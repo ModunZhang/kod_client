@@ -3,12 +3,12 @@ local UIAutoClose = import(".UIAutoClose")
 
 local FullScreenPopDialogUI = class("FullScreenPopDialogUI", UIAutoClose)
 
-function FullScreenPopDialogUI:ctor()
+function FullScreenPopDialogUI:ctor(listener)
     FullScreenPopDialogUI.super.ctor(self,{type=UIKit.UITYPE.MESSAGEDIALOG})
-    self:Init()
+    self:Init(listener)
 end
 
-function FullScreenPopDialogUI:Init()
+function FullScreenPopDialogUI:Init(listener)
     -- bg
     local bg = display.newSprite("back_ground_608x350.png", display.cx, display.top - 480)
     self:addTouchAbleChild(bg)

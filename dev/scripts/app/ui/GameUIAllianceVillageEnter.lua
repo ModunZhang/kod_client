@@ -15,16 +15,11 @@ function GameUIAllianceVillageEnter:ctor(building,isMyAlliance,my_alliance,enemy
 	self.enemy_alliance = enemy_alliance
 	self.village_info = building:GetAllianceVillageInfo()
 	self.map_id = building:Id()
-	if not self.village_info then
-		self.isRuins = true
-	else
-		self.isRuins = false
-	end
 end
 
 
 function GameUIAllianceVillageEnter:IsRuins()
-	return self.isRuins
+	return false
 end
 
 function GameUIAllianceVillageEnter:GetVillageInfo()

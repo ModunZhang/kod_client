@@ -440,7 +440,7 @@ function GameUIHospital:CreateSpeedUpHeal()
         :align(display.CENTER, window.cx, window.top-740)
         :hide()
         :OnButtonClicked(function(event)
-            GameUITreatSoldierSpeedUp.new(self.building):AddToCurrentScene(true)
+            UIKit:newGameUI("GameUITreatSoldierSpeedUp", self.building):AddToCurrentScene(true)
         end)
 end
 --设置正在治愈的伤兵数量label

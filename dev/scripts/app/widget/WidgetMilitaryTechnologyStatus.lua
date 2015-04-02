@@ -76,7 +76,7 @@ function WidgetMilitaryTechnologyStatus:CreateUpgradingStatus()
             shadow= true
         }))
         :onButtonClicked(function (event)
-            GameUIMilitaryTechSpeedUp.new(self.event):AddToCurrentScene(true)
+            UIKit:newGameUI("GameUIMilitaryTechSpeedUp", self.event):AddToCurrentScene(true)
         end)
         :align(display.CENTER, 474, 44):addTo(upgrading_node)
 

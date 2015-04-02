@@ -3,12 +3,6 @@ local cocos_promise = import("..utils.cocos_promise")
 local Localize = import("..utils.Localize")
 local SoldierManager = import("..entity.SoldierManager")
 local WidgetPushButton = import("..widget.WidgetPushButton")
-local GameUIMilitaryTechSpeedUp = import("..ui.GameUIMilitaryTechSpeedUp")
-local GameUITechnologySpeedUp = import("..ui.GameUITechnologySpeedUp")
-local GameUIBuildingSpeedUp = import("..ui.GameUIBuildingSpeedUp")
-local GameUIBarracksSpeedUp = import("..ui.GameUIBarracksSpeedUp")
-local GameUIToolShopSpeedUp = import("..ui.GameUIToolShopSpeedUp")
-local GameUIBlackSmithSpeedUp = import("..ui.GameUIBlackSmithSpeedUp")
 local WidgetTab = import(".WidgetTab")
 local timer = app.timer
 local WIDGET_WIDTH = 640
@@ -691,7 +685,7 @@ function WidgetEventTabButtons:UpgradeBuildingHelpOrSpeedup(building)
             end
         end
         -- 没加入联盟或者已加入联盟并且申请过帮助时执行使用道具加速
-        GameUIBuildingSpeedUp.new(building):AddToCurrentScene(true)
+        UIKit:newGameUI("GameUIBuildingSpeedUp", building):AddToCurrentScene(true)
     end
 end
 function WidgetEventTabButtons:MiliTaryTechUpgradeOrSpeedup(event)
@@ -714,17 +708,17 @@ function WidgetEventTabButtons:MiliTaryTechUpgradeOrSpeedup(event)
             end
         end
         -- 没加入联盟或者已加入联盟并且申请过帮助时执行使用道具加速
-        GameUIMilitaryTechSpeedUp.new(event):AddToCurrentScene(true)
+        UIKit:newGameUI("GameUIMilitaryTechSpeedUp", event):AddToCurrentScene(true)
     end
 end
 function WidgetEventTabButtons:SoldierRecruitUpgradeOrSpeedup()
-    GameUIBarracksSpeedUp.new(self.city:GetFirstBuildingByType("barracks")):AddToCurrentScene(true)
+    UIKit:newGameUI("GameUIBarracksSpeedUp", self.city:GetFirstBuildingByType("barracks")):AddToCurrentScene(true)
 end
 function WidgetEventTabButtons:MaterialEventUpgradeOrSpeedup()
-    GameUIToolShopSpeedUp.new(self.city:GetFirstBuildingByType("toolShop")):AddToCurrentScene(true)
+    UIKit:newGameUI("GameUIToolShopSpeedUp", self.city:GetFirstBuildingByType("toolShop")):AddToCurrentScene(true)
 end
 function WidgetEventTabButtons:DragonEquipmentEventsUpgradeOrSpeedup()
-    GameUIBlackSmithSpeedUp.new(self.city:GetFirstBuildingByType("blackSmith")):AddToCurrentScene(true)
+    UIKit:newGameUI("GameUIBlackSmithSpeedUp", self.city:GetFirstBuildingByType("blackSmith")):AddToCurrentScene(true)
 end
 
 function WidgetEventTabButtons:SetProgressItemBtnLabel(canFreeSpeedUp,event_key,event_item)
@@ -811,7 +805,7 @@ function WidgetEventTabButtons:Load()
             elseif k == "technology" then
                 if City:HaveProductionTechEvent() then
                     City:IteratorProductionTechEvents(function(event)
-                            local item = self:CreateItem()
+                        local item = self:CreateItem()
                             :SetProgressInfo(self:GetProductionTechnologyEventProgressInfo(event))
                             :SetEventKey(event:Id())
                             :OnClicked(
@@ -1001,7 +995,7 @@ function WidgetEventTabButtons:MilitaryTechDescribe(event)
 end
 --学院科技
 function WidgetEventTabButtons:OnProductionTechnologyEventTimer(event)
-     if self:IsShow() and self:GetCurrentTab() == "technology" then
+    if self:IsShow() and self:GetCurrentTab() == "technology" then
         self:IteratorAllItem(function(i, v)
             if v.GetEventKey and v:GetEventKey() == event:Id() then
                 v:SetProgressInfo(self:GetProductionTechnologyEventProgressInfo(event))
@@ -1011,7 +1005,7 @@ function WidgetEventTabButtons:OnProductionTechnologyEventTimer(event)
     end
 end
 function WidgetEventTabButtons:OnProductionTechnologyEventDataChanged(changed_map)
-   self:OnProductionTechnologyEventDataRefresh(changed_map)
+    self:OnProductionTechnologyEventDataRefresh(changed_map)
 end
 function WidgetEventTabButtons:OnProductionTechnologyEventDataRefresh(changed_map)
     changed_map = changed_map or {}
@@ -1022,7 +1016,7 @@ function WidgetEventTabButtons:ProductionTechnologyEventUpgradeOrSpeedup(event)
     if DataUtils:getFreeSpeedUpLimitTime() > event:GetTime() then
         NetManager:getFreeSpeedUpPromise("productionTechEvents",event:Id()):next(function()
 
-        end)
+            end)
     else
         if not Alliance_Manager:GetMyAlliance():IsDefault() then
             -- 是否已经申请过联盟加速
@@ -1036,7 +1030,7 @@ function WidgetEventTabButtons:ProductionTechnologyEventUpgradeOrSpeedup(event)
             end
         end
         -- 没加入联盟或者已加入联盟并且申请过帮助时执行使用道具加速
-        GameUITechnologySpeedUp.new():AddToCurrentScene(true)
+        UIKit:newGameUI("GameUITechnologySpeedUp"):AddToCurrentScene(true)
     end
 end
 
@@ -1044,6 +1038,7 @@ function WidgetEventTabButtons:GetProductionTechnologyEventProgressInfo(event)
     return _("研发") .. event:Entity():GetLocalizedName() .. " " .. GameUtils:formatTimeStyle1(event:GetTime()),event:GetPercent()
 end
 return WidgetEventTabButtons
+
 
 
 

@@ -267,11 +267,7 @@ function GameUIAllianceEnterBase:GetEnterButtons()
             }):AddToCurrentScene()
             self:LeftButtonClicked()
         end)
-        local move_building_button = self:BuildOneButton("icon_move_alliance_building.png",_("迁移联盟建筑")):onButtonClicked(function()
-            UIKit:newGameUI("GameUIMoveAllianceBuilding",{location = self:GetLogicPosition()}):AddToCurrentScene(true)
-            self:LeftButtonClicked()
-        end)
-        return {move_city_button,move_building_button}
+        return {move_city_button}
     else
         return {}
     end

@@ -16,7 +16,6 @@ end
 
 function GameUIAllianceDecorateEnter:FixedUI()
 	self:GetLevelBg():show()
-	self:GetLevelLabel():hide()
 	self.process_bar_bg:hide()
 end
 
@@ -53,21 +52,31 @@ function GameUIAllianceDecorateEnter:GetBuildingInfo()
 end
 
 function GameUIAllianceDecorateEnter:GetEnterButtons()
-	local chai_button = self:BuildOneButton("icon_demolish.png",_("拆除")):onButtonClicked(function()
-		local alliacne =  self:GetMyAlliance()
-        local isEqualOrGreater = alliacne:GetSelf():CanEditAllianceObject()
-        if isEqualOrGreater then
-            if self:GetMyAlliance():Honour() < self:GetHonourLabelText() then 
-                UIKit:showMessageDialog(nil, _("联盟荣耀值不足"),function()end)
-                return 
+    
+    local current_scene = display.getRunningScene()
+    if current_scene.__cname == "AllianceScene" and current_scene.LoadEditModeWithAllianceObj then
+    	local chai_button = self:BuildOneButton("icon_move_alliance_building.png",_("移动")):onButtonClicked(function()
+    		local alliacne =  self:GetMyAlliance()
+            local isEqualOrGreater = alliacne:GetSelf():CanEditAllianceObject()
+            if isEqualOrGreater then
+                if self:GetMyAlliance():Honour() < self:GetHonourLabelText() then 
+                    UIKit:showMessageDialog(nil, _("联盟荣耀值不足"),function()end)
+                    return 
+                end
+                current_scene:LoadEditModeWithAllianceObj({
+                    obj = self:GetBuilding(),
+                    honour = self:GetHonourLabelText(),
+                    name = self:GetUITitle()
+                })
+            else
+            	UIKit:showMessageDialog(nil, _("您没有此操作权限"),function()end)
             end
-            NetManager:getDistroyAllianceDecoratePromise(self:GetBuilding():Id())
-        else
-        	UIKit:showMessageDialog(nil, _("您没有此操作权限"),function()end)
-        end
-		self:LeftButtonClicked()
-	end)
- 	return {chai_button}
+    		self:LeftButtonClicked()
+    	end)
+     	return {chai_button}
+    else
+        return {}
+    end
 end
 
 return GameUIAllianceDecorateEnter

@@ -460,7 +460,7 @@ function GameUIHasBeenBuild:CreateItemWithListView(list_view)
             font = UIKit:getFontFilePath(),
             color = UIKit:hex2c3b(0xffedae)}))
         :onButtonClicked(function(event)
-            GameUIBuildingSpeedUp.new(item.building):AddToCurrentScene(true)
+            UIKit:newGameUI("GameUIBuildingSpeedUp", item.building):AddToCurrentScene(true)
         end)
 
 
