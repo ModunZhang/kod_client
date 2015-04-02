@@ -61,6 +61,22 @@ function GameUIAlliancePalaceEnter:GetEnterButtons()
 			UIKit:newGameUI('GameUIAlliancePalace',City,"upgrade",self:GetBuilding()):AddToCurrentScene(true)
 			self:LeftButtonClicked()
 		end)
+		local current_scene = display.getRunningScene()
+		if current_scene.__cname == "AllianceScene" then
+			local move_building_button = self:BuildOneButton("icon_move_alliance_building.png",_("移动")):onButtonClicked(function()
+	          	if self:GetMyAlliance():Honour() < self:GetMoveNeedHonour() then 
+                    UIKit:showMessageDialog(nil, _("联盟荣耀值不足"),function()end)
+                    return 
+                end
+	            current_scene:LoadEditModeWithAllianceObj({
+	            	obj = self:GetMapObject(),
+	            	honour = self:GetMoveNeedHonour(),
+	            	name = self:GetUITitle()
+	            })
+	            self:LeftButtonClicked()
+	        end)
+			return {move_building_button,info_button,tax_button,upgrade_button}
+		end
 	    return {info_button,tax_button,upgrade_button}
 	else
 		return {}

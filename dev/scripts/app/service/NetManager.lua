@@ -1012,25 +1012,12 @@ function NetManager:getEditAllianceBasicInfoPromise(name, tag, language, flag)
     }, "修改联盟基本信息失败!"):next(get_response_msg)
 end
 -- 移动联盟建筑
-function NetManager:getMoveAllianceBuildingPromise(buildingName, locationX, locationY)
+function NetManager:getMoveAllianceBuildingPromise(mapObjectId, locationX, locationY)
     return get_blocking_request_promise("logic.allianceHandler.moveAllianceBuilding", {
-        buildingName = buildingName,
+        mapObjectId = mapObjectId,
         locationX = locationX,
         locationY = locationY
     }, "移动联盟建筑失败!"):next(get_response_msg):next(get_alliance_response_msg)
-end
--- 移动玩家城市
-function NetManager:getMoveAllianceMemberPromise(locationX, locationY)
-    return get_blocking_request_promise("logic.allianceHandler.moveAllianceMember", {
-        locationX = locationX,
-        locationY = locationY
-    }, "移动玩家城市失败!")
-end
--- 拆除装饰物
-function NetManager:getDistroyAllianceDecoratePromise(decorateId)
-    return get_blocking_request_promise("logic.allianceHandler.distroyAllianceDecorate", {
-        decorateId = decorateId
-    }, "拆除装饰物失败!"):next(get_response_msg)
 end
 -- 激活联盟事件
 function NetManager:getActivateAllianceShrineStagePromise(stageName)

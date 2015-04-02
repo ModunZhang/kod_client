@@ -64,14 +64,18 @@ function UIKit:createUIClass(className, baseName)
 end
 
 function UIKit:newGameUI(gameUIName,... )
-    if self.Registry.isObjectExists(gameUIName) then
-        print("已经创建过一个Object-->",gameUIName)
-        return {AddToCurrentScene=function(...)end,AddToScene=function(...)end} -- 适配后面的调用不报错
+    if gameUIName ~= 'FullScreenPopDialogUI' then  
+        if self.Registry.isObjectExists(gameUIName) then
+            print("已经创建过一个Object-->",gameUIName)
+            return {AddToCurrentScene=function(...)end,AddToScene=function(...)end} -- 适配后面的调用不报错
+        end
     end
     local viewPackageName = app.packageRoot .. ".ui." .. gameUIName
     local viewClass = require(viewPackageName)
     local instance = viewClass.new(...)
-    self.Registry.setObject(instance,gameUIName)
+    if gameUIName ~= 'FullScreenPopDialogUI' then 
+       self.Registry.setObject(instance,gameUIName)
+    end
     return instance
 end
 
@@ -441,10 +445,10 @@ function UIKit:createLineItem(params)
     return line
 end
 
-function UIKit:showMessageDialog(title,tips,ok_callback,cancel_callback,visible_x_button)
+function UIKit:showMessageDialog(title,tips,ok_callback,cancel_callback,visible_x_button,x_button_callback)
     title = title or _("提示")
     if type(visible_x_button) ~= 'boolean' then visible_x_button = true end
-    local dialog = UIKit:newGameUI("FullScreenPopDialogUI"):SetTitle(title):SetPopMessage(tips)
+    local dialog = UIKit:newGameUI("FullScreenPopDialogUI",x_button_callback):SetTitle(title):SetPopMessage(tips)
         :CreateOKButton({
             listener =  function ()
                 if ok_callback then

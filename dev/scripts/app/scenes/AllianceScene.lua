@@ -42,7 +42,7 @@ function AllianceScene:LeaveEditMode()
     self:GetHomePage():DisplayOn()
 end
 function AllianceScene:IsEditMode()
-    return self:GetHomePage():IsDisplayOn()
+    return not self:GetHomePage():IsDisplayOn()
 end
 function AllianceScene:CreateAllianceUI()
     -- local home_page = UIKit:newGameUI('GameUIAllianceHome',Alliance_Manager:GetMyAlliance()):AddToScene(self)
@@ -76,6 +76,10 @@ function AllianceScene:OnTouchClicked(pre_x, pre_y, x, y)
         else
             self:EnterAllianceBuilding(building:GetEntity())
         end
+    else
+        if self:IsEditMode() then
+            self:LeaveEditMode()
+        end
     end
 end
 function AllianceScene:OnBasicChanged(alliance,changed_map)
@@ -98,42 +102,92 @@ function AllianceScene:OnOperation(alliance,operation_type)
 end
 
 function AllianceScene:EnterAllianceBuilding(entity)
-    local isMyAlliance = true
-    local building_info = entity:GetAllianceBuildingInfo()
-    local building_name = building_info.name
-    local class_name = ""
-    if building_name == 'shrine' then
-        class_name = "GameUIAllianceShrineEnter"
-    elseif building_name == 'palace' then
-        class_name = "GameUIAlliancePalaceEnter"
-    elseif building_name == 'shop' then
-        class_name = "GameUIAllianceShopEnter"
-    elseif building_name == 'orderHall' then
-        class_name = "GameUIAllianceOrderHallEnter"
-    elseif building_name == 'moonGate' then
-        class_name = "GameUIAllianceMoonGateEnter"
+    if self:IsEditMode() then
+        self:LeaveEditMode()
     else
-        print("没有此建筑--->",building_name)
-        return
+        local isMyAlliance = true
+        local building_info = entity:GetAllianceBuildingInfo()
+        local building_name = building_info.name
+        local class_name = ""
+        if building_name == 'shrine' then
+            class_name = "GameUIAllianceShrineEnter"
+        elseif building_name == 'palace' then
+            class_name = "GameUIAlliancePalaceEnter"
+        elseif building_name == 'shop' then
+            class_name = "GameUIAllianceShopEnter"
+        elseif building_name == 'orderHall' then
+            class_name = "GameUIAllianceOrderHallEnter"
+        elseif building_name == 'moonGate' then
+            class_name = "GameUIAllianceMoonGateEnter"
+        else
+            print("没有此建筑--->",building_name)
+            return
+        end
+        UIKit:newGameUI(class_name,entity,isMyAlliance,self:GetAlliance()):AddToCurrentScene(true)
     end
-    UIKit:newGameUI(class_name,entity,isMyAlliance,self:GetAlliance()):AddToCurrentScene(true)
 end
 
 function AllianceScene:EnterNotAllianceBuilding(entity)
     local isMyAlliance = true
     local type_ = entity:GetType()
     local class_name = ""
-    if type_ == 'none' then
-        class_name = "GameUIAllianceEnterBase"
-    elseif type_ == 'member' then
-        class_name = "GameUIAllianceCityEnter"
-    elseif type_ == 'decorate' then
-        class_name = "GameUIAllianceDecorateEnter"
-    elseif type_ == 'village' then
-        class_name = "GameUIAllianceVillageEnter"
+    if not self:IsEditMode() then
+        if type_ == 'none' then
+            class_name = "GameUIAllianceEnterBase"
+        elseif type_ == 'member' then
+            class_name = "GameUIAllianceCityEnter"
+        elseif type_ == 'decorate' then
+            class_name = "GameUIAllianceDecorateEnter"
+        elseif type_ == 'village' then
+            class_name = "GameUIAllianceVillageEnter"
+            if not entity:GetAllianceVillageInfo() then -- 废墟
+                class_name = "GameUIAllianceRuinsEnter"
+            end
+        end
+        UIKit:newGameUI(class_name,entity,isMyAlliance,self:GetAlliance()):AddToCurrentScene(true)
+    else
+        if type_ == 'none' then
+            local x,y = entity:GetLogicPosition()
+            self:CheckCanMoveAllianceObject(x,y)
+        else
+            self:LeaveEditMode()
+        end
     end
-    UIKit:newGameUI(class_name,entity,isMyAlliance,self:GetAlliance()):AddToCurrentScene(true)
 end
+
+function AllianceScene:LoadEditModeWithAllianceObj(alliance_obj)
+    self.alliance_obj_to_move = alliance_obj
+    self:EnterEditMode()
+end
+
+function AllianceScene:CheckCanMoveAllianceObject(x,y)
+    if self.alliance_obj_to_move then
+        UIKit:showMessageDialog(nil
+            ,string.format(
+                _("可以移动%s到%s将消耗荣耀值%s,确认移动?")
+                ,self.alliance_obj_to_move.name
+                ,"(" .. x .."," .. y .. ")"
+                ,self.alliance_obj_to_move.honour
+            )
+            ,function()
+                if self:GetAlliance():GetAllianceMap():CanMoveBuilding(self.alliance_obj_to_move.obj,x,y) then
+                    NetManager:getMoveAllianceBuildingPromise(self.alliance_obj_to_move.obj:Id(), x, y):next(function()
+                        self.alliance_obj_to_move = nil
+                        self:LeaveEditMode()
+                    end)
+                else
+                     UIKit:showMessageDialog(nil, _("不能移动到目标点位"),function()end)
+                end
+            end
+            ,nil
+            ,true
+            ,function()
+                self:LeaveEditMode()
+            end
+        )
+    end
+end
+
 function AllianceScene:ReEnterScene()
     app:enterScene("AllianceScene")
 end

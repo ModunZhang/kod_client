@@ -3,19 +3,34 @@
 -- Date: 2014-12-29 11:32:56
 --
 local GameUIAllianceShrineEnter = UIKit:createUIClass("GameUIAllianceShrineEnter","GameUIAllianceEnterBase")
+local buildingName = GameDatas.AllianceInitData.buildingName
 
 function GameUIAllianceShrineEnter:ctor(building,isMyAlliance,alliance)
 	GameUIAllianceShrineEnter.super.ctor(self,building,isMyAlliance,alliance)
 	self.building = building:GetAllianceBuildingInfo()
 end
 
--- function GameUIAllianceShrineEnter:IsMyAlliance()
--- 	return self.isMyAlliance
--- end
-
 function GameUIAllianceShrineEnter:GetLocation()
 	local mapObject = self:GetMyAlliance():GetAllianceMap():FindMapObjectById(self:GetBuilding().id)
 	return mapObject.location.x .. "," .. mapObject.location.y
+end
+
+function GameUIAllianceShrineEnter:GetLogicPosition()
+	local mapObject = self:GetMyAlliance():GetAllianceMap():FindMapObjectById(self:GetBuilding().id)
+	return {x = mapObject.location.x,y = mapObject.location.y}
+end
+
+function GameUIAllianceShrineEnter:GetMapObject()
+	local mapObject = self:GetMyAlliance():GetAllianceMap():FindMapObjectById(self:GetBuilding().id)
+	return mapObject
+end
+
+function GameUIAllianceShrineEnter:GetMoveNeedHonour()
+	local mapObject = self:GetMapObject()
+	if buildingName[mapObject.name] then
+		return buildingName[mapObject.name].moveNeedHonour
+	end
+	return 0
 end
 
 function GameUIAllianceShrineEnter:GetUIHeight()
@@ -83,6 +98,22 @@ function GameUIAllianceShrineEnter:GetEnterButtons()
 			UIKit:newGameUI('GameUIAllianceShrine',City,"upgrade",self:GetBuilding()):AddToCurrentScene(true)
 			self:LeftButtonClicked()
 		end)
+        local current_scene = display.getRunningScene()
+		if current_scene.__cname == "AllianceScene" then
+			local move_building_button = self:BuildOneButton("icon_move_alliance_building.png",_("移动")):onButtonClicked(function()
+				if self:GetMyAlliance():Honour() < self:GetMoveNeedHonour() then 
+                    UIKit:showMessageDialog(nil, _("联盟荣耀值不足"),function()end)
+                    return 
+                end
+	            current_scene:LoadEditModeWithAllianceObj({
+	            	obj = self:GetMapObject(),
+	            	honour = self:GetMoveNeedHonour(),
+	            	name = self:GetUITitle()
+	            })
+	            self:LeftButtonClicked()
+	        end)
+			return {move_building_button,fight_event_button,alliance_shirine_event_button,upgrade_button}
+		end
 	    return {fight_event_button,alliance_shirine_event_button,upgrade_button}
 	else
 		return {}
