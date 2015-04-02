@@ -7,8 +7,8 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetNeedBox = import("..widget.WidgetNeedBox")
 local WidgetTimerProgressStyleThree = import("..widget.WidgetTimerProgressStyleThree")
 local WidgetManufacture = class("WidgetManufacture", function()
-	local node = display.newNode()
-	node:setNodeEventEnabled(true)
+    local node = display.newNode()
+    node:setNodeEventEnabled(true)
     return node
 end)
 
@@ -51,7 +51,7 @@ local MATERIALS_MAP = {
     ironPart = { "ironPart_128x128.png",  _("精铁零件"), 4},
 }
 function WidgetManufacture:ctor(toolShop)
-	self.toolShop = toolShop
+    self.toolShop = toolShop
 end
 function WidgetManufacture:onEnter()
     self:Manufacture()
@@ -336,7 +336,7 @@ function WidgetManufacture:CreateMaterialItemWithListView(list_view, title, mate
         :pos(size.width/2, 110)
         :hide()
         :OnButtonClicked(function(event)
-            GameUIToolShopSpeedUp.new(self.toolShop):AddToCurrentScene(true)
+            UIKit:newGameUI("GameUIToolShopSpeedUp", self.toolShop):AddToCurrentScene(true)
         end)
 
     local get_material = new_get_material():addTo(content, 2):pos(align_x, align_y):hide()
@@ -414,3 +414,4 @@ end
 
 
 return WidgetManufacture
+

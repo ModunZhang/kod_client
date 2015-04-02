@@ -513,7 +513,7 @@ function GameUIDragonEyrieMain:OnDragonExpItemUseButtonClicked()
 end
 
 function GameUIDragonEyrieMain:OnDragonDeathSpeedUpClicked()
-	GameUIDragonDeathSpeedUp.new(self.dragonDeathEvent__):AddToCurrentScene(true)
+	UIKit:newGameUI("GameUIDragonDeathSpeedUp", self.dragonDeathEvent__):AddToCurrentScene(true)
 end
 
 --fte

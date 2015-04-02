@@ -29,7 +29,6 @@ local GameUIAcademy = UIKit:createUIClass("GameUIAcademy","GameUIUpgradeBuilding
 local window = import("..utils.window")
 local UIScrollView = import(".UIScrollView")
 local WidgetPushButton = import("..widget.WidgetPushButton")
-local GameUITechnologySpeedUp = import(".GameUITechnologySpeedUp")
 
 
 function GameUIAcademy:GetTechsData()
@@ -173,7 +172,7 @@ function GameUIAcademy:BuildTipsUI(technology_node,y)
 		:addTo(tips_bg)
 		:setButtonLabel("normal",UIKit:commonButtonLable({text = _("加速")}))
 		:onButtonClicked(function()
-			GameUITechnologySpeedUp.new():AddToCurrentScene(true)
+			UIKit:newGameUI("GameUITechnologySpeedUp"):AddToCurrentScene(true)
 		end)
 	self.speedButton = speedButton
 end

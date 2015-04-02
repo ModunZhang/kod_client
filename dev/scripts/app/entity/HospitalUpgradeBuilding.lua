@@ -3,6 +3,7 @@ local NORMAL = GameDatas.Soldiers.normal
 local config_function = GameDatas.BuildingFunction.hospital
 local Observer = import(".Observer")
 local Enum = import("..utils.Enum")
+local Localize = import("..utils.Localize")
 local UpgradeBuilding = import(".UpgradeBuilding")
 local HospitalUpgradeBuilding = class("HospitalUpgradeBuilding", UpgradeBuilding)
 HospitalUpgradeBuilding.CAN_NOT_TREAT = Enum("TREATING","LACK_RESOURCE","TREATING_AND_LACK_RESOURCE")
@@ -25,9 +26,15 @@ function HospitalUpgradeBuilding:CreateEvent()
         self.id = nil
     end
     function event:SetTreatInfo(soldiers, finish_time , id)
+        local old_id = self.id
         self.soldiers = soldiers
         self.finished_time = finish_time
         self.id = id
+        if soldiers and finish_time~=0 and id then
+            hospital:GeneralSoldierLocalPush(self)
+        else
+            hospital:CancelSoldierLocalPush(self)
+        end
     end
     function event:StartTime()
         return self.finished_time - self:GetTreatingTime()
@@ -67,6 +74,25 @@ function HospitalUpgradeBuilding:CreateEvent()
     end
     event:Init()
     return event
+end
+function HospitalUpgradeBuilding:GeneralSoldierLocalPush(event)
+    if ext and ext.localpush then
+        local soldiers = event:GetTreatInfo()
+        local pushIdentity = event:Id()
+        local soldiers_desc = ""
+        for k,v in pairs(soldiers) do
+            local soldier_type = v.name
+            local count = v.count
+            soldiers_desc = soldiers_desc .. string.format(_("%s X %d "),Localize.soldier_name[soldier_type],count)
+        end
+        local title = string.format(_("治愈%s完成"),soldiers_desc)
+        app:GetPushManager():UpdateSoldierPush(event:FinishTime(),title,pushIdentity)
+    end
+end
+function HospitalUpgradeBuilding:CancelSoldierLocalPush(id)
+    if ext and ext.localpush then
+        app:GetPushManager():CancelSoldierPush(id)
+    end
 end
 function HospitalUpgradeBuilding:ResetAllListeners()
     HospitalUpgradeBuilding.super.ResetAllListeners(self)
@@ -133,7 +159,7 @@ end
 function HospitalUpgradeBuilding:OnUserDataChanged(...)
     HospitalUpgradeBuilding.super.OnUserDataChanged(self, ...)
     local userData, current_time, location_id, sub_location_id, deltaData = ...
-    
+
     if not userData.treatSoldierEvents then return end
 
     local is_fully_update = deltaData == nil
@@ -226,6 +252,8 @@ function HospitalUpgradeBuilding:GetCasualtyRate()
 end
 
 return HospitalUpgradeBuilding
+
+
 
 
 

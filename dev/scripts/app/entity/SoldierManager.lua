@@ -172,6 +172,19 @@ function SoldierManager:CancelMilitaryTechLocalPush(event)
         app:GetPushManager():CancelTechnologyPush(pushIdentity)
     end
 end
+function SoldierManager:GeneralSoldierLocalPush(event)
+    if ext and ext.localpush then
+        local pushIdentity = event:Id()..event:Name()
+        local title = event:GetLocalizeDesc()
+        app:GetPushManager():UpdateSoldierPush(event:FinishTime(),title,pushIdentity)
+    end
+end
+function SoldierManager:CancelSoldierLocalPush(event)
+    if ext and ext.localpush then
+        local pushIdentity = event:Id()..event:Name()
+        app:GetPushManager():CancelSoldierPush(pushIdentity)
+    end
+end
 function SoldierManager:OnUserDataChanged(user_data,current_time, deltaData)
     local is_fully_update = deltaData == nil
     if is_fully_update then
@@ -568,6 +581,7 @@ function SoldierManager:OnSoldierStarEventsChanged(soldierStarEvents)
         event:UpdateData(v)
         event:AddObserver(self)
         self.soldierStarEvents[event:Id()] = event
+        self:GeneralSoldierLocalPush(event)
     end
     self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.ALL_SOLDIER_STAR_EVENTS_CHANGED, function(listener)
         listener:OnAllSoldierStarEventsChanged(self,self.soldierStarEvents)
@@ -593,6 +607,7 @@ function SoldierManager:__OnSoldierStarEventsChanged(__soldierStarEvents)
             event:AddObserver(self)
             self.soldierStarEvents[event:Id()] = event
             table.insert(added, event)
+            self:GeneralSoldierLocalPush(event)
         end
     end
     if edit then
@@ -600,6 +615,7 @@ function SoldierManager:__OnSoldierStarEventsChanged(__soldierStarEvents)
             local event = self.soldierStarEvents[data.id]
             event:UpdateData(data)
             table.insert(edited, event)
+            self:GeneralSoldierLocalPush(event)
         end
     end
     if remove then
@@ -610,6 +626,7 @@ function SoldierManager:__OnSoldierStarEventsChanged(__soldierStarEvents)
             local event = SoldierStarEvents.new()
             event:UpdateData(data)
             table.insert(removed, event)
+            self:CancelSoldierLocalPush(event)
         end
     end
 
@@ -637,6 +654,7 @@ function SoldierManager:OnMilitaryTechEventsTimer(tech_event)
     end)
 end
 return SoldierManager
+
 
 
 

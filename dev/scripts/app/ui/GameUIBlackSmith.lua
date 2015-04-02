@@ -12,7 +12,6 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetTimerProgress = import("..widget.WidgetTimerProgress")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetMakeEquip = import("..widget.WidgetMakeEquip")
-local GameUIBlackSmithSpeedUp = import("..ui.GameUIBlackSmithSpeedUp")
 local GameUIBlackSmith = UIKit:createUIClass("GameUIBlackSmith", "GameUIUpgradeBuilding")
 
 
@@ -150,9 +149,8 @@ function GameUIBlackSmith:InitEquipmentTitle()
         :align(display.CENTER, display.cx, display.top - 140)
         :hide()
         :OnButtonClicked(function(event)
-            GameUIBlackSmithSpeedUp.new(self.black_smith):AddToCurrentScene(true)
+            UIKit:newGameUI("GameUIBlackSmithSpeedUp", self.black_smith):AddToCurrentScene(true)
         end)
-    -- self.timer:GetSpeedUpButton():setButtonEnabled(false)
     return node
 end
 function GameUIBlackSmith:CreateDragonEquipments()
