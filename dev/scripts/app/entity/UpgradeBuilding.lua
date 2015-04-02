@@ -97,10 +97,7 @@ end
 function UpgradeBuilding:InstantUpgradeTo(level)
     self.level = level
     self.upgrade_to_next_level_time = 0
-    
-    if display.getRunningScene().__cname ~= "MainScene" then
-        GameGlobalUI:showTips(_("提示"),string.format(_('建造%s至%d级完成'),Localize.building_name[self:GetType()],level))
-    end
+
     self:CancelLocalPush()
     self.upgrade_building_observer:NotifyObservers(function(lisenter)
         lisenter:OnBuildingUpgradeFinished(self)
@@ -194,6 +191,9 @@ function UpgradeBuilding:OnUserDataChanged(userData, current_time, location_id, 
     end
     self:OnEvent(event)
     if level and finished_time then
+        if display.getRunningScene().__cname ~= "MainScene" and is_delta_update and level ~= self.level then
+            GameGlobalUI:showTips(_("提示"),string.format(_('建造%s至%d级完成'),Localize.building_name[self:GetType()],level))
+        end
         self:OnHandle(level, finished_time)
     end
 end
@@ -496,6 +496,7 @@ function UpgradeBuilding:getUpgradeRequiredGems()
 end
 
 return UpgradeBuilding
+
 
 
 
