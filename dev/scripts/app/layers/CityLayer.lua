@@ -66,7 +66,10 @@ function CityLayer:GetClickedObject(world_x, world_y)
     }
     self:IteratorClickAble(function(_, v)
         if v:isVisible() then
-            if v:GetEntity().IsUnlocked == nil and true or v:GetEntity():IsUnlocked() then
+            local is_available = v:GetEntity():GetType() == "tower" 
+            or v:GetEntity():GetType() == "wall" 
+            or (v:GetEntity().IsUnlocked == nil and true or v:GetEntity():IsUnlocked())
+            if is_available then
                 local check = v:IsContainPointWithFullCheck(logic_x, logic_y, world_x, world_y)
                 if check.logic_clicked then
                     table.insert(clicked_list.logic_clicked, v)
