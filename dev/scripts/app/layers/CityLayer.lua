@@ -376,8 +376,6 @@ function CityLayer:InitWithCity(city)
     self.fair_ground = self:CreateFairGround(60, 45):addTo(city_node)
 
 
-    -- display.newSprite("redDragon_icon_151x133.png"):addTo(self, WEATHER_NODE):pos(500, 500)
-
     -- 更新其他需要动态生成的建筑
     self:UpdateAllDynamicWithCity(city)
     self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt)
@@ -551,10 +549,9 @@ function CityLayer:RefreshSoldiers(soldier_manager)
         {x = 8, y = 14, soldier_type = "horseArcher"},
         {x = 6, y = 14, soldier_type = "sentinel"},
         {x = 4, y = 14, soldier_type = "crossbowman"},
-    -- {x = 2, y = 14, soldier_type = "ballista"},
+        {x = 2, y = 14, soldier_type = "ballista"},
     }) do
         local star = soldier_manager:GetStarBySoldierType(v.soldier_type)
-        local star = 2
         local soldier = self:CreateSoldier(v.soldier_type, star, v.x, v.y):addTo(self:GetCityNode())
         local x, y = soldier:getPosition()
         soldier:pos(x, y + 25)

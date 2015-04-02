@@ -1,3 +1,4 @@
+local UILib = import("..ui.UILib")
 local window = import("..utils.window")
 local MultiAllianceLayer = import("..layers.MultiAllianceLayer")
 local WidgetPushButton = import("..widget.WidgetPushButton")

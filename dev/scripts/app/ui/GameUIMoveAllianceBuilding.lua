@@ -162,7 +162,7 @@ function GameUIMoveAllianceBuilding:GetItem(data)
 end
 
 function GameUIMoveAllianceBuilding:OnMoveButtonClick(data)
-	dump(data.obj,"data--->obj")
+	-- dump(data.obj,"data--->obj")
 	if not Alliance_Manager:GetMyAlliance():GetAllianceMap():CanMoveBuilding(data.obj,self.target_location.x,self.target_location.y) then
 		UIKit:showMessageDialog(nil, _("不能移动到目标点位"),function()end)
 		return
