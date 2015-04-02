@@ -25,12 +25,27 @@ function GameUIAllianceHome:GetChatManager()
 end
 function GameUIAllianceHome:DisplayOn()
     self.visible_count = self.visible_count + 1
-    self:setVisible(self.visible_count > 0)
+    self:FadeToSelf(self.visible_count > 0)
 end
 function GameUIAllianceHome:DisplayOff()
     self.visible_count = self.visible_count - 1
-    self:setVisible(self.visible_count > 0)
+    self:FadeToSelf(self.visible_count > 0)
 end
+function GameUIAllianceHome:IsDisplayOn()
+    return self.visible_count > 0
+end
+function GameUIAllianceHome:FadeToSelf(isFullDisplay)
+    self:setCascadeOpacityEnabled(true)
+    local opacity = isFullDisplay == true and 255 or 0
+    local p = isFullDisplay and 0 or 99999999
+    transition.fadeTo(self, {opacity = opacity, time = 0.2,
+        onComplete = function()
+            self:pos(p, p)
+        end
+    })
+end
+
+
 function GameUIAllianceHome:onEnter()
     GameUIAllianceHome.super.onEnter(self)
     self.visible_count = 1
@@ -643,8 +658,7 @@ function GameUIAllianceHome:OnBottomButtonClicked(event)
     local tag = event.target:getTag()
     if not tag then return end
     if tag == 4 then -- tag 4 = alliance button
-        -- UIKit:newGameUI('GameUIAlliance'):AddToCurrentScene(true)
-        UIKit:newGameUI('GameUIShop', City):AddToCurrentScene(true)
+        UIKit:newGameUI('GameUIAlliance'):AddToCurrentScene(true)
     elseif tag == 1 then
         UIKit:newGameUI('GameUIMission',City):AddToCurrentScene(true)
     elseif tag == 2 then

@@ -273,11 +273,17 @@ function GameUIMission:GetAchievementMissionData(isFinish)
         return self.city:GetUser():GetTaskManager():GetAvailableTasksGroup()
     end
 end
-
 function GameUIMission:OnGetAchievementRewardButtonClicked(data)
     NetManager:getGrowUpTaskRewardsPromise(data:TaskType(), data.id):next(function()
         GameGlobalUI:showTips(_("获得奖励"), data:GetRewards())
-        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
+        if not self.is_hooray_on then
+            self.is_hooray_on = true
+            app:GetAudioManager():PlayeEffectSoundWithKey("HOORAY")
+            
+            self:performWithDelay(function()
+                self.is_hooray_on = false
+            end, 1.5)
+        end
     end)
 end
 
@@ -431,5 +437,6 @@ function GameUIMission:dailyListviewListener(event)
     end
 end
 return GameUIMission
+
 
 

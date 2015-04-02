@@ -32,6 +32,10 @@ function WidgetManufacture:OnMaterialsChanged(material_manager, material_type, c
         self.building_item:SetStoreMaterials(LuaUtils:table_map(changed, function(k, v)
             return k, v.new
         end))
+    elseif MaterialManager.MATERIAL_TYPE.TECHNOLOGY == material_type then
+        self.technology_event:SetStoreMaterials(LuaUtils:table_map(changed, function(k, v)
+            return k, v.new
+        end))
     end
 end
 --

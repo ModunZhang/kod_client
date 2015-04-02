@@ -53,12 +53,11 @@ typedef SSIZE_T ssize_t;
 
 
 NS_CC_BEGIN
-#ifdef COCOS2D_DEBUG
+
 /// The max length of CCLog message.
-static const int MAX_LOG_LENGTH = 1024*1024;
-#else
+
 static const int MAX_LOG_LENGTH = 16*1024;
-#endif
+
 /**
  @brief Output Debug message.
  */

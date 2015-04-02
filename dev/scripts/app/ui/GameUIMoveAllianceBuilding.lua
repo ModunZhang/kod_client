@@ -7,7 +7,7 @@ local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local GameUIMoveAllianceBuilding = UIKit:createUIClass("GameUIMoveAllianceBuilding")
 local WidgetPushButton = import("..widget.WidgetPushButton")
-local config_alliance_building = GameDatas.AllianceBuilding
+local config_alliance_building = GameDatas.AllianceInitData.buildingName
 local Localize = import("..utils.Localize")
 
 function GameUIMoveAllianceBuilding:ctor(params)
@@ -63,8 +63,8 @@ function GameUIMoveAllianceBuilding:GetListData()
 end
 
 function GameUIMoveAllianceBuilding:GetMoveNeedHonour(buildingKey,level)
-	if config_alliance_building[buildingKey] and config_alliance_building[buildingKey][level] then 
-		return config_alliance_building[buildingKey][level].moveNeedHonour
+	if config_alliance_building[buildingKey] then 
+		return config_alliance_building[buildingKey].moveNeedHonour
 	else
 		return 0
 	end
@@ -162,7 +162,7 @@ function GameUIMoveAllianceBuilding:GetItem(data)
 end
 
 function GameUIMoveAllianceBuilding:OnMoveButtonClick(data)
-	dump(data.obj,"data--->obj")
+	-- dump(data.obj,"data--->obj")
 	if not Alliance_Manager:GetMyAlliance():GetAllianceMap():CanMoveBuilding(data.obj,self.target_location.x,self.target_location.y) then
 		UIKit:showMessageDialog(nil, _("不能移动到目标点位"),function()end)
 		return

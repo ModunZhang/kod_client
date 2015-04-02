@@ -81,7 +81,6 @@ end
 
 -- 过滤器
 local function get_response_msg(response)
-    dump(response,"get_response_msg---->")
     if response.msg.playerData then
         local user_data = DataManager:getUserData()
         local edit = decodeInUserDataFromDeltaData(user_data, response.msg.playerData)
@@ -93,7 +92,6 @@ local function get_response_msg(response)
     return response
 end
 local function get_response_mail_msg(response)
-    dump(response,"get_response_mail_msg---->")
     if response.msg.playerData then
         local user_data = DataManager:getUserData()
         local mail_response = response.msg.playerData
@@ -121,7 +119,6 @@ local function get_response_mail_msg(response)
     return response
 end
 local function get_response_report_msg(response)
-    dump(response,"get_response_report_msg---->")
     if response.msg.playerData then
         local user_data = DataManager:getUserData()
         local report_response = response.msg.playerData
@@ -150,7 +147,6 @@ local function get_response_report_msg(response)
 end
 
 local function get_alliance_response_msg(response)
-    print("get_alliance_response_msg--->")
     if response.msg.allianceData then
         local user_alliance_data = DataManager:getUserAllianceData()
         if user_alliance_data == json.null then
@@ -568,11 +564,14 @@ local function get_recruitNormalSoldier_promise(soldierName, count, finish_now)
     }, "招募普通士兵失败!"):next(get_response_msg)
 end
 function NetManager:getRecruitNormalSoldierPromise(soldierName, count, cb)
-    return get_recruitNormalSoldier_promise(soldierName, count)
+    return get_recruitNormalSoldier_promise(soldierName, count):next(function(response)
+            app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_RECRUIT")
+        return response
+    end)
 end
 function NetManager:getInstantRecruitNormalSoldierPromise(soldierName, count, cb)
     return get_recruitNormalSoldier_promise(soldierName, count, true):next(function()
-        app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_COMPLETE")
+        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
     end)
 end
 -- 招募特殊士兵
@@ -584,11 +583,14 @@ local function get_recruitSpecialSoldier_promise(soldierName, count, finish_now)
     }, "招募特殊士兵失败!"):next(get_response_msg)
 end
 function NetManager:getRecruitSpecialSoldierPromise(soldierName, count)
-    return get_recruitSpecialSoldier_promise(soldierName, count)
+    return get_recruitSpecialSoldier_promise(soldierName, count):next(function(response)
+            app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_RECRUIT")
+        return response
+    end)
 end
 function NetManager:getInstantRecruitSpecialSoldierPromise(soldierName, count)
     return get_recruitSpecialSoldier_promise(soldierName, count, true):next(function()
-        app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_COMPLETE")
+        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
     end)
 end
 -- 普通治疗士兵
@@ -1022,7 +1024,7 @@ function NetManager:getMoveAllianceMemberPromise(locationX, locationY)
     return get_blocking_request_promise("logic.allianceHandler.moveAllianceMember", {
         locationX = locationX,
         locationY = locationY
-    }, "移动玩家城市失败!"):next(get_response_msg)
+    }, "移动玩家城市失败!")
 end
 -- 拆除装饰物
 function NetManager:getDistroyAllianceDecoratePromise(decorateId)
