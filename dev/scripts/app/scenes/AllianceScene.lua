@@ -35,7 +35,15 @@ function AllianceScene:GotoCurrectPosition()
     local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(location.x, location.y)
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
 end
-
+function AllianceScene:EnterEditMode()
+    self:GetHomePage():DisplayOff()
+end
+function AllianceScene:LeaveEditMode()
+    self:GetHomePage():DisplayOn()
+end
+function AllianceScene:IsEditMode()
+    return self:GetHomePage():IsDisplayOn()
+end
 function AllianceScene:CreateAllianceUI()
     -- local home_page = UIKit:newGameUI('GameUIAllianceHome',Alliance_Manager:GetMyAlliance()):AddToScene(self)
     local home_page = GameUIAllianceHome.new(self:GetAlliance()):addTo(self)
