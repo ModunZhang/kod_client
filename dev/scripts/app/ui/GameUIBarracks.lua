@@ -11,7 +11,6 @@ local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetTimerProgress = import("..widget.WidgetTimerProgress")
 local WidgetRecruitSoldier = import("..widget.WidgetRecruitSoldier")
 local SoldierManager = import("..entity.SoldierManager")
-local GameUIBarracksSpeedUp = import(".GameUIBarracksSpeedUp")
 local GameUIBarracks = UIKit:createUIClass("GameUIBarracks", "GameUIUpgradeBuilding")
 local WidgetRecruitSoldier_tag = 1
 function GameUIBarracks:ctor(city, barracks)
@@ -82,10 +81,8 @@ function GameUIBarracks:CreateTimerAndTips()
         :align(display.CENTER, window.cx, window.top - 160)
         :hide()
         :OnButtonClicked(function(event)
-            GameUIBarracksSpeedUp.new(self.barracks):AddToCurrentScene(true)
-            -- print("hello")
+            UIKit:newGameUI("GameUIBarracksSpeedUp",self.barracks):AddToCurrentScene(true)
         end)
-    -- self.timer:GetSpeedUpButton():setButtonEnabled(false)
     return timerAndTips
 end
 

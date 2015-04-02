@@ -2,6 +2,7 @@ local barracks_config = GameDatas.BuildingFunction.barracks
 local NORMAL = GameDatas.Soldiers.normal
 local SPECIAL = GameDatas.Soldiers.special
 local promise = import("..utils.promise")
+local Localize = import("..utils.Localize")
 local Observer = import(".Observer")
 local UpgradeBuilding = import(".UpgradeBuilding")
 local BarracksUpgradeBuilding = class("BarracksUpgradeBuilding", UpgradeBuilding)
@@ -27,10 +28,16 @@ function BarracksUpgradeBuilding:CreateEvent()
         self.id = nil
     end
     function event:SetRecruitInfo(soldier_type, count, finish_time ,id )
+        local old_ = self.id
         self.soldier_type = soldier_type
         self.soldier_count = count
         self.finished_time = finish_time
         self.id = id
+        if finish_time == 0 or not soldier_type then
+            barracks:CancelSoldierLocalPush(old_)
+        else
+            barracks:GeneralSoldierLocalPush(self)
+        end
     end
     function event:Id()
         return self.id
@@ -96,6 +103,19 @@ function BarracksUpgradeBuilding:IsRecruitEventEmpty()
 end
 function BarracksUpgradeBuilding:IsRecruting()
     return not self.recruit_event:IsEmpty()
+end
+function BarracksUpgradeBuilding:GeneralSoldierLocalPush(event)
+    if ext and ext.localpush then
+        local soldier_type, soldier_count = event:GetRecruitInfo()
+        local pushIdentity = event:Id()
+        local title = string.format(_("招募%s X%d完成"),Localize.soldier_name[soldier_type],soldier_count)
+        app:GetPushManager():UpdateSoldierPush(event:FinishTime(),title,pushIdentity)
+    end
+end
+function BarracksUpgradeBuilding:CancelSoldierLocalPush(pushIdentity)
+    if ext and ext.localpush then
+        app:GetPushManager():CancelSoldierPush(pushIdentity)
+    end
 end
 function BarracksUpgradeBuilding:RecruitSoldiersWithFinishTime(soldier_type, count, finish_time,id)
     local event = self.recruit_event
