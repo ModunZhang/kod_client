@@ -1,5 +1,6 @@
 local Enum = import("..utils.Enum")
 local Observer = import(".Observer")
+local Localize = import("..utils.Localize")
 local MaterialManager = class("MaterialManager", Observer)
 MaterialManager.MATERIAL_TYPE = Enum("BUILD", "TECHNOLOGY","DRAGON", "SOLDIER", "EQUIPMENT")
 local MATERIAL_TYPE = MaterialManager.MATERIAL_TYPE
@@ -102,6 +103,24 @@ function MaterialManager:OnMaterialsComing(material_type, materials)
             changed[k] = {old = old, new = new}
         end
     end
+    -- 如果是增加材料则弹出提示
+    if next(changed) and display.getRunningScene().__cname ~= "MainScene" then
+        local get_list = ""
+        for k,v in pairs(changed) do
+            local add = v.new-v.old
+            if add>0 then
+                local m_name = Localize.equip_material[k] or Localize.equip[k] or Localize.materials[k] or  k
+                get_list = get_list .. m_name .. "X"..add
+            end
+        end
+        if get_list ~="" then
+            if material_type == EQUIPMENT then
+                GameGlobalUI:showTips(_("制造装备完成"),get_list)
+            else
+                GameGlobalUI:showTips(_("获得材料"),get_list)
+            end
+        end
+    end
     if next(changed) then
         self:NotifyObservers(function(listener)
             listener:OnMaterialsChanged(self, material_type, changed)
@@ -110,6 +129,8 @@ function MaterialManager:OnMaterialsComing(material_type, materials)
 end
 
 return MaterialManager
+
+
 
 
 

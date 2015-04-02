@@ -97,6 +97,16 @@ local EQUIP_LOCALIZE = {
     ["greenSting_s3"] = _("本地化缺失"),
     ["blueArmguard_s1"] = _("本地化缺失"),
 }
+local MATERIALS_MAP = {
+    blueprints =  _("建筑图纸"), 
+    tools =  _("建筑工具"), 
+    tiles =  _("砖石瓦片"), 
+    pulley =  _("滑轮组"),
+    trainingFigure =   _("木人桩"),
+    bowTarget = _("箭靶"),
+    saddle =  _("马鞍"), 
+    ironPart =   _("精铁零件"),
+}
 local DRAGON_LOCALIZE = {
     ["redDragon"] = _("红龙"),
     ["blueDragon"] = _("蓝龙"),
@@ -728,10 +738,24 @@ local IAP_PACKAGE_NAME = {
     product_5 = _("龙族王朝礼包"),
 }
 
+local DAILY_QUESTS_NAME = {
+    [0] = _("零"),
+    _("一"),
+    _("二"),
+    _("三"),
+    _("四"),
+    _("五"),
+    _("六"),
+    _("七"),
+    _("八"),
+    _("九"),
+}
+
 return {
     equip_material = EQUIP_MATERIAL_LOCALIZE,
     equip = EQUIP_LOCALIZE,
     dragon = DRAGON_LOCALIZE,
+    materials = MATERIALS_MAP,
     body = BODY_LOCALIZE,
     dragon_skill_effection = DRAGON_SKILL_EFFECTION,
     dragon_skill = DRAGON_SKILL,
@@ -767,4 +791,5 @@ return {
     selenaquestion_tips = SELENAQUESTION_TIPS,
     alliance_buildings = ALLIANCE_BUILDINGS,
     iap_package_name = IAP_PACKAGE_NAME,
+    daily_quests_name = DAILY_QUESTS_NAME
 }

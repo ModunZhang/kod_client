@@ -113,9 +113,7 @@ function WidgetMilitaryTechnologyStatus:RefreshTop()
         local event = tech_start_time>soldier_star_start_time and military_tech_event or soldier_star_event
         self.event = event
         if military_tech_event == event then
-            local name = military_tech_event:Name()
-            local level = soldier_manager:GetMilitaryTechsLevelByName(name)
-            upgrade_node:SetUpgradeTip(string.format(_("研发对%s的攻击 Lv %d"),Localize.soldier_category[string.split(name, "_")[2]],level+1))
+            upgrade_node:SetUpgradeTip(military_tech_event:GetLocalizeDesc())
             self.event.type = "militaryTechEvents"
         end
         if soldier_star_event == event then

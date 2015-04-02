@@ -11,6 +11,8 @@ local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local StarBar = import("..ui.StarBar")
 local UILib = import(".UILib")
 local WidgetInfo = import("..widget.WidgetInfo")
+local dailyQuests_config = GameDatas.DailyQuests.dailyQuests
+local dailyQuestStar_config = GameDatas.DailyQuests.dailyQuestStar
 local GameUITownHall = UIKit:createUIClass("GameUITownHall", "GameUIUpgradeBuilding")
 function GameUITownHall:ctor(city, townHall)
     GameUITownHall.super.ctor(self, city, _("市政厅"), townHall)
@@ -126,7 +128,7 @@ function GameUITownHall:CreateAllQuests(daily_quests)
 end
 
 function GameUITownHall:CreateQuestItem(quest,index)
-    local quest_config = GameDatas.DailyQuests.dailyQuests[quest.index]
+    local quest_config = dailyQuests_config[quest.index]
     local list = self.quest_list_view
     local item = list:newItem()
     local item_width,item_height = 568,218
@@ -263,7 +265,7 @@ function GameUITownHall:CreateQuestItem(quest,index)
             add_star_btn:setVisible(true)
             star_bar:setPositionX(title_bg:getContentSize().width-50)
             status = _("需要")
-            need_time_label:setString(GameUtils:formatTimeStyle1(GameDatas.DailyQuests.dailyQuestStar[quest.star].needMinutes*60))
+            need_time_label:setString(GameUtils:formatTimeStyle1(dailyQuestStar_config[quest.star].needMinutes*60))
             progress:setVisible(false)
         end
         status_label:setString(status)
@@ -281,7 +283,7 @@ function GameUITownHall:CreateQuestItem(quest,index)
             size = 20,
             color = 0x403c2f,
         }):align(display.LEFT_CENTER,10,reward_bg:getContentSize().height/2):addTo(reward_bg)
-        local rewards = GameDatas.DailyQuests.dailyQuests[quest.index].rewards
+        local rewards = dailyQuests_config[quest.index].rewards
         local origin_x = re_label:getPositionX()+re_label:getContentSize().width + 30
         for k,v in pairs(string.split(rewards,",")) do
             local re = string.split(v,":")
@@ -307,7 +309,7 @@ function GameUITownHall:CreateQuestItem(quest,index)
         self:BindQuest(quest)
         self:SetReward(quest)
         self:SetStar(quest)
-        need_time_label:setString(GameUtils:formatTimeStyle1(GameDatas.DailyQuests.dailyQuestStar[quest.star].needMinutes*60))
+        need_time_label:setString(GameUtils:formatTimeStyle1(dailyQuestStar_config[quest.star].needMinutes*60))
         if User:IsQuestStarted(quest) then
             if User:IsQuestFinished(quest) then
                 TownHallUI.isFinishedQuest = true
