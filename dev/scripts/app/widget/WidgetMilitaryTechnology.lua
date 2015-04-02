@@ -68,7 +68,7 @@ function WidgetMilitaryTechnology:CreateItem(tech)
     local title_bg = display.newScale9Sprite("title_blue_430x30.png",item_width/2,item_height-25,cc.size(550,30),cc.rect(15,10,400,10))
         :addTo(content)
     local temp = UIKit:ttfLabel({
-        text = string.format(_("对%s的攻击"),Localize.soldier_category[string.split(tech:Name(), "_")[2]]) ,
+        text = tech:GetTechLocalize() ,
         size = 22,
         color = 0xffedae,
     }):align(display.LEFT_CENTER, 20 , title_bg:getContentSize().height/2)

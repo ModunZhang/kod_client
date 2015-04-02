@@ -1,6 +1,7 @@
 local PVEDatabase = import(".PVEDatabase")
 local Resource = import(".Resource")
 local VipEvent = import(".VipEvent")
+local Localize = import("..utils.Localize")
 local GrowUpTaskManager = import(".GrowUpTaskManager")
 local AutomaticUpdateResource = import(".AutomaticUpdateResource")
 local property = import("..utils.property")
@@ -533,10 +534,14 @@ function User:OnDailyQuestsEventsChanged(userData,deltaData)
                 end
             end
             if k == "edit" then
-                for _,data in ipairs(v) do
+                for i,data in ipairs(v) do
                     if self.dailyQuestEvents[data.id] then
                         self.dailyQuestEvents[data.id] = data
                         table.insert(edit,data)
+
+                        if data.finishTime == 0 then
+                            GameGlobalUI:showTips(_("提示"),string.format(_('每日任务%s完成'),Localize.daily_quests_name[data.index]))
+                        end
                     end
                 end
             end
@@ -546,15 +551,6 @@ function User:OnDailyQuestsEventsChanged(userData,deltaData)
                         self.dailyQuestEvents[data.id] = nil
                         table.insert(remove,data)
                     end
-                end
-            end
-            if tolua.type(k) == "number" then
-                local u_dailyQuestEvent = DataManager:getUserData().dailyQuestEvents[k]
-                if u_dailyQuestEvent then
-                    for attr,value in pairs(v) do
-                        self.dailyQuestEvents[u_dailyQuestEvent.id][attr] = value
-                    end
-                    table.insert(edit,clone(u_dailyQuestEvent))
                 end
             end
         end
@@ -616,6 +612,7 @@ function User:GetBestDragon()
 end
 
 return User
+
 
 
 

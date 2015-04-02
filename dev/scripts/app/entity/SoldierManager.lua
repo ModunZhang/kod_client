@@ -1,6 +1,7 @@
 local NORMAL = GameDatas.Soldiers.normal
 local SPECIAL = GameDatas.Soldiers.special
 local Enum = import("..utils.Enum")
+local Localize = import("..utils.Localize")
 local MultiObserver = import(".MultiObserver")
 local MilitaryTechnology = import(".MilitaryTechnology")
 local MilitaryTechEvents = import(".MilitaryTechEvents")
@@ -218,11 +219,32 @@ function SoldierManager:OnUserDataChanged(user_data,current_time, deltaData)
     if is_delta_update then
         local soldier_map = self.soldier_map
         local changed = {}
+        local old_soldier = {}
         for k, new in pairs(deltaData.soldiers) do
+            local old = soldier_map[k]
             soldier_map[k] = new
             table.insert(changed, k)
+            old_soldier[k] = {old = old,new = new}
         end
         if #changed > 0 then
+            -- 士兵增加提示
+            if display.getRunningScene().__cname ~= "MainScene" then
+                local get_list = ""
+                for k,v in pairs(old_soldier) do
+                    local add = v.new-v.old
+                    if add>0 then
+                        local m_name = Localize.soldier_name[k]
+                        get_list = get_list .. m_name .. "X"..add
+                    end
+                end
+                if get_list ~="" then
+                    if deltaData.treatSoldierEvents and deltaData.treatSoldierEvents.remove or deltaData.woundedSoldiers then
+                        GameGlobalUI:showTips(_("治愈士兵完成"),get_list)
+                    else
+                        GameGlobalUI:showTips(_("招募士兵完成"),get_list)
+                    end
+                end
+            end
             self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED,function(listener)
                 listener:OnSoliderCountChanged(self, changed)
             end)
@@ -247,11 +269,15 @@ function SoldierManager:OnUserDataChanged(user_data,current_time, deltaData)
     is_delta_update = not is_fully_update and deltaData.soldierStars ~= nil
     if is_delta_update then
         local soldier_star_changed = {}
-        for k,v in pairs(deltaData.soldierStars) do
-            self.soldierStars[k] = v
-            table.insert(soldier_star_changed, k)
+        for k,new in pairs(deltaData.soldierStars) do
+            local old = self.soldierStars[k]
+            if old ~= new then
+                self.soldierStars[k] = new
+                table.insert(soldier_star_changed, k)
+            end
         end
         if #soldier_star_changed > 0 then
+            GameGlobalUI:showTips(_("士兵晋级完成"),string.format(_('晋级%s至%d星完成'),Localize.soldier_name[soldier_star_changed[1]],self:GetStarBySoldierType(soldier_star_changed[1])))
             self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED,function(listener)
                 listener:OnSoliderStarCountChanged(self, soldier_star_changed)
             end)
@@ -290,6 +316,7 @@ function SoldierManager:OnMilitaryTechsDataChanged(militaryTechs)
         militaryTechnology:UpdateData(name,v)
         self.militaryTechs[name] = militaryTechnology
     end
+
     self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.MILITARY_TECHS_DATA_CHANGED, function(listener)
         listener:OnMilitaryTechsDataChanged(self,self.militaryTechs)
     end)
@@ -301,6 +328,9 @@ function SoldierManager:OnPartOfMilitaryTechsDataChanged(militaryTechs)
             self.militaryTechs[k]:UpdateData(k,v)
             changed_map[k] = self.militaryTechs[k]
         end
+    end
+    for k,v in pairs(changed_map) do
+        GameGlobalUI:showTips(_("军事科技升级完成"),v:GetTechLocalize().."Lv"..v:Level())
     end
     self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.MILITARY_TECHS_DATA_CHANGED, function(listener)
         listener:OnMilitaryTechsDataChanged(self,changed_map)
@@ -522,7 +552,7 @@ function SoldierManager:OnSoldierStarEventsChanged(soldierStarEvents)
         self.soldierStarEvents[event:Id()] = event
     end
     self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.ALL_SOLDIER_STAR_EVENTS_CHANGED, function(listener)
-        listener:OnSoldierStarEventsChanged(self,self.soldierStarEvents)
+        listener:OnAllSoldierStarEventsChanged(self,self.soldierStarEvents)
     end)
 end
 function SoldierManager:GetPromotingSoldierName(building_type)
@@ -589,6 +619,12 @@ function SoldierManager:OnMilitaryTechEventsTimer(tech_event)
     end)
 end
 return SoldierManager
+
+
+
+
+
+
 
 
 

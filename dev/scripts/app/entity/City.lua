@@ -1460,6 +1460,7 @@ function City:OnProductionTechsDataChanged(productionTechs)
             need_fast_update_all_techs = false
             if productionTechnology and productionTechnology:Level() ~= v.level then
                 productionTechnology:SetLevel(v.level)
+                GameGlobalUI:showTips(_("生产科技升级完成"),productionTechnology:GetLocalizedName().."Lv"..productionTechnology:Level())
                 local changed = self:CheckDependTechsLockState(productionTechnology)
                 table.insert(edited, productionTechnology)
                 table.insertto(edited,changed)

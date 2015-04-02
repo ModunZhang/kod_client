@@ -24,6 +24,12 @@ militaryTechs["infantry_siege"] = {
 	["techPointPerLevel"] = 10000,
 	["building"] = "trainingGround"
 }
+militaryTechs["infantry_hpAdd"] = {
+	["name"] = "infantry_hpAdd",
+	["effectPerLevel"] = 0.050000,
+	["techPointPerLevel"] = 10000,
+	["building"] = "trainingGround"
+}
 militaryTechs["archer_infantry"] = {
 	["name"] = "archer_infantry",
 	["effectPerLevel"] = 0.050000,
@@ -44,6 +50,12 @@ militaryTechs["archer_cavalry"] = {
 }
 militaryTechs["archer_siege"] = {
 	["name"] = "archer_siege",
+	["effectPerLevel"] = 0.050000,
+	["techPointPerLevel"] = 10000,
+	["building"] = "hunterHall"
+}
+militaryTechs["archer_hpAdd"] = {
+	["name"] = "archer_hpAdd",
 	["effectPerLevel"] = 0.050000,
 	["techPointPerLevel"] = 10000,
 	["building"] = "hunterHall"
@@ -72,6 +84,12 @@ militaryTechs["cavalry_siege"] = {
 	["techPointPerLevel"] = 10000,
 	["building"] = "stable"
 }
+militaryTechs["cavalry_hpAdd"] = {
+	["name"] = "cavalry_hpAdd",
+	["effectPerLevel"] = 0.050000,
+	["techPointPerLevel"] = 10000,
+	["building"] = "stable"
+}
 militaryTechs["siege_infantry"] = {
 	["name"] = "siege_infantry",
 	["effectPerLevel"] = 0.050000,
@@ -92,6 +110,12 @@ militaryTechs["siege_cavalry"] = {
 }
 militaryTechs["siege_siege"] = {
 	["name"] = "siege_siege",
+	["effectPerLevel"] = 0.050000,
+	["techPointPerLevel"] = 10000,
+	["building"] = "workshop"
+}
+militaryTechs["siege_hpAdd"] = {
+	["name"] = "siege_hpAdd",
 	["effectPerLevel"] = 0.050000,
 	["techPointPerLevel"] = 10000,
 	["building"] = "workshop"

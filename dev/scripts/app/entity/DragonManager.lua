@@ -3,6 +3,7 @@
 -- Date: 2014-10-27 21:33:54
 --
 local Enum = import("app.utils.Enum")
+local Localize = import("app.utils.Localize")
 local property = import("app.utils.property")
 local MultiObserver = import("app.entity.MultiObserver")
 local DragonManager = class("DragonManager", MultiObserver)
@@ -176,6 +177,9 @@ function DragonManager:RefreshDragonEvents(user_data,deltaData)
                     self.dragon_events[event_data.dragonType] = nil
                     dragonEvent = DragonEvent.new()
                     dragonEvent:UpdateData(event_data)
+
+                    GameGlobalUI:showTips(_("提示"),string.format(_('孵化%s完成'),Localize.dragon[event_data.dragonType]))
+
                     return dragonEvent
                 end
             end
@@ -246,6 +250,7 @@ function DragonManager:RefreshDragonDeathEvents(user_data,deltaData)
                     self.dragonDeathEvents[event_data.dragonType] = nil
                     dragonDeathEvent = DragonDeathEvent.new()
                     dragonDeathEvent:UpdateData(event_data)
+                    GameGlobalUI:showTips(_("提示"),string.format(_('%s已经复活'),Localize.dragon[event_data.dragonType]))
                     return dragonDeathEvent
                 end
             end
@@ -296,6 +301,8 @@ function DragonManager:RefreshDragonData( dragons,resource_refresh_time,hp_recov
                     need_notify_defence = isDefenced ~= dragon:IsDefenced()
                 end
                 if dragonIsHated_ ~= dragon:Ishated() then
+                    GameGlobalUI:showTips(_("提示"),string.format(_('孵化%s完成'),Localize.dragon[dragon:Type()]))
+
                     self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnDragonHatched,function(lisenter)
                         lisenter.OnDragonHatched(lisenter,dragon)
                     end)
