@@ -887,6 +887,14 @@ function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc,buyAndUseFun
             if item:Price() > User:GetGemResource():GetValue() then
                 FullScreenPopDialogUI.new():SetTitle(_("提示"))
                     :SetPopMessage(_("宝石不足"))
+                    :CreateOKButton(
+                        {
+                            listener = function ()
+                                UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                            end,
+                            btn_name= _("前往商店")
+                        }
+                    )
                     :AddToCurrentScene()
             else
                 buyAndUseFunc()
@@ -938,6 +946,7 @@ function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc,buyAndUseFun
 end
 
 return WidgetUseItems
+
 
 
 

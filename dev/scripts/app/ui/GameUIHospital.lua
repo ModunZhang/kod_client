@@ -239,7 +239,16 @@ function GameUIHospital:TreatListener()
             :SetPopMessage(_("没有伤兵需要治愈")):AddToCurrentScene()
     elseif City:GetUser():GetGemResource():GetValue()< self.building:GetTreatGems(soldiers) then
         local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
-            :SetPopMessage(_("没有足够的宝石补充资源")):AddToCurrentScene()
+            :SetPopMessage(_("没有足够的宝石补充资源"))
+            :CreateOKButton(
+                {
+                    listener = function ()
+                        UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                        self:LeftButtonClicked()
+                    end,
+                    btn_name= _("前往商店")
+                }
+            ):AddToCurrentScene()
     elseif isAbleToTreat==HospitalUpgradeBuilding.CAN_NOT_TREAT.TREATING_AND_LACK_RESOURCE then
         local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
             :SetPopMessage(_("正在治愈，资源不足"))
@@ -286,7 +295,15 @@ function GameUIHospital:TreatNowListener()
             :SetPopMessage(_("没有伤兵需要治愈")):AddToCurrentScene()
     elseif self.treat_all_now_need_gems>City:GetUser():GetGemResource():GetValue() then
         local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
-            :SetPopMessage(_("宝石补足")):AddToCurrentScene()
+            :SetPopMessage(_("宝石补足")) :CreateOKButton(
+                {
+                    listener = function ()
+                        UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                        self:LeftButtonClicked()
+                    end,
+                    btn_name= _("前往商店")
+                }
+            ):AddToCurrentScene()
     else
         treat_fun()
     end

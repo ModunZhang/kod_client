@@ -244,20 +244,33 @@ function WidgetPromoteSoldier:OnMilitaryTechsDataChanged( soldier_manager,change
 end
 function WidgetPromoteSoldier:PopNotSatisfyDialog(upgrade_listener,results)
     local message = ""
+    local gem_not_enough =false
     for k,v in pairs(results) do
         message = message .. v.."\n"
+        if v == _("宝石不足") then
+            gem_not_enough = true
+        end
     end
     local dialog =  FullScreenPopDialogUI.new():SetTitle(_("提示"))
         :SetPopMessage(message)
-        :CreateOKButton({
-            listener =  upgrade_listener
-        })
         :AddToCurrentScene()
     local need_gem = self:GetUpgradeGems()
     if need_gem==0 then
         dialog:CreateCancelButton()
     else
         dialog:CreateNeeds({value = self:GetUpgradeGems()})
+    end
+    if gem_not_enough or need_gem > User:GetGemResource():GetValue() then
+        dialog:CreateOKButton({
+            listener =  function ()
+                UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+            end,
+            btn_name = _("前往商店")
+        })
+    else
+        dialog:CreateOKButton({
+            listener =  upgrade_listener
+        })
     end
 end
 function WidgetPromoteSoldier:GetInstantUpgradeGems()

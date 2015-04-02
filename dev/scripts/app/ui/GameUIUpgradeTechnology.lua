@@ -20,8 +20,8 @@ function GameUIUpgradeTechnology:GetProductionTechnology()
 end
 
 function GameUIUpgradeTechnology:onEnter()
-	GameUIUpgradeTechnology.super.onEnter(self)
-	self:BuildUI()
+    GameUIUpgradeTechnology.super.onEnter(self)
+    self:BuildUI()
     City:AddListenOnType(self,City.LISTEN_TYPE.PRODUCTION_DATA_CHANGED)
     self:RefreshButtonState()
 end
@@ -58,12 +58,12 @@ function GameUIUpgradeTechnology:GetLevelUpBuffTimeStr()
     if self:CheckIsMeUpgrade() and not self:CheckMeIsReachLimitLevel() then
         buildTime = self:GetProductionTechnology():GetNextLevelUpCost().buildTime
     end
-    buildTime = self:GetProductionTechnology():GetLevelUpCost().buildTime 
+    buildTime = self:GetProductionTechnology():GetLevelUpCost().buildTime
     return  GameUtils:formatTimeStyle1(DataUtils:getTechnilogyUpgradeBuffTime(buildTime))
 end
 
 function GameUIUpgradeTechnology:GetLevelUpTimeStr()
-   
+
     if self:CheckIsMeUpgrade() and not self:CheckMeIsReachLimitLevel() then
         return GameUtils:formatTimeStyle1(self:GetProductionTechnology():GetNextLevelUpCost().buildTime)
     end
@@ -78,7 +78,7 @@ function GameUIUpgradeTechnology:GetBuffEffectStr()
 end
 
 function GameUIUpgradeTechnology:GetNextLevelBuffEffectStr()
-     if self:CheckIsMeUpgrade() and not self:CheckMeIsReachLimitLevel() then
+    if self:CheckIsMeUpgrade() and not self:CheckMeIsReachLimitLevel() then
         if self:GetProductionTechnology():GetNextNexLevelBuffEffectVal() then
             return  self:GetProductionTechnology():GetNextNexLevelBuffEffectVal()  * 100  .. "%"
         else
@@ -140,66 +140,66 @@ function GameUIUpgradeTechnology:GetTechIcon()
 end
 
 function GameUIUpgradeTechnology:BuildUI()
-	UIKit:shadowLayer():addTo(self)
-	local bg_node =  WidgetUIBackGround.new({height = HEIGHT,isFrame = "no"}):addTo(self):align(display.TOP_CENTER, window.cx, window.top_bottom - 100)
-	local title_bar = display.newSprite("title_blue_600x52.png"):align(display.BOTTOM_CENTER,304,HEIGHT - 15):addTo(bg_node)
-	UIKit:closeButton():align(display.RIGHT_BOTTOM,600, 0):addTo(title_bar):onButtonClicked(function()
-		self:LeftButtonClicked()
-	end)
-	UIKit:ttfLabel({text = _("科技研发"),
-		size = 22,
+    UIKit:shadowLayer():addTo(self)
+    local bg_node =  WidgetUIBackGround.new({height = HEIGHT,isFrame = "no"}):addTo(self):align(display.TOP_CENTER, window.cx, window.top_bottom - 100)
+    local title_bar = display.newSprite("title_blue_600x52.png"):align(display.BOTTOM_CENTER,304,HEIGHT - 15):addTo(bg_node)
+    UIKit:closeButton():align(display.RIGHT_BOTTOM,600, 0):addTo(title_bar):onButtonClicked(function()
+        self:LeftButtonClicked()
+    end)
+    UIKit:ttfLabel({text = _("科技研发"),
+        size = 22,
         color = 0xffedae
     }):align(display.CENTER,300, 22):addTo(title_bar)
     local box = display.newSprite("alliance_item_flag_box_126X126.png"):align(display.LEFT_TOP, 20, title_bar:getPositionY() - 20):addTo(bg_node)
     self.tech_bg = self:GetTechIcon():pos(63,63):addTo(box):scale(0.95)
     local title = display.newSprite("technology_title_438x30.png")
-    	:align(display.LEFT_TOP,box:getPositionX()+box:getContentSize().width + 10, box:getPositionY())
-    	:addTo(bg_node)
+        :align(display.LEFT_TOP,box:getPositionX()+box:getContentSize().width + 10, box:getPositionY())
+        :addTo(bg_node)
     self.lv_label = UIKit:ttfLabel({
-    	text = self:GetTechLevelStr(),
-    	size = 22,
-    	color= 0xffedae
+        text = self:GetTechLevelStr(),
+        size = 22,
+        color= 0xffedae
     }):align(display.LEFT_CENTER, 20, 15):addTo(title)
     local line_2 = display.newScale9Sprite("dividing_line_594x2.png"):size(422,1)
-    	:align(display.LEFT_BOTTOM,box:getPositionX()+box:getContentSize().width + 10, box:getPositionY()-box:getContentSize().height)
-    	:addTo(bg_node)
+        :align(display.LEFT_BOTTOM,box:getPositionX()+box:getContentSize().width + 10, box:getPositionY()-box:getContentSize().height)
+        :addTo(bg_node)
     local next_effect_desc = UIKit:ttfLabel({
-    	text = _("下一级"),
-    	size = 20,
-    	color= 0x797154
+        text = _("下一级"),
+        size = 20,
+        color= 0x797154
     }):align(display.LEFT_BOTTOM,line_2:getPositionX(), line_2:getPositionY() + 5):addTo(bg_node)
     self.next_effect_desc_label = next_effect_desc
     local next_effect_val_label = UIKit:ttfLabel({
-    	text = "", --self:GetProductionTechnology():GetNextLevelBuffEffectVal() * 100  .. "%",
-    	size = 22,
-    	color= 0x403c2f
+        text = "", --self:GetProductionTechnology():GetNextLevelBuffEffectVal() * 100  .. "%",
+        size = 22,
+        color= 0x403c2f
     }):align(display.RIGHT_BOTTOM,line_2:getPositionX()+line_2:getContentSize().width, next_effect_desc:getPositionY()):addTo(bg_node)
     self.next_effect_val_label = next_effect_val_label
     local line_1 = display.newScale9Sprite("dividing_line_594x2.png"):size(422,1)
-    	:align(display.LEFT_BOTTOM,line_2:getPositionX(), line_2:getPositionY() + 40)
-    	:addTo(bg_node)
+        :align(display.LEFT_BOTTOM,line_2:getPositionX(), line_2:getPositionY() + 40)
+        :addTo(bg_node)
 
     local current_effect_desc = UIKit:ttfLabel({
-    	text = self:GetProductionTechnology():GetBuffLocalizedDesc(),
-    	size = 20,
-    	color= 0x797154
+        text = self:GetProductionTechnology():GetBuffLocalizedDesc(),
+        size = 20,
+        color= 0x797154
     }):align(display.LEFT_BOTTOM,line_1:getPositionX(), line_1:getPositionY() + 5):addTo(bg_node)
-   	local current_effect_val_label = UIKit:ttfLabel({
-    	text = "",--self:GetProductionTechnology():GetBuffEffectVal() * 100  .. "%",
-    	size = 22,
-    	color= 0x403c2f
+    local current_effect_val_label = UIKit:ttfLabel({
+        text = "",--self:GetProductionTechnology():GetBuffEffectVal() * 100  .. "%",
+        size = 22,
+        color= 0x403c2f
     }):align(display.RIGHT_BOTTOM,line_1:getPositionX()+line_1:getContentSize().width, current_effect_desc:getPositionY()):addTo(bg_node)
     self.current_effect_val_label = current_effect_val_label
-   local btn_now = UIKit:commonButtonWithBG(
-    {
-        w=250,
-        h=65,
-        style = UIKit.BTN_COLOR.GREEN,
-        labelParams = {text = _("立即研发")},
-        listener = function ()
-            self:OnUpgradNowButtonClicked()
-        end,
-    }):align(display.LEFT_TOP, 30, line_2:getPositionY() - 30):addTo(bg_node)
+    local btn_now = UIKit:commonButtonWithBG(
+        {
+            w=250,
+            h=65,
+            style = UIKit.BTN_COLOR.GREEN,
+            labelParams = {text = _("立即研发")},
+            listener = function ()
+                self:OnUpgradNowButtonClicked()
+            end,
+        }):align(display.LEFT_TOP, 30, line_2:getPositionY() - 30):addTo(bg_node)
     self.upgradeNowButton = btn_now
 
     local btn_bg = UIKit:commonButtonWithBG(
@@ -213,40 +213,40 @@ function GameUIUpgradeTechnology:BuildUI()
             end,
         }
     ):align(display.RIGHT_TOP, line_2:getPositionX()+line_2:getContentSize().width, line_2:getPositionY() - 30)
-     :addTo(bg_node)
+        :addTo(bg_node)
     self.upgrade_button = btn_bg
     local gem = display.newSprite("gem_66x56.png")
-    	:addTo(bg_node)
-    	:scale(0.5)
-    	:align(display.LEFT_TOP, btn_now:getPositionX(), btn_now:getPositionY() - 65 - 10)
+        :addTo(bg_node)
+        :scale(0.5)
+        :align(display.LEFT_TOP, btn_now:getPositionX(), btn_now:getPositionY() - 65 - 10)
     self.need_gems_icon = gem
     self.need_gems_label = UIKit:ttfLabel({
-    	text = "",--self:GetUpgradeNowGems(),
-    	size = 20,
-    	color= 0x403c2f
+        text = "",--self:GetUpgradeNowGems(),
+        size = 20,
+        color= 0x403c2f
     }):align(display.LEFT_TOP,gem:getPositionX() + gem:getCascadeBoundingBox().width + 10, gem:getPositionY()):addTo(bg_node)
 
 
     --升级所需时间
     local time_icon = display.newSprite("hourglass_39x46.png")
-    	:addTo(bg_node)
-    	:scale(0.6)
-    	:align(display.LEFT_TOP, btn_bg:getPositionX() - 185,btn_bg:getPositionY() - 65 - 10)
+        :addTo(bg_node)
+        :scale(0.6)
+        :align(display.LEFT_TOP, btn_bg:getPositionX() - 185,btn_bg:getPositionY() - 65 - 10)
     self.time_icon = time_icon
     self.time_label = UIKit:ttfLabel({
-    	text = "",--GameUtils:formatTimeStyle1(self:GetProductionTechnology():GetLevelUpCost().buildTime),
-    	size = 18,
-    	color= 0x403c2f
+        text = "",--GameUtils:formatTimeStyle1(self:GetProductionTechnology():GetLevelUpCost().buildTime),
+        size = 18,
+        color= 0x403c2f
     }):align(display.LEFT_TOP, time_icon:getPositionX()+time_icon:getCascadeBoundingBox().width + 10, time_icon:getPositionY()):addTo(bg_node)
 
-	self.buff_time_label = UIKit:ttfLabel({
-		text = "(-00:20:00)",
-		size = 18,
-		color= 0x068329
-	}):align(display.LEFT_TOP,time_icon:getPositionX()+time_icon:getCascadeBoundingBox().width + 10,time_icon:getPositionY()-20):addTo(bg_node)
+    self.buff_time_label = UIKit:ttfLabel({
+        text = "(-00:20:00)",
+        size = 18,
+        color= 0x068329
+    }):align(display.LEFT_TOP,time_icon:getPositionX()+time_icon:getCascadeBoundingBox().width + 10,time_icon:getPositionY()-20):addTo(bg_node)
     if not self:GetProductionTechnology():IsReachLimitLevel() then
         local requirements = self:GetUpgradeRequirements()
-   	    self.listView = WidgetRequirementListview.new({
+        self.listView = WidgetRequirementListview.new({
             title = _("研发需求"),
             height = 270,
             contents = requirements,
@@ -267,7 +267,7 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
     local unLockByTech = City:FindTechByIndex(current_tech:UnlockBy())
     local cost =  self:GetResourceCost()
     local coin = City.resource_manager:GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    table.insert(requirements, 
+    table.insert(requirements,
         {
             resource_type = _("升级队列"),
             isVisible = true,
@@ -276,7 +276,7 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
             description= City:HaveProductionTechEvent() and "1/1" or "0/1"
         })
     if unLockByTech:Index() ~= current_tech:Index() then
-        table.insert(requirements, 
+        table.insert(requirements,
             {
                 resource_type = unLockByTech:GetLocalizedName(),
                 isVisible = true,
@@ -285,7 +285,7 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
                 description= _("等级达到") .. current_tech:UnlockLevel()
             })
     end
-    table.insert(requirements, 
+    table.insert(requirements,
         {
             resource_type = _("银币"),
             isVisible = cost.coin >0,
@@ -293,7 +293,7 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
             icon="coin_icon_1.png",
             description= GameUtils:formatNumber(cost.coin).."/"..GameUtils:formatNumber(coin)
         })
-    table.insert(requirements, 
+    table.insert(requirements,
         {
             resource_type = _("建筑蓝图"),
             isVisible = cost.blueprints>0,
@@ -301,15 +301,15 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
             icon="blueprints_112x112.png",
             description= GameUtils:formatNumber(cost.blueprints).."/"..GameUtils:formatNumber(City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["blueprints"])
         })
-    table.insert(requirements, 
+    table.insert(requirements,
         {
             resource_type = _("建造工具"),
             isVisible = cost.tools>0,
             isSatisfy = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tools"]>=cost.tools,
             icon="tools_112x112.png",
             description= GameUtils:formatNumber(cost.tools).."/"..GameUtils:formatNumber(City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tools"])
-        }) 
-    table.insert(requirements, 
+        })
+    table.insert(requirements,
         {
             resource_type = _("砖石瓦片"),
             isVisible = cost.tiles>0,
@@ -317,7 +317,7 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
             icon="tiles_112x112.png",
             description= GameUtils:formatNumber(cost.tiles).."/"..GameUtils:formatNumber(City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tiles"])
         })
-    table.insert(requirements, 
+    table.insert(requirements,
         {
             resource_type = _("滑轮组"),
             isVisible = cost.pulley>0,
@@ -325,7 +325,7 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
             icon="pulley_112x112.png",
             description= GameUtils:formatNumber(cost.pulley).."/"..GameUtils:formatNumber(City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["pulley"])
         })
-  
+
     return requirements
 end
 
@@ -334,7 +334,7 @@ function GameUIUpgradeTechnology:OnUpgradNowButtonClicked()
     if canUpgrade then
         NetManager:getUpgradeProductionTechPromise(self:GetProductionTechnology():Name(),true):next(function(msg)
 
-        end)
+            end)
     else
         UIKit:showMessageDialog(_("提示"),msg, function()end)
     end
@@ -361,9 +361,12 @@ end
 
 function GameUIUpgradeTechnology:ForceUpgrade(gem_cost)
     if  User:GetGemResource():GetValue() < gem_cost then
-         UIKit:showMessageDialog(_("提示"),_("宝石不足"), function()end)
+        UIKit:showMessageDialog(_("提示"),_("宝石不足"), function()
+            UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+            self:LeftButtonClicked()
+        end)
     else
-         NetManager:getUpgradeProductionTechPromise(self:GetProductionTechnology():Name(),false):next(function(msg)
+        NetManager:getUpgradeProductionTechPromise(self:GetProductionTechnology():Name(),false):next(function(msg)
             self:LeftButtonClicked()
         end)
     end
@@ -373,9 +376,9 @@ end
 ----------------------------------------------------------------------------------------------------------------
 
 function GameUIUpgradeTechnology:GetNeedResourceAndMaterialsAndTime(tech)
-    local cost = self:GetResourceCost() 
+    local cost = self:GetResourceCost()
     if not cost then return {},{},0 end
-    return 
+    return
         {
             coin = cost.coin
         },
@@ -396,7 +399,7 @@ function GameUIUpgradeTechnology:GetUpgradeNowGems()
 end
 
 function GameUIUpgradeTechnology:CheckCanUpgradeNow()
-    if not self:CheckUpgradeNowButtonState() then 
+    if not self:CheckUpgradeNowButtonState() then
         return false
     end
     return User:GetGemResource():GetValue() >= self:GetUpgradeNowGems(),_("宝石不足")
@@ -494,3 +497,4 @@ function GameUIUpgradeTechnology:CheckMeIsReachLimitLevel()
 end
 
 return GameUIUpgradeTechnology
+

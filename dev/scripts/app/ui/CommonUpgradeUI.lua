@@ -636,6 +636,18 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
             dialog:SetTitle(_("提示"))
             dialog:SetPopMessage(self.building:GetPreConditionDesc())
         end
+    elseif can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.GEM_NOT_ENOUGH then
+        dialog:SetTitle(_("提示"))
+        dialog:SetPopMessage(can_not_update_type)
+        dialog:CreateOKButton(
+                {
+                    listener = function ()
+                        UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                        self:getParent():getParent():LeftButtonClicked()
+                    end,
+                    btn_name= _("前往商店")
+                }
+            )
     else
         dialog:SetTitle(_("提示"))
         dialog:SetPopMessage(can_not_update_type)

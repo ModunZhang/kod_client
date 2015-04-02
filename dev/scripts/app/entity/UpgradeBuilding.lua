@@ -425,8 +425,6 @@ function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
         end
         return
     end
-    -- 还未管理道具，暂时从userdata中取
-    -- local m = DataManager:getUserData().materials
     local m =city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
     local config = self.config_building_levelup[self:GetType()]
 
@@ -472,8 +470,7 @@ function UpgradeBuilding:getUpgradeRequiredGems()
         stone = city.resource_manager:GetStoneResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()),
     }
 
-    -- 还未管理道具，暂时从userdata中取
-    local has_materials = DataManager:getUserData().materials
+    local has_materials =city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
 
     local resource_config = DataUtils:getBuildingUpgradeRequired(self.building_type, self:GetNextLevel())
     required_gems = required_gems + DataUtils:buyResource(resource_config.resources, has_resourcce)
