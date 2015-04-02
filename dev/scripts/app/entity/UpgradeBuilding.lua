@@ -101,6 +101,7 @@ function UpgradeBuilding:InstantUpgradeTo(level)
     if display.getRunningScene().__cname ~= "MainScene" then
         GameGlobalUI:showTips(_("提示"),string.format(_('建造%s至%d级完成'),Localize.building_name[self:GetType()],level))
     end
+    self:CancelLocalPush()
     self.upgrade_building_observer:NotifyObservers(function(lisenter)
         lisenter:OnBuildingUpgradeFinished(self)
     end)
@@ -151,7 +152,12 @@ function UpgradeBuilding:GeneralLocalPush()
         app:GetPushManager():UpdateBuildPush(self.upgrade_to_next_level_time,title,pushIdentity)
     end
 end
-
+function UpgradeBuilding:CancelLocalPush()
+    if ext and ext.localpush then
+        local pushIdentity = self.x .. self.y .. self.w .. self.h .. self.orient
+        app:GetPushManager():CancelBuildPush(pushIdentity)
+    end
+end
 function UpgradeBuilding:OnTimer(current_time)
     if self:IsUpgrading() then
         local is_upgrading = self:GetUpgradingLeftTimeByCurrentTime(current_time) >= 0

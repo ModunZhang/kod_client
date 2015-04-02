@@ -159,6 +159,19 @@ function SoldierManager:GetTotalTreatSoldierCount()
     end
     return total_count
 end
+function SoldierManager:GeneralMilitaryTechLocalPush(event)
+    if ext and ext.localpush then
+        local pushIdentity = event:Id()..event:Name()
+        local title = event:GetLocalizeDesc()
+        app:GetPushManager():UpdateTechnologyPush(event:FinishTime(),title,pushIdentity)
+    end
+end
+function SoldierManager:CancelMilitaryTechLocalPush(event)
+    if ext and ext.localpush then
+        local pushIdentity = event:Id()..event:Name()
+        app:GetPushManager():CancelTechnologyPush(pushIdentity)
+    end
+end
 function SoldierManager:OnUserDataChanged(user_data,current_time, deltaData)
     local is_fully_update = deltaData == nil
     if is_fully_update then
@@ -456,6 +469,7 @@ function SoldierManager:OnMilitaryTechEventsChanged(militaryTechEvents)
         event:UpdateData(v)
         event:AddObserver(self)
         self.militaryTechEvents[event:Id()] = event
+        self:GeneralMilitaryTechLocalPush(event)
     end
     self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_ALL_CHANGED, function(listener)
         listener:OnMilitaryTechEventsAllChanged(self,self.militaryTechEvents)
@@ -475,6 +489,8 @@ function SoldierManager:__OnMilitaryTechEventsChanged(__militaryTechEvents)
             self.militaryTechEvents[event:Id()] = event
             event:AddObserver(self)
             table.insert(added, event)
+
+            self:GeneralMilitaryTechLocalPush(event)
         end
     end
     if edit then
@@ -482,6 +498,7 @@ function SoldierManager:__OnMilitaryTechEventsChanged(__militaryTechEvents)
             local event = self.militaryTechEvents[data.id]
             event:UpdateData(data)
             table.insert(edited, event)
+            self:GeneralMilitaryTechLocalPush(event)
         end
     end
     if remove then
@@ -492,6 +509,7 @@ function SoldierManager:__OnMilitaryTechEventsChanged(__militaryTechEvents)
             event = MilitaryTechEvents.new()
             event:UpdateData(data)
             table.insert(removed, event)
+            self:CancelMilitaryTechLocalPush(event)
         end
     end
     self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED, function(listener)
