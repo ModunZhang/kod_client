@@ -97,6 +97,10 @@ end
 function UpgradeBuilding:InstantUpgradeTo(level)
     self.level = level
     self.upgrade_to_next_level_time = 0
+    
+    if display.getRunningScene().__cname ~= "MainScene" then
+        GameGlobalUI:showTips(_("提示"),string.format(_('建造%s至%d级完成'),Localize.building_name[self:GetType()],level))
+    end
     self.upgrade_building_observer:NotifyObservers(function(lisenter)
         lisenter:OnBuildingUpgradeFinished(self)
     end)
@@ -424,7 +428,7 @@ function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
     local wood = city.resource_manager:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     local iron = city.resource_manager:GetIronResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     local stone = city.resource_manager:GetStoneResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    local is_resource_enough = wood<config[self:GetNextLevel()].wood 
+    local is_resource_enough = wood<config[self:GetNextLevel()].wood
         or stone<config[self:GetNextLevel()].stone or iron<config[self:GetNextLevel()].iron
         or m.tiles<config[self:GetNextLevel()].tiles or m.tools<config[self:GetNextLevel()].tools
         or m.blueprints<config[self:GetNextLevel()].blueprints or m.pulley<config[self:GetNextLevel()].pulley
@@ -486,6 +490,7 @@ function UpgradeBuilding:getUpgradeRequiredGems()
 end
 
 return UpgradeBuilding
+
 
 
 

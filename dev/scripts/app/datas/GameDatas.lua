@@ -361,35 +361,43 @@ GameDatas.MilitaryTechLevelUp = {
 	["infantry_archer"] = {},
 	["infantry_cavalry"] = {},
 	["infantry_siege"] = {},
+	["infantry_hpAdd"] = {},
 	["archer_infantry"] = {},
 	["archer_archer"] = {},
 	["archer_cavalry"] = {},
 	["archer_siege"] = {},
+	["archer_hpAdd"] = {},
 	["cavalry_infantry"] = {},
 	["cavalry_archer"] = {},
 	["cavalry_cavalry"] = {},
 	["cavalry_siege"] = {},
+	["cavalry_hpAdd"] = {},
 	["siege_infantry"] = {},
 	["siege_archer"] = {},
 	["siege_cavalry"] = {},
 	["siege_siege"] = {},
+	["siege_hpAdd"] = {},
 }
 require("app.datas.MilitaryTechLevelUp_infantry_infantry")
 require("app.datas.MilitaryTechLevelUp_infantry_archer")
 require("app.datas.MilitaryTechLevelUp_infantry_cavalry")
 require("app.datas.MilitaryTechLevelUp_infantry_siege")
+require("app.datas.MilitaryTechLevelUp_infantry_hpAdd")
 require("app.datas.MilitaryTechLevelUp_archer_infantry")
 require("app.datas.MilitaryTechLevelUp_archer_archer")
 require("app.datas.MilitaryTechLevelUp_archer_cavalry")
 require("app.datas.MilitaryTechLevelUp_archer_siege")
+require("app.datas.MilitaryTechLevelUp_archer_hpAdd")
 require("app.datas.MilitaryTechLevelUp_cavalry_infantry")
 require("app.datas.MilitaryTechLevelUp_cavalry_archer")
 require("app.datas.MilitaryTechLevelUp_cavalry_cavalry")
 require("app.datas.MilitaryTechLevelUp_cavalry_siege")
+require("app.datas.MilitaryTechLevelUp_cavalry_hpAdd")
 require("app.datas.MilitaryTechLevelUp_siege_infantry")
 require("app.datas.MilitaryTechLevelUp_siege_archer")
 require("app.datas.MilitaryTechLevelUp_siege_cavalry")
 require("app.datas.MilitaryTechLevelUp_siege_siege")
+require("app.datas.MilitaryTechLevelUp_siege_hpAdd")
 
 GameDatas.MilitaryTechs = {
 	["militaryTechs"] = {},
