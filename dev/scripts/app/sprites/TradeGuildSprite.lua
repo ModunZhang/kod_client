@@ -4,7 +4,16 @@ local TradeGuildSprite = class("TradeGuildSprite", FunctionUpgradingSprite)
 function TradeGuildSprite:ctor(city_layer, entity, city)
     TradeGuildSprite.super.ctor(self, city_layer, entity, city)
     self.action_node = display.newNode():addTo(self)
-    self:PlayAni()
+    self:DoAni()
+end
+function TradeGuildSprite:RefreshSprite()
+    TradeGuildSprite.super.RefreshSprite(self)
+    self:DoAni()
+end
+function TradeGuildSprite:DoAni()
+    if self:GetEntity():IsUnlocked() then
+        self:PlayAni()
+    end
 end
 function TradeGuildSprite:PlayAni()
     local animation = self:GetAniArray()[1]:getAnimation()
@@ -18,6 +27,7 @@ end
 
 
 return TradeGuildSprite
+
 
 
 

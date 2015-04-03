@@ -59,7 +59,9 @@ function FunctionUpgradingSprite:ReloadSprite()
     FunctionUpgradingSprite.super.RefreshSprite(self)
 end
 function FunctionUpgradingSprite:RefreshSprite()
-    
+    if self:GetEntity():GetLevel() == 1 then
+        FunctionUpgradingSprite.super.RefreshSprite(self)
+    end
 end
 function FunctionUpgradingSprite:GetSpriteTopPosition()
     local x,y = FunctionUpgradingSprite.super.GetSpriteTopPosition(self)
