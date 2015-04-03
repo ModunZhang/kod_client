@@ -170,7 +170,7 @@ function GameUIUnlockBuilding:SetUpgradeRequirementListview()
         {resource_type = _("前置条件"),isVisible = building:GetLevel()>5, isSatisfy = not pre_condition,canNotBuy=true,
             icon="hammer_31x33.png",description = building:GetPreConditionDesc()},
         {resource_type = _("建造队列"),isVisible = true, isSatisfy = #City:GetUpgradingBuildings()<City:BuildQueueCounts(),
-            icon="hammer_31x33.png",description=City:BuildQueueCounts().."/"..GameUtils:formatNumber(#City:GetUpgradingBuildings())},
+            icon="hammer_31x33.png",description=_("建造队列")..City:BuildQueueCounts().."/"..GameUtils:formatNumber(#City:GetUpgradingBuildings())},
         {resource_type = _("木材"),isVisible = self.building:GetLevelUpWood()>0,      isSatisfy = wood>=self.building:GetLevelUpWood(),
             icon="res_wood_114x100.png",description=wood.."/"..self.building:GetLevelUpWood()},
 

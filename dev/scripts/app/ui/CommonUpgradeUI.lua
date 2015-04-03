@@ -414,7 +414,7 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
             isVisible = true,
             isSatisfy = #city:GetUpgradingBuildings()<1,
             icon="hammer_31x33.png",
-            description=city:BuildQueueCounts().."/"..GameUtils:formatNumber(#city:GetUpgradingBuildings())
+            description=_("建造队列")..city:BuildQueueCounts().."/"..GameUtils:formatNumber(#city:GetUpgradingBuildings())
         },
         {
             resource_type = _("木材"),
@@ -690,6 +690,31 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
             dialog:SetTitle(_("提示"))
             dialog:SetPopMessage(self.building:GetPreConditionDesc())
         end
+    elseif can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.FREE_CITIZEN_ERROR then
+        local city =  self.building:BelongCity()
+        local preName = "dwelling"
+        local highest_level_building = city:GetHighestBuildingByType(preName)
+
+        local jump_building = highest_level_building or city:GetRuinsNotBeenOccupied()[1] or preName
+
+        dialog:SetTitle("提示")
+            :SetPopMessage(can_not_update_type)
+        if tolua.type(jump_building) ~= "string" then
+            dialog:CreateOKButton(
+                {
+                    listener = function ( ... )
+                        local current_scene = display.getRunningScene()
+                        local building_sprite = current_scene:GetSceneLayer():FindBuildingSpriteByBuilding(jump_building, city)
+                        self:getParent():getParent():LeftButtonClicked()
+                        current_scene:GotoLogicPoint(jump_building:GetMidLogicPosition())
+                        if current_scene.AddIndicateForBuilding then
+                            current_scene:AddIndicateForBuilding(building_sprite)
+                        end
+                    end,
+                    btn_name= _("前往")
+                }
+            )
+        end
     elseif can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.GEM_NOT_ENOUGH then
         dialog:SetTitle(_("提示"))
         dialog:SetPopMessage(can_not_update_type)
@@ -709,6 +734,8 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
+
 
 
 
