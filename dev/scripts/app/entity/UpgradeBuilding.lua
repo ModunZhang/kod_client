@@ -15,7 +15,7 @@ UpgradeBuilding.NOT_ABLE_TO_UPGRADE = {
     GEM_NOT_ENOUGH = _("宝石不足"),
     LEVEL_NOT_ENOUGH = _("等级小于0级"),
     BUILDING_IS_UPGRADING = _("建筑正在升级"),
-    FREE_CITIZEN_ERROR = _("升级小屋会造成可用城民小于0"),
+    FREE_CITIZEN_ERROR = _("城民上限不足,无法升级小屋,请升级或建造住宅"),
     PRE_CONDITION = _("前置建筑等级未满足"),
 }
 local NOT_ABLE_TO_UPGRADE = UpgradeBuilding.NOT_ABLE_TO_UPGRADE

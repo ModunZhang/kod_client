@@ -86,7 +86,7 @@ function WidgetMilitaryTechnology:CreateItem(tech)
             color = 0xffedae,
             shadow = true
         })):onButtonClicked(function (event)
-        UIKit:newGameUI("WidgetUpgradeMilitaryTech", tech):AddToCurrentScene()
+        UIKit:newWidgetUI("WidgetUpgradeMilitaryTech", tech):AddToCurrentScene()
         end)
         :align(display.CENTER, item_width-90, 44):addTo(content)
 
