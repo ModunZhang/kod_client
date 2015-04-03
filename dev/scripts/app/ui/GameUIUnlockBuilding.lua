@@ -169,25 +169,25 @@ function GameUIUnlockBuilding:SetUpgradeRequirementListview()
     local requirements = {
         {resource_type = _("前置条件"),isVisible = building:GetLevel()>5, isSatisfy = not pre_condition,canNotBuy=true,
             icon="hammer_31x33.png",description = building:GetPreConditionDesc()},
-        {resource_type = _("建造队列"),isVisible = true, isSatisfy = #City:GetUpgradingBuildings()<1,
-            icon="hammer_31x33.png",description=GameUtils:formatNumber(#City:GetUpgradingBuildings()).."/1"},
-        {resource_type = _("木材"),isVisible = self.building:GetLevelUpWood()>0,      isSatisfy = wood>self.building:GetLevelUpWood(),
-            icon="res_wood_114x100.png",description=self.building:GetLevelUpWood().."/"..wood},
+        {resource_type = _("建造队列"),isVisible = true, isSatisfy = #City:GetUpgradingBuildings()<City:BuildQueueCounts(),
+            icon="hammer_31x33.png",description=City:BuildQueueCounts().."/"..GameUtils:formatNumber(#City:GetUpgradingBuildings())},
+        {resource_type = _("木材"),isVisible = self.building:GetLevelUpWood()>0,      isSatisfy = wood>=self.building:GetLevelUpWood(),
+            icon="res_wood_114x100.png",description=wood.."/"..self.building:GetLevelUpWood()},
 
-        {resource_type = _("石料"),isVisible = self.building:GetLevelUpStone()>0,     isSatisfy = stone>self.building:GetLevelUpStone() ,
-            icon="stone_icon.png",description=self.building:GetLevelUpStone().."/"..stone},
+        {resource_type = _("石料"),isVisible = self.building:GetLevelUpStone()>0,     isSatisfy = stone>=self.building:GetLevelUpStone() ,
+            icon="stone_icon.png",description=stone.."/"..self.building:GetLevelUpStone()},
 
-        {resource_type = _("铁矿"),isVisible = self.building:GetLevelUpIron()>0,      isSatisfy = iron>self.building:GetLevelUpIron() ,
-            icon="res_iron_114x100.png",description=self.building:GetLevelUpIron().."/"..iron},
+        {resource_type = _("铁矿"),isVisible = self.building:GetLevelUpIron()>0,      isSatisfy = iron>=self.building:GetLevelUpIron() ,
+            icon="res_iron_114x100.png",description=iron.."/"..self.building:GetLevelUpIron()},
 
-        {resource_type = _("建筑蓝图"),isVisible = self.building:GetLevelUpBlueprints()>0,isSatisfy = has_materials.blueprints>self.building:GetLevelUpBlueprints() ,
-            icon="blueprints_128x128.png",description=self.building:GetLevelUpBlueprints().."/"..has_materials.blueprints},
-        {resource_type = _("建造工具"),isVisible = self.building:GetLevelUpTools()>0,     isSatisfy = has_materials.tools>self.building:GetLevelUpTools() ,
-            icon="tools_128x128.png",description=self.building:GetLevelUpTools().."/"..has_materials.tools},
-        {resource_type = _("砖石瓦片"),isVisible = self.building:GetLevelUpTiles()>0,     isSatisfy = has_materials.tiles>self.building:GetLevelUpTiles() ,
-            icon="tiles_128x128.png",description=self.building:GetLevelUpTiles().."/"..has_materials.tiles},
-        {resource_type = _("滑轮组"),isVisible = self.building:GetLevelUpPulley()>0,    isSatisfy = has_materials.pulley>self.building:GetLevelUpPulley() ,
-            icon="pulley_128x128.png",description=self.building:GetLevelUpPulley().."/"..has_materials.pulley},
+        {resource_type = _("建筑蓝图"),isVisible = self.building:GetLevelUpBlueprints()>0,isSatisfy = has_materials.blueprints>=self.building:GetLevelUpBlueprints() ,
+            icon="blueprints_128x128.png",description=has_materials.blueprints.."/"..self.building:GetLevelUpBlueprints()},
+        {resource_type = _("建造工具"),isVisible = self.building:GetLevelUpTools()>0,     isSatisfy = has_materials.tools>=self.building:GetLevelUpTools() ,
+            icon="tools_128x128.png",description=has_materials.tools.."/"..self.building:GetLevelUpTools()},
+        {resource_type = _("砖石瓦片"),isVisible = self.building:GetLevelUpTiles()>0,     isSatisfy = has_materials.tiles>=self.building:GetLevelUpTiles() ,
+            icon="tiles_128x128.png",description=has_materials.tiles.."/"..self.building:GetLevelUpTiles()},
+        {resource_type = _("滑轮组"),isVisible = self.building:GetLevelUpPulley()>0,    isSatisfy = has_materials.pulley>=self.building:GetLevelUpPulley() ,
+            icon="pulley_128x128.png",description=has_materials.pulley.."/"..self.building:GetLevelUpPulley()},
     }
 
     if not self.requirement_listview then

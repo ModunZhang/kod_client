@@ -52,9 +52,10 @@ end
 function ResourceUpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
     -- 升级是否使空闲城民小于0
     local resource_manager = City:GetResourceManager()
-    local free_citizen = resource_manager:GetPopulationResource():GetNoneAllocatedByTime(app.timer:GetServerTime())
+    local free_citizen_limit = resource_manager:GetPopulationResource():GetValueLimit()
+    local current_citizen = self:GetCitizen()
     local next_level_citizen = self:GetNextLevelLevelCitizen()
-    if next_level_citizen>free_citizen then
+    if (next_level_citizen-current_citizen)>free_citizen_limit then
         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.FREE_CITIZEN_ERROR
     end
     return ResourceUpgradeBuilding.super.IsAbleToUpgrade(self,isUpgradeNow)

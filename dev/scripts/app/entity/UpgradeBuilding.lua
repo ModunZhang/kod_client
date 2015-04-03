@@ -15,7 +15,7 @@ UpgradeBuilding.NOT_ABLE_TO_UPGRADE = {
     GEM_NOT_ENOUGH = _("宝石不足"),
     LEVEL_NOT_ENOUGH = _("等级小于0级"),
     BUILDING_IS_UPGRADING = _("建筑正在升级"),
-    FREE_CITIZEN_ERROR = _("升级小屋会造成可用城民小于0"),
+    FREE_CITIZEN_ERROR = _("城民上限不足,无法升级小屋,请升级或建造住宅"),
     PRE_CONDITION = _("前置建筑等级未满足"),
 }
 local NOT_ABLE_TO_UPGRADE = UpgradeBuilding.NOT_ABLE_TO_UPGRADE
@@ -294,7 +294,15 @@ function UpgradeBuilding:GetLevelUpIron()
     local level = self.level
     return self.config_building_levelup[self:GetType()][self:GetNextLevel()].iron
 end
-
+function UpgradeBuilding:GetLevelUpCitizen()
+    local level = self.level
+    local b_config = self.config_building_levelup[self:GetType()]
+    if b_config[self:GetNextLevel()].citizen and b_config[self:GetLevel()].citizen then
+        return b_config[self:GetNextLevel()].citizen - b_config[self:GetLevel()].citizen
+    else
+        return 0
+    end
+end
 function UpgradeBuilding:GetLevelUpBlueprints()
     local level = self.level
     return self.config_building_levelup[self:GetType()][self:GetNextLevel()].blueprints
@@ -432,10 +440,15 @@ function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
     local wood = city.resource_manager:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     local iron = city.resource_manager:GetIronResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     local stone = city.resource_manager:GetStoneResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+    local citizen = city.resource_manager:GetPopulationResource():GetNoneAllocatedByTime(app.timer:GetServerTime())
     local is_resource_enough = wood<config[self:GetNextLevel()].wood
-        or stone<config[self:GetNextLevel()].stone or iron<config[self:GetNextLevel()].iron
-        or m.tiles<config[self:GetNextLevel()].tiles or m.tools<config[self:GetNextLevel()].tools
-        or m.blueprints<config[self:GetNextLevel()].blueprints or m.pulley<config[self:GetNextLevel()].pulley
+        or stone<config[self:GetNextLevel()].stone
+        or iron<config[self:GetNextLevel()].iron
+        or (config[self:GetNextLevel()].citizen and config[self:GetLevel()].citizen and citizen<(config[self:GetNextLevel()].citizen-config[self:GetLevel()].citizen))
+        or m.tiles<config[self:GetNextLevel()].tiles
+        or m.tools<config[self:GetNextLevel()].tools
+        or m.blueprints<config[self:GetNextLevel()].blueprints
+        or m.pulley<config[self:GetNextLevel()].pulley
     local max = city.build_queue
     local current = max - #city:GetUpgradingBuildings()
 
@@ -468,6 +481,7 @@ function UpgradeBuilding:getUpgradeRequiredGems()
         wood = city.resource_manager:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()),
         iron = city.resource_manager:GetIronResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()),
         stone = city.resource_manager:GetStoneResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()),
+        citizen = city.resource_manager:GetPopulationResource():GetNoneAllocatedByTime(app.timer:GetServerTime()),
     }
 
     local has_materials =city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
@@ -493,6 +507,7 @@ function UpgradeBuilding:getUpgradeRequiredGems()
 end
 
 return UpgradeBuilding
+
 
 
 

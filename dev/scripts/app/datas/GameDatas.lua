@@ -81,14 +81,12 @@ GameDatas.AllianceVillage = {
 	["stoneVillage"] = {},
 	["ironVillage"] = {},
 	["coinVillage"] = {},
-	["gemVillage"] = {},
 }
 require("app.datas.AllianceVillage_woodVillage")
 require("app.datas.AllianceVillage_foodVillage")
 require("app.datas.AllianceVillage_stoneVillage")
 require("app.datas.AllianceVillage_ironVillage")
 require("app.datas.AllianceVillage_coinVillage")
-require("app.datas.AllianceVillage_gemVillage")
 
 GameDatas.BuildingFunction = {
 	["keep"] = {},

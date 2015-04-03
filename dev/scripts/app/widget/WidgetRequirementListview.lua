@@ -54,9 +54,16 @@ function WidgetRequirementListview:RefreshListView(contents)
                     content.bg:setTexture("upgrade_resources_background_2.png")
                 end
                 meetFlag =  not meetFlag
+                local split_desc = string.split(v.description, "/")
                 if v.isSatisfy then
                     -- 符合条件，添加钩钩图标
                     content.mark:setTexture("yes_40x40.png")
+                    content.resource_value[1]:setString(split_desc[1])
+                    content.resource_value[1]:setColor(UIKit:hex2c4b(0x403c2f))
+                    if split_desc[2] then
+                        content.resource_value[2]:setString("/"..split_desc[2])
+                        content.resource_value[2]:setColor(UIKit:hex2c4b(0x403c2f))
+                    end
                 else
                     if v.canNotBuy then
                         content.bg:setTexture("upgrade_resources_background_red.png")
@@ -69,7 +76,7 @@ function WidgetRequirementListview:RefreshListView(contents)
                                 cc.ScaleTo:create(0.4, 1)
                             }
                             content.mark:runAction(cc.RepeatForever:create(seq_1))
-                            
+
                             content.bg:setNodeEventEnabled(true)
                             content.bg:setTouchEnabled(true)
                             content.bg:removeAllNodeEventListeners()
@@ -84,8 +91,14 @@ function WidgetRequirementListview:RefreshListView(contents)
                         -- 不符合条提案，添加!图标
                         content.mark:setTexture("wow_40x40.png")
                     end
+                    -- 条件未达到，自己的数据红色显示
+                    content.resource_value[1]:setString(split_desc[1])
+                    content.resource_value[1]:setColor(split_desc[2] and UIKit:hex2c4b(0x7e0000) or UIKit:hex2c4b(0x403c2f))
+                    if split_desc[2] then
+                        content.resource_value[2]:setString("/"..split_desc[2])
+                        content.resource_value[2]:setColor(UIKit:hex2c4b(0x403c2f))
+                    end
                 end
-                content.resource_value:setString(v.resource_type.." "..v.description)
             else
                 -- 添加新条件
                 local item = self.listview:newItem()
@@ -99,9 +112,23 @@ function WidgetRequirementListview:RefreshListView(contents)
                     content.bg = display.newSprite("upgrade_resources_background_2.png", 0, 0):addTo(content)
                 end
                 meetFlag =  not meetFlag
+                local split_desc = string.split(v.description, "/")
                 if v.isSatisfy then
                     -- 符合条件，添加钩钩图标
                     content.mark = display.newSprite("yes_40x40.png", item_width/2-25, 0):addTo(content)
+                    content.resource_value  = {}
+                    content.resource_value[1] = UIKit:ttfLabel({
+                        text = split_desc[1],
+                        size = 22,
+                        color = 0x403c2f
+                    }):align(display.LEFT_CENTER,-180,0):addTo(content)
+                    if split_desc[2] then
+                        content.resource_value[2] = UIKit:ttfLabel({
+                            text = "/"..split_desc[2],
+                            size = 22,
+                            color = 0x403c2f
+                        }):align(display.LEFT_CENTER,content.resource_value[1]:getPositionX()+content.resource_value[1]:getContentSize().width,0):addTo(content)
+                    end
                 else
                     if v.canNotBuy then
                         content.bg = display.newSprite("upgrade_resources_background_red.png", 0, 0):addTo(content)
@@ -128,17 +155,24 @@ function WidgetRequirementListview:RefreshListView(contents)
                         -- 不符合条提案，添加X图标
                         content.mark = display.newSprite("wow_40x40.png", item_width/2-25, 0):addTo(content)
                     end
+                    -- 条件未达到，自己的数据红色显示
+                    content.resource_value  = {}
+                    content.resource_value[1] = UIKit:ttfLabel({
+                        text = split_desc[1],
+                        size = 22,
+                        color = split_desc[2] and 0x7e0000 or 0x403c2f
+                    }):align(display.LEFT_CENTER,-180,0):addTo(content)
+                    if split_desc[2] then
+                        content.resource_value[2] = UIKit:ttfLabel({
+                            text = "/"..split_desc[2],
+                            size = 22,
+                            color = 0x403c2f
+                        }):align(display.LEFT_CENTER,content.resource_value[1]:getPositionX()+content.resource_value[1]:getContentSize().width,0):addTo(content)
+                    end
                 end
                 -- 资源类型icon
                 local resource_type_icon = display.newSprite(v.icon, -item_width/2+35, 0):addTo(content)
                 resource_type_icon:setScale(40/resource_type_icon:getContentSize().width)
-                content.resource_value = cc.ui.UILabel.new({
-                    UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-                    text = v.resource_type.." "..v.description,
-                    font = UIKit:getFontFilePath(),
-                    size = 22,
-                    color = UIKit:hex2c3b(0x403c2f)
-                }):align(display.LEFT_CENTER,-180,0):addTo(content)
                 item:addContent(content)
                 local index = v.canNotBuy and 1
                 self.listview:addItem(item,index)
@@ -157,6 +191,10 @@ function WidgetRequirementListview:RefreshListView(contents)
 end
 
 return WidgetRequirementListview
+
+
+
+
 
 
 
