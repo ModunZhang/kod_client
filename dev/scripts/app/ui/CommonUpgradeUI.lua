@@ -693,7 +693,7 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
     elseif can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.FREE_CITIZEN_ERROR then
         local city =  self.building:BelongCity()
         local preName = "dwelling"
-        local highest_level_building = city:GetHighestBuildingByType(preName)
+        local highest_level_building = city:GetLowestestBuildingByType(preName)
 
         local jump_building = highest_level_building or city:GetRuinsNotBeenOccupied()[1] or preName
 

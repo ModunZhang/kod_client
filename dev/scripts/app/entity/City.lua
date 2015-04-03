@@ -590,6 +590,15 @@ function City:GetHighestBuildingByType(build_type)
     end
     return highest
 end
+function City:GetLowestestBuildingByType(build_type)
+    local lowest
+    for _,v in ipairs(self:GetBuildingByType(build_type)) do
+        if not lowest or lowest:GetLevel() > v:GetLevel() then
+            lowest = v
+        end
+    end
+    return lowest
+end
 function City:GetBuildingByType(build_type)
     local find_buildings = {}
     local filter = function(_, building)
