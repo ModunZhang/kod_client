@@ -55,7 +55,6 @@ function ResourceUpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
     local free_citizen_limit = resource_manager:GetPopulationResource():GetValueLimit()
     local current_citizen = self:GetCitizen()
     local next_level_citizen = self:GetNextLevelLevelCitizen()
-    print("空闲城民控件",free_citizen_limit,(next_level_citizen-current_citizen))
     if (next_level_citizen-current_citizen)>free_citizen_limit then
         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.FREE_CITIZEN_ERROR
     end
