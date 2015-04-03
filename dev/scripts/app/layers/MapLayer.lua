@@ -5,6 +5,7 @@ local MapLayer = class("MapLayer", function(...)
     layer:setNodeEventEnabled(true)
     return layer
 end)
+
 local SPEED = 10
 local min = math.min
 local max = math.max
@@ -35,6 +36,8 @@ function MapLayer:ctor(min_scale, max_scale)
                 if #self.move_callbacks > 0 then
                     (table.remove(self.move_callbacks, 1))()
                 end
+            else
+                target_position[3] = speed * 0.98 > 8 and speed * 0.98 or 8
             end
             self:setPosition(cc.p(new_x, new_y))
         end
@@ -124,7 +127,7 @@ function MapLayer:GetScaleRange()
     return self.min_scale, self.max_scale
 end
 -------
-local elastic_len = 50
+local ELASTIC = 30
 function MapLayer:MakeElastic()
     local mx, my = self:GetCollideLength()
     local mid = self:convertToNodeSpace(cc.p(display.cx, display.cy))
@@ -143,19 +146,19 @@ function MapLayer:GetCollideLength()
     
     local left, bottom, right, top = left_bottom.x, left_bottom.y, right_top.x, right_top.y
 
-    local left_offset = left - elastic_len
-    local right_offset = width - right - elastic_len
+    local left_offset = left - ELASTIC
+    local right_offset = width - right - ELASTIC
 
     local move_x = left_offset >= 0 and 0 or left_offset
     move_x = move_x + (right_offset >= 0 and 0 or - right_offset)
 
-    local bottom_offset = bottom - elastic_len
-    local top_offset = height - top - elastic_len
+    local bottom_offset = bottom - ELASTIC
+    local top_offset = height - top - ELASTIC
 
     local move_y = bottom_offset >= 0 and 0 or bottom_offset
     move_y = move_y + (top_offset >= 0 and 0 or - top_offset)
 
-    return move_x, move_y
+    return move_x, move_y, ELASTIC
 end
 
 -------
