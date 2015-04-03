@@ -26,21 +26,12 @@ local titles = {
 function GameUIActivity:ctor(city)
 	GameUIActivity.super.ctor(self,city, _("活动"))
 	local countInfo = User:GetCountInfo()
-	self.diff_time = (countInfo.todayOnLineTime - countInfo.lastLoginTime) / 1000
 	self.player_level_up_time = countInfo.registerTime/1000 + config_intInit.playerLevelupRewardsHours.value * 60 * 60 -- 单位秒
-	self.player_level_up_time_residue = self.player_level_up_time - app.timer:GetServerTime() 
+	app.timer:AddListener(self)
 end
 
 function GameUIActivity:OnMoveInStage()
 	GameUIActivity.super.OnMoveInStage(self)
-
-	local list,list_node = UIKit:commonListView({
-        direction = UIScrollView.DIRECTION_VERTICAL,
-        viewRect = cc.rect(0,0,576,772),
-    })
-    list_node:addTo(self:GetView()):pos(window.left + 35,window.bottom_top + 20)
-    self.list_view = list
-    list:onTouch(handler(self, self.OnListViewTouch))
 	self.tab_buttons = self:CreateTabButtons(
         {
             {
@@ -54,31 +45,73 @@ function GameUIActivity:OnMoveInStage()
             }
         },
         function(tag)
-
+        	self:OnTabButtonClicked(tag)
         end
     ):pos(window.cx, window.bottom + 34)
-    self:RefreshListView()
-    User:AddListenOnType(self,User.LISTEN_TYPE.COUNT_INFO)
-    app.timer:AddListener(self)
+
 end
 
+
+function GameUIActivity:OnTabButtonClicked(tag)
+	local method_name = "CreateTabIf_" .. tag
+	if self[method_name] then
+		if self.current_content then self.current_content:hide() end
+		self.current_content = self[method_name](self)
+		self.current_content:show()
+	end
+end
+
+
+function GameUIActivity:CreateTabIf_award()
+	local countInfo = User:GetCountInfo()
+	self.diff_time = (countInfo.todayOnLineTime - countInfo.lastLoginTime) / 1000
+	self.player_level_up_time_residue = self.player_level_up_time - app.timer:GetServerTime()
+	if not self.list_view then
+		local list,list_node = UIKit:commonListView({
+	        direction = UIScrollView.DIRECTION_VERTICAL,
+	        viewRect = cc.rect(0,0,576,772),
+	    })
+	    list_node:addTo(self:GetView()):pos(window.left + 35,window.bottom_top + 20)
+	    self.list_view = list
+	    list:onTouch(handler(self, self.OnListViewTouch))
+	    self:RefreshListView()
+	    User:AddListenOnType(self,User.LISTEN_TYPE.COUNT_INFO)
+	end
+	self:RefreshListView()
+	return self.list_view
+end
+
+function GameUIActivity:CreateTabIf_activity()
+	if not self.activity_list_view then
+		local list,list_node = UIKit:commonListView({
+	        direction = UIScrollView.DIRECTION_VERTICAL,
+	        viewRect = cc.rect(0,0,576,772),
+	    })
+	    list_node:addTo(self:GetView()):pos(window.left + 35,window.bottom_top + 20)
+	    self.activity_list_view = list
+	else
+	end
+	return self.activity_list_view
+end
+
+
 function GameUIActivity:OnTimer(current_time)
-	if self.list_view then
+	if self.list_view and self.tab_buttons:GetSelectedButtonTag() == 'award' then
 		local item = self.list_view:getItems()[2]
 		if not item then return end
 		local time = math.floor((self.diff_time + current_time)/60)
 		item.title_label:setString(string.format(_("今日累计在线:%s分钟"),time))
-	end
-	if current_time <= self.player_level_up_time and self.list_view then
-		local item = self.list_view:getItems()[5]
-		if not item or not item.time_label then return end
-		self.player_level_up_time_residue = self.player_level_up_time - current_time
-		if self.player_level_up_time_residue > 0 then
-			item.time_label:setString(GameUtils:formatTimeStyle1(self.player_level_up_time_residue))
-		else
-			item.time_desc_label:hide()
-			item.time_label:hide()
-			item.state_label:show()
+		if current_time <= self.player_level_up_time and self.list_view then
+			local item = self.list_view:getItems()[5]
+			if not item or not item.time_label then return end
+			self.player_level_up_time_residue = self.player_level_up_time - current_time
+			if self.player_level_up_time_residue > 0 then
+				item.time_label:setString(GameUtils:formatTimeStyle1(self.player_level_up_time_residue))
+			else
+				item.time_desc_label:hide()
+				item.time_label:hide()
+				item.state_label:show()
+			end
 		end
 	end
 end
@@ -95,18 +128,16 @@ end
 
 function GameUIActivity:RefreshListView()
 	self.list_view:removeAllItems()
-	-- for i=1,10 do
-		local item = self:GetItem(self.ITEMS_TYPE.EVERY_DAY_LOGIN)
-		self.list_view:addItem(item)
-		item = self:GetItem(self.ITEMS_TYPE.ONLINE)
-		self.list_view:addItem(item)
-		item = self:GetItem(self.ITEMS_TYPE.CONTINUITY)
-		self.list_view:addItem(item)	
-		item = self:GetItem(self.ITEMS_TYPE.FIRST_IN_PURGURE)
-		self.list_view:addItem(item)	
-		item = self:GetItem(self.ITEMS_TYPE.PLAYER_LEVEL_UP)
-		self.list_view:addItem(item)
-	-- end
+	local item = self:GetItem(self.ITEMS_TYPE.EVERY_DAY_LOGIN)
+	self.list_view:addItem(item)
+	item = self:GetItem(self.ITEMS_TYPE.ONLINE)
+	self.list_view:addItem(item)
+	item = self:GetItem(self.ITEMS_TYPE.CONTINUITY)
+	self.list_view:addItem(item)	
+	item = self:GetItem(self.ITEMS_TYPE.FIRST_IN_PURGURE)
+	self.list_view:addItem(item)	
+	item = self:GetItem(self.ITEMS_TYPE.PLAYER_LEVEL_UP)
+	self.list_view:addItem(item)
 	self.list_view:reload()
 end
 
@@ -259,5 +290,11 @@ function GameUIActivity:GetMaxOnLineTimePointRewards()
 	end
 	return maxPoint 
 end
+
+--activity
+function GameUIActivity:RefreshActivityList()
+	
+end
+
 
 return GameUIActivity

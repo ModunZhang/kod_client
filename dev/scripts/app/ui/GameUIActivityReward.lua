@@ -538,14 +538,11 @@ end
 function GameUIActivityReward:GetLevelUpData()
 	local current_level = City:GetFirstBuildingByType('keep'):GetLevel()
 	local r = {}
-	local max_level_got_rewards = self:GetLevelUpRewardMaxLevel()
 	for __,v in ipairs(config_levelup) do
 		local flag = 0
-		if v.level <= max_level_got_rewards then
-			flag = 1
-		elseif v.level == current_level then
-			flag = 2
-		elseif v.level > current_level then
+		if 	v.level <= current_level then
+			flag = self:CheckCanGetLevelUpReward(v.index) and 2 or 1
+		else
 			flag = 3
 		end
 		local rewards = self:GetLevelUpRewardListFromConfig(v.rewards)
@@ -564,15 +561,15 @@ function GameUIActivityReward:GetLevelUpRewardListFromConfig(config_str)
 	return r
 end
 
-function GameUIActivityReward:GetLevelUpRewardMaxLevel()
+function GameUIActivityReward:CheckCanGetLevelUpReward(level)
 	local max_level = 0
 	local countInfo = User:GetCountInfo()
 	for __,v in ipairs(countInfo.levelupRewards) do
-		if v > max_level then
-			max_level = v
+		if v == level then
+			return false
 		end
 	end
-	return max_level
+	return true
 end
 
 function GameUIActivityReward:GetRewardLevelUpItem(index,title,rewards,flag)
