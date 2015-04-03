@@ -117,7 +117,7 @@ function GameUIBuild:OnCityChanged()
         v:SetNumber(number, max_number)
         if building then
             if building:GetCitizen() > citizen then
-                v:SetBuildEnable(false)
+                -- v:SetBuildEnable(false)
                 v:SetCondition(_("空闲城民不足"), display.COLOR_RED)
             elseif number >= max_number then
                 v:SetBuildEnable(false)
@@ -143,10 +143,15 @@ function GameUIBuild:OnBuildOnItem(item)
     local wood = city.resource_manager:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     local iron = city.resource_manager:GetIronResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     local stone = city.resource_manager:GetStoneResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+    local citizen = city.resource_manager:GetPopulationResource():GetNoneAllocatedByTime(app.timer:GetServerTime())
     local is_resource_enough = wood<config[1].wood
-        or stone<config[1].stone or iron<config[1].iron
-        or m.tiles<config[1].tiles or m.tools<config[1].tools
-        or m.blueprints<config[1].blueprints or m.pulley<config[1].pulley
+        or stone<config[1].stone 
+        or iron<config[1].iron
+        or citizen<config[1].citizen
+        or m.tiles<config[1].tiles 
+        or m.tools<config[1].tools
+        or m.blueprints<config[1].blueprints 
+        or m.pulley<config[1].pulley
 
     local resource_gems = 0
     if is_resource_enough then
@@ -154,13 +159,14 @@ function GameUIBuild:OnBuildOnItem(item)
             wood = wood,
             iron = iron,
             stone = stone,
+            citizen = citizen
         }
 
         local resource_config = DataUtils:getBuildingUpgradeRequired(item.building.building_type, 1)
         resource_gems = resource_gems + DataUtils:buyResource(resource_config.resources, has_resourcce)
         resource_gems = resource_gems + DataUtils:buyMaterial(resource_config.materials, m)
     end
-
+    print("resource_gems>>>>",resource_gems)
     if current > 0 and resource_gems == 0 then
         self:BuildWithRuins(self.select_ruins, item.building.building_type)
     else
