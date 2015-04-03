@@ -2,7 +2,7 @@
 -- Author: dannyhe
 -- Date: 2014-08-05 20:10:36
 --
-local GameUILogin = UIKit:createUIClass('GameUILogin','GameUISplash')
+local GameUILogin = UIKit:createUIClass('GameUILogin','GameUISplashBeta')
 local WidgetPushButton = import("..widget.WidgetPushButton")
 function GameUILogin:ctor()
     GameUILogin.super.ctor(self)
