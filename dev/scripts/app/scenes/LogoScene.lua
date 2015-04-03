@@ -14,55 +14,37 @@ end
 function LogoScene:onEnter()
     self.layer = cc.LayerColor:create(cc.c4b(255,255,255,255)):addTo(self)
     self.sprite = display.newScale9Sprite("batcat_logo_368x390.png", display.cx, display.cy):addTo(self.layer)
-    self:performWithDelay(function() self:beginAnimate() end,1)
-
-    -- local director = cc.Director:getInstance()
-    -- display.newSprite("Fairground_386x297.png", nil,nil , {class=cc.FilteredSpriteWithOne}):addTo(self)
-    --     :pos(display.cx, display.cy)
-    --     :setFilter(filter.newFilter("CUSTOM", json.encode({
-    --         frag = "shaders/flash.fs",
-    --         shaderName = "flash",
-    --         startTime = director:getTotalFrames() * director:getAnimationInterval(),
-    --         lastTime = 1.0,
-    --     })))
+    self:performWithDelay(function() self:beginAnimate() end,0.5)
 end
 
 function LogoScene:beginAnimate()
-    transition.execute(self.sprite, cc.ScaleTo:create(checknumber(3),1.5))
-    transition.fadeTo(self.sprite, {opacity = 255/2, time = 1.5})
-    transition.fadeOut(self.layer,{time = 1.5})
+    -- transition.execute(self.sprite, cc.ScaleTo:create(checknumber(2),1.5))
+    -- transition.fadeTo(self.sprite, {opacity = 255/2, time = 1.5})
+    local action = cc.Spawn:create({cc.ScaleTo:create(checknumber(2),1.5),cca.fadeTo(1.5,255/2)})
+    self.sprite:runAction(action)
+    -- transition.fadeOut(self.layer,{time = 2})
     local sequence = transition.sequence({
-        cc.FadeOut:create(1.5),
-        cc.DelayTime:create(0.5),
+        cc.FadeOut:create(1),
         cc.CallFunc:create(function()
             self:performWithDelay(function()
                 self.sprite:removeFromParent(true)
                 if CONFIG_IS_DEBUG then
                     app:enterScene("MainScene")
                 else
-                    app:enterScene("UpdaterScene")
+                    -- app:enterScene("UpdaterScene")
                 end
             end, 0.5)
         end),
     })
     self.layer:runAction(sequence)
 end
---TODO:预加载动画和大图
+--TODO:预加载动画和大图 
 function LogoScene:PreLoadResource()
-    -- local soldier_anmations = {
-    --     {"animations/Infantry_1_render0.plist","animations/Infantry_1_render0.png","animations/Infantry_1_render.ExportJson"},
-    --     {"animations/Cavalry_1_render0.plist","animations/Cavalry_1_render0.png","animations/Cavalry_1_render.ExportJson"},
-    --     {"animations/Archer_1_render0.plist","animations/Archer_1_render0.png","animations/Archer_1_render.ExportJson"},
-    --     {"animations/Catapult_1_render0.plist","animations/Catapult_1_render0.png","animations/Catapult_1_render.ExportJson"},
-    --     {"animations/Cloud_Animation0.plist","animations/Cloud_Animation0.png","animations/Cloud_Animation.ExportJson"},
-    -- }
-    -- for _,v in ipairs(soldier_anmations) do
-    --     local plist,png,export_json = unpack(v)
-    --     display.addSpriteFrames(plist,png,function(plistFilename, image)
-    --         print("load resoures-->",plistFilename, image)
-    --     end)
-    -- end
-    display.addSpriteFrames("PlistImage/emoji.plist","PlistImage/emoji.png")
+    --加载splash界面使用的图片
+    display.addImageAsync("splash_beta_logo_503x107.png",function()
+        display.addSpriteFrames("PlistImage/emoji.plist","PlistImage/emoji.png",function()
+        end)
+    end)
 end
 
 
