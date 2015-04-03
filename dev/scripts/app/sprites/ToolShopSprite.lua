@@ -16,10 +16,19 @@ end
 function ToolShopSprite:ctor(city_layer, entity, city)
     ToolShopSprite.super.ctor(self, city_layer, entity, city)
     entity:AddToolShopListener(self)
-    if entity:IsMakingAny(app.timer:GetServerTime()) then
-        self:PlayAni()
-    else
-        self:StopAni()
+    self:DoAni()
+end
+function ToolShopSprite:RefreshSprite()
+    ToolShopSprite.super.RefreshSprite(self)
+    self:DoAni()
+end
+function ToolShopSprite:DoAni()
+    if self:GetEntity():IsUnlocked() then
+        if self:GetEntity():IsMakingAny(app.timer:GetServerTime()) then
+            self:PlayAni()
+        else
+            self:StopAni()
+        end
     end
 end
 function ToolShopSprite:PlayAni()
@@ -37,6 +46,7 @@ end
 
 
 return ToolShopSprite
+
 
 
 

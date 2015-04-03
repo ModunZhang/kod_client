@@ -2,21 +2,30 @@ local FunctionUpgradingSprite = import(".FunctionUpgradingSprite")
 local HospitalSprite = class("HospitalSprite", FunctionUpgradingSprite)
 
 function HospitalSprite:OnBeginTreat()
-    self:PlayAni()
+    self:DoAni()
 end
 function HospitalSprite:OnTreating()
 end
 function HospitalSprite:OnEndTreat()
-    self:StopAni()
+    self:DoAni()
 end
 
 function HospitalSprite:ctor(city_layer, entity, city)
     HospitalSprite.super.ctor(self, city_layer, entity, city)
     entity:AddHospitalListener(self)
-    if entity:IsTreating() then
-        self:PlayAni()
-    else
-        self:StopAni()
+    self:DoAni()
+end
+function HospitalSprite:RefreshSprite()
+    HospitalSprite.super.RefreshSprite(self)
+    self:DoAni()
+end
+function HospitalSprite:DoAni()
+    if self:GetEntity():IsUnlocked() then
+        if self:GetEntity():IsTreating() then
+            self:PlayAni()
+        else
+            self:StopAni()
+        end
     end
 end
 function HospitalSprite:PlayAni()
@@ -31,6 +40,7 @@ end
 
 
 return HospitalSprite
+
 
 
 
