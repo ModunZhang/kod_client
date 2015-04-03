@@ -806,6 +806,8 @@ function GameUtils:DoBattle(attacker, defencer, terrain)
         end
         return {dragon = dragon, soldiers = soldiers}
     end
+    function report:IsPveBattle()
+    end
     function report:GetFightAttackName()
         return _("进攻方")
     end

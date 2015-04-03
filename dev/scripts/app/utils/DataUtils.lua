@@ -43,12 +43,27 @@ function DataUtils:buyResource(need, has)
                 value = value - has[key]
             end
             -- print("需要购买",key,value)
-            for i=#payment,1,-1 do
-                if value>0 then
-                    while payment[i].min<value do
-                        value = value - payment[i].resource
-                        usedGem = usedGem + payment[i].gem
-                        -- print("买了",payment[i].resource,"花费",payment[i].gem)
+            if key == "citizen" then
+                local freeCitizenLimit = City:GetResourceManager():GetPopulationResource():GetValueLimit()
+                for i=#payment,1,-1 do
+                    if value>0 then
+                        local requiredPercent = value / freeCitizenLimit
+                        while payment[i].min<requiredPercent do
+                            local citizenBuyed = math.floor(payment[i].resource * freeCitizenLimit)
+                            value = value - citizenBuyed
+                            usedGem = usedGem + payment[i].gem
+                            requiredPercent = value / freeCitizenLimit
+                        end
+                    end
+                end
+            else
+                for i=#payment,1,-1 do
+                    if value>0 then
+                        while payment[i].min<value do
+                            value = value - payment[i].resource
+                            usedGem = usedGem + payment[i].gem
+                            -- print("买了",payment[i].resource,"花费",payment[i].gem)
+                        end
                     end
                 end
             end
@@ -144,7 +159,7 @@ function DataUtils:getDragonBaseStrengthAndVitality(star,level)
     star = checkint(star)
     level = checkint(level)
     return config_dragonAttribute[star].initStrength + level * config_dragonAttribute[star].perLevelStrength,
-        config_dragonAttribute[star].initVitality + level * config_dragonAttribute[star].perLevelVitality 
+        config_dragonAttribute[star].initVitality + level * config_dragonAttribute[star].perLevelVitality
 end
 
 function DataUtils:getDragonEquipmentAttribute(body,max_star,star)
@@ -178,7 +193,7 @@ function DataUtils:getDragonMaxHp(star,level,skills,equipments)
     return vitality * 2
 end
 
--- 获取兵相关的buff信息  
+-- 获取兵相关的buff信息
 -- solider_config:兵详情的配置信息
 function DataUtils:getAllSoldierBuffValue(solider_config)
     local result = {}
@@ -302,7 +317,7 @@ function DataUtils:getAllianceLocationDistance(fromAllianceDoc, fromLocation, to
         end
     end
 end
---[[ 
+--[[
     -->
     math.ceil(DataUtils:getPlayerSoldiersMarchTime(...) * (1 - DataUtils:getPlayerMarchTimeBuffEffectValue()))
     ---> 行军的真实时间
@@ -340,7 +355,7 @@ end
 --获得龙的行军时间（突袭）不加入任何buffer
 function DataUtils:getPlayerDragonMarchTime(fromAllianceDoc, fromLocation, toAllianceDoc, toLocation)
     local distance = DataUtils:getAllianceLocationDistance(fromAllianceDoc, fromLocation, toAllianceDoc, toLocation)
-    local baseSpeed = 2400 
+    local baseSpeed = 2400
     local marchSpeed = PlayerInitData.intInit.dragonMarchSpeed.value
     local time = math.ceil(baseSpeed / marchSpeed * distance)
     return time
@@ -351,7 +366,7 @@ function DataUtils:getTechnilogyUpgradeBuffTime(time)
     local academy = City:GetFirstBuildingByType("academy")
     local level = academy:GetLevel()
     local config = config_academy[level]
-    local efficiency = config and config.efficiency or 0 
+    local efficiency = config and config.efficiency or 0
     if efficiency > 0 then
         return DataUtils:getBuffEfffectTime(time,efficiency)
     else
@@ -449,9 +464,10 @@ function DataUtils:getIapRewardMessage(productId)
 end
 
 function DataUtils:getIapInfo(productId)
-     for __,v in ipairs(config_store) do
+    for __,v in ipairs(config_store) do
         if productId == v.productId then
             return v
         end
     end
 end
+
