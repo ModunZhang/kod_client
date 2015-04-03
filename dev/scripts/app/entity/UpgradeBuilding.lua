@@ -444,7 +444,7 @@ function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
     local is_resource_enough = wood<config[self:GetNextLevel()].wood
         or stone<config[self:GetNextLevel()].stone
         or iron<config[self:GetNextLevel()].iron
-        or citizen<(config[self:GetNextLevel()].citizen-config[self:GetLevel()].citizen)
+        or (config[self:GetNextLevel()].citizen and config[self:GetLevel()].citizen and citizen<(config[self:GetNextLevel()].citizen-config[self:GetLevel()].citizen))
         or m.tiles<config[self:GetNextLevel()].tiles
         or m.tools<config[self:GetNextLevel()].tools
         or m.blueprints<config[self:GetNextLevel()].blueprints
