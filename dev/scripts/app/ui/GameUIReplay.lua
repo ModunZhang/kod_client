@@ -16,25 +16,27 @@ local GameUIReplay = UIKit:createUIClass('GameUIReplay')
 -- 攻击者默认在左边
 local new_battle = {
     {
-        left = {soldier = "lancer", count = 1000, damage = 90, morale = 100, decrease = 20},
-        right = {soldier = "catapult", count = 100, damage = 80, morale = 100, decrease = 80},
+        left = {soldier = "lancer", star = 1, count = 1000, damage = 90, morale = 100, decrease = 20},
+        right = {soldier = "catapult", star = 1, count = 100, damage = 80, morale = 100, decrease = 80},
+        defeatAll = true,
         defeat = "right"
     },
-    -- {
-    --     left = {damage = 90, decrease = 10},
-    --     right = {soldier = "swordsman", count = 100, damage = 80, morale = 100, decrease = 50},
-    --     defeat = "left"
-    -- },
-    -- {
-    --     left = {soldier = "lancer", count = 1000, damage = 90, morale = 100, decrease = 20},
-    --     right = {damage = 10, decrease = 10},
-    --     defeat = "right"
-    -- },
     {
-        left = {damage = 90, decrease = 30},
-        right = {soldier = "wall", count = 1000, damage = 80, morale = 100, decrease = 90},
+        left = {soldier = "lancer", star = 1, count = 1000, damage = 90, morale = 100, decrease = 20},
+        right = {soldier = "catapult", star = 1, count = 100, damage = 80, morale = 100, decrease = 80},
+        defeatAll = false,
         defeat = "right"
     },
+-- {
+--     left = {soldier = "lancer", count = 1000, damage = 90, morale = 100, decrease = 20},
+--     right = {damage = 10, decrease = 10},
+--     defeat = "right"
+-- },
+-- {
+--     left = {damage = 90, decrease = 30},
+--     right = {soldier = "wall", count = 1000, damage = 80, morale = 100, decrease = 90},
+--     defeat = "right"
+-- },
 }
 local function decode_battle_from_report(report)
     local attacks = report:GetFightAttackSoldierRoundData()
@@ -54,6 +56,10 @@ local function decode_battle_from_report(report)
     for i = 1, #attacks do
         local attacker = attacks[i]
         local defender = defends[i]
+        local defeatAll = (((attacker.morale - attacker.moraleDecreased) <= 20
+            or (attacker.soldierCount - attacker.soldierDamagedCount) <= 0) or not attacker.isWin)
+            and (((defender.morale - defender.moraleDecreased) <= 20
+            or (defender.soldierCount - defender.soldierDamagedCount) <= 0) or not defender.isWin)
         local left
         local right
         if defeat == "right" then
@@ -87,7 +93,10 @@ local function decode_battle_from_report(report)
             }
         end
         defeat = attacker.isWin and "right" or "left"
-        table.insert(battle, {left = left, right = right, defeat = defeat})
+        table.insert(battle, {left = left, right = right, defeat = defeat, defeatAll = defeatAll})
+        if defeatAll then
+            defeat = nil
+        end
     end
     return battle
 end
@@ -99,58 +108,64 @@ local function decode_battle(raw)
         local left, right = dual.left, dual.right
         left_soldier = left.soldier or left_soldier
         right_soldier = right.soldier or right_soldier
-        if i == 1 then
+        if left.soldier and right.soldier then
             table.insert(r, {
-                {soldier = left_soldier, star = left.star, state = "enter", count = left.count, morale = left.morale},
-                {soldier = right_soldier, star = right.star, state = "enter", count = right.count, morale = right.morale}
+                {soldier = left.soldier, star = left.star, state = "enter", count = left.count, morale = left.morale},
+                {soldier = right.soldier, star = right.star, state = "enter", count = right.count, morale = right.morale}
             })
-        else
-            if left.soldier then
-                local soldier = left.soldier
-                local count = left.count
-                local morale = left.morale
-                local star = left.star
-                if soldier == "wall" then
-                    table.insert(r, {
-                        {soldier = soldier, state = "enter", count = count, morale = morale}, {state = "move"}
-                    })
-                    table.insert(r, {{state = "defend"}, {state = "breath"}})
-                else
-                    table.insert(r, {
-                        {soldier = soldier, star = star, state = "enter", count = count, morale = morale}, {state = "defend"}
-                    })
-                end
-            elseif right.soldier then
-                local soldier = right.soldier
-                local count = right.count
-                local morale = right.morale
-                local star = right.star
-                if soldier == "wall" then
-                    table.insert(r, {
-                        {state = "move"}, {soldier = soldier, state = "enter", count = count, morale = morale}
-                    })
-                    table.insert(r, {{state = "breath"}, {state = "defend"}})
-                else
-                    table.insert(r, {
-                        {state = "defend"}, {soldier = soldier, star = star, state = "enter", count = count, morale = morale}
-                    })
-                end
+        elseif left.soldier then
+            local soldier = left.soldier
+            local count = left.count
+            local morale = left.morale
+            local star = left.star
+            if soldier == "wall" then
+                table.insert(r, {
+                    {soldier = soldier, state = "enter", count = count, morale = morale}, {state = "move"}
+                })
+                table.insert(r, {{state = "defend"}, {state = "breath"}})
             else
-                assert(false)
+                table.insert(r, {
+                    {soldier = soldier, star = star, state = "enter", count = count, morale = morale}, {state = "defend"}
+                })
             end
+        elseif right.soldier then
+            local soldier = right.soldier
+            local count = right.count
+            local morale = right.morale
+            local star = right.star
+            if soldier == "wall" then
+                table.insert(r, {
+                    {state = "move"}, {soldier = soldier, state = "enter", count = count, morale = morale}
+                })
+                table.insert(r, {{state = "breath"}, {state = "defend"}})
+            else
+                table.insert(r, {
+                    {state = "defend"}, {soldier = soldier, star = star, state = "enter", count = count, morale = morale}
+                })
+            end
+        else
+            assert(false)
         end
         if dual.defeat == "left" then
             table.insert(r, {{state = "attack", effect = left_soldier}, {state = "defend"}})
             table.insert(r, {{state = "defend"}, {state = "hurt", damage = right.damage, decrease = right.decrease}})
             table.insert(r, {{state = "defend"}, {state = "attack", effect = right_soldier}})
             table.insert(r, {{state = "hurt", damage = left.damage, decrease = left.decrease}, {state = "defend"}})
-            table.insert(r, {{state = "defeat"}, {state = "defend"}})
+            if dual.defeatAll == true then
+                table.insert(r, {{state = "defeat"}, {state = "defeat"}})
+            else
+                table.insert(r, {{state = "defeat"}, {state = "defend"}})
+            end
         elseif dual.defeat == "right" then
             table.insert(r, {{state = "defend"}, {state = "attack", effect = right_soldier}})
             table.insert(r, {{state = "hurt", damage = left.damage, decrease = left.decrease}, {state = "defend"}})
             table.insert(r, {{state = "attack", effect = left_soldier}, {state = "defend"}})
             table.insert(r, {{state = "defend"}, {state = "hurt", damage = right.damage, decrease = right.decrease}})
-            table.insert(r, {{state = "defend"}, {state = "defeat"}})
+            if dual.defeatAll == true then
+                table.insert(r, {{state = "defeat"}, {state = "defeat"}})
+            else
+                table.insert(r, {{state = "defend"}, {state = "defeat"}})
+            end
         else
             assert(false)
         end
@@ -689,7 +704,7 @@ local soldier_arrange = {
     lancer = {row = 3, col = 1},
     horseArcher = {row = 3, col = 1},
     deathKnight = {row = 3, col = 1},
-    
+
     catapult = {row = 2, col = 1},
     ballista = {row = 2, col = 1},
     meatWagon = {row = 2, col = 1},
@@ -856,7 +871,6 @@ function GameUIReplay:CreateItemWithListView(list_view, dual)
     return item, left_item, right_item
 end
 function GameUIReplay:SetCurrentSoldierStateBySide(side, status)
-    print(side, status)
     if side == "left" then
         self.left_corps[self.left_round]:SetUnitStatus(status)
     elseif side == "right" then
@@ -920,6 +934,10 @@ end
 
 
 return GameUIReplay
+
+
+
+
 
 
 

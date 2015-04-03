@@ -9,8 +9,6 @@ local special = GameDatas.Soldiers.special
 function WidgetSoldierInBattle:ctor(filename, options)
     WidgetSoldierInBattle.super.ctor(self, filename, options)
     local pos = {x = 284/2,y = 128/2}
-
-    dump(options)
     local soldier_level = options.star
     local soldier_type = options.soldier
     local config = special[soldier_type] or normal[soldier_type.."_"..options.star]
