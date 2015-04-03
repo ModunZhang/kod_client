@@ -96,8 +96,70 @@ local soldier_config = {
         {"jiaorouche", 0, 30, 0.8},
     },
 }
+local pve_soldier_config = {
+    ----
+    ["swordsman"] = {
+        x = -45,
+        y = -120,
+        {"bubing_1", -10, 45, 0.8},
+        {"heihua_bubing_2", -20, 40, 0.8},
+        {"heihua_bubing_3", -15, 35, 0.8},
+    },
+    ["ranger"] = {
+        x = -45,
+        y = -120,
+        {"gongjianshou_1", 0, 45, 0.8},
+        {"heihua_gongjianshou_2", 0, 45, 0.8},
+        {"heihua_gongjianshou_3", 0, 45, 0.8},
+    },
+    ["lancer"] = {
+        x = -45,
+        y = -120,
+        {"qibing_1", -10, 50, 0.8},
+        {"heihua_qibing_2", -10, 50, 0.8},
+        {"heihua_qibing_3", -10, 50, 0.8},
+    },
+    ["catapult"] = {
+        x = 50,
+        y = -80,
+        {  "toushiche", 0, 35, 1},
+        {"heihua_toushiche_2", 0, 35, 1},
+        {"heihua_toushiche_3", 0, 35, 1},
+    },
 
-function Corps:ctor(soldier, star, row, col, width, height)
+    -----
+    ["sentinel"] = {
+        x = -45,
+        y = -120,
+        {"shaobing_1", 0, 55, 0.8},
+        {"heihua_shaobing_2", 0, 55, 0.8},
+        {"heihua_shaobing_3", 0, 55, 0.8},
+    },
+    ["crossbowman"] = {
+        x = -45,
+        y = -120,
+        {"nugongshou_1", 0, 45, 0.8},
+        {"heihua_nugongshou_2", 0, 50, 0.8},
+        {"heihua_nugongshou_3", 15, 45, 0.8},
+    },
+    ["horseArcher"] = {
+        x = -45,
+        y = -120,
+        {"youqibing_1", -15, 55, 0.8},
+        {"heihua_youqibing_2", -15, 55, 0.8},
+        {"heihua_youqibing_3", -15, 55, 0.8},
+    },
+    ["ballista"] = {
+        x = 100,
+        y = -80,
+        {"nuche_1", 0, 30, 1},
+        {"heihua_nuche_2", 0, 30, 1},
+        {"heihua_nuche_3", 0, 30, 1},
+    },
+}
+pve_soldier_config.__index = soldier_config
+
+function Corps:ctor(soldier, star, row, col, width, height, is_pve_battle)
     Corps.super.ctor(self)
     local corps = self
     self.soldier = soldier
@@ -106,6 +168,7 @@ function Corps:ctor(soldier, star, row, col, width, height)
     self.star = config.star
     width = width or 90
     height = height or 120
+    local soldier_config = is_pve_battle and pve_soldier_config or soldier_config
     local pos_config = soldier_config[self.soldier]
     local start_x, start_y = pos_config.x, pos_config.y
     local width, height = width * 2, height * 2

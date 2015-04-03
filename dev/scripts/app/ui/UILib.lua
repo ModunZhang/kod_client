@@ -695,6 +695,24 @@ local PVE = {
 local PVE_ANIMATION_FILES = {
     "animations/yewaiyindi.ExportJson",
     "animations/zhihuishi.ExportJson",
+    
+    "animations/heihua_bubing_2.ExportJson",
+    "animations/heihua_bubing_3.ExportJson",
+    "animations/heihua_gongjianshou_2.ExportJson",
+    "animations/heihua_gongjianshou_3.ExportJson",
+    "animations/heihua_nuche_2.ExportJson",
+    "animations/heihua_nuche_3.ExportJson",
+    "animations/heihua_nugongshou_2.ExportJson",
+    "animations/heihua_nugongshou_3.ExportJson",
+    "animations/heihua_qibing_2.ExportJson",
+    "animations/heihua_qibing_3.ExportJson",
+    "animations/heihua_shaobing_2.ExportJson",
+    "animations/heihua_shaobing_3.ExportJson",
+    "animations/heihua_toushiche_2.ExportJson",
+    "animations/heihua_toushiche_3.ExportJson",
+    "animations/heihua_youqibing_2.ExportJson",
+    "animations/heihua_youqibing_3.ExportJson",
+    "animations/heilong.ExportJson",
 }
 
 local function loadBuildingAnimation()
@@ -839,5 +857,6 @@ return {
     unLoadDragonAnimation = unLoadDragonAnimation,
     iap_package_image = IAP_PACKAGE_IMAGE,
 }
+
 
 

@@ -582,15 +582,16 @@ function GameUIReplay:NewDragonBattle()
     self.left_dragon = left_dragon
     self.left_dragon:SetHp(attack_dragon.hp, attack_dragon.hpMax)
 
+    local is_pve_battle = self.report.IsPveBattle
     local right_bone = dragon_battle:getBone("Layer5")
-    local right_dragon = self:NewDragon():addTo(right_bone):pos(238, -82)
+    local right_dragon = self:NewDragon(nil, is_pve_battle):addTo(right_bone):pos(238, -82)
     right_bone:addDisplay(right_dragon, 0)
     right_bone:changeDisplayWithIndex(0, true)
     self.right_dragon = right_dragon
     self.right_dragon:SetHp(defend_dragon.hp, defend_dragon.hpMax)
     return dragon_battle
 end
-function GameUIReplay:NewDragon(is_left)
+function GameUIReplay:NewDragon(is_left, is_pve_battle)
     local node = display.newNode()
     function node:Init()
         self.name = cc.ui.UILabel.new({
@@ -643,7 +644,7 @@ function GameUIReplay:NewDragon(is_left)
             self.buff:pos(80, -55)
         end
 
-        local dragon = ccs.Armature:create("red_long")
+        local dragon = ccs.Armature:create(is_pve_battle and "heilong" or "red_long")
             :addTo(self):align(display.CENTER, 130, 60):scale(0.6)
         dragon:getAnimation():play("idle", -1, -1)
         dragon:setScaleX(is_left and 0.6 or -0.6)
@@ -709,9 +710,9 @@ local soldier_arrange = {
     ballista = {row = 2, col = 1},
     meatWagon = {row = 2, col = 1},
 }
-function GameUIReplay:NewCorps(soldier, star, x, y)
+function GameUIReplay:NewCorps(soldier, star, x, y, is_pve_battle)
     local arrange = soldier_arrange[soldier]
-    return Corps.new(soldier, star, arrange.row, arrange.col):addTo(self.battle):pos(x, y)
+    return Corps.new(soldier, star, arrange.row, arrange.col, is_pve_battle):addTo(self.battle):pos(x, y)
 end
 function GameUIReplay:NewEffect(soldier, is_left, x, y)
     if soldier == "wall" then return end
@@ -737,6 +738,7 @@ function GameUIReplay:DecodeStateBySide(side, is_left)
     local right_end = {x = right_start.x - len, y = height}
     local action
     local state = side.state
+    local is_pve_battle = self.report.IsPveBattle
     if state == "enter" then
         if is_left then
             if side.soldier == "wall" then
@@ -780,7 +782,7 @@ function GameUIReplay:DecodeStateBySide(side, is_left)
                         end):resolve(self.battle_bg)
                 end)
             else
-                self.right = self:NewCorps(side.soldier, side.star, right_start.x, right_start.y)
+                self.right = self:NewCorps(side.soldier, side.star, right_start.x, right_start.y, is_pve_battle)
                 action = BattleObject:Do(function(corps)
                     self:NextSoldierBySide("right")
                     return corps

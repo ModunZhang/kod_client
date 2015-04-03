@@ -900,3 +900,8 @@ errors["theAllianceBuildingCanNotMoveToTargetPoint"] = {
 	["code"] = 680,
 	["message"] = "不能移动到目标点位"
 }
+errors["giftNotExist"] = {
+	["key"] = "giftNotExist",
+	["code"] = 681,
+	["message"] = "礼品不存在"
+}
