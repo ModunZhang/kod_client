@@ -6,14 +6,82 @@ local WidgetSoldierInBattle = class("WidgetSoldierInBattle", UIImage)
 local normal = GameDatas.Soldiers.normal
 local special = GameDatas.Soldiers.special
 
+
+local BLACK_SOLDIER_IMAGES = {
+    ranger = {
+        "ranger_1.png",
+        "b_ranger_1.png",
+        "b_ranger_2.png",
+    },
+    catapult = {
+        "catapult_1.png",
+        "b_catapult_1.png",
+        "b_catapult_2.png",
+    },
+    lancer = {
+        "lancer_1.png",
+        "b_lancer_1.png",
+        "b_lancer_2.png",
+    },
+    swordsman = {
+        "swordsman_1.png",
+        "b_swordsman_1.png",
+        "b_swordsman_2.png",
+    },
+    sentinel = {
+        "sentinel_1.png",
+        "b_sentinel_1.png",
+        "b_sentinel_2.png",
+    },
+    crossbowman = {
+        "crossbowman_1.png",
+        "b_crossbowman_1.png",
+        "b_crossbowman_2.png",
+    },
+    horseArcher = {
+        "horseArcher_1.png",
+        "b_horseArcher_1.png",
+        "b_horseArcher_2.png",
+    },
+    ballista = {
+        "ballista_1.png",
+        "b_ballista_1.png",
+        "b_ballista_2.png",
+    },
+
+    skeletonWarrior = {
+        "skeletonWarrior.png",
+        "skeletonWarrior.png",
+        "skeletonWarrior.png",
+    },
+    skeletonArcher = {
+        "skeletonArcher.png",
+        "skeletonArcher.png",
+        "skeletonArcher.png",
+    },
+    deathKnight = {
+        "deathKnight.png",
+        "deathKnight.png",
+        "deathKnight.png",
+    },
+    meatWagon = {
+        "meatWagon.png",
+        "meatWagon.png",
+        "meatWagon.png",
+    },
+}
+
+
 function WidgetSoldierInBattle:ctor(filename, options)
     WidgetSoldierInBattle.super.ctor(self, filename, options)
     local pos = {x = 284/2,y = 128/2}
     local soldier_level = options.star
     local soldier_type = options.soldier
+    local is_pve_battle = options.is_pve_battle
     local config = special[soldier_type] or normal[soldier_type.."_"..options.star]
-    local soldier_ui_config = UILib.soldier_image[soldier_type][config.star]
-    local soldier_head_icon = display.newSprite(soldier_ui_config, nil, nil, {class=cc.FilteredSpriteWithOne}):align(display.LEFT_BOTTOM,0,10)
+    local soldier_ui_config = is_pve_battle and BLACK_SOLDIER_IMAGES or UILib.soldier_image
+    local soldier_ui = soldier_ui_config[soldier_type][config.star]
+    local soldier_head_icon = display.newSprite(soldier_ui, nil, nil, {class=cc.FilteredSpriteWithOne}):align(display.LEFT_BOTTOM,0,10)
     soldier_head_icon:scale(104/soldier_head_icon:getContentSize().height)
     local soldier_head_bg  = display.newSprite("box_soldier_128x128.png")
         :align(display.CENTER, soldier_head_icon:getContentSize().width/2, soldier_head_icon:getContentSize().height-64)
@@ -84,6 +152,7 @@ function WidgetSoldierInBattle:GetSoldierName()
 end
 
 return WidgetSoldierInBattle
+
 
 
 

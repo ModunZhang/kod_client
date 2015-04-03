@@ -712,7 +712,7 @@ local soldier_arrange = {
 }
 function GameUIReplay:NewCorps(soldier, star, x, y, is_pve_battle)
     local arrange = soldier_arrange[soldier]
-    return Corps.new(soldier, star, arrange.row, arrange.col, is_pve_battle):addTo(self.battle):pos(x, y)
+    return Corps.new(soldier, star, arrange.row, arrange.col, nil, nil, is_pve_battle):addTo(self.battle):pos(x, y)
 end
 function GameUIReplay:NewEffect(soldier, is_left, x, y)
     if soldier == "wall" then return end
@@ -863,7 +863,7 @@ function GameUIReplay:CreateItemWithListView(list_view, dual)
     end
     if right then
         right_item = WidgetSoldierInBattle.new("back_ground_284x128.png",
-            {side = "red", soldier = right.name, star = right.star}):addTo(row_item)
+            {side = "red", soldier = right.name, star = right.star, is_pve_battle = self.report.IsPveBattle}):addTo(row_item)
             :align(display.CENTER, 284/2 + gap, 0)
     end
     -- row_item:setContentSize(cc.size(284 * 2, 128))
