@@ -373,34 +373,42 @@ local SOLDIER_IMAGES = {
 }
 local BLACK_SOLDIER_IMAGES = {
     ranger = {
+        "ranger_1.png",
         "b_ranger_1.png",
         "b_ranger_2.png",
     },
     catapult = {
+        "catapult_1.png",
         "b_catapult_1.png",
         "b_catapult_2.png",
     },
     lancer = {
+        "lancer_1.png",
         "b_lancer_1.png",
         "b_lancer_2.png",
     },
     swordsman = {
+        "swordsman_1.png",
         "b_swordsman_1.png",
         "b_swordsman_2.png",
     },
     sentinel = {
+        "sentinel_1.png",
         "b_sentinel_1.png",
         "b_sentinel_2.png",
     },
     crossbowman = {
+        "crossbowman_1.png",
         "b_crossbowman_1.png",
         "b_crossbowman_2.png",
     },
     horseArcher = {
+        "horseArcher_1.png",
         "b_horseArcher_1.png",
         "b_horseArcher_2.png",
     },
     ballista = {
+        "ballista_1.png",
         "b_ballista_1.png",
         "b_ballista_2.png",
     },
