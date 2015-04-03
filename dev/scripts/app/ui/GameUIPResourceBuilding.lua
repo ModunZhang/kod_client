@@ -223,6 +223,15 @@ function GameUIPResourceBuilding:CheckSwitch(switch_to_building_type)
         FullScreenPopDialogUI.new()
             :AddToCurrentScene()
             :SetTitle("提示")
+            :CreateOKButton(
+                {
+                    listener = function ()
+                        UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                        self:LeftButtonClicked()
+                    end,
+                    btn_name= _("前往商店")
+                }
+            )
             :SetPopMessage(_("宝石不足"))
         return
     elseif (city:GetMaxHouseCanBeBuilt(current_building:GetHouseType())-current_building:GetMaxHouseNum())<#city:GetBuildingByType(current_building:GetHouseType()) then
@@ -277,6 +286,7 @@ function GameUIPResourceBuilding:CheckSwitch(switch_to_building_type)
     return true
 end
 return GameUIPResourceBuilding
+
 
 
 

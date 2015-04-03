@@ -6,7 +6,6 @@ local window = import("..utils.window")
 local WidgetProgress = import(".WidgetProgress")
 local WidgetUIBackGround = import(".WidgetUIBackGround")
 local WidgetPushButton = import(".WidgetPushButton")
-local WidgetUpgradeMilitaryTech = import(".WidgetUpgradeMilitaryTech")
 local SoldierManager = import("..entity.SoldierManager")
 local Localize = import("..utils.Localize")
 
@@ -87,7 +86,7 @@ function WidgetMilitaryTechnology:CreateItem(tech)
             color = 0xffedae,
             shadow = true
         })):onButtonClicked(function (event)
-        WidgetUpgradeMilitaryTech.new(tech):AddToCurrentScene()
+        UIKit:newGameUI("WidgetUpgradeMilitaryTech", tech):AddToCurrentScene()
         end)
         :align(display.CENTER, item_width-90, 44):addTo(content)
 
@@ -143,6 +142,7 @@ function WidgetMilitaryTechnology:VisibleUpgradeButton()
     end
 end
 return WidgetMilitaryTechnology
+
 
 
 

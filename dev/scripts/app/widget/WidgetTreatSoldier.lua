@@ -359,7 +359,17 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
                     :SetPopMessage(_("请设置要治愈的伤兵数")):AddToCurrentScene()
             elseif self.treat_now_gems>City:GetUser():GetGemResource():GetValue() then
                 local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                    :SetPopMessage(_("宝石补足")):AddToCurrentScene()
+                    :SetPopMessage(_("宝石补足"))
+                    :CreateOKButton(
+                        {
+                            listener = function ()
+                                UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                                City:GetResourceManager():RemoveObserver(self)
+                                self:getParent():LeftButtonClicked()
+                            end,
+                            btn_name= _("前往商店")
+                        }
+                    ):AddToCurrentScene()
             else
                 treat_fun()
             end
@@ -413,7 +423,17 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
                     :SetPopMessage(_("请设置要治愈的伤兵数")):AddToCurrentScene()
             elseif City:GetUser():GetGemResource():GetValue()< hospital:GetTreatGems(soldiers) then
                 local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                    :SetPopMessage(_("没有足够的宝石补充资源")):AddToCurrentScene()
+                    :SetPopMessage(_("没有足够的宝石补充资源"))
+                    :CreateOKButton(
+                        {
+                            listener = function ()
+                                UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                                City:GetResourceManager():RemoveObserver(self)
+                                self:getParent():LeftButtonClicked()
+                            end,
+                            btn_name= _("前往商店")
+                        }
+                    ):AddToCurrentScene()
             elseif isAbleToTreat==HospitalUpgradeBuilding.CAN_NOT_TREAT.TREATING_AND_LACK_RESOURCE then
                 local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
                     :SetPopMessage(_("正在治愈，资源不足"))
@@ -569,6 +589,7 @@ function WidgetTreatSoldier:OnCountChanged(count)
     self.gem_label:setString(self.treat_now_gems)
 end
 return WidgetTreatSoldier
+
 
 
 

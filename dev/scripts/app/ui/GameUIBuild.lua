@@ -2,11 +2,14 @@ local cocos_promise = import("..utils.cocos_promise")
 local promise = import("..utils.promise")
 local window = import("..utils.window")
 local BuildingRegister = import("..entity.BuildingRegister")
+local MaterialManager = import("..entity.MaterialManager")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local WidgetBuyBuildingQueue = import("..widget.WidgetBuyBuildingQueue")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local SpriteConfig = import("..sprites.SpriteConfig")
+local house_levelup_config = GameDatas.HouseLevelUp
+
 local GameUIBuild = UIKit:createUIClass('GameUIBuild', "GameUIWithCommonHeader")
 
 local base_items = {
@@ -114,7 +117,7 @@ function GameUIBuild:OnCityChanged()
         v:SetNumber(number, max_number)
         if building then
             if building:GetCitizen() > citizen then
-                v:SetBuildEnable(false)
+                -- v:SetBuildEnable(false)
                 v:SetCondition(_("空闲城民不足"), display.COLOR_RED)
             elseif number >= max_number then
                 v:SetBuildEnable(false)
@@ -127,26 +130,81 @@ function GameUIBuild:OnCityChanged()
     end)
 end
 function GameUIBuild:OnBuildOnItem(item)
-    local max = self.build_city.build_queue
+    local city = self.build_city
+    local max = city.build_queue
     local current_time = app.timer:GetServerTime()
-    local upgrading_buildings = self.build_city:GetUpgradingBuildingsWithOrder(current_time)
+    local upgrading_buildings = city:GetUpgradingBuildingsWithOrder(current_time)
     local current = max - #upgrading_buildings
 
-    if current > 0 then
+    local m =city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
+    local config = house_levelup_config[item.building.building_type]
+
+    -- 升级所需资源不足
+    local wood = city.resource_manager:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+    local iron = city.resource_manager:GetIronResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+    local stone = city.resource_manager:GetStoneResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+    local citizen = city.resource_manager:GetPopulationResource():GetNoneAllocatedByTime(app.timer:GetServerTime())
+    local is_resource_enough = wood<config[1].wood
+        or stone<config[1].stone 
+        or iron<config[1].iron
+        or citizen<config[1].citizen
+        or m.tiles<config[1].tiles 
+        or m.tools<config[1].tools
+        or m.blueprints<config[1].blueprints 
+        or m.pulley<config[1].pulley
+
+    local resource_gems = 0
+    if is_resource_enough then
+        local has_resourcce = {
+            wood = wood,
+            iron = iron,
+            stone = stone,
+            citizen = citizen
+        }
+
+        local resource_config = DataUtils:getBuildingUpgradeRequired(item.building.building_type, 1)
+        resource_gems = resource_gems + DataUtils:buyResource(resource_config.resources, has_resourcce)
+        resource_gems = resource_gems + DataUtils:buyMaterial(resource_config.materials, m)
+    end
+    print("resource_gems>>>>",resource_gems)
+    if current > 0 and resource_gems == 0 then
         self:BuildWithRuins(self.select_ruins, item.building.building_type)
     else
         local dialog = FullScreenPopDialogUI.new():addTo(self:GetView())
-        local required_gems = DataUtils:getGemByTimeInterval(upgrading_buildings[1]:GetUpgradingLeftTimeByCurrentTime(current_time))
+        local required_gems = 0
+        if current <= 0 then
+            required_gems = DataUtils:getGemByTimeInterval(upgrading_buildings[1]:GetUpgradingLeftTimeByCurrentTime(current_time))
+        end
         dialog:SetTitle(_("提示"))
-        dialog:SetPopMessage(_("您当前没有空闲的建筑队列,是否花费魔法石立即完成上一个队列"))
-        dialog:CreateNeeds({value = required_gems})
-        dialog:CreateOKButton(
-            {
-                listener =  function()
-                    self:BuildWithRuins(self.select_ruins, item.building.building_type)
-                end
-            }
-        )
+        local message  = ""
+        if resource_gems>0 then
+            message = message .. _("您当前资源不足，补足需要宝石").. resource_gems.. "\n"
+        end
+        if current<=0 then
+            message = message .. _("您当前没有空闲的建筑队列,是否花费魔法石立即完成上一个队列").. "\n"
+        end
+        local need_gem = required_gems+resource_gems
+        dialog:SetPopMessage(message)
+        dialog:CreateNeeds({value = need_gem})
+        if need_gem > User:GetGemResource():GetValue() then
+            dialog:CreateOKButton(
+                {
+                    llistener =  function ()
+                        UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                        self:LeftButtonClicked()
+                    end,
+                    btn_name = _("前往商店")
+                }
+            )
+        else
+            dialog:CreateOKButton(
+                {
+                    listener =  function()
+                        self:BuildWithRuins(self.select_ruins, item.building.building_type)
+                    end
+                }
+            )
+        end
     end
 end
 function GameUIBuild:BuildWithRuins(select_ruins, building_type)
@@ -299,6 +357,9 @@ end
 
 
 return GameUIBuild
+
+
+
 
 
 

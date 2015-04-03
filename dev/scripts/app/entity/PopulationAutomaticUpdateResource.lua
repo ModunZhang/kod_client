@@ -23,7 +23,6 @@ function PopulationAutomaticUpdateResource:SetLowLimitResource(value)
 end
 
 
-
 return PopulationAutomaticUpdateResource
 
 

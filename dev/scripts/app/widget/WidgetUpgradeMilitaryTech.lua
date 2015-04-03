@@ -94,7 +94,10 @@ function WidgetUpgradeMilitaryTech:UpgradeButtons()
                     FullScreenPopDialogUI.new():SetTitle(_("提示"))
                         :SetPopMessage(_("宝石不足"))
                         :CreateOKButton({
-                            listener =  function () end
+                            listener =  function () 
+                                UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                                self:LeftButtonClicked()
+                            end
                         })
                         :AddToCurrentScene()
                 else

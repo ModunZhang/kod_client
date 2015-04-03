@@ -441,7 +441,7 @@ function WidgetMakeEquip:IsAbleToMakeEqui(isFinishNow)
     if isFinishNow then
         local gem =  DataUtils:buyResource({coin = equip_config.coin}, {}) + DataUtils:getGemByTimeInterval(equip_config.makeTime)
         if gem > User:GetGemResource():GetValue() then
-            UIKit:showMessageDialog(_("提示"),_("宝石不足"),function()end)
+            UIKit:showMessageDialog(_("提示"),_("宝石不足"),function()  UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)  end)
             return false
         end
     end
