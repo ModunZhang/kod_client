@@ -171,45 +171,106 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
     local building = self.building
     local efficiency
     if self.building:GetType()=="keep" then
-        efficiency = string.format("%s%d,%s%d,%s+%d",bd.unlock,building:GetNextLevelUnlockPoint(),bd.troopPopulation,building:GetNextLevelBeHelpedCount(),bd.power,building:GetNextLevelPower())
+        efficiency = string.format("%s+%d,%s+%d,%s+%d",
+            bd.unlock,building:GetNextLevelUnlockPoint()-building:GetUnlockPoint(),
+            bd.beHelpCount,building:GetNextLevelBeHelpedCount()-building:GetBeHelpedCount(),
+            bd.power,building:GetNextLevelPower()-building:GetPower())
     elseif self.building:GetType()=="dragonEyrie" then
-        efficiency = string.format("%s%d,%s+%d",bd.vitalityRecoveryPerHour,building:GetNextLevelHPRecoveryPerHour(),bd.power,building:GetNextLevelPower())
+        efficiency = string.format("%s+%d,%s+%d",
+            bd.vitalityRecoveryPerHour,building:GetNextLevelHPRecoveryPerHour()-building:GetHPRecoveryPerHourWithoutBuff(),
+            bd.power,building:GetNextLevelPower()-building:GetPower())
     elseif self.building:GetType()=="watchTower" then
         efficiency = string.format("%s",bd["watchTower_"..self.building:GetLevel()])
     elseif self.building:GetType()=="warehouse" then
-        efficiency = string.format("%s%d,%s+%d",bd.warehouse_max,building:GetResourceNextLevelValueLimit(),bd.power,building:GetNextLevelPower())
+        efficiency = string.format("%s%d,%s+%d",
+            bd.warehouse_max,building:GetResourceNextLevelValueLimit()-building:GetResourceValueLimit(),
+            bd.power,building:GetNextLevelPower()-building:GetPower())
     elseif self.building:GetType()=="toolShop" then
-        efficiency = string.format("%s%d%s,%s+%d",bd.poduction,building:GetNextLevelProduction(),bd.poduction_1,bd.power,building:GetNextLevelPower())
+        efficiency = string.format("%s+%d%s,%s+%d",
+            bd.poduction,building:GetNextLevelProduction()-building:GetProduction(),bd.poduction_1,
+            bd.power,building:GetNextLevelPower()-building:GetPower())
     elseif self.building:GetType()=="materialDepot" then
-        efficiency = string.format("%s%d,%s+%d",bd.maxMaterial,building:GetNextLevelMaxMaterial(),bd.power,building:GetNextLevelPower())
-    elseif self.building:GetType()=="armyCamp" then
-        efficiency = string.format("%s%d,%s+%d",bd.armyCamp_troopPopulation,building:GetNextLevelTroopPopulation(),bd.power,building:GetNextLevelPower())
+        efficiency = string.format("%s+%d,%s+%d",
+            bd.maxMaterial,building:GetNextLevelMaxMaterial()-building:GetMaxMaterial(),
+            bd.power,building:GetNextLevelPower()-building:GetPower())
+        -- elseif self.building:GetType()=="armyCamp" then
+        --     efficiency = string.format("%s%d,%s+%d",bd.armyCamp_troopPopulation,building:GetNextLevelTroopPopulation(),bd.power,building:GetNextLevelPower())
     elseif self.building:GetType()=="barracks" then
-        efficiency = string.format("%s%d,%s+%d",bd.maxRecruit,building:GetNextLevelMaxRecruitSoldierCount(),bd.power,building:GetNextLevelPower())
+        efficiency = string.format("%s+%d,%s+%d",
+            bd.maxRecruit,building:GetNextLevelMaxRecruitSoldierCount()-building:GetMaxRecruitSoldierCount(),
+            bd.power,building:GetNextLevelPower()-building:GetPower())
     elseif self.building:GetType()=="blackSmith" then
-        efficiency = string.format("%s%d%%,%s+%d",bd.blackSmith_efficiency,building:GetNextLevelEfficiency()*100,bd.power,building:GetNextLevelPower())
+        efficiency = string.format("%s+%d%%,%s+%d",
+            bd.blackSmith_efficiency,(building:GetNextLevelEfficiency()-building:GetEfficiency())*100,
+            bd.power,building:GetNextLevelPower()-building:GetPower())
     elseif self.building:GetType()=="foundry" then
-        efficiency = string.format("%s+%d,%s+%d%%,%s+%d",bd.foundry_miner,building:GetNextLevelMaxHouseNum(),bd.foundry_protection,building:GetNextLevelProtection()*100,bd.power,building:GetNextLevelPower())
+        local house_add = building:GetNextLevelMaxHouseNum()-building:GetMaxHouseNum()
+        efficiency = ""
+        if house_add>0 then
+            efficiency = string.format("%s+%d," ,bd.foundry_miner,house_add)
+        end
+        efficiency = efficiency..string.format("%s+%d%%,%s+%d",
+            bd.foundry_protection,(building:GetNextLevelProtection()-building:GetProtection())*100,
+            bd.power,building:GetNextLevelPower()-building:GetPower())
     elseif self.building:GetType()=="lumbermill" then
-        efficiency = string.format("%s+%d,%s+%d%%,%s+%d",bd.lumbermill_woodcutter,building:GetNextLevelMaxHouseNum(),bd.lumbermill_protection,building:GetNextLevelProtection()*100,bd.power,building:GetNextLevelPower())
+        local house_add = building:GetNextLevelMaxHouseNum()-building:GetMaxHouseNum()
+         efficiency = ""
+        if house_add>0 then
+            efficiency = string.format("%s+%d," ,bd.lumbermill_woodcutter,house_add)
+        end
+        efficiency = efficiency..string.format("%s+%d%%,%s+%d",
+            bd.lumbermill_protection,(building:GetNextLevelProtection()-building:GetProtection())*100,
+            bd.power,building:GetNextLevelPower()-building:GetPower())
     elseif self.building:GetType()=="mill" then
-        efficiency = string.format("%s+%d,%s+%d%%,%s+%d",bd.mill_farmer,building:GetNextLevelMaxHouseNum(),bd.mill_protection,building:GetNextLevelProtection()*100,bd.power,building:GetNextLevelPower())
+        local house_add = building:GetNextLevelMaxHouseNum()-building:GetMaxHouseNum()
+        efficiency = ""
+        if house_add>0 then
+            efficiency = string.format("%s+%d," ,bd.mill_farmer,house_add)
+        end
+        efficiency = efficiency..string.format("%s+%d%%,%s+%d",
+            bd.mill_protection,(building:GetNextLevelProtection()-building:GetProtection())*100,
+            bd.power,building:GetNextLevelPower()-building:GetPower())
     elseif self.building:GetType()=="stoneMason" then
-        efficiency = string.format("%s+%d,%s+%d%%,%s+%d",bd.stoneMason_quarrier,building:GetNextLevelMaxHouseNum(),bd.stoneMason_protection,building:GetNextLevelProtection()*100,bd.power,building:GetNextLevelPower())
+         local house_add = building:GetNextLevelMaxHouseNum()-building:GetMaxHouseNum()
+        efficiency = ""
+        if house_add>0 then
+            efficiency = string.format("%s+%d," ,bd.stoneMason_quarrier,house_add)
+        end
+        efficiency = efficiency..string.format("%s+%d%%,%s+%d",
+            bd.stoneMason_protection,(building:GetNextLevelProtection()-building:GetProtection())*100,
+            bd.power,building:GetNextLevelPower()-building:GetPower())
     elseif self.building:GetType()=="hospital" then
-        efficiency = string.format("%s%d,%s+%d",bd.maxCasualty,building:GetNextLevelMaxCasualty(),bd.power,building:GetNextLevelPower())
+        efficiency = string.format("%s+%d,%s+%d",
+            bd.maxCasualty,building:GetNextLevelMaxCasualty()-building:GetMaxCasualty(),
+            bd.power,building:GetNextLevelPower()-building:GetPower())
     elseif self.building:GetType()=="townHall" then
-        efficiency = string.format("%s%d",bd.townHall_dwelling,building:GetNextLevelMaxHouseNum())
+        local house_add = building:GetNextLevelMaxHouseNum()-building:GetMaxHouseNum()
+        efficiency = ""
+        if house_add>0 then
+            efficiency = string.format("%s+%d," ,bd.townHall_dwelling,house_add)
+        end
+        efficiency = efficiency..string.format("%s+%d",
+            bd.power,building:GetNextLevelPower()-building:GetPower())
     elseif self.building:GetType()=="dwelling" then
-        efficiency = string.format("%s%d,%s+%d",bd.dwelling_citizen,building:GetNextLevelCitizen(),bd.power,building:GetNextLevelPower())
+        efficiency = string.format("%s+%d,%s+%d",
+            bd.dwelling_citizen,building:GetNextLevelCitizen()-building:GetProductionLimit(),
+            bd.power,building:GetNextLevelPower()-building:GetPower())
     elseif self.building:GetType()=="woodcutter" then
-        efficiency = string.format("%s%d,%s+%d",bd.woodcutter_poduction,building:GetNextLevelProductionPerHour(),bd.power,building:GetNextLevelPower())
+        efficiency = string.format("%s+%d,%s+%d",
+            bd.woodcutter_poduction,building:GetNextLevelProductionPerHour()-building:GetProductionPerHour(),
+            bd.power,building:GetNextLevelPower()-building:GetPower())
     elseif self.building:GetType()=="farmer" then
-        efficiency = string.format("%s%d,%s+%d",bd.farmer_poduction,building:GetNextLevelProductionPerHour(),bd.power,building:GetNextLevelPower())
+        efficiency = string.format("%s+%d,%s+%d",
+            bd.farmer_poduction,building:GetNextLevelProductionPerHour()-building:GetProductionPerHour(),
+            bd.power,building:GetNextLevelPower()-building:GetPower())
     elseif self.building:GetType()=="quarrier" then
-        efficiency = string.format("%s%d,%s+%d",bd.quarrier_poduction,building:GetNextLevelProductionPerHour(),bd.power,building:GetNextLevelPower())
+        efficiency = string.format("%s+%d,%s+%d",
+            bd.quarrier_poduction,building:GetNextLevelProductionPerHour()-building:GetProductionPerHour(),
+            bd.power,building:GetNextLevelPower()-building:GetPower())
     elseif self.building:GetType()=="miner" then
-        efficiency = string.format("%s%d,%s+%d",bd.miner_poduction,building:GetNextLevelProductionPerHour(),bd.power,building:GetNextLevelPower())
+        efficiency = string.format("%s+%d,%s+%d",
+            bd.miner_poduction,building:GetNextLevelProductionPerHour()-building:GetProductionPerHour(),
+            bd.power,building:GetNextLevelPower()-building:GetPower())
     else
         efficiency = (_("本地化未添加"))
     end
@@ -734,6 +795,7 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
 
 
 

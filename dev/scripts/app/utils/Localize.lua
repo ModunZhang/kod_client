@@ -186,7 +186,7 @@ local DRAGON_BUFF_EFFECTION = {
 local BUILDING_DESCRIPTION = {
     ["keep"] = _("城堡是权力的的象征，城市的核心建筑，升级能够解锁更多的地块，提供更高的建筑等级"),
     ["unlock"] = _("可解锁的地块"),
-    ["troopPopulation"] = _("部队派兵上限"),
+    ["beHelpCount"] = _("被协助加速次数"),
     ["power"] = _("战斗力"),
 
     ["watchTower"] = _("瞭望塔提供查看部队的情况，并提供敌方来袭时的信息，"),
