@@ -412,9 +412,9 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
         {
             resource_type = _("建造队列"),
             isVisible = true,
-            isSatisfy = #city:GetUpgradingBuildings()<1,
+            isSatisfy = #city:GetUpgradingBuildings()<city:BuildQueueCounts(),
             icon="hammer_31x33.png",
-            description=_("建造队列")..city:BuildQueueCounts().."/"..GameUtils:formatNumber(#city:GetUpgradingBuildings())
+            description=_("建造队列")..(city:BuildQueueCounts()-GameUtils:formatNumber(#city:GetUpgradingBuildings())).."/"..city:BuildQueueCounts()
         },
         {
             resource_type = _("木材"),

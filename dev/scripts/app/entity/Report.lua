@@ -318,11 +318,11 @@ function Report:GetBattleAt()
     elseif self.type == Report.REPORT_TYPE[VILLAGEBESTRIKED]
         or self.type == Report.REPORT_TYPE[STRIKEVILLAGE]
     then
-        return Localize.village_name[data.strikeTarget.type]
+        return Localize.village_name[data.strikeTarget.name]
     elseif self.type == Report.REPORT_TYPE[ATTACKVILLAGE] then
-        return Localize.village_name[data.attackTarget.type]
+        return Localize.village_name[data.attackTarget.name]
     elseif self.type == Report.REPORT_TYPE[COLLECTRESOURCE] then
-        return Localize.village_name[data.collectTarget.type]
+        return Localize.village_name[data.collectTarget.name]
     end
 end
 function Report:GetBattleLocation()
