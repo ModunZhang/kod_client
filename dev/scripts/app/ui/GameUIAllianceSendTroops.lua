@@ -115,6 +115,9 @@ function GameUIAllianceSendTroops:OnMoveInStage()
                     item:SetSoldierCount(0)
                 end
             else
+                for k,item in pairs(self.soldiers_table) do
+                    item:SetSoldierCount(0)
+                end
                 self:AdapterMaxButton()
                 local max_soldiers_citizen = 0
                 for k,item in pairs(self.soldiers_table) do
@@ -456,10 +459,10 @@ function GameUIAllianceSendTroops:SelectSoldiers()
         "skeletonArcher",
         "deathKnight",
         "meatWagon",
-        "priest",
-        "demonHunter",
-        "paladin",
-        "steamTank",
+    -- "priest",
+    -- "demonHunter",
+    -- "paladin",
+    -- "steamTank",
     }
     local map_s = sm:GetSoldierMap()
     for _,name in pairs(soldier_map) do
@@ -634,7 +637,11 @@ function GameUIAllianceSendTroops:CreateTroopsShow()
             local total_power , total_weight, total_citizen =0,0,0
             for index,v in pairs(soldiers) do
                 local corp = self:NewCorps(v.soldier_type,v.power,v.soldier_star):addTo(self)
-                corp:PlayAnimation("idle_90")
+                if v.soldier_type ~= "catapult" and v.soldier_type ~= "ballista" and v.soldier_type ~= "meatWagon" then
+                    corp:PlayAnimation("idle_90")
+                else
+                    corp:PlayAnimation("move_90")
+                end
                 x = x - (count ~= 0 and pre_width or corp:getCascadeBoundingBox().size.width/2)
                 pre_width = corp:getCascadeBoundingBox().size.width/2+40
                 if v.soldier_type =="lancer" or v.soldier_type =="lancer" then
@@ -675,6 +682,7 @@ function GameUIAllianceSendTroops:onExit()
 end
 
 return GameUIAllianceSendTroops
+
 
 
 
