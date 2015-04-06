@@ -10,18 +10,15 @@ local GameUIAllianceContribute = import(".GameUIAllianceContribute")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local GameUIHelp = import(".GameUIHelp")
 local WidgetChangeMap = import("..widget.WidgetChangeMap")
-local RichText = import("..widget.RichText")
-local ChatManager = import("..entity.ChatManager")
+local WidgetChat = import("..widget.WidgetChat")
+local WidgetNumberTips = import("..widget.WidgetNumberTips")
+local WidgetHomeBottom = import("..widget.WidgetHomeBottom")
+local WidgetPushButton = import("..widget.WidgetPushButton")
 local GameUIAllianceHome = UIKit:createUIClass('GameUIAllianceHome')
 local cc = cc
 function GameUIAllianceHome:ctor(alliance)
     GameUIAllianceHome.super.ctor(self)
     self.alliance = alliance
-    self.chatManager = app:GetChatManager()
-end
-
-function GameUIAllianceHome:GetChatManager()
-    return self.chatManager
 end
 function GameUIAllianceHome:DisplayOn()
     self.visible_count = self.visible_count + 1
@@ -44,13 +41,17 @@ function GameUIAllianceHome:FadeToSelf(isFullDisplay)
         end
     })
 end
+function GameUIAllianceHome:OnTaskChanged()
+    self.bottom.task_count:SetNumber(self.city:GetUser():GetTaskManager():GetCompleteTaskCount())
+end
 
 
 function GameUIAllianceHome:onEnter()
     GameUIAllianceHome.super.onEnter(self)
     self.visible_count = 1
-    self.bottom = self:CreateBottom()
     self.top = self:CreateTop()
+    self.bottom = self:CreateBottom()
+    WidgetChangeMap.new(WidgetChangeMap.MAP_TYPE.OUR_ALLIANCE):addTo(self)
 
     local rect1 = self.bottom:getCascadeBoundingBox()
     local rect2 = self.top_bg:getCascadeBoundingBox()
@@ -88,8 +89,6 @@ function GameUIAllianceHome:onEnter()
 
     -- 中间按钮
     self:CreateOperationButton()
-    self:GetChatManager():AddListenOnType(self,ChatManager.LISTEN_TYPE.TO_REFRESH)
-    self:GetChatManager():AddListenOnType(self,ChatManager.LISTEN_TYPE.TO_TOP)
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.MEMBER)
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.ALLIANCE_FIGHT)
@@ -98,12 +97,18 @@ function GameUIAllianceHome:onEnter()
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.ALL_HELP_EVENTS)
     MailManager:AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
     local city = City
+    self.city = city
     city:AddListenOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
     city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
     city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
     city:AddListenOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
+
+    city:GetUser():AddListenOnType(self, city:GetUser().LISTEN_TYPE.TASK)
     -- 添加到全局计时器中，以便显示各个阶段的时间
     app.timer:AddListener(self)
+
+    self:OnTaskChanged(city:GetUser())
+    self:MailUnreadChanged()
 end
 
 function GameUIAllianceHome:CreateOperationButton()
@@ -192,34 +197,17 @@ function GameUIAllianceHome:onExit()
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.HELP_EVENTS)
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.ALL_HELP_EVENTS)
     MailManager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
-    self:GetChatManager():RemoveListenerOnType(self,ChatManager.LISTEN_TYPE.TO_REFRESH)
-    self:GetChatManager():RemoveListenerOnType(self,ChatManager.LISTEN_TYPE.TO_TOP)
 
     local city = City
     city:RemoveListenerOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
+    city:RemoveListenerOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
     city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
     city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
-    city:RemoveListenerOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
+    city:GetUser():RemoveListenerOnType(self, city:GetUser().LISTEN_TYPE.TASK)
+
     GameUIAllianceHome.super.onExit(self)
 end
 
-function GameUIAllianceHome:TO_TOP()
-    self:RefreshChatMessage()
-end
-
-function GameUIAllianceHome:TO_REFRESH()
-    self:RefreshChatMessage()
-end
-
-function GameUIAllianceHome:RefreshChatMessage()
-    if not self.chat_labels then return end
-    local last_chat_messages = self:GetChatManager():FetchLastChannelMessage()
-    for i,v in ipairs(self.chat_labels) do
-        local rich_text = self.chat_labels[i]
-        rich_text:Text(last_chat_messages[i],1)
-        rich_text:align(display.LEFT_CENTER, 0, 10)
-    end
-end
 
 function GameUIAllianceHome:TopBg()
     local top_bg = display.newSprite("alliance_home_top_bg_768x116.png")
@@ -515,138 +503,16 @@ function GameUIAllianceHome:OnAllianceFightRequestsChanged(request_num)
 end
 
 function GameUIAllianceHome:MailUnreadChanged(...)
-    local num =MailManager:GetUnReadMailsNum() + MailManager:GetUnReadReportsNum()
-    if num==0 then
-        self.mail_unread_num_bg:setVisible(false)
-    else
-        self.mail_unread_num_bg:setVisible(true)
-        self.mail_unread_num_label:setString(GameUtils:formatNumber(num))
-    end
+    self.bottom.mail_count:SetNumber(MailManager:GetUnReadMailsNum()+MailManager:GetUnReadReportsNum())
 end
 function GameUIAllianceHome:CreateBottom()
-
-    -- 底部背景
-    local bottom_bg = display.newSprite("bottom_bg_768x136.png")
+    local bottom_bg = WidgetHomeBottom.new(handler(self, self.OnBottomButtonClicked)):addTo(self)
         :align(display.BOTTOM_CENTER, display.cx, display.bottom)
-        :addTo(self)
-    bottom_bg:setTouchEnabled(true)
-    if display.width >640 then
-        bottom_bg:scale(display.width/768)
-    end
 
-    -- 聊天背景
-    local chat_bg = display.newSprite("chat_background.png")
-        :align(display.CENTER, bottom_bg:getContentSize().width/2, bottom_bg:getContentSize().height-10)
-        :addTo(bottom_bg)
-    cc.ui.UIImage.new("chat_btn_60x48.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width-60, 0)
-    local index_1 = display.newSprite("chat_page_index_1.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width/2-10,chat_bg:getContentSize().height-10)
-    local index_2 = display.newSprite("chat_page_index_2.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width/2+10,chat_bg:getContentSize().height-10)
-
-    local size = chat_bg:getContentSize()
-    local pv = UIPageView.new {
-        viewRect =  cc.rect(10, 4, size.width-80, size.height),
-        row = 2,
-        padding = {left = 0, right = 0, top = 10, bottom = 0}
-    }
-        :onTouch(function (event)
-            dump(event,"UIPageView event")
-            if event.name == "pageChange" then
-                if 1 == event.pageIdx then
-                    index_1:setPositionX(chat_bg:getContentSize().width/2-10)
-                    index_2:setPositionX(chat_bg:getContentSize().width/2+10)
-                elseif 2 == event.pageIdx then
-                    index_1:setPositionX(chat_bg:getContentSize().width/2+10)
-                    index_2:setPositionX(chat_bg:getContentSize().width/2-10)
-                end
-            elseif event.name == "clicked" then
-                if event.pageIdx == 1 then
-                    UIKit:newGameUI('GameUIChatChannel',"global"):AddToCurrentScene(true)
-                elseif event.pageIdx == 2 then
-                    UIKit:newGameUI('GameUIChatChannel',"alliance"):AddToCurrentScene(true)
-                end
-            end
-        end)
-        :addTo(chat_bg)
-    pv:setTouchEnabled(true)
-    pv:setTouchSwallowEnabled(false)
-    -- add items
-    self.chat_labels = {}
-    local last_chat_messages = self:GetChatManager():FetchLastChannelMessage()
-    dump(last_chat_messages,"last_chat_messages--->")
-    -- add items
-    for i=1,4 do
-        local item = pv:newItem()
-        local content
-
-        content = display.newLayer()
-        content:setContentSize(540, 20)
-        content:setTouchEnabled(false)
-        local label = RichText.new({width = 540,size = 16,color = 0xc7bd97})
-        label:Text(last_chat_messages[i],1)
-        label:addTo(content):align(display.LEFT_CENTER, 0, content:getContentSize().height/2)
-        table.insert(self.chat_labels, label)
-        item:addChild(content)
-        pv:addItem(item)
-    end
-    pv:reload()
-
-
-    -- 底部按钮
-    local first_row = 64
-    local first_col = 240
-    local label_padding = 20
-    local padding_width = 100
-    for i, v in ipairs({
-        {"bottom_icon_mission_128x128.png", _("任务")},
-        {"bottom_icon_package_128x128.png", _("物品")},
-        {"mail_icon_128x128.png", _("邮件")},
-        {"bottom_icon_alliance_128x128.png", _("联盟")},
-        {"bottom_icon_package_77x67.png", _("更多")},
-    }) do
-        local col = i - 1
-        local x, y = first_col + col * padding_width, first_row
-        local button = WidgetPushButton.new({normal = v[1]})
-            :onButtonClicked(handler(self, self.OnBottomButtonClicked))
-            :addTo(bottom_bg):pos(x, y)
-            :scale(0.55)
-        button:setTag(i)
-        button:addButtonPressedEventListener(function ()
-            local seq_1 = transition.sequence{
-                cc.ScaleTo:create(0.1, 0.55),
-                cc.ScaleTo:create(0.1, 0.6),
-                cc.ScaleTo:create(0.1, 0.55),
-            }
-            button:runAction(seq_1)
-        end)
-        UIKit:ttfLabel({
-            text = v[2],
-            size = 16,
-            color = 0xf5e8c4})
-            :addTo(bottom_bg):align(display.CENTER,x, y-40)
-    end
-
-    -- 未读邮件或战报数量显示条
-    self.mail_unread_num_bg = display.newSprite("mail_unread_bg_36x23.png"):addTo(bottom_bg):pos(460, first_row+20)
-    self.mail_unread_num_label = cc.ui.UILabel.new(
-        {cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = GameUtils:formatNumber(MailManager:GetUnReadMailsAndReportsNum()),
-            font = UIKit:getFontFilePath(),
-            size = 16,
-            -- dimensions = cc.size(200,24),
-            color = UIKit:hex2c3b(0xf5f2b3)
-        }):align(display.CENTER,self.mail_unread_num_bg:getContentSize().width/2,self.mail_unread_num_bg:getContentSize().height/2+4)
-        :addTo(self.mail_unread_num_bg)
-    if MailManager:GetUnReadMailsAndReportsNum()==0 then
-        self.mail_unread_num_bg:setVisible(false)
-    end
-
-
-    self:AddMapChangeButton()
+    self.chat = WidgetChat.new():addTo(bottom_bg)
+        :align(display.CENTER, bottom_bg:getContentSize().width/2, bottom_bg:getContentSize().height-11)
 
     return bottom_bg
-end
-function GameUIAllianceHome:AddMapChangeButton()
-    local map_node = WidgetChangeMap.new(WidgetChangeMap.MAP_TYPE.OUR_ALLIANCE):addTo(self)
 end
 function GameUIAllianceHome:OnTopButtonClicked(event)
     print("OnTopButtonClicked=",event.name)
@@ -659,14 +525,14 @@ function GameUIAllianceHome:OnBottomButtonClicked(event)
     if not tag then return end
     if tag == 4 then -- tag 4 = alliance button
         UIKit:newGameUI('GameUIAlliance'):AddToCurrentScene(true)
-    elseif tag == 1 then
-        UIKit:newGameUI('GameUIMission',City):AddToCurrentScene(true)
-    elseif tag == 2 then
-        UIKit:newGameUI('GameUIItems',City):AddToCurrentScene(true)
     elseif tag == 3 then
-        UIKit:newGameUI('GameUIMail',City):AddToCurrentScene(true)
+        UIKit:newGameUI('GameUIMail',self.city):AddToCurrentScene(true)
+    elseif tag == 2 then
+        UIKit:newGameUI('GameUIItems',self.city):AddToCurrentScene(true)
+    elseif tag == 1 then
+        UIKit:newGameUI('GameUIMission',self.city):AddToCurrentScene(true)
     elseif tag == 5 then
-        UIKit:newGameUI('GameUISetting',City):AddToCurrentScene(true)
+        UIKit:newGameUI('GameUISetting',self.city):AddToCurrentScene(true)
     end
 end
 function GameUIAllianceHome:OnMidButtonClicked(event)
@@ -824,6 +690,7 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
+
 
 
 
