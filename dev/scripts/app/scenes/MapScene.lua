@@ -4,7 +4,10 @@ local TouchJudgment = import("..layers.TouchJudgment")
 local MapScene = class("MapScene", function()
     return display.newScene("MapScene")
 end)
-
+local sqrt = math.sqrt
+local floor = math.floor
+local abs = math.abs
+local elastic = 200
 function MapScene:ctor()
     User:ResetAllListeners()
     City:ResetAllListeners()
@@ -99,8 +102,6 @@ function MapScene:OneTouch(pre_x, pre_y, x, y, touch_type)
         self.touch_judgment:OnTouchCancelled(pre_x, pre_y, x, y)
     end
 end
-local sqrt = math.sqrt
-local floor = math.floor
 function MapScene:OnTwoTouch(x1, y1, x2, y2, event_type)
     local scene = self.scene_layer
     if event_type == "began" then
@@ -133,16 +134,13 @@ function MapScene:OnTouchBegan(pre_x, pre_y, x, y)
 
 end
 function MapScene:OnTouchEnd(pre_x, pre_y, x, y, speed)
-    if not speed then
+    if not speed and self.scene_layer:MakeElastic() then
         self.touch_judgment:ResetTouch()
-        self.scene_layer:MakeElastic()
     end
 end
 function MapScene:OnTouchCancelled(pre_x, pre_y, x, y)
     print("OnTouchCancelled")
 end
-local abs = math.abs
-local sqrt = math.sqrt
 function MapScene:OnTouchMove(pre_x, pre_y, x, y)
     if self.distance then return end
     local parent = self.scene_layer:getParent()
@@ -170,9 +168,8 @@ function MapScene:OnTouchExtend(old_speed_x, old_speed_y, new_speed_x, new_speed
     local rx, ry = 1- sqrt((abs(mx)/ELASTIC)), 1 - sqrt((abs(my)/ELASTIC))
     self.scene_layer:setPosition(cc.p(x + sp.x * rx, y + sp.y * ry))
 
-    if is_end or self.scene_layer:IsCollideSide() then
+    if self.scene_layer:MakeElastic() then
         self.touch_judgment:ResetTouch()
-        self.scene_layer:MakeElastic()
     end
 end
 

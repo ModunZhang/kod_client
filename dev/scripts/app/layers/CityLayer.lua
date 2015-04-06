@@ -203,11 +203,9 @@ function CityLayer:ctor(city_scene)
     self.ruins = {}
     self.trees = {}
     self.tiles = {}
-    self.locked_tiles = {}
     self.walls = {}
     self.helpedByTroops = {}
     self.citizens = {}
-    -- self.road = nil
     self:InitBackground()
     self:InitCity()
     self:InitWeather()
@@ -411,7 +409,7 @@ function CityLayer:IsEditMode()
     return is_edit_mode
 end
 function CityLayer:UpdateAllDynamicWithCity(city)
-    self:UpdateLockedTilesWithCity(city)
+    -- self:UpdateLockedTilesWithCity(city)
     self:UpdateTilesWithCity(city)
     self:UpdateTreesWithCity(city)
     self:UpdateWallsWithCity(city)
@@ -435,19 +433,19 @@ function CityLayer:UpdateSingleTreeVisibleWithCity(city)
         tree:setVisible(city:GetTileByBuildingPosition(tree.x, tree.y):IsUnlocked())
     end)
 end
-function CityLayer:UpdateLockedTilesWithCity(city)
-    local city_node = self:GetCityNode()
-    for _, v in pairs(self.locked_tiles) do
-        v:removeFromParent()
-    end
-    self.locked_tiles = {}
-    city:IteratorTilesByFunc(function(x, y, tile)
-        local building = city:GetBuildingByLocationId(tile.location_id)
-        if tile:NeedWalls() and tile.locked and not building:IsUnlocking() then
-            table.insert(self.locked_tiles, self:CreateLockedTileSpriteWithTile(tile):addTo(city_node))
-        end
-    end)
-end
+-- function CityLayer:UpdateLockedTilesWithCity(city)
+--     local city_node = self:GetCityNode()
+--     for _, v in pairs(self.locked_tiles) do
+--         v:removeFromParent()
+--     end
+--     self.locked_tiles = {}
+--     city:IteratorTilesByFunc(function(x, y, tile)
+--         local building = city:GetBuildingByLocationId(tile.location_id)
+--         if tile:NeedWalls() and tile.locked and not building:IsUnlocking() then
+--             table.insert(self.locked_tiles, self:CreateLockedTileSpriteWithTile(tile):addTo(city_node))
+--         end
+--     end)
+-- end
 function CityLayer:UpdateTilesWithCity(city)
     local city_node = self:GetCityNode()
     for _, v in pairs(self.tiles) do
@@ -739,10 +737,10 @@ function CityLayer:CreateRoadWithTile(tile)
     local x, y = self.iso_map:ConvertToMapPosition(tile:GetMidLogicPosition())
     return RoadSprite.new(self, tile, x, y)
 end
-function CityLayer:CreateLockedTileSpriteWithTile(tile)
-    local x, y = self.iso_map:ConvertToMapPosition(tile:GetMidLogicPosition())
-    return LockedTileSprite.new(self, tile, x, y)
-end
+-- function CityLayer:CreateLockedTileSpriteWithTile(tile)
+--     local x, y = self.iso_map:ConvertToMapPosition(tile:GetMidLogicPosition())
+--     return LockedTileSprite.new(self, tile, x, y)
+-- end
 function CityLayer:CreateTileWithTile(tile)
     local x, y = self.iso_map:ConvertToMapPosition(tile:GetMidLogicPosition())
     return TileSprite.new(self, tile, x, y)

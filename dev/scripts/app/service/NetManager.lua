@@ -1418,8 +1418,11 @@ end
 
 local function rank_sort(response)
     local data = response.msg
-    data.myData.rank = data.myData.rank + 1
-    if data.datas[data.myData.rank] then
+    local is_not_nil = data.myData.rank ~= json.null
+    if is_not_nil then
+        data.myData.rank = data.myData.rank + 1
+    end
+    if is_not_nil and data.datas[data.myData.rank] then
         data.datas[data.myData.rank].is_mine = true
     end
     table.sort(data.datas, function(a, b)
