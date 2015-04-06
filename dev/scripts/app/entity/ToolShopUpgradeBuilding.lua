@@ -167,6 +167,10 @@ function ToolShopUpgradeBuilding:GetNeedByCategory(category)
     end
     return config["production"], unpack(need)
 end
+function ToolShopUpgradeBuilding:GetProduction()
+    local config = config_function[self:GetEfficiencyLevel()]
+    return config["production"]
+end
 function ToolShopUpgradeBuilding:GetNextLevelProduction()
     local config = config_function[self:GetNextLevel()]
     return config["production"]

@@ -13,4 +13,7 @@ end
 function TownHallUpgradeBuilding:GetNextLevelEfficiency()
     return config_function[self:GetNextLevel()].efficiency
 end
+function TownHallUpgradeBuilding:GetEfficiency()
+    return config_function[self:GetEfficiencyLevel()].efficiency
+end
 return TownHallUpgradeBuilding
