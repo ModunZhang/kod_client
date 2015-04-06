@@ -400,33 +400,32 @@ function GameUIHome:CreateTop()
 
     -- 礼物按钮
     local button = cc.ui.UIPushButton.new(
-        {normal = "gift_128x128.png"},
+        {normal = "activity_128x128.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
             UIKit:newGameUI("GameUIActivity",City):AddToCurrentScene(true)
         end
-    end):addTo(self):pos(display.right-40, display.top-200):scale(0.6)
+    end):addTo(self):pos(display.left+40, display.top-200)
     --帮助
     local button = cc.ui.UIPushButton.new(
-        {normal = "buff_8_128x128.png", pressed = "buff_8_128x128.png"},
+        {normal = "tips_128x128.png", pressed = "tips_128x128.png"},
         {scale9 = false}
     )
     button:onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
             UIKit:newGameUI("GameUITips",button):AddToCurrentScene(true)
         end
-    end):addTo(self):pos(display.right-40, display.top-290):scale(0.5)
+    end):addTo(self):pos(display.right-40, display.top-200)
 
     -- BUFF按钮
     local buff_button = cc.ui.UIPushButton.new(
-        {normal = "buff_1_128x128.png", pressed = "buff_1_128x128.png"}
+        {normal = "buff_128x128.png", pressed = "buff_128x128.png"}
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
             UIKit:newGameUI("GameUIBuff",self.city):AddToCurrentScene(true)
         end
-    end):addTo(self):pos(display.left+40, display.top-200)
-        :scale(0.5)
+    end):addTo(self):pos(display.right-40, display.top-290)
     return top_bg
 end
 
@@ -521,7 +520,7 @@ function GameUIHome:CreateBottom()
         local button = cc.ui.UIPushButton.new({normal = v[1]})
             :onButtonClicked(handler(self, self.OnBottomButtonClicked))
             :addTo(bottom_bg):pos(x, y)
-            :scale(0.55)
+            -- :scale(0.55)
         UIKit:ttfLabel({
             text = v[2],
             size = 16,
@@ -571,7 +570,7 @@ function GameUIHome:CreateBottom()
 
     -- 协助加速按钮
     local help_button = cc.ui.UIPushButton.new(
-        {normal = "help_68x60.png", pressed = "help_68x60.png"},
+        {normal = "help_128x128.png", pressed = "help_128x128.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
@@ -583,7 +582,7 @@ function GameUIHome:CreateBottom()
                     :AddToCurrentScene()
             end
         end
-    end):addTo(self):pos(display.right-40, display.bottom+300)
+    end):addTo(self):pos(display.right-40, display.top-380)
     self.help_button = help_button
     self:RefreshHelpButtonVisible()
 

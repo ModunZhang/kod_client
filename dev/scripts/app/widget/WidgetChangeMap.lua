@@ -101,9 +101,9 @@ function WidgetChangeMap:ctor(map_type)
     --     :setButtonLabelOffset(0, -48)
 
     local btn = WidgetPushButton.new(
-        {normal = "map_bg_104X112.png", pressed = "map_bg_104X112.png"}
+        {normal = "map_bg_128X128.png", pressed = "map_bg_128X128.png"}
     ):addTo(self)
-        :align(display.LEFT_CENTER,window.cx-315*scale_x, 50*scale_x)
+        :align(display.LEFT_CENTER,window.cx-330*scale_x, 50*scale_x)
         :onButtonClicked(function(event)
             -- dump(event)
             -- self:Move()
@@ -124,7 +124,15 @@ function WidgetChangeMap:ctor(map_type)
             end
         end)
         :scale(scale_x)
-    display.newSprite("change_map_icon.png"):addTo(btn):align(display.CENTER, 52, 0)
+    local change_icon
+    if map_type == WidgetChangeMap.MAP_TYPE.OUR_CITY then
+        change_icon = "map_alliance_icon_128x128.png"
+    elseif map_type == WidgetChangeMap.MAP_TYPE.OUR_ALLIANCE then
+        change_icon = "map_city_128x128.png"
+    elseif map_type == WidgetChangeMap.MAP_TYPE.OTHER_ALLIANCE then
+        change_icon = "map_back_128x128.png"
+    end
+    display.newSprite(change_icon):addTo(btn):align(display.CENTER, 64, 10)
     btn:setTouchSwallowEnabled(true)
 
     -- self:SetMapType(map_type)
@@ -181,11 +189,11 @@ function WidgetChangeMap:SetMapType( map_type )
         -- if enemy_alliance_id and string.trim(enemy_alliance_id) ~= "" then
         --     self.map_frame:setPositionY(289)
         --  self:Retraction()
-            -- NetManager:getFtechAllianceViewDataPromose(enemy_alliance_id):next(function(msg)
-            --     local enemyAlliance = Alliance_Manager:DecodeAllianceFromJson(msg)
-            --     app:lockInput(false)
-            --     app:enterScene("EnemyAllianceScene", {enemyAlliance,GameUIAllianceEnter.Enemy}, "custom", -1, handler(self, self.CloudArmature))
-            -- end)
+        -- NetManager:getFtechAllianceViewDataPromose(enemy_alliance_id):next(function(msg)
+        --     local enemyAlliance = Alliance_Manager:DecodeAllianceFromJson(msg)
+        --     app:lockInput(false)
+        --     app:enterScene("EnemyAllianceScene", {enemyAlliance,GameUIAllianceEnter.Enemy}, "custom", -1, handler(self, self.CloudArmature))
+        -- end)
         -- else
         --     FullScreenPopDialogUI.new():SetTitle(_("提示"))
         --         :SetPopMessage(_("当前是和平期"))
@@ -209,21 +217,21 @@ function WidgetChangeMap:SetMapType( map_type )
         end)
 
         -- self.enemy_btn:onButtonClicked(function(event)
-            -- local enemy_alliance_id = Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():GetEnemyAlliance().id
-            -- if enemy_alliance_id and string.trim(enemy_alliance_id) ~= "" then
-            --     self.map_frame:setPositionY(289)
-            --  self:Retraction()
-            --     NetManager:getFtechAllianceViewDataPromose(enemy_alliance_id):next(function(msg)
-            --         local enemyAlliance = Alliance_Manager:DecodeAllianceFromJson(msg)
-            --         app:lockInput(false)
-            --         app:enterScene("EnemyAllianceScene", {enemyAlliance,GameUIAllianceEnter.Enemy}, "custom", -1, handler(self, self.CloudArmature))
-            --     end)
-            -- else
-            --     FullScreenPopDialogUI.new():SetTitle(_("提示"))
-            --         :SetPopMessage(_("当前是和平期"))
-            --         :AddToCurrentScene()
-            -- end
-            -- end)
+        -- local enemy_alliance_id = Alliance_Manager:GetMyAlliance():GetAllianceMoonGate():GetEnemyAlliance().id
+        -- if enemy_alliance_id and string.trim(enemy_alliance_id) ~= "" then
+        --     self.map_frame:setPositionY(289)
+        --  self:Retraction()
+        --     NetManager:getFtechAllianceViewDataPromose(enemy_alliance_id):next(function(msg)
+        --         local enemyAlliance = Alliance_Manager:DecodeAllianceFromJson(msg)
+        --         app:lockInput(false)
+        --         app:enterScene("EnemyAllianceScene", {enemyAlliance,GameUIAllianceEnter.Enemy}, "custom", -1, handler(self, self.CloudArmature))
+        --     end)
+        -- else
+        --     FullScreenPopDialogUI.new():SetTitle(_("提示"))
+        --         :SetPopMessage(_("当前是和平期"))
+        --         :AddToCurrentScene()
+        -- end
+        -- end)
 
 
         y = 179
@@ -258,6 +266,7 @@ function WidgetChangeMap:SetMapType( map_type )
 end
 
 return WidgetChangeMap
+
 
 
 

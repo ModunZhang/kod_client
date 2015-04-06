@@ -97,8 +97,8 @@ function GameUIOtherAllianceHome:CreateOperationButton()
     local first_col = 177
     local label_padding = 100
     for i, v in ipairs({
-        {"help_68x60.png", _("帮助")},
-        {"war_54x55.png", _("战斗")},
+        {"help_128x128.png", _("帮助")},
+        {"fight_128x128.png", _("战斗")},
     }) do
         local col = i - 1
         local y =  first_row + col*label_padding
