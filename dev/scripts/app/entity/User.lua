@@ -217,6 +217,14 @@ function User:OnPropertyChange(property_name, old_value, new_value)
             [property_name] = {old = old_value, new = new_value}
         })
     end)
+    -- 如果是名字改变，更新联盟中信息
+    if property_name == "name" and Alliance_Manager
+        and not Alliance_Manager:GetMyAlliance():IsDefault()
+        and Alliance_Manager:GetMyAlliance():GetMemeberById(self:Id())
+    then
+        Alliance_Manager:GetMyAlliance():GetMemeberById(self:Id()).name = new_value
+
+    end
 end
 function User:OnUserDataChanged(userData, current_time, deltaData)
     self:SetGcId(userData.gcId)
@@ -612,6 +620,8 @@ function User:GetBestDragon()
 end
 
 return User
+
+
 
 
 

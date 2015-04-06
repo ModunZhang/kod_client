@@ -58,6 +58,9 @@ function GameUIPVESendTroop:OnMoveInStage()
                     item:SetSoldierCount(0)
                 end
             else
+                for k,item in pairs(self.soldiers_table) do
+                    item:SetSoldierCount(0)
+                end
                 self:AdapterMaxButton()
                 local max_soldiers_citizen = 0
                 for k,item in pairs(self.soldiers_table) do

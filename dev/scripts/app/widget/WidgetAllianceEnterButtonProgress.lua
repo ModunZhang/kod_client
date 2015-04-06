@@ -11,7 +11,7 @@ local WidgetAllianceEnterButtonProgress = class("WidgetAllianceEnterButtonProgre
         local statusStartTime = math.floor(my_allaince:StatusStartTime()/1000)
         local statusFinishTime = math.floor(my_allaince:StatusFinishTime()/1000)
 
-        local percent = math.floor((statusFinishTime-current_time)/(statusFinishTime-statusStartTime)*100)
+        local percent = math.floor((statusFinishTime-app.timer:GetServerTime())/(statusFinishTime-statusStartTime)*100)
         progress:setPercentage(percent)
     end
     app.timer:AddListener(progress)

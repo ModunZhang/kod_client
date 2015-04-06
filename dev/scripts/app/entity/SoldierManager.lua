@@ -260,13 +260,13 @@ function SoldierManager:OnUserDataChanged(user_data,current_time, deltaData)
                     local add = v.new-v.old
                     if add>0 then
                         local m_name = Localize.soldier_name[k]
-                        get_list = get_list .. m_name .. "X"..add
+                        get_list = get_list .. m_name .. "X"..add.." "
                     end
                 end
                 if get_list ~="" then
-                    if deltaData.treatSoldierEvents and deltaData.treatSoldierEvents.remove or deltaData.woundedSoldiers then
+                    if deltaData.treatSoldierEvents and deltaData.treatSoldierEvents.remove then
                         GameGlobalUI:showTips(_("治愈士兵完成"),get_list)
-                    else
+                    elseif deltaData.soldierEvents and deltaData.soldierEvents.remove then
                         GameGlobalUI:showTips(_("招募士兵完成"),get_list)
                     end
                 end

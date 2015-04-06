@@ -1,6 +1,7 @@
 local promise = import("..utils.promise")
 local GameGlobalUIUtils = import("..ui.GameGlobalUIUtils")
 local Localize_item = import("..utils.Localize_item")
+local Localize = import("..utils.Localize")
 local cocos_promise = import("..utils.cocos_promise")
 
 NetManager = {}
@@ -565,13 +566,15 @@ local function get_recruitNormalSoldier_promise(soldierName, count, finish_now)
 end
 function NetManager:getRecruitNormalSoldierPromise(soldierName, count, cb)
     return get_recruitNormalSoldier_promise(soldierName, count):next(function(response)
-            app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_RECRUIT")
+        app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_RECRUIT")
         return response
     end)
 end
 function NetManager:getInstantRecruitNormalSoldierPromise(soldierName, count, cb)
     return get_recruitNormalSoldier_promise(soldierName, count, true):next(function()
         app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
+    end):done(function ()
+        GameGlobalUI:showTips(_("招募士兵完成"),Localize.soldier_name[soldierName].."X"..count)
     end)
 end
 -- 招募特殊士兵
@@ -584,13 +587,15 @@ local function get_recruitSpecialSoldier_promise(soldierName, count, finish_now)
 end
 function NetManager:getRecruitSpecialSoldierPromise(soldierName, count)
     return get_recruitSpecialSoldier_promise(soldierName, count):next(function(response)
-            app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_RECRUIT")
+        app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_RECRUIT")
         return response
     end)
 end
 function NetManager:getInstantRecruitSpecialSoldierPromise(soldierName, count)
     return get_recruitSpecialSoldier_promise(soldierName, count, true):next(function()
         app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
+    end):done(function ()
+        GameGlobalUI:showTips(_("治愈士兵完成"),Localize.soldier_name[soldierName].."X"..count)
     end)
 end
 -- 普通治疗士兵
@@ -604,7 +609,14 @@ function NetManager:getTreatSoldiersPromise(soldiers)
     return get_treatSoldier_promise(soldiers)
 end
 function NetManager:getInstantTreatSoldiersPromise(soldiers)
-    return get_treatSoldier_promise(soldiers, true)
+    return get_treatSoldier_promise(soldiers, true):done(function ()
+        local get_list = ""
+        for k,v in pairs(soldiers) do
+            local m_name = Localize.soldier_name[v.name]
+            get_list = get_list .. m_name .. "X"..v.count.." "
+        end
+        GameGlobalUI:showTips(_("招募士兵完成"),get_list)
+    end)
 end
 -- 孵化
 function NetManager:getHatchDragonPromise(dragonType)
@@ -1523,6 +1535,8 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
+
 
 
 
