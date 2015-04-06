@@ -473,7 +473,7 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
             isVisible = building:GetLevelUpPulley()>0,
             isSatisfy = materials["pulley"]>=building:GetLevelUpPulley() ,
             icon="pulley_128x128.png",
-            description=GameUtils:formatNumber(building:GetLevelUpPulley()).."/"..GameUtils:formatNumber(materials["pulley"])
+            description=GameUtils:formatNumber(materials["pulley"]).."/"..GameUtils:formatNumber(building:GetLevelUpPulley())
         },
     }
 
@@ -734,6 +734,7 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
 
 
 

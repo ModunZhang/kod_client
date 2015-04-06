@@ -23,27 +23,37 @@ local soldier_arrange = {
     catapult = {row = 2, col = 1},
 
     horseArcher = {row = 3, col = 1},
-    ballista = {row = 4, col = 2},
-    skeletonWarrior = {row = 3, col = 1},
-    skeletonArcher = {row = 2, col = 1},
+    ballista = {row = 2, col = 1},
+    skeletonWarrior = {row = 4, col = 2},
+    skeletonArcher = {row = 4, col = 2},
 
-    deathKnight = {row = 4, col = 2},
-    meatWagon = {row = 4, col = 2},
+    deathKnight = {row = 3, col = 1},
+    meatWagon = {row = 2, col = 1},
     priest = {row = 3, col = 1},
-    demonHunter = {row = 2, col = 1},
+    demonHunter = {row = 3, col = 1},
 
     paladin = {row = 4, col = 2},
-    steamTank = {row = 4, col = 2},
+    steamTank = {row = 2, col = 1},
     sentinel = {row = 4, col = 2},
     crossbowman = {row = 4, col = 2},
 }
-local STAR_BG = {
-    "star1_118x132.png",
-    "star2_118x132.png",
-    "star3_118x132.png",
-    "star4_118x132.png",
-    "star5_118x132.png",
+local soldier_ani_width = {
+    swordsman = 180,
+    ranger = 180,
+    lancer = 180,
+    catapult = 180,
+
+    sentinel = 180,
+    crossbowman = 180,
+    horseArcher = 180,
+    ballista = 180,
+
+    skeletonWarrior = 180,
+    skeletonArcher = 200,
+    deathKnight = 180,
+    meatWagon = 180,
 }
+
 
 function GameUIAllianceSendTroops:GetMyAlliance()
     return Alliance_Manager:GetMyAlliance()
@@ -147,15 +157,14 @@ function GameUIAllianceSendTroops:OnMoveInStage()
                             break
                         end
                     end
-                    self:RefreashSoldierShow()
                 else
                     for k,item in pairs(self.soldiers_table) do
                         local _,_,_,max_num = item:GetSoldierInfo()
                         item:SetSoldierCount(max_num)
                     end
-                    self:RefreashSoldierShow()
                 end
             end
+            self:RefreashSoldierShow()
         end
     end):align(display.LEFT_CENTER,window.left+50,window.top-920):addTo(self:GetView())
     self.max_btn = max_btn
@@ -584,11 +593,8 @@ function GameUIAllianceSendTroops:CreateTroopsShow()
         local arrange = soldier_arrange[soldier]
         local corps = Corps.new(soldier, star , arrange.row, arrange.col)
         local label = display.newSprite("back_ground_122x24.png")
-            :align(display.CENTER, 0, -40)
+            :align(display.CENTER, 40, -40)
             :addTo(corps)
-        if soldier=="lancer" or soldier=="catapult" then
-            label:setPositionX(20)
-        end
         display.newSprite("dragon_strength_27x31.png"):pos(10,label:getContentSize().height/2)
             :addTo(label)
         UIKit:ttfLabel({
@@ -632,28 +638,21 @@ function GameUIAllianceSendTroops:CreateTroopsShow()
             self:removeAllChildren()
             local y  = 100
             local x = 752
-            local count = 0
-            local pre_width -- 前一个添加的节点的宽
             local total_power , total_weight, total_citizen =0,0,0
             for index,v in pairs(soldiers) do
-                local corp = self:NewCorps(v.soldier_type,v.power,v.soldier_star):addTo(self)
+                local corp = self:NewCorps(v.soldier_type,v.power,v.soldier_star,120,120):addTo(self)
                 if v.soldier_type ~= "catapult" and v.soldier_type ~= "ballista" and v.soldier_type ~= "meatWagon" then
                     corp:PlayAnimation("idle_90")
                 else
                     corp:PlayAnimation("move_90")
                 end
-                x = x - (count ~= 0 and pre_width or corp:getCascadeBoundingBox().size.width/2)
-                pre_width = corp:getCascadeBoundingBox().size.width/2+40
-                if v.soldier_type =="lancer" or v.soldier_type =="lancer" then
-                    pre_width = pre_width - 60
-                end
+                x = x - soldier_ani_width[v.soldier_type]
+               
                 corp:pos(x,y)
-                count = count + 1
                 total_power = total_power + v.power
                 total_weight = total_weight + v.soldier_weight
                 total_citizen = total_citizen + v.soldier_citizen
 
-                -- print("soldier==",v.soldier_type,corp:getCascadeBoundingBox().size.width)
             end
             info_bg:removeAllChildren()
             self:SetPower(total_power)
@@ -682,6 +681,7 @@ function GameUIAllianceSendTroops:onExit()
 end
 
 return GameUIAllianceSendTroops
+
 
 
 

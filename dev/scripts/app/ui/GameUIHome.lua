@@ -137,6 +137,8 @@ function GameUIHome:onEnter()
     local x, y = rect1.x, rect1.y + rect1.height - 2 * ratio
     self.event_tab:addTo(self):pos(x, y)
 
+    
+
     city:AddListenOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
     city:GetResourceManager():AddObserver(self)
     city:GetResourceManager():OnResourceChanged()
@@ -375,33 +377,32 @@ function GameUIHome:CreateTop()
 
     -- 礼物按钮
     local button = cc.ui.UIPushButton.new(
-        {normal = "gift_128x128.png"},
+        {normal = "activity_128x128.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
             UIKit:newGameUI("GameUIActivity",City):AddToCurrentScene(true)
         end
-    end):addTo(self):pos(display.right-40, display.top-200):scale(0.6)
+    end):addTo(self):pos(display.left+40, display.top-200)
     --帮助
     local button = cc.ui.UIPushButton.new(
-        {normal = "buff_8_128x128.png", pressed = "buff_8_128x128.png"},
+        {normal = "tips_128x128.png", pressed = "tips_128x128.png"},
         {scale9 = false}
     )
     button:onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
             UIKit:newGameUI("GameUITips",button):AddToCurrentScene(true)
         end
-    end):addTo(self):pos(display.right-40, display.top-290):scale(0.5)
+    end):addTo(self):pos(display.right-40, display.top-200)
 
     -- BUFF按钮
     local buff_button = cc.ui.UIPushButton.new(
-        {normal = "buff_1_128x128.png", pressed = "buff_1_128x128.png"}
+        {normal = "buff_128x128.png", pressed = "buff_128x128.png"}
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
             UIKit:newGameUI("GameUIBuff",self.city):AddToCurrentScene(true)
         end
-    end):addTo(self):pos(display.left+40, display.top-200)
-        :scale(0.5)
+    end):addTo(self):pos(display.right-40, display.top-290)
     return top_bg
 end
 function GameUIHome:CreateBottom()
