@@ -31,10 +31,10 @@ function WidgetHomeBottom:ctor(callback)
             :onButtonClicked(callback or OnBottomButtonClicked)
             :addTo(self):pos(x, y)
             :onButtonPressed(function(event)
-            event.target:runAction(cc.ScaleTo:create(0.1, 0.7))
+            event.target:runAction(cc.ScaleTo:create(0.1, 1.2))
             end):onButtonRelease(function(event)
             event.target:runAction(cc.ScaleTo:create(0.1, 1))
-            end):setTag(i)
+            end):setTag(i):setLocalZOrder(10)
         UIKit:ttfLabel({
             text = v[2],
             size = 16,
@@ -42,8 +42,10 @@ function WidgetHomeBottom:ctor(callback)
             :addTo(self):align(display.CENTER,x, y-40)
         if i == 1 then
             self.task_count = WidgetNumberTips.new():addTo(self):pos(x+20, first_row+20)
+            self.task_count:setLocalZOrder(11)
         elseif i == 3 then
             self.mail_count = WidgetNumberTips.new():addTo(self):pos(x+20, first_row+20)
+            self.mail_count:setLocalZOrder(11)
         end
     end
 end

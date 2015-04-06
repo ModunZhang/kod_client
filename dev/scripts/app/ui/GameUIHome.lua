@@ -111,7 +111,7 @@ function GameUIHome:onEnter()
 
     -- 协助加速按钮
     self.help_button = cc.ui.UIPushButton.new(
-        {normal = "help_68x60.png", pressed = "help_68x60.png"},
+        {normal = "help_64x72.png", pressed = "help_64x72.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
@@ -123,7 +123,7 @@ function GameUIHome:onEnter()
                     :AddToCurrentScene()
             end
         end
-    end):addTo(self):pos(display.right-40, display.bottom+300)
+    end):addTo(self):pos(display.right-40, display.top-380)
 
     self.request_count = WidgetNumberTips.new():addTo(self.help_button):pos(20,-20)
     self.request_count:SetNumber(Alliance_Manager:GetMyAlliance():GetOtherRequestEventsNum())
@@ -377,7 +377,7 @@ function GameUIHome:CreateTop()
 
     -- 礼物按钮
     local button = cc.ui.UIPushButton.new(
-        {normal = "activity_128x128.png"},
+        {normal = "activity_68x78.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
@@ -397,7 +397,7 @@ function GameUIHome:CreateTop()
 
     -- BUFF按钮
     local buff_button = cc.ui.UIPushButton.new(
-        {normal = "buff_128x128.png", pressed = "buff_128x128.png"}
+        {normal = "buff_68x68.png", pressed = "buff_68x68.png"}
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
             UIKit:newGameUI("GameUIBuff",self.city):AddToCurrentScene(true)
