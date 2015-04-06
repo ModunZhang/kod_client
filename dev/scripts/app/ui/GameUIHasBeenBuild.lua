@@ -10,7 +10,7 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local GameUIBuildingSpeedUp = import("..ui.GameUIBuildingSpeedUp")
 local GameUIHasBeenBuild = UIKit:createUIClass('GameUIHasBeenBuild', "GameUIWithCommonHeader")
 local NOT_ABLE_TO_UPGRADE = UpgradeBuilding.NOT_ABLE_TO_UPGRADE
-
+local timer = app.timer
 local building_config_map = {
     ["keep"] = {scale = 0.3, offset = {x = 10, y = -20}},
     ["watchTower"] = {scale = 0.5, offset = {x = 10, y = -10}},
@@ -43,8 +43,366 @@ local building_config_map = {
     ["quarrier"] = {scale = 0.8, offset = {x = 0, y = -10}},
     ["miner"] = {scale = 0.8, offset = {x = 0, y = -10}},
 }
-local timer = app.timer
 
+
+
+
+local Item = class("Item", WidgetUIBackGround)
+function Item:ctor(ui)
+    Item.super.ctor(self, {
+        width = 568,
+        height = 150,
+        top_img = "back_ground_568x16_top.png",
+        bottom_img = "back_ground_568x80_bottom.png",
+        mid_img = "back_ground_568x28_mid.png",
+        u_height = 16,
+        b_height = 80,
+        m_height = 28,
+    })
+    local back_ground = self
+    local w, h = back_ground:getContentSize().width, back_ground:getContentSize().height
+    local left_x, right_x = 5, 150
+    local frame = display.newSprite("bg_134x134.png"):addTo(back_ground):pos((left_x + right_x) / 2, h/2)
+
+    local info_btn = cc.ui.UIPushButton.new(
+        {normal = "info_26x26.png",pressed = "info_26x26.png"})
+        :addTo(frame)
+        :align(display.CENTER, 16, 16)
+
+    self.building_icon = cc.ui.UIImage.new("info_26x26.png")
+        :addTo(back_ground):align(display.BOTTOM_CENTER, (left_x + right_x) / 2, 30)
+
+    local title_blue = cc.ui.UIImage.new("title_blue_412x30.png", {scale9 = true})
+        :addTo(back_ground):align(display.LEFT_CENTER, right_x, h - 23)
+
+    local size = title_blue:getContentSize()
+    self.title_label = cc.ui.UILabel.new({
+        size = 22,
+        font = UIKit:getFontFilePath(),
+        align = cc.ui.TEXT_ALIGN_LEFT,
+        color = UIKit:hex2c3b(0xffedae)
+    }):addTo(title_blue, 2)
+        :align(display.LEFT_CENTER, 23 - 5, size.height/2)
+
+
+    self.condition_label = cc.ui.UILabel.new({
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        align = cc.ui.TEXT_ALIGN_LEFT,
+        color = UIKit:hex2c3b(0x7e0000)
+    }):addTo(back_ground, 2)
+        :align(display.LEFT_CENTER, 170 - 5, h/2)
+
+
+
+    self.desc_label = cc.ui.UILabel.new({
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        align = cc.ui.TEXT_ALIGN_LEFT,
+        color = UIKit:hex2c3b(0x403c2f)
+    }):addTo(back_ground, 2)
+        :align(display.LEFT_CENTER, 170 - 5, 35)
+
+    self.free_speedUp = WidgetPushButton.new(
+        {normal = "purple_btn_up_148x58.png",pressed = "purple_btn_down_148x58.png"})
+        :addTo(back_ground)
+        :align(display.CENTER, w - 90, 40)
+        :setButtonLabel(cc.ui.UILabel.new({
+            text = _("免费加速"),
+            size = 24,
+            font = UIKit:getFontFilePath(),
+            color = UIKit:hex2c3b(0xffedae)}))
+        :onButtonClicked(function(event)
+            local building = self.building
+            NetManager:getFreeSpeedUpPromise(building:EventType(), building:UniqueUpgradingKey())
+        end)
+
+
+    self.instant_build = WidgetPushButton.new(
+        {normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"})
+        :addTo(back_ground)
+        :align(display.CENTER, w - 90, 40)
+        :setButtonLabel(cc.ui.UILabel.new({
+            text = _("升级"),
+            size = 24,
+            font = UIKit:getFontFilePath(),
+            color = UIKit:hex2c3b(0xffedae)}))
+        :onButtonClicked(function(event)
+            local building = self.building
+            local city = building:BelongCity()
+            if city:IsFunctionBuilding(building) then
+                local location_id = city:GetLocationIdByBuilding(building)
+                NetManager:getInstantUpgradeBuildingByLocationPromise(location_id)
+                    :catch(function(err)
+                        dump(err:reason())
+                    end)
+            elseif city:IsHouse(building) then
+                local tile = city:GetTileWhichBuildingBelongs(building)
+                local house_location = tile:GetBuildingLocation(building)
+                NetManager:getInstantUpgradeHouseByLocationPromise(tile.location_id, house_location)
+                    :catch(function(err)
+                        dump(err:reason())
+                    end)
+            elseif city:IsGate(building) then
+                -- NetManager:instantUpgradeWallByLocation(NOT_HANDLE)
+                NetManager:getInstantUpgradeWallByLocationPromise()
+                    :catch(function(err)
+                        dump(err:reason())
+                    end)
+            elseif city:IsTower(building) then
+                -- NetManager:instantUpgradeTowerByLocation(building:TowerId(), NOT_HANDLE)
+                NetManager:getInstantUpgradeTowerPromise()
+                    :catch(function(err)
+                        dump(err:reason())
+                    end)
+            end
+        end)
+
+    self.gem_bg = display.newSprite("back_ground_97x20.png")
+        :addTo(back_ground, 2)
+        :align(display.CENTER, w - 90, h/2+10)
+
+    display.newSprite("gem_66x56.png")
+        :addTo(self.gem_bg, 2)
+        :align(display.CENTER, 20, 20/2)
+        :scale(0.4)
+
+    self.gem_label = cc.ui.UILabel.new({
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        align = cc.ui.TEXT_ALIGN_LEFT,
+        color = UIKit:hex2c3b(0xfff3c7)
+    }):addTo(self.gem_bg, 2)
+        :align(display.LEFT_CENTER, 40, 20/2)
+
+
+    self.normal_build = WidgetPushButton.new(
+        {normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"}
+        ,{}
+        ,{
+            disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
+        })
+        :addTo(back_ground)
+        :align(display.CENTER, w - 90, 40)
+        :setButtonLabel(cc.ui.UILabel.new({
+            text = _("升级"),
+            size = 24,
+            font = UIKit:getFontFilePath(),
+            color = UIKit:hex2c3b(0xffedae)}))
+        :onButtonClicked(function(event)
+            local building = self.building
+            local city = building:BelongCity()
+            local illegal, is_pre_condition = building:IsAbleToUpgrade(false)
+            local jump_building = building:GetPreConditionBuilding()
+            local cur_scene = display.getRunningScene()
+            if illegal and is_pre_condition
+                and type(jump_building) == "table"
+                and cur_scene.AddIndicateForBuilding then
+                UIKit:showMessageDialog(_("提示"), _("前置建筑条件不满足, 请前往。"), function()
+                    local building_sprite = cur_scene:GetSceneLayer():FindBuildingSpriteByBuilding(jump_building, city)
+                    cur_scene:GotoLogicPoint(jump_building:GetMidLogicPosition())
+                    cur_scene:AddIndicateForBuilding(building_sprite)
+                    ui:LeftButtonClicked()
+                end)
+                return
+            end
+
+            if city:IsFunctionBuilding(building) then
+                local location_id = city:GetLocationIdByBuilding(building)
+                NetManager:getUpgradeBuildingByLocationPromise(location_id)
+                    :catch(function(err)
+                        dump(err:reason())
+                    end)
+            elseif city:IsHouse(building) then
+                local tile = city:GetTileWhichBuildingBelongs(building)
+                local house_location = tile:GetBuildingLocation(building)
+
+                NetManager:getUpgradeHouseByLocationPromise(tile.location_id, house_location)
+                    :catch(function(err)
+                        dump(err:reason())
+                    end)
+            elseif city:IsGate(building) then
+                -- NetManager:upgradeWallByLocation(NOT_HANDLE)
+                NetManager:getUpgradeWallByLocationPromise()
+                    :catch(function(err)
+                        dump(err:reason())
+                    end)
+            elseif city:IsTower(building) then
+                -- NetManager:upgradeTowerByLocation(building:TowerId(), NOT_HANDLE)
+                NetManager:getUpgradeTowerPromise()
+                    :catch(function(err)
+                        dump(err:reason())
+                    end)
+            end
+        end)
+
+
+    self.progress = WidgetTimeBar.new(nil, "back_ground_138x34.png"):addTo(back_ground, 2)
+        :align(display.LEFT_CENTER, 185, h/2)
+
+    self.speed_up = WidgetPushButton.new(
+        {normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"}
+        ,{}
+        ,{
+            disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
+        }
+    )
+        :addTo(back_ground)
+        :align(display.CENTER, w - 90, 40)
+        :setButtonLabel(cc.ui.UILabel.new({
+            text = _("加速"),
+            size = 24,
+            font = UIKit:getFontFilePath(),
+            color = UIKit:hex2c3b(0xffedae)}))
+        :onButtonClicked(function(event)
+            UIKit:newGameUI("GameUIBuildingSpeedUp", self.building):AddToCurrentScene(true)
+        end)
+end
+function Item:SetBuildingType(building_type, level)
+    local left_x, right_x = 5, 150
+    local base_x, base_y = (left_x + right_x) / 2, 30
+    local config = building_config_map[building_type]
+    local png = SpriteConfig[building_type]:GetConfigByLevel(level).png
+
+    self.title_label:setString(Localize.building_name[building_type])
+    self.building_icon:setTexture(png)
+    self.building_icon:scale(config.scale)
+    self.building_icon:pos(base_x + config.offset.x, base_y + config.offset.y)
+    return self
+end
+function Item:SetConditionLabel(label, color)
+    self.condition_label:setString(label)
+    if color then
+        self.condition_label:setColor(color)
+    end
+    return self
+end
+function Item:UpdateByBuilding(building, current_time)
+    self.building = building
+    self:SetBuildingType(building:GetType(), building:GetLevel())
+    repeat
+        if building:IsUpgrading() then
+            assert(current_time ~= 0)
+            local can_free_speedUp = building:GetUpgradingLeftTimeByCurrentTime(current_time) <= DataUtils:getFreeSpeedUpLimitTime()
+            self:ChangeStatus(can_free_speedUp and "free" or "building")
+            self:UpdateProgress(building)
+            break
+        end
+        if building:IsMaxLevel() then
+            self:ChangeStatus("max")
+            break
+        end
+        local illegal, is_pre_condition = building:IsAbleToUpgrade(false)
+        if illegal then
+            if is_pre_condition then
+                self:ChangeStatus("disable")
+            else
+                self:ChangeStatus("instant")
+                self.gem_label:setString(building:getUpgradeNowNeedGems())
+            end
+            self:SetConditionLabel(illegal, UIKit:hex2c3b(0x7e0000))
+        else
+            self:ChangeStatus("normal")
+            self:SetConditionLabel(_("满足条件"), UIKit:hex2c3b(0x007c23))
+        end
+    until true
+    self:UpdateDesc(building)
+end
+function Item:UpdateProgress(building)
+    if building:IsUpgrading() then
+        local time = timer:GetServerTime()
+        local str = GameUtils:formatTimeStyle1(building:GetUpgradingLeftTimeByCurrentTime(time))
+        local percent = building:GetUpgradingPercentByCurrentTime(time)
+        self.progress:SetProgressInfo(str, percent)
+    end
+end
+function Item:UpdateDesc(building)
+    if building:IsUpgrading() then
+        if building:GetNextLevel() == 1 then
+            self.desc_label:setString(building:IsHouse() and _("正在建造") or _("正在解锁"))
+        else
+            self.desc_label:setString(string.format("%s%d", _("正在升级到 等级"), building:GetNextLevel()))
+        end
+    else
+        if building:IsMaxLevel() then
+            self.desc_label:setString(string.format("%s", _("已经到最大等级了")))
+        else
+            self.desc_label:setString(string.format("%s%d%s%d", _("从等级"), building:GetLevel(), _("升级到等级"), building:GetNextLevel()))
+        end
+    end
+end
+function Item:ChangeStatus(status)
+    if self.status == status then
+        return
+    end
+    if status == "instant" then
+        self:HideFreeSpeedUp()
+        self:HideNormalButton()
+        self:HideProgress()
+
+        self:ShowInstantButton()
+    elseif status == "free" then
+        self:HideNormalButton()
+        self:HideInstantButton()
+
+        self:ShowProgress()
+        self:ShowFreeSpeedUp()
+    elseif status == "normal" then
+        self:HideFreeSpeedUp()
+        self:HideInstantButton()
+        self:HideProgress()
+
+        self:ShowNormalButton()
+    elseif status == "building" then
+        self:HideFreeSpeedUp()
+        self:HideInstantButton()
+        self:HideNormalButton()
+
+        self:ShowProgress()
+        self.speed_up:show()
+    elseif status == "disable" then
+        self:HideFreeSpeedUp()
+        self:HideInstantButton()
+        self:HideProgress()
+        self:ShowNormalButton(false)
+    elseif status == "max" then
+        self:HideFreeSpeedUp()
+        self:HideInstantButton()
+        self:HideNormalButton()
+        self:HideProgress()
+    end
+    self.status = status
+    return self
+end
+function Item:HideInstantButton()
+    self.gem_bg:setVisible(false)
+    self.instant_build:setVisible(false)
+end
+function Item:ShowInstantButton()
+    self.speed_up:setVisible(false)
+    self.gem_bg:setVisible(true)
+    self.instant_build:setVisible(true)
+end
+function Item:HideNormalButton()
+    self.normal_build:setVisible(false)
+end
+function Item:ShowNormalButton(able)
+    self.speed_up:setVisible(false)
+    self.normal_build:setVisible(true)
+end
+function Item:HideProgress()
+    self.progress:setVisible(false)
+end
+function Item:ShowProgress()
+    self.progress:setVisible(true)
+end
+function Item:ShowFreeSpeedUp()
+    self.speed_up:setVisible(false)
+    self.free_speedUp:show()
+end
+function Item:HideFreeSpeedUp()
+    self.free_speedUp:hide()
+end
 
 
 
@@ -54,6 +412,7 @@ function GameUIHasBeenBuild:ctor(city)
     self.build_city = city
 end
 function GameUIHasBeenBuild:OnMoveInStage()
+    timer:AddListener(self)
     self.build_city:AddListenOnType(self, self.build_city.LISTEN_TYPE.UPGRADE_BUILDING)
     GameUIHasBeenBuild.super.OnMoveInStage(self)
 
@@ -63,44 +422,27 @@ function GameUIHasBeenBuild:OnMoveInStage()
     self:TabButtons()
 end
 function GameUIHasBeenBuild:onExit()
+    timer:RemoveListener(self)
     self.build_city:RemoveListenerOnType(self, self.build_city.LISTEN_TYPE.UPGRADE_BUILDING)
     GameUIHasBeenBuild.super.onExit(self)
 end
+function GameUIHasBeenBuild:OnTimer(time)
+    self:RefreshAllItems()
+end
 function GameUIHasBeenBuild:OnUpgradingBegin(building, current_time, city)
     self:UpdateBuildingQueue(city)
-
-    local is_house = self.build_city:IsHouse(building)
-    if self.function_list_view and not is_house then
-        self.function_list_view:UpdateItemsByBuildings(self.build_city:GetBuildingsIsUnlocked(), current_time)
-    elseif self.house_list_view and is_house then
-        self.house_list_view:UpdateItemsByBuildings(self.build_city:GetHousesWhichIsBuilded(), current_time)
-    end
+    self:RefreshAllItems()
 end
 function GameUIHasBeenBuild:OnUpgrading(building, current_time, city)
-
-    local is_house = self.build_city:IsHouse(building)
-    if self.function_list_view and not is_house then
-        self.function_list_view:UpdateItemByBuilding(building, current_time)
-    elseif self.house_list_view and is_house then
-        self.house_list_view:UpdateItemByBuilding(building, current_time)
-    end
 end
 function GameUIHasBeenBuild:OnUpgradingFinished(building, city)
     self:UpdateBuildingQueue(city)
-
-    local is_house = self.build_city:IsHouse(building)
-    if self.function_list_view and not is_house then
-        self.function_list_view:UpdateItemsByBuildings(self.build_city:GetBuildingsIsUnlocked(), timer:GetServerTime())
-        local item = self.function_list_view:GetItemByUniqueKey(building:UniqueKey())
-        if item then
-            item:UpdateIcon(building)
-        end
-    elseif self.house_list_view and is_house then
-        self.house_list_view:UpdateItemsByBuildings(self.build_city:GetHousesWhichIsBuilded(), timer:GetServerTime())
-        local item = self.house_list_view:GetItemByUniqueKey(building:UniqueKey())
-        if item then
-            item:UpdateIcon(building)
-        end
+    self:RefreshAllItems()
+end
+function GameUIHasBeenBuild:RefreshAllItems()
+    local list = self.house_list_view or self.function_list_view or {}
+    for i,v in ipairs(list.items_ or {}) do
+        self:UpdateContent(v:getContent(), v.idx_)
     end
 end
 function GameUIHasBeenBuild:LoadBuildingQueue()
@@ -126,7 +468,6 @@ function GameUIHasBeenBuild:LoadBuildingQueue()
         })
         :addTo(back_ground)
         :align(display.CENTER, back_ground:getContentSize().width - 25, back_ground:getContentSize().height/2)
-        -- :setButtonEnabled(false)
         :onButtonClicked(function ( event )
             if event.name == "CLICKED_EVENT" then
                 WidgetBuyBuildingQueue.new():AddToCurrentScene()
@@ -177,7 +518,6 @@ function GameUIHasBeenBuild:LoadFunctionListView()
     if not self.function_list_view then
         self.function_list_view , self.function_list_node= self:CreateListView(self.build_city:GetBuildingsIsUnlocked())
         self.function_list_view:reload()
-        -- :resetPosition()
     end
 end
 function GameUIHasBeenBuild:UnloadFunctionListView()
@@ -193,7 +533,6 @@ function GameUIHasBeenBuild:LoadHouseListView()
     if not self.house_list_view then
         self.house_list_view, self.house_list_node= self:CreateListView(self.build_city:GetHousesWhichIsBuilded())
         self.house_list_view:reload()
-        -- :resetPosition()
     end
 end
 function GameUIHasBeenBuild:UnloadHouseListView()
@@ -206,447 +545,52 @@ function GameUIHasBeenBuild:UnloadHouseListView()
 end
 ---
 function GameUIHasBeenBuild:CreateListView(buildings)
-    -- local list_view = self:CreateVerticalListView(window.left + 20, window.bottom + 70, window.right - 20, window.top - 180)
+    self.buildings = buildings
     local list_view ,listnode=  UIKit:commonListView({
+        async = true, --异步加载
         -- bgColor = UIKit:hex2c4b(0x7a100000),
         viewRect = cc.rect(0, 0, 568, 680),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     })
     listnode:addTo(self:GetView()):align(display.BOTTOM_CENTER,window.cx,window.bottom_top + 20)
-    -- 初始化item
-    local unique_map = {}
-    for _,v in pairs(buildings) do
-        local item = self:CreateItemWithListView(list_view)
-        item.building = v
-        item:UpdateIcon(v)
-        item:UpdateByBuilding(v, timer:GetServerTime())
-        unique_map[v:UniqueKey()] = item
-        list_view:addItem(item)
-    end
-    list_view.unique_map = unique_map
-
-    function list_view:GetItemByUniqueKey(unique_key)
-        return self.unique_map[unique_key]
-    end
-    function list_view:UpdateItemsByBuildings(buildings, current_time)
-        for k, v in pairs(buildings) do
-            self:UpdateItemByBuilding(v, current_time)
-        end
-    end
-    function list_view:UpdateItemByBuilding(building, current_time)
-        local item = self.unique_map[building:UniqueKey()]
-        if item then
-            item:UpdateByBuilding(building, current_time)
-        end
-    end
+    list_view:setRedundancyViewVal(list_view:getViewRect().height)
+    list_view:setDelegate(handler(self, self.sourceDelegate))
+    list_view:reload()
     return list_view,listnode
 end
---
-function GameUIHasBeenBuild:CreateItemWithListView(list_view)
-    local city = self.build_city
-
-    local item = list_view:newItem()
-    local back_ground = WidgetUIBackGround.new({
-        width = 568,
-        height = 150,
-        top_img = "back_ground_568x16_top.png",
-        bottom_img = "back_ground_568x80_bottom.png",
-        mid_img = "back_ground_568x28_mid.png",
-        u_height = 16,
-        b_height = 80,
-        m_height = 28,
-    })
-    item:addContent(back_ground)
-
-    local w, h = back_ground:getContentSize().width, back_ground:getContentSize().height
-    item:setItemSize(w, h)
-
-    local left_x, right_x = 5, 150
-    local frame = display.newSprite("bg_134x134.png"):addTo(back_ground):pos((left_x + right_x) / 2, h/2)
-
-    local info_btn = WidgetPushButton.new(
-        {normal = "info_26x26.png",pressed = "info_26x26.png"})
-        :addTo(frame)
-        :align(display.CENTER, 16, 16)
-
-
-
-    local building_icon = display.newSprite("keep_131x164.png")
-        :addTo(back_ground):align(display.BOTTOM_CENTER, (left_x + right_x) / 2, 30)
-
-
-    local title_blue = cc.ui.UIImage.new("title_blue_412x30.png", {scale9 = true})
-        :addTo(back_ground):align(display.LEFT_CENTER, right_x, h - 23)
-
-    local size = title_blue:getContentSize()
-    local title_label = cc.ui.UILabel.new({
-        size = 22,
-        font = UIKit:getFontFilePath(),
-        align = cc.ui.TEXT_ALIGN_LEFT,
-        color = UIKit:hex2c3b(0xffedae)
-    }):addTo(title_blue, 2)
-        :align(display.LEFT_CENTER, 23 - 5, size.height/2)
-
-
-    local condition_label = cc.ui.UILabel.new({
-        size = 20,
-        font = UIKit:getFontFilePath(),
-        align = cc.ui.TEXT_ALIGN_LEFT,
-        color = UIKit:hex2c3b(0x7e0000)
-    }):addTo(back_ground, 2)
-        :align(display.LEFT_CENTER, 170 - 5, h/2)
-
-
-
-    local desc_label = cc.ui.UILabel.new({
-        size = 20,
-        font = UIKit:getFontFilePath(),
-        align = cc.ui.TEXT_ALIGN_LEFT,
-        color = UIKit:hex2c3b(0x403c2f)
-    }):addTo(back_ground, 2)
-        :align(display.LEFT_CENTER, 170 - 5, 35)
-
-
-    local free_speedUp = WidgetPushButton.new(
-        {normal = "purple_btn_up_148x58.png",pressed = "purple_btn_down_148x58.png"})
-        :addTo(back_ground)
-        :align(display.CENTER, w - 90, 40)
-        :setButtonLabel(cc.ui.UILabel.new({
-            text = _("免费加速"),
-            size = 24,
-            font = UIKit:getFontFilePath(),
-            color = UIKit:hex2c3b(0xffedae)}))
-        :onButtonClicked(function(event)
-            local building = item.building
-            NetManager:getFreeSpeedUpPromise(building:EventType(), building:UniqueUpgradingKey())
-        end)
-
-
-    local instant_build = WidgetPushButton.new(
-        {normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"})
-        :addTo(back_ground)
-        :align(display.CENTER, w - 90, 40)
-        :setButtonLabel(cc.ui.UILabel.new({
-            text = _("升级"),
-            size = 24,
-            font = UIKit:getFontFilePath(),
-            color = UIKit:hex2c3b(0xffedae)}))
-        :onButtonClicked(function(event)
-            local building = item.building
-            if city:IsFunctionBuilding(building) then
-                local location_id = city:GetLocationIdByBuilding(building)
-                NetManager:getInstantUpgradeBuildingByLocationPromise(location_id)
-                    :catch(function(err)
-                        dump(err:reason())
-                    end)
-            elseif city:IsHouse(building) then
-                local tile = city:GetTileWhichBuildingBelongs(building)
-                local house_location = tile:GetBuildingLocation(building)
-                NetManager:getInstantUpgradeHouseByLocationPromise(tile.location_id, house_location)
-                    :catch(function(err)
-                        dump(err:reason())
-                    end)
-            elseif city:IsGate(building) then
-                -- NetManager:instantUpgradeWallByLocation(NOT_HANDLE)
-                NetManager:getInstantUpgradeWallByLocationPromise()
-                    :catch(function(err)
-                        dump(err:reason())
-                    end)
-            elseif city:IsTower(building) then
-                -- NetManager:instantUpgradeTowerByLocation(building:TowerId(), NOT_HANDLE)
-                NetManager:getInstantUpgradeTowerPromise()
-                    :catch(function(err)
-                        dump(err:reason())
-                    end)
-            end
-        end)
-
-
-    local gem_bg = display.newSprite("back_ground_97x20.png")
-        :addTo(back_ground, 2)
-        :align(display.CENTER, w - 90, h/2+10)
-
-    display.newSprite("gem_66x56.png")
-        :addTo(gem_bg, 2)
-        :align(display.CENTER, 20, 20/2)
-        :scale(0.4)
-
-    local gem_label = cc.ui.UILabel.new({
-        size = 20,
-        font = UIKit:getFontFilePath(),
-        align = cc.ui.TEXT_ALIGN_LEFT,
-        color = UIKit:hex2c3b(0xfff3c7)
-    }):addTo(gem_bg, 2)
-        :align(display.LEFT_CENTER, 40, 20/2)
-
-
-    local normal_build = WidgetPushButton.new(
-        {normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"}
-        ,{}
-        ,{
-            disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
-        })
-        :addTo(back_ground)
-        :align(display.CENTER, w - 90, 40)
-        :setButtonLabel(cc.ui.UILabel.new({
-            text = _("升级"),
-            size = 24,
-            font = UIKit:getFontFilePath(),
-            color = UIKit:hex2c3b(0xffedae)}))
-        :onButtonClicked(function(event)
-            local building = item.building
-            local illegal, is_pre_condition = building:IsAbleToUpgrade(false)
-            local jump_building = building:GetPreConditionBuilding()
-            local cur_scene = display.getRunningScene()
-            if illegal and is_pre_condition
-                and type(jump_building) == "table"
-                and cur_scene.AddIndicateForBuilding then
-                UIKit:showMessageDialog(_("提示"), _("前置建筑条件不满足, 请前往。"), function()
-                    local building_sprite = cur_scene:GetSceneLayer():FindBuildingSpriteByBuilding(jump_building, self.city)
-                    cur_scene:GotoLogicPoint(jump_building:GetMidLogicPosition())
-                    cur_scene:AddIndicateForBuilding(building_sprite)
-                    self:LeftButtonClicked()
-                end)
-                return
-            end
-
-
-            if city:IsFunctionBuilding(building) then
-                local location_id = city:GetLocationIdByBuilding(building)
-                NetManager:getUpgradeBuildingByLocationPromise(location_id)
-                    :catch(function(err)
-                        dump(err:reason())
-                    end)
-            elseif city:IsHouse(building) then
-                local tile = city:GetTileWhichBuildingBelongs(building)
-                local house_location = tile:GetBuildingLocation(building)
-
-                NetManager:getUpgradeHouseByLocationPromise(tile.location_id, house_location)
-                    :catch(function(err)
-                        dump(err:reason())
-                    end)
-            elseif city:IsGate(building) then
-                -- NetManager:upgradeWallByLocation(NOT_HANDLE)
-                NetManager:getUpgradeWallByLocationPromise()
-                    :catch(function(err)
-                        dump(err:reason())
-                    end)
-            elseif city:IsTower(building) then
-                -- NetManager:upgradeTowerByLocation(building:TowerId(), NOT_HANDLE)
-                NetManager:getUpgradeTowerPromise()
-                    :catch(function(err)
-                        dump(err:reason())
-                    end)
-            end
-        end)
-
-
-
-    local progress = WidgetTimeBar.new(nil, "back_ground_138x34.png"):addTo(back_ground, 2)
-        :align(display.LEFT_CENTER, 185, h/2)
-
-    local speed_up = WidgetPushButton.new(
-        {normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"}
-        ,{}
-        ,{
-            disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
-        }
-    )
-        :addTo(back_ground)
-        :align(display.CENTER, w - 90, 40)
-        :setButtonLabel(cc.ui.UILabel.new({
-            text = _("加速"),
-            size = 24,
-            font = UIKit:getFontFilePath(),
-            color = UIKit:hex2c3b(0xffedae)}))
-        :onButtonClicked(function(event)
-            UIKit:newGameUI("GameUIBuildingSpeedUp", item.building):AddToCurrentScene(true)
-        end)
-
-
-    function item:SetBuildingType(building_type, level)
-        local base_x, base_y = (left_x + right_x) / 2, 30
-        local config = building_config_map[building_type]
-        local png = SpriteConfig[building_type]:GetConfigByLevel(level).png
-
-        self:SetTitleLabel(Localize.building_name[building_type])
-        building_icon:setTexture(png)
-        building_icon:scale(config.scale)
-        building_icon:pos(base_x + config.offset.x, base_y + config.offset.y)
-        info_btn:onButtonClicked(function (event)
-            if event.name == "CLICKED_EVENT" then
-                WidgetBuildingIntroduce.new(City:GetFirstBuildingByType(building_type)):AddToCurrentScene()
-            end
-        end)
-        return self
-    end
-    function item:SetTitleLabel(label)
-        if title_label:getString() ~= label then
-            title_label:setString(label)
-        end
-        return self
-    end
-    function item:SetGemLabel(label)
-        if gem_label:getString() ~= label then
-            gem_label:setString(label)
-        end
-        return self
-    end
-    function item:SetConditionLabel(label, color)
-        if condition_label:getString() ~= label then
-            condition_label:setString(label)
-        end
-        if color then
-            condition_label:setColor(color)
-        end
-        return self
-    end
-    function item:SetDescLabel(label)
-        if desc_label:getString() ~= label then
-            desc_label:setString(label)
-        end
-        return self
-    end
-    function item:SetProgressInfo(time_label, percent)
-        progress:SetProgressInfo(time_label, percent)
-        return self
-    end
-    function item:UpdateByBuilding(building, current_time)
-        repeat
-            if building:IsUpgrading() then
-                assert(current_time ~= 0)
-                local can_free_speedUp = building:GetUpgradingLeftTimeByCurrentTime(current_time) <= DataUtils:getFreeSpeedUpLimitTime()
-                self:ChangeStatus(can_free_speedUp and "free" or "building")
-                self:UpdateProgress(building)
-                break
-            end
-            if building:IsMaxLevel() then
-                self:ChangeStatus("max")
-                break
-            end
-            local illegal, is_pre_condition = building:IsAbleToUpgrade(false)
-            if illegal then
-                if is_pre_condition then
-                    self:ChangeStatus("disable")
-                else
-                    self:ChangeStatus("instant")
-                    self:SetGemLabel(building:getUpgradeNowNeedGems())
-                end
-                self:SetConditionLabel(illegal, UIKit:hex2c3b(0x7e0000))
-            else
-                self:ChangeStatus("normal")
-                self:SetConditionLabel(_("满足条件"), UIKit:hex2c3b(0x007c23))
-            end
-        until true
-        self:UpdateDesc(building)
-    end
-    function item:UpdateIcon(building)
-        self:SetBuildingType(building:GetType(), building:GetLevel())
-    end
-    function item:UpdateProgress(building)
-        if building:IsUpgrading() then
-            local time = timer:GetServerTime()
-            local str = GameUtils:formatTimeStyle1(building:GetUpgradingLeftTimeByCurrentTime(time))
-            local percent = building:GetUpgradingPercentByCurrentTime(time)
-            self:SetProgressInfo(str, percent)
-        end
-    end
-    function item:UpdateDesc(building)
-        if building:IsUpgrading() then
-            if building:GetNextLevel() == 1 then
-                if city:IsHouse(building) then
-                    self:SetDescLabel(_("正在建造"))
-                else
-                    self:SetDescLabel(_("正在解锁"))
-                end
-            else
-                self:SetDescLabel(string.format("%s%d", _("正在升级到 等级"), building:GetNextLevel()))
-            end
+function GameUIHasBeenBuild:sourceDelegate(listView, tag, idx)
+    if cc.ui.UIListView.COUNT_TAG == tag then
+        return #self.buildings
+    elseif cc.ui.UIListView.CELL_TAG == tag then
+        local item
+        local content
+        item = listView:dequeueItem()
+        if not item then
+            item = listView:newItem()
+            content = Item.new(self)
+            item:addContent(content)
         else
-            if building:IsMaxLevel() then
-                self:SetDescLabel(string.format("%s", _("已经到最大等级了")))
-            else
-                self:SetDescLabel(string.format("%s%d%s%d", _("从等级"), building:GetLevel(), _("升级到等级"), building:GetNextLevel()))
-            end
+            content = item:getContent()
         end
+        self:UpdateContent(content, idx)
+        local size = content:getContentSize()
+        item:setItemSize(size.width, size.height)
+        return item
+    else
     end
-    function item:ChangeStatus(status)
-        if self.status == status then
-            return
-        end
-        if status == "instant" then
-            self:HideFreeSpeedUp()
-            self:HideNormalButton()
-            self:HideProgress()
-
-            self:ShowInstantButton()
-        elseif status == "free" then
-            self:HideNormalButton()
-            self:HideInstantButton()
-
-            self:ShowProgress()
-            self:ShowFreeSpeedUp()
-        elseif status == "normal" then
-            self:HideFreeSpeedUp()
-            self:HideInstantButton()
-            self:HideProgress()
-
-            self:ShowNormalButton()
-        elseif status == "building" then
-            self:HideFreeSpeedUp()
-            self:HideInstantButton()
-            self:HideNormalButton()
-
-            self:ShowProgress()
-            speed_up:show()
-        elseif status == "disable" then
-            self:HideFreeSpeedUp()
-            self:HideInstantButton()
-            self:HideProgress()
-            self:ShowNormalButton(false)
-        elseif status == "max" then
-            self:HideFreeSpeedUp()
-            self:HideInstantButton()
-            self:HideNormalButton()
-            self:HideProgress()
-        end
-        self.status = status
-        return self
-    end
-    function item:HideInstantButton()
-        gem_bg:setVisible(false)
-        instant_build:setVisible(false)
-    end
-    function item:ShowInstantButton()
-        speed_up:setVisible(false)
-        gem_bg:setVisible(true)
-        instant_build:setVisible(true)
-    end
-    function item:HideNormalButton()
-        normal_build:setVisible(false)
-    end
-    function item:ShowNormalButton(able)
-        speed_up:setVisible(false)
-        normal_build:setVisible(true)
-        -- normal_build:setButtonEnabled(able == nil and true or able)
-    end
-    function item:HideProgress()
-        progress:setVisible(false)
-    end
-    function item:ShowProgress()
-        progress:setVisible(true)
-    end
-    function item:ShowFreeSpeedUp()
-        speed_up:setVisible(false)
-        free_speedUp:show()
-    end
-    function item:HideFreeSpeedUp()
-        free_speedUp:hide()
-    end
-    return item
 end
-
+function GameUIHasBeenBuild:UpdateContent(content, idx)
+    content:UpdateByBuilding(self.buildings[idx], timer:GetServerTime())
+end
 return GameUIHasBeenBuild
+
+
+
+
+
+
+
+
 
 
 
