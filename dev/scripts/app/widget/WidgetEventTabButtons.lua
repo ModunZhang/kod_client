@@ -128,8 +128,8 @@ function WidgetEventTabButtons:OnMilitaryTechEventsTimer(tech_event)
         end)
     end
 end
-function WidgetEventTabButtons:OnMilitaryTechEventsChanged()
-    self:EventChangeOn("technology")
+function WidgetEventTabButtons:OnMilitaryTechEventsChanged(soldier_manager,changed_map)
+    self:EventChangeOn("technology",#changed_map[1]>1)
     self:RefreshBuildQueueByType("technology")
 end
 function WidgetEventTabButtons:OnMilitaryTechEventsAllChanged()
@@ -137,7 +137,7 @@ function WidgetEventTabButtons:OnMilitaryTechEventsAllChanged()
     self:RefreshBuildQueueByType("technology")
 end
 function WidgetEventTabButtons:OnSoldierStarEventsChanged(soldier_manager, changed)
-    self:EventChangeOn("technology", changed[1])
+    self:EventChangeOn("technology", #changed[1]>1)
     self:RefreshBuildQueueByType("technology")
 end
 function WidgetEventTabButtons:EventChangeOn(event_type, is_begin)
