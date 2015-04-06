@@ -79,7 +79,7 @@ function GameUIChatChannel:CreateTextFieldBody()
 	local function onEdit(event, editbox)
         if event == "return" then
             if self._channelType == ChatManager.CHANNNEL_TYPE.ALLIANCE then
-                if Alliance:GetMyAlliance():IsDefault() then
+                if Alliance_Manager:GetMyAlliance():IsDefault() then
                     UIKit:showMessageDialog(_("错误"),_("未加入联盟"),function()end)
                     return
                 end
