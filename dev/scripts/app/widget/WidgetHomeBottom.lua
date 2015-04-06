@@ -30,10 +30,10 @@ function WidgetHomeBottom:ctor(callback)
         local button = cc.ui.UIPushButton.new({normal = v[1]})
             :onButtonClicked(callback or OnBottomButtonClicked)
             :addTo(self):pos(x, y)
-            :scale(0.55):onButtonPressed(function(event)
+            :onButtonPressed(function(event)
             event.target:runAction(cc.ScaleTo:create(0.1, 0.7))
             end):onButtonRelease(function(event)
-            event.target:runAction(cc.ScaleTo:create(0.1, 0.55))
+            event.target:runAction(cc.ScaleTo:create(0.1, 1))
             end):setTag(i)
         UIKit:ttfLabel({
             text = v[2],
