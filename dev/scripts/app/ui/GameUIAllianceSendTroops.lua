@@ -490,7 +490,8 @@ function GameUIAllianceSendTroops:RefreashSoldierShow()
                 soldier_num = soldier_number,
                 soldier_weight = soldier_config.load*soldier_number,
                 soldier_citizen = soldier_config.citizen*soldier_number,
-                soldier_march = soldier_config.march
+                soldier_march = soldier_config.march,
+                soldier_star = soldier_level
             })
         end
     end
@@ -576,9 +577,9 @@ function GameUIAllianceSendTroops:CreateTroopsShow()
             :addTo(info_bg)
         return self
     end
-    function TroopShow:NewCorps(soldier,soldier_number)
+    function TroopShow:NewCorps(soldier,soldier_number,star)
         local arrange = soldier_arrange[soldier]
-        local corps = Corps.new(soldier, arrange.row, arrange.col)
+        local corps = Corps.new(soldier, star , arrange.row, arrange.col)
         local label = display.newSprite("back_ground_122x24.png")
             :align(display.CENTER, 0, -40)
             :addTo(corps)
@@ -632,8 +633,8 @@ function GameUIAllianceSendTroops:CreateTroopsShow()
             local pre_width -- 前一个添加的节点的宽
             local total_power , total_weight, total_citizen =0,0,0
             for index,v in pairs(soldiers) do
-                local corp = self:NewCorps(v.soldier_type,v.power):addTo(self)
-                corp:PlayAnimation("idle_2")
+                local corp = self:NewCorps(v.soldier_type,v.power,v.soldier_star):addTo(self)
+                corp:PlayAnimation("idle_90")
                 x = x - (count ~= 0 and pre_width or corp:getCascadeBoundingBox().size.width/2)
                 pre_width = corp:getCascadeBoundingBox().size.width/2+40
                 if v.soldier_type =="lancer" or v.soldier_type =="lancer" then
