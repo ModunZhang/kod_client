@@ -90,15 +90,14 @@ function GameUIPVESendTroop:OnMoveInStage()
                             break
                         end
                     end
-                    self:RefreashSoldierShow()
                 else
                     for k,item in pairs(self.soldiers_table) do
                         local _,_,_,max_num = item:GetSoldierInfo()
                         item:SetSoldierCount(max_num)
                     end
-                    self:RefreashSoldierShow()
                 end
             end
+            self:RefreashSoldierShow()
         end
     end):align(display.LEFT_CENTER,window.left+50,window.top-910):addTo(self:GetView())
     self.max_btn = max_btn
