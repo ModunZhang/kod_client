@@ -152,7 +152,6 @@ function GameUIItems:CreateShopContentByIndex( idx )
         dimensions = cc.size(260,0)
     }):align(display.LEFT_TOP, 156 , item_height-60)
         :addTo(content)
-
     local icon_bg = display.newSprite("box_120x154.png"):addTo(content):align(display.CENTER, 70, item_height/2)
     local num_bg = display.newSprite("back_ground_118x36.png"):addTo(icon_bg):align(display.CENTER, icon_bg:getContentSize().width/2, 20)
     local item_bg = display.newSprite("box_118x118.png"):addTo(icon_bg):align(display.CENTER, icon_bg:getContentSize().width/2, icon_bg:getContentSize().height-60)
@@ -175,6 +174,8 @@ function GameUIItems:CreateShopContentByIndex( idx )
         local items = parent:GetShopItemByTag(parent.shop_select_tag)[idx]
         price:setString(string.formatnumberthousands(items:Price()))
         local item_iamge = UILib.item[items:Name()]
+        print("UILib.item[items:Name()?>>>>>>",items:Name(),item_iamge)
+
         if item_iamge then
             item_icon:setTexture(item_iamge)
             item_icon:scale(100/item_icon:getContentSize().width)
