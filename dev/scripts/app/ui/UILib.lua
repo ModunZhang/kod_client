@@ -539,6 +539,10 @@ local ITEM = {
     warSpeedupClass_1 = "warSpeedup_1_128x128.png",
     warSpeedupClass_2 = "warSpeedup_2_128x128.png",
 
+    dragonChest_1 = "#root/lanse/a0000.png",
+    dragonChest_2 = "#root/lvse/a0000.png",
+    dragonChest_3 = "#root/zise/a0000.png",
+
     casinoTokenClass_1 = "casinoTokenClass_1_128x128.png",
     casinoTokenClass_2 = "casinoTokenClass_2_128x128.png",
     casinoTokenClass_3 = "casinoTokenClass_3_128x128.png",

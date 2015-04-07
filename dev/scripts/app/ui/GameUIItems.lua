@@ -156,8 +156,6 @@ function GameUIItems:CreateShopContentByIndex( idx )
     local num_bg = display.newSprite("back_ground_118x36.png"):addTo(icon_bg):align(display.CENTER, icon_bg:getContentSize().width/2, 20)
     local item_bg = display.newSprite("box_118x118.png"):addTo(icon_bg):align(display.CENTER, icon_bg:getContentSize().width/2, icon_bg:getContentSize().height-60)
     local item_icon_color_bg = display.newSprite("box_item_100x100.png"):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
-    local item_icon = cc.ui.UIImage.new(UILib.item[items:Name()]):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
-    item_icon:scale(100/item_icon:getContentSize().width)
     local i_icon = display.newSprite("goods_26x26.png"):addTo(item_bg):align(display.CENTER, 15, 15)
     -- gem icon
     local gem_icon = display.newSprite("gem_icon_62x61.png"):addTo(num_bg):align(display.CENTER, 20, num_bg:getContentSize().height/2):scale(0.6)
@@ -174,16 +172,22 @@ function GameUIItems:CreateShopContentByIndex( idx )
         local items = parent:GetShopItemByTag(parent.shop_select_tag)[idx]
         price:setString(string.formatnumberthousands(items:Price()))
         local item_iamge = UILib.item[items:Name()]
-        print("UILib.item[items:Name()?>>>>>>",items:Name(),item_iamge)
 
         if item_iamge then
-            item_icon:setTexture(item_iamge)
+            if self.item_icon then
+                item_bg:removeChild(self.item_icon, true)
+            end
+            local item_icon = display.newSprite(UILib.item[items:Name()]):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
+
             item_icon:scale(100/item_icon:getContentSize().width)
+            self.item_icon = item_icon
         end
         desc:setString(items:GetLocalizeDesc())
         item_name:setString(items:GetLocalizeName())
-        self:removeChild(button, true)
-        local button = cc.ui.UIPushButton.new({normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"})
+        if self.button then
+            self:removeChild(self.button, true)
+        end
+        self.button = cc.ui.UIPushButton.new({normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"})
             :setButtonLabel(UIKit:ttfLabel({
                 text = _("购买"),
                 size = 20,
@@ -303,8 +307,6 @@ function GameUIItems:CreateMyItemContentByIndex( idx )
     local item_bg = display.newSprite("box_118x118.png"):addTo(icon_bg):align(display.CENTER, icon_bg:getContentSize().width/2, icon_bg:getContentSize().height-60)
     local item_icon_color_bg = display.newSprite("box_item_100x100.png"):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
     local i_icon = cc.ui.UIImage.new("goods_26x26.png"):addTo(item_bg):align(display.CENTER, 15, 15)
-    local item_icon = cc.ui.UIImage.new("Dragon_red_113x128.png"):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
-    item_icon:scale(100/item_icon:getContentSize().width)
 
 
     local own_num = UIKit:ttfLabel({
@@ -325,8 +327,13 @@ function GameUIItems:CreateMyItemContentByIndex( idx )
         self:SetOwnCount(string.formatnumberthousands(items:Count()))
         local item_image =UILib.item[items:Name()]
         if item_image then
-            item_icon:setTexture(item_image)
+            if self.item_icon then
+                item_bg:removeChild(self.item_icon, true)
+            end
+            local item_icon = display.newSprite(UILib.item[items:Name()]):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
+
             item_icon:scale(100/item_icon:getContentSize().width)
+            self.item_icon = item_icon
         end
         desc:setString(items:GetLocalizeDesc())
         item_name:setString(items:GetLocalizeName())
@@ -400,6 +407,7 @@ function GameUIItems:OnItemsChanged( changed_map )
     end
 end
 return GameUIItems
+
 
 
 
