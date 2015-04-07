@@ -837,6 +837,26 @@ local PRODUC_TIONTECHS_IMAGE = {
     
 }
 
+
+local GET_DRAGON_EQUIPMENT_IMAGE = function(dragon_name,body_name,star)
+    local __,__,color_str = string.find(dragon_name, "(%a+)Dragon")
+    local body_str = ""
+    if "armguardLeft" == body_name or "armguardRight" == body_name then
+        body_str = "Armguard"
+    elseif "crown" == body_name then
+        body_str  = "Crown"
+    elseif "orb" == body_name then 
+        body_str  = "Orb"
+    elseif "chest" ==  body_name then
+        body_str  = "Chest"
+    elseif "sting" == body_name then
+        body_str  = "Sting"
+    end
+    assert(body_str ~= '',"body_name错误")
+    local equipment_key = color_str .. body_str .. "_s" .. star
+    return EQUIPMENT[equipment_key]
+end
+
 return {
     resource = RESOURCE,
     soldier_bg = STAR_BG,
@@ -873,6 +893,7 @@ return {
     unLoadDragonAnimation = unLoadDragonAnimation,
     iap_package_image = IAP_PACKAGE_IMAGE,
     produc_tiontechs_image = PRODUC_TIONTECHS_IMAGE,
+    getDragonEquipmentImage = GET_DRAGON_EQUIPMENT_IMAGE,
 }
 
 

@@ -478,4 +478,3 @@ function DataUtils:getIapInfo(productId)
         end
     end
 end
-
