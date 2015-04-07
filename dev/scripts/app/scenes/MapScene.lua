@@ -162,11 +162,11 @@ function MapScene:OnTouchExtend(old_speed_x, old_speed_y, new_speed_x, new_speed
     local speed = parent:convertToNodeSpace(cc.p(new_speed_x, new_speed_y))
     local x, y = self.scene_layer:getPosition()
     local max_speed = 5
+    local sp = self:convertToNodeSpace(cc.p(speed.x * millisecond, speed.y * millisecond))
     speed.x = speed.x > max_speed and max_speed or speed.x
     speed.y = speed.y > max_speed and max_speed or speed.y
     self.scene_layer:setPosition(cc.p(x + sp.x, y + sp.y))
 
-    -- local sp = self:convertToNodeSpace(cc.p(speed.x * millisecond, speed.y * millisecond))
     -- local mx, my, ELASTIC = self.scene_layer:GetCollideLength()
     -- local rx, ry = 1- sqrt((abs(mx)/ELASTIC)), 1 - sqrt((abs(my)/ELASTIC))
     -- self.scene_layer:setPosition(cc.p(x + sp.x * rx, y + sp.y * ry))
