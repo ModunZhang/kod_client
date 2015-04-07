@@ -49,11 +49,11 @@ end
 
 function GameUIAlliancePalaceEnter:GetEnterButtons()
 	if self:IsMyAlliance() then
-		local info_button = self:BuildOneButton("icon_info_1.png",_("信息")):onButtonClicked(function()
+		local info_button = self:BuildOneButton("icon_info_56x56.png",_("信息")):onButtonClicked(function()
 			UIKit:newGameUI('GameUIAlliancePalace',City,"info",self:GetBuilding()):AddToCurrentScene(true)
 			self:LeftButtonClicked()
 		end)
-		local tax_button = self:BuildOneButton("icon_tax.png",_("奖励")):onButtonClicked(function()
+		local tax_button = self:BuildOneButton("icon_award_52x54.png",_("奖励")):onButtonClicked(function()
 			 UIKit:newGameUI('GameUIAlliancePalace',City,"impose",self:GetBuilding()):AddToCurrentScene(true)
 			self:LeftButtonClicked()
 		end)

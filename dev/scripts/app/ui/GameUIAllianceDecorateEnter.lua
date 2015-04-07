@@ -55,7 +55,7 @@ function GameUIAllianceDecorateEnter:GetEnterButtons()
     
     local current_scene = display.getRunningScene()
     if current_scene.__cname == "AllianceScene" and current_scene.LoadEditModeWithAllianceObj then
-    	local chai_button = self:BuildOneButton("icon_move_alliance_building.png",_("移动")):onButtonClicked(function()
+    	local chai_button = self:BuildOneButton("icon_move_player_city.png",_("移动")):onButtonClicked(function()
     		local alliacne =  self:GetMyAlliance()
             local isEqualOrGreater = alliacne:GetSelf():CanEditAllianceObject()
             if isEqualOrGreater then

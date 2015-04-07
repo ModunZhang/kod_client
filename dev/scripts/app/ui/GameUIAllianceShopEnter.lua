@@ -56,7 +56,7 @@ end
 
 function GameUIAllianceShopEnter:GetEnterButtons()
 	if self:IsMyAlliance() then
-		local info_button = self:BuildOneButton("icon_info_1.png",_("商店记录")):onButtonClicked(function()
+		local info_button = self:BuildOneButton("icon_info_56x56.png",_("商店记录")):onButtonClicked(function()
 			UIKit:newGameUI('GameUIAllianceShop',City,"record",self:GetBuilding()):AddToCurrentScene(true)
 			self:LeftButtonClicked()
 		end)
@@ -65,7 +65,7 @@ function GameUIAllianceShopEnter:GetEnterButtons()
 			UIKit:newGameUI('GameUIAllianceShop',City,"stock",self:GetBuilding()):AddToCurrentScene(true)
 			self:LeftButtonClicked()
 		end)
-		local tax_button = self:BuildOneButton("icon_tax.png",_("购买商品")):onButtonClicked(function()
+		local tax_button = self:BuildOneButton("icon_buy_goods_72x60.png",_("购买商品")):onButtonClicked(function()
 			UIKit:newGameUI('GameUIAllianceShop',City,"goods",self:GetBuilding()):AddToCurrentScene(true)
 			self:LeftButtonClicked()
 		end)

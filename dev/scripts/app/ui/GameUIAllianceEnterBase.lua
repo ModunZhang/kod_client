@@ -280,7 +280,7 @@ function GameUIAllianceEnterBase:BuildOneButton(image,title)
             disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
         })
     local s = btn:getCascadeBoundingBox().size
-    display.newSprite(image):align(display.CENTER, -s.width/2, -s.height/2+22):addTo(btn)
+    display.newSprite(image):align(display.CENTER, -s.width/2, -s.height/2+12):addTo(btn)
     UIKit:ttfLabel({
         text =  title,
         size = 18,

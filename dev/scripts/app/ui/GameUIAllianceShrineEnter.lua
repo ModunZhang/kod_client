@@ -86,7 +86,7 @@ end
 
 function GameUIAllianceShrineEnter:GetEnterButtons()
 	if self:IsMyAlliance() then
-		local fight_event_button = self:BuildOneButton("icon_info_1.png",_("战争事件")):onButtonClicked(function()
+		local fight_event_button = self:BuildOneButton("icon_war_48x54.png",_("战争事件")):onButtonClicked(function()
 			UIKit:newGameUI('GameUIAllianceShrine',City,"fight_event",self:GetBuilding()):AddToCurrentScene(true)
 			self:LeftButtonClicked()
 		end)
