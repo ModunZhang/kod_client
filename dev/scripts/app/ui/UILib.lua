@@ -815,6 +815,28 @@ local IAP_PACKAGE_IMAGE = {
     },
 }
 
+local PRODUC_TIONTECHS_IMAGE = {
+    crane = "crane_128x128.png",
+    stoneCarving = "stoneCarving_128x128.png",
+    forestation = "forestation_128x128.png",
+    fastFix = "fastFix_128x128.png",
+    ironSmelting = "ironSmelting_128x128.png",
+    cropResearch = "cropResearch_128x128.png",
+    reinforcing = "reinforcing_128x128.png",
+    seniorTower = "seniorTower_128x128.png",
+    beerSupply = "beerSupply_128x128.png",
+    rescueTent = "rescueTent_128x128.png",
+    colonization = "colonization_128x128.png",
+    negotiation = "negotiation_128x128.png",
+    trap = "trap_128x128.png",
+    hideout = "hideoud_128x128.png",
+    logistics = "logistics_128x128.png",
+    healingAgent = "healingAgent_128x128.png",
+    sketching = "sketching_128x128.png",
+    mintedCoin = "mintedcoin_128x128.png",
+    
+}
+
 return {
     resource = RESOURCE,
     soldier_bg = STAR_BG,
@@ -850,6 +872,7 @@ return {
     loadDragonAnimation = loadDragonAnimation,
     unLoadDragonAnimation = unLoadDragonAnimation,
     iap_package_image = IAP_PACKAGE_IMAGE,
+    produc_tiontechs_image = PRODUC_TIONTECHS_IMAGE,
 }
 
 
