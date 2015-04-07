@@ -123,7 +123,7 @@ function GameUIHome:onEnter()
                     :AddToCurrentScene()
             end
         end
-    end):addTo(self):pos(display.right-40, display.top-380)
+    end):addTo(self):pos(display.right-40, display.bottom+300)
 
     self.request_count = WidgetNumberTips.new():addTo(self.help_button):pos(20,-20)
     self.request_count:SetNumber(Alliance_Manager:GetMyAlliance():GetOtherRequestEventsNum())
