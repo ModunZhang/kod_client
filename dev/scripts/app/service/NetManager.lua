@@ -194,7 +194,7 @@ local function get_request_promise(request_route, data, m)
 end
 local function get_blocking_request_promise(request_route, data, m,need_catch)
     --默认后面的处理需要主动catch错误
-    need_catch = type(need_catch) == 'boolean' and need_catch or true
+    need_catch = type(need_catch) == 'boolean' and need_catch or false
     if display.getRunningScene().WaitForNet then
         display.getRunningScene():WaitForNet()
     end
@@ -205,9 +205,10 @@ local function get_blocking_request_promise(request_route, data, m,need_catch)
     end)
     return cocos_promise.promiseFilterNetError(p,need_catch)
 end
-local function get_none_blocking_request_promise(request_route, data, m)
+local function get_none_blocking_request_promise(request_route, data, m, need_catch)
+    need_catch = need_catch or false
     -- return cocos_promise.promiseWithTimeOut(get_request_promise(request_route, data, m), TIME_OUT)
-    return get_request_promise(request_route, data, m)
+    return cocos_promise.promiseFilterNetError(get_request_promise(request_route, data, m), need_catch)
 end
 local function get_callback_promise(callbacks, m)
     local p = promise.new(check_response(m or ""))
@@ -380,7 +381,7 @@ end
 -- 获取服务器列表
 function NetManager:getLogicServerInfoPromise()
     return get_none_blocking_request_promise("gate.gateHandler.queryEntry", nil, "获取逻辑服务器失败")
-        :next(function(result)
+        :done(function(result)
             self:CleanAllEventListeners()
             self.m_netService:disconnect()
             self.m_logicServer.host = result.msg.data.host
@@ -419,7 +420,7 @@ function NetManager:getLoginPromise(deviceId)
     else
         device_id = device.getOpenUDID()
     end
-    return get_none_blocking_request_promise("logic.entryHandler.login", {deviceId = deviceId or device_id}):next(function(response)
+    return get_none_blocking_request_promise("logic.entryHandler.login", {deviceId = deviceId or device_id}, nil, true):next(function(response)
         if response.success then
             app:GetPushManager():CancelAll()
             local playerData = response.msg.playerData
@@ -437,6 +438,7 @@ function NetManager:getLoginPromise(deviceId)
             end
             self.m_was_inited_game = false
         end
+        return response 
     end)
 end
 
@@ -1380,7 +1382,7 @@ end
 function NetManager:getFirstIAPRewardsPromise()
     return get_blocking_request_promise("logic.playerHandler.getFirstIAPRewards",
         nil,
-        "获取首充奖励失败!"):next(get_response_msg)
+        "获取首充奖励失败!"):done(get_response_msg)
 end
 
 -- 新手冲级奖励
@@ -1427,7 +1429,7 @@ end
 -- 设置玩家Apple Push Notification Id
 function NetManager:getSetApnIdPromise(apnId)
     return get_none_blocking_request_promise("logic.playerHandler.setApnId",{apnId=apnId},
-        "设置玩家Apple Push失败"):next(get_response_msg)
+        "设置玩家Apple Push失败"):done(get_response_msg)
 end
 
 -- 获取排行榜

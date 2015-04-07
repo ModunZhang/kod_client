@@ -126,11 +126,10 @@ function GameUILogin:connectGateServer()
     end)
 end
 function GameUILogin:getLogicServerInfo()
-    NetManager:getLogicServerInfoPromise():next(function()
+    NetManager:getLogicServerInfoPromise():done(function()
         self:setProgressPercent(80)
         self:connectLogicServer()
-    end):catch(function(err)
-        dump(err:reason())
+    end):fail(function()
         self:setProgressText(_("获取游戏服务器信息失败!"),true)
     end)
 end
