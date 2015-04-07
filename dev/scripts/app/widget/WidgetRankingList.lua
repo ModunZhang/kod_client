@@ -108,10 +108,10 @@ end
 function WidgetRankingList:ReloadRank(rank)
     if self.rank_map.power == rank then
         local str = self.type_ == "player" and _("我的战斗力排行") or _("我的联盟战斗力排行")
-        self.my_ranking:setString(string.format("%s : %d", str, rank.myData.rank))
+        self.my_ranking:setString(string.format("%s : %d", str, rank.myData.rank == json.null and -1 or rank.myData.rank))
     elseif self.rank_map.kill == rank then
         local str = self.type_ == "player" and _("我的击杀排行") or _("我的联盟击杀排行")
-        self.my_ranking:setString(string.format("%s : %d", str, rank.myData.rank))
+        self.my_ranking:setString(string.format("%s : %d", str, rank.myData.rank == json.null and -1 or rank.myData.rank))
     end
     self.current_rank = rank
     self.listview:reload()

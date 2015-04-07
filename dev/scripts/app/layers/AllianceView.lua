@@ -131,16 +131,17 @@ function AllianceView:OnBuildingDeltaUpdate(allianceMap, deltaMapObjects)
     end
 end
 function AllianceView:CreateObject(entity)
+    local is_my_alliance = Alliance_Manager:GetMyAlliance():Id() == self.alliance:Id()
     local type_ = entity:GetType()
     local object
     if type_ == "building" then
-        object = AllianceBuildingSprite.new(self, entity):addTo(self:GetBuildingNode())
+        object = AllianceBuildingSprite.new(self, entity, is_my_alliance):addTo(self:GetBuildingNode())
     elseif type_ == "member" then
-        object = CitySprite.new(self, entity):addTo(self:GetBuildingNode())
+        object = CitySprite.new(self, entity, is_my_alliance):addTo(self:GetBuildingNode())
     elseif type_ == "village" then
-        object = VillageSprite.new(self, entity):addTo(self:GetBuildingNode())
+        object = VillageSprite.new(self, entity, is_my_alliance):addTo(self:GetBuildingNode())
     elseif type_ == "decorate" then
-        object = AllianceDecoratorSprite.new(self, entity):addTo(self:GetBuildingNode())
+        object = AllianceDecoratorSprite.new(self, entity, is_my_alliance):addTo(self:GetBuildingNode())
     end
     return object
 end

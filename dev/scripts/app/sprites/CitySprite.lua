@@ -1,7 +1,8 @@
 local Sprite = import(".Sprite")
 local SpriteConfig = import(".SpriteConfig")
 local CitySprite = class("CitySprite", Sprite)
-function CitySprite:ctor(city_layer, entity)
+function CitySprite:ctor(city_layer, entity, is_my_alliance)
+    self.is_my_alliance = is_my_alliance
     local x, y = city_layer:GetLogicMap():ConvertToMapPosition(entity:GetLogicPosition())
     CitySprite.super.ctor(self, city_layer, entity, x, y)
 
@@ -24,13 +25,13 @@ function CitySprite:ctor(city_layer, entity)
     --     size = 22,
     --     color = 0x403c2f,
     -- }):addTo(bg):align(display.LEFT_CENTER, startx, gap * 3.5)
-    
+
     -- self.keepLevel = UIKit:ttfLabel({
     --     text = _("城堡等级: ")..entity:GetAllianceMemberInfo():KeepLevel(),
     --     size = 22,
     --     color = 0x403c2f,
     -- }):addTo(bg):align(display.LEFT_CENTER, startx, gap * 2.5)
-    
+
     -- self.isProtected = UIKit:ttfLabel({
     --     text = _("保护状态: ")..(entity:GetAllianceMemberInfo():IsProtected() and "是" or "否"),
     --     size = 22,
@@ -48,10 +49,16 @@ function CitySprite:ctor(city_layer, entity)
     -- self:CreateBase()
 end
 function CitySprite:GetSpriteFile()
-    return SpriteConfig["keep"]:GetConfigByLevel(1).png, 0.2
+    local config
+    if self.is_my_alliance then
+        config = SpriteConfig["keep"]
+    else
+        config = SpriteConfig["other_keep"]
+    end
+    return config:GetConfigByLevel(self:GetEntity():GetAllianceMemberInfo():KeepLevel()).png, 0.2
 end
 function CitySprite:GetSpriteOffset()
-	return self:GetLogicMap():ConvertToLocalPosition(0, 0)
+    return self:GetLogicMap():ConvertToLocalPosition(0, 0)
 end
 function CitySprite:OnSceneScale(s)
     self.info:setScale(2 - s)
@@ -70,12 +77,13 @@ function CitySprite:newBatchNode(w, h)
     local map = self:GetLogicMap()
     for ix = start_x, end_x do
         for iy = start_y, end_y do
-			display.newSprite(base_node:getTexture()):addTo(base_node):pos(map:ConvertToLocalPosition(ix, iy))
+            display.newSprite(base_node:getTexture()):addTo(base_node):pos(map:ConvertToLocalPosition(ix, iy))
         end
     end
     return base_node
 end
 return CitySprite
+
 
 
 

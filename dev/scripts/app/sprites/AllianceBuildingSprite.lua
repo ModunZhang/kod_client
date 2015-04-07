@@ -7,13 +7,25 @@ local building_map = {
     orderHall = {"orderHall_100x153.png", 1},
     moonGate = {"moonGate_108x118.png", 1},
 }
-function AllianceBuildingSprite:ctor(city_layer, entity)
+local other_building_map = {
+    palace = {"other_palace.png", 0.4},
+    shrine = {"shrine_115x94.png", 1},
+    shop = {"other_shop.png", 0.4},
+    orderHall = {"other_orderHall.png", 0.4},
+    moonGate = {"moonGate_108x118.png", 1},
+}
+function AllianceBuildingSprite:ctor(city_layer, entity, is_my_alliance)
+    self.is_my_alliance = is_my_alliance
     local x, y = city_layer:GetLogicMap():ConvertToMapPosition(entity:GetLogicPosition())
     AllianceBuildingSprite.super.ctor(self, city_layer, entity, x, y)
     -- self:CreateBase()
 end
 function AllianceBuildingSprite:GetSpriteFile()
-    return unpack(building_map[self:GetEntity():GetAllianceBuildingInfo().name])
+    if self.is_my_alliance then
+        return unpack(building_map[self:GetEntity():GetAllianceBuildingInfo().name])
+    else
+        return unpack(other_building_map[self:GetEntity():GetAllianceBuildingInfo().name])
+    end
 end
 function AllianceBuildingSprite:GetSpriteOffset()
 	return self:GetLogicMap():ConvertToLocalPosition(1, 1)

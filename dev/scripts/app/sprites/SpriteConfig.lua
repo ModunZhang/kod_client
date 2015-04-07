@@ -76,6 +76,13 @@ end
 
 
 create_building_config(
+    "other_keep"
+    ,create_config(MIN_LEVEL, level(1), "other_keep_1.png", offset(60, 225), scale(1))
+    ,create_config(level(2), level(5), "other_keep_2.png", offset(60, 245), scale(1))
+    ,create_config(level(6), MAX_LEVEL, "other_keep_3.png", offset(60, 285), scale(1))
+)
+
+create_building_config(
     "keep"
     ,create_config(MIN_LEVEL, level(1), "keep_1_420x390.png", offset(60, 225), scale(1), decorator("image", "keep_1_d_168x222.png", offset(124, -100)))
     ,create_config(level(2), level(5), "keep_2_436x436.png", offset(60, 245), scale(1), decorator("image", "keep_2_d_172x230.png", offset(126, -126)))
