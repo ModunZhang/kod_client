@@ -189,7 +189,7 @@ function ResourceManager:UpdateByCity(city, current_time)
         resource:SetProductionPerHour(current_time,
             resource_type ~= POPULATION
             and resource_production
-            or (resource_limit - resource:GetLowLimitResource()) / intInit.playerCitizenRecoverFullNeedHours.value)
+            or (intInit.initCitizen.value + resource_limit - resource:GetLowLimitResource()) / intInit.playerCitizenRecoverFullNeedHours.value)
     end
 end
 function ResourceManager:GetCitizenAllocInfo()

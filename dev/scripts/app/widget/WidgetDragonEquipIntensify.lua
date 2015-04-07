@@ -5,7 +5,7 @@
 local Button = import(".WidgetPushButton")
 local config_equipments = GameDatas.DragonEquipments.equipments
 local WidgetDragonEquipIntensify = class("WidgetDragonEquipIntensify",Button)
-
+local UILib = import("..ui.UILib")
 -- equipment 为配置表 count为服务器拥有值
 function WidgetDragonEquipIntensify:ctor(delegate,equipmentName,current_count,maxCount,resolveEquipmentName)
 	local super_ = WidgetDragonEquipIntensify.super
@@ -82,17 +82,7 @@ function WidgetDragonEquipIntensify:GetEquipmetFromConfig( equipmentName )
 end
 
 function WidgetDragonEquipIntensify:GetEqIcon(equipmentName)
-	local equipment = config_equipments[equipmentName]
-	local equipmentCategory = self:GetEqCategory(equipment)
-	local equipmentIcon = {}
-    --五个星级的装备 TODO:6种龙装备
-    equipmentIcon["armguardLeft"] = {"armguard_1.png","armguard_1.png","armguard_1.png","armguard_1.png","armguard_1.png"}
-    equipmentIcon["armguardRight"] = {"armguard_1.png","armguard_1.png","armguard_1.png","armguard_1.png","armguard_1.png"}
-    equipmentIcon["crown"] = {"crown_1.png","crown_1.png","crown_1.png","crown_1.png","crown_1.png"}
-    equipmentIcon["orb"] = {"orb_1.png","orb_1.png","orb_1.png","orb_1.png","orb_1.png"}
-    equipmentIcon["chest"] = {"chest_1.png","chest_1.png","chest_1.png","chest_1.png","chest_1.png"}
-    equipmentIcon["sting"] = {"sting_1.png","sting_1.png","sting_1.png","sting_1.png","sting_1.png"}
-    return equipmentIcon[equipmentCategory][1]
+ 	return UILib.equipment[equipmentName]
 end
 
 function WidgetDragonEquipIntensify:GetEqCategory(equipment)

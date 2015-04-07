@@ -815,6 +815,48 @@ local IAP_PACKAGE_IMAGE = {
     },
 }
 
+local PRODUC_TIONTECHS_IMAGE = {
+    crane = "crane_128x128.png",
+    stoneCarving = "stoneCarving_128x128.png",
+    forestation = "forestation_128x128.png",
+    fastFix = "fastFix_128x128.png",
+    ironSmelting = "ironSmelting_128x128.png",
+    cropResearch = "cropResearch_128x128.png",
+    reinforcing = "reinforcing_128x128.png",
+    seniorTower = "seniorTower_128x128.png",
+    beerSupply = "beerSupply_128x128.png",
+    rescueTent = "rescueTent_128x128.png",
+    colonization = "colonization_128x128.png",
+    negotiation = "negotiation_128x128.png",
+    trap = "trap_128x128.png",
+    hideout = "hideoud_128x128.png",
+    logistics = "logistics_128x128.png",
+    healingAgent = "healingAgent_128x128.png",
+    sketching = "sketching_128x128.png",
+    mintedCoin = "mintedcoin_128x128.png",
+    
+}
+
+
+local GET_DRAGON_EQUIPMENT_IMAGE = function(dragon_name,body_name,star)
+    local __,__,color_str = string.find(dragon_name, "(%a+)Dragon")
+    local body_str = ""
+    if "armguardLeft" == body_name or "armguardRight" == body_name then
+        body_str = "Armguard"
+    elseif "crown" == body_name then
+        body_str  = "Crown"
+    elseif "orb" == body_name then 
+        body_str  = "Orb"
+    elseif "chest" ==  body_name then
+        body_str  = "Chest"
+    elseif "sting" == body_name then
+        body_str  = "Sting"
+    end
+    assert(body_str ~= '',"body_name错误")
+    local equipment_key = color_str .. body_str .. "_s" .. star
+    return EQUIPMENT[equipment_key]
+end
+
 return {
     resource = RESOURCE,
     soldier_bg = STAR_BG,
@@ -850,6 +892,8 @@ return {
     loadDragonAnimation = loadDragonAnimation,
     unLoadDragonAnimation = unLoadDragonAnimation,
     iap_package_image = IAP_PACKAGE_IMAGE,
+    produc_tiontechs_image = PRODUC_TIONTECHS_IMAGE,
+    getDragonEquipmentImage = GET_DRAGON_EQUIPMENT_IMAGE,
 }
 
 

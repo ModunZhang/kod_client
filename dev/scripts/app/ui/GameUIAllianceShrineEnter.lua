@@ -5,23 +5,38 @@
 local GameUIAllianceShrineEnter = UIKit:createUIClass("GameUIAllianceShrineEnter","GameUIAllianceEnterBase")
 local buildingName = GameDatas.AllianceInitData.buildingName
 
-function GameUIAllianceShrineEnter:ctor(building,isMyAlliance,alliance)
-	GameUIAllianceShrineEnter.super.ctor(self,building,isMyAlliance,alliance)
+function GameUIAllianceShrineEnter:ctor(building,isMyAlliance,alliance,enemy_alliance)
+	GameUIAllianceShrineEnter.super.ctor(self,building,isMyAlliance,alliance,enemy_alliance)
 	self.building = building:GetAllianceBuildingInfo()
 end
 
 function GameUIAllianceShrineEnter:GetLocation()
-	local mapObject = self:GetMyAlliance():GetAllianceMap():FindMapObjectById(self:GetBuilding().id)
+	local mapObject
+	if self:IsMyAlliance() then
+		mapObject = self:GetMyAlliance():GetAllianceMap():FindMapObjectById(self:GetBuilding().id)
+	else
+		mapObject = self:GetEnemyAlliance():GetAllianceMap():FindMapObjectById(self:GetBuilding().id)
+	end
 	return mapObject.location.x .. "," .. mapObject.location.y
 end
 
 function GameUIAllianceShrineEnter:GetLogicPosition()
-	local mapObject = self:GetMyAlliance():GetAllianceMap():FindMapObjectById(self:GetBuilding().id)
+	local mapObject
+	if self:IsMyAlliance() then
+		mapObject = self:GetMyAlliance():GetAllianceMap():FindMapObjectById(self:GetBuilding().id)
+	else
+		mapObject = self:GetEnemyAlliance():GetAllianceMap():FindMapObjectById(self:GetBuilding().id)
+	end
 	return {x = mapObject.location.x,y = mapObject.location.y}
 end
 
 function GameUIAllianceShrineEnter:GetMapObject()
-	local mapObject = self:GetMyAlliance():GetAllianceMap():FindMapObjectById(self:GetBuilding().id)
+	local mapObject
+	if self:IsMyAlliance() then
+		mapObject = self:GetMyAlliance():GetAllianceMap():FindMapObjectById(self:GetBuilding().id)
+	else
+		mapObject = self:GetEnemyAlliance():GetAllianceMap():FindMapObjectById(self:GetBuilding().id)
+	end
 	return mapObject
 end
 
