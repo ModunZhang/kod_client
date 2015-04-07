@@ -78,7 +78,19 @@ function UIKit:newGameUI(gameUIName,... )
     end
     return instance
 end
-
+function UIKit:newWidgetUI(gameUIName,... )
+    if gameUIName ~= 'FullScreenPopDialogUI' then  
+        if self.Registry.isObjectExists(gameUIName) then
+            print("已经创建过一个Object-->",gameUIName)
+            return {AddToCurrentScene=function(...)end,AddToScene=function(...)end} -- 适配后面的调用不报错
+        end
+    end
+    local viewPackageName = app.packageRoot .. ".widget." .. gameUIName
+    local viewClass = require(viewPackageName)
+    local instance = viewClass.new(...)
+    self.Registry.setObject(instance,gameUIName)
+    return instance
+end
 function UIKit:getFontFilePath()
     return "Droid Sans Fallback.ttf"
 end

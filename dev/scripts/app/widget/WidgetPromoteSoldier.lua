@@ -255,9 +255,7 @@ function WidgetPromoteSoldier:PopNotSatisfyDialog(upgrade_listener,results)
         :SetPopMessage(message)
         :AddToCurrentScene()
     local need_gem = self:GetUpgradeGems()
-    if need_gem==0 then
-        dialog:CreateCancelButton()
-    else
+    if need_gem~=0 then
         dialog:CreateNeeds({value = self:GetUpgradeGems()})
     end
     if gem_not_enough or need_gem > User:GetGemResource():GetValue() then

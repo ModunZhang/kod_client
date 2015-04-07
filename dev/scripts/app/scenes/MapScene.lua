@@ -4,7 +4,10 @@ local TouchJudgment = import("..layers.TouchJudgment")
 local MapScene = class("MapScene", function()
     return display.newScene("MapScene")
 end)
-
+local sqrt = math.sqrt
+local floor = math.floor
+local abs = math.abs
+local elastic = 200
 function MapScene:ctor()
     User:ResetAllListeners()
     City:ResetAllListeners()
@@ -99,8 +102,6 @@ function MapScene:OneTouch(pre_x, pre_y, x, y, touch_type)
         self.touch_judgment:OnTouchCancelled(pre_x, pre_y, x, y)
     end
 end
-local sqrt = math.sqrt
-local floor = math.floor
 function MapScene:OnTwoTouch(x1, y1, x2, y2, event_type)
     local scene = self.scene_layer
     if event_type == "began" then
@@ -133,10 +134,9 @@ function MapScene:OnTouchBegan(pre_x, pre_y, x, y)
 
 end
 function MapScene:OnTouchEnd(pre_x, pre_y, x, y, speed)
-    if not speed then
-        self.touch_judgment:ResetTouch()
-        self.scene_layer:MakeElastic()
-    end
+    -- if not speed and self.scene_layer:MakeElastic() then
+    --     self.touch_judgment:ResetTouch()
+    -- end
 end
 function MapScene:OnTouchCancelled(pre_x, pre_y, x, y)
     print("OnTouchCancelled")
@@ -148,8 +148,11 @@ function MapScene:OnTouchMove(pre_x, pre_y, x, y)
     local new_point = parent:convertToNodeSpace(cc.p(x, y))
     local old_x, old_y = self.scene_layer:getPosition()
     local diffX = new_point.x - old_point.x
-    local diffY = new_point.y - old_point.y
+    local diffY = new_point.y - old_point.y 
     self.scene_layer:setPosition(cc.p(old_x + diffX, old_y + diffY))
+    -- local mx, my, ELASTIC = self.scene_layer:GetCollideLength()
+    -- local rx, ry = 1- sqrt((abs(mx)/ELASTIC)), 1 - sqrt((abs(my)/ELASTIC))
+    -- self.scene_layer:setPosition(cc.p(old_x + diffX * rx, old_y + diffY * ry))
 end
 function MapScene:OnTouchClicked(pre_x, pre_y, x, y)
 
@@ -157,17 +160,19 @@ end
 function MapScene:OnTouchExtend(old_speed_x, old_speed_y, new_speed_x, new_speed_y, millisecond, is_end)
     local parent = self.scene_layer:getParent()
     local speed = parent:convertToNodeSpace(cc.p(new_speed_x, new_speed_y))
-    local x, y  = self.scene_layer:getPosition()
+    local x, y = self.scene_layer:getPosition()
     local max_speed = 5
+    local sp = self:convertToNodeSpace(cc.p(speed.x * millisecond, speed.y * millisecond))
     speed.x = speed.x > max_speed and max_speed or speed.x
     speed.y = speed.y > max_speed and max_speed or speed.y
-    local sp = self:convertToNodeSpace(cc.p(speed.x * millisecond, speed.y * millisecond))
     self.scene_layer:setPosition(cc.p(x + sp.x, y + sp.y))
 
-    if is_end or self.scene_layer:IsCollideSide() then
-        self.touch_judgment:ResetTouch()
-        self.scene_layer:MakeElastic()
-    end
+    -- local mx, my, ELASTIC = self.scene_layer:GetCollideLength()
+    -- local rx, ry = 1- sqrt((abs(mx)/ELASTIC)), 1 - sqrt((abs(my)/ELASTIC))
+    -- self.scene_layer:setPosition(cc.p(x + sp.x * rx, y + sp.y * ry))
+    -- if self.scene_layer:MakeElastic() then
+    --     self.touch_judgment:ResetTouch()
+    -- end
 end
 
 return MapScene

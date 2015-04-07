@@ -20,13 +20,13 @@ function KeepUpgradeBuilding:GetUnlockPoint()
     return config_function[self:GetEfficiencyLevel()].unlock
 end
 
---派兵上限
 function KeepUpgradeBuilding:GetBeHelpedCount()
     return config_function[self:GetEfficiencyLevel()].beHelpedCount
 end
 
 function KeepUpgradeBuilding:GetNextLevelUnlockPoint()
-    return config_function[self:GetEfficiencyLevel()].unlock
+    local level = self:GetNextLevel()
+    return config_function[level].unlock
 end
 
 function KeepUpgradeBuilding:GetNextLevelBeHelpedCount()

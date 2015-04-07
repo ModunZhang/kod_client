@@ -7,6 +7,10 @@ function WidgetPushButton:ctor(images, options, filters,music_info)
     self.filters = filters ~= nil and filters or nil
 
     WidgetPushButton.super.ctor(self, images, options,music_info)
+    self:setTouchSwallowEnabled(false)
+    self:RebindEventListener()
+end
+function WidgetPushButton:RebindEventListener()
     self:onButtonPressed(function(event)
         self.pre_pos = event.target:convertToWorldSpace(cc.p(event.target:getPosition()))
     end)
@@ -18,7 +22,6 @@ function WidgetPushButton:ctor(images, options, filters,music_info)
             end
         end
     end)
-    self:setTouchSwallowEnabled(false)
     self:addNodeEventListener(cc.NODE_EVENT, function(event)
         if event.name == "enter" then
             if self:HasFilters() then
@@ -26,6 +29,7 @@ function WidgetPushButton:ctor(images, options, filters,music_info)
             end
         end
     end)
+    return self
 end
 function WidgetPushButton:onChangeState_()
     if self:isRunning() then

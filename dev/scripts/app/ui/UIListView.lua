@@ -705,7 +705,7 @@ end
 私有函数
 
 ]]
-function UIListView:increaseOrReduceItem_()
+function UIListView:increaseOrReduceItem_(nNeedAdjust)
     -- if self.nTest > 0 then
     --  return
     -- end
@@ -717,7 +717,7 @@ function UIListView:increaseOrReduceItem_()
     end
 
     local count = self.delegate_[UIListView.DELEGATE](self, UIListView.COUNT_TAG)
-    local nNeedAdjust = 2 --作为是否还需要再增加或减少item的标志,2表示上下两个方向或左右都需要调整
+    local nNeedAdjust = nNeedAdjust or 2 --作为是否还需要再增加或减少item的标志,2表示上下两个方向或左右都需要调整
     local cascadeBound = self.container:getCascadeBoundingBox()
     local item
     local itemW, itemH
@@ -748,6 +748,7 @@ function UIListView:increaseOrReduceItem_()
             itemW, itemH = item:getItemSize()
             if cascadeBound.height - itemH > self.viewRect_.height
                 and disH - itemH > self.redundancyViewVal then
+                print("tempIdx", tempIdx)
                 self:unloadOneItem_(tempIdx)
             else
                 nNeedAdjust = nNeedAdjust - 1
@@ -757,6 +758,7 @@ function UIListView:increaseOrReduceItem_()
             tempIdx = tempIdx - 1
             if tempIdx > 0 then
                 local localPoint = self.container:convertToNodeSpace(cc.p(cascadeBound.x, cascadeBound.y + cascadeBound.height))
+                print("loadOneItem_, tempIdx", tempIdx, true)
                 item = self:loadOneItem_(localPoint, tempIdx, true)
             end
             if nil == item then
@@ -789,6 +791,7 @@ function UIListView:increaseOrReduceItem_()
             tempIdx = tempIdx + 1
             if tempIdx <= count then
                 local localPoint = self.container:convertToNodeSpace(cc.p(cascadeBound.x, cascadeBound.y))
+                print("loadOneItem_, tempIdx", tempIdx, false)
                 item = self:loadOneItem_(localPoint, tempIdx)
             end
             if nil == item then
@@ -845,10 +848,10 @@ function UIListView:increaseOrReduceItem_()
         end
     end
 
-    -- print("increaseOrReduceItem_() adjust:" .. nNeedAdjust)
-    -- print("increaseOrReduceItem_() item count:" .. #self.items_)
     if nNeedAdjust > 0 then
-        return self:increaseOrReduceItem_()
+        print("increaseOrReduceItem_() adjust:" .. nNeedAdjust)
+        print("increaseOrReduceItem_() item count:" .. #self.items_)
+        return self:increaseOrReduceItem_(nNeedAdjust)
     end
 end
 

@@ -41,7 +41,7 @@ function GameUIUnlockBuilding:Init()
     cc.ui.UIImage.new("building_frame_36x136.png"):align(display.CENTER, display.cx-145, display.top-265)
         :addTo(self)
 
-    local build_png = SpriteConfig[self.building:GetType()]:GetConfigByLevel(self.building:GetLevel()).png
+    local build_png = SpriteConfig[self.building:GetType()]:GetConfigByLevel(1).png
     self.building_image = display.newScale9Sprite(build_png, display.cx-197, display.top-245):addTo(self)
     self.building_image:setAnchorPoint(cc.p(0.5,0.5))
     self.building_image:setScale(124/self.building_image:getContentSize().width)
@@ -170,7 +170,7 @@ function GameUIUnlockBuilding:SetUpgradeRequirementListview()
         {resource_type = _("前置条件"),isVisible = building:GetLevel()>5, isSatisfy = not pre_condition,canNotBuy=true,
             icon="hammer_31x33.png",description = building:GetPreConditionDesc()},
         {resource_type = _("建造队列"),isVisible = true, isSatisfy = #City:GetUpgradingBuildings()<City:BuildQueueCounts(),
-            icon="hammer_31x33.png",description=City:BuildQueueCounts().."/"..GameUtils:formatNumber(#City:GetUpgradingBuildings())},
+            icon="hammer_31x33.png",description=_("建造队列")..(City:BuildQueueCounts()-GameUtils:formatNumber(#City:GetUpgradingBuildings())).."/"..City:BuildQueueCounts()},
         {resource_type = _("木材"),isVisible = self.building:GetLevelUpWood()>0,      isSatisfy = wood>=self.building:GetLevelUpWood(),
             icon="res_wood_114x100.png",description=wood.."/"..self.building:GetLevelUpWood()},
 
@@ -254,6 +254,7 @@ end
 
 
 return GameUIUnlockBuilding
+
 
 
 

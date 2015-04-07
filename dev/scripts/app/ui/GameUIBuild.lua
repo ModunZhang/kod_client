@@ -108,7 +108,7 @@ function GameUIBuild:OnUpgradingFinished(building)
     self:OnCityChanged()
 end
 function GameUIBuild:OnCityChanged()
-    local citizen = self.build_city:GetResourceManager():GetPopulationResource():GetNoneAllocatedByTime(app.timer:GetServerTime())
+    local citizen = self.build_city:GetResourceManager():GetPopulationResource():GetValueLimit()
     table.foreachi(self.base_resource_building_items, function(i, v)
         local building_type = base_items[i].building_type
         local number = #self.build_city:GetDecoratorsByType(building_type)
@@ -117,8 +117,8 @@ function GameUIBuild:OnCityChanged()
         v:SetNumber(number, max_number)
         if building then
             if building:GetCitizen() > citizen then
-                -- v:SetBuildEnable(false)
-                v:SetCondition(_("空闲城民不足"), display.COLOR_RED)
+                v:SetBuildEnable(false)
+                v:SetCondition(_("城民上限不足,请首先升级或建造小屋"), display.COLOR_RED)
             elseif number >= max_number then
                 v:SetBuildEnable(false)
                 v:SetCondition(_("已达到最大建筑数量"), display.COLOR_RED)

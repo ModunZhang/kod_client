@@ -428,15 +428,15 @@ function GameUIUpgradeTechnology:CheckCanUpgradeActionReturnGems()
     if not self:CheckUpgradeButtonState() then
         return -1
     end
-    local gems_cost,msg = 0,0,""
+    local gems_cost,msg = 0,""
     if City:HaveProductionTechEvent() then
         gems_cost = self:GetUpgradeGemsIfQueueNotEnough()
-        msg = _("已有科技升级队列,需加速完成该队列花费宝石") .. gems_cost
+        msg = _("已有科技升级队列,需加速完成该队列花费宝石") .. gems_cost.. "\n"
     end
     local resource_gems = self:GetUpgradeGemsIfResourceNotEnough()
     if resource_gems ~= 0 then
         gems_cost = resource_gems + gems_cost
-        msg = msg .. "\n" .. _("升级所需物品不足,购买所缺物品需花费宝石") .. resource_gems
+        msg = msg  .. _("升级所需物品不足,购买所缺物品需花费宝石") .. resource_gems.. "\n"
     end
     return gems_cost,msg
 end

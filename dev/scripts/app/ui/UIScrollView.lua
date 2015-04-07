@@ -88,7 +88,7 @@ function UIScrollView:ctor(params)
 
 	-- touchOnContent true:当触摸在滚动内容上才有效 false:当触摸在显示区域(viewRect_)就有效
 	-- 当内容小于显示区域时，两者就有区别了
-	self:setTouchType(params.touchOnContent or true)
+	self:setTouchType(params.touchOnContent or false)
 
 	self:addBgColorIf(params)
 	self:addBgGradientColorIf(params)
@@ -391,8 +391,7 @@ function UIScrollView:onTouch_(event)
 	end
 
 	if "began" == event.name and self.touchOnContent then
-		local cascadeBound = self.scrollNode:getCascadeBoundingBox()
-		if not cc.rectContainsPoint(cascadeBound, cc.p(event.x, event.y)) then
+		if not self:isTouchInViewRect(event) then
 			return false
 		end
 	end

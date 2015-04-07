@@ -128,16 +128,18 @@ function WidgetEventTabButtons:OnMilitaryTechEventsTimer(tech_event)
         end)
     end
 end
-function WidgetEventTabButtons:OnMilitaryTechEventsChanged()
-    self:EventChangeOn("technology")
+function WidgetEventTabButtons:OnMilitaryTechEventsChanged(soldier_manager,changed_map)
+    self:EventChangeOn("technology",#changed_map[1]>0)
     self:RefreshBuildQueueByType("technology")
 end
 function WidgetEventTabButtons:OnMilitaryTechEventsAllChanged()
-    self:EventChangeOn("technology")
+    if self:IsShow() and self:GetCurrentTab()== "technology" then
+        self:EventChangeOn("technology")
+    end
     self:RefreshBuildQueueByType("technology")
 end
 function WidgetEventTabButtons:OnSoldierStarEventsChanged(soldier_manager, changed)
-    self:EventChangeOn("technology", changed[1])
+    self:EventChangeOn("technology", #changed[1]>0)
     self:RefreshBuildQueueByType("technology")
 end
 function WidgetEventTabButtons:EventChangeOn(event_type, is_begin)
@@ -1007,9 +1009,10 @@ end
 function WidgetEventTabButtons:OnProductionTechnologyEventDataChanged(changed_map)
     self:OnProductionTechnologyEventDataRefresh(changed_map)
 end
-function WidgetEventTabButtons:OnProductionTechnologyEventDataRefresh(changed_map)
-    changed_map = changed_map or {}
-    self:EventChangeOn("technology", next(changed_map.add or {}))
+function WidgetEventTabButtons:OnProductionTechnologyEventDataRefresh()
+    if self:IsShow() and self:GetCurrentTab()== "technology" then
+        self:EventChangeOn("technology", false)
+    end
 end
 
 function WidgetEventTabButtons:ProductionTechnologyEventUpgradeOrSpeedup(event)

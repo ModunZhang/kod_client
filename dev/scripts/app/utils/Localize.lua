@@ -98,13 +98,13 @@ local EQUIP_LOCALIZE = {
     ["blueArmguard_s1"] = _("本地化缺失"),
 }
 local MATERIALS_MAP = {
-    blueprints =  _("建筑图纸"), 
-    tools =  _("建筑工具"), 
-    tiles =  _("砖石瓦片"), 
+    blueprints =  _("建筑图纸"),
+    tools =  _("建筑工具"),
+    tiles =  _("砖石瓦片"),
     pulley =  _("滑轮组"),
     trainingFigure =   _("木人桩"),
     bowTarget = _("箭靶"),
-    saddle =  _("马鞍"), 
+    saddle =  _("马鞍"),
     ironPart =   _("精铁零件"),
 }
 local DRAGON_LOCALIZE = {
@@ -186,7 +186,7 @@ local DRAGON_BUFF_EFFECTION = {
 local BUILDING_DESCRIPTION = {
     ["keep"] = _("城堡是权力的的象征，城市的核心建筑，升级能够解锁更多的地块，提供更高的建筑等级"),
     ["unlock"] = _("可解锁的地块"),
-    ["troopPopulation"] = _("部队派兵上限"),
+    ["beHelpCount"] = _("被协助加速次数"),
     ["power"] = _("战斗力"),
 
     ["watchTower"] = _("瞭望塔提供查看部队的情况，并提供敌方来袭时的信息，"),
@@ -784,7 +784,13 @@ return {
     fight_reward = FIGHT_REWARD,
     soldier_category_map = SOLDIER_CATEGORY_MAP,
     getSoldierCategoryByName = function(soldier_name) return SOLDIER_CATEGORY[SOLDIER_CATEGORY_MAP[soldier_name]] end,
-    getMilitaryTechnologyName = function(tech_name) return string.format(_("%s对%s的攻击"),SOLDIER_CATEGORY[string.split(tech_name, "_")[1]],SOLDIER_CATEGORY[string.split(tech_name, "_")[2]]) end,
+    getMilitaryTechnologyName = function(tech_name)
+        local soldier1, soldier2 = unpack(string.split(tech_name, "_"))
+        if soldier2 ~= "hpAdd" then
+            return string.format(_("%s对%s的攻击"), SOLDIER_CATEGORY[soldier1], SOLDIER_CATEGORY[soldier2])
+        end
+        return string.format(_("%s血量增加"), SOLDIER_CATEGORY[soldier1])
+    end,
     alliance_authority_list = ALLIANCE_AUTHORITY_LIST,
     village_name = VILLAGE_NAME,
     terrain = TERRAIN,
@@ -806,3 +812,4 @@ return {
     iap_package_name = IAP_PACKAGE_NAME,
     daily_quests_name = DAILY_QUESTS_NAME
 }
+

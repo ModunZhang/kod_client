@@ -26,7 +26,7 @@ function GameUICollectReport:ctor(report)
         color = 0x403c2f,
     }):align(display.LEFT_CENTER,80,r_size.height-60):addTo(body)
     UIKit:ttfLabel({
-        text =Localize.village_name[report:GetData().collectTarget.type],
+        text =Localize.village_name[report:GetData().collectTarget.name],
         size = 24,
         color = 0x403c2f,
     }):align(display.LEFT_CENTER,200,r_size.height-60):addTo(body)

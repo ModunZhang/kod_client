@@ -2,22 +2,31 @@ local FunctionUpgradingSprite = import(".FunctionUpgradingSprite")
 local BarracksSprite = class("BarracksSprite", FunctionUpgradingSprite)
 
 function BarracksSprite:OnBeginRecruit()
-    self:PlayAni()
+    self:DoAni()
 end
 function BarracksSprite:OnRecruiting()
 end
 function BarracksSprite:OnEndRecruit()
-    self:StopAni()
+    self:DoAni()
     app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
 end
 
 function BarracksSprite:ctor(city_layer, entity, city)
     BarracksSprite.super.ctor(self, city_layer, entity, city)
     entity:AddBarracksListener(self)
-    if entity:IsRecruting() then
-        self:PlayAni()
-    else
-        self:StopAni()
+    self:DoAni()
+end
+function BarracksSprite:RefreshSprite()
+    BarracksSprite.super.RefreshSprite(self)
+    self:DoAni()
+end
+function BarracksSprite:DoAni()
+    if self:GetEntity():IsUnlocked() then
+        if self:GetEntity():IsRecruting() then
+            self:PlayAni()
+        else
+            self:StopAni()
+        end
     end
 end
 function BarracksSprite:PlayAni()

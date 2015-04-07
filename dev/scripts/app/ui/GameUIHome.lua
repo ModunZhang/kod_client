@@ -1,7 +1,9 @@
 local cocos_promise = import("..utils.cocos_promise")
 local promise = import("..utils.promise")
 local window = import("..utils.window")
-local UIPageView = import("..ui.UIPageView")
+local WidgetChat = import("..widget.WidgetChat")
+local WidgetNumberTips = import("..widget.WidgetNumberTips")
+local WidgetHomeBottom = import("..widget.WidgetHomeBottom")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetEventTabButtons = import("..widget.WidgetEventTabButtons")
 local SoldierManager = import("..entity.SoldierManager")
@@ -11,8 +13,6 @@ local GameUIHelp = import(".GameUIHelp")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local Alliance = import("..entity.Alliance")
 local GrowUpTaskManager = import("..entity.GrowUpTaskManager")
-local RichText = import("..widget.RichText")
-local ChatManager = import("..entity.ChatManager")
 local GameUIHome = UIKit:createUIClass('GameUIHome')
 
 
@@ -69,23 +69,13 @@ function GameUIHome:RefreshHelpButtonVisible()
     end
 end
 function GameUIHome:SetCompleteTaskCount(count)
-    if count > 0 then
-        self.complete_task_count:show()
-        self.complete_task_count_label:setString(count > 99 and "99+" or count)
-    else
-        self.complete_task_count:hide()
-    end
+    self.bottom.task_count:SetNumber(count)
 end
 
 
 function GameUIHome:ctor(city)
     GameUIHome.super.ctor(self,{type = UIKit.UITYPE.BACKGROUND})
     self.city = city
-    self.chatManager = app:GetChatManager()
-end
-
-function GameUIHome:GetChatManager()
-    return self.chatManager
 end
 
 function GameUIHome:DisplayOn()
@@ -111,23 +101,44 @@ function GameUIHome:FadeToSelf(isFullDisplay)
 end
 
 function GameUIHome:onEnter()
-    -- GameUIHome.super.onEnter(self)
     self.visible_count = 1
     local city = self.city
     -- 上背景
     self:CreateTop()
     self.bottom = self:CreateBottom()
-    self.bottom:setCascadeOpacityEnabled(true)
+
+    WidgetChangeMap.new(WidgetChangeMap.MAP_TYPE.OUR_CITY):addTo(self)
+
+    -- 协助加速按钮
+    self.help_button = cc.ui.UIPushButton.new(
+        {normal = "help_64x72.png", pressed = "help_64x72.png"},
+        {scale9 = false}
+    ):onButtonClicked(function(event)
+        if event.name == "CLICKED_EVENT" then
+            if not Alliance_Manager:GetMyAlliance():IsDefault() then
+                GameUIHelp.new():AddToCurrentScene(true)
+            else
+                FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                    :SetPopMessage(_("加入联盟才能激活帮助功能"))
+                    :AddToCurrentScene()
+            end
+        end
+    end):addTo(self):pos(display.right-40, display.bottom+300)
+
+    self.request_count = WidgetNumberTips.new():addTo(self.help_button):pos(20,-20)
+    self.request_count:SetNumber(Alliance_Manager:GetMyAlliance():GetOtherRequestEventsNum())
+
+    
+
     local ratio = self.bottom:getScale()
-    self:GetChatManager():AddListenOnType(self,ChatManager.LISTEN_TYPE.TO_REFRESH)
-    self:GetChatManager():AddListenOnType(self,ChatManager.LISTEN_TYPE.TO_TOP)
     self.event_tab = WidgetEventTabButtons.new(self.city, ratio)
-    local rect1 = self.chat_bg:getCascadeBoundingBox()
+    local rect1 = self.chat:getCascadeBoundingBox()
     local rect2 = self.event_tab:getCascadeBoundingBox()
     local x, y = rect1.x, rect1.y + rect1.height - 2 * ratio
     self.event_tab:addTo(self):pos(x, y)
 
-    self:RefreshData()
+    
+
     city:AddListenOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
     city:GetResourceManager():AddObserver(self)
     city:GetResourceManager():OnResourceChanged()
@@ -146,35 +157,14 @@ function GameUIHome:onEnter()
     User:AddListenOnType(self, User.LISTEN_TYPE.VIP_EVENT_OVER)
 
 
-    -- local back = cc.ui.UIImage.new("tab_background_640x106.png", {scale9 = true,
-    --     capInsets = cc.rect(2, 2, 640 - 4, 106 - 4)
-    -- }):align(display.LEFT_BOTTOM, 40, display.cy):setLayoutSize(640, 50):addTo(self,100)
+    self:RefreshData()
     self:OnTaskChanged(User)
+    self:MailUnreadChanged()
+    self:RefreshHelpButtonVisible()
 end
-
-function GameUIHome:TO_TOP()
-    self:RefreshChatMessage()
-end
-
-function GameUIHome:TO_REFRESH()
-    self:RefreshChatMessage()
-end
-
-function GameUIHome:RefreshChatMessage()
-    if not self.chat_labels then return end
-    local last_chat_messages = self:GetChatManager():FetchLastChannelMessage()
-    for i,v in ipairs(self.chat_labels) do
-        local rich_text = self.chat_labels[i]
-        rich_text:Text(last_chat_messages[i],1)
-        rich_text:align(display.LEFT_CENTER, 0, 10)
-    end
-end
-
 function GameUIHome:onExit()
     local city = self.city
     city:RemoveListenerOnType(self, self.city.LISTEN_TYPE.UPGRADE_BUILDING)
-    self:GetChatManager():RemoveListenerOnType(self,ChatManager.LISTEN_TYPE.TO_REFRESH)
-    self:GetChatManager():RemoveListenerOnType(self,ChatManager.LISTEN_TYPE.TO_TOP)
     self.city:GetResourceManager():RemoveObserver(self)
     MailManager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
@@ -206,27 +196,14 @@ function GameUIHome:OnBasicChanged(fromEntity,changed_map)
 end
 function GameUIHome:OnHelpEventChanged(changed_map)
     self:RefreshHelpButtonVisible()
-    local alliance = Alliance_Manager:GetMyAlliance()
-    local request_num = alliance:GetOtherRequestEventsNum()
-    self.request_help_num_bg:setVisible(request_num>0)
-    self.request_help_num:setString(GameUtils:formatNumber(request_num))
+    self.request_count:SetNumber(Alliance_Manager:GetMyAlliance():GetOtherRequestEventsNum())
 end
 function GameUIHome:OnAllHelpEventChanged(help_events)
     self:RefreshHelpButtonVisible()
-    local alliance = Alliance_Manager:GetMyAlliance()
-    local request_num = alliance:GetOtherRequestEventsNum()
-    self.request_help_num_bg:setVisible(request_num>0)
-    self.request_help_num:setString(GameUtils:formatNumber(request_num))
+    self.request_count:SetNumber(Alliance_Manager:GetMyAlliance():GetOtherRequestEventsNum())
 end
-
 function GameUIHome:MailUnreadChanged(...)
-    local num =MailManager:GetUnReadMailsNum()+MailManager:GetUnReadReportsNum()
-    if num==0 then
-        self.mail_unread_num_bg:setVisible(false)
-    else
-        self.mail_unread_num_bg:setVisible(true)
-        self.mail_unread_num_label:setString(GameUtils:formatNumber(num))
-    end
+    self.bottom.mail_count:SetNumber(MailManager:GetUnReadMailsNum()+MailManager:GetUnReadReportsNum())
 end
 function GameUIHome:RefreshData()
     -- 更新数值
@@ -400,217 +377,40 @@ function GameUIHome:CreateTop()
 
     -- 礼物按钮
     local button = cc.ui.UIPushButton.new(
-        {normal = "gift_128x128.png"},
+        {normal = "activity_68x78.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
             UIKit:newGameUI("GameUIActivity",City):AddToCurrentScene(true)
         end
-    end):addTo(self):pos(display.right-40, display.top-200):scale(0.6)
+    end):addTo(self):pos(display.left+40, display.top-200)
     --帮助
     local button = cc.ui.UIPushButton.new(
-        {normal = "buff_8_128x128.png", pressed = "buff_8_128x128.png"},
+        {normal = "tips_128x128.png", pressed = "tips_128x128.png"},
         {scale9 = false}
     )
     button:onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
             UIKit:newGameUI("GameUITips",button):AddToCurrentScene(true)
         end
-    end):addTo(self):pos(display.right-40, display.top-290):scale(0.5)
+    end):addTo(self):pos(display.right-40, display.top-200)
 
     -- BUFF按钮
     local buff_button = cc.ui.UIPushButton.new(
-        {normal = "buff_1_128x128.png", pressed = "buff_1_128x128.png"}
+        {normal = "buff_68x68.png", pressed = "buff_68x68.png"}
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
             UIKit:newGameUI("GameUIBuff",self.city):AddToCurrentScene(true)
         end
-    end):addTo(self):pos(display.left+40, display.top-200)
-        :scale(0.5)
+    end):addTo(self):pos(display.right-40, display.top-290)
     return top_bg
 end
-
 function GameUIHome:CreateBottom()
-    -- 底部背景
-    local bottom_bg = display.newSprite("bottom_bg_768x136.png")
-        :align(display.BOTTOM_CENTER, display.cx, display.bottom)
-        :addTo(self)
-    bottom_bg:setTouchEnabled(true)
-    if display.width >640 then
-        bottom_bg:scale(display.width/768)
-    end
+    local bottom_bg = WidgetHomeBottom.new(handler(self, self.OnBottomButtonClicked)):addTo(self)
+    :align(display.BOTTOM_CENTER, display.cx, display.bottom)
 
-    -- 聊天背景
-    local chat_bg = display.newSprite("chat_background.png")
-        :align(display.CENTER, bottom_bg:getContentSize().width/2, bottom_bg:getContentSize().height-11)
-        :addTo(bottom_bg)
-    chat_bg:setCascadeOpacityEnabled(true)
-    local size = chat_bg:getContentSize()
-    local index_1 = display.newSprite("chat_page_index_1.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width/2-10,chat_bg:getContentSize().height-10)
-    local index_2 = display.newSprite("chat_page_index_2.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width/2+10,chat_bg:getContentSize().height-10)
-    self.chat_bg = chat_bg
-    local pv = UIPageView.new {
-        viewRect = cc.rect(10, 4, size.width-80, size.height),
-        row = 2,
-        padding = {left = 0, right = 0, top = 10, bottom = 0}
-    }:onTouch(function (event)
-        dump(event,"UIPageView event")
-        if event.name == "pageChange" then
-            if 1 == event.pageIdx then
-                index_1:setPositionX(chat_bg:getContentSize().width/2-10)
-                index_2:setPositionX(chat_bg:getContentSize().width/2+10)
-            elseif 2 == event.pageIdx then
-                index_1:setPositionX(chat_bg:getContentSize().width/2+10)
-                index_2:setPositionX(chat_bg:getContentSize().width/2-10)
-            end
-        elseif event.name == "clicked" then
-            if event.pageIdx == 1 then
-                UIKit:newGameUI('GameUIChatChannel',"global"):AddToCurrentScene(true)
-            elseif event.pageIdx == 2 then
-                UIKit:newGameUI('GameUIChatChannel',"alliance"):AddToCurrentScene(true)
-            end
-        end
-    end):addTo(chat_bg)
-    pv:setTouchEnabled(true)
-    pv:setTouchSwallowEnabled(false)
-    pv:setCascadeOpacityEnabled(true)
-    self.chat_labels = {}
-    local last_chat_messages = self:GetChatManager():FetchLastChannelMessage()
-    -- add items
-    for i=1,4 do
-        local item = pv:newItem()
-        local content
-
-        content = display.newLayer()
-        content:setContentSize(540, 20)
-        content:setTouchEnabled(false)
-        local label = RichText.new({width = 540,size = 16,color = 0xc7bd97})
-        label:Text(last_chat_messages[i],1)
-        label:addTo(content):align(display.LEFT_CENTER, 0, content:getContentSize().height/2)
-        table.insert(self.chat_labels, label)
-        item:addChild(content)
-        pv:addItem(item)
-    end
-    pv:reload()
-
-    cc.ui.UIPushButton.new({normal = "chat_btn_60x48.png",
-        pressed = "chat_btn_60x48.png"}):addTo(chat_bg)
-        :pos(chat_bg:getContentSize().width-30, size.height/2)
-        :onButtonClicked(function()
-            if 1 == pv:getCurPageIdx() then
-                UIKit:newGameUI('GameUIChatChannel',"global"):AddToCurrentScene(true)
-            elseif 2 == pv:getCurPageIdx() then
-                UIKit:newGameUI('GameUIChatChannel',"alliance"):AddToCurrentScene(true)
-            end
-        end)
-
-    -- 底部按钮
-    local first_row = 64
-    local first_col = 240
-    local label_padding = 20
-    local padding_width = 100
-    for i, v in ipairs({
-        {"bottom_icon_mission_128x128.png", _("任务")},
-        {"bottom_icon_package_128x128.png", _("物品")},
-        {"mail_icon_128x128.png", _("邮件")},
-        {"bottom_icon_alliance_128x128.png", _("联盟")},
-        {"bottom_icon_package_77x67.png", _("更多")},
-    }) do
-        local col = i - 1
-        local x, y = first_col + col * padding_width, first_row
-        local button = cc.ui.UIPushButton.new({normal = v[1]})
-            :onButtonClicked(handler(self, self.OnBottomButtonClicked))
-            :addTo(bottom_bg):pos(x, y)
-            :scale(0.55)
-        UIKit:ttfLabel({
-            text = v[2],
-            size = 16,
-            color = 0xf5e8c4})
-            :addTo(bottom_bg):align(display.CENTER,x, y-40)
-        button:setTag(i)
-        button:addButtonPressedEventListener(function ()
-            button:runAction(cc.ScaleTo:create(0.1, 0.7))
-        end)
-        button:addButtonReleaseEventListener(function ()
-            button:runAction(cc.ScaleTo:create(0.1, 0.55))
-        end)
-        if i == 1 then
-            -- 未读邮件或战报数量显示条
-            self.complete_task_count = display.newSprite("mail_unread_bg_36x23.png"):addTo(bottom_bg):pos(260, first_row+20)
-            local size = self.complete_task_count:getContentSize()
-            self.complete_task_count_label = cc.ui.UILabel.new(
-                {cc.ui.UILabel.LABEL_TYPE_TTF,
-                    text = GameUtils:formatNumber(0),
-                    font = UIKit:getFontFilePath(),
-                    size = 16,
-                    color = UIKit:hex2c3b(0xf5f2b3)
-                }):align(display.CENTER, size.width/2, size.height/2+4):addTo(self.complete_task_count)
-        end
-    end
-
-    -- 未读邮件或战报数量显示条
-    self.mail_unread_num_bg = display.newSprite("mail_unread_bg_36x23.png"):addTo(bottom_bg):pos(460, first_row+20)
-    self.mail_unread_num_label = cc.ui.UILabel.new(
-        {cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = GameUtils:formatNumber(MailManager:GetUnReadMailsAndReportsNum() or 0),
-            font = UIKit:getFontFilePath(),
-            size = 16,
-            -- dimensions = cc.size(200,24),
-            color = UIKit:hex2c3b(0xf5f2b3)
-        }):align(display.CENTER,self.mail_unread_num_bg:getContentSize().width/2,self.mail_unread_num_bg:getContentSize().height/2+4)
-        :addTo(self.mail_unread_num_bg)
-    if MailManager:GetUnReadMailsAndReportsNum()==0 then
-        self.mail_unread_num_bg:setVisible(false)
-    end
-
-
-    -- 场景切换
-
-    local map_node = WidgetChangeMap.new(WidgetChangeMap.MAP_TYPE.OUR_CITY):addTo(self)
-
-
-    -- 协助加速按钮
-    local help_button = cc.ui.UIPushButton.new(
-        {normal = "help_68x60.png", pressed = "help_68x60.png"},
-        {scale9 = false}
-    ):onButtonClicked(function(event)
-        if event.name == "CLICKED_EVENT" then
-            if not Alliance_Manager:GetMyAlliance():IsDefault() then
-                GameUIHelp.new():AddToCurrentScene(true)
-            else
-                FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                    :SetPopMessage(_("加入联盟才能激活帮助功能"))
-                    :AddToCurrentScene()
-            end
-        end
-    end):addTo(self):pos(display.right-40, display.bottom+300)
-    self.help_button = help_button
-    self:RefreshHelpButtonVisible()
-
-
-    -- 请求帮助的其他联盟成员请求帮助事件数量
-    local request_help_num_bg = display.newSprite("mail_unread_bg_36x23.png"):addTo(help_button):pos(20,-20)
-    local request_num = Alliance_Manager:GetMyAlliance():GetOtherRequestEventsNum()
-    self.request_help_num = UIKit:ttfLabel(
-        {
-            text = GameUtils:formatNumber(request_num),
-            size = 16,
-            color = 0xf5f2b3
-        }):align(display.CENTER,request_help_num_bg:getContentSize().width/2,request_help_num_bg:getContentSize().height/2+4)
-        :addTo(request_help_num_bg)
-    request_help_num_bg:setVisible(request_num>0)
-    self.request_help_num_bg = request_help_num_bg
-
-    -- TODO:临时gacha按钮
-    -- local gacha_button = cc.ui.UIPushButton.new(
-    --     {normal = "icon_casinoToken.png", pressed = "icon_casinoToken.png"},
-    --     {scale9 = false}
-    -- ):onButtonClicked(function(event)
-    --     if event.name == "CLICKED_EVENT" then
-    --         UIKit:newGameUI("GameUIGacha", self.city):AddToCurrentScene(true)
-    --     end
-    -- end):addTo(self):pos(display.right-40, display.bottom+400):scale(0.6)
-
+    self.chat = WidgetChat.new():addTo(bottom_bg)
+    :align(display.CENTER, bottom_bg:getContentSize().width/2, bottom_bg:getContentSize().height-11)
     return bottom_bg
 end
 
@@ -628,9 +428,6 @@ function GameUIHome:OnBottomButtonClicked(event)
     elseif tag == 5 then
         UIKit:newGameUI('GameUISetting',self.city):AddToCurrentScene(true)
     end
-
-
-
 end
 function GameUIHome:OnVipEventActive( vip_event )
     self:RefreshVIP()

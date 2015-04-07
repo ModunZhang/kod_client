@@ -4,12 +4,12 @@ local FunctionUpgradingSprite = class("FunctionUpgradingSprite", UpgradingSprite
 
 ----
 function FunctionUpgradingSprite:OnUpgradingBegin(building, current_time, city)
-    self:OnTileChanged(city, nil)
+    self:OnTileChanged(city)
 end
 function FunctionUpgradingSprite:OnUpgrading(building, current_time, city)
 end
 function FunctionUpgradingSprite:OnUpgradingFinished(building, city)
-    self:OnTileChanged(city, nil)
+    self:OnTileChanged(city)
 end
 function FunctionUpgradingSprite:OnTileLocked(city)
     self:OnTileChanged(city)
@@ -18,33 +18,16 @@ function FunctionUpgradingSprite:OnTileUnlocked(city)
     self:OnTileChanged(city)
 end
 function FunctionUpgradingSprite:OnTileChanged(city)
-    local location_id = city:GetLocationIdByBuilding(self:GetEntity())
-    local current_tile = city:GetTileByLocationId(location_id)
-    if current_tile:IsUnlocked() then
-        self:TranslateToUnlock()
-    elseif self:GetEntity():IsUpgrading() then 
-        self:TranslateToUpgrading()
-    elseif city:IsTileCanbeUnlockAt(current_tile.x, current_tile.y) then
-        if city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint(city) > 0 then
-            self:TranslateToCanbeUnlock()
-        else
-            self:TranslateToCanNotBeUnlock()
-        end 
-    else
-        self:TranslateToCanNotBeUnlock()
+    local current_tile = city:GetTileByLocationId(city:GetLocationIdByBuilding(self:GetEntity()))
+    if current_tile:IsUnlocked() then return self:show() end
+    if self:GetEntity():IsUpgrading() then return self:show() end
+    if current_tile:NeedWalls() and not self:GetEntity():IsUnlocking() then
+        return self:show()
     end
-end
-function FunctionUpgradingSprite:TranslateToUpgrading()
-    self:setVisible(true)
-end
-function FunctionUpgradingSprite:TranslateToUnlock()
-    self:setVisible(true)
-end
-function FunctionUpgradingSprite:TranslateToCanbeUnlock()
-    self:setVisible(false)
-end
-function FunctionUpgradingSprite:TranslateToCanNotBeUnlock()
-    self:setVisible(false)
+    if not city:IsTileCanbeUnlockAt(current_tile.x, current_tile.y) then
+        return self:hide()
+    end
+    return self:hide()
 end
 --
 function FunctionUpgradingSprite:OnTransformed(entity)
@@ -53,13 +36,15 @@ function FunctionUpgradingSprite:OnTransformed(entity)
 end
 function FunctionUpgradingSprite:ctor(city_layer, entity, city)
     FunctionUpgradingSprite.super.ctor(self, city_layer, entity)
-    self:OnTileChanged(city, city:GetTileWhichBuildingBelongs(entity))
+    self:OnTileChanged(city)
 end
 function FunctionUpgradingSprite:ReloadSprite()
     FunctionUpgradingSprite.super.RefreshSprite(self)
 end
 function FunctionUpgradingSprite:RefreshSprite()
-    
+    if self:GetEntity():GetLevel() == 1 then
+        FunctionUpgradingSprite.super.RefreshSprite(self)
+    end
 end
 function FunctionUpgradingSprite:GetSpriteTopPosition()
     local x,y = FunctionUpgradingSprite.super.GetSpriteTopPosition(self)
@@ -75,6 +60,8 @@ end
 
 
 return FunctionUpgradingSprite
+
+
 
 
 
