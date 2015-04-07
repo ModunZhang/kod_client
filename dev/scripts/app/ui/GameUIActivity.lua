@@ -14,6 +14,7 @@ local GameUtils = GameUtils
 local RichText = import("..widget.RichText")
 local config_intInit = GameDatas.PlayerInitData.intInit
 GameUIActivity.ITEMS_TYPE = Enum("EVERY_DAY_LOGIN","ONLINE","CONTINUITY","FIRST_IN_PURGURE","PLAYER_LEVEL_UP")
+local User = User
 
 local titles = {
 	EVERY_DAY_LOGIN = _("每日登陆奖励"),
@@ -89,8 +90,8 @@ function GameUIActivity:CreateTabIf_activity()
 	    })
 	    list_node:addTo(self:GetView()):pos(window.left + 35,window.bottom_top + 20)
 	    self.activity_list_view = list
-	else
 	end
+	self:RefreshActivityList()
 	return self.activity_list_view
 end
 
@@ -293,8 +294,29 @@ end
 
 --activity
 function GameUIActivity:RefreshActivityList()
-	
+	self.activity_list_view:removeAllItems()
+	local gifts = User:GetIapGifts()
+	for __,v in pairs(gifts) do
+		local item = self:GetActivityItem(v)
+		self.activity_list_view:addItem(item)
+	end
+	self.activity_list_view:reload()
 end
 
+function GameUIActivity:GetActivityItem(data)
+	local item = self.activity_list_view:newItem()
+	local content = WidgetUIBackGround.new({width = 576,height = 149},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
+	local title_bg = display.newSprite("activity_title_552x42.png"):align(display.TOP_CENTER,288,145):addTo(content)
+	-- local title_txt = titles[self.ITEMS_TYPE[item_type]]
+	-- UIKit:ttfLabel({
+	-- 	text = title_txt,
+	-- 	size = 22,
+	-- 	color= 0xfed36c
+	-- }):align(display.CENTER,276, 21):addTo(title_bg)
+	display.newSprite("activity_box_552x112.png"):align(display.CENTER_BOTTOM,288, 10):addTo(content,2)
+	item:addContent(content)
+	item:setItemSize(576,164)
+	return item
+end
 
 return GameUIActivity
