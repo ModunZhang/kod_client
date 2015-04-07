@@ -11,6 +11,7 @@ local UIListView = import(".UIListView")
 local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
 local Localize = import("..utils.Localize")
 local Localize_item = import("..utils.Localize_item")
+local shop = GameDatas.AllianceBuilding.shop
 
 
 function GameUIAllianceShop:ctor(city,default_tab,building)
