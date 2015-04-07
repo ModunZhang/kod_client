@@ -206,7 +206,7 @@ end
 
 function GameUISettingAccount:ChangeAccountForceButtonClicked()
 	local __,gcId = ext.gamecenter.getPlayerNameAndId() 
-	NetManager:getForceSwitchGcId(gcId)
+	NetManager:getForceSwitchGcIdPromise(gcId)
 end
 
 function GameUISettingAccount:CreateOrChangeAccountButtonClicked()

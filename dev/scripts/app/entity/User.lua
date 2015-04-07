@@ -19,6 +19,9 @@ User.LISTEN_TYPE = Enum("BASIC",
     "DAILY_TASKS",
     "VIP_EVENT_OVER",
     "VIP_EVENT_ACTIVE",
+    "IAP_GIFTS_REFRESH",
+    "IAP_GIFTS_CHANGE",
+    "IAP_GIFTS_TIMER",
     "TASK")
 local TASK = User.LISTEN_TYPE.TASK
 local BASIC = User.LISTEN_TYPE.BASIC
@@ -31,6 +34,7 @@ local STRENGTH = User.RESOURCE_TYPE.STRENGTH
 
 local intInit = GameDatas.PlayerInitData.intInit
 local vip_level = GameDatas.Vip.level
+local IapGift = import("..entity.IapGift")
 
 property(User, "level", 1)
 property(User, "levelExp", 0)
@@ -78,6 +82,7 @@ function User:ctor(p)
     self.vip_event = vip_event
     self.dailyTasks = {}
     self.growUpTaskManger = GrowUpTaskManager.new()
+    self.iapGifts = {}
 end
 function User:IsBindGameCenter()
     return self:GcId() ~= "" and self:GcId() ~= json.null
@@ -164,6 +169,9 @@ end
 function User:OnTimer(current_time)
     self:OnResourceChanged()
     self.vip_event:OnTimer(current_time)
+    for __,v in pairs(self:GetIapGifts()) do
+        v:OnTimer(current_time)
+    end
 end
 function User:OnResourceChanged()
     self:NotifyListeneOnType(RESOURCE, function(listener)
@@ -233,6 +241,7 @@ function User:OnUserDataChanged(userData, current_time, deltaData)
     self:OnResourcesChangedByTime(userData, current_time, deltaData)
     self:OnBasicInfoChanged(userData, deltaData)
     self:OnCountInfoChanged(userData, deltaData)
+    self:OnIapGiftsChanged(userData, deltaData)
     self:GetPVEDatabase():OnUserDataChanged(userData, deltaData)
     if self.growUpTaskManger:OnUserDataChanged(userData, deltaData) then
         self:OnTaskChanged()
@@ -253,6 +262,74 @@ function User:OnUserDataChanged(userData, current_time, deltaData)
     -- 日常任务
     self:OnDailyTasksChanged(userData.dailyTasks)
     return self
+end
+
+function User:OnIapGiftTimer(iapGift)
+    self:NotifyListeneOnType(self.LISTEN_TYPE.IAP_GIFTS_TIMER, function(listener)
+        listener:OnIapGiftTimer(iapGift)
+    end)
+end
+
+function User:OnIapGiftsChanged(userData,deltaData)
+    if not userData.iapGifts then return end
+    local is_fully_update = deltaData == nil
+    local is_delta_update = not is_fully_update and deltaData.iapGifts
+    if is_fully_update then
+        for __,v in pairs(self.iapGifts) do
+            v:Reset()
+        end
+        self.iapGifts = {}
+        for __,v in ipairs(userData.iapGifts) do
+            if not self.iapGifts[v.id] then
+                local iapGift = IapGift.new()
+                iapGift:Update(v)
+                self.iapGifts[v.id] = iapGift
+                iapGift:AddObserver(self)
+            end
+        end
+        self:NotifyListeneOnType(self.LISTEN_TYPE.IAP_GIFTS_REFRESH, function(listener)
+            listener:OnIapGiftsRefresh(self)
+        end)
+    end
+
+    if is_delta_update then
+         local changed_map = GameUtils:Handler_DeltaData_Func(
+            deltaData.iapGifts
+            ,function(event_data)
+                if not self.iapGifts[event_data.id] then
+                    local iapGift = IapGift.new()
+                    iapGift:Update(event_data)
+                    self.iapGifts[event_data.id] = iapGift
+                    iapGift:AddObserver(self)
+                    return iapGift
+                end
+            end
+            ,function(event_data)
+                if self.iapGifts[event_data.id] then
+                    local iapGift = self.iapGifts[event_data.id]
+                    iapGift:Update(event_data)
+                    return iapGift
+                end
+            end
+            ,function(event_data)
+                if self.iapGifts[event_data.id] then
+                    local iapGift = self.iapGifts[event_data.id]
+                    iapGift:Reset()
+                    self.iapGifts[event_data.id] = nil
+                    iapGift = IapGift.new()
+                    iapGift:Update(event_data)
+                    return iapGift
+                end
+            end
+        )
+        self:NotifyListeneOnType(self.LISTEN_TYPE.IAP_GIFTS_CHANGE, function(listener)
+            listener:OnIapGiftsChanged(changed_map)
+        end)
+    end
+end
+
+function User:GetIapGifts()
+    return self.iapGifts
 end
 
 function User:OnDailyTasksChanged(dailyTasks)

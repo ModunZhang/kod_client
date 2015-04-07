@@ -25,6 +25,9 @@ return function(userData)
     if ext.gamecenter.isGameCenterEnabled() and not ext.gamecenter.isAuthenticated() then
          ext.gamecenter.authenticate(false)
     end
+    if device.platform ~= 'mac' then
+        app:getStore():updateTransactionStates()
+    end
 end
 
 
