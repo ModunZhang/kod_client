@@ -412,25 +412,16 @@ function GameUIKeep:CreateChangeTerrainWindow()
                     return
                 end
                 if selected_index == 1 then
-                    NetManager:getChangeToGrassPromise():next(function (response)
-                        dump(response)
-                        if response.success then
-                            self:PlayCloudAnimation()
-                        end
+                    NetManager:getChangeToGrassPromise():done(function()
+                        self:PlayCloudAnimation()
                     end)
                 elseif selected_index == 2 then
-                    NetManager:getChangeToDesertPromise():next(function (response)
-                        dump(response)
-                        if response.success then
-                            self:PlayCloudAnimation()
-                        end
+                    NetManager:getChangeToDesertPromise():done(function()
+                        self:PlayCloudAnimation()
                     end)
                 elseif selected_index == 3 then
-                    NetManager:getChangeToIceFieldPromise():next(function (response)
-                        dump(response)
-                        if response.success then
-                            self:PlayCloudAnimation()
-                        end
+                    NetManager:getChangeToIceFieldPromise():done(function() 
+                        self:PlayCloudAnimation()
                     end)
                 end
             end

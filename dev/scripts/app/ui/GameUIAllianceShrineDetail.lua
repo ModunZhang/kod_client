@@ -294,9 +294,7 @@ end
 function GameUIAllianceShrineDetail:OnEventButtonClicked()
 	local member = self:GetAllianceShrine():GetAlliance():GetSelf()
 	if member:CanActivateShirneEvent() then
-		NetManager:getActivateAllianceShrineStagePromise(self:GetShrineStage():StageName()):catch(function(err)
-			dump(err:reason())
-		end)
+		NetManager:getActivateAllianceShrineStagePromise(self:GetShrineStage():StageName())
 	else
 		UIKit:showMessageDialog(_("提示"),_("您没有此操作权限"), function()end)
 	end

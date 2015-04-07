@@ -313,18 +313,18 @@ end
 
 -- tag ~= nil -->search
 function GameUIAlliance:GetJoinList(tag)
-    if tag  then
-        NetManager:getSearchAllianceByTagPromsie(tag):next(function(data)
-            if not data.msg or not data.msg.allianceDatas then return end
-            if #data.msg.allianceDatas > 0 then
-                self:RefreshJoinListView(data.msg.allianceDatas)
+    if tag then
+        NetManager:getSearchAllianceByTagPromsie(tag):done(function(response)
+            if not response.msg or not response.msg.allianceDatas then return end
+            if #response.msg.allianceDatas > 0 then
+                self:RefreshJoinListView(response.msg.allianceDatas)
             end
         end)
     else
-        NetManager:getFetchCanDirectJoinAlliancesPromise():next(function(data)
-            if not data.msg or not data.msg.allianceDatas then return end
-            if #data.msg.allianceDatas > 0 then
-                self:RefreshJoinListView(data.msg.allianceDatas)
+        NetManager:getFetchCanDirectJoinAlliancesPromise():done(function(response)
+            if not response.msg or not response.msg.allianceDatas then return end
+            if #response.msg.allianceDatas > 0 then
+                self:RefreshJoinListView(response.msg.allianceDatas)
             end
         end)
     end
@@ -613,15 +613,15 @@ end
 function GameUIAlliance:commonListItemAction( listType,item,alliance,tag)
     if listType == self.COMMON_LIST_ITEM_TYPE.JOIN then
         if  alliance.joinType == 'all' then --如果是直接加入
-            NetManager:getJoinAllianceDirectlyPromise(alliance.id):catch(function(err)
+            NetManager:getJoinAllianceDirectlyPromise(alliance.id):fail(function()
                 self:SearchAllianAction(self.editbox_tag_search:getText())
             end)
         else
-            NetManager:getRequestToJoinAlliancePromise(alliance.id):next(function()
+            NetManager:getRequestToJoinAlliancePromise(alliance.id):done(function()
                 UIKit:showMessageDialog(_("申请成功"),
                     string.format(_("您的申请已发送至%s,如果被接受将加入该联盟,如果被拒绝,将收到一封通知邮件."),alliance.name),
                     function()end)
-            end):catch(function(err)
+            end):fail(function()
                 self:SearchAllianAction(self.editbox_tag_search:getText())
             end)
         end
@@ -1240,10 +1240,7 @@ function GameUIAlliance:OnAllianceJoinTypeButtonClicked(event)
     if event.selected ~= 1 then
         join_type = "audit"
     end 
-    NetManager:getEditAllianceJoinTypePromise(join_type):catch(function(err)
-        dump(err:reason())
-    end):done(function(result)
-    end)
+    NetManager:getEditAllianceJoinTypePromise(join_type)
 end
 
 
@@ -1326,12 +1323,10 @@ function GameUIAlliance:CreateInvateUI()
                 UIKit:showMessageDialog(_("提示"), _("请输入邀请的玩家ID"), function()end)
                 return
             end
-            NetManager:getInviteToJoinAlliancePromise(playerID)
-                :next(function(result)
+            NetManager:getInviteToJoinAlliancePromise(playerID):done(function(result)
                     layer:removeFromParent(true)
                     UIKit:showMessageDialog(_("提示"), _("邀请发送成功"), function()end)
-                end)
-                :catch(function(err)
+                end):fail(function(err)
                     UIKit:showMessageDialog(_("提示"), err:reason(), function()end)
                 end)
         end)

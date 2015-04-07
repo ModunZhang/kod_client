@@ -670,9 +670,6 @@ function WidgetEventTabButtons:UpgradeBuildingHelpOrSpeedup(building)
     local eventType = building:EventType()
     if self:IsAbleToFreeSpeedup(building) then
         NetManager:getFreeSpeedUpPromise(eventType,building:UniqueUpgradingKey())
-            :catch(function(err)
-                dump(err:reason())
-            end)
     else
         if not Alliance_Manager:GetMyAlliance():IsDefault() then
             -- 是否已经申请过联盟加速
@@ -680,9 +677,6 @@ function WidgetEventTabButtons:UpgradeBuildingHelpOrSpeedup(building)
                 :HasBeenRequestedToHelpSpeedup(building:UniqueUpgradingKey())
             if not isRequested then
                 NetManager:getRequestAllianceToSpeedUpPromise(eventType,building:UniqueUpgradingKey())
-                    :catch(function(err)
-                        dump(err:reason())
-                    end)
                 return
             end
         end
@@ -693,9 +687,6 @@ end
 function WidgetEventTabButtons:MiliTaryTechUpgradeOrSpeedup(event)
     if DataUtils:getFreeSpeedUpLimitTime()>event:GetTime() then
         NetManager:getFreeSpeedUpPromise(event:GetEventType(),event:Id())
-            :catch(function(err)
-                dump(err:reason())
-            end)
     else
         if not Alliance_Manager:GetMyAlliance():IsDefault() then
             -- 是否已经申请过联盟加速
@@ -703,9 +694,6 @@ function WidgetEventTabButtons:MiliTaryTechUpgradeOrSpeedup(event)
                 :HasBeenRequestedToHelpSpeedup(event:Id())
             if not isRequested then
                 NetManager:getRequestAllianceToSpeedUpPromise(event:GetEventType(),event:Id())
-                    :catch(function(err)
-                        dump(err:reason())
-                    end)
                 return
             end
         end
@@ -1017,16 +1005,13 @@ end
 
 function WidgetEventTabButtons:ProductionTechnologyEventUpgradeOrSpeedup(event)
     if DataUtils:getFreeSpeedUpLimitTime() > event:GetTime() then
-        NetManager:getFreeSpeedUpPromise("productionTechEvents",event:Id()):next(function()
-
-            end)
+        NetManager:getFreeSpeedUpPromise("productionTechEvents",event:Id())
     else
         if not Alliance_Manager:GetMyAlliance():IsDefault() then
             -- 是否已经申请过联盟加速
             local isRequested = Alliance_Manager:GetMyAlliance():HasBeenRequestedToHelpSpeedup(event:Id())
             if not isRequested then
-                NetManager:getRequestAllianceToSpeedUpPromise("productionTechEvents",event:Id())
-                    :next(function()
+                NetManager:getRequestAllianceToSpeedUpPromise("productionTechEvents",event:Id()):done(function()
                         self:OnProductionTechnologyEventDataRefresh()
                     end)
                 return

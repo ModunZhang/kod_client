@@ -228,10 +228,7 @@ function GameUIHospital:TreatListener()
         end
     end
     local treat_fun = function ()
-        -- NetManager:treatSoldiers(soldiers, NOT_HANDLE)
-        NetManager:getTreatSoldiersPromise(soldiers):catch(function(err)
-            dump(err:reason())
-        end)
+        NetManager:getTreatSoldiersPromise(soldiers)
     end
     local isAbleToTreat =self.building:IsAbleToTreat(soldiers)
     if #soldiers<1 then
@@ -285,10 +282,7 @@ function GameUIHospital:TreatNowListener()
         end
     end
     local treat_fun = function ()
-        -- NetManager:instantTreatSoldiers(soldiers, NOT_HANDLE)
-        NetManager:getInstantTreatSoldiersPromise(soldiers):catch(function(err)
-            dump(err:reason())
-        end)
+        NetManager:getInstantTreatSoldiersPromise(soldiers)
     end
     if #soldiers<1 then
         local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))

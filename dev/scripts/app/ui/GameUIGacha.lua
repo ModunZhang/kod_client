@@ -418,7 +418,7 @@ function GameUIGacha:InitOrdinary()
                             })
                         :AddToCurrentScene()
                 else
-                    NetManager:getNormalGachaPromise():next(function ( response )
+                    NetManager:getNormalGachaPromise():done(function(response)
                         if response.msg.playerData then
                             local data = response.msg.playerData
                             local items = {}
@@ -512,7 +512,7 @@ function GameUIGacha:InitDeluxe()
                             })
                         :AddToCurrentScene()
                 else
-                    NetManager:getAdvancedGachaPromise():next(function ( response )
+                    NetManager:getAdvancedGachaPromise():done(function(response)
                         if response.msg.playerData then
                             local data = response.msg.playerData
                             local items = {}

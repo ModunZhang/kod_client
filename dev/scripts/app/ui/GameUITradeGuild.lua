@@ -184,8 +184,8 @@ end
 function GameUITradeGuild:RefreshSellListView(goods_type,selected)
     local list_view = self:GetSellListViewByGoodsType(goods_type)
     list_view:removeAllItems()
-    NetManager:getGetSellItemsPromise(self:GetGoodsTypeMapToString(goods_type),goods_type[selected]):next(function(data)
-        for k,v in pairs(data.msg.itemDocs) do
+    NetManager:getGetSellItemsPromise(self:GetGoodsTypeMapToString(goods_type),goods_type[selected]):done(function(response)
+        for k,v in pairs(response.msg.itemDocs) do
             self:CreateSellItemForListView(list_view,v)
         end
         list_view:reload()
@@ -254,7 +254,7 @@ function GameUITradeGuild:CreateSellItemForListView(listView,goods)
                     :AddToCurrentScene()
                 return
             end
-            NetManager:getBuySellItemPromise(goods._id):next(function ( ... )
+            NetManager:getBuySellItemPromise(goods._id):done(function()
                 listView:removeItem(item)
             end)
         end)
@@ -811,10 +811,9 @@ function GameUITradeGuild:OpenSellDialog()
                         :AddToCurrentScene()
                     return
                 end
-                NetManager:getSellItemPromise(type,goods_type[selected],self.sell_num_item:GetValue(),self.sell_price_item:GetValue())
-                    :next(function(result)
-                        self:getParent():LeftButtonClicked()
-                    end)
+                NetManager:getSellItemPromise(type,goods_type[selected],self.sell_num_item:GetValue(),self.sell_price_item:GetValue()):done(function(result)
+                    self:getParent():LeftButtonClicked()
+                end)
             end)
 
 
@@ -1050,4 +1049,5 @@ function GameUITradeGuild:GetMaterialIndexByName(material_type)
     return build_temp[material_type] or teach_temp[material_type]
 end
 return GameUITradeGuild
+
 

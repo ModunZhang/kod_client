@@ -222,9 +222,7 @@ end
 --充能
 function GameUIDragonEyrieDetail:OnEnergyButtonClicked()
     local dragon = self:GetDragon()
-    NetManager:getHatchDragonPromise(dragon:Type()):catch(function(err)
-        dump(err:reason())
-    end)
+    NetManager:getHatchDragonPromise(dragon:Type())
 end
 
 function GameUIDragonEyrieDetail:RefreshUI()
@@ -333,10 +331,7 @@ function GameUIDragonEyrieDetail:UpgradeDragonStar()
         UIKit:showMessageDialog(_("提示"), _("所有装备未达到最高星级"), function()end)
         return
     end
-
-    NetManager:getUpgradeDragonStarPromise(dragon:Type()):catch(function(err)
-        dump(err:reason())
-    end)
+    NetManager:getUpgradeDragonStarPromise(dragon:Type())
 end
 
 function GameUIDragonEyrieDetail:HandleEquipments(dragon)

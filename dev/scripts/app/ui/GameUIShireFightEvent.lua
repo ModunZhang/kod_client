@@ -282,9 +282,7 @@ function GameUIShireFightEvent:DispathSoliderButtonClicked()
 		return
 	end
 	UIKit:newGameUI("GameUIAllianceSendTroops",function(dragonType,soldiers)
-		NetManager:getMarchToShrinePromose(self:GetFightEvent():Id(),dragonType,soldiers):catch(function(err)
-			dump(err:reason())
-		end)
+		NetManager:getMarchToShrinePromose(self:GetFightEvent():Id(),dragonType,soldiers)
 	end,{toLocation = self:GetAllianceShrineLocation(),targetIsMyAlliance = true}):AddToCurrentScene(true)
 end
 

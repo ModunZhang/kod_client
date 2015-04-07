@@ -191,14 +191,14 @@ function ChatManager:FetchLastChannelMessage()
 end
 
 function ChatManager:FetchAllChatMessageFromServer()
-	NetManager:getFetchChatPromise():next(function(messages)
+	NetManager:getFetchChatPromise():done(function(messages)
 		-- self:HandleNetMessage('onAllChat',messages)
 	end)
 end
 
 function ChatManager:SendChat(channel,msg)
 	local channel_in_server = channel == self.CHANNNEL_TYPE.GLOBAL and 'global' or 'alliance'
-	NetManager:getSendChatPromise(channel_in_server,msg):next(function()
+	NetManager:getSendChatPromise(channel_in_server,msg):done(function()
 		self:__checkNotifyIf()
 	end)
 end

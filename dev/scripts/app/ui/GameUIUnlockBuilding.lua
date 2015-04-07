@@ -58,9 +58,6 @@ function GameUIUnlockBuilding:Init()
                 local upgrade_listener = function()
                     local location_id = City:GetLocationIdByBuilding(self.building)
                     NetManager:getInstantUpgradeBuildingByLocationPromise(location_id)
-                        :catch(function(err)
-                            dump(err:reason())
-                        end)
                 end
 
                 local can_not_update_type = self.building:IsAbleToUpgrade(true)

@@ -296,30 +296,17 @@ function CommonUpgradeUI:InitUpgradePart()
                 local upgrade_listener = function()
                     if self.building:GetType()=="tower" then
                         NetManager:getInstantUpgradeTowerPromise()
-                            :catch(function(err)
-                                dump(err:reason())
-                            end)
                     elseif self.building:GetType()=="wall" then
                         NetManager:getInstantUpgradeWallByLocationPromise()
-                            :catch(function(err)
-                                dump(err:reason())
-                            end)
                     else
                         if City:IsFunctionBuilding(self.building) then
 
                             local location_id = City:GetLocationIdByBuilding(self.building)
                             NetManager:getInstantUpgradeBuildingByLocationPromise(location_id)
-                                :catch(function(err)
-                                    dump(err:reason())
-                                end)
                         else
                             local tile = City:GetTileWhichBuildingBelongs(self.building)
                             local house_location = tile:GetBuildingLocation(self.building)
-
                             NetManager:getInstantUpgradeHouseByLocationPromise(tile.location_id, house_location)
-                                :catch(function(err)
-                                    dump(err:reason())
-                                end)
                         end
                     end
                 end
@@ -346,29 +333,16 @@ function CommonUpgradeUI:InitUpgradePart()
                 local upgrade_listener = function()
                     if self.building:GetType()=="tower" then
                         NetManager:getUpgradeTowerPromise()
-                            :catch(function(err)
-                                dump(err:reason())
-                            end)
                     elseif self.building:GetType()=="wall" then
                         NetManager:getUpgradeWallByLocationPromise()
-                            :catch(function(err)
-                                dump(err:reason())
-                            end)
                     else
                         if City:IsFunctionBuilding(self.building) then
                             local location_id = City:GetLocationIdByBuilding(self.building)
                             NetManager:getUpgradeBuildingByLocationPromise(location_id)
-                                :catch(function(err)
-                                    dump(err:reason())
-                                end)
                         else
                             local tile = City:GetTileWhichBuildingBelongs(self.building)
                             local house_location = tile:GetBuildingLocation(self.building)
-
                             NetManager:getUpgradeHouseByLocationPromise(tile.location_id, house_location)
-                                :catch(function(err)
-                                    dump(err:reason())
-                                end)
                         end
                     end
                     self:getParent():getParent():LeftButtonClicked()
@@ -633,9 +607,6 @@ function CommonUpgradeUI:CreateFreeSpeedUpBuildingUpgradeButton()
             if event.name == "CLICKED_EVENT" then
                 local eventType = self.building:EventType()
                 NetManager:getFreeSpeedUpPromise(eventType,self.building:UniqueUpgradingKey())
-                    :catch(function(err)
-                        dump(err:reason())
-                    end)
             end
         end):align(display.CENTER, display.cx+185, display.top - 435):addTo(self.acc_layer)
     local building = self.building

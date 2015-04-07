@@ -285,9 +285,7 @@ function GameUIHelp:CreateHelpItem(event)
         ):setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("帮助"), size = 18, color = UIKit:hex2c3b(0xfff3c7)}))
             :onButtonClicked(function(e)
                 if e.name == "CLICKED_EVENT" then
-                    NetManager:getHelpAllianceMemberSpeedUpPromise(event:Id()):catch(function(err)
-                        dump(err:reason())
-                    end)
+                    NetManager:getHelpAllianceMemberSpeedUpPromise(event:Id())
                 end
             end):addTo(bg):pos(480, 30)
     end

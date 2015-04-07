@@ -163,14 +163,12 @@ function GameUIStrikeReport:onEnter()
     }):onButtonStateChanged(function(event)
         local target = event.target
         if target:isButtonSelected() then
-            NetManager:getSaveReportPromise(report:Id()):catch(function(err)
+            NetManager:getSaveReportPromise(report:Id()):fail(function(err)
                 target:setButtonSelected(false,true)
-                dump(err:reason())
             end)
         else
-            NetManager:getUnSaveReportPromise(report:Id()):catch(function(err)
+            NetManager:getUnSaveReportPromise(report:Id()):fail(function(err)
                 target:setButtonSelected(true,true)
-                dump(err:reason())
             end)
         end
     end):addTo(report_body):pos(rb_size.width-47, 37)

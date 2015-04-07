@@ -217,10 +217,10 @@ function GameUIAllianceTitle:CreateEditTitleUI()
                         :AddToCurrentScene()
                     return
                 end
-                NetManager:getEditAllianceTitleNamePromise(self.title_,newTitle):next(function()
+                NetManager:getEditAllianceTitleNamePromise(self.title_,newTitle):done(function()
  					self:RefreshTitle()
 					layer:removeFromParent(true)
-		 		end):catch(function(err)
+		 		end):fail(function()
 		 			layer:removeFromParent(true)
 		 		end)
             end)

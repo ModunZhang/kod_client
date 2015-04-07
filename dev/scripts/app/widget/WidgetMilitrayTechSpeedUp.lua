@@ -27,7 +27,7 @@ function WidgetMilitrayTechSpeedUp:ctor()
 end
 
 function WidgetMilitrayTechSpeedUp:FreeSpeedUpAction()
-	NetManager:getFreeSpeedUpPromise("productionTechEvents",self:GetEvent():Id()):next(function()
+	NetManager:getFreeSpeedUpPromise("productionTechEvents",self:GetEvent():Id()):done(function()
 		self:LeftButtonClicked()
 	end)
 end

@@ -44,8 +44,8 @@ end
 -- per 30s request server
 function OtherAllianceScene:TimerRequestServer()
     print("请求联盟数据--->" .. os.time(),self:GetAlliance():Id())
-    NetManager:getFtechAllianceViewDataPromose(self:GetAlliance():Id()):next(function(msg)
-        local enemyAlliance = Alliance_Manager:DecodeAllianceFromJson(msg)
+    NetManager:getFtechAllianceViewDataPromose(self:GetAlliance():Id()):done(function(response)
+        local enemyAlliance = Alliance_Manager:DecodeAllianceFromJson(response)
         --用新联盟刷新layer
         self.alliance_ = enemyAlliance
         self:RefreshAllianceMarchLine()

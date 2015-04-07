@@ -224,10 +224,19 @@ function MailManager:GetReportByServerIndex(serverIndex)
     end
 end
 function MailManager:FetchMailsFromServer(fromIndex)
-    NetManager:getFetchMailsPromise(fromIndex):next(function ( fetch_mails )
-        self:NotifyListeneOnType(MailManager.LISTEN_TYPE.FETCH_MAILS,function(listener)
-            listener:OnFetchMailsSuccess(fetch_mails)
-        end)
+    NetManager:getFetchMailsPromise(fromIndex):done(function(response)
+        if response.msg.mails then
+            local user_data = DataManager:getUserData()
+            local fetch_mails = {}
+            for i,v in ipairs(response.msg.mails) do
+                table.insert(user_data.mails, v)
+                MailManager:AddMailsToEnd(v)
+                table.insert(fetch_mails, v)
+            end
+            self:NotifyListeneOnType(MailManager.LISTEN_TYPE.FETCH_MAILS,function(listener)
+                listener:OnFetchMailsSuccess(fetch_mails)
+            end)
+        end
     end)
 end
 function MailManager:GetSavedMails(fromIndex)
@@ -247,10 +256,19 @@ function MailManager:GetSavedMails(fromIndex)
     return savedMails
 end
 function MailManager:FetchSavedMailsFromServer(fromIndex)
-    NetManager:getFetchSavedMailsPromise(fromIndex):next(function ( fetch_mails )
-        self:NotifyListeneOnType(MailManager.LISTEN_TYPE.FETCH_SAVED_MAILS,function(listener)
-            listener:OnFetchSavedMailsSuccess(fetch_mails)
-        end)
+    NetManager:getFetchSavedMailsPromise(fromIndex):done(function (response)
+        if response.msg.mails then
+            local user_data = DataManager:getUserData()
+            local fetch_mails = {}
+            for i,v in ipairs(response.msg.mails) do
+                table.insert(user_data.savedMails, v)
+                MailManager:AddSavedMailsToEnd(v)
+                table.insert(fetch_mails, v)
+            end
+            self:NotifyListeneOnType(MailManager.LISTEN_TYPE.FETCH_SAVED_MAILS,function(listener)
+                listener:OnFetchSavedMailsSuccess(fetch_mails)
+            end)
+        end
     end)
 end
 function MailManager:GetSendMails(fromIndex)
@@ -266,10 +284,19 @@ function MailManager:GetSendMails(fromIndex)
     return sendMails
 end
 function MailManager:FetchSendMailsFromServer(fromIndex)
-    NetManager:getFetchSendMailsPromise(fromIndex):next(function ( fetch_mails )
-        self:NotifyListeneOnType(MailManager.LISTEN_TYPE.FETCH_SEND_MAILS,function(listener)
-            listener:OnFetchSendMailsSuccess(fetch_mails)
-        end)
+    NetManager:getFetchSendMailsPromise(fromIndex):done(function(response)
+        if response.msg.mails then
+            local user_data = DataManager:getUserData()
+            local fetch_mails = {}
+            for i,v in ipairs(response.msg.mails) do
+                table.insert(user_data.sendMails, v)
+                MailManager:AddSendMailsToEnd(v)
+                table.insert(fetch_mails, v)
+            end
+            self:NotifyListeneOnType(MailManager.LISTEN_TYPE.FETCH_SEND_MAILS,function(listener)
+                listener:OnFetchSendMailsSuccess(fetch_mails)
+            end)
+        end
     end)
 end
 function MailManager:OnMailStatusChanged( mailStatus )
@@ -578,11 +605,21 @@ function MailManager:GetReports(fromIndex)
     return reports
 end
 function MailManager:FetchReportsFromServer(fromIndex)
-    NetManager:getReportsPromise(fromIndex):next(function ( fetch_reports )
-        self:NotifyListeneOnType(MailManager.LISTEN_TYPE.FETCH_REPORTS,function(listener)
-            listener:OnFetchReportsSuccess(fetch_reports)
+    NetManager:getReportsPromise(fromIndex)
+        :done(function (response)
+            if response.msg.reports then
+                local user_data = DataManager:getUserData()
+                local fetch_reports = {}
+                for i,v in ipairs(response.msg.reports) do
+                    table.insert(user_data.reports, v)
+                    MailManager:AddReportsToEnd(v)
+                    table.insert(fetch_reports, v)
+                end
+                self:NotifyListeneOnType(MailManager.LISTEN_TYPE.FETCH_REPORTS,function(listener)
+                    listener:OnFetchReportsSuccess(fetch_reports)
+                end)
+            end
         end)
-    end)
 end
 function MailManager:GetSavedReports(fromIndex)
     local fromIndex = fromIndex or 0
@@ -599,13 +636,28 @@ function MailManager:GetSavedReports(fromIndex)
     return reports
 end
 function MailManager:FetchSavedReportsFromServer(fromIndex)
-    NetManager:getSavedReportsPromise(fromIndex):next(function ( fetch_reports )
-        self:NotifyListeneOnType(MailManager.LISTEN_TYPE.FETCH_SAVED_REPORTS,function(listener)
-            listener:OnFetchSavedReportsSuccess(fetch_reports)
-        end)
+    NetManager:getSavedReportsPromise(fromIndex):done(function (response)
+        if response.msg.reports then
+            local user_data = DataManager:getUserData()
+            local fetch_reports = {}
+            for i,v in ipairs(response.msg.reports) do
+                table.insert(user_data.reports, v)
+                MailManager:AddSavedReportsToEnd(v)
+                table.insert(fetch_reports, v)
+            end
+            self:NotifyListeneOnType(MailManager.LISTEN_TYPE.FETCH_SAVED_REPORTS,function(listener)
+                listener:OnFetchSavedReportsSuccess(fetch_reports)
+            end)
+        end
     end)
 end
 return MailManager
+
+
+
+
+
+
 
 
 

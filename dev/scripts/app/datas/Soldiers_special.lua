@@ -16,7 +16,7 @@ special["skeletonWarrior"] = {
 	["march"] = 145,
 	["consumeFoodPerHour"] = 0,
 	["killScore"] = 6,
-	["citizen"] = 0,
+	["citizen"] = 1,
 	["recruitTime"] = 30,
 	["techBuildingName"] = "trainingGround"
 }
@@ -36,7 +36,7 @@ special["skeletonArcher"] = {
 	["march"] = 155,
 	["consumeFoodPerHour"] = 0,
 	["killScore"] = 6,
-	["citizen"] = 0,
+	["citizen"] = 1,
 	["recruitTime"] = 30,
 	["techBuildingName"] = "hunterHall"
 }
@@ -56,7 +56,7 @@ special["deathKnight"] = {
 	["march"] = 185,
 	["consumeFoodPerHour"] = 0,
 	["killScore"] = 15,
-	["citizen"] = 0,
+	["citizen"] = 2,
 	["recruitTime"] = 50,
 	["techBuildingName"] = "stable"
 }
@@ -76,7 +76,7 @@ special["meatWagon"] = {
 	["march"] = 125,
 	["consumeFoodPerHour"] = 0,
 	["killScore"] = 30,
-	["citizen"] = 0,
+	["citizen"] = 4,
 	["recruitTime"] = 100,
 	["techBuildingName"] = "workshop"
 }

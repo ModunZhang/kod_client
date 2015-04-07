@@ -20,10 +20,10 @@ end
 function GameUISettingAccount:CheckGameCenter()
 	if ext.gamecenter.isAuthenticated() then
 		local __,gcId = ext.gamecenter.getPlayerNameAndId() 
-		NetManager:getGcBindStatusPromise(gcId):next(function(response)
+		NetManager:getGcBindStatusPromise(gcId):done(function(response)
 			ext.gamecenter.gc_bind = response.msg.isBind
         	if not User:IsBindGameCenter() and not response.msg.isBind then
-            	NetManager:getBindGcIdPromise(gc_id):next(function()
+            	NetManager:getBindGcIdPromise(gc_id):done(function()
             		app:EndCheckGameCenterIf()
             	end)
         	end

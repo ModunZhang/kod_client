@@ -449,13 +449,13 @@ local function get_changeTerrain_promise(terrain)
     }, "修改地形失败!")
 end
 function NetManager:getChangeToGrassPromise()
-    return get_changeTerrain_promise("grassLand"):next(get_response_msg)
+    return get_changeTerrain_promise("grassLand"):done(get_response_msg)
 end
 function NetManager:getChangeToDesertPromise()
-    return get_changeTerrain_promise("desert"):next(get_response_msg)
+    return get_changeTerrain_promise("desert"):done(get_response_msg)
 end
 function NetManager:getChangeToIceFieldPromise()
-    return get_changeTerrain_promise("iceField"):next(get_response_msg)
+    return get_changeTerrain_promise("iceField"):done(get_response_msg)
 end
 -- 建造小屋
 function NetManager:getCreateHouseByLocationPromise(location, sub_location, building_type)
@@ -464,14 +464,7 @@ function NetManager:getCreateHouseByLocationPromise(location, sub_location, buil
         houseLocation = sub_location,
         houseType = building_type,
         finishNow = false
-    }, "建造小屋失败!"):next(get_response_msg)
-end
--- 拆除小屋
-function NetManager:getDestroyHouseByLocationPromise(location, sub_location)
-    return get_blocking_request_promise("logic.playerHandler.destroyHouse", {
-        buildingLocation = location,
-        houseLocation = sub_location
-    }, "拆除小屋失败!"):next(get_response_msg)
+    }, "建造小屋失败!"):done(get_response_msg)
 end
 -- 升级小屋
 local function get_upgradeHouse_promise(location, sub_location, finish_now)
@@ -479,13 +472,13 @@ local function get_upgradeHouse_promise(location, sub_location, finish_now)
         buildingLocation = location,
         houseLocation = sub_location,
         finishNow = finish_now or false
-    }, "升级小屋失败!"):next(get_response_msg)
+    }, "升级小屋失败!"):done(get_response_msg)
 end
 function NetManager:getUpgradeHouseByLocationPromise(location, sub_location)
     return get_upgradeHouse_promise(location, sub_location, false)
 end
 function NetManager:getInstantUpgradeHouseByLocationPromise(location, sub_location)
-    return get_upgradeHouse_promise(location, sub_location, true):next(function()
+    return get_upgradeHouse_promise(location, sub_location, true):done(function()
         app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
     end)
 end
@@ -494,13 +487,13 @@ local function get_upgradeBuilding_promise(location, finish_now)
     return get_blocking_request_promise("logic.playerHandler.upgradeBuilding", {
         location = location,
         finishNow = finish_now or false
-    }, "升级功能建筑失败!"):next(get_response_msg)
+    }, "升级功能建筑失败!"):done(get_response_msg)
 end
 function NetManager:getUpgradeBuildingByLocationPromise(location)
     return get_upgradeBuilding_promise(location, false)
 end
 function NetManager:getInstantUpgradeBuildingByLocationPromise(location)
-    return get_upgradeBuilding_promise(location, true):next(function()
+    return get_upgradeBuilding_promise(location, true):done(function()
         app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
     end)
 end
@@ -524,7 +517,7 @@ function NetManager:getSwitchBuildingPromise(buildingLocation,newBuildingName)
         buildingLocation = buildingLocation,
         newBuildingName = newBuildingName
     },
-    "转换生产建筑类型失败!"):next(get_response_msg)
+    "转换生产建筑类型失败!"):done(get_response_msg)
 end
 
 
@@ -533,7 +526,7 @@ local function get_makeMaterial_promise(category)
     return get_blocking_request_promise("logic.playerHandler.makeMaterial", {
         category = category,
         finishNow = false
-    }, "制造材料失败!"):next(get_response_msg)
+    }, "制造材料失败!"):done(get_response_msg)
 end
 -- 建造建筑材料
 function NetManager:getMakeBuildingMaterialPromise()
@@ -547,14 +540,14 @@ end
 function NetManager:getFetchMaterialsPromise(id)
     return get_blocking_request_promise("logic.playerHandler.getMaterials", {
         eventId = id,
-    }, "获取材料失败!"):next(get_response_msg)
+    }, "获取材料失败!"):done(get_response_msg)
 end
 -- 打造装备
 local function get_makeDragonEquipment_promise(equipment_name, finish_now)
     return get_blocking_request_promise("logic.playerHandler.makeDragonEquipment", {
         equipmentName = equipment_name,
         finishNow = finish_now or false
-    }, "打造装备失败!"):next(get_response_msg)
+    }, "打造装备失败!"):done(get_response_msg)
 end
 function NetManager:getMakeDragonEquipmentPromise(equipment_name)
     return get_makeDragonEquipment_promise(equipment_name)
@@ -568,18 +561,17 @@ local function get_recruitNormalSoldier_promise(soldierName, count, finish_now)
         soldierName = soldierName,
         count = count,
         finishNow = finish_now or false
-    }, "招募普通士兵失败!"):next(get_response_msg)
+    }, "招募普通士兵失败!"):done(get_response_msg)
 end
 function NetManager:getRecruitNormalSoldierPromise(soldierName, count, cb)
-    return get_recruitNormalSoldier_promise(soldierName, count):next(function(response)
+    return get_recruitNormalSoldier_promise(soldierName, count):done(function(response)
         app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_RECRUIT")
         return response
     end)
 end
 function NetManager:getInstantRecruitNormalSoldierPromise(soldierName, count, cb)
-    return get_recruitNormalSoldier_promise(soldierName, count, true):next(function()
+    return get_recruitNormalSoldier_promise(soldierName, count, true):done(function()
         app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
-    end):done(function ()
         GameGlobalUI:showTips(_("招募士兵完成"),Localize.soldier_name[soldierName].."X"..count)
     end)
 end
@@ -589,18 +581,17 @@ local function get_recruitSpecialSoldier_promise(soldierName, count, finish_now)
         soldierName = soldierName,
         count = count,
         finishNow = finish_now or false
-    }, "招募特殊士兵失败!"):next(get_response_msg)
+    }, "招募特殊士兵失败!"):done(get_response_msg)
 end
 function NetManager:getRecruitSpecialSoldierPromise(soldierName, count)
-    return get_recruitSpecialSoldier_promise(soldierName, count):next(function(response)
+    return get_recruitSpecialSoldier_promise(soldierName, count):done(function(response)
         app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_RECRUIT")
         return response
     end)
 end
 function NetManager:getInstantRecruitSpecialSoldierPromise(soldierName, count)
-    return get_recruitSpecialSoldier_promise(soldierName, count, true):next(function()
+    return get_recruitSpecialSoldier_promise(soldierName, count, true):done(function()
         app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
-    end):done(function ()
         GameGlobalUI:showTips(_("治愈士兵完成"),Localize.soldier_name[soldierName].."X"..count)
     end)
 end
@@ -609,7 +600,7 @@ local function get_treatSoldier_promise(soldiers, finish_now)
     return get_blocking_request_promise("logic.playerHandler.treatSoldier", {
         soldiers = soldiers,
         finishNow = finish_now or false
-    }, "普通治疗士兵失败!"):next(get_response_msg)
+    }, "普通治疗士兵失败!"):done(get_response_msg)
 end
 function NetManager:getTreatSoldiersPromise(soldiers)
     return get_treatSoldier_promise(soldiers)
@@ -628,7 +619,7 @@ end
 function NetManager:getHatchDragonPromise(dragonType)
     return get_blocking_request_promise("logic.playerHandler.hatchDragon", {
         dragonType = dragonType,
-    }, "孵化失败!"):next(get_response_msg)
+    }, "孵化失败!"):done(get_response_msg)
 end
 -- 装备
 function NetManager:getLoadDragonEquipmentPromise(dragonType, equipmentCategory, equipmentName)
@@ -636,14 +627,14 @@ function NetManager:getLoadDragonEquipmentPromise(dragonType, equipmentCategory,
         dragonType = dragonType,
         equipmentCategory = equipmentCategory,
         equipmentName = equipmentName
-    }, "装备失败!"):next(get_response_msg)
+    }, "装备失败!"):done(get_response_msg)
 end
 -- 卸载装备
 function NetManager:getResetDragonEquipmentPromise(dragonType, equipmentCategory)
     return get_blocking_request_promise("logic.playerHandler.resetDragonEquipment", {
         dragonType = dragonType,
         equipmentCategory = equipmentCategory
-    }, "卸载装备失败!"):next(get_response_msg)
+    }, "卸载装备失败!"):done(get_response_msg)
 end
 -- 强化装备
 function NetManager:getEnhanceDragonEquipmentPromise(dragonType, equipmentCategory, equipments)
@@ -651,25 +642,25 @@ function NetManager:getEnhanceDragonEquipmentPromise(dragonType, equipmentCatego
         dragonType = dragonType,
         equipmentCategory = equipmentCategory,
         equipments = equipments
-    }, "强化装备失败!"):next(get_response_msg)
+    }, "强化装备失败!"):done(get_response_msg)
 end
 -- 升级龙星
 function NetManager:getUpgradeDragonStarPromise(dragonType)
     return get_blocking_request_promise("logic.playerHandler.upgradeDragonStar", {
         dragonType = dragonType,
-    }, "升级龙星失败!"):next(get_response_msg)
+    }, "升级龙星失败!"):done(get_response_msg)
 end
 -- 升级龙技能
 function NetManager:getUpgradeDragonDragonSkillPromise(dragonType, skillKey)
     return get_blocking_request_promise("logic.playerHandler.upgradeDragonSkill", {
         dragonType = dragonType,
         skillKey = skillKey
-    }, "升级龙技能失败!"):next(get_response_msg)
+    }, "升级龙技能失败!"):done(get_response_msg)
 end
 -- 获取每日任务列表
 function NetManager:getDailyQuestsPromise()
     return get_blocking_request_promise("logic.playerHandler.getDailyQuests", {},
-        "获取每日任务列表失败!"):next(get_response_msg)
+        "获取每日任务列表失败!"):done(get_response_msg)
 end
 -- 为每日任务中某个任务增加星级
 function NetManager:getAddDailyQuestStarPromise(questId)
@@ -677,7 +668,7 @@ function NetManager:getAddDailyQuestStarPromise(questId)
         {
             questId = questId
         },
-        "为每日任务中某个任务增加星级失败!"):next(get_response_msg)
+        "为每日任务中某个任务增加星级失败!"):done(get_response_msg)
 end
 -- 开始一个每日任务
 function NetManager:getStartDailyQuestPromise(questId)
@@ -685,7 +676,7 @@ function NetManager:getStartDailyQuestPromise(questId)
         {
             questId = questId
         },
-        "开始一个每日任务失败!"):next(get_response_msg)
+        "开始一个每日任务失败!"):done(get_response_msg)
 end
 -- 领取每日任务奖励
 function NetManager:getDailyQeustRewardPromise(questEventId)
@@ -693,7 +684,7 @@ function NetManager:getDailyQeustRewardPromise(questEventId)
         {
             questEventId = questEventId
         },
-        "领取每日任务奖励失败!"):next(get_response_msg)
+        "领取每日任务奖励失败!"):done(get_response_msg)
 end
 -- 发送个人邮件
 function NetManager:getSendPersonalMailPromise(memberId, title, content)
@@ -701,172 +692,117 @@ function NetManager:getSendPersonalMailPromise(memberId, title, content)
         memberId = memberId,
         title = title,
         content = content,
-    }, "发送个人邮件失败!"):next(get_response_msg)
+    }, "发送个人邮件失败!"):done(get_response_msg)
 end
 -- 获取收件箱邮件
 function NetManager:getFetchMailsPromise(fromIndex)
     return get_blocking_request_promise("logic.playerHandler.getMails", {
         fromIndex = fromIndex
-    }, "获取收件箱邮件失败!"):next(function (response)
-        if response.msg.mails then
-            local user_data = DataManager:getUserData()
-            local fetch_mails = {}
-            for i,v in ipairs(response.msg.mails) do
-                table.insert(user_data.mails, v)
-                MailManager:AddMailsToEnd(v)
-                table.insert(fetch_mails, v)
-            end
-            return fetch_mails
-        end
-    end)
+    }, "获取收件箱邮件失败!")
 end
 -- 阅读邮件
 function NetManager:getReadMailsPromise(mailIds)
     return get_none_blocking_request_promise("logic.playerHandler.readMails", {
         mailIds = mailIds
-    }, "阅读邮件失败!"):next(get_response_mail_msg)
+    }, "阅读邮件失败!"):done(get_response_mail_msg)
 end
 -- 收藏邮件
 function NetManager:getSaveMailPromise(mailId)
     return get_blocking_request_promise("logic.playerHandler.saveMail", {
         mailId = mailId
-    }, "收藏邮件失败!"):next(get_response_mail_msg)
+    }, "收藏邮件失败!"):done(get_response_mail_msg)
 end
 -- 取消收藏邮件
 function NetManager:getUnSaveMailPromise(mailId)
     return get_blocking_request_promise("logic.playerHandler.unSaveMail", {
         mailId = mailId
-    }, "取消收藏邮件失败!"):next(get_response_mail_msg)
+    }, "取消收藏邮件失败!"):done(get_response_mail_msg)
 end
 -- 获取收藏邮件
 function NetManager:getFetchSavedMailsPromise(fromIndex)
     return get_blocking_request_promise("logic.playerHandler.getSavedMails", {
         fromIndex = fromIndex
-    }, "获取收藏邮件失败!"):next(function (response)
-        if response.msg.mails then
-            local user_data = DataManager:getUserData()
-            local fetch_mails = {}
-            for i,v in ipairs(response.msg.mails) do
-                table.insert(user_data.savedMails, v)
-                MailManager:AddSavedMailsToEnd(v)
-                table.insert(fetch_mails, v)
-            end
-            return fetch_mails
-        end
-    end)
+    }, "获取收藏邮件失败!")
 end
 -- 获取已发送邮件
 function NetManager:getFetchSendMailsPromise(fromIndex)
     return get_blocking_request_promise("logic.playerHandler.getSendMails", {
         fromIndex = fromIndex
-    }, "获取已发送邮件失败!"):next(function (response)
-        if response.msg.mails then
-            local user_data = DataManager:getUserData()
-            local fetch_mails = {}
-            for i,v in ipairs(response.msg.mails) do
-                table.insert(user_data.sendMails, v)
-                MailManager:AddSendMailsToEnd(v)
-                table.insert(fetch_mails, v)
-            end
-            return fetch_mails
-        end
-    end)
+    }, "获取已发送邮件失败!")
 end
 -- 删除邮件
 function NetManager:getDeleteMailsPromise(mailIds)
     return get_blocking_request_promise("logic.playerHandler.deleteMails", {
         mailIds = mailIds
-    }, "删除邮件失败!"):next(get_response_mail_msg)
+    }, "删除邮件失败!"):done(get_response_mail_msg)
 end
 -- 发送联盟邮件
 function NetManager:getSendAllianceMailPromise(title, content)
     return get_blocking_request_promise("logic.allianceHandler.sendAllianceMail", {
         title = title,
         content = content,
-    }, "发送联盟邮件失败!"):next(get_response_msg)
+    }, "发送联盟邮件失败!"):done(get_response_msg)
 end
 -- 阅读战报
 function NetManager:getReadReportsPromise(reportIds)
     return get_none_blocking_request_promise("logic.playerHandler.readReports", {
         reportIds = reportIds
-    }, "阅读战报失败!"):next(get_response_report_msg)
+    }, "阅读战报失败!"):done(get_response_report_msg)
 end
 -- 收藏战报
 function NetManager:getSaveReportPromise(reportId)
     return get_blocking_request_promise("logic.playerHandler.saveReport", {
         reportId = reportId
-    }, "收藏战报失败!"):next(get_response_report_msg)
+    }, "收藏战报失败!"):done(get_response_report_msg)
 end
 -- 取消收藏战报
 function NetManager:getUnSaveReportPromise(reportId)
     return get_blocking_request_promise("logic.playerHandler.unSaveReport", {
         reportId = reportId
-    }, "取消收藏战报失败!"):next(get_response_report_msg)
+    }, "取消收藏战报失败!"):done(get_response_report_msg)
 end
 -- 获取玩家战报
 function NetManager:getReportsPromise(fromIndex)
     return get_blocking_request_promise("logic.playerHandler.getReports", {
         fromIndex = fromIndex
-    }, "获取玩家战报失败!"):next(function (response)
-        if response.msg.reports then
-            local user_data = DataManager:getUserData()
-            local fetch_reports = {}
-            for i,v in ipairs(response.msg.reports) do
-                table.insert(user_data.reports, v)
-                MailManager:AddReportsToEnd(v)
-                table.insert(fetch_reports, v)
-            end
-            return fetch_reports
-        end
-    end)
+    }, "获取玩家战报失败!")
 end
 -- 获取玩家已存战报
 function NetManager:getSavedReportsPromise(fromIndex)
     return get_blocking_request_promise("logic.playerHandler.getSavedReports", {
         fromIndex = fromIndex
-    }, "获取玩家已存战报失败!"):next(function (response)
-        if response.msg.reports then
-            local user_data = DataManager:getUserData()
-            local fetch_reports = {}
-            for i,v in ipairs(response.msg.reports) do
-                table.insert(user_data.reports, v)
-                MailManager:AddSavedReportsToEnd(v)
-                table.insert(fetch_reports, v)
-            end
-            return fetch_reports
-        end
-    end)
+    }, "获取玩家已存战报失败!")
 end
 -- 删除战报
 function NetManager:getDeleteReportsPromise(reportIds)
     return get_blocking_request_promise("logic.playerHandler.deleteReports", {
         reportIds = reportIds
-    }, "删除战报失败!"):next(get_response_report_msg)
+    }, "删除战报失败!"):done(get_response_report_msg)
 end
 -- 请求加速
 function NetManager:getRequestAllianceToSpeedUpPromise(eventType, eventId)
     return get_blocking_request_promise("logic.allianceHandler.requestAllianceToSpeedUp", {
         eventType = eventType,
         eventId = eventId,
-    }, "请求加速失败!"):next(get_response_msg)
+    }, "请求加速失败!"):done(get_response_msg)
 end
 -- 免费加速建筑升级
 function NetManager:getFreeSpeedUpPromise(eventType, eventId)
     return get_blocking_request_promise("logic.playerHandler.freeSpeedUp", {
         eventType = eventType,
         eventId = eventId,
-    }, "请求免费加速失败!"):next(get_response_msg)
+    }, "请求免费加速失败!"):done(get_response_msg)
 end
 -- 协助玩家加速
 function NetManager:getHelpAllianceMemberSpeedUpPromise(eventId)
     return get_none_blocking_request_promise("logic.allianceHandler.helpAllianceMemberSpeedUp", {
         eventId = eventId,
-    }, "协助玩家加速失败!"):next(get_response_msg)
+    }, "协助玩家加速失败!"):done(get_response_msg)
 end
 -- 协助所有玩家加速
 function NetManager:getHelpAllAllianceMemberSpeedUpPromise()
     return get_none_blocking_request_promise("logic.allianceHandler.helpAllAllianceMemberSpeedUp", {}
-        , "协助所有玩家加速失败!"):next(get_response_msg)
+        , "协助所有玩家加速失败!"):done(get_response_msg)
 end
 -- 创建联盟
 function NetManager:getCreateAlliancePromise(name, tag, language, terrain, flag)
@@ -876,47 +812,47 @@ function NetManager:getCreateAlliancePromise(name, tag, language, terrain, flag)
         language = language,
         terrain = terrain,
         flag = flag
-    }, "创建联盟失败!"):next(get_response_msg):next(get_alliance_response_msg)
+    }, "创建联盟失败!"):done(get_response_msg):done(get_alliance_response_msg)
 end
 -- 退出联盟
 function NetManager:getQuitAlliancePromise()
     return get_blocking_request_promise("logic.allianceHandler.quitAlliance", nil
-        , "退出联盟失败!"):next(get_response_msg)
+        , "退出联盟失败!"):done(get_response_msg)
 end
 -- 修改联盟加入条件
 function NetManager:getEditAllianceJoinTypePromise(join_type)
     return get_blocking_request_promise("logic.allianceHandler.editAllianceJoinType", {
         joinType = join_type
-    }, "修改联盟加入条件失败!"):next(get_response_msg)
+    }, "修改联盟加入条件失败!"):done(get_response_msg)
 end
 -- 拒绝玩家
 function NetManager:getRemoveJoinAllianceReqeustsPromise(requestEventIds)
     return get_blocking_request_promise("logic.allianceHandler.removeJoinAllianceReqeusts",{
         requestEventIds = requestEventIds}, "拒绝玩家失败!")
-        :next(get_alliance_response_msg)
+        :done(get_alliance_response_msg)
 end
 -- 接受玩家
 function NetManager:getApproveJoinAllianceRequestPromise(requestEventId)
     return get_blocking_request_promise("logic.allianceHandler.approveJoinAllianceRequest", {
         requestEventId = requestEventId
-    }, "接受玩家失败!"):next(get_alliance_response_msg)
+    }, "接受玩家失败!"):done(get_alliance_response_msg)
 end
 -- 踢出玩家
 function NetManager:getKickAllianceMemberOffPromise(memberId)
     return get_blocking_request_promise("logic.allianceHandler.kickAllianceMemberOff", {
         memberId = memberId,
-    }, "踢出玩家失败!"):next(get_response_msg)
+    }, "踢出玩家失败!"):done(get_response_msg)
 end
 -- 搜索特定标签联盟
 function NetManager:getSearchAllianceByTagPromsie(tag)
     return get_blocking_request_promise("logic.allianceHandler.searchAllianceByTag", {
         tag = tag
-    }, "搜索特定标签联盟失败!"):next(get_response_msg)
+    }, "搜索特定标签联盟失败!"):done(get_response_msg)
 end
 -- 搜索能直接加入联盟
 function NetManager:getFetchCanDirectJoinAlliancesPromise()
     return get_blocking_request_promise("logic.allianceHandler.getCanDirectJoinAlliances", nil
-        , "搜索直接加入联盟失败!"):next(get_response_msg)
+        , "搜索直接加入联盟失败!"):done(get_response_msg)
 end
 -- 邀请加入联盟
 function NetManager:getInviteToJoinAlliancePromise(memberId)
@@ -928,19 +864,19 @@ end
 function NetManager:getJoinAllianceDirectlyPromise(allianceId)
     return get_blocking_request_promise("logic.allianceHandler.joinAllianceDirectly", {
         allianceId = allianceId
-    }, "直接加入联盟失败!"):next(get_response_msg):next(get_alliance_response_msg)
+    }, "直接加入联盟失败!"):done(get_response_msg):done(get_alliance_response_msg)
 end
 -- 请求加入联盟
 function NetManager:getRequestToJoinAlliancePromise(allianceId)
     return get_blocking_request_promise("logic.allianceHandler.requestToJoinAlliance", {
         allianceId = allianceId
-    }, "请求加入联盟失败!"):next(get_response_msg)
+    }, "请求加入联盟失败!"):done(get_response_msg)
 end
 -- 获取玩家信息
 function NetManager:getPlayerInfoPromise(memberId)
     return get_blocking_request_promise("logic.playerHandler.getPlayerInfo", {
         memberId = memberId
-    }, "获取玩家信息失败!"):next(get_response_msg)
+    }, "获取玩家信息失败!"):done(get_response_msg)
 end
 -- 获取玩家城市信息
 function NetManager:getPlayerCityInfoPromise(targetPlayerId)
@@ -952,33 +888,33 @@ end
 function NetManager:getHandOverAllianceArchonPromise(memberId)
     return get_blocking_request_promise("logic.allianceHandler.handOverAllianceArchon", {
         memberId = memberId,
-    }, "移交萌主失败!"):next(get_response_msg)
+    }, "移交萌主失败!"):done(get_response_msg)
 end
 -- 修改成员职位
 function NetManager:getEditAllianceMemberTitlePromise(memberId, title)
     return get_blocking_request_promise("logic.allianceHandler.editAllianceMemberTitle", {
         memberId = memberId,
         title = title
-    }, "修改成员职位失败!"):next(get_response_msg)
+    }, "修改成员职位失败!"):done(get_response_msg)
 end
 -- 修改联盟公告
 function NetManager:getEditAllianceNoticePromise(notice)
     return get_blocking_request_promise("logic.allianceHandler.editAllianceNotice", {
         notice = notice
-    }, "修改联盟公告失败!"):next(get_response_msg)
+    }, "修改联盟公告失败!"):done(get_response_msg)
 end
 -- 修改联盟描述
 function NetManager:getEditAllianceDescriptionPromise(description)
     return get_blocking_request_promise("logic.allianceHandler.editAllianceDescription", {
         description = description
-    }, "修改联盟描述失败!"):next(get_response_msg)
+    }, "修改联盟描述失败!"):done(get_response_msg)
 end
 -- 修改职位名字
 function NetManager:getEditAllianceTitleNamePromise(title, titleName)
     return get_blocking_request_promise("logic.allianceHandler.editAllianceTitleName", {
         title = title,
         titleName = titleName
-    }, "修改职位名字失败!"):next(get_response_msg)
+    }, "修改职位名字失败!"):done(get_response_msg)
 end
 -- 发送秘籍
 function NetManager:getSendGlobalMsgPromise(text)
@@ -1018,7 +954,7 @@ end
 function NetManager:getCancelJoinAlliancePromise(allianceId)
     return get_blocking_request_promise("logic.allianceHandler.cancelJoinAllianceRequest", {
         ["allianceId"] = allianceId,
-    }, "取消申请联盟失败!"):next(get_response_msg)
+    }, "取消申请联盟失败!"):done(get_response_msg)
 end
 --修改联盟基本信息
 function NetManager:getEditAllianceBasicInfoPromise(name, tag, language, flag)
@@ -1027,7 +963,7 @@ function NetManager:getEditAllianceBasicInfoPromise(name, tag, language, flag)
         tag = tag,
         language = language,
         flag = flag
-    }, "修改联盟基本信息失败!"):next(get_response_msg)
+    }, "修改联盟基本信息失败!"):done(get_response_msg)
 end
 -- 移动联盟建筑
 function NetManager:getMoveAllianceBuildingPromise(mapObjectId, locationX, locationY)
@@ -1035,31 +971,31 @@ function NetManager:getMoveAllianceBuildingPromise(mapObjectId, locationX, locat
         mapObjectId = mapObjectId,
         locationX = locationX,
         locationY = locationY
-    }, "移动联盟建筑失败!"):next(get_response_msg):next(get_alliance_response_msg)
+    }, "移动联盟建筑失败!"):done(get_response_msg):done(get_alliance_response_msg)
 end
 -- 激活联盟事件
 function NetManager:getActivateAllianceShrineStagePromise(stageName)
     return get_blocking_request_promise("logic.allianceHandler.activateAllianceShrineStage", {
         stageName = stageName
-    }, "激活联盟事件失败!"):next(get_response_msg)
+    }, "激活联盟事件失败!"):done(get_response_msg)
 end
 -- 升级联盟建筑
 function NetManager:getUpgradeAllianceBuildingPromise(buildingName)
     return get_blocking_request_promise("logic.allianceHandler.upgradeAllianceBuilding", {
         buildingName = buildingName
-    }, "升级联盟建筑失败!"):next(get_response_msg)
+    }, "升级联盟建筑失败!"):done(get_response_msg)
 end
 -- 升级联盟村落
 function NetManager:getUpgradeAllianceVillagePromise(villageType)
     return get_blocking_request_promise("logic.allianceHandler.upgradeAllianceVillage", {
         villageType = villageType
-    }, "升级联盟村落失败!"):next(get_response_msg)
+    }, "升级联盟村落失败!"):done(get_response_msg)
 end
 -- 联盟捐赠
 function NetManager:getDonateToAlliancePromise(donateType)
     return get_blocking_request_promise("logic.allianceHandler.donateToAlliance", {
         donateType = donateType
-    }, "联盟捐赠失败!"):next(get_response_msg)
+    }, "联盟捐赠失败!"):done(get_response_msg)
 end
 -- 编辑联盟地形
 function NetManager:getEditAllianceTerrianPromise(terrain)
@@ -1073,40 +1009,40 @@ function NetManager:getMarchToShrinePromose(shrineEventId,dragonType,soldiers)
         dragonType = dragonType,
         shrineEventId = shrineEventId,
         soldiers = soldiers
-    }, "圣地派兵失败!"):next(get_response_msg)
+    }, "圣地派兵失败!"):done(get_response_msg)
 end
 --查找合适的联盟进行战斗
 function NetManager:getFindAllianceToFightPromose()
     return get_blocking_request_promise("logic.allianceHandler.findAllianceToFight",
-        {}, "查找合适的联盟进行战斗失败!"):next(get_response_msg)
+        {}, "查找合适的联盟进行战斗失败!"):done(get_response_msg)
 end
 --行军到月门
 function NetManager:getMarchToMoonGatePromose(dragonType,soldiers)
     return get_blocking_request_promise("logic.allianceHandler.marchToMoonGate",
         {dragonType = dragonType,
-            soldiers = soldiers}, "行军到月门失败!"):next(get_response_msg)
+            soldiers = soldiers}, "行军到月门失败!"):done(get_response_msg)
 end
 --获取对手联盟数据
 function NetManager:getFtechAllianceViewDataPromose(targetAllianceId)
     return get_blocking_request_promise("logic.allianceHandler.getAllianceViewData",
         {targetAllianceId = targetAllianceId,
             includeMoonGateData = true
-        },"获取对手联盟数据失败!"):next(get_response_msg)
+        },"获取对手联盟数据失败!"):done(get_response_msg)
 end
 --从月门撤兵
 function NetManager:getRetreatFromMoonGatePromose()
     return get_blocking_request_promise("logic.allianceHandler.retreatFromMoonGate",{},
-        "从月门撤兵失败!"):next(get_response_msg)
+        "从月门撤兵失败!"):done(get_response_msg)
 end
 --联盟战月门挑战
 function NetManager:getChallengeMoonGateEnemyTroopPromose()
     return get_blocking_request_promise("logic.allianceHandler.challengeMoonGateEnemyTroop",{},
-        "联盟战月门挑战失败!"):next(get_response_msg)
+        "联盟战月门挑战失败!"):done(get_response_msg)
 end
 --请求联盟进行联盟战
 function NetManager:getRequestAllianceToFightPromose()
     return get_blocking_request_promise("logic.allianceHandler.requestAllianceToFight",{},
-        "请求联盟进行联盟战失败!"):next(get_response_msg)
+        "请求联盟进行联盟战失败!"):done(get_response_msg)
 end
 
 --协防
@@ -1117,7 +1053,7 @@ function NetManager:getHelpAllianceMemberDefencePromise(dragonType, soldiers, ta
             soldiers   = soldiers,
             targetPlayerId = targetPlayerId,
         },
-        "协防玩家失败!"):next(get_response_msg)
+        "协防玩家失败!"):done(get_response_msg)
 end
 --撤销协防
 function NetManager:getRetreatFromHelpedAllianceMemberPromise(beHelpedPlayerId)
@@ -1125,7 +1061,7 @@ function NetManager:getRetreatFromHelpedAllianceMemberPromise(beHelpedPlayerId)
         {
             beHelpedPlayerId = beHelpedPlayerId,
         },
-        "撤销协防失败!"):next(get_response_msg)
+        "撤销协防失败!"):done(get_response_msg)
 end
 --复仇其他联盟
 function NetManager:getRevengeAlliancePromise(reportId)
@@ -1133,78 +1069,78 @@ function NetManager:getRevengeAlliancePromise(reportId)
         {
             reportId = reportId,
         },
-        "复仇其他联盟失败!"):next(get_response_msg)
+        "复仇其他联盟失败!"):done(get_response_msg)
 end
 --查看战力相近的高低3个联盟的数据
 function NetManager:getNearedAllianceInfosPromise()
     return get_blocking_request_promise("logic.allianceHandler.getNearedAllianceInfos",
         {},
-        "查看战力相近的高低3个联盟的数据失败!"):next(get_response_msg)
+        "查看战力相近的高低3个联盟的数据失败!"):done(get_response_msg)
 end
 --根据Tag搜索联盟战斗数据
 function NetManager:getSearchAllianceInfoByTagPromise(tag)
     return get_blocking_request_promise("logic.allianceHandler.searchAllianceInfoByTag",
         {tag=tag},
-        "根据Tag搜索联盟战斗数据失败!"):next(get_response_msg)
+        "根据Tag搜索联盟战斗数据失败!"):done(get_response_msg)
 end
 --突袭玩家城市
 function NetManager:getStrikePlayerCityPromise(dragonType,defencePlayerId)
     return get_blocking_request_promise("logic.allianceHandler.strikePlayerCity",
         {dragonType=dragonType,defencePlayerId=defencePlayerId},
-        "突袭玩家城市失败!"):next(get_response_msg)
+        "突袭玩家城市失败!"):done(get_response_msg)
 end
 --攻打玩家城市
 function NetManager:getAttackPlayerCityPromise(dragonType, soldiers,defencePlayerId)
     return get_blocking_request_promise("logic.allianceHandler.attackPlayerCity",
-        {defencePlayerId=defencePlayerId,dragonType=dragonType,soldiers = soldiers},"攻打玩家城市失败!"):next(get_response_msg)
+        {defencePlayerId=defencePlayerId,dragonType=dragonType,soldiers = soldiers},"攻打玩家城市失败!"):done(get_response_msg)
 end
 
 --设置驻防使用的龙
 function NetManager:getSetDefenceDragonPromise(dragonType)
     return get_none_blocking_request_promise("logic.playerHandler.setDefenceDragon",
         {dragonType=dragonType},
-        "设置驻防使用的龙失败!"):next(get_response_msg)
+        "设置驻防使用的龙失败!"):done(get_response_msg)
 end
 --取消龙驻防
 function NetManager:getCancelDefenceDragonPromise()
     return get_none_blocking_request_promise("logic.playerHandler.cancelDefenceDragon",
         nil,
-        "取消龙驻防失败!"):next(get_response_msg)
+        "取消龙驻防失败!"):done(get_response_msg)
 end
 --攻击村落
 function NetManager:getAttackVillagePromise(dragonType,soldiers,defenceAllianceId,defenceVillageId)
     return get_blocking_request_promise("logic.allianceHandler.attackVillage",
-        {defenceVillageId = defenceVillageId,defenceAllianceId=defenceAllianceId,dragonType=dragonType,soldiers = soldiers},"攻打村落失败!"):next(get_response_msg)
+        {defenceVillageId = defenceVillageId,defenceAllianceId=defenceAllianceId,dragonType=dragonType,soldiers = soldiers},"攻打村落失败!"):done(get_response_msg)
 end
 --从村落撤退
 function NetManager:getRetreatFromVillagePromise(allianceId,eventId)
     return get_blocking_request_promise("logic.allianceHandler.retreatFromVillage",
-        {villageEventId = eventId},"村落撤退失败!"):next(get_response_msg)
+        {villageEventId = eventId},"村落撤退失败!"):done(get_response_msg)
 end
 --突袭村落
 function NetManager:getStrikeVillagePromise(dragonType,defenceAllianceId,defenceVillageId)
     return get_blocking_request_promise("logic.allianceHandler.strikeVillage",
-        {dragonType = dragonType,defenceAllianceId = defenceAllianceId,defenceVillageId=defenceVillageId},"突袭村落失败!"):next(get_response_msg)
+        {dragonType = dragonType,defenceAllianceId = defenceAllianceId,defenceVillageId=defenceVillageId},"突袭村落失败!"):done(get_response_msg)
 end
 --查看敌方进攻行军事件详细信息
 function NetManager:getAttackMarchEventDetailPromise(eventId)
     return get_blocking_request_promise("logic.allianceHandler.getAttackMarchEventDetail",
-        {eventId = eventId},"获取行军事件数据失败!"):next(get_response_msg)
+        {eventId = eventId},"获取行军事件数据失败!"):done(get_response_msg)
 end
 --查看敌方突袭行军事件详细信息
 function NetManager:getStrikeMarchEventDetailPromise(eventId)
     return get_blocking_request_promise("logic.allianceHandler.getStrikeMarchEventDetail",
-        {eventId = eventId},"获取突袭事件数据失败!"):next(get_response_msg)
+        {eventId = eventId},"获取突袭事件数据失败!"):done(get_response_msg)
 end
 --查看协助部队行军事件详细信息
 function NetManager:getHelpDefenceMarchEventDetailPromise(eventId)
     return get_blocking_request_promise("logic.allianceHandler.getHelpDefenceMarchEventDetail",
-        {eventId = eventId},"获取协防事件数据失败!"):next(get_response_msg)
+        {eventId = eventId},"获取协防事件数据失败!"):done(get_response_msg)
 end
 --查看协防部队详细信息
 function NetManager:getHelpDefenceTroopDetailPromise(playerId,helpedByPlayerId)
     return get_blocking_request_promise("logic.allianceHandler.getHelpDefenceTroopDetail",
-        {playerId = playerId,helpedByPlayerId = helpedByPlayerId},"查看协防部队详细信息失败!"):next(get_response_msg)
+        {playerId = playerId,helpedByPlayerId = helpedByPlayerId},"查看协防部队详细信息失败!"):done(get_response_msg)
 end
 -- 出售商品
 function NetManager:getSellItemPromise(type,name,count,price)
@@ -1213,46 +1149,46 @@ function NetManager:getSellItemPromise(type,name,count,price)
         name = name,
         count = count,
         price = price,
-    }, "出售商品失败!"):next(get_response_msg)
+    }, "出售商品失败!"):done(get_response_msg)
 end
 -- 获取商品列表
 function NetManager:getGetSellItemsPromise(type,name)
     return get_blocking_request_promise("logic.playerHandler.getSellItems", {
         type = type,
         name = name,
-    }, "获取商品列表失败!"):next(get_response_msg)
+    }, "获取商品列表失败!"):done(get_response_msg)
 end
 -- 购买出售的商品
 function NetManager:getBuySellItemPromise(itemId)
     return get_blocking_request_promise("logic.playerHandler.buySellItem", {
         itemId = itemId
-    }, "购买出售的商品失败!"):next(get_response_msg)
+    }, "购买出售的商品失败!"):done(get_response_msg)
 end
 -- 获取出售后赚取的银币
 function NetManager:getGetMyItemSoldMoneyPromise(itemId)
     return get_blocking_request_promise("logic.playerHandler.getMyItemSoldMoney", {
         itemId = itemId
-    }, "获取出售后赚取的银币失败!"):next(get_response_msg)
+    }, "获取出售后赚取的银币失败!"):done(get_response_msg)
 end
 -- 下架商品
 function NetManager:getRemoveMySellItemPromise(itemId)
     return get_blocking_request_promise("logic.playerHandler.removeMySellItem", {
         itemId = itemId
-    }, "下架商品失败!"):next(get_response_msg)
+    }, "下架商品失败!"):done(get_response_msg)
 end
 --升级生产科技
 function NetManager:getUpgradeProductionTechPromise(techName,finishNow)
     return get_blocking_request_promise("logic.playerHandler.upgradeProductionTech", {
         techName = techName,
         finishNow = finishNow,
-    }, "升级生产科技失败!"):next(get_response_msg)
+    }, "升级生产科技失败!"):done(get_response_msg)
 end
 -- 升级军事科技
 local function upgrade_military_tech_promise(techName,finishNow)
     return get_blocking_request_promise("logic.playerHandler.upgradeMilitaryTech", {
         techName = techName,
         finishNow = finishNow,
-    }, "升级军事科技失败!"):next(get_response_msg)
+    }, "升级军事科技失败!"):done(get_response_msg)
 end
 
 
@@ -1267,7 +1203,7 @@ local function upgrade_soldier_star_promise(soldierName,finishNow)
     return get_blocking_request_promise("logic.playerHandler.upgradeSoldierStar", {
         soldierName = soldierName,
         finishNow = finishNow,
-    }, "士兵晋级失败!"):next(get_response_msg)
+    }, "士兵晋级失败!"):done(get_response_msg)
 end
 function NetManager:getInstantUpgradeSoldierStarPromise(soldierName)
     return upgrade_soldier_star_promise(soldierName,true)
@@ -1276,13 +1212,13 @@ function NetManager:getUpgradeSoldierStarPromise(soldierName)
     return upgrade_soldier_star_promise(soldierName,false)
 end
 --设置pve数据
-function NetManager:getSetPveDataPromise(pveData, is_none_blocking)
+function NetManager:getSetPveDataPromise(pveData, is_none_blocking, need_catch)
     if is_none_blocking then
         return get_none_blocking_request_promise("logic.playerHandler.setPveData",
-            pveData, "设置pve数据失败!"):next(get_response_msg)
+            pveData, "设置pve数据失败!", need_catch):done(get_response_msg)
     else
         return get_blocking_request_promise("logic.playerHandler.setPveData",
-            pveData, "设置pve数据失败!"):next(get_response_msg)
+            pveData, "设置pve数据失败!", need_catch):done(get_response_msg)
     end
 end
 --为联盟成员添加荣耀值
@@ -1292,14 +1228,14 @@ function NetManager:getGiveLoyaltyToAllianceMemberPromise(memberId,count)
             memberId=memberId,
             count=count
         },
-        "为联盟成员添加荣耀值失败!"):next(get_response_msg)
+        "为联盟成员添加荣耀值失败!"):done(get_response_msg)
 end
 --购买道具
 function NetManager:getBuyItemPromise(itemName,count)
     return get_blocking_request_promise("logic.playerHandler.buyItem", {
         itemName = itemName,
         count = count,
-    }, "购买道具失败!"):next(get_response_msg):next(function ()
+    }, "购买道具失败!"):done(get_response_msg):done(function ()
         GameGlobalUI:showTips(_("提示"),string.format(_('购买%s道具成功'),Localize_item.item_name[itemName]))
         ext.market_sdk.onPlayerBuyGameItems(itemName,count,DataUtils:GetItemPriceByItemName(itemName))
         app:GetAudioManager():PlayeEffectSoundWithKey("BUY_ITEM")
@@ -1310,7 +1246,7 @@ function NetManager:getUseItemPromise(itemName,params)
     return get_blocking_request_promise("logic.playerHandler.useItem", {
         itemName = itemName,
         params = params,
-    }, "使用道具失败!"):next(get_response_msg):next(function ()
+    }, "使用道具失败!"):done(get_response_msg):done(function ()
         GameGlobalUI:showTips(_("提示"),string.format(_('使用%s道具成功'),Localize_item.item_name[itemName]))
         ext.market_sdk.onPlayerUseGameItems(itemName,1)
         if itemName == "torch" then
@@ -1325,7 +1261,7 @@ function NetManager:getBuyAndUseItemPromise(itemName,params)
     return get_blocking_request_promise("logic.playerHandler.buyAndUseItem", {
         itemName = itemName,
         params = params,
-    }, "购买并使用道具失败!"):next(get_response_msg):done(function()
+    }, "购买并使用道具失败!"):done(get_response_msg):done(function()
         GameGlobalUI:showTips(_("提示"),string.format(_('使用%s道具成功'),Localize_item.item_name[itemName]))
         ext.market_sdk.onPlayerBuyGameItems(itemName,1,DataUtils:GetItemPriceByItemName(itemName))
         ext.market_sdk.onPlayerUseGameItems(itemName,1)
@@ -1339,7 +1275,7 @@ function NetManager:getAddAllianceItemPromise(itemName,count)
             itemName = itemName,
             count = count,
         },
-        "联盟商店补充道具失败!"):next(get_response_msg)
+        "联盟商店补充道具失败!"):done(get_response_msg)
 end
 --购买联盟商店的道具
 function NetManager:getBuyAllianceItemPromise(itemName,count)
@@ -1348,7 +1284,7 @@ function NetManager:getBuyAllianceItemPromise(itemName,count)
             itemName = itemName,
             count = count,
         },
-        "购买联盟商店的道具失败!"):next(get_response_msg)
+        "购买联盟商店的道具失败!"):done(get_response_msg)
 end
 --玩家内购
 function NetManager:getVerifyIAPPromise(transactionId,receiptData)
@@ -1356,27 +1292,27 @@ function NetManager:getVerifyIAPPromise(transactionId,receiptData)
         {
             transactionId=transactionId,receiptData=receiptData
         }
-        ,"玩家内购失败"):next(get_response_msg)
+        ,"玩家内购失败", true):next(get_response_msg)
 end
 --获得每日登陆奖励
 function NetManager:getDay60RewardPromise()
     return get_blocking_request_promise("logic.playerHandler.getDay60Reward",
         nil,
-        "获得每日登陆奖励失败!"):next(get_response_msg)
+        "获得每日登陆奖励失败!"):done(get_response_msg)
 end
 
 -- 获取每日在线奖励
 function NetManager:getOnlineRewardPromise(timePoint)
     return get_blocking_request_promise("logic.playerHandler.getOnlineReward",
         {timePoint = timePoint},
-        "获取每日在线奖励失败!"):next(get_response_msg)
+        "获取每日在线奖励失败!"):done(get_response_msg)
 end
 
 -- 获取在线天数奖励
 function NetManager:getDay14RewardPromise()
     return get_blocking_request_promise("logic.playerHandler.getDay14Reward",
         nil,
-        "获取在线天数奖励失败!"):next(get_response_msg)
+        "获取在线天数奖励失败!"):done(get_response_msg)
 end
 -- 首充奖励
 function NetManager:getFirstIAPRewardsPromise()
@@ -1389,19 +1325,19 @@ end
 function NetManager:getLevelupRewardPromise(levelupIndex)
     return get_blocking_request_promise("logic.playerHandler.getLevelupReward",
         {levelupIndex = levelupIndex},
-        "获取新手冲级奖励失败!"):next(get_response_msg)
+        "获取新手冲级奖励失败!"):done(get_response_msg)
 end
 -- 普通gacha
 function NetManager:getNormalGachaPromise()
     return get_blocking_request_promise("logic.playerHandler.gacha",
         {type = "normal"},
-        "普通gacha失败!"):next(get_response_msg)
+        "普通gacha失败!"):done(get_response_msg)
 end
 -- 高级gacha
 function NetManager:getAdvancedGachaPromise()
     return get_blocking_request_promise("logic.playerHandler.gacha",
         {type = "advanced"},
-        "高级gacha失败!"):next(get_response_msg)
+        "高级gacha失败!"):done(get_response_msg)
 end
 
 
@@ -1409,21 +1345,21 @@ end
 function NetManager:getPassSelinasTestPromise()
     return get_blocking_request_promise("logic.playerHandler.passSelinasTest",
         nil,
-        "通过Selina的考验!"):next(get_response_msg)
+        "通过Selina的考验!"):done(get_response_msg)
 end
 -- 获取成就任务奖励
 function NetManager:getGrowUpTaskRewardsPromise(taskType, taskId)
     return get_blocking_request_promise("logic.playerHandler.getGrowUpTaskRewards",{
         taskType = taskType,
         taskId = taskId
-    }, "领取奖励失败!"):next(get_response_msg)
+    }, "领取奖励失败!"):done(get_response_msg)
 end
 
 -- 领取日常任务奖励
 function NetManager:getDailyTaskRewards(taskType)
     return get_blocking_request_promise("logic.playerHandler.getDailyTaskRewards",
         {taskType = taskType},
-        "领取日常任务奖励!"):next(get_response_msg)
+        "领取日常任务奖励!"):done(get_response_msg)
 end
 
 -- 设置玩家Apple Push Notification Id
@@ -1433,37 +1369,17 @@ function NetManager:getSetApnIdPromise(apnId)
 end
 
 -- 获取排行榜
-
-local function rank_sort(response)
-    local data = response.msg
-    local is_not_nil = data.myData.rank ~= json.null
-    if is_not_nil then
-        data.myData.rank = data.myData.rank + 1
-    end
-    if is_not_nil and data.datas[data.myData.rank] then
-        data.datas[data.myData.rank].is_mine = true
-    end
-    table.sort(data.datas, function(a, b)
-        return a.value > b.value
-    end)
-    for i,v in ipairs(data.datas) do
-        if v.is_mine then
-            data.myData.rank = i
-        end
-    end
-    return response
-end
 function NetManager:getPlayerRankPromise(rankType, fromRank)
     return get_blocking_request_promise("logic.playerHandler.getPlayerRankList",{
         rankType = rankType,
         fromRank = fromRank or 0
-    },"获取排行榜失败!"):next(rank_sort)
+    },"获取排行榜失败!")
 end
 function NetManager:getAllianceRankPromise(rankType, fromRank)
     return get_blocking_request_promise("logic.playerHandler.getAllianceRankList",{
         rankType = rankType,
         fromRank = fromRank or 0
-    },"获取排行榜失败!"):next(rank_sort)
+    },"获取排行榜失败!")
 end
 -- 获取GameCenter账号绑定状态
 function NetManager:getGcBindStatusPromise(gcId)
@@ -1473,7 +1389,7 @@ end
 -- 设置GameCenter Id
 function NetManager:getBindGcIdPromise(gcId)
     return get_none_blocking_request_promise("logic.playerHandler.bindGcId",{gcId=gcId},
-        "设置GameCenter失败"):next(get_response_msg)
+        "设置GameCenter失败"):done(get_response_msg)
 end
 
 -- 切换GameCenter账号

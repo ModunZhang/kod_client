@@ -27,7 +27,7 @@ function GameUITechnologySpeedUp:ctor()
 end
 
 function GameUITechnologySpeedUp:FreeSpeedUpAction()
-	NetManager:getFreeSpeedUpPromise("productionTechEvents",self:GetEvent():Id()):next(function()
+	NetManager:getFreeSpeedUpPromise("productionTechEvents",self:GetEvent():Id()):done(function()
 		self:removeFromParent()
 	end)
 end

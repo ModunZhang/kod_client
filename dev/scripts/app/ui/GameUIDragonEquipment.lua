@@ -221,7 +221,7 @@ function GameUIDragonEquipment:IntensifyEvent()
       return  
   end 
   local equipment = self:GetEquipment()
-  NetManager:getEnhanceDragonEquipmentPromise(self.dragon:Type(),equipment:Body(),equipments):next(function(result)
+  NetManager:getEnhanceDragonEquipmentPromise(self.dragon:Type(),equipment:Body(),equipments):done(function(result)
       self:RefreshIntensifyUI()
   end)
 end
@@ -450,11 +450,11 @@ function GameUIDragonEquipment:AdornOrResetButtonClicked()
   if self.infoButton.selected_ then -- 信息界面
     local equipment = self:GetEquipment()
     if not equipment:IsLoaded() then --来自配置 装备
-      NetManager:getLoadDragonEquipmentPromise(equipment:Type(),equipment:Body(),equipment:GetCanLoadConfig().name):next(function()
+      NetManager:getLoadDragonEquipmentPromise(equipment:Type(),equipment:Body(),equipment:GetCanLoadConfig().name):done(function()
           self:RefreshInfoUI()
       end)
     else -- 重置
-      NetManager:getResetDragonEquipmentPromise(equipment:Type(),equipment:Body()):next(function()
+      NetManager:getResetDragonEquipmentPromise(equipment:Type(),equipment:Body()):done(function()
          self:RefreshInfoUI()
       end)
     end

@@ -309,9 +309,7 @@ function GameUIActivityReward:On_EVERY_DAY_LOGIN_GetReward(index)
 	local countInfo = User:GetCountInfo()
 	local real_index = countInfo.day60 % 30 
 	if countInfo.day60 > countInfo.day60RewardsCount and  real_index == index then 
-		NetManager:getDay60RewardPromise():next(function(msg)
-		end):catch(function()
-		end)
+		NetManager:getDay60RewardPromise()
 	end
 end
 

@@ -43,9 +43,7 @@ function GameUIShowStrikeResult:OnInterval()
 		self.progress:setPercentage((self.total_interval - self.interval_)/self.total_interval * 100)
 	else
 		self.handlerOfupdate:stop()
-		NetManager:getStrikePlayerCityPromise(self.dragonType,self.enemyPlayerId):catch(function(err)
-			dump(err:reason())
-		end)
+		NetManager:getStrikePlayerCityPromise(self.dragonType,self.enemyPlayerId)
 		self:LeftButtonClicked()
 	end
 end

@@ -194,7 +194,7 @@ function MyApp:EnterPlayerCityScene(id)
     self:EnterCitySceneByPlayerAndAlliance(id, false)
 end
 function MyApp:EnterCitySceneByPlayerAndAlliance(id, is_my_alliance)
-    NetManager:getPlayerCityInfoPromise(id):next(function(response)
+    NetManager:getPlayerCityInfoPromise(id):done(function(response)
         local user_data = response.msg.playerViewData
         local user = User_.new(user_data):OnBasicInfoChanged(user_data)
         local city = City.new(user_data):SetUser(user):OnUserDataChanged(user_data, app.timer:GetServerTime())
@@ -257,7 +257,7 @@ function MyApp:getSupportMailFormat(category)
 end
 
 function MyApp:EnterViewModelAllianceScene(alliance_id)
-    NetManager:getFtechAllianceViewDataPromose(alliance_id):next(function(msg)
+    NetManager:getFtechAllianceViewDataPromose(alliance_id):done(function(msg)
         local alliance = Alliance_Manager:DecodeAllianceFromJson(msg)
         app:enterScene("OtherAllianceScene", {alliance}, "custom", -1,transition_)
     end)
@@ -327,9 +327,9 @@ function MyApp:__checkGameCenter()
     if ext.gamecenter.isAuthenticated() then
         local __,gcId = ext.gamecenter.getPlayerNameAndId() 
         if string.len(gcId) > 0 and NetManager:isConnected() and User and not User:IsBindGameCenter() then
-            NetManager:getGcBindStatusPromise(gcId):next(function(response)
+            NetManager:getGcBindStatusPromise(gcId):done(function(response)
             if not response.msg.isBind then
-                NetManager:getBindGcIdPromise(gc_id):next(function()
+                NetManager:getBindGcIdPromise(gc_id):done(function()
                     app:EndCheckGameCenterIf()
                 end)
             end
@@ -344,9 +344,9 @@ function __G__GAME_CENTER_CALLBACK(gc_name,gc_id)
     app:StarCheckGameCenterIf()
     --如果玩家当前未绑定gc并且当前的gc未绑定任何账号 执行自动绑定
     if gc_name and gc_id and NetManager:isConnected() then
-        NetManager:getGcBindStatusPromise(gc_id):next(function(response)
+        NetManager:getGcBindStatusPromise(gc_id):done(function(response)
             if User and not User:IsBindGameCenter() and not response.msg.isBind then
-                NetManager:getBindGcIdPromise(gc_id):next(function()
+                NetManager:getBindGcIdPromise(gc_id):done(function()
                     app:EndCheckGameCenterIf()
                 end)
             end

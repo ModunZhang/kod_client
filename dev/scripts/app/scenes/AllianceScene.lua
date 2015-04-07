@@ -171,7 +171,7 @@ function AllianceScene:CheckCanMoveAllianceObject(x,y)
             )
             ,function()
                 if self:GetAlliance():GetAllianceMap():CanMoveBuilding(self.alliance_obj_to_move.obj,x,y) then
-                    NetManager:getMoveAllianceBuildingPromise(self.alliance_obj_to_move.obj:Id(), x, y):next(function()
+                    NetManager:getMoveAllianceBuildingPromise(self.alliance_obj_to_move.obj:Id(), x, y):always(function()
                         self.alliance_obj_to_move = nil
                         self:LeaveEditMode()
                     end)

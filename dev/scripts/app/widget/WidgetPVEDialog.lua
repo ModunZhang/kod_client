@@ -123,10 +123,8 @@ function WidgetPVEDialog:GotoNext()
         self.user:ResetPveData()
         local point = next_map:GetStartPoint()
         self.user:GetPVEDatabase():SetCharPosition(point.x, point.y, next_index)
-        NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData()):next(function(result)
+        NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData()):done(function(result)
             app:EnterPVEScene(next_index)
-        end):catch(function(err)
-            dump(err:reason())
         end)
     else
     end
@@ -188,7 +186,7 @@ function WidgetPVEDialog:Fight()
                 local rollback = self:Search()
                 local rewards = self:GetObject():IsLast() and enemy.rewards + self:GetObject():GetRewards() or enemy.rewards
                 self.user:SetPveData(report:GetAttackKDA(), rewards)
-                NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData()):next(function()
+                NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData(), nil, true):done(function()
                     UIKit:newGameUI("GameUIReplay", report, function()
                         if report:IsAttackWin() then
                             GameGlobalUI:showTips(_("获得奖励"), rewards)
@@ -203,10 +201,8 @@ function WidgetPVEDialog:Fight()
                 end)
             else
                 self.user:SetPveData(report:GetAttackKDA())
-                NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData()):next(function()
+                NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData()):done(function()
                     UIKit:newGameUI("GameUIReplay", report):AddToCurrentScene(true)
-                end):catch(function(err)
-                    dump(err:reason())
                 end)
             end
         end):AddToCurrentScene(true)
