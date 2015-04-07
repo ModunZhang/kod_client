@@ -21,6 +21,7 @@ User.LISTEN_TYPE = Enum("BASIC",
     "VIP_EVENT_ACTIVE",
     "IAP_GIFTS_REFRESH",
     "IAP_GIFTS_CHANGE",
+    "IAP_GIFTS_TIMER",
     "TASK")
 local TASK = User.LISTEN_TYPE.TASK
 local BASIC = User.LISTEN_TYPE.BASIC
@@ -33,6 +34,7 @@ local STRENGTH = User.RESOURCE_TYPE.STRENGTH
 
 local intInit = GameDatas.PlayerInitData.intInit
 local vip_level = GameDatas.Vip.level
+local IapGift = import("..entity.IapGift")
 
 property(User, "level", 1)
 property(User, "levelExp", 0)
@@ -167,6 +169,9 @@ end
 function User:OnTimer(current_time)
     self:OnResourceChanged()
     self.vip_event:OnTimer(current_time)
+    for __,v in pairs(self:GetIapGifts()) do
+        v:OnTimer(current_time)
+    end
 end
 function User:OnResourceChanged()
     self:NotifyListeneOnType(RESOURCE, function(listener)
@@ -259,14 +264,27 @@ function User:OnUserDataChanged(userData, current_time, deltaData)
     return self
 end
 
+function User:OnIapGiftTimer(iapGift)
+    self:NotifyListeneOnType(self.LISTEN_TYPE.IAP_GIFTS_TIMER, function(listener)
+        listener:OnIapGiftTimer(iapGift)
+    end)
+end
+
 function User:OnIapGiftsChanged(userData,deltaData)
     if not userData.iapGifts then return end
     local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.iapGifts
     if is_fully_update then
+        for __,v in pairs(self.iapGifts) do
+            v:Reset()
+        end
+        self.iapGifts = {}
         for __,v in ipairs(userData.iapGifts) do
             if not self.iapGifts[v.id] then
-                self.iapGifts[v.id] = v
+                local iapGift = IapGift.new()
+                iapGift:Update(v)
+                self.iapGifts[v.id] = iapGift
+                iapGift:AddObserver(self)
             end
         end
         self:NotifyListeneOnType(self.LISTEN_TYPE.IAP_GIFTS_REFRESH, function(listener)
@@ -279,20 +297,28 @@ function User:OnIapGiftsChanged(userData,deltaData)
             deltaData.iapGifts
             ,function(event_data)
                 if not self.iapGifts[event_data.id] then
-                    self.iapGifts[event_data.id] = event_data
-                    return event_data
+                    local iapGift = IapGift.new()
+                    iapGift:Update(event_data)
+                    self.iapGifts[event_data.id] = iapGift
+                    iapGift:AddObserver(self)
+                    return iapGift
                 end
             end
             ,function(event_data)
                 if self.iapGifts[event_data.id] then
-                    self.iapGifts[event_data.id] = event_data
-                    return event_data
+                    local iapGift = self.iapGifts[event_data.id]
+                    iapGift:Update(event_data)
+                    return iapGift
                 end
             end
             ,function(event_data)
                 if self.iapGifts[event_data.id] then
-                    self.iapGifts = nil
-                    return event_data
+                    local iapGift = self.iapGifts[event_data.id]
+                    iapGift:Reset()
+                    self.iapGifts[event_data.id] = nil
+                    iapGift = IapGift.new()
+                    iapGift:Update(event_data)
+                    return iapGift
                 end
             end
         )
