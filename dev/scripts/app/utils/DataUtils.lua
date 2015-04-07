@@ -419,7 +419,7 @@ function DataUtils:getPlayerOnlineTimeMinutes()
 end
 -- 根据vip exp获得vip等级,当前等级已升经验百分比
 function DataUtils:getPlayerVIPLevel(exp)
-    for i=#VipLevel,1,-1 do
+    for i=#VipLevel,0,-1 do
         local config = VipLevel[i]
         if exp >= config.expFrom then
             local percent = math.floor((exp - config.expFrom)/(config.expTo-config.expFrom)*100)

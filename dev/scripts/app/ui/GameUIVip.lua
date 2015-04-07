@@ -330,6 +330,9 @@ function GameUIVip:CreateVipExpBar()
         @param per 下一级升级当前百分比
     ]]
     function ExpBar:LightLevelBar(level,per,exp)
+        if level<1 then
+            return 
+        end
         for i=1,level do
             self.level_images["level_image_"..i]:setVisible(true)
             self.level_bar["level_bar_"..i]:setVisible(true)
