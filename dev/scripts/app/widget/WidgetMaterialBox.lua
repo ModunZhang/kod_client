@@ -7,23 +7,26 @@ local WidgetMaterialBox = class("WidgetMaterialBox", function()
 end)
 
 function WidgetMaterialBox:ctor(material_type,material_name,cb,is_has_i_icon)
-    self.material_bg = WidgetPushButton.new({normal = "box_blue_124x124.png",
-        pressed = "box_blue_124x124.png"}):align(display.LEFT_BOTTOM):addTo(self)
+    local material_bg = WidgetPushButton.new({normal = "back_ground_130x166.png"}):align(display.LEFT_BOTTOM):addTo(self)
     if cb then
-        self.material_bg:onButtonClicked(cb)
+        material_bg:onButtonClicked(cb)
     end
         
-    local rect = self.material_bg:getCascadeBoundingBox()
+    local rect = material_bg:getCascadeBoundingBox()
 
-    local material = cc.ui.UIImage.new(self:GetMaterialImage(material_type,material_name)):addTo(self.material_bg)
-        :align(display.LEFT_BOTTOM, 5, 5)
-    -- if is_has_i_icon then
-    --     local material_bg_i = cc.ui.UIImage.new("info_46x45.png"):addTo(self.material_bg,2)
-    --         :align(display.BOTTOM_RIGHT, rect.width, 0)
-    -- end
+    -- 图标背景框
+    local icon_bg = display.newSprite("box_118x118.png"):addTo(material_bg)
+        :align(display.CENTER, rect.width/2, 97)
 
-    self.number_bg = cc.ui.UIImage.new("box_number_bg_124x53.png"):addTo(self.material_bg)
-        :align(display.LEFT_BOTTOM, 0, -42)
+    local material = cc.ui.UIImage.new(self:GetMaterialImage(material_type,material_name)):addTo(icon_bg)
+        :align(display.CENTER, icon_bg:getContentSize().width/2, icon_bg:getContentSize().height/2):scale(100/128)
+    if is_has_i_icon then
+        cc.ui.UIImage.new("draong_eq_i_25x25.png"):addTo(icon_bg,2)
+            :align(display.BOTTOM_LEFT, 4, 4)
+    end
+
+    self.number_bg = cc.ui.UIImage.new("back_ground_118x36.png"):addTo(material_bg)
+        :align(display.BOTTOM_CENTER, rect.width/2, 4)
         :hide()
     local number_bg = self.number_bg 
 
@@ -32,7 +35,7 @@ function WidgetMaterialBox:ctor(material_type,material_name,cb,is_has_i_icon)
         text = "",
         size = 22,
         color = 0x403c2f
-    }):addTo(number_bg):align(display.CENTER, size.width / 2, 26)
+    }):addTo(number_bg):align(display.CENTER, size.width / 2, size.height/2)
 
     self.name = cc.ui.UILabel.new({
         text = material_name,
@@ -40,7 +43,7 @@ function WidgetMaterialBox:ctor(material_type,material_name,cb,is_has_i_icon)
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_LEFT,
         color = UIKit:hex2c3b(0xffedae)
-    }):addTo(self.material_bg):align(display.CENTER, size.width / 2, rect.height-16)
+    }):addTo(material_bg):align(display.CENTER, size.width / 2, rect.height-16)
 end
 function WidgetMaterialBox:SetNumber(number)
     self.number_bg:show()

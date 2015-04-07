@@ -1,14 +1,12 @@
 local WidgetNumberTips = class("WidgetNumberTips", function()
-    return display.newSprite("mail_unread_bg_36x23.png")
+    return display.newSprite("back_ground_32x33.png")
 end)
 
 function WidgetNumberTips:ctor()
     local size = self:getContentSize()
-    self.label = cc.ui.UILabel.new({
-        cc.ui.UILabel.LABEL_TYPE_TTF,
-        font = UIKit:getFontFilePath(),
-        size = 16,
-        color = UIKit:hex2c3b(0xf5f2b3)
+    self.label = UIKit:ttfLabel({
+        size = 14,
+        color = 0xf5e8c4,
     }):align(display.CENTER, size.width/2, size.height/2+4):addTo(self)
 end
 
