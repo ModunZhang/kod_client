@@ -5,8 +5,8 @@
 local GameUIAllianceShrineEnter = UIKit:createUIClass("GameUIAllianceShrineEnter","GameUIAllianceEnterBase")
 local buildingName = GameDatas.AllianceInitData.buildingName
 
-function GameUIAllianceShrineEnter:ctor(building,isMyAlliance,alliance)
-	GameUIAllianceShrineEnter.super.ctor(self,building,isMyAlliance,alliance)
+function GameUIAllianceShrineEnter:ctor(building,isMyAlliance,alliance,enemy_alliance)
+	GameUIAllianceShrineEnter.super.ctor(self,building,isMyAlliance,alliance,enemy_alliance)
 	self.building = building:GetAllianceBuildingInfo()
 end
 
