@@ -57,7 +57,6 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
     -- title
     local size = back_ground:getContentSize()
     local title_blue = cc.ui.UIImage.new("title_blue_430x30.png"):addTo(back_ground, 2)
-        -- :align(display.CENTER, size.width/2, size.height - 49/2)
         :align(display.RIGHT_CENTER, size.width-10, size.height - 40)
 
 
@@ -70,7 +69,6 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
         color = UIKit:hex2c3b(0xffedae)
     }):addTo(title_blue)
         :align(display.LEFT_CENTER, 10, size.height/2)
-    -- :align(display.LEFT_CENTER, label_origin_x, size.height/2)
 
 
     -- info
@@ -95,12 +93,10 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
         color = UIKit:hex2c3b(0x5bb800)
     }):addTo(back_ground, 2)
         :align(display.LEFT_BOTTOM, label_origin_x, size.height - 85 - 11)
-    -- :align(display.LEFT_BOTTOM, label_origin_x, size.height - 65 - 11)
 
     local vs_map = return_vs_soldiers_map(soldier_name)
     local strong_vs = {}
     for i, v in ipairs(vs_map.strong_vs) do
-        -- table.insert(strong_vs, SOLDIER_LOCALIZE_MAP[v])
         table.insert(strong_vs, Localize.soldier_category[v])
     end
     local soldier_name = cc.ui.UILabel.new({
@@ -111,7 +107,6 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
         color = UIKit:hex2c3b(0x403c2f)
     }):addTo(back_ground, 2)
         :align(display.LEFT_CENTER, label_origin_x + label:getContentSize().width, size.height - 85)
-    -- :align(display.LEFT_CENTER, label_origin_x + label:getContentSize().width, size.height - 65)
 
     local label = cc.ui.UILabel.new({
         text = "弱势对抗",
@@ -121,11 +116,9 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
         color = UIKit:hex2c3b(0x890000)
     }):addTo(back_ground, 2)
         :align(display.LEFT_BOTTOM, label_origin_x, size.height - 120 - 11)
-    -- :align(display.LEFT_BOTTOM, label_origin_x, size.height - 100 - 11)
 
     local weak_vs = {}
     for i, v in ipairs(vs_map.weak_vs) do
-        -- table.insert(weak_vs, SOLDIER_LOCALIZE_MAP[v])
         table.insert(weak_vs, Localize.soldier_category[v])
     end
     local soldier_name = cc.ui.UILabel.new({
@@ -136,7 +129,6 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
         color = UIKit:hex2c3b(0x403c2f)
     }):addTo(back_ground, 2)
         :align(display.LEFT_CENTER, label_origin_x + label:getContentSize().width, size.height - 120)
-    -- :align(display.LEFT_CENTER, label_origin_x + label:getContentSize().width, size.height - 100)
 
 
     -- food icon
@@ -223,12 +215,23 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
     if soldier_config.specialMaterials then
         local margin_x = 100
         local length = size.width - margin_x * 2
-        local origin_x, origin_y, gap_x = margin_x, 30, length / 2
+        local origin_x, origin_y, gap_x = margin_x, 30, length / 3
         local specialMaterials = string.split(soldier_config.specialMaterials,",")
+        table.insert(specialMaterials, { "citizen", "res_citizen_44x50.png" })
         for k,v in pairs(specialMaterials) do
             local x = origin_x + (k - 1) * gap_x
-            cc.ui.UIImage.new(UILib.soldier_metarial[string.split(v, "_")[1]]):addTo(need, 2)
+            local need_image,res_type
+            if tolua.type(v) ~= "table" then
+                local tmp = string.split(v, "_")
+                need_image = UILib.soldier_metarial[tmp[1]]
+                res_type = v
+            else
+                res_type = v[1]
+                need_image = v[2]
+            end
+            local icon_iamge = cc.ui.UIImage.new(need_image):addTo(need, 2)
                 :align(display.CENTER, x, size.height - origin_y)
+            icon_iamge:scale(50/icon_iamge:getContentSize().width)
             local total = cc.ui.UILabel.new({
                 size = 20,
                 font = UIKit:getFontFilePath(),
@@ -245,8 +248,8 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
             -- color = display.COLOR_RED
             }):addTo(need, 2)
                 :align(display.CENTER, x, size.height - origin_y - 60)
+            self.res_map[res_type] = { total = total, need = need }
 
-            self.res_map[v] = { total = total, need = need }
         end
     else
         local margin_x = 80
@@ -325,7 +328,7 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
                 if not_enough_material then
                     FullScreenPopDialogUI.new()
                         :SetTitle(_("招募材料不足"))
-                        :SetPopMessage(string.format(_("您当前没有足够%s"),not_enough_material))
+                        :SetPopMessage(_("您当前没有足够材料"))
                         :CreateCancelButton():AddToCurrentScene()
                 else
                     NetManager:getInstantRecruitSpecialSoldierPromise(self.soldier_name, self.count)
@@ -378,13 +381,17 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
 
             if SPECIAL[self.soldier_name] then
                 local not_enough_material = self:CheckMaterials(self.count)
+                local required_gems = DataUtils:buyResource(self:GetNeedResouce(self.count), {})
                 if not_enough_material then
-                    UIKit:showMessageDialog(_("招募材料不足"), string.format(_("您当前没有足够%s"), not_enough_material))
-                elseif queue_need_gem > 0 then
-                    UIKit:showMessageDialog(_("队列不足"), _("您当前没有足够的队列,是否花费魔法石立即补充"),function()
+                    UIKit:showMessageDialog(_("招募材料不足"), _("您当前没有足够材料"))
+                elseif queue_need_gem + required_gems > 0 then
+                    local title = string.format("%s/%s", queue_need_gem > 0 and _("队列不足") or "", required_gems > 0 and _("资源不足") or "")
+                    local content = string.format("%s%s%s", queue_need_gem > 0 and _("您当前没有足够的队列") or "", required_gems > 0 and _("您当前没有足够的资源") or "", _("是否花费魔法石立即补充"))
+
+                    UIKit:showMessageDialog(title, content,function()
                         NetManager:getRecruitSpecialSoldierPromise(self.soldier_name, self.count)
                         self:Close()
-                    end):CreateNeeds({value = queue_need_gem})
+                    end):CreateNeeds({value = queue_need_gem + required_gems})
                 else
                     NetManager:getRecruitSpecialSoldierPromise(self.soldier_name, self.count)
                     self:Close()
@@ -480,7 +487,7 @@ function WidgetRecruitSoldier:SetSoldier(soldier_name, star)
             WidgetSoldierDetails.new(soldier_name, star):addTo(self)
         end)
     -- self.soldier = display.newSprite(soldier_ui_config):addTo(self.back_ground)
-        -- :align(display.CENTER, 84, self.back_ground:getContentSize().height - 84)
+    -- :align(display.CENTER, 84, self.back_ground:getContentSize().height - 84)
     -- self.soldier:scale(104/self.soldier:getContentSize().height)
     local rect = self.soldier:getCascadeBoundingBox()
     display.newSprite("box_soldier_128x128.png"):addTo(self.soldier):align(display.CENTER, 0,0)
@@ -504,17 +511,19 @@ end
 local app = app
 local timer = app.timer
 function WidgetRecruitSoldier:OnResourceChanged(resource_manager)
+    local server_time = timer:GetServerTime()
+    local res_map = {}
     if not self.soldier_config.specialMaterials then
-        local server_time = timer:GetServerTime()
-        local res_map = {}
         res_map.wood = resource_manager:GetWoodResource():GetResourceValueByCurrentTime(server_time)
         res_map.food = resource_manager:GetFoodResource():GetResourceValueByCurrentTime(server_time)
         res_map.iron = resource_manager:GetIronResource():GetResourceValueByCurrentTime(server_time)
         res_map.stone = resource_manager:GetStoneResource():GetResourceValueByCurrentTime(server_time)
         res_map.citizen = resource_manager:GetPopulationResource():GetNoneAllocatedByTime(server_time)
-        self.res_total_map = res_map
-        self:CheckNeedResource(res_map, self.count)
+    else
+        res_map.citizen = resource_manager:GetPopulationResource():GetNoneAllocatedByTime(server_time)
     end
+    self.res_total_map = res_map
+    self:CheckNeedResource(res_map, self.count)
 end
 function WidgetRecruitSoldier:OnBeginRecruit()
 
@@ -572,9 +581,15 @@ function WidgetRecruitSoldier:CheckNeedResource(total_resouce, count)
     for k, v in pairs(self.res_map) do
         local total,current
         if soldier_config.specialMaterials then
-            local temp = string.split(k, "_")
-            total = self.city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.SOLDIER)[temp[1]]
-            current = count * tonumber(temp[2])
+            if k == "citizen" then
+                total = total_map[k] == nil and 0 or total_map[k]
+                current = soldier_config[k] * count
+                current_res_map[k] = current
+            else
+                local temp = string.split(k, "_")
+                total = self.city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.SOLDIER)[temp[1]]
+                current = count * tonumber(temp[2])
+            end
         else
             total = total_map[k] == nil and 0 or total_map[k]
             current = soldier_config[k] * count
@@ -599,10 +614,14 @@ function WidgetRecruitSoldier:GetCurrentMaxRecruitNum(total_resouce)
     for k, v in pairs(self.res_map) do
         local total,temp_max
         if soldier_config.specialMaterials then
-            local temp = string.split(k, "_")
-            total = self.city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.SOLDIER)[temp[1]]
-            dump(temp)
-            temp_max = math.floor(total/tonumber(temp[2]))
+            if k == "citizen" then
+                total = total_map[k] == nil and 0 or total_map[k]
+                temp_max = math.floor(total / soldier_config[k])
+            else
+                local temp = string.split(k, "_")
+                total = self.city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.SOLDIER)[temp[1]]
+                temp_max = math.floor(total/tonumber(temp[2]))
+            end
         else
             total = total_map[k] == nil and 0 or total_map[k]
             temp_max = math.floor(total / soldier_config[k])
@@ -616,7 +635,10 @@ end
 function WidgetRecruitSoldier:GetNeedResouce(count)
     local soldier_config = self.soldier_config
     local need_res_map = {}
-    if not soldier_config.specialMaterials then
+    if  soldier_config.specialMaterials then
+        local left = self.res_total_map["citizen"] - soldier_config["citizen"] * count
+        need_res_map["citizen"] = left >= 0 and 0 or -left
+    else
         for res_type, value in pairs(self.res_total_map) do
             local left = value - soldier_config[res_type] * count
             need_res_map[res_type] = left >= 0 and 0 or -left
@@ -656,6 +678,15 @@ end
 
 
 return WidgetRecruitSoldier
+
+
+
+
+
+
+
+
+
 
 
 

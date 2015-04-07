@@ -5,23 +5,38 @@
 local GameUIAllianceShrineEnter = UIKit:createUIClass("GameUIAllianceShrineEnter","GameUIAllianceEnterBase")
 local buildingName = GameDatas.AllianceInitData.buildingName
 
-function GameUIAllianceShrineEnter:ctor(building,isMyAlliance,alliance)
-	GameUIAllianceShrineEnter.super.ctor(self,building,isMyAlliance,alliance)
+function GameUIAllianceShrineEnter:ctor(building,isMyAlliance,alliance,enemy_alliance)
+	GameUIAllianceShrineEnter.super.ctor(self,building,isMyAlliance,alliance,enemy_alliance)
 	self.building = building:GetAllianceBuildingInfo()
 end
 
 function GameUIAllianceShrineEnter:GetLocation()
-	local mapObject = self:GetMyAlliance():GetAllianceMap():FindMapObjectById(self:GetBuilding().id)
+	local mapObject
+	if self:IsMyAlliance() then
+		mapObject = self:GetMyAlliance():GetAllianceMap():FindMapObjectById(self:GetBuilding().id)
+	else
+		mapObject = self:GetEnemyAlliance():GetAllianceMap():FindMapObjectById(self:GetBuilding().id)
+	end
 	return mapObject.location.x .. "," .. mapObject.location.y
 end
 
 function GameUIAllianceShrineEnter:GetLogicPosition()
-	local mapObject = self:GetMyAlliance():GetAllianceMap():FindMapObjectById(self:GetBuilding().id)
+	local mapObject
+	if self:IsMyAlliance() then
+		mapObject = self:GetMyAlliance():GetAllianceMap():FindMapObjectById(self:GetBuilding().id)
+	else
+		mapObject = self:GetEnemyAlliance():GetAllianceMap():FindMapObjectById(self:GetBuilding().id)
+	end
 	return {x = mapObject.location.x,y = mapObject.location.y}
 end
 
 function GameUIAllianceShrineEnter:GetMapObject()
-	local mapObject = self:GetMyAlliance():GetAllianceMap():FindMapObjectById(self:GetBuilding().id)
+	local mapObject
+	if self:IsMyAlliance() then
+		mapObject = self:GetMyAlliance():GetAllianceMap():FindMapObjectById(self:GetBuilding().id)
+	else
+		mapObject = self:GetEnemyAlliance():GetAllianceMap():FindMapObjectById(self:GetBuilding().id)
+	end
 	return mapObject
 end
 
@@ -86,7 +101,7 @@ end
 
 function GameUIAllianceShrineEnter:GetEnterButtons()
 	if self:IsMyAlliance() then
-		local fight_event_button = self:BuildOneButton("icon_info_1.png",_("战争事件")):onButtonClicked(function()
+		local fight_event_button = self:BuildOneButton("icon_war_48x54.png",_("战争事件")):onButtonClicked(function()
 			UIKit:newGameUI('GameUIAllianceShrine',City,"fight_event",self:GetBuilding()):AddToCurrentScene(true)
 			self:LeftButtonClicked()
 		end)

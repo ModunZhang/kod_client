@@ -17,6 +17,7 @@ local Localize = import("..utils.Localize")
 local config_intInit = GameDatas.PlayerInitData.intInit
 local WidgetUseItems = import("..widget.WidgetUseItems")
 local GameUIDragonHateSpeedUp = import(".GameUIDragonHateSpeedUp")
+local UILib = import(".UILib")
 
 -- building = DragonEyrie
 function GameUIDragonEyrieDetail:ctor(city,building,dragon_type)
@@ -363,7 +364,7 @@ function GameUIDragonEyrieDetail:GetEquipmentItem(equipment_obj,needInfoIcon)
     if equipment_obj:IsLocked() then
         equipment_node = display.newSprite(bgImage):scale(0.71)
         local icon = display.newFilteredSprite(bodyImage,"GRAY", {0.2, 0.3, 0.5, 0.1}):addTo(equipment_node):pos(73,73)
-        icon:setOpacity(25)
+        -- icon:setOpacity(25)
         display.newSprite("lock_80x104.png", 73, 73):addTo(equipment_node)
 
     else
@@ -392,7 +393,7 @@ function GameUIDragonEyrieDetail:GetEquipmentItem(equipment_obj,needInfoIcon)
             end
         else
             local icon = display.newFilteredSprite(bodyImage,"GRAY", {0.2, 0.3, 0.5, 0.1}):addTo(equipment_node):pos(73,73)
-            icon:setOpacity(30)
+            -- icon:setOpacity(30)
 
         end
     end
@@ -403,16 +404,12 @@ end
 function GameUIDragonEyrieDetail:GetEquipmentItemImageInfo(equipment_obj)
     --装备5个星级背景
     local bgImages = {"eq_bg_1_146x146.png","eq_bg_2_146x146.png","eq_bg_3_146x146.png","eq_bg_4_146x146.png","eq_bg_5_146x146.png"}
-    --表示身体部位的图
-    local body = {
-        armguardLeft="armguard_1.png",armguardRight="armguard_1.png",
-        crown="crown_1.png",orb="orb_1.png",chest="chest_1.png",sting="sting_1.png"
-    }
     local bg_index = equipment_obj:Star()
     if bg_index == 0 then
         bg_index = 1
     end
-    return bgImages[bg_index],body[equipment_obj:Body()],body[equipment_obj:Body()]
+    local image = UILib.getDragonEquipmentImage(equipment_obj:Type(),equipment_obj:Body(),bg_index)
+    return bgImages[bg_index],image,image
 end
 
 function GameUIDragonEyrieDetail:OnBasicChanged()

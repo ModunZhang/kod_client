@@ -8,6 +8,7 @@ local property = import("..utils.property")
 local productionTechs = GameDatas.ProductionTechs.productionTechs
 local Localize = import("..utils.Localize")
 local ResourceManager = import(".ResourceManager")
+local UILib = import("..ui.UILib")
 
 function ProductionTechnology:ctor()
 	property(self,"index","")
@@ -55,7 +56,7 @@ function ProductionTechnology:GetNextLevel()
 end
 
 function ProductionTechnology:GetImageName()
-	return "technology_icon_123x123.png"
+	return UILib.produc_tiontechs_image[self:Name()]
 end
 
 function ProductionTechnology:GetLocalizedName()

@@ -7,6 +7,7 @@ local Localize = import("..utils.Localize")
 local MaterialManager = import("..entity.MaterialManager")
 local UIPushButton = cc.ui.UIPushButton
 local window = import("..utils.window")
+local UILib = import(".UILib")
 local WidgetTips = import("..widget.WidgetTips")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetTimerProgress = import("..widget.WidgetTimerProgress")
@@ -267,8 +268,8 @@ function GameUIBlackSmith:CreateEquipmentByType(equip_type)
             info_press_tag = false
         end)
     -- 装备图标
-    cc.ui.UIImage.new("moltenCrown_128x128.png"):addTo(equipment_btn)
-        :align(display.CENTER):scale(0.8)
+    cc.ui.UIImage.new(UILib.equipment[equip_type]):addTo(equipment_btn)
+        :align(display.CENTER):scale(0.5)
 
     -- 详细按钮
     local info_clicked = nil

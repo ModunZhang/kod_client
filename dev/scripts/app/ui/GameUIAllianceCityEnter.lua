@@ -120,7 +120,7 @@ function GameUIAllianceCityEnter:GetEnterButtons()
     if self:IsMyAlliance() then --自己
         local alliance = self:GetMyAlliance()
         if DataManager:getUserData()._id == self:GetMember():Id() then
-            local enter_button = self:BuildOneButton("playercity_66x83.png",_("进入")):onButtonClicked(function()
+            local enter_button = self:BuildOneButton("alliance_enter_city_56x68.png",_("进入")):onButtonClicked(function()
                 app:EnterMyCityScene()
                 self:LeftButtonClicked()
             end)
@@ -129,12 +129,12 @@ function GameUIAllianceCityEnter:GetEnterButtons()
             local help_button
             local can_not_help_in_city = City:IsHelpedToTroopsWithPlayerId(member:Id())
             if can_not_help_in_city then
-                help_button = self:BuildOneButton("help_defense_55x69.png",_("撤防")):onButtonClicked(function()
+                help_button = self:BuildOneButton("help_defense_44x56.png",_("撤防")):onButtonClicked(function()
                     NetManager:getRetreatFromHelpedAllianceMemberPromise(member:Id())
                     self:LeftButtonClicked()
                 end)
             else
-                help_button = self:BuildOneButton("help_defense_55x69.png",_("协防")):onButtonClicked(function()
+                help_button = self:BuildOneButton("help_defense_44x56.png",_("协防")):onButtonClicked(function()
                     local playerId = member:Id()
                     if not alliance:CheckHelpDefenceMarchEventsHaveTarget(playerId) then
                         UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
@@ -148,25 +148,25 @@ function GameUIAllianceCityEnter:GetEnterButtons()
                     end
                 end)
             end
-            local enter_button = self:BuildOneButton("playercity_66x83.png",_("进入")):onButtonClicked(function()
+            local enter_button = self:BuildOneButton("alliance_enter_city_56x68.png",_("进入")):onButtonClicked(function()
                 app:EnterFriendCityScene(member:Id())
                 self:LeftButtonClicked()
             end)
-            local mail_button = self:BuildOneButton("mail_70x55.png",_("邮件")):onButtonClicked(function()
+            local mail_button = self:BuildOneButton("mail_56x40.png",_("邮件")):onButtonClicked(function()
                 local mail = GameUIWriteMail.new(GameUIWriteMail.SEND_TYPE.PERSONAL_MAIL)
                 mail:SetTitle(_("个人邮件"))
                 mail:SetAddressee(member:Name())
                 mail:AddToCurrentScene()
                 self:LeftButtonClicked()
             end)
-            local info_button = self:BuildOneButton("icon_info_1.png",_("信息")):onButtonClicked(function()
+            local info_button = self:BuildOneButton("icon_info_56x56.png",_("信息")):onButtonClicked(function()
                 UIKit:newGameUI("GameUIAllianceMemberInfo",true,member:Id()):AddToCurrentScene(true)
                 self:LeftButtonClicked()
             end)
             buttons = {help_button,enter_button,mail_button,info_button}
         end
     else -- 敌方玩家
-        local attack_button = self:BuildOneButton("attack_80x66.png",_("进攻")):onButtonClicked(function()
+        local attack_button = self:BuildOneButton("attack_58x56.png",_("进攻")):onButtonClicked(function()
             UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
                 if member:IsProtected() then
                     UIKit:showMessageDialog(_("提示"),_("玩家处于保护状态,不能进攻或突袭"), function()end)
@@ -190,13 +190,13 @@ function GameUIAllianceCityEnter:GetEnterButtons()
 
     buttons = {attack_button,strike_button}
     if self:GetMyAlliance():GetAllianceBelvedere():CanEnterEnemyCity() then
-        local enter_button = self:BuildOneButton("playercity_66x83.png",_("进入")):onButtonClicked(function()
+        local enter_button = self:BuildOneButton("alliance_enter_city_56x68.png",_("进入")):onButtonClicked(function()
             app:EnterPlayerCityScene(member:Id())
             self:LeftButtonClicked()
         end)
         table.insert(buttons, enter_button)
     end
-    local info_button = self:BuildOneButton("icon_info_1.png",_("信息")):onButtonClicked(function()
+    local info_button = self:BuildOneButton("icon_info_56x56.png",_("信息")):onButtonClicked(function()
         UIKit:newGameUI("GameUIAllianceMemberInfo",false,member:Id()):AddToCurrentScene(true)
         self:LeftButtonClicked()
     end)
