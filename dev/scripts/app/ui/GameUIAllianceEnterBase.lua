@@ -11,11 +11,12 @@ local Localize = import("..utils.Localize")
 local WidgetUseItems = import("..widget.WidgetUseItems")
 
 -- building is allianceobject
-function GameUIAllianceEnterBase:ctor(building,isMyAlliance,my_alliance)
+function GameUIAllianceEnterBase:ctor(building,isMyAlliance,my_alliance,enemy_alliance)
     GameUIAllianceEnterBase.super.ctor(self,self:GetUIHeight(),"",display.top-200)
     self.building = building
     self.my_alliance = my_alliance
     self.isMyAlliance = isMyAlliance
+    self.enemy_alliance = enemy_alliance
 end
 
 function GameUIAllianceEnterBase:IsMyAlliance()
@@ -28,6 +29,10 @@ end
 
 function GameUIAllianceEnterBase:GetMyAlliance()
     return self.my_alliance
+end
+
+function GameUIAllianceEnterBase:GetEnemyAlliance()
+    return self.enemy_alliance
 end
 
 function GameUIAllianceEnterBase:GetBuildingType()

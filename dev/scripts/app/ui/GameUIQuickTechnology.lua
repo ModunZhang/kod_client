@@ -106,7 +106,7 @@ end
 
 function GameUIQuickTechnology:CreateBetweenBgAndTitle()
     GameUIQuickTechnology.super.CreateBetweenBgAndTitle(self)
-	self.technology_node = self:BuildTechnologyUI(window.height - 100):addTo(self):pos(window.left,window.bottom+15)
+	self.technology_node = self:BuildTechnologyUI(window.height - 100):addTo(self:GetView()):pos(window.left,window.bottom+15)
 
 end
 
