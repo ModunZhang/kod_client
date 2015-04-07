@@ -35,41 +35,49 @@ end
   @param has
 ]]
 function DataUtils:buyResource(need, has)
-    local usedGem = 0
+    local gemUsed = 0
+    local totalBuy = {}
     table.foreach(need,function( key,value )
-        local payment = GemsPayment[key]
-        if payment then
-            if type(has[key]) == "number" then
-                value = value - has[key]
-            end
-            -- print("需要购买",key,value)
+        local config = GemsPayment[key]
+        local required = value
+        if type(has[key]) == "number" then required = required - has[key] end
+        if config and required > 0 then
+            local currentBuy = 0
             if key == "citizen" then
                 local freeCitizenLimit = City:GetResourceManager():GetPopulationResource():GetValueLimit()
-                for i=#payment,1,-1 do
-                    if value>0 then
-                        local requiredPercent = value / freeCitizenLimit
-                        while payment[i].min<requiredPercent do
-                            local citizenBuyed = math.floor(payment[i].resource * freeCitizenLimit)
-                            value = value - citizenBuyed
-                            usedGem = usedGem + payment[i].gem
-                            requiredPercent = value / freeCitizenLimit
+                while required > 0 do
+                    local requiredPercent = required / freeCitizenLimit
+                    for i=#config,1,-1 do
+                        item = config[i]
+                        if item.min < requiredPercent then
+                            gemUsed = gemUsed + item.gem
+                            local citizenBuyed = math.floor(item.resource * freeCitizenLimit)
+                            required = required - citizenBuyed
+                            currentBuy = currentBuy + citizenBuyed
+                            break
                         end
                     end
                 end
             else
-                for i=#payment,1,-1 do
-                    if value>0 then
-                        while payment[i].min<value do
-                            value = value - payment[i].resource
-                            usedGem = usedGem + payment[i].gem
-                            -- print("买了",payment[i].resource,"花费",payment[i].gem)
+                while required > 0 do
+                    for i=#config,1,-1 do
+                        item = config[i]
+                        if required>0 then
+                            while item.min<required do
+                                gemUsed = gemUsed + item.gem
+                                required = required - item.resource
+                                currentBuy = currentBuy + item.resource
+                                break
+                                -- print("买了",config[i].resource,"花费",config[i].gem)
+                            end
                         end
                     end
                 end
             end
+            totalBuy[key] = currentBuy
         end
     end)
-    return usedGem
+    return gemUsed
 end
 
 --[[
