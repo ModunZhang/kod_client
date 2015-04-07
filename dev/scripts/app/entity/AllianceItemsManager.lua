@@ -24,16 +24,14 @@ function AllianceItemsManager:InitAllItems()
     for k,v in pairs(GameDatas.Items) do
         if k ~= "buffTypes" then
             for item_name,item in pairs(v) do
-                if item.isSellInAlliance then
-                    local item = Item.new()
-                    item:UpdateData(
-                        {
-                            name = item_name,
-                            count = 0
-                        }
-                    )
-                    self:InsertItem(item)
-                end
+                local item = Item.new()
+                item:UpdateData(
+                    {
+                        name = item_name,
+                        count = 0
+                    }
+                )
+                self:InsertItem(item)
             end
         end
     end
@@ -222,6 +220,7 @@ function AllianceItemsManager:GetItemLogs()
     return self.item_logs
 end
 return AllianceItemsManager
+
 
 
 

@@ -20,8 +20,20 @@ function GameUIAllianceShop:ctor(city,default_tab,building)
     self.building = building
     self.alliance = Alliance_Manager:GetMyAlliance()
     self.items_manager = self.alliance:GetItemsManager()
+    self:InitUnLockItems()
 end
-
+function GameUIAllianceShop:InitUnLockItems()
+    self.unlock_items = {}
+    for i=1,self.building.level do
+        local unlock = string.split(shop[i].itemsUnlock, ",")
+        for i,v in ipairs(unlock) do
+            self.unlock_items[v] = true
+        end
+    end
+end
+function GameUIAllianceShop:CheckSell(item_type)
+    return self.unlock_items[item_type]
+end
 function GameUIAllianceShop:OnMoveInStage()
     GameUIAllianceShop.super.OnMoveInStage(self)
     self:CreateTabButtons({
@@ -121,20 +133,23 @@ function GameUIAllianceShop:InitGoodsPart()
 
     local normal_items = self.items_manager:GetAllNormalItems()
     for i=1,#normal_items,row_count do
-        local goods_item = __createListItem(list_width,goods_item_height)
-        local node = display.newNode()
-        node:setContentSize(cc.size(list_width,goods_item_height))
-        local count = 1
-        for index=i,i + row_count -1 do
-            local goods = normal_items[index]
-            if goods then
-                self:CreateGoodsBox(goods):addTo(node):pos(origin_x+(count-1)*(gap_x+box_width), goods_item_height/2)
-                count = count + 1
-            else
-                break
+        local noraml_item = normal_items[i]
+        if self:CheckSell(noraml_item:Name()) then
+            local goods_item = __createListItem(list_width,goods_item_height)
+            local node = display.newNode()
+            node:setContentSize(cc.size(list_width,goods_item_height))
+            local count = 1
+            for index=i,i + row_count -1 do
+                local goods = normal_items[index]
+                if goods then
+                    self:CreateGoodsBox(goods):addTo(node):pos(origin_x+(count-1)*(gap_x+box_width), goods_item_height/2)
+                    count = count + 1
+                else
+                    break
+                end
             end
+            goods_item:addContent(node)
         end
-        goods_item:addContent(node)
     end
 
     -- 高级道具
@@ -153,23 +168,25 @@ function GameUIAllianceShop:InitGoodsPart()
     -- 道具部分
     local super_items = self.items_manager:GetAllSuperItems()
     for i=1,#super_items,row_count do
-        local goods_item = __createListItem(list_width,goods_item_height)
-        local node = display.newNode()
-        node:setContentSize(cc.size(list_width,goods_item_height))
-        local count = 1
-        for index=i,i + row_count -1 do
-            local goods = super_items[index]
-            if goods then
-                local goods_box = self:CreateGoodsBox(goods):addTo(node):pos(origin_x+(count-1)*(gap_x+box_width), goods_item_height/2)
-                count = count + 1
-                if goods:IsAdvancedItem() then
-                    self.super_goods_boxes[goods:Name()] = goods_box
+        if self:CheckSell(super_items[i]:Name()) then
+            local goods_item = __createListItem(list_width,goods_item_height)
+            local node = display.newNode()
+            node:setContentSize(cc.size(list_width,goods_item_height))
+            local count = 1
+            for index=i,i + row_count -1 do
+                local goods = super_items[index]
+                if goods then
+                    local goods_box = self:CreateGoodsBox(goods):addTo(node):pos(origin_x+(count-1)*(gap_x+box_width), goods_item_height/2)
+                    count = count + 1
+                    if goods:IsAdvancedItem() then
+                        self.super_goods_boxes[goods:Name()] = goods_box
+                    end
+                else
+                    break
                 end
-            else
-                break
             end
+            goods_item:addContent(node)
         end
-        goods_item:addContent(node)
     end
     list:reload()
 end
@@ -299,20 +316,22 @@ function GameUIAllianceShop:InitStockPart()
     -- 道具部分
     local super_items = self.items_manager:GetAllSuperItems()
     for i=1,#super_items,row_count do
-        local goods_item = __createListItem(list_width,goods_item_height)
-        local node = display.newNode()
-        node:setContentSize(cc.size(list_width,goods_item_height))
-        local count = 1
-        for index=i,i + row_count -1 do
-            local goods = super_items[index]
-            if goods then
-                self.stock_boxes[goods:Name()] = self:CreateStockGoodsBox(goods):addTo(node):pos(origin_x+(count-1)*(gap_x+box_width), goods_item_height/2)
-                count = count + 1
-            else
-                break
+        if self:CheckSell(super_items[i]:Name()) then
+            local goods_item = __createListItem(list_width,goods_item_height)
+            local node = display.newNode()
+            node:setContentSize(cc.size(list_width,goods_item_height))
+            local count = 1
+            for index=i,i + row_count -1 do
+                local goods = super_items[index]
+                if goods then
+                    self.stock_boxes[goods:Name()] = self:CreateStockGoodsBox(goods):addTo(node):pos(origin_x+(count-1)*(gap_x+box_width), goods_item_height/2)
+                    count = count + 1
+                else
+                    break
+                end
             end
+            goods_item:addContent(node)
         end
-        goods_item:addContent(node)
     end
     list:reload()
 end
@@ -421,6 +440,11 @@ function GameUIAllianceShop:OnItemLogsChanged( changed_map )
     self.record_list:reload()
 end
 return GameUIAllianceShop
+
+
+
+
+
 
 
 
