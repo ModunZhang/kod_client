@@ -16,7 +16,6 @@ function GameUIStore:ctor()
 end
 
 function GameUIStore:OnMoveInStage()
-	app:getStore():updateTransactionStates()
 	GameUIStore.super.OnMoveInStage(self)
 	self:CreateUI()
 end

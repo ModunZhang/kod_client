@@ -1399,9 +1399,16 @@ function NetManager:getSwitchGcIdPromise(gcId)
 end
 
 -- 强制切换GameCenter账号到原GameCenter账号下的玩家数据,当前未绑定的玩家账号数据会丢失
-function NetManager:getForceSwitchGcId(gcId)
+function NetManager:getForceSwitchGcIdPromise(gcId)
     return get_none_blocking_request_promise("logic.playerHandler.forceSwitchGcId",{gcId=gcId},
         "切换GameCenter账号失败")
+end
+
+-- 获取联盟其他玩家赠送的礼品
+function NetManager:getIapGiftPromise(giftId)
+    return get_blocking_request_promise("logic.playerHandler.getIapGift",{
+        giftId = giftId,
+    },"获取联盟其他玩家赠送的礼品!"):next(get_response_msg)
 end
 
 ----------------------------------------------------------------------------------------------------------------

@@ -41,7 +41,7 @@ end
 --TODO:预加载动画和大图 
 function LogoScene:PreLoadResource()
     --加载splash界面使用的图片
-    display.addImageAsync("splash_beta_logo_503x107.png",function()
+    display.addImageAsync("splash_beta_logo_515x119.png",function()
         display.addSpriteFrames("PlistImage/emoji.plist","PlistImage/emoji.png",function()
         end)
     end)

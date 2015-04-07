@@ -226,7 +226,9 @@ function GameUIActivityReward:GetOnLineItem(item_key,time_str,rewards,flag,timeP
 			:pos(471,35)
 			:setButtonEnabled(flag == 2)
 			:onButtonClicked(function()
-				NetManager:getOnlineRewardPromise(timePoint)
+				NetManager:getOnlineRewardPromise(timePoint):next(function()
+					GameGlobalUI:showTips(_("提示"),rewards)
+				end)
 			end)
 	end
 	item:addContent(content)
@@ -308,7 +310,7 @@ end
 function GameUIActivityReward:On_EVERY_DAY_LOGIN_GetReward(index)
 	local countInfo = User:GetCountInfo()
 	local real_index = countInfo.day60 % 30 
-	if countInfo.day60 > countInfo.day60RewardsCount and  real_index == index then 
+	if countInfo.day60 > countInfo.day60RewardsCount and real_index == index then 
 		NetManager:getDay60RewardPromise()
 	end
 end
@@ -397,7 +399,9 @@ function GameUIActivityReward:GetContinutyListItem(reward_type,item_key,time_str
 			:addTo(content)
 			:pos(473,58)
 			:onButtonClicked(function()
-				NetManager:getDay14RewardPromise()
+				NetManager:getDay14RewardPromise():next(function()
+					GameGlobalUI:showTips(_("提示"),rewards_str)
+				end)
 			end)
 	end
 	item:addContent(content)
@@ -436,30 +440,35 @@ function GameUIActivityReward:ui_FIRST_IN_PURGURE()
 	local bar = display.newSprite("activity_first_purgure_598x190.png"):align(display.TOP_CENTER, 304,self.height - 20):addTo(self.bg)
 	display.newSprite("Npc.png"):align(display.RIGHT_BOTTOM, 305, -20):addTo(self.bg):scale(552/423)
 	local countInfo = User:GetCountInfo()
+	local rewards = self:GetFirstPurgureRewards()
+	local x,y = 300,self.height - 245
 	self.purgure_get_button = WidgetPushButton.new({normal = 'yellow_btn_up_148x58.png',pressed = 'yellow_btn_down_148x58.png',disabled = 'gray_btn_148x58.png'})
 			:setButtonLabel("normal", UIKit:commonButtonLable({
 				text = _("领取")
 			}))
 			:addTo(self.bg)
 			:pos(435,54)
-			:onButtonClicked(function()
-				NetManager:getFirstIAPRewardsPromise()
-			end)
-	self.purgure_get_button:setButtonEnabled(countInfo.iapCount > 0 and not countInfo.isFirstIAPRewardsGeted)
-	local rewards = self:GetFirstPurgureRewards()
-	local x,y = 300,self.height - 245
+	local tips_str = ""
 	for index,reward in ipairs(rewards) do
 		--TODO:
-		-- local reward_type,reward_name = unpack(reward)
-		if index > 6 then return end
-		local item_bg = display.newSprite("activity_item_bg_110x108.png"):align(display.LEFT_TOP, x, y):addTo(self.bg)
-		display.newSprite("activity_item_icon_90x90.png",55,54):addTo(item_bg)
-		x = x  + 110 + 35 
-		if index % 2 == 0 then 
-			x = 300
-			y = y - 108 - 21 
+		if index <= 6 then 
+			local __,reward_name,count = unpack(reward)
+			tips_str = tips_str .. Localize_item.item_name[reward_name] .. " x" .. count
+			local item_bg = display.newSprite("activity_item_bg_110x108.png"):align(display.LEFT_TOP, x, y):addTo(self.bg)
+			display.newSprite("activity_item_icon_90x90.png",55,54):addTo(item_bg)
+			x = x  + 110 + 35 
+			if index % 2 == 0 then 
+				x = 300
+				y = y - 108 - 21 
+			end
 		end
 	end
+	self.purgure_get_button:onButtonClicked(function()
+		NetManager:getFirstIAPRewardsPromise():next(function()
+			GameGlobalUI:showTips(_("提示"),tips_str)
+		end)
+	end)
+	self.purgure_get_button:setButtonEnabled(countInfo.iapCount > 0 and not countInfo.isFirstIAPRewardsGeted)
 end
 
 function GameUIActivityReward:GetFirstPurgureRewards()
@@ -467,8 +476,8 @@ function GameUIActivityReward:GetFirstPurgureRewards()
 	local r = {}
 	local rewards = string.split(config, ',')
 	for __,v in ipairs(rewards) do
-		local reward_type,reward_name,count = string.split(v, ':')
-		table.insert(r,{reward_type,reward_name})
+		local reward_type,reward_name,count = unpack(string.split(v, ':'))
+		table.insert(r,{reward_type,reward_name,count})
 	end
 	return r
 end
@@ -534,17 +543,20 @@ function GameUIActivityReward:RefreshLevelUpListView()
 end
 -- flag 1.已领取 2.可以领取 3.不能领取
 function GameUIActivityReward:GetLevelUpData()
+	local countInfo = User:GetCountInfo()
+
 	local current_level = City:GetFirstBuildingByType('keep'):GetLevel()
 	local r = {}
-	local max_level_got_rewards = self:GetLevelUpRewardMaxLevel()
 	for __,v in ipairs(config_levelup) do
 		local flag = 0
-		if v.level <= max_level_got_rewards then
-			flag = 1
-		elseif v.level == current_level then
-			flag = 2
-		elseif v.level > current_level then
+		if app.timer:GetServerTime() > countInfo.registerTime/1000 + config_intInit.playerLevelupRewardsHours.value * 60 * 60 then
 			flag = 3
+		else
+			if 	v.level <= current_level then
+				flag = self:CheckCanGetLevelUpReward(v.index) and 2 or 1
+			else
+				flag = 3
+			end
 		end
 		local rewards = self:GetLevelUpRewardListFromConfig(v.rewards)
 		table.insert(r,{string.format(_("等级%s"),v.level),rewards,flag})
@@ -562,15 +574,15 @@ function GameUIActivityReward:GetLevelUpRewardListFromConfig(config_str)
 	return r
 end
 
-function GameUIActivityReward:GetLevelUpRewardMaxLevel()
+function GameUIActivityReward:CheckCanGetLevelUpReward(level)
 	local max_level = 0
 	local countInfo = User:GetCountInfo()
 	for __,v in ipairs(countInfo.levelupRewards) do
-		if v > max_level then
-			max_level = v
+		if v == level then
+			return false
 		end
 	end
-	return max_level
+	return true
 end
 
 function GameUIActivityReward:GetRewardLevelUpItem(index,title,rewards,flag)
@@ -582,8 +594,11 @@ function GameUIActivityReward:GetRewardLevelUpItem(index,title,rewards,flag)
 		color= 0x514d3e
 	}):align(display.LEFT_CENTER, 34, 52):addTo(content)
 	local x = 104
+	local tips_str = ""
 	for __,v in ipairs(rewards) do
 		--TODO:
+		local __,reward_name,count = unpack(v)
+		tips_str = Localize_item.item_name[reward_name] .. " x" .. count
 		local item_bg = display.newSprite("activity_item_bg_110x108.png"):align(display.LEFT_CENTER, x, 52):addTo(content):scale(94/110)
 		display.newSprite("activity_item_icon_90x90.png",55,54):addTo(item_bg)
 		x = x + 130
@@ -603,7 +618,9 @@ function GameUIActivityReward:GetRewardLevelUpItem(index,title,rewards,flag)
 			:pos(450,54)
 			:setButtonEnabled(flag == 2)
 			:onButtonClicked(function()
-				NetManager:getLevelupRewardPromise(index)
+				NetManager:getLevelupRewardPromise(index):next(function()
+					GameGlobalUI:showTips(_("提示"),tips_str)
+				end)
 			end)
 	end
 	item:addContent(content)
