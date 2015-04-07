@@ -37,7 +37,7 @@ function WidgetMoveHouse:ctor(house)
                             toBuildingLocation = _toBuildingLocation,
                             toHouseLocation = _toHouseLocation,
                         }
-                    }):next(function ()
+                    }):always(function()
                         running_scene:LeaveEditMode()
                     end)
                 end

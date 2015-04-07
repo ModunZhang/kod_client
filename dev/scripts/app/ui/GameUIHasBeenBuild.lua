@@ -199,26 +199,14 @@ function Item:RebindEventListener()
         if city:IsFunctionBuilding(building) then
             local location_id = city:GetLocationIdByBuilding(building)
             NetManager:getInstantUpgradeBuildingByLocationPromise(location_id)
-                :catch(function(err)
-                    dump(err:reason())
-                end)
         elseif city:IsHouse(building) then
             local tile = city:GetTileWhichBuildingBelongs(building)
             local house_location = tile:GetBuildingLocation(building)
             NetManager:getInstantUpgradeHouseByLocationPromise(tile.location_id, house_location)
-                :catch(function(err)
-                    dump(err:reason())
-                end)
         elseif city:IsGate(building) then
             NetManager:getInstantUpgradeWallByLocationPromise()
-                :catch(function(err)
-                    dump(err:reason())
-                end)
         elseif city:IsTower(building) then
             NetManager:getInstantUpgradeTowerPromise()
-                :catch(function(err)
-                    dump(err:reason())
-                end)
         end
             end)
 
@@ -258,27 +246,15 @@ function Item:RebindEventListener()
         if city:IsFunctionBuilding(building) then
             local location_id = city:GetLocationIdByBuilding(building)
             NetManager:getUpgradeBuildingByLocationPromise(location_id)
-                :catch(function(err)
-                    dump(err:reason())
-                end)
         elseif city:IsHouse(building) then
             local tile = city:GetTileWhichBuildingBelongs(building)
             local house_location = tile:GetBuildingLocation(building)
 
             NetManager:getUpgradeHouseByLocationPromise(tile.location_id, house_location)
-                :catch(function(err)
-                    dump(err:reason())
-                end)
         elseif city:IsGate(building) then
             NetManager:getUpgradeWallByLocationPromise()
-                :catch(function(err)
-                    dump(err:reason())
-                end)
         elseif city:IsTower(building) then
             NetManager:getUpgradeTowerPromise()
-                :catch(function(err)
-                    dump(err:reason())
-                end)
         end
             end)
 

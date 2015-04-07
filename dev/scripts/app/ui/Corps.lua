@@ -157,7 +157,9 @@ local pve_soldier_config = {
         {"heihua_nuche_3", 0, 30, 1},
     },
 }
-pve_soldier_config.__index = soldier_config
+setmetatable(pve_soldier_config, {
+    __index = soldier_config
+})
 
 function Corps:ctor(soldier, star, row, col, width, height, is_pve_battle)
     Corps.super.ctor(self)
@@ -168,8 +170,10 @@ function Corps:ctor(soldier, star, row, col, width, height, is_pve_battle)
     self.star = config.star
     width = width or 90
     height = height or 120
-    local soldier_config = is_pve_battle and pve_soldier_config or soldier_config
-    local pos_config = soldier_config[self.soldier]
+    local corps_config = is_pve_battle and pve_soldier_config or soldier_config
+    local pos_config = corps_config[self.soldier]
+    print(self.soldier, star)
+    dump(corps_config[self.soldier])
     local start_x, start_y = pos_config.x, pos_config.y
     local width, height = width * 2, height * 2
     local function return_x_y_by_index(row_max, col_max, index)
@@ -182,7 +186,7 @@ function Corps:ctor(soldier, star, row, col, width, height, is_pve_battle)
     local row_max = row or 4
     local col_max = col or 2
     local t = {}
-    local ani_name,_,_ = unpack(soldier_config[self.soldier][self.star])
+    local ani_name,_,_ = unpack(corps_config[self.soldier][self.star])
     for i = 0, col_max * row_max - 1 do
         local armature = ccs.Armature:create(ani_name):addTo(corps):scale(1):pos(return_x_y_by_index(row_max, col_max, i))
         table.insert(t, armature)
@@ -249,6 +253,7 @@ function Corps:move(time, x, y)
     return Corps.super.move(self, time, x, y)
 end
 return Corps
+
 
 
 

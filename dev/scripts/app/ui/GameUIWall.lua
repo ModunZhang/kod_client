@@ -332,12 +332,12 @@ end
 function GameUIWall:OnDragonSelected(dragon)
 	if dragon then
 		if self:GetDragon() and self:GetDragon():Type() == dragon:Type() then return end
-		NetManager:getSetDefenceDragonPromise(dragon:Type()):next(function()
+		NetManager:getSetDefenceDragonPromise(dragon:Type()):done(function()
 			self:RefreshUIAfterSelectDragon(dragon)
 		end)
 	else
 		if self:GetDragon() then
-			NetManager:getCancelDefenceDragonPromise():next(function()
+			NetManager:getCancelDefenceDragonPromise():done(function()
 				self:RefreshUIAfterSelectDragon()
 			end)
 		else

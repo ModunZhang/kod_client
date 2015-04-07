@@ -274,7 +274,7 @@ function GameUIMission:GetAchievementMissionData(isFinish)
     end
 end
 function GameUIMission:OnGetAchievementRewardButtonClicked(data)
-    NetManager:getGrowUpTaskRewardsPromise(data:TaskType(), data.id):next(function()
+    NetManager:getGrowUpTaskRewardsPromise(data:TaskType(), data.id):done(function()
         GameGlobalUI:showTips(_("获得奖励"), data:GetRewards())
         if not self.is_hooray_on then
             self.is_hooray_on = true

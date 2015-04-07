@@ -85,14 +85,12 @@ function GameUICollectReport:ctor(report)
     }):onButtonStateChanged(function(event)
         local target = event.target
         if target:isButtonSelected() then
-            NetManager:getSaveReportPromise(report.id):catch(function(err)
+            NetManager:getSaveReportPromise(report.id):fail(function()
                 target:setButtonSelected(false,true)
-                dump(err:reason())
             end)
         else
-            NetManager:getUnSaveReportPromise(report.id):catch(function(err)
+            NetManager:getUnSaveReportPromise(report.id):fail(function()
                 target:setButtonSelected(true,true)
-                dump(err:reason())
             end)
         end
     end):addTo(body):pos(r_size.width-48, 37)

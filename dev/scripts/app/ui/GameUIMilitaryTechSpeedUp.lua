@@ -23,7 +23,7 @@ function GameUIMilitaryTechSpeedUp:ctor(event)
 end
 
 function GameUIMilitaryTechSpeedUp:FreeSpeedUpAction()
-    NetManager:getFreeSpeedUpPromise(self:GetEvent():GetEventType(),self:GetEvent():Id()):next(function()
+    NetManager:getFreeSpeedUpPromise(self:GetEvent():GetEventType(),self:GetEvent():Id()):done(function()
         self:LeftButtonClicked()
     end)
 end

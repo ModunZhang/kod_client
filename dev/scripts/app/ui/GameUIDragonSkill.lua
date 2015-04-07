@@ -122,9 +122,7 @@ function GameUIDragonSkill:OnMoveOutStage()
 end
 
 function GameUIDragonSkill:UpgradeButtonClicked()
-  NetManager:getUpgradeDragonDragonSkillPromise(self.skill:Type(),self.skill:Key()):catch(function(err)
-    dump(err:reason())
-  end)
+  NetManager:getUpgradeDragonDragonSkillPromise(self.skill:Type(),self.skill:Key())
 end
 
 function GameUIDragonSkill:GetListItem(index,key,val)

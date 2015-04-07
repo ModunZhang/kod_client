@@ -44,16 +44,16 @@ require("app.datas.Activities_levelup")
 
 GameDatas.AllianceBuilding = {
 	["palace"] = {},
+	["shop"] = {},
 	["moonGate"] = {},
 	["orderHall"] = {},
 	["shrine"] = {},
-	["shop"] = {},
 }
 require("app.datas.AllianceBuilding_palace")
+require("app.datas.AllianceBuilding_shop")
 require("app.datas.AllianceBuilding_moonGate")
 require("app.datas.AllianceBuilding_orderHall")
 require("app.datas.AllianceBuilding_shrine")
-require("app.datas.AllianceBuilding_shop")
 
 GameDatas.AllianceInitData = {
 	["intInit"] = {},

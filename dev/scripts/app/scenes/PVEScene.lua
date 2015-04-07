@@ -104,7 +104,7 @@ end
 function PVEScene:OpenUI(x, y)
     local gid = self:GetSceneLayer():GetTileInfo(x, y)
     if gid <= 0 then return end
-    self:PormiseOfCheckObject(x, y, gid):next(function()
+    self:PormiseOfCheckObject(x, y, gid):done(function()
         if gid == PVEDefine.START_AIRSHIP then
             WidgetPVEStartAirship.new(x, y, self.user):AddToScene(self, true)
         elseif gid == PVEDefine.WOODCUTTER then
@@ -172,14 +172,12 @@ function PVEScene:CheckTrap()
                     else
                         self.user:SetPveData(report:GetAttackKDA())
                     end
-                    NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData()):next(function()
+                    NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData()):done(function()
                         UIKit:newGameUI("GameUIReplay", report, function()
                             if report:IsAttackWin() then
                                 GameGlobalUI:showTips(_("获得奖励"), enemy.rewards)
                             end
                         end):AddToCurrentScene(true)
-                    end):catch(function(err)
-                        dump(err:reason())
                     end)
                 end):AddToCurrentScene(true)
         end)

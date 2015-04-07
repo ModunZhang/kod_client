@@ -145,12 +145,12 @@ function GameUIBuild:OnBuildOnItem(item)
     local stone = city.resource_manager:GetStoneResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     local citizen = city.resource_manager:GetPopulationResource():GetNoneAllocatedByTime(app.timer:GetServerTime())
     local is_resource_enough = wood<config[1].wood
-        or stone<config[1].stone 
+        or stone<config[1].stone
         or iron<config[1].iron
         or citizen<config[1].citizen
-        or m.tiles<config[1].tiles 
+        or m.tiles<config[1].tiles
         or m.tools<config[1].tools
-        or m.blueprints<config[1].blueprints 
+        or m.blueprints<config[1].blueprints
         or m.pulley<config[1].pulley
 
     local resource_gems = 0
@@ -357,6 +357,7 @@ end
 
 
 return GameUIBuild
+
 
 
 

@@ -62,14 +62,12 @@ function DataUtils:buyResource(need, has)
                 while required > 0 do
                     for i=#config,1,-1 do
                         item = config[i]
-                        if required>0 then
-                            while item.min<required do
-                                gemUsed = gemUsed + item.gem
-                                required = required - item.resource
-                                currentBuy = currentBuy + item.resource
-                                break
-                                -- print("买了",config[i].resource,"花费",config[i].gem)
-                            end
+                        if item.min < required then
+                            gemUsed = gemUsed + item.gem
+                            required = required - item.resource
+                            currentBuy = currentBuy + item.resource
+                            -- print("买了",config[i].resource,"花费",config[i].gem)
+                            break
                         end
                     end
                 end
@@ -77,7 +75,7 @@ function DataUtils:buyResource(need, has)
             totalBuy[key] = currentBuy
         end
     end)
-    return gemUsed
+    return gemUsed, totalBuy
 end
 
 --[[
@@ -113,9 +111,11 @@ function DataUtils:getGemByTimeInterval(interval)
     local config = GemsPayment.time
     while interval > 0 do
         for i = #config,1,-1 do
-            while config[i].min<interval do
-                interval = interval - config[i].speedup
-                gem = gem + config[i].gem
+            local item = config[i]
+            if item.min < interval then
+                gem = gem + item.gem
+                interval = interval - item.speedup
+                break
             end
         end
     end
@@ -478,4 +478,5 @@ function DataUtils:getIapInfo(productId)
         end
     end
 end
+
 

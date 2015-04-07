@@ -30,6 +30,25 @@ function WidgetRankingList:ctor(type_)
         end
     end, EXPIRE_TIME)
 end
+local function rank_sort(response)
+    local data = response.msg
+    local is_not_nil = data.myData.rank ~= json.null
+    if is_not_nil then
+        data.myData.rank = data.myData.rank + 1
+    end
+    if is_not_nil and data.datas[data.myData.rank] then
+        data.datas[data.myData.rank].is_mine = true
+    end
+    table.sort(data.datas, function(a, b)
+        return a.value > b.value
+    end)
+    for i,v in ipairs(data.datas) do
+        if v.is_mine then
+            data.myData.rank = i
+        end
+    end
+    return response
+end
 function WidgetRankingList:onEnter()
     WidgetRankingList.super.onEnter(self)
 
@@ -68,13 +87,13 @@ function WidgetRankingList:onEnter()
             if tag == 'power' then
                 if not self.rank_map.power then
                     if self.type_ == "player" then
-                        NetManager:getPlayerRankPromise("power"):next(function(response)
-                            self.rank_map.power = response.msg
+                        NetManager:getPlayerRankPromise("power"):done(function(response)
+                            self.rank_map.power = rank_sort(response).msg
                             self:ReloadRank(self.rank_map.power)
                         end)
                     else
-                        NetManager:getAllianceRankPromise("power"):next(function(response)
-                            self.rank_map.power = response.msg
+                        NetManager:getAllianceRankPromise("power"):done(function(response)
+                            self.rank_map.power = rank_sort(response).msg
                             self:ReloadRank(self.rank_map.power)
                         end)
                     end
@@ -84,13 +103,13 @@ function WidgetRankingList:onEnter()
             elseif tag == 'kill' then
                 if not self.rank_map.kill then
                     if self.type_ == "player" then
-                        NetManager:getPlayerRankPromise("kill"):next(function(response)
-                            self.rank_map.kill = response.msg
+                        NetManager:getPlayerRankPromise("kill"):done(function(response)
+                            self.rank_map.kill = rank_sort(response).msg
                             self:ReloadRank(self.rank_map.kill)
                         end)
                     else
-                        NetManager:getAllianceRankPromise("kill"):next(function(response)
-                            self.rank_map.kill = response.msg
+                        NetManager:getAllianceRankPromise("kill"):done(function(response)
+                            self.rank_map.kill = rank_sort(response).msg
                             self:ReloadRank(self.rank_map.kill)
                         end)
                     end
@@ -108,10 +127,10 @@ end
 function WidgetRankingList:ReloadRank(rank)
     if self.rank_map.power == rank then
         local str = self.type_ == "player" and _("我的战斗力排行") or _("我的联盟战斗力排行")
-        self.my_ranking:setString(string.format("%s : %d", str, rank.myData.rank == json.null and -1 or rank.myData.rank))
+        self.my_ranking:setString(string.format("%s : %d", str, rank.myData.rank == json.null and 999999 or rank.myData.rank))
     elseif self.rank_map.kill == rank then
         local str = self.type_ == "player" and _("我的击杀排行") or _("我的联盟击杀排行")
-        self.my_ranking:setString(string.format("%s : %d", str, rank.myData.rank == json.null and -1 or rank.myData.rank))
+        self.my_ranking:setString(string.format("%s : %d", str, rank.myData.rank == json.null and 999999 or rank.myData.rank))
     end
     self.current_rank = rank
     self.listview:reload()

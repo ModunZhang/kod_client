@@ -332,9 +332,7 @@ end
 function GameUIUpgradeTechnology:OnUpgradNowButtonClicked()
     local canUpgrade,msg = self:CheckCanUpgradeNow()
     if canUpgrade then
-        NetManager:getUpgradeProductionTechPromise(self:GetProductionTechnology():Name(),true):next(function(msg)
-
-            end)
+        NetManager:getUpgradeProductionTechPromise(self:GetProductionTechnology():Name(),true)
     else
         UIKit:showMessageDialog(_("提示"),msg, function()end)
     end
@@ -345,7 +343,7 @@ function GameUIUpgradeTechnology:OnUpgradButtonClicked()
     if gems_cost < 0 then
         return
     elseif gems_cost == 0 then
-        NetManager:getUpgradeProductionTechPromise(self:GetProductionTechnology():Name(),false):next(function(msg)
+        NetManager:getUpgradeProductionTechPromise(self:GetProductionTechnology():Name(),false):done(function()
             self:LeftButtonClicked()
         end)
     else
@@ -366,7 +364,7 @@ function GameUIUpgradeTechnology:ForceUpgrade(gem_cost)
             self:LeftButtonClicked()
         end)
     else
-        NetManager:getUpgradeProductionTechPromise(self:GetProductionTechnology():Name(),false):next(function(msg)
+        NetManager:getUpgradeProductionTechPromise(self:GetProductionTechnology():Name(),false):done(function(msg)
             self:LeftButtonClicked()
         end)
     end

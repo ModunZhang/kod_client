@@ -576,14 +576,12 @@ function GameUIMail:SelectAllMailsOrReports(isSelect)
 end
 function GameUIMail:SaveOrUnsaveMail(mail,target)
     if target:isButtonSelected() then
-        NetManager:getSaveMailPromise(mail.id):catch(function(err)
+        NetManager:getSaveMailPromise(mail.id):fail(function()
             target:setButtonSelected(false,true)
-            dump(err:reason())
         end)
     else
-        NetManager:getUnSaveMailPromise(mail.id):catch(function(err)
+        NetManager:getUnSaveMailPromise(mail.id):fail(function()
             target:setButtonSelected(true,true)
-            dump(err:reason())
         end)
     end
 end
@@ -591,13 +589,9 @@ end
 function GameUIMail:ReadMailOrReports(Ids,cb)
     local control_type = self:GetCurrentSelectType()
     if control_type == "mail" then
-        NetManager:getReadMailsPromise(Ids):next(function (response)
-
-            end):done(cb)
+        NetManager:getReadMailsPromise(Ids):done(cb)
     elseif control_type == "report" then
-        NetManager:getReadReportsPromise(Ids):done(cb):catch(function(err)
-            dump(err:reason())
-        end)
+        NetManager:getReadReportsPromise(Ids):done(cb)
     end
 end
 
@@ -1504,9 +1498,7 @@ function GameUIMail:SendMail(addressee,title,content)
             :AddToCurrentScene()
         return
     end
-    NetManager:getSendPersonalMailPromise(addressee, title, content):catch(function(err)
-        dump(err:reason())
-    end)
+    NetManager:getSendPersonalMailPromise(addressee, title, content)
 end
 
 function GameUIMail:OnReportsChanged( changed_map )
@@ -1571,14 +1563,12 @@ function GameUIMail:OnSavedReportsChanged( changed_map )
 end
 function GameUIMail:SaveOrUnsaveReport(report,target)
     if target:isButtonSelected() then
-        NetManager:getSaveReportPromise(report:Id()):catch(function(err)
+        NetManager:getSaveReportPromise(report:Id()):fail(function()
             target:setButtonSelected(false,true)
-            dump(err:reason())
         end)
     else
-        NetManager:getUnSaveReportPromise(report:Id()):catch(function(err)
+        NetManager:getUnSaveReportPromise(report:Id()):fail(function()
             target:setButtonSelected(true,true)
-            dump(err:reason())
         end)
     end
 end

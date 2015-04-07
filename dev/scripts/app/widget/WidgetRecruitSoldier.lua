@@ -335,9 +335,6 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
                 end
             else
                 NetManager:getInstantRecruitNormalSoldierPromise(self.soldier_name, self.count)
-                    :catch(function(err)
-                        dump(err:reason())
-                    end)
             end
 
             if type(self.instant_button_clicked) == "function" then
@@ -353,7 +350,6 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
 
     -- gem count
     self.gem_label = cc.ui.UILabel.new({
-        text = "600",
         size = 18,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_CENTER,
@@ -574,7 +570,9 @@ function WidgetRecruitSoldier:OnCountChanged(count)
     -- 检查资源
     local need_resource = self:CheckNeedResource(self.res_total_map, count)
     self.count = count
-    self.gem_label:setString(DataUtils:buyResource(need_resource, {}) + DataUtils:getGemByTimeInterval(total_time-DataUtils:getSoldierRecruitBuffTime(soldier_config.type,total_time)))
+    local gem_resource, buy = DataUtils:buyResource(need_resource, {})
+    local gem_time = DataUtils:getGemByTimeInterval(total_time-DataUtils:getSoldierRecruitBuffTime(soldier_config.type,total_time))
+    self.gem_label:setString(gem_resource + gem_time)
 end
 function WidgetRecruitSoldier:CheckNeedResource(total_resouce, count)
     local soldier_config = self.soldier_config
