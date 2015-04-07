@@ -220,11 +220,11 @@ local scale_tile = math.min(tile_w,tile_h)
 local layer_offset_x = tile_w * 16 - display.width * 2
 
 local building_map = {
-    {"palace_421x481.png", scale_tile*2/481},
-    {"shrine_256x210.png", scale_tile*2/256 * 0.7},
-    {"shop_268x274.png", scale_tile*2/274 * 0.5},
-    {"orderHall_277x417.png", scale_tile*2/417},
-    {"moonGate_200x217.png", scale_tile*2/217},
+    {"palace_152x174.png", scale_tile*2/481},
+    {"shrine_115x94.png", scale_tile*2/256 * 0.7},
+    {"shop_97x99.png", scale_tile*2/274 * 0.5},
+    {"orderHall_100x153.png", scale_tile*2/417},
+    {"moonGate_108x118.png", scale_tile*2/217},
 }
 
 local ZORDER = {

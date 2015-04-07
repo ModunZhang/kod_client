@@ -36,11 +36,30 @@ function MultiAllianceLayer:ChangeTerrain()
         v:ChangeTerrain()
     end
 end
+local terrain_array = {
+    -- "016.png",
+    -- "017.png",
+    -- "017.png",
+    -- "018.png",
+    -- "018.png",
+    "012.png",
+    "013.png",
+    "014.png",
+    "015.png",
+}
 function MultiAllianceLayer:ReloadBackGround()
     if self.background then
         self.background:removeFromParent()
     end
     self.background = cc.TMXTiledMap:create(self:GetMapFileByArrangeAndTerrain()):addTo(self, ZORDER.BACKGROUND)
+    local size = self:getContentSize()
+    local random = math.random
+    local span = 200
+    for i = 1, 300 do
+        local x = random(span, size.width - span)
+        local y = random(span, size.height - span)
+        display.newSprite(terrain_array[random(#terrain_array)]):addTo(self.background, 1000):pos(x, y)
+    end
 end
 function MultiAllianceLayer:GetMapFileByArrangeAndTerrain()
     if #self.alliances == 1 then

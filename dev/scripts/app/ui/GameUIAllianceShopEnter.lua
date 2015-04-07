@@ -14,7 +14,7 @@ function GameUIAllianceShopEnter:GetUITitle()
 end
 
 function GameUIAllianceShopEnter:GetBuildingImage()
-	return "shop_268x274.png"
+	return "shop_97x99.png"
 end
 
 function GameUIAllianceShopEnter:GetBuildingType()

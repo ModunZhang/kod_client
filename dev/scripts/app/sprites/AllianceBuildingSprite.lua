@@ -1,11 +1,11 @@
 local Sprite = import(".Sprite")
 local AllianceBuildingSprite = class("AllianceBuildingSprite", Sprite)
 local building_map = {
-    palace = {"palace_421x481.png", 0.5},
-    shrine = {"shrine_256x210.png", 0.7},
-    shop = {"shop_268x274.png", 0.5},
-    orderHall = {"orderHall_277x417.png", 0.5},
-    moonGate = {"moonGate_200x217.png", 1},
+    palace = {"palace_152x174.png", 1},
+    shrine = {"shrine_115x94.png", 1},
+    shop = {"shop_97x99.png", 1},
+    orderHall = {"orderHall_100x153.png", 1},
+    moonGate = {"moonGate_108x118.png", 1},
 }
 function AllianceBuildingSprite:ctor(city_layer, entity)
     local x, y = city_layer:GetLogicMap():ConvertToMapPosition(entity:GetLogicPosition())

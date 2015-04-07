@@ -1,4 +1,5 @@
 local Sprite = import(".Sprite")
+local SpriteConfig = import(".SpriteConfig")
 local CitySprite = class("CitySprite", Sprite)
 function CitySprite:ctor(city_layer, entity)
     local x, y = city_layer:GetLogicMap():ConvertToMapPosition(entity:GetLogicPosition())
@@ -47,7 +48,7 @@ function CitySprite:ctor(city_layer, entity)
     -- self:CreateBase()
 end
 function CitySprite:GetSpriteFile()
-	return "keep_760x855.png", 0.15
+    return SpriteConfig["keep"]:GetConfigByLevel(1).png, 0.2
 end
 function CitySprite:GetSpriteOffset()
 	return self:GetLogicMap():ConvertToLocalPosition(0, 0)

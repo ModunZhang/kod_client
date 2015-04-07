@@ -14,7 +14,7 @@ function GameUIAllianceOrderHallEnter:GetUITitle()
 end
 
 function GameUIAllianceOrderHallEnter:GetBuildingImage()
-	return "orderHall_277x417.png"
+	return "orderHall_100x153.png"
 end
 
 function GameUIAllianceOrderHallEnter:GetBuildingType()

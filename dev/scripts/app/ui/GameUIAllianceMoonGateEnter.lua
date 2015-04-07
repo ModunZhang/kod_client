@@ -14,7 +14,7 @@ function GameUIAllianceMoonGateEnter:GetUITitle()
 end
 
 function GameUIAllianceMoonGateEnter:GetBuildingImage()
-	return "moonGate_200x217.png"
+	return "moonGate_108x118.png"
 end
 
 function GameUIAllianceMoonGateEnter:GetBuildingType()

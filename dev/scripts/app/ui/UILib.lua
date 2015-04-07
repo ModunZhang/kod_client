@@ -439,14 +439,14 @@ local DRAGON_ANIMATIONS_FILES = {
 }
 local DECORATOR_IMAGE = {
     grassLand = {
-        decorate_lake_1 = "grass_lake_272x158.png",
-        decorate_lake_2 =  "grass_lake_244x142.png",
-        decorate_mountain_2 =  "grass_hill_160x106.png",
-        decorate_mountain_1 =  "grass_hill_254x240.png",
-        decorate_tree_1 =  "grass_tree_1_138x110.png",
-        decorate_tree_2 =  "grass_tree_2_124x122.png",
-        decorate_tree_3 =  "grass_tree_3_112x114.png",
-        decorate_tree_4 =  "grass_tree_4_100x106.png",
+        decorate_lake_1 = "lake_1_grassLand.png",
+        decorate_lake_2 =  "lake_2_grassLand.png",
+        decorate_mountain_1 =  "hill_1_grassLand.png",
+        decorate_mountain_2 =  "hill_2_grassLand.png",
+        decorate_tree_1 =  "tree_1_grassLand.png",
+        decorate_tree_2 =  "tree_2_grassLand.png",
+        decorate_tree_3 =  "tree_3_grassLand.png",
+        decorate_tree_4 =  "tree_4_grassLand.png",
         stone_mountain  = "grass_stone_mountain_80x58.png",
         farmland        = "grass_farmland_80x55.png"
     },
@@ -463,14 +463,14 @@ local DECORATOR_IMAGE = {
         farmland        = "ice_farmland_80x55.png"
     },
     desert = {
-        decorate_lake_1 = "desert_lake_276x162.png",
-        decorate_lake_2 =  "desert_lake_248x146.png",
-        decorate_mountain_2 =  "desert_hill_226x148.png",
-        decorate_mountain_1 =  "desert_hill_314x298.png",
-        decorate_tree_1 =  "desert_tree_1_148x104.png",
-        decorate_tree_2 =  "desert_tree_2_128x106.png",
-        decorate_tree_3 =  "desert_tree_3_98x96.png",
-        decorate_tree_4 =  "desert_tree_4_106x102.png",
+        decorate_lake_1 = "lake_1_desert.png",
+        decorate_lake_2 =  "lake_2_desert.png",
+        decorate_mountain_1 =  "hill_1_desert.png",
+        decorate_mountain_2 =  "hill_2_desert.png",
+        decorate_tree_1 =  "tree_1_desert.png",
+        decorate_tree_2 =  "tree_2_desert.png",
+        decorate_tree_3 =  "tree_3_desert.png",
+        decorate_tree_4 =  "tree_4_desert.png",
         stone_mountain  = "desert_stone_mountain_80x58.png",
         farmland        = "desert_farmland_80x55.png"
     },

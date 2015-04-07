@@ -195,9 +195,13 @@ end
 local function get_blocking_request_promise(request_route, data, m,need_catch)
     --默认后面的处理需要主动catch错误
     need_catch = type(need_catch) == 'boolean' and need_catch or true
-    display.getRunningScene():WaitForNet()
+    if display.getRunningScene().WaitForNet then
+        display.getRunningScene():WaitForNet()
+    end
     local p =  cocos_promise.promiseWithTimeOut(get_request_promise(request_route, data, m), TIME_OUT):always(function()
-        display.getRunningScene():NoWaitForNet()
+        if display.getRunningScene().NoWaitForNet then
+            display.getRunningScene():NoWaitForNet()
+        end
     end)
     return cocos_promise.promiseFilterNetError(p,need_catch)
 end
@@ -1535,6 +1539,7 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
 
 
 

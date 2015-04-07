@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="17" height="19" tilewidth="240" tileheight="240">
- <tileset firstgid="1" name="terrain" tilewidth="240" tileheight="240">
-  <image source="terrain.png" width="960" height="1440"/>
+ <tileset firstgid="1" name="025" tilewidth="240" tileheight="240">
+  <image source="025.png" width="480" height="480"/>
  </tileset>
  <layer name="layer1" width="17" height="19">
   <data encoding="base64" compression="zlib">
-   eJyFlFEOwCAIQ8EE7n/k7UOT7q3ED6M4qK2WZUSsPWrP/Y6U/ZZvteMlIxG3zAerZTgc5iSwz34BYwG3gcu14lX8+U/5ylHjiq92F/cwUzd5ULPWpOxTl3Lv+OtK4BXWk96bTvKqmN/e+YOYt/N4p9MdLuQ06tuc7/jSjznksDccLr1e8eVObu4ttLYEQ2uZRx+4vne9xPtWvs4jB4v8WKc+cf8c9qPmKrbzFv1HvcR5AHJFBIs=
+   eJyFk0EOBCEIBAX9/5vHw5jU1rTZAxERaWnaGmP0trmttq13LexbZ9yf2HzjjXi6x/yCvxRzTqPeee+Ev2AT+L7HvBa2eWCcmDV+35swShjsI2Exnz3YPzhT622G9nnffZMz9kUOzBlnxRpcK9QmH0lT1ox5I55nxvks5SZOb5pq5dSlzj+c0nnC6Us91jj7Gt+eb3xZE9ZSelfCop/067/pWVg/1jB17H7cr7lL+kr9+q8Y9wETRANC
   </data>
  </layer>
 </map>

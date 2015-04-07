@@ -271,15 +271,15 @@ function UIKit:getImageByBuildingType( building_type ,level)
             return "miner_3_326x307.png"
         end
     elseif building_type=="moonGate" then
-        return "moonGate_200x217.png"
+        return "moonGate_108x118.png"
     elseif building_type=="orderHall" then
-        return "orderHall_277x417.png"
+        return "orderHall_100x153.png"
     elseif building_type=="palace" then
-        return "palace_421x481.png"
+        return "palace_152x174.png"
     elseif building_type=="shop" then
-        return "shop_268x274.png"
+        return "shop_97x99.png"
     elseif building_type=="shrine" then
-        return "shrine_256x210.png"
+        return "shrine_115x94.png"
     end
 end
 

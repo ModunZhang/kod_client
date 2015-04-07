@@ -42,7 +42,7 @@ function GameUIAllianceShrineEnter:GetUITitle()
 end
 
 function GameUIAllianceShrineEnter:GetBuildingImage()
-	return "shrine_256x210.png"
+	return "shrine_115x94.png"
 end
 
 function GameUIAllianceShrineEnter:GetBuildingType()
