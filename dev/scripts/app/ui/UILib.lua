@@ -618,6 +618,9 @@ local ITEM = {
     citizenBonus_1 = "citizenBonus_1_128x128.png",
     citizenBonus_2 = "citizenBonus_2_128x128.png",
     citizenBonus_3 = "citizenBonus_3_128x128.png",
+    citizenClass_1 = "citizenClass_1_128x128.png",
+    citizenClass_2 = "citizenClass_2_128x128.png",
+    citizenClass_3 = "citizenClass_3_128x128.png",
     coinBonus_1 = "coinBonus_1_128x128.png",
     coinBonus_2 = "coinBonus_2_128x128.png",
     coinBonus_3 = "coinBonus_3_128x128.png",
@@ -689,7 +692,7 @@ local PVE = {
 local PVE_ANIMATION_FILES = {
     "animations/yewaiyindi.ExportJson",
     "animations/zhihuishi.ExportJson",
-    
+
     "animations/heihua_bubing_2.ExportJson",
     "animations/heihua_bubing_3.ExportJson",
     "animations/heihua_gongjianshou_2.ExportJson",
@@ -834,7 +837,7 @@ local PRODUC_TIONTECHS_IMAGE = {
     healingAgent = "healingAgent_128x128.png",
     sketching = "sketching_128x128.png",
     mintedCoin = "mintedcoin_128x128.png",
-    
+
 }
 
 
@@ -845,7 +848,7 @@ local GET_DRAGON_EQUIPMENT_IMAGE = function(dragon_name,body_name,star)
         body_str = "Armguard"
     elseif "crown" == body_name then
         body_str  = "Crown"
-    elseif "orb" == body_name then 
+    elseif "orb" == body_name then
         body_str  = "Orb"
     elseif "chest" ==  body_name then
         body_str  = "Chest"
@@ -895,6 +898,7 @@ return {
     produc_tiontechs_image = PRODUC_TIONTECHS_IMAGE,
     getDragonEquipmentImage = GET_DRAGON_EQUIPMENT_IMAGE,
 }
+
 
 
 
