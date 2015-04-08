@@ -14,6 +14,7 @@ local WidgetChat = import("..widget.WidgetChat")
 local WidgetNumberTips = import("..widget.WidgetNumberTips")
 local WidgetHomeBottom = import("..widget.WidgetHomeBottom")
 local WidgetPushButton = import("..widget.WidgetPushButton")
+local WidgetAutoOrder = import("..widget.WidgetAutoOrder")
 local GameUIAllianceHome = UIKit:createUIClass('GameUIAllianceHome')
 local cc = cc
 function GameUIAllianceHome:ctor(alliance)
@@ -112,6 +113,8 @@ function GameUIAllianceHome:onEnter()
 end
 
 function GameUIAllianceHome:CreateOperationButton()
+    local order = WidgetAutoOrder.new(WidgetAutoOrder.ORIENTATION.BOTTOM_TO_TOP):addTo(self):pos(display.right-50,220)
+
     local first_row = 220
     local first_col = 177
     local label_padding = 100
@@ -130,63 +133,58 @@ function GameUIAllianceHome:CreateOperationButton()
             )
             )
             :setButtonLabelOffset(0, -40)
-            :addTo(self):pos(display.right-50, y)
         button:setTag(i)
         button:setTouchSwallowEnabled(true)
+
+        function button:GetElementSize()
+            return button:getCascadeBoundingBox().size
+        end
         if i == 1 then
-            self:RefreshHelpButtonVisible()
             local alliance = self.alliance
             -- 请求帮助的其他联盟成员请求帮助事件数量
-            local request_help_num_bg = display.newSprite("mail_unread_bg_36x23.png"):addTo(button):pos(20,-20)
             local request_num = alliance:GetOtherRequestEventsNum()
-            self.request_help_num = UIKit:ttfLabel(
-                {
-                    text = GameUtils:formatNumber(request_num),
-                    size = 16,
-                    color = 0xf5f2b3
-                }):align(display.CENTER,request_help_num_bg:getContentSize().width/2,request_help_num_bg:getContentSize().height/2+4)
-                :addTo(request_help_num_bg)
-            self.request_help_num_bg = request_help_num_bg
-            self:VisibleRequestHelpNum()
+            self.help_count = WidgetNumberTips.new():addTo(button):pos(20,-20)
+            self.help_count:SetNumber(request_num)
+
+            function button:CheckVisible()
+                local alliance = Alliance_Manager:GetMyAlliance()
+                return not alliance:IsDefault() and #alliance:GetCouldShowHelpEvents()>0
+            end
+        else
+            function button:CheckVisible()
+                return true
+            end
         end
+        order:AddElement(button)
     end
-end
-function GameUIAllianceHome:VisibleRequestHelpNum()
-    local alliance = self.alliance
-    local request_num = alliance:GetOtherRequestEventsNum()
-    self.request_help_num_bg:setVisible(request_num>0)
-    self.request_help_num:setString(GameUtils:formatNumber(request_num))
-end
-function GameUIAllianceHome:RefreshHelpButtonVisible()
-    local help_button = self:getChildByTag(1)
-    if help_button then
-        local alliance = Alliance_Manager:GetMyAlliance()
-        help_button:setVisible(not alliance:IsDefault() and #alliance:GetCouldShowHelpEvents()>0)
-    end
+    order:RefreshOrder()
+    self.operation_button_order = order
 end
 function GameUIAllianceHome:OnUpgradingBegin()
 end
 function GameUIAllianceHome:OnUpgrading()
 end
 function GameUIAllianceHome:OnUpgradingFinished()
-    self:RefreshHelpButtonVisible()
+    self.operation_button_order:RefreshOrder()
 end
 function GameUIAllianceHome:OnMilitaryTechEventsChanged()
-    self:RefreshHelpButtonVisible()
+    self.operation_button_order:RefreshOrder()
 end
 function GameUIAllianceHome:OnSoldierStarEventsChanged()
-    self:RefreshHelpButtonVisible()
+    self.operation_button_order:RefreshOrder()
 end
 function GameUIAllianceHome:OnProductionTechnologyEventDataChanged()
-    self:RefreshHelpButtonVisible()
+    self.operation_button_order:RefreshOrder()
 end
 function GameUIAllianceHome:OnHelpEventChanged()
-    self:RefreshHelpButtonVisible()
-    self:VisibleRequestHelpNum()
+    self.operation_button_order:RefreshOrder()
+    local request_num = self.alliance:GetOtherRequestEventsNum()
+    self.help_count:SetNumber(request_num)
 end
 function GameUIAllianceHome:OnAllHelpEventChanged()
-    self:RefreshHelpButtonVisible()
-    self:VisibleRequestHelpNum()
+    self.operation_button_order:RefreshOrder()
+    local request_num = self.alliance:GetOtherRequestEventsNum()
+    self.help_count:SetNumber(request_num)
 end
 function GameUIAllianceHome:onExit()
     app.timer:RemoveListener(self)
@@ -690,6 +688,7 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
+
 
 
 
