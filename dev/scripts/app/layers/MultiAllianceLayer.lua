@@ -6,6 +6,7 @@ local MapLayer = import(".MapLayer")
 local MultiAllianceLayer = class("MultiAllianceLayer", MapLayer)
 local ZORDER = Enum("BACKGROUND", "BUILDING", "LINE", "CORPS")
 local floor = math.floor
+local timer = app.timer
 
 MultiAllianceLayer.ARRANGE = Enum("H", "V")
 
@@ -166,8 +167,9 @@ function MultiAllianceLayer:InitAllianceEvent()
     end
 end
 function MultiAllianceLayer:StartCorpsTimer()
-    local timer = app.timer
-    self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function()
+    local time = 0
+    self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt)
+        time = time + dt
         local cur_time = timer:GetServerTime()
         for id, corps in pairs(self.corps_map) do
             if corps then
@@ -180,6 +182,10 @@ function MultiAllianceLayer:StartCorpsTimer()
                 else
                     self:DeleteCorpsById(id)
                 end
+            end
+            local line = self.lines_map[id]
+            if line then
+                line:getFilter():getGLProgramState():setUniformFloat("curTime", time)
             end
         end
     end)
@@ -325,7 +331,8 @@ function MultiAllianceLayer:CreateLine(id, start_pos, end_pos)
         json.encode({
             frag = "shaders/multi_tex.fs",
             shaderName = "lineShader"..unit_count,
-            unit_count = unit_count
+            unit_count = unit_count,
+            curTime = 0,
         })
     ))
     sprite:setScaleY(scale)

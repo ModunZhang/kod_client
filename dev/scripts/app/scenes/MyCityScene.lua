@@ -249,7 +249,7 @@ function MyCityScene:OnCreateDecoratorSprite(building_sprite)
 -- self:GetSceneUILayer():NewUIFromBuildingSprite(building_sprite)
 end
 function MyCityScene:OnDestoryDecoratorSprite(building_sprite)
-    -- app:GetAudioManager():PlayeEffectSoundWithKey("UI_BUILDING_DESTROY")
+-- app:GetAudioManager():PlayeEffectSoundWithKey("UI_BUILDING_DESTROY")
 -- self:GetSceneUILayer():RemoveUIFromBuildingSprite(building_sprite)
 end
 function MyCityScene:OnTilesChanged(tiles)
@@ -304,21 +304,10 @@ function MyCityScene:PromiseOfFlash(...)
     local buildings = {...}
     local director = cc.Director:getInstance()
     for i,v in ipairs(buildings) do
-        v:GetSprite():clearFilter()
-        v:GetSprite():setFilter(filter.newFilter("CUSTOM", json.encode({
-            frag = "shaders/flash.fs",
-            shaderName = "flash",
-            startTime = director:getTotalFrames() * director:getAnimationInterval(),
-            lastTime = FLASH_TIME,
-        })))
+        v:Flash(FLASH_TIME)
     end
     self.util_node:stopAllActions()
     self.util_node:performWithDelay(function()
-        for i,v in ipairs(buildings) do
-            if v.GetSprite and v:GetSprite() then
-                v:GetSprite():clearFilter()
-            end
-        end
         p:resolve()
     end, FLASH_TIME)
     return p
@@ -431,6 +420,7 @@ function MyCityScene:OpenUI(building)
     end
 end
 return MyCityScene
+
 
 
 
