@@ -3,7 +3,7 @@ local MainScene = class("MainScene", function()
 end)
 
 function MainScene:ctor()
-    self.ui = UIKit:newGameUI('GameUILogin')
+    self.ui = UIKit:newGameUI('GameUILoginBeta')
 end
 
 function MainScene:onEnter()
@@ -13,5 +13,4 @@ end
 function MainScene:onExit()
     self.ui:removeFromParent()
 end
-
 return MainScene
