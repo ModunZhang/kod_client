@@ -1248,12 +1248,12 @@ function NetManager:getUseItemPromise(itemName,params)
         params = params,
     }, "使用道具失败!"):done(get_response_msg):done(function ()
         GameGlobalUI:showTips(_("提示"),string.format(_('使用%s道具成功'),Localize_item.item_name[itemName]))
-        ext.market_sdk.onPlayerUseGameItems(itemName,1)
         if itemName == "torch" then
             app:GetAudioManager():PlayeEffectSoundWithKey("UI_BUILDING_DESTROY")
         else
             app:GetAudioManager():PlayeEffectSoundWithKey("USE_ITEM")
         end
+        ext.market_sdk.onPlayerUseGameItems(itemName,1)
     end)
 end
 --购买并使用道具
@@ -1263,6 +1263,11 @@ function NetManager:getBuyAndUseItemPromise(itemName,params)
         params = params,
     }, "购买并使用道具失败!"):done(get_response_msg):done(function()
         GameGlobalUI:showTips(_("提示"),string.format(_('使用%s道具成功'),Localize_item.item_name[itemName]))
+        if itemName == "torch" then
+            app:GetAudioManager():PlayeEffectSoundWithKey("UI_BUILDING_DESTROY")
+        else
+            app:GetAudioManager():PlayeEffectSoundWithKey("USE_ITEM")
+        end
         ext.market_sdk.onPlayerBuyGameItems(itemName,1,DataUtils:GetItemPriceByItemName(itemName))
         ext.market_sdk.onPlayerUseGameItems(itemName,1)
     end)
