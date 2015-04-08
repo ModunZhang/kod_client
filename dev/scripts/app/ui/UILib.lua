@@ -839,6 +839,19 @@ local PRODUC_TIONTECHS_IMAGE = {
     mintedCoin = "mintedcoin_128x128.png",
 
 }
+local ALLIANCE_BUILDING = {
+    palace = "palace_240x276.png",
+    shrine = "shrine_240x191.png",
+    shop = "shop_240x246.png",
+    orderHall = "orderHall_240x364.png",
+    moonGate = "moonGate_200x217.png",
+}
+local OTHER_ALLIANCE_BUILDING = setmetatable({
+    palace = "other_palace.png",
+    shop = "other_shop.png",
+    orderHall = "other_orderHall.png",
+}, {__index = ALLIANCE_BUILDING})
+
 
 
 local GET_DRAGON_EQUIPMENT_IMAGE = function(dragon_name,body_name,star)
@@ -897,6 +910,8 @@ return {
     iap_package_image = IAP_PACKAGE_IMAGE,
     produc_tiontechs_image = PRODUC_TIONTECHS_IMAGE,
     getDragonEquipmentImage = GET_DRAGON_EQUIPMENT_IMAGE,
+    alliance_building = ALLIANCE_BUILDING,
+    other_alliance_building = OTHER_ALLIANCE_BUILDING,
 }
 
 

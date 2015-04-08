@@ -37,21 +37,21 @@ end
 
 
 
-
+local TILE_WIDTH = 240
 function AllianceView:ctor(layer, alliance, logic_base_x, logic_base_y)
     Observer.extend(self)
     self.layer = layer
     self.alliance = alliance
     self.objects = {}
     logic_base_x = logic_base_x or 0
-    logic_base_y = logic_base_y or 54
+    logic_base_y = logic_base_y or 52
     self.normal_map = NormalMapAnchorBottomLeftReverseY.new{
-        tile_w = 80,
-        tile_h = 80,
+        tile_w = TILE_WIDTH,
+        tile_h = TILE_WIDTH,
         map_width = intInit.allianceRegionMapWidth.value,
         map_height = intInit.allianceRegionMapHeight.value,
-        base_x = logic_base_x * 80,
-        base_y = logic_base_y * 80
+        base_x = logic_base_x * TILE_WIDTH,
+        base_y = logic_base_y * TILE_WIDTH
     }
     math.randomseed(self:RandomSeed())
     self:InitAlliance()

@@ -1,24 +1,26 @@
+local UILib = import("..ui.UILib")
 local Sprite = import(".Sprite")
 local AllianceBuildingSprite = class("AllianceBuildingSprite", Sprite)
+
 local building_map = {
-    palace = {"palace_152x174.png", 1},
-    shrine = {"shrine_115x94.png", 1},
-    shop = {"shop_97x99.png", 1},
-    orderHall = {"orderHall_100x153.png", 1},
-    moonGate = {"moonGate_108x118.png", 1},
+    palace = {UILib.alliance_building.palace, 1},
+    shrine = {UILib.alliance_building.shrine, 1},
+    shop = {UILib.alliance_building.shop, 1},
+    orderHall = {UILib.alliance_building.orderHall, 1},
+    moonGate = {UILib.alliance_building.moonGate, 1},
 }
 local other_building_map = {
-    palace = {"other_palace.png", 0.4},
-    shrine = {"shrine_115x94.png", 1},
-    shop = {"other_shop.png", 0.4},
-    orderHall = {"other_orderHall.png", 0.4},
-    moonGate = {"moonGate_108x118.png", 1},
+    palace = {UILib.other_alliance_building.palace, 1},
+    shrine = {UILib.other_alliance_building.shrine, 1},
+    shop = {UILib.other_alliance_building.shop, 1},
+    orderHall = {UILib.other_alliance_building.orderHall, 1},
+    moonGate = {UILib.other_alliance_building.moonGate, 1},
 }
 function AllianceBuildingSprite:ctor(city_layer, entity, is_my_alliance)
     self.is_my_alliance = is_my_alliance
     local x, y = city_layer:GetLogicMap():ConvertToMapPosition(entity:GetLogicPosition())
     AllianceBuildingSprite.super.ctor(self, city_layer, entity, x, y)
-    -- self:CreateBase()
+    self:CreateBase()
 end
 function AllianceBuildingSprite:GetSpriteFile()
     if self.is_my_alliance then
@@ -28,7 +30,7 @@ function AllianceBuildingSprite:GetSpriteFile()
     end
 end
 function AllianceBuildingSprite:GetSpriteOffset()
-	return self:GetLogicMap():ConvertToLocalPosition(1, 1)
+    return self:GetLogicMap():ConvertToLocalPosition(1, 1)
 end
 
 
@@ -44,12 +46,13 @@ function AllianceBuildingSprite:newBatchNode(w, h)
     local map = self:GetLogicMap()
     for ix = start_x, end_x do
         for iy = start_y, end_y do
-			display.newSprite(base_node:getTexture()):addTo(base_node):pos(map:ConvertToLocalPosition(ix, iy))
+            display.newSprite(base_node:getTexture()):addTo(base_node):pos(map:ConvertToLocalPosition(ix, iy)):scale(3)
         end
     end
     return base_node
 end
 return AllianceBuildingSprite
+
 
 
 

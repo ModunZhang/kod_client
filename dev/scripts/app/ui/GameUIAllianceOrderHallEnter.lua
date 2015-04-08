@@ -2,6 +2,7 @@
 -- Author: Danny He
 -- Date: 2014-12-29 16:18:19
 --
+local UILib = import(".UILib")
 local  GameUIAllianceOrderHallEnter = UIKit:createUIClass("GameUIAllianceOrderHallEnter","GameUIAllianceShrineEnter")
 
 
@@ -14,7 +15,7 @@ function GameUIAllianceOrderHallEnter:GetUITitle()
 end
 
 function GameUIAllianceOrderHallEnter:GetBuildingImage()
-	return "orderHall_100x153.png"
+	return UILib.alliance_building.orderHall
 end
 
 function GameUIAllianceOrderHallEnter:GetBuildingType()

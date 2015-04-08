@@ -2,6 +2,7 @@
 -- Author: Danny He
 -- Date: 2014-12-29 15:56:44
 --
+local UILib = import("..ui.UILib")
 local GameUIAlliancePalaceEnter = UIKit:createUIClass("GameUIAlliancePalaceEnter","GameUIAllianceShrineEnter")
 
 function GameUIAlliancePalaceEnter:GetUIHeight()
@@ -13,7 +14,7 @@ function GameUIAlliancePalaceEnter:GetUITitle()
 end
 
 function GameUIAlliancePalaceEnter:GetBuildingImage()
-	return "palace_152x174.png"
+	return UILib.alliance_building.palace
 end
 
 function GameUIAlliancePalaceEnter:GetBuildingType()

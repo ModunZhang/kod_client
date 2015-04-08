@@ -220,11 +220,11 @@ local scale_tile = math.min(tile_w,tile_h)
 local layer_offset_x = tile_w * 16 - display.width * 2
 
 local building_map = {
-    {"palace_152x174.png", scale_tile*2/481},
-    {"shrine_115x94.png", scale_tile*2/256 * 0.7},
-    {"shop_97x99.png", scale_tile*2/274 * 0.5},
-    {"orderHall_100x153.png", scale_tile*2/417},
-    {"moonGate_108x118.png", scale_tile*2/217},
+    {UILib.alliance_building.palace, scale_tile*2/481},
+    {UILib.alliance_building.shrine, scale_tile*2/256 * 0.7},
+    {UILib.alliance_building.shop, scale_tile*2/274 * 0.5},
+    {UILib.alliance_building.orderHall, scale_tile*2/417},
+    {UILib.alliance_building.moonGate, scale_tile*2/217},
 }
 
 local ZORDER = {

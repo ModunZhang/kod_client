@@ -169,6 +169,11 @@ function WidgetRankingList:sourceDelegate(listView, tag, idx)
     else
     end
 end
+local crown_map = {
+    "crown_gold_46x40.png",
+    "crown_silver_46x40.png",
+    "crown_brass_46x40.png",
+}
 function WidgetRankingList:CreatePlayerContentByIndex(idx)
     local item = display.newSprite("background2_548x76.png")
     local size = item:getContentSize()
@@ -196,6 +201,7 @@ function WidgetRankingList:CreatePlayerContentByIndex(idx)
         color = 0x403c2f,
     }):align(display.LEFT_CENTER, 400 + 20, 40):addTo(item)
 
+    item.crown = display.newSprite(crown_map[1]):addTo(item, 10):pos(50, 40)
 
     function item:SetData(data)
         self.name:setString(data.name)
@@ -206,50 +212,10 @@ function WidgetRankingList:CreatePlayerContentByIndex(idx)
         self.bg2:setVisible(index % 2 == 0)
         if index <= 3 then
             self.rank:hide()
-            if index == 1 and not self.crown_gold then
-                if self.crown_silver then
-                    self.crown_silver:removeFromParent()
-                    self.crown_silver = nil
-                end
-                if self.crown_brass then
-                    self.crown_brass:removeFromParent()
-                    self.crown_brass = nil
-                end
-                self.crown_gold = display.newSprite("crown_gold_46x40.png"):addTo(self, 10):pos(50, 40)
-            elseif index == 2 and not self.crown_silver then
-                if self.crown_gold then
-                    self.crown_gold:removeFromParent()
-                    self.crown_gold = nil
-                end
-                if self.crown_brass then
-                    self.crown_brass:removeFromParent()
-                    self.crown_brass = nil
-                end
-                self.crown_silver = display.newSprite("crown_silver_46x40.png"):addTo(self, 10):pos(50, 40)
-            elseif not self.crown_brass then
-                if self.crown_gold then
-                    self.crown_gold:removeFromParent()
-                    self.crown_gold = nil
-                end
-                if self.crown_silver then
-                    self.crown_silver:removeFromParent()
-                    self.crown_silver = nil
-                end
-                self.crown_brass = display.newSprite("crown_brass_46x40.png"):addTo(self, 10):pos(50, 40)
-            end
-        else
-            if self.crown_gold then
-                self.crown_gold:removeFromParent()
-                self.crown_gold = nil
-            end
-            if self.crown_silver then
-                self.crown_silver:removeFromParent()
-                self.crown_silver = nil
-            end
-            if self.crown_brass then
-                self.crown_brass:removeFromParent()
-                self.crown_brass = nil
-            end
+            self.crown:setTexture(crown_map[index])
+            self.crown:show()
+        else         
+            self.crown:hide()
             self.rank:show():setString(index)
         end
         return self
