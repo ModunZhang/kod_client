@@ -11,6 +11,7 @@ local UIListView = import(".UIListView")
 local Localize = import("..utils.Localize")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local DragonManager = import("..entity.DragonManager") 
+local UILib = import(".UILib")
 
 function GameUIDragonSkill:ctor(building,skill)
 	GameUIDragonSkill.super.ctor(self)
@@ -43,7 +44,8 @@ function GameUIDragonSkill:onEnter()
       end)
   local skillBg = display.newSprite("dragon_skill_box_84x84.png")
         :addTo(self.backgroundImage):align(display.LEFT_TOP,30,titleBar:getPositionY() - 20)
-    display.newSprite("dragon_skill_70x70.png"):addTo(skillBg):pos(skillBg:getContentSize().width/2,skillBg:getContentSize().height/2)
+  local skill_icon = UILib.dragon_skill_icon[self.skill:Name()][self.skill:Type()]
+  display.newSprite(skill_icon):addTo(skillBg):pos(skillBg:getContentSize().width/2,skillBg:getContentSize().height/2):scale(74/128)
 
   local titleLabel = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
