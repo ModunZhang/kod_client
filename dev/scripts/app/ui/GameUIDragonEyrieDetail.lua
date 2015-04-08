@@ -513,12 +513,12 @@ function GameUIDragonEyrieDetail:GetSkillListItem(skill)
     })
         :align(display.LEFT_CENTER,110,35)
         :addTo(bg)
-    --TODO:技能的图片
+    local skill_icon = UILib.dragon_skill_icon[skill:Name()][skill:Type()]
     if skill:IsLocked() then
-        display.newFilteredSprite("dragon_skill_70x70.png","GRAY", {0.2,0.5,0.1,0.1}):addTo(box):pos(43,41):scale(1.1)
+        display.newFilteredSprite(skill_icon,"GRAY", {0.2,0.5,0.1,0.1}):addTo(box):pos(43,41):scale(74/128)
         display.newSprite("skill_lock_32x50.png",42,42):addTo(box)
     else
-        display.newSprite("dragon_skill_70x70.png", 43, 41):addTo(box):scale(1.1)
+        display.newSprite(skill_icon, 43, 41):addTo(box):scale(74/128)
     end
     return bg
 end

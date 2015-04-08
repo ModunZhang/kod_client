@@ -29,8 +29,6 @@ function DragonSkill:ctor(key,name,level,dragon_star,dragon_type)
 	property(self, "star", dragon_star)
 	property(self, "type", dragon_type)
 	self:LoadConfig_()
-	print("self:Name()---->",self:Name())
-	print("self:Key()---->",self:Key())
 end
 
 --将配置表里的数据直接注入object

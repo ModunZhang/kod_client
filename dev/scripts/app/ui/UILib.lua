@@ -884,6 +884,74 @@ local GET_DRAGON_EQUIPMENT_IMAGE = function(dragon_name,body_name,star)
     return EQUIPMENT[equipment_key]
 end
 
+local DRAGON_SKILL_ICON = {
+    infantryEnhance = {
+        redDragon = "infantryEnhance_red_128x128.png",
+        greenDragon = "infantryEnhance_green_128x128.png",
+        blueDragon = "infantryEnhance_blue_128x128.png",
+    },
+    archerEnhance = {
+        redDragon = "archerenhance_red_128x128.png",
+        greenDragon = "archerenhance_green_128x128.png",
+        blueDragon = "archerenhance_blue_128x128.png",
+    },
+    dragonBlood = {
+        redDragon = "dragonBlood_128x128.png",
+        greenDragon = "dragonBlood_128x128.png",
+        blueDragon = "dragonBlood_128x128.png",
+    },
+    cavalryEnhance = {
+        redDragon = "cavalryEnhance_red_128x128.png",
+        greenDragon = "cavalryEnhance_green_128x128.png",
+        blueDragon = "cavalryEnhance_blue_128x128.png",
+    },
+    siegeEnhance = {
+        redDragon = "siegeEnhance_red_128x128.png",
+        greenDragon = "siegeEnhance_green_128x128.png",
+        blueDragon = "siegeEnhance_blue_128x128.png",
+    },
+    dragonBreath = {
+        redDragon = "dragonbreath_128x128.png",
+        greenDragon = "dragonbreath_128x128.png",
+        blueDragon = "dragonbreath_128x128.png",
+    },
+    leadership = {
+        redDragon = "leadership_128x128.png",
+        greenDragon = "leadership_128x128.png",
+        blueDragon = "leadership_128x128.png",
+    },
+    greedy = {
+        redDragon = "greedy_128x128.png",
+        greenDragon = "greedy_128x128.png",
+        blueDragon = "greedy_128x128.png",
+    },
+    frenzied = {
+        redDragon = "frenzied_128x128.png",
+        greenDragon = "frenzied_128x128.png",
+        blueDragon = "frenzied_128x128.png",
+    },
+    recover = {
+        redDragon = "recover_128x128.png",
+        greenDragon = "recover_128x128.png",
+        blueDragon = "recover_128x128.png",
+    },
+    insensitive = {
+        redDragon = "insensitive_128x128.png",
+        greenDragon = "insensitive_128x128.png",
+        blueDragon = "insensitive_128x128.png",
+    },
+    earthquake = {
+        redDragon = "earthquake_128x128.png",
+        greenDragon = "earthquake_128x128.png",
+        blueDragon = "earthquake_128x128.png",
+    },
+    battleHunger = {
+        redDragon = "battleHunger_128x128.png",
+        greenDragon = "battleHunger_128x128.png",
+        blueDragon = "battleHunger_128x128.png",
+    }
+}
+
 return {
     resource = RESOURCE,
     soldier_bg = STAR_BG,
@@ -923,6 +991,7 @@ return {
     getDragonEquipmentImage = GET_DRAGON_EQUIPMENT_IMAGE,
     alliance_building = ALLIANCE_BUILDING,
     other_alliance_building = OTHER_ALLIANCE_BUILDING,
+    dragon_skill_icon = DRAGON_SKILL_ICON,
 }
 
 
