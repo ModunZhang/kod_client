@@ -179,11 +179,11 @@ function WidgetAllianceBuildingUpgrade:InitRequirement()
             icon="honour_128x128.png",
             description=alliance:Honour().."/"..now_c.needHonour},
 
-        {resource_type = _("职位大于等于")..Localize.alliance_title.quartermaster,
+        {resource_type = "title",
             isVisible = true,
             isSatisfy = alliance:GetSelf():CanUpgradeAllianceBuilding() ,
             icon="alliance_item_leader_39x39.png",
-            description= ""},
+            description= _("职位大于等于")..Localize.alliance_title.quartermaster},
     }
     if not self.requirement_listview then
         self.requirement_listview = WidgetRequirementListview.new({

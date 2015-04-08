@@ -51,7 +51,7 @@ end
 
 function GameUIAllianceOrderHallEnter:GetEnterButtons()
 	if self:IsMyAlliance() then
-		local info_button = self:BuildOneButton("icon_ proficiency_78x56.png",_("熟练度")):onButtonClicked(function()
+		local info_button = self:BuildOneButton("icon_proficiency_78x56.png",_("熟练度")):onButtonClicked(function()
 			UIKit:newGameUI('GameUIOrderHall',City,"proficiency",self:GetBuilding()):AddToCurrentScene(true)
 			self:LeftButtonClicked()
 		end)
