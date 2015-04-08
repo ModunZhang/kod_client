@@ -6,6 +6,7 @@ local WidgetMoveHouse = import("..widget.WidgetMoveHouse")
 local TutorialLayer = import("..ui.TutorialLayer")
 local GameUINpc = import("..ui.GameUINpc")
 local Arrow = import("..ui.Arrow")
+local Sprite = import("..sprites.Sprite")
 local SoldierManager = import("..entity.SoldierManager")
 local City = import("..entity.City")
 local User = import("..entity.User")
@@ -298,20 +299,6 @@ function MyCityScene:OnSceneScale(scene_layer)
         scene_layer:ShowLevelUpNode()
     end
 end
-local FLASH_TIME = 0.5
-function MyCityScene:PromiseOfFlash(...)
-    local p = promise.new()
-    local buildings = {...}
-    local director = cc.Director:getInstance()
-    for i,v in ipairs(buildings) do
-        v:Flash(FLASH_TIME)
-    end
-    self.util_node:stopAllActions()
-    self.util_node:performWithDelay(function()
-        p:resolve()
-    end, FLASH_TIME)
-    return p
-end
 function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
     if self.event_manager:TouchCounts() > 0 or self.util_node:getNumberOfRunningActions() > 0 then return end
     local building = self:GetSceneLayer():GetClickedObject(x, y)
@@ -331,7 +318,9 @@ function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
         else
             buildings = {building}
         end
-        self:PromiseOfFlash(unpack(buildings)):next(function()
+
+        self.util_node:performWithDelay(function()end, 0.5)
+        Sprite:PromiseOfFlash(unpack(buildings)):next(function()
             if self:IsEditMode() then
                 self:GetSceneUILayer():getChildByTag(WidgetMoveHouse.ADD_TAG):SetMoveToRuins(building)
                 return

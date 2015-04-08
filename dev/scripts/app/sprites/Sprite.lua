@@ -1,6 +1,7 @@
 local promise = import("..utils.promise")
 local Orient = import("..entity.Orient")
 local Observer = import("..entity.Observer")
+local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
 local Sprite = class("Sprite", function(...)
     return Observer.extend(display.newNode(), ...)
 end)
@@ -140,6 +141,20 @@ function Sprite:GetLogicMap()
     return self.logic_map
 end
 
+--- effects
+local FLASH_TIME = 0.5
+function Sprite:PromiseOfFlash(...)
+    local p = promise.new()
+    local sprites = {...}
+    local director = cc.Director:getInstance()
+    for _,v in ipairs(sprites) do
+        v:Flash(FLASH_TIME)
+    end
+    scheduler.performWithDelayGlobal(function()
+        p:resolve()
+    end, FLASH_TIME)
+    return p
+end
 function Sprite:Flash(time)
     self:ResetFlashStatus()
     self:BeginFlash(time)
