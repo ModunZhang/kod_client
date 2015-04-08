@@ -1,3 +1,4 @@
+local Sprite = import("..sprites.Sprite")
 local UILib = import("..ui.UILib")
 local window = import("..utils.window")
 local MultiAllianceLayer = import("..layers.MultiAllianceLayer")
@@ -8,6 +9,7 @@ local GameUIAllianceHome = import("..ui.GameUIAllianceHome")
 local Alliance = import("..entity.Alliance")
 
 function AllianceBattleScene:ctor()
+    self.util_node = display.newNode():addTo(self)
     AllianceBattleScene.super.ctor(self)
 end
 function AllianceBattleScene:onEnter()
@@ -62,13 +64,25 @@ function AllianceBattleScene:GotoLogicPosition(x, y, id)
     return self:GetSceneLayer():PromiseOfMove(point.x, point.y)
 end
 function AllianceBattleScene:OnTouchClicked(pre_x, pre_y, x, y)
+    if self.util_node:getNumberOfRunningActions() > 0 then return end
+    
     local building,isMyAlliance = self:GetSceneLayer():GetClickedObject(x, y)
     if building then
-        if building:GetEntity():GetType() ~= "building" then
-            self:EnterNotAllianceBuilding(building:GetEntity(),isMyAlliance)
+        if iskindof(building, "Sprite") then
+            self.util_node:performWithDelay(function() end, 0.5)
+            Sprite:PromiseOfFlash(building):next(function()
+                self:OpenUI(building)
+            end)
         else
-            self:EnterAllianceBuilding(building:GetEntity(),isMyAlliance)
+            self:OpenUI(building)
         end
+    end
+end
+function AllianceScene:OpenUI(building)
+    if building:GetEntity():GetType() ~= "building" then
+        self:EnterNotAllianceBuilding(building:GetEntity(),isMyAlliance)
+    else
+        self:EnterAllianceBuilding(building:GetEntity(),isMyAlliance)
     end
 end
 function AllianceBattleScene:OnBasicChanged(alliance,changed_map)
@@ -115,6 +129,7 @@ function AllianceBattleScene:EnterNotAllianceBuilding(entity,isMyAlliance)
     UIKit:newGameUI(class_name,entity,isMyAlliance,self:GetAlliance(),self:GetEnemyAlliance()):AddToCurrentScene(true)
 end
 return AllianceBattleScene
+
 
 
 

@@ -1,5 +1,4 @@
 local window = import("..utils.window")
-local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetEventTabButtons = import("..widget.WidgetEventTabButtons")
 local UIPageView = import("..ui.UIPageView")
 local Flag = import("..entity.Flag")
@@ -53,37 +52,7 @@ function GameUIAllianceHome:onEnter()
     self.top = self:CreateTop()
     self.bottom = self:CreateBottom()
     WidgetChangeMap.new(WidgetChangeMap.MAP_TYPE.OUR_ALLIANCE):addTo(self)
-
-    local rect1 = self.bottom:getCascadeBoundingBox()
-    local rect2 = self.top_bg:getCascadeBoundingBox()
-    self.screen_rect = cc.rect(0, rect1.height, display.width, rect2.y - rect1.height)
-    self.arrow = display.newSprite("arrow_home.png")
-        :addTo(self):align(display.TOP_CENTER):scale(0.3):hide()
-    self.arrow:setTouchEnabled(true)
-    self.arrow:setTouchSwallowEnabled(true)
-    self.arrow:setTouchMode(cc.TOUCH_MODE_ONE_BY_ONE)
-    self.arrow:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
-        local touch_type = event.name
-        local pre_x, pre_y, x, y = event.prevX, event.prevY, event.x, event.y
-        if touch_type == "began" then
-        elseif touch_type == "moved" then
-        elseif touch_type == "ended" then
-            local scene = display.getRunningScene()
-            local alliance = scene:GetAlliance()
-            local mapObject = alliance:GetAllianceMap():FindMapObjectById(alliance:GetSelf():MapId())
-            local location = mapObject.location
-            scene:GotoLogicPosition(location.x, location.y, alliance:Id())
-        end
-        return true
-    end)
-    local size = self.arrow:getContentSize()
-    self.arrow_label = cc.ui.UILabel.new({
-        size = 20,
-        font = UIKit:getFontFilePath(),
-        color = UIKit:hex2c3b(0xf5e8c4)
-    }):addTo(self.arrow):rotation(90)
-        :align(display.LEFT_CENTER, size.width/2 + 10, size.height/2 + 10)
-
+    self:InitArrow()
     if self.top then
         self.top:Refresh()
     end
@@ -111,7 +80,27 @@ function GameUIAllianceHome:onEnter()
     self:OnTaskChanged(city:GetUser())
     self:MailUnreadChanged()
 end
-
+function GameUIAllianceHome:InitArrow()
+    local rect1 = self.bottom:getCascadeBoundingBox()
+    local rect2 = self.top_bg:getCascadeBoundingBox()
+    self.screen_rect = cc.rect(0, rect1.height, display.width, rect2.y - rect1.height)
+    self.arrow = cc.ui.UIPushButton.new({normal = "location_arrow_up.png",pressed = "location_arrow_down.png"})
+        :addTo(self):align(display.TOP_CENTER):hide():onButtonClicked(function()
+            self:ReturnMyCity()
+        end)
+    self.arrow_label = cc.ui.UILabel.new({
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xf5e8c4)
+    }):addTo(self.arrow):rotation(90):align(display.LEFT_CENTER, 0, -40)
+end
+function GameUIAllianceHome:ReturnMyCity()
+    local scene = display.getRunningScene()
+    local alliance = scene:GetAlliance()
+    local mapObject = alliance:GetAllianceMap():FindMapObjectById(alliance:GetSelf():MapId())
+    local location = mapObject.location
+    scene:GotoLogicPosition(location.x, location.y, alliance:Id())
+end
 function GameUIAllianceHome:CreateOperationButton()
     local order = WidgetAutoOrder.new(WidgetAutoOrder.ORIENTATION.BOTTOM_TO_TOP):addTo(self):pos(display.right-50,220)
 
@@ -627,10 +616,9 @@ function GameUIAllianceHome:OnSceneMove(logic_x, logic_y, alliance_view)
                 if s > 0 and cc.rectContainsPoint(screen_rect, p) then
                     self.arrow:show():pos(p.x, p.y):rotation(degree)
                     local isflip = (degree > 0 and degree < 180)
-                    self.arrow_label:align(isflip and display.RIGHT_CENTER or display.LEFT_CENTER)
-                    self.arrow_label:scale(isflip and -3 or 3)
                     local distance = math.ceil(cc.pGetLength(cc.pSub(world_point, p)) / 80)
-                    self.arrow_label:setString(string.format("%dM", distance))
+                    self.arrow_label:align(isflip and display.RIGHT_CENTER or display.LEFT_CENTER)
+                    :scale(isflip and -1 or 1):setString(string.format("%dM", distance))
                     break
                 end
             end
@@ -688,6 +676,7 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
+
 
 
 

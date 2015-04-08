@@ -1,5 +1,6 @@
 local window = import("..utils.window")
 local UILib = import("..ui.UILib")
+local Sprite = import("..sprites.Sprite")
 local MultiAllianceLayer = import("..layers.MultiAllianceLayer")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local MapScene = import(".MapScene")
@@ -7,17 +8,18 @@ local AllianceScene = class("AllianceScene", MapScene)
 local Alliance = import("..entity.Alliance")
 local GameUIAllianceHome = import("..ui.GameUIAllianceHome")
 function AllianceScene:ctor()
+    self.util_node = display.newNode():addTo(self)
     AllianceScene.super.ctor(self)
 end
 function AllianceScene:onEnter()
     self:LoadAnimation()
-    
+
     AllianceScene.super.onEnter(self)
 
     self:CreateAllianceUI()
     self:GotoCurrectPosition()
     app:GetAudioManager():PlayGameMusic("AllianceScene")
-    self:GetSceneLayer():ZoomTo(1)
+    self:GetSceneLayer():ZoomTo(0.6)
 
     self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
     self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.OPERATION)
@@ -69,17 +71,26 @@ function AllianceScene:GotoLogicPosition(x, y)
     return self:GetSceneLayer():PromiseOfMove(point.x, point.y)
 end
 function AllianceScene:OnTouchClicked(pre_x, pre_y, x, y)
+    if self.util_node:getNumberOfRunningActions() > 0 then return end
     local building = self:GetSceneLayer():GetClickedObject(x, y)
     if building then
-        if building:GetEntity():GetType() ~= "building" then
-            self:EnterNotAllianceBuilding(building:GetEntity())
+        if iskindof(building, "Sprite") then
+            self.util_node:performWithDelay(function() end, 0.5)
+            Sprite:PromiseOfFlash(building):next(function()
+                self:OpenUI(building)
+            end)
         else
-            self:EnterAllianceBuilding(building:GetEntity())
+            self:OpenUI(building)
         end
+    elseif self:IsEditMode() then
+        self:LeaveEditMode()
+    end
+end
+function AllianceScene:OpenUI(building)
+    if building:GetEntity():GetType() ~= "building" then
+        self:EnterNotAllianceBuilding(building:GetEntity())
     else
-        if self:IsEditMode() then
-            self:LeaveEditMode()
-        end
+        self:EnterAllianceBuilding(building:GetEntity())
     end
 end
 function AllianceScene:OnBasicChanged(alliance,changed_map)
@@ -176,7 +187,7 @@ function AllianceScene:CheckCanMoveAllianceObject(x,y)
                         self:LeaveEditMode()
                     end)
                 else
-                     UIKit:showMessageDialog(nil, _("不能移动到目标点位"),function()end)
+                    UIKit:showMessageDialog(nil, _("不能移动到目标点位"),function()end)
                 end
             end
             ,nil
@@ -192,6 +203,8 @@ function AllianceScene:ReEnterScene()
     app:enterScene("AllianceScene")
 end
 return AllianceScene
+
+
 
 
 
