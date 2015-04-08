@@ -26,7 +26,7 @@ local WidgetSoldierDetails = class("WidgetSoldierDetails", WidgetPopDialog)
 
 function WidgetSoldierDetails:ctor(soldier_type,soldier_level)
     self.soldier_count = City:GetSoldierManager():GetCountBySoldierType(soldier_type)
-    local height = self.soldier_count > 0 and 675 or 500
+    local height =  500
     WidgetSoldierDetails.super.ctor(self,height,_("兵种详情"),window.top-200)
     self.soldier_type = soldier_type
     self.soldier_level = soldier_level
@@ -79,10 +79,10 @@ function WidgetSoldierDetails:InitSoldierDetails()
         color = UIKit:hex2c3b(0x5a5544)
     }):align(display.LEFT_CENTER,num_title_label:getPositionX()+num_title_label:getContentSize().width+10,bg_height-90):addTo(bg,2)
 
-    -- 调整解散士兵数量silder
-    if soldier_count>0 then
-        self:CreateDismissSoldierSilder()
-    end
+    -- -- 调整解散士兵数量silder
+    -- if soldier_count>0 then
+    --     self:CreateDismissSoldierSilder()
+    -- end
     -- 士兵属性
     self:InitSoldierAttr()
 end

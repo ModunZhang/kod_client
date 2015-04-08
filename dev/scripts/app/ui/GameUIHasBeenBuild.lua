@@ -238,7 +238,7 @@ function Item:RebindEventListener()
                 local building_sprite = cur_scene:GetSceneLayer():FindBuildingSpriteByBuilding(jump_building, city)
                 cur_scene:GotoLogicPoint(jump_building:GetMidLogicPosition())
                 cur_scene:AddIndicateForBuilding(building_sprite)
-                ui:LeftButtonClicked()
+                self:LeftButtonClicked()
             end)
             return
         end
