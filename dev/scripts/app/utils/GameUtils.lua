@@ -678,11 +678,13 @@ function GameUtils:DragonDragonBattle(attackDragon, defenceDragon, effect)
     defenceDragon.isWin = attackDragonStrength < defenceDragonStrength
 
     return {
+        dragonType = attackDragon.dragonType,
         hp = attackDragon.totalHp,
         hpDecreased = attackDragon.totalHp - attackDragon.currentHp,
         hpMax = attackDragon.hpMax,
         isWin = attackDragonStrength >= defenceDragonStrength
     }, {
+        dragonType = defenceDragon.dragonType,
         hp = defenceDragon.totalHp,
         hpDecreased = defenceDragon.totalHp - defenceDragon.currentHp,
         hpMax = defenceDragon.hpMax,

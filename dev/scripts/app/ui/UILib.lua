@@ -663,6 +663,19 @@ local SOLDIER_ANIMATIONS = getAniNameFromAnimationFiles(SOLDIER_ANIMATION_FILES)
 local SOLDIER_EFFECT_ANIMATIONS = getAniNameFromAnimationFiles(EFFECT_ANIMATION_FILES)
 local DRAGON_ANIMATIONS = getAniNameFromAnimationFiles(DRAGON_ANIMATIONS_FILES)
 
+local ALLIANCE_BUILDING = {
+    palace = "palace_240x276.png",
+    shrine = "shrine_240x191.png",
+    shop = "shop_240x246.png",
+    orderHall = "orderHall_240x364.png",
+    moonGate = "moonGate_200x217.png",
+}
+local OTHER_ALLIANCE_BUILDING = setmetatable({
+    palace = "other_palace.png",
+    shop = "other_shop.png",
+    orderHall = "other_orderHall.png",
+}, {__index = ALLIANCE_BUILDING})
+
 local DAILY_TASK_ICON = {
     empireRise = "Icon_empireRise_91x117.png",
     conqueror = "Icon_conqueror_104x117.png",
@@ -684,7 +697,7 @@ local PVE = {
     [PVEDefine.WARRIORS_TOMB] = {"image", "warriors_tomb_80x72.png"},
     [PVEDefine.OBELISK] = {"animation", "zhihuishi"},
     [PVEDefine.ANCIENT_RUINS] = {"image", "ancient_ruins.png"},
-    [PVEDefine.ENTRANCE_DOOR] = {"image", "entrance_door.png"},
+    [PVEDefine.ENTRANCE_DOOR] = {"image", ALLIANCE_BUILDING.moonGate},
     [PVEDefine.TREE] = {"image", "grass_tree_1_138x110.png"},
     [PVEDefine.HILL] = {"image", "hill_228x146.png"},
     [PVEDefine.LAKE] = {"image", "lake_220x174.png"},
@@ -839,18 +852,7 @@ local PRODUC_TIONTECHS_IMAGE = {
     mintedCoin = "mintedcoin_128x128.png",
 
 }
-local ALLIANCE_BUILDING = {
-    palace = "palace_240x276.png",
-    shrine = "shrine_240x191.png",
-    shop = "shop_240x246.png",
-    orderHall = "orderHall_240x364.png",
-    moonGate = "moonGate_200x217.png",
-}
-local OTHER_ALLIANCE_BUILDING = setmetatable({
-    palace = "other_palace.png",
-    shop = "other_shop.png",
-    orderHall = "other_orderHall.png",
-}, {__index = ALLIANCE_BUILDING})
+
 
 
 
