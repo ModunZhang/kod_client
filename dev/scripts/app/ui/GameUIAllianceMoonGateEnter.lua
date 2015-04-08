@@ -2,6 +2,7 @@
 -- Author: Kenny Dai
 -- Date: 2015-01-14 20:37:32
 --
+local UILib = import(".UILib")
 local  GameUIAllianceMoonGateEnter = UIKit:createUIClass("GameUIAllianceMoonGateEnter","GameUIAllianceShrineEnter")
 
 
@@ -14,11 +15,11 @@ function GameUIAllianceMoonGateEnter:GetUITitle()
 end
 
 function GameUIAllianceMoonGateEnter:GetBuildingImage()
-	return "moonGate_108x118.png"
+    return UILib.alliance_building.moonGate
 end
 
 function GameUIAllianceMoonGateEnter:GetBuildingType()
-	return 'orderHall'
+	return 'moonGate'
 end
 
 function GameUIAllianceMoonGateEnter:GetBuildingDesc()

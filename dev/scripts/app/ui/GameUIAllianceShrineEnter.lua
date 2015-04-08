@@ -2,6 +2,7 @@
 -- Author: Danny He
 -- Date: 2014-12-29 11:32:56
 --
+local UILib = import(".UILib")
 local GameUIAllianceShrineEnter = UIKit:createUIClass("GameUIAllianceShrineEnter","GameUIAllianceEnterBase")
 local buildingName = GameDatas.AllianceInitData.buildingName
 
@@ -57,7 +58,7 @@ function GameUIAllianceShrineEnter:GetUITitle()
 end
 
 function GameUIAllianceShrineEnter:GetBuildingImage()
-	return "shrine_115x94.png"
+	return UILib.alliance_building.shrine
 end
 
 function GameUIAllianceShrineEnter:GetBuildingType()

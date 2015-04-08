@@ -9,38 +9,37 @@ local decorator_map = {
         decorate_lake_2 =  1,
         decorate_mountain_1 =  1,
         decorate_mountain_2 =  1,
-        decorate_tree_1 =  0.8,
-        decorate_tree_2 =  0.8,
-        decorate_tree_3 =  0.8,
-        decorate_tree_4 =  0.8,
+        decorate_tree_1 =  1,
+        decorate_tree_2 =  1,
+        decorate_tree_3 =  1,
+        decorate_tree_4 =  1,
     },
     desert = {
         decorate_lake_1 =  1,
         decorate_lake_2 =  1,
         decorate_mountain_1 =  1,
         decorate_mountain_2 =  1,
-        decorate_tree_1 =  0.8,
-        decorate_tree_2 =  0.8,
-        decorate_tree_3 =  0.8,
-        decorate_tree_4 =  0.8,
+        decorate_tree_1 =  1,
+        decorate_tree_2 =  1,
+        decorate_tree_3 =  1,
+        decorate_tree_4 =  1,
     },
     iceField = {
         decorate_lake_1 =  1,
         decorate_lake_2 =  1,
         decorate_mountain_1 =  1,
         decorate_mountain_2 =  1,
-        decorate_tree_1 =  0.8,
-        decorate_tree_2 =  0.8,
-        decorate_tree_3 =  0.8,
-        decorate_tree_4 =  0.8,
+        decorate_tree_1 =  1,
+        decorate_tree_2 =  1,
+        decorate_tree_3 =  1,
+        decorate_tree_4 =  1,
     },
 }
 
 function AllianceDecoratorSprite:ctor(city_layer, entity)
     local x, y = city_layer:GetLogicMap():ConvertToMapPosition(entity:GetLogicPosition())
     AllianceDecoratorSprite.super.ctor(self, city_layer, entity, x, y)
-    -- self:CreateBase()
-    -- self:GetSprite():setVisible(false)
+    self:CreateBase()
 end
 function AllianceDecoratorSprite:GetSpriteFile()
     local terrain = self:GetMapLayer():Terrain()
@@ -67,7 +66,7 @@ function AllianceDecoratorSprite:newBatchNode(w, h)
     local map = self:GetLogicMap()
     for ix = start_x, end_x do
         for iy = start_y, end_y do
-            display.newSprite(base_node:getTexture()):addTo(base_node):pos(map:ConvertToLocalPosition(ix, iy))
+            display.newSprite(base_node:getTexture()):addTo(base_node):pos(map:ConvertToLocalPosition(ix, iy)):scale(3)
         end
     end
     return base_node

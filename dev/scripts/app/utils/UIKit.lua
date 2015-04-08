@@ -8,6 +8,7 @@ local cocos_promise = import(".cocos_promise")
 local promise = import(".promise")
 local Enum = import("..utils.Enum")
 local WidgetPushButton = import("..widget.WidgetPushButton")
+local UILib = import("..ui.UILib")
 local UIListView = import("..ui.UIListView")
 
 local error_code = {}
@@ -271,15 +272,15 @@ function UIKit:getImageByBuildingType( building_type ,level)
             return "miner_3_326x307.png"
         end
     elseif building_type=="moonGate" then
-        return "moonGate_108x118.png"
+        return UILib.alliance_building.moonGate
     elseif building_type=="orderHall" then
-        return "orderHall_100x153.png"
+        return UILib.alliance_building.orderHall
     elseif building_type=="palace" then
-        return "palace_152x174.png"
+        return UILib.alliance_building.palace
     elseif building_type=="shop" then
-        return "shop_97x99.png"
+        return UILib.alliance_building.shop
     elseif building_type=="shrine" then
-        return "shrine_115x94.png"
+        return UILib.alliance_building.shrine
     end
 end
 
