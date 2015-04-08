@@ -49,6 +49,7 @@ property(User, "marchQueue", 1)
 property(User, "serverName", "")
 property(User, "apnId", "")
 property(User, "gcId", "")
+property(User, "serverId", "")
 function User:ctor(p)
     User.super.ctor(self)
     self.resources = {
@@ -235,6 +236,7 @@ function User:OnPropertyChange(property_name, old_value, new_value)
     end
 end
 function User:OnUserDataChanged(userData, current_time, deltaData)
+    self:SetServerId(userData.serverId)
     self:SetGcId(userData.gcId)
     self:SetServerName(userData.logicServerId)
     self:SetApnId(userData.apnId)
