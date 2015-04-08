@@ -7,7 +7,7 @@ function WidgetNumberTips:ctor()
     self.label = UIKit:ttfLabel({
         size = 14,
         color = 0xf5e8c4,
-    }):align(display.CENTER, size.width/2, size.height/2+4):addTo(self)
+    }):align(display.CENTER, size.width/2-2, size.height/2+4):addTo(self)
 end
 
 function WidgetNumberTips:SetNumber(number)
