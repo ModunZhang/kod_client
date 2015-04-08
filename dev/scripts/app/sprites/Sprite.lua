@@ -64,8 +64,10 @@ function Sprite:GetLogicZorder()
 end
 ---- 功能
 function Sprite:ctor(city_layer, entity, x, y)
-    self.city_layer = city_layer
-    self.logic_map = city_layer:GetLogicMap()
+    if city_layer then
+        self.city_layer = city_layer
+        self.logic_map = city_layer:GetLogicMap()
+    end
     self.entity = entity
     self.sprite = self:CreateSprite():addTo(self, SPRITE):pos(self:GetSpriteOffset())
     self:SetPositionWithZOrder(x, y)
