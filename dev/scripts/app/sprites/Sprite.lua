@@ -73,7 +73,7 @@ function Sprite:ctor(city_layer, entity, x, y)
     -- self:CreateBase()
 end
 function Sprite:ReloadSpriteCauseTerrainChanged()
-    -- print("你应该在子类实现切换地形的功能")
+-- print("你应该在子类实现切换地形的功能")
 end
 -- function Sprite:GetShadow()
 --     return self.shadow
@@ -140,6 +140,35 @@ function Sprite:GetLogicMap()
     return self.logic_map
 end
 
+function Sprite:Flash(time)
+    self:ResetFlashStatus()
+    self:BeginFlash(time)
+end
+function Sprite:ResetFlashStatus()
+    self:GetSprite():clearFilter()
+    self:GetSprite():removeNodeEventListenersByEvent(cc.NODE_ENTER_FRAME_EVENT)
+end
+function Sprite:BeginFlash(time)
+    self.flash_time = 0
+    self:GetSprite():setFilter(filter.newFilter("CUSTOM", json.encode({
+        frag = "shaders/flash.fs",
+        shaderName = "flash",
+        startTime = self.flash_time,
+        curTime = self.flash_time,
+        lastTime = time,
+    })))
+
+    self:GetSprite():addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt)
+        self.flash_time = self.flash_time + dt
+        if self.flash_time > time then
+            self:ResetFlashStatus()
+        else
+            self:GetSprite():getFilter():getGLProgramState():setUniformFloat("curTime", self.flash_time)
+        end
+    end)
+    self:GetSprite():scheduleUpdate()
+end
+
 ----------base
 function Sprite:GenerateBaseTiles(w, h)
     self:newBatchNode(w, h):addTo(self, -1)
@@ -177,6 +206,7 @@ function Sprite:GetLocalRegion(w, h)
 end
 
 return Sprite
+
 
 
 
