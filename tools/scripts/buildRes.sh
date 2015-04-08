@@ -7,38 +7,44 @@ RES_DEST_DIR=`./functions.sh getExportResourcesDir $Platform`
 XXTEAKey=`./functions.sh getXXTEAKey`
 XXTEASign=`./functions.sh getXXTEASign`
 PVRTOOL=`./functions.sh getPVRTexTool`
-IMAGEFORMAT="PVRTC4"
+IMAGEFORMAT="PVRTC1_4"
 
 # rm -rf $RES_DEST_DIR
-exportAnimationsRes()
+exportImagesRes()
 {
-	currentDir=$1
+	images_dir=$1
 	outdir=$RES_DEST_DIR
-	for file in $currentDir/*
+	for file in $images_dir/*.png $images_dir/*.jpg 
 	do
 		outfile=$outdir/${file##*/res/}
-		if test -f $file;then
-			fileExt=${file##*.}
-			finalDir=${outfile%/*}
-			if test $fileExt != "png";then
-				if test $file -nt $outfile;then
-		    		test -d $finalDir || mkdir -p $finalDir && cp $file $finalDir
-		    	fi
-			else
-				if test $file -nt $outfile;then
-					# if  test -n `which TexturePacker`; then
-					# 	echo 处理${file##*/}
-					# 	# $PVRTOOL -p -f $IMAGEFORMAT -i $file 
-					# 	TexturePacker --quiet --format cocos2d --no-trim --disable-rotation --texture-format pvr2 --opt $IMAGEFORMAT  --padding 0 $file --sheet ${file%.*}.pvr
-					# 	test -d $finalDir || mkdir -p $finalDir && cp ${file%.*}.pvr $outfile
-					# 	rm -f ${file%.*}.pvr
-					# else
-						test -d $finalDir || mkdir -p $finalDir && cp $file $finalDir
-					# fi
-				fi
+		finalDir=${outfile%/*}
+		if test "$file" -nt "$outfile";then
+			test -d $finalDir || mkdir -p $finalDir && cp  "$file" $finalDir
+		fi
+	done
+
+	for file in $images_dir/_Compressed/*
+	do
+		if test -f "$file";then
+			finalDir=$outdir/${images_dir##*/res/}
+			outfile=$finalDir/${file##*/}
+			if test "$file" -nt "$outfile"; then
+				test -d $finalDir || mkdir -p $finalDir && cp "$file" $finalDir
 			fi
-		elif test -d $file; then
-			exportAnimationsRes $file
+		fi
+	done
+
+	for file in $images_dir/_CanCompress/*
+	do
+		if test -f "$file";then
+			finalDir=$outdir/${images_dir##*/res/}
+			outfile=$finalDir/${file##*/}
+			if test "$file" -nt "$outfile"; then
+				#compress image
+				$PVRTOOL -f $IMAGEFORMAT -i $file -o ${file%.*}.pvr
+				echo "$PVRTOOL -f $IMAGEFORMAT -i $file -o ${file%.*}.pvr"
+				mv ${file%.*}.pvr $outfile
+			fi
 		fi
 	done
 }
@@ -57,15 +63,15 @@ exportRes()
 		    	test -d "$finalDir" || mkdir -p "$finalDir" && cp "$file" "$finalDir"
 		    fi
 		elif test -d "$file";then
-			if [[ ${file/"animations"//} != $file ]];then
-	    		exportAnimationsRes $file
+			if [[ ${file/"images"//} != $file ]];then
+	    		exportImagesRes $file
 	    	else
 				exportRes $file
 	    	fi
 		fi
     done
 }
-
+#TODO:修改加密脚本
 exportResEncrypt()
 {
 	outdir=$RES_DEST_DIR
@@ -75,9 +81,9 @@ exportResEncrypt()
 
 if $NEED_ENCRYPT_RES; then
 	exportResEncrypt
+	#清除临时文件
+	find $RES_SRC_DIR -name "*.tmp" -exec rm -r {} \;
 else
 	exportRes $RES_SRC_DIR
 fi
 
-#清除临时文件
-find $RES_SRC_DIR -name "*.tmp" -exec rm -r {} \;

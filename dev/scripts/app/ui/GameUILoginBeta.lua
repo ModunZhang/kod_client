@@ -29,7 +29,7 @@ function GameUILoginBeta:ctor()
 		{image = "animations/soldiers_5.png",list = "animations/soldiers_5.plist"},
 		{image = "animations/ui_building_0.png",list = "animations/ui_building_0.plist"},
 		{image = "animations/ui_building_1.png",list = "animations/ui_building_1.plist"},
-		{image = "PlistImage/emoji.png",list = "PlistImage/emoji.plist"},
+		{image = "emoji.png",list = "emoji.plist"},
 	}
 	self.local_resources_percent_per = LOCAL_RESOURCES_PERCENT / #self.local_resources
 end
