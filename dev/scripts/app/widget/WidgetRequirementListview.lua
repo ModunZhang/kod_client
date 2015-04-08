@@ -97,6 +97,7 @@ function WidgetRequirementListview:RefreshListView(contents)
                     if split_desc[2] then
                         content.resource_value[2]:setString("/"..split_desc[2])
                         content.resource_value[2]:setColor(UIKit:hex2c4b(0x403c2f))
+                        content.resource_value[2]:setPositionX(content.resource_value[1]:getPositionX()+content.resource_value[1]:getContentSize().width) 
                     end
                 end
             else
