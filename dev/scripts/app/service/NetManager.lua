@@ -1408,7 +1408,17 @@ end
 function NetManager:getIapGiftPromise(giftId)
     return get_blocking_request_promise("logic.playerHandler.getIapGift",{
         giftId = giftId,
-    },"获取联盟其他玩家赠送的礼品!"):next(get_response_msg)
+    },"获取联盟其他玩家赠送的礼品!"):done(get_response_msg)
+end
+
+--获取服务器列表
+function NetManager:getServersPromise()
+    return get_blocking_request_promise("logic.playerHandler.getServers",nil,"获取服务器列表失败!")
+end
+
+-- 切换服务器
+function NetManager:getSwitchServer(serverId)
+    return get_blocking_request_promise("logic.playerHandler.switchServer",{serverId=serverId},"切换服务器失败!")
 end
 
 ----------------------------------------------------------------------------------------------------------------

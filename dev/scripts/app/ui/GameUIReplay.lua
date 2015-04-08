@@ -593,6 +593,7 @@ function GameUIReplay:NewDragonBattle()
 end
 function GameUIReplay:NewDragon(is_left, is_pve_battle)
     local node = display.newNode()
+    local game_ui_replay = self
     function node:Init()
         self.name = cc.ui.UILabel.new({
             text = "红龙(等级20)",
@@ -644,11 +645,25 @@ function GameUIReplay:NewDragon(is_left, is_pve_battle)
             self.buff:pos(80, -55)
         end
 
-        local dragon = ccs.Armature:create(is_pve_battle and "heilong" or "red_long")
+        local dragon_ani_map = {
+            redDragon = "red_long",
+            blueDragon = "blue_long",
+            greenDragon = "green_long",
+            blackDragon = "heilong",
+        }
+        local dragon_ani_name
+        if is_left then
+            local attack_dragon = game_ui_replay.report:GetFightAttackDragonRoundData()
+            dragon_ani_name = dragon_ani_map[attack_dragon.dragonType]
+        else
+            local defend_dragon = game_ui_replay.report:GetFightDefenceDragonRoundData()
+            dragon_ani_name = dragon_ani_map[defend_dragon.dragonType]
+        end
+
+        local dragon = ccs.Armature:create(dragon_ani_name or "red_long")
             :addTo(self):align(display.CENTER, 130, 60):scale(0.6)
         dragon:getAnimation():play("idle", -1, -1)
         dragon:setScaleX(is_left and 0.6 or -0.6)
-        -- dragon:setColor(cc.c3b(0,0,128) + dragon:getColor())
         if not is_left then
             dragon:pos(-45, 60)
         end

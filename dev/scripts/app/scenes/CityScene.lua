@@ -91,7 +91,7 @@ function CityScene:CreateSceneUILayer()
             self.indicator = display.newSprite("arrow_home.png")
                 :addTo(self)
                 :scale(0.4)
-                :rotation(240)
+                :rotation(240 - 180)
                 :zorder(1001)
 
             self.indicator:runAction(cc.RepeatForever:create(transition.sequence{

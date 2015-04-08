@@ -1,11 +1,12 @@
 local Enum = import("..utils.Enum")
-local ClipHeight = 188
-local Animate_Time_Inteval = 0.1
+local WidgetPushTransparentButton = import(".WidgetPushTransparentButton")
 local WidgetDropItem = class("WidgetDropItem",function()
     return display.newNode()
 end)
-
 WidgetDropItem.STATE = Enum("open","close")
+
+local ClipHeight = 188
+local Animate_Time_Inteval = 0.1
 
 function WidgetDropItem:ctor(params, callback)
     self.params = params
@@ -17,6 +18,10 @@ end
 function WidgetDropItem:onEnter()
     local header = display.newSprite("drop_down_box_content_562x58.png"):align(display.LEFT_BOTTOM,2,0):addTo(self)
     self.header = header
+    WidgetPushTransparentButton.new(cc.rect(0,0,562,58))
+        :align(display.LEFT_BOTTOM, 0, 0)
+        :addTo(header)
+        :onButtonClicked(handler(self, self.OnBoxButtonClicked))
     local button = cc.ui.UIPushButton.new({normal = "drop_down_box_button_normal_52x44.png",pressed = "drop_down_box_button_light_52x44.png"})
         :align(display.RIGHT_BOTTOM, 554,7):addTo(header)
         :onButtonClicked(handler(self, self.OnBoxButtonClicked))

@@ -108,7 +108,7 @@ function PVEObject:DecodeToEnemy(raw_data)
             return k, {
                 name = name,
                 star = tonumber(star),
-                count = is_not_boss and count * self:Floor() ^ 3 - (self:Floor() - 1) * 20 or count,
+                count = is_not_boss and math.ceil(count * self:Floor() ^ 2.6) or count,
             }
         end),
         rewards = self:DecodeToRewards(raw_data.rewards),
