@@ -57,6 +57,7 @@ function PlatformAdapter:mac()
     fileutils:addSearchPath("dev/res/fonts/")
     fileutils:addSearchPath("dev/res/images/")
     fileutils:addSearchPath("dev/res/fonts/")
+    fileutils:addSearchPath("dev/res/images/_Compressed/")
     ext.getDeviceToken = function ()end
     ext.market_sdk = {}
     setmetatable(ext.market_sdk,{
