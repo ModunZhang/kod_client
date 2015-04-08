@@ -38,18 +38,18 @@ function LogoScene:beginAnimate()
     })
     self.layer:runAction(sequence)
 end
---TODO:预加载动画和大图 
+--TODO:预先加载登录界面使用的大图 
 function LogoScene:PreLoadResource()
     --加载splash界面使用的图片
     display.addImageAsync("splash_beta_logo_515x119.png",function()
-        display.addSpriteFrames("PlistImage/emoji.plist","PlistImage/emoji.png",function()
-        end)
+        display.addImageAsync("splash_beta_bg_3987x1136.jpg",function()end)
     end)
 end
 
 
 
 function LogoScene:onExit()
+    cc.Director:getInstance():getTextureCache():removeTextureForKey("batcat_logo_368x390.png")
 end
 
 return LogoScene
