@@ -76,8 +76,8 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
 
     -- 装备图标
     local pos = star_bg:getAnchorPointInPoints()
-    cc.ui.UIImage.new("moltenCrown_128x128.png"):addTo(star_bg, 2)
-        :align(display.CENTER, pos.x, pos.y):scale(0.8)
+    cc.ui.UIImage.new(UILib.equipment[equip_type]):addTo(star_bg, 2)
+        :align(display.CENTER, pos.x, pos.y):scale(0.5)
 
     -- 装备的数量背景
     local back_ground_97x20 = cc.ui.UIImage.new("back_ground_138x34.png"):addTo(star_bg, 2)
