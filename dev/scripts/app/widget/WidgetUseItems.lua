@@ -6,10 +6,12 @@
 local WidgetPushButton = import(".WidgetPushButton")
 local WidgetUIBackGround = import(".WidgetUIBackGround")
 local WidgetPopDialog = import(".WidgetPopDialog")
+local BoxSprite = import("..sprites.BoxSprite")
 local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local Enum = import("..utils.Enum")
 local window = import("..utils.window")
 local Localize = import("..utils.Localize")
+local UILib = import("..ui.UILib")
 local Item = import("..entity.Item")
 local Alliance = import("..entity.Alliance")
 local WidgetUseItems = class("WidgetUseItems")
@@ -677,6 +679,19 @@ function WidgetUseItems:OpenNormalDialog( item )
             function ()
                 local item_name = v:Name()
                 NetManager:getUseItemPromise(item_name,{}):done(function ()
+                    -- local ani = ""
+                    -- if item_name == "dragonChest_1" then
+                    --     ani = "lanse"
+                    -- elseif item_name == "dragonChest_2" then
+                    --     ani = "lvse_box"
+                    -- elseif item_name == "dragonChest_3" then
+                    --     ani = "zise_box"
+                    -- end
+                    -- local box = ccs.Armature:create(ani):addTo(display.getRunningScene(),10000):align(display.CENTER, window.cx, window.cy)
+                    --     :scale(0.5)
+
+                    -- box:getAnimation():play("Animation1", -1, 0)
+                    local box_sprite = BoxSprite.new(item_name):addTo(display.getRunningScene()):scale(0.5)
                     dialog:LeftButtonClicked()
                 end)
             end,
@@ -860,8 +875,8 @@ function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc,buyAndUseFun
     local icon_bg = display.newSprite("box_120x128.png"):addTo(body):pos(60,64)
     local item_bg = display.newSprite("box_118x118.png"):addTo(icon_bg):align(display.CENTER, icon_bg:getContentSize().width/2, icon_bg:getContentSize().height/2)
     local item_icon_color_bg = display.newSprite("box_item_100x100.png"):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
-    local item_icon = display.newSprite("tool_1.png"):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2):scale(0.6)
-
+    local item_icon = display.newSprite(UILib.item[item:Name()]):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2):scale(0.6)
+    item_icon:scale(100/item_icon:getContentSize().width)
     local desc_bg = display.newSprite("box_450x128.png"):addTo(body):pos(345,64)
 
     -- 道具名称
@@ -946,6 +961,9 @@ function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc,buyAndUseFun
 end
 
 return WidgetUseItems
+
+
+
 
 
 

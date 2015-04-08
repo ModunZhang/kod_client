@@ -58,6 +58,15 @@ local BUILDING_ANIMATIONS_FILES = {
     },
     bird = {
         "animations/gezi.ExportJson",
+    },
+    box = {
+        "animations/lanse.ExportJson",
+        "animations/lvse_box.ExportJson",
+        "animations/zise_box.ExportJson",
+        "animations/mu_box.ExportJson",
+        "animations/tong_box.ExportJson",
+        "animations/yin_box.ExportJson",
+        "animations/jin_box.ExportJson",
     }
 }
 local BUILDING_ANIMATIONS = getAniNameFromAnimationFiles(BUILDING_ANIMATIONS_FILES)
