@@ -141,7 +141,7 @@ function ResourceManager:UpdateByCity(city, current_time)
         [IRON] = max_iron,
         [STONE] = max_stone,
         [COIN] = math.huge,
-        [POPULATION] = 0,
+        [POPULATION] = intInit.initCitizen.value,
         [CART] = max_cart,
         [WALLHP] = wall_max_hp or 0,
     }
@@ -189,7 +189,7 @@ function ResourceManager:UpdateByCity(city, current_time)
         resource:SetProductionPerHour(current_time,
             resource_type ~= POPULATION
             and resource_production
-            or (intInit.initCitizen.value + resource_limit - resource:GetLowLimitResource()) / intInit.playerCitizenRecoverFullNeedHours.value)
+            or (resource_limit - resource:GetLowLimitResource()) / intInit.playerCitizenRecoverFullNeedHours.value)
     end
 end
 function ResourceManager:GetCitizenAllocInfo()
