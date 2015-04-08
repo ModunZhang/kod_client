@@ -721,12 +721,12 @@ local function loadBuildingAnimation()
     end
 end
 local function unLoadBuildingAnimation()
-    local manager = ccs.ArmatureDataManager:getInstance()
-    for _,all_files in pairs(BUILDING_ANIMATIONS_FILES) do
-        for _,ani_file in pairs(all_files) do
-            manager:removeArmatureFileInfo(ani_file)
-        end
-    end
+    -- local manager = ccs.ArmatureDataManager:getInstance()
+    -- for _,all_files in pairs(BUILDING_ANIMATIONS_FILES) do
+    --     for _,ani_file in pairs(all_files) do
+    --         manager:removeArmatureFileInfo(ani_file)
+    --     end
+    -- end
 end
 --
 local function loadSolidersAnimation()
