@@ -394,7 +394,7 @@ function GameUIActivity:GetActivityItem(data)
 end
 
 function GameUIActivity:OnActivityButtonClicked(iapgift)
-	NetManager:getIapGiftPromise(iapgift:Id()):next(function()
+	NetManager:getIapGiftPromise(iapgift:Id()):done(function()
 		GameGlobalUI:showTips(_("提示"),Localize_item.item_name[iapgift:Name()] .. " x" .. iapgift:Count())
 	end)
 end

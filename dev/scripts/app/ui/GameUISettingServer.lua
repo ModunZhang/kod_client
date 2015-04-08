@@ -7,10 +7,10 @@ local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local window = import("..utils.window")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local UIListView = import(".UIListView")
-
+local User = User
 function GameUISettingServer:onEnter()
 	GameUISettingServer.super.onEnter(self)
-	self.server_code = 1
+	self.server_code = User:ServerId()
 	self:BuildUI()
 end
 
@@ -38,7 +38,9 @@ function GameUISettingServer:BuildUI()
 			text = _("切换服务器"),
 		}))
 		:onButtonClicked(function()
-			GameGlobalUI:showTips("提示","功能还未实现")
+			if self.server_code ~= User:ServerId() then
+				NetManager:getSwitchServer(self.server_code)
+			end
 		end)
 	self.list_view = UIListView.new{
         viewRect = cc.rect(26,90,556,650),
@@ -48,13 +50,18 @@ function GameUISettingServer:BuildUI()
 end
 
 function GameUISettingServer:FetchServers()
-	local servers = {
-		{name = "世界01",isNew = true,isIn = true,isOwn = true,code = 1},
-		{name = "世界02",isNew = true,isIn = false,isOwn = true,code = 2},
-		{name = "世界03",isNew = true,isIn = false,isOwn = false,code = 3},
-	}
-	self.data = servers
-	self:RefreshList()
+	NetManager:getServersPromise():done(function(response)
+		if response.msg.code == 200 then
+			local servers = response.msg.servers
+			self.data = servers
+			self:RefreshList()
+		end
+	end)
+	-- local servers = {
+	-- 	{name = "世界01",isNew = true,isIn = true,isOwn = true,code = 1},
+	-- 	{name = "世界02",isNew = true,isIn = false,isOwn = true,code = 2},
+	-- 	{name = "世界03",isNew = true,isIn = false,isOwn = false,code = 3},
+	-- }
 end
 
 function GameUISettingServer:RefreshList()
@@ -70,7 +77,7 @@ function GameUISettingServer:GetItem(v)
 	local item = self.list_view:newItem()
 	local content = UIKit:CreateBoxPanelWithBorder({width = 556,height = 96})
 	local name_label = UIKit:ttfLabel({
-		text = v.name,
+		text = v.id,
 		size = 24,
 		color= 0x514d3e
 	}):align(display.LEFT_TOP,16, 80):addTo(content)
@@ -81,13 +88,13 @@ function GameUISettingServer:GetItem(v)
 			color= 0x318200
 		}):align(display.LEFT_TOP,name_label:getPositionX()+name_label:getContentSize().width + 10, 80):addTo(content)
 	end
-	if v.isIn then
+	if User:ServerId() == v.id then
 		UIKit:ttfLabel({
 			text = _("您在这里"),
 			size = 22,
 			color= 0x318200
 		}):align(display.LEFT_BOTTOM,16,15):addTo(content)
-	elseif v.isOwn then
+	elseif v.hasPlayerData then
 		UIKit:ttfLabel({
 			text = _("您拥有一片领地"),
 			size = 22,
@@ -102,7 +109,7 @@ function GameUISettingServer:GetItem(v)
 	end
 	local check_bg = display.newSprite("activity_check_bg_55x51.png"):align(display.RIGHT_CENTER, 542,48):addTo(content)
 	local check_body = display.newSprite("activity_check_body_55x51.png"):addTo(check_bg):pos(27,25)
-	check_body:setVisible(self.server_code == v.code)
+	check_body:setVisible(self.server_code == v.id)
 	item:addContent(content)
 	item:setMargin({left = 0, right = 0, top = 0, bottom = 8})
 	item:setItemSize(556,96,false)
@@ -113,7 +120,7 @@ function GameUISettingServer:listviewListener(event)
     local listView = event.listView
     if "clicked" == event.name then
     	local server = self.data[event.itemPos]
-    	self.server_code = server.code
+    	self.server_code = server.id
 		self:RefreshList()    	
     end
 end
