@@ -208,10 +208,8 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
         end
     elseif self.building:GetType()=="blackSmith" then
         local additon = (building:GetNextLevelEfficiency()-building:GetEfficiency())*100
-        print("blackSmith ,additon>>",additon,tolua.type(additon))
         if additon>0 then
-            efficiency = string.format("%s%+d%%,",bd.blackSmith_efficiency,additon)
-            print(">>>>>",efficiency,string.format("shishi%d%%",additon))
+            efficiency = string.format("%s+%.1f%%,",bd.blackSmith_efficiency,additon)
         end
     elseif self.building:GetType()=="foundry" then
         local house_add = building:GetNextLevelMaxHouseNum()-building:GetMaxHouseNum()
@@ -221,7 +219,7 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
         end
         local addtion = (building:GetNextLevelProtection()-building:GetProtection())*100
         if addtion>0 then
-            efficiency = efficiency..string.format("%s+%d%%,",bd.foundry_protection,addtion)
+            efficiency = efficiency..string.format("%s+%.1f%%,",bd.foundry_protection,addtion)
         end
     elseif self.building:GetType()=="lumbermill" then
         local house_add = building:GetNextLevelMaxHouseNum()-building:GetMaxHouseNum()
@@ -231,7 +229,7 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
         end
         local addtion = (building:GetNextLevelProtection()-building:GetProtection())*100
         if addtion>0 then
-            efficiency = efficiency..string.format("%s+%d%%,",bd.lumbermill_protection,addtion)
+            efficiency = efficiency..string.format("%s+%.1f%%,",bd.lumbermill_protection,addtion)
         end
     elseif self.building:GetType()=="mill" then
         local house_add = building:GetNextLevelMaxHouseNum()-building:GetMaxHouseNum()
@@ -241,7 +239,7 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
         end
         local addtion = (building:GetNextLevelProtection()-building:GetProtection())*100
         if addtion>0 then
-            efficiency = efficiency..string.format("%s+%d%%,",bd.mill_protection,addtion)
+            efficiency = efficiency..string.format("%s+%.1f%%,",bd.mill_protection,addtion)
         end
     elseif self.building:GetType()=="stoneMason" then
         local house_add = building:GetNextLevelMaxHouseNum()-building:GetMaxHouseNum()
@@ -251,7 +249,7 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
         end
         local addtion = (building:GetNextLevelProtection()-building:GetProtection())*100
         if addtion>0 then
-            efficiency = efficiency..string.format("%s+%d%%,",bd.stoneMason_protection,addtion)
+            efficiency = efficiency..string.format("%s+%.1f%%,",bd.stoneMason_protection,addtion)
         end
     elseif self.building:GetType()=="hospital" then
         local addtion = building:GetNextLevelMaxCasualty()-building:GetMaxCasualty()
