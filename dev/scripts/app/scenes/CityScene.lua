@@ -91,12 +91,12 @@ function CityScene:CreateSceneUILayer()
             self.indicator = display.newSprite("arrow_home.png")
                 :addTo(self)
                 :scale(0.4)
-                :rotation(240 - 180)
+                :rotation(40)
                 :zorder(1001)
-
+            self.indicator:setRotationSkewY(30)
             self.indicator:runAction(cc.RepeatForever:create(transition.sequence{
-                cc.ScaleTo:create(0.4, 0.8),
-                cc.ScaleTo:create(0.4, 0.4),
+                cc.ScaleTo:create(0.4, 1),
+                cc.ScaleTo:create(0.4, 0.6),
             }))
 
             self.action_node:stopAllActions()
