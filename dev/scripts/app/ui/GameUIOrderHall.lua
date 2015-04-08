@@ -145,18 +145,20 @@ function GameUIOrderHall:CreateVillageItem(village_type,village_level)
         :addTo(content)
 
 
-    if alliance:GetSelf():CanUpgradeAllianceBuilding() then
+    if alliance:GetSelf():CanUpgradeAllianceBuilding() and village_level<#AllianceVillage[village_type] then
+        local config = AllianceVillage[village_type]
         -- 荣耀值
-        display.newSprite("honour_128x128.png"):align(display.CENTER, 250, 40):addTo(content):scale(42/128)
+        item.honour_icon = display.newSprite("honour_128x128.png"):align(display.CENTER, 250, 40):addTo(content):scale(42/128)
         local honour_bg = display.newSprite("back_ground_114x36.png"):align(display.CENTER, 330, 40):addTo(content)
-        local need_honour = AllianceVillage[village_type][village_level+1].needHonour
+        local need_honour = config[village_level+1>#config and #config or village_level+1].needHonour
         item.honour_label = UIKit:ttfLabel({
             text = need_honour,
             size = 20,
             color = 0x403c2f,
         }):addTo(honour_bg):align(display.CENTER,honour_bg:getContentSize().width/2,honour_bg:getContentSize().height/2)
+        item.honour_bg = honour_bg
         -- 升级按钮
-        WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
+        item.upgrade_btn = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
             :setButtonLabel(UIKit:ttfLabel({
                 text = _("升级"),
                 size = 22,
@@ -183,9 +185,23 @@ function GameUIOrderHall:CreateVillageItem(village_type,village_level)
         villageLevel:setString(_("等级")..village_level)
         local build_png = SpriteConfig[village_type]:GetConfigByLevel(village_level).png
         building_image:setTexture(build_png)
-        if self.honour_label then
-            local need_honour = AllianceVillage[village_type][village_level+1].needHonour
+        local config = AllianceVillage[village_type]
+        if self.honour_label and village_level <#config then
+            local need_honour = config[village_level+1].needHonour
             self.honour_label:setString(need_honour)
+        else
+            if self.honour_icon then
+                self.honour_icon:hide()
+            end
+            if self.honour_label then
+                self.honour_label:hide()
+            end
+            if self.honour_bg then
+                self.honour_bg:hide()
+            end
+            if self.upgrade_btn then
+                self.upgrade_btn:hide()
+            end
         end
     end
 
@@ -388,6 +404,8 @@ function GameUIOrderHall:onExit()
 end
 
 return GameUIOrderHall
+
+
 
 
 
