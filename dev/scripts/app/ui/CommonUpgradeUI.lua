@@ -411,20 +411,8 @@ function CommonUpgradeUI:SetUpgradeTime()
 end
 function CommonUpgradeUI:GotoPreconditionBuilding()
     local jump_building = self.building:GetPreConditionBuilding()
-    if tolua.type(jump_building) == "string" then
-        FullScreenPopDialogUI.new()
-            :AddToCurrentScene()
-            :SetTitle("提示")
-            :SetPopMessage(string.format(_("请首先建造%s"),Localize.building_name[jump_building]))
-        return
-    end
-    local current_scene = display.getRunningScene()
-    local building_sprite = current_scene:GetSceneLayer():FindBuildingSpriteByBuilding(jump_building, self.city)
+    UIKit:GotoPreconditionBuilding(jump_building)
     self:getParent():getParent():LeftButtonClicked()
-    current_scene:GotoLogicPoint(jump_building:GetMidLogicPosition())
-    if current_scene.AddIndicateForBuilding then
-        current_scene:AddIndicateForBuilding(building_sprite)
-    end
 end
 function CommonUpgradeUI:SetUpgradeRequirementListview()
     local city = City

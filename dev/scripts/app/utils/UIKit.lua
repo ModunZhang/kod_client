@@ -517,3 +517,18 @@ end
 function UIKit:getErrorCodeKey(code)
     return self:getErrorCodeData(code).key or ""
 end
+
+function UIKit:GotoPreconditionBuilding(jump_building)
+    local city = jump_building:BelongCity()
+    if tolua.type(jump_building) == "string" then
+        UIKit:showMessageDialog(_("提示"),string.format(_("请首先建造%s"),Localize.building_name[jump_building]),function()end)
+            :AddToCurrentScene()
+        return
+    end
+    local current_scene = display.getRunningScene()
+    local building_sprite = current_scene:GetSceneLayer():FindBuildingSpriteByBuilding(jump_building, city)
+    current_scene:GotoLogicPoint(jump_building:GetMidLogicPosition())
+    if current_scene.AddIndicateForBuilding then
+        current_scene:AddIndicateForBuilding(building_sprite)
+    end
+end
