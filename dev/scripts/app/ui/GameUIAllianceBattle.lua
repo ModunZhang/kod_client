@@ -430,7 +430,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
                 :addTo(honour_bg,2)
                 :scale(50/128)
             UIKit:ttfLabel({
-                text = string.formatnumberthousands(2384028014),
+                text = "未定义",
                 size = 20,
                 color = 0x514d3e,
             }):addTo(honour_bg,2)
@@ -443,7 +443,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
                 :addTo(gem_bg,2)
                 :scale(0.7)
             UIKit:ttfLabel({
-                text = string.formatnumberthousands(2384028014),
+                text = "未定义",
                 size = 20,
                 color = 0x514d3e,
             }):addTo(gem_bg,2)

@@ -188,6 +188,7 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
     self.listnode:addTo(self.info_layer):pos(window.cx,window.bottom_top + 60)
     self.listnode:align(display.BOTTOM_CENTER)
     local buildings = GameDatas.Buildings.buildings
+    local unlock_index = 1 
     for i,v in ipairs(buildings) do
         if v.location<21 then
             local unlock_building = City:GetBuildingByLocationId(v.location)
@@ -264,7 +265,11 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
                 building_image:setFilter(filters)
             end
             item:addContent(content)
-            self.building_listview:addItem(item)
+
+            self.building_listview:addItem(item,isUnlocked and unlock_index)
+            if isUnlocked then
+                unlock_index = unlock_index + 1
+            end
         end
     end
     self.building_listview:reload()
