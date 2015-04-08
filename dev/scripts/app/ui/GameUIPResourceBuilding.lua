@@ -280,10 +280,30 @@ function GameUIPResourceBuilding:CheckSwitch(switch_to_building_type)
                 :AddToCurrentScene()
                 :SetTitle("提示")
                 :SetPopMessage(string.format(_("前置建筑%s等级需要大于等于%d级"),Localize.building_name[preName],current_building:GetLevel()+preLevel))
+                :CreateOKButton(
+                {
+                    listener = function ()
+                        self:GotoPreconditionBuilding(preName)
+                    end,
+                    btn_name= _("前往")
+                }
+            )
             return
         end
     end
     return true
+end
+function GameUIPResourceBuilding:GotoPreconditionBuilding(preName)
+    local city = self.building:BelongCity()
+    local highest_level_building
+    if preName ~= "tower" then
+        highest_level_building = city:GetHighestBuildingByType(preName)
+    else
+        highest_level_building = city:GetNearGateTower()
+    end
+    local jump_building = highest_level_building or city:GetRuinsNotBeenOccupied()[1] or preName
+    UIKit:GotoPreconditionBuilding(jump_building)
+    self:LeftButtonClicked()
 end
 return GameUIPResourceBuilding
 
