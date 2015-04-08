@@ -6,7 +6,6 @@
 local WidgetPushButton = import(".WidgetPushButton")
 local WidgetUIBackGround = import(".WidgetUIBackGround")
 local WidgetPopDialog = import(".WidgetPopDialog")
-local BoxSprite = import("..sprites.BoxSprite")
 local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local Enum = import("..utils.Enum")
 local window = import("..utils.window")
@@ -679,19 +678,25 @@ function WidgetUseItems:OpenNormalDialog( item )
             function ()
                 local item_name = v:Name()
                 NetManager:getUseItemPromise(item_name,{}):done(function ()
-                    -- local ani = ""
-                    -- if item_name == "dragonChest_1" then
-                    --     ani = "lanse"
-                    -- elseif item_name == "dragonChest_2" then
-                    --     ani = "lvse_box"
-                    -- elseif item_name == "dragonChest_3" then
-                    --     ani = "zise_box"
-                    -- end
-                    -- local box = ccs.Armature:create(ani):addTo(display.getRunningScene(),10000):align(display.CENTER, window.cx, window.cy)
-                    --     :scale(0.5)
+                    local ani = ""
+                    if item_name == "dragonChest_1" then
+                        ani = "lanse"
+                    elseif item_name == "dragonChest_2" then
+                        ani = "lvse_box"
+                    elseif item_name == "dragonChest_3" then
+                        ani = "zise_box"
+                    end
+                    local box = ccs.Armature:create(ani):addTo(display.getRunningScene(),10000):align(display.CENTER, window.cx-50, window.cy)
+                        :scale(0.5)
+                    box:getAnimation():setMovementEventCallFunc(function (armatureBack, movementType, movementID)
+                        if movementType == ccs.MovementEventType.start then
+                        elseif movementType == ccs.MovementEventType.complete then
+                            box:removeFromParent()
+                        elseif movementType == ccs.MovementEventType.loopComplete then
+                        end
+                    end)
 
-                    -- box:getAnimation():play("Animation1", -1, 0)
-                    local box_sprite = BoxSprite.new(item_name):addTo(display.getRunningScene()):scale(0.5)
+                    box:getAnimation():play("Animation1", -1, 0)
                     dialog:LeftButtonClicked()
                 end)
             end,
@@ -961,6 +966,7 @@ function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc,buyAndUseFun
 end
 
 return WidgetUseItems
+
 
 
 
