@@ -28,11 +28,11 @@ end
 
 function GameUIAllianceVillageEnter:GetProcessIconConfig()
 	local config  = {
-		woodVillage = {"res_wood_114x100.png",41/114},
-	    stoneVillage= {"res_stone_128x128.png",41/128},
-	    ironVillage = {"res_iron_114x100.png",41/114},
-	    foodVillage = {"res_food_114x100.png",41/114},
-	    coinVillage = {"coin_icon.png",41/107},
+		woodVillage = {"res_wood_82x73.png",41/82},
+	    stoneVillage= {"res_stone_88x82.png",41/88},
+	    ironVillage = {"res_iron_91x63.png",41/91},
+	    foodVillage = {"res_food_91x74.png",41/91},
+	    coinVillage = {"res_coin_81x68.png",41/81},
 	}
 	return config
 end

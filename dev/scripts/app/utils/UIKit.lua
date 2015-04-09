@@ -65,7 +65,7 @@ function UIKit:createUIClass(className, baseName)
 end
 
 function UIKit:newGameUI(gameUIName,... )
-    if gameUIName ~= 'FullScreenPopDialogUI' then  
+    if gameUIName ~= 'FullScreenPopDialogUI' then
         if self.Registry.isObjectExists(gameUIName) then
             print("已经创建过一个Object-->",gameUIName)
             return {AddToCurrentScene=function(...)end,AddToScene=function(...)end} -- 适配后面的调用不报错
@@ -74,13 +74,13 @@ function UIKit:newGameUI(gameUIName,... )
     local viewPackageName = app.packageRoot .. ".ui." .. gameUIName
     local viewClass = require(viewPackageName)
     local instance = viewClass.new(...)
-    if gameUIName ~= 'FullScreenPopDialogUI' then 
-       self.Registry.setObject(instance,gameUIName)
+    if gameUIName ~= 'FullScreenPopDialogUI' then
+        self.Registry.setObject(instance,gameUIName)
     end
     return instance
 end
 function UIKit:newWidgetUI(gameUIName,... )
-    if gameUIName ~= 'FullScreenPopDialogUI' then  
+    if gameUIName ~= 'FullScreenPopDialogUI' then
         if self.Registry.isObjectExists(gameUIName) then
             print("已经创建过一个Object-->",gameUIName)
             return {AddToCurrentScene=function(...)end,AddToScene=function(...)end} -- 适配后面的调用不报错
@@ -417,7 +417,7 @@ function UIKit:commonListView(params,topEnding,bottomEnding)
     list_node:setContentSize(cc.size(viewRect.width,viewRect.height))
     local list = UIListView.new(params):addTo(list_node)
     -- 是否有顶部的边界条，默认有
-    local isTopEnding 
+    local isTopEnding
     if tolua.type(topEnding)~="nil" then
         isTopEnding = topEnding
     else
@@ -451,7 +451,7 @@ function UIKit:createLineItem(params)
             color = 0x403c2f
         }):align(display.RIGHT_BOTTOM, line_size.width, 0)
         :addTo(line)
-    
+
     function line:SetValue(value)
         value_label:setString(value)
     end
@@ -469,18 +469,18 @@ function UIKit:showMessageDialog(title,tips,ok_callback,cancel_callback,visible_
                 end
             end
         })
-        if cancel_callback then
-            dialog:CreateCancelButton({
-                listener = function ()
-                    cancel_callback()
-                end,btn_name = _("取消")})
-        end
-        dialog:VisibleXButton(visible_x_button)
-        if not visible_x_button then
-            dialog:DisableAutoClose()
-        end
-        dialog:AddToCurrentScene()
-        return dialog
+    if cancel_callback then
+        dialog:CreateCancelButton({
+            listener = function ()
+                cancel_callback()
+            end,btn_name = _("取消")})
+    end
+    dialog:VisibleXButton(visible_x_button)
+    if not visible_x_button then
+        dialog:DisableAutoClose()
+    end
+    dialog:AddToCurrentScene()
+    return dialog
 end
 
 function UIKit:showEvaluateDialog()
@@ -491,8 +491,8 @@ function UIKit:showEvaluateDialog()
             end,btn_name = _("支持一个")
         })
         :CreateCancelButton({
-                listener = function ()
-                end,btn_name = _("残忍的拒绝")
+            listener = function ()
+            end,btn_name = _("残忍的拒绝")
         })dialog:AddToCurrentScene()
     return dialog
 end
@@ -505,7 +505,7 @@ function UIKit:WaitForNet()
 end
 
 function UIKit:NoWaitForNet()
-     local scene = display.getRunningScene()
+    local scene = display.getRunningScene()
     if scene.__cname  ~= 'UpdaterScene' and scene.__cname  ~= 'MainScene' then
         scene:NoWaitForNet()
     end
@@ -533,3 +533,4 @@ function UIKit:GotoPreconditionBuilding(jump_building)
         current_scene:AddIndicateForBuilding(building_sprite)
     end
 end
+

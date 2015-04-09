@@ -289,7 +289,7 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
         :addTo(condition_bg)
         :align(display.BOTTOM_CENTER, 284, 10)
 
-    cc.ui.UIImage.new("coin_icon.png"):addTo(condition_bg_2, 2)
+    cc.ui.UIImage.new("res_coin_81x68.png"):addTo(condition_bg_2, 2)
         :align(display.CENTER, 30, 20):scale(0.3)
 
     self.coin_label = cc.ui.UILabel.new({

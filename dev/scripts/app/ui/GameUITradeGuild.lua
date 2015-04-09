@@ -714,7 +714,7 @@ function GameUITradeGuild:OpenSellDialog()
                 title = _("单价"),
                 max = max_unit_price,
                 min = min_unit_price,
-                icon = "coin_icon_1.png",
+                icon = "res_coin_81x68.png",
                 onSliderValueChanged = function ( value )
                     self:SetTotalPriceAndCartNum(self.sell_num_item:GetValue(),value)
                 end

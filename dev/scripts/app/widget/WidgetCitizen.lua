@@ -21,35 +21,35 @@ local items = {
         production_text = _("空闲城民"),
         production_per_hour_text = _("城民增长"),
         tag_color = "green_head_42x98.png",
-        tag_icon = "res_citizen_44x50.png",
-        tag_icon_scale = 0.8
+        tag_icon = "res_citizen_88x82.png",
+        tag_icon_scale = 0.3
     },
     [FOOD] = {
         production_text = _("农夫"),
         production_per_hour_text = _("粮食产量"),
         tag_color = "yellow_head_42x98.png",
-        tag_icon = "res_food_114x100.png",
+        tag_icon = "res_food_91x74.png",
         tag_icon_scale = 0.25
     },
     [WOOD] = {
         production_text = _("伐木工"),
         production_per_hour_text = _("木材产量"),
         tag_color = "brown_head_42x98.png",
-        tag_icon = "res_wood_114x100.png",
+        tag_icon = "res_wood_82x73.png",
         tag_icon_scale = 0.25
     },
     [IRON] = {
         production_text = _("矿工"),
         production_per_hour_text = _("矿产产量"),
         tag_color = "blue_head_42x98.png",
-        tag_icon = "res_iron_114x100.png",
+        tag_icon = "res_iron_91x63.png",
         tag_icon_scale = 0.25
     },
     [STONE] = {
         production_text = _("石匠"),
         production_per_hour_text = _("石料产量"),
         tag_color = "grey_head_42x98.png",
-        tag_icon = "res_stone_128x128.png",
+        tag_icon = "res_stone_88x82.png",
         tag_icon_scale = 0.25
     }
 }
@@ -66,8 +66,8 @@ function WidgetCitizen:ctor(city)
         :pos(window.left + 45, window.top - 140)
         :addTo(self)
 
-    cc.ui.UIImage.new("res_citizen_44x50.png")
-        :addTo(iconBg)
+    cc.ui.UIImage.new("res_citizen_88x82.png")
+        :addTo(iconBg):scale(0.45)
 
     cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
