@@ -237,10 +237,11 @@ end
 
 function GameUILoginBeta:login()
     NetManager:getLoginPromise():next(function(response)
-    	self:sendApnIdIf()
         ext.market_sdk.onPlayerLogin(User:Id(),User:Name(),User:ServerName())
         ext.market_sdk.onPlayerLevelUp(User:Level())
-  		app:EnterMyCityScene()
+        self:performWithDelay(function()
+  		    app:EnterMyCityScene()
+        end, 0.3)
     end):catch(function(err)
         if err:isSyntaxError() then
             dump(err)
@@ -263,17 +264,6 @@ function GameUILoginBeta:showError(msg,cb)
     UIKit:showMessageDialog(_("提示"),msg, function()
         if cb then cb() end
     end, nil, false)
-end
-
-function GameUILoginBeta:sendApnIdIf()
-    local token = ext.getDeviceToken() or ""
-    if string.len(token) > 0 then 
-        token = string.sub(token,2,string.len(token)-1)
-        token = string.gsub(token," ","")
-    end
-    if token ~= User:ApnId() then
-        NetManager:getSetApnIdPromise(token)
-    end
 end
 -- Auto Update
 --------------------------------------------------------------------------------------------------------------
