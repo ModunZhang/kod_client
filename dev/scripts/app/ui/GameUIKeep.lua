@@ -10,6 +10,7 @@ local WidgetUseItems= import("..widget.WidgetUseItems")
 local Localize = import("..utils.Localize")
 local SpriteConfig = import("..sprites.SpriteConfig")
 local window = import('..utils.window')
+local intInit = GameDatas.PlayerInitData.intInit
 local GameUIKeep = UIKit:createUIClass('GameUIKeep',"GameUIUpgradeBuilding")
 
 local building_config_map = {
@@ -188,7 +189,7 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
     self.listnode:addTo(self.info_layer):pos(window.cx,window.bottom_top + 60)
     self.listnode:align(display.BOTTOM_CENTER)
     local buildings = GameDatas.Buildings.buildings
-    local unlock_index = 1 
+    local unlock_index = 1
     for i,v in ipairs(buildings) do
         if v.location<21 then
             local unlock_building = City:GetBuildingByLocationId(v.location)
@@ -361,7 +362,7 @@ function GameUIKeep:CreateChangeTerrainWindow()
         :align(display.LEFT_CENTER, 10, 20):addTo(num_bg):scale(0.4)
     self.number = cc.ui.UILabel.new({
         size = 20,
-        text = "500",
+        text = intInit.changeTerrainNeedGemCount.value,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_LEFT,
         color = UIKit:hex2c3b(0x423f32)
@@ -403,6 +404,22 @@ function GameUIKeep:CreateChangeTerrainWindow()
         :addTo(bg2):align(display.CENTER, 480, 100)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
+                if User:GetGemResource():GetValue()<intInit.changeTerrainNeedGemCount.value then
+                    FullScreenPopDialogUI.new()
+                        :AddToCurrentScene()
+                        :SetTitle("提示")
+                        :CreateOKButton(
+                            {
+                                listener = function ()
+                                    UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                                    self:LeftButtonClicked()
+                                end,
+                                btn_name= _("前往商店")
+                            }
+                        )
+                        :SetPopMessage(_("宝石不足"))
+                    return
+                end
                 local selected_index = 1
                 for i=1,group:getButtonsCount() do
                     if group:getButtonAtIndex(i):isButtonSelected() then
@@ -425,7 +442,7 @@ function GameUIKeep:CreateChangeTerrainWindow()
                         self:PlayCloudAnimation()
                     end)
                 elseif selected_index == 3 then
-                    NetManager:getChangeToIceFieldPromise():done(function() 
+                    NetManager:getChangeToIceFieldPromise():done(function()
                         self:PlayCloudAnimation()
                     end)
                 end
@@ -486,6 +503,8 @@ end
 
 
 return GameUIKeep
+
+
 
 
 
