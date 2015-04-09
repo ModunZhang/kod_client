@@ -7,22 +7,28 @@ function BirdSprite:ctor(city_layer, x, y)
     self:Refly()
 end
 function BirdSprite:Refly()
-    self:GetSprite():setScaleX(-1) -- 往右飞
-    -- if math.random(2) > 1 then
-    --     self:GetSprite():setScaleX(-1) -- 往右飞
-    -- else
-    --     self:GetSprite():setScaleX(1) -- 往左飞
-    -- end
     local size = self:GetMapLayer():getContentSize()
-    local points = {
-        cc.p(0, 0),
-        cc.p(size.width/2, 0),
-        cc.p(size.width, size.height),
-    }
-    self:pos(points[1].x, points[1].y)
+    local points
+    if math.random(2) > 1 then
+        self:pos(0,0)
+        self:GetSprite():setScaleX(-1) -- 往右飞
+        points = {
+            cc.p(math.random(500) - 250, 0),
+            cc.p(math.random(size.width) - 500, size.height/2),
+            cc.p(size.width, size.height),
+        }
+    else
+        self:pos(size.width,0)
+        self:GetSprite():setScaleX(1) -- 往左飞
+        points = {
+            cc.p(math.random(500) - 250, 0),
+            cc.p(math.random(size.width) - 500, size.height/2),
+            cc.p(-size.width, size.height),
+        }
+    end
     self:stopAllActions()
     self:runAction(transition.sequence({
-        cc.BezierBy:create(20, points),
+        cc.BezierBy:create(math.random(60, 70), points),
         cc.CallFunc:create(function()
             self:Refly()
         end)
@@ -39,6 +45,7 @@ function BirdSprite:GetMidLogicPosition()
 end
 
 return BirdSprite
+
 
 
 

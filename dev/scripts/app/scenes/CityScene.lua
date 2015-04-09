@@ -88,17 +88,19 @@ function CityScene:CreateSceneUILayer()
     function scene_ui_layer:ShowIndicatorOnBuilding(building_sprite)
         if not self.indicator then
             self.building__ = building_sprite
-            self.indicator = display.newSprite("arrow_home.png")
-                :addTo(self)
-                :scale(0.4)
-                :rotation(40)
-                :zorder(1001)
-            self.indicator:setRotationSkewY(30)
-            self.indicator:runAction(cc.RepeatForever:create(transition.sequence{
-                cc.ScaleTo:create(0.4, 1),
-                cc.ScaleTo:create(0.4, 0.6),
-            }))
-
+            self.indicator = display.newNode():addTo(self):zorder(1001)
+            local r = 30
+            local len = 50
+            local x = math.sin(math.rad(r)) * len
+            local y = math.sin(math.rad(90 - r)) * len
+            display.newSprite("arrow_home.png")
+                :addTo(self.indicator)
+                :align(display.BOTTOM_CENTER, 10, 10)
+                :rotation(r)
+                :runAction(cc.RepeatForever:create(transition.sequence{
+                    cc.MoveBy:create(0.4, cc.p(-x, -y)),
+                    cc.MoveBy:create(0.4, cc.p(x, y)),
+                }))
             self.action_node:stopAllActions()
             self.action_node:performWithDelay(function()
                 self:HideIndicator()
@@ -321,6 +323,7 @@ end
 
 
 return CityScene
+
 
 
 

@@ -10,6 +10,7 @@ local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local UIKit = UIKit
 local UIListView = import(".UIListView")
 local WidgetPushButton = import("..widget.WidgetPushButton")
+local WidgetPushTransparentButton = import("..widget.WidgetPushTransparentButton")
 
 function GameUIDailyMissionInfo:ctor(key_of_daily)
 	GameUIDailyMissionInfo.super.ctor(self)
@@ -59,17 +60,24 @@ function GameUIDailyMissionInfo:BuildUI()
 		color= 0x403c2f,
 		size = 20,
 	}):align(display.LEFT_BOTTOM,22,562):addTo(bg)
-	local button = WidgetPushButton.new({
-		normal = 'Icon_reward_174x141.png',
-	})
-		:align(display.RIGHT_BOTTOM, 562,456)
-		:addTo(bg)
+	-- local button = WidgetPushButton.new({
+	-- 	normal = 'Icon_reward_174x141.png',
+	-- })
+
+    local yin_box = ccs.Armature:create("yin_box")
+        :align(display.RIGHT_BOTTOM, 562,456)
+        :addTo(bg)
+        :scale(174/400)
+    self.button_finish_animation = yin_box
+    local button = WidgetPushTransparentButton.new(cc.rect(0,0,174,141))
+        :align(display.RIGHT_BOTTOM, 562,456)
+        :addTo(bg)
 		:onButtonClicked(function()
 			self:GetRewardFromServer()
 		end)
 	local finish_icon = display.newSprite("minssion_finish_icon_51x51.png")
 		:align(display.CENTER, -50, 70)
-		:addTo(button)
+		:addTo(yin_box)
 	finish_icon:setVisible(true) 
 	self.button_finish_icon = finish_icon
 	self:RefreshListUI()
@@ -92,7 +100,9 @@ end
 
 function GameUIDailyMissionInfo:GetRewardFromServer()
     if not User:CheckDailyTasksWasRewarded(self:GetKeyOfDaily()) then
-        NetManager:getDailyTaskRewards(self:GetKeyOfDaily())
+        NetManager:getDailyTaskRewards(self:GetKeyOfDaily()):done(function()
+            self.button_finish_animation:getAnimation():play("Animation1", -1, 0)
+        end)
     end
 end
 
