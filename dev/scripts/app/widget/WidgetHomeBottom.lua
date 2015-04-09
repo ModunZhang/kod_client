@@ -19,9 +19,9 @@ function WidgetHomeBottom:ctor(callback)
     local label_padding = 20
     local padding_width = 100
     for i, v in ipairs({
-        {"bottom_icon_mission_128x128.png", _("任务")},
-        {"bottom_icon_package_128x128.png", _("物品")},
-        {"mail_icon_128x128.png", _("邮件")},
+        {"bottom_icon_mission_62x62.png", _("任务")},
+        {"bottom_icon_package_66x66.png", _("物品")},
+        {"mail_icon_62x62.png", _("邮件")},
         {"bottom_icon_alliance_66x70.png", _("联盟")},
         {"bottom_icon_package_77x67.png", _("更多")},
     }) do

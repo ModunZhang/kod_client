@@ -37,13 +37,6 @@ function WidgetMaterialBox:ctor(material_type,material_name,cb,is_has_i_icon)
         color = 0x403c2f
     }):addTo(number_bg):align(display.CENTER, size.width / 2, size.height/2)
 
-    self.name = cc.ui.UILabel.new({
-        text = material_name,
-        size = 16,
-        font = UIKit:getFontFilePath(),
-        align = cc.ui.TEXT_ALIGN_LEFT,
-        color = UIKit:hex2c3b(0xffedae)
-    }):addTo(material_bg):align(display.CENTER, size.width / 2, rect.height-16)
 end
 function WidgetMaterialBox:SetNumber(number)
     self.number_bg:show()

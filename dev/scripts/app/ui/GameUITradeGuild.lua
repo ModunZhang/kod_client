@@ -661,7 +661,7 @@ function GameUITradeGuild:OpenDollyIntro()
 end
 function GameUITradeGuild:OpenSellDialog()
     local tradeGuildUI = self
-    local root = WidgetPopDialog.new(654,_("出售资源")):AddToCurrentScene()
+    local root = WidgetPopDialog.new(654,_("出售资源")):addTo(self,10000)
     local body = root:GetBody()
     -- 资源，材料出售价格区间
     local PRICE_SCOPE = {
@@ -761,13 +761,21 @@ function GameUITradeGuild:OpenSellDialog()
             :align(display.CENTER, temp_label:getPositionX()+temp_label:getContentSize().width+20, 30)
             :addTo(layer)
             :scale(0.2)
+        -- 已有小车数量
+        self.own_cart_num_label = UIKit:ttfLabel(
+            {
+                text = string.formatnumberthousands(City:GetResourceManager():GetCartResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())).."/",
+                size = 20,
+                color = 0x403c2f
+            }):align(display.LEFT_CENTER, temp_icon:getPositionX()+temp_icon:getContentSize().width*0.2 ,30)
+            :addTo(layer)
         -- 需要小车数量
         self.cart_num_label = UIKit:ttfLabel(
             {
                 text = string.formatnumberthousands(1020),
                 size = 20,
                 color = 0x403c2f
-            }):align(display.LEFT_CENTER, temp_icon:getPositionX()+temp_icon:getContentSize().width*0.2 ,30)
+            }):align(display.LEFT_CENTER, self.own_cart_num_label:getPositionX()+self.own_cart_num_label:getContentSize().width ,30)
             :addTo(layer)
 
         -- 出售
@@ -804,6 +812,10 @@ function GameUITradeGuild:OpenSellDialog()
                     goods_type = MARTIAL_MATERIAL_TYPE
                 end
                 local selected = options.currentSelectedIndex_
+                if self.sell_num_item:GetValue()==0 then
+                    UIKit:showMessageDialog(_("提示"),_("出售数量不能为零"),function()end)
+                    return
+                end
                 -- 判定小车是否足够
                 if self.sell_num_item:GetValue()>City:GetResourceManager():GetCartResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()) then
                     FullScreenPopDialogUI.new():SetTitle(_("提示"))
@@ -869,6 +881,14 @@ function GameUITradeGuild:OpenSellDialog()
     function body:SetTotalPriceAndCartNum(goods_num,goods_unit_price)
         self.total_price_label:setString(string.formatnumberthousands(goods_num*goods_unit_price))
         self.cart_num_label:setString(string.formatnumberthousands(goods_num))
+        local current_cart_num = City:GetResourceManager():GetCartResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+        self.own_cart_num_label:setString(string.formatnumberthousands(current_cart_num).."/")
+        if current_cart_num<goods_num then
+            self.own_cart_num_label:setColor(UIKit:hex2c4b(0x7e0000))
+        else
+            self.own_cart_num_label:setColor(UIKit:hex2c4b(0x403c2f))
+        end
+        self.cart_num_label:setPositionX(self.own_cart_num_label:getPositionX()+self.own_cart_num_label:getContentSize().width)
         self.total_price = goods_num*goods_unit_price
         self.sell_btn:isButtonEnabled()
         if self.sell_btn:isButtonEnabled() ~= (value~=0) then
@@ -1049,5 +1069,6 @@ function GameUITradeGuild:GetMaterialIndexByName(material_type)
     return build_temp[material_type] or teach_temp[material_type]
 end
 return GameUITradeGuild
+
 
 

@@ -126,11 +126,11 @@ function WidgetChangeMap:ctor(map_type)
         :scale(scale_x)
     local change_icon
     if map_type == WidgetChangeMap.MAP_TYPE.OUR_CITY then
-        change_icon = "map_alliance_icon_128x128.png"
+        change_icon = "map_alliance_icon_81x98.png"
     elseif map_type == WidgetChangeMap.MAP_TYPE.OUR_ALLIANCE then
-        change_icon = "map_city_128x128.png"
+        change_icon = "map_city_81x102.png"
     elseif map_type == WidgetChangeMap.MAP_TYPE.OTHER_ALLIANCE then
-        change_icon = "map_back_128x128.png"
+        change_icon = "map_back_99x88.png"
     end
     display.newSprite(change_icon):addTo(btn):align(display.CENTER, 50, 10)
     btn:setTouchSwallowEnabled(true)

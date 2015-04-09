@@ -386,7 +386,7 @@ function GameUIHome:CreateTop()
     end):addTo(self):pos(display.left+40, display.top-200)
     --帮助
     local button = cc.ui.UIPushButton.new(
-        {normal = "tips_128x128.png", pressed = "tips_128x128.png"},
+        {normal = "tips_66x64.png", pressed = "tips_66x64.png"},
         {scale9 = false}
     )
     button:onButtonClicked(function(event)
