@@ -52,7 +52,7 @@ function VillageSprite:newBatchNode(w, h)
     local map = self:GetLogicMap()
     for ix = start_x, end_x do
         for iy = start_y, end_y do
-			display.newSprite(base_node:getTexture()):addTo(base_node):pos(map:ConvertToLocalPosition(ix, iy))
+			display.newSprite(base_node:getTexture()):addTo(base_node):pos(map:ConvertToLocalPosition(ix, iy)):scale(2)
         end
     end
     return base_node

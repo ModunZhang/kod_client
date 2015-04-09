@@ -37,7 +37,7 @@ end
 
 
 
-local TILE_WIDTH = 240
+local TILE_WIDTH = 160
 function AllianceView:ctor(layer, alliance, logic_base_x, logic_base_y)
     Observer.extend(self)
     self.layer = layer
