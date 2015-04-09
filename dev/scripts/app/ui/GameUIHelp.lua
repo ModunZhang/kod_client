@@ -8,6 +8,8 @@ local Localize = import("..utils.Localize")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local WidgetBackGroundLucid = import("..widget.WidgetBackGroundLucid")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
+local intInit = GameDatas.PlayerInitData.intInit
+
 local HELP_EVENTS = "help_events"
 local GameUIHelp = class("GameUIHelp", WidgetPopDialog)
 
@@ -15,7 +17,6 @@ function GameUIHelp:ctor()
     GameUIHelp.super.ctor(self,756,_("协助加速"),display.top-100)
     self.alliance = Alliance_Manager:GetMyAlliance()
     self.help_events_items = {}
-    self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.HELP_EVENTS)
 end
 
 function GameUIHelp:onEnter()
@@ -78,6 +79,8 @@ function GameUIHelp:onEnter()
             end
         end):addTo(body):pos(rb_size.width/2, 50)
     self:InitHelpEvents()
+    self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.HELP_EVENTS)
+    User:AddListenOnType(self, User.LISTEN_TYPE.COUNT_INFO)
 end
 function GameUIHelp:IsAbleToHelpAll()
     for k,item in pairs(self.help_events_items) do
@@ -87,8 +90,8 @@ function GameUIHelp:IsAbleToHelpAll()
     end
 end
 function GameUIHelp:SetLoyalty()
-    self.loyalty_label:setString(_("每日获得最大忠诚度：")..DataManager:getUserData().allianceInfo.loyalty.."/10000")
-    self.ProgressTimer:setPercentage(math.floor(DataManager:getUserData().allianceInfo.loyalty/10000*100))
+    self.loyalty_label:setString(_("每日获得最大忠诚度：")..User:GetCountInfo().todayLoyaltyGet.."/"..intInit.maxLoyaltyGetPerDay.value)
+    self.ProgressTimer:setPercentage(math.floor(User:GetCountInfo().todayLoyaltyGet/10000*100))
 end
 function GameUIHelp:InitHelpEvents()
     local help_events = self.alliance:GetCouldShowHelpEvents()
@@ -342,9 +345,12 @@ function GameUIHelp:AddToCurrentScene(anima)
     display.getRunningScene():addChild(self,3000)
     return self
 end
-
+function GameUIHelp:OnCountInfoChanged()
+    self:SetLoyalty()
+end
 function GameUIHelp:onExit()
     self.alliance:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.HELP_EVENTS)
+    User:RemoveListenerOnType(self, User.LISTEN_TYPE.COUNT_INFO)
 end
 
 return GameUIHelp
