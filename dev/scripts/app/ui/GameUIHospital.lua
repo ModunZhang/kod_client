@@ -147,10 +147,10 @@ function GameUIHospital:CreateHealAllSoldierItem()
     end
     local total_iron,total_stone,total_wood,total_food = self.city:GetSoldierManager():GetTreatResource(soldiers)
     local resource_icons = {
-        [WOOD]  = {total_wood,"res_wood_114x100.png"},
-        [STONE]  = {total_stone,"stone_icon.png"},
-        [FOOD]  = {total_food,"res_food_114x100.png"},
-        [IRON] = {total_iron,"res_iron_114x100.png"},
+        [WOOD]  = {total_wood,"res_wood_82x73.png"},
+        [STONE]  = {total_stone,"res_stone_88x82.png"},
+        [FOOD]  = {total_food,"res_food_91x74.png"},
+        [IRON] = {total_iron,"res_iron_91x63.png"},
     }
     -- 资源背景框
     local resource_bg = display.newSprite("back_ground_556x56.png"):addTo(self.treate_all_soldiers_item):pos(self.treate_all_soldiers_item:getContentSize().width/2,180)

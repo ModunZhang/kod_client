@@ -290,7 +290,7 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
             resource_type = _("银币"),
             isVisible = cost.coin >0,
             isSatisfy = coin >= cost.coin,
-            icon="coin_icon_1.png",
+            icon="res_coin_81x68.png",
             description= GameUtils:formatNumber(cost.coin).."/"..GameUtils:formatNumber(coin)
         })
     table.insert(requirements,
