@@ -1,4 +1,5 @@
 local Enum = import("..utils.Enum")
+local UILib = import("..ui.UILib")
 local Alliance = import("..entity.Alliance")
 local Observer = import("..entity.Observer")
 local AllianceView = import(".AllianceView")
@@ -24,6 +25,57 @@ function MultiAllianceLayer:ctor(arrange, ...)
     self:InitAllianceEvent()
     self:AddOrRemoveAllianceEvent(true)
     self:StartCorpsTimer()
+
+
+    -- local x, y = 13, 36
+    -- local len = 9
+    -- local count = 1
+    -- for i = x - len, x + len do
+    --     self:CreateCorps(
+    --         count,
+    --         {x = x, y = y, index = 1},
+    --         {x = i, y = y + 10, index = 1},
+    --         timer:GetServerTime(),
+    --         timer:GetServerTime() + 30
+    --     )
+    --     count = count + 1
+    -- end
+
+    -- for i = x - len, x + len do
+    --     self:CreateCorps(
+    --         count,
+    --         {x = x, y = y, index = 1},
+    --         {x = i, y = y - 10, index = 1},
+    --         timer:GetServerTime(),
+    --         timer:GetServerTime() + 30
+    --     )
+    --     count = count + 1
+    -- end
+
+
+    -- for i = y - len, y + len do
+    --     self:CreateCorps(
+    --         count,
+    --         {x = x, y = y, index = 1},
+    --         {x = x + 10, y = i, index = 1},
+    --         timer:GetServerTime(),
+    --         timer:GetServerTime() + 30
+    --     )
+    --     count = count + 1
+    -- end
+
+
+    -- for i = y - len, y + len do
+    --     self:CreateCorps(
+    --         count,
+    --         {x = x, y = y, index = 1},
+    --         {x = x - 10, y = i, index = 1},
+    --         timer:GetServerTime(),
+    --         timer:GetServerTime() + 30
+    --     )
+    --     count = count + 1
+    -- end
+
 end
 function MultiAllianceLayer:onCleanup()
     self:AddOrRemoveAllianceEvent(false)
@@ -70,6 +122,7 @@ function MultiAllianceLayer:ReloadBackGround()
     if self.background then
         self.background:removeFromParent()
     end
+    print("self:GetMapFileByArrangeAndTerrain()", self:GetMapFileByArrangeAndTerrain())
     self.background = cc.TMXTiledMap:create(self:GetMapFileByArrangeAndTerrain()):addTo(self, ZORDER.BACKGROUND)
     --
     local terrains = self:GetTerrains()
@@ -294,20 +347,57 @@ function MultiAllianceLayer:CreateCorpsIf(marchEvent)
         marchEvent:ArriveTime()
     )
 end
-local dir_map = {
+local dragon_dir_map = {
     [0] = {"flying_45", -1}, -- x-,y+
     {"flying_45", -1}, -- x-,y+
-    {"flying_90", -1}, -- x-
+    {"flying_-45", -1}, -- x-
 
     {"flying_-45", -1}, -- x-,y-
     {"flying_-45", 1}, -- y+
     {"flying_-45", 1}, -- x+,y+
 
-    {"flying_90", 1}, -- x+
+    {"flying_45", 1}, -- x+
     {"flying_45", 1}, -- x+,y-
     {"flying_45", 1}, -- y-
 }
-function MultiAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, finish_time)
+local soldier_scale = 1
+local corps_scale = 1
+local soldier_dir_map = {
+    [0] = {"move_45", - corps_scale, soldier_scale}, -- x-,y+
+    {"move_45", - corps_scale, soldier_scale}, -- x-,y+
+    {"move_-45", - corps_scale, soldier_scale}, -- x-
+
+    {"move_-45", - corps_scale, soldier_scale}, -- x-,y-
+    {"move_-45", corps_scale, soldier_scale}, -- y+
+    {"move_-45", corps_scale, soldier_scale}, -- x+,y+
+
+    {"move_45", corps_scale, soldier_scale}, -- x+
+    {"move_45", corps_scale, soldier_scale}, -- x+,y-
+    {"move_45", corps_scale, soldier_scale}, -- y-
+}
+local len = 30
+local location_map = {
+    {len * 0.5, len * 0.5},
+    {- len * 0.5, len * 0.5},
+    {len * 0.5, - len * 0.5},
+    {- len * 0.5, - len * 0.5},
+}
+-- local location_map = {
+--     {0,0}
+-- }
+local location_map = {
+    {- len * 0.5, len * 0.5},
+    {- len * 0.5, - len * 0.5},
+}
+local function move_soldiers(corps, ani, dir_index)
+    local _,_,soldier_scale = unpack(soldier_dir_map[dir_index])
+    for i,v in ipairs(location_map) do
+        local x,y = unpack(v)
+        ccs.Armature:create("qibing_1"):addTo(corps):scale(soldier_scale)
+        :align(display.CENTER, x, y):getAnimation():play(ani)    
+    end
+end
+function MultiAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, finish_time, dragonType, soldiers)
     local march_info = self:GetMarchInfoWith(id, start_pos, end_pos)
     march_info.start_time = start_time
     march_info.finish_time = finish_time
@@ -316,12 +406,18 @@ function MultiAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, fini
     if not self.corps_map[id] then
         local index = math.floor(march_info.degree / 45) + 4
         if index < 0 or index > 8 then index = 1 end
-        local ani, scalex = unpack(dir_map[index])
         local corps = display.newNode():addTo(self:GetCorpsNode())
-        local armature = ccs.Armature:create("red_long"):addTo(corps)
-        armature:align(display.CENTER)
-        armature:getAnimation():play(ani)
+
+        local ani, scalex = unpack(dragon_dir_map[index])
+        local dragon_ani = UILib.dragon_animations[dragonType or "redDragon"][1]
+        ccs.Armature:create(dragon_ani):addTo(corps)
+            :align(display.CENTER):getAnimation():play(ani)
+
+        -- local ani, scalex = unpack(soldier_dir_map[index])
+        -- move_soldiers(corps, ani, index)
+
         corps:setScaleX(scalex)
+        corps:setScaleY(math.abs(scalex))
         corps.march_info = march_info
         self.corps_map[id] = corps
         self:CreateLine(id, march_info.start_info.logic, march_info.end_info.logic)
@@ -464,6 +560,8 @@ end
 
 
 return MultiAllianceLayer
+
+
 
 
 
