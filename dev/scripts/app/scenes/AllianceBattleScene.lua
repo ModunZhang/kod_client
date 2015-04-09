@@ -71,14 +71,14 @@ function AllianceBattleScene:OnTouchClicked(pre_x, pre_y, x, y)
         if iskindof(building, "Sprite") then
             self.util_node:performWithDelay(function() end, 0.5)
             Sprite:PromiseOfFlash(building):next(function()
-                self:OpenUI(building)
+                self:OpenUI(building, isMyAlliance)
             end)
         else
-            self:OpenUI(building)
+            self:OpenUI(building, isMyAlliance)
         end
     end
 end
-function AllianceScene:OpenUI(building)
+function AllianceBattleScene:OpenUI(building, isMyAlliance)
     if building:GetEntity():GetType() ~= "building" then
         self:EnterNotAllianceBuilding(building:GetEntity(),isMyAlliance)
     else

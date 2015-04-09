@@ -15,10 +15,18 @@ function WidgetSliderWithInput:ctor(params)
     local unit = params.unit or ""
     local bar = params.bar or "slider_bg_554x24.png"
     local progress = params.progress or "slider_progress_538x24.png"
+    self.max = max
+    self.unit = unit
     -- progress
+    local slider_max
+    if params.unit == "K" then
+        slider_max = math.floor(max/1000)
+    else
+        slider_max = max
+    end
     self.slider = WidgetSlider.new(display.LEFT_TO_RIGHT,  {bar = bar,
         progress = progress,
-        button = "slider_btn_66x66.png"}, {max = max,min = min,scale9=true}):addTo(self)
+        button = "slider_btn_66x66.png"}, {max = slider_max,min = min,scale9=true}):addTo(self)
     local slider = self.slider
 
 
@@ -63,7 +71,7 @@ function WidgetSliderWithInput:ctor(params)
                     min=min,
                     unit=unit,
                     callback = function ( edit_value )
-                        if edit_value ~= slider_value then
+                        if edit_value ~= self:GetValue() then
                             slider.fsm_:doEvent("press")
                             slider:setSliderValue(edit_value)
                             slider.fsm_:doEvent("release")
@@ -76,6 +84,9 @@ function WidgetSliderWithInput:ctor(params)
                 WidgetInput.new(p):AddToCurrentScene()
             end
         end):align(display.CENTER, slider:getCascadeBoundingBox().size.width,30):addTo(self)
+
+
+
     self.btn_text = UIKit:ttfLabel({
         text = min,
         size = 22,
@@ -84,18 +95,35 @@ function WidgetSliderWithInput:ctor(params)
     self.text_btn = text_btn
 
     slider:onSliderValueChanged(function(event)
-        self.btn_text:setString(math.floor(event.value))
+        local change_unit
+        if self.unit == "K" then
+            change_unit = 1000
+        else
+            change_unit = 1
+        end
+        local e_value = math.floor(event.value*change_unit)
+        local btn_value
+        local btn_unit  = ""
+        if e_value>=1000 then
+            local f_value = GameUtils:formatNumber(e_value)
+            btn_value = string.sub(f_value,1,-2)
+            btn_unit = string.sub(f_value,-1,-1)
+        else
+            btn_value = e_value
+        end
+        self.btn_text:setString(tonumber(btn_value))
+        self.soldier_total_count:setString(string.format(btn_unit.."/ %s", GameUtils:formatNumber(self.max)))
     end)
-    slider:setSliderValue(min)
 
     local soldier_total_count = UIKit:ttfLabel({
-        text = string.format(unit.."/ %d"..unit, max),
+        text = string.format(unit.."/ %s", GameUtils:formatNumber(max)),
         size = 20,
         color = 0x403c2f
     }):addTo(slider)
         :align(display.RIGHT_CENTER, slider:getCascadeBoundingBox().size.width,0)
     self:setContentSize(cc.size(slider:getCascadeBoundingBox().size.width,slider:getCascadeBoundingBox().size.height))
     self.soldier_total_count = soldier_total_count
+    slider:setSliderValue(min)
 end
 function WidgetSliderWithInput:SetValue(value)
     self.slider:setSliderValue(value)
@@ -112,7 +140,24 @@ function WidgetSliderWithInput:AddSliderReleaseEventListener(func)
 end
 function WidgetSliderWithInput:OnSliderValueChanged(func)
     self.slider:onSliderValueChanged(function(event)
-        self.btn_text:setString(math.floor(event.value))
+        local change_unit
+        if self.unit == "K" then
+            change_unit = 1000
+        else
+            change_unit = 1
+        end
+        local e_value = math.floor(event.value*change_unit)
+        local btn_value
+        local btn_unit  = ""
+        if e_value>=1000 then
+            local f_value = GameUtils:formatNumber(e_value)
+            btn_value = string.sub(f_value,1,-2)
+            btn_unit = string.sub(f_value,-1,-1)
+        else
+            btn_value = e_value
+        end
+        self.btn_text:setString(tonumber(btn_value))
+        self.soldier_total_count:setString(string.format(btn_unit.."/ %s", GameUtils:formatNumber(self.max)))
         func(event)
     end)
     return self
@@ -136,6 +181,7 @@ function WidgetSliderWithInput:GetEditBoxPostion()
 end
 
 return WidgetSliderWithInput
+
 
 
 

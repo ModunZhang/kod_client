@@ -119,12 +119,15 @@ function GameUITradeGuild:LoadBuyPage()
 
             if self.resource_layer then
                 self.resource_layer:setVisible(tag == 'resource')
+                self:RefreshSellListView(RESOURCE_TYPE,self.resource_options:getSelectedIndex())
             end
             if self.build_material_layer then
                 self.build_material_layer:setVisible(tag == 'build_material')
+                self:RefreshSellListView(BUILD_MATERIAL_TYPE,self.build_material_options:getSelectedIndex())
             end
             if self.martial_material_layer then
                 self.martial_material_layer:setVisible(tag == 'martial_material')
+                self:RefreshSellListView(MARTIAL_MATERIAL_TYPE,self.martial_material_options:getSelectedIndex())
             end
         end
     )
@@ -254,7 +257,12 @@ function GameUITradeGuild:CreateSellItemForListView(listView,goods)
                     :AddToCurrentScene()
                 return
             end
-            NetManager:getBuySellItemPromise(goods._id):done(function()
+            NetManager:getBuySellItemPromise(goods._id):next(function ( response )
+                -- 商品不存在
+                if response.errcode[1].code==573 then
+                    listView:removeItem(item)
+                end
+            end):done(function()
                 listView:removeItem(item)
             end)
         end)
@@ -818,9 +826,7 @@ function GameUITradeGuild:OpenSellDialog()
                 end
                 -- 判定小车是否足够
                 if self.sell_num_item:GetValue()>City:GetResourceManager():GetCartResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()) then
-                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                        :SetPopMessage(_("资源小车数量不足"))
-                        :AddToCurrentScene()
+                    UIKit:showMessageDialog(_("提示"),_("资源小车数量不足"), function()end)
                     return
                 end
                 NetManager:getSellItemPromise(type,goods_type[selected],self.sell_num_item:GetValue(),self.sell_price_item:GetValue()):done(function(result)
@@ -857,7 +863,7 @@ function GameUITradeGuild:OpenSellDialog()
             min_unit_price = PRICE_SCOPE.resource.min
             max_unit_price = PRICE_SCOPE.resource.max
 
-            max_num = math.floor(goods_details[2]/unit)
+            max_num = goods_details[2]
             min_num = max_num>1 and 1 or 0
         else
             min_unit_price = PRICE_SCOPE.material.min

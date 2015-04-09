@@ -16,7 +16,11 @@ function WidgetInput:ctor(params)
     local min = params.min or 0
     local unit = params.unit or ""
     local callback = params.callback or NOT_HANDLE
-
+    local exchange = 1
+    if unit == "K" then
+        exchange = 1000
+    end
+    self.current_value = min
     -- max 有时会变化
     self.max = max
 
@@ -28,17 +32,30 @@ function WidgetInput:ctor(params)
             end
         elseif event == "changed" then
             if text then
-                if text > self.max then
-                    editbox:setText(self.max)
+                if text > math.floor(self.max/exchange) then
+                    editbox:setText(math.floor(self.max/exchange))
                 end
             end
         elseif event == "ended" then
             if editbox:getText()=="" or min>text then
                 editbox:setText(min)
+            else
+                local e_value = math.floor(text*exchange)
+                local btn_value
+                local btn_unit  = ""
+                if e_value>=1000 then
+                    local f_value = GameUtils:formatNumber(e_value)
+                    btn_value = string.sub(f_value,1,-2)
+                    btn_unit = string.sub(f_value,-1,-1)
+                else
+                    btn_value = e_value
+                end
+                editbox:setText(btn_value)
+                self.perfix_lable:setString(string.format(btn_unit.."/ %s", GameUtils:formatNumber(max)))
+
+                self.current_value = text
             end
-            local edit_value = tonumber(editbox:getText())
-            editbox:setText(edit_value)
-            callback(edit_value)
+            callback(self.current_value)
         end
     end
 
@@ -59,8 +76,8 @@ function WidgetInput:ctor(params)
     editbox:setReturnType(cc.KEYBOARD_RETURNTYPE_DEFAULT)
     editbox:align(display.CENTER, body:getContentSize().width/2,body:getContentSize().height/2+20):addTo(body)
 
-    UIKit:ttfLabel({
-        text = string.format(unit.."/ %d"..unit, max),
+    self.perfix_lable = UIKit:ttfLabel({
+        text = string.format(unit.."/ %s", GameUtils:formatNumber(max)),
         size = 20,
         color = 0x403c2f
     }):addTo(body)
@@ -75,7 +92,7 @@ function WidgetInput:ctor(params)
         }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                callback(tonumber(editbox:getText()))
+                callback(self.current_value)
                 self:LeftButtonClicked()
             end
         end):align(display.CENTER, editbox:getPositionX(),editbox:getPositionY()-50):addTo(body)
@@ -83,5 +100,10 @@ end
 function WidgetInput:SetMax( max )
     self.max = max
 end
+function WidgetInput:onEnter()
+    WidgetInput.super.onEnter(self)
+    self.editbox:touchDownAction(editbox,2)
+end
 return WidgetInput
+
 

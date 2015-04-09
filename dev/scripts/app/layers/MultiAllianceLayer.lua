@@ -48,28 +48,62 @@ local terrain_array = {
     "014.png",
     "015.png",
 }
+local terrain_map = {
+    grassLand = {
+        "012.png",
+        "013.png",
+        "014.png",
+        "015.png",
+    },
+    desert = {
+        "016.png",
+        "017.png",
+        "017.png",
+        "018.png",
+        "018.png",
+    },
+    iceField = {
+
+    }
+}
 function MultiAllianceLayer:ReloadBackGround()
     if self.background then
         self.background:removeFromParent()
     end
     self.background = cc.TMXTiledMap:create(self:GetMapFileByArrangeAndTerrain()):addTo(self, ZORDER.BACKGROUND)
-    local size = self:getContentSize()
-    local random = math.random
-    local span = 200
-    for i = 1, 300 do
-        local x = random(span, size.width - span)
-        local y = random(span, size.height - span)
-        display.newSprite(terrain_array[random(#terrain_array)]):addTo(self.background, 1000):pos(x, y)
+    --
+    local terrains = self:GetTerrains()
+    if #terrains == 1 then
+        local array = terrain_map[terrains[1]]
+        if #array > 0 then
+            local size = self:getContentSize()
+            local random = math.random
+            local span = 200
+            for i = 1, 300 do
+                local x = random(span, size.width - span)
+                local y = random(span, size.height - span)
+                display.newSprite(array[random(#array)]):addTo(self.background, 1000):pos(x, y)
+            end
+        end
+    else
+
     end
 end
 function MultiAllianceLayer:GetMapFileByArrangeAndTerrain()
-    if #self.alliances == 1 then
-        return string.format("tmxmaps/alliance_%s.tmx", self.alliances[1]:Terrain())
+    local terrains = self:GetTerrains()
+    if #terrains == 1 then
+        return string.format("tmxmaps/alliance_%s.tmx", unpack(terrains))
     end
-    local first, second = unpack(self.alliances)
-    local terrain1, terrain2 = first:Terrain(), second:Terrain()
+    local terrain1, terrain2 = unpack(terrains)
     local arrange = MultiAllianceLayer.ARRANGE.H == self.arrange and "h" or "v"
     return string.format("tmxmaps/alliance_%s_%s_%s.tmx", arrange, terrain1, terrain2)
+end
+function MultiAllianceLayer:GetTerrains()
+    if #self.alliances == 1 then
+        return {self.alliances[1]:Terrain()}
+    end
+    local first, second = unpack(self.alliances)
+    return {first:Terrain(), second:Terrain()}
 end
 function MultiAllianceLayer:InitBuildingNode()
     self.building = display.newNode():addTo(self, ZORDER.BUILDING)
@@ -107,8 +141,8 @@ function MultiAllianceLayer:InitAllianceView()
         --     {borderColor = cc.c4f(1.0, 0.0, 0.0, 1.0),
         --         borderWidth = 5}):addTo(self.building)
     else
-        alliance_view1 = AllianceView.new(self, self.alliances[1], 0, 105):addTo(self)
-        alliance_view2 = AllianceView.new(self, self.alliances[2], 0, 54):addTo(self)
+        alliance_view1 = AllianceView.new(self, self.alliances[1], 0, 103):addTo(self)
+        alliance_view2 = AllianceView.new(self, self.alliances[2], 0, 52):addTo(self)
         -- local sx, sy = alliance_view1:GetLogicMap():ConvertToMapPosition(-0.5, 51.5)
         -- local ex, ey = alliance_view1:GetLogicMap():ConvertToMapPosition(51.5, 51.5)
         -- display.newLine({{sx, sy}, {ex, ey}},
@@ -236,7 +270,7 @@ function MultiAllianceLayer:ManagerCorpsFromChangedMap(changed_map)
             self:DeleteCorpsById(marchEvent:Id())
         end)
     elseif changed_map.edited then
-         table.foreachi(changed_map.edited,function(_,marchEvent)
+        table.foreachi(changed_map.edited,function(_,marchEvent)
             self:CreateCorpsIf(marchEvent)
         end)
     elseif changed_map.added then
@@ -435,6 +469,9 @@ end
 
 
 return MultiAllianceLayer
+
+
+
 
 
 

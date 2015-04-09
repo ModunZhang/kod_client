@@ -17,8 +17,8 @@ local decorator_map = {
     desert = {
         decorate_lake_1 =  1,
         decorate_lake_2 =  1,
-        decorate_mountain_1 =  1,
-        decorate_mountain_2 =  1,
+        decorate_mountain_1 =  4,
+        decorate_mountain_2 =  2,
         decorate_tree_1 =  1,
         decorate_tree_2 =  1,
         decorate_tree_3 =  1,
@@ -27,8 +27,8 @@ local decorator_map = {
     iceField = {
         decorate_lake_1 =  1,
         decorate_lake_2 =  1,
-        decorate_mountain_1 =  1,
-        decorate_mountain_2 =  1,
+        decorate_mountain_1 =  4,
+        decorate_mountain_2 =  2,
         decorate_tree_1 =  1,
         decorate_tree_2 =  1,
         decorate_tree_3 =  1,
@@ -39,12 +39,12 @@ local decorator_map = {
 function AllianceDecoratorSprite:ctor(city_layer, entity)
     local x, y = city_layer:GetLogicMap():ConvertToMapPosition(entity:GetLogicPosition())
     AllianceDecoratorSprite.super.ctor(self, city_layer, entity, x, y)
-    self:CreateBase()
+    -- self:CreateBase()
 end
 function AllianceDecoratorSprite:GetSpriteFile()
     local terrain = self:GetMapLayer():Terrain()
     local deco_name = self:GetEntity():GetName()
-    return DECORATOR_IMAGE[terrain][deco_name], decorator_map[terrain][deco_name]
+    return DECORATOR_IMAGE[terrain][deco_name], decorator_map["grassLand"][deco_name]
 end
 function AllianceDecoratorSprite:GetSpriteOffset()
     local w, h = self:GetSize()
@@ -66,7 +66,7 @@ function AllianceDecoratorSprite:newBatchNode(w, h)
     local map = self:GetLogicMap()
     for ix = start_x, end_x do
         for iy = start_y, end_y do
-            display.newSprite(base_node:getTexture()):addTo(base_node):pos(map:ConvertToLocalPosition(ix, iy)):scale(3)
+            display.newSprite(base_node:getTexture()):addTo(base_node):pos(map:ConvertToLocalPosition(ix, iy)):scale(2)
         end
     end
     return base_node
