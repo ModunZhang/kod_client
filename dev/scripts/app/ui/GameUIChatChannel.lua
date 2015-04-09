@@ -2,7 +2,7 @@
 -- Author: Danny He
 -- Date: 2015-01-21 16:07:41
 --
-local GameUIChatChannel = UIKit:createUIClass('GameUIChatChannel')
+local GameUIChatChannel = UIKit:createUIClass('GameUIChatChannel','GameUIWithCommonHeader')
 local WidgetBackGroundTabButtons = import('..widget.WidgetBackGroundTabButtons')
 local NetService = import('..service.NetService')
 local window = import("..utils.window")
@@ -31,7 +31,7 @@ GameUIChatChannel.CELL_PLAYER_ICON_HERO_TAG = 111
 
 
 function GameUIChatChannel:ctor(default_tag)
-	GameUIChatChannel.super.ctor(self)
+	GameUIChatChannel.super.ctor(self,City,_("聊天"))
 	self.default_tag = default_tag
     self.chatManager = app:GetChatManager()
 end
@@ -40,17 +40,19 @@ function GameUIChatChannel:GetChatManager()
     return self.chatManager
 end
 
-function GameUIChatChannel:onEnter()
-	GameUIChatChannel.super.onEnter(self)
+function GameUIChatChannel:OnMoveInStage()
+	GameUIChatChannel.super.OnMoveInStage(self)
 	self:CreateBackGround()
-    self:CreateTitle(_("聊天"))
-    self:CreateHomeButton()
-    self:CreateSettingButton()
+    -- self:CreateTitle(_("聊天"))
+    -- self:CreateHomeButton()
+    -- self:CreateSettingButton()
     self:CreateTextFieldBody()
     self:CreateListView()
     self:CreateTabButtons()
     self:GetChatManager():AddListenOnType(self,ChatManager.LISTEN_TYPE.TO_TOP)
 end
+
+
 
 function GameUIChatChannel:OnMoveOutStage()
     self:GetChatManager():RemoveListenerOnType(self,ChatManager.LISTEN_TYPE.TO_TOP)
@@ -105,7 +107,7 @@ function GameUIChatChannel:CreateTextFieldBody()
     editbox:setFontColor(cc.c3b(0,0,0))
     editbox:setPlaceholderFontColor(cc.c3b(204,196,158))
     editbox:setReturnType(cc.KEYBOARD_RETURNTYPE_SEND)
-    editbox:align(display.LEFT_TOP,window.left+46,window.top - 100):addTo(self)
+    editbox:align(display.LEFT_TOP,window.left+46,window.top - 100):addTo(self:GetView())
     self.editbox = editbox
 
     -- body button
@@ -116,7 +118,7 @@ function GameUIChatChannel:CreateTextFieldBody()
                 self:CreateEmojiPanel()
             -- end
     	end)
-    	:addTo(self)
+    	:addTo(self:GetView())
     	:align(display.LEFT_TOP,self.editbox:getPositionX()+self.editbox:getContentSize().width+10, window.top - 100)
         :zorder(2)
     local plusButton = cc.ui.UIPushButton.new({normal = "chat_add.png",pressed = "chat_add_highlight.png",}, {scale9 = false})
@@ -137,24 +139,23 @@ function GameUIChatChannel:CreateTextFieldBody()
                 self:GetChatManager():SendChat(self._channelType,msg)
             end
 		end)
-		:addTo(self)
+		:addTo(self:GetView())
 		:align(display.LEFT_TOP, emojiButton:getPositionX()+emojiButton:getCascadeBoundingBox().size.width+10,emojiButton:getPositionY()-2)
         :zorder(2)
 end
 
-function GameUIChatChannel:CreateSettingButton()
+function GameUIChatChannel:CreateShopButton()
 	--right button
 	local rightbutton = cc.ui.UIPushButton.new({normal = "home_btn_up.png",pressed = "home_btn_down.png"}, {scale9 = false}, {down = "HOME_PAGE"})
 		:onButtonClicked(function(event)
 			self:CreatShieldView()
     	end)
-    	:align(display.TOP_RIGHT, 0, 0)
-    	:addTo(self)
-    rightbutton:pos(window.right-5,window.top-5)
+    	:align(display.TOP_RIGHT, 670, 86)
    	display.newSprite("chat_setting.png")
    		:addTo(rightbutton):scale(0.8)
         :pos(-49,-30)
 
+    return rightbutton
 end
 
 function GameUIChatChannel:FetchCurrentChannelMessages()
@@ -178,7 +179,7 @@ function GameUIChatChannel:CreateTabButtons()
     function(tag)
         self._channelType = tag == 'global' and ChatManager.CHANNNEL_TYPE.GLOBAL or ChatManager.CHANNNEL_TYPE.ALLIANCE
         self:RefreshListView()
-    end):addTo(self):pos(window.cx, window.bottom + 34)
+    end):addTo(self:GetView()):pos(window.cx, window.bottom + 34)
 end
 
 
@@ -307,7 +308,7 @@ function GameUIChatChannel:CreateListView()
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
         alignment = cc.ui.UIListView.ALIGNMENT_LEFT,
         async = true
-    }:onTouch(handler(self, self.listviewListener)):addTo(self)
+    }:onTouch(handler(self, self.listviewListener)):addTo(self:GetView())
     self.listView:setDelegate(handler(self, self.sourceDelegate))
 end
 
@@ -682,7 +683,7 @@ function GameUIChatChannel:CreatePlayerMenu(event,chat)
             local mail = GameUIWriteMail.new(GameUIWriteMail.SEND_TYPE.PERSONAL_MAIL)
             mail:SetTitle(_("个人邮件"))
             mail:SetAddressee(chat.fromName)
-            mail:addTo(self)
+            mail:addTo(self:GetView())
         end)
         :align(display.LEFT_BOTTOM, tabBg:getContentSize().width/5 * 4 , 2)
         :addTo(tabBg)

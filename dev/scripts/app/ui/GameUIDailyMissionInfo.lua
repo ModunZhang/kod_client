@@ -3,7 +3,7 @@
 -- Date: 2015-03-06 17:27:51
 --
 
-local GameUIDailyMissionInfo = UIKit:createUIClass("GameUIDailyMissionInfo")
+local GameUIDailyMissionInfo = UIKit:createUIClass("GameUIDailyMissionInfo","UIAutoClose")
 local window = import("..utils.window")
 local Localize = import("..utils.Localize")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
@@ -25,8 +25,8 @@ end
 
 
 function GameUIDailyMissionInfo:BuildUI()
-	local shadowLayer = UIKit:shadowLayer():addTo(self)
-	local bg = WidgetUIBackGround.new({height=630}):addTo(shadowLayer)
+	local bg = WidgetUIBackGround.new({height=630})
+    self:addTouchAbleChild(bg)
 	bg:pos(((display.width - bg:getContentSize().width)/2),window.bottom_top + 100)
 	local titleBar = display.newSprite("title_blue_600x52.png"):align(display.LEFT_BOTTOM,3,615):addTo(bg)
 	local closeButton = UIKit:closeButton()

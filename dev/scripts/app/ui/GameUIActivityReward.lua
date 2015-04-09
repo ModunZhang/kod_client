@@ -2,7 +2,7 @@
 -- Author: Danny He
 -- Date: 2015-02-11 14:25:56
 --
-local GameUIActivityReward = UIKit:createUIClass("GameUIActivityReward")
+local GameUIActivityReward = UIKit:createUIClass("GameUIActivityReward","UIAutoClose")
 local Enum = import("..utils.Enum")
 local window = import("..utils.window")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
@@ -86,10 +86,10 @@ function GameUIActivityReward:onExit()
 end
 
 function GameUIActivityReward:BuildUI()
-	local shadowLayer = UIKit:shadowLayer():addTo(self)
 	local height = height_config[self.REWARD_TYPE[self:GetRewardType()]]
 	self.height = height
-	local bg = WidgetUIBackGround.new({height=height}):addTo(shadowLayer)
+	local bg = WidgetUIBackGround.new({height=height})
+	self:addTouchAbleChild(bg)
 	self.bg = bg
 	bg:pos(((display.width - bg:getContentSize().width)/2),window.bottom_top)
 	local titleBar = display.newSprite("title_blue_600x52.png"):align(display.LEFT_BOTTOM,3,height - 15):addTo(bg)

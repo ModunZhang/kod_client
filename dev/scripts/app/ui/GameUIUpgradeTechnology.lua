@@ -2,7 +2,7 @@
 -- Author: Danny He
 -- Date: 2014-12-17 19:30:23
 --
-local GameUIUpgradeTechnology = UIKit:createUIClass("GameUIUpgradeTechnology")
+local GameUIUpgradeTechnology = UIKit:createUIClass("GameUIUpgradeTechnology","UIAutoClose")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetRequirementListview = import("..widget.WidgetRequirementListview")
 local HEIGHT = 694
@@ -21,6 +21,15 @@ end
 
 function GameUIUpgradeTechnology:onEnter()
     GameUIUpgradeTechnology.super.onEnter(self)
+    if self:CheckIsMeUpgrade() then
+        HEIGHT = 550
+    else
+        if self:CheckMeIsReachLimitLevel() then
+            HEIGHT = 200
+        else
+            HEIGHT = 694
+        end
+    end
     self:BuildUI()
     City:AddListenOnType(self,City.LISTEN_TYPE.PRODUCTION_DATA_CHANGED)
     self:RefreshButtonState()
@@ -34,7 +43,11 @@ end
 function GameUIUpgradeTechnology:OnProductionTechsDataChanged(changed_map)
     for _,tech in ipairs(changed_map.edited or {}) do
         if self:GetProductionTechnology():Index() == tech:Index() then
-            self:RefreshUI()
+            if self:CheckMeIsReachLimitLevel() then
+                self:LeftButtonClicked()
+            else
+                self:RefreshUI()
+            end
         end
     end
 end
@@ -140,8 +153,8 @@ function GameUIUpgradeTechnology:GetTechIcon()
 end
 
 function GameUIUpgradeTechnology:BuildUI()
-    UIKit:shadowLayer():addTo(self)
-    local bg_node =  WidgetUIBackGround.new({height = HEIGHT,isFrame = "no"}):addTo(self):align(display.TOP_CENTER, window.cx, window.top_bottom - 100)
+    local bg_node =  WidgetUIBackGround.new({height = HEIGHT,isFrame = "no"}):align(display.TOP_CENTER, window.cx, window.top_bottom - 50)
+    self:addTouchAbleChild(bg_node)
     local title_bar = display.newSprite("title_blue_600x52.png"):align(display.BOTTOM_CENTER,304,HEIGHT - 15):addTo(bg_node)
     UIKit:closeButton():align(display.RIGHT_BOTTOM,600, 0):addTo(title_bar):onButtonClicked(function()
         self:LeftButtonClicked()
@@ -252,7 +265,17 @@ function GameUIUpgradeTechnology:BuildUI()
             contents = requirements,
         }):addTo(bg_node):pos(30,40)
     end
+    
     self:RefreshUI()
+    if self:CheckIsMeUpgrade() then
+         self.upgradeNowButton:hide()
+         self.upgrade_button:hide()
+         self.need_gems_icon:hide()
+         self.need_gems_label:hide()
+         self.time_icon:hide()
+         self.time_label:hide()
+         self.buff_time_label:hide()
+    end
 end
 
 
@@ -291,7 +314,7 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
             isVisible = cost.coin >0,
             isSatisfy = coin >= cost.coin,
             icon="res_coin_81x68.png",
-            description= GameUtils:formatNumber(cost.coin).."/"..GameUtils:formatNumber(coin)
+            description=  GameUtils:formatNumber(coin) .."/".. GameUtils:formatNumber(cost.coin)
         })
     table.insert(requirements,
         {
@@ -299,7 +322,7 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
             isVisible = cost.blueprints>0,
             isSatisfy = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["blueprints"]>=cost.blueprints,
             icon="blueprints_112x112.png",
-            description= GameUtils:formatNumber(cost.blueprints).."/"..GameUtils:formatNumber(City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["blueprints"])
+            description= GameUtils:formatNumber(City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["blueprints"]) .."/"..  GameUtils:formatNumber(cost.blueprints) 
         })
     table.insert(requirements,
         {
@@ -307,7 +330,7 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
             isVisible = cost.tools>0,
             isSatisfy = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tools"]>=cost.tools,
             icon="tools_112x112.png",
-            description= GameUtils:formatNumber(cost.tools).."/"..GameUtils:formatNumber(City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tools"])
+            description= GameUtils:formatNumber(City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tools"]) .."/".. GameUtils:formatNumber(cost.tools) 
         })
     table.insert(requirements,
         {
@@ -315,7 +338,7 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
             isVisible = cost.tiles>0,
             isSatisfy = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tiles"]>=cost.tiles,
             icon="tiles_112x112.png",
-            description= GameUtils:formatNumber(cost.tiles).."/"..GameUtils:formatNumber(City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tiles"])
+            description= GameUtils:formatNumber(City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tiles"]) .. "/" .. GameUtils:formatNumber(cost.tiles)  
         })
     table.insert(requirements,
         {
@@ -323,7 +346,7 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
             isVisible = cost.pulley>0,
             isSatisfy = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["pulley"]>=cost.pulley,
             icon="pulley_112x112.png",
-            description= GameUtils:formatNumber(cost.pulley).."/"..GameUtils:formatNumber(City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["pulley"])
+            description = GameUtils:formatNumber(City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["pulley"]) .. "/" .. GameUtils:formatNumber(cost.pulley) 
         })
 
     return requirements

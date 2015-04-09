@@ -211,7 +211,7 @@ end
 function MyApp:EnterMyAllianceSceneWithTips(tips)
     UIKit:showMessageDialog(nil,tips,function()
         self:EnterMyAllianceScene()
-    end):VisibleXButton(false)
+    end,nil,false)
 end
 function MyApp:EnterMyAllianceScene()
     if Alliance_Manager:GetMyAlliance():IsDefault() then
@@ -262,6 +262,18 @@ function MyApp:EnterViewModelAllianceScene(alliance_id)
         app:enterScene("OtherAllianceScene", {alliance}, "custom", -1,transition_)
     end)
 end
+
+function MyApp:sendApnIdIf()
+    local token = ext.getDeviceToken() or ""
+    if string.len(token) > 0 then 
+        token = string.sub(token,2,string.len(token)-1)
+        token = string.gsub(token," ","")
+    end
+    if token ~= User:ApnId() then
+        NetManager:getSetApnIdPromise(token)
+    end
+end
+
 -- Store
 ------------------------------------------------------------------------------------------------------------------
 function MyApp:getStore()
