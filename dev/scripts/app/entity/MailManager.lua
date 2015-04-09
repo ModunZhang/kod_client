@@ -334,7 +334,7 @@ function MailManager:OnNewMailsChanged( mails )
             for i,data in ipairs(mail) do
                 -- 收到
                 if not data.index then
-                    data.index = self.mails[1] and self.mails[1].index + 1 or 1
+                    data.index = self.mails[1] and self.mails[1].index + 1 or 0
                 end
                 table.insert(add_mails, data)
                 table.insert(self.mails, 1, data)
@@ -468,7 +468,7 @@ function MailManager:OnNewReportsChanged( __reports )
         if type == "add" then
             for k,data in pairs(rp) do
                 if not data.index then
-                    data.index = self.reports[1] and self.reports[1]:Index() + 1 or 1
+                    data.index = self.reports[1] and self.reports[1]:Index() + 1 or 0
                 end
                 local c_report = Report:DecodeFromJsonData(data)
                 table.insert(add_reports, c_report)
