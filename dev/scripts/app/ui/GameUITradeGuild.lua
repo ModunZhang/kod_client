@@ -826,9 +826,7 @@ function GameUITradeGuild:OpenSellDialog()
                 end
                 -- 判定小车是否足够
                 if self.sell_num_item:GetValue()>City:GetResourceManager():GetCartResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()) then
-                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                        :SetPopMessage(_("资源小车数量不足"))
-                        :AddToCurrentScene()
+                    UIKit:showMessageDialog(_("提示"),_("资源小车数量不足"), function()end)
                     return
                 end
                 NetManager:getSellItemPromise(type,goods_type[selected],self.sell_num_item:GetValue(),self.sell_price_item:GetValue()):done(function(result)
@@ -865,7 +863,7 @@ function GameUITradeGuild:OpenSellDialog()
             min_unit_price = PRICE_SCOPE.resource.min
             max_unit_price = PRICE_SCOPE.resource.max
 
-            max_num = math.floor(goods_details[2]/unit)
+            max_num = goods_details[2]
             min_num = max_num>1 and 1 or 0
         else
             min_unit_price = PRICE_SCOPE.material.min
