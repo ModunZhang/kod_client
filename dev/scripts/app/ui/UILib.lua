@@ -72,11 +72,11 @@ local BUILDING_ANIMATIONS_FILES = {
 local BUILDING_ANIMATIONS = getAniNameFromAnimationFiles(BUILDING_ANIMATIONS_FILES)
 local RESOURCE = {
     blood = "dragonskill_blood_51x63.png",
-    food = "res_food_114x100.png",
-    wood = "res_wood_114x100.png",
-    stone = "stone_icon.png",
-    iron = "res_iron_114x100.png",
-    coin = "coin_icon_1.png",
+    food = "res_food_91x74.png",
+    wood = "res_wood_82x73.png",
+    stone = "res_stone_88x82.png",
+    iron = "res_iron_91x63.png",
+    coin = "res_coin_81x68.png",
     wallHp = "gate_1.png",
 }
 local MATERIALS = {

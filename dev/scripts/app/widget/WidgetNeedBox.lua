@@ -8,7 +8,7 @@ function WidgetNeedBox:ctor()
 
     local back_ground_556x56 = cc.ui.UIImage.new("back_ground_556x56.png"):addTo(self)
     
-    local wood = cc.ui.UIImage.new("res_wood_114x100.png")
+    local wood = cc.ui.UIImage.new("res_wood_82x73.png")
         :addTo(back_ground_556x56)
         :align(display.CENTER, col1_x, row_y)
         :scale(0.4)
@@ -21,7 +21,7 @@ function WidgetNeedBox:ctor()
     }):addTo(back_ground_556x56, 2)
     :align(display.LEFT_CENTER, col1_x + label_relate_x, row_y + label_relate_y)
 
-    local stone = cc.ui.UIImage.new("res_stone_128x128.png")
+    local stone = cc.ui.UIImage.new("res_stone_88x82.png")
         :addTo(back_ground_556x56)
         :align(display.CENTER, col2_x, row_y)
         :scale(0.4)
@@ -35,7 +35,7 @@ function WidgetNeedBox:ctor()
     :align(display.LEFT_CENTER, col2_x + label_relate_x, row_y + label_relate_y)
 
 
-    local iron = cc.ui.UIImage.new("res_iron_114x100.png")
+    local iron = cc.ui.UIImage.new("res_iron_91x63.png")
         :addTo(back_ground_556x56)
         :align(display.CENTER, col3_x, row_y)
         :scale(0.4)

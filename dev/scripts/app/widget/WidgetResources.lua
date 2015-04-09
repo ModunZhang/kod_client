@@ -1,6 +1,7 @@
 local ResourceManager = import('..entity.ResourceManager')
 local SoldierManager = import('..entity.SoldierManager')
 local WidgetUseItems= import(".WidgetUseItems")
+local WidgetUIBackGround= import(".WidgetUIBackGround")
 local WidgetPushButton = import('.WidgetPushButton')
 local UIListView = import("..ui.UIListView")
 local resource_type = {
@@ -73,7 +74,7 @@ end
 function WidgetResources:CreateResourceListView()
     self.resource_listview = UIListView.new{
         bgScale9 = true,
-        viewRect = cc.rect(display.cx-300, display.top-860, 600, 780),
+        viewRect = cc.rect(display.cx-284, display.top-860, 568, 780),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL}
         :addTo(self)
 end
@@ -84,7 +85,7 @@ function WidgetResources:InitAllResources()
     local crm = City:GetResourceManager()
     local all_resources = {
         food = {
-            resource_icon="res_food_114x100.png",
+            resource_icon="res_food_91x74.png",
             resource_limit_value=maxfood,
             resource_current_value=crm:GetFoodResource():GetResourceValueByCurrentTime(current_time),
             total_income=crm:GetFoodProductionPerHour().."/h",
@@ -93,7 +94,7 @@ function WidgetResources:InitAllResources()
             type = "food"
         },
         wood = {
-            resource_icon="res_wood_114x100.png",
+            resource_icon="res_wood_82x73.png",
             resource_limit_value=maxwood,
             resource_current_value=crm:GetWoodResource():GetResourceValueByCurrentTime(current_time),
             total_income=crm:GetWoodResource():GetProductionPerHour().."/h",
@@ -101,7 +102,7 @@ function WidgetResources:InitAllResources()
             type = "wood"
         },
         stone = {
-            resource_icon="stone_icon.png",
+            resource_icon="res_stone_88x82.png",
             resource_limit_value=maxstone,
             resource_current_value=crm:GetStoneResource():GetResourceValueByCurrentTime(current_time),
             total_income=crm:GetStoneResource():GetProductionPerHour().."/h",
@@ -109,7 +110,7 @@ function WidgetResources:InitAllResources()
             type = "stone"
         },
         iron = {
-            resource_icon="res_iron_114x100.png",
+            resource_icon="res_iron_91x63.png",
             resource_limit_value=maxiron,
             resource_current_value=crm:GetIronResource():GetResourceValueByCurrentTime(current_time),
             total_income=crm:GetIronResource():GetProductionPerHour().."/h",
@@ -117,7 +118,7 @@ function WidgetResources:InitAllResources()
             type = "iron"
         },
         coin = {
-            resource_icon="coin_icon.png",
+            resource_icon="res_coin_81x68.png",
             resource_current_value=crm:GetCoinResource():GetResourceValueByCurrentTime(current_time),
             total_income=crm:GetCoinResource():GetProductionPerHour().."/h",
             occupy_citizen=self.city:GetResourceManager():GetPopulationResource():GetNoneAllocatedByTime(current_time),
@@ -141,20 +142,21 @@ function WidgetResources:AddResourceItem(parms)
     local maintenance_cost = parms.maintenance_cost
 
     local item = self.resource_listview:newItem()
-    local item_width, item_height = 600,173
+    local item_width, item_height = 568,156
     item:setItemSize(item_width, item_height)
-    local content = cc.ui.UIGroup.new()
-    -- item 主背景
-    content:addWidget(display.newSprite("Background_wareHouseUI.png",  0, 0))
+    local content = WidgetUIBackGround.new({width = 568,height = 156},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
+    local c_size = content:getContentSize()
     -- resource icon bg
-    content:addWidget(display.newSprite("alliance_item_flag_box_126X126.png",-230, 0))
+    local icon_bg = display.newSprite("box_134x134.png",80,c_size.height/2):addTo(content)
+    local icon_bg_1 = display.newSprite("box_118x118.png",icon_bg:getContentSize().width/2,icon_bg:getContentSize().height/2):addTo(icon_bg)
+
     -- resou icon
-    content:addWidget(display.newSprite(resource_icon,-230, 0))
+    display.newSprite(resource_icon,icon_bg_1:getContentSize().width/2, icon_bg_1:getContentSize().height/2):addTo(icon_bg_1)
 
     -- 构造分割线显示信息方法
     local function createTipItem(prams)
         -- 分割线
-        local line = display.newScale9Sprite("dividing_line.png",prams.x, prams.y, cc.size(395,2))
+        local line = display.newScale9Sprite("dividing_line.png",prams.x, prams.y, cc.size(342,2))
 
         -- title
         line.title = cc.ui.UILabel.new(
@@ -181,8 +183,8 @@ function WidgetResources:AddResourceItem(parms)
 
     if resource_limit_value then
         -- 进度条
-        local bar = display.newSprite("progress_bar_382x40_1.png"):addTo(content):pos(35,46)
-        local progressFill = display.newSprite("progress_bar_382x40_2.png")
+        local bar = display.newSprite("progress_bar_348x40_1.png"):addTo(content):pos(330,c_size.height-32)
+        local progressFill = display.newSprite("progress_bar_348x40_2.png")
         item.ProgressTimer = cc.ProgressTimer:create(progressFill)
         item.ProgressTimer:setType(display.PROGRESS_TIMER_BAR)
         item.ProgressTimer:setBarChangeRate(cc.p(1,0))
@@ -202,20 +204,20 @@ function WidgetResources:AddResourceItem(parms)
             title_color = UIKit:hex2c3b(0x797154),
             value = total_income ,
             value_color = UIKit:hex2c3b(0x403c2f),
-            x = 40,
-            y = -10
+            x = icon_bg:getPositionX()+icon_bg:getContentSize().width/2+180,
+            y = bar:getPositionY()-50
         })
-        content:addWidget(item.produce_capacity)
+        item.produce_capacity:addTo(content)
         --  占用人口
         item.occupy_citizen = createTipItem({
             title = _("占用人口"),
             title_color = UIKit:hex2c3b(0x797154),
             value = occupy_citizen ,
             value_color = UIKit:hex2c3b(0x403c2f),
-            x = 40,
-            y = -40
+            x = icon_bg:getPositionX()+icon_bg:getContentSize().width/2+180,
+            y = item.produce_capacity:getPositionY()-30
         })
-        content:addWidget(item.occupy_citizen)
+        item.occupy_citizen:addTo(content)
         if maintenance_cost then
             --  维护费用
             item.maintenance_cost = createTipItem({
@@ -223,11 +225,11 @@ function WidgetResources:AddResourceItem(parms)
                 title_color = UIKit:hex2c3b(0x797154),
                 value = maintenance_cost ,
                 value_color = UIKit:hex2c3b(0x4ff0000),
-                x = 40,
-                y = -70
+                x = icon_bg:getPositionX()+icon_bg:getContentSize().width/2+180,
+                y = item.occupy_citizen:getPositionY()-30
             })
             self.maintenance_cost = item.maintenance_cost
-            content:addWidget(item.maintenance_cost)
+            item.maintenance_cost:addTo(content)
         end
 
     else
@@ -240,17 +242,17 @@ function WidgetResources:AddResourceItem(parms)
             size = 24,
             align = ui.TEXT_ALIGN_CENTER,
             color = UIKit:hex2c3b(0x403c2f),
-        }):align(display.LEFT_CENTER, -155, 40):addTo(content)
+        }):align(display.LEFT_CENTER, 154, c_size.height-22):addTo(content)
         -- 单位产能
         item.produce_capacity = createTipItem({
             title = _("单位产能"),
             title_color = UIKit:hex2c3b(0x797154),
             value = total_income ,
             value_color = UIKit:hex2c3b(0x403c2f),
-            x = 40,
-            y = -10
+            x = icon_bg:getPositionX()+icon_bg:getContentSize().width/2+180,
+            y = c_size.height-70
         })
-        content:addWidget(item.produce_capacity)
+        item.produce_capacity:addTo(content)
         -- item.resource_label:setAnchorPoint(cc.p(0,0.5))
         -- item.resource_label:pos(-125, 40)
         -- 是否在征税
@@ -284,7 +286,7 @@ function WidgetResources:AddResourceItem(parms)
             print("string.split(resource_icon, )[1]",string.split(resource_icon, "_")[1])
             local items = ItemManager:GetItemByName(parms.type.."Class_1")
             WidgetUseItems.new():Create({item = items}):AddToCurrentScene()
-        end):align(display.CENTER, item_width/2 -30, 0):addTo(content)
+        end):align(display.CENTER, c_size.width-32, c_size.height/2):addTo(content)
         :addChild(display.newSprite("add.png"))
 
     item:addContent(content)
@@ -295,4 +297,5 @@ function WidgetResources:AddResourceItem(parms)
 end
 
 return WidgetResources
+
 

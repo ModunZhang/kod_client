@@ -285,17 +285,17 @@ function GameUIHome:CreateTop()
     local padding_width = 100
     local padding_height = 35
     for i, v in ipairs({
-        {"res_wood_114x100.png", "wood_label"},
-        {"res_stone_128x128.png", "stone_label"},
-        {"res_citizen_44x50.png", "citizen_label"},
-        {"res_food_114x100.png", "food_label"},
-        {"res_iron_114x100.png", "iron_label"},
-        {"coin_icon.png", "coin_label"},
+        {"res_wood_82x73.png", "wood_label"},
+        {"res_stone_88x82.png", "stone_label"},
+        {"res_citizen_88x82.png", "citizen_label"},
+        {"res_food_91x74.png", "food_label"},
+        {"res_iron_91x63.png", "iron_label"},
+        {"res_coin_81x68.png", "coin_label"},
     }) do
         local row = i > 3 and 1 or 0
         local col = (i - 1) % 3
         local x, y = first_col + col * padding_width, first_row - (row * padding_height)
-        display.newSprite(v[1]):addTo(button):pos(x, y):scale(i == 3 and 0.65 or 0.25)
+        display.newSprite(v[1]):addTo(button):pos(x, y):scale(0.25)
         self[v[2]] = UIKit:ttfLabel({text = "",
             size = 18,
             color = 0xf3f0b6,
