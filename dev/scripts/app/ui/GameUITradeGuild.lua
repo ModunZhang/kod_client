@@ -764,7 +764,7 @@ function GameUITradeGuild:OpenSellDialog()
         -- 已有小车数量
         self.own_cart_num_label = UIKit:ttfLabel(
             {
-                text = string.formatnumberthousands(City:GetResourceManager():GetCartResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())).."/",
+                text = string.formatnumberthousands(City:GetResourceManager():GetCartResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())),
                 size = 20,
                 color = 0x403c2f
             }):align(display.LEFT_CENTER, temp_icon:getPositionX()+temp_icon:getContentSize().width*0.2 ,30)
@@ -772,7 +772,7 @@ function GameUITradeGuild:OpenSellDialog()
         -- 需要小车数量
         self.cart_num_label = UIKit:ttfLabel(
             {
-                text = string.formatnumberthousands(1020),
+                text = "/"..string.formatnumberthousands(1020),
                 size = 20,
                 color = 0x403c2f
             }):align(display.LEFT_CENTER, self.own_cart_num_label:getPositionX()+self.own_cart_num_label:getContentSize().width ,30)
@@ -880,9 +880,9 @@ function GameUITradeGuild:OpenSellDialog()
     end
     function body:SetTotalPriceAndCartNum(goods_num,goods_unit_price)
         self.total_price_label:setString(string.formatnumberthousands(goods_num*goods_unit_price))
-        self.cart_num_label:setString(string.formatnumberthousands(goods_num))
+        self.cart_num_label:setString("/"..string.formatnumberthousands(goods_num))
         local current_cart_num = City:GetResourceManager():GetCartResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-        self.own_cart_num_label:setString(string.formatnumberthousands(current_cart_num).."/")
+        self.own_cart_num_label:setString(string.formatnumberthousands(current_cart_num))
         if current_cart_num<goods_num then
             self.own_cart_num_label:setColor(UIKit:hex2c4b(0x7e0000))
         else
@@ -1069,6 +1069,7 @@ function GameUITradeGuild:GetMaterialIndexByName(material_type)
     return build_temp[material_type] or teach_temp[material_type]
 end
 return GameUITradeGuild
+
 
 
 
