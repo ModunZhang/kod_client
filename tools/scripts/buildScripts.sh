@@ -8,8 +8,7 @@ SCRIPTS_DEST_DIR=`./functions.sh getExportScriptsDir $Platform`
 XXTEAKey=`./functions.sh getXXTEAKey`
 XXTEASign=`./functions.sh getXXTEASign`
 
-test -d $SCRIPTS_DEST_DIR && rm -rf $SCRIPTS_DEST_DIR
-
+test -d "$SCRIPTS_DEST_DIR" && rm -rf "$SCRIPTS_DEST_DIR"
 exportScripts()
 {
 	currentDir=$1
