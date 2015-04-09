@@ -45,7 +45,7 @@ function CitySprite:ctor(city_layer, entity, is_my_alliance)
     -- }):addTo(bg):align(display.LEFT_CENTER, startx, gap * 0.5)
 
     -- self.info = bg
-    self:CreateBase()
+    -- self:CreateBase()
 end
 function CitySprite:GetSpriteFile()
     local config
@@ -76,7 +76,7 @@ function CitySprite:newBatchNode(w, h)
     local map = self:GetLogicMap()
     for ix = start_x, end_x do
         for iy = start_y, end_y do
-            display.newSprite(base_node:getTexture()):addTo(base_node):pos(map:ConvertToLocalPosition(ix, iy)):scale(3)
+            display.newSprite(base_node:getTexture()):addTo(base_node):pos(map:ConvertToLocalPosition(ix, iy)):scale(2)
         end
     end
     return base_node

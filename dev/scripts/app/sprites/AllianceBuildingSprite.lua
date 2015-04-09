@@ -20,7 +20,7 @@ function AllianceBuildingSprite:ctor(city_layer, entity, is_my_alliance)
     self.is_my_alliance = is_my_alliance
     local x, y = city_layer:GetLogicMap():ConvertToMapPosition(entity:GetLogicPosition())
     AllianceBuildingSprite.super.ctor(self, city_layer, entity, x, y)
-    self:CreateBase()
+    -- self:CreateBase()
 end
 function AllianceBuildingSprite:GetSpriteFile()
     if self.is_my_alliance then
@@ -46,7 +46,7 @@ function AllianceBuildingSprite:newBatchNode(w, h)
     local map = self:GetLogicMap()
     for ix = start_x, end_x do
         for iy = start_y, end_y do
-            display.newSprite(base_node:getTexture()):addTo(base_node):pos(map:ConvertToLocalPosition(ix, iy)):scale(3)
+            display.newSprite(base_node:getTexture()):addTo(base_node):pos(map:ConvertToLocalPosition(ix, iy)):scale(2)
         end
     end
     return base_node
