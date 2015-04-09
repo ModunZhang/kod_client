@@ -85,7 +85,7 @@ function BelvedereEntity:GetDestination()
 		return self:WithObject().beHelpedPlayerData.cityName
 	elseif self:GetType() == self.ENTITY_TYPE.COLLECT then
 
-		return Localize.village_name[self:WithObject():VillageData().type] .. "Lv" .. self:WithObject():VillageData().level
+		return Localize.village_name[self:WithObject():VillageData().name] .. "Lv" .. self:WithObject():VillageData().level
 	elseif self:GetType() == self.ENTITY_TYPE.MARCH_OUT  
 		-- or self:GetType() == self.ENTITY_TYPE.MARCH_RETURN 
 		or self:GetType() == self.ENTITY_TYPE.STRIKE_OUT 
@@ -97,7 +97,7 @@ function BelvedereEntity:GetDestination()
 		elseif self:WithObject():MarchType() == 'village' then
 			dump(self:WithObject(),"self:WithObject()---->")
 			local village_data = self:WithObject():GetDefenceData() 
-			return Localize.village_name[village_data.type] .. "Lv" .. village_data.level
+			return Localize.village_name[village_data.name] .. "Lv" .. village_data.level
 		elseif self:WithObject():MarchType() == 'shrine' then
 			return _("圣地")
 		end

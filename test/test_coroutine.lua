@@ -167,23 +167,35 @@ local function kjoin(...)
     end
 end
 
--- local function cat(...)
---     local t = {...}
---     local ti = 1
---     return function()
---         local len = 0
---         for i, v in ipairs(t) do
---             len = len + #v
---             if ti < len then
---                 ti - len
---             end
---         end
---         return ti, v
---     end
--- end
+local function cat(...)
+    local t = {...}
+    local cursor = 1
+    return function()
+        local len = 0
+        for _,v in ipairs(t) do
+            if cursor < len + #v then
+                next(v, cursor - len)
+                cursor = cursor + 1
+            else
+                len = len + #v
+            end
+        end
+        return cursor, v
+    end
+end
 
--- for i, v in pairs({1,2,3,4}) do
---  print(i, v)
+for i, v in ipairs({1,2,3,4}) do
+ print(i, v)
+end
+-- print(next)
+a = {1, 2, 3, 4}
+-- print(next(a))
+-- print(next(a, 3))
+-- for i,v in next(a) do
+--     print(i,v)
+-- end
+-- for i,v in cat({1, 2, 3, 4}, {1,1, 2, 3}, {1, 2, 3, 4}) do
+--     print(i, v)
 -- end
 
 -- for i, v1, v2, v3 in zip({1, 2, 3, 4}, {1,1, 2, 3}, {1, 2, 3, 4}) do
@@ -1791,12 +1803,29 @@ local function decodeInUserDataFromDeltaData(userData, deltaData)
 end
 
 
-LuaUtils:outputTable("a", decodeInUserDataFromDeltaData(b, a))
+-- LuaUtils:outputTable("a", decodeInUserDataFromDeltaData(b, a))
 
 
 
 
+-- for k,v in pairs(table) do
+--     print(k,v)
+-- end
 
+
+local type = type
+local function table_equal(t1, t2)
+    if t1 ~= t2 and type(t1) == "table" and type("table") then
+        for k,v in pairs(t1) do
+            if t2[k] ~= v then
+                return false
+            end
+        end
+    end
+    return true
+end
+print(table_equal({}, {}))
+print(table_equal({a = 1}, {a = 1}))
 
 
 
