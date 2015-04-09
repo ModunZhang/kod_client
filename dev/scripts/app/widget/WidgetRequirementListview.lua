@@ -190,6 +190,7 @@ function WidgetRequirementListview:RefreshListView(contents)
                 -- print("刷新时已经没有此项条件时，删除之前添加的项",v.resource_type)
                 self.listview:removeItem(self.added_items[v.resource_type])
                 self.listview:reload()
+                self.added_items[v.resource_type] = nil
             end
         end
     end
