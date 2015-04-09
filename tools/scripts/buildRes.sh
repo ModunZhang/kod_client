@@ -9,9 +9,9 @@ XXTEASign=`./functions.sh getXXTEASign`
 PVRTOOL=`./functions.sh getPVRTexTool`
 IMAGEFORMAT="PVRTC1_4"
 
-# rm -rf $RES_DEST_DIR
 exportImagesRes()
 {
+	echo -- 处理images文件夹
 	images_dir=$1
 	outdir=$RES_DEST_DIR
 	for file in $images_dir/*.png $images_dir/*.jpg 
@@ -19,31 +19,80 @@ exportImagesRes()
 		outfile=$outdir/${file##*/res/}
 		finalDir=${outfile%/*}
 		if test "$file" -nt "$outfile";then
-			test -d $finalDir || mkdir -p $finalDir && cp  "$file" $finalDir
+			echo "---- ${file##*/res/}"
+			if $NEED_ENCRYPT_RES; then
+				test -d $finalDir || mkdir -p $finalDir && $RES_COMPILE_TOOL -i "$file" -o $finalDir -ek $XXTEAKey -es $XXTEASign -q
+			else
+				test -d $finalDir || mkdir -p $finalDir && cp  "$file" $finalDir
+			fi
 		fi
 	done
-
+	echo -- 处理_Compressed文件夹
 	for file in $images_dir/_Compressed/*
 	do
 		if test -f "$file";then
 			finalDir=$outdir/${images_dir##*/res/}
 			outfile=$finalDir/${file##*/}
+			fileExt=${file##*.}
 			if test "$file" -nt "$outfile"; then
-				test -d $finalDir || mkdir -p $finalDir && cp "$file" $finalDir
+				echo "---- ${file##*/}"
+				if test $fileExt == "plist" || test $fileExt == "ExportJson";then
+					test -d $finalDir || mkdir -p $finalDir && cp "$file" $finalDir
+				else
+					if $NEED_ENCRYPT_RES;then
+						test -d $finalDir || mkdir -p $finalDir && $RES_COMPILE_TOOL -i "$file" -o $finalDir -ek $XXTEAKey -es $XXTEASign -q
+					else
+						test -d $finalDir || mkdir -p $finalDir && cp "$file" $finalDir
+					fi
+				fi
 			fi
 		fi
 	done
-
+	echo -- 处理_CanCompress文件夹
 	for file in $images_dir/_CanCompress/*
 	do
 		if test -f "$file";then
 			finalDir=$outdir/${images_dir##*/res/}
 			outfile=$finalDir/${file##*/}
 			if test "$file" -nt "$outfile"; then
+				echo "---- ${file##*/}"
 				#compress image
 				$PVRTOOL -f $IMAGEFORMAT -i $file -o ${file%.*}.pvr
-				echo "$PVRTOOL -f $IMAGEFORMAT -i $file -o ${file%.*}.pvr"
-				mv ${file%.*}.pvr $outfile
+				mv ${file%.*}.pvr ${file%.*}_PVR_PNG.png
+				if $NEED_ENCRYPT_RES;then
+					$RES_COMPILE_TOOL -i ${file%.*}_PVR_PNG.png -o $finalDir -ek $XXTEAKey -es $XXTEASign -q
+					mv -f ${outfile%.*}_PVR_PNG.png $outfile
+					rm ${file%.*}_PVR_PNG.png
+				else
+					mv ${file%.*}_PVR_PNG.png $outfile
+				fi
+			fi
+		fi
+	done
+}
+
+exportAnimationsRes()
+{
+	echo -- 处理Animations文件夹
+	images_dir=$1
+	outdir=$RES_DEST_DIR
+	for file in $images_dir/* 
+	do
+		if test -f "$file";then
+			outfile=$outdir/${file##*/res/}
+			finalDir=${outfile%/*}
+			fileExt=${file##*.}
+			if test "$file" -nt "$outfile";then
+				echo "---- ${file##*/res/}"
+				if test $fileExt == "plist" || test $fileExt == "ExportJson";then
+					test -d $finalDir || mkdir -p $finalDir && cp "$file" $finalDir
+				else
+					if $NEED_ENCRYPT_RES; then
+						test -d $finalDir || mkdir -p $finalDir && $RES_COMPILE_TOOL -i "$file" -o $finalDir -ek $XXTEAKey -es $XXTEASign -q
+					else
+						test -d $finalDir || mkdir -p $finalDir && cp  "$file" $finalDir
+					fi
+				fi
 			fi
 		fi
 	done
@@ -65,25 +114,16 @@ exportRes()
 		elif test -d "$file";then
 			if [[ ${file/"images"//} != $file ]];then
 	    		exportImagesRes $file
+	    	elif [[ ${file/"animations"//} != $file ]];then
+	    		exportAnimationsRes $file
 	    	else
 				exportRes $file
 	    	fi
 		fi
     done
 }
-#TODO:修改加密脚本
-exportResEncrypt()
-{
-	outdir=$RES_DEST_DIR
-	$RES_COMPILE_TOOL -i $RES_SRC_DIR/images -o $outdir/images -ek $XXTEAKey -es $XXTEASign
-	$RES_COMPILE_TOOL -i $RES_SRC_DIR/animations -o $outdir/animations -ek $XXTEAKey -es $XXTEASign
-}
-
-if $NEED_ENCRYPT_RES; then
-	exportResEncrypt
-	#清除临时文件
-	find $RES_SRC_DIR -name "*.tmp" -exec rm -r {} \;
-else
-	exportRes $RES_SRC_DIR
-fi
-
+#清除临时文件
+find "$RES_SRC_DIR" -name "*.tmp" -exec rm -r {} \;
+exportRes "$RES_SRC_DIR"
+echo "> 资源处理完成"
+echo "------------------------------------"
