@@ -10,6 +10,7 @@ local TreeSprite = import("..sprites.TreeSprite")
 local AirshipSprite = import("..sprites.AirshipSprite")
 local FairGroundSprite = import("..sprites.FairGroundSprite")
 local SingleTreeSprite = import("..sprites.SingleTreeSprite")
+local BirdSprite = import("..sprites.BirdSprite")
 local CitizenSprite = import("..sprites.CitizenSprite")
 local SoldierSprite = import("..sprites.SoldierSprite")
 local HelpedTroopsSprite = import("..sprites.HelpedTroopsSprite")
@@ -188,6 +189,7 @@ end
 local SCENE_BACKGROUND = 1
 local BACK_NODE = 2
 local CITY_LAYER = 3
+local SKY_LAYER = 4
 local CITY_BACKGROUND = 1
 local ROAD_NODE = 2
 local BUILDING_NODE = 3
@@ -229,6 +231,7 @@ function CityLayer:InitBackground()
 end
 function CityLayer:InitCity()
     self.city_layer = display.newLayer():addTo(self, CITY_LAYER):align(display.BOTTOM_LEFT, 47, 158 + 250)
+    self.sky_layer = display.newLayer():addTo(self, SKY_LAYER):align(display.BOTTOM_LEFT)
     self.position_node = cc.TMXTiledMap:create("tmxmaps/city_road2.tmx"):addTo(self.city_layer):hide()
     self.city_node = display.newLayer():addTo(self.city_layer, BUILDING_NODE):align(display.BOTTOM_LEFT)
     local origin_point = self:GetPositionIndex(0, 0)
@@ -385,6 +388,10 @@ function CityLayer:InitWithCity(city)
         end
     end)
     self:scheduleUpdate()
+
+    for i = 1, 1 do
+        self:CreateBird(0, 0):addTo(self.sky_layer)
+    end
 end
 ---
 function CityLayer:EnterEditMode()
@@ -761,6 +768,9 @@ function CityLayer:CreateBuilding(building, city)
 end
 function CityLayer:CreateSingleTree(logic_x, logic_y)
     return SingleTreeSprite.new(self, logic_x, logic_y)
+end
+function CityLayer:CreateBird(city, x, y)
+    return BirdSprite.new(self, city, x, y)
 end
 function CityLayer:CreateCitizen(city, logic_x, logic_y)
     return CitizenSprite.new(self, city, logic_x, logic_y)

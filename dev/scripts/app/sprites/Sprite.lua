@@ -51,7 +51,6 @@ end
 -----position
 function Sprite:SetPositionWithZOrder(x, y)
     self:setPosition(x, y)
-    self:setLocalZOrder(self:GetLogicZorder())
 end
 function Sprite:setPosition(x, y)
     assert(getmetatable(self).setPosition)
