@@ -119,12 +119,15 @@ function GameUITradeGuild:LoadBuyPage()
 
             if self.resource_layer then
                 self.resource_layer:setVisible(tag == 'resource')
+                self:RefreshSellListView(RESOURCE_TYPE,self.resource_options:getSelectedIndex())
             end
             if self.build_material_layer then
                 self.build_material_layer:setVisible(tag == 'build_material')
+                self:RefreshSellListView(BUILD_MATERIAL_TYPE,self.build_material_options:getSelectedIndex())
             end
             if self.martial_material_layer then
                 self.martial_material_layer:setVisible(tag == 'martial_material')
+                self:RefreshSellListView(MARTIAL_MATERIAL_TYPE,self.martial_material_options:getSelectedIndex())
             end
         end
     )
@@ -254,7 +257,12 @@ function GameUITradeGuild:CreateSellItemForListView(listView,goods)
                     :AddToCurrentScene()
                 return
             end
-            NetManager:getBuySellItemPromise(goods._id):done(function()
+            NetManager:getBuySellItemPromise(goods._id):next(function ( response )
+                -- 商品不存在
+                if response.errcode[1].code==573 then
+                    listView:removeItem(item)
+                end
+            end):done(function()
                 listView:removeItem(item)
             end)
         end)

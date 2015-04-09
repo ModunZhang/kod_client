@@ -134,7 +134,14 @@ end
 function UICheckBoxButtonGroup:getButtonsCount()
     return #self.buttons_
 end
-
+-- 代国强 添加获取当前选中项index
+function UICheckBoxButtonGroup:getSelectedIndex()
+    for i,v in ipairs(self.buttons_) do
+        if v:isButtonSelected() then
+            return i
+        end
+    end
+end
 -- start --
 
 --------------------------------
@@ -159,6 +166,7 @@ end
 function UICheckBoxButtonGroup:addButtonSelectChangedEventListener(callback)
     return self:addEventListener(UICheckBoxButtonGroup.BUTTON_SELECT_CHANGED, callback)
 end
+
 
 -- start --
 

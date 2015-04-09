@@ -83,5 +83,9 @@ end
 function WidgetInput:SetMax( max )
     self.max = max
 end
+function WidgetInput:onEnter()
+    WidgetInput.super.onEnter(self)
+    self.editbox:touchDownAction(editbox,2)
+end
 return WidgetInput
 
