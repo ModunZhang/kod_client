@@ -389,7 +389,7 @@ function CityLayer:InitWithCity(city)
     end)
     self:scheduleUpdate()
 
-    for i = 1, 2 do
+    for i = 1,1 do
         self:CreateBird(0, 0):addTo(self.sky_layer)
     end
 end
