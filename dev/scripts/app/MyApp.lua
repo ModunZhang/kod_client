@@ -226,6 +226,18 @@ function MyApp:EnterMyAllianceScene()
     end
     app:enterScene(alliance_name, nil, "custom", -1, transition_)
 end
+function MyApp:EnterMyAllianceSceneOrMyCityScene()
+    if not Alliance_Manager:GetMyAlliance():IsDefault() then
+        local my_status = Alliance_Manager:GetMyAlliance():Status()
+        local alliance_name = "AllianceScene"
+        if my_status == "prepare" or  my_status == "fight" then
+            alliance_name = "AllianceBattleScene"   
+        end
+        app:enterScene(alliance_name, nil, "custom", -1, transition_)
+    else
+        app:enterScene("MyCityScene", {City}, "custom", -1, transition_)
+    end
+end
 function MyApp:EnterPVEScene(level)
     User:GotoPVEMapByLevel(level)
     app:enterScene("PVEScene", {User}, "custom", -1, transition_)

@@ -1054,7 +1054,7 @@ function City:OnHouseChanged(userData, current_time, deltaData)
 
     local unlock_table = {}
     local is_unlock_any_tiles = false
-    for i,v in ipairs(userData.buildingEvents) do
+    for i,v in ipairs(userData.buildingEvents or {}) do
         if self:GetBuildingByLocationId(v.location):GetLevel() == 0 then
             is_unlock_any_tiles = true
             break
