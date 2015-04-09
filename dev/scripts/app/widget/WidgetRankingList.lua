@@ -175,7 +175,7 @@ function WidgetRankingList:sourceDelegate(listView, tag, idx)
         end
         return 0
     elseif cc.ui.UIListView.CELL_TAG == tag then
-        if #self.current_rank.datas - idx < 5 then
+        if #self.current_rank.datas % 20 == 0 and #self.current_rank.datas - idx < 5 then
             self:LoadMore()
         end
         local item
