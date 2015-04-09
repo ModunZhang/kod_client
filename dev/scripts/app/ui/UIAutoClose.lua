@@ -10,7 +10,7 @@ function UIAutoClose:ctor(params)
     node:setNodeEventEnabled(true)
     node:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
         if event.name == "ended" then
-            if node.disable then
+            if self.disable then
                 return
             end
             self:LeftButtonClicked()

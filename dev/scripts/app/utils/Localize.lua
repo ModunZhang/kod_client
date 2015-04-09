@@ -646,6 +646,7 @@ local WONDER_TITLE_BUFF = {
     curse_6 = _("维护费用增加+10%，研发速度-10%"),
     curse_7 = _("木材产量-10%，石料产量-10%，建造速度-5%"),
 }
+
 local  getBuildingLocalizedKeyByBuildingType = function(name)
     local building_config = GameDatas.Buildings.buildings
     for _,v in ipairs(building_config) do

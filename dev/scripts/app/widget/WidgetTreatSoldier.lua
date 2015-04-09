@@ -208,7 +208,7 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
 
 
     -- food icon
-    cc.ui.UIImage.new("res_food_114x100.png"):addTo(back_ground, 2)
+    cc.ui.UIImage.new("res_food_91x74.png"):addTo(back_ground, 2)
         :align(display.CENTER, size.width - 130, size.height - 100):scale(0.5)
 
     cc.ui.UILabel.new({
@@ -294,10 +294,10 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
     local length = size.width - margin_x * 2
     local origin_x, origin_y, gap_x = margin_x, 30, length / 3
     local res_map = {
-        { "treatFood", "res_food_114x100.png" },
-        { "treatWood", "res_wood_114x100.png" },
-        { "treatIron", "res_iron_114x100.png" },
-        { "treatStone", "res_stone_128x128.png" },
+        { "treatFood", "res_food_91x74.png" },
+        { "treatWood", "res_wood_82x73.png" },
+        { "treatIron", "res_iron_91x63.png" },
+        { "treatStone", "res_stone_88x82.png" },
     -- { "citizen", "res_citizen_44x50.png" },
     }
     self.res_map = {}

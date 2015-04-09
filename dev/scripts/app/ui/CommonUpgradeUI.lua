@@ -451,24 +451,24 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
             description = building:GetPreConditionDesc(),jump_call = handler(self,self.GotoPreconditionBuilding)
         },
         {
-            resource_type = _("建造队列"),
-            isVisible = true,
+            resource_type = "building_queue",
+            isVisible = #city:GetUpgradingBuildings()>=city:BuildQueueCounts(),
             isSatisfy = #city:GetUpgradingBuildings()<city:BuildQueueCounts(),
             icon="hammer_31x33.png",
-            description=_("建造队列")..(city:BuildQueueCounts()-GameUtils:formatNumber(#city:GetUpgradingBuildings())).."/"..city:BuildQueueCounts()
+            description=_("建造队列已满")..(GameUtils:formatNumber(#city:GetUpgradingBuildings())).."/"..city:BuildQueueCounts()
         },
         {
             resource_type = _("木材"),
             isVisible = building:GetLevelUpWood()>0,
             isSatisfy = wood>=building:GetLevelUpWood(),
-            icon="res_wood_114x100.png",
+            icon="res_wood_82x73.png",
             description=GameUtils:formatNumber(wood).."/"..GameUtils:formatNumber(building:GetLevelUpWood())
         },
         {
             resource_type = _("石料"),
             isVisible = building:GetLevelUpStone()>0,
             isSatisfy = stone>=building:GetLevelUpStone() ,
-            icon="stone_icon.png",
+            icon="res_stone_88x82.png",
             description=GameUtils:formatNumber(stone).."/"..GameUtils:formatNumber(building:GetLevelUpStone())
         },
 
@@ -476,7 +476,7 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
             resource_type = _("铁矿"),
             isVisible = building:GetLevelUpIron()>0,
             isSatisfy = iron>=building:GetLevelUpIron() ,
-            icon="res_iron_114x100.png",
+            icon="res_iron_91x63.png",
             description=GameUtils:formatNumber(iron).."/"..GameUtils:formatNumber(building:GetLevelUpIron())
         },
 
@@ -484,7 +484,7 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
             resource_type = _("空闲城民"),
             isVisible = building:GetLevelUpCitizen()>0,
             isSatisfy = population>=building:GetLevelUpCitizen() ,
-            icon="res_citizen_44x50.png",
+            icon="res_citizen_88x82.png",
             description=GameUtils:formatNumber(population).."/"..GameUtils:formatNumber(building:GetLevelUpCitizen())
         },
 
@@ -772,6 +772,7 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
 
 
 

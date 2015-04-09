@@ -132,7 +132,7 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
 
 
     -- food icon
-    cc.ui.UIImage.new("res_food_114x100.png"):addTo(back_ground, 2)
+    cc.ui.UIImage.new("res_food_91x74.png"):addTo(back_ground, 2)
         :align(display.CENTER, size.width - 130, size.height - 110):scale(0.5)
 
     cc.ui.UILabel.new({
@@ -256,17 +256,17 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
         local length = size.width - margin_x * 2
         local origin_x, origin_y, gap_x = margin_x, 30, length / 4
         local res_map = {
-            { "food", "res_food_114x100.png" },
-            { "wood", "res_wood_114x100.png" },
-            { "iron", "res_iron_114x100.png" },
-            { "stone", "res_stone_128x128.png" },
-            { "citizen", "res_citizen_44x50.png" },
+            { "food", "res_food_91x74.png" },
+            { "wood", "res_wood_82x73.png" },
+            { "iron", "res_iron_91x63.png" },
+            { "stone", "res_stone_88x82.png" },
+            { "citizen", "res_citizen_88x82.png" },
         }
         for i, v in pairs(res_map) do
             local res_type = v[1]
             local png = v[2]
             local x = origin_x + (i - 1) * gap_x
-            local scale = i == #res_map and 1 or 0.4
+            local scale = 0.4
             cc.ui.UIImage.new(png):addTo(need, 2)
                 :align(display.CENTER, x, size.height - origin_y):scale(scale)
 
