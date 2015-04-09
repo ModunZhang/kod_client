@@ -211,7 +211,7 @@ end
 function MyApp:EnterMyAllianceSceneWithTips(tips)
     UIKit:showMessageDialog(nil,tips,function()
         self:EnterMyAllianceScene()
-    end):VisibleXButton(false)
+    end,nil,false)
 end
 function MyApp:EnterMyAllianceScene()
     if Alliance_Manager:GetMyAlliance():IsDefault() then
