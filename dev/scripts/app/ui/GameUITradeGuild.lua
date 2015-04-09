@@ -62,7 +62,7 @@ end
 
 function GameUITradeGuild:OnMoveInStage()
     GameUITradeGuild.super.OnMoveInStage(self)
-    self:CreateTabButtons({
+    self.tab_buttons = self:CreateTabButtons({
         {
             label = _("购买"),
             tag = "buy",
@@ -81,19 +81,34 @@ function GameUITradeGuild:OnMoveInStage()
             self:LoadMyGoodsPage()
         end
     end):pos(window.cx, window.bottom + 34)
+    self:RefreshSoldMark()
 
     self.building:AddUpgradeListener(self)
     self.trade_manager:AddListenOnType(self, TradeManager.LISTEN_TYPE.DEAL_CHANGED)
+    self.trade_manager:AddListenOnType(self, TradeManager.LISTEN_TYPE.MY_DEAL_REFRESH)
     self.city:GetMaterialManager():AddObserver(self)
 end
 
 function GameUITradeGuild:onExit()
     self.trade_manager:RemoveListenerOnType(self, TradeManager.LISTEN_TYPE.DEAL_CHANGED)
+    self.trade_manager:RemoveListenerOnType(self, TradeManager.LISTEN_TYPE.MY_DEAL_REFRESH)
     self.building:RemoveUpgradeListener(self)
     self.city:GetMaterialManager():RemoveObserver(self)
     GameUITradeGuild.super.onExit(self)
 end
-
+function GameUITradeGuild:RefreshSoldMark()
+    if self.trade_manager:IsSomeDealsSold() then
+        if not self.is_some_sold then
+            self.is_some_sold = display.newSprite("back_ground_32x33.png"):addTo(self.tab_buttons)
+                :pos(280,40)
+        end
+    else
+        if self.is_some_sold then
+            self.is_some_sold:removeFromParent(true)
+            self.is_some_sold = nil
+        end
+    end
+end
 function GameUITradeGuild:LoadBuyPage()
     local layer = self.buy_layer
     self.resource_drop_list =  WidgetDropList.new(
@@ -1035,7 +1050,11 @@ end
 function GameUITradeGuild:OnBuildingUpgrading()
 end
 function GameUITradeGuild:OnDealChanged(changed_map)
+    self:RefreshSoldMark()
     self:LoadMyGoodsList()
+end
+function GameUITradeGuild:OnMyDealsRefresh(changed_map)
+    self:RefreshSoldMark()
 end
 function GameUITradeGuild:OnResourceChanged(resource_manager)
     GameUITradeGuild.super.OnResourceChanged(self,resource_manager)
@@ -1088,6 +1107,8 @@ function GameUITradeGuild:GetMaterialIndexByName(material_type)
     return build_temp[material_type] or teach_temp[material_type]
 end
 return GameUITradeGuild
+
+
 
 
 

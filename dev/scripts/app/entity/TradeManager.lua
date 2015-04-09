@@ -16,6 +16,13 @@ end
 function TradeManager:GetMyDeals()
     return self.my_deals
 end
+function TradeManager:IsSomeDealsSold()
+    for k,v in pairs(self.my_deals) do
+        if v.isSold then
+            return true
+        end
+    end
+end
 function TradeManager:OnUserDataChanged(user_data,deltaData)
     local is_fully_update = deltaData == nil
     if is_fully_update then
