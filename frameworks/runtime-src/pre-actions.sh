@@ -28,7 +28,7 @@ cd $DOCROOT/../../tools/scripts
 if test "${CONFIGURATION}" = "Debug"; then
 	sh buildGame.sh iOS false false
 else
-	sh buildGame.sh iOS false false
+	sh buildGame.sh iOS true true
 fi
 
 cd $DOCROOT

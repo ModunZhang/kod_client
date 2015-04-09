@@ -3,6 +3,7 @@ local cocos_promise = import("..utils.cocos_promise")
 local window = import("..utils.window")
 local Flag = import("..entity.Flag")
 local UIListView = import("..ui.UIListView")
+local WidgetPushButton = import(".WidgetPushButton")
 local WidgetPopDialog = import(".WidgetPopDialog")
 local WidgetAllianceUIHelper = import(".WidgetAllianceUIHelper")
 local WidgetDropList = import("..widget.WidgetDropList")
@@ -30,24 +31,29 @@ function WidgetRankingList:ctor(type_)
         end
     end, EXPIRE_TIME)
 end
-local function rank_sort(response)
+local function rank_filter(response)
     local data = response.msg
     local is_not_nil = data.myData.rank ~= json.null
     if is_not_nil then
         data.myData.rank = data.myData.rank + 1
     end
-    if is_not_nil and data.datas[data.myData.rank] then
-        data.datas[data.myData.rank].is_mine = true
-    end
-    table.sort(data.datas, function(a, b)
-        return a.value > b.value
-    end)
-    for i,v in ipairs(data.datas) do
-        if v.is_mine then
-            data.myData.rank = i
-        end
-    end
+    -- if is_not_nil and data.datas[data.myData.rank] then
+    --     data.datas[data.myData.rank].is_mine = true
+    -- end
+    -- table.sort(data.datas, function(a, b)
+    --     return a.value > b.value
+    -- end)
+    -- for i,v in ipairs(data.datas) do
+    --     if v.is_mine then
+    --         data.myData.rank = i
+    --     end
+    -- end
     return response
+end
+local function load_more(rank_list, new_datas)
+    for i,v in ipairs(new_datas) do
+        table.insert(rank_list, v)
+    end
 end
 function WidgetRankingList:onEnter()
     WidgetRankingList.super.onEnter(self)
@@ -78,7 +84,7 @@ function WidgetRankingList:onEnter()
     self.listview:setRedundancyViewVal(self.listview:getViewRect().height + 76 * 2)
     self.listview:setDelegate(handler(self, self.sourceDelegate))
 
-    WidgetDropList.new(
+    self.drop_list = WidgetDropList.new(
         {
             {tag = "power",label = _("战斗力排行榜"),default = true},
             {tag = "kill",label = _("击杀排行榜")},
@@ -88,12 +94,12 @@ function WidgetRankingList:onEnter()
                 if not self.rank_map.power then
                     if self.type_ == "player" then
                         NetManager:getPlayerRankPromise("power"):done(function(response)
-                            self.rank_map.power = rank_sort(response).msg
+                            self.rank_map.power = rank_filter(response).msg
                             self:ReloadRank(self.rank_map.power)
                         end)
                     else
                         NetManager:getAllianceRankPromise("power"):done(function(response)
-                            self.rank_map.power = rank_sort(response).msg
+                            self.rank_map.power = rank_filter(response).msg
                             self:ReloadRank(self.rank_map.power)
                         end)
                     end
@@ -104,12 +110,12 @@ function WidgetRankingList:onEnter()
                 if not self.rank_map.kill then
                     if self.type_ == "player" then
                         NetManager:getPlayerRankPromise("kill"):done(function(response)
-                            self.rank_map.kill = rank_sort(response).msg
+                            self.rank_map.kill = rank_filter(response).msg
                             self:ReloadRank(self.rank_map.kill)
                         end)
                     else
                         NetManager:getAllianceRankPromise("kill"):done(function(response)
-                            self.rank_map.kill = rank_sort(response).msg
+                            self.rank_map.kill = rank_filter(response).msg
                             self:ReloadRank(self.rank_map.kill)
                         end)
                     end
@@ -123,6 +129,26 @@ end
 function WidgetRankingList:onExit()
     WidgetRankingList.super.onExit(self)
     WidgetRankingList.lock = false
+end
+function WidgetRankingList:LoadMore()
+    if self.is_loading or #self.current_rank.datas >= 100 then return end
+    self.is_loading = true
+    local tag = self.drop_list:GetSelectdTag()
+    if self.type_ == "player" then
+        local cur_datas = self.rank_map[tag].datas
+        NetManager:getPlayerRankPromise(tag, #cur_datas):done(function(response)
+            load_more(cur_datas, rank_filter(response).msg.datas)
+        end):always(function()
+            self.is_loading = false
+        end)
+    else
+        local cur_datas = self.rank_map[tag].datas
+        NetManager:getAllianceRankPromise(tag, #cur_datas):done(function(response)
+            load_more(cur_datas, rank_filter(response).msg.datas)
+        end):always(function()
+            self.is_loading = false
+        end)
+    end
 end
 function WidgetRankingList:ReloadRank(rank)
     if self.rank_map.power == rank then
@@ -148,6 +174,9 @@ function WidgetRankingList:sourceDelegate(listView, tag, idx)
         end
         return 0
     elseif cc.ui.UIListView.CELL_TAG == tag then
+        if #self.current_rank.datas - idx < 5 then
+            self:LoadMore()
+        end
         local item
         local content
         item = self.listview:dequeueItem()
@@ -214,7 +243,7 @@ function WidgetRankingList:CreatePlayerContentByIndex(idx)
             self.rank:hide()
             self.crown:setTexture(crown_map[index])
             self.crown:show()
-        else         
+        else
             self.crown:hide()
             self.rank:show():setString(index)
         end
@@ -327,6 +356,9 @@ end
 
 
 return WidgetRankingList
+
+
+
 
 
 
