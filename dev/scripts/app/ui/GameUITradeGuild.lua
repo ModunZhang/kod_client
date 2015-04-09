@@ -105,29 +105,38 @@ function GameUITradeGuild:LoadBuyPage()
         function(tag)
             if tag == 'resource' and not self.resource_layer then
                 self.resource_layer, self.resource_listview , self.resource_options= self:LoadResource(self:GetGoodsDetailsByType(RESOURCE_TYPE),RESOURCE_TYPE)
-                self.resource_options:getButtonAtIndex(1):setButtonSelected(true)
             end
             if tag == 'build_material' and not self.build_material_layer then
                 self.build_material_layer, self.build_material_listview , self.build_material_options= self:LoadResource(self:GetGoodsDetailsByType(BUILD_MATERIAL_TYPE),BUILD_MATERIAL_TYPE)
-                self.build_material_options:getButtonAtIndex(1):setButtonSelected(true)
             end
             if tag == 'martial_material' and not self.martial_material_layer then
                 self.martial_material_layer, self.martial_material_listview , self.martial_material_options= self:LoadResource(self:GetGoodsDetailsByType(MARTIAL_MATERIAL_TYPE),MARTIAL_MATERIAL_TYPE)
-                self.martial_material_options:getButtonAtIndex(1):setButtonSelected(true)
             end
 
 
             if self.resource_layer then
                 self.resource_layer:setVisible(tag == 'resource')
-                self:RefreshSellListView(RESOURCE_TYPE,self.resource_options:getSelectedIndex())
+                if self.resource_options:getSelectedIndex() then
+                    self:RefreshSellListView(RESOURCE_TYPE,self.resource_options:getSelectedIndex())
+                else
+                    self.resource_options:getButtonAtIndex(1):setButtonSelected(true)
+                end
             end
             if self.build_material_layer then
                 self.build_material_layer:setVisible(tag == 'build_material')
-                self:RefreshSellListView(BUILD_MATERIAL_TYPE,self.build_material_options:getSelectedIndex())
+                if self.build_material_options:getSelectedIndex() then
+                    self:RefreshSellListView(BUILD_MATERIAL_TYPE,self.build_material_options:getSelectedIndex())
+                else
+                    self.build_material_options:getButtonAtIndex(1):setButtonSelected(true)
+                end
             end
             if self.martial_material_layer then
                 self.martial_material_layer:setVisible(tag == 'martial_material')
-                self:RefreshSellListView(MARTIAL_MATERIAL_TYPE,self.martial_material_options:getSelectedIndex())
+                if self.martial_material_options:getSelectedIndex() then
+                    self:RefreshSellListView(BUILD_MATERIAL_TYPE,self.martial_material_options:getSelectedIndex())
+                else
+                    self.martial_material_options:getButtonAtIndex(1):setButtonSelected(true)
+                end
             end
         end
     )
@@ -259,10 +268,14 @@ function GameUITradeGuild:CreateSellItemForListView(listView,goods)
             end
             NetManager:getBuySellItemPromise(goods._id):next(function ( response )
                 -- 商品不存在
-                if response.errcode[1].code==573 then
-                    listView:removeItem(item)
+                if response.errcode then
+                    if response.errcode[1].code==573 then
+                        listView:removeItem(item)
+                    end
                 end
+                return response
             end):done(function()
+                GameGlobalUI:showTips(_("提示"),string.format(_("购买%s成功"),Localize.sell_type[goods.itemData.name]))
                 listView:removeItem(item)
             end)
         end)
@@ -1075,6 +1088,8 @@ function GameUITradeGuild:GetMaterialIndexByName(material_type)
     return build_temp[material_type] or teach_temp[material_type]
 end
 return GameUITradeGuild
+
+
 
 
 

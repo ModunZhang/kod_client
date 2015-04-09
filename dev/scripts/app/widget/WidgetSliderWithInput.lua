@@ -30,38 +30,6 @@ function WidgetSliderWithInput:ctor(params)
     local slider = self.slider
 
 
-    -- local function edit(event, editbox)
-    --     local text = tonumber(editbox:getText()) or min
-    --     if event == "began" then
-    --         if min==text then
-    --             editbox:setText("")
-    --         end
-    --     elseif event == "changed" then
-    --         if text then
-    --             if text > max then
-    --                 editbox:setText(max)
-    --             end
-    --         end
-    --     elseif event == "ended" then
-    --         if editbox:getText()=="" or min>text then
-    --             editbox:setText(min)
-    --         end
-    --         local edit_value = tonumber(editbox:getText())
-    --         editbox:setText(edit_value)
-
-    --         local slider_value = slider:getSliderValue()
-    --         print("edit_value=",edit_value,"slider_value=",slider_value)
-    --         if edit_value ~= slider_value then
-    --             slider.fsm_:doEvent("press")
-    --             slider:setSliderValue(edit_value)
-    --             slider.fsm_:doEvent("release")
-    --             if self.sliderReleaseEventListener then
-    --                 self.sliderReleaseEventListener()
-    --             end
-    --         end
-    --     end
-    -- end
-
     local text_btn = WidgetPushButton.new({normal = "back_ground_83x32.png",pressed = "back_ground_83x32.png"})
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
@@ -156,7 +124,7 @@ function WidgetSliderWithInput:OnSliderValueChanged(func)
         else
             btn_value = e_value
         end
-        self.btn_text:setString(tonumber(btn_value))
+        self.btn_text:setString(math.floor(tonumber(btn_value)))
         self.soldier_total_count:setString(string.format(btn_unit.."/ %s", GameUtils:formatNumber(self.max)))
         func(event)
     end)
@@ -181,6 +149,7 @@ function WidgetSliderWithInput:GetEditBoxPostion()
 end
 
 return WidgetSliderWithInput
+
 
 
 

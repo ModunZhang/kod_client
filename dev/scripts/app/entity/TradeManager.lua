@@ -3,6 +3,7 @@
 -- Date: 2015-01-13 17:05:03
 --
 local Enum = import("..utils.Enum")
+local Localize = import("..utils.Localize")
 local MultiObserver = import(".MultiObserver")
 local TradeManager = class("TradeManager", MultiObserver)
 
@@ -44,11 +45,12 @@ function TradeManager:OnUserDataChanged(user_data,deltaData)
                     end
                 end
                 if k == "edit" then
-                    for _,deal in pairs(v) do
+                    for k,deal in pairs(v) do
                         for index,myDeal in pairs(self.my_deals) do
                             if myDeal.id == deal.id then
                                 self.my_deals[index] = deal
                                 table.insert(edit,deal)
+                                GameGlobalUI:showTips(_("提示"),string.format(_("出售%s成功"),Localize.sell_type[deal.itemData.name]))
                             end
                         end
                     end
