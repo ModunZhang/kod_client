@@ -136,22 +136,22 @@ function WidgetMaterials:CreateItemWithListView(material_type,materials)
     local unit_width ,unit_height = 130 , 166
     local gap_x = (568 - unit_width * 4) / 3
     local row_item = display.newNode()
-    local row_count = 4
+    local row_count = 0
     self.material_box_table = {}
     for i,material_name in ipairs(materials) do
-        row_count = row_count -1
         local material_box = WidgetMaterialBox.new(material_type,material_name,function ()
             self:OpenMaterialDetails(material_type,material_name,material_map[material_name].."/"..self.building:GetMaxMaterial())
         end,true):addTo(row_item):SetNumber(material_map[material_name].."/"..self.building:GetMaxMaterial())
             :pos(origin_x + (unit_width + gap_x) * row_count , -unit_height/2)
         self.material_box_table[material_type]={}
         self.material_box_table[material_type][material_name] = material_box
-        if row_count<1 then
+        row_count = row_count + 1
+        if row_count>3 or i==#materials then
             local item = list_view:newItem()
             item:addContent(row_item)
             item:setItemSize(548, unit_height)
             list_view:addItem(item)
-            row_count=4
+            row_count=0
             row_item = display.newNode()
         end
     end
