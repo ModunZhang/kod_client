@@ -9,7 +9,6 @@ local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local WidgetMoveHouse = import("..widget.WidgetMoveHouse")
 local WidgetUseItems = import("..widget.WidgetUseItems")
 local City = City
-local MAX_COUNT_DECORATOR = 5
 local UIListView = import(".UIListView")
 local window = import("..utils.window")
 function GameUIResource:ctor(building)
@@ -161,23 +160,6 @@ function GameUIResource:CreateInfomation()
     }):addTo(infomationLayer)
         :align(display.RIGHT_BOTTOM,chaiButton:getPositionX(),secondLabel:getPositionY())
 
-    -- local listHeader = display.newScale9Sprite("resources_background_header.png")
-    --     :addTo(infomationLayer)
-    --     :align(display.TOP_LEFT, window.left+45,secondLine:getPositionY()-30)
-
-    -- cc.ui.UILabel.new({
-    --     UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-    --     text = _("总计"),
-    --     font = UIKit:getFontFilePath(),
-    --     size = 24,
-    --     align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
-    --     -- dimensions = cc.size(listHeader:getContentSize().width, listHeader:getContentSize().height),
-    --     color = UIKit:hex2c3b(0x403c2f),
-    --     valign = cc.ui.UILabel.TEXT_VALIGN_CENTER
-    -- })
-    -- :addTo(listHeader,5)
-    -- :pos(listHeader:getContentSize().width/2,listHeader:getContentSize().height/2)
-
     self.info = WidgetInfoWithTitle.new({
         title = _("总计"),
         h = 226
@@ -225,33 +207,35 @@ function GameUIResource:GetListItem(index,title,val)
 end
 
 function GameUIResource:RefreshListView()
-    -- self.listView:removeAllItems()
-    -- for i,v in ipairs(self.dataSource) do
-    --     local newItem = self:GetListItem(i,v[1],v[2])
-    --     self.listView:addItem(newItem)
-    -- end
-    -- self.listView:reload()
+    self.dataSource = self:GetDataSource()
+    dump(self.dataSource,"self.dataSource----->")
     self.info:CreateInfoItems(self.dataSource)
 end
 
 function GameUIResource:GetDataSource()
     local dataSource = {{_('待建地基'),'x' .. #City:GetRuinsNotBeenOccupied()}}
     local decorators = City:GetDecoratorsByType(self.building:GetType())
-    table.insert(dataSource,{_('可建造数量'),#decorators .. '/' .. MAX_COUNT_DECORATOR})
-
+    table.insert(dataSource,{_('可建造数量'),#decorators .. '/' .. City:GetMaxHouseCanBeBuilt(self.building:GetType())})
     local number = City.resource_manager:GetResourceByType(self.building:GetUpdateResourceType()):GetResourceValueByCurrentTime(app.timer:GetServerTime())
     table.insert(dataSource,{_('当前产出'),string.format('%d',number)})
     local levelTable = {}
     for _,v in ipairs(decorators) do
-        if levelTable[tostring(v:GetLevel())] then
-            table.insert(levelTable[tostring(v:GetLevel())],v)
+        local level = tonumber(v:GetLevel())
+        if levelTable[level] then
+            levelTable[level] = levelTable[level] + 1
         else
-            levelTable[tostring(v:GetLevel())] = {v}
+            levelTable[level] = 1
         end
     end
-    local title = self:GetTitleByType(self.building)
+    local final_level_table = {}
     for k,v in pairs(levelTable) do
-        table.insert(dataSource,{title .. ' LV ' .. k ,'x' .. #v})
+        table.insert(final_level_table,{level = k,count = v})
+    end
+    table.sort( final_level_table, function(a,b) return a.level < b.level end)
+
+    local title = self:GetTitleByType(self.building)
+    for k,v in ipairs(final_level_table) do
+        table.insert(dataSource,{title .. ' LV ' .. v.level ,'x' .. v.count})
     end
     return dataSource
 end
