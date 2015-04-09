@@ -451,11 +451,11 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
             description = building:GetPreConditionDesc(),jump_call = handler(self,self.GotoPreconditionBuilding)
         },
         {
-            resource_type = _("建造队列"),
-            isVisible = true,
+            resource_type = "building_queue",
+            isVisible = #city:GetUpgradingBuildings()>=city:BuildQueueCounts(),
             isSatisfy = #city:GetUpgradingBuildings()<city:BuildQueueCounts(),
             icon="hammer_31x33.png",
-            description=_("建造队列")..(city:BuildQueueCounts()-GameUtils:formatNumber(#city:GetUpgradingBuildings())).."/"..city:BuildQueueCounts()
+            description=_("建造队列已满")..(GameUtils:formatNumber(#city:GetUpgradingBuildings())).."/"..city:BuildQueueCounts()
         },
         {
             resource_type = _("木材"),
@@ -772,6 +772,7 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
 
 
 

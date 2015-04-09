@@ -96,7 +96,11 @@ function WidgetRequirementListview:RefreshListView(contents)
                     content.resource_value[1]:setColor(split_desc[2] and UIKit:hex2c4b(0x7e0000) or UIKit:hex2c4b(0x403c2f))
                     if split_desc[2] then
                         content.resource_value[2]:setString("/"..split_desc[2])
-                        content.resource_value[2]:setColor(UIKit:hex2c4b(0x403c2f))
+                        if v.resource_type == "building_queue" then
+                            content.resource_value[2]:setColor(UIKit:hex2c4b(0x7e0000))
+                        else
+                            content.resource_value[2]:setColor(UIKit:hex2c4b(0x403c2f))
+                        end
                         content.resource_value[2]:setPositionX(content.resource_value[1]:getPositionX()+content.resource_value[1]:getContentSize().width) 
                     end
                 end
@@ -167,7 +171,7 @@ function WidgetRequirementListview:RefreshListView(contents)
                         content.resource_value[2] = UIKit:ttfLabel({
                             text = "/"..split_desc[2],
                             size = 22,
-                            color = 0x403c2f
+                            color = v.resource_type == "building_queue" and 0x7e0000 or 0x403c2f
                         }):align(display.LEFT_CENTER,content.resource_value[1]:getPositionX()+content.resource_value[1]:getContentSize().width,0):addTo(content)
                     end
                 end
