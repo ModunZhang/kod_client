@@ -60,9 +60,6 @@ function NetService:request(route, lmsg, cb)
             if not success then  self.net_state = self.NET_STATE.DISCONNECT end 
             if jmsg then
                 jmsg = json.decode(jmsg)
-                if jmsg.code == 510 then
-                    self.net_state = self.NET_STATE.DISCONNECT
-                end
             else
                jmsg = nil 
             end

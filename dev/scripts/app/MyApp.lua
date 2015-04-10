@@ -145,9 +145,22 @@ function MyApp:retryConnectServer(need_disconnect)
             NetManager:getConnectLogicServerPromise():next(function()
                 return NetManager:getLoginPromise()
             end):catch(function(err)
-                UIKit:showMessageDialog(_("错误"), _("服务器连接断开,请检测你的网络环境后重试!"), function()
-                    app:retryConnectServer(false)
-                end,nil,false)
+                local content, title = err:reason()
+                if title == 'timeout' then
+                    UIKit:showMessageDialog(_("错误"), _("服务器连接断开,请检测你的网络环境后重试!"), function()
+                        app:retryConnectServer(false)
+                    end,nil,false)
+                else
+                    local code = content.code
+                    if UIKit:getErrorCodeKey(content.code) == 'reLoginNeeded' then
+                        app:retryConnectServer(false)
+                        return
+                    else
+                        UIKit:showMessageDialog(_("错误"), _("服务器连接断开,请检测你的网络环境后重试!"), function()
+                            app:retryConnectServer(false)
+                        end,nil,false)
+                    end
+                end
             end):always(function()
                 UIKit:NoWaitForNet()
             end)      

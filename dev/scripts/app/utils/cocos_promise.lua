@@ -46,20 +46,22 @@ local function promiseFilterNetError(p,need_catch)
         end
         local content, title = err:reason()
         title = title or ""
-        if title == 'timeout' then
-            content = _("请求超时")
-            UIKit:showMessageDialog(title == 'timeout' and _("错误") or title, content.msg,function()
-                if title == 'timeout' then
-                    app:retryConnectServer()
-                end
-            end,nil,false)
-        else
-            local code = content.code 
-            if UIKit:getErrorCodeKey(code) == "reLoginNeeded" then
-                app:retryConnectServer()
-            else
-                UIKit:showMessageDialog(_("错误"), content.msg .. string.format("[%d]",code),function()
+        if not need_catch then
+            if title == 'timeout' then
+                content = _("请求超时")
+                UIKit:showMessageDialog(title == 'timeout' and _("错误") or title, content,function()
+                    if title == 'timeout' then
+                        app:retryConnectServer()
+                    end
                 end,nil,false)
+            else
+                local code = content.code 
+                if UIKit:getErrorCodeKey(code) == "reLoginNeeded" then
+                    app:retryConnectServer()
+                else
+                    UIKit:showMessageDialog(_("错误"), content.msg .. string.format("[%d]",code),function()
+                    end,nil,false)
+                end
             end
         end
         if need_catch then

@@ -380,7 +380,7 @@ function NetManager:getConnectGateServerPromise()
 end
 -- 获取服务器列表
 function NetManager:getLogicServerInfoPromise()
-    return get_none_blocking_request_promise("gate.gateHandler.queryEntry", nil, "获取逻辑服务器失败")
+    return get_none_blocking_request_promise("gate.gateHandler.queryEntry", nil, "获取逻辑服务器失败",true)
         :done(function(result)
             self:CleanAllEventListeners()
             self.m_netService:disconnect()
@@ -416,7 +416,7 @@ end
 function NetManager:getLoginPromise(deviceId)
     local device_id
     if CONFIG_IS_DEBUG then
-        device_id = getOpenUDID()
+        device_id = "dannyhe"
     else
         device_id = device.getOpenUDID()
     end
