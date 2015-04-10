@@ -2,6 +2,7 @@ local config_equipments = GameDatas.DragonEquipments.equipments
 local config_function = GameDatas.BuildingFunction.blackSmith
 local config_levelup = GameDatas.BuildingLevelUp.blackSmith
 
+local Localize = import("..utils.Localize")
 local Observer = import(".Observer")
 local UpgradeBuilding = import(".UpgradeBuilding")
 local BlackSmithUpgradeBuilding = class("BlackSmithUpgradeBuilding", UpgradeBuilding)
@@ -71,6 +72,12 @@ function BlackSmithUpgradeBuilding:CreateEvent()
     end
     function event:Id()
         return self.id
+    end
+    function event:ContentDesc()
+        return string.format("%s %s", _("正在制作"), Localize.equip[self:Content()])
+    end
+    function event:TimeDesc(time)
+        return GameUtils:formatTimeStyle1(self:LeftTime(time)), self:Percent(time)
     end
     event:Init()
     return event
