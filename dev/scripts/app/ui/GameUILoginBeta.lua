@@ -204,7 +204,7 @@ function GameUILoginBeta:connectGateServer()
         self:getLogicServerInfo()
     end):catch(function(err)
         self:showError(_("连接网关服务器失败!"),function()
-        	self:loginAction()
+        	self:connectGateServer()
         end)
     end)
 end
