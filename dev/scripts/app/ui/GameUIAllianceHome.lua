@@ -15,6 +15,7 @@ local WidgetHomeBottom = import("..widget.WidgetHomeBottom")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetAutoOrder = import("..widget.WidgetAutoOrder")
 local GameUIAllianceHome = UIKit:createUIClass('GameUIAllianceHome')
+local buildingName = GameDatas.AllianceInitData.buildingName
 local cc = cc
 function GameUIAllianceHome:ctor(alliance)
     GameUIAllianceHome.super.ctor(self)
@@ -84,6 +85,18 @@ function GameUIAllianceHome:InitArrow()
     local rect1 = self.bottom:getCascadeBoundingBox()
     local rect2 = self.top_bg:getCascadeBoundingBox()
     self.screen_rect = cc.rect(0, rect1.height, display.width, rect2.y - rect1.height)
+
+    -- my alliance building
+    self.alliance_building_arrows = {}
+    for k,v in pairs(buildingName) do
+        if v.type == "building" then
+            self.alliance_building_arrows[k] = display.newSprite("arrow_blue-hd.png")
+                :addTo(self):align(display.TOP_CENTER):hide()
+        end
+    end
+
+
+    -- my city
     self.arrow = cc.ui.UIPushButton.new({normal = "location_arrow_up.png",pressed = "location_arrow_down.png"})
         :addTo(self):align(display.TOP_CENTER):hide():onButtonClicked(function()
         self:ReturnMyCity()
@@ -573,6 +586,7 @@ local pGetLength = cc.pGetLength
 local rectContainsPoint = cc.rectContainsPoint
 local RIGHT_CENTER = display.RIGHT_CENTER
 local LEFT_CENTER = display.LEFT_CENTER
+local MID_POINT = point(display.cx, display.cy)
 local function pGetIntersectPoint(pt1,pt2,pt3,pt4)
     local s,t, ret = 0,0,false
     ret,s,t = cc.pIsLineIntersect(pt1,pt2,pt3,pt4,s,t)
@@ -583,6 +597,10 @@ local function pGetIntersectPoint(pt1,pt2,pt3,pt4)
     end
 end
 function GameUIAllianceHome:OnSceneMove(logic_x, logic_y, alliance_view)
+    self:UpdateCoordinate(logic_x, logic_y, alliance_view)
+    self:UpdateAllArrows(logic_x, logic_y, alliance_view)
+end
+function GameUIAllianceHome:UpdateCoordinate(logic_x, logic_y, alliance_view)
     local coordinate_str = string.format("%d, %d", logic_x, logic_y)
     local is_mine
     if alliance_view then
@@ -592,34 +610,50 @@ function GameUIAllianceHome:OnSceneMove(logic_x, logic_y, alliance_view)
     end
     self.coordinate_label:setString(coordinate_str)
     self.coordinate_title_label:setString(is_mine)
+end
+function GameUIAllianceHome:UpdateAllArrows(logic_x, logic_y, alliance_view)
+    local layer = alliance_view:GetLayer()
+    local screen_rect = self.screen_rect
+    local alliance = self.alliance
+    self:UpdateMyCityArrows(screen_rect, alliance, layer)
+    self:UpdateMyAllianceBuildingArrows(screen_rect, alliance, layer)
+end
+function GameUIAllianceHome:UpdateMyCityArrows(screen_rect, alliance, layer)
+    local x,y = alliance:GetAllianceMap():FindMapObjectById(alliance:GetSelf():MapId()):GetMidLogicPosition()
+    local map_point = layer:ConvertLogicPositionToMapPosition(x, y, alliance:Id())
+    local world_point = layer:convertToWorldSpace(map_point)
+    if not rectContainsPoint(screen_rect, world_point) then
+        local p,degree = self:GetIntersectPoint(screen_rect, MID_POINT, world_point)
+        if p and degree then
+            degree = degree + 180
+            self.arrow:show():pos(p.x, p.y):rotation(degree)
 
-    -- ----- arrow
-    local scene = display.getRunningScene()
-    if scene.GetAlliance then
-        local alliance = scene:GetAlliance()
-        local layer = scene:GetSceneLayer()
-
-        local mapObject = alliance:GetAllianceMap():FindMapObjectById(alliance:GetSelf():MapId())
-        local location = mapObject.location
-        local map_point = layer:ConvertLogicPositionToMapPosition(location.x, location.y, alliance:Id())
-        local world_point = layer:convertToWorldSpace(map_point)
-        local mid_point = point(display.cx, display.cy)
-        local screen_rect = self.screen_rect
-
-        if not rectContainsPoint(screen_rect, world_point) then
-            local p,degree = self:GetIntersectPoint(screen_rect, mid_point, world_point, cc.p(0,1))
-            if p and degree then
-                degree = degree + 180
-                self.arrow:show():pos(p.x, p.y):rotation(degree)
-                    local isflip = (degree > 0 and degree < 180)
-                    local distance = ceil(pGetLength(pSub(world_point, p)) / 80)
-                    self.arrow_label:align(isflip and RIGHT_CENTER or LEFT_CENTER)
-                        :scale(isflip and -1 or 1):setString(string.format("%dM", distance))
-            end
-        else
-            self.arrow:hide()
+            local isflip = (degree > 0 and degree < 180)
+            local distance = ceil(pGetLength(pSub(world_point, p)) / 80)
+            self.arrow_label:align(isflip and RIGHT_CENTER or LEFT_CENTER)
+                :scale(isflip and -1 or 1):setString(string.format("%dM", distance))
         end
+    else
+        self.arrow:hide()
     end
+end
+function GameUIAllianceHome:UpdateMyAllianceBuildingArrows(screen_rect, alliance, layer)
+    alliance:GetAllianceMap():IteratorAllianceBuildings(function(_, v)
+        local arrow = self.alliance_building_arrows[v:GetName()]
+        if arrow then
+            local x,y = v:GetMidLogicPosition()
+            local map_point = layer:ConvertLogicPositionToMapPosition(x, y, id)
+            local world_point = layer:convertToWorldSpace(map_point)
+            if not rectContainsPoint(screen_rect, world_point) then
+                local p,degree = self:GetIntersectPoint(screen_rect, MID_POINT, world_point)
+                if p and degree then
+                    arrow:show():pos(p.x, p.y):rotation(degree + 180)
+                end
+            else
+                arrow:hide()
+            end
+        end
+    end)
 end
 function GameUIAllianceHome:GetIntersectPoint(screen_rect, point1, point2, normal)
     local points = self:GetPointsWithScreenRect(screen_rect)
@@ -696,6 +730,15 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
+
+
+
+
+
+
+
+
+
 
 
 

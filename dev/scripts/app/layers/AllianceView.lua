@@ -148,11 +148,11 @@ end
 function AllianceView:IteratorAllianceObjects(func)
     table.foreach(self.objects, func)
 end
-function AllianceView:OnSceneMove()
--- self:IteratorAllianceObjects(function(_, object)
---     object:OnSceneMove()
--- end)
-end
+-- function AllianceView:OnSceneMove()
+-- -- self:IteratorAllianceObjects(function(_, object)
+-- --     object:OnSceneMove()
+-- -- end)
+-- end
 function AllianceView:GetClickedObject(world_x, world_y)
     local point = self:GetBuildingNode():convertToNodeSpace(cc.p(world_x, world_y))
     local logic_x, logic_y = self:GetLogicMap():ConvertToLogicPosition(point.x, point.y)

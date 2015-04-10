@@ -31,21 +31,36 @@ end
 function mapObject_meta:GetType()
     return buildingName[self.name].type
 end
+function mapObject_meta:GetName()
+    return self.name
+end
 function mapObject_meta:Id()
     return self.id
 end
 function mapObject_meta:GetSize()
-    local config = buildingName[self.name] or {width = 1, height = 1}
-    return config.width, config.height
+    if not self.width then
+        local config = buildingName[self.name] or {width = 1, height = 1}
+        self.width = config.width
+        self.height = config.height
+    end
+    return self.width, self.height
 end
 function mapObject_meta:GetLogicPosition()
-    local location = self.location
-    return location.x, location.y
+    if not self.x then
+        local location = self.location
+        self.x, self.y = location.x, location.y
+    end
+    return self.x, self.y
 end
 function mapObject_meta:GetMidLogicPosition()
-    local start_x, end_x, start_y, end_y = self:GetGlobalRegion()
-    return (start_x + end_x) / 2, (start_y + end_y) / 2
+    local w,h = self:GetSize()
+    local x,y = self:GetLogicPosition()
+    return (2 * x - w + 1) / 2, (2 * y - h + 1) / 2
 end
+-- function mapObject_meta:GetMidLogicPosition()
+--     local start_x, end_x, start_y, end_y = self:GetGlobalRegion()
+--     return (start_x + end_x) / 2, (start_y + end_y) / 2
+-- end
 function mapObject_meta:GetTopLeftPoint()
     local start_x, end_x, start_y, end_y = self:GetGlobalRegion()
     return start_x, start_y

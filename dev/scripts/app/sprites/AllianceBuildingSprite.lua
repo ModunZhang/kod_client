@@ -30,7 +30,7 @@ function AllianceBuildingSprite:GetSpriteFile()
     end
 end
 function AllianceBuildingSprite:GetSpriteOffset()
-    return self:GetLogicMap():ConvertToLocalPosition(1, 1)
+    return self:GetLogicMap():ConvertToLocalPosition(0, 0)
 end
 
 
@@ -38,7 +38,7 @@ end
 
 ---
 function AllianceBuildingSprite:CreateBase()
-    self:GenerateBaseTiles(3, 3)
+    self:GenerateBaseTiles(1, 1)
 end
 function AllianceBuildingSprite:newBatchNode(w, h)
     local start_x, end_x, start_y, end_y = self:GetLocalRegion(w, h)

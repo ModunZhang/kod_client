@@ -498,9 +498,9 @@ function MultiAllianceLayer:getContentSize()
     return self.content_size
 end
 function MultiAllianceLayer:OnSceneMove()
-    for _, v in ipairs(self.alliance_views) do
-        v:OnSceneMove()
-    end
+    -- for _, v in ipairs(self.alliance_views) do
+    --     v:OnSceneMove()
+    -- end
     local logic_x, logic_y, alliance_view = self:GetCurrentViewAllianceCoordinate()
     self:NotifyObservers(function(listener)
         listener:OnSceneMove(logic_x, logic_y, alliance_view)
