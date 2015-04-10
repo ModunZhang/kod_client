@@ -348,7 +348,7 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
         self.instant_button = instant_button
 
         -- gem
-        cc.ui.UIImage.new("gem_66x56.png"):addTo(instant_button, 2)
+        cc.ui.UIImage.new("gem_icon_62x61.png"):addTo(instant_button, 2)
             :align(display.CENTER, -100, -50):scale(0.5)
 
         -- gem count

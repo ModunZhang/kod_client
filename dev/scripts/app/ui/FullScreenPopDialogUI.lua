@@ -117,7 +117,7 @@ function FullScreenPopDialogUI:CreateNeeds(params)
     local icon = params.icon
     local value = params.value
     local color = params.color
-    local image_icon = icon or "gem_66x56.png"
+    local image_icon = icon or "gem_icon_62x61.png"
     local icon_image = display.newScale9Sprite(image_icon, display.cx-30, display.top-610):addTo(self)
     icon_image:setScale(30/icon_image:getContentSize().height)
     self.needs_label = UIKit:ttfLabel({
