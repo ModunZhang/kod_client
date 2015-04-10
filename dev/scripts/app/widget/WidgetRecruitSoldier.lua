@@ -298,144 +298,167 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
         end)
         :LayoutValueLabel(WidgetSliderWithInput.STYLE_LAYOUT.RIGHT,0)
     self.slider_input = slider_input
-    -- 立即招募
-    local size = back_ground:getContentSize()
-    local instant_button = WidgetPushButton.new(
-        {normal = "green_btn_up_250x65.png",pressed = "green_btn_down_250x65.png"}
-        ,{}
-        ,{
-            disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
-        })
-        :addTo(back_ground, 2)
-        :align(display.CENTER, 160, 110)
-        :setButtonLabel(cc.ui.UILabel.new({
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("立即招募"),
-            size = 24,
-            color = UIKit:hex2c3b(0xfff3c7)
-        }))
-        :onButtonClicked(function(event)
-            if City:GetUser():GetGemResource():GetValue()< tonumber(self.gem_label:getString())then
-                FullScreenPopDialogUI.new()
-                    :SetTitle(_("提示"))
-                    :SetPopMessage(_("您当前没有足够宝石"))
-                    :CreateCancelButton():AddToCurrentScene()
-                return
-            end
 
-            if SPECIAL[self.soldier_name] then
-                local not_enough_material = self:CheckMaterials(self.count)
-                if not_enough_material then
+    local re_time = DataUtils:GetNextRecruitTime()
+    if tolua.type(re_time) == "boolean" and re_time then
+        -- 立即招募
+        local size = back_ground:getContentSize()
+        local instant_button = WidgetPushButton.new(
+            {normal = "green_btn_up_250x65.png",pressed = "green_btn_down_250x65.png"}
+            ,{}
+            ,{
+                disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
+            })
+            :addTo(back_ground, 2)
+            :align(display.CENTER, 160, 110)
+            :setButtonLabel(cc.ui.UILabel.new({
+                UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+                text = _("立即招募"),
+                size = 24,
+                color = UIKit:hex2c3b(0xfff3c7)
+            }))
+            :onButtonClicked(function(event)
+                if City:GetUser():GetGemResource():GetValue()< tonumber(self.gem_label:getString())then
                     FullScreenPopDialogUI.new()
-                        :SetTitle(_("招募材料不足"))
-                        :SetPopMessage(_("您当前没有足够材料"))
+                        :SetTitle(_("提示"))
+                        :SetPopMessage(_("您当前没有足够宝石"))
                         :CreateCancelButton():AddToCurrentScene()
-                else
-                    NetManager:getInstantRecruitSpecialSoldierPromise(self.soldier_name, self.count)
+                    return
                 end
-            else
-                NetManager:getInstantRecruitNormalSoldierPromise(self.soldier_name, self.count)
-            end
 
-            if type(self.instant_button_clicked) == "function" then
-                self:instant_button_clicked()
-            end
-            self:Close()
-        end)
-    self.instant_button = instant_button
+                if SPECIAL[self.soldier_name] then
+                    local not_enough_material = self:CheckMaterials(self.count)
+                    if not_enough_material then
+                        FullScreenPopDialogUI.new()
+                            :SetTitle(_("招募材料不足"))
+                            :SetPopMessage(_("您当前没有足够材料"))
+                            :CreateCancelButton():AddToCurrentScene()
+                    else
+                        NetManager:getInstantRecruitSpecialSoldierPromise(self.soldier_name, self.count)
+                    end
+                else
+                    NetManager:getInstantRecruitNormalSoldierPromise(self.soldier_name, self.count)
+                end
 
-    -- gem
-    cc.ui.UIImage.new("gem_66x56.png"):addTo(instant_button, 2)
-        :align(display.CENTER, -100, -50):scale(0.5)
+                if type(self.instant_button_clicked) == "function" then
+                    self:instant_button_clicked()
+                end
+                self:Close()
+            end)
+        self.instant_button = instant_button
 
-    -- gem count
-    self.gem_label = cc.ui.UILabel.new({
-        size = 18,
-        font = UIKit:getFontFilePath(),
-        align = cc.ui.TEXT_ALIGN_CENTER,
-        color = UIKit:hex2c3b(0x403c2f)
-    }):addTo(instant_button, 2)
-        :align(display.LEFT_CENTER, -100 + 20, -50)
+        -- gem
+        cc.ui.UIImage.new("gem_66x56.png"):addTo(instant_button, 2)
+            :align(display.CENTER, -100, -50):scale(0.5)
+
+        -- gem count
+        self.gem_label = cc.ui.UILabel.new({
+            size = 18,
+            font = UIKit:getFontFilePath(),
+            align = cc.ui.TEXT_ALIGN_CENTER,
+            color = UIKit:hex2c3b(0x403c2f)
+        }):addTo(instant_button, 2)
+            :align(display.LEFT_CENTER, -100 + 20, -50)
 
 
-    -- 招募
-    local button = WidgetPushButton.new(
-        {normal = "yellow_btn_up_185x65.png",pressed = "yellow_btn_down_185x65.png"}
-        ,{}
-        ,{
-            disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
-        })
-        :addTo(back_ground, 2)
-        :align(display.CENTER, size.width - 120, 110)
-        :setButtonLabel(cc.ui.UILabel.new({
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("招募"),
-            size = 27,
-            color = UIKit:hex2c3b(0xfff3c7)
-        }))
-        :onButtonClicked(function(event)
-            local current_time = app.timer:GetServerTime()
-            local left_time = self.barracks:GetRecruitEvent():LeftTime(current_time)
-            local queue_need_gem = self.barracks:IsRecruting()
-                and DataUtils:getGemByTimeInterval(left_time) or 0
+        -- 招募
+        local button = WidgetPushButton.new(
+            {normal = "yellow_btn_up_185x65.png",pressed = "yellow_btn_down_185x65.png"}
+            ,{}
+            ,{
+                disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
+            })
+            :addTo(back_ground, 2)
+            :align(display.CENTER, size.width - 120, 110)
+            :setButtonLabel(cc.ui.UILabel.new({
+                UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+                text = _("招募"),
+                size = 27,
+                color = UIKit:hex2c3b(0xfff3c7)
+            }))
+            :onButtonClicked(function(event)
+                local current_time = app.timer:GetServerTime()
+                local left_time = self.barracks:GetRecruitEvent():LeftTime(current_time)
+                local queue_need_gem = self.barracks:IsRecruting()
+                    and DataUtils:getGemByTimeInterval(left_time) or 0
 
-            if SPECIAL[self.soldier_name] then
-                local not_enough_material = self:CheckMaterials(self.count)
-                local required_gems = DataUtils:buyResource(self:GetNeedResouce(self.count), {})
-                if not_enough_material then
-                    UIKit:showMessageDialog(_("招募材料不足"), _("您当前没有足够材料"))
-                elseif queue_need_gem + required_gems > 0 then
-                    local title = string.format("%s/%s", queue_need_gem > 0 and _("队列不足") or "", required_gems > 0 and _("资源不足") or "")
-                    local content = string.format("%s%s%s", queue_need_gem > 0 and _("您当前没有足够的队列") or "", required_gems > 0 and _("您当前没有足够的资源") or "", _("是否花费魔法石立即补充"))
+                if SPECIAL[self.soldier_name] then
+                    local not_enough_material = self:CheckMaterials(self.count)
+                    local required_gems = DataUtils:buyResource(self:GetNeedResouce(self.count), {})
+                    if not_enough_material then
+                        UIKit:showMessageDialog(_("招募材料不足"), _("您当前没有足够材料"))
+                    elseif queue_need_gem + required_gems > 0 then
+                        local title = string.format("%s/%s", queue_need_gem > 0 and _("队列不足") or "", required_gems > 0 and _("资源不足") or "")
+                        local content = string.format("%s%s%s", queue_need_gem > 0 and _("您当前没有足够的队列") or "", required_gems > 0 and _("您当前没有足够的资源") or "", _("是否花费魔法石立即补充"))
 
-                    UIKit:showMessageDialog(title, content,function()
+                        UIKit:showMessageDialog(title, content,function()
+                            NetManager:getRecruitSpecialSoldierPromise(self.soldier_name, self.count)
+                            self:Close()
+                        end):CreateNeeds({value = queue_need_gem + required_gems})
+                    else
                         NetManager:getRecruitSpecialSoldierPromise(self.soldier_name, self.count)
                         self:Close()
-                    end):CreateNeeds({value = queue_need_gem + required_gems})
+                    end
                 else
-                    NetManager:getRecruitSpecialSoldierPromise(self.soldier_name, self.count)
-                    self:Close()
-                end
-            else
-                local required_gems = DataUtils:buyResource(self:GetNeedResouce(self.count), {})
-                if queue_need_gem + required_gems > 0 then
-                    local title = string.format("%s/%s", queue_need_gem > 0 and _("队列不足") or "", required_gems > 0 and _("资源不足") or "")
-                    local content = string.format("%s%s%s", queue_need_gem > 0 and _("您当前没有足够的队列") or "", required_gems > 0 and _("您当前没有足够的资源") or "", _("是否花费魔法石立即补充"))
-                    UIKit:showMessageDialog(title, content,function()
+                    local required_gems = DataUtils:buyResource(self:GetNeedResouce(self.count), {})
+                    if queue_need_gem + required_gems > 0 then
+                        local title = string.format("%s/%s", queue_need_gem > 0 and _("队列不足") or "", required_gems > 0 and _("资源不足") or "")
+                        local content = string.format("%s%s%s", queue_need_gem > 0 and _("您当前没有足够的队列") or "", required_gems > 0 and _("您当前没有足够的资源") or "", _("是否花费魔法石立即补充"))
+                        UIKit:showMessageDialog(title, content,function()
+                            NetManager:getRecruitNormalSoldierPromise(self.soldier_name, self.count)
+                            self:Close()
+                        end):CreateNeeds({value = queue_need_gem + required_gems})
+                    else
                         NetManager:getRecruitNormalSoldierPromise(self.soldier_name, self.count)
                         self:Close()
-                    end):CreateNeeds({value = queue_need_gem + required_gems})
-                else
-                    NetManager:getRecruitNormalSoldierPromise(self.soldier_name, self.count)
-                    self:Close()
+                    end
                 end
-            end
-        end)
-    assert(not self.normal_button)
-    self.normal_button = button
+            end)
+        assert(not self.normal_button)
+        self.normal_button = button
 
-    -- 时间glass
-    cc.ui.UIImage.new("hourglass_39x46.png"):addTo(button, 2)
-        :align(display.LEFT_CENTER, -90, -55):scale(0.7)
+        -- 时间glass
+        cc.ui.UIImage.new("hourglass_39x46.png"):addTo(button, 2)
+            :align(display.LEFT_CENTER, -90, -55):scale(0.7)
 
-    -- 时间
-    local center = -20
-    self.recruit_time = cc.ui.UILabel.new({
-        size = 18,
-        font = UIKit:getFontFilePath(),
-        align = cc.ui.TEXT_ALIGN_CENTER,
-        color = UIKit:hex2c3b(0x403c2f)
-    }):addTo(button, 2)
-        :align(display.CENTER, center, -50)
+        -- 时间
+        local center = -20
+        self.recruit_time = cc.ui.UILabel.new({
+            size = 18,
+            font = UIKit:getFontFilePath(),
+            align = cc.ui.TEXT_ALIGN_CENTER,
+            color = UIKit:hex2c3b(0x403c2f)
+        }):addTo(button, 2)
+            :align(display.CENTER, center, -50)
 
-    self.recruit_buff_time = cc.ui.UILabel.new({
-        text = "(-00:00:00)",
-        size = 18,
-        font = UIKit:getFontFilePath(),
-        align = cc.ui.TEXT_ALIGN_CENTER,
-        color = UIKit:hex2c3b(0x068329)
-    }):addTo(button, 2)
-        :align(display.CENTER, center, -70)
+        self.recruit_buff_time = cc.ui.UILabel.new({
+            text = "(-00:00:00)",
+            size = 18,
+            font = UIKit:getFontFilePath(),
+            align = cc.ui.TEXT_ALIGN_CENTER,
+            color = UIKit:hex2c3b(0x068329)
+        }):addTo(button, 2)
+            :align(display.CENTER, center, -70)
+    else
+        -- 招募时间限制
+        local time_bg = display.newSprite("back_ground_548X34.png")
+            :align(display.BOTTOM_CENTER, back_ground:getContentSize().width/2, 50)
+            :addTo(back_ground)
+        local re_time = DataUtils:GetNextRecruitTime()
+        local re_string = ""
+        if tolua.type(re_time) == "boolean" then
+            re_string = _("招募开启中")
+        else
+            re_string = _("下一次开启招募:")..GameUtils:formatTimeStyle1(re_time-app.timer:GetServerTime())
+        end
+        self.re_status = UIKit:ttfLabel({
+            text = re_string,
+            size = 20,
+            color = 0x514d3e
+        }):addTo(time_bg)
+            :align(display.CENTER, time_bg:getContentSize().width/2,time_bg:getContentSize().height/2)
+    end
+
 
     self.back_ground = back_ground
 
@@ -454,12 +477,24 @@ function WidgetRecruitSoldier:onEnter()
     self.slider_input:SetValue(max)
 
     UIKit:CheckOpenUI(self)
+    app.timer:AddListener(self)
 
 end
 function WidgetRecruitSoldier:onExit()
     self.barracks:RemoveBarracksListener(self)
     self.city:GetResourceManager():RemoveObserver(self)
+    app.timer:RemoveListener(self)
     UIKit:getRegistry().removeObject(self.__cname)
+end
+function WidgetRecruitSoldier:OnTimer(current_time)
+    if self.re_status then
+        local re_time = DataUtils:GetNextRecruitTime()
+        if tolua.type(re_time) == "boolean" and re_time then
+            self.re_status:setString(_("招募开启中"))
+        else
+            self.re_status:setString(_("下一次开启招募:")..GameUtils:formatTimeStyle1(re_time-current_time))
+        end
+    end
 end
 function WidgetRecruitSoldier:SetSoldier(soldier_name, star)
     local soldier_config, soldier_ui_config = self:GetConfigBySoldierTypeAndStar(soldier_name, star)
@@ -552,27 +587,29 @@ function WidgetRecruitSoldier:Close()
     return self
 end
 function WidgetRecruitSoldier:OnCountChanged(count)
-    local enable = count > 0
-    -- 按钮
-    self.instant_button:setButtonEnabled(enable)
-    -- self.normal_button:setButtonEnabled(enable and self.barracks:IsRecruitEventEmpty())
-
     -- 数量和时间
     local soldier_config = self.soldier_config
     local soldier_ui_config = self.soldier_ui_config
     local total_time = soldier_config.recruitTime * count
     -- self.soldier_current_count:setString(string.format("%d", count))
     self.upkeep:setString(string.format("%s%d/%s", count > 0 and "-" or "", soldier_config.consumeFoodPerHour * count, _("小时")))
-    self.recruit_time:setString(GameUtils:formatTimeStyle1(total_time))
-    local buff_str = string.format("(-%s)", GameUtils:formatTimeStyle1(DataUtils:getSoldierRecruitBuffTime(soldier_config.type,total_time)))
-    self.recruit_buff_time:setString(buff_str)
-
     -- 检查资源
     local need_resource = self:CheckNeedResource(self.res_total_map, count)
     self.count = count
-    local gem_resource, buy = DataUtils:buyResource(need_resource, {})
-    local gem_time = DataUtils:getGemByTimeInterval(total_time-DataUtils:getSoldierRecruitBuffTime(soldier_config.type,total_time))
-    self.gem_label:setString(gem_resource + gem_time)
+
+    local re_time = DataUtils:GetNextRecruitTime()
+    if tolua.type(re_time) == "boolean" and re_time then
+        -- 按钮
+        local enable = count > 0
+        self.instant_button:setButtonEnabled(enable)
+        self.recruit_time:setString(GameUtils:formatTimeStyle1(total_time))
+        local buff_str = string.format("(-%s)", GameUtils:formatTimeStyle1(DataUtils:getSoldierRecruitBuffTime(soldier_config.type,total_time)))
+        self.recruit_buff_time:setString(buff_str)
+        local gem_resource, buy = DataUtils:buyResource(need_resource, {})
+        local gem_time = DataUtils:getGemByTimeInterval(total_time-DataUtils:getSoldierRecruitBuffTime(soldier_config.type,total_time))
+        self.gem_label:setString(gem_resource + gem_time)
+    end
+
 end
 function WidgetRecruitSoldier:CheckNeedResource(total_resouce, count)
     local soldier_config = self.soldier_config
@@ -678,6 +715,12 @@ end
 
 
 return WidgetRecruitSoldier
+
+
+
+
+
+
 
 
 
