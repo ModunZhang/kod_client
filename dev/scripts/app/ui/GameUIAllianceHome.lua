@@ -564,13 +564,22 @@ end
 --         end
 --     end
 -- end
+local deg = math.deg
+local ceil = math.ceil
+local point = cc.p
+local pSub = cc.pSub
+local pGetAngle = cc.pGetAngle
+local pGetLength = cc.pGetLength
+local rectContainsPoint = cc.rectContainsPoint
+local RIGHT_CENTER = display.RIGHT_CENTER
+local LEFT_CENTER = display.LEFT_CENTER
 local function pGetIntersectPoint(pt1,pt2,pt3,pt4)
     local s,t, ret = 0,0,false
     ret,s,t = cc.pIsLineIntersect(pt1,pt2,pt3,pt4,s,t)
     if ret then
-        return cc.p(pt1.x + s * (pt2.x - pt1.x), pt1.y + s * (pt2.y - pt1.y)), s
+        return point(pt1.x + s * (pt2.x - pt1.x), pt1.y + s * (pt2.y - pt1.y)), s
     else
-        return cc.p(0,0), s
+        return point(0,0), s
     end
 end
 function GameUIAllianceHome:OnSceneMove(logic_x, logic_y, alliance_view)
@@ -592,50 +601,51 @@ function GameUIAllianceHome:OnSceneMove(logic_x, logic_y, alliance_view)
 
         local mapObject = alliance:GetAllianceMap():FindMapObjectById(alliance:GetSelf():MapId())
         local location = mapObject.location
-        local point = layer:ConvertLogicPositionToMapPosition(location.x, location.y, alliance:Id())
-        local world_point = layer:convertToWorldSpace(point)
-        local mid_point = cc.p(display.cx, display.cy)
+        local map_point = layer:ConvertLogicPositionToMapPosition(location.x, location.y, alliance:Id())
+        local world_point = layer:convertToWorldSpace(map_point)
+        local mid_point = point(display.cx, display.cy)
         local screen_rect = self.screen_rect
-        if not cc.rectContainsPoint(screen_rect, world_point) then
-            local degree = math.deg(cc.pGetAngle(cc.pSub(mid_point, world_point), cc.p(0, 1))) + 180
-            local points = self:GetPointsWithScreenRect(screen_rect)
-            for i = 1, #points do
-                local p1, p2
-                if i ~= #points then
-                    p1 = points[i]
-                    p2 = points[i + 1]
-                else
-                    p1 = points[i]
-                    p2 = points[1]
-                end
-                local p,s = pGetIntersectPoint(mid_point, world_point, p1, p2)
-                if s > 0 and cc.rectContainsPoint(screen_rect, p) then
-                    self.arrow:show():pos(p.x, p.y):rotation(degree)
+
+        if not rectContainsPoint(screen_rect, world_point) then
+            local p,degree = self:GetIntersectPoint(screen_rect, mid_point, world_point, cc.p(0,1))
+            if p and degree then
+                degree = degree + 180
+                self.arrow:show():pos(p.x, p.y):rotation(degree)
                     local isflip = (degree > 0 and degree < 180)
-                    local distance = math.ceil(cc.pGetLength(cc.pSub(world_point, p)) / 80)
-                    self.arrow_label:align(isflip and display.RIGHT_CENTER or display.LEFT_CENTER)
+                    local distance = ceil(pGetLength(pSub(world_point, p)) / 80)
+                    self.arrow_label:align(isflip and RIGHT_CENTER or LEFT_CENTER)
                         :scale(isflip and -1 or 1):setString(string.format("%dM", distance))
-                    break
-                end
             end
         else
             self.arrow:hide()
         end
     end
 end
-function GameUIAllianceHome:GetIntersectPoint(point1, point2)
-    local left_bottom_point = cc.p(screen_rect.x, screen_rect.y)
-    local left_top_point = cc.p(screen_rect.x, screen_rect.y + screen_rect.height)
-    local right_bottom_point = cc.p(screen_rect.x + screen_rect.width, screen_rect.y)
-    local right_top_point = cc.p(screen_rect.x + screen_rect.width, screen_rect.y + screen_rect.height)
-    return {right_bottom_point,right_top_point,left_top_point,left_bottom_point}
+function GameUIAllianceHome:GetIntersectPoint(screen_rect, point1, point2, normal)
+    local points = self:GetPointsWithScreenRect(screen_rect)
+    for i = 1, #points do
+        local p1, p2
+        if i ~= #points then
+            p1 = points[i]
+            p2 = points[i + 1]
+        else
+            p1 = points[i]
+            p2 = points[1]
+        end
+        local p,s = pGetIntersectPoint(point1, point2, p1, p2)
+        if s > 0 and rectContainsPoint(screen_rect, p) then
+            return p, deg(pGetAngle(pSub(point1, point2), normal or point(0, 1)))
+        end
+    end
 end
 function GameUIAllianceHome:GetPointsWithScreenRect(screen_rect)
-    local left_bottom_point = cc.p(screen_rect.x, screen_rect.y)
-    local left_top_point = cc.p(screen_rect.x, screen_rect.y + screen_rect.height)
-    local right_bottom_point = cc.p(screen_rect.x + screen_rect.width, screen_rect.y)
-    local right_top_point = cc.p(screen_rect.x + screen_rect.width, screen_rect.y + screen_rect.height)
-    return {right_bottom_point,right_top_point,left_top_point,left_bottom_point}
+    local x,y,w,h = screen_rect.x, screen_rect.y, screen_rect.width, screen_rect.height
+    return {
+        point(x + w, y),
+        point(x + w, y + h),
+        point(x, y + h),
+        point(x, y),
+    }
 end
 function GameUIAllianceHome:OnAllianceFightChanged(alliance,allianceFight)
     local status = self.alliance:Status()
@@ -686,6 +696,8 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
+
+
 
 
 
