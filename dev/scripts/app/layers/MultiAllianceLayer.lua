@@ -89,17 +89,6 @@ function MultiAllianceLayer:ChangeTerrain()
         v:ChangeTerrain()
     end
 end
-local terrain_array = {
-    -- "016.png",
-    -- "017.png",
-    -- "017.png",
-    -- "018.png",
-    -- "018.png",
-    "012.png",
-    "013.png",
-    "014.png",
-    "015.png",
-}
 local terrain_map = {
     grassLand = {
         "012.png",
