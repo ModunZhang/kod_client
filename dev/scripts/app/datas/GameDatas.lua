@@ -15,6 +15,10 @@ GameDatas.ClientInitGame = {
 	["wonder_desert"] = {},
 	["wonder_iceField"] = {},
 	["selena_question"] = {},
+	["alliance_name_single_name"] = {},
+	["alliance_name_adj"] = {},
+	["alliance_name_noun"] = {},
+	["alliance_name_fixed"] = {},
 }
 require("app.datas.ClientInitGame_ruins")
 require("app.datas.ClientInitGame_locations")
@@ -30,6 +34,10 @@ require("app.datas.ClientInitGame_wonder_grassLand")
 require("app.datas.ClientInitGame_wonder_desert")
 require("app.datas.ClientInitGame_wonder_iceField")
 require("app.datas.ClientInitGame_selena_question")
+require("app.datas.ClientInitGame_alliance_name_single_name")
+require("app.datas.ClientInitGame_alliance_name_adj")
+require("app.datas.ClientInitGame_alliance_name_noun")
+require("app.datas.ClientInitGame_alliance_name_fixed")
 
 GameDatas.Activities = {
 	["day60"] = {},

@@ -380,7 +380,7 @@ function NetManager:getConnectGateServerPromise()
 end
 -- 获取服务器列表
 function NetManager:getLogicServerInfoPromise()
-    return get_none_blocking_request_promise("gate.gateHandler.queryEntry", nil, "获取逻辑服务器失败")
+    return get_none_blocking_request_promise("gate.gateHandler.queryEntry", nil, "获取逻辑服务器失败",true)
         :done(function(result)
             self:CleanAllEventListeners()
             self.m_netService:disconnect()

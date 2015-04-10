@@ -478,3 +478,62 @@ function DataUtils:getIapInfo(productId)
         end
     end
 end
+--联盟名称随机
+local config_clientinitgame = GameDatas.ClientInitGame
+function DataUtils:__getRandomAllianceNameAndTag()
+    local __categore = math.random(1,5)
+    local name = ""
+    local tag = ""
+    if __categore == 1 then
+        name = config_clientinitgame.alliance_name_single_name[math.random(1,#config_clientinitgame.alliance_name_single_name)].value
+        tag  = string.sub(name,1,3)
+    elseif __categore == 2 then
+        local config = config_clientinitgame.alliance_name_single_name
+        local count = #config
+        local fist_index = math.random(1,count)
+        local second_index
+        repeat
+            second_index = math.random(1,count)
+        until second_index ~= fist_index
+        name = string.format("%s and %s",config[fist_index].value,config[second_index].value)
+        tag  = string.format("%sn%s",string.sub(config[fist_index].value,1,1),string.sub(config[second_index].value,1,1))
+    elseif __categore == 3 then
+        local config_1 = config_clientinitgame.alliance_name_adj
+        local config_2 = config_clientinitgame.alliance_name_noun
+        local fist_index,second_index = math.random(1,#config_1),math.random(1,#config_2)
+
+        name = string.format("The %s %s",config_1[fist_index].value,config_2[second_index].value)
+        tag  = string.format("T%s%s",string.sub(config_1[fist_index].value,1,1),string.sub(config_2[second_index].value,1,1))
+    elseif __categore == 4 then
+        local config_1 = config_clientinitgame.alliance_name_noun
+        local config_2 = config_clientinitgame.alliance_name_single_name
+        local fist_index,second_index = math.random(1,#config_1),math.random(1,#config_2)
+        name = string.format("%s of %s",config_1[fist_index].value,config_2[second_index].value)
+        tag  = string.format("%so%s",string.sub(config_1[fist_index].value,1,1),string.sub(config_2[second_index].value,1,1))
+    elseif __categore == 5 then
+        local config_1 = config_clientinitgame.alliance_name_fixed
+        local index = math.random(1,#config_1)
+        name = config_1[index].value
+        local tags = string.split(name," ")
+        local count = #tags
+        if count == 2 then
+            tag = string.format("%s%s",string.sub(tags[1],1,1),string.sub(tags[2],1,1))
+        elseif count == 3 then
+            if tags[2] == 'and' then
+                tag = string.format("%sn%s",string.sub(tags[1],1,1),string.sub(tags[3],1,1))
+            else
+                tag = string.format("%s%s%s",string.sub(tags[1],1,1),string.sub(tags[2],1,1),string.sub(tags[3],1,1))
+            end
+        end
+    end
+    return name,tag
+end
+local randomed_alliance_name = {}
+function DataUtils:randomAllianceNameTag()
+    local name,tag
+    repeat
+        name,tag = self:__getRandomAllianceNameAndTag()
+    until not randomed_alliance_name[name]
+    randomed_alliance_name[name] = true
+    return name,tag
+end

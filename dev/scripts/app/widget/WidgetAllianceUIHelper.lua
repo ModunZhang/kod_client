@@ -137,12 +137,7 @@ end
 
 
 function WidgetAllianceUIHelper:RandomAlliacneNameAndTag()
-	local name = RANDOM_ALLIANCE_NAMES[math.random(#RANDOM_ALLIANCE_NAMES)]
-	local randomTag = ""
-	table.foreachi(string.split(string.trim(name)," "),function (i,v)
-		randomTag = randomTag .. string.sub(v,1,1)
-	end)
-	return name,randomTag
+	return DataUtils:randomAllianceNameTag()
 end
 
 function WidgetAllianceUIHelper:GetLandFormTypeName(val)

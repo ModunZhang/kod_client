@@ -101,7 +101,10 @@ end
 
 function AudioManager:PlayeBgMusic(filename)
 	if self.is_bg_auido_on then
-		audio.playMusic("audios/" .. filename,true)
+		if filename ~= self.last_music_filename then
+			audio.playMusic("audios/" .. filename,true)
+			self.last_music_filename = filename
+		end
 	end
 end
 

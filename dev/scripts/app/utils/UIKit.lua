@@ -288,6 +288,40 @@ function UIKit:shadowLayer()
     return display.newColorLayer(UIKit:hex2c4b(0x7a000000))
 end
 
+-- 
+function UIKit:CreateEventTitle(...)
+    local title, desc, callback = ...
+    local node = display.newNode()
+    node.tips = WidgetTips.new(title, desc):addTo(node)
+        :align(display.CENTER, display.cx, display.top - 140)
+        :show()
+    node.timer = WidgetTimerProgress.new(549, 108):addTo(node)
+        :align(display.CENTER, display.cx, display.top - 140)
+        :hide()
+        :OnButtonClicked(function(event)
+            callback()
+        end)
+
+    function node:BeginEvent()
+        self.tips:hide()
+        self.timer:show()
+    end
+    function node:UpdateEvent(event, time)
+        local is_empty = self:IsEmpty()
+        
+        self.tips:setVisible(is_empty)
+        self.timer:setVisible(not is_empty)
+
+        self.timer:SetDescribe(event:ContentDesc())
+        self.timer:SetProgressInfo(event:TimeDesc(time))
+    end
+    function node:EndEvent()
+        self.tips:show()
+        self.timer:hide()
+    end
+    return node
+end
+
 -- TODO: 玩家头像
 function UIKit:GetPlayerCommonIcon()
     local heroBg = display.newSprite("chat_hero_background.png")
