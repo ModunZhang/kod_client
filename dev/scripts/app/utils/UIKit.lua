@@ -288,7 +288,7 @@ function UIKit:shadowLayer()
     return display.newColorLayer(UIKit:hex2c4b(0x7a000000))
 end
 
--- 
+--
 function UIKit:CreateEventTitle(...)
     local title, desc, callback = ...
     local node = display.newNode()
@@ -308,7 +308,7 @@ function UIKit:CreateEventTitle(...)
     end
     function node:UpdateEvent(event, time)
         local is_empty = self:IsEmpty()
-        
+
         self.tips:setVisible(is_empty)
         self.timer:setVisible(not is_empty)
 
@@ -567,4 +567,31 @@ function UIKit:GotoPreconditionBuilding(jump_building)
         current_scene:AddIndicateForBuilding(building_sprite)
     end
 end
+-- 暂时只有宝箱
+function UIKit:PlayUseItemAni(items)
+    if string.find(items:Name(),"dragonChest") then
+        local ani = ""
+        local item_name = items:Name()
+        if item_name == "dragonChest_1" then
+            ani = "lanse"
+        elseif item_name == "dragonChest_2" then
+            ani = "lvse_box"
+        elseif item_name == "dragonChest_3" then
+            ani = "zise_box"
+        end
+        local box = ccs.Armature:create(ani):addTo(display.getRunningScene(),10000):align(display.CENTER, display.cx-50, display.cy)
+            :scale(0.5)
+        box:getAnimation():setMovementEventCallFunc(function (armatureBack, movementType, movementID)
+            if movementType == ccs.MovementEventType.start then
+            elseif movementType == ccs.MovementEventType.complete then
+                box:removeFromParent()
+            elseif movementType == ccs.MovementEventType.loopComplete then
+            end
+        end)
+
+        box:getAnimation():play("Animation1", -1, 0)
+    end
+end
+
+
 
