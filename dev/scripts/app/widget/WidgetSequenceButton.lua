@@ -131,7 +131,6 @@ function WidgetSequenceButton:updateSeqButtonImage_(oneImage)
 	    end
 	else
 		local state = self:getCurrentEvent().name
-		-- dump(self.seqFilter_)
 		local filter = self.seqFilter_[state]
     	local customParams = {frag = "shaders/customer_color.fsh",
 					shaderName = state,

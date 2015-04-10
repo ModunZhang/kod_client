@@ -568,3 +568,16 @@ function UIKit:GotoPreconditionBuilding(jump_building)
     end
 end
 
+function UIKit:pack_alliance_flag(form_index,form_color_index_1,form_color_index_2,graphic_index,graphic_color_index)
+    checkint(form_index)
+    checkint(form_color_index_1)
+    checkint(form_color_index_2)
+    checkint(graphic_index)
+    checkint(graphic_color_index)
+    return string.format("%d,%d,%d,%d,%d",form_index,form_color_index_1,form_color_index_2,graphic_index,graphic_color_index)
+end
+
+function UIKit:unpack_alliance_flag(flag_str)
+    local r = string.split(flag_str, ",")
+    return unpack(r)
+end
