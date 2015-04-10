@@ -34,8 +34,10 @@ function GameUIBlackSmith:ctor(city, black_smith)
 end
 function GameUIBlackSmith:OnMoveInStage()
     GameUIBlackSmith.super.OnMoveInStage(self)
+    -- local self.title = UIKit:CreateEventTitle(_("建造队列空闲"), _("请选择一个装备进行制造"), function()
+    --         UIKit:newGameUI("GameUIBlackSmithSpeedUp", self.black_smith):AddToCurrentScene(true)
+    --     end):addTo(self:GetView())
     self.title = self:InitEquipmentTitle()
-    -- self.dragon_map = self:CreateDragonEquipments()
     self:TabButtons()
     self.black_smith_city:GetMaterialManager():AddObserver(self)
     self.black_smith:AddBlackSmithListener(self)
@@ -180,13 +182,11 @@ function GameUIBlackSmith:CreateDragonEquipmentsByType(dragon_type)
     })
     listnode:addTo(self:GetView()):align(display.BOTTOM_CENTER,window.cx,window.bottom_top + 20)
 
-    -- = self:CreateVerticalListView(window.left + 20, window.bottom + 70, window.right - 20, window.top - 230)
     for i, v in ipairs(dragon_equipments) do
         local item = self:CreateItemWithListViewByEquipments(list_view, v.equipments, v.title, equip_map)
         list_view:addItem(item)
     end
     list_view:reload()
-    -- :resetPosition()
     return list_view, equip_map,listnode
 end
 function GameUIBlackSmith:GetDragonEquipmentsByType(dragon_type)

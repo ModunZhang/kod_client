@@ -7,6 +7,7 @@ local Localize = import("..utils.Localize")
 local MaterialManager = import("..entity.MaterialManager")
 local UIPushButton = cc.ui.UIPushButton
 local window = import("..utils.window")
+local UILib = import("..ui.UILib")
 local WidgetTips = import("..widget.WidgetTips")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetTimerProgress = import("..widget.WidgetTimerProgress")
@@ -131,7 +132,7 @@ function GameUIMaterials:SwitchToDragon(dragon_type)
         dragon_equipments = {}
         dragon_equipments = return_map_of_list_view_and_ui_map(self:CreateDragonEquipmentsByType(dragon_type))
         self.blackSmith:BelongCity():GetMaterialManager():IteratorEquipmentMaterialsByType(function(k, v)
-            if EQUIPMENTS[k].usedFor == dragon_type then
+            if EQUIPMENTS[k].usedFor == dragon_type and dragon_equipments.ui_map[k] then
                 dragon_equipments.ui_map[k]:SetNumber(v)
             end
         end)
@@ -168,9 +169,8 @@ function GameUIMaterials:InitEquipmentTitle()
         :align(display.CENTER, display.cx, display.top - 140)
         :hide()
         :OnButtonClicked(function(event)
-            print("hello")
+            UIKit:newGameUI("GameUIBlackSmithSpeedUp", self.blackSmith):AddToCurrentScene(true)
         end)
-    self.timer:GetSpeedUpButton():setButtonEnabled(false)
     return node
 end
 function GameUIMaterials:CreateDragonEquipments()
@@ -191,7 +191,7 @@ function GameUIMaterials:CreateDragonEquipments()
 end
 function GameUIMaterials:CreateDragonEquipmentsByType(dragon_type)
     local equip_map = {}
-    local red_dragon_equipments = self:GetDragonEquipmentsByType(dragon_type)
+    local dragon_equipments = self:GetDragonEquipmentsByType(dragon_type)
     local list_view ,listnode=  UIKit:commonListView({
         -- bgColor = UIKit:hex2c4b(0x7a100000),
         viewRect = cc.rect(0, 0, 568, 650),
@@ -199,13 +199,11 @@ function GameUIMaterials:CreateDragonEquipmentsByType(dragon_type)
     })
     listnode:addTo(self:GetView()):align(display.BOTTOM_CENTER,window.cx,window.bottom_top + 20)
 
-    -- = self:CreateVerticalListView(window.left + 20, window.bottom + 70, window.right - 20, window.top - 230)
-    for i, v in ipairs(red_dragon_equipments) do
+    for i, v in ipairs(dragon_equipments) do
         local item = self:CreateItemWithListViewByEquipments(list_view, v.equipments, v.title, equip_map)
         list_view:addItem(item)
     end
     list_view:reload()
-    -- :resetPosition()
     return list_view, equip_map,listnode
 end
 function GameUIMaterials:GetDragonEquipmentsByType(dragon_type)
@@ -216,24 +214,24 @@ function GameUIMaterials:GetDragonEquipmentsByType(dragon_type)
         ["orb"] = 4,
         ["armguardLeft,armguardRight"] = 5
     }
-    local red_dragon_equipments = {
+    local dragon_equipments = {
         [1] = { title = _("灰色套装"), equipments = {}},
         [2] = { title = _("绿色套装"), equipments = {}},
         [3] = { title = _("蓝色套装"), equipments = {}},
         [4] = { title = _("紫色套装"), equipments = {}},
-        [5] = { title = _("橙色套装"), equipments = {}},
+        -- [5] = { title = _("橙色套装"), equipments = {}},
     }
     for name, v in pairs(EQUIPMENTS) do
-        if v.usedFor == dragon_type then
-            table.insert(red_dragon_equipments[v.maxStar].equipments, v)
+        if v.usedFor == dragon_type and dragon_equipments[v.maxStar] then
+            table.insert(dragon_equipments[v.maxStar].equipments, v)
         end
     end
-    for _, v in pairs(red_dragon_equipments) do
+    for _, v in pairs(dragon_equipments) do
         table.sort(v.equipments, function(a, b)
             return sort_map[a.category] < sort_map[b.category]
         end)
     end
-    return red_dragon_equipments
+    return dragon_equipments
 end
 function GameUIMaterials:CreateItemWithListViewByEquipments(list_view, equipments, title, equip_map)
     local equip_map = equip_map == nil and {} or equip_map
@@ -287,8 +285,8 @@ function GameUIMaterials:CreateEquipmentByType(equip_type)
             info_press_tag = false
         end)
     -- 装备图标
-    cc.ui.UIImage.new("moltenCrown_128x128.png"):addTo(equipment_btn)
-        :align(display.CENTER):scale(0.8)
+    cc.ui.UIImage.new(UILib.equipment[equip_type]):addTo(equipment_btn)
+        :align(display.CENTER):scale(0.5)
 
     -- 详细按钮
     local info_clicked = nil
