@@ -153,7 +153,7 @@ function GameUIAllianceContribute:CreateContributeGroup()
             donate=self:GetDonateValueByType("coin").count
         },
         {
-            icon="gem_66x56.png",
+            icon="gem_icon_62x61.png",
             own=gem,
             donate=self:GetDonateValueByType("gem").count
         },

@@ -50,7 +50,7 @@ local resource_map = {
 
 
 local rewards_icon_map = {
-    gem = "gem_66x56.png",
+    gem = "gem_icon_62x61.png",
     exp = "upgrade_experience_icon.png",
     coin = "res_coin_81x68.png",
     food = "res_food_91x74.png",

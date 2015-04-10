@@ -252,7 +252,7 @@ function GameUITradeGuild:CreateSellItemForListView(listView,goods)
         }):align(display.CENTER, 230 ,content:getContentSize().height/2)
         :addTo(content)
     -- 银币icon
-    display.newSprite("icon_coin_26x24.png")
+    display.newSprite("res_coin_81x68.png")
         :align(display.CENTER, 310, content:getContentSize().height/2)
         :addTo(content)
     -- 总价
@@ -555,7 +555,7 @@ function GameUITradeGuild:CreateSellItem(list,index)
 
         -- 商品出售价格
         -- 银币icon
-        display.newSprite("icon_coin_26x24.png")
+        display.newSprite("res_coin_81x68.png")
             :align(display.CENTER, 150, item_height-120)
             :addTo(content)
         -- 总价
@@ -772,7 +772,7 @@ function GameUITradeGuild:OpenSellDialog()
             }):align(display.LEFT_CENTER, 54 ,70)
             :addTo(layer)
         -- 银币icon
-        local temp_icon = display.newSprite("icon_coin_26x24.png")
+        local temp_icon = display.newSprite("res_coin_81x68.png")
             :align(display.CENTER, temp_label:getPositionX()+temp_label:getContentSize().width+20, 70)
             :addTo(layer)
         -- 总价

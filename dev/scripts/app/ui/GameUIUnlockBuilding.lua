@@ -98,7 +98,7 @@ function GameUIUnlockBuilding:Init()
         :addTo(self)
 
     -- 立即升级所需宝石
-    display.newSprite("gem_66x56.png", display.cx-260, display.top-440):addTo(self):setScale(0.5)
+    display.newSprite("gem_icon_62x61.png", display.cx-260, display.top-440):addTo(self):setScale(0.5)
     self.upgrade_now_need_gems_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         font = UIKit:getFontFilePath(),

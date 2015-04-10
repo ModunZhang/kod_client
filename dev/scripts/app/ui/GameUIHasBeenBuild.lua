@@ -103,7 +103,7 @@ function Item:ctor(ui)
         :addTo(back_ground, 2)
         :align(display.CENTER, w - 90, h/2+10)
 
-    display.newSprite("gem_66x56.png")
+    display.newSprite("gem_icon_62x61.png")
         :addTo(self.gem_bg, 2)
         :align(display.CENTER, 20, 20/2)
         :scale(0.4)

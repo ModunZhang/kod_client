@@ -191,7 +191,7 @@ function GameUIHospital:CreateHealAllSoldierItem()
     self.treat_all_now_button:setButtonEnabled(self.city:GetSoldierManager():GetTotalTreatSoldierCount()>0)
     self.treat_all_button:setButtonEnabled(self.city:GetSoldierManager():GetTotalTreatSoldierCount()>0)
     -- 立即治愈所需宝石
-    display.newSprite("gem_66x56.png", bg_size.width/2 - 260, 50):addTo(self.treate_all_soldiers_item):setScale(0.5)
+    display.newSprite("gem_icon_62x61.png", bg_size.width/2 - 260, 50):addTo(self.treate_all_soldiers_item):setScale(0.5)
     self.heal_now_need_gems_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         font = UIKit:getFontFilePath(),
