@@ -678,25 +678,7 @@ function WidgetUseItems:OpenNormalDialog( item )
             function ()
                 local item_name = v:Name()
                 NetManager:getUseItemPromise(item_name,{}):done(function ()
-                    local ani = ""
-                    if item_name == "dragonChest_1" then
-                        ani = "lanse"
-                    elseif item_name == "dragonChest_2" then
-                        ani = "lvse_box"
-                    elseif item_name == "dragonChest_3" then
-                        ani = "zise_box"
-                    end
-                    local box = ccs.Armature:create(ani):addTo(display.getRunningScene(),10000):align(display.CENTER, window.cx-50, window.cy)
-                        :scale(0.5)
-                    box:getAnimation():setMovementEventCallFunc(function (armatureBack, movementType, movementID)
-                        if movementType == ccs.MovementEventType.start then
-                        elseif movementType == ccs.MovementEventType.complete then
-                            box:removeFromParent()
-                        elseif movementType == ccs.MovementEventType.loopComplete then
-                        end
-                    end)
-
-                    box:getAnimation():play("Animation1", -1, 0)
+                    UIKit:PlayUseItemAni(v)
                     dialog:LeftButtonClicked()
                 end)
             end,
@@ -824,6 +806,9 @@ function WidgetUseItems:OpenWarSpeedupDialog( item ,march_event)
         if march_event:WithObject():Id() == attackMarchEvent:Id() and (attackMarchEvent:GetPlayerRole() == attackMarchEvent.MARCH_EVENT_PLAYER_ROLE.SENDER
             or attackMarchEvent:GetPlayerRole() == attackMarchEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER) then
             buff_status_label:setString(_("剩余时间:")..GameUtils:formatTimeStyle1(attackMarchEvent:GetTime()))
+            if attackMarchEvent:GetTime()==1 then
+                dialog:LeftButtonClicked()
+            end
         end
     end
 
