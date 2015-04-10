@@ -92,14 +92,16 @@ function GameUIAllianceHome:InitArrow()
     for k,v in pairs(buildingName) do
         if v.type == "building" then
             self.alliance_building_arrows[k] = display.newSprite("arrow_blue-hd.png")
-                :addTo(self):align(display.TOP_CENTER):hide()
+                :addTo(self, -2):align(display.TOP_CENTER):hide()
         end
     end
 
+    -- enemys
+    self.enemy_arrows = {}
 
     -- my city
     self.arrow = cc.ui.UIPushButton.new({normal = "location_arrow_up.png",pressed = "location_arrow_down.png"})
-        :addTo(self):align(display.TOP_CENTER):hide():onButtonClicked(function()
+        :addTo(self, -1):align(display.TOP_CENTER):hide():onButtonClicked(function()
         self:ReturnMyCity()
         end)
     self.arrow_label = cc.ui.UILabel.new({
@@ -616,11 +618,14 @@ function GameUIAllianceHome:UpdateAllArrows(logic_x, logic_y, alliance_view)
     local layer = alliance_view:GetLayer()
     local screen_rect = self.screen_rect
     local alliance = self.alliance
-    self:UpdateMyCityArrows(screen_rect, alliance, layer)
-    self:UpdateMyAllianceBuildingArrows(screen_rect, alliance, layer)
-end
-function GameUIAllianceHome:UpdateMyCityArrows(screen_rect, alliance, layer)
     local x,y = alliance:GetAllianceMap():FindMapObjectById(alliance:GetSelf():MapId()):GetMidLogicPosition()
+    self:UpdateMyCityArrows(screen_rect, alliance, layer, x,y)
+    self:UpdateMyAllianceBuildingArrows(screen_rect, alliance, layer)
+    if alliance:HaveEnemyAlliance() then
+        self:UpdateEnemyArrows(screen_rect, alliance:GetEnemyAlliance(), layer, x, y)
+    end
+end
+function GameUIAllianceHome:UpdateMyCityArrows(screen_rect, alliance, layer, x, y)
     local map_point = layer:ConvertLogicPositionToMapPosition(x, y, alliance:Id())
     local world_point = layer:convertToWorldSpace(map_point)
     if not rectContainsPoint(screen_rect, world_point) then
@@ -656,6 +661,39 @@ function GameUIAllianceHome:UpdateMyAllianceBuildingArrows(screen_rect, alliance
             end
         end
     end)
+end
+function GameUIAllianceHome:UpdateEnemyArrows(screen_rect, enemy_alliance, layer, my_x, my_y)
+    local id = enemy_alliance:Id()
+    local count = 1
+    enemy_alliance:GetAllianceMap():IteratorCities(function(_, v)
+        local x,y = v:GetMidLogicPosition()
+        local dx, dy = (my_x - x), (my_y - y)
+        if dx^2 + dy^2 < 20 * 20 then
+            local arrow = self:GetEnemyArrow(count)
+            local map_point = layer:ConvertLogicPositionToMapPosition(x, y, id)
+            local world_point = layer:convertToWorldSpace(map_point)
+            if not rectContainsPoint(screen_rect, world_point) then
+                local p,degree = self:GetIntersectPoint(screen_rect, MID_POINT, world_point)
+                if p and degree then
+                    arrow:show():pos(p.x, p.y):rotation(degree + 180)
+                end
+            else
+                arrow:hide()
+            end
+        end
+        count = count + 1
+    end)
+    local enemy_arrows = self.enemy_arrows
+    for i = count, #enemy_arrows do
+        enemy_arrows[i]:hide()
+    end
+end
+function GameUIAllianceHome:GetEnemyArrow(count)
+    if not self.enemy_arrows[count] then
+        self.enemy_arrows[count] = display.newSprite("arrow_red-hd.png")
+            :addTo(self, -2):align(display.TOP_CENTER):hide()
+    end
+    return self.enemy_arrows[count]
 end
 function GameUIAllianceHome:GetIntersectPoint(screen_rect, point1, point2, normal)
     local points = self:GetPointsWithScreenRect(screen_rect)
@@ -732,6 +770,8 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
+
+
 
 
 
