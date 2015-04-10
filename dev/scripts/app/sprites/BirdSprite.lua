@@ -7,7 +7,7 @@ function BirdSprite:ctor(city_layer, x, y)
     self:Refly()
 end
 function BirdSprite:Refly()
-    local size = self:GetMapLayer():getContentSize()
+    local size = self:show():GetMapLayer():getContentSize()
     local points
     if math.random(2) > 1 then
         self:pos(0,0)
@@ -28,10 +28,10 @@ function BirdSprite:Refly()
     end
     self:stopAllActions()
     self:runAction(transition.sequence({
-        cc.BezierBy:create(math.random(60, 70), points),
-        cc.CallFunc:create(function()
-            self:Refly()
-        end)
+        cc.BezierBy:create(math.random(10,15), points),
+        cc.CallFunc:create(function() self:hide() end),
+        cc.DelayTime:create(math.random(30,60)),
+        cc.CallFunc:create(function() self:Refly() end)
     }))
 end
 function BirdSprite:CreateSprite()
