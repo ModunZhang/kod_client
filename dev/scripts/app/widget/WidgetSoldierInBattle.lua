@@ -75,12 +75,17 @@ local BLACK_SOLDIER_IMAGES = {
 function WidgetSoldierInBattle:ctor(filename, options)
     WidgetSoldierInBattle.super.ctor(self, filename, options)
     local pos = {x = 284/2,y = 128/2}
-    local soldier_level = options.star
     local soldier_type = options.soldier
     local is_pve_battle = options.is_pve_battle
-    local config = special[soldier_type] or normal[soldier_type.."_"..options.star]
+    local soldier_star 
+    if soldier_type == "wall" then
+        soldier_star = 1
+    else
+        local config = special[soldier_type] or normal[soldier_type.."_"..options.star]
+        soldier_star = config.star
+    end
     local soldier_ui_config = is_pve_battle and BLACK_SOLDIER_IMAGES or UILib.soldier_image
-    local soldier_ui = soldier_ui_config[soldier_type][config.star]
+    local soldier_ui = soldier_ui_config[soldier_type][soldier_star]
     local soldier_head_icon = display.newSprite(soldier_ui, nil, nil, {class=cc.FilteredSpriteWithOne}):align(display.LEFT_BOTTOM,0,10)
     soldier_head_icon:scale(104/soldier_head_icon:getContentSize().height)
     local soldier_head_bg  = display.newSprite("box_soldier_128x128.png")
