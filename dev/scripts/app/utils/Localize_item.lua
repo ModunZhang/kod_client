@@ -7,13 +7,19 @@ local buff = items.buff
 local resource = items.resource
 local special = items.special
 local speedup = items.speedup
--- local function formatMin(time)
---     time = time / 60
---     local minutes = floor(time)% 60
---     time = time / 60
---     local hours = floor(time)
---     return string.format(_("%d天%d小时"), hours, minutes, seconds)
--- end
+local function formatMin(time)
+    time = tonumber(time)
+    local new_time = math.floor(time / (60*24))
+    if new_time>0 then
+        return new_time.._("天")
+    end
+    local new_time = math.floor(time / 60)
+
+    if new_time>0 then
+        return new_time.._("小时")
+    end
+    return time.._("分钟")
+end
 
 local ITEM_CATEGORY_NAME = {
     -- buff
@@ -169,25 +175,25 @@ local ITEM_NAME = {
     chestKey_2 = _("铜").._("钥匙"),
     chestKey_3 = _("银").._("钥匙"),
     chestKey_4 = _("金").._("钥匙"),
-    vipActive_1 = "VIP".._("激活").."30".._("分钟"),
-    vipActive_2 = "VIP".._("激活").."60".._("分钟"),
-    vipActive_3 = "VIP".._("激活").."1".._("天"),
-    vipActive_4 = "VIP".._("激活").."7".._("天"),
-    vipActive_5 = "VIP".._("激活").."30".._("天"),
-    vipPoint_1 = "100VIP".._("点数"),
-    vipPoint_2 = "300VIP".._("点数"),
-    vipPoint_3 = "1000VIP".._("点数"),
-    vipPoint_4 = "2000VIP".._("点数"),
+    vipActive_1 = "VIP".._("激活")..formatMin(special.vipActive_1.effect),
+    vipActive_2 = "VIP".._("激活")..formatMin(special.vipActive_2.effect),
+    vipActive_3 = "VIP".._("激活")..formatMin(special.vipActive_3.effect),
+    vipActive_4 = "VIP".._("激活")..formatMin(special.vipActive_4.effect),
+    vipActive_5 = "VIP".._("激活")..formatMin(special.vipActive_5.effect),
+    vipPoint_1 = tonumber(special.vipPoint_1.effect).."VIP".._("点数"),
+    vipPoint_2 = tonumber(special.vipPoint_2.effect).."VIP".._("点数"),
+    vipPoint_3 = tonumber(special.vipPoint_3.effect).."VIP".._("点数"),
+    vipPoint_4 = tonumber(special.vipPoint_4.effect).."VIP".._("点数"),
 
     -- speedup
-    speedup_1 = "1".._("分钟").._("加速"),
-    speedup_2 = "5".._("分钟").._("加速"),
-    speedup_3 = "15".._("分钟").._("加速"),
-    speedup_4 = "1".._("小时").._("加速"),
-    speedup_5 = "3".._("小时").._("加速"),
-    speedup_6 = "8".._("小时").._("加速"),
-    speedup_7 = "15".._("小时").._("加速"),
-    speedup_8 = "24".._("小时").._("加速"),
+    speedup_1 = formatMin(speedup.speedup_1.effect).._("加速"),
+    speedup_2 = formatMin(speedup.speedup_2.effect).._("加速"),
+    speedup_3 = formatMin(speedup.speedup_3.effect).._("加速"),
+    speedup_4 = formatMin(speedup.speedup_4.effect).._("加速"),
+    speedup_5 = formatMin(speedup.speedup_5.effect).._("加速"),
+    speedup_6 = formatMin(speedup.speedup_6.effect).._("加速"),
+    speedup_7 = formatMin(speedup.speedup_7.effect).._("加速"),
+    speedup_8 = formatMin(speedup.speedup_8.effect).._("加速"),
     warSpeedupClass_1 = _("普通").._("战争沙漏"),
     warSpeedupClass_2 = _("强化").._("战争沙漏"),
 }
