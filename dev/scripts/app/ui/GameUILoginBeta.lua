@@ -204,7 +204,10 @@ function GameUILoginBeta:connectGateServer()
         self:getLogicServerInfo()
     end):catch(function(err)
         self:showError(_("连接网关服务器失败!"),function()
-        	self:loginAction()
+            self:performWithDelay(function()
+                self:loginAction()
+            end, 1)
+        	
         end)
     end)
 end
@@ -216,8 +219,19 @@ function GameUILoginBeta:getLogicServerInfo()
             self.tips_ui:hide()
             self.start_ui:show()
         end, 0.5) 
-    end):catch(function()
-        self:showError(_("获取游戏服务器信息失败!"),function()
+    end):catch(function(err)
+        local content, title = err:reason()
+        if title == 'timeout' then
+            content = _("请求超时")
+        else
+            local code = content.code 
+            if UIKit:getErrorCodeKey(code) == "serverUnderMaintain" then
+                content = _("服务器维护中")
+            else
+                content = _("获取游戏服务器信息失败!")
+            end
+        end
+        self:showError(content,function()
         	self:getLogicServerInfo()
         end)
     end)
@@ -229,7 +243,9 @@ function GameUILoginBeta:connectLogicServer()
         self:login()
     end):catch(function(err)
         self:showError(_("连接游戏服务器失败!"),function()
-        	self:connectLogicServer()
+            self:performWithDelay(function()
+        	   self:connectLogicServer()
+            end,1)
         end)
     end)
 
@@ -243,19 +259,21 @@ function GameUILoginBeta:login()
   		    app:EnterMyCityScene()
         end, 0.3)
     end):catch(function(err)
-        if err:isSyntaxError() then
-            dump(err)
-            return
+        local content, title = err:reason()
+        if title == 'timeout' then
+            content = _("请求超时")
         else
-            local content, title = err:reason()
+            local code = content.code
             if UIKit:getErrorCodeKey(content.code) == 'reLoginNeeded' then
                 self:login()
+                return
             else
-                self:showError(_("登录游戏失败!"),function()
-        			self:connectLogicServer()
-        		end)
+                content = _("登录游戏失败!")
             end
         end
+        self:showError(content,function()
+			self:login()
+		end)
     end)
 end
 
