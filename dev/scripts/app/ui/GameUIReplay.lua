@@ -56,10 +56,15 @@ local function decode_battle_from_report(report)
     for i = 1, #attacks do
         local attacker = attacks[i]
         local defender = defends[i]
-        local defeatAll = (((attacker.morale - attacker.moraleDecreased) <= 20
-            or (attacker.soldierCount - attacker.soldierDamagedCount) <= 0) or not attacker.isWin)
-            and (((defender.morale - defender.moraleDecreased) <= 20
-            or (defender.soldierCount - defender.soldierDamagedCount) <= 0) or not defender.isWin)
+        attacker.soldierName = attacker.soldierName or "wall"
+        defender.soldierName = defender.soldierName or "wall"
+        local defeatAll
+        if attacker.soldierName ~= "wall" and defender.soldierName ~= "wall" then
+            defeatAll = (((attacker.morale - attacker.moraleDecreased) <= 20
+                or (attacker.soldierCount - attacker.soldierDamagedCount) <= 0) or not attacker.isWin)
+                and (((defender.morale - defender.moraleDecreased) <= 20
+                or (defender.soldierCount - defender.soldierDamagedCount) <= 0) or not defender.isWin)
+        end
         local left
         local right
         if defeat == "right" then
@@ -69,7 +74,7 @@ local function decode_battle_from_report(report)
             }
         else
             left = {
-                soldier = attacker.soldierName or "wall",
+                soldier = attacker.soldierName,
                 star = attacker.soldierStar,
                 count = attacker.soldierCount or attacker.wallHp,
                 damage = attacker.soldierDamagedCount or attacker.wallDamagedHp,
@@ -84,7 +89,7 @@ local function decode_battle_from_report(report)
             }
         else
             right = {
-                soldier = defender.soldierName or "wall",
+                soldier = defender.soldierName,
                 star = defender.soldierStar,
                 count = defender.soldierCount or defender.wallHp,
                 damage = defender.soldierDamagedCount or defender.wallDamagedHp,
@@ -951,6 +956,7 @@ end
 
 
 return GameUIReplay
+
 
 
 

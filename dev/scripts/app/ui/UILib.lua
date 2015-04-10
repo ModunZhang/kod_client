@@ -339,30 +339,30 @@ local SOLDIER_IMAGES = {
         "meatWagon.png",
     },
     priest = {
-        "soldier_skeletonWarrior.png",
-        "soldier_skeletonWarrior.png",
-        "soldier_skeletonWarrior.png",
+        "skeletonWarrior.png",
+        "skeletonWarrior.png",
+        "skeletonWarrior.png",
     },
     demonHunter = {
-        "soldier_skeletonArcher.png",
-        "soldier_skeletonArcher.png",
-        "soldier_skeletonArcher.png",
+        "skeletonArcher.png",
+        "skeletonArcher.png",
+        "skeletonArcher.png",
     },
     paladin = {
-        "soldier_deathKnight.png",
-        "soldier_deathKnight.png",
-        "soldier_deathKnight.png",
+        "deathKnight.png",
+        "deathKnight.png",
+        "deathKnight.png",
     },
     steamTank = {
-        "soldier_meatWagon.png",
-        "soldier_meatWagon.png",
-        "soldier_meatWagon.png",
+        "meatWagon.png",
+        "meatWagon.png",
+        "meatWagon.png",
     },
 
     wall = {
-        "soldier_ballista_1.png",
-        "soldier_ballista_1.png",
-        "soldier_ballista_1.png",
+        "gate_1.png",
+        "gate_2.png",
+        "gate_3.png",
     }
 }
 local BLACK_SOLDIER_IMAGES = {

@@ -86,7 +86,7 @@ function GameUIAllianceHome:InitArrow()
     self.screen_rect = cc.rect(0, rect1.height, display.width, rect2.y - rect1.height)
     self.arrow = cc.ui.UIPushButton.new({normal = "location_arrow_up.png",pressed = "location_arrow_down.png"})
         :addTo(self):align(display.TOP_CENTER):hide():onButtonClicked(function()
-            self:ReturnMyCity()
+        self:ReturnMyCity()
         end)
     self.arrow_label = cc.ui.UILabel.new({
         size = 20,
@@ -596,13 +596,9 @@ function GameUIAllianceHome:OnSceneMove(logic_x, logic_y, alliance_view)
         local world_point = layer:convertToWorldSpace(point)
         local mid_point = cc.p(display.cx, display.cy)
         local screen_rect = self.screen_rect
-        local left_bottom_point = cc.p(screen_rect.x, screen_rect.y)
-        local left_top_point = cc.p(screen_rect.x, screen_rect.y + screen_rect.height)
-        local right_bottom_point = cc.p(screen_rect.x + screen_rect.width, screen_rect.y)
-        local right_top_point = cc.p(screen_rect.x + screen_rect.width, screen_rect.y + screen_rect.height)
         if not cc.rectContainsPoint(screen_rect, world_point) then
             local degree = math.deg(cc.pGetAngle(cc.pSub(mid_point, world_point), cc.p(0, 1))) + 180
-            local points = {right_bottom_point,right_top_point,left_top_point,left_bottom_point}
+            local points = self:GetPointsWithScreenRect(screen_rect)
             for i = 1, #points do
                 local p1, p2
                 if i ~= #points then
@@ -618,7 +614,7 @@ function GameUIAllianceHome:OnSceneMove(logic_x, logic_y, alliance_view)
                     local isflip = (degree > 0 and degree < 180)
                     local distance = math.ceil(cc.pGetLength(cc.pSub(world_point, p)) / 80)
                     self.arrow_label:align(isflip and display.RIGHT_CENTER or display.LEFT_CENTER)
-                    :scale(isflip and -1 or 1):setString(string.format("%dM", distance))
+                        :scale(isflip and -1 or 1):setString(string.format("%dM", distance))
                     break
                 end
             end
@@ -626,6 +622,20 @@ function GameUIAllianceHome:OnSceneMove(logic_x, logic_y, alliance_view)
             self.arrow:hide()
         end
     end
+end
+function GameUIAllianceHome:GetIntersectPoint(point1, point2)
+    local left_bottom_point = cc.p(screen_rect.x, screen_rect.y)
+    local left_top_point = cc.p(screen_rect.x, screen_rect.y + screen_rect.height)
+    local right_bottom_point = cc.p(screen_rect.x + screen_rect.width, screen_rect.y)
+    local right_top_point = cc.p(screen_rect.x + screen_rect.width, screen_rect.y + screen_rect.height)
+    return {right_bottom_point,right_top_point,left_top_point,left_bottom_point}
+end
+function GameUIAllianceHome:GetPointsWithScreenRect(screen_rect)
+    local left_bottom_point = cc.p(screen_rect.x, screen_rect.y)
+    local left_top_point = cc.p(screen_rect.x, screen_rect.y + screen_rect.height)
+    local right_bottom_point = cc.p(screen_rect.x + screen_rect.width, screen_rect.y)
+    local right_top_point = cc.p(screen_rect.x + screen_rect.width, screen_rect.y + screen_rect.height)
+    return {right_bottom_point,right_top_point,left_top_point,left_bottom_point}
 end
 function GameUIAllianceHome:OnAllianceFightChanged(alliance,allianceFight)
     local status = self.alliance:Status()
@@ -676,6 +686,7 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
+
 
 
 
