@@ -16,6 +16,7 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetAutoOrder = import("..widget.WidgetAutoOrder")
 local GameUIAllianceHome = UIKit:createUIClass('GameUIAllianceHome')
 local buildingName = GameDatas.AllianceInitData.buildingName
+local Alliance_Manager = Alliance_Manager
 local cc = cc
 function GameUIAllianceHome:ctor(alliance)
     GameUIAllianceHome.super.ctor(self)
@@ -638,6 +639,7 @@ function GameUIAllianceHome:UpdateMyCityArrows(screen_rect, alliance, layer)
     end
 end
 function GameUIAllianceHome:UpdateMyAllianceBuildingArrows(screen_rect, alliance, layer)
+    local id = alliance:Id()
     alliance:GetAllianceMap():IteratorAllianceBuildings(function(_, v)
         local arrow = self.alliance_building_arrows[v:GetName()]
         if arrow then
