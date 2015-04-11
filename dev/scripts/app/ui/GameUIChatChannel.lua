@@ -528,6 +528,7 @@ function GameUIChatChannel:listviewListener(event)
     local listView = event.listView
     if "clicked" == event.name then
         local item = event.item
+        if not item then return end
         local chat = self.dataSource_[item.idx_]
         local isSelf = DataManager:getUserData()._id == chat.fromId
         if isSelf or not chat then return end

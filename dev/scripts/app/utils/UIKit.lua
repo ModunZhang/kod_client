@@ -492,6 +492,31 @@ function UIKit:createLineItem(params)
     return line
 end
 
+function UIKit:showMessageDialogCanCanleNotAutoClose(title,tips,ok_callback,cancel_callback)
+     title = title or _("提示")
+     local dialog = UIKit:newGameUI("FullScreenPopDialogUI",x_button_callback)
+        :SetTitle(title)
+        :SetPopMessage(tips)
+        :CreateOKButton({
+            listener =  function ()
+                if ok_callback then
+                    ok_callback()
+                end
+            end
+        })
+    dialog:CreateCancelButton({
+            listener = function ()
+                if cancel_callback then
+                    cancel_callback()
+                end
+            end,
+            btn_name = _("取消")
+        })
+    dialog:DisableAutoClose()
+    dialog:AddToCurrentScene()
+    return dialog
+end
+
 function UIKit:showMessageDialog(title,tips,ok_callback,cancel_callback,visible_x_button,x_button_callback)
     title = title or _("提示")
     if type(visible_x_button) ~= 'boolean' then visible_x_button = true end
@@ -503,6 +528,7 @@ function UIKit:showMessageDialog(title,tips,ok_callback,cancel_callback,visible_
                 end
             end
         })
+
     if cancel_callback then
         dialog:CreateCancelButton({
             listener = function ()

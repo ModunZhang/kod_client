@@ -333,7 +333,9 @@ function MultiAllianceLayer:CreateCorpsIf(marchEvent)
         from,
         to,
         marchEvent:StartTime(),
-        marchEvent:ArriveTime()
+        marchEvent:ArriveTime(),
+        marchEvent:AttackPlayerData().dragon.type,
+        marchEvent:AttackPlayerData().soldiers
     )
 end
 local dragon_dir_map = {
