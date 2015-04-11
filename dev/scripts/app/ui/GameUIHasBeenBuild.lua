@@ -48,7 +48,8 @@ local building_config_map = {
 
 
 local Item = class("Item", WidgetUIBackGround)
-function Item:ctor(ui)
+function Item:ctor(parent_ui)
+    self.parent_ui = parent_ui
     Item.super.ctor(self, {
         width = 568,
         height = 150,
@@ -238,7 +239,7 @@ function Item:RebindEventListener()
                 local building_sprite = cur_scene:GetSceneLayer():FindBuildingSpriteByBuilding(jump_building, city)
                 cur_scene:GotoLogicPoint(jump_building:GetMidLogicPosition())
                 cur_scene:AddIndicateForBuilding(building_sprite)
-                self:LeftButtonClicked()
+                self.parent_ui:LeftButtonClicked()
             end)
             return
         end
@@ -359,11 +360,12 @@ function Item:ChangeStatus(status)
         self:HideNormalButton()
 
         self:ShowProgress()
+        self.speed_up:setVisible(true)
     elseif status == "disable" then
         self:HideFreeSpeedUp()
         self:HideInstantButton()
         self:HideProgress()
-        self:ShowNormalButton(false)
+        self:ShowNormalButton()
     elseif status == "max" then
         self:HideFreeSpeedUp()
         self:HideInstantButton()
@@ -385,7 +387,7 @@ end
 function Item:HideNormalButton()
     self.normal_build:setVisible(false)
 end
-function Item:ShowNormalButton(able)
+function Item:ShowNormalButton()
     self.speed_up:setVisible(false)
     self.normal_build:setVisible(true)
 end
