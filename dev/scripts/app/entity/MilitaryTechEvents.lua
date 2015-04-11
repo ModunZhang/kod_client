@@ -44,6 +44,9 @@ function MilitaryTechEvents:Percent(current_time)
     local total_time = self.finishTime - start_time
     return elapse_time * 100.0 / total_time
 end
+function MilitaryTechEvents:LeftTime()
+    return self.times_ or 0
+end
 function MilitaryTechEvents:GetTime()
     return self.times_ or 0
 end

@@ -65,5 +65,11 @@ function ProductionTechnologyEvent:GetPercent()
 	local totalTime = app.timer:GetServerTime() - self:StartTime()
 	return totalTime/self:Entity():GetLevelUpCost().buildTime * 100
 end
+function ProductionTechnologyEvent:LeftTime()
+	return self.times_ or 0
+end
+function ProductionTechnologyEvent:Percent()
+	return self:GetPercent()
+end
 
 return ProductionTechnologyEvent
