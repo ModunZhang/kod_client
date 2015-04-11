@@ -3676,13 +3676,13 @@
             <key>format</key>
             <integer>2</integer>
             <key>realTextureFileName</key>
-            <string>soldiers_2.png</string>
+            <string>soldiers_2.pvr.ccz</string>
             <key>size</key>
             <string>{2048,2048}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:d7f33092e4eab2cb58cac33d060849b1:3/6$</string>
+            <string>$TexturePacker:SmartUpdate:bc7ab06595bb48ce91767a6e1a40bd39:3/6$</string>
             <key>textureFileName</key>
-            <string>soldiers_2.png</string>
+            <string>soldiers_2.pvr.ccz</string>
         </dict>
     </dict>
 </plist>
