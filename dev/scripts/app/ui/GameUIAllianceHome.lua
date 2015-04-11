@@ -559,7 +559,7 @@ function GameUIAllianceHome:OnMidButtonClicked(event)
     if tag == 2 then -- 战斗
     -- NetManager:getFindAllianceToFightPromose()
         local watchTower = self.city:GetFirstBuildingByType('watchTower')
-        UIKit:newGameUI('GameUIWatchTower', self.city, watchTower):AddToCurrentScene(true)
+        UIKit:newGameUI('GameUIWatchTower', self.city, watchTower,"march"):AddToCurrentScene(true)
     elseif tag == 1 then
         if not self.alliance:IsDefault() then
             GameUIHelp.new():AddToCurrentScene()
