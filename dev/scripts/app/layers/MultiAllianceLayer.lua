@@ -97,11 +97,10 @@ local terrain_map = {
         "015.png",
     },
     desert = {
-        "016.png",
-        "017.png",
-        "017.png",
-        "018.png",
-        "018.png",
+        "005.png",
+        "006.png",
+        "007.png",
+        "008.png",
     },
     iceField = {
 

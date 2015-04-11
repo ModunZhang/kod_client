@@ -54,7 +54,7 @@ function CitySprite:GetSpriteFile()
     else
         config = SpriteConfig["other_keep"]
     end
-    return config:GetConfigByLevel(self:GetEntity():GetAllianceMemberInfo():KeepLevel()).png, 0.5
+    return config:GetConfigByLevel(self:GetEntity():GetAllianceMemberInfo():KeepLevel()).png, 0.3
 end
 function CitySprite:GetSpriteOffset()
     return self:GetLogicMap():ConvertToLocalPosition(0, 0)

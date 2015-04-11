@@ -52,14 +52,7 @@ function WidgetRoundTabButtons:ctor(buttons, listener)
         self:PushButton(default)
     end
 end
-function WidgetRoundTabButtons:SelectTab(tag)
-    for _, tab in pairs(self.tabs) do
-        if button.tag == tag then
-            self:PushButton(button)
-            return
-        end
-    end
-end
+
 function WidgetRoundTabButtons:PushButton(tab)
     for _, v in pairs(self.tabs) do
         if v ~= tab then
