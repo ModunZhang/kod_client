@@ -31,10 +31,10 @@ function WidgetChat:ctor()
     self.chatManager = app:GetChatManager()
 
     local size = self:getContentSize()
-    local index_1 = display.newSprite("chat_page_index_1.png"):addTo(self):pos(size.width/2-10,size.height-10)
-    local index_2 = display.newSprite("chat_page_index_2.png"):addTo(self):pos(size.width/2+10,size.height-10)
+    local index_1 = display.newSprite("chat_page_index_1.png"):addTo(self):pos(size.width/2-10,size.height-5)
+    local index_2 = display.newSprite("chat_page_index_2.png"):addTo(self):pos(size.width/2+10,size.height-5)
     local pv = UIPageView.new {
-        viewRect = cc.rect(10, 4, size.width-80, size.height),
+        viewRect = cc.rect(15, 4, size.width-80, size.height),
         row = 2,
         padding = {left = 0, right = 0, top = 10, bottom = 0}
     }:onTouch(function (event)
@@ -68,7 +68,7 @@ function WidgetChat:ctor()
         content = display.newLayer()
         content:setContentSize(540, 20)
         content:setTouchEnabled(false)
-        local label = RichText.new({width = 540,size = 16,color = 0xc7bd97})
+        local label = RichText.new({width = 540,size = 16,color = 0xf5f2b3})
         label:Text(last_chat_messages[i],1)
         label:addTo(content):align(display.LEFT_CENTER, 0, content:getContentSize().height/2)
         table.insert(self.chat_labels, label)
@@ -76,9 +76,9 @@ function WidgetChat:ctor()
         pv:addItem(item)
     end
     pv:reload()
-    cc.ui.UIPushButton.new({normal = "chat_btn_60x48.png",
-        pressed = "chat_btn_60x48.png"}):addTo(self)
-        :pos(self:getContentSize().width-30, size.height/2)
+    cc.ui.UIPushButton.new({normal = "chat_btn_up_60x48.png",
+        pressed = "chat_btn_down_60x48.png"}):addTo(self)
+        :pos(self:getContentSize().width-36, size.height/2 - 4)
         :onButtonClicked(function()
             if 1 == pv:getCurPageIdx() then
                 UIKit:newGameUI('GameUIChatChannel',"global"):AddToCurrentScene(true)
