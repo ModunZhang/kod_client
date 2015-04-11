@@ -334,7 +334,7 @@ function MailManager:OnNewMailsChanged( mails )
             for i,data in ipairs(mail) do
                 -- 收到
                 if not data.index then
-                    data.index = self.mails[1] and self.mails[1].index + 1 or 0
+                    data.index = self.mails[1] and (self.mails[1].index + 1) or 0
                 end
                 table.insert(add_mails, data)
                 table.insert(self.mails, 1, data)
@@ -346,7 +346,6 @@ function MailManager:OnNewMailsChanged( mails )
                 for k,v in pairs(u_mails) do
                     max_index = math.max(k,max_index)
                 end
-                local max_mail = u_mails[max_index]
                 local temp_mail = table.remove(u_mails,max_index)
                 table.insert(u_mails, 1 ,temp_mail)
             end
@@ -464,11 +463,12 @@ function MailManager:OnNewReportsChanged( __reports )
     local add_reports = {}
     local remove_reports = {}
     local edit_reports = {}
+    LuaUtils:outputTable("OnNewReportsChanged :__reports", __reports)
     for type,rp in pairs(__reports) do
         if type == "add" then
             for k,data in pairs(rp) do
                 if not data.index then
-                    data.index = self.reports[1] and self.reports[1]:Index() + 1 or 0
+                    data.index = self.reports[1] and (self.reports[1]:Index() + 1) or 0
                 end
                 local c_report = Report:DecodeFromJsonData(data)
                 table.insert(add_reports, c_report)
@@ -482,7 +482,6 @@ function MailManager:OnNewReportsChanged( __reports )
                 for k,v in pairs(u_reports) do
                     max_index = math.max(k,max_index)
                 end
-                local max_mail = u_reports[max_index]
                 local temp_report = table.remove(u_reports,max_index)
                 table.insert(u_reports, 1 ,temp_report)
             end
