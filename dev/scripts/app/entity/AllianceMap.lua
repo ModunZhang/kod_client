@@ -148,9 +148,18 @@ function AllianceMap:Reset()
     self.villageMapObjects = {}
     self.decoratorMapObjects = {}
 end
--- function AllianceMap:GetMapObjectByType()
-
--- end
+function AllianceMap:GetMapObjectsByType(type_)
+    if type_ == "building" then
+        return self.buildingMapObjects
+    elseif type_ == "member" then
+        return self.memberMapObjects
+    elseif type_ == "village" then
+        return self.villageMapObjects
+    elseif type_ == "decorate" then
+        return self.decoratorMapObjects
+    end
+    return {}
+end
 function AllianceMap:GetAllianceMemberInfo(object)
     if is_city(object) then
         local id = object:Id()
@@ -179,16 +188,32 @@ function AllianceMap:FindAllianceBuildingInfoByName(name)
     end
 end
 function AllianceMap:IteratorAllianceBuildings(func)
-    self:IteratorByType("building", func)
+    for k,v in pairs(self:GetMapObjectsByType("building")) do
+        if func(k,v) then
+            return
+        end
+    end
 end
 function AllianceMap:IteratorCities(func)
-    self:IteratorByType("member", func)
+    for k,v in pairs(self:GetMapObjectsByType("member")) do
+        if func(k,v) then
+            return
+        end
+    end
 end
 function AllianceMap:IteratorVillages(func)
-    self:IteratorByType("village", func)
+    for k,v in pairs(self:GetMapObjectsByType("village")) do
+        if func(k,v) then
+            return
+        end
+    end
 end
 function AllianceMap:IteratorDecorators(func)
-    self:IteratorByType("decorate", func)
+    for k,v in pairs(self:GetMapObjectsByType("decorate")) do
+        if func(k,v) then
+            return
+        end
+    end
 end
 function AllianceMap:IteratorByType(type_, func)
     self:IteratorAllObjects(function(k, v)
