@@ -343,8 +343,6 @@ function GameUIAllianceContribute:OnResourceChanged(resource_manager)
     self.group:RefreashAllOwn(owns)
 end
 function GameUIAllianceContribute:OnMemberChanged(alliance)
-    local self_member = alliance:GetMemeberById(DataManager:getUserData()._id)
-    LuaUtils:outputTable("self_member.donateStatus", self_member.donateStatus)
     local donate = {
         self:GetDonateValueByType("wood").count,
         self:GetDonateValueByType("stone").count,
