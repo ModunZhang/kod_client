@@ -1988,7 +1988,7 @@
 					"$(SRCROOT)/../../sdk/TalkingData",
 				);
 				OTHER_LDFLAGS = "";
-				PROVISIONING_PROFILE = "6d6e257c-35a4-4a64-93a2-5ada89f0e6f4";
+				PROVISIONING_PROFILE = "3c8e891a-85b6-42a2-ae14-5cfdf625dd92";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "$(inherited) $(SRCROOT)/../../cocos2d-x/cocos/platform/ios";
