@@ -178,7 +178,7 @@ function GameUIAllianceCityEnter:GetEnterButtons()
         end)
     local my_allaince = Alliance_Manager:GetMyAlliance()
     attack_button:setButtonEnabled(my_allaince:Status() == "fight")
-    local strike_button = self:BuildOneButton("Strike_72x72.png",_("突袭")):onButtonClicked(function()
+    local strike_button = self:BuildOneButton("strike_66x62.png",_("突袭")):onButtonClicked(function()
         if member:IsProtected() then
             UIKit:showMessageDialog(_("提示"),_("玩家处于保护状态,不能进攻或突袭"), function()end)
             return
