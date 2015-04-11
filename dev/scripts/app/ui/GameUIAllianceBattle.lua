@@ -55,8 +55,8 @@ function GameUIAllianceBattle:OnMoveInStage()
             if not self.alliance_listview then
                 self:InitOtherAlliance()
                 NetManager:getNearedAllianceInfosPromise():done(function(response)
-                    if #response > 0 then
-                        self:RefreshAllianceListview(response)
+                    if response.msg.allianceInfos then
+                        self:RefreshAllianceListview(response.msg.allianceInfos)
                     end
                 end)
 
@@ -1115,8 +1115,8 @@ end
 function GameUIAllianceBattle:GetJoinList(tag)
     if tag then
         NetManager:getSearchAllianceInfoByTagPromise(tag):done(function(response)
-            if #response > 0 then
-                self:RefreshAllianceListview(response)
+            if response.msg.allianceInfos then
+                self:RefreshAllianceListview(response.msg.allianceInfos)
             end
         end)
     end
