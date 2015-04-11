@@ -673,11 +673,11 @@ local SOLDIER_EFFECT_ANIMATIONS = getAniNameFromAnimationFiles(EFFECT_ANIMATION_
 local DRAGON_ANIMATIONS = getAniNameFromAnimationFiles(DRAGON_ANIMATIONS_FILES)
 
 local ALLIANCE_BUILDING = {
-    palace = "palace_240x276.png",
-    shrine = "shrine_240x191.png",
-    shop = "shop_240x246.png",
-    orderHall = "orderHall_240x364.png",
-    moonGate = "moonGate_200x217.png",
+    palace = "alliance_palace.png",
+    shrine = "alliance_shrine.png",
+    shop = "alliance_shop.png",
+    orderHall = "alliance_orderHall.png",
+    moonGate = "alliance_moonGate.png",
 }
 local OTHER_ALLIANCE_BUILDING = setmetatable({
     palace = "other_palace.png",
