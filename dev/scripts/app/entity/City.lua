@@ -1400,6 +1400,9 @@ function City:OnHelpToTroopsDataChange(userData, deltaData)
                 self.helpToTroops[v.beHelpedPlayerData.id] = v
             end
         end
+        self:NotifyListeneOnType(City.LISTEN_TYPE.HELPED_TO_TROOPS, function(listener)
+            listener:OnHelpToTroopsChanged(self)
+        end)
     end
 end
 
@@ -1419,6 +1422,10 @@ function City:GetHelpToTroops(playerId)
         end)
         return r
     end
+end
+
+function City:HasHelpToTroops()
+    return not LuaUtils:table_empty(self.helpToTroops)
 end
 
 function City:IsHelpedToTroopsWithPlayerId(id)

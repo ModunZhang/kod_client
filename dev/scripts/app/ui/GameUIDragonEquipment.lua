@@ -3,7 +3,7 @@
 -- Date: 2014-09-22 19:44:50
 --
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
-local GameUIDragonEquipment = UIKit:createUIClass("GameUIDragonEquipment")
+local GameUIDragonEquipment = UIKit:createUIClass("GameUIDragonEquipment","UIAutoClose")
 local StarBar = import(".StarBar")
 local UIListView = import(".UIListView")
 local config_category = GameDatas.DragonEyrie
@@ -35,8 +35,8 @@ end
 
 function GameUIDragonEquipment:onEnter()
     GameUIDragonEquipment.super.onEnter(self)
-    UIKit:shadowLayer():addTo(self,-1)
-	  local backgroundImage = WidgetUIBackGround.new({height = BODY_HEIGHT}):addTo(self)
+	  local backgroundImage = WidgetUIBackGround.new({height = BODY_HEIGHT})
+    self:addTouchAbleChild(backgroundImage)
 	  self.background = backgroundImage:pos((display.width-backgroundImage:getContentSize().width)/2,display.height - backgroundImage:getContentSize().height - 80)
 	  local titleBar = display.newSprite("title_blue_600x52.png")
 		  :align(display.BOTTOM_LEFT, 2,backgroundImage:getContentSize().height - 15)

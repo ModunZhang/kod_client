@@ -100,7 +100,7 @@ end
 --返回是否有瞭望塔事件发生
 function AllianceBelvedere:HasEvent()
 	if self:GetAlliance():IsDefault() then return false end
-	return #self:GetMyEvents() > 0 or self:GetOtherEvents()
+	return #self:GetMyEvents() > 0 or #self:GetOtherEvents() > 0 
 end
 
 function AllianceBelvedere:FastCheckHasEvent_()
