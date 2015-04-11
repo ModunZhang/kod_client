@@ -84,8 +84,8 @@ function GameUIAllianceContribute:onExit()
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.MEMBER)
 end
 function GameUIAllianceContribute:GetDonateValueByType(donate_type)
+    if not donate_type then return end
     local donate_status = self.alliance:GetMemeberById(User:Id()):DonateStatus()
-    dump(donate_status,"donate_status>>>")
     local donate_level = donate_status[donate_type]
     for _,donate in pairs(GameDatas.AllianceInitData.donate) do
         if donate.level==donate_level and donate_type == donate.type then
