@@ -89,13 +89,6 @@ function GameUIAllianceHome:InitArrow()
 
     -- my alliance building
     self.alliance_building_arrows = {}
-    for k,v in pairs(buildingName) do
-        if v.type == "building" then
-            self.alliance_building_arrows[k] = display.newSprite("arrow_blue-hd.png")
-                :addTo(self, -2):align(display.TOP_CENTER):hide()
-        end
-    end
-
     -- enemys
     self.enemy_arrows = {}
 
@@ -622,7 +615,7 @@ function GameUIAllianceHome:UpdateAllArrows(logic_x, logic_y, alliance_view)
     self:UpdateMyCityArrows(screen_rect, alliance, layer, x,y)
     self:UpdateMyAllianceBuildingArrows(screen_rect, alliance, layer)
     if alliance:HaveEnemyAlliance() then
-        self:UpdateEnemyArrows(screen_rect, alliance:GetEnemyAlliance(), layer, x, y)
+        self:UpdateEnemyArrows(screen_rect, alliance:GetEnemyAlliance(), layer, logic_x, logic_y)
     end
 end
 function GameUIAllianceHome:UpdateMyCityArrows(screen_rect, alliance, layer, x, y)
@@ -645,30 +638,42 @@ function GameUIAllianceHome:UpdateMyCityArrows(screen_rect, alliance, layer, x, 
 end
 function GameUIAllianceHome:UpdateMyAllianceBuildingArrows(screen_rect, alliance, layer)
     local id = alliance:Id()
+    local count = 1
     alliance:GetAllianceMap():IteratorAllianceBuildings(function(_, v)
-        local arrow = self.alliance_building_arrows[v:GetName()]
-        if arrow then
-            local x,y = v:GetMidLogicPosition()
-            local map_point = layer:ConvertLogicPositionToMapPosition(x, y, id)
-            local world_point = layer:convertToWorldSpace(map_point)
-            if not rectContainsPoint(screen_rect, world_point) then
-                local p,degree = self:GetIntersectPoint(screen_rect, MID_POINT, world_point)
-                if p and degree then
-                    arrow:show():pos(p.x, p.y):rotation(degree + 180)
-                end
-            else
-                arrow:hide()
+        local arrow = self:GetMyAllianceArrow(count)
+        local x,y = v:GetMidLogicPosition()
+        local map_point = layer:ConvertLogicPositionToMapPosition(x, y, id)
+        local world_point = layer:convertToWorldSpace(map_point)
+        if not rectContainsPoint(screen_rect, world_point) then
+            local p,degree = self:GetIntersectPoint(screen_rect, MID_POINT, world_point)
+            if p and degree then
+                arrow:show():pos(p.x, p.y):rotation(degree + 180)
             end
+        else
+            arrow:hide()
         end
+        count = count + 1
     end)
+    local alliance_building_arrows = self.alliance_building_arrows
+    for i = count, #alliance_building_arrows do
+        alliance_building_arrows[i]:hide()
+    end
 end
-function GameUIAllianceHome:UpdateEnemyArrows(screen_rect, enemy_alliance, layer, my_x, my_y)
+function GameUIAllianceHome:GetMyAllianceArrow(count)
+    if not self.alliance_building_arrows[count] then
+        self.alliance_building_arrows[count] = display.newSprite("arrow_blue-hd.png")
+            :addTo(self, -2):align(display.TOP_CENTER):hide()
+    end
+    return self.alliance_building_arrows[count]
+end
+function GameUIAllianceHome:UpdateEnemyArrows(screen_rect, enemy_alliance, layer, logic_x, logic_y)
     local id = enemy_alliance:Id()
     local count = 1
     enemy_alliance:GetAllianceMap():IteratorCities(function(_, v)
+        if count > 10 then return true end
         local x,y = v:GetMidLogicPosition()
-        local dx, dy = (my_x - x), (my_y - y)
-        if dx^2 + dy^2 < 20 * 20 then
+        local dx, dy = (logic_x - x), (logic_y - y)
+        if dx^2 + dy^2 > 10 * 10 then
             local arrow = self:GetEnemyArrow(count)
             local map_point = layer:ConvertLogicPositionToMapPosition(x, y, id)
             local world_point = layer:convertToWorldSpace(map_point)
@@ -680,8 +685,8 @@ function GameUIAllianceHome:UpdateEnemyArrows(screen_rect, enemy_alliance, layer
             else
                 arrow:hide()
             end
+            count = count + 1
         end
-        count = count + 1
     end)
     local enemy_arrows = self.enemy_arrows
     for i = count, #enemy_arrows do
@@ -770,6 +775,7 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
+
 
 
 

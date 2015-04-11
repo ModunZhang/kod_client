@@ -218,7 +218,7 @@ function MultiAllianceLayer:ConvertLogicPositionToMapPosition(lx, ly, alliance_i
     return self:convertToNodeSpace(self.background:convertToWorldSpace(map_pos))
 end
 function MultiAllianceLayer:GetAllianceViewIndexById(id)
-    for i, v in ipairs(self.alliances) do
+    for i,v in ipairs(self.alliances) do
         if v:Id() == id then
             return i
         end
@@ -333,7 +333,9 @@ function MultiAllianceLayer:CreateCorpsIf(marchEvent)
         from,
         to,
         marchEvent:StartTime(),
-        marchEvent:ArriveTime()
+        marchEvent:ArriveTime(),
+        marchEvent:AttackPlayerData().dragon.type,
+        marchEvent:AttackPlayerData().soldiers
     )
 end
 local dragon_dir_map = {
