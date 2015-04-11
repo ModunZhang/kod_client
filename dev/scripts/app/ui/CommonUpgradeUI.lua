@@ -543,11 +543,11 @@ function CommonUpgradeUI:InitAccelerationPart()
         font = UIKit:getFontFilePath(),
         size = 22,
         color = UIKit:hex2c3b(0x403c2f)
-    }):align(display.LEFT_CENTER, display.cx - 275, display.top - 410)
+    }):align(display.LEFT_CENTER, display.cx - 260, display.top - 410)
         :addTo(self.acc_layer)
     -- 升级倒数时间进度条
     --进度条
-    local bar = display.newSprite("progress_bar_364x40_1.png"):addTo(self.acc_layer):pos(display.cx-90, display.top - 460)
+    local bar = display.newSprite("progress_bar_364x40_1.png"):addTo(self.acc_layer):pos(display.cx-78, display.top - 450)
     local progressFill = display.newSprite("progress_bar_364x40_2.png")
     self.acc_layer.ProgressTimer = cc.ProgressTimer:create(progressFill)
     local pro = self.acc_layer.ProgressTimer
@@ -572,8 +572,8 @@ function CommonUpgradeUI:InitAccelerationPart()
     end
 
     -- 进度条头图标
-    display.newSprite("back_ground_43x43.png", display.cx - 260, display.top - 460):addTo(self.acc_layer)
-    display.newSprite("hourglass_39x46.png", display.cx - 260, display.top - 460):addTo(self.acc_layer):setScale(0.8)
+    display.newSprite("back_ground_43x43.png", display.cx - 250, display.top - 450):addTo(self.acc_layer)
+    display.newSprite("hourglass_39x46.png", display.cx - 250, display.top - 450):addTo(self.acc_layer):setScale(0.8)
     -- 免费加速按钮
     self:CreateFreeSpeedUpBuildingUpgradeButton()
     -- 可免费加速提示
@@ -614,7 +614,7 @@ function CommonUpgradeUI:CreateFreeSpeedUpBuildingUpgradeButton()
                 local eventType = self.building:EventType()
                 NetManager:getFreeSpeedUpPromise(eventType,self.building:UniqueUpgradingKey())
             end
-        end):align(display.CENTER, display.cx+185, display.top - 435):addTo(self.acc_layer)
+        end):align(display.CENTER, display.cx+194, display.top - 435):addTo(self.acc_layer)
     local building = self.building
     if building:IsUpgrading() and building:IsAbleToFreeSpeedUpByTime(app.timer:GetServerTime()) then
         self.acc_layer.acc_button:setButtonEnabled(true)
