@@ -673,7 +673,7 @@ function GameUIAllianceHome:UpdateEnemyArrows(screen_rect, enemy_alliance, layer
         if count > 10 then return true end
         local x,y = v:GetMidLogicPosition()
         local dx, dy = (logic_x - x), (logic_y - y)
-        if dx^2 + dy^2 > 10 * 10 then
+        if dx^2 + dy^2 > 1 then
             local arrow = self:GetEnemyArrow(count)
             local map_point = layer:ConvertLogicPositionToMapPosition(x, y, id)
             local world_point = layer:convertToWorldSpace(map_point)
