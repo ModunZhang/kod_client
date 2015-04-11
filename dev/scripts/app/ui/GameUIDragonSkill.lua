@@ -3,7 +3,7 @@
 -- Date: 2014-09-24 22:37:58
 --
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
-local GameUIDragonSkill = UIKit:createUIClass("GameUIDragonSkill")
+local GameUIDragonSkill = UIKit:createUIClass("GameUIDragonSkill","UIAutoClose")
 local config_dragonSkill = GameDatas.Dragons.dragonSkill
 local BODY_HEIGHT = 450
 local LISTVIEW_WIDTH = 547
@@ -22,8 +22,8 @@ end
 
 function GameUIDragonSkill:onEnter()
 	GameUIDragonSkill.super.onEnter(self)
-  UIKit:shadowLayer():addTo(self,-1)
-	self.backgroundImage = WidgetUIBackGround.new({height=BODY_HEIGHT}):addTo(self)
+	self.backgroundImage = WidgetUIBackGround.new({height=BODY_HEIGHT})
+  self:addTouchAbleChild(self.backgroundImage)
 	self.backgroundImage:pos((display.width-self.backgroundImage:getContentSize().width)/2,display.height - self.backgroundImage:getContentSize().height - 280)
 	local titleBar = display.newSprite("title_blue_600x52.png")
 		:align(display.BOTTOM_LEFT, 2,self.backgroundImage:getContentSize().height - 15)
