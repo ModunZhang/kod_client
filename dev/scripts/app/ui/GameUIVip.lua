@@ -274,7 +274,7 @@ function GameUIVip:onExit()
     GameUIVip.super.onExit(self)
 end
 function GameUIVip:InitVip()
-    self:CreateAD():addTo(self.vip_layer):align(display.CENTER_TOP, display.cx - 2, display.top-46)
+    self:CreateAD():addTo(self.vip_layer):align(display.CENTER_TOP, display.cx, window.top_bottom+20)
     local exp_bar = self:CreateVipExpBar():addTo(self.vip_layer,1,999):pos(display.cx-287, display.top-300)
     exp_bar:LightLevelBar(User:GetVipLevel())
     self:CreateVIPStatus()
@@ -282,9 +282,18 @@ end
 
 -- 创建广告框
 function GameUIVip:CreateAD()
-    local ad = display.newSprite("banner_617x166.png")
-
-    display.newSprite("line_663x58.png"):addTo(ad):pos(ad:getContentSize().width/2,6)
+    local ad = WidgetPushButton.new(
+        {normal = "banner_614x146.png", pressed = "banner_614x146.png"}
+    )
+        :onButtonClicked(function(event)
+            if event.name == "CLICKED_EVENT" then
+                UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                self:LeftButtonClicked()
+            end
+        end)
+    display.newSprite("back_ground_430X115.png"):addTo(ad):align(display.CENTER, 20, -73)
+    display.newSprite("npc_110x130.png"):addTo(ad):align(display.BOTTOM_RIGHT, 307, -140)
+    display.newSprite("line_663x58.png"):addTo(ad):pos(0,-140)
     return ad
 end
 
@@ -840,6 +849,7 @@ function GameUIVip:OnVipEventTimer( vip_event_new )
 end
 
 return GameUIVip
+
 
 
 
