@@ -382,7 +382,7 @@ end
 function WidgetMakeEquip:UpdateBuildLabel(queue)
     local is_enough = queue == 0
     -- self.normal_build_btn:setButtonEnabled(is_enough)
-    local label = string.format("%s %d/%d", _("制造队列"), queue, 1)
+    local label = string.format("%s %d/%d", _("制造队列"), 1,queue)
     if label ~= self.build_label:getString() then
         self.build_label:setString(label)
     end
@@ -393,7 +393,7 @@ end
 function WidgetMakeEquip:UpdateCoin(coin)
     local equip_config = self.equip_config
     local need_coin = equip_config.coin
-    local label = string.format("%s %s/%s", _("需要银币"), GameUtils:formatNumber(need_coin), GameUtils:formatNumber(coin))
+    local label = string.format("%s %s/%s", _("需要银币"),  GameUtils:formatNumber(coin),GameUtils:formatNumber(need_coin))
     if self.coin_label:getString() ~= label then
         self.coin_label:setString(label)
     end

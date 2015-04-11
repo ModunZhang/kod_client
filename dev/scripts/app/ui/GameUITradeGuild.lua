@@ -275,24 +275,34 @@ function GameUITradeGuild:CreateSellItemForListView(listView,goods)
             shadow = true
         }))
         :onButtonClicked(function(event)
-            if City:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())<goods.itemData.price*goods.itemData.count then
-                FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                    :SetPopMessage(_("银币不足"))
-                    :AddToCurrentScene()
-                return
-            end
-            NetManager:getBuySellItemPromise(goods._id):next(function ( response )
-                -- 商品不存在
-                if response.errcode then
-                    if response.errcode[1].code==573 then
+
+                local buy_func = function ()
+                    NetManager:getBuySellItemPromise(goods._id):next(function ( response )
+                        -- 商品不存在
+                        if response.errcode then
+                            if response.errcode[1].code==573 then
+                                listView:removeItem(item)
+                            end
+                        end
+                        return response
+                    end):done(function()
+                        GameGlobalUI:showTips(_("提示"),string.format(_("购买%s成功"),Localize.sell_type[goods.itemData.name]))
                         listView:removeItem(item)
-                    end
+                    end)
                 end
-                return response
-            end):done(function()
-                GameGlobalUI:showTips(_("提示"),string.format(_("购买%s成功"),Localize.sell_type[goods.itemData.name]))
-                listView:removeItem(item)
-            end)
+                if City:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())<goods.itemData.price*goods.itemData.count then
+                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                        :SetPopMessage(_("银币不足,是否使用金龙币补充"))
+                        :CreateOKButton({
+                            listener = function ()
+                                buy_func()
+                            end
+                        })
+                        :CreateNeeds({value = DataUtils:buyResource({coin = goods.itemData.price*goods.itemData.count}, {coin=City:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())})})
+                        :AddToCurrentScene()
+                    return
+                end
+                buy_func()
         end)
 end
 function GameUITradeGuild:GetGoodsIcon(listView,icon)
@@ -1107,6 +1117,7 @@ function GameUITradeGuild:GetMaterialIndexByName(material_type)
     return build_temp[material_type] or teach_temp[material_type]
 end
 return GameUITradeGuild
+
 
 
 
