@@ -57,6 +57,9 @@ function GameUIAllianceMoonGateEnter:GetEnterButtons()
         local current_scene = display.getRunningScene()
         if current_scene.__cname == "AllianceScene" then
             local move_building_button = self:BuildOneButton("icon_move_alliance_building.png",_("移动")):onButtonClicked(function()
+            local alliacne =  self:GetMyAlliance()
+            local isEqualOrGreater = alliacne:GetSelf():CanEditAllianceObject()
+            if isEqualOrGreater then
                 if self:GetMyAlliance():Honour() < self:GetMoveNeedHonour() then 
                     UIKit:showMessageDialog(nil, _("联盟荣耀值不足"),function()end)
                     return 
@@ -67,6 +70,9 @@ function GameUIAllianceMoonGateEnter:GetEnterButtons()
                     name = self:GetUITitle()
                 })
                 self:LeftButtonClicked()
+            else
+                UIKit:showMessageDialog(nil, _("您没有此操作权限"),function()end)
+            end
             end)
             return {move_building_button,village_button}
         end
