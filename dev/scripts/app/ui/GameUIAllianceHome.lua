@@ -74,14 +74,31 @@ function GameUIAllianceHome:onEnter()
     city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
     city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
     city:AddListenOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
-
+    city:AddListenOnType(self,city.LISTEN_TYPE.HELPED_TO_TROOPS)
     city:GetUser():AddListenOnType(self, city:GetUser().LISTEN_TYPE.TASK)
+
+    local alliance_belvedere = self.alliance:GetAllianceBelvedere()
+    alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
+    alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
+
     -- 添加到全局计时器中，以便显示各个阶段的时间
     app.timer:AddListener(self)
 
     self:OnTaskChanged(city:GetUser())
     self:MailUnreadChanged()
 end
+
+function GameUIAllianceHome:OnMarchDataChanged()
+    self:OnHelpToTroopsChanged()
+end
+function GameUIAllianceHome:OnCommingDataChanged()
+    self:OnHelpToTroopsChanged()
+end
+
+function GameUIAllianceHome:OnHelpToTroopsChanged()
+    self.operation_button_order:RefreshOrder()
+end
+
 function GameUIAllianceHome:InitArrow()
     local rect1 = self.bottom:getCascadeBoundingBox()
     local rect2 = self.top_bg:getCascadeBoundingBox()
@@ -149,8 +166,10 @@ function GameUIAllianceHome:CreateOperationButton()
                 return not alliance:IsDefault() and #alliance:GetCouldShowHelpEvents()>0
             end
         else
+            local alliance = self.alliance
             function button:CheckVisible()
-                return true
+                local alliance_belvedere = alliance:GetAllianceBelvedere()
+                return alliance_belvedere:HasEvent() or City:HasHelpToTroops()
             end
         end
         order:AddElement(button)
@@ -200,7 +219,10 @@ function GameUIAllianceHome:onExit()
     city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
     city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
     city:GetUser():RemoveListenerOnType(self, city:GetUser().LISTEN_TYPE.TASK)
-
+    city:RemoveListenerOnType(self,city.LISTEN_TYPE.HELPED_TO_TROOPS)
+    local alliance_belvedere = self.alliance:GetAllianceBelvedere()
+    alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
+    alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
     GameUIAllianceHome.super.onExit(self)
 end
 
@@ -536,6 +558,8 @@ function GameUIAllianceHome:OnMidButtonClicked(event)
     if not tag then return end
     if tag == 2 then -- 战斗
     -- NetManager:getFindAllianceToFightPromose()
+        local watchTower = self.city:GetFirstBuildingByType('watchTower')
+        UIKit:newGameUI('GameUIWatchTower', self.city, watchTower):AddToCurrentScene(true)
     elseif tag == 1 then
         if not self.alliance:IsDefault() then
             GameUIHelp.new():AddToCurrentScene()
