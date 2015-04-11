@@ -254,7 +254,7 @@ function GameUITradeGuild:CreateSellItemForListView(listView,goods)
     -- 银币icon
     display.newSprite("res_coin_81x68.png")
         :align(display.CENTER, 310, content:getContentSize().height/2)
-        :addTo(content)
+        :addTo(content):scale(0.5)
     -- 总价
     UIKit:ttfLabel(
         {
@@ -557,7 +557,7 @@ function GameUITradeGuild:CreateSellItem(list,index)
         -- 银币icon
         display.newSprite("res_coin_81x68.png")
             :align(display.CENTER, 150, item_height-120)
-            :addTo(content)
+            :addTo(content):scale(0.5)
         -- 总价
         UIKit:ttfLabel(
             {
@@ -773,15 +773,15 @@ function GameUITradeGuild:OpenSellDialog()
             :addTo(layer)
         -- 银币icon
         local temp_icon = display.newSprite("res_coin_81x68.png")
-            :align(display.CENTER, temp_label:getPositionX()+temp_label:getContentSize().width+20, 70)
-            :addTo(layer)
+            :align(display.CENTER, temp_label:getPositionX()+temp_label:getContentSize().width+24, 70)
+            :addTo(layer):scale(0.5)
         -- 总价
         self.total_price_label = UIKit:ttfLabel(
             {
                 text = string.formatnumberthousands(1020),
                 size = 20,
                 color = 0x403c2f
-            }):align(display.LEFT_CENTER, temp_icon:getPositionX()+temp_icon:getContentSize().width ,70)
+            }):align(display.LEFT_CENTER, temp_icon:getPositionX()+30 ,70)
             :addTo(layer)
 
         -- 需要小车

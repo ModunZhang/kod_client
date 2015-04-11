@@ -57,7 +57,7 @@ function WidgetAccelerateGroup:ctor(eventType,eventId)
         }):align(display.CENTER, width/2-220+gap_x*math.mod(i-1,4), 160-gap_y*math.floor((i-1)/4))
             :addTo(self)
         -- 时间按钮
-        local time_button = WidgetPushButton.new({normal = "speedup_"..i.."_128x128.png"},{scale9 = false}
+        local time_button = WidgetPushButton.new({normal = "upgrade_time_"..i..".png"},{scale9 = false}
             ,{
                 disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}
             })

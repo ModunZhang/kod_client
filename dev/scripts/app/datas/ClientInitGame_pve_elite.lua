@@ -2,7 +2,7 @@ local pve_elite = GameDatas.ClientInitGame.pve_elite
 
 pve_elite[1] = {
 	["index"] = 1,
-	["soldiers"] = "lancer_2,8;horseArcher_2,6;sentine_2,8;swordsman_2,4",
+	["soldiers"] = "lancer_2,8;horseArcher_2,6;sentinel_2,8;swordsman_2,4",
 	["rewards"] = "resources,coin,1000"
 }
 pve_elite[2] = {
