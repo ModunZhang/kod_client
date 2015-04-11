@@ -18,6 +18,9 @@ local GameUIItems = UIKit:createUIClass("GameUIItems","GameUIWithCommonHeader")
 
 function GameUIItems:ctor(city)
     GameUIItems.super.ctor(self,city,_("道具"))
+
+    -- 记录选中的tab，切换商城和我的道具标签时，保持切过去的和当前的选中同一个tab
+    self.top_tab = nil
 end
 function GameUIItems:OnMoveInStage()
     GameUIItems.super.OnMoveInStage(self)
@@ -35,6 +38,9 @@ function GameUIItems:OnMoveInStage()
         self.shop_layer:setVisible(tag == 'shop')
         self.myItems_layer:setVisible(tag == 'myItems')
         if tag == 'shop' then
+            if self.top_tab and self.shop_dropList then
+                self.shop_dropList:PushButton(self.shop_dropList:GetTabByTag(self.top_tab))
+            end
             if not self.shop_dropList then
                 self:InitShop()
             end
@@ -42,6 +48,9 @@ function GameUIItems:OnMoveInStage()
         if tag == 'myItems' then
             if not self.myItems_dropList then
                 self:InitMyItems()
+            end
+            if self.top_tab and self.myItems_dropList then
+                self.myItems_dropList:PushButton(self.myItems_dropList:GetTabByTag(self.top_tab))
             end
         end
     end):pos(window.cx, window.bottom + 34)
@@ -78,6 +87,7 @@ function GameUIItems:InitShop()
         {tag = "menu_3",label = "增益"},
         {tag = "menu_4",label = "时间加速"},
     }, function(tag)
+        self.top_tab = tag
         self.shop_items = {}
         self:ReloadShopList(tag)
     end):align(display.TOP_CENTER,window.cx,window.top-84):addTo(layer)
@@ -296,11 +306,12 @@ function GameUIItems:InitMyItems()
     self.myItems_listview = list
 
     self.myItems_dropList = WidgetRoundTabButtons.new({
-        {tag = "menu_1",label = "特殊",default = true},
+        {tag = "menu_1",label = "特殊"},
         {tag = "menu_2",label = "持续增益"},
         {tag = "menu_3",label = "增益"},
         {tag = "menu_4",label = "时间加速"},
     }, function(tag)
+        self.top_tab = tag
         self.my_items = {}
         self:ReloadMyItemsList(tag)
     end):align(display.TOP_CENTER,window.cx,window.top-84):addTo(layer)
@@ -497,6 +508,8 @@ function GameUIItems:OnItemsChanged( changed_map )
     end
 end
 return GameUIItems
+
+
 
 
 
