@@ -221,10 +221,16 @@ function WidgetEventTabButtons:RefreshBuildQueueByType(...)
             local count = #city:GetUpgradingBuildings()
             local total = city:BuildQueueCounts()
             item:SetActiveNumber(count, total):Enable(able):SetOrResetProgress()
+            if item:GetTotal() ~= total then
+                item:SetOrResetProgress()
+            end
         elseif key == "soldier" then
             local count = self.barracks:IsRecruting() and 1 or 0
             local total = self.barracks:IsUnlocked() and 1 or 0
-            item:SetActiveNumber(count, total):Enable(able):SetOrResetProgress()
+            item:SetActiveNumber(count, total):Enable(able)
+            if item:GetTotal() ~= total then
+                item:SetOrResetProgress()
+            end
         elseif key == "material" then
             local count = 0
             count = count + (self.blackSmith:IsMakingEquipment() and 1 or 0)
@@ -232,7 +238,10 @@ function WidgetEventTabButtons:RefreshBuildQueueByType(...)
             local total = 0
             total = total + (self.toolShop:IsUnlocked() and 1 or 0)
             total = total + (self.blackSmith:IsUnlocked() and 1 or 0)
-            item:SetActiveNumber(count, total):Enable(able):SetOrResetProgress()
+            item:SetActiveNumber(count, total):Enable(able)
+            if item:GetTotal() ~= total then
+                item:SetOrResetProgress()
+            end
         elseif key == "technology" then
             local total = 0
             local buildings = {
@@ -248,7 +257,10 @@ function WidgetEventTabButtons:RefreshBuildQueueByType(...)
                 end
             end
             local count = city:GetSoldierManager():GetTotalUpgradingMilitaryTechNum() + city:GetProductionTechEventCount()
-            item:SetActiveNumber(count, total):Enable(able):SetOrResetProgress()
+            item:SetActiveNumber(count, total):Enable(able)
+            if item:GetTotal() ~= total then
+                item:SetOrResetProgress()
+            end
         end
     end
 end
