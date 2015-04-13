@@ -127,7 +127,7 @@ create_building_config(
 create_building_config(
     "foundry"
     ,create_config(MIN_LEVEL, 0, "locked_tile.png", offset(20, 120), scale(1))
-    ,create_config(1, MAX_LEVEL, "foundry_258x254.png", offset(20, 120), scale(1), smoke(55, 213), smoke(79, 180))
+    ,create_config(1, MAX_LEVEL, "foundry_258x254.png", offset(20, 120), scale(1), smoke(45, 203), smoke(69, 170))
 )
 create_building_config(
     "stoneMason"

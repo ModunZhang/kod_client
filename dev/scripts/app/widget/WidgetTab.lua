@@ -35,7 +35,7 @@ function WidgetTab:ctor(param, width, height)
             text = "",
             size = 14,
             color = 0xfffcbe,
-        }):addTo(self):align(display.CENTER, width/2, height/2)
+        }):addTo(self):align(display.CENTER, width/2 + 10, height/2)
     end
 
     self.back_ground:setContentSize(cc.size(width, height))
@@ -54,14 +54,16 @@ function WidgetTab:ctor(param, width, height)
         end
     end)
 end
-function WidgetTab:SetOrResetProgress(str, percent)
-    if str and percent then
-        if percent > self.progress:getPercentage() then
-            self.label:show():setString(str)
+function WidgetTab:SetOrResetProgress(time, percent)
+    if time and percent then
+        if self.left_time > time then
+            self.left_time = time
+            self.label:show():setString(GameUtils:formatTimeStyle1(time))
             self.progress:show():setPercentage(percent)
+            self.tab_png:scale(0.8):setPositionX(self.width/5)
         end
-        self.tab_png:scale(0.8):setPositionX(self.width/5)
     else
+        self.left_time = math.huge
         self.label:hide()
         self.progress:hide():setPercentage(0)
         self.tab_png:scale(1):setPositionX(self.width/2)
@@ -103,13 +105,14 @@ function WidgetTab:EnableTag(b)
     return self
 end
 function WidgetTab:SetActiveNumber(active, total)
+    self.current = active
     self.total = total
     self.active:getParent():setVisible(total > 0)
     self.active:setString(string.format("%d/%d", active, total))
     return self
 end
-function WidgetTab:GetTotal()
-    return self.total
+function WidgetTab:IsChanged(active, total)
+    return self.current ~= active or self.total ~= total
 end
 function WidgetTab:Size(width, height)
     self.tab:setButtonSize(width, height)

@@ -319,7 +319,10 @@ function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
             buildings = {building}
         end
 
-        self.util_node:performWithDelay(function()end, 0.5)
+        app:lockInput(true)
+        self.util_node:performWithDelay(function()
+            app:lockInput(false)
+        end, 0.5)
         Sprite:PromiseOfFlash(unpack(buildings)):next(function()
             if self:IsEditMode() then
                 self:GetSceneUILayer():getChildByTag(WidgetMoveHouse.ADD_TAG):SetMoveToRuins(building)

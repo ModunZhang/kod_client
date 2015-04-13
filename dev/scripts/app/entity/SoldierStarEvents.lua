@@ -47,6 +47,9 @@ end
 function SoldierStarEvents:GetTime()
     return self.times_ or 0
 end
+function SoldierStarEvents:LeftTime()
+    return self.times_ or 0
+end
 function SoldierStarEvents:GetLocalizeDesc()
     local star = City:GetSoldierManager():GetStarBySoldierType(self.name)
     return string.format(_("晋升%s的星级 star %d"),Localize.soldier_name[self.name],star+1)
