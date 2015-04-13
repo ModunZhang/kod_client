@@ -13,8 +13,15 @@ function Flag:ctor()
     self.graphic_color_index = 11
 end
 function Flag:SetBackColors(color1, color2)
-    checkint(color1)
-    checkint(color2)
+    if type(color1) == 'string' and string.find(color1,"colors_") then
+        color1 = string.sub(color1,8)
+    end   
+    if type(color2) == 'string' and string.find(color2,"colors_") then
+        color2 = string.sub(color2,8)
+    end  
+
+    color1 = tonumber(color1)
+    color2 = tonumber(color2)
     self.form_color_index_1 = color1
     self.form_color_index_2 = color2
 end
@@ -27,7 +34,7 @@ function Flag:GetBackSeqColors()
 end
 
 function Flag:SetBackStyle(back_style)
-    checkint(back_style)
+    back_style = tonumber(back_style)
     self.form_index = back_style
 end
 
@@ -36,7 +43,7 @@ function Flag:GetBackStyle()
 end
 
 function Flag:SetFrontStyle(front_style)
-     checkint(front_style)
+    front_style = tonumber(front_style)
     self.graphic_index = front_style
 end
 
@@ -45,7 +52,10 @@ function Flag:GetFrontStyle()
 end
 
 function Flag:SetFrontColor(color)
-    checkint(color)
+     if type(color) == 'string' and string.find(color,"colors_") then
+        color = string.sub(color,8)
+    end   
+    color = tonumber(color)
     self.graphic_color_index = color
 end
 

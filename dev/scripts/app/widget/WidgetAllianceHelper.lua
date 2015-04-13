@@ -3,7 +3,20 @@
 -- Date: 2015-04-10 15:04:46
 --
 local WidgetAllianceHelper = class("WidgetAllianceHelper")
--- local  = 1
+
+WidgetAllianceHelper.FLAG_ZORDER = {
+	BODY = 1,
+	GRAPHIC = 3,
+	FLAG_BOX = 4,
+}
+
+WidgetAllianceHelper.FLAG_TAG = {
+	BODY = 1,
+	GRAPHIC = 3,
+	FLAG_BOX = 4,
+}
+
+
 function WidgetAllianceHelper:ctor()
 	self.colors = {
 		0x000000,
@@ -43,14 +56,17 @@ function WidgetAllianceHelper:ctor()
 end
 
 function WidgetAllianceHelper:GetRectangleTerrainImageByIndex(index)
+	index = tonumber(index)
 	return self.images_of_terrain_rectangle[index]
 end
 
 function WidgetAllianceHelper:GetRhombusTerrainImageByIndex(index)
+	index = tonumber(index)
 	return self.images_of_terrain_rhombus[index]
 end
 
 function WidgetAllianceHelper:GetGraphicImageNameByIndex(index)
+	index = tonumber(index)
 	return self.images_of_graphics[index].image
 end
 
@@ -77,12 +93,22 @@ function WidgetAllianceHelper:GetBackStylesForSeqButton()
 end
 
 function WidgetAllianceHelper:GetColorByIndex(index)
-	checkint(index)
+	print("GetColorByIndex---->",index,type(index),self.colors[index])
 	return self.colors[index]
 end
 
 function WidgetAllianceHelper:GetTerrainIndex(name)
 	return self.landforms[name]
+end
+
+function WidgetAllianceHelper:GetTerrainNameByIndex(index)
+	local index = tonumber(index)
+	for k,v in pairs(self.landforms) do
+		if v == index then
+			return k
+		end
+	end
+	return ""
 end
 
 function WidgetAllianceHelper:RandomTerrain()
@@ -99,16 +125,22 @@ function WidgetAllianceHelper:GetTerrain()
 end
 
 --旗帜
-
+---------------------------------------------------------------------------------------------------
 --创建一个自定义颜色的Sprite
 function WidgetAllianceHelper:CreateColorSprite(image,color_index)
-    local customParams = {
+    local customParams = self:GetColorShaderParams(color_index)
+    return display.newFilteredSprite(image, "CUSTOM", json.encode(customParams))
+end
+
+function WidgetAllianceHelper:GetColorShaderParams(color_index)
+	color_index = tonumber(color_index)
+	return {
         frag = "shaders/customer_color.fsh",
         shaderName = "colors_" .. color_index,
         color = UIKit:convertColorToGL_(self:GetColorByIndex(color_index))
     }
-    return display.newFilteredSprite(image, "CUSTOM", json.encode(customParams))
 end
+
 --创建旗帜
 function WidgetAllianceHelper:CreateFlagContentSprite(obj_flag)
 	local box_bounding = display.newSprite("alliance_flag_box_119x139.png")
@@ -116,13 +148,14 @@ function WidgetAllianceHelper:CreateFlagContentSprite(obj_flag)
     local box = display.newNode()
     --body
     local body_node = self:CreateFlagBody(obj_flag,size)
-    body_node:addTo(box)
+    body_node:addTo(box,self.FLAG_ZORDER.BODY,self.FLAG_TAG.BODY)
     --graphic
     local graphic_node = self:CreateFlagGraphic(obj_flag,size)
-    graphic_node:addTo(box)
-   	box_bounding:addTo(box):align(display.LEFT_BOTTOM, 0, 0)
+    graphic_node:addTo(box,self.FLAG_ZORDER.GRAPHIC,self.FLAG_TAG.GRAPHIC)
+   	box_bounding:addTo(box,self.FLAG_ZORDER.FLAG_BOX,self.FLAG_TAG.FLAG_BOX):align(display.LEFT_BOTTOM, 0, 0)
     return box
 end
+
 --旗帜背景
 function WidgetAllianceHelper:CreateFlagBody(obj_flag,box_bounding)
 	local body_node = display.newNode() 
@@ -130,7 +163,7 @@ function WidgetAllianceHelper:CreateFlagBody(obj_flag,box_bounding)
 	local bg = self:CreateColorSprite("alliance_flag_body_106x126_1.png",color_1)
 		:addTo(body_node)
         :pos(box_bounding.width/2,box_bounding.height/2)
-    if obj_flag:GetBackStyle() > 1 then
+   	if obj_flag:GetBackStyle() > 1 then
     	local content = self:CreateColorSprite(string.format("alliance_flag_body_106x126_%d.png",obj_flag:GetBackStyle()),color_2)
     		:addTo(body_node)
         	:pos(box_bounding.width/2,box_bounding.height/2)

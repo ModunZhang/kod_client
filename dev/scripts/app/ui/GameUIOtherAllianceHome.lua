@@ -7,7 +7,6 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local window = import("..utils.window")
 local Alliance = import("..entity.Alliance")
 local Flag = import("..entity.Flag")
-local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
 local WidgetChangeMap = import("..widget.WidgetChangeMap")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 

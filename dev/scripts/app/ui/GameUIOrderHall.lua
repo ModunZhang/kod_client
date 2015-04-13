@@ -9,7 +9,6 @@ local SpriteConfig = import("..sprites.SpriteConfig")
 local Flag = import("..entity.Flag")
 local UIListView = import(".UIListView")
 local UILib = import(".UILib")
-local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
 local Alliance = import("..entity.Alliance")
 local Localize = import("..utils.Localize")
 local AllianceVillage = GameDatas.AllianceVillage

@@ -11,7 +11,7 @@ local WidgetAllianceLanguagePanel = import(".WidgetAllianceLanguagePanel")
 local WidgetAllianceHelper = import(".WidgetAllianceHelper")
 local WidgetPushButton = import(".WidgetPushButton")
 local CONTENT_WIDTH = window.width - 80
-
+local UICheckBoxButton = import("..ui.UICheckBoxButton")
 local WidgetAllianceCreateOrEdit = class("WidgetAllianceCreateOrEdit",function()
 	return display.newNode()
 end)
@@ -58,11 +58,11 @@ function WidgetAllianceCreateOrEdit:onEnter()
 	    self.createFlagPanel = self:createFlagPanel():addTo(self)
 	    	:pos(0,okButton:getPositionY()+65)
 	    -- landform & language
-	    -- self.landformPanel = self:createCheckAllianeGroup():addTo(self)
-	    -- 	:pos(-10,self.createFlagPanel:getCascadeBoundingBox().height+80)
+	    self.landformPanel = self:createCheckAllianeGroup():addTo(self)
+	    	:pos(-10,self.createFlagPanel:getCascadeBoundingBox().height+50)
 	    -- textfield
-	    -- self.textfieldPanel = self:createTextfieldPanel():addTo(self)
-	    -- 	:pos(-10,self.landformPanel:getPositionY()+self.landformPanel:getCascadeBoundingBox().height+20)
+	    self.textfieldPanel = self:createTextfieldPanel():addTo(self)
+	    	:pos(-10,self.landformPanel:getPositionY()+self.landformPanel:getCascadeBoundingBox().height+20)
 end
 
 function WidgetAllianceCreateOrEdit:Helper()
@@ -122,7 +122,7 @@ function WidgetAllianceCreateOrEdit:createFlagPanel()
 		)
 		:addTo(panel)
 		:pos(295,75)
-		:onSeqStateChange(handler(self, self.OnGraphicTypeButtonClicked))
+		:onSeqStateChange(handler(self, self.OnFlagTypeButtonClicked))
 		:setButtonEnabled(self:GetFlagInfomation():GetBackStyle() ~= 1)
 	self.colorButton_right = colorButton_right
 	local colorButton_left = WidgetSequenceButton.new(
@@ -133,7 +133,7 @@ function WidgetAllianceCreateOrEdit:createFlagPanel()
 			color_1
 		)
 		:addTo(panel):pos(183,75)
-		:onSeqStateChange(handler(self, self.OnGraphicTypeButtonClicked))
+		:onSeqStateChange(handler(self, self.OnFlagTypeButtonClicked))
 	self.colorButton_left = colorButton_left
 
 
@@ -182,14 +182,14 @@ function WidgetAllianceCreateOrEdit:createFlagPanel()
 		:onButtonClicked(function()
 			self.flag_info = self:GetFlagInfomation():RandomFlag()
 			self:RefreshButtonState()
-			-- self:RefrshFlagSprite()
+			self:RefrshFlagSprite()
 		end)
 
-	-- UIKit:ttfLabel({
-	-- 	text = _("联盟旗帜"),
-	-- 	size = 22,
-	-- 	color = 0x403c2f
-	-- }):addTo(node):pos(color_header:getPositionX()-320+10,color_header:getPositionY()+color_header:getContentSize().height+20)
+	UIKit:ttfLabel({
+		text = _("联盟旗帜"),
+		size = 22,
+		color = 0x403c2f
+	}):addTo(node):align(display.CENTER,CONTENT_WIDTH/2 - 10,290)
 	return node
 end
 
@@ -222,26 +222,24 @@ function WidgetAllianceCreateOrEdit:createCheckAllianeGroup()
 
 	    }
 		self.landTypeButton = cc.ui.UICheckBoxButtonGroup.new()
-	        :addButton(cc.ui.UICheckBoxButton.new(checkbox_image)
+	        :addButton(UICheckBoxButton.new(checkbox_image)
 	            :setButtonLabel(UIKit:ttfLabel({text = _("草地"),size = 20,color = 0x797154}))
 	            :setButtonLabelOffset(40, 0)
 	            :align(display.LEFT_CENTER))
-	        :addButton(cc.ui.UICheckBoxButton.new(checkbox_image)
+	        :addButton(UICheckBoxButton.new(checkbox_image)
 	            :setButtonLabel(UIKit:ttfLabel({text = _("沙漠"),size = 20,color = 0x797154}))
 	            :setButtonLabelOffset(40, 0)
 	            :align(display.LEFT_CENTER))
-	        :addButton(cc.ui.UICheckBoxButton.new(checkbox_image)
+	        :addButton(UICheckBoxButton.new(checkbox_image)
 	            :setButtonLabel(UIKit:ttfLabel({text = _("雪地"),size = 20,color = 0x797154}))
 	            :setButtonLabelOffset(40, 0)
 	            :align(display.LEFT_CENTER))
 	        :setButtonsLayoutMargin(10, 100, 0,0)
 	        :onButtonSelectChanged(function(event)
 	            self.terrain_info = event.selected
-	            -- self:RefrshFlagSprite(3)
+	            self:RefrshFlagSprite(3)
 	        end)
 	        :addTo(landSelect):pos(10,10)
-		
-
 	    self.languageSelected  = WidgetAllianceLanguagePanel.new():addTo(groupNode)
 	    	:pos(0,landSelect:getCascadeBoundingBox().height+landSelect:getPositionY()+20)
     	self:SelectLandCheckButton(self.terrain_info,true)
@@ -264,7 +262,7 @@ function WidgetAllianceCreateOrEdit:createTextfieldPanel()
         image = "alliance_editbox_575x48.png",
         size = cc.size(552,48),
     })
-    editbox_tag:setPlaceHolder(_("最多可输入20字符"))
+    editbox_tag:setPlaceHolder(_("最多可输入3字符"))
     editbox_tag:setMaxLength(3)
     editbox_tag:setFont(UIKit:getEditBoxFont(),18)
     editbox_tag:setFontColor(cc.c3b(0,0,0))
@@ -335,21 +333,22 @@ function WidgetAllianceCreateOrEdit:RandomAllianceName_()
 end
 
 
--- where : 1->body 2->graphic other->all
+-- where : 1->body 2->graphic 3->terrain other->all
 function WidgetAllianceCreateOrEdit:RefrshFlagSprite(where)
-	local box_bounding = self.flag_sprite:getChildByTag(self.alliance_ui_helper.FLAG_BOX_TAG)
+	local box_bounding = self.flag_sprite:getChildByTag(self.alliance_ui_helper.FLAG_TAG.FLAG_BOX)
 	if 1 == where then --body
-		local body_node = self.flag_sprite:getChildByTag(self.alliance_ui_helper.FLAG_BODY_TAG)
-		body_node:removeFromParent(true)
-		body_node = self.alliance_ui_helper:CreateFlagBody(self:GetFlagInfomation(),box_bounding:getContentSize())
-		body_node:addTo(self.flag_sprite,self.alliance_ui_helper.FLAG_BODY_ZORDER,self.alliance_ui_helper.FLAG_BODY_TAG)
+		local flag_obj = self:GetFlagInfomation()
+		local flag_body = self.flag_sprite:getChildByTag(self.alliance_ui_helper.FLAG_TAG.BODY)
+		flag_body:removeFromParent(true)
+		flag_body = self.alliance_ui_helper:CreateFlagBody(flag_obj,box_bounding:getContentSize())
+		flag_body:addTo(self.flag_sprite,self.alliance_ui_helper.FLAG_ZORDER.BODY,self.alliance_ui_helper.FLAG_TAG.BODY)
 	elseif 2 == where then --graphic
-		local graphic_node = self.flag_sprite:getChildByTag(self.alliance_ui_helper.FLAG_GRAPHIC_TAG)
+		local graphic_node = self.flag_sprite:getChildByTag(self.alliance_ui_helper.FLAG_TAG.GRAPHIC)
 		graphic_node:removeFromParent(true)
 		graphic_node = self.alliance_ui_helper:CreateFlagGraphic(self:GetFlagInfomation(),box_bounding:getContentSize())
-		graphic_node:addTo(self.flag_sprite,self.alliance_ui_helper.FLAG_GRAPHIC_ZORDER,self.alliance_ui_helper.FLAG_GRAPHIC_TAG)
+		graphic_node:addTo(self.flag_sprite,self.alliance_ui_helper.FLAG_ZORDER.GRAPHIC,self.alliance_ui_helper.FLAG_TAG.GRAPHIC)
 	elseif 3 == where then
-		self.terrain_node:setTexture(self.alliance_ui_helper:GetAllRectangleTerrains()[self.terrain_info])
+		self.terrain_node:setTexture(self.alliance_ui_helper:GetRectangleTerrainImageByIndex(self.terrain_info))
 	else --all
 		self:RefrshFlagSprite(1)
 		self:RefrshFlagSprite(2)
@@ -364,19 +363,7 @@ function WidgetAllianceCreateOrEdit:RefreshButtonState()
 	self.flag_type_button:setSeqState(flag:GetBackStyle(),false)
 	self.graphic_right_button:setSeqState(flag:GetFrontSeqColor(),false)
 	self.graphic_type_button:setSeqState(flag:GetFrontStyle(),false)
-	print("flag:GetBackStyle()----->",flag:GetBackStyle())
 	self.colorButton_right:setButtonEnabled(flag:GetBackStyle() ~= 1)
-	-- self.flag_type_button:setSeqState(flag:GetBackStyle(),false)
-	-- self.color_middleColor_button:setSeqState(flag:GetBackColors()[1],false)
-	-- self.color_rightColor_button:setSeqState(flag:GetBackColors()[2],false)
-	-- self.color_rightColor_button:setButtonEnabled(flag:GetBackStyle() ~= self.alliance_ui_helper.FLAG_LOCATION_TYPE.ONE)
-	-- self.graphic_type_button:setSeqState(flag:GetFrontStyle(),false)
-	-- self.colorButton_right:setSeqState(flag:GetFrontImageColors()[2],false)
-	-- self.colorButton_left:setSeqState(flag:GetFrontImageColors()[1],false)
-	-- self.graphic_middle_button:setSeqState(flag:GetFrontImagesStyle()[1],false)
-	-- self.graphic_right_button:setSeqState(flag:GetFrontImagesStyle()[2],false)
-	-- self.colorButton_right:setButtonEnabled(flag:GetFrontStyle() ~= self.alliance_ui_helper.FLAG_LOCATION_TYPE.ONE)
-	-- self.graphic_right_button:setButtonEnabled(flag:GetFrontStyle() ~= self.alliance_ui_helper.FLAG_LOCATION_TYPE.ONE)
 end
 
 function WidgetAllianceCreateOrEdit:AdapterCreateData2Server_()
@@ -384,30 +371,25 @@ function WidgetAllianceCreateOrEdit:AdapterCreateData2Server_()
 		name=string.trim(self.editbox_name:getText()),
 		tag=string.trim(self.editbox_tag:getText()),
 		language=self.languageSelected:getSelectedLanguage(),
-		terrain=self.alliance_ui_helper:GetLandFormTypeName(self.terrain_info),
+		terrain=self.alliance_ui_helper:GetTerrainNameByIndex(self.terrain_info),
 		flag=self:GetFlagInfomation():EncodeToJson()
 	}
 end
 
 -- flag button event
-
 function WidgetAllianceCreateOrEdit:OnFlagTypeButtonClicked()
 	local flag = self:GetFlagInfomation()
+	flag:SetBackStyle(self.flag_type_button:GetSeqState())
+	flag:SetBackColors(self.colorButton_left:GetSeqState(),self.colorButton_right:GetSeqState())
 	self.colorButton_right:setButtonEnabled(flag:GetBackStyle() ~= 1)
-	-- flag:SetBackStyle(self.flag_type_button:GetSeqState())
-	-- flag:SetBackColors(self.color_middleColor_button:GetSeqState(),self.color_rightColor_button:GetSeqState())
-	-- self.color_rightColor_button:setButtonEnabled(self:GetFlagInfomation():GetBackStyle() ~= self.alliance_ui_helper.FLAG_LOCATION_TYPE.ONE)
-	-- self:RefrshFlagSprite(1)
+	self:RefrshFlagSprite(1)
 end
 
 function WidgetAllianceCreateOrEdit:OnGraphicTypeButtonClicked()
 	local flag = self:GetFlagInfomation()
-	-- flag:SetFrontStyle(self.graphic_type_button:GetSeqState())
-	-- flag:SetFrontImageColors(self.colorButton_left:GetSeqState(),self.colorButton_right:GetSeqState())
-	-- flag:SetFrontImagesStyle(self.graphic_middle_button:GetSeqState(),self.graphic_right_button:GetSeqState())
-	-- self.colorButton_right:setButtonEnabled(self:GetFlagInfomation():GetFrontStyle() ~= self.alliance_ui_helper.FLAG_LOCATION_TYPE.ONE)
+	flag:SetFrontStyle(self.graphic_type_button:GetSeqState())
+	flag:SetFrontColor(self.graphic_right_button:GetSeqState())
 	self.colorButton_right:setButtonEnabled(flag:GetBackStyle() ~= 1)
-	-- self:RefrshFlagSprite(2)
-	print(self.colorButton_right:GetSeqState(),type(self.colorButton_right:GetSeqState()))
+	self:RefrshFlagSprite(2)
 end
 return WidgetAllianceCreateOrEdit
