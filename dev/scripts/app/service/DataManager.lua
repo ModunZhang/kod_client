@@ -6,7 +6,7 @@ function DataManager:setUserData( userData, deltaData )
 end
 function DataManager:setUserAllianceData(allianceData,deltaData)
 	-- dump(allianceData,"setUserAllianceData allianceData-->")
-	dump(deltaData,"setUserAllianceData deltaData-->")
+	-- dump(deltaData,"setUserAllianceData allianceData-->")
 	self.alliance = allianceData
 	if allianceData == json.null then return end
 	Alliance_Manager:OnAllianceDataChanged(allianceData,app.timer:GetServerTime(),deltaData)

@@ -1,7 +1,6 @@
 local Sprite = import(".Sprite")
 local UILib = import("..ui.UILib")
 local AllianceDecoratorSprite = class("AllianceDecoratorSprite", Sprite)
--- local allianceBuildingType = GameDatas.AllianceInitData.buildingType
 local DECORATOR_IMAGE = UILib.decorator_image
 local decorator_map = {
     grassLand = {
@@ -17,8 +16,8 @@ local decorator_map = {
     desert = {
         decorate_lake_1 =  1,
         decorate_lake_2 =  1,
-        decorate_mountain_1 =  4,
-        decorate_mountain_2 =  2,
+        decorate_mountain_1 =  1,
+        decorate_mountain_2 =  1,
         decorate_tree_1 =  1,
         decorate_tree_2 =  1,
         decorate_tree_3 =  1,
@@ -27,8 +26,8 @@ local decorator_map = {
     iceField = {
         decorate_lake_1 =  1,
         decorate_lake_2 =  1,
-        decorate_mountain_1 =  4,
-        decorate_mountain_2 =  2,
+        decorate_mountain_1 =  1,
+        decorate_mountain_2 =  1,
         decorate_tree_1 =  1,
         decorate_tree_2 =  1,
         decorate_tree_3 =  1,
@@ -44,7 +43,7 @@ end
 function AllianceDecoratorSprite:GetSpriteFile()
     local terrain = self:GetMapLayer():Terrain()
     local deco_name = self:GetEntity():GetName()
-    return DECORATOR_IMAGE[terrain][deco_name], decorator_map["grassLand"][deco_name]
+    return DECORATOR_IMAGE[terrain][deco_name], decorator_map[terrain][deco_name]
 end
 function AllianceDecoratorSprite:GetSpriteOffset()
     local w, h = self:GetSize()

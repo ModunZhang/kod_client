@@ -55,8 +55,8 @@ function GameUIAllianceBattle:OnMoveInStage()
             if not self.alliance_listview then
                 self:InitOtherAlliance()
                 NetManager:getNearedAllianceInfosPromise():done(function(response)
-                    if #response > 0 then
-                        self:RefreshAllianceListview(response)
+                    if response.msg.allianceInfos then
+                        self:RefreshAllianceListview(response.msg.allianceInfos)
                     end
                 end)
 
@@ -439,7 +439,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
             local gem_bg = display.newScale9Sprite("back_ground_138x34.png",window.right-60,window.top-350,cc.size(188,34))
                 :align(display.RIGHT_CENTER)
                 :addTo(layer)
-            display.newSprite("gem_66x56.png"):align(display.CENTER,0,gem_bg:getContentSize().height/2)
+            display.newSprite("gem_icon_62x61.png"):align(display.CENTER,0,gem_bg:getContentSize().height/2)
                 :addTo(gem_bg,2)
                 :scale(0.7)
             UIKit:ttfLabel({
@@ -1115,8 +1115,8 @@ end
 function GameUIAllianceBattle:GetJoinList(tag)
     if tag then
         NetManager:getSearchAllianceInfoByTagPromise(tag):done(function(response)
-            if #response > 0 then
-                self:RefreshAllianceListview(response)
+            if response.msg.allianceInfos then
+                self:RefreshAllianceListview(response.msg.allianceInfos)
             end
         end)
     end

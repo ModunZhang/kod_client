@@ -8,6 +8,7 @@ local timer = app.timer
 local WIDGET_WIDTH = 640
 local WIDGET_HEIGHT = 300
 local TAB_HEIGHT = 42
+local ITEM_HEIGHT = 47
 local WidgetEventTabButtons = class("WidgetEventTabButtons", function()
     local rect = cc.rect(0, 0, WIDGET_WIDTH, WIDGET_HEIGHT + TAB_HEIGHT)
     local node = display.newClippingRegionNode(rect)
@@ -42,6 +43,7 @@ function WidgetEventTabButtons:OnUpgradingBegin(building, current_time, city)
     self:RefreshBuildQueueByType("build")
 end
 function WidgetEventTabButtons:OnUpgrading(building, current_time, city)
+    self:GetTabByKey("build"):SetOrResetProgress(self:BuildingPercent(building))
     if self:IsShow() and self:GetCurrentTab() == "build" then
         self:IteratorAllItem(function(i, v)
             if i ~= 1 and v:GetEventKey() == building:UniqueKey() then
@@ -60,6 +62,7 @@ function WidgetEventTabButtons:OnBeginRecruit(barracks, event)
     self:EventChangeOn("soldier", true)
 end
 function WidgetEventTabButtons:OnRecruiting(barracks, event, current_time)
+    self:GetTabByKey("soldier"):SetOrResetProgress(self:EventPercent(event))
     if self:IsShow() and self:GetCurrentTab() == "soldier" then
         self:IteratorAllItem(function(i, v)
             if i ~= 1 then
@@ -76,6 +79,7 @@ function WidgetEventTabButtons:OnBeginMakeEquipmentWithEvent(black_smith, event)
     self:EventChangeOn("material", true)
 end
 function WidgetEventTabButtons:OnMakingEquipmentWithEvent(black_smith, event, current_time)
+    self:GetTabByKey("material"):SetOrResetProgress(self:EventPercent(event))
     if self:IsShow() and self:GetCurrentTab() == "material" then
         self:IteratorAllItem(function(i, v)
             if i ~= 1 and v:GetEventKey() == event:UniqueKey() then
@@ -92,6 +96,7 @@ function WidgetEventTabButtons:OnBeginMakeMaterialsWithEvent(tool_shop, event)
     self:EventChangeOn("material", true)
 end
 function WidgetEventTabButtons:OnMakingMaterialsWithEvent(tool_shop, event, current_time)
+    self:GetTabByKey("material"):SetOrResetProgress(self:EventPercent(event))
     if self:IsShow() and self:GetCurrentTab() == "material" then
         self:IteratorAllItem(function(i, v)
             if i ~= 1 and v:GetEventKey() == event:UniqueKey() then
@@ -109,6 +114,7 @@ end
 
 -- 军事科技
 function WidgetEventTabButtons:OnSoldierStarEventsTimer(star_event)
+    self:GetTabByKey("technology"):SetOrResetProgress(self:EventPercent(star_event))
     if self:IsShow() and self:GetCurrentTab() == "technology" then
         self:IteratorAllItem(function(i, v)
             if v.GetEventKey and v:GetEventKey() == star_event:Id() then
@@ -119,6 +125,7 @@ function WidgetEventTabButtons:OnSoldierStarEventsTimer(star_event)
     end
 end
 function WidgetEventTabButtons:OnMilitaryTechEventsTimer(tech_event)
+    self:GetTabByKey("technology"):SetOrResetProgress(self:EventPercent(tech_event))
     if self:IsShow() and self:GetCurrentTab() == "technology" then
         self:IteratorAllItem(function(i, v)
             if v.GetEventKey and v:GetEventKey() == tech_event:Id() then
@@ -129,7 +136,7 @@ function WidgetEventTabButtons:OnMilitaryTechEventsTimer(tech_event)
     end
 end
 function WidgetEventTabButtons:OnMilitaryTechEventsChanged(soldier_manager,changed_map)
-    self:EventChangeOn("technology",#changed_map[1]>0)
+    self:EventChangeOn("technology", #changed_map[1]>0)
     self:RefreshBuildQueueByType("technology")
 end
 function WidgetEventTabButtons:OnMilitaryTechEventsAllChanged()
@@ -167,23 +174,20 @@ function WidgetEventTabButtons:ctor(city, ratio)
     self.back_ground = self:CreateBackGround():addTo(node)
 
     self.city = city
-    city:AddListenOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
-    city:AddListenOnType(self, City.LISTEN_TYPE.DESTROY_DECORATOR)
-
     self.barracks = city:GetFirstBuildingByType("barracks")
-    self.barracks:AddBarracksListener(self)
-
-    self.blackSmith = city:GetFirstBuildingByType("blackSmith")
-    self.blackSmith:AddBlackSmithListener(self)
-
     self.toolShop = city:GetFirstBuildingByType("toolShop")
-    self.toolShop:AddToolShopListener(self)
+    self.blackSmith = city:GetFirstBuildingByType("blackSmith")
 
+    self.toolShop:AddToolShopListener(self)
+    self.barracks:AddBarracksListener(self)
+    self.blackSmith:AddBlackSmithListener(self)
     city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.OnSoldierStarEventsTimer)
     city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.OnMilitaryTechEventsTimer)
     city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
     city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_ALL_CHANGED)
     city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
+    city:AddListenOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
+    city:AddListenOnType(self, City.LISTEN_TYPE.DESTROY_DECORATOR)
     city:AddListenOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_TIMER)
     city:AddListenOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
     city:AddListenOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_REFRESH)
@@ -192,6 +196,21 @@ function WidgetEventTabButtons:ctor(city, ratio)
     self:ShowStartEvent()
     self:RefreshBuildQueueByType("build", "soldier", "material", "technology")
 end
+function WidgetEventTabButtons:onExit()
+    self.toolShop:RemoveToolShopListener(self)
+    self.barracks:RemoveBarracksListener(self)
+    self.blackSmith:RemoveBlackSmithListener(self)
+    self.city:RemoveListenerOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
+    self.city:RemoveListenerOnType(self, City.LISTEN_TYPE.DESTROY_DECORATOR)
+    self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.OnSoldierStarEventsTimer)
+    self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.OnMilitaryTechEventsTimer)
+    self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
+    self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_ALL_CHANGED)
+    self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
+    self.city:RemoveListenerOnType(self,self.city.LISTEN_TYPE.PRODUCTION_EVENT_REFRESH)
+    self.city:RemoveListenerOnType(self,self.city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
+    self.city:RemoveListenerOnType(self,self.city.LISTEN_TYPE.PRODUCTION_EVENT_REFRESH)
+end
 function WidgetEventTabButtons:RefreshBuildQueueByType(...)
     local cur_tab = self:GetCurrentTab()
     local city = self.city
@@ -199,19 +218,32 @@ function WidgetEventTabButtons:RefreshBuildQueueByType(...)
         local item = self.tab_map[key]
         local able = cur_tab ~= key and self:IsTabEnable(key)
         if key == "build" then
-            item:SetActiveNumber(#city:GetUpgradingBuildings(), city:BuildQueueCounts()):Enable(able)
+            local count = #city:GetUpgradingBuildings()
+            local total = city:BuildQueueCounts()
+            item:SetActiveNumber(count, total):Enable(able):SetOrResetProgress()
+            if item:GetTotal() ~= total then
+                item:SetOrResetProgress()
+            end
         elseif key == "soldier" then
-            item:SetActiveNumber(self.barracks:IsRecruting() and 1 or 0, self.barracks:IsUnlocked() and 1 or 0):Enable(able)
+            local count = self.barracks:IsRecruting() and 1 or 0
+            local total = self.barracks:IsUnlocked() and 1 or 0
+            item:SetActiveNumber(count, total):Enable(able)
+            if item:GetTotal() ~= total then
+                item:SetOrResetProgress()
+            end
         elseif key == "material" then
             local count = 0
             count = count + (self.blackSmith:IsMakingEquipment() and 1 or 0)
             count = count + (self.toolShop:IsMakingAny(timer:GetServerTime()) and 1 or 0)
-            local total_count = 0
-            total_count = total_count + (self.toolShop:IsUnlocked() and 1 or 0)
-            total_count = total_count + (self.blackSmith:IsUnlocked() and 1 or 0)
-            item:SetActiveNumber(count, total_count):Enable(able)
+            local total = 0
+            total = total + (self.toolShop:IsUnlocked() and 1 or 0)
+            total = total + (self.blackSmith:IsUnlocked() and 1 or 0)
+            item:SetActiveNumber(count, total):Enable(able)
+            if item:GetTotal() ~= total then
+                item:SetOrResetProgress()
+            end
         elseif key == "technology" then
-            local total_num = 0
+            local total = 0
             local buildings = {
                 "academy",
                 "trainingGround",
@@ -221,10 +253,14 @@ function WidgetEventTabButtons:RefreshBuildQueueByType(...)
             }
             for i,v in ipairs(buildings) do
                 if city:GetFirstBuildingByType(v):IsUnlocked() then
-                    total_num = total_num + 1
+                    total = total + 1
                 end
             end
-            item:SetActiveNumber(city:GetSoldierManager():GetTotalUpgradingMilitaryTechNum()+#city:GetProductionTechEventsArray(), total_num):Enable(able)
+            local count = city:GetSoldierManager():GetTotalUpgradingMilitaryTechNum() + city:GetProductionTechEventCount()
+            item:SetActiveNumber(count, total):Enable(able)
+            if item:GetTotal() ~= total then
+                item:SetOrResetProgress()
+            end
         end
     end
 end
@@ -250,21 +286,6 @@ function WidgetEventTabButtons:HasAnyMaterialEvent()
 end
 function WidgetEventTabButtons:HasAnyTechnologyEvent()
     return self.city:GetSoldierManager():IsUpgradingAnyMilitaryTech() or self.city:HaveProductionTechEvent()
-end
-function WidgetEventTabButtons:onExit()
-    self.toolShop:RemoveToolShopListener(self)
-    self.blackSmith:RemoveBlackSmithListener(self)
-    self.barracks:RemoveBarracksListener(self)
-    self.city:RemoveListenerOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
-    self.city:RemoveListenerOnType(self, City.LISTEN_TYPE.DESTROY_DECORATOR)
-    self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.OnSoldierStarEventsTimer)
-    self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.OnMilitaryTechEventsTimer)
-    self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
-    self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_ALL_CHANGED)
-    self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
-    self.city:RemoveListenerOnType(self,self.city.LISTEN_TYPE.PRODUCTION_EVENT_REFRESH)
-    self.city:RemoveListenerOnType(self,self.city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
-    self.city:RemoveListenerOnType(self,self.city.LISTEN_TYPE.PRODUCTION_EVENT_REFRESH)
 end
 -- 构造ui
 function WidgetEventTabButtons:CreateTabButtons()
@@ -299,7 +320,8 @@ function WidgetEventTabButtons:CreateTabButtons()
         tab_map[tab_type] = WidgetTab.new({
             on = "tab_button_down_142x42.png",
             off = "tab_button_up_142x42.png",
-            tab = tab_png,
+            progress = true,
+            tab_png = tab_png,
         }, 142, TAB_HEIGHT)
             :addTo(node):align(display.LEFT_BOTTOM,origin_x + (i - 5) * (142 + 1), 4)
             :OnTabPress(handler(self, self.OnTabClicked))
@@ -310,7 +332,7 @@ end
 function WidgetEventTabButtons:CreateBackGround()
     local back = cc.ui.UIImage.new("tab_background_640x106.png", {scale9 = true,
         capInsets = cc.rect(2, 2, WIDGET_WIDTH - 4, 106 - 4)
-    }):align(display.LEFT_BOTTOM):setLayoutSize(WIDGET_WIDTH, 50)
+    }):align(display.LEFT_BOTTOM):setLayoutSize(WIDGET_WIDTH, ITEM_HEIGHT + 2)
     return back
 end
 function WidgetEventTabButtons:CreateItem()
@@ -323,67 +345,56 @@ function WidgetEventTabButtons:CreateMilitaryItem(building)
     return self:CreateOpenMilitaryTechItem(building):align(display.LEFT_CENTER)
 end
 function WidgetEventTabButtons:CreateProgressItem()
-    local progress = display.newProgressTimer("progress_bar_432x36.png", display.PROGRESS_TIMER_BAR)
-    progress:setBarChangeRate(cc.p(1,0))
-    progress:setMidpoint(cc.p(0,0))
-    progress:setPercentage(100)
-    display.newSprite("progress_background_432x36.png"):addTo(progress, -1):align(display.LEFT_BOTTOM)
-    local bg = display.newSprite("back_ground_43x43.png"):addTo(progress, 1):align(display.CENTER, 0, 36/2)
-    display.newSprite("hourglass_39x46.png"):addTo(bg):align(display.CENTER, 43/2, 43/2):scale(0.8)
+    local node = display.newSprite("tab_event_bar.png")
+    local half_height = node:getContentSize().height / 2
+    node.progress = display.newProgressTimer("tab_progress_bar.png",
+        display.PROGRESS_TIMER_BAR):addTo(node)
+        :align(display.LEFT_CENTER, 4, half_height)
+    node.progress:setBarChangeRate(cc.p(1,0))
+    node.progress:setMidpoint(cc.p(0,0))
+    node.desc = UIKit:ttfLabel({
+        text = "Building",
+        size = 16,
+        color = 0xd1ca95,
+    }):addTo(node):align(display.LEFT_CENTER, 10, half_height)
 
-    local describe = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        size = 18,
-        font = UIKit:getFontFilePath(),
-        color = UIKit:hex2c3b(0xd1ca95)}):addTo(progress):align(display.LEFT_CENTER, 30, 36/2)
-
-    local btn = WidgetPushButton.new({normal = "green_btn_up_142x39.png",
-        pressed = "green_btn_down_142x39.png",
-        disabled = "blue_btn_up_142x39.png",
+    node.speed_btn = WidgetPushButton.new({normal = "green_btn_up_154x39.png",
+        pressed = "green_btn_down_154x39.png",
     }
     ,{}
     ,{
         disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
-    }):addTo(progress)
-        :align(display.RIGHT_CENTER, WIDGET_WIDTH - 55, 36/2)
+    }):addTo(node):align(display.RIGHT_CENTER, WIDGET_WIDTH - 6, half_height)
         :setButtonLabel(cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = _("加速"),
             size = 18,
             font = UIKit:getFontFilePath(),
             color = UIKit:hex2c3b(0xfff3c7)}))
-        :onButtonClicked(function(event)
-            end)
-    cc.ui.UIImage.new("divide_line_489x2.png"):addTo(progress)
-        :align(display.LEFT_BOTTOM, -38, -6):setLayoutSize(638, 2)
-
-
-    function progress:SetProgressInfo(str, percent)
-        if describe:getString() ~= str then
-            describe:setString(str)
-        end
-        self:setPercentage(percent)
+    function node:SetProgressInfo(str, percent)
+        self.desc:setString(str)
+        self.progress:setPercentage(percent)
         return self
     end
-    function progress:OnClicked(func)
-        btn:onButtonClicked(func)
+    function node:OnClicked(func)
+        self.speed_btn:onButtonClicked(func)
         return self
     end
-    function progress:GetEventKey()
+    function node:GetEventKey()
         return self.key
     end
-    function progress:SetEventKey(key)
+    function node:SetEventKey(key)
         self.key = key
         return self
     end
-    function progress:SetButtonImages(images)
-        btn:setButtonImage(cc.ui.UIPushButton.NORMAL, images["normal"], true)
-        btn:setButtonImage(cc.ui.UIPushButton.PRESSED, images["pressed"], true)
-        btn:setButtonImage(cc.ui.UIPushButton.DISABLED, images["disabled"], true)
+    function node:SetButtonImages(images)
+        self.speed_btn:setButtonImage(cc.ui.UIPushButton.NORMAL, images["normal"], true)
+        self.speed_btn:setButtonImage(cc.ui.UIPushButton.PRESSED, images["pressed"], true)
+        self.speed_btn:setButtonImage(cc.ui.UIPushButton.DISABLED, images["disabled"], true)
         return self
     end
-    function progress:SetButtonLabel(str)
-        btn:setButtonLabel(cc.ui.UILabel.new({
+    function node:SetButtonLabel(str)
+        self.speed_btn:setButtonLabel(cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = str,
             size = 18,
@@ -391,91 +402,50 @@ function WidgetEventTabButtons:CreateProgressItem()
             color = UIKit:hex2c3b(0xfff3c7)}))
         return self
     end
-    function progress:onEnter()
-        btn:setButtonEnabled(true)
+    function node:GetSpeedUpButton()
+        return self.speed_btn
     end
-    function progress:GetSpeedUpButton()
-        return btn
-    end
-    progress:setNodeEventEnabled(true)
-
-    return progress
+    return node
 end
 function WidgetEventTabButtons:CreateOpenItem()
-    local widget = self
-    local node = display.newNode()
-    local label = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+    local node = display.newSprite("tab_event_bar.png")
+    local half_height = node:getContentSize().height / 2
+
+    node.label = UIKit:ttfLabel({
+        text = "Building",
         size = 18,
         font = UIKit:getFontFilePath(),
-        color = UIKit:hex2c3b(0xd1ca95)}):addTo(node):align(display.LEFT_CENTER, 10, 0)
+        color = 0xd1ca95,
+    }):addTo(node):align(display.LEFT_CENTER, 10, half_height)
 
-    local button = WidgetPushButton.new({normal = "blue_btn_up_142x39.png",
-        pressed = "blue_btn_down_142x39.png",
-        disabled = "blue_btn_up_142x39.png"
+    node.button = WidgetPushButton.new({
+        normal = "blue_btn_up_154x39.png",
+        pressed = "blue_btn_down_154x39.png",
     }
     ,{}
     ,{
         disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
-    }):addTo(node):align(display.RIGHT_CENTER, WIDGET_WIDTH - 55, 0)
+    }):addTo(node):align(display.RIGHT_CENTER, WIDGET_WIDTH - 6, half_height)
         :setButtonLabel(UIKit:ttfLabel({
             text = _("打开"),
             size = 18,
             color = 0xfff3c7,
             shadow = true
         }))
-
-
     function node:SetLabel(str)
-        if label:getString() ~= str then
-            label:setString(str)
-        end
+        self.label:setString(str)
         return self
     end
     function node:OnOpenClicked(func)
-        button:onButtonClicked(func)
+        self.button:onButtonClicked(func)
         return self
     end
-
     return node
 end
 function WidgetEventTabButtons:CreateOpenMilitaryTechItem(building)
-    local widget = self
-    local node = display.newNode()
-    local label = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        size = 18,
-        font = UIKit:getFontFilePath(),
-        color = UIKit:hex2c3b(0xd1ca95)}):addTo(node):align(display.LEFT_CENTER, 10, 0)
-
-    local button = WidgetPushButton.new({normal = "blue_btn_up_142x39.png",
-        pressed = "blue_btn_down_142x39.png",
-        disabled = "blue_btn_up_142x39.png"
-    }
-    ,{}
-    ,{
-        disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
-    }):addTo(node):align(display.RIGHT_CENTER, WIDGET_WIDTH - 55, 0)
-        :setButtonLabel(UIKit:ttfLabel({
-            text = _("打开"),
-            size = 18,
-            color = 0xfff3c7,
-            shadow = true
-        }))
-        :onButtonClicked(function(event)
-            UIKit:newGameUI('GameUIMilitaryTechBuilding', City, building):AddToCurrentScene(true)
-        end)
-
-    cc.ui.UIImage.new("divide_line_489x2.png"):addTo(node)
-        :align(display.LEFT_BOTTOM, -38, -25):setLayoutSize(638, 2)
-    function node:SetLabel(str)
-        if label:getString() ~= str then
-            label:setString(str)
-        end
-        return self
-    end
-
-    return node
+    return self:CreateOpenItem():OnOpenClicked(function()
+        UIKit:newGameUI('GameUIMilitaryTechBuilding', City, building):AddToCurrentScene(true)
+    end)
 end
 -----
 function WidgetEventTabButtons:Reset()
@@ -521,7 +491,7 @@ function WidgetEventTabButtons:IsTabEnable(tab)
 end
 function WidgetEventTabButtons:ResetItemPosition()
     for i, v in ipairs(self.item_array) do
-        v:pos(40, (i-1) * 50 + 25)
+        v:pos(1, (i-1) * ITEM_HEIGHT + 25)
     end
 end
 -- 操作
@@ -604,14 +574,14 @@ function WidgetEventTabButtons:IsHide()
     return self.arrow:isFlippedY()
 end
 function WidgetEventTabButtons:ResizeBelowHorizon(new_height)
-    local height = new_height < 50 and 50 or new_height
+    local height = new_height < ITEM_HEIGHT and ITEM_HEIGHT or new_height
     local size = self.back_ground:getContentSize()
     self.back_ground:setContentSize(cc.size(size.width, height))
     self.node:setPositionY(- height)
     self.tab_buttons:setPositionY(height)
 end
 function WidgetEventTabButtons:Length(array_len)
-    return array_len * 50
+    return array_len * ITEM_HEIGHT + 2
 end
 function WidgetEventTabButtons:AdapterPosition()
     self.tab_buttons:setPositionY(self.back_ground:getContentSize().height)
@@ -652,10 +622,13 @@ end
 function WidgetEventTabButtons:OnBeforeShow()
     return self:IsTabEnable(self:GetCurrentTab())
 end
+function WidgetEventTabButtons:GetTabByKey(key)
+    return self.tab_map[key]
+end
 function WidgetEventTabButtons:GetCurrentTab()
     for k, v in pairs(self.tab_map) do
         if v:IsSelected() then
-            return k
+            return k, v
         end
     end
 end
@@ -717,9 +690,8 @@ function WidgetEventTabButtons:SetProgressItemBtnLabel(canFreeSpeedUp,event_key,
     local btn_images
     if canFreeSpeedUp then
         btn_label = _("免费加速")
-        btn_images = {normal = "purple_btn_up_142x39.png",
-            pressed = "purple_btn_down_142x39.png",
-            disabled = "purple_btn_up_142x39.png",
+        btn_images = {normal = "purple_btn_up_154x39.png",
+            pressed = "purple_btn_down_154x39.png",
         }
         event_item.status = "freeSpeedup"
     else
@@ -728,16 +700,14 @@ function WidgetEventTabButtons:SetProgressItemBtnLabel(canFreeSpeedUp,event_key,
             Alliance_Manager:GetMyAlliance()
                 :HasBeenRequestedToHelpSpeedup(event_key) then
             btn_label = _("加速")
-            btn_images = {normal = "green_btn_up_142x39.png",
-                pressed = "green_btn_down_142x39.png",
-                disabled = "blue_btn_up_142x39.png",
+            btn_images = {normal = "green_btn_up_154x39.png",
+                pressed = "green_btn_down_154x39.png",
             }
             event_item.status = "speedup"
         else
             btn_label = _("帮助")
             btn_images = {normal = "yellow_button_146x42.png",
                 pressed = "yellow_button_highlight_146x42.png",
-                disabled = "yellow_button_146x42.png",
             }
             event_item.status = "help"
         end
@@ -763,14 +733,13 @@ function WidgetEventTabButtons:Load()
                 local items = {}
                 for i, v in ipairs(buildings) do
                     local event_item = self:CreateItem()
-                        :SetProgressInfo(self:BuildingDescribe(v))
-                        :SetEventKey(v:UniqueKey()):OnClicked(
-                        function(event)
-                            if event.name == "CLICKED_EVENT" then
-                                self:UpgradeBuildingHelpOrSpeedup(v)
-                            end
+                    :SetProgressInfo(self:BuildingDescribe(v))
+                    :SetEventKey(v:UniqueKey()):OnClicked(
+                    function(event)
+                        if event.name == "CLICKED_EVENT" then
+                            self:UpgradeBuildingHelpOrSpeedup(v)
                         end
-                        )
+                    end)
                     self:SetProgressItemBtnLabel(self:IsAbleToFreeSpeedup(v),v:UniqueUpgradingKey(),event_item)
                     table.insert(items, event_item)
                 end
@@ -781,7 +750,8 @@ function WidgetEventTabButtons:Load()
                 end):SetLabel(_("查看现有的士兵")))
                 local event = self.barracks:GetRecruitEvent()
                 if event:IsRecruting() then
-                    local item = self:CreateItem():SetProgressInfo(self:SoldierDescribe(event))
+                    local item = self:CreateItem()
+                        :SetProgressInfo(self:SoldierDescribe(event))
                         :SetEventKey(event:Id())
                         :OnClicked(
                             function(e)
@@ -902,7 +872,8 @@ function WidgetEventTabButtons:Load()
                 end):SetLabel(_("查看材料")))
                 local event = self.blackSmith:GetMakeEquipmentEvent()
                 if event:IsMaking() then
-                    local item = self:CreateItem():SetProgressInfo(self:EquipmentDescribe(event))
+                    local item = self:CreateItem()
+                        :SetProgressInfo(self:EquipmentDescribe(event))
                         :SetEventKey(event:Id())
                         :OnClicked(
                             function(e)
@@ -920,7 +891,8 @@ function WidgetEventTabButtons:Load()
                 local events = self.toolShop:GetMakeMaterialsEvents()
                 for k, v in pairs(events) do
                     if v:IsMaking(timer:GetServerTime()) then
-                        local item = self:CreateItem():SetProgressInfo(self:MaterialDescribe(v))
+                        local item = self:CreateItem()
+                            :SetProgressInfo(self:MaterialDescribe(v))
                             :SetEventKey(v:Id())
                             :OnClicked(
                                 function(e)
@@ -953,38 +925,43 @@ function WidgetEventTabButtons:BuildingDescribe(building)
     else
         upgrade_info = string.format("%s%d", _("升级到 等级"), building:GetNextLevel())
     end
-    local time = timer:GetServerTime()
+    local time_str, percent = self:BuildingPercent(building)
     local str = string.format("%s (%s) %s",
         Localize.building_name[building:GetType()],
         upgrade_info,
-        GameUtils:formatTimeStyle1(building:GetUpgradingLeftTimeByCurrentTime(time)))
-    local percent = building:GetUpgradingPercentByCurrentTime(time)
+        time_str)
     return str, percent
+end
+function WidgetEventTabButtons:BuildingPercent(building)
+    local time = timer:GetServerTime()
+    local left_time = building:GetUpgradingLeftTimeByCurrentTime(time)
+    return GameUtils:formatTimeStyle1(left_time), building:GetUpgradingPercentByCurrentTime(time)
 end
 function WidgetEventTabButtons:SoldierDescribe(event)
     local soldier_type, count = event:GetRecruitInfo()
     local soldier_name = Localize.soldier_name[soldier_type]
-    local current_time = timer:GetServerTime()
-    local str = string.format("%s%s x%d %s", _("招募"), soldier_name, count, GameUtils:formatTimeStyle1(event:LeftTime(current_time)))
-    return str, event:Percent(current_time)
+    local str, percent = self:EventPercent(event)
+    return string.format("%s%s x%d %s", _("招募"), soldier_name, count, str), percent
 end
 function WidgetEventTabButtons:EquipmentDescribe(event)
-    local current_time = app.timer:GetServerTime()
-    local str = string.format("%s %s %s", _("正在制作"), Localize.equip[event:Content()], GameUtils:formatTimeStyle1(event:LeftTime(current_time)))
-    return str, event:Percent(current_time)
+    local time_str, percent = self:EventPercent(event)
+    return string.format("%s %s %s", _("正在制作"), Localize.equip[event:Content()], time_str), percent
 end
 function WidgetEventTabButtons:MaterialDescribe(event)
-    local current_time = app.timer:GetServerTime()
-    local str = string.format("%s x%d %s", _("制造材料"), event:TotalCount(), GameUtils:formatTimeStyle1(event:LeftTime(current_time)))
-    return str, event:Percent(current_time)
+    local time_str, percent = self:EventPercent(event)
+    return string.format("%s x%d %s", _("制造材料"), event:TotalCount(), time_str), percent
 end
 function WidgetEventTabButtons:MilitaryTechDescribe(event)
-    local current_time = app.timer:GetServerTime()
-    local str = event:GetLocalizeDesc().."  "..GameUtils:formatTimeStyle1(event:GetTime())
-    return str, event:Percent(current_time)
+    local time_str, percent = self:EventPercent(event)
+    return string.format("%s  %s", event:GetLocalizeDesc(), time_str), percent
+end
+function WidgetEventTabButtons:EventPercent(event)
+    local time = timer:GetServerTime()
+    return GameUtils:formatTimeStyle1(event:LeftTime(time)), event:Percent(time) 
 end
 --学院科技
 function WidgetEventTabButtons:OnProductionTechnologyEventTimer(event)
+    self:GetTabByKey("technology"):SetOrResetProgress(self:EventPercent(event))
     if self:IsShow() and self:GetCurrentTab() == "technology" then
         self:IteratorAllItem(function(i, v)
             if v.GetEventKey and v:GetEventKey() == event:Id() then
@@ -997,10 +974,10 @@ end
 function WidgetEventTabButtons:OnProductionTechnologyEventDataChanged(changed_map)
     self:OnProductionTechnologyEventDataRefresh(changed_map)
 end
-function WidgetEventTabButtons:OnProductionTechnologyEventDataRefresh()
-    if self:IsShow() and self:GetCurrentTab()== "technology" then
-        self:EventChangeOn("technology", false)
-    end
+function WidgetEventTabButtons:OnProductionTechnologyEventDataRefresh(changed_map)
+    changed_map = changed_map or {}
+    local add,_,_ = unpack(changed_map)
+    self:EventChangeOn("technology", (add and #add > 0))
 end
 
 function WidgetEventTabButtons:ProductionTechnologyEventUpgradeOrSpeedup(event)
@@ -1012,8 +989,8 @@ function WidgetEventTabButtons:ProductionTechnologyEventUpgradeOrSpeedup(event)
             local isRequested = Alliance_Manager:GetMyAlliance():HasBeenRequestedToHelpSpeedup(event:Id())
             if not isRequested then
                 NetManager:getRequestAllianceToSpeedUpPromise("productionTechEvents",event:Id()):done(function()
-                        self:OnProductionTechnologyEventDataRefresh()
-                    end)
+                    self:OnProductionTechnologyEventDataRefresh()
+                end)
                 return
             end
         end
@@ -1026,36 +1003,6 @@ function WidgetEventTabButtons:GetProductionTechnologyEventProgressInfo(event)
     return _("研发") .. event:Entity():GetLocalizedName() .. " " .. GameUtils:formatTimeStyle1(event:GetTime()),event:GetPercent()
 end
 return WidgetEventTabButtons
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

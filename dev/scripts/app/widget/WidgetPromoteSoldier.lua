@@ -140,7 +140,7 @@ function WidgetPromoteSoldier:UpgradeButtons()
 
 
     -- 立即升级所需宝石
-    display.newSprite("gem_66x56.png", size.width/2 - 250, size.height-290):addTo(body):setScale(0.5)
+    display.newSprite("gem_icon_62x61.png", size.width/2 - 250, size.height-290):addTo(body):setScale(0.5)
     self.upgrade_now_need_gems_label = UIKit:ttfLabel({
         text = self:GetInstantUpgradeGems(),
         size = 20,

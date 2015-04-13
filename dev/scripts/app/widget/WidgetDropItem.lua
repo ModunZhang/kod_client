@@ -6,7 +6,7 @@ end)
 WidgetDropItem.STATE = Enum("open","close")
 
 local ClipHeight = 188
-local Animate_Time_Inteval = 0.1
+local Animate_Time_Inteval = 0.2
 
 function WidgetDropItem:ctor(params, callback)
     self.params = params
@@ -131,6 +131,7 @@ function WidgetDropItem:align(anchorPoint, x, y)
 end
 
 return WidgetDropItem
+
 
 
 

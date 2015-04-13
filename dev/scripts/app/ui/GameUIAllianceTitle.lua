@@ -109,7 +109,7 @@ function GameUIAllianceTitle:BuildUI()
     )
     :setButtonLabelOffset(0, 15)
     local gem_bg = display.newSprite("alliance_title_gem_bg_154x20.png"):addTo(button):align(display.TOP_CENTER,0,0)
-    local gem_icon = display.newSprite("gem_66x56.png"):scale(0.4):align(display.LEFT_BOTTOM, 10, 0):addTo(gem_bg)
+    local gem_icon = display.newSprite("gem_icon_62x61.png"):scale(0.4):align(display.LEFT_BOTTOM, 10, 0):addTo(gem_bg)
     UIKit:ttfLabel({
 			text = "2000",
 			size = 20,

@@ -31,21 +31,33 @@ end
 function mapObject_meta:GetType()
     return buildingName[self.name].type
 end
+function mapObject_meta:GetName()
+    return self.name
+end
 function mapObject_meta:Id()
     return self.id
 end
 function mapObject_meta:GetSize()
-    local config = buildingName[self.name] or {width = 1, height = 1}
-    return config.width, config.height
+    if not self.width then
+        local config = buildingName[self.name] or {width = 1, height = 1}
+        self.width = config.width
+        self.height = config.height
+    end
+    return self.width, self.height
 end
 function mapObject_meta:GetLogicPosition()
     local location = self.location
     return location.x, location.y
 end
 function mapObject_meta:GetMidLogicPosition()
-    local start_x, end_x, start_y, end_y = self:GetGlobalRegion()
-    return (start_x + end_x) / 2, (start_y + end_y) / 2
+    local w,h = self:GetSize()
+    local x,y = self:GetLogicPosition()
+    return (2 * x - w + 1) / 2, (2 * y - h + 1) / 2
 end
+-- function mapObject_meta:GetMidLogicPosition()
+--     local start_x, end_x, start_y, end_y = self:GetGlobalRegion()
+--     return (start_x + end_x) / 2, (start_y + end_y) / 2
+-- end
 function mapObject_meta:GetTopLeftPoint()
     local start_x, end_x, start_y, end_y = self:GetGlobalRegion()
     return start_x, start_y
@@ -123,10 +135,30 @@ function AllianceMap:ctor(alliance)
     self.alliance = alliance
     self.mapObjects = {}
     self.buildings = {}
+    self.buildingMapObjects = {}
+    self.memberMapObjects = {}
+    self.villageMapObjects = {}
+    self.decoratorMapObjects = {}
 end
 function AllianceMap:Reset()
     self.mapObjects = {}
     self.buildings = {}
+    self.buildingMapObjects = {}
+    self.memberMapObjects = {}
+    self.villageMapObjects = {}
+    self.decoratorMapObjects = {}
+end
+function AllianceMap:GetMapObjectsByType(type_)
+    if type_ == "building" then
+        return self.buildingMapObjects
+    elseif type_ == "member" then
+        return self.memberMapObjects
+    elseif type_ == "village" then
+        return self.villageMapObjects
+    elseif type_ == "decorate" then
+        return self.decoratorMapObjects
+    end
+    return {}
 end
 function AllianceMap:GetAllianceMemberInfo(object)
     if is_city(object) then
@@ -156,16 +188,32 @@ function AllianceMap:FindAllianceBuildingInfoByName(name)
     end
 end
 function AllianceMap:IteratorAllianceBuildings(func)
-    self:IteratorByType("building", func)
+    for k,v in pairs(self:GetMapObjectsByType("building")) do
+        if func(k,v) then
+            return
+        end
+    end
 end
 function AllianceMap:IteratorCities(func)
-    self:IteratorByType("member", func)
+    for k,v in pairs(self:GetMapObjectsByType("member")) do
+        if func(k,v) then
+            return
+        end
+    end
 end
 function AllianceMap:IteratorVillages(func)
-    self:IteratorByType("village", func)
+    for k,v in pairs(self:GetMapObjectsByType("village")) do
+        if func(k,v) then
+            return
+        end
+    end
 end
 function AllianceMap:IteratorDecorators(func)
-    self:IteratorByType("decorate", func)
+    for k,v in pairs(self:GetMapObjectsByType("decorate")) do
+        if func(k,v) then
+            return
+        end
+    end
 end
 function AllianceMap:IteratorByType(type_, func)
     self:IteratorAllObjects(function(k, v)
@@ -202,7 +250,7 @@ function AllianceMap:CanMoveBuilding(allianceBuilding, x, y)
             return false
         end
     end
-    -- 
+    --
     local x1,y1 = allianceBuilding:GetLogicPosition()
     for _,v in pairs(self.mapObjects) do
         local x2,y2 = v:GetLogicPosition()
@@ -259,9 +307,20 @@ function AllianceMap:OnMapObjectsChanged(allianceData, deltaData)
 
     if is_fully_update or is_delta_update then
         self.mapObjects = allianceData.mapObjects
+        local objects_map = {
+            building = {},
+            member = {},
+            village = {},
+            decorate = {},
+        }
         for k,v in pairs(self.mapObjects) do
-            setmetatable(v, mapObject_meta):SetAllianceMap(self)
+            local type_ = buildingName[v.name].type
+            objects_map[type_][v.id] = setmetatable(v, mapObject_meta):SetAllianceMap(self)
         end
+        self.buildingMapObjects = objects_map.building
+        self.memberMapObjects = objects_map.member
+        self.villageMapObjects = objects_map.village
+        self.decoratorMapObjects = objects_map.decorate
         if is_fully_update then
             self:NotifyListeneOnType(AllianceMap.LISTEN_TYPE.BUILDING, function(listener)
                 if listener.OnBuildingFullUpdate then
@@ -289,6 +348,7 @@ end
 
 
 return AllianceMap
+
 
 
 

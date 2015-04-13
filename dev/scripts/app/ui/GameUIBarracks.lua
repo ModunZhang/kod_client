@@ -17,6 +17,8 @@ function GameUIBarracks:ctor(city, barracks)
     GameUIBarracks.super.ctor(self, city, _("兵营"),barracks)
     self.barracks_city = city
     self.barracks = barracks
+
+    self.special_soldier_items={}
 end
 function GameUIBarracks:OnMoveInStage()
     GameUIBarracks.super.OnMoveInStage(self)
@@ -28,11 +30,13 @@ function GameUIBarracks:OnMoveInStage()
     self.barracks:AddUpgradeListener(self)
     self.barracks:AddBarracksListener(self)
     self.barracks_city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
+    app.timer:AddListener(self)
 end
 function GameUIBarracks:onExit()
     self.barracks:RemoveUpgradeListener(self)
     self.barracks:RemoveBarracksListener(self)
     self.barracks_city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
+    app.timer:RemoveListener(self)
     GameUIBarracks.super.onExit(self)
 end
 function GameUIBarracks:RightButtonClicked()
@@ -137,17 +141,19 @@ function GameUIBarracks:CreateSpecialSoldierUI()
             title = _("亡灵部队"),
             title_img = "title_red_554x34.png",
         },
-        -- {
-        --     title = _("精灵部队"),
-        --     title_img = "title_green_554x34.png",
-        -- },
+    -- {
+    --     title = _("精灵部队"),
+    --     title_img = "title_green_554x34.png",
+    -- },
     }
 
     for i, v in ipairs({
         {"skeletonWarrior", "skeletonArcher", "deathKnight", "meatWagon"}
-        -- {"priest", "demonHunter", "paladin", "steamTank"}
+    -- {"priest", "demonHunter", "paladin", "steamTank"}
     }) do
-        self.special_list_view:addItem(self:CreateSpecialItemWithListView(self.special_list_view, v,titles[i].title, titles[i].title_img))
+        local item = self:CreateSpecialItemWithListView(self.special_list_view, v,titles[i].title, titles[i].title_img)
+        table.insert(self.special_soldier_items,item)
+        self.special_list_view:addItem(item)
     end
 
     local soldier_map = self.barracks_city:GetSoldierManager():GetSoldierMap()
@@ -259,8 +265,15 @@ function GameUIBarracks:CreateSpecialItemWithListView( list_view, soldiers ,titl
     local time_bg = display.newSprite("back_ground_548X34.png")
         :align(display.BOTTOM_CENTER, row_item:getContentSize().width/2, 10)
         :addTo(row_item)
-    UIKit:ttfLabel({
-        text = "下一次开启招募：01:52:34",
+    local re_time = DataUtils:GetNextRecruitTime()
+    local re_string = ""
+    if tolua.type(re_time) == "boolean" then
+        re_string = _("招募开启中")
+    else
+        re_string = _("下一次开启招募:")..GameUtils:formatTimeStyle1(re_time-app.timer:GetServerTime())
+    end
+    local re_status = UIKit:ttfLabel({
+        text = re_string,
         size = 20,
         color = 0x514d3e
     }):addTo(time_bg)
@@ -269,6 +282,9 @@ function GameUIBarracks:CreateSpecialItemWithListView( list_view, soldiers ,titl
     local item = list_view:newItem()
     item:addContent(row_item)
     item:setItemSize(widget_width, 284)
+    function item:SetRecruitStatus(string)
+        re_status:setString(string)
+    end
     return item
 end
 function GameUIBarracks:OnSoliderCountChanged()
@@ -294,6 +310,16 @@ function GameUIBarracks:RefershUnlockInfo()
     self:OnSoliderCountChanged()
 end
 
+function GameUIBarracks:OnTimer(current_time)
+    for i,v in ipairs(self.special_soldier_items) do
+        local re_time = DataUtils:GetNextRecruitTime()
+        if tolua.type(re_time) == "boolean" then
+            v:SetRecruitStatus(_("招募开启中"))
+        else
+            v:SetRecruitStatus(_("下一次开启招募:")..GameUtils:formatTimeStyle1(re_time-current_time))
+        end
+    end
+end
 --fte
 function GameUIBarracks:Lock()
     self.list_view:getScrollNode():setTouchEnabled(false)
@@ -318,6 +344,9 @@ end
 
 
 return GameUIBarracks
+
+
+
 
 
 

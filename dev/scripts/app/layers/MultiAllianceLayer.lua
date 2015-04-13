@@ -89,17 +89,6 @@ function MultiAllianceLayer:ChangeTerrain()
         v:ChangeTerrain()
     end
 end
-local terrain_array = {
-    -- "016.png",
-    -- "017.png",
-    -- "017.png",
-    -- "018.png",
-    -- "018.png",
-    "012.png",
-    "013.png",
-    "014.png",
-    "015.png",
-}
 local terrain_map = {
     grassLand = {
         "012.png",
@@ -108,11 +97,10 @@ local terrain_map = {
         "015.png",
     },
     desert = {
-        "016.png",
-        "017.png",
-        "017.png",
-        "018.png",
-        "018.png",
+        "005.png",
+        "006.png",
+        "007.png",
+        "008.png",
     },
     iceField = {
 
@@ -229,7 +217,7 @@ function MultiAllianceLayer:ConvertLogicPositionToMapPosition(lx, ly, alliance_i
     return self:convertToNodeSpace(self.background:convertToWorldSpace(map_pos))
 end
 function MultiAllianceLayer:GetAllianceViewIndexById(id)
-    for i, v in ipairs(self.alliances) do
+    for i,v in ipairs(self.alliances) do
         if v:Id() == id then
             return i
         end
@@ -344,7 +332,9 @@ function MultiAllianceLayer:CreateCorpsIf(marchEvent)
         from,
         to,
         marchEvent:StartTime(),
-        marchEvent:ArriveTime()
+        marchEvent:ArriveTime(),
+        marchEvent:AttackPlayerData().dragon.type,
+        marchEvent:AttackPlayerData().soldiers
     )
 end
 local dragon_dir_map = {
@@ -509,9 +499,9 @@ function MultiAllianceLayer:getContentSize()
     return self.content_size
 end
 function MultiAllianceLayer:OnSceneMove()
-    for _, v in ipairs(self.alliance_views) do
-        v:OnSceneMove()
-    end
+    -- for _, v in ipairs(self.alliance_views) do
+    --     v:OnSceneMove()
+    -- end
     local logic_x, logic_y, alliance_view = self:GetCurrentViewAllianceCoordinate()
     self:NotifyObservers(function(listener)
         listener:OnSceneMove(logic_x, logic_y, alliance_view)

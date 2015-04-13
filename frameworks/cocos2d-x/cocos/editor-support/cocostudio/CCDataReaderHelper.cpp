@@ -1359,7 +1359,7 @@ void DataReaderHelper::addDataFromJsonCache(const std::string& fileContent, Data
             }
             
             std::string filePath = path;
-            filePath = filePath.erase(filePath.find_last_of("."));
+            filePath = filePath.erase(filePath.find_first_of("."));
             
             if (dataInfo->asyncStruct)
             {

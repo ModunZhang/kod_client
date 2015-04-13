@@ -74,22 +74,28 @@ local BLACK_SOLDIER_IMAGES = {
 
 function WidgetSoldierInBattle:ctor(filename, options)
     WidgetSoldierInBattle.super.ctor(self, filename, options)
-    local pos = {x = 284/2,y = 128/2}
-    local soldier_level = options.star
-    local soldier_type = options.soldier
-    local is_pve_battle = options.is_pve_battle
-    local config = special[soldier_type] or normal[soldier_type.."_"..options.star]
-    local soldier_ui_config = is_pve_battle and BLACK_SOLDIER_IMAGES or UILib.soldier_image
-    local soldier_ui = soldier_ui_config[soldier_type][config.star]
-    local soldier_head_icon = display.newSprite(soldier_ui, nil, nil, {class=cc.FilteredSpriteWithOne}):align(display.LEFT_BOTTOM,0,10)
-    soldier_head_icon:scale(104/soldier_head_icon:getContentSize().height)
-    local soldier_head_bg  = display.newSprite("box_soldier_128x128.png")
-        :align(display.CENTER, soldier_head_icon:getContentSize().width/2, soldier_head_icon:getContentSize().height-64)
-        :addTo(soldier_head_icon)
-    soldier_head_icon:addTo(self):align(display.CENTER, 55, pos.y):scale(0.9)
-    self.soldier = soldier_head_icon
     self.soldier_name = options.soldier
+    local pos = {x = 284/2,y = 128/2}
+    local is_pve_battle = options.is_pve_battle
+    local soldier_star 
+    local soldier_scale = 0.8
+    local frame_scale = 0.8
+    if self.soldier_name == "wall" then
+        soldier_star, soldier_scale = 1, 0.5
+    else
+        local config = special[self.soldier_name] or normal[self.soldier_name.."_"..options.star]
+        soldier_star = config.star
+    end
+    local soldier_ui_config = is_pve_battle and BLACK_SOLDIER_IMAGES or UILib.soldier_image
+    local soldier_ui = soldier_ui_config[self.soldier_name][soldier_star]
 
+    self.soldier = display.newSprite(soldier_ui, nil, nil, {class=cc.FilteredSpriteWithOne})
+    :addTo(self):align(display.CENTER, 55, pos.y):scale(soldier_scale)
+
+    local size = self.soldier:getContentSize()
+    display.newSprite("box_soldier_128x128.png")
+    :align(display.CENTER, 55, pos.y):addTo(self)
+    :scale(frame_scale)
 
     if options.side == "blue" then
         cc.ui.UIImage.new("title_blue_166x30.png")

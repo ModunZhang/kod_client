@@ -376,7 +376,7 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
         })
 
     -- gem
-    cc.ui.UIImage.new("gem_66x56.png"):addTo(instant_button, 2)
+    cc.ui.UIImage.new("gem_icon_62x61.png"):addTo(instant_button, 2)
         :align(display.CENTER, -100, -50):scale(0.5)
 
     -- gem count

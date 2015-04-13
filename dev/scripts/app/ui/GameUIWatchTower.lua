@@ -9,11 +9,12 @@ local GameUIWatchTowerTroopDetail = import(".GameUIWatchTowerTroopDetail")
 local WidgetUseItems = import("..widget.WidgetUseItems")
 local config_day14 = GameDatas.Activities.day14
 
-function GameUIWatchTower:ctor(city,building)
+function GameUIWatchTower:ctor(city,building,default_tab)
+	default_tab = default_tab or "upgrade"
     local bn = Localize.building_name
-    GameUIWatchTower.super.ctor(self,city,bn[building:GetType()],building)
+    GameUIWatchTower.super.ctor(self,city,bn[building:GetType()],building,default_tab)
     self.belvedere = Alliance_Manager:GetMyAlliance():GetAllianceBelvedere()
-
+    self.default_tab = default_tab
 end
 
 function GameUIWatchTower:OnMoveInStage()
@@ -40,10 +41,12 @@ function GameUIWatchTower:CreateUI()
        	{
             label = _("来袭"),
             tag = "comming",
+            default = self.default_tab == 'comming'
         },
         {
             label = _("进军"),
             tag = "march",
+            default = self.default_tab == 'march'
         }
     },
     function(tag)
@@ -369,7 +372,7 @@ function GameUIWatchTower:OnEventDetailButtonClicked(entity)
 	if strEntityType == entity.ENTITY_TYPE.MARCH_OUT then
 		if entity:WithObject():MarchType() == "helpDefence" then
 			NetManager:getHelpDefenceMarchEventDetailPromise(entity:WithObject():Id()):done(function(response)
-				UIKit:newGameUI("GameUIWatchTowerTroopDetail",GameUIWatchTowerTroopDetail.DATA_TYPE.MARCH,response,DataManager:getUserData()._id)
+				UIKit:newGameUI("GameUIWatchTowerTroopDetail",GameUIWatchTowerTroopDetail.DATA_TYPE.MARCH,response.msg.eventDetail,DataManager:getUserData()._id)
 					:AddToCurrentScene(true)
 			end)
 		else

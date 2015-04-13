@@ -174,6 +174,7 @@ end
 function AudioManager:SwitchBackgroundMusicState(isOn)
 	isOn = checkbool(isOn)
 	if self.is_bg_auido_on == isOn then return end
+	self.last_music_filename = ""
 	self.is_bg_auido_on = isOn 
 	if isOn then
 		self:PlayGameMusic()
@@ -209,8 +210,5 @@ end
 function AudioManager:SetEffectsVolume(volume)
 	audio.setSoundsVolume(volume)
 end
-
-
--- function AudioManager:
 
 return AudioManager

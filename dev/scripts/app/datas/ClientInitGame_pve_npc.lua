@@ -22,7 +22,7 @@ pve_npc["FARMER"] = {
 }
 pve_npc["CAMP"] = {
 	["type"] = "CAMP",
-	["rewards"] = "items,taxesBonus_1,1,40;items,citizenBonus_1,1,30;items,troopSizeBonus_1,1,30",
+	["rewards"] = "items,coinBonus_1,1,40;items,citizenBonus_1,1,30;items,troopSizeBonus_1,1,30",
 	["rewards_type"] = "random"
 }
 pve_npc["CRASHED_AIRSHIP"] = {

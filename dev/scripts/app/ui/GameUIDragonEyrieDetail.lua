@@ -364,7 +364,6 @@ function GameUIDragonEyrieDetail:GetEquipmentItem(equipment_obj,needInfoIcon)
     if equipment_obj:IsLocked() then
         equipment_node = display.newSprite(bgImage):scale(0.71)
         local icon = display.newFilteredSprite(bodyImage,"GRAY", {0.2, 0.3, 0.5, 0.1}):addTo(equipment_node):pos(73,73)
-        -- icon:setOpacity(25)
         display.newSprite("lock_80x104.png", 73, 73):addTo(equipment_node)
 
     else
@@ -393,7 +392,7 @@ function GameUIDragonEyrieDetail:GetEquipmentItem(equipment_obj,needInfoIcon)
             end
         else
             local icon = display.newFilteredSprite(bodyImage,"GRAY", {0.2, 0.3, 0.5, 0.1}):addTo(equipment_node):pos(73,73)
-            -- icon:setOpacity(30)
+            icon:setOpacity(153)
 
         end
     end

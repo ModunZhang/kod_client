@@ -537,3 +537,30 @@ function DataUtils:randomAllianceNameTag()
     randomed_alliance_name[name] = true
     return name,tag
 end
+-- 获取特殊兵种招募状态，返回true 招募进行中；返回时间，下次招募开始时间
+function DataUtils:GetNextRecruitTime()
+    local can_re_time = PlayerInitData.intInit.specialSoldierRecruitAbleDays.value..""
+    local days = {}
+    for i=1,string.len(can_re_time) do
+        table.insert(days, tonumber(string.sub(can_re_time,i,i)))
+    end
+
+    -- local current_day = 3
+    local current_day = tonumber(os.date("%w", os.time()))
+    local next_day = 7
+    for i,v in ipairs(days) do
+        v = v == 7 and 0 or v
+        if v==current_day then
+            return true
+        else
+            if current_day<v then
+                next_day = math.min(next_day,v)
+            end
+        end
+    end
+
+    local dt1 = os.time{year=os.date("%Y", os.time()), month=os.date("%m", os.time()), day=os.date("%d", os.time())+next_day-current_day, hour=0,min=0,sec=0}
+
+    return dt1
+end
+

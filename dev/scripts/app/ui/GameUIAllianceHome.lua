@@ -15,6 +15,8 @@ local WidgetHomeBottom = import("..widget.WidgetHomeBottom")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetAutoOrder = import("..widget.WidgetAutoOrder")
 local GameUIAllianceHome = UIKit:createUIClass('GameUIAllianceHome')
+local buildingName = GameDatas.AllianceInitData.buildingName
+local Alliance_Manager = Alliance_Manager
 local cc = cc
 function GameUIAllianceHome:ctor(alliance)
     GameUIAllianceHome.super.ctor(self)
@@ -72,21 +74,45 @@ function GameUIAllianceHome:onEnter()
     city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
     city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
     city:AddListenOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
-
+    city:AddListenOnType(self,city.LISTEN_TYPE.HELPED_TO_TROOPS)
     city:GetUser():AddListenOnType(self, city:GetUser().LISTEN_TYPE.TASK)
+
+    local alliance_belvedere = self.alliance:GetAllianceBelvedere()
+    alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
+    alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
+
     -- 添加到全局计时器中，以便显示各个阶段的时间
     app.timer:AddListener(self)
 
     self:OnTaskChanged(city:GetUser())
     self:MailUnreadChanged()
 end
+
+function GameUIAllianceHome:OnMarchDataChanged()
+    self:OnHelpToTroopsChanged()
+end
+function GameUIAllianceHome:OnCommingDataChanged()
+    self:OnHelpToTroopsChanged()
+end
+
+function GameUIAllianceHome:OnHelpToTroopsChanged()
+    self.operation_button_order:RefreshOrder()
+end
+
 function GameUIAllianceHome:InitArrow()
     local rect1 = self.bottom:getCascadeBoundingBox()
     local rect2 = self.top_bg:getCascadeBoundingBox()
     self.screen_rect = cc.rect(0, rect1.height, display.width, rect2.y - rect1.height)
+
+    -- my alliance building
+    self.alliance_building_arrows = {}
+    -- enemys
+    self.enemy_arrows = {}
+
+    -- my city
     self.arrow = cc.ui.UIPushButton.new({normal = "location_arrow_up.png",pressed = "location_arrow_down.png"})
-        :addTo(self):align(display.TOP_CENTER):hide():onButtonClicked(function()
-            self:ReturnMyCity()
+        :addTo(self, -1):align(display.TOP_CENTER):hide():onButtonClicked(function()
+        self:ReturnMyCity()
         end)
     self.arrow_label = cc.ui.UILabel.new({
         size = 20,
@@ -140,8 +166,10 @@ function GameUIAllianceHome:CreateOperationButton()
                 return not alliance:IsDefault() and #alliance:GetCouldShowHelpEvents()>0
             end
         else
+            local alliance = self.alliance
             function button:CheckVisible()
-                return true
+                local alliance_belvedere = alliance:GetAllianceBelvedere()
+                return alliance_belvedere:HasEvent() or City:HasHelpToTroops()
             end
         end
         order:AddElement(button)
@@ -191,7 +219,10 @@ function GameUIAllianceHome:onExit()
     city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
     city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
     city:GetUser():RemoveListenerOnType(self, city:GetUser().LISTEN_TYPE.TASK)
-
+    city:RemoveListenerOnType(self,city.LISTEN_TYPE.HELPED_TO_TROOPS)
+    local alliance_belvedere = self.alliance:GetAllianceBelvedere()
+    alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
+    alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
     GameUIAllianceHome.super.onExit(self)
 end
 
@@ -527,6 +558,8 @@ function GameUIAllianceHome:OnMidButtonClicked(event)
     if not tag then return end
     if tag == 2 then -- 战斗
     -- NetManager:getFindAllianceToFightPromose()
+        local watchTower = self.city:GetFirstBuildingByType('watchTower')
+        UIKit:newGameUI('GameUIWatchTower', self.city, watchTower,"march"):AddToCurrentScene(true)
     elseif tag == 1 then
         if not self.alliance:IsDefault() then
             GameUIHelp.new():AddToCurrentScene()
@@ -564,16 +597,30 @@ end
 --         end
 --     end
 -- end
+local deg = math.deg
+local ceil = math.ceil
+local point = cc.p
+local pSub = cc.pSub
+local pGetAngle = cc.pGetAngle
+local pGetLength = cc.pGetLength
+local rectContainsPoint = cc.rectContainsPoint
+local RIGHT_CENTER = display.RIGHT_CENTER
+local LEFT_CENTER = display.LEFT_CENTER
+local MID_POINT = point(display.cx, display.cy)
 local function pGetIntersectPoint(pt1,pt2,pt3,pt4)
     local s,t, ret = 0,0,false
     ret,s,t = cc.pIsLineIntersect(pt1,pt2,pt3,pt4,s,t)
     if ret then
-        return cc.p(pt1.x + s * (pt2.x - pt1.x), pt1.y + s * (pt2.y - pt1.y)), s
+        return point(pt1.x + s * (pt2.x - pt1.x), pt1.y + s * (pt2.y - pt1.y)), s
     else
-        return cc.p(0,0), s
+        return point(0,0), s
     end
 end
 function GameUIAllianceHome:OnSceneMove(logic_x, logic_y, alliance_view)
+    self:UpdateCoordinate(logic_x, logic_y, alliance_view)
+    self:UpdateAllArrows(logic_x, logic_y, alliance_view)
+end
+function GameUIAllianceHome:UpdateCoordinate(logic_x, logic_y, alliance_view)
     local coordinate_str = string.format("%d, %d", logic_x, logic_y)
     local is_mine
     if alliance_view then
@@ -583,49 +630,125 @@ function GameUIAllianceHome:OnSceneMove(logic_x, logic_y, alliance_view)
     end
     self.coordinate_label:setString(coordinate_str)
     self.coordinate_title_label:setString(is_mine)
+end
+function GameUIAllianceHome:UpdateAllArrows(logic_x, logic_y, alliance_view)
+    local layer = alliance_view:GetLayer()
+    local screen_rect = self.screen_rect
+    local alliance = self.alliance
+    local x,y = alliance:GetAllianceMap():FindMapObjectById(alliance:GetSelf():MapId()):GetMidLogicPosition()
+    self:UpdateMyCityArrows(screen_rect, alliance, layer, x,y)
+    self:UpdateMyAllianceBuildingArrows(screen_rect, alliance, layer)
+    if alliance:HaveEnemyAlliance() then
+        self:UpdateEnemyArrows(screen_rect, alliance:GetEnemyAlliance(), layer, logic_x, logic_y)
+    end
+end
+function GameUIAllianceHome:UpdateMyCityArrows(screen_rect, alliance, layer, x, y)
+    local map_point = layer:ConvertLogicPositionToMapPosition(x, y, alliance:Id())
+    local world_point = layer:convertToWorldSpace(map_point)
+    if not rectContainsPoint(screen_rect, world_point) then
+        local p,degree = self:GetIntersectPoint(screen_rect, MID_POINT, world_point)
+        if p and degree then
+            degree = degree + 180
+            self.arrow:show():pos(p.x, p.y):rotation(degree)
 
-    -- ----- arrow
-    local scene = display.getRunningScene()
-    if scene.GetAlliance then
-        local alliance = scene:GetAlliance()
-        local layer = scene:GetSceneLayer()
-
-        local mapObject = alliance:GetAllianceMap():FindMapObjectById(alliance:GetSelf():MapId())
-        local location = mapObject.location
-        local point = layer:ConvertLogicPositionToMapPosition(location.x, location.y, alliance:Id())
-        local world_point = layer:convertToWorldSpace(point)
-        local mid_point = cc.p(display.cx, display.cy)
-        local screen_rect = self.screen_rect
-        local left_bottom_point = cc.p(screen_rect.x, screen_rect.y)
-        local left_top_point = cc.p(screen_rect.x, screen_rect.y + screen_rect.height)
-        local right_bottom_point = cc.p(screen_rect.x + screen_rect.width, screen_rect.y)
-        local right_top_point = cc.p(screen_rect.x + screen_rect.width, screen_rect.y + screen_rect.height)
-        if not cc.rectContainsPoint(screen_rect, world_point) then
-            local degree = math.deg(cc.pGetAngle(cc.pSub(mid_point, world_point), cc.p(0, 1))) + 180
-            local points = {right_bottom_point,right_top_point,left_top_point,left_bottom_point}
-            for i = 1, #points do
-                local p1, p2
-                if i ~= #points then
-                    p1 = points[i]
-                    p2 = points[i + 1]
-                else
-                    p1 = points[i]
-                    p2 = points[1]
-                end
-                local p,s = pGetIntersectPoint(mid_point, world_point, p1, p2)
-                if s > 0 and cc.rectContainsPoint(screen_rect, p) then
-                    self.arrow:show():pos(p.x, p.y):rotation(degree)
-                    local isflip = (degree > 0 and degree < 180)
-                    local distance = math.ceil(cc.pGetLength(cc.pSub(world_point, p)) / 80)
-                    self.arrow_label:align(isflip and display.RIGHT_CENTER or display.LEFT_CENTER)
-                    :scale(isflip and -1 or 1):setString(string.format("%dM", distance))
-                    break
-                end
+            local isflip = (degree > 0 and degree < 180)
+            local distance = ceil(pGetLength(pSub(world_point, p)) / 80)
+            self.arrow_label:align(isflip and RIGHT_CENTER or LEFT_CENTER)
+                :scale(isflip and -1 or 1):setString(string.format("%dM", distance))
+        end
+    else
+        self.arrow:hide()
+    end
+end
+function GameUIAllianceHome:UpdateMyAllianceBuildingArrows(screen_rect, alliance, layer)
+    local id = alliance:Id()
+    local count = 1
+    alliance:GetAllianceMap():IteratorAllianceBuildings(function(_, v)
+        local arrow = self:GetMyAllianceArrow(count)
+        local x,y = v:GetMidLogicPosition()
+        local map_point = layer:ConvertLogicPositionToMapPosition(x, y, id)
+        local world_point = layer:convertToWorldSpace(map_point)
+        if not rectContainsPoint(screen_rect, world_point) then
+            local p,degree = self:GetIntersectPoint(screen_rect, MID_POINT, world_point)
+            if p and degree then
+                arrow:show():pos(p.x, p.y):rotation(degree + 180)
             end
         else
-            self.arrow:hide()
+            arrow:hide()
+        end
+        count = count + 1
+    end)
+    local alliance_building_arrows = self.alliance_building_arrows
+    for i = count, #alliance_building_arrows do
+        alliance_building_arrows[i]:hide()
+    end
+end
+function GameUIAllianceHome:GetMyAllianceArrow(count)
+    if not self.alliance_building_arrows[count] then
+        self.alliance_building_arrows[count] = display.newSprite("arrow_blue-hd.png")
+            :addTo(self, -2):align(display.TOP_CENTER):hide()
+    end
+    return self.alliance_building_arrows[count]
+end
+function GameUIAllianceHome:UpdateEnemyArrows(screen_rect, enemy_alliance, layer, logic_x, logic_y)
+    local id = enemy_alliance:Id()
+    local count = 1
+    enemy_alliance:GetAllianceMap():IteratorCities(function(_, v)
+        if count > 10 then return true end
+        local x,y = v:GetMidLogicPosition()
+        local dx, dy = (logic_x - x), (logic_y - y)
+        if dx^2 + dy^2 > 1 then
+            local arrow = self:GetEnemyArrow(count)
+            local map_point = layer:ConvertLogicPositionToMapPosition(x, y, id)
+            local world_point = layer:convertToWorldSpace(map_point)
+            if not rectContainsPoint(screen_rect, world_point) then
+                local p,degree = self:GetIntersectPoint(screen_rect, MID_POINT, world_point)
+                if p and degree then
+                    arrow:show():pos(p.x, p.y):rotation(degree + 180)
+                end
+            else
+                arrow:hide()
+            end
+            count = count + 1
+        end
+    end)
+    local enemy_arrows = self.enemy_arrows
+    for i = count, #enemy_arrows do
+        enemy_arrows[i]:hide()
+    end
+end
+function GameUIAllianceHome:GetEnemyArrow(count)
+    if not self.enemy_arrows[count] then
+        self.enemy_arrows[count] = display.newSprite("arrow_red-hd.png")
+            :addTo(self, -2):align(display.TOP_CENTER):hide()
+    end
+    return self.enemy_arrows[count]
+end
+function GameUIAllianceHome:GetIntersectPoint(screen_rect, point1, point2, normal)
+    local points = self:GetPointsWithScreenRect(screen_rect)
+    for i = 1, #points do
+        local p1, p2
+        if i ~= #points then
+            p1 = points[i]
+            p2 = points[i + 1]
+        else
+            p1 = points[i]
+            p2 = points[1]
+        end
+        local p,s = pGetIntersectPoint(point1, point2, p1, p2)
+        if s > 0 and rectContainsPoint(screen_rect, p) then
+            return p, deg(pGetAngle(pSub(point1, point2), normal or point(0, 1)))
         end
     end
+end
+function GameUIAllianceHome:GetPointsWithScreenRect(screen_rect)
+    local x,y,w,h = screen_rect.x, screen_rect.y, screen_rect.width, screen_rect.height
+    return {
+        point(x + w, y),
+        point(x + w, y + h),
+        point(x, y + h),
+        point(x, y),
+    }
 end
 function GameUIAllianceHome:OnAllianceFightChanged(alliance,allianceFight)
     local status = self.alliance:Status()
@@ -676,6 +799,21 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

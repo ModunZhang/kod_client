@@ -77,13 +77,6 @@ end
 function AllianceView:InitAlliance()
     self:RefreshBuildings(self:GetAlliance():GetAllianceMap())
 end
-function AllianceView:RefreshBuildings(alliance_map)
-    self:IteratorAllianceObjects(function(_,v) v:removeFromParent() end)
-    self.objects = {}
-    alliance_map:IteratorAllObjects(function(_, entity)
-        self.objects[entity:Id()] = self:CreateObject(entity)
-    end)
-end
 function AllianceView:GetBuildingNode()
     return self.layer:GetBuildingNode()
 end
@@ -109,26 +102,34 @@ end
 function AllianceView:OnBuildingFullUpdate(allianceMap)
     self:RefreshBuildings(allianceMap)
 end
+function AllianceView:RefreshBuildings(alliance_map)
+    self:IteratorAllianceObjects(function(_,v) v:removeFromParent() end)
+    self.objects = {}
+    alliance_map:IteratorAllObjects(function(_, entity)
+        self.objects[entity:Id()] = self:CreateObject(entity)
+    end)
+end
 function AllianceView:OnBuildingDeltaUpdate(allianceMap, deltaMapObjects)
     for _,entity in ipairs(deltaMapObjects.add or {}) do
         self.objects[entity:Id()] = self:CreateObject(entity)
     end
     for _,entity in ipairs(deltaMapObjects.edit or {}) do
-    -- todo
+        -- todo
     end
     for _,entity in ipairs(deltaMapObjects.remove or {}) do
-        self.objects[entity:Id()]:removeFromParent()
-        self.objects[entity:Id()] = nil
+        self:RemoveEntity(entity)
     end
-
     -- 修改位置
     for index,_ in pairs(deltaMapObjects) do
         if type(index) == "number" then
-            local entity = allianceMap:GetMapObjects()[index]
-            self.objects[entity:Id()]:removeFromParent()
-            self.objects[entity:Id()] = self:CreateObject(entity)
+            print(allianceMap:GetMapObjects()[index]:GetLogicPosition())
+            self:RefreshEntity(allianceMap:GetMapObjects()[index])
         end
     end
+end
+function AllianceView:RefreshEntity(entity)
+    self.objects[entity:Id()]:removeFromParent()
+    self.objects[entity:Id()] = self:CreateObject(entity)
 end
 function AllianceView:CreateObject(entity)
     local is_my_alliance = Alliance_Manager:GetMyAlliance():Id() == self.alliance:Id()
@@ -145,13 +146,12 @@ function AllianceView:CreateObject(entity)
     end
     return object
 end
+function AllianceView:RemoveEntity(entity)
+    self.objects[entity:Id()]:removeFromParent()
+    self.objects[entity:Id()] = nil
+end
 function AllianceView:IteratorAllianceObjects(func)
     table.foreach(self.objects, func)
-end
-function AllianceView:OnSceneMove()
--- self:IteratorAllianceObjects(function(_, object)
---     object:OnSceneMove()
--- end)
 end
 function AllianceView:GetClickedObject(world_x, world_y)
     local point = self:GetBuildingNode():convertToNodeSpace(cc.p(world_x, world_y))

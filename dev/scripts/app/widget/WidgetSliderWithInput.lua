@@ -24,6 +24,7 @@ function WidgetSliderWithInput:ctor(params)
     else
         slider_max = max
     end
+    min = slider_max == 0 and 0 or min
     self.slider = WidgetSlider.new(display.LEFT_TO_RIGHT,  {bar = bar,
         progress = progress,
         button = "slider_btn_66x66.png"}, {max = slider_max,min = min,scale9=true}):addTo(self)
@@ -79,7 +80,11 @@ function WidgetSliderWithInput:ctor(params)
         else
             btn_value = e_value
         end
-        self.btn_text:setString(tonumber(btn_value))
+        if btn_unit == "K" then
+            self.btn_text:setString(math.floor(tonumber(btn_value)))
+        else
+            self.btn_text:setString(tonumber(btn_value))
+        end
         self.soldier_total_count:setString(string.format(btn_unit.."/ %s", GameUtils:formatNumber(self.max)))
     end)
 
@@ -124,7 +129,11 @@ function WidgetSliderWithInput:OnSliderValueChanged(func)
         else
             btn_value = e_value
         end
-        self.btn_text:setString(math.floor(tonumber(btn_value)))
+        if btn_unit == "K" then
+            self.btn_text:setString(math.floor(tonumber(btn_value)))
+        else
+            self.btn_text:setString(tonumber(btn_value))
+        end
         self.soldier_total_count:setString(string.format(btn_unit.."/ %s", GameUtils:formatNumber(self.max)))
         func(event)
     end)
@@ -149,6 +158,7 @@ function WidgetSliderWithInput:GetEditBoxPostion()
 end
 
 return WidgetSliderWithInput
+
 
 
 

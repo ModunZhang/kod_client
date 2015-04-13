@@ -59,7 +59,8 @@ local function decodeInUserDataFromDeltaData(userData, deltaData)
                     if type(k) == "number" then
                         if is_json_null then
                             tmp.remove = tmp.remove or {}
-                            table.insert(tmp.remove, table.remove(curRoot, k))
+                            table.insert(tmp.remove, curRoot[k])
+                            table.remove(curRoot, k)
                         elseif curRoot[k] then
                             tmp.edit = tmp.edit or {}
                             table.insert(tmp.edit, value)

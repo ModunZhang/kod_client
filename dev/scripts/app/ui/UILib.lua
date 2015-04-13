@@ -339,30 +339,30 @@ local SOLDIER_IMAGES = {
         "meatWagon.png",
     },
     priest = {
-        "soldier_skeletonWarrior.png",
-        "soldier_skeletonWarrior.png",
-        "soldier_skeletonWarrior.png",
+        "skeletonWarrior.png",
+        "skeletonWarrior.png",
+        "skeletonWarrior.png",
     },
     demonHunter = {
-        "soldier_skeletonArcher.png",
-        "soldier_skeletonArcher.png",
-        "soldier_skeletonArcher.png",
+        "skeletonArcher.png",
+        "skeletonArcher.png",
+        "skeletonArcher.png",
     },
     paladin = {
-        "soldier_deathKnight.png",
-        "soldier_deathKnight.png",
-        "soldier_deathKnight.png",
+        "deathKnight.png",
+        "deathKnight.png",
+        "deathKnight.png",
     },
     steamTank = {
-        "soldier_meatWagon.png",
-        "soldier_meatWagon.png",
-        "soldier_meatWagon.png",
+        "meatWagon.png",
+        "meatWagon.png",
+        "meatWagon.png",
     },
 
     wall = {
-        "soldier_ballista_1.png",
-        "soldier_ballista_1.png",
-        "soldier_ballista_1.png",
+        "gate_1.png",
+        "gate_2.png",
+        "gate_3.png",
     }
 }
 local BLACK_SOLDIER_IMAGES = {
@@ -673,11 +673,11 @@ local SOLDIER_EFFECT_ANIMATIONS = getAniNameFromAnimationFiles(EFFECT_ANIMATION_
 local DRAGON_ANIMATIONS = getAniNameFromAnimationFiles(DRAGON_ANIMATIONS_FILES)
 
 local ALLIANCE_BUILDING = {
-    palace = "palace_240x276.png",
-    shrine = "shrine_240x191.png",
-    shop = "shop_240x246.png",
-    orderHall = "orderHall_240x364.png",
-    moonGate = "moonGate_200x217.png",
+    palace = "alliance_palace.png",
+    shrine = "alliance_shrine.png",
+    shop = "alliance_shop.png",
+    orderHall = "alliance_orderHall.png",
+    moonGate = "alliance_moonGate.png",
 }
 local OTHER_ALLIANCE_BUILDING = setmetatable({
     palace = "other_palace.png",

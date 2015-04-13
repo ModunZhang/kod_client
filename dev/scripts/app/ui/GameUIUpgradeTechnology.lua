@@ -228,7 +228,7 @@ function GameUIUpgradeTechnology:BuildUI()
     ):align(display.RIGHT_TOP, line_2:getPositionX()+line_2:getContentSize().width, line_2:getPositionY() - 30)
         :addTo(bg_node)
     self.upgrade_button = btn_bg
-    local gem = display.newSprite("gem_66x56.png")
+    local gem = display.newSprite("gem_icon_62x61.png")
         :addTo(bg_node)
         :scale(0.5)
         :align(display.LEFT_TOP, btn_now:getPositionX(), btn_now:getPositionY() - 65 - 10)
