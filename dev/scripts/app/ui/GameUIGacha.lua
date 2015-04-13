@@ -140,7 +140,7 @@ function GameUIGacha:CreateGachaPool(layer)
     for i,v in ipairs(temp_table) do
         table.insert(gacha_item_table, v)
     end
-    math.randomseed(os.time())
+    math.randomseed(tostring(os.time()):reverse():sub(1, 6))
     for i=1,10 do
         local round_num = math.random(1,#gacha_item_table)
         local remove_element = table.remove(gacha_item_table,round_num)
