@@ -103,7 +103,7 @@ create_building_config(
 create_building_config(
     "toolShop"
     ,create_config(MIN_LEVEL, 0, "locked_tile.png", offset(20, 120), scale(1))
-    ,create_config(1, MAX_LEVEL, "toolShop_228x232.png", offset(20, 100), scale(1), smoke(111, 167))
+    ,create_config(1, MAX_LEVEL, "toolShop_228x232.png", offset(20, 100), scale(1), smoke(100, 147))
 )
 create_building_config(
     "materialDepot"

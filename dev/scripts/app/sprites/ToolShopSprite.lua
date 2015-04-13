@@ -3,12 +3,12 @@ local ToolShopSprite = class("ToolShopSprite", FunctionUpgradingSprite)
 
 
 function ToolShopSprite:OnBeginMakeMaterialsWithEvent()
-    self:PlayAni()
+    self:DoAni()
 end
 function ToolShopSprite:OnMakingMaterialsWithEvent()
 end
 function ToolShopSprite:OnEndMakeMaterialsWithEvent()
-    self:StopAni()
+    self:DoAni()
 end
 function ToolShopSprite:OnGetMaterialsWithEvent()
 end

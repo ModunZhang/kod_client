@@ -918,17 +918,16 @@ function WidgetEventTabButtons:BuildingDescribe(building)
     else
         upgrade_info = string.format("%s%d", _("升级到 等级"), building:GetNextLevel())
     end
-    local time_str, percent = self:BuildingPercent(building)
+    local time, percent = self:BuildingPercent(building)
     local str = string.format("%s (%s) %s",
         Localize.building_name[building:GetType()],
         upgrade_info,
-        time_str)
+        GameUtils:formatTimeStyle1(time))
     return str, percent
 end
 function WidgetEventTabButtons:BuildingPercent(building)
-    local time = timer:GetServerTime()
-    local left_time = building:GetUpgradingLeftTimeByCurrentTime(time)
-    return GameUtils:formatTimeStyle1(left_time), building:GetUpgradingPercentByCurrentTime(time)
+    local time = timer:GetServerTime() 
+    return building:GetUpgradingLeftTimeByCurrentTime(time), building:GetUpgradingPercentByCurrentTime(time)
 end
 function WidgetEventTabButtons:SoldierDescribe(event)
     local soldier_type, count = event:GetRecruitInfo()
