@@ -758,6 +758,9 @@ bool Texture2D::initWithImage(Image *image, PixelFormat format)
         }
 
         initWithData(tempData, tempDataLen, image->getRenderFormat(), imageWidth, imageHeight, imageSize);
+        //dannyhe 修复2dx的bug? 当pvr v2压缩时此时alpha预乘信息应该从图片信息中获得
+        // set the premultiplied tag
+        _hasPremultipliedAlpha = image->hasPremultipliedAlpha();
         return true;
     }
     else

@@ -12,6 +12,7 @@ local WidgetAllianceHelper = import(".WidgetAllianceHelper")
 local WidgetPushButton = import(".WidgetPushButton")
 local CONTENT_WIDTH = window.width - 80
 local UICheckBoxButton = import("..ui.UICheckBoxButton")
+local config_intInit = GameDatas.AllianceInitData.intInit
 local WidgetAllianceCreateOrEdit = class("WidgetAllianceCreateOrEdit",function()
 	return display.newNode()
 end)
@@ -45,15 +46,15 @@ function WidgetAllianceCreateOrEdit:onEnter()
     	end)
 		local gemIcon = display.newSprite("gem_icon_62x61.png")
 			:addTo(self)
-			:align(display.LEFT_BOTTOM,okButton:getPositionX() - 360, 20)
+			:align(display.LEFT_BOTTOM,okButton:getPositionX() - 360,12)
 			:scale(0.5)
 		local gemLabel = UIKit:ttfLabel({
-			text = "50",
+			text = self:IsCreate() and config_intInit.createAllianceGem.value or config_intInit.editAllianceBasicInfoGem.value,
 			size = 16,
 			color = 0x797154
 		})
 			:addTo(self)
-			:align(display.LEFT_BOTTOM, gemIcon:getPositionX()+gemIcon:getCascadeBoundingBox().width + 4,gemIcon:getPositionY())
+			:align(display.LEFT_CENTER, gemIcon:getPositionX()+gemIcon:getCascadeBoundingBox().width + 4,gemIcon:getPositionY() + gemIcon:getCascadeBoundingBox().height/2)
 		-- flags
 	    self.createFlagPanel = self:createFlagPanel():addTo(self)
 	    	:pos(0,okButton:getPositionY()+65)
@@ -82,6 +83,17 @@ function WidgetAllianceCreateOrEdit:CreateAllianceButtonClicked()
 	end 
 	if string.utf8len(data.tag) < 1 or string.utf8len(data.tag) > 3 or not string.match(data.tag,"^%w%w?%w?") then
 		errMsg = _("联盟标签不合法")
+	end
+	if self:IsCreate() then
+		if config_intInit.createAllianceGem.value > User:GetGemResource():GetValue() then
+			errMsg = _("宝石不足")
+			return 
+		end
+	else
+		if config_intInit.editAllianceBasicInfoGem.value > User:GetGemResource():GetValue() then
+			errMsg = _("宝石不足")
+			return 
+		end
 	end
 	if errMsg ~= "" then
   		UIKit:showMessageDialog(_("错误"),errMsg)

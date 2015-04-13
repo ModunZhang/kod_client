@@ -14,6 +14,7 @@ local memberMeta = import("..entity.memberMeta")
 local UILib = import(".UILib")
 local Alliance_Manager = Alliance_Manager
 local WidgetPushTransparentButton = import("..widget.WidgetPushTransparentButton")
+local config_intInit = GameDatas.AllianceInitData.intInit
 
 function GameUIAllianceTitle:ctor(title)
 	GameUIAllianceTitle.super.ctor(self)
@@ -97,8 +98,10 @@ function GameUIAllianceTitle:BuildUI()
     	viewRect = cc.rect(4, 12, 564,325),
         direction = UIScrollView.DIRECTION_VERTICAL,
     }:addTo(listBg)
-    local button = WidgetPushButton.new({normal = "yellow_btn_up_185x65.png",pressed = "yellow_btn_down_185x65.png"})
+    local button = WidgetPushButton.new(
+        {normal = "yellow_btn_up_185x65.png",pressed = "yellow_btn_down_185x65.png"})
     :addTo(bg):pos(304,listBg:getPositionY() - listBg:getContentSize().height - 40)
+    :onButtonClicked(handler(self, self.OnBuyAllianceArchonButtonClicked))
     :setButtonLabel("normal",
     	UIKit:ttfLabel({
 			text = _("竞选盟主"),
@@ -111,17 +114,26 @@ function GameUIAllianceTitle:BuildUI()
     local gem_bg = display.newSprite("alliance_title_gem_bg_154x20.png"):addTo(button):align(display.TOP_CENTER,0,0)
     local gem_icon = display.newSprite("gem_icon_62x61.png"):scale(0.4):align(display.LEFT_BOTTOM, 10, 0):addTo(gem_bg)
     UIKit:ttfLabel({
-			text = "2000",
+			text = config_intInit.buyArchonGem.value,
 			size = 20,
 			color = 0xfff3c7,
 	}):align(display.LEFT_BOTTOM, gem_icon:getPositionX()+gem_icon:getContentSize().width*0.4+20, -3):addTo(gem_bg)
 
 	UIKit:ttfLabel({
-			text = _("盟主离线超过7D可以使用竞选盟主和盟主职位兑换"),
+			text = _("盟主离线超过7天可以使用竞选盟主和盟主职位兑换"),
 			size = 18,
 			color = 0x7e0000,
 	}):align(display.TOP_CENTER, 304, button:getPositionY() - 50):addTo(bg)
 	self:RefreshListView(member_level)
+end
+
+function GameUIAllianceTitle:OnBuyAllianceArchonButtonClicked()
+    if config_intInit.buyArchonGem.value > User:GetGemResource():GetValue() then
+        UIKit:showMessageDialog(nil, _("宝石不足"), function()
+        end)
+    else
+        NetManager:getBuyAllianceArchon()
+    end
 end
 
 function GameUIAllianceTitle:RefreshListView(index)
