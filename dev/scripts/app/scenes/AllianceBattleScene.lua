@@ -43,7 +43,7 @@ function AllianceBattleScene:GetAlliance()
 end
 
 function AllianceBattleScene:GetEnemyAlliance()
-    return self:GetAlliance():GetEnemyAlliance()
+    return Alliance_Manager:GetEnemyAlliance()
 end
 
 function AllianceBattleScene:onExit()

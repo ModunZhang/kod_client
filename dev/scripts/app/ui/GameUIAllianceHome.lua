@@ -445,7 +445,7 @@ function GameUIAllianceHome:CreateTop()
     function Top:Refresh()
         local alliance = home.alliance
         local status = alliance:Status()
-        local enemyAlliance = Alliance_Manager:GetMyAlliance():GetEnemyAlliance()
+        local enemyAlliance = Alliance_Manager:GetEnemyAlliance()
         period_label:setString(home:GetAlliancePeriod())
         -- 和平期
         if status=="peace" then
@@ -638,8 +638,8 @@ function GameUIAllianceHome:UpdateAllArrows(logic_x, logic_y, alliance_view)
     local x,y = alliance:GetAllianceMap():FindMapObjectById(alliance:GetSelf():MapId()):GetMidLogicPosition()
     self:UpdateMyCityArrows(screen_rect, alliance, layer, x,y)
     self:UpdateMyAllianceBuildingArrows(screen_rect, alliance, layer)
-    if alliance:HaveEnemyAlliance() then
-        self:UpdateEnemyArrows(screen_rect, alliance:GetEnemyAlliance(), layer, logic_x, logic_y)
+    if Alliance_Manager:HaveEnemyAlliance() then
+        self:UpdateEnemyArrows(screen_rect, Alliance_Manager:GetEnemyAlliance(), layer, logic_x, logic_y)
     end
 end
 function GameUIAllianceHome:UpdateMyCityArrows(screen_rect, alliance, layer, x, y)

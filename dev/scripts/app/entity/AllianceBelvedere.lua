@@ -24,7 +24,7 @@ function AllianceBelvedere:IsReachEventLimit()
 end
 
 function AllianceBelvedere:GetEnemyAlliance()
-	return Alliance_Manager:GetMyAlliance():GetEnemyAlliance()
+	return Alliance_Manager:GetEnemyAlliance()
 end
 
 function AllianceBelvedere:GetAlliance()
@@ -126,7 +126,7 @@ end
 
 
 function AllianceBelvedere:OnAttackMarchEventDataChanged(changed_map)
-	if self:GetAlliance():NeedUpdateEnemyAlliance() then --my alliance
+	if self:GetAlliance():IsMyAlliance() then --my alliance
 		local showMarch,showComming = false,false
 		for _,data in pairs(changed_map) do
 			if showMarch or showComming then break end
@@ -158,7 +158,7 @@ function AllianceBelvedere:OnAttackMarchEventDataChanged(changed_map)
 end
 
 function AllianceBelvedere:OnAttackMarchReturnEventDataChanged(changed_map)
-	if not self:GetAlliance():NeedUpdateEnemyAlliance() then return end
+	if not self:GetAlliance():IsMyAlliance() then return end
 	local showMarch = false 
 	for _,data in pairs(changed_map) do
 		if showMarch then break end
@@ -174,7 +174,7 @@ function AllianceBelvedere:OnAttackMarchReturnEventDataChanged(changed_map)
 	end
 end
 function AllianceBelvedere:OnStrikeMarchEventDataChanged(changed_map)
-	if self:GetAlliance():NeedUpdateEnemyAlliance() then --my alliance
+	if self:GetAlliance():IsMyAlliance() then --my alliance
 		local showMarch,showComming = false,false
 		for _,data in pairs(changed_map) do
 			if showMarch or showComming then break end
@@ -200,7 +200,7 @@ function AllianceBelvedere:OnStrikeMarchEventDataChanged(changed_map)
 	end
 end
 function AllianceBelvedere:OnStrikeMarchReturnEventDataChanged(changed_map)
-	if not self:GetAlliance():NeedUpdateEnemyAlliance() then return end
+	if not self:GetAlliance():IsMyAlliance() then return end
 	local showMarch = false 
 	for _,data in pairs(changed_map) do
 		if showMarch then break end
@@ -216,7 +216,7 @@ function AllianceBelvedere:OnStrikeMarchReturnEventDataChanged(changed_map)
 	end
 end
 function AllianceBelvedere:OnVillageEventsDataChanged(changed_map)
-	if not self:GetAlliance():NeedUpdateEnemyAlliance() then return end
+	if not self:GetAlliance():IsMyAlliance() then return end
 	local showMarch = false 
 	for _,data in pairs(changed_map) do
 		if showMarch then break end
@@ -233,13 +233,13 @@ function AllianceBelvedere:OnVillageEventsDataChanged(changed_map)
 end
 
 function AllianceBelvedere:OnVillageEventTimer(villageEvent,left_resource)
-	if not self:GetAlliance():NeedUpdateEnemyAlliance() then return end
+	if not self:GetAlliance():IsMyAlliance() then return end
 	if villageEvent:GetPlayerRole() ~= villageEvent.EVENT_PLAYER_ROLE.Me then return end
 	self:CallEventsChangedListeners(AllianceBelvedere.LISTEN_TYPE.OnVillageEventTimer,{villageEvent,left_resource})
 end
 
 function AllianceBelvedere:OnShrineEventsChanged(changed_map)
-	if self:GetAlliance():NeedUpdateEnemyAlliance() then
+	if self:GetAlliance():IsMyAlliance() then
 		self:NotifyMarchDataChanged()
 	end
 end
@@ -249,7 +249,7 @@ function AllianceBelvedere:OnShrineEventsRefresh()
 end
 
 function AllianceBelvedere:OnFightEventTimerChanged(fightEvent)
-	if self:GetAlliance():NeedUpdateEnemyAlliance() then
+	if self:GetAlliance():IsMyAlliance() then
 		self:CallEventsChangedListeners(AllianceBelvedere.LISTEN_TYPE.OnFightEventTimerChanged,{fightEvent}) 
 	end
 end

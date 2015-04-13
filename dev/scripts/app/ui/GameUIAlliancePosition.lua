@@ -9,7 +9,7 @@ local GameUIAlliancePosition = class("GameUIAlliancePosition",WidgetPopDialog)
 function GameUIAlliancePosition:ctor()
     -- 根据是否处于联盟战状态构建不同UI
     local my_alliance = Alliance_Manager:GetMyAlliance()
-    local enemy_alliance = my_alliance:GetEnemyAlliance()
+    local enemy_alliance = Alliance_Manager:GetEnemyAlliance()
     print("enemy_alliance:IsDefault()=",enemy_alliance:IsDefault())
     local isFight = enemy_alliance:IsDefault()
     local height = isFight and 258 or 386

@@ -20,6 +20,7 @@
 #include "luabinding/HelperFunc_luabinding.h"
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
 #include "luabinding/cocos2dx_extra_ios_iap_luabinding.h"
+#include "CommonUtils.h"
 #endif
 #if ANYSDK_DEFINE > 0
 #include "anysdkbindings.h"
@@ -198,6 +199,11 @@ void AppDelegateExtern::loadConfigFile()
 
 const char* AppDelegateExtern::getAppVersion()
 {
+    const char*ipaVersion = GetAppVersion();
+    if (ipaVersion != NULL)
+    {
+        return ipaVersion;
+    }
     lua_State *tolua_S = LuaEngine::getInstance()->getLuaStack()->getLuaState();
     lua_getglobal(tolua_S, "CONFIG_APP_VERSION");
     const char* path = tolua_tostring(tolua_S, -1, 0);
