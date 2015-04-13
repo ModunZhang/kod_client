@@ -14,21 +14,27 @@ function GameUILoginBeta:ctor()
     self.m_totalSize = 0
     self.m_currentSize = 0
     self.local_resources = {
-		{image = "animations/dragon_0.pvr.ccz",list = "animations/dragon_0.plist"},
-		{image = "animations/dragon_1.pvr.ccz",list = "animations/dragon_1.plist"},
-		{image = "animations/dragon_2.pvr.ccz",list = "animations/dragon_2.plist"},
-		{image = "animations/dragon_3.pvr.ccz",list = "animations/dragon_3.plist"},
-		{image = "animations/dragon_4.pvr.ccz",list = "animations/dragon_4.plist"},
-		{image = "animations/dragon_5.pvr.ccz",list = "animations/dragon_5.plist"},
-		{image = "animations/dragon_6.pvr.ccz",list = "animations/dragon_6.plist"},
-		{image = "animations/soldiers_0.pvr.ccz",list = "animations/soldiers_0.plist"},
-		{image = "animations/soldiers_1.pvr.ccz",list = "animations/soldiers_1.plist"},
-		{image = "animations/soldiers_2.pvr.ccz",list = "animations/soldiers_2.plist"},
-		{image = "animations/soldiers_3.pvr.ccz",list = "animations/soldiers_3.plist"},
-		{image = "animations/soldiers_4.pvr.ccz",list = "animations/soldiers_4.plist"},
-		{image = "animations/soldiers_5.pvr.ccz",list = "animations/soldiers_5.plist"},
-		{image = "animations/ui_building_0.pvr.ccz",list = "animations/ui_building_0.plist"},
-		{image = "animations/ui_building_1.pvr.ccz",list = "animations/ui_building_1.plist"},
+		{image = "animations/dragon_animation_0.png",list = "animations/dragon_animation_0.plist"},
+		{image = "animations/dragon_animation_1.png",list = "animations/dragon_animation_1.plist"},
+		{image = "animations/dragon_animation_2.png",list = "animations/dragon_animation_2.plist"},
+		{image = "animations/dragon_animation_3.png",list = "animations/dragon_animation_3.plist"},
+		{image = "animations/dragon_animation_4.png",list = "animations/dragon_animation_4.plist"},
+		{image = "animations/dragon_animation_5.png",list = "animations/dragon_animation_5.plist"},
+		{image = "animations/dragon_animation_6.png",list = "animations/dragon_animation_6.plist"},
+		{image = "animations/soldiers_animation_0.png",list = "animations/soldiers_animation_0.plist"},
+		{image = "animations/soldiers_animation_1.png",list = "animations/soldiers_animation_1.plist"},
+		{image = "animations/soldiers_animation_2.png",list = "animations/soldiers_animation_2.plist"},
+		{image = "animations/soldiers_animation_3.png",list = "animations/soldiers_animation_3.plist"},
+		{image = "animations/ui_animation_0.png",list = "animations/ui_animation_0.plist"},
+        {image = "animations/ui_animation_1.png",list = "animations/ui_animation_1.plist"},
+
+        {image = "animations/heihua_animation_0.png",list = "animations/heihua_animation_0.plist"},
+        {image = "animations/heihua_animation_1.png",list = "animations/heihua_animation_1.plist"},
+        {image = "animations/heihua_animation_2.png",list = "animations/heihua_animation_2.plist"},
+		{image = "animations/region_animation_0.png",list = "animations/region_animation_0.plist"},
+
+        
+
 		{image = "emoji.png",list = "emoji.plist"},
 	}
 	self.local_resources_percent_per = LOCAL_RESOURCES_PERCENT / #self.local_resources
