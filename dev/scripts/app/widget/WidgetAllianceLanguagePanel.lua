@@ -2,7 +2,7 @@
 -- Author: Danny He
 -- Date: 2014-10-09 20:58:25
 --
-local UICheckBoxButton = cc.ui.UICheckBoxButton
+local UICheckBoxButton = import("..ui.UICheckBoxButton")
 local WidgetAllianceLanguagePanel = class("WidgetAllianceLanguagePanel", function()
     return display.newNode()
 end)

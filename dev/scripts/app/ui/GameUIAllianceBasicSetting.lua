@@ -38,7 +38,7 @@ function GameUIAllianceBasicSetting:BuildModifyUI()
         end):pos(35,0))
         :setDirection(UIScrollView.DIRECTION_VERTICAL)
         :addTo(bg)
-	scrollView:fixResetPostion(-50)
+	scrollView:fixResetPostion(3)
 	self.createScrollView = scrollView
 end
 

@@ -1427,6 +1427,10 @@ function NetManager:getSwitchServer(serverId)
     return get_blocking_request_promise("logic.playerHandler.switchServer",{serverId=serverId},"切换服务器失败!")
 end
 
+-- 购买联盟盟主职位
+function NetManager:getBuyAllianceArchon()
+    return get_blocking_request_promise("logic.allianceHandler.buyAllianceArchon"):done(get_response_msg)
+end
 ----------------------------------------------------------------------------------------------------------------
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"

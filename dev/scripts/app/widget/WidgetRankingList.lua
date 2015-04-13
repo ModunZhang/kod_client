@@ -5,11 +5,11 @@ local Flag = import("..entity.Flag")
 local UIListView = import("..ui.UIListView")
 local WidgetPushButton = import(".WidgetPushButton")
 local WidgetPopDialog = import(".WidgetPopDialog")
-local WidgetAllianceUIHelper = import(".WidgetAllianceUIHelper")
+local WidgetAllianceHelper = import(".WidgetAllianceHelper")
 local WidgetDropList = import("..widget.WidgetDropList")
 local WidgetRankingList = class("WidgetRankingList", WidgetPopDialog)
 
-local ui_helper = WidgetAllianceUIHelper.new()
+local ui_helper = WidgetAllianceHelper.new()
 
 WidgetRankingList.lock = false
 WidgetRankingList.rank_data = {

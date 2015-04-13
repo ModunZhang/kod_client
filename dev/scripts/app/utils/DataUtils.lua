@@ -499,7 +499,7 @@ function DataUtils:__getRandomAllianceNameAndTag()
         tag  = string.format("%sn%s",string.sub(config[fist_index].value,1,1),string.sub(config[second_index].value,1,1))
     elseif __categore == 3 then
         local config_1 = config_clientinitgame.alliance_name_adj
-        local config_2 = config_clientinitgame.alliance_name_noun
+        local config_2 = config_clientinitgame.alliance_name_single_name
         local fist_index,second_index = math.random(1,#config_1),math.random(1,#config_2)
 
         name = string.format("The %s %s",config_1[fist_index].value,config_2[second_index].value)

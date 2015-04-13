@@ -18,7 +18,7 @@ local Localize = import("..utils.Localize")
 local NetService = import('..service.NetService')
 local Alliance_Manager = Alliance_Manager
 local Alliance = import("..entity.Alliance")
-local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
+local WidgetAllianceHelper = import("..widget.WidgetAllianceHelper")
 local Flag = import("..entity.Flag")
 local GameUIWriteMail = import('.GameUIWriteMail')
 local UILib = import(".UILib")
@@ -30,7 +30,7 @@ GameUIAlliance.COMMON_LIST_ITEM_TYPE = Enum("JOIN","INVATE","APPLY")
 --------------------------------------------------------------------------------
 function GameUIAlliance:ctor()
     GameUIAlliance.super.ctor(self,City,_("联盟"))
-    self.alliance_ui_helper = WidgetAllianceUIHelper.new()
+    self.alliance_ui_helper = WidgetAllianceHelper.new()
 end
 
 function GameUIAlliance:OnBasicChanged(alliance, changed_map)
@@ -265,7 +265,7 @@ function GameUIAlliance:NoAllianceTabEvent_createIf()
         :addScrollNode(basic_setting:pos(55,0))
         :setDirection(UIScrollView.DIRECTION_VERTICAL)
         :addTo(self.main_content)
-    scrollView:fixResetPostion(-50)
+    scrollView:fixResetPostion(3)
     self.createScrollView = scrollView
     return self.createScrollView
 end
