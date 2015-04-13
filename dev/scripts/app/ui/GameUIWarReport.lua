@@ -45,21 +45,7 @@ function GameUIWarReport:onEnter()
     local war_result_image = display.newSprite(result_img)
         :align(display.CENTER_TOP, rb_size.width/2, rb_size.height-16)
         :addTo(report_body)
-    -- 标记
-    local mark_btn = WidgetPushButton.new({normal = "blue_btn_up_142x39.png",pressed = "blue_btn_down_142x39.png"})
-        :setButtonLabel(UIKit:ttfLabel({
-            text = _("标记"),
-            size = 22,
-            color = 0xffedae,
-            shadow= true
-        }))
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-
-            end
-        end):align(display.RIGHT_CENTER,war_result_image:getContentSize().width - 10,war_result_image:getContentSize().height/2)
-        :addTo(war_result_image)
-
+    
 
     -- 战斗发生时间
     local war_result_label = UIKit:ttfLabel(
@@ -114,10 +100,10 @@ function GameUIWarReport:onEnter()
 
     replay_label:enableShadow()
     WidgetPushButton.new(
-        {normal = "yellow_btn_up_149x47.png", pressed = "yellow_btn_down_149x47.png"},
+        {normal = "yellow_btn_up_148x58.png", pressed = "yellow_btn_down_148x58.png"},
         {scale9 = false}
     ):setButtonLabel(replay_label)
-        :addTo(report_body):align(display.CENTER, report_body:getContentSize().width-120, rb_size.height-186)
+        :addTo(report_body):align(display.CENTER, report_body:getContentSize().width-100, rb_size.height-186)
         :onButtonClicked(function(event)
             UIKit:newGameUI("GameUIReplay",clone(report)):AddToCurrentScene(true)
         end)
@@ -130,10 +116,10 @@ function GameUIWarReport:onEnter()
     delete_label:enableShadow()
 
     WidgetPushButton.new(
-        {normal = "resource_butter_red.png", pressed = "resource_butter_red_highlight.png"},
+        {normal = "red_btn_up_148x58.png", pressed = "red_btn_down_148x58.png"},
         {scale9 = false}
     ):setButtonLabel(delete_label)
-        :addTo(report_body):align(display.CENTER, 140, 40)
+        :addTo(report_body):align(display.CENTER, 110, 40)
         :onButtonClicked(function(event)
             NetManager:getDeleteReportsPromise({report.id}):done(function ()
                 self:removeFromParent()
@@ -460,12 +446,12 @@ end
 function GameUIWarReport:CreateBelligerents(left_player,right_player)
     local group = cc.ui.UIGroup.new()
     local group_width,group_height = 540,100
-    local self_item = self:CreateBelligerentsItem(left_player)
+    local self_item = self:CreateBelligerentsItem(left_player,true)
         :align(display.CENTER, -group_width/2+129, 0)
 
     group:addWidget(self_item)
 
-    local enemy_item = self:CreateBelligerentsItem(right_player)
+    local enemy_item = self:CreateBelligerentsItem(right_player,false)
         :align(display.CENTER, group_width/2-129, 0)
     group:addWidget(enemy_item)
     local item = self.details_view:newItem()
@@ -474,10 +460,12 @@ function GameUIWarReport:CreateBelligerents(left_player,right_player)
     self.details_view:addItem(item)
 end
 
-function GameUIWarReport:CreateBelligerentsItem(player)
+function GameUIWarReport:CreateBelligerentsItem(player,isSelf)
     local height = 100
     local player_item = self:CreateSmallBackGround(height)
 
+    -- 联盟名字背景框
+    display.newScale9Sprite(isSelf and "back_ground_blue_254x42.png" or "back_ground_red_254x42.png", 0, 0,cc.size(258,50),cc.rect(10,10,234,22)):align(display.LEFT_BOTTOM):addTo(player_item)
     -- 玩家头像
     local heroBg = display.newSprite("chat_hero_background.png"):align(display.CENTER, 50, height/2):addTo(player_item)
     heroBg:setScale(0.6)
@@ -488,69 +476,20 @@ function GameUIWarReport:CreateBelligerentsItem(player)
     -- 玩家名称
     UIKit:ttfLabel({
         text = player.name or Localize.village_name[player.type] ,
-        size = 18,
+        size = 20,
         color = 0x403c2f
-    }):align(display.LEFT_CENTER,110, height-40)
+    }):align(display.LEFT_CENTER,90, height-25)
         :addTo(player_item)
 
     UIKit:ttfLabel({
         text =  player.type and _("Level").." "..player.level or player.alliance.name,
-        size = 18,
-        color = 0x403c2f
-    }):align(display.LEFT_CENTER,110,  height-70)
+        size = 22,
+        color = 0xffedae
+    }):align(display.LEFT_CENTER,90,  height-75)
         :addTo(player_item)
 
     return player_item
 end
-
-
-
-
--- function GameUIWarReport:GetTestSelfSoldiers()
---     return {
---         {
---             soldier_type = _("ranger"),
---             soldier_name = _("ranger"),
---             soldier_original_num = 1,
---             soldier_after_war_num = 1,
---         },
---         {
---             soldier_type = _("ranger"),
---             soldier_name = _("ranger"),
---             soldier_original_num = 1,
---             soldier_after_war_num = 1,
---         },
---         {
---             soldier_type = _("ranger"),
---             soldier_name = _("ranger"),
---             soldier_original_num = 1,
---             soldier_after_war_num = 1,
---         },
---     }
--- end
-function GameUIWarReport:GetTestEnemySoldiers()
-    return {
-        {
-            soldier_type = _("ranger"),
-            soldier_name = _("ranger"),
-            soldier_original_num = 1,
-            soldier_after_war_num = 1,
-        },
-        {
-            soldier_type = _("ranger"),
-            soldier_name = _("ranger"),
-            soldier_original_num = 1,
-            soldier_after_war_num = 1,
-        },
-    -- {
-    --     soldier_type = _("ranger"),
-    --     soldier_name = _("ranger"),
-    --     soldier_original_num = 1,
-    --     soldier_after_war_num = 1,
-    -- },
-    }
-end
-
 
 -- 击杀敌方
 function GameUIWarReport:KillEnemy(troop)
@@ -718,10 +657,7 @@ end
 
 -- 创建 宽度为258的 UI框
 function GameUIWarReport:CreateSmallBackGround(height,title)
-    local r_bg = display.newNode()
-    r_bg:setContentSize(cc.size(258,height))
-    -- 上中下三段的图片高度
-    local u_height,m_height,b_height = 12 , 1 , 12
+    local r_bg = display.newScale9Sprite("back_ground_258x90.png",0,0,cc.size(258,height),cc.rect(10,10,238,70))
     -- title bg
     if title then
         local t_bg = display.newSprite("report_title_252X30.png"):align(display.CENTER_TOP, 129, height-3):addTo(r_bg,2)
@@ -731,22 +667,7 @@ function GameUIWarReport:CreateSmallBackGround(height,title)
             color = 0xffedae
         }):align(display.CENTER,t_bg:getContentSize().width/2, 15):addTo(t_bg)
     end
-    --top
-    display.newSprite("back_ground_258X12_top.png"):align(display.LEFT_TOP, 0, height):addTo(r_bg)
-    --bottom
-    display.newSprite("back_ground_258X12_bottom.png"):align(display.LEFT_BOTTOM, 0, 0):addTo(r_bg)
-
-    --center
-    local need_filled_height = height-(u_height+b_height) --中间部分需要填充的高度
-    local center_y = b_height -- 中间部分起始 y 坐标
-    local  next_y = b_height
-    -- 需要填充的剩余高度大于中间部分图片原始高度时，直接复制即可
-    while need_filled_height>=m_height do
-        display.newSprite("back_ground_258X1_mid.png"):align(display.LEFT_BOTTOM, 0, next_y):addTo(r_bg)
-        need_filled_height = need_filled_height - m_height
-        -- copy_count = copy_count + 1
-        next_y = next_y+m_height
-    end
+   
     return r_bg
 end
 

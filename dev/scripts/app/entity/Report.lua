@@ -365,7 +365,7 @@ function Report:GetReportTitle()
         if data.level>1 then
             return _("防守突袭村落成功")
         else
-            return _("防守突袭村落成功")
+            return _("防守突袭村落失败")
         end
     elseif report_type=="attackCity" then
         if data.attackPlayerData.id == self.player_id then
@@ -417,6 +417,114 @@ function Report:GetReportTitle()
         end
     elseif report_type=="collectResource" then
         return _("采集报告")
+    end
+end
+function Report:IsFromMe()
+    local data = self:GetData()
+    local report_type = self.type
+    if report_type == "strikeCity"
+        or report_type=="strikeVillage"
+        or report_type=="attackCity"
+        or report_type=="attackVillage"
+        or report_type=="collectResource" then
+        return true
+    elseif report_type=="villageBeStriked"
+        or report_type=="cityBeStriked" then
+        return false
+    end
+end
+function Report:IsAttackOrStrike()
+    local data = self:GetData()
+    local report_type = self.type
+    if report_type == "strikeCity"
+        or report_type=="strikeVillage"
+        or report_type=="villageBeStriked"
+        or report_type=="cityBeStriked" then
+        return "strike"
+    elseif report_type=="attackCity"
+        or report_type=="attackVillage" then
+        return "attack"
+    elseif report_type=="collectResource" then
+        return "collect"
+    end
+end
+function Report:IsWin()
+    local data = self:GetData()
+    local report_type = self.type
+    if report_type == "strikeCity" then
+        if data.level>1 then
+            return true
+        else
+            return false
+        end
+    elseif report_type == "strikeVillage" then
+        if data.level>1 then
+            return _("突袭村落成功")
+        else
+            return false
+        end
+    elseif report_type== "cityBeStriked" then
+        if data.level>1 then
+            return false
+        else
+            return _("防守突袭成功")
+        end
+    elseif report_type == "villageBeStriked" then
+        if data.level>1 then
+            return _("防守突袭村落成功")
+        else
+            return false
+        end
+    elseif report_type=="attackCity" then
+        if data.attackPlayerData.id == self.player_id then
+            if data.fightWithHelpDefencePlayerReports then
+                local round = data.fightWithHelpDefencePlayerReports.attackPlayerSoldierRoundDatas
+                if not round then
+                    return true
+                end
+                return round[#round].isWin
+            elseif data.fightWithDefencePlayerReports then
+                local round = data.fightWithDefencePlayerReports.attackPlayerSoldierRoundDatas
+                if not round then
+                    return true
+                end
+                return round[#round].isWin
+            end
+        elseif data.defencePlayerData and data.defencePlayerData.id == self.player_id then
+            local round = data.fightWithDefencePlayerReports.defencePlayerSoldierRoundDatas
+            if not round then
+                return false
+            end
+            return round[#round].isWin
+        elseif data.helpDefencePlayerData and
+            data.helpDefencePlayerData.id == DataManager:getUserData()._id then
+            local round = data.fightWithHelpDefencePlayerReports.defencePlayerSoldierRoundDatas
+            return round[#round].isWin
+        end
+    elseif report_type=="attackVillage" then
+        if data.attackPlayerData.id == self.player_id then
+            if data.fightWithDefencePlayerReports then
+                local round = data.fightWithDefencePlayerReports.attackPlayerSoldierRoundDatas
+                if not round then
+                    return true
+                end
+                return round[#round].isWin
+            elseif data.fightWithDefenceVillageReports then
+                local round = data.fightWithDefenceVillageReports.attackPlayerSoldierRoundDatas
+                if not round then
+                    return true
+                end
+                return round[#round].isWin
+            end
+        elseif data.defencePlayerData and data.defencePlayerData.id == self.player_id then
+            local round = data.fightWithDefencePlayerReports.defencePlayerSoldierRoundDatas
+            if not round then
+                return false
+            end
+            return round[#round].isWin
+        end
+    elseif report_type=="collectResource" then
+        return true
     end
 end
 function Report:IsHasHelpDefencePlayer()
@@ -507,6 +615,7 @@ function Report:GetReportResult()
     end
 end
 return Report
+
 
 
 

@@ -11,6 +11,7 @@ local WidgetUIBackGround2 = import("..widget.WidgetUIBackGround2")
 local WidgetBackGroudWhite = import("..widget.WidgetBackGroudWhite")
 local WidgetDropList = import("..widget.WidgetDropList")
 local WidgetBackGroundLucid = import("..widget.WidgetBackGroundLucid")
+local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local GameUICollectReport = import(".GameUICollectReport")
 local Report = import("..entity.Report")
@@ -134,16 +135,16 @@ function GameUIMail:InitUnreadMark()
 end
 function GameUIMail:CreateMailControlBox()
     -- 标记邮件，已读，删除多封邮件
-    self.mail_control_box = display.newSprite("back_ground_624x70.png")
-        :pos(window.cx+1, window.bottom + 35)
-        :addTo(self)
+    self.mail_control_box = display.newSprite("back_ground_624x134.png")
+        :pos(window.cx+1, window.bottom + 66)
+        :addTo(self,100)
     self.mail_control_box:setVisible(false)
     self.mail_control_box:setTouchEnabled(true)
 
     local box = self.mail_control_box
     local w,h = box:getContentSize().width, box:getContentSize().height
-
-    local select_all_btn = WidgetPushButton.new({normal = "blue_btn_up_142x39.png",pressed = "blue_btn_down_142x39.png"})
+    local gap_x = (624-132*4)/5
+    local select_all_btn = WidgetPushButton.new({normal = "brown_btn_up_132x98.png",pressed = "brown_btn_down_132x98.png"})
         :setButtonLabel(UIKit:ttfLabel({
             text = _("全选"),
             size = 22,
@@ -154,8 +155,8 @@ function GameUIMail:CreateMailControlBox()
             if event.name == "CLICKED_EVENT" then
                 self:SelectAllMailsOrReports(true)
             end
-        end):align(display.LEFT_CENTER,7,h/2):addTo(box)
-    local delete_btn = WidgetPushButton.new({normal = "red_button_146x42.png",pressed = "red_button_highlight_146x42.png"})
+        end):align(display.LEFT_CENTER,gap_x,h/2-6):addTo(box)
+    local delete_btn = WidgetPushButton.new({normal = "brown_btn_up_132x98.png",pressed = "brown_btn_down_132x98.png"})
         :setButtonLabel(UIKit:ttfLabel({
             text = _("删除"),
             size = 24,
@@ -192,8 +193,8 @@ function GameUIMail:CreateMailControlBox()
                     )
                     :AddToCurrentScene()
             end
-        end):align(display.LEFT_CENTER,select_all_btn:getPositionX() + select_all_btn:getCascadeBoundingBox().size.width+10,h/2):addTo(box)
-    local mark_read_btn = WidgetPushButton.new({normal = "yellow_button_146x42.png",pressed = "yellow_button_highlight_146x42.png"})
+        end):align(display.LEFT_CENTER,select_all_btn:getPositionX() + select_all_btn:getCascadeBoundingBox().size.width+gap_x,h/2-6):addTo(box)
+    local mark_read_btn = WidgetPushButton.new({normal = "brown_btn_up_132x98.png",pressed = "brown_btn_down_132x98.png"})
         :setButtonLabel(UIKit:ttfLabel({
             text = _("标记已读"),
             size = 24,
@@ -209,17 +210,19 @@ function GameUIMail:CreateMailControlBox()
                         table.insert(ids, v.id)
                     end
                 end
-                self:ReadMailOrReports(ids,function ()
-                    self:SelectAllMailsOrReports(false)
-                    if select_type=="mail" then
-                        self.manager:DecreaseUnReadMailsNum(#ids)
-                    elseif select_type=="report" then
-                        self.manager:DecreaseUnReadReportsNum(#ids)
-                    end
-                end)
+                if #ids>0 then
+                    self:ReadMailOrReports(ids,function ()
+                        self:SelectAllMailsOrReports(false)
+                        if select_type=="mail" then
+                            self.manager:DecreaseUnReadMailsNum(#ids)
+                        elseif select_type=="report" then
+                            self.manager:DecreaseUnReadReportsNum(#ids)
+                        end
+                    end)
+                end
             end
-        end):align(display.LEFT_CENTER,delete_btn:getPositionX() + delete_btn:getCascadeBoundingBox().size.width+10,h/2):addTo(box)
-    local cancel_btn = WidgetPushButton.new({normal = "yellow_button_146x42.png",pressed = "yellow_button_highlight_146x42.png"})
+        end):align(display.LEFT_CENTER,delete_btn:getPositionX() + delete_btn:getCascadeBoundingBox().size.width+gap_x,h/2-6):addTo(box)
+    local cancel_btn = WidgetPushButton.new({normal = "brown_btn_up_132x98.png",pressed = "brown_btn_down_132x98.png"})
         :setButtonLabel(UIKit:ttfLabel({
             text = _("取消"),
             size = 24,
@@ -230,7 +233,7 @@ function GameUIMail:CreateMailControlBox()
             if event.name == "CLICKED_EVENT" then
                 self:SelectAllMailsOrReports(false)
             end
-        end):align(display.LEFT_CENTER,mark_read_btn:getPositionX() + mark_read_btn:getCascadeBoundingBox().size.width+10,h/2):addTo(box)
+        end):align(display.LEFT_CENTER,mark_read_btn:getPositionX() + mark_read_btn:getCascadeBoundingBox().size.width+gap_x,h/2-6):addTo(box)
 
 end
 function GameUIMail:onExit()
@@ -272,7 +275,7 @@ end
 function GameUIMail:InitInbox(mails)
     self.inbox_listview = UIListView.new{
         -- bgColor = UIKit:hex2c4b(0x7a000000),
-        viewRect = cc.rect(display.cx-304, display.top-870, 612, 790),
+        viewRect = cc.rect(display.cx-284, display.top-870, 568, 790),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(self.inbox_layer)
     if mails then
@@ -297,7 +300,7 @@ function GameUIMail:InitSaveMails(mails)
 
     self.save_mails_listview = UIListView.new{
         -- bgColor = UIKit:hex2c4b(0x7a000000),
-        viewRect = cc.rect(display.cx-304, display.top-870, 612, 710),
+        viewRect = cc.rect(display.cx-284, display.top-870, 568, 710),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(self.saved_layer)
 
@@ -324,7 +327,7 @@ end
 function GameUIMail:InitSendMails(mails)
     self.send_mail_listview = UIListView.new{
         -- bgColor = UIKit:hex2c4b(0x7a000000),
-        viewRect = cc.rect(display.cx-304, display.top-870, 612, 790),
+        viewRect = cc.rect(display.cx-284, display.top-870, 568, 790),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(self.sent_layer)
     if mails then
@@ -354,10 +357,10 @@ end
 function GameUIMail:CreateMailItem(listview,mail)
     if not listview then return end
     local item = listview:newItem()
-    local item_width, item_height = 608,126
+    local item_width, item_height = 568,118
     item.mail = mail
     item:setItemSize(item_width, item_height)
-    local content = WidgetPushButton.new({normal = "mail_inbox_item_bg_608X126.png",pressed = "mail_inbox_item_bg_608X126.png"})
+    local content = WidgetPushButton.new({normal = "back_ground_568x118.png",pressed = "back_ground_568x118.png"})
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 if tolua.type(mail.isRead)=="boolean" and not mail.isRead then
@@ -378,22 +381,22 @@ function GameUIMail:CreateMailItem(listview,mail)
 
     local title_bg
     if mail.isRead then
-        title_bg = display.newSprite("title_grey_516X30.png", 36, 38):addTo(content)
+        title_bg = display.newSprite("title_grey_482x30.png",40, 36)
+            :addTo(content)
     else
-        title_bg = display.newSprite("title_blue_516X30.png", 36, 38):addTo(content)
+        title_bg = display.newSprite("title_blue_482x30.png",40, 36)
+            :addTo(content)
     end
     item.title_bg = title_bg
-    local content_title_bg = display.newSprite("back_ground_516x60.png")
-        :align(display.RIGHT_BOTTOM,item_width/2-10,-c_size.height/2+10)
+    local content_title_bg = display.newScale9Sprite("back_ground_516x60.png",item_width/2-4,-c_size.height/2+10,cc.size(482,60),cc.rect(15,10,486,40))
+        :align(display.RIGHT_BOTTOM)
         :addTo(content)
-
-
 
     -- 邮件icon
     if mail.fromId == "__system" then
-        display.newSprite("icon_system_mail.png"):align(display.LEFT_CENTER,11, 22):addTo(content_title_bg)
+        display.newSprite("icon_system_mail.png"):align(display.LEFT_CENTER,11, 24):addTo(content_title_bg)
     else
-        display.newSprite("mail_state_user_not_read.png"):align(display.LEFT_CENTER,11, 22):addTo(content_title_bg)
+        display.newSprite("mail_state_user_not_read.png"):align(display.LEFT_CENTER,11, 24):addTo(content_title_bg)
     end
 
     local from_name_label =  cc.ui.UILabel.new(
@@ -448,7 +451,7 @@ function GameUIMail:CreateMailItem(listview,mail)
             on_disabled = "mail_saved_button_pressed.png",
         }):setButtonSelected(tolua.type(mail.isSaved)=="nil" or mail.isSaved,true):onButtonStateChanged(function(event)
             self:SaveOrUnsaveMail(mail,event.target)
-        end):addTo(content_title_bg):align(display.RIGHT_CENTER, content_title_bg:getContentSize().width, content_title_bg:getContentSize().height/2)
+        end):addTo(content_title_bg):align(display.RIGHT_CENTER, content_title_bg:getContentSize().width+4, content_title_bg:getContentSize().height/2)
 
         self:CreateCheckBox(item):align(display.LEFT_CENTER,-c_size.width/2+14,0)
             :addTo(content)
@@ -730,7 +733,7 @@ function GameUIMail:OnInboxMailsChanged(changed_mails)
                 if edit_mail.isRead then
                     self.inbox_mails[edit_mail.id].mail.isRead = true
                     -- self.inbox_mails[edit_mail.id].mail_state:setTexture("mail_state_read.png")
-                    self.inbox_mails[edit_mail.id].title_bg:setTexture("title_grey_516X30.png")
+                    self.inbox_mails[edit_mail.id].title_bg:setTexture("title_grey_482x30.png")
                     -- self.inbox_mails[edit_mail.id].mail_state:setScale(34/self.inbox_mails[edit_mail.id].mail_state:getContentSize().width)
                 end
             end
@@ -790,7 +793,7 @@ function GameUIMail:OnSavedMailsChanged(changed_mails)
                 local item = self.saved_mails[edit_mail.id]
                 print("self.save_mails_listview[edit_mail.id]",item)
                 item.mail.isRead = true
-                item.title_bg:setTexture("title_grey_516X30.png")
+                item.title_bg:setTexture("title_grey_482x30.png")
             end
         end
     end
@@ -977,38 +980,18 @@ function GameUIMail:ShowSendMailDetails(mail)
 end
 --邮件详情弹出框
 function GameUIMail:ShowMailDetails(mail)
-    -- 蒙层背景
-    local layer_bg = display.newColorLayer(UIKit:hex2c4b(0x7a000000)):addTo(self)
-    -- bg
-    local bg = WidgetUIBackGround.new({height=768}):addTo(layer_bg)
-    bg:pos((display.width-bg:getContentSize().width)/2,display.top - bg:getContentSize().height - 120)
-    -- mail content bg
-    local content_bg = WidgetUIBackGround2.new(544):addTo(bg)
-    content_bg:pos((bg:getContentSize().width-content_bg:getContentSize().width)/2,80)
-    -- title bg
-    local title_bg = display.newSprite("title_blue_596x49.png"):align(display.TOP_LEFT, 6, bg:getContentSize().height-6):addTo(bg)
-    -- title
     local title_string = (mail.fromAllianceTag~="" and "["..mail.fromAllianceTag.."] "..mail.fromName) or mail.fromName
-    local title_label = cc.ui.UILabel.new(
-        {cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = title_string,
-            font = UIKit:getFontFilePath(),
-            size = 22,
-            dimensions = cc.size(0,24),
-            color = UIKit:hex2c3b(0xffedae)
-        }):align(display.LEFT_CENTER, 150, 25)
-        :addTo(title_bg)
+    local dialog = WidgetPopDialog.new(768,title_string):AddToCurrentScene(true)
+    local body = dialog:GetBody()
+    local size = body:getContentSize()
+    
+    local content_bg = WidgetUIBackGround.new({width=568,height = 544},WidgetUIBackGround.STYLE_TYPE.STYLE_5):addTo(body)
+    content_bg:pos((size.width-content_bg:getContentSize().width)/2,80)
+    
     -- player head icon
-    local heroBg = display.newSprite("chat_hero_background.png"):align(display.CENTER, 76, bg:getContentSize().height - 70):addTo(bg)
+    local heroBg = display.newSprite("chat_hero_background.png"):align(display.CENTER, 76, size.height - 80):addTo(body)
     local hero = display.newSprite("playerIcon_default.png"):align(display.CENTER, math.floor(heroBg:getContentSize().width/2), math.floor(heroBg:getContentSize().height/2)+5)
     hero:addTo(heroBg)
-    --close button
-    cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-                self:removeChild(layer_bg, true)
-            end
-        end):align(display.CENTER, title_bg:getContentSize().width-10, title_bg:getContentSize().height-6):addTo(title_bg)
     -- 主题
     local subject_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -1016,16 +999,16 @@ function GameUIMail:ShowMailDetails(mail)
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x797154)
-        }):align(display.LEFT_CENTER, 155, bg:getContentSize().height-80)
-        :addTo(bg)
+        }):align(display.LEFT_CENTER, 155, size.height-60)
+        :addTo(body)
     local subject_content_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
             text = mail.title,
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x403c2f)
-        }):align(display.LEFT_CENTER,155 + subject_label:getContentSize().width+20, bg:getContentSize().height-80)
-        :addTo(bg)
+        }):align(display.LEFT_CENTER,155 + subject_label:getContentSize().width+20, size.height-60)
+        :addTo(body)
     -- 日期
     local date_title_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -1033,16 +1016,16 @@ function GameUIMail:ShowMailDetails(mail)
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x797154)
-        }):align(display.LEFT_CENTER, 155, bg:getContentSize().height-120)
-        :addTo(bg)
+        }):align(display.LEFT_CENTER, 155, size.height-100)
+        :addTo(body)
     local date_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
             text = GameUtils:formatTimeStyle2(mail.sendTime/1000),
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x403c2f)
-        }):align(display.LEFT_CENTER, 155 + date_title_label:getContentSize().width+20, bg:getContentSize().height-120)
-        :addTo(bg)
+        }):align(display.LEFT_CENTER, 155 + date_title_label:getContentSize().width+20, size.height-100)
+        :addTo(body)
     -- 内容
     local content_listview = UIListView.new{
         viewRect = cc.rect(0, 10, 550, 520),
@@ -1073,14 +1056,14 @@ function GameUIMail:ShowMailDetails(mail)
         delete_label:enableShadow()
 
         local del_btn = WidgetPushButton.new(
-            {normal = "resource_butter_red.png", pressed = "resource_butter_red_highlight.png"},
+            {normal = "red_btn_up_148x58.png", pressed = "red_btn_down_148x58.png"},
             {scale9 = false}
         ):setButtonLabel(delete_label)
-            :addTo(bg):align(display.CENTER, 140, 50)
+            :addTo(body):align(display.CENTER, 92, 42)
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
                     NetManager:getDeleteMailsPromise({mail.id}):done(function ()
-                        layer_bg:removeFromParent()
+                        dialog:LeftButtonClicked()
                     end)
                 end
             end)
@@ -1095,15 +1078,16 @@ function GameUIMail:ShowMailDetails(mail)
 
             replay_label:enableShadow()
             WidgetPushButton.new(
-                {normal = "yellow_btn_up_149x47.png", pressed = "yellow_btn_down_149x47.png"},
+                {normal = "yellow_btn_up_148x58.png", pressed = "yellow_btn_down_148x58.png"},
                 {scale9 = false}
             ):setButtonLabel(replay_label)
-                :addTo(bg):align(display.CENTER, bg:getContentSize().width-140, 50)
+                :addTo(body):align(display.CENTER, size.width-92, 42)
                 :onButtonClicked(function(event)
-                    self:CreateReplyMail(mail):addTo(layer_bg)
+                    dialog:LeftButtonClicked()
+                    self:OpenReplyMail(mail)
                 end)
         else
-            del_btn:setPositionX(bg:getContentSize().width/2)
+            del_btn:setPositionX(size.width/2)
         end
     end
     -- 收藏按钮
@@ -1116,14 +1100,14 @@ function GameUIMail:ShowMailDetails(mail)
         on_disabled = "mail_saved_button_pressed.png",
     }):setButtonSelected(tolua.type(mail.isSaved)=="nil" or mail.isSaved,true):onButtonStateChanged(function(event)
         self:SaveOrUnsaveMail(mail,event.target)
-    end):addTo(bg):pos(bg:getContentSize().width-48, bg:getContentSize().height-100)
+    end):addTo(body):pos(size.width-48, size.height-80)
 end
 
 -- report layer
 function GameUIMail:InitReport()
     local flag = true
     self.report_listview = UIListView.new{
-        viewRect = cc.rect(display.cx-304, display.top-870, 612, 790),
+        viewRect = cc.rect(display.cx-284, display.top-870, 568, 790),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(self.report_layer)
 
@@ -1144,10 +1128,10 @@ end
 
 function GameUIMail:CreateReportItem(listview,report)
     local item = listview:newItem()
-    local item_width, item_height = 612,200
+    local item_width, item_height = 568,150
     item.report = report
     item:setItemSize(item_width, item_height)
-    local content = WidgetPushButton.new({normal = "back_ground_608x196.png",pressed = "back_ground_608x196.png"})
+    local content = WidgetPushButton.new({normal = "back_ground_568x150.png"})
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 if not report:IsRead() then
@@ -1169,121 +1153,113 @@ function GameUIMail:CreateReportItem(listview,report)
             end
         end)
     local c_size = content:getCascadeBoundingBox().size
-    local title_bg = display.newSprite("title_red_588X30.png", 0, 66):addTo(content)
-    local report_state_bg = display.newSprite("back_ground_44X44.png", 35, 16):addTo(title_bg)
-    local report_state= display.newSprite("dragon_red.png", 22, 22):addTo(report_state_bg)
-    local from_name_label =  cc.ui.UILabel.new(
+    local title_bg_image 
+    if report:IsRead() then
+        title_bg_image = "title_grey_558x34.png"
+    else
+        if report:IsWin() then
+            title_bg_image = "title_green_558x34.png"
+        else
+            title_bg_image = "title_red_558x34.png"
+        end
+    end
+    local title_bg = display.newSprite(title_bg_image, 0, 52):addTo(content)
+    item.title_bg = title_bg
+    -- local report_state_bg = display.newSprite("back_ground_44X44.png", 35, 16):addTo(title_bg)
+    -- local report_state= display.newSprite("dragon_red.png", 22, 22):addTo(report_state_bg)
+    local report_title =  UIKit:ttfLabel(
         {
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = report:GetReportTitle(),
-            font = UIKit:getFontFilePath(),
             size = 22,
-            -- dimensions = cc.size(200,24),
-            color = UIKit:hex2c3b(0xffedae)
+            color = 0xffedae
         }):align(display.LEFT_CENTER, 60, 17)
         :addTo(title_bg)
-    local date_label =  cc.ui.UILabel.new(
+    local date_label =  UIKit:ttfLabel(
         {
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = GameUtils:formatTimeStyle2(math.floor(report.createTime/1000)),
-            font = UIKit:getFontFilePath(),
             size = 16,
-            color = UIKit:hex2c3b(0xffedae)
+            color = 0xffedae
         }):align(display.RIGHT_CENTER, 540, 17)
         :addTo(title_bg)
-    local report_content_bg = display.newSprite("report_back_ground.png", 0, -4):addTo(content)
+    local report_content_bg = display.newSprite("back_ground_484X98.png", 35, -18):addTo(content)
+    local report_big_type = report:IsAttackOrStrike()
+    if report_big_type == "strike" then
+        display.newSprite("icon_strike_69x50.png"):align(display.LEFT_BOTTOM, 0, 0):addTo(report_content_bg)
+        display.newSprite("icon_strike_69x50.png"):align(display.LEFT_BOTTOM, 410, 0):addTo(report_content_bg):flipX(true)
+    elseif report_big_type == "attack" then
+        display.newSprite("icon_attack_76x88.png"):align(display.CENTER, 110, 47):addTo(report_content_bg)
+        display.newSprite("icon_attack_76x88.png"):align(display.CENTER, 350, 47):addTo(report_content_bg)
+    end
+    local isFromMe = report:IsFromMe()
     -- 战报发出方信息
     -- 旗帜
-    display.newSprite("report_from_icon.png", 120, 47):addTo(report_content_bg)
+    display.newSprite("report_from_icon.png", 110, 47):addTo(report_content_bg)
     -- from title label
-    local from_label =  cc.ui.UILabel.new(
+    local from_label = UIKit:ttfLabel(
         {
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = _("From"),
-            font = UIKit:getFontFilePath(),
             size = 16,
-            color = UIKit:hex2c3b(0x797154)
-        }):align(display.LEFT_CENTER, 160, 70)
+            color = 0x797154
+        }):align(display.LEFT_CENTER, 150, 70)
         :addTo(report_content_bg)
     -- 发出方名字
-    local from_player_label =  cc.ui.UILabel.new(
+    local from_player_label =  UIKit:ttfLabel(
         {
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = self:GetMyName(report),
-            font = UIKit:getFontFilePath(),
+            text = isFromMe and self:GetMyName(report) or self:GetEnemyName(report),
             size = 20,
-            color = UIKit:hex2c3b(0x403c2f)
-        }):align(display.LEFT_CENTER, 160, 50)
+            color = 0x403c2f
+        }):align(display.LEFT_CENTER, 150, 50)
         :addTo(report_content_bg)
     -- 发出方所属联盟
-    local from_alliance_label =  cc.ui.UILabel.new(
+    local from_alliance_label = UIKit:ttfLabel(
         {
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = "["..self:GetMyAllianceTag(report).."]",
-            font = UIKit:getFontFilePath(),
+            text = isFromMe and "["..self:GetMyAllianceTag(report).."]" or "["..self:GetEnemyAllianceTag(report).."]",
             size = 20,
-            color = UIKit:hex2c3b(0x403c2f)
-        }):align(display.LEFT_CENTER, 160, 30)
+            color = 0x403c2f
+        }):align(display.LEFT_CENTER, 150, 30)
         :addTo(report_content_bg)
 
-
+   
     -- 战报发向方信息
     -- 旗帜
-    display.newSprite("report_to_icon.png", 360, 47):addTo(report_content_bg)
+    display.newSprite("report_to_icon.png", 350, 47):addTo(report_content_bg)
     -- to title label
-    local to_label =  cc.ui.UILabel.new(
+    local to_label = UIKit:ttfLabel(
         {
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = _("To"),
-            font = UIKit:getFontFilePath(),
             size = 16,
-            color = UIKit:hex2c3b(0x797154)
-        }):align(display.LEFT_CENTER, 400, 70)
+            color = 0x797154
+        }):align(display.LEFT_CENTER, 390, 70)
         :addTo(report_content_bg)
     -- 发向方名字
-    local to_player_label =  cc.ui.UILabel.new(
+    local to_player_label = UIKit:ttfLabel(
         {
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = self:GetEnemyName(report),
-            font = UIKit:getFontFilePath(),
+            text = isFromMe and self:GetEnemyName(report) or self:GetMyName(report),
             size = 20,
-            color = UIKit:hex2c3b(0x403c2f)
-        }):align(display.LEFT_CENTER, 400, 50)
+            color = 0x403c2f
+        }):align(display.LEFT_CENTER, 390, 50)
         :addTo(report_content_bg)
     -- 发向方所属联盟
-    local to_alliance_label =  cc.ui.UILabel.new(
+    local to_alliance_label = UIKit:ttfLabel(
         {
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = "["..self:GetEnemyAllianceTag(report).."]",
-            font = UIKit:getFontFilePath(),
+            text = isFromMe and "["..self:GetEnemyAllianceTag(report).."]" or "["..self:GetMyAllianceTag(report).."]",
             size = 20,
-            color = UIKit:hex2c3b(0x403c2f)
-        }):align(display.LEFT_CENTER, 400, 30)
+            color = 0x403c2f
+        }):align(display.LEFT_CENTER, 390, 30)
         :addTo(report_content_bg)
-
-    local report_result_bg = WidgetUIBackGround2.new(34):addTo(content):pos(-290, -87)
-    local report_result_label = cc.ui.UILabel.new(
-        {
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = self:GetReportLevel(report),
-            font = UIKit:getFontFilePath(),
-            size = 18,
-            color = UIKit:hex2c3b(0x403c2f)
-        }):align(display.CENTER, report_result_bg:getContentSize().width/2, report_result_bg:getContentSize().height/2)
-        :addTo(report_result_bg)
     item.saved_button = UICheckBoxButton.new({
-        off = "mail_saved_button_normal.png",
-        off_pressed = "mail_saved_button_normal.png",
-        off_disabled = "mail_saved_button_normal.png",
-        on = "mail_saved_button_pressed.png",
-        on_pressed = "mail_saved_button_pressed.png",
-        on_disabled = "mail_saved_button_pressed.png",
+        off = "report_saved_button_normal.png",
+        off_pressed = "report_saved_button_normal.png",
+        off_disabled = "report_saved_button_normal.png",
+        on = "report_saved_button_selected.png",
+        on_pressed = "report_saved_button_selected.png",
+        on_disabled = "report_saved_button_selected.png",
     }):onButtonStateChanged(function(event)
         self:SaveOrUnsaveReport(report,event.target)
-    end):addTo(content):pos(265, -60)
+    end):addTo(content):pos(249, -41)
         :setButtonSelected(report:IsSaved(),true)
 
-    self:CreateCheckBox(item):align(display.LEFT_CENTER,-c_size.width/2+14,0)
+    self:CreateCheckBox(item):align(display.LEFT_CENTER,-c_size.width/2+10,-18)
         :addTo(content)
 
     item:addContent(content)
@@ -1334,32 +1310,11 @@ function GameUIMail:InitSavedReports()
     dropList:align(display.TOP_CENTER,display.cx,display.top-100):addTo(self.saved_layer,2)
 end
 
-function GameUIMail:CreateReplyMail(mail)
-    -- bg
-    local reply_mail = WidgetUIBackGround.new({height=768})
-    reply_mail:pos((display.width-reply_mail:getContentSize().width)/2,display.top - reply_mail:getContentSize().height - 120)
+function GameUIMail:OpenReplyMail(mail)
+    local dialog = WidgetPopDialog.new(748,_("回复邮件")):AddToCurrentScene(true)
+    local reply_mail = dialog:GetBody()
     local r_size = reply_mail:getContentSize()
-    -- title reply_mail
-    local title_reply_mail = display.newSprite("title_blue_596x49.png"):align(display.TOP_LEFT, 6, reply_mail:getContentSize().height-6):addTo(reply_mail)
-    -- title
-    local title_label = cc.ui.UILabel.new(
-        {cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("回复邮件"),
-            font = UIKit:getFontFilePath(),
-            size = 22,
-            dimensions = cc.size(200,24),
-            color = UIKit:hex2c3b(0xffedae)
-        }):align(display.LEFT_CENTER,30, 25)
-        :addTo(title_reply_mail)
-
-    --close button
-    cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-                reply_mail:removeFromParent()
-            end
-        end):align(display.CENTER, title_reply_mail:getContentSize().width-10, title_reply_mail:getContentSize().height-6):addTo(title_reply_mail)
-
+    
     -- 收件人
     local addressee_title_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -1367,9 +1322,9 @@ function GameUIMail:CreateReplyMail(mail)
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x797154)
-        }):align(display.RIGHT_CENTER,120, r_size.height-90)
+        }):align(display.RIGHT_CENTER,120, r_size.height-70)
         :addTo(reply_mail)
-    local addressee_input_box_image = display.newSprite("input_box.png",350, r_size.height-90):addTo(reply_mail)
+    local addressee_input_box_image = display.newSprite("input_box.png",350, r_size.height-70):addTo(reply_mail)
     local addressee_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
             text = mail.fromAllianceTag~="" and _("RE:").."["..mail.fromAllianceTag.."]"..mail.fromName
@@ -1387,9 +1342,9 @@ function GameUIMail:CreateReplyMail(mail)
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x797154)
-        }):align(display.RIGHT_CENTER,120, r_size.height-140)
+        }):align(display.RIGHT_CENTER,120, r_size.height-120)
         :addTo(reply_mail)
-    local subject_input_box_image = display.newSprite("input_box.png",350, r_size.height-140):addTo(reply_mail)
+    local subject_input_box_image = display.newSprite("input_box.png",350, r_size.height-120):addTo(reply_mail)
     local subject_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
             text = _("RE:")..mail.title,
@@ -1400,7 +1355,7 @@ function GameUIMail:CreateReplyMail(mail)
         }):align(display.LEFT_CENTER,10,18)
         :addTo(subject_input_box_image)
     -- 分割线
-    display.newScale9Sprite("dividing_line_584x1.png", r_size.width/2, r_size.height-180,cc.size(594,1)):addTo(reply_mail)
+    display.newScale9Sprite("dividing_line_584x1.png", r_size.width/2, r_size.height-160,cc.size(594,1)):addTo(reply_mail)
     -- 内容
     cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -1409,7 +1364,7 @@ function GameUIMail:CreateReplyMail(mail)
             size = 18,
             dimensions = cc.size(410,24),
             color = UIKit:hex2c3b(0x797154)
-        }):align(display.LEFT_CENTER,30,r_size.height-200)
+        }):align(display.LEFT_CENTER,30,r_size.height-180)
         :addTo(reply_mail)
     -- 回复的邮件内容
     local lucid_bg = WidgetBackGroundLucid.new(472):addTo(reply_mail)
@@ -1427,7 +1382,7 @@ function GameUIMail:CreateReplyMail(mail)
 
     -- 被回复的邮件内容
     local content_listview = UIListView.new{
-        bgColor = UIKit:hex2c4b(0x7a000000),
+        -- bgColor = UIKit:hex2c4b(0x7a000000),
         viewRect = cc.rect(0, 10, 560, 170),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(lucid_bg):pos(10, 0)
@@ -1455,10 +1410,10 @@ function GameUIMail:CreateReplyMail(mail)
 
     send_label:enableShadow()
     WidgetPushButton.new(
-        {normal = "yellow_btn_up_149x47.png", pressed = "yellow_btn_down_149x47.png"},
+        {normal = "yellow_btn_up_148x58.png", pressed = "yellow_btn_down_148x58.png"},
         {scale9 = false}
     ):setButtonLabel(send_label)
-        :addTo(reply_mail):align(display.CENTER, reply_mail:getContentSize().width-120, 40)
+        :addTo(reply_mail):align(display.CENTER, reply_mail:getContentSize().width-92, 46)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 self:SendMail(mail.fromName, _("RE:")..mail.title, textView:getText())
@@ -1518,7 +1473,7 @@ function GameUIMail:OnReportsChanged( changed_map )
                 self.item_reports[report:Id()].saved_button:setButtonSelected(report:IsSaved(),true)
                 if report:IsRead() then
                     self.item_reports[report:Id()].report:SetIsRead(true)
-                    -- self.item_reports[report:Id()].title_bg:setTexture("title_grey_516X30.png")
+                    self.item_reports[report:Id()].title_bg:setTexture("title_grey_558x34.png")
                 end
             end
         end
@@ -1548,7 +1503,7 @@ function GameUIMail:OnSavedReportsChanged( changed_map )
                 -- self.item_saved_reports[report:Id()].saved_button:setButtonSelected(report:IsSaved(),true)
                 if report:IsRead() then
                 -- self.item_saved_reports[report:Id()].mail.isRead = true
-                -- self.item_saved_reports[report:Id()].title_bg:setTexture("title_grey_516X30.png")
+                -- self.item_saved_reports[report:Id()].title_bg:setTexture("title_grey_482x30.png")
                 end
             end
         end
@@ -1703,6 +1658,7 @@ function GameUIMail:GetEnemyAllianceTag(report)
 end
 
 return GameUIMail
+
 
 
 
