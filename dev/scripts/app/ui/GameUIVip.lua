@@ -10,9 +10,12 @@ local WidgetInfoNotListView = import("..widget.WidgetInfoNotListView")
 local WidgetVIPInfo = import("..widget.WidgetVIPInfo")
 local WidgetUseItems = import("..widget.WidgetUseItems")
 local Enum = import("..utils.Enum")
+local UILib = import(".UILib")
 local window = import("..utils.window")
+local Localize = import("..utils.Localize")
 local loginDays = GameDatas.Vip.loginDays
 local VIP_LEVEL = GameDatas.Vip.level
+local config_store = GameDatas.StoreItems.items
 
 local GameUIVip = UIKit:createUIClass('GameUIVip',"GameUIWithCommonHeader")
 
@@ -274,16 +277,17 @@ function GameUIVip:onExit()
     GameUIVip.super.onExit(self)
 end
 function GameUIVip:InitVip()
-    self:CreateAD():addTo(self.vip_layer):align(display.CENTER_TOP, display.cx, window.top_bottom+20)
+    self:CreateAD(4):addTo(self.vip_layer):align(display.CENTER_TOP, display.cx, window.top_bottom+20)
     local exp_bar = self:CreateVipExpBar():addTo(self.vip_layer,1,999):pos(display.cx-287, display.top-300)
     exp_bar:LightLevelBar(User:GetVipLevel())
     self:CreateVIPStatus()
 end
 
 -- 创建广告框
-function GameUIVip:CreateAD()
+function GameUIVip:CreateAD(index)
+    local data = self:GetStoreData()[index]
     local ad = WidgetPushButton.new(
-        {normal = "banner_614x146.png", pressed = "banner_614x146.png"}
+        {normal = data.config.logo}
     )
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
@@ -291,12 +295,65 @@ function GameUIVip:CreateAD()
                 self:LeftButtonClicked()
             end
         end)
-    display.newSprite("back_ground_430X115.png"):addTo(ad):align(display.CENTER, 20, -73)
-    display.newSprite("npc_110x130.png"):addTo(ad):align(display.BOTTOM_RIGHT, 307, -140)
+    -- if index==5 then
+    --     ad:
+    -- end
+    local info_bg = display.newSprite("back_ground_430X115.png"):addTo(ad)
     display.newSprite("line_663x58.png"):addTo(ad):pos(0,-140)
+    if data.config.npc then
+        info_bg:align(display.RIGHT_CENTER, 247, -73)
+        display.newSprite(data.config.npc):align(display.RIGHT_BOTTOM, 307, -140):addTo(ad)
+    else
+        info_bg:align(display.RIGHT_CENTER, 307, -73)
+    end
+    UIKit:ttfLabel({
+        text = data.name,
+        color= 0xffd200,
+        size = 30,
+        align = cc.TEXT_ALIGNMENT_CENTER,
+    }):align(display.CENTER, 290, 80):addTo(info_bg)
+
+    UIKit:ttfLabel({
+        text = data.gem,
+        size = 30,
+        color= 0xffd200,
+    }):align(display.TOP_CENTER, 290, 72):addTo(info_bg)
+
+    UIKit:ttfLabel({
+        text = string.format(_("+价值%d的道具"),data.rewards_price),
+        size = 20,
+        color= 0xffd200
+    }):align(display.CENTER, 290,24):addTo(info_bg)
+
     return ad
 end
 
+function GameUIVip:GetStoreData()
+    local data = {}
+    for __,v in ipairs(config_store) do
+        local temp_data = {}
+        temp_data['gem'] = v.gem
+        temp_data['name'] = Localize.iap_package_name[v.productId]
+        local ___,rewards_price = self:FormatGemRewards(v.rewards)
+        temp_data['rewards_price'] = rewards_price
+        temp_data['config'] = UILib.iap_package_image[v.productId]
+        table.insert(data,temp_data)
+    end
+    return data
+end
+
+function GameUIVip:FormatGemRewards(rewards)
+    local result_rewards = {}
+    local rewards_price = {}
+    local all_rewards = string.split(rewards, ",")
+    for __,v in ipairs(all_rewards) do
+        local one_reward = string.split(v,":")
+        local category,key,count = unpack(one_reward)
+        table.insert(result_rewards,{category = category,key = key,count = count})
+        rewards_price[key] = count
+    end
+    return result_rewards,DataUtils:getItemsPrice(rewards_price)
+end
 -- 创建vip等级经验条
 function GameUIVip:CreateVipExpBar()
     local  head_width = 35 -- 两头经验圈宽度
@@ -849,6 +906,7 @@ function GameUIVip:OnVipEventTimer( vip_event_new )
 end
 
 return GameUIVip
+
 
 
 

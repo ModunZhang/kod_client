@@ -27,7 +27,9 @@ function GameUIUpgradeBuilding:CreateTabButtons(param, cb)
             end
             self.upgrade_layer:setVisible(true)
         else
-            self.upgrade_layer:setVisible(false)
+            if self.upgrade_layer then
+                self.upgrade_layer:setVisible(false)
+            end
         end
         cb(tag)
     end)
