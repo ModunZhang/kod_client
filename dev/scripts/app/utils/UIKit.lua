@@ -465,7 +465,15 @@ function UIKit:commonListView(params,topEnding,bottomEnding)
     end
     return list,list_node
 end
-
+function UIKit:commonListView_1(params)
+    assert(params.direction==cc.ui.UIScrollView.DIRECTION_VERTICAL,"错误！只支持上下滑动")
+    local viewRect = params.viewRect
+    viewRect.x = 0
+    viewRect.y = 0
+    local list_node = display.newScale9Sprite("background_568x556.png",x,y,cc.size(viewRect.width,viewRect.height+24),cc.rect(10,10,548,536))
+    local list = UIListView.new(params):addTo(list_node):pos(0,12)
+    return list,list_node
+end
 function UIKit:createLineItem(params)
     -- 分割线
     local line = display.newScale9Sprite("dividing_line.png")

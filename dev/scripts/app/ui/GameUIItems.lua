@@ -501,7 +501,7 @@ function GameUIItems:OnItemsChanged( changed_map )
             if self.shop_items then
                 local item = self.shop_items[v:Name()]
                 if item then
-                    item:SetOwnCount(item)
+                    item:SetOwnCount(v)
                 end
             end
         end
