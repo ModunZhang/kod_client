@@ -37,6 +37,14 @@ local BLOOD = ResourceManager.RESOURCE_TYPE.BLOOD
 local CASINOTOKEN = ResourceManager.RESOURCE_TYPE.CASINOTOKEN
 local WALLHP = ResourceManager.RESOURCE_TYPE.WALLHP
 
+local RESOURCE_TYPE = ResourceManager.RESOURCE_TYPE
+local dump_buffs = function(...)
+    local t, name = ...
+    dump(LuaUtils:table_map(t, function(k, v)
+        return RESOURCE_TYPE[k], v
+    end), name)
+end
+
 function ResourceManager:ctor()
     ResourceManager.super.ctor(self)
     self.resources = {
@@ -262,15 +270,38 @@ function ResourceManager:GetTotalBuffData(city)
             end
         end
     end)
+    dump_buffs(buff_production_map, "建筑对资源的影响--->")
     --学院科技
+    local techs_buff_map = {
+        [WOOD] = 0,
+        [FOOD] = 0,
+        [IRON] = 0,
+        [STONE] = 0,
+        [COIN] = 0,
+        [POPULATION] = 0,
+        [WALLHP] = 0,
+        [CART] = 0,
+    }
     city:IteratorTechs(function(__,tech)
         local resource_type,buff_type,buff_value = tech:GetResourceBuffData()
         if resource_type then
             local target_map = buff_type == self.RESOURCE_BUFF_TYPE.PRODUCT and buff_production_map or buff_limt_map
             target_map[resource_type] = target_map[resource_type] + buff_value
+            techs_buff_map[resource_type] = techs_buff_map[resource_type] + buff_value
         end
     end)
+    dump_buffs(techs_buff_map, "学院科技对资源的影响--->")
     --道具buuff
+    local item_buff_map = {
+        [WOOD] = 0,
+        [FOOD] = 0,
+        [IRON] = 0,
+        [STONE] = 0,
+        [COIN] = 0,
+        [POPULATION] = 0,
+        [WALLHP] = 0,
+        [CART] = 0,
+    }
     local item_buff = ItemManager:GetAllResourceBuffData()
     for _,v in ipairs(item_buff) do
         local resource_type,buff_type,buff_value = unpack(v)
@@ -278,27 +309,41 @@ function ResourceManager:GetTotalBuffData(city)
             local target_map = buff_type == self.RESOURCE_BUFF_TYPE.PRODUCT and buff_production_map or buff_limt_map
             if type(resource_type) == 'number' then
                 target_map[resource_type] = target_map[resource_type] + buff_value
+                item_buff_map[resource_type] = item_buff_map[resource_type] + buff_value
             elseif type(resource_type) == 'table' then
                 for _,one_resource_type in ipairs(resource_type) do
                     target_map[one_resource_type] = target_map[one_resource_type] + buff_value
+                    item_buff_map[one_resource_type] = item_buff_map[one_resource_type] + buff_value
                 end
             end
         end
     end
+    dump_buffs(item_buff_map, "道具对资源的影响--->")
     --vip buff
-    buff_production_map[WALLHP] = buff_production_map[WALLHP] + User:GetVIPWallHpRecoveryAdd()
-    buff_production_map[WOOD] = buff_production_map[WOOD] + User:GetVIPWoodProductionAdd()
-    buff_production_map[FOOD] = buff_production_map[FOOD] + User:GetVIPFoodProductionAdd()
-    buff_production_map[IRON] = buff_production_map[IRON] + User:GetVIPIronProductionAdd()
-    buff_production_map[STONE] = buff_production_map[STONE] + User:GetVIPStoneProductionAdd()
-    buff_production_map[POPULATION] = buff_production_map[POPULATION] + User:GetVIPCitizenRecoveryAdd()
+    local vip_buff_map = {
+        [WOOD] = User:GetVIPWoodProductionAdd(),
+        [FOOD] = User:GetVIPFoodProductionAdd(),
+        [IRON] = User:GetVIPIronProductionAdd(),
+        [STONE] = User:GetVIPStoneProductionAdd(),
+        [POPULATION] = User:GetVIPCitizenRecoveryAdd(),
+        [WALLHP] = User:GetVIPWallHpRecoveryAdd(),
+        [COIN] = 0,
+        [CART] = 0,
+    }
+    dump_buffs(vip_buff_map, "VIP对资源的影响--->")
+    for resource_type,v in pairs(buff_production_map) do
+        buff_production_map[resource_type] = v + vip_buff_map[resource_type]
+    end
     --end
-    dump(buff_production_map,"buff_production_map--->")
-    dump(buff_limt_map,"buff_limt_map--->")
+    dump_buffs(buff_production_map,"buff_production_map--->")
+    dump_buffs(buff_limt_map,"buff_limt_map--->")
     return buff_production_map,buff_limt_map
 end
 
+
 return ResourceManager
+
+
 
 
 

@@ -39,7 +39,7 @@ function VipEvent:GetTime()
     return self.times_ or 0
 end
 function VipEvent:IsActived()
-    return self.times_ and self.times_ > 0 and self.finishTime-self.startTime>0
+    return (self.times_ and self.times_ > 0) or (self.finishTime - self.startTime > 0)
 end
 return VipEvent
 
