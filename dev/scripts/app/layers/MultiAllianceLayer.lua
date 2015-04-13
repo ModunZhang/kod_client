@@ -7,6 +7,8 @@ local MapLayer = import(".MapLayer")
 local MultiAllianceLayer = class("MultiAllianceLayer", MapLayer)
 local ZORDER = Enum("BACKGROUND", "BUILDING", "LINE", "CORPS")
 local floor = math.floor
+local min = math.min
+local max = math.max
 local timer = app.timer
 
 MultiAllianceLayer.ARRANGE = Enum("H", "V")
@@ -36,7 +38,8 @@ function MultiAllianceLayer:ctor(arrange, ...)
     --         {x = x, y = y, index = 1},
     --         {x = i, y = y + 10, index = 1},
     --         timer:GetServerTime(),
-    --         timer:GetServerTime() + 30
+    --         timer:GetServerTime() + 100,
+    --         "redDragon"
     --     )
     --     count = count + 1
     -- end
@@ -257,10 +260,13 @@ function MultiAllianceLayer:StartCorpsTimer()
                 else
                     self:DeleteCorpsById(id)
                 end
-            end
-            local line = self.lines_map[id]
-            if line then
-                line:getFilter():getGLProgramState():setUniformFloat("curTime", time)
+                local line = self.lines_map[id]
+                if line then
+                    local shader_program = line:getFilter():getGLProgramState()
+                    shader_program:setUniformFloat("curTime", time)
+                    -- local percent = elapse_time / total_time
+                    -- shader_program:setUniformFloat("percent", min(max(0, percent), 1))
+                end
             end
         end
     end)
@@ -533,6 +539,7 @@ function MultiAllianceLayer:CreateLine(id, start_pos, end_pos)
             shaderName = "lineShader"..unit_count,
             unit_count = unit_count,
             curTime = 0,
+            -- percent = 0,
         })
     ))
     sprite:setScaleY(scale)
@@ -635,6 +642,7 @@ end
 
 
 return MultiAllianceLayer
+
 
 
 
