@@ -62,14 +62,11 @@ function DataUtils:buyResource(need, has)
                 while required > 0 do
                     for i=#config,1,-1 do
                         item = config[i]
-                        if required>0 then
-                            while item.min<required do
-                                gemUsed = gemUsed + item.gem
-                                required = required - item.resource
-                                currentBuy = currentBuy + item.resource
-                                break
-                                -- print("买了",config[i].resource,"花费",config[i].gem)
-                            end
+                        if item.min < required then
+                            gemUsed = gemUsed + item.gem
+                            required = required - item.resource
+                            currentBuy = currentBuy + item.resource
+                            break
                         end
                     end
                 end
@@ -77,7 +74,7 @@ function DataUtils:buyResource(need, has)
             totalBuy[key] = currentBuy
         end
     end)
-    return gemUsed
+    return gemUsed, totalBuy
 end
 
 --[[
@@ -563,4 +560,5 @@ function DataUtils:GetNextRecruitTime()
 
     return dt1
 end
+
 

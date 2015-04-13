@@ -96,7 +96,17 @@ function WidgetManufacture:Manufacture()
         local stone_cur = resource_manager:GetStoneResource():GetResourceValueByCurrentTime(time)
         local iron_cur = resource_manager:GetIronResource():GetResourceValueByCurrentTime(time)
         local count, wood, stone, iron, time = self.toolShop:GetNeedByCategory("building")
-        local need_gems = DataUtils:buyResource({
+        dump({
+            wood = wood,
+            stone = stone,
+            iron = iron,
+        })
+        dump({
+            wood = wood_cur,
+            stone = stone_cur,
+            iron = iron_cur,
+        })
+        local need_gems, total_buy = DataUtils:buyResource({
             wood = wood,
             stone = stone,
             iron = iron,
@@ -105,6 +115,7 @@ function WidgetManufacture:Manufacture()
             stone = stone_cur,
             iron = iron_cur,
         })
+        dump(total_buy)
         if need_gems > 0 then
             UIKit:showMessageDialog(_("提示"), "资源不足!",function()
                 NetManager:getMakeBuildingMaterialPromise()
