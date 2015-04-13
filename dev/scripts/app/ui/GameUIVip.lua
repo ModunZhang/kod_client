@@ -10,9 +10,13 @@ local WidgetInfoNotListView = import("..widget.WidgetInfoNotListView")
 local WidgetVIPInfo = import("..widget.WidgetVIPInfo")
 local WidgetUseItems = import("..widget.WidgetUseItems")
 local Enum = import("..utils.Enum")
+local UILib = import(".UILib")
 local window = import("..utils.window")
+local Localize = import("..utils.Localize")
+local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
 local loginDays = GameDatas.Vip.loginDays
 local VIP_LEVEL = GameDatas.Vip.level
+local config_store = GameDatas.StoreItems.items
 
 local GameUIVip = UIKit:createUIClass('GameUIVip',"GameUIWithCommonHeader")
 
@@ -271,19 +275,49 @@ end
 function GameUIVip:onExit()
     User:RemoveListenerOnType(self,User.LISTEN_TYPE.BASIC)
     User:RemoveListenerOnType(self, User.LISTEN_TYPE.VIP_EVENT)
+    if self.ad_handle then
+        scheduler.unscheduleGlobal(self.ad_handle)
+    end
     GameUIVip.super.onExit(self)
 end
 function GameUIVip:InitVip()
-    self:CreateAD():addTo(self.vip_layer):align(display.CENTER_TOP, display.cx, window.top_bottom+20)
+    self:InitAD()
     local exp_bar = self:CreateVipExpBar():addTo(self.vip_layer,1,999):pos(display.cx-287, display.top-300)
     exp_bar:LightLevelBar(User:GetVipLevel())
     self:CreateVIPStatus()
 end
 
+function GameUIVip:InitAD()
+    local ad_clip_rect = display.newClippingRegionNode(cc.rect(window.cx-592/2,window.top_bottom-119,592,139)):addTo(self:GetView())
+    self.ad_clip_rect = ad_clip_rect
+    math.randomseed(tostring(os.time()):reverse():sub(1, 6))
+
+    self.current_ad_index = math.random(1,#self:GetStoreData())
+    self.current_ad = self:CreateAD(self.current_ad_index):addTo(ad_clip_rect):align(display.LEFT_BOTTOM,window.cx-592/2,window.top_bottom-119)
+
+    self.ad_handle = scheduler.scheduleGlobal(handler(self, self.MoveAD), 5.0, false)
+end
+function GameUIVip:MoveAD()
+    self.current_ad_index = self.current_ad_index==#self:GetStoreData() and 1 or (self.current_ad_index + 1)
+    local current_ad = self:CreateAD(self.current_ad_index):addTo(self.ad_clip_rect):align(display.LEFT_BOTTOM,window.cx-592/2+592,window.top_bottom-119)
+    transition.moveTo(self.current_ad, {
+        x = self.current_ad:getPositionX() -592, y = y, time = 1.0,
+        onComplete = function()
+        end
+    })
+    transition.moveTo(current_ad, {
+        x = current_ad:getPositionX() -592, y = y, time = 1.0,
+        onComplete = function()
+            self.current_ad:removeFromParent()
+            self.current_ad = current_ad
+        end
+    })
+end
 -- 创建广告框
-function GameUIVip:CreateAD()
+function GameUIVip:CreateAD(index)
+    local data = self:GetStoreData()[index]
     local ad = WidgetPushButton.new(
-        {normal = "banner_614x146.png", pressed = "banner_614x146.png"}
+        {normal = data.config.logo}
     )
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
@@ -291,12 +325,61 @@ function GameUIVip:CreateAD()
                 self:LeftButtonClicked()
             end
         end)
-    display.newSprite("back_ground_430X115.png"):addTo(ad):align(display.CENTER, 20, -73)
-    display.newSprite("npc_110x130.png"):addTo(ad):align(display.BOTTOM_RIGHT, 307, -140)
-    display.newSprite("line_663x58.png"):addTo(ad):pos(0,-140)
+    local info_bg = display.newSprite("back_ground_430X115.png"):addTo(ad)
+    if data.config.npc then
+        info_bg:align(display.RIGHT_CENTER, 552, 73)
+        display.newSprite(data.config.npc):align(display.RIGHT_BOTTOM, 592, 0):addTo(ad)
+    else
+        info_bg:align(display.RIGHT_CENTER, 592, 73)
+    end
+    UIKit:ttfLabel({
+        text = data.name,
+        color= 0xffd200,
+        size = 30,
+        align = cc.TEXT_ALIGNMENT_CENTER,
+    }):align(display.CENTER, 290, 80):addTo(info_bg)
+
+    UIKit:ttfLabel({
+        text = data.gem,
+        size = 30,
+        color= 0xffd200,
+    }):align(display.TOP_CENTER, 290, 72):addTo(info_bg)
+
+    UIKit:ttfLabel({
+        text = string.format(_("+价值%d的道具"),data.rewards_price),
+        size = 20,
+        color= 0xffd200
+    }):align(display.CENTER, 290,24):addTo(info_bg)
+
     return ad
 end
 
+function GameUIVip:GetStoreData()
+    local data = {}
+    for __,v in ipairs(config_store) do
+        local temp_data = {}
+        temp_data['gem'] = v.gem
+        temp_data['name'] = Localize.iap_package_name[v.productId]
+        local ___,rewards_price = self:FormatGemRewards(v.rewards)
+        temp_data['rewards_price'] = rewards_price
+        temp_data['config'] = UILib.iap_package_image[v.productId]
+        table.insert(data,temp_data)
+    end
+    return data
+end
+
+function GameUIVip:FormatGemRewards(rewards)
+    local result_rewards = {}
+    local rewards_price = {}
+    local all_rewards = string.split(rewards, ",")
+    for __,v in ipairs(all_rewards) do
+        local one_reward = string.split(v,":")
+        local category,key,count = unpack(one_reward)
+        table.insert(result_rewards,{category = category,key = key,count = count})
+        rewards_price[key] = count
+    end
+    return result_rewards,DataUtils:getItemsPrice(rewards_price)
+end
 -- 创建vip等级经验条
 function GameUIVip:CreateVipExpBar()
     local  head_width = 35 -- 两头经验圈宽度
@@ -529,23 +612,26 @@ function GameUIVip:CreateVIPButtons(level)
     local button_group = display.newLayer()
     button_group:setContentSize(cc.size(560,210))
 
-    local gap_x = 112
+    local gap_x = 115
     for i=1,VIP_MAX_LEVEL do
         local btn_pics
         if i<=level then
-            btn_pics = {normal = "vip_unlock.png", pressed = "vip_unlock.png"}
+            btn_pics = {normal = "vip_unlock_normal.png", pressed = "vip_unlock_pressed.png"}
         else
             btn_pics = {normal = "vip_lock.png", pressed = "vip_lock.png"}
         end
+        local vip_btn_bg = display.newSprite("vip_btn_back_ground_96x120.png"):addTo(button_group):align(display.LEFT_BOTTOM, (math.mod(i-1,5))*gap_x, 90-math.floor((i-1)/5)*110)
+        vip_btn_bg:setTag(i)
         local button = WidgetPushButton.new(
             btn_pics,
             {scale9 = false}
-        ):addTo(button_group,1,i):align(display.LEFT_BOTTOM, (math.mod(i-1,5))*gap_x, 90-math.floor((i-1)/5)*110)
+        ):addTo(vip_btn_bg):align(display.LEFT_BOTTOM, 0,0)
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
                     self:OpenVIPDetails(i)
                 end
             end)
+        button:setTag(i)
         display.newSprite("VIP_"..i.."_46x32.png"):addTo(button)
             :align(display.CENTER, 52,45)
     end
@@ -553,12 +639,12 @@ function GameUIVip:CreateVIPButtons(level)
         for i=1,VIP_MAX_LEVEL do
             local btn_pics
             if i<=vip_level then
-                btn_pics = {normal = "vip_unlock.png", pressed = "vip_unlock.png"}
+                btn_pics = {normal = "vip_unlock_normal.png", pressed = "vip_unlock_pressed.png"}
             else
                 btn_pics = {normal = "vip_lock.png", pressed = "vip_lock.png"}
             end
-            self:getChildByTag(i):setButtonImage("normal", btn_pics.normal, true)
-            self:getChildByTag(i):setButtonImage("pressed", btn_pics.pressed, true)
+            self:getChildByTag(i):getChildByTag(i):setButtonImage("normal", btn_pics.normal, true)
+            self:getChildByTag(i):getChildByTag(i):setButtonImage("pressed", btn_pics.pressed, true)
         end
     end
     return button_group
@@ -849,6 +935,9 @@ function GameUIVip:OnVipEventTimer( vip_event_new )
 end
 
 return GameUIVip
+
+
+
 
 
 

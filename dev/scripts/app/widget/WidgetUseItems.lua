@@ -144,6 +144,8 @@ function WidgetUseItems:OpenChangePlayerOrCityName(item)
     editbox:align(display.LEFT_TOP,16, size.height-30)
     editbox:addTo(body)
 
+    local item_box_bg = self:GetListBg(size.width/2,90,568,154):addTo(body)
+
     self:CreateItemBox(item,function ()
         local newName = string.trim(editbox:getText())
         if string.len(newName) == 0 then
@@ -174,12 +176,12 @@ function WidgetUseItems:OpenChangePlayerOrCityName(item)
             dialog:LeftButtonClicked()
         end)
     end
-    ):addTo(body):align(display.CENTER,size.width/2,90)
+    ):addTo(item_box_bg):align(display.CENTER,item_box_bg:getContentSize().width/2,item_box_bg:getContentSize().height/2)
     return dialog
 end
 function WidgetUseItems:OpenBuffDialog( item )
     local same_items = ItemManager:GetSameTypeItems(item)
-    local dialog = WidgetPopDialog.new(#same_items * 138 + 100,_("激活增益道具"),window.top-230)
+    local dialog = WidgetPopDialog.new(#same_items * 130 + 140,_("激活增益道具"),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
 
@@ -195,6 +197,11 @@ function WidgetUseItems:OpenBuffDialog( item )
         buff_status_label:setString(_("未激活"))
     end
 
+
+    local list_bg = self:GetListBg(size.width/2,(#same_items * 130+24)/2+30, 568, #same_items * 130+24)
+        :addTo(body)
+
+    local which_bg = true
     for i,v in ipairs(same_items) do
         self:CreateItemBox(
             v,
@@ -212,8 +219,10 @@ function WidgetUseItems:OpenBuffDialog( item )
                 NetManager:getBuyAndUseItemPromise(item_name,{}):done(function ()
                     dialog:LeftButtonClicked()
                 end)
-            end
-        ):addTo(body):align(display.CENTER,size.width/2,size.height- 150 - (i-1)*138)
+            end,
+            which_bg
+        ):addTo(list_bg):align(display.CENTER,568/2,#same_items * 130+12 - 130/2 - (i-1)*130)
+        which_bg = not which_bg
     end
     function dialog:OnItemEventTimer( item_event_new )
         local item_event = ItemManager:GetItemEventByType( string.split(item:Name(),"_")[1] )
@@ -251,19 +260,19 @@ function WidgetUseItems:OpenBuffDialog( item )
 end
 function WidgetUseItems:OpenResourceDialog( item )
     local same_items = ItemManager:GetSameTypeItems(item)
-    local dialog = WidgetPopDialog.new(4 * 138 +40,_("增益道具"),window.top-230)
+    local dialog = WidgetPopDialog.new(4 * 130 +24 + 70,_("增益道具"),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
 
-    local list,list_node = UIKit:commonListView({
+    local list,list_node = UIKit:commonListView_1({
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
-        viewRect = cc.rect(0, 0,570,4 * 138),
-    },false)
+        viewRect = cc.rect(0, 0,570,4 * 130),
+    })
     list_node:addTo(body):align(display.BOTTOM_CENTER, size.width/2,20)
-
+    local which_bg = true
     for i,v in ipairs(same_items) do
         local list_item = list:newItem()
-        list_item:setItemSize(570,136)
+        list_item:setItemSize(570,130)
         list_item:addContent(self:CreateItemBox(
             v,
             function ()
@@ -280,17 +289,19 @@ function WidgetUseItems:OpenResourceDialog( item )
                 NetManager:getBuyAndUseItemPromise(item_name,{}):done(function ()
                     dialog:LeftButtonClicked()
                 end)
-            end
+            end,
+            which_bg
         )
         )
         list:addItem(list_item)
+        which_bg = not which_bg
     end
     list:reload()
     return dialog
 end
 function WidgetUseItems:OpenHeroBloodDialog( item )
     local same_items = ItemManager:GetSameTypeItems(item)
-    local dialog = WidgetPopDialog.new(#same_items * 138 +110,_("英雄之血"),window.top-230)
+    local dialog = WidgetPopDialog.new(#same_items * 130 +150,_("英雄之血"),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
     local blood_bg = display.newScale9Sprite("back_ground_398x97.png",size.width/2,size.height-50,cc.size(556,58),cc.rect(10,10,378,77))
@@ -308,6 +319,10 @@ function WidgetUseItems:OpenHeroBloodDialog( item )
         color = 0x28251d,
     }):align(display.RIGHT_CENTER,blood_bg:getContentSize().width-40,blood_bg:getContentSize().height/2)
         :addTo(blood_bg)
+    local list_bg = self:GetListBg(size.width/2,(#same_items * 130+24)/2+30, 568, #same_items * 130+24)
+        :addTo(body)
+
+    local which_bg = true
     for i,v in ipairs(same_items) do
         self:CreateItemBox(
             v,
@@ -325,15 +340,17 @@ function WidgetUseItems:OpenHeroBloodDialog( item )
                 NetManager:getBuyAndUseItemPromise(item_name,{}):done(function ()
                     dialog:LeftButtonClicked()
                 end)
-            end
-        ):addTo(body):align(display.CENTER,size.width/2,size.height - 160 - (i-1)*138)
+            end,
+            which_bg
+        ):addTo(list_bg):align(display.CENTER,568/2,#same_items * 130+12 - 130/2 - (i-1)*130)
+        which_bg = not which_bg
     end
     return dialog
 end
 function WidgetUseItems:OpenOneDragonItemDialog( item ,dragon)
     local same_items = ItemManager:GetSameTypeItems(item)
     local increase_type = string.split(item:Name(),"_")[1]
-    local dialog = WidgetPopDialog.new(#same_items*138+110,increase_type == "dragonHp" and _("增加龙的生命值") or _("增加龙的经验"),window.top-230)
+    local dialog = WidgetPopDialog.new(#same_items*130+150,increase_type == "dragonHp" and _("增加龙的生命值") or _("增加龙的经验"),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
     local blood_bg = display.newScale9Sprite("back_ground_398x97.png",size.width/2,size.height-50,cc.size(556,58),cc.rect(10,10,378,77))
@@ -351,6 +368,13 @@ function WidgetUseItems:OpenOneDragonItemDialog( item ,dragon)
         color = 0x28251d,
     }):align(display.RIGHT_CENTER,blood_bg:getContentSize().width-40,blood_bg:getContentSize().height/2)
         :addTo(blood_bg)
+
+
+    local list_bg = self:GetListBg(size.width/2,(#same_items * 130+24)/2+30, 568, #same_items * 130+24)
+        :addTo(body)
+
+    local which_bg = true
+
     for i,v in ipairs(same_items) do
         self:CreateItemBox(
             v,
@@ -372,8 +396,10 @@ function WidgetUseItems:OpenOneDragonItemDialog( item ,dragon)
                 }}):done(function ()
                     dialog:LeftButtonClicked()
                 end)
-            end
-        ):addTo(body):align(display.CENTER,size.width/2,size.height - 160 - (i-1)*138)
+            end,
+            which_bg
+        ):addTo(list_bg):align(display.CENTER,568/2,#same_items * 130+12 - 130/2 - (i-1)*130)
+        which_bg = not which_bg
     end
     return dialog
 end
@@ -507,11 +533,11 @@ function WidgetUseItems:OpenIncreaseDragonExpOrHp( item )
         return dragon_frame
     end
 
-    local dialog = WidgetPopDialog.new(192 + dragon_num*136,increase_type == "dragonHp" and _("增加龙的生命值") or _("增加龙的经验"),window.top-230)
+    local dialog = WidgetPopDialog.new(220 + dragon_num*136,increase_type == "dragonHp" and _("增加龙的生命值") or _("增加龙的经验"),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
 
-    local origin_y = size.height-240
+    local origin_y = size.height-260
     local gap_y = 130
     local add_count = 0
     local optional_dragon = {}
@@ -550,6 +576,8 @@ function WidgetUseItems:OpenIncreaseDragonExpOrHp( item )
         end
     end
 
+    local item_box_bg = self:GetListBg(size.width/2,size.height - 100,568,154):addTo(body)
+    
     self:CreateItemBox(
         item,
         function ()
@@ -585,15 +613,18 @@ function WidgetUseItems:OpenIncreaseDragonExpOrHp( item )
                 dialog:LeftButtonClicked()
             end)
         end
-    ):addTo(body):align(display.CENTER,size.width/2,size.height - 100)
+    ):addTo(item_box_bg):align(display.CENTER,item_box_bg:getContentSize().width/2,item_box_bg:getContentSize().height/2)
     return dialog
 end
 function WidgetUseItems:OpenChestDialog( item )
     local same_items = ItemManager:GetSameTypeItems(item)
-    local dialog = WidgetPopDialog.new(#same_items * 138 +100,item:GetLocalizeName(),window.top-230)
+    local dialog = WidgetPopDialog.new(#same_items * 130 +140,item:GetLocalizeName(),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
+    local list_bg = self:GetListBg(size.width/2,(#same_items * 130+24)/2+30, 568, #same_items * 130+24)
+        :addTo(body)
 
+    local which_bg = true
     for i,v in ipairs(same_items) do
         self:CreateItemBox(
             v,
@@ -621,15 +652,18 @@ function WidgetUseItems:OpenChestDialog( item )
                 NetManager:getBuyAndUseItemPromise(item_name,{}):done(function ()
                     dialog:LeftButtonClicked()
                 end)
-            end
-        ):addTo(body):align(display.CENTER,size.width/2,size.height - 120 - (i-1)*138)
+            end,
+            which_bg
+        ):addTo(list_bg):align(display.CENTER,568/2,#same_items * 130+12 - 130/2 - (i-1)*130)
+        which_bg = not which_bg
     end
     return dialog
 end
 function WidgetUseItems:OpenMoveTheCityDialog( item ,params)
-    local dialog = WidgetPopDialog.new(138 +100,item:GetLocalizeName(),window.top-230)
+    local dialog = WidgetPopDialog.new(200,item:GetLocalizeName(),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
+    local item_box_bg = self:GetListBg(size.width/2,90,568,154):addTo(body)
 
     self:CreateItemBox(
         item,
@@ -660,15 +694,19 @@ function WidgetUseItems:OpenMoveTheCityDialog( item ,params)
                 dialog:LeftButtonClicked()
             end)
         end
-    ):addTo(body):align(display.CENTER,size.width/2,size.height - 120 )
+    ):addTo(item_box_bg):align(display.CENTER,item_box_bg:getContentSize().width/2,item_box_bg:getContentSize().height/2)
     return dialog
 end
 function WidgetUseItems:OpenNormalDialog( item )
     local same_items = ItemManager:GetSameTypeItems(item)
-    local dialog = WidgetPopDialog.new(#same_items * 138 +100,item:GetLocalizeName(),window.top-230)
+    local dialog = WidgetPopDialog.new(#same_items * 130 +100,item:GetLocalizeName(),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
 
+    local list_bg = self:GetListBg(size.width/2,(#same_items * 130+24)/2+30, 568, #same_items * 130+24)
+        :addTo(body)
+
+    local which_bg = true
     for i,v in ipairs(same_items) do
         self:CreateItemBox(
             v,
@@ -687,14 +725,16 @@ function WidgetUseItems:OpenNormalDialog( item )
                 NetManager:getBuyAndUseItemPromise(item_name,{}):done(function ()
                     dialog:LeftButtonClicked()
                 end)
-            end
-        ):addTo(body):align(display.CENTER,size.width/2,size.height - 120 - (i-1)*138)
+            end,
+            which_bg
+        ):addTo(list_bg):align(display.CENTER,568/2,#same_items * 130+12 - 130/2 - (i-1)*130)
+        which_bg = not which_bg
     end
     return dialog
 end
 function WidgetUseItems:OpenVipActive( item )
     local same_items = ItemManager:GetSameTypeItems(item)
-    local dialog = WidgetPopDialog.new(4 * 138 +40,_("激活VIP"),window.top-230)
+    local dialog = WidgetPopDialog.new(4 * 130+24 +80,_("激活VIP"),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
     -- 是否激活 vip
@@ -702,12 +742,13 @@ function WidgetUseItems:OpenVipActive( item )
     local vip_status_label = UIKit:ttfLabel({
         size = 22,
         color = vip_event:IsActived() and 0x007c23 or 0x403c2f,
-    }):addTo(body):align(display.CENTER,size.width/2, size.height-50)
+    }):addTo(body):align(display.CENTER,size.width/2, size.height-35)
     if vip_event:IsActived() then
         vip_status_label:setString(_("已激活,剩余时间:")..GameUtils:formatTimeStyle1(vip_event:GetTime()))
     else
         vip_status_label:setString(_("未激活"))
     end
+
 
 
     function dialog:OnVipEventTimer( vip_event_new )
@@ -726,15 +767,16 @@ function WidgetUseItems:OpenVipActive( item )
 
     User:AddListenOnType(dialog, User.LISTEN_TYPE.VIP_EVENT)
 
-    local list,list_node = UIKit:commonListView({
+    local list,list_node = UIKit:commonListView_1({
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
-        viewRect = cc.rect(0, 0,570,4 * 138 - 60),
-    },false)
+        viewRect = cc.rect(0, 0,570,4 * 130),
+    })
     list_node:addTo(body):align(display.BOTTOM_CENTER, size.width/2,20)
 
+    local list_bg = true
     for i,v in ipairs(same_items) do
         local list_item = list:newItem()
-        list_item:setItemSize(570,136)
+        list_item:setItemSize(570,130)
         list_item:addContent(self:CreateItemBox(
             v,
             function ()
@@ -751,17 +793,19 @@ function WidgetUseItems:OpenVipActive( item )
                 NetManager:getBuyAndUseItemPromise(item_name,{}):done(function ()
                     dialog:LeftButtonClicked()
                 end)
-            end
+            end,
+            list_bg
         )
         )
         list:addItem(list_item)
+        list_bg = not list_bg
     end
     list:reload()
     return dialog
 end
 function WidgetUseItems:OpenWarSpeedupDialog( item ,march_event)
     local same_items = ItemManager:GetSameTypeItems(item)
-    local dialog = WidgetPopDialog.new(#same_items * 138 + 100,_("战争沙漏"),window.top-230)
+    local dialog = WidgetPopDialog.new(#same_items * 130 + 140,_("战争沙漏"),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
 
@@ -771,6 +815,10 @@ function WidgetUseItems:OpenWarSpeedupDialog( item ,march_event)
         color = 0x007c23,
     }):addTo(body):align(display.CENTER,size.width/2, size.height-50)
 
+    local list_bg = self:GetListBg(size.width/2,(#same_items * 130+24)/2+30, 568, #same_items * 130+24)
+        :addTo(body)
+
+    local which_bg = true
     for i,v in ipairs(same_items) do
         self:CreateItemBox(
             v,
@@ -799,8 +847,10 @@ function WidgetUseItems:OpenWarSpeedupDialog( item ,march_event)
                 }):done(function ()
                     dialog:LeftButtonClicked()
                 end)
-            end
-        ):addTo(body):align(display.CENTER,size.width/2,size.height- 150 - (i-1)*138)
+            end,
+            which_bg
+        ):addTo(list_bg):align(display.CENTER,568/2,#same_items * 130+12 - 130/2 - (i-1)*130)
+        which_bg = not which_bg
     end
     function dialog:OnAttackMarchEventTimerChanged( attackMarchEvent )
         if march_event:WithObject():Id() == attackMarchEvent:Id() and (attackMarchEvent:GetPlayerRole() == attackMarchEvent.MARCH_EVENT_PLAYER_ROLE.SENDER
@@ -822,9 +872,11 @@ function WidgetUseItems:OpenWarSpeedupDialog( item ,march_event)
     return dialog
 end
 function WidgetUseItems:OpenRetreatTroopDialog( item,event )
-    local dialog = WidgetPopDialog.new( 138 +100,item:GetLocalizeName(),window.top-230)
+    local dialog = WidgetPopDialog.new( 130 +80,item:GetLocalizeName(),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
+
+    local item_box_bg = self:GetListBg(size.width/2,100,568,154):addTo(body)
 
     self:CreateItemBox(
         item,
@@ -853,35 +905,55 @@ function WidgetUseItems:OpenRetreatTroopDialog( item,event )
                 dialog:LeftButtonClicked()
             end)
         end
-    ):addTo(body):align(display.CENTER,size.width/2,size.height - 120)
+    ):addTo(item_box_bg):align(display.CENTER,item_box_bg:getContentSize().width/2,item_box_bg:getContentSize().height/2)
+
+    function dialog:OnAttackMarchEventTimerChanged( attackMarchEvent )
+        if event:WithObject():Id() == attackMarchEvent:Id() and (attackMarchEvent:GetPlayerRole() == attackMarchEvent.MARCH_EVENT_PLAYER_ROLE.SENDER
+            or attackMarchEvent:GetPlayerRole() == attackMarchEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER) then
+            if attackMarchEvent:GetTime()<=5 then
+                dialog:LeftButtonClicked()
+            end
+        end
+    end
+
+    local alliance = Alliance_Manager:GetMyAlliance()
+
+    alliance:AddListenOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
+
+    dialog:addCloseCleanFunc(function ()
+        alliance:RemoveListenerOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
+    end)
     return dialog
 end
 
-function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc,buyAndUseFunc)
-    local body = display.newNode()
-    body:setContentSize(cc.size(570,128))
+function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc,buyAndUseFunc,which_bg)
+    -- local body = display.newNode()
+    -- body:setContentSize(cc.size(570,128))
+    local body_image = which_bg and "upgrade_resources_background_2.png" or "upgrade_resources_background_3.png"
+    local body = display.newScale9Sprite(body_image,0,0,cc.size(548,130),cc.rect(10,10,500,26))
+
 
     -- icon bg
-    local icon_bg = display.newSprite("box_120x128.png"):addTo(body):pos(60,64)
-    local item_bg = display.newSprite("box_118x118.png"):addTo(icon_bg):align(display.CENTER, icon_bg:getContentSize().width/2, icon_bg:getContentSize().height/2)
-    local item_icon_color_bg = display.newSprite("box_item_100x100.png"):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
+    -- local icon_bg = display.newSprite("box_120x128.png"):addTo(body):pos(60,64)
+    local item_bg = display.newSprite("box_118x118.png"):addTo(body):pos(65,65)
+    -- local item_icon_color_bg = display.newSprite("box_item_100x100.png"):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
     local item_icon = display.newSprite(UILib.item[item:Name()]):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2):scale(0.6)
     item_icon:scale(100/item_icon:getContentSize().width)
-    local desc_bg = display.newSprite("box_450x128.png"):addTo(body):pos(345,64)
+    -- local desc_bg = display.newSprite("box_450x128.png"):addTo(body):pos(345,64)
 
     -- 道具名称
     UIKit:ttfLabel({
         text = item:GetLocalizeName(),
         size = 24,
-        color = 0x514d3e,
-    }):addTo(desc_bg):align(display.LEFT_CENTER,20, desc_bg:getContentSize().height-20)
+        color = 0x403c2f,
+    }):addTo(body):align(display.LEFT_CENTER,130, body:getContentSize().height-20)
     -- 道具介绍
     UIKit:ttfLabel({
         text = item:GetLocalizeDesc(),
         size = 20,
-        color = 0x797154,
+        color = 0x5c553f,
         dimensions = cc.size(260,0)
-    }):addTo(desc_bg):align(display.LEFT_TOP,20, desc_bg:getContentSize().height/2+20)
+    }):addTo(body):align(display.LEFT_CENTER,130, body:getContentSize().height/2-10)
 
     local btn_pics , btn_label, btn_call_back
     if item:Count()<1 then
@@ -906,7 +978,7 @@ function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc,buyAndUseFun
             end
         end
         if item:IsSell() then
-            local price_bg = display.newSprite("back_ground_118x36.png"):addTo(body):align(display.CENTER,490,84)
+            local price_bg = display.newSprite("back_ground_118x36.png"):addTo(body):align(display.CENTER,470,94)
             -- gem icon
             local gem_icon = display.newSprite("gem_icon_62x61.png"):addTo(price_bg):align(display.CENTER, 20, price_bg:getContentSize().height/2):scale(0.6)
             UIKit:ttfLabel({
@@ -917,12 +989,12 @@ function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc,buyAndUseFun
                 :addTo(price_bg)
         end
     else
-        local num_bg = display.newSprite("back_ground_102x30.png"):addTo(item_bg):pos(icon_bg:getContentSize().width/2,20)
+        local num_bg = display.newSprite("back_ground_118x36.png"):addTo(body):align(display.CENTER,470,94)
 
         local own_label = UIKit:ttfLabel({
-            text = _("拥有")..item:Count(),
+            text = _("拥有")..":"..item:Count(),
             size = 20,
-            color = 0xffedae,
+            color = 0x403c2f,
         }):addTo(num_bg):align(display.CENTER,num_bg:getContentSize().width/2, num_bg:getContentSize().height/2)
 
         btn_pics = {normal = "yellow_btn_up_148x58.png", pressed = "yellow_btn_down_148x58.png"}
@@ -935,7 +1007,7 @@ function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc,buyAndUseFun
         btn_pics,
         {scale9 = false}
     ):setButtonLabel(UIKit:commonButtonLable({text = btn_label}))
-        :addTo(body):align(display.CENTER, 490, 34)
+        :addTo(body):align(display.CENTER, 470, 34)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 if checkUseFunc(item) then
@@ -950,7 +1022,13 @@ function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc,buyAndUseFun
     return body
 end
 
+function WidgetUseItems:GetListBg(x,y,width,height)
+    return display.newScale9Sprite("background_568x556.png",x,y,cc.size(width,height),cc.rect(10,10,548,536))
+end
 return WidgetUseItems
+
+
+
 
 
 
