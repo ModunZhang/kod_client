@@ -300,7 +300,7 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
     self.slider_input = slider_input
 
     local re_time = DataUtils:GetNextRecruitTime()
-    if tolua.type(re_time) == "boolean" and re_time then
+    if tolua.type(re_time) == "boolean" and re_time or not soldier_config.specialMaterials then
         -- 立即招募
         local size = back_ground:getContentSize()
         local instant_button = WidgetPushButton.new(
@@ -598,7 +598,7 @@ function WidgetRecruitSoldier:OnCountChanged(count)
     self.count = count
 
     local re_time = DataUtils:GetNextRecruitTime()
-    if tolua.type(re_time) == "boolean" and re_time then
+    if tolua.type(re_time) == "boolean" and re_time or not soldier_config.specialMaterials then
         -- 按钮
         local enable = count > 0
         self.instant_button:setButtonEnabled(enable)
