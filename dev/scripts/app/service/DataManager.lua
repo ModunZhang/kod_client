@@ -5,19 +5,26 @@ function DataManager:setUserData( userData, deltaData )
     self:OnUserDataChanged(self.user, app.timer:GetServerTime(), deltaData)
 end
 function DataManager:setUserAllianceData(allianceData,deltaData)
-	-- dump(allianceData,"setUserAllianceData allianceData-->")
-	-- dump(deltaData,"setUserAllianceData allianceData-->")
-	self.alliance = allianceData
+	self.allianceData = allianceData
 	if allianceData == json.null then return end
 	Alliance_Manager:OnAllianceDataChanged(allianceData,app.timer:GetServerTime(),deltaData)
 end
 
 function DataManager:getUserAllianceData()
-	return self.alliance
+	return self.allianceData
 end
 
 function DataManager:getUserData(  )
     return self.user
+end
+
+function DataManager:setEnemyAllianceData(enemyAllianceData,deltaData)
+	self.enemyAllianceData = enemyAllianceData
+	Alliance_Manager:OnEnemyAllianceDataChanged(enemyAllianceData,app.timer:GetServerTime(),deltaData)
+end
+
+function DataManager:getEnemyAllianceData()
+	return self.enemyAllianceData
 end
 
 function DataManager:OnUserDataChanged(userData,timer, deltaData)

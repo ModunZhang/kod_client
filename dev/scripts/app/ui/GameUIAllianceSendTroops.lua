@@ -60,7 +60,7 @@ function GameUIAllianceSendTroops:GetMyAlliance()
 end
 
 function GameUIAllianceSendTroops:GetEnemyAlliance()
-    return self:GetMyAlliance():GetEnemyAlliance()
+    return Alliance_Manager:GetEnemyAlliance()
 end
 
 function GameUIAllianceSendTroops:GetMarchTime(soldier_show_table)

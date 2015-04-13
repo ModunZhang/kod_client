@@ -71,7 +71,7 @@ function Alliance:ctor(id, name, aliasName, defaultLanguage, terrainType)
     self.villageEvents = {}
     self.alliance_villages = {}
     self.alliance_belvedere = AllianceBelvedere.new(self)
-    self:SetNeedUpdateEnemyAlliance(false)
+    -- self:SetNeedUpdateEnemyAlliance(false)
 
     -- 联盟道具管理
     self.items_manager = AllianceItemsManager.new()
@@ -362,9 +362,6 @@ function Alliance:GetOtherRequestEventsNum()
     return request_num
 end
 function Alliance:Reset()
-    if self:NeedUpdateEnemyAlliance() then
-        self:GetEnemyAlliance():Reset()
-    end
     self:GetAllianceBelvedere():Reset()
     for k,v in pairs(self) do
         if type(v) == 'string' then
@@ -413,15 +410,6 @@ function Alliance:OnJoinEventsChanged()
     end)
 end
 function Alliance:OnAllianceDataChanged(alliance_data,refresh_time,deltaData)
-    if self:NeedUpdateEnemyAlliance() and alliance_data.enemyAllianceDoc then
-        if deltaData then
-            self:UpdateEnemyAlliance(alliance_data.enemyAllianceDoc,alliance_data.basicInfo and alliance_data.basicInfo.status or nil,
-                deltaData.enemyAllianceDoc or {})
-        else
-            self:UpdateEnemyAlliance(alliance_data.enemyAllianceDoc,alliance_data.basicInfo and alliance_data.basicInfo.status or nil,deltaData)
-        end
-
-    end
     if alliance_data.notice then
         self:SetNotice(alliance_data.notice)
     end
@@ -669,9 +657,6 @@ function Alliance:OnTimer(current_time)
     self:IteratorVillageEvents(function(villageEvent)
         villageEvent:OnTimer(current_time)
     end)
-    if self:NeedUpdateEnemyAlliance() then
-        self:GetEnemyAlliance():OnTimer(current_time)
-    end
 end
 
 --行军事件
@@ -1099,8 +1084,9 @@ end
 ------------------------------------------------------------------------------------------
 function Alliance:OnVillageEventTimer(villageEvent)
     local village = self:GetAllianceVillageInfos()[villageEvent:VillageData().id]
-    if not village then
-        village = self:GetEnemyAlliance():GetAllianceVillageInfos()[villageEvent:VillageData().id]
+    if not village and Alliance_Manager:HaveEnemyAlliance() then
+        local enemy_alliance = Alliance_Manager:GetEnemyAlliance()
+        village = enemy_alliance:GetAllianceVillageInfos()[villageEvent:VillageData().id]
     end
     if village then
         if villageEvent:GetTime() >= 0 then
@@ -1250,70 +1236,12 @@ function Alliance:GetAllianceVillageInfos()
     return self.alliance_villages
 end
 
---敌方联盟
-function Alliance:GetEnemyAlliance()
-    return self.enemyAlliance
+function Alliance:SetIsMyAlliance(isMyAlliance)
+    self.isMyAlliance = isMyAlliance
 end
 
-function Alliance:SetEnemyAlliance(alliance)
-    self.enemyAlliance = alliance
-end
-
-function Alliance:HaveEnemyAlliance()
-    return not self:GetEnemyAlliance():IsDefault()
-end
-
-function Alliance:InitEnemyAlliance()
-    local enemy_alliance = Alliance.new()
-    enemy_alliance:SetEnemyAlliance(self)
-    self:SetEnemyAlliance(enemy_alliance)
-end
-
-function Alliance:UpdateEnemyAlliance(json_data,my_alliance_status,deltaData)
-    if not json_data then return end
-    if my_alliance_status == 'protect' or my_alliance_status == 'peace' then
-        self:GetEnemyAlliance():Reset()
-    else
-        local enemy_alliance = self:GetEnemyAlliance()
-        if enemy_alliance:IsDefault() then
-            local my_belvedere = self:GetAllianceBelvedere()
-            local enemy_belvedere = enemy_alliance:GetAllianceBelvedere()
-            enemy_belvedere:AddListenOnType(my_belvedere, enemy_belvedere.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
-            enemy_belvedere:AddListenOnType(my_belvedere, enemy_belvedere.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
-            enemy_belvedere:AddListenOnType(my_belvedere, enemy_belvedere.LISTEN_TYPE.OnAttackMarchEventDataChanged)
-            --瞭望塔coming不需要知道敌方对自己联盟的村落事件和返回事件 reset 会自动去掉所有监听
-        end
-        if json_data._id then
-            enemy_alliance:SetId(json_data._id)
-        end
-        if json_data.basicInfo then
-            enemy_alliance:SetName(json_data.basicInfo.name)
-            enemy_alliance:SetAliasName(json_data.basicInfo.tag)
-        end
-        enemy_alliance:OnAllianceDataChanged(json_data,deltaData)
-    end
-end
-
-function Alliance:SetNeedUpdateEnemyAlliance(need)
-    self.needUpdateEnemyAlliance = need
-end
-
-function Alliance:NeedUpdateEnemyAlliance()
-    return self.needUpdateEnemyAlliance
+function Alliance:IsMyAlliance()
+    return self.isMyAlliance
 end
 
 return Alliance
-
-
-
-
-
-
-
-
-
-
-
-
-
-
