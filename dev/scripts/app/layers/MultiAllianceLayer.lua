@@ -525,7 +525,9 @@ function MultiAllianceLayer:IsExistCorps(id)
     return self.corps_map[id] ~= nil
 end
 function MultiAllianceLayer:CreateLine(id, start_pos, end_pos)
-    assert(self.lines_map[id] == nil)
+    if self.lines_map[id] then
+        self.lines_map[id]:removeFromParent()
+    end
     local march_info = self:GetMarchInfoWith(id, start_pos, end_pos)
     local middle = cc.pMidpoint(march_info.start_info.real, march_info.end_info.real)
     local scale = march_info.length / 22
