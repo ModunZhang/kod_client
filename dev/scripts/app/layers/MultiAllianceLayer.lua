@@ -365,26 +365,109 @@ local soldier_dir_map = {
     {"move_45", corps_scale, soldier_scale}, -- x+,y-
     {"move_45", corps_scale, soldier_scale}, -- y-
 }
+local soldier_config = {
+    ----
+    ["swordsman"] = {
+        count = 4,
+        {"bubing_1", -10, 45, 0.8},
+        {"bubing_2", -20, 40, 0.8},
+        {"bubing_3", -15, 35, 0.8},
+    },
+    ["ranger"] = {
+        count = 4,
+        {"gongjianshou_1", 0, 45, 0.8},
+        {"gongjianshou_2", 0, 45, 0.8},
+        {"gongjianshou_3", 0, 45, 0.8},
+    },
+    ["lancer"] = {
+        count = 2,
+        {"qibing_1", -10, 50, 0.8},
+        {"qibing_2", -10, 50, 0.8},
+        {"qibing_3", -10, 50, 0.8},
+    },
+    ["catapult"] = {
+        count = 1,
+        {  "toushiche", 0, 35, 1},
+        {"toushiche_2", 0, 35, 1},
+        {"toushiche_3", 0, 35, 1},
+    },
+
+    -----
+    ["sentinel"] = {
+        count = 4,
+        {"shaobing_1", 0, 55, 0.8},
+        {"shaobing_2", 0, 55, 0.8},
+        {"shaobing_3", 0, 55, 0.8},
+    },
+    ["crossbowman"] = {
+        count = 4,
+        {"nugongshou_1", 0, 45, 0.8},
+        {"nugongshou_2", 0, 50, 0.8},
+        {"nugongshou_3", 15, 45, 0.8},
+    },
+    ["horseArcher"] = {
+        count = 2,
+        {"youqibing_1", -15, 55, 0.8},
+        {"youqibing_2", -15, 55, 0.8},
+        {"youqibing_3", -15, 55, 0.8},
+    },
+    ["ballista"] = {
+        count = 1,
+        {"nuche_1", 0, 30, 1},
+        {"nuche_2", 0, 30, 1},
+        {"nuche_3", 0, 30, 1},
+    },
+    ----
+    ["skeletonWarrior"] = {
+        count = 4,
+        {"kulouyongshi", 0, 40, 0.8},
+        {"kulouyongshi", 0, 40, 0.8},
+        {"kulouyongshi", 0, 40, 0.8},
+    },
+    ["skeletonArcher"] = {
+        count = 4,
+        {"kulousheshou", 25, 40, 0.8},
+        {"kulousheshou", 25, 40, 0.8},
+        {"kulousheshou", 25, 40, 0.8},
+    },
+    ["deathKnight"] = {
+        count = 2,
+        {"siwangqishi", -10, 50, 0.8},
+        {"siwangqishi", -10, 50, 0.8},
+        {"siwangqishi", -10, 50, 0.8},
+    },
+    ["meatWagon"] = {
+        count = 1,
+        {"jiaorouche", 0, 30, 0.8},
+        {"jiaorouche", 0, 30, 0.8},
+        {"jiaorouche", 0, 30, 0.8},
+    },
+}
+
 local len = 30
 local location_map = {
-    {len * 0.5, len * 0.5},
-    {- len * 0.5, len * 0.5},
-    {len * 0.5, - len * 0.5},
-    {- len * 0.5, - len * 0.5},
+    [1] = {
+        {0, 0},
+    },
+    [2] = {
+        {- len * 0.5, len * 0.5},
+        {- len * 0.5, - len * 0.5},
+    },
+    [4] = {
+        {len * 0.5, len * 0.5},
+        {- len * 0.5, len * 0.5},
+        {len * 0.5, - len * 0.5},
+        {- len * 0.5, - len * 0.5},
+    },
 }
--- local location_map = {
---     {0,0}
--- }
-local location_map = {
-    {- len * 0.5, len * 0.5},
-    {- len * 0.5, - len * 0.5},
-}
-local function move_soldiers(corps, ani, dir_index)
+local function move_soldiers(corps, ani, dir_index, first_soldier)
+    local config = soldier_config[first_soldier.name]
+    local ani_name,count = config[first_soldier.star or 1][1], config.count
     local _,_,soldier_scale = unpack(soldier_dir_map[dir_index])
-    for i,v in ipairs(location_map) do
+    for i,v in ipairs(location_map[count]) do
         local x,y = unpack(v)
-        ccs.Armature:create("qibing_1"):addTo(corps):scale(soldier_scale)
-        :align(display.CENTER, x, y):getAnimation():play(ani)    
+        ccs.Armature:create(ani_name):addTo(corps):scale(soldier_scale)
+            :align(display.CENTER, x, y):getAnimation():play(ani)
     end
 end
 function MultiAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, finish_time, dragonType, soldiers)
@@ -397,15 +480,17 @@ function MultiAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, fini
         local index = math.floor(march_info.degree / 45) + 4
         if index < 0 or index > 8 then index = 1 end
         local corps = display.newNode():addTo(self:GetCorpsNode())
-
-        local ani, scalex = unpack(dragon_dir_map[index])
-        local dragon_ani = UILib.dragon_animations[dragonType or "redDragon"][1]
-        ccs.Armature:create(dragon_ani):addTo(corps)
-            :align(display.CENTER):getAnimation():play(ani)
-
-        -- local ani, scalex = unpack(soldier_dir_map[index])
-        -- move_soldiers(corps, ani, index)
-
+        local ani,scalex
+        local is_strike = not soldiers
+        if is_strike then
+            ani,scalex = unpack(dragon_dir_map[index])
+            local dragon_ani = UILib.dragon_animations[dragonType or "redDragon"][1]
+            ccs.Armature:create(dragon_ani):addTo(corps)
+                :align(display.CENTER):getAnimation():play(ani)
+        else
+            ani,scalex = unpack(soldier_dir_map[index])
+            move_soldiers(corps, ani, index, soldiers[1])
+        end
         corps:setScaleX(scalex)
         corps:setScaleY(math.abs(scalex))
         corps.march_info = march_info
@@ -550,6 +635,8 @@ end
 
 
 return MultiAllianceLayer
+
+
 
 
 
