@@ -5,6 +5,8 @@ end)
 
 function WidgetTab:ctor(param, width, height)
     self.pressed = false
+    self.width = width
+    self.height = height
     self.back_ground = display.newLayer():addTo(self)
     self.back_ground:setContentSize(width, height)
     if param.background then
@@ -17,10 +19,24 @@ function WidgetTab:ctor(param, width, height)
         :setButtonSize(width, height)
     self.tab:setTouchEnabled(false)
 
-    if param.tab then
-        cc.ui.UIImage.new(param.tab):addTo(self):align(display.CENTER, width/2, height/2)
+    if param.tab_png then
+        self.tab_png = cc.ui.UIImage.new(param.tab_png):addTo(self)
+            :align(display.CENTER, width/2, height/2)
     end
 
+    if param.progress then
+        self.progress = display.newProgressTimer("tab_event_progress.png",
+            display.PROGRESS_TIMER_BAR):addTo(self.back_ground, 2)
+            :align(display.BOTTOM_CENTER, width/2, 1)
+        self.progress:setBarChangeRate(cc.p(1,0))
+        self.progress:setMidpoint(cc.p(0,0))
+
+        self.label = UIKit:ttfLabel({
+            text = "",
+            size = 14,
+            color = 0xfffcbe,
+        }):addTo(self):align(display.CENTER, width/2, height/2)
+    end
 
     self.back_ground:setContentSize(cc.size(width, height))
     self.back_ground:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
@@ -37,6 +53,20 @@ function WidgetTab:ctor(param, width, height)
             return false
         end
     end)
+end
+function WidgetTab:SetOrResetProgress(str, percent)
+    if str and percent then
+        if percent > self.progress:getPercentage() then
+            self.label:show():setString(str)
+            self.progress:show():setPercentage(percent)
+        end
+        self.tab_png:scale(0.8):setPositionX(self.width/5)
+    else
+        self.label:hide()
+        self.progress:hide():setPercentage(0)
+        self.tab_png:scale(1):setPositionX(self.width/2)
+    end
+    return self
 end
 function WidgetTab:OnTabPress(func)
     self.tab_press = func
@@ -73,9 +103,13 @@ function WidgetTab:EnableTag(b)
     return self
 end
 function WidgetTab:SetActiveNumber(active, total)
+    self.total = total
     self.active:getParent():setVisible(total > 0)
     self.active:setString(string.format("%d/%d", active, total))
     return self
+end
+function WidgetTab:GetTotal()
+    return self.total
 end
 function WidgetTab:Size(width, height)
     self.tab:setButtonSize(width, height)
@@ -96,6 +130,9 @@ end
 
 
 return WidgetTab
+
+
+
 
 
 

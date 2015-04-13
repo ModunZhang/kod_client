@@ -1637,6 +1637,9 @@ end
 function City:HaveProductionTechEvent()
     return not LuaUtils:table_empty(self.productionTechEvents)
 end
+function City:GetProductionTechEventCount()
+    return table.nums(self.productionTechEvents)
+end
 
 function City:GetProductionTechEventsArray()
     local r = {}
