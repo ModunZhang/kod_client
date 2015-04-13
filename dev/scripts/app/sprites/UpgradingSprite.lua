@@ -175,6 +175,11 @@ end
 --         return nil
 --     end
 -- end
+function UpgradingSprite:RefreshSprite()
+    if self:GetBeforeConfig() ~= self:GetCurrentConfig() then
+        UpgradingSprite.super.RefreshSprite(self)
+    end
+end
 function UpgradingSprite:GetCurrentConfig()
     if self.config then
         return self.config:GetConfigByLevel(self.entity:GetLevel())
