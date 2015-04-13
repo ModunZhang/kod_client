@@ -35,7 +35,6 @@ function GameUIStorePackage:CreateItemLogo()
 	local content = display.newSprite(data.config.small_content)
 		:align(display.CENTER_BOTTOM, 304, 538)
 		:addTo(self:GetBody())
-	print("GameUIStorePackage>>>>data.name===",data.name)
 	UIKit:ttfLabel({
 		text = data.name,
 		color= 0xfed36c,
@@ -49,7 +48,6 @@ function GameUIStorePackage:CreateItemLogo()
 	bg:align(display.RIGHT_CENTER, 592, 69):addTo(logo)
 	local gem_box = display.newSprite("store_gem_box_260x116.png"):align(display.CENTER, 0, 46):addTo(bg)
 	display.newSprite("store_gem_260x116.png", 130, 58):addTo(gem_box)
-	print("GameUIStorePackage>>>>data.gem===",data.gem)
 	UIKit:ttfLabel({
 		text = data.gem,
 		size = 30,
@@ -60,7 +58,6 @@ function GameUIStorePackage:CreateItemLogo()
 		size = 16,
 		color= 0xfed36c
 	}):align(display.BOTTOM_CENTER, 167,6):addTo(bg)
-	print("GameUIStorePackage>>>>data.rewards_price===",data.rewards_price)
 	UIKit:ttfLabel({
 		text = string.format(_("+价值%d的道具"),data.rewards_price),
 		size = 20,
