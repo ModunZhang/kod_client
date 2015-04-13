@@ -1,78 +1,100 @@
 local WidgetNeedBox = class("WidgetNeedBox", function(...)
     return display.newNode(...)
 end)
+
+local function need_label(params)
+    local node = display.newNode()
+    local params1 = clone(params)
+    node.color = UIKit:hex2c3b(params.color)
+    node.current = UIKit:ttfLabel(params):addTo(node)
+    node.need = UIKit:ttfLabel(params1):addTo(node)
+    function node:SetCurrentAndNeed(current, need)
+        self.current:setString(GameUtils:formatNumber(current))
+        self.current:setColor(current >= need and node.color or display.COLOR_RED)
+        self.need:setString(string.format("/%s", GameUtils:formatNumber(need)))
+        local size = self.current:getContentSize()
+        self.need:pos((size.width - self.need:getContentSize().width) / 2, - size.height)
+        return self
+    end
+    function node:align(...)
+        local anchor, x, y = ...
+        self.current:align(anchor)
+        self.need:align(anchor)
+        return self:pos(x, y)
+    end
+    return node
+end
+
 function WidgetNeedBox:ctor()
     local col1_x, col2_x, col3_x, col4_x = 35, 160, 285, 410
-    local row_y = 28
-    local label_relate_x, label_relate_y = 25, 0
+    local row_y, label_relate_x, label_relate_y = 28, 32, 12
 
     local back_ground_556x56 = cc.ui.UIImage.new("back_ground_556x56.png"):addTo(self)
-    
-    local wood = cc.ui.UIImage.new("res_wood_82x73.png")
+
+    cc.ui.UIImage.new("res_wood_82x73.png")
         :addTo(back_ground_556x56)
         :align(display.CENTER, col1_x, row_y)
         :scale(0.4)
-    self.wood_label = cc.ui.UILabel.new({
-        text = "100",
-        size = 22,
+
+    self.wood = need_label({
+        size = 18,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_RIGHT,
-        color = UIKit:hex2c3b(0x403c2f)
+        color = 0x403c2f
     }):addTo(back_ground_556x56, 2)
-    :align(display.LEFT_CENTER, col1_x + label_relate_x, row_y + label_relate_y)
+        :align(display.LEFT_CENTER, col1_x + label_relate_x, row_y + label_relate_y)
 
-    local stone = cc.ui.UIImage.new("res_stone_88x82.png")
+    cc.ui.UIImage.new("res_stone_88x82.png")
         :addTo(back_ground_556x56)
         :align(display.CENTER, col2_x, row_y)
         :scale(0.4)
-    self.stone_label = cc.ui.UILabel.new({
-        text = "100",
-        size = 22,
+    self.stone = need_label({
+        size = 18,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_RIGHT,
-        color = UIKit:hex2c3b(0x403c2f)
+        color = 0x403c2f
     }):addTo(back_ground_556x56, 2)
-    :align(display.LEFT_CENTER, col2_x + label_relate_x, row_y + label_relate_y)
+        :align(display.LEFT_CENTER, col2_x + label_relate_x, row_y + label_relate_y)
 
 
-    local iron = cc.ui.UIImage.new("res_iron_91x63.png")
+    cc.ui.UIImage.new("res_iron_91x63.png")
         :addTo(back_ground_556x56)
         :align(display.CENTER, col3_x, row_y)
         :scale(0.4)
-    self.iron_label = cc.ui.UILabel.new({
-        text = "100",
-        size = 22,
+    self.iron = need_label({
+        size = 18,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_RIGHT,
-        color = UIKit:hex2c3b(0x403c2f)
+        color = 0x403c2f
     }):addTo(back_ground_556x56, 2)
-    :align(display.LEFT_CENTER, col3_x + label_relate_x, row_y + label_relate_y)
+        :align(display.LEFT_CENTER, col3_x + label_relate_x, row_y + label_relate_y)
 
 
-    local time = cc.ui.UIImage.new("hourglass_39x46.png")
+    cc.ui.UIImage.new("hourglass_39x46.png")
         :addTo(back_ground_556x56)
         :align(display.CENTER, col4_x, row_y)
         :scale(0.8)
-    self.time_label = cc.ui.UILabel.new({
-        text = "100",
+    self.time = cc.ui.UILabel.new({
         size = 22,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_RIGHT,
         color = UIKit:hex2c3b(0x403c2f)
     }):addTo(back_ground_556x56, 2)
-    :align(display.LEFT_CENTER, col4_x + label_relate_x, row_y + label_relate_y)
+        :align(display.LEFT_CENTER, col4_x + label_relate_x, row_y + label_relate_y - 10)
 end
 
 local GameUtils = GameUtils
-function WidgetNeedBox:SetNeedNumber(wood_number, stone_number, iron_number, time_number)
-    self.wood_label:setString(GameUtils:formatNumber(wood_number))
-    self.stone_label:setString(GameUtils:formatNumber(stone_number))
-    self.iron_label:setString(GameUtils:formatNumber(iron_number))
-    self.time_label:setString(GameUtils:formatTimeStyle1(time_number))
+function WidgetNeedBox:SetNeedNumber(wood, stone, iron, time)
+    self.wood:SetCurrentAndNeed(unpack(wood))
+    self.stone:SetCurrentAndNeed(unpack(stone))
+    self.iron:SetCurrentAndNeed(unpack(iron))
+    self.time:setString(GameUtils:formatTimeStyle1(time))
     return self
 end
 
 return WidgetNeedBox
+
+
 
 
 
