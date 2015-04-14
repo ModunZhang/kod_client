@@ -28,7 +28,7 @@ function BirdSprite:Refly()
     end
     self:stopAllActions()
     self:runAction(transition.sequence({
-        cc.BezierBy:create(math.random(10,15), points),
+        cc.BezierBy:create(math.random(25,30), points),
         cc.CallFunc:create(function() self:hide() end),
         cc.DelayTime:create(math.random(30,60)),
         cc.CallFunc:create(function() self:Refly() end)
