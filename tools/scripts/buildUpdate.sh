@@ -1,5 +1,6 @@
 #!/bin/bash
 Platform=`./functions.sh getPlatform $1`
+APP_VERSION=`./functions.sh getAppVersion $Platform`
 DOCROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PROJ_DIR=$DOCROOT/../../
 
@@ -16,7 +17,7 @@ echo ---------------- 提交代码
 
 echo ---------------- 检查更新
 cd $DOCROOT/../buildUpdate
-python buildUpdate.py
+python buildUpdate.py $APP_VERSION
 cd $DOCROOT
 
 echo ---------------- 同步代码

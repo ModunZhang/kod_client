@@ -3,9 +3,9 @@ import os
 import json
 import string
 import subprocess
-
+import sys,getopt
 global m_currentDir
-
+global app_version
 def getFileTag( fullPath ):
 	bashCommand = "git log -1 --pretty=format:%h -- path " + fullPath
 	process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
@@ -60,9 +60,13 @@ def getAppVersion():
 	return appVersion
 
 if __name__=="__main__":
+	if len(sys.argv) < 2:
+		print "错误必须传入版本号"
+		sys.exit(1)
+	app_version = sys.argv[1]
 	m_currentDir = os.path.dirname(os.path.realpath(__file__))
 	fileList = {
-		"appVersion":getAppVersion(),
+		"appVersion":app_version,
 		"tag":getFileTag("../../update/"),
 		"files":{},
 	}
