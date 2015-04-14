@@ -267,7 +267,7 @@ function MyApp:getSupportMailFormat(category)
     
     local UTCTime    = "UTC Time:" .. os.date('!%Y-%m-%d %H:%M:%S', self.timer:GetServerTime())
     local GameName   = "Game:" .. "Kod"
-    local Version    = "Version:" .. CONFIG_APP_VERSION
+    local Version    = "Version:" .. ext.getAppVersion()
     local Username   = "User ID:" .. DataManager:getUserData()._id
     local Server     = "Server:" .. "World"
     local OpenUDID   = "Open UDID:" .. device.getOpenUDID()

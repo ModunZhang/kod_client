@@ -517,13 +517,13 @@
             <key>format</key>
             <integer>2</integer>
             <key>realTextureFileName</key>
-            <string>dragon_animation_2.png</string>
+            <string>dragon_animation_2.pvr.ccz</string>
             <key>size</key>
             <string>{2048,2048}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:023d2c14a9a8068c0970fec466be2f5b:3/7$</string>
+            <string>$TexturePacker:SmartUpdate:2980dca50dba3fc342857a008ccc3d37:3/7$</string>
             <key>textureFileName</key>
-            <string>dragon_animation_2.png</string>
+            <string>dragon_animation_2.pvr.ccz</string>
         </dict>
     </dict>
 </plist>

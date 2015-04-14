@@ -2142,13 +2142,13 @@
             <key>format</key>
             <integer>2</integer>
             <key>realTextureFileName</key>
-            <string>heihua_animation_2.png</string>
+            <string>heihua_animation_2.pvr.ccz</string>
             <key>size</key>
             <string>{1024,1024}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:79d418a9f5c236534a99229149114f18:3/3$</string>
+            <string>$TexturePacker:SmartUpdate:7d5ebbe347914af02a143c733d4da8db:3/3$</string>
             <key>textureFileName</key>
-            <string>heihua_animation_2.png</string>
+            <string>heihua_animation_2.pvr.ccz</string>
         </dict>
     </dict>
 </plist>

@@ -439,13 +439,13 @@
             <key>format</key>
             <integer>2</integer>
             <key>realTextureFileName</key>
-            <string>ui_animation_0.png</string>
+            <string>ui_animation_0.pvr.ccz</string>
             <key>size</key>
             <string>{2048,2048}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:6794030afc4688e9aff431002f56bc70:1/2$</string>
+            <string>$TexturePacker:SmartUpdate:5f620a9181ada4ec183e14b07b2da5bf:1/2$</string>
             <key>textureFileName</key>
-            <string>ui_animation_0.png</string>
+            <string>ui_animation_0.pvr.ccz</string>
         </dict>
     </dict>
 </plist>

@@ -218,13 +218,13 @@
             <key>format</key>
             <integer>2</integer>
             <key>realTextureFileName</key>
-            <string>region_animation_0.png</string>
+            <string>region_animation_0.pvr.ccz</string>
             <key>size</key>
             <string>{512,512}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:0a4d629458723c1f2f4fce8d771fae37:1/1$</string>
+            <string>$TexturePacker:SmartUpdate:7793cb83316b8ca32fd4e7ee7c82f25d:1/1$</string>
             <key>textureFileName</key>
-            <string>region_animation_0.png</string>
+            <string>region_animation_0.pvr.ccz</string>
         </dict>
     </dict>
 </plist>

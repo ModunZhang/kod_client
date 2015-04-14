@@ -14,27 +14,24 @@ function GameUILoginBeta:ctor()
     self.m_totalSize = 0
     self.m_currentSize = 0
     self.local_resources = {
-		{image = "animations/dragon_animation_0.png",list = "animations/dragon_animation_0.plist"},
-		{image = "animations/dragon_animation_1.png",list = "animations/dragon_animation_1.plist"},
-		{image = "animations/dragon_animation_2.png",list = "animations/dragon_animation_2.plist"},
-		{image = "animations/dragon_animation_3.png",list = "animations/dragon_animation_3.plist"},
-		{image = "animations/dragon_animation_4.png",list = "animations/dragon_animation_4.plist"},
-		{image = "animations/dragon_animation_5.png",list = "animations/dragon_animation_5.plist"},
-		{image = "animations/dragon_animation_6.png",list = "animations/dragon_animation_6.plist"},
-		{image = "animations/soldiers_animation_0.png",list = "animations/soldiers_animation_0.plist"},
-		{image = "animations/soldiers_animation_1.png",list = "animations/soldiers_animation_1.plist"},
-		{image = "animations/soldiers_animation_2.png",list = "animations/soldiers_animation_2.plist"},
-		{image = "animations/soldiers_animation_3.png",list = "animations/soldiers_animation_3.plist"},
-		{image = "animations/ui_animation_0.png",list = "animations/ui_animation_0.plist"},
-        {image = "animations/ui_animation_1.png",list = "animations/ui_animation_1.plist"},
-
-        {image = "animations/heihua_animation_0.png",list = "animations/heihua_animation_0.plist"},
-        {image = "animations/heihua_animation_1.png",list = "animations/heihua_animation_1.plist"},
-        {image = "animations/heihua_animation_2.png",list = "animations/heihua_animation_2.plist"},
-		{image = "animations/region_animation_0.png",list = "animations/region_animation_0.plist"},
-
-        
-
+		{image = "animations/dragon_animation_0.pvr.ccz",list = "animations/dragon_animation_0.plist"},
+		{image = "animations/dragon_animation_1.pvr.ccz",list = "animations/dragon_animation_1.plist"},
+		{image = "animations/dragon_animation_2.pvr.ccz",list = "animations/dragon_animation_2.plist"},
+		{image = "animations/dragon_animation_3.pvr.ccz",list = "animations/dragon_animation_3.plist"},
+		{image = "animations/dragon_animation_4.pvr.ccz",list = "animations/dragon_animation_4.plist"},
+		{image = "animations/dragon_animation_5.pvr.ccz",list = "animations/dragon_animation_5.plist"},
+		{image = "animations/dragon_animation_6.pvr.ccz",list = "animations/dragon_animation_6.plist"},
+		{image = "animations/soldiers_animation_0.pvr.ccz",list = "animations/soldiers_animation_0.plist"},
+		{image = "animations/soldiers_animation_1.pvr.ccz",list = "animations/soldiers_animation_1.plist"},
+		{image = "animations/soldiers_animation_2.pvr.ccz",list = "animations/soldiers_animation_2.plist"},
+		{image = "animations/soldiers_animation_3.pvr.ccz",list = "animations/soldiers_animation_3.plist"},
+		{image = "animations/ui_animation_0.pvr.ccz",list = "animations/ui_animation_0.plist"},
+        {image = "animations/ui_animation_1.pvr.ccz",list = "animations/ui_animation_1.plist"},
+        {image = "animations/heihua_animation_0.pvr.ccz",list = "animations/heihua_animation_0.plist"},
+        {image = "animations/heihua_animation_1.pvr.ccz",list = "animations/heihua_animation_1.plist"},
+        {image = "animations/heihua_animation_2.pvr.ccz",list = "animations/heihua_animation_2.plist"},
+        {image = "animations/region_animation_0.pvr.ccz",list = "animations/region_animation_0.plist"},
+		{image = "animations/building_animation.pvr.ccz",list = "animations/building_animation.plist"},
 		{image = "emoji.png",list = "emoji.plist"},
 	}
 	self.local_resources_percent_per = LOCAL_RESOURCES_PERCENT / #self.local_resources
@@ -129,7 +126,7 @@ end
 function GameUILoginBeta:showVersion()
     if  CONFIG_IS_DEBUG then
         local __debugVer = require("debug_version")
-        self.verLabel:setString(string.format(_("版本:%s(%s)"), CONFIG_APP_VERSION, __debugVer))
+        self.verLabel:setString(string.format(_("版本:%s(%s)"), ext.getAppVersion(), __debugVer))
     else
         local jsonPath = cc.FileUtils:getInstance():fullPathForFilename("fileList.json")
         local file = io.open(jsonPath)
@@ -137,7 +134,7 @@ function GameUILoginBeta:showVersion()
         file:close()
 
         local tag = json.decode(jsonString).tag
-        local version = string.format(_("版本:%s(%s)"), CONFIG_APP_VERSION, tag)
+        local version = string.format(_("版本:%s(%s)"), ext.getAppVersion(), tag)
         self.verLabel:setString(version)
     end
 end
@@ -318,7 +315,7 @@ function GameUILoginBeta:getUpdateFileList()
     self.m_currentSize = 0
     local localFileList = json.decode(self.m_localJson)
     local serverFileList = json.decode(self.m_serverJson)
-    local localAppVersion = CONFIG_APP_VERSION --TODO:存在cpp?
+    local localAppVersion = ext.getAppVersion() 
     local serverAppVersion = serverFileList.appVersion
     if localAppVersion < serverAppVersion then
         device.showAlert(nil, _("游戏版本过低,请更新!"), { _("确定") }, function(event)

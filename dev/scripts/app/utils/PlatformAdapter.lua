@@ -68,6 +68,9 @@ function PlatformAdapter:mac()
             end
         end
     })
+    ext.getAppVersion = function()
+        return "mac version"
+    end
 end
 
 
