@@ -60,7 +60,7 @@ property(Alliance, "fightRequests", {})
 property(Alliance, "countInfo", {})
 property(Alliance, "events", {})
 property(Alliance, "joinRequestEvents", {})
-function Alliance:ctor(id, name, aliasName, defaultLanguage, terrainType)
+function Alliance:ctor(id, name, aliasName, defaultLanguage, terrain)
     Alliance.super.ctor(self)
     self.id = id
     self.name = name
