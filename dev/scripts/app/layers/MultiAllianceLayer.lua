@@ -256,7 +256,7 @@ function MultiAllianceLayer:StartCorpsTimer()
                 local elapse_time = cur_time - march_info.start_time
                 if elapse_time <= total_time then
                     local cur_vec = cc.pAdd(cc.pMul(march_info.normal, march_info.speed * elapse_time), march_info.start_info.real)
-                    corps:setPosition(cur_vec.x, cur_vec.y)
+                    corps:pos(cur_vec.x, cur_vec.y)
                 else
                     self:DeleteCorpsById(id)
                 end
@@ -479,9 +479,8 @@ end
 function MultiAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, finish_time, dragonType, soldiers)
     local march_info = self:GetMarchInfoWith(id, start_pos, end_pos)
     march_info.start_time = start_time
-    march_info.finish_time = finish_time
-    march_info.total_time = finish_time - start_time
-    march_info.speed = (march_info.length /  march_info.total_time)
+    march_info.finish_time = finish_time 
+    march_info.speed = (march_info.length / (finish_time - start_time))
     if not self.corps_map[id] then
         local index = math.floor(march_info.degree / 45) + 4
         if index < 0 or index > 8 then index = 1 end
@@ -503,9 +502,18 @@ function MultiAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, fini
         self.corps_map[id] = corps
         self:CreateLine(id, march_info)
     else
-        self.corps_map[id].march_info = march_info
+        self:UpdateCorpsBy(self.corps_map[id], march_info)
     end
     return corps
+end
+function MultiAllianceLayer:UpdateCorpsBy(corps, march_info)
+    local x,y = corps:getPosition()
+    local cur_pos = {x = x, y = y}
+    march_info.start_info.real = cur_pos
+    march_info.start_time = timer:GetServerTime()
+    march_info.length = cc.pGetLength(cc.pSub(march_info.end_info.real, cur_pos))
+    march_info.speed = (march_info.length / (march_info.finish_time - march_info.start_time))
+    corps.march_info = march_info
 end
 function MultiAllianceLayer:DeleteCorpsById(id)
     if self.corps_map[id] == nil then
@@ -539,7 +547,7 @@ function MultiAllianceLayer:CreateLine(id, march_info)
             shaderName = "lineShader"..unit_count,
             unit_count = unit_count,
             curTime = 0,
-            -- percent = 0,
+        -- percent = 0,
         })
     ))
     sprite:setScaleY(scale)
@@ -641,6 +649,7 @@ end
 
 
 return MultiAllianceLayer
+
 
 
 
