@@ -37,7 +37,7 @@ end
 
 function GameAllianceApproval:RefreshListView()
 	self.listView:removeAllItems()
-	table.foreachi(Alliance_Manager:GetMyAlliance():GetJoinEvents(),function(k,v)
+	table.foreachi(Alliance_Manager:GetMyAlliance():JoinRequestEvents(),function(k,v)
 		local newItem = self:GetListItem(v)
 		self.listView:addItem(newItem)
 	end)

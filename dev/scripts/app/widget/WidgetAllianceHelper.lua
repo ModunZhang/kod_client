@@ -45,7 +45,7 @@ function WidgetAllianceHelper:ctor()
 	end
 	--旗帜背景布局样式
 	self.images_of_category = {}
-	for i=1,9 do
+	for i=1,10 do
 	    local bodyButtonImageName = string.format("alliance_flag_type_48x46_%d",i)
 		self.images_of_category[i] = {name = i,image = bodyButtonImageName .. ".png"}
 	end
@@ -93,7 +93,6 @@ function WidgetAllianceHelper:GetBackStylesForSeqButton()
 end
 
 function WidgetAllianceHelper:GetColorByIndex(index)
-	print("GetColorByIndex---->",index,type(index),self.colors[index])
 	return self.colors[index]
 end
 

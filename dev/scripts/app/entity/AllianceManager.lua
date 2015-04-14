@@ -29,7 +29,7 @@ end
 function AllianceManager:OnUserDataChanged(user_data,time,deltaData)
     local alliance = user_data.alliance
     local my_alliance = self:GetMyAlliance()
-    if alliance == json.null or not alliance then
+    if alliance == json.null or not alliance or not alliance.id then
         my_alliance:Reset()
         DataManager:setUserAllianceData(json.null)
         DataManager:setEnemyAllianceData(json.null) -- 清除敌方联盟数据

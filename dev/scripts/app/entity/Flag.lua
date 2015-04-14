@@ -1,6 +1,6 @@
 local Flag = class("Flag")
 local count_config = {
-    backstyle=9,
+    backstyle=10,
     colors=12,
     graphics=19,
 }
