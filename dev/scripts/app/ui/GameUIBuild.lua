@@ -25,6 +25,7 @@ function GameUIBuild:ctor(city, building)
     self.select_ruins = building
     self.select_ruins_list = city:GetNeighbourRuinWithSpecificRuin(building)
     self.build_city:AddListenOnType(self, self.build_city.LISTEN_TYPE.UPGRADE_BUILDING)
+    app:GetAudioManager():PlayBuildingEffectByType("woodcutter")
 end
 function GameUIBuild:OnMoveInStage()
     GameUIBuild.super.OnMoveInStage(self)

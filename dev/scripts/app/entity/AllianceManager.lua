@@ -72,8 +72,6 @@ end
 function AllianceManager:DecodeAllianceFromJson( json_data )
     local alliance = Alliance.new()
     alliance:SetId(json_data._id)
-    alliance:SetName(json_data.basicInfo.name)
-    alliance:SetAliasName(json_data.basicInfo.tag)
     alliance:OnAllianceDataChanged(json_data)
     return alliance
 end

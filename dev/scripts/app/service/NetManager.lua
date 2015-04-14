@@ -1047,7 +1047,7 @@ function NetManager:getFtechAllianceViewDataPromose(targetAllianceId)
     return get_blocking_request_promise("logic.allianceHandler.getAllianceViewData",
         {targetAllianceId = targetAllianceId,
             includeMoonGateData = true
-        },"获取对手联盟数据失败!"):done(get_response_msg)
+        },"获取对手联盟数据失败!")
 end
 --从月门撤兵
 function NetManager:getRetreatFromMoonGatePromose()

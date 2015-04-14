@@ -9,9 +9,7 @@ local REQUEST_SERVER_TIME = 30
 
 function OtherAllianceScene:ctor(alliance)
 	self.alliance_ = alliance
-    self.time_intval = 0
 	OtherAllianceScene.super.ctor(self)
-    app.timer:AddListener(self)
 end
 
 function OtherAllianceScene:onEnter()
@@ -27,7 +25,6 @@ function OtherAllianceScene:GetAlliance()
 end
 
 function OtherAllianceScene:CreateAllianceUI()
- 
 	local home = UIKit:newGameUI('GameUIOtherAllianceHome',self:GetAlliance()):AddToScene(self)
     self:GetSceneLayer():AddObserver(home)
     home:setTouchSwallowEnabled(false)
@@ -37,34 +34,14 @@ function OtherAllianceScene:GotoCurrectPosition()
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
 end
 function OtherAllianceScene:onExit()
-    app.timer:RemoveListener(self)
     OtherAllianceScene.super.onExit(self)
 end
 
--- per 30s request server
-function OtherAllianceScene:TimerRequestServer()
-    print("请求联盟数据--->" .. os.time(),self:GetAlliance():Id())
-    NetManager:getFtechAllianceViewDataPromose(self:GetAlliance():Id()):done(function(response)
-        local enemyAlliance = Alliance_Manager:DecodeAllianceFromJson(response)
-        --用新联盟刷新layer
-        self.alliance_ = enemyAlliance
-        self:RefreshAllianceMarchLine()
-    end)
-end
 --特殊刷新行军路线-->服务器需要添加缺失的行军事件
 function OtherAllianceScene:RefreshAllianceMarchLine()
     --TODO:待验证
     self:GetSceneLayer():InitAllianceEvent()
 end
 
-function OtherAllianceScene:OnTimer(current_time)
-    self:GetAlliance():OnTimer(current_time)
-    if self.time_intval >= REQUEST_SERVER_TIME then
-        self.time_intval = 0
-        self:TimerRequestServer()
-    else
-        self.time_intval = self.time_intval + 1
-    end
-end
 
 return OtherAllianceScene

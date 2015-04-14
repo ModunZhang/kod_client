@@ -53,7 +53,7 @@ function GameUIAllianceHome:onEnter()
     self.visible_count = 1
     self.top = self:CreateTop()
     self.bottom = self:CreateBottom()
-    WidgetChangeMap.new(WidgetChangeMap.MAP_TYPE.OUR_ALLIANCE):addTo(self)
+    self:AddMapChangeButton()
     self:InitArrow()
     if self.top then
         self.top:Refresh()
@@ -87,7 +87,9 @@ function GameUIAllianceHome:onEnter()
     self:OnTaskChanged(city:GetUser())
     self:MailUnreadChanged()
 end
-
+function GameUIAllianceHome:AddMapChangeButton()
+    WidgetChangeMap.new(WidgetChangeMap.MAP_TYPE.OUR_ALLIANCE):addTo(self)
+end
 function GameUIAllianceHome:OnMarchDataChanged()
     self:OnHelpToTroopsChanged()
 end

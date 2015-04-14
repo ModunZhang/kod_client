@@ -15,10 +15,27 @@ local Alliance = class("Alliance", MultiObserver)
 local VillageEvent = import(".VillageEvent")
 local AllianceBelvedere = import(".AllianceBelvedere")
 --注意:突袭用的MarchAttackEvent 所以使用OnAttackMarchEventTimerChanged
-Alliance.LISTEN_TYPE = Enum("OPERATION", "BASIC", "MEMBER", "EVENTS", "JOIN_EVENTS", "HELP_EVENTS","ALL_HELP_EVENTS","FIGHT_REQUESTS","FIGHT_REPORTS",
-    "OnAttackMarchEventDataChanged","OnAttackMarchEventTimerChanged","OnAttackMarchReturnEventDataChanged","ALLIANCE_FIGHT"
-    ,"OnStrikeMarchEventDataChanged","OnStrikeMarchReturnEventDataChanged","OnVillageEventsDataChanged","OnVillageEventTimer","COUNT_INFO",
-    "VILLAGE_LEVELS_CHANGED","OnMarchEventRefreshed")
+Alliance.LISTEN_TYPE = Enum(
+    "OPERATION",
+    "BASIC",
+    "MEMBER",
+    "EVENTS",
+    "JOIN_EVENTS",
+    "HELP_EVENTS",
+    "ALL_HELP_EVENTS",
+    "FIGHT_REQUESTS",
+    "FIGHT_REPORTS",
+    "OnAttackMarchEventDataChanged",
+    "OnAttackMarchEventTimerChanged",
+    "OnAttackMarchReturnEventDataChanged",
+    "ALLIANCE_FIGHT",
+    "OnStrikeMarchEventDataChanged",
+    "OnStrikeMarchReturnEventDataChanged",
+    "OnVillageEventsDataChanged",
+    "OnVillageEventTimer",
+    "COUNT_INFO",
+    "VILLAGE_LEVELS_CHANGED",
+    "OnMarchEventRefreshed")
 local unpack = unpack
 property(Alliance, "power", 0)
 property(Alliance, "createTime", 0)
@@ -34,6 +51,7 @@ property(Alliance, "status", "")
 property(Alliance, "statusStartTime", 0)
 property(Alliance, "statusFinishTime", 0)
 property(Alliance, "fightPosition", "")
+property(Alliance, "fightRequests", {})
 function Alliance:ctor(id, name, aliasName, defaultLanguage, terrainType)
     Alliance.super.ctor(self)
     property(self, "id", id)
@@ -54,7 +72,6 @@ function Alliance:ctor(id, name, aliasName, defaultLanguage, terrainType)
     self.events = {}
     self.join_events = {}
     self.help_events = {}
-    self.fight_requests = {}
     self.alliance_fight_reports = {}
     self.countInfo = {}
     self.allianceFight = {}
@@ -203,14 +220,11 @@ function Alliance:OnMemberChanged()
         listener:OnMemberChanged(self)
     end)
 end
-function Alliance:GetFightRequest()
-    return self.fight_requests
-end
 function Alliance:GetFightRequestPlayerNum()
-    return #self.fight_requests
+    return #self.fightRequests
 end
 function Alliance:IsRequested()
-    for k,v in pairs(self.fight_requests) do
+    for _,v in pairs(self:GetFightRequest()) do
         if v == User:Id() then
             return true
         end
@@ -544,9 +558,9 @@ function Alliance:OnAllianceFightRequestsChanged(alliance_data, deltaData)
     local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.fightRequests ~= nil
     if is_fully_update or is_delta_update then
-        self.fight_requests = alliance_data.fightRequests
+        self.fightRequests = alliance_data.fightRequests or {}
         self:NotifyListeneOnType(Alliance.LISTEN_TYPE.FIGHT_REQUESTS, function(listener)
-            listener:OnAllianceFightRequestsChanged(#self.fight_requests)
+            listener:OnAllianceFightRequestsChanged(#self.fightRequests)
         end)
     end
 end
@@ -1245,3 +1259,4 @@ function Alliance:IsMyAlliance()
 end
 
 return Alliance
+

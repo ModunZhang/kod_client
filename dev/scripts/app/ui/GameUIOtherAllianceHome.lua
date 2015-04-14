@@ -11,18 +11,6 @@ local WidgetChangeMap = import("..widget.WidgetChangeMap")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 
 
-
-function GameUIOtherAllianceHome:onEnter()
-    GameUIOtherAllianceHome.super.onEnter(self)
-
-    Alliance_Manager:GetMyAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
-end
-
-function GameUIOtherAllianceHome:onExit()
-    Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
-
-    GameUIOtherAllianceHome.super.onExit(self)
-end
 function GameUIOtherAllianceHome:OnSceneMove(logic_x, logic_y, alliance_view)
     local coordinate_str = string.format("%d, %d", logic_x, logic_y)
     local is_mine
@@ -115,45 +103,6 @@ function GameUIOtherAllianceHome:CreateOperationButton()
         button:setTouchSwallowEnabled(true)
     end
 end
-
-function GameUIOtherAllianceHome:ComeBackToOurAlliance()
-    app:lockInput(false)
-    app:enterScene("AllianceScene", nil, "custom", -1, function(scene, status)
-        local manager = ccs.ArmatureDataManager:getInstance()
-        if status == "onEnter" then
-            local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
-            display.newColorLayer(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
-                transition.sequence{
-                    cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
-                    cc.FadeIn:create(0.75),
-                    cc.CallFunc:create(function() scene:hideOutShowIn() end),
-                    cc.DelayTime:create(0.5),
-                    cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
-                    cc.FadeOut:create(0.75),
-                    cc.CallFunc:create(function() scene:finish() end),
-                }
-            )
-        elseif status == "onExit" then
-        end
-    end)
-end
-
--- function GameUIOtherAllianceHome:OnBasicChanged(alliance,changed_map)
---     if changed_map.status then
---         if changed_map.status.new ~="fight" then
---             FullScreenPopDialogUI.new():SetTitle(_("提示"))
---                 :SetPopMessage(_("联盟会战已经结束,请返回我方联盟"))
---                 :CreateOKButton(
---                     {
---                         listener = function ()
---                             self:ComeBackToOurAlliance()
---                         end
---                     }
---                 )
---                 :AddToCurrentScene()
---         end
---     end
--- end
 
 function GameUIOtherAllianceHome:AddMapChangeButton()
     local map_node = WidgetChangeMap.new(WidgetChangeMap.MAP_TYPE.OTHER_ALLIANCE):addTo(self)
