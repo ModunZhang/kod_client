@@ -25,6 +25,7 @@ rsync -rave "ssh " --exclude=.DS_Store*  ../../update ec2-user@ec2-54-223-172-65
 
 
 echo ---------------- 提交代码
+cd $PROJ_DIR
 git add --all .
 git commit -m "update new version"
 git push

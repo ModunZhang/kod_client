@@ -301,7 +301,7 @@ function GameUILoginBeta:loadServerJson()
 
     NetManager:getUpdateFileList(function(success, msg)
         if not success then
-            device.showAlert(nil, _("检查游戏更新失败!"), { _("确定") })
+            device.showAlert(_("错误"), _("检查游戏更新失败!"), { _("确定") })
             return
         end
 
@@ -318,7 +318,7 @@ function GameUILoginBeta:getUpdateFileList()
     local localAppVersion = ext.getAppVersion() 
     local serverAppVersion = serverFileList.appVersion
     if localAppVersion < serverAppVersion then
-        device.showAlert(nil, _("游戏版本过低,请更新!"), { _("确定") }, function(event)
+        device.showAlert(_("错误"), _("游戏版本过低,请更新!"), { _("确定") }, function(event)
             if CONFIG_IS_DEBUG then
                 device.openURL("https://batcat.sinaapp.com/ad_hoc/build-index.html")
             else
