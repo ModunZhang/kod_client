@@ -367,7 +367,8 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
 		end
 	else --我方占领
 		if villageEvent:GetPlayerRole() == villageEvent.EVENT_PLAYER_ROLE.Me then --自己占领
-			local che_button = self:BuildOneButton("capture_38x56.png",_("撤军")):onButtonClicked(function()
+			local che_button = self:BuildOneButton("capture_38x56.png",_("撤军"),{down = "TROOP_BACK"}):onButtonClicked(function()
+
 				NetManager:getRetreatFromVillagePromise(villageEvent:VillageData().alliance.id,villageEvent:Id())
 				self:LeftButtonClicked()
 			end)

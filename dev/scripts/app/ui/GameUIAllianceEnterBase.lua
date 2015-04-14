@@ -279,11 +279,12 @@ function GameUIAllianceEnterBase:GetEnterButtons()
 end
 
 
-function GameUIAllianceEnterBase:BuildOneButton(image,title)
+function GameUIAllianceEnterBase:BuildOneButton(image,title,music_info)
     local btn = WidgetPushButton.new({normal = "btn_138x110.png",pressed = "btn_pressed_138x110.png"},{}
         ,{
             disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
-        })
+        }
+        ,music_info)
     local s = btn:getCascadeBoundingBox().size
     display.newSprite(image):align(display.CENTER, -s.width/2, -s.height/2+12):addTo(btn)
     UIKit:ttfLabel({

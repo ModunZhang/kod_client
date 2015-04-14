@@ -146,10 +146,12 @@ function AllianceScene:EnterNotAllianceBuilding(entity)
         if type_ == 'none' then
             class_name = "GameUIAllianceEnterBase"
         elseif type_ == 'member' then
+            app:GetAudioManager():PlayBuildingEffectByType("keep")
             class_name = "GameUIAllianceCityEnter"
         elseif type_ == 'decorate' then
             class_name = "GameUIAllianceDecorateEnter"
         elseif type_ == 'village' then
+            app:GetAudioManager():PlayBuildingEffectByType("warehouse")
             class_name = "GameUIAllianceVillageEnter"
             if not entity:GetAllianceVillageInfo() then -- 废墟
                 class_name = "GameUIAllianceRuinsEnter"

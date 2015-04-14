@@ -301,7 +301,9 @@ function GameUILoginBeta:loadServerJson()
 
     NetManager:getUpdateFileList(function(success, msg)
         if not success then
-            device.showAlert(_("错误"), _("检查游戏更新失败!"), { _("确定") })
+            device.showAlert(_("错误"), _("检查游戏更新失败!"), { _("确定") },function(event)
+                app:restart(false)
+            end)
             return
         end
 

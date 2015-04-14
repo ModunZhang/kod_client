@@ -69,7 +69,10 @@ function AllianceBattleScene:OnTouchClicked(pre_x, pre_y, x, y)
     local building,isMyAlliance = self:GetSceneLayer():GetClickedObject(x, y)
     if building then
         if iskindof(building, "Sprite") then
-            self.util_node:performWithDelay(function() end, 0.5)
+            app:lockInput(true)
+            self.util_node:performWithDelay(function()
+                app:lockInput(false)
+            end, 0.5)
             Sprite:PromiseOfFlash(building):next(function()
                 self:OpenUI(building, isMyAlliance)
             end)
@@ -117,10 +120,16 @@ function AllianceBattleScene:EnterNotAllianceBuilding(entity,isMyAlliance)
     if type_ == 'none' then
         class_name = "GameUIAllianceEnterBase"
     elseif type_ == 'member' then
+        if isMyAlliance then
+            app:GetAudioManager():PlayBuildingEffectByType("keep")
+        else
+            app:GetAudioManager():PlayeEffectSoundWithKey("SELECT_ENEMY_ALLIANCE_CITY")
+        end
         class_name = "GameUIAllianceCityEnter"
     elseif type_ == 'decorate' then
         class_name = "GameUIAllianceDecorateEnter"
     elseif type_ == 'village' then
+        app:GetAudioManager():PlayBuildingEffectByType("warehouse")
         class_name = "GameUIAllianceVillageEnter"
         if not entity:GetAllianceVillageInfo() then -- 废墟
             class_name = "GameUIAllianceRuinsEnter"
