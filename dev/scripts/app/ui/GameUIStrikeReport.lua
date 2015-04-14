@@ -426,21 +426,21 @@ function GameUIStrikeReport:CreateReportOfEnemy()
     self.details_view:addItem(item)
 
     local report_level = self.report:GetStrikeLevel()
-    -- 敌方资源产量
-    self:CreateEnemyResource()
+    if report_level>1 then
+        -- 敌方资源产量
+        self:CreateEnemyResource()
+        -- 驻防部队
+        self:CreateGarrison()
+    end
     -- 敌方军事水平
     -- 暂无
     -- self:CreateEnemyTechnology()
-    -- if report_level>2 then
-    -- 敌方龙的装备
-    self:CreateDragonEquipments()
-    -- 驻防部队
-    self:CreateGarrison()
-    -- end
-    -- if report_level>4 then
-    -- 敌方龙的技能
-    self:CreateDragonSkills()
-    -- end
+    if report_level>3 then
+        -- 敌方龙的装备
+        self:CreateDragonEquipments()
+        -- 敌方龙的技能
+        self:CreateDragonSkills()
+    end
 end
 function GameUIStrikeReport:CreateEnemyResource()
     local resources = self.report:GetStrikeIntelligence().resources
@@ -475,7 +475,7 @@ function GameUIStrikeReport:CreateEnemyResource()
             size = 20,
             color = UIKit:hex2c3b(0x403c2f)
         }):align(display.LEFT_CENTER,80,18):addTo(r_item_bg)
-        local r_value = self.report:GetStrikeLevel() < 4 and self:GetProbableNum(r_parms.value) or r_parms.value
+        local r_value = self.report:GetStrikeLevel() < 3 and self:GetProbableNum(r_parms.value) or r_parms.value
         cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = r_value,
@@ -603,13 +603,15 @@ function GameUIStrikeReport:CreateDragonSkills()
                 size = 20,
                 color = UIKit:hex2c3b(0x403c2f)
             }):align(display.LEFT_CENTER,10,18):addTo(r_item_bg)
-            cc.ui.UILabel.new({
-                UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-                text = _("Level")..r_parms.level,
-                font = UIKit:getFontFilePath(),
-                size = 20,
-                color = UIKit:hex2c3b(0x403c2f)
-            }):align(display.RIGHT_CENTER,group_width-30,18):addTo(r_item_bg)
+            if self.report:GetStrikeLevel()>4 then
+                cc.ui.UILabel.new({
+                    UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+                    text = _("Level")..r_parms.level,
+                    font = UIKit:getFontFilePath(),
+                    size = 20,
+                    color = UIKit:hex2c3b(0x403c2f)
+                }):align(display.RIGHT_CENTER,group_width-30,18):addTo(r_item_bg)
+            end
 
             added_r_item_count = added_r_item_count + 1
             r_item_bg_color_flag = not r_item_bg_color_flag
@@ -717,7 +719,6 @@ function GameUIStrikeReport:CreateDragonEquipments()
                 size = 20,
                 color = UIKit:hex2c3b(0x403c2f)
             }):align(display.LEFT_CENTER,10,18):addTo(r_item_bg)
-
             StarBar.new({
                 max = 5,
                 bg = "Stars_bar_bg.png",
@@ -859,6 +860,10 @@ function GameUIStrikeReport:GetProbableNum(num)
 end
 
 return GameUIStrikeReport
+
+
+
+
 
 
 

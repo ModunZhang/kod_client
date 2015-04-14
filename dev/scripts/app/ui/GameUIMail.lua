@@ -9,6 +9,8 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetUIBackGround2 = import("..widget.WidgetUIBackGround2")
 local WidgetBackGroudWhite = import("..widget.WidgetBackGroudWhite")
+local WidgetAllianceHelper = import("..widget.WidgetAllianceHelper")
+local Flag = import("..entity.Flag")
 local WidgetDropList = import("..widget.WidgetDropList")
 local WidgetBackGroundLucid = import("..widget.WidgetBackGroundLucid")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
@@ -1214,7 +1216,18 @@ function GameUIMail:CreateReportItem(listview,report)
     else
         -- 战报发出方信息
         -- 旗帜
-        display.newSprite("report_from_icon.png", 110, 47):addTo(report_content_bg)
+        local my_flag_data = report:GetMyPlayerData().alliance.flag
+        local enemy_flag_data = report:GetEnemyPlayerData().alliance.flag
+
+        local a_helper = WidgetAllianceHelper.new()
+        local my_flag = a_helper:CreateFlagContentSprite(Flag:DecodeFromJson(my_flag_data))
+        local enemy_flag = a_helper:CreateFlagContentSprite(Flag:DecodeFromJson(enemy_flag_data))
+        my_flag:scale(0.55)
+        enemy_flag:scale(0.55)
+        my_flag:align(display.CENTER, isFromMe and 78 or 318, 8)
+            :addTo(report_content_bg)
+        enemy_flag:align(display.CENTER, isFromMe and 318 or 78, 8)
+            :addTo(report_content_bg)
         -- from title label
         local from_label = UIKit:ttfLabel(
             {
@@ -1242,8 +1255,6 @@ function GameUIMail:CreateReportItem(listview,report)
 
 
         -- 战报发向方信息
-        -- 旗帜
-        display.newSprite("report_to_icon.png", 350, 47):addTo(report_content_bg)
         -- to title label
         local to_label = UIKit:ttfLabel(
             {
@@ -1680,6 +1691,9 @@ function GameUIMail:GetEnemyAllianceTag(report)
 end
 
 return GameUIMail
+
+
+
 
 
 
