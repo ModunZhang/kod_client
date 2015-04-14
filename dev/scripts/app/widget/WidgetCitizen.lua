@@ -218,7 +218,9 @@ function WidgetCitizen:OnCitizenChanged(citizen_array)
         local production = string.format("%d", citizen_array[k])
         local productionPerHour
         if k == CITIZEN then
-            productionPerHour = resource_manager:GetPopulationResource():GetProductionPerHour()
+            local population = resource_manager:GetPopulationResource()
+            productionPerHour = population:GetProductionPerHour()
+            production = string.format("%d/%d", production, population:GetValueLimit())
         elseif k == FOOD then
             productionPerHour = resource_manager:GetFoodResource():GetProductionPerHour()
         elseif k == WOOD then
