@@ -116,4 +116,15 @@ getPVRTexTool()
 	DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 	echo $DIR/../TextureTools/PVRTexToolCLI
 }
+getAppVersion()
+{
+	Platform=$1
+	python -c "exit(0) if \"$Platform\" in \"$PLATFORMS\".split() else exit(1)"
+	root_dir=`getProjDir`
+	if [[ $Platform = "iOS" ]]
+	then
+		plist=${root_dir}/frameworks/runtime-src/proj.ios_mac/ios/Info.plist
+		echo `/usr/libexec/PlistBuddy -c "print CFBundleVersion" $plist`
+	fi
+}
 $@

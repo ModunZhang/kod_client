@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="35" height="35" tilewidth="80" tileheight="80">
+ <tileset firstgid="1" name="grass_80x80" tilewidth="80" tileheight="80">
+  <image source="../images/grass_80x80.png" width="80" height="80"/>
+ </tileset>
+ <layer name="layer1" width="35" height="35">
+  <properties>
+   <property name="a" value="100"/>
+   <property name="b" value="100"/>
+   <property name="g" value="100"/>
+   <property name="r" value="100"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJztwwENAAAMw6DOv+kLOSSsmqqqqqo+fur7BMo=
+  </data>
+ </layer>
+</map>
