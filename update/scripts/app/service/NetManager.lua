@@ -329,11 +329,11 @@ local logic_event_map = {
     end,
     onAllianceFight = function(success, response)
         LuaUtils:outputTable("onAllianceFight", response)
+        local user_enemy_alliance_data = response.enemyAllianceData
+        DataManager:setEnemyAllianceData(user_enemy_alliance_data)
         local user_alliance_data = DataManager:getUserAllianceData()
         local edit = decodeInUserDataFromDeltaData(user_alliance_data, response.allianceData)
         DataManager:setUserAllianceData(user_alliance_data, edit)
-        local user_enemy_alliance_data = DataManager:getEnemyAllianceData()
-        DataManager:setEnemyAllianceData(user_enemy_alliance_data)
     end
 }
 ---

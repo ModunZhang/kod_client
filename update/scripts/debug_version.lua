@@ -1,3 +1,3 @@
-local __debugVer = 3011
+local __debugVer = 3012
 		return __debugVer
 	
