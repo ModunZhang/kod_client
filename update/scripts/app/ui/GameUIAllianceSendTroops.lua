@@ -110,7 +110,7 @@ function GameUIAllianceSendTroops:OnMoveInStage()
         return normal[soldier_type.."_"..level] or SPECIAL[soldier_type]
     end
 
-    local max_btn = WidgetPushButton.new({normal = "yellow_button_146x42.png",pressed = "yellow_button_highlight_146x42.png"})
+    local max_btn = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
         :setButtonLabel(UIKit:ttfLabel({
             text = _("最大"),
             size = 24,
@@ -166,10 +166,10 @@ function GameUIAllianceSendTroops:OnMoveInStage()
             end
             self:RefreashSoldierShow()
         end
-    end):align(display.LEFT_CENTER,window.left+50,window.top-920):addTo(self:GetView())
+    end):align(display.LEFT_CENTER,window.left+50,window.top-910):addTo(self:GetView())
     self.max_btn = max_btn
 
-    local march_btn = WidgetPushButton.new({normal = "yellow_button_146x42.png",pressed = "yellow_button_highlight_146x42.png"})
+    local march_btn = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
         :setButtonLabel(UIKit:ttfLabel({
             text = _("行军"),
             size = 24,
@@ -224,23 +224,23 @@ function GameUIAllianceSendTroops:OnMoveInStage()
                 end
             end
 
-        end):align(display.RIGHT_CENTER,window.right-50,window.top-920):addTo(self:GetView())
+        end):align(display.RIGHT_CENTER,window.right-50,window.top-910):addTo(self:GetView())
     if not self.isPVE then
         --行军所需时间
-        display.newSprite("hourglass_39x46.png", window.cx, window.top-920)
+        display.newSprite("hourglass_39x46.png", window.cx, window.top-910)
             :addTo(self):scale(0.6)
         self.march_time = UIKit:ttfLabel({
             text = "00:00:00",
             size = 18,
             color = 0x403c2f
-        }):align(display.LEFT_CENTER,window.cx+20,window.top-910):addTo(self:GetView())
+        }):align(display.LEFT_CENTER,window.cx+20,window.top-900):addTo(self:GetView())
 
         -- 科技减少行军时间
         self.buff_reduce_time = UIKit:ttfLabel({
             text = "-(00:00:00)",
             size = 18,
             color = 0x068329
-        }):align(display.LEFT_CENTER,window.cx+20,window.top-930):addTo(self:GetView())
+        }):align(display.LEFT_CENTER,window.cx+20,window.top-920):addTo(self:GetView())
     end
     City:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
 end
@@ -278,7 +278,7 @@ function GameUIAllianceSendTroops:SelectDragonPart()
         :addTo(dragon_frame)
     -- 龙，等级
     self.dragon_name = UIKit:ttfLabel({
-        text = _(dragon:Type()).."（LV ".. dragon:Level()..")",
+        text = Localize.dragon[dragon:Type()].."（LV ".. dragon:Level()..")",
         size = 22,
         color = 0x514d3e,
     }):align(display.LEFT_CENTER,20,80)
@@ -291,7 +291,7 @@ function GameUIAllianceSendTroops:SelectDragonPart()
     }):align(display.LEFT_CENTER,20,30)
         :addTo(box_bg)
 
-    local send_troops_btn = WidgetPushButton.new({normal = "blue_btn_up_142x39.png",pressed = "blue_btn_down_142x39.png"})
+    local send_troops_btn = WidgetPushButton.new({normal = "blue_btn_up_148x58.png",pressed = "blue_btn_down_148x58.png"})
         :setButtonLabel(UIKit:ttfLabel({
             text = _("选择"),
             size = 22,
@@ -302,7 +302,7 @@ function GameUIAllianceSendTroops:SelectDragonPart()
             if event.name == "CLICKED_EVENT" then
                 self:SelectDragon()
             end
-        end):align(display.CENTER,330,30):addTo(box_bg)
+        end):align(display.CENTER,340,40):addTo(box_bg)
 
 end
 function GameUIAllianceSendTroops:RefreashDragon(dragon)
@@ -528,22 +528,33 @@ function GameUIAllianceSendTroops:GetSelectSoldier()
 end
 function GameUIAllianceSendTroops:CreateTroopsShow()
     local parent = self
-    local TroopShow = display.newSprite("battle_bg_grass_772x388.png")
-        :align(display.BOTTOM_RIGHT, window.right-16, window.top-355)
+    local grass_width,grass_height =611,275
+    local TroopShow = display.newNode()
+    TroopShow:setContentSize(cc.size(grass_width,grass_height))
+    TroopShow:align(display.BOTTOM_LEFT, window.cx-304, window.top_bottom-250)
+    display.newSprite("battle_bg_grass_611x275.png")
+        :align(display.LEFT_BOTTOM,window.cx-304, window.top_bottom-250):addTo(self:GetView())
+    TroopShow.offset_x = 0
+    TroopShow.bound_box_width = grass_width
 
     local scrollView = UIScrollView.new({
-        viewRect = cc.rect(window.cx-304, window.top-355, 608, 388),
-        bgColor = UIKit:hex2c4b(0x7a000000),
+        viewRect = cc.rect(window.cx-304, window.top_bottom-250, 611, 275),
+    -- bgColor = UIKit:hex2c4b(0x7a000000),
     }):addScrollNode(TroopShow)
         :setBounceable(false)
         :setDirection(UIScrollView.DIRECTION_HORIZONTAL)
         :addTo(self:GetView())
     -- 战斗力，人口，负重信息展示背景框
     local info_bg = cc.LayerColor:create(UIKit:hex2c4b(0x7a000000))
-        :pos(window.left+14, window.top-355)
+        :pos(window.left+14, window.top-343)
         :addTo(self:GetView())
     info_bg:setTouchEnabled(false)
     info_bg:setContentSize(620, 46)
+    -- line
+    local line = display.newSprite("line_624x4.png")
+        :align(display.CENTER, window.cx+2, window.top-343)
+        :addTo(self:GetView())
+
     local function createInfoItem(title,value)
         local info = cc.Layer:create()
         local value_label = UIKit:ttfLabel({
@@ -566,14 +577,41 @@ function GameUIAllianceSendTroops:CreateTroopsShow()
         return info
     end
 
-    -- line
-    local line = display.newSprite("line_624x4.png")
-        :align(display.CENTER, window.cx+2, window.top-355)
-        :addTo(self:GetView())
+    function TroopShow:RefreshScrollNode(current_x)
+        if current_x<grass_width then
+            table.insert(self.soldier_crops,display.newSprite("battle_bg_grass_611x275.png")
+                :align(display.LEFT_BOTTOM,0,0):addTo(self))
+        end
+        if current_x<0 then
+            local need_bg_count = math.ceil(math.abs(current_x)/grass_width)
+            for i=1,need_bg_count do
+                table.insert(self.soldier_crops,display.newSprite("battle_bg_grass_611x275.png")
+                    :align(display.LEFT_BOTTOM,-grass_width*i,0):addTo(self))
+            end
+            self.offset_x = grass_width -(math.abs(current_x)-(need_bg_count-1)*grass_width)
+            self.bound_box_width = math.abs(current_x)+grass_width
+        else
+            self.offset_x = 0
+            self.bound_box_width = grass_width
+        end
+    end
+    function TroopShow:getCascadeBoundingBox()
+        local rc
+        local func = tolua.getcfunction(self, "getCascadeBoundingBox")
+        if func then
+            rc = func(self)
+        end
 
+        rc.origin = {x=rc.x+self.offset_x-60, y=rc.y}
+        rc.size = {width=self.bound_box_width+60, height=rc.height}
+        rc.width=self.bound_box_width+60
+        rc.x=rc.x+self.offset_x-60
+        rc.containsPoint = isPointIn
+        return rc
+    end
     function TroopShow:SetPower(power)
         local power_item = createInfoItem(_("战斗力"),string.formatnumberthousands(power))
-            :align(display.CENTER,20,0)
+            :align(display.CENTER,30,0)
             :addTo(info_bg)
         return self
     end
@@ -591,7 +629,7 @@ function GameUIAllianceSendTroops:CreateTroopsShow()
     end
     function TroopShow:NewCorps(soldier,soldier_number,star)
         local arrange = soldier_arrange[soldier]
-        local corps = Corps.new(soldier, star , arrange.row, arrange.col)
+        local corps = Corps.new(soldier, star , arrange.row, arrange.col,nil,100)
         local label = display.newSprite("back_ground_122x24.png")
             :align(display.CENTER, 40, -40)
             :addTo(corps)
@@ -610,6 +648,15 @@ function GameUIAllianceSendTroops:CreateTroopsShow()
     end
     function TroopShow:GetSoldiers()
         return self.soldiers
+    end
+    function TroopShow:RemoveAllSoldierCrops()
+        if self.soldier_crops then
+            for i,v in ipairs(self.soldier_crops) do
+                v:removeFromParent(true)
+            end
+        end
+        self.offset_x = 0
+        self.bound_box_width = grass_width
     end
     function TroopShow:ShowOrRefreasTroops(soldiers)
         -- 按兵种战力排序
@@ -635,30 +682,31 @@ function GameUIAllianceSendTroops:CreateTroopsShow()
         -- 更新
         self:SetSoldiers(soldiers)
         if isRefresh then
-            self:removeAllChildren()
+            self:RemoveAllSoldierCrops()
             local y  = 100
-            local x = 752
+            local x = 611
             local total_power , total_weight, total_citizen =0,0,0
+            self.soldier_crops = {}
             for index,v in pairs(soldiers) do
-                local corp = self:NewCorps(v.soldier_type,v.power,v.soldier_star,120,120):addTo(self)
+                local corp = self:NewCorps(v.soldier_type,v.power,v.soldier_star,120,120):addTo(self,2)
                 if v.soldier_type ~= "catapult" and v.soldier_type ~= "ballista" and v.soldier_type ~= "meatWagon" then
                     corp:PlayAnimation("idle_90")
                 else
                     corp:PlayAnimation("move_90")
                 end
+                table.insert(self.soldier_crops,corp)
                 x = x - soldier_ani_width[v.soldier_type]
-               
+
                 corp:pos(x,y)
                 total_power = total_power + v.power
                 total_weight = total_weight + v.soldier_weight
                 total_citizen = total_citizen + v.soldier_citizen
-
             end
+            self:RefreshScrollNode(x)
             info_bg:removeAllChildren()
             self:SetPower(total_power)
             self:SetWeight(total_weight)
             self:SetCitizen(total_citizen)
-
         end
     end
 
@@ -681,6 +729,14 @@ function GameUIAllianceSendTroops:onExit()
 end
 
 return GameUIAllianceSendTroops
+
+
+
+
+
+
+
+
 
 
 

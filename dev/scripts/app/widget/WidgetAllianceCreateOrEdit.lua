@@ -33,7 +33,7 @@ function WidgetAllianceCreateOrEdit:ctor(isModify,callback)
 end
 
 function WidgetAllianceCreateOrEdit:onEnter()
-	local okButton = WidgetPushButton.new({normal = "green_btn_up_142x39.png",pressed = "green_btn_down_142x39.png"})
+	local okButton = WidgetPushButton.new({normal = "green_btn_up_250x66.png",pressed = "green_btn_down_250x66.png"})
     	:addTo(self)
     	:align(display.BOTTOM_RIGHT, CONTENT_WIDTH - 10, 10)
     	:setButtonLabel("normal",UIKit:commonButtonLable({
@@ -57,7 +57,7 @@ function WidgetAllianceCreateOrEdit:onEnter()
 			:align(display.LEFT_CENTER, gemIcon:getPositionX()+gemIcon:getCascadeBoundingBox().width + 4,gemIcon:getPositionY() + gemIcon:getCascadeBoundingBox().height/2)
 		-- flags
 	    self.createFlagPanel = self:createFlagPanel():addTo(self)
-	    	:pos(0,okButton:getPositionY()+65)
+	    	:pos(0,okButton:getPositionY()+85)
 	    -- landform & language
 	    self.landformPanel = self:createCheckAllianeGroup():addTo(self)
 	    	:pos(-10,self.createFlagPanel:getCascadeBoundingBox().height+50)
