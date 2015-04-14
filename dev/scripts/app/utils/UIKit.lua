@@ -567,14 +567,14 @@ end
 
 function UIKit:WaitForNet()
     local scene = display.getRunningScene()
-    if scene.__cname  ~= 'UpdaterScene' and scene.__cname  ~= 'MainScene' then
+    if scene.__cname  ~= 'UpdaterScene' and scene.__cname  ~= 'MainScene' and scene.WaitForNet then
         scene:WaitForNet()
     end
 end
 
 function UIKit:NoWaitForNet()
     local scene = display.getRunningScene()
-    if scene.__cname  ~= 'UpdaterScene' and scene.__cname  ~= 'MainScene' then
+    if scene.__cname  ~= 'UpdaterScene' and scene.__cname  ~= 'MainScene' and scene.NoWaitForNet then
         scene:NoWaitForNet()
     end
 end

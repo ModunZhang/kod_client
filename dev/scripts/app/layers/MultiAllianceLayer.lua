@@ -501,7 +501,7 @@ function MultiAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, fini
         corps:setScaleY(math.abs(scalex))
         corps.march_info = march_info
         self.corps_map[id] = corps
-        self:CreateLine(id, march_info.start_info.logic, march_info.end_info.logic)
+        self:CreateLine(id, march_info)
     else
         self.corps_map[id].march_info = march_info
     end
@@ -524,17 +524,15 @@ end
 function MultiAllianceLayer:IsExistCorps(id)
     return self.corps_map[id] ~= nil
 end
-function MultiAllianceLayer:CreateLine(id, start_pos, end_pos)
+function MultiAllianceLayer:CreateLine(id, march_info)
     if self.lines_map[id] then
         self.lines_map[id]:removeFromParent()
     end
-    local march_info = self:GetMarchInfoWith(id, start_pos, end_pos)
     local middle = cc.pMidpoint(march_info.start_info.real, march_info.end_info.real)
     local scale = march_info.length / 22
     local unit_count = math.floor(scale)
     local sprite = display.newSprite("arrow_16x22.png", nil, nil, {class=cc.FilteredSpriteWithOne})
         :addTo(self:GetLineNode()):pos(middle.x, middle.y):rotation(march_info.degree)
-    -- local line_id = string.format("_(%d,%d)->(%d,%d)", start_pos.x, start_pos.y, end_pos.x, end_pos.y)
     sprite:setFilter(filter.newFilter("CUSTOM",
         json.encode({
             frag = "shaders/multi_tex.fs",
@@ -552,18 +550,17 @@ function MultiAllianceLayer:GetMarchInfoWith(id, logic_start_point, logic_end_po
     assert(logic_start_point.index and logic_end_point.index,"")
     local spt = self.alliance_views[logic_start_point.index]:GetLogicMap():WrapConvertToMapPosition(logic_start_point.x, logic_start_point.y)
     local ept = self.alliance_views[logic_end_point.index]:GetLogicMap():WrapConvertToMapPosition(logic_end_point.x, logic_end_point.y)
-    local vec = cc.pSub(ept, spt)
-    local deg = math.deg(cc.pGetAngle(vec, {x = 0, y = 1}))
-    local length = cc.pGetLength(vec)
+    local vector = cc.pSub(ept, spt)
+    local degree = math.deg(cc.pGetAngle(vector, {x = 0, y = 1}))
+    local length = cc.pGetLength(vector)
     local scale = length / 22
     local unit_count = math.floor(scale)
     return {
         start_info = {real = spt, logic = logic_start_point},
         end_info = {real = ept, logic = logic_end_point},
-        degree = deg,
-        dir_vector = vec,
+        degree = degree,
         length = length,
-        normal = cc.pNormalize(vec)
+        normal = cc.pNormalize(vector)
     }
 end
 function MultiAllianceLayer:DeleteLineById(id)
