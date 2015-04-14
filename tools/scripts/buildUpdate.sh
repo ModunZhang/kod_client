@@ -15,14 +15,12 @@ echo ---------------- 提交代码
 # cd $DOCROOT
 
 echo ---------------- 检查更新
-# cd $DOCROOT/../buildUpdate
-# python buildUpdate.py
-# cd $DOCROOT
+cd $DOCROOT/../buildUpdate
+python buildUpdate.py
+cd $DOCROOT
 
 echo ---------------- 同步代码
-cd $PROJ_DIR
-# cp -r ../update ../../server/update-server/public
-# rsync -rave "ssh " --exclude=.DS_Store*  ../update ec2-user@ec2-54-178-151-193.ap-northeast-1.compute.amazonaws.com:~/server/update-server/public/
+rsync -rave "ssh " --exclude=.DS_Store*  ../../update ec2-user@ec2-54-223-172-65.cn-north-1.compute.amazonaws.com.cn:~/server/update-server/public/
 
 
 echo ---------------- 提交代码
