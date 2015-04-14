@@ -27,11 +27,12 @@ varying vec2 v_texCoord;
 #endif
 
 uniform vec2 u_resolution;
+uniform float curTime;
 
 
 void main(void)
 {
-	float time = CC_Time[1];
+	float time = curTime;
 	const mat3 p = mat3(13.323122,23.5112,21.71123,21.1212,28.7312,11.9312,21.8112,14.7212,61.3934);
 	vec2 uv = vec2(320.0, 380.0)/u_resolution.xy + vec2(1.,u_resolution.y/u_resolution.x)*gl_FragCoord.xy / u_resolution.xy;
 	vec3 acc = vec3(0.0);

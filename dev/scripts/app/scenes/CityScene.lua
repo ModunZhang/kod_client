@@ -38,12 +38,18 @@ function CityScene:onEnter()
     local sprite = display.newSprite("batcat_logo_368x390.png", 0, 0, {class=cc.FilteredSpriteWithOne}):addTo(self):align(display.LEFT_BOTTOM)
     sprite:setScaleX(display.width/368)
     sprite:setScaleY(display.height/390)
-    self.flash_time = 0
     sprite:setFilter(filter.newFilter("CUSTOM", json.encode({
         frag = "shaders/snow.fs",
         shaderName = "snow",
         u_resolution = {display.width, display.height},
+        curTime = 0,
     })))
+    local time = 0
+    sprite:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt)
+        time = time + dt
+        sprite:getFilter():getGLProgramState():setUniformFloat("curTime", time)
+    end)
+    sprite:scheduleUpdate()
 end
 function CityScene:onExit()
     UILib.unLoadBuildingAnimation()
@@ -335,6 +341,7 @@ end
 
 
 return CityScene
+
 
 
 
