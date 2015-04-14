@@ -7,7 +7,6 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local window = import("..utils.window")
 local Alliance = import("..entity.Alliance")
 local Flag = import("..entity.Flag")
-local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
 local WidgetChangeMap = import("..widget.WidgetChangeMap")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 
@@ -28,7 +27,7 @@ function GameUIOtherAllianceHome:OnSceneMove(logic_x, logic_y, alliance_view)
     local coordinate_str = string.format("%d, %d", logic_x, logic_y)
     local is_mine
     if alliance_view then
-        is_mine = alliance_view:GetAlliance():Id() == self.alliance:Id() and "["..self.alliance:AliasName().."]" or "["..self.alliance:GetEnemyAlliance():AliasName().."]"
+        is_mine = alliance_view:GetAlliance():Id() == self.alliance:Id() and "["..self.alliance:AliasName().."]" or "["..Alliance_Manager:GetEnemyAlliance():AliasName().."]"
     else
         is_mine = _("坐标")
     end

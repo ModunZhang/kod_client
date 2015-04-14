@@ -62,14 +62,11 @@ function DataUtils:buyResource(need, has)
                 while required > 0 do
                     for i=#config,1,-1 do
                         item = config[i]
-                        if required>0 then
-                            while item.min<required do
-                                gemUsed = gemUsed + item.gem
-                                required = required - item.resource
-                                currentBuy = currentBuy + item.resource
-                                break
-                                -- print("买了",config[i].resource,"花费",config[i].gem)
-                            end
+                        if item.min < required then
+                            gemUsed = gemUsed + item.gem
+                            required = required - item.resource
+                            currentBuy = currentBuy + item.resource
+                            break
                         end
                     end
                 end
@@ -77,7 +74,7 @@ function DataUtils:buyResource(need, has)
             totalBuy[key] = currentBuy
         end
     end)
-    return gemUsed
+    return gemUsed, totalBuy
 end
 
 --[[
@@ -499,7 +496,7 @@ function DataUtils:__getRandomAllianceNameAndTag()
         tag  = string.format("%sn%s",string.sub(config[fist_index].value,1,1),string.sub(config[second_index].value,1,1))
     elseif __categore == 3 then
         local config_1 = config_clientinitgame.alliance_name_adj
-        local config_2 = config_clientinitgame.alliance_name_noun
+        local config_2 = config_clientinitgame.alliance_name_single_name
         local fist_index,second_index = math.random(1,#config_1),math.random(1,#config_2)
 
         name = string.format("The %s %s",config_1[fist_index].value,config_2[second_index].value)
@@ -563,4 +560,5 @@ function DataUtils:GetNextRecruitTime()
 
     return dt1
 end
+
 

@@ -8,7 +8,6 @@ local AllianceItemsManager = import("..entity.AllianceItemsManager")
 local GameUIAllianceShop = UIKit:createUIClass('GameUIAllianceShop', "GameUIAllianceBuilding")
 local Flag = import("..entity.Flag")
 local UIListView = import(".UIListView")
-local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
 local Localize = import("..utils.Localize")
 local Localize_item = import("..utils.Localize_item")
 local shop = GameDatas.AllianceBuilding.shop

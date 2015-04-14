@@ -226,7 +226,7 @@ void Director::setDefaultValues(void)
         Texture2D::setDefaultAlphaPixelFormat(Texture2D::PixelFormat::RGB5A1);
 
     // PVR v2 has alpha premultiplied ?
-    bool pvr_alpha_premultipled = conf->getValue("cocos2d.x.texture.pvrv2_has_alpha_premultiplied", Value(false)).asBool();
+    bool pvr_alpha_premultipled = conf->getValue("cocos2d.x.texture.pvrv2_has_alpha_premultiplied", Value(true)).asBool();
     Image::setPVRImagesHavePremultipliedAlpha(pvr_alpha_premultipled);
 }
 

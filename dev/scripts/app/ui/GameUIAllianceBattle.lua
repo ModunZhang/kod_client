@@ -10,14 +10,14 @@ local Alliance = import("..entity.Alliance")
 local AllianceMoonGate = import("..entity.AllianceMoonGate")
 local UIListView = import(".UIListView")
 local Flag = import("..entity.Flag")
-local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
+local WidgetAllianceHelper = import("..widget.WidgetAllianceHelper")
 
 local GameUIAllianceBattle = UIKit:createUIClass('GameUIAllianceBattle', "GameUIWithCommonHeader")
 
 function GameUIAllianceBattle:ctor(city)
     GameUIAllianceBattle.super.ctor(self, city, _("联盟会战"))
     self.alliance = Alliance_Manager:GetMyAlliance()
-    self.enemy_alliance = Alliance_Manager:GetMyAlliance():GetEnemyAlliance()
+    self.enemy_alliance = Alliance_Manager:GetEnemyAlliance()
 
     self.alliance_fight_reports_table = {}
     self.history_items = {}
@@ -293,7 +293,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
     else
         local our_alliance = self.alliance
         -- local enemy_alliance = self.alliance:GetAllianceMoonGate():GetEnemyAlliance()
-        local enemy_alliance = Alliance_Manager:GetMyAlliance():GetEnemyAlliance()
+        local enemy_alliance = Alliance_Manager:GetEnemyAlliance()
         local top_bg = display.newSprite("back_ground_580x118.png")
             :align(display.TOP_CENTER, window.cx, window.top-120)
             :addTo(layer)
@@ -537,7 +537,7 @@ end
 function GameUIAllianceBattle:OpenAllianceDetails(isOur)
     local alliance = self.alliance
 
-    local enemy_alliance = Alliance_Manager:GetMyAlliance():GetEnemyAlliance()
+    local enemy_alliance = Alliance_Manager:GetEnemyAlliance()
     local count_data = isOur and alliance:GetMyAllianceFightCountData() or alliance:GetEnemyAllianceFightCountData()
     local our_player_kills = alliance:GetMyAllianceFightPlayerKills()
     local enemy_player_kills = alliance:GetEnemyAllianceFightPlayerKills()
@@ -570,7 +570,7 @@ function GameUIAllianceBattle:OpenAllianceDetails(isOur)
     local flag_bg = display.newSprite("alliance_item_flag_box_126X126.png")
         :align(display.CENTER,90,rb_size.height-90)
         :addTo(body)
-    local a_helper = WidgetAllianceUIHelper.new()
+    local a_helper = WidgetAllianceHelper.new()
     local flag_sprite = a_helper:CreateFlagWithRhombusTerrain(alliance_terrain,alliance_flag)
     flag_sprite:scale(0.85)
     flag_sprite:align(display.CENTER, flag_bg:getContentSize().width/2, flag_bg:getContentSize().height/2-20)
@@ -844,7 +844,7 @@ function GameUIAllianceBattle:AddHistoryItem(report,index)
         :addTo(fight_bg)
 
     -- 己方联盟旗帜
-    local ui_helper = WidgetAllianceUIHelper.new()
+    local ui_helper = WidgetAllianceHelper.new()
     local self_flag = ui_helper:CreateFlagContentSprite(Flag.new():DecodeFromJson(ourAlliance.flag)):scale(0.5)
     self_flag:align(display.CENTER, VS:getPositionX()-80, 10)
         :addTo(fight_bg)
@@ -1036,7 +1036,7 @@ function GameUIAllianceBattle:CreateAllianceItem(alliance)
         end)
         :align(display.CENTER,80,h/2)
         :addTo(content)
-    local a_helper = WidgetAllianceUIHelper.new()
+    local a_helper = WidgetAllianceHelper.new()
     local flag_sprite = a_helper:CreateFlagWithRhombusTerrain(basic.terrain
         ,Flag.new():DecodeFromJson(basic.flag))
     flag_sprite:scale(0.85)
@@ -1138,7 +1138,7 @@ function GameUIAllianceBattle:OpenOtherAllianceDetails(alliance)
         :align(display.CENTER,78,h-78)
         :addTo(body)
         :scale(0.8)
-    local a_helper = WidgetAllianceUIHelper.new()
+    local a_helper = WidgetAllianceHelper.new()
     local flag_sprite = a_helper:CreateFlagWithRhombusTerrain(basic.terrain
         ,Flag.new():DecodeFromJson(basic.flag))
     flag_sprite:scale(0.8)

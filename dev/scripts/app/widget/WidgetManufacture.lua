@@ -12,6 +12,8 @@ local WidgetManufacture = class("WidgetManufacture", function()
     return node
 end)
 
+local timer = app.timer
+
 function WidgetManufacture:OnBeginMakeMaterialsWithEvent(tool_shop, event)
     self:UpdateEvent(event)
     self:UpdateNeedStatus()
@@ -88,7 +90,39 @@ function WidgetManufacture:Manufacture()
         })
     self.list_view:addItem(item)
     item:GetNeedBox():SetClicked(function()
-        NetManager:getMakeBuildingMaterialPromise()
+        local resource_manager = self.toolShop:BelongCity():GetResourceManager()
+        local time = timer:GetServerTime()
+        local wood_cur = resource_manager:GetWoodResource():GetResourceValueByCurrentTime(time)
+        local stone_cur = resource_manager:GetStoneResource():GetResourceValueByCurrentTime(time)
+        local iron_cur = resource_manager:GetIronResource():GetResourceValueByCurrentTime(time)
+        local count, wood, stone, iron, time = self.toolShop:GetNeedByCategory("building")
+        dump({
+            wood = wood,
+            stone = stone,
+            iron = iron,
+        })
+        dump({
+            wood = wood_cur,
+            stone = stone_cur,
+            iron = iron_cur,
+        })
+        local need_gems, total_buy = DataUtils:buyResource({
+            wood = wood,
+            stone = stone,
+            iron = iron,
+        }, {
+            wood = wood_cur,
+            stone = stone_cur,
+            iron = iron_cur,
+        })
+        dump(total_buy)
+        if need_gems > 0 then
+            UIKit:showMessageDialog(_("提示"), "资源不足!",function()
+                NetManager:getMakeBuildingMaterialPromise()
+            end):CreateNeeds({value = need_gems})
+        else
+            NetManager:getMakeBuildingMaterialPromise()
+        end
     end)
     item:GetMaterial():SetClicked(function()
         NetManager:getFetchMaterialsPromise(self.toolShop:GetBuildingEvent():Id())
@@ -110,7 +144,28 @@ function WidgetManufacture:Manufacture()
         })
     self.list_view:addItem(item)
     item:GetNeedBox():SetClicked(function()
-        NetManager:getMakeTechnologyMaterialPromise()
+        local resource_manager = self.toolShop:BelongCity():GetResourceManager()
+        local time = timer:GetServerTime()
+        local wood_cur = resource_manager:GetWoodResource():GetResourceValueByCurrentTime(time)
+        local stone_cur = resource_manager:GetStoneResource():GetResourceValueByCurrentTime(time)
+        local iron_cur = resource_manager:GetIronResource():GetResourceValueByCurrentTime(time)
+        local count, wood, stone, iron, time = self.toolShop:GetNeedByCategory("technology")
+        local need_gems = DataUtils:buyResource({
+            wood = wood,
+            stone = stone,
+            iron = iron,
+        }, {
+            wood = wood_cur,
+            stone = stone_cur,
+            iron = iron_cur,
+        })
+        if need_gems > 0 then
+            UIKit:showMessageDialog(_("提示"), "资源不足!",function()
+                NetManager:getMakeTechnologyMaterialPromise()
+            end):CreateNeeds({value = need_gems})
+        else
+            NetManager:getMakeTechnologyMaterialPromise()
+        end
     end)
     item:GetMaterial():SetClicked(function()
         NetManager:getFetchMaterialsPromise(self.toolShop:GetTechnologyEvent():Id())
@@ -277,9 +332,14 @@ function WidgetManufacture:CreateMaterialItemWithListView(list_view, title, mate
 
 
         function need_box:Update(category)
+            local resource_manager = toolShop:BelongCity():GetResourceManager()
+            local time = timer:GetServerTime()
+            local wood_cur = resource_manager:GetWoodResource():GetResourceValueByCurrentTime(time)
+            local stone_cur = resource_manager:GetStoneResource():GetResourceValueByCurrentTime(time)
+            local iron_cur = resource_manager:GetIronResource():GetResourceValueByCurrentTime(time)
             local number, wood, stone, iron, time = toolShop:GetNeedByCategory(category)
             describe:setString(_("随机制造")..string.format("%d", number).._("个材料"))
-            self:SetNeedNumber(wood, stone, iron, time)
+            self:SetNeedNumber({wood_cur, wood}, {stone_cur, stone}, {iron_cur, iron}, time)
             return self
         end
         function need_box:GetNormalButton()
@@ -414,4 +474,6 @@ end
 
 
 return WidgetManufacture
+
+
 

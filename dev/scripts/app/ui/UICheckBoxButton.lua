@@ -31,7 +31,7 @@ quick CheckButton控件
 
 local UIButton = import(".UIButton")
 local UICheckBoxButton = class("UICheckBoxButton", UIButton)
-
+local MOVE_EVENT = "MOVE_EVENT"
 UICheckBoxButton.OFF          = "off"
 UICheckBoxButton.OFF_PRESSED  = "off_pressed"
 UICheckBoxButton.OFF_DISABLED = "off_disabled"
@@ -69,6 +69,25 @@ function UICheckBoxButton:ctor(images, options)
     self:setButtonImage(UICheckBoxButton.ON_PRESSED, images["on_pressed"], true)
     self:setButtonImage(UICheckBoxButton.ON_DISABLED, images["on_disabled"], true)
     self.labelAlign_ = display.LEFT_CENTER
+    self.pre_pos = nil
+    self:setTouchSwallowEnabled(false)
+    self:RebindEventListener()
+end
+
+
+function UICheckBoxButton:RebindEventListener()
+    self:onButtonPressed(function(event)
+        self.pre_pos = event.target:convertToWorldSpace(cc.p(event.target:getPosition()))
+    end)
+    self:addEventListener(MOVE_EVENT, function(event)
+        local cur_pos = event.target:convertToWorldSpace(cc.p(event.target:getPosition()))
+        if event.touchInTarget and cc.pGetDistance(cur_pos, self.pre_pos) > 10 then
+            if event.target.fsm_:canDoEvent("release") then
+                event.target.fsm_:doEvent("release")
+            end
+        end
+    end)
+    return self
 end
 
 --[[--

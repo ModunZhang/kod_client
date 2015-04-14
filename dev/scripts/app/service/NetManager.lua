@@ -318,6 +318,22 @@ local logic_event_map = {
         if success then
             DataManager:setUserAllianceData(response)
         end
+    end,
+    onEnemyAllianceDataChanged = function(success, response)
+        LuaUtils:outputTable("onEnemyAllianceDataChanged", response)
+        if success then
+            local user_enemy_alliance_data = DataManager:getEnemyAllianceData()
+            local edit = decodeInUserDataFromDeltaData(user_enemy_alliance_data,response)
+            DataManager:setEnemyAllianceData(user_enemy_alliance_data,edit)
+        end
+    end,
+    onAllianceFight = function(success, response)
+        LuaUtils:outputTable("onAllianceFight", response)
+        local user_alliance_data = DataManager:getUserAllianceData()
+        local edit = decodeInUserDataFromDeltaData(user_alliance_data, response.allianceData)
+        DataManager:setUserAllianceData(user_alliance_data, edit)
+        local user_enemy_alliance_data = DataManager:getEnemyAllianceData()
+        DataManager:setEnemyAllianceData(user_enemy_alliance_data)
     end
 }
 ---
@@ -407,7 +423,7 @@ local function getOpenUDID()
     local device_id
     local udid = cc.UserDefault:getInstance():getStringForKey("udid")
     if udid and #udid > 0 then
-        device_id = "1"
+        device_id = udid
     else
         device_id = device.getOpenUDID()
     end
@@ -426,16 +442,19 @@ function NetManager:getLoginPromise(deviceId)
             app:GetPushManager():CancelAll()
             local playerData = response.msg.playerData
             local user_alliance_data = response.msg.allianceData
+            local user_enemy_alliance_data = response.msg.enemyAllianceData
             if self.m_was_inited_game then
                 self.m_netService:setDeltatime(playerData.serverTime - ext.now())
                 DataManager:setUserData(playerData)
                 DataManager:setUserAllianceData(user_alliance_data)
+                DataManager:setEnemyAllianceData(user_enemy_alliance_data)
             else
                 -- LuaUtils:outputTable("logic.entryHandler.login", response)
                 self.m_netService:setDeltatime(playerData.serverTime - ext.now())
                 local InitGame = import("app.service.InitGame")
-                InitGame(playerData)
+                InitGame(playerData) -- inner DataManager:setUserData ...
                 DataManager:setUserAllianceData(user_alliance_data)
+                DataManager:setEnemyAllianceData(user_enemy_alliance_data)
             end
             self.m_was_inited_game = false
         end
@@ -1427,6 +1446,10 @@ function NetManager:getSwitchServer(serverId)
     return get_blocking_request_promise("logic.playerHandler.switchServer",{serverId=serverId},"切换服务器失败!")
 end
 
+-- 购买联盟盟主职位
+function NetManager:getBuyAllianceArchon()
+    return get_blocking_request_promise("logic.allianceHandler.buyAllianceArchon"):done(get_response_msg)
+end
 ----------------------------------------------------------------------------------------------------------------
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"

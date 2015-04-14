@@ -1395,10 +1395,9 @@ function City:OnHelpToTroopsDataChange(userData, deltaData)
     local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.helpToTroops
     if is_fully_update or is_delta_update then
+        self.helpToTroops = {}
         for _,v in ipairs(userData.helpToTroops or {}) do
-            if not self.helpToTroops[v.beHelpedPlayerData.id] then
-                self.helpToTroops[v.beHelpedPlayerData.id] = v
-            end
+            self.helpToTroops[v.beHelpedPlayerData.id] = v
         end
         self:NotifyListeneOnType(City.LISTEN_TYPE.HELPED_TO_TROOPS, function(listener)
             listener:OnHelpToTroopsChanged(self)

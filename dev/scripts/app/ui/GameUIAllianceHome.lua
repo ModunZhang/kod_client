@@ -4,7 +4,7 @@ local UIPageView = import("..ui.UIPageView")
 local Flag = import("..entity.Flag")
 local Alliance = import("..entity.Alliance")
 local SoldierManager = import("..entity.SoldierManager")
-local WidgetAllianceUIHelper = import("..widget.WidgetAllianceUIHelper")
+local WidgetAllianceHelper = import("..widget.WidgetAllianceHelper")
 local GameUIAllianceContribute = import(".GameUIAllianceContribute")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local GameUIHelp = import(".GameUIHelp")
@@ -371,7 +371,7 @@ function GameUIAllianceHome:CreateTop()
         }):align(display.LEFT_CENTER, 30, 20)
         :addTo(self_name_bg)
     -- 己方联盟旗帜
-    local ui_helper = WidgetAllianceUIHelper.new()
+    local ui_helper = WidgetAllianceHelper.new()
     local self_flag = ui_helper:CreateFlagContentSprite(alliance:Flag()):scale(0.5)
     self_flag:align(display.CENTER, self_name_bg:getContentSize().width-100, -30):addTo(self_name_bg)
 
@@ -445,7 +445,7 @@ function GameUIAllianceHome:CreateTop()
     function Top:Refresh()
         local alliance = home.alliance
         local status = alliance:Status()
-        local enemyAlliance = Alliance_Manager:GetMyAlliance():GetEnemyAlliance()
+        local enemyAlliance = Alliance_Manager:GetEnemyAlliance()
         period_label:setString(home:GetAlliancePeriod())
         -- 和平期
         if status=="peace" then
@@ -638,8 +638,8 @@ function GameUIAllianceHome:UpdateAllArrows(logic_x, logic_y, alliance_view)
     local x,y = alliance:GetAllianceMap():FindMapObjectById(alliance:GetSelf():MapId()):GetMidLogicPosition()
     self:UpdateMyCityArrows(screen_rect, alliance, layer, x,y)
     self:UpdateMyAllianceBuildingArrows(screen_rect, alliance, layer)
-    if alliance:HaveEnemyAlliance() then
-        self:UpdateEnemyArrows(screen_rect, alliance:GetEnemyAlliance(), layer, logic_x, logic_y)
+    if Alliance_Manager:HaveEnemyAlliance() then
+        self:UpdateEnemyArrows(screen_rect, Alliance_Manager:GetEnemyAlliance(), layer, logic_x, logic_y)
     end
 end
 function GameUIAllianceHome:UpdateMyCityArrows(screen_rect, alliance, layer, x, y)
