@@ -282,9 +282,9 @@ function MyApp:getSupportMailFormat(category)
 end
 
 function MyApp:EnterViewModelAllianceScene(alliance_id)
-    NetManager:getFtechAllianceViewDataPromose(alliance_id):done(function(msg)
-        local alliance = Alliance_Manager:DecodeAllianceFromJson(msg)
-        app:enterScene("OtherAllianceScene", {alliance}, "custom", -1,transition_)
+    NetManager:getFtechAllianceViewDataPromose(alliance_id):done(function(response)
+        local alliance = Alliance_Manager:DecodeAllianceFromJson(response.msg.allianceViewData)
+        app:enterScene("OtherAllianceScene", {alliance}, "custom", -1, transition_)
     end)
 end
 
