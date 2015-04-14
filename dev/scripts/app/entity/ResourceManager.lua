@@ -187,17 +187,22 @@ function ResourceManager:UpdateByCity(city, current_time)
     self.resource_citizen = citizen_map
     self:GetPopulationResource():SetLowLimitResource(total_citizen)
     for resource_type, production in pairs(total_production_map) do
-        local resource_production = math.floor(production * (1 + buff_production_map[resource_type]))
-        if resource_type == FOOD then
-            resource_production = resource_production - city:GetSoldierManager():GetTotalUpkeep()
-        end
-        local resource_limit = math.floor(total_limit_map[resource_type] * (1 + buff_limt_map[resource_type]))
+        local buff_limit = 1 + buff_limt_map[resource_type]
+        local resource_limit = math.floor(total_limit_map[resource_type] * buff_limit)
         local resource = self.resources[resource_type]
         resource:SetValueLimit(resource_limit)
-        resource:SetProductionPerHour(current_time,
-            resource_type ~= POPULATION
-            and resource_production
-            or (resource_limit - resource:GetLowLimitResource()) / intInit.playerCitizenRecoverFullNeedHours.value)
+
+        local buff_production = 1 + buff_production_map[resource_type]
+        if resource_type == POPULATION then
+            local production = (resource_limit - resource:GetLowLimitResource()) / intInit.playerCitizenRecoverFullNeedHours.value
+            resource:SetProductionPerHour(current_time, production * buff_production)
+        else
+            local resource_production = math.floor(production * buff_production)
+            if resource_type == FOOD then
+                resource_production = resource_production - city:GetSoldierManager():GetTotalUpkeep()
+            end
+            resource:SetProductionPerHour(current_time, resource_production)
+        end
     end
 end
 function ResourceManager:GetCitizenAllocInfo()
