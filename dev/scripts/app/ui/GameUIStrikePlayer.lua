@@ -51,7 +51,7 @@ function GameUIStrikePlayer:BuildUI()
 	WidgetPushButton.new({
 		normal = "yellow_btn_up_149x47.png",
 		pressed = "yellow_btn_down_149x47.png"
-		})
+		},nil,nil,{down = "DRAGON_STRIKE"})
 		:align(display.CENTER_BOTTOM,window.cx,window.bottom + 20)
 		:addTo(self.content_node)
 		:setButtonLabel("normal",UIKit:commonButtonLable({

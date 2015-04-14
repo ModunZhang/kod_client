@@ -15,7 +15,7 @@ function VillageEvent:OnPropertyChange()
 end
 
 function VillageEvent:GetPlayerRole()
-	local Me_Id = DataManager:getUserData()._id
+	local Me_Id = User:Id()
 	if Me_Id == self:PlayerData().id then
 		return self.EVENT_PLAYER_ROLE.Me 
 	else

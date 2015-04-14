@@ -169,7 +169,7 @@ function GameUIAllianceSendTroops:OnMoveInStage()
     end):align(display.LEFT_CENTER,window.left+50,window.top-910):addTo(self:GetView())
     self.max_btn = max_btn
 
-    local march_btn = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
+    local march_btn = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"},nil,nil,{down = "TROOP_SENDOUT"})
         :setButtonLabel(UIKit:ttfLabel({
             text = _("行军"),
             size = 24,

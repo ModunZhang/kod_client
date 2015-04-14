@@ -28,14 +28,19 @@ local effect_sound_map = {
 	TROOP_LOSE = "sfx_troop_lose.wav",
 	TROOP_SENDOUT = "sfx_troop_sendOut.wav",
 	TROOP_RECRUIT = "sfx_troop_recruit.wav",
+	TROOP_BACK = "sfx_troops_back.wav",
 	BATTLE_DEFEATED = "sfx_battle_defeated.wav",
 	BATTLE_VICTORY = "sfx_battle_victory.wav",
+	DRAGON_STRIKE = "sfx_select_dragon2.wav",
 	BATTLE_DRAGON = "sfx_dragonPK.wav",
 	SPLASH_BUTTON_START = "sfx_click_start.mp3",
 	UI_BUILDING_UPGRADE_START = "ui_building_upgrade.wav",
 	UI_BUILDING_DESTROY = "sfx_building_destroy.wav",
 	UI_BLACKSMITH_FORGE = "ui_blacksmith_forge.mp3",
-	UI_TOOLSHOP_CRAFT_START = "ui_toolShop_craft_start.mp3"
+	UI_TOOLSHOP_CRAFT_START = "ui_toolShop_craft_start.mp3",
+	SELECT_ENEMY_ALLIANCE_CITY = "sfx_select_keep_enemy.wav",
+	ATTACK_PLAYER_ARRIVE = "sfx_select_armyCamp.wav",
+	STRIKE_PLAYER_ARRIVE = "sfx_select_dragon3.wav"
 }
 
 local soldier_step_sfx_map = {

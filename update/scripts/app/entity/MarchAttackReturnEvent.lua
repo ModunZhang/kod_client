@@ -6,7 +6,7 @@ local MarchAttackEvent = import(".MarchAttackEvent")
 local MarchAttackReturnEvent = class("MarchAttackReturnEvent",MarchAttackEvent)
 
 function MarchAttackReturnEvent:GetPlayerRole()
-	local Me_Id = DataManager:getUserData()._id
+	local Me_Id = User:Id()
 	if Me_Id == self:AttackPlayerData().id then
 		return self.MARCH_EVENT_PLAYER_ROLE.RECEIVER
 	elseif Me_Id == self:GetDefenceData().id then

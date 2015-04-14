@@ -295,25 +295,40 @@ function MultiAllianceLayer:OnMarchEventRefreshed(eventName)
 end
 
 function MultiAllianceLayer:OnAttackMarchEventDataChanged(changed_map)
-    self:ManagerCorpsFromChangedMap(changed_map)
+    self:ManagerCorpsFromChangedMap(changed_map,false)
 end
 
 function MultiAllianceLayer:OnAttackMarchReturnEventDataChanged(changed_map)
-    self:ManagerCorpsFromChangedMap(changed_map)
+    self:ManagerCorpsFromChangedMap(changed_map,false)
 end
 
 function MultiAllianceLayer:OnStrikeMarchEventDataChanged(changed_map)
-    dump(changed_map,"OnStrikeMarchEventDataChanged-->")
-    self:ManagerCorpsFromChangedMap(changed_map)
+    self:ManagerCorpsFromChangedMap(changed_map,true)
 end
 
 function MultiAllianceLayer:OnStrikeMarchReturnEventDataChanged(changed_map)
-    dump(changed_map,"OnStrikeMarchReturnEventDataChanged-->")
-    self:ManagerCorpsFromChangedMap(changed_map)
+    self:ManagerCorpsFromChangedMap(changed_map,true)
 end
-function MultiAllianceLayer:ManagerCorpsFromChangedMap(changed_map)
+function MultiAllianceLayer:ManagerCorpsFromChangedMap(changed_map,is_strkie)
     if changed_map.removed then
         table.foreachi(changed_map.removed,function(_,marchEvent)
+            local player_role = marchEvent:GetPlayerRole()
+            if player_role == marchEvent.MARCH_EVENT_PLAYER_ROLE.SENDER then
+                if is_strkie then
+                    app:GetAudioManager():PlayeEffectSoundWithKey("STRIKE_PLAYER_ARRIVE")
+                else
+                    app:GetAudioManager():PlayeEffectSoundWithKey("ATTACK_PLAYER_ARRIVE")
+                end
+            elseif player_role == marchEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER then
+                local __,alliance_id = marchEvent:FromLocation()
+                if Alliance_Manager:HaveEnemyAlliance() and alliance_id == Alliance_Manager:GetEnemyAlliance():Id() then
+                    if is_strkie then
+                        app:GetAudioManager():PlayeEffectSoundWithKey("STRIKE_PLAYER_ARRIVE")
+                    else
+                        app:GetAudioManager():PlayeEffectSoundWithKey("ATTACK_PLAYER_ARRIVE")
+                    end
+                end
+            end
             self:DeleteCorpsById(marchEvent:Id())
         end)
     elseif changed_map.edited then
