@@ -369,7 +369,7 @@ function GameUIAlliance:NoAllianceTabEvent_inviteIf()
 end
 
 function GameUIAlliance:RefreshInvateListView()
-    local list = User:GetInviteEvents()
+    local list = User:InviteToAllianceEvents()
     self.invateListView:removeAllItems()
     for i,v in ipairs(list) do
         local item = self:getCommonListItem_(self.COMMON_LIST_ITEM_TYPE.INVATE,v)
@@ -402,7 +402,7 @@ function GameUIAlliance:NoAllianceTabEvent_applyIf()
 end
 
 function GameUIAlliance:RefreshApplyListView()
-    local list = User:GetRequestEvents()
+    local list = User:RequestToAllianceEvents()
     self.applyListView:removeAllItems()
     for i,v in ipairs(list) do
         local item = self:getCommonListItem_(self.COMMON_LIST_ITEM_TYPE.APPLY,v)
