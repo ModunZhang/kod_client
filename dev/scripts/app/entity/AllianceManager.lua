@@ -41,8 +41,9 @@ function AllianceManager:OnUserDataChanged(user_data,time,deltaData)
 end
 
 function AllianceManager:OnAllianceDataChanged(alliance_data,refresh_time,deltaData)
+    local my_alliance_status = self:GetMyAlliance():Status() 
     self:GetMyAlliance():OnAllianceDataChanged(alliance_data,refresh_time,deltaData)
-    self:RefreshAllianceSceneIf()
+    self:RefreshAllianceSceneIf(my_alliance_status)
 end
 
 function AllianceManager:OnEnemyAllianceDataChanged(enemyAllianceData,refresh_time,deltaData)
@@ -75,9 +76,10 @@ function AllianceManager:DecodeAllianceFromJson( json_data )
     return alliance
 end
 --判断是否进入对战地图
-function AllianceManager:RefreshAllianceSceneIf()
+function AllianceManager:RefreshAllianceSceneIf(old_alliance_status)
     local my_alliance = self:GetMyAlliance()
     local my_alliance_status = my_alliance:Status()
+    if old_alliance_status == my_alliance_status then return end
     local scene_name = display.getRunningScene().__cname
     if (my_alliance_status == 'protect' or my_alliance_status == 'peace') then
         if self:HaveEnemyAlliance() then
