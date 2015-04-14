@@ -23,27 +23,28 @@ function WidgetClickPageView:ctor(params)
     self.current_index = 1
 
     self:addChild(self.bg)
+    self.bg:align(display.CENTER, self.width/2, self.height/2)
 
     self:setContentSize(cc.size(self.width,self.height))
 
     self.left_btn =  WidgetPushButton.new(
-        {normal = "next_54X60_normal.png", pressed = "next_54X60_pressed.png"},
+        {normal = "brown_btn_up_26x165.png", pressed = "brown_btn_down_26x165.png"},
         {scale9 = false}
     )
-        :addTo(self.bg):align(display.CENTER, 8,self.height/2)
+        :addTo(self.bg):align(display.CENTER, 15,self.height/2)
         :onButtonClicked(function(event)
             self:changePage(false)
         end)
-    self.left_btn:setRotationSkewY(180)
-
+    display.newSprite("icon_arrow_14x26.png"):addTo(self.left_btn)
     self.right_btn =  WidgetPushButton.new(
-        {normal = "next_54X60_normal.png", pressed = "next_54X60_pressed.png"},
+        {normal = "brown_btn_up_26x165.png", pressed = "brown_btn_down_26x165.png"},
         {scale9 = false}
     )
-        :addTo(self.bg):align(display.CENTER, self.width-8,self.height/2)
+        :addTo(self.bg):align(display.CENTER, self.width-15,self.height/2)
         :onButtonClicked(function(event)
             self:changePage(true)
         end)
+    display.newSprite("icon_arrow_14x26.png"):addTo(self.right_btn):flipX(true)
 end
 --[[--
 
@@ -110,6 +111,7 @@ function WidgetClickPageView:align(align, x, y)
 end
 
 return WidgetClickPageView
+
 
 
 
