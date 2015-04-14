@@ -12,6 +12,7 @@ local WidgetBackGroudWhite = import("..widget.WidgetBackGroudWhite")
 local WidgetDropList = import("..widget.WidgetDropList")
 local WidgetBackGroundLucid = import("..widget.WidgetBackGroundLucid")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
+local UILib = import(".UILib")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local GameUICollectReport = import(".GameUICollectReport")
 local Report = import("..entity.Report")
@@ -984,10 +985,10 @@ function GameUIMail:ShowMailDetails(mail)
     local dialog = WidgetPopDialog.new(768,title_string):AddToCurrentScene(true)
     local body = dialog:GetBody()
     local size = body:getContentSize()
-    
+
     local content_bg = WidgetUIBackGround.new({width=568,height = 544},WidgetUIBackGround.STYLE_TYPE.STYLE_5):addTo(body)
     content_bg:pos((size.width-content_bg:getContentSize().width)/2,80)
-    
+
     -- player head icon
     local heroBg = display.newSprite("chat_hero_background.png"):align(display.CENTER, 76, size.height - 80):addTo(body)
     local hero = display.newSprite("playerIcon_default.png"):align(display.CENTER, math.floor(heroBg:getContentSize().width/2), math.floor(heroBg:getContentSize().height/2)+5)
@@ -1153,7 +1154,7 @@ function GameUIMail:CreateReportItem(listview,report)
             end
         end)
     local c_size = content:getCascadeBoundingBox().size
-    local title_bg_image 
+    local title_bg_image
     if report:IsRead() then
         title_bg_image = "title_grey_558x34.png"
     else
@@ -1172,7 +1173,7 @@ function GameUIMail:CreateReportItem(listview,report)
             text = report:GetReportTitle(),
             size = 22,
             color = 0xffedae
-        }):align(display.LEFT_CENTER, 60, 17)
+        }):align(display.LEFT_CENTER, 30, 17)
         :addTo(title_bg)
     local date_label =  UIKit:ttfLabel(
         {
@@ -1191,62 +1192,83 @@ function GameUIMail:CreateReportItem(listview,report)
         display.newSprite("icon_attack_76x88.png"):align(display.CENTER, 350, 47):addTo(report_content_bg)
     end
     local isFromMe = report:IsFromMe()
-    -- 战报发出方信息
-    -- 旗帜
-    display.newSprite("report_from_icon.png", 110, 47):addTo(report_content_bg)
-    -- from title label
-    local from_label = UIKit:ttfLabel(
-        {
-            text = _("From"),
-            size = 16,
-            color = 0x797154
-        }):align(display.LEFT_CENTER, 150, 70)
-        :addTo(report_content_bg)
-    -- 发出方名字
-    local from_player_label =  UIKit:ttfLabel(
-        {
-            text = isFromMe and self:GetMyName(report) or self:GetEnemyName(report),
-            size = 20,
-            color = 0x403c2f
-        }):align(display.LEFT_CENTER, 150, 50)
-        :addTo(report_content_bg)
-    -- 发出方所属联盟
-    local from_alliance_label = UIKit:ttfLabel(
-        {
-            text = isFromMe and "["..self:GetMyAllianceTag(report).."]" or "["..self:GetEnemyAllianceTag(report).."]",
-            size = 20,
-            color = 0x403c2f
-        }):align(display.LEFT_CENTER, 150, 30)
-        :addTo(report_content_bg)
+    if isFromMe == "collectResource" then
+        local rewards = report:GetMyRewards()[1]
+        dump(rewards)
+        UIKit:ttfLabel(
+            {
+                text = _("资源采集报告"),
+                size = 20,
+                color = 0x403c2f
+            }):align(display.CENTER, report_content_bg:getContentSize().width/2-20, 60)
+            :addTo(report_content_bg)
+        display.newSprite(UILib.resource[rewards.name], 190, 30):addTo(report_content_bg):scale(0.5)
+        LuaUtils:outputTable("资源采集报告>", report:GetData())
+        UIKit:ttfLabel(
+            {
+                text = "+"..rewards.count,
+                size = 20,
+                color = 0x403c2f
+            }):align(display.LEFT_CENTER, report_content_bg:getContentSize().width/2-20, 30)
+            :addTo(report_content_bg)
+    else
+        -- 战报发出方信息
+        -- 旗帜
+        display.newSprite("report_from_icon.png", 110, 47):addTo(report_content_bg)
+        -- from title label
+        local from_label = UIKit:ttfLabel(
+            {
+                text = _("From"),
+                size = 16,
+                color = 0x797154
+            }):align(display.LEFT_CENTER, 150, 70)
+            :addTo(report_content_bg)
+        -- 发出方名字
+        local from_player_label =  UIKit:ttfLabel(
+            {
+                text = isFromMe and self:GetMyName(report) or self:GetEnemyName(report),
+                size = 20,
+                color = 0x403c2f
+            }):align(display.LEFT_CENTER, 150, 50)
+            :addTo(report_content_bg)
+        -- 发出方所属联盟
+        local from_alliance_label = UIKit:ttfLabel(
+            {
+                text = isFromMe and "["..self:GetMyAllianceTag(report).."]" or "["..self:GetEnemyAllianceTag(report).."]",
+                size = 20,
+                color = 0x403c2f
+            }):align(display.LEFT_CENTER, 150, 30)
+            :addTo(report_content_bg)
 
-   
-    -- 战报发向方信息
-    -- 旗帜
-    display.newSprite("report_to_icon.png", 350, 47):addTo(report_content_bg)
-    -- to title label
-    local to_label = UIKit:ttfLabel(
-        {
-            text = _("To"),
-            size = 16,
-            color = 0x797154
-        }):align(display.LEFT_CENTER, 390, 70)
-        :addTo(report_content_bg)
-    -- 发向方名字
-    local to_player_label = UIKit:ttfLabel(
-        {
-            text = isFromMe and self:GetEnemyName(report) or self:GetMyName(report),
-            size = 20,
-            color = 0x403c2f
-        }):align(display.LEFT_CENTER, 390, 50)
-        :addTo(report_content_bg)
-    -- 发向方所属联盟
-    local to_alliance_label = UIKit:ttfLabel(
-        {
-            text = isFromMe and "["..self:GetEnemyAllianceTag(report).."]" or "["..self:GetMyAllianceTag(report).."]",
-            size = 20,
-            color = 0x403c2f
-        }):align(display.LEFT_CENTER, 390, 30)
-        :addTo(report_content_bg)
+
+        -- 战报发向方信息
+        -- 旗帜
+        display.newSprite("report_to_icon.png", 350, 47):addTo(report_content_bg)
+        -- to title label
+        local to_label = UIKit:ttfLabel(
+            {
+                text = _("To"),
+                size = 16,
+                color = 0x797154
+            }):align(display.LEFT_CENTER, 390, 70)
+            :addTo(report_content_bg)
+        -- 发向方名字
+        local to_player_label = UIKit:ttfLabel(
+            {
+                text = isFromMe and self:GetEnemyName(report) or self:GetMyName(report),
+                size = 20,
+                color = 0x403c2f
+            }):align(display.LEFT_CENTER, 390, 50)
+            :addTo(report_content_bg)
+        -- 发向方所属联盟
+        local to_alliance_label = UIKit:ttfLabel(
+            {
+                text = isFromMe and "["..self:GetEnemyAllianceTag(report).."]" or "["..self:GetMyAllianceTag(report).."]",
+                size = 20,
+                color = 0x403c2f
+            }):align(display.LEFT_CENTER, 390, 30)
+            :addTo(report_content_bg)
+    end
     item.saved_button = UICheckBoxButton.new({
         off = "report_saved_button_normal.png",
         off_pressed = "report_saved_button_normal.png",
@@ -1314,7 +1336,7 @@ function GameUIMail:OpenReplyMail(mail)
     local dialog = WidgetPopDialog.new(748,_("回复邮件")):AddToCurrentScene(true)
     local reply_mail = dialog:GetBody()
     local r_size = reply_mail:getContentSize()
-    
+
     -- 收件人
     local addressee_title_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -1658,6 +1680,8 @@ function GameUIMail:GetEnemyAllianceTag(report)
 end
 
 return GameUIMail
+
+
 
 
 

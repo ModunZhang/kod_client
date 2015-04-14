@@ -425,12 +425,13 @@ function Report:IsFromMe()
     if report_type == "strikeCity"
         or report_type=="strikeVillage"
         or report_type=="attackCity"
-        or report_type=="attackVillage"
-        or report_type=="collectResource" then
+        or report_type=="attackVillage" then
         return true
     elseif report_type=="villageBeStriked"
         or report_type=="cityBeStriked" then
         return false
+    elseif report_type=="collectResource" then
+        return "collectResource"
     end
 end
 function Report:IsAttackOrStrike()
@@ -615,6 +616,7 @@ function Report:GetReportResult()
     end
 end
 return Report
+
 
 
 

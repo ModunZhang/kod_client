@@ -14,22 +14,25 @@ local GameUICollectReport = class("GameUICollectReport",WidgetPopDialog)
 
 
 function GameUICollectReport:ctor(report)
-    GameUICollectReport.super.ctor(self,420,_("采集战报"))
+    GameUICollectReport.super.ctor(self,500,_("采集战报"))
     self.report = report
     -- bg
     local body = self.body
     local r_size = body:getContentSize()
 
-    UIKit:ttfLabel({
-        text = _("目标"),
-        size = 24,
-        color = 0x403c2f,
-    }):align(display.LEFT_CENTER,80,r_size.height-60):addTo(body)
-    UIKit:ttfLabel({
-        text =Localize.village_name[report:GetData().collectTarget.name],
-        size = 24,
-        color = 0x403c2f,
-    }):align(display.LEFT_CENTER,200,r_size.height-60):addTo(body)
+    local strike_result_image = display.newSprite("report_victory.png")
+        :align(display.CENTER_TOP, r_size.width/2, r_size.height-10)
+        :addTo(body)
+    -- UIKit:ttfLabel({
+    --     text = _("目标"),
+    --     size = 24,
+    --     color = 0x403c2f,
+    -- }):align(display.LEFT_CENTER,80,r_size.height-60):addTo(body)
+    -- UIKit:ttfLabel({
+    --     text =Localize.village_name[report:GetData().collectTarget.name],
+    --     size = 24,
+    --     color = 0x403c2f,
+    -- }):align(display.LEFT_CENTER,200,r_size.height-60):addTo(body)
 
     -- 战斗发生时间
     local war_result_label = UIKit:ttfLabel(
@@ -37,21 +40,21 @@ function GameUICollectReport:ctor(report)
             text = GameUtils:formatTimeStyle2(math.floor(report.createTime/1000)),
             size = 18,
             color = 0x403c2f
-        }):align(display.LEFT_CENTER, 80, r_size.height-100)
+        }):align(display.LEFT_CENTER, 40, r_size.height-190)
         :addTo(body)
     local war_result_label = UIKit:ttfLabel(
         {
             text = self:GetFightTarget(),
             size = 18,
             color = 0x797154
-        }):align(display.LEFT_CENTER, 80, r_size.height-140)
+        }):align(display.LEFT_CENTER, 40, r_size.height-220)
         :addTo(body)
 
     -- 战利品
     self:CreateBootyPart()
 
 
-    local delete_btn = WidgetPushButton.new({normal = "red_button_146x42.png",pressed = "red_button_highlight_146x42.png"})
+    local delete_btn = WidgetPushButton.new({normal = "red_btn_up_148x58.png",pressed = "red_btn_down_148x58.png"})
         :setButtonLabel(UIKit:ttfLabel({
             text = _("删除"),
             size = 24,
@@ -73,7 +76,7 @@ function GameUICollectReport:ctor(report)
                     )
                     :AddToCurrentScene()
             end
-        end):align(display.CENTER,r_size.width/2,60):addTo(body)
+        end):align(display.CENTER,106,50):addTo(body)
     -- 收藏按钮
     local saved_button = UICheckBoxButton.new({
         off = "mail_saved_button_normal.png",
@@ -164,7 +167,7 @@ function GameUICollectReport:CreateBootyPart()
     -- item:setItemSize(item_width, (booty_list_bg and booty_list_bg:getContentSize().height or 0) +booty_title_bg:getContentSize().height)
     -- item:addContent(booty_group)
     -- self.details_view:addItem(item)
-    booty_group:addTo(self.body):align(display.CENTER,304,200)
+    booty_group:addTo(self.body):align(display.CENTER,304,180)
 end
 
 
