@@ -106,12 +106,16 @@ function PVELayer:onEnter()
     self.objects = objects
 
     -- 加载玩家
-    self.char = display.newSprite("pve_char_bg_104x106.png"):addTo(self.object_layer)
-    display.newSprite("playerIcon_default.png"):addTo(self.char):pos(104*0.5, 106*0.5):scale(0.8)
+    self:LoadPlayer()
 
     -- 加载标记
     self.pve_map:IteratorObjects(handler(self, self.SetObjectStatus))
     self.pve_map:AddObserver(self)
+end
+function PVELayer:LoadPlayer()
+    self.char = display.newSprite("pve_char.png"):addTo(self.object_layer):scale(0.5)
+    self.char:setAnchorPoint(cc.p(0.6, 0.4))
+    -- display.newSprite("playerIcon_default.png"):addTo(self.char):pos(104*0.5, 106*0.5):scale(0.8)
 end
 function PVELayer:onExit()
     self.pve_map:RemoveObserver(self)
@@ -157,10 +161,10 @@ function PVELayer:PromiseOfTrap()
     local t = 0.025
     local r = 5
     local exclamation_time = 0.5
-    local exclamation_scale = 0.2
+    local exclamation_scale = 0.3
     local size = self.char:getContentSize()
     local s = display.newSprite("exclamation.png")
-        :addTo(self.char):pos(size.width, size.height):scale(0)
+        :addTo(self.char):pos(size.width - 80, size.height):scale(0)
     self.char:runAction(transition.sequence({
         cc.RotateBy:create(t, r),
         cc.RotateBy:create(t, -r),

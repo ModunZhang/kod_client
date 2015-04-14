@@ -143,7 +143,7 @@ function GameUIShop:onEnter()
         end)
 
     local member_id
-    for _, v in ipairs(Alliance_Manager:GetMyAlliance():GetJoinEvents()) do
+    for _, v in ipairs(Alliance_Manager:GetMyAlliance():JoinRequestEvents()) do
         if v.id ~=  DataManager:getUserData()._id then
             member_id = v.id
         end
@@ -509,7 +509,7 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 140, window.top - 1000)
         :onButtonClicked(function(event)
-            cocos_promise.promiseWithCatchError(NetManager:getAgreeJoinAllianceInvitePromise(User:GetInviteEvents()[1].id):next(function(ee)
+            cocos_promise.promiseWithCatchError(NetManager:getAgreeJoinAllianceInvitePromise(User:InviteToAllianceEvents()[1].id):next(function(ee)
                 dump(ee)
             end))
         end)
@@ -528,7 +528,7 @@ function GameUIShop:onEnter()
         :align(display.CENTER, window.left + 320, window.top - 1000)
         :onButtonClicked(function(event)
             cocos_promise.promiseWithCatchError(NetManager:getCancelJoinAlliancePromise(
-                User:GetRequestEvents()[1].id
+                User:RequestToAllianceEvents()[1].id
             ):next(function(ee)
                 dump(ee)
             end))
@@ -547,7 +547,7 @@ function GameUIShop:onEnter()
         :align(display.CENTER, window.left + 500, window.top - 1000)
         :onButtonClicked(function(event)
             cocos_promise.promiseWithCatchError(NetManager:getDisagreeJoinAllianceInvitePromise(
-                User:GetInviteEvents()[1].id
+                User:InviteToAllianceEvents()[1].id
             ))
         end)
 

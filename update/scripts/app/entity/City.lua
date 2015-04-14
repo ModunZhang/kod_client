@@ -13,20 +13,23 @@ local Building = import(".Building")
 local TowerEntity = import(".TowerEntity")
 local TowerUpgradeBuilding = import(".TowerUpgradeBuilding")
 local MultiObserver = import(".MultiObserver")
-local City = class("City", MultiObserver)
+local property = import("..utils.property")
 local ProductionTechnology = import(".ProductionTechnology")
 local ProductionTechnologyEvent = import(".ProductionTechnologyEvent")
+local City = class("City", MultiObserver)
 local floor = math.floor
 local ceil = math.ceil
 local abs = math.abs
 local max = math.max
 -- 枚举定义
-City.RETURN_CODE = Enum("INNER_ROUND_NOT_UNLOCKED",
+City.RETURN_CODE = Enum(
+    "INNER_ROUND_NOT_UNLOCKED",
     "EDGE_BESIDE_NOT_UNLOCKED",
     "HAS_NO_UNLOCK_POINT",
     "HAS_UNLOCKED",
     "OUT_OF_BOUND")
-City.LISTEN_TYPE = Enum("LOCK_TILE",
+City.LISTEN_TYPE = Enum(
+    "LOCK_TILE",
     "UNLOCK_TILE",
     "UNLOCK_ROUND",
     "CREATE_DECORATOR",
@@ -73,7 +76,6 @@ function City:ctor(json_data)
     self.productionTechs = {}
     self.productionTechEvents = {}
     self.build_queue = 0
-
     self.locations_decorators = {}
     self:InitLocations()
     self:InitRuins()

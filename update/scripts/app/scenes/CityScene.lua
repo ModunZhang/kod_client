@@ -28,13 +28,6 @@ function CityScene:onEnter()
     self:GotoLogicPointInstant(6, 4)
     self:GetSceneLayer():ZoomTo(1)
 
-    local alliance = Alliance_Manager:GetMyAlliance()
-    local alliance_map = alliance:GetAllianceMap()
-    local allianceShirine = alliance:GetAllianceShrine()
-    alliance_map:AddListenOnType(allianceShirine,alliance_map.LISTEN_TYPE.BUILDING_INFO)
-    app:sendApnIdIf()
-
-
     -- local sprite = display.newSprite("batcat_logo_368x390.png", 0, 0, {class=cc.FilteredSpriteWithOne}):addTo(self):align(display.LEFT_BOTTOM)
     -- sprite:setScaleX(display.width/368)
     -- sprite:setScaleY(display.height/390)

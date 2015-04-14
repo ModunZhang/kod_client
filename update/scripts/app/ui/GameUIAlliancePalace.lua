@@ -387,7 +387,7 @@ function GameUIAlliancePalace:InitInfoPart()
             end
         end):align(display.CENTER, window.right -120, window.top-470):addTo(layer)
 
-    local countInfo = self.alliance:GetCountInfo()
+    local countInfo = self.alliance:CountInfo()
     local info_message = {
         {_("击杀部队人口"),string.formatnumberthousands(countInfo.kill)},
         {_("阵亡部队人口"),string.formatnumberthousands(countInfo.beKilled)},

@@ -37,7 +37,7 @@ Alliance.LISTEN_TYPE = Enum(
     "VILLAGE_LEVELS_CHANGED",
     "OnMarchEventRefreshed")
 local unpack = unpack
-property(Alliance, "id", 0)
+property(Alliance, "id", nil)
 property(Alliance, "name", "")
 property(Alliance, "aliasName", "")
 property(Alliance, "defaultLanguage", "")
