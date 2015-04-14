@@ -11,6 +11,7 @@ local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local StarBar = import("..ui.StarBar")
 local UILib = import(".UILib")
 local Localize = import("..utils.Localize")
+local intInit = GameDatas.PlayerInitData.intInit
 local WidgetInfo = import("..widget.WidgetInfo")
 local dailyQuests_config = GameDatas.DailyQuests.dailyQuests
 local dailyQuestStar_config = GameDatas.DailyQuests.dailyQuestStar
@@ -138,11 +139,11 @@ function GameUITownHall:CreateQuestItem(quest,index)
     local body = WidgetUIBackGround.new({width=item_width,height=item_height},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
     local b_size = body:getContentSize()
     local title_bg = display.newSprite("title_blue_558x34.png"):addTo(body):align(display.CENTER,b_size.width/2 , b_size.height-24)
-    local quest_name = UIKit:ttfLabel({
-        text = Localize.daily_quests_name[quest.index],
-        size = 22,
-        color = 0xffedae,
-    }):align(display.LEFT_CENTER, 15, title_bg:getContentSize().height/2):addTo(title_bg)
+    -- local quest_name = UIKit:ttfLabel({
+    --     text = Localize.daily_quests_name[quest.index],
+    --     size = 22,
+    --     color = 0xffedae,
+    -- }):align(display.LEFT_CENTER, 15, title_bg:getContentSize().height/2):addTo(title_bg)
     local star_bar = StarBar.new({
         max = 5,
         bg = "Stars_bar_bg.png",
@@ -150,7 +151,7 @@ function GameUITownHall:CreateQuestItem(quest,index)
         num = quest.star,
         margin = 0,
         direction = StarBar.DIRECTION_HORIZONTAL,
-    }):addTo(title_bg):align(display.RIGHT_CENTER,title_bg:getContentSize().width-10, title_bg:getContentSize().height/2)
+    }):addTo(title_bg):align(display.LEFT_CENTER,10, title_bg:getContentSize().height/2)
 
     -- 任务icon
     local icon_bg = display.newSprite("box_100x100.png"):addTo(body):pos(55,120)
@@ -171,6 +172,18 @@ function GameUITownHall:CreateQuestItem(quest,index)
         :onButtonClicked(function(event)
             NetManager:getAddDailyQuestStarPromise(quest.id)
         end):scale(0.6)
+
+    -- gem icon
+    local gem_icon = display.newSprite("gem_icon_62x61.png")
+        :addTo(title_bg)
+        :align(display.CENTER, title_bg:getContentSize().width-90, title_bg:getContentSize().height/2-2)
+        :scale(0.6)
+    local gem_label = UIKit:ttfLabel({
+        text = string.formatnumberthousands(intInit.dailyQuestAddStarNeedGemCount.value),
+        size = 22,
+        color = 0xffedae,
+    }):align(display.LEFT_CENTER, title_bg:getContentSize().width-70, title_bg:getContentSize().height/2)
+        :addTo(title_bg)
 
     local glass_icon = display.newSprite("hourglass_39x46.png")
         :align(display.RIGHT_CENTER,icon_bg:getPositionX()+ icon_bg:getContentSize().width, icon_bg:getPositionY()-20)
@@ -199,8 +212,9 @@ function GameUITownHall:CreateQuestItem(quest,index)
     function item:SetStar(quest)
         star_bar:setNum(quest.star)
         if quest.star == 5 then
-            add_star_btn:setVisible(false)
-            star_bar:setPositionX(title_bg:getContentSize().width-10)
+            add_star_btn:hide()
+            gem_icon:hide()
+            gem_label:hide()
         end
         return self
     end
@@ -214,19 +228,26 @@ function GameUITownHall:CreateQuestItem(quest,index)
                 control_btn:setButtonImage(cc.ui.UIPushButton.NORMAL, "yellow_btn_up_148x58.png", true)
                 control_btn:setButtonImage(cc.ui.UIPushButton.PRESSED,"yellow_btn_down_148x58.png", true)
                 control_btn:removeAllEventListeners()
-
+                local total_rewards = self.total_rewards
                 control_btn:setButtonLabel(
                     UIKit:commonButtonLable({
                         color = 0xfff3c7,
                         text  = _("获取奖励")
                     })
                 ):onButtonClicked(function(event)
-                    NetManager:getDailyQeustRewardPromise(quest.id)
+                    NetManager:getDailyQeustRewardPromise(quest.id):done(function ()
+                        local re_desc = ""
+                        for i,v in ipairs(total_rewards) do
+                            re_desc = re_desc .. Localize.fight_reward[v.resource_type].."X"..v.count.." "
+                        end
+                        GameGlobalUI:showTips(_("每日任务完成"),_("获得")..re_desc)
+                        
+                    end)
                     TownHallUI.isFinishedQuest = false
                 end)
             else
                 progress:setVisible(true)
-                status = _("正在处理政务")
+                status = _("正在")..Localize.daily_quests_name[quest.index]
                 -- control_btn:setButtonImage(cc.ui.UIPushButton.NORMAL, "green_btn_up_148x58.png", true)
                 -- control_btn:setButtonImage(cc.ui.UIPushButton.PRESSED,"green_btn_down_148x58.png", true)
                 -- control_btn:setButtonLabel(
@@ -241,7 +262,9 @@ function GameUITownHall:CreateQuestItem(quest,index)
                 -- end)
             end
             need_time_label:setVisible(false)
-            add_star_btn:setVisible(false)
+            add_star_btn:hide()
+            gem_icon:hide()
+            gem_label:hide()
         else
             control_btn:setButtonImage(cc.ui.UIPushButton.NORMAL, "yellow_btn_up_148x58.png", true)
             control_btn:setButtonImage(cc.ui.UIPushButton.PRESSED,"yellow_btn_down_148x58.png", true)
@@ -268,9 +291,10 @@ function GameUITownHall:CreateQuestItem(quest,index)
                 NetManager:getStartDailyQuestPromise(quest.id)
             end)
 
-            add_star_btn:setVisible(true)
-            star_bar:setPositionX(title_bg:getContentSize().width-50)
-            status = _("需要")
+            add_star_btn:show()
+            gem_icon:show()
+            gem_label:show()
+            status = Localize.daily_quests_name[quest.index]
             need_time_label:setString(GameUtils:formatTimeStyle1(dailyQuestStar_config[quest.star].needMinutes*60))
             progress:setVisible(false)
         end
@@ -282,6 +306,7 @@ function GameUITownHall:CreateQuestItem(quest,index)
         return self
     end
     function item:SetReward(quest)
+        local total_rewards = {}
         reward_bg:removeAllChildren()
         local quest = quest or self:GetQuest()
         local re_label = UIKit:ttfLabel({
@@ -297,12 +322,15 @@ function GameUITownHall:CreateQuestItem(quest,index)
             local max = math.max(reward_icon:getContentSize().width,reward_icon:getContentSize().height)
             reward_icon:scale(40/max)
 
+            local reward_count = re[3]*quest.star*(1+0.2*TownHallUI.town_hall:GetLevel())
+            table.insert(total_rewards, {resource_type=re[2],count = reward_count})
             UIKit:ttfLabel({
-                text = re[3]*quest.star*(1+0.2*TownHallUI.town_hall:GetLevel()),
+                text = reward_count,
                 size = 20,
                 color = 0x403c2f,
             }):align(display.LEFT_CENTER,reward_icon:getPositionX()+20,reward_bg:getContentSize().height/2):addTo(reward_bg)
         end
+        self.total_rewards = total_rewards
         return self
     end
     function item:BindQuest(quest )
@@ -418,7 +446,6 @@ end
 function GameUITownHall:RemoveQuestItemById( questId )
     local item = self.quest_items[questId]
     self.quest_list_view:removeItem(item)
-    print("RemoveQuestItemById questId",questId)
     self.quest_items[questId]  = nil
 end
 function GameUITownHall:ResetQuest()
@@ -461,7 +488,7 @@ function GameUITownHall:OnNewDailyQuestsEvent(changed_map)
                 self:CreateQuestItem(v,finished_quest_num+1)
             end
             self.quest_list_view:reload()
-        end, 0.2)
+        end, 0.3)
     end
     if changed_map.edit then
         for k,v in pairs(changed_map.edit) do
@@ -488,6 +515,8 @@ function GameUITownHall:OnBuildingUpgrading()
 end
 
 return GameUITownHall
+
+
 
 
 
