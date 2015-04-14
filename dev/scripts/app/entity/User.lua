@@ -9,7 +9,8 @@ local TradeManager = import("..entity.TradeManager")
 local Enum = import("..utils.Enum")
 local MultiObserver = import(".MultiObserver")
 local User = class("User", MultiObserver)
-User.LISTEN_TYPE = Enum("BASIC",
+User.LISTEN_TYPE = Enum(
+    "BASIC",
     "RESOURCE",
     "DALIY_QUEST_REFRESH",
     "NEW_DALIY_QUEST",
@@ -50,6 +51,8 @@ property(User, "serverName", "")
 property(User, "apnId", "")
 property(User, "gcId", "")
 property(User, "serverId", "")
+property(User, "requestToAllianceEvents", {})
+property(User, "inviteToAllianceEvents", {})
 function User:ctor(p)
     User.super.ctor(self)
     self.resources = {
@@ -63,9 +66,6 @@ function User:ctor(p)
     self.pve_database = PVEDatabase.new(self)
     local _,_, index = self.pve_database:GetCharPosition()
     self:GotoPVEMapByLevel(index)
-
-    self.request_events = {}
-    self.invite_events = {}
     -- 每日任务
     self.dailyQuests = {}
     self.dailyQuestEvents = {}
@@ -179,9 +179,6 @@ function User:OnResourceChanged()
         listener:OnResourceChanged(self)
     end)
 end
-function User:GetInviteEvents()
-    return self.invite_events
-end
 function User:GetDailyQuests()
     if self:GetNextDailyQuestsRefreshTime() <= app.timer:GetServerTime() then
         -- 达成刷新每日任务条件
@@ -217,9 +214,6 @@ end
 function User:IsQuestFinished(quest)
     return quest.finishTime==0
 end
-function User:GetRequestEvents()
-    return self.request_events
-end
 function User:OnPropertyChange(property_name, old_value, new_value)
     self:NotifyListeneOnType(BASIC, function(listener)
         listener:OnBasicChanged(self, {
@@ -248,10 +242,8 @@ function User:OnUserDataChanged(userData, current_time, deltaData)
     if self.growUpTaskManger:OnUserDataChanged(userData, deltaData) then
         self:OnTaskChanged()
     end
-    self.request_events = userData.requestToAllianceEvents
-    self.invite_events = userData.inviteToAllianceEvents
-
-    -- 下面还没做增量判断
+    self.requestToAllianceEvents = userData.requestToAllianceEvents
+    self.inviteToAllianceEvents = userData.inviteToAllianceEvents
     -- 每日任务
     self:OnDailyQuestsChanged(userData,deltaData)
     self:OnDailyQuestsEventsChanged(userData,deltaData)

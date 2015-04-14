@@ -37,6 +37,11 @@ Alliance.LISTEN_TYPE = Enum(
     "VILLAGE_LEVELS_CHANGED",
     "OnMarchEventRefreshed")
 local unpack = unpack
+property(Alliance, "id", 0)
+property(Alliance, "name", "")
+property(Alliance, "aliasName", "")
+property(Alliance, "defaultLanguage", "")
+property(Alliance, "terrain", "grassLand")
 property(Alliance, "power", 0)
 property(Alliance, "createTime", 0)
 property(Alliance, "kill", 0)
@@ -52,13 +57,16 @@ property(Alliance, "statusStartTime", 0)
 property(Alliance, "statusFinishTime", 0)
 property(Alliance, "fightPosition", "")
 property(Alliance, "fightRequests", {})
+property(Alliance, "countInfo", {})
+property(Alliance, "events", {})
+property(Alliance, "joinRequestEvents", {})
 function Alliance:ctor(id, name, aliasName, defaultLanguage, terrainType)
     Alliance.super.ctor(self)
-    property(self, "id", id)
-    property(self, "name", name)
-    property(self, "aliasName", aliasName)
-    property(self, "defaultLanguage", defaultLanguage or "all")
-    property(self, "terrain", terrainType or "grassLand")
+    self.id = id
+    self.name = name
+    self.aliasName = aliasName
+    self.defaultLanguage = defaultLanguage or "all"
+    self.terrain = terrain or "grassLand"
     self.flag = Flag:RandomFlag()
     self.titles = {
         ["member"] = "__member",
@@ -69,8 +77,6 @@ function Alliance:ctor(id, name, aliasName, defaultLanguage, terrainType)
         ["elite"] = "__elite",
     }
     self.members = {}
-    self.events = {}
-    self.join_events = {}
     self.help_events = {}
     self.alliance_fight_reports = {}
     self.countInfo = {}
@@ -388,7 +394,8 @@ function Alliance:Reset()
     self:SetJoinType("all")
     self.members = {}
     self.events = {}
-    self.join_events = {}
+    self.countInfo = {}
+    self.joinRequestEvents = {}
     self.help_events = {}
     self.alliance_villages = {}
     self.villageLevels = {}
@@ -403,20 +410,10 @@ function Alliance:OnOperation(operation_type)
         listener:OnOperation(self, operation_type)
     end)
 end
-function Alliance:GetEvents()
-    return self.events
-end
-function Alliance:GetCountInfo()
-    return self.countInfo
-end
 function Alliance:OnEventsChanged()
     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.EVENTS, function(listener)
         listener:OnEventsChanged(self)
     end)
-end
-
-function Alliance:GetJoinEvents()
-    return self.join_events
 end
 function Alliance:OnJoinEventsChanged()
     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.JOIN_EVENTS, function(listener)
@@ -491,29 +488,20 @@ function Alliance:OnAllianceBasicInfoChangedFirst(alliance_data,deltaData)
     self:SetStatusFinishTime(basicInfo.statusFinishTime)
 end
 function Alliance:OnAllianceEventsChanged(alliance_data,deltaData)
-    if not alliance_data.events then return end
     local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.events ~= nil
-    if is_fully_update then
+    if is_fully_update or is_delta_update then
         self.events = alliance_data.events
         self:OnEventsChanged()
-    end
-    if is_delta_update then
-        self:OnEventsChanged()
-    end
+    end 
 end
 function Alliance:OnJoinRequestEventsChanged(alliance_data,deltaData)
-    if not alliance_data.joinRequestEvents then return end
     local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.joinRequestEvents ~= nil
-    if is_fully_update then
-        self.join_events = alliance_data.joinRequestEvents
+    if is_fully_update or is_delta_update then
+        self.joinRequestEvents = alliance_data.joinRequestEvents
         self:OnJoinEventsChanged()
     end
-    if is_delta_update then
-        self:OnJoinEventsChanged()
-    end
-
 end
 function Alliance:OnAllianceMemberDataChanged(alliance_data,deltaData)
     if not alliance_data.members then return end
