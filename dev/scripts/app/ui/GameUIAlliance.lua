@@ -889,7 +889,7 @@ function GameUIAlliance:RefreshOverViewUI()
 end
 
 function GameUIAlliance:RefreshEventListView()
-    local events = Alliance_Manager:GetMyAlliance():GetEvents()
+    local events = Alliance_Manager:GetMyAlliance():Events()
     self.eventListView:removeAllItems()
     for i = #events, 1, -1 do
         self.eventListView:addItem(self:GetEventItemByIndexAndEvent(i,events[i]))

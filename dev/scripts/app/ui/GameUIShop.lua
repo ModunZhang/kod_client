@@ -143,7 +143,7 @@ function GameUIShop:onEnter()
         end)
 
     local member_id
-    for _, v in ipairs(Alliance_Manager:GetMyAlliance():GetJoinEvents()) do
+    for _, v in ipairs(Alliance_Manager:GetMyAlliance():JoinRequestEvents()) do
         if v.id ~=  DataManager:getUserData()._id then
             member_id = v.id
         end

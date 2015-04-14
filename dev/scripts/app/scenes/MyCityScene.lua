@@ -31,6 +31,13 @@ function MyCityScene:onEnter()
     self:GetCity():AddListenOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
     self:GetCity():GetUser():AddListenOnType(self, User.LISTEN_TYPE.BASIC)
     self:GetCity():GetSoldierManager():AddListenOnType(self, SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
+
+
+    local alliance = Alliance_Manager:GetMyAlliance()
+    local alliance_map = alliance:GetAllianceMap()
+    local allianceShirine = alliance:GetAllianceShrine()
+    alliance_map:AddListenOnType(allianceShirine, alliance_map.LISTEN_TYPE.BUILDING_INFO)
+    app:sendApnIdIf()
 end
 function MyCityScene:onExit()
     MyCityScene.super.onExit(self)
