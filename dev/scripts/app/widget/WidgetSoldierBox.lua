@@ -8,15 +8,15 @@ local NORMAL = GameDatas.Soldiers.normal
 local SPECIAL = GameDatas.Soldiers.special
 
 function WidgetSoldierBox:ctor(soldier_png, cb)
-    self.soldier_bg = WidgetPushButton.new({normal = "box_120x154.png",
-        pressed = "box_120x154.png"}):addTo(self)
+    self.soldier_bg = WidgetPushButton.new({normal = "back_ground_130x166.png",
+        pressed = "back_ground_130x166.png"}):addTo(self)
         :onButtonClicked(cb)
         :align(display.CENTER, 0,0)
 
     local rect = self.soldier_bg:getCascadeBoundingBox()
 
     local number_bg = cc.ui.UIImage.new("back_ground_118x36.png"):addTo(self.soldier_bg)
-        :align(display.CENTER, 0, - rect.height / 2 +20)
+        :align(display.CENTER, 0, - rect.height / 2 +28)
 
     local size = number_bg:getContentSize()
     self.number = cc.ui.UILabel.new({

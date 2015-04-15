@@ -1187,11 +1187,11 @@ function GameUIMail:CreateReportItem(listview,report)
     local report_content_bg = display.newSprite("back_ground_484X98.png", 35, -18):addTo(content)
     local report_big_type = report:IsAttackOrStrike()
     if report_big_type == "strike" then
-        display.newSprite("icon_strike_69x50.png"):align(display.LEFT_BOTTOM, 0, 0):addTo(report_content_bg)
-        display.newSprite("icon_strike_69x50.png"):align(display.LEFT_BOTTOM, 410, 0):addTo(report_content_bg):flipX(true)
+        display.newSprite("icon_strike_69x50.png"):align(display.LEFT_BOTTOM, 0, 0):addTo(report_content_bg):scale(0.8)
+        display.newSprite("icon_strike_69x50.png"):align(display.LEFT_BOTTOM, 410, 0):addTo(report_content_bg):flipX(true):scale(0.8)
     elseif report_big_type == "attack" then
-        display.newSprite("icon_attack_76x88.png"):align(display.CENTER, 110, 47):addTo(report_content_bg)
-        display.newSprite("icon_attack_76x88.png"):align(display.CENTER, 350, 47):addTo(report_content_bg)
+        display.newSprite("icon_attack_76x88.png"):align(display.CENTER, 80, 47):addTo(report_content_bg)
+        display.newSprite("icon_attack_76x88.png"):align(display.CENTER, 310, 47):addTo(report_content_bg)
     end
     local isFromMe = report:IsFromMe()
     if isFromMe == "collectResource" then
@@ -1224,9 +1224,9 @@ function GameUIMail:CreateReportItem(listview,report)
         local enemy_flag = a_helper:CreateFlagContentSprite(Flag:DecodeFromJson(enemy_flag_data))
         my_flag:scale(0.55)
         enemy_flag:scale(0.55)
-        my_flag:align(display.CENTER, isFromMe and 78 or 318, 8)
+        my_flag:align(display.CENTER, isFromMe and 48 or 278, 8)
             :addTo(report_content_bg)
-        enemy_flag:align(display.CENTER, isFromMe and 318 or 78, 8)
+        enemy_flag:align(display.CENTER, isFromMe and 278 or 48, 8)
             :addTo(report_content_bg)
         -- from title label
         local from_label = UIKit:ttfLabel(
@@ -1234,7 +1234,7 @@ function GameUIMail:CreateReportItem(listview,report)
                 text = _("From"),
                 size = 16,
                 color = 0x797154
-            }):align(display.LEFT_CENTER, 150, 70)
+            }):align(display.LEFT_CENTER, 120, 70)
             :addTo(report_content_bg)
         -- 发出方名字
         local from_player_label =  UIKit:ttfLabel(
@@ -1242,7 +1242,7 @@ function GameUIMail:CreateReportItem(listview,report)
                 text = isFromMe and self:GetMyName(report) or self:GetEnemyName(report),
                 size = 20,
                 color = 0x403c2f
-            }):align(display.LEFT_CENTER, 150, 50)
+            }):align(display.LEFT_CENTER, 120, 50)
             :addTo(report_content_bg)
         -- 发出方所属联盟
         local from_alliance_label = UIKit:ttfLabel(
@@ -1250,7 +1250,7 @@ function GameUIMail:CreateReportItem(listview,report)
                 text = isFromMe and "["..self:GetMyAllianceTag(report).."]" or "["..self:GetEnemyAllianceTag(report).."]",
                 size = 20,
                 color = 0x403c2f
-            }):align(display.LEFT_CENTER, 150, 30)
+            }):align(display.LEFT_CENTER, 120, 30)
             :addTo(report_content_bg)
 
 
@@ -1261,7 +1261,7 @@ function GameUIMail:CreateReportItem(listview,report)
                 text = _("To"),
                 size = 16,
                 color = 0x797154
-            }):align(display.LEFT_CENTER, 390, 70)
+            }):align(display.LEFT_CENTER, 350, 70)
             :addTo(report_content_bg)
         -- 发向方名字
         local to_player_label = UIKit:ttfLabel(
@@ -1269,7 +1269,7 @@ function GameUIMail:CreateReportItem(listview,report)
                 text = isFromMe and self:GetEnemyName(report) or self:GetMyName(report),
                 size = 20,
                 color = 0x403c2f
-            }):align(display.LEFT_CENTER, 390, 50)
+            }):align(display.LEFT_CENTER, 350, 50)
             :addTo(report_content_bg)
         -- 发向方所属联盟
         local to_alliance_label = UIKit:ttfLabel(
@@ -1277,7 +1277,7 @@ function GameUIMail:CreateReportItem(listview,report)
                 text = isFromMe and "["..self:GetEnemyAllianceTag(report).."]" or "["..self:GetMyAllianceTag(report).."]",
                 size = 20,
                 color = 0x403c2f
-            }):align(display.LEFT_CENTER, 390, 30)
+            }):align(display.LEFT_CENTER, 350, 30)
             :addTo(report_content_bg)
     end
     item.saved_button = UICheckBoxButton.new({
