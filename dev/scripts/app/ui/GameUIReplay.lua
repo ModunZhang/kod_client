@@ -588,7 +588,7 @@ function GameUIReplay:NewDragonBattle()
     local dragon_battle = ccs.Armature:create("paizi"):addTo(self.battle):align(display.CENTER, 275, 155)
 
     local left_bone = dragon_battle:getBone("Layer4")
-    local left_dragon = self:NewDragon(true):addTo(left_bone):pos(-360, -50)
+    local left_dragon = self:NewDragon(true):addTo(left_bone):pos(-400, -50)
     left_bone:addDisplay(left_dragon, 0)
     left_bone:changeDisplayWithIndex(0, true)
     self.left_dragon = left_dragon
@@ -596,7 +596,7 @@ function GameUIReplay:NewDragonBattle()
 
     local is_pve_battle = self.report.IsPveBattle
     local right_bone = dragon_battle:getBone("Layer5")
-    local right_dragon = self:NewDragon(nil, is_pve_battle):addTo(right_bone):pos(238, -82)
+    local right_dragon = self:NewDragon(nil, is_pve_battle):addTo(right_bone):pos(300, -82)
     right_bone:addDisplay(right_dragon, 0)
     right_bone:changeDisplayWithIndex(0, true)
     self.right_dragon = right_dragon

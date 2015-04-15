@@ -259,6 +259,7 @@ function GameUIAllianceShrineDetail:IsNotDragon(stageTroop)
 	local name = stageTroop.type or ""
 	if name == 'blueDragon' 
 		or "redDragon" == name 
+		or "dragon" == name 
 		or "greenDragon" == name then
 		return false
 	end

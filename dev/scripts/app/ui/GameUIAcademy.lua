@@ -115,6 +115,13 @@ function GameUIAcademy:OnProductionTechnologyEventTimer(event)
 	if self.time_label and self.time_label:isVisible() then
 		self.process_timer:setPercentage(event:GetPercent())
 		self.time_label:setString(GameUtils:formatTimeStyle1(event:GetTime()))
+		if event:GetTime() > DataUtils:getFreeSpeedUpLimitTime() then
+			self.speedButton:show()
+			self.freeSpeedUpButton:hide()
+		else
+			self.speedButton:hide()
+			self.freeSpeedUpButton:show()
+		end
 	end
 end
 
@@ -175,6 +182,19 @@ function GameUIAcademy:BuildTipsUI(technology_node,y)
 			UIKit:newGameUI("GameUITechnologySpeedUp"):AddToCurrentScene(true)
 		end)
 	self.speedButton = speedButton
+	local freeSpeedUpButton =  WidgetPushButton.new({normal = "purple_btn_up_148x76.png",pressed = "purple_btn_down_148x76.png"})
+		:align(display.RIGHT_BOTTOM, 546, 10)
+		:addTo(tips_bg)
+		:setButtonLabel("normal",UIKit:commonButtonLable({text = _("免费加速")}))
+		:onButtonClicked(function()
+			if City:HaveProductionTechEvent() then
+				local event = City:GetProductionTechEventsArray()[1]
+				NetManager:getFreeSpeedUpPromise("productionTechEvents",event:Id()):done(function()
+					self:CheckUIChanged()
+				end)
+			end
+		end)
+	self.freeSpeedUpButton = freeSpeedUpButton
 end
 
 function GameUIAcademy:BuildTechnologyUI(height)
@@ -201,9 +221,15 @@ function GameUIAcademy:CheckUIChanged()
 		self.icon_bg:show()
 		self.process_bg:show()
 		self.time_label:show()
-		self.speedButton:show()
 		local event = City:GetProductionTechEventsArray()[1]
 		if event then
+			if event:GetTime() > DataUtils:getFreeSpeedUpLimitTime() then
+				self.speedButton:show()
+				self.freeSpeedUpButton:hide()
+			else
+				self.speedButton:hide()
+				self.freeSpeedUpButton:show()
+			end
 			self.upgrade_label:setString(string.format(_("正在研发%s到 Level %d"),event:Entity():GetLocalizedName(),event:Entity():GetNextLevel()))
 			self.process_timer:setPercentage(event:GetPercent())
 			self.time_label:setString(GameUtils:formatTimeStyle1(event:GetTime()))
@@ -216,6 +242,7 @@ function GameUIAcademy:CheckUIChanged()
 		self.process_bg:hide()
 		self.time_label:hide()
 		self.speedButton:hide()
+		self.freeSpeedUpButton:hide()
 	end
 end
 

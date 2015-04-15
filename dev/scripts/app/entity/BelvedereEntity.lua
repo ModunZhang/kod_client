@@ -148,7 +148,7 @@ function BelvedereEntity:FindShrinePlayerTroops()
 	if  self:GetType() == self.ENTITY_TYPE.SHIRNE then 
 		local troops = self:WithObject():PlayerTroops()
 		for _,v in ipairs(troops) do
-			if v.id == DataManager:getUserData()._id then
+			if v.id == User:Id() then
 				return v
 			end
 		end
