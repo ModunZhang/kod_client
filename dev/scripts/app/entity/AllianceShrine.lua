@@ -2,7 +2,7 @@
 -- Author: Danny He
 -- Date: 2014-11-07 15:21:22
 --
-local config_shrineStage = GameDatas.AllianceShrine.shrineStage
+local config_shrineStage = GameDatas.AllianceInitData.shrineStage
 local config_shrine = GameDatas.AllianceBuilding.shrine
 local AllianceShrineStage = import(".AllianceShrineStage")
 local MultiObserver = import(".MultiObserver")
@@ -240,12 +240,12 @@ function AllianceShrine:RefreshEvents(alliance_data,deltaData)
 			for _,v in ipairs(alliance_data.shrineEvents) do
 				local fightEvent = ShrineFightEvent.new()
 				fightEvent:Update(v)
-				local palyerDatas = {}
-				for _,playerData in ipairs(v.playerTroops) do
-					playerData.location = self:GetPlayerLocation(playerData.id)
-					table.insert(palyerDatas,playerData)
-				end
-				fightEvent:SetPlayerTroops(palyerDatas)
+				-- local palyerDatas = {}
+				-- for _,playerData in ipairs(v.playerTroops) do
+				-- 	playerData.location = self:GetPlayerLocation(playerData.id)
+				-- 	table.insert(palyerDatas,playerData)
+				-- end
+				-- fightEvent:SetPlayerTroops(palyerDatas)
 				fightEvent:SetStage(self:GetStatgeByName(fightEvent:StageName()))
 				self.shrineEvents[fightEvent:Id()] = fightEvent
 				fightEvent:AddObserver(self)
@@ -261,12 +261,12 @@ function AllianceShrine:RefreshEvents(alliance_data,deltaData)
 				if not self.shrineEvents[event.id] then
 					local fightEvent = ShrineFightEvent.new()
 					fightEvent:Update(event)
-					local palyerDatas = {}
-					for _,playerData in ipairs(event.playerTroops) do
-						playerData.location = self:GetPlayerLocation(playerData.id)
-						table.insert(palyerDatas,playerData)
-					end
-					fightEvent:SetPlayerTroops(palyerDatas)
+					-- local palyerDatas = {}
+					-- for _,playerData in ipairs(event.playerTroops) do
+					-- 	playerData.location = self:GetPlayerLocation(playerData.id)
+					-- 	table.insert(palyerDatas,playerData)
+					-- end
+					-- fightEvent:SetPlayerTroops(palyerDatas)
 					fightEvent:SetStage(self:GetStatgeByName(fightEvent:StageName()))
 					self.shrineEvents[fightEvent:Id()] = fightEvent
 					fightEvent:AddObserver(self)
@@ -277,12 +277,12 @@ function AllianceShrine:RefreshEvents(alliance_data,deltaData)
 				local fightEvent = self:GetShrineEventById(event.id)
 				if fightEvent then
 					fightEvent:Update(event)
-					local palyerDatas = {}
-					for _,playerData in ipairs(event.playerTroops) do
-						playerData.location = self:GetPlayerLocation(playerData.id)
-						table.insert(palyerDatas,playerData)
-					end
-					fightEvent:SetPlayerTroops(palyerDatas)
+					-- local palyerDatas = {}
+					-- for _,playerData in ipairs(event.playerTroops) do
+					-- 	playerData.location = self:GetPlayerLocation(playerData.id)
+					-- 	table.insert(palyerDatas,playerData)
+					-- end
+					-- fightEvent:SetPlayerTroops(palyerDatas)
 				end
 				return fightEvent
 			end
@@ -434,8 +434,8 @@ function AllianceShrine:OnShrineEventsChanged(changed_map)
 end
 
 -- 数据
-function AllianceShrine:OnAllianceDataChanged(alliance_data)
-	self:DecodeObjectsFromJsonAlliance(alliance_data)
+function AllianceShrine:OnAllianceDataChanged(alliance_data,deltaData)
+	self:DecodeObjectsFromJsonAlliance(alliance_data,deltaData)
 end
 
 function AllianceShrine:DecodeObjectsFromJsonAlliance(alliance_data,deltaData)

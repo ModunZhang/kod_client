@@ -157,7 +157,6 @@ end
 
 function GameUIShireFightEvent:RefreshListView()
 	self.info_list:removeAllItems()
-	dump(self:GetFightEvent():PlayerTroops())
 	for i,v in ipairs(self:GetFightEvent():PlayerTroops()) do
 		local content = self:GetListItem(true,v)
 		local item = self.info_list:newItem()

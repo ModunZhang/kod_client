@@ -80,11 +80,6 @@ require("app.datas.AllianceInitData_shrineStage")
 require("app.datas.AllianceInitData_buildingName")
 require("app.datas.AllianceInitData_buildings")
 
-GameDatas.AllianceShrine = {
-	["shrineStage"] = {},
-}
-require("app.datas.AllianceShrine_shrineStage")
-
 GameDatas.AllianceVillage = {
 	["woodVillage"] = {},
 	["foodVillage"] = {},
