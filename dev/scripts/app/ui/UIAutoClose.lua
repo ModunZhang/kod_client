@@ -23,9 +23,14 @@ end
 function UIAutoClose:addTouchAbleChild(body)
     body:setTouchEnabled(true)
     function body:isTouchInViewRect( event)
+        for k,v in pairs(self:getChildren()) do
+            if v:getCascadeBoundingBox():containsPoint(cc.p(event.x, event.y)) then
+                return true
+            end
+        end
         local viewRect = self:convertToWorldSpace(cc.p(0, 0))
         viewRect.width = self:getContentSize().width
-        viewRect.height = self:getContentSize().height+52
+        viewRect.height = self:getContentSize().height
         return cc.rectContainsPoint(viewRect, cc.p(event.x, event.y))
     end
     body:addNodeEventListener(cc.NODE_TOUCH_CAPTURE_EVENT, function(event)
@@ -54,5 +59,6 @@ function UIAutoClose:addCloseCleanFunc(func)
     self.clean_func=func
 end
 return UIAutoClose
+
 
 
