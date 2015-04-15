@@ -170,6 +170,9 @@ function BattleObject:Hold()
         return p
     end
 end
+function BattleObject:Stop()
+    self:stopAllActions()
+end
 function BattleObject:RefreshSpeed()
     local a = self:getActionByTag(MOVE_TAG)
     if a then

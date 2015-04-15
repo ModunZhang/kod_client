@@ -38,6 +38,10 @@ end
 function Wall:breath()
     return cocos_promise.defer()
 end
+function Wall:Stop()
+    Wall.super.Stop(self)
+    self.wall:getAnimation():stop()
+end
 function Wall:RefreshSpeed()
     Wall.super.RefreshSpeed(self)
     self.wall:getAnimation():setSpeedScale(self:Speed())

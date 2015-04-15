@@ -254,6 +254,12 @@ function Corps:move(time, x, y)
     self:runAction(speed)
     return Corps.super.move(self, time, x, y)
 end
+function Corps:Stop()
+    Corps.super.Stop(self)
+    for _, v in pairs(self.corps) do
+        v:getAnimation():stop()
+    end
+end
 function Corps:RefreshSpeed()
     Corps.super.RefreshSpeed(self)
     local a = self:getActionByTag(AUDIO_TAG)

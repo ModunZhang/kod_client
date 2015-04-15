@@ -472,6 +472,7 @@ function GameUIReplay:ShowResult()
     end
     self.pass:hide()
     self.close:show()
+    self:Stop()
 end
 function GameUIReplay:onExit()
     GameUIReplay.super.onExit(self)
@@ -964,6 +965,19 @@ function GameUIReplay:SpeedUp(speed)
     end
     if self.right then
         self.right:RefreshSpeed()
+    end
+end
+function GameUIReplay:Stop()
+    self.timer_node:stopAllActions()
+    self.battle_bg:stopAllActions()
+    if self.dragon_battle then
+        self.dragon_battle:getAnimation():stop()
+    end
+    if self.left then
+        self.left:Stop()
+    end
+    if self.right then
+        self.right:Stop()
     end
 end
 function GameUIReplay:Speed()
