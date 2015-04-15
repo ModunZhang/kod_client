@@ -758,7 +758,7 @@ function GameUIReplay:NewEffect(soldier, is_left, x, y)
 end
 function GameUIReplay:DecodeStateBySide(side, is_left)
     local height = 90
-    local len = 200
+    local len = 230
     local left_start = {x = -100, y = height}
     local left_end = {x = left_start.x + len, y = height}
     local right_start = {x = 700, y = height}

@@ -208,7 +208,7 @@ function GameUIBarracks:CreateItemWithListView(list_view, soldiers)
     local rect = list_view:getViewRect()
     local origin_x = - rect.width / 2
     local widget_rect = self.timer:getCascadeBoundingBox()
-    local unit_width = 120
+    local unit_width = 130
     local gap_x = (widget_rect.width - unit_width * 4) / 3
     local row_item = display.newNode()
     for i, soldier_name in pairs(soldiers) do
@@ -227,7 +227,7 @@ function GameUIBarracks:CreateItemWithListView(list_view, soldiers)
 
     local item = list_view:newItem()
     item:addContent(row_item)
-    item:setItemSize(widget_rect.width, 160)
+    item:setItemSize(widget_rect.width, 172)
     return item
 end
 function GameUIBarracks:CreateSpecialItemWithListView( list_view, soldiers ,title,title_img)
