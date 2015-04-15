@@ -12,6 +12,19 @@ local function getAniNameFromAnimationFiles(animation_files)
     return anis
 end
 
+local PLAYER_ICON = {
+    "player_icon_1.png",
+    "player_icon_2.png",
+    "player_icon_3.png",
+    "player_icon_4.png",
+    "player_icon_5.png",
+    "player_icon_6.png",
+    "player_icon_7.png",
+    "player_icon_8.png",
+    "player_icon_9.png",
+    "player_icon_10.png",
+    "player_icon_11.png",
+}
 
 local BUILDING_ANIMATIONS_FILES = {
     watchTower = {
@@ -743,12 +756,12 @@ local function loadBuildingAnimation()
     end
 end
 local function unLoadBuildingAnimation()
-    -- local manager = ccs.ArmatureDataManager:getInstance()
-    -- for _,all_files in pairs(BUILDING_ANIMATIONS_FILES) do
-    --     for _,ani_file in pairs(all_files) do
-    --         manager:removeArmatureFileInfo(ani_file)
-    --     end
-    -- end
+-- local manager = ccs.ArmatureDataManager:getInstance()
+-- for _,all_files in pairs(BUILDING_ANIMATIONS_FILES) do
+--     for _,ani_file in pairs(all_files) do
+--         manager:removeArmatureFileInfo(ani_file)
+--     end
+-- end
 end
 --
 local function loadSolidersAnimation()
@@ -1004,7 +1017,9 @@ return {
     other_alliance_building = OTHER_ALLIANCE_BUILDING,
     dragon_skill_icon = DRAGON_SKILL_ICON,
     daily_quests_icon = DAILY_QUESTS_ICON,
+    player_icon = PLAYER_ICON,
 }
+
 
 
 
