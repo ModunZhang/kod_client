@@ -951,7 +951,18 @@ local DRAGON_SKILL_ICON = {
         blueDragon = "battleHunger_128x128.png",
     }
 }
-
+local DAILY_QUESTS_ICON = {
+    [0] = "crane_128x128.png",
+    "beerSupply_128x128.png",
+    "forestation_128x128.png",
+    "stoneCarving_128x128.png",
+    "ironSmelting_128x128.png",
+    "cropResearch_128x128.png",
+    "sketching_128x128.png",
+    "negotiation_128x128.png",
+    "colonization_128x128.png",
+    "seniorTower_128x128.png",
+}
 return {
     resource = RESOURCE,
     soldier_bg = STAR_BG,
@@ -992,6 +1003,7 @@ return {
     alliance_building = ALLIANCE_BUILDING,
     other_alliance_building = OTHER_ALLIANCE_BUILDING,
     dragon_skill_icon = DRAGON_SKILL_ICON,
+    daily_quests_icon = DAILY_QUESTS_ICON,
 }
 
 
