@@ -9,6 +9,7 @@ function UIAutoClose:ctor(params)
     local node = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
     node:setNodeEventEnabled(true)
     node:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+        dump(event)
         if event.name == "ended" then
             if self.disable then
                 return
@@ -21,7 +22,6 @@ function UIAutoClose:ctor(params)
 end
 
 function UIAutoClose:addTouchAbleChild(body)
-    body:setTouchEnabled(true)
     self:addChild(body)
 end
 
