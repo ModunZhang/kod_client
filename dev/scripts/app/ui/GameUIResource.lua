@@ -138,7 +138,7 @@ function GameUIResource:CreateInfomation()
 
     local secondLabel = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = _("城民增长"),
+        text = "城民增长",
         font = UIKit:getFontFilePath(),
         size = 20,
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
@@ -173,7 +173,18 @@ function GameUIResource:CreateInfomation()
     self.firstValueLabel:setString(string.format('%d',citizen))
     local _,resource_title = self:GetTitleByType(self.building)
     self.secondLabel:setString(resource_title)
-    self.secondValueLabel:setString(string.format("%d/h",resource:GetProductionPerHour()))
+
+    if ResourceManager.RESOURCE_TYPE.POPULATION ==  self.building:GetUpdateResourceType() then
+        self.secondValueLabel:setString(self.building:GetProductionLimit())
+    else
+        local reduce = resource:GetProductionPerHour()
+        local buffMap,__ = City.resource_manager:GetTotalBuffData(City)
+        local key = ResourceManager.RESOURCE_TYPE[self.building:GetUpdateResourceType()]
+        if buffMap[key] then
+            reduce = reduce * (1 + buffMap[key])
+        end
+        self.secondValueLabel:setString(string.format("-%d/h",reduce))
+    end
 end
 
 
@@ -208,7 +219,6 @@ end
 
 function GameUIResource:RefreshListView()
     self.dataSource = self:GetDataSource()
-    dump(self.dataSource,"self.dataSource----->")
     self.info:CreateInfoItems(self.dataSource)
 end
 
@@ -216,8 +226,8 @@ function GameUIResource:GetDataSource()
     local dataSource = {{_('待建地基'),'x' .. #City:GetRuinsNotBeenOccupied()}}
     local decorators = City:GetDecoratorsByType(self.building:GetType())
     table.insert(dataSource,{_('可建造数量'),#decorators .. '/' .. City:GetMaxHouseCanBeBuilt(self.building:GetType())})
-    local number = City.resource_manager:GetResourceByType(self.building:GetUpdateResourceType()):GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    table.insert(dataSource,{_('当前产出'),string.format('%d',number)})
+    local resource = City.resource_manager:GetResourceByType(self.building:GetUpdateResourceType())
+    table.insert(dataSource,{_('当前产出'),string.format("%d/h",resource:GetProductionPerHour())})
     local levelTable = {}
     for _,v in ipairs(decorators) do
         local level = tonumber(v:GetLevel())
@@ -252,7 +262,7 @@ function GameUIResource:GetTitleByType(building)
     elseif type == ResourceManager.RESOURCE_TYPE.FOOD then
         return _('农夫小屋'),_('粮食产量')
     elseif type == ResourceManager.RESOURCE_TYPE.POPULATION then
-        return _('住宅'),_('城民产量')
+        return _('住宅'),_('城民上限')
     else
         assert(false)
     end
