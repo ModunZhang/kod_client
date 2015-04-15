@@ -32,19 +32,11 @@ end
 --
 function FunctionUpgradingSprite:OnTransformed(entity)
     self.config = SpriteConfig[entity:GetType()]
-    self:ReloadSprite()
+    self:RefreshSprite()
 end
 function FunctionUpgradingSprite:ctor(city_layer, entity, city)
     FunctionUpgradingSprite.super.ctor(self, city_layer, entity)
     self:OnTileChanged(city)
-end
-function FunctionUpgradingSprite:ReloadSprite()
-    FunctionUpgradingSprite.super.RefreshSprite(self)
-end
-function FunctionUpgradingSprite:RefreshSprite()
-    if self:GetEntity():GetLevel() >= 1 then
-        FunctionUpgradingSprite.super.RefreshSprite(self)
-    end
 end
 function FunctionUpgradingSprite:GetSpriteTopPosition()
     local x,y = FunctionUpgradingSprite.super.GetSpriteTopPosition(self)
