@@ -24,6 +24,8 @@ function GameUISelenaQuestion:ctor()
 end
 
 function GameUISelenaQuestion:onEnter()
+	local manager = ccs.ArmatureDataManager:getInstance()
+	manager:addArmatureFileInfo("animations/npc_nv.ExportJson")
 	GameUISelenaQuestion.super.onEnter(self)
 	self:BuildUI()
 end
@@ -46,7 +48,8 @@ function GameUISelenaQuestion:BuildUI()
 		color = 0xffedae
 	}):addTo(titleBar):align(display.CENTER,300,24)
 	local npc_bg = display.newSprite("selenaquestion_bg_580x536.png"):align(display.TOP_CENTER, 304, 860):addTo(bg)
-	display.newSprite("npc_1.png"):scale(512/2000):addTo(npc_bg):align(display.BOTTOM_CENTER, 290, 6)
+	local npc_animation = ccs.Armature:create("npc_nv"):addTo(npc_bg):align(display.BOTTOM_CENTER, 290, 6)
+	self.npc_animation = npc_animation
 	self:GetTipContent():zorder(ZORDER_INDEX.TIPS):addTo(bg):hide()
 	self:GetQuestionLayer():zorder(ZORDER_INDEX.ANSWER):addTo(bg):hide()
 	self:GetWelcomeLayer():zorder(ZORDER_INDEX.WELCOME):addTo(bg)
@@ -65,11 +68,13 @@ function GameUISelenaQuestion:ShowTips(isCorrect,callback)
 		title_2:setString(self:GetCorrectDesc())
 		title_1:setColor(UIKit:hex2c3b(0x8aff00))
 		title_2:setColor(UIKit:hex2c3b(0x8aff00))
+		self.npc_animation:getAnimation():play("smile", -1, 0)
 	else
 		title_1:setString(_("回答错误!"))
 		title_2:setString(_("抱歉"))
 		title_1:setColor(UIKit:hex2c3b(0xe13a00))
 		title_2:setColor(UIKit:hex2c3b(0xe13a00))
+		self.npc_animation:getAnimation():play("sad", -1, 0)
 	end
 	self.tips:show()
 	self:performWithDelay(function()
@@ -110,6 +115,7 @@ function GameUISelenaQuestion:GetMsgAndButtonTitleByWelcomeType(welcome_ui_type)
 	if welcome_ui_type == self.WELCOME_UI_TYPE.WELCOME then
 		return _("大人，我准备了一些小小测试，如果你每日能连续答对10道题，我会奖赏你哦！"),_("开始吧")
 	elseif welcome_ui_type == self.WELCOME_UI_TYPE.SUCCESS then 
+		self.npc_animation:getAnimation():play("shy", -1, 0)
 		return _("大人，恭喜你已经答对所有问题！你可以在每日任务中领取我为你准备的一份小礼物哦！"),_("再来一局")
 	elseif welcome_ui_type == self.WELCOME_UI_TYPE.FAILED then 
 		return string.format(_("回答错误！大人，你本次答题一共回答正确%s道问题，请你继续努力哦！"),self:GetRightQuestionCount()),_("再来一局")
@@ -226,6 +232,7 @@ function GameUISelenaQuestion:GetWelcomeLayer(welcome_ui_type)
 			text = ""
 		}))
 		:onButtonClicked(function ()
+			self.npc_animation:getAnimation():play("Animation1", 0, 0)
 			self:OnStarButtonClicked()
 		end)
 	layer.setInfo = function(msg,button_title)

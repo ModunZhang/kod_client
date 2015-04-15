@@ -115,6 +115,7 @@ end
 
 function WidgetMaterials:onExit()
     self.city:GetMaterialManager():RemoveObserver(self)
+    self.building:RemoveUpgradeListener(self)
 end
 
 function WidgetMaterials:onEnter()
@@ -125,8 +126,21 @@ function WidgetMaterials:onEnter()
     list_node:align(display.BOTTOM_CENTER, window.cx, window.bottom_top+20):addTo(self)
     self.material_listview = list
     self:CreateSelectButton()
+    self.building:AddUpgradeListener(self)
+    dump(self.material_box_table)
 end
-
+function WidgetMaterials:OnBuildingUpgradingBegin()
+end
+function WidgetMaterials:OnBuildingUpgradeFinished(building)
+    for i,v in pairs(self.material_box_table) do
+        local material_map = self.city:GetMaterialManager():GetMaterialMap()[i]
+        for k,m in pairs(v) do
+            m:SetNumber(material_map[k].."/"..building:GetMaxMaterial())
+        end
+    end
+end
+function WidgetMaterials:OnBuildingUpgrading()
+end
 function WidgetMaterials:CreateItemWithListView(material_type,materials)
     local list_view = self.material_listview
     list_view:removeAllItems()
@@ -138,12 +152,12 @@ function WidgetMaterials:CreateItemWithListView(material_type,materials)
     local row_item = display.newNode()
     local row_count = 0
     self.material_box_table = {}
+    self.material_box_table[material_type]={}
     for i,material_name in ipairs(materials) do
         local material_box = WidgetMaterialBox.new(material_type,material_name,function ()
             self:OpenMaterialDetails(material_type,material_name,material_map[material_name].."/"..self.building:GetMaxMaterial())
         end,true):addTo(row_item):SetNumber(material_map[material_name].."/"..self.building:GetMaxMaterial())
             :pos(origin_x + (unit_width + gap_x) * row_count , -unit_height/2)
-        self.material_box_table[material_type]={}
         self.material_box_table[material_type][material_name] = material_box
         row_count = row_count + 1
         if row_count>3 or i==#materials then
@@ -155,6 +169,7 @@ function WidgetMaterials:CreateItemWithListView(material_type,materials)
             row_item = display.newNode()
         end
     end
+    LuaUtils:outputTable("self.material_box_table", self.material_box_table)
     list_view:reload()
 end
 function WidgetMaterials:SelectOneTypeMaterials(m_type)

@@ -10,6 +10,7 @@ local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local StarBar = import("..ui.StarBar")
 local UILib = import(".UILib")
+local Localize = import("..utils.Localize")
 local WidgetInfo = import("..widget.WidgetInfo")
 local dailyQuests_config = GameDatas.DailyQuests.dailyQuests
 local dailyQuestStar_config = GameDatas.DailyQuests.dailyQuestStar
@@ -138,7 +139,7 @@ function GameUITownHall:CreateQuestItem(quest,index)
     local b_size = body:getContentSize()
     local title_bg = display.newSprite("title_blue_558x34.png"):addTo(body):align(display.CENTER,b_size.width/2 , b_size.height-24)
     local quest_name = UIKit:ttfLabel({
-        text = quest_config.name,
+        text = Localize.daily_quests_name[quest.index],
         size = 22,
         color = 0xffedae,
     }):align(display.LEFT_CENTER, 15, title_bg:getContentSize().height/2):addTo(title_bg)
@@ -153,6 +154,9 @@ function GameUITownHall:CreateQuestItem(quest,index)
 
     -- 任务icon
     local icon_bg = display.newSprite("box_100x100.png"):addTo(body):pos(55,120)
+    display.newSprite(UILib.daily_quests_icon[quest.index])
+        :addTo(icon_bg):pos(icon_bg:getContentSize().width/2,icon_bg:getContentSize().height/2)
+        :scale(0.55)
 
     local status_label = UIKit:ttfLabel({
         text = "111",
@@ -250,12 +254,14 @@ function GameUITownHall:CreateQuestItem(quest,index)
                 if TownHallUI.isFinishedQuest then
                     FullScreenPopDialogUI.new():SetTitle(_("提示"))
                         :SetPopMessage(_("请先领取已经完成的任务的奖励"))
+                        :CreateOKButton()
                         :AddToCurrentScene()
                     return
                 end
                 if TownHallUI.started_quest_item then
                     FullScreenPopDialogUI.new():SetTitle(_("提示"))
                         :SetPopMessage(_("已经有一个任务正在进行中"))
+                        :CreateOKButton()
                         :AddToCurrentScene()
                     return
                 end
@@ -425,8 +431,6 @@ function GameUITownHall:OnDailyQuestsRefresh()
     self:ResetQuest()
 end
 function GameUITownHall:OnNewDailyQuests(changed_map)
-    LuaUtils:outputTable("OnNewDailyQuestschanged_map", changed_map)
-
     if changed_map.add then
         for k,v in pairs(changed_map.add) do
             self:CreateQuestItem(v)
@@ -445,20 +449,19 @@ function GameUITownHall:OnNewDailyQuests(changed_map)
     end
 end
 function GameUITownHall:OnNewDailyQuestsEvent(changed_map)
-    LuaUtils:outputTable("OnNewDailyQuestsEvent", changed_map)
     if changed_map.add then
-        local finished_quest_num = 0
-        for k,v in pairs(self.quest_items) do
-            if User:IsQuestFinished(v:GetQuest()) then
-                finished_quest_num = finished_quest_num + 1
+        self:performWithDelay(function ()
+            local finished_quest_num = 0
+            for k,v in pairs(self.quest_items) do
+                if User:IsQuestFinished(v:GetQuest()) then
+                    finished_quest_num = finished_quest_num + 1
+                end
             end
-        end
-        for k,v in pairs(changed_map.add) do
-            -- self:performWithDelay(function()
+            for k,v in pairs(changed_map.add) do
                 self:CreateQuestItem(v,finished_quest_num+1)
-                self.quest_list_view:reload()
-            -- end,0.5)
-        end
+            end
+            self.quest_list_view:reload()
+        end, 0.2)
     end
     if changed_map.edit then
         for k,v in pairs(changed_map.edit) do
@@ -485,6 +488,10 @@ function GameUITownHall:OnBuildingUpgrading()
 end
 
 return GameUITownHall
+
+
+
+
 
 
 
