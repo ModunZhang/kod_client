@@ -34,6 +34,18 @@ function WidgetSoldierBox:SetSoldier(soldier_type, star)
         if self.soldier then
             self.soldier_bg:removeChild(self.soldier)
         end
+
+        if soldier_type == "skeletonWarrior"
+            or soldier_type == "skeletonArcher"
+            or soldier_type == "deathKnight"
+            or soldier_type == "meatWagon"
+        then
+            self.soldier_color_bg = display.newSprite("green_bg_128x128.png", nil, nil, {class=cc.FilteredSpriteWithOne}):addTo(self.soldier_bg)
+                :align(display.CENTER, 0, 20):scale(104/128)
+        else
+            self.soldier_color_bg = display.newSprite("blue_bg_128x128.png", nil, nil, {class=cc.FilteredSpriteWithOne}):addTo(self.soldier_bg)
+                :align(display.CENTER, 0, 20):scale(104/128)
+        end
         self.soldier = display.newSprite(soldier_ui_config, nil, nil, {class=cc.FilteredSpriteWithOne}):addTo(self.soldier_bg)
             :align(display.CENTER, 0, 20)
         self.soldier:scale(104/self.soldier:getContentSize().height)
@@ -43,7 +55,7 @@ function WidgetSoldierBox:SetSoldier(soldier_type, star)
 end
 function WidgetSoldierBox:SetNumber(number)
     if type(number) == 'string' then
-         self.number:setString(number)
+        self.number:setString(number)
     elseif type(number) == 'number' then
         self.number:setString(string.format("%s%d", _("数量: "), number))
     end
@@ -52,8 +64,10 @@ end
 function WidgetSoldierBox:Enable(b)
     if b then
         self.soldier:clearFilter()
+        self.soldier_color_bg:clearFilter()
     else
         self.soldier:setFilter(filter.newFilter("GRAY", {0.2, 0.3, 0.5, 0.1}))
+        self.soldier_color_bg:setFilter(filter.newFilter("GRAY", {0.2, 0.3, 0.5, 0.1}))
     end
     return self
 end
@@ -80,6 +94,7 @@ function WidgetSoldierBox:SetButtonListener( cb )
 end
 
 return WidgetSoldierBox
+
 
 
 

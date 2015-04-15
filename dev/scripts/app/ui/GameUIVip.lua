@@ -24,13 +24,6 @@ local BUY_AND_USE = 1
 local USE = 2
 local VIP_MAX_LEVEL = 10
 
-local function __getPlayerIcons()
-    return {
-        "head_dragon.png",
-        "playerIcon_default.png",
-        "playerIcon_default.png",
-    }
-end
 local VIP_EFFECIVE_ALL_TYPE = Enum(
     "freeSpeedup",
     "helpSpeedup",
@@ -104,14 +97,22 @@ end
 function GameUIVip:OpenSelectHeadIcon()
     local pd = WidgetPopDialog.new(644,_("选择头像")):AddToCurrentScene()
     local body = pd:GetBody()
-    self.head_icon_list = UIListView.new{
-        -- bgColor = UIKit:hex2c4b(0x7a100000),
-        viewRect = cc.rect(4, 10, 600, 600),
-        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
-    }:addTo(body)
-    for _,icon in pairs(__getPlayerIcons()) do
+    local size = body:getContentSize()
+
+    local list,list_node = UIKit:commonListView_1({
+        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
+        viewRect = cc.rect(0, 0,570,570),
+    })
+    list_node:addTo(body):align(display.BOTTOM_CENTER, size.width/2,20)
+    self.head_icon_list = list
+    for _,icon in pairs(UILib.player_icon) do
         self:AddIconOption(icon)
     end
+    dump(list.container,"list.container")
+    list:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+        dump(event)
+        return true
+    end)
     self.head_icon_list:reload()
 
 end
@@ -119,32 +120,30 @@ end
 function GameUIVip:AddIconOption(icon)
     local list =  self.head_icon_list
     local item =list:newItem()
+    local item_width,item_height = 548, 116
+    item:setItemSize(item_width,item_height)
+    local body_image = list.which_bg and "upgrade_resources_background_2.png" or "upgrade_resources_background_3.png"
+    local content = display.newScale9Sprite(body_image,0,0,cc.size(item_width,item_height),cc.rect(10,10,500,26))
+    list.which_bg = not list.which_bg
+    print("litem   :",item:isTouchEnabled(),item:isTouchSwallowEnabled())
 
-    item:setItemSize(600, 138)
-
-    local content = display.newNode()
-    content:setContentSize(cc.size(600, 126))
-
-    local bg_1 = display.newSprite("alliance_item_flag_box_126X126.png")
-        :addTo(content):pos(75,63)
-    local size = bg_1:getContentSize()
-    local head_bg = display.newSprite("player_head_bg.png"):addTo(bg_1)
-        :pos(size.width/2,size.height/2)
+    local head_bg = display.newSprite("player_head_bg_104x104.png"):addTo(content)
+        :pos(60,item_height/2)
     display.newSprite(icon):addTo(head_bg):pos(head_bg:getContentSize().width/2,head_bg:getContentSize().height/2)
-    local bg_2 = display.newSprite("alliance_approval_box_450x126.png"):addTo(bg_1)
-        :align(display.LEFT_CENTER,size.width,size.height/2)
+    :scale(100/128)
+
     UIKit:ttfLabel({
         text = _("头像")..icon,
         size = 24,
         color = 0x403c2f
-    }):align(display.LEFT_CENTER,10,80)
-        :addTo(bg_2)
+    }):align(display.LEFT_CENTER,130,80)
+        :addTo(content)
     UIKit:ttfLabel({
         text = _("解锁条件").."XXXXXX",
-        size = 24,
-        color = 0x403c2f
-    }):align(display.LEFT_CENTER,10,40)
-        :addTo(bg_2)
+        size = 20,
+        color = 0x5c553f
+    }):align(display.LEFT_CENTER,130,40)
+        :addTo(content)
 
     if User:Icon() ~= icon then
         WidgetPushButton.new(
@@ -162,14 +161,14 @@ function GameUIVip:AddIconOption(icon)
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
                 end
-            end):addTo(bg_2):align(display.RIGHT_CENTER, bg_2:getContentSize().width-10,40)
+            end):addTo(content):align(display.RIGHT_CENTER, item_width-10,40)
             :setButtonEnabled(false)
     else
         UIKit:ttfLabel({
             text = _("已装备"),
             size = 24,
-            color = 0xffedae,
-        }):addTo(bg_2):align(display.RIGHT_CENTER, bg_2:getContentSize().width-10,40)
+            color = 0x403c2f,
+        }):addTo(content):align(display.RIGHT_CENTER,item_width-10,40)
     end
 
 
@@ -288,7 +287,7 @@ function GameUIVip:InitVip()
 end
 
 function GameUIVip:InitAD()
-    local ad_clip_rect = display.newClippingRegionNode(cc.rect(window.cx-592/2,window.top_bottom-119,592,139)):addTo(self:GetView())
+    local ad_clip_rect = display.newClippingRegionNode(cc.rect(window.cx-592/2,window.top_bottom-119,592,139)):addTo(self.vip_layer)
     self.ad_clip_rect = ad_clip_rect
     math.randomseed(tostring(os.time()):reverse():sub(1, 6))
 
@@ -972,6 +971,7 @@ function GameUIVip:OnVipEventTimer( vip_event_new )
 end
 
 return GameUIVip
+
 
 
 
