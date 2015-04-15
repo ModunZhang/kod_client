@@ -14,7 +14,7 @@ local HELP_EVENTS = "help_events"
 local GameUIHelp = class("GameUIHelp", WidgetPopDialog)
 
 function GameUIHelp:ctor()
-    GameUIHelp.super.ctor(self,756,_("协助加速"),display.top-100)
+    GameUIHelp.super.ctor(self,766,_("协助加速"),display.top-100)
     self.alliance = Alliance_Manager:GetMyAlliance()
     self.help_events_items = {}
 end
@@ -23,22 +23,23 @@ function GameUIHelp:onEnter()
     local body = self.body
     local rb_size = body:getContentSize()
 
-    -- 协助加速介绍
-    cc.ui.UILabel.new(
-        {
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("帮助联盟成员加速并获得联盟忠诚值，激活VIP后能够提升为盟友加速效果"),
-            font = UIKit:getFontFilePath(),
-            size = 18,
-            align = cc.ui.TEXT_ALIGN_CENTER,
-            dimensions = cc.size(360,0),
-            color = UIKit:hex2c3b(0x514d3e)
-        }):align(display.TOP_CENTER, rb_size.width/2, rb_size.height-40)
+    local desc_bg = display.newScale9Sprite("back_ground_398x97.png", rb_size.width/2, rb_size.height-70,cc.size(556,88),cc.rect(15,10,368,77))
         :addTo(body)
 
+    -- 协助加速介绍
+    UIKit:ttfLabel(
+        {
+            text = _("帮助联盟成员加速并获得联盟忠诚值，激活VIP后能够提升为盟友加速效果"),
+            size = 20,
+            align = cc.ui.TEXT_ALIGN_CENTER,
+            dimensions = cc.size(360,0),
+            color = 0x403c2f
+        }):align(display.CENTER, desc_bg:getContentSize().width/2, desc_bg:getContentSize().height/2)
+        :addTo(desc_bg)
+
     -- 当天帮助加速获得的忠诚度进度条
-    local bar = display.newSprite("progress_bg_560x36.png"):addTo(body):pos(rb_size.width/2+10, rb_size.height-110)
-    local progressFill = display.newSprite("progress_bar_558x32.png")
+    local bar = display.newSprite("progress_bar_540x40_1.png"):addTo(body):pos(rb_size.width/2+10, rb_size.height-156)
+    local progressFill = display.newSprite("progress_bar_540x40_3.png")
     self.ProgressTimer = cc.ProgressTimer:create(progressFill)
     local pro = self.ProgressTimer
     pro:setType(display.PROGRESS_TIMER_BAR)
@@ -56,29 +57,26 @@ function GameUIHelp:onEnter()
     display.newSprite("loyalty_128x128.png",pro_head_bg:getContentSize().width/2,pro_head_bg:getContentSize().height/2):addTo(pro_head_bg):scale(42/128)
 
     -- 帮助列表
-    local help_list_bg = WidgetUIBackGround2.new(522):addTo(body):pos((rb_size.width-572)/2, 90)
-    self.help_listview = UIListView.new{
-        -- bgColor = UIKit:hex2c4b(0x7a000000),
-        viewRect = cc.rect(0,7, 572, 508),
-        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
-    }:addTo(help_list_bg)
+    local list,list_node = UIKit:commonListView_1({
+        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
+        viewRect = cc.rect(0, 0,570,456),
+    })
+    list_node:addTo(body):align(display.BOTTOM_CENTER, rb_size.width/2,90)
 
+    self.help_listview = list
+
+    self:InitHelpEvents()
     -- 全部帮助按钮
     local help_all_button = WidgetPushButton.new(
-        {normal = "yellow_button_146x42.png", pressed = "yellow_button_highlight_146x42.png"}
-    ):setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("全部帮助"), size = 18, color = UIKit:hex2c3b(0xfff3c7)}))
+        {normal = "yellow_btn_up_148x58.png", pressed = "yellow_btn_down_148x58.png"}
+    ):setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("全部帮助"), size = 22, color = UIKit:hex2c3b(0xfff3c7)}))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                if self:IsAbleToHelpAll() then
-                    NetManager:getHelpAllAllianceMemberSpeedUpPromise()
-                else
-                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                        :SetPopMessage(_("没有联盟成员需要协助加速"))
-                        :AddToCurrentScene()
-                end
+                NetManager:getHelpAllAllianceMemberSpeedUpPromise()
             end
         end):addTo(body):pos(rb_size.width/2, 50)
-    self:InitHelpEvents()
+    help_all_button:setVisible(self:IsAbleToHelpAll())
+    self.help_all_button = help_all_button
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.HELP_EVENTS)
     User:AddListenOnType(self, User.LISTEN_TYPE.COUNT_INFO)
 end
@@ -88,6 +86,7 @@ function GameUIHelp:IsAbleToHelpAll()
             return true
         end
     end
+    return false
 end
 function GameUIHelp:SetLoyalty()
     self.loyalty_label:setString(_("每日获得最大忠诚度：")..User:GetCountInfo().todayLoyaltyGet.."/"..intInit.maxLoyaltyGetPerDay.value)
@@ -97,7 +96,7 @@ function GameUIHelp:InitHelpEvents()
     local help_events = self.alliance:GetCouldShowHelpEvents()
     if help_events then
         for k,event in pairs(help_events) do
-                self:InsertItemToList(event)
+            self:InsertItemToList(event)
         end
         self.help_listview:reload()
     end
@@ -105,7 +104,7 @@ end
 function GameUIHelp:InsertItemToList(help_event)
     -- 当前玩家的求助事件需要置顶
     local item = self:CreateHelpItem(help_event)
-        -- 检查自己请求帮助的事件是否已经结束了
+    -- 检查自己请求帮助的事件是否已经结束了
     if User:Id() == help_event:GetPlayerData():Id() then
         self.help_listview:addItem(item,1)
     else
@@ -211,7 +210,11 @@ function GameUIHelp:GetHelpEventDesc( eventData )
     then
         return _("正在升级")..Localize.building_name[name].._("Lv")..eventData:Level()
     elseif type == "militaryTechEvents" then
-        return string.format(_("研发%s对%s的攻击到 Lv %d"),Localize.soldier_category[string.split(name, "_")[1]],Localize.soldier_category[string.split(name, "_")[2]],eventData:Level()+1)
+        local names = string.split(name, "_")
+        if names[2] == "hpAdd" then
+            return string.format(_("研发%s血量增加 Lv %d"),Localize.soldier_category[names[1]],eventData:Level()+1)
+        end
+        return string.format(_("研发%s对%s的攻击到 Lv %d"),Localize.soldier_category[names[1]],Localize.soldier_category[names[2]],eventData:Level()+1)
     elseif type == "soldierStarEvents" then
         return string.format(_("晋升%s的星级 star %d"),Localize.soldier_name[name],eventData:Level()+1)
     elseif type == "materialEvents" then
@@ -236,32 +239,30 @@ function GameUIHelp:CreateHelpItem(event)
 
     local item = self.help_listview:newItem()
     item.eventId = event:Id()
-    local item_width, item_height = 568,130
+    local item_width, item_height = 547,114
     item:setItemSize(item_width, item_height)
-    local bg = display.newSprite("back_ground_568X126.png")
+
+    local body_image = self.which_bg and "upgrade_resources_background_2.png" or "upgrade_resources_background_3.png"
+    self.which_bg = not self.which_bg
+    local bg = display.newScale9Sprite(body_image,0,0,cc.size(item_width, item_height),cc.rect(10,10,500,26))
+
     local bg_size = bg:getContentSize()
-    display.newSprite("people.png"):addTo(bg):pos(20, bg_size.height-24)
+    display.newSprite("people.png"):addTo(bg):pos(28, bg_size.height-20)
     -- 玩家名字
-    local name_label = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        font = UIKit:getFontFilePath(),
+    local name_label = UIKit:ttfLabel({
         text = playerData:Name(),
-        size = 24,
-        color = UIKit:hex2c3b(0x514d3e),
-        dimensions = cc.size(0,26),
-    }):addTo(bg):align(display.LEFT_CENTER, 50, bg_size.height-24)
+        size = 22,
+        color = 0x403c2f,
+    }):addTo(bg):align(display.LEFT_CENTER, 50, bg_size.height-20)
     -- 请求帮助事件
-    cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        font = UIKit:getFontFilePath(),
+    UIKit:ttfLabel({
         text = self:GetHelpEventDesc(eventData),
-        size = 20,
-        color = UIKit:hex2c3b(0x797154),
-        dimensions = cc.size(0,0),
-    }):addTo(bg):align(display.LEFT_TOP, 20, bg_size.height-50)
+        size = 18,
+        color = 0x615b44,
+    }):addTo(bg):align(display.LEFT_TOP, 18, bg_size.height-40)
     -- 此条事件被帮助次数进度条
-    local bar = display.newSprite("progress_bg_366x34.png"):addTo(bg):pos(200,30)
-    local progressFill = display.newSprite("progress_bar_366x34.png")
+    local bar = display.newSprite("progress_bar_364x40_1.png"):addTo(bg):pos(200,28)
+    local progressFill = display.newSprite("progress_bar_364x40_3.png")
     local ProgressTimer = cc.ProgressTimer:create(progressFill)
     local pro = ProgressTimer
     pro:setType(display.PROGRESS_TIMER_BAR)
@@ -276,7 +277,7 @@ function GameUIHelp:CreateHelpItem(event)
     local help_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         font = UIKit:getFontFilePath(),
-        text = _("帮助")..#helpedMembers.."/"..maxHelpCount,
+        text = _("帮助").." "..#helpedMembers.."/"..maxHelpCount,
         size = 18,
         align = ui.TEXT_ALIGN_CENTER,
         color = UIKit:hex2c3b(0xfff3c7),
@@ -284,20 +285,20 @@ function GameUIHelp:CreateHelpItem(event)
     -- 帮助按钮
     if User:Id() ~= playerData:Id() then
         local help_button = WidgetPushButton.new(
-            {normal = "yellow_button_146x42.png", pressed = "yellow_button_highlight_146x42.png"}
-        ):setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("帮助"), size = 18, color = UIKit:hex2c3b(0xfff3c7)}))
+            {normal = "yellow_btn_up_148x58.png", pressed = "yellow_btn_down_148x58.png"}
+        ):setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("帮助"), size = 22, color = UIKit:hex2c3b(0xfff3c7)}))
             :onButtonClicked(function(e)
                 if e.name == "CLICKED_EVENT" then
                     NetManager:getHelpAllianceMemberSpeedUpPromise(event:Id())
                 end
-            end):addTo(bg):pos(480, 30)
+            end):addTo(bg):pos(470, 34)
     end
     item:addContent(bg)
 
     self.help_events_items[event:Id()] = item
 
     function item:SetHelp(event)
-        help_label:setString(_("帮助")..#event:GetEventData():HelpedMembers().."/"..event:GetEventData():MaxHelpCount())
+        help_label:setString(_("帮助").." "..#event:GetEventData():HelpedMembers().."/"..event:GetEventData():MaxHelpCount())
         ProgressTimer:setPercentage(math.floor(#event:GetEventData():HelpedMembers()/event:GetEventData():MaxHelpCount()*100))
         return item
     end
@@ -308,9 +309,6 @@ function GameUIHelp:CreateHelpItem(event)
 
     return item
 end
--- function GameUIHelp:OnAllHelpEventChanged(event)
---     self:RefreshUI(event)
--- end
 function GameUIHelp:OnHelpEventChanged(changed_help_event)
     if changed_help_event.added then
         local added = changed_help_event.added
@@ -340,6 +338,7 @@ function GameUIHelp:OnHelpEventChanged(changed_help_event)
             end
         end
     end
+    self.help_all_button:setVisible(self:IsAbleToHelpAll())
 end
 function GameUIHelp:AddToCurrentScene(anima)
     display.getRunningScene():addChild(self,3000)
@@ -354,6 +353,8 @@ function GameUIHelp:onExit()
 end
 
 return GameUIHelp
+
+
 
 
 

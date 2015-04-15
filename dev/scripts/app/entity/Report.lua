@@ -13,7 +13,7 @@ function Report:ctor(id,type,createTime,isRead,isSaved,index)
     property(self, "isRead", isRead)
     property(self, "isSaved", isSaved)
     property(self, "index", index)
-    self.player_id = DataManager:getUserData()._id
+    self.player_id = User:Id()
 end
 function Report:OnPropertyChange(property_name, old_value, new_value)
 
@@ -424,12 +424,13 @@ function Report:IsFromMe()
     local report_type = self.type
     if report_type == "strikeCity"
         or report_type=="strikeVillage"
-        or report_type=="attackCity"
         or report_type=="attackVillage" then
         return true
     elseif report_type=="villageBeStriked"
         or report_type=="cityBeStriked" then
         return false
+    elseif report_type=="attackCity" then
+        return data.attackTarget.id ~= self.player_id
     elseif report_type=="collectResource" then
         return "collectResource"
     end
