@@ -22,6 +22,20 @@ end
 
 function UIAutoClose:addTouchAbleChild(body)
     body:setTouchEnabled(true)
+    function body:isTouchInViewRect( event)
+        local viewRect = self:convertToWorldSpace(cc.p(0, 0))
+        viewRect.width = self:getContentSize().width
+        viewRect.height = self:getContentSize().height+52
+        return cc.rectContainsPoint(viewRect, cc.p(event.x, event.y))
+    end
+    body:addNodeEventListener(cc.NODE_TOUCH_CAPTURE_EVENT, function(event)
+        if ("began" == event.name or "moved" == event.name or "ended" == event.name)
+            and body:isTouchInViewRect(event) then
+            return true
+        else
+            return false
+        end
+    end)
     self:addChild(body)
 end
 
@@ -40,4 +54,5 @@ function UIAutoClose:addCloseCleanFunc(func)
     self.clean_func=func
 end
 return UIAutoClose
+
 
