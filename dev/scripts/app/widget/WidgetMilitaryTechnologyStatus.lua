@@ -68,6 +68,8 @@ function WidgetMilitaryTechnologyStatus:CreateUpgradingStatus()
     }):align(display.LEFT_CENTER, 30,80)
         :addTo(upgrading_node)
 
+    local upgrading_event = self.event
+    local is_free = upgrading_event and upgrading_event:LeftTime()<= DataUtils:getFreeSpeedUpLimitTime()
     local speed_up_btn = WidgetPushButton.new({normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"})
         :setButtonLabel(UIKit:ttfLabel({
             text = _("加速"),
@@ -79,9 +81,26 @@ function WidgetMilitaryTechnologyStatus:CreateUpgradingStatus()
             UIKit:newGameUI("GameUIMilitaryTechSpeedUp", self.event):AddToCurrentScene(true)
         end)
         :align(display.CENTER, 474, 44):addTo(upgrading_node)
+    speed_up_btn:setVisible(not is_free)
+    local free_speed_up_btn = WidgetPushButton.new({normal = "purple_btn_up_148x58.png",pressed = "purple_btn_down_148x58.png"})
+        :setButtonLabel(UIKit:ttfLabel({
+            text = _("免费加速"),
+            size = 22,
+            color = 0xffedae,
+            shadow= true
+        }))
+        :onButtonClicked(function (event)
+            NetManager:getFreeSpeedUpPromise(self.event:GetEventType(),self.event:Id())
+        end)
+        :align(display.CENTER, 474, 44):addTo(upgrading_node)
+    free_speed_up_btn:setVisible(is_free)
 
-    function upgrading_node:SetProgressInfo(time_label, percent)
+
+
+    function upgrading_node:SetProgressInfo(time_label, percent,isFree)
         progress:SetProgressInfo(time_label, percent)
+        speed_up_btn:setVisible(not isFree)
+        free_speed_up_btn:setVisible(isFree)
     end
     function upgrading_node:SetUpgradeTip(tip)
         upgrading_tip:setString(tip)
@@ -89,14 +108,7 @@ function WidgetMilitaryTechnologyStatus:CreateUpgradingStatus()
     function upgrading_node:GetUpgradeTip()
         return upgrading_tip:getString()
     end
-    function upgrading_node:OnSpeedUpClicked(func)
-        speed_up_btn:onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-                func()
-            end
-        end)
-    end
-    upgrading_node:setVisible(false)
+    upgrading_node:hide()
     return upgrading_node
 end
 function WidgetMilitaryTechnologyStatus:RefreshTop()
@@ -150,7 +162,7 @@ function WidgetMilitaryTechnologyStatus:OnTimer(current_time)
     local soldier_star_start_time = soldier_star_event and soldier_star_event:StartTime() or 0
     local event = tech_start_time>soldier_star_start_time and military_tech_event or soldier_star_event
     if event then
-        self.upgrading_node:SetProgressInfo(GameUtils:formatTimeStyle1(event:GetTime()), event:Percent(current_time))
+        self.upgrading_node:SetProgressInfo(GameUtils:formatTimeStyle1(event:GetTime()), event:Percent(current_time),event:GetTime()<=DataUtils:getFreeSpeedUpLimitTime())
     end
 end
 function WidgetMilitaryTechnologyStatus:OnMilitaryTechEventsChanged(soldier_manager,changed_map)
@@ -160,6 +172,8 @@ function WidgetMilitaryTechnologyStatus:OnSoldierStarEventsChanged( soldier_mana
     self:RefreshTop()
 end
 return WidgetMilitaryTechnologyStatus
+
+
 
 
 
