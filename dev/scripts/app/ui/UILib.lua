@@ -518,12 +518,12 @@ local VILLAGE = {
 }
 
 local ITEM = {
-    movingConstruction = "movingConstruction_128x128.png",
-    torch = "torch_128x128.png",
+    movingConstruction = "movingConstruction_101x101.png",
+    torch = "torch_101x101.png",
     changePlayerName = "changePlayerName_128x128.png",
     changeCityName = "changeCityName_128x128.png",
     retreatTroop = "retreatTroop_128x128.png",
-    moveTheCity = "moveTheCity_128x128.png",
+    moveTheCity = "moveTheCity_101x101.png",
     dragonExp_1 = "dragonExp_1_128x128.png",
     dragonExp_2 = "dragonExp_2_128x128.png",
     dragonExp_3 = "dragonExp_3_128x128.png",
