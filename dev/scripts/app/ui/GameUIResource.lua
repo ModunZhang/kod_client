@@ -7,7 +7,7 @@ local ResourceManager = import("..entity.ResourceManager")
 local WidgetInfoWithTitle = import("..widget.WidgetInfoWithTitle")
 local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local WidgetMoveHouse = import("..widget.WidgetMoveHouse")
-local WidgetUseItems = import("..widget.WidgetUseItems")
+local UILib = import(".UILib")
 local City = City
 local UIListView = import(".UIListView")
 local window = import("..utils.window")
@@ -51,120 +51,173 @@ end
 function GameUIResource:CreateInfomation()
     local infomationLayer = display.newNode():addTo(self:GetView())
     self.infomationLayer = infomationLayer
-    local iconBg = display.newSprite("resource_icon_background.png"):align(display.LEFT_TOP, window.left+60, window.top - 110):addTo(infomationLayer)
-    display.newSprite("resource_icon.png"):align(display.CENTER, iconBg:getContentSize().width/2, iconBg:getContentSize().height/2):addTo(iconBg)
-    local lvBg = display.newSprite("LV_background.png"):align(display.LEFT_TOP, window.left+60, iconBg:getPositionY()-iconBg:getContentSize().height-10):addTo(infomationLayer)
-    local lvLabel = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = ItemManager:GetItemByName("torch"):Count(),
-        font = UIKit:getFontFilePath(),
+    local iconBg = display.newSprite("box_118x118.png")
+        :align(display.LEFT_TOP, window.left+40, window.top - 100)
+        :addTo(infomationLayer)
+    display.newSprite(UILib.item.torch)
+        :align(display.CENTER, iconBg:getContentSize().width/2, iconBg:getContentSize().height/2):
+        addTo(iconBg)
+    local lvBg = display.newSprite("back_ground_102x30.png")
+        :align(display.LEFT_TOP, window.left+48, iconBg:getPositionY()-iconBg:getContentSize().height+36)
+        :addTo(infomationLayer)
+    local lvLabel = UIKit:ttfLabel({
+        text = _("拥有").." "..ItemManager:GetItemByName("torch"):Count(),
         size = 18,
-        align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
-        -- dimensions = cc.size(500, 33),
-        color = UIKit:hex2c3b(0x403c2f),
+        color = 0xffedae,
     }):addTo(lvBg):align(display.CENTER,lvBg:getContentSize().width/2,lvBg:getContentSize().height/2)
 
-    local titleLable = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+    local title_bg = display.newSprite("title_blue_430x30.png"):addTo(infomationLayer)
+        :align(display.LEFT_TOP,iconBg:getPositionX()+iconBg:getContentSize().width,iconBg:getPositionY()-2)
+    local titleLable = UIKit:ttfLabel({
         text = _("拆除这个建筑"),
-        font = UIKit:getFontFilePath(),
         size = 22,
-        align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
-        dimensions = cc.size(500, 33),
-        color = UIKit:hex2c3b(0x29261c),
-        valign = cc.ui.UILabel.TEXT_VALIGN_CENTER
-    }):addTo(infomationLayer):align(display.LEFT_TOP,iconBg:getPositionX()+iconBg:getContentSize().width+20,iconBg:getPositionY())
+        color = 0xffedae,
+    }):addTo(title_bg)
+        :align(display.LEFT_CENTER,10,title_bg:getContentSize().height/2)
 
-    local chaiButton = cc.ui.UIPushButton.new({normal = "resource_butter_red.png",pressed = "resource_butter_red_highlight.png"}, {scale9 = false})
-        :addTo(infomationLayer)
-        :align(display.TOP_RIGHT, window.right-60, iconBg:getPositionY())
-        :setButtonLabel("normal",  cc.ui.UILabel.new({
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("拆除"),
-            font = UIKit:getFontFilePath(),
-            size = 22,
-            color = UIKit:hex2c3b(0xffedae),
-        }))
-        :setButtonLabelOffset(0, 2)
-        :onButtonClicked(function(event)
-            self:ChaiButtonAction(event)
-        end)
-
-    WidgetUseItems.new():CreateItemBox(ItemManager:GetItemByName("movingConstruction"),function ()
-        return true
-    end,
-    function ()
-        WidgetMoveHouse.new(self.building)
-        self:LeftButtonClicked()
-    end,
-    function ()
-        NetManager:getBuyItemPromise("movingConstruction",1)
-        WidgetMoveHouse.new(self.building)
-        self:LeftButtonClicked()
-    end
-    ):addTo(infomationLayer):align(display.CENTER, window.cx, iconBg:getPositionY() - 230)
-
-    local fistLine = display.newScale9Sprite("dividing_line.png")
-        :align(display.BOTTOM_LEFT, titleLable:getPositionX(),lvBg:getPositionY()+lvBg:getContentSize().height-15)
+    local fistLine = display.newScale9Sprite("dividing_line.png",title_bg:getPositionX()+10,lvBg:getPositionY()+lvBg:getContentSize().height-15,
+        cc.size(262,2),cc.rect(1,1,400,1))
+        :align(display.BOTTOM_LEFT)
         :addTo(infomationLayer)
 
-    local firstLable = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+    local firstLable = UIKit:ttfLabel({
         text = _("返还城民"),
-        font = UIKit:getFontFilePath(),
         size = 20,
-        align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
-        -- dimensions = cc.size(500, 33),
-        color = UIKit:hex2c3b(0x797154),
+        color = 0x615b44,
         valign = cc.ui.UILabel.TEXT_VALIGN_CENTER
     }):addTo(infomationLayer)
         :align(display.LEFT_BOTTOM,fistLine:getPositionX(),fistLine:getPositionY()+2)
 
-    local firstValueLabel = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+    local firstValueLabel = UIKit:ttfLabel({
         text = "-100",
-        font = UIKit:getFontFilePath(),
         size = 20,
-        align = cc.ui.UILabel.TEXT_ALIGN_RIGHT,
-        -- dimensions = cc.size(500, 33),
-        color = UIKit:hex2c3b(0x403c2f),
-        valign = cc.ui.UILabel.TEXT_VALIGN_CENTER
+        color = 0x403c2f,
     }):addTo(infomationLayer)
-        :align(display.RIGHT_BOTTOM,chaiButton:getPositionX(),firstLable:getPositionY())
+        :align(display.RIGHT_BOTTOM,fistLine:getPositionX()+262,firstLable:getPositionY())
     self.firstValueLabel = firstValueLabel
-    local secondLine = display.newScale9Sprite("dividing_line.png")
-        :align(display.BOTTOM_LEFT, firstLable:getPositionX(),lvBg:getPositionY()-lvBg:getContentSize().height)
+    local secondLine = display.newScale9Sprite("dividing_line.png",firstLable:getPositionX(),lvBg:getPositionY()-lvBg:getContentSize().height,
+        cc.size(262,2),cc.rect(1,1,400,1))
+        :align(display.BOTTOM_LEFT)
         :addTo(infomationLayer)
 
-    local secondLabel = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = "城民增长",
-        font = UIKit:getFontFilePath(),
+    local secondLabel = UIKit:ttfLabel({
+        text = _("城民增长"),
         size = 20,
-        align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
-        -- dimensions = cc.size(500, 33),
-        color = UIKit:hex2c3b(0x797154),
-        valign = cc.ui.UILabel.TEXT_VALIGN_CENTER
+        color = 0x615b44,
     }):addTo(infomationLayer)
         :align(display.LEFT_BOTTOM,secondLine:getPositionX(),secondLine:getPositionY()+2)
     self.secondLabel = secondLabel
-    self.secondValueLabel = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+    self.secondValueLabel = UIKit:ttfLabel({
         text = "-100/h",
-        font = UIKit:getFontFilePath(),
         size = 20,
-        align = cc.ui.UILabel.TEXT_ALIGN_RIGHT,
-        -- dimensions = cc.size(500, 33),
-        color = UIKit:hex2c3b(0x403c2f),
-        valign = cc.ui.UILabel.TEXT_VALIGN_CENTER
+        color = 0x403c2f,
     }):addTo(infomationLayer)
-        :align(display.RIGHT_BOTTOM,chaiButton:getPositionX(),secondLabel:getPositionY())
+        :align(display.RIGHT_BOTTOM,secondLine:getPositionX()+262,secondLabel:getPositionY())
+
+    local chaiButton =  cc.ui.UIPushButton.new({normal = "red_btn_up_148x58.png",pressed = "red_btn_down_148x58.png"}, {scale9 = false})
+        :addTo(infomationLayer)
+        :align(display.TOP_RIGHT, window.right-50, secondLine:getPositionY()+56)
+        :onButtonClicked(function(event)
+            self:ChaiButtonAction(event)
+        end)
+    if ItemManager:GetItemByName("torch"):Count()>0 then
+        chaiButton:setButtonLabel("normal", UIKit:ttfLabel({
+            text = _("拆除"),
+            size = 22,
+            color = 0xffedae,
+        }))
+    else
+        chaiButton:setButtonLabel("normal", UIKit:ttfLabel({
+            text = _("购买&拆除"),
+            size = 18,
+            color = 0xffedae,
+        }))
+            :setButtonLabelOffset(0, 14)
+        local num_bg = display.newSprite("back_ground_122x20.png"):addTo(chaiButton):align(display.CENTER, -74, -40)
+        -- gem icon
+        local gem_icon = display.newSprite("gem_icon_62x61.png"):addTo(num_bg):align(display.CENTER, 20, num_bg:getContentSize().height/2):scale(0.5)
+        local price = UIKit:ttfLabel({
+            text = string.formatnumberthousands(ItemManager:GetItemByName("torch"):Price()),
+            size = 18,
+            color = 0xffd200,
+        }):align(display.LEFT_CENTER, 50 , num_bg:getContentSize().height/2)
+            :addTo(num_bg)
+    end
+
+
+    -- 移动小屋
+    local movingConstruction_item = ItemManager:GetItemByName("movingConstruction")
+    local iconBg = display.newSprite("box_118x118.png")
+        :align(display.LEFT_TOP, window.left+40, window.top - 260)
+        :addTo(infomationLayer)
+    display.newSprite(UILib.item.movingConstruction)
+        :align(display.CENTER, iconBg:getContentSize().width/2, iconBg:getContentSize().height/2):
+        addTo(iconBg)
+    local lvBg = display.newSprite("back_ground_102x30.png")
+        :align(display.LEFT_TOP, window.left+48, iconBg:getPositionY()-iconBg:getContentSize().height+36)
+        :addTo(infomationLayer)
+    local lvLabel = UIKit:ttfLabel({
+        text = _("拥有").." "..movingConstruction_item:Count(),
+        size = 18,
+        color = 0xffedae,
+    }):addTo(lvBg):align(display.CENTER,lvBg:getContentSize().width/2,lvBg:getContentSize().height/2)
+
+    local title_bg = display.newSprite("title_blue_430x30.png"):addTo(infomationLayer)
+        :align(display.LEFT_TOP,iconBg:getPositionX()+iconBg:getContentSize().width,iconBg:getPositionY()-2)
+    local titleLable = UIKit:ttfLabel({
+        text = _("移动这个建筑"),
+        size = 22,
+        color = 0xffedae,
+    }):addTo(title_bg)
+        :align(display.LEFT_CENTER,10,title_bg:getContentSize().height/2)
+
+
+    UIKit:ttfLabel({
+        text = _("用来调换城市内的资源建筑的位置"),
+        size = 20,
+        color = 0x615b44,
+        dimensions = cc.size(240,0)
+    }):addTo(infomationLayer)
+        :align(display.LEFT_CENTER,title_bg:getPositionX()+10,title_bg:getPositionY()-70)
+
+    local moveButton =  cc.ui.UIPushButton.new({normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"}, {scale9 = false})
+        :addTo(infomationLayer)
+        :align(display.TOP_RIGHT, window.right-50, title_bg:getPositionY()-58)
+        :onButtonClicked(function(event)
+            self:MoveButtonAction(event)
+        end)
+    if movingConstruction_item:Count()>0 then
+        moveButton:setButtonLabel("normal", UIKit:ttfLabel({
+            text = _("移动"),
+            size = 22,
+            color = 0xffedae,
+        }))
+    else
+        moveButton:setButtonLabel("normal", UIKit:ttfLabel({
+            text = _("购买&移动"),
+            size = 18,
+            color = 0xffedae,
+        }))
+            :setButtonLabelOffset(0, 14)
+        local num_bg = display.newSprite("back_ground_122x20.png"):addTo(moveButton):align(display.CENTER, -74, -40)
+        -- gem icon
+        local gem_icon = display.newSprite("gem_icon_62x61.png"):addTo(num_bg):align(display.CENTER, 20, num_bg:getContentSize().height/2):scale(0.5)
+        local price = UIKit:ttfLabel({
+            text = string.formatnumberthousands(movingConstruction_item:Price()),
+            size = 18,
+            color = 0xffd200,
+        }):align(display.LEFT_CENTER, 50 , num_bg:getContentSize().height/2)
+            :addTo(num_bg)
+    end
+
 
     self.info = WidgetInfoWithTitle.new({
         title = _("总计"),
         h = 226
     }):addTo(self.infomationLayer)
         :align(display.TOP_CENTER, window.cx,secondLine:getPositionY()-200)
+
+
 
     self.listView = self.info:GetListView()
 
@@ -278,16 +331,17 @@ function GameUIResource:ChaiButtonAction( event )
         UIKit:showMessageDialog(_("提示"), _("正在建造或者升级小屋,不能拆除!"), function()end)
         return
     end
-
-    local item = ItemManager:GetItemByName("torch")
-
-    if item:Count() < 1 then
-        UIKit:showMessageDialog(_("提示"), _("没有拆除建筑道具"), function()end)
+    local tile = self.city:GetTileWhichBuildingBelongs(self.building)
+    local house_location = tile:GetBuildingLocation(self.building)
+    local torch_count = ItemManager:GetItemByName("torch"):Count()
+    if torch_count<1 then
+        NetManager:getBuyAndUseItemPromise("torch",{
+            torch = {
+                buildingLocation = tile.location_id,
+                houseLocation = house_location,
+            }
+        })
     else
-        local tile = self.city:GetTileWhichBuildingBelongs(self.building)
-        local house_location = tile:GetBuildingLocation(self.building)
-
-        self:LeftButtonClicked(nil)
         NetManager:getUseItemPromise("torch",{
             torch = {
                 buildingLocation = tile.location_id,
@@ -295,6 +349,26 @@ function GameUIResource:ChaiButtonAction( event )
             }
         })
     end
+
+    self:LeftButtonClicked(nil)
+end
+function GameUIResource:MoveButtonAction( event )
+    if self.building:IsUpgrading() or self.building:IsBuilding() then
+        UIKit:showMessageDialog(_("提示"), _("正在建造或者升级小屋,不能拆除!"), function()end)
+        return
+    end
+    local tile = self.city:GetTileWhichBuildingBelongs(self.building)
+    local house_location = tile:GetBuildingLocation(self.building)
+    local torch_count = ItemManager:GetItemByName("movingConstruction"):Count()
+
+    if torch_count<1 then
+        NetManager:getBuyItemPromise("movingConstruction",1)
+        WidgetMoveHouse.new(self.building)
+    else
+        WidgetMoveHouse.new(self.building)
+    end
+
+    self:LeftButtonClicked(nil)
 end
 
 function GameUIResource:OnMoveOutStage()
@@ -311,6 +385,15 @@ function GameUIResource:OnResourceChanged(resource_manager)
 end
 
 return GameUIResource
+
+
+
+
+
+
+
+
+
 
 
 
