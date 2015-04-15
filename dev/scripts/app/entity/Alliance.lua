@@ -168,7 +168,6 @@ end
 function Alliance:GetTitles()
     return LuaUtils:table_map(self.titles, function(k, v)
         if string.sub(v, 1, 2) == "__" then
-            dump(alliance_title[k])
             return k, alliance_title[k]
         end
         return k,v
