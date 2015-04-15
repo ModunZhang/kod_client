@@ -209,7 +209,7 @@ function GameUIHome:RefreshData()
     -- 更新数值
     local user = self.city:GetUser()
     self.name_label:setString(user:Name())
-    self.power_label:setString(user:Power())
+    self.power_label:setString(string.formatnumberthousands(user:Power()))
     self.level_label:setString(user:Level())
     self:RefreshVIP()
 end
@@ -443,7 +443,7 @@ function GameUIHome:RefreshVIP()
     vip_btn:setButtonImage(cc.ui.UIPushButton.PRESSED, vip_btn_img, true)
     local vip_level = self.vip_level
     vip_level:removeAllChildren()
-    local level_img = display.newSprite(string.format("VIP_%d_46x32.png", User:GetVipLevel() == 0 and 1 or User:GetVipLevel()),0,0,{class=cc.FilteredSpriteWithOne}):addTo(vip_level)
+    local level_img = display.newSprite(string.format("VIP_%d_46x32.png", User:GetVipLevel()),0,0,{class=cc.FilteredSpriteWithOne}):addTo(vip_level)
     if not User:IsVIPActived() then
         local my_filter = filter
         local filters = my_filter.newFilter("GRAY", {0.2, 0.3, 0.5, 0.1})

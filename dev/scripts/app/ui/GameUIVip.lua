@@ -414,9 +414,6 @@ function GameUIVip:CreateVipExpBar()
             size = 16,
             font = UIKit:getFontFilePath(),
             color = UIKit:hex2c3b(0xffedae)}):addTo(tip):align(display.CENTER, tip:getContentSize().width/2, 25)
-        if level == 0 then
-            tip:setVisible(false)
-        end
         return tip
     end
     --[[
@@ -428,7 +425,7 @@ function GameUIVip:CreateVipExpBar()
         -- if level<1 then
         --     return
         -- end
-        for i=0,level do
+        for i=1,level do
             -- self.level_images["level_image_"..i]:setVisible(true)
             self.level_bar["level_bar_"..i]:setVisible(true)
             if self.exp_bar["exp_bar_"..i-1] then
@@ -447,7 +444,7 @@ function GameUIVip:CreateVipExpBar()
         end
         local x = self.level_bar["level_bar_"..level]:getParent():getPosition()
         -- 由于两头的圈使用的图片宽度为单数，所以锚点都设置在了左边中心而不是中间圈那样的锚点在中心，此时需要tip框中心找到其中心位置
-        x = x + ((level == 0 or level == VIP_MAX_LEVEL) and 17 or 0)
+        x = x + ((level == 1 or level == VIP_MAX_LEVEL) and 17 or 0)
         self.tip_1:align(display.BOTTOM_CENTER, x, 20)
         if level<VIP_MAX_LEVEL then
             local x = self.level_bar["level_bar_"..level+1]:getParent():getPosition()
@@ -486,19 +483,18 @@ function GameUIVip:CreateVipExpBar()
         return ProgressTimer
     end
     local current_x = 0
-    for i=0,VIP_MAX_LEVEL do
+    for i=1,VIP_MAX_LEVEL do
         local lv_bg
-        if i==0 then
+        if i==1 then
             lv_bg = display.newSprite("vip_lv_bar_1.png"):addTo(ExpBar):align(display.LEFT_CENTER, 0, 0)
             ExpBar:AddLevelBar(i,display.newSprite("vip_lv_bar_3.png"):addTo(lv_bg)
                 :align(display.CENTER, lv_bg:getContentSize().width/2+1, lv_bg:getContentSize().height/2))
             current_x = current_x + head_width
             local exp = display.newSprite("vip_lv_bar_5.png"):addTo(ExpBar):align(display.CENTER, current_x+level_width/2, 0)
             local ProgressTimer = createProgressTimer():align(display.LEFT_CENTER, 0, exp:getContentSize().height/2):addTo(exp)
-            -- ProgressTimer:setPercentage(100)
             ExpBar:AddLevelExpBar(i,ProgressTimer)
             current_x = current_x + level_width
-        elseif i>0 and i<VIP_MAX_LEVEL then
+        elseif i>1 and i<VIP_MAX_LEVEL then
             lv_bg = display.newSprite("vip_lv_bar_2.png"):addTo(ExpBar):align(display.CENTER, current_x+mid_width/2, 0)
             local light = display.newSprite("vip_lv_bar_4.png"):addTo(lv_bg)
                 :align(display.CENTER, lv_bg:getContentSize().width/2, lv_bg:getContentSize().height/2)
@@ -507,7 +503,6 @@ function GameUIVip:CreateVipExpBar()
             current_x = current_x + mid_width
             local exp = display.newSprite("vip_lv_bar_5.png"):addTo(ExpBar):align(display.CENTER, current_x+level_width/2, 0)
             local ProgressTimer = createProgressTimer():align(display.LEFT_CENTER, 0, exp:getContentSize().height/2):addTo(exp)
-            -- ProgressTimer:setPercentage(100)
             ExpBar:AddLevelExpBar(i,ProgressTimer)
 
             current_x = current_x + level_width
@@ -520,15 +515,11 @@ function GameUIVip:CreateVipExpBar()
             ExpBar:AddLevelBar(i,light)
             light:setFlippedX(true)
         end
-        if i>0 then
-            local level_image = display.newSprite(i..".png"):addTo(lv_bg,1,i*100)
-                :align(display.CENTER, lv_bg:getContentSize().width/2, lv_bg:getContentSize().height/2)
-                :scale(0.5)
-        end
-        -- level_image:setVisible(false)
+        local level_image = display.newSprite(i..".png"):addTo(lv_bg,1,i*100)
+            :align(display.CENTER, lv_bg:getContentSize().width/2, lv_bg:getContentSize().height/2)
+            :scale(0.5)
         ExpBar:AddLevelImage(i,level_image)
     end
-    ExpBar:scale(0.905)
     return ExpBar
 end
 
@@ -590,7 +581,7 @@ function GameUIVip:CreateVIPStatus()
                 WidgetUseItems.new():Create({item_type = WidgetUseItems.USE_TYPE.VIP_ACTIVE}):AddToCurrentScene()
             end
         end)
-    active_button:setButtonEnabled(User:GetVipLevel()~=0)
+
     self.active_button = active_button
     local widget_info = WidgetInfoNotListView.new(
         {
@@ -859,52 +850,98 @@ function GameUIVip:OpenVIPDetails(show_vip_level)
         titles =  {"VIP 1","VIP 2","VIP 3","VIP 4","VIP 5","VIP 6","VIP 7","VIP 8","VIP 9","VIP 10",}, -- 标题 type -> table
         cb = function (page)
             self:SetVIPInfo(page)
+            if layer.status_node then
+                layer.status_node:removeFromParent(true)
+            end
+            if User:GetVipLevel()<page then
+                if (User:GetVipLevel()+1) == page then
+                    -- 增加VIP点数按钮
+                    local increase_vip_label = UIKit:ttfLabel({
+                        text = _("增加VIP点数"),
+                        size = 20,
+                        color = 0xfff3c7})
+                    increase_vip_label:enableShadow()
+                    local btn = WidgetPushButton.new(
+                        {normal = "yellow_button_highlight_190x46.png", pressed = "yellow_button_190x46.png"},
+                        {scale9 = false}
+                    ):setButtonLabel(increase_vip_label)
+                        :addTo(body):align(display.CENTER, size.width/2, 80)
+                        :onButtonClicked(function(event)
+                            if event.name == "CLICKED_EVENT" then
+                                WidgetUseItems.new():Create({item_type = WidgetUseItems.USE_TYPE.VIP_POINT}):AddToCurrentScene()
+                                layer:LeftButtonClicked()
+                            end
+                        end)
+                    layer.status_node = btn
+                else
+                    local not_reach_bg = display.newSprite("vip_bg_5.png")
+                    not_reach_bg:align(display.CENTER, size.width/2, 80)
+                        :addTo(body)
+                    cc.ui.UILabel.new(
+                        {
+                            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+                            text = _("到达等级赠送"),
+                            font = UIKit:getFontFilePath(),
+                            size = 20,
+                            color = UIKit:hex2c3b(0xefdea3)
+                        }):align(display.LEFT_CENTER, 120, 70)
+                        :addTo(not_reach_bg)
+                    cc.ui.UILabel.new(
+                        {
+                            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+                            text = _("7 DAY"),
+                            font = UIKit:getFontFilePath(),
+                            size = 18,
+                            color = UIKit:hex2c3b(0x403c2f)
+                        }):align(display.CENTER, 70, 12)
+                        :addTo(not_reach_bg)
+                    layer.status_node = not_reach_bg
+                end
+            else
+                if User:GetVipLevel() == page then
+                    -- 激活VIP按钮
+                    local active_vip_label = UIKit:ttfLabel({
+                        text = _("激活VIP"),
+                        size = 20,
+                        color = 0xfff3c7})
+                    active_vip_label:enableShadow()
+                    local active_button = WidgetPushButton.new(
+                        {normal = "yellow_button_highlight_190x46.png", pressed = "yellow_button_190x46.png"},
+                        {scale9 = false},
+                        {
+                            disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
+                        }
+                    ):setButtonLabel(active_vip_label)
+                        :addTo(body):align(display.CENTER, size.width/2, 80)
+                        :onButtonClicked(function(event)
+                            if event.name == "CLICKED_EVENT" then
+                                WidgetUseItems.new():Create({item_type = WidgetUseItems.USE_TYPE.VIP_ACTIVE}):AddToCurrentScene()
+                                layer:LeftButtonClicked()
+                            end
+                        end)
+                    layer.status_node = active_button
+                else
+                    local reach_bg = display.newSprite("vip_bg_4.png")
+                    reach_bg:align(display.CENTER, size.width/2, 40)
+                        :addTo(body)
+                    cc.ui.UILabel.new(
+                        {
+                            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+                            text = _("已达成"),
+                            font = UIKit:getFontFilePath(),
+                            size = 20,
+                            color = UIKit:hex2c3b(0x403c2f)
+                        }):align(display.CENTER, reach_bg:getContentSize().width/2, reach_bg:getContentSize().height/2)
+                        :addTo(reach_bg)
+                    layer.status_node = reach_bg
+                end
+            end
         end,
         current_page = show_vip_level,
         icon = "vip_king_icon.png"
     }):align(display.CENTER, size.width/2, size.height-50)
         :addTo(body)
 
-    if User:GetVipLevel()<show_vip_level then
-        self.not_reach_bg  = display.newSprite("vip_bg_5.png")
-        local not_reach_bg = self.not_reach_bg
-        not_reach_bg:align(display.CENTER, size.width/2, 80)
-            :addTo(body)
-        cc.ui.UILabel.new(
-            {
-                UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-                text = _("到达等级赠送"),
-                font = UIKit:getFontFilePath(),
-                size = 20,
-                color = UIKit:hex2c3b(0xefdea3)
-            }):align(display.LEFT_CENTER, 120, 70)
-            :addTo(not_reach_bg)
-        cc.ui.UILabel.new(
-            {
-                UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-                text = _("7 DAY"),
-                font = UIKit:getFontFilePath(),
-                size = 18,
-                color = UIKit:hex2c3b(0x403c2f)
-            }):align(display.CENTER, 70, 12)
-            :addTo(not_reach_bg)
-    else
-        self.reach_bg = display.newSprite("vip_bg_4.png")
-        local reach_bg = self.reach_bg
-
-
-        reach_bg:align(display.CENTER, size.width/2, 40)
-            :addTo(body)
-        cc.ui.UILabel.new(
-            {
-                UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-                text = _("已达成"),
-                font = UIKit:getFontFilePath(),
-                size = 20,
-                color = UIKit:hex2c3b(0x403c2f)
-            }):align(display.CENTER, reach_bg:getContentSize().width/2, reach_bg:getContentSize().height/2)
-            :addTo(reach_bg)
-    end
 end
 
 function GameUIVip:OnBasicChanged(from,changed_map)
@@ -935,6 +972,14 @@ function GameUIVip:OnVipEventTimer( vip_event_new )
 end
 
 return GameUIVip
+
+
+
+
+
+
+
+
 
 
 

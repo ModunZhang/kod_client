@@ -16,6 +16,14 @@ local WidgetAllianceEnterButtonProgress = class("WidgetAllianceEnterButtonProgre
     end
     app.timer:AddListener(progress)
     progress:setNodeEventEnabled(true)
+    progress.time_label = UIKit:ttfLabel(
+        {
+            text = "",
+            size = 20,
+            color = 0x7e0000
+        }):align(display.CENTER, 58, 64)
+        :addTo(progress)
+    progress.time_label:setRotationSkewY(180)
 
     return progress
 end)
@@ -29,6 +37,10 @@ function WidgetAllianceEnterButtonProgress:OnTimer(current_time)
 
         local percent = math.floor((statusFinishTime-current_time)/(statusFinishTime-statusStartTime)*100)
         self:setPercentage(percent)
+
+        if statusFinishTime>current_time then
+            self.time_label:setString(GameUtils:formatTimeStyle1(statusFinishTime-current_time))
+        end
     else
         app.timer:RemoveListener(self)
         self:removeFromParent()
@@ -38,6 +50,7 @@ function WidgetAllianceEnterButtonProgress:onExit()
     app.timer:RemoveListener(self)
 end
 return WidgetAllianceEnterButtonProgress
+
 
 
 

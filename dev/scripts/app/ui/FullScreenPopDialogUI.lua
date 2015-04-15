@@ -49,6 +49,9 @@ function FullScreenPopDialogUI:Init(listener)
             end
         end
     end)
+
+    -- 默认加入ok button
+    self:CreateOKButton()
 end
 
 function FullScreenPopDialogUI:SetTitle(title)
@@ -80,6 +83,9 @@ function FullScreenPopDialogUI:SetPopMessage(message)
 end
 
 function FullScreenPopDialogUI:CreateOKButton(params)
+    if self.ok_button then
+        self.ok_button:removeFromParent(true)
+    end
     local params = params or {}
     local listener,btn_name = params.listener,params.btn_name
     local name = btn_name or _("确定")
@@ -93,6 +99,7 @@ function FullScreenPopDialogUI:CreateOKButton(params)
                 end
             end
         end):align(display.CENTER, display.cx+200, display.top-610):addTo(self)
+    self.ok_button = ok_button
     return self
 end
 
