@@ -2,11 +2,8 @@
 -- Author: Kenny Dai
 -- Date: 2015-02-02 16:19:41
 --
-
 local WidgetMoveHouse = class("WidgetMoveHouse",function ( )
-    local node = display.newNode()
-    node:setNodeEventEnabled(true)
-    return node
+    return display.newSprite("back_ground_256x207.png")
 end)
 
 WidgetMoveHouse.ADD_TAG =989
@@ -17,11 +14,10 @@ function WidgetMoveHouse:ctor(house)
         running_scene:EnterEditMode()
         self.house = house
         running_scene:GetSceneUILayer():addChild(self, 1, WidgetMoveHouse.ADD_TAG)
-        self.ok_btn = cc.ui.UIPushButton.new(
-            {normal = "yellow_btn_up_148x58.png", pressed = "yellow_btn_down_148x58.png"},
-            {scale9 = false}
-        ):setButtonLabel(UIKit:commonButtonLable({text = _("确定")}))
-            :addTo(self):pos(100,0)
+        local ok_btn = cc.ui.UIPushButton.new(
+            {normal = "green_btn_up_58x58.png", pressed = "green_btn_down_58x58.png"}
+        )
+            :addTo(self):pos(224,108)
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
                 	local from_house_tile = City:GetTileWhichBuildingBelongs(house)
@@ -42,30 +38,28 @@ function WidgetMoveHouse:ctor(house)
                     end)
                 end
             end)
-        self.ok_btn:setVisible(false)
-        self.cancel_btn = cc.ui.UIPushButton.new(
-            {normal = "yellow_btn_up_148x58.png", pressed = "yellow_btn_down_148x58.png"},
-            {scale9 = false}
-        ):setButtonLabel(UIKit:commonButtonLable({text = _("取消")}))
-            :addTo(self):pos(-100,0)
+        display.newSprite("icon_v_37x30.png"):addTo(ok_btn)
+        local cancel_btn = cc.ui.UIPushButton.new(
+            {normal = "red_btn_up_58x58.png", pressed = "red_btn_down_58x58.png"}
+        )
+            :addTo(self):pos(30,108)
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
                     running_scene:LeaveEditMode()
                 end
             end)
-        self.cancel_btn:setVisible(false)
+        display.newSprite("icon_x_25x23.png"):addTo(cancel_btn)
 
     end
-
+    self:hide()
 end
 function WidgetMoveHouse:SetMoveToRuins( ruins )
     if ruins:GetEntity() == self.house then
         return
     end
     self.move_to_ruins=ruins
-    self.ok_btn:setVisible(true)
 
-    self.cancel_btn:setVisible(true)
+    self:show()
 
     local world_pos = ruins:GetWorldPosition()
     self:setPosition(world_pos.x, world_pos.y)

@@ -56,8 +56,8 @@ NS_CC_BEGIN
 
 /// The max length of CCLog message.
 //dannyhe
-//static const int MAX_LOG_LENGTH = 16*1024;
-static const int MAX_LOG_LENGTH = 1024*1024;
+static const int MAX_LOG_LENGTH = 16*1024;
+//static const int MAX_LOG_LENGTH = 1024*1024;
 /**
  @brief Output Debug message.
  */

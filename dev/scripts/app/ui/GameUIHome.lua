@@ -306,7 +306,7 @@ function GameUIHome:CreateTop()
     -- 玩家信息背景
     local player_bg = display.newSprite("player_bg_110x106.png"):addTo(top_bg, 2)
         :align(display.LEFT_BOTTOM, display.width>640 and 58 or 64, 10):setCascadeOpacityEnabled(true)
-    display.newSprite("player_icon_110x106.png"):addTo(player_bg):pos(55, 53)
+    display.newSprite(User:Icon()):addTo(player_bg):pos(55, 53):scale(110/128)
     local level_bg = display.newSprite("level_bg_74x24.png"):addTo(player_bg):pos(55, 30):setCascadeOpacityEnabled(true)
     self.level_label = UIKit:ttfLabel({
         size = 20,

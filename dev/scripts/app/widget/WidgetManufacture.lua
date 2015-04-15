@@ -204,7 +204,7 @@ function WidgetManufacture:CreateMaterialItemWithListView(list_view, title, mate
     local toolShop_ui = self
     local align_x, align_y = 30, 35
     local height = 378
-    local content = WidgetUIBackGround.new({height=height}):align(display.CENTER)
+    local content = WidgetUIBackGround.new({height=height,isFrame="yes"}):align(display.CENTER)
 
     local size = content:getContentSize()
     local title_blue = cc.ui.UIImage.new("title_blue_586x34.png",
@@ -220,23 +220,26 @@ function WidgetManufacture:CreateMaterialItemWithListView(list_view, title, mate
     }):addTo(title_blue):align(display.CENTER, title_blue:getContentSize().width/2, title_blue:getContentSize().height/2)
 
     local function new_material(type)
-        local origin_x, origin_y, gap_x = 90, height - 140, 143
+        local origin_x, origin_y, gap_x = 90, height - 160, 143
         local png = MATERIALS_MAP[type][1]
         local describe = MATERIALS_MAP[type][2]
         local index = MATERIALS_MAP[type][3]
 
-        local back_ground = cc.ui.UIImage.new("box_blue_124x124.png")
+        local back_ground = cc.ui.UIImage.new("box_120x154.png")
             :align(display.CENTER, origin_x + gap_x * (index - 1), origin_y)
 
         local pos = back_ground:getAnchorPointInPoints()
-
-        local material = cc.ui.UIImage.new(png)
+        
+        local icon_bg = cc.ui.UIImage.new("box_118x118.png")
+            :align(display.CENTER, pos.x, pos.y+18)
             :addTo(back_ground)
-            :align(display.CENTER, pos.x, pos.y)
-            :scale(103/128)
+        local material = cc.ui.UIImage.new(png)
+            :addTo(icon_bg)
+            :align(display.CENTER, icon_bg:getContentSize().width/2,icon_bg:getContentSize().height/2)
+            :scale(100/128)
 
-        local num_bg = cc.ui.UIImage.new("number_bg_116x46.png")
-            :addTo(back_ground):align(display.TOP_LEFT,4,10)
+        local num_bg = cc.ui.UIImage.new("back_ground_118x36.png")
+            :addTo(back_ground):align(display.CENTER,pos.x, 20)
 
         local store_label = UIKit:ttfLabel({
             text = "",
@@ -253,7 +256,7 @@ function WidgetManufacture:CreateMaterialItemWithListView(list_view, title, mate
             align = cc.ui.TEXT_ALIGN_RIGHT,
             color = UIKit:hex2c3b(0x403c2f)
         }):addTo(back_ground, 2)
-            :align(display.CENTER, pos.x, pos.y + 68)
+            :align(display.CENTER, pos.x, pos.y + 88)
 
         local num_label = UIKit:ttfLabel({
             text = "",

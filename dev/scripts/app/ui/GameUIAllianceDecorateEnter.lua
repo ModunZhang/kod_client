@@ -56,6 +56,10 @@ function GameUIAllianceDecorateEnter:GetEnterButtons()
     local current_scene = display.getRunningScene()
     if current_scene.__cname == "AllianceScene" and current_scene.LoadEditModeWithAllianceObj then
     	local chai_button = self:BuildOneButton("icon_move_player_city.png",_("移动")):onButtonClicked(function()
+            if self:GetMyAlliance():Status() == 'fight' then
+                UIKit:showMessageDialog(nil, _("战争期不能移动"),function()end)
+                return
+            end
     		local alliacne =  self:GetMyAlliance()
             local isEqualOrGreater = alliacne:GetSelf():CanEditAllianceObject()
             if isEqualOrGreater then

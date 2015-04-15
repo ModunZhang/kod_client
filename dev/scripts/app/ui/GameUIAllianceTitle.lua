@@ -120,7 +120,7 @@ function GameUIAllianceTitle:BuildUI()
 	}):align(display.LEFT_BOTTOM, gem_icon:getPositionX()+gem_icon:getContentSize().width*0.4+20, -3):addTo(gem_bg)
 
 	UIKit:ttfLabel({
-			text = _("盟主离线超过7天可以使用竞选盟主和盟主职位兑换"),
+			text = _("盟主离线超过7天可以使用竞选盟主和盟主职位对换"),
 			size = 18,
 			color = 0x7e0000,
 	}):align(display.TOP_CENTER, 304, button:getPositionY() - 50):addTo(bg)
@@ -131,8 +131,14 @@ function GameUIAllianceTitle:OnBuyAllianceArchonButtonClicked()
     if config_intInit.buyArchonGem.value > User:GetGemResource():GetValue() then
         UIKit:showMessageDialog(nil, _("宝石不足"), function()
         end)
+    elseif Alliance_Manager:GetMyAlliance():GetSelf():IsArchon() then
+        UIKit:showMessageDialog(nil, _("你已经是盟主"), function()
+        end)
     else
-        NetManager:getBuyAllianceArchon()
+        NetManager:getBuyAllianceArchon():done(function(response)
+           UIKit:showMessageDialog(nil, _("竞选盟主成功"), function()
+           end)
+        end)
     end
 end
 
