@@ -199,7 +199,7 @@ function GameUIReplay:ctor(report, callback)
     UILib.loadSolidersAnimation()
 
     local manager = ccs.ArmatureDataManager:getInstance()
-    manager:addArmatureFileInfo("animations/paizi.ExportJson")
+    manager:addArmatureFileInfo(DEBUG_GET_ANIMATION_PAHT("animations/paizi.ExportJson"))
 end
 function GameUIReplay:OnMoveInStage()
     GameUIReplay.super.OnMoveInStage(self)

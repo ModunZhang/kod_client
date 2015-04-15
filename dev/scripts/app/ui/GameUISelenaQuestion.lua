@@ -25,7 +25,7 @@ end
 
 function GameUISelenaQuestion:onEnter()
 	local manager = ccs.ArmatureDataManager:getInstance()
-	manager:addArmatureFileInfo("animations/npc_nv.ExportJson")
+	manager:addArmatureFileInfo(DEBUG_GET_ANIMATION_PAHT("animations/npc_nv.ExportJson"))
 	GameUISelenaQuestion.super.onEnter(self)
 	self:BuildUI()
 end
