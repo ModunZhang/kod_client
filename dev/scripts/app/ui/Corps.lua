@@ -1,4 +1,5 @@
 local promise = import("..utils.promise")
+local cocos_promise = import("..utils.cocos_promise")
 local UILib = import(".UILib")
 local BattleObject = import(".BattleObject")
 local Corps = class("Corps", BattleObject)
@@ -206,14 +207,17 @@ function Corps:PlayAnimation(ani, loop_time)
         v:getAnimation():setSpeedScale(self:Speed())
     end
 end
+function Corps:StopAnimation()
+    for _, v in pairs(self.corps) do
+        v:getAnimation():gotoAndPause(0)
+    end
+end
 function Corps:breath(is_forever)
     if self.config.type == "siege" then
-        self:PlayAnimation("move_90", is_forever and -1 or 0)
-        local p = promise.new()
-        self:OnAnimationPlayEnd("move_90", function()
-            p:resolve(self)
+        self:StopAnimation()
+        return cocos_promise.defer(function()
+            return self
         end)
-        return p
     else
         self:PlayAnimation("idle_90", is_forever and -1 or 0)
         local p = promise.new()
