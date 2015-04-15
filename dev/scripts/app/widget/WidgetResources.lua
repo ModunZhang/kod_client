@@ -31,7 +31,7 @@ function WidgetResources:onExit()
     self.city:GetResourceManager():RemoveObserver(self)
 end
 function WidgetResources:OnSoliderCountChanged(...)
-    self.maintenance_cost.value:setString("-"..self.city:GetSoldierManager():GetTotalUpkeep())
+    self.maintenance_cost.value:setString("-"..GameUtils:formatNumber(self.city:GetSoldierManager():GetTotalUpkeep()))
 end
 -- 资源刷新
 function WidgetResources:OnResourceChanged(resource_manager)
@@ -54,15 +54,15 @@ local FOOD = ResourceManager.RESOURCE_TYPE.FOOD
 function WidgetResources:RefreshSpecifyResource(resource,item,maxvalue,occupy_citizen, type_)
     if maxvalue then
         item.ProgressTimer:setPercentage(resource:GetResourceValueByCurrentTime(app.timer:GetServerTime())/maxvalue*100)
-        item.resource_label:setString(resource:GetResourceValueByCurrentTime(app.timer:GetServerTime()).."/"..maxvalue)
+        item.resource_label:setString(GameUtils:formatNumber(resource:GetResourceValueByCurrentTime(app.timer:GetServerTime())).."/"..GameUtils:formatNumber(maxvalue))
         if type_ == FOOD then
-            item.produce_capacity.value:setString(city:GetResourceManager():GetFoodProductionPerHour().."/h")
+            item.produce_capacity.value:setString(GameUtils:formatNumber(city:GetResourceManager():GetFoodProductionPerHour()) .."/h")
         else
-            item.produce_capacity.value:setString(resource:GetProductionPerHour().."/h")
+            item.produce_capacity.value:setString(GameUtils:formatNumber(resource:GetProductionPerHour()).."/h")
         end
-        item.occupy_citizen.value:setString(occupy_citizen.."")
+        item.occupy_citizen.value:setString(GameUtils:formatNumber(occupy_citizen).."")
     else
-        item.resource_label:setString(resource:GetResourceValueByCurrentTime(app.timer:GetServerTime()))
+        item.resource_label:setString(GameUtils:formatNumber(resource:GetResourceValueByCurrentTime(app.timer:GetServerTime())))
         --  local townHall = self.city:GetFirstBuildingByType("townHall")
         -- local title_value = townHall:IsInImposing() and _("正在征税") or _("当前没有进行征税")
         -- item.tax.title:setString(title_value)
@@ -86,42 +86,42 @@ function WidgetResources:InitAllResources()
     local all_resources = {
         food = {
             resource_icon="res_food_91x74.png",
-            resource_limit_value=maxfood,
+            resource_limit_value = maxfood,
             resource_current_value=crm:GetFoodResource():GetResourceValueByCurrentTime(current_time),
-            total_income=crm:GetFoodProductionPerHour().."/h",
-            occupy_citizen=City:GetCitizenByType("farmer"),
-            maintenance_cost="-"..self.city:GetSoldierManager():GetTotalUpkeep(),
+            total_income=GameUtils:formatNumber(crm:GetFoodProductionPerHour()).."/h",
+            occupy_citizen=GameUtils:formatNumber(City:GetCitizenByType("farmer")),
+            maintenance_cost="-"..GameUtils:formatNumber(self.city:GetSoldierManager():GetTotalUpkeep()),
             type = "food"
         },
         wood = {
             resource_icon="res_wood_82x73.png",
-            resource_limit_value=maxwood,
+            resource_limit_value= maxwood,
             resource_current_value=crm:GetWoodResource():GetResourceValueByCurrentTime(current_time),
-            total_income=crm:GetWoodResource():GetProductionPerHour().."/h",
-            occupy_citizen=City:GetCitizenByType("woodcutter"),
+            total_income=GameUtils:formatNumber(crm:GetWoodResource():GetProductionPerHour()).."/h",
+            occupy_citizen=GameUtils:formatNumber(City:GetCitizenByType("woodcutter")),
             type = "wood"
         },
         stone = {
             resource_icon="res_stone_88x82.png",
-            resource_limit_value=maxstone,
+            resource_limit_value= maxstone,
             resource_current_value=crm:GetStoneResource():GetResourceValueByCurrentTime(current_time),
-            total_income=crm:GetStoneResource():GetProductionPerHour().."/h",
-            occupy_citizen=City:GetCitizenByType("quarrier"),
+            total_income=GameUtils:formatNumber(crm:GetStoneResource():GetProductionPerHour()).."/h",
+            occupy_citizen=GameUtils:formatNumber(City:GetCitizenByType("quarrier")),
             type = "stone"
         },
         iron = {
             resource_icon="res_iron_91x63.png",
             resource_limit_value=maxiron,
             resource_current_value=crm:GetIronResource():GetResourceValueByCurrentTime(current_time),
-            total_income=crm:GetIronResource():GetProductionPerHour().."/h",
-            occupy_citizen=City:GetCitizenByType("miner"),
+            total_income=GameUtils:formatNumber(crm:GetIronResource():GetProductionPerHour()).."/h",
+            occupy_citizen=GameUtils:formatNumber(City:GetCitizenByType("miner")),
             type = "iron"
         },
         coin = {
             resource_icon="res_coin_81x68.png",
             resource_current_value=crm:GetCoinResource():GetResourceValueByCurrentTime(current_time),
-            total_income=crm:GetCoinResource():GetProductionPerHour().."/h",
-            occupy_citizen=self.city:GetResourceManager():GetPopulationResource():GetNoneAllocatedByTime(current_time),
+            total_income=GameUtils:formatNumber(crm:GetCoinResource():GetProductionPerHour()).."/h",
+            occupy_citizen=GameUtils:formatNumber(self.city:GetResourceManager():GetPopulationResource():GetNoneAllocatedByTime(current_time)),
             type = "coin"
         },
     }
@@ -192,7 +192,7 @@ function WidgetResources:AddResourceItem(parms)
         item.ProgressTimer:align(display.LEFT_BOTTOM, 0, 0):addTo(bar)
         item.ProgressTimer:setPercentage(resource_current_value/resource_limit_value*100)
         item.resource_label = UIKit:ttfLabel({
-            text = resource_current_value.."/"..resource_limit_value,
+            text = GameUtils:formatNumber(resource_current_value).."/"..GameUtils:formatNumber(resource_limit_value),
             size = 20,
             color = 0xfff3c7,
         }):addTo(bar):align(display.LEFT_CENTER,10 , bar:getContentSize().height/2)
@@ -297,5 +297,7 @@ function WidgetResources:AddResourceItem(parms)
 end
 
 return WidgetResources
+
+
 
 

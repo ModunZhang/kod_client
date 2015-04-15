@@ -209,7 +209,7 @@ function GameUIHome:RefreshData()
     -- 更新数值
     local user = self.city:GetUser()
     self.name_label:setString(user:Name())
-    self.power_label:setString(user:Power())
+    self.power_label:setString(string.formatnumberthousands(user:Power()))
     self.level_label:setString(user:Level())
     self:RefreshVIP()
 end

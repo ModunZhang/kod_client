@@ -3,6 +3,7 @@ local WidgetCitizen = class("WidgetCitizen", function ()
 end)
 
 local window = import("..utils.window")
+local WidgetUseItems = import(".WidgetUseItems")
 local ResourceManager = import("..entity.ResourceManager")
 WidgetCitizen.CITIZEN_TYPE = {
     CITIZEN = 5,
@@ -60,8 +61,8 @@ end
 
 function WidgetCitizen:ctor(city)
     self:setNodeEventEnabled(true)
-	
-	self.city = city
+
+    self.city = city
     local iconBg = cc.ui.UIImage.new("back_ground_43x43.png")
         :pos(window.left + 45, window.top - 140)
         :addTo(self)
@@ -177,6 +178,10 @@ function WidgetCitizen:ctor(city)
             local add_btn = cc.ui.UIPushButton.new(
                 {normal = "add_btn_up_30x88.png",pressed = "add_btn_down_30x88.png"})
                 :addTo(res_info_bg):pos(375, 53)
+                :onButtonClicked(function(event)
+                    WidgetUseItems.new():Create({item_type = WidgetUseItems.USE_TYPE.BUFF,item_name="citizenBonus_1"})
+                        :AddToCurrentScene()
+                end)
             cc.ui.UIImage.new("add_18x19.png"):addTo(add_btn):align(display.CENTER, 0, 0)
         end
 
@@ -288,4 +293,7 @@ function WidgetCitizen:onExit()
     self.city:RemoveListenerOnType(self, self.city.LISTEN_TYPE.UPGRADE_BUILDING)
 end
 return WidgetCitizen
+
+
+
 
