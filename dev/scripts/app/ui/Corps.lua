@@ -160,9 +160,9 @@ local pve_soldier_config = {
 setmetatable(pve_soldier_config, {
     __index = soldier_config
 })
-
-function Corps:ctor(soldier, star, row, col, width, height, is_pve_battle)
-    Corps.super.ctor(self)
+local AUDIO_TAG = 11
+function Corps:ctor(soldier, star, row, col, width, height, is_pve_battle, ui_replay)
+    Corps.super.ctor(self, ui_replay)
     local corps = self
     self.soldier = soldier
     local config = special[self.soldier] or normal[self.soldier.."_"..star]
@@ -203,6 +203,7 @@ function Corps:PlayAnimation(ani, loop_time)
     end
     for _, v in pairs(self.corps) do
         v:getAnimation():play(ani, -1, loop_time or -1)
+        v:getAnimation():setSpeedScale(self:Speed())
     end
 end
 function Corps:breath(is_forever)
@@ -237,7 +238,7 @@ function Corps:move(time, x, y)
     local function step()
         app:GetAudioManager():PlaySoldierStepEffectByType(type_)
     end
-    self:runAction(
+    local speed = cc.Speed:create(
         transition.sequence{
             cc.CallFunc:create(step),
             cc.DelayTime:create(0.5),
@@ -248,9 +249,20 @@ function Corps:move(time, x, y)
             cc.CallFunc:create(step),
             cc.DelayTime:create(0.5),
             cc.CallFunc:create(step)
-        }
-    )
+        }, 1)
+    speed:setTag(AUDIO_TAG)
+    self:runAction(speed)
     return Corps.super.move(self, time, x, y)
+end
+function Corps:RefreshSpeed()
+    Corps.super.RefreshSpeed(self)
+    local a = self:getActionByTag(AUDIO_TAG)
+    if a then
+        a:setSpeed(self:Speed())
+    end
+    for _, v in pairs(self.corps) do
+        v:getAnimation():setSpeedScale(self:Speed())
+    end
 end
 return Corps
 

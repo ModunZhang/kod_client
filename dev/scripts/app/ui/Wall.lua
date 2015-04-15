@@ -4,13 +4,14 @@ local UILib = import(".UILib")
 local BattleObject = import(".BattleObject")
 local Wall = class("Wall", BattleObject)
 
-function Wall:ctor()
-    Wall.super.ctor(self)
+function Wall:ctor(ui_replay)
+    Wall.super.ctor(self, ui_replay)
     self.wall = ccs.Armature:create(UILib.soldier_animation.wall[1]):addTo(self):align(display.CENTER, 0 ,0)
     self.wall:getAnimation():setMovementEventCallFunc(handler(self, self.OnAnimationCallback))
 end
 function Wall:PlayAnimation(ani, loop_time)
     self.wall:getAnimation():play(ani, -1, loop_time or -1)
+    self.wall:getAnimation():setSpeedScale(self:Speed())
 end
 function Wall:hit()
     self:PlayAnimation("Animation1", 0)
@@ -36,6 +37,10 @@ function Wall:turnRight()
 end
 function Wall:breath()
     return cocos_promise.defer()
+end
+function Wall:RefreshSpeed()
+    Wall.super.RefreshSpeed(self)
+    self.wall:getAnimation():setSpeedScale(self:Speed())
 end
 return Wall
 

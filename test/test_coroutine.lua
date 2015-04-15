@@ -1824,8 +1824,51 @@ local function table_equal(t1, t2)
     end
     return true
 end
-print(table_equal({}, {}))
-print(table_equal({a = 1}, {a = 1}))
+-- print(table_equal({}, {}))
+-- print(table_equal({a = 1}, {a = 1}))
+
+
+local property = import("app.utils.property")
+
+
+local A = class("A")
+property(A, "id1", 1)
+property(A, "id2", 2)
+property(A, "id3", 3)
+property(A, "id4", {})
+
+local a = A.new()
+
+a:SetId1(11)
+a:SetId2(22)
+a:SetId3(33)
+a:SetId4(44)
+print(a:Id1())
+print(a:Id2())
+print(a:Id3())
+print(a:Id4())
+
+property(a, "RESET")
+
+
+print(a:Id1())
+print(a:Id2())
+print(a:Id3())
+print(a:Id4())
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

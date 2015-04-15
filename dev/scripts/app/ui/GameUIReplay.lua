@@ -200,6 +200,8 @@ function GameUIReplay:ctor(report, callback)
 
     local manager = ccs.ArmatureDataManager:getInstance()
     manager:addArmatureFileInfo(DEBUG_GET_ANIMATION_PATH("animations/paizi.ExportJson"))
+
+    self.timer_node = display.newNode():addTo(self)
 end
 function GameUIReplay:OnMoveInStage()
     GameUIReplay.super.OnMoveInStage(self)
@@ -256,6 +258,30 @@ function GameUIReplay:OnMoveInStage()
         :onButtonClicked(function(event)
             self:LeftButtonClicked()
         end):hide()
+
+
+    self.speedUp = cc.ui.UIPushButton.new(
+        {normal = "yellow_btn_up_149x47.png",pressed = "yellow_btn_down_149x47.png"},
+        {scale9 = false}
+    ):setButtonLabel(cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = _("加速"),
+        size = 24,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)}))
+        :addTo(back_ground):align(display.CENTER, 100, 50)
+        :onButtonClicked(function(event)
+            if self:Speed() == 1 then
+                self.speedUp:setButtonLabelString(_("2x倍速"))
+                self:SpeedUp(2)
+            elseif self:Speed() == 2 then
+                self.speedUp:setButtonLabelString(_("4x倍速"))
+                self:SpeedUp(4)
+            elseif self:Speed() == 4 then
+                self.speedUp:setButtonLabelString(_("加速"))
+                self:SpeedUp(1)
+            end
+        end)
 
 
     -- title
@@ -460,21 +486,16 @@ function GameUIReplay:PlayDragonBattle()
     local defend_dragon = report:GetFightDefenceDragonRoundData()
 
     self.dragon_battle = self:NewDragonBattle()
-    local dp = promise.new(cocos_promise.delay(0.1)):next(function()
-        local p = promise.new()
-        self:Performance(0.5, function(pos)
+    local dp = promise.new(self:Delay(0.1)):next(function()
+        return self:Performance(0.5, function(percent)
             if attack_dragon then
-                self.left_dragon:SetHp(attack_dragon.hp - pos * attack_dragon.hpDecreased, attack_dragon.hpMax)
+                self.left_dragon:SetHp(attack_dragon.hp - percent * attack_dragon.hpDecreased, attack_dragon.hpMax)
             end
             if defend_dragon then
-                self.right_dragon:SetHp(defend_dragon.hp - pos * defend_dragon.hpDecreased, defend_dragon.hpMax)
+                self.right_dragon:SetHp(defend_dragon.hp - percent * defend_dragon.hpDecreased, defend_dragon.hpMax)
             end
-        end, function()
-            p:resolve()
         end)
-        return p
-    end)
-        :next(cocos_promise.delay(0.8))
+    end):next(self:Delay(0.8))
         :next(function()
             local left_p
             if attack_dragon then
@@ -486,30 +507,26 @@ function GameUIReplay:PlayDragonBattle()
             end
             return left_p or right_p
         end)
-        :next(cocos_promise.delay(0.8))
+        :next(self:Delay(0.8))
         :next(function()
-            local p = promise.new()
             if attack_dragon and self.left_dragon then
                 self.left_dragon:ShowBuff()
             end
             if defend_dragon and self.right_dragon then
                 self.right_dragon:ShowBuff()
             end
-            self:Performance(0.5, function(pos)
+            return self:Performance(0.5, function(percent)
                 if attack_dragon then
                     local d = attack_dragon.isWin and 100 or 50
-                    self.left_dragon:SetBuff(string.format("BUFF + %d%%", math.floor(pos * d)))
+                    self.left_dragon:SetBuff(string.format("BUFF + %d%%", math.floor(percent * d)))
                 end
                 if defend_dragon then
                     local d = defend_dragon.isWin and 100 or 50
-                    self.right_dragon:SetBuff(string.format("BUFF + %d%%", math.floor(pos * d)))
+                    self.right_dragon:SetBuff(string.format("BUFF + %d%%", math.floor(percent * d)))
                 end
-            end, function()
-                p:resolve()
             end)
-            return p
         end)
-        :next(cocos_promise.delay(0.8))
+        :next(self:Delay(0.8))
         :next(function()
             local p = promise.new()
             self.dragon_battle:getAnimation():setMovementEventCallFunc(function(armatureBack, movementType, movementID)
@@ -518,14 +535,15 @@ function GameUIReplay:PlayDragonBattle()
                 end
             end)
             self.dragon_battle:getAnimation():play("Animation2", -1, 0)
-            self.dragon_battle:getAnimation():setSpeedScale(0.8)
+            self.dragon_battle:getAnimation():setSpeedScale(self:Speed())
             return p
         end)
-        :next(cocos_promise.delay(0.8))
+        :next(self:Delay(0.8))
 
-    promise.new():next(cocos_promise.delay(0.2)):next(function()
+    promise.new():next(self:Delay(0.2)):next(function()
         if self.dragon_battle then
             self.dragon_battle:getAnimation():play("Animation1", -1, 0)
+            self.dragon_battle:getAnimation():setSpeedScale(self:Speed())
             app:GetAudioManager():PlayeEffectSoundWithKey("BATTLE_DRAGON")
         end
     end):resolve()
@@ -561,18 +579,6 @@ function GameUIReplay:PlaySoldierBattle(soldier_battle)
         end)
     end
     return cocos_promise.defferPromise(rounds)
-end
-function GameUIReplay:MoveBattleBgBy(x)
-    return function(battle_bg)
-        local p = promise.new()
-        transition.moveBy(battle_bg, {
-            x = x, y = 0, time = 1,
-            onComplete = function()
-                p:resolve(battle_bg)
-            end
-        })
-        return p
-    end
 end
 function GameUIReplay:NewDragonBattle()
     local report = self.report
@@ -711,7 +717,7 @@ function GameUIReplay:NewDragon(is_left, is_pve_battle)
     return node
 end
 function GameUIReplay:NewWall(x)
-    return Wall.new():addTo(self.battle_bg):pos(x, 150)
+    return Wall.new(self):addTo(self.battle_bg):pos(x, 150)
 end
 local soldier_arrange = {
     swordsman = {row = 4, col = 2},
@@ -732,7 +738,7 @@ local soldier_arrange = {
 }
 function GameUIReplay:NewCorps(soldier, star, x, y, is_pve_battle)
     local arrange = soldier_arrange[soldier]
-    return Corps.new(soldier, star, arrange.row, arrange.col, nil, nil, is_pve_battle):addTo(self.battle):pos(x, y)
+    return Corps.new(soldier, star, arrange.row, arrange.col, nil, nil, is_pve_battle, self):addTo(self.battle):pos(x, y)
 end
 function GameUIReplay:NewEffect(soldier, is_left, x, y)
     if soldier == "wall" then return end
@@ -931,31 +937,104 @@ function GameUIReplay:ShowStrongOrWeak(vs)
         self.weak:hide()
     end
 end
-function GameUIReplay:Performance(time, onUpdate, onComplete)
-    if self.update_handle then
-        self:unscheduleUpdate()
-        self:removeNodeEventListener(self.update_handle)
+local timer = app.timer
+local BATTLE_TAG = 1
+local TIMER_TAG = 2
+local PERFORM_TAG = 3
+function GameUIReplay:SpeedUp(speed)
+    self.speed = speed or 1
+    local a1 = self.timer_node:getActionByTag(TIMER_TAG)
+    if a1 then
+        a1:setSpeed(self:Speed())
     end
-    local t = 0
-    self.update_handle = self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt)
-        t = t + dt
-        if t > time then
-            t = time
-            if type(onComplete) == "function" then
-                onComplete()
-            end
-            self:unscheduleUpdate()
-        end
-        if type(onUpdate) == "function" then
-            onUpdate(t / time)
-        end
-    end)
-    self:scheduleUpdate()
-    return self
+    local a2 = self.timer_node:getActionByTag(PERFORM_TAG)
+    if a2 then
+        a2:setSpeed(self:Speed())
+    end
+    local a3 = self.battle_bg:getActionByTag(PERFORM_TAG)
+    if a3 then
+        a3:setSpeed(self:Speed())
+    end
+
+    if self.dragon_battle then
+        self.dragon_battle:getAnimation():setSpeedScale(self:Speed())
+    end
+    if self.left then
+        self.left:RefreshSpeed()
+    end
+    if self.right then
+        self.right:RefreshSpeed()
+    end
+end
+function GameUIReplay:Speed()
+    return self.speed or 1
+end
+function GameUIReplay:MoveBattleBgBy(x)
+    return function(battle_bg)
+        local p = promise.new()
+        local speed = cc.Speed:create(transition.sequence({
+            cc.MoveBy:create(1, cc.p(x, 0)),
+            cc.CallFunc:create(function()
+                p:resolve(battle_bg)
+            end),
+        }), self:Speed())
+        battle_bg:runAction(speed)
+        return p
+    end
+end
+function GameUIReplay:PromiseOfDelay(time, func)
+    local p = promise.new(func)
+    local speed = cc.Speed:create(transition.sequence({
+        cc.DelayTime:create(time),
+        cc.CallFunc:create(function()
+            p:resolve()
+        end),
+    }), self:Speed())
+    speed:setTag(TIMER_TAG)
+    self.timer_node:runAction(speed)
+    return p
+end
+function GameUIReplay:Delay(time)
+    return function(obj)
+        return self:PromiseOfDelay(time, function() return obj end)
+    end
+end
+function GameUIReplay:Performance(time, func)
+    local p = promise.new()
+    local start_time = timer:GetServerTime()
+    local speed = cc.Speed:create(
+        cc.RepeatForever:create(
+            transition.sequence({
+                cc.DelayTime:create(0.05),
+                cc.CallFunc:create(function()
+                    local t = timer:GetServerTime() - start_time
+                    if t > time then
+                        func(1)
+                        p:resolve()
+                        self.timer_node:stopActionByTag(PERFORM_TAG)
+                    else
+                        if type(func) == "function" then
+                            func(t / time)
+                        end
+                    end
+                end)
+            })
+        )
+        ,  self:Speed())
+    speed:setTag(PERFORM_TAG)
+    self.timer_node:runAction(speed)
+    return p
 end
 
 
 return GameUIReplay
+
+
+
+
+
+
+
 
 
 

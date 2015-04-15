@@ -4,7 +4,12 @@ local UILib = import(".UILib")
 local BattleObject = class("BattleObject", function()
     return display.newNode()
 end)
-function BattleObject:ctor()
+
+
+local MOVE_TAG = 1
+
+function BattleObject:ctor(ui_replay)
+    self.ui_replay = ui_replay
     self.callback_map = {}
     self:setCascadeOpacityEnabled(true)
     self:setVisible(false)
@@ -75,14 +80,14 @@ function BattleObject:breath(is_forever)
     return p
 end
 function BattleObject:move(time, x, y)
-    self:PlayAnimation("move_90")
     local p = promise.new()
-    transition.moveTo(self, {
-        x = x, y = y, time = time,
-        onComplete = function()
-            p:resolve(self)
-        end
-    })
+    self:PlayAnimation("move_90")
+    local speed = cc.Speed:create(transition.sequence({
+        cc.MoveTo:create(time, cc.p(x, y)),
+        cc.CallFunc:create(function() p:resolve(self) end),
+    }), self:Speed())
+    speed:setTag(MOVE_TAG)
+    self:runAction(speed)
     return p
 end
 function BattleObject:defeat()
@@ -165,32 +170,24 @@ function BattleObject:Hold()
         return p
     end
 end
+function BattleObject:RefreshSpeed()
+    local a = self:getActionByTag(MOVE_TAG)
+    if a then
+        a:setSpeed(self:Speed())
+    end
+end
+function BattleObject:Speed()
+    if self.ui_replay then
+        return self.ui_replay:Speed()
+    end
+    return 1
+end
 -- 实例方法
 function BattleObject:Do(p)
     return promise.new(p)
 end
 
 return BattleObject
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
