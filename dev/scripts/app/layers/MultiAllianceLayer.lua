@@ -312,20 +312,23 @@ end
 function MultiAllianceLayer:ManagerCorpsFromChangedMap(changed_map,is_strkie)
     if changed_map.removed then
         table.foreachi(changed_map.removed,function(_,marchEvent)
-            local player_role = marchEvent:GetPlayerRole()
-            if player_role == marchEvent.MARCH_EVENT_PLAYER_ROLE.SENDER then
-                if is_strkie then
-                    app:GetAudioManager():PlayeEffectSoundWithKey("STRIKE_PLAYER_ARRIVE")
-                else
-                    app:GetAudioManager():PlayeEffectSoundWithKey("ATTACK_PLAYER_ARRIVE")
-                end
-            elseif player_role == marchEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER then
-                local __,alliance_id = marchEvent:FromLocation()
-                if Alliance_Manager:HaveEnemyAlliance() and alliance_id == Alliance_Manager:GetEnemyAlliance():Id() then
+            local time = math.ceil(marchEvent:ArriveTime() - app.timer:GetServerTime())
+            if time < 5 then -- 5秒内误差也认为是部队到达,不是撤退引起的删除行军事件
+                local player_role = marchEvent:GetPlayerRole()
+                if player_role == marchEvent.MARCH_EVENT_PLAYER_ROLE.SENDER then
                     if is_strkie then
                         app:GetAudioManager():PlayeEffectSoundWithKey("STRIKE_PLAYER_ARRIVE")
                     else
                         app:GetAudioManager():PlayeEffectSoundWithKey("ATTACK_PLAYER_ARRIVE")
+                    end
+                elseif player_role == marchEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER then
+                    local __,alliance_id = marchEvent:FromLocation()
+                    if Alliance_Manager:HaveEnemyAlliance() and alliance_id == Alliance_Manager:GetEnemyAlliance():Id() then
+                        if is_strkie then
+                            app:GetAudioManager():PlayeEffectSoundWithKey("STRIKE_PLAYER_ARRIVE")
+                        else
+                            app:GetAudioManager():PlayeEffectSoundWithKey("ATTACK_PLAYER_ARRIVE")
+                        end
                     end
                 end
             end

@@ -264,6 +264,10 @@ end
 function GameUIAllianceEnterBase:GetEnterButtons()
     if self:IsMyAlliance() then
         local move_city_button = self:BuildOneButton("icon_move_city.png",_("迁移城市")):onButtonClicked(function()
+            if self:GetMyAlliance():Status() == 'fight' then
+                UIKit:showMessageDialog(nil, _("战争期不能移动"),function()end)
+                return
+            end
             local location = self:GetLogicPosition()
             WidgetUseItems.new():Create({
                 item_type = WidgetUseItems.USE_TYPE.MOVE_THE_CITY,
