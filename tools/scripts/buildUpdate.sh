@@ -27,7 +27,7 @@ rsync -rave "ssh " --exclude=.DS_Store*  ../../update ec2-user@ec2-54-223-172-65
 echo ---------------- 提交代码
 cd $PROJ_DIR
 git add --all .
-git commit -m "update new version $APP_VERSION" #todo 加入小版本号到日志
+git commit -m "update new version $Platform $APP_VERSION" #todo 加入小版本号到日志
 git push
 cd $DOCROOT
 

@@ -161,6 +161,14 @@ local function get_alliance_response_msg(response)
     end
     return response
 end
+-- enemyAllianceData 全是返回的全数据
+local function get_enemy_alliance_response_msg(response)
+     if response.msg.enemyAllianceData then
+        DataManager:setEnemyAllianceData(response.msg.enemyAllianceData)
+        return response
+    end
+    return response
+end
 
 local function check_response(m)
     return function(result)
@@ -314,9 +322,13 @@ local logic_event_map = {
             DataManager:setUserAllianceData(user_alliance_data, edit)
         end
     end,
-    onGetAllianceDataSuccess = function(success, response)
+    onJoinAllianceSuccess = function(success, response)
         if success then
-            DataManager:setUserAllianceData(response)
+            DataManager:setEnemyAllianceData(response.enemyAllianceData)
+            DataManager:setUserAllianceData(response.allianceData)
+            local user_data = DataManager:getUserData()
+            local edit = decodeInUserDataFromDeltaData(user_data, response.playerData)
+            DataManager:setUserData(user_data, edit)
         end
     end,
     onEnemyAllianceDataChanged = function(success, response)
@@ -884,7 +896,7 @@ end
 function NetManager:getJoinAllianceDirectlyPromise(allianceId)
     return get_blocking_request_promise("logic.allianceHandler.joinAllianceDirectly", {
         allianceId = allianceId
-    }, "直接加入联盟失败!"):done(get_response_msg):done(get_alliance_response_msg)
+    }, "直接加入联盟失败!"):done(get_enemy_alliance_response_msg):done(get_response_msg):done(get_alliance_response_msg)
 end
 -- 请求加入联盟
 function NetManager:getRequestToJoinAlliancePromise(allianceId)
@@ -959,7 +971,7 @@ local function getHandleJoinAllianceInvitePromise(allianceId, agree)
     return get_blocking_request_promise("logic.allianceHandler.handleJoinAllianceInvite", {
         ["allianceId"] = allianceId,
         ["agree"] = agree,
-    }, "处理联盟的对玩家的邀请失败!")
+    }, "处理联盟的对玩家的邀请失败!"):done(get_enemy_alliance_response_msg):done(get_alliance_response_msg):done(get_response_msg)
 end
 function NetManager:getHandleJoinAllianceInvitePromise(allianceId, agree)
     return getHandleJoinAllianceInvitePromise(allianceId, agree)

@@ -13,8 +13,6 @@ CONFIG_SCREEN_ORIENTATION = "portrait"
 
 LOAD_DEPRECATED_API = true
 
-CONFIG_APP_VERSION  = "0.1"
-
 -- server config
 CONFIG_LOCAL_SERVER = {
     update = {

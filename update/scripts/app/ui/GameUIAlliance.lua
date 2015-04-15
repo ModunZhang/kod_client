@@ -632,7 +632,9 @@ function GameUIAlliance:commonListItemAction( listType,item,alliance,tag)
     elseif listType == self.COMMON_LIST_ITEM_TYPE.INVATE then
         -- tag == 1 -> 拒绝
         NetManager:getHandleJoinAllianceInvitePromise(alliance.id,tag~=1):done(function()
-            self:RefreshInvateListView()
+            if tag == 1 then
+                self:RefreshInvateListView()
+            end
         end)
     end
 end

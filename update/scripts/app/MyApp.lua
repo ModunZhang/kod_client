@@ -59,7 +59,7 @@ function MyApp:ctor()
     NetManager:init()
     self.timer = Timer.new()
     local manager = ccs.ArmatureDataManager:getInstance()
-    manager:addArmatureFileInfo(DEBUG_GET_ANIMATION_PAHT("animations/Cloud_Animation.ExportJson"))
+    manager:addArmatureFileInfo(DEBUG_GET_ANIMATION_PATH("animations/Cloud_Animation.ExportJson"))
 end
 
 function MyApp:run()
@@ -68,7 +68,7 @@ end
 
 function MyApp:showDebugInfo()
     local __debugVer = require("debug_version")
-    return "Client Ver:" .. __debugVer .. "\nPlayerID:" .. DataManager:getUserData()._id .. "\nDeviceID:" .. DataManager:getUserData().countInfo.deviceId
+    return "Client Ver:" .. __debugVer .. "\nPlayerID:" .. DataManager:getUserData()._id
 end
 
 function MyApp:restart(needDisconnect)

@@ -92,6 +92,7 @@ end
 function GameUISettingFaq:listviewListener(event)
     if "clicked" == event.name then
         local data = self.list_data[event.itemPos]
+        if not data then return end
         UIKit:newGameUI("GameUISettingFaqDetail", data):AddToCurrentScene(true)
     end
 end

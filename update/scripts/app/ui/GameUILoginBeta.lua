@@ -175,7 +175,7 @@ function GameUILoginBeta:loadLocalResources()
 end
 
 function GameUILoginBeta:__loadToTextureCache(config,shouldLogin)
-	display.addSpriteFrames(DEBUG_GET_ANIMATION_PAHT(config.list),DEBUG_GET_ANIMATION_PAHT(config.image),function()
+	display.addSpriteFrames(DEBUG_GET_ANIMATION_PATH(config.list),DEBUG_GET_ANIMATION_PATH(config.image),function()
 		self:setProgressPercent(self.progress_num + self.local_resources_percent_per)
 		if shouldLogin then self:loginAction() end
     end)
