@@ -738,7 +738,7 @@ local function loadBuildingAnimation()
     local manager = ccs.ArmatureDataManager:getInstance()
     for _,all_files in pairs(BUILDING_ANIMATIONS_FILES) do
         for _,ani_file in pairs(all_files) do
-            manager:addArmatureFileInfo(ani_file)
+            manager:addArmatureFileInfo(DEBUG_GET_ANIMATION_PATH(ani_file))
         end
     end
 end
@@ -755,7 +755,7 @@ local function loadSolidersAnimation()
     local manager = ccs.ArmatureDataManager:getInstance()
     for _,all_files in pairs(SOLDIER_ANIMATION_FILES) do
         for _,ani_file in pairs(all_files) do
-            manager:addArmatureFileInfo(ani_file)
+            manager:addArmatureFileInfo(DEBUG_GET_ANIMATION_PATH(ani_file))
         end
     end
 end
@@ -763,7 +763,7 @@ local function unLoadSolidersAnimation()
     local manager = ccs.ArmatureDataManager:getInstance()
     for _,all_files in pairs(SOLDIER_ANIMATION_FILES) do
         for _,ani_file in pairs(all_files) do
-            manager:removeArmatureFileInfo(ani_file)
+            manager:removeArmatureFileInfo(DEBUG_GET_ANIMATION_PATH(ani_file))
         end
     end
 end
@@ -771,13 +771,13 @@ end
 local function loadPveAnimation()
     local manager = ccs.ArmatureDataManager:getInstance()
     for _,ani_file in pairs(PVE_ANIMATION_FILES) do
-        manager:addArmatureFileInfo(ani_file)
+        manager:addArmatureFileInfo(DEBUG_GET_ANIMATION_PATH(ani_file))
     end
 end
 local function unLoadPveAnimation()
     local manager = ccs.ArmatureDataManager:getInstance()
     for _,all_files in pairs(PVE_ANIMATION_FILES) do
-        manager:removeArmatureFileInfo(ani_file)
+        manager:removeArmatureFileInfo(DEBUG_GET_ANIMATION_PATH(ani_file))
     end
 end
 
@@ -785,7 +785,7 @@ local function loadDragonAnimation()
     local manager = ccs.ArmatureDataManager:getInstance()
     for _, anis in pairs(DRAGON_ANIMATIONS_FILES) do
         for _, v in pairs(anis) do
-            manager:addArmatureFileInfo(v)
+            manager:addArmatureFileInfo(DEBUG_GET_ANIMATION_PATH(v))
         end
     end
 end
@@ -793,7 +793,7 @@ local function unLoadDragonAnimation()
     local manager = ccs.ArmatureDataManager:getInstance()
     for _, anis in pairs(DRAGON_ANIMATIONS_FILES) do
         for _, v in pairs(anis) do
-            manager:removeArmatureFileInfo(v)
+            manager:removeArmatureFileInfo(DEBUG_GET_ANIMATION_PATH(v))
         end
     end
 end

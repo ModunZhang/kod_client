@@ -60,9 +60,6 @@ function GameUIDailyMissionInfo:BuildUI()
 		color= 0x403c2f,
 		size = 20,
 	}):align(display.LEFT_BOTTOM,22,562):addTo(bg)
-	-- local button = WidgetPushButton.new({
-	-- 	normal = 'Icon_reward_174x141.png',
-	-- })
 
     local yin_box = ccs.Armature:create("yin_box")
         :align(display.RIGHT_BOTTOM, 562,456)

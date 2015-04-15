@@ -112,10 +112,13 @@ exportRes()
 		    	test -d "$finalDir" || mkdir -p "$finalDir" && cp "$file" "$finalDir"
 		    fi
 		elif test -d "$file";then
-			if [[ ${file/"images"//} != $file ]];then
+			dir_name=${file##*/dev/res/}
+			if [[ "images" == $dir_name ]];then
 	    		exportImagesRes $file
-	    	elif [[ ${file/"animations"//} != $file ]];then
+	    	elif [[ "animations" == $dir_name ]];then
 	    		exportAnimationsRes $file
+	    	elif [[ "animations_mac" == $dir_name ]];then
+	    		echo -- 不处理animations_mac文件夹
 	    	else
 				exportRes $file
 	    	fi

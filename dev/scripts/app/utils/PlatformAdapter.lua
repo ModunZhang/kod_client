@@ -41,6 +41,9 @@ function PlatformAdapter:ios()
             ext.__logFile(table.concat(t,"\t") .. "\n")
         end
     end
+    DEBUG_GET_ANIMATION_PATH = function(filePath)
+        return filePath
+    end
 end
 
 
@@ -70,6 +73,11 @@ function PlatformAdapter:mac()
     })
     ext.getAppVersion = function()
         return "Debug Version"
+    end
+    DEBUG_GET_ANIMATION_PATH = function(filePath)
+        filePath = string.gsub(filePath,".pvr.ccz",".png")
+        filePath = string.gsub(filePath,"animations/","animations_mac/")
+        return filePath
     end
 end
 

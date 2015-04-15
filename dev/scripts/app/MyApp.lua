@@ -59,7 +59,7 @@ function MyApp:ctor()
     NetManager:init()
     self.timer = Timer.new()
     local manager = ccs.ArmatureDataManager:getInstance()
-    manager:addArmatureFileInfo("animations/Cloud_Animation.ExportJson")
+    manager:addArmatureFileInfo(DEBUG_GET_ANIMATION_PATH("animations/Cloud_Animation.ExportJson"))
 end
 
 function MyApp:run()

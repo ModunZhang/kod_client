@@ -75,7 +75,10 @@ function AllianceScene:OnTouchClicked(pre_x, pre_y, x, y)
     local building = self:GetSceneLayer():GetClickedObject(x, y)
     if building then
         if iskindof(building, "Sprite") then
-            self.util_node:performWithDelay(function() end, 0.5)
+            app:lockInput(true)
+            self.util_node:performWithDelay(function()
+                app:lockInput(false)
+            end, 0.5)
             Sprite:PromiseOfFlash(building):next(function()
                 self:OpenUI(building)
             end)
@@ -205,6 +208,7 @@ function AllianceScene:ReEnterScene()
     app:enterScene("AllianceScene")
 end
 return AllianceScene
+
 
 
 
