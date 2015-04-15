@@ -7,7 +7,7 @@
 local EmojiUtil = class("EmojiUtil")
 
 --将表情化标签转换成富文本语法
-function EmojiUtil:ConvertEmojiToRichText(chatmsg)
+function EmojiUtil:ConvertEmojiToRichText(chatmsg,func_handler_dest)
 	chatmsg = chatmsg or ""
 	if string.len(chatmsg) == 0 then return "" end
 	chatmsg = string.gsub(chatmsg,"\n","\\n")
@@ -36,6 +36,9 @@ function EmojiUtil:ConvertEmojiToRichText(chatmsg)
 		else
 			dest[i] = string.format('{\"type\":\"image\", \"value\":\"%s\"}',string.format('#%s.png', string.upper(result)))
 		end
+	end
+	if func_handler_dest and type(func_handler_dest) == 'function' then
+		func_handler_dest(dest)
 	end
 	local result
 	if #dest > 0 then
@@ -169,8 +172,11 @@ end
 
 function ChatManager:__formatLastMessage(chat)
 	if not chat then return ""  end
-	local str = string.format("%s : %s",chat.fromName,chat.text)
-	return self:GetEmojiUtil():ConvertEmojiToRichText(str)
+	local chat_text = string.format(" : %s",chat.text)
+	local result = self:GetEmojiUtil():ConvertEmojiToRichText(chat_text,function(json_table)
+		table.insert(json_table,1,string.format('{\"type\":\"text\", \"value\":\"%s\",\"color\":0x00b4cf}', chat.fromName))
+	end)
+	return result
 end
 function ChatManager:FetchLastChannelMessage()
 	local messages_1 = self:__getMessageWithChannel(self.CHANNNEL_TYPE.GLOBAL)
