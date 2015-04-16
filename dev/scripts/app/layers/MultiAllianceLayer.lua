@@ -1,4 +1,5 @@
 local Enum = import("..utils.Enum")
+local promise = import("..utils.promise")
 local UILib = import("..ui.UILib")
 local Alliance = import("..entity.Alliance")
 local Observer = import("..entity.Observer")
@@ -497,7 +498,7 @@ end
 function MultiAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, finish_time, dragonType, soldiers)
     local march_info = self:GetMarchInfoWith(id, start_pos, end_pos)
     march_info.start_time = start_time
-    march_info.finish_time = finish_time 
+    march_info.finish_time = finish_time
     march_info.speed = (march_info.length / (finish_time - start_time))
     if not self.corps_map[id] then
         local index = math.floor(march_info.degree / 45) + 4
@@ -606,6 +607,34 @@ function MultiAllianceLayer:GetClickedObject(world_x, world_y)
     local logic_x, logic_y, alliance_view = self:GetAllianceCoordWithPoint(world_x, world_y)
     return alliance_view:GetClickedObject(world_x, world_y), self:GetMyAlliance():Id() == alliance_view:GetAlliance():Id()
 end
+function MultiAllianceLayer:PromiseOfFlashEmptyGround(building, is_my_alliance)
+    local alliance_view
+    for i,v in ipairs(self.alliance_views) do
+        if is_my_alliance and v:GetAlliance():Id() == self:GetMyAlliance():Id() then
+            alliance_view = v
+            break
+        else
+            alliance_view = v
+            break
+        end
+    end
+    local p = promise.new()
+    if self.click_empty then
+        self.click_empty:removeFromParent()
+    end
+    local x,y = alliance_view:GetLogicMap():ConvertToMapPosition(building:GetEntity():GetLogicPosition())
+    self.click_empty = display.newSprite("click_empty.png"):addTo(self:GetBuildingNode()):pos(x,y)
+    self.click_empty:setOpacity(128)
+    transition.fadeTo(self.click_empty, {
+        opacity = 255, time = 0.5,
+        onComplete = function()
+            self.click_empty:removeFromParent()
+            self.click_empty = nil
+            p:resolve()
+        end
+    })
+    return p
+end
 
 ----- override
 function MultiAllianceLayer:getContentSize()
@@ -667,6 +696,10 @@ end
 
 
 return MultiAllianceLayer
+
+
+
+
 
 
 
