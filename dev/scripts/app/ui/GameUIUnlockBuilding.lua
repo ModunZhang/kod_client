@@ -97,7 +97,7 @@ function GameUIUnlockBuilding:Init()
     ):pos(display.cx+180, display.top-380)
         :addTo(self)
 
-    -- 立即升级所需宝石
+    -- 立即升级所需金龙币
     display.newSprite("gem_icon_62x61.png", display.cx-260, display.top-440):addTo(self):setScale(0.5)
     self.upgrade_now_need_gems_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,

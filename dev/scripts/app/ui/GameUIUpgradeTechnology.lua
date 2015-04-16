@@ -382,7 +382,7 @@ end
 
 function GameUIUpgradeTechnology:ForceUpgrade(gem_cost)
     if  User:GetGemResource():GetValue() < gem_cost then
-        UIKit:showMessageDialog(_("提示"),_("宝石不足"), function()
+        UIKit:showMessageDialog(_("提示"),_("金龙币不足"), function()
             UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
             self:LeftButtonClicked()
         end)
@@ -423,7 +423,7 @@ function GameUIUpgradeTechnology:CheckCanUpgradeNow()
     if not self:CheckUpgradeNowButtonState() then
         return false
     end
-    return User:GetGemResource():GetValue() >= self:GetUpgradeNowGems(),_("宝石不足")
+    return User:GetGemResource():GetValue() >= self:GetUpgradeNowGems(),_("金龙币不足")
 end
 
 function GameUIUpgradeTechnology:GetUpgradeGemsIfResourceNotEnough()
@@ -452,12 +452,12 @@ function GameUIUpgradeTechnology:CheckCanUpgradeActionReturnGems()
     local gems_cost,msg = 0,""
     if City:HaveProductionTechEvent() then
         gems_cost = self:GetUpgradeGemsIfQueueNotEnough()
-        msg = _("已有科技升级队列,需加速完成该队列花费宝石") .. gems_cost.. "\n"
+        msg = _("已有科技升级队列,需加速完成该队列花费金龙币") .. gems_cost.. "\n"
     end
     local resource_gems = self:GetUpgradeGemsIfResourceNotEnough()
     if resource_gems ~= 0 then
         gems_cost = resource_gems + gems_cost
-        msg = msg  .. _("升级所需物品不足,购买所缺物品需花费宝石") .. resource_gems.. "\n"
+        msg = msg  .. _("升级所需物品不足,购买所缺物品需花费金龙币") .. resource_gems.. "\n"
     end
     return gems_cost,msg
 end

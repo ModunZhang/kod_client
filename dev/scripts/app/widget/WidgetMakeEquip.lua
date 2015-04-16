@@ -401,7 +401,7 @@ function WidgetMakeEquip:UpdateCoin(coin)
     self.coin_label:setColor(is_enough and UIKit:hex2c3b(0x403c2f) or display.COLOR_RED)
     self.coin_check_box:setButtonSelected(is_enough)
 end
--- 更新宝石数量
+-- 更新金龙币数量
 function WidgetMakeEquip:UpdateGemLabel()
     local equip_config = self.equip_config
     local gem_label = string.format("%d", DataUtils:buyResource({coin = equip_config.coin}, {}) + DataUtils:getGemByTimeInterval(equip_config.makeTime))
@@ -441,7 +441,7 @@ function WidgetMakeEquip:IsAbleToMakeEqui(isFinishNow)
     if isFinishNow then
         local gem =  DataUtils:buyResource({coin = equip_config.coin}, {}) + DataUtils:getGemByTimeInterval(equip_config.makeTime)
         if gem > User:GetGemResource():GetValue() then
-            UIKit:showMessageDialog(_("提示"),_("宝石不足"),function()  UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)  end)
+            UIKit:showMessageDialog(_("提示"),_("金龙币不足"),function()  UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)  end)
             return false
         end
     end

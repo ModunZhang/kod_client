@@ -476,7 +476,7 @@ local FIGHT_REWARD = {
     coin = _("银币"),
     wallHp = _("城墙血量"),
     exp = _("经验值"),
-    gem = _("宝石"),
+    gem = _("金龙币"),
 }
 local SELL_TYPE = {
     food = _("粮食"),

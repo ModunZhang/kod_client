@@ -321,7 +321,7 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
                 if City:GetUser():GetGemResource():GetValue()< tonumber(self.gem_label:getString())then
                     FullScreenPopDialogUI.new()
                         :SetTitle(_("提示"))
-                        :SetPopMessage(_("您当前没有足够宝石"))
+                        :SetPopMessage(_("您当前没有足够金龙币"))
                         :CreateOKButton():AddToCurrentScene()
                     return
                 end
