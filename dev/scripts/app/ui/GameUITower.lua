@@ -37,29 +37,33 @@ function GameUITower:CreateBetweenBgAndTitle()
 end
 
 function GameUITower:InitInfo()
-    local atkinfs,atkarcs,atkcavs,atkcats = self.building:GetAtk()
+    local atkinfs,atkarcs,atkcavs,atkcats,defencePower = self.building:GetAtk()
     local info = {
         {
-            "对步兵攻击",
+            _("对步兵攻击"),
             atkinfs,
         },
         {
-            "对骑兵攻击",
+            _("对骑兵攻击"),
             atkarcs,
         },
         {
-            "对弓箭手攻击",
+            _("对弓箭手攻击"),
             atkarcs,
         },
         {
-            "对投石车攻击",
+            _("对投石车攻击"),
             atkcats,
+        },
+        {
+            _("防御力"),
+            defencePower,
         },
     }
     WidgetInfoWithTitle.new({
         info = info,
         title = _("总计"),
-        h = 226
+        h = 266
         }):addTo(self.info_layer)
     :align(display.TOP_CENTER, window.cx, window.top-100)
 end

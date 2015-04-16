@@ -20,7 +20,7 @@ function TowerEntity:GetAtk()
     local config = self.config_building_function[self:GetType()]
     local level = self.level
     local c = config[level]
-    return c.infantry,c.archer,c.cavalry,c.siege
+    return c.infantry,c.archer,c.cavalry,c.siege,c.defencePower
 end
 
 return TowerEntity
