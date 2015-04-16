@@ -48,6 +48,10 @@ function EmojiUtil:ConvertEmojiToRichText(chatmsg,func_handler_dest)
 	end
 	return result
 end
+--删除字符串中所有的emoji标签并返回新字符串
+function EmojiUtil:RemoveAllEmojiTag(str)
+	return string.gsub(str, "%[[%P]+%]","")
+end
 
 --end
 --------------------------------------------------------------------------------------------------

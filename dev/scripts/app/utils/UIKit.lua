@@ -323,15 +323,18 @@ function UIKit:CreateEventTitle(...)
 end
 
 -- TODO: 玩家头像
-function UIKit:GetPlayerCommonIcon()
+function UIKit:GetPlayerCommonIcon(key)
     local heroBg = display.newSprite("chat_hero_background.png")
-    self:GetPlayerIconOnly():addTo(heroBg)
+    self:GetPlayerIconOnly(key):addTo(heroBg)
         :align(display.CENTER, math.floor(heroBg:getContentSize().width/2), math.floor(heroBg:getContentSize().height/2)+5)
     return heroBg
 end
 
-function UIKit:GetPlayerIconOnly()
-    return display.newSprite("playerIcon_default.png")
+function UIKit:GetPlayerIconOnly(key)
+    if not key then 
+        return display.newSprite("player_icon_10.png")
+    end
+    return display.newSprite("player_icon_10.png")
 end
 --TODO:将这个函数替换成CreateBoxPanel9来实现
 function UIKit:CreateBoxPanel(height)
