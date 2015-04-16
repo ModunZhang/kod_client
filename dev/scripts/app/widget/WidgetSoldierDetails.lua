@@ -55,17 +55,9 @@ function WidgetSoldierDetails:InitSoldierDetails()
     }):align(display.LEFT_CENTER,180,bg_height-50):addTo(bg,2)
     local soldier_ui_config = UILib.soldier_image[self.soldier_type][self.soldier_level]
 
-    if self.soldier_type == "skeletonWarrior"
-        or self.soldier_type == "skeletonArcher"
-        or self.soldier_type == "deathKnight"
-        or self.soldier_type == "meatWagon"
-    then
-        display.newSprite("green_bg_128x128.png"):addTo(bg)
-            :align(display.CENTER_TOP,100, bg_height-30):scale(130/128)
-    else
-        display.newSprite("blue_bg_128x128.png"):addTo(bg)
-            :align(display.CENTER_TOP,100, bg_height-30):scale(130/128)
-    end
+
+    display.newSprite(UILib.soldier_color_bg_images[self.soldier_type]):addTo(bg)
+        :align(display.CENTER_TOP,100, bg_height-30):scale(130/128)
 
     local soldier_head_icon = display.newSprite(soldier_ui_config):align(display.CENTER_TOP,100, bg_height-30)
     soldier_head_icon:scale(130/soldier_head_icon:getContentSize().height)
@@ -202,6 +194,7 @@ function WidgetSoldierDetails:GetSoldierFieldWithBuff(field)
 end
 
 return WidgetSoldierDetails
+
 
 
 

@@ -99,7 +99,7 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
     local size = back_ground:getContentSize()
     self.back_ground  = back_ground
     local width, height = 140, 130
-   
+
     local size = back_ground:getContentSize()
     local label = cc.ui.UILabel.new({
         text = "强势对抗",
@@ -398,17 +398,9 @@ function WidgetTreatSoldier:SetSoldier(soldier_type, star)
     -- title
     self.title:setString(Localize.soldier_name[soldier_type])
 
-    if soldier_type == "skeletonWarrior"
-        or soldier_type == "skeletonArcher"
-        or soldier_type == "deathKnight"
-        or soldier_type == "meatWagon"
-    then
-        display.newSprite("green_bg_128x128.png"):addTo(self.back_ground)
-            :align(display.CENTER,  86, self.back_ground:getContentSize().height-86):scale(130/128)
-    else
-        display.newSprite("blue_bg_128x128.png"):addTo(self.back_ground)
-            :align(display.CENTER,  86, self.back_ground:getContentSize().height-86):scale(130/128)
-    end
+
+    display.newSprite(UILib.soldier_color_bg_images[self.soldier_type]):addTo(self.back_ground)
+        :align(display.CENTER,  86, self.back_ground:getContentSize().height-86):scale(130/128)
 
     self.soldier = display.newSprite(soldier_ui_config):addTo(self.back_ground)
         :align(display.CENTER,  86, self.back_ground:getContentSize().height-86)
@@ -492,6 +484,7 @@ function WidgetTreatSoldier:OnCountChanged(count)
     self.gem_label:setString(self.treat_now_gems)
 end
 return WidgetTreatSoldier
+
 
 
 
