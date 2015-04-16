@@ -8,6 +8,7 @@ local StarBar = import(".StarBar")
 local UIListView = import(".UIListView")
 local AllianceShrine = import("..entity.AllianceShrine")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
+local UILib = import(".UILib")
 
 function GameUIAllianceShrine:ctor(city,default_tab,building)
 	GameUIAllianceShrine.super.ctor(self, city, _("联盟圣地"),default_tab,building)
@@ -251,7 +252,16 @@ end
 function GameUIAllianceShrine:GetStageListItem(index,stage_obj)
 	local item = self.stage_list:newItem()
 	local is_locked = stage_obj:IsLocked()
-	local logo_file = is_locked and "alliance_shire_stage_bg_554x130_0.png" or "alliance_shire_stage_bg_554x130_1.png"
+	local troop = stage_obj:Troops()[2]
+
+	local logo_file = "alliance_shire_stage_bg_554x130_black.png" 
+	if not is_locked then  
+		if troop.type == 'catapult' or troop.type == 'ballista' then
+	 		logo_file = "alliance_shire_stage_bg_554x130_yellow.png"
+	 	else
+	 		logo_file = "alliance_shire_stage_bg_554x130_blue.png"
+	 	end
+	end
 	local bg = WidgetUIBackGround.new({width = 568,height = 216},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
 	local logo_bg = display.newSprite(logo_file)
 	logo_bg:align(display.TOP_CENTER, 284, 210):addTo(bg)
@@ -271,10 +281,6 @@ function GameUIAllianceShrine:GetStageListItem(index,stage_obj)
 		color= is_locked and 0xffffff or 0xf6b304,
 		dimensions = cc.size(530,74) 
 	}):align(display.LEFT_TOP, 10, 82):addTo(logo_bg)
-	local troops = stage_obj:Troops()
-	local random_index = math.random(#troops - 1)
-	local troop = troops[random_index]
-	print("troop--->todo add image",troop.type)
 	local stage_star = stage_obj:Star()
 	local x,y = 14,15
 	for star_index = 1,3 do
@@ -286,7 +292,14 @@ function GameUIAllianceShrine:GetStageListItem(index,stage_obj)
 		x = x + 70
 	end
 
-	if not is_locked then
+	local troop_image = UILib.soldier_image[troop.type][troop.star]
+	if is_locked then
+		local sp = display.newFilteredSprite(troop_image, "CUSTOM", json.encode({frag = "shaders/ps_discoloration.fs",shaderName = "ps_discoloration"}))
+			:align(display.RIGHT_BOTTOM, 550, 0)
+			:addTo(logo_bg)
+		sp:setFlippedX(true)
+		display.newSprite("alliance_shire_stage_soldier_shadow_128x107.png"):addTo(sp):align(display.LEFT_BOTTOM, 0, 0)
+	else
 		local power_bg = display.newSprite("shrie_power_bg_146x26.png"):align(display.LEFT_BOTTOM, 260, 30):addTo(bg)
 		display.newSprite("dragon_strength_27x31.png")
 			:align(display.LEFT_CENTER,-10,13)
@@ -309,79 +322,9 @@ function GameUIAllianceShrine:GetStageListItem(index,stage_obj)
 			:onButtonClicked(function(event)
 				self:OnResearchButtonClick(stage_obj)
 			end)
+		local sp = display.newSprite(troop_image):align(display.RIGHT_BOTTOM, 550, 0):addTo(logo_bg)
+		display.newSprite("alliance_shire_stage_soldier_shadow_128x107.png"):addTo(sp):align(display.LEFT_BOTTOM, 0, 0)
 	end
-
-
-	-- local top = display.newSprite("shrie_state_item_line_606_16.png"):align(display.LEFT_TOP,-5,209):addTo(bg,2)
-	-- local bottom = display.newSprite("shrie_state_item_line_606_16.png")
-	-- bottom:setFlippedY(true)
-	-- bottom:align(display.LEFT_BOTTOM,-5,5):addTo(bg,2)
-	-- local title_bg = display.newScale9Sprite("title_red_588X30.png")
-	-- 	:size(568,30)
-	-- 	:align(display.LEFT_TOP,20,top:getPositionY() - top:getContentSize().height)
-	-- 	:addTo(bg,2)
-
-	-- UIKit:ttfLabel({
-	-- 	text = stage_obj:GetDescStageName(),
-	-- 	size = 22,
-	-- 	color = 0xffedae
-	-- 	})
-	-- 	:align(display.LEFT_CENTER, 10, 15)
-	-- 	:addTo(title_bg,2)
-
-	-- local star_bar = StarBar.new({
- --       		max = 3,
- --       		bg = "Stars_bar_bg.png",
- --       		fill = "Stars_bar_highlight.png", 
- --       		num = stage_obj:Star(),
- --    }):addTo(title_bg,2):align(display.RIGHT_CENTER,540,15)
-
-	-- local content_box = UIKit:CreateBoxPanel(137):addTo(bg,2):pos(20,bottom:getPositionY()+bottom:getContentSize().height)
-	-- local soldier_bg = display.newSprite("soldier_bg_118x132.png")
-	-- 	:addTo(content_box):align(display.LEFT_BOTTOM,5, 2)
-	-- display.newSprite("soldier_swordsman_1.png"):addTo(soldier_bg):pos(59,66):scale(0.6)
-	-- local power_bg = display.newSprite("shrie_power_bg_146x26.png")
-	-- 	:addTo(content_box)
-	-- 	:align(display.LEFT_BOTTOM,soldier_bg:getPositionX()+soldier_bg:getContentSize().width+25, soldier_bg:getPositionY()+10)
-	-- display.newSprite("dragon_strength_27x31.png")
-	-- 	:align(display.LEFT_CENTER,-10,13)
-	-- 	:addTo(power_bg)
-	-- UIKit:ttfLabel({
-	-- 	text = string.formatnumberthousands(stage_obj:EnemyPower()),
-	-- 	size = 20,
-	-- 	color = 0xfff3c7
-	-- }):align(display.LEFT_CENTER,15,13):addTo(power_bg)
-	-- if not stage_obj:IsLocked() then
-	-- 	cc.ui.UIPushButton.new({
-	-- 		normal = "blue_btn_up_142x39.png",
-	-- 		pressed = "blue_btn_down_142x39.png"
-	-- 		})
-	-- 		:setButtonLabel("normal",UIKit:commonButtonLable({
-	-- 			text = _("调查"),
-	-- 			size = 20,
-	-- 			color = 0xfff3c7
-	-- 		}))
-	-- 		:onButtonClicked(function(event)
-	-- 			self:OnResearchButtonClick(stage_obj)
-	-- 		end)
-	-- 		:align(display.RIGHT_BOTTOM,540,10)
-	-- 		:addTo(content_box)
-	-- else
-	-- 	UIKit:ttfLabel({
-	-- 		text = _("未解锁"),
-	-- 		size = 20,
-	-- 		color = 0x403c2f,
-	-- 	})
-	-- 	:align(display.RIGHT_BOTTOM,540,10)
-	-- 		:addTo(content_box)
-	-- end
-	-- UIKit:ttfLabel({
-	-- 	text = stage_obj:GetStageDesc(),
-	-- 	size = 18,
-	-- 	color = 0x797154,
-	-- 	dimensions = cc.size(400,72)
-	-- }):align(display.LEFT_TOP,power_bg:getPositionX(),soldier_bg:getPositionY()+soldier_bg:getContentSize().height - 10)
-	-- :addTo(content_box)
 	item:addContent(bg)
 	item:setItemSize(568,216)
 	return item
