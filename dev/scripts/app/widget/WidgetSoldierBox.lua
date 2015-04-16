@@ -35,17 +35,8 @@ function WidgetSoldierBox:SetSoldier(soldier_type, star)
             self.soldier_bg:removeChild(self.soldier)
         end
 
-        if soldier_type == "skeletonWarrior"
-            or soldier_type == "skeletonArcher"
-            or soldier_type == "deathKnight"
-            or soldier_type == "meatWagon"
-        then
-            self.soldier_color_bg = display.newSprite("green_bg_128x128.png", nil, nil, {class=cc.FilteredSpriteWithOne}):addTo(self.soldier_bg)
-                :align(display.CENTER, 0, 20):scale(104/128)
-        else
-            self.soldier_color_bg = display.newSprite("blue_bg_128x128.png", nil, nil, {class=cc.FilteredSpriteWithOne}):addTo(self.soldier_bg)
-                :align(display.CENTER, 0, 20):scale(104/128)
-        end
+        self.soldier_color_bg = display.newSprite(UILib.soldier_color_bg_images[soldier_type], nil, nil, {class=cc.FilteredSpriteWithOne}):addTo(self.soldier_bg)
+            :align(display.CENTER, 0, 20):scale(104/128)
         self.soldier = display.newSprite(soldier_ui_config, nil, nil, {class=cc.FilteredSpriteWithOne}):addTo(self.soldier_bg)
             :align(display.CENTER, 0, 20)
         self.soldier:scale(104/self.soldier:getContentSize().height)
@@ -94,6 +85,7 @@ function WidgetSoldierBox:SetButtonListener( cb )
 end
 
 return WidgetSoldierBox
+
 
 
 

@@ -114,19 +114,23 @@ function GameUIResource:CreateInfomation()
     }):addTo(infomationLayer)
         :align(display.RIGHT_BOTTOM,secondLine:getPositionX()+262,secondLabel:getPositionY())
 
-    local chaiButton =  cc.ui.UIPushButton.new({normal = "red_btn_up_148x58.png",pressed = "red_btn_down_148x58.png"}, {scale9 = false})
+    local chaiButton =  cc.ui.UIPushButton.new()
         :addTo(infomationLayer)
         :align(display.TOP_RIGHT, window.right-50, secondLine:getPositionY()+56)
         :onButtonClicked(function(event)
             self:ChaiButtonAction(event)
         end)
     if ItemManager:GetItemByName("torch"):Count()>0 then
+        chaiButton:setButtonImage(cc.ui.UIPushButton.NORMAL, "red_btn_up_148x58.png", true)
+        chaiButton:setButtonImage(cc.ui.UIPushButton.PRESSED, "red_btn_down_148x58.png", true)
         chaiButton:setButtonLabel("normal", UIKit:ttfLabel({
             text = _("拆除"),
             size = 22,
             color = 0xffedae,
         }))
     else
+        chaiButton:setButtonImage(cc.ui.UIPushButton.NORMAL, "green_btn_up_148x58.png", true)
+        chaiButton:setButtonImage(cc.ui.UIPushButton.PRESSED, "green_btn_down_148x58.png", true)
         chaiButton:setButtonLabel("normal", UIKit:ttfLabel({
             text = _("购买&拆除"),
             size = 18,
