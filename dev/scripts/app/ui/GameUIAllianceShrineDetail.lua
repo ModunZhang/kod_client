@@ -11,6 +11,7 @@ local UIListView = import(".UIListView")
 local WidgetSoldierBox = import("..widget.WidgetSoldierBox")
 local WidgetPushTransparentButton = import("..widget.WidgetPushTransparentButton")
 local AllianceShrine = import("..entity.AllianceShrine")
+local UILib = import(".UILib")
 
 function GameUIAllianceShrineDetail:ctor(shrineStage,allianceShrine,isActivate)
 	HEIGHT = 738
@@ -126,7 +127,7 @@ function GameUIAllianceShrineDetail:BuildUI()
 		self.event_button = event_button
 		local resource = self:GetAllianceShrine():GetPerceptionResource()
 		event_button:setButtonEnabled(resource:GetResourceValueByCurrentTime(app.timer:GetServerTime()) >= self:GetShrineStage():NeedPerception())
-		local insight_icon = display.newSprite("insight_icon_45x45.png")
+		local insight_icon = display.newSprite("insight_icon_40x44.png")
 			:align(display.RIGHT_BOTTOM,570 - event_button:getCascadeBoundingBox().width - 120,desc_label:getPositionY() + 60)
 			:addTo(background)
 		local need_insight_title_label = UIKit:ttfLabel({
@@ -239,17 +240,26 @@ function GameUIAllianceShrineDetail:RefreshInfoListView()
 end
 
 
---TODO:显示关卡的所有装备奖励 配置表还未配置
 function GameUIAllianceShrineDetail:RefreshItemListView()	
 	self.item_list:removeAllItems()
-	for i=1,3 do
+	local terrain = Alliance_Manager:GetMyAlliance():Terrain()
+	local goldRewards = self:GetShrineStage():GoldRewards(terrain)
+	for __,v in ipairs(goldRewards) do
 		local item = self.item_list:newItem()
-		local content = display.newScale9Sprite("tool_box_red.png"):size(118,120)
-		display.newSprite("glacierShard_92x92.png"):align(display.CENTER,59,60):addTo(content,2):scale(0.98)
+		local content = display.newScale9Sprite("box_118x118.png")
+		if v.type == 'dragonMaterials' then
+			local sp = display.newSprite(UILib.dragon_material_pic_map[v.sub_type]):align(display.CENTER,59,59)
+			local size = sp:getContentSize()
+			sp:scale(100/math.max(size.width,size.height)):addTo(content)
+		elseif v.type == 'allianceInfo' then
+			if v.sub_type == 'loyalty' then
+				local sp = display.newSprite("loyalty_128x128.png"):align(display.CENTER,59,59)
+				sp:scale(0.78):addTo(content)
+			end
+		end
 		item:addContent(content)
-		item:setMargin({left = 20, right = 60, top = 0, bottom = 0})
-		item:setItemSize(118,120,false)
-
+		item:setMargin({left = 10, right = 70, top = 0, bottom = 0})
+		item:setItemSize(118,118,false)
 		self.item_list:addItem(item)
 	end
 	self.item_list:reload()
@@ -277,7 +287,7 @@ function GameUIAllianceShrineDetail:RefreshSoldierListView()
 			content:SetSoldier(v.type,v.star)
 			content:SetNumber(v.count)
 			item:addContent(content)
-			item:setItemSize(content:getCascadeBoundingBox().width+20,content:getCascadeBoundingBox().height)
+			item:setItemSize(content:getCascadeBoundingBox().width+12,content:getCascadeBoundingBox().height)
 			self.soldier_list:addItem(item)
 		end
 	end

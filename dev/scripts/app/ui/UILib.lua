@@ -997,7 +997,6 @@ local DAILY_QUESTS_ICON = {
 return {
     resource = RESOURCE,
     soldier_bg = STAR_BG,
-    soldier = SOLDIER_TYPE,
     soldier_effect = SOLDIER_EFFECT_ANIMATIONS,
     effect_animation_files = EFFECT_ANIMATION_FILES,
     soldier_animation_files = SOLDIER_ANIMATION_FILES,

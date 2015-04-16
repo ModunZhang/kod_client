@@ -16,29 +16,29 @@ function GameUIWithCommonHeader:onEnter()
     local background = self:CreateBackGround()
     local titleBar = self:CreateTitle(self.title)
     -- 点击空白区域关闭
-    -- self.control_close_layer = display.newLayer():addTo(self,10000)
-    -- self.control_close_layer:setTouchSwallowEnabled(false)
-    -- self.control_close_layer:setNodeEventEnabled(true)
-    -- self.control_close_layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
-    --     if event.name == "ended" then
-    --         if self.disable then
-    --             return
-    --         end
-    --         local lbpoint = background:convertToWorldSpace({x = 0, y = 0})
-    --         local size = background:getContentSize()
-    --         local rtpoint = background:convertToWorldSpace({x = size.width, y = size.height})
+    self.control_close_layer = display.newLayer():addTo(self,100)
+    self.control_close_layer:setTouchSwallowEnabled(false)
+    self.control_close_layer:setNodeEventEnabled(true)
+    self.control_close_layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+        if event.name == "ended" then
+            if self.disable then
+                return
+            end
+            local lbpoint = background:convertToWorldSpace({x = 0, y = 0})
+            local size = background:getContentSize()
+            local rtpoint = background:convertToWorldSpace({x = size.width, y = size.height})
 
-    --         local lbpoint_title = titleBar:convertToWorldSpace({x = 0, y = 0})
-    --         local size_title = titleBar:getContentSize()
-    --         local rtpoint_title = titleBar:convertToWorldSpace({x = size_title.width, y = size_title.height})
-    --         if not cc.rectContainsPoint(cc.rect(lbpoint.x, lbpoint.y, rtpoint.x - lbpoint.x, rtpoint.y - lbpoint.y), event)
-    --             and not cc.rectContainsPoint(cc.rect(lbpoint_title.x, lbpoint_title.y, rtpoint_title.x - lbpoint_title.x, rtpoint_title.y - lbpoint_title.y), event)
-    --         then
-    --             self:LeftButtonClicked()
-    --         end
-    --     end
-    --     return true
-    -- end)
+            local lbpoint_title = titleBar:convertToWorldSpace({x = 0, y = 0})
+            local size_title = titleBar:getContentSize()
+            local rtpoint_title = titleBar:convertToWorldSpace({x = size_title.width, y = size_title.height})
+            if not cc.rectContainsPoint(cc.rect(lbpoint.x, lbpoint.y, rtpoint.x - lbpoint.x, rtpoint.y - lbpoint.y), event)
+                and not cc.rectContainsPoint(cc.rect(lbpoint_title.x, lbpoint_title.y, rtpoint_title.x - lbpoint_title.x, rtpoint_title.y - lbpoint_title.y), event)
+            then
+                self:LeftButtonClicked()
+            end
+        end
+        return true
+    end)
 
     self:CreateBetweenBgAndTitle()
     local home_button = self:CreateHomeButton():addTo(titleBar)
