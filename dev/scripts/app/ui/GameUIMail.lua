@@ -113,25 +113,25 @@ function GameUIMail:OnMoveInStage()
     self:InitUnreadMark()
 end
 function GameUIMail:InitUnreadMark()
-    self.mail_unread_num_bg = display.newSprite("mail_unread_bg_36x23.png"):addTo(self)
-        :pos(window.left+154, window.bottom_top)
+    self.mail_unread_num_bg = display.newSprite("back_ground_32x33.png"):addTo(self:GetView(),3)
+        :pos(window.left+158, window.bottom_top)
     self.mail_unread_num_label = UIKit:ttfLabel(
         {
             text = MailManager:GetUnReadMailsNum(),
             size = 16,
             color = 0xf5f2b3
-        }):align(display.CENTER,self.mail_unread_num_bg:getContentSize().width/2,self.mail_unread_num_bg:getContentSize().height/2+4)
+        }):align(display.CENTER,self.mail_unread_num_bg:getContentSize().width/2-2,self.mail_unread_num_bg:getContentSize().height/2+4)
         :addTo(self.mail_unread_num_bg)
 
 
-    self.report_unread_num_bg = display.newSprite("mail_unread_bg_36x23.png"):addTo(self)
-        :pos(window.left+300, window.bottom_top)
+    self.report_unread_num_bg = display.newSprite("back_ground_32x33.png"):addTo(self:GetView(),3)
+        :pos(window.left+304, window.bottom_top)
     self.report_unread_num_label = UIKit:ttfLabel(
         {
             text = MailManager:GetUnReadReportsNum(),
             size = 16,
             color = 0xf5f2b3
-        }):align(display.CENTER,self.report_unread_num_bg:getContentSize().width/2,self.report_unread_num_bg:getContentSize().height/2+4)
+        }):align(display.CENTER,self.report_unread_num_bg:getContentSize().width/2-2,self.report_unread_num_bg:getContentSize().height/2+4)
         :addTo(self.report_unread_num_bg)
     self.mail_unread_num_bg:setVisible(MailManager:GetUnReadMailsNum()>0)
     self.report_unread_num_bg:setVisible(MailManager:GetUnReadReportsNum()>0)
@@ -1203,7 +1203,6 @@ function GameUIMail:CreateReportItem(listview,report)
             }):align(display.CENTER, report_content_bg:getContentSize().width/2-20, 60)
             :addTo(report_content_bg)
         display.newSprite(UILib.resource[rewards.name], 190, 30):addTo(report_content_bg):scale(0.5)
-        LuaUtils:outputTable("资源采集报告>", report:GetData())
         UIKit:ttfLabel(
             {
                 text = "+"..rewards.count,

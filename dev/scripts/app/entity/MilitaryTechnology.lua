@@ -40,6 +40,16 @@ end
 function MilitaryTechnology:GetTechPoint()
     return military_config[self.name].techPointPerLevel * self:Level()
 end
+-- 获取下一级攻击加成
+function MilitaryTechnology:GetNextLevlAtkEff()
+    local next_level = self:IsMaxLevel() and self:Level() or (self:Level()+1)
+    return military_config[self.name].effectPerLevel * next_level
+end
+-- 获取下一级增加科技点
+function MilitaryTechnology:GetNextLevlTechPoint()
+    local next_level = self:IsMaxLevel() and self:Level() or (self:Level()+1)
+    return military_config[self.name].techPointPerLevel * next_level
+end
 -- 获取技能本地化
 function MilitaryTechnology:GetTechLocalize()
     local soldiers = string.split(self:Name(), "_")

@@ -290,7 +290,7 @@ function MailManager:FetchSendMailsFromServer(fromIndex)
             local fetch_mails = {}
             for i,v in ipairs(response.msg.mails) do
                 table.insert(user_data.sendMails, v)
-                MailManager:AddSendMailsToEnd(v)
+                self:AddSendMailsToEnd(v)
                 table.insert(fetch_mails, v)
             end
             self:NotifyListeneOnType(MailManager.LISTEN_TYPE.FETCH_SEND_MAILS,function(listener)
@@ -463,7 +463,6 @@ function MailManager:OnNewReportsChanged( __reports )
     local add_reports = {}
     local remove_reports = {}
     local edit_reports = {}
-    LuaUtils:outputTable("OnNewReportsChanged :__reports", __reports)
     for type,rp in pairs(__reports) do
         if type == "add" then
             for k,data in pairs(rp) do
@@ -556,11 +555,9 @@ function MailManager:ModifyReport( report )
 end
 function MailManager:ModifyReportByIndex( index,attr )
     local report = self.reports[index]
-    print("index==",index,#self.reports)
     assert(report,"修改战报属性，战报不存在")
     for k,v in pairs(attr) do
         report[k] = v
-        print("ModifyReportByIndex",k,v)
         if k == "isSaved" then
             self:OnNewSavedReportsChanged(report)
         end
@@ -611,7 +608,7 @@ function MailManager:FetchReportsFromServer(fromIndex)
                 local fetch_reports = {}
                 for i,v in ipairs(response.msg.reports) do
                     table.insert(user_data.reports, v)
-                    MailManager:AddReportsToEnd(v)
+                    self:AddReportsToEnd(v)
                     table.insert(fetch_reports, v)
                 end
                 self:NotifyListeneOnType(MailManager.LISTEN_TYPE.FETCH_REPORTS,function(listener)
@@ -641,7 +638,7 @@ function MailManager:FetchSavedReportsFromServer(fromIndex)
             local fetch_reports = {}
             for i,v in ipairs(response.msg.reports) do
                 table.insert(user_data.reports, v)
-                MailManager:AddSavedReportsToEnd(v)
+                self:AddSavedReportsToEnd(v)
                 table.insert(fetch_reports, v)
             end
             self:NotifyListeneOnType(MailManager.LISTEN_TYPE.FETCH_SAVED_REPORTS,function(listener)
