@@ -2,11 +2,19 @@
 -- Author: Danny He
 -- Date: 2015-01-21 16:14:47
 --
---Emoji
+-- Emoji
 --------------------------------------------------------------------------------------------------
 local EmojiUtil = class("EmojiUtil")
 
---将表情化标签转换成富文本语法
+--[[ 
+	将表情化标签转换成富文本语法
+	chatmsg : "[1FED]hello world..."
+	
+	-- dest: {'{\"type\":\"text\", \"value\":\"%s\"}','{\"type\":\"text\", \"value\":\"%s\"}','{\"type\":\"text\", \"value\":\"%s\"}'}
+	local func_handler_dest = function(dest)
+		table.insert(dest,1,'{\"type\":\"text\", \"value\":\"first\"}')
+	end
+--]]
 function EmojiUtil:ConvertEmojiToRichText(chatmsg,func_handler_dest)
 	chatmsg = chatmsg or ""
 	if string.len(chatmsg) == 0 then return "" end
@@ -52,9 +60,9 @@ end
 function EmojiUtil:RemoveAllEmojiTag(str)
 	return string.gsub(str, "%[[%P]+%]","")
 end
-
---end
+-- end
 --------------------------------------------------------------------------------------------------
+
 local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
 local MultiObserver = import(".MultiObserver")
 local ChatManager = class("ChatManager",MultiObserver)
@@ -89,6 +97,9 @@ function ChatManager:sortMessage_(t)
 end
 
 function ChatManager:__checkIsBlocked(msg)
+	if msg.fromId == User:Id() then
+		msg.fromName = User:Name()
+	end
 	return self._blockedIdList_[msg.fromId] ~= nil
 end
 
@@ -176,12 +187,16 @@ end
 
 function ChatManager:__formatLastMessage(chat)
 	if not chat then return ""  end
+	if chat.fromId == User:Id() then
+		chat.fromName = User:Name()
+	end
 	local chat_text = string.format(" : %s",chat.text)
 	local result = self:GetEmojiUtil():ConvertEmojiToRichText(chat_text,function(json_table)
 		table.insert(json_table,1,string.format('{\"type\":\"text\", \"value\":\"%s\",\"color\":0x00b4cf}', chat.fromName))
 	end)
 	return result
 end
+
 function ChatManager:FetchLastChannelMessage()
 	local messages_1 = self:__getMessageWithChannel(self.CHANNNEL_TYPE.GLOBAL)
 	local messages_2 = self:__getMessageWithChannel(self.CHANNNEL_TYPE.ALLIANCE)

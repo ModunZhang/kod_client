@@ -1,7 +1,9 @@
 -- 需求列表控件
 local UIListView = import("..ui.UIListView")
 local WidgetRequirementListview = class("WidgetRequirementListview", function ()
-    return cc.Layer:create()
+    local layer = cc.Layer:create()
+    layer:setCascadeOpacityEnabled(true)
+    return layer
 end)
 
 function WidgetRequirementListview:ctor(parms)

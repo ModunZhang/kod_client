@@ -197,6 +197,14 @@ function DataUtils:getDragonMaxHp(star,level,skills,equipments)
     local vitality = self:getTotalVitalityFromJson(star,level,skills,equipments)
     return vitality * 2
 end
+-- 通过buff名获得士兵属性字段
+function DataUtils:getSoldierBuffFieldFromKey(key)
+    if key == 'hpAdd' then
+        return 'hp'
+    else
+        return key
+    end
+end
 
 -- 获取兵相关的buff信息
 -- solider_config:兵详情的配置信息
@@ -211,6 +219,7 @@ function DataUtils:getAllSoldierBuffValue(solider_config)
     for __,v in ipairs(item_buff) do
         local effect_soldier,buff_field,buff_value = unpack(v)
         if effect_soldier == soldier_type or effect_soldier == '*' then
+            buff_field = self:getSoldierBuffFieldFromKey(buff_field)
             local buff_realy_value = (solider_config[buff_field] or 0 ) * buff_value
             if result[buff_field] then
                 result[buff_field] = result[buff_field] + buff_realy_value

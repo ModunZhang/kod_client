@@ -58,7 +58,7 @@ function GameUITechnologySpeedUp:GetEvent()
 end
 
 function GameUITechnologySpeedUp:CheckCanSpeedUpFree()
-	self:SetFreeButtonEnabled(self:GetEvent():GetTime() <= 60 * 5)
+	self:SetFreeButtonEnabled(self:GetEvent():GetTime() <= DataUtils:getFreeSpeedUpLimitTime())
 end
 
 return GameUITechnologySpeedUp
