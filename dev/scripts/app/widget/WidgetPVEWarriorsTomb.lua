@@ -11,7 +11,7 @@ end
 function WidgetPVEWarriorsTomb:GetDesc()
     return self:GetObject():IsSearched()
         and _('陵墓之中仿佛有几个人形虚影正在向你招手, 你不禁背心一凉, 还是赶紧离开吧')
-        or _('你发现一些未被安葬的战士的遗骸, 是否花费10个宝石将他们安葬?')
+        or _('你发现一些未被安葬的战士的遗骸, 是否花费10个金龙币将他们安葬?')
 end
 function WidgetPVEWarriorsTomb:SetUpButtons()
     return self:GetObject():IsSearched() and

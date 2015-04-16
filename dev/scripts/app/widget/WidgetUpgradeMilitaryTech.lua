@@ -92,7 +92,7 @@ function WidgetUpgradeMilitaryTech:UpgradeButtons()
 
                 if self.tech:IsAbleToUpgradeNow() then
                     FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                        :SetPopMessage(_("宝石不足"))
+                        :SetPopMessage(_("金龙币不足"))
                         :CreateOKButton({
                             listener =  function () 
                                 UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
@@ -134,7 +134,7 @@ function WidgetUpgradeMilitaryTech:UpgradeButtons()
         :addTo(body)
 
 
-    -- 立即升级所需宝石
+    -- 立即升级所需金龙币
     display.newSprite("gem_icon_62x61.png", size.width/2 - 250, size.height-290):addTo(body):setScale(0.5)
     self.upgrade_now_need_gems_label = UIKit:ttfLabel({
         text = self.tech:GetInstantUpgradeGems(),

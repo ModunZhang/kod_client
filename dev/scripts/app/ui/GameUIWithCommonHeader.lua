@@ -12,9 +12,35 @@ end
 function GameUIWithCommonHeader:onEnter()
     GameUIWithCommonHeader.super.onEnter(self)
     self.__view = display.newLayer():addTo(self)
-    self:CreateBackGround()
-    self:CreateBetweenBgAndTitle()
+
+    local background = self:CreateBackGround()
     local titleBar = self:CreateTitle(self.title)
+    -- 点击空白区域关闭
+    self.control_close_layer = display.newLayer():addTo(self,10000)
+    self.control_close_layer:setTouchSwallowEnabled(false)
+    self.control_close_layer:setNodeEventEnabled(true)
+    self.control_close_layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+        if event.name == "ended" then
+            if self.disable then
+                return
+            end
+            local lbpoint = background:convertToWorldSpace({x = 0, y = 0})
+            local size = background:getContentSize()
+            local rtpoint = background:convertToWorldSpace({x = size.width, y = size.height})
+
+            local lbpoint_title = titleBar:convertToWorldSpace({x = 0, y = 0})
+            local size_title = titleBar:getContentSize()
+            local rtpoint_title = titleBar:convertToWorldSpace({x = size_title.width, y = size_title.height})
+            if not cc.rectContainsPoint(cc.rect(lbpoint.x, lbpoint.y, rtpoint.x - lbpoint.x, rtpoint.y - lbpoint.y), event)
+                and not cc.rectContainsPoint(cc.rect(lbpoint_title.x, lbpoint_title.y, rtpoint_title.x - lbpoint_title.x, rtpoint_title.y - lbpoint_title.y), event)
+            then
+                self:LeftButtonClicked()
+            end
+        end
+        return true
+    end)
+
+    self:CreateBetweenBgAndTitle()
     local home_button = self:CreateHomeButton():addTo(titleBar)
     local gem_button,gem_label = self:CreateShopButton()
     gem_button:addTo(titleBar)
@@ -27,7 +53,7 @@ function GameUIWithCommonHeader:onEnter()
 end
 
 function GameUIWithCommonHeader:onExit()
-    if self.__gem_label then 
+    if self.__gem_label then
         self.city:GetResourceManager():RemoveObserver(self)
     end
     GameUIWithCommonHeader.super.onExit(self)
@@ -66,8 +92,8 @@ function GameUIWithCommonHeader:UIAnimationMoveIn()
         time = 0.05,
         onComplete = function()
             transition.moveTo(self:GetView(),{
-                x = 0, 
-                y = 0, 
+                x = 0,
+                y = 0,
                 time = 0.2,
                 onComplete = function()
                     self:OnMoveInStage()
@@ -80,18 +106,18 @@ end
 function GameUIWithCommonHeader:UIAnimationMoveOut()
     self:ResetRenderSceneState()
     transition.moveTo(self:GetView(),{
-                x = 0, 
-                y = display.top + 200, 
-                time = 0.15,
+        x = 0,
+        y = display.top + 200,
+        time = 0.15,
+        onComplete = function()
+            transition.fadeOut(self:GetTitleBar(),{
+                time = 0.05,
                 onComplete = function()
-                    transition.fadeOut(self:GetTitleBar(),{
-                        time = 0.05,
-                        onComplete = function()
-                            self:OnMoveOutStage()
-                        end
-                    })
+                    self:OnMoveOutStage()
                 end
             })
+        end
+    })
 end
 
 function GameUIWithCommonHeader:RightButtonClicked()
@@ -103,12 +129,12 @@ function GameUIWithCommonHeader:CreateTitle(title)
         :align(display.TOP_CENTER, window.cx, window.top)
         :addTo(self):zorder(200)
     UIKit:ttfLabel({
-            text = title,
-            size = 30,
-            color = 0xffedae,
-            align = cc.TEXT_ALIGNMENT_LEFT,
-            bold  = true
-        }):addTo(head_bg):align(display.CENTER, head_bg:getContentSize().width / 2, head_bg:getContentSize().height - 35)
+        text = title,
+        size = 30,
+        color = 0xffedae,
+        align = cc.TEXT_ALIGNMENT_LEFT,
+        bold  = true
+    }):addTo(head_bg):align(display.CENTER, head_bg:getContentSize().width / 2, head_bg:getContentSize().height - 35)
     return head_bg
 end
 
@@ -117,7 +143,7 @@ function GameUIWithCommonHeader:CreateBackGround()
 end
 
 function GameUIWithCommonHeader:CreateHomeButton(on_clicked)
-     local home_button = cc.ui.UIPushButton.new(
+    local home_button = cc.ui.UIPushButton.new(
         {normal = "home_btn_up.png",pressed = "home_btn_down.png",disabled = "home_btn_disabled.png"}, nil, {down = "HOME_PAGE"})
         :onButtonClicked(function(event)
             if on_clicked then
@@ -164,7 +190,7 @@ function GameUIWithCommonHeader:CreateBetweenBgAndTitle()
 end
 
 function GameUIWithCommonHeader:OnResourceChanged(resource_manager)
-     self:GetGemLabel():setString(string.formatnumberthousands(self.city:GetUser():GetGemResource():GetValue()))
+    self:GetGemLabel():setString(string.formatnumberthousands(self.city:GetUser():GetGemResource():GetValue()))
 end
 
 function GameUIWithCommonHeader:CreateTabButtons(param, func)
@@ -174,4 +200,6 @@ function GameUIWithCommonHeader:CreateTabButtons(param, func)
 end
 
 return GameUIWithCommonHeader
+
+
 

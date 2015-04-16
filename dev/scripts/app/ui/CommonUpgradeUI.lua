@@ -379,7 +379,7 @@ function CommonUpgradeUI:InitUpgradePart()
 
     self.upgrade_btn = btn_bg.button
 
-    -- 立即升级所需宝石
+    -- 立即升级所需金龙币
     display.newSprite("gem_icon_62x61.png", display.cx - 260, display.top-470):addTo(self.upgrade_layer):setScale(0.5)
     self.upgrade_now_need_gems_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,

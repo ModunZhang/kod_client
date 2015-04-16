@@ -963,7 +963,7 @@ function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc,buyAndUseFun
         btn_call_back = function ()
             if item:Price() > User:GetGemResource():GetValue() then
                 FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                    :SetPopMessage(_("宝石不足"))
+                    :SetPopMessage(_("金龙币不足"))
                     :CreateOKButton(
                         {
                             listener = function ()

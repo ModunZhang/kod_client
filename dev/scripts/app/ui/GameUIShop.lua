@@ -30,7 +30,7 @@ function GameUIShop:onEnter()
     -- }
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = "宝石增加十万",
+        text = "金龙币增加十万",
         size = 20,
         font = UIKit:getFontFilePath(),
         color = UIKit:hex2c3b(0xfff3c7)}))
@@ -652,7 +652,7 @@ function GameUIShop:onEnter()
         :onButtonClicked(function(event)
             -- 重置玩家和联盟数据
             cocos_promise.promiseWithCatchError(
-                -- 增加宝石
+                -- 增加金龙币
                 NetManager:getSendGlobalMsgPromise("gem "..1000000)
                     -- 升级城堡到4级
                     :next(function()
@@ -710,7 +710,7 @@ function GameUIShop:onEnter()
         :onButtonClicked(function(event)
             -- 重置玩家和联盟数据
             cocos_promise.promiseWithCatchError(
-                -- 增加宝石
+                -- 增加金龙币
                 NetManager:getSendGlobalMsgPromise("gem "..1000000)
                     -- 升级城堡到4级
                     :next(function()
@@ -769,7 +769,7 @@ function GameUIShop:onEnter()
         :onButtonClicked(function(event)
             -- 重置玩家和联盟数据
             cocos_promise.promiseWithCatchError(
-                -- 增加宝石
+                -- 增加金龙币
                 NetManager:getSendGlobalMsgPromise("resources gem "..1000000)
                     -- 升级城堡到4级
                     :next(function()
@@ -960,7 +960,7 @@ function GameUIShop:onEnter()
         {scale9 = false}
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = "iOS购买宝石",
+        text = "iOS购买金龙币",
         size = 20,
         font = UIKit:getFontFilePath(),
         color =  cc.c3b(255,0,0)

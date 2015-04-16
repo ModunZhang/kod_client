@@ -101,7 +101,7 @@ function DataUtils:buyMaterial(need, has)
 end
 
 --[[
-  根据所缺时间换算成宝石,并返回宝石数量
+  根据所缺时间换算成金龙币,并返回金龙币数量
   @param interval
   @returns {number}
 ]]

@@ -190,7 +190,7 @@ function GameUIHospital:CreateHealAllSoldierItem()
 
     self.treat_all_now_button:setButtonEnabled(self.city:GetSoldierManager():GetTotalTreatSoldierCount()>0)
     self.treat_all_button:setButtonEnabled(self.city:GetSoldierManager():GetTotalTreatSoldierCount()>0)
-    -- 立即治愈所需宝石
+    -- 立即治愈所需金龙币
     display.newSprite("gem_icon_62x61.png", bg_size.width/2 - 260, 50):addTo(self.treate_all_soldiers_item):setScale(0.5)
     self.heal_now_need_gems_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -236,7 +236,7 @@ function GameUIHospital:TreatListener()
             :SetPopMessage(_("没有伤兵需要治愈")):AddToCurrentScene()
     elseif City:GetUser():GetGemResource():GetValue()< self.building:GetTreatGems(soldiers) then
         local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
-            :SetPopMessage(_("没有足够的宝石补充资源"))
+            :SetPopMessage(_("没有足够的金龙币补充资源"))
             :CreateOKButton(
                 {
                     listener = function ()
@@ -257,7 +257,7 @@ function GameUIHospital:TreatListener()
             :CreateNeeds({value = self.building:GetTreatGems(soldiers)}):AddToCurrentScene()
     elseif isAbleToTreat==HospitalUpgradeBuilding.CAN_NOT_TREAT.LACK_RESOURCE then
         local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
-            :SetPopMessage(_("资源不足，是否花费宝石补足"))
+            :SetPopMessage(_("资源不足，是否花费金龙币补足"))
             :CreateOKButton({
                 listener = treat_fun
             })
@@ -289,7 +289,7 @@ function GameUIHospital:TreatNowListener()
             :SetPopMessage(_("没有伤兵需要治愈")):AddToCurrentScene()
     elseif self.treat_all_now_need_gems>City:GetUser():GetGemResource():GetValue() then
         local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
-            :SetPopMessage(_("宝石补足")) :CreateOKButton(
+            :SetPopMessage(_("金龙币补足")) :CreateOKButton(
                 {
                     listener = function ()
                         UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)

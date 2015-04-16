@@ -333,7 +333,7 @@ function GameUIHome:CreateTop()
 
 
 
-    -- 宝石按钮
+    -- 金龙币按钮
     local button = cc.ui.UIPushButton.new(
         {normal = "gem_btn_up_196x68.png", pressed = "gem_btn_down_196x68.png"},
         {scale9 = false}

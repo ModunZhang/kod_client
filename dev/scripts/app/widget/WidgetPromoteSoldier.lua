@@ -139,7 +139,7 @@ function WidgetPromoteSoldier:UpgradeButtons()
         :addTo(body)
 
 
-    -- 立即升级所需宝石
+    -- 立即升级所需金龙币
     display.newSprite("gem_icon_62x61.png", size.width/2 - 250, size.height-290):addTo(body):setScale(0.5)
     self.upgrade_now_need_gems_label = UIKit:ttfLabel({
         text = self:GetInstantUpgradeGems(),
@@ -247,7 +247,7 @@ function WidgetPromoteSoldier:PopNotSatisfyDialog(upgrade_listener,results)
     local gem_not_enough =false
     for k,v in pairs(results) do
         message = message .. v.."\n"
-        if v == _("宝石不足") then
+        if v == _("金龙币不足") then
             gem_not_enough = true
         end
     end
@@ -292,7 +292,7 @@ function WidgetPromoteSoldier:IsAbleToUpgradeNow()
         table.insert(results, _("科技点未达到要求"))
     end
     if self:GetInstantUpgradeGems() > User:GetGemResource():GetValue() then
-        table.insert(results, _("宝石不足"))
+        table.insert(results, _("金龙币不足"))
     end
     return results
 end

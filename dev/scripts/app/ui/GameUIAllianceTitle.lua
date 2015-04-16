@@ -129,7 +129,7 @@ end
 
 function GameUIAllianceTitle:OnBuyAllianceArchonButtonClicked()
     if config_intInit.buyArchonGem.value > User:GetGemResource():GetValue() then
-        UIKit:showMessageDialog(nil, _("宝石不足"), function()
+        UIKit:showMessageDialog(nil, _("金龙币不足"), function()
         end)
     elseif Alliance_Manager:GetMyAlliance():GetSelf():IsArchon() then
         UIKit:showMessageDialog(nil, _("你已经是盟主"), function()
