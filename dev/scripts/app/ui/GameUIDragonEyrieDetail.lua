@@ -514,7 +514,7 @@ function GameUIDragonEyrieDetail:GetSkillListItem(skill)
         :addTo(bg)
     local skill_icon = UILib.dragon_skill_icon[skill:Name()][skill:Type()]
     if skill:IsLocked() then
-        display.newFilteredSprite(skill_icon,"GRAY", {0.2,0.5,0.1,0.1}):addTo(box):pos(43,41):scale(74/128)
+        display.newFilteredSprite(skill_icon,"GRAY", {0.1,0.1,0.1,0.4}):addTo(box):pos(43,41):scale(74/128)
         display.newSprite("skill_lock_32x50.png",42,42):addTo(box)
     else
         display.newSprite(skill_icon, 43, 41):addTo(box):scale(74/128)

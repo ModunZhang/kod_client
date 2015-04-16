@@ -234,7 +234,7 @@ function GameUIResource:CreateInfomation()
     if ResourceManager.RESOURCE_TYPE.POPULATION ==  self.building:GetUpdateResourceType() then
         self.secondValueLabel:setString(self.building:GetProductionLimit())
     else
-        local reduce = resource:GetProductionPerHour()
+        local reduce = self.building:GetProductionPerHour()
         local buffMap,__ = City.resource_manager:GetTotalBuffData(City)
         local key = ResourceManager.RESOURCE_TYPE[self.building:GetUpdateResourceType()]
         if buffMap[key] then

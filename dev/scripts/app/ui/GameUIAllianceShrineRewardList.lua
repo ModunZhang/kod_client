@@ -7,6 +7,8 @@ local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local HEIGHT = 738
 local window = import("..utils.window")
 local UIListView = import(".UIListView")
+local Alliance_Manager = Alliance_Manager
+local UILib = import(".UILib")
 
 function GameUIAllianceShrineRewardList:ctor(shrineStage)
 	GameUIAllianceShrineRewardList.super.ctor(self)
@@ -81,25 +83,37 @@ function GameUIAllianceShrineRewardList:GetListItem(index,data)
 		color = 0x403c2f
 	}):addTo(node):align(display.LEFT_TOP,strength_icon:getPositionX(),icon:getPositionY()+icon:getContentSize().height)
 	local x,y = strength_icon:getPositionX()+strength_icon:getContentSize().width+200,label:getPositionY()+10
+
 	for i,v in ipairs(data[3]) do
-		local item = display.newSprite("shire_reward_70x70.png")
+		local item = display.newScale9Sprite("box_118x118.png"):scale(0.59)
 			:align(display.LEFT_TOP,x,y)
 			:addTo(node)
+			if v.type == 'dragonMaterials' then
+				local sp = display.newSprite(UILib.dragon_material_pic_map[v.sub_type]):align(display.CENTER,59,59)
+				local size = sp:getContentSize()
+				sp:scale(100/math.max(size.width,size.height)):addTo(item)
+			elseif v.type == 'allianceInfo' then
+				if v.sub_type == 'loyalty' then
+					local sp = display.newSprite("loyalty_128x128.png"):align(display.CENTER,59,59)
+					sp:scale(0.78):addTo(item)
+				end
+			end
 		UIKit:ttfLabel({
 			text = "x" .. v.count,
 			size = 22,
 			color = 0x403c2f
-		}):addTo(item):align(display.TOP_CENTER,35,2)
+		}):addTo(node):align(display.TOP_CENTER,x + 35,y - 68)
 		x = x + 70 + 20
 	end
 	return node
 end
 
 function GameUIAllianceShrineRewardList:GetListData()
+	local terrain = Alliance_Manager:GetMyAlliance():Terrain()
 	local data = {}
-	data[1] = {"奖励等级本地化缺失",string.formatnumberthousands(self:GetShrineStage():GoldKill()),self:GetShrineStage():GoldRewards()}
-	data[2] = {"奖励等级本地化缺失",string.formatnumberthousands(self:GetShrineStage():SilverKill()),self:GetShrineStage():SilverRewards()}
-	data[3] = {"奖励等级本地化缺失",string.formatnumberthousands(self:GetShrineStage():BronzeKill()),self:GetShrineStage():BronzeRewards()}
+	data[1] = {"奖励等级本地化缺失",string.formatnumberthousands(self:GetShrineStage():GoldKill()),self:GetShrineStage():GoldRewards(terrain)}
+	data[2] = {"奖励等级本地化缺失",string.formatnumberthousands(self:GetShrineStage():SilverKill()),self:GetShrineStage():SilverRewards(terrain)}
+	data[3] = {"奖励等级本地化缺失",string.formatnumberthousands(self:GetShrineStage():BronzeKill()),self:GetShrineStage():BronzeRewards(terrain)}
 	return data
 end
 

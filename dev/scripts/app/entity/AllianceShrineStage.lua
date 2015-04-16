@@ -9,6 +9,7 @@ local property = import("..utils.property")
 
 function AllianceShrineStage:ctor(config)
 	property(self,"isLocked",true)
+	self.config_ = config
 	self:loadProperty(config)
 end
 
@@ -23,16 +24,13 @@ function AllianceShrineStage:loadProperty(config)
 	property(self,"suggestPlayer",config.suggestPlayer)
 	property(self,"suggestPower",config.suggestPower)
 	self:formatTroops(config.troops)
-	property(self,"star2DeathPopulation",config.star2DeathPopulation)
+	property(self,"star2DeathCitizen",config.star2DeathCitizen)
 	property(self,"star1Honour",config.star1Honour)
 	property(self,"star2Honour",config.star2Honour)
 	property(self,"star3Honour",config.star3Honour)
-	property(self,"bronzeKill",config.bronzeKill)
-	property(self,"silverKill",config.silverKill)
-	property(self,"goldKill",config.goldKill)
-	self:formatRewards("bronzeRewards",config.bronzeRewards)
-	self:formatRewards("silverRewards",config.silverRewards)
-	self:formatRewards("goldRewards",config.goldRewards)
+	property(self,"bronzeKill",config.playerKill_1)
+	property(self,"silverKill",config.playerKill_2)
+	property(self,"goldKill",config.playerKill_3)
 end
 
 function AllianceShrineStage:OnPropertyChange()
@@ -57,35 +55,52 @@ function AllianceShrineStage:formatTroops(str)
 	local troops_temp = string.split(str,",")
 	for i,suntroops in ipairs(troops_temp) do
 		local troops = string.split(suntroops,"_")
-		-- for _,v in ipairs(troops) do
-		-- 	local desc,count = unpack(string.split(v,":"))
-		-- 	local troop_type,star =  unpack(string.split(desc,"_"))
-		-- 	count = checknumber(count)
-		-- 	local count_str = math.ceil(count*0.8) .. "-" .. math.ceil(count*1.2)
-		-- 	table.insert(r,{type = troop_type,count = count_str,star = star})
-		-- end
 		local troop_type,star = troops[1],troops[2]
 		local count =  checknumber(troops[3])
 		local count_str = math.ceil(count*0.8) .. "-" .. math.ceil(count*1.2)
-		table.insert(r,{type = troop_type,count = count_str,star = star})
+		table.insert(r,{type = troop_type,count = count_str,star = tonumber(star)})
 	end
 	property(self,"troops",r)
 end
 
-function AllianceShrineStage:formatRewards(name,rewards)
+function AllianceShrineStage:formatRewards(rewards)
 	local r = {}
 	local reward_list = string.split(rewards,",")
 	for i,v in ipairs(reward_list) do
 		local reward_type,sub_type,count = unpack(string.split(v,":"))
-		table.insert(r,{type = reward_type,count = count})
+		table.insert(r,{type = reward_type,sub_type = sub_type,count = count})
 	end
-	property(self,name,r)
+	return r
 end
 
 function AllianceShrineStage:SetStar(star)
 	if star >= 0 and  self:MaxStar() >= star then
 		self.star_ = star
 	end
+end
+
+function AllianceShrineStage:BronzeRewards(terrain)
+	if terrain then
+		local key = string.format("playerRewards_1_%s",terrain)
+		return self:formatRewards(self.config_[key])
+	end
+	return {}
+end
+
+function AllianceShrineStage:SilverRewards(terrain)
+	if terrain then
+		local key = string.format("playerRewards_2_%s",terrain)
+		return self:formatRewards(self.config_[key])
+	end
+	return {}
+end
+
+function AllianceShrineStage:GoldRewards(terrain)
+	if terrain then
+		local key = string.format("playerRewards_3_%s",terrain)
+		return self:formatRewards(self.config_[key])
+	end
+	return {}
 end
 
 function AllianceShrineStage:Star()
