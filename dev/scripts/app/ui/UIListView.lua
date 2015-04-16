@@ -1200,7 +1200,7 @@ function UIListView:insertItemAndRefresh(listItem, pos)
     local item_width,item_height = listItem:getItemSize()
     if self.direction == UIListView.DIRECTION_VERTICAL then
     self.container:setPosition(0, pre_y-item_height)
-        print("insertItemAndRefresh  item_height=",item_height,"pre_y=",pre_y)
+        -- print("insertItemAndRefresh  item_height=",item_height,"pre_y=",pre_y)
     else
         self.container:setPosition(0, self.viewRect_.height - self.size.height)
     end

@@ -47,6 +47,9 @@ function GameUIAllianceBattle:OnMoveInStage()
         end
         if tag == 'history' then
             self.history_layer:setVisible(true)
+            if not self.history_listview then
+                self:InitHistoryRecord()
+            end
         else
             self.history_layer:setVisible(false)
         end
@@ -67,7 +70,6 @@ function GameUIAllianceBattle:OnMoveInStage()
     end):pos(window.cx, window.bottom + 34)
 
     self:InitBattleStatistics()
-    self:InitHistoryRecord()
 
 
     app.timer:AddListener(self)
@@ -317,26 +319,40 @@ function GameUIAllianceBattle:InitBattleStatistics()
             :addTo(top_bg)
             :scale(0.8)
         -- 己方联盟名字
-        local our_alliance_name = UIKit:ttfLabel({
-            text = "["..our_alliance:AliasName().."]".. our_alliance:Name(),
+        local our_alliance_tag = UIKit:ttfLabel({
+            text = "["..our_alliance:AliasName().."]",
             size = 26,
             color = 0xffedae,
         }):addTo(self_alliance_bg)
-            :align(display.CENTER,-180,0)
+            :align(display.CENTER,-180,14)
+        local our_alliance_name = UIKit:ttfLabel({
+            text = our_alliance:Name(),
+            size = 26,
+            color = 0xffedae,
+        }):addTo(self_alliance_bg)
+            :align(display.CENTER,-180,-14)
         -- 敌方联盟名字
+        local a_tag = ""
         local a_name = ""
         if enemy_alliance then
             if enemy_alliance:AliasName()
                 and enemy_alliance:Name() then
-                a_name = "["..enemy_alliance:AliasName().."]"..enemy_alliance:Name()
+                a_tag = "["..enemy_alliance:AliasName().."]"
+                a_name = enemy_alliance:Name()
             end
         end
+        local enemy_alliance_tag = UIKit:ttfLabel({
+            text =a_tag,
+            size = 26,
+            color = 0xffedae,
+        }):addTo(enemy_alliance_bg)
+            :align(display.CENTER,180,14)
         local enemy_alliance_name = UIKit:ttfLabel({
             text =a_name,
             size = 26,
             color = 0xffedae,
         }):addTo(enemy_alliance_bg)
-            :align(display.CENTER,180,0)
+            :align(display.CENTER,180,-14)
         local period_bg = display.newSprite("box_104x104.png")
             :align(display.CENTER, t_size.width/2, t_size.height/2-4)
             :addTo(top_bg)
@@ -361,8 +377,11 @@ function GameUIAllianceBattle:InitBattleStatistics()
             end
             local our_reprot_data = our_alliance:GetOurLastAllianceFightReportsData()
             local enemy_reprot_data = our_alliance:GetEnemyLastAllianceFightReportsData()
-            our_alliance_name:setString("["..our_reprot_data.tag.."]"..our_reprot_data.name)
-            enemy_alliance_name:setString("["..enemy_reprot_data.tag.."]"..enemy_reprot_data.name)
+
+            our_alliance_name:setString(our_reprot_data.name)
+            enemy_alliance_name:setString(enemy_reprot_data.name)
+            our_alliance_tag:setString("["..our_reprot_data.tag.."]")
+            enemy_alliance_tag:setString("["..enemy_reprot_data.tag.."]")
 
             local text_1 = fight_result and "WIN" or "LOSE"
             local color_1 = fight_result and 0x007c23 or 0x7e0000
@@ -753,16 +772,55 @@ function GameUIAllianceBattle:InitHistoryRecord()
     self.history_listview = list
 
     local fight_reports = self.alliance:GetAllianceFightReports()
-    for k,v in pairs(fight_reports) do
-        self:AddHistoryItem(v)
+    -- 一次加载3封
+    for i=#fight_reports,#fight_reports-2,-1 do
+        if fight_reports[i] then
+            self:AddHistoryItem(fight_reports[i])
+        else
+            break
+        end
     end
-
+    if #list:getItems()<#fight_reports then
+        self:CreateLoadingMoreItem(list)
+    end
     self.history_listview:reload()
 end
+function GameUIAllianceBattle:CreateLoadingMoreItem(listview)
+    local item = listview:newItem()
+    local item_width, item_height = 568,150
+    item:setItemSize(item_width, item_height)
+    -- 加载更多按钮
+    local loading_more_label = UIKit:ttfLabel({
+        text = _("载入更多..."),
+        size = 24,
+        color = 0xfff3c7})
+    loading_more_label:enableShadow()
 
+    local loading_more_button = WidgetPushButton.new():setButtonLabel(loading_more_label)
+        :align(display.CENTER, item_width/2, item_height/2)
+    loading_more_button:onButtonClicked(function(event)
+        if event.name == "CLICKED_EVENT" then
+            local fight_reports = self.alliance:GetAllianceFightReports()
+            local current_index = #fight_reports-#listview:getItems()+1
+            for i=current_index,current_index-2,-1 do
+                if fight_reports[i] then
+                    self:AddHistoryItem(fight_reports[i],#listview:getItems())
+                else
+                    break
+                end
+            end
+            -- 加载完毕移除载入更多按钮
+            if (#listview:getItems()-1)==#fight_reports then
+                listview:removeItem(item)
+            end
+        end
+    end)
+    item:addContent(loading_more_button)
+    listview:addItem(item)
+end
 function GameUIAllianceBattle:AddHistoryItem(report,index)
     local alliance = self.alliance
-    LuaUtils:outputTable("report", report)
+    -- LuaUtils:outputTable("report", report)
     -- 各项数据
     local win
     if report.attackAllianceId == alliance:Id() then
@@ -977,7 +1035,7 @@ function GameUIAllianceBattle:AddHistoryItem(report,index)
 
     item:addContent(content)
     self.history_items[report.id] = item
-    self.history_listview:addItem(item,index)
+    self.history_listview:insertItemAndRefresh(item,index)
 end
 
 function GameUIAllianceBattle:InitOtherAlliance()
@@ -1264,6 +1322,8 @@ function GameUIAllianceBattle:OnAllianceFightReportsChanged(changed_map)
 end
 
 return GameUIAllianceBattle
+
+
 
 
 

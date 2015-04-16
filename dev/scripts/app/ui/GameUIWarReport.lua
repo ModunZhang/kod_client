@@ -467,7 +467,6 @@ end
 function GameUIWarReport:CreateBelligerentsItem(player,isSelf)
     local height = 100
     local player_item = self:CreateSmallBackGround({height=height})
-
     -- 联盟名字背景框
     display.newScale9Sprite(isSelf and "back_ground_blue_254x42.png" or "back_ground_red_254x42.png", 1, 0,cc.size(256,50),cc.rect(10,10,234,22)):align(display.LEFT_BOTTOM):addTo(player_item)
     -- 玩家头像
@@ -486,10 +485,10 @@ function GameUIWarReport:CreateBelligerentsItem(player,isSelf)
         :addTo(player_item)
 
     UIKit:ttfLabel({
-        text =  player.type and _("Level").." "..player.level or player.alliance.name,
+        text =  player.type and _("Level").." "..player.level or "["..player.alliance.tag.."]",
         size = 22,
         color = 0xffedae
-    }):align(display.LEFT_CENTER,90,  height-75)
+    }):align(display.CENTER,160,  height-75)
         :addTo(player_item)
 
     return player_item

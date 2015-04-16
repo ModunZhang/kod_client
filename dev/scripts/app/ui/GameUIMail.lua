@@ -661,8 +661,6 @@ function GameUIMail:CreateLoadingMoreItem(listview)
     loading_more_button:onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
             local mails = self:GetMailsOrReports(listview)
-            LuaUtils:outputTable("载入更多 mails", mails)
-            print("ssssss")
             if #mails == GameUIMail.ONE_TIME_LOADING_MAILS then
                 self:AddLoadingMoreMails(listview,mails)
             else
