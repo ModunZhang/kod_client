@@ -5,7 +5,6 @@
 
 local WidgetPushButton = import(".WidgetPushButton")
 local WidgetUIBackGround = import(".WidgetUIBackGround")
-local WidgetPopDialog = import(".WidgetPopDialog")
 local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local Enum = import("..utils.Enum")
 local window = import("..utils.window")
@@ -126,7 +125,7 @@ function WidgetUseItems:OpenChangePlayerOrCityName(item)
         eidtbox_holder=_("输入新的城市名称")
         request_key= "cityName"
     end
-    local dialog = WidgetPopDialog.new(264,title,window.top-230)
+    local dialog = UIKit:newWidgetUI("WidgetPopDialog",264,title,window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
     local editbox = cc.ui.UIInput.new({
@@ -181,7 +180,7 @@ function WidgetUseItems:OpenChangePlayerOrCityName(item)
 end
 function WidgetUseItems:OpenBuffDialog( item )
     local same_items = ItemManager:GetSameTypeItems(item)
-    local dialog = WidgetPopDialog.new(#same_items * 130 + 140,_("激活增益道具"),window.top-230)
+    local dialog = UIKit:newWidgetUI("WidgetPopDialog", #same_items * 130 + 140,_("激活增益道具"),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
 
@@ -203,26 +202,28 @@ function WidgetUseItems:OpenBuffDialog( item )
 
     local which_bg = true
     for i,v in ipairs(same_items) do
-        self:CreateItemBox(
-            v,
-            function ()
-                return true
-            end,
-            function ()
-                local item_name = v:Name()
-                NetManager:getUseItemPromise(item_name,{}):done(function ()
-                    dialog:LeftButtonClicked()
-                end)
-            end,
-            function ()
-                local item_name = v:Name()
-                NetManager:getBuyAndUseItemPromise(item_name,{}):done(function ()
-                    dialog:LeftButtonClicked()
-                end)
-            end,
-            which_bg
-        ):addTo(list_bg):align(display.CENTER,568/2,#same_items * 130+12 - 130/2 - (i-1)*130)
-        which_bg = not which_bg
+        if not (v:Count()<1 and not v:IsSell()) then
+            self:CreateItemBox(
+                v,
+                function ()
+                    return true
+                end,
+                function ()
+                    local item_name = v:Name()
+                    NetManager:getUseItemPromise(item_name,{}):done(function ()
+                        dialog:LeftButtonClicked()
+                    end)
+                end,
+                function ()
+                    local item_name = v:Name()
+                    NetManager:getBuyAndUseItemPromise(item_name,{}):done(function ()
+                        dialog:LeftButtonClicked()
+                    end)
+                end,
+                which_bg
+            ):addTo(list_bg):align(display.CENTER,568/2,#same_items * 130+12 - 130/2 - (i-1)*130)
+            which_bg = not which_bg
+        end
     end
     function dialog:OnItemEventTimer( item_event_new )
         local item_event = ItemManager:GetItemEventByType( string.split(item:Name(),"_")[1] )
@@ -260,7 +261,7 @@ function WidgetUseItems:OpenBuffDialog( item )
 end
 function WidgetUseItems:OpenResourceDialog( item )
     local same_items = ItemManager:GetSameTypeItems(item)
-    local dialog = WidgetPopDialog.new(4 * 130 +24 + 70,_("增益道具"),window.top-230)
+    local dialog = UIKit:newWidgetUI("WidgetPopDialog",4 * 130 +24 + 70,_("增益道具"),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
 
@@ -271,37 +272,39 @@ function WidgetUseItems:OpenResourceDialog( item )
     list_node:addTo(body):align(display.BOTTOM_CENTER, size.width/2,20)
     local which_bg = true
     for i,v in ipairs(same_items) do
-        local list_item = list:newItem()
-        list_item:setItemSize(570,130)
-        list_item:addContent(self:CreateItemBox(
-            v,
-            function ()
-                return true
-            end,
-            function ()
-                local item_name = v:Name()
-                NetManager:getUseItemPromise(item_name,{}):done(function ()
-                    dialog:LeftButtonClicked()
-                end)
-            end,
-            function ()
-                local item_name = v:Name()
-                NetManager:getBuyAndUseItemPromise(item_name,{}):done(function ()
-                    dialog:LeftButtonClicked()
-                end)
-            end,
-            which_bg
-        )
-        )
-        list:addItem(list_item)
-        which_bg = not which_bg
+        if not (v:Count()<1 and not v:IsSell()) then
+            local list_item = list:newItem()
+            list_item:setItemSize(570,130)
+            list_item:addContent(self:CreateItemBox(
+                v,
+                function ()
+                    return true
+                end,
+                function ()
+                    local item_name = v:Name()
+                    NetManager:getUseItemPromise(item_name,{}):done(function ()
+                        dialog:LeftButtonClicked()
+                    end)
+                end,
+                function ()
+                    local item_name = v:Name()
+                    NetManager:getBuyAndUseItemPromise(item_name,{}):done(function ()
+                        dialog:LeftButtonClicked()
+                    end)
+                end,
+                which_bg
+            )
+            )
+            list:addItem(list_item)
+            which_bg = not which_bg
+        end
     end
     list:reload()
     return dialog
 end
 function WidgetUseItems:OpenHeroBloodDialog( item )
     local same_items = ItemManager:GetSameTypeItems(item)
-    local dialog = WidgetPopDialog.new(#same_items * 130 +150,_("英雄之血"),window.top-230)
+    local dialog = UIKit:newWidgetUI("WidgetPopDialog",#same_items * 130 +150,_("英雄之血"),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
     local blood_bg = display.newScale9Sprite("back_ground_398x97.png",size.width/2,size.height-50,cc.size(556,58),cc.rect(10,10,378,77))
@@ -324,33 +327,35 @@ function WidgetUseItems:OpenHeroBloodDialog( item )
 
     local which_bg = true
     for i,v in ipairs(same_items) do
-        self:CreateItemBox(
-            v,
-            function ()
-                return true
-            end,
-            function ()
-                local item_name = v:Name()
-                NetManager:getUseItemPromise(item_name,{}):done(function ()
-                    dialog:LeftButtonClicked()
-                end)
-            end,
-            function ()
-                local item_name = v:Name()
-                NetManager:getBuyAndUseItemPromise(item_name,{}):done(function ()
-                    dialog:LeftButtonClicked()
-                end)
-            end,
-            which_bg
-        ):addTo(list_bg):align(display.CENTER,568/2,#same_items * 130+12 - 130/2 - (i-1)*130)
-        which_bg = not which_bg
+        if not (v:Count()<1 and not v:IsSell()) then
+            self:CreateItemBox(
+                v,
+                function ()
+                    return true
+                end,
+                function ()
+                    local item_name = v:Name()
+                    NetManager:getUseItemPromise(item_name,{}):done(function ()
+                        dialog:LeftButtonClicked()
+                    end)
+                end,
+                function ()
+                    local item_name = v:Name()
+                    NetManager:getBuyAndUseItemPromise(item_name,{}):done(function ()
+                        dialog:LeftButtonClicked()
+                    end)
+                end,
+                which_bg
+            ):addTo(list_bg):align(display.CENTER,568/2,#same_items * 130+12 - 130/2 - (i-1)*130)
+            which_bg = not which_bg
+        end
     end
     return dialog
 end
 function WidgetUseItems:OpenOneDragonItemDialog( item ,dragon)
     local same_items = ItemManager:GetSameTypeItems(item)
     local increase_type = string.split(item:Name(),"_")[1]
-    local dialog = WidgetPopDialog.new(#same_items*130+150,increase_type == "dragonHp" and _("增加龙的生命值") or _("增加龙的经验"),window.top-230)
+    local dialog = UIKit:newWidgetUI("WidgetPopDialog",#same_items*130+150,increase_type == "dragonHp" and _("增加龙的生命值") or _("增加龙的经验"),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
     local blood_bg = display.newScale9Sprite("back_ground_398x97.png",size.width/2,size.height-50,cc.size(556,58),cc.rect(10,10,378,77))
@@ -376,36 +381,38 @@ function WidgetUseItems:OpenOneDragonItemDialog( item ,dragon)
     local which_bg = true
 
     for i,v in ipairs(same_items) do
-        self:CreateItemBox(
-            v,
-            function ()
-                return true
-            end,
-            function ()
-                local item_name = v:Name()
-                NetManager:getUseItemPromise(item_name,{[item_name] = {
-                    dragonType = dragon:Type()
-                }}):done(function ()
-                    dialog:LeftButtonClicked()
-                end)
-            end,
-            function ()
-                local item_name = v:Name()
-                NetManager:getBuyAndUseItemPromise(item_name,{[item_name] = {
-                    dragonType = dragon:Type()
-                }}):done(function ()
-                    dialog:LeftButtonClicked()
-                end)
-            end,
-            which_bg
-        ):addTo(list_bg):align(display.CENTER,568/2,#same_items * 130+12 - 130/2 - (i-1)*130)
-        which_bg = not which_bg
+        if not (v:Count()<1 and not v:IsSell()) then
+            self:CreateItemBox(
+                v,
+                function ()
+                    return true
+                end,
+                function ()
+                    local item_name = v:Name()
+                    NetManager:getUseItemPromise(item_name,{[item_name] = {
+                        dragonType = dragon:Type()
+                    }}):done(function ()
+                        dialog:LeftButtonClicked()
+                    end)
+                end,
+                function ()
+                    local item_name = v:Name()
+                    NetManager:getBuyAndUseItemPromise(item_name,{[item_name] = {
+                        dragonType = dragon:Type()
+                    }}):done(function ()
+                        dialog:LeftButtonClicked()
+                    end)
+                end,
+                which_bg
+            ):addTo(list_bg):align(display.CENTER,568/2,#same_items * 130+12 - 130/2 - (i-1)*130)
+            which_bg = not which_bg
+        end
     end
     return dialog
 end
 function WidgetUseItems:OpenStrengthDialog( item )
     local same_items = ItemManager:GetSameTypeItems(item)
-    local dialog = WidgetPopDialog.new(#same_items * 138 +110,_("探索体力值"),window.top-230)
+    local dialog = UIKit:newWidgetUI("WidgetPopDialog",#same_items * 138 +110,_("探索体力值"),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
     local blood_bg = display.newScale9Sprite("back_ground_398x97.png",size.width/2,size.height-50,cc.size(556,58),cc.rect(10,10,378,77))
@@ -424,24 +431,26 @@ function WidgetUseItems:OpenStrengthDialog( item )
     }):align(display.RIGHT_CENTER,blood_bg:getContentSize().width-40,blood_bg:getContentSize().height/2)
         :addTo(blood_bg)
     for i,v in ipairs(same_items) do
-        self:CreateItemBox(
-            v,
-            function ()
-                return true
-            end,
-            function ()
-                local item_name = v:Name()
-                NetManager:getUseItemPromise(item_name,{}):done(function ()
-                    dialog:LeftButtonClicked()
-                end)
-            end,
-            function ()
-                local item_name = v:Name()
-                NetManager:getBuyAndUseItemPromise(item_name,{}):done(function ()
-                    dialog:LeftButtonClicked()
-                end)
-            end
-        ):addTo(body):align(display.CENTER,size.width/2,size.height - 160 - (i-1)*138)
+        if not (v:Count()<1 and not v:IsSell()) then
+            self:CreateItemBox(
+                v,
+                function ()
+                    return true
+                end,
+                function ()
+                    local item_name = v:Name()
+                    NetManager:getUseItemPromise(item_name,{}):done(function ()
+                        dialog:LeftButtonClicked()
+                    end)
+                end,
+                function ()
+                    local item_name = v:Name()
+                    NetManager:getBuyAndUseItemPromise(item_name,{}):done(function ()
+                        dialog:LeftButtonClicked()
+                    end)
+                end
+            ):addTo(body):align(display.CENTER,size.width/2,size.height - 160 - (i-1)*138)
+        end
     end
     return dialog
 end
@@ -533,7 +542,7 @@ function WidgetUseItems:OpenIncreaseDragonExpOrHp( item )
         return dragon_frame
     end
 
-    local dialog = WidgetPopDialog.new(220 + dragon_num*136,increase_type == "dragonHp" and _("增加龙的生命值") or _("增加龙的经验"),window.top-230)
+    local dialog = UIKit:newWidgetUI("WidgetPopDialog",220 + dragon_num*136,increase_type == "dragonHp" and _("增加龙的生命值") or _("增加龙的经验"),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
 
@@ -577,7 +586,7 @@ function WidgetUseItems:OpenIncreaseDragonExpOrHp( item )
     end
 
     local item_box_bg = self:GetListBg(size.width/2,size.height - 100,568,154):addTo(body)
-    
+
     self:CreateItemBox(
         item,
         function ()
@@ -618,7 +627,7 @@ function WidgetUseItems:OpenIncreaseDragonExpOrHp( item )
 end
 function WidgetUseItems:OpenChestDialog( item )
     local same_items = ItemManager:GetSameTypeItems(item)
-    local dialog = WidgetPopDialog.new(#same_items * 130 +140,item:GetLocalizeName(),window.top-230)
+    local dialog = UIKit:newWidgetUI("WidgetPopDialog",#same_items * 130 +140,item:GetLocalizeName(),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
     local list_bg = self:GetListBg(size.width/2,(#same_items * 130+24)/2+30, 568, #same_items * 130+24)
@@ -626,41 +635,43 @@ function WidgetUseItems:OpenChestDialog( item )
 
     local which_bg = true
     for i,v in ipairs(same_items) do
-        self:CreateItemBox(
-            v,
-            function (use_item)
-                if ItemManager:CanOpenChest(use_item)  then
-                    return true
-                else
-                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                        :SetPopMessage(_("没有钥匙"))
-                        :CreateOKButton(
-                            {
-                                listener = function()end
-                            })
-                        :AddToCurrentScene()
-                end
-            end,
-            function ()
-                local item_name = v:Name()
-                NetManager:getUseItemPromise(item_name,{}):done(function ()
-                    dialog:LeftButtonClicked()
-                end)
-            end,
-            function ()
-                local item_name = v:Name()
-                NetManager:getBuyAndUseItemPromise(item_name,{}):done(function ()
-                    dialog:LeftButtonClicked()
-                end)
-            end,
-            which_bg
-        ):addTo(list_bg):align(display.CENTER,568/2,#same_items * 130+12 - 130/2 - (i-1)*130)
-        which_bg = not which_bg
+        if not (v:Count()<1 and not v:IsSell()) then
+            self:CreateItemBox(
+                v,
+                function (use_item)
+                    if ItemManager:CanOpenChest(use_item)  then
+                        return true
+                    else
+                        FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                            :SetPopMessage(_("没有钥匙"))
+                            :CreateOKButton(
+                                {
+                                    listener = function()end
+                                })
+                            :AddToCurrentScene()
+                    end
+                end,
+                function ()
+                    local item_name = v:Name()
+                    NetManager:getUseItemPromise(item_name,{}):done(function ()
+                        dialog:LeftButtonClicked()
+                    end)
+                end,
+                function ()
+                    local item_name = v:Name()
+                    NetManager:getBuyAndUseItemPromise(item_name,{}):done(function ()
+                        dialog:LeftButtonClicked()
+                    end)
+                end,
+                which_bg
+            ):addTo(list_bg):align(display.CENTER,568/2,#same_items * 130+12 - 130/2 - (i-1)*130)
+            which_bg = not which_bg
+        end
     end
     return dialog
 end
 function WidgetUseItems:OpenMoveTheCityDialog( item ,params)
-    local dialog = WidgetPopDialog.new(200,item:GetLocalizeName(),window.top-230)
+    local dialog = UIKit:newWidgetUI("WidgetPopDialog",200,item:GetLocalizeName(),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
     local item_box_bg = self:GetListBg(size.width/2,90,568,154):addTo(body)
@@ -699,7 +710,7 @@ function WidgetUseItems:OpenMoveTheCityDialog( item ,params)
 end
 function WidgetUseItems:OpenNormalDialog( item )
     local same_items = ItemManager:GetSameTypeItems(item)
-    local dialog = WidgetPopDialog.new(#same_items * 130 +100,item:GetLocalizeName(),window.top-230)
+    local dialog = UIKit:newWidgetUI("WidgetPopDialog",#same_items * 130 +100,item:GetLocalizeName(),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
 
@@ -708,33 +719,35 @@ function WidgetUseItems:OpenNormalDialog( item )
 
     local which_bg = true
     for i,v in ipairs(same_items) do
-        self:CreateItemBox(
-            v,
-            function ()
-                return true
-            end,
-            function ()
-                local item_name = v:Name()
-                NetManager:getUseItemPromise(item_name,{}):done(function ()
-                    UIKit:PlayUseItemAni(v)
-                    dialog:LeftButtonClicked()
-                end)
-            end,
-            function ()
-                local item_name = v:Name()
-                NetManager:getBuyAndUseItemPromise(item_name,{}):done(function ()
-                    dialog:LeftButtonClicked()
-                end)
-            end,
-            which_bg
-        ):addTo(list_bg):align(display.CENTER,568/2,#same_items * 130+12 - 130/2 - (i-1)*130)
-        which_bg = not which_bg
+        if not (v:Count()<1 and not v:IsSell()) then
+            self:CreateItemBox(
+                v,
+                function ()
+                    return true
+                end,
+                function ()
+                    local item_name = v:Name()
+                    NetManager:getUseItemPromise(item_name,{}):done(function ()
+                        UIKit:PlayUseItemAni(v)
+                        dialog:LeftButtonClicked()
+                    end)
+                end,
+                function ()
+                    local item_name = v:Name()
+                    NetManager:getBuyAndUseItemPromise(item_name,{}):done(function ()
+                        dialog:LeftButtonClicked()
+                    end)
+                end,
+                which_bg
+            ):addTo(list_bg):align(display.CENTER,568/2,#same_items * 130+12 - 130/2 - (i-1)*130)
+            which_bg = not which_bg
+        end
     end
     return dialog
 end
 function WidgetUseItems:OpenVipActive( item )
     local same_items = ItemManager:GetSameTypeItems(item)
-    local dialog = WidgetPopDialog.new(4 * 130+24 +80,_("激活VIP"),window.top-230)
+    local dialog = UIKit:newWidgetUI("WidgetPopDialog",4 * 130+24 +80,_("激活VIP"),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
     -- 是否激活 vip
@@ -775,37 +788,39 @@ function WidgetUseItems:OpenVipActive( item )
 
     local list_bg = true
     for i,v in ipairs(same_items) do
-        local list_item = list:newItem()
-        list_item:setItemSize(570,130)
-        list_item:addContent(self:CreateItemBox(
-            v,
-            function ()
-                return true
-            end,
-            function ()
-                local item_name = v:Name()
-                NetManager:getUseItemPromise(item_name,{}):done(function ()
-                    dialog:LeftButtonClicked()
-                end)
-            end,
-            function ()
-                local item_name = v:Name()
-                NetManager:getBuyAndUseItemPromise(item_name,{}):done(function ()
-                    dialog:LeftButtonClicked()
-                end)
-            end,
-            list_bg
-        )
-        )
-        list:addItem(list_item)
-        list_bg = not list_bg
+        if not (v:Count()<1 and not v:IsSell()) then
+            local list_item = list:newItem()
+            list_item:setItemSize(570,130)
+            list_item:addContent(self:CreateItemBox(
+                v,
+                function ()
+                    return true
+                end,
+                function ()
+                    local item_name = v:Name()
+                    NetManager:getUseItemPromise(item_name,{}):done(function ()
+                        dialog:LeftButtonClicked()
+                    end)
+                end,
+                function ()
+                    local item_name = v:Name()
+                    NetManager:getBuyAndUseItemPromise(item_name,{}):done(function ()
+                        dialog:LeftButtonClicked()
+                    end)
+                end,
+                list_bg
+            )
+            )
+            list:addItem(list_item)
+            list_bg = not list_bg
+        end
     end
     list:reload()
     return dialog
 end
 function WidgetUseItems:OpenWarSpeedupDialog( item ,march_event)
     local same_items = ItemManager:GetSameTypeItems(item)
-    local dialog = WidgetPopDialog.new(#same_items * 130 + 140,_("战争沙漏"),window.top-230)
+    local dialog = UIKit:newWidgetUI("WidgetPopDialog",#same_items * 130 + 140,_("战争沙漏"),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
 
@@ -820,37 +835,39 @@ function WidgetUseItems:OpenWarSpeedupDialog( item ,march_event)
 
     local which_bg = true
     for i,v in ipairs(same_items) do
-        self:CreateItemBox(
-            v,
-            function ()
-                return true
-            end,
-            function ()
-                local item_name = v:Name()
-                NetManager:getUseItemPromise(item_name,{
-                    [item_name]={
-                        eventType = march_event:GetEventServerType(),
-                        eventId=march_event:WithObject():Id()
-                    }
+        if not (v:Count()<1 and not v:IsSell()) then
+            self:CreateItemBox(
+                v,
+                function ()
+                    return true
+                end,
+                function ()
+                    local item_name = v:Name()
+                    NetManager:getUseItemPromise(item_name,{
+                        [item_name]={
+                            eventType = march_event:GetEventServerType(),
+                            eventId=march_event:WithObject():Id()
+                        }
 
-                }):done(function ()
-                    dialog:LeftButtonClicked()
-                end)
-            end,
-            function ()
-                local item_name = v:Name()
-                NetManager:getBuyAndUseItemPromise(item_name,{
-                    [item_name]={
-                        eventType = march_event:GetEventServerType(),
-                        eventId=march_event:WithObject():Id()
-                    }
-                }):done(function ()
-                    dialog:LeftButtonClicked()
-                end)
-            end,
-            which_bg
-        ):addTo(list_bg):align(display.CENTER,568/2,#same_items * 130+12 - 130/2 - (i-1)*130)
-        which_bg = not which_bg
+                    }):done(function ()
+                        dialog:LeftButtonClicked()
+                    end)
+                end,
+                function ()
+                    local item_name = v:Name()
+                    NetManager:getBuyAndUseItemPromise(item_name,{
+                        [item_name]={
+                            eventType = march_event:GetEventServerType(),
+                            eventId=march_event:WithObject():Id()
+                        }
+                    }):done(function ()
+                        dialog:LeftButtonClicked()
+                    end)
+                end,
+                which_bg
+            ):addTo(list_bg):align(display.CENTER,568/2,#same_items * 130+12 - 130/2 - (i-1)*130)
+            which_bg = not which_bg
+        end
     end
     function dialog:OnAttackMarchEventTimerChanged( attackMarchEvent )
         if march_event:WithObject():Id() == attackMarchEvent:Id() and (attackMarchEvent:GetPlayerRole() == attackMarchEvent.MARCH_EVENT_PLAYER_ROLE.SENDER
@@ -872,7 +889,7 @@ function WidgetUseItems:OpenWarSpeedupDialog( item ,march_event)
     return dialog
 end
 function WidgetUseItems:OpenRetreatTroopDialog( item,event )
-    local dialog = WidgetPopDialog.new( 130 +80,item:GetLocalizeName(),window.top-230)
+    local dialog = UIKit:newWidgetUI("WidgetPopDialog", 130 +80,item:GetLocalizeName(),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
 
@@ -1026,6 +1043,9 @@ function WidgetUseItems:GetListBg(x,y,width,height)
     return display.newScale9Sprite("background_568x556.png",x,y,cc.size(width,height),cc.rect(10,10,548,536))
 end
 return WidgetUseItems
+
+
+
 
 
 
