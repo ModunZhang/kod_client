@@ -187,7 +187,8 @@ function GameUIAllianceSendTroops:OnMoveInStage()
                 end
                 local dragonType = self.dragon:Type()
                 local soldiers = self:GetSelectSoldier()
-                if self.dragon:Status() ~= "free" then
+
+                if not self.dragon:IsFree() and not self.dragon:IsDefenced() then
                     FullScreenPopDialogUI.new():SetTitle(_("提示"))
                         :SetPopMessage(_("龙未处于空闲状态"))
                         :AddToCurrentScene()
@@ -209,18 +210,33 @@ function GameUIAllianceSendTroops:OnMoveInStage()
                         :CreateOKButton(
                             {
                                 listener =  function ()
-                                    self.march_callback(dragonType,soldiers)
-                                    -- 确认派兵后关闭界面
-                                    self:LeftButtonClicked()
+                                    if self.dragon:IsDefenced() then
+                                        NetManager:getCancelDefenceDragonPromise():done(function()
+                                            self.march_callback(dragonType,soldiers)
+                                            -- 确认派兵后关闭界面
+                                            self:LeftButtonClicked()
+                                        end)
+                                    else
+                                        self.march_callback(dragonType,soldiers)
+                                        -- 确认派兵后关闭界面
+                                        self:LeftButtonClicked()
+                                    end
                                 end
                             }
                         )
                         :AddToCurrentScene()
                 else
-                    self.march_callback(dragonType,soldiers)
-                    -- 确认派兵后关闭界面
-                    self:LeftButtonClicked()
-
+                    if self.dragon:IsDefenced() then
+                        NetManager:getCancelDefenceDragonPromise():done(function()
+                            self.march_callback(dragonType,soldiers)
+                            -- 确认派兵后关闭界面
+                            self:LeftButtonClicked()
+                        end)
+                    else
+                        self.march_callback(dragonType,soldiers)
+                        -- 确认派兵后关闭界面
+                        self:LeftButtonClicked()
+                    end
                 end
             end
 
@@ -326,7 +342,7 @@ function GameUIAllianceSendTroops:SelectDragon()
             },
 
         }
-    ):addTo(self:GetView())
+    ):addTo(self,1000)
 end
 function GameUIAllianceSendTroops:SelectSoldiers()
     local list ,listnode=  UIKit:commonListView({
@@ -729,6 +745,9 @@ function GameUIAllianceSendTroops:onExit()
 end
 
 return GameUIAllianceSendTroops
+
+
+
 
 
 
