@@ -968,8 +968,7 @@ function WidgetEventTabButtons:OnProductionTechnologyEventDataChanged(changed_ma
 end
 function WidgetEventTabButtons:OnProductionTechnologyEventDataRefresh(changed_map)
     changed_map = changed_map or {}
-    local add,_,_ = unpack(changed_map)
-    self:EventChangeOn("technology", (add and #add > 0))
+    self:EventChangeOn("technology", (changed_map.added and #changed_map.added > 0))
 end
 
 function WidgetEventTabButtons:ProductionTechnologyEventUpgradeOrSpeedup(event)
