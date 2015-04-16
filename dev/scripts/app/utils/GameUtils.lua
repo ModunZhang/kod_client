@@ -270,6 +270,10 @@ end
 
 -- Translate Main
 function GameUtils:Translate(text,cb)
+    if text == "" then 
+        cb(" ")
+        return
+    end
     local language = self:getCurrentLanguage()
     if language == 'zh_Hant' or language == 'zh_Hans' then
         self:Baidu_Translate(text,cb)
