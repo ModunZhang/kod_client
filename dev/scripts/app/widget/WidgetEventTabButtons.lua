@@ -847,12 +847,13 @@ function WidgetEventTabButtons:LoadTechnologyEvents()
             end
         else
             technology_buildings[building_type] = city:GetFirstBuildingByType(building_type)
-            if technology_buildings[building_type]:IsUnlocked() and
-                soldier_manager:IsUpgradingMilitaryTech(building_type) then
-                local event = soldier_manager:GetUpgradingMilitaryTech(building_type)
-                table.insert(technology_events, {building_type, event})
-            else
-                table.insert(technology_events, {building_type})
+            if technology_buildings[building_type]:IsUnlocked() then
+                if soldier_manager:IsUpgradingMilitaryTech(building_type) then
+                    local event = soldier_manager:GetUpgradingMilitaryTech(building_type)
+                    table.insert(technology_events, {building_type, event})
+                else
+                    table.insert(technology_events, {building_type})
+                end
             end
         end
     end
@@ -926,7 +927,7 @@ function WidgetEventTabButtons:BuildingDescribe(building)
     return str, percent
 end
 function WidgetEventTabButtons:BuildingPercent(building)
-    local time = timer:GetServerTime() 
+    local time = timer:GetServerTime()
     return building:GetUpgradingLeftTimeByCurrentTime(time), building:GetUpgradingPercentByCurrentTime(time)
 end
 function WidgetEventTabButtons:SoldierDescribe(event)
@@ -994,6 +995,7 @@ function WidgetEventTabButtons:GetProductionTechnologyEventProgressInfo(event)
     return _("研发") .. event:Entity():GetLocalizedName() .. " " .. GameUtils:formatTimeStyle1(event:GetTime()),event:GetPercent()
 end
 return WidgetEventTabButtons
+
 
 
 
