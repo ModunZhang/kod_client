@@ -321,7 +321,7 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
                 if City:GetUser():GetGemResource():GetValue()< tonumber(self.gem_label:getString())then
                     FullScreenPopDialogUI.new()
                         :SetTitle(_("提示"))
-                        :SetPopMessage(_("您当前没有足够宝石"))
+                        :SetPopMessage(_("您当前没有足够金龙币"))
                         :CreateOKButton():AddToCurrentScene()
                     return
                 end
@@ -500,20 +500,9 @@ function WidgetRecruitSoldier:SetSoldier(soldier_name, star)
     local soldier_config, soldier_ui_config = self:GetConfigBySoldierTypeAndStar(soldier_name, star)
     -- title
     self.title:setString(Localize.soldier_name[soldier_name])
-    -- bg
-    -- local bg = UILib.soldier_bg[star]
-    -- self.star_bg:setTexture(display.newSprite(bg):getTexture())
-    -- -- soldier
-    -- if self.soldier then
-    --     self.star_bg:removeChild(self.soldier)
-    -- end
-    -- self.soldier = display.newSprite(soldier_ui_config):addTo(self.star_bg)
-    --     :align(display.CENTER, self.star_bg:getContentSize().width/2, self.star_bg:getContentSize().height/2)
-    -- self.soldier:scale(130/self.soldier:getContentSize().height)
-    -- local star = soldier_config.star
-    -- for i, v in ipairs(self.stars) do
-    --     v:setVisible(i <= star)
-    -- end
+
+    display.newSprite(UILib.soldier_color_bg_images[soldier_name]):addTo(self.back_ground)
+        :align(display.CENTER,84, self.back_ground:getContentSize().height - 84)
 
     self.soldier = cc.ui.UIPushButton.new({normal = soldier_ui_config,
         pressed = soldier_ui_config}):addTo(self.back_ground)
@@ -521,9 +510,7 @@ function WidgetRecruitSoldier:SetSoldier(soldier_name, star)
         :onButtonClicked(function(event)
             WidgetSoldierDetails.new(soldier_name, star):addTo(self)
         end)
-    -- self.soldier = display.newSprite(soldier_ui_config):addTo(self.back_ground)
-    -- :align(display.CENTER, 84, self.back_ground:getContentSize().height - 84)
-    -- self.soldier:scale(104/self.soldier:getContentSize().height)
+
     local rect = self.soldier:getCascadeBoundingBox()
     display.newSprite("box_soldier_128x128.png"):addTo(self.soldier):align(display.CENTER, 0,0)
 
@@ -715,6 +702,8 @@ end
 
 
 return WidgetRecruitSoldier
+
+
 
 
 

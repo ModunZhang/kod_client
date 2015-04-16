@@ -378,6 +378,24 @@ local SOLDIER_IMAGES = {
         "gate_3.png",
     }
 }
+local SOLDIER_COLOR_BG_IMAGES = {
+    ranger = "blue_bg_128x128.png",
+    catapult = "yellow_bg_128x128.png",
+    lancer = "blue_bg_128x128.png",
+    swordsman = "blue_bg_128x128.png",
+    sentinel = "blue_bg_128x128.png",
+    crossbowman = "blue_bg_128x128.png",
+    horseArcher = "blue_bg_128x128.png",
+    ballista = "yellow_bg_128x128.png",
+    skeletonWarrior = "green_bg_128x128.png",
+    skeletonArcher = "green_bg_128x128.png",
+    deathKnight = "green_bg_128x128.png",
+    meatWagon = "green_bg_128x128.png",
+    priest = "green_bg_128x128.png",
+    demonHunter = "green_bg_128x128.png",
+    paladin = "green_bg_128x128.png",
+    steamTank = "green_bg_128x128.png",
+}
 local BLACK_SOLDIER_IMAGES = {
     ranger = {
         "ranger_1.png",
@@ -707,7 +725,7 @@ local DAILY_TASK_ICON = {
 local PVEDefine = import("..entity.PVEDefine")
 local SpriteConfig = import("..sprites.SpriteConfig")
 local PVE = {
-    [PVEDefine.START_AIRSHIP] = {"image", "airship.png", 0.4},
+    [PVEDefine.START_AIRSHIP] = {"image", "pve_char.png", 0.4},
     [PVEDefine.WOODCUTTER] = {"image", SpriteConfig["woodcutter"]:GetConfigByLevel(1).png},
     [PVEDefine.QUARRIER] = {"image", SpriteConfig["quarrier"]:GetConfigByLevel(1).png},
     [PVEDefine.MINER] = {"image", SpriteConfig["miner"]:GetConfigByLevel(1).png},
@@ -984,6 +1002,7 @@ return {
     soldier_animation_files = SOLDIER_ANIMATION_FILES,
     soldier_animation = SOLDIER_ANIMATIONS,
     soldier_image = SOLDIER_IMAGES,
+    soldier_color_bg_images = SOLDIER_COLOR_BG_IMAGES,
     black_soldier_image = BLACK_SOLDIER_IMAGES,
     dragon_head  = DRAGON_HEAD,
     dragon_animations = DRAGON_ANIMATIONS,

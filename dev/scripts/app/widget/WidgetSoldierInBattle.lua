@@ -7,69 +7,83 @@ local normal = GameDatas.Soldiers.normal
 local special = GameDatas.Soldiers.special
 
 
-local BLACK_SOLDIER_IMAGES = {
+local PVE_SOLDIER_IMAGES = {
     ranger = {
+        bg = "blue_bg_128x128.png",
         "ranger_1.png",
         "b_ranger_1.png",
         "b_ranger_2.png",
     },
     catapult = {
+        bg = "blue_bg_128x128.png",
         "catapult_1.png",
         "b_catapult_1.png",
         "b_catapult_2.png",
     },
     lancer = {
+        bg = "blue_bg_128x128.png",
         "lancer_1.png",
         "b_lancer_1.png",
         "b_lancer_2.png",
     },
     swordsman = {
+        bg = "blue_bg_128x128.png",
         "swordsman_1.png",
         "b_swordsman_1.png",
         "b_swordsman_2.png",
     },
     sentinel = {
+        bg = "blue_bg_128x128.png",
         "sentinel_1.png",
         "b_sentinel_1.png",
         "b_sentinel_2.png",
     },
     crossbowman = {
+        bg = "blue_bg_128x128.png",
         "crossbowman_1.png",
         "b_crossbowman_1.png",
         "b_crossbowman_2.png",
     },
     horseArcher = {
+        bg = "blue_bg_128x128.png",
         "horseArcher_1.png",
         "b_horseArcher_1.png",
         "b_horseArcher_2.png",
     },
     ballista = {
+        bg = "blue_bg_128x128.png",
         "ballista_1.png",
         "b_ballista_1.png",
         "b_ballista_2.png",
     },
 
     skeletonWarrior = {
+        bg = "green_bg_128x128.png",
         "skeletonWarrior.png",
         "skeletonWarrior.png",
         "skeletonWarrior.png",
     },
     skeletonArcher = {
+        bg = "green_bg_128x128.png",
         "skeletonArcher.png",
         "skeletonArcher.png",
         "skeletonArcher.png",
     },
     deathKnight = {
+        bg = "green_bg_128x128.png",
         "deathKnight.png",
         "deathKnight.png",
         "deathKnight.png",
     },
     meatWagon = {
+        bg = "green_bg_128x128.png",
         "meatWagon.png",
         "meatWagon.png",
         "meatWagon.png",
     },
 }
+
+local pve_bg = "red_bg_128x128.png"
 
 
 function WidgetSoldierInBattle:ctor(filename, options)
@@ -86,10 +100,13 @@ function WidgetSoldierInBattle:ctor(filename, options)
         local config = special[self.soldier_name] or normal[self.soldier_name.."_"..options.star]
         soldier_star = config.star
     end
-    local soldier_ui_config = is_pve_battle and BLACK_SOLDIER_IMAGES or UILib.soldier_image
-    local soldier_ui = soldier_ui_config[self.soldier_name][soldier_star]
+    local soldier_ui_config = is_pve_battle and PVE_SOLDIER_IMAGES or UILib.soldier_image
+    local bg = is_pve_battle and pve_bg or PVE_SOLDIER_IMAGES[self.soldier_name].bg
 
-    self.soldier = display.newSprite(soldier_ui, nil, nil, {class=cc.FilteredSpriteWithOne})
+    display.newSprite(bg)
+    :addTo(self):align(display.CENTER, 55, pos.y):scale(soldier_scale)
+
+    self.soldier = display.newSprite(soldier_ui_config[self.soldier_name][soldier_star], nil, nil, {class=cc.FilteredSpriteWithOne})
     :addTo(self):align(display.CENTER, 55, pos.y):scale(soldier_scale)
 
     local size = self.soldier:getContentSize()

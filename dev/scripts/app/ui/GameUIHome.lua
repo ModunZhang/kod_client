@@ -133,8 +133,8 @@ function GameUIHome:onEnter()
     local ratio = self.bottom:getScale()
     self.event_tab = WidgetEventTabButtons.new(self.city, ratio)
     local rect1 = self.chat:getCascadeBoundingBox()
-    local rect2 = self.event_tab:getCascadeBoundingBox()
-    local x, y = rect1.x, rect1.y + rect1.height - 2 * ratio
+    local x, y = rect1.x, rect1.y + rect1.height - 2
+
     self.event_tab:addTo(self):pos(x, y)
 
     
@@ -333,7 +333,7 @@ function GameUIHome:CreateTop()
 
 
 
-    -- 宝石按钮
+    -- 金龙币按钮
     local button = cc.ui.UIPushButton.new(
         {normal = "gem_btn_up_196x68.png", pressed = "gem_btn_down_196x68.png"},
         {scale9 = false}

@@ -66,7 +66,7 @@ function GameUIPVEHome:CreateTop()
         color = UIKit:hex2c3b(0xffedae)})):setButtonLabelOffset(-20, 0)
 
 
-    -- 宝石按钮
+    -- 金龙币按钮
     local button = cc.ui.UIPushButton.new(
         {normal = "gem_btn_up_196x68.png", pressed = "gem_btn_down_196x68.png"},
         {scale9 = false}

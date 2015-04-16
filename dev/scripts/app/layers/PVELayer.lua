@@ -113,9 +113,18 @@ function PVELayer:onEnter()
     self.pve_map:AddObserver(self)
 end
 function PVELayer:LoadPlayer()
-    self.char = display.newSprite("pve_char.png"):addTo(self.object_layer):scale(0.5)
-    self.char:setAnchorPoint(cc.p(0.6, 0.4))
-    -- display.newSprite("playerIcon_default.png"):addTo(self.char):pos(104*0.5, 106*0.5):scale(0.8)
+    self.char = display.newNode():addTo(self.object_layer)
+    self.char:setContentSize(cc.size(80, 80))
+    local ariship = display.newSprite("airship.png"):addTo(self.char):scale(0.5)
+    local armature = ccs.Armature:create("feiting"):addTo(ariship)
+    local p = ariship:getAnchorPointInPoints()
+    armature:align(display.CENTER, p.x, p.y):getAnimation():playWithIndex(0)
+    armature:getAnimation():setSpeedScale(2)
+    ariship:setAnchorPoint(cc.p(0.4, 0.5))
+    ariship:runAction(cc.RepeatForever:create(transition.sequence{
+        cc.MoveBy:create(5, cc.p(0, 10)),
+        cc.MoveBy:create(5, cc.p(0, -10))
+    }))
 end
 function PVELayer:onExit()
     self.pve_map:RemoveObserver(self)
@@ -161,10 +170,10 @@ function PVELayer:PromiseOfTrap()
     local t = 0.025
     local r = 5
     local exclamation_time = 0.5
-    local exclamation_scale = 0.3
+    local exclamation_scale = 0.2
     local size = self.char:getContentSize()
     local s = display.newSprite("exclamation.png")
-        :addTo(self.char):pos(size.width - 80, size.height):scale(0)
+        :addTo(self.char):pos(size.width, size.height):scale(0)
     self.char:runAction(transition.sequence({
         cc.RotateBy:create(t, r),
         cc.RotateBy:create(t, -r),

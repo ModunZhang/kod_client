@@ -33,7 +33,7 @@ function HospitalUpgradeBuilding:CreateEvent()
         if soldiers and finish_time~=0 and id then
             hospital:GeneralSoldierLocalPush(self)
         else
-            hospital:CancelSoldierLocalPush(self)
+            hospital:CancelSoldierLocalPush(old_id)
         end
     end
     function event:StartTime()
@@ -197,7 +197,7 @@ function HospitalUpgradeBuilding:IsAbleToTreat(soldiers)
         return HospitalUpgradeBuilding.CAN_NOT_TREAT.LACK_RESOURCE
     end
 end
--- 普通治疗需要的宝石
+-- 普通治疗需要的金龙币
 function HospitalUpgradeBuilding:GetTreatGems(soldiers)
     local total_iron,total_stone,total_wood,total_food = City:GetSoldierManager():GetTreatResource(soldiers)
     local resource_state =  City:GetResourceManager():GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())<total_wood
@@ -220,7 +220,7 @@ function HospitalUpgradeBuilding:GetTreatGems(soldiers)
     end
     return need_gems
 end
---  立即治疗需要宝石
+--  立即治疗需要金龙币
 function HospitalUpgradeBuilding:GetTreatNowGems(soldiers)
     local total_time = City:GetSoldierManager():GetTreatTime(soldiers)
     need_gems = DataUtils:getGemByTimeInterval(total_time)

@@ -86,12 +86,12 @@ function WidgetAllianceCreateOrEdit:CreateAllianceButtonClicked()
 	end
 	if self:IsCreate() then
 		if config_intInit.createAllianceGem.value > User:GetGemResource():GetValue() then
-			errMsg = _("宝石不足")
+			errMsg = _("金龙币不足")
 			return 
 		end
 	else
 		if config_intInit.editAllianceBasicInfoGem.value > User:GetGemResource():GetValue() then
-			errMsg = _("宝石不足")
+			errMsg = _("金龙币不足")
 			return 
 		end
 	end
@@ -210,7 +210,7 @@ function WidgetAllianceCreateOrEdit:createCheckAllianeGroup()
 	local groupNode = display.newNode()
 	if self:IsCreate() then
 		local tipsLabel = UIKit:ttfLabel({
-				text = _("草地——产出强化绿龙的材料，更容易培养绿龙，更容易培养绿龙，草地产出绿宝石，建造资源加成类的铺筑建筑"),
+				text = _("草地——产出强化绿龙的材料，更容易培养绿龙，更容易培养绿龙，草地产出绿金龙币，建造资源加成类的铺筑建筑"),
 				size = 18,
 				color = 0x797154,
 				dimensions = cc.size(552, 0),

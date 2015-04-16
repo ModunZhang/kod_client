@@ -251,7 +251,7 @@ function GameUIAllianceContribute:CreateContributeItem(params)
     local own_label = UIKit:ttfLabel({
         text = GameUtils:formatNumber(params.own),
         size = 20,
-        color = 0x288400,
+        color = params.own < params.donate and 0x7e0000 or 0x288400,
     }):align(display.LEFT_CENTER, 90,25)
         :addTo(item)
     local donate_label = UIKit:ttfLabel({

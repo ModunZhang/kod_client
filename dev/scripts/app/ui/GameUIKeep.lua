@@ -417,7 +417,7 @@ function GameUIKeep:CreateChangeTerrainWindow()
                                 btn_name= _("前往商店")
                             }
                         )
-                        :SetPopMessage(_("宝石不足"))
+                        :SetPopMessage(_("金龙币不足"))
                     return
                 end
                 local selected_index = 1

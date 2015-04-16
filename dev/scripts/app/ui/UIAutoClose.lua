@@ -3,7 +3,7 @@
 local GameUIBase = import('.GameUIBase')
 
 local UIAutoClose = class('UIAutoClose', GameUIBase)
-
+local BODY_TAG = 2101
 function UIAutoClose:ctor(params)
     UIAutoClose.super.ctor(self,params)
     local node = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
@@ -13,7 +13,13 @@ function UIAutoClose:ctor(params)
             if self.disable then
                 return
             end
-            self:LeftButtonClicked()
+            local body = self:getChildByTag(BODY_TAG)
+            local lbpoint = body:convertToWorldSpace({x = 0, y = 0})
+            local size = body:getContentSize()
+            local rtpoint = body:convertToWorldSpace({x = size.width, y = size.height})
+            if not cc.rectContainsPoint(cc.rect(lbpoint.x, lbpoint.y, rtpoint.x - lbpoint.x, rtpoint.y - lbpoint.y), event) then
+                self:LeftButtonClicked()
+            end
         end
         return true
     end)
@@ -21,26 +27,22 @@ function UIAutoClose:ctor(params)
 end
 
 function UIAutoClose:addTouchAbleChild(body)
-    body:setTouchEnabled(true)
-    function body:isTouchInViewRect( event)
-        for k,v in pairs(self:getChildren()) do
-            if v:getCascadeBoundingBox():containsPoint(cc.p(event.x, event.y)) then
-                return true
-            end
-        end
-        local viewRect = self:convertToWorldSpace(cc.p(0, 0))
-        viewRect.width = self:getContentSize().width
-        viewRect.height = self:getContentSize().height
-        return cc.rectContainsPoint(viewRect, cc.p(event.x, event.y))
-    end
-    body:addNodeEventListener(cc.NODE_TOUCH_CAPTURE_EVENT, function(event)
-        if ("began" == event.name or "moved" == event.name or "ended" == event.name)
-            and body:isTouchInViewRect(event) then
-            return true
-        else
-            return false
-        end
-    end)
+    -- body:setTouchEnabled(true)
+    -- function body:isTouchInViewRect( event)
+    --     local viewRect = self:convertToWorldSpace(cc.p(0, 0))
+    --     viewRect.width = self:getContentSize().width
+    --     viewRect.height = self:getContentSize().height
+    --     return cc.rectContainsPoint(viewRect, cc.p(event.x, event.y))
+    -- end
+    -- body:addNodeEventListener(cc.NODE_TOUCH_CAPTURE_EVENT, function(event)
+    --     if ("began" == event.name or "moved" == event.name or "ended" == event.name)
+    --         and body:isTouchInViewRect(event) then
+    --         return true
+    --     else
+    --         return false
+    --     end
+    -- end)
+    body:setTag(BODY_TAG)
     self:addChild(body)
 end
 

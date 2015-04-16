@@ -74,16 +74,18 @@ function AllianceScene:OnTouchClicked(pre_x, pre_y, x, y)
     if self.util_node:getNumberOfRunningActions() > 0 then return end
     local building = self:GetSceneLayer():GetClickedObject(x, y)
     if building then
+        app:lockInput(true)
+        self.util_node:performWithDelay(function()
+            app:lockInput(false)
+        end, 0.5)
         if iskindof(building, "Sprite") then
-            app:lockInput(true)
-            self.util_node:performWithDelay(function()
-                app:lockInput(false)
-            end, 0.5)
             Sprite:PromiseOfFlash(building):next(function()
                 self:OpenUI(building)
             end)
         else
-            self:OpenUI(building)
+            self:GetSceneLayer():PromiseOfFlashEmptyGround(building, true):next(function()
+                self:OpenUI(building)
+            end)
         end
     elseif self:IsEditMode() then
         self:LeaveEditMode()
@@ -208,6 +210,7 @@ function AllianceScene:ReEnterScene()
     app:enterScene("AllianceScene")
 end
 return AllianceScene
+
 
 
 

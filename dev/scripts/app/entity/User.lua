@@ -59,7 +59,7 @@ function User:ctor(p)
         [GEM] = Resource.new(),
         [STRENGTH] = AutomaticUpdateResource.new(),
     }
-    self:GetGemResource():SetValueLimit(math.huge) -- 会有人充值这么多的宝石吗？
+    self:GetGemResource():SetValueLimit(math.huge) -- 会有人充值这么多的金龙币吗？
     self:GetStrengthResource():SetValueLimit(100)
 
     self.used_strength = 0

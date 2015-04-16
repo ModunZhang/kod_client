@@ -232,7 +232,7 @@ function GameUIPResourceBuilding:CheckSwitch(switch_to_building_type)
                     btn_name= _("前往商店")
                 }
             )
-            :SetPopMessage(_("宝石不足"))
+            :SetPopMessage(_("金龙币不足"))
         return
     elseif (city:GetMaxHouseCanBeBuilt(current_building:GetHouseType())-current_building:GetMaxHouseNum())<#city:GetBuildingByType(current_building:GetHouseType()) then
         FullScreenPopDialogUI.new()
