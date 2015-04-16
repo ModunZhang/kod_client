@@ -21,40 +21,6 @@ end)
 local NORMAL = GameDatas.Soldiers.normal
 local SPECIAL = GameDatas.Soldiers.special
 
-local SOLDIER_TYPE = {
-    ["swordsman_1"] = { png = "#Infantry_1_render/idle/1/00000.png" },
-    ["swordsman_2"] = { png = "soldier_swordsman_2.png" },
-    ["swordsman_3"] = { png = "soldier_swordsman_3.png" },
-    ["sentinel_1"] = { png = "soldier_sentinel_1.png" },
-    ["sentinel_2"] = { png = "soldier_sentinel_2.png" },
-    ["sentinel_3"] = { png = "soldier_sentinel_3.png" },
-    ["archer_1"] = { png = "#Archer_1_render/idle/1/00000.png" },
-    ["archer_2"] = { png = "soldier_archer_2.png" },
-    ["archer_3"] = { png = "soldier_archer_3.png" },
-    ["crossbowman_1"] = { png = "soldier_crossbowman_1.png" },
-    ["crossbowman_2"] = { png = "soldier_crossbowman_2.png" },
-    ["crossbowman_3"] = { png = "soldier_crossbowman_2.png" },
-    ["lancer_1"] = { png = "#Cavalry_1_render/idle/1/00000.png" },
-    ["lancer_2"] = { png = "soldier_lancer_2.png" },
-    ["lancer_3"] = { png = "soldier_lancer_3.png" },
-    ["horseArcher_1"] = { png = "soldier_horseArcher_1.png" },
-    ["horseArcher_2"] = { png = "soldier_horseArcher_2.png" },
-    ["horseArcher_3"] = { png = "soldier_horseArcher_3.png" },
-    ["catapult_1"] = { png = "#Catapult_1_render/move/1/00000.png" },
-    ["catapult_2"] = { png = "soldier_catapult_2.png" },
-    ["catapult_3"] = { png = "soldier_catapult_3.png" },
-    ["ballista_1"] = { png = "soldier_ballista_1.png" },
-    ["ballista_2"] = { png = "soldier_ballista_2.png" },
-    ["ballista_3"] = { png = "soldier_ballista_3.png" },
-    ["skeletonWarrior"] = { png = "soldier_skeletonWarrior.png" },
-    ["skeletonArcher"] = { png = "soldier_skeletonArcher.png" },
-    ["deathKnight"] = { png = "soldier_deathKnight.png" },
-    ["meatWagon"] = { png = "meatWagon.png" },
-    ["priest"] = {},
-    ["demonHunter"] = {},
-    ["paladin"] = {},
-    ["steamTank"] = {},
-}
 local SOLDIER_CATEGORY_MAP = {
     ["swordsman"] = "infantry",
     ["sentinel"] = "infantry",
@@ -131,35 +97,9 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
 
     -- soldier bg
     local size = back_ground:getContentSize()
+    self.back_ground  = back_ground
     local width, height = 140, 130
-    local soldier_bg = cc.ui.UIImage.new("back_ground_54x127.png",
-        {scale9 = true}):addTo(back_ground, 2)
-        :align(display.CENTER, 84, size.height - 84)
-        :setLayoutSize(width, height)
-
-    -- stars
-    self.stars = {}
-    local origin_x, origin_y, gap_y = width - 15, 15, 25
-    for i = 1, 5 do
-        local bg = cc.ui.UIImage.new("star_bg_24x23.png"):addTo(soldier_bg, 2)
-            :align(display.CENTER, origin_x, origin_y + (i - 1) * gap_y)
-
-        local pos = bg:getAnchorPointInPoints()
-        local star = cc.ui.UIImage.new("star_18x16.png"):addTo(bg)
-            :align(display.CENTER, pos.x, pos.y)
-        table.insert(self.stars, star)
-    end
-
-
-    -- star_bg
-    local size = soldier_bg:getContentSize()
-    local star_bg = cc.ui.UIImage.new("star1_114x128.png"):addTo(soldier_bg, 2)
-        :align(display.CENTER, 55, size.height/2)
-    self.star_bg = star_bg
-
-    -- soldier type
-    local pos = star_bg:getAnchorPointInPoints()
-
+   
     local size = back_ground:getContentSize()
     local label = cc.ui.UILabel.new({
         text = "强势对抗",
@@ -229,40 +169,6 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
     }):addTo(back_ground, 2)
         :align(display.CENTER, size.width - 60, size.height - 110)
 
-
-    -- local slider = WidgetSlider.new(display.LEFT_TO_RIGHT,  {bar = "slider_bg_461x24.png",
-    --     progress = "slider_progress_445x14.png",
-    --     button = "slider_btn_66x66.png"}, {max = treat_max}):addTo(back_ground, 2)
-    --     :align(display.LEFT_CENTER, 25, slider_height)
-    --     :onSliderValueChanged(function(event)
-    --         self:OnCountChanged(math.floor(event.value))
-    --     end)
-
-
-    -- -- soldier count bg
-    -- local bg = cc.ui.UIImage.new("back_ground_83x32.png"):addTo(back_ground, 2)
-    --     :align(display.CENTER, size.width - 70, label_height)
-
-    -- -- soldier current
-    -- local pos = bg:getAnchorPointInPoints()
-    -- self.soldier_current_count = cc.ui.UILabel.new({
-    --     text = "0",
-    --     size = 20,
-    --     font = UIKit:getFontFilePath(),
-    --     align = cc.ui.TEXT_ALIGN_RIGHT,
-    --     color = UIKit:hex2c3b(0x403c2f)
-    -- }):addTo(bg, 2)
-    --     :align(display.CENTER, pos.x, pos.y)
-
-    -- -- soldier total count
-    -- self.soldier_total_count = cc.ui.UILabel.new({
-    --     text = string.format("/ %d", treat_max),
-    --     size = 20,
-    --     font = UIKit:getFontFilePath(),
-    --     align = cc.ui.TEXT_ALIGN_RIGHT,
-    --     color = UIKit:hex2c3b(0x403c2f)
-    -- }):addTo(back_ground, 2)
-    --     :align(display.CENTER, size.width - 70, label_height - 35)
 
     -- progress
     WidgetSliderWithInput.new({max = treat_max}):addTo(back_ground):align(display.LEFT_CENTER, 25, 330)
@@ -348,7 +254,6 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
         :onButtonClicked(function(event)
             local soldiers = {{name=self.soldier_type, count=self.count}}
             local treat_fun = function ()
-                -- NetManager:instantTreatSoldiers(soldiers, NOT_HANDLE)
                 NetManager:getInstantTreatSoldiersPromise(soldiers)
                 self:instant_button_clicked()
             end
@@ -409,7 +314,6 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
             local hospital = City:GetFirstBuildingByType("hospital")
             local soldiers = {{name=self.soldier_type, count=self.count}}
             local treat_fun = function ()
-                -- NetManager:treatSoldiers(soldiers, NOT_HANDLE)
                 NetManager:getTreatSoldiersPromise(soldiers)
                 self:button_clicked()
             end
@@ -493,20 +397,23 @@ function WidgetTreatSoldier:SetSoldier(soldier_type, star)
     local soldier_config, soldier_ui_config = self:GetConfigBySoldierTypeAndStar(soldier_type, star)
     -- title
     self.title:setString(Localize.soldier_name[soldier_type])
-    -- bg
-    self.star_bg:setTexture(display.newSprite(UILib.soldier_bg[star]):getTexture())
-    -- soldier
-    if self.soldier then
-        self.star_bg:removeChild(self.soldier)
+
+    if soldier_type == "skeletonWarrior"
+        or soldier_type == "skeletonArcher"
+        or soldier_type == "deathKnight"
+        or soldier_type == "meatWagon"
+    then
+        display.newSprite("green_bg_128x128.png"):addTo(self.back_ground)
+            :align(display.CENTER,  86, self.back_ground:getContentSize().height-86):scale(130/128)
+    else
+        display.newSprite("blue_bg_128x128.png"):addTo(self.back_ground)
+            :align(display.CENTER,  86, self.back_ground:getContentSize().height-86):scale(130/128)
     end
-    self.soldier = display.newSprite(soldier_ui_config):addTo(self.star_bg)
-        :align(display.CENTER, self.star_bg:getContentSize().width/2, self.star_bg:getContentSize().height/2)
+
+    self.soldier = display.newSprite(soldier_ui_config):addTo(self.back_ground)
+        :align(display.CENTER,  86, self.back_ground:getContentSize().height-86)
     self.soldier:scale(130/self.soldier:getContentSize().height)
-    -- stars
-    local star = soldier_config.star
-    for i, v in ipairs(self.stars) do
-        v:setVisible(i <= star)
-    end
+    display.newSprite("box_soldier_128x128.png"):addTo(self.soldier):align(display.CENTER, self.soldier:getContentSize().width/2, self.soldier:getContentSize().height-64)
 
     self.soldier_config = soldier_config
     self.soldier_ui_config = soldier_ui_config

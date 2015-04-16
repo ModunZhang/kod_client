@@ -45,7 +45,7 @@ function WidgetSoldierDetails:InitSoldierDetails()
     local bg = self.body
 
     local bg_width,bg_height = bg:getContentSize().width,bg:getContentSize().height
-  
+
     self.soldier_name_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = Localize.soldier_name[self.soldier_type],
@@ -55,6 +55,17 @@ function WidgetSoldierDetails:InitSoldierDetails()
     }):align(display.LEFT_CENTER,180,bg_height-50):addTo(bg,2)
     local soldier_ui_config = UILib.soldier_image[self.soldier_type][self.soldier_level]
 
+    if self.soldier_type == "skeletonWarrior"
+        or self.soldier_type == "skeletonArcher"
+        or self.soldier_type == "deathKnight"
+        or self.soldier_type == "meatWagon"
+    then
+        display.newSprite("green_bg_128x128.png"):addTo(bg)
+            :align(display.CENTER_TOP,100, bg_height-30):scale(130/128)
+    else
+        display.newSprite("blue_bg_128x128.png"):addTo(bg)
+            :align(display.CENTER_TOP,100, bg_height-30):scale(130/128)
+    end
 
     local soldier_head_icon = display.newSprite(soldier_ui_config):align(display.CENTER_TOP,100, bg_height-30)
     soldier_head_icon:scale(130/soldier_head_icon:getContentSize().height)
@@ -92,7 +103,7 @@ function WidgetSoldierDetails:CreateDismissSoldierSilder()
     local bg = self.body
 
     local bg_width,bg_height = bg:getContentSize().width,bg:getContentSize().height
-  
+
     -- -- icon
     display.newSprite("res_citizen_44x50.png", bg_width/2-106, bg_height-126):addTo(bg)
     local citizen_label = cc.ui.UILabel.new({
@@ -103,7 +114,7 @@ function WidgetSoldierDetails:CreateDismissSoldierSilder()
         color = UIKit:hex2c3b(0x403c2f)})
         :align(display.CENTER, display.cx - 60, display.top - 324)
         :addTo(self)
-   
+
     self.slider = WidgetSliderWithInput.new({max = City:GetSoldierManager():GetCountBySoldierType(self.soldier_type)})
         :SetSliderSize(445, 24)
         :addTo(bg)
@@ -127,7 +138,7 @@ end
 
 function WidgetSoldierDetails:InitSoldierAttr()
     local sc = self.s_config
-    
+
     local  attr_table = {
         {
             _("对步兵攻击"),
@@ -191,6 +202,7 @@ function WidgetSoldierDetails:GetSoldierFieldWithBuff(field)
 end
 
 return WidgetSoldierDetails
+
 
 
 
