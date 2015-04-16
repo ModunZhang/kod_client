@@ -415,7 +415,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
 
         else
             UIKit:ttfLabel({
-                text = _("本次联盟会战结束后奖励,总击杀越高奖励越高.获胜方获得70%的总奖励,失败方获得剩下的,获胜联盟击杀前5名的玩家还将平分奖励的宝石"),
+                text = _("本次联盟会战结束后奖励,总击杀越高奖励越高.获胜方获得70%的总奖励,失败方获得剩下的,获胜联盟击杀前5名的玩家还将平分奖励的金龙币"),
                 size = 20,
                 color = 0x797154,
                 -- align = cc.ui.TEXT_ALIGN_CENTER,
@@ -435,7 +435,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
                 color = 0x514d3e,
             }):addTo(honour_bg,2)
                 :align(display.CENTER,honour_bg:getContentSize().width/2,honour_bg:getContentSize().height/2)
-            -- 宝石奖励
+            -- 金龙币奖励
             local gem_bg = display.newScale9Sprite("back_ground_138x34.png",window.right-60,window.top-350,cc.size(188,34))
                 :align(display.RIGHT_CENTER)
                 :addTo(layer)

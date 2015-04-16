@@ -65,7 +65,7 @@ end
 function MilitaryTechnology:IsMaxLevel()
     return self.level == #upgrade_config[self.name]
 end
--- 获取立即升级需要宝石
+-- 获取立即升级需要金龙币
 function MilitaryTechnology:GetInstantUpgradeGems()
     local config = self:GetLevelUpConfig()
     local required = {
@@ -82,7 +82,7 @@ function MilitaryTechnology:GetInstantUpgradeGems()
     }
     return DataUtils:buyResource(required.resources, {}) + DataUtils:buyMaterial(required.materials, {}) + DataUtils:getGemByTimeInterval(required.buildTime)
 end
--- 获取普通升级需要宝石
+-- 获取普通升级需要金龙币
 function MilitaryTechnology:GetUpgradeGems()
     local config = self:GetLevelUpConfig()
     local required = {
