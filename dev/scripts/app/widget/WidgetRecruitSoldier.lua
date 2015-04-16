@@ -515,6 +515,18 @@ function WidgetRecruitSoldier:SetSoldier(soldier_name, star)
     --     v:setVisible(i <= star)
     -- end
 
+    if soldier_name == "skeletonWarrior"
+        or soldier_name == "skeletonArcher"
+        or soldier_name == "deathKnight"
+        or soldier_name == "meatWagon"
+    then
+         display.newSprite("green_bg_128x128.png"):addTo(self.back_ground)
+            :align(display.CENTER,84, self.back_ground:getContentSize().height - 84)
+    else
+        display.newSprite("blue_bg_128x128.png"):addTo(self.back_ground)
+            :align(display.CENTER,84, self.back_ground:getContentSize().height - 84)
+    end
+
     self.soldier = cc.ui.UIPushButton.new({normal = soldier_ui_config,
         pressed = soldier_ui_config}):addTo(self.back_ground)
         :align(display.CENTER, 84, self.back_ground:getContentSize().height - 84)
@@ -715,6 +727,7 @@ end
 
 
 return WidgetRecruitSoldier
+
 
 
 
