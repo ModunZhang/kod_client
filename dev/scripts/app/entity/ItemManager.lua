@@ -310,7 +310,13 @@ function ItemManager:GetSameTypeItems(item)
         for i=1,math.huge do
             local same_item = find_area[area_type[1].."_"..i]
             if same_item then
-                table.insert(same_items, same_item)
+                if same_item:IsSell()then
+                    table.insert(same_items, same_item)
+                else
+                    if same_item:Count()>0  then
+                        table.insert(same_items, same_item)
+                    end
+                end
             else
                 break
             end
@@ -335,6 +341,7 @@ function ItemManager:CanOpenChest( item )
     return  not key_item or key_item:Count()>0
 end
 return ItemManager
+
 
 
 
