@@ -33,7 +33,7 @@ function HospitalUpgradeBuilding:CreateEvent()
         if soldiers and finish_time~=0 and id then
             hospital:GeneralSoldierLocalPush(self)
         else
-            hospital:CancelSoldierLocalPush(self)
+            hospital:CancelSoldierLocalPush(old_id)
         end
     end
     function event:StartTime()
