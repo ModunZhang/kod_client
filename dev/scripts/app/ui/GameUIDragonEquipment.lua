@@ -16,7 +16,6 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local DragonManager = import("..entity.DragonManager")
 local GameUIDragonEyrieDetail = import(".GameUIDragonEyrieDetail")
 local MaterialManager = import("..entity.MaterialManager")
-local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 
 function GameUIDragonEquipment:ctor(building,dragon,equipment_obj)
 	GameUIDragonEquipment.super.ctor(self)

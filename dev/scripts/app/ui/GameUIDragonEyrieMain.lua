@@ -420,7 +420,7 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNode()
 	self.dragon_manager:SortDragon()
 	for i,v in ipairs(contenNode:GetItems()) do
 		local dragon = self.dragon_manager:GetDragonByIndex(i)
-		local dragon_image = display.newSprite("dragon_egg_139x187.png", nil, nil, {class=cc.FilteredSpriteWithOne})
+		local dragon_image = display.newSprite(string.format("%s_egg_176x174.png",dragon:Type()))
 			:align(display.CENTER, 290,355)
 			:addTo(v)
 		v.dragon_image = dragon_image

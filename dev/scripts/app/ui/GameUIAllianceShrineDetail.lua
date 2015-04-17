@@ -98,7 +98,7 @@ function GameUIAllianceShrineDetail:BuildUI()
 		text = self:GetShrineStage():GetStageDesc(),
 		size = 22,
 		color = 0xffedae
-	}):align(display.CENTER,300,21):addTo(title_bar)
+	}):align(display.CENTER,300,26):addTo(title_bar)
 	local closeButton = UIKit:closeButton()
 	   	:addTo(title_bar)
 	   	:align(display.BOTTOM_RIGHT,title_bar:getContentSize().width, 0)
