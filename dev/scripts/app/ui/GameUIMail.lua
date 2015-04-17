@@ -720,7 +720,6 @@ function GameUIMail:OnInboxMailsChanged(changed_mails)
     if changed_mails.remove_mails then
         for _,remove_mail in pairs(changed_mails.remove_mails) do
             self.inbox_listview:removeItem(self.inbox_mails[remove_mail.id])
-            self.inbox_listview:reload()
             self.inbox_mails[remove_mail.id]=nil
         end
     end
@@ -1170,7 +1169,6 @@ function GameUIMail:CreateReportItem(listview,report)
     local isFromMe = report:IsFromMe()
     if isFromMe == "collectResource" then
         local rewards = report:GetMyRewards()[1]
-        dump(rewards)
         UIKit:ttfLabel(
             {
                 text = _("资源采集报告"),
@@ -1214,7 +1212,9 @@ function GameUIMail:CreateReportItem(listview,report)
             {
                 text = isFromMe and self:GetMyName(report) or self:GetEnemyName(report),
                 size = 20,
-                color = 0x403c2f
+                color = 0x403c2f,
+                dimensions = cc.size(150,20),
+                ellipsis = true
             }):align(display.LEFT_CENTER, 120, 50)
             :addTo(report_content_bg)
         -- 发出方所属联盟
@@ -1223,7 +1223,7 @@ function GameUIMail:CreateReportItem(listview,report)
                 text = isFromMe and "["..self:GetMyAllianceTag(report).."]" or "["..self:GetEnemyAllianceTag(report).."]",
                 size = 20,
                 color = 0x403c2f
-            }):align(display.LEFT_CENTER, 120, 30)
+            }):align(display.LEFT_CENTER, 120, 27)
             :addTo(report_content_bg)
 
 
@@ -1241,7 +1241,9 @@ function GameUIMail:CreateReportItem(listview,report)
             {
                 text = isFromMe and self:GetEnemyName(report) or self:GetMyName(report),
                 size = 20,
-                color = 0x403c2f
+                color = 0x403c2f,
+                dimensions = cc.size(150,20),
+                ellipsis = true
             }):align(display.LEFT_CENTER, 350, 50)
             :addTo(report_content_bg)
         -- 发向方所属联盟
@@ -1250,7 +1252,7 @@ function GameUIMail:CreateReportItem(listview,report)
                 text = isFromMe and "["..self:GetEnemyAllianceTag(report).."]" or "["..self:GetMyAllianceTag(report).."]",
                 size = 20,
                 color = 0x403c2f
-            }):align(display.LEFT_CENTER, 350, 30)
+            }):align(display.LEFT_CENTER, 350, 27)
             :addTo(report_content_bg)
     end
     item.saved_button = cc.ui.UICheckBoxButton.new({
@@ -1486,7 +1488,6 @@ function GameUIMail:OnReportsChanged( changed_map )
     if changed_map.remove then
         for _,report in pairs(changed_map.remove) do
             self.report_listview:removeItem(self.item_reports[report:Id()])
-            self.report_listview:reload()
             self.item_reports[report:Id()]=nil
         end
     end
@@ -1647,6 +1648,7 @@ function GameUIMail:GetEnemyAllianceTag(report)
 end
 
 return GameUIMail
+
 
 
 
