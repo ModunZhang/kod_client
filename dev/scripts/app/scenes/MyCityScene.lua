@@ -305,6 +305,10 @@ function MyCityScene:OnSceneScale(scene_layer)
         -- self:GetSceneUILayer():ShowLevelUpNode()
         scene_layer:ShowLevelUpNode()
     end
+    local widget_move_house = self:GetSceneUILayer():getChildByTag(WidgetMoveHouse.ADD_TAG)
+    if widget_move_house then
+        widget_move_house:OnSceneScale()
+    end
 end
 function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
     if self.event_manager:TouchCounts() > 0 or self.util_node:getNumberOfRunningActions() > 0 then return end
