@@ -9,6 +9,7 @@ function ToolShopSprite:OnMakingMaterialsWithEvent()
 end
 function ToolShopSprite:OnEndMakeMaterialsWithEvent()
     self:DoAni()
+    app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
 end
 function ToolShopSprite:OnGetMaterialsWithEvent()
 end
