@@ -117,7 +117,7 @@ function MaterialManager:OnMaterialsComing(material_type, materials)
             if material_type == EQUIPMENT then
                 GameGlobalUI:showTips(_("制造装备完成"),get_list)
             else
-                GameGlobalUI:showTips(_("获得材料"),get_list)
+                -- GameGlobalUI:showTips(_("获得材料"),get_list)
             end
         end
     end
