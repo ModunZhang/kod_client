@@ -135,6 +135,11 @@ function MailManager:DeleteMail(mail)
             v.index = v.index - 1
         end
     end
+    for k,v in pairs(DataManager:getUserData().mails) do
+        if v.index > delete_mail_server_index then
+            v.index = v.index - 1
+        end
+    end
 end
 function MailManager:ModifyMail(mail)
     for k,v in pairs(self.mails) do
@@ -326,7 +331,7 @@ function MailManager:OnNewMailsChanged( mails )
                 if not data.index then
                     data.index = self.mails[1] and (self.mails[1].index + 1) or 0
                 end
-                table.insert(add_mails, data)
+                table.insert(add_mails, clone(data))
                 table.insert(self.mails, 1, clone(data))
                 self:IncreaseUnReadMailsNum(1)
 
@@ -341,12 +346,12 @@ function MailManager:OnNewMailsChanged( mails )
             end
         elseif type == "remove" then
             for i,data in ipairs(mail) do
-                table.insert(remove_mails, data)
+                table.insert(remove_mails, clone(data))
                 self:DeleteMail(clone(data))
             end
         elseif type == "edit" then
             for i,data in ipairs(mail) do
-                table.insert(edit_mails, self:ModifyMail(data))
+                table.insert(edit_mails, self:ModifyMail(clone(data)))
             end
         end
     end
@@ -621,6 +626,7 @@ function MailManager:FetchSavedReportsFromServer(fromIndex)
     end)
 end
 return MailManager
+
 
 
 

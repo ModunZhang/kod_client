@@ -720,7 +720,6 @@ function GameUIMail:OnInboxMailsChanged(changed_mails)
     if changed_mails.remove_mails then
         for _,remove_mail in pairs(changed_mails.remove_mails) do
             self.inbox_listview:removeItem(self.inbox_mails[remove_mail.id])
-            self.inbox_listview:reload()
             self.inbox_mails[remove_mail.id]=nil
         end
     end
@@ -1170,7 +1169,6 @@ function GameUIMail:CreateReportItem(listview,report)
     local isFromMe = report:IsFromMe()
     if isFromMe == "collectResource" then
         local rewards = report:GetMyRewards()[1]
-        dump(rewards)
         UIKit:ttfLabel(
             {
                 text = _("资源采集报告"),
