@@ -16,6 +16,13 @@ function MapScene:ctor()
     self.blur_count = 1
     self.event_manager = EventManager.new(self)
     self.touch_judgment = TouchJudgment.new(self)
+
+    User:AddListenOnType(self, User.LISTEN_TYPE.BASIC)
+end
+function MapScene:OnBasicChanged(user, changed)
+    if changed.level then
+        UIKit:newGameUI('GameUILevelUp', user):AddToScene(self)
+    end
 end
 function MapScene:onEnter()
     self.scene_node = display.newClippingRegionNode(cc.rect(0, 0, display.width, display.height)):addTo(self)
