@@ -1484,7 +1484,6 @@ function GameUIMail:OnReportsChanged( changed_map )
     if changed_map.remove then
         for _,report in pairs(changed_map.remove) do
             self.report_listview:removeItem(self.item_reports[report:Id()])
-            self.report_listview:reload()
             self.item_reports[report:Id()]=nil
         end
     end
