@@ -480,7 +480,9 @@ function GameUIWarReport:CreateBelligerentsItem(player,isSelf)
     UIKit:ttfLabel({
         text = player.name or Localize.village_name[player.type] ,
         size = 20,
-        color = 0x403c2f
+        color = 0x403c2f,
+        dimensions = cc.size(200,22),
+        ellipsis = true
     }):align(display.LEFT_CENTER,90, height-25)
         :addTo(player_item)
 
