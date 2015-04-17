@@ -229,6 +229,15 @@ function GameUIUnlockBuilding:PopNotSatisfyDialog(listener,can_not_update_type)
         dialog:SetTitle(_("立即开始"))
         dialog:SetPopMessage(_("您当前没有空闲的建筑,是否花费魔法石立即完成上一个队列"))
         dialog:CreateNeeds({value = required_gems})
+    elseif can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.GEM_NOT_ENOUGH then
+        dialog:SetTitle(_("提示"))
+            :SetPopMessage(can_not_update_type)
+            :CreateOKButton({
+                listener =  function ()
+                    UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                    self:LeftButtonClicked()
+                end
+            })
     else
         dialog:SetTitle(_("提示"))
         dialog:SetPopMessage(can_not_update_type)
@@ -251,6 +260,7 @@ end
 
 
 return GameUIUnlockBuilding
+
 
 
 
