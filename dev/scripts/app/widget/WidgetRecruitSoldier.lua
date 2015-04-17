@@ -4,6 +4,7 @@ local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local UILib = import("..ui.UILib")
 local Localize = import("..utils.Localize")
 local MaterialManager = import("..entity.MaterialManager")
+local SoldierManager = import("..entity.SoldierManager")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetSliderWithInput = import("..widget.WidgetSliderWithInput")
@@ -152,46 +153,6 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
         color = UIKit:hex2c3b(0x403c2f)
     }):addTo(back_ground, 2)
         :align(display.LEFT_CENTER, size.width - 100, size.height - 120)
-
-    -- progress
-    -- local slider_height, label_height = size.height - 170, size.height - 150
-    -- local slider = WidgetSlider.new(display.LEFT_TO_RIGHT,  {bar = "slider_bg_461x24.png",
-    --     progress = "slider_progress_445x14.png",
-    --     button = "slider_btn_66x66.png"}, {max = self.recruit_max}):addTo(back_ground, 2)
-    --     :align(display.LEFT_CENTER, 25, slider_height)
-    --     :onSliderValueChanged(function(event)
-    --         self:OnCountChanged(math.floor(event.value))
-    --     end)
-    -- assert(not self.slider)
-    -- self.slider = slider
-
-
-    -- -- soldier count bg
-    -- local bg = cc.ui.UIImage.new("back_ground_83x32.png"):addTo(back_ground, 2)
-    --     :align(display.CENTER, size.width - 70, label_height)
-
-    -- -- soldier current
-    -- local pos = bg:getAnchorPointInPoints()
-    -- self.soldier_current_count = cc.ui.UILabel.new({
-    --     text = "0",
-    --     size = 20,
-    --     font = UIKit:getFontFilePath(),
-    --     align = cc.ui.TEXT_ALIGN_RIGHT,
-    --     color = UIKit:hex2c3b(0x403c2f)
-    -- }):addTo(bg, 2)
-    --     :align(display.CENTER, pos.x, pos.y)
-
-    -- -- soldier total count
-    -- self.soldier_total_count = cc.ui.UILabel.new({
-    --     text = string.format("/ %d", self.recruit_max),
-    --     size = 20,
-    --     font = UIKit:getFontFilePath(),
-    --     align = cc.ui.TEXT_ALIGN_RIGHT,
-    --     color = UIKit:hex2c3b(0x403c2f)
-    -- }):addTo(back_ground, 2)
-    --     :align(display.CENTER, size.width - 70, label_height - 35)
-
-
 
 
     -- need bg
@@ -476,6 +437,7 @@ function WidgetRecruitSoldier:onEnter()
     local max = self:GetCurrentMaxRecruitNum(self.res_total_map)
     self.slider_input:SetValue(max)
 
+    self.city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
     UIKit:CheckOpenUI(self)
     app.timer:AddListener(self)
 
@@ -484,6 +446,7 @@ function WidgetRecruitSoldier:onExit()
     self.barracks:RemoveBarracksListener(self)
     self.city:GetResourceManager():RemoveObserver(self)
     app.timer:RemoveListener(self)
+    self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
     UIKit:getRegistry().removeObject(self.__cname)
 end
 function WidgetRecruitSoldier:OnTimer(current_time)
@@ -683,7 +646,18 @@ function WidgetRecruitSoldier:CheckMaterials(count)
         end
     end
 end
-
+function WidgetRecruitSoldier:OnSoliderStarCountChanged(soldier_manager,star_changed_map)
+    for i,v in pairs(star_changed_map) do
+        if v == self.soldier_name then
+            self.star =  soldier_manager:GetStarBySoldierType(v)
+            local soldier_config, soldier_ui_config = self:GetConfigBySoldierTypeAndStar(soldier_name, self.star)
+            self.soldier:setButtonImage(cc.ui.UIPushButton.NORMAL, soldier_ui_config, true)
+            self.soldier:setButtonImage(cc.ui.UIPushButton.PRESSED, soldier_ui_config, true)
+            self.soldier_config = soldier_config
+            self.soldier_ui_config = soldier_ui_config
+        end
+    end
+end
 -- fte
 function WidgetRecruitSoldier:Lock()
     return cocos_promise.defer(function() return self end)
@@ -702,6 +676,8 @@ end
 
 
 return WidgetRecruitSoldier
+
+
 
 
 
