@@ -172,6 +172,10 @@ function UIKit:ttfLabel( params )
         params.color = self:hex2c3b(params.color)
     end
     local label = cc.ui.UILabel.new(params)
+    if params.ellipsis then
+        label:setLineBreakWithoutSpace(true)
+        label:setEllipsisEabled(true)
+    end
     if params.shadow then
         label:enableShadow()
     end
