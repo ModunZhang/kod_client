@@ -19,22 +19,30 @@ function GameUIWithCommonHeader:onEnter()
     self.control_close_layer = display.newLayer():addTo(self,100)
     self.control_close_layer:setTouchSwallowEnabled(false)
     self.control_close_layer:setNodeEventEnabled(true)
-    self.control_close_layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
-        if event.name == "ended" then
-            if self.disable then
-                return
-            end
-            local lbpoint = background:convertToWorldSpace({x = 0, y = 0})
-            local size = background:getContentSize()
-            local rtpoint = background:convertToWorldSpace({x = size.width, y = size.height})
+    local lbpoint = background:convertToWorldSpace({x = 0, y = 0})
+    local size = background:getContentSize()
+    local rtpoint = background:convertToWorldSpace({x = size.width, y = size.height})
 
-            local lbpoint_title = titleBar:convertToWorldSpace({x = 0, y = 0})
-            local size_title = titleBar:getContentSize()
-            local rtpoint_title = titleBar:convertToWorldSpace({x = size_title.width, y = size_title.height})
+    local lbpoint_title = titleBar:convertToWorldSpace({x = 0, y = 0})
+    local size_title = titleBar:getContentSize()
+    local rtpoint_title = titleBar:convertToWorldSpace({x = size_title.width, y = size_title.height})
+    local is_began_out = false
+    self.control_close_layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+        if event.name == "began" then
             if not cc.rectContainsPoint(cc.rect(lbpoint.x, lbpoint.y, rtpoint.x - lbpoint.x, rtpoint.y - lbpoint.y), event)
                 and not cc.rectContainsPoint(cc.rect(lbpoint_title.x, lbpoint_title.y, rtpoint_title.x - lbpoint_title.x, rtpoint_title.y - lbpoint_title.y), event)
             then
-                self:LeftButtonClicked()
+                is_began_out = true
+            end
+        elseif event.name == "ended" then
+            if not cc.rectContainsPoint(cc.rect(lbpoint.x, lbpoint.y, rtpoint.x - lbpoint.x, rtpoint.y - lbpoint.y), event)
+                and not cc.rectContainsPoint(cc.rect(lbpoint_title.x, lbpoint_title.y, rtpoint_title.x - lbpoint_title.x, rtpoint_title.y - lbpoint_title.y), event)
+            then
+                if is_began_out then
+                    self:LeftButtonClicked()
+                end
+            else
+                is_began_out = false
             end
         end
         return true
@@ -200,6 +208,7 @@ function GameUIWithCommonHeader:CreateTabButtons(param, func)
 end
 
 return GameUIWithCommonHeader
+
 
 
 
