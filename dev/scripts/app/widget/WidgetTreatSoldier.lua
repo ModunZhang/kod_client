@@ -381,7 +381,7 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
         :align(display.CENTER, center, -50)
 
     cc.ui.UILabel.new({
-        text = "(-20:20:20)",
+        text = "(-00:00:00)",
         size = 18,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_CENTER,
