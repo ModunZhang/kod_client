@@ -27,19 +27,47 @@
 #define _CCLabelTextFormatter_h_
 
 #include "platform/CCPlatformMacros.h"
-
+#include "2d/CCFontAtlas.h"
+#include "math/Vec2.h"
+#include "math/CCGeometry.h"
 NS_CC_BEGIN
 
 class Label;
-
+class labelUtil;
+struct LetterInfo_
+{
+    FontLetterDefinition def;
+    Vec2 position;
+    Size  contentSize;
+    int   atlasIndex;
+};
+struct Status
+{
+    Status()
+    {
+        is_width_max = false;
+        is_height_max = false;
+        is_cut = false;
+    }
+    bool is_width_max;
+    bool is_height_max;
+    bool is_cut;
+};
 class CC_DLL LabelTextFormatter
 {
 public:
-    
+	static bool ellipsisText(Label *theLabel, std::u16string& _currentUTF16String, std::u16string& text);
     static bool multilineText(Label *theLabel);
     static bool alignText(Label *theLabel);
     static bool createStringSprites(Label *theLabel);
-
+private:
+	static Status _ellipsisText(labelUtil *theLabel,
+                              std::u16string& origin_str,
+                              std::u16string& text,
+                              std::vector<LetterInfo_>& lettersInfo,
+                              int& _limitShowCount,
+                              FontAtlas * newAtlas,
+                              const int *kernings);
 };
 
 NS_CC_END
