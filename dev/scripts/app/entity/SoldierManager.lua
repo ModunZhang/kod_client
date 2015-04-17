@@ -123,11 +123,15 @@ function SoldierManager:GetTotalUpkeep()
 end
 function SoldierManager:GetTreatResource(soldiers)
     local total_iron,total_stone,total_wood,total_food = 0,0,0,0
+    dump(soldiers)
     for k, v in pairs(soldiers) do
-        total_iron = total_iron + NORMAL[v.name.."_"..self:GetStarBySoldierType(v.name)].treatIron*v.count
-        total_stone = total_iron + NORMAL[v.name.."_"..self:GetStarBySoldierType(v.name)].treatStone*v.count
-        total_wood = total_iron + NORMAL[v.name.."_"..self:GetStarBySoldierType(v.name)].treatWood*v.count
-        total_food = total_iron + NORMAL[v.name.."_"..self:GetStarBySoldierType(v.name)].treatFood*v.count
+        local config = NORMAL[v.name.."_"..self:GetStarBySoldierType(v.name)]
+        if config then
+            total_iron = total_iron + config.treatIron*v.count
+            total_stone = total_iron + config.treatStone*v.count
+            total_wood = total_iron + config.treatWood*v.count
+            total_food = total_iron + config.treatFood*v.count
+        end
     end
     return total_iron,total_stone,total_wood,total_food
 end
@@ -654,6 +658,7 @@ function SoldierManager:OnMilitaryTechEventsTimer(tech_event)
     end)
 end
 return SoldierManager
+
 
 
 

@@ -143,17 +143,20 @@ function WidgetEventTabButtons:OnMilitaryTechEventsChanged(soldier_manager,chang
     if #changed_map[1]~=0 then
         self:EventChangeOn("technology", #changed_map[1]>0)
     end
+    if #changed_map[3]>0 then
+        self:EventChangeOn("technology")
+    end
     self:RefreshBuildQueueByType("technology")
 end
 function WidgetEventTabButtons:OnMilitaryTechEventsAllChanged()
-    if self:IsShow() and self:GetCurrentTab()== "technology" then
-        -- self:EventChangeOn("technology")
-    end
     self:RefreshBuildQueueByType("technology")
 end
 function WidgetEventTabButtons:OnSoldierStarEventsChanged(soldier_manager, changed)
     if #changed[1]~=0 then
         self:EventChangeOn("technology", #changed[1]>0)
+    end
+    if #changed[3]>0 then
+        self:EventChangeOn("technology")
     end
     self:RefreshBuildQueueByType("technology")
 end
@@ -973,9 +976,11 @@ function WidgetEventTabButtons:OnProductionTechnologyEventDataChanged(changed_ma
 end
 function WidgetEventTabButtons:OnProductionTechnologyEventDataRefresh(changed_map)
     changed_map = changed_map or {}
-    print("OnProductionTechnologyEventDataRefresh>>>>")
     if changed_map.added and #changed_map.added > 0 then
         self:EventChangeOn("technology", true)
+    end
+     if changed_map.removed and #changed_map.added > 0 then
+        self:EventChangeOn("technology")
     end
 end
 
