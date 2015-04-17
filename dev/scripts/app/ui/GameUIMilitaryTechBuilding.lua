@@ -39,23 +39,33 @@ function GameUIMilitaryTechBuilding:OnMoveInStage()
     },
     function(tag)
         if tag == 'tech' then
-            self.status:setVisible(true)
             self.tech_layer:setVisible(true)
             self.promote_layer:setVisible(false)
             if not self.teac_list then
                 self:InitTech()
             end
-        elseif tag == 'promote' then
+            if not self.status then
+                -- 军事科技升级状态
+                self.status = WidgetMilitaryTechnologyStatus.new(self.building):addTo(self:GetView(),2):pos(window.cx, window.top_bottom)
+            end
             self.status:setVisible(true)
+        elseif tag == 'promote' then
             self.tech_layer:setVisible(false)
             self.promote_layer:setVisible(true)
             if not self.promote_list then
                 self:InitPromote()
             end
+            if not self.status then
+                -- 军事科技升级状态
+                self.status = WidgetMilitaryTechnologyStatus.new(self.building):addTo(self:GetView(),2):pos(window.cx, window.top_bottom)
+            end
+            self.status:setVisible(true)
         else
             self.tech_layer:setVisible(false)
             self.promote_layer:setVisible(false)
-            self.status:setVisible(false)
+            if self.status then
+                self.status:setVisible(false)
+            end
         end
     end):pos(window.cx, window.bottom + 34)
     City:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_DATA_CHANGED)
@@ -67,8 +77,6 @@ end
 function GameUIMilitaryTechBuilding:CreateBetweenBgAndTitle()
     GameUIMilitaryTechBuilding.super.CreateBetweenBgAndTitle(self)
 
-    -- 军事科技升级状态
-    self.status = WidgetMilitaryTechnologyStatus.new(self.building):addTo(self:GetView(),2):pos(window.cx, window.top_bottom)
 
     -- 科技 layer
     self.tech_layer = display.newLayer():addTo(self:GetView())
@@ -108,4 +116,6 @@ function GameUIMilitaryTechBuilding:OnMilitaryTechsDataChanged(soldier_manager,c
     end
 end
 return GameUIMilitaryTechBuilding
+
+
 
