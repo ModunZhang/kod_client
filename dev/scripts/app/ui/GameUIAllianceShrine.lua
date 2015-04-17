@@ -253,12 +253,14 @@ function GameUIAllianceShrine:GetStageListItem(index,stage_obj)
 	local item = self.stage_list:newItem()
 	local is_locked = stage_obj:IsLocked()
 	local troop = stage_obj:Troops()[2]
-
+	local desc_color = 0xffffff
 	local logo_file = "alliance_shire_stage_bg_554x130_black.png" 
 	if not is_locked then  
 		if troop.type == 'catapult' or troop.type == 'ballista' then
 	 		logo_file = "alliance_shire_stage_bg_554x130_yellow.png"
+	 		desc_color = 0xf6b304
 	 	else
+	 		desc_color = 0x00d2ff
 	 		logo_file = "alliance_shire_stage_bg_554x130_blue.png"
 	 	end
 	end
@@ -278,7 +280,7 @@ function GameUIAllianceShrine:GetStageListItem(index,stage_obj)
 	UIKit:ttfLabel({
 		text = stage_obj:GetStageDesc(),
 		size = 18,
-		color= is_locked and 0xffffff or 0xf6b304,
+		color=  desc_color,
 		dimensions = cc.size(530,74) 
 	}):align(display.LEFT_TOP, 10, 82):addTo(logo_bg)
 	local stage_star = stage_obj:Star()

@@ -291,6 +291,10 @@ function GameUIAcademy:GetItem(tech)
 	end
 	item.changeState(tech:Enable())
 	item:onButtonClicked(function(event)
+		if not tech:IsOpen() then
+			UIKit:showMessageDialog(nil, _("该技能暂未开放！"))
+			return
+		end
         UIKit:newGameUI("GameUIUpgradeTechnology",tech):AddToCurrentScene(true)
 	end)
 	item:setTag(tech:Index())
