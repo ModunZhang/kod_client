@@ -1212,7 +1212,9 @@ function GameUIMail:CreateReportItem(listview,report)
             {
                 text = isFromMe and self:GetMyName(report) or self:GetEnemyName(report),
                 size = 20,
-                color = 0x403c2f
+                color = 0x403c2f,
+                dimensions = cc.size(150,20),
+                ellipsis = true
             }):align(display.LEFT_CENTER, 120, 50)
             :addTo(report_content_bg)
         -- 发出方所属联盟
@@ -1221,7 +1223,7 @@ function GameUIMail:CreateReportItem(listview,report)
                 text = isFromMe and "["..self:GetMyAllianceTag(report).."]" or "["..self:GetEnemyAllianceTag(report).."]",
                 size = 20,
                 color = 0x403c2f
-            }):align(display.LEFT_CENTER, 120, 30)
+            }):align(display.LEFT_CENTER, 120, 27)
             :addTo(report_content_bg)
 
 
@@ -1239,7 +1241,9 @@ function GameUIMail:CreateReportItem(listview,report)
             {
                 text = isFromMe and self:GetEnemyName(report) or self:GetMyName(report),
                 size = 20,
-                color = 0x403c2f
+                color = 0x403c2f,
+                dimensions = cc.size(150,20),
+                ellipsis = true
             }):align(display.LEFT_CENTER, 350, 50)
             :addTo(report_content_bg)
         -- 发向方所属联盟
@@ -1248,7 +1252,7 @@ function GameUIMail:CreateReportItem(listview,report)
                 text = isFromMe and "["..self:GetEnemyAllianceTag(report).."]" or "["..self:GetMyAllianceTag(report).."]",
                 size = 20,
                 color = 0x403c2f
-            }):align(display.LEFT_CENTER, 350, 30)
+            }):align(display.LEFT_CENTER, 350, 27)
             :addTo(report_content_bg)
     end
     item.saved_button = cc.ui.UICheckBoxButton.new({
@@ -1644,6 +1648,7 @@ function GameUIMail:GetEnemyAllianceTag(report)
 end
 
 return GameUIMail
+
 
 
 
