@@ -141,14 +141,17 @@ end
 
 -- end --
 
-function UICheckBoxButton:setButtonSelected(selected)
+function UICheckBoxButton:setButtonSelected(selected,do_not_call_cb)
     if self:isButtonSelected() ~= selected then
         if selected then
             self.fsm_:doEventForce("select")
         else
             self.fsm_:doEventForce("unselect")
         end
-        self:dispatchEvent({name = UIButton.STATE_CHANGED_EVENT, state = self.fsm_:getState()})
+        -- 更改状态不通知
+        if not do_not_call_cb then
+            self:dispatchEvent({name = UIButton.STATE_CHANGED_EVENT, state = self.fsm_:getState()})
+        end
     end
     return self
 end

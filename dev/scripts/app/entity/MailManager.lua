@@ -124,9 +124,9 @@ function MailManager:DeleteMail(mail)
         if v.id == mail.id then
             table.remove(self.mails,k)
             delete_mail_server_index = v.index
-            if v.isSaved then
-                v.isSaved = false
-                self:OnNewSavedMailsChanged(v)
+            if mail.isSaved then
+                mail.isSaved = false
+                self:OnNewSavedMailsChanged(mail)
             end
         end
     end
@@ -139,29 +139,20 @@ end
 function MailManager:ModifyMail(mail)
     for k,v in pairs(self.mails) do
         if v.id == mail.id then
-            for i,modify in ipairs(mail) do
+            if mail.isSaved ~= v.isSaved then
+                self:OnNewSavedMailsChanged(mail)
+            end
+            if mail.isRead ~= v.isRead then
+                self:OnNewSavedMailsChanged(mail,true)
+            end
+            for i,modify in pairs(mail) do
                 v[i] = modify
             end
             return v
         end
     end
 end
--- 更新某项属性
-function MailManager:ModifyMailAttr(index,attr)
-    local mail = self.mails[index]
-    print("index==",index,#self.mails)
-    assert(mail,"修改邮件属性，邮件不存在")
-    for k,v in pairs(attr) do
-        mail[k] = v
-        if k == "isSaved" then
-            self:OnNewSavedMailsChanged(mail)
-        end
-        if k == "isRead" then
-            self:OnNewSavedMailsChanged(mail,true)
-        end
-    end
-    return mail
-end
+
 function MailManager:DeleteSendMail(mail)
     for k,v in pairs(self.sendMails) do
         if v.id == mail.id then
@@ -206,7 +197,6 @@ function MailManager:GetMailByServerIndex(serverIndex)
         print(".....v.index == index",v.title,v.index,serverIndex,v.index == serverIndex)
     end
     for i,v in ipairs(mails) do
-        print("v.index == index",v.title,v.index,serverIndex,v.index == serverIndex)
         if v.index == serverIndex then
             return i
         end
@@ -230,7 +220,7 @@ function MailManager:FetchMailsFromServer(fromIndex)
             local fetch_mails = {}
             for i,v in ipairs(response.msg.mails) do
                 table.insert(user_data.mails, v)
-                MailManager:AddMailsToEnd(v)
+                self:AddMailsToEnd(v)
                 table.insert(fetch_mails, v)
             end
             self:NotifyListeneOnType(MailManager.LISTEN_TYPE.FETCH_MAILS,function(listener)
@@ -262,7 +252,7 @@ function MailManager:FetchSavedMailsFromServer(fromIndex)
             local fetch_mails = {}
             for i,v in ipairs(response.msg.mails) do
                 table.insert(user_data.savedMails, v)
-                MailManager:AddSavedMailsToEnd(v)
+                self:AddSavedMailsToEnd(v)
                 table.insert(fetch_mails, v)
             end
             self:NotifyListeneOnType(MailManager.LISTEN_TYPE.FETCH_SAVED_MAILS,function(listener)
@@ -337,7 +327,7 @@ function MailManager:OnNewMailsChanged( mails )
                     data.index = self.mails[1] and (self.mails[1].index + 1) or 0
                 end
                 table.insert(add_mails, data)
-                table.insert(self.mails, 1, data)
+                table.insert(self.mails, 1, clone(data))
                 self:IncreaseUnReadMailsNum(1)
 
 
@@ -352,14 +342,12 @@ function MailManager:OnNewMailsChanged( mails )
         elseif type == "remove" then
             for i,data in ipairs(mail) do
                 table.insert(remove_mails, data)
-                self:DeleteMail(data)
+                self:DeleteMail(clone(data))
             end
         elseif type == "edit" then
             for i,data in ipairs(mail) do
                 table.insert(edit_mails, self:ModifyMail(data))
             end
-        elseif tolua.type(type) == "number" then
-            table.insert(edit_mails, self:ModifyMailAttr(tonumber(type),mail))
         end
     end
     self:NotifyListeneOnType(MailManager.LISTEN_TYPE.MAILS_CHANGED,function(listener)
@@ -493,8 +481,6 @@ function MailManager:OnNewReportsChanged( __reports )
             for k,data in pairs(rp) do
                 table.insert(edit_reports,self:ModifyReport(data))
             end
-        elseif tolua.type(type) == "number" then
-            table.insert(edit_reports, self:ModifyReportByIndex(tonumber(type),rp))
         end
     end
     self:NotifyListeneOnType(MailManager.LISTEN_TYPE.REPORTS_CHANGED,function(listener)
@@ -509,7 +495,7 @@ function MailManager:OnNewSavedReportsChanged( __savedReports )
     local add_reports = {}
     local remove_reports = {}
     local edit_reports = {}
-    if __savedReports.isSaved then
+    if __savedReports:IsSaved() then
         table.insert(add_reports, __savedReports)
         table.insert(self.savedReports, __savedReports)
     else
@@ -548,22 +534,15 @@ end
 function MailManager:ModifyReport( report )
     for k,v in pairs(self.reports) do
         if v:Id() == report.id then
-            self.reports[k]:Update(report)
+            if v:IsSaved() ~= report.isSaved then
+                self:OnNewSavedReportsChanged(Report:DecodeFromJsonData(report))
+            end
+            v:Update(report)
             return self.reports[k]
         end
     end
 end
-function MailManager:ModifyReportByIndex( index,attr )
-    local report = self.reports[index]
-    assert(report,"修改战报属性，战报不存在")
-    for k,v in pairs(attr) do
-        report[k] = v
-        if k == "isSaved" then
-            self:OnNewSavedReportsChanged(report)
-        end
-    end
-    return report
-end
+
 function MailManager:DeleteSavedReport( report )
     local delete_index
     for k,v in pairs(self.savedReports) do
@@ -578,13 +557,7 @@ function MailManager:DeleteSavedReport( report )
         end
     end
 end
-function MailManager:ModifySavedReport( report )
-    for k,v in pairs(self.savedReports) do
-        if v:Id() == report.id then
-            self.savedReports[k] = Report:DecodeFromJsonData(report)
-        end
-    end
-end
+
 function MailManager:GetReports(fromIndex)
     -- 首先检查本地MailManager是否缓存有之前获取到的邮件
     local fromIndex = fromIndex or 0
@@ -648,6 +621,7 @@ function MailManager:FetchSavedReportsFromServer(fromIndex)
     end)
 end
 return MailManager
+
 
 
 

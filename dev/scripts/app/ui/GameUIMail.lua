@@ -1,6 +1,5 @@
 local GameUIWithCommonHeader = import('.GameUIWithCommonHeader')
 local UIListView = import(".UIListView")
-local UICheckBoxButton = import(".UICheckBoxButton")
 local GameUIStrikeReport = import(".GameUIStrikeReport")
 local GameUIWarReport = import(".GameUIWarReport")
 local window = import("..utils.window")
@@ -140,8 +139,8 @@ function GameUIMail:CreateMailControlBox()
     -- 标记邮件，已读，删除多封邮件
     self.mail_control_box = display.newSprite("back_ground_624x134.png")
         :pos(window.cx+1, window.bottom + 66)
-        :addTo(self,100)
-    self.mail_control_box:setVisible(false)
+        :addTo(self:GetView(),4)
+    self.mail_control_box:hide()
     self.mail_control_box:setTouchEnabled(true)
 
     local box = self.mail_control_box
@@ -445,7 +444,7 @@ function GameUIMail:CreateMailItem(listview,mail)
     --     :addTo(mail_content_bg)
     -- 发件箱无收藏,删除功能
     if listview ~= self.send_mail_listview then
-        item.saved_button = UICheckBoxButton.new({
+        item.saved_button = cc.ui.UICheckBoxButton.new({
             off = "mail_saved_button_normal.png",
             off_pressed = "mail_saved_button_normal.png",
             off_disabled = "mail_saved_button_normal.png",
@@ -498,28 +497,28 @@ function GameUIMail:VisibleJudgeForMailControl()
     if self.inbox_layer:isVisible() then
         for _,item in pairs(self.inbox_mails) do
             if item.check_box:isButtonSelected() then
-                self.mail_control_box:setVisible(true)
+                self.mail_control_box:show()
                 return
             end
         end
     elseif self.report_layer:isVisible() then
         for _,item in pairs(self.item_reports) do
             if item.check_box:isButtonSelected() then
-                self.mail_control_box:setVisible(true)
+                self.mail_control_box:show()
                 return
             end
         end
     elseif self.saved_layer:isVisible() and self.saved_reports_listview:isVisible() then
         for _,item in pairs(self.item_saved_reports) do
             if item.check_box:isButtonSelected() then
-                self.mail_control_box:setVisible(true)
+                self.mail_control_box:show()
                 return
             end
         end
     elseif self.saved_layer:isVisible() and self.save_mails_listview:isVisible() then
         for _,item in pairs(self.saved_mails) do
             if item.check_box:isButtonSelected() then
-                self.mail_control_box:setVisible(true)
+                self.mail_control_box:show()
                 return
             end
         end
@@ -638,9 +637,7 @@ function GameUIMail:InsertMailToListView(listview,item,mail,index)
     local id = mail.id or mail.toId
     mails_table[id] = item
     local add_index = index or self:GetMailsCount(listview)
-    -- listview:addItem(item,add_index)
     listview:insertItemAndRefresh(item,add_index)
-    -- listview:reload()
 end
 
 function GameUIMail:CreateLoadingMoreItem(listview)
@@ -700,25 +697,7 @@ function GameUIMail:FetchMailsOrReportsFromServer(listview,fromIndex)
         return self.manager:FetchSavedReportsFromServer(self:GetMailsCount(listview)+fromIndex)
     end
 end
-function GameUIMail:OnServerDataEvent(event)
-    if event.eventType == "onGetMailsSuccess" then
-        self:AddLoadingMoreMails(self.inbox_listview,event.data.mails)
-    elseif event.eventType == "onNewMailReceived" then
-        local item = self:CreateMailItem(self.inbox_listview,event.data.mail)
-        self:AddMails(self.inbox_listview,item,event.data.mail,1)
-    elseif event.eventType == "onGetSavedMailsSuccess" then
-        self:AddLoadingMoreMails(self.save_mails_listview,event.data.mails)
-    elseif event.eventType == "onGetSendMailsSuccess" then
-        self:AddLoadingMoreMails(self.send_mail_listview,event.data.mails)
-    elseif event.eventType == "onSendMailSuccess" then
-        local item = self:CreateMailItem(self.send_mail_listview,event.data.mail)
-        self:AddMails(self.send_mail_listview,item,event.data.mail,1)
-    elseif event.eventType == "onGetReportsSuccess" then
-        self:AddLoadingMoreMails(self.report_listview,event.data.reports)
-    elseif event.eventType == "onGetSavedReportsSuccess" then
-        self:AddLoadingMoreMails(self.saved_reports_listview,event.data.reports)
-    end
-end
+
 function GameUIMail:OnInboxMailsChanged(changed_mails)
     if changed_mails.add_mails then
         for _,add_mail in pairs(changed_mails.add_mails) do
@@ -733,9 +712,7 @@ function GameUIMail:OnInboxMailsChanged(changed_mails)
                 self.inbox_mails[edit_mail.id].saved_button:setButtonSelected(edit_mail.isSaved,true)
                 if edit_mail.isRead then
                     self.inbox_mails[edit_mail.id].mail.isRead = true
-                    -- self.inbox_mails[edit_mail.id].mail_state:setTexture("mail_state_read.png")
                     self.inbox_mails[edit_mail.id].title_bg:setTexture("title_grey_482x30.png")
-                    -- self.inbox_mails[edit_mail.id].mail_state:setScale(34/self.inbox_mails[edit_mail.id].mail_state:getContentSize().width)
                 end
             end
         end
@@ -792,7 +769,6 @@ function GameUIMail:OnSavedMailsChanged(changed_mails)
             -- 是否已读属性改变
             if edit_mail.isRead and self.save_mails_listview then
                 local item = self.saved_mails[edit_mail.id]
-                print("self.save_mails_listview[edit_mail.id]",item)
                 item.mail.isRead = true
                 item.title_bg:setTexture("title_grey_482x30.png")
             end
@@ -1092,7 +1068,7 @@ function GameUIMail:ShowMailDetails(mail)
         end
     end
     -- 收藏按钮
-    local saved_button = UICheckBoxButton.new({
+    local saved_button = cc.ui.UICheckBoxButton.new({
         off = "mail_saved_button_normal.png",
         off_pressed = "mail_saved_button_normal.png",
         off_disabled = "mail_saved_button_normal.png",
@@ -1277,7 +1253,7 @@ function GameUIMail:CreateReportItem(listview,report)
             }):align(display.LEFT_CENTER, 350, 30)
             :addTo(report_content_bg)
     end
-    item.saved_button = UICheckBoxButton.new({
+    item.saved_button = cc.ui.UICheckBoxButton.new({
         off = "report_saved_button_normal.png",
         off_pressed = "report_saved_button_normal.png",
         off_disabled = "report_saved_button_normal.png",
@@ -1288,7 +1264,6 @@ function GameUIMail:CreateReportItem(listview,report)
         self:SaveOrUnsaveReport(report,event.target)
     end):addTo(content):pos(249, -41)
         :setButtonSelected(report:IsSaved(),true)
-
     self:CreateCheckBox(item):align(display.LEFT_CENTER,-c_size.width/2+10,-18)
         :addTo(content)
 
@@ -1541,7 +1516,6 @@ function GameUIMail:OnSavedReportsChanged( changed_map )
     if changed_map.remove then
         for _,report in pairs(changed_map.remove) do
             self.saved_reports_listview:removeItem(self.item_saved_reports[report:Id()])
-            self.saved_reports_listview:reload()
             self.item_saved_reports[report:Id()]=nil
         end
     end
@@ -1557,22 +1531,7 @@ function GameUIMail:SaveOrUnsaveReport(report,target)
         end)
     end
 end
-function GameUIMail:GetReportLevel(report)
-    if report:Type() == "strikeCity" or report:Type()== "cityBeStriked" then
-        local level = report:GetStrikeLevel()
-        local report_level = level==1 and _("没有得到任何情报") or _("得到一封%s级的情报")
-        local level_map ={
-            "",
-            "D",
-            "C",
-            "B",
-            "A",
-            "S",
-        }
-        return (report:Type() == "cityBeStriked" and _("敌方") or "")..string.format(report_level,level_map[level])
-    end
-    return ""
-end
+
 
 function GameUIMail:GetMyName(report)
     if report:Type() == "strikeCity" or report:Type()== "cityBeStriked" then
