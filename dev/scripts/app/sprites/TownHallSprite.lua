@@ -1,7 +1,14 @@
 local FunctionUpgradingSprite = import(".FunctionUpgradingSprite")
 local TownHallSprite = class("TownHallSprite", FunctionUpgradingSprite)
 
-function TownHallSprite:OnNewDailyQuestsEvent()
+function TownHallSprite:OnNewDailyQuestsEvent(changed_map)
+    local changed_map = changed_map or {}
+    for _,v in ipairs(changed_map.edit or {}) do
+        if v.finishTime == 0 then
+            app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
+            break
+        end
+    end
     self:DoAni()
 end
 function TownHallSprite:ctor(city_layer, entity, city)
