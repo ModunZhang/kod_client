@@ -144,6 +144,7 @@ function WidgetEventTabButtons:OnMilitaryTechEventsChanged(soldier_manager,chang
         self:EventChangeOn("technology", #changed_map[1]>0)
     end
     if #changed_map[3]>0 then
+        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
         self:EventChangeOn("technology")
     end
     self:RefreshBuildQueueByType("technology")
@@ -156,6 +157,7 @@ function WidgetEventTabButtons:OnSoldierStarEventsChanged(soldier_manager, chang
         self:EventChangeOn("technology", #changed[1]>0)
     end
     if #changed[3]>0 then
+        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
         self:EventChangeOn("technology")
     end
     self:RefreshBuildQueueByType("technology")
@@ -979,7 +981,8 @@ function WidgetEventTabButtons:OnProductionTechnologyEventDataRefresh(changed_ma
     if changed_map.added and #changed_map.added > 0 then
         self:EventChangeOn("technology", true)
     end
-     if changed_map.removed and #changed_map.added > 0 then
+     if changed_map.removed and #changed_map.removed > 0 then
+        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
         self:EventChangeOn("technology")
     end
 end

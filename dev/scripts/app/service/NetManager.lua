@@ -585,7 +585,9 @@ function NetManager:getMakeDragonEquipmentPromise(equipment_name)
     return get_makeDragonEquipment_promise(equipment_name)
 end
 function NetManager:getInstantMakeDragonEquipmentPromise(equipment_name)
-    return get_makeDragonEquipment_promise(equipment_name, true)
+    return get_makeDragonEquipment_promise(equipment_name, true):done(function()
+        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
+    end)
 end
 -- 招募士兵
 local function get_recruitNormalSoldier_promise(soldierName, count, finish_now)
@@ -1213,14 +1215,22 @@ function NetManager:getUpgradeProductionTechPromise(techName,finishNow)
     return get_blocking_request_promise("logic.playerHandler.upgradeProductionTech", {
         techName = techName,
         finishNow = finishNow,
-    }, "升级生产科技失败!"):done(get_response_msg)
+    }, "升级生产科技失败!"):done(get_response_msg):done(function()
+        if finishNow then
+            app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
+        end
+    end)
 end
 -- 升级军事科技
 local function upgrade_military_tech_promise(techName,finishNow)
     return get_blocking_request_promise("logic.playerHandler.upgradeMilitaryTech", {
         techName = techName,
         finishNow = finishNow,
-    }, "升级军事科技失败!"):done(get_response_msg)
+    }, "升级军事科技失败!"):done(get_response_msg):done(function()
+        if finishNow then
+            app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
+        end
+    end)
 end
 
 

@@ -46,6 +46,7 @@ function GameUILevelUp:ctor(user)
         end
     end
     bg:scale(0.3)
+    app:GetAudioManager():PlayeEffectSoundWithKey("HOORAY")
     transition.scaleTo(bg, {
         scale = 1, 
         time = 0.3, 

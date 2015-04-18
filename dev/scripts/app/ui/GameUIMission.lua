@@ -278,7 +278,7 @@ function GameUIMission:OnGetAchievementRewardButtonClicked(data)
         GameGlobalUI:showTips(_("获得奖励"), data:GetRewards())
         if not self.is_hooray_on then
             self.is_hooray_on = true
-            app:GetAudioManager():PlayeEffectSoundWithKey("HOORAY")
+            app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
             
             self:performWithDelay(function()
                 self.is_hooray_on = false
