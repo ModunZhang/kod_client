@@ -1102,9 +1102,8 @@ end
 -- 信息
 function GameUIAlliance:HaveAlliaceUI_infomationIf()
     if self.informationNode then return self.informationNode end
-    local informationNode = WidgetUIBackGround.new({height=384,isFrame = "yes"}):addTo(self.main_content):pos(20,window.betweenHeaderAndTab-384 - 10)
+    local informationNode = WidgetUIBackGround.new({height=384,isFrame = "yes"}):addTo(self.main_content):pos(20,window.betweenHeaderAndTab - 394)
     self.informationNode = informationNode
-
     local notice_bg = display.newSprite("alliance_notice_box_580x184.png")
         :align(display.CENTER_TOP,informationNode:getContentSize().width/2,395)
         :addTo(informationNode)

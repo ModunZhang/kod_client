@@ -21,16 +21,15 @@ function GameUIAllianceNoticeOrDescEdit:OnMoveInStage()
 	local shadowLayer = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
 		:addTo(self)
 	local bg_node = WidgetUIBackGround.new({height=content_height}):addTo(shadowLayer):pos(window.left+20,window.bottom + 400)
-	local titleBar = display.newScale9Sprite("title_blue_600x52.png")
-		:size(bg_node:getCascadeBoundingBox().width,42)
-		:align(display.LEFT_BOTTOM, -2,content_height - 15)
+	local titleBar = display.newSprite("title_blue_600x52.png")
+		:align(display.LEFT_BOTTOM, 2,content_height - 15)
 		:addTo(bg_node)
 	local title = self.isNotice_ and _("联盟公告") or _("联盟描述")
 	local titleLabel = UIKit:ttfLabel({
 		text = title,
 		size = 22,
 		color = 0xffedae
-	}):align(display.CENTER,300,21):addTo(titleBar,2)
+	}):align(display.CENTER,300,26):addTo(titleBar)
 	
 
 	local textView = ccui.UITextView:create(cc.size(555,238),display.newScale9Sprite("alliance_edit_bg_555x238.png"))
