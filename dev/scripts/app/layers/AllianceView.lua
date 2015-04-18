@@ -3,6 +3,7 @@ local VillageSprite = import("..sprites.VillageSprite")
 local AllianceDecoratorSprite = import("..sprites.AllianceDecoratorSprite")
 local AllianceBuildingSprite = import("..sprites.AllianceBuildingSprite")
 local memberMeta = import("..entity.memberMeta")
+local Alliance = import("..entity.Alliance")
 local AllianceMap = import("..entity.AllianceMap")
 local Observer = import("..entity.Observer")
 local NormalMapAnchorBottomLeftReverseY = import("..map.NormalMapAnchorBottomLeftReverseY")
@@ -58,9 +59,13 @@ function AllianceView:ctor(layer, alliance, logic_base_x, logic_base_y)
 end
 function AllianceView:onEnter()
     self:GetAlliance():GetAllianceMap():AddListenOnType(self, AllianceMap.LISTEN_TYPE.BUILDING)
+    self:GetAlliance():GetAllianceMap():AddListenOnType(self, AllianceMap.LISTEN_TYPE.BUILDING_INFO)
+    self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.MEMBER)
 end
 function AllianceView:onExit()
     self:GetAlliance():GetAllianceMap():RemoveListenerOnType(self, AllianceMap.LISTEN_TYPE.BUILDING)
+    self:GetAlliance():GetAllianceMap():RemoveListenerOnType(self, AllianceMap.LISTEN_TYPE.BUILDING_INFO)
+    self:GetAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.MEMBER)
 end
 function AllianceView:ChangeTerrain()
     local terrain = self:Terrain()
@@ -99,6 +104,22 @@ function AllianceView:GetZOrderBy(sprite, x, y)
     local width, _ = self:GetLogicMap():GetSize()
     return x + y * width + 100
 end
+function AllianceView:OnMemberChanged(alliance)
+    for _,v in pairs(alliance:GetAllMembers()) do
+        local entity = self.objects[v.mapId]
+        if entity then
+            entity:RefreshInfo()
+        end
+    end
+end
+function AllianceView:OnBuildingInfoChange()
+    for _,v in ipairs(self:GetAlliance():GetAllianceMap():GetAllBuildingsInfo()) do
+        local entity = self.objects[v.id]
+        if entity then
+            entity:RefreshInfo()
+        end
+    end
+end
 function AllianceView:OnBuildingFullUpdate(allianceMap)
     self:RefreshBuildings(allianceMap)
 end
@@ -122,7 +143,6 @@ function AllianceView:OnBuildingDeltaUpdate(allianceMap, deltaMapObjects)
     -- 修改位置
     for index,_ in pairs(deltaMapObjects) do
         if type(index) == "number" then
-            print(allianceMap:GetMapObjects()[index]:GetLogicPosition())
             self:RefreshEntity(allianceMap:GetMapObjects()[index])
         end
     end
@@ -147,8 +167,10 @@ function AllianceView:CreateObject(entity)
     return object
 end
 function AllianceView:RemoveEntity(entity)
-    self.objects[entity:Id()]:removeFromParent()
-    self.objects[entity:Id()] = nil
+    if self.objects[entity:Id()] then
+        self.objects[entity:Id()]:removeFromParent()
+        self.objects[entity:Id()] = nil
+    end
 end
 function AllianceView:IteratorAllianceObjects(func)
     table.foreach(self.objects, func)
@@ -189,11 +211,11 @@ function AllianceView:EmptyGround(x, y)
     end
 end
 function AllianceView:OnSceneScale(s)
-    for _,v in pairs(self.objects) do
-        if v:GetEntity():GetType() == "member" then
-            v:OnSceneScale(s)
-        end
-    end
+--     for _,v in pairs(self.objects) do
+--         if v:GetEntity():GetType() == "member" then
+--             v:OnSceneScale(s)
+--         end
+--     end
 end
 
 

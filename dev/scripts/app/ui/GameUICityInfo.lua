@@ -1,49 +1,21 @@
 local window = import("..utils.window")
 local UIPageView = import("..ui.UIPageView")
+local WidgetChat = import("..widget.WidgetChat")
 local WidgetChangeMap = import("..widget.WidgetChangeMap")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local GameUICityInfo = UIKit:createUIClass('GameUICityInfo')
-local RichText = import("..widget.RichText")
-local ChatManager = import("..entity.ChatManager")
 
 function GameUICityInfo:ctor(user)
     GameUICityInfo.super.ctor(self)
     self.user = user
-    self.chatManager = app:GetChatManager()
-end
-
-function GameUICityInfo:GetChatManager()
-    return self.chatManager
-end
-
-function GameUICityInfo:TO_TOP()
-    self:RefreshChatMessage()
-end
-
-function GameUICityInfo:TO_REFRESH()
-    self:RefreshChatMessage()
-end
-
-function GameUICityInfo:RefreshChatMessage()
-    if not self.chat_labels then return end
-    local last_chat_messages = self:GetChatManager():FetchLastChannelMessage()
-    for i,v in ipairs(self.chat_labels) do
-        local rich_text = self.chat_labels[i]
-        rich_text:Text(last_chat_messages[i],1)
-        rich_text:align(display.LEFT_CENTER, 0, 10)
-    end
 end
 
 function GameUICityInfo:onEnter()
     GameUICityInfo.super.onEnter(self)
     self:CreateTop()
     self:CreateBottom()
-    self:GetChatManager():AddListenOnType(self,ChatManager.LISTEN_TYPE.TO_REFRESH)
-    self:GetChatManager():AddListenOnType(self,ChatManager.LISTEN_TYPE.TO_TOP)
 end
 function GameUICityInfo:onExit()
-    self:GetChatManager():RemoveListenerOnType(self,ChatManager.LISTEN_TYPE.TO_REFRESH)
-    self:GetChatManager():RemoveListenerOnType(self,ChatManager.LISTEN_TYPE.TO_TOP)
     GameUICityInfo.super.onExit(self)
 end
 function GameUICityInfo:CreateTop()
@@ -165,62 +137,8 @@ function GameUICityInfo:CreateBottom()
         bottom_bg:scale(display.width/768)
     end
 
-
-    -- 聊天背景
-    local chat_bg = display.newSprite("chat_background.png")
-        :align(display.CENTER, bottom_bg:getContentSize().width/2, bottom_bg:getContentSize().height-10)
-        :addTo(bottom_bg)
-    cc.ui.UIImage.new("chat_btn_60x48.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width-60, 0)
-    local index_1 = display.newSprite("chat_page_index_1.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width/2-10,chat_bg:getContentSize().height-10)
-    local index_2 = display.newSprite("chat_page_index_2.png"):addTo(chat_bg):pos(chat_bg:getContentSize().width/2+10,chat_bg:getContentSize().height-10)
-    self.chat_bg = chat_bg
-
-    local size = chat_bg:getContentSize()
-    local pv = UIPageView.new {
-        viewRect = cc.rect(10, 4, size.width-80, size.height),
-        row = 2,
-        padding = {left = 0, right = 0, top = 10, bottom = 0}
-    }
-        :onTouch(function (event)
-            dump(event,"UIPageView event")
-            if event.name == "pageChange" then
-                if 1 == event.pageIdx then
-                    index_1:setPositionX(chat_bg:getContentSize().width/2-10)
-                    index_2:setPositionX(chat_bg:getContentSize().width/2+10)
-                elseif 2 == event.pageIdx then
-                    index_1:setPositionX(chat_bg:getContentSize().width/2+10)
-                    index_2:setPositionX(chat_bg:getContentSize().width/2-10)
-                end
-            elseif event.name == "clicked" then
-                if event.pageIdx == 1 then
-                    UIKit:newGameUI('GameUIChatChannel',"global"):AddToCurrentScene(true)
-                elseif event.pageIdx == 2 then
-                    UIKit:newGameUI('GameUIChatChannel',"alliance"):AddToCurrentScene(true)
-                end
-            end
-        end)
-        :addTo(chat_bg)
-    pv:setTouchEnabled(true)
-    pv:setTouchSwallowEnabled(false)
-    self.chat_labels = {}
-    local last_chat_messages = self:GetChatManager():FetchLastChannelMessage()
-    -- add items
-    for i=1,4 do
-        local item = pv:newItem()
-        local content
-
-        content = display.newLayer()
-        content:setContentSize(540, 20)
-        content:setTouchEnabled(false)
-        local label = RichText.new({width = 540,size = 16,color = 0xc7bd97})
-        label:Text(last_chat_messages[i],1)
-        label:addTo(content):align(display.LEFT_CENTER, 0, content:getContentSize().height/2)
-        table.insert(self.chat_labels, label)
-        item:addChild(content)
-        pv:addItem(item)
-    end
-    pv:reload()
-
+    self.chat = WidgetChat.new():addTo(bottom_bg)
+    :align(display.CENTER, bottom_bg:getContentSize().width/2, bottom_bg:getContentSize().height-11)
 
     cc.ui.UILabel.new({text = "您正在访问其他玩家的城市, 无法使用其他功能, 点击左下角返回城市",
         size = 20,

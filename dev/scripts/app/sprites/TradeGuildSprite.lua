@@ -2,8 +2,8 @@ local FunctionUpgradingSprite = import(".FunctionUpgradingSprite")
 local TradeGuildSprite = class("TradeGuildSprite", FunctionUpgradingSprite)
 
 function TradeGuildSprite:ctor(city_layer, entity, city)
-    TradeGuildSprite.super.ctor(self, city_layer, entity, city)
     self.action_node = display.newNode():addTo(self)
+    TradeGuildSprite.super.ctor(self, city_layer, entity, city)
     self:DoAni()
 end
 function TradeGuildSprite:RefreshSprite()

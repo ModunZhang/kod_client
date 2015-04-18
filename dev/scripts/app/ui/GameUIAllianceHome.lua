@@ -367,7 +367,7 @@ function GameUIAllianceHome:CreateTop()
         :addTo(top_self_bg):flipX(true)
     local self_name_label = UIKit:ttfLabel(
         {
-            text = "["..alliance:AliasName().."] "..alliance:Name(),
+            text = "["..alliance:Tag().."] "..alliance:Name(),
             size = 18,
             color = 0xffedae
         }):align(display.LEFT_CENTER, 30, 20)
@@ -466,7 +466,7 @@ function GameUIAllianceHome:CreateTop()
                 enemy_flag:align(display.CENTER,100-enemy_flag:getCascadeBoundingBox().size.width, -30)
                     :addTo(enemy_name_bg)
                 enemy_flag:setTag(201)
-                enemy_name_label:setString("["..enemyAlliance:AliasName().."] "..enemyAlliance:Name())
+                enemy_name_label:setString("["..enemyAlliance:Tag().."] "..enemyAlliance:Name())
             elseif status=="protect" then
                 local enemy_reprot_data = alliance:GetEnemyLastAllianceFightReportsData()
                 local enemy_flag = ui_helper:CreateFlagContentSprite(Flag.new():DecodeFromJson(enemy_reprot_data.flag)):scale(0.5)

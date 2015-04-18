@@ -781,7 +781,7 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
         :align(display.LEFT_BOTTOM,languageLabel:getPositionX(),line_1:getPositionY() + 5)
 
     local tagLabelVal = UIKit:ttfLabel({
-        text = Alliance_Manager:GetMyAlliance():AliasName(),
+        text = Alliance_Manager:GetMyAlliance():Tag(),
         size = 22,
         color = 0x403c2f,
     })
@@ -884,7 +884,7 @@ function GameUIAlliance:RefreshOverViewUI()
     if self.ui_overview and self.tab_buttons:GetSelectedButtonTag() == 'overview'  then
         local alliance_data = Alliance_Manager:GetMyAlliance()
         self.ui_overview.nameLabel:setString(alliance_data:Name())
-        self.ui_overview.tagLabel:setString(alliance_data:AliasName())
+        self.ui_overview.tagLabel:setString(alliance_data:Tag())
         self.ui_overview.languageLabel:setString(alliance_data:DefaultLanguage())
         self:RefreshNoticeView()
     end

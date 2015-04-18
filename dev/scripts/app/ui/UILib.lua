@@ -987,6 +987,24 @@ local DAILY_QUESTS_ICON = {
     "colonization_128x128.png",
     "seniorTower_128x128.png",
 }
+
+local my_city_banner = {
+    [0] = "city_banner.png",
+    [1] = "city_helped_banner.png",
+    [2] = "city_helped_banner.png",
+    [3] = "city_helped_banner.png",
+    [4] = "city_helped_banner.png",
+    [5] = "city_helped_banner.png",
+}
+local enemy_city_banner = {
+    [0] = "enemy_city_banner.png",
+    [1] = "enemy_city_helped_banner.png",
+    [2] = "enemy_city_helped_banner.png",
+    [3] = "enemy_city_helped_banner.png",
+    [4] = "enemy_city_helped_banner.png",
+    [5] = "enemy_city_helped_banner.png",
+}
+
 return {
     resource = RESOURCE,
     soldier_bg = STAR_BG,
@@ -1029,6 +1047,8 @@ return {
     dragon_skill_icon = DRAGON_SKILL_ICON,
     daily_quests_icon = DAILY_QUESTS_ICON,
     player_icon = PLAYER_ICON,
+    my_city_banner = my_city_banner,
+    enemy_city_banner = enemy_city_banner,
 }
 
 

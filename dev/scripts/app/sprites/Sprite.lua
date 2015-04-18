@@ -68,7 +68,7 @@ function Sprite:ctor(city_layer, entity, x, y)
         self.logic_map = city_layer:GetLogicMap()
     end
     self.entity = entity
-    self.sprite = self:CreateSprite():addTo(self, SPRITE):pos(self:GetSpriteOffset())
+    self:RefreshSprite()
     self:SetPositionWithZOrder(x, y)
     self:setCascadeOpacityEnabled(true)
     self:setCascadeColorEnabled(true)
@@ -98,7 +98,9 @@ end
 --     end
 -- end
 function Sprite:RefreshSprite()
-    self.sprite:removeFromParent()
+    if self.sprite then
+        self.sprite:removeFromParent()
+    end
     self.sprite = self:CreateSprite():addTo(self, SPRITE):pos(self:GetSpriteOffset())
 end
 function Sprite:CreateSprite()

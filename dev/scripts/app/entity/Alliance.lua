@@ -39,7 +39,7 @@ Alliance.LISTEN_TYPE = Enum(
 local unpack = unpack
 property(Alliance, "id", nil)
 property(Alliance, "name", "")
-property(Alliance, "aliasName", "")
+property(Alliance, "tag", "")
 property(Alliance, "defaultLanguage", "")
 property(Alliance, "terrain", "grassLand")
 property(Alliance, "power", 0)
@@ -210,6 +210,9 @@ end
 function Alliance:GetMemeberById(id)
     return self.members[id]
 end
+function Alliance:GetMemberByMapObjectsId(id)
+    return self.members_mapObjects[id]
+end
 function Alliance:GetAllMembers()
     return self.members
 end
@@ -220,9 +223,9 @@ function Alliance:GetMembersCount()
     end
     return count
 end
-function Alliance:OnMemberChanged()
+function Alliance:OnMemberChanged(changed_map)
     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.MEMBER, function(listener)
-        listener:OnMemberChanged(self)
+        listener:OnMemberChanged(self, changed_map)
     end)
 end
 function Alliance:GetFightRequestPlayerNum()
@@ -473,7 +476,7 @@ function Alliance:OnAllianceBasicInfoChangedFirst(alliance_data,deltaData)
     if not alliance_data.basicInfo then return end
     local basicInfo = alliance_data.basicInfo
     self:SetName(basicInfo.name)
-    self:SetAliasName(basicInfo.tag)
+    self:SetTag(basicInfo.tag)
     self:SetDefaultLanguage(basicInfo.language)
     self:SetFlag(Flag:DecodeFromJson(basicInfo.flag))
     self:SetTerrain(basicInfo.terrain)
@@ -503,13 +506,13 @@ function Alliance:OnJoinRequestEventsChanged(alliance_data,deltaData)
     end
 end
 function Alliance:OnAllianceMemberDataChanged(alliance_data,deltaData)
-    if not alliance_data.members then return end
     local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.members ~= nil
     if is_fully_update then
+        self.members_mapObjects = {}
         self.members = {}
         for _,v in ipairs(alliance_data.members) do
-            self.members[v.id] = setmetatable(v, memberMeta)
+            self.members[v.id] = self:DecodeMember(v)
         end
         self:OnMemberChanged()
     end
@@ -518,28 +521,30 @@ function Alliance:OnAllianceMemberDataChanged(alliance_data,deltaData)
             deltaData.members
             ,function(event_data)
                 if not self.members[event_data.id] then
-                    local member = setmetatable(event_data, memberMeta)
-                    self.members[event_data.id] = member
+                    self.members[event_data.id] = self:DecodeMember(event_data)
                     return member
                 end
             end
             ,function(event_data)
                 if self.members[event_data.id] then
-                    local member = setmetatable(event_data, memberMeta)
-                    self.members[event_data.id] = member
+                    self.members[event_data.id] = self:DecodeMember(event_data)
                     return member
                 end
             end
             ,function(event_data)
                 if self.members[event_data.id] then
-                    local member = setmetatable(event_data, memberMeta)
                     self.members[event_data.id] = nil
                     return member
                 end
             end
         )
-        self:OnMemberChanged()
+        self:OnMemberChanged(changed_map)
     end
+end
+function Alliance:DecodeMember(member_raw)
+    local v = setmetatable(member_raw, memberMeta)
+    self.members_mapObjects[member_raw.mapId] = v
+    return v
 end
 function Alliance:OnAllianceFightRequestsChanged(alliance_data, deltaData)
     local is_fully_update = deltaData == nil
@@ -1203,6 +1208,7 @@ function Alliance:DecodeAllianceVillages(alliance_data,deltaData)
     local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.villages ~= nil
     if is_fully_update then
+        self.alliance_villages = {}
         for _,v in ipairs(alliance_data.villages) do
             self.alliance_villages[v.id] = v
         end

@@ -15,7 +15,7 @@ function GameUIOtherAllianceHome:OnSceneMove(logic_x, logic_y, alliance_view)
     local coordinate_str = string.format("%d, %d", logic_x, logic_y)
     local is_mine
     if alliance_view then
-        is_mine = alliance_view:GetAlliance():Id() == self.alliance:Id() and "["..self.alliance:AliasName().."]" or "["..Alliance_Manager:GetEnemyAlliance():AliasName().."]"
+        is_mine = alliance_view:GetAlliance():Id() == self.alliance:Id() and "["..self.alliance:Tag().."]" or "["..Alliance_Manager:GetEnemyAlliance():Tag().."]"
     else
         is_mine = _("坐标")
     end

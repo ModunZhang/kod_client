@@ -2,8 +2,8 @@ local FunctionUpgradingSprite = import(".FunctionUpgradingSprite")
 local WareHouseSprite = class("WareHouseSprite", FunctionUpgradingSprite)
 
 function WareHouseSprite:ctor(city_layer, entity, city)
-    WareHouseSprite.super.ctor(self, city_layer, entity, city)
     self.action_node = display.newNode():addTo(self)
+    WareHouseSprite.super.ctor(self, city_layer, entity, city)
     self:PlayAni()
 end
 function WareHouseSprite:PlayAni()

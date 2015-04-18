@@ -104,7 +104,7 @@ function WidgetAllianceCreateOrEdit:CreateAllianceButtonClicked()
 	else
 		local my_alliance = Alliance_Manager:GetMyAlliance()
 		if not self:GetFlagInfomation():IsDifferentWith(Alliance_Manager:GetMyAlliance():Flag()) 
-			and my_alliance:AliasName() == data.tag 
+			and my_alliance:Tag() == data.tag 
 			and my_alliance:Name() == data.name 
 			and my_alliance:DefaultLanguage() == data.language 
 			then
@@ -283,7 +283,7 @@ function WidgetAllianceCreateOrEdit:createTextfieldPanel()
     editbox_tag:align(display.LEFT_BOTTOM,0,limitLabel:getContentSize().height+10):addTo(node)
     self.editbox_tag = editbox_tag
     if not self:IsCreate() then
-    	editbox_tag:setText(Alliance_Manager:GetMyAlliance():AliasName())
+    	editbox_tag:setText(Alliance_Manager:GetMyAlliance():Tag())
     end
     local tagLabel = UIKit:ttfLabel({
 		text = _("联盟标签"),
