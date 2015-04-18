@@ -67,6 +67,7 @@ function AllianceBattleScene:OnTouchClicked(pre_x, pre_y, x, y)
     if self.util_node:getNumberOfRunningActions() > 0 then return end
     local building,isMyAlliance = self:GetSceneLayer():GetClickedObject(x, y)
     if building then
+        app:GetAudioManager():PlayeEffectSoundWithKey("HOME_PAGE")
         app:lockInput(true)
         self.util_node:performWithDelay(function()
             app:lockInput(false)

@@ -30,12 +30,14 @@ function GameUIBarracks:OnMoveInStage()
     self.barracks:AddUpgradeListener(self)
     self.barracks:AddBarracksListener(self)
     self.barracks_city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
+    self.barracks_city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
     app.timer:AddListener(self)
 end
 function GameUIBarracks:onExit()
     self.barracks:RemoveUpgradeListener(self)
     self.barracks:RemoveBarracksListener(self)
     self.barracks_city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
+    self.barracks_city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
     app.timer:RemoveListener(self)
     GameUIBarracks.super.onExit(self)
 end
@@ -222,7 +224,7 @@ function GameUIBarracks:CreateItemWithListView(list_view, soldiers)
                     :align(display.CENTER, window.cx, 500 / 2)
             end):addTo(row_item)
                 :alignByPoint(cc.p(0.5, 0.5), origin_x + (unit_width + gap_x) * (i - 1) + unit_width / 2, 0)
-                :SetSoldier(soldier_name, self.barracks.soldier_star)
+                :SetSoldier(soldier_name, self.barracks_city:GetSoldierManager():GetStarBySoldierType(soldier_name))
     end
 
     local item = list_view:newItem()
@@ -295,6 +297,13 @@ function GameUIBarracks:OnSoliderCountChanged()
         end
     end
 end
+function GameUIBarracks:OnSoliderStarCountChanged(soldier_manager,star_changed_map)
+    for i,v in pairs(star_changed_map) do
+        if self.soldier_map[v] then
+            self.soldier_map[v]:SetSoldier(v, soldier_manager:GetStarBySoldierType(v))
+        end
+    end
+end
 function GameUIBarracks:RefershUnlockInfo()
     local unlock_soldiers = self.barracks:GetUnlockSoldiers()
     local level = self.barracks:GetLevel()
@@ -344,6 +353,7 @@ end
 
 
 return GameUIBarracks
+
 
 
 

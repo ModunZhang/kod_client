@@ -355,6 +355,8 @@ function GameUIPVESendTroop:SelectSoldiers()
 
         -- 士兵头像
         local soldier_ui_config = UILib.soldier_image[name][star]
+        local color_bg = display.newSprite(UILib.soldier_color_bg_images[name]):align(display.CENTER,60,64):addTo(content):scale(104/128)
+
         local soldier_head_icon = display.newSprite(soldier_ui_config):align(display.CENTER,60,64):addTo(content):scale(104/128)
         local soldier_head_bg  = display.newSprite("box_soldier_128x128.png"):addTo(soldier_head_icon):pos(soldier_head_icon:getContentSize().width/2,soldier_head_icon:getContentSize().height/2)
 

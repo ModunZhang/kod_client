@@ -15,6 +15,7 @@ function WidgetMoveHouse:ctor(house)
     if running_scene.__cname == "MyCityScene" then
         running_scene:EnterEditMode()
         self.house = house
+        self.scene_layer = running_scene:GetSceneLayer()
         running_scene:GetSceneUILayer():addChild(self, 1, WidgetMoveHouse.ADD_TAG)
         local ok_btn = cc.ui.UIPushButton.new(
             {normal = "green_btn_up_58x58.png", pressed = "green_btn_down_58x58.png"}
@@ -56,6 +57,8 @@ function WidgetMoveHouse:ctor(house)
         local building_image = display.newSprite(build_png, 0, 0)
             :addTo(self):pos(self:getContentSize().width/2,self:getContentSize().height/2+20)
         building_image:setOpacity(180)
+        building_image:scale(self.scene_layer:getScale())
+        self.building_image = building_image
     end
     self:hide()
 end
@@ -73,8 +76,11 @@ end
 function WidgetMoveHouse:GetRuins( )
     return self.move_to_ruins
 end
-
+function WidgetMoveHouse:OnSceneScale()
+    self.building_image:scale(self.scene_layer:getScale())
+end
 return WidgetMoveHouse
+
 
 
 

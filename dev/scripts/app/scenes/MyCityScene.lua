@@ -236,6 +236,7 @@ function MyCityScene:OnSoliderStarCountChanged(soldier_manager, soldier_star_cha
     self:GetSceneLayer():OnSoliderStarCountChanged(soldier_manager, soldier_star_changed)
 end
 function MyCityScene:OnBasicChanged(user, changed)
+    MyCityScene.super.OnBasicChanged(self, user, changed)
     if changed.terrain then
         self:ChangeTerrain(changed.terrain.new)
     end
@@ -304,6 +305,10 @@ function MyCityScene:OnSceneScale(scene_layer)
     else
         -- self:GetSceneUILayer():ShowLevelUpNode()
         scene_layer:ShowLevelUpNode()
+    end
+    local widget_move_house = self:GetSceneUILayer():getChildByTag(WidgetMoveHouse.ADD_TAG)
+    if widget_move_house then
+        widget_move_house:OnSceneScale()
     end
 end
 function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)

@@ -34,7 +34,9 @@ function WidgetSoldierBox:SetSoldier(soldier_type, star)
         if self.soldier then
             self.soldier_bg:removeChild(self.soldier)
         end
-
+        if self.soldier_color_bg then
+            self.soldier_bg:removeChild(self.soldier_color_bg)
+        end
         self.soldier_color_bg = display.newSprite(UILib.soldier_color_bg_images[soldier_type], nil, nil, {class=cc.FilteredSpriteWithOne}):addTo(self.soldier_bg)
             :align(display.CENTER, 0, 20):scale(104/128)
         self.soldier = display.newSprite(soldier_ui_config, nil, nil, {class=cc.FilteredSpriteWithOne}):addTo(self.soldier_bg)

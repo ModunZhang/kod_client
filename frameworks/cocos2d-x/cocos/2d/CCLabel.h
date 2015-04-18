@@ -215,6 +215,11 @@ public:
     void setClipMarginEnabled(bool clipEnabled) { _clipEnabled = clipEnabled; }
     bool isClipMarginEnabled() const { return _clipEnabled; }
 
+    /**
+    */
+    void setEllipsisEabled(bool ellipsisEabled) { _ellipsisEabled = ellipsisEabled; }
+
+
     /** Sets the line height of the label
       @warning Not support system font
       @since v3.2.0
@@ -390,6 +395,7 @@ protected:
     GLuint _uniformTextColor;
     CustomCommand _customCommand;   
 
+    bool    _ellipsisEabled;
     bool    _shadowDirty;
     bool    _shadowEnabled;
     Size    _shadowOffset;

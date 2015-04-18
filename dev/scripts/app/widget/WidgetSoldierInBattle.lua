@@ -81,6 +81,12 @@ local PVE_SOLDIER_IMAGES = {
         "meatWagon.png",
         "meatWagon.png",
     },
+    wall = {
+        bg = "blue_bg_128x128.png",
+        "gate_1.png",
+        "gate_2.png",
+        "gate_3.png",
+    }
 }
 
 local pve_bg = "red_bg_128x128.png"

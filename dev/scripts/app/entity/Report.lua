@@ -24,8 +24,8 @@ function Report:DecodeFromJsonData(json_data)
     return report
 end
 function Report:Update( json_data )
-    self:SetIsRead(json_data.isRead or self.isRead)
-    self:SetIsSaved(json_data.isSaved or self.isSaved)
+    self:SetIsRead(json_data.isRead)
+    self:SetIsSaved(json_data.isSaved)
 end
 function Report:SetData(data)
     local function replace_null_to_nil(t)

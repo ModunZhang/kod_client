@@ -480,7 +480,9 @@ function GameUIWarReport:CreateBelligerentsItem(player,isSelf)
     UIKit:ttfLabel({
         text = player.name or Localize.village_name[player.type] ,
         size = 20,
-        color = 0x403c2f
+        color = 0x403c2f,
+        dimensions = cc.size(200,22),
+        ellipsis = true
     }):align(display.LEFT_CENTER,90, height-25)
         :addTo(player_item)
 
@@ -560,12 +562,16 @@ function GameUIWarReport:CreateSoldiersInfo(soldier)
     local soldier_level = soldier.star
     local soldier_type = soldier.name
     local soldier_ui_config = UILib.soldier_image[soldier_type][soldier_level]
+    local color_bg = display.newSprite(UILib.soldier_color_bg_images[soldier_type])
+            :scale(104/128)
+            :align(display.LEFT_BOTTOM)
+    local soldier_head_icon = display.newSprite(soldier_ui_config):align(display.CENTER,color_bg:getContentSize().width/2,color_bg:getContentSize().height/2)
+    soldier_head_icon:addTo(color_bg)
 
-    local soldier_head_icon = display.newSprite(soldier_ui_config):align(display.LEFT_BOTTOM,0,10)
-    soldier_head_icon:scale(104/soldier_head_icon:getContentSize().height)
     local soldier_head_bg  = display.newSprite("box_soldier_128x128.png")
         :align(display.CENTER, soldier_head_icon:getContentSize().width/2, soldier_head_icon:getContentSize().height-64)
         :addTo(soldier_head_icon)
+    
 
     UIKit:ttfLabel({
         text = soldier.count,
@@ -580,7 +586,7 @@ function GameUIWarReport:CreateSoldiersInfo(soldier)
     }):align(display.CENTER,soldier_head_bg:getContentSize().width/2, -38):addTo(soldier_head_bg)
         :scale(soldier_head_icon:getContentSize().height/104)
 
-    return soldier_head_icon
+    return color_bg
 end
 
 function GameUIWarReport:CreateWallPart()

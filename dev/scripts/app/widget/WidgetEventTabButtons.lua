@@ -140,17 +140,26 @@ function WidgetEventTabButtons:OnMilitaryTechEventsTimer(tech_event)
     end
 end
 function WidgetEventTabButtons:OnMilitaryTechEventsChanged(soldier_manager,changed_map)
-    self:EventChangeOn("technology", #changed_map[1]>0)
-    self:RefreshBuildQueueByType("technology")
-end
-function WidgetEventTabButtons:OnMilitaryTechEventsAllChanged()
-    if self:IsShow() and self:GetCurrentTab()== "technology" then
+    if #changed_map[1]~=0 then
+        self:EventChangeOn("technology", #changed_map[1]>0)
+    end
+    if #changed_map[3]>0 then
+        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
         self:EventChangeOn("technology")
     end
     self:RefreshBuildQueueByType("technology")
 end
+function WidgetEventTabButtons:OnMilitaryTechEventsAllChanged()
+    self:RefreshBuildQueueByType("technology")
+end
 function WidgetEventTabButtons:OnSoldierStarEventsChanged(soldier_manager, changed)
-    self:EventChangeOn("technology", #changed[1]>0)
+    if #changed[1]~=0 then
+        self:EventChangeOn("technology", #changed[1]>0)
+    end
+    if #changed[3]>0 then
+        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
+        self:EventChangeOn("technology")
+    end
     self:RefreshBuildQueueByType("technology")
 end
 function WidgetEventTabButtons:EventChangeOn(event_type, is_begin)
@@ -969,7 +978,13 @@ function WidgetEventTabButtons:OnProductionTechnologyEventDataChanged(changed_ma
 end
 function WidgetEventTabButtons:OnProductionTechnologyEventDataRefresh(changed_map)
     changed_map = changed_map or {}
-    self:EventChangeOn("technology", (changed_map.added and #changed_map.added > 0))
+    if changed_map.added and #changed_map.added > 0 then
+        self:EventChangeOn("technology", true)
+    end
+     if changed_map.removed and #changed_map.removed > 0 then
+        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
+        self:EventChangeOn("technology")
+    end
 end
 
 function WidgetEventTabButtons:ProductionTechnologyEventUpgradeOrSpeedup(event)

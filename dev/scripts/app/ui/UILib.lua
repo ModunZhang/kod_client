@@ -476,14 +476,14 @@ local DECORATOR_IMAGE = {
         farmland        = "grass_farmland_80x55.png"
     },
     iceField = {
-        decorate_lake_1 = "ice_lake_280x166.png",
-        decorate_lake_2 =  "ice_lake_252x150.png",
-        decorate_mountain_2 =  "ice_hill_230x150.png",
-        decorate_mountain_1 =  "ice_hill_314x296.png",
-        decorate_tree_1 =  "ice_tree_1_126x110.png",
-        decorate_tree_2 =  "ice_tree_2_124x106.png",
-        decorate_tree_3 =  "ice_tree_3_102x96.png",
-        decorate_tree_4 =  "ice_tree_4_102x98.png",
+        decorate_lake_1 = "lake_1_iceField.png",
+        decorate_lake_2 =  "lake_2_iceField.png",
+        decorate_mountain_1 =  "hill_1_iceField.png",
+        decorate_mountain_2 =  "hill_2_iceField.png",
+        decorate_tree_1 =  "tree_1_iceField.png",
+        decorate_tree_2 =  "tree_2_iceField.png",
+        decorate_tree_3 =  "tree_3_iceField.png",
+        decorate_tree_4 =  "tree_4_iceField.png",
         stone_mountain  = "ice_stone_mountain_80x58.png",
         farmland        = "ice_farmland_80x55.png"
     },
@@ -499,12 +499,6 @@ local DECORATOR_IMAGE = {
         stone_mountain  = "desert_stone_mountain_80x58.png",
         farmland        = "desert_farmland_80x55.png"
     },
-    decorate_lake_1 = "grass_lake_272x158.png",
-    decorate_lake_2 =  "grass_lake_244x142.png",
-    decorate_mountain_2 =  "grass_hill_160x106.png",
-    decorate_mountain_1 =  "grass_hill_254x240.png",
-    decorate_tree_1 =  "grass_tree_1_138x110.png",
-    decorate_tree_2 =  "grass_tree_3_112x114.png",
 }
 local DRAGON_HEAD = {
     blueDragon = "Dragon_blue_113x128.png",
@@ -512,24 +506,24 @@ local DRAGON_HEAD = {
     greenDragon = "Dragon_green_113x128.png"
 }
 local BUFF = {
-    masterOfDefender = "buff_1_128x128.png",
-    quarterMaster =  "buff_2_128x128.png",
-    fogOfTrick =  "buff_3_128x128.png",
-    woodBonus =  "buff_4_128x128.png",
-    stoneBonus =  "buff_5_128x128.png",
-    ironBonus =  "buff_6_128x128.png",
-    foodBonus = "buff_7_128x128.png",
-    coinBonus =  "buff_8_128x128.png",
-    citizenBonus =  "buff_9_128x128.png",
-    dragonExpBonus =  "buff_1_128x128.png",
-    troopSizeBonus =  "buff_2_128x128.png",
-    dragonHpBonus =  "buff_3_128x128.png",
-    marchSpeedBonus = "buff_4_128x128.png",
-    unitHpBonus =  "buff_5_128x128.png",
-    infantryAtkBonus =  "buff_6_128x128.png",
-    archerAtkBonus =  "buff_7_128x128.png",
-    cavalryAtkBonus =  "buff_8_128x128.png",
-    siegeAtkBonus =  "buff_9_128x128.png",
+    masterOfDefender = "masterOfDefender_128x128.png",
+    quarterMaster = "quarterMaster_128x128.png",
+    fogOfTrick = "fogOfTrick_128x128.png",
+    woodBonus = "woodBonus_128x128.png",
+    stoneBonus = "stoneBonus_128x128.png",
+    ironBonus = "ironBonus_128x128.png",
+    foodBonus = "foodBonus_128x128.png",
+    coinBonus = "coinBonus_128x128.png",
+    citizenBonus = "citizenBonus_128x128.png",
+    dragonExpBonus = "dragonExpBonus_128x128.png",
+    troopSizeBonus = "troopSizeBonus_128x128.png",
+    dragonHpBonus = "dragonHpBonus_128x128.png",
+    marchSpeedBonus = "marchSpeedBonus_128x128.png",
+    unitHpBonus = "unitHpBonus_128x128.png",
+    infantryAtkBonus = "infantryAtkBonus_128x128.png",
+    archerAtkBonus = "archerAtkBonus_128x128.png",
+    cavalryAtkBonus = "cavalryAtkBonus_128x128.png",
+    siegeAtkBonus = "siegeAtkBonus_128x128.png",
 }
 
 local ALLIANCE_TITLE_ICON = {
@@ -547,7 +541,6 @@ local VILLAGE = {
     foodVillage = "woodcutter_1_150x108.png",
     coinVillage = "woodcutter_1_150x108.png",
 }
-
 local ITEM = {
     movingConstruction = "movingConstruction_101x101.png",
     torch = "torch_101x101.png",
@@ -1037,6 +1030,8 @@ return {
     daily_quests_icon = DAILY_QUESTS_ICON,
     player_icon = PLAYER_ICON,
 }
+
+
 
 
 

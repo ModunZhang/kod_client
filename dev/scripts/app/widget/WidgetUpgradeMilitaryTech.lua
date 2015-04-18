@@ -166,42 +166,42 @@ function WidgetUpgradeMilitaryTech:UpgradeRequirement()
 
     local requirements = {
         {
-            resource_type = _("升级军事科技队列"),
-            isVisible = true,
+            resource_type = "building_queue",
+            isVisible = City:GetSoldierManager():GetUpgradingMilitaryTechNum(self.tech:Building())>0,
             isSatisfy = not  City:GetSoldierManager():IsUpgradingMilitaryTech(self.tech:Building()),
             icon="hammer_31x33.png",
-            description=City:GetSoldierManager():GetUpgradingMilitaryTechNum(self.tech:Building()).."/1"
+            description= _("升级队列已满")..":"..City:GetSoldierManager():GetUpgradingMilitaryTechNum(self.tech:Building()).."/1"
         },
         {
             resource_type = Localize.fight_reward.coin,
-            isVisible = true,
+            isVisible = level_up_config.coin>0,
             isSatisfy = current_coin>level_up_config.coin,
             icon=UILib.resource.coin,description=current_coin..'/'..level_up_config.coin
         },
         {
             resource_type = Localize.sell_type.trainingFigure,
-            isVisible = true,
+            isVisible = level_up_config.trainingFigure>0,
             isSatisfy = has_materials.trainingFigure>level_up_config.trainingFigure,
             icon=UILib.materials.trainingFigure,
             description=has_materials.trainingFigure..'/'..level_up_config.trainingFigure
         },
         {
             resource_type = Localize.sell_type.bowTarget,
-            isVisible = true,
+            isVisible = level_up_config.bowTarget>0,
             isSatisfy = has_materials.bowTarget>level_up_config.bowTarget,
             icon=UILib.materials.bowTarget,
             description=has_materials.bowTarget..'/'..level_up_config.bowTarget
         },
         {
             resource_type = Localize.sell_type.saddle,
-            isVisible = true,
+            isVisible = level_up_config.saddle>0,
             isSatisfy = has_materials.saddle>level_up_config.saddle,
             icon=UILib.materials.saddle,
             description=has_materials.saddle..'/'..level_up_config.saddle
         },
         {
             resource_type = Localize.sell_type.ironPart,
-            isVisible = true,
+            isVisible = level_up_config.ironPart>0,
             isSatisfy = has_materials.ironPart>level_up_config.ironPart,
             icon=UILib.materials.ironPart,
             description=has_materials.ironPart..'/'..level_up_config.ironPart

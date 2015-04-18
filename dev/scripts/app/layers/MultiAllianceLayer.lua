@@ -107,7 +107,10 @@ local terrain_map = {
         "008.png",
     },
     iceField = {
-
+        "024.png",
+        "025.png",
+        "026.png",
+        "027.png",
     }
 }
 function MultiAllianceLayer:ReloadBackGround()

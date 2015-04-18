@@ -22,6 +22,11 @@ function Observer:CopyListenerFrom(subject)
 	self.observer = observer
 end
 function Observer:AddObserver(observer)
+	for i,v in ipairs(self.observer) do
+		if v == observer then
+			return v
+		end
+	end
 	table.insert(self.observer, observer)
 	return observer
 end

@@ -142,12 +142,14 @@ function EventManager:two_touch_began(points)
     for id, cursor in pairs(self:AllTouches()) do
         table.insert(points, {id = id, x = cursor.x, y = cursor.y})
     end
-    self.scale_id_1 = points[1].id
-    self.scale_id_2 = points[2].id
-    local x1, y1 = points[1].x, points[1].y
-    local x2, y2 = points[2].x, points[2].y
-    if self.two_touch_handle then
-        self.two_touch_handle:OnTwoTouch(x1, y1, x2, y2, "began")
+    if #points >= 2 then
+        self.scale_id_1 = points[1].id
+        self.scale_id_2 = points[2].id
+        local x1, y1 = points[1].x, points[1].y
+        local x2, y2 = points[2].x, points[2].y
+        if self.two_touch_handle then
+            self.two_touch_handle:OnTwoTouch(x1, y1, x2, y2, "began")
+        end
     end
 end
 function EventManager:touch_moving(event_points)

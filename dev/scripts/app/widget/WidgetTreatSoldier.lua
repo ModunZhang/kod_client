@@ -2,6 +2,7 @@ local GameUtils = GameUtils
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetSliderWithInput = import("..widget.WidgetSliderWithInput")
 local HospitalUpgradeBuilding = import("..entity.HospitalUpgradeBuilding")
+local SoldierManager = import("..entity.SoldierManager")
 local UILib = import("..ui.UILib")
 local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local WidgetSlider = import("..widget.WidgetSlider")
@@ -380,7 +381,7 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
         :align(display.CENTER, center, -50)
 
     cc.ui.UILabel.new({
-        text = "-(20:20:20)",
+        text = "(-00:00:00)",
         size = 18,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_CENTER,
@@ -391,7 +392,14 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
     self.back_ground = back_ground
 
     self:SetSoldier(soldier_type, star)
+    self.star = star
     self:OnCountChanged(0)
+end
+function WidgetTreatSoldier:onEnter()
+    City:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
+end
+function WidgetTreatSoldier:onExit()
+    City:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
 end
 function WidgetTreatSoldier:SetSoldier(soldier_type, star)
     local soldier_config, soldier_ui_config = self:GetConfigBySoldierTypeAndStar(soldier_type, star)
@@ -410,6 +418,17 @@ function WidgetTreatSoldier:SetSoldier(soldier_type, star)
     self.soldier_config = soldier_config
     self.soldier_ui_config = soldier_ui_config
     return self
+end
+function WidgetTreatSoldier:OnSoliderStarCountChanged(soldier_manager,star_changed_map)
+    for i,v in pairs(star_changed_map) do
+        if v == self.soldier_type then
+            self.star =  soldier_manager:GetStarBySoldierType(v)
+            local soldier_config, soldier_ui_config = self:GetConfigBySoldierTypeAndStar(v, self.star)
+            self.soldier:setTexture(soldier_ui_config)
+            self.soldier_config = soldier_config
+            self.soldier_ui_config = soldier_ui_config
+        end
+    end
 end
 function WidgetTreatSoldier:GetConfigBySoldierTypeAndStar(soldier_type, star)
     local soldier_type_with_star = soldier_type..(star == nil and "" or string.format("_%d", star))

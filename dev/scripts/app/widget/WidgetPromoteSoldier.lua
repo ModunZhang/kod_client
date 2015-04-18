@@ -131,7 +131,23 @@ function WidgetPromoteSoldier:UpgradeButtons()
                 if LuaUtils:table_empty(results) then
                     upgrade_listener()
                 else
-                    self:PopNotSatisfyDialog(upgrade_listener,results)
+                    local dialog =  self:PopNotSatisfyDialog(upgrade_listener,results)
+                    local need_gem = self:GetUpgradeGems()
+                    if need_gem~=0 then
+                        dialog:CreateNeeds({value = self:GetUpgradeGems()})
+                    end
+                    if need_gem > User:GetGemResource():GetValue() then
+                        dialog:CreateOKButton({
+                            listener =  function ()
+                                UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                            end,
+                            btn_name = _("前往商店")
+                        })
+                    else
+                        dialog:CreateOKButton({
+                            listener =  upgrade_listener
+                        })
+                    end
                 end
             end,
         }
@@ -175,21 +191,21 @@ function WidgetPromoteSoldier:UpgradeRequirement()
     local tech_points = City:GetSoldierManager():GetTechPointsByType(self:GetSoldierMapToBuilding())
     local requirements = {
         {
-            resource_type = _("升级军事科技队列"),
-            isVisible = true,
+            resource_type = "building_queue",
+            isVisible = City:GetSoldierManager():GetUpgradingMilitaryTechNum(self.building_type)>0,
             isSatisfy = not  City:GetSoldierManager():IsUpgradingMilitaryTech(self.building_type),
             icon="hammer_31x33.png",
-            description=City:GetSoldierManager():GetUpgradingMilitaryTechNum(self.building_type).."/1"
+            description= _("升级队列已满")..":"..City:GetSoldierManager():GetUpgradingMilitaryTechNum(self.building_type).."/1"
         },
         {
             resource_type = Localize.fight_reward.coin,
-            isVisible = true,
+            isVisible = level_up_config.upgradeCoinNeed>0,
             isSatisfy = current_coin>level_up_config.upgradeCoinNeed,
             icon=UILib.resource.coin,description=current_coin..'/'..level_up_config.upgradeCoinNeed
         },
         {
             resource_type = _("科技点数"),
-            isVisible = true,
+            isVisible = level_up_config.upgradeTechPointNeed>0,
             isSatisfy =tech_points>=level_up_config.upgradeTechPointNeed,
             icon="icon_teac.png",
             description=tech_points..'/'..level_up_config.upgradeTechPointNeed,
@@ -244,32 +260,13 @@ function WidgetPromoteSoldier:OnMilitaryTechsDataChanged( soldier_manager,change
 end
 function WidgetPromoteSoldier:PopNotSatisfyDialog(upgrade_listener,results)
     local message = ""
-    local gem_not_enough =false
     for k,v in pairs(results) do
         message = message .. v.."\n"
-        if v == _("金龙币不足") then
-            gem_not_enough = true
-        end
     end
     local dialog =  FullScreenPopDialogUI.new():SetTitle(_("提示"))
         :SetPopMessage(message)
         :AddToCurrentScene()
-    local need_gem = self:GetUpgradeGems()
-    if need_gem~=0 then
-        dialog:CreateNeeds({value = self:GetUpgradeGems()})
-    end
-    if gem_not_enough or need_gem > User:GetGemResource():GetValue() then
-        dialog:CreateOKButton({
-            listener =  function ()
-                UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
-            end,
-            btn_name = _("前往商店")
-        })
-    else
-        dialog:CreateOKButton({
-            listener =  upgrade_listener
-        })
-    end
+    return dialog
 end
 function WidgetPromoteSoldier:GetInstantUpgradeGems()
     local config = self:GetNextLevelConfig()
@@ -298,9 +295,6 @@ function WidgetPromoteSoldier:IsAbleToUpgradeNow()
 end
 function WidgetPromoteSoldier:IsAbleToUpgradeFirst()
     local level_up_config = self:GetNextLevelConfig()
-
-    local current_coin = City:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-
     local tech_points = City:GetSoldierManager():GetTechPointsByType(self:GetSoldierMapToBuilding())
     local results = {}
     if tech_points<level_up_config.upgradeTechPointNeed then
@@ -326,6 +320,7 @@ function WidgetPromoteSoldier:GetNextLevelConfig()
     return NORMAL[self.soldier_type.."_"..(City:GetSoldierManager():GetStarBySoldierType(self.soldier_type)+1)]
 end
 return WidgetPromoteSoldier
+
 
 
 

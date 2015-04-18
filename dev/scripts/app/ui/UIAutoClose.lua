@@ -8,8 +8,9 @@ function UIAutoClose:ctor(params)
     UIAutoClose.super.ctor(self,params)
     local node = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
     node:setNodeEventEnabled(true)
+    local is_began_out = false
     node:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
-        if event.name == "ended" then
+        if event.name == "began" then
             if self.disable then
                 return
             end
@@ -18,7 +19,22 @@ function UIAutoClose:ctor(params)
             local size = body:getContentSize()
             local rtpoint = body:convertToWorldSpace({x = size.width, y = size.height})
             if not cc.rectContainsPoint(cc.rect(lbpoint.x, lbpoint.y, rtpoint.x - lbpoint.x, rtpoint.y - lbpoint.y), event) then
-                self:LeftButtonClicked()
+                is_began_out = true
+            end
+        elseif event.name == "ended" then
+            if self.disable then
+                return
+            end
+            local body = self:getChildByTag(BODY_TAG)
+            local lbpoint = body:convertToWorldSpace({x = 0, y = 0})
+            local size = body:getContentSize()
+            local rtpoint = body:convertToWorldSpace({x = size.width, y = size.height})
+            if not cc.rectContainsPoint(cc.rect(lbpoint.x, lbpoint.y, rtpoint.x - lbpoint.x, rtpoint.y - lbpoint.y), event) then
+                if is_began_out then
+                    self:LeftButtonClicked()
+                end
+            else
+                is_began_out = false
             end
         end
         return true
@@ -61,6 +77,7 @@ function UIAutoClose:addCloseCleanFunc(func)
     self.clean_func=func
 end
 return UIAutoClose
+
 
 
 

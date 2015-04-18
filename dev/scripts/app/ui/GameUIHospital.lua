@@ -80,6 +80,7 @@ function GameUIHospital:OnMoveInStage()
     self:CreateSpeedUpHeal()
 
     self.city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.TREAT_SOLDIER_CHANGED)
+    self.city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
     self.building:AddHospitalListener(self)
     self.building:AddUpgradeListener(self)
 end
@@ -88,6 +89,7 @@ function GameUIHospital:onExit()
     self.building:RemoveHospitalListener(self)
     self.building:RemoveUpgradeListener(self)
     self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.TREAT_SOLDIER_CHANGED)
+    self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
     GameUIHospital.super.onExit(self)
 end
 function GameUIHospital:OnBuildingUpgradingBegin( ... )
@@ -212,7 +214,7 @@ function GameUIHospital:CreateHealAllSoldierItem()
     -- 科技减少治愈时间
     self.buff_reduce_time = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = "(-00:20:00)",
+        text = "(-00:00:00)",
         font = UIKit:getFontFilePath(),
         size = 18,
         color = UIKit:hex2c3b(0x068329)
@@ -409,7 +411,7 @@ function GameUIHospital:CreateItemWithListView(list_view)
         local soldier = WidgetSoldierBox.new("",function ()
             if soldier_number>0 then
                 local widget = WidgetTreatSoldier.new(soldier_name,
-                    1,
+                    self.city:GetSoldierManager():GetStarBySoldierType(soldier_name),
                     soldier_number)
                     :addTo(self,1000)
                     :align(display.CENTER, window.cx, 500 / 2)
@@ -430,7 +432,7 @@ function GameUIHospital:CreateItemWithListView(list_view)
             end
         end):addTo(row_item)
             :alignByPoint(cc.p(0.5,0.5), origin_x + (unit_width + gap_x) * row_count + unit_width / 2, 0)
-        soldier:SetSoldier(soldier_name,1)
+        soldier:SetSoldier(soldier_name,self.city:GetSoldierManager():GetStarBySoldierType(soldier_name))
         soldier:SetNumber(soldier_number)
         soldier:Enable(soldier_number>0)
         self.treat_soldier_boxes_table[soldier_name] = soldier
@@ -522,7 +524,13 @@ function GameUIHospital:OnTreatSoliderCountChanged(soldier_manager, treat_soldie
 
 
 end
-
+function GameUIHospital:OnSoliderStarCountChanged(soldier_manager,star_changed_map)
+    for i,v in pairs(star_changed_map) do
+        if self.treat_soldier_boxes_table[v] then
+            self.treat_soldier_boxes_table[v]:SetSoldier(v, soldier_manager:GetStarBySoldierType(v))
+        end
+    end
+end
 return GameUIHospital
 
 
