@@ -305,16 +305,9 @@ function GameUIDragonEquipment:WidgetDragonEquipIntensifyEvent(widgetDragonEquip
       self.exp_label:setString(str)
       if percent >= 100 then
         local config =  equipment:GetNextStarDetailConfig()
-          self:RefreshIntensifyListViewBuffVal(config.vitality,config.strength)
-          -- self.intensify_ui.vitality_val_label_add:setString("+" ...)
-          -- self.intensify_ui.vitality_val_label_add:show()
-          -- self.intensify_ui.strength_val_label_add:setString("+" .. equipment:GetNextStarDetailConfig().strength)
-          -- self.intensify_ui.strength_val_label_add:show()
-          
+        self:RefreshIntensifyListViewBuffVal(config.vitality,config.strength)
       else
         self:RefreshIntensifyListViewBuffVal(0,0)
-          -- self.intensify_ui.vitality_val_label_add:hide()
-          -- self.intensify_ui.strength_val_label_add:hide()
       end
       self.greenProgress:setPercentage(percent)
     end
@@ -337,129 +330,6 @@ function GameUIDragonEquipment:IntensifyButtonClicked()
       self:RefreshIntensifyUI()
   end)
 end
-
-
--- function GameUIDragonEquipment:BuildIntensifyUI()
---   self.intensify_ui = {}
---   local mainEquipment = self.mainEquipment
---   local body = display.newNode():addTo(self):pos((display.width-self.background:getContentSize().width)/2,display.height - self.background:getContentSize().height - 80)
- 
---   local vitality_icon = display.newSprite("dragon_vitality_33x42.png")
---     :align(display.LEFT_BOTTOM,mainEquipment:getPositionX(),mainEquipment:getPositionY()-mainEquipment:getContentSize().height*mainEquipment:getScale()-60)
---     :addTo(body)
-
---   local vitality_title_label = UIKit:ttfLabel({
---     text = _("龙的活力"),
---     size = 22,
---     color = 0x615b44,
---     align = cc.TEXT_ALIGNMENT_LEFT
---   }):align(display.LEFT_CENTER,vitality_icon:getPositionX()+vitality_icon:getContentSize().width + 5,vitality_icon:getPositionY() + vitality_icon:getContentSize().height/2)
---     :addTo(body)
---   self.intensify_ui.vitality_val_label = UIKit:ttfLabel({
---     text = "",
---     size = 20,
---     color = 0x403c2f,
---     align = cc.TEXT_ALIGNMENT_RIGHT
---   }):addTo(body):align(display.RIGHT_CENTER,540,vitality_title_label:getPositionY())
---   self.intensify_ui.vitality_val_label_add = UIKit:ttfLabel({
---     text = "",
---     size = 20,
---     color = 0x309700,
---     align = cc.TEXT_ALIGNMENT_LEFT
---   }):addTo(body):align(display.LEFT_CENTER,self.intensify_ui.vitality_val_label:getPositionX()+2,vitality_title_label:getPositionY())
---   local line1 = display.newScale9Sprite("dividing_line_594x2.png")
---     :size(554,2)
---     :align(display.LEFT_TOP,vitality_icon:getPositionX(),vitality_icon:getPositionY()+5)
---     :addTo(body)
---   local strength_icon = display.newSprite("dragon_strength_27x31.png")
---     :align(display.LEFT_TOP,vitality_icon:getPositionX(),line1:getPositionY()-8)
---     :addTo(body)
-
---   local strength_title_label = UIKit:ttfLabel({
---     text = _("龙的力量"),
---     size = 22,
---     color = 0x615b44,
---     align = cc.TEXT_ALIGNMENT_LEFT
---   }):align(display.LEFT_CENTER,vitality_title_label:getPositionX(),strength_icon:getPositionY() - strength_icon:getContentSize().height/2)
---     :addTo(body)
-
---   self.intensify_ui.strength_val_label = UIKit:ttfLabel({
---     text = "",
---     size = 20,
---     color = 0x403c2f,
---     align = cc.TEXT_ALIGNMENT_RIGHT
---   }):addTo(body):align(display.RIGHT_CENTER,540,strength_title_label:getPositionY())
-
---   self.intensify_ui.strength_val_label_add = UIKit:ttfLabel({
---     text = "",
---     size = 20,
---     color = 0x309700,
---     align = cc.TEXT_ALIGNMENT_LEFT
---   }):addTo(body):align(display.LEFT_CENTER,self.intensify_ui.strength_val_label:getPositionX()+2,strength_title_label:getPositionY())
---   local line2 = display.newScale9Sprite("dividing_line_594x2.png")
---     :size(554,2)
---     :align(display.LEFT_TOP,strength_icon:getPositionX(),strength_icon:getPositionY()-strength_icon:getContentSize().height)
---     :addTo(body)
---   local progressBg = display.newSprite("balckbar_555x44.png")
---     :addTo(body)
---     :align(display.LEFT_TOP, mainEquipment:getPositionX(), line2:getPositionY()-10)
---   local greenProgress = UIKit:commonProgressTimer("greenbar_550x38.png")
---     :addTo(progressBg)
---     :align(display.LEFT_BOTTOM,1,3)
---   greenProgress:setPercentage(50)
---   local yellowProgress = UIKit:commonProgressTimer("yellowbar_551x38.png")
---     :addTo(progressBg)
---     :align(display.LEFT_BOTTOM,1,3)
---   yellowProgress:setPercentage(30)
-
---   local descLabel =   cc.ui.UILabel.new({
---     UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
---     text = "",
---     font = UIKit:getFontFilePath(),
---     size = 20,
---     align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
---     color = UIKit:hex2c3b(0xfff3c7)
---   }):addTo(yellowProgress)
---     :align(display.LEFT_BOTTOM, 5, 5)
---   self.intensify_ui.expLabel = descLabel
---   self.intensify_ui.yellowProgress = yellowProgress
---   self.intensify_ui.greenProgress = greenProgress
---   --- listview
---   self.intensify_ui.main = body
---   self.intensify_ui.listView = UIListView.new {
---       viewRect = cc.rect(mainEquipment:getPositionX(), 60, 555, 300),
---       direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
---       alignment = cc.ui.UIListView.ALIGNMENT_LEFT,
---   }
---   :addTo(body)
---   self.allEquipemnts = {}
---   local equipment = self:GetEquipment()
---   local lineCount = self:GetPlayerEquipmentsListData(5)
---   for i=1,lineCount do
---       local item = self.intensify_ui.listView:newItem()
---       local node = display.newNode()
---       local lineData = self:GetPlayerEquipmentsListData(5,i)
---       for j=1,#lineData do
---         local perData = lineData[j]
---         local tempNode = WidgetDragonEquipIntensify.new(self,perData[1],0,perData[2],equipment:Name())
---         :addTo(node)
---         local x = tempNode:getCascadeBoundingBox().width/2 + (j-1) * (tempNode:getCascadeBoundingBox().width +6)
---         tempNode:pos(x,tempNode:getCascadeBoundingBox().height/2)
---         table.insert(self.allEquipemnts,tempNode)
---       end
---       item:addContent(node)
---       node:size(node:getCascadeBoundingBox().width, node:getCascadeBoundingBox().height+10)
---       item:setItemSize(node:getCascadeBoundingBox().width, node:getCascadeBoundingBox().height+10)
---       self.intensify_ui.listView:addItem(item)
---   end
---   self.intensify_ui.listView:reload()
--- end
-
--- function GameUIDragonEquipment:GetEquipmentCategory()
---   local equipment = self:GetEquipment()
---   return equipment:GetDetailConfig()
--- end
-
 
 function GameUIDragonEquipment:RefreshEquipmentItem(isInfo)
     if isInfo then
@@ -492,8 +362,8 @@ function GameUIDragonEquipment:RefreshIntensifyUI()
 end
 
 function GameUIDragonEquipment:RefreshIntensifyEquipmentListView( ... )
-  self.intensify_eq_list:removeAllItems()
   self.allEquipemnts = {}
+  self.intensify_eq_list:removeAllItems()
   local equipment = self:GetEquipment()
   local lineCount = self:GetPlayerEquipmentsListData(5)
   for i=1,lineCount do
