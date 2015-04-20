@@ -3,30 +3,15 @@ local UIPushButton = cc.ui.UIPushButton
 local WidgetPushButton = class("WidgetPushButton", UIPushButton)
 local my_filter = filter
 function WidgetPushButton:ctor(images, options, filters,music_info)
-    self.pre_pos = nil
     self.filters = filters ~= nil and filters or nil
-
     WidgetPushButton.super.ctor(self, images, options,music_info)
     self:setTouchSwallowEnabled(false)
     self:RebindEventListener()
 end
 function WidgetPushButton:RebindEventListener()
-    self:onButtonPressed(function(event)
-        self.pre_pos = event.target:convertToWorldSpace(cc.p(event.target:getPosition()))
-    end)
-    self:addEventListener(MOVE_EVENT, function(event)
-        local cur_pos = event.target:convertToWorldSpace(cc.p(event.target:getPosition()))
-        if event.touchInTarget and cc.pGetDistance(cur_pos, self.pre_pos) > 10 then
-            if event.target.fsm_:canDoEvent("release") then
-                event.target.fsm_:doEvent("release")
-            end
-        end
-    end)
     self:addNodeEventListener(cc.NODE_EVENT, function(event)
         if event.name == "enter" then
-            if self:HasFilters() then
-                self:UpdateFilters()
-            end
+            self:UpdateFilters()
         end
     end)
     return self
@@ -35,9 +20,7 @@ function WidgetPushButton:onChangeState_()
     if self:isRunning() then
         self:updateButtonImage_()
         self:updateButtonLable_()
-        if self:HasFilters() then
-            self:UpdateFilters()
-        end
+        self:UpdateFilters()
     end
     return self
 end
@@ -103,7 +86,7 @@ function WidgetPushButton:updateButtonImage_()
             v:setPosition(0, 0)
         end
     elseif not self.labels_ then
-        printError("UIButton:updateButtonImage_() - not set image for state %s", state)
+        printError("UIPushButton:updateButtonImage_() - not set image for state %s", state)
     end
 end
 function WidgetPushButton:NewSprite(image, filter)
@@ -126,7 +109,9 @@ function WidgetPushButton:SetFilter(filters)
     return self
 end
 function WidgetPushButton:UpdateFilters()
-    self:SetFilterOnSprite(self.sprite_[1], self.filters[self.fsm_:getState()])
+    if self:HasFilters() then
+        self:SetFilterOnSprite(self.sprite_[1], self.filters[self.fsm_:getState()])
+    end
 end
 function WidgetPushButton:SetFilterOnSprite(sprite, filter)
     if filter then
@@ -138,43 +123,6 @@ function WidgetPushButton:SetFilterOnSprite(sprite, filter)
 end
 function WidgetPushButton:HasFilters()
     return self.filters
-end
-function WidgetPushButton:onTouch_(event)
-    -- print("----UIPushButton:onTouch_")
-    local name, x, y = event.name, event.x, event.y
-    -- print("----name, x, y = ", name, x, y)
-    if name == "began" then
-        -- print("----began")
-        if not self:checkTouchInSprite_(x, y) then return false end
-        -- print("----doEvent('press')")
-        if self:isButtonEnabled() then
-            self.fsm_:doEvent("press")
-            self:dispatchEvent({name = UIPushButton.PRESSED_EVENT, x = x, y = y, touchInTarget = true})
-        end
-        return true
-    end
-
-    local touchInTarget = self:checkTouchInSprite_(x, y)
-    if name == "moved" then
-        if touchInTarget then
-            self:dispatchEvent({name = MOVE_EVENT, x = x, y = y, touchInTarget = true})
-        elseif not touchInTarget and self.fsm_:canDoEvent("release") then
-            self.fsm_:doEvent("release")
-            self:dispatchEvent({name = UIPushButton.RELEASE_EVENT, x = x, y = y, touchInTarget = false})
-        end
-    else
-        local is_pressed = self.fsm_:isState("pressed")
-        if self.fsm_:canDoEvent("release") then
-            self.fsm_:doEvent("release")
-            self:dispatchEvent({name = UIPushButton.RELEASE_EVENT, x = x, y = y, touchInTarget = touchInTarget})
-        end
-        if name == "ended" and is_pressed and touchInTarget then
-            self:setTouchEnabled(false)
-            self:performWithDelay(function() self:setTouchEnabled(true) end, 0.5)
-
-            self:dispatchEvent({name = UIPushButton.CLICKED_EVENT, x = x, y = y, touchInTarget = true})
-        end
-    end
 end
 
 return WidgetPushButton
