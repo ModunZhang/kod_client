@@ -17,6 +17,7 @@ local GameUIAllianceNoticeOrDescEdit = import(".GameUIAllianceNoticeOrDescEdit")
 local Localize = import("..utils.Localize")
 local NetService = import('..service.NetService')
 local Alliance_Manager = Alliance_Manager
+local User = User
 local Alliance = import("..entity.Alliance")
 local WidgetAllianceHelper = import("..widget.WidgetAllianceHelper")
 local Flag = import("..entity.Flag")
@@ -910,28 +911,107 @@ end
 --成员
 
 function GameUIAlliance:HaveAlliaceUI_membersIf()
-    if self.member_list_bg then self:RefreshMemberList() return self.member_list_bg end
-    local member_list_bg = display.newSprite("alliance_member_bg_568x784.png")
-        :align(display.CENTER_TOP, window.width/2, window.betweenHeaderAndTab)
-        :addTo(self.main_content)
-    local listView = UIListView.new {
-        viewRect = cc.rect(10, 10, 548,764),
-        direction = UIScrollView.DIRECTION_VERTICAL,
-    -- bgColor = UIKit:hex2c4b(0x7a000000),
-    }:addTo(member_list_bg)
-    self.memberListView = listView
-    self.member_list_bg = member_list_bg
+    if not self.member_list_bg then
+        self.member_list_bg = display.newNode():size(568,784):addTo(self.main_content)
+             :align(display.CENTER_TOP, window.width/2, window.betweenHeaderAndTab)
+        local list,list_node = UIKit:commonListView({
+            viewRect = cc.rect(0, 0,558,618),
+            direction = UIScrollView.DIRECTION_VERTICAL,
+            -- bgColor = UIKit:hex2c4b(0x7a000000),
+        })
+        self.memberListView = list
+        list_node:addTo(self.member_list_bg):pos(5,10)
+        local box = display.newScale9Sprite("alliance_item_flag_box_126X126.png")
+            :size(126,134)
+            :addTo(self.member_list_bg)
+            :align(display.LEFT_TOP,5,784)
+        self.member_list_bg.player_icon_box = box
+        local title_bar =  display.newScale9Sprite("alliance_event_type_darkblue_222x30.png",0,0, cc.size(428,30), cc.rect(7,7,190,16))
+            :addTo(self.member_list_bg)
+            :align(display.LEFT_TOP, 136, 782) 
+        local title_label = UIKit:ttfLabel({
+            text = "",
+            size = 22,
+            color= 0xffedae,
+            align = cc.TEXT_ALIGNMENT_LEFT,
+        }):addTo(title_bar):align(display.LEFT_CENTER,5, 15)
+        self.member_list_bg.title_label = title_label
+        local button = WidgetPushButton.new({normal = "info_16x33.png"}):addTo(title_bar):align(display.RIGHT_CENTER, 400, 15):scale(0.7):onButtonClicked(function(event)
+            self:OnAllianceTitleClicked("archon")
+        end)
+        WidgetPushTransparentButton.new(cc.rect(0,0,428,30),button):addTo(title_bar):align(display.LEFT_BOTTOM,0,0)
+        local line_2 = display.newScale9Sprite("dividing_line_594x2.png"):addTo(self.member_list_bg)
+            :align(display.LEFT_BOTTOM,title_bar:getPositionX(),650)
+            :size(428,2)
+        local powerIcon = display.newSprite("dragon_strength_27x31.png")
+            :align(display.LEFT_BOTTOM,line_2:getPositionX() + 5,line_2:getPositionY()+5)
+            :addTo(self.member_list_bg)
+        local powerLabel = UIKit:ttfLabel({
+            text = "",
+            size = 22,
+            color = 0x403c2f,
+            align = cc.TEXT_ALIGNMENT_LEFT,
+        }):addTo(self.member_list_bg):align(display.LEFT_BOTTOM,powerIcon:getPositionX()+powerIcon:getContentSize().width+10,powerIcon:getPositionY())
+        self.member_list_bg.powerLabel = powerLabel
+        local loginLabel = UIKit:ttfLabel({
+            text = "",
+            size = 22,
+            color = 0x403c2f,
+            align = cc.TEXT_ALIGNMENT_RIGHT,
+        }):addTo(self.member_list_bg):align(display.BOTTOM_RIGHT,554,line_2:getPositionY() + 5)
+        self.member_list_bg.loginLabel = loginLabel
+        local line_1 = display.newScale9Sprite("dividing_line_594x2.png"):addTo(self.member_list_bg)
+            :align(display.LEFT_BOTTOM,title_bar:getPositionX(),688)
+            :size(428,2)
+        local display_title,imageName = self:GetAllianceTitleAndLevelPng("archon")
+        local title_icon = display.newSprite(imageName)
+            :align(display.LEFT_BOTTOM, line_1:getPositionX(), line_1:getPositionY() + 5)
+            :addTo(self.member_list_bg)
+        UIKit:ttfLabel({
+            text = display_title,
+            size = 22,
+            color= 0x403c2f,
+            align = cc.TEXT_ALIGNMENT_LEFT,
+        }):align(display.LEFT_BOTTOM, title_icon:getPositionX()+title_icon:getContentSize().width + 10,title_icon:getPositionY()):addTo(self.member_list_bg)
+
+        self.member_list_bg.view_archon_info_button = WidgetPushButton.new({normal = "alliacne_search_29x33.png"})
+            :align(display.RIGHT_BOTTOM,554,line_1:getPositionY()+4)
+            :addTo(self.member_list_bg)
+            :onButtonClicked(function()
+                local archon = Alliance_Manager:GetMyAlliance():GetAllianceArchon()
+                self:OnPlayerDetailButtonClicked(archon:Id())
+            end)
+    end
+    -- if self.member_list_bg then self:RefreshMemberList() return self.member_list_bg end
+    -- local member_list_bg = display.newSprite("alliance_member_bg_568x784.png")
+    --     :align(display.CENTER_TOP, window.width/2, window.betweenHeaderAndTab)
+    --     :addTo(self.main_content)
+    -- local listView = UIListView.new {
+    --     viewRect = cc.rect(10, 10, 548,764),
+    --     direction = UIScrollView.DIRECTION_VERTICAL,
+    -- }:addTo(member_list_bg)
+    -- self.memberListView = listView
+    -- self.member_list_bg = member_list_bg
     self:RefreshMemberList()
     return self.member_list_bg
 end
 
 function GameUIAlliance:RefreshMemberList()
     if not self.memberListView then return end
+    if self.member_list_bg.player_icon then
+        self.member_list_bg.player_icon:removeFromParent()
+    end
+    local archon = Alliance_Manager:GetMyAlliance():GetAllianceArchon()
+    self.member_list_bg.player_icon = UIKit:GetPlayerCommonIcon(key)
+        :addTo(self.member_list_bg.player_icon_box):pos(63,67)
+    self.member_list_bg.title_label:setString(string.format("%s Lv %s",archon:Name(),archon.level))
+    self.member_list_bg.powerLabel:setString(string.formatnumberthousands(archon.power))
+    self.member_list_bg.loginLabel:setString(_("离线:") .. NetService:formatTimeAsTimeAgoStyleByServerTime(archon.lastLoginTime))
+    self.member_list_bg.view_archon_info_button:setVisible(User:Id() ~= archon:Id())
+    --list view
     self.memberListView:removeAllItems()
 
-    local item = self:GetMemberItem("archon")
-    self.memberListView:addItem(item)
-    item = self:GetMemberItem("general")
+    local item = self:GetMemberItem("general")
     self.memberListView:addItem(item)
     item = self:GetMemberItem("quartermaster")
     self.memberListView:addItem(item)
@@ -965,125 +1045,143 @@ function GameUIAlliance:GetMemberItem(title)
     end)
     local header_title,number_image = "",""
 
-    if title == 'archon' then
-        local bg = display.newScale9Sprite("alliance_member_item_bg0_548x68.png"):size(548,150):align(display.LEFT_BOTTOM, 0, 0)
-        local title_bar = display.newSprite("alliance_member_title_548x38.png"):align(display.LEFT_TOP, 0, 150):addTo(bg)
-        local button = WidgetPushButton.new({normal = "alliance_member_i_n_34x34.png",pressed = "alliance_member_i_h_34x34.png"})
-            :align(display.RIGHT_CENTER,540,19)
-            :addTo(title_bar)
-            :onButtonClicked(function(event)
-                self:OnAllianceTitleClicked(title)
-            end)
-        WidgetPushTransparentButton.new(cc.rect(0,0,548,38),button):addTo(title_bar):align(display.LEFT_BOTTOM,0,0)
-        local display_title,imageName = self:GetAllianceTitleAndLevelPng(title)
-        local titleLabel = UIKit:ttfLabel({
-            text = display_title,
-            size = 22,
-            color = 0xffedae,
-        }):align(display.CENTER, 274,19):addTo(title_bar)
+    -- if title == 'archon' then
+    --     local bg = display.newScale9Sprite("alliance_member_item_bg0_548x68.png"):size(548,150):align(display.LEFT_BOTTOM, 0, 0)
+    --     local title_bar = display.newSprite("alliance_member_title_548x38.png"):align(display.LEFT_TOP, 0, 150):addTo(bg)
+    --     local button = WidgetPushButton.new({normal = "alliance_member_i_n_34x34.png",pressed = "alliance_member_i_h_34x34.png"})
+    --         :align(display.RIGHT_CENTER,540,19)
+    --         :addTo(title_bar)
+    --         :onButtonClicked(function(event)
+    --             self:OnAllianceTitleClicked(title)
+    --         end)
+    --     WidgetPushTransparentButton.new(cc.rect(0,0,548,38),button):addTo(title_bar):align(display.LEFT_BOTTOM,0,0)
+    --     local display_title,imageName = self:GetAllianceTitleAndLevelPng(title)
+    --     local titleLabel = UIKit:ttfLabel({
+    --         text = display_title,
+    --         size = 22,
+    --         color = 0xffedae,
+    --     }):align(display.CENTER, 274,19):addTo(title_bar)
 
-        local icon = display.newSprite(imageName)
-            :align(display.RIGHT_CENTER,titleLabel:getPositionX() - titleLabel:getContentSize().width/2 - 10,19)
-            :addTo(title_bar)
-        --content
-        local box = display.newSprite("alliance_icon_box_108x108.png"):align(display.LEFT_BOTTOM, 4, 4):addTo(bg)
-        UIKit:GetPlayerCommonIcon():addTo(box):pos(54,54):scale(0.8)
-        local nameLabel = UIKit:ttfLabel({
-            text = data[1].name,
-            size = 22,
-            color = 0x403c2f,
-        }):addTo(bg):align(display.LEFT_TOP,box:getPositionX()+box:getContentSize().width + 5, box:getPositionY()+box:getContentSize().height - 2)
-        local lvLabel =  UIKit:ttfLabel({
-            text = "LV " .. data[1].level,
-            size = 22,
-            color = 0x403c2f,
-        }):addTo(bg):align(display.LEFT_TOP,nameLabel:getPositionX()+200, nameLabel:getPositionY())
-        local line_2 = display.newScale9Sprite("dividing_line_594x2.png"):addTo(bg)
-            :align(display.LEFT_BOTTOM,box:getPositionX()+box:getContentSize().width+2,box:getPositionY()+2)
-            :size(title_bar:getContentSize().width - box:getContentSize().width - 20,2)
-        local loginLabel = UIKit:ttfLabel({
-            text = _("最后登陆时间:") .. NetService:formatTimeAsTimeAgoStyleByServerTime(data[1].lastLoginTime),
-            size = 20,
-            color = 0x403c2f,
-        }):addTo(bg):align(display.LEFT_BOTTOM, line_2:getPositionX(),line_2:getPositionY() + 5)
-        local line_1 = display.newScale9Sprite("dividing_line_594x2.png"):addTo(bg)
-            :align(display.LEFT_BOTTOM,box:getPositionX()+box:getContentSize().width+2,box:getPositionY()+35)
-            :size(title_bar:getContentSize().width - box:getContentSize().width - 20,2)
-        local powerIcon = display.newSprite("dragon_strength_27x31.png")
-            :align(display.LEFT_BOTTOM,line_1:getPositionX(),line_1:getPositionY()+5)
-            :addTo(bg)
-        local powerLabel = UIKit:ttfLabel({
-            text = string.formatnumberthousands(data[1].power),
-            size = 22,
-            color = 0x403c2f,
-            align = cc.TEXT_ALIGNMENT_LEFT,
-        }):addTo(bg):align(display.LEFT_BOTTOM,powerIcon:getPositionX()+powerIcon:getContentSize().width+10,powerIcon:getPositionY())
-        if DataManager:getUserData()._id ~= data[1].id then
-            WidgetPushButton.new({normal = "alliacne_search_29x33.png"})
-                :align(display.RIGHT_BOTTOM,line_1:getPositionX()+line_1:getContentSize().width - 2,line_1:getPositionY()+2)
-                :addTo(bg)
-                :onButtonClicked(function()
-                    self:OnPlayerDetailButtonClicked(data[1].id)
-                end)
-        end
-        --end
-        item:addContent(bg)
-        item:setItemSize(548,150)
-        return item
-    else
-        header_title,number_image = self:GetAllianceTitleAndLevelPng(title)
+    --     local icon = display.newSprite(imageName)
+    --         :align(display.RIGHT_CENTER,titleLabel:getPositionX() - titleLabel:getContentSize().width/2 - 10,19)
+    --         :addTo(title_bar)
+    --     --content
+    --     local box = display.newSprite("alliance_icon_box_108x108.png"):align(display.LEFT_BOTTOM, 4, 4):addTo(bg)
+    --     UIKit:GetPlayerCommonIcon():addTo(box):pos(54,54):scale(0.8)
+    --     local nameLabel = UIKit:ttfLabel({
+    --         text = data[1].name,
+    --         size = 22,
+    --         color = 0x403c2f,
+    --     }):addTo(bg):align(display.LEFT_TOP,box:getPositionX()+box:getContentSize().width + 5, box:getPositionY()+box:getContentSize().height - 2)
+    --     local lvLabel =  UIKit:ttfLabel({
+    --         text = "LV " .. data[1].level,
+    --         size = 22,
+    --         color = 0x403c2f,
+    --     }):addTo(bg):align(display.LEFT_TOP,nameLabel:getPositionX()+200, nameLabel:getPositionY())
+    --     local line_2 = display.newScale9Sprite("dividing_line_594x2.png"):addTo(bg)
+    --         :align(display.LEFT_BOTTOM,box:getPositionX()+box:getContentSize().width+2,box:getPositionY()+2)
+    --         :size(title_bar:getContentSize().width - box:getContentSize().width - 20,2)
+    --     local loginLabel = UIKit:ttfLabel({
+    --         text = _("最后登陆时间:") .. NetService:formatTimeAsTimeAgoStyleByServerTime(data[1].lastLoginTime),
+    --         size = 20,
+    --         color = 0x403c2f,
+    --     }):addTo(bg):align(display.LEFT_BOTTOM, line_2:getPositionX(),line_2:getPositionY() + 5)
+    --     local line_1 = display.newScale9Sprite("dividing_line_594x2.png"):addTo(bg)
+    --         :align(display.LEFT_BOTTOM,box:getPositionX()+box:getContentSize().width+2,box:getPositionY()+35)
+    --         :size(title_bar:getContentSize().width - box:getContentSize().width - 20,2)
+    --     local powerIcon = display.newSprite("dragon_strength_27x31.png")
+    --         :align(display.LEFT_BOTTOM,line_1:getPositionX(),line_1:getPositionY()+5)
+    --         :addTo(bg)
+    --     local powerLabel = UIKit:ttfLabel({
+    --         text = string.formatnumberthousands(data[1].power),
+    --         size = 22,
+    --         color = 0x403c2f,
+    --         align = cc.TEXT_ALIGNMENT_LEFT,
+    --     }):addTo(bg):align(display.LEFT_BOTTOM,powerIcon:getPositionX()+powerIcon:getContentSize().width+10,powerIcon:getPositionY())
+    --     if DataManager:getUserData()._id ~= data[1].id then
+    --         WidgetPushButton.new({normal = "alliacne_search_29x33.png"})
+    --             :align(display.RIGHT_BOTTOM,line_1:getPositionX()+line_1:getContentSize().width - 2,line_1:getPositionY()+2)
+    --             :addTo(bg)
+    --             :onButtonClicked(function()
+    --                 self:OnPlayerDetailButtonClicked(data[1].id)
+    --             end)
+    --     end
+    --     --end
+    --     item:addContent(bg)
+    --     item:setItemSize(548,150)
+    --     return item
+    -- else
+    --     header_title,number_image = self:GetAllianceTitleAndLevelPng(title)
+    -- end
+    header_title,number_image = self:GetAllianceTitleAndLevelPng(title)
+    local count = #data
+    -- 71 = 66 + 5
+    local height = 34 + count * 71 + 15
+    if count == 0 then
+        height = 120 -- 120 = 34 + 71 + 15
     end
-    local height = 38 + 68 * (#data)
-    local node = display.newNode():size(548,height)
-    local title_bar = display.newSprite("alliance_member_title_548x38.png"):align(display.LEFT_TOP, 0, height):addTo(node)
-    local button = WidgetPushButton.new({normal = "alliance_member_i_n_34x34.png",pressed = "alliance_member_i_h_34x34.png"})
-        :align(display.RIGHT_CENTER,540,19)
+    local node = display.newNode():size(558,height)
+    local title_bar = display.newSprite("title_blue_558x34.png"):align(display.LEFT_TOP, 0, height):addTo(node)
+    local button = WidgetPushButton.new({normal = "info_16x33.png"})
+        :align(display.RIGHT_CENTER,550,17)
         :addTo(title_bar)
+        :scale(0.7)
         :onButtonClicked(function(event)
             self:OnAllianceTitleClicked(title)
         end)
-    WidgetPushTransparentButton.new(cc.rect(0,0,548,38),button):addTo(title_bar):align(display.LEFT_BOTTOM,0,0)
+    WidgetPushTransparentButton.new(cc.rect(0,0,558,38),button):addTo(title_bar):align(display.LEFT_BOTTOM,0,0)
     local title_label= UIKit:ttfLabel({
         text = header_title,
         size = 22,
         color = 0xffedae,
-    }):addTo(title_bar):align(display.CENTER,274, 19)
+    }):addTo(title_bar):align(display.LEFT_CENTER,268, 17)
     local num = display.newSprite(number_image):addTo(title_bar)
-        :align(display.RIGHT_CENTER,title_label:getPositionX() - title_label:getContentSize().width/2 - 10,19)
-    local y = height - 38
-    for i,v in ipairs(data) do
-        self:GetNormalSubItem(i,v.name,v.level,v.power,v.id):addTo(node):align(display.LEFT_TOP, 0, y)
-        y = y - 68
+        :align(display.RIGHT_CENTER,258,17)
+    local y = height - 39
+    if count > 0 then
+        for i,v in ipairs(data) do
+            self:GetNormalSubItem(i,v.name,v.level,v.power,v.id):addTo(node):align(display.LEFT_TOP, 0, y)
+            y = y - 71
+        end
+    else
+        local tips = display.newSprite("mission_box_558x66.png"):align(display.LEFT_TOP, 0, y):addTo(node)
+        UIKit:ttfLabel({
+            text = _("<空>"),
+            size = 22,
+            color= 0x797154
+        }):align(display.CENTER, 279, 33):addTo(tips)
     end
     item:addContent(node)
-    item:setItemSize(548,height)
+    item:setItemSize(558,height)
     return item
 end
 
 function GameUIAlliance:GetNormalSubItem(index,playerName,level,power,memberId)
-    local item = display.newSprite(string.format("alliance_member_item_bg%d_548x68.png",index % 2))
-    local icon = UIKit:GetPlayerCommonIcon():scale(0.5):align(display.LEFT_CENTER,15, 34):addTo(item)
+    local item = display.newSprite("mission_box_558x66.png")
+    local icon = UIKit:GetPlayerCommonIcon():scale(0.5):align(display.LEFT_CENTER,15, 33):addTo(item)
     local nameLabel = UIKit:ttfLabel({
         text = playerName,
-        size = 22,
+        size = 20,
         color = 0x403c2f,
-    }):addTo(item):align(display.LEFT_CENTER,icon:getPositionX()+icon:getContentSize().width*0.5 + 3,34)
+        dimensions = cc.size(175,30),
+        ellipsis = true
+    }):addTo(item):align(display.LEFT_CENTER,icon:getPositionX()+icon:getCascadeBoundingBox().width + 5,33)
     local lvLabel =  UIKit:ttfLabel({
         text = "LV " .. level,
-        size = 22,
+        size = 20,
         color = 0x797154,
-    }):addTo(item):align(display.LEFT_CENTER,icon:getPositionX()+icon:getContentSize().width*0.5+170, 34)
-    local powerIcon = display.newSprite("dragon_strength_27x31.png"):align(display.LEFT_CENTER,icon:getPositionX()+icon:getContentSize().width*0.5+266,34)
+    }):addTo(item):align(display.LEFT_CENTER,icon:getPositionX()+icon:getCascadeBoundingBox().width + 180, 33)
+    local powerIcon = display.newSprite("dragon_strength_27x31.png"):align(display.LEFT_CENTER,icon:getPositionX()+icon:getCascadeBoundingBox().width+255,33)
         :addTo(item)
     local powerLabel = UIKit:ttfLabel({
         text = string.formatnumberthousands(power),
         size = 22,
         color = 0x403c2f,
         align = cc.TEXT_ALIGNMENT_LEFT,
-    }):addTo(item):align(display.LEFT_CENTER,icon:getPositionX()+icon:getContentSize().width*0.5+300,34)
-    if DataManager:getUserData()._id ~= memberId then
+    }):addTo(item):align(display.LEFT_CENTER,powerIcon:getPositionX()+35,33)
+    if User:Id()~= memberId then
         WidgetPushButton.new({normal = "alliacne_search_29x33.png"})
-            :align(display.RIGHT_CENTER,524,34)
+            :align(display.RIGHT_CENTER,548,33)
             :addTo(item)
             :onButtonClicked(function()
                 self:OnPlayerDetailButtonClicked(memberId)
@@ -1102,9 +1200,8 @@ end
 -- 信息
 function GameUIAlliance:HaveAlliaceUI_infomationIf()
     if self.informationNode then return self.informationNode end
-    local informationNode = WidgetUIBackGround.new({height=384,isFrame = "yes"}):addTo(self.main_content):pos(20,window.betweenHeaderAndTab-384 - 10)
+    local informationNode = WidgetUIBackGround.new({height=384,isFrame = "yes"}):addTo(self.main_content):pos(20,window.betweenHeaderAndTab - 394)
     self.informationNode = informationNode
-
     local notice_bg = display.newSprite("alliance_notice_box_580x184.png")
         :align(display.CENTER_TOP,informationNode:getContentSize().width/2,395)
         :addTo(informationNode)

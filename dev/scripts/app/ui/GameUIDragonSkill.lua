@@ -42,10 +42,11 @@ function GameUIDragonSkill:onEnter()
       :addTo(titleBar):onButtonClicked(function()
           self:LeftButtonClicked()
       end)
-  local skillBg = display.newSprite("dragon_skill_box_84x84.png")
+  local skillBg = display.newSprite("dragon_skill_bg_110x110.png")
         :addTo(self.backgroundImage):align(display.LEFT_TOP,30,titleBar:getPositionY() - 20)
   local skill_icon = UILib.dragon_skill_icon[self.skill:Name()][self.skill:Type()]
-  display.newSprite(skill_icon):addTo(skillBg):pos(skillBg:getContentSize().width/2,skillBg:getContentSize().height/2):scale(74/128)
+  local skill_sp = display.newSprite(skill_icon):addTo(skillBg):pos(55,55)
+  skill_sp:scale(80/skill_sp:getContentSize().width)
 
   local titleLabel = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -77,7 +78,7 @@ function GameUIDragonSkill:onEnter()
           color = UIKit:hex2c3b(0xfff3c7)
       }))
       :addTo(self.backgroundImage)
-      :align(display.LEFT_BOTTOM,skillBg:getPositionX()+skillBg:getContentSize().width+260,skillBg:getPositionY()-skillBg:getContentSize().height)
+      :align(display.LEFT_TOP,skillBg:getPositionX()+skillBg:getContentSize().width+260,titleBar:getPositionY() - 20)
       :onButtonClicked(function(event)
       		self:UpgradeButtonClicked()
       end)

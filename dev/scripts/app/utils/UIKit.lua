@@ -330,7 +330,7 @@ end
 function UIKit:GetPlayerCommonIcon(key)
     local heroBg = display.newSprite("chat_hero_background.png")
     self:GetPlayerIconOnly(key):addTo(heroBg)
-        :align(display.CENTER, math.floor(heroBg:getContentSize().width/2), math.floor(heroBg:getContentSize().height/2)+5)
+        :align(display.CENTER,56,65)
     return heroBg
 end
 
@@ -648,4 +648,8 @@ end
 function UIKit:unpack_alliance_flag(flag_str)
     local r = string.split(flag_str, ",")
     return unpack(r)
+end
+
+function UIKit:getDiscolorrationSprite(image)
+    return display.newFilteredSprite(image, "CUSTOM", json.encode({frag = "shaders/ps_discoloration.fs",shaderName = "ps_discoloration"}))
 end
