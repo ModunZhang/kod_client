@@ -5,6 +5,7 @@ local Flag = import("..entity.Flag")
 local Alliance = import("..entity.Alliance")
 local SoldierManager = import("..entity.SoldierManager")
 local WidgetAllianceHelper = import("..widget.WidgetAllianceHelper")
+local WidgetAllianceTop = import("..widget.WidgetAllianceTop")
 local GameUIAllianceContribute = import(".GameUIAllianceContribute")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local GameUIHelp = import(".GameUIHelp")
@@ -266,7 +267,7 @@ function GameUIAllianceHome:TopBg()
 end
 
 function GameUIAllianceHome:TopTabButtons()
-    self.page_top = UIKit:newWidgetUI("WidgetAllianceTop",self.alliance):align(display.TOP_CENTER,self.top_bg:getContentSize().width/2,26)
+    self.page_top = WidgetAllianceTop.new(self.alliance):align(display.TOP_CENTER,self.top_bg:getContentSize().width/2,26)
         :addTo(self.top_bg)
 end
 
@@ -278,7 +279,8 @@ function GameUIAllianceHome:CreateTop()
     local self_name_bg = display.newSprite("title_green_292X32.png")
         :align(display.LEFT_CENTER, -147,-26)
         :addTo(top_self_bg):flipX(true)
-    local self_name_label = UIKit:ttfLabel(
+    self.self_name_bg = self_name_bg
+    self.self_name_label = UIKit:ttfLabel(
         {
             text = "["..alliance:Tag().."] "..alliance:Name(),
             size = 18,
@@ -289,7 +291,7 @@ function GameUIAllianceHome:CreateTop()
     local ui_helper = WidgetAllianceHelper.new()
     local self_flag = ui_helper:CreateFlagContentSprite(alliance:Flag()):scale(0.5)
     self_flag:align(display.CENTER, self_name_bg:getContentSize().width-100, -30):addTo(self_name_bg)
-
+    self.self_flag = self_flag
     -- 敌方联盟名字
     local enemy_name_bg = display.newSprite("title_red_292X32.png")
         :align(display.RIGHT_CENTER, 147,-26)
@@ -472,7 +474,7 @@ function GameUIAllianceHome:OnMidButtonClicked(event)
     local tag = event.target:getTag()
     if not tag then return end
     if tag == 2 then -- 战斗
-    -- NetManager:getFindAllianceToFightPromose()
+        -- NetManager:getFindAllianceToFightPromose()
         local watchTower = self.city:GetFirstBuildingByType('watchTower')
         UIKit:newGameUI('GameUIWatchTower', self.city, watchTower,"march"):AddToCurrentScene(true)
     elseif tag == 1 then
@@ -487,10 +489,22 @@ function GameUIAllianceHome:OnMidButtonClicked(event)
 end
 
 function GameUIAllianceHome:OnBasicChanged(alliance,changed_map)
+    local alliance = self.alliance
     if changed_map.honour then
         self.page_top:SetHonour(GameUtils:formatNumber(changed_map.honour.new))
     elseif changed_map.status then
         self.top:Refresh()
+    elseif changed_map.name then
+        self.self_name_label:setString("["..alliance:Tag().."] "..changed_map.name.new)
+    elseif changed_map.tag then
+        self.self_name_label:setString("["..changed_map.tag.new.."] ".. alliance:Name())
+    elseif changed_map.flag then
+        self.self_flag:removeFromParent(true)
+        -- 己方联盟旗帜
+        local ui_helper = WidgetAllianceHelper.new()
+        local self_flag = ui_helper:CreateFlagContentSprite(alliance:Flag()):scale(0.5)
+        self_flag:align(display.CENTER, self.self_name_bg:getContentSize().width-100, -30):addTo(self.self_name_bg)
+        self.self_flag = self_flag
     end
 end
 function GameUIAllianceHome:OnMemberChanged(alliance)
@@ -714,6 +728,7 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
+
 
 
 

@@ -471,7 +471,7 @@ function WidgetRecruitSoldier:SetSoldier(soldier_name, star)
         pressed = soldier_ui_config}):addTo(self.back_ground)
         :align(display.CENTER, 84, self.back_ground:getContentSize().height - 84)
         :onButtonClicked(function(event)
-            WidgetSoldierDetails.new(soldier_name, star):addTo(self)
+            WidgetSoldierDetails.new(soldier_name, self.star):addTo(self)
         end)
 
     local rect = self.soldier:getCascadeBoundingBox()
