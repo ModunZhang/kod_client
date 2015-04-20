@@ -4,10 +4,12 @@ local WidgetUIBackGround2 = import("..widget.WidgetUIBackGround2")
 local WidgetBuyGoods = import("..widget.WidgetBuyGoods")
 local WidgetStockGoods = import("..widget.WidgetStockGoods")
 local WidgetPushButton = import("..widget.WidgetPushButton")
+local AllianceMap = import("..entity.AllianceMap")
 local AllianceItemsManager = import("..entity.AllianceItemsManager")
 local GameUIAllianceShop = UIKit:createUIClass('GameUIAllianceShop', "GameUIAllianceBuilding")
 local Flag = import("..entity.Flag")
 local UIListView = import(".UIListView")
+local UILib = import(".UILib")
 local Localize = import("..utils.Localize")
 local Localize_item = import("..utils.Localize_item")
 local shop = GameDatas.AllianceBuilding.shop
@@ -29,6 +31,7 @@ function GameUIAllianceShop:InitUnLockItems()
             self.unlock_items[v] = true
         end
     end
+    dump(self.unlock_items)
 end
 function GameUIAllianceShop:CheckSell(item_type)
     return self.unlock_items[item_type]
@@ -73,11 +76,13 @@ function GameUIAllianceShop:OnMoveInStage()
         if tag == 'stock' and not self.stock_listview then
             self:InitStockPart()
         end
+        if tag == 'stock' and not self.record_list then
+            self:InitRecordPart()
+        end
     end):pos(window.cx, window.bottom + 34)
-    self:InitRecordPart()
-
     self.alliance:GetItemsManager():AddListenOnType(self,AllianceItemsManager.LISTEN_TYPE.ITEM_CHANGED)
     self.alliance:GetItemsManager():AddListenOnType(self,AllianceItemsManager.LISTEN_TYPE.ITEM_LOGS_CHANGED)
+    self.alliance:GetAllianceMap():AddListenOnType(self,AllianceMap.LISTEN_TYPE.BUILDING_INFO)
 
 end
 function GameUIAllianceShop:CreateBetweenBgAndTitle()
@@ -93,6 +98,7 @@ end
 function GameUIAllianceShop:onExit()
     self.alliance:GetItemsManager():RemoveListenerOnType(self,AllianceItemsManager.LISTEN_TYPE.ITEM_CHANGED)
     self.alliance:GetItemsManager():RemoveListenerOnType(self,AllianceItemsManager.LISTEN_TYPE.ITEM_LOGS_CHANGED)
+    self.alliance:GetAllianceMap():RemoveListenerOnType(self,AllianceMap.LISTEN_TYPE.BUILDING_INFO)
     GameUIAllianceShop.super.onExit(self)
 end
 function GameUIAllianceShop:InitGoodsPart()
@@ -131,23 +137,22 @@ function GameUIAllianceShop:InitGoodsPart()
     local gap_x = 10
 
     local normal_items = self.items_manager:GetAllNormalItems()
-    for i=1,#normal_items,row_count do
-        local noraml_item = normal_items[i]
-        if self:CheckSell(noraml_item:Name()) then
+    local row_items = {}
+    for i=1,#normal_items do
+        if LuaUtils:table_size(row_items) == 4 or i == #normal_items then
             local goods_item = __createListItem(list_width,goods_item_height)
             local node = display.newNode()
             node:setContentSize(cc.size(list_width,goods_item_height))
-            local count = 1
-            for index=i,i + row_count -1 do
-                local goods = normal_items[index]
-                if goods then
-                    self:CreateGoodsBox(goods):addTo(node):pos(origin_x+(count-1)*(gap_x+box_width), goods_item_height/2)
-                    count = count + 1
-                else
-                    break
-                end
+            for i,v in ipairs(row_items) do
+                self:CreateGoodsBox(v):addTo(node):pos(origin_x+(i-1)*(gap_x+box_width), goods_item_height/2)
             end
             goods_item:addContent(node)
+            row_items = {}
+        else
+            local noraml_item = normal_items[i]
+            if self:CheckSell(noraml_item:Name()) then
+                table.insert(row_items,noraml_item)
+            end
         end
     end
 
@@ -165,26 +170,26 @@ function GameUIAllianceShop:InitGoodsPart()
     self.super_goods_boxes = {}
 
     -- 道具部分
+    local row_items = {}
     local super_items = self.items_manager:GetAllSuperItems()
-    for i=1,#super_items,row_count do
-        if self:CheckSell(super_items[i]:Name()) then
+    for i=1,#super_items do
+        if LuaUtils:table_size(row_items) == 4 or i == #super_items then
             local goods_item = __createListItem(list_width,goods_item_height)
             local node = display.newNode()
             node:setContentSize(cc.size(list_width,goods_item_height))
-            local count = 1
-            for index=i,i + row_count -1 do
-                local goods = super_items[index]
-                if goods then
-                    local goods_box = self:CreateGoodsBox(goods):addTo(node):pos(origin_x+(count-1)*(gap_x+box_width), goods_item_height/2)
-                    count = count + 1
-                    if goods:IsAdvancedItem() then
-                        self.super_goods_boxes[goods:Name()] = goods_box
-                    end
-                else
-                    break
+            for i,v in ipairs(row_items) do
+                local goods_box = self:CreateGoodsBox(v):addTo(node):pos(origin_x+(i-1)*(gap_x+box_width), goods_item_height/2)
+                if v:IsAdvancedItem() then
+                    self.super_goods_boxes[v:Name()] = goods_box
                 end
             end
             goods_item:addContent(node)
+            row_items = {}
+        else
+            local super_item = super_items[i]
+            if self:CheckSell(super_item:Name()) then
+                table.insert(row_items,super_item)
+            end
         end
     end
     list:reload()
@@ -196,15 +201,17 @@ function GameUIAllianceShop:CreateGoodsBox(goods)
     local box_button = WidgetPushButton.new({normal = "back_ground_130x166.png",pressed = "back_ground_130x166.png"})
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                WidgetBuyGoods.new(goods):addTo(self)
+                WidgetBuyGoods.new(goods):addTo(self,201)
             end
         end)
 
     local item_bg = display.newSprite("box_118x118.png"):addTo(box_button):align(display.CENTER, 0, 18)
     local item_icon_color_bg = display.newSprite("box_item_100x100.png"):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
     -- tool image
-    display.newSprite("tool_1.png"):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
-        :addTo(item_bg):scale(0.8)
+    local goods_icon = display.newSprite(UILib.item[goods:Name()]):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
+        :addTo(item_bg)
+    goods_icon:scale(100/goods_icon:getContentSize().width)
+
     local i_icon = display.newSprite("goods_26x26.png"):addTo(item_bg):align(display.CENTER, 15, 15)
 
     -- 高级道具显示数量
@@ -231,7 +238,7 @@ function GameUIAllianceShop:CreateGoodsBox(goods)
         text = goods:SellPriceInAlliance(),
         size = 22,
         color = 0x423f32,
-    }):align(display.LEFT_CENTER, num_bg:getContentSize().width/2-10, num_bg:getContentSize().height/2-2):addTo(num_bg)
+    }):align(display.LEFT_CENTER, num_bg:getContentSize().width/2-18, num_bg:getContentSize().height/2-2):addTo(num_bg)
     return box_button
 end
 
@@ -239,15 +246,17 @@ function GameUIAllianceShop:CreateStockGoodsBox(goods)
     local box_button = WidgetPushButton.new({normal = "back_ground_130x166.png",pressed = "back_ground_130x166.png"})
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                WidgetStockGoods.new(goods):addTo(self)
+                WidgetStockGoods.new(goods):addTo(self,201)
             end
         end)
 
     local item_bg = display.newSprite("box_118x118.png"):addTo(box_button):align(display.CENTER, 0, 18)
     local item_icon_color_bg = display.newSprite("box_item_100x100.png"):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
     -- tool image
-    display.newSprite("tool_1.png"):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
-        :addTo(item_bg):scale(0.8)
+    local goods_icon = display.newSprite(UILib.item[goods:Name()]):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
+        :addTo(item_bg)
+    goods_icon:scale(100/goods_icon:getContentSize().width)
+
     local i_icon = display.newSprite("goods_26x26.png"):addTo(item_bg):align(display.CENTER, 15, 15)
     -- 拥有数量
     local own_bg = display.newSprite("back_ground_42x48.png"):align(display.TOP_CENTER, 28, item_bg:getContentSize().height+4):addTo(item_bg)
@@ -266,7 +275,7 @@ function GameUIAllianceShop:CreateStockGoodsBox(goods)
         text = goods:BuyPriceInAlliance(),
         size = 22,
         color = 0x423f32,
-    }):align(display.LEFT_CENTER, num_bg:getContentSize().width/2-10, num_bg:getContentSize().height/2-2):addTo(num_bg)
+    }):align(display.LEFT_CENTER, num_bg:getContentSize().width/2-18, num_bg:getContentSize().height/2-2):addTo(num_bg)
     function box_button:SetOwnCount(count)
         own_label:setString(count)
     end
@@ -313,25 +322,26 @@ function GameUIAllianceShop:InitStockPart()
     self.stock_boxes = {}
 
     -- 道具部分
+    local row_items = {}
     local super_items = self.items_manager:GetAllSuperItems()
-    for i=1,#super_items,row_count do
-        if self:CheckSell(super_items[i]:Name()) then
+    for i=1,#super_items do
+        if LuaUtils:table_size(row_items) == 4 or i == #super_items then
             local goods_item = __createListItem(list_width,goods_item_height)
             local node = display.newNode()
             node:setContentSize(cc.size(list_width,goods_item_height))
-            local count = 1
-            for index=i,i + row_count -1 do
-                local goods = super_items[index]
-                if goods then
-                    self.stock_boxes[goods:Name()] = self:CreateStockGoodsBox(goods):addTo(node):pos(origin_x+(count-1)*(gap_x+box_width), goods_item_height/2)
-                    count = count + 1
-                else
-                    break
-                end
+            for i,v in ipairs(row_items) do
+                self.stock_boxes[v:Name()] = self:CreateStockGoodsBox(v):addTo(node):pos(origin_x+(i-1)*(gap_x+box_width), goods_item_height/2)
             end
             goods_item:addContent(node)
+            row_items = {}
+        else
+            local super_item = super_items[i]
+            if self:CheckSell(super_item:Name()) then
+                table.insert(row_items,super_item)
+            end
         end
     end
+
     list:reload()
 end
 
@@ -354,7 +364,6 @@ function GameUIAllianceShop:InitRecordPart()
 end
 
 function GameUIAllianceShop:CreateRecordItem(item_log,index)
-    LuaUtils:outputTable("item_log", item_log)
     local item = self.record_list:newItem()
     local item_width,item_height = 568 , 110
     item:setItemSize(item_width, item_height)
@@ -364,8 +373,9 @@ function GameUIAllianceShop:CreateRecordItem(item_log,index)
     local item_bg = display.newSprite("box_118x118.png"):addTo(content):align(display.CENTER, 58, item_height/2):scale(0.8)
     local item_icon_color_bg = display.newSprite("box_item_100x100.png"):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
     -- tool image
-    display.newSprite("tool_1.png"):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
-        :addTo(item_bg):scale(0.8)
+    local goods_icon = display.newSprite(UILib.item[item_log.itemName]):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
+        :addTo(item_bg)
+    goods_icon:scale(100/goods_icon:getContentSize().width)
 
     local record_type = item_log.type
     local color_1 = record_type == "addItem" and 0x007c23 or 0x7e0000
@@ -438,7 +448,23 @@ function GameUIAllianceShop:OnItemLogsChanged( changed_map )
     end
     self.record_list:reload()
 end
+function GameUIAllianceShop:OnBuildingInfoChange(building)
+    if building.name == 'shop' then
+        self:InitUnLockItems()
+        if self.goods_listview then
+            self.goods_listview:removeAllItems()
+            self:InitGoodsPart()
+        end
+        if  self.stock_listview then
+            self.stock_listview:removeAllItems()
+            self:InitStockPart()
+        end
+    end
+end
 return GameUIAllianceShop
+
+
+
 
 
 

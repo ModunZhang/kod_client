@@ -6,9 +6,9 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetDropList = import("..widget.WidgetDropList")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local SpriteConfig = import("..sprites.SpriteConfig")
-local Flag = import("..entity.Flag")
 local UIListView = import(".UIListView")
 local UILib = import(".UILib")
+local AllianceMap = import("..entity.AllianceMap")
 local Alliance = import("..entity.Alliance")
 local Localize = import("..utils.Localize")
 local AllianceVillage = GameDatas.AllianceVillage
@@ -44,21 +44,25 @@ function GameUIOrderHall:OnMoveInStage()
     }, function(tag)
         if tag == 'village' then
             self.village_layer:setVisible(true)
+            if not self.village_listview then
+                self:InitVillagePart()
+            end
         else
             self.village_layer:setVisible(false)
         end
         if tag == 'proficiency' then
             self.proficiency_layer:setVisible(true)
+            if not self.proficiency_listview then
+                self:InitProficiencyPart()
+            end
         else
             self.proficiency_layer:setVisible(false)
         end
     end):pos(window.cx, window.bottom + 34)
-    self:InitVillagePart()
-    self:InitProficiencyPart()
 
 
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.VILLAGE_LEVELS_CHANGED)
-
+    self.alliance:GetAllianceMap():AddListenOnType(self,AllianceMap.LISTEN_TYPE.BUILDING_INFO)
 end
 function GameUIOrderHall:CreateBetweenBgAndTitle()
     GameUIOrderHall.super.CreateBetweenBgAndTitle(self)
@@ -83,7 +87,9 @@ function GameUIOrderHall:ResetVillageList()
     self.village_listview:removeAllItems()
     self.village_items = {}
     for k,v in pairs(self.alliance:GetVillageLevels()) do
-        self.village_items[k] = self:CreateVillageItem(k,v)
+        if k ~= "coinVillage" then
+            self.village_items[k] = self:CreateVillageItem(k,v)
+        end
     end
     self.village_listview:reload()
 end
@@ -126,26 +132,19 @@ function GameUIOrderHall:CreateVillageItem(village_type,village_level)
     }):align(display.LEFT_CENTER, 20 , title_bg:getContentSize().height/2)
         :addTo(title_bg)
 
-    UIKit:createLineItem(
+    local config = AllianceVillage[village_type]
+
+    local total_resource = UIKit:createLineItem(
         {
             width = 396,
             text_1 = _("资源总量"),
-            text_2 = string.formatnumberthousands(400000),
+            text_2 = string.formatnumberthousands(config[village_level].production),
         }
-    ):align(display.RIGHT_CENTER,item_width - 10 , 120)
-        :addTo(content)
-    UIKit:createLineItem(
-        {
-            width = 396,
-            text_1 = _("采集速度"),
-            text_2 = string.formatnumberthousands(400000).._("每分钟"),
-        }
-    ):align(display.RIGHT_CENTER,item_width - 10, 80)
+    ):align(display.RIGHT_CENTER,item_width - 10 , 100)
         :addTo(content)
 
 
     if alliance:GetSelf():CanUpgradeAllianceBuilding() and village_level<#AllianceVillage[village_type] then
-        local config = AllianceVillage[village_type]
         -- 荣耀值
         item.honour_icon = display.newSprite("honour_128x128.png"):align(display.CENTER, 250, 40):addTo(content):scale(42/128)
         local honour_bg = display.newSprite("back_ground_114x36.png"):align(display.CENTER, 330, 40):addTo(content)
@@ -184,7 +183,7 @@ function GameUIOrderHall:CreateVillageItem(village_type,village_level)
         villageLevel:setString(_("等级")..village_level)
         local build_png = SpriteConfig[village_type]:GetConfigByLevel(village_level).png
         building_image:setTexture(build_png)
-        local config = AllianceVillage[village_type]
+        total_resource:SetValue(config[village_level].production)
         if self.honour_label and village_level <#config then
             local need_honour = config[village_level+1].needHonour
             self.honour_label:setString(need_honour)
@@ -390,6 +389,7 @@ function GameUIOrderHall:CreateLoadingMoreItem()
     self.loading_more_item = item
 end
 function GameUIOrderHall:OnVillageLevelsChanged(alliance)
+    dump(alliance:GetVillageLevels())
     for k,v in pairs(alliance:GetVillageLevels()) do
         if self.village_items[k] then
             self.village_items[k]:LevelUpRefresh(k,v)
@@ -399,10 +399,14 @@ end
 
 function GameUIOrderHall:onExit()
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.VILLAGE_LEVELS_CHANGED)
+    self.alliance:GetAllianceMap():RemoveListenerOnType(self,AllianceMap.LISTEN_TYPE.BUILDING_INFO)
     GameUIOrderHall.super.onExit(self)
 end
+function GameUIOrderHall:OnBuildingInfoChange(building)
 
+end
 return GameUIOrderHall
+
 
 
 

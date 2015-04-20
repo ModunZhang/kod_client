@@ -134,7 +134,7 @@ function WidgetPromoteSoliderList:CreateSoliderBox(soldier_type,index,star)
         elseif star < index-1 then
             status = "lock"
         end
-        if status == "unlock" or status == "toUnlock" then
+        if status == "unlock" then
             soldier_box:setTexture("box_light_148x148.png")
             blue_bg:clearFilter()
             soldier_icon:clearFilter()
