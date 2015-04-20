@@ -2,7 +2,7 @@ local GameUILevelUp = UIKit:createUIClass("GameUILevelUp", "UIAutoClose")
 function GameUILevelUp:ctor(user)
     GameUILevelUp.super.ctor(self)
 
-    local bg = cc.ui.UIPushButton.new({normal = "player_level_bg.png"}, nil, {})
+    local bg = cc.ui.UIPushButton.new({normal = "player_levelup_bg.png"}, nil, {})
     :align(display.CENTER, display.cx, display.cy)
     :onButtonClicked(function(event)
     	self:LeftButtonClicked()

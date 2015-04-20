@@ -452,22 +452,6 @@ function WidgetEventTabButtons:CreateOpenMilitaryTechItem(building)
         UIKit:newGameUI('GameUIMilitaryTechBuilding', City, building):AddToCurrentScene(true)
     end)
 end
------
-function WidgetEventTabButtons:Reset()
-    for k, v in pairs(self.item_array) do
-        v:removeFromParent()
-    end
-    for k, v in pairs(self.tab_map) do
-        v:Enable(self:IsTabEnable(k)):SetHighLight(false)
-    end
-    self.item_array = {}
-    self:ResizeBelowHorizon(0)
-    self.node:stopAllActions()
-    self:AdapterPosition()
-    self:ResetPosition()
-    self.arrow:flipY(true)
-    self:Lock(false)
-end
 function WidgetEventTabButtons:IsTabEnable(tab)
     if tab == "build" or tab == nil then
         return true
@@ -494,11 +478,6 @@ function WidgetEventTabButtons:IsTabEnable(tab)
     end
     return false
 end
-function WidgetEventTabButtons:ResetItemPosition()
-    for i, v in ipairs(self.item_array) do
-        v:pos(1, (i-1) * ITEM_HEIGHT + 25)
-    end
-end
 -- 操作
 function WidgetEventTabButtons:IteratorAllItem(func)
     for i, v in pairs(self.item_array) do
@@ -516,7 +495,9 @@ function WidgetEventTabButtons:InsertItem(item, pos)
     else
         self:InsertItem_(item, pos)
     end
-    self:ResetItemPosition()
+    for i, v in ipairs(self.item_array) do
+        v:pos(1, (i-1) * ITEM_HEIGHT + 25)
+    end
 end
 function WidgetEventTabButtons:InsertItem_(item, pos)
     item:addTo(self.back_ground, 2)
@@ -575,9 +556,6 @@ end
 function WidgetEventTabButtons:IsShow()
     return not self.arrow:isFlippedY()
 end
-function WidgetEventTabButtons:IsHide()
-    return self.arrow:isFlippedY()
-end
 function WidgetEventTabButtons:ResizeBelowHorizon(new_height)
     local height = new_height < ITEM_HEIGHT and ITEM_HEIGHT or new_height
     local size = self.back_ground:getContentSize()
@@ -588,12 +566,6 @@ end
 function WidgetEventTabButtons:Length(array_len)
     return array_len * ITEM_HEIGHT + 2
 end
-function WidgetEventTabButtons:AdapterPosition()
-    self.tab_buttons:setPositionY(self.back_ground:getContentSize().height)
-end
-function WidgetEventTabButtons:ResetPosition()
-    self.node:setPositionY(self:HidePosY())
-end
 function WidgetEventTabButtons:PromiseOfSwitch()
     return self:PromiseOfHide():next(function()
         return self:PromiseOfShow()
@@ -602,30 +574,19 @@ end
 function WidgetEventTabButtons:PromiseOfHide()
     self.node:stopAllActions()
     self:Lock(true)
-    return cocos_promise.promiseOfMoveTo(self.node, 0, self:HidePosY(), 0.15, "sineIn"):next(function()
+    local hide_height = - self.back_ground:getContentSize().height
+    return cocos_promise.promiseOfMoveTo(self.node, 0, hide_height, 0.15, "sineIn"):next(function()
         self:Reset()
     end)
 end
 function WidgetEventTabButtons:PromiseOfShow()
-    if not self:OnBeforeShow() then
-        return cocos_promise.defer()
+    if self:IsTabEnable(self:GetCurrentTab()) then
+        self:Reload()
+        return cocos_promise.promiseOfMoveTo(self.node, 0, 0, 0.15, "sineIn"):next(function()
+            self.arrow:flipY(false)
+        end)
     end
-    local size = self.back_ground:getContentSize()
-    self.back_ground:setContentSize(cc.size(size.width, size.height))
-    self.tab_buttons:setPositionY(size.height)
-    self:Lock(true)
-    self:Reload()
-    self.node:stopAllActions()
-    return cocos_promise.promiseOfMoveTo(self.node, 0, 0, 0.15, "sineIn"):next(function()
-        self.arrow:flipY(false)
-        self:Lock(false)
-    end)
-end
-function WidgetEventTabButtons:HidePosY()
-    return -self.back_ground:getContentSize().height
-end
-function WidgetEventTabButtons:OnBeforeShow()
-    return self:IsTabEnable(self:GetCurrentTab())
+    return cocos_promise.defer()
 end
 function WidgetEventTabButtons:GetTabByKey(key)
     return self.tab_map[key]
@@ -641,6 +602,41 @@ function WidgetEventTabButtons:Reload()
     self:Reset()
     self:Load()
 end
+function WidgetEventTabButtons:Reset()
+    for k, v in pairs(self.tab_map) do
+        v:Enable(self:IsTabEnable(k)):SetHighLight(false)
+    end
+    self.back_ground:removeAllChildren()
+    self.item_array = {}
+    self.node:stopAllActions()
+    self:ResizeBelowHorizon(0)
+    self.arrow:flipY(true)
+    self:Lock(false)
+end
+function WidgetEventTabButtons:Load()
+    if not self:GetCurrentTab() then
+        self.tab_map["build"]:SetSelect(true)
+    end
+    for k, v in pairs(self.tab_map) do
+        if v:IsSelected() then
+            self:HighLightTab(k)
+            if k == "build" then
+                self:LoadBuildingEvents()
+            elseif k == "soldier" then
+                self:LoadSoldierEvents()
+            elseif k == "technology" then
+                self:LoadTechnologyEvents()
+            elseif k == "material" then
+                self:LoadMaterialEvents()
+            end
+            self:ResizeBelowHorizon(self:Length(#self.item_array))
+            return
+        end
+    end
+end
+
+
+--------------
 function WidgetEventTabButtons:IsAbleToFreeSpeedup(building)
     return building:IsAbleToFreeSpeedUpByTime(app.timer:GetServerTime())
 end
@@ -688,7 +684,6 @@ end
 function WidgetEventTabButtons:DragonEquipmentEventsUpgradeOrSpeedup()
     UIKit:newGameUI("GameUIBlackSmithSpeedUp", self.city:GetFirstBuildingByType("blackSmith")):AddToCurrentScene(true)
 end
-
 function WidgetEventTabButtons:SetProgressItemBtnLabel(canFreeSpeedUp,event_key,event_item)
     local old_status = event_item.status
     local btn_label
@@ -720,27 +715,6 @@ function WidgetEventTabButtons:SetProgressItemBtnLabel(canFreeSpeedUp,event_key,
     if old_status~= event_item.status then
         event_item:SetButtonLabel(btn_label)
         event_item:SetButtonImages(btn_images)
-    end
-end
-function WidgetEventTabButtons:Load()
-    if not self:GetCurrentTab() then
-        self.tab_map["build"]:SetSelect(true)
-    end
-    for k, v in pairs(self.tab_map) do
-        if v:IsSelected() then
-            self:HighLightTab(k)
-            if k == "build" then
-                self:LoadBuildingEvents()
-            elseif k == "soldier" then
-                self:LoadSoldierEvents()
-            elseif k == "technology" then
-                self:LoadTechnologyEvents()
-            elseif k == "material" then
-                self:LoadMaterialEvents()
-            end
-            self:ResizeBelowHorizon(self:Length(#self.item_array))
-            return
-        end
     end
 end
 function WidgetEventTabButtons:LoadBuildingEvents()
@@ -981,7 +955,7 @@ function WidgetEventTabButtons:OnProductionTechnologyEventDataRefresh(changed_ma
     if changed_map.added and #changed_map.added > 0 then
         self:EventChangeOn("technology", true)
     end
-     if changed_map.removed and #changed_map.removed > 0 then
+    if changed_map.removed and #changed_map.removed > 0 then
         app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
         self:EventChangeOn("technology")
     end
@@ -1010,6 +984,7 @@ function WidgetEventTabButtons:GetProductionTechnologyEventProgressInfo(event)
     return _("研发") .. event:Entity():GetLocalizedName() .. " " .. GameUtils:formatTimeStyle1(event:GetTime()),event:GetPercent()
 end
 return WidgetEventTabButtons
+
 
 
 

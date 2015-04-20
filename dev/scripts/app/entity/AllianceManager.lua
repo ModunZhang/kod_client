@@ -36,7 +36,7 @@ function AllianceManager:OnUserDataChanged(user_data,time,deltaData)
     else
         my_alliance:SetId(alliance.id)
         my_alliance:SetName(alliance.name)
-        my_alliance:SetAliasName(alliance.tag)
+        my_alliance:SetTag(alliance.tag)
     end
 end
 
@@ -56,7 +56,7 @@ function AllianceManager:OnEnemyAllianceDataChanged(enemyAllianceData,refresh_ti
         end
         if enemyAllianceData.basicInfo then
             alliance:SetName(enemyAllianceData.basicInfo.name)
-            alliance:SetAliasName(enemyAllianceData.basicInfo.tag)
+            alliance:SetTag(enemyAllianceData.basicInfo.tag)
         end
         alliance:OnAllianceDataChanged(enemyAllianceData,refresh_time,deltaData)
     end

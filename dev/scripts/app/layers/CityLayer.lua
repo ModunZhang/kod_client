@@ -347,8 +347,7 @@ function CityLayer:InitWithCity(city)
         if (x == 1 and y == 1)
             or (x == 2 and y == 1)
             or (x == 1 and y == 2)
-            or x == 5
-            or y == 5 then
+            or x == 5 then
             return
         end
         local grounds = tile:RandomGrounds(random(123456789))

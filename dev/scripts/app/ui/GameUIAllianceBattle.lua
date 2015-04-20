@@ -320,7 +320,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
             :scale(0.8)
         -- 己方联盟名字
         local our_alliance_tag = UIKit:ttfLabel({
-            text = "["..our_alliance:AliasName().."]",
+            text = "["..our_alliance:Tag().."]",
             size = 26,
             color = 0xffedae,
         }):addTo(self_alliance_bg)
@@ -335,9 +335,9 @@ function GameUIAllianceBattle:InitBattleStatistics()
         local a_tag = ""
         local a_name = ""
         if enemy_alliance then
-            if enemy_alliance:AliasName()
+            if enemy_alliance:Tag()
                 and enemy_alliance:Name() then
-                a_tag = "["..enemy_alliance:AliasName().."]"
+                a_tag = "["..enemy_alliance:Tag().."]"
                 a_name = enemy_alliance:Name()
             end
         end
@@ -561,7 +561,7 @@ function GameUIAllianceBattle:OpenAllianceDetails(isOur)
     local our_player_kills = alliance:GetMyAllianceFightPlayerKills()
     local enemy_player_kills = alliance:GetEnemyAllianceFightPlayerKills()
     local alliance_name = isOur and alliance:Name() or enemy_alliance:Name()
-    local alliance_tag = isOur and alliance:AliasName() or enemy_alliance:AliasName()
+    local alliance_tag = isOur and alliance:Tag() or enemy_alliance:Tag()
     -- 玩家联盟成员
     local palace_level = alliance:GetAllianceMap():FindAllianceBuildingInfoByName("palace").level
     local memberCount = GameDatas.AllianceBuilding.palace[palace_level].memberCount

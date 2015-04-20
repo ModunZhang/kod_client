@@ -163,7 +163,7 @@ local function get_alliance_response_msg(response)
 end
 -- enemyAllianceData 全是返回的全数据
 local function get_enemy_alliance_response_msg(response)
-     if response.msg.enemyAllianceData then
+    if response.msg.enemyAllianceData then
         DataManager:setEnemyAllianceData(response.msg.enemyAllianceData)
         return response
     end
@@ -409,7 +409,8 @@ function NetManager:getConnectGateServerPromise()
 end
 -- 获取服务器列表
 function NetManager:getLogicServerInfoPromise()
-    return get_none_blocking_request_promise("gate.gateHandler.queryEntry", nil, "获取逻辑服务器失败",true)
+    local device_id = device.getOpenUDID()
+    return get_none_blocking_request_promise("gate.gateHandler.queryEntry", {deviceId = device_id}, "获取逻辑服务器失败",true)
         :done(function(result)
             self:CleanAllEventListeners()
             self.m_netService:disconnect()
@@ -431,24 +432,19 @@ function NetManager:getConnectLogicServerPromise()
         self:InitEventsMap(base_event_map, logic_event_map)
     end)
 end
-local function getOpenUDID()
-    local device_id
-    local udid = cc.UserDefault:getInstance():getStringForKey("udid")
-    if udid and #udid > 0 then
-        device_id = udid
-    else
-        device_id = device.getOpenUDID()
-    end
-    return device_id
-end
+-- function NetManager:getOpenUDID()
+--     local device_id
+--     local udid = cc.UserDefault:getInstance():getStringForKey("udid")
+--     if udid and #udid > 0 then
+--         device_id = udid
+--     else
+--         device_id = device.getOpenUDID()
+--     end
+--     return device_id
+-- end
 -- 登录
 function NetManager:getLoginPromise(deviceId)
-    local device_id
-    if CONFIG_IS_DEBUG then
-        device_id = getOpenUDID()
-    else
-        device_id = device.getOpenUDID()
-    end
+    local device_id = device.getOpenUDID()
     return get_none_blocking_request_promise("logic.entryHandler.login", {deviceId = deviceId or device_id}, nil, true):next(function(response)
         if response.success then
             app:GetPushManager():CancelAll()
@@ -470,7 +466,7 @@ function NetManager:getLoginPromise(deviceId)
             end
             self.m_was_inited_game = false
         end
-        return response 
+        return response
     end)
 end
 
@@ -572,7 +568,9 @@ end
 function NetManager:getFetchMaterialsPromise(id)
     return get_blocking_request_promise("logic.playerHandler.getMaterials", {
         eventId = id,
-    }, "获取材料失败!"):done(get_response_msg)
+    }, "获取材料失败!"):done(get_response_msg):done(function()
+        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
+    end)
 end
 -- 打造装备
 local function get_makeDragonEquipment_promise(equipment_name, finish_now)
@@ -718,7 +716,9 @@ function NetManager:getDailyQeustRewardPromise(questEventId)
         {
             questEventId = questEventId
         },
-        "领取每日任务奖励失败!"):done(get_response_msg)
+        "领取每日任务奖励失败!"):done(get_response_msg):done(function()
+        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
+        end)
 end
 -- 发送个人邮件
 function NetManager:getSendPersonalMailPromise(memberId, title, content)
@@ -1525,6 +1525,7 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
 
 
 

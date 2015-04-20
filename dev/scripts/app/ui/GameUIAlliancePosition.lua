@@ -18,7 +18,7 @@ function GameUIAlliancePosition:ctor()
     if isFight then
         -- 联盟名字
         UIKit:ttfLabel({
-            text = "["..my_alliance:AliasName().."]"..my_alliance:Name(),
+            text = "["..my_alliance:Tag().."]"..my_alliance:Name(),
             size = 20,
             color = 0x514d3e,
         }):align(display.CENTER, 304, 225):addTo(body)
@@ -35,7 +35,7 @@ function GameUIAlliancePosition:ctor()
         local group = cc.ui.UICheckBoxButtonGroup.new(display.TOP_TO_BOTTOM)
             :addButton(cc.ui.UICheckBoxButton.new(checkbox_image)
                 :setButtonLabel(UIKit:ttfLabel({
-                    text = "["..my_alliance:AliasName().."]"..my_alliance:Name(),
+                    text = "["..my_alliance:Tag().."]"..my_alliance:Name(),
                     size = 20,
                     color = 0x514d3e,
                 }))
@@ -43,7 +43,7 @@ function GameUIAlliancePosition:ctor()
                 :align(display.LEFT_CENTER))
             :addButton(cc.ui.UICheckBoxButton.new(checkbox_image)
                 :setButtonLabel(UIKit:ttfLabel({
-                    text = "["..enemy_alliance:AliasName().."]"..enemy_alliance:Name(),
+                    text = "["..enemy_alliance:Tag().."]"..enemy_alliance:Name(),
                     size = 20,
                     color = 0x514d3e,
                 }))

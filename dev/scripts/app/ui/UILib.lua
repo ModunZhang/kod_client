@@ -476,14 +476,14 @@ local DECORATOR_IMAGE = {
         farmland        = "grass_farmland_80x55.png"
     },
     iceField = {
-        decorate_lake_1 = "ice_lake_280x166.png",
-        decorate_lake_2 =  "ice_lake_252x150.png",
-        decorate_mountain_2 =  "ice_hill_230x150.png",
-        decorate_mountain_1 =  "ice_hill_314x296.png",
-        decorate_tree_1 =  "ice_tree_1_126x110.png",
-        decorate_tree_2 =  "ice_tree_2_124x106.png",
-        decorate_tree_3 =  "ice_tree_3_102x96.png",
-        decorate_tree_4 =  "ice_tree_4_102x98.png",
+        decorate_lake_1 = "lake_1_iceField.png",
+        decorate_lake_2 =  "lake_2_iceField.png",
+        decorate_mountain_1 =  "hill_1_iceField.png",
+        decorate_mountain_2 =  "hill_2_iceField.png",
+        decorate_tree_1 =  "tree_1_iceField.png",
+        decorate_tree_2 =  "tree_2_iceField.png",
+        decorate_tree_3 =  "tree_3_iceField.png",
+        decorate_tree_4 =  "tree_4_iceField.png",
         stone_mountain  = "ice_stone_mountain_80x58.png",
         farmland        = "ice_farmland_80x55.png"
     },
@@ -499,12 +499,6 @@ local DECORATOR_IMAGE = {
         stone_mountain  = "desert_stone_mountain_80x58.png",
         farmland        = "desert_farmland_80x55.png"
     },
-    decorate_lake_1 = "grass_lake_272x158.png",
-    decorate_lake_2 =  "grass_lake_244x142.png",
-    decorate_mountain_2 =  "grass_hill_160x106.png",
-    decorate_mountain_1 =  "grass_hill_254x240.png",
-    decorate_tree_1 =  "grass_tree_1_138x110.png",
-    decorate_tree_2 =  "grass_tree_3_112x114.png",
 }
 local DRAGON_HEAD = {
     blueDragon = "Dragon_blue_113x128.png",
@@ -735,11 +729,11 @@ local PVE = {
     [PVEDefine.KEEL] = {"image", "keel_189x86.png"},
     [PVEDefine.WARRIORS_TOMB] = {"image", "warriors_tomb_80x72.png"},
     [PVEDefine.OBELISK] = {"animation", "zhihuishi"},
-    [PVEDefine.ANCIENT_RUINS] = {"image", "ancient_ruins.png"},
+    [PVEDefine.ANCIENT_RUINS] = {"image", "alliance_shrine.png", 0.8},
     [PVEDefine.ENTRANCE_DOOR] = {"image", ALLIANCE_BUILDING.moonGate},
-    [PVEDefine.TREE] = {"image", "grass_tree_1_138x110.png"},
-    [PVEDefine.HILL] = {"image", "hill_228x146.png"},
-    [PVEDefine.LAKE] = {"image", "lake_220x174.png"},
+    [PVEDefine.TREE] = {"image", "tree_1_grassLand.png", 0.5, grassLand = "tree_1_grassLand.png", iceField = "tree_1_iceField.png", desert = "tree_1_desert.png"},
+    [PVEDefine.HILL] = {"image", "tree_1_grassLand.png", 0.5, grassLand = "hill_2_grassLand.png", iceField = "hill_2_iceField.png", desert = "hill_2_desert.png"},
+    [PVEDefine.LAKE] = {"image", "tree_1_grassLand.png", 0.5, grassLand = "lake_2_grassLand.png", iceField = "lake_2_iceField.png", desert = "lake_2_desert.png"},
 }
 local PVE_ANIMATION_FILES = {
     "animations/yewaiyindi.ExportJson",
@@ -993,6 +987,24 @@ local DAILY_QUESTS_ICON = {
     "colonization_128x128.png",
     "seniorTower_128x128.png",
 }
+
+local my_city_banner = {
+    [0] = "city_banner.png",
+    [1] = "city_helped_banner.png",
+    [2] = "city_helped_banner.png",
+    [3] = "city_helped_banner.png",
+    [4] = "city_helped_banner.png",
+    [5] = "city_helped_banner.png",
+}
+local enemy_city_banner = {
+    [0] = "enemy_city_banner.png",
+    [1] = "enemy_city_helped_banner.png",
+    [2] = "enemy_city_helped_banner.png",
+    [3] = "enemy_city_helped_banner.png",
+    [4] = "enemy_city_helped_banner.png",
+    [5] = "enemy_city_helped_banner.png",
+}
+
 return {
     resource = RESOURCE,
     soldier_bg = STAR_BG,
@@ -1035,6 +1047,8 @@ return {
     dragon_skill_icon = DRAGON_SKILL_ICON,
     daily_quests_icon = DAILY_QUESTS_ICON,
     player_icon = PLAYER_ICON,
+    my_city_banner = my_city_banner,
+    enemy_city_banner = enemy_city_banner,
 }
 
 

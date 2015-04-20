@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="35" height="35" tilewidth="80" tileheight="80">
+ <tileset firstgid="1" name="013" tilewidth="80" tileheight="80">
+  <image source="013.png" width="480" height="480"/>
+ </tileset>
+ <layer name="layer1" width="35" height="35">
+  <properties>
+   <property name="a" value="100"/>
+   <property name="b" value="100"/>
+   <property name="g" value="100"/>
+   <property name="r" value="100"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJzt0zcCglAUBdFPliBBkqiAIPtfI1Nb0rzmFqeZfjznnI8AISLE8Ax6ghtSZMhRGPU7SlSo0eBh1Ft06DFgxNOoT3jhjQ9mLEZ9xRcbdvxwGHWLX/SRPtJH+kgf6aP/ro/0kT7SR/pIH+kjfaSPrvcTNB5WIw==
+  </data>
+ </layer>
+</map>

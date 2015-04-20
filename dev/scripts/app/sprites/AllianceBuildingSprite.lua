@@ -1,4 +1,5 @@
 local UILib = import("..ui.UILib")
+local Localize = import("..utils.Localize")
 local Sprite = import(".Sprite")
 local AllianceBuildingSprite = class("AllianceBuildingSprite", Sprite)
 
@@ -31,6 +32,31 @@ function AllianceBuildingSprite:GetSpriteFile()
 end
 function AllianceBuildingSprite:GetSpriteOffset()
     return self:GetLogicMap():ConvertToLocalPosition(0, 0)
+end
+function AllianceBuildingSprite:RefreshSprite()
+    AllianceBuildingSprite.super.RefreshSprite(self)
+    if self.info then
+        self.info:removeFromParent()
+        self.info = nil
+    end
+    self.info = display.newNode():addTo(self):pos(0, -50):scale(0.8)
+    local banners = self.is_my_alliance and UILib.my_city_banner or UILib.enemy_city_banner
+    self.banner = display.newSprite(banners[0]):addTo(self.info):align(display.CENTER_TOP)
+    self.level = UIKit:ttfLabel({
+        size = 22,
+        color = 0xffedae,
+    }):addTo(self.banner):align(display.CENTER, 30, 30)
+    self.name = UIKit:ttfLabel({
+        size = 20,
+        color = 0xffedae,
+    }):addTo(self.banner):align(display.LEFT_CENTER, 60, 32)
+    self:RefreshInfo()
+end
+function AllianceBuildingSprite:RefreshInfo()
+    local entity = self:GetEntity()
+    local info = entity:GetAllianceBuildingInfo()
+    self.level:setString(info.level)
+    self.name:setString(string.format("[%s]%s", entity:GetAlliance():Tag(), Localize.alliance_buildings[info.name]))
 end
 
 

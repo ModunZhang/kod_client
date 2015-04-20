@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="25" height="25" tilewidth="80" tileheight="80">
- <tileset firstgid="1" name="grass_80x80" tilewidth="80" tileheight="80">
-  <image source="../images/grass_80x80.png" width="80" height="80"/>
+ <tileset firstgid="1" name="026" tilewidth="80" tileheight="80">
+  <image source="026.png" width="480" height="480"/>
  </tileset>
  <layer name="layer1" width="25" height="25">
   <properties>
@@ -11,7 +11,7 @@
    <property name="r" value="100"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJztwwEJAAAMBKH7/qWXY6Dgqqmq+uoB+w0Ccg==
+   eJzt0iUCwEAQwMArMzPj/9/Y+NqVK8ZExzLG2HDgwoMPS7AHCBEhRoJUuGfIUaBEhVq4N2jRoceAUbhPmLFgxYZduB84ceHGg1e4S/6jX+lX+pV+pV/pV/rVv39mfSt2
   </data>
  </layer>
 </map>

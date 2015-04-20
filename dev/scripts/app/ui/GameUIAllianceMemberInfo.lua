@@ -146,7 +146,7 @@ function GameUIAllianceMemberInfo:SendToServerWithTag(tag,member)
     elseif tag == 3 then --降级
         if not member:IsTitleLowest() then
             NetManager:getEditAllianceMemberTitlePromise(member:Id(), member:TitleDegrade()):done(function()
-                UIKit:showMessageDialog(_("提示"), string.format(_("%s已降级为%s"),member:Name(),Localize.alliance_title[member:TitleDegrade()]))
+                GameGlobalUI:showTips(_("提示"), string.format(_("%s已降级为%s"),member:Name(),Localize.alliance_title[member:TitleDegrade()]))
                 local alliacne =  Alliance_Manager:GetMyAlliance()
                 local title = alliacne:GetMemeberById(member:Id()):Title()
                 self.player_info.title = title
@@ -156,7 +156,7 @@ function GameUIAllianceMemberInfo:SendToServerWithTag(tag,member)
     elseif tag == 4 then --晋级
         if not member:IsTitleHighest() then
             NetManager:getEditAllianceMemberTitlePromise(member:Id(), member:TitleUpgrade()):done(function()
-                UIKit:showMessageDialog(_("提示"), string.format(_("%s已晋级为%s"),member:Name(),Localize.alliance_title[member:TitleUpgrade()]))
+                GameGlobalUI:showTips(_("提示"), string.format(_("%s已晋级为%s"),member:Name(),Localize.alliance_title[member:TitleUpgrade()]))
                 local alliacne =  Alliance_Manager:GetMyAlliance()
                 local title = alliacne:GetMemeberById(member:Id()):Title()
                 self.player_info.title = title

@@ -14,6 +14,7 @@ local WidgetNumberTips = import("..widget.WidgetNumberTips")
 local WidgetHomeBottom = import("..widget.WidgetHomeBottom")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetAutoOrder = import("..widget.WidgetAutoOrder")
+local WidgetMarchEvents = import("app.widget.WidgetMarchEvents")
 local GameUIAllianceHome = UIKit:createUIClass('GameUIAllianceHome')
 local buildingName = GameDatas.AllianceInitData.buildingName
 local Alliance_Manager = Alliance_Manager
@@ -53,6 +54,13 @@ function GameUIAllianceHome:onEnter()
     self.visible_count = 1
     self.top = self:CreateTop()
     self.bottom = self:CreateBottom()
+
+
+    local ratio = self.bottom:getScale()
+    local rect1 = self.chat:getCascadeBoundingBox()
+    local x, y = rect1.x, rect1.y + rect1.height - 2
+    local march = WidgetMarchEvents.new(self.alliance, ratio):addTo(self):pos(x, y)
+
     self:AddMapChangeButton()
     self:InitArrow()
     if self.top then
@@ -272,7 +280,7 @@ function GameUIAllianceHome:CreateTop()
         :addTo(top_self_bg):flipX(true)
     local self_name_label = UIKit:ttfLabel(
         {
-            text = "["..alliance:AliasName().."] "..alliance:Name(),
+            text = "["..alliance:Tag().."] "..alliance:Name(),
             size = 18,
             color = 0xffedae
         }):align(display.LEFT_CENTER, 30, 20)
@@ -371,7 +379,7 @@ function GameUIAllianceHome:CreateTop()
                 enemy_flag:align(display.CENTER,100-enemy_flag:getCascadeBoundingBox().size.width, -30)
                     :addTo(enemy_name_bg)
                 enemy_flag:setTag(201)
-                enemy_name_label:setString("["..enemyAlliance:AliasName().."] "..enemyAlliance:Name())
+                enemy_name_label:setString("["..enemyAlliance:Tag().."] "..enemyAlliance:Name())
             elseif status=="protect" then
                 local enemy_reprot_data = alliance:GetEnemyLastAllianceFightReportsData()
                 local enemy_flag = ui_helper:CreateFlagContentSprite(Flag.new():DecodeFromJson(enemy_reprot_data.flag)):scale(0.5)

@@ -74,11 +74,12 @@ function AllianceScene:OnTouchClicked(pre_x, pre_y, x, y)
     if self.util_node:getNumberOfRunningActions() > 0 then return end
     local building = self:GetSceneLayer():GetClickedObject(x, y)
     if building then
-        app:GetAudioManager():PlayeEffectSoundWithKey("HOME_PAGE")
         app:lockInput(true)
         self.util_node:performWithDelay(function()
             app:lockInput(false)
         end, 0.5)
+
+        app:GetAudioManager():PlayeEffectSoundWithKey("HOME_PAGE")
         if iskindof(building, "Sprite") then
             Sprite:PromiseOfFlash(building):next(function()
                 self:OpenUI(building)

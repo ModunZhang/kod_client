@@ -7,6 +7,15 @@ local buildingName = GameDatas.AllianceInitData.buildingName
 
 AllianceMap.LISTEN_TYPE = Enum("BUILDING","BUILDING_INFO")
 
+
+-- {
+--     "id": "7kf2_RE13",
+--     "name": "decorate_tree_1",
+--     "location": {
+--         "x": 1,
+--         "y": 1
+--     }
+-- }
 local mapObject_meta = {}
 mapObject_meta.__index = mapObject_meta
 function mapObject_meta:GetName()
@@ -21,9 +30,11 @@ end
 function mapObject_meta:GetAllianceMemberInfo()
     return self.alliance_map:GetAllianceMemberInfo(self)
 end
+function mapObject_meta:GetAlliance()
+    return self.alliance_map:GetAlliance()
+end
 function mapObject_meta:GetAllianceMap()
-    self.alliance_map = alliance_map
-    return self
+    return self.alliance_map
 end
 function mapObject_meta:SetAllianceMap(alliance_map)
     self.alliance_map = alliance_map
@@ -121,9 +132,11 @@ end
 
 
 
-
 local function is_city(object)
-    return buildingName[object.name].type == "member"
+    return object.name == "member"
+end
+local function is_building(object)
+    return buildingName[object.name].type == "building"
 end
 local function is_village(object)
     return buildingName[object.name].type == "village"
@@ -163,18 +176,13 @@ function AllianceMap:GetMapObjectsByType(type_)
 end
 function AllianceMap:GetAllianceMemberInfo(object)
     if is_city(object) then
-        local id = object:Id()
-        for _,member in pairs(self:GetAlliance():GetAllMembers()) do
-            if member:MapId() == id then
-                return member
-            end
-        end
+        return self:GetAlliance():GetMemberByMapObjectsId(object:Id())
     end
 end
 function AllianceMap:FindAllianceBuildingInfoByObjects(object)
-    if object:GetType() == "building" then
+    if is_building(object) then
         local id = object:Id()
-        for k, v in pairs(self.buildings) do
+        for _,v in ipairs(self.buildings) do
             if v.id == id then
                 return v
             end
@@ -187,6 +195,9 @@ function AllianceMap:FindAllianceBuildingInfoByName(name)
             return v
         end
     end
+end
+function AllianceMap:GetAllBuildingsInfo()
+    return self.buildings
 end
 function AllianceMap:IteratorAllianceBuildings(func)
     for k,v in pairs(self:GetMapObjectsByType("building")) do
@@ -272,12 +283,10 @@ function AllianceMap:OnAllianceDataChanged(allianceData, deltaData)
     self:OnAllianceBuildingInfoChange(allianceData, deltaData)
 end
 function AllianceMap:FindAllianceVillagesInfoByObject(object)
-    if is_village(object) then
-        local id = object:Id()
-        for _,village_info in pairs(self:GetAlliance():GetAllianceVillageInfos()) do
-            if village_info.id == id then
-                return village_info
-            end
+    if is_village(object) then 
+        local village_info = self:GetAlliance():GetAllianceVillageInfos()[object:Id()]
+        if village_info then
+            return village_info
         end
     end
 end

@@ -676,4 +676,9 @@ function GameUIChatChannel:CreateEmojiPanel()
     end):AddToCurrentScene(true)
 end
 
+function GameUIChatChannel:LeftButtonClicked()
+    self.listView:removeAllItems()
+    GameUIChatChannel.super.LeftButtonClicked(self)
+end
+
 return GameUIChatChannel

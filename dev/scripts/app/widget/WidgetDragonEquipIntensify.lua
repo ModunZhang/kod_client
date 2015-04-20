@@ -16,25 +16,22 @@ function WidgetDragonEquipIntensify:ctor(delegate,equipmentName,current_count,ma
     self.maxCount = maxCount or 0
     self.resolveEquipmentName = resolveEquipmentName
     --ui
-	super_.ctor(self,{normal = "eq_bg_1_146x146.png"}, {scale9 = true})
-	self:setButtonSize(105, 104)
+	super_.ctor(self,{normal = "back_ground_104x132.png"})
+	local icon_bg = display.newSprite("box_104x104_2.png"):addTo(self):pos(0,16)
 	local icon_ = display.newSprite(self:GetEqIcon(equipmentName))
-	icon_:addTo(self):setScale(0.7)
-
-	local labelbg = display.newSprite("back_ground_97x20.png"):addTo(self):pos(0,-70)
-	local label = cc.ui.UILabel.new({
-      UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-      text = self.current_count .. "/" .. self.maxCount,
-      font = UIKit:getFontFilePath(),
-      size = 18,
-      align = cc.ui.UILabel.TEXT_ALIGN_CENTER, 
-      color = UIKit:hex2c3b(0x403c2f)
+	icon_:addTo(icon_bg):setScale(0.6):pos(52,52)
+	display.newSprite("i_icon_20x20.png"):align(display.LEFT_BOTTOM, 5, 5):addTo(icon_bg)
+	local labelbg = display.newSprite("number_bg_102x30.png"):addTo(self):pos(0,-50)
+    local label = UIKit:ttfLabel({
+    	size = 18,
+    	color= 0x403c2f,
+    	text = self.current_count .. "/" .. self.maxCount,
     }):addTo(labelbg):align(display.CENTER, labelbg:getContentSize().width/2, labelbg:getContentSize().height/2)
     self.textLabel = label
 	self:onButtonClicked(function(event)
 		self:Action(1)
     end)
-	local cancel = cc.ui.UIPushButton.new("cancel_39x39.png",{scale9 = falses}):addTo(self):pos(45,45)
+	local cancel = cc.ui.UIPushButton.new("cancel_39x39.png",{scale9 = falses}):addTo(self):pos(42,55)
 	cancel:setScale(0.8)
 	cancel:onButtonClicked(function(event)
 		self:Action(2)

@@ -9,6 +9,16 @@ local property = import("..utils.property")
 
 MarchAttackEvent.MARCH_EVENT_PLAYER_ROLE = Enum("SENDER","RECEIVER","NOTHING")
 
+
+property(MarchAttackEvent, "id", "")
+property(MarchAttackEvent, "startTime", "")
+property(MarchAttackEvent, "arriveTime", "")
+property(MarchAttackEvent, "marchType", "")
+property(MarchAttackEvent, "attackPlayerData", {})
+property(MarchAttackEvent, "defencePlayerData", {})
+property(MarchAttackEvent, "defenceVillageData", {})
+property(MarchAttackEvent, "defenceShrineData", {})
+
 --判断该玩家是这个事件的发送者/接受者/无关
 function MarchAttackEvent:GetPlayerRole()
 	local Me_Id = User:Id()
@@ -48,17 +58,8 @@ end
 
 function MarchAttackEvent:OnPropertyChange()
 end
-
 function MarchAttackEvent:ctor()
 	MarchAttackEvent.super.ctor(self)
-	property(self,"id","")
-	property(self,"startTime","")
-	property(self,"arriveTime","")
-	property(self,"marchType","")
-	property(self,"attackPlayerData",{})
-	property(self,"defencePlayerData",{})
-	property(self,"defenceVillageData",{})
-	property(self,"defenceShrineData",{})
 end
 
 function MarchAttackEvent:GetDefenceData()

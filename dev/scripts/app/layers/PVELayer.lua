@@ -50,8 +50,9 @@ function PVELayer:ctor(user)
     local size = self.pve_layer:getLayerSize()
     local w, h = size.width, size.height
 
+
     self.scene_node = display.newNode():addTo(self)
-    self.background = cc.TMXTiledMap:create(string.format("tmxmaps/pve_background_%dx%d.tmx", w, h)):addTo(self.scene_node, ZORDER.BACKGROUND)
+    self.background = cc.TMXTiledMap:create(string.format("tmxmaps/pve_background_%s_%dx%d.tmx", self.pve_map:Terrain(), w, h)):addTo(self.scene_node, ZORDER.BACKGROUND)
     self.war_fog_layer = cc.TMXTiledMap:create(string.format("tmxmaps/pve_fog_%dx%d.tmx", w, h)):addTo(self.scene_node, ZORDER.FOG):pos(-80, -80):getLayer("layer1")
 
     self.building_layer = display.newNode():addTo(self.scene_node, ZORDER.BUILDING)
@@ -69,14 +70,14 @@ function PVELayer:ctor(user)
     local x, y = size_out.width * 0.5 - size_in.width * 0.5, size_out.height * 0.5 - size_in.height * 0.5
     self.scene_node:pos(x, y)
 
-    local layer = self.background:getLayer("layer1")
-    local color = pve_color[self.pve_map.index]
-    for x = 0, w - 1 do
-        for y = 0, h - 1 do
-            local tile = layer:getTileAt(cc.p(x, y))
-            tile:setColor(color + cc.c3b(tile:getColor()))
-        end
-    end
+    -- local layer = self.background:getLayer("layer1")
+    -- local color = pve_color[self.pve_map.index]
+    -- for x = 0, w - 1 do
+    --     for y = 0, h - 1 do
+    --         local tile = layer:getTileAt(cc.p(x, y))
+    --         tile:setColor(color + cc.c3b(tile:getColor()))
+    --     end
+    -- end
 end
 function PVELayer:onEnter()
     PVELayer.super.onEnter(self)
@@ -88,12 +89,14 @@ function PVELayer:onEnter()
     -- 加载地图数据
     local objects = {}
     self:IteratorObjectsGID(function(x, y, gid)
-        local type,image,s = unpack(UILib.pve[gid])
+        local config = UILib.pve[gid]
+        local type,image,s = unpack(config)
         local obj
-        if type == "image" then
+        if config[1] == "image" then
+            image = config[self.pve_map:Terrain()] or image
             obj = display.newSprite(image)
         else
-            obj = ccs.Armature:create(image)
+            obj = ccs.Armature:create(config[2])
             obj:getAnimation():playWithIndex(0)
         end
         local zorder = 0
@@ -173,7 +176,7 @@ function PVELayer:PromiseOfTrap()
     local exclamation_scale = 0.2
     local size = self.char:getContentSize()
     local s = display.newSprite("exclamation.png")
-        :addTo(self.char):pos(size.width, size.height):scale(0)
+        :addTo(self.char):pos(size.width*0.4, size.height*0.4):scale(0)
     self.char:runAction(transition.sequence({
         cc.RotateBy:create(t, r),
         cc.RotateBy:create(t, -r),
