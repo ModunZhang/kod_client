@@ -1,6 +1,6 @@
 local EventManager = class("EventManager")
 ---
-local DEBUG_TOUCH = true
+local DEBUG_TOUCH = false
 if DEBUG_TOUCH then
     function EventManager:RemoveTouch(touch_id)
         if self.cursors[touch_id] then
