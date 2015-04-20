@@ -85,7 +85,7 @@ function MapLayer:PromiseOfMove(map_x, map_y, speed_)
     local len = cc.pGetLength(scene_mid_point, cc.p(map_x, map_y))
     self.move_callbacks = {}
     local p = promise.new()
-    self:MoveToPosition(map_x, map_y, speed_ or len * 0.5)
+    self:MoveToPosition(map_x, map_y, speed_ or len)
     table.insert(self.move_callbacks, function()
         p:resolve()
     end)
