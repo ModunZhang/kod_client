@@ -225,6 +225,7 @@ function GameUIReplay:OnMoveInStage()
     local battle_bg = cc.ui.UIImage.new("battle_bg_grass_772x388.png")
         :addTo(battle):align(display.CENTER, rect.width / 2, rect.height / 2)
     self.battle_bg = battle_bg
+    self.damge_node = display.newNode():addTo(self.battle, 2)
 
 
 
@@ -849,6 +850,8 @@ function GameUIReplay:DecodeStateBySide(side, is_left)
                 self.right_morale:setString(percent.."%")
                 self.right_progress:SetProgressInfo("", percent)
             end
+            local x,y = corps:getPosition()
+            self:PlayDamageCount(side.damage, x, y)
             return corps
         end):next(BattleObject:HitOnce()):next(function(corps)
             BattleObject:Do(BattleObject:BreathForever()):resolve(corps)
@@ -935,22 +938,27 @@ function GameUIReplay:ShowStrongOrWeak(vs)
     end
 end
 local timer = app.timer
-local BATTLE_TAG = 1
-local TIMER_TAG = 2
-local PERFORM_TAG = 3
+local SPEED_TAG = 1
+local PERFORMANCE_TAG = 2
 function GameUIReplay:SpeedUp(speed)
     self.speed = speed or 1
-    local a1 = self.timer_node:getActionByTag(TIMER_TAG)
+    local a1 = self.timer_node:getActionByTag(SPEED_TAG)
     if a1 then
         a1:setSpeed(self:Speed())
     end
-    local a2 = self.timer_node:getActionByTag(PERFORM_TAG)
+    local a2 = self.timer_node:getActionByTag(PERFORMANCE_TAG)
     if a2 then
         a2:setSpeed(self:Speed())
     end
-    local a3 = self.battle_bg:getActionByTag(PERFORM_TAG)
+    local a3 = self.battle_bg:getActionByTag(SPEED_TAG)
     if a3 then
         a3:setSpeed(self:Speed())
+    end
+    for i,v in ipairs(self.damge_node:getChildren()) do
+        local a = v:getActionByTag(SPEED_TAG)
+        if a then
+            a:setSpeed(self:Speed())
+        end
     end
 
     if self.dragon_battle then
@@ -964,6 +972,9 @@ function GameUIReplay:SpeedUp(speed)
     end
 end
 function GameUIReplay:Stop()
+    for i,v in ipairs(self.damge_node:getChildren()) do
+        v:stopAllActions()
+    end
     self.timer_node:stopAllActions()
     self.battle_bg:stopAllActions()
     if self.dragon_battle then
@@ -979,6 +990,21 @@ end
 function GameUIReplay:Speed()
     return self.speed or 1
 end
+function GameUIReplay:PlayDamageCount(count, x, y)
+    local label = UIKit:ttfLabel({
+        text = "-"..count,
+        size = 30,
+        color = 0xff0000,
+    }):addTo(self.damge_node):pos(x, y)
+
+    local speed = cc.Speed:create(transition.sequence({
+        -- cc.Spawn:create({cc.MoveBy:create(0.5, cc.p(0, 20)), cc.FadeTo:create(0.5, 0)}),
+        cc.MoveBy:create(0.6, cc.p(0, 20)),
+        cc.RemoveSelf:create(),
+    }), self:Speed())
+    speed:setTag(SPEED_TAG)
+    label:runAction(speed)
+end
 function GameUIReplay:MoveBattleBgBy(x)
     return function(battle_bg)
         local p = promise.new()
@@ -988,6 +1014,7 @@ function GameUIReplay:MoveBattleBgBy(x)
                 p:resolve(battle_bg)
             end),
         }), self:Speed())
+        speed:setTag(SPEED_TAG)
         battle_bg:runAction(speed)
         return p
     end
@@ -1000,7 +1027,7 @@ function GameUIReplay:PromiseOfDelay(time, func)
             p:resolve()
         end),
     }), self:Speed())
-    speed:setTag(TIMER_TAG)
+    speed:setTag(SPEED_TAG)
     self.timer_node:runAction(speed)
     return p
 end
@@ -1021,7 +1048,7 @@ function GameUIReplay:Performance(time, func)
                     if t > time then
                         func(1)
                         p:resolve()
-                        self.timer_node:stopActionByTag(PERFORM_TAG)
+                        self.timer_node:stopActionByTag(PERFORMANCE_TAG)
                     else
                         if type(func) == "function" then
                             func(t / time)
@@ -1030,33 +1057,13 @@ function GameUIReplay:Performance(time, func)
                 end)
             })
         ),  self:Speed())
-    speed:setTag(PERFORM_TAG)
+    speed:setTag(PERFORMANCE_TAG)
     self.timer_node:runAction(speed)
     return p
 end
 
 
 return GameUIReplay
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
