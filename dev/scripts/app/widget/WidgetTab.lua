@@ -44,9 +44,7 @@ function WidgetTab:ctor(param, width, height)
             self.back_ground:getCascadeBoundingBox():containsPoint(cc.p(event.x, event.y)) then
             self.pressed = not self.pressed
             self:Active(self.pressed)
-            if self.pressed then
-                app:GetAudioManager():PlayeEffectSoundWithKey("HOME_PAGE")
-            end
+            app:GetAudioManager():PlayeEffectSoundWithKey("HOME_PAGE")
             if type(self.tab_press) == "function" then
                 self:tab_press(self.pressed)
             end
