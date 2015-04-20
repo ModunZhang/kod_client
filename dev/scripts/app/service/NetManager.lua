@@ -255,7 +255,6 @@ function NetManager:getServerTime()
 end
 
 function NetManager:disconnect()
-    self.m_was_inited_game = true
     self:removeEventListener("disconnect")
     self.m_netService:disconnect()
 end
@@ -463,8 +462,8 @@ function NetManager:getLoginPromise(deviceId)
                 InitGame(playerData) -- inner DataManager:setUserData ...
                 DataManager:setUserAllianceData(user_alliance_data)
                 DataManager:setEnemyAllianceData(user_enemy_alliance_data)
+                self.m_was_inited_game = true
             end
-            self.m_was_inited_game = false
         end
         return response
     end)

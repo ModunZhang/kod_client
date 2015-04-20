@@ -279,7 +279,7 @@ end
 
 function DragonManager:RefreshDragonData( dragons,resource_refresh_time,hp_recovery_perHour,deltaData)
     if not dragons then return end
-    if not self.dragons_ then -- 初始化龙信息
+    if not self.dragons_ or deltaData == nil then -- 初始化龙信息
         self.dragons_ = {}
         for k,v in pairs(dragons) do
             local dragon = Dragon.new(k,v.strength,v.vitality,v.status,v.star,v.level,v.exp,v.hp or 0)
@@ -287,7 +287,7 @@ function DragonManager:RefreshDragonData( dragons,resource_refresh_time,hp_recov
             self:AddDragon(dragon)
             self:checkHPRecoveryIf_(dragon,resource_refresh_time,hp_recovery_perHour)
         end
-    elseif deltaData.dragons then
+    elseif dragons and deltaData.dragons then
         --遍历更新龙信息
         local need_notify_defence = false
         for k,v in pairs(dragons) do
