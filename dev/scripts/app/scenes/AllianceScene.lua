@@ -78,6 +78,7 @@ function AllianceScene:OnTouchClicked(pre_x, pre_y, x, y)
         self.util_node:performWithDelay(function()
             app:lockInput(false)
         end, 0.5)
+        self.event_manager:RemoveAllTouches()
 
         app:GetAudioManager():PlayeEffectSoundWithKey("HOME_PAGE")
         if iskindof(building, "Sprite") then
