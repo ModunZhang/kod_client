@@ -4,14 +4,37 @@ local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local WidgetSliderWithInput = import("..widget.WidgetSliderWithInput")
 local WidgetInfoNotListView = import("..widget.WidgetInfoNotListView")
 local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
+local UILib = import("..ui.UILib")
 local window = import("..utils.window")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetStockGoods = class("WidgetStockGoods", function(...)
     local node = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
     node:setNodeEventEnabled(true)
+    local is_began_out = false
     node:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
         if event.name == "began" then
-            node:removeFromParent()
+            -- 点击空白区域关闭
+            local background = node:getChildByTag(101)
+            local lbpoint = background:convertToWorldSpace({x = 0, y = 0})
+            local size = background:getContentSize()
+            local rtpoint = background:convertToWorldSpace({x = size.width, y = size.height})
+            if not cc.rectContainsPoint(cc.rect(lbpoint.x, lbpoint.y, rtpoint.x - lbpoint.x, rtpoint.y - lbpoint.y), event) then
+                is_began_out = true
+            end
+        elseif event.name == "ended" then
+            -- 点击空白区域关闭
+            local background = node:getChildByTag(101)
+            local lbpoint = background:convertToWorldSpace({x = 0, y = 0})
+            local size = background:getContentSize()
+            local rtpoint = background:convertToWorldSpace({x = size.width, y = size.height})
+
+            if not cc.rectContainsPoint(cc.rect(lbpoint.x, lbpoint.y, rtpoint.x - lbpoint.x, rtpoint.y - lbpoint.y), event) then
+                if is_began_out then
+                    node:removeFromParent(true)
+                end
+            else
+                is_began_out = false
+            end
         end
         return true
     end)
@@ -27,7 +50,7 @@ function WidgetStockGoods:ctor(item)
 
     -- bg
     local back_ground = WidgetUIBackGround.new({height=464,isFrame="yes"}):align(display.BOTTOM_CENTER, window.cx, 0):addTo(self)
-
+    back_ground:setTag(101)
     back_ground:setTouchEnabled(true)
     local size = back_ground:getContentSize()
 
@@ -35,8 +58,9 @@ function WidgetStockGoods:ctor(item)
     local item_bg = display.newSprite("box_118x118.png"):addTo(back_ground):align(display.CENTER, 70, size.height-80)
     local item_icon_color_bg = display.newSprite("box_item_100x100.png"):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
     -- tool image
-    display.newSprite("tool_1.png"):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
-        :addTo(item_bg):scale(0.8)
+    local goods_icon = display.newSprite(UILib.item[item:Name()]):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
+        :addTo(item_bg)
+    goods_icon:scale(100/goods_icon:getContentSize().width)
     local i_icon = display.newSprite("goods_26x26.png"):addTo(item_bg):align(display.CENTER, 15, 15)
     -- 道具title
     local title_bg = display.newScale9Sprite("title_blue_430x30.png",370,size.height-40,cc.size(458,30),cc.rect(15,10,400,10))
@@ -103,8 +127,14 @@ function WidgetStockGoods:ctor(item)
                     :AddToCurrentScene()
                 return
             end
+            if slider:GetValue()<1 then
+                FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                    :SetPopMessage(_("请输入正确的进货数量"))
+                    :AddToCurrentScene()
+                return
+            end
             NetManager:getAddAllianceItemPromise(item:Name(),slider:GetValue())
-            self:removeFromParent()
+            self:removeFromParent(true)
         end):pos(500, 50)
         :addTo(back_ground)
 

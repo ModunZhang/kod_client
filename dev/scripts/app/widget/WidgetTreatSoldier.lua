@@ -1,6 +1,7 @@
 local GameUtils = GameUtils
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetSliderWithInput = import("..widget.WidgetSliderWithInput")
+local WidgetSoldierDetails = import("..widget.WidgetSoldierDetails")
 local HospitalUpgradeBuilding = import("..entity.HospitalUpgradeBuilding")
 local SoldierManager = import("..entity.SoldierManager")
 local UILib = import("..ui.UILib")
@@ -72,6 +73,7 @@ end
 function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
     self.soldier_type = soldier_type
     self.treat_max = treat_max
+    self.star = star
 
     local label_origin_x = 190
 
@@ -94,7 +96,13 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
         color = UIKit:hex2c3b(0xffedae)
     }):addTo(title_blue)
         :align(display.LEFT_CENTER, 10, size.height/2)
-
+    -- info
+    cc.ui.UIPushButton.new({normal = "i_btn_up_26x26.png",
+        pressed = "i_btn_down_26x26.png"}):addTo(title_blue)
+        :align(display.LEFT_CENTER, title_blue:getContentSize().width - 50, size.height/2)
+        :onButtonClicked(function(event)
+            WidgetSoldierDetails.new(self.soldier_type, self.star):addTo(self)
+        end)
 
     -- soldier bg
     local size = back_ground:getContentSize()
@@ -392,7 +400,6 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
     self.back_ground = back_ground
 
     self:SetSoldier(soldier_type, star)
-    self.star = star
     self:OnCountChanged(0)
 end
 function WidgetTreatSoldier:onEnter()
@@ -400,6 +407,7 @@ function WidgetTreatSoldier:onEnter()
 end
 function WidgetTreatSoldier:onExit()
     City:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
+    City:GetResourceManager():RemoveObserver(self)
 end
 function WidgetTreatSoldier:SetSoldier(soldier_type, star)
     local soldier_config, soldier_ui_config = self:GetConfigBySoldierTypeAndStar(soldier_type, star)
@@ -409,12 +417,15 @@ function WidgetTreatSoldier:SetSoldier(soldier_type, star)
 
     display.newSprite(UILib.soldier_color_bg_images[self.soldier_type]):addTo(self.back_ground)
         :align(display.CENTER,  86, self.back_ground:getContentSize().height-86):scale(130/128)
+    self.soldier = cc.ui.UIPushButton.new({normal = soldier_ui_config,
+        pressed = soldier_ui_config}):addTo(self.back_ground)
+        :align(display.CENTER, 86, self.back_ground:getContentSize().height - 86)
+        :onButtonClicked(function(event)
+            WidgetSoldierDetails.new(self.soldier_type, self.star):addTo(self)
+        end)
 
-    self.soldier = display.newSprite(soldier_ui_config):addTo(self.back_ground)
-        :align(display.CENTER,  86, self.back_ground:getContentSize().height-86)
-    self.soldier:scale(130/self.soldier:getContentSize().height)
-    display.newSprite("box_soldier_128x128.png"):addTo(self.soldier):align(display.CENTER, self.soldier:getContentSize().width/2, self.soldier:getContentSize().height-64)
-
+    local rect = self.soldier:getCascadeBoundingBox()
+    display.newSprite("box_soldier_128x128.png"):addTo(self.soldier):align(display.CENTER, 0,0)
     self.soldier_config = soldier_config
     self.soldier_ui_config = soldier_ui_config
     return self
@@ -424,7 +435,8 @@ function WidgetTreatSoldier:OnSoliderStarCountChanged(soldier_manager,star_chang
         if v == self.soldier_type then
             self.star =  soldier_manager:GetStarBySoldierType(v)
             local soldier_config, soldier_ui_config = self:GetConfigBySoldierTypeAndStar(v, self.star)
-            self.soldier:setTexture(soldier_ui_config)
+            self.soldier:setButtonImage(cc.ui.UIPushButton.NORMAL, soldier_ui_config, true)
+            self.soldier:setButtonImage(cc.ui.UIPushButton.PRESSED, soldier_ui_config, true)
             self.soldier_config = soldier_config
             self.soldier_ui_config = soldier_ui_config
         end
@@ -473,7 +485,7 @@ function WidgetTreatSoldier:OnCountChanged(count)
     local soldier_ui_config = self.soldier_ui_config
     local total_time = soldier_config.treatTime * count
     -- self.soldier_current_count:setString(string.format("%d", count))
-    self.upkeep:setString(string.format("%s%d", count > 0 and "-" or "", soldier_config.consumeFoodPerHour * count))
+    self.upkeep:setString(string.format("%s%d/".._("小时"), count > 0 and "-" or "", soldier_config.consumeFoodPerHour * count))
     self.treat_time:setString(GameUtils:formatTimeStyle1(total_time))
 
     local total_map = self.res_total_map == nil and {} or self.res_total_map

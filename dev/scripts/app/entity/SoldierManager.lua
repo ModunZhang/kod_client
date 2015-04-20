@@ -396,7 +396,18 @@ function SoldierManager:FindMilitaryTechsByBuildingType(building_type)
     local techs = {}
     self:IteratorMilitaryTechs(function ( name,v )
         if building_type == v:Building() then
-            techs[name] = v
+            local _,focus_field = unpack(string.split(name,"_"))
+            if focus_field == "infantry" then
+                techs[1] = v
+            elseif focus_field == "archer" then
+                techs[2] = v
+            elseif focus_field == "cavalry" then
+                techs[3] = v
+            elseif focus_field == "siege" then
+                techs[4] = v
+            elseif focus_field == "hpAdd" then
+                techs[5] = v
+            end
         end
     end)
     return techs
@@ -407,7 +418,7 @@ function SoldierManager:GetTechPointsByType(building_type)
 
     local tech_points = 0
     for k,v in pairs(techs) do
-        tech_points = tech_points + config[k].techPointPerLevel * v:Level()
+        tech_points = tech_points + config[v:Name()].techPointPerLevel * v:Level()
     end
     return tech_points
 end
