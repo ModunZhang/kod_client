@@ -134,7 +134,7 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
 
     -- food icon
     cc.ui.UIImage.new("res_food_91x74.png"):addTo(back_ground, 2)
-        :align(display.CENTER, size.width - 130, size.height - 110):scale(0.5)
+        :align(display.CENTER, size.width - 130, size.height - 90):scale(0.5)
 
     cc.ui.UILabel.new({
         text = _("维护费"),
@@ -152,7 +152,7 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
         align = cc.ui.TEXT_ALIGN_RIGHT,
         color = UIKit:hex2c3b(0x403c2f)
     }):addTo(back_ground, 2)
-        :align(display.LEFT_CENTER, size.width - 100, size.height - 120)
+        :align(display.CENTER, size.width - 75, size.height - 120)
 
 
     -- need bg

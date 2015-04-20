@@ -163,7 +163,7 @@ local function get_alliance_response_msg(response)
 end
 -- enemyAllianceData 全是返回的全数据
 local function get_enemy_alliance_response_msg(response)
-     if response.msg.enemyAllianceData then
+    if response.msg.enemyAllianceData then
         DataManager:setEnemyAllianceData(response.msg.enemyAllianceData)
         return response
     end
@@ -470,7 +470,7 @@ function NetManager:getLoginPromise(deviceId)
             end
             self.m_was_inited_game = false
         end
-        return response 
+        return response
     end)
 end
 
@@ -572,7 +572,9 @@ end
 function NetManager:getFetchMaterialsPromise(id)
     return get_blocking_request_promise("logic.playerHandler.getMaterials", {
         eventId = id,
-    }, "获取材料失败!"):done(get_response_msg)
+    }, "获取材料失败!"):done(get_response_msg):done(function()
+        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
+    end)
 end
 -- 打造装备
 local function get_makeDragonEquipment_promise(equipment_name, finish_now)
@@ -718,7 +720,9 @@ function NetManager:getDailyQeustRewardPromise(questEventId)
         {
             questEventId = questEventId
         },
-        "领取每日任务奖励失败!"):done(get_response_msg)
+        "领取每日任务奖励失败!"):done(get_response_msg):done(function()
+        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
+        end)
 end
 -- 发送个人邮件
 function NetManager:getSendPersonalMailPromise(memberId, title, content)
@@ -1525,6 +1529,7 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
 
 
 
