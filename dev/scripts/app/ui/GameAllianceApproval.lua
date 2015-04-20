@@ -25,7 +25,7 @@ function GameAllianceApproval:onEnter()
 		text = _("申请审批"),
 		color = 0xffedae,
 		size = 22,
-	}):align(display.CENTER, 300, 21):addTo(title_bar)
+	}):align(display.CENTER, 300, 26):addTo(title_bar)
 	local list,list_node = UIKit:commonListView({
 		viewRect = cc.rect(0, 0,568,687),
         direction = UIScrollView.DIRECTION_VERTICAL,

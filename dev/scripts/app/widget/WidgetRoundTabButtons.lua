@@ -66,7 +66,17 @@ function WidgetRoundTabButtons:PushButton(tab)
     self:OnSelectTag(tab.tag)
 end
 function WidgetRoundTabButtons:OnTabClicked(widget, is_pressed)
-    self:PushButton(widget)
+    if self.tab_button_will_select_event_listener 
+        and type(self.tab_button_will_select_event_listener) == 'function' and is_pressed then
+        if self.tab_button_will_select_event_listener(widget.tag) then
+            self:PushButton(widget)
+        else
+            widget:Enable(true):Active(false)
+            widget.label:setColor(UIKit:hex2c3b(0x403c2f))
+        end
+    else
+        self:PushButton(widget)
+    end
 end
 function WidgetRoundTabButtons:OnSelectTag(tag)
     if type(self.tabListener) == "function" then
@@ -97,7 +107,10 @@ function WidgetRoundTabButtons:CheckTag(tag)
     end
 end
 
-
+function WidgetRoundTabButtons:SetTabButtonWillSelectListener(func)
+    self.tab_button_will_select_event_listener = func
+    return self
+end
 return WidgetRoundTabButtons
 
 

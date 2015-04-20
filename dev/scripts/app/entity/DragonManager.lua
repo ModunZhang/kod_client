@@ -130,7 +130,7 @@ function DragonManager:GetDragonsSortWithPowerful()
 end
 
 function DragonManager:OnUserDataChanged(user_data, current_time, deltaData,hp_recovery_perHour)
-    self:RefreshDragonData(user_data.dragons,current_time,hp_recovery_perHour)
+    self:RefreshDragonData(user_data.dragons,current_time,hp_recovery_perHour,deltaData)
     self:RefreshDragonEvents(user_data,deltaData)
     self:RefreshDragonDeathEvents(user_data,deltaData)
 end
@@ -277,7 +277,7 @@ function DragonManager:OnDragonDeathEventTimer(dragonDeathEvent)
     end)
 end
 
-function DragonManager:RefreshDragonData( dragons,resource_refresh_time,hp_recovery_perHour)
+function DragonManager:RefreshDragonData( dragons,resource_refresh_time,hp_recovery_perHour,deltaData)
     if not dragons then return end
     if not self.dragons_ then -- 初始化龙信息
         self.dragons_ = {}
@@ -287,9 +287,8 @@ function DragonManager:RefreshDragonData( dragons,resource_refresh_time,hp_recov
             self:AddDragon(dragon)
             self:checkHPRecoveryIf_(dragon,resource_refresh_time,hp_recovery_perHour)
         end
-    else
+    elseif deltaData.dragons then
         --遍历更新龙信息
-        if not dragons then return end
         local need_notify_defence = false
         for k,v in pairs(dragons) do
             local dragon = self:GetDragon(k)
@@ -301,8 +300,6 @@ function DragonManager:RefreshDragonData( dragons,resource_refresh_time,hp_recov
                     need_notify_defence = isDefenced ~= dragon:IsDefenced()
                 end
                 if dragonIsHated_ ~= dragon:Ishated() then
-                    GameGlobalUI:showTips(_("提示"),string.format(_('孵化%s完成'),Localize.dragon[dragon:Type()]))
-
                     self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnDragonHatched,function(lisenter)
                         lisenter.OnDragonHatched(lisenter,dragon)
                     end)

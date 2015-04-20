@@ -42,7 +42,7 @@ alliance_name_noun[10] = {
 }
 alliance_name_noun[11] = {
 	["index"] = 11,
-	["value"] = "Warrior"
+	["value"] = "Warriors"
 }
 alliance_name_noun[12] = {
 	["index"] = 12,

@@ -26,9 +26,9 @@ function StarBar:ctor(params)
 		local stars = display.newSprite(params.bg):addTo(self)
 		stars:setScale(self.params_ .scale)
 		if self.params_.direction == StarBar.DIRECTION_HORIZONTAL then
-			stars:align(display.LEFT_BOTTOM,(i-1)*((self.params_.margin or 0)+stars:getContentSize().width * self.params_.scale) , 0)
+			stars:align(display.LEFT_BOTTOM,(i-1)*((self.params_.margin or 0)+stars:getCascadeBoundingBox().width) , 0)
 		else
-			stars:align(display.LEFT_BOTTOM, 0, (i-1)*((params.margin or 0)+stars:getContentSize().height * self.params_.scale))
+			stars:align(display.LEFT_BOTTOM, 0, (i-1)*((params.margin or 0)+stars:getCascadeBoundingBox().height))
 		end
  		stars.fill_ = display.newSprite(self.params_.fill):addTo(stars):pos(stars:getContentSize().width /2 +  self.params_.fillOffset.x ,stars:getContentSize().height/2 + self.params_.fillOffset.y)
  		stars.fill_:setVisible(self.params_.fillFunc(i,self.params_.num or 0,self.params_.max))
