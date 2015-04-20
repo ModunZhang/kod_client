@@ -907,98 +907,107 @@ function WidgetUseItems:OpenRetreatTroopDialog( item,event )
 end
 
 function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc,buyAndUseFunc,which_bg)
-    -- local body = display.newNode()
-    -- body:setContentSize(cc.size(570,128))
     local body_image = which_bg and "upgrade_resources_background_2.png" or "upgrade_resources_background_3.png"
     local body = display.newScale9Sprite(body_image,0,0,cc.size(548,130),cc.rect(10,10,500,26))
+    body:setNodeEventEnabled(true)
 
+   
 
-    -- icon bg
-    -- local icon_bg = display.newSprite("box_120x128.png"):addTo(body):pos(60,64)
-    local item_bg = display.newSprite("box_118x118.png"):addTo(body):pos(65,65)
-    -- local item_icon_color_bg = display.newSprite("box_item_100x100.png"):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
-    local item_icon = display.newSprite(UILib.item[item:Name()]):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2):scale(0.6)
-    item_icon:scale(100/item_icon:getContentSize().width)
-    -- local desc_bg = display.newSprite("box_450x128.png"):addTo(body):pos(345,64)
-
-    -- 道具名称
-    UIKit:ttfLabel({
-        text = item:GetLocalizeName(),
-        size = 24,
-        color = 0x403c2f,
-    }):addTo(body):align(display.LEFT_CENTER,130, body:getContentSize().height-20)
-    -- 道具介绍
-    UIKit:ttfLabel({
-        text = item:GetLocalizeDesc(),
-        size = 20,
-        color = 0x5c553f,
-        dimensions = cc.size(260,0)
-    }):addTo(body):align(display.LEFT_CENTER,130, body:getContentSize().height/2-10)
-
-    local btn_pics , btn_label, btn_call_back
-    if item:Count()<1 then
-        btn_pics = {normal = "green_btn_up_148x58.png", pressed = "green_btn_down_148x58.png"}
-        btn_label = _("购买&使用")
-        local item_name = item:Name()
-        btn_call_back = function ()
-            if item:Price() > User:GetGemResource():GetValue() then
-                FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                    :SetPopMessage(_("金龙币不足"))
-                    :CreateOKButton(
-                        {
-                            listener = function ()
-                                UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
-                            end,
-                            btn_name= _("前往商店")
-                        }
-                    )
-                    :AddToCurrentScene()
-            else
-                buyAndUseFunc()
-            end
-        end
-        if item:IsSell() then
-            local price_bg = display.newSprite("back_ground_118x36.png"):addTo(body):align(display.CENTER,470,94)
-            -- gem icon
-            local gem_icon = display.newSprite("gem_icon_62x61.png"):addTo(price_bg):align(display.CENTER, 20, price_bg:getContentSize().height/2):scale(0.6)
-            UIKit:ttfLabel({
-                text = string.formatnumberthousands(item:Price()),
-                size = 20,
-                color = 0x403c2f,
-            }):align(display.LEFT_CENTER, 50 , price_bg:getContentSize().height/2)
-                :addTo(price_bg)
-        end
-    else
-        local num_bg = display.newSprite("back_ground_118x36.png"):addTo(body):align(display.CENTER,470,94)
-
-        local own_label = UIKit:ttfLabel({
-            text = _("拥有")..":"..item:Count(),
-            size = 20,
-            color = 0x403c2f,
-        }):addTo(num_bg):align(display.CENTER,num_bg:getContentSize().width/2, num_bg:getContentSize().height/2)
-
-        btn_pics = {normal = "yellow_btn_up_148x58.png", pressed = "yellow_btn_down_148x58.png"}
-        btn_label = _("使用")
-        local item_name = item:Name()
-        btn_call_back = useItemFunc
+    function body:onExit()
+        ItemManager:RemoveListenerOnType(self,ItemManager.LISTEN_TYPE.ITEM_CHANGED)
     end
-    -- 使用按钮
-    local use_btn = WidgetPushButton.new(
-        btn_pics,
-        {scale9 = false}
-    ):setButtonLabel(UIKit:commonButtonLable({text = btn_label}))
-        :addTo(body):align(display.CENTER, 470, 34)
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-                if checkUseFunc(item) then
-                    btn_call_back(item)
+    function body:OnItemsChanged()
+        local new_item = ItemManager:GetItemByName(item:Name())
+        self:Init()
+    end
+    function body:Init()
+        self:removeAllChildren()
+        local item_bg = display.newSprite("box_118x118.png"):addTo(body):pos(65,65)
+        local item_icon = display.newSprite(UILib.item[item:Name()]):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2):scale(0.6)
+        item_icon:scale(100/item_icon:getContentSize().width)
+
+        -- 道具名称
+        UIKit:ttfLabel({
+            text = item:GetLocalizeName(),
+            size = 24,
+            color = 0x403c2f,
+        }):addTo(body):align(display.LEFT_CENTER,130, body:getContentSize().height-20)
+        -- 道具介绍
+        UIKit:ttfLabel({
+            text = item:GetLocalizeDesc(),
+            size = 20,
+            color = 0x5c553f,
+            dimensions = cc.size(260,0)
+        }):addTo(body):align(display.LEFT_CENTER,130, body:getContentSize().height/2-10)
+
+        local btn_pics , btn_label, btn_call_back
+        if item:Count()<1 then
+            btn_pics = {normal = "green_btn_up_148x58.png", pressed = "green_btn_down_148x58.png"}
+            btn_label = _("购买&使用")
+            local item_name = item:Name()
+            btn_call_back = function ()
+                if item:Price() > User:GetGemResource():GetValue() then
+                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                        :SetPopMessage(_("金龙币不足"))
+                        :CreateOKButton(
+                            {
+                                listener = function ()
+                                    UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                                end,
+                                btn_name= _("前往商店")
+                            }
+                        )
+                        :AddToCurrentScene()
+                else
+                    buyAndUseFunc()
                 end
             end
-        end)
-    -- 没有道具，并且不能购买
-    if item:Count()<1 and not item:IsSell() then
-        use_btn:setVisible(false)
+            if item:IsSell() then
+                local price_bg = display.newSprite("back_ground_118x36.png"):addTo(body):align(display.CENTER,470,94)
+                -- gem icon
+                local gem_icon = display.newSprite("gem_icon_62x61.png"):addTo(price_bg):align(display.CENTER, 20, price_bg:getContentSize().height/2):scale(0.6)
+                UIKit:ttfLabel({
+                    text = string.formatnumberthousands(item:Price()),
+                    size = 20,
+                    color = 0x403c2f,
+                }):align(display.LEFT_CENTER, 50 , price_bg:getContentSize().height/2)
+                    :addTo(price_bg)
+            end
+        else
+            local num_bg = display.newSprite("back_ground_118x36.png"):addTo(body):align(display.CENTER,470,94)
+
+            local own_label = UIKit:ttfLabel({
+                text = _("拥有")..":"..item:Count(),
+                size = 20,
+                color = 0x403c2f,
+            }):addTo(num_bg):align(display.CENTER,num_bg:getContentSize().width/2, num_bg:getContentSize().height/2)
+
+            btn_pics = {normal = "yellow_btn_up_148x58.png", pressed = "yellow_btn_down_148x58.png"}
+            btn_label = _("使用")
+            local item_name = item:Name()
+            btn_call_back = useItemFunc
+        end
+        -- 使用按钮
+        local use_btn = WidgetPushButton.new(
+            btn_pics,
+            {scale9 = false}
+        ):setButtonLabel(UIKit:commonButtonLable({text = btn_label}))
+            :addTo(body):align(display.CENTER, 470, 34)
+            :onButtonClicked(function(event)
+                if event.name == "CLICKED_EVENT" then
+                    if checkUseFunc(item) then
+                        btn_call_back(item)
+                    end
+                end
+            end)
+
+        -- 没有道具，并且不能购买
+        if item:Count()<1 and not item:IsSell() then
+            use_btn:setVisible(false)
+        end
     end
+    body:Init()
+    ItemManager:AddListenOnType(body,ItemManager.LISTEN_TYPE.ITEM_CHANGED)
     return body
 end
 
@@ -1006,6 +1015,8 @@ function WidgetUseItems:GetListBg(x,y,width,height)
     return display.newScale9Sprite("background_568x556.png",x,y,cc.size(width,height),cc.rect(10,10,548,536))
 end
 return WidgetUseItems
+
+
 
 
 

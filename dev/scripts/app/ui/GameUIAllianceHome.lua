@@ -258,103 +258,8 @@ function GameUIAllianceHome:TopBg()
 end
 
 function GameUIAllianceHome:TopTabButtons()
-    -- 荣誉,忠诚,坐标按钮背景框
-    local btn_bg = display.newSprite("back_ground_676x100.png")
-        :align(display.TOP_CENTER,self.top_bg:getContentSize().width/2,46)
+    self.page_top = UIKit:newWidgetUI("WidgetAllianceTop",self.alliance):align(display.TOP_CENTER,self.top_bg:getContentSize().width/2,26)
         :addTo(self.top_bg)
-    btn_bg:setTouchEnabled(true)
-    -- 荣耀按钮
-    local honour_btn = WidgetPushButton.new({normal = "btn_196x44.png",
-        pressed = "btn_196x44_light.png"})
-        :onButtonClicked(function (event)
-            if event.name == "CLICKED_EVENT" then
-                GameUIAllianceContribute.new():AddToCurrentScene(true)
-            end
-        end)
-        :align(display.CENTER, 145, btn_bg:getContentSize().height/2-1)
-        :addTo(btn_bg)
-    -- 荣耀值
-    display.newSprite("honour_128x128.png")
-        :align(display.CENTER, 120,btn_bg:getContentSize().height/2-3)
-        :addTo(btn_bg)
-        :scale(42/128)
-    UIKit:ttfLabel(
-        {
-            text = _("荣耀值"),
-            size = 14,
-            color = 0xbdb582
-        }):align(display.LEFT_CENTER, 145, btn_bg:getContentSize().height/2+8)
-        :addTo(btn_bg)
-    self.honour_label = UIKit:ttfLabel(
-        {
-            text = GameUtils:formatNumber(self.alliance:Honour()),
-            size = 18,
-            color = 0xf5e8c4
-        }):align(display.LEFT_CENTER, 145, btn_bg:getContentSize().height/2-8)
-        :addTo(btn_bg)
-    honour_btn:setRotationSkewY(180)
-
-    -- 忠诚按钮
-    local loyalty_btn = WidgetPushButton.new({normal = "btn_196x44.png",
-        pressed = "btn_196x44_light.png"})
-        :onButtonClicked(function (event)
-            if event.name == "CLICKED_EVENT" then
-                UIKit:newGameUI('GameUIAllianceLoyalty'):AddToCurrentScene(true)
-            end
-        end)
-        :align(display.CENTER, btn_bg:getContentSize().width-144, btn_bg:getContentSize().height/2-1)
-        :addTo(btn_bg)
-    -- 忠诚值
-    display.newSprite("loyalty_128x128.png")
-        :align(display.CENTER, -40,loyalty_btn:getContentSize().height/2-4)
-        :addTo(loyalty_btn)
-        :scale(42/128)
-    UIKit:ttfLabel(
-        {
-            text = _("忠诚值"),
-            size = 14,
-            color = 0xbdb582
-        }):align(display.LEFT_CENTER, -15, loyalty_btn:getContentSize().height/2+10)
-        :addTo(loyalty_btn)
-    local member = self.alliance:GetMemeberById(DataManager:getUserData()._id)
-    self.loyalty_label = UIKit:ttfLabel(
-        {
-            text = GameUtils:formatNumber(member:Loyalty()),
-            size = 18,
-            color = 0xf5e8c4
-        }):align(display.LEFT_CENTER, -15, loyalty_btn:getContentSize().height/2-10)
-        :addTo(loyalty_btn)
-    -- 坐标按钮
-    local coordinate_btn = WidgetPushButton.new({normal = "btn_mid_196x44.png",
-        pressed = "btn_mid_196x44_light.png"})
-        :onButtonClicked(function ( event )
-            if event.name == "CLICKED_EVENT" then
-                UIKit:newGameUI('GameUIAlliancePosition'):AddToCurrentScene(true)
-            end
-        end)
-        :align(display.CENTER, btn_bg:getContentSize().width/2+6, btn_bg:getContentSize().height/2-1)
-        :addTo(btn_bg)
-    -- 坐标
-    display.newSprite("coordinate_128x128.png")
-        :align(display.CENTER, -40,coordinate_btn:getContentSize().height/2-4)
-        :addTo(coordinate_btn)
-        :scale(42/128)
-    self.coordinate_title_label = UIKit:ttfLabel(
-        {
-            text = _("坐标"),
-            size = 14,
-            color = 0xbdb582
-        }):align(display.LEFT_CENTER, -15, coordinate_btn:getContentSize().height/2+10)
-        :addTo(coordinate_btn)
-    self.coordinate_label = UIKit:ttfLabel(
-        {
-            text = "23,21",
-            size = 18,
-            color = 0xf5e8c4
-        }):align(display.LEFT_CENTER, -15, coordinate_btn:getContentSize().height/2-10)
-        :addTo(coordinate_btn)
-
-
 end
 
 function GameUIAllianceHome:CreateTop()
@@ -575,14 +480,14 @@ end
 
 function GameUIAllianceHome:OnBasicChanged(alliance,changed_map)
     if changed_map.honour then
-        self.honour_label:setString(GameUtils:formatNumber(changed_map.honour.new))
+        self.page_top:SetHonour(GameUtils:formatNumber(changed_map.honour.new))
     elseif changed_map.status then
         self.top:Refresh()
     end
 end
 function GameUIAllianceHome:OnMemberChanged(alliance)
     local self_member = alliance:GetMemeberById(DataManager:getUserData()._id)
-    self.loyalty_label:setString(GameUtils:formatNumber(self_member.loyalty))
+    self.page_top:SetLoyalty(GameUtils:formatNumber(self_member.loyalty))
 end
 -- function GameUIAllianceHome:OnAllianceCountInfoChanged(alliance,countInfo)
 --     self.count = 0
@@ -630,8 +535,8 @@ function GameUIAllianceHome:UpdateCoordinate(logic_x, logic_y, alliance_view)
     else
         is_mine = _("坐标")
     end
-    self.coordinate_label:setString(coordinate_str)
-    self.coordinate_title_label:setString(is_mine)
+    self.page_top:SetCoordinateTitle(is_mine)
+    self.page_top:SetCoordinate(coordinate_str)
 end
 function GameUIAllianceHome:UpdateAllArrows(logic_x, logic_y, alliance_view)
     local layer = alliance_view:GetLayer()

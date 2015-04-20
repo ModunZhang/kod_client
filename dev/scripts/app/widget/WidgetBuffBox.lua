@@ -33,7 +33,9 @@ function WidgetBuffBox:ctor(params)
     local buff_icon = display.newSprite(UILib.buff[buff_type],0,12,{class=cc.FilteredSpriteWithOne})
         :addTo(buff_btn)
     buff_icon:scale(102/math.max(buff_icon:getContentSize().width,buff_icon:getContentSize().height))
-    if not ItemManager:IsBuffActived( buff_type ) then
+
+    local  isBuffActived = ItemManager:IsBuffActived( buff_type )
+    if not isBuffActived then
         local my_filter = filter
         local filters = my_filter.newFilter("GRAY", {0.2, 0.3, 0.5, 0.1})
         buff_icon:setFilter(filters)
@@ -45,9 +47,9 @@ function WidgetBuffBox:ctor(params)
         :addTo(self)
     self.info_label = UIKit:ttfLabel(
         {
-            text = "",
+            text = isBuffActived and GameUtils:formatTimeStyle1(ItemManager:GetItemEventByType(buff_type):GetTime()) or _("未解锁"),
             size = 20,
-            color = 0x403c2f
+            color = isBuffActived and 0x007c23 or 0x403c2f
         }):align(display.CENTER, info_bg:getContentSize().width/2 ,info_bg:getContentSize().height/2)
         :addTo(info_bg)
 end
@@ -79,6 +81,7 @@ function WidgetBuffBox:onExit()
     ItemManager:RemoveListenerOnType(self,ItemManager.LISTEN_TYPE.OnItemEventTimer)
 end
 return WidgetBuffBox
+
 
 
 

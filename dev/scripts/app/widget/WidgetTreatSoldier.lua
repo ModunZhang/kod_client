@@ -400,6 +400,7 @@ function WidgetTreatSoldier:onEnter()
 end
 function WidgetTreatSoldier:onExit()
     City:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
+    City:GetResourceManager():RemoveObserver(self)
 end
 function WidgetTreatSoldier:SetSoldier(soldier_type, star)
     local soldier_config, soldier_ui_config = self:GetConfigBySoldierTypeAndStar(soldier_type, star)
