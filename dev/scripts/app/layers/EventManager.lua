@@ -30,9 +30,7 @@ if DEBUG_TOUCH then
     function EventManager:two_touch_began(points)
         table.foreach(points, function(id, point)
             if self.one_touch_id == id then
-                if self.one_touch_handle then
-                    self.one_touch_handle:OnOneTouch(0, 0, point.x, point.y, "cancelled")
-                end
+                self.one_touch_handle:OnOneTouch(0, 0, point.x, point.y, "cancelled")
                 self.one_touch_id = nil
                 return true
             end
@@ -45,11 +43,11 @@ if DEBUG_TOUCH then
                 table.insert(points, {id = id, x = x, y = y}) -- 调试触摸时打开
             end
         end
-        self.scale_id_1 = points[1].id
-        self.scale_id_2 = points[2].id
-        local x1, y1 = points[1].x, points[1].y
-        local x2, y2 = points[2].x, points[2].y
-        if self.two_touch_handle then
+        if #points >= 2 then
+            self.scale_id_1 = points[1].id
+            self.scale_id_2 = points[2].id
+            local x1, y1 = points[1].x, points[1].y
+            local x2, y2 = points[2].x, points[2].y
             self.two_touch_handle:OnTwoTouch(x1, y1, x2, y2, "began")
         end
     end
@@ -88,9 +86,7 @@ if DEBUG_TOUCH then
         if is_two_finger_moving then
             local x1, y1 = points[1].x, points[1].y
             local x2, y2 = points[2].x, points[2].y
-            if self.two_touch_handle then
-                self.two_touch_handle:OnTwoTouch(x1, y1, x2, y2, "moved")
-            end
+            self.two_touch_handle:OnTwoTouch(x1, y1, x2, y2, "moved")
         end
         local is_only_one_finger_on_screen = count == 1 and #points == 0
         if is_only_one_finger_on_screen then
@@ -130,9 +126,7 @@ else
     function EventManager:two_touch_began(points)
         table.foreach(points, function(id, point)
             if self.one_touch_id == id then
-                if self.one_touch_handle then
-                    self.one_touch_handle:OnOneTouch(0, 0, point.x, point.y, "cancelled")
-                end
+                self.one_touch_handle:OnOneTouch(0, 0, point.x, point.y, "cancelled")
                 self.one_touch_id = nil
                 return true
             end
@@ -147,9 +141,7 @@ else
             self.scale_id_2 = points[2].id
             local x1, y1 = points[1].x, points[1].y
             local x2, y2 = points[2].x, points[2].y
-            if self.two_touch_handle then
-                self.two_touch_handle:OnTwoTouch(x1, y1, x2, y2, "began")
-            end
+            self.two_touch_handle:OnTwoTouch(x1, y1, x2, y2, "began")
         end
     end
     function EventManager:touch_moving(event_points)
@@ -179,9 +171,7 @@ else
         if is_two_finger_moving then
             local x1, y1 = points[1].x, points[1].y
             local x2, y2 = points[2].x, points[2].y
-            if self.two_touch_handle then
-                self.two_touch_handle:OnTwoTouch(x1, y1, x2, y2, "moved")
-            end
+            self.two_touch_handle:OnTwoTouch(x1, y1, x2, y2, "moved")
         end
 
         local is_only_one_finger_on_screen = #points == 0 and count == 1
@@ -246,9 +236,7 @@ function EventManager:OnEvent(event)
         table.foreach(event.points, function(id, point)
             self:RemoveTouch(id)
             if self.one_touch_id == id then
-                if self.one_touch_handle then
-                    self.one_touch_handle:OnOneTouch(point.prevX, point.prevY, point.x, point.y, "ended")
-                end
+                self.one_touch_handle:OnOneTouch(point.prevX, point.prevY, point.x, point.y, "ended")
                 self.one_touch_id = nil
             end
             self:check_two_touches_which_has_removed(id)
@@ -271,27 +259,21 @@ end
 function EventManager:one_touch_began(points)
     table.foreach(points, function(id, point)
         self.one_touch_id = id
-        if self.one_touch_handle then
-            self.one_touch_handle:OnOneTouch(0, 0, point.x, point.y, "began")
-        end
+        self.one_touch_handle:OnOneTouch(0, 0, point.x, point.y, "began")
         return true
     end)
 end
 function EventManager:one_touch_moving(points)
     table.foreach(points, function(id, point)
         self.one_touch_id = id
-        if self.one_touch_handle then
-            self.one_touch_handle:OnOneTouch(point.prevX, point.prevY, point.x, point.y, "moved")
-        end
+        self.one_touch_handle:OnOneTouch(point.prevX, point.prevY, point.x, point.y, "moved")
         return true
     end)
 end
 function EventManager:one_touch_over(points, event_name)
     table.foreach(points, function(id, point)
         if self.one_touch_id == id then
-            if self.one_touch_handle then
-                self.one_touch_handle:OnOneTouch(0, 0, point.x, point.y, event_name)
-            end
+            self.one_touch_handle:OnOneTouch(0, 0, point.x, point.y, event_name)
             return true
         end
     end)
@@ -309,15 +291,16 @@ function EventManager:check_two_touches_has_cancelled()
     if is_scale_cancelled then
         self.scale_id_1 = nil
         self.scale_id_2 = nil
-        if self.two_touch_handle then
-            self.two_touch_handle:OnTwoTouch(0, 0, 0, 0, "ended")
-        end
+        self.two_touch_handle:OnTwoTouch(0, 0, 0, 0, "ended")
     end
 end
 
 
 
 return EventManager
+
+
+
 
 
 
