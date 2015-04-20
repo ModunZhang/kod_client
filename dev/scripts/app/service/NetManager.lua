@@ -409,7 +409,8 @@ function NetManager:getConnectGateServerPromise()
 end
 -- 获取服务器列表
 function NetManager:getLogicServerInfoPromise()
-    return get_none_blocking_request_promise("gate.gateHandler.queryEntry", nil, "获取逻辑服务器失败",true)
+    local device_id = device.getOpenUDID()
+    return get_none_blocking_request_promise("gate.gateHandler.queryEntry", {deviceId = device_id}, "获取逻辑服务器失败",true)
         :done(function(result)
             self:CleanAllEventListeners()
             self.m_netService:disconnect()
@@ -431,24 +432,19 @@ function NetManager:getConnectLogicServerPromise()
         self:InitEventsMap(base_event_map, logic_event_map)
     end)
 end
-local function getOpenUDID()
-    local device_id
-    local udid = cc.UserDefault:getInstance():getStringForKey("udid")
-    if udid and #udid > 0 then
-        device_id = udid
-    else
-        device_id = device.getOpenUDID()
-    end
-    return device_id
-end
+-- function NetManager:getOpenUDID()
+--     local device_id
+--     local udid = cc.UserDefault:getInstance():getStringForKey("udid")
+--     if udid and #udid > 0 then
+--         device_id = udid
+--     else
+--         device_id = device.getOpenUDID()
+--     end
+--     return device_id
+-- end
 -- 登录
 function NetManager:getLoginPromise(deviceId)
-    local device_id
-    if CONFIG_IS_DEBUG then
-        device_id = getOpenUDID()
-    else
-        device_id = device.getOpenUDID()
-    end
+    local device_id = device.getOpenUDID()
     return get_none_blocking_request_promise("logic.entryHandler.login", {deviceId = deviceId or device_id}, nil, true):next(function(response)
         if response.success then
             app:GetPushManager():CancelAll()
