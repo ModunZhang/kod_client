@@ -87,7 +87,9 @@ function GameUIOrderHall:ResetVillageList()
     self.village_listview:removeAllItems()
     self.village_items = {}
     for k,v in pairs(self.alliance:GetVillageLevels()) do
-        self.village_items[k] = self:CreateVillageItem(k,v)
+        if k ~= "coinVillage" then
+            self.village_items[k] = self:CreateVillageItem(k,v)
+        end
     end
     self.village_listview:reload()
 end
@@ -140,7 +142,7 @@ function GameUIOrderHall:CreateVillageItem(village_type,village_level)
         }
     ):align(display.RIGHT_CENTER,item_width - 10 , 100)
         :addTo(content)
-  
+
 
     if alliance:GetSelf():CanUpgradeAllianceBuilding() and village_level<#AllianceVillage[village_type] then
         -- 荣耀值
@@ -401,9 +403,10 @@ function GameUIOrderHall:onExit()
     GameUIOrderHall.super.onExit(self)
 end
 function GameUIOrderHall:OnBuildingInfoChange(building)
-    
+
 end
 return GameUIOrderHall
+
 
 
 
