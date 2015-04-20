@@ -8,188 +8,143 @@ local normal = GameDatas.Soldiers.normal
 local special = GameDatas.Soldiers.special
 
 local soldier_config = {
-    ----
     ["swordsman"] = {
-        x = -45,
-        y = -120,
-        {"bubing_1", -10, 45, 0.8},
-        {"bubing_2", -20, 40, 0.8},
-        {"bubing_3", -15, 35, 0.8},
+        {"bubing_1", -90, -150, 0.8},
+        {"bubing_2", -80, -135, 0.8},
+        {"bubing_3", -80, -130, 0.8},
     },
     ["ranger"] = {
-        x = -45,
-        y = -120,
-        {"gongjianshou_1", 0, 45, 0.8},
-        {"gongjianshou_2", 0, 45, 0.8},
-        {"gongjianshou_3", 0, 45, 0.8},
+        {"gongjianshou_1", -90, -150, 0.8},
+        {"gongjianshou_2", -75, -145, 0.8},
+        {"gongjianshou_3", -75, -145, 0.8},
     },
     ["lancer"] = {
-        x = -45,
-        y = -120,
-        {"qibing_1", -10, 50, 0.8},
-        {"qibing_2", -10, 50, 0.8},
-        {"qibing_3", -10, 50, 0.8},
+        {"qibing_1", -70, -150, 0.8},
+        {"qibing_2", -70, -150, 0.8},
+        {"qibing_3", -50, -150, 0.8},
     },
     ["catapult"] = {
-        x = 50,
-        y = -80,
-        {  "toushiche", 0, 35, 1},
-        {"toushiche_2", 0, 35, 1},
-        {"toushiche_3", 0, 35, 1},
+        {  "toushiche", 30, -80, 1},
+        {"toushiche_2", 30, -80, 1},
+        {"toushiche_3", 20, -80, 1},
     },
 
     -----
     ["sentinel"] = {
-        x = -45,
-        y = -120,
-        {"shaobing_1", 0, 55, 0.8},
-        {"shaobing_2", 0, 55, 0.8},
-        {"shaobing_3", 0, 55, 0.8},
+        {"shaobing_1", -60, -140, 0.8},
+        {"shaobing_2", -60, -140, 0.8},
+        {"shaobing_3", -60, -140, 0.8},
     },
     ["crossbowman"] = {
-        x = -45,
-        y = -120,
-        {"nugongshou_1", 0, 45, 0.8},
-        {"nugongshou_2", 0, 50, 0.8},
-        {"nugongshou_3", 15, 45, 0.8},
+        {"nugongshou_1", -90, -160, 0.8},
+        {"nugongshou_2", -90, -160, 0.8},
+        {"nugongshou_3", -105, -160, 0.8},
     },
     ["horseArcher"] = {
-        x = -45,
-        y = -120,
-        {"youqibing_1", -15, 55, 0.8},
-        {"youqibing_2", -15, 55, 0.8},
-        {"youqibing_3", -15, 55, 0.8},
+        {"youqibing_1", -70, -140, 0.8},
+        {"youqibing_2", -60, -140, 0.8},
+        {"youqibing_3", -60, -140, 0.8},
     },
     ["ballista"] = {
-        x = 100,
-        y = -80,
-        {"nuche_1", 0, 30, 1},
-        {"nuche_2", 0, 30, 1},
-        {"nuche_3", 0, 30, 1},
+        {"nuche_1", 75, -100, 1},
+        {"nuche_2", 85, -95, 1},
+        {"nuche_3", 90, -80, 1},
     },
     ----
     ["skeletonWarrior"] = {
-        x = -45,
-        y = -120,
-        {"kulouyongshi", 0, 40, 0.8},
-        {"kulouyongshi", 0, 40, 0.8},
-        {"kulouyongshi", 0, 40, 0.8},
+        {"kulouyongshi", -80, -160, 0.8},
+        {"kulouyongshi", -80, -160, 0.8},
+        {"kulouyongshi", -80, -160, 0.8},
     },
     ["skeletonArcher"] = {
-        x = -45,
-        y = -120,
-        {"kulousheshou", 25, 40, 0.8},
-        {"kulousheshou", 25, 40, 0.8},
-        {"kulousheshou", 25, 40, 0.8},
+        {"kulousheshou", -100, -150, 0.8},
+        {"kulousheshou", -100, -150, 0.8},
+        {"kulousheshou", -100, -150, 0.8},
     },
     ["deathKnight"] = {
-        x = -45,
-        y = -120,
-        {"siwangqishi", -10, 50, 0.8},
-        {"siwangqishi", -10, 50, 0.8},
-        {"siwangqishi", -10, 50, 0.8},
+        {"siwangqishi", -70, -145, 0.8},
+        {"siwangqishi", -70, -145, 0.8},
+        {"siwangqishi", -70, -145, 0.8},
     },
     ["meatWagon"] = {
-        x = 50,
-        y = -80,
-        {"jiaorouche", 0, 30, 0.8},
-        {"jiaorouche", 0, 30, 0.8},
-        {"jiaorouche", 0, 30, 0.8},
+        {"jiaorouche", 20, -100, 0.8},
+        {"jiaorouche", 20, -100, 0.8},
+        {"jiaorouche", 20, -100, 0.8},
     },
 }
 local pve_soldier_config = {
-    ----
     ["swordsman"] = {
-        x = -45,
-        y = -120,
-        {"bubing_1", -10, 45, 0.8},
-        {"heihua_bubing_2", -20, 40, 0.8},
-        {"heihua_bubing_3", -15, 35, 0.8},
+        {"bubing_1", -90, -150, 0.8},
+        {"heihua_bubing_2", -100, -150, 0.8},
+        {"heihua_bubing_3", -100, -145, 0.8},
     },
     ["ranger"] = {
-        x = -45,
-        y = -120,
-        {"gongjianshou_1", 0, 45, 0.8},
-        {"heihua_gongjianshou_2", 0, 45, 0.8},
-        {"heihua_gongjianshou_3", 0, 45, 0.8},
+        {"gongjianshou_1", -90, -150, 0.8},
+        {"heihua_gongjianshou_2", -125, -150, 0.8},
+        {"heihua_gongjianshou_3", -70, -145, 0.8},
     },
     ["lancer"] = {
-        x = -45,
-        y = -120,
-        {"qibing_1", -10, 50, 0.8},
-        {"heihua_qibing_2", -10, 50, 0.8},
-        {"heihua_qibing_3", -10, 50, 0.8},
+        {"qibing_1", -70, -150, 0.8},
+        {"heihua_qibing_2", -100, -150, 0.8},
+        {"heihua_qibing_3", -50, -150, 0.8},
     },
     ["catapult"] = {
-        x = 50,
-        y = -80,
-        {  "toushiche", 0, 35, 1},
-        {"heihua_toushiche_2", 0, 35, 1},
-        {"heihua_toushiche_3", 0, 35, 1},
+        {  "toushiche", 30, -80, 1},
+        {"heihua_toushiche_2", 20, -100, 1},
+        {"heihua_toushiche_3", 20, -100, 1},
     },
 
     -----
     ["sentinel"] = {
-        x = -45,
-        y = -120,
-        {"shaobing_1", 0, 55, 0.8},
-        {"heihua_shaobing_2", 0, 55, 0.8},
-        {"heihua_shaobing_3", 0, 55, 0.8},
+        {"shaobing_1", -60, -140, 0.8},
+        {"heihua_shaobing_2", -110, -130, 0.8},
+        {"heihua_shaobing_3", -110, -130, 0.8},
     },
     ["crossbowman"] = {
-        x = -45,
-        y = -120,
-        {"nugongshou_1", 0, 45, 0.8},
-        {"heihua_nugongshou_2", 0, 50, 0.8},
-        {"heihua_nugongshou_3", 15, 45, 0.8},
+        {"nugongshou_1", -90, -160, 0.8},
+        {"heihua_nugongshou_2", -110, -160, 0.8},
+        {"heihua_nugongshou_3", -105, -150, 0.8},
     },
     ["horseArcher"] = {
-        x = -45,
-        y = -120,
-        {"youqibing_1", -15, 55, 0.8},
-        {"heihua_youqibing_2", -15, 55, 0.8},
-        {"heihua_youqibing_3", -15, 55, 0.8},
+        {"youqibing_1", -70, -140, 0.8},
+        {"heihua_youqibing_2", -70, -140, 0.8},
+        {"heihua_youqibing_3", -65, -140, 0.8},
     },
     ["ballista"] = {
-        x = 100,
-        y = -80,
-        {"nuche_1", 0, 30, 1},
-        {"heihua_nuche_2", 0, 30, 1},
-        {"heihua_nuche_3", 0, 30, 1},
+        {"nuche_1", 75, -100, 1},
+        {"heihua_nuche_2", 0, -130, 1},
+        {"heihua_nuche_3", 20, -120, 1},
     },
 }
 setmetatable(pve_soldier_config, {
     __index = soldier_config
 })
 local AUDIO_TAG = 11
+local function return_x_y_by_index(start_x, start_y, width, height, row_max, col_max, index)
+    local unit_height = height / row_max
+    local unit_width = width / col_max
+    local cur_row = row_max - index % row_max - 1
+    local cur_col = math.floor(index / row_max)
+    return start_x + (cur_col + 0.5) * unit_width, start_y + (cur_row + 0.5) * unit_height
+end
 function Corps:ctor(soldier, star, row, col, width, height, is_pve_battle, ui_replay)
     Corps.super.ctor(self, ui_replay)
-    local corps = self
     self.soldier = soldier
-    local config = special[self.soldier] or normal[self.soldier.."_"..star]
-    self.config = config
-    self.star = config.star
-    width = width or 90
-    height = height or 120
+    self.config = special[self.soldier] or normal[self.soldier.."_"..star]
+    self.star = self.config.star
+    
     local corps_config = is_pve_battle and pve_soldier_config or soldier_config
-    local pos_config = corps_config[self.soldier]
-    print(self.soldier, star)
-    dump(corps_config[self.soldier])
-    local start_x, start_y = pos_config.x, pos_config.y
-    local width, height = width * 2, height * 2
-    local function return_x_y_by_index(row_max, col_max, index)
-        local unit_height = height / row_max
-        local unit_width = width / col_max
-        local cur_row = row_max - index % row_max - 1
-        local cur_col = math.floor(index / row_max)
-        return start_x + (cur_col + 0.5) * unit_width, start_y + (cur_row + 0.5) * unit_height
-    end
+    local cur_config = corps_config[self.soldier][self.star]
+    local ani_name, start_x, start_y,_ = unpack(cur_config)
+
+    width = width or 180
+    height = height or 240
     local row_max = row or 4
     local col_max = col or 2
     local t = {}
-    local ani_name,_,_ = unpack(corps_config[self.soldier][self.star])
     for i = 0, col_max * row_max - 1 do
-        local armature = ccs.Armature:create(ani_name):addTo(corps):scale(1):pos(return_x_y_by_index(row_max, col_max, i))
+        local armature = ccs.Armature:create(ani_name):addTo(self):scale(1)
+        :pos(return_x_y_by_index(start_x, start_y, width, height, row_max, col_max, i))
         table.insert(t, armature)
     end
     self.corps = t
@@ -253,7 +208,7 @@ function Corps:move(time, x, y)
             cc.CallFunc:create(step),
             cc.DelayTime:create(0.5),
             cc.CallFunc:create(step)
-        }, 1)
+        }, self:Speed())
     speed:setTag(AUDIO_TAG)
     self:runAction(speed)
     return Corps.super.move(self, time, x, y)
@@ -275,6 +230,7 @@ function Corps:RefreshSpeed()
     end
 end
 return Corps
+
 
 
 

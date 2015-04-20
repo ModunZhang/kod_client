@@ -753,7 +753,7 @@ function GameUIReplay:NewEffect(soldier, is_left, x, y)
     effect:PlayAnimation("attack_1", 0)
 end
 function GameUIReplay:DecodeStateBySide(side, is_left)
-    local height = 90
+    local height = 130
     local len = 230
     local left_start = {x = -100, y = height}
     local left_end = {x = left_start.x + len, y = height}
@@ -1029,8 +1029,7 @@ function GameUIReplay:Performance(time, func)
                     end
                 end)
             })
-        )
-        ,  self:Speed())
+        ),  self:Speed())
     speed:setTag(PERFORM_TAG)
     self.timer_node:runAction(speed)
     return p
