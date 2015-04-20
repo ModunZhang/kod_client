@@ -50,24 +50,21 @@ function HelpEvent:UpdateData(json_data)
     local effective_events = Alliance_Manager:GetMyAlliance():GetCouldShowHelpEvents()
     local is_live = false
     for i,v in ipairs(effective_events) do
-        print("self id",self:Id(),"effective_events id",v:Id())
         if v:Id()==self:Id() then
             is_live = true
             break
         end
     end
-    print("#eventData.helpedMembers",#eventData.helpedMembers,"#self.eventData:HelpedMembers()=",#self.eventData:HelpedMembers())
     if is_live and #eventData.helpedMembers~= #self.eventData:HelpedMembers() and playerData.id == User:Id() then
         local new_help_member
         for i,new in ipairs(eventData.helpedMembers) do
-            new_help_member = new
+            new_help_member = clone(new)
             for k,old in ipairs(self.eventData:HelpedMembers()) do
                 if old==new then
                     new_help_member = nil
                     break
                 end
             end
-            print("new_help_member>>>",new_help_member)
             if new_help_member then
                 local event_name
                 if eventData.type == "buildingEvents" or eventData.type == "houseEvents" then
@@ -85,7 +82,8 @@ function HelpEvent:UpdateData(json_data)
                 elseif eventData.type == "productionTechEvents" then
                     event_name = Localize.productiontechnology_name[eventData.name]
                 end
-                GameGlobalUI:showTips(_("提示"),string.format(_("%s帮助升级%s成功"),new_help_member,event_name))
+                local name = Alliance_Manager:GetMyAlliance():GetMemeberById(new_help_member):Name()
+                GameGlobalUI:showTips(_("提示"),string.format(_("%s帮助升级%s成功"),name,event_name))
                 break
             end
         end
