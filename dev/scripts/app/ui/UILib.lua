@@ -729,11 +729,11 @@ local PVE = {
     [PVEDefine.KEEL] = {"image", "keel_189x86.png"},
     [PVEDefine.WARRIORS_TOMB] = {"image", "warriors_tomb_80x72.png"},
     [PVEDefine.OBELISK] = {"animation", "zhihuishi"},
-    [PVEDefine.ANCIENT_RUINS] = {"image", "ancient_ruins.png"},
+    [PVEDefine.ANCIENT_RUINS] = {"image", "alliance_shrine.png", 0.8},
     [PVEDefine.ENTRANCE_DOOR] = {"image", ALLIANCE_BUILDING.moonGate},
-    [PVEDefine.TREE] = {"image", "grass_tree_1_138x110.png"},
-    [PVEDefine.HILL] = {"image", "hill_228x146.png"},
-    [PVEDefine.LAKE] = {"image", "lake_220x174.png"},
+    [PVEDefine.TREE] = {"image", "tree_1_grassLand.png", 0.5, grassLand = "tree_1_grassLand.png", iceField = "tree_1_iceField.png", desert = "tree_1_desert.png"},
+    [PVEDefine.HILL] = {"image", "tree_1_grassLand.png", 0.5, grassLand = "hill_2_grassLand.png", iceField = "hill_2_iceField.png", desert = "hill_2_desert.png"},
+    [PVEDefine.LAKE] = {"image", "tree_1_grassLand.png", 0.5, grassLand = "lake_2_grassLand.png", iceField = "lake_2_iceField.png", desert = "lake_2_desert.png"},
 }
 local PVE_ANIMATION_FILES = {
     "animations/yewaiyindi.ExportJson",
