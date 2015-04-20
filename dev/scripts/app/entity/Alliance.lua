@@ -207,6 +207,17 @@ function Alliance:IteratorAllMembers(func)
         end
     end
 end
+
+function Alliance:GetAllianceArchon()
+    local archon = json.null
+    self:IteratorAllMembers(function(__,member)
+        if member:IsArchon() then
+            archon = member
+        end
+    end)
+    return archon
+end
+
 function Alliance:GetMemeberById(id)
     return self.members[id]
 end
@@ -1078,7 +1089,7 @@ function Alliance:CheckHelpDefenceMarchEventsHaveTarget(memeberId)
 end
 
 function Alliance:GetSelf()
-    return self:GetMemeberById(DataManager:getUserData()._id)
+    return self:GetMemeberById(User:Id())
 end
 
 --这里会取敌方的的村落信息，因为可能是占领的敌方村落

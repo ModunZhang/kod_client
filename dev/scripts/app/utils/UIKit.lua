@@ -330,7 +330,7 @@ end
 function UIKit:GetPlayerCommonIcon(key)
     local heroBg = display.newSprite("chat_hero_background.png")
     self:GetPlayerIconOnly(key):addTo(heroBg)
-        :align(display.CENTER, math.floor(heroBg:getContentSize().width/2), math.floor(heroBg:getContentSize().height/2)+5)
+        :align(display.CENTER,56,65)
     return heroBg
 end
 
