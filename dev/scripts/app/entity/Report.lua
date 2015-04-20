@@ -616,6 +616,20 @@ function Report:GetReportResult()
         return round[#round].isWin
     end
 end
+function Report:GetAttackDragonLevel()
+    local data = self.data
+    local attack = data.attackPlayerData
+    return attack.fightWithHelpDefenceTroop and attack.fightWithHelpDefenceTroop.dragon.level or 
+    attack.fightWithDefenceTroop and attack.fightWithDefenceTroop.dragon.level
+end
+function Report:GetDefenceDragonLevel()
+    local data = self.data
+    local helpDefencePlayerData = data.helpDefencePlayerData
+    local defencePlayerData = data.defencePlayerData
+
+    return helpDefencePlayerData and helpDefencePlayerData.dragon.level or 
+    defencePlayerData and defencePlayerData.dragon.level
+end
 return Report
 
 

@@ -374,7 +374,10 @@ function UIPageView:isTouchInViewRect_(event, rect)
 
     return cc.rectContainsPoint(viewRect, cc.p(event.x, event.y))
 end
-
+-- 代国强 get isOnTouch mark
+function UIPageView:IsOnTouch()
+    return self.isOnTouch
+end
 function UIPageView:onTouch_(event)
     if "began" == event.name
         and not self:isTouchInViewRect_(event) then
@@ -386,6 +389,7 @@ function UIPageView:onTouch_(event)
         self.event__ = event
         self:stopAllTransition()
         self.bDrag_ = false
+        self.isOnTouch = true -- 代国强
     elseif "moved" == event.name then
         if math.abs(event.x - self.event__.x) > 20 then
             self.bDrag_ = true
@@ -399,6 +403,7 @@ function UIPageView:onTouch_(event)
             self:resetPages_()
             self:onClick_(event)
         end
+        self.isOnTouch = false -- 代国强
     end
 
     return true

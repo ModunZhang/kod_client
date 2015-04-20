@@ -53,7 +53,6 @@ function GameUIBuff:InitBuffs(buffs,container,category)
             buff_type = v,
         }):addTo(container)
             :align(display.CENTER,origin_x + ((i-1)%3)*(margin_x+buff_width),origin_y - math.floor((i-1)/3)*gap_y)
-            :SetInfo("未解锁")
     end
 end
 
