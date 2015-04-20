@@ -34,10 +34,8 @@ function WidgetProgress:ctor(label_color, bg, bar, params)
     self.back_ground = progress_bg
 end
 function WidgetProgress:SetProgressInfo(time_label, percent)
-    if self.progress_label:getString() ~= time_label then
-        self.progress_label:setString(time_label)
-    end
-    self.progress_timer:setPercentage(percent)
+    self.progress_label:setString(time_label)
+    self.progress_timer:setPercentage(100)
     return self
 end
 function WidgetProgress:align(anchorPoint, x, y)

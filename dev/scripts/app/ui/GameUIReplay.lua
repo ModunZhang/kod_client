@@ -622,16 +622,10 @@ function GameUIReplay:NewDragon(is_left, is_pve_battle)
         }):align(display.CENTER, 45, 180)
             :addTo(self)
 
-        self.hp_progress = WidgetProgress.new(UIKit:hex2c3b(0xffedae), "progress_bar_262x16.png", "progress_bar_262x16.png", {
-            label_size = 14,
-            has_icon = false,
-            has_bg = false
-        }):addTo(self)
-            :align(display.LEFT_CENTER, -82, 158):scale(0.975, 1)
-        if not is_left then
-            self.hp_progress:pos(166, 158)
-            self.hp_progress:setScaleX(-0.975)
-        end
+        self.progress = display.newProgressTimer("progress_bar_262x16.png", display.PROGRESS_TIMER_BAR)
+        :addTo(self):align(display.LEFT_CENTER, is_left and -85 or 170, 158):setScaleX(is_left and 0.975 or -0.975)
+        self.progress:setBarChangeRate(cc.p(1,0))
+        self.progress:setMidpoint(cc.p(0,0))
 
         self.hp = cc.ui.UILabel.new({
             text = "",
@@ -682,7 +676,7 @@ function GameUIReplay:NewDragon(is_left, is_pve_battle)
     end
     function node:SetHp(cur, total)
         self.hp:setString(string.format("%d/%d", math.floor(cur), math.floor(total)))
-        self.hp_progress:SetProgressInfo("", cur / total * 100)
+        self.progress:setPercentage(cur / total * 100)
         return self
     end
     function node:SetReulst(is_win)
