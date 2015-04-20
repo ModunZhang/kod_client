@@ -588,7 +588,7 @@ function GameUIReplay:NewDragonBattle()
     local dragon_battle = ccs.Armature:create("paizi"):addTo(self.battle):align(display.CENTER, 275, 155)
 
     local left_bone = dragon_battle:getBone("Layer4")
-    local left_dragon = self:NewDragon(true):addTo(left_bone):pos(-400, -50)
+    local left_dragon = self:NewDragon(true):addTo(left_bone):pos(-360, -50)
     left_bone:addDisplay(left_dragon, 0)
     left_bone:changeDisplayWithIndex(0, true)
     self.left_dragon = left_dragon
@@ -596,13 +596,19 @@ function GameUIReplay:NewDragonBattle()
 
     local is_pve_battle = self.report.IsPveBattle
     local right_bone = dragon_battle:getBone("Layer5")
-    local right_dragon = self:NewDragon(nil, is_pve_battle):addTo(right_bone):pos(300, -82)
+    local right_dragon = self:NewDragon(nil, is_pve_battle):addTo(right_bone):pos(238, -82)
     right_bone:addDisplay(right_dragon, 0)
     right_bone:changeDisplayWithIndex(0, true)
     self.right_dragon = right_dragon
     self.right_dragon:SetHp(defend_dragon.hp, defend_dragon.hpMax)
     return dragon_battle
 end
+local dragon_ani_map = {
+    redDragon = {"red_long", 100, 0},
+    blueDragon = {"blue_long", 100, 0},
+    greenDragon = {"green_long", 100, 0},
+    blackDragon = {"heilong", 100, 50},
+}
 function GameUIReplay:NewDragon(is_left, is_pve_battle)
     local node = display.newNode()
     local game_ui_replay = self
@@ -656,29 +662,19 @@ function GameUIReplay:NewDragon(is_left, is_pve_battle)
         if not is_left then
             self.buff:pos(80, -55)
         end
-
-        local dragon_ani_map = {
-            redDragon = "red_long",
-            blueDragon = "blue_long",
-            greenDragon = "green_long",
-            blackDragon = "heilong",
-        }
-        local dragon_ani_name
+        local dragon_type = "redDragon"
         if is_left then
             local attack_dragon = game_ui_replay.report:GetFightAttackDragonRoundData()
-            dragon_ani_name = dragon_ani_map[attack_dragon.dragonType]
+            dragon_type = attack_dragon.dragonType
         else
             local defend_dragon = game_ui_replay.report:GetFightDefenceDragonRoundData()
-            dragon_ani_name = dragon_ani_map[defend_dragon.dragonType]
+            dragon_type = defend_dragon.dragonType
         end
-
-        local dragon = ccs.Armature:create(dragon_ani_name or "red_long")
-            :addTo(self):align(display.CENTER, 130, 60):scale(0.6)
+        local ani_name, left_x, right_x = unpack(dragon_ani_map[dragon_type])
+        local dragon = ccs.Armature:create(ani_name)
+            :addTo(self):align(display.CENTER, is_left and left_x or right_x, 60):scale(0.6)
         dragon:getAnimation():play("idle", -1, -1)
         dragon:setScaleX(is_left and 0.6 or -0.6)
-        if not is_left then
-            dragon:pos(-45, 60)
-        end
     end
     function node:SetName()
         return self
@@ -1042,6 +1038,7 @@ end
 
 
 return GameUIReplay
+
 
 
 

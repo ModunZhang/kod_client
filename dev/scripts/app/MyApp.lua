@@ -139,12 +139,13 @@ function MyApp:retryConnectServer(need_disconnect)
     if need_disconnect or type(need_disconnect) == "nil" then
         NetManager:disconnect()
     end
-    if NetManager.m_logicServer.host and NetManager.m_logicServer.port then
+    if NetManager.m_logicServer.host and NetManager.m_logicServer.port and NetManager.m_was_inited_game then
         UIKit:WaitForNet()
         scheduler.performWithDelayGlobal(function()
             NetManager:getConnectLogicServerPromise():next(function()
                 return NetManager:getLoginPromise()
             end):catch(function(err)
+                dump(err)
                 local content, title = err:reason()
                 if title == 'timeout' then
                     UIKit:showMessageDialog(_("错误"), _("服务器连接断开,请检测你的网络环境后重试!"), function()

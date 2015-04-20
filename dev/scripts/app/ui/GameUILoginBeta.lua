@@ -202,11 +202,10 @@ function GameUILoginBeta:loginAction()
 end
 
 function GameUILoginBeta:connectGateServer()
-    NetManager:getConnectGateServerPromise():next(function()
+    NetManager:getConnectGateServerPromise():done(function()
         self:setProgressPercent(80)
         self:getLogicServerInfo()
     end):catch(function(err)
-        dump(err)
         self:showError(_("连接网关服务器失败!"),function()
             self:performWithDelay(function()
                 self:loginAction()
@@ -243,7 +242,7 @@ end
 
 
 function GameUILoginBeta:connectLogicServer()
-    NetManager:getConnectLogicServerPromise():next(function()
+    NetManager:getConnectLogicServerPromise():done(function()
         self:login()
     end):catch(function(err)
         self:showError(_("连接游戏服务器失败!"),function()
@@ -256,7 +255,7 @@ function GameUILoginBeta:connectLogicServer()
 end
 
 function GameUILoginBeta:login()
-    NetManager:getLoginPromise():next(function(response)
+    NetManager:getLoginPromise():done(function(response)
         ext.market_sdk.onPlayerLogin(User:Id(),User:Name(),User:ServerName())
         ext.market_sdk.onPlayerLevelUp(User:Level())
         self:performWithDelay(function()

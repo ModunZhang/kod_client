@@ -27,16 +27,14 @@ function AllianceManager:HaveEnemyAlliance()
 end
 
 function AllianceManager:OnUserDataChanged(user_data,time,deltaData)
-    local alliance = user_data.alliance
+    local allianceId = user_data.allianceId
     local my_alliance = self:GetMyAlliance()
-    if alliance == json.null or not alliance or not alliance.id then
+    if allianceId == json.null or not allianceId then
         my_alliance:Reset()
         DataManager:setUserAllianceData(json.null)
         DataManager:setEnemyAllianceData(json.null) -- 清除敌方联盟数据
     else
-        my_alliance:SetId(alliance.id)
-        my_alliance:SetName(alliance.name)
-        my_alliance:SetTag(alliance.tag)
+        my_alliance:SetId(allianceId)
     end
 end
 
