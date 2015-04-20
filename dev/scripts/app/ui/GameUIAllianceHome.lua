@@ -14,6 +14,7 @@ local WidgetNumberTips = import("..widget.WidgetNumberTips")
 local WidgetHomeBottom = import("..widget.WidgetHomeBottom")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetAutoOrder = import("..widget.WidgetAutoOrder")
+local WidgetMarchEvents = import("app.widget.WidgetMarchEvents")
 local GameUIAllianceHome = UIKit:createUIClass('GameUIAllianceHome')
 local buildingName = GameDatas.AllianceInitData.buildingName
 local Alliance_Manager = Alliance_Manager
@@ -53,6 +54,13 @@ function GameUIAllianceHome:onEnter()
     self.visible_count = 1
     self.top = self:CreateTop()
     self.bottom = self:CreateBottom()
+
+
+    local ratio = self.bottom:getScale()
+    local rect1 = self.chat:getCascadeBoundingBox()
+    local x, y = rect1.x, rect1.y + rect1.height - 2
+    local march = WidgetMarchEvents.new(self.alliance, ratio):addTo(self):pos(x, y)
+
     self:AddMapChangeButton()
     self:InitArrow()
     if self.top then

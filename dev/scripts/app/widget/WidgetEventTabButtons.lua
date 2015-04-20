@@ -580,18 +580,13 @@ function WidgetEventTabButtons:PromiseOfHide()
     end)
 end
 function WidgetEventTabButtons:PromiseOfShow()
-    if not self:IsTabEnable(self:GetCurrentTab()) then
-        return cocos_promise.defer()
+    if self:IsTabEnable(self:GetCurrentTab()) then
+        self:Reload()
+        return cocos_promise.promiseOfMoveTo(self.node, 0, 0, 0.15, "sineIn"):next(function()
+            self.arrow:flipY(false)
+        end)
     end
-    local size = self.back_ground:getContentSize()
-    self.tab_buttons:setPositionY(size.height)
-    self:Lock(true)
-    self:Reload()
-    self.node:stopAllActions()
-    return cocos_promise.promiseOfMoveTo(self.node, 0, 0, 0.15, "sineIn"):next(function()
-        self.arrow:flipY(false)
-        self:Lock(false)
-    end)
+    return cocos_promise.defer()
 end
 function WidgetEventTabButtons:GetTabByKey(key)
     return self.tab_map[key]
@@ -608,12 +603,10 @@ function WidgetEventTabButtons:Reload()
     self:Load()
 end
 function WidgetEventTabButtons:Reset()
-    for k, v in pairs(self.item_array) do
-        v:removeFromParent()
-    end
     for k, v in pairs(self.tab_map) do
         v:Enable(self:IsTabEnable(k)):SetHighLight(false)
     end
+    self.back_ground:removeAllChildren()
     self.item_array = {}
     self.node:stopAllActions()
     self:ResizeBelowHorizon(0)
@@ -962,7 +955,7 @@ function WidgetEventTabButtons:OnProductionTechnologyEventDataRefresh(changed_ma
     if changed_map.added and #changed_map.added > 0 then
         self:EventChangeOn("technology", true)
     end
-     if changed_map.removed and #changed_map.removed > 0 then
+    if changed_map.removed and #changed_map.removed > 0 then
         app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
         self:EventChangeOn("technology")
     end
@@ -991,6 +984,7 @@ function WidgetEventTabButtons:GetProductionTechnologyEventProgressInfo(event)
     return _("研发") .. event:Entity():GetLocalizedName() .. " " .. GameUtils:formatTimeStyle1(event:GetTime()),event:GetPercent()
 end
 return WidgetEventTabButtons
+
 
 
 

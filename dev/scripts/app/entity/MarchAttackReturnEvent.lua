@@ -3,7 +3,7 @@
 -- Date: 2014-12-19 17:07:03
 --
 local MarchAttackEvent = import(".MarchAttackEvent")
-local MarchAttackReturnEvent = class("MarchAttackReturnEvent",MarchAttackEvent)
+local MarchAttackReturnEvent = class("MarchAttackReturnEvent", MarchAttackEvent)
 
 function MarchAttackReturnEvent:GetPlayerRole()
 	local Me_Id = User:Id()
