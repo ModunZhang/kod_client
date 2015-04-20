@@ -106,12 +106,34 @@ function CommonUpgradeUI:InitCommonPart()
     self:InitNextLevelEfficiency()
     self:SetBuildingLevel()
 end
+local ani_map = {
+    mill = 1,
+    foundry = 1,
+    watchTower = 1,
+    barracks = 2,
+}
 function CommonUpgradeUI:ReloadBuildingImage()
     if self.building_image then
         self.building_image:removeFromParent()
     end
-    local build_png = SpriteConfig[self.building:GetType()]:GetConfigByLevel(self.building:GetLevel()).png
-    self.building_image = display.newSprite(build_png, 0, 0):addTo(self):pos(display.cx-196, display.top-158)
+    local config = SpriteConfig[self.building:GetType()]:GetConfigByLevel(self.building:GetLevel())
+    self.building_image = display.newSprite(config.png, 0, 0):addTo(self):pos(display.cx-196, display.top-158)
+    if ani_map[self.building:GetType()] then
+        local p = self.building_image:getAnchorPointInPoints()
+        for i,v in ipairs(config.decorator) do
+            if ani_map[self.building:GetType()] == i then
+                if v.deco_type == "image" then
+                    display.newSprite(v.deco_name):addTo(self.building_image):pos(p.x + v.offset.x, p.y + v.offset.y)
+                elseif v.deco_type == "animation" then
+                    local offset = v.offset
+                    local armature = ccs.Armature:create(v.deco_name):addTo(self.building_image):
+                        scale(v.scale or 1):align(display.CENTER, offset.x or p.x, offset.y or p.y)
+                    armature:getAnimation():setSpeedScale(2)
+                    armature:getAnimation():playWithIndex(0)
+                end
+            end
+        end
+    end
     if self.building:GetType()=="watchTower" or self.building:GetType()=="tower" then
         self.building_image:setScale(150/self.building_image:getContentSize().height)
     else
@@ -772,6 +794,7 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
 
 
 
