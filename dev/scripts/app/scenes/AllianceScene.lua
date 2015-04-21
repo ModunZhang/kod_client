@@ -71,6 +71,7 @@ function AllianceScene:GotoLogicPosition(x, y)
     return self:GetSceneLayer():PromiseOfMove(point.x, point.y)
 end
 function AllianceScene:OnTouchClicked(pre_x, pre_y, x, y)
+    if not AllianceScene.super.OnTouchClicked(self, pre_x, pre_y, x, y) then return end
     if self.util_node:getNumberOfRunningActions() > 0 then return end
     local building = self:GetSceneLayer():GetClickedObject(x, y)
     if building then
@@ -78,7 +79,6 @@ function AllianceScene:OnTouchClicked(pre_x, pre_y, x, y)
         self.util_node:performWithDelay(function()
             app:lockInput(false)
         end, 0.5)
-        self.event_manager:RemoveAllTouches()
 
         app:GetAudioManager():PlayeEffectSoundWithKey("HOME_PAGE")
         if iskindof(building, "Sprite") then
