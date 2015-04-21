@@ -78,6 +78,34 @@ function BelvedereEntity:GetTitle()
 		return self:WithObject():Stage():GetDescStageName()
 	end
 end
+-- 获取区域地图上事件显示的前缀
+function BelvedereEntity:GetEventPrefix()
+	if self:GetType() == self.ENTITY_TYPE.HELPTO then
+		return  string.format(_("正在协防 %s (%s)"),self:WithObject().beHelpedPlayerData.name,self:GetDestinationLocation())
+	elseif self:GetType() == self.ENTITY_TYPE.COLLECT then
+		return string.format(_("正在采集%sLv%s (%s)"), 
+			Localize.village_name[self:WithObject():VillageData().name],
+			self:WithObject():VillageData().level,
+			self:GetDestinationLocation())
+	elseif self:GetType() == self.ENTITY_TYPE.MARCH_OUT then
+		local march_type = self:WithObject():MarchType()
+		if march_type == 'shrine' then 
+			return string.format(_("进军圣地 (%s)"),self:GetDestinationLocation())
+		elseif  march_type == 'helpDefence' then
+			return string.format(_("前往协防 %s(%s)"),self:GetDestination(),self:GetDestinationLocation())
+		else
+			return string.format(_("正在进攻 %s(%s)"),self:GetDestination(),self:GetDestinationLocation())
+		end
+	elseif self:GetType() == self.ENTITY_TYPE.MARCH_RETURN then
+		return string.format(_("返回中 (%s)"),self:GetDestinationLocation())
+	elseif self:GetType() == self.ENTITY_TYPE.STRIKE_OUT then
+		return string.format(_("正在突袭 %s(%s)"),self:GetDestination(),self:GetDestinationLocation())
+	elseif self:GetType() == self.ENTITY_TYPE.STRIKE_RETURN then
+		return string.format(_("返回中 (%s)"),self:GetDestinationLocation())
+	elseif self:GetType() == self.ENTITY_TYPE.SHIRNE then
+		return string.format(_("圣地战中 %s(%s)"),self:WithObject():Stage():GetDescStageName(),self:GetDestinationLocation())
+	end
+end
 
 function BelvedereEntity:GetDestination()
 	if self:GetType() == self.ENTITY_TYPE.HELPTO then

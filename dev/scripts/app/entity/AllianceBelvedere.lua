@@ -97,13 +97,22 @@ function AllianceBelvedere:Reset()
 	self:ClearAllListener()
 end
 
---返回是否有瞭望塔事件发生
+--返回是否有瞭望塔事件发生 和瞭望塔事件数量(包含协防事件)
 function AllianceBelvedere:HasEvent()
-	if self:GetAlliance():IsDefault() then return false end
-	return #self:GetMyEvents() > 0 or #self:GetOtherEvents() > 0 
+	if self:GetAlliance():IsDefault() then return false,0 end
+	local hasMyEvents,my_count = self:HasMyEvents()
+	local other_count = #self:GetOtherEvents()
+	return hasMyEvents or other_count > 0,my_count + other_count
 end
 
-function AllianceBelvedere:FastCheckHasEvent_()
+--返回是否有"我的事件"
+function  AllianceBelvedere:HasMyEvents()
+	local count = #self:GetMyEvents()
+	return count > 0,count
+end
+
+function AllianceBelvedere:FastCheckHasEvent()
+	PRINT_DEPRECATED("AllianceBelvedere:FastCheckHasEvent or TODO:")
 end
 
 function AllianceBelvedere:OnAttackMarchEventTimerChanged(attackMarchEvent)
@@ -264,6 +273,7 @@ end
 
 function AllianceBelvedere:CallEventsChangedListeners(LISTEN_TYPE,args)
     self:NotifyListeneOnType(LISTEN_TYPE, function(listener)
+		print(LISTEN_TYPE,self.LISTEN_TYPE[LISTEN_TYPE],listener.__cname,type(args))
         listener[AllianceBelvedere.LISTEN_TYPE[LISTEN_TYPE]](listener,unpack(args))
     end)
 end

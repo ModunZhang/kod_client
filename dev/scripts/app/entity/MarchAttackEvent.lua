@@ -74,6 +74,14 @@ function MarchAttackEvent:GetDefenceData()
 	end
 end
 
+function MarchAttackEvent:GetTotalTime()
+	return self:ArriveTime() - self:StartTime()
+end
+
+function MarchAttackEvent:GetPercent()
+	return (1 - self:GetTime() / self:GetTotalTime()) * 100
+end
+
 function MarchAttackEvent:UpdateData(json_data)
 	self:SetId(json_data.id or "")
 	self:SetStartTime(json_data.startTime and json_data.startTime/1000.0 or 0)
