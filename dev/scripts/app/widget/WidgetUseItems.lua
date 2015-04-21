@@ -232,11 +232,6 @@ function WidgetUseItems:OpenBuffDialog( item )
                 buff_status_label:setString(_("未激活"))
                 buff_status_label:setColor(UIKit:hex2c4b(0x403c2f))
             end
-        else
-            if buff_status_label:getString() ~= _("未激活") then
-                buff_status_label:setString(_("未激活"))
-                buff_status_label:setColor(UIKit:hex2c4b(0x403c2f))
-            end
         end
     end
     function dialog:OnItemEventChanged( changed_map )
