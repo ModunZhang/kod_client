@@ -299,15 +299,24 @@ function GameUIAlliancePalace:InitInfoPart()
         size = 20,
         color = 0xb7af8e,
     }):align(display.RIGHT_CENTER, title_bg:getContentSize().width-20, title_bg:getContentSize().height/2):addTo(title_bg)
+
     -- 草地
-    display.newSprite("grass_ground1_800x560.png")
-        :align(display.CENTER, 87, 220):addTo(bg1):scale(0.2)
-    -- 雪地
-    display.newSprite("icefield1_800x560.png")
-        :align(display.CENTER, 272, 220):addTo(bg1):scale(0.2)
+    local grass_box = display.newSprite("box_132x132_1.png")
+        :align(display.CENTER, 87, 215):addTo(bg1)
+    local box_size = grass_box:getContentSize()
+    local grass = display.newSprite("icon_grass_132x132.png")
+        :align(display.CENTER, box_size.width/2,box_size.height/2):addTo(grass_box)
     -- 沙漠
-    display.newSprite("desert1_800x560.png")
-        :align(display.CENTER, 462, 220):addTo(bg1):scale(0.2)
+    local icefield_box = display.newSprite("box_132x132_1.png")
+        :align(display.CENTER, 272, 215):addTo(bg1)
+    local icefield = display.newSprite("icon_icefield_132x132.png")
+        :align(display.CENTER, box_size.width/2,box_size.height/2):addTo(icefield_box)
+    -- 雪地
+    local desert_box = display.newSprite("box_132x132_1.png")
+        :align(display.CENTER, 462, 215):addTo(bg1)
+    local desert = display.newSprite("icon_desert_132x132.png")
+        :align(display.CENTER, box_size.width/2,box_size.height/2):addTo(desert_box)
+
     -- 地形介绍
     local terian_intro = UIKit:ttfLabel({
         -- text = _("草地地形能产出绿龙装备材料，每当在自己的领土上完成任务，或者击杀一点战斗力的敌方单位，就由一定几率获得装备材料。"),
