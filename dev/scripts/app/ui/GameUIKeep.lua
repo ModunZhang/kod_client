@@ -281,38 +281,48 @@ function GameUIKeep:CreateModifyCityNameWindow()
 end
 
 function GameUIKeep:CreateChangeTerrainWindow()
-    local layer = WidgetPopDialog.new(450,_("城市地形修改")):addTo(self:GetView())
+    local layer = WidgetPopDialog.new(450,_("城市地形修改")):addTo(self,201)
     local body = layer:GetBody()
-    local bg1 = WidgetUIBackGround.new({
-        width = 580,
-        height = 264,
-        top_img = "back_ground_580x12_top.png",
-        bottom_img = "back_ground_580X12_bottom.png",
-        mid_img = "back_ground_580X1_mid.png",
-        u_height = 12,
-        b_height = 12,
-        m_height = 1,
-    }):align(display.CENTER,304, 294)
+    
+    local bg1 = display.newScale9Sprite("back_ground_104x132.png",x,y,cc.size(580,264),cc.rect(10,10,84,112))
+        :addTo(body):align(display.CENTER,304, 294)
+    -- local bg1 = WidgetUIBackGround.new({
+    --     width = 580,
+    --     height = 264,
+    --     top_img = "back_ground_580x12_top.png",
+    --     bottom_img = "back_ground_580X12_bottom.png",
+    --     mid_img = "back_ground_580X1_mid.png",
+    --     u_height = 12,
+    --     b_height = 12,
+    --     m_height = 1,
+    -- }):align(display.CENTER,304, 294)
 
-    bg1:addTo(body)
+    -- bg1:addTo(body)
 
     self.terrain_eff_label = cc.ui.UILabel.new({
         size = 18,
-        text = "草地地形能提升50% 绿龙的活力回复速度",
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_LEFT,
         color = UIKit:hex2c3b(0x514d3e)
     }):addTo(bg1):align(display.CENTER,304,30)
 
+
     -- 草地
-    display.newSprite("grass_ground1_800x560.png")
-        :align(display.CENTER, 110, 180):addTo(bg1):scale(0.2)
-    -- 雪地
-    display.newSprite("desert1_800x560.png")
-        :align(display.CENTER, 295, 180):addTo(bg1):scale(0.2)
+    local grass_box = display.newSprite("box_132x132_1.png")
+        :align(display.CENTER, 110, 180):addTo(bg1)
+    local box_size = grass_box:getContentSize()
+    local grass = display.newSprite("icon_grass_132x132.png")
+        :align(display.CENTER, box_size.width/2,box_size.height/2):addTo(grass_box)
     -- 沙漠
-    display.newSprite("icefield1_800x560.png")
-        :align(display.CENTER, 485, 180):addTo(bg1):scale(0.2)
+    local icefield_box = display.newSprite("box_132x132_1.png")
+        :align(display.CENTER, 295, 180):addTo(bg1)
+    local icefield = display.newSprite("icon_icefield_132x132.png")
+        :align(display.CENTER, box_size.width/2,box_size.height/2):addTo(icefield_box)
+    -- 雪地
+    local desert_box = display.newSprite("box_132x132_1.png")
+        :align(display.CENTER, 482, 180):addTo(bg1)
+    local desert = display.newSprite("icon_desert_132x132.png")
+        :align(display.CENTER, box_size.width/2,box_size.height/2):addTo(desert_box)
 
     local checkbox_image = {
         off = "checkbox_unselected.png",
@@ -332,7 +342,23 @@ function GameUIKeep:CreateChangeTerrainWindow()
         :setButtonsLayoutMargin(0, 130, 0, 0)
         :onButtonSelectChanged(function(event)
             -- self.selected_rebuild_to_building = rebuild_list[event.selected]
-            end)
+            local t_name = {
+                {
+                    _("草地"),
+                    _("绿龙"),
+                },
+                {
+                    _("雪地"),
+                    _("蓝龙"),
+                },
+                {
+                    _("沙漠"),
+                    _("红龙"),
+                },
+            }
+            self.terrain_eff_label:setString(string.format(_("%s地形能提升50%% %s的活力回复速度"),t_name[event.selected][1],t_name[event.selected][2]))
+
+        end)
         :align(display.CENTER, 80 , 50)
         :addTo(bg1)
 
@@ -340,33 +366,33 @@ function GameUIKeep:CreateChangeTerrainWindow()
     local default_index = 0
     if terrain == "grassLand" then
         default_index = 1
-    elseif terrain == "desert" then
-        default_index = 2
     elseif terrain == "iceField" then
+        default_index = 2
+    elseif terrain == "desert" then
         default_index = 3
     end
 
 
     group:getButtonAtIndex(default_index):setButtonSelected(true)
 
-    local bg2 = WidgetUIBackGround2.new(140)
-    bg2:addTo(body):align(display.CENTER, 304, 84)
+    local bg2 = display.newScale9Sprite("background_568x556.png",x,y,cc.size(568,140),cc.rect(10,10,548,536))
+        :addTo(body):align(display.CENTER, 304, 84)
 
-    local prop_bg = display.newSprite("background_prop_100_100.png")
-        :align(display.LEFT_CENTER, 10, 82):addTo(bg2)
+    local prop_bg = display.newSprite("box_118x118.png")
+        :align(display.LEFT_CENTER, 10, 70):addTo(bg2)
     display.newSprite("change_city_name.png")
-        :align(display.CENTER, 50, 50):addTo(prop_bg):scale(0.5)
-    local num_bg = display.newSprite("number_bg_100x40.png")
-        :align(display.CENTER_TOP, 50, 12):addTo(prop_bg)
+        :align(display.CENTER, 59, 59):addTo(prop_bg):scale(0.7)
+    local num_bg = display.newSprite("back_ground_118x36.png")
+        :align(display.CENTER, 480, 100):addTo(bg2)
     local gem_img = display.newSprite("gem_icon_62x61.png")
-        :align(display.LEFT_CENTER, 10, 20):addTo(num_bg):scale(0.4)
+        :align(display.LEFT_CENTER, -4, 16):addTo(num_bg):scale(0.7)
     self.number = cc.ui.UILabel.new({
         size = 20,
         text = intInit.changeTerrainNeedGemCount.value,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_LEFT,
         color = UIKit:hex2c3b(0x423f32)
-    }):addTo(num_bg):align(display.LEFT_CENTER,40,20)
+    }):addTo(num_bg):align(display.CENTER,60,18)
 
     local label_1 = cc.ui.UILabel.new(
         {
@@ -375,7 +401,7 @@ function GameUIKeep:CreateChangeTerrainWindow()
             font = UIKit:getFontFilePath(),
             size = 22,
             color = UIKit:hex2c3b(0x514d3e)
-        }):align(display.LEFT_CENTER, 120, 100)
+        }):align(display.LEFT_CENTER, 140, 110)
         :addTo(bg2)
 
     local label_2 = cc.ui.UILabel.new(
@@ -384,9 +410,9 @@ function GameUIKeep:CreateChangeTerrainWindow()
             text = _("提供兵种招募，升级增加每次招募的最大数量"),
             font = UIKit:getFontFilePath(),
             size = 20,
-            dimensions = cc.size(300,100),
+            dimensions = cc.size(260,100),
             color = UIKit:hex2c3b(0x797154)
-        }):align(display.LEFT_TOP, 120, 70)
+        }):align(display.LEFT_TOP, 140, 80)
         :addTo(bg2)
     -- 回复按钮
     local buy_label = cc.ui.UILabel.new({
@@ -398,10 +424,10 @@ function GameUIKeep:CreateChangeTerrainWindow()
 
     buy_label:enableShadow()
     WidgetPushButton.new(
-        {normal = "green_btn_up_142x39.png", pressed = "green_btn_down_142x39.png"},
+        {normal = "green_btn_up_148x58.png", pressed = "green_btn_down_148x58.png"},
         {scale9 = false}
     ):setButtonLabel(buy_label)
-        :addTo(bg2):align(display.CENTER, 480, 100)
+        :addTo(bg2):align(display.CENTER, 480, 45)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 if User:GetGemResource():GetValue()<intInit.changeTerrainNeedGemCount.value then
@@ -438,11 +464,11 @@ function GameUIKeep:CreateChangeTerrainWindow()
                         self:PlayCloudAnimation()
                     end)
                 elseif selected_index == 2 then
-                    NetManager:getChangeToDesertPromise():done(function()
+                    NetManager:getChangeToIceFieldPromise():done(function()
                         self:PlayCloudAnimation()
                     end)
                 elseif selected_index == 3 then
-                    NetManager:getChangeToIceFieldPromise():done(function()
+                    NetManager:getChangeToDesertPromise():done(function()
                         self:PlayCloudAnimation()
                     end)
                 end
@@ -503,6 +529,9 @@ end
 
 
 return GameUIKeep
+
+
+
 
 
 

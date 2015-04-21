@@ -178,7 +178,7 @@ function MapLayer:setPosition(position)
     local right_top_pos, is_collide2 = self:GetRightTopPositionWithConstrain(x, y)
     local rx = x >= 0 and min(left_bottom_pos.x, right_top_pos.x) or max(left_bottom_pos.x, right_top_pos.x)
     local ry = y >= 0 and min(left_bottom_pos.y, right_top_pos.y) or max(left_bottom_pos.y, right_top_pos.y)
-    super.setPosition(self, cc.p(floor(rx), floor(ry)))
+    super.setPosition(self, cc.p(rx, ry))
     self:OnSceneMove(is_collide1 or is_collide2)
 end
 function MapLayer:GetLeftBottomPositionWithConstrain(x, y)
