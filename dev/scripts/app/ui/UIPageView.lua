@@ -79,7 +79,7 @@ function UIPageView:ctor(params)
     self.padding_ = params.padding or {left = 0, right = 0, top = 0, bottom = 0}
     self.bCirc = params.bCirc or false
     self.nBounce = params.nBounce or false -- 代国强 true 滑动不超出边界
-    self.gap = params.gap or gap -- 代国强 滑动距离设置
+    self.gap = params.gap or 20 -- 代国强 滑动距离设置
     self.speed_limit = params.speed_limit or 10 -- 代国强 滑动距离设置
 
     self:setClippingRegion(self.viewRect_)
@@ -597,9 +597,6 @@ function UIPageView:scroll(dis)
             page = self:getNextPage(false)
             if not page then
                 page = false
-                if self.nBounce then -- 代国强
-                    return
-                end
             end
             table.insert(threePages, page)
             table.insert(threePages, self.pages_[self.curPageIdx_])
@@ -607,27 +604,16 @@ function UIPageView:scroll(dis)
             table.insert(threePages, false)
             table.insert(threePages, self.pages_[self.curPageIdx_])
             table.insert(threePages, self:getNextPage(true))
-            if not  self:getNextPage(true) then
-                if self.nBounce then -- 代国强
-                    return
-                end
-            end
         end
     else
         page = self:getNextPage(false)
         local posX, posY = self.pages_[self.curPageIdx_]:getPosition()
         if not page then
             page = false
-            if posX > self.viewRect_.x and self.nBounce then -- 代国强
-                return
-            end
         end
         table.insert(threePages, page)
         table.insert(threePages, self.pages_[self.curPageIdx_])
         table.insert(threePages, self:getNextPage(true))
-        if not self:getNextPage(true) and posX < self.viewRect_.x and self.nBounce then-- 代国强
-            return
-        end
     end
 
     self:scrollLCRPages(threePages, dis)
@@ -638,7 +624,13 @@ function UIPageView:scrollLCRPages(threePages, dis)
     local pageL = threePages[1]
     local page = threePages[2]
     local pageR = threePages[3]
-
+    if not self.bCirc then
+        if dis<0 and not pageR and self.nBounce then -- 代国强 回弹返回缩小
+            dis = -0.2
+        elseif dis>0 and not pageL and "boolean" == type(pageL) and self.nBounce then
+            dis = 0.2
+        end
+    end
     -- current
     posX, posY = page:getPosition()
     posX = posX + dis
@@ -824,5 +816,7 @@ end
 
 
 return UIPageView
+
+
 
 
