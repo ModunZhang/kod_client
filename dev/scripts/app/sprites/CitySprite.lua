@@ -10,11 +10,11 @@ end
 function CitySprite:GetSpriteFile()
     local config
     if self.is_my_alliance then
-        config = SpriteConfig["keep"]
+        config = SpriteConfig["my_keep"]
     else
         config = SpriteConfig["other_keep"]
     end
-    return config:GetConfigByLevel(self:GetEntity():GetAllianceMemberInfo():KeepLevel()).png, 0.3
+    return config:GetConfigByLevel(self:GetEntity():GetAllianceMemberInfo():KeepLevel()).png
 end
 function CitySprite:GetSpriteOffset()
     return self:GetLogicMap():ConvertToLocalPosition(0, 0)

@@ -169,6 +169,7 @@ function MapLayer:GotoMapPositionInMiddle(x, y)
     local current_x, current_y = self:getPosition()
     self:setPosition(cc.p(current_x + dx, current_y + dy))
 end
+local floor = math.floor
 function MapLayer:setPosition(position)
     local x, y = position.x, position.y
     local super = getmetatable(self)
@@ -177,7 +178,7 @@ function MapLayer:setPosition(position)
     local right_top_pos, is_collide2 = self:GetRightTopPositionWithConstrain(x, y)
     local rx = x >= 0 and min(left_bottom_pos.x, right_top_pos.x) or max(left_bottom_pos.x, right_top_pos.x)
     local ry = y >= 0 and min(left_bottom_pos.y, right_top_pos.y) or max(left_bottom_pos.y, right_top_pos.y)
-    super.setPosition(self, cc.p(rx, ry))
+    super.setPosition(self, cc.p(floor(rx), floor(ry)))
     self:OnSceneMove(is_collide1 or is_collide2)
 end
 function MapLayer:GetLeftBottomPositionWithConstrain(x, y)

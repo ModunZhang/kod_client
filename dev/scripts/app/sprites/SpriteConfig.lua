@@ -81,6 +81,12 @@ create_building_config(
     ,create_config(level(2), level(5), "other_keep_2.png", offset(60, 245), scale(1))
     ,create_config(level(6), MAX_LEVEL, "other_keep_3.png", offset(60, 285), scale(1))
 )
+create_building_config(
+    "my_keep"
+    ,create_config(MIN_LEVEL, level(1), "my_keep_1.png", offset(60, 225), scale(1))
+    ,create_config(level(2), level(5), "my_keep_2.png", offset(60, 245), scale(1))
+    ,create_config(level(6), MAX_LEVEL, "my_keep_3.png", offset(60, 285), scale(1))
+)
 
 create_building_config(
     "keep"
