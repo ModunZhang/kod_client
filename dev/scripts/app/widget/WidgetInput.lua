@@ -4,11 +4,12 @@
 --
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
+local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 
 local WidgetInput = class("WidgetInput", WidgetPopDialog)
 
 function WidgetInput:ctor(params)
-    WidgetInput.super.ctor(self,200,"调整数量",display.top-400)
+    WidgetInput.super.ctor(self,210,"调整数量",display.top-400)
     self:DisableCloseBtn()
     local body = self.body
     local max = params.max
@@ -59,6 +60,17 @@ function WidgetInput:ctor(params)
         end
     end
 
+    local bg1 = WidgetUIBackGround.new({
+        width = 558,
+        height = 90,
+        top_img = "back_ground_580x12_top.png",
+        bottom_img = "back_ground_580X12_bottom.png",
+        mid_img = "back_ground_580X1_mid.png",
+        u_height = 12,
+        b_height = 12,
+        m_height = 1,
+    }):align(display.CENTER,304, 130):addTo(body)
+
     -- soldier current
     self.editbox = cc.ui.UIInput.new({
         UIInputType = 1,
@@ -95,7 +107,7 @@ function WidgetInput:ctor(params)
                 callback(self.current_value)
                 self:LeftButtonClicked()
             end
-        end):align(display.CENTER, editbox:getPositionX(),editbox:getPositionY()-50):addTo(body)
+        end):align(display.CENTER, editbox:getPositionX(),editbox:getPositionY()-80):addTo(body)
 end
 function WidgetInput:SetMax( max )
     self.max = max
