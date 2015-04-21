@@ -78,6 +78,7 @@ function UIPageView:ctor(params)
     self.rowSpace_ = params.rowSpace or 0
     self.padding_ = params.padding or {left = 0, right = 0, top = 0, bottom = 0}
     self.bCirc = params.bCirc or false
+    self.nBounce = params.nBounce or false -- 代国强 true 滑动不超出边界
 
     self:setClippingRegion(self.viewRect_)
     -- self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(...)
@@ -85,8 +86,8 @@ function UIPageView:ctor(params)
     --  end)
     self:setTouchEnabled(true)
     self:addNodeEventListener(cc.NODE_TOUCH_EVENT, function (event)
-            return self:onTouch_(event)
-        end)
+        return self:onTouch_(event)
+    end)
 end
 
 -- start --
@@ -94,16 +95,16 @@ end
 --------------------------------
 -- 创建一个新的页面控件项
 -- @function [parent=#UIPageView] newItem
--- @return UIPageViewItem#UIPageViewItem 
+-- @return UIPageViewItem#UIPageViewItem
 
 -- end --
 
 function UIPageView:newItem()
     local item = UIPageViewItem.new()
     local itemW = (self.viewRect_.width - self.padding_.left - self.padding_.right
-                - self.columnSpace_*(self.column_ - 1)) / self.column_
+        - self.columnSpace_*(self.column_ - 1)) / self.column_
     local itemH = (self.viewRect_.height - self.padding_.top - self.padding_.bottom
-                - self.rowSpace_*(self.row_ - 1)) / self.row_
+        - self.rowSpace_*(self.row_ - 1)) / self.row_
     -- item:setContentSize(self.viewRect_.width/self.column_, self.viewRect_.height/self.row_)
     item:setContentSize(itemW, itemH)
 
@@ -116,7 +117,7 @@ end
 -- 添加一项到页面控件中
 -- @function [parent=#UIPageView] addItem
 -- @param node item 页面控件项
--- @return UIPageView#UIPageView 
+-- @return UIPageView#UIPageView
 
 -- end --
 
@@ -132,7 +133,7 @@ end
 -- 移除一项
 -- @function [parent=#UIPageView] removeItem
 -- @param number idx 要移除项的序号
--- @return UIPageView#UIPageView 
+-- @return UIPageView#UIPageView
 
 -- end --
 
@@ -163,7 +164,7 @@ end
 --------------------------------
 -- 移除所有页面
 -- @function [parent=#UIPageView] removeAllItems
--- @return UIPageView#UIPageView 
+-- @return UIPageView#UIPageView
 
 -- end --
 
@@ -181,7 +182,7 @@ end
 -- 注册一个监听函数
 -- @function [parent=#UIPageView] onTouch
 -- @param function listener 监听函数
--- @return UIPageView#UIPageView 
+-- @return UIPageView#UIPageView
 
 -- end --
 
@@ -197,7 +198,7 @@ end
 -- 加载数据，各种参数
 -- @function [parent=#UIPageView] reload
 -- @param number page index加载完成后,首先要显示的页面序号,为空从第一页开始显示
--- @return UIPageView#UIPageView 
+-- @return UIPageView#UIPageView
 
 -- end --
 
@@ -253,7 +254,7 @@ end
 -- @param integer pageIdx 要跳转的页面的位置
 -- @param boolean bSmooth 是否需要跳转动画
 -- @param bLeftToRight 移动的方向,在可循环下有效, nil:自动调整方向,false:从右向左,true:从左向右
--- @return UIPageView#UIPageView 
+-- @return UIPageView#UIPageView
 
 -- end --
 
@@ -290,7 +291,7 @@ end
 --------------------------------
 -- 得到页面的总数
 -- @function [parent=#UIPageView] getPageCount
--- @return number#number 
+-- @return number#number
 
 -- end --
 
@@ -303,7 +304,7 @@ end
 --------------------------------
 -- 得到当前页面的位置
 -- @function [parent=#UIPageView] getCurPageIdx
--- @return number#number 
+-- @return number#number
 
 -- end --
 
@@ -317,7 +318,7 @@ end
 -- 设置页面控件是否为循环
 -- @function [parent=#UIPageView] setCirculatory
 -- @param boolean bCirc 是否循环
--- @return UIPageView#UIPageView 
+-- @return UIPageView#UIPageView
 
 -- end --
 
@@ -336,9 +337,9 @@ function UIPageView:createPage_(pageNo)
     local itemW, itemH
 
     itemW = (self.viewRect_.width - self.padding_.left - self.padding_.right
-                - self.columnSpace_*(self.column_ - 1)) / self.column_
+        - self.columnSpace_*(self.column_ - 1)) / self.column_
     itemH = (self.viewRect_.height - self.padding_.top - self.padding_.bottom
-                - self.rowSpace_*(self.row_ - 1)) / self.row_
+        - self.rowSpace_*(self.row_ - 1)) / self.row_
     local bBreak = false
     for row=1,self.row_ do
         for column=1,self.column_ do
@@ -354,7 +355,7 @@ function UIPageView:createPage_(pageNo)
             item:setPosition(
                 self.padding_.left + (column - 1)*self.columnSpace_ + column*itemW - itemW/2,
                 self.viewRect_.height - self.padding_.top - (row - 1)*self.rowSpace_ - row*itemH + itemH/2)
-                -- self.padding_.bottom + (row - 1)*self.rowSpace_ + row*itemH - itemH/2)
+            -- self.padding_.bottom + (row - 1)*self.rowSpace_ + row*itemH - itemH/2)
         end
         if bBreak then
             break
@@ -540,20 +541,20 @@ function UIPageView:scrollPagePos(pos, bLeftToRight)
         if page then
             page:setVisible(true)
             transition.moveBy(page,
-                    {x = -movedis, y = 0, time = 0.3})
+                {x = -movedis, y = 0, time = 0.3})
         end
     end
     transition.moveBy(self.pages_[self.curPageIdx_],
-                    {x = -movedis, y = 0, time = 0.3,
-                    onComplete = function()
-                        local pageIdx = (self.curPageIdx_ + dis + count)%count
-                        if 0 == pageIdx then
-                            pageIdx = count
-                        end
-                        self.curPageIdx_ = pageIdx
-                        self:disablePage()
-                        self:notifyListener_{name = "pageChange"}
-                    end})
+        {x = -movedis, y = 0, time = 0.3,
+            onComplete = function()
+                local pageIdx = (self.curPageIdx_ + dis + count)%count
+                if 0 == pageIdx then
+                    pageIdx = count
+                end
+                self.curPageIdx_ = pageIdx
+                self:disablePage()
+                self:notifyListener_{name = "pageChange"}
+            end})
 end
 
 function UIPageView:stopAllTransition()
@@ -594,6 +595,9 @@ function UIPageView:scroll(dis)
             page = self:getNextPage(false)
             if not page then
                 page = false
+                if self.nBounce then -- 代国强
+                    return
+                end
             end
             table.insert(threePages, page)
             table.insert(threePages, self.pages_[self.curPageIdx_])
@@ -601,15 +605,27 @@ function UIPageView:scroll(dis)
             table.insert(threePages, false)
             table.insert(threePages, self.pages_[self.curPageIdx_])
             table.insert(threePages, self:getNextPage(true))
+            if not  self:getNextPage(true) then
+                if self.nBounce then -- 代国强
+                    return
+                end
+            end
         end
     else
         page = self:getNextPage(false)
+        local posX, posY = self.pages_[self.curPageIdx_]:getPosition()
         if not page then
             page = false
+            if posX > self.viewRect_.x and self.nBounce then -- 代国强
+                return
+            end
         end
         table.insert(threePages, page)
         table.insert(threePages, self.pages_[self.curPageIdx_])
         table.insert(threePages, self:getNextPage(true))
+        if not self:getNextPage(true) and posX < self.viewRect_.x and self.nBounce then-- 代国强
+            return
+        end
     end
 
     self:scrollLCRPages(threePages, dis)
@@ -676,20 +692,20 @@ function UIPageView:scrollAuto()
         if bChange then
             transition.moveTo(page,
                 {x = pageRX, y = posY, time = 0.3,
-                onComplete = function()
-                    self.curPageIdx_ = self:getNextPageIndex(false)
-                    self:disablePage()
-                    self:notifyListener_{name = "pageChange"}
-                end})
+                    onComplete = function()
+                        self.curPageIdx_ = self:getNextPageIndex(false)
+                        self:disablePage()
+                        self:notifyListener_{name = "pageChange"}
+                    end})
             transition.moveTo(pageL,
                 {x = self.viewRect_.x, y = posY, time = 0.3})
         else
             transition.moveTo(page,
                 {x = self.viewRect_.x, y = posY, time = 0.3,
-                onComplete = function()
-                    self:disablePage()
-                    self:notifyListener_{name = "pageChange"}
-                end})
+                    onComplete = function()
+                        self:disablePage()
+                        self:notifyListener_{name = "pageChange"}
+                    end})
             if pageL then
                 transition.moveTo(pageL,
                     {x = pageLX, y = posY, time = 0.3})
@@ -699,20 +715,20 @@ function UIPageView:scrollAuto()
         if bChange then
             transition.moveTo(page,
                 {x = pageLX, y = posY, time = 0.3,
-                onComplete = function()
-                    self.curPageIdx_ = self:getNextPageIndex(true)
-                    self:disablePage()
-                    self:notifyListener_{name = "pageChange"}
-                end})
+                    onComplete = function()
+                        self.curPageIdx_ = self:getNextPageIndex(true)
+                        self:disablePage()
+                        self:notifyListener_{name = "pageChange"}
+                    end})
             transition.moveTo(pageR,
                 {x = self.viewRect_.x, y = posY, time = 0.3})
         else
             transition.moveTo(page,
                 {x = self.viewRect_.x, y = posY, time = 0.3,
-                onComplete = function()
-                    self:disablePage()
-                    self:notifyListener_{name = "pageChange"}
-                end})
+                    onComplete = function()
+                        self:disablePage()
+                        self:notifyListener_{name = "pageChange"}
+                    end})
             if pageR then
                 transition.moveTo(pageR,
                     {x = pageRX, y = posY, time = 0.3})
@@ -725,9 +741,9 @@ function UIPageView:onClick_(event)
     local itemW, itemH
 
     itemW = (self.viewRect_.width - self.padding_.left - self.padding_.right
-                - self.columnSpace_*(self.column_ - 1)) / self.column_
+        - self.columnSpace_*(self.column_ - 1)) / self.column_
     itemH = (self.viewRect_.height - self.padding_.top - self.padding_.bottom
-                - self.rowSpace_*(self.row_ - 1)) / self.row_
+        - self.rowSpace_*(self.row_ - 1)) / self.row_
 
     local itemRect = {width = itemW, height = itemH}
 
@@ -806,3 +822,5 @@ end
 
 
 return UIPageView
+
+

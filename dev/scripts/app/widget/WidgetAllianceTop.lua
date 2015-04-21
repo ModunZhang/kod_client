@@ -25,7 +25,8 @@ function WidgetAllianceTop:onEnter()
     local pv = UIPageView.new {
         viewRect = cc.rect(54, 8, size.width-104, size.height-14),
         row = 1,
-        padding = {left = 0, right = 0, top = 10, bottom = 0}
+        padding = {left = 0, right = 0, top = 10, bottom = 0},
+        nBounce = true
     }:onTouch(function (event)
         dump(event,"UIPageView event")
         if event.name == "pageChange" then
