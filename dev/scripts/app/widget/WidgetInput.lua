@@ -60,16 +60,8 @@ function WidgetInput:ctor(params)
         end
     end
 
-    local bg1 = WidgetUIBackGround.new({
-        width = 558,
-        height = 90,
-        top_img = "back_ground_580x12_top.png",
-        bottom_img = "back_ground_580X12_bottom.png",
-        mid_img = "back_ground_580X1_mid.png",
-        u_height = 12,
-        b_height = 12,
-        m_height = 1,
-    }):align(display.CENTER,304, 130):addTo(body)
+    local bg1 = WidgetUIBackGround.new({width = 558,height=90},WidgetUIBackGround.STYLE_TYPE.STYLE_4)
+        :align(display.CENTER,304, 130):addTo(body)
 
     -- soldier current
     self.editbox = cc.ui.UIInput.new({
@@ -117,5 +109,6 @@ function WidgetInput:onEnter()
     self.editbox:touchDownAction(editbox,2)
 end
 return WidgetInput
+
 
 

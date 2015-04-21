@@ -11,7 +11,6 @@ local WidgetBackGroudWhite = import("..widget.WidgetBackGroudWhite")
 local WidgetAllianceHelper = import("..widget.WidgetAllianceHelper")
 local Flag = import("..entity.Flag")
 local WidgetDropList = import("..widget.WidgetDropList")
-local WidgetBackGroundLucid = import("..widget.WidgetBackGroundLucid")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local UILib = import(".UILib")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
@@ -851,46 +850,25 @@ function GameUIMail:GetMailsCount(listview)
 end
 --已发送邮件详情弹出框
 function GameUIMail:ShowSendMailDetails(mail)
-    -- 蒙层背景
-    local layer_bg = display.newColorLayer(UIKit:hex2c4b(0x7a000000)):addTo(self)
-    -- bg
-    local bg = WidgetUIBackGround.new({height=768}):addTo(layer_bg)
-    bg:pos((display.width-bg:getContentSize().width)/2,display.top - bg:getContentSize().height - 120)
-    -- mail content bg
-    local content_bg = WidgetUIBackGround2.new(544):addTo(bg)
-    content_bg:pos((bg:getContentSize().width-content_bg:getContentSize().width)/2,30)
-    -- title bg
-    local title_bg = display.newSprite("title_blue_596x49.png"):align(display.TOP_LEFT, 6, bg:getContentSize().height-6):addTo(bg)
-    -- title
     local title_string = (mail.fromAllianceTag~="" and "["..mail.fromAllianceTag.."] "..mail.fromName) or mail.fromName
-    local title_label = cc.ui.UILabel.new(
-        {cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = title_string,
-            font = UIKit:getFontFilePath(),
-            size = 22,
-            dimensions = cc.size(0,24),
-            color = UIKit:hex2c3b(0xffedae)
-        }):align(display.LEFT_CENTER, 150, 25)
-        :addTo(title_bg)
+    local dialog = WidgetPopDialog.new(748,title_string):AddToCurrentScene(true)
+    local bg = dialog:GetBody()
+    local size = bg:getContentSize()
+   
+    -- mail content bg
+    local content_bg = WidgetUIBackGround.new({width=568,height = 544},WidgetUIBackGround.STYLE_TYPE.STYLE_5):addTo(bg)
+    content_bg:align(display.LEFT_BOTTOM,(bg:getContentSize().width-content_bg:getContentSize().width)/2,30)
+   
     -- player head icon
-    local heroBg = display.newSprite("chat_hero_background.png"):align(display.CENTER, 76, bg:getContentSize().height - 70):addTo(bg)
-    local hero = display.newSprite("playerIcon_default.png"):align(display.CENTER, math.floor(heroBg:getContentSize().width/2), math.floor(heroBg:getContentSize().height/2)+5)
-    hero:addTo(heroBg)
-    --close button
-    cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-                self:removeChild(layer_bg, true)
-            end
-        end):align(display.CENTER, title_bg:getContentSize().width-10, title_bg:getContentSize().height-6):addTo(title_bg)
-    -- 收件人
+    UIKit:GetPlayerCommonIcon():align(display.CENTER, 76, bg:getContentSize().height - 90):addTo(bg)
+       -- 收件人
     local subject_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
             text = _("收件人: "),
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x797154)
-        }):align(display.LEFT_CENTER, 155, bg:getContentSize().height-80)
+        }):align(display.LEFT_CENTER, 155, bg:getContentSize().height-60)
         :addTo(bg)
     local subject_content_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -899,7 +877,7 @@ function GameUIMail:ShowSendMailDetails(mail)
             size = 20,
             dimensions = cc.size(0,24),
             color = UIKit:hex2c3b(0x403c2f)
-        }):align(display.LEFT_CENTER,155 + subject_label:getContentSize().width+20, bg:getContentSize().height-80)
+        }):align(display.LEFT_CENTER,155 + subject_label:getContentSize().width+20, bg:getContentSize().height-60)
         :addTo(bg)
     -- 主题
     local subject_label = cc.ui.UILabel.new(
@@ -908,7 +886,7 @@ function GameUIMail:ShowSendMailDetails(mail)
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x797154)
-        }):align(display.LEFT_CENTER, 155, bg:getContentSize().height-120)
+        }):align(display.LEFT_CENTER, 155, bg:getContentSize().height-100)
         :addTo(bg)
     local subject_content_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -916,7 +894,7 @@ function GameUIMail:ShowSendMailDetails(mail)
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x403c2f)
-        }):align(display.LEFT_CENTER,155 + subject_label:getContentSize().width+20, bg:getContentSize().height-120)
+        }):align(display.LEFT_CENTER,155 + subject_label:getContentSize().width+20, bg:getContentSize().height-100)
         :addTo(bg)
     -- 日期
     local date_title_label = cc.ui.UILabel.new(
@@ -925,7 +903,7 @@ function GameUIMail:ShowSendMailDetails(mail)
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x797154)
-        }):align(display.LEFT_CENTER, 155, bg:getContentSize().height-160)
+        }):align(display.LEFT_CENTER, 155, bg:getContentSize().height-140)
         :addTo(bg)
     local date_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -933,7 +911,7 @@ function GameUIMail:ShowSendMailDetails(mail)
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x403c2f)
-        }):align(display.LEFT_CENTER, 155 + date_title_label:getContentSize().width+20, bg:getContentSize().height-160)
+        }):align(display.LEFT_CENTER, 155 + date_title_label:getContentSize().width+20, bg:getContentSize().height-140)
         :addTo(bg)
     -- 内容
     local content_listview = UIListView.new{
@@ -965,9 +943,8 @@ function GameUIMail:ShowMailDetails(mail)
     content_bg:pos((size.width-content_bg:getContentSize().width)/2,80)
 
     -- player head icon
-    local heroBg = display.newSprite("chat_hero_background.png"):align(display.CENTER, 76, size.height - 80):addTo(body)
-    local hero = display.newSprite("playerIcon_default.png"):align(display.CENTER, math.floor(heroBg:getContentSize().width/2), math.floor(heroBg:getContentSize().height/2)+5)
-    hero:addTo(heroBg)
+    UIKit:GetPlayerCommonIcon():align(display.CENTER, 76, size.height - 80):addTo(body)
+
     -- 主题
     local subject_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -1319,6 +1296,7 @@ end
 
 function GameUIMail:OpenReplyMail(mail)
     local dialog = WidgetPopDialog.new(748,_("回复邮件")):AddToCurrentScene(true)
+    dialog:DisableAutoClose()
     local reply_mail = dialog:GetBody()
     local r_size = reply_mail:getContentSize()
 
@@ -1374,7 +1352,7 @@ function GameUIMail:OpenReplyMail(mail)
         }):align(display.LEFT_CENTER,30,r_size.height-180)
         :addTo(reply_mail)
     -- 回复的邮件内容
-    local lucid_bg = WidgetBackGroundLucid.new(472):addTo(reply_mail)
+    local lucid_bg = WidgetUIBackGround.new({width = 580,height=472},WidgetUIBackGround.STYLE_TYPE.STYLE_4):addTo(reply_mail)
     lucid_bg:pos((r_size.width-lucid_bg:getContentSize().width)/2, 82)
     display.newScale9Sprite("dividing_line_584x1.png", lucid_bg:getContentSize().width/2, lucid_bg:getContentSize().height-288,cc.size(580,1)):addTo(lucid_bg)
 
@@ -1423,8 +1401,8 @@ function GameUIMail:OpenReplyMail(mail)
         :addTo(reply_mail):align(display.CENTER, reply_mail:getContentSize().width-92, 46)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                self:SendMail(mail.fromName, _("RE:")..mail.title, textView:getText())
-                reply_mail:removeFromParent()
+                self:SendMail(mail.fromId, _("RE:")..mail.title, textView:getText())
+                dialog:LeftButtonClicked()
             end
         end)
     return reply_mail
