@@ -1,6 +1,6 @@
 local Localize = import("..utils.Localize")
 local window = import("..utils.window")
-local WidgetDropList = import("..widget.WidgetDropList")
+local WidgetRoundTabButtons = import("..widget.WidgetRoundTabButtons")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
@@ -111,7 +111,7 @@ function GameUITradeGuild:RefreshSoldMark()
 end
 function GameUITradeGuild:LoadBuyPage()
     local layer = self.buy_layer
-    self.resource_drop_list =  WidgetDropList.new(
+    self.resource_drop_list =  WidgetRoundTabButtons.new(
         {
             {tag = "resource",label = "基本资源",default = true},
             {tag = "build_material",label = "建筑材料"},
@@ -201,7 +201,7 @@ function GameUITradeGuild:LoadResource(goods_details,goods_type)
 
     -- 资源选择框
     local options = self:CreateOptions(goods_details)
-        :pos(40, h-120):addTo(layer)
+        :pos(40, h-135):addTo(layer)
         :onButtonSelectChanged(function(event)
             self:RefreshSellListView(goods_type,event.selected)
         end)
@@ -757,7 +757,7 @@ function GameUITradeGuild:OpenSellDialog()
         -- 商品单价拖动条
         self.sell_price_item = self:CreateSliderItem(
             {
-                title = _("单价"),
+                title = params.unit == 1000 and _("每1K售价") or _("单价"),
                 max = max_unit_price,
                 min = min_unit_price,
                 icon = "res_coin_81x68.png",
@@ -880,7 +880,7 @@ function GameUITradeGuild:OpenSellDialog()
                 local max_num,min_num,min_unit_price,max_unit_price,unit = self:GetPriceAndNum(goods_type,event.selected)
                 self:CreateOrRefreshSliders(
                     {
-                        max_num=max_num,
+                        max_num=string.formatnumberthousands(City:GetResourceManager():GetCartResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()))*unit,
                         min_num=min_num,
                         min_unit_price=min_unit_price,
                         max_unit_price=max_unit_price,
@@ -909,6 +909,7 @@ function GameUITradeGuild:OpenSellDialog()
 
             max_num = goods_details[2]
             min_num = max_num>1 and 1 or 0
+            unit = 1
 
         end
         return max_num,min_num,min_unit_price,max_unit_price,unit
@@ -1006,7 +1007,7 @@ function GameUITradeGuild:OpenSellDialog()
     -- body 方法
 
     local body_width,body_height = 608,654
-    body.drop_list =  WidgetDropList.new(
+    body.drop_list =  WidgetRoundTabButtons.new(
         {
             {tag = "resource",label = "基本资源",default = true},
             {tag = "build_material",label = "建筑材料"},
@@ -1041,7 +1042,7 @@ function GameUITradeGuild:OpenSellDialog()
             end
         end
     )
-    body.drop_list:align(display.TOP_CENTER,window.cx,window.top-180):addTo(root)
+    body.drop_list:align(display.TOP_CENTER,window.cx,window.top-170):addTo(root)
 end
 
 function GameUITradeGuild:OnBuildingUpgradingBegin()

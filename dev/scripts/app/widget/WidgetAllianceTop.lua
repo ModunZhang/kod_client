@@ -25,7 +25,8 @@ function WidgetAllianceTop:onEnter()
     local pv = UIPageView.new {
         viewRect = cc.rect(54, 8, size.width-104, size.height-14),
         row = 1,
-        padding = {left = 0, right = 0, top = 10, bottom = 0}
+        padding = {left = 0, right = 0, top = 10, bottom = 0},
+        nBounce = true
     }:onTouch(function (event)
         dump(event,"UIPageView event")
         if event.name == "pageChange" then
@@ -36,6 +37,10 @@ function WidgetAllianceTop:onEnter()
                 mark_1:setPositionX(size.width/2-11)
                 mark_2:setPositionX(size.width/2+11)
             end
+            if self.auto_change_page then
+            scheduler.unscheduleGlobal(self.auto_change_page)
+        end
+        self.auto_change_page = scheduler.scheduleGlobal(handler(self, self.Change), 20.0, false)
         end
     end):addTo(self)
     pv:setTouchSwallowEnabled(false)
@@ -45,12 +50,6 @@ function WidgetAllianceTop:onEnter()
     self:CreateBtnsPageItem()
     self:CreateResourcesPageItem()
     pv:reload()
-    pv:onTouch(function ( event )
-        if self.auto_change_page then
-            scheduler.unscheduleGlobal(self.auto_change_page)
-        end
-        self.auto_change_page = scheduler.scheduleGlobal(handler(self, self.Change), 20.0, false)
-    end)
     City:GetResourceManager():AddObserver(self)
     City:GetResourceManager():OnResourceChanged()
     self.auto_change_page = scheduler.scheduleGlobal(handler(self, self.Change), 20.0, false)
