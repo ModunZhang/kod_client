@@ -461,19 +461,19 @@ function Alliance:OnAllianceDataChanged(alliance_data,refresh_time,deltaData)
     self:OnAllianceFightRequestsChanged(alliance_data, deltaData)
 
     self:OnVillageLevelsChanged(alliance_data, deltaData)
-    self.alliance_shrine:OnAllianceDataChanged(alliance_data,deltaData)
+    self.alliance_shrine:OnAllianceDataChanged(alliance_data,deltaData,refresh_time)
     self.alliance_map:OnAllianceDataChanged(alliance_data, deltaData)
     --TODO:
 
-    self:OnAttackMarchEventsDataChanged(alliance_data,deltaData)
+    self:OnAttackMarchEventsDataChanged(alliance_data,deltaData,refresh_time)
 
-    self:OnAttackMarchReturnEventsDataChanged(alliance_data,deltaData)
+    self:OnAttackMarchReturnEventsDataChanged(alliance_data,deltaData,refresh_time)
 
-    self:OnStrikeMarchEventsDataChanged(alliance_data,deltaData)
+    self:OnStrikeMarchEventsDataChanged(alliance_data,deltaData,refresh_time)
 
-    self:OnStrikeMarchReturnEventsDataChanged(alliance_data,deltaData)
+    self:OnStrikeMarchReturnEventsDataChanged(alliance_data,deltaData,refresh_time)
 
-    self:OnVillageEventsDataChanged(alliance_data,deltaData)
+    self:OnVillageEventsDataChanged(alliance_data,deltaData,refresh_time)
 
     self:DecodeAllianceVillages(alliance_data,deltaData)
 
@@ -725,7 +725,7 @@ function Alliance:GetAttackMarchReturnEvents(march_type)
     return r
 end
 
-function Alliance:OnAttackMarchEventsDataChanged(alliance_data,deltaData)
+function Alliance:OnAttackMarchEventsDataChanged(alliance_data,deltaData,refresh_time)
     if not alliance_data.attackMarchEvents then return end
     local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.attackMarchEvents ~= nil
@@ -736,7 +736,7 @@ function Alliance:OnAttackMarchEventsDataChanged(alliance_data,deltaData)
         self.attackMarchEvents = {}
         for _,v in ipairs(alliance_data.attackMarchEvents) do
             local attackMarchEvent = MarchAttackEvent.new()
-            attackMarchEvent:UpdateData(v)
+            attackMarchEvent:UpdateData(v,refresh_time)
             self.attackMarchEvents[attackMarchEvent:Id()] = attackMarchEvent
             attackMarchEvent:AddObserver(self)
         end
@@ -748,7 +748,7 @@ function Alliance:OnAttackMarchEventsDataChanged(alliance_data,deltaData)
             deltaData.attackMarchEvents
             ,function(event_data)
                 local attackMarchEvent = MarchAttackEvent.new()
-                attackMarchEvent:UpdateData(event_data)
+                attackMarchEvent:UpdateData(event_data,refresh_time)
                 self.attackMarchEvents[attackMarchEvent:Id()] = attackMarchEvent
                 attackMarchEvent:AddObserver(self)
                 return attackMarchEvent
@@ -756,7 +756,7 @@ function Alliance:OnAttackMarchEventsDataChanged(alliance_data,deltaData)
             ,function(event_data)
                 if self.attackMarchEvents[event_data.id] then
                     local attackMarchEvent = self.attackMarchEvents[event_data.id]
-                    attackMarchEvent:UpdateData(event_data)
+                    attackMarchEvent:UpdateData(event_data,refresh_time)
                     return attackMarchEvent
                 end
             end
@@ -766,7 +766,7 @@ function Alliance:OnAttackMarchEventsDataChanged(alliance_data,deltaData)
                     attackMarchEvent:Reset()
                     self.attackMarchEvents[event_data.id] = nil
                     attackMarchEvent = MarchAttackEvent.new()
-                    attackMarchEvent:UpdateData(event_data)
+                    attackMarchEvent:UpdateData(event_data,refresh_time)
                     return attackMarchEvent
                 end
             end
@@ -782,7 +782,7 @@ function Alliance:IteratorAttackMarchEvents(func)
 end
 
 
-function Alliance:OnAttackMarchReturnEventsDataChanged(alliance_data,deltaData)
+function Alliance:OnAttackMarchReturnEventsDataChanged(alliance_data,deltaData,refresh_time)
     if not alliance_data.attackMarchReturnEvents then return end
     local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.attackMarchReturnEvents ~= nil
@@ -793,7 +793,7 @@ function Alliance:OnAttackMarchReturnEventsDataChanged(alliance_data,deltaData)
         self.attackMarchReturnEvents = {}
         for _,v in ipairs(alliance_data.attackMarchReturnEvents) do
             local attackMarchReturnEvent = MarchAttackReturnEvent.new()
-            attackMarchReturnEvent:UpdateData(v)
+            attackMarchReturnEvent:UpdateData(v,refresh_time)
             self.attackMarchReturnEvents[attackMarchReturnEvent:Id()] = attackMarchReturnEvent
             attackMarchReturnEvent:AddObserver(self)
         end
@@ -804,7 +804,7 @@ function Alliance:OnAttackMarchReturnEventsDataChanged(alliance_data,deltaData)
             deltaData.attackMarchReturnEvents
             ,function(event_data)
                 local attackMarchReturnEvent = MarchAttackReturnEvent.new()
-                attackMarchReturnEvent:UpdateData(event_data)
+                attackMarchReturnEvent:UpdateData(event_data,refresh_time)
                 self.attackMarchReturnEvents[attackMarchReturnEvent:Id()] = attackMarchReturnEvent
                 attackMarchReturnEvent:AddObserver(self)
                 return attackMarchReturnEvent
@@ -812,7 +812,7 @@ function Alliance:OnAttackMarchReturnEventsDataChanged(alliance_data,deltaData)
             ,function(event_data)
                 if self.attackMarchReturnEvents[event_data.id] then
                     local attackMarchReturnEvent = self.attackMarchReturnEvents[event_data.id]
-                    attackMarchReturnEvent:UpdateData(event_data)
+                    attackMarchReturnEvent:UpdateData(event_data,refresh_time)
                     return attackMarchReturnEvent
                 end
             end
@@ -822,7 +822,7 @@ function Alliance:OnAttackMarchReturnEventsDataChanged(alliance_data,deltaData)
                     attackMarchReturnEvent:Reset()
                     self.attackMarchReturnEvents[event_data.id] = nil
                     attackMarchReturnEvent = MarchAttackReturnEvent.new()
-                    attackMarchReturnEvent:UpdateData(event_data)
+                    attackMarchReturnEvent:UpdateData(event_data,refresh_time)
                     return attackMarchReturnEvent
                 end
             end
@@ -929,7 +929,7 @@ function Alliance:GetEnemyAllianceFightPlayerKills()
     return self.id == allianceFight.attackAllianceId and allianceFight.defencePlayerKills or allianceFight.attackPlayerKills
 end
 
-function Alliance:OnStrikeMarchEventsDataChanged(alliance_data,deltaData)
+function Alliance:OnStrikeMarchEventsDataChanged(alliance_data,deltaData,refresh_time)
     if not alliance_data.strikeMarchEvents then return end
     local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.strikeMarchEvents ~= nil
@@ -940,7 +940,7 @@ function Alliance:OnStrikeMarchEventsDataChanged(alliance_data,deltaData)
         self.strikeMarchEvents = {}
         for _,v in ipairs(alliance_data.strikeMarchEvents) do
             local strikeMarchEvent = MarchAttackEvent.new()
-            strikeMarchEvent:UpdateData(v)
+            strikeMarchEvent:UpdateData(v,refresh_time)
             self.strikeMarchEvents[strikeMarchEvent:Id()] = strikeMarchEvent
             strikeMarchEvent:AddObserver(self)
         end
@@ -951,7 +951,7 @@ function Alliance:OnStrikeMarchEventsDataChanged(alliance_data,deltaData)
             deltaData.strikeMarchEvents
             ,function(event_data)
                 local strikeMarchEvent = MarchAttackEvent.new()
-                strikeMarchEvent:UpdateData(event_data)
+                strikeMarchEvent:UpdateData(event_data,refresh_time)
                 self.strikeMarchEvents[strikeMarchEvent:Id()] = strikeMarchEvent
                 strikeMarchEvent:AddObserver(self)
                 return strikeMarchEvent
@@ -959,7 +959,7 @@ function Alliance:OnStrikeMarchEventsDataChanged(alliance_data,deltaData)
             ,function(event_data)
                 if self.strikeMarchEvents[event_data.id] then
                     local strikeMarchEvent = self.strikeMarchEvents[event_data.id]
-                    strikeMarchEvent:UpdateData(event_data)
+                    strikeMarchEvent:UpdateData(event_data,refresh_time)
                     return strikeMarchEvent
                 end
             end
@@ -969,7 +969,7 @@ function Alliance:OnStrikeMarchEventsDataChanged(alliance_data,deltaData)
                     strikeMarchEvent:Reset()
                     self.strikeMarchEvents[event_data.id] = nil
                     strikeMarchEvent = MarchAttackEvent.new()
-                    strikeMarchEvent:UpdateData(event_data)
+                    strikeMarchEvent:UpdateData(event_data,refresh_time)
                     return strikeMarchEvent
                 end
             end
@@ -984,7 +984,7 @@ function Alliance:IteratorStrikeMarchEvents(func)
     end
 end
 
-function Alliance:OnStrikeMarchReturnEventsDataChanged(alliance_data,deltaData)
+function Alliance:OnStrikeMarchReturnEventsDataChanged(alliance_data,deltaData,refresh_time)
     if not alliance_data.strikeMarchReturnEvents then return end
     local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.strikeMarchReturnEvents ~= nil
@@ -995,7 +995,7 @@ function Alliance:OnStrikeMarchReturnEventsDataChanged(alliance_data,deltaData)
         self.strikeMarchReturnEvents = {}
         for _,v in ipairs(alliance_data.strikeMarchReturnEvents) do
             local strikeMarchReturnEvent = MarchAttackReturnEvent.new()
-            strikeMarchReturnEvent:UpdateData(v)
+            strikeMarchReturnEvent:UpdateData(v,refresh_time)
             self.strikeMarchReturnEvents[strikeMarchReturnEvent:Id()] = strikeMarchReturnEvent
             strikeMarchReturnEvent:AddObserver(self)
         end
@@ -1006,7 +1006,7 @@ function Alliance:OnStrikeMarchReturnEventsDataChanged(alliance_data,deltaData)
             deltaData.strikeMarchReturnEvents
             ,function(event_data)
                 local strikeMarchReturnEvent = MarchAttackReturnEvent.new()
-                strikeMarchReturnEvent:UpdateData(event_data)
+                strikeMarchReturnEvent:UpdateData(event_data,refresh_time)
                 self.strikeMarchReturnEvents[strikeMarchReturnEvent:Id()] = strikeMarchReturnEvent
                 strikeMarchReturnEvent:AddObserver(self)
                 return strikeMarchReturnEvent
@@ -1014,7 +1014,7 @@ function Alliance:OnStrikeMarchReturnEventsDataChanged(alliance_data,deltaData)
             ,function(event_data)
                 if self.strikeMarchReturnEvents[event_data.id] then
                     local strikeMarchReturnEvent = self.strikeMarchReturnEvents[event_data.id]
-                    strikeMarchReturnEvent:UpdateData(event_data)
+                    strikeMarchReturnEvent:UpdateData(event_data,refresh_time)
                     return strikeMarchReturnEvent
                 end
             end
@@ -1024,7 +1024,7 @@ function Alliance:OnStrikeMarchReturnEventsDataChanged(alliance_data,deltaData)
                     strikeMarchReturnEvent:Reset()
                     self.strikeMarchReturnEvents[event_data.id] = nil
                     strikeMarchReturnEvent = MarchAttackReturnEvent.new()
-                    strikeMarchReturnEvent:UpdateData(event_data)
+                    strikeMarchReturnEvent:UpdateData(event_data,refresh_time)
                     return strikeMarchReturnEvent
                 end
             end
@@ -1118,7 +1118,7 @@ function Alliance:OnVillageEventTimer(villageEvent)
 end
 
 --村落采集事件
-function Alliance:OnVillageEventsDataChanged(alliance_data,deltaData)
+function Alliance:OnVillageEventsDataChanged(alliance_data,deltaData,refresh_time)
     if not alliance_data.villageEvents then return end
     local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.villageEvents ~= nil

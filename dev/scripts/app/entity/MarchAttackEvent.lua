@@ -82,7 +82,7 @@ function MarchAttackEvent:GetPercent()
 	return (1 - self:GetTime() / self:GetTotalTime()) * 100
 end
 
-function MarchAttackEvent:UpdateData(json_data)
+function MarchAttackEvent:UpdateData(json_data,refresh_time)
 	self:SetId(json_data.id or "")
 	self:SetStartTime(json_data.startTime and json_data.startTime/1000.0 or 0)
 	self:SetArriveTime(json_data.arriveTime and json_data.arriveTime/1000.0 or 0)
@@ -91,6 +91,7 @@ function MarchAttackEvent:UpdateData(json_data)
 	self:SetDefencePlayerData(json_data.defencePlayerData or {})
 	self:SetDefenceVillageData(json_data.defenceVillageData or {})
 	self:SetDefenceShrineData(json_data.defenceShrineData or {})
+	self.times_ = math.ceil(self:ArriveTime() - refresh_time)
 end
 
 return MarchAttackEvent
