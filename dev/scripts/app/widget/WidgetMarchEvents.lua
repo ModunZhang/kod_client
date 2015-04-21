@@ -255,7 +255,7 @@ function WidgetMarchEvents:Load()
             table.insert(items, item)
         elseif type_str == 'HELPTO' then
             local item = self:CreateDefenceItem(entity)
-            self.items_map[event:Id()] = item
+            -- self.items_map[event:Id()] = item
             table.insert(items, item)
         end
     end

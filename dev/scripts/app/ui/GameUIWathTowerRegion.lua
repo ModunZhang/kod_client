@@ -423,6 +423,10 @@ function GameUIWathTowerRegion:RefreshOtherEvents()
 	end
 end
 
+function GameUIWathTowerRegion:GetTabButton()
+	return self.tabButton
+end
+
 function GameUIWathTowerRegion:RefreshCurrentList()
 	local tag = self:GetTabButton():GetSelectedButtonTag()
 	if tag == 'comming' or tag == 'march' then
