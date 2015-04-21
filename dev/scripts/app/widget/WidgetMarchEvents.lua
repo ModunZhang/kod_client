@@ -9,6 +9,7 @@ local WIDGET_WIDTH = 640
 local WIDGET_HEIGHT = 600
 local ITEM_HEIGHT = 47
 local GameUtils = GameUtils
+
 local WidgetMarchEvents = class("WidgetMarchEvents", function()
     local rect = cc.rect(0, 0, WIDGET_WIDTH, WIDGET_HEIGHT)
     local node = display.newClippingRegionNode(rect)
@@ -28,12 +29,14 @@ local WidgetMarchEvents = class("WidgetMarchEvents", function()
     end)
     return node:setCascadeOpacityEnabled(true)
 end)
+
 function WidgetMarchEvents:isTouchInViewRect(event)
     local viewRect = self:convertToWorldSpace(cc.p(self.view_rect.x, self.view_rect.y))
     viewRect.width = self.view_rect.width
     viewRect.height = self.view_rect.height
     return cc.rectContainsPoint(viewRect, cc.p(event.x, event.y))
 end
+
 ---------------------------
 --Observer Methods
 function WidgetMarchEvents:OnHelpToTroopsChanged(changed_map)
@@ -46,7 +49,6 @@ function WidgetMarchEvents:OnMarchDataChanged()
 end
 
 function WidgetMarchEvents:OnFightEventTimerChanged(fightEvent)
-    print("OnFightEventTimerChanged--->",fightEvent:Id(),self.items_map[fightEvent:Id()])
     local item = self.items_map[fightEvent:Id()]
     if item then
         local desc =  string.format(" %s %s", item.prefix,GameUtils:formatTimeStyle1(fightEvent:GetTime()))
@@ -89,8 +91,6 @@ function WidgetMarchEvents:AddOrRemoveAllianceEvent(isAdd)
     end
 end
 
-
-
 ---------------------------
 function WidgetMarchEvents:ctor(alliance, ratio)
     self:setNodeEventEnabled(true)
@@ -123,6 +123,7 @@ end
 function WidgetMarchEvents:onExit()
     self:AddOrRemoveAllianceEvent(false)
 end
+
 function WidgetMarchEvents:CreateHideButton()
     local btn = cc.ui.UIPushButton.new({normal = "march_hide_btn_up.png",
         pressed = "march_hide_btn_down.png"})
@@ -139,6 +140,7 @@ function WidgetMarchEvents:CreateHideButton()
         :addTo(btn):align(display.CENTER, 0, size.height/2)
     return btn
 end
+
 function WidgetMarchEvents:CreateBackGround()
     local back = cc.ui.UIImage.new("tab_background_640x106.png", {scale9 = true,
         capInsets = cc.rect(2, 2, WIDGET_WIDTH - 4, 106 - 4)
@@ -178,14 +180,17 @@ end
 function WidgetMarchEvents:Lock(lock)
     self.locked = lock
 end
+
 function WidgetMarchEvents:IsShow()
     return not self.arrow:isFlippedY()
 end
+
 function WidgetMarchEvents:PromiseOfSwitch()
     return self:PromiseOfHide():next(function()
         return self:PromiseOfShow()
     end)
 end
+
 function WidgetMarchEvents:PromiseOfHide()
     self.node:stopAllActions()
     self:Lock(true)
@@ -194,6 +199,7 @@ function WidgetMarchEvents:PromiseOfHide()
         self:Reset()
     end)
 end
+
 function WidgetMarchEvents:PromiseOfShow()
     if self:HasAnyMarchEvent() then
         self:Reload()
@@ -204,13 +210,16 @@ function WidgetMarchEvents:PromiseOfShow()
     end
     return cocos_promise.defer()
 end
+
 function WidgetMarchEvents:IsShow()
     return not self.arrow:isFlippedY()
 end
+
 function WidgetMarchEvents:Reload()
     self:Reset()
     self:Load()
 end
+
 function WidgetMarchEvents:Reset()
     self.items_map = {}
     self.back_ground:removeAllChildren()
@@ -220,6 +229,7 @@ function WidgetMarchEvents:Reset()
     self.arrow:flipY(true)
     self:Lock(false)
 end
+
 function WidgetMarchEvents:Load()
     local my_events = self:GetAllianceBelvedere():GetMyEvents()
     local items = {}
@@ -240,7 +250,7 @@ function WidgetMarchEvents:Load()
             table.insert(items, item)
         elseif type_str == 'SHIRNE' then
             local item = self:CreateDefenceItem(entity)
-            item.speed_btn:setButtonEnabled(false)
+            item.speed_btn:setButtonEnabled(false) -- 圣地事件没有撤军功能
             self.items_map[event:Id()] = item
             table.insert(items, item)
         elseif type_str == 'HELPTO' then
@@ -252,9 +262,11 @@ function WidgetMarchEvents:Load()
     self:InsertItem(items)
     self:ResizeBelowHorizon(self:Length(#self.item_array))
 end
+
 function WidgetMarchEvents:Length(array_len)
     return array_len * ITEM_HEIGHT + 2
 end
+
 function WidgetMarchEvents:ResizeBelowHorizon(new_height)
     local height = new_height < ITEM_HEIGHT and ITEM_HEIGHT or new_height
     local size = self.back_ground:getContentSize()
@@ -386,6 +398,7 @@ function WidgetMarchEvents:CreateDefenceItem(entity)
         end)
     return node
 end
+
 function WidgetMarchEvents:HasAnyMarchEvent()
     local alliance_belvedere = self:GetAllianceBelvedere()
     local hasEvent,__ = alliance_belvedere:HasMyEvents()
@@ -431,21 +444,3 @@ function WidgetMarchEvents:OnRetreatButtonClicked(entity,cb)
 end
 
 return WidgetMarchEvents
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

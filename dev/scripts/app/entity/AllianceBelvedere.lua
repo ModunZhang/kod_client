@@ -98,17 +98,22 @@ function AllianceBelvedere:Reset()
 end
 
 --返回是否有瞭望塔事件发生 和瞭望塔事件数量(包含协防事件)
-function AllianceBelvedere:HasEvent()
+function AllianceBelvedere:HasEvents()
 	if self:GetAlliance():IsDefault() then return false,0 end
 	local hasMyEvents,my_count = self:HasMyEvents()
-	local other_count = #self:GetOtherEvents()
-	return hasMyEvents or other_count > 0,my_count + other_count
+	local hasOtherEvents,other_count = self:HasOtherEvents()
+	return hasMyEvents or hasOtherEvents,my_count + other_count
 end
 
---返回是否有"我的事件"
+--返回是否有"我的事件"及数量
 function  AllianceBelvedere:HasMyEvents()
 	local count = #self:GetMyEvents()
 	return count > 0,count
+end
+--返回是否有"来袭事件"及数量
+function AllianceBelvedere:HasOtherEvents()
+	local other_count = #self:GetOtherEvents()
+	return other_count > 0,other_count
 end
 
 function AllianceBelvedere:FastCheckHasEvent()
@@ -273,7 +278,6 @@ end
 
 function AllianceBelvedere:CallEventsChangedListeners(LISTEN_TYPE,args)
     self:NotifyListeneOnType(LISTEN_TYPE, function(listener)
-		print(LISTEN_TYPE,self.LISTEN_TYPE[LISTEN_TYPE],listener.__cname,type(args))
         listener[AllianceBelvedere.LISTEN_TYPE[LISTEN_TYPE]](listener,unpack(args))
     end)
 end
