@@ -14,6 +14,7 @@ function GameUIBlackSmithSpeedUp:ctor(building)
     self:SetAccBtnsGroup(self:GetEventType(),making_event:Id())
     self:SetAccTips(_("制造装备不能免费加速"))
     self:SetUpgradeTip(_("制造装备").."X 1")
+    self:SetProgressInfo(GameUtils:formatTimeStyle1(making_event:LeftTime(app.timer:GetServerTime())),making_event:Percent(app.timer:GetServerTime()))
     building:AddBlackSmithListener(self)
 end
 

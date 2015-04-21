@@ -35,7 +35,7 @@ function WidgetProgress:ctor(label_color, bg, bar, params)
 end
 function WidgetProgress:SetProgressInfo(time_label, percent)
     self.progress_label:setString(time_label)
-    self.progress_timer:setPercentage(100)
+    self.progress_timer:setPercentage(percent)
     return self
 end
 function WidgetProgress:align(anchorPoint, x, y)

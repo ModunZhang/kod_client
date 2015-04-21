@@ -16,6 +16,7 @@ function GameUIDragonHateSpeedUp:ctor(dragon_manager,hateEvent)
 	self:SetAccBtnsGroup(self:GetEventType(),hateEvent:Id())
     self:SetAccTips(_("龙的孵化没有免费加速"))
     self:SetUpgradeTip(Localize.dragon[hateEvent:DragonType()] .. _("正在孵化"))
+	self:SetProgressInfo(GameUtils:formatTimeStyle1(hateEvent:GetTime()),hateEvent:GetPercent())
     self.dragon_manager:AddListenOnType(self,self.dragon_manager.LISTEN_TYPE.OnDragonHatched)
 end
 

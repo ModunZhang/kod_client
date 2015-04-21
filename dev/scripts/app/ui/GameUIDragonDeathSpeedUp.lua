@@ -16,6 +16,7 @@ function GameUIDragonDeathSpeedUp:ctor(dragonDeathEvent)
     self.dragonDeathEvent = dragonDeathEvent
     self.dragon_manager = City:GetDragonEyrie():GetDragonManager()
 	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventChanged)
+	self:SetProgressInfo(GameUtils:formatTimeStyle1(dragonDeathEvent:GetTime()),dragonDeathEvent:GetPercent())
 	self.dragon_type = dragonDeathEvent:DragonType()
 end
 
