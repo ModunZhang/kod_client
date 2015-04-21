@@ -314,6 +314,7 @@ end
 function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
     if not MyCityScene.super.OnTouchClicked(self, pre_x, pre_y, x, y) then return end
     if self.util_node:getNumberOfRunningActions() > 0 then return end
+
     local building = self:GetSceneLayer():GetClickedObject(x, y)
     if building then
         self:GetSceneUILayer():HideIndicator()

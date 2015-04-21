@@ -6,6 +6,7 @@ local pve_normal = GameDatas.ClientInitGame.pve_normal
 local pve_elite = GameDatas.ClientInitGame.pve_elite
 local pve_boss = GameDatas.ClientInitGame.pve_boss
 local pve_npc = GameDatas.ClientInitGame.pve_npc
+local pve_func = GameDatas.ClientInitGame.pve_func
 local dragonLevel = GameDatas.Dragons.dragonLevel
 local random = math.random
 local randomseed = math.randomseed
@@ -111,7 +112,7 @@ function PVEObject:DecodeToEnemy(raw_data)
             return k, {
                 name = name,
                 star = tonumber(star),
-                count = is_not_boss and math.ceil(count * self:Floor() ^ 2.6) or count,
+                count = is_not_boss and pve_func.soldiers.countFunc(self:Floor(), count) or count,
             }
         end),
         rewards = self:DecodeToRewards(raw_data.rewards),
@@ -156,7 +157,7 @@ function PVEObject:DecodeToRewards(raw)
         return k, {
             type = rtype,
             name = rname,
-            count = is_not_boss and count * self:Floor() ^ 2 or count,
+            count = is_not_boss and pve_func.rewards.countFunc(self:Floor(), count) or count,
             probability = probability
         }
     end)

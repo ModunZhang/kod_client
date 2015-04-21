@@ -133,6 +133,8 @@ def exportSheetAsLua(sheet):
 				text = ('\t["%s"] = %s,\n' % (nakeName(title[j]), datarow[j]) )
 			elif ("STR" == valueType):
 				text = ('\t["%s"] = "%s",\n' % (nakeName(title[j]), datarow[j]) )
+			elif ("FUNC" == valueType):
+				text = ('\t["%s"] = %s,\n' % (nakeName(title[j]), datarow[j]) )
 			else:
 				continue
 			luaStr += text
