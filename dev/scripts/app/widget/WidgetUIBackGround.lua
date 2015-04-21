@@ -18,37 +18,29 @@ local STYLES = {
         u_height =16,
         m_height=28,
         b_height=80,
-    },
-    [3] = {
-        top_img = "back_ground_258X12_top.png",
-        bottom_img = "back_ground_258X12_bottom.png",
-        mid_img = "back_ground_258X1_mid.png",
-        u_height =12,
-        m_height=1,
-        b_height=12,
-    },
-    [4] = {
-        top_img = "back_ground_580x12_top.png",
-        bottom_img = "back_ground_580X12_bottom.png",
-        mid_img = "back_ground_426x1_mid_1.png",
-        u_height =12,
-        m_height=1,
-        b_height=12,
-    },
-    [5] = {
-        top_img = "back_ground_426x14_top_1.png",
-        bottom_img = "back_ground_426x14_top_1.png",
-        mid_img = "back_ground_426x1_mid_1.png",
-        u_height =14,
-        m_height=1,
-        b_height=14,
-        b_flip = true
-    },
+    }
 }
 
 function WidgetUIBackGround:ctor(params,style)
     local width = params.width or 608
     local height = params.height or 100
+    self:setContentSize(cc.size(width,height))
+    if style == WidgetUIBackGround.STYLE_TYPE.STYLE_5 then
+        display.newScale9Sprite("back_ground_398x97.png", 0, 0,cc.size(width,height),cc.rect(20,20,358,57))
+            :align(display.LEFT_BOTTOM)
+            :addTo(self)
+        return
+    elseif style == WidgetUIBackGround.STYLE_TYPE.STYLE_4 then
+        display.newScale9Sprite("back_ground_484X98.png",0 , 0,cc.size(width,height),cc.rect(15,10,454,78))
+            :align(display.LEFT_BOTTOM)
+            :addTo(self)
+        return
+    elseif style == WidgetUIBackGround.STYLE_TYPE.STYLE_3 then
+        display.newScale9Sprite("back_ground_166x84.png",0 , 0,cc.size(width,height),cc.rect(15,10,136,64))
+            :align(display.LEFT_BOTTOM)
+            :addTo(self)
+        return
+    end
     local st = STYLES[style]
     local top_img = st and st.top_img or params.top_img or "back_ground_608x22.png"
     local bottom_img = st and st.bottom_img or params.bottom_img or "back_ground_608x62.png"
@@ -61,7 +53,6 @@ function WidgetUIBackGround:ctor(params,style)
     local is_have_frame = params.isFrame or "no"
     local capInsets = params.capInsets
 
-    self:setContentSize(cc.size(width,height))
     --top
     display.newScale9Sprite(top_img,0, height,cc.size(width,u_height),capInsets):align(display.LEFT_TOP):addTo(self)
     local bottom = display.newScale9Sprite(bottom_img,0, 0,cc.size(width,b_height),capInsets):align(display.LEFT_BOTTOM):addTo(self)
@@ -96,6 +87,8 @@ function WidgetUIBackGround:ctor(params,style)
 end
 
 return WidgetUIBackGround
+
+
 
 
 

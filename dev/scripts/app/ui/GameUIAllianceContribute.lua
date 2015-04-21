@@ -111,16 +111,8 @@ function GameUIAllianceContribute:CreateContributeGroup()
     local ui_self = self
 
     -- 透明背景框
-    local group = WidgetUIBackGround.new({
-        width = 580,
-        height = 248,
-        top_img = "back_ground_580x12_top.png",
-        bottom_img = "back_ground_580X12_bottom.png",
-        mid_img = "back_ground_580X1_mid.png",
-        u_height = 12,
-        b_height = 12,
-        m_height = 1,
-    }):align(display.CENTER,304, 250):addTo(self.body)
+    local group = WidgetUIBackGround.new({width = 580,height=248},WidgetUIBackGround.STYLE_TYPE.STYLE_4)
+        :align(display.CENTER,304, 250):addTo(self.body)
     local wood = City.resource_manager:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     local stone = City.resource_manager:GetStoneResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     local food = City.resource_manager:GetFoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
@@ -355,6 +347,7 @@ function GameUIAllianceContribute:OnMemberChanged(alliance)
     self:RefreashEff()
 end
 return GameUIAllianceContribute
+
 
 
 

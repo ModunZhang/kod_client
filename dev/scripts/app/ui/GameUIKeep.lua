@@ -286,18 +286,6 @@ function GameUIKeep:CreateChangeTerrainWindow()
     
     local bg1 = display.newScale9Sprite("back_ground_104x132.png",x,y,cc.size(580,264),cc.rect(10,10,84,112))
         :addTo(body):align(display.CENTER,304, 294)
-    -- local bg1 = WidgetUIBackGround.new({
-    --     width = 580,
-    --     height = 264,
-    --     top_img = "back_ground_580x12_top.png",
-    --     bottom_img = "back_ground_580X12_bottom.png",
-    --     mid_img = "back_ground_580X1_mid.png",
-    --     u_height = 12,
-    --     b_height = 12,
-    --     m_height = 1,
-    -- }):align(display.CENTER,304, 294)
-
-    -- bg1:addTo(body)
 
     self.terrain_eff_label = cc.ui.UILabel.new({
         size = 18,

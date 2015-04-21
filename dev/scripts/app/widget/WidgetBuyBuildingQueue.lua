@@ -1,5 +1,5 @@
 local WidgetPopDialog = import(".WidgetPopDialog")
-local WidgetBackGroundLucid = import(".WidgetBackGroundLucid")
+local WidgetUIBackGround = import(".WidgetUIBackGround")
 local WidgetPushButton = import(".WidgetPushButton")
 
 local WidgetBuyBuildingQueue = class("WidgetBuyBuildingQueue", WidgetPopDialog)
@@ -17,7 +17,7 @@ function WidgetBuyBuildingQueue:CreateBuyItem()
     local body = self.body
     local size = body:getContentSize()
     local width,height = size.width,size.height
-    local item = WidgetBackGroundLucid.new(128)
+    local item = WidgetUIBackGround.new({width = 580,height=128},WidgetUIBackGround.STYLE_TYPE.STYLE_4)
     local box = display.newSprite("box_blue_138x138.png"):addTo(item):align(display.LEFT_CENTER,-10,item:getContentSize().height/2)
     local icon = cc.ui.UIImage.new("help_64x72.png"):addTo(box):align(display.CENTER, box:getContentSize().width/2, box:getContentSize().height/2)
     local price_bg = display.newSprite("vip_bg_2.png"):addTo(box):align(display.BOTTOM_CENTER, box:getContentSize().width/2, 6)

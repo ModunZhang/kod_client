@@ -190,17 +190,8 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
 
 
     -- need bg
-    local need = WidgetUIBackGround.new({
-        width = 556,
-        height = 106,
-        top_img = "back_ground_426x14_top_1.png",
-        bottom_img = "back_ground_426x14_top_1.png",
-        mid_img = "back_ground_426x1_mid_1.png",
-        u_height = 14,
-        b_height = 14,
-        m_height = 1,
-        b_flip = true,
-    }):align(display.CENTER,size.width/2, size.height/2 - 40):addTo(back_ground)
+    local need = WidgetUIBackGround.new({width=556,height = 106},WidgetUIBackGround.STYLE_TYPE.STYLE_5)
+        :align(display.CENTER,size.width/2, size.height/2 - 40):addTo(back_ground)
 
 
     -- needs
@@ -515,6 +506,7 @@ function WidgetTreatSoldier:OnCountChanged(count)
     self.gem_label:setString(self.treat_now_gems)
 end
 return WidgetTreatSoldier
+
 
 
 

@@ -655,10 +655,8 @@ end
 
 -- 创建 宽度为258的 UI框
 function GameUIAttackVillage:CreateSmallBackGround(height,title)
-    local r_bg = display.newNode()
-    r_bg:setContentSize(cc.size(258,height))
-    -- 上中下三段的图片高度
-    local u_height,m_height,b_height = 12 , 1 , 12
+    local r_bg = WidgetUIBackGround.new({width = 258,height=height},WidgetUIBackGround.STYLE_TYPE.STYLE_3)
+    
     -- title bg
     if title then
         local t_bg = display.newSprite("report_title_252X30.png"):align(display.CENTER_TOP, 129, height-3):addTo(r_bg,2)
@@ -668,22 +666,7 @@ function GameUIAttackVillage:CreateSmallBackGround(height,title)
             color = 0xffedae
         }):align(display.CENTER,t_bg:getContentSize().width/2, 15):addTo(t_bg)
     end
-    --top
-    display.newSprite("back_ground_258X12_top.png"):align(display.LEFT_TOP, 0, height):addTo(r_bg)
-    --bottom
-    display.newSprite("back_ground_258X12_bottom.png"):align(display.LEFT_BOTTOM, 0, 0):addTo(r_bg)
-
-    --center
-    local need_filled_height = height-(u_height+b_height) --中间部分需要填充的高度
-    local center_y = b_height -- 中间部分起始 y 坐标
-    local  next_y = b_height
-    -- 需要填充的剩余高度大于中间部分图片原始高度时，直接复制即可
-    while need_filled_height>=m_height do
-        display.newSprite("back_ground_258X1_mid.png"):align(display.LEFT_BOTTOM, 0, next_y):addTo(r_bg)
-        need_filled_height = need_filled_height - m_height
-        -- copy_count = copy_count + 1
-        next_y = next_y+m_height
-    end
+   
     return r_bg
 end
 
