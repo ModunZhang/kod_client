@@ -1,6 +1,5 @@
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
-local WidgetBackGroundLucid = import("..widget.WidgetBackGroundLucid")
 local WidgetPlayerNode = import("..widget.WidgetPlayerNode")
 local UIAutoClose = import(".UIAutoClose")
 local UIListView = import(".UIListView")
@@ -527,7 +526,7 @@ function GameUIVip:CreateVIPStatus()
         :align(display.BOTTOM_CENTER, display.cx, display.top-880)
     local bg_size = status_bg:getContentSize()
     -- 透明边框
-    WidgetBackGroundLucid.new(300):addTo(status_bg)
+    WidgetUIBackGround.new({width = 580,height=300},WidgetUIBackGround.STYLE_TYPE.STYLE_4):addTo(status_bg)
         :align(display.TOP_CENTER, bg_size.width/2, bg_size.height-60)
 
     local title_bg = display.newSprite("title_purple_586x34.png"):addTo(status_bg)

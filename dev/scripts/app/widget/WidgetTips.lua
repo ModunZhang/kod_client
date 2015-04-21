@@ -1,21 +1,12 @@
 local WidgetUIBackGround = import(".WidgetUIBackGround")
 local WidgetTips = class("WidgetTips", function()
-	return display.newNode()
+    return display.newNode()
 end)
 
 
 function WidgetTips:ctor(head, body)
-	self.back_ground = WidgetUIBackGround.new({
-        width = 556,
-        height = 106,
-        top_img = "back_ground_426x14_top_1.png",
-        bottom_img = "back_ground_426x14_top_1.png",
-        mid_img = "back_ground_426x1_mid_1.png",
-        u_height = 14,
-        b_height = 14,
-        m_height = 1,
-        b_flip = true,
-    }):addTo(self)
+    self.back_ground = WidgetUIBackGround.new({width=556,height = 106},WidgetUIBackGround.STYLE_TYPE.STYLE_5)
+        :addTo(self)
 
 
     local align_x = 30
@@ -36,22 +27,23 @@ function WidgetTips:ctor(head, body)
     self:Title(head, body)
 end
 function WidgetTips:Title(head, body)
-	self.head:setString(head)
-	self.body:setString(body)
-	return self
+    self.head:setString(head)
+    self.body:setString(body)
+    return self
 end
 function WidgetTips:Size(width, height)
-	self.back_ground:setLayoutSize(width, height)
-	return self
+    self.back_ground:setLayoutSize(width, height)
+    return self
 end
 function WidgetTips:align(anchorPoint, x, y)
-	self.back_ground:align(anchorPoint)
+    self.back_ground:align(anchorPoint)
     if x and y then self:setPosition(x, y) end
-	return self
+    return self
 end
 
 
 return WidgetTips
+
 
 
 

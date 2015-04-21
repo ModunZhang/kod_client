@@ -6,7 +6,6 @@ local WidgetBackGroudWhite = import("..widget.WidgetBackGroudWhite")
 local Alliance = import("..entity.Alliance")
 local Localize = import("..utils.Localize")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
-local WidgetBackGroundLucid = import("..widget.WidgetBackGroundLucid")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local intInit = GameDatas.PlayerInitData.intInit
 

@@ -156,19 +156,8 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
 
 
     -- need bg
-    local need =  WidgetUIBackGround.new({
-        width = 556,
-        height = 106,
-        top_img = "back_ground_426x14_top_1.png",
-        bottom_img = "back_ground_426x14_top_1.png",
-        mid_img = "back_ground_426x1_mid_1.png",
-        u_height = 14,
-        b_height = 14,
-        m_height = 1,
-        b_flip = true,
-    }):align(display.CENTER,size.width/2, size.height/2 - 40):addTo(back_ground)
-    -- cc.ui.UIImage.new("back_ground_583x107.png"):addTo(back_ground, 2)
-    --     :align(display.CENTER, size.width/2, size.height/2 - 40)
+    local need =  WidgetUIBackGround.new({width=556,height = 106},WidgetUIBackGround.STYLE_TYPE.STYLE_5)
+        :align(display.CENTER,size.width/2, size.height/2 - 40):addTo(back_ground)
 
     -- needs
     local size = need:getContentSize()
@@ -676,6 +665,7 @@ end
 
 
 return WidgetRecruitSoldier
+
 
 
 

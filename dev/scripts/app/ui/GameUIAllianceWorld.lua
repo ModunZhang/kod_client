@@ -25,7 +25,7 @@ function GameUIAllianceWorld:ctor()
     --         end
     --     end)
     --     :align(display.CENTER, 0,0)
-    --     :addTo(map)    
+    --     :addTo(map)
     local scrollView = UIScrollView.new({
         viewRect = cc.rect(0,0,556,541),
     -- bgColor = UIKit:hex2c4b(0x7a000000),
@@ -34,8 +34,8 @@ function GameUIAllianceWorld:ctor()
         :setBounceable(false)
         :setDirection(UIScrollView.DIRECTION_BOTH)
         :align(display.TOP_CENTER,26, self.body:getContentSize().height-569)
-        -- :addTo(self.body)
-    
+    -- :addTo(self.body)
+
 
     -- 遮罩效果
     -- 模板
@@ -55,16 +55,8 @@ function GameUIAllianceWorld:ctor()
     clippingNode:addChild(scrollView)
     self.body:addChild(clippingNode)
 
-    local bg1 = WidgetUIBackGround.new({
-        width = 572,
-        height = 557,
-        top_img = "back_ground_580x12_top.png",
-        bottom_img = "back_ground_580X12_bottom.png",
-        mid_img = "back_ground_580X1_mid.png",
-        u_height = 12,
-        b_height = 12,
-        m_height = 1,
-    }):align(display.TOP_CENTER,304, self.body:getContentSize().height-20):addTo(self.body)
+    local bg1 = WidgetUIBackGround.new({width = 572,height=557},WidgetUIBackGround.STYLE_TYPE.STYLE_4)
+        :align(display.TOP_CENTER,304, self.body:getContentSize().height-20):addTo(self.body)
     -- 介绍
     local info_bg = WidgetUIBackGround.new({
         width = 568,
@@ -154,6 +146,7 @@ function GameUIAllianceWorld:onExit()
 end
 
 return GameUIAllianceWorld
+
 
 
 
