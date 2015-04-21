@@ -1131,7 +1131,7 @@ function Alliance:OnVillageEventsDataChanged(alliance_data,deltaData,refresh_tim
         self.villageEvents = {}
         for _,v in ipairs(alliance_data.villageEvents) do
             local villageEvent = VillageEvent.new()
-            villageEvent:UpdateData(v)
+            villageEvent:UpdateData(v,refresh_time)
             self.villageEvents[villageEvent:Id()] = villageEvent
             villageEvent:AddObserver(self)
         end
@@ -1142,7 +1142,7 @@ function Alliance:OnVillageEventsDataChanged(alliance_data,deltaData,refresh_tim
             deltaData.villageEvents
             ,function(event_data)
                 local villageEvent = VillageEvent.new()
-                villageEvent:UpdateData(event_data)
+                villageEvent:UpdateData(event_data,refresh_time)
                 self.villageEvents[villageEvent:Id()] = villageEvent
                 villageEvent:AddObserver(self)
                 return villageEvent
@@ -1150,7 +1150,7 @@ function Alliance:OnVillageEventsDataChanged(alliance_data,deltaData,refresh_tim
             ,function(event_data)
                 if self.villageEvents[event_data.id] then
                     local villageEvent = self.villageEvents[event_data.id]
-                    villageEvent:UpdateData(event_data)
+                    villageEvent:UpdateData(event_data,refresh_time)
                     return villageEvent
                 end
             end
@@ -1160,7 +1160,7 @@ function Alliance:OnVillageEventsDataChanged(alliance_data,deltaData,refresh_tim
                     villageEvent:Reset()
                     self.villageEvents[villageEvent:Id()] = nil
                     villageEvent = VillageEvent.new()
-                    villageEvent:UpdateData(event_data)
+                    villageEvent:UpdateData(event_data,refresh_time)
                     return villageEvent
                 end
             end
