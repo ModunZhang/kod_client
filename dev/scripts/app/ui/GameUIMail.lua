@@ -1434,7 +1434,7 @@ end
 function GameUIMail:CreateWriteMail()
     return GameUIWriteMail.new(GameUIWriteMail.SEND_TYPE.PERSONAL_MAIL):SetTitle(_("写邮件"))
         -- :OnSendButtonClicked(GameUIWriteMail.SEND_TYPE.PERSONAL_MAIL)
-        :addTo(self)
+        :addTo(self,201)
 end
 
 --[[

@@ -191,6 +191,8 @@ function GameUIReplay:ctor(report, callback)
     assert(report.GetOrderedAttackSoldiers)
     assert(report.GetOrderedDefenceSoldiers)
     assert(report.GetReportResult)
+    assert(report.GetAttackDragonLevel)
+    assert(report.GetAttackDragonLevel)
     self.report = report
     self.callback = callback
     GameUIReplay.super.ctor(self)
@@ -225,6 +227,7 @@ function GameUIReplay:OnMoveInStage()
     local battle_bg = cc.ui.UIImage.new("battle_bg_grass_772x388.png")
         :addTo(battle):align(display.CENTER, rect.width / 2, rect.height / 2)
     self.battle_bg = battle_bg
+    self.damge_node = display.newNode():addTo(self.battle, 2)
 
 
 
@@ -613,24 +616,26 @@ function GameUIReplay:NewDragon(is_left, is_pve_battle)
     local node = display.newNode()
     local game_ui_replay = self
     function node:Init()
+        local dragon_type = "redDragon"
+        if is_left then
+            local attack_dragon = game_ui_replay.report:GetFightAttackDragonRoundData()
+            dragon_type = attack_dragon.dragonType
+        else
+            local defend_dragon = game_ui_replay.report:GetFightDefenceDragonRoundData()
+            dragon_type = defend_dragon.dragonType
+        end
         self.name = cc.ui.UILabel.new({
-            text = "红龙(等级20)",
+            text = string.format("%s(等级%d)", Localize.dragon[dragon_type], game_ui_replay.report:GetAttackDragonLevel()),
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0xffedae)
         }):align(display.CENTER, 45, 180)
             :addTo(self)
 
-        self.hp_progress = WidgetProgress.new(UIKit:hex2c3b(0xffedae), "progress_bar_262x16.png", "progress_bar_262x16.png", {
-            label_size = 14,
-            has_icon = false,
-            has_bg = false
-        }):addTo(self)
-            :align(display.LEFT_CENTER, -82, 158):scale(0.975, 1)
-        if not is_left then
-            self.hp_progress:pos(166, 158)
-            self.hp_progress:setScaleX(-0.975)
-        end
+        self.progress = display.newProgressTimer("progress_bar_262x16.png", display.PROGRESS_TIMER_BAR)
+        :addTo(self):align(display.LEFT_CENTER, is_left and -85 or 170, 158):setScaleX(is_left and 0.975 or -0.975)
+        self.progress:setBarChangeRate(cc.p(1,0))
+        self.progress:setMidpoint(cc.p(0,0))
 
         self.hp = cc.ui.UILabel.new({
             text = "",
@@ -642,34 +647,19 @@ function GameUIReplay:NewDragon(is_left, is_pve_battle)
 
 
         self.result = cc.ui.UILabel.new({
-            text = "WIN",
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x00be36)
-        }):align(display.CENTER, 120, -55)
+        }):align(display.CENTER, is_left and 120 or -35, -55)
             :addTo(self):hide()
-        if not is_left then
-            self.result:pos(-35, -55)
-        end
 
         self.buff = cc.ui.UILabel.new({
-            text = "BUFF + 100%",
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x00be36)
-        }):align(display.CENTER, 20, -55)
+        }):align(display.CENTER, is_left and 20 or 80, -55)
             :addTo(self):hide()
-        if not is_left then
-            self.buff:pos(80, -55)
-        end
-        local dragon_type = "redDragon"
-        if is_left then
-            local attack_dragon = game_ui_replay.report:GetFightAttackDragonRoundData()
-            dragon_type = attack_dragon.dragonType
-        else
-            local defend_dragon = game_ui_replay.report:GetFightDefenceDragonRoundData()
-            dragon_type = defend_dragon.dragonType
-        end
+
         local ani_name, left_x, right_x = unpack(dragon_ani_map[dragon_type])
         local dragon = ccs.Armature:create(ani_name)
             :addTo(self):align(display.CENTER, is_left and left_x or right_x, 60):scale(0.6)
@@ -681,7 +671,7 @@ function GameUIReplay:NewDragon(is_left, is_pve_battle)
     end
     function node:SetHp(cur, total)
         self.hp:setString(string.format("%d/%d", math.floor(cur), math.floor(total)))
-        self.hp_progress:SetProgressInfo("", cur / total * 100)
+        self.progress:setPercentage(cur / total * 100)
         return self
     end
     function node:SetReulst(is_win)
@@ -753,7 +743,7 @@ function GameUIReplay:NewEffect(soldier, is_left, x, y)
     effect:PlayAnimation("attack_1", 0)
 end
 function GameUIReplay:DecodeStateBySide(side, is_left)
-    local height = 90
+    local height = 130
     local len = 230
     local left_start = {x = -100, y = height}
     local left_end = {x = left_start.x + len, y = height}
@@ -849,6 +839,8 @@ function GameUIReplay:DecodeStateBySide(side, is_left)
                 self.right_morale:setString(percent.."%")
                 self.right_progress:SetProgressInfo("", percent)
             end
+            local x,y = corps:getPosition()
+            self:PlayDamageCount(side.damage, x, y)
             return corps
         end):next(BattleObject:HitOnce()):next(function(corps)
             BattleObject:Do(BattleObject:BreathForever()):resolve(corps)
@@ -935,22 +927,27 @@ function GameUIReplay:ShowStrongOrWeak(vs)
     end
 end
 local timer = app.timer
-local BATTLE_TAG = 1
-local TIMER_TAG = 2
-local PERFORM_TAG = 3
+local SPEED_TAG = 1
+local PERFORMANCE_TAG = 2
 function GameUIReplay:SpeedUp(speed)
     self.speed = speed or 1
-    local a1 = self.timer_node:getActionByTag(TIMER_TAG)
+    local a1 = self.timer_node:getActionByTag(SPEED_TAG)
     if a1 then
         a1:setSpeed(self:Speed())
     end
-    local a2 = self.timer_node:getActionByTag(PERFORM_TAG)
+    local a2 = self.timer_node:getActionByTag(PERFORMANCE_TAG)
     if a2 then
         a2:setSpeed(self:Speed())
     end
-    local a3 = self.battle_bg:getActionByTag(PERFORM_TAG)
+    local a3 = self.battle_bg:getActionByTag(SPEED_TAG)
     if a3 then
         a3:setSpeed(self:Speed())
+    end
+    for i,v in ipairs(self.damge_node:getChildren()) do
+        local a = v:getActionByTag(SPEED_TAG)
+        if a then
+            a:setSpeed(self:Speed())
+        end
     end
 
     if self.dragon_battle then
@@ -964,6 +961,9 @@ function GameUIReplay:SpeedUp(speed)
     end
 end
 function GameUIReplay:Stop()
+    for i,v in ipairs(self.damge_node:getChildren()) do
+        v:stopAllActions()
+    end
     self.timer_node:stopAllActions()
     self.battle_bg:stopAllActions()
     if self.dragon_battle then
@@ -979,6 +979,21 @@ end
 function GameUIReplay:Speed()
     return self.speed or 1
 end
+function GameUIReplay:PlayDamageCount(count, x, y)
+    local label = UIKit:ttfLabel({
+        text = "-"..count,
+        size = 30,
+        color = 0xff0000,
+    }):addTo(self.damge_node):pos(x, y)
+
+    local speed = cc.Speed:create(transition.sequence({
+        -- cc.Spawn:create({cc.MoveBy:create(0.5, cc.p(0, 20)), cc.FadeTo:create(0.5, 0)}),
+        cc.MoveBy:create(0.6, cc.p(0, 20)),
+        cc.RemoveSelf:create(),
+    }), self:Speed())
+    speed:setTag(SPEED_TAG)
+    label:runAction(speed)
+end
 function GameUIReplay:MoveBattleBgBy(x)
     return function(battle_bg)
         local p = promise.new()
@@ -988,6 +1003,7 @@ function GameUIReplay:MoveBattleBgBy(x)
                 p:resolve(battle_bg)
             end),
         }), self:Speed())
+        speed:setTag(SPEED_TAG)
         battle_bg:runAction(speed)
         return p
     end
@@ -1000,7 +1016,7 @@ function GameUIReplay:PromiseOfDelay(time, func)
             p:resolve()
         end),
     }), self:Speed())
-    speed:setTag(TIMER_TAG)
+    speed:setTag(SPEED_TAG)
     self.timer_node:runAction(speed)
     return p
 end
@@ -1021,7 +1037,7 @@ function GameUIReplay:Performance(time, func)
                     if t > time then
                         func(1)
                         p:resolve()
-                        self.timer_node:stopActionByTag(PERFORM_TAG)
+                        self.timer_node:stopActionByTag(PERFORMANCE_TAG)
                     else
                         if type(func) == "function" then
                             func(t / time)
@@ -1029,35 +1045,14 @@ function GameUIReplay:Performance(time, func)
                     end
                 end)
             })
-        )
-        ,  self:Speed())
-    speed:setTag(PERFORM_TAG)
+        ),  self:Speed())
+    speed:setTag(PERFORMANCE_TAG)
     self.timer_node:runAction(speed)
     return p
 end
 
 
 return GameUIReplay
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

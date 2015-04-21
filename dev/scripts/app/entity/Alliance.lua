@@ -362,10 +362,10 @@ function Alliance:RemoveHelpEventById(id)
     help_events[id] = nil
     return old
 end
-function Alliance:EditHelpEvent(event)
+function Alliance:EditHelpEvent(help_event)
     local help_events = self.help_events
-    help_events[event:Id()] = event
-    return event
+    help_events[help_event.id]:UpdateData(help_event)
+    return help_events[help_event.id]
 end
 function Alliance:ReFreashHelpEvent(changed_help_event)
     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.HELP_EVENTS, function(listener)
@@ -631,8 +631,7 @@ function Alliance:OnHelpEventsChanged(alliance_data,deltaData)
                 table.insert(added, helpEvent)
             end,
             function(help_event)
-                local helpEvent = HelpEvent.new():UpdateData(help_event)
-                self:EditHelpEvent(helpEvent)
+                local helpEvent = self:EditHelpEvent(help_event)
                 table.insert(edit, helpEvent)
             end,
             function(help_event)

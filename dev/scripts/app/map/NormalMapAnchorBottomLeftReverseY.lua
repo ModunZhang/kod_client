@@ -14,6 +14,9 @@ end
 function NormalMapAnchorBottomLeftReverseY:GetSize()
     return self.map_width, self.map_height
 end
+function NormalMapAnchorBottomLeftReverseY:GetRegion()
+    return self.base_x, self.base_y - self.tile_h * self.map_height, self.base_x + self.tile_w * self.map_width, self.base_y
+end
 function NormalMapAnchorBottomLeftReverseY:WrapConvertToMapPosition(x, y)
     local x, y = self:ConvertToMapPosition(x, y)
     return {x = x, y = y}

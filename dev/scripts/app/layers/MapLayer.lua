@@ -116,7 +116,7 @@ function MapLayer:ZoomBy(scale, x, y)
     local cur_x, cur_y = self:getPosition()
     local new_position = cc.p(cur_x + scene_mid_point.x - new_scene_mid_point.x, cur_y + scene_mid_point.y - new_scene_mid_point.y)
     self:setPosition(new_position)
-    -- self:OnSceneScale(self:getScale())
+    self:OnSceneScale(self:getScale())
     return self
 end
 function MapLayer:ZoomEnd()

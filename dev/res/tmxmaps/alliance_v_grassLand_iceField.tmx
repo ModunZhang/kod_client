@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="51" height="104" tilewidth="160" tileheight="160">
- <tileset firstgid="1" name="015" tilewidth="160" tileheight="160">
-  <image source="015.png" width="480" height="480"/>
+<map version="1.0" orientation="orthogonal" width="51" height="106" tilewidth="160" tileheight="160">
+ <tileset firstgid="1" name="terrain" tilewidth="160" tileheight="160">
+  <image source="terrain.png" width="1440" height="1440"/>
  </tileset>
- <tileset firstgid="10" name="026" tilewidth="160" tileheight="160">
-  <image source="026.png" width="480" height="480"/>
- </tileset>
- <layer name="layer1" width="51" height="104">
+ <layer name="layer1" width="51" height="106">
   <data encoding="base64" compression="zlib">
-   eJzt0rFxQlEAxMAfgzHg/ovlFeFAx2ygGRWwt+u67qef0238H6ff0/ML/nV6n/6+4As2GGNs5Qs2GGNs5Qs2GGNs5Qs2GGNs5Qs2GGNs5Qs2GGNs5Qs2GGNs5Qs2GGNs5Qs2GGNs5Qs2GGNs5Qs2GGNs5Qs2GGNs5Qs2GGNs5Qs2GGNs5Qs2GGNs5Qs2GGNs5Qs2GGNs5Qs2GGNs5Qs2GGNs5Qs2GGNs5Qs2GGNs5Qs2GGNs5Qs2GGNs5Qs2GGNs5Qs2GGNs5Qs2/us/epUhhw==
+   eJzt0rsRwkAAxNALAEMANgR8+++Tzd2A9kaBZlTAW8YY53RJS/lv6Z4eE/wnfdNvgifY0JjGWp5gQ2Maa3mCDY1prOUJNjSmsZYn2NCYxlqeYENjGmt5gg2NaazlCTY0prGWJ9jQmMZanmBDYxpreYINjWms5Qk2NKaxlifY0Nj+D+mYThP8Nd3SOsE/0yu9J3iCDY1prOUJNjSmsZYn2NCYxlqeYENjGmt5gg2NaazlCTY0prGWJ9jQmMZanmBDYxpreYINjWms5Qk2NKaxlifY0JjGWp5gQ2Maa3mCDY3t/w+oD0PL
+  </data>
+ </layer>
+ <layer name="layer2" width="51" height="106">
+  <data encoding="base64" compression="zlib">
+   eJztxrENwCAQBEG6AjKbzKb/fnwVEDl6zUgrbWsAAAAAAAAAAAAA/+tppFngr3SnVeCf9KZd4AEAAAAAAAAAAAA4+wBVRiba
   </data>
  </layer>
 </map>

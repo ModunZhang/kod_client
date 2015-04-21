@@ -156,13 +156,11 @@ function UpgradeBuilding:CancelLocalPush()
     end
 end
 function UpgradeBuilding:OnTimer(current_time)
-    if self:IsUpgrading() then
-        local is_upgrading = self:GetUpgradingLeftTimeByCurrentTime(current_time) >= 0
-        if is_upgrading then
-            self.upgrade_building_observer:NotifyObservers(function(lisenter)
-                lisenter:OnBuildingUpgrading(self, current_time)
-            end)
-        end
+    local is_upgrading = self:GetUpgradingLeftTimeByCurrentTime(current_time) >= 0
+    if is_upgrading then
+        self.upgrade_building_observer:NotifyObservers(function(lisenter)
+            lisenter:OnBuildingUpgrading(self, current_time)
+        end)
     end
 end
 function UpgradeBuilding:OnUserDataChanged(userData, current_time, location_id, sub_location_id, deltaData)
@@ -507,6 +505,7 @@ function UpgradeBuilding:getUpgradeRequiredGems()
 end
 
 return UpgradeBuilding
+
 
 
 

@@ -265,7 +265,9 @@ function GameUIAllianceHome:CreateTop()
         {
             text = "["..alliance:Tag().."] "..alliance:Name(),
             size = 18,
-            color = 0xffedae
+            color = 0xffedae,
+            dimensions = cc.size(160,18),
+            ellipsis = true
         }):align(display.LEFT_CENTER, 30, 20)
         :addTo(self_name_bg)
     -- 己方联盟旗帜
@@ -281,7 +283,9 @@ function GameUIAllianceHome:CreateTop()
         {
             text = "",
             size = 18,
-            color = 0xffedae
+            color = 0xffedae,
+            dimensions = cc.size(200,18),
+            ellipsis = true
         }):align(display.RIGHT_CENTER, enemy_name_bg:getContentSize().width-30, 20)
         :addTo(enemy_name_bg)
     local enemy_peace_label = UIKit:ttfLabel(

@@ -2,145 +2,145 @@ local pve_dragon = GameDatas.ClientInitGame.pve_dragon
 
 pve_dragon[1] = {
 	["index"] = 1,
-	["normal_dragon_strength_vitality"] = "blueDragon,4,4",
-	["elite_dragon_strength_vitality"] = "blueDragon,9,10",
-	["boss_dragon_strength_vitality"] = "blackDragon,22,25"
+	["normal_dragon_star_level"] = "blueDragon_1_1",
+	["elite_dragon_star_level"] = "blueDragon_1_3",
+	["boss_dragon_star_level"] = "blackDragon_1_5"
 }
 pve_dragon[2] = {
 	["index"] = 2,
-	["normal_dragon_strength_vitality"] = "blueDragon,5,5",
-	["elite_dragon_strength_vitality"] = "blueDragon,12,13",
-	["boss_dragon_strength_vitality"] = "blackDragon,29,32"
+	["normal_dragon_star_level"] = "blueDragon_1_2",
+	["elite_dragon_star_level"] = "blueDragon_1_4",
+	["boss_dragon_star_level"] = "blackDragon_1_6"
 }
 pve_dragon[3] = {
 	["index"] = 3,
-	["normal_dragon_strength_vitality"] = "greenDragon,6,6",
-	["elite_dragon_strength_vitality"] = "greenDragon,14,16",
-	["boss_dragon_strength_vitality"] = "blackDragon,35,40"
+	["normal_dragon_star_level"] = "greenDragon_1_3",
+	["elite_dragon_star_level"] = "greenDragon_1_5",
+	["boss_dragon_star_level"] = "blackDragon_1_7"
 }
 pve_dragon[4] = {
 	["index"] = 4,
-	["normal_dragon_strength_vitality"] = "greenDragon,8,9",
-	["elite_dragon_strength_vitality"] = "greenDragon,19,22",
-	["boss_dragon_strength_vitality"] = "blackDragon,48,54"
+	["normal_dragon_star_level"] = "greenDragon_1_4",
+	["elite_dragon_star_level"] = "greenDragon_1_6",
+	["boss_dragon_star_level"] = "blackDragon_1_8"
 }
 pve_dragon[5] = {
 	["index"] = 5,
-	["normal_dragon_strength_vitality"] = "redDragon,13,14",
-	["elite_dragon_strength_vitality"] = "redDragon,32,36",
-	["boss_dragon_strength_vitality"] = "blackDragon,80,90"
+	["normal_dragon_star_level"] = "redDragon_1_5",
+	["elite_dragon_star_level"] = "redDragon_1_7",
+	["boss_dragon_star_level"] = "blackDragon_1_9"
 }
 pve_dragon[6] = {
 	["index"] = 6,
-	["normal_dragon_strength_vitality"] = "redDragon,19,21",
-	["elite_dragon_strength_vitality"] = "redDragon,47,53",
-	["boss_dragon_strength_vitality"] = "blackDragon,118,133"
+	["normal_dragon_star_level"] = "redDragon_1_6",
+	["elite_dragon_star_level"] = "redDragon_1_8",
+	["boss_dragon_star_level"] = "blackDragon_1_10"
 }
 pve_dragon[7] = {
 	["index"] = 7,
-	["normal_dragon_strength_vitality"] = "blueDragon,23,26",
-	["elite_dragon_strength_vitality"] = "blueDragon,58,65",
-	["boss_dragon_strength_vitality"] = "blackDragon,144,162"
+	["normal_dragon_star_level"] = "blueDragon_2_11",
+	["elite_dragon_star_level"] = "blueDragon_2_13",
+	["boss_dragon_star_level"] = "blackDragon_2_15"
 }
 pve_dragon[8] = {
 	["index"] = 8,
-	["normal_dragon_strength_vitality"] = "blueDragon,27,31",
-	["elite_dragon_strength_vitality"] = "blueDragon,68,76",
-	["boss_dragon_strength_vitality"] = "blackDragon,170,191"
+	["normal_dragon_star_level"] = "blueDragon_2_12",
+	["elite_dragon_star_level"] = "blueDragon_2_14",
+	["boss_dragon_star_level"] = "blackDragon_2_16"
 }
 pve_dragon[9] = {
 	["index"] = 9,
-	["normal_dragon_strength_vitality"] = "blueDragon,31,35",
-	["elite_dragon_strength_vitality"] = "blueDragon,78,88",
-	["boss_dragon_strength_vitality"] = "blackDragon,195,220"
+	["normal_dragon_star_level"] = "blueDragon_2_13",
+	["elite_dragon_star_level"] = "blueDragon_2_15",
+	["boss_dragon_star_level"] = "blackDragon_2_17"
 }
 pve_dragon[10] = {
 	["index"] = 10,
-	["normal_dragon_strength_vitality"] = "redDragon,68,77",
-	["elite_dragon_strength_vitality"] = "redDragon,170,192",
-	["boss_dragon_strength_vitality"] = "blackDragon,426,479"
+	["normal_dragon_star_level"] = "redDragon_2_14",
+	["elite_dragon_star_level"] = "redDragon_2_16",
+	["boss_dragon_star_level"] = "blackDragon_2_18"
 }
 pve_dragon[11] = {
 	["index"] = 11,
-	["normal_dragon_strength_vitality"] = "redDragon,84,95",
-	["elite_dragon_strength_vitality"] = "redDragon,211,238",
-	["boss_dragon_strength_vitality"] = "blackDragon,528,594"
+	["normal_dragon_star_level"] = "redDragon_2_15",
+	["elite_dragon_star_level"] = "redDragon_2_17",
+	["boss_dragon_star_level"] = "blackDragon_2_19"
 }
 pve_dragon[12] = {
 	["index"] = 12,
-	["normal_dragon_strength_vitality"] = "redDragon,101,113",
-	["elite_dragon_strength_vitality"] = "redDragon,252,284",
-	["boss_dragon_strength_vitality"] = "blackDragon,630,709"
+	["normal_dragon_star_level"] = "redDragon_2_16",
+	["elite_dragon_star_level"] = "redDragon_2_18",
+	["boss_dragon_star_level"] = "blackDragon_2_20"
 }
 pve_dragon[13] = {
 	["index"] = 13,
-	["normal_dragon_strength_vitality"] = "greenDragon,117,132",
-	["elite_dragon_strength_vitality"] = "greenDragon,293,330",
-	["boss_dragon_strength_vitality"] = "blackDragon,733,824"
+	["normal_dragon_star_level"] = "greenDragon_3_21",
+	["elite_dragon_star_level"] = "greenDragon_3_23",
+	["boss_dragon_star_level"] = "blackDragon_3_25"
 }
 pve_dragon[14] = {
 	["index"] = 14,
-	["normal_dragon_strength_vitality"] = "greenDragon,134,150",
-	["elite_dragon_strength_vitality"] = "greenDragon,334,376",
-	["boss_dragon_strength_vitality"] = "blackDragon,835,940"
+	["normal_dragon_star_level"] = "greenDragon_3_22",
+	["elite_dragon_star_level"] = "greenDragon_3_24",
+	["boss_dragon_star_level"] = "blackDragon_3_26"
 }
 pve_dragon[15] = {
 	["index"] = 15,
-	["normal_dragon_strength_vitality"] = "greenDragon,216,242",
-	["elite_dragon_strength_vitality"] = "greenDragon,539,606",
-	["boss_dragon_strength_vitality"] = "blackDragon,1347,1516"
+	["normal_dragon_star_level"] = "greenDragon_3_23",
+	["elite_dragon_star_level"] = "greenDragon_3_25",
+	["boss_dragon_star_level"] = "blackDragon_3_27"
 }
 pve_dragon[16] = {
 	["index"] = 16,
-	["normal_dragon_strength_vitality"] = "redDragon,248,279",
-	["elite_dragon_strength_vitality"] = "redDragon,621,698",
-	["boss_dragon_strength_vitality"] = "blackDragon,1552,1746"
+	["normal_dragon_star_level"] = "redDragon_3_24",
+	["elite_dragon_star_level"] = "redDragon_3_26",
+	["boss_dragon_star_level"] = "blackDragon_3_28"
 }
 pve_dragon[17] = {
 	["index"] = 17,
-	["normal_dragon_strength_vitality"] = "redDragon,281,316",
-	["elite_dragon_strength_vitality"] = "redDragon,703,791",
-	["boss_dragon_strength_vitality"] = "blackDragon,1757,1976"
+	["normal_dragon_star_level"] = "redDragon_3_25",
+	["elite_dragon_star_level"] = "redDragon_3_27",
+	["boss_dragon_star_level"] = "blackDragon_3_29"
 }
 pve_dragon[18] = {
 	["index"] = 18,
-	["normal_dragon_strength_vitality"] = "redDragon,314,353",
-	["elite_dragon_strength_vitality"] = "redDragon,785,883",
-	["boss_dragon_strength_vitality"] = "blackDragon,1962,2207"
+	["normal_dragon_star_level"] = "redDragon_3_26",
+	["elite_dragon_star_level"] = "redDragon_3_28",
+	["boss_dragon_star_level"] = "blackDragon_3_30"
 }
 pve_dragon[19] = {
 	["index"] = 19,
-	["normal_dragon_strength_vitality"] = "blueDragon,347,390",
-	["elite_dragon_strength_vitality"] = "blueDragon,867,975",
-	["boss_dragon_strength_vitality"] = "blackDragon,2166,2437"
+	["normal_dragon_star_level"] = "blueDragon_4_31",
+	["elite_dragon_star_level"] = "blueDragon_4_33",
+	["boss_dragon_star_level"] = "blackDragon_4_35"
 }
 pve_dragon[20] = {
 	["index"] = 20,
-	["normal_dragon_strength_vitality"] = "blueDragon,551,620",
-	["elite_dragon_strength_vitality"] = "blueDragon,1379,1551",
-	["boss_dragon_strength_vitality"] = "blackDragon,3446,3877"
+	["normal_dragon_star_level"] = "blueDragon_4_32",
+	["elite_dragon_star_level"] = "blueDragon_4_34",
+	["boss_dragon_star_level"] = "blackDragon_4_36"
 }
 pve_dragon[21] = {
 	["index"] = 21,
-	["normal_dragon_strength_vitality"] = "blueDragon,617,694",
-	["elite_dragon_strength_vitality"] = "blueDragon,1542,1735",
-	["boss_dragon_strength_vitality"] = "blackDragon,3856,4338"
+	["normal_dragon_star_level"] = "blueDragon_4_33",
+	["elite_dragon_star_level"] = "blueDragon_4_35",
+	["boss_dragon_star_level"] = "blackDragon_4_37"
 }
 pve_dragon[22] = {
 	["index"] = 22,
-	["normal_dragon_strength_vitality"] = "greenDragon,682,768",
-	["elite_dragon_strength_vitality"] = "greenDragon,1706,1920",
-	["boss_dragon_strength_vitality"] = "blackDragon,4266,4780"
+	["normal_dragon_star_level"] = "greenDragon_4_34",
+	["elite_dragon_star_level"] = "greenDragon_4_36",
+	["boss_dragon_star_level"] = "blackDragon_4_38"
 }
 pve_dragon[23] = {
 	["index"] = 23,
-	["normal_dragon_strength_vitality"] = "greenDragon,748,842",
-	["elite_dragon_strength_vitality"] = "greenDragon,1870,2104",
-	["boss_dragon_strength_vitality"] = "blackDragon,4675,5260"
+	["normal_dragon_star_level"] = "greenDragon_4_35",
+	["elite_dragon_star_level"] = "greenDragon_4_37",
+	["boss_dragon_star_level"] = "blackDragon_4_39"
 }
 pve_dragon[24] = {
 	["index"] = 24,
-	["normal_dragon_strength_vitality"] = "greenDragon,822,924",
-	["elite_dragon_strength_vitality"] = "greenDragon,2054,2311",
-	["boss_dragon_strength_vitality"] = "blackDragon,5136,5778"
+	["normal_dragon_star_level"] = "greenDragon_4_36",
+	["elite_dragon_star_level"] = "greenDragon_4_38",
+	["boss_dragon_star_level"] = "blackDragon_4_40"
 }

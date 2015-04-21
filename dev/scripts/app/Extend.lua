@@ -225,17 +225,16 @@ end
 
 local newScene = display.newScene
 function display.newScene(name)
+    local WAI_TAG = 1234
     local scene = newScene(name)
     function scene:WaitForNet()
-        if not self.wait_for_net then
-            self.wait_for_net = UIKit:newGameUI("GameUIWatiForNetWork"):AddToScene(self, true):zorder(2001)
+        local child = self:getChildByTag(WAI_TAG)
+        if not child then
+            UIKit:newGameUI("GameUIWatiForNetWork"):AddToScene(self, true):zorder(2001):setTag(WAI_TAG)
         end
     end
     function scene:NoWaitForNet()
-        if self.wait_for_net then
-            self.wait_for_net:removeFromParent()
-            self.wait_for_net = nil
-        end
+        self:removeChildByTag(WAI_TAG, true)
     end
     return scene
 end

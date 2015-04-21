@@ -72,6 +72,8 @@ function AllianceBattleScene:OnTouchClicked(pre_x, pre_y, x, y)
             app:lockInput(false)
         end, 0.5)
 
+        self.event_manager:RemoveAllTouches()
+        
         app:GetAudioManager():PlayeEffectSoundWithKey("HOME_PAGE")
         if iskindof(building, "Sprite") then
             Sprite:PromiseOfFlash(building):next(function()

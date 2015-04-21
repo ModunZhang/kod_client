@@ -45,7 +45,7 @@ function AllianceView:ctor(layer, alliance, logic_base_x, logic_base_y)
     self.alliance = alliance
     self.objects = {}
     logic_base_x = logic_base_x or 0
-    logic_base_y = logic_base_y or 52
+    logic_base_y = logic_base_y or 53
     self.normal_map = NormalMapAnchorBottomLeftReverseY.new{
         tile_w = TILE_WIDTH,
         tile_h = TILE_WIDTH,
@@ -79,7 +79,40 @@ end
 function AllianceView:RandomSeed()
     return 1985423439857
 end
+local terrain_map = {
+    grassLand = {
+        "012.png",
+        "013.png",
+        "014.png",
+        "015.png",
+    },
+    desert = {
+        "005.png",
+        "006.png",
+        "007.png",
+        "008.png",
+    },
+    iceField = {
+        "024.png",
+        "025.png",
+        "026.png",
+        "027.png",
+    }
+}
 function AllianceView:InitAlliance()
+    local background = self:GetLayer():GetBackGround()
+    local array = terrain_map[self:Terrain()]
+    if #array > 0 then
+        local sx,sy,ex,ey = self.normal_map:GetRegion()
+        local size = self:getContentSize()
+        local random = math.random
+        local span = 200
+        for i = 1, 300 do
+            local x = random(sx + span, ex - span)
+            local y = random(sy + span, ey - span)
+            display.newSprite(array[random(#array)]):addTo(background, 1000):pos(x, y)
+        end
+    end
     self:RefreshBuildings(self:GetAlliance():GetAllianceMap())
 end
 function AllianceView:GetBuildingNode()
@@ -135,7 +168,7 @@ function AllianceView:OnBuildingDeltaUpdate(allianceMap, deltaMapObjects)
         self.objects[entity:Id()] = self:CreateObject(entity)
     end
     for _,entity in ipairs(deltaMapObjects.edit or {}) do
-        -- todo
+    -- todo
     end
     for _,entity in ipairs(deltaMapObjects.remove or {}) do
         self:RemoveEntity(entity)
@@ -220,6 +253,7 @@ end
 
 
 return AllianceView
+
 
 
 
