@@ -74,8 +74,6 @@ function GameUIAllianceHome:onEnter()
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.MEMBER)
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.ALLIANCE_FIGHT)
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.FIGHT_REQUESTS)
-    self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.HELP_EVENTS)
-    self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.ALL_HELP_EVENTS)
     MailManager:AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
     local city = City
     self.city = city
@@ -139,13 +137,12 @@ function GameUIAllianceHome:ReturnMyCity()
     scene:GotoLogicPosition(location.x, location.y, alliance:Id())
 end
 function GameUIAllianceHome:CreateOperationButton()
-    local order = WidgetAutoOrder.new(WidgetAutoOrder.ORIENTATION.BOTTOM_TO_TOP):addTo(self):pos(display.right-50,220)
+    local order = WidgetAutoOrder.new(WidgetAutoOrder.ORIENTATION.BOTTOM_TO_TOP):addTo(self):pos(display.right-50,420)
 
-    local first_row = 220
+    local first_row = 420
     local first_col = 177
     local label_padding = 100
     for i, v in ipairs({
-        {"help_64x72.png", _("帮助")},
         {"fight_62x70.png", _("战斗")},
     }) do
         local col = i - 1
@@ -167,20 +164,16 @@ function GameUIAllianceHome:CreateOperationButton()
         end
         if i == 1 then
             local alliance = self.alliance
-            -- 请求帮助的其他联盟成员请求帮助事件数量
-            local request_num = alliance:GetOtherRequestEventsNum()
-            self.help_count = WidgetNumberTips.new():addTo(button):pos(20,-20)
-            self.help_count:SetNumber(request_num)
-
+            local alliance_belvedere = alliance:GetAllianceBelvedere()
+            local __,count = alliance_belvedere:HasEvent()
+            self.alliance_belvedere_events_count = WidgetNumberTips.new():addTo(button):pos(20,-20)
+            self.alliance_belvedere_events_count:SetNumber(count)
             function button:CheckVisible()
-                local alliance = Alliance_Manager:GetMyAlliance()
-                return not alliance:IsDefault() and #alliance:GetCouldShowHelpEvents()>0
-            end
-        else
-            local alliance = self.alliance
-            function button:CheckVisible()
-                local alliance_belvedere = alliance:GetAllianceBelvedere()
-                return alliance_belvedere:HasEvent() or City:HasHelpToTroops()
+                local hasEvent,count = alliance_belvedere:HasEvent()
+                if self.alliance_belvedere_events_count then
+                    self.alliance_belvedere_events_count:SetNumber(count)
+                end
+                return hasEvent
             end
         end
         order:AddElement(button)
@@ -204,24 +197,12 @@ end
 function GameUIAllianceHome:OnProductionTechnologyEventDataChanged()
     self.operation_button_order:RefreshOrder()
 end
-function GameUIAllianceHome:OnHelpEventChanged()
-    self.operation_button_order:RefreshOrder()
-    local request_num = self.alliance:GetOtherRequestEventsNum()
-    self.help_count:SetNumber(request_num)
-end
-function GameUIAllianceHome:OnAllHelpEventChanged()
-    self.operation_button_order:RefreshOrder()
-    local request_num = self.alliance:GetOtherRequestEventsNum()
-    self.help_count:SetNumber(request_num)
-end
 function GameUIAllianceHome:onExit()
     app.timer:RemoveListener(self)
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.MEMBER)
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.ALLIANCE_FIGHT)
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.FIGHT_REQUESTS)
-    self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.HELP_EVENTS)
-    self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.ALL_HELP_EVENTS)
     MailManager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
 
     local city = City
@@ -473,18 +454,18 @@ end
 function GameUIAllianceHome:OnMidButtonClicked(event)
     local tag = event.target:getTag()
     if not tag then return end
-    if tag == 2 then -- 战斗
+    if tag == 1 then -- 战斗
         -- NetManager:getFindAllianceToFightPromose()
         local watchTower = self.city:GetFirstBuildingByType('watchTower')
         UIKit:newGameUI('GameUIWatchTower', self.city, watchTower,"march"):AddToCurrentScene(true)
-    elseif tag == 1 then
-        if not self.alliance:IsDefault() then
-            GameUIHelp.new():AddToCurrentScene()
-        else
-            FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                :SetPopMessage(_("加入联盟才能激活帮助功能"))
-                :AddToCurrentScene()
-        end
+    -- elseif tag == 1 then
+    --     if not self.alliance:IsDefault() then
+    --         GameUIHelp.new():AddToCurrentScene()
+    --     else
+    --         FullScreenPopDialogUI.new():SetTitle(_("提示"))
+    --             :SetPopMessage(_("加入联盟才能激活帮助功能"))
+    --             :AddToCurrentScene()
+    --     end
     end
 end
 
@@ -728,51 +709,3 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

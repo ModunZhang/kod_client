@@ -431,16 +431,23 @@ function NetManager:getConnectLogicServerPromise()
         self:InitEventsMap(base_event_map, logic_event_map)
     end)
 end
--- function NetManager:getOpenUDID()
---     local device_id
---     local udid = cc.UserDefault:getInstance():getStringForKey("udid")
---     if udid and #udid > 0 then
---         device_id = udid
---     else
---         device_id = device.getOpenUDID()
---     end
---     return device_id
--- end
+-- 重写OpenUDID
+local getOpenUDID = device.getOpenUDID
+device.getOpenUDID = function()
+    -- if true then return "dannyhe" end
+    if CONFIG_IS_DEBUG then
+        local device_id
+        local udid = cc.UserDefault:getInstance():getStringForKey("udid")
+        if udid and #udid > 0 then
+            device_id = udid
+        else
+            device_id = getOpenUDID()
+        end
+        return device_id
+    else
+        return getOpenUDID()
+    end
+end
 -- 登录
 function NetManager:getLoginPromise(deviceId)
     local device_id = device.getOpenUDID()
