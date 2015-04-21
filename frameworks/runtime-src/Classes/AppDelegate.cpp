@@ -147,6 +147,9 @@ void AppDelegateExtern::extendApplication()
 
 void AppDelegateExtern::initLuaEngine()
 {
+    Director::getInstance()->stopAnimation();
+    Director::getInstance()->pause();
+    
     ScriptEngineManager::getInstance()->removeScriptEngine();
     auto engine = LuaEngine::getInstance();
     ScriptEngineManager::getInstance()->setScriptEngine(engine);
@@ -187,6 +190,8 @@ void AppDelegateExtern::initLuaEngine()
         }
     }
     FileUtils::getInstance()->setPopupNotify(false);
+    Director::getInstance()->resume();
+    Director::getInstance()->startAnimation();
     engine->executeScriptFile(path.c_str());
 }
 

@@ -37,6 +37,7 @@
 #include "tolua_fix.h"
 #include "LuaBasicConversions.h"
 #include "base/ccUtils.h"
+#include "../../external/lua/quick/LuaNodeManager.h"
 extern "C" {
     #include "tolua++.h"
 }
@@ -595,7 +596,12 @@ static int tolua_ext_restart(lua_State* tolua_S)
 #endif
     {
         AppDelegateExtern delegateExtern;
-        Director::getInstance()->getScheduler()->schedule(schedule_selector(AppDelegateExtern::restartGame), &delegateExtern, 0, false, 0, false);
+        
+        auto scheduler = Director::getInstance()->getScheduler();
+        //下面两个方法均有修改 dannyhe
+        LuaNodeManager::getInstance()->removeAllNodeAndEvents();
+        scheduler->unscheduleScriptEntry(-1);
+        scheduler->schedule(schedule_selector(AppDelegateExtern::restartGame), &delegateExtern, 0, false, 0, false);
     }
     return 0;
 #ifndef TOLUA_RELEASE

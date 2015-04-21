@@ -682,10 +682,18 @@ void Scheduler::unscheduleScriptEntry(unsigned int scheduleScriptEntryID)
     for (ssize_t i = _scriptHandlerEntries.size() - 1; i >= 0; i--)
     {
         SchedulerScriptHandlerEntry* entry = _scriptHandlerEntries.at(i);
-        if (entry->getEntryId() == (int)scheduleScriptEntryID)
+        //dannyhe 如果为-1标记所有脚本启动的计时器为关闭
+        if(scheduleScriptEntryID == -1)
         {
             entry->markedForDeletion();
-            break;
+        }
+        else
+        {
+            if (entry->getEntryId() == (int)scheduleScriptEntryID)
+            {
+                entry->markedForDeletion();
+                break;
+            }
         }
     }
 }

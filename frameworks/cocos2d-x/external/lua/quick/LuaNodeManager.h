@@ -45,7 +45,7 @@ public:
 
     LuaEventNode* getLuaNodeByNode(Node *node, bool toCreate);
     void removeLuaNode(LuaEventNode *lnode);
-
+    void removeAllNodeAndEvents(); //dannyhe 移除所有保存的luanode事件 然后清空保存列表
 CC_CONSTRUCTOR_ACCESS:
     LuaNodeManager();
     ~LuaNodeManager();
