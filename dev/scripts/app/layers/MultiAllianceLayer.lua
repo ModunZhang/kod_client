@@ -93,49 +93,12 @@ function MultiAllianceLayer:ChangeTerrain()
         v:ChangeTerrain()
     end
 end
-local terrain_map = {
-    grassLand = {
-        "012.png",
-        "013.png",
-        "014.png",
-        "015.png",
-    },
-    desert = {
-        "005.png",
-        "006.png",
-        "007.png",
-        "008.png",
-    },
-    iceField = {
-        "024.png",
-        "025.png",
-        "026.png",
-        "027.png",
-    }
-}
 function MultiAllianceLayer:ReloadBackGround()
     if self.background then
         self.background:removeFromParent()
     end
     print("self:GetMapFileByArrangeAndTerrain()", self:GetMapFileByArrangeAndTerrain())
     self.background = cc.TMXTiledMap:create(self:GetMapFileByArrangeAndTerrain()):addTo(self, ZORDER.BACKGROUND)
-    --
-    local terrains = self:GetTerrains()
-    if #terrains == 1 then
-        local array = terrain_map[terrains[1]]
-        if #array > 0 then
-            local size = self:getContentSize()
-            local random = math.random
-            local span = 200
-            for i = 1, 300 do
-                local x = random(span, size.width - span)
-                local y = random(span, size.height - span)
-                display.newSprite(array[random(#array)]):addTo(self.background, 1000):pos(x, y)
-            end
-        end
-    else
-
-    end
 end
 function MultiAllianceLayer:GetMapFileByArrangeAndTerrain()
     local terrains = self:GetTerrains()
@@ -163,6 +126,9 @@ end
 function MultiAllianceLayer:InitLineNode()
     self.lines = display.newNode():addTo(self, ZORDER.LINE)
     self.lines_map = {}
+end
+function MultiAllianceLayer:GetBackGround()
+    return self.background
 end
 function MultiAllianceLayer:GetBuildingNode()
     return self.building
@@ -616,7 +582,8 @@ function MultiAllianceLayer:PromiseOfFlashEmptyGround(building, is_my_alliance)
         if is_my_alliance and v:GetAlliance():Id() == self:GetMyAlliance():Id() then
             alliance_view = v
             break
-        else
+        end
+        if not is_my_alliance and v:GetAlliance():Id() ~= self:GetMyAlliance():Id() then
             alliance_view = v
             break
         end

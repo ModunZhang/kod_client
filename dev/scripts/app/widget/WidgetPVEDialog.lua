@@ -161,6 +161,7 @@ function WidgetPVEDialog:Fight()
         function(dragonType, soldiers)
             local dragon = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon(dragonType)
             local attack_dragon = {
+                level = dragon:Level(),
                 dragonType = dragonType,
                 currentHp = dragon:Hp(),
                 hpMax = dragon:GetMaxHP(),

@@ -6,6 +6,7 @@ local pve_normal = GameDatas.ClientInitGame.pve_normal
 local pve_elite = GameDatas.ClientInitGame.pve_elite
 local pve_boss = GameDatas.ClientInitGame.pve_boss
 local pve_npc = GameDatas.ClientInitGame.pve_npc
+local dragonLevel = GameDatas.Dragons.dragonLevel
 local random = math.random
 local randomseed = math.randomseed
 local TOTAL = {
@@ -82,18 +83,20 @@ function PVEObject:DecodeToEnemy(raw_data)
     local raw_dragon
     local cur_floor_dragon_config = pve_dragon[self:Floor()]
     if normal_map[self.type] then
-        raw_dragon = cur_floor_dragon_config.normal_dragon_strength_vitality
+        raw_dragon = cur_floor_dragon_config.normal_dragon_star_level
     elseif elite_map[self.type] then
-        raw_dragon = cur_floor_dragon_config.elite_dragon_strength_vitality
+        raw_dragon = cur_floor_dragon_config.elite_dragon_star_level
     else
-        raw_dragon = cur_floor_dragon_config.boss_dragon_strength_vitality
+        raw_dragon = cur_floor_dragon_config.boss_dragon_star_level
     end
     local is_not_boss = normal_map[self.type] or elite_map[self.type]
-    local dragonType, strength, vitality = unpack(string.split(raw_dragon, ","))
-    strength, vitality = tonumber(strength), tonumber(vitality)
+    local dragonType,star,level = unpack(string.split(raw_dragon, "_"))
+    level = tonumber(level)
+    local strength, vitality = dragonLevel[level].strength, dragonLevel[level].vitality
     local soldiers_raw = string.split(raw_data.soldiers, ";")
     return {
         dragon = {
+            level = level,
             dragonType = dragonType,
             strength = strength,
             vitality = vitality,

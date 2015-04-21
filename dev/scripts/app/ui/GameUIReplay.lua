@@ -191,6 +191,8 @@ function GameUIReplay:ctor(report, callback)
     assert(report.GetOrderedAttackSoldiers)
     assert(report.GetOrderedDefenceSoldiers)
     assert(report.GetReportResult)
+    assert(report.GetAttackDragonLevel)
+    assert(report.GetAttackDragonLevel)
     self.report = report
     self.callback = callback
     GameUIReplay.super.ctor(self)
@@ -614,8 +616,16 @@ function GameUIReplay:NewDragon(is_left, is_pve_battle)
     local node = display.newNode()
     local game_ui_replay = self
     function node:Init()
+        local dragon_type = "redDragon"
+        if is_left then
+            local attack_dragon = game_ui_replay.report:GetFightAttackDragonRoundData()
+            dragon_type = attack_dragon.dragonType
+        else
+            local defend_dragon = game_ui_replay.report:GetFightDefenceDragonRoundData()
+            dragon_type = defend_dragon.dragonType
+        end
         self.name = cc.ui.UILabel.new({
-            text = "红龙(等级20)",
+            text = string.format("%s(等级%d)", Localize.dragon[dragon_type], game_ui_replay.report:GetAttackDragonLevel()),
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0xffedae)
@@ -637,34 +647,19 @@ function GameUIReplay:NewDragon(is_left, is_pve_battle)
 
 
         self.result = cc.ui.UILabel.new({
-            text = "WIN",
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x00be36)
-        }):align(display.CENTER, 120, -55)
+        }):align(display.CENTER, is_left and 120 or -35, -55)
             :addTo(self):hide()
-        if not is_left then
-            self.result:pos(-35, -55)
-        end
 
         self.buff = cc.ui.UILabel.new({
-            text = "BUFF + 100%",
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x00be36)
-        }):align(display.CENTER, 20, -55)
+        }):align(display.CENTER, is_left and 20 or 80, -55)
             :addTo(self):hide()
-        if not is_left then
-            self.buff:pos(80, -55)
-        end
-        local dragon_type = "redDragon"
-        if is_left then
-            local attack_dragon = game_ui_replay.report:GetFightAttackDragonRoundData()
-            dragon_type = attack_dragon.dragonType
-        else
-            local defend_dragon = game_ui_replay.report:GetFightDefenceDragonRoundData()
-            dragon_type = defend_dragon.dragonType
-        end
+
         local ani_name, left_x, right_x = unpack(dragon_ani_map[dragon_type])
         local dragon = ccs.Armature:create(ani_name)
             :addTo(self):align(display.CENTER, is_left and left_x or right_x, 60):scale(0.6)
