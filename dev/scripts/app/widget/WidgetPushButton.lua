@@ -9,6 +9,19 @@ function WidgetPushButton:ctor(images, options, filters,music_info)
     self:RebindEventListener()
 end
 function WidgetPushButton:RebindEventListener()
+    self:onButtonPressed(function(event)
+        self.pre_pos = event.target:convertToWorldSpace(cc.p(event.target:getPosition()))
+    end)
+    self:addEventListener(MOVE_EVENT, function(event)
+        if self.pre_pos then
+            local cur_pos = event.target:convertToWorldSpace(cc.p(event.target:getPosition()))
+            if event.touchInTarget and cc.pGetDistance(cur_pos, self.pre_pos) > 10 then
+                if event.target.fsm_:canDoEvent("release") then
+                    event.target.fsm_:doEvent("release")
+                end
+            end
+        end
+    end)
     self:addNodeEventListener(cc.NODE_EVENT, function(event)
         if event.name == "enter" then
             self:UpdateFilters()
@@ -125,7 +138,45 @@ function WidgetPushButton:HasFilters()
     return self.filters
 end
 
+function WidgetPushButton:onTouch_(event)
+    local name, x, y = event.name, event.x, event.y
+    if name == "began" then
+        self.touchBeganX = x
+        self.touchBeganY = y
+        if not self:checkTouchInSprite_(x, y) then return false end
+        self.fsm_:doEvent("press")
+        self:dispatchEvent({name = UIPushButton.PRESSED_EVENT, x = x, y = y, touchInTarget = true})
+        return true
+    end
+
+    -- must the begin point and current point in Button Sprite
+    local touchInTarget = self:checkTouchInSprite_(self.touchBeganX, self.touchBeganY)
+        and self:checkTouchInSprite_(x, y)
+    if name == "moved" then
+        -- if touchInTarget and self.fsm_:canDoEvent("press") then
+        --     self.fsm_:doEvent("press")
+        --     self:dispatchEvent({name = UIPushButton.PRESSED_EVENT, x = x, y = y, touchInTarget = true})
+        -- end
+        if touchInTarget then
+            self:dispatchEvent({name = MOVE_EVENT, x = x, y = y, touchInTarget = true})
+        elseif not touchInTarget and self.fsm_:canDoEvent("release") then
+            self.fsm_:doEvent("release")
+            self:dispatchEvent({name = UIPushButton.RELEASE_EVENT, x = x, y = y, touchInTarget = false})
+        end
+    else
+        local can_release = self.fsm_:canDoEvent("release")
+        if can_release then
+            self.fsm_:doEvent("release")
+            self:dispatchEvent({name = UIPushButton.RELEASE_EVENT, x = x, y = y, touchInTarget = touchInTarget})
+        end
+        if name == "ended" and touchInTarget and can_release then
+            self:dispatchEvent({name = UIPushButton.CLICKED_EVENT, x = x, y = y, touchInTarget = true})
+        end
+    end
+end
+
 return WidgetPushButton
+
 
 
 
