@@ -165,11 +165,11 @@ function GameUIAllianceHome:CreateOperationButton()
         if i == 1 then
             local alliance = self.alliance
             local alliance_belvedere = alliance:GetAllianceBelvedere()
-            local __,count = alliance_belvedere:HasEvent()
+            local __,count = alliance_belvedere:HasEvents()
             self.alliance_belvedere_events_count = WidgetNumberTips.new():addTo(button):pos(20,-20)
             self.alliance_belvedere_events_count:SetNumber(count)
             function button:CheckVisible()
-                local hasEvent,count = alliance_belvedere:HasEvent()
+                local hasEvent,count = alliance_belvedere:HasEvents()
                 if self.alliance_belvedere_events_count then
                     self.alliance_belvedere_events_count:SetNumber(count)
                 end
@@ -459,17 +459,17 @@ function GameUIAllianceHome:OnMidButtonClicked(event)
     local tag = event.target:getTag()
     if not tag then return end
     if tag == 1 then -- 战斗
-        -- NetManager:getFindAllianceToFightPromose()
-        local watchTower = self.city:GetFirstBuildingByType('watchTower')
-        UIKit:newGameUI('GameUIWatchTower', self.city, watchTower,"march"):AddToCurrentScene(true)
-    -- elseif tag == 1 then
-    --     if not self.alliance:IsDefault() then
-    --         GameUIHelp.new():AddToCurrentScene()
-    --     else
-    --         FullScreenPopDialogUI.new():SetTitle(_("提示"))
-    --             :SetPopMessage(_("加入联盟才能激活帮助功能"))
-    --             :AddToCurrentScene()
-    --     end
+        local default_tab = 'march'
+        local alliance = self.alliance
+        local alliance_belvedere = alliance:GetAllianceBelvedere()
+        local hasMarch,__ = alliance_belvedere:HasMyEvents()
+        if not hasMarch then
+            local hasComming,__ = alliance_belvedere:HasOtherEvents()
+            if hasComming then
+                default_tab = 'comming'
+            end
+        end
+        UIKit:newGameUI('GameUIWathTowerRegion',self.city,default_tab):AddToCurrentScene(true)
     end
 end
 

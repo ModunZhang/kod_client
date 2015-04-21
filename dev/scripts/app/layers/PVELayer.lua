@@ -244,7 +244,7 @@ function PVELayer:LightOn(x, y, size)
     for x_ = sx, ex do
         for y_ = sy, ey do
             if x_ >= 1 and x_ < width - 1 and y_ >= 1 and y_ < height - 1 then
-                local fog = self.war_fog_layer:getTileAt(cc.p(x_, y_))
+                local fog = self:GetFog(x_, y_)
                 if fog:isVisible() then
                     fog:hide()
                     self.pve_map:InsertFog(x_, y_)
@@ -254,19 +254,13 @@ function PVELayer:LightOn(x, y, size)
     end
 end
 function PVELayer:LoadFog()
-    local war_fog_layer = self.war_fog_layer
     self.pve_map:IteratorFogs(function(x, y)
-        war_fog_layer:getTileAt(cc.p(x, y)):hide()
+        self:GetFog(x, y):hide()
     end)
 end
-function PVELayer:LockTileAt(x, y)
-    self.war_fog_layer:getTileAt(cc.p(x, y)):show()
-end
-function PVELayer:UnLockTileAt(x, y)
-    self.war_fog_layer:getTileAt(cc.p(x, y)):hide()
-end
-function PVELayer:UnLockTileAt(x, y)
-    self.war_fog_layer:getTileAt(cc.p(x, y)):hide()
+function PVELayer:GetFog(x, y)
+    return self.war_fog_layer:getTileAt(cc.p(x, y))
+    -- return self.fogs[x][y]
 end
 function PVELayer:ConvertLogicPositionToMapPosition(lx, ly)
     local map_pos = cc.p(self.normal_map:ConvertToMapPosition(lx, ly))

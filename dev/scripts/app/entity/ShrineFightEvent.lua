@@ -18,11 +18,12 @@ end
 function ShrineFightEvent:OnPropertyChange()
 end
 
-function ShrineFightEvent:Update(json_data)
+function ShrineFightEvent:Update(json_data,refresh_time)
 	self:SetStageName(json_data.stageName)
 	self:SetStartTime(json_data.startTime/1000.0)
 	self:SetId(json_data.id)
 	self:SetPlayerTroops(json_data.playerTroops)
+	self.times = math.ceil(self:StartTime() - refresh_time)
 end
 
 

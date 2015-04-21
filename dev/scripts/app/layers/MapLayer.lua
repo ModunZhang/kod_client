@@ -169,6 +169,7 @@ function MapLayer:GotoMapPositionInMiddle(x, y)
     local current_x, current_y = self:getPosition()
     self:setPosition(cc.p(current_x + dx, current_y + dy))
 end
+local floor = math.floor
 function MapLayer:setPosition(position)
     local x, y = position.x, position.y
     local super = getmetatable(self)
