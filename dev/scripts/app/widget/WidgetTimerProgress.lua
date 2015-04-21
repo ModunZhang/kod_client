@@ -8,17 +8,7 @@ end)
 function WidgetTimerProgress:ctor(width, height)
     local width = width == nil and 549 or width
     local height = height == nil and 100 or height
-    local back_ground_351x96 = WidgetUIBackGround.new({
-        width = 556,
-        height = 106,
-        top_img = "back_ground_426x14_top_1.png",
-        bottom_img = "back_ground_426x14_top_1.png",
-        mid_img = "back_ground_426x1_mid_1.png",
-        u_height = 14,
-        b_height = 14,
-        m_height = 1,
-        b_flip = true,
-    })
+    local back_ground_351x96 = WidgetUIBackGround.new({width=556,height = 106},WidgetUIBackGround.STYLE_TYPE.STYLE_5)
     self.describe = cc.ui.UILabel.new({
         size = 22,
         font = UIKit:getFontFilePath(),

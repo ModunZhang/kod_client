@@ -58,16 +58,8 @@ function GameUIAlliancePosition:ctor()
 
 
 
-    local bg1 = WidgetUIBackGround.new({
-        width = 558,
-        height = 118,
-        top_img = "back_ground_580x12_top.png",
-        bottom_img = "back_ground_580X12_bottom.png",
-        mid_img = "back_ground_580X1_mid.png",
-        u_height = 12,
-        b_height = 12,
-        m_height = 1,
-    }):align(display.CENTER,304, 140):addTo(body)
+    local bg1 = WidgetUIBackGround.new({width = 558,height=118},WidgetUIBackGround.STYLE_TYPE.STYLE_4)
+        :align(display.CENTER,304, 140):addTo(body)
 
     -- 最大坐标
     local max = 51

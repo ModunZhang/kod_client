@@ -1,5 +1,4 @@
 local WidgetPopDialog = import(".WidgetPopDialog")
-local WidgetBackGroundLucid = import(".WidgetBackGroundLucid")
 local WidgetRequirementListview = import(".WidgetRequirementListview")
 local MaterialManager = import("..entity.MaterialManager")
 local Localize = import("..utils.Localize")
