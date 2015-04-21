@@ -115,7 +115,7 @@ function PVEObject:DecodeToEnemy(raw_data)
                 count = is_not_boss and pve_func.soldiers.countFunc(self:Floor(), count) or count,
             }
         end),
-        rewards = self:DecodeToRewards(raw_data.rewards),
+        rewards = self:DecodeToRewards(raw_data.rewards, pve_func.rewards.countFunc),
     }
 end
 local m = getmetatable(NotifyItem)
@@ -146,7 +146,8 @@ function PVEObject:GetRewards(select)
         end
     end
 end
-function PVEObject:DecodeToRewards(raw)
+function PVEObject:DecodeToRewards(raw, func)
+    func = func or function(_,count) return count end
     local is_not_boss = normal_map[self.type] or elite_map[self.type]
     local rewards_raw = string.split(raw, ";")
     local r = LuaUtils:table_map(rewards_raw, function(k, v)
@@ -157,7 +158,7 @@ function PVEObject:DecodeToRewards(raw)
         return k, {
             type = rtype,
             name = rname,
-            count = is_not_boss and pve_func.rewards.countFunc(self:Floor(), count) or count,
+            count = func(self:Floor(), count),
             probability = probability
         }
     end)

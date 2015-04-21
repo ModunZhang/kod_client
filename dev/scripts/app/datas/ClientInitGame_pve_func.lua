@@ -6,5 +6,5 @@ pve_func["soldiers"] = {
 }
 pve_func["rewards"] = {
 	["type"] = "rewards",
-	["countFunc"] = function(floor,count,C,D,E) return count * floor ^ 2 end
+	["countFunc"] = function(floor,count,C,D,E) return math.ceil(count * floor ^ 2) end
 }
