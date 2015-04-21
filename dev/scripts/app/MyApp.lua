@@ -63,6 +63,7 @@ function MyApp:ctor()
 end
 
 function MyApp:run()
+    cc.Director:getInstance():setProjection(0)
     self:enterScene('LogoScene')
 end
 
