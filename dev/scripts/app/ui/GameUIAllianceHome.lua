@@ -284,9 +284,9 @@ function GameUIAllianceHome:CreateTop()
             text = "",
             size = 18,
             color = 0xffedae,
-            dimensions = cc.size(200,18),
+            dimensions = cc.size(160,18),
             ellipsis = true
-        }):align(display.RIGHT_CENTER, enemy_name_bg:getContentSize().width-30, 20)
+        }):align(display.LEFT_CENTER, 100, 20)
         :addTo(enemy_name_bg)
     local enemy_peace_label = UIKit:ttfLabel(
         {

@@ -19,6 +19,7 @@ function GameUIToolShopSpeedUp:ctor(building)
     self:SetAccBtnsGroup(self:GetEventType(),event:Id())
     self:SetAccTips(_("生产材料不能免费加速"))
     self:SetUpgradeTip(_("制造材料").."X 1")
+    self:SetProgressInfo(GameUtils:formatTimeStyle1(event:LeftTime(app.timer:GetServerTime())),event:Percent(app.timer:GetServerTime()))
     building:AddToolShopListener(self)
 end
 

@@ -14,6 +14,7 @@ function GameUITreatSoldierSpeedUp:ctor(building)
     self:SetAccBtnsGroup(self:GetEventType(),building:GetTreatEvent():Id())
     self:SetAccTips(_("治疗伤兵不能免费加速"))
     self:SetUpgradeTip(string.format(_("正在治愈%d人口的伤兵"),self:GetTreatCount()))
+    self:SetProgressInfo(GameUtils:formatTimeStyle1(building:GetTreatEvent():LeftTime(app.timer:GetServerTime())),building:GetTreatEvent():Percent(app.timer:GetServerTime()))
     building:AddHospitalListener(self)
 end
 

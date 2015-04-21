@@ -215,6 +215,14 @@ function GameUIItems:CreateShopContentByIndex( idx )
                     if items:Price() > User:GetGemResource():GetValue() then
                         FullScreenPopDialogUI.new():SetTitle(_("提示"))
                             :SetPopMessage(_("金龙币不足"))
+                            :CreateOKButton(
+                                {
+                                    listener = function ()
+                                        UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                                    end,
+                                    btn_name= _("前往商店")
+                                }
+                            )
                             :AddToCurrentScene()
                     else
                         NetManager:getBuyItemPromise(items:Name(),1)
@@ -508,6 +516,7 @@ function GameUIItems:OnItemsChanged( changed_map )
     end
 end
 return GameUIItems
+
 
 
 

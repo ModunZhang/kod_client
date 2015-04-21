@@ -623,7 +623,7 @@ function GameUIVip:CreateVIPButtons(level)
             end)
         button:setTag(i)
         display.newSprite("VIP_"..i.."_46x32.png"):addTo(button)
-            :align(display.CENTER, 52,45)
+            :align(display.CENTER,48,45)
     end
     function button_group:Refresh(vip_level)
         for i=1,VIP_MAX_LEVEL do

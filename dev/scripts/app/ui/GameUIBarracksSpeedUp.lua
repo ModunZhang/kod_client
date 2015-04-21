@@ -16,6 +16,7 @@ function GameUIBarracksSpeedUp:ctor(building)
     self:SetAccBtnsGroup(self:GetEventType(),building:GetRecruitEvent():Id())
     self:SetAccTips(_("招募士兵不能免费加速"))
     self:SetUpgradeTip(string.format("%s%s x%d", _("招募"), Localize.soldier_name[soldier_type], count))
+    self:SetProgressInfo(GameUtils:formatTimeStyle1(building:GetRecruitEvent():LeftTime(app.timer:GetServerTime())),building:GetRecruitEvent():Percent(app.timer:GetServerTime()))
     building:AddBarracksListener(self)
 end
 
