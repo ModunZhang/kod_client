@@ -80,6 +80,7 @@ function UIPageView:ctor(params)
     self.bCirc = params.bCirc or false
     self.nBounce = params.nBounce or false -- 代国强 true 滑动不超出边界
     self.gap = params.gap or gap -- 代国强 滑动距离设置
+    self.speed_limit = params.speed_limit or 10 -- 代国强 滑动距离设置
 
     self:setClippingRegion(self.viewRect_)
     -- self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(...)
@@ -679,11 +680,11 @@ function UIPageView:scrollAuto()
         pageL = nil
         pageR = nil
     end
-    if (dis > self.viewRect_.width/2 or self.speed > 10)
+    if (dis > self.viewRect_.width/2 or self.speed > self.speed_limit)
         and (self.curPageIdx_ > 1 or self.bCirc)
         and count > 1 then
         bChange = true
-    elseif (-dis > self.viewRect_.width/2 or -self.speed > 10)
+    elseif (-dis > self.viewRect_.width/2 or -self.speed > self.speed_limit)
         and (self.curPageIdx_ < self:getPageCount() or self.bCirc)
         and count > 1 then
         bChange = true

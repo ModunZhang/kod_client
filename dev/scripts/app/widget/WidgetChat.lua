@@ -37,7 +37,8 @@ function WidgetChat:ctor()
         viewRect = cc.rect(15, 4, size.width-80, size.height),
         row = 2,
         padding = {left = 0, right = 0, top = 10, bottom = 0},
-        gap = 10
+        gap = 10,
+        speed_limit = 5
     }:onTouch(function (event)
         dump(event,"UIPageView event")
         if event.name == "pageChange" then
