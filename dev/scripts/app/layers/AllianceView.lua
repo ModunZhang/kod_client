@@ -45,7 +45,7 @@ function AllianceView:ctor(layer, alliance, logic_base_x, logic_base_y)
     self.alliance = alliance
     self.objects = {}
     logic_base_x = logic_base_x or 0
-    logic_base_y = logic_base_y or 52
+    logic_base_y = logic_base_y or 53
     self.normal_map = NormalMapAnchorBottomLeftReverseY.new{
         tile_w = TILE_WIDTH,
         tile_h = TILE_WIDTH,
