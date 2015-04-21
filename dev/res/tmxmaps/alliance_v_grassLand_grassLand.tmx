@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="51" height="104" tilewidth="160" tileheight="160">
- <tileset firstgid="1" name="015" tilewidth="160" tileheight="160">
-  <image source="015.png" width="480" height="480"/>
+<map version="1.0" orientation="orthogonal" width="51" height="106" tilewidth="160" tileheight="160">
+ <tileset firstgid="1" name="terrain" tilewidth="160" tileheight="160">
+  <image source="terrain.png" width="1440" height="1440"/>
  </tileset>
- <tileset firstgid="10" name="026" tilewidth="160" tileheight="160">
-  <image source="026.png" width="480" height="480"/>
- </tileset>
- <layer name="layer1" width="51" height="104">
+ <layer name="layer1" width="51" height="106">
   <data encoding="base64" compression="zlib">
-   eJzt07FxQlEAA8EfgzHg/ovlFeHgxGygmStgdbuu6372c3Yb78fZ79nzC/p19j77+4Iu2GCMsZUu2GCMsZUu2GCMsZUu2GCMsZUu2GCMsZUu2GCMsZUu2GCMsZUu2GCMsZUu2GCMsZUu2GCMsZUu2GCMsZUu2GCMsZUu2ND+stIFG4wxttIFG4wxttIFG4wxttIFG4wxttIFG4wxttIFG4wxttIFG4wxttIFG4wxttIFG4wxttIFG4wxttIFG4wxttIFG4wxttIFG//VH/DyIO4=
+   eJzt0rFtAlEABcHLgMwmA/ffp38Z+04TrLQFzOO6rufpdXqM/8/p9/S+wX9O39PfDb5ggzHGVr5ggzHGVr5ggzHGVr5ggzHGVr5ggzHGVr5ggzHGVr5ggzHGVr5ggzHGVr5ggzHGVr5ggzHGVr5ggzHGVr5ggzHGVr5ggzHGVr5ggzHGVr5ggzHGVr5ggzHGVr5ggzHGVr5ggzHGVr5ggzHGVr5ggzHGVr5ggzHGVr5ggzHGVr5ggzHGVr5ggzHGVr5ggzHGVr5gg7F7G/sHbnFlQw==
+  </data>
+ </layer>
+ <layer name="layer2" width="51" height="106">
+  <data encoding="base64" compression="zlib">
+   eJztxrENwCAQBEEaAzKbzKb/ZnwVkDl5zUgrbWsAAAAAAAAAAAAAnPQ00izwV7rTKvBPetMu8AAAAAAAAAAAAAB/+ABz4ypw
   </data>
  </layer>
 </map>
