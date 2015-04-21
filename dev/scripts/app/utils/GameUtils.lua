@@ -561,6 +561,7 @@ local function createFightSoldiers(soldiers, dragon, terrain)
 end
 local function createFightDragon(dragon)
     return {
+        level = dragon.level,
         dragonType = dragon.dragonType,
         currentHp = dragon.currentHp,
         totalHp = dragon.currentHp,
@@ -849,6 +850,12 @@ function GameUtils:DoBattle(attacker, defencer, terrain)
     end
     function report:GetReportResult()
         return self:IsAttackWin()
+    end
+    function report:GetAttackDragonLevel()
+        return attacker_dragon.level
+    end
+    function report:GetAttackDragonLevel()
+        return defencer_dragon.level
     end
     return report
 end

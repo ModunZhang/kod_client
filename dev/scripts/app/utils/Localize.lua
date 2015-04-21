@@ -96,6 +96,7 @@ local DRAGON_LOCALIZE = {
     ["redDragon"] = _("红龙"),
     ["blueDragon"] = _("蓝龙"),
     ["greenDragon"] = _("绿龙"),
+    ["blackDragon"] = _("黑龙"),
 }
 local BODY_LOCALIZE = {
     ["crown"] = _("头部"),
