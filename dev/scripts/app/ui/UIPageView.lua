@@ -79,6 +79,7 @@ function UIPageView:ctor(params)
     self.padding_ = params.padding or {left = 0, right = 0, top = 0, bottom = 0}
     self.bCirc = params.bCirc or false
     self.nBounce = params.nBounce or false -- 代国强 true 滑动不超出边界
+    self.gap = params.gap or gap -- 代国强 滑动距离设置
 
     self:setClippingRegion(self.viewRect_)
     -- self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(...)
@@ -392,7 +393,7 @@ function UIPageView:onTouch_(event)
         self.bDrag_ = false
         self.isOnTouch = true -- 代国强
     elseif "moved" == event.name then
-        if math.abs(event.x - self.event__.x) > 20 then
+        if math.abs(event.x - self.event__.x) > self.gap then
             self.bDrag_ = true
             self.speed = event.x - event.prevX
             self:scroll(self.speed)
