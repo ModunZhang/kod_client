@@ -1404,6 +1404,8 @@ function GameUIMail:OpenReplyMail(mail)
                 dialog:LeftButtonClicked()
             end
         end)
+    textView:setRectTrackedNode(send_label)
+
     return reply_mail
 end
 
@@ -1424,17 +1426,22 @@ function GameUIMail:SendMail(addressee,title,content)
     if not addressee or string.trim(addressee)=="" then
         FullScreenPopDialogUI.new():SetTitle(_("提示"))
             :SetPopMessage(_("请填写正确的收件人ID"))
-            :AddToCurrentScene()
+            :AddToCurrentScene(true)
+        return
+    elseif addressee == User:Id() then
+        FullScreenPopDialogUI.new():SetTitle(_("提示"))
+            :SetPopMessage(_("不能向自己发送邮件"))
+            :AddToCurrentScene(true)
         return
     elseif not title or string.trim(title)=="" then
         FullScreenPopDialogUI.new():SetTitle(_("提示"))
             :SetPopMessage(_("请填写邮件主题"))
-            :AddToCurrentScene()
+            :AddToCurrentScene(true)
         return
     elseif not content or string.trim(content)=="" then
         FullScreenPopDialogUI.new():SetTitle(_("提示"))
             :SetPopMessage(_("请填写邮件内容"))
-            :AddToCurrentScene()
+            :AddToCurrentScene(true)
         return
     end
     NetManager:getSendPersonalMailPromise(addressee, title, content)
