@@ -10,8 +10,10 @@ local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local window = import("..utils.window")
 local Localize = import("..utils.Localize")
+local Localize_item = import("..utils.Localize_item")
 local UILib = import("..ui.UILib")
 local Item = import("..entity.Item")
+local MaterialManager = import("..entity.MaterialManager")
 local WidgetUseItems = import("..widget.WidgetUseItems")
 
 local GameUIItems = UIKit:createUIClass("GameUIItems","GameUIWithCommonHeader")
@@ -255,15 +257,7 @@ function GameUIItems:CreateShopContentByIndex( idx )
             }))
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
-                    if parent:IsItemCouldUseNow(items) then
-                        NetManager:getUseItemPromise(items:Name(),{}):done(function ()
-                            UIKit:PlayUseItemAni(items)
-                        end)
-                    else
-                        WidgetUseItems.new():Create({
-                            item = items
-                        }):AddToCurrentScene()
-                    end
+                    parent:UseItemFunc(items)
                 end
             end)
             :align(display.LEFT_BOTTOM, 14, 16)
@@ -441,16 +435,7 @@ function GameUIItems:CreateMyItemContentByIndex( idx )
                 }))
                 :onButtonClicked(function(event)
                     if event.name == "CLICKED_EVENT" then
-                        if parent:IsItemCouldUseNow(items) then
-                            NetManager:getUseItemPromise(items:Name(),{}):done(function ()
-                                UIKit:PlayUseItemAni(items)
-                            end)
-                        else
-                            WidgetUseItems.new():Create({
-                                item = items
-                            }):AddToCurrentScene()
-                        end
-
+                        parent:UseItemFunc(items)
                     end
                 end)
                 :align(display.RIGHT_BOTTOM, item_width-10, 15)
@@ -460,7 +445,33 @@ function GameUIItems:CreateMyItemContentByIndex( idx )
     end
     return content
 end
-
+function GameUIItems:UseItemFunc( items )
+    if self:IsItemCouldUseNow(items) then
+        local name = items:Name()
+        -- 使用巨龙宝箱会获得龙装备材料，需要提示
+        local clone_dragon_materials
+        if string.find(name,"dragonChest") then
+            clone_dragon_materials = clone(self.city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.DRAGON))
+        end
+        NetManager:getUseItemPromise(items:Name(),{}):done(function (response)
+            if string.find(name,"dragonChest") then
+                local message = ""
+                for i,v in ipairs(response.msg.playerData) do
+                    if string.find(v[1],"dragonMaterials") then
+                        local m_name = string.split(v[1], ".")[2]
+                        message = message .. Localize.equip_material[m_name].."x"..(v[2]-clone_dragon_materials[m_name]).." "
+                    end
+                end
+                GameGlobalUI:showTips(_("获得"),message)
+            end
+            UIKit:PlayUseItemAni(items)
+        end)
+    else
+        WidgetUseItems.new():Create({
+            item = items
+        }):AddToCurrentScene()
+    end
+end
 function GameUIItems:OnItemsChanged( changed_map )
     if changed_map[1] then
         for k,v in pairs(changed_map[1]) do
@@ -517,6 +528,7 @@ function GameUIItems:OnItemsChanged( changed_map )
     end
 end
 return GameUIItems
+
 
 
 

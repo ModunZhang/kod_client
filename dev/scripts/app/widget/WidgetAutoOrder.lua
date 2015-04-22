@@ -12,8 +12,9 @@ WidgetAutoOrder.ORIENTATION = {
     TOP_TO_BOTTOM = 3,
     BOTTOM_TO_TOP = 4,
 }
-function WidgetAutoOrder:ctor(order_type)
+function WidgetAutoOrder:ctor(order_type,default_gap)
     self.order_type = order_type
+    self.default_gap = default_gap
     self.element_table = {}
 end
 
@@ -28,18 +29,18 @@ function WidgetAutoOrder:RefreshOrder()
     local gap = 0
     for i,v in ipairs(self.element_table) do
         if v:CheckVisible() then
-            if WidgetAutoOrder.ORIENTATION.BOTTOM_TO_TOP then
+            if self.order_type == WidgetAutoOrder.ORIENTATION.BOTTOM_TO_TOP then
             	v:setPositionY(gap)
-                gap = gap + v:GetElementSize().height
-            elseif WidgetAutoOrder.ORIENTATION.TOP_TO_BOTTOM then
+                gap = gap + v:GetElementSize().height + self.default_gap
+            elseif self.order_type == WidgetAutoOrder.ORIENTATION.TOP_TO_BOTTOM then
             	v:setPositionY(gap)
-                gap = gap - v:GetElementSize().height
-            elseif WidgetAutoOrder.ORIENTATION.LEFT_TO_RIGHT then
+                gap = gap - v:GetElementSize().height - self.default_gap
+            elseif self.order_type == WidgetAutoOrder.ORIENTATION.LEFT_TO_RIGHT then
             	v:setPositionX(gap)
-                gap = gap + v:GetElementSize().width
-            elseif WidgetAutoOrder.ORIENTATION.RIGHT_TO_LEFT then
+                gap = gap + v:GetElementSize().width + self.default_gap
+            elseif self.order_type == WidgetAutoOrder.ORIENTATION.RIGHT_TO_LEFT then
             	v:setPositionX(gap)
-                gap = gap - v:GetElementSize().width
+                gap = gap - v:GetElementSize().width - self.default_gap
             end
             v:show()
         else
