@@ -112,8 +112,8 @@ function ChatManager:__getMessageWithChannel(channel)
 end
 
 function ChatManager:insertNormalMessage_(msg)
-	if not msg.fromChannel then return end
-	local msg_type = string.lower(msg.fromChannel)
+	if not msg.channel then return end
+	local msg_type = string.lower(msg.channel)
 	if msg_type =='global' or msg_type == 'system' then
 		if not self:__checkIsBlocked(msg) then
 			table.insert(self.global_channel,1,msg)
@@ -187,12 +187,12 @@ end
 
 function ChatManager:__formatLastMessage(chat)
 	if not chat then return ""  end
-	if chat.fromId == User:Id() then
-		chat.fromName = User:Name()
+	if chat.id == User:Id() then
+		chat.name = User:Name()
 	end
 	local chat_text = string.format(" : %s",chat.text)
 	local result = self:GetEmojiUtil():ConvertEmojiToRichText(chat_text,function(json_table)
-		table.insert(json_table,1,string.format('{\"type\":\"text\", \"value\":\"%s\",\"color\":0x00b4cf}', chat.fromName))
+		table.insert(json_table,1,string.format('{\"type\":\"text\", \"value\":\"%s\",\"color\":0x00b4cf}', chat.name))
 	end)
 	return result
 end
@@ -238,7 +238,7 @@ end
 
 function ChatManager:AddBlockChat(chat)
 	if self:__checkIsBlocked(chat) then return true end
-	self._blockedIdList_[chat.fromId] = chat
+	self._blockedIdList_[chat.id] = chat
 	self:__flush()
 	return true
 end
@@ -249,7 +249,7 @@ end
 
 function ChatManager:RemoveItemFromBlockList(chat)
 	if self:__checkIsBlocked(chat) then 
-		self._blockedIdList_[chat.fromId] = nil
+		self._blockedIdList_[chat.id] = nil
 		self:__flush()
 		return true
 	end

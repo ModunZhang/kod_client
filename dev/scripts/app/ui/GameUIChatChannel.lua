@@ -324,8 +324,8 @@ function GameUIChatChannel:HandleCellUIData(mainContent,chat,update_time)
     if type(update_time) ~= 'boolean' then
         update_time = true
     end
-    local isSelf = User:Id() == chat.fromId
-    local isVip = chat.fromVip and chat.fromVip > 0
+    local isSelf = User:Id() == chat.id
+    local isVip = chat.vip and chat.vip > 0
     local currentContent = nil
     if isSelf then
       mainContent.other_content:hide()
@@ -345,8 +345,9 @@ function GameUIChatChannel:HandleCellUIData(mainContent,chat,update_time)
     local timeLabel = currentContent.time_label
     local titleLabel = currentContent.from_label
     local vipLabel = currentContent.vip_label
-    titleLabel:setString("[ Tag ] " .. chat.fromName)
-    vipLabel:setString('VIP ' .. DataUtils:getPlayerVIPLevel(chat.fromVip))
+    local name_title = chat.allianceTag == "" and chat.name or string.format("[ %s ] %s",chat.allianceTag,chat.name)
+    titleLabel:setString(name_title)
+    vipLabel:setString('VIP ' .. DataUtils:getPlayerVIPLevel(chat.vip))
     vipLabel:setPositionX(titleLabel:getPositionX() + titleLabel:getContentSize().width + 15)
     if update_time or not chat.timeStr then
         chat.timeStr = NetService:formatTimeAsTimeAgoStyleByServerTime(chat.time)
@@ -455,7 +456,7 @@ function GameUIChatChannel:GetBlackListItem(chat,width)
     local iconBg = UIKit:GetPlayerCommonIcon():scale(0.8):addTo(bg,2):pos(60,math.floor(bg:getContentSize().height/2))
     local nameLabel = cc.ui.UILabel.new({
         UILabelType = 2,
-        text = chat.fromName or "player" ,
+        text = chat.name or "player" ,
         size = 22,
         color = UIKit:hex2c3b(0x403c2f),
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
@@ -464,7 +465,7 @@ function GameUIChatChannel:GetBlackListItem(chat,width)
 
     local allianceLabel = cc.ui.UILabel.new({
         UILabelType = 2,
-        text = chat.fromAlliance or "",
+        text = chat.allianceTag or "",
         size = 16,
         color = UIKit:hex2c3b(0x403c2f),
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
@@ -498,7 +499,7 @@ function GameUIChatChannel:listviewListener(event)
         local item = event.item
         if not item then return end
         local chat = self.dataSource_[item.idx_]
-        local isSelf = User:Id() == chat.fromId
+        local isSelf = User:Id() == chat.id
         if isSelf or not chat then return end
         local content = item:getContent().other_content
         local header = content.header
@@ -602,7 +603,7 @@ function GameUIChatChannel:CreatePlayerMenu(event,chat)
         }))
         :onButtonClicked(function(event)
             menuLayer:removeFromParent(true)
-            UIKit:newGameUI("GameUIAllianceMemberInfo",false,chat.fromId):AddToCurrentScene(true)
+            UIKit:newGameUI("GameUIAllianceMemberInfo",false,chat.id):AddToCurrentScene(true)
         end)
         :setTouchSwallowEnabled(true)
         :align(display.LEFT_BOTTOM, window.left + 134 , 2)
@@ -658,7 +659,7 @@ function GameUIChatChannel:CreatePlayerMenu(event,chat)
             menuLayer:removeFromParent(true)
             local mail = GameUIWriteMail.new(GameUIWriteMail.SEND_TYPE.PERSONAL_MAIL)
             mail:SetTitle(_("个人邮件"))
-            mail:SetAddressee(chat.fromId)
+            mail:SetAddressee(chat.id)
             mail:addTo(self,201)
         end)
         :setTouchSwallowEnabled(true)
