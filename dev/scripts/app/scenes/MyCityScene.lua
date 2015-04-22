@@ -235,8 +235,8 @@ end
 function MyCityScene:OnSoliderStarCountChanged(soldier_manager, soldier_star_changed)
     self:GetSceneLayer():OnSoliderStarCountChanged(soldier_manager, soldier_star_changed)
 end
-function MyCityScene:OnBasicChanged(user, changed)
-    MyCityScene.super.OnBasicChanged(self, user, changed)
+function MyCityScene:OnUserBasicChanged(user, changed)
+    MyCityScene.super.OnUserBasicChanged(self, user, changed)
     if changed.terrain then
         self:ChangeTerrain(changed.terrain.new)
     end
@@ -422,7 +422,7 @@ function MyCityScene:OpenUI(building)
                 :SetPopMessage("必须有一条空闲的龙，才能进入pve")
         end
     elseif type_ == "FairGround" then
-        UIKit:newGameUI("GameUIGacha", self.city):AddToCurrentScene(true)
+        UIKit:newGameUI("GameUIGacha", self.city):AddToCurrentScene(true):DisableAutoClose()
     end
 end
 return MyCityScene

@@ -25,6 +25,7 @@ function GameUIMission:ctor(city,mission_type)
     GameUIMission.super.ctor(self,city, _("任务"))
     self.city = city
     self.init_mission_type = mission_type or self.MISSION_TYPE.achievement
+    self.action_node = display.newNode():addTo(self)
 end
 function GameUIMission:OnMoveInStage()
     GameUIMission.super.OnMoveInStage(self)
@@ -33,9 +34,6 @@ function GameUIMission:OnMoveInStage()
     self.city:GetUser():AddListenOnType(self, User.LISTEN_TYPE.DAILY_TASKS)
 end
 function GameUIMission:OnMoveOutStage()
-    if self.___handle___ then
-        scheduler.unscheduleGlobal(self.___handle___)
-    end
     self.city:GetUser():RemoveListenerOnType(self, User.LISTEN_TYPE.TASK)
     self.city:GetUser():RemoveListenerOnType(self, User.LISTEN_TYPE.DAILY_TASKS)
     GameUIMission.super.OnMoveOutStage(self)
@@ -148,7 +146,7 @@ end
 
 function GameUIMission:SchedulerInfo()
     self:ShakeInfoIcon()
-    self.___handle___ = scheduler.scheduleGlobal(handler(self, self.ShakeInfoIcon),5)
+    self.action_node:schedule(handler(self, self.ShakeInfoIcon), 5)
 end
 
 function GameUIMission:ShakeInfoIcon()

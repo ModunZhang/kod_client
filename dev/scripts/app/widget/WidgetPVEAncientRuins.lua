@@ -20,8 +20,10 @@ function WidgetPVEAncientRuins:SetUpButtons()
             {
                 label = _("捐献"), callback = function()
                     if self:HasGem(20) then
-                        self:Search()
-                        self:GetRewardsFromServer(nil, 20)
+                        local rollback = self:Search()
+                        self:GetRewardsFromServer(nil, 20):fail(function()
+                            rollback()
+                        end)
                         self:removeFromParent()
                     end
                 end

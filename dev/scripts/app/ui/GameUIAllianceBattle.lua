@@ -1275,7 +1275,7 @@ function GameUIAllianceBattle:OpenOtherAllianceDetails(alliance)
         :addTo(body)
 end
 
-function GameUIAllianceBattle:OnBasicChanged(alliance,changed_map)
+function GameUIAllianceBattle:OnAllianceBasicChanged(alliance,changed_map)
     if changed_map.status then
         self:InitBattleStatistics()
     end

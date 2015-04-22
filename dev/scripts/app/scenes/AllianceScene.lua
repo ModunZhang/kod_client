@@ -101,10 +101,7 @@ function AllianceScene:OpenUI(building)
         self:EnterAllianceBuilding(building:GetEntity())
     end
 end
-function AllianceScene:OnBasicChanged(alliance,changed_map)
-    -- if changed_map.status and changed_map.status.new == 'prepare' then
-    --     app:EnterMyAllianceScene()
-    -- end
+function AllianceScene:OnAllianceBasicChanged(alliance,changed_map)
     if changed_map.terrain then
         app:EnterMyAllianceScene()
     end

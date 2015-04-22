@@ -335,7 +335,7 @@ function UIKit:GetPlayerCommonIcon(key)
 end
 
 function UIKit:GetPlayerIconOnly(key)
-    if not key then 
+    if not key then
         return display.newSprite("player_icon_10.png")
     end
     return display.newSprite("player_icon_10.png")
@@ -508,8 +508,8 @@ function UIKit:createLineItem(params)
 end
 
 function UIKit:showMessageDialogCanCanleNotAutoClose(title,tips,ok_callback,cancel_callback)
-     title = title or _("提示")
-     local dialog = UIKit:newGameUI("FullScreenPopDialogUI",x_button_callback)
+    title = title or _("提示")
+    local dialog = UIKit:newGameUI("FullScreenPopDialogUI",x_button_callback)
         :SetTitle(title)
         :SetPopMessage(tips)
         :CreateOKButton({
@@ -520,13 +520,13 @@ function UIKit:showMessageDialogCanCanleNotAutoClose(title,tips,ok_callback,canc
             end
         })
     dialog:CreateCancelButton({
-            listener = function ()
-                if cancel_callback then
-                    cancel_callback()
-                end
-            end,
-            btn_name = _("取消")
-        })
+        listener = function ()
+            if cancel_callback then
+                cancel_callback()
+            end
+        end,
+        btn_name = _("取消")
+    })
     dialog:DisableAutoClose()
     dialog:AddToCurrentScene()
     return dialog
@@ -653,3 +653,9 @@ end
 function UIKit:getDiscolorrationSprite(image)
     return display.newFilteredSprite(image, "CUSTOM", json.encode({frag = "shaders/ps_discoloration.fs",shaderName = "ps_discoloration"}))
 end
+
+
+
+
+
+

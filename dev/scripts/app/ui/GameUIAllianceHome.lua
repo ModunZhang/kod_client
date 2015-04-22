@@ -473,7 +473,7 @@ function GameUIAllianceHome:OnMidButtonClicked(event)
     end
 end
 
-function GameUIAllianceHome:OnBasicChanged(alliance,changed_map)
+function GameUIAllianceHome:OnAllianceBasicChanged(alliance,changed_map)
     local alliance = self.alliance
     if changed_map.honour then
         self.page_top:SetHonour(GameUtils:formatNumber(changed_map.honour.new))

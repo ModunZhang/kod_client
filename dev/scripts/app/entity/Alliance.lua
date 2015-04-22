@@ -197,7 +197,7 @@ function Alliance:OnPropertyChange(property_name, old_value, new_value)
 end
 function Alliance:OnBasicChanged(changed_map)
     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.BASIC, function(listener)
-        listener:OnBasicChanged(self, changed_map)
+        listener:OnAllianceBasicChanged(self, changed_map)
     end)
 end
 function Alliance:IteratorAllMembers(func)

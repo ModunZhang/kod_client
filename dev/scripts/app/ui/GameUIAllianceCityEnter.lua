@@ -47,7 +47,7 @@ function GameUIAllianceCityEnter:onExit()
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.BASIC)
     GameUIAllianceCityEnter.super.onExit(self)
 end
-function GameUIAllianceCityEnter:OnBasicChanged( alliance,changed_map )
+function GameUIAllianceCityEnter:OnAllianceBasicChanged( alliance,changed_map )
     if changed_map.status and not self:IsMyAlliance() then
         self:GetEnterButtonByIndex(1):setButtonEnabled(changed_map.status.new == "fight")
         self:GetEnterButtonByIndex(2):setButtonEnabled(changed_map.status.new == "fight")

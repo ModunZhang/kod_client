@@ -412,13 +412,13 @@ function GameUIAlliancePalace:InitInfoPart()
     }):addTo(layer)
         :align(display.BOTTOM_CENTER, window.cx, window.bottom_top+20)
 end
-function GameUIAlliancePalace:OnBasicChanged(alliance,changed_map)
+function GameUIAlliancePalace:OnAllianceBasicChanged(alliance,changed_map)
     if changed_map.honour then
         local new = changed_map.honour.new
         self.current_honour:RefreshHonour(new)
     end
 end
-function GameUIAlliancePalace:OnMemberChanged(alliance,changed_map)
+function GameUIAlliancePalace:OnAllianceBasicChanged(alliance,changed_map)
     if not changed_map then return end
     if changed_map.added then
         for k,v in pairs(changed_map.added) do

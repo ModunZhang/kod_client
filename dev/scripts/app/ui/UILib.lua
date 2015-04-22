@@ -107,15 +107,15 @@ local DRAGON_MATERIAL_PIC_MAP = {
     ["ingo_2"] = "steelIngot_128x128.png",
     ["ingo_3"] = "mithrilIngot_128x128.png",
     ["ingo_4"] = "blackIronIngot_128x128.png",
-    ["redSoul_2"] = "arcaniteIngot_92x92.png",
-    ["redSoul_3"] = "wispOfFire_92x92.png",
-    ["redSoul_4"] = "wispOfCold_92x92.png",
-    ["blueSoul_2"] = "wispOfWind_92x92.png",
-    ["blueSoul_3"] = "lavaSoul_92x92.png",
-    ["blueSoul_4"] = "iceSoul_92x92.png",
-    ["greenSoul_2"] = "forestSoul_92x92.png",
-    ["greenSoul_3"] = "infernoSoul_92x92.png",
-    ["greenSoul_4"] = "blizzardSoul_92x92.png",
+    ["redSoul_2"] = "redSoul_2_128x128.png",
+    ["redSoul_3"] = "redSoul_3_128x128.png",
+    ["redSoul_4"] = "redSoul_4_128x128.png",
+    ["blueSoul_2"] = "blueSoul_2_128x128.png",
+    ["blueSoul_3"] = "blueSoul_3_128x128.png",
+    ["blueSoul_4"] = "blueSoul_4_128x128.png",
+    ["greenSoul_2"] = "greenSoul_2_128x128.png",
+    ["greenSoul_3"] = "greenSoul_3_128x128.png",
+    ["greenSoul_4"] = "greenSoul_4_128x128.png",
     ["redCrystal_1"] = "flawedRedCrystal_128x128.png",
     ["redCrystal_2"] = "redCrystal_128x128.png",
     ["redCrystal_3"] = "flawlessRedCrystal_128x128.png",
@@ -572,10 +572,13 @@ local ITEM = {
     warSpeedupClass_1 = "warSpeedup_1_128x128.png",
     warSpeedupClass_2 = "warSpeedup_2_128x128.png",
 
-    dragonChest_1 = "#root/lanse/a0000.png",
-    dragonChest_2 = "#root/lvse/a0000.png",
-    dragonChest_3 = "#root/zise/a0000.png",
-
+    dragonChest_1 = "dragonChest_1_128x128.png",
+    dragonChest_2 = "dragonChest_2_128x128.png",
+    dragonChest_3 = "dragonChest_3_128x128.png",
+    chest_1 = "chest_1_128x128.png",
+    chest_2 = "chest_2_128x128.png",
+    chest_3 = "chest_3_128x128.png",
+    chest_4 = "chest_4_128x128.png",
     casinoTokenClass_1 = "casinoTokenClass_1_128x128.png",
     casinoTokenClass_2 = "casinoTokenClass_2_128x128.png",
     casinoTokenClass_3 = "casinoTokenClass_3_128x128.png",
@@ -1050,6 +1053,7 @@ return {
     my_city_banner = my_city_banner,
     enemy_city_banner = enemy_city_banner,
 }
+
 
 
 

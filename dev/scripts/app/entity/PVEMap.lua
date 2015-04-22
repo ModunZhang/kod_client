@@ -33,8 +33,6 @@ local pve_terrain = {
     "grassLand",
 }
 
-
-
 function PVEMap:ctor(database, index)
     PVEMap.super.ctor(self)
     self.index = index
@@ -42,20 +40,17 @@ function PVEMap:ctor(database, index)
     self.database = database
 end
 function PVEMap:LoadProperty()
-    local file_name = self:GetFileName()
-    local pve_layer = cc.TMXTiledMap:create(file_name):getLayer("layer1")
+    local pve_layer = cc.TMXTiledMap:create(self:GetFileName()):getLayer("layer1")
     local size = pve_layer:getLayerSize()
     local total_objects = 0
     for x = 0, size.width - 1 do
         for y = 0, size.height - 1 do
-            local ccp = cc.p(x, y)
-            local gid = (pve_layer:getTileGIDAt(ccp))
+            local point = cc.p(x, y)
+            local gid = (pve_layer:getTileGIDAt(point))
             if gid > 0 then
                 total_objects = total_objects + PVEObject:TotalByType(gid)
                 if gid == PVEDefine.START_AIRSHIP then
-                    self.start_point = ccp
-                elseif gid == PVEDefine.ENTRANCE_DOOR then
-                    self.end_point = ccp
+                    self.start_point = point
                 end
             end
         end
@@ -102,10 +97,6 @@ function PVEMap:GetStartPoint()
     assert(self.start_point)
     return self.start_point
 end
-function PVEMap:GetEndPoint()
-    assert(self.end_point)
-    return self.end_point
-end
 function PVEMap:GetSize()
     return self.width, self.height
 end
@@ -146,7 +137,7 @@ function PVEMap:IteratorObjects(func)
         func(v)
     end
 end
-function PVEMap:GetObject(x, y)
+function PVEMap:GetObjectByCoord(x, y)
     for _, v in ipairs(self.searched_objects) do
         if v.x == x and v.y == y then
             return v
@@ -206,10 +197,9 @@ function PVEMap:Load(floor)
     assert(floor.fogs)
     assert(floor.objects)
     self.fogs:decode(floor.fogs)
-    local end_point = self:GetEndPoint()
     for _, v in ipairs(json.decode(floor.objects)) do
         local x, y, searched = unpack(v)
-        self:ModifyObject(x, y, searched, (x == end_point.x and y == end_point.y) and PVEDefine.ENTRANCE_DOOR)
+        self:ModifyObject(x, y, searched)
     end
 end
 function PVEMap:EncodeMap()

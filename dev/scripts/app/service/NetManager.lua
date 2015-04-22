@@ -512,9 +512,7 @@ function NetManager:getUpgradeHouseByLocationPromise(location, sub_location)
     return get_upgradeHouse_promise(location, sub_location, false)
 end
 function NetManager:getInstantUpgradeHouseByLocationPromise(location, sub_location)
-    return get_upgradeHouse_promise(location, sub_location, true):done(function()
-        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
-    end)
+    return get_upgradeHouse_promise(location, sub_location, true)
 end
 -- 升级功能建筑
 local function get_upgradeBuilding_promise(location, finish_now)
@@ -527,9 +525,7 @@ function NetManager:getUpgradeBuildingByLocationPromise(location)
     return get_upgradeBuilding_promise(location, false)
 end
 function NetManager:getInstantUpgradeBuildingByLocationPromise(location)
-    return get_upgradeBuilding_promise(location, true):done(function()
-        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
-    end)
+    return get_upgradeBuilding_promise(location, true)
 end
 -- 升级防御塔
 function NetManager:getUpgradeTowerPromise()
@@ -1531,6 +1527,8 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
+
 
 
 

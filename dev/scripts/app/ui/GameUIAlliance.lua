@@ -34,7 +34,7 @@ function GameUIAlliance:ctor()
     self.alliance_ui_helper = WidgetAllianceHelper.new()
 end
 
-function GameUIAlliance:OnBasicChanged(alliance, changed_map)
+function GameUIAlliance:OnAllianceBasicChanged(alliance, changed_map)
     if Alliance_Manager:GetMyAlliance():IsDefault() then return end
     if self.tab_buttons:GetSelectedButtonTag() == 'overview' then
         if changed_map.flag then

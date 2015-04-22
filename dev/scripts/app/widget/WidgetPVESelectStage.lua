@@ -79,18 +79,24 @@ function WidgetPVESelectStage:CreateItemWithListView(list_view, level)
                 self.user:ResetPveData()
                 local point = self.user:GetPVEDatabase():GetMapByIndex(level):GetStartPoint()
                 self.user:GetPVEDatabase():SetCharPosition(point.x, point.y, level)
-                NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData()):done(function(result)
+                NetManager:getSetPveDataPromise(
+                    self.user:EncodePveDataAndResetFightRewardsData()
+                ):done(function()
                     self:removeFromParent()
                     app:EnterPVEScene(level)
+                end):fail(function()
+                    local location = DataManager:getUserData().pve.location
+                    self.user:GetPVEDatabase():SetCharPosition(location.x, location.y, location.z)
                 end)
             end
-        end):setButtonEnabled(cur_map:IsAvailable())
+        end):setButtonEnabled(cur_map:IsAvailable() and cur_map:GetIndex() ~= level)
     return item
 end
 
 
 
 return WidgetPVESelectStage
+
 
 
 

@@ -95,7 +95,7 @@ function AllianceBattleScene:OpenUI(building, isMyAlliance)
         self:EnterAllianceBuilding(building:GetEntity(),isMyAlliance)
     end
 end
-function AllianceBattleScene:OnBasicChanged(alliance,changed_map)
+function AllianceBattleScene:OnAllianceBasicChanged(alliance,changed_map)
     if changed_map.status and changed_map.status.new == 'protect' then
         app:GetAudioManager():PlayGameMusic()
     end

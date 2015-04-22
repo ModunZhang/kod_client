@@ -19,7 +19,7 @@ function MapScene:ctor()
 
     User:AddListenOnType(self, User.LISTEN_TYPE.BASIC)
 end
-function MapScene:OnBasicChanged(user, changed)
+function MapScene:OnUserBasicChanged(user, changed)
     if changed.level then
         UIKit:newGameUI('GameUILevelUp', user):AddToScene(self)
     end

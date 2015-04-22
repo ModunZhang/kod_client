@@ -145,6 +145,7 @@ function PVEObject:GetNpcRewards(select)
             end
         end
     end
+    assert(false)
 end
 function PVEObject:DecodeToRewards(raw, func)
     func = func or function(_,count) return count end

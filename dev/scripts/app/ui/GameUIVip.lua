@@ -129,7 +129,7 @@ function GameUIVip:AddIconOption(icon)
     local head_bg = display.newSprite("player_head_bg_104x104.png"):addTo(content)
         :pos(60,item_height/2)
     display.newSprite(icon):addTo(head_bg):pos(head_bg:getContentSize().width/2,head_bg:getContentSize().height/2)
-    :scale(100/128)
+        :scale(100/128)
 
     UIKit:ttfLabel({
         text = _("头像")..icon,
@@ -267,11 +267,11 @@ function GameUIVip:OnMoveInStage()
             end
         end
     end):pos(window.cx, window.bottom + 34)
-    User:AddListenOnType(self,User.LISTEN_TYPE.BASIC)
+    User:AddListenOnType(self, User.LISTEN_TYPE.BASIC)
 
 end
 function GameUIVip:onExit()
-    User:RemoveListenerOnType(self,User.LISTEN_TYPE.BASIC)
+    User:RemoveListenerOnType(self, User.LISTEN_TYPE.BASIC)
     User:RemoveListenerOnType(self, User.LISTEN_TYPE.VIP_EVENT)
     if self.ad_handle then
         scheduler.unscheduleGlobal(self.ad_handle)
@@ -942,21 +942,21 @@ function GameUIVip:OpenVIPDetails(show_vip_level)
 
 end
 
-function GameUIVip:OnBasicChanged(from,changed_map)
-    if from.__cname=="User" then
-        if changed_map.name and self.player_node then
+function GameUIVip:OnAllianceBasicChanged(from,changed_map)
+end
+function GameUIVip:OnUserBasicChanged(from,changed_map)
+    if changed_map.name and self.player_node then
+        self.player_node:RefreshUI()
+    end
+    if changed_map.vipExp and self.vip_layer then
+        local vip_level,percent,exp = User:GetVipLevel()
+        self.vip_button_group:Refresh(vip_level)
+        self.vip_layer:removeChildByTag(999, true)
+        local exp_bar = self:CreateVipExpBar():addTo(self.vip_layer,1,999):pos(display.cx-287, display.top-300)
+        exp_bar:LightLevelBar(vip_level,percent,exp)
+        self.active_button:setButtonEnabled(vip_level~=0)
+        if self.player_node then
             self.player_node:RefreshUI()
-        end
-        if changed_map.vipExp and self.vip_layer then
-            local vip_level,percent,exp = User:GetVipLevel()
-            self.vip_button_group:Refresh(vip_level)
-            self.vip_layer:removeChildByTag(999, true)
-            local exp_bar = self:CreateVipExpBar():addTo(self.vip_layer,1,999):pos(display.cx-287, display.top-300)
-            exp_bar:LightLevelBar(vip_level,percent,exp)
-            self.active_button:setButtonEnabled(vip_level~=0)
-            if self.player_node then
-                self.player_node:RefreshUI()
-            end
         end
     end
 end
@@ -970,6 +970,7 @@ function GameUIVip:OnVipEventTimer( vip_event_new )
 end
 
 return GameUIVip
+
 
 
 
