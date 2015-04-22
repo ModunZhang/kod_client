@@ -55,6 +55,7 @@ function PVEScene:GetHomePage()
 end
 function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
     -- 有动画就什么都不处理
+    if not PVEScene.super.OnTouchClicked(self, pre_x, pre_y, x, y) then return end
     if self:GetSceneLayer():GetChar():getNumberOfRunningActions() > 0 then return end
 
     local logic_map = self:GetSceneLayer():GetLogicMap()
