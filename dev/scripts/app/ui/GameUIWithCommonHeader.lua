@@ -28,6 +28,9 @@ function GameUIWithCommonHeader:onEnter()
     local rtpoint_title = titleBar:convertToWorldSpace({x = size_title.width, y = size_title.height})
     local is_began_out = false
     self.control_close_layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+        if self.disable_auto_close then
+            return
+        end
         if event.name == "began" then
             if not cc.rectContainsPoint(cc.rect(lbpoint.x, lbpoint.y, rtpoint.x - lbpoint.x, rtpoint.y - lbpoint.y), event)
                 and not cc.rectContainsPoint(cc.rect(lbpoint_title.x, lbpoint_title.y, rtpoint_title.x - lbpoint_title.x, rtpoint_title.y - lbpoint_title.y), event)
@@ -59,7 +62,10 @@ function GameUIWithCommonHeader:onEnter()
     end
 
 end
-
+function GameUIWithCommonHeader:DisableAutoClose()
+    self.disable_auto_close = true
+    return self
+end
 function GameUIWithCommonHeader:onExit()
     if self.__gem_label then
         self.city:GetResourceManager():RemoveObserver(self)
@@ -208,6 +214,8 @@ function GameUIWithCommonHeader:CreateTabButtons(param, func)
 end
 
 return GameUIWithCommonHeader
+
+
 
 
 
