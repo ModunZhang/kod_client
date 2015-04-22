@@ -218,7 +218,7 @@ function User:IsQuestFinished(quest)
 end
 function User:OnPropertyChange(property_name, old_value, new_value)
     self:NotifyListeneOnType(BASIC, function(listener)
-        listener:OnBasicChanged(self, {
+        listener:OnUserBasicChanged(self, {
             [property_name] = {old = old_value, new = new_value}
         })
     end)

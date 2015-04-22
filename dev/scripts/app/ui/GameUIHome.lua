@@ -116,7 +116,7 @@ function GameUIHome:onEnter()
 
     self.event_tab:addTo(self):pos(x, y)
 
-    
+
 
     city:AddListenOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
     city:GetResourceManager():AddObserver(self)
@@ -159,17 +159,16 @@ function GameUIHome:onExit()
     User:RemoveListenerOnType(self, User.LISTEN_TYPE.VIP_EVENT_OVER)
     -- GameUIHome.super.onExit(self)
 end
-function GameUIHome:OnBasicChanged(fromEntity,changed_map)
-    if fromEntity.__cname == "Alliance" and changed_map.id then
-        self:RefreshHelpButtonVisible()
+function GameUIHome:OnAllianceBasicChanged(fromEntity,changed_map)
+    self:RefreshHelpButtonVisible()
+    self:RefreshData()
+end
+function GameUIHome:OnUserBasicChanged(fromEntity,changed_map)
+    if changed_map.name then
+        self.name_label:setString(changed_map.name.new)
     end
-    if fromEntity.__cname == "User" then
-        if changed_map.name then
-            self.name_label:setString(changed_map.name.new)
-        end
-        if changed_map.vipExp then
-            self:RefreshVIP()
-        end
+    if changed_map.vipExp then
+        self:RefreshVIP()
     end
     self:RefreshData()
 end
@@ -400,7 +399,7 @@ function GameUIHome:CreateTop()
     end
     order:AddElement(button)
 
-     -- 协助加速按钮
+    -- 协助加速按钮
     self.help_button = cc.ui.UIPushButton.new(
         {normal = "help_64x72.png", pressed = "help_64x72.png"},
         {scale9 = false}
@@ -434,10 +433,10 @@ function GameUIHome:CreateTop()
 end
 function GameUIHome:CreateBottom()
     local bottom_bg = WidgetHomeBottom.new(handler(self, self.OnBottomButtonClicked)):addTo(self)
-    :align(display.BOTTOM_CENTER, display.cx, display.bottom)
+        :align(display.BOTTOM_CENTER, display.cx, display.bottom)
 
     self.chat = WidgetChat.new():addTo(bottom_bg)
-    :align(display.CENTER, bottom_bg:getContentSize().width/2, bottom_bg:getContentSize().height-11)
+        :align(display.CENTER, bottom_bg:getContentSize().width/2, bottom_bg:getContentSize().height-11)
     return bottom_bg
 end
 
@@ -497,6 +496,7 @@ function GameUIHome:Find()
 end
 
 return GameUIHome
+
 
 
 
