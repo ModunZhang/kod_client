@@ -144,21 +144,9 @@ function AllianceBattleScene:EnterNotAllianceBuilding(entity,isMyAlliance)
     end
     UIKit:newGameUI(class_name,entity,isMyAlliance,self:GetAlliance(),self:GetEnemyAlliance()):AddToCurrentScene(true)
 end
+function AllianceBattleScene:PlayCurrentTerrainMusic()
+    local __, __, alliance_view = self:GetSceneLayer():GetCurrentViewAllianceCoordinate()
+    local alliance = alliance_view:GetAlliance()
+    app:GetAudioManager():PlayGameMusic(alliance:Terrain(),false)
+end
 return AllianceBattleScene
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -3,6 +3,7 @@
 -- Date: 2014-12-12 10:41:06
 --
 local AudioManager = class("AudioManager")
+local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
 
 local bg_music_map = {
 	MainScene = "music_begin.mp3",
@@ -105,13 +106,17 @@ end
 
 
 function AudioManager:PlayeBgMusic(filename,isLoop)
+	assert(type(isLoop) == 'boolean')
 	print("PlayeBgMusic----->",filename,isLoop)
 	local index = string.find(filename,"%.")
 	local file_key = string.sub(filename,1,index - 1)
 	if self.is_bg_auido_on then
 		if file_key ~= self.last_music_filename then
 			audio.playMusic("audios/" .. filename,isLoop)
-			self.last_music_filename = file_key
+			self.last_music_filename = file_key 
+		elseif not audio.isMusicPlaying() then
+			audio.playMusic("audios/" .. filename,isLoop)
+			self.last_music_filename = file_key 
 		end
 	end
 end
@@ -154,6 +159,10 @@ function AudioManager:PlaySoldierStepEffectByType(type_)
 end
 
 function AudioManager:PlayGameMusic(scene_name,isLoop)
+	if self.music_handle then
+		cc.Director:getInstance():getScheduler():unscheduleScriptEntry(self.music_handle)
+		self:SetBgMusicVolume(1.0)
+	end
 	if type(isLoop) ~= 'boolean' then isLoop = true end
 	local file_key = scene_name
 	if not scene_name then
@@ -167,26 +176,34 @@ function AudioManager:PlayGameMusic(scene_name,isLoop)
 				local status = alliance:Status()
 				if status == 'prepare' or status == 'fight' then
 					file_key = "AllianceBattleScene"
-					loop = true
 				else
 					file_key = "AllianceScene"
 				end
 			end
 		end
 		if bg_music_map[file_key] then
-			self:PlayeBgMusic(bg_music_map[file_key],loop)
+			if string.find(bg_music_map[file_key],"sfx_") then
+				self:SetBgMusicVolume(0)
+				self:PlayeBgMusic(bg_music_map[file_key],loop)
+				self:FadeInBgMusicVolume()
+			else
+				self:PlayeBgMusic(bg_music_map[file_key],loop)
+			end
 		end
 	else
 		if bg_music_map[file_key] then
-			self:PlayeBgMusic(bg_music_map[file_key],isLoop)
+			if string.find(bg_music_map[file_key],"sfx_") then
+				self:SetBgMusicVolume(0)
+				self:PlayeBgMusic(bg_music_map[file_key],isLoop)
+				self:FadeInBgMusicVolume()
+			else
+				self:PlayeBgMusic(bg_music_map[file_key],isLoop)
+			end
 		end
 	end
-	
- 	
 end
 
 function AudioManager:PlayeEffectSoundWithKey(key)
-	print("PlayeEffectSoundWithKey---->",key)
 	self:PlayeEffectSound(self:GetEffectAudio(key))
 end
 
@@ -246,10 +263,34 @@ function AudioManager:SetEffectsVolume(volume)
 	audio.setSoundsVolume(volume)
 end
 
+function AudioManager:SetBgMusicVolume(volume)
+	audio.setMusicVolume(volume)
+end
+
+function AudioManager:GetBgMusicVolume()
+	return audio.getMusicVolume()
+end
+
+function AudioManager:FadeInBgMusicVolume()
+    local sharedScheduler = cc.Director:getInstance():getScheduler()
+    local perVol = 0.01
+    local vol = 0
+    self.music_handle = sharedScheduler:scheduleScriptFunc(function()
+        vol = vol + perVol
+        self:SetBgMusicVolume(vol)
+        if vol >= 1 then 
+        	if self.music_handle then
+            	sharedScheduler:unscheduleScriptEntry(self.music_handle)
+            end
+        end
+    end, 0.04, false)
+end
+
 -- for global call
 function AudioManager:OnBackgroundMusicCompletion()
 	print("AudioManager:OnBackgroundMusicCompletion--->",self:GetLastPlayedFileName())
-	local scene_name = display.getRunningScene().__cname
+	local current_scene = display.getRunningScene()
+	local scene_name = current_scene.__cname
 	local lastFilename = self:GetLastPlayedFileName()
 	local terrain = Alliance_Manager:GetMyAlliance():Terrain()
 	if lastFilename == 'bgm_peace' 
@@ -262,6 +303,16 @@ function AudioManager:OnBackgroundMusicCompletion()
 			if lastFilename == 'bgm_peace' or lastFilename == 'bgm_battle' then
 				if scene_name == 'MyCityScene' then
 					self:PlayGameMusic("MyCityScene",false) -- sfx_city
+				elseif scene_name == 'AllianceBattleScene' then
+					local alliance = Alliance_Manager:GetMyAlliance()
+					local status = alliance:Status()
+					if status == 'prepare' or status == 'fight' then
+						if current_scene.PlayCurrentTerrainMusic then
+							current_scene:PlayCurrentTerrainMusic()
+						end
+					else
+						self:PlayGameMusic("AllianceScene",false)
+					end
 				elseif scene_name == 'AllianceScene' then
 					self:PlayGameMusic(terrain,false) -- terrain music
 				end
