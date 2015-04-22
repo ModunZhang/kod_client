@@ -13,30 +13,30 @@ local ZORDER = Enum("BACKGROUND", "BUILDING", "OBJECT", "FOG")
 
 
 local pve_color = {
-    cc.c3b(125,0,125),
-    cc.c3b(0,0,0),
-    cc.c3b(0,0,125),
-    cc.c3b(0,0,0),
-    cc.c3b(125,125,125),
-    cc.c3b(125,125,0),
-    cc.c3b(125,125,0),
-    cc.c3b(125,125,125),
-    cc.c3b(125,125,125),
-    cc.c3b(125,125,125),
-    cc.c3b(125,125,125),
-    cc.c3b(125,125,125),
-    cc.c3b(125,125,125),
-    cc.c3b(125,125,125),
-    cc.c3b(125,125,125),
-    cc.c3b(125,125,125),
-    cc.c3b(125,125,125),
-    cc.c3b(125,125,125),
-    cc.c3b(125,125,125),
-    cc.c3b(125,125,125),
-    cc.c3b(125,125,125),
-    cc.c3b(125,125,125),
-    cc.c3b(125,125,125),
-    cc.c3b(125,125,125),
+    cc.c3b(  0,   0,   0), -- "iceField",
+    cc.c3b(192, 207, 186), -- "iceField",
+    cc.c3b(164, 176, 143), -- "grassLand",
+    cc.c3b(  0,   0,   0), -- "grassLand",
+    cc.c3b(  0,   0,   0), -- "desert",
+    cc.c3b(184, 184, 184), -- "desert",
+    cc.c3b(212, 189, 172), -- "iceField",
+    cc.c3b(191, 163, 163), -- "iceField",
+    cc.c3b(158, 125, 126), -- "iceField",
+    cc.c3b(197, 201, 160), -- "desert",
+    cc.c3b(201, 180, 160), -- "desert",
+    cc.c3b(201, 172, 160), -- "desert",
+    cc.c3b(204, 166, 180), -- "grassLand",
+    cc.c3b(230, 156, 170), -- "grassLand",
+    cc.c3b(212, 137, 138), -- "grassLand",
+    cc.c3b(153, 203, 237), -- "desert",
+    cc.c3b(130, 167, 232), -- "desert",
+    cc.c3b(115, 119, 227), -- "desert",
+    cc.c3b(166, 182, 186), -- "iceField",
+    cc.c3b(131, 142, 150), -- "iceField",
+    cc.c3b(136, 125, 148), -- "iceField",
+    cc.c3b(126, 124, 255), -- "grassLand",
+    cc.c3b(114, 111, 255), -- "grassLand",
+    cc.c3b(169,  98, 255), -- "grassLand",
 }
 
 
@@ -45,16 +45,21 @@ function PVELayer:ctor(user)
     self.pve_listener = Observer.new()
     self.user = user
     self.pve_map = user:GetCurrentPVEMap()
-
-    self.pve_layer = cc.TMXTiledMap:create(string.format("tmxmaps/pve_%d_info.tmx", self.pve_map:GetIndex())):addTo(self):hide():getLayer("layer1")
+    self.pve_layer = cc.TMXTiledMap:create(self.pve_map:GetFileName()):addTo(self):hide():getLayer("layer1")
     local size = self.pve_layer:getLayerSize()
     local w, h = size.width, size.height
 
-
     self.scene_node = display.newNode():addTo(self)
-    self.background = cc.TMXTiledMap:create(string.format("tmxmaps/pve_background_%s_%dx%d.tmx", self.pve_map:Terrain(), w, h)):addTo(self.scene_node, ZORDER.BACKGROUND)
-    self.war_fog_layer = cc.TMXTiledMap:create(string.format("tmxmaps/pve_fog_%dx%d.tmx", w, h)):addTo(self.scene_node, ZORDER.FOG):pos(-80, -80):getLayer("layer1")
 
+    self.background = cc.TMXTiledMap:create(
+        string.format("tmxmaps/pve_background_%s_%dx%d.tmx",
+            self.pve_map:Terrain(), w, h)
+    ):addTo(self.scene_node, ZORDER.BACKGROUND)
+
+    self.war_fog_layer = cc.TMXTiledMap:create(
+        string.format("tmxmaps/pve_fog_%dx%d.tmx", w, h)
+    ):addTo(self.scene_node, ZORDER.FOG):pos(-80, -80):getLayer("layer1")
+    
     self.building_layer = display.newNode():addTo(self.scene_node, ZORDER.BUILDING)
     self.object_layer = display.newNode():addTo(self.scene_node, ZORDER.OBJECT)
     self.normal_map = NormalMapAnchorBottomLeftReverseY.new({
@@ -70,14 +75,14 @@ function PVELayer:ctor(user)
     local x, y = size_out.width * 0.5 - size_in.width * 0.5, size_out.height * 0.5 - size_in.height * 0.5
     self.scene_node:pos(x, y)
 
-    -- local layer = self.background:getLayer("layer1")
-    -- local color = pve_color[self.pve_map.index]
-    -- for x = 0, w - 1 do
-    --     for y = 0, h - 1 do
-    --         local tile = layer:getTileAt(cc.p(x, y))
-    --         tile:setColor(color + cc.c3b(tile:getColor()))
-    --     end
-    -- end
+    local layer = self.background:getLayer("layer1")
+    local color = pve_color[self.pve_map.index]
+    for x = 0, w - 1 do
+        for y = 0, h - 1 do
+            local tile = layer:getTileAt(cc.p(x, y))
+            tile:setColor(color + cc.c3b(tile:getColor()))
+        end
+    end
 end
 function PVELayer:onEnter()
     PVELayer.super.onEnter(self)
@@ -103,7 +108,8 @@ function PVELayer:onEnter()
         if PVEDefine.TREE ~= gid and PVEDefine.HILL ~= gid and PVEDefine.LAKE ~= gid then
             zorder = 10
         end
-        obj:addTo(self.building_layer, zorder):pos(self:GetLogicMap():ConvertToMapPosition(x, y)):scale(s or 1)
+        obj:addTo(self.building_layer, zorder)
+            :pos(self:GetLogicMap():ConvertToMapPosition(x, y)):scale(s or 1)
         objects[#objects + 1] = {sprite = obj, x = x, y = y}
     end)
     self.objects = objects
@@ -260,7 +266,7 @@ function PVELayer:LoadFog()
 end
 function PVELayer:GetFog(x, y)
     return self.war_fog_layer:getTileAt(cc.p(x, y))
-    -- return self.fogs[x][y]
+        -- return self.fogs[x][y]
 end
 function PVELayer:ConvertLogicPositionToMapPosition(lx, ly)
     local map_pos = cc.p(self.normal_map:ConvertToMapPosition(lx, ly))
@@ -312,6 +318,11 @@ function PVELayer:GotoLogicPoint(x, y, s)
 end
 
 return PVELayer
+
+
+
+
+
 
 
 

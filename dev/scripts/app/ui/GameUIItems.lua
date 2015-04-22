@@ -271,6 +271,7 @@ function GameUIItems:CreateShopContentByIndex( idx )
         if not parent:IsItemCouldUseInShop(items) or items:Count()<1 then
             self.use_button:setButtonEnabled(false)
         end
+        self:SetOwnCount( items )
         parent.shop_items[items:Name()] = self
     end
     return content

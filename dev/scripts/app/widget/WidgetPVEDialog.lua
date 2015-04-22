@@ -151,8 +151,11 @@ function WidgetPVEDialog:Search()
     return self:GetPVEMap():ModifyObject(x, y, searched + 1)
 end
 function WidgetPVEDialog:GetRewardsFromServer(select, gem_used)
-    self.user:SetPveData(nil, self:GetObject():GetRewards(select), gem_used)
-    return NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData())
+    local rewards = self:GetObject():GetNpcRewards(select)
+    self.user:SetPveData(nil, rewards, gem_used)
+    return NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData()):done(function()
+        GameGlobalUI:showTips(_("获得奖励"), rewards)
+    end)
 end
 function WidgetPVEDialog:Fight()
     local enemy = self:GetObject():GetNextEnemy()
@@ -185,7 +188,7 @@ function WidgetPVEDialog:Fight()
 
             if report:IsAttackWin() then
                 local rollback = self:Search()
-                local rewards = self:GetObject():IsLast() and enemy.rewards + self:GetObject():GetRewards() or enemy.rewards
+                local rewards = self:GetObject():IsLast() and enemy.rewards + self:GetObject():GetNpcRewards() or enemy.rewards
                 self.user:SetPveData(report:GetAttackKDA(), rewards)
                 NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData(), nil, true):done(function()
                     UIKit:newGameUI("GameUIReplay", report, function()

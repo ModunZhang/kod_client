@@ -119,7 +119,7 @@ function PVEObject:DecodeToEnemy(raw_data)
     }
 end
 local m = getmetatable(NotifyItem)
-function PVEObject:GetRewards(select)
+function PVEObject:GetNpcRewards(select)
     for k, v in pairs(PVEDefine) do
         if v == self.type then
             local rewards = self:DecodeToRewards(pve_npc[k].rewards)

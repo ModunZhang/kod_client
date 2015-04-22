@@ -89,7 +89,6 @@ function PVEMap:Terrain()
     return pve_terrain[self:GetIndex()]
 end
 function PVEMap:ExploreDegree()
-    -- return self:SearchedFogsCount()/self:TotalFogs()
     return (self:SearchedObjectsCount()/self:TotalObjects() + self:SearchedFogsCount()/self:TotalFogs()) * 0.5
 end
 function PVEMap:TotalFogs()

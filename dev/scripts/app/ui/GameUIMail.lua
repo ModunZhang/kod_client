@@ -851,7 +851,7 @@ end
 --已发送邮件详情弹出框
 function GameUIMail:ShowSendMailDetails(mail)
     local title_string = (mail.fromAllianceTag~="" and "["..mail.fromAllianceTag.."] "..mail.fromName) or mail.fromName
-    local dialog = WidgetPopDialog.new(748,title_string):AddToCurrentScene(true)
+    local dialog = WidgetPopDialog.new(748,title_string):addTo(self,201)
     local bg = dialog:GetBody()
     local size = bg:getContentSize()
    
@@ -935,7 +935,8 @@ end
 --邮件详情弹出框
 function GameUIMail:ShowMailDetails(mail)
     local title_string = (mail.fromAllianceTag~="" and "["..mail.fromAllianceTag.."] "..mail.fromName) or mail.fromName
-    local dialog = WidgetPopDialog.new(768,title_string):AddToCurrentScene(true)
+    title_string = title_string == "__system" and _("系统邮件") or title_string
+    local dialog = WidgetPopDialog.new(768,title_string):addTo(self,201)
     local body = dialog:GetBody()
     local size = body:getContentSize()
 
@@ -1094,13 +1095,11 @@ function GameUIMail:CreateReportItem(listview,report)
                 end
                 if report:Type() == "strikeCity" or report:Type()== "cityBeStriked"
                     or report:Type() == "villageBeStriked" or report:Type()== "strikeVillage" then
-                    GameUIStrikeReport.new(report):AddToCurrentScene()
+                    UIKit:newGameUI("GameUIStrikeReport", report):AddToCurrentScene(true)
                 elseif report:Type() == "attackCity" or report:Type() == "attackVillage" then
-                    GameUIWarReport.new(report):AddToCurrentScene()
-                    -- elseif report:Type() == "villageBeStriked" or report:Type()== "strikeVillage" then
-                    -- elseif report:Type() == "attackVillage" then
+                    UIKit:newGameUI("GameUIWarReport", report):AddToCurrentScene(true)
                 elseif report:Type() == "collectResource" then
-                    GameUICollectReport.new(report):AddToCurrentScene()
+                    UIKit:newGameUI("GameUICollectReport", report):AddToCurrentScene(true)
                 end
 
             end
@@ -1295,7 +1294,7 @@ function GameUIMail:InitSavedReports()
 end
 
 function GameUIMail:OpenReplyMail(mail)
-    local dialog = WidgetPopDialog.new(748,_("回复邮件")):AddToCurrentScene(true)
+    local dialog = WidgetPopDialog.new(748,_("回复邮件")):addTo(self,201)
     dialog:DisableAutoClose()
     local reply_mail = dialog:GetBody()
     local r_size = reply_mail:getContentSize()
@@ -1405,6 +1404,8 @@ function GameUIMail:OpenReplyMail(mail)
                 dialog:LeftButtonClicked()
             end
         end)
+    textView:setRectTrackedNode(send_label)
+
     return reply_mail
 end
 
@@ -1425,17 +1426,22 @@ function GameUIMail:SendMail(addressee,title,content)
     if not addressee or string.trim(addressee)=="" then
         FullScreenPopDialogUI.new():SetTitle(_("提示"))
             :SetPopMessage(_("请填写正确的收件人ID"))
-            :AddToCurrentScene()
+            :AddToCurrentScene(true)
+        return
+    elseif addressee == User:Id() then
+        FullScreenPopDialogUI.new():SetTitle(_("提示"))
+            :SetPopMessage(_("不能向自己发送邮件"))
+            :AddToCurrentScene(true)
         return
     elseif not title or string.trim(title)=="" then
         FullScreenPopDialogUI.new():SetTitle(_("提示"))
             :SetPopMessage(_("请填写邮件主题"))
-            :AddToCurrentScene()
+            :AddToCurrentScene(true)
         return
     elseif not content or string.trim(content)=="" then
         FullScreenPopDialogUI.new():SetTitle(_("提示"))
             :SetPopMessage(_("请填写邮件内容"))
-            :AddToCurrentScene()
+            :AddToCurrentScene(true)
         return
     end
     NetManager:getSendPersonalMailPromise(addressee, title, content)
