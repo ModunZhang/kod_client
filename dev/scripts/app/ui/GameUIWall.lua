@@ -227,7 +227,7 @@ end
 
 function GameUIWall:OnDragonHpItemUseButtonClicked()
 	local widgetUseItems = WidgetUseItems.new():Create({
-		item_type = WidgetUseItems.USE_TYPE.DRAGON_EXP,
+		item_type = WidgetUseItems.USE_TYPE.DRAGON_HP,
 		dragon = self:GetDragon()
 	})
 	widgetUseItems:AddToCurrentScene()
