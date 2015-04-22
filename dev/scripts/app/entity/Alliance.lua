@@ -39,8 +39,16 @@ Alliance.LISTEN_TYPE = Enum(
 local unpack = unpack
 property(Alliance, "id", nil)
 property(Alliance, "name", "")
+property(Alliance, "titles", {
+    ["member"]        = "__member",
+    ["supervisor"]    = "__supervisor",
+    ["quartermaster"] = "__quartermaster",
+    ["general"]       = "__general",
+    ["archon"]        = "__archon",
+    ["elite"]         = "__elite",
+})
 property(Alliance, "tag", "")
-property(Alliance, "defaultLanguage", "")
+property(Alliance, "defaultLanguage", "all")
 property(Alliance, "terrain", "grassLand")
 property(Alliance, "power", 0)
 property(Alliance, "createTime", 0)
@@ -60,31 +68,17 @@ property(Alliance, "fightRequests", {})
 property(Alliance, "countInfo", {})
 property(Alliance, "events", {})
 property(Alliance, "joinRequestEvents", {})
-function Alliance:ctor(id, name, aliasName, defaultLanguage, terrain)
+property(Alliance, "villages", {})
+property(Alliance, "villageLevels", {})
+property(Alliance, "allianceFight", {})
+property(Alliance, "allianceFightReports", {})
+function Alliance:ctor()
     Alliance.super.ctor(self)
-    self.id = id
-    self.name = name
-    self.aliasName = aliasName
-    self.defaultLanguage = defaultLanguage or "all"
-    self.terrain = terrain or "grassLand"
     self.flag = Flag:RandomFlag()
-    self.titles = {
-        ["member"] = "__member",
-        ["supervisor"] = "__supervisor",
-        ["quartermaster"] = "__quartermaster",
-        ["general"] = "__general",
-        ["archon"] = "__archon",
-        ["elite"] = "__elite",
-    }
     self.members = {}
     self.help_events = {}
-    self.alliance_fight_reports = {}
-    self.countInfo = {}
-    self.allianceFight = {}
     self.alliance_map = AllianceMap.new(self)
     self.alliance_shrine = AllianceShrine.new(self)
-    -- 村落等级
-    self.villageLevels = {}
     --行军事件
     self.attackMarchEvents = {}
     self.attackMarchReturnEvents = {}
@@ -92,10 +86,8 @@ function Alliance:ctor(id, name, aliasName, defaultLanguage, terrain)
     self.strikeMarchReturnEvents = {}
     --村落采集
     self.villageEvents = {}
-    self.alliance_villages = {}
     self.alliance_belvedere = AllianceBelvedere.new(self)
     -- self:SetNeedUpdateEnemyAlliance(false)
-
     -- 联盟道具管理
     self.items_manager = AllianceItemsManager.new()
 end
@@ -122,7 +114,11 @@ function Alliance:GetAllianceMap()
     return self.alliance_map
 end
 function Alliance:DecodeFromJsonData(json_data)
-    local alliance = Alliance.new(json_data.id, json_data.name, json_data.tag, json_data.language)
+    local alliance = Alliance.new()
+    alliance:SetId(json_data.id)
+    alliance:SetName(json_data.name)
+    alliance:SetTag(json_data.tag)
+    alliance:SetLanguage(json_data.language)
     alliance:SetHonour(json_data.honour)
     alliance:SetPower(json_data.power)
     alliance:SetArchon(json_data.archon)
@@ -250,11 +246,11 @@ function Alliance:IsRequested()
     end
 end
 function Alliance:GetAllianceFightReports()
-    return self.alliance_fight_reports
+    return self.allianceFightReports
 end
 function Alliance:GetLastAllianceFightReports()
     local last_report
-    for _,v in pairs(self.alliance_fight_reports) do
+    for _,v in pairs(self.allianceFightReports) do
         if not last_report or v.fightTime > last_report.fightTime then
             last_report = v
         end
@@ -395,26 +391,12 @@ function Alliance:GetOtherRequestEventsNum()
     return request_num
 end
 function Alliance:Reset()
-    self:GetAllianceBelvedere():Reset()
-    for k,v in pairs(self) do
-        if type(v) == 'string' then
-            self[k] = ""
-        elseif type(v) == 'number' then
-            self[k] = 0
-        end
-    end
-    self:SetId(nil)
-    self:SetJoinType("all")
-    self.members = {}
-    self.events = {}
-    self.countInfo = {}
-    self.joinRequestEvents = {}
+    property(self, "RESET")
     self.help_events = {}
-    self.alliance_villages = {}
-    self.villageLevels = {}
     self:OnOperation("quit")
     self.alliance_map:Reset()
     self.alliance_shrine:Reset()
+    self:GetAllianceBelvedere():Reset()
     self:ResetMarchEvent()
     self:ResetVillageEvents()
 end
@@ -506,7 +488,7 @@ function Alliance:OnAllianceEventsChanged(alliance_data,deltaData)
     if is_fully_update or is_delta_update then
         self.events = alliance_data.events
         self:OnEventsChanged()
-    end 
+    end
 end
 function Alliance:OnJoinRequestEventsChanged(alliance_data,deltaData)
     local is_fully_update = deltaData == nil
@@ -571,40 +553,8 @@ function Alliance:OnAllianceFightReportsChanged(alliance_data, deltaData)
     local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.allianceFightReports ~= nil
     if is_fully_update or is_delta_update then
-        self.alliance_fight_reports = alliance_data.allianceFightReports
-        -- self:NotifyListeneOnType(Alliance.LISTEN_TYPE.FIGHT_REPORTS, function(listener)
-        --     listener:OnAllianceFightReportsChanged({add = add,remove=remove})
-        -- end)
+        self.allianceFightReports = alliance_data.allianceFightReports
     end
-    -- if alliance_data.allianceFightReports then
-    --     self.alliance_fight_reports = alliance_data.allianceFightReports
-    --     table.sort( self.alliance_fight_reports, function(a, b)
-    --         return a.fightTime > b.fightTime
-    --     end )
-    -- end
-    -- if alliance_data.__allianceFightReports then
-    --     local add = {}
-    --     local remove = {}
-    --     for k,v in pairs(alliance_data.__allianceFightReports) do
-    --         if v.type == "add" then
-    --             table.insert(self.alliance_fight_reports,v.data)
-    --             table.insert(add,v.data)
-    --         elseif v.type == "remove" then
-    --             for index,old in pairs(self.alliance_fight_reports) do
-    --                 if old.id == v.data.id then
-    --                     table.remove(self.alliance_fight_reports,index)
-    --                     table.insert(remove,v.data)
-    --                 end
-    --             end
-    --         end
-    --     end
-    --     table.sort( self.alliance_fight_reports, function(a, b)
-    --         return a.fightTime > b.fightTime
-    --     end )
-    --     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.FIGHT_REPORTS, function(listener)
-    --         listener:OnAllianceFightReportsChanged({add = add,remove=remove})
-    --     end)
-    -- end
 end
 function Alliance:OnHelpEventsChanged(alliance_data,deltaData)
     local is_fully_update = deltaData == nil
@@ -1218,25 +1168,25 @@ function Alliance:DecodeAllianceVillages(alliance_data,deltaData)
     local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.villages ~= nil
     if is_fully_update then
-        self.alliance_villages = {}
+        self.villages = {}
         for _,v in ipairs(alliance_data.villages) do
-            self.alliance_villages[v.id] = v
+            self.villages[v.id] = v
         end
     end
     if is_delta_update then
         local changed_map = GameUtils:Handler_DeltaData_Func(
             deltaData.villages
             ,function(event_data)
-                self.alliance_villages[event_data.id] = event_data
+                self.villages[event_data.id] = event_data
             end
             ,function(event_data)
-                if self.alliance_villages[event_data.id] then
-                    self.alliance_villages[event_data.id] = event_data
+                if self.villages[event_data.id] then
+                    self.villages[event_data.id] = event_data
                 end
             end
             ,function(event_data)
-                if self.alliance_villages[event_data.id] then
-                    self.alliance_villages[event_data.id] = nil
+                if self.villages[event_data.id] then
+                    self.villages[event_data.id] = nil
                 end
             end
         )
@@ -1244,13 +1194,13 @@ function Alliance:DecodeAllianceVillages(alliance_data,deltaData)
 end
 
 function Alliance:IteratorAllianceVillageInfo(func)
-    for _,v in pairs(self.alliance_villages) do
+    for _,v in pairs(self.villages) do
         func(v)
     end
 end
 
 function Alliance:GetAllianceVillageInfos()
-    return self.alliance_villages
+    return self.villages
 end
 
 function Alliance:SetIsMyAlliance(isMyAlliance)
@@ -1262,4 +1212,5 @@ function Alliance:IsMyAlliance()
 end
 
 return Alliance
+
 
