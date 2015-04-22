@@ -107,11 +107,7 @@ function GameUIVip:OpenSelectHeadIcon()
     for _,icon in pairs(UILib.player_icon) do
         self:AddIconOption(icon)
     end
-    dump(list.container,"list.container")
-    list:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
-        dump(event)
-        return true
-    end)
+   
     self.head_icon_list:reload()
 
 end
