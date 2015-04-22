@@ -607,10 +607,10 @@ function GameUIReplay:NewDragonBattle()
     return dragon_battle
 end
 local dragon_ani_map = {
-    redDragon = {"red_long", 100, 0},
-    blueDragon = {"blue_long", 100, 0},
-    greenDragon = {"green_long", 100, 0},
-    blackDragon = {"heilong", 100, 50},
+    redDragon   = {   "red_long", 100, 0, 0.6},
+    blueDragon  = {  "blue_long", 100, 0, 0.6},
+    greenDragon = { "green_long", 100, 0, 0.6},
+    blackDragon = {    "heilong", 100,50,   1},
 }
 function GameUIReplay:NewDragon(is_left, is_pve_battle)
     local node = display.newNode()
@@ -659,12 +659,11 @@ function GameUIReplay:NewDragon(is_left, is_pve_battle)
             color = UIKit:hex2c3b(0x00be36)
         }):align(display.CENTER, is_left and 20 or 80, -55)
             :addTo(self):hide()
-
-        local ani_name, left_x, right_x = unpack(dragon_ani_map[dragon_type])
+        local ani_name, left_x, right_x, scale = unpack(dragon_ani_map[dragon_type])
         local dragon = ccs.Armature:create(ani_name)
             :addTo(self):align(display.CENTER, is_left and left_x or right_x, 60):scale(0.6)
         dragon:getAnimation():play("idle", -1, -1)
-        dragon:setScaleX(is_left and 0.6 or -0.6)
+        dragon:setScale(is_left and scale or - scale, scale)
     end
     function node:SetName()
         return self
