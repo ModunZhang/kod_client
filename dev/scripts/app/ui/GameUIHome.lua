@@ -7,6 +7,7 @@ local WidgetHomeBottom = import("..widget.WidgetHomeBottom")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetEventTabButtons = import("..widget.WidgetEventTabButtons")
 local SoldierManager = import("..entity.SoldierManager")
+local WidgetAutoOrder = import("..widget.WidgetAutoOrder")
 local Arrow = import(".Arrow")
 local WidgetChangeMap = import("..widget.WidgetChangeMap")
 local GameUIHelp = import(".GameUIHelp")
@@ -64,8 +65,7 @@ function GameUIHome:OnProductionTechnologyEventDataChanged()
 end
 function GameUIHome:RefreshHelpButtonVisible()
     if self.help_button then
-        local alliance = Alliance_Manager:GetMyAlliance()
-        self.help_button:setVisible(not alliance:IsDefault() and #alliance:GetCouldShowHelpEvents()>0)
+        self.top_order_group:RefreshOrder()
     end
 end
 function GameUIHome:SetCompleteTaskCount(count)
@@ -108,27 +108,6 @@ function GameUIHome:onEnter()
     self.bottom = self:CreateBottom()
 
     WidgetChangeMap.new(WidgetChangeMap.MAP_TYPE.OUR_CITY):addTo(self)
-
-    -- 协助加速按钮
-    self.help_button = cc.ui.UIPushButton.new(
-        {normal = "help_64x72.png", pressed = "help_64x72.png"},
-        {scale9 = false}
-    ):onButtonClicked(function(event)
-        if event.name == "CLICKED_EVENT" then
-            if not Alliance_Manager:GetMyAlliance():IsDefault() then
-                GameUIHelp.new():AddToCurrentScene(true)
-            else
-                FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                    :SetPopMessage(_("加入联盟才能激活帮助功能"))
-                    :AddToCurrentScene()
-            end
-        end
-    end):addTo(self):pos(display.right-40, display.top-380)
-
-    self.request_count = WidgetNumberTips.new():addTo(self.help_button):pos(20,-20)
-    self.request_count:SetNumber(Alliance_Manager:GetMyAlliance():GetOtherRequestEventsNum())
-
-    
 
     local ratio = self.bottom:getScale()
     self.event_tab = WidgetEventTabButtons.new(self.city, ratio)
@@ -375,6 +354,7 @@ function GameUIHome:CreateTop()
         color = UIKit:hex2c3b(0xfffeb3)})
         :addTo(quest_bar_bg):align(display.LEFT_CENTER, -120, 0)
 
+
     -- 礼物按钮
     local button = cc.ui.UIPushButton.new(
         {normal = "activity_68x78.png"},
@@ -384,17 +364,7 @@ function GameUIHome:CreateTop()
             UIKit:newGameUI("GameUIActivity",City):AddToCurrentScene(true)
         end
     end):addTo(self):pos(display.left+40, display.top-200)
-    --帮助
-    local button = cc.ui.UIPushButton.new(
-        {normal = "tips_66x64.png", pressed = "tips_66x64.png"},
-        {scale9 = false}
-    )
-    button:onButtonClicked(function(event)
-        if event.name == "CLICKED_EVENT" then
-            UIKit:newGameUI("GameUITips",button):AddToCurrentScene(true)
-        end
-    end):addTo(self):pos(display.right-40, display.top-200)
-
+    local order = WidgetAutoOrder.new(WidgetAutoOrder.ORIENTATION.TOP_TO_BOTTOM,20):addTo(self):pos(display.right-50, display.top-200)
     -- BUFF按钮
     local buff_button = cc.ui.UIPushButton.new(
         {normal = "buff_68x68.png", pressed = "buff_68x68.png"}
@@ -402,7 +372,64 @@ function GameUIHome:CreateTop()
         if event.name == "CLICKED_EVENT" then
             UIKit:newGameUI("GameUIBuff",self.city):AddToCurrentScene(true)
         end
-    end):addTo(self):pos(display.right-40, display.top-290)
+    end)
+    function buff_button:CheckVisible()
+        return true
+    end
+    function buff_button:GetElementSize()
+        return buff_button:getCascadeBoundingBox().size
+    end
+    order:AddElement(buff_button)
+    -- tips
+    local button = cc.ui.UIPushButton.new(
+        {normal = "tips_66x64.png", pressed = "tips_66x64.png"},
+        {scale9 = false}
+    )
+    button:onButtonClicked(function(event)
+        if event.name == "CLICKED_EVENT" then
+            UIKit:newGameUI("GameUITips",button,function ()
+                order:RefreshOrder()
+            end):AddToCurrentScene(true)
+        end
+    end)
+    function button:CheckVisible()
+        return not app:GetGameDefautlt():getBasicInfoValueForKey("NEVER_SHOW_TIP_ICON")
+    end
+    function button:GetElementSize()
+        return button:getCascadeBoundingBox().size
+    end
+    order:AddElement(button)
+
+     -- 协助加速按钮
+    self.help_button = cc.ui.UIPushButton.new(
+        {normal = "help_64x72.png", pressed = "help_64x72.png"},
+        {scale9 = false}
+    ):onButtonClicked(function(event)
+        if event.name == "CLICKED_EVENT" then
+            if not Alliance_Manager:GetMyAlliance():IsDefault() then
+                GameUIHelp.new():AddToCurrentScene(true)
+            else
+                FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                    :SetPopMessage(_("加入联盟才能激活帮助功能"))
+                    :AddToCurrentScene()
+            end
+        end
+    end)
+
+    self.request_count = WidgetNumberTips.new():addTo(self.help_button):pos(20,-20)
+    self.request_count:SetNumber(Alliance_Manager:GetMyAlliance():GetOtherRequestEventsNum())
+    local help_button = self.help_button
+    function help_button:CheckVisible()
+        local alliance = Alliance_Manager:GetMyAlliance()
+        return not alliance:IsDefault() and #alliance:GetCouldShowHelpEvents()>0
+    end
+    function help_button:GetElementSize()
+        return help_button:getCascadeBoundingBox().size
+    end
+    order:AddElement(help_button)
+
+    order:RefreshOrder()
+    self.top_order_group = order
     return top_bg
 end
 function GameUIHome:CreateBottom()
