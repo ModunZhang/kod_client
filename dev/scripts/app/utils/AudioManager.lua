@@ -6,14 +6,13 @@ local AudioManager = class("AudioManager")
 
 local bg_music_map = {
 	MainScene = "music_begin.mp3",
-	MyCityScene = "KoD_music_city.mp3",
+	MyCityScene = "sfx_city.mp3",
 	AllianceScene = "bgm_peace.mp3",
 	PVEScene = "bgm_battle.mp3",
 	AllianceBattleScene = "bgm_battle.mp3",
-}
-
-local bg_sound_map = {
-	MyCityScene = "sfx_peace.mp3"
+	grassLand = "sfx_glassland.mp3",
+	iceField = "sfx_icefiled.mp3",
+	desert = "sfx_desert.mp3",
 }
 
 local effect_sound_map = {
@@ -98,17 +97,21 @@ end
 function AudioManager:GetGameDefault()
 	return self.game_default
 end
+
 --预加载音乐到内存(android)
 function AudioManager:PreLoadAudio()
 
 end
 
 
-function AudioManager:PlayeBgMusic(filename)
+function AudioManager:PlayeBgMusic(filename,isLoop)
+	print("PlayeBgMusic----->",filename,isLoop)
+	local index = string.find(filename,"%.")
+	local file_key = string.sub(filename,1,index - 1)
 	if self.is_bg_auido_on then
-		if filename ~= self.last_music_filename then
-			audio.playMusic("audios/" .. filename,true)
-			self.last_music_filename = filename
+		if file_key ~= self.last_music_filename then
+			audio.playMusic("audios/" .. filename,isLoop)
+			self.last_music_filename = file_key
 		end
 	end
 end
@@ -131,6 +134,10 @@ function AudioManager:PlayeAttackSoundBySoldierName(soldier_name)
 	self:PlayeEffectSound(audio_name)
 end
 
+function AudioManager:GetLastPlayedFileName()
+	return self.last_music_filename or  ""
+end
+
 --Api normal
 function AudioManager:PlayBuildingEffectByType(type_)
 	local sfx = building_sfx_map[type_]
@@ -146,15 +153,36 @@ function AudioManager:PlaySoldierStepEffectByType(type_)
 	end
 end
 
-function AudioManager:PlayGameMusic(scene_name)
-	local file_key = scene_name or display.getRunningScene().__cname
-	print("PlayGameMusic---->",file_key)
- 	if bg_music_map[file_key] then
-		self:PlayeBgMusic(bg_music_map[file_key])
+function AudioManager:PlayGameMusic(scene_name,isLoop)
+	if type(isLoop) ~= 'boolean' then isLoop = true end
+	local file_key = scene_name
+	if not scene_name then
+		local file_key = display.getRunningScene().__cname
+		local loop = false
+		if "PVEScene" ~= file_key  and "MainScene" ~= file_key then
+			local alliance = Alliance_Manager:GetMyAlliance()
+			if alliance:IsDefault() then
+				file_key = "AllianceScene"
+			else
+				local status = alliance:Status()
+				if status == 'prepare' or status == 'fight' then
+					file_key = "AllianceBattleScene"
+					loop = true
+				else
+					file_key = "AllianceScene"
+				end
+			end
+		end
+		if bg_music_map[file_key] then
+			self:PlayeBgMusic(bg_music_map[file_key],loop)
+		end
+	else
+		if bg_music_map[file_key] then
+			self:PlayeBgMusic(bg_music_map[file_key],isLoop)
+		end
 	end
-	-- if bg_sound_map[file_key] then
-	-- 	self:PlayeBgSound(bg_sound_map[file_key])
-	-- end
+	
+ 	
 end
 
 function AudioManager:PlayeEffectSoundWithKey(key)
@@ -171,9 +199,11 @@ function AudioManager:StopMusic()
 end
 
 function AudioManager:StopEffectSound()
-	self.is_effect_audio_on = false
+	-- self.is_effect_audio_on = false
 	audio.stopAllSounds()
 end
+
+--scene
 
 --control 
 function AudioManager:SwitchBackgroundMusicState(isOn)
@@ -214,6 +244,31 @@ end
 
 function AudioManager:SetEffectsVolume(volume)
 	audio.setSoundsVolume(volume)
+end
+
+-- for global call
+function AudioManager:OnBackgroundMusicCompletion()
+	print("AudioManager:OnBackgroundMusicCompletion--->",self:GetLastPlayedFileName())
+	local scene_name = display.getRunningScene().__cname
+	local lastFilename = self:GetLastPlayedFileName()
+	local terrain = Alliance_Manager:GetMyAlliance():Terrain()
+	if lastFilename == 'bgm_peace' 
+		or lastFilename == 'bgm_battle' 
+		or lastFilename == 'sfx_city' 
+		or lastFilename == 'sfx_desert' 
+		or lastFilename == 'sfx_glassland' 
+		or lastFilename == 'sfx_icefiled' 
+		then
+			if lastFilename == 'bgm_peace' or lastFilename == 'bgm_battle' then
+				if scene_name == 'MyCityScene' then
+					self:PlayGameMusic("MyCityScene",false) -- sfx_city
+				elseif scene_name == 'AllianceScene' then
+					self:PlayGameMusic(terrain,false) -- terrain music
+				end
+			else 
+				self:PlayGameMusic()
+			end
+	end
 end
 
 return AudioManager

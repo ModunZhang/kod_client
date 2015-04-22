@@ -60,6 +60,11 @@ function MyApp:ctor()
     self.timer = Timer.new()
     local manager = ccs.ArmatureDataManager:getInstance()
     manager:addArmatureFileInfo(DEBUG_GET_ANIMATION_PATH("animations/Cloud_Animation.ExportJson"))
+
+    -- 当前音乐播放完成回调(只播放一次的音乐)
+    local eventDispatcher = cc.Director:getInstance():getEventDispatcher()
+    local customListenerBg = cc.EventListenerCustom:create("APP_BACKGROUND_MUSIC_COMPLETION",handler(self, self.onBackgroundMusicCompletion))
+    eventDispatcher:addEventListenerWithFixedPriority(customListenerBg, 1)
 end
 
 function MyApp:run()
@@ -175,6 +180,10 @@ function MyApp:onEnterBackground()
     LuaUtils:outputTable("onEnterBackground", {})
     NetManager:disconnect()
     self:flushIf()
+end
+
+function MyApp:onBackgroundMusicCompletion()
+    self:GetAudioManager():OnBackgroundMusicCompletion()
 end
 
 function MyApp:onEnterForeground()

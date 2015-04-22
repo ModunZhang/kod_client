@@ -198,7 +198,7 @@ function CityScene:GotoLogicPoint(x, y)
     return self:GetSceneLayer():PromiseOfMove(point.x, point.y)
 end
 function CityScene:PlayBackgroundMusic()
-    app:GetAudioManager():PlayGameMusic("MyCityScene")
+    app:GetAudioManager():PlayGameMusic()
     -- self:performWithDelay(function()
     --     self:PlayBackgroundMusic()
     -- end, 113 + 30)

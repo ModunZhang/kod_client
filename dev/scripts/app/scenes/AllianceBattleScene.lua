@@ -22,7 +22,7 @@ function AllianceBattleScene:onEnter()
     local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(location.x, location.y, self:GetAlliance():Id())
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
     self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
-    app:GetAudioManager():PlayGameMusic("AllianceBattleScene")
+    app:GetAudioManager():PlayGameMusic()
     self:GetSceneLayer():ZoomTo(0.6)
 end
 function AllianceBattleScene:LoadAnimation()
@@ -97,7 +97,7 @@ function AllianceBattleScene:OpenUI(building, isMyAlliance)
 end
 function AllianceBattleScene:OnBasicChanged(alliance,changed_map)
     if changed_map.status and changed_map.status.new == 'protect' then
-        app:GetAudioManager():PlayGameMusic("AllianceScene")
+        app:GetAudioManager():PlayGameMusic()
     end
 end
 function AllianceBattleScene:EnterAllianceBuilding(entity,isMyAlliance)

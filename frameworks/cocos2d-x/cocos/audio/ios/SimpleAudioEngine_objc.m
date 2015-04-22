@@ -236,5 +236,7 @@ static CDBufferManager *bufferManager = nil;
         return nil;
     }    
 }    
-
+-(void) setBackgroundMusicCompletionListener:(id) listener selector:(SEL) selector {
+    [am setBackgroundMusicCompletionListener:listener selector:selector];
+}
 @end 

@@ -96,5 +96,5 @@
 
 /** Shuts down the shared audio engine instance so that it can be reinitialised */
 +(void) end;
-
+-(void) setBackgroundMusicCompletionListener:(id) listener selector:(SEL) selector;
 @end
