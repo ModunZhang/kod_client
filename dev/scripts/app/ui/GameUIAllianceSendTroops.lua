@@ -49,7 +49,7 @@ local soldier_ani_width = {
     ballista = 180,
 
     skeletonWarrior = 180,
-    skeletonArcher = 200,
+    skeletonArcher = 180,
     deathKnight = 180,
     meatWagon = 180,
 }
@@ -596,6 +596,8 @@ function GameUIAllianceSendTroops:CreateTroopsShow()
     end
 
     function TroopShow:RefreshScrollNode(current_x)
+        -- 因为士兵动画的锚点为CENTER，需要的滑动区域的宽度需要多加士兵动画设计快读180/2
+        current_x = current_x - 180/2
         if current_x<grass_width then
             table.insert(self.soldier_crops,display.newSprite("battle_bg_grass_611x275.png")
                 :align(display.LEFT_BOTTOM,0,0):addTo(self))
@@ -620,10 +622,10 @@ function GameUIAllianceSendTroops:CreateTroopsShow()
             rc = func(self)
         end
 
-        rc.origin = {x=rc.x+self.offset_x-60, y=rc.y}
-        rc.size = {width=self.bound_box_width+60, height=rc.height}
-        rc.width=self.bound_box_width+60
-        rc.x=rc.x+self.offset_x-60
+        rc.origin = {x=rc.x+self.offset_x, y=rc.y}
+        rc.size = {width=self.bound_box_width, height=rc.height}
+        rc.width=self.bound_box_width
+        rc.x=rc.x+self.offset_x
         rc.containsPoint = isPointIn
         return rc
     end
@@ -645,16 +647,16 @@ function GameUIAllianceSendTroops:CreateTroopsShow()
             :addTo(info_bg)
         return self
     end
-    function TroopShow:NewCorps(soldier,soldier_number,star)
+    function TroopShow:NewCorps(soldier,soldier_power,star)
         local arrange = soldier_arrange[soldier]
-        local corps = Corps.new(soldier, star , arrange.row, arrange.col,nil,100)
+        local corps = Corps.new(soldier, star , arrange.row, arrange.col)
         local label = display.newSprite("back_ground_122x24.png")
-            :align(display.CENTER, 40, -40)
+            :align(display.CENTER, 0, -50)
             :addTo(corps)
         display.newSprite("dragon_strength_27x31.png"):pos(10,label:getContentSize().height/2)
             :addTo(label)
         UIKit:ttfLabel({
-            text = soldier_number,
+            text = soldier_power,
             size = 18,
             color = 0xffedae,
         }):align(display.CENTER,label:getContentSize().width/2,label:getContentSize().height/2)
@@ -701,12 +703,12 @@ function GameUIAllianceSendTroops:CreateTroopsShow()
         self:SetSoldiers(soldiers)
         if isRefresh then
             self:RemoveAllSoldierCrops()
-            local y  = 100
-            local x = 611
+            local y  = 110
+            local x = 681
             local total_power , total_weight, total_citizen =0,0,0
             self.soldier_crops = {}
             for index,v in pairs(soldiers) do
-                local corp = self:NewCorps(v.soldier_type,v.power,v.soldier_star,120,120):addTo(self,2)
+                local corp = self:NewCorps(v.soldier_type,v.power,v.soldier_star):addTo(self,2)
                 if v.soldier_type ~= "catapult" and v.soldier_type ~= "ballista" and v.soldier_type ~= "meatWagon" then
                     corp:PlayAnimation("idle_90")
                 else
