@@ -62,7 +62,8 @@ function User:ctor(p)
     self:GetGemResource():SetValueLimit(math.huge) -- 会有人充值这么多的金龙币吗？
     self:GetStrengthResource():SetValueLimit(100)
 
-    self.used_strength = 0
+    self.staminaUsed = 0
+    self.gemUsed = 0
     self.pve_database = PVEDatabase.new(self)
     local _,_, index = self.pve_database:GetCharPosition()
     self:GotoPVEMapByLevel(index)
@@ -89,15 +90,13 @@ function User:IsBindGameCenter()
     return self:GcId() ~= "" and self:GcId() ~= json.null
 end
 function User:GotoPVEMapByLevel(level)
-    if self.cur_pve_map then
-        self.cur_pve_map:RemoveAllObserver()
-    end
+    self.pve_database:ResetAllMapsListener()
     self.cur_pve_map = self.pve_database:GetMapByIndex(level)
 end
 -- return 是否成功使用体力
 function User:UseStrength(num)
     if self:HasAnyStength(num) then
-        self.used_strength = self.used_strength + num
+        self.staminaUsed = self.staminaUsed + num
         self:GetStrengthResource():ReduceResourceByCurrentTime(app.timer:GetServerTime(), num or 1)
         self:OnResourceChanged()
         return true
@@ -110,10 +109,13 @@ end
 function User:ResetPveData()
     self:SetPveData(nil, nil, nil)
 end
-function User:SetPveData(fight_data, rewards_data, gem_used)
+function User:GetStaminaUsed()
+    return self.staminaUsed
+end
+function User:SetPveData(fight_data, rewards_data, gemUsed)
     self.fight_data = fight_data
     self.rewards_data = rewards_data
-    self.gem_used = gem_used
+    self.gemUsed = gemUsed or 0
 end
 function User:EncodePveDataAndResetFightRewardsData()
     local fightData = self.fight_data
@@ -124,15 +126,15 @@ function User:EncodePveDataAndResetFightRewardsData()
     for i,v in ipairs(rewards or {}) do
         v.probability = nil
     end
-    local used_strength = self.used_strength
-    self.used_strength = 0
+    local staminaUsed = self.staminaUsed
+    self.staminaUsed = 0
 
-    local gem_used = self.gem_used
-    self.gem_used = nil
+    local gemUsed = self.gemUsed
+    self.gemUsed = 0
     return {
         pveData = {
-            gemUsed = gem_used,
-            staminaUsed = used_strength,
+            gemUsed = gemUsed,
+            staminaUsed = staminaUsed,
             location = self.pve_database:EncodeLocation(),
             floor = self.cur_pve_map:EncodeMap(),
         },
@@ -141,7 +143,7 @@ function User:EncodePveDataAndResetFightRewardsData()
     }
 end
 function User:ResetAllListeners()
-    self.cur_pve_map:RemoveAllObserver()
+    self.pve_database:ResetAllMapsListener()
     self:ClearAllListener()
 end
 function User:GetCurrentPVEMap()

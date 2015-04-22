@@ -20,8 +20,10 @@ function WidgetPVEWarriorsTomb:SetUpButtons()
             {
                 label = _("安葬"), callback = function()
                     if self:HasGem(10) then
-                        self:Search()
-                        self:GetRewardsFromServer(nil, 10)
+                        local rollback = self:Search()
+                        self:GetRewardsFromServer(nil, 10):fail(function()
+                            rollback()
+                        end)
                         self:removeFromParent()
                     end
                 end

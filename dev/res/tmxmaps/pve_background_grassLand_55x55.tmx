@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="55" height="55" tilewidth="80" tileheight="80">
- <tileset firstgid="1" name="026" tilewidth="80" tileheight="80">
-  <image source="026.png" width="480" height="480"/>
+ <tileset firstgid="1" name="terrain" tilewidth="80" tileheight="80">
+  <image source="terrain.png" width="1440" height="1440"/>
  </tileset>
  <layer name="layer1" width="55" height="55">
   <properties>
@@ -11,7 +11,7 @@
    <property name="r" value="100"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJzt1LcRAkEAxdA9vD+899B/jagIgj87CpSogNeUUjrUpR71aUBNBX9IIxrThKY0q+TPaUEtLWlF60r+hra0oz0d6FjJP9GZLnSlG90r+Q960ove9KFvJT/RN53UyTTfdFIn03zTSZ1M800ndTLNN53UyTTfdFIn03zTSZ1M800ndTLNN53UyTTfdFIn03zTSZ1M800ndTLNN53UyTTfdFIn03zTSZ1M800ndTLNt3/9H1yo1tk=
+   eJzt1EcRAkEABdExsCQDRAOwgAGiAaIBov8zLYLDr6k+9KUFvKaU0qEu9ahPA2oq+EMa0ZgmNKVZJX9OC2ppSStaV/I3tKUd7elAx0r+ic50oSvd6F7Jf9CTXvSmD30r+Ym+6aROpvmmkzqZ5ptO6mSabzqpk2m+6aROpvmmkzqZ5ptO6mSabzqpk2m+6aROpvmmkzqZ5ptO6mSabzqpk2m+6aROpvmmkzqZ5ptO6mSabzqpk2m+/ev/AMchwM8=
   </data>
  </layer>
 </map>

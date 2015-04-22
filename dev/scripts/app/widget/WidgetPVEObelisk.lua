@@ -5,8 +5,10 @@ local WidgetPVEObelisk = class("WidgetPVEObelisk", WidgetPVEDialog)
 function WidgetPVEObelisk:ctor(...)
     WidgetPVEObelisk.super.ctor(self, ...)
     if self:GetObject():IsUnSearched() then
-        self:Search()
-        self:GetRewardsFromServer()
+        local rollback = self:Search()
+        self:GetRewardsFromServer():fail(function()
+            rollback()
+        end)
     end
 end
 function WidgetPVEObelisk:GetTitle()
@@ -20,6 +22,7 @@ function WidgetPVEObelisk:SetUpButtons()
 end
 
 return WidgetPVEObelisk
+
 
 
 

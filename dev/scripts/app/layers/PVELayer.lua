@@ -59,7 +59,7 @@ function PVELayer:ctor(user)
     self.war_fog_layer = cc.TMXTiledMap:create(
         string.format("tmxmaps/pve_fog_%dx%d.tmx", w, h)
     ):addTo(self.scene_node, ZORDER.FOG):pos(-80, -80):getLayer("layer1")
-    
+
     self.building_layer = display.newNode():addTo(self.scene_node, ZORDER.BUILDING)
     self.object_layer = display.newNode():addTo(self.scene_node, ZORDER.OBJECT)
     self.normal_map = NormalMapAnchorBottomLeftReverseY.new({
@@ -121,6 +121,10 @@ function PVELayer:onEnter()
     self.pve_map:IteratorObjects(handler(self, self.SetObjectStatus))
     self.pve_map:AddObserver(self)
 end
+function PVELayer:onExit()
+    PVELayer.super.onExit(self)
+    self.pve_map:RemoveObserver(self)
+end
 function PVELayer:LoadPlayer()
     self.char = display.newNode():addTo(self.object_layer)
     self.char:setContentSize(cc.size(80, 80))
@@ -134,10 +138,6 @@ function PVELayer:LoadPlayer()
         cc.MoveBy:create(5, cc.p(0, 10)),
         cc.MoveBy:create(5, cc.p(0, -10))
     }))
-end
-function PVELayer:onExit()
-    self.pve_map:RemoveObserver(self)
-    PVELayer.super.onExit(self)
 end
 function PVELayer:AddPVEListener(l)
     self.pve_listener:AddObserver(l)
