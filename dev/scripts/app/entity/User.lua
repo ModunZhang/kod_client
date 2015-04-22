@@ -63,7 +63,7 @@ function User:ctor(p)
     self:GetStrengthResource():SetValueLimit(100)
 
     self.staminaUsed = 0
-    self.gemUsed = 0
+    self.gemUsed = nil
     self.pve_database = PVEDatabase.new(self)
     local _,_, index = self.pve_database:GetCharPosition()
     self:GotoPVEMapByLevel(index)
@@ -115,7 +115,7 @@ end
 function User:SetPveData(fight_data, rewards_data, gemUsed)
     self.fight_data = fight_data
     self.rewards_data = rewards_data
-    self.gemUsed = gemUsed or 0
+    self.gemUsed = gemUsed
 end
 function User:EncodePveDataAndResetFightRewardsData()
     local fightData = self.fight_data
@@ -130,7 +130,7 @@ function User:EncodePveDataAndResetFightRewardsData()
     self.staminaUsed = 0
 
     local gemUsed = self.gemUsed
-    self.gemUsed = 0
+    self.gemUsed = nil
     return {
         pveData = {
             gemUsed = gemUsed,

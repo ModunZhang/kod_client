@@ -30,7 +30,7 @@ function PVEScene:ctor(user)
 end
 function PVEScene:onEnter()
     PVEScene.super.onEnter(self)
-    self.home_page = self:CreateHomePage()
+    self:CreateHomePage()
     local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(self.user:GetPVEDatabase():GetCharPosition())
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
     self:GetSceneLayer():ZoomTo(0.8)
@@ -209,12 +209,21 @@ function PVEScene:PormiseOfCheckObject(x, y, type)
     if not object or not object:Type() then
         self.user:GetCurrentPVEMap():ModifyObject(x, y, 0, type)
         self.user:ResetPveData()
-        return NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData())
+        return NetManager:getSetPveDataPromise(
+            self.user:EncodePveDataAndResetFightRewardsData()
+        ):fail(function()
+            -- 失败回滚
+            local location = DataManager:getUserData().pve.location
+            self.user:GetPVEDatabase():SetCharPosition(location.x, location.y, location.z)
+            self:GetSceneLayer():MoveCharTo(self.user:GetPVEDatabase():GetCharPosition())
+        end)
     else
         return cocos_promise.defer()
     end
 end
 return PVEScene
+
+
 
 
 

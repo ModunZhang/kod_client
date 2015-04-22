@@ -34,6 +34,7 @@ function PVEDatabase:OnUserDataChanged(userData, deltaData)
             self.pve_maps[v.level]:Load(v)
         end
     end
+    local location = pve.location
     local is_switch_floor = self.char_floor ~= location.z
     local is_pos_changed = self.char_x ~= location.x or self.char_y ~= location.y
     local location = pve.location
