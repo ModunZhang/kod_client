@@ -18,14 +18,17 @@ function WidgetPVEConstructionRuins:SetUpButtons()
         { { label = _("离开") } } or
         { { label = _("搜索"), callback = function()
             if self:UseStrength(3) then
-                self:Search()
-                self:GetRewardsFromServer()
+                local rollback = self:Search()
+                self:GetRewardsFromServer():fail(function()
+                    rollback()
+                end)
                 self:removeFromParent()
             end
         end }, { label = _("离开") } }
 end
 
 return WidgetPVEConstructionRuins
+
 
 
 

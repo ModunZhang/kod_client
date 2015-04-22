@@ -30,18 +30,24 @@ function PVEScene:ctor(user)
 end
 function PVEScene:onEnter()
     PVEScene.super.onEnter(self)
+    self.home_page = self:CreateHomePage()
     local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(self.user:GetPVEDatabase():GetCharPosition())
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
     self:GetSceneLayer():ZoomTo(0.8)
     self:GetSceneLayer():MoveCharTo(self.user:GetPVEDatabase():GetCharPosition())
     app:GetAudioManager():PlayGameMusic("PVEScene")
-
-    GameUIPVEHome.new(self.user, self):AddToScene(self, true):setTouchSwallowEnabled(false)
 end
 function PVEScene:onExit()
     PVEScene.super.onExit(self)
     self.user:ResetPveData()
-    NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData(), true)
+    NetManager:getSetPveDataPromise(
+        self.user:EncodePveDataAndResetFightRewardsData(),
+        true
+    ):fail(function()
+        -- 失败回滚
+        local location = DataManager:getUserData().pve.location
+        self.user:GetPVEDatabase():SetCharPosition(location.x, location.y, location.z)
+    end)
 end
 function PVEScene:LoadAnimation()
     UILib.loadSolidersAnimation()
@@ -50,8 +56,13 @@ end
 function PVEScene:CreateSceneLayer()
     return PVELayer.new(self.user)
 end
+function PVEScene:CreateHomePage()
+    local home_page = GameUIPVEHome.new(self.user, self):AddToScene(self, true)
+    home_page:setTouchSwallowEnabled(false)
+    return home_page
+end
 function PVEScene:GetHomePage()
-
+    return self.home_page
 end
 function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
     -- 有动画就什么都不处理
@@ -95,8 +106,17 @@ function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
             self:CheckTrap()
         end
     elseif not self.user:HasAnyStength() then
-        self.user:ResetPveData()
-        NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData(), true)
+        if self.user:GetStaminaUsed() > 0 then
+            self.user:ResetPveData()
+            NetManager:getSetPveDataPromise(
+                self.user:EncodePveDataAndResetFightRewardsData()
+            ):fail(function()
+                -- 失败回滚
+                local location = DataManager:getUserData().pve.location
+                self.user:GetPVEDatabase():SetCharPosition(location.x, location.y, location.z)
+                self:GetSceneLayer():MoveCharTo(self.user:GetPVEDatabase():GetCharPosition())
+            end)
+        end
         WidgetUseItems.new():Create({
             item_type = WidgetUseItems.USE_TYPE.STAMINA
         }):AddToCurrentScene()
@@ -138,9 +158,6 @@ end
 function PVEScene:CheckTrap()
     if self.user:GetPVEDatabase():IsInTrap() then
         self:GetSceneLayer():PromiseOfTrap():next(function()
-            self.user:ResetPveData()
-            return NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData())
-        end):next(function()
             local trap_obj = PVEObject.new(0, 0, 0, PVEDefine.TRAP, self:GetSceneLayer():CurrentPVEMap())
             local enemy = trap_obj:GetNextEnemy()
             UIKit:newGameUI('GameUIPVESendTroop',
@@ -173,7 +190,9 @@ function PVEScene:CheckTrap()
                     else
                         self.user:SetPveData(report:GetAttackKDA())
                     end
-                    NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData()):done(function()
+                    NetManager:getSetPveDataPromise(
+                        self.user:EncodePveDataAndResetFightRewardsData()
+                    ):done(function()
                         UIKit:newGameUI("GameUIReplay", report, function()
                             if report:IsAttackWin() then
                                 GameGlobalUI:showTips(_("获得奖励"), enemy.rewards)
@@ -186,7 +205,7 @@ function PVEScene:CheckTrap()
     end
 end
 function PVEScene:PormiseOfCheckObject(x, y, type)
-    local object = self.user:GetCurrentPVEMap():GetObject(x, y)
+    local object = self.user:GetCurrentPVEMap():GetObjectByCoord(x, y)
     if not object or not object:Type() then
         self.user:GetCurrentPVEMap():ModifyObject(x, y, 0, type)
         self.user:ResetPveData()
@@ -196,5 +215,9 @@ function PVEScene:PormiseOfCheckObject(x, y, type)
     end
 end
 return PVEScene
+
+
+
+
 
 

@@ -17,14 +17,22 @@ end
 function GameUIPVEHome:onEnter()
     self:CreateTop()
     self:CreateBottom()
-    self.user:AddListenOnType(self, self.user.LISTEN_TYPE.RESOURCE)
+    self:OnExploreChanged(self.layer)
     self:OnResourceChanged(self.user)
-    self.layer:AddPVEListener(self)
-    self.layer:NotifyExploring()
+
+    self:AddOrRemoveListener(true)
 end
 function GameUIPVEHome:onExit()
-    self.layer:RemovePVEListener(self)
-    self.user:RemoveListenerOnType(self, self.user.LISTEN_TYPE.RESOURCE)
+    self:AddOrRemoveListener(false)
+end
+function GameUIPVEHome:AddOrRemoveListener(isAdd)
+    if isAdd then
+        self.layer:AddPVEListener(self)
+        self.user:AddListenOnType(self, self.user.LISTEN_TYPE.RESOURCE)
+    else
+        self.layer:RemovePVEListener(self)
+        self.user:RemoveListenerOnType(self, self.user.LISTEN_TYPE.RESOURCE)
+    end
 end
 function GameUIPVEHome:OnResourceChanged(user)
     local strength_resouce = user:GetStrengthResource()
@@ -54,7 +62,14 @@ function GameUIPVEHome:CreateTop()
                     listener =  function()
                         self.user:SetPveData(nil, nil, 10)
                         self.layer:ResetCharPos()
-                        NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData())
+                        NetManager:getSetPveDataPromise(
+                            self.user:EncodePveDataAndResetFightRewardsData()
+                        ):fail(function()
+                            -- 失败回滚
+                            local location = DataManager:getUserData().pve.location
+                            self.user:GetPVEDatabase():SetCharPosition(location.x, location.y, location.z)
+                            self.layer:MoveCharTo(self.user:GetPVEDatabase():GetCharPosition())
+                        end)
                     end
                 }):CreateCancelButton():AddToCurrentScene()
             

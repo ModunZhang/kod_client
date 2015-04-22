@@ -19,15 +19,19 @@ function WidgetPVEKeel:SetUpButtons()
         {
             {
                 label = _("知识"), callback = function()
-                    self:Search()
-                    self:GetRewardsFromServer(1)
+                    local rollback = self:Search()
+                    self:GetRewardsFromServer(1):fail(function()
+                        rollback()
+                    end)
                     self:removeFromParent()
                 end
             },
             {
                 label = _("生命"), callback = function()
-                    self:Search()
-                    self:GetRewardsFromServer(2)
+                    local rollback = self:Search()
+                    self:GetRewardsFromServer(2):fail(function()
+                        rollback()
+                    end)
                     self:removeFromParent()
                 end
             }
@@ -35,6 +39,7 @@ function WidgetPVEKeel:SetUpButtons()
 end
 
 return WidgetPVEKeel
+
 
 
 

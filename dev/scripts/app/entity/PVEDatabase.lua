@@ -9,11 +9,10 @@ function PVEDatabase:ctor(user)
     self.char_y = 12
     self.char_floor = 1
     self.next_enemy_step = TRAP_NPC_STEPS
-    local pve_maps = {}
+    self.pve_maps = {}
     for i = 1, MAX_FLOOR do
-        pve_maps[i] = PVEMap.new(self, i):LoadProperty()
+        self.pve_maps[i] = PVEMap.new(self, i):LoadProperty()
     end
-    self.pve_maps = pve_maps
 end
 function PVEDatabase:MapLen()
     return #self.pve_maps
@@ -35,7 +34,8 @@ function PVEDatabase:OnUserDataChanged(userData, deltaData)
             self.pve_maps[v.level]:Load(v)
         end
     end
-
+    local is_switch_floor = self.char_floor ~= location.z
+    local is_pos_changed = self.char_x ~= location.x or self.char_y ~= location.y
     local location = pve.location
     self.char_x = location.x
     self.char_y = location.y
@@ -66,15 +66,10 @@ end
 function PVEDatabase:GetMapByIndex(index)
     return self.pve_maps[index]
 end
-function PVEDatabase:GetSearchedMapList()
-    local searched_list = {}
-    for _, v in ipairs(self.pve_maps) do
-        if not v:IsSearched() then
-            break
-        end
-        searched_list[#searched_list + 1] = v
+function PVEDatabase:ResetAllMapsListener()
+    for k,v in pairs(self.pve_maps) do
+        v:RemoveAllObserver()
     end
-    return searched_list
 end
 
 

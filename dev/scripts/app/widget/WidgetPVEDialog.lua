@@ -10,7 +10,7 @@ function WidgetPVEDialog:ctor(x, y, user)
     self.y = y
     self.user = user
     self.pve_map = user:GetCurrentPVEMap()
-    self.object = self.pve_map:GetObject(x, y)
+    self.object = self.pve_map:GetObjectByCoord(x, y)
     WidgetPVEDialog.super.ctor(self, 250, self:GetTitle(), display.cy + 150)
     self.dialog = display.newNode():addTo(self:GetBody())
     self.pve_map:AddObserver(self)
@@ -123,8 +123,13 @@ function WidgetPVEDialog:GotoNext()
         self.user:ResetPveData()
         local point = next_map:GetStartPoint()
         self.user:GetPVEDatabase():SetCharPosition(point.x, point.y, next_index)
-        NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData()):done(function(result)
+        NetManager:getSetPveDataPromise(
+            self.user:EncodePveDataAndResetFightRewardsData()
+        ):done(function(result)
             app:EnterPVEScene(next_index)
+        end):fail(function()
+            local location = DataManager:getUserData().pve.location
+            self.user:GetPVEDatabase():SetCharPosition(location.x, location.y, location.z)
         end)
     else
     end
@@ -153,7 +158,9 @@ end
 function WidgetPVEDialog:GetRewardsFromServer(select, gem_used)
     local rewards = self:GetObject():GetNpcRewards(select)
     self.user:SetPveData(nil, rewards, gem_used)
-    return NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData()):done(function()
+    return NetManager:getSetPveDataPromise(
+        self.user:EncodePveDataAndResetFightRewardsData()
+    ):done(function()
         GameGlobalUI:showTips(_("获得奖励"), rewards)
     end)
 end
@@ -190,22 +197,22 @@ function WidgetPVEDialog:Fight()
                 local rollback = self:Search()
                 local rewards = self:GetObject():IsLast() and enemy.rewards + self:GetObject():GetNpcRewards() or enemy.rewards
                 self.user:SetPveData(report:GetAttackKDA(), rewards)
-                NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData(), nil, true):done(function()
+                NetManager:getSetPveDataPromise(
+                    self.user:EncodePveDataAndResetFightRewardsData()
+                ):done(function()
                     UIKit:newGameUI("GameUIReplay", report, function()
                         if report:IsAttackWin() then
                             GameGlobalUI:showTips(_("获得奖励"), rewards)
                         end
                     end):AddToCurrentScene(true)
-                end):catch(function(err)
-                    local _,code_type = err:reason()
-                    if not err:isSyntaxError() and code_type ~= "timeout" then
-                        dump(err:reason())
-                        rollback()
-                    end
+                end):fail(function()
+                    rollback()
                 end)
             else
                 self.user:SetPveData(report:GetAttackKDA())
-                NetManager:getSetPveDataPromise(self.user:EncodePveDataAndResetFightRewardsData()):done(function()
+                NetManager:getSetPveDataPromise(
+                    self.user:EncodePveDataAndResetFightRewardsData()
+                ):done(function()
                     UIKit:newGameUI("GameUIReplay", report):AddToCurrentScene(true)
                 end)
             end
