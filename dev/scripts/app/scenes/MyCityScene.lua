@@ -422,7 +422,7 @@ function MyCityScene:OpenUI(building)
                 :SetPopMessage("必须有一条空闲的龙，才能进入pve")
         end
     elseif type_ == "FairGround" then
-        UIKit:newGameUI("GameUIGacha", self.city):AddToCurrentScene(true)
+        UIKit:newGameUI("GameUIGacha", self.city):AddToCurrentScene(true):DisableAutoClose()
     end
 end
 return MyCityScene
