@@ -14,7 +14,7 @@ WidgetAutoOrder.ORIENTATION = {
 }
 function WidgetAutoOrder:ctor(order_type,default_gap)
     self.order_type = order_type
-    self.default_gap = default_gap
+    self.default_gap = default_gap or 0
     self.element_table = {}
 end
 

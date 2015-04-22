@@ -727,12 +727,18 @@ function NetManager:getDailyQeustRewardPromise(questEventId)
         end)
 end
 -- 发送个人邮件
-function NetManager:getSendPersonalMailPromise(memberId, title, content)
+function NetManager:getSendPersonalMailPromise(memberId, title, content , contacts)
     return get_blocking_request_promise("logic.playerHandler.sendMail", {
         memberId = memberId,
         title = title,
         content = content,
-    }, "发送个人邮件失败!"):done(get_response_msg)
+    }, "发送个人邮件失败!"):done(get_response_msg):done(function ( response )
+        -- 保存联系人
+        contacts.time = app.timer:GetServerTime()
+        app:GetGameDefautlt():addRecentContacts(contacts)
+        dump(app:GetGameDefautlt():getRecentContacts())
+        return response
+    end)
 end
 -- 获取收件箱邮件
 function NetManager:getFetchMailsPromise(fromIndex)

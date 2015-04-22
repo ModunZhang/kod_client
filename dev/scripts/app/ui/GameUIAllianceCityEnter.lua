@@ -153,7 +153,12 @@ function GameUIAllianceCityEnter:GetEnterButtons()
                 self:LeftButtonClicked()
             end)
             local mail_button = self:BuildOneButton("mail_56x40.png",_("邮件")):onButtonClicked(function()
-                local mail = GameUIWriteMail.new(GameUIWriteMail.SEND_TYPE.PERSONAL_MAIL)
+                local mail = GameUIWriteMail.new(GameUIWriteMail.SEND_TYPE.PERSONAL_MAIL,{
+                    id = member:Id(),
+                    name = member:Name(),
+                    icon = member:Icon(),
+                    allianceTag = self:GetCurrentAlliance():Tag(),
+                })
                 mail:SetTitle(_("个人邮件"))
                 mail:SetAddressee(member:Name())
                 mail:AddToCurrentScene()
@@ -216,6 +221,7 @@ function GameUIAllianceCityEnter:GetEnterButtons()
 end
 
 return GameUIAllianceCityEnter
+
 
 
 
