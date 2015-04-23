@@ -50,6 +50,16 @@ City.RESOURCE_TYPE_TO_BUILDING_TYPE = {
     [ResourceManager.RESOURCE_TYPE.STONE] = "quarrier",
     [ResourceManager.RESOURCE_TYPE.POPULATION] = "dwelling",
 }
+local only_one_buildings_map = {
+    keep            = true,
+    watchTower      = true,
+    barracks        = true,
+    dragonEyrie     = true,
+    trainingGround  = true,
+    hunterHall      = true,
+    workshop        = true,
+    academy         = true,
+}
 local illegal_map = {
     location_21 = true,
     location_22 = true
@@ -259,21 +269,11 @@ function City:InitTiles(w, h, unlocked)
 end
 function City:InitBuildings(buildings)
     self.buildings = buildings
-
     table.foreach(buildings, function(key, building)
         local type_ = building:GetType()
-        if type_ == "keep" then
-            assert(not self.keep)
-            self.keep = building
-        elseif type_ == "watchTower" then
-            assert(not self.watchTower)
-            self.watchTower = building
-        elseif type_ == "barracks" then
-            assert(not self.barracks)
-            self.barracks = building
-        elseif type_ == "dragonEyrie" then
-            assert(not self.dragonEyrie)
-            self.dragonEyrie = building
+        if only_one_buildings_map[type_] then
+            assert(not self[type_])
+            self[type_] = building
         end
         building:AddUpgradeListener(self)
     end)
@@ -297,17 +297,8 @@ function City:InitDecorators(decorators)
     self:CheckIfDecoratorsIntersectWithRuins()
 end
 -- 取值函数
-function City:GetKeep()
-    return self.keep
-end
-function City:GetWatchTower()
-    return self.watchTower
-end
-function City:GetBarracks()
-    return self.barracks
-end
 function City:GetDragonEyrie()
-    return self.dragonEyrie
+    return self:GetFirstBuildingByType("dragonEyrie")
 end
 function City:GetHousesAroundFunctionBuildingByType(building, building_type, len)
     return self:GetHousesAroundFunctionBuildingWithFilter(building, len, function(house)
@@ -559,7 +550,7 @@ function City:GetLocationIdByBuildingType(building_type)
 end
 function City:GetBuildingByLocationId(location_id)
     if location_id == 2 then
-        return self:GetWatchTower()
+        return self:GetFirstBuildingByType("watchTower")
     elseif location_id == 21 then
         return self:GetGate()
     elseif location_id == 22 then
@@ -580,31 +571,34 @@ function City:GetBuildingByTypeWithSpecificPosition(building_type, x, y)
     end
     return nil
 end
-function City:GetFirstBuildingByType(build_type)
-    return self:GetBuildingByType(build_type)[1]
+function City:GetFirstBuildingByType(type_)
+    if only_one_buildings_map[type_] then
+        return self[type_]
+    end
+    return self:GetBuildingByType(type_)[1]
 end
-function City:GetHighestBuildingByType(build_type)
+function City:GetHighestBuildingByType(type_)
     local highest
-    for _,v in ipairs(self:GetBuildingByType(build_type)) do
+    for _,v in ipairs(self:GetBuildingByType(type_)) do
         if not highest or highest:GetLevel() < v:GetLevel() then
             highest = v
         end
     end
     return highest
 end
-function City:GetLowestestBuildingByType(build_type)
+function City:GetLowestestBuildingByType(type_)
     local lowest
-    for _,v in ipairs(self:GetBuildingByType(build_type)) do
+    for _,v in ipairs(self:GetBuildingByType(type_)) do
         if not lowest or lowest:GetLevel() > v:GetLevel() then
             lowest = v
         end
     end
     return lowest
 end
-function City:GetBuildingByType(build_type)
+function City:GetBuildingByType(type_)
     local find_buildings = {}
     local filter = function(_, building)
-        if building:GetType() == build_type then
+        if building:GetType() == type_ then
             table.insert(find_buildings, building)
         end
     end
@@ -1465,10 +1459,10 @@ function City:CheckFinishUpgradingBuildingPormise(building)
 end
 --
 function City:PromiseOfRecruitSoldier(soldier_type)
-    return self:GetBarracks():PromiseOfRecruitSoldier(soldier_type)
+    return self:GetFirstBuildingByType("barracks"):PromiseOfRecruitSoldier(soldier_type)
 end
 function City:PromiseOfFinishSoldier(soldier_type)
-    return self:GetBarracks():PromiseOfFinishSoldier(soldier_type)
+    return self:GetFirstBuildingByType("barracks"):PromiseOfFinishSoldier(soldier_type)
 end
 --
 function City:PromiseOfFinishEquipementDragon()

@@ -81,7 +81,7 @@ function SpriteButton:OnTileChanged(city)
     elseif building and building:IsUpgrading() then
         self:TranslateToSatateByName("can_not_unlocked")
     elseif city:IsTileCanbeUnlockAt(current_tile.x, current_tile.y) then
-        if city:GetKeep():GetFreeUnlockPoint(city) > 0 then
+        if city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint(city) > 0 then
             self:TranslateToSatateByName("locked")
         else
             self:TranslateToSatateByName("can_not_unlocked")

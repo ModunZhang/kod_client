@@ -58,7 +58,7 @@ function CommonUpgradeUI:RemoveUpgradeListener()
 end
 function CommonUpgradeUI:OnBuildingUpgradingBegin( buidling, current_time )
     local pro = self.acc_layer.ProgressTimer
-    pro:setPercentage(self.building:GetElapsedTimeByCurrentTime(current_time)/self.building:GetUpgradeTimeToNextLevel()*100)
+    pro:setPercentage(self.building:GetUpgradingPercentByCurrentTime(current_time))
     self.acc_layer.upgrade_time_label:setString(GameUtils:formatTimeStyle1(self.building:GetUpgradingLeftTimeByCurrentTime(current_time)))
     self:visibleChildLayers()
 end
@@ -77,7 +77,7 @@ end
 
 function CommonUpgradeUI:OnBuildingUpgrading( buidling, current_time )
     local pro = self.acc_layer.ProgressTimer
-    pro:setPercentage(self.building:GetElapsedTimeByCurrentTime(current_time)/self.building:GetUpgradeTimeToNextLevel()*100)
+    pro:setPercentage(self.building:GetUpgradingPercentByCurrentTime(current_time))
     self.acc_layer.upgrade_time_label:setString(GameUtils:formatTimeStyle1(self.building:GetUpgradingLeftTimeByCurrentTime(current_time)))
     if not self.acc_layer.acc_button:isButtonEnabled() and
         self.building:IsAbleToFreeSpeedUpByTime(current_time) then
@@ -589,7 +589,7 @@ function CommonUpgradeUI:InitAccelerationPart()
     self.acc_layer.upgrade_time_label:setAnchorPoint(cc.p(0,0.5))
     self.acc_layer.upgrade_time_label:pos(self.acc_layer.upgrade_time_label:getContentSize().width/2+40, bar:getContentSize().height/2)
     if self.building:IsUpgrading() then
-        pro:setPercentage(self.building:GetElapsedTimeByCurrentTime(app.timer:GetServerTime())/self.building:GetUpgradeTimeToNextLevel()*100)
+        pro:setPercentage(self.building:GetUpgradingPercentByCurrentTime(app.timer:GetServerTime()))
         self.acc_layer.upgrade_time_label:setString(GameUtils:formatTimeStyle1(self.building:GetUpgradingLeftTimeByCurrentTime(app.timer:GetServerTime())))
     end
 
