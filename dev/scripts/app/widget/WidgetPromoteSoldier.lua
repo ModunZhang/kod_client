@@ -170,14 +170,8 @@ function WidgetPromoteSoldier:UpgradeButtons()
         text = GameUtils:formatTimeStyle1(level_up_config.upgradeTimeSecondsNeed),
         size = 18,
         color = 0x403c2f
-    }):align(display.LEFT_CENTER,size.width/2+125,size.height-280):addTo(body)
+    }):align(display.LEFT_CENTER,size.width/2+125,size.height-294):addTo(body)
 
-    -- 科技减少升级时间
-    self.buff_reduce_time = UIKit:ttfLabel({
-        text = "-("..GameUtils:formatTimeStyle1(DataUtils:getTechnilogyUpgradeBuffTime(level_up_config.upgradeTimeSecondsNeed))..")",
-        size = 18,
-        color = 0x068329
-    }):align(display.LEFT_CENTER,size.width/2+120,size.height-300):addTo(body)
 end
 function WidgetPromoteSoldier:UpgradeRequirement()
     local body = self.body

@@ -732,7 +732,7 @@ function NetManager:getSendPersonalMailPromise(memberId, title, content , contac
         -- 保存联系人
         contacts.time = app.timer:GetServerTime()
         app:GetGameDefautlt():addRecentContacts(contacts)
-        dump(app:GetGameDefautlt():getRecentContacts())
+        GameGlobalUI:showTips(_("提示"),_('发送邮件成功'))
         return response
     end)
 end
@@ -783,7 +783,10 @@ function NetManager:getSendAllianceMailPromise(title, content)
     return get_blocking_request_promise("logic.allianceHandler.sendAllianceMail", {
         title = title,
         content = content,
-    }, "发送联盟邮件失败!"):done(get_response_msg)
+    }, "发送联盟邮件失败!"):done(get_response_msg):done(function ( response )
+        GameGlobalUI:showTips(_("提示"),_('发送邮件成功'))
+        return response
+    end)
 end
 -- 阅读战报
 function NetManager:getReadReportsPromise(reportIds)
@@ -1533,6 +1536,7 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
 
 
 
