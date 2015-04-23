@@ -256,6 +256,13 @@ static const int CC_EDIT_BOX_PADDING = 5;
  */
 - (void) textChanged
 {
+    if (getEditBoxImplIOS()->getMaxLength() > 0)
+    {
+        if (textField_.text.length > getEditBoxImplIOS()->getMaxLength())
+        {
+            textField_.text = [textField_.text substringToIndex:getEditBoxImplIOS()->getMaxLength()];
+        }
+    }
     // NSLog(@"text is %@", self.textField.text);
     cocos2d::ui::EditBoxDelegate* pDelegate = getEditBoxImplIOS()->getDelegate();
     if (pDelegate != NULL)
