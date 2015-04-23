@@ -3,10 +3,10 @@ local NORMAL = GameDatas.Soldiers.normal
 local SPECIAL = GameDatas.Soldiers.special
 local promise = import("..utils.promise")
 local Localize = import("..utils.Localize")
+local DataUtils = import("..utils.DataUtils")
 local Observer = import(".Observer")
 local UpgradeBuilding = import(".UpgradeBuilding")
 local BarracksUpgradeBuilding = class("BarracksUpgradeBuilding", UpgradeBuilding)
-
 function BarracksUpgradeBuilding:ctor(...)
     self.barracks_building_observer = Observer.new()
     self.soldier_star = 1
@@ -46,7 +46,9 @@ function BarracksUpgradeBuilding:CreateEvent()
         return self.finished_time - self:GetRecruitingTime()
     end
     function event:GetRecruitingTime()
-        return barracks:GetRecruitingTimeByTypeWithCount(self.soldier_type, self.soldier_count)
+        local config = barracks:GetSoldierConfigByType(self.soldier_type)
+        local totalTime = config.recruitTime * self.soldier_count
+        return totalTime - DataUtils:getSoldierRecruitBuffTime(config.type, totalTime)
     end
     function event:ElapseTime(current_time)
         return current_time - self:StartTime()

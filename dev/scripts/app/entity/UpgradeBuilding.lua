@@ -1,6 +1,7 @@
 
 local Observer = import(".Observer")
 local Building = import(".Building")
+local DataUtils = import("..utils.DataUtils")
 local MaterialManager = import("..entity.MaterialManager")
 local UpgradeBuilding = class("UpgradeBuilding", Building)
 local Localize = import("..utils.Localize")
@@ -61,19 +62,16 @@ end
 function UpgradeBuilding:GetUpgradeObserver()
     return self.upgrade_building_observer
 end
-function UpgradeBuilding:GetElapsedTimeByCurrentTime(current_time)
-    return self:GetUpgradeTimeToNextLevel() - self:GetUpgradingLeftTimeByCurrentTime(current_time)
-end
 function UpgradeBuilding:GetUpgradingLeftTimeByCurrentTime(current_time)
-    return self.upgrade_to_next_level_time - current_time
+    local left_time = self.upgrade_to_next_level_time - current_time
+    return left_time > 0 and left_time or 0
 end
 function UpgradeBuilding:GetUpgradingPercentByCurrentTime(current_time)
     if self:IsUpgrading() then
-        local total_time = self:GetUpgradeTimeToNextLevel()
-        return (total_time + current_time - self.upgrade_to_next_level_time) / total_time * 100
-    else
-        return 0
+        local total = self:GetUpgradeTimeToNextLevel()
+        return (1 - self:GetUpgradingLeftTimeByCurrentTime(current_time) / (total - DataUtils:getBuildingBuff(total))) * 100
     end
+    return 0
 end
 function UpgradeBuilding:CanUpgrade()
     local legal = self:IsBuildingUpgradeLegal()
@@ -104,7 +102,6 @@ function UpgradeBuilding:InstantUpgradeTo(level)
     end)
 end
 function UpgradeBuilding:UpgradeByCurrentTime(current_time)
-    self.upgrade_to_next_level_time = current_time + self:GetUpgradeTimeToNextLevel()
     self:GeneralLocalPush()
     self.upgrade_building_observer:NotifyObservers(function(lisenter)
         lisenter:OnBuildingUpgradingBegin(self, current_time)
@@ -156,8 +153,7 @@ function UpgradeBuilding:CancelLocalPush()
     end
 end
 function UpgradeBuilding:OnTimer(current_time)
-    local is_upgrading = self:GetUpgradingLeftTimeByCurrentTime(current_time) >= 0
-    if is_upgrading then
+    if self:IsUpgrading() then
         self.upgrade_building_observer:NotifyObservers(function(lisenter)
             lisenter:OnBuildingUpgrading(self, current_time)
         end)
@@ -252,10 +248,10 @@ end
 function UpgradeBuilding:OnHandle(level, finish_time)
     if self.level == level then
         if self.upgrade_to_next_level_time == 0 and finish_time ~= 0 then
-            print("请求升级的时间",finish_time,finish_time - self:GetUpgradeTimeToNextLevel())
-            self:UpgradeByCurrentTime(finish_time - self:GetUpgradeTimeToNextLevel())
+            self.upgrade_to_next_level_time = finish_time
+            local total = self:GetUpgradeTimeToNextLevel()
+            self:UpgradeByCurrentTime(finish_time - total - DataUtils:getBuildingBuff(total))
         elseif self.upgrade_to_next_level_time ~= 0 and finish_time ~= 0 then
-            print("升级时间finish_time= ",finish_time*1000,app.timer:GetServerTime()*1000,finish_time*1000-app.timer:GetServerTime()*1000)
             self.upgrade_to_next_level_time = finish_time
             self:GeneralLocalPush()
         elseif self.upgrade_to_next_level_time ~= 0 and finish_time == 0 then

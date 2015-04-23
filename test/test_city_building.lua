@@ -41,11 +41,6 @@ function test_city_building()
             assert_equal(1, building:GetLevel())
         end,
         OnBuildingUpgrading = function(self, building, time)
-            assert_equal(1, building:GetLevel())
-            if building:GetElapsedTimeByCurrentTime(time) >= building:GetUpgradeTimeToNextLevel() then
-                flag = false
-                building:InstantUpgradeTo(building:GetNextLevel())
-            end
         end,
         OnBuildingUpgradeFinished = function(self, building, time)
             assert_equal(2, building:GetLevel())

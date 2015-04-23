@@ -40,12 +40,7 @@ function test_keep_building()
             assert_equal(1, building:GetLevel())
         end,
         OnBuildingUpgrading = function(self, building, time)
-            -- print("upgrading", building:GetType(), building:GetElapsedTimeByCurrentTime(time).."/"..building:GetUpgradeTimeToNextLevel())
-            assert_equal(1, building:GetLevel())
-            if building:GetElapsedTimeByCurrentTime(time) >= building:GetUpgradeTimeToNextLevel() then
-                flag = false
-                building:InstantUpgradeTo(building:GetNextLevel())
-            end
+
         end,
         OnBuildingUpgradeFinished = function(self, building, time)
             print("finished", building:GetType(), time)
