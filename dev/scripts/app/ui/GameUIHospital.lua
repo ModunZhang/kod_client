@@ -31,16 +31,10 @@ GameUIHospital.SOLDIERS_NAME = {
 }
 
 GameUIHospital.HEAL_NEED_RESOURCE_TYPE ={
-    WOOD = 1,
-    STONE = 2,
-    FOOD = 3,
-    IRON = 4,
+    COIN = 1,
 }
 
-local IRON = GameUIHospital.HEAL_NEED_RESOURCE_TYPE.IRON
-local STONE = GameUIHospital.HEAL_NEED_RESOURCE_TYPE.STONE
-local WOOD = GameUIHospital.HEAL_NEED_RESOURCE_TYPE.WOOD
-local FOOD = GameUIHospital.HEAL_NEED_RESOURCE_TYPE.FOOD
+local COIN = GameUIHospital.HEAL_NEED_RESOURCE_TYPE.COIN
 
 function GameUIHospital:ctor(city,building)
     GameUIHospital.super.ctor(self,city,_("医院"),building)
@@ -147,17 +141,14 @@ function GameUIHospital:CreateHealAllSoldierItem()
     for k,v in pairs(self.city:GetSoldierManager():GetTreatSoldierMap()) do
         table.insert(soldiers,{name=k,count=v})
     end
-    local total_iron,total_stone,total_wood,total_food = self.city:GetSoldierManager():GetTreatResource(soldiers)
+    local total_coin = self.city:GetSoldierManager():GetTreatResource(soldiers)
     local resource_icons = {
-        [WOOD]  = {total_wood,"res_wood_82x73.png"},
-        [STONE]  = {total_stone,"res_stone_88x82.png"},
-        [FOOD]  = {total_food,"res_food_91x74.png"},
-        [IRON] = {total_iron,"res_iron_91x63.png"},
+        [COIN]  = {total_coin,"res_coin_81x68.png"},
     }
     -- 资源背景框
     local resource_bg = display.newSprite("back_ground_556x56.png"):addTo(self.treate_all_soldiers_item):pos(self.treate_all_soldiers_item:getContentSize().width/2,180)
     for k,v in pairs(resource_icons) do
-        self.heal_resource_item_table[k] = createResourceItem(v[2],v[1]):addTo(self.treate_all_soldiers_item):pos(gap_x*k+item_width*(k-1)+10, 165)
+        self.heal_resource_item_table[k] = createResourceItem(v[2],v[1]):addTo(self.treate_all_soldiers_item):pos(bg_size.width/2-40, 165)
     end
 
     -- 立即治愈和治愈按钮
@@ -321,11 +312,8 @@ function GameUIHospital:SetTreatAllSoldiersNowNeedGems()
     for k,v in pairs(self.city:GetSoldierManager():GetTreatSoldierMap()) do
         table.insert(soldiers,{name=k,count=v})
     end
-    local total_iron,total_stone,total_wood,total_food = self.city:GetSoldierManager():GetTreatResource(soldiers)
-    local bur_resource_gems = DataUtils:buyResource({wood=total_wood,
-        stone=total_stone,
-        iron=total_iron,
-        food=total_food},{})
+    local total_coin = self.city:GetSoldierManager():GetTreatResource(soldiers)
+    local bur_resource_gems = DataUtils:buyResource({coin=total_coin},{})
     local buy_time = DataUtils:getGemByTimeInterval(total_treat_time)
     self.treat_all_now_need_gems = buy_time+bur_resource_gems
     self.heal_now_need_gems_label:setString(""..self.treat_all_now_need_gems)
@@ -334,18 +322,7 @@ end
 function GameUIHospital:SetTreatAllSoldiersTime()
     self.heal_time:setString(GameUtils:formatTimeStyle1(self.city:GetSoldierManager():GetTreatAllTime()))
 end
--- 检查普通治愈需要资源
--- function GameUIHospital:IsAbleToTreat()
---     local total_iron,total_stone,total_wood,total_food = self.city:GetSoldierManager():GetTreatResource()
---     if self.city:GetResourceManager():GetWoodResource()<total_wood
---         or self.city:GetResourceManager():GetFoodResource()<total_food
---         or self.city:GetResourceManager():GetIronResource()<total_iron
---         or self.city:GetResourceManager():GetStoneResource()<total_stone
---     then
---         return false
---     end
---     return true
--- end
+
 
 function GameUIHospital:CreateCasualtyRateBar()
     local bar = display.newSprite("progress_bar_540x40_1.png"):addTo(self.heal_layer):pos(window.cx+10, window.top-110)
@@ -404,7 +381,7 @@ function GameUIHospital:CreateItemWithListView(list_view)
     local row_count = -1
     for i, soldier_name in ipairs({
         "swordsman", "ranger", "lancer", "catapult",
-        "sentinel", "crossbowman", "horseArcher", "ballista"
+        "sentinel", "crossbowman", "horseArcher", "ballista",
     }) do
         local soldier_number = treat_soldier_map[soldier_name] or 0
         row_count = row_count + 1
@@ -495,12 +472,9 @@ function GameUIHospital:OnTreatSoliderCountChanged(soldier_manager, treat_soldie
         for k,v in pairs(self.city:GetSoldierManager():GetTreatSoldierMap()) do
             table.insert(soldiers,{name=k,count=v})
         end
-        local total_iron,total_stone,total_wood,total_food = soldier_manager:GetTreatResource(soldiers)
+        local total_coin = soldier_manager:GetTreatResource(soldiers)
         self:SetTreatAllSoldiersNeedResources({
-            [IRON] = total_iron,
-            [STONE]  = total_stone,
-            [WOOD]  = total_wood,
-            [FOOD]  = total_food,
+            [COIN] = total_coin
         })
         self:SetTreatAllSoldiersNowNeedGems()
         self:SetTreatAllSoldiersTime()

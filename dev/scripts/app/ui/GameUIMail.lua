@@ -283,7 +283,7 @@ function GameUIMail:InitInbox(mails)
     self.has_mail_label = UIKit:ttfLabel({
         text = _("当前没有邮件"),
         size = 20,
-        color = 0x403c2f
+        color = 0x615b44
         }):align(display.CENTER,window.cx,window.cy):addTo(self.inbox_layer)
     self.has_mail_label:setVisible(not (mails and #mails>0))
     if mails then
