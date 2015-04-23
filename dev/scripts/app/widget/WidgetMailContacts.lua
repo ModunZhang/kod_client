@@ -65,17 +65,20 @@ function WidgetMailContacts:CreateContactsContent()
     local alliance_tag = UIKit:ttfLabel({
         size = 24,
         color = 0x403c2f
-    }):align(display.LEFT_CENTER,140,80)
+    }):align(display.LEFT_CENTER,140,40)
         :addTo(content)
     local name = UIKit:ttfLabel({
         size = 20,
         color = 0x5c553f
-    }):align(display.LEFT_CENTER,140,40)
+    }):align(display.LEFT_CENTER,140,80)
         :addTo(content)
     local parent = self
     function content:SetData( idx )
         local contacts = parent.contacts[idx]
-        alliance_tag:setString(contacts.allianceTag or "")
+        alliance_tag:setString(contacts.allianceTag and "["..contacts.allianceTag.."]" or "")
+        if not contacts.allianceTag then
+            name:setPositionY(62)
+        end
         name:setString(contacts.name)
         if self.icon then
             self.icon:removeFromParent(true)
@@ -102,13 +105,10 @@ function WidgetMailContacts:CreateContactsContent()
                     mail:SetTitle(_("个人邮件"))
                     mail:AddToCurrentScene(true)
                     mail:setLocalZOrder(3000)
-                    self:LeftButtonClicked()
+                    parent:LeftButtonClicked()
                 end
             end):addTo(self):align(display.RIGHT_CENTER, item_width-10,40)
-
     end
-
-
     return content
 end
 return WidgetMailContacts

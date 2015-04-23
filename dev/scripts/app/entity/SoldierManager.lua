@@ -49,6 +49,10 @@ function SoldierManager:ctor()
         ["swordsman"] = 0,
         ["sentinel"] = 0,
         ["lancer"] = 0,
+        ["skeletonWarrior"] = 0,
+        ["skeletonArcher"] = 0,
+        ["deathKnight"] = 0,
+        ["meatWagon"] = 0,
     }
     self.soldierStars = {
         ["ballista"]    = 1,
@@ -90,6 +94,12 @@ end
 function SoldierManager:GetMarchSoldierCount()
     return 0
 end
+function SoldierManager:GetSoldierConfig(soldier_type)
+    local star = self:GetStarBySoldierType(soldier_type)
+    local config_name = soldier_type.."_"..star
+    local config = NORMAL[config_name] or SPECIAL[soldier_type]
+    return config
+end
 function SoldierManager:GetStarBySoldierType(soldier_type)
     return SPECIAL[soldier_type] and SPECIAL[soldier_type].star or self.soldierStars[soldier_type]
 end
@@ -108,8 +118,7 @@ end
 function SoldierManager:GetTotalUpkeep()
     local total = 0
     for k, v in pairs(self.soldier_map) do
-        local config_name = k.."_"..self:GetStarBySoldierType(k)
-        local config = NORMAL[config_name] or SPECIAL[k]
+        local config = self:GetSoldierConfig(k)
         total = total + config.consumeFoodPerHour * v
     end
     if ItemManager:IsBuffActived("quarterMaster") then
@@ -122,30 +131,29 @@ function SoldierManager:GetTotalUpkeep()
     return total
 end
 function SoldierManager:GetTreatResource(soldiers)
-    local total_iron,total_stone,total_wood,total_food = 0,0,0,0
+    local treatCoin = 0
     dump(soldiers)
     for k, v in pairs(soldiers) do
-        local config = NORMAL[v.name.."_"..self:GetStarBySoldierType(v.name)]
+        local config = self:GetSoldierConfig(v.name)
         if config then
-            total_iron = total_iron + config.treatIron*v.count
-            total_stone = total_iron + config.treatStone*v.count
-            total_wood = total_iron + config.treatWood*v.count
-            total_food = total_iron + config.treatFood*v.count
+            treatCoin = treatCoin + config.treatCoin*v.count
         end
     end
-    return total_iron,total_stone,total_wood,total_food
+    return treatCoin
 end
 function SoldierManager:GetTreatTime(soldiers)
     local treat_time = 0
     for k, v in pairs(soldiers) do
-        total_iron = total_iron + NORMAL[v.name.."_"..self:GetStarBySoldierType(k)].treatTime*v.count
+        local config = self:GetSoldierConfig(v.name)
+        total_iron = total_iron + config.treatTime*v.count
     end
     return treat_time
 end
 function SoldierManager:GetTreatAllTime()
     local total_time= 0
     for k, v in pairs(self.treatSoldiers_map) do
-        total_time = total_time + NORMAL[k.."_"..self:GetStarBySoldierType(k)].treatTime*v
+        local config = self:GetSoldierConfig(k)
+        total_time = total_time + config.treatTime*v
     end
     return total_time
 end
@@ -669,6 +677,7 @@ function SoldierManager:OnMilitaryTechEventsTimer(tech_event)
     end)
 end
 return SoldierManager
+
 
 
 

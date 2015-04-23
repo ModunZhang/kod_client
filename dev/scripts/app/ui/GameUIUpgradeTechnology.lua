@@ -72,7 +72,7 @@ function GameUIUpgradeTechnology:GetLevelUpBuffTimeStr()
         buildTime = self:GetProductionTechnology():GetNextLevelUpCost().buildTime
     end
     buildTime = self:GetProductionTechnology():GetLevelUpCost().buildTime
-    return  GameUtils:formatTimeStyle1(DataUtils:getTechnilogyUpgradeBuffTime(buildTime))
+    return   string.format("(-%s)",GameUtils:formatTimeStyle1(DataUtils:getTechnilogyUpgradeBuffTime(buildTime))) 
 end
 
 function GameUIUpgradeTechnology:GetLevelUpTimeStr()
@@ -106,6 +106,7 @@ function GameUIUpgradeTechnology:RefreshUI()
     self.lv_label:setString(self:GetTechLevelStr())
     self.current_effect_val_label:setString(self:GetBuffEffectStr())
     if not tech:IsReachLimitLevel() then
+         self.upgrade_info_icon:show()
         self.next_effect_val_label:setString(self:GetNextLevelBuffEffectStr())
         self.time_label:setString(self:GetLevelUpTimeStr())
         self.need_gems_label:setString(self:GetUpgradeNowGems())
@@ -119,7 +120,7 @@ function GameUIUpgradeTechnology:RefreshUI()
         self.time_label:hide()
         self.need_gems_label:hide()
         self.next_effect_val_label:hide()
-        self.next_effect_desc_label:setString("等级已满")
+        self.upgrade_info_icon:hide()
         self.buff_time_label:hide()
         self.need_gems_icon:hide()
         self.time_icon:hide()
@@ -176,18 +177,6 @@ function GameUIUpgradeTechnology:BuildUI()
     local line_2 = display.newScale9Sprite("dividing_line_594x2.png"):size(422,1)
         :align(display.LEFT_BOTTOM,box:getPositionX()+box:getContentSize().width + 10, box:getPositionY()-box:getContentSize().height)
         :addTo(bg_node)
-    local next_effect_desc = UIKit:ttfLabel({
-        text = _("下一级"),
-        size = 20,
-        color= 0x797154
-    }):align(display.LEFT_BOTTOM,line_2:getPositionX(), line_2:getPositionY() + 5):addTo(bg_node)
-    self.next_effect_desc_label = next_effect_desc
-    local next_effect_val_label = UIKit:ttfLabel({
-        text = "", --self:GetProductionTechnology():GetNextLevelBuffEffectVal() * 100  .. "%",
-        size = 22,
-        color= 0x403c2f
-    }):align(display.RIGHT_BOTTOM,line_2:getPositionX()+line_2:getContentSize().width, next_effect_desc:getPositionY()):addTo(bg_node)
-    self.next_effect_val_label = next_effect_val_label
     local line_1 = display.newScale9Sprite("dividing_line_594x2.png"):size(422,1)
         :align(display.LEFT_BOTTOM,line_2:getPositionX(), line_2:getPositionY() + 40)
         :addTo(bg_node)
@@ -201,8 +190,18 @@ function GameUIUpgradeTechnology:BuildUI()
         text = "",--self:GetProductionTechnology():GetBuffEffectVal() * 100  .. "%",
         size = 22,
         color= 0x403c2f
-    }):align(display.RIGHT_BOTTOM,line_1:getPositionX()+line_1:getContentSize().width, current_effect_desc:getPositionY()):addTo(bg_node)
+    }):align(display.LEFT_BOTTOM,line_2:getPositionX(), line_2:getPositionY() + 5):addTo(bg_node)
     self.current_effect_val_label = current_effect_val_label
+
+    self.upgrade_info_icon = display.newSprite("teach_upgrade_icon_15x17.png"):align(display.LEFT_BOTTOM, line_2:getPositionX() + 50,
+         line_2:getPositionY() + 10):addTo(bg_node)
+    local next_effect_val_label = UIKit:ttfLabel({
+        text = "", --self:GetProductionTechnology():GetNextLevelBuffEffectVal() * 100  .. "%",
+        size = 22,
+        color= 0x403c2f
+    }):align(display.LEFT_BOTTOM,self.upgrade_info_icon:getPositionX() + self.upgrade_info_icon:getContentSize().width + 12, 
+        current_effect_val_label:getPositionY()):addTo(bg_node)
+    self.next_effect_val_label = next_effect_val_label
     local btn_now = UIKit:commonButtonWithBG(
         {
             w=250,

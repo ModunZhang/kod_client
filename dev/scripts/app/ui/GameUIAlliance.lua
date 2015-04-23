@@ -143,11 +143,12 @@ function GameUIAlliance:CreateNoAllianceUI()
             {
                 label = _("创建"),
                 tag = "create",
-                default = true,
+                
             },
             {
                 label = _("加入"),
                 tag = "join",
+                default = true,
             },
             {
                 label = _("邀请"),

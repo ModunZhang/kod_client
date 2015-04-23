@@ -26,15 +26,19 @@ local SPECIAL = GameDatas.Soldiers.special
 local SOLDIER_CATEGORY_MAP = {
     ["swordsman"] = "infantry",
     ["sentinel"] = "infantry",
+    ["skeletonWarrior"] = "infantry",
 
     ["ranger"] = "archer",
     ["crossbowman"] = "archer",
+    ["skeletonArcher"] = "archer",
 
     ["lancer"] = "cavalry",
     ["horseArcher"] = "cavalry",
+    ["deathKnight"] = "cavalry",
 
     ["catapult"] = "siege",
     ["ballista"] = "siege",
+    ["meatWagon"] = "siege",
 }
 local SOLDIER_VS_MAP = {
     ["infantry"] = {
@@ -200,17 +204,13 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
     local length = size.width - margin_x * 2
     local origin_x, origin_y, gap_x = margin_x, 30, length / 3
     local res_map = {
-        { "treatFood", "res_food_91x74.png" },
-        { "treatWood", "res_wood_82x73.png" },
-        { "treatIron", "res_iron_91x63.png" },
-        { "treatStone", "res_stone_88x82.png" },
-    -- { "citizen", "res_citizen_44x50.png" },
+        { "treatCoin", "res_coin_81x68.png" }
     }
     self.res_map = {}
     for i, v in pairs(res_map) do
         local res_type = v[1]
         local png = v[2]
-        local x = origin_x + (i - 1) * gap_x
+        local x = 556/2
         local scale =  0.4
         cc.ui.UIImage.new(png):addTo(need, 2)
             :align(display.CENTER, x, size.height - origin_y):scale(scale)
@@ -448,11 +448,7 @@ local timer = app.timer
 function WidgetTreatSoldier:OnResourceChanged(resource_manager)
     local server_time = timer:GetServerTime()
     local res_map = {}
-    res_map.treatWood = resource_manager:GetWoodResource():GetResourceValueByCurrentTime(server_time)
-    res_map.treatFood = resource_manager:GetFoodResource():GetResourceValueByCurrentTime(server_time)
-    res_map.treatIron = resource_manager:GetIronResource():GetResourceValueByCurrentTime(server_time)
-    res_map.treatStone = resource_manager:GetStoneResource():GetResourceValueByCurrentTime(server_time)
-    -- res_map.citizen = resource_manager:GetPopulationResource():GetNoneAllocatedByTime(server_time)
+    res_map.treatCoin = resource_manager:GetCoinResource():GetResourceValueByCurrentTime(server_time)
     for k, v in pairs(self.res_map) do
         local total = res_map[k]
         v.total:setString(GameUtils:formatNumber(total))
@@ -475,7 +471,6 @@ function WidgetTreatSoldier:OnCountChanged(count)
     local soldier_config = self.soldier_config
     local soldier_ui_config = self.soldier_ui_config
     local total_time = soldier_config.treatTime * count
-    -- self.soldier_current_count:setString(string.format("%d", count))
     self.upkeep:setString(string.format("%s%d/".._("小时"), count > 0 and "-" or "", soldier_config.consumeFoodPerHour * count))
     self.treat_time:setString(GameUtils:formatTimeStyle1(total_time))
 
@@ -484,16 +479,7 @@ function WidgetTreatSoldier:OnCountChanged(count)
     for k, v in pairs(self.res_map) do
         local total = total_map[k] == nil and 0 or total_map[k]
         local current = soldier_config[k] * count
-        local rs_k = ""
-        if k=="treatStone" then
-            rs_k = "stone"
-        elseif k=="treatIron" then
-            rs_k = "iron"
-        elseif k=="treatFood" then
-            rs_k = "food"
-        elseif k=="treatWood" then
-            rs_k = "wood"
-        end
+        local rs_k = "treatCoin"
         current_res_map[rs_k] = current
         local color = total >= current and UIKit:hex2c3b(0x403c2f) or display.COLOR_RED
         v.need:setString(string.format("/ %s", GameUtils:formatNumber(current)))
@@ -501,7 +487,6 @@ function WidgetTreatSoldier:OnCountChanged(count)
         v.need:setColor(color)
     end
     self.count = count
-    LuaUtils:outputTable("current_res_map", current_res_map)
     self.treat_now_gems = DataUtils:buyResource(current_res_map, {}) + DataUtils:getGemByTimeInterval(total_time)
     self.gem_label:setString(self.treat_now_gems)
 end

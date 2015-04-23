@@ -1,5 +1,6 @@
 
 local NORMAL = GameDatas.Soldiers.normal
+local SPECIAL = GameDatas.Soldiers.special
 local config_function = GameDatas.BuildingFunction.hospital
 local Observer = import(".Observer")
 local Enum = import("..utils.Enum")
@@ -143,8 +144,10 @@ function HospitalUpgradeBuilding:GetTreatingTimeByTypeWithCount(soldiers)
     return treat_time
 end
 function HospitalUpgradeBuilding:GetSoldierConfigByType(soldier_type)
-    local soldier_name = string.format("%s_%d", soldier_type, self.soldier_star)
-    return NORMAL[soldier_name]
+     local star = City:GetSoldierManager():GetStarBySoldierType(soldier_type)
+    local config_name = soldier_type.."_"..star
+    local config = NORMAL[config_name] or SPECIAL[soldier_type]
+    return config
 end
 function HospitalUpgradeBuilding:OnTimer(current_time)
     local event = self.treat_event
@@ -183,11 +186,8 @@ function HospitalUpgradeBuilding:OnUserDataChanged(...)
 end
 
 function HospitalUpgradeBuilding:IsAbleToTreat(soldiers)
-    local total_iron,total_stone,total_wood,total_food = City:GetSoldierManager():GetTreatResource(soldiers)
-    local resource_state =  City:GetResourceManager():GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())<total_wood
-        or City:GetResourceManager():GetFoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())<total_food
-        or City:GetResourceManager():GetIronResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())<total_iron
-        or City:GetResourceManager():GetStoneResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())<total_stone
+    local total_coin = City:GetSoldierManager():GetTreatResource(soldiers)
+    local resource_state =  City:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())<total_coin
 
     if self:IsTreating() and resource_state then
         return HospitalUpgradeBuilding.CAN_NOT_TREAT.TREATING_AND_LACK_RESOURCE
@@ -199,21 +199,12 @@ function HospitalUpgradeBuilding:IsAbleToTreat(soldiers)
 end
 -- 普通治疗需要的金龙币
 function HospitalUpgradeBuilding:GetTreatGems(soldiers)
-    local total_iron,total_stone,total_wood,total_food = City:GetSoldierManager():GetTreatResource(soldiers)
-    local resource_state =  City:GetResourceManager():GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())<total_wood
-        or City:GetResourceManager():GetFoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())<total_food
-        or City:GetResourceManager():GetIronResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())<total_iron
-        or City:GetResourceManager():GetStoneResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())<total_stone
+    local total_coin = City:GetSoldierManager():GetTreatResource(soldiers)
+    local resource_state =  City:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())<total_coin
 
     local need_gems = 0
     if resource_state then
-        need_gems = DataUtils:buyResource({wood=total_wood,
-            stone=total_stone,
-            iron=total_iron,
-            food=total_food},{wood=City:GetResourceManager():GetWoodResource(),
-            stone=City:GetResourceManager():GetStoneResource(),
-            iron=City:GetResourceManager():GetIronResource(),
-            food=City:GetResourceManager():GetFoodResource()})
+        need_gems = DataUtils:buyResource({coin=total_coin},{coin=City:GetResourceManager():GetCoinResource()})
     end
     if self:IsTreating() then
         need_gems = need_gems +DataUtils:getGemByTimeInterval(self:GetTreatEvent():LeftTime(app.timer:GetServerTime()))
@@ -224,11 +215,8 @@ end
 function HospitalUpgradeBuilding:GetTreatNowGems(soldiers)
     local total_time = City:GetSoldierManager():GetTreatTime(soldiers)
     need_gems = DataUtils:getGemByTimeInterval(total_time)
-    local total_iron,total_stone,total_wood,total_food = City:GetSoldierManager():GetTreatResource(soldiers)
-    need_gems = need_gems + DataUtils:buyResource({wood=total_wood,
-        stone=total_stone,
-        iron=total_iron,
-        food=total_food},{})
+    local total_coin = City:GetSoldierManager():GetTreatResource(soldiers)
+    need_gems = need_gems + DataUtils:buyResource({coin=total_coin},{})
     return need_gems
 end
 
