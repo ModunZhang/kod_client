@@ -17,7 +17,7 @@ function BlackSmithUpgradeBuilding:GetNextLevelEfficiency()
 end
 function BlackSmithUpgradeBuilding:GetEfficiency()
     if self:GetLevel() > 0 then
-        return config_function[self:GetEfficiencyLevel()].efficiency
+        return config_function[self:GetLevel()].efficiency
     end
     return 0
 end
@@ -36,7 +36,8 @@ function BlackSmithUpgradeBuilding:CreateEvent()
         return self:Id()
     end
     function event:StartTime()
-        return self.finished_time - black_smith:GetMakingTimeByEquipment(self.content)
+        local total = black_smith:GetMakingTimeByEquipment(self.content)
+        return self.finished_time - total + DataUtils:getBuffEfffectTime(total, black_smith:GetEfficiency())
     end
     function event:ElapseTime(current_time)
         return current_time - self:StartTime()
@@ -145,6 +146,14 @@ function BlackSmithUpgradeBuilding:OnUserDataChanged(...)
         return 
     end
     print("BlackSmithUpgradeBuilding:OnUserDataChanged")
+
+    if is_delta_update then
+        local dragonEquipmentEvents = deltaData.dragonEquipmentEvents
+        if dragonEquipmentEvents.add and dragonEquipmentEvents.remove then
+            self:EndMakeEquipmentWithCurrentTime()
+        end
+    end
+
     local event = userData.dragonEquipmentEvents[1]
     if event then
         local finished_time = event.finishTime / 1000
