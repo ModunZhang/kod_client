@@ -491,6 +491,12 @@ end
 function NetManager:getChangeToIceFieldPromise()
     return get_changeTerrain_promise("iceField"):done(get_response_msg)
 end
+-- 设置玩家头像
+function NetManager:getSetPlayerIconPromise(icon)
+    return get_blocking_request_promise("logic.playerHandler.setPlayerIcon",{
+        icon = icon
+    }):done(get_response_msg)
+end
 -- 建造小屋
 function NetManager:getCreateHouseByLocationPromise(location, sub_location, building_type)
     return get_blocking_request_promise("logic.playerHandler.createHouse", {
@@ -1536,6 +1542,7 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
 
 
 
