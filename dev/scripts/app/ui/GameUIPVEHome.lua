@@ -131,12 +131,12 @@ function GameUIPVEHome:CreateTop()
         text = string.format("%d. %s", self.layer:CurrentPVEMap():GetIndex(), self.layer:CurrentPVEMap():Name()),
         size = 22,
         color = 0xffedae,
-    }):addTo(top_bg):align(display.LEFT_CENTER, 100, 65)
+    }):addTo(top_bg):align(display.LEFT_CENTER, 130, 65)
 
     self.exploring = UIKit:ttfLabel({
         size = 16,
         color = 0xffedae,
-    }):addTo(top_bg):align(display.LEFT_CENTER, 100, 45)
+    }):addTo(top_bg):align(display.LEFT_CENTER, 130, 45)
 end
 
 function GameUIPVEHome:CreateBottom()
