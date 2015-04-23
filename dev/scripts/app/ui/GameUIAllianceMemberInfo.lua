@@ -111,7 +111,7 @@ function GameUIAllianceMemberInfo:OnPlayerButtonClicked( tag )
         self:ShowMessage(msg)
         return
     end
-    local member = memberMeta:DecodeFromJson(self.player_info)
+    local member = Alliance_Manager:GetMyAlliance():GetMemeberById(self.player_info.id)
     if tag == 1 then -- 踢出
         self:ShowSureDialog(string.format(_("您确定逐出玩家:%s?"),member:Name()),function()
             self:SendToServerWithTag(tag,member)
@@ -139,27 +139,23 @@ function GameUIAllianceMemberInfo:SendToServerWithTag(tag,member)
         NetManager:getHandOverAllianceArchonPromise(member:Id()):done(function()
             local alliacne =  Alliance_Manager:GetMyAlliance()
             local title = alliacne:GetMemeberById(member:Id()):Title()
-            self.player_info.title = title
+            self.player_info.alliance.title = title
             self:RefreshListView()
             self:LeftButtonClicked()
         end)
     elseif tag == 3 then --降级
         if not member:IsTitleLowest() then
             NetManager:getEditAllianceMemberTitlePromise(member:Id(), member:TitleDegrade()):done(function()
-                GameGlobalUI:showTips(_("提示"), string.format(_("%s已降级为%s"),member:Name(),Localize.alliance_title[member:TitleDegrade()]))
-                local alliacne =  Alliance_Manager:GetMyAlliance()
-                local title = alliacne:GetMemeberById(member:Id()):Title()
-                self.player_info.title = title
+                GameGlobalUI:showTips(_("提示"), string.format(_("%s已降级为%s"),member:Name(),Localize.alliance_title[member:Title()]))
+                self.player_info.alliance.title = member:Title()
                 self:RefreshListView()
             end)
     end
     elseif tag == 4 then --晋级
         if not member:IsTitleHighest() then
             NetManager:getEditAllianceMemberTitlePromise(member:Id(), member:TitleUpgrade()):done(function()
-                GameGlobalUI:showTips(_("提示"), string.format(_("%s已晋级为%s"),member:Name(),Localize.alliance_title[member:TitleUpgrade()]))
-                local alliacne =  Alliance_Manager:GetMyAlliance()
-                local title = alliacne:GetMemeberById(member:Id()):Title()
-                self.player_info.title = title
+                GameGlobalUI:showTips(_("提示"), string.format(_("%s已晋级为%s"),member:Name(),Localize.alliance_title[member:Title()]))
+                self.player_info.alliance.title = member:Title()
                 self:RefreshListView()
             end)
     end
@@ -183,8 +179,8 @@ end
 function GameUIAllianceMemberInfo:AdapterPlayerList()
     local player = self.player_info
     local r = {}
-    table.insert(r,{_("职位"),Localize.alliance_title[player.title]})
-    table.insert(r,{_("联盟"),player.alliance})
+    table.insert(r,{_("职位"),Localize.alliance_title[player.alliance.title]})
+    table.insert(r,{_("联盟"),player.alliance.name})
     table.insert(r,{_("最后登陆时间"),NetService:formatTimeAsTimeAgoStyleByServerTime(player.lastLoginTime)})
     table.insert(r,{_("战斗力"),player.power})
     table.insert(r,{_("击杀"),player.kill})
@@ -237,15 +233,16 @@ end
 --数据回调
 function GameUIAllianceMemberInfo:WidgetPlayerNode_DataSource(name)
     if name == 'BasicInfoData' then
+        local level = User:GetPlayerLevelByExp(self.player_info.levelExp)
         return {
             name = self.player_info.name,
-            lv = User:GetPlayerLevelByExp(self.player_info.levelExp),
-            currentExp = 50,
-            maxExp = 100,
+            lv = level,
+            currentExp = self.player_info.levelExp,
+            maxExp = User:GetCurrentLevelMaxExp(level),
             power = self.player_info.power,
             playerId = self.player_info.id,
             playerIcon = "xxx.png",
-            vip = "88"
+            vip = DataUtils:getPlayerVIPLevel(self.player_info.vipExp)
         }
     elseif name == "MedalData"  then
         return {}
@@ -258,8 +255,9 @@ end
 
 function GameUIAllianceMemberInfo:CheckPlayerAuthor(button_tag)
     local can_do,msg = true,""
-    local me = Alliance_Manager:GetMyAlliance():GetSelf()
-    local member = memberMeta:DecodeFromJson(self.player_info)
+    local alliance = Alliance_Manager:GetMyAlliance()
+    local me = alliance:GetSelf()
+    local member = alliance:GetMemeberById(self.player_info.id)
     if button_tag == 1 then
         local auth,title_can = me:CanKickOutMember(member:Title())
         can_do = auth and title_can

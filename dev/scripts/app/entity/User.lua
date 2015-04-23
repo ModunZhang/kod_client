@@ -682,6 +682,15 @@ function User:GetPlayerLevelByExp(exp)
     end
     return 0
 end
+function User:GetCurrentLevelMaxExp(level)
+    local config = config_playerLevel[tonumber(level) + 1]
+    if not config then
+        return config_playerLevel[level].expTo 
+    else
+        return config.expFrom
+    end
+
+end
 --获得有加成的龙类型
 function User:GetBestDragon()
     local bestDragonForTerrain = {

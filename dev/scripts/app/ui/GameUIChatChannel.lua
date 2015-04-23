@@ -169,9 +169,10 @@ end
 
 
 
-function GameUIChatChannel:GetChatIcon()
+function GameUIChatChannel:GetChatIcon(icon)
     local bg = display.newSprite("chat_hero_background_56x56.png")
-    local icon = UIKit:GetPlayerIconOnly():addTo(bg):pos(28,28)
+    local icon = UIKit:GetPlayerIconOnly(icon):addTo(bg):pos(28,28)
+    bg.icon = icon
     local size = icon:getContentSize()
     icon:scale(50/math.max(size.width,size.height))
     return bg
@@ -355,6 +356,7 @@ function GameUIChatChannel:HandleCellUIData(mainContent,chat,update_time)
     timeLabel:setString(chat.timeStr)
 
     local palyerIcon = currentContent.chat_icon -- TODO:
+    palyerIcon.icon:setTexture(UIKit:GetPlayerIconImage(chat.icon))
     local content_label = currentContent.content_label
     local labelText = chat.text
     if chat._translate_ and chat._translateMode_ then
