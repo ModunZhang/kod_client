@@ -26,15 +26,19 @@ local SPECIAL = GameDatas.Soldiers.special
 local SOLDIER_CATEGORY_MAP = {
     ["swordsman"] = "infantry",
     ["sentinel"] = "infantry",
+    ["skeletonWarrior"] = "infantry",
 
     ["ranger"] = "archer",
     ["crossbowman"] = "archer",
+    ["skeletonArcher"] = "archer",
 
     ["lancer"] = "cavalry",
     ["horseArcher"] = "cavalry",
+    ["deathKnight"] = "cavalry",
 
     ["catapult"] = "siege",
     ["ballista"] = "siege",
+    ["meatWagon"] = "siege",
 }
 local SOLDIER_VS_MAP = {
     ["infantry"] = {
@@ -467,7 +471,6 @@ function WidgetTreatSoldier:OnCountChanged(count)
     local soldier_config = self.soldier_config
     local soldier_ui_config = self.soldier_ui_config
     local total_time = soldier_config.treatTime * count
-    -- self.soldier_current_count:setString(string.format("%d", count))
     self.upkeep:setString(string.format("%s%d/".._("小时"), count > 0 and "-" or "", soldier_config.consumeFoodPerHour * count))
     self.treat_time:setString(GameUtils:formatTimeStyle1(total_time))
 
@@ -484,7 +487,6 @@ function WidgetTreatSoldier:OnCountChanged(count)
         v.need:setColor(color)
     end
     self.count = count
-    LuaUtils:outputTable("current_res_map", current_res_map)
     self.treat_now_gems = DataUtils:buyResource(current_res_map, {}) + DataUtils:getGemByTimeInterval(total_time)
     self.gem_label:setString(self.treat_now_gems)
 end

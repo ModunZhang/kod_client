@@ -382,6 +382,7 @@ function GameUIHospital:CreateItemWithListView(list_view)
     for i, soldier_name in ipairs({
         "swordsman", "ranger", "lancer", "catapult",
         "sentinel", "crossbowman", "horseArcher", "ballista",
+        "skeletonWarrior", "skeletonArcher", "deathKnight", "meatWagon",
     }) do
         local soldier_number = treat_soldier_map[soldier_name] or 0
         row_count = row_count + 1
