@@ -1490,7 +1490,7 @@ function GameUIMail:ReplyMail(mail,content)
     NetManager:getSendPersonalMailPromise(addressee, _("RE:")..title, content,{
         id = mail.fromId,
         name = mail.fromName,
-        icon = mail.icon,
+        icon = mail.fromIcon,
         allianceTag = mail.fromAllianceTag,
     })
 end

@@ -75,7 +75,10 @@ function WidgetMailContacts:CreateContactsContent()
     local parent = self
     function content:SetData( idx )
         local contacts = parent.contacts[idx]
-        alliance_tag:setString("["..contacts.allianceTag.."]" or "")
+        alliance_tag:setString(contacts.allianceTag and "["..contacts.allianceTag.."]" or "")
+        if not contacts.allianceTag then
+            name:setPositionY(62)
+        end
         name:setString(contacts.name)
         if self.icon then
             self.icon:removeFromParent(true)
