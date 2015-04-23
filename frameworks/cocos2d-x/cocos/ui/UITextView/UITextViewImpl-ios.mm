@@ -51,6 +51,8 @@
 #endif
         textView_.delegate = self;
         textView_.hidden = true;
+        [textView_ setAutocorrectionType:UITextAutocorrectionTypeNo];
+        [textView_ setAutocapitalizationType:UITextAutocapitalizationTypeNone];
         textView_.returnKeyType = UIReturnKeyDefault;
         self.dtextView = dtextView;
     }

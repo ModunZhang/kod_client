@@ -742,7 +742,9 @@ function GameUIMail:OnInboxMailsChanged(changed_mails)
             self.inbox_mails[remove_mail.id]=nil
         end
     end
-    self.has_mail_label:setVisible(#self.inbox_listview:getItems()==0)
+    if self.has_mail_label then
+        self.has_mail_label:setVisible(#self.inbox_listview:getItems()==0)
+    end
 end
 function GameUIMail:OnFetchMailsSuccess(...)
     local mails = self:GetMailsOrReports(self.inbox_listview)
@@ -793,7 +795,9 @@ function GameUIMail:OnSavedMailsChanged(changed_mails)
             end
         end
     end
-    self.has_saved_mail_label:setVisible(#self.save_mails_listview:getItems()<1)
+    if self.has_saved_mail_label then
+        self.has_saved_mail_label:setVisible(#self.save_mails_listview:getItems()<1)
+    end
 end
 function GameUIMail:OnSendMailsChanged(changed_mails)
     if changed_mails.add_mails then
@@ -812,7 +816,9 @@ function GameUIMail:OnSendMailsChanged(changed_mails)
             end
         end
     end
-    self.has_send_label:setVisible(#self.send_mail_listview:getItems()<1)
+    if self.has_send_label then
+        self.has_send_label:setVisible(#self.send_mail_listview:getItems()<1)
+    end
 end
 function GameUIMail:MailUnreadChanged(unreads)
     local mail_bg = self.mail_unread_num_bg
@@ -1523,7 +1529,9 @@ function GameUIMail:OnReportsChanged( changed_map )
             self.item_reports[report:Id()]=nil
         end
     end
-    self.has_report_label:setVisible(#self.report_listview:getItems()<1)
+    if self.has_report_label then
+        self.has_report_label:setVisible(#self.report_listview:getItems()<1)
+    end
 end
 function GameUIMail:OnSavedReportsChanged( changed_map )
     if not self.saved_reports_listview then
@@ -1553,7 +1561,9 @@ function GameUIMail:OnSavedReportsChanged( changed_map )
             self.item_saved_reports[report:Id()]=nil
         end
     end
-    self.has_saved_report_label:setVisible(self.save_dropList:GetSelectdTag() == "menu_1" and #self.saved_reports_listview:getItems()<1)
+    if self.has_saved_report_label then
+        self.has_saved_report_label:setVisible(self.save_dropList:GetSelectdTag() == "menu_1" and #self.saved_reports_listview:getItems()<1)
+    end
 end
 function GameUIMail:SaveOrUnsaveReport(report,target)
     if target:isButtonSelected() then

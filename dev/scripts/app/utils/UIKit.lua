@@ -336,9 +336,9 @@ end
 
 function UIKit:GetPlayerIconOnly(key)
     if not key then
-        return display.newSprite("player_icon_10.png")
+        return display.newSprite(UILib.player_icon[1])
     end
-    return display.newSprite("player_icon_10.png")
+    return display.newSprite(UILib.player_icon[key])
 end
 --TODO:将这个函数替换成CreateBoxPanel9来实现
 function UIKit:CreateBoxPanel(height)

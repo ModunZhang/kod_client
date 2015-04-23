@@ -749,6 +749,33 @@ local DAILY_QUESTS_NAME = {
     _("开拓土地"),
     _("加强戒备"),
 }
+local PLAYER_ICON = {
+    _("初始头像男-1"),
+    _("初始头像男-2"),
+    _("初始头像男-3"),
+    _("初始头像女-1"),
+    _("初始头像女-2"),
+    _("初始头像女-3"),
+    _("刺客"),
+    _("将军"),
+    _("术士"),
+    _("贵妇"),
+    _("旧神"),
+}
+local PLAYER_ICON_UNLOCK = {
+    _("默认解锁"),
+    _("默认解锁"),
+    _("默认解锁"),
+    _("默认解锁"),
+    _("默认解锁"),
+    _("默认解锁"),
+    _("击杀累计到达1,000,000后解锁"),
+    _("战斗力到达1,000,000后解锁"),
+    _("成为VIP10后解锁"),
+    _("城堡提升到40级后解锁"),
+    _("飞艇探险通关暮光高地第三层后解锁"),
+}
+
 
 return {
     equip_material = EQUIP_MATERIAL_LOCALIZE,
@@ -797,6 +824,8 @@ return {
     selenaquestion_tips = SELENAQUESTION_TIPS,
     alliance_buildings = ALLIANCE_BUILDINGS,
     iap_package_name = IAP_PACKAGE_NAME,
-    daily_quests_name = DAILY_QUESTS_NAME
+    daily_quests_name = DAILY_QUESTS_NAME,
+    player_icon = PLAYER_ICON,
+    player_icon_unlock = PLAYER_ICON_UNLOCK
 }
 

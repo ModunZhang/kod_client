@@ -19,6 +19,7 @@ local PLAYER_ICON = {
     "player_icon_4.png",
     "player_icon_5.png",
     "player_icon_6.png",
+    -- 以上为默认解锁头像
     "player_icon_7.png",
     "player_icon_8.png",
     "player_icon_9.png",

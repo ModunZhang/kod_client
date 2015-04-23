@@ -902,7 +902,14 @@ function GameUIAlliance:RefreshEventListView()
 end
 
 function GameUIAlliance:OnAllianceSettingButtonClicked(event)
-    if not Alliance_Manager:GetMyAlliance():GetSelf():CanEditAlliance() then
+    local my_alliance = Alliance_Manager:GetMyAlliance()
+    local my_alliance_status = my_alliance:Status()
+    if (my_alliance_status == 'prepare' or my_alliance_status == 'fight') then
+        UIKit:showMessageDialog(_("提示"), _("联盟对战期不能修改联盟信息"), function()end)
+        return
+    end
+
+    if not my_alliance:GetSelf():CanEditAlliance() then
         UIKit:showMessageDialog(_("提示"), _("您没有此操作权限"), function()end)
         return
     end
@@ -916,7 +923,7 @@ function GameUIAlliance:HaveAlliaceUI_membersIf()
         self.member_list_bg = display.newNode():size(568,784):addTo(self.main_content)
              :align(display.CENTER_TOP, window.width/2, window.betweenHeaderAndTab)
         local list,list_node = UIKit:commonListView({
-            viewRect = cc.rect(0, 0,558,618),
+            viewRect = cc.rect(0, 0,560,618),
             direction = UIScrollView.DIRECTION_VERTICAL,
             -- bgColor = UIKit:hex2c4b(0x7a000000),
         })
@@ -1041,7 +1048,7 @@ function GameUIAlliance:GetMemberItem(title)
     if count == 0 then
         height = 120 -- 120 = 34 + 71 + 15
     end
-    local node = display.newNode():size(558,height)
+    local node = display.newNode():size(560,height)
     local title_bar = display.newSprite("title_blue_558x34.png"):align(display.LEFT_TOP, 0, height):addTo(node)
     local button = WidgetPushButton.new({normal = "info_16x33.png"})
         :align(display.RIGHT_CENTER,545,17)
@@ -1050,7 +1057,7 @@ function GameUIAlliance:GetMemberItem(title)
         :onButtonClicked(function(event)
             self:OnAllianceTitleClicked(title)
         end)
-    WidgetPushTransparentButton.new(cc.rect(0,0,558,38),button):addTo(title_bar):align(display.LEFT_BOTTOM,0,0)
+    WidgetPushTransparentButton.new(cc.rect(0,0,560,38),button):addTo(title_bar):align(display.LEFT_BOTTOM,0,0)
     local title_label= UIKit:ttfLabel({
         text = header_title,
         size = 22,
@@ -1065,7 +1072,7 @@ function GameUIAlliance:GetMemberItem(title)
             y = y - 71
         end
     else
-        local tips = display.newSprite("mission_box_558x66.png"):align(display.LEFT_TOP, 0, y):addTo(node)
+        local tips = display.newSprite("mission_box_558x66.png"):align(display.LEFT_TOP,0, y):addTo(node)
         UIKit:ttfLabel({
             text = _("<空>"),
             size = 22,
@@ -1073,7 +1080,7 @@ function GameUIAlliance:GetMemberItem(title)
         }):align(display.CENTER, 279, 33):addTo(tips)
     end
     item:addContent(node)
-    item:setItemSize(558,height)
+    item:setItemSize(560,height)
     return item
 end
 

@@ -2,7 +2,7 @@
 -- Author: Danny He
 -- Date: 2014-10-23 20:46:22
 --
-local GameUIAllianceTitle = UIKit:createUIClass("GameUIAllianceTitle")
+local GameUIAllianceTitle = UIKit:createUIClass("GameUIAllianceTitle","UIAutoClose")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local window = import("..utils.window")
 local Localize = import("..utils.Localize")
@@ -50,8 +50,8 @@ function GameUIAllianceTitle:GetAllTitlesAndImages()
 end
 
 function GameUIAllianceTitle:BuildUI()
-	local shadowLayer = UIKit:shadowLayer():addTo(self)
-	local bg = WidgetUIBackGround.new({height=614}):addTo(shadowLayer):pos(window.left+20,window.bottom+150)
+	local bg = WidgetUIBackGround.new({height=614}):pos(window.left+20,window.bottom+150)
+    self:addTouchAbleChild(bg)
 	local title_bar = display.newSprite("title_blue_600x52.png")
 		:addTo(bg)
 		:align(display.CENTER_BOTTOM, 304, 600)
