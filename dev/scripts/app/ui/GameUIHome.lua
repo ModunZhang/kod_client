@@ -8,6 +8,7 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetEventTabButtons = import("..widget.WidgetEventTabButtons")
 local SoldierManager = import("..entity.SoldierManager")
 local WidgetAutoOrder = import("..widget.WidgetAutoOrder")
+local UILib = import(".UILib")
 local Arrow = import(".Arrow")
 local WidgetChangeMap = import("..widget.WidgetChangeMap")
 local GameUIHelp = import(".GameUIHelp")
@@ -170,6 +171,10 @@ function GameUIHome:OnUserBasicChanged(fromEntity,changed_map)
     if changed_map.vipExp then
         self:RefreshVIP()
     end
+    if changed_map.icon then
+        self.player_icon:setTexture(UILib.player_icon[changed_map.icon.new])
+    end
+
     self:RefreshData()
 end
 function GameUIHome:OnHelpEventChanged(changed_map)
@@ -284,7 +289,7 @@ function GameUIHome:CreateTop()
     -- 玩家信息背景
     local player_bg = display.newSprite("player_bg_110x106.png"):addTo(top_bg, 2)
         :align(display.LEFT_BOTTOM, display.width>640 and 58 or 64, 10):setCascadeOpacityEnabled(true)
-    UIKit:GetPlayerIconOnly(User:Icon()):addTo(player_bg):pos(55, 60):scale(0.75)
+    self.player_icon = UIKit:GetPlayerIconOnly(User:Icon()):addTo(player_bg):pos(55, 60):scale(0.75)
 
     local level_bg = display.newSprite("level_bg_74x24.png"):addTo(player_bg):pos(55, 30):setCascadeOpacityEnabled(true)
     self.level_label = UIKit:ttfLabel({
