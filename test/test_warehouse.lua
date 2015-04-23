@@ -44,12 +44,7 @@ function test_warehouse_building()
             assert_equal(1, building.level)
         end,
         OnBuildingUpgrading = function(self, building, time)
-            print("upgrading", building:GetType(), building:GetElapsedTimeByCurrentTime(time).."/"..building:GetUpgradeTimeToNextLevel())
-            assert_equal(1, building.level)
-            if building:GetElapsedTimeByCurrentTime(time) >= building:GetUpgradeTimeToNextLevel() then
-                flag = false
-                City:GetFirstBuildingByType("warehouse"):InstantUpgradeTo(2)
-            end
+            
         end,
         OnBuildingUpgradeFinished = function(self, building, time)
             print("finished", building:GetType(), time)

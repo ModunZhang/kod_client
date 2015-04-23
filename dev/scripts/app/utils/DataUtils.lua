@@ -264,7 +264,7 @@ end
 function DataUtils:getBuildingBuff(buildingTime)
     local tech = City:FindTechByName('crane')
     if tech and tech:Level() > 0 then
-        return DataUtils:getBuffEfffectTime(buildingTime,tech:GetBuffEffectVal())
+        return DataUtils:getBuffEfffectTime(buildingTime, tech:GetBuffEffectVal())
     else
         return 0
     end
@@ -388,26 +388,23 @@ function DataUtils:getTechnilogyUpgradeBuffTime(time)
 end
 --获取兵种招募的buff时间
 local config_BuildingFunction = GameDatas.BuildingFunction
+local soldier_type_map_building = {
+    infantry = "trainingGround",
+    cavalry = "stable",
+    archer = "hunterHall",
+    siege = "workshop"
+}
 function DataUtils:getSoldierRecruitBuffTime(soldier_type,time)
-    local soldier_type_map_building = {
-        infantry = "trainingGround",
-        cavalry = "stable",
-        archer = "hunterHall",
-        siege = "workshop"
-    }
     local building_type = soldier_type_map_building[soldier_type]
-    if not time or not building_type then
-        return 0
+    if time and building_type then
+        local build = City:GetFirstBuildingByType(building_type)
+        if build and build:IsUnlocked() then
+            local config = config_BuildingFunction[building_type][build:GetLevel()]
+            local efficiency = config.efficiency
+            return efficiency > 0 and self:getBuffEfffectTime(time, efficiency) or 0
+        end
     end
-    local build = City:GetFirstBuildingByType(building_type)
-    if not build or not build:IsUnlocked() then return 0 end
-    local config = config_BuildingFunction[building_type][build:GetLevel()]
-    local efficiency = config.efficiency
-    if efficiency > 0 then
-        return DataUtils:getBuffEfffectTime(time,efficiency)
-    else
-        return 0
-    end
+    return 0
 end
 function DataUtils:getBuffEfffectTime(time,decreasePercent)
     return time - math.floor(time / (1 + decreasePercent))
@@ -568,5 +565,8 @@ function DataUtils:GetNextRecruitTime()
 
     return dt1
 end
+
+
+return DataUtils
 
 

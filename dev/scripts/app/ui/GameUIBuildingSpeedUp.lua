@@ -17,7 +17,7 @@ function GameUIBuildingSpeedUp:ctor(building)
     self:SetUpgradeTip(string.format(_("正在升级 %s 到等级 %d"),Localize.getBuildingLocalizedKeyByBuildingType(building:GetType()),building:GetLevel()+1))
     self:CheckCanSpeedUpFree()
     self:OnFreeButtonClicked(handler(self, self.FreeSpeedUpAction))
-    self:SetProgressInfo(GameUtils:formatTimeStyle1(building:GetUpgradingLeftTimeByCurrentTime(app.timer:GetServerTime())),building:GetElapsedTimeByCurrentTime(app.timer:GetServerTime())/building:GetUpgradeTimeToNextLevel()*100)
+    self:SetProgressInfo(GameUtils:formatTimeStyle1(building:GetUpgradingLeftTimeByCurrentTime(app.timer:GetServerTime())),building:GetUpgradingPercentByCurrentTime(app.timer:GetServerTime()))
     building:AddUpgradeListener(self)
 end
 function GameUIBuildingSpeedUp:FreeSpeedUpAction()
@@ -36,14 +36,14 @@ function GameUIBuildingSpeedUp:CheckCanSpeedUpFree()
     self:SetFreeButtonEnabled(self.building:GetUpgradingLeftTimeByCurrentTime(timer:GetServerTime()) <= DataUtils:getFreeSpeedUpLimitTime())
 end
 function GameUIBuildingSpeedUp:OnBuildingUpgradingBegin( building, current_time )
-    self:SetProgressInfo(GameUtils:formatTimeStyle1(building:GetUpgradingLeftTimeByCurrentTime(current_time)),building:GetElapsedTimeByCurrentTime(current_time)/building:GetUpgradeTimeToNextLevel()*100)
+    self:SetProgressInfo(GameUtils:formatTimeStyle1(building:GetUpgradingLeftTimeByCurrentTime(current_time)),building:GetUpgradingPercentByCurrentTime(current_time))
 end
 function GameUIBuildingSpeedUp:OnBuildingUpgradeFinished( building )
     self:LeftButtonClicked()
 end
 function GameUIBuildingSpeedUp:OnBuildingUpgrading( building, current_time )
     self:CheckCanSpeedUpFree()
-    self:SetProgressInfo(GameUtils:formatTimeStyle1(building:GetUpgradingLeftTimeByCurrentTime(current_time)),math.floor(building:GetElapsedTimeByCurrentTime(current_time)/building:GetUpgradeTimeToNextLevel()*100))
+    self:SetProgressInfo(GameUtils:formatTimeStyle1(building:GetUpgradingLeftTimeByCurrentTime(current_time)),math.floor(building:GetUpgradingPercentByCurrentTime(current_time)))
 end
 return GameUIBuildingSpeedUp
 

@@ -87,7 +87,7 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
     --
     local size = back_ground:getContentSize()
     local label = cc.ui.UILabel.new({
-        text = "强势对抗",
+        text = _("强势对抗"),
         size = 22,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_RIGHT,
@@ -110,7 +110,7 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
         :align(display.LEFT_CENTER, label_origin_x + label:getContentSize().width, size.height - 85)
 
     local label = cc.ui.UILabel.new({
-        text = "弱势对抗",
+        text = _("弱势对抗"),
         size = 22,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_RIGHT,

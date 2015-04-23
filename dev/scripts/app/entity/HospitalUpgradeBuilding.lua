@@ -1,5 +1,6 @@
 
 local NORMAL = GameDatas.Soldiers.normal
+local SPECIAL = GameDatas.Soldiers.special
 local config_function = GameDatas.BuildingFunction.hospital
 local Observer = import(".Observer")
 local Enum = import("..utils.Enum")
@@ -143,8 +144,10 @@ function HospitalUpgradeBuilding:GetTreatingTimeByTypeWithCount(soldiers)
     return treat_time
 end
 function HospitalUpgradeBuilding:GetSoldierConfigByType(soldier_type)
-    local soldier_name = string.format("%s_%d", soldier_type, self.soldier_star)
-    return NORMAL[soldier_name]
+     local star = City:GetSoldierManager():GetStarBySoldierType(soldier_type)
+    local config_name = soldier_type.."_"..star
+    local config = NORMAL[config_name] or SPECIAL[soldier_type]
+    return config
 end
 function HospitalUpgradeBuilding:OnTimer(current_time)
     local event = self.treat_event
