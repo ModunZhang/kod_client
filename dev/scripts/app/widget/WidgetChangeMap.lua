@@ -18,7 +18,7 @@ local WidgetChangeMap = class("WidgetChangeMap", function ()
     end)
     return layer
 end)
-WidgetChangeMap.MAP_TYPE = Enum("OUR_CITY", "OTHER_CITY", "OUR_ALLIANCE","OTHER_ALLIANCE")
+WidgetChangeMap.MAP_TYPE = Enum("OUR_CITY", "OTHER_CITY", "OUR_ALLIANCE", "OTHER_ALLIANCE", "PVE")
 
 function WidgetChangeMap:ctor(map_type)
     -- 设置位置位移参数
@@ -123,6 +123,8 @@ function WidgetChangeMap:ctor(map_type)
                 app:EnterMyCityScene()
             elseif map_type == WidgetChangeMap.MAP_TYPE.OTHER_ALLIANCE then
                 app:EnterMyAllianceScene()
+           elseif map_type == WidgetChangeMap.MAP_TYPE.PVE then
+                app:EnterMyCityScene()
             end
         end)
         :scale(scale_x)
@@ -135,6 +137,8 @@ function WidgetChangeMap:ctor(map_type)
         change_icon = "map_city_81x102.png"
     elseif map_type == WidgetChangeMap.MAP_TYPE.OTHER_ALLIANCE then
         change_icon = "map_back_99x88.png"
+    elseif map_type == WidgetChangeMap.MAP_TYPE.PVE then
+        change_icon = "map_city_81x102.png"
     end
     display.newSprite(change_icon):addTo(btn):align(display.CENTER, 50, 10)
     btn:setTouchSwallowEnabled(true)

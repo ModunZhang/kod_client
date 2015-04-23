@@ -739,6 +739,8 @@ local PVE = {
     [PVEDefine.LAKE] = {"image", "tree_1_grassLand.png", 0.5, grassLand = "lake_2_grassLand.png", iceField = "lake_2_iceField.png", desert = "lake_2_desert.png"},
 }
 local PVE_ANIMATION_FILES = {
+    "animations/lanse.ExportJson",
+    
     "animations/yewaiyindi.ExportJson",
     "animations/zhihuishi.ExportJson",
 
