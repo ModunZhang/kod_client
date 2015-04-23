@@ -73,29 +73,27 @@ function WidgetPVESelectStage:CreateItemWithListView(list_view, level)
             font = UIKit:getFontFilePath(),
             color = UIKit:hex2c3b(0xffedae)}))
         :onButtonClicked(function(event)
-            if self.user:GetCurrentPVEMap():GetIndex() == level then
-                print("你已经在当前关卡")
-            else
-                self.user:ResetPveData()
-                local point = self.user:GetPVEDatabase():GetMapByIndex(level):GetStartPoint()
-                self.user:GetPVEDatabase():SetCharPosition(point.x, point.y, level)
-                NetManager:getSetPveDataPromise(
-                    self.user:EncodePveDataAndResetFightRewardsData()
-                ):done(function()
-                    self:removeFromParent()
-                    app:EnterPVEScene(level)
-                end):fail(function()
-                    local location = DataManager:getUserData().pve.location
-                    self.user:GetPVEDatabase():SetCharPosition(location.x, location.y, location.z)
-                end)
-            end
-        end):setButtonEnabled(cur_map:IsAvailable() and cur_map:GetIndex() ~= level)
+            self.user:ResetPveData()
+            local point = self.user:GetPVEDatabase():GetMapByIndex(level):GetStartPoint()
+            self.user:GetPVEDatabase():SetCharPosition(point.x, point.y, level)
+            NetManager:getSetPveDataPromise(
+                self.user:EncodePveDataAndResetFightRewardsData()
+            ):done(function()
+                self:removeFromParent()
+                app:EnterPVEScene(level)
+            end):fail(function()
+                -- 回滚
+                local location = DataManager:getUserData().pve.location
+                self.user:GetPVEDatabase():SetCharPosition(location.x, location.y, location.z)
+            end)
+        end):setButtonEnabled(cur_map:IsAvailable() and self.user:GetCurrentPVEMap():GetIndex() ~= level)
     return item
 end
 
 
 
 return WidgetPVESelectStage
+
 
 
 

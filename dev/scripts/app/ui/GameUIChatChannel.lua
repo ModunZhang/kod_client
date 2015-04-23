@@ -657,9 +657,13 @@ function GameUIChatChannel:CreatePlayerMenu(event,chat)
         }))
         :onButtonClicked(function(event)
             menuLayer:removeFromParent(true)
-            local mail = GameUIWriteMail.new(GameUIWriteMail.SEND_TYPE.PERSONAL_MAIL)
+            local mail = GameUIWriteMail.new(GameUIWriteMail.SEND_TYPE.PERSONAL_MAIL,{
+                    id = chat.id,
+                    name = chat.name,
+                    icon = chat.icon,
+                    allianceTag = chat.allianceTag,
+                })
             mail:SetTitle(_("个人邮件"))
-            mail:SetAddressee(chat.id)
             mail:addTo(self,201)
         end)
         :setTouchSwallowEnabled(true)

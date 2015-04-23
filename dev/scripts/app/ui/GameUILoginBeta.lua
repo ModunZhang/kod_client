@@ -234,6 +234,7 @@ function GameUILoginBeta:getLogicServerInfo()
                 content = _("获取游戏服务器信息失败!")
             end
         end
+        dump(err:reason())
         self:showError(content,function()
         	self:getLogicServerInfo()
         end)

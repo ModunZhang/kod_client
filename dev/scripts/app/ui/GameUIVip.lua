@@ -100,18 +100,14 @@ function GameUIVip:OpenSelectHeadIcon()
 
     local list,list_node = UIKit:commonListView_1({
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
-        viewRect = cc.rect(0, 0,570,570),
+        viewRect = cc.rect(0, 0,548,570),
     })
     list_node:addTo(body):align(display.BOTTOM_CENTER, size.width/2,20)
     self.head_icon_list = list
     for _,icon in pairs(UILib.player_icon) do
         self:AddIconOption(icon)
     end
-    dump(list.container,"list.container")
-    list:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
-        dump(event)
-        return true
-    end)
+   
     self.head_icon_list:reload()
 
 end

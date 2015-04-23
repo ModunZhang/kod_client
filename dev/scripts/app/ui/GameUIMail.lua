@@ -3,7 +3,6 @@ local UIListView = import(".UIListView")
 local GameUIStrikeReport = import(".GameUIStrikeReport")
 local GameUIWarReport = import(".GameUIWarReport")
 local window = import("..utils.window")
-local GameUIWriteMail = import(".GameUIWriteMail")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetUIBackGround2 = import("..widget.WidgetUIBackGround2")
@@ -253,7 +252,7 @@ function GameUIMail:CreateShopButton()
         {normal = "home_btn_up.png", pressed = "home_btn_down.png"}
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
-            self:CreateWriteMail()
+            self:CreateMailContacts()
         end
     end)
     write_mail_button:align(display.RIGHT_TOP,  670, 86)
@@ -279,6 +278,14 @@ function GameUIMail:InitInbox(mails)
         viewRect = cc.rect(display.cx-284, display.top-870, 568, 790),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(self.inbox_layer)
+
+    -- 没有邮件
+    self.has_mail_label = UIKit:ttfLabel({
+        text = _("当前没有邮件"),
+        size = 20,
+        color = 0x403c2f
+        }):align(display.CENTER,window.cx,window.cy):addTo(self.inbox_layer)
+    self.has_mail_label:setVisible(not (mails and #mails>0))
     if mails then
         local added_count = 0
         for k,inbox_mail in pairs(mails) do
@@ -722,6 +729,7 @@ function GameUIMail:OnInboxMailsChanged(changed_mails)
             self.inbox_mails[remove_mail.id]=nil
         end
     end
+    self.has_mail_label:setVisible(#self.inbox_listview:getItems()==0)
 end
 function GameUIMail:OnFetchMailsSuccess(...)
     local mails = self:GetMailsOrReports(self.inbox_listview)
@@ -1400,7 +1408,7 @@ function GameUIMail:OpenReplyMail(mail)
         :addTo(reply_mail):align(display.CENTER, reply_mail:getContentSize().width-92, 46)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                self:SendMail(mail.fromId, _("RE:")..mail.title, textView:getText())
+                self:ReplyMail(mail.fromId, _("RE:")..mail.title, textView:getText())
                 dialog:LeftButtonClicked()
             end
         end)
@@ -1410,19 +1418,19 @@ function GameUIMail:OpenReplyMail(mail)
 end
 
 
-function GameUIMail:CreateWriteMail()
-    return GameUIWriteMail.new(GameUIWriteMail.SEND_TYPE.PERSONAL_MAIL):SetTitle(_("写邮件"))
-        -- :OnSendButtonClicked(GameUIWriteMail.SEND_TYPE.PERSONAL_MAIL)
-        :addTo(self,201)
+function GameUIMail:CreateMailContacts()
+   UIKit:newWidgetUI("WidgetMailContacts"):AddToCurrentScene(true)
 end
 
 --[[
-    发送邮件
+    回复邮件
     @param addressee 收件人
     @param title 邮件主题
     @param content 邮件内容 
 ]]
-function GameUIMail:SendMail(addressee,title,content)
+function GameUIMail:ReplyMail(mail,content)
+    local addressee = mail.fromId
+    local title = mail.title
     if not addressee or string.trim(addressee)=="" then
         FullScreenPopDialogUI.new():SetTitle(_("提示"))
             :SetPopMessage(_("请填写正确的收件人ID"))
@@ -1444,7 +1452,12 @@ function GameUIMail:SendMail(addressee,title,content)
             :AddToCurrentScene(true)
         return
     end
-    NetManager:getSendPersonalMailPromise(addressee, title, content)
+    NetManager:getSendPersonalMailPromise(addressee, _("RE:")..title, content,{
+            id = mail.fromId,
+            name = mail.fromName,
+            icon = mail.icon,
+            allianceTag = mail.fromAllianceTag,
+        })
 end
 
 function GameUIMail:OnReportsChanged( changed_map )

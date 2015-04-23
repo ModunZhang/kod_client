@@ -10,8 +10,8 @@ dragonStar[0] = {
 	["iron"] = 0,
 	["food"] = 0,
 	["coin"] = 0,
-	["gem"] = 0,
-	["exp"] = 4000
+	["gem"] = 500,
+	["exp"] = 1000
 }
 dragonStar[1] = {
 	["id"] = 1,
@@ -23,8 +23,8 @@ dragonStar[1] = {
 	["iron"] = 0,
 	["food"] = 0,
 	["coin"] = 0,
-	["gem"] = 0,
-	["exp"] = 9000
+	["gem"] = 1000,
+	["exp"] = 3000
 }
 dragonStar[2] = {
 	["id"] = 2,
@@ -36,8 +36,8 @@ dragonStar[2] = {
 	["iron"] = 0,
 	["food"] = 0,
 	["coin"] = 0,
-	["gem"] = 0,
-	["exp"] = 16000
+	["gem"] = 2000,
+	["exp"] = 8000
 }
 dragonStar[3] = {
 	["id"] = 3,
@@ -49,8 +49,8 @@ dragonStar[3] = {
 	["iron"] = 0,
 	["food"] = 0,
 	["coin"] = 0,
-	["gem"] = 0,
-	["exp"] = 4000
+	["gem"] = 500,
+	["exp"] = 1000
 }
 dragonStar[4] = {
 	["id"] = 4,
@@ -62,8 +62,8 @@ dragonStar[4] = {
 	["iron"] = 0,
 	["food"] = 0,
 	["coin"] = 0,
-	["gem"] = 0,
-	["exp"] = 9000
+	["gem"] = 1000,
+	["exp"] = 3000
 }
 dragonStar[5] = {
 	["id"] = 5,
@@ -75,8 +75,8 @@ dragonStar[5] = {
 	["iron"] = 0,
 	["food"] = 0,
 	["coin"] = 0,
-	["gem"] = 0,
-	["exp"] = 16000
+	["gem"] = 2000,
+	["exp"] = 8000
 }
 dragonStar[6] = {
 	["id"] = 6,
@@ -88,8 +88,8 @@ dragonStar[6] = {
 	["iron"] = 0,
 	["food"] = 0,
 	["coin"] = 0,
-	["gem"] = 0,
-	["exp"] = 4000
+	["gem"] = 500,
+	["exp"] = 1000
 }
 dragonStar[7] = {
 	["id"] = 7,
@@ -101,8 +101,8 @@ dragonStar[7] = {
 	["iron"] = 0,
 	["food"] = 0,
 	["coin"] = 0,
-	["gem"] = 0,
-	["exp"] = 9000
+	["gem"] = 1000,
+	["exp"] = 3000
 }
 dragonStar[8] = {
 	["id"] = 8,
@@ -114,6 +114,6 @@ dragonStar[8] = {
 	["iron"] = 0,
 	["food"] = 0,
 	["coin"] = 0,
-	["gem"] = 0,
-	["exp"] = 16000
+	["gem"] = 2000,
+	["exp"] = 8000
 }
