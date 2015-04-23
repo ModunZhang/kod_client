@@ -470,12 +470,8 @@ function GameUIWarReport:CreateBelligerentsItem(player,isSelf)
     -- 联盟名字背景框
     display.newScale9Sprite(isSelf and "back_ground_blue_254x42.png" or "back_ground_red_254x42.png", 1, 0,cc.size(256,50),cc.rect(10,10,234,22)):align(display.LEFT_BOTTOM):addTo(player_item)
     -- 玩家头像
-    local heroBg = display.newSprite("chat_hero_background.png"):align(display.CENTER, 50, height/2):addTo(player_item)
-    heroBg:setScale(0.7)
-    local hero = display.newSprite(player.icon or UILib.village[player.type]):align(display.CENTER, 50, height/2)
-        :addTo(player_item)
-    hero:setScale(70/math.max(hero:getContentSize().width,hero:getContentSize().height))
-
+    UIKit:GetPlayerCommonIcon(player.icon):addTo(bottom_bg,1):align(display.CENTER, 50, height/2):addTo(player_item):setScale(0.7)
+    
     -- 玩家名称
     UIKit:ttfLabel({
         text = player.name or Localize.village_name[player.type] ,

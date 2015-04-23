@@ -119,9 +119,7 @@ function GameUIPVEHome:CreateBottom()
     end
 
 
-    local char_bg = display.newSprite("chat_hero_background.png")
-        :addTo(bottom_bg, 1):pos(250, display.bottom + 50):scale(0.65)
-    display.newSprite("playerIcon_default.png"):addTo(char_bg):pos(55, 55):scale(0.9)
+    UIKit:GetPlayerCommonIcon(User:Icon()):addTo(bottom_bg,1):pos(250, display.bottom + 50):scale(0.65)
     local alliance_name = Alliance_Manager:GetMyAlliance():IsDefault() and "" or Alliance_Manager:GetMyAlliance():Name()
     self.tag = UIKit:ttfLabel({text = string.format("[%s] %s", alliance_name, self.user:Name()),
         size = 20,

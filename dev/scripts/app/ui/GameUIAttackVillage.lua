@@ -468,10 +468,7 @@ function GameUIAttackVillage:CreateBelligerentsItem(player)
     local player_item = self:CreateSmallBackGround(height)
 
     -- 玩家头像
-    local heroBg = display.newSprite("chat_hero_background.png"):align(display.CENTER, 50, height/2):addTo(player_item)
-    heroBg:setScale(0.6)
-    local hero = display.newSprite("playerIcon_default.png"):align(display.CENTER, 50, height/2)
-        :addTo(player_item):setScale(0.5)
+    UIKit:GetPlayerCommonIcon(player.icon):align(display.CENTER, 50, height/2):addTo(player_item):setScale(0.6)
     -- 玩家名称
     UIKit:ttfLabel({
         text = player.name ,
