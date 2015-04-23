@@ -902,7 +902,14 @@ function GameUIAlliance:RefreshEventListView()
 end
 
 function GameUIAlliance:OnAllianceSettingButtonClicked(event)
-    if not Alliance_Manager:GetMyAlliance():GetSelf():CanEditAlliance() then
+    local my_alliance = Alliance_Manager:GetMyAlliance()
+    local my_alliance_status = my_alliance:Status()
+    if (my_alliance_status == 'prepare' or my_alliance_status == 'fight') then
+        UIKit:showMessageDialog(_("提示"), _("联盟对战期不能修改联盟信息"), function()end)
+        return
+    end
+
+    if not my_alliance:GetSelf():CanEditAlliance() then
         UIKit:showMessageDialog(_("提示"), _("您没有此操作权限"), function()end)
         return
     end
