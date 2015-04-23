@@ -100,7 +100,7 @@ function GameUIVip:OpenSelectHeadIcon()
 
     local list,list_node = UIKit:commonListView_1({
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
-        viewRect = cc.rect(0, 0,570,570),
+        viewRect = cc.rect(0, 0,548,570),
     })
     list_node:addTo(body):align(display.BOTTOM_CENTER, size.width/2,20)
     self.head_icon_list = list
