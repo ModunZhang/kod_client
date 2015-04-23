@@ -92,84 +92,7 @@ function GameUIVip:AdapterPlayerList()
     table.insert(infos,{_("采集粮食熟练度"),"假的"})
     return infos
 end
--- 选择新头像弹出框
-function GameUIVip:OpenSelectHeadIcon()
-    local pd = WidgetPopDialog.new(644,_("选择头像")):AddToCurrentScene()
-    local body = pd:GetBody()
-    local size = body:getContentSize()
 
-    local list,list_node = UIKit:commonListView_1({
-        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
-        viewRect = cc.rect(0, 0,548,570),
-    })
-    list_node:addTo(body):align(display.BOTTOM_CENTER, size.width/2,20)
-    self.head_icon_list = list
-    for _,icon in pairs(UILib.player_icon) do
-        self:AddIconOption(icon)
-    end
-   
-    self.head_icon_list:reload()
-
-end
-
-function GameUIVip:AddIconOption(icon)
-    local list =  self.head_icon_list
-    local item =list:newItem()
-    local item_width,item_height = 548, 116
-    item:setItemSize(item_width,item_height)
-    local body_image = list.which_bg and "upgrade_resources_background_2.png" or "upgrade_resources_background_3.png"
-    local content = display.newScale9Sprite(body_image,0,0,cc.size(item_width,item_height),cc.rect(10,10,500,26))
-    list.which_bg = not list.which_bg
-    print("litem   :",item:isTouchEnabled(),item:isTouchSwallowEnabled())
-
-    local head_bg = display.newSprite("player_head_bg_104x104.png"):addTo(content)
-        :pos(60,item_height/2)
-    display.newSprite(icon):addTo(head_bg):pos(head_bg:getContentSize().width/2,head_bg:getContentSize().height/2)
-        :scale(100/128)
-
-    UIKit:ttfLabel({
-        text = _("头像")..icon,
-        size = 24,
-        color = 0x403c2f
-    }):align(display.LEFT_CENTER,130,80)
-        :addTo(content)
-    UIKit:ttfLabel({
-        text = _("解锁条件").."XXXXXX",
-        size = 20,
-        color = 0x5c553f
-    }):align(display.LEFT_CENTER,130,40)
-        :addTo(content)
-
-    if User:Icon() ~= icon then
-        WidgetPushButton.new(
-            {normal = "yellow_btn_up_148x58.png", pressed = "yellow_btn_down_148x58.png"},
-            {scale9 = false},
-            {
-                disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
-            }
-        ):setButtonLabel(UIKit:ttfLabel({
-            text = _("选择"),
-            size = 24,
-            color = 0xffedae,
-            shadow= true
-        }))
-            :onButtonClicked(function(event)
-                if event.name == "CLICKED_EVENT" then
-                end
-            end):addTo(content):align(display.RIGHT_CENTER, item_width-10,40)
-            :setButtonEnabled(false)
-    else
-        UIKit:ttfLabel({
-            text = _("已装备"),
-            size = 24,
-            color = 0x403c2f,
-        }):addTo(content):align(display.RIGHT_CENTER,item_width-10,40)
-    end
-
-
-    item:addContent(content)
-    list:addItem(item)
-end
 --WidgetPlayerNode的回调方法
 --点击勋章
 function GameUIVip:WidgetPlayerNode_OnMedalButtonClicked(index)
@@ -182,7 +105,7 @@ end
 --修改头像
 function GameUIVip:WidgetPlayerNode_OnPlayerIconCliked()
     print("WidgetPlayerNode_OnPlayerIconCliked-->")
-    self:OpenSelectHeadIcon()
+    UIKit:newWidgetUI("WidgetSelectPlayerHeadIcon"):AddToCurrentScene(true)
 end
 --修改玩家名
 function GameUIVip:WidgetPlayerNode_OnPlayerNameCliked()
@@ -941,8 +864,10 @@ end
 function GameUIVip:OnAllianceBasicChanged(from,changed_map)
 end
 function GameUIVip:OnUserBasicChanged(from,changed_map)
-    if changed_map.name and self.player_node then
-        self.player_node:RefreshUI()
+    if self.player_node then
+        if changed_map.name or changed_map.icon then
+            self.player_node:RefreshUI()
+        end
     end
     if changed_map.vipExp and self.vip_layer then
         local vip_level,percent,exp = User:GetVipLevel()

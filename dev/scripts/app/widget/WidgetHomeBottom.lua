@@ -5,14 +5,20 @@ local WidgetHomeBottom = class("WidgetHomeBottom", function()
     if display.width >640 then
         bottom_bg:scale(display.width/768)
     end
+    bottom_bg:setNodeEventEnabled(true)
     bottom_bg:setTouchEnabled(true)
     return bottom_bg
 end)
 
-local function OnBottomButtonClicked(event)
-    print(event.target:getTag())
+
+function WidgetHomeBottom:MailUnreadChanged(...)
+    self.mail_count:SetNumber(MailManager:GetUnReadMailsNum()+MailManager:GetUnReadReportsNum())
 end
-function WidgetHomeBottom:ctor(callback)
+function WidgetHomeBottom:OnTaskChanged()
+    self.task_count:SetNumber(self.city:GetUser():GetTaskManager():GetCompleteTaskCount())
+end
+function WidgetHomeBottom:ctor(city)
+    self.city = city
     -- 底部按钮
     local first_row = 64
     local first_col = 240
@@ -28,10 +34,10 @@ function WidgetHomeBottom:ctor(callback)
         local col = i - 1
         local x, y = first_col + col * padding_width, first_row
         local button = cc.ui.UIPushButton.new({normal = v[1]})
-            :onButtonClicked(callback or OnBottomButtonClicked)
+            :onButtonClicked(handler(self, self.OnBottomButtonClicked))
             :addTo(self):pos(x, y)
             :onButtonPressed(function(event)
-            event.target:runAction(cc.ScaleTo:create(0.1, 1.2))
+                event.target:runAction(cc.ScaleTo:create(0.1, 1.2))
             end):onButtonRelease(function(event)
             event.target:runAction(cc.ScaleTo:create(0.1, 1))
             end):setTag(i):setLocalZOrder(10)
@@ -49,9 +55,37 @@ function WidgetHomeBottom:ctor(callback)
         end
     end
 end
-
+function WidgetHomeBottom:onEnter()
+    local user = self.city:GetUser()
+    MailManager:AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
+    user:AddListenOnType(self, user.LISTEN_TYPE.TASK)
+    
+    self:OnTaskChanged()
+    self:MailUnreadChanged()
+end
+function WidgetHomeBottom:onExit()
+    local user = self.city:GetUser()
+    MailManager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
+    user:RemoveListenerOnType(self, user.LISTEN_TYPE.TASK)
+end
+function WidgetHomeBottom:OnBottomButtonClicked(event)
+    local tag = event.target:getTag()
+    if not tag then return end
+    if tag == 4 then -- tag 4 = alliance button
+        UIKit:newGameUI('GameUIAlliance'):AddToCurrentScene(true)
+    elseif tag == 3 then
+        UIKit:newGameUI('GameUIMail',self.city):AddToCurrentScene(true)
+    elseif tag == 2 then
+        UIKit:newGameUI('GameUIItems',self.city):AddToCurrentScene(true)
+    elseif tag == 1 then
+        UIKit:newGameUI('GameUIMission',self.city):AddToCurrentScene(true)
+    elseif tag == 5 then
+        UIKit:newGameUI('GameUISetting',self.city):AddToCurrentScene(true)
+    end
+end
 
 
 return WidgetHomeBottom
+
 
 

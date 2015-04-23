@@ -45,13 +45,11 @@ function GameUIAllianceHome:FadeToSelf(isFullDisplay)
         end
     })
 end
-function GameUIAllianceHome:OnTaskChanged()
-    self.bottom.task_count:SetNumber(self.city:GetUser():GetTaskManager():GetCompleteTaskCount())
-end
 
 
 function GameUIAllianceHome:onEnter()
     GameUIAllianceHome.super.onEnter(self)
+    self.city = City
     self.visible_count = 1
     self.top = self:CreateTop()
     self.bottom = self:CreateBottom()
@@ -61,39 +59,53 @@ function GameUIAllianceHome:onEnter()
     local rect1 = self.chat:getCascadeBoundingBox()
     local x, y = rect1.x, rect1.y + rect1.height - 2
     local march = WidgetMarchEvents.new(self.alliance, ratio):addTo(self):pos(x, y)
-
     self:AddMapChangeButton()
     self:InitArrow()
     if self.top then
         self.top:Refresh()
     end
-
     -- 中间按钮
     self:CreateOperationButton()
-    self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
-    self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.MEMBER)
-    self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.ALLIANCE_FIGHT)
-    self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.FIGHT_REQUESTS)
-    MailManager:AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
-    local city = City
-    self.city = city
-    city:AddListenOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
-    city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
-    city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
-    city:AddListenOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
-    city:AddListenOnType(self,city.LISTEN_TYPE.HELPED_TO_TROOPS)
-    city:GetUser():AddListenOnType(self, city:GetUser().LISTEN_TYPE.TASK)
-
-    local alliance_belvedere = self.alliance:GetAllianceBelvedere()
-    alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
-    alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
-
-    -- 添加到全局计时器中，以便显示各个阶段的时间
-    app.timer:AddListener(self)
-
-    self:OnTaskChanged(city:GetUser())
-    self:MailUnreadChanged()
+    self:AddOrRemoveListener(true)
 end
+function GameUIAllianceHome:onExit()
+    self:AddOrRemoveListener(false)
+    GameUIAllianceHome.super.onExit(self)
+end
+function GameUIAllianceHome:AddOrRemoveListener(isAdd)
+    local city = self.city
+    if isAdd then
+        self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
+        self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.MEMBER)
+        self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.ALLIANCE_FIGHT)
+        self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.FIGHT_REQUESTS)
+        city:AddListenOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
+        city:AddListenOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
+        city:AddListenOnType(self,city.LISTEN_TYPE.HELPED_TO_TROOPS)
+        city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
+        city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
+        local alliance_belvedere = self.alliance:GetAllianceBelvedere()
+        alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
+        alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
+        -- 添加到全局计时器中，以便显示各个阶段的时间
+        app.timer:AddListener(self)
+    else
+        app.timer:RemoveListener(self)
+        self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
+        self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.MEMBER)
+        self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.ALLIANCE_FIGHT)
+        self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.FIGHT_REQUESTS)
+        city:RemoveListenerOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
+        city:RemoveListenerOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
+        city:RemoveListenerOnType(self,city.LISTEN_TYPE.HELPED_TO_TROOPS)
+        city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
+        city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
+        local alliance_belvedere = self.alliance:GetAllianceBelvedere()
+        alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
+        alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
+    end
+end
+
 function GameUIAllianceHome:AddMapChangeButton()
     WidgetChangeMap.new(WidgetChangeMap.MAP_TYPE.OUR_ALLIANCE):addTo(self)
 end
@@ -197,27 +209,6 @@ end
 function GameUIAllianceHome:OnProductionTechnologyEventDataChanged()
     self.operation_button_order:RefreshOrder()
 end
-function GameUIAllianceHome:onExit()
-    app.timer:RemoveListener(self)
-    self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
-    self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.MEMBER)
-    self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.ALLIANCE_FIGHT)
-    self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.FIGHT_REQUESTS)
-    MailManager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
-
-    local city = City
-    city:RemoveListenerOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
-    city:RemoveListenerOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
-    city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
-    city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
-    city:GetUser():RemoveListenerOnType(self, city:GetUser().LISTEN_TYPE.TASK)
-    city:RemoveListenerOnType(self,city.LISTEN_TYPE.HELPED_TO_TROOPS)
-    local alliance_belvedere = self.alliance:GetAllianceBelvedere()
-    alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
-    alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
-    GameUIAllianceHome.super.onExit(self)
-end
-
 
 function GameUIAllianceHome:TopBg()
     local top_bg = display.newSprite("alliance_home_top_bg_768x116.png")
@@ -421,38 +412,17 @@ function GameUIAllianceHome:OnAllianceFightRequestsChanged(request_num)
         self.top:SetEnemyPowerOrKill(request_num)
     end
 end
-
-function GameUIAllianceHome:MailUnreadChanged(...)
-    self.bottom.mail_count:SetNumber(MailManager:GetUnReadMailsNum()+MailManager:GetUnReadReportsNum())
-end
 function GameUIAllianceHome:CreateBottom()
-    local bottom_bg = WidgetHomeBottom.new(handler(self, self.OnBottomButtonClicked)):addTo(self)
+    local bottom_bg = WidgetHomeBottom.new(self.city):addTo(self)
         :align(display.BOTTOM_CENTER, display.cx, display.bottom)
-
     self.chat = WidgetChat.new():addTo(bottom_bg)
         :align(display.CENTER, bottom_bg:getContentSize().width/2, bottom_bg:getContentSize().height-11)
-
     return bottom_bg
 end
 function GameUIAllianceHome:OnTopButtonClicked(event)
     print("OnTopButtonClicked=",event.name)
     if event.name == "CLICKED_EVENT" then
-        UIKit:newGameUI("GameUIAllianceBattle",City):AddToCurrentScene(true)
-    end
-end
-function GameUIAllianceHome:OnBottomButtonClicked(event)
-    local tag = event.target:getTag()
-    if not tag then return end
-    if tag == 4 then -- tag 4 = alliance button
-        UIKit:newGameUI('GameUIAlliance'):AddToCurrentScene(true)
-    elseif tag == 3 then
-        UIKit:newGameUI('GameUIMail',self.city):AddToCurrentScene(true)
-    elseif tag == 2 then
-        UIKit:newGameUI('GameUIItems',self.city):AddToCurrentScene(true)
-    elseif tag == 1 then
-        UIKit:newGameUI('GameUIMission',self.city):AddToCurrentScene(true)
-    elseif tag == 5 then
-        UIKit:newGameUI('GameUISetting',self.city):AddToCurrentScene(true)
+        UIKit:newGameUI("GameUIAllianceBattle", self.city):AddToCurrentScene(true)
     end
 end
 function GameUIAllianceHome:OnMidButtonClicked(event)
@@ -713,3 +683,4 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
+

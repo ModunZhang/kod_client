@@ -210,7 +210,7 @@ function WidgetRankingList:CreatePlayerContentByIndex(idx)
     item.bg2 = display.newSprite("background1_548x76.png"):addTo(item)
         :pos(size.width/2, size.height/2)
     display.newSprite("background_57x57.png"):addTo(item):pos(120, 40)
-    display.newSprite("playerIcon_default.png"):addTo(item, 1):pos(120, 40):scale(0.5)
+    local player_head_icon = UIKit:GetPlayerIconOnly():addTo(item,1):pos(120, 40):scale(0.5)
     display.newSprite("dragon_strength_27x31.png"):addTo(item):pos(400, 40)
 
     item.rank = UIKit:ttfLabel({

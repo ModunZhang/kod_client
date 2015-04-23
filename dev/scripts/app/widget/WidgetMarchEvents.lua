@@ -105,7 +105,6 @@ function WidgetMarchEvents:ctor(alliance, ratio)
     self.hide_btn = self:CreateHideButton():addTo(self.node)
     self.back_ground = self:CreateBackGround():addTo(self.node)
     self:Reset()
-   
 end
 
 function WidgetMarchEvents:GetAllianceBelvedere()
