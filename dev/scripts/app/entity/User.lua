@@ -23,7 +23,8 @@ User.LISTEN_TYPE = Enum(
     "IAP_GIFTS_REFRESH",
     "IAP_GIFTS_CHANGE",
     "IAP_GIFTS_TIMER",
-    "TASK")
+    "TASK",
+    "ALLIANCE_DONATE")
 local TASK = User.LISTEN_TYPE.TASK
 local BASIC = User.LISTEN_TYPE.BASIC
 local RESOURCE = User.LISTEN_TYPE.RESOURCE
@@ -58,6 +59,14 @@ property(User, "gcId", "")
 property(User, "serverId", "")
 property(User, "requestToAllianceEvents", {})
 property(User, "inviteToAllianceEvents", {})
+property(User, "allianceDonate", {
+    wood = 1,
+    stone = 1,
+    food = 1,
+    iron = 1,
+    coin = 1,
+    gem = 1,
+})
 function User:ctor(p)
     User.super.ctor(self)
     self.resources = {
@@ -246,6 +255,7 @@ function User:OnUserDataChanged(userData, current_time, deltaData)
     self:OnCountInfoChanged(userData, deltaData)
     self:OnIapGiftsChanged(userData, deltaData)
     self:GetPVEDatabase():OnUserDataChanged(userData, deltaData)
+    self:OnAllianceDonateChanged(userData, deltaData)
     if self.growUpTaskManger:OnUserDataChanged(userData, deltaData) then
         self:OnTaskChanged()
     end
@@ -294,7 +304,7 @@ function User:OnIapGiftsChanged(userData,deltaData)
     end
 
     if is_delta_update then
-         local changed_map = GameUtils:Handler_DeltaData_Func(
+        local changed_map = GameUtils:Handler_DeltaData_Func(
             deltaData.iapGifts
             ,function(event_data)
                 if not self.iapGifts[event_data.id] then
@@ -539,6 +549,21 @@ function User:OnBasicInfoChanged(userData, deltaData)
     end
     return self
 end
+function User:OnAllianceDonateChanged( userData, deltaData )
+    local is_fully_update = deltaData == nil
+    local is_delta_update = not is_fully_update and deltaData.allianceDonate
+    if is_fully_update then
+       self.allianceDonate = clone(userData.allianceDonate)
+    end
+    if is_delta_update then
+        for i,v in pairs(deltaData.allianceDonate) do
+            self.allianceDonate[i] = v
+        end
+    end
+    self:NotifyListeneOnType(User.LISTEN_TYPE.ALLIANCE_DONATE, function(listener)
+        listener:OnAllianceDonateChanged()
+    end)
+end
 function User:OnDailyQuestsChanged(userData, deltaData)
     local is_fully_update = deltaData == nil
     if is_fully_update then
@@ -692,6 +717,15 @@ function User:GetPlayerLevelByExp(exp)
     end
     return 0
 end
+function User:GetCurrentLevelMaxExp(level)
+    local config = config_playerLevel[tonumber(level) + 1]
+    if not config then
+        return config_playerLevel[level].expTo
+    else
+        return config.expFrom
+    end
+
+end
 --获得有加成的龙类型
 function User:GetBestDragon()
     local bestDragonForTerrain = {
@@ -703,6 +737,7 @@ function User:GetBestDragon()
 end
 
 return User
+
 
 
 

@@ -101,10 +101,16 @@ function UIListView:ctor(params)
     self.delegate_ = {}
     self.redundancyViewVal = 0 --异步的视图两个方向上的冗余大小,横向代表宽,竖向代表高
     self.nTest = 0
+    self.trackTop = params.trackTop or false -- 是否追终与上边的距离
 end
 
 function UIListView:onCleanup()
     self:releaseAllFreeItems_()
+end
+
+
+function UIListView:isTrackTop()
+    return self.trackTop
 end
 
 --[[--
@@ -1111,12 +1117,51 @@ function UIListView:scrollBy(x, y)
     -- self.position_.x = self.position_.x + x
     -- self.position_.y = self.position_.y + y
     self.scrollNode:setPosition(self.position_)
-
+    if self:isTrackTop() and UIScrollView.DIRECTION_VERTICAL == self.direction then
+        local __,disY = self:getSlideDistance()
+        if disY > 0 then
+             self:notifyListener_({name = "top_distance_changed",disY = disY})
+        end
+    end
     if self.actualRect_ then
         self.actualRect_.x = self.actualRect_.x + x
         self.actualRect_.y = self.actualRect_.y + y
     end
 end
+
+function UIListView:getSlideDistance()
+    local cascadeBound = self:getScrollNodeRect()
+    local disX, disY = 0, 0
+    local viewRect = self:getViewRectInWorldSpace()
+
+    -- dump(cascadeBound, "UIScrollView - cascBoundingBox:")
+    -- dump(viewRect, "UIScrollView - viewRect:")
+    --修改quick:如果是单方向滑动 只改变该方向上的位移！加上判断
+    if UIScrollView.DIRECTION_VERTICAL ~= self.direction then
+        if cascadeBound.width < viewRect.width then
+            disX = viewRect.x - cascadeBound.x
+        else
+            if cascadeBound.x > viewRect.x then
+                disX = viewRect.x - cascadeBound.x
+            elseif cascadeBound.x + cascadeBound.width < viewRect.x + viewRect.width then
+                disX = viewRect.x + viewRect.width - cascadeBound.x - cascadeBound.width
+            end
+        end
+    end
+    if UIScrollView.DIRECTION_HORIZONTAL ~= self.direction then
+        if cascadeBound.height < viewRect.height then
+            disY = viewRect.y + viewRect.height - cascadeBound.y - cascadeBound.height
+        else
+            if cascadeBound.y > viewRect.y then
+                disY = viewRect.y - cascadeBound.y
+            elseif cascadeBound.y + cascadeBound.height < viewRect.y + viewRect.height then
+                disY = viewRect.y + viewRect.height - cascadeBound.y - cascadeBound.height
+            end
+        end
+    end
+    return disX,disY
+end
+
 
 local function floor_0(t, c)
     local abs_c = abs(c)
@@ -1247,7 +1292,8 @@ function UIListView:rectWholeInRect(rect1,rect2)
         and  cc.rectGetMaxY(rect1) >= cc.rectGetMaxY(rect2) and cc.rectGetMinY(rect1) <=  cc.rectGetMinY(rect2)
 end
 --[[--
-    判断pos位置的item[完全]在viewRect内
+    判断item[完全]在viewRect内
+    pos 可以为逻辑索引、真实索引或者item
 ]]
 function UIListView:isItemFullyInViewRect(pos)
     local item

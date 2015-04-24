@@ -327,18 +327,24 @@ function UIKit:CreateEventTitle(...)
 end
 
 -- TODO: 玩家头像
-function UIKit:GetPlayerCommonIcon(key)
-    local heroBg = display.newSprite("chat_hero_background.png")
-    self:GetPlayerIconOnly(key):addTo(heroBg)
+function UIKit:GetPlayerCommonIcon(key,isOnline)
+    isOnline = type(isOnline) ~= 'boolean' and true or isOnline
+    local heroBg = isOnline and display.newSprite("chat_hero_background.png") or self:getDiscolorrationSprite("chat_hero_background.png")
+    self:GetPlayerIconOnly(key,isOnline):addTo(heroBg)
         :align(display.CENTER,56,65)
     return heroBg
 end
 
-function UIKit:GetPlayerIconOnly(key)
+function UIKit:GetPlayerIconImage(key)
+    return UILib.player_icon[tonumber(key)]
+end
+
+function UIKit:GetPlayerIconOnly(key,isOnline)
+    isOnline = type(isOnline) ~= 'boolean' and true or isOnline
     if not key then
-        return display.newSprite(UILib.player_icon[1])
+        return isOnline and display.newSprite(UILib.player_icon[1]) or self:getDiscolorrationSprite(UILib.player_icon[1])
     end
-    return display.newSprite(UILib.player_icon[key])
+    return isOnline and display.newSprite(self:GetPlayerIconImage(key)) or self:getDiscolorrationSprite(self:GetPlayerIconImage(key))
 end
 --TODO:将这个函数替换成CreateBoxPanel9来实现
 function UIKit:CreateBoxPanel(height)
@@ -572,10 +578,10 @@ function UIKit:showEvaluateDialog()
     return dialog
 end
 
-function UIKit:WaitForNet()
+function UIKit:WaitForNet(delay)
     local scene = display.getRunningScene()
     if scene.__cname  ~= 'UpdaterScene' and scene.__cname  ~= 'MainScene' and scene.WaitForNet then
-        scene:WaitForNet()
+        scene:WaitForNet(delay)
     end
 end
 

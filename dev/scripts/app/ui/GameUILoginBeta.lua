@@ -236,7 +236,7 @@ function GameUILoginBeta:getLogicServerInfo()
         end
         dump(err:reason())
         self:showError(content,function()
-        	self:getLogicServerInfo()
+        	self:connectGateServer()
         end)
     end)
 end

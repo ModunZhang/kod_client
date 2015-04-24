@@ -385,6 +385,7 @@ function UIScrollView:onTouchCapture_(event)
 end
 
 function UIScrollView:onTouch_(event)
+
 	if "began" == event.name and not self:isTouchInViewRect(event) then
 		printInfo("UIScrollView - touch didn't in viewRect")
 		return false
@@ -416,7 +417,6 @@ function UIScrollView:onTouch_(event)
 		if self:isShake(event) then
 			return
 		end
-
 		self.bDrag_ = true
 		self.speed.x = event.x - event.prevX
 		self.speed.y = event.y - event.prevY
@@ -521,7 +521,7 @@ function UIScrollView:scrollBy(x, y)
 	-- self.position_.x = self.position_.x + x
 	-- self.position_.y = self.position_.y + y
 	self.scrollNode:setPosition(self.position_)
-
+	
 	if self.actualRect_ then
 		self.actualRect_.x = self.actualRect_.x + x
 		self.actualRect_.y = self.actualRect_.y + y
@@ -594,9 +594,9 @@ function UIScrollView:elasticScroll()
 	--修改quick 添加滑动到顶部或者的底部的通知
 	if UIScrollView.DIRECTION_VERTICAL == self.direction then
 		if disY > 0 then
-			self:callListener_{name = "SCROLLVIEW_EVENT_BOUNCE_TOP"}
+			self:callListener_{name = "SCROLLVIEW_EVENT_BOUNCE_TOP",disY = disY}
 		else
-			self:callListener_{name = "SCROLLVIEW_EVENT_BOUNCE_BOTTOM"}
+			self:callListener_{name = "SCROLLVIEW_EVENT_BOUNCE_BOTTOM",disY = disY}
 		end
 	end
 	transition.moveBy(self.scrollNode,

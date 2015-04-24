@@ -840,7 +840,7 @@ function GameUITradeGuild:OpenSellDialog()
                 shadow = true
             }))
             :onButtonClicked(function(event)
-                local tag = body.drop_list:GetSelectdTag()
+                local tag = body.drop_list:GetSelectedButtonTag()
                 local type,options,goods_type
                 if tag == 'resource' then
                     type = "resources"
