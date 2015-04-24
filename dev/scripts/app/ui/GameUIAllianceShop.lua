@@ -57,6 +57,10 @@ function GameUIAllianceShop:OnMoveInStage()
     }, function(tag)
         if tag == 'goods' then
             self.goods_layer:setVisible(true)
+            -- 打开商店,更新查看新货物状态
+            if self.alliance:GetItemsManager():IsNewGoodsCome() then
+                self.alliance:GetItemsManager():HasCheckNewGoods()
+            end
         else
             self.goods_layer:setVisible(false)
         end
@@ -139,6 +143,10 @@ function GameUIAllianceShop:InitGoodsPart()
     local normal_items = self.items_manager:GetAllNormalItems()
     local row_items = {}
     for i=1,#normal_items do
+        local noraml_item = normal_items[i]
+        if self:CheckSell(noraml_item:Name()) then
+            table.insert(row_items,noraml_item)
+        end
         if LuaUtils:table_size(row_items) == 4 or i == #normal_items then
             local goods_item = __createListItem(list_width,goods_item_height)
             local node = display.newNode()
@@ -148,11 +156,6 @@ function GameUIAllianceShop:InitGoodsPart()
             end
             goods_item:addContent(node)
             row_items = {}
-        else
-            local noraml_item = normal_items[i]
-            if self:CheckSell(noraml_item:Name()) then
-                table.insert(row_items,noraml_item)
-            end
         end
     end
 
@@ -173,6 +176,10 @@ function GameUIAllianceShop:InitGoodsPart()
     local row_items = {}
     local super_items = self.items_manager:GetAllSuperItems()
     for i=1,#super_items do
+        local super_item = super_items[i]
+        if self:CheckSell(super_item:Name()) then
+            table.insert(row_items,super_item)
+        end
         if LuaUtils:table_size(row_items) == 4 or i == #super_items then
             local goods_item = __createListItem(list_width,goods_item_height)
             local node = display.newNode()
@@ -185,11 +192,6 @@ function GameUIAllianceShop:InitGoodsPart()
             end
             goods_item:addContent(node)
             row_items = {}
-        else
-            local super_item = super_items[i]
-            if self:CheckSell(super_item:Name()) then
-                table.insert(row_items,super_item)
-            end
         end
     end
     list:reload()
@@ -206,7 +208,6 @@ function GameUIAllianceShop:CreateGoodsBox(goods)
         end)
 
     local item_bg = display.newSprite("box_118x118.png"):addTo(box_button):align(display.CENTER, 0, 18)
-    local item_icon_color_bg = display.newSprite("box_item_100x100.png"):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
     -- tool image
     local goods_icon = display.newSprite(UILib.item[goods:Name()]):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
         :addTo(item_bg)
@@ -251,7 +252,6 @@ function GameUIAllianceShop:CreateStockGoodsBox(goods)
         end)
 
     local item_bg = display.newSprite("box_118x118.png"):addTo(box_button):align(display.CENTER, 0, 18)
-    local item_icon_color_bg = display.newSprite("box_item_100x100.png"):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
     -- tool image
     local goods_icon = display.newSprite(UILib.item[goods:Name()]):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
         :addTo(item_bg)
@@ -325,6 +325,10 @@ function GameUIAllianceShop:InitStockPart()
     local row_items = {}
     local super_items = self.items_manager:GetAllSuperItems()
     for i=1,#super_items do
+        local super_item = super_items[i]
+        if self:CheckSell(super_item:Name()) then
+            table.insert(row_items,super_item)
+        end
         if LuaUtils:table_size(row_items) == 4 or i == #super_items then
             local goods_item = __createListItem(list_width,goods_item_height)
             local node = display.newNode()
@@ -334,11 +338,6 @@ function GameUIAllianceShop:InitStockPart()
             end
             goods_item:addContent(node)
             row_items = {}
-        else
-            local super_item = super_items[i]
-            if self:CheckSell(super_item:Name()) then
-                table.insert(row_items,super_item)
-            end
         end
     end
 
@@ -371,7 +370,6 @@ function GameUIAllianceShop:CreateRecordItem(item_log,index)
     local content = display.newSprite("back_ground_568x110.png")
 
     local item_bg = display.newSprite("box_118x118.png"):addTo(content):align(display.CENTER, 58, item_height/2):scale(0.8)
-    local item_icon_color_bg = display.newSprite("box_item_100x100.png"):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
     -- tool image
     local goods_icon = display.newSprite(UILib.item[item_log.itemName]):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
         :addTo(item_bg)
@@ -436,17 +434,19 @@ function GameUIAllianceShop:OnItemsChanged(changed_map)
 end
 
 function GameUIAllianceShop:OnItemLogsChanged( changed_map )
-    for i,v in ipairs(changed_map[1]) do
-        self:CreateRecordItem(v,1)
-    end
-
-    for i,v in ipairs(changed_map[3]) do
-        local record_item = self.record_logs_items[v.time..v.playerName]
-        if record_item then
-            self.record_list:removeItem(record_item)
+    if self.record_list then
+        for i,v in ipairs(changed_map[1]) do
+            self:CreateRecordItem(v,1)
         end
+
+        for i,v in ipairs(changed_map[3]) do
+            local record_item = self.record_logs_items[v.time..v.playerName]
+            if record_item then
+                self.record_list:removeItem(record_item)
+            end
+        end
+        self.record_list:reload()
     end
-    self.record_list:reload()
 end
 function GameUIAllianceShop:OnBuildingInfoChange(building)
     if building.name == 'shop' then
@@ -462,6 +462,10 @@ function GameUIAllianceShop:OnBuildingInfoChange(building)
     end
 end
 return GameUIAllianceShop
+
+
+
+
 
 
 
