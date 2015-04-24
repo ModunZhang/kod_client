@@ -1,16 +1,12 @@
 local GameUIWatiForNetWork = UIKit:createUIClass("GameUIWatiForNetWork")
 
-function GameUIWatiForNetWork:ctor()
+function GameUIWatiForNetWork:ctor(delay)
     GameUIWatiForNetWork.super.ctor(self)
+    self.delay = delay and checkint(delay) or 1
 end
 function GameUIWatiForNetWork:onEnter()
     GameUIWatiForNetWork.super.onEnter(self)
     display.newColorLayer(cc.c4b(255,255,255,0)):addTo(self):setTouchEnabled(true)
-
-    self:performWithDelay(function()
-        self.sprite:show()
-        self.loading:show()
-    end, 1)
 
     self.sprite = display.newSprite("batcat_logo_368x390.png", display.cx, display.cy, {class=cc.FilteredSpriteWithOne})
     :addTo(self)
@@ -29,9 +25,14 @@ function GameUIWatiForNetWork:onEnter()
 
     self.loading = display.newSprite("loading_88x86.png"):addTo(self):pos(display.cx, display.cy)
     self.loading:runAction(cc.RepeatForever:create(cc.RotateBy:create(7, 360)))
-
     self.sprite:hide()
     self.loading:hide()
+    
+    print("self.delay----->",self.delay)
+    self:performWithDelay(function()
+        self.sprite:show()
+        self.loading:show()
+    end, self.delay)
 end
 
 

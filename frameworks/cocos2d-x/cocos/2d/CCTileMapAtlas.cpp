@@ -178,18 +178,17 @@ void TileMapAtlas::updateAtlasValueAt(const Vec2& pos, const Color3B& value, int
 
     float itemWidthInPixels = _itemWidth * CC_CONTENT_SCALE_FACTOR();
     float itemHeightInPixels = _itemHeight * CC_CONTENT_SCALE_FACTOR();
-//dannyhe 对所有瓦块地图修改抗锯齿采样方式
-//#if CC_FIX_ARTIFACTS_BY_STRECHING_TEXEL
+#if CC_FIX_ARTIFACTS_BY_STRECHING_TEXEL
     float left        = (2 * row * itemWidthInPixels + 1) / (2 * textureWide);
     float right       = left + (itemWidthInPixels * 2 - 2) / (2 * textureWide);
     float top         = (2 * col * itemHeightInPixels + 1) / (2 * textureHigh);
     float bottom      = top + (itemHeightInPixels * 2 - 2) / (2 * textureHigh);
-//#else
-//    float left        = (row * itemWidthInPixels) / textureWide;
-//    float right       = left + itemWidthInPixels / textureWide;
-//    float top         = (col * itemHeightInPixels) / textureHigh;
-//    float bottom      = top + itemHeightInPixels / textureHigh;
-//#endif
+#else
+    float left        = (row * itemWidthInPixels) / textureWide;
+    float right       = left + itemWidthInPixels / textureWide;
+    float top         = (col * itemHeightInPixels) / textureHigh;
+    float bottom      = top + itemHeightInPixels / textureHigh;
+#endif
 
     quad->tl.texCoords.u = left;
     quad->tl.texCoords.v = top;

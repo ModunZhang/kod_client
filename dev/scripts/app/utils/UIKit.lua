@@ -578,10 +578,10 @@ function UIKit:showEvaluateDialog()
     return dialog
 end
 
-function UIKit:WaitForNet()
+function UIKit:WaitForNet(delay)
     local scene = display.getRunningScene()
     if scene.__cname  ~= 'UpdaterScene' and scene.__cname  ~= 'MainScene' and scene.WaitForNet then
-        scene:WaitForNet()
+        scene:WaitForNet(delay)
     end
 end
 

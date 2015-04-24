@@ -934,7 +934,30 @@ function GameUIAlliance:OnAllianceSettingButtonClicked(event)
 end
 
 --成员
-
+--------------
+function GameUIAlliance:MembersListonTouch(event)
+    if event.name == 'SCROLLVIEW_EVENT_BOUNCE_TOP' and not self.need_refresh then
+        if math.ceil(event.disY) >= 70 then
+            self.need_refresh = true
+        end
+        self.refresh_label:hide()
+    elseif "scrollEnd" == event.name and self.need_refresh then
+        self.refresh_label:hide()
+        self.memberListView:removeAllItems()
+        UIKit:WaitForNet(0)
+        self:RefreshMemberList()
+        self:performWithDelay(function()
+             UIKit:NoWaitForNet()
+            self.need_refresh = false
+        end, 0.3)
+    elseif "top_distance_changed" == event.name then
+         if math.ceil(event.disY) > 40 then
+            self.refresh_label:show()
+        else
+            self.refresh_label:hide()
+        end
+    end
+end
 function GameUIAlliance:HaveAlliaceUI_membersIf()
     if not self.member_list_bg then
         self.member_list_bg = display.newNode():size(568,784):addTo(self.main_content)
@@ -943,7 +966,14 @@ function GameUIAlliance:HaveAlliaceUI_membersIf()
             viewRect = cc.rect(0, 0,560,618),
             direction = UIScrollView.DIRECTION_VERTICAL,
             -- bgColor = UIKit:hex2c4b(0x7a000000),
+            trackTop = true,
         })
+        list:onTouch(handler(self, self.MembersListonTouch))
+        self.refresh_label = UIKit:ttfLabel({
+            text = _("下拉刷新"),
+            size = 18,
+            color= 0x797154
+        }):align(display.CENTER, 284, 590):addTo(self.member_list_bg):hide()
         self.memberListView = list
         list_node:addTo(self.member_list_bg):pos(5,10)
         local box = display.newScale9Sprite("alliance_item_flag_box_126X126.png")
@@ -1154,7 +1184,10 @@ function GameUIAlliance:OnPlayerDetailButtonClicked(memberId)
 end
 -- 信息
 function GameUIAlliance:HaveAlliaceUI_infomationIf()
-    if self.informationNode then return self.informationNode end
+    if self.informationNode then 
+        self:RefreshDescView()
+        return self.informationNode 
+    end
     local informationNode = WidgetUIBackGround.new({height=384,isFrame = "yes"}):addTo(self.main_content):pos(20,window.betweenHeaderAndTab - 394)
     self.informationNode = informationNode
     local notice_bg = display.newSprite("alliance_notice_box_580x184.png")
