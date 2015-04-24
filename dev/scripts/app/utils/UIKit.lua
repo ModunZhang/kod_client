@@ -334,11 +334,15 @@ function UIKit:GetPlayerCommonIcon(key)
     return heroBg
 end
 
+function UIKit:GetPlayerIconImage(key)
+    return UILib.player_icon[tonumber(key)]
+end
+
 function UIKit:GetPlayerIconOnly(key)
     if not key then
         return display.newSprite(UILib.player_icon[1])
     end
-    return display.newSprite(UILib.player_icon[key])
+    return display.newSprite(self:GetPlayerIconImage(key))
 end
 --TODO:将这个函数替换成CreateBoxPanel9来实现
 function UIKit:CreateBoxPanel(height)

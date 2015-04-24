@@ -53,7 +53,6 @@ function GameUIHome:OnTaskChanged()
     else
         self.quest_label:setString(_("当前没有推荐任务!"))
     end
-    self:SetCompleteTaskCount(self.city:GetUser():GetTaskManager():GetCompleteTaskCount())
 end
 function GameUIHome:OnMilitaryTechEventsChanged()
     self:RefreshHelpButtonVisible()
@@ -69,16 +68,6 @@ function GameUIHome:RefreshHelpButtonVisible()
         self.top_order_group:RefreshOrder()
     end
 end
-function GameUIHome:SetCompleteTaskCount(count)
-    self.bottom.task_count:SetNumber(count)
-end
-
-
-function GameUIHome:ctor(city)
-    GameUIHome.super.ctor(self,{type = UIKit.UITYPE.BACKGROUND})
-    self.city = city
-end
-
 function GameUIHome:DisplayOn()
     self.visible_count = self.visible_count + 1
     -- self:setVisible(self.visible_count > 0)
@@ -89,7 +78,6 @@ function GameUIHome:DisplayOff()
     -- self:setVisible(self.visible_count > 0)
     self:FadeToSelf(self.visible_count > 0)
 end
-
 function GameUIHome:FadeToSelf(isFullDisplay)
     self:setCascadeOpacityEnabled(true)
     local opacity = isFullDisplay == true and 255 or 0
@@ -101,6 +89,10 @@ function GameUIHome:FadeToSelf(isFullDisplay)
     })
 end
 
+function GameUIHome:ctor(city)
+    GameUIHome.super.ctor(self,{type = UIKit.UITYPE.BACKGROUND})
+    self.city = city
+end
 function GameUIHome:onEnter()
     self.visible_count = 1
     local city = self.city
@@ -116,49 +108,45 @@ function GameUIHome:onEnter()
     local x, y = rect1.x, rect1.y + rect1.height - 2
 
     self.event_tab:addTo(self):pos(x, y)
-
-
-
-    city:AddListenOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
-    city:GetResourceManager():AddObserver(self)
-    city:GetResourceManager():OnResourceChanged()
-    MailManager:AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
-    Alliance_Manager:GetMyAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
-    Alliance_Manager:GetMyAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.HELP_EVENTS)
-    Alliance_Manager:GetMyAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.ALL_HELP_EVENTS)
-
-    city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
-    city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
-    city:AddListenOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
-
-    User:AddListenOnType(self, User.LISTEN_TYPE.BASIC)
-    User:AddListenOnType(self, User.LISTEN_TYPE.TASK)
-    User:AddListenOnType(self, User.LISTEN_TYPE.VIP_EVENT_ACTIVE)
-    User:AddListenOnType(self, User.LISTEN_TYPE.VIP_EVENT_OVER)
-
-
+    self:AddOrRemoveListener(true)
+    self:OnResourceChanged(city:GetResourceManager())
     self:RefreshData()
     self:OnTaskChanged(User)
-    self:MailUnreadChanged()
     self:RefreshHelpButtonVisible()
 end
 function GameUIHome:onExit()
+    self:AddOrRemoveListener(false)
+end
+function GameUIHome:AddOrRemoveListener(isAdd)
     local city = self.city
-    city:RemoveListenerOnType(self, self.city.LISTEN_TYPE.UPGRADE_BUILDING)
-    self.city:GetResourceManager():RemoveObserver(self)
-    MailManager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
-    Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
-    Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.HELP_EVENTS)
-    Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.ALL_HELP_EVENTS)
-    city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
-    city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
-    city:RemoveListenerOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
-
-    User:RemoveListenerOnType(self, User.LISTEN_TYPE.BASIC)
-    User:RemoveListenerOnType(self, User.LISTEN_TYPE.TASK)
-    User:RemoveListenerOnType(self, User.LISTEN_TYPE.VIP_EVENT_ACTIVE)
-    User:RemoveListenerOnType(self, User.LISTEN_TYPE.VIP_EVENT_OVER)
-    -- GameUIHome.super.onExit(self)
+    local user = self.city:GetUser()
+    if isAdd then
+        city:AddListenOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
+        city:AddListenOnType(self, city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
+        city:GetResourceManager():AddObserver(self)
+        city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
+        city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
+        Alliance_Manager:GetMyAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
+        Alliance_Manager:GetMyAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.HELP_EVENTS)
+        Alliance_Manager:GetMyAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.ALL_HELP_EVENTS)
+        user:AddListenOnType(self, user.LISTEN_TYPE.BASIC)
+        user:AddListenOnType(self, user.LISTEN_TYPE.TASK)
+        user:AddListenOnType(self, user.LISTEN_TYPE.VIP_EVENT_ACTIVE)
+        user:AddListenOnType(self, user.LISTEN_TYPE.VIP_EVENT_OVER)
+    else
+        city:RemoveListenerOnType(self, self.city.LISTEN_TYPE.UPGRADE_BUILDING)
+        city:RemoveListenerOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
+        city:GetResourceManager():RemoveObserver(self)
+        city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
+        city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
+        Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
+        Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.HELP_EVENTS)
+        Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.ALL_HELP_EVENTS)
+        user:RemoveListenerOnType(self, user.LISTEN_TYPE.BASIC)
+        user:RemoveListenerOnType(self, user.LISTEN_TYPE.TASK)
+        user:RemoveListenerOnType(self, user.LISTEN_TYPE.VIP_EVENT_ACTIVE)
+        user:RemoveListenerOnType(self, user.LISTEN_TYPE.VIP_EVENT_OVER)
+    end
 end
 function GameUIHome:OnAllianceBasicChanged(fromEntity,changed_map)
     self:RefreshHelpButtonVisible()
@@ -184,9 +172,6 @@ end
 function GameUIHome:OnAllHelpEventChanged(help_events)
     self:RefreshHelpButtonVisible()
     self.request_count:SetNumber(Alliance_Manager:GetMyAlliance():GetOtherRequestEventsNum())
-end
-function GameUIHome:MailUnreadChanged(...)
-    self.bottom.mail_count:SetNumber(MailManager:GetUnReadMailsNum()+MailManager:GetUnReadReportsNum())
 end
 function GameUIHome:RefreshData()
     -- 更新数值
@@ -290,7 +275,6 @@ function GameUIHome:CreateTop()
     local player_bg = display.newSprite("player_bg_110x106.png"):addTo(top_bg, 2)
         :align(display.LEFT_BOTTOM, display.width>640 and 58 or 64, 10):setCascadeOpacityEnabled(true)
     self.player_icon = UIKit:GetPlayerIconOnly(User:Icon()):addTo(player_bg):pos(55, 60):scale(0.75)
-
     local level_bg = display.newSprite("level_bg_74x24.png"):addTo(player_bg):pos(55, 30):setCascadeOpacityEnabled(true)
     self.level_label = UIKit:ttfLabel({
         size = 20,
@@ -438,28 +422,12 @@ function GameUIHome:CreateTop()
     return top_bg
 end
 function GameUIHome:CreateBottom()
-    local bottom_bg = WidgetHomeBottom.new(handler(self, self.OnBottomButtonClicked)):addTo(self)
+    local bottom_bg = WidgetHomeBottom.new(self.city):addTo(self)
         :align(display.BOTTOM_CENTER, display.cx, display.bottom)
 
     self.chat = WidgetChat.new():addTo(bottom_bg)
         :align(display.CENTER, bottom_bg:getContentSize().width/2, bottom_bg:getContentSize().height-11)
     return bottom_bg
-end
-
-function GameUIHome:OnBottomButtonClicked(event)
-    local tag = event.target:getTag()
-    if not tag then return end
-    if tag == 4 then -- tag 4 = alliance button
-        UIKit:newGameUI('GameUIAlliance'):AddToCurrentScene(true)
-    elseif tag == 3 then
-        UIKit:newGameUI('GameUIMail',self.city):AddToCurrentScene(true)
-    elseif tag == 2 then
-        UIKit:newGameUI('GameUIItems',self.city):AddToCurrentScene(true)
-    elseif tag == 1 then
-        UIKit:newGameUI('GameUIMission',self.city):AddToCurrentScene(true)
-    elseif tag == 5 then
-        UIKit:newGameUI('GameUISetting',self.city):AddToCurrentScene(true)
-    end
 end
 function GameUIHome:OnVipEventActive( vip_event )
     self:RefreshVIP()
@@ -502,6 +470,7 @@ function GameUIHome:Find()
 end
 
 return GameUIHome
+
 
 
 

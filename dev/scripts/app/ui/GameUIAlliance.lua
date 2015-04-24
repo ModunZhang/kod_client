@@ -318,14 +318,14 @@ function GameUIAlliance:GetJoinList(tag)
     if tag then
         NetManager:getSearchAllianceByTagPromsie(tag):done(function(response)
             if not response.msg or not response.msg.allianceDatas then return end
-            if #response.msg.allianceDatas > 0 then
+            if response.msg.allianceDatas  then
                 self:RefreshJoinListView(response.msg.allianceDatas)
             end
         end)
     else
         NetManager:getFetchCanDirectJoinAlliancesPromise():done(function(response)
             if not response.msg or not response.msg.allianceDatas then return end
-            if #response.msg.allianceDatas > 0 then
+            if response.msg.allianceDatas then
                 self:RefreshJoinListView(response.msg.allianceDatas)
             end
         end)
@@ -550,7 +550,7 @@ function GameUIAlliance:getCommonListItem_(listType,alliance)
             end)
             :addTo(bg)
         nameLabel:setString(alliance.name)
-        memberValLabel:setString(alliance.members .. "/50") --TODO:联盟人数限制
+        memberValLabel:setString(string.format("%s/%s",alliance.members,alliance.membersMax)) 
         fightingValLabel:setString(alliance.power)
         languageValLabel:setString(alliance.language)
         killValLabel:setString(alliance.kill)
@@ -585,6 +585,7 @@ function GameUIAlliance:getCommonListItem_(listType,alliance)
                 self:commonListItemAction(listType,item,alliance,1)
             end)
             :addTo(bg)
+            memberValLabel:setString(string.format("%s/%s",alliance.members,alliance.membersMax)) 
     elseif listType == self.COMMON_LIST_ITEM_TYPE.APPLY then
         local cancel_button = WidgetPushButton.new({normal = "red_btn_up_148x58.png",pressed = "red_btn_down_148x58.png"})
             :setButtonLabel(
@@ -601,7 +602,7 @@ function GameUIAlliance:getCommonListItem_(listType,alliance)
             end)
             :addTo(bg)
         nameLabel:setString(alliance.name)
-        memberValLabel:setString(alliance.members .. "/50")
+        memberValLabel:setString(string.format("%s/%s",alliance.members,alliance.membersMax)) 
         fightingValLabel:setString(alliance.power)
         languageValLabel:setString(alliance.language)
         killValLabel:setString(alliance.kill)
@@ -629,13 +630,13 @@ function GameUIAlliance:commonListItemAction( listType,item,alliance,tag)
         end
     elseif  listType == self.COMMON_LIST_ITEM_TYPE.APPLY then
         NetManager:getCancelJoinAlliancePromise(alliance.id):done(function()
-            self:RefreshApplyListView()
+            -- self:RefreshApplyListView()
         end)
     elseif listType == self.COMMON_LIST_ITEM_TYPE.INVATE then
         -- tag == 1 -> 拒绝
         NetManager:getHandleJoinAllianceInvitePromise(alliance.id,tag~=1):done(function()
             if tag == 1 then
-                self:RefreshInvateListView()
+                -- self:RefreshInvateListView()
             end
         end)
     end
@@ -1000,11 +1001,11 @@ function GameUIAlliance:RefreshMemberList()
         self.member_list_bg.player_icon:removeFromParent()
     end
     local archon = Alliance_Manager:GetMyAlliance():GetAllianceArchon()
-    self.member_list_bg.player_icon = UIKit:GetPlayerCommonIcon(key)
+    self.member_list_bg.player_icon = UIKit:GetPlayerCommonIcon(archon.icon)
         :addTo(self.member_list_bg.player_icon_box):pos(63,67)
-    self.member_list_bg.title_label:setString(string.format("%s Lv %s",archon:Name(),archon.level))
+    self.member_list_bg.title_label:setString(string.format("%s Lv %s",archon:Name(),User:GetPlayerLevelByExp(archon.levelExp)))
     self.member_list_bg.powerLabel:setString(string.formatnumberthousands(archon.power))
-    self.member_list_bg.loginLabel:setString(_("离线:") .. NetService:formatTimeAsTimeAgoStyleByServerTime(archon.lastLoginTime))
+    self.member_list_bg.loginLabel:setString(_("最后登录:") .. NetService:formatTimeAsTimeAgoStyleByServerTime(archon.lastLoginTime))
     self.member_list_bg.view_archon_info_button:setVisible(User:Id() ~= archon:Id())
     --list view
     self.memberListView:removeAllItems()
@@ -1068,7 +1069,7 @@ function GameUIAlliance:GetMemberItem(title)
     local y = height - 39
     if count > 0 then
         for i,v in ipairs(data) do
-            self:GetNormalSubItem(i,v.name,v.level,v.power,v.id):addTo(node):align(display.LEFT_TOP, 0, y)
+            self:GetNormalSubItem(i,v.name,User:GetPlayerLevelByExp(v.levelExp),v.power,v.id,v.icon):addTo(node):align(display.LEFT_TOP, 0, y)
             y = y - 71
         end
     else
@@ -1084,9 +1085,9 @@ function GameUIAlliance:GetMemberItem(title)
     return item
 end
 
-function GameUIAlliance:GetNormalSubItem(index,playerName,level,power,memberId)
+function GameUIAlliance:GetNormalSubItem(index,playerName,level,power,memberId,icon)
     local item = display.newSprite("mission_box_558x66.png")
-    local icon = UIKit:GetPlayerCommonIcon():scale(0.5):align(display.LEFT_CENTER,15, 33):addTo(item)
+    local icon = UIKit:GetPlayerCommonIcon(icon):scale(0.5):align(display.LEFT_CENTER,15, 33):addTo(item)
     local nameLabel = UIKit:ttfLabel({
         text = playerName,
         size = 20,
@@ -1335,6 +1336,7 @@ function GameUIAlliance:CreateInvateUI()
     })
     editbox:setFont(UIKit:getEditBoxFont(),18)
     editbox:setFontColor(cc.c3b(0,0,0))
+    editbox:setPlaceHolder(_("输入邀请的玩家ID"))
     editbox:setReturnType(cc.KEYBOARD_RETURNTYPE_DEFAULT)
     editbox:align(display.RIGHT_TOP,588,120):addTo(bg)
     WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})

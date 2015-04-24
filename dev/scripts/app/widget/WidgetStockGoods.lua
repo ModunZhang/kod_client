@@ -56,7 +56,6 @@ function WidgetStockGoods:ctor(item)
 
     -- 道具图片
     local item_bg = display.newSprite("box_118x118.png"):addTo(back_ground):align(display.CENTER, 70, size.height-80)
-    local item_icon_color_bg = display.newSprite("box_item_100x100.png"):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
     -- tool image
     local goods_icon = display.newSprite(UILib.item[item:Name()]):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
         :addTo(item_bg)
