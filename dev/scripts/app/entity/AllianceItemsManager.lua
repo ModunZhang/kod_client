@@ -19,6 +19,17 @@ function AllianceItemsManager:ctor()
     self.item_logs = {}
     self:InitAllItems()
 end
+-- 是否有新货物
+function AllianceItemsManager:IsNewGoodsCome()
+    return self.isNewGoodsCome
+end
+function AllianceItemsManager:NewGoodsCome()
+    self.isNewGoodsCome = true
+end
+-- 已查看新货物
+function AllianceItemsManager:HasCheckNewGoods()
+    self.isNewGoodsCome = false
+end
 -- 初始化所有道具，数量 0
 function AllianceItemsManager:InitAllItems()
     for k,v in pairs(GameDatas.Items) do
@@ -99,6 +110,7 @@ function AllianceItemsManager:OnItemLogsChanged(alliance_data,deltaData)
             ,function(data)
                 -- add
                 table.insert(item_logs, 1,data)
+                self:NewGoodsCome()
                 return data
             end
             ,function(data)
