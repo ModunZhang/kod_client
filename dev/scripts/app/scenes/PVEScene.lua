@@ -165,6 +165,7 @@ function PVEScene:CheckTrap()
                 function(dragonType, soldiers)
                     local dragon = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon(dragonType)
                     local attack_dragon = {
+                        level = dragon:Level(),
                         dragonType = dragonType,
                         currentHp = dragon:Hp(),
                         hpMax = dragon:GetMaxHP(),
@@ -193,7 +194,7 @@ function PVEScene:CheckTrap()
                     NetManager:getSetPveDataPromise(
                         self.user:EncodePveDataAndResetFightRewardsData()
                     ):done(function()
-                        UIKit:newGameUI("GameUIReplay", report, function()
+                        UIKit:newGameUI("GameUIReplayNew", report, function()
                             if report:IsAttackWin() then
                                 GameGlobalUI:showTips(_("获得奖励"), enemy.rewards)
                             end

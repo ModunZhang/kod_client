@@ -37,6 +37,7 @@ function GameUtils:GetSoldierTypeByName(name)
             return v.type
         end
     end
+    return name
 end
 function GameUtils:formatTimeStyle1(time)
     local seconds = floor(time) % 60
@@ -545,6 +546,7 @@ local function createFightSoldiers(soldiers, dragon, terrain)
             type = config.type,
             currentCount = soldier.count,
             totalCount = soldier.count,
+            count = soldier.count,
             woundedCount = 0,
             power = config.power,
             hp = math.floor(config.hp * (1 + hpBuff + techBuffHpAdd + vipHpBuff)),
@@ -854,7 +856,7 @@ function GameUtils:DoBattle(attacker, defencer, terrain)
     function report:GetAttackDragonLevel()
         return attacker_dragon.level
     end
-    function report:GetAttackDragonLevel()
+    function report:GetDefenceDragonLevel()
         return defencer_dragon.level
     end
     return report

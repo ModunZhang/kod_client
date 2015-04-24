@@ -184,9 +184,11 @@ function Corps:breath(is_forever)
 end
 function Corps:turnLeft()
     self:setScaleX(-1)
+    return self
 end
 function Corps:turnRight()
     self:setScaleX(1)
+    return self
 end
 function Corps:GetSoldierConfig()
     return special[self.soldier] or normal[self.soldier.."_"..self.star]
