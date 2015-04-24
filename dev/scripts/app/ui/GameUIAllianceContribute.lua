@@ -75,17 +75,17 @@ function GameUIAllianceContribute:ctor()
 end
 function GameUIAllianceContribute:onEnter()
     City:GetResourceManager():AddObserver(self)
-    self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.MEMBER)
+    User:AddListenOnType(self, User.LISTEN_TYPE.ALLIANCE_DONATE)
 end
 
 function GameUIAllianceContribute:onExit()
     -- UIKit:getRegistry().removeObject(self.__cname)
     City:GetResourceManager():RemoveObserver(self)
-    self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.MEMBER)
+    User:RemoveListenerOnType(self, User.LISTEN_TYPE.ALLIANCE_DONATE)
 end
 function GameUIAllianceContribute:GetDonateValueByType(donate_type)
     if not donate_type then return end
-    local donate_status = self.alliance:GetMemeberById(User:Id()):DonateStatus()
+    local donate_status = User:AllianceDonate()
     local donate_level = donate_status[donate_type]
     for _,donate in pairs(GameDatas.AllianceInitData.donate) do
         if donate.level==donate_level and donate_type == donate.type then
@@ -252,6 +252,7 @@ function GameUIAllianceContribute:CreateContributeItem(params)
         color = 0x288400,
     }):align(display.LEFT_CENTER, own_label:getPositionX()+own_label:getContentSize().width,25)
         :addTo(item)
+    item.donate = params.donate
     local checkbox_image = {
         off = "checkbox_unselected.png",
         off_pressed = "checkbox_unselected.png",
@@ -274,10 +275,13 @@ function GameUIAllianceContribute:CreateContributeItem(params)
         return check_box
     end
     function item:SetOwn(own)
+        own_label:setColor(UIKit:hex2c4b(own < self.donate and 0x7e0000 or 0x288400))
         own_label:setString(GameUtils:formatNumber(own))
     end
     function item:SetDonate(donate)
+        self.donate = donate
         donate_label:setString("/"..GameUtils:formatNumber(donate))
+        donate_label:setPositionX(own_label:getPositionX()+own_label:getContentSize().width) 
     end
     function item:OnStateChanged(listener)
         check_box:onButtonStateChanged(function(event)
@@ -334,7 +338,7 @@ function GameUIAllianceContribute:OnResourceChanged(resource_manager)
     }
     self.group:RefreashAllOwn(owns)
 end
-function GameUIAllianceContribute:OnMemberChanged(alliance)
+function GameUIAllianceContribute:OnAllianceDonateChanged()
     local donate = {
         self:GetDonateValueByType("wood").count,
         self:GetDonateValueByType("stone").count,
@@ -347,6 +351,7 @@ function GameUIAllianceContribute:OnMemberChanged(alliance)
     self:RefreashEff()
 end
 return GameUIAllianceContribute
+
 
 
 
