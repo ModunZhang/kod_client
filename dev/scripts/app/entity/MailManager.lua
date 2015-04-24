@@ -130,16 +130,25 @@ function MailManager:DeleteMail(mail)
             end
         end
     end
+    print("delete_mail_server_index=",delete_mail_server_index)
     for k,v in pairs(self.mails) do
         if v.index > delete_mail_server_index then
+            print("1 mail title,",v.title,"index=",v.index)
             v.index = v.index - 1
+            print("2 mail title,",v.title,"index=",v.index)
+            print("---------分割----------")
         end
     end
     for k,v in pairs(DataManager:getUserData().mails) do
         if v.index > delete_mail_server_index then
+            print("1 DataManager mail title,",v.title,"index=",v.index)
             v.index = v.index - 1
+            print("2 DataManager mail title,",v.title,"index=",v.index)
+            print("---------分割----------")
         end
     end
+    dump(DataManager:getUserData().mails,"DataManager mails")
+    dump(self.mails,"manger mails")
 end
 function MailManager:ModifyMail(mail)
     for k,v in pairs(self.mails) do
@@ -423,6 +432,7 @@ function MailManager:OnUserDataChanged(userData,timer,deltaData)
     end
     is_delta_update = not is_fully_update and deltaData.mails ~= nil
     if is_delta_update then
+        dump(DataManager:getUserData().mails,"<<<<<<DataManager mails")
         self:OnNewMailsChanged(deltaData.mails)
     end
     is_delta_update = not is_fully_update and deltaData.sendMails ~= nil

@@ -110,28 +110,29 @@ function GameUIMail:OnMoveInStage()
     self:InitUnreadMark()
 end
 function GameUIMail:InitUnreadMark()
+    local mail_unread_num = MailManager:GetUnReadMailsNum()
     self.mail_unread_num_bg = display.newSprite("back_ground_32x33.png"):addTo(self:GetView(),3)
         :pos(window.left+158, window.bottom_top)
     self.mail_unread_num_label = UIKit:ttfLabel(
         {
-            text = MailManager:GetUnReadMailsNum(),
+            text = mail_unread_num > 99 and "99+" or mail_unread_num,
             size = 16,
             color = 0xf5f2b3
         }):align(display.CENTER,self.mail_unread_num_bg:getContentSize().width/2-2,self.mail_unread_num_bg:getContentSize().height/2+4)
         :addTo(self.mail_unread_num_bg)
 
-
+    local report_unread_num = MailManager:GetUnReadReportsNum()
     self.report_unread_num_bg = display.newSprite("back_ground_32x33.png"):addTo(self:GetView(),3)
         :pos(window.left+304, window.bottom_top)
     self.report_unread_num_label = UIKit:ttfLabel(
         {
-            text = MailManager:GetUnReadReportsNum(),
+            text = report_unread_num > 99 and "99+" or report_unread_num,
             size = 16,
             color = 0xf5f2b3
         }):align(display.CENTER,self.report_unread_num_bg:getContentSize().width/2-2,self.report_unread_num_bg:getContentSize().height/2+4)
         :addTo(self.report_unread_num_bg)
-    self.mail_unread_num_bg:setVisible(MailManager:GetUnReadMailsNum()>0)
-    self.report_unread_num_bg:setVisible(MailManager:GetUnReadReportsNum()>0)
+    self.mail_unread_num_bg:setVisible(mail_unread_num>0)
+    self.report_unread_num_bg:setVisible(report_unread_num>0)
 end
 function GameUIMail:CreateMailControlBox()
     -- 标记邮件，已读，删除多封邮件
@@ -278,7 +279,7 @@ function GameUIMail:InitInbox(mails)
         viewRect = cc.rect(display.cx-284, display.top-870, 568, 790),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(self.inbox_layer)
-    self.inbox_listview:setRedundancyViewVal(self.inbox_listview:getViewRect().height + 118)
+    self.inbox_listview:setRedundancyViewVal(118)
     self.inbox_listview:setDelegate(handler(self, self.DelegateInbox))
     self.inbox_listview:reload()
     -- 没有邮件
@@ -307,9 +308,6 @@ end
 function GameUIMail:DelegateInbox( listView, tag, idx )
     if cc.ui.UIListView.COUNT_TAG == tag then
         local mails_count = #self.manager:GetMails()
-        if mails_count%10 ~=0 then
-            self.isLastMailGot = true
-        end
         return mails_count
     elseif cc.ui.UIListView.CELL_TAG == tag then
         local item
@@ -343,7 +341,7 @@ function GameUIMail:CreateInboxContent()
     content:setContentSize(cc.size(item_width, item_height))
     -- 标题背景框
     local title_bg = display.newSprite("title_blue_482x30.png",item_width-482/2-2, item_height-24)
-            :addTo(content,2)
+        :addTo(content,2)
     -- 不变的模板部分
     local content_title_bg = display.newScale9Sprite("back_ground_516x60.png",item_width-4,10,cc.size(482,60),cc.rect(15,10,486,40))
         :align(display.RIGHT_BOTTOM)
@@ -374,9 +372,10 @@ function GameUIMail:CreateInboxContent()
 
 
     local parent = self
-    function content:SetData(idx)
-        local mail = parent.manager:GetMails()[idx]
-        content.mail = mail
+    function content:SetData(idx,new_mail)
+        print("SetData idx=",idx,"new_mail=",new_mail,"parent.manager:GetMails(=",#parent.manager:GetMails())
+        local mail = new_mail or parent.manager:GetMails()[idx]
+        self.mail = mail
         if self.bg_button then
             self.bg_button:removeFromParent(true)
         end
@@ -399,7 +398,7 @@ function GameUIMail:CreateInboxContent()
             :pos(item_width/2, item_height/2)
 
         title_bg:setTexture(mail.isRead and "title_grey_482x30.png" or "title_blue_482x30.png")
-        
+
         local mail_icon = display.newSprite(mail.fromId == "__system" and "icon_system_mail.png" or "mail_state_user_not_read.png")
             :align(display.LEFT_CENTER,11, 24):addTo(content_title_bg)
 
@@ -425,7 +424,7 @@ function GameUIMail:CreateInboxContent()
         parent:CreateCheckBox(self):align(display.LEFT_CENTER,14,item_height/2)
             :addTo(self)
     end
-
+  
     function content:GetContentData()
         return self.mail
     end
@@ -832,27 +831,35 @@ end
 
 function GameUIMail:OnInboxMailsChanged(changed_mails)
     if changed_mails.add_mails then
-        for _,add_mail in pairs(changed_mails.add_mails) do
-            local item = self:CreateMailItem(self.inbox_listview,add_mail)
-            self:AddMails(self.inbox_listview,item,add_mail,1)
+        -- for _,add_mail in pairs(changed_mails.add_mails) do
+        --     local item = self:CreateMailItem(self.inbox_listview,add_mail)
+        --     self:AddMails(self.inbox_listview,item,add_mail,1)
+        -- end
+        if #changed_mails.add_mails > 0 then
+            self.inbox_listview:asyncLoadWithCurrentPosition_()
         end
     end
     if changed_mails.edit_mails then
         for _,edit_mail in pairs(changed_mails.edit_mails) do
-            if self.inbox_mails[edit_mail.id] then
-                self.inbox_mails[edit_mail.id].mail.isSaved=edit_mail.isSaved
-                self.inbox_mails[edit_mail.id].saved_button:setButtonSelected(edit_mail.isSaved,true)
-                if edit_mail.isRead then
-                    self.inbox_mails[edit_mail.id].mail.isRead = true
-                    self.inbox_mails[edit_mail.id].title_bg:setTexture("title_grey_482x30.png")
+            if self.inbox_listview then
+                for i,listitem in ipairs(self.inbox_listview:getItems()) do
+                    local content = listitem:getContent()
+                    local content_mail = content:GetContentData()
+                    if content_mail.id == edit_mail.id then
+                        content:SetData(nil,edit_mail)
+                    end
                 end
             end
         end
     end
     if changed_mails.remove_mails then
-        for _,remove_mail in pairs(changed_mails.remove_mails) do
-            self.inbox_listview:removeItem(self.inbox_mails[remove_mail.id])
-            self.inbox_mails[remove_mail.id]=nil
+        -- for _,remove_mail in pairs(changed_mails.remove_mails) do
+           
+        --     -- self.inbox_listview:removeItem(self.inbox_mails[remove_mail.id])
+        --     -- self.inbox_mails[remove_mail.id]=nil
+        -- end
+        if #changed_mails.remove_mails > 0 then
+            self.inbox_listview:asyncLoadWithCurrentPosition_()
         end
     end
     if self.has_mail_label then
@@ -860,8 +867,8 @@ function GameUIMail:OnInboxMailsChanged(changed_mails)
     end
 end
 function GameUIMail:OnFetchMailsSuccess(...)
-    -- local mails = self:GetMailsOrReports(self.inbox_listview)
-    -- self:AddLoadingMoreMails(self.inbox_listview,mails)
+-- local mails = self:GetMailsOrReports(self.inbox_listview)
+-- self:AddLoadingMoreMails(self.inbox_listview,mails)
 end
 function GameUIMail:OnFetchSavedMailsSuccess(...)
     local mails = self:GetMailsOrReports(self.save_mails_listview)
@@ -940,14 +947,14 @@ function GameUIMail:MailUnreadChanged(unreads)
     local report_label = self.report_unread_num_label
     if unreads.mail and  unreads.mail>0 then
         mail_bg:setVisible(true)
-        mail_label:setString(unreads.mail)
+        mail_label:setString(unreads.mail > 99 and "99+" or unreads.mail)
     else
         mail_bg:setVisible(false)
         mail_label:setString("")
     end
     if unreads.report and  unreads.report>0 then
         report_bg:setVisible(true)
-        report_label:setString(unreads.report)
+        report_label:setString(unreads.report > 99 and "99+" or unreads.report)
     else
         report_bg:setVisible(false)
         report_label:setString("")
@@ -1805,6 +1812,7 @@ function GameUIMail:GetEnemyAllianceTag(report)
 end
 
 return GameUIMail
+
 
 
 
