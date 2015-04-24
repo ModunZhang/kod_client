@@ -180,12 +180,12 @@ function GameUIMail:CreateMailControlBox()
                                 if control_type == "mail" then
                                     MailManager:DecreaseUnReadMailsNumByIds(ids)
                                     NetManager:getDeleteMailsPromise(ids):done(function ()
-                                        self:VisibleJudgeForMailControl()
+                                        self.mail_control_box:hide()
                                     end)
                                 elseif control_type == "report" then
                                     MailManager:DecreaseUnReadReportsNumByIds(ids)
                                     NetManager:getDeleteReportsPromise(ids):done(function ()
-                                        self:VisibleJudgeForMailControl()
+                                        self.mail_control_box:hide()
                                     end)
                                 end
                             end
@@ -274,11 +274,13 @@ end
 
 function GameUIMail:InitInbox(mails)
     self.inbox_listview = UIListView.new{
-        -- bgColor = UIKit:hex2c4b(0x7a000000),
+        async = true, --异步加载
         viewRect = cc.rect(display.cx-284, display.top-870, 568, 790),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(self.inbox_layer)
-
+    self.inbox_listview:setRedundancyViewVal(self.inbox_listview:getViewRect().height + 118)
+    self.inbox_listview:setDelegate(handler(self, self.DelegateInbox))
+    self.inbox_listview:reload()
     -- 没有邮件
     self.has_mail_label = UIKit:ttfLabel({
         text = _("当前没有内容"),
@@ -286,23 +288,151 @@ function GameUIMail:InitInbox(mails)
         color = 0x615b44
     }):align(display.CENTER,window.cx,window.cy):addTo(self.inbox_layer)
     self.has_mail_label:setVisible(not (mails and #mails>0))
-    if mails then
-        local added_count = 0
-        for k,inbox_mail in pairs(mails) do
-            added_count = added_count + 1
-            if added_count>GameUIMail.ONE_TIME_LOADING_MAILS then
-                break
-            end
-            local item = self:CreateMailItem(self.inbox_listview,inbox_mail)
-            self:AddMailToListView(self.inbox_listview,item,inbox_mail)
+    -- if mails then
+    --     local added_count = 0
+    --     for k,inbox_mail in pairs(mails) do
+    --         added_count = added_count + 1
+    --         if added_count>GameUIMail.ONE_TIME_LOADING_MAILS then
+    --             break
+    --         end
+    --         local item = self:CreateMailItem(self.inbox_listview,inbox_mail)
+    --         self:AddMailToListView(self.inbox_listview,item,inbox_mail)
+    --     end
+    --     -- 从服务器第一次获取到的邮件数量等于10时才有可能有更多的邮件
+    --     if added_count == GameUIMail.ONE_TIME_LOADING_MAILS then
+    --         self:CreateLoadingMoreItem(self.inbox_listview)
+    --     end
+    -- end
+end
+function GameUIMail:DelegateInbox( listView, tag, idx )
+    if cc.ui.UIListView.COUNT_TAG == tag then
+        local mails_count = #self.manager:GetMails()
+        if mails_count%10 ~=0 then
+            self.isLastMailGot = true
         end
-        -- 从服务器第一次获取到的邮件数量等于10时才有可能有更多的邮件
-        if added_count == GameUIMail.ONE_TIME_LOADING_MAILS then
-            self:CreateLoadingMoreItem(self.inbox_listview)
+        return mails_count
+    elseif cc.ui.UIListView.CELL_TAG == tag then
+        local item
+        local content
+        item = listView:dequeueItem()
+        if not item then
+            item = listView:newItem()
+            content = self:CreateInboxContent()
+            item:addContent(content)
+        else
+            content = item:getContent()
         end
+        content:SetData(idx)
+        local size = content:getContentSize()
+        item:setItemSize(size.width, size.height)
+        -- 当取到客户端本地最后一封收件箱邮件后，请求服务器获得更多以前的邮件
+        if idx == #self.manager:GetMails() and not self.isLastMailGot then
+            self.manager:FetchMailsFromServer(#self.manager:GetMails())
+            print("当取到客户端本地最后一封收件箱邮件后，请求服务器获得更多以前的邮件")
+        end
+        return item
+    else
     end
 end
+function GameUIMail:CreateInboxContent()
+    local listview = self.inbox_listview
+    local item = listview:newItem()
+    local item_width, item_height = 568,118
+    item:setItemSize(item_width, item_height)
+    local content = display.newNode()
+    content:setContentSize(cc.size(item_width, item_height))
+    -- 标题背景框
+    local title_bg = display.newSprite("title_blue_482x30.png",item_width-482/2-2, item_height-24)
+            :addTo(content,2)
+    -- 不变的模板部分
+    local content_title_bg = display.newScale9Sprite("back_ground_516x60.png",item_width-4,10,cc.size(482,60),cc.rect(15,10,486,40))
+        :align(display.RIGHT_BOTTOM)
+        :addTo(content,2)
 
+    local from_name_label =  UIKit:ttfLabel(
+        {
+            size = 22,
+            dimensions = cc.size(0,24),
+            color = 0xffedae
+        }):align(display.LEFT_CENTER, 10, 17)
+        :addTo(title_bg)
+    local date_label = UIKit:ttfLabel(
+        {
+            size = 16,
+            dimensions = cc.size(0,0),
+            color = 0xffedae
+        }):align(display.RIGHT_CENTER, title_bg:getContentSize().width-30, 17)
+        :addTo(title_bg)
+
+    local mail_content_title_label =  UIKit:ttfLabel(
+        {
+            size = 20,
+            dimensions = cc.size(580,0),
+            color = 0x403c2f
+        }):align(display.LEFT_CENTER, 60, content_title_bg:getContentSize().height/2)
+        :addTo(content_title_bg)
+
+
+    local parent = self
+    function content:SetData(idx)
+        local mail = parent.manager:GetMails()[idx]
+        content.mail = mail
+        if self.bg_button then
+            self.bg_button:removeFromParent(true)
+        end
+        self.bg_button = WidgetPushButton.new({normal = "back_ground_568x118.png",pressed = "back_ground_568x118.png"})
+            :onButtonClicked(function(event)
+                if event.name == "CLICKED_EVENT" then
+                    if tolua.type(mail.isRead)=="boolean" and not mail.isRead then
+                        parent:ReadMailOrReports({mail.id},function ()
+                            parent.manager:DecreaseUnReadMailsNum(1)
+                        end)
+                    end
+                    --如果是发送邮件
+                    if mail.toId then
+                        parent:ShowSendMailDetails(mail)
+                    else
+                        parent:ShowMailDetails(mail)
+                    end
+                end
+            end):addTo(self)
+            :pos(item_width/2, item_height/2)
+
+        title_bg:setTexture(mail.isRead and "title_grey_482x30.png" or "title_blue_482x30.png")
+        
+        local mail_icon = display.newSprite(mail.fromId == "__system" and "icon_system_mail.png" or "mail_state_user_not_read.png")
+            :align(display.LEFT_CENTER,11, 24):addTo(content_title_bg)
+
+        from_name_label:setString(_("From")..":"..((mail.fromAllianceTag~="" and "["..mail.fromAllianceTag.."]"..mail.fromName) or mail.fromName))
+        date_label:setString(GameUtils:formatTimeStyle2(mail.sendTime/1000))
+        mail_content_title_label:setString(mail.title)
+
+        -- 保存按钮
+        if self.saved_button then
+            self.saved_button:removeFromParent(true)
+        end
+        self.saved_button = cc.ui.UICheckBoxButton.new({
+            off = "mail_saved_button_normal.png",
+            off_pressed = "mail_saved_button_normal.png",
+            off_disabled = "mail_saved_button_normal.png",
+            on = "mail_saved_button_pressed.png",
+            on_pressed = "mail_saved_button_pressed.png",
+            on_disabled = "mail_saved_button_pressed.png",
+        }):setButtonSelected(tolua.type(mail.isSaved)=="nil" or mail.isSaved,true):onButtonStateChanged(function(event)
+            parent:SaveOrUnsaveMail(mail,event.target)
+        end):addTo(content_title_bg):align(display.RIGHT_CENTER, content_title_bg:getContentSize().width+4, content_title_bg:getContentSize().height/2)
+
+        parent:CreateCheckBox(self):align(display.LEFT_CENTER,14,item_height/2)
+            :addTo(self)
+    end
+
+    function content:GetContentData()
+        return self.mail
+    end
+
+
+    return content
+end
 function GameUIMail:InitSaveMails(mails)
 
 
@@ -481,7 +611,7 @@ function GameUIMail:CreateMailItem(listview,mail)
     item:addContent(content)
     return item
 end
-function GameUIMail:CreateCheckBox(item)
+function GameUIMail:CreateCheckBox(content)
     local checkbox_bg = display.newSprite("box_62X98.png")
 
     --  选择checkbox
@@ -493,10 +623,11 @@ function GameUIMail:CreateCheckBox(item)
         on_pressed = "checkbox_selectd.png",
         on_disabled = "checkbox_selectd.png",
     }
-    item.check_box = cc.ui.UICheckBoxButton.new(checkbox_image)
+    local check_box = cc.ui.UICheckBoxButton.new(checkbox_image)
         :align(display.CENTER,checkbox_bg:getContentSize().width/2,checkbox_bg:getContentSize().height/2)
+        :setButtonSelected(self.selected_items and self.selected_items[content:GetContentData().id],true)
         :onButtonStateChanged(function(event)
-            self:VisibleJudgeForMailControl()
+            self:SelectItems(content:GetContentData(),event.state == "on")
         end)
         :addTo(checkbox_bg)
     return checkbox_bg
@@ -512,37 +643,19 @@ function GameUIMail:GetCurrentSelectType()
         return "report"
     end
 end
-function GameUIMail:VisibleJudgeForMailControl()
-    if self.inbox_layer:isVisible() then
-        for _,item in pairs(self.inbox_mails) do
-            if item.check_box:isButtonSelected() then
-                self.mail_control_box:show()
-                return
-            end
-        end
-    elseif self.report_layer:isVisible() then
-        for _,item in pairs(self.item_reports) do
-            if item.check_box:isButtonSelected() then
-                self.mail_control_box:show()
-                return
-            end
-        end
-    elseif self.saved_layer:isVisible() and self.saved_reports_listview:isVisible() then
-        for _,item in pairs(self.item_saved_reports) do
-            if item.check_box:isButtonSelected() then
-                self.mail_control_box:show()
-                return
-            end
-        end
-    elseif self.saved_layer:isVisible() and self.save_mails_listview:isVisible() then
-        for _,item in pairs(self.saved_mails) do
-            if item.check_box:isButtonSelected() then
-                self.mail_control_box:show()
-                return
-            end
-        end
+-- @parms source_data : mail(map) or report对象
+function GameUIMail:SelectItems(source_data,isSelected)
+    if not self.selected_items then
+        self.selected_items = {}
     end
-    self.mail_control_box:setVisible(false)
+
+    if isSelected then
+        self.selected_items[source_data.id] = source_data
+    else
+        self.selected_items[source_data.id] = nil
+    end
+
+    self.mail_control_box:setVisible(LuaUtils:table_size(self.selected_items)>0)
 end
 function GameUIMail:GetSelectMailsOrReports()
     local select_map = {}
@@ -580,8 +693,8 @@ function GameUIMail:GetSelectMailsOrReports()
 end
 function GameUIMail:SelectAllMailsOrReports(isSelect)
     if self.inbox_layer:isVisible() then
-        for _,item in pairs(self.inbox_mails) do
-            item.check_box:setButtonSelected(isSelect)
+        for i,v in ipairs(self.manager:GetMails()) do
+            self:SelectItems(v, true)
         end
     elseif self.report_layer:isVisible() then
         for _,item in pairs(self.item_reports) do
@@ -747,8 +860,8 @@ function GameUIMail:OnInboxMailsChanged(changed_mails)
     end
 end
 function GameUIMail:OnFetchMailsSuccess(...)
-    local mails = self:GetMailsOrReports(self.inbox_listview)
-    self:AddLoadingMoreMails(self.inbox_listview,mails)
+    -- local mails = self:GetMailsOrReports(self.inbox_listview)
+    -- self:AddLoadingMoreMails(self.inbox_listview,mails)
 end
 function GameUIMail:OnFetchSavedMailsSuccess(...)
     local mails = self:GetMailsOrReports(self.save_mails_listview)
@@ -1692,6 +1805,7 @@ function GameUIMail:GetEnemyAllianceTag(report)
 end
 
 return GameUIMail
+
 
 
 

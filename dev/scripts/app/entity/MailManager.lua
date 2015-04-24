@@ -181,20 +181,20 @@ end
 function MailManager:AddSavedReportsToEnd(report)
     table.insert(self.savedReports, Report:DecodeFromJsonData(report))
 end
-function MailManager:GetMails(fromIndex)
-    -- 首先检查本地MailManager是否缓存有之前获取到的邮件
-    local fromIndex = fromIndex or 0
-    local mails = {}
-    if self.mails[fromIndex+1] then
-        for i=fromIndex+1,fromIndex+10 do
-            if self.mails[i] then
-                table.insert(mails, self.mails[i])
-            else
-                break
-            end
-        end
-    end
-    return mails
+function MailManager:GetMails()
+    -- -- 首先检查本地MailManager是否缓存有之前获取到的邮件
+    -- local fromIndex = fromIndex or 0
+    -- local mails = {}
+    -- if self.mails[fromIndex+1] then
+    --     for i=fromIndex+1,fromIndex+10 do
+    --         if self.mails[i] then
+    --             table.insert(mails, self.mails[i])
+    --         else
+    --             break
+    --         end
+    --     end
+    -- end
+    return self.mails
 end
 function MailManager:GetMailByServerIndex(serverIndex)
     local mails = self.mails
