@@ -80,7 +80,7 @@ function GameUIAllianceShop:OnMoveInStage()
         if tag == 'stock' and not self.stock_listview then
             self:InitStockPart()
         end
-        if tag == 'stock' and not self.record_list then
+        if tag == 'record' and not self.record_list then
             self:InitRecordPart()
         end
     end):pos(window.cx, window.bottom + 34)
