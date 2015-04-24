@@ -12,11 +12,12 @@ local RichText = import("..widget.RichText")
 local GameUIWriteMail = import('.GameUIWriteMail')
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushButton = import("..widget.WidgetPushButton")
+local WidgetChatSendPushButton = import("..widget.WidgetChatSendPushButton")
 
-local LISTVIEW_WIDTH = 542
+local LISTVIEW_WIDTH = 556
 local PLAYERMENU_ZORDER = 201
-local BASE_CELL_HEIGHT = 78
-local CELL_FIX_WIDTH = 480
+local BASE_CELL_HEIGHT = 82
+local CELL_FIX_WIDTH = 484
 
 function GameUIChatChannel:ctor(default_tag)
 	GameUIChatChannel.super.ctor(self,City,_("聊天"))
@@ -63,6 +64,15 @@ function GameUIChatChannel:GetDataSource()
 end
 
 function GameUIChatChannel:CreateTextFieldBody()
+
+    local emojiButton = WidgetPushButton.new({
+        normal = "chat_button_n_68x50.png",
+        pressed= "chat_button_h_68x50.png",
+    }):onButtonClicked(function(event)
+        self:CreateEmojiPanel()
+    end):addTo(self:GetView()):align(display.LEFT_TOP, window.left+40, window.top - 100)
+    display.newSprite("chat_emoji_37x37.png"):addTo(emojiButton):pos(34,-25)
+
 	local function onEdit(event, editbox)
         if event == "return" then
             if self._channelType == ChatManager.CHANNNEL_TYPE.ALLIANCE then
@@ -80,10 +90,11 @@ function GameUIChatChannel:CreateTextFieldBody()
             self:GetChatManager():SendChat(self._channelType,msg)
         end
     end
+
     local editbox = cc.ui.UIInput.new({
     	UIInputType = 1,
-        image = "chat_Input_box.png",
-        size = cc.size(427,57),
+        image = "chat_Input_box_417x51.png",
+        size = cc.size(417,51),
         listener = onEdit,
     })
     editbox:setPlaceHolder(_("最多可输入140字符"))
@@ -92,41 +103,60 @@ function GameUIChatChannel:CreateTextFieldBody()
     editbox:setFontColor(cc.c3b(0,0,0))
     editbox:setPlaceholderFontColor(cc.c3b(204,196,158))
     editbox:setReturnType(cc.KEYBOARD_RETURNTYPE_SEND)
-    editbox:align(display.LEFT_TOP,window.left+46,window.top - 100):addTo(self:GetView())
+    editbox:align(display.LEFT_TOP,emojiButton:getPositionX() + 73,window.top - 100):addTo(self:GetView())
     self.editbox = editbox
 
+    local sendChatButton = WidgetChatSendPushButton.new():align(display.LEFT_TOP, editbox:getPositionX() + 422, window.top - 100):addTo(self:GetView())
+    sendChatButton:onButtonClicked(function()
+       if self._channelType == ChatManager.CHANNNEL_TYPE.ALLIANCE then
+            if Alliance_Manager:GetMyAlliance():IsDefault() then 
+                UIKit:showMessageDialog(_("错误"),_("未加入联盟"),function()end)
+                return
+            end
+        end
+        local msg = editbox:getText()
+        if not msg or string.len(string.trim(msg)) == 0 then 
+            UIKit:showMessageDialog(_("错误"), _("聊天内容不能为空"),function()end)
+            return 
+        end  
+        editbox:setText('')
+        self:GetChatManager():SendChat(self._channelType,msg,function()
+            sendChatButton:StartTimer()
+        end)
+    end)
+    
     -- body button
 
-	local emojiButton = cc.ui.UIPushButton.new({normal = "chat_expression.png",pressed = "chat_expression_highlight.png",},{scale9 = false})
-		:onButtonClicked(function(event)
-            -- if CONFIG_IS_DEBUG then
-                self:CreateEmojiPanel()
-            -- end
-    	end)
-    	:addTo(self:GetView())
-    	:align(display.LEFT_TOP,self.editbox:getPositionX()+self.editbox:getContentSize().width+10, window.top - 100)
-        :zorder(2)
-    local plusButton = cc.ui.UIPushButton.new({normal = "chat_add.png",pressed = "chat_add_highlight.png",}, {scale9 = false})
-    	:onButtonClicked(function(event)
-            if CONFIG_IS_DEBUG then
-                if self._channelType == ChatManager.CHANNNEL_TYPE.ALLIANCE then
-                    if Alliance_Manager:GetMyAlliance():IsDefault() then 
-                        UIKit:showMessageDialog(_("错误"),_("未加入联盟"),function()end)
-                        return
-                    end
-                end
-                local msg = editbox:getText()
-                if not msg or string.len(string.trim(msg)) == 0 then 
-                    UIKit:showMessageDialog(_("错误"), _("聊天内容不能为空"),function()end)
-                    return 
-                end  
-                editbox:setText('')
-                self:GetChatManager():SendChat(self._channelType,msg)
-            end
-		end)
-		:addTo(self:GetView())
-		:align(display.LEFT_TOP, emojiButton:getPositionX()+emojiButton:getCascadeBoundingBox().size.width+10,emojiButton:getPositionY()-2)
-        :zorder(2)
+	-- local emojiButton = cc.ui.UIPushButton.new({normal = "chat_expression.png",pressed = "chat_expression_highlight.png",},{scale9 = false})
+	-- 	:onButtonClicked(function(event)
+ --            -- if CONFIG_IS_DEBUG then
+ --                self:CreateEmojiPanel()
+ --            -- end
+ --    	end)
+ --    	:addTo(self:GetView())
+ --    	:align(display.LEFT_TOP,self.editbox:getPositionX()+self.editbox:getContentSize().width+10, window.top - 100)
+ --        :zorder(2)
+ --    local plusButton = cc.ui.UIPushButton.new({normal = "chat_add.png",pressed = "chat_add_highlight.png",}, {scale9 = false})
+ --    	:onButtonClicked(function(event)
+ --            if CONFIG_IS_DEBUG then
+ --                if self._channelType == ChatManager.CHANNNEL_TYPE.ALLIANCE then
+ --                    if Alliance_Manager:GetMyAlliance():IsDefault() then 
+ --                        UIKit:showMessageDialog(_("错误"),_("未加入联盟"),function()end)
+ --                        return
+ --                    end
+ --                end
+ --                local msg = editbox:getText()
+ --                if not msg or string.len(string.trim(msg)) == 0 then 
+ --                    UIKit:showMessageDialog(_("错误"), _("聊天内容不能为空"),function()end)
+ --                    return 
+ --                end  
+ --                editbox:setText('')
+ --                self:GetChatManager():SendChat(self._channelType,msg)
+ --            end
+	-- 	end)
+	-- 	:addTo(self:GetView())
+	-- 	:align(display.LEFT_TOP, emojiButton:getPositionX()+emojiButton:getCascadeBoundingBox().size.width+10,emojiButton:getPositionY()-2)
+ --        :zorder(2)
 end
 
 function GameUIChatChannel:CreateShopButton()
@@ -170,20 +200,20 @@ end
 
 
 function GameUIChatChannel:GetChatIcon(icon)
-    local bg = display.newSprite("chat_hero_background_56x56.png")
-    local icon = UIKit:GetPlayerIconOnly(icon):addTo(bg):pos(28,28)
+    local bg = display.newSprite("chat_hero_background_66x66.png")
+    local icon = UIKit:GetPlayerIconOnly(icon):addTo(bg):align(display.LEFT_BOTTOM,-5, 1)
     bg.icon = icon
-    local size = icon:getContentSize()
-    icon:scale(50/math.max(size.width,size.height))
+    -- local size = icon:getContentSize()
+    icon:scale(0.6)
     return bg
 end
 
 function GameUIChatChannel:GetChatItemCell()
 	local content = display.newNode()
     local other_content = display.newNode()
-    local bottom = display.newScale9Sprite("chat_bubble_bottom_480x14.png"):addTo(other_content):align(display.RIGHT_BOTTOM,LISTVIEW_WIDTH, 0)
-    local middle = display.newScale9Sprite("chat_bubble_middle_480x20.png"):addTo(other_content):align(display.RIGHT_BOTTOM, LISTVIEW_WIDTH, 14)
-    local header = display.newScale9Sprite("chat_bubble_header_480x38.png"):addTo(other_content):align(display.RIGHT_BOTTOM, LISTVIEW_WIDTH,34)
+    local bottom = display.newScale9Sprite("chat_bubble_bottom_484x14.png"):addTo(other_content):align(display.RIGHT_BOTTOM,LISTVIEW_WIDTH, 0)
+    local middle = display.newScale9Sprite("chat_bubble_middle_484x20.png"):addTo(other_content):align(display.RIGHT_BOTTOM, LISTVIEW_WIDTH, 14)
+    local header = display.newScale9Sprite("chat_bubble_header_484x38.png"):addTo(other_content):align(display.RIGHT_BOTTOM, LISTVIEW_WIDTH,34)
     local chat_icon = self:GetChatIcon():addTo(other_content):align(display.LEFT_TOP, 3, 72)
     local from_label = UIKit:ttfLabel({
         text = "[ P/L ] SkinnMart",
@@ -228,9 +258,9 @@ function GameUIChatChannel:GetChatItemCell()
     -- end of other_content
     -- mine 
     local mine_content = display.newNode()
-    local bottom = display.newScale9Sprite("chat_bubble_bottom_480x14.png"):addTo(mine_content):align(display.LEFT_BOTTOM, 0, 0)
-    local middle = display.newScale9Sprite("chat_bubble_middle_480x20.png"):addTo(mine_content):align(display.LEFT_BOTTOM, 0, 14)
-    local header = display.newScale9Sprite("chat_bubble_header_480x38.png"):addTo(mine_content):align(display.LEFT_BOTTOM, 0,34)
+    local bottom = display.newScale9Sprite("chat_bubble_bottom_484x14.png"):addTo(mine_content):align(display.LEFT_BOTTOM, 0, 0)
+    local middle = display.newScale9Sprite("chat_bubble_middle_484x20.png"):addTo(mine_content):align(display.LEFT_BOTTOM, 0, 14)
+    local header = display.newScale9Sprite("chat_bubble_header_484x38.png"):addTo(mine_content):align(display.LEFT_BOTTOM, 0,34)
     local chat_icon = self:GetChatIcon():addTo(mine_content):align(display.RIGHT_TOP, LISTVIEW_WIDTH - 3, 72)
 
     local from_label = UIKit:ttfLabel({
@@ -635,7 +665,7 @@ function GameUIChatChannel:CreatePlayerMenu(event,chat)
     shieldButton:setButtonLabelOffset(0,-30)
 
     --chat_report
-    local reportButton = WidgetPushButton.new({normal="chat_button_n_124x92.png",pressed="chat_button_h_124x92.png"}, {scale9 = false})
+    local reportButton = WidgetPushButton.new({normal="chat_button_n_124x92.png",pressed="chat_button_h_124x92.png",disabled = "chat_button_d_124x92.png"}, {scale9 = false})
         :setButtonLabel("normal", UIKit:commonButtonLable({
             text = _("举报"),
             size = 16,
@@ -650,6 +680,7 @@ function GameUIChatChannel:CreatePlayerMenu(event,chat)
     local label = reportButton:getButtonLabel()
     display.newSprite("chat_report_62x56.png"):align(display.CENTER,label:getPositionX(), label:getPositionY()+10):addTo(reportButton)
     reportButton:setButtonLabelOffset(0,-30)
+    reportButton:setButtonEnabled(false)
     --chat_mail
     local mailButton = WidgetPushButton.new({normal="chat_button_n_124x92.png",pressed="chat_button_h_124x92.png"}, {scale9 = false})
         :setButtonLabel("normal",  UIKit:commonButtonLable({

@@ -67,8 +67,8 @@ local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
 local MultiObserver = import(".MultiObserver")
 local ChatManager = class("ChatManager",MultiObserver)
 local Enum = import("..utils.Enum")
-local PUSH_INTVAL = 10 -- 推送的时间间隔
-local SIZE_MUST_PUSH = 10 -- 如果队列中数量达到指定条数立即推送
+local PUSH_INTVAL = 2 -- 推送的时间间隔
+local SIZE_MUST_PUSH = 5 -- 如果队列中数量达到指定条数立即推送
 ChatManager.LISTEN_TYPE = Enum("TO_TOP","TO_REFRESH")
 ChatManager.CHANNNEL_TYPE = {GLOBAL = 1 ,ALLIANCE = 2}
 local BLOCK_LIST_KEY = "CHAT_BLOCK_LIST"
@@ -221,10 +221,11 @@ function ChatManager:FetchAllChatMessageFromServer()
 	end)
 end
 
-function ChatManager:SendChat(channel,msg)
+function ChatManager:SendChat(channel,msg,cb)
 	local channel_in_server = channel == self.CHANNNEL_TYPE.GLOBAL and 'global' or 'alliance'
 	NetManager:getSendChatPromise(channel_in_server,msg):done(function()
 		self:__checkNotifyIf()
+		if cb then cb() end
 	end)
 end
 
