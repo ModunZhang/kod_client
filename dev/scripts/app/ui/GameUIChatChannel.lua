@@ -75,6 +75,10 @@ function GameUIChatChannel:CreateTextFieldBody()
 
 	local function onEdit(event, editbox)
         if event == "return" then
+            if not self.sendChatButton:CanSendChat() then
+                GameGlobalUI:showTips(_("提示"),_("对不起你的聊天频率太频繁"))
+                return
+            end
             if self._channelType == ChatManager.CHANNNEL_TYPE.ALLIANCE then
                 if Alliance_Manager:GetMyAlliance():IsDefault() then
                     UIKit:showMessageDialog(_("错误"),_("未加入联盟"),function()end,nil,false)
@@ -124,6 +128,7 @@ function GameUIChatChannel:CreateTextFieldBody()
             sendChatButton:StartTimer()
         end)
     end)
+    self.sendChatButton = sendChatButton
     
     -- body button
 

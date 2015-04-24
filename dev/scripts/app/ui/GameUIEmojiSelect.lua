@@ -2,7 +2,7 @@
 -- Author: Danny He
 -- Date: 2015-01-27 10:37:38
 --
-local GameUIEmojiSelect = UIKit:createUIClass("GameUIEmojiSelect")
+local GameUIEmojiSelect = UIKit:createUIClass("GameUIEmojiSelect","UIAutoClose")
 local EmojiTable = import("..utils.EmojiTable")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
@@ -17,9 +17,8 @@ end
 
 function GameUIEmojiSelect:onEnter()
 	GameUIEmojiSelect.super.onEnter(self)
-	local shieldView = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
-        :addTo(self,self.PLAYERMENU_ZORDER)
-    local bg =  WidgetUIBackGround.new({height=658}):addTo(shieldView):pos(window.left+20,window.bottom+100)
+    local bg =  WidgetUIBackGround.new({height=658}):pos(window.left+20,window.bottom+100)
+    self:addTouchAbleChild(bg)
     local header = display.newSprite("title_blue_600x52.png")
         :addTo(bg,3)
         :align(display.CENTER_BOTTOM, 304, 644)

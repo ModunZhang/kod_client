@@ -14,10 +14,11 @@ local WidgetPlayerNode = import("..widget.WidgetPlayerNode")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local Localize = import("..utils.Localize")
 
-function GameUIAllianceMemberInfo:ctor(isMyAlliance,memberId)
+function GameUIAllianceMemberInfo:ctor(isMyAlliance,memberId,func_call)
     GameUIAllianceMemberInfo.super.ctor(self)
     self.isMyAlliance = isMyAlliance or false
     self.memberId_ = memberId
+    self.func_call = func_call
 end
 
 function GameUIAllianceMemberInfo:OnMoveInStage()
@@ -130,17 +131,24 @@ function GameUIAllianceMemberInfo:OnPlayerButtonClicked( tag )
 
 end
 
+function GameUIAllianceMemberInfo:CallBackFunctionIf()
+    if self.func_call and type(self.func_call) == 'function' then
+        self.func_call()
+    end
+end
+
 function GameUIAllianceMemberInfo:SendToServerWithTag(tag,member)
     if tag == 1 then -- 踢出
         NetManager:getKickAllianceMemberOffPromise(member:Id()):done(function(data)
+            self:CallBackFunctionIf()
             self:LeftButtonClicked()
         end)
     elseif tag == 2 then -- 移交盟主
         NetManager:getHandOverAllianceArchonPromise(member:Id()):done(function()
             local alliacne =  Alliance_Manager:GetMyAlliance()
             local title = alliacne:GetMemeberById(member:Id()):Title()
-            self.player_info.alliance.title = title
-            self:RefreshListView()
+            -- self.player_info.alliance.title = title
+            self:CallBackFunctionIf()
             self:LeftButtonClicked()
         end)
     elseif tag == 3 then --降级
@@ -149,6 +157,7 @@ function GameUIAllianceMemberInfo:SendToServerWithTag(tag,member)
                 GameGlobalUI:showTips(_("提示"), string.format(_("%s已降级为%s"),member:Name(),Localize.alliance_title[member:Title()]))
                 self.player_info.alliance.title = member:Title()
                 self:RefreshListView()
+                self:CallBackFunctionIf()
             end)
     end
     elseif tag == 4 then --晋级
@@ -156,6 +165,7 @@ function GameUIAllianceMemberInfo:SendToServerWithTag(tag,member)
             NetManager:getEditAllianceMemberTitlePromise(member:Id(), member:TitleUpgrade()):done(function()
                 GameGlobalUI:showTips(_("提示"), string.format(_("%s已晋级为%s"),member:Name(),Localize.alliance_title[member:Title()]))
                 self.player_info.alliance.title = member:Title()
+                self:CallBackFunctionIf()
                 self:RefreshListView()
             end)
     end
@@ -181,7 +191,11 @@ function GameUIAllianceMemberInfo:AdapterPlayerList()
     local r = {}
     table.insert(r,{_("职位"),Localize.alliance_title[player.alliance.title]})
     table.insert(r,{_("联盟"),player.alliance.name})
-    table.insert(r,{_("最后登陆时间"),NetService:formatTimeAsTimeAgoStyleByServerTime(player.lastLoginTime)})
+    if type(player.online) == 'boolean' and player.online then
+        table.insert(r,{_("最后登陆"),_("在线")})
+    else
+        table.insert(r,{_("最后登陆"),NetService:formatTimeAsTimeAgoStyleByServerTime(player.lastLoginTime)})
+    end
     table.insert(r,{_("战斗力"),player.power})
     table.insert(r,{_("击杀"),player.kill})
 
@@ -199,8 +213,6 @@ end
 function GameUIAllianceMemberInfo:OnMoveOutStage()
     GameUIAllianceMemberInfo.super.OnMoveOutStage(self)
 end
-
-
 
 --WidgetPlayerNode的回调方法
 --点击勋章
@@ -232,6 +244,7 @@ function GameUIAllianceMemberInfo:WidgetPlayerNode_PlayerCanClickedButton(name,a
 end
 --数据回调
 function GameUIAllianceMemberInfo:WidgetPlayerNode_DataSource(name)
+    print("UIKit:GetPlayerIconImage(self.player_info.icon)--->",UIKit:GetPlayerIconImage(self.player_info.icon))
     if name == 'BasicInfoData' then
         local level = User:GetPlayerLevelByExp(self.player_info.levelExp)
         return {
@@ -241,7 +254,7 @@ function GameUIAllianceMemberInfo:WidgetPlayerNode_DataSource(name)
             maxExp = User:GetCurrentLevelMaxExp(level),
             power = self.player_info.power,
             playerId = self.player_info.id,
-            playerIcon = "xxx.png",
+            playerIcon = self.player_info.icon,
             vip = DataUtils:getPlayerVIPLevel(self.player_info.vipExp)
         }
     elseif name == "MedalData"  then

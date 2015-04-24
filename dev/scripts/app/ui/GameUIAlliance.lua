@@ -43,9 +43,6 @@ function GameUIAlliance:OnAllianceBasicChanged(alliance, changed_map)
             self:RefreshOverViewUI()
         end
     end
-    if self.tab_buttons:GetSelectedButtonTag() == 'members' then
-        self:RefreshMemberList()
-    end
     if self.tab_buttons:GetSelectedButtonTag() == 'infomation' then
         self:RefreshInfomationView()
     end
@@ -62,8 +59,8 @@ function GameUIAlliance:OnEventsChanged(alliance)
 end
 
 function GameUIAlliance:OnMemberChanged(alliance)
-    if self.tab_buttons:GetSelectedButtonTag() == 'members' then
-        self:RefreshMemberList()
+    if self.tab_buttons:GetSelectedButtonTag() == 'overview' then
+        self:RefreshOverViewUI()
     end
 end
 
@@ -708,7 +705,7 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
         :align(display.TOP_LEFT,20, headerBg:getContentSize().height - 20):addTo(headerBg)
     self.flag_box = flag_box
     self.ui_overview.nameLabel = UIKit:ttfLabel({
-        text = Alliance_Manager:GetMyAlliance():Name(),
+        text = string.format("[%s] %s",Alliance_Manager:GetMyAlliance():Tag(),Alliance_Manager:GetMyAlliance():Name()),
         size = 24,
         color = 0xffedae,
     }):align(display.LEFT_CENTER,10,15):addTo(titileBar)
@@ -756,42 +753,59 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
 
     local line_2 = display.newSprite("dividing_line.png")
         :addTo(headerBg)
-        :align(display.LEFT_BOTTOM,titileBar:getPositionX() - titileBar:getContentSize().width + 10,flag_box:getPositionY() - flag_box:getContentSize().height+5)
+        :align(display.LEFT_BOTTOM,titileBar:getPositionX() - titileBar:getContentSize().width + 10,flag_box:getPositionY() - flag_box:getContentSize().height+2)
     local languageLabel = UIKit:ttfLabel({
-        text = _("语言"),
-        size = 22,
+        text = _("在线人数"),
+        size = 20,
         color = 0x797154,
-    }):addTo(headerBg):align(display.LEFT_BOTTOM,line_2:getPositionX()+5,line_2:getPositionY() + 5)
-
+    }):addTo(headerBg):align(display.LEFT_BOTTOM,line_2:getPositionX()+5,line_2:getPositionY() + 2)
+    local m_count,m_online,m_maxCount = Alliance_Manager:GetMyAlliance():GetMembersCountInfo()
     local languageLabelVal =  UIKit:ttfLabel({
-        text = Alliance_Manager:GetMyAlliance():DefaultLanguage(),
-        size = 22,
+        text = m_online,
+        size = 20,
         color= 0x403c2f,
         align= cc.TEXT_ALIGNMENT_RIGHT
     }):addTo(headerBg):align(display.RIGHT_BOTTOM,line_2:getPositionX()+line_2:getContentSize().width - 5,languageLabel:getPositionY())
-    self.ui_overview.languageLabel = languageLabelVal
+    self.ui_overview.online_count_label = languageLabelVal
 
 
     local line_1 = display.newSprite("dividing_line.png")
         :addTo(headerBg)
-        :align(display.LEFT_TOP,titileBar:getPositionX() - titileBar:getContentSize().width + 10,titileBar:getPositionY() - titileBar:getContentSize().height - 50)
+        :align(display.LEFT_BOTTOM,titileBar:getPositionX() - titileBar:getContentSize().width + 10,line_2:getPositionY()+30)
 
     local tagLabel = UIKit:ttfLabel({
-        text = _("标签"),
-        size = 22,
+        text = _("联盟人数"),
+        size = 20,
         color = 0x797154,
     }):addTo(headerBg)
-        :align(display.LEFT_BOTTOM,languageLabel:getPositionX(),line_1:getPositionY() + 5)
+        :align(display.LEFT_BOTTOM,languageLabel:getPositionX(),line_1:getPositionY() + 2)
 
     local tagLabelVal = UIKit:ttfLabel({
-        text = Alliance_Manager:GetMyAlliance():Tag(),
-        size = 22,
+        text = string.format("%s/%s",m_count,m_maxCount),
+        size = 20,
         color = 0x403c2f,
     })
         :addTo(headerBg)
         :align(display.RIGHT_BOTTOM,languageLabelVal:getPositionX(),tagLabel:getPositionY())
+    self.ui_overview.memberCountLabel = tagLabelVal
 
-    self.ui_overview.tagLabel = tagLabelVal
+    local line_0 =  display.newSprite("dividing_line.png")
+        :addTo(headerBg)
+        :align(display.LEFT_BOTTOM,line_1:getPositionX(),line_1:getPositionY()+30)
+    local languageLabel = UIKit:ttfLabel({
+        text = _("语言"),
+        size = 20,
+        color = 0x797154,
+    }):addTo(headerBg)
+        :align(display.LEFT_BOTTOM,tagLabel:getPositionX(),line_0:getPositionY() + 2)
+    local languageLabelVal = UIKit:ttfLabel({
+        text = Localize.alliance_language[Alliance_Manager:GetMyAlliance():DefaultLanguage()],
+        size = 20,
+        color = 0x403c2f,
+    })
+        :addTo(headerBg)
+        :align(display.RIGHT_BOTTOM,languageLabelVal:getPositionX(),languageLabel:getPositionY())
+    self.ui_overview.languageLabelVal = languageLabelVal
     self.overviewNode = overviewNode
     return self.overviewNode
 end
@@ -886,9 +900,11 @@ end
 function GameUIAlliance:RefreshOverViewUI()
     if self.ui_overview and self.tab_buttons:GetSelectedButtonTag() == 'overview'  then
         local alliance_data = Alliance_Manager:GetMyAlliance()
-        self.ui_overview.nameLabel:setString(alliance_data:Name())
-        self.ui_overview.tagLabel:setString(alliance_data:Tag())
-        self.ui_overview.languageLabel:setString(alliance_data:DefaultLanguage())
+         local m_count,m_online,m_maxCount = alliance_data:GetMembersCountInfo()
+        self.ui_overview.nameLabel:setString(string.format("[%s] %s",alliance_data:Tag(),alliance_data:Name()))
+        self.ui_overview.memberCountLabel:setString(string.format("%s/%s",m_count,m_maxCount))
+        self.ui_overview.online_count_label:setString(m_online)
+        self.ui_overview.languageLabelVal:setString(Localize.alliance_language[alliance_data:DefaultLanguage()])
         self:RefreshNoticeView()
     end
 end
@@ -1001,11 +1017,16 @@ function GameUIAlliance:RefreshMemberList()
         self.member_list_bg.player_icon:removeFromParent()
     end
     local archon = Alliance_Manager:GetMyAlliance():GetAllianceArchon()
-    self.member_list_bg.player_icon = UIKit:GetPlayerCommonIcon(archon.icon)
+    local isOnline = (type(archon.online) == 'boolean' and archon.online) and true or false
+    self.member_list_bg.player_icon = UIKit:GetPlayerCommonIcon(archon.icon,isOnline)
         :addTo(self.member_list_bg.player_icon_box):pos(63,67)
     self.member_list_bg.title_label:setString(string.format("%s Lv %s",archon:Name(),User:GetPlayerLevelByExp(archon.levelExp)))
     self.member_list_bg.powerLabel:setString(string.formatnumberthousands(archon.power))
-    self.member_list_bg.loginLabel:setString(_("最后登录:") .. NetService:formatTimeAsTimeAgoStyleByServerTime(archon.lastLoginTime))
+    if archon.online then
+        self.member_list_bg.loginLabel:setString(_("在线"))
+    else
+        self.member_list_bg.loginLabel:setString(_("最后登录:") .. NetService:formatTimeAsTimeAgoStyleByServerTime(archon.lastLoginTime))
+    end
     self.member_list_bg.view_archon_info_button:setVisible(User:Id() ~= archon:Id())
     --list view
     self.memberListView:removeAllItems()
@@ -1069,7 +1090,8 @@ function GameUIAlliance:GetMemberItem(title)
     local y = height - 39
     if count > 0 then
         for i,v in ipairs(data) do
-            self:GetNormalSubItem(i,v.name,User:GetPlayerLevelByExp(v.levelExp),v.power,v.id,v.icon):addTo(node):align(display.LEFT_TOP, 0, y)
+            local isOnline = (type(v.online) == 'boolean' and v.online) and true or false
+            self:GetNormalSubItem(i,v.name,User:GetPlayerLevelByExp(v.levelExp),v.power,v.id,v.icon,isOnline):addTo(node):align(display.LEFT_TOP, 0, y)
             y = y - 71
         end
     else
@@ -1085,9 +1107,9 @@ function GameUIAlliance:GetMemberItem(title)
     return item
 end
 
-function GameUIAlliance:GetNormalSubItem(index,playerName,level,power,memberId,icon)
+function GameUIAlliance:GetNormalSubItem(index,playerName,level,power,memberId,icon,online)
     local item = display.newSprite("mission_box_558x66.png")
-    local icon = UIKit:GetPlayerCommonIcon(icon):scale(0.5):align(display.LEFT_CENTER,15, 33):addTo(item)
+    local icon = UIKit:GetPlayerCommonIcon(icon,online):scale(0.5):align(display.LEFT_CENTER,15, 33):addTo(item)
     local nameLabel = UIKit:ttfLabel({
         text = playerName,
         size = 20,
@@ -1124,7 +1146,11 @@ function GameUIAlliance:OnAllianceTitleClicked( title )
 end
 
 function GameUIAlliance:OnPlayerDetailButtonClicked(memberId)
-    UIKit:newGameUI('GameUIAllianceMemberInfo',true,memberId):AddToCurrentScene(true)
+    UIKit:newGameUI('GameUIAllianceMemberInfo',true,memberId,function()
+        if self.tab_buttons:GetSelectedButtonTag() == 'members' then
+            self:RefreshMemberList()
+        end
+    end):AddToCurrentScene(true)
 end
 -- 信息
 function GameUIAlliance:HaveAlliaceUI_infomationIf()

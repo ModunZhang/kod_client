@@ -14,6 +14,7 @@ local AllianceItemsManager = import(".AllianceItemsManager")
 local Alliance = class("Alliance", MultiObserver)
 local VillageEvent = import(".VillageEvent")
 local AllianceBelvedere = import(".AllianceBelvedere")
+local config_palace = GameDatas.AllianceBuilding.palace
 --注意:突袭用的MarchAttackEvent 所以使用OnAttackMarchEventTimerChanged
 Alliance.LISTEN_TYPE = Enum(
     "OPERATION",
@@ -229,6 +230,20 @@ function Alliance:GetMembersCount()
         count = count + 1
     end
     return count
+end
+function Alliance:GetMembersCountInfo()
+    local count,online,maxCount = 0,0,0
+    for __,v in pairs(self:GetAllMembers()) do
+        count = count + 1
+        if type(v.online) == 'boolean' and v.online  then
+            online = online + 1
+        end
+    end
+    local palace = self:GetAllianceMap():FindAllianceBuildingInfoByName("palace")
+    if palace and config_palace[palace.level] then
+        maxCount = config_palace[palace.level].memberCount
+    end
+    return count,online,maxCount
 end
 function Alliance:OnMemberChanged(changed_map)
     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.MEMBER, function(listener)

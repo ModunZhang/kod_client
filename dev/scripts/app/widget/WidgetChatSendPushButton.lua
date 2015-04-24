@@ -24,13 +24,17 @@ function WidgetChatSendPushButton:onEnter()
 end
 
 function WidgetChatSendPushButton:StartTimer()
-	if self.progress:getNumberOfRunningActions() ~= 0 then return end
+	if not self:CanSendChat() then return end
 	self.progress:show()
 	transition.execute(self.progress,cca.progressFromTo(2,100,0),{
 	onComplete = function()
 		self.progress:hide()
     end
 	})
+end
+
+function WidgetChatSendPushButton:CanSendChat()
+	return self.progress:getNumberOfRunningActions() == 0
 end
 
 return WidgetChatSendPushButton

@@ -397,7 +397,7 @@ local SOLDIER_CATEGORY_MAP = {
 
 local ALLIANCE_EVENTS = {
     donate = _("向联盟慷慨捐赠，提升荣耀值%s"),
-    promotion = _("在联盟中的职位被晋级/降级到%s"),
+    promotionDown = _("在联盟中的职位被降级到%s"),
     join = _("一个新成员加入联盟"),
     kick = _("一个玩家被逐出联盟"),
     quit = _("退出联盟"),
@@ -414,6 +414,7 @@ local ALLIANCE_EVENTS = {
     terrain = _("修改联盟地形为%s"),
     language = _("修改联盟语言更改为%s"),
     gve = _("激活了圣地的神秘事件"),
+    promotionUp = _("在联盟中的职位被晋级到%s"),
 }
 
 local SOLDIER_CATEGORY = {
@@ -776,6 +777,19 @@ local PLAYER_ICON_UNLOCK = {
     _("飞艇探险通关暮光高地第三层后解锁"),
 }
 
+local ALLIANCE_LANGUAGE = {
+    all = _("所有语言"),
+    en  = _("英语"),
+    fr  = _("法语"),
+    cn  = _("简体中文"),
+    tw  = _("繁体中文"),
+    de  = _("德语"),
+    ko  = _("韩语"),
+    ja  = _("日语"),
+    ru  = _("俄语"),
+    es  = _("西班牙语"),
+    pt  = _("葡萄牙语"),
+}
 
 return {
     equip_material = EQUIP_MATERIAL_LOCALIZE,
@@ -826,6 +840,7 @@ return {
     iap_package_name = IAP_PACKAGE_NAME,
     daily_quests_name = DAILY_QUESTS_NAME,
     player_icon = PLAYER_ICON,
-    player_icon_unlock = PLAYER_ICON_UNLOCK
+    player_icon_unlock = PLAYER_ICON_UNLOCK,
+    alliance_language = ALLIANCE_LANGUAGE
 }
 
