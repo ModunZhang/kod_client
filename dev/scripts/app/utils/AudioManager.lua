@@ -128,6 +128,7 @@ function AudioManager:PlayeBgSound(filename)
 end
 
 function AudioManager:PlayeEffectSound(filename)
+	print("PlayeEffectSound----->",filename)
 	if self.is_effect_audio_on then
 		audio.playSound("audios/" .. filename,false)
 	end

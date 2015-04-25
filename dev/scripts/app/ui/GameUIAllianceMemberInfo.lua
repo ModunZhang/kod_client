@@ -189,8 +189,13 @@ end
 function GameUIAllianceMemberInfo:AdapterPlayerList()
     local player = self.player_info
     local r = {}
-    table.insert(r,{_("职位"),Localize.alliance_title[player.alliance.title]})
-    table.insert(r,{_("联盟"),player.alliance.name})
+    if player.alliance then
+        table.insert(r,{_("职位"),Localize.alliance_title[player.alliance.title]})
+        table.insert(r,{_("联盟"),player.alliance.name})
+    else
+         table.insert(r,{_("职位"),_("无")})
+        table.insert(r,{_("联盟"),_("无")})
+    end
     if type(player.online) == 'boolean' and player.online then
         table.insert(r,{_("最后登陆"),_("在线")})
     else
