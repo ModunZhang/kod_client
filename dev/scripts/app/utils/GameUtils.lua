@@ -271,7 +271,7 @@ end
 
 -- Translate Main
 function GameUtils:Translate(text,cb)
-    if text == "" then 
+    if text == "" then
         cb(" ")
         return
     end
@@ -454,6 +454,7 @@ local function getSoldiersConfig(soldier_name, soldier_star)
     assert(soldier_config)
     return soldier_config
 end
+-- 如果是pve得话就没有龙
 local function getPlayerSoldierAtkBuff(soldierName, soldierStar, dragon, terrain)
     if not dragon then
         return 0
@@ -485,7 +486,8 @@ local function getPlayerSoldierAtkBuff(soldierName, soldierStar, dragon, terrain
 
     return itemBuff + skillBuff + equipmentBuff
 end
-local function getSoliderHpBuff(soldierName, soldierStar, dragon, terrain)
+-- 如果是pve得话就没有龙
+local function getPlayerSoldierHpBuff(soldierName, soldierStar, dragon, terrain)
     if not dragon then
         return 0
     end
@@ -516,22 +518,21 @@ local function getSoliderHpBuff(soldierName, soldierStar, dragon, terrain)
     end
     return itemBuff + skillBuff + equipmentBuff
 end
-local function createFightSoldiers(soldiers, dragon, terrain)
+local function createPlayerSoldiersForFight(soldiers, dragon, terrain)
     return LuaUtils:table_map(soldiers, function(k, soldier)
-        local config = getSoldiersConfig(soldier.name, soldier.star)
-        
-        local atkBuff = getPlayerSoldierAtkBuff(soldier.name, soldier.star, dragon, terrain)
-        local hpBuff = getSoliderHpBuff(soldier.name, soldier.star, dragon, terrain)
-
         local soldier_man = City:GetSoldierManager()
+        -----
+        local config = getSoldiersConfig(soldier.name, soldier.star)
+        local atkBuff = getPlayerSoldierAtkBuff(soldier.name, soldier.star, dragon, terrain)
+        -- var atkWallBuff = self.getDragonAtkWallBuff(dragon)
+        local hpBuff = getPlayerSoldierHpBuff(soldier.name, soldier.star, dragon, terrain)
         local techBuffToInfantry = soldier_man:GetMilitaryTechsByName(config.type.."_".."infantry"):GetAtkEff()
         local techBuffToArcher = soldier_man:GetMilitaryTechsByName(config.type.."_".."archer"):GetAtkEff()
         local techBuffToCavalry = soldier_man:GetMilitaryTechsByName(config.type.."_".."cavalry"):GetAtkEff()
         local techBuffToSiege = soldier_man:GetMilitaryTechsByName(config.type.."_".."siege"):GetAtkEff()
         local techBuffHpAdd = soldier_man:GetMilitaryTechsByName(config.type.."_".."hpAdd"):GetAtkEff()
-        
-        local vipHpBuff = User:GetVIPSoldierHpAdd()
         local vipAttackBuff = User:GetVIPSoldierAttackPowerAdd()
+        local vipHpBuff = User:GetVIPSoldierHpAdd()
         -- dump(hpBuff, "hpBuff")
         -- dump(vipHpBuff, "vipHpBuff")
         -- dump(atkBuff, "atkBuff")
@@ -546,7 +547,6 @@ local function createFightSoldiers(soldiers, dragon, terrain)
             type = config.type,
             currentCount = soldier.count,
             totalCount = soldier.count,
-            count = soldier.count,
             woundedCount = 0,
             power = config.power,
             hp = math.floor(config.hp * (1 + hpBuff + techBuffHpAdd + vipHpBuff)),
@@ -561,7 +561,7 @@ local function createFightSoldiers(soldiers, dragon, terrain)
         }
     end)
 end
-local function createFightDragon(dragon)
+local function createDragonForFight(dragon)
     return {
         level = dragon.level,
         dragonType = dragon.dragonType,
@@ -754,21 +754,21 @@ local function getPlayerSoldierMoraleDecreasedPercent(dragon)
     return basePercent - skillBuff
 end
 function GameUtils:DoBattle(attacker, defencer, terrain)
-    local attacker_soldiers = createFightSoldiers(attacker.soldiers, attacker.dragon.dragon, terrain or "iceFiled")
-    local defencer_soldiers = createFightSoldiers(defencer.soldiers)
+    local clone_attacker_soldiers = clone(attacker.soldiers)
+    local clone_defencer_soldiers = clone(defencer.soldiers)
+    local attacker_soldiers = createPlayerSoldiersForFight(attacker.soldiers, attacker.dragon.dragon, terrain or "iceFiled")
+    local defencer_soldiers = createPlayerSoldiersForFight(defencer.soldiers)
 
-    local clone_attacker_soldiers = clone(attacker_soldiers)
-    local clone_defencer_soldiers = clone(defencer_soldiers)
 
-    local attacker_dragon = createFightDragon(attacker.dragon)
-    local defencer_dragon = createFightDragon(defencer.dragon)
+    local attacker_dragon = createDragonForFight(attacker.dragon)
+    local defencer_dragon = createDragonForFight(defencer.dragon)
 
     local dragonFightFixedEffect = getDragonFightFixedEffect(attacker_soldiers, defencer_soldiers)
     local attack_dragon, defence_dragon = GameUtils:DragonDragonBattle(attacker_dragon, defencer_dragon, dragonFightFixedEffect)
 
     local attackWoundedSoldierPercent = getPlayerTreatSoldierPercent(attacker.dragon.dragon)
     local attackSoldierMoraleDecreasedPercent = getPlayerSoldierMoraleDecreasedPercent(attacker.dragon.dragon)
-    local attack_soldier, defence_soldier, is_attack_win =
+    local attack_soldier, defence_soldier, is_attack_win = 
         GameUtils:SoldierSoldierBattle(
             attacker_soldiers, attackWoundedSoldierPercent, attackSoldierMoraleDecreasedPercent,
             defencer_soldiers, 0.4, 1
@@ -859,11 +859,15 @@ function GameUtils:DoBattle(attacker, defencer, terrain)
     function report:GetDefenceDragonLevel()
         return defencer_dragon.level
     end
+    function report:GetAttackTargetTerrain()
+        return terrain
+    end
     return report
 end
 
 
 return GameUtils
+
 
 
 

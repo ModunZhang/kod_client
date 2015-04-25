@@ -23,6 +23,7 @@ function Wall:hit()
 end
 function Wall:attack()
     self:PlayAnimation("Animation2", 0)
+    app:GetAudioManager():PlayeAttackSoundBySoldierName("ranger")
     local p = promise.new()
     self:OnAnimationPlayEnd("Animation2", function()
         p:resolve(self)

@@ -21,17 +21,16 @@ local LEFT_TAG1  = tags.LEFT_TAG1
 local RIGHT_TAG1 = tags.RIGHT_TAG1
 
 
-
 local function decode_battle_from_report(report)
     local attacks = report:GetFightAttackSoldierRoundData()
     local defends = report:GetFightDefenceSoldierRoundData()
     if report:IsFightWall() then
         assert(report.GetFightAttackWallRoundData)
         assert(report.GetFightDefenceWallRoundData)
-        for i, v in ipairs(report:GetFightAttackWallRoundData()) do
+        for i,v in ipairs(report:GetFightAttackWallRoundData()) do
             attacks[#attacks + 1] = v
         end
-        for i, v in ipairs(report:GetFightDefenceWallRoundData()) do
+        for i,v in ipairs(report:GetFightDefenceWallRoundData()) do
             defends[#defends + 1] = v
         end
     end
@@ -315,6 +314,7 @@ local function newDragonBattle(replay_ui, dragonAttack, dragonAttackLevel, drago
     end
     function dragon_battle:PromsieOfFight()
         self:getAnimation():play("Animation1", -1, 0)
+        app:GetAudioManager():PlayeEffectSoundWithKey("BATTLE_DRAGON")
         self:RefreshSpeed()
         return self:PromiseOfAnimation()
     end
@@ -396,128 +396,130 @@ local function newSoldierInBattle(list_view, is_left)
     return item
 end
 
--- local report = {
---     GetFightAttackName = function() return "hello" end,
---     GetFightDefenceName = function() return "hello" end,
---     IsDragonFight = function() return true end,
---     GetAttackDragonLevel = function() return 1 end,
---     GetDefenceDragonLevel = function() return 2 end,
---     GetFightAttackDragonRoundData = function()
---         return {
---             dragonType = "redDragon",
---             hp = 1000,
---             hpDecreased = 90,
---             hpMax = 1000,
---             isWin = true
---         }
---     end,
---     GetFightDefenceDragonRoundData = function()
---         return {
---             dragonType = "blackDragon",
---             hp = 1000,
---             hpDecreased = 90,
---             hpMax = 1000,
---             isWin = false
---         }
---     end,
---     GetFightAttackSoldierRoundData = function()
---         return {
---             {
---                 soldierName = "ranger",
---                 soldierStar = 3,
---                 soldierCount = 1000,
---                 soldierDamagedCount = 20,
---                 morale = 100,
---                 moraleDecreased = 20,
---                 isWin = true,
---             },
---             {
---                 soldierName = "ranger",
---                 soldierStar = 1,
---                 soldierCount = 980,
---                 soldierDamagedCount = 20,
---                 morale = 80,
---                 moraleDecreased = 20,
---                 isWin = true,
---             },
---             {
---                 soldierName = "ranger",
---                 soldierStar = 1,
---                 soldierCount = 960,
---                 soldierDamagedCount = 20,
---                 morale = 60,
---                 moraleDecreased = 20,
---                 isWin = true,
---             },
---         }
---     end,
---     GetFightDefenceSoldierRoundData = function()
---         return  {
---             {
---                 soldierName = "ranger",
---                 soldierStar = 1,
---                 soldierCount = 100,
---                 soldierDamagedCount = 20,
---                 morale = 100,
---                 moraleDecreased = 20,
---                 isWin = false,
---             },
---             {
---                 soldierName = "swordsman",
---                 soldierStar = 1,
---                 soldierCount = 100,
---                 soldierDamagedCount = 20,
---                 morale = 100,
---                 moraleDecreased = 20,
---                 isWin = false,
---             },
---             {
---                 soldierName = "wall",
---                 soldierStar = 1,
---                 soldierCount = 100,
---                 soldierDamagedCount = 20,
---                 morale = 100,
---                 moraleDecreased = 0,
---                 isWin = false,
---             },
---         }
---     end,
---     GetOrderedAttackSoldiers = function()
---         return {
---             {
---                 name = "ranger",
---                 star = 3,
---                 count = 1000,
---             },
---         }
---     end,
---     GetOrderedDefenceSoldiers = function()
---         return  {
---             {
---                 name = "ranger",
---                 star = 3,
---                 count = 100,
---             },
---             {
---                 name = "swordsman",
---                 star = 2,
---                 count = 100,
---             },
---             {
---                 name = "wall",
---                 star = 1,
---                 count = 100,
---             },
---         }
---     end,
---     GetReportResult = function() return true end,
---     IsFightWall = function() return false end,
---     IsPveBattle = function() return false end,
--- }
+local report_ = {
+    GetFightAttackName = function() return "hello" end,
+    GetFightDefenceName = function() return "hello" end,
+    IsDragonFight = function() return true end,
+    GetAttackDragonLevel = function() return 1 end,
+    GetDefenceDragonLevel = function() return 2 end,
+    GetFightAttackDragonRoundData = function()
+        return {
+            dragonType = "redDragon",
+            hp = 1000,
+            hpDecreased = 90,
+            hpMax = 1000,
+            isWin = true
+        }
+    end,
+    GetFightDefenceDragonRoundData = function()
+        return {
+            dragonType = "blackDragon",
+            hp = 1000,
+            hpDecreased = 90,
+            hpMax = 1000,
+            isWin = false
+        }
+    end,
+    GetFightAttackSoldierRoundData = function()
+        return {
+            {
+                soldierName = "ranger",
+                soldierStar = 3,
+                soldierCount = 1000,
+                soldierDamagedCount = 20,
+                morale = 100,
+                moraleDecreased = 20,
+                isWin = true,
+            },
+            {
+                soldierName = "ranger",
+                soldierStar = 1,
+                soldierCount = 980,
+                soldierDamagedCount = 20,
+                morale = 80,
+                moraleDecreased = 20,
+                isWin = true,
+            },
+            {
+                soldierName = "ranger",
+                soldierStar = 1,
+                soldierCount = 960,
+                soldierDamagedCount = 20,
+                morale = 60,
+                moraleDecreased = 20,
+                isWin = true,
+            },
+        }
+    end,
+    GetFightDefenceSoldierRoundData = function()
+        return  {
+            {
+                soldierName = "ranger",
+                soldierStar = 1,
+                soldierCount = 100,
+                soldierDamagedCount = 20,
+                morale = 100,
+                moraleDecreased = 20,
+                isWin = false,
+            },
+            {
+                soldierName = "swordsman",
+                soldierStar = 1,
+                soldierCount = 100,
+                soldierDamagedCount = 20,
+                morale = 100,
+                moraleDecreased = 20,
+                isWin = false,
+            },
+            {
+                soldierName = "wall",
+                soldierStar = 1,
+                soldierCount = 100,
+                soldierDamagedCount = 20,
+                morale = 100,
+                moraleDecreased = 0,
+                isWin = false,
+            },
+        }
+    end,
+    GetOrderedAttackSoldiers = function()
+        return {
+            {
+                name = "ranger",
+                star = 3,
+                count = 1000,
+            },
+        }
+    end,
+    GetOrderedDefenceSoldiers = function()
+        return  {
+            {
+                name = "ranger",
+                star = 3,
+                count = 100,
+            },
+            {
+                name = "swordsman",
+                star = 2,
+                count = 100,
+            },
+            {
+                name = "wall",
+                star = 1,
+                count = 100,
+            },
+        }
+    end,
+    GetReportResult = function() return true end,
+    IsFightWall = function() return false end,
+    IsPveBattle = function() return false end,
+    GetAttackTargetTerrain = function() return "iceField" end,
+}
 
 
 -------------------
 function GameUIReplayNew:ctor(report, callback)
+    -- report = report_
     assert(report.GetFightAttackName)
     assert(report.GetFightDefenceName)
     assert(report.IsDragonFight)
@@ -533,27 +535,37 @@ function GameUIReplayNew:ctor(report, callback)
     assert(report.GetAttackDragonLevel)
     GameUIReplayNew.super.ctor(self)
     self.report = report
+    local soldiers = self.report:GetOrderedDefenceSoldiers()
+    if self.report:IsFightWall() then
+        local count = self.report:GetFightDefenceWallRoundData()[1].wallMaxHp
+        table.insert(soldiers, {name = "wall", star = 1, count = count})
+    end
+    self.defence_soldiers = soldiers
+
     self.callback = callback
     local manager = ccs.ArmatureDataManager:getInstance()
     manager:addArmatureFileInfo(DEBUG_GET_ANIMATION_PATH("animations/paizi.ExportJson"))
     UILib.loadPveAnimation()
     UILib.loadDragonAnimation()
     UILib.loadSolidersAnimation()
+    UILib.loadUIAnimation()
     self.timer_node = display.newNode():addTo(self)
     self.round = 1
 end
 function GameUIReplayNew:OnMoveInStage()
     GameUIReplayNew.super.OnMoveInStage(self)
+    app:GetAudioManager():PlayGameMusic("AllianceBattleScene")
     self.ui_map = self:BuildUI()
+    self.ui_map.battle_background1:setTexture(string.format("back_ground_%s.png", self.report:GetAttackTargetTerrain()))
     self.ui_map.attackName:setString(self.report:GetFightAttackName())
     self.ui_map.defenceName:setString(self.report:GetFightDefenceName())
 
-    for i,v in ipairs(self.report:GetOrderedAttackSoldiers()) do
+    for i,v in ipairs(self:GetOrderedAttackSoldiers()) do
         self.ui_map.list_view_attack:addItem(newSoldierInBattle(self.ui_map.list_view_attack, true))
     end
     self.ui_map.list_view_attack:reload()
 
-    for i,v in ipairs(self.report:GetOrderedDefenceSoldiers()) do
+    for i,v in ipairs(self:GetOrderedDefenceSoldiers()) do
         self.ui_map.list_view_defence:addItem(newSoldierInBattle(self.ui_map.list_view_defence))
     end
     self.ui_map.list_view_defence:reload()
@@ -590,6 +602,28 @@ function GameUIReplayNew:onExit()
         self.callback()
     end
 end
+function GameUIReplayNew:GetOrderedAttackSoldiers()
+    return self.report:GetOrderedAttackSoldiers()
+end
+function GameUIReplayNew:GetOrderedDefenceSoldiers()
+    return self.defence_soldiers
+end
+function GameUIReplayNew:GetFightAttackSoldierByRound(round)
+    local rounds1 = self.report:GetFightAttackSoldierRoundData()
+    if rounds1[round] then return rounds1[round] end
+    if self.report:IsFightWall() then
+        return self.report:GetFightAttackWallRoundData()[round - #rounds1]
+    end
+    assert(false)
+end
+function GameUIReplayNew:GetFightDefenceSoldierByRound(round)
+    local rounds1 = self.report:GetFightDefenceSoldierRoundData()
+    if rounds1[round] then return rounds1[round] end
+    if self.report:IsFightWall() then
+        return self.report:GetFightDefenceWallRoundData()[round - #rounds1]
+    end
+    assert(false)
+end
 function GameUIReplayNew:RefreshSoldierListView(list_view, soldiers, is_pve_soldier)
     for i,v in ipairs(list_view.items_) do
         local cur = soldiers[i]
@@ -599,11 +633,12 @@ function GameUIReplayNew:RefreshSoldierListView(list_view, soldiers, is_pve_sold
 end
 function GameUIReplayNew:ShowResult()
     if not self.result then
+        self.result = ccs.Armature:create("win"):addTo(self, 1):align(display.CENTER, window.cx, window.cy + 250)
         if self.report:GetReportResult() then
-            self.result = display.newSprite("victory_459x194.png"):addTo(self, 1):pos(window.cx, window.cy + 250)
+            self.result:getAnimation():play("Victory", -1, 0)
             app:GetAudioManager():PlayeEffectSoundWithKey("BATTLE_VICTORY")
         else
-            self.result = display.newSprite("defeat_469x263.png"):addTo(self, 1):pos(window.cx, window.cy + 250)
+            self.result:getAnimation():play("Defeat", -1, 0)
             app:GetAudioManager():PlayeEffectSoundWithKey("BATTLE_DEFEATED")
         end
     end
@@ -775,21 +810,23 @@ function GameUIReplayNew:DecodeStateBySide(side, is_left)
     return action
 end
 function GameUIReplayNew:HurtSoldierLeft()
-    local round = self.report:GetFightAttackSoldierRoundData()[self.round]
+    local round = self:GetFightAttackSoldierByRound(self.round)
     local soldier = self:TopSoldierLeft()
-    local count_percent = (round.soldierCount - round.soldierDamagedCount)/soldier.count * 100
-    local morale_percent = (round.morale - round.moraleDecreased)
+    local soldierCount = round.soldierCount or round.wallHp
+    local soldierDamagedCount = round.soldierDamagedCount or round.wallDamagedHp
+    local morale = round.morale or 100
+    local moraleDecreased = round.moraleDecreased or 0
     return promise.all(
-        self.ui_map.soldier_count_attack:PromiseOfProgressTo(0.5, count_percent),
+        self.ui_map.soldier_count_attack:PromiseOfProgressTo(0.5, (soldierCount - soldierDamagedCount) / soldier.count * 100),
         self:PormiseOfSchedule(0.5, function(percent)
-            local count = math.floor((round.soldierCount - round.soldierDamagedCount * percent))
+            local count = math.ceil(soldierCount - soldierDamagedCount * percent)
             self.ui_map.soldier_count_attack:SetText(count.."/"..soldier.count)
         end),
         self:PromiseOfDelay(0.8):next(function()
             return promise.all(
-                self.ui_map.soldier_morale_attack:PromiseOfProgressTo(0.5, morale_percent),
+                self.ui_map.soldier_morale_attack:PromiseOfProgressTo(0.5, morale - moraleDecreased),
                 self:PormiseOfSchedule2(0.5, function(percent)
-                    local count = math.floor((round.morale - round.moraleDecreased * percent))
+                    local count = math.ceil(morale - moraleDecreased * percent)
                     self.ui_map.soldier_morale_attack:SetText(count.."/"..100)
                 end)
             )
@@ -797,21 +834,23 @@ function GameUIReplayNew:HurtSoldierLeft()
     )
 end
 function GameUIReplayNew:HurtSoldierRight()
-    local round = self.report:GetFightDefenceSoldierRoundData()[self.round]
+    local round = self:GetFightDefenceSoldierByRound(self.round)
     local soldier = self:TopSoldierRight()
-    local count_percent = (round.soldierCount - round.soldierDamagedCount)/soldier.count * 100
-    local morale_percent = (round.morale - round.moraleDecreased)
+    local soldierCount = round.soldierCount or round.wallHp
+    local soldierDamagedCount = round.soldierDamagedCount or round.wallDamagedHp
+    local morale = round.morale or 100
+    local moraleDecreased = round.moraleDecreased or 0
     return promise.all(
-        self.ui_map.soldier_count_defence:PromiseOfProgressTo(0.5, count_percent),
+        self.ui_map.soldier_count_defence:PromiseOfProgressTo(0.5, (soldierCount - soldierDamagedCount) / soldier.count * 100),
         self:PormiseOfSchedule(0.5, function(percent)
-            local count = math.floor((round.soldierCount - round.soldierDamagedCount * percent))
+            local count = math.ceil(soldierCount - soldierDamagedCount * percent)
             self.ui_map.soldier_count_defence:SetText(count.."/"..soldier.count)
         end),
         self:PromiseOfDelay(0.8):next(function()
             return promise.all(
-                self.ui_map.soldier_morale_defence:PromiseOfProgressTo(0.5, morale_percent),
+                self.ui_map.soldier_morale_defence:PromiseOfProgressTo(0.5, morale - moraleDecreased),
                 self:PormiseOfSchedule2(0.5, function(percent)
-                    local count = math.floor((round.morale - round.moraleDecreased * percent))
+                    local count = math.ceil(morale - moraleDecreased * percent)
                     self.ui_map.soldier_morale_defence:SetText(count.."/"..100)
                 end)
             )
@@ -839,8 +878,8 @@ function GameUIReplayNew:EnterRightSoldiers()
     local top_soldier = self:TopSoldierRight()
     top_soldier.status = "fighting"
     self.ui_map.soldier_inbattle_defence
-        :SetSoldeir(top_soldier.name, top_soldier.star, self.report.IsPveBattle):
-        show():SetEnable(true)
+        :SetSoldeir(top_soldier.name, top_soldier.star, self.report.IsPveBattle)
+        :show():SetEnable(true)
 
     self.ui_map.soldier_count_defence
         :SetText(top_soldier.count.."/"..top_soldier.count)
@@ -897,7 +936,7 @@ function GameUIReplayNew:GetOriginSoldierInfoLeft(name)
     end
 end
 function GameUIReplayNew:GetOriginSoldierInfoRight(name)
-    for _,v in ipairs(self.report:GetOrderedDefenceSoldiers()) do
+    for _,v in ipairs(self:GetOrderedDefenceSoldiers()) do
         if v.name == name then
             return v
         end
@@ -976,7 +1015,7 @@ function GameUIReplayNew:Reset()
     self.copy_soldiers_attack = clone(self.report:GetOrderedAttackSoldiers())
     self:RefreshSoldierListView(self.ui_map.list_view_attack, self.copy_soldiers_attack)
     self.ui_map.list_view_attack:reload()
-    self.copy_soldiers_defence = clone(self.report:GetOrderedDefenceSoldiers())
+    self.copy_soldiers_defence = clone(self:GetOrderedDefenceSoldiers())
     self:RefreshSoldierListView(self.ui_map.list_view_defence, self.copy_soldiers_defence, self.report.IsPveBattle)
     self.ui_map.list_view_defence:reload()
 end
@@ -1086,9 +1125,6 @@ function GameUIReplayNew:BuildUI()
     local clip = display.newClippingRegionNode(cc.rect(0,0, 588, 400)):addTo(self):pos(window.left + 25, window.bottom + 580)
     ui_map.battle_background1 = display.newSprite("back_ground_grassLand.png")
         :addTo(clip):align(display.LEFT_BOTTOM)
-    ui_map.battle_background2 = display.newSprite("back_ground_grassLand.png")
-        :addTo(ui_map.battle_background1)
-        :align(display.LEFT_BOTTOM, ui_map.battle_background1:getContentSize().width, 0)
     ui_map.battle_node = display.newNode():addTo(clip)
 
     local top = display.newSprite("back_ground_replay_1.png"):addTo(self, 1)

@@ -26,6 +26,9 @@ local PLAYER_ICON = {
     "player_icon_10.png",
     "player_icon_11.png",
 }
+local UI_ANIMATION_FILES = {
+    "animations/win.ExportJson"
+}
 
 local BUILDING_ANIMATIONS_FILES = {
     watchTower = {
@@ -777,6 +780,13 @@ local PVE_ANIMATION_FILES = {
     "animations/heilong.ExportJson",
 }
 
+local function loadUIAnimation()
+    local manager = ccs.ArmatureDataManager:getInstance()
+    for _,file in pairs(UI_ANIMATION_FILES) do
+        manager:addArmatureFileInfo(DEBUG_GET_ANIMATION_PATH(file))
+    end
+end
+
 local function loadBuildingAnimation()
     local manager = ccs.ArmatureDataManager:getInstance()
     for _,all_files in pairs(BUILDING_ANIMATIONS_FILES) do
@@ -1050,6 +1060,7 @@ return {
     building_animations = BUILDING_ANIMATIONS,
     building_animations_files = BUILDING_ANIMATIONS_FILES,
     pve = PVE,
+    loadUIAnimation = loadUIAnimation,
     loadBuildingAnimation = loadBuildingAnimation,
     unLoadBuildingAnimation = unLoadBuildingAnimation,
     loadSolidersAnimation = loadSolidersAnimation,
