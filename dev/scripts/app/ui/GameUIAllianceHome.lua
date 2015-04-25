@@ -501,6 +501,7 @@ local function pGetIntersectPoint(pt1,pt2,pt3,pt4)
     end
 end
 function GameUIAllianceHome:OnSceneMove(logic_x, logic_y, alliance_view)
+    if self.alliance:IsDefault() then return end
     self:UpdateCoordinate(logic_x, logic_y, alliance_view)
     self:UpdateAllArrows(logic_x, logic_y, alliance_view)
 end
