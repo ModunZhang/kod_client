@@ -658,6 +658,8 @@ function GameUIReplayNew:ShowStrongOrWeak()
 end
 function GameUIReplayNew:Replay()
     self:Reset()
+    self:EnterSoldiersRight()
+    self:EnterSoldiersLeft()
     if self.report:IsDragonFight() then
         self:PlayDragonBattle():next(function()
             return self:PlaySoldierBattle(decode_battle(decode_battle_from_report(self.report)))
@@ -750,7 +752,7 @@ function GameUIReplayNew:DecodeStateBySide(side, is_left)
                 end):next(BattleObject:MoveTo(2, end_left, Y))
                     :next(BattleObject:BreathForever())
             end
-            self:EnterLeftSoldiers()
+            self:EnterSoldiersLeft()
         else
             if side.soldier == "wall" then
                 self.right = NewWall(self):addTo(self.ui_map.battle_background1):pos(650, Y)
@@ -766,7 +768,7 @@ function GameUIReplayNew:DecodeStateBySide(side, is_left)
                     :next(BattleObject:MoveTo(2, end_right, Y))
                     :next(BattleObject:BreathForever())
             end
-            self:EnterRightSoldiers()
+            self:EnterSoldiersRight()
         end
     elseif state == "attack" then
         action = BattleObject:Do(BattleObject:AttackOnce()):next(function(corps)
@@ -857,7 +859,7 @@ function GameUIReplayNew:HurtSoldierRight()
         end)
     )
 end
-function GameUIReplayNew:EnterLeftSoldiers()
+function GameUIReplayNew:EnterSoldiersLeft()
     local top_soldier = self:TopSoldierLeft()
     top_soldier.status = "fighting"
     self.ui_map.soldier_inbattle_attack
@@ -874,7 +876,7 @@ function GameUIReplayNew:EnterLeftSoldiers()
 
     self:ShowStrongOrWeak()
 end
-function GameUIReplayNew:EnterRightSoldiers()
+function GameUIReplayNew:EnterSoldiersRight()
     local top_soldier = self:TopSoldierRight()
     top_soldier.status = "fighting"
     self.ui_map.soldier_inbattle_defence
@@ -1236,17 +1238,19 @@ function GameUIReplayNew:BuildUI()
     local s1 = bottom:getContentSize()
     ui_map.list_view_attack = UIListView.new{
         -- bgColor = UIKit:hex2c4b(0x7a100000),
-        viewRect = cc.rect(0, 0, s1.width - 20, s1.height - 130),
+        viewRect = cc.rect(0, 0, s1.width - 20, s1.height - 120),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
     }:addTo(bottom):pos(10, 100):setBounceable(false)
 
     ui_map.list_view_defence = UIListView.new{
         -- bgColor = UIKit:hex2c4b(0x7a170000),
-        viewRect = cc.rect(0, 0, s1.width - 20, s1.height - 130),
+        viewRect = cc.rect(0, 0, s1.width - 20, s1.height - 120),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
     }:addTo(bottom):pos(10, 100):setBounceable(false)
 
-    ui_map.list_view_layer = display.newLayer():addTo(bottom):pos(10, 100)
+    ui_map.list_view_layer = display.newLayer()
+    -- newColorLayer(cc.c4b(100,100,100,0))
+    :addTo(bottom):pos(10, 100)
     ui_map.list_view_layer:setContentSize(cc.size(590,390))
     ui_map.list_view_layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
         ui_map.list_view_attack:onTouch_(event)
@@ -1258,7 +1262,7 @@ function GameUIReplayNew:BuildUI()
 
 
     ui_map.speedup = cc.ui.UIPushButton.new(
-        {normal = "yellow_btn_up_186x66.png",pressed = "yellow_btn_down_186x66.png"},
+        {normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"},
         {scale9 = false}
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -1278,7 +1282,7 @@ function GameUIReplayNew:BuildUI()
         :addTo(bottom):align(display.CENTER, s1.width - 110, 50)
 
     ui_map.pass = cc.ui.UIPushButton.new(
-        {normal = "yellow_btn_up_186x66.png",pressed = "yellow_btn_down_186x66.png"},
+        {normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"},
         {scale9 = false}
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
