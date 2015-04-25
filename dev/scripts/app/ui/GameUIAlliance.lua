@@ -140,7 +140,7 @@ function GameUIAlliance:CreateNoAllianceUI()
             {
                 label = _("创建"),
                 tag = "create",
-                
+
             },
             {
                 label = _("加入"),
@@ -547,7 +547,7 @@ function GameUIAlliance:getCommonListItem_(listType,alliance)
             end)
             :addTo(bg)
         nameLabel:setString(alliance.name)
-        memberValLabel:setString(string.format("%s/%s",alliance.members,alliance.membersMax)) 
+        memberValLabel:setString(string.format("%s/%s",alliance.members,alliance.membersMax))
         fightingValLabel:setString(alliance.power)
         languageValLabel:setString(alliance.language)
         killValLabel:setString(alliance.kill)
@@ -582,7 +582,7 @@ function GameUIAlliance:getCommonListItem_(listType,alliance)
                 self:commonListItemAction(listType,item,alliance,1)
             end)
             :addTo(bg)
-            memberValLabel:setString(string.format("%s/%s",alliance.members,alliance.membersMax)) 
+        memberValLabel:setString(string.format("%s/%s",alliance.members,alliance.membersMax))
     elseif listType == self.COMMON_LIST_ITEM_TYPE.APPLY then
         local cancel_button = WidgetPushButton.new({normal = "red_btn_up_148x58.png",pressed = "red_btn_down_148x58.png"})
             :setButtonLabel(
@@ -599,7 +599,7 @@ function GameUIAlliance:getCommonListItem_(listType,alliance)
             end)
             :addTo(bg)
         nameLabel:setString(alliance.name)
-        memberValLabel:setString(string.format("%s/%s",alliance.members,alliance.membersMax)) 
+        memberValLabel:setString(string.format("%s/%s",alliance.members,alliance.membersMax))
         fightingValLabel:setString(alliance.power)
         languageValLabel:setString(alliance.language)
         killValLabel:setString(alliance.kill)
@@ -628,12 +628,12 @@ function GameUIAlliance:commonListItemAction( listType,item,alliance,tag)
     elseif  listType == self.COMMON_LIST_ITEM_TYPE.APPLY then
         NetManager:getCancelJoinAlliancePromise(alliance.id):done(function()
             -- self:RefreshApplyListView()
-        end)
+            end)
     elseif listType == self.COMMON_LIST_ITEM_TYPE.INVATE then
         -- tag == 1 -> 拒绝
         NetManager:getHandleJoinAllianceInvitePromise(alliance.id,tag~=1):done(function()
             if tag == 1 then
-                -- self:RefreshInvateListView()
+            -- self:RefreshInvateListView()
             end
         end)
     end
@@ -673,7 +673,7 @@ end
 
 --总览
 function GameUIAlliance:HaveAlliaceUI_overviewIf()
-    if self.overviewNode then 
+    if self.overviewNode then
         self:RefreshEventListView()
         return self.overviewNode end
     self.ui_overview = {}
@@ -900,7 +900,7 @@ end
 function GameUIAlliance:RefreshOverViewUI()
     if self.ui_overview and self.tab_buttons:GetSelectedButtonTag() == 'overview'  then
         local alliance_data = Alliance_Manager:GetMyAlliance()
-         local m_count,m_online,m_maxCount = alliance_data:GetMembersCountInfo()
+        local m_count,m_online,m_maxCount = alliance_data:GetMembersCountInfo()
         self.ui_overview.nameLabel:setString(string.format("[%s] %s",alliance_data:Tag(),alliance_data:Name()))
         self.ui_overview.memberCountLabel:setString(string.format("%s/%s",m_count,m_maxCount))
         self.ui_overview.online_count_label:setString(m_online)
@@ -947,11 +947,11 @@ function GameUIAlliance:MembersListonTouch(event)
         UIKit:WaitForNet(0)
         self:RefreshMemberList()
         self:performWithDelay(function()
-             UIKit:NoWaitForNet()
+            UIKit:NoWaitForNet()
             self.need_refresh = false
         end, 0.3)
     elseif "top_distance_changed" == event.name then
-         if math.ceil(event.disY) > 40 then
+        if math.ceil(event.disY) > 40 then
             self.refresh_label:show()
         else
             self.refresh_label:hide()
@@ -961,7 +961,7 @@ end
 function GameUIAlliance:HaveAlliaceUI_membersIf()
     if not self.member_list_bg then
         self.member_list_bg = display.newNode():size(568,784):addTo(self.main_content)
-             :align(display.CENTER_TOP, window.width/2, window.betweenHeaderAndTab)
+            :align(display.CENTER_TOP, window.width/2, window.betweenHeaderAndTab)
         local list,list_node = UIKit:commonListView({
             viewRect = cc.rect(0, 0,560,618),
             direction = UIScrollView.DIRECTION_VERTICAL,
@@ -983,7 +983,7 @@ function GameUIAlliance:HaveAlliaceUI_membersIf()
         self.member_list_bg.player_icon_box = box
         local title_bar =  display.newScale9Sprite("alliance_event_type_darkblue_222x30.png",0,0, cc.size(428,30), cc.rect(7,7,190,16))
             :addTo(self.member_list_bg)
-            :align(display.LEFT_TOP, 136, 782) 
+            :align(display.LEFT_TOP, 136, 782)
         local title_label = UIKit:ttfLabel({
             text = "",
             size = 22,
@@ -1184,9 +1184,9 @@ function GameUIAlliance:OnPlayerDetailButtonClicked(memberId)
 end
 -- 信息
 function GameUIAlliance:HaveAlliaceUI_infomationIf()
-    if self.informationNode then 
+    if self.informationNode then
         self:RefreshDescView()
-        return self.informationNode 
+        return self.informationNode
     end
     local informationNode = WidgetUIBackGround.new({height=384,isFrame = "yes"}):addTo(self.main_content):pos(20,window.betweenHeaderAndTab - 394)
     self.informationNode = informationNode
@@ -1246,7 +1246,7 @@ function GameUIAlliance:HaveAlliaceUI_infomationIf()
         :setLayoutSize(557, 54)
         :pos(notice_bg:getPositionX() - notice_bg:getContentSize().width/2,notice_bg:getPositionY() - notice_bg:getContentSize().height/2 - 118)
         :setCheckButtonStateChangeFunction(function(group,currentSelectedIndex,oldIndex)
-             if  not Alliance_Manager:GetMyAlliance():GetSelf():CanEditAllianceJoinType() then
+            if  not Alliance_Manager:GetMyAlliance():GetSelf():CanEditAllianceJoinType() then
                 UIKit:showMessageDialog(_("提示"), _("您没有此操作权限"), function()end)
                 return false
             end
@@ -1255,7 +1255,7 @@ function GameUIAlliance:HaveAlliaceUI_infomationIf()
                 if currentSelectedIndex ~= 1 then
                     title = _("玩家仅能通过申请或者邀请的方式加入")
                 end
-                UIKit:showMessageDialog(_("提示"), 
+                UIKit:showMessageDialog(_("提示"),
                     _("你将设置联盟加入方式为") .. title,
                     function()
                         self.joinTypeButton:sureSelectedButtonIndex(currentSelectedIndex)
@@ -1322,11 +1322,11 @@ function GameUIAlliance:RefreshDescView()
     self.descListView:reload()
 end
 
-function GameUIAlliance:OnAllianceJoinTypeButtonClicked(event)  
+function GameUIAlliance:OnAllianceJoinTypeButtonClicked(event)
     local join_type = "all"
     if event.selected ~= 1 then
         join_type = "audit"
-    end 
+    end
     NetManager:getEditAllianceJoinTypePromise(join_type)
 end
 
@@ -1338,17 +1338,17 @@ end
 
 function GameUIAlliance:OnInfoButtonClicked(tag)
     if not self:IsOperateButtonEnable(tag) then
-       UIKit:showMessageDialog(_("提示"), _("您没有此操作权限"), function()end)
+        UIKit:showMessageDialog(_("提示"), _("您没有此操作权限"), function()end)
         return
     end
     if tag == 1 then
-        if Alliance_Manager:GetMyAlliance():GetSelf():IsArchon() and Alliance_Manager:GetMyAlliance():GetMembersCount() > 1 then 
+        if Alliance_Manager:GetMyAlliance():GetSelf():IsArchon() and Alliance_Manager:GetMyAlliance():GetMembersCount() > 1 then
             UIKit:showMessageDialog(_("提示"),_("仅当联盟成员为空时,盟主才能退出联盟"), function()end)
             return
         end
         UIKit:showMessageDialog(_("退出联盟"),
             _("您必须在没有部队在外行军的情况下，才可以退出联盟。退出联盟会损失当前未打开的联盟礼物。"),
-            function() 
+            function()
                 NetManager:getQuitAlliancePromise():done()
             end)
     elseif tag == 2 then
@@ -1412,11 +1412,9 @@ function GameUIAlliance:CreateInvateUI()
                 return
             end
             NetManager:getInviteToJoinAlliancePromise(playerID):done(function(result)
-                    layer:removeFromParent(true)
-                    UIKit:showMessageDialog(_("提示"), _("邀请发送成功"), function()end)
-                end):fail(function(err)
-                    UIKit:showMessageDialog(_("提示"), err:reason(), function()end)
-                end)
+                layer:removeFromParent(true)
+                UIKit:showMessageDialog(_("提示"), _("邀请发送成功"), function()end)
+            end)
         end)
         :addTo(bg):align(display.RIGHT_BOTTOM,editbox:getPositionX(), 20)
 
@@ -1425,3 +1423,4 @@ end
 
 
 return GameUIAlliance
+
