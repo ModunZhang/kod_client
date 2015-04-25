@@ -32,7 +32,7 @@ THE SOFTWARE.
 #include "renderer/CCTextureCache.h"
 #include "renderer/CCGLProgram.h"
 #include "deprecated/CCString.h" // For StringUtils::format
-
+#include "2d/CCSpriteTileMap.h"
 NS_CC_BEGIN
 
 
@@ -281,7 +281,7 @@ Sprite* TMXLayer::reusedTileWithRect(Rect rect)
 {
     if (! _reusedTile) 
     {
-        _reusedTile = Sprite::createWithTexture(_textureAtlas->getTexture(), rect);
+        _reusedTile = SpriteTileMap::createWithTexture(_textureAtlas->getTexture(), rect);
         _reusedTile->setBatchNode(this);
         _reusedTile->retain();
     }
@@ -322,7 +322,7 @@ Sprite * TMXLayer::getTileAt(const Vec2& pos)
             Rect rect = _tileSet->getRectForGID(gid);
             rect = CC_RECT_PIXELS_TO_POINTS(rect);
 
-            tile = Sprite::createWithTexture(this->getTexture(), rect);
+            tile = SpriteTileMap::createWithTexture(this->getTexture(), rect);
             tile->setBatchNode(this);
             tile->setPosition(getPositionAt(pos));
             tile->setPositionZ((float)getVertexZForPos(pos));
