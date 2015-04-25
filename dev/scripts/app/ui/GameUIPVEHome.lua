@@ -117,7 +117,7 @@ function GameUIPVEHome:CreateTop()
     }):addTo(pve_back):align(display.CENTER, size.width / 2, 25)
 
     local box = cc.ui.UIPushButton.new(
-        {normal = "map_bg_100X100.png", pressed = "map_bg_100X100.png"}
+        {normal = "back_ground_box.png", pressed = "back_ground_box.png"}
         ,{})
         :addTo(top_bg, 1):align(display.CENTER, 80, 55):scale(0.8)
         :onButtonClicked(function(event)

@@ -105,7 +105,7 @@ function GameUIWarReport:onEnter()
     ):setButtonLabel(replay_label)
         :addTo(report_body):align(display.CENTER, report_body:getContentSize().width-100, rb_size.height-186)
         :onButtonClicked(function(event)
-            UIKit:newGameUI("GameUIReplay",clone(report)):AddToCurrentScene(true)
+            UIKit:newGameUI("GameUIReplayNew",clone(report)):AddToCurrentScene(true)
         end)
 
     -- 删除按钮
@@ -470,7 +470,7 @@ function GameUIWarReport:CreateBelligerentsItem(player,isSelf)
     -- 联盟名字背景框
     display.newScale9Sprite(isSelf and "back_ground_blue_254x42.png" or "back_ground_red_254x42.png", 1, 0,cc.size(256,50),cc.rect(10,10,234,22)):align(display.LEFT_BOTTOM):addTo(player_item)
     -- 玩家头像
-    UIKit:GetPlayerCommonIcon(player.icon):addTo(bottom_bg,1):align(display.CENTER, 50, height/2):addTo(player_item):setScale(0.7)
+    UIKit:GetPlayerCommonIcon(player.icon):addTo(player_item,1):align(display.CENTER, 50, height/2):setScale(0.7)
     
     -- 玩家名称
     UIKit:ttfLabel({

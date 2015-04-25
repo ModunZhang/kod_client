@@ -82,10 +82,18 @@ end
 function BattleObject:move(time, x, y)
     local p = promise.new()
     self:PlayAnimation("move_90")
-    local speed = cc.Speed:create(transition.sequence({
-        cc.MoveTo:create(time, cc.p(x, y)),
-        cc.CallFunc:create(function() p:resolve(self) end),
-    }), self:Speed())
+    local speed
+    if x and y then
+        speed = cc.Speed:create(transition.sequence({
+            cc.MoveTo:create(time, cc.p(x, y)),
+            cc.CallFunc:create(function() p:resolve(self) end),
+        }), self:Speed())
+    else
+        speed = cc.Speed:create(transition.sequence({
+            cc.DelayTime:create(time),
+            cc.CallFunc:create(function() p:resolve(self) end),
+        }), self:Speed())
+    end
     speed:setTag(MOVE_TAG)
     self:runAction(speed)
     return p
@@ -104,6 +112,11 @@ end
 function BattleObject:Defeat()
     return function(object)
         return object:defeat()
+    end
+end
+function BattleObject:Move(time)
+    return function(object)
+        return object:move(time)
     end
 end
 function BattleObject:MoveTo(time, x, y)
@@ -151,16 +164,6 @@ function BattleObject:TurnRight()
         return p
     end
 end
-function BattleObject:Move()
-    return function(object)
-        object:PlayAnimation("move_90")
-        local p = promise.new()
-        object:OnAnimationPlayEnd("move_90", function()
-            p:resolve(object)
-        end)
-        return p
-    end
-end
 function BattleObject:Hold()
     return function(object)
         local p = promise.new()
@@ -191,6 +194,7 @@ function BattleObject:Do(p)
 end
 
 return BattleObject
+
 
 
 

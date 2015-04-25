@@ -368,32 +368,16 @@ local ALLIANCE_TITLE = {
     ["member"] = _("成员"),
 }
 
-
--- local normal = GameDatas.Soldiers.normal
 local SOLDIER_CATEGORY_MAP = {
-    ["swordsman"] = "infantry",
-    ["sentinel"] = "infantry",
-    ["skeletonWarrior"] = "infantry",
-    ["priest"] = "infantry",
-
-    ["ranger"] = "archer",
-    ["crossbowman"] = "archer",
-    ["skeletonArcher"] = "archer",
-    ["demonHunter"] = "archer",
-
-    ["lancer"] = "cavalry",
-    ["horseArcher"] = "cavalry",
-    ["deathKnight"] = "cavalry",
-    ["paladin"] = "cavalry",
-
-    ["catapult"] = "siege",
-    ["ballista"] = "siege",
-    ["meatWagon"] = "siege",
-    ["steamTank"] = "siege",
-
-
     ["wall"] = "wall"
 }
+for k,v in pairs(GameDatas.Soldiers.normal) do
+    SOLDIER_CATEGORY_MAP[v.name] = v.type
+end
+for k,v in pairs(GameDatas.Soldiers.special) do
+    SOLDIER_CATEGORY_MAP[v.name] = v.type
+end
+
 
 local ALLIANCE_EVENTS = {
     donate = _("向联盟慷慨捐赠，提升荣耀值%s"),

@@ -200,7 +200,7 @@ function WidgetPVEDialog:Fight()
                 NetManager:getSetPveDataPromise(
                     self.user:EncodePveDataAndResetFightRewardsData()
                 ):done(function()
-                    UIKit:newGameUI("GameUIReplay", report, function()
+                    UIKit:newGameUI("GameUIReplayNew", report, function()
                         if report:IsAttackWin() then
                             GameGlobalUI:showTips(_("获得奖励"), rewards)
                         end
@@ -213,7 +213,7 @@ function WidgetPVEDialog:Fight()
                 NetManager:getSetPveDataPromise(
                     self.user:EncodePveDataAndResetFightRewardsData()
                 ):done(function()
-                    UIKit:newGameUI("GameUIReplay", report):AddToCurrentScene(true)
+                    UIKit:newGameUI("GameUIReplayNew", report):AddToCurrentScene(true)
                 end)
             end
         end):AddToCurrentScene(true)

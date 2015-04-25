@@ -630,6 +630,10 @@ function Report:GetDefenceDragonLevel()
     return helpDefencePlayerData and helpDefencePlayerData.dragon.level or 
     defencePlayerData and defencePlayerData.dragon.level
 end
+function Report:GetAttackTargetTerrain()
+    local data = self.data
+    return data.attackTarget.terrain
+end
 return Report
 
 

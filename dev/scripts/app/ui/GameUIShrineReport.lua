@@ -154,7 +154,7 @@ function GameUIShrineReport:OnDropListSelected( tag )
 end
 
 function GameUIShrineReport:OnRePlayClicked(roundData)
-    UIKit:newGameUI("GameUIReplay",self:GetShrineReport():GetFightReportObjectWithJson(roundData)):AddToCurrentScene(true)
+    UIKit:newGameUI("GameUIReplayNew",self:GetShrineReport():GetFightReportObjectWithJson(roundData)):AddToCurrentScene(true)
 end
 
 function GameUIShrineReport:RefreshUI(tag)

@@ -26,6 +26,9 @@ local PLAYER_ICON = {
     "player_icon_10.png",
     "player_icon_11.png",
 }
+local UI_ANIMATION_FILES = {
+    "animations/win.ExportJson"
+}
 
 local BUILDING_ANIMATIONS_FILES = {
     watchTower = {
@@ -372,7 +375,6 @@ local SOLDIER_IMAGES = {
         "meatWagon.png",
         "meatWagon.png",
     },
-
     wall = {
         "gate_1.png",
         "gate_2.png",
@@ -380,6 +382,7 @@ local SOLDIER_IMAGES = {
     }
 }
 local SOLDIER_COLOR_BG_IMAGES = {
+    wall = "blue_bg_128x128.png",
     ranger = "blue_bg_128x128.png",
     catapult = "yellow_bg_128x128.png",
     lancer = "blue_bg_128x128.png",
@@ -400,57 +403,70 @@ local SOLDIER_COLOR_BG_IMAGES = {
 local BLACK_SOLDIER_IMAGES = {
     ranger = {
         "ranger_1.png",
-        "b_ranger_1.png",
         "b_ranger_2.png",
+        "b_ranger_3.png",
     },
     catapult = {
         "catapult_1.png",
-        "b_catapult_1.png",
         "b_catapult_2.png",
+        "b_catapult_3.png",
     },
     lancer = {
         "lancer_1.png",
-        "b_lancer_1.png",
         "b_lancer_2.png",
+        "b_lancer_3.png",
     },
     swordsman = {
         "swordsman_1.png",
-        "b_swordsman_1.png",
         "b_swordsman_2.png",
+        "b_swordsman_3.png",
     },
     sentinel = {
         "sentinel_1.png",
-        "b_sentinel_1.png",
         "b_sentinel_2.png",
+        "b_sentinel_3.png",
     },
     crossbowman = {
         "crossbowman_1.png",
-        "b_crossbowman_1.png",
         "b_crossbowman_2.png",
+        "b_crossbowman_3.png",
     },
     horseArcher = {
         "horseArcher_1.png",
-        "b_horseArcher_1.png",
         "b_horseArcher_2.png",
+        "b_horseArcher_3.png",
     },
     ballista = {
         "ballista_1.png",
-        "b_ballista_1.png",
         "b_ballista_2.png",
+        "b_ballista_3.png",
     },
 
     skeletonWarrior = {
         "skeletonWarrior.png",
+        "skeletonWarrior.png",
+        "skeletonWarrior.png",
     },
     skeletonArcher = {
+        "skeletonArcher.png",
+        "skeletonArcher.png",
         "skeletonArcher.png",
     },
     deathKnight = {
         "deathKnight.png",
+        "deathKnight.png",
+        "deathKnight.png",
     },
     meatWagon = {
         "meatWagon.png",
+        "meatWagon.png",
+        "meatWagon.png",
     },
+    wall = {
+        "gate_1.png",
+        "gate_2.png",
+        "gate_3.png",
+    }
 }
 local DRAGON_ANIMATIONS_FILES = {
     redDragon = {
@@ -764,6 +780,13 @@ local PVE_ANIMATION_FILES = {
     "animations/heilong.ExportJson",
 }
 
+local function loadUIAnimation()
+    local manager = ccs.ArmatureDataManager:getInstance()
+    for _,file in pairs(UI_ANIMATION_FILES) do
+        manager:addArmatureFileInfo(DEBUG_GET_ANIMATION_PATH(file))
+    end
+end
+
 local function loadBuildingAnimation()
     local manager = ccs.ArmatureDataManager:getInstance()
     for _,all_files in pairs(BUILDING_ANIMATIONS_FILES) do
@@ -1037,6 +1060,7 @@ return {
     building_animations = BUILDING_ANIMATIONS,
     building_animations_files = BUILDING_ANIMATIONS_FILES,
     pve = PVE,
+    loadUIAnimation = loadUIAnimation,
     loadBuildingAnimation = loadBuildingAnimation,
     unLoadBuildingAnimation = unLoadBuildingAnimation,
     loadSolidersAnimation = loadSolidersAnimation,
