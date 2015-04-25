@@ -16,7 +16,7 @@
 
 #define kLabelZOrder  9999
 #define gettextViewImplIOS() ((cocos2d::ui::UITextViewImplIOS*)dtextView_)
-#define CC_TEXT_VIEW_PADDING 5
+#define CC_TEXT_VIEW_PADDING 10
 
 //MARK:Objective-C
 
@@ -281,8 +281,8 @@ void UITextViewImplIOS::initInactiveLabels(const Size& size)
     
 void UITextViewImplIOS::placeInactiveLabels()
 {
-    _label->setPosition(Vec2(CC_TEXT_VIEW_PADDING*2, _contentSize.height - CC_TEXT_VIEW_PADDING*4));
-    _labelPlaceHolder->setPosition(Vec2(CC_TEXT_VIEW_PADDING*2, _contentSize.height - CC_TEXT_VIEW_PADDING*4));
+    _label->setPosition(Vec2(CC_TEXT_VIEW_PADDING*2, _contentSize.height - CC_TEXT_VIEW_PADDING));
+    _labelPlaceHolder->setPosition(Vec2(CC_TEXT_VIEW_PADDING*2, _contentSize.height - CC_TEXT_VIEW_PADDING));
 }
 
 void UITextViewImplIOS::setInactiveText(const char* pText)
@@ -296,11 +296,11 @@ void UITextViewImplIOS::setInactiveText(const char* pText)
     }
     else
         _label->setString(getText());
-    
+    _label->setEllipsisEabled(true);
     // Clip the text width to fit to the text box
     Size contentSize = _textView->getContentSize();
-    float fMaxWidth = contentSize.width - CC_TEXT_VIEW_PADDING * 2;
-    float fMaxHeight = contentSize.height - CC_TEXT_VIEW_PADDING * 2;
+    float fMaxWidth = contentSize.width - CC_TEXT_VIEW_PADDING * 4;
+    float fMaxHeight = contentSize.height - CC_TEXT_VIEW_PADDING;
     _label->setDimensions(fMaxWidth,fMaxHeight);
 }
 
