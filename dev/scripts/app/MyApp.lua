@@ -142,33 +142,42 @@ function MyApp:flushIf()
 end
 
 function MyApp:retryConnectServer(need_disconnect)
+    print(debug.traceback("", 2),"retryConnectServer---->0")
     if need_disconnect or type(need_disconnect) == "nil" then
         NetManager:disconnect()
+        print("MyApp:retryConnectServer--->1")
     end
     if NetManager.m_logicServer.host and NetManager.m_logicServer.port and NetManager.m_was_inited_game then
         UIKit:WaitForNet()
         scheduler.performWithDelayGlobal(function()
             NetManager:getConnectLogicServerPromise():next(function()
+                print("MyApp:retryConnectServer--->2")
                 return NetManager:getLoginPromise()
             end):catch(function(err)
                 dump(err)
+                print("MyApp:retryConnectServer--->3")
                 local content, title = err:reason()
                 if title == 'timeout' then
+                    print("MyApp:retryConnectServer--->4")
                     UIKit:showMessageDialog(_("错误"), _("服务器连接断开,请检测你的网络环境后重试!"), function()
                         app:retryConnectServer(false)
                     end,nil,false)
                 else
+                    print("MyApp:retryConnectServer--->5")
                     local code = content.code
                     if UIKit:getErrorCodeKey(content.code) == 'reLoginNeeded' then
+                        print("MyApp:retryConnectServer--->6")
                         app:retryConnectServer(false)
                         return
                     else
+                        print("MyApp:retryConnectServer--->7")
                         UIKit:showMessageDialog(_("错误"), _("服务器连接断开,请检测你的网络环境后重试!"), function()
                             app:retryConnectServer(false)
                         end,nil,false)
                     end
                 end
             end):always(function()
+                print("MyApp:retryConnectServer--->8")
                 UIKit:NoWaitForNet()
             end)      
         end,1)
