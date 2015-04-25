@@ -111,7 +111,7 @@ function AllianceScene:ChangeTerrain()
 end
 function AllianceScene:OnOperation(alliance,operation_type)
     if operation_type == "quit" then
-        UIKit:showMessageDialog(_("提示"),_("您已经被逐出联盟"), function()
+        UIKit:showMessageDialog(_("提示"),_("您已经退出联盟"), function()
             app:EnterMyCityScene()
         end,nil,false)
     end
