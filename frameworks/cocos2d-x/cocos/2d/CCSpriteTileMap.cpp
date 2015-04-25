@@ -1,4 +1,4 @@
-.//
+//
 //  CCSpriteTileMap.cpp
 //  cocos2d_libs
 //
