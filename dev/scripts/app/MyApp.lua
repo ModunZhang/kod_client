@@ -186,7 +186,7 @@ function MyApp:retryConnectServer(need_disconnect)
 end
 
 function MyApp:onEnterBackground()
-    LuaUtils:outputTable("onEnterBackground", {})
+    dump("onEnterBackground------>")
     NetManager:disconnect()
     self:flushIf()
 end
@@ -197,7 +197,7 @@ end
 
 function MyApp:onEnterForeground()
     UIKit:closeAllUI()
-    LuaUtils:outputTable("onEnterForeground", {})
+    dump("onEnterForeground------>")
     self:retryConnectServer(false)
 end
 function MyApp:onEnterPause()
