@@ -724,7 +724,7 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
         :addTo(headerBg):align(display.CENTER_BOTTOM,headerBg:getContentSize().width/2, 20)
 
     local noticeView = UIListView.new {
-        viewRect =  cc.rect(21,14,537,123),
+        viewRect =  cc.rect(24,16,534,120),
         direction = UIScrollView.DIRECTION_VERTICAL,
     }:addTo(notice_bg)
     self.ui_overview.noticeView = noticeView
@@ -812,15 +812,15 @@ end
 
 function GameUIAlliance:RefreshNoticeView()
     local textLabel = UIKit:ttfLabel({
-        dimensions = cc.size(537, 0),
+        dimensions = cc.size(530, 0),
         text = string.len(Alliance_Manager:GetMyAlliance():Notice())>0 and Alliance_Manager:GetMyAlliance():Notice() or _("未设置联盟公告"),
         size = 20,
         color = 0x403c2f,
         align=cc.TEXT_ALIGNMENT_CENTER
     })
     local content = display.newNode()
-    content:size(537,textLabel:getContentSize().height)
-    textLabel:addTo(content):align(display.CENTER, 269, textLabel:getContentSize().height/2)
+    content:size(534,textLabel:getContentSize().height)
+    textLabel:addTo(content):align(display.CENTER, 267, textLabel:getContentSize().height/2)
     self.ui_overview.noticeView:removeAllItems()
     local textItem = self.ui_overview.noticeView:newItem()
     textItem:addContent(content)
@@ -1197,7 +1197,7 @@ function GameUIAlliance:HaveAlliaceUI_infomationIf()
 
 
     local descView = UIListView.new {
-        viewRect =  cc.rect(21,14,537,123),
+        viewRect =  cc.rect(24,16,534,120),
         direction = UIScrollView.DIRECTION_VERTICAL,
     }:addTo(notice_bg)
     self.descListView = descView
@@ -1305,19 +1305,19 @@ end
 
 function GameUIAlliance:RefreshDescView()
     local textLabel = UIKit:ttfLabel({
-        dimensions = cc.size(537, 0),
+        dimensions = cc.size(530, 0),
         text = string.len(Alliance_Manager:GetMyAlliance():Describe())>0 and Alliance_Manager:GetMyAlliance():Describe() or _("未设置联盟描述"),
         size = 20,
         color = 0x403c2f,
         align=cc.TEXT_ALIGNMENT_CENTER
     })
     local content = display.newNode()
-    content:size(537,textLabel:getContentSize().height)
-    textLabel:addTo(content):align(display.CENTER, 269, textLabel:getContentSize().height/2)
+    content:size(534,textLabel:getContentSize().height)
+    textLabel:addTo(content):align(display.CENTER, 267, textLabel:getContentSize().height/2)
     self.descListView:removeAllItems()
     local textItem = self.descListView:newItem()
     textItem:addContent(content)
-    textItem:setItemSize(537,content:getContentSize().height)
+    textItem:setItemSize(534,content:getContentSize().height)
     self.descListView:addItem(textItem)
     self.descListView:reload()
 end
