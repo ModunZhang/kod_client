@@ -85,11 +85,30 @@ function GameUIAllianceEnterBase:GetLocation()
     return x .. "," .. y
 end
 
-
-function GameUIAllianceEnterBase:GetBuildingImage()
-    return "grass_tree_3_112x114.png"
+function GameUIAllianceEnterBase:GetTerrain()
+    local alliance = self:IsMyAlliance() and self:GetMyAlliance() or self:GetEnemyAlliance()
+    return alliance:Terrain()
 end
 
+function GameUIAllianceEnterBase:GetBuildImageSprite()
+    local postion = {
+        grassLand = 960,
+        desert = 0,
+        iceField = 480,
+    }
+    local x = postion[self:GetTerrain()]
+    local sprite = cc.Sprite:create("tmxmaps/terrain.png",cc.rect(x,0,480,480))
+    sprite:setCascadeOpacityEnabled(true)
+    return sprite
+end
+
+function GameUIAllianceEnterBase:GetBuildingImage()
+    return ""
+end
+
+function GameUIAllianceEnterBase:GetBuildImageInfomation(sprite)
+    return 110/480,97,self:GetUIHeight() - 90 
+end
 
 function GameUIAllianceEnterBase:InitBuildingImage()
     local body = self:GetBody()
@@ -98,10 +117,18 @@ function GameUIAllianceEnterBase:InitBuildingImage()
         :addTo(body):flipX(true)
     cc.ui.UIImage.new("building_frame_36x136.png"):align(display.RIGHT_CENTER, 163, self:GetUIHeight()-90)
         :addTo(body)
-    local building_image = display.newSprite(self:GetBuildingImage())
-        :addTo(body):pos(105, self:GetUIHeight()-60)
-    building_image:setAnchorPoint(cc.p(0.5,0.5))
-    building_image:setScale(125/building_image:getContentSize().width)
+    local sprite = self:GetBuildImageSprite()
+    if not sprite then
+        local building_image = display.newSprite(self:GetBuildingImage())
+        local scale,x,y = self:GetBuildImageInfomation(building_image)
+        building_image:addTo(body):pos(x,y)
+        building_image:setAnchorPoint(cc.p(0.5,0.5))
+        building_image:setScale(scale)
+    else
+        local scale,x,y = self:GetBuildImageInfomation(sprite)
+        sprite:setAnchorPoint(cc.p(0.5,0.5)):addTo(body):pos(x,y)
+        sprite:setScale(scale)
+    end
     local level_bg = display.newSprite("back_ground_138x34.png"):addTo(body):pos(96, self:GetUIHeight()-180)
     local label = UIKit:ttfLabel({
         text = self:GetLevelLabelText(),

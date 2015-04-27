@@ -197,7 +197,7 @@ function DataUtils:getDragonMaxHp(star,level,skills,equipments)
     local vitality = self:getTotalVitalityFromJson(star,level,skills,equipments)
     return vitality * 2
 end
--- 通过buff名获得士兵属性字段
+-- 通过buff名获得士兵属性字段 
 function DataUtils:getSoldierBuffFieldFromKey(key)
     if key == 'hpAdd' then
         return 'hp'
@@ -255,6 +255,11 @@ function DataUtils:getAllSoldierVipBuffValue()
     local consumeFood_buff = User:GetVIPSoldierConsumeSub()
     if consumeFood_buff > 0 then
         table.insert(buff_table,{"*","consumeFoodPerHour",consumeFood_buff})
+    end
+    --行军速度
+    local march_buff = User:GetVIPMarchSpeedAdd()
+    if march_buff > 0 then
+        table.insert(buff_table,{"*","march",march_buff})
     end
     return buff_table
 end

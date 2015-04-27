@@ -26,6 +26,10 @@ function GameUIAllianceOrderHallEnter:GetBuildingDesc()
 	return "本地化缺失"
 end
 
+function GameUIAllianceOrderHallEnter:GetBuildImageInfomation(sprite)
+    local size = sprite:getContentSize()
+    return 0.6,97,self:GetUIHeight() - 90 
+end
 
 function GameUIAllianceOrderHallEnter:GetBuildingInfo()
 	local location = {
@@ -65,7 +69,7 @@ function GameUIAllianceOrderHallEnter:GetEnterButtons()
 			self:LeftButtonClicked()
 		end)
         local current_scene = display.getRunningScene()
-        if current_scene.__cname == "AllianceScene" then
+        if current_scene.__cname == "AllianceScene" and self:AllianceBuildingMoveIsOpen() then
             local move_building_button = self:BuildOneButton("icon_move_alliance_building.png",_("移动")):onButtonClicked(function()
                 if self:GetMyAlliance():Status() == 'fight' then
                     UIKit:showMessageDialog(nil, _("战争期不能移动"),function()end)

@@ -93,7 +93,7 @@ function GameUISettingContactUs:GetItem(title,subtitle,mail)
 			local subject,body = app:getSupportMailFormat(title)
 			local canSendMail = ext.sysmail.sendMail(mail,subject,body,function()end)
 			if not canSendMail then
-				UIKit:showMessageDialog(_("错误"),_("对不起，你的设备不支持邮件功能"),function()end)
+				UIKit:showMessageDialog(_("错误"),_("您尚未设置邮件：请前往IOS系统“设置”-“邮件、通讯录、日历”-“添加账户”处设置"),function()end)
 			end
 		end)
 	item:addContent(content)

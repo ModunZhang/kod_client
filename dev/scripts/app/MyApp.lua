@@ -148,7 +148,7 @@ function MyApp:retryConnectServer(need_disconnect)
         print("MyApp:retryConnectServer--->1")
     end
     if NetManager.m_logicServer.host and NetManager.m_logicServer.port and NetManager.m_was_inited_game then
-        UIKit:WaitForNet()
+        UIKit:WaitForNet(2)
         scheduler.performWithDelayGlobal(function()
             NetManager:getConnectLogicServerPromise():next(function()
                 print("MyApp:retryConnectServer--->2")
@@ -198,6 +198,7 @@ end
 function MyApp:onEnterForeground()
     UIKit:closeAllUI()
     dump("onEnterForeground------>")
+    local scene = display.getRunningScene()
     self:retryConnectServer(false)
 end
 function MyApp:onEnterPause()
@@ -283,7 +284,7 @@ function MyApp:pushScene(sceneName, args, transitionType, time, more)
     display.pushScene(scene, transitionType, time, more)
 end
 
-function MyApp:getSupportMailFormat(category)
+function MyApp:getSupportMailFormat(category,logMsg)
     
     local UTCTime    = "UTC Time:" .. os.date('!%Y-%m-%d %H:%M:%S', self.timer:GetServerTime())
     local GameName   = "Game:" .. "Kod"
@@ -298,6 +299,9 @@ function MyApp:getSupportMailFormat(category)
 
     local format_str = "\n\n\n\n\n---------------%s---------------\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s"
     local result_str = string.format(format_str,_("不要删除"),UTCTime,GameName,Version,Username,Server,OpenUDID,Category,Language,DeviceType,OSVersion)
+    if logMsg then
+        result_str = string.format("%s\n---------------Log---------------\n%s",result_str,logMsg)
+    end
     return "[KoD]" .. category ,result_str
 end
 

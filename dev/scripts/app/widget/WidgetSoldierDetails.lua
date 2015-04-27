@@ -172,6 +172,16 @@ function WidgetSoldierDetails:InitSoldierAttr()
             sc.consumeFoodPerHour,
             self:GetSoldierFieldWithBuff("consumeFoodPerHour")
         },
+        {
+            _("负重"),
+            sc.load,
+            self:GetSoldierFieldWithBuff("load")
+        },
+        {
+            _("行军速度"),
+            sc.march,
+            self:GetSoldierFieldWithBuff("march")
+        },
     }
 
     WidgetInfoBuff.new({

@@ -181,10 +181,10 @@ function Alliance:SetFlag(flag)
     end
 end
 function Alliance:IsDefault()
-    return self:Id() == nil
+    return self:Id() == nil or self:Id() == json.null
 end
 function Alliance:OnPropertyChange(property_name, old_value, new_value)
-    local is_new_alliance = property_name == "id" and old_value == nil and new_value ~= nil
+    local is_new_alliance = property_name == "id" and (old_value == nil or old_value == json.null) and new_value ~= nil
     if is_new_alliance then
         self:OnOperation("join")
     end
@@ -231,6 +231,7 @@ function Alliance:GetMembersCount()
     end
     return count
 end
+-- return 当前人数,在线人数,最大成员数
 function Alliance:GetMembersCountInfo()
     local count,online,maxCount = 0,0,0
     for __,v in pairs(self:GetAllMembers()) do
