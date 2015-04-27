@@ -6,7 +6,7 @@ local Observer = import("..entity.Observer")
 local AllianceView = import(".AllianceView")
 local MapLayer = import(".MapLayer")
 local MultiAllianceLayer = class("MultiAllianceLayer", MapLayer)
-local ZORDER = Enum("BACKGROUND", "BUILDING", "LINE", "CORPS")
+local ZORDER = Enum("BACKGROUND", "BUILDING", "INFO", "LINE", "CORPS")
 local floor = math.floor
 local min = math.min
 local max = math.max
@@ -22,6 +22,7 @@ function MultiAllianceLayer:ctor(arrange, ...)
     self.alliance_views = {}
     self:InitBackground()
     self:InitBuildingNode()
+    self:InitInfoNode()
     self:InitCorpsNode()
     self:InitLineNode()
     self:InitAllianceView()
@@ -119,6 +120,9 @@ end
 function MultiAllianceLayer:InitBuildingNode()
     self.building = display.newNode():addTo(self, ZORDER.BUILDING)
 end
+function MultiAllianceLayer:InitInfoNode()
+    self.info = display.newNode():addTo(self, ZORDER.INFO)
+end
 function MultiAllianceLayer:InitCorpsNode()
     self.corps = display.newNode():addTo(self, ZORDER.CORPS)
     self.corps_map = {}
@@ -132,6 +136,9 @@ function MultiAllianceLayer:GetBackGround()
 end
 function MultiAllianceLayer:GetBuildingNode()
     return self.building
+end
+function MultiAllianceLayer:GetInfoNode()
+    return self.info
 end
 function MultiAllianceLayer:GetCorpsNode()
     return self.corps

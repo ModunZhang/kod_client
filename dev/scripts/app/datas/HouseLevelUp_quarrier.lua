@@ -9,7 +9,7 @@ quarrier[1] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 25,
+	["buildTime"] = 20,
 	["citizen"] = 10
 }
 quarrier[2] = {
@@ -21,7 +21,7 @@ quarrier[2] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 45,
+	["buildTime"] = 50,
 	["citizen"] = 16
 }
 quarrier[3] = {
@@ -33,7 +33,7 @@ quarrier[3] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 108,
+	["buildTime"] = 110,
 	["citizen"] = 22
 }
 quarrier[4] = {
@@ -45,7 +45,7 @@ quarrier[4] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 216,
+	["buildTime"] = 230,
 	["citizen"] = 32
 }
 quarrier[5] = {
@@ -57,7 +57,7 @@ quarrier[5] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 432,
+	["buildTime"] = 290,
 	["citizen"] = 44
 }
 quarrier[6] = {

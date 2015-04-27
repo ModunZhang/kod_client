@@ -18,10 +18,16 @@ local other_building_map = {
     moonGate = {UILib.other_alliance_building.moonGate, 1},
 }
 function AllianceBuildingSprite:ctor(city_layer, entity, is_my_alliance)
+    self:setNodeEventEnabled(true)
     self.is_my_alliance = is_my_alliance
     local x, y = city_layer:GetLogicMap():ConvertToMapPosition(entity:GetLogicPosition())
     AllianceBuildingSprite.super.ctor(self, city_layer, entity, x, y)
     -- self:CreateBase()
+end
+function AllianceBuildingSprite:onExit()
+    if self.info then
+        self.info:removeFromParent()
+    end
 end
 function AllianceBuildingSprite:GetSpriteFile()
     if self.is_my_alliance then
@@ -39,7 +45,11 @@ function AllianceBuildingSprite:RefreshSprite()
         self.info:removeFromParent()
         self.info = nil
     end
-    self.info = display.newNode():addTo(self):pos(0, -50):scale(0.8)
+    local map_layer = self:GetMapLayer()
+    local x,y = map_layer:GetLogicMap():ConvertToMapPosition(self:GetEntity():GetLogicPosition())
+    self.info = display.newNode():addTo(map_layer:GetInfoNode()):pos(x, y - 50):scale(0.8)
+
+    
     local banners = self.is_my_alliance and UILib.my_city_banner or UILib.enemy_city_banner
     self.banner = display.newSprite(banners[0]):addTo(self.info):align(display.CENTER_TOP)
     self.level = UIKit:ttfLabel({
