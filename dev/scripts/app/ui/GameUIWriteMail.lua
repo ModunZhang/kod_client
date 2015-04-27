@@ -91,7 +91,7 @@ function GameUIWriteMail:ctor(send_type,contacts)
         :addTo(write_mail):align(display.CENTER, write_mail:getContentSize().width-120, 40)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                self:SendMail(contacts.id, self.editbox_subject:getText(), self.textView:getText())
+                self:SendMail(contacts and contacts.id, self.editbox_subject:getText(), self.textView:getText())
             end
         end)
     textView:setRectTrackedNode(self.send_button)
@@ -142,11 +142,6 @@ function GameUIWriteMail:SetContent( content )
     self.textView:setText(content)
     return self
 end
-
-function GameUIWriteMail:AddToCurrentScene()
-    return self:addTo(display.getRunningScene())
-end
-
 
 return GameUIWriteMail
 
