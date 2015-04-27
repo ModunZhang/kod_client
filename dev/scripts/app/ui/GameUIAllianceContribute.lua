@@ -297,7 +297,6 @@ function GameUIAllianceContribute:IsAbleToContribute()
     if not r_type then
         FullScreenPopDialogUI.new():SetTitle(_("提示"))
             :SetPopMessage(_("请选择一种资源"))
-            :CreateCancelButton()
             :AddToCurrentScene()
         return false
     end
