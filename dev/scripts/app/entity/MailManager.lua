@@ -217,9 +217,6 @@ function MailManager:FetchMailsFromServer(fromIndex)
                 self:AddMailsToEnd(clone(v))
                 table.insert(fetch_mails, clone(v))
             end
-            self:NotifyListeneOnType(MailManager.LISTEN_TYPE.FETCH_MAILS,function(listener)
-                listener:OnFetchMailsSuccess(fetch_mails)
-            end)
         end
         return response
     end)
