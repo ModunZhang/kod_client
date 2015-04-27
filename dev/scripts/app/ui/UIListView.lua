@@ -916,7 +916,7 @@ end
 ]]
 function UIListView:asyncLoadWithCurrentPosition_()
     local items = self:getItems()
-    local begin_idx
+    local begin_idx = 1
     for i,v in ipairs(items) do
         if UIScrollView.DIRECTION_VERTICAL == self.direction then
             if self.container:getPositionY() + v:getPositionY() < self.viewRect_.height then
@@ -932,8 +932,13 @@ function UIListView:asyncLoadWithCurrentPosition_()
     end
 
     local count = self.delegate_[UIListView.DELEGATE](self, UIListView.COUNT_TAG)
-    -- 去较小值
-    local end_idx = math.min( items[#items].idx_ , count )
+    -- 取较小值
+    local end_idx
+    if items[#items] then
+        end_idx = math.min(items[#items].idx_ , count )
+    else
+        end_idx = count
+    end
 
 
     self:removeAllItems()

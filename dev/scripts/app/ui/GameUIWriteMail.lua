@@ -27,9 +27,8 @@ function GameUIWriteMail:ctor(send_type,contacts)
             text = contacts and _("收件人")..":      "..contacts.name,
             size = 20,
             color = 0x797154
-        }):align(display.LEFT_CENTER,56, r_size.height-70)
+        }):align(display.LEFT_CENTER,58, r_size.height-70)
         :addTo(write_mail)
-
     -- 主题
     local subject_title_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -130,7 +129,7 @@ end
 
 -- -- 收件人ID
 function GameUIWriteMail:SetAddressee( addressee )
-     self.addressee_title_label:setString(_("收件人")..":"..addressee)
+     self.addressee_title_label:setString( _("收件人")..":      "..addressee)
     return self
 end
 -- 邮件主题

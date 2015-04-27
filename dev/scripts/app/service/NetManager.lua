@@ -111,7 +111,7 @@ local function get_response_mail_msg(response)
                         newKey = newKey..keys[i]..(i~=len and "." or "")
                     end
                 end
-                mail_response[i][1] = newKey
+                v[1] = newKey
             end
         end
         local edit = decodeInUserDataFromDeltaData(user_data, response.msg.playerData)
@@ -120,6 +120,38 @@ local function get_response_mail_msg(response)
 
     return response
 end
+local function get_response_delete_mail_msg(response)
+    if response.msg.playerData then
+        local user_data = DataManager:getUserData()
+        local mail_response = response.msg.playerData
+        for i,v in ipairs(mail_response) do
+            if type(v) == "table" then
+                local keys = string.split(v[1], ".")
+                local newKey = ""
+                local len = #keys
+                for i=1,len do
+                    local k = tonumber(keys[i]) or keys[i]
+                    if type(k) == "number" then
+                        local client_index = MailManager:GetMailByServerIndex(k) - 1
+                        newKey = newKey..client_index..(i~=len and "." or "")
+                    else
+                        newKey = newKey..keys[i]..(i~=len and "." or "")
+                    end
+                end
+
+                v[1] = newKey
+                local clone_response = clone(response)
+                clone_response.msg.playerData = {}
+                table.insert(clone_response.msg.playerData, v)
+                local edit = decodeInUserDataFromDeltaData(user_data, clone_response.msg.playerData)
+                DataManager:setUserData(user_data, edit)
+            end
+        end
+    end
+
+    return response
+end
+
 local function get_response_report_msg(response)
     if response.msg.playerData then
         local user_data = DataManager:getUserData()
@@ -143,6 +175,36 @@ local function get_response_report_msg(response)
         end
         local edit = decodeInUserDataFromDeltaData(user_data, response.msg.playerData)
         DataManager:setUserData(user_data, edit)
+    end
+
+    return response
+end
+local function get_response_delete_report_msg(response)
+    if response.msg.playerData then
+        local user_data = DataManager:getUserData()
+        local report_response = response.msg.playerData
+        for i,v in ipairs(report_response) do
+            if type(v) == "table" then
+                local keys = string.split(v[1], ".")
+                local newKey = ""
+                local len = #keys
+                for i=1,len do
+                    local k = tonumber(keys[i]) or keys[i]
+                    if type(k) == "number" then
+                        local client_index = MailManager:GetReportByServerIndex(k) - 1
+                        newKey = newKey..client_index..(i~=len and "." or "")
+                    else
+                        newKey = newKey..keys[i]..(i~=len and "." or "")
+                    end
+                end
+                v[1] = newKey
+                local clone_response = clone(response)
+                clone_response.msg.playerData = {}
+                table.insert(clone_response.msg.playerData, v)
+                local edit = decodeInUserDataFromDeltaData(user_data, clone_response.msg.playerData)
+                DataManager:setUserData(user_data, edit)
+            end
+        end
     end
 
     return response
@@ -784,7 +846,7 @@ end
 function NetManager:getDeleteMailsPromise(mailIds)
     return get_blocking_request_promise("logic.playerHandler.deleteMails", {
         mailIds = mailIds
-    }, "删除邮件失败!"):done(get_response_mail_msg)
+    }, "删除邮件失败!"):done(get_response_delete_mail_msg)
 end
 -- 发送联盟邮件
 function NetManager:getSendAllianceMailPromise(title, content)
@@ -830,7 +892,7 @@ end
 function NetManager:getDeleteReportsPromise(reportIds)
     return get_blocking_request_promise("logic.playerHandler.deleteReports", {
         reportIds = reportIds
-    }, "删除战报失败!"):done(get_response_report_msg)
+    }, "删除战报失败!"):done(get_response_delete_report_msg)
 end
 -- 请求加速
 function NetManager:getRequestAllianceToSpeedUpPromise(eventType, eventId)
@@ -1544,6 +1606,10 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
+
+
+
 
 
 
