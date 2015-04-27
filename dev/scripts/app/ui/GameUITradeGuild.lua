@@ -840,21 +840,21 @@ function GameUITradeGuild:OpenSellDialog()
                 shadow = true
             }))
             :onButtonClicked(function(event)
-                local tag = body.drop_list:GetSelectedButtonTag()
+                local tag = self.drop_list:GetSelectedButtonTag()
                 local type,options,goods_type
                 if tag == 'resource' then
                     type = "resources"
-                    options = body.resource_options
+                    options = self.resource_options
                     goods_type = RESOURCE_TYPE
                 end
                 if tag == 'build_material' then
                     type = "buildingMaterials"
-                    options = body.build_material_options
+                    options = self.build_material_options
                     goods_type = BUILD_MATERIAL_TYPE
                 end
                 if tag == 'martial_material' then
                     type = "technologyMaterials"
-                    options = body.martial_material_options
+                    options = self.martial_material_options
                     goods_type = MARTIAL_MATERIAL_TYPE
                 end
                 local selected = options.currentSelectedIndex_
@@ -868,6 +868,7 @@ function GameUITradeGuild:OpenSellDialog()
                     return
                 end
                 NetManager:getSellItemPromise(type,goods_type[selected],self.sell_num_item:GetValue(),self.sell_price_item:GetValue()):done(function(result)
+                    GameGlobalUI:showTips(_("提示"),string.format(_("出售%s成功"),Localize.sell_type[goods_type[selected]]))
                     self:getParent():LeftButtonClicked()
                 end)
             end)
@@ -877,10 +878,11 @@ function GameUITradeGuild:OpenSellDialog()
         local options = tradeGuildUI:CreateOptions(goods_details)
             :pos(26, h-120):addTo(layer)
             :onButtonSelectChanged(function(event)
+                dump(event)
                 local max_num,min_num,min_unit_price,max_unit_price,unit = self:GetPriceAndNum(goods_type,event.selected)
                 self:CreateOrRefreshSliders(
                     {
-                        max_num=string.formatnumberthousands(City:GetResourceManager():GetCartResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()))*unit,
+                        max_num=max_num,
                         min_num=min_num,
                         min_unit_price=min_unit_price,
                         max_unit_price=max_unit_price,
@@ -1014,31 +1016,23 @@ function GameUITradeGuild:OpenSellDialog()
             {tag = "martial_material",label = "军事材料"},
         },
         function(tag)
-            if tag == 'resource' and not body.resource_layer then
-                body.resource_layer, body.resource_options= body:LoadSellResource(RESOURCE_TYPE)
+            if body.layer then
+                body.layer:removeAllChildren()
+            end
+            if tag == 'resource' then
+                body.layer, body.resource_options= body:LoadSellResource(RESOURCE_TYPE)
                 body.resource_options:getButtonAtIndex(1):setButtonSelected(true)
-                body.resource_layer:addTo(body)
+                body.layer:addTo(body)
             end
-            if tag == 'build_material' and not body.build_material_layer then
-                body.build_material_layer,  body.build_material_options= body:LoadSellResource(BUILD_MATERIAL_TYPE)
+            if tag == 'build_material' then
+                body.layer,  body.build_material_options= body:LoadSellResource(BUILD_MATERIAL_TYPE)
                 body.build_material_options:getButtonAtIndex(1):setButtonSelected(true)
-                body.build_material_layer:addTo(body)
+                body.layer:addTo(body)
             end
-            if tag == 'martial_material' and not body.martial_material_layer then
-                body.martial_material_layer,  body.martial_material_options= body:LoadSellResource(MARTIAL_MATERIAL_TYPE)
+            if tag == 'martial_material' then
+                body.layer,  body.martial_material_options= body:LoadSellResource(MARTIAL_MATERIAL_TYPE)
                 body.martial_material_options:getButtonAtIndex(1):setButtonSelected(true)
-                body.martial_material_layer:addTo(body)
-            end
-
-
-            if body.resource_layer then
-                body.resource_layer:setVisible(tag == 'resource')
-            end
-            if body.build_material_layer then
-                body.build_material_layer:setVisible(tag == 'build_material')
-            end
-            if body.martial_material_layer then
-                body.martial_material_layer:setVisible(tag == 'martial_material')
+                body.layer:addTo(body)
             end
         end
     )
@@ -1118,6 +1112,8 @@ function GameUITradeGuild:GetMaterialIndexByName(material_type)
     return build_temp[material_type] or teach_temp[material_type]
 end
 return GameUITradeGuild
+
+
 
 
 

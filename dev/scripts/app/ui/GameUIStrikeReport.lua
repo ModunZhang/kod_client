@@ -312,11 +312,8 @@ function GameUIStrikeReport:CreateBelligerentsItem(height,player,isSelf)
         :align(display.LEFT_BOTTOM):addTo(player_item)
 
     -- 玩家头像
-    local heroBg = display.newSprite("chat_hero_background.png"):align(display.CENTER, 50, height/2):addTo(player_item)
-    heroBg:setScale(0.7)
-    local hero = display.newSprite(player.icon or UILib.village[player.type]):align(display.CENTER, 50, height/2)
-        :addTo(player_item)
-    hero:setScale(70/math.max(hero:getContentSize().width,hero:getContentSize().height))
+    UIKit:GetPlayerCommonIcon(player.icon):addTo(player_item,1):align(display.CENTER, 50, height/2):setScale(0.7)
+    
     -- 玩家名称
     UIKit:ttfLabel({
         text = player.name or Localize.village_name[player.type] ,

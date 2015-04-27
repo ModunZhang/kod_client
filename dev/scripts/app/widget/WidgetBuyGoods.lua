@@ -4,6 +4,7 @@ local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local WidgetSliderWithInput = import("..widget.WidgetSliderWithInput")
 local window = import("..utils.window")
 local UILib = import("..ui.UILib")
+local Localize_item = import("..utils.Localize_item")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetBuyGoods = class("WidgetBuyGoods", function(...)
     local node = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
@@ -95,15 +96,25 @@ function WidgetBuyGoods:ctor(item)
             self:OnCountChanged(math.floor(event.value))
         end)
         :LayoutValueLabel(WidgetSliderWithInput.STYLE_LAYOUT.RIGHT,0)
-
     -- 忠诚值
     display.newSprite("loyalty_128x128.png"):align(display.CENTER, 200, 50):addTo(back_ground):scale(42/128)
-    local loyalty_bg = display.newSprite("back_ground_114x36.png"):align(display.CENTER, 300, 50):addTo(back_ground)
-    self.loyalty_label = UIKit:ttfLabel({
-        text = item:SellPriceInAlliance(),
+    local dividing = UIKit:ttfLabel({
+        text = "/",
         size = 20,
         color = 0x403c2f,
-    }):addTo(loyalty_bg):align(display.CENTER,loyalty_bg:getContentSize().width/2,loyalty_bg:getContentSize().height/2)
+    }):addTo(back_ground):align(display.CENTER,300, 50)
+    local member = Alliance_Manager:GetMyAlliance():GetSelf()
+    self.loyalty_label = UIKit:ttfLabel({
+        text = GameUtils:formatNumber(member:Loyalty()),
+        size = 20,
+        color = 0x403c2f,
+    }):addTo(back_ground):align(display.RIGHT_CENTER,dividing:getPositionX()-4,50)
+    self.need_loyalty_label = UIKit:ttfLabel({
+        text = "0",
+        size = 20,
+        color = 0x403c2f,
+    }):addTo(back_ground):align(display.LEFT_CENTER,dividing:getPositionX()+4,50)
+
     -- 购买按钮
     local button = WidgetPushButton.new(
         {normal = "yellow_btn_up_185x65.png",pressed = "yellow_btn_down_185x65.png"}
@@ -125,7 +136,10 @@ function WidgetBuyGoods:ctor(item)
                     :AddToCurrentScene()
                 return
             end
-            NetManager:getBuyAllianceItemPromise(item:Name(),slider:GetValue())
+            NetManager:getBuyAllianceItemPromise(item:Name(),slider:GetValue()):done(function ( response )
+                GameGlobalUI:showTips(_("提示"),string.format(_("购买%s成功"),Localize_item.item_name[item:Name()]))
+                return response
+            end)
             self:removeFromParent(true)
 
         end):pos(500, 50)
@@ -140,9 +154,15 @@ function WidgetBuyGoods:align(anchorPoint, x, y)
 end
 
 function WidgetBuyGoods:OnCountChanged(count)
-    self.loyalty_label:setString(self.item:SellPriceInAlliance() * count)
+    local member = Alliance_Manager:GetMyAlliance():GetSelf()
+    local  need_loyalty = self.item:SellPriceInAlliance() * count
+    self.loyalty_label:setString(GameUtils:formatNumber(member:Loyalty()))
+    self.need_loyalty_label:setString(GameUtils:formatNumber(need_loyalty))
+    self.loyalty_label:setColor(UIKit:hex2c4b(member:Loyalty()<need_loyalty and 0x7e0000 or 0x403c2f))
 end
 return WidgetBuyGoods
+
+
 
 
 
