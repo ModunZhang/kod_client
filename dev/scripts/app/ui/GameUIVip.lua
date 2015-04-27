@@ -212,7 +212,7 @@ function GameUIVip:InitAD()
     self.current_ad_index = math.random(1,#self:GetStoreData())
     self.current_ad = self:CreateAD(self.current_ad_index):addTo(ad_clip_rect):align(display.LEFT_BOTTOM,window.cx-592/2,window.top_bottom-119)
 
-    self.ad_handle = scheduler.scheduleGlobal(handler(self, self.MoveAD), 5.0, false)
+    self.ad_handle = scheduler.scheduleGlobal(handler(self, self.MoveAD), 10.0, false)
 end
 function GameUIVip:MoveAD()
     self.current_ad_index = self.current_ad_index==#self:GetStoreData() and 1 or (self.current_ad_index + 1)

@@ -24,7 +24,7 @@ local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
 
 local function transition_(scene, status)
     if status == "onEnter" then
-        local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene):pos(display.cx, display.cy)
+        local armature = ccs.Armature:create("Cloud_Animation"):addTo(scene,0,1):pos(display.cx, display.cy)
         cc.LayerColor:create(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
             transition.sequence{
                 cc.CallFunc:create(function() 
@@ -45,7 +45,10 @@ local function transition_(scene, status)
                     armature:getAnimation():play("Animation4", -1, 0) 
                 end),
                 cc.FadeOut:create(0.75),
-                cc.CallFunc:create(function() scene:finish() end),
+                cc.CallFunc:create(function() 
+                    scene:removeChildByTag(1)
+                    scene:finish()
+                 end),
             }
         )
     elseif status == "onExit" then

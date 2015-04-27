@@ -255,6 +255,7 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
             local soldiers = {{name=self.soldier_type, count=self.count}}
             local treat_fun = function ()
                 NetManager:getInstantTreatSoldiersPromise(soldiers)
+                app:GetAudioManager():PlayeEffectSoundWithKey("INSTANT_TREATE_SOLDIER")
                 self:instant_button_clicked()
             end
             if self.count<1 then
@@ -315,6 +316,7 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
             local soldiers = {{name=self.soldier_type, count=self.count}}
             local treat_fun = function ()
                 NetManager:getTreatSoldiersPromise(soldiers)
+                app:GetAudioManager():PlayeEffectSoundWithKey("TREATE_SOLDIER")
                 self:button_clicked()
             end
             local isAbleToTreat =hospital:IsAbleToTreat(soldiers)

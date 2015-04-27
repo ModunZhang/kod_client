@@ -4,6 +4,7 @@ local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local WidgetSliderWithInput = import("..widget.WidgetSliderWithInput")
 local WidgetInfoNotListView = import("..widget.WidgetInfoNotListView")
 local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
+local Localize_item = import("..utils.Localize_item")
 local UILib = import("..ui.UILib")
 local window = import("..utils.window")
 local WidgetPushButton = import("..widget.WidgetPushButton")
@@ -105,12 +106,24 @@ function WidgetStockGoods:ctor(item)
 
     -- 荣耀值
     display.newSprite("honour_128x128.png"):align(display.CENTER, 200, 50):addTo(back_ground):scale(42/128)
-    local honour_bg = display.newSprite("back_ground_114x36.png"):align(display.CENTER, 300, 50):addTo(back_ground)
-    self.honour_label = UIKit:ttfLabel({
+    local dividing = UIKit:ttfLabel({
+        text = "/",
+        size = 20,
+        color = 0x403c2f,
+    }):addTo(back_ground):align(display.CENTER,300, 50)
+
+    self.need_honour_label = UIKit:ttfLabel({
         text = "0",
         size = 20,
         color = 0x403c2f,
-    }):addTo(honour_bg):align(display.CENTER,honour_bg:getContentSize().width/2,honour_bg:getContentSize().height/2)
+    }):addTo(back_ground):align(display.LEFT_CENTER,dividing:getPositionX()+4,50)
+    local alliance = Alliance_Manager:GetMyAlliance()
+
+    self.honour_label = UIKit:ttfLabel({
+        text = GameUtils:formatNumber(alliance:Honour()) ,
+        size = 20,
+        color = 0x403c2f,
+    }):addTo(back_ground):align(display.RIGHT_CENTER,dividing:getPositionX()-4,50)
     -- 购买按钮
     local button = WidgetPushButton.new(
         {normal = "yellow_btn_up_185x65.png",pressed = "yellow_btn_down_185x65.png"}
@@ -132,7 +145,10 @@ function WidgetStockGoods:ctor(item)
                     :AddToCurrentScene()
                 return
             end
-            NetManager:getAddAllianceItemPromise(item:Name(),slider:GetValue())
+            NetManager:getAddAllianceItemPromise(item:Name(),slider:GetValue()):done(function ( response )
+                GameGlobalUI:showTips(_("提示"),string.format(_("进货%s成功"),Localize_item.item_name[item:Name()]))
+                return response
+            end)
             self:removeFromParent(true)
         end):pos(500, 50)
         :addTo(back_ground)
@@ -146,7 +162,7 @@ function WidgetStockGoods:align(anchorPoint, x, y)
 end
 
 function WidgetStockGoods:OnCountChanged(count)
-    self.honour_label:setString(self.item:BuyPriceInAlliance()*count)
+    self.need_honour_label:setString(GameUtils:formatNumber(self.item:BuyPriceInAlliance()*count))
 end
 return WidgetStockGoods
 

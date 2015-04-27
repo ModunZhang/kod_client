@@ -4,15 +4,21 @@ local Localize = import("..utils.Localize")
 
 
 local Report = class("Report")
+property(Report, "id", "")
+property(Report, "type", "")
+property(Report, "createTime", 0)
+property(Report, "isRead", false)
+property(Report, "isSaved", false)
+property(Report, "index", 0)
 Report.REPORT_TYPE = Enum("strikeCity","cityBeStriked","strikeVillage","villageBeStriked","attackCity","attackVillage","collectResource")
 local STRIKECITY,CITYBESTRIKED,STRIKEVILLAGE,VILLAGEBESTRIKED,ATTACKCITY,ATTACKVILLAGE,COLLECTRESOURCE = 1,2,3,4,5,6,7
 function Report:ctor(id,type,createTime,isRead,isSaved,index)
-    property(self, "id", id)
-    property(self, "type", type)
-    property(self, "createTime", createTime)
-    property(self, "isRead", isRead)
-    property(self, "isSaved", isSaved)
-    property(self, "index", index)
+    self:SetId(id)
+    self:SetType(type)
+    self:SetCreateTime(createTime)
+    self:SetIsRead(isRead)
+    self:SetIsSaved(isSaved)
+    self:SetIndex(index)
     self.player_id = User:Id()
 end
 function Report:OnPropertyChange(property_name, old_value, new_value)
@@ -619,22 +625,23 @@ end
 function Report:GetAttackDragonLevel()
     local data = self.data
     local attack = data.attackPlayerData
-    return attack.fightWithHelpDefenceTroop and attack.fightWithHelpDefenceTroop.dragon.level or 
-    attack.fightWithDefenceTroop and attack.fightWithDefenceTroop.dragon.level
+    return attack.fightWithHelpDefenceTroop and attack.fightWithHelpDefenceTroop.dragon.level or
+        attack.fightWithDefenceTroop and attack.fightWithDefenceTroop.dragon.level
 end
 function Report:GetDefenceDragonLevel()
     local data = self.data
     local helpDefencePlayerData = data.helpDefencePlayerData
     local defencePlayerData = data.defencePlayerData
 
-    return helpDefencePlayerData and helpDefencePlayerData.dragon.level or 
-    defencePlayerData and defencePlayerData.dragon.level
+    return helpDefencePlayerData and helpDefencePlayerData.dragon.level or
+        defencePlayerData and defencePlayerData.dragon.level
 end
 function Report:GetAttackTargetTerrain()
     local data = self.data
     return data.attackTarget.terrain
 end
 return Report
+
 
 
 

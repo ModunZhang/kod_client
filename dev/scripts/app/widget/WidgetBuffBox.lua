@@ -47,7 +47,7 @@ function WidgetBuffBox:ctor(params)
         :addTo(self)
     self.info_label = UIKit:ttfLabel(
         {
-            text = isBuffActived and GameUtils:formatTimeStyle1(ItemManager:GetItemEventByType(buff_type):GetTime()) or _("未解锁"),
+            text = isBuffActived and GameUtils:formatTimeStyle1(ItemManager:GetItemEventByType(buff_type):GetTime()) or _("未激活"),
             size = 20,
             color = isBuffActived and 0x007c23 or 0x403c2f
         }):align(display.CENTER, info_bg:getContentSize().width/2 ,info_bg:getContentSize().height/2)
@@ -67,7 +67,7 @@ function WidgetBuffBox:OnItemEventTimer( item_event_new )
             self:SetInfo(GameUtils:formatTimeStyle1(time),UIKit:hex2c4b(0x007c23))
             self.buff_icon:clearFilter()
         else
-            self:SetInfo(_("未解锁"),UIKit:hex2c4b(0x403c2f))
+            self:SetInfo(_("未激活"),UIKit:hex2c4b(0x403c2f))
             local my_filter = filter
             local filters = my_filter.newFilter("GRAY", {0.2, 0.3, 0.5, 0.1})
             self.buff_icon:setFilter(filters)

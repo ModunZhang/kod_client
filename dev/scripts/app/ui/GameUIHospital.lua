@@ -160,6 +160,7 @@ function GameUIHospital:CreateHealAllSoldierItem()
             labelParams = {text = _("立即治愈")},
             listener = function ()
                 self:TreatNowListener()
+                app:GetAudioManager():PlayeEffectSoundWithKey("INSTANT_TREATE_SOLDIER")
             end,
         }
     ):pos(bg_size.width/2-150, 110)
@@ -175,6 +176,7 @@ function GameUIHospital:CreateHealAllSoldierItem()
             labelParams = {text = _("治愈")},
             listener = function ()
                 self:TreatListener()
+                app:GetAudioManager():PlayeEffectSoundWithKey("TREATE_SOLDIER")
             end,
         }
     ):pos(bg_size.width/2+180, 110)

@@ -875,8 +875,8 @@ errors["theGCIdAlreadyBindedByCurrentPlayer"] = {
 	["code"] = 675,
 	["message"] = "此GameCenter账号已绑定当前玩家"
 }
-errors["ApnIdAlreadySeted"] = {
-	["key"] = "ApnIdAlreadySeted",
+errors["apnIdAlreadySeted"] = {
+	["key"] = "apnIdAlreadySeted",
 	["code"] = 676,
 	["message"] = "ApnId已经设置"
 }
@@ -914,4 +914,14 @@ errors["noEventsNeedTobeSpeedup"] = {
 	["key"] = "noEventsNeedTobeSpeedup",
 	["code"] = 683,
 	["message"] = "没有事件需要协助加速"
+}
+errors["allianceMemberCountReachMax"] = {
+	["key"] = "allianceMemberCountReachMax",
+	["code"] = 684,
+	["message"] = "联盟人数已达最大"
+}
+errors["allianceFightWillEndCanNotSendTroops"] = {
+	["key"] = "allianceFightWillEndCanNotSendTroops",
+	["code"] = 685,
+	["message"] = "联盟战即将结束,不能派兵"
 }

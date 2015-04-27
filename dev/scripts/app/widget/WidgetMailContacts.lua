@@ -59,23 +59,30 @@ function WidgetMailContacts:CreateContactsContent()
     local item =list:newItem()
     local item_width,item_height = 548, 124
     item:setItemSize(item_width,item_height)
-    local body_image = list.which_bg and "upgrade_resources_background_2.png" or "upgrade_resources_background_3.png"
-    local content = display.newScale9Sprite(body_image,0,0,cc.size(item_width,item_height),cc.rect(10,10,500,26))
+    local content = display.newNode()
+    content:setContentSize(cc.size(item_width,item_height))
+
     list.which_bg = not list.which_bg
     local alliance_tag = UIKit:ttfLabel({
         size = 24,
         color = 0x403c2f
     }):align(display.LEFT_CENTER,140,40)
-        :addTo(content)
+        :addTo(content,2)
     local name = UIKit:ttfLabel({
         size = 20,
         color = 0x5c553f
     }):align(display.LEFT_CENTER,140,80)
-        :addTo(content)
+        :addTo(content,2)
     local parent = self
     function content:SetData( idx )
         local contacts = parent.contacts[idx]
-        alliance_tag:setString(contacts.allianceTag and "["..contacts.allianceTag.."]" or "")
+        if self.bg then
+            self.bg:removeFromParent(true)
+        end
+        local body_image = idx%2==0 and "upgrade_resources_background_2.png" or "upgrade_resources_background_3.png"
+        self.bg = display.newScale9Sprite(body_image,item_width/2,item_height/2,cc.size(item_width,item_height),cc.rect(10,10,500,26)):addTo(self)
+
+        alliance_tag:setString(contacts.allianceTag and contacts.allianceTag~="" and "["..contacts.allianceTag.."]" or "")
         if not contacts.allianceTag then
             name:setPositionY(62)
         end

@@ -96,6 +96,7 @@ end
 
 function GameUIAllianceContribute:RefreashEff()
     local donate  = self:GetDonateValueByType(self.group:GetSelectedType())
+    if not donate then return end
     self.donate_eff:setString(
         string.format(
             _("额外获得荣誉+%d%%，忠诚+%d%%"),
@@ -296,7 +297,6 @@ function GameUIAllianceContribute:IsAbleToContribute()
     if not r_type then
         FullScreenPopDialogUI.new():SetTitle(_("提示"))
             :SetPopMessage(_("请选择一种资源"))
-            :CreateCancelButton()
             :AddToCurrentScene()
         return false
     end

@@ -19,7 +19,7 @@ function AllianceScene:onEnter()
     self:CreateAllianceUI()
     self:GotoCurrectPosition()
     app:GetAudioManager():PlayGameMusic()
-    self:GetSceneLayer():ZoomTo(0.6)
+    self:GetSceneLayer():ZoomTo(0.8)
 
     self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
     self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.OPERATION)

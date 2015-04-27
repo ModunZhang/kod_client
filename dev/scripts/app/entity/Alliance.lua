@@ -531,19 +531,19 @@ function Alliance:OnAllianceMemberDataChanged(alliance_data,deltaData)
             ,function(event_data)
                 if not self.members[event_data.id] then
                     self.members[event_data.id] = self:DecodeMember(event_data)
-                    return member
+                    return self.members[event_data.id]
                 end
             end
             ,function(event_data)
                 if self.members[event_data.id] then
                     self.members[event_data.id] = self:DecodeMember(event_data)
-                    return member
+                    return self.members[event_data.id]
                 end
             end
             ,function(event_data)
                 if self.members[event_data.id] then
                     self.members[event_data.id] = nil
-                    return member
+                    return event_data
                 end
             end
         )

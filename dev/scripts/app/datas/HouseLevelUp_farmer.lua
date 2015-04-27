@@ -9,7 +9,7 @@ farmer[1] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 20,
+	["buildTime"] = 10,
 	["citizen"] = 10
 }
 farmer[2] = {
@@ -21,7 +21,7 @@ farmer[2] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 38,
+	["buildTime"] = 40,
 	["citizen"] = 16
 }
 farmer[3] = {
@@ -33,7 +33,7 @@ farmer[3] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 96,
+	["buildTime"] = 100,
 	["citizen"] = 22
 }
 farmer[4] = {
@@ -45,7 +45,7 @@ farmer[4] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 192,
+	["buildTime"] = 220,
 	["citizen"] = 32
 }
 farmer[5] = {
@@ -57,7 +57,7 @@ farmer[5] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 384,
+	["buildTime"] = 280,
 	["citizen"] = 44
 }
 farmer[6] = {

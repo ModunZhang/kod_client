@@ -57,7 +57,6 @@ function TradeManager:OnUserDataChanged(user_data,deltaData)
                             if myDeal.id == deal.id then
                                 self.my_deals[index] = deal
                                 table.insert(edit,deal)
-                                GameGlobalUI:showTips(_("提示"),string.format(_("出售%s成功"),Localize.sell_type[deal.itemData.name]))
                             end
                         end
                     end

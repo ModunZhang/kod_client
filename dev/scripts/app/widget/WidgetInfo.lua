@@ -22,7 +22,6 @@ function WidgetInfo:ctor(params)
         capInsets = cc.rect(8,2,552,10)
     }):addTo(self)
     self.info_listview = UIListView.new{
-        -- bgColor = UIKit:hex2c4b(0x7a000000),
         viewRect = cc.rect(10, 10, width-20, (params.h or #info*40+20)-20),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(self.info_bg)
