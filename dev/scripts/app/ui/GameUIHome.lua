@@ -275,13 +275,13 @@ function GameUIHome:CreateTop()
     local player_bg = display.newSprite("player_bg_110x106.png"):addTo(top_bg, 2)
         :align(display.LEFT_BOTTOM, display.width>640 and 58 or 64, 10):setCascadeOpacityEnabled(true)
     self.player_icon = UIKit:GetPlayerIconOnly(User:Icon()):addTo(player_bg):pos(55, 60):scale(0.75)
-    local level_bg = display.newSprite("level_bg_74x24.png"):addTo(player_bg):pos(55, 30):setCascadeOpacityEnabled(true)
+    self.exp = display.newSprite("player_exp_bar_110x106.png"):addTo(player_bg):pos(55, 53)
+    local level_bg = display.newSprite("level_bg_74x21.png"):addTo(player_bg):pos(55, 20):setCascadeOpacityEnabled(true)
     self.level_label = UIKit:ttfLabel({
         size = 20,
         color = 0xfff1cc,
         shadow = true,
     }):addTo(level_bg):align(display.CENTER, 37, 12)
-    self.exp = display.newSprite("player_exp_bar_110x106.png"):addTo(player_bg):pos(55, 53)
 
     -- vip
     local vip_btn = cc.ui.UIPushButton.new(
