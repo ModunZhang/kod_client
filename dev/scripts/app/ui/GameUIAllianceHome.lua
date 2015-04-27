@@ -308,9 +308,9 @@ function GameUIAllianceHome:CreateTop()
         }):align(display.BOTTOM_CENTER, period_bg:getContentSize().width/2, period_bg:getContentSize().height/2-10)
         :addTo(period_bg)
     -- 己方战力
-    local our_num_icon = cc.ui.UIImage.new("power_24x29.png"):align(display.CENTER, -107, -65):addTo(top_self_bg)
     local self_power_bg = display.newSprite("power_background_146x26.png")
         :align(display.LEFT_CENTER, -107, -65):addTo(top_self_bg)
+    local our_num_icon = cc.ui.UIImage.new("power_24x29.png"):align(display.CENTER, -107, -65):addTo(top_self_bg)
     local self_power_label = UIKit:ttfLabel(
         {
             text = string.formatnumberthousands(alliance:Power()),
