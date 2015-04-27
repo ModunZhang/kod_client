@@ -913,6 +913,71 @@ end
 
 --[[--
 
+依据当前位置
+异步加载列表数据
+
+@return UIListView
+@author Kenny Dai
+
+]]
+function UIListView:asyncLoadWithCurrentPosition_()
+    local items = self:getItems()
+    local begin_idx = 1
+    for i,v in ipairs(items) do
+        if UIScrollView.DIRECTION_VERTICAL == self.direction then
+            if self.container:getPositionY() + v:getPositionY() < self.viewRect_.height then
+                begin_idx = v.idx_
+                break
+            end
+        else
+            if self.container:getPositionX() - v:getPositionX() < self.viewRect_.width then
+                begin_idx = v.idx_
+                break
+            end
+        end
+    end
+
+    local count = self.delegate_[UIListView.DELEGATE](self, UIListView.COUNT_TAG)
+    -- 取较小值
+    local end_idx
+    if items[#items] then
+        end_idx = math.min(items[#items].idx_ , count )
+    else
+        end_idx = count
+    end
+
+
+    self:removeAllItems()
+    self.container:setPosition(0, 0)
+    self.container:setContentSize(cc.size(0, 0))
+
+    self.items_ = {}
+    local itemW, itemH = 0, 0
+    local item
+    local containerW, containerH = 0, 0
+    local posX, posY = 0, 0
+    for i=begin_idx,end_idx do
+        item, itemW, itemH = self:loadOneItem_(cc.p(posX, posY), i)
+        if UIScrollView.DIRECTION_VERTICAL == self.direction then
+            posY = posY - itemH
+        else
+            posX = posX + itemW
+        end
+
+    end
+
+    if UIScrollView.DIRECTION_VERTICAL == self.direction then
+        self.container:setPosition(self.viewRect_.x,
+            self.viewRect_.y + self.viewRect_.height)
+    else
+        self.container:setPosition(self.viewRect_.x, self.viewRect_.y)
+    end
+
+    return self
+end
+
+--[[--
+
 设置delegate函数
 
 @return UIListView

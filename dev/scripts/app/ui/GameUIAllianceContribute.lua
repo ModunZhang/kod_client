@@ -96,6 +96,7 @@ end
 
 function GameUIAllianceContribute:RefreashEff()
     local donate  = self:GetDonateValueByType(self.group:GetSelectedType())
+    if not donate then return end
     self.donate_eff:setString(
         string.format(
             _("额外获得荣誉+%d%%，忠诚+%d%%"),

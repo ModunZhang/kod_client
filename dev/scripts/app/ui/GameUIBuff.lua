@@ -19,6 +19,10 @@ function GameUIBuff:OnMoveInStage()
     self:CityBuff()
     self:WarBuff()
     list_view:reload()
+    -- for i=1,30 do
+    --     print("发送邮件",i)
+    --      NetManager:getSendPersonalMailPromise("mJs8WN2n", "标题"..i, "内容"..i)
+    -- end
 end
 function GameUIBuff:CityBuff()
     local content = self:CreateItem(_("城市增益效果"),WidgetBackGroundWithInnerTitle.TITLE_COLOR.BLUE)
