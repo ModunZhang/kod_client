@@ -9,10 +9,16 @@ local UILib = import("..ui.UILib")
 local SpriteConfig = import(".SpriteConfig")
 
 function VillageSprite:ctor(city_layer, entity, is_my_alliance)
+    self:setNodeEventEnabled(true)
     self.is_my_alliance = is_my_alliance
     local x, y = city_layer:GetLogicMap():ConvertToMapPosition(entity:GetLogicPosition())
     VillageSprite.super.ctor(self, city_layer, entity, x, y)
     -- self:CreateBase()
+end
+function VillageSprite:onExit()
+    if self.info then
+        self.info:removeFromParent()
+    end
 end
 function VillageSprite:GetSpriteFile()
     local village_info = self:VillageInfo()
@@ -47,7 +53,11 @@ function VillageSprite:RefreshSprite()
         self.info:removeFromParent()
         self.info = nil
     end
-    self.info = display.newNode():addTo(self):pos(0, -50):scale(0.8)
+
+    local map_layer = self:GetMapLayer()
+    local x,y = map_layer:GetLogicMap():ConvertToMapPosition(self:GetEntity():GetLogicPosition())
+    self.info = display.newNode():addTo(map_layer:GetInfoNode()):pos(x, y - 50):scale(0.8)
+
     local banners = self.is_my_alliance and UILib.my_city_banner or UILib.enemy_city_banner
     self.banner = display.newSprite(banners[0]):addTo(self.info):align(display.CENTER_TOP)
     self.level = UIKit:ttfLabel({

@@ -90,3 +90,33 @@ intInit["KilledCitizenPerWallHp"] = {
 	["value"] = 1,
 	["desc"] = "损失一点城墙血量获得多少击杀积分"
 }
+intInit["woodVillageRefreshMinutes"] = {
+	["type"] = "woodVillageRefreshMinutes",
+	["value"] = 10,
+	["desc"] = "村落采空后多少分钟后刷新"
+}
+intInit["stoneVillageRefreshMinutes"] = {
+	["type"] = "stoneVillageRefreshMinutes",
+	["value"] = 10,
+	["desc"] = "村落采空后多少分钟后刷新"
+}
+intInit["ironVillageRefreshMinutes"] = {
+	["type"] = "ironVillageRefreshMinutes",
+	["value"] = 10,
+	["desc"] = "村落采空后多少分钟后刷新"
+}
+intInit["woodVillageRefreshMinutes"] = {
+	["type"] = "woodVillageRefreshMinutes",
+	["value"] = 10,
+	["desc"] = "村落采空后多少分钟后刷新"
+}
+intInit["coinVillageRefreshMinutes"] = {
+	["type"] = "coinVillageRefreshMinutes",
+	["value"] = 10,
+	["desc"] = "村落采空后多少分钟后刷新"
+}
+intInit["allianceFightWillFinishedMinutes"] = {
+	["type"] = "allianceFightWillFinishedMinutes",
+	["value"] = 1,
+	["desc"] = "判断联盟战即将结束的时间"
+}

@@ -3,9 +3,15 @@ local Sprite = import(".Sprite")
 local SpriteConfig = import(".SpriteConfig")
 local CitySprite = class("CitySprite", Sprite)
 function CitySprite:ctor(city_layer, entity, is_my_alliance)
+    self:setNodeEventEnabled(true)
     self.is_my_alliance = is_my_alliance
     local x, y = city_layer:GetLogicMap():ConvertToMapPosition(entity:GetLogicPosition())
     CitySprite.super.ctor(self, city_layer, entity, x, y)
+end
+function CitySprite:onExit()
+    if self.info then
+        self.info:removeFromParent()
+    end
 end
 function CitySprite:GetSpriteFile()
     local config
@@ -25,7 +31,11 @@ function CitySprite:RefreshSprite()
         self.info:removeFromParent()
         self.info = nil
     end
-    self.info = display.newNode():addTo(self):pos(0, -50):scale(0.8)
+
+    local map_layer = self:GetMapLayer()
+    local x,y = map_layer:GetLogicMap():ConvertToMapPosition(self:GetEntity():GetLogicPosition())
+    self.info = display.newNode():addTo(map_layer:GetInfoNode()):pos(x, y - 50):scale(0.8)
+
     self.banner = display.newSprite("city_banner.png"):addTo(self.info):align(display.CENTER_TOP)
     self.level = UIKit:ttfLabel({
         size = 22,

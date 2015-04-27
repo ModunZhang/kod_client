@@ -118,6 +118,9 @@ end
 function AllianceView:GetBuildingNode()
     return self.layer:GetBuildingNode()
 end
+function AllianceView:GetInfoNode()
+    return self.layer:GetInfoNode()
+end
 function AllianceView:GetCorpsNode()
     return self.layer:GetCorpsNode()
 end
