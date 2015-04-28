@@ -9,6 +9,8 @@ local WIDGET_WIDTH = 640
 local WIDGET_HEIGHT = 600
 local ITEM_HEIGHT = 47
 local GameUtils = GameUtils
+local WidgetPushTransparentButton = import("..widget.WidgetPushTransparentButton")
+local Alliance_Manager = Alliance_Manager
 
 local WidgetMarchEvents = class("WidgetMarchEvents", function()
     local rect = cc.rect(0, 0, WIDGET_WIDTH, WIDGET_HEIGHT)
@@ -284,6 +286,9 @@ function WidgetMarchEvents:CreateReturnItem(entity)
     node.progress:setBarChangeRate(cc.p(1,0))
     node.progress:setMidpoint(cc.p(0,0))
     node.progress:setPercentage(event:GetPercent())
+    WidgetPushTransparentButton.new(cc.rect(0,0,469,41)):onButtonClicked(function()
+        self:MoveToTargetAction(entity)
+    end):addTo(node):align(display.LEFT_CENTER, 4, half_height)
     node.prefix = entity:GetEventPrefix()
     node.desc = UIKit:ttfLabel({
         text = string.format("%s %s",node.prefix,GameUtils:formatTimeStyle1(event:GetTime())),
@@ -317,6 +322,9 @@ function WidgetMarchEvents:CreateAttackItem(entity)
     node.progress:setBarChangeRate(cc.p(1,0))
     node.progress:setMidpoint(cc.p(0,0))
     node.progress:setPercentage(event:GetPercent())
+    WidgetPushTransparentButton.new(cc.rect(0,0,469,41)):onButtonClicked(function()
+       self:MoveToTargetAction(entity)
+    end):addTo(node):align(display.LEFT_CENTER, 4, half_height)
     node.prefix = entity:GetEventPrefix()
     node.desc = UIKit:ttfLabel({
         text = string.format("%s %s",node.prefix,GameUtils:formatTimeStyle1(event:GetTime())),
@@ -356,6 +364,7 @@ end
 --只有撤退
 function WidgetMarchEvents:CreateDefenceItem(entity)
     local event = entity:WithObject()
+    local type_str = entity:GetTypeStr()
     local node = display.newSprite("tab_event_bar.png"):align(display.LEFT_CENTER)
     local half_height = node:getContentSize().height / 2
     node.progress = display.newProgressTimer("tab_progress_bar.png",
@@ -363,9 +372,11 @@ function WidgetMarchEvents:CreateDefenceItem(entity)
         :align(display.LEFT_CENTER, 4, half_height)
     node.progress:setBarChangeRate(cc.p(1,0))
     node.progress:setMidpoint(cc.p(0,0))
+    WidgetPushTransparentButton.new(cc.rect(0,0,469,41)):onButtonClicked(function()
+        self:MoveToTargetAction(entity)
+    end):addTo(node):align(display.LEFT_CENTER, 4, half_height)
     local display_text = ""
     node.prefix = entity:GetEventPrefix()
-    local type_str = entity:GetTypeStr()
     if type_str == 'COLLECT' then
         node.progress:setPercentage(event:CollectPercent())
         display_text = string.format(" %s %d%% %s", node.prefix,event:CollectPercent(),GameUtils:formatTimeStyle1(event:GetTime()))
@@ -440,6 +451,21 @@ function WidgetMarchEvents:OnRetreatButtonClicked(entity,cb)
         })
         widgetUseItems:AddToCurrentScene()
     end
+end
+
+function WidgetMarchEvents:MoveToTargetAction(entity)
+    local type_str = entity:GetTypeStr()
+    local location,alliance_id
+    if type_str == 'SHIRNE' or type_str == 'HELPTO' then
+       location = entity:GetDestinationLocationNotString()
+       alliance_id = Alliance_Manager:GetMyAlliance():Id()
+    else
+        location,alliance_id = entity:GetDestinationLocationNotString()
+    end
+    print("type_str---->",type_str,location.x,location.y,alliance_id)
+    local map_layer = display.getRunningScene():GetSceneLayer()
+    local point = map_layer:ConvertLogicPositionToMapPosition(location.x,location.y,alliance_id)
+    map_layer:GotoMapPositionInMiddle(point.x,point.y)
 end
 
 return WidgetMarchEvents

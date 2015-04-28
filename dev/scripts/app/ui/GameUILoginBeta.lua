@@ -243,6 +243,7 @@ end
 
 
 function GameUILoginBeta:connectLogicServer()
+    UIKit:WaitForNet()
     NetManager:getConnectLogicServerPromise():done(function()
         self:login()
     end):catch(function(err)
@@ -263,6 +264,7 @@ function GameUILoginBeta:login()
   		    app:EnterMyCityScene()
         end, 0.3)
     end):catch(function(err)
+        dump(err)
         local content, title = err:reason()
         if title == 'timeout' then
             content = _("请求超时")
@@ -278,7 +280,9 @@ function GameUILoginBeta:login()
         self:showError(content,function()
 			self:login()
 		end)
-    end)
+    end):always(function()
+        UIKit:NoWaitForNet()
+    end)      
 end
 
 function GameUILoginBeta:showError(msg,cb)

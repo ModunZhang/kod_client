@@ -775,6 +775,12 @@ local ALLIANCE_LANGUAGE = {
     pt  = _("葡萄牙语"),
 }
 
+local ALLIANCE_DECORATE_NAME = {
+    decorate_lake = _("湖"),
+    decorate_mountain = _("山"),
+    decorate_tree = _("树")
+}
+
 return {
     equip_material = EQUIP_MATERIAL_LOCALIZE,
     equip = EQUIP_LOCALIZE,
@@ -825,6 +831,7 @@ return {
     daily_quests_name = DAILY_QUESTS_NAME,
     player_icon = PLAYER_ICON,
     player_icon_unlock = PLAYER_ICON_UNLOCK,
-    alliance_language = ALLIANCE_LANGUAGE
+    alliance_language = ALLIANCE_LANGUAGE,
+    alliance_decorate_name = ALLIANCE_DECORATE_NAME,
 }
 

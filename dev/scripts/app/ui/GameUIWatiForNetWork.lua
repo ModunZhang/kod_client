@@ -28,14 +28,26 @@ function GameUIWatiForNetWork:onEnter()
     self.sprite:hide()
     self.loading:hide()
     
-    print("self.delay----->",self.delay)
     self:performWithDelay(function()
         self.sprite:show()
         self.loading:show()
     end, self.delay)
 end
 
+function GameUIWatiForNetWork:DelayShow(delay)
+     self.delay = delay and checkint(delay) or 1
+     if not self:isVisible() then
+        self:performWithDelay(function()
+            self:show()
+            self.sprite:show()
+            self.loading:show()
+        end, self.delay)
+     end
+end
 
+function GameUIWatiForNetWork:LeftButtonClicked()
+    self:hide()
+end
 
 return GameUIWatiForNetWork
 

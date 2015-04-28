@@ -180,9 +180,11 @@ function GameUIAllianceHome:CreateOperationButton()
             local __,count = alliance_belvedere:HasEvents()
             self.alliance_belvedere_events_count = WidgetNumberTips.new():addTo(button):pos(20,-20)
             self.alliance_belvedere_events_count:SetNumber(count)
+             print("CheckVisible----->1",count)
             function button:CheckVisible()
                 local hasEvent,count = alliance_belvedere:HasEvents()
                 if self.alliance_belvedere_events_count then
+                    print("CheckVisible----->2",count)
                     self.alliance_belvedere_events_count:SetNumber(count)
                 end
                 return hasEvent

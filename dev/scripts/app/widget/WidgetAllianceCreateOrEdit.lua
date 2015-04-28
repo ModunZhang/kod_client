@@ -281,6 +281,7 @@ function WidgetAllianceCreateOrEdit:createTextfieldPanel()
     editbox_tag:setPlaceholderFontColor(UIKit:hex2c3b(0xccc49e))
     editbox_tag:setReturnType(cc.KEYBOARD_RETURNTYPE_DONE)
     editbox_tag:align(display.LEFT_BOTTOM,0,limitLabel:getContentSize().height+10):addTo(node)
+    editbox_tag:setIgnoreWhiteSpaceInput(true) -- 忽略空格输入
     self.editbox_tag = editbox_tag
     if not self:IsCreate() then
     	editbox_tag:setText(Alliance_Manager:GetMyAlliance():Tag())

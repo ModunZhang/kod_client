@@ -61,6 +61,15 @@ function GameUIAllianceShrineEnter:GetBuildingImage()
 	return UILib.alliance_building.shrine
 end
 
+function GameUIAllianceShrineEnter:GetBuildImageSprite()
+    return nil
+end
+
+function GameUIAllianceShrineEnter:GetBuildImageInfomation(sprite)
+    local size = sprite:getContentSize()
+    return 110/math.max(size.width,size.height),97,self:GetUIHeight() - 90 
+end
+
 function GameUIAllianceShrineEnter:GetBuildingType()
 	return 'shrine'
 end
@@ -115,7 +124,7 @@ function GameUIAllianceShrineEnter:GetEnterButtons()
 			self:LeftButtonClicked()
 		end)
         local current_scene = display.getRunningScene()
-		if current_scene.__cname == "AllianceScene" then
+		if current_scene.__cname == "AllianceScene" and self:AllianceBuildingMoveIsOpen() then
 			local move_building_button = self:BuildOneButton("icon_move_alliance_building.png",_("移动")):onButtonClicked(function()
 				if self:GetMyAlliance():Status() == 'fight' then
                 	UIKit:showMessageDialog(nil, _("战争期不能移动"),function()end)
@@ -144,5 +153,9 @@ function GameUIAllianceShrineEnter:GetEnterButtons()
 	else
 		return {}
 	end
+end
+
+function GameUIAllianceShrineEnter:AllianceBuildingMoveIsOpen()
+	return false
 end
 return GameUIAllianceShrineEnter

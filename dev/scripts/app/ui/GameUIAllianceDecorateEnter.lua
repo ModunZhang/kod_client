@@ -3,8 +3,10 @@
 -- Date: 2014-12-29 17:09:39
 --
 local GameUIAllianceDecorateEnter = UIKit:createUIClass("GameUIAllianceDecorateEnter","GameUIAllianceEnterBase")
--- local buildingType_config = GameDatas.AllianceInitData.buildingType
 local buildingName = GameDatas.AllianceInitData.buildingName
+local UILib = import(".UILib")
+local DECORATOR_IMAGE = UILib.decorator_image
+local Localize = import("..utils.Localize")
 
 function GameUIAllianceDecorateEnter:GetUIHeight()
 	return 242
@@ -20,13 +22,23 @@ function GameUIAllianceDecorateEnter:FixedUI()
 end
 
 
-
 function GameUIAllianceDecorateEnter:GetUITitle()
-	return _("树/湖泊/山脉")
+    local name = self:GetBuilding():GetName()
+    local __,__,key = string.find(name,"(.+)_%d")
+    return Localize.alliance_decorate_name[key]
+end
+
+function GameUIAllianceDecorateEnter:GetBuildImageSprite()
+    return nil
 end
 
 function GameUIAllianceDecorateEnter:GetBuildingImage()
-	return "grass_tree_3_112x114.png"
+    return DECORATOR_IMAGE[self:GetTerrain()][self:GetBuilding():GetName()]
+end
+
+function GameUIAllianceDecorateEnter:GetBuildImageInfomation(sprite)
+    local size = sprite:getContentSize()
+    return 110/math.max(size.width,size.height),97,self:GetUIHeight() - 90 
 end
 
 function GameUIAllianceDecorateEnter:GetBuildingType()
@@ -44,9 +56,10 @@ function GameUIAllianceDecorateEnter:GetBuildingInfo()
         {self:GetLocation(),0x403c2f},
     }
     local w,h = self:GetBuilding():GetSize()
+    local occupy_str = string.format("%d x %d",w,h)
     local occupy = {
         {_("占地"),0x797154},
-        {w*h,0x403c2f},
+        {occupy_str,0x403c2f},
     }
   	return {location,occupy}
 end

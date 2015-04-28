@@ -5,10 +5,9 @@
 local GameUIAllianceCityEnter = UIKit:createUIClass("GameUIAllianceCityEnter","GameUIAllianceEnterBase")
 local config_wall = GameDatas.BuildingFunction.wall
 local GameUIWriteMail = import(".GameUIWriteMail")
-
+local SpriteConfig = import("..sprites.SpriteConfig")
 local WidgetAllianceEnterButtonProgress = import("..widget.WidgetAllianceEnterButtonProgress")
 local Alliance = import("..entity.Alliance")
-local PROGRESS_TAG = 100
 
 function GameUIAllianceCityEnter:ctor(building,isMyAlliance,my_alliance,enemy_alliance)
     GameUIAllianceCityEnter.super.ctor(self,building,isMyAlliance,my_alliance)
@@ -85,8 +84,20 @@ function GameUIAllianceCityEnter:GetUITitle()
 end
 
 function GameUIAllianceCityEnter:GetBuildingImage()
-    return "keep_760x855.png"
+    local sprite_config_key = self:IsMyAlliance() and "my_keep" or "other_keep"
+    local build_png = SpriteConfig[sprite_config_key]:GetConfigByLevel(self:GetMember():KeepLevel()).png
+    return build_png
 end
+
+function GameUIAllianceCityEnter:GetBuildImageSprite()
+    return nil
+end
+
+function GameUIAllianceCityEnter:GetBuildImageInfomation(sprite)
+    local size = sprite:getContentSize()
+    return 110/math.max(size.width,size.height),97,self:GetUIHeight() - 90 
+end
+
 
 function GameUIAllianceCityEnter:GetBuildingType()
     return 'member'
