@@ -54,39 +54,43 @@ function GameUIMail:OnMoveInStage()
     }, function(tag)
         if tag == 'inbox' then
             self.inbox_layer:setVisible(true)
-            if not self.inbox_listview then
-                local mails = self.manager:GetMails()
-                self:InitInbox(mails)
-            end
+            -- if not self.inbox_listview then
+            local mails = self.manager:GetMails()
+            self:InitInbox(mails)
+            -- end
         else
+            self.inbox_layer:ClearAll()
             self.inbox_layer:setVisible(false)
         end
 
         if tag == 'report' then
-            if not self.report_listview then
-                self:InitReport()
-            end
+            -- if not self.report_listview then
+            self:InitReport()
+            -- end
             self.report_layer:setVisible(true)
         else
+            self.report_layer:ClearAll()
             self.report_layer:setVisible(false)
         end
 
         if tag == 'saved' then
             self.saved_layer:setVisible(true)
-            if not self.saved_reports_listview then
-                self:InitSavedReports()
-            end
+            -- if not self.saved_reports_listview then
+            self:InitSavedReports()
+            -- end
         else
+            self.saved_layer:ClearAll()
             self.saved_layer:setVisible(false)
         end
 
         if tag == 'sent' then
             self.sent_layer:setVisible(true)
-            if not self.send_mail_listview then
-                local send_mails = self.manager:GetSendMails()
-                self:InitSendMails(send_mails)
-            end
+            -- if not self.send_mail_listview then
+            local send_mails = self.manager:GetSendMails()
+            self:InitSendMails(send_mails)
+            -- end
         else
+            self.sent_layer:ClearAll()
             self.sent_layer:setVisible(false)
         end
     end):pos(window.cx, window.bottom + 34)
@@ -297,13 +301,42 @@ function GameUIMail:CreateShopButton()
     return write_mail_button
 end
 function GameUIMail:CreateBetweenBgAndTitle()
+    local parent = self
     self.inbox_layer = display.newLayer():addTo(self:GetView())
+    local inbox_layer = self.inbox_layer
+    function inbox_layer:ClearAll()
+        parent.inbox_listview = nil
+        parent.has_mail_label = nil
+        self:removeAllChildren()
+    end
 
     self.report_layer = display.newLayer():addTo(self:GetView())
+    local report_layer = self.report_layer
+    function report_layer:ClearAll()
+        parent.report_listview = nil
+        parent.has_report_label = nil
+        self:removeAllChildren()
+    end
 
     self.saved_layer = display.newLayer():addTo(self:GetView())
+    local saved_layer = self.saved_layer
+    function saved_layer:ClearAll()
+        parent.save_mails_listview = nil
+        parent.saved_reports_listview = nil
+        parent.has_saved_report_label = nil
+        parent.has_saved_mail_label = nil
+        self.save_dropList = nil
+        self:removeAllChildren()
+    end
 
     self.sent_layer = display.newLayer():addTo(self:GetView())
+
+    local sent_layer = self.sent_layer
+    function sent_layer:ClearAll()
+        parent.send_mail_listview = nil
+        parent.has_send_label = nil
+        self:removeAllChildren()
+    end
 end
 
 function GameUIMail:InitInbox(mails)
@@ -421,9 +454,10 @@ function GameUIMail:CreateInboxContent()
         local mail_icon = display.newSprite(mail.fromId == "__system" and "icon_system_mail.png" or "mail_state_user_not_read.png")
             :align(display.LEFT_CENTER,11, 24):addTo(content_title_bg)
 
-        from_name_label:setString(_("From")..":"..((mail.fromAllianceTag~="" and "["..mail.fromAllianceTag.."]"..mail.fromName) or mail.fromName))
+        local from_name = mail.fromName == "__system" and _("系统邮件") or mail.fromName
+        from_name_label:setString(_("From")..":"..((mail.fromAllianceTag~="" and "["..mail.fromAllianceTag.."]"..from_name) or from_name))
         date_label:setString(GameUtils:formatTimeStyle2(mail.sendTime/1000))
-        mail_content_title_label:setString(mail.title)
+        mail_content_title_label:setString(mail.fromName == "__system" and _(mail.title) or mail.title)
 
         -- 保存按钮
         if self.saved_button then
@@ -559,7 +593,6 @@ function GameUIMail:CreateSavedMailContent()
                 end
             end):addTo(self)
             :pos(item_width/2, item_height/2)
-
         title_bg:setTexture(mail.isRead and "title_grey_482x30.png" or "title_blue_482x30.png")
 
         local mail_icon = display.newSprite(mail.fromId == "__system" and "icon_system_mail.png" or "mail_state_user_not_read.png")
@@ -802,7 +835,17 @@ function GameUIMail:SelectAllMailsOrReports(isSelect)
         end
         self.report_listview:asyncLoadWithCurrentPosition_()
     elseif self.saved_layer:isVisible() then
-
+        if self.save_mails_listview:isVisible() then
+            for i,v in ipairs(self.manager:GetSavedMails()) do
+                self:SelectItems(v,isSelect)
+            end
+            self.save_mails_listview:asyncLoadWithCurrentPosition_()
+        elseif self.saved_reports_listview:isVisible() then
+            for i,v in ipairs(self.manager:GetSavedReports()) do
+                self:SelectItems(v,isSelect)
+            end
+            self.saved_reports_listview:asyncLoadWithCurrentPosition_()
+        end
     elseif self.sent_layer:isVisible() then
 
     end
@@ -894,7 +937,7 @@ function GameUIMail:OnSavedMailsChanged(changed_mails)
     end
 end
 function GameUIMail:OnSendMailsChanged(changed_mails)
-if not self.send_mail_listview then
+    if not self.send_mail_listview then
         return
     end
     if changed_mails.add_mails then
@@ -949,7 +992,7 @@ function GameUIMail:ShowSendMailDetails(mail)
     -- 收件人
     local subject_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("收件人: "),
+            text = _("收件人")..": ",
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x797154)
@@ -967,7 +1010,7 @@ function GameUIMail:ShowSendMailDetails(mail)
     -- 主题
     local subject_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("主题: "),
+            text = _("主题")..": ",
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x797154)
@@ -984,7 +1027,7 @@ function GameUIMail:ShowSendMailDetails(mail)
     -- 日期
     local date_title_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("日期: "),
+            text = _("日期")..": ",
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x797154)
@@ -1004,13 +1047,12 @@ function GameUIMail:ShowSendMailDetails(mail)
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(content_bg):pos(10, 0)
     local content_item = content_listview:newItem()
-    local content_label = cc.ui.UILabel.new(
-        {cc.ui.UILabel.LABEL_TYPE_TTF,
+    local content_label = UIKit:ttfLabel(
+        {
             text = mail.content,
-            font = UIKit:getFontFilePath(),
             size = 20,
             dimensions = cc.size(550,0),
-            color = UIKit:hex2c3b(0x403c2f)
+            color = 0x403c2f
         }):align(display.LEFT_TOP)
     content_item:setItemSize(570,content_label:getContentSize().height)
     content_item:addContent(content_label)
@@ -1020,7 +1062,7 @@ end
 --邮件详情弹出框
 function GameUIMail:ShowMailDetails(mail)
     local title_string = (mail.fromAllianceTag~="" and "["..mail.fromAllianceTag.."] "..mail.fromName) or mail.fromName
-    title_string = title_string == "__system" and _("系统邮件") or title_string
+    title_string = mail.fromName == "__system" and _("系统邮件") or title_string
     local dialog = WidgetPopDialog.new(768,title_string):addTo(self,201)
     local body = dialog:GetBody()
     local size = body:getContentSize()
@@ -1057,12 +1099,11 @@ function GameUIMail:ShowMailDetails(mail)
             color = UIKit:hex2c3b(0x797154)
         }):align(display.LEFT_CENTER, 155, size.height-100)
         :addTo(body)
-    local date_label = cc.ui.UILabel.new(
-        {cc.ui.UILabel.LABEL_TYPE_TTF,
+    local date_label = UIKit:ttfLabel(
+        {
             text = GameUtils:formatTimeStyle2(mail.sendTime/1000),
-            font = UIKit:getFontFilePath(),
             size = 20,
-            color = UIKit:hex2c3b(0x403c2f)
+            color = 0x403c2f
         }):align(display.LEFT_CENTER, 155 + date_title_label:getContentSize().width+20, size.height-100)
         :addTo(body)
     -- 内容
@@ -1071,13 +1112,12 @@ function GameUIMail:ShowMailDetails(mail)
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(content_bg):pos(10, 0)
     local content_item = content_listview:newItem()
-    local content_label = cc.ui.UILabel.new(
-        {cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = mail.content,
-            font = UIKit:getFontFilePath(),
+    local content_label = UIKit:ttfLabel(
+        {
+            text = mail.fromName == "__system" and _(mail.content) or mail.content,
             size = 20,
             dimensions = cc.size(550,0),
-            color = UIKit:hex2c3b(0x403c2f)
+            color = 0x403c2f
         }):align(display.LEFT_TOP)
     content_item:setItemSize(570,content_label:getContentSize().height)
     content_item:addContent(content_label)
@@ -1379,10 +1419,8 @@ function GameUIMail:InitSavedReports()
         },
         function(tag)
             if tag == 'menu_2' then
-                if not self.save_mails_listview then
-                    local saved_mails = self.manager:GetSavedMails()
-                    self:InitSaveMails(saved_mails)
-                end
+                local saved_mails = self.manager:GetSavedMails()
+                self:InitSaveMails(saved_mails)
                 self.save_mails_listview:show()
 
                 self.saved_reports_listview:hide()
@@ -1393,17 +1431,15 @@ function GameUIMail:InitSavedReports()
                 if self.save_mails_listview then
                     self.save_mails_listview:setVisible(false)
                 end
-                if not self.saved_reports_listview then
-                    self.saved_reports_listview = UIListView.new{
-                        async = true, --异步加载
-                        viewRect = cc.rect(display.cx-284, display.top-870, 612, 710),
-                        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
-                    }:addTo(self.saved_layer)
+                self.saved_reports_listview = UIListView.new{
+                    async = true, --异步加载
+                    viewRect = cc.rect(display.cx-284, display.top-870, 612, 710),
+                    direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
+                }:addTo(self.saved_layer)
 
-                    self.saved_reports_listview:setRedundancyViewVal(200)
-                    self.saved_reports_listview:setDelegate(handler(self, self.DelegateSavedReport))
-                    self.saved_reports_listview:reload()
-                end
+                self.saved_reports_listview:setRedundancyViewVal(200)
+                self.saved_reports_listview:setDelegate(handler(self, self.DelegateSavedReport))
+                self.saved_reports_listview:reload()
                 -- 没有保存战报
                 self.has_saved_report_label = UIKit:ttfLabel({
                     text = _("当前没有内容"),
@@ -1974,6 +2010,9 @@ function GameUIMail:GetEnemyAllianceTag(report)
 end
 
 return GameUIMail
+
+
+
 
 
 

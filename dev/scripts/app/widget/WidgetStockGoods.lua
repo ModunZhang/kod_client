@@ -146,7 +146,7 @@ function WidgetStockGoods:ctor(item)
                 return
             end
             NetManager:getAddAllianceItemPromise(item:Name(),slider:GetValue()):done(function ( response )
-                GameGlobalUI:showTips(_("提示"),string.format(_("进货%s成功"),Localize_item.item_name[item:Name()]))
+                GameGlobalUI:showTips(_("提示"),_("进货成功"))
                 return response
             end)
             self:removeFromParent(true)

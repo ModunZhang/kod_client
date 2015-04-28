@@ -21,7 +21,11 @@ function MapScene:ctor()
 end
 function MapScene:OnUserBasicChanged(user, changed)
     if changed.level then
-        UIKit:newGameUI('GameUILevelUp', user):AddToScene(self)
+        assert(type(changed.level.old) == "number")
+        assert(type(changed.level.new) == "number")
+        if changed.level.new > 1 then
+            UIKit:newGameUI('GameUILevelUp', changed.level.old, changed.level.new):AddToScene(self)
+        end
     end
 end
 function MapScene:onEnter()

@@ -31,7 +31,11 @@ function UIAutoClose:ctor(params)
             local rtpoint = body:convertToWorldSpace({x = size.width, y = size.height})
             if not cc.rectContainsPoint(cc.rect(lbpoint.x, lbpoint.y, rtpoint.x - lbpoint.x, rtpoint.y - lbpoint.y), event) then
                 if is_began_out then
-                    self:LeftButtonClicked()
+                    if type(self.out_func) == "function" then
+                        self.out_func()
+                    else
+                        self:LeftButtonClicked()
+                    end
                 end
             else
                 is_began_out = false
@@ -75,6 +79,10 @@ end
 
 function UIAutoClose:addCloseCleanFunc(func)
     self.clean_func=func
+end
+
+function UIAutoClose:AddClickOutFunc(out_func)
+    self.out_func = out_func
 end
 return UIAutoClose
 

@@ -20,19 +20,9 @@ function GameUICollectReport:ctor(report)
     local body = self.body
     local r_size = body:getContentSize()
 
-    local strike_result_image = display.newSprite("report_victory.png")
+    local strike_result_image = display.newSprite("report_collect_590x137.png")
         :align(display.CENTER_TOP, r_size.width/2, r_size.height-10)
         :addTo(body)
-    -- UIKit:ttfLabel({
-    --     text = _("目标"),
-    --     size = 24,
-    --     color = 0x403c2f,
-    -- }):align(display.LEFT_CENTER,80,r_size.height-60):addTo(body)
-    -- UIKit:ttfLabel({
-    --     text =Localize.village_name[report:GetData().collectTarget.name],
-    --     size = 24,
-    --     color = 0x403c2f,
-    -- }):align(display.LEFT_CENTER,200,r_size.height-60):addTo(body)
 
     -- 战斗发生时间
     local war_result_label = UIKit:ttfLabel(

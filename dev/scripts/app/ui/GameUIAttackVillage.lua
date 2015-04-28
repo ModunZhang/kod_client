@@ -41,7 +41,7 @@ function GameUIAttackVillage:onEnter()
         end):align(display.CENTER, title:getContentSize().width-20, title:getContentSize().height-20)
         :addTo(title)
     -- 战争结果图片
-    local result_img = self:GetWarResult() >0 and "report_victory.png" or "report_failure.png"
+    local result_img = self:GetWarResult() >0 and "report_victory_590x137.png" or "report_failure_590x137.png"
     local war_result_image = display.newSprite(result_img)
         :align(display.CENTER_TOP, rb_size.width/2, rb_size.height-16)
         :addTo(report_body)
