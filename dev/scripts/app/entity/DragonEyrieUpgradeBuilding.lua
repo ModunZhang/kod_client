@@ -47,7 +47,7 @@ function DragonEyrieUpgradeBuilding:GetHPRecoveryPerHour(withBuff)
 end
 
 function DragonEyrieUpgradeBuilding:GetHPRecoveryPerHourWithoutBuff()
-    return config_function[self:GetEfficiencyLevel()].hpRecoveryPerHour
+    return self:GetHPRecoveryPerHour(false)
 end
 function DragonEyrieUpgradeBuilding:GetNextLevelHPRecoveryPerHour()
     return config_function[self:GetNextLevel()].hpRecoveryPerHour
