@@ -661,7 +661,10 @@ function UIKit:getDiscolorrationSprite(image)
 end
 
 
-
+function UIKit:getIapPackageName(productId)
+    local Localize = import(".Localize", CURRENT_MODULE_NAME)
+    return Localize.iap_package_name[productId]
+end
 
 
 

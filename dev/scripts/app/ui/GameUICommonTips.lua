@@ -73,7 +73,8 @@ function GameUICommonTips:createUI()
 		size = 20,
 		color= 0xf3f0b6,
 		align = cc.TEXT_ALIGNMENT_CENTER,
-		dimensions = cc.size(640,140)
+		dimensions = cc.size(580,100),
+		ellipsis = true,
 	}):align(display.TOP_CENTER, 335, 100):addTo(self.content_sp)
 end
 

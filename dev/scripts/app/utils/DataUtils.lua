@@ -464,20 +464,6 @@ function DataUtils:getItemsPrice( items )
     return total_price
 end
 local config_store = GameDatas.StoreItems.items
-local Localize_item = import("..utils.Localize_item")
-function DataUtils:getIapRewardMessage(productId)
-    local message = ""
-    local info = self:getIapInfo(productId)
-    message = _("金龙币") .. " x" .. info.gem .. " "
-    local all_rewards = string.split(info.rewards, ",")
-    for __,v in ipairs(all_rewards) do
-        local one_reward = string.split(v,":")
-        local __,key,count = unpack(one_reward)
-        message = message .. Localize_item.item_name[key] .. " x" .. count .. " "
-    end
-    return message,info
-end
-
 function DataUtils:getIapInfo(productId)
     for __,v in ipairs(config_store) do
         if productId == v.productId then

@@ -146,11 +146,11 @@ end
 
 function MyApp:retryConnectServer(need_disconnect)
     print(debug.traceback("", 2),"retryConnectServer---->0")
-    if need_disconnect or type(need_disconnect) == "nil" then
+    if need_disconnect or type(need_disconnect) == "nil" or not NetManager:isConnected() then
         NetManager:disconnect()
         print("MyApp:retryConnectServer--->1")
     end
-    if NetManager.m_logicServer.host and NetManager.m_logicServer.port and NetManager.m_was_inited_game then
+    if NetManager.m_logicServer.host and NetManager.m_logicServer.port then
         UIKit:WaitForNet(2)
         scheduler.performWithDelayGlobal(function()
             NetManager:getConnectLogicServerPromise():next(function()
@@ -343,13 +343,13 @@ function MyApp:transactionObserver(event)
         Store.finishTransaction(transaction)
         device.hideActivityIndicator()
     elseif transaction_state == 'purchased' then
-        local rewards_msg,info = DataUtils:getIapRewardMessage(transaction.productIdentifier)
+        local info = DataUtils:getIapInfo(transaction.productIdentifier)
         ext.market_sdk.onPlayerChargeRequst(transaction.transactionIdentifier,transaction.productIdentifier,info.price,info.gem,"USD")
         NetManager:getVerifyIAPPromise(transaction.transactionIdentifier,transaction.receipt):next(function(response)
             device.hideActivityIndicator()
             local msg = response.msg
             if msg.transactionId then
-                GameGlobalUI:showTips(_("提示"),rewards_msg)
+                GameGlobalUI:showTips(_("提示"),string.format("您已获得%s,到物品里面查看",UIKit:getIapPackageName(transaction.productIdentifier)))
                 Store.finishTransaction(transaction)
                 ext.market_sdk.onPlayerChargeSuccess(transaction.transactionIdentifier)
             end
