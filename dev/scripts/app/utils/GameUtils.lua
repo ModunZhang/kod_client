@@ -572,6 +572,7 @@ local function createDragonForFight(dragon)
         vitality = dragon.vitality,
     }
 end
+local DAMAGE_FACTOR = 0.3
 function GameUtils:SoldierSoldierBattle(attackSoldiers, attackWoundedSoldierPercent, attackSoldierMoraleDecreasedPercent, defenceSoldiers, defenceWoundedSoldierPercent, defenceSoldierMoraleDecreasedPercent)
     local attackResults = {}
     local defenceResults = {}
@@ -585,10 +586,10 @@ function GameUtils:SoldierSoldierBattle(attackSoldiers, attackWoundedSoldierPerc
         local attackDamagedSoldierCount = nil
         local defenceDamagedSoldierCount = nil
         if attackTotalPower >= defenceTotalPower then
-            attackDamagedSoldierCount = ceil(defenceTotalPower * 0.5 / attackSoldier.hp)
+            attackDamagedSoldierCount = ceil(defenceTotalPower * DAMAGE_FACTOR / attackSoldier.hp)
             defenceDamagedSoldierCount = ceil(sqrt(attackTotalPower * defenceTotalPower) * 0.5 / defenceSoldier.hp)
         else
-            attackDamagedSoldierCount = ceil(sqrt(attackTotalPower * defenceTotalPower) * 0.5 / attackSoldier.hp)
+            attackDamagedSoldierCount = ceil(sqrt(attackTotalPower * defenceTotalPower) * DAMAGE_FACTOR / attackSoldier.hp)
             defenceDamagedSoldierCount = ceil(attackTotalPower * 0.5 / defenceSoldier.hp)
         end
         if attackDamagedSoldierCount > attackSoldier.currentCount * 0.7 then
@@ -724,6 +725,7 @@ local function getDragonFightFixedEffect(attackSoldiersForFight, defenceSoldiers
     return effect
 end
 local function getPlayerTreatSoldierPercent(dragon)
+    if true then return 1.0 end
     local basePercent = 0.3
     local skillBuff = 0
     local equipmentBuff = 0

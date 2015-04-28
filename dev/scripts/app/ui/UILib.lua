@@ -95,6 +95,7 @@ local RESOURCE = {
     iron = "res_iron_91x63.png",
     coin = "res_coin_81x68.png",
     wallHp = "gate_1.png",
+    gem = "gem_icon_62x61.png",
 }
 local MATERIALS = {
     blueprints = "blueprints_128x128.png",
