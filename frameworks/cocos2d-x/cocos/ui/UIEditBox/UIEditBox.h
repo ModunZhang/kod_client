@@ -442,6 +442,8 @@ namespace ui {
              *  @param enable 是否可以输入
              */
             void setEnable(bool enable);
+            //dannyhe
+            void setIgnoreWhiteSpaceInput(bool ignore);
         protected:
             virtual void adaptRenderers();
 
@@ -468,6 +470,7 @@ namespace ui {
             
             int   _maxLength;
             float _adjustHeight;
+            bool  _ignoreWhiteSpaceInput;
 #if CC_ENABLE_SCRIPT_BINDING
             int   _scriptEditBoxHandler;
 #endif

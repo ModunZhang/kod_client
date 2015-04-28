@@ -158,6 +158,23 @@ function BelvedereEntity:GetDestinationLocation()
 	end
 end
 
+function BelvedereEntity:GetDestinationLocationNotString()
+	if self:GetType() == self.ENTITY_TYPE.COLLECT then
+		return self:WithObject():TargetLocation()
+	elseif self:GetType() == self.ENTITY_TYPE.MARCH_OUT  
+		or self:GetType() == self.ENTITY_TYPE.MARCH_RETURN 
+		or self:GetType() == self.ENTITY_TYPE.STRIKE_OUT 
+		or self:GetType() == self.ENTITY_TYPE.STRIKE_RETURN 
+		then
+		return self:WithObject():TargetLocation()
+	elseif self:GetType() == self.ENTITY_TYPE.HELPTO then
+		return self:WithObject().beHelpedPlayerData.location
+	elseif self:GetType() == self.ENTITY_TYPE.SHIRNE then
+		local location =  self:FindShrinePlayerTroops().location
+		return location
+	end
+end
+
 function BelvedereEntity:GetDragonType()
 	if self:GetType() == self.ENTITY_TYPE.HELPTO then
 		return self:WithObject().playerDragon

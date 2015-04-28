@@ -9,20 +9,9 @@ function WidgetInfo:ctor(params)
     local width = params.w or 568
     self.width = width
 
-    self.info_bg = WidgetUIBackGround.new({
-        width = width,
-        height = params.h or #info*40+20,
-        top_img = "back_ground_568X14_top.png",
-        bottom_img = "back_ground_568X14_top.png",
-        mid_img = "back_ground_568X1_mid.png",
-        u_height = 14,
-        b_height = 14,
-        m_height = 1,
-        b_flip = true,
-        capInsets = cc.rect(8,2,552,10)
-    }):addTo(self)
+    self.info_bg = WidgetUIBackGround.new({width = width,height = params.h or #info*40+20},WidgetUIBackGround.STYLE_TYPE.STYLE_6)
+        :addTo(self)
     self.info_listview = UIListView.new{
-        -- bgColor = UIKit:hex2c4b(0x7a000000),
         viewRect = cc.rect(10, 10, width-20, (params.h or #info*40+20)-20),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(self.info_bg)

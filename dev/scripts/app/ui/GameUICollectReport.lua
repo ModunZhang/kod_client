@@ -20,19 +20,9 @@ function GameUICollectReport:ctor(report)
     local body = self.body
     local r_size = body:getContentSize()
 
-    local strike_result_image = display.newSprite("report_victory.png")
+    local strike_result_image = display.newSprite("report_collect_590x137.png")
         :align(display.CENTER_TOP, r_size.width/2, r_size.height-10)
         :addTo(body)
-    -- UIKit:ttfLabel({
-    --     text = _("目标"),
-    --     size = 24,
-    --     color = 0x403c2f,
-    -- }):align(display.LEFT_CENTER,80,r_size.height-60):addTo(body)
-    -- UIKit:ttfLabel({
-    --     text =Localize.village_name[report:GetData().collectTarget.name],
-    --     size = 24,
-    --     color = 0x403c2f,
-    -- }):align(display.LEFT_CENTER,200,r_size.height-60):addTo(body)
 
     -- 战斗发生时间
     local war_result_label = UIKit:ttfLabel(
@@ -113,17 +103,9 @@ function GameUICollectReport:CreateBootyPart()
         local booty_list_height = booty_count * item_height
 
         -- 战利品列表
-        booty_list_bg = WidgetUIBackGround.new({
-            width = item_width,
-            height = booty_list_height+16,
-            top_img = "back_ground_568X14_top.png",
-            bottom_img = "back_ground_568X14_top.png",
-            mid_img = "back_ground_568X1_mid.png",
-            u_height = 14,
-            b_height = 14,
-            m_height = 1,
-            b_flip = true,
-        }):align(display.CENTER,0,-25)
+        booty_list_bg = WidgetUIBackGround.new({width = item_width,height = booty_list_height+16},WidgetUIBackGround.STYLE_TYPE.STYLE_6)
+            :align(display.CENTER,0,-25)
+       
         local booty_list_bg_size = booty_list_bg:getContentSize()
         booty_group:addChild(booty_list_bg)
 
@@ -163,10 +145,7 @@ function GameUICollectReport:CreateBootyPart()
         size = 24,
         color = 0xffedae
     }):align(display.CENTER,booty_title_bg:getContentSize().width/2, 25):addTo(booty_title_bg)
-    -- local item = self.details_view:newItem()
-    -- item:setItemSize(item_width, (booty_list_bg and booty_list_bg:getContentSize().height or 0) +booty_title_bg:getContentSize().height)
-    -- item:addContent(booty_group)
-    -- self.details_view:addItem(item)
+
     booty_group:addTo(self.body):align(display.CENTER,304,180)
 end
 

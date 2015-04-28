@@ -451,7 +451,7 @@ function GameUIAlliance:getCommonListItem_(listType,alliance)
         :addTo(bg)
         :align(display.RIGHT_TOP,bg:getContentSize().width-10, bg:getContentSize().height - 10)
     local nameLabel = UIKit:ttfLabel({
-        text = alliance.name, -- alliance name
+        text = string.format("[%s] %s",alliance.tag,alliance.name), -- alliance name
         size = 22,
         color = 0xffedae
     }):addTo(titleBg):align(display.LEFT_CENTER,10, 15)
@@ -546,7 +546,7 @@ function GameUIAlliance:getCommonListItem_(listType,alliance)
                 self:commonListItemAction(listType,item,alliance)
             end)
             :addTo(bg)
-        nameLabel:setString(alliance.name)
+        -- nameLabel:setString(alliance.name)
         memberValLabel:setString(string.format("%s/%s",alliance.members,alliance.membersMax))
         fightingValLabel:setString(alliance.power)
         languageValLabel:setString(alliance.language)
@@ -598,7 +598,7 @@ function GameUIAlliance:getCommonListItem_(listType,alliance)
                 self:commonListItemAction(listType,item,alliance)
             end)
             :addTo(bg)
-        nameLabel:setString(alliance.name)
+        -- nameLabel:setString(alliance.name)
         memberValLabel:setString(string.format("%s/%s",alliance.members,alliance.membersMax))
         fightingValLabel:setString(alliance.power)
         languageValLabel:setString(alliance.language)
@@ -627,13 +627,13 @@ function GameUIAlliance:commonListItemAction( listType,item,alliance,tag)
         end
     elseif  listType == self.COMMON_LIST_ITEM_TYPE.APPLY then
         NetManager:getCancelJoinAlliancePromise(alliance.id):done(function()
-            -- self:RefreshApplyListView()
+            self:RefreshApplyListView()
             end)
     elseif listType == self.COMMON_LIST_ITEM_TYPE.INVATE then
         -- tag == 1 -> 拒绝
         NetManager:getHandleJoinAllianceInvitePromise(alliance.id,tag~=1):done(function()
             if tag == 1 then
-            -- self:RefreshInvateListView()
+            self:RefreshInvateListView()
             end
         end)
     end
@@ -991,10 +991,11 @@ function GameUIAlliance:HaveAlliaceUI_membersIf()
             align = cc.TEXT_ALIGNMENT_LEFT,
         }):addTo(title_bar):align(display.LEFT_CENTER,5, 15)
         self.member_list_bg.title_label = title_label
-        local button = WidgetPushButton.new({normal = "info_16x33.png"}):addTo(title_bar):align(display.RIGHT_CENTER, 400, 15):scale(0.7):onButtonClicked(function(event)
-            self:OnAllianceTitleClicked("archon")
+
+        local button = display.newSprite("info_16x33.png"):addTo(title_bar):align(display.RIGHT_CENTER, 400, 15):scale(0.7)
+        WidgetPushTransparentButton.new(cc.rect(0,0,428,30)):addTo(title_bar):align(display.LEFT_BOTTOM,0,0):onButtonClicked(function()
+            self:OnAllianceTitleClicked(title)
         end)
-        WidgetPushTransparentButton.new(cc.rect(0,0,428,30),button):addTo(title_bar):align(display.LEFT_BOTTOM,0,0)
         local line_2 = display.newScale9Sprite("dividing_line_594x2.png"):addTo(self.member_list_bg)
             :align(display.LEFT_BOTTOM,title_bar:getPositionX(),650)
             :size(428,2)
@@ -1093,6 +1094,15 @@ function GameUIAlliance:GetMemberItem(title)
     table.foreach(filter_data,function(k,v)
         table.insert(data,v)
     end)
+    table.sort( data, function(a,b)
+        local isOnline_a = (type(a.online) == 'boolean' and a.online) and true or false
+        local isOnline_b = (type(b.online) == 'boolean' and b.online) and true or false
+        if isOnline_a == isOnline_b then
+            return a.power > b.power
+        else
+            return isOnline_a
+        end
+    end)
     local header_title,number_image = self:GetAllianceTitleAndLevelPng(title)
     local count = #data
     -- 71 = 66 + 5
@@ -1102,14 +1112,13 @@ function GameUIAlliance:GetMemberItem(title)
     end
     local node = display.newNode():size(560,height)
     local title_bar = display.newSprite("title_blue_558x34.png"):align(display.LEFT_TOP, 0, height):addTo(node)
-    local button = WidgetPushButton.new({normal = "info_16x33.png"})
+    local button = display.newSprite("info_16x33.png")
         :align(display.RIGHT_CENTER,545,17)
         :addTo(title_bar)
         :scale(0.7)
-        :onButtonClicked(function(event)
+    WidgetPushTransparentButton.new(cc.rect(0,0,560,38)):addTo(title_bar):align(display.LEFT_BOTTOM,0,0):onButtonClicked(function(event)
             self:OnAllianceTitleClicked(title)
         end)
-    WidgetPushTransparentButton.new(cc.rect(0,0,560,38),button):addTo(title_bar):align(display.LEFT_BOTTOM,0,0)
     local title_label= UIKit:ttfLabel({
         text = header_title,
         size = 22,
@@ -1161,11 +1170,14 @@ function GameUIAlliance:GetNormalSubItem(index,playerName,level,power,memberId,i
         align = cc.TEXT_ALIGNMENT_LEFT,
     }):addTo(item):align(display.LEFT_CENTER,powerIcon:getPositionX()+35,33)
     if User:Id()~= memberId then
-        WidgetPushButton.new({normal = "alliacne_search_29x33.png"})
+        display.newSprite("alliacne_search_29x33.png")
             :align(display.RIGHT_CENTER,548,33)
             :addTo(item)
+        WidgetPushTransparentButton.new(cc.rect(0,0,558,66))
+            :align(display.LEFT_BOTTOM,0,0)
+            :addTo(item)
             :onButtonClicked(function()
-                self:OnPlayerDetailButtonClicked(memberId)
+                 self:OnPlayerDetailButtonClicked(memberId)
             end)
     end
     return item

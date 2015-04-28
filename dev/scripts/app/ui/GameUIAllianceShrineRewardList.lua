@@ -2,9 +2,9 @@
 -- Author: Danny He
 -- Date: 2014-11-12 10:02:15
 --
-local GameUIAllianceShrineRewardList = UIKit:createUIClass("GameUIAllianceShrineRewardList")
+local GameUIAllianceShrineRewardList = UIKit:createUIClass("GameUIAllianceShrineRewardList","UIAutoClose")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
-local HEIGHT = 738
+local HEIGHT = 438
 local window = import("..utils.window")
 local UIListView = import(".UIListView")
 local Alliance_Manager = Alliance_Manager
@@ -21,16 +21,15 @@ function GameUIAllianceShrineRewardList:onEnter()
 end
 
 function GameUIAllianceShrineRewardList:BuildUI()
-	local layer = UIKit:shadowLayer():addTo(self)
 	local background = WidgetUIBackGround.new({height = HEIGHT})
-		:addTo(layer)
 		:pos(window.left+22,window.top - 101 - HEIGHT)
+	self:addTouchAbleChild(background)
 	local title_bar = display.newSprite("title_blue_600x52.png"):align(display.CENTER_BOTTOM, 304,HEIGHT - 15):addTo(background)
 	UIKit:ttfLabel({
 		text = _("事件完成奖励"),
 		size = 22,
 		color = 0xffedae
-	}):align(display.CENTER,300,21):addTo(title_bar)
+	}):align(display.CENTER,300,26):addTo(title_bar)
 	local closeButton = UIKit:closeButton()
 	   	:addTo(title_bar)
 	   	:align(display.BOTTOM_RIGHT,title_bar:getContentSize().width, 0)
@@ -39,7 +38,7 @@ function GameUIAllianceShrineRewardList:BuildUI()
 	   	end)
 
 	self.rewards_listView = UIListView.new({
-        viewRect = cc.rect(7, 100,595, 610),
+        viewRect = cc.rect(7, 100,595, 300),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
         alignment = UIListView.ALIGNMENT_LEFT,
     }):addTo(background)

@@ -78,9 +78,9 @@ function GameUIStrikeReport:onEnter()
     -- 突袭结果图片
     local report_result_img
     if report:Type() == "strikeCity" or report:Type() == "strikeVillage" then
-        report_result_img = report:GetStrikeLevel() >1 and "report_victory.png" or "report_failure.png"
+        report_result_img = report:GetStrikeLevel() >1 and "report_victory_590x137.png" or "report_failure_590x137.png"
     elseif report:Type() == "cityBeStriked" or report:Type() == "villageBeStriked" then
-        report_result_img = report:GetStrikeLevel() >1 and "report_failure.png" or "report_victory.png"
+        report_result_img = report:GetStrikeLevel() >1 and "report_failure_590x137.png" or "report_victory_590x137.png"
     end
     local strike_result_image = display.newSprite(report_result_img)
         :align(display.CENTER_TOP, rb_size.width/2, rb_size.height-10)
@@ -189,17 +189,8 @@ function GameUIStrikeReport:CreateBootyPart()
         -- 战利品列表部分高度
         local booty_list_height = booty_count * item_height
         -- 战利品列表
-        booty_list_bg = WidgetUIBackGround.new({
-            width = 540,
-            height = booty_list_height+16,
-            top_img = "back_ground_568X14_top.png",
-            bottom_img = "back_ground_568X14_top.png",
-            mid_img = "back_ground_568X1_mid.png",
-            u_height = 14,
-            b_height = 14,
-            m_height = 1,
-            b_flip = true,
-        }):align(display.CENTER,0,-25)
+        booty_list_bg = WidgetUIBackGround.new({width = 540,height = booty_list_height+16},WidgetUIBackGround.STYLE_TYPE.STYLE_6)
+            :align(display.CENTER,0,-25)
             :addTo(booty_group)
 
         local booty_list_bg_size = booty_list_bg:getContentSize()

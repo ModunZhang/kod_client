@@ -91,19 +91,14 @@ function GameUIWriteMail:ctor(send_type,contacts)
         :addTo(write_mail):align(display.CENTER, write_mail:getContentSize().width-120, 40)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                self:SendMail(contacts.id, self.editbox_subject:getText(), self.textView:getText())
+                self:SendMail(contacts and contacts.id, self.editbox_subject:getText(), self.textView:getText())
             end
         end)
     textView:setRectTrackedNode(self.send_button)
 
 end
 function GameUIWriteMail:SendMail(addressee,title,content)
-    if not addressee or string.trim(addressee)=="" then
-        FullScreenPopDialogUI.new():SetTitle(_("提示"))
-            :SetPopMessage(_("请填写正确的收件人ID"))
-            :AddToCurrentScene()
-        return
-    elseif not title or string.trim(title)=="" then
+    if not title or string.trim(title)=="" then
         FullScreenPopDialogUI.new():SetTitle(_("提示"))
             :SetPopMessage(_("请填写邮件主题"))
             :AddToCurrentScene()
@@ -115,6 +110,12 @@ function GameUIWriteMail:SendMail(addressee,title,content)
         return
     end
     if self.send_type == PERSONAL_MAIL then
+        if not addressee or string.trim(addressee)=="" then
+            FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                :SetPopMessage(_("请填写正确的收件人ID"))
+                :AddToCurrentScene()
+            return
+        end
         NetManager:getSendPersonalMailPromise(addressee, title, content,self.contacts):done(function(result)
             self:removeFromParent()
             return result
@@ -129,7 +130,7 @@ end
 
 -- -- 收件人ID
 function GameUIWriteMail:SetAddressee( addressee )
-     self.addressee_title_label:setString( _("收件人")..":      "..addressee)
+    self.addressee_title_label:setString( _("收件人")..":      "..addressee)
     return self
 end
 -- 邮件主题
@@ -143,11 +144,6 @@ function GameUIWriteMail:SetContent( content )
     return self
 end
 
-function GameUIWriteMail:AddToCurrentScene()
-    return self:addTo(display.getRunningScene())
-end
-
-
 return GameUIWriteMail
 
 
@@ -158,6 +154,7 @@ return GameUIWriteMail
 
 
    
+
 
 
 

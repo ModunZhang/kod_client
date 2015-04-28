@@ -217,9 +217,6 @@ function MailManager:FetchMailsFromServer(fromIndex)
                 self:AddMailsToEnd(clone(v))
                 table.insert(fetch_mails, clone(v))
             end
-            self:NotifyListeneOnType(MailManager.LISTEN_TYPE.FETCH_MAILS,function(listener)
-                listener:OnFetchMailsSuccess(fetch_mails)
-            end)
         end
         return response
     end)
@@ -405,11 +402,13 @@ function MailManager:OnUserDataChanged(userData,timer,deltaData)
 end
 
 function MailManager:OnReportsChanged( reports )
+    self.reports = {}
     for k,v in pairs(reports) do
         table.insert(self.reports, Report:DecodeFromJsonData(clone(v)))
     end
 end
 function MailManager:OnSavedReportsChanged( savedReports )
+    self.savedReports = {}
     for k,v in pairs(savedReports) do
         table.insert(self.savedReports, Report:DecodeFromJsonData(clone(v)))
     end

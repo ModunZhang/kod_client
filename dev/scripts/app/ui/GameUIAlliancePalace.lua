@@ -193,15 +193,15 @@ function GameUIAlliancePalace:OpenAwardDialog(member)
             color = 0x403c2f,
         }):align(display.LEFT_TOP, 20 ,slider_bg:getContentSize().height-15)
         :addTo(slider_bg)
+
     -- slider
     local slider = WidgetSliderWithInput.new({max = self.alliance:Honour()})
         :addTo(slider_bg)
         :align(display.CENTER, slider_bg:getContentSize().width/2,  65)
         :OnSliderValueChanged(function(event)
-            -- parms.onSliderValueChanged(math.floor(event.value))
-            end)
+                body.button:setButtonEnabled(math.floor(event.value) ~= 0)
+        end)
         :LayoutValueLabel(WidgetSliderWithInput.STYLE_LAYOUT.TOP,75)
-
     -- icon
     local x,y = slider:GetEditBoxPostion()
     local icon = display.newSprite("loyalty_128x128.png")
@@ -210,7 +210,7 @@ function GameUIAlliancePalace:OpenAwardDialog(member)
     local max = math.max(icon:getContentSize().width,icon:getContentSize().height)
     icon:scale(40/max)
     --奖赏按钮
-    WidgetPushButton.new({normal = "yellow_btn_up_185x65.png",pressed = "yellow_btn_down_185x65.png"})
+    body.button = WidgetPushButton.new({normal = "yellow_btn_up_186x66.png",pressed = "yellow_btn_down_186x66.png",disabled = "grey_btn_186x66.png"})
         :setButtonLabel(UIKit:ttfLabel({
             text = _("奖赏"),
             size = 24,
@@ -229,6 +229,8 @@ function GameUIAlliancePalace:OpenAwardDialog(member)
                 end
             end
         end):align(display.BOTTOM_RIGHT, body_size.width-20,30):addTo(body)
+    body.button:setButtonEnabled(slider:GetValue() ~= 0)
+
 end
 function GameUIAlliancePalace:GetLastThreeDaysKill(lastThreeDaysKillData)
     if not lastThreeDaysKillData then return 0 end
@@ -344,19 +346,19 @@ function GameUIAlliancePalace:InitInfoPart()
             -- self.selected_rebuild_to_building = rebuild_list[event.selected]
             self.select_terrian_index = event.selected
             local t_name = {
-           {
-           _("草地"),
-           _("绿龙"),
-           },
-           {
-           _("雪地"),
-           _("蓝龙"),
-           },
-           {
-           _("沙漠"),
-           _("红龙"),
-           },
-        }
+                {
+                    _("草地"),
+                    _("绿龙"),
+                },
+                {
+                    _("雪地"),
+                    _("蓝龙"),
+                },
+                {
+                    _("沙漠"),
+                    _("红龙"),
+                },
+            }
             terian_intro:setString(string.format(_("%s地形能产出%s装备材料，每当在自己的领土上完成任务，或者击杀一点战斗力的敌方单位，就由一定几率获得装备材料。"),t_name[self.select_terrian_index][1],t_name[self.select_terrian_index][2]))
         end)
         :align(display.CENTER, 57 , 90)
@@ -418,19 +420,19 @@ function GameUIAlliancePalace:OnAllianceBasicChanged(alliance,changed_map)
         self.current_honour:RefreshHonour(new)
     end
 end
-function GameUIAlliancePalace:OnAllianceBasicChanged(alliance,changed_map)
+function GameUIAlliancePalace:OnMemberChanged(alliance,changed_map)
     if not changed_map then return end
-    if changed_map.added then
-        for k,v in pairs(changed_map.added) do
+    if changed_map[1] then
+        for k,v in pairs(changed_map[1]) do
             self:CreateAwardMemberItem(v,LuaUtils:table_size(self.award_menmber_listview:getItems()) + 1)
         end
         self.award_menmber_listview:reload()
     end
-    if changed_map.removed then
+    if changed_map[3] then
         self:SetAwardMemberList()
     end
-    if changed_map.changed then
-        for k,v in pairs(changed_map.changed) do
+    if changed_map[2] then
+        for k,v in pairs(changed_map[2]) do
             if self.items[v:Id()] then
                 self.items[v:Id()]:RefreshItem(v)
             end
@@ -438,6 +440,7 @@ function GameUIAlliancePalace:OnAllianceBasicChanged(alliance,changed_map)
     end
 end
 return GameUIAlliancePalace
+
 
 
 

@@ -8,6 +8,7 @@ local UILib = import(".UILib")
 local GameUIWatchTowerTroopDetail = import(".GameUIWatchTowerTroopDetail")
 local WidgetUseItems = import("..widget.WidgetUseItems")
 local config_day14 = GameDatas.Activities.day14
+local SpriteConfig = import("..sprites.SpriteConfig")
 
 function GameUIWatchTower:ctor(city,building,default_tab)
 	default_tab = default_tab or "upgrade"
@@ -234,13 +235,14 @@ function GameUIWatchTower:GetMyEventItemWithIndex(index,isOpen,entity)
 		                	end
 		                end)
 		            end)
-		        local icon = display.newSprite("woodcutter_1_150x108.png", 67, 67):addTo(event_bg)
+		        local image = SpriteConfig[entity:WithObject():VillageData().name]:GetConfigByLevel(entity:WithObject():VillageData().level).png
+		        local icon = display.newSprite(image, 67, 67):addTo(event_bg)
 		        icon:setScale(120/150)
 		        local process_bg = display.newSprite("process_bg_village_collect_326x40.png"):align(display.LEFT_BOTTOM,164, 20):addTo(bg)
 		        local progress_timer = UIKit:commonProgressTimer("process_color_village_collect_326x40.png"):align(display.LEFT_CENTER, 0, 20):addTo(process_bg)
 		        progress_timer:setPercentage(entity:WithObject():CollectPercent())
 		        local process_label = UIKit:ttfLabel({
-		        	text =  math.floor(entity:WithObject():CollectPercent()/100 * entity:WithObject():CollectCount()) .. "/" .. entity:WithObject():VillageData().collectTotal,
+		        	text =  math.floor(entity:WithObject():CollectCount()) .. "/" .. entity:WithObject():VillageData().collectTotal,
 		        	size = 20,
 		        	color= 0xfff3c7,
 		        	shadow= true
@@ -461,7 +463,7 @@ function GameUIWatchTower:OnVillageEventTimer(villageEvent)
 		self.village_process[villageEvent:Id()]:setPercentage(villageEvent:CollectPercent())
 	end
 	if self.village_labels[villageEvent:Id()] then
-		self.village_labels[villageEvent:Id()]:setString(math.floor(villageEvent:CollectPercent()/100 * villageEvent:CollectCount()) .. "/" .. villageEvent:VillageData().collectTotal)
+		self.village_labels[villageEvent:Id()]:setString(math.floor(villageEvent:CollectCount()) .. "/" .. villageEvent:VillageData().collectTotal)
 	end
 end
 

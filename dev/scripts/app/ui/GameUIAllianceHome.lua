@@ -180,9 +180,11 @@ function GameUIAllianceHome:CreateOperationButton()
             local __,count = alliance_belvedere:HasEvents()
             self.alliance_belvedere_events_count = WidgetNumberTips.new():addTo(button):pos(20,-20)
             self.alliance_belvedere_events_count:SetNumber(count)
+             print("CheckVisible----->1",count)
             function button:CheckVisible()
                 local hasEvent,count = alliance_belvedere:HasEvents()
                 if self.alliance_belvedere_events_count then
+                    print("CheckVisible----->2",count)
                     self.alliance_belvedere_events_count:SetNumber(count)
                 end
                 return hasEvent
@@ -308,9 +310,9 @@ function GameUIAllianceHome:CreateTop()
         }):align(display.BOTTOM_CENTER, period_bg:getContentSize().width/2, period_bg:getContentSize().height/2-10)
         :addTo(period_bg)
     -- 己方战力
-    local our_num_icon = cc.ui.UIImage.new("power_24x29.png"):align(display.CENTER, -107, -65):addTo(top_self_bg)
     local self_power_bg = display.newSprite("power_background_146x26.png")
         :align(display.LEFT_CENTER, -107, -65):addTo(top_self_bg)
+    local our_num_icon = cc.ui.UIImage.new("power_24x29.png"):align(display.CENTER, -107, -65):addTo(top_self_bg)
     local self_power_label = UIKit:ttfLabel(
         {
             text = string.formatnumberthousands(alliance:Power()),

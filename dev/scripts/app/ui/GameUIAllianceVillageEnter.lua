@@ -83,6 +83,15 @@ function GameUIAllianceVillageEnter:GetUITitle()
 	return Localize.village_name[self:GetBuilding():GetName()]
 end
 
+function GameUIAllianceVillageEnter:GetBuildImageSprite()
+    return nil
+end
+
+function GameUIAllianceVillageEnter:GetBuildImageInfomation(sprite)
+    local size = sprite:getContentSize()
+    return 110/math.max(size.width,size.height),97,self:GetUIHeight() - 90 
+end
+
 function GameUIAllianceVillageEnter:GetBuildingImage()
 	if not self:IsRuins() then
 		local village_info = self:GetVillageInfo()

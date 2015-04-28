@@ -421,9 +421,10 @@ function GameUIMail:CreateInboxContent()
         local mail_icon = display.newSprite(mail.fromId == "__system" and "icon_system_mail.png" or "mail_state_user_not_read.png")
             :align(display.LEFT_CENTER,11, 24):addTo(content_title_bg)
 
-        from_name_label:setString(_("From")..":"..((mail.fromAllianceTag~="" and "["..mail.fromAllianceTag.."]"..mail.fromName) or mail.fromName))
+        local from_name = mail.fromName == "__system" and _("系统邮件") or mail.fromName
+        from_name_label:setString(_("From")..":"..((mail.fromAllianceTag~="" and "["..mail.fromAllianceTag.."]"..from_name) or from_name))
         date_label:setString(GameUtils:formatTimeStyle2(mail.sendTime/1000))
-        mail_content_title_label:setString(mail.title)
+        mail_content_title_label:setString(mail.fromName == "__system" and _(mail.title) or mail.title)
 
         -- 保存按钮
         if self.saved_button then
@@ -949,7 +950,7 @@ function GameUIMail:ShowSendMailDetails(mail)
     -- 收件人
     local subject_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("收件人: "),
+            text = _("收件人")..": ",
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x797154)
@@ -967,7 +968,7 @@ function GameUIMail:ShowSendMailDetails(mail)
     -- 主题
     local subject_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("主题: "),
+            text = _("主题")..": ",
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x797154)
@@ -984,7 +985,7 @@ function GameUIMail:ShowSendMailDetails(mail)
     -- 日期
     local date_title_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("日期: "),
+            text = _("日期")..": ",
             font = UIKit:getFontFilePath(),
             size = 20,
             color = UIKit:hex2c3b(0x797154)
@@ -1004,13 +1005,12 @@ function GameUIMail:ShowSendMailDetails(mail)
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(content_bg):pos(10, 0)
     local content_item = content_listview:newItem()
-    local content_label = cc.ui.UILabel.new(
-        {cc.ui.UILabel.LABEL_TYPE_TTF,
+    local content_label = UIKit:ttfLabel(
+        {
             text = mail.content,
-            font = UIKit:getFontFilePath(),
             size = 20,
             dimensions = cc.size(550,0),
-            color = UIKit:hex2c3b(0x403c2f)
+            color = 0x403c2f
         }):align(display.LEFT_TOP)
     content_item:setItemSize(570,content_label:getContentSize().height)
     content_item:addContent(content_label)
@@ -1020,7 +1020,7 @@ end
 --邮件详情弹出框
 function GameUIMail:ShowMailDetails(mail)
     local title_string = (mail.fromAllianceTag~="" and "["..mail.fromAllianceTag.."] "..mail.fromName) or mail.fromName
-    title_string = title_string == "__system" and _("系统邮件") or title_string
+    title_string = mail.fromName == "__system" and _("系统邮件") or title_string
     local dialog = WidgetPopDialog.new(768,title_string):addTo(self,201)
     local body = dialog:GetBody()
     local size = body:getContentSize()
@@ -1057,12 +1057,11 @@ function GameUIMail:ShowMailDetails(mail)
             color = UIKit:hex2c3b(0x797154)
         }):align(display.LEFT_CENTER, 155, size.height-100)
         :addTo(body)
-    local date_label = cc.ui.UILabel.new(
-        {cc.ui.UILabel.LABEL_TYPE_TTF,
+    local date_label = UIKit:ttfLabel(
+        {
             text = GameUtils:formatTimeStyle2(mail.sendTime/1000),
-            font = UIKit:getFontFilePath(),
             size = 20,
-            color = UIKit:hex2c3b(0x403c2f)
+            color = 0x403c2f
         }):align(display.LEFT_CENTER, 155 + date_title_label:getContentSize().width+20, size.height-100)
         :addTo(body)
     -- 内容
@@ -1071,13 +1070,12 @@ function GameUIMail:ShowMailDetails(mail)
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(content_bg):pos(10, 0)
     local content_item = content_listview:newItem()
-    local content_label = cc.ui.UILabel.new(
-        {cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = mail.content,
-            font = UIKit:getFontFilePath(),
+    local content_label = UIKit:ttfLabel(
+        {
+            text = mail.fromName == "__system" and _(mail.content) or mail.content,
             size = 20,
             dimensions = cc.size(550,0),
-            color = UIKit:hex2c3b(0x403c2f)
+            color = 0x403c2f
         }):align(display.LEFT_TOP)
     content_item:setItemSize(570,content_label:getContentSize().height)
     content_item:addContent(content_label)

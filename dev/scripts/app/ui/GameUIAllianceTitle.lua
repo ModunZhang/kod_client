@@ -21,9 +21,9 @@ function GameUIAllianceTitle:ctor(title)
 	self.title_ = title
 end
 
-function GameUIAllianceTitle:OnMoveInStage()
-	GameUIAllianceTitle.super.OnMoveInStage(self)
-	self:BuildUI()
+function GameUIAllianceTitle:onEnter()
+    GameUIAllianceTitle.super.onEnter(self)
+    self:BuildUI()
 end
 
 

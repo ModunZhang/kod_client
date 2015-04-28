@@ -35,19 +35,19 @@ function GameUIActivity:ctor(city)
 	self.player_level_up_time = countInfo.registerTime/1000 + config_intInit.playerLevelupRewardsHours.value * 60 * 60 -- 单位秒
 	app.timer:AddListener(self)
 end
-
+-- 历史原因 tag是反的
 function GameUIActivity:OnMoveInStage()
 	GameUIActivity.super.OnMoveInStage(self)
 	self.tab_buttons = self:CreateTabButtons(
         {
             {
                 label = _("活动"),
-                tag = "activity",
+                tag = "award",
                 default = true,
             },
             {
                 label = _("奖励"),
-                tag = "award",
+                tag = "activity",
             }
         },
         function(tag)
