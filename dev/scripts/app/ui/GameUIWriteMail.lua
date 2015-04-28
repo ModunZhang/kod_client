@@ -98,12 +98,7 @@ function GameUIWriteMail:ctor(send_type,contacts)
 
 end
 function GameUIWriteMail:SendMail(addressee,title,content)
-    if not addressee or string.trim(addressee)=="" then
-        FullScreenPopDialogUI.new():SetTitle(_("提示"))
-            :SetPopMessage(_("请填写正确的收件人ID"))
-            :AddToCurrentScene()
-        return
-    elseif not title or string.trim(title)=="" then
+    if not title or string.trim(title)=="" then
         FullScreenPopDialogUI.new():SetTitle(_("提示"))
             :SetPopMessage(_("请填写邮件主题"))
             :AddToCurrentScene()
@@ -115,6 +110,12 @@ function GameUIWriteMail:SendMail(addressee,title,content)
         return
     end
     if self.send_type == PERSONAL_MAIL then
+        if not addressee or string.trim(addressee)=="" then
+            FullScreenPopDialogUI.new():SetTitle(_("提示"))
+                :SetPopMessage(_("请填写正确的收件人ID"))
+                :AddToCurrentScene()
+            return
+        end
         NetManager:getSendPersonalMailPromise(addressee, title, content,self.contacts):done(function(result)
             self:removeFromParent()
             return result
@@ -129,7 +130,7 @@ end
 
 -- -- 收件人ID
 function GameUIWriteMail:SetAddressee( addressee )
-     self.addressee_title_label:setString( _("收件人")..":      "..addressee)
+    self.addressee_title_label:setString( _("收件人")..":      "..addressee)
     return self
 end
 -- 邮件主题
@@ -153,6 +154,7 @@ return GameUIWriteMail
 
 
    
+
 
 
 

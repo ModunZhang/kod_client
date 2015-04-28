@@ -137,7 +137,7 @@ function WidgetBuyGoods:ctor(item)
                 return
             end
             NetManager:getBuyAllianceItemPromise(item:Name(),slider:GetValue()):done(function ( response )
-                GameGlobalUI:showTips(_("提示"),string.format(_("购买%s成功"),Localize_item.item_name[item:Name()]))
+                GameGlobalUI:showTips(_("提示"),_("购买成功"))
                 return response
             end)
             self:removeFromParent(true)
