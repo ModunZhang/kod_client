@@ -13,27 +13,16 @@ function WidgetInfoNotListView:ctor(params)
     local info = params.info -- 显示信息
     local width = params.w or 568
     self.width = width
+    self.info_bg = WidgetUIBackGround.new({width = width,height = params.h or #info*40+20},WidgetUIBackGround.STYLE_TYPE.STYLE_6)
+        :addTo(self)
 
-    self.info_bg = WidgetUIBackGround.new({
-        width = width,
-        height = params.h or #info*40+20,
-        top_img = "back_ground_568X14_top.png",
-        bottom_img = "back_ground_568X14_top.png",
-        mid_img = "back_ground_568X1_mid.png",
-        u_height = 14,
-        b_height = 14,
-        m_height = 1,
-        b_flip = true,
-        capInsets = cc.rect(8,2,552,10)
-    }):addTo(self)
-   
     if info then
         self:CreateInfoItem(info)
     end
 end
 function WidgetInfoNotListView:SetInfo(info)
     for k,v in pairs(self.items) do
-    	self.info_bg:removeChild(v, true)
+        self.info_bg:removeChild(v, true)
     end
     self:CreateInfoItem(info)
     return self
@@ -46,14 +35,14 @@ function WidgetInfoNotListView:GetListView()
     return self.info_listview
 end
 function WidgetInfoNotListView:CreateInfoItem(info_message)
-	self.items = {}
+    self.items = {}
     local meetFlag = true
 
     local item_width, item_height = self.width-20,40
     local origin_y = 30
     local gap_y = 40
     for k,v in ipairs(info_message) do
-        
+
         local content
         if meetFlag then
             content = display.newScale9Sprite("back_ground_548x40_1.png",0,0,cc.size(self.width-20,40),cc.rect(10,10,528,20))
@@ -85,11 +74,12 @@ function WidgetInfoNotListView:CreateInfoItem(info_message)
             end
         end
         meetFlag = not meetFlag
-        
+
         table.insert(self.items, content)
     end
 end
 return WidgetInfoNotListView
+
 
 
 

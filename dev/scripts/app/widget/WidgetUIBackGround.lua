@@ -3,7 +3,7 @@ local WidgetUIBackGround = class("WidgetUIBackGround", function ()
     return display.newNode()
 end)
 
-WidgetUIBackGround.STYLE_TYPE = Enum("STYLE_1","STYLE_2","STYLE_3","STYLE_4","STYLE_5")
+WidgetUIBackGround.STYLE_TYPE = Enum("STYLE_1","STYLE_2","STYLE_3","STYLE_4","STYLE_5","STYLE_6")
 
 local STYLES = {
     [1]= {
@@ -38,6 +38,11 @@ function WidgetUIBackGround:ctor(params,style)
     elseif style == WidgetUIBackGround.STYLE_TYPE.STYLE_3 then
         display.newScale9Sprite("back_ground_166x84.png",0 , 0,cc.size(width,height),cc.rect(15,10,136,64))
             :align(display.LEFT_BOTTOM)
+            :addTo(self)
+        return
+    elseif style == WidgetUIBackGround.STYLE_TYPE.STYLE_6 then
+        display.newScale9Sprite("background_568x556.png",0 , 0,cc.size(width,height),cc.rect(10,10,548,536))
+        :align(display.LEFT_BOTTOM)
             :addTo(self)
         return
     end

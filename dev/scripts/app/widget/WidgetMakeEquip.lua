@@ -248,18 +248,10 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
 
 
     -- 制造条件
-    local condition_bg = WidgetUIBackGround.new({
-        width = 568,
-        height = 100,
-        top_img = "back_ground_568X14_top.png",
-        bottom_img = "back_ground_568X14_top.png",
-        mid_img = "back_ground_568X1_mid.png",
-        u_height = 14,
-        b_height = 14,
-        m_height = 1,
-        b_flip = true,
-    }):addTo(back_ground)
+    local condition_bg = WidgetUIBackGround.new({width = 568,height = 100},WidgetUIBackGround.STYLE_TYPE.STYLE_6)
+        :addTo(back_ground)
         :align(display.CENTER, size.width/2, 200)
+   
     -- 建造队列
     local  condition_bg_1 = display.newSprite("back_ground_548x40_1.png")
         :addTo(condition_bg)
@@ -501,56 +493,3 @@ function WidgetMakeEquip:IsAbleToMakeEqui(isFinishNow)
 end
 
 return WidgetMakeEquip
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

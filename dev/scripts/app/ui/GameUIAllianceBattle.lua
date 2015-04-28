@@ -470,20 +470,10 @@ function GameUIAllianceBattle:InitBattleStatistics()
             info_bg_y = window.top-380
         end
 
-
-        local info_bg = WidgetUIBackGround.new({
-            width = 540,
-            height =  434,
-            top_img = "back_ground_568X14_top.png",
-            bottom_img = "back_ground_568X14_top.png",
-            mid_img = "back_ground_568X1_mid.png",
-            u_height = 14,
-            b_height = 14,
-            m_height = 1,
-            b_flip = true,
-        }):align(display.TOP_CENTER,window.cx, info_bg_y):addTo(layer)
+        local info_bg = WidgetUIBackGround.new({width = 540,height = 434},WidgetUIBackGround.STYLE_TYPE.STYLE_6)
+            :align(display.TOP_CENTER,window.cx, info_bg_y):addTo(layer)
+       
         self.info_listview = UIListView.new{
-            -- bgColor = UIKit:hex2c4b(0x7a000000),
             viewRect = cc.rect(9, 10, 522, 414),
             direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
         }:addTo(info_bg)
@@ -912,17 +902,8 @@ function GameUIAllianceBattle:AddHistoryItem(report,index)
         :addTo(fight_bg)
 
     -- 击杀数，击溃城市
-    local info_bg = WidgetUIBackGround.new({
-        width = 540,
-        height = 110,
-        top_img = "back_ground_568X14_top.png",
-        bottom_img = "back_ground_568X14_top.png",
-        mid_img = "back_ground_568X1_mid.png",
-        u_height = 14,
-        b_height = 14,
-        m_height = 1,
-        b_flip = true,
-    }):align(display.BOTTOM_CENTER,w/2,80):addTo(content)
+    local info_bg = WidgetUIBackGround.new({width = 540,height = 110},WidgetUIBackGround.STYLE_TYPE.STYLE_6)
+        :align(display.BOTTOM_CENTER,w/2,80):addTo(content)
 
     local info_message = {
         {string.formatnumberthousands(ourAlliance.kill),_("总击杀"),string.formatnumberthousands(enemyAlliance.kill)},
@@ -1322,6 +1303,7 @@ function GameUIAllianceBattle:OnAllianceFightReportsChanged(changed_map)
 end
 
 return GameUIAllianceBattle
+
 
 
 
