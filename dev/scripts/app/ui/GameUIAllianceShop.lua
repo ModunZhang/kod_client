@@ -437,6 +437,7 @@ function GameUIAllianceShop:OnItemLogsChanged( changed_map )
     if self.record_list then
         for i,v in ipairs(changed_map[1]) do
             self:CreateRecordItem(v,1)
+            self.record_list:reload()
         end
 
         for i,v in ipairs(changed_map[3]) do
@@ -445,7 +446,6 @@ function GameUIAllianceShop:OnItemLogsChanged( changed_map )
                 self.record_list:removeItem(record_item)
             end
         end
-        self.record_list:reload()
     end
 end
 function GameUIAllianceShop:OnBuildingInfoChange(building)

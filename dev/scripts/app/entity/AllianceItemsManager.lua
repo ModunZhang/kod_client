@@ -120,7 +120,7 @@ function AllianceItemsManager:OnItemLogsChanged(alliance_data,deltaData)
             end
             ,function(data)
                 for i,v in ipairs(item_logs) do
-                    if v.id == data.id then
+                    if v.time == data.time then
                         table.remove(item_logs,i)
                     end
                 end

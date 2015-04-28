@@ -90,7 +90,7 @@ function WidgetBuyGoods:ctor(item)
     -- progress
     local slider_height, label_height = size.height - 170, size.height - 170
 
-    local slider = WidgetSliderWithInput.new({max = buy_max}):addTo(back_ground):align(display.LEFT_CENTER, 25, slider_height)
+    local slider = WidgetSliderWithInput.new({max = buy_max,min = buy_max>0 and 1 or 0}):addTo(back_ground):align(display.LEFT_CENTER, 25, slider_height)
         :SetSliderSize(445, 24)
         :OnSliderValueChanged(function(event)
             self:OnCountChanged(math.floor(event.value))
@@ -109,8 +109,10 @@ function WidgetBuyGoods:ctor(item)
         size = 20,
         color = 0x403c2f,
     }):addTo(back_ground):align(display.RIGHT_CENTER,dividing:getPositionX()-4,50)
+    local need_loyalty = item:SellPriceInAlliance() * slider:GetValue()
+
     self.need_loyalty_label = UIKit:ttfLabel({
-        text = "0",
+        text = GameUtils:formatNumber(need_loyalty),
         size = 20,
         color = 0x403c2f,
     }):addTo(back_ground):align(display.LEFT_CENTER,dividing:getPositionX()+4,50)

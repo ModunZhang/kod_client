@@ -85,7 +85,7 @@ function WidgetStockGoods:ctor(item)
     -- progress
     local slider_height, label_height = size.height - 170, size.height - 170
 
-    local slider = WidgetSliderWithInput.new({max = buy_max}):addTo(back_ground):align(display.LEFT_CENTER, 25, slider_height)
+    local slider = WidgetSliderWithInput.new({max = buy_max,min = buy_max > 0 and 1 or 0}):addTo(back_ground):align(display.LEFT_CENTER, 25, slider_height)
         :SetSliderSize(445, 24)
         :OnSliderValueChanged(function(event)
             self:OnCountChanged(math.floor(event.value))
@@ -113,7 +113,7 @@ function WidgetStockGoods:ctor(item)
     }):addTo(back_ground):align(display.CENTER,300, 50)
 
     self.need_honour_label = UIKit:ttfLabel({
-        text = "0",
+        text = GameUtils:formatNumber(self.item:BuyPriceInAlliance()*slider:GetValue()),
         size = 20,
         color = 0x403c2f,
     }):addTo(back_ground):align(display.LEFT_CENTER,dividing:getPositionX()+4,50)
