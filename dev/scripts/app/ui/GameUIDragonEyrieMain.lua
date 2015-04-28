@@ -14,26 +14,20 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUseItems = import("..widget.WidgetUseItems")
 local GameUtils = GameUtils
 local GameUIDragonDeathSpeedUp = import(".GameUIDragonDeathSpeedUp")
+local UICheckBoxButton = import(".UICheckBoxButton")
 
-function GameUIDragonEyrieMain:ctor(city,building)
+function GameUIDragonEyrieMain:ctor(city,building,lockDragon)
 	GameUIDragonEyrieMain.super.ctor(self,city,_("龙巢"),building)
 	self.building = building
 	self.city = city
-	self.dragon_manager = building:GetDragonManager()
-	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnHPChanged)
-	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
-	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonHatched)
-	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonEventTimer)
-	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonEventChanged)
-	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventChanged)
-	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventRefresh)
-	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventTimer)
 	self.draong_index = 1
+	self.dragon_manager = building:GetDragonManager()
+	if type(lockDragon) ~= "boolean" then lockDragon = false end
+	self.lockDragon = lockDragon
 end
 
-function GameUIDragonEyrieMain:CreateBetweenBgAndTitle()
-	GameUIDragonEyrieMain.super.CreateBetweenBgAndTitle(self)
-	self.dragonNode = display.newNode():size(window.width,window.height):addTo(self:GetView())
+function GameUIDragonEyrieMain:IsDragonLock()
+	return self.lockDragon
 end
 
 -- event
@@ -50,19 +44,14 @@ end
 function GameUIDragonEyrieMain:OnDragonHatched(dragon)
 	local dragon_index = self.dragon_manager:GetDragonIndexByType(dragon:Type())
 	local localIndex = dragon_index - 1
-	local eyrie = self.draongConteNode:GetItemByIndex(localIndex)
+	local eyrie = self.draongContentNode:GetItemByIndex(localIndex)
 	eyrie.dragon_image:hide()
 	eyrie.armature:show()
 	self:RefreshUI()
 end
+
 function GameUIDragonEyrieMain:OnBasicChanged()
 	self:RefreshUI()
-end
-------------------------------------------------------------------
-
-function GameUIDragonEyrieMain:OnMoveInStage()
-	GameUIDragonEyrieMain.super.OnMoveInStage(self)
-	self:CreateUI()
 end
 
 function GameUIDragonEyrieMain:OnDragonEventChanged()
@@ -100,6 +89,27 @@ function GameUIDragonEyrieMain:OnDragonEventTimer(dragonEvent)
 	end
 end
 
+------------------------------------------------------------------
+
+function GameUIDragonEyrieMain:CreateBetweenBgAndTitle()
+	GameUIDragonEyrieMain.super.CreateBetweenBgAndTitle(self)
+	self.dragonNode = display.newNode():size(window.width,window.height):addTo(self:GetView())
+end
+
+
+function GameUIDragonEyrieMain:OnMoveInStage()
+	GameUIDragonEyrieMain.super.OnMoveInStage(self)
+	self:CreateUI()
+	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnHPChanged)
+	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
+	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonHatched)
+	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonEventTimer)
+	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonEventChanged)
+	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventChanged)
+	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventRefresh)
+	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventTimer)
+end
+
 function GameUIDragonEyrieMain:OnMoveOutStage()
 	self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnHPChanged)
 	self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
@@ -126,7 +136,7 @@ end
 
 function GameUIDragonEyrieMain:TabButtonsAction(tag)
 	if tag == 'dragon' then
-		self:CreateDragonAnimateNodeIf()
+		self:CreateDragonContentNodeIf()
 		self:RefreshUI()
 		self.dragonNode:show()
 	else
@@ -138,27 +148,34 @@ function GameUIDragonEyrieMain:RefreshUI()
 	local dragon = self:GetCurrentDragon()
 	if not self.dragon_info then return end
 	if not self:GetCurrentDragon():Ishated() then
+		self.garrison_button:setButtonSelected(false)
 		self.dragon_info:hide()
 		self.death_speed_button:hide()
 		self.progress_content_death:hide()
 		local dragonEvent = self.dragon_manager:GetDragonEventByDragonType(self:GetCurrentDragon():Type())
- 		if dragonEvent then
-			self.progress_content_not_hated:show()
-			self.progress_content_not_hated_timer:show()
- 			self.progress_content_not_hated:setString(_("正在孵化,剩余时间"))
- 			self.progress_content_not_hated_timer:setString(GameUtils:formatTimeStyleDayHour(dragonEvent:GetTime()))
- 		else
- 			self.progress_content_not_hated:show()
- 			self.progress_content_not_hated:setString(_("未孵化"))
- 			self.progress_content_not_hated_timer:hide()
- 		end
 		self.progress_content_hated:hide()
-		self.strength_val_label:setString("0")
-		self.vitality_val_label:setString("0")
-		self.leadership_val_label:setString("0")
-		self.state_label:setString(_("未孵化"))
-		self.detailButton:setButtonLabelString("normal",_("孵化"))
+		self.info_panel:hide()
+ 	-- 	if dragonEvent then
+		-- 	self.progress_content_not_hated:show()
+		-- 	self.progress_content_not_hated_timer:show()
+ 	-- 		self.progress_content_not_hated:setString(_("正在孵化,剩余时间"))
+ 	-- 		self.progress_content_not_hated_timer:setString(GameUtils:formatTimeStyleDayHour(dragonEvent:GetTime()))
+ 	-- 	else
+ 	-- 		self.progress_content_not_hated:show()
+ 	-- 		self.progress_content_not_hated:setString(_("未孵化"))
+ 	-- 		self.progress_content_not_hated_timer:hide()
+ 	-- 	end
+		-- self.strength_val_label:setString("0")
+		-- self.vitality_val_label:setString("0")
+		-- self.leadership_val_label:setString("0")
+		-- self.state_label:setString(_("未孵化"))
+		-- self.detailButton:setButtonLabelString("normal",_("孵化"))
 	else
+		self.garrison_button:setButtonSelected(dragon:IsDefenced())
+		self.info_panel:show()
+		self.strength_val_label:setString(string.formatnumberthousands(dragon:TotalStrength()))
+		self.vitality_val_label:setString(string.formatnumberthousands(dragon:TotalVitality()))
+		self.leadership_val_label:setString(string.formatnumberthousands(dragon:TotalLeadership()))
 		if dragon:IsDead() then
 			local dragonDeathEvent = self.dragon_manager:GetDragonDeathEventByType(self:GetCurrentDragon():Type())
 			if dragonDeathEvent then
@@ -167,10 +184,10 @@ function GameUIDragonEyrieMain:RefreshUI()
 			end
 			self.death_speed_button:show()
 			self.progress_content_death:show()
-			self.progress_content_not_hated_timer:hide()
-			self.progress_content_not_hated:hide()
+			-- self.progress_content_not_hated_timer:hide()
+			-- self.progress_content_not_hated:hide()
 			self.progress_content_hated:hide()
-			self.state_label:setString(_("死亡"))
+			self.state_label:setString(_("已阵亡"))
 		else
 			self.dragon_info:show()
 			self.draong_info_lv_label:setString("LV " .. dragon:Level() .. "/" .. dragon:GetMaxLevel())
@@ -178,19 +195,15 @@ function GameUIDragonEyrieMain:RefreshUI()
 			self.expIcon:setPositionX(self.draong_info_xp_label:getPositionX() - self.draong_info_xp_label:getContentSize().width/2 - 10)
 			self.exp_add_button:setPositionX(self.draong_info_xp_label:getPositionX() + self.draong_info_xp_label:getContentSize().width/2 + 10)
 
-			self.progress_content_not_hated:hide()
-			self.progress_content_not_hated_timer:hide()
+			-- self.progress_content_not_hated:hide()
+			-- self.progress_content_not_hated_timer:hide()
 			self.progress_content_hated:show()
-			self.strength_val_label:setString(dragon:TotalStrength())
-			self.vitality_val_label:setString(dragon:TotalVitality())
-			self.leadership_val_label:setString(dragon:TotalLeadership())
 			self.dragon_hp_label:setString(dragon:Hp() .. "/" .. dragon:GetMaxHP())
 			self.progress_hated:setPercentage(dragon:Hp()/dragon:GetMaxHP()*100)
 			self.state_label:setString(Localize.dragon_status[dragon:Status()])
 			self.death_speed_button:hide()
 			self.progress_content_death:hide()
 		end
-		self.detailButton:setButtonLabelString("normal",_("详情"))
 	end
 	self.nameLabel:setString(dragon:GetLocalizedName())
 	
@@ -246,10 +259,11 @@ function GameUIDragonEyrieMain:CreateDeathEventProgressTimer()
 	return bg,progressTimer
 end
 
-function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
-	if not self.draongConteNode then
-		local dragonAnimateNode,draongConteNode = self:CreateDragonAnimateNode()
-		self.draongConteNode = draongConteNode
+function GameUIDragonEyrieMain:CreateDragonContentNodeIf()
+	if not self.draongContentNode then
+		local dragonAnimateNode,draongContentNode = self:CreateDragonScrollNode()
+		self.draongContentNode = draongContentNode
+		self.draongContentNode:SetScrollable(not self:IsDragonLock())
 		dragonAnimateNode:addTo(self.dragonNode):pos(window.cx - 310,window.top_bottom - 576)
 		--info
 		local info_bg = display.newSprite("dragon_info_bg_290x92.png")
@@ -262,8 +276,8 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
 		self.dragon_info = info_bg
 		self.draong_info_lv_label = UIKit:ttfLabel({
 			text = "LV " .. self:GetCurrentDragon():Level() .. "/" .. self:GetCurrentDragon():GetMaxLevel(),
-			color = 0xb1a475,
-			size = 22
+			color = 0xffedae,
+			size = 20
 		}):addTo(lv_bg):align(display.CENTER,lv_bg:getContentSize().width/2,lv_bg:getContentSize().height/2)
 		self.draong_info_xp_label = UIKit:ttfLabel({
 			text = self:GetCurrentDragon():Exp() .. "/" .. self:GetCurrentDragon():GetMaxExp(),
@@ -319,6 +333,41 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
     	}):addTo(info_layer):align(display.RIGHT_CENTER, 610,20)
     	self.nameLabel = nameLabel
     	self.star_bar = star_bar
+    	--驻防
+    	local checkbox_image = {on = "draon_garrison_btn_d_82x86.png",off = "draon_garrison_btn_n_82x86.png",}
+    	local dragon = self:GetCurrentDragon()
+    	self.garrison_button = UICheckBoxButton.new(checkbox_image)
+	        :addTo(dragonAnimateNode):align(display.LEFT_BOTTOM, 25, 310)
+	        :setButtonSelected(dragon:IsDefenced())
+	        :onButtonClicked(function()
+	            local target = self.garrison_button:isButtonSelected()
+	            local dragon = self:GetCurrentDragon()
+	            if target then
+	                if not dragon:Ishated() then
+	                    UIKit:showMessageDialog(nil,_("龙还未孵化"))
+	                    self.garrison_button:setButtonSelected(not target,false)
+	                    return 
+	                end
+	                if dragon:IsFree() then
+	                    NetManager:getSetDefenceDragonPromise(dragon:Type()):done(function()
+	                        GameGlobalUI:showTips(_("提示"),_("设置龙驻防成功"))
+	                    end)
+	                else
+	                    UIKit:showMessageDialog(nil,_("龙未处于空闲状态"))
+	                    self.garrison_button:setButtonSelected(not target,false)
+	                end
+	            else
+	                if dragon:IsDefenced() then
+	                    NetManager:getCancelDefenceDragonPromise():done(function()
+	                        GameGlobalUI:showTips(_("提示"),_("取消龙驻防成功"))
+	                    end)
+	                else
+	                    UIKit:showMessageDialog(nil,_("还没有龙驻防"))
+	                    self.garrison_button:setButtonSelected(not target,false)
+	                end
+	            end
+	        end)
+
     	--
     	self.progress_content_hated,self.progress_hated = self:CreateProgressTimer()
     	self.progress_content_hated:align(display.CENTER_TOP,window.cx,info_layer:getPositionY()-18):addTo(self.dragonNode)
@@ -336,9 +385,10 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
 		local info_panel = UIKit:CreateBoxPanel9({width = 548, height = 114})
 			:addTo(self.dragonNode)
 			:align(display.CENTER_TOP,window.cx,self.progress_content_hated:getPositionY() - self.progress_content_hated:getContentSize().height - 32)
-		self.progress_content_not_hated,self.progress_content_not_hated_timer = self:GetHateLabel()
-		self.progress_content_not_hated:align(display.CENTER_TOP,window.cx,info_layer:getPositionY()-10):addTo(self.dragonNode)
-		self.progress_content_not_hated_timer:align(display.CENTER_TOP,window.cx,info_layer:getPositionY()-36):addTo(self.dragonNode)
+		self.info_panel = info_panel
+		-- self.progress_content_not_hated,self.progress_content_not_hated_timer = self:GetHateLabel()
+		-- self.progress_content_not_hated:align(display.CENTER_TOP,window.cx,info_layer:getPositionY()-10):addTo(self.dragonNode)
+		-- self.progress_content_not_hated_timer:align(display.CENTER_TOP,window.cx,info_layer:getPositionY()-36):addTo(self.dragonNode)
     	local strength_title_label =  UIKit:ttfLabel({
 			text = _("力量"),
 			color = 0x797154,
@@ -376,14 +426,13 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
 
 		self.state_label = UIKit:ttfLabel({
 			text = "",
-			color = 0x403c2f,
+			color = 0x07862b,
 			size  = 20
-		}):addTo(info_panel):align(display.CENTER_BOTTOM,540 - 92,75)
-		local text_str = self:GetCurrentDragon():Ishated() and _("详情") or _("孵化")
+		}):addTo(info_panel):align(display.CENTER_BOTTOM,540 - 74,75)
 		local detailButton = WidgetPushButton.new({
-			normal = "yellow_btn_up_185x65.png",pressed = "yellow_btn_down_185x65.png"
+			normal = "blue_btn_up_148x58.png",pressed = "blue_btn_down_148x58.png"
 		}):setButtonLabel("normal",UIKit:ttfLabel({
-			text = text_str,
+			text = _("详情"),
 			size = 24,
 			color = 0xffedae,
 			shadow = true
@@ -391,16 +440,24 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNodeIf()
 			UIKit:newGameUI("GameUIDragonEyrieDetail",self.city,self.building,self:GetCurrentDragon():Type()):AddToCurrentScene(false)
 		end)
 		self.detailButton = detailButton
-		self.draongConteNode:OnEnterIndex(math.abs(0))
+		self.draongContentNode:OnEnterIndex(math.abs(0))
+		self:CreateDragonHateNodeIf()
 	end
 
 end
 
-function GameUIDragonEyrieMain:GetHateLabel()
-	local label_1 = UIKit:ttfLabel({text = "正在孵化,剩余时间",size = 20,color = 0x403c2f})
-	local label_2 = UIKit:ttfLabel({text = "00:20:00",size = 22,color = 0x068329})
-	return label_1,label_2
+function GameUIDragonEyrieMain:CreateDragonHateNodeIf()
+	if not self.draogn_hate_node then
+		self.draogn_hate_node = display.newNode():size(window.width,210):addTo(self.dragonNode):pos(0,window.bottom_top)
+	end
+	return self.draogn_hate_node
 end
+
+-- function GameUIDragonEyrieMain:GetHateLabel()
+-- 	local label_1 = UIKit:ttfLabel({text = "正在孵化,剩余时间",size = 20,color = 0x403c2f})
+-- 	local label_2 = UIKit:ttfLabel({text = "00:20:00",size = 22,color = 0x068329})
+-- 	return label_1,label_2
+-- end
 
 function GameUIDragonEyrieMain:GetCurrentDragon()
 	-- index 1~3
@@ -408,11 +465,10 @@ function GameUIDragonEyrieMain:GetCurrentDragon()
 	return dragon
 end
 
-function GameUIDragonEyrieMain:CreateDragonAnimateNode()
+function GameUIDragonEyrieMain:CreateDragonScrollNode()
 	local clipNode = display.newClippingRegionNode(cc.rect(0,0,620,600))
 	local contenNode = WidgetDragons.new(
 		{
-			OnFilterChangedEvent = handler(self, self.OnFilterChangedEvent),
 			OnLeaveIndexEvent = handler(self, self.OnLeaveIndexEvent),
 			OnEnterIndexEvent = handler(self, self.OnEnterIndexEvent),
 		}
@@ -439,10 +495,10 @@ function GameUIDragonEyrieMain:CreateDragonAnimateNode()
 end
 
 function GameUIDragonEyrieMain:OnEnterIndexEvent(index)
-	if self.draongConteNode then
+	if self.draongContentNode then
 		self.draong_index = index + 1
 		self:RefreshUI()
-		local eyrie = self.draongConteNode:GetItemByIndex(index)
+		local eyrie = self.draongContentNode:GetItemByIndex(index)
 		if not self:GetCurrentDragon():Ishated() then return end
 		eyrie.dragon_image:hide()
 		eyrie.armature:show()
@@ -451,8 +507,8 @@ function GameUIDragonEyrieMain:OnEnterIndexEvent(index)
 end
 
 function GameUIDragonEyrieMain:OnLeaveIndexEvent(index)
-	if self.draongConteNode then
-		local eyrie = self.draongConteNode:GetItemByIndex(index)
+	if self.draongContentNode then
+		local eyrie = self.draongContentNode:GetItemByIndex(index)
 		if not self:GetCurrentDragon():Ishated() then return end
 		-- eyrie.armature:GetSprite():stop()
 		-- eyrie.armature:hide()
@@ -460,23 +516,8 @@ function GameUIDragonEyrieMain:OnLeaveIndexEvent(index)
 	end
 end
 
-function GameUIDragonEyrieMain:OnFilterChangedEvent(eyrie,b,i)
-	if eyrie.dragon_image then
-		local filter_ = filter.newFilter("CUSTOM",
-            json.encode({
-                frag = "shaders/blur.fs",
-                shaderName = "dragon_image"..i,
-                resolution = eyrie.dragon_image.resolution,
-                blurRadius = b,
-                sampleNum = 2
-            })
-        )
-		eyrie.dragon_image:setFilter(filter_)
-	end
-end
-
 function GameUIDragonEyrieMain:ChangeDragon(direction)
-	if self.isChanging  then return end
+	if self.isChanging or self:IsDragonLock() then return end
 	self.isChanging = true
 	if direction == 'next' then
 		if self.draong_index + 1 > 3 then
@@ -484,7 +525,7 @@ function GameUIDragonEyrieMain:ChangeDragon(direction)
 		else
 			self.draong_index = self.draong_index + 1
 		end
-		self.draongConteNode:Next()
+		self.draongContentNode:Next()
 		self.isChanging = false
 	else
 		if self.draong_index - 1 == 0 then
@@ -492,7 +533,7 @@ function GameUIDragonEyrieMain:ChangeDragon(direction)
 		else
 			self.draong_index = self.draong_index - 1
 		end
-		self.draongConteNode:Before()
+		self.draongContentNode:Before()
 		self.isChanging = false
 	end
 end

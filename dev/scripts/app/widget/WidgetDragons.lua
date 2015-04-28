@@ -31,10 +31,9 @@ local edge = function(t, n)
     return n >= t and 1 or 0
 end
 function WidgetDragons:ctor(callbacks)
-
+    self.scrollable = true
     self:setNodeEventEnabled(true)
     callbacks = checktable(callbacks)
-    self.OnFilterChangedEvent = callbacks.OnFilterChangedEvent
     self.OnLeaveIndexEvent = callbacks.OnLeaveIndexEvent
     self.OnEnterIndexEvent = callbacks.OnEnterIndexEvent
 
@@ -57,7 +56,6 @@ function WidgetDragons:ctor(callbacks)
         return true
     end)
 
-
     self.angle = 0
     self.target_angle = nil
     self.items = {}
@@ -76,6 +74,14 @@ end
 
 function WidgetDragons:onEnter()
     -- self:OnEnterIndex(math.abs(0))
+end
+
+function WidgetDragons:SetScrollable(scrollable)
+    self.scrollable = scrollable
+end
+
+function WidgetDragons:IsScrollable()
+    return self.scrollable
 end
 
 function WidgetDragons:onExit()
@@ -100,19 +106,6 @@ function WidgetDragons:UpdatePosition(dt)
     for i, dragon in ipairs(self.items) do
         local x, y, z, s, b = getinfo(self.angle - 120 * (i - 1))
         dragon:pos(x, y):scale(s):setLocalZOrder(z)
-        -- local filter_ = filter.newFilter("CUSTOM",
-        --     json.encode({
-        --         frag = "shaders/blur.fs",
-        --         shaderName = "blur"..i,
-        --         resolution = {613, 509},
-        --         blurRadius = b,
-        --         sampleNum = 2
-        --     })
-        -- )
-        -- -- dragon:setFilter(filter_)
-        -- if self.OnFilterChangedEvent then
-        --     -- self.OnFilterChangedEvent(dragon,b,i)
-        -- end
     end
 end
 function WidgetDragons:IndexByAngle(angle)
@@ -141,9 +134,11 @@ function WidgetDragons:OnEnterIndex(index)
     end
 end
 function WidgetDragons:OnTouchBegan(pre_x, pre_y, x, y)
+    if not self:IsScrollable() then return end
     self:StopAuto()
 end
 function WidgetDragons:OnTouchEnd(pre_x, pre_y, x, y)
+    if not self:IsScrollable() then return end
     local speed = self.touch_judgment.speed
     if speed then
         self:SlipABit(speed)
@@ -155,6 +150,7 @@ function WidgetDragons:OnTouchCancelled(pre_x, pre_y, x, y)
 
 end
 function WidgetDragons:OnTouchMove(pre_x, pre_y, x, y)
+    if not self:IsScrollable() then return end
     self:Move(x - pre_x)
     if self.cur_index then
         self:OnLeaveIndex(self.cur_index)
@@ -163,6 +159,7 @@ function WidgetDragons:OnTouchMove(pre_x, pre_y, x, y)
 end
 function WidgetDragons:OnTouchClicked(pre_x, pre_y, x, y)
     -- self:AutoRotation()
+    print("OnTouchClicked------>")
 end
 function WidgetDragons:OnTouchExtend(old_speed_x, old_speed_y, new_speed_x, new_speed_y, millisecond)
 
