@@ -21,19 +21,10 @@ function WidgetAllianceBuildingInfo:ctor()
 
 
     -- 帮助列表
-    local info_bg = WidgetUIBackGround.new({
-        width = 568,
-        height = 382,
-        top_img = "back_ground_568X14_top.png",
-        bottom_img = "back_ground_568X14_top.png",
-        mid_img = "back_ground_568X1_mid.png",
-        u_height = 14,
-        b_height = 14,
-        m_height = 1,
-        b_flip = true,
-    }):align(display.CENTER,rb_size.width/2, rb_size.height/2-40):addTo(body)
+    local info_bg = WidgetUIBackGround.new({width = 568,height = 382},WidgetUIBackGround.STYLE_TYPE.STYLE_6)
+        :align(display.CENTER,rb_size.width/2, rb_size.height/2-40):addTo(body)
+    
     self.info_listview = UIListView.new{
-        -- bgColor = UIKit:hex2c4b(0x7a000000),
         viewRect = cc.rect(9, 10, 550, 362),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(info_bg)

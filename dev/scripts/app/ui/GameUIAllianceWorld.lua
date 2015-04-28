@@ -13,28 +13,14 @@ function GameUIAllianceWorld:ctor()
     GameUIAllianceWorld.super.ctor(self,880,_("世界地图"),window.top-60)
 
     local map = display.newSprite("world_map_2000x2000.jpg"):scale(1.8):align(display.CENTER, 278, 270)
-
-    -- local button = WidgetPushButton.new({normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"})
-    --     :setButtonLabel(UIKit:ttfLabel({
-    --         text = "xxxx",
-    --         size = 20,
-    --         color = 0xffedae,
-    --     }))
-    --     :onButtonClicked(function(event)
-    --         if event.name == "CLICKED_EVENT" then
-    --         end
-    --     end)
-    --     :align(display.CENTER, 0,0)
-    --     :addTo(map)
+    
     local scrollView = UIScrollView.new({
         viewRect = cc.rect(0,0,556,541),
-    -- bgColor = UIKit:hex2c4b(0x7a000000),
     })
         :addScrollNode(map)
         :setBounceable(false)
         :setDirection(UIScrollView.DIRECTION_BOTH)
         :align(display.TOP_CENTER,26, self.body:getContentSize().height-569)
-    -- :addTo(self.body)
 
 
     -- 遮罩效果
@@ -58,17 +44,9 @@ function GameUIAllianceWorld:ctor()
     local bg1 = WidgetUIBackGround.new({width = 572,height=557},WidgetUIBackGround.STYLE_TYPE.STYLE_4)
         :align(display.TOP_CENTER,304, self.body:getContentSize().height-20):addTo(self.body)
     -- 介绍
-    local info_bg = WidgetUIBackGround.new({
-        width = 568,
-        height = 200,
-        top_img = "back_ground_568X14_top.png",
-        bottom_img = "back_ground_568X14_top.png",
-        mid_img = "back_ground_568X1_mid.png",
-        u_height = 14,
-        b_height = 14,
-        m_height = 1,
-        b_flip = true,
-    }):align(display.BOTTOM_CENTER,304, 90):addTo(self.body)
+    local info_bg = WidgetUIBackGround.new({width = 568,height = 200},WidgetUIBackGround.STYLE_TYPE.STYLE_6)
+        :align(display.BOTTOM_CENTER,304, 90):addTo(self.body)
+
     local info_message = {
         {_("统治联盟"),"Kingdoms of Dragon"},
         {_("国王"),"孙悟空"},
@@ -76,7 +54,6 @@ function GameUIAllianceWorld:ctor()
         {_("人口密度"),"Low"},
     }
     self.info_listview = UIListView.new{
-        -- bgColor = UIKit:hex2c4b(0x7a000000),
         viewRect = cc.rect(9, 10, 550, 180),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(info_bg)
