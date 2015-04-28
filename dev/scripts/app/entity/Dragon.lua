@@ -33,11 +33,11 @@ end
 
 --将配置表里的数据直接注入object
 function DragonSkill:LoadConfig_()
-	self.config_ = config_dragonSkill[self:Level()]
+	self.config_skill = config_dragonSkill[self:Level()]
 end
 
 function DragonSkill:GetSkillConfig()
-	return self.config_
+	return self.config_skill
 end
 
 function DragonSkill:IsLocked()
@@ -110,11 +110,11 @@ function DragonEquipment:SetMaxStar(maxStar)
 end
 
 function DragonEquipment:GetCanLoadConfig()
-	return self.config_
+	return self.config_can_load
 end
 
 function DragonEquipment:SetCanLoadConfig(config)
-	self.config_ = config
+	self.config_can_load = config
 end
 
 function DragonEquipment:GetDetailConfig()
