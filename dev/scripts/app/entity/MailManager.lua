@@ -148,7 +148,7 @@ function MailManager:ModifyMail(mail)
             if mail.isSaved ~= v.isSaved then
                 self:OnNewSavedMailsChanged(mail)
             end
-            if mail.isRead ~= v.isRead then
+            if mail.isRead then
                 self:OnNewSavedMailsChanged(mail,true)
             end
             for i,modify in pairs(mail) do
@@ -328,6 +328,11 @@ function MailManager:OnNewSavedMailsChanged( savedMails,isRead )
     local edit_mails = {}
     if isRead then
         table.insert(edit_mails, savedMails)
+        for i,v in ipairs(self.savedMails) do
+            if v.id == savedMails.id then
+                v.isRead = true
+            end
+        end
     else
         if savedMails.isSaved then
             table.insert(add_mails, savedMails)
@@ -541,19 +546,8 @@ function MailManager:FetchReportsFromServer(fromIndex)
             end
         end)
 end
-function MailManager:GetSavedReports(fromIndex)
-    local fromIndex = fromIndex or 0
-    local reports = {}
-    if self.savedReports[fromIndex+1] then
-        for i=fromIndex+1,fromIndex+10 do
-            if self.savedReports[i] then
-                table.insert(reports, self.savedReports[i])
-            else
-                break
-            end
-        end
-    end
-    return reports
+function MailManager:GetSavedReports()
+    return self.savedReports
 end
 function MailManager:FetchSavedReportsFromServer(fromIndex)
     NetManager:getSavedReportsPromise(fromIndex):done(function (response)
