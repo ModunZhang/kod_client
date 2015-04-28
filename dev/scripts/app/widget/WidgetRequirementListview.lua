@@ -17,7 +17,7 @@ function WidgetRequirementListview:ctor(parms)
     self:setContentSize(cc.size(self.width, self.listview_height+50))
     self:setAnchorPoint(cc.p(0.5,0))
 
-    local list_bg = display.newScale9Sprite("upgrade_requirement_background.png", 0, 0,cc.size(self.width, self.listview_height))
+    local list_bg = display.newScale9Sprite("back_ground_540x64.png", 0, 0,cc.size(self.width, self.listview_height))
         :align(display.LEFT_BOTTOM):addTo(self)
     local title_bg = display.newSprite("alliance_evnets_title_548x50.png", x, y):align(display.CENTER_BOTTOM, self.width/2, self.listview_height):addTo(self)
     UIKit:ttfLabel({

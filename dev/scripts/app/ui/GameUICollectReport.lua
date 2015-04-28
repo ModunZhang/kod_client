@@ -155,10 +155,7 @@ function GameUICollectReport:CreateBootyPart()
         size = 24,
         color = 0xffedae
     }):align(display.CENTER,booty_title_bg:getContentSize().width/2, 25):addTo(booty_title_bg)
-    -- local item = self.details_view:newItem()
-    -- item:setItemSize(item_width, (booty_list_bg and booty_list_bg:getContentSize().height or 0) +booty_title_bg:getContentSize().height)
-    -- item:addContent(booty_group)
-    -- self.details_view:addItem(item)
+
     booty_group:addTo(self.body):align(display.CENTER,304,180)
 end
 

@@ -6,7 +6,6 @@
 local Localize = import("..utils.Localize")
 local window = import("..utils.window")
 local SoldierManager = import("..entity.SoldierManager")
-local WidgetInfoWithTitle = import("..widget.WidgetInfoWithTitle")
 local WidgetMilitaryTechnologyStatus = import("..widget.WidgetMilitaryTechnologyStatus")
 local WidgetMilitaryTechnology = import("..widget.WidgetMilitaryTechnology")
 local WidgetPromoteSoliderList = import("..widget.WidgetPromoteSoliderList")
