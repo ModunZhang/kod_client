@@ -103,16 +103,9 @@ function MailManager:AddSavedMail(mail)
     table.insert(self.savedMails,1, mail)
 end
 function MailManager:DeleteSavedMail(mail)
-    local delete_mail_server_index
     for k,v in pairs(self.savedMails) do
         if v.id == mail.id then
-            delete_mail_server_index = v.index
             table.remove(self.savedMails,k)
-        end
-    end
-    for k,v in pairs(self.savedMails) do
-        if v.index > delete_mail_server_index then
-            v.index = v.index - 1
         end
     end
 end
@@ -144,6 +137,21 @@ function MailManager:DeleteMail(mail)
 end
 function MailManager:ModifyMail(mail)
     for k,v in pairs(self.mails) do
+        if v.id == mail.id then
+            if mail.isSaved ~= v.isSaved then
+                self:OnNewSavedMailsChanged(mail)
+            end
+            if mail.isRead ~= v.isSaved and mail.isRead then
+                self:OnNewSavedMailsChanged(mail,true)
+            end
+            for i,modify in pairs(mail) do
+                v[i] = modify
+            end
+            return v
+        end
+    end
+    -- 如果收件箱没找到对应邮件,则在收藏夹找一下
+    for k,v in pairs(self.savedMails) do
         if v.id == mail.id then
             if mail.isSaved ~= v.isSaved then
                 self:OnNewSavedMailsChanged(mail)
@@ -196,10 +204,32 @@ function MailManager:GetMailByServerIndex(serverIndex)
         end
     end
 end
+function MailManager:GetSavedMailByServerIndex(serverIndex)
+    local savedMails = self.savedMails
+    for i,v in ipairs(savedMails) do
+        print("收藏夹.....v.index == index",v.title,v.index,serverIndex,v.index == serverIndex)
+    end
+    for i,v in ipairs(savedMails) do
+        if v.index == serverIndex then
+            return i
+        end
+    end
+end
 function MailManager:GetReportByServerIndex(serverIndex)
     local reports = self.reports
     for i,v in ipairs(reports) do
         print(".....v.index == index",v:Index(),serverIndex)
+    end
+    for i,v in ipairs(reports) do
+        if v:Index() == serverIndex then
+            return i
+        end
+    end
+end
+function MailManager:GetSavedReportByServerIndex(serverIndex)
+    local reports = self.savedReports
+    for i,v in ipairs(reports) do
+        print("收藏战报.....v.index == index",v:Index(),serverIndex)
     end
     for i,v in ipairs(reports) do
         if v:Index() == serverIndex then
@@ -283,6 +313,7 @@ function MailManager:OnNewMailsChanged( mails )
     local add_mails = {}
     local remove_mails = {}
     local edit_mails = {}
+    dump(mails,"OnNewMailsChanged")
     for type,mail in pairs(mails) do
         if type == "add" then
             for i,data in ipairs(mail) do
@@ -326,6 +357,7 @@ function MailManager:OnNewSavedMailsChanged( savedMails,isRead )
     local add_mails = {}
     local remove_mails = {}
     local edit_mails = {}
+    dump(savedMails,"savedMails")
     if isRead then
         table.insert(edit_mails, savedMails)
         for i,v in ipairs(self.savedMails) do
@@ -389,6 +421,10 @@ function MailManager:OnUserDataChanged(userData,timer,deltaData)
     if is_delta_update then
         self:OnNewMailsChanged(deltaData.mails)
     end
+    is_delta_update = not is_fully_update and deltaData.savedMails ~= nil
+    if is_delta_update then
+        self:OnNewSavedMailsChanged(clone(deltaData.savedMails.edit[1]))
+    end
     is_delta_update = not is_fully_update and deltaData.sendMails ~= nil
     if is_delta_update then
         self:OnNewSendMailsChanged(deltaData.sendMails)
@@ -404,6 +440,10 @@ function MailManager:OnUserDataChanged(userData,timer,deltaData)
         self:OnNewReportsChanged(deltaData.reports)
     end
 
+    local is_delta_update = not is_fully_update and deltaData.savedReports ~= nil
+    if is_delta_update then
+        self:OnNewSavedReportsChanged(Report:DecodeFromJsonData(clone(deltaData.savedReports.edit[1])))
+    end
 end
 
 function MailManager:OnReportsChanged( reports )
@@ -515,16 +555,9 @@ function MailManager:ModifyReport( report )
 end
 
 function MailManager:DeleteSavedReport( report )
-    local delete_index
     for k,v in pairs(self.savedReports) do
         if v:Id() == report:Id() then
-            delete_index = v:Index()
             table.remove(self.savedReports,k)
-        end
-    end
-    for k,v in pairs(self.savedReports) do
-        if v:Index() > delete_index then
-            v:SetIndex(v:Index()-1)
         end
     end
 end
@@ -563,4 +596,5 @@ function MailManager:FetchSavedReportsFromServer(fromIndex)
     end)
 end
 return MailManager
+
 

@@ -102,16 +102,33 @@ local function get_response_mail_msg(response)
                 local keys = string.split(v[1], ".")
                 local newKey = ""
                 local len = #keys
+                local is_changed_saved_mails = false
                 for i=1,len do
                     local k = tonumber(keys[i]) or keys[i]
                     if type(k) == "number" then
-                        local client_index = MailManager:GetMailByServerIndex(k) - 1
+                        local client_index
+                        local mail_index = MailManager:GetMailByServerIndex(k)
+                        if not mail_index then
+                            is_changed_saved_mails = true
+                            client_index = MailManager:GetSavedMailByServerIndex(k) - 1
+                        else
+                            client_index = mail_index - 1 
+                        end
                         newKey = newKey..client_index..(i~=len and "." or "")
                     else
                         newKey = newKey..keys[i]..(i~=len and "." or "")
                     end
                 end
-                v[1] = newKey
+                if is_changed_saved_mails then
+                    local split = string.split(newKey, ".")
+                    local key = "savedMails."
+                    for i=2,#split do
+                        key = key..split[i]..(i~=#split and "." or "")
+                    end
+                    v[1] = key
+                else
+                    v[1] = newKey
+                end
             end
         end
         local edit = decodeInUserDataFromDeltaData(user_data, response.msg.playerData)
@@ -161,16 +178,33 @@ local function get_response_report_msg(response)
                 local keys = string.split(v[1], ".")
                 local newKey = ""
                 local len = #keys
+                local is_saved_report = false
                 for i=1,len do
                     local k = tonumber(keys[i]) or keys[i]
                     if type(k) == "number" then
-                        local client_index = MailManager:GetReportByServerIndex(k) - 1
+                        local client_index 
+                        local report_index = MailManager:GetReportByServerIndex(k)
+                        if report_index then
+                            client_index = report_index - 1
+                        else
+                            is_saved_report = true
+                            client_index = MailManager:GetSavedReportByServerIndex(k) - 1
+                        end
                         newKey = newKey..client_index..(i~=len and "." or "")
                     else
                         newKey = newKey..keys[i]..(i~=len and "." or "")
                     end
                 end
-                report_response[i][1] = newKey
+                if is_saved_report then
+                    local split = string.split(newKey, ".")
+                    local key = "savedReports."
+                    for i=2,#split do
+                        key = key..split[i]..(i~=#split and "." or "")
+                    end
+                    v[1] = key
+                else
+                    v[1] = newKey
+                end
             end
         end
         local edit = decodeInUserDataFromDeltaData(user_data, response.msg.playerData)
