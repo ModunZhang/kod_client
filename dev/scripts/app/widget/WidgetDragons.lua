@@ -36,7 +36,7 @@ function WidgetDragons:ctor(callbacks)
     callbacks = checktable(callbacks)
     self.OnLeaveIndexEvent = callbacks.OnLeaveIndexEvent
     self.OnEnterIndexEvent = callbacks.OnEnterIndexEvent
-
+    self.OnTouchClickEvent = callbacks.OnTouchClickEvent
     self.touch_judgment = TouchJudgment.new(self)
     local back_node = display.newScale9Sprite("dragon_animate_bg_624x606.png"):size(624,606):addTo(self)
         :align(display.CENTER)
@@ -159,8 +159,21 @@ function WidgetDragons:OnTouchMove(pre_x, pre_y, x, y)
 end
 function WidgetDragons:OnTouchClicked(pre_x, pre_y, x, y)
     -- self:AutoRotation()
-    print("OnTouchClicked------>")
+    if self.OnTouchClickEvent then
+        local index = self:CheckIndexOfClicked(x,y)
+        if index > 0 then self.OnTouchClickEvent(index - 1) end
+    end
 end
+
+function WidgetDragons:CheckIndexOfClicked(x,y)
+    for index,v in ipairs(self:GetItems()) do
+        if v:getCascadeBoundingBox():containsPoint(cc.p(x, y)) then
+            return index
+        end
+    end
+    return -1
+end
+
 function WidgetDragons:OnTouchExtend(old_speed_x, old_speed_y, new_speed_x, new_speed_y, millisecond)
 
 end

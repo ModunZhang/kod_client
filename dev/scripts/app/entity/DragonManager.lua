@@ -13,6 +13,7 @@ local promise = import("..utils.promise")
 DragonManager.promise_callbacks = {}
 local DragonEvent = import(".DragonEvent")
 local DragonDeathEvent = import(".DragonDeathEvent")
+local config_intInit = GameDatas.PlayerInitData.intInit
 
 DragonManager.LISTEN_TYPE = Enum("OnHPChanged","OnBasicChanged","OnDragonHatched","OnDragonEventChanged","OnDragonEventTimer","OnDefencedDragonChanged",
     "OnDragonDeathEventChanged","OnDragonDeathEventTimer","OnDragonDeathEventRefresh")
@@ -388,6 +389,20 @@ function DragonManager:OnHPChanged()
     end)
 end
 
+function DragonManager:GetHateNeedMinutes(dragonType)
+    if self:NoDragonHated() then return 0 end
+    return config_intInit['playerHatchDragonNeedMinutes']['value']
+end
+
+function DragonManager:NoDragonHated()
+    for __,dragon in pairs(self:GetDragons()) do
+        if dragon:Ishated() then
+            return false
+        end
+    end
+    return true
+end
+
 --新手引导
 function DragonManager:PromiseOfFinishEquipementDragon()
     local p = promise.new()
@@ -410,5 +425,7 @@ function DragonManager:CheckFinishEquipementDragonPormise()
         end
     end
 end
+
+
 
 return DragonManager
