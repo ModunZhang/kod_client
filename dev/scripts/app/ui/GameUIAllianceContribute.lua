@@ -3,6 +3,7 @@ local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local UIListView = import(".UIListView")
 local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local Alliance = import("..entity.Alliance")
+local Observer = import("..entity.Observer")
 local window = import("..utils.window")
 
 local ResourceManager = import("..entity.ResourceManager")
@@ -23,6 +24,8 @@ local GameUIAllianceContribute = class("GameUIAllianceContribute", WidgetPopDial
 function GameUIAllianceContribute:ctor()
     GameUIAllianceContribute.super.ctor(self,398,_("联盟捐献"),window.top-200)
     self:setNodeEventEnabled(true)
+    -- 联盟主页滑动框需要监听捐赠ui是否开启来决定是否自动滚动
+    self.observer = Observer.new()
     self.alliance = Alliance_Manager:GetMyAlliance()
 
     self.group = self:CreateContributeGroup()
@@ -73,6 +76,12 @@ function GameUIAllianceContribute:ctor()
         :addTo(self.body)
 
 end
+function GameUIAllianceContribute:AddIsOpenObserver( listener )
+    self.observer:AddObserver(listener)
+end
+function GameUIAllianceContribute:RemoveIsOpenObserver( listener )
+    self.observer:RemoveObserver(listener)
+end
 function GameUIAllianceContribute:onEnter()
     City:GetResourceManager():AddObserver(self)
     User:AddListenOnType(self, User.LISTEN_TYPE.ALLIANCE_DONATE)
@@ -80,6 +89,9 @@ end
 
 function GameUIAllianceContribute:onExit()
     -- UIKit:getRegistry().removeObject(self.__cname)
+    self.observer:NotifyObservers(function ( listener )
+        listener:UIAllianceContributeClose()
+    end)
     City:GetResourceManager():RemoveObserver(self)
     User:RemoveListenerOnType(self, User.LISTEN_TYPE.ALLIANCE_DONATE)
 end

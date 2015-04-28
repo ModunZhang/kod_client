@@ -357,6 +357,7 @@ function GameUIOrderHall:CreateProficiencyItem(member,index,option)
         color = 0x403c2f,
     }):align(display.CENTER, speed_bg:getContentSize().width/2 , speed_bg:getContentSize().height-20)
         :addTo(speed_bg)
+        print("option===",option)
     UIKit:ttfLabel({
         text = "+"..(member:GetCollectEffectByType(option)*100).."%",
         size = 20,

@@ -148,7 +148,7 @@ function memberMeta:GetCollectExpsByType(collectType)
     return exp,self:get_collect_config(collectType).expTo
 end
 function memberMeta:GetCollectEffectByType(collectType)
-    return self:get_collect_config(collectType).effect
+    return self:get_collect_config(collectType).percentPerHour
 end
 function memberMeta:GetWoodCollectLevelUpExp()
     return self:GetCollectLevelUpExpByType(COLLECT_TYPE.WOOD)

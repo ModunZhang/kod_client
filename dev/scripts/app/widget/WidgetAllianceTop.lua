@@ -38,9 +38,9 @@ function WidgetAllianceTop:onEnter()
                 mark_2:setPositionX(size.width/2+11)
             end
             if self.auto_change_page then
-            scheduler.unscheduleGlobal(self.auto_change_page)
-        end
-        self.auto_change_page = scheduler.scheduleGlobal(handler(self, self.Change), 20.0, false)
+                scheduler.unscheduleGlobal(self.auto_change_page)
+            end
+            self.auto_change_page = scheduler.scheduleGlobal(handler(self, self.Change), 20.0, false)
         end
     end):addTo(self)
     pv:setTouchSwallowEnabled(false)
@@ -105,7 +105,12 @@ function WidgetAllianceTop:CreateBtnsPageItem()
         pressed = "dark_blue_btn_down_176x44.png"})
         :onButtonClicked(function (event)
             if event.name == "CLICKED_EVENT" then
-                UIKit:newGameUI('GameUIAllianceContribute'):AddToCurrentScene(true)
+                if self.auto_change_page then
+                    scheduler.unscheduleGlobal(self.auto_change_page)
+                end
+                local ui = UIKit:newGameUI('GameUIAllianceContribute'):AddToCurrentScene(true)
+                ui:AddIsOpenObserver(self)
+                self.uiAllianceContribute = ui
             end
         end)
         :align(display.CENTER, 88, 23)
@@ -138,7 +143,7 @@ function WidgetAllianceTop:CreateBtnsPageItem()
                 UIKit:newGameUI('GameUIAllianceLoyalty'):AddToCurrentScene(true)
             end
         end)
-        :align(display.CENTER, 180+88, 23)
+        :align(display.CENTER,180+90+176 , 23)
         :addTo(content)
     -- 忠诚值
     display.newSprite("loyalty_128x128.png")
@@ -168,7 +173,7 @@ function WidgetAllianceTop:CreateBtnsPageItem()
                 UIKit:newGameUI('GameUIAlliancePosition'):AddToCurrentScene(true)
             end
         end)
-        :align(display.CENTER, 180+90+176, 23)
+        :align(display.CENTER, 180+88, 23)
         :addTo(content)
     -- 坐标
     display.newSprite("coordinate_128x128.png")
@@ -245,7 +250,14 @@ function WidgetAllianceTop:OnResourceChanged(resource_manager)
     self.stone_label:setString(GameUtils:formatNumber(stone_number))
     self.coin_label:setString(GameUtils:formatNumber(coin_number))
 end
+function WidgetAllianceTop:UIAllianceContributeClose()
+    self.auto_change_page = scheduler.scheduleGlobal(handler(self, self.Change), 20.0, false)
+    self.uiAllianceContribute:RemoveIsOpenObserver(self)
+    self.uiAllianceContribute = nil
+end
 return WidgetAllianceTop
+
+
 
 
 
