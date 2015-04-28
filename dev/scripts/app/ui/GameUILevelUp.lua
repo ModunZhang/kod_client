@@ -4,7 +4,7 @@ local playerLevel = GameDatas.PlayerInitData.playerLevel
 
 function GameUILevelUp:ctor(cur_level, next_level)
     GameUILevelUp.super.ctor(self)
-    self.cur_level = cur_level
+    self.cur_level = cur_level + 1
     self.next_level = next_level
     assert(self.cur_level)
     assert(self.next_level)
@@ -46,6 +46,7 @@ local scale_map = {
 }
 function GameUILevelUp:Play(level)
     app:GetAudioManager():PlayeEffectSoundWithKey("HOORAY")
+    self.bg:scale(1):hide()
     local size = self.bg:getCascadeBoundingBox()
     self.level:setString(string.format(_("等级 %d"), level))
     for k,v in pairs(self.rewards_map or {}) do
@@ -91,7 +92,7 @@ function GameUILevelUp:Play(level)
     end
 
     self.bg:stopAllActions()
-    self.bg:scale(0.3)
+    self.bg:scale(0.3):show()
     transition.scaleTo(self.bg, {
         scale = 1,
         time = 0.3,
