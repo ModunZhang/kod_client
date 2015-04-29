@@ -204,33 +204,39 @@ local dragon_ani_map = {
 local function newDragon(replay_ui, dragon_type, level)
     local dragon_type = dragon_type or "redDragon"
     local node = display.newNode()
-    node.name = UIKit:ttfLabel({
-        text = string.format(_("%s(等级%d)"), Localize.dragon[dragon_type], level),
+
+    node.level = UIKit:ttfLabel({
+        text = level,
         size = 20,
         color = 0xffedae,
-    }):align(display.CENTER, 45, 180):addTo(node)
+    }):align(display.CENTER, -65, 180):addTo(node)
 
-    node.progress = display.newProgressTimer("progress_bar_262x16.png", display.PROGRESS_TIMER_BAR)
-        :addTo(node):align(display.LEFT_CENTER, -85, 158):setScaleX(0.975)
+    node.name = UIKit:ttfLabel({
+        text = Localize.dragon[dragon_type],
+        size = 20,
+        color = 0xffedae,
+    }):align(display.CENTER, 80, 180):addTo(node)
+
+    node.progress = display.newProgressTimer("progress_bar_dragon_hp.png", display.PROGRESS_TIMER_BAR)
+        :addTo(node):align(display.LEFT_CENTER, -85, 145)
     node.progress:setBarChangeRate(cc.p(1,0))
     node.progress:setMidpoint(cc.p(0,0))
-    node.progress:setPercentage(80)
+    -- node.progress:setPercentage(80)
 
     node.hp = UIKit:ttfLabel({
-        size = 14,
+        size = 12,
         color = 0xffedae,
-    }):align(display.CENTER, 45, 160):addTo(node):hide()
+    }):align(display.CENTER, 45, 145):addTo(node):hide()
 
     node.result = UIKit:ttfLabel({
         size = 20,
         color = 0x00be36
-    }):align(display.CENTER, 120, -55):addTo(node):hide()
+    }):align(display.CENTER, 120, -55):addTo(node,1):hide()
 
     node.buff = UIKit:ttfLabel({
-        text = "hello",
         size = 20,
         color = 0x00be36
-    }):align(display.CENTER, 20, -55):addTo(node):hide()
+    }):align(display.CENTER, 65, -55):addTo(node,1):hide()
 
     local ani_name, left_x, right_x, scale, Y = unpack(dragon_ani_map[dragon_type])
     local dragon = ccs.Armature:create(ani_name):scale(0.6)
@@ -238,10 +244,13 @@ local function newDragon(replay_ui, dragon_type, level)
     dragon:getAnimation():play("idle", -1, -1)
     dragon:setScale(scale, scale)
     function node:TurnLeft()
-        self.progress:setPositionX(170)
-        self.progress:setScaleX(-0.975)
+        self.name:pos(15, 180)
+        self.level:pos(150, 180)
+        self.hp:pos(45, 147)
+        self.progress:setScaleX(-1)
+        self.progress:pos(170, 147)
         self.result:setPositionX(-35)
-        self.buff:setPositionX(80)
+        self.buff:setPositionX(35)
         dragon:setPositionX(right_x)
         dragon:setScale(- scale, scale)
         return self
@@ -274,7 +283,8 @@ local function newDragon(replay_ui, dragon_type, level)
         self.buff:setString(buff)
         return self
     end
-    function node:ShowBuff()
+    function node:ShowBuff(is_win)
+        self:SetReulst(is_win)
         self.buff:show()
         return self
     end
@@ -288,6 +298,8 @@ local function newDragon(replay_ui, dragon_type, level)
 end
 local function newDragonBattle(replay_ui, dragonAttack, dragonAttackLevel, dragonDefence, dragonDefenceLevel)
     local dragon_battle = ccs.Armature:create("paizi")
+    dragon_battle.result = ccs.Armature:create("paizi"):addTo(dragon_battle, 100):hide()
+
     local left_bone = dragon_battle:getBone("Layer4")
     local left_dragon = newDragon(replay_ui, dragonAttack.dragonType, dragonAttackLevel):addTo(left_bone):pos(-360, -50)
     left_bone:addDisplay(left_dragon, 0)
@@ -303,9 +315,9 @@ local function newDragonBattle(replay_ui, dragonAttack, dragonAttackLevel, drago
     function dragon_battle:GetDefenceDragon()
         return right_dragon
     end
-    function dragon_battle:PromiseOfAnimation()
+    function dragon_battle:PromiseOfAnimation(animation)
         local p = promise.new()
-        self:getAnimation():setMovementEventCallFunc(function(armatureBack, movementType, movementID)
+        animation:setMovementEventCallFunc(function(armatureBack, movementType, movementID)
             if movementType == ccs.MovementEventType.complete then
                 p:resolve()
             end
@@ -316,23 +328,45 @@ local function newDragonBattle(replay_ui, dragonAttack, dragonAttackLevel, drago
         self:getAnimation():play("Animation1", -1, 0)
         app:GetAudioManager():PlayeEffectSoundWithKey("BATTLE_DRAGON")
         self:RefreshSpeed()
-        return self:PromiseOfAnimation()
+        return self:PromiseOfAnimation(self:getAnimation())
     end
     function dragon_battle:PromsieOfHide()
         self:getAnimation():play("Animation2", -1, 0)
         self:RefreshSpeed()
-        return self:PromiseOfAnimation()
+        return self:PromiseOfAnimation(self:getAnimation())
     end
     function dragon_battle:RefreshSpeed()
         self:getAnimation():setSpeedScale(replay_ui:Speed())
+        self.result:getAnimation():setSpeedScale(replay_ui:Speed())
         left_dragon:RefreshSpeed()
         right_dragon:RefreshSpeed()
         return self
     end
     function dragon_battle:Stop()
         self:getAnimation():stop()
+        self.result:getAnimation():stop()
         left_dragon:stopAllActions()
         right_dragon:stopAllActions()
+    end
+    function dragon_battle:PromiseOfVictory()
+        self.result:show():getAnimation():playWithIndex(2, -1, 0)
+        self:RefreshSpeed()
+        return self:PromiseOfAnimation(self.result:getAnimation())
+    end
+    function dragon_battle:PromiseOfDefeat()
+        self.result:show():getAnimation():playWithIndex(3, -1, 0)
+        self:RefreshSpeed()
+        return self:PromiseOfAnimation(self.result:getAnimation())
+    end
+    function dragon_battle:PromiseOfVictoryHide()
+        self.result:show():getAnimation():playWithIndex(4, -1, 0)
+        self:RefreshSpeed()
+        return self:PromiseOfAnimation(self.result:getAnimation())
+    end
+    function dragon_battle:PromiseOfDefeatHide()
+        self.result:show():getAnimation():playWithIndex(5, -1, 0)
+        self:RefreshSpeed()
+        return self:PromiseOfAnimation(self.result:getAnimation())
     end
     return dragon_battle
 end
@@ -1044,22 +1078,32 @@ function GameUIReplayNew:PlayDragonBattle()
     local defend_dragon_level = self.report:GetDefenceDragonLevel()
 
     self.dragon_battle = newDragonBattle(self, attack_dragon, attack_dragon_level, defend_dragon, defend_dragon_level)
-        :addTo(self.ui_map.battle_node):align(display.CENTER, 275, 155)
+        :addTo(self.ui_map.dragon_node):align(display.CENTER, 275, 155)
     self.dragon_battle:GetAttackDragon():SetHp(attack_dragon.hp, attack_dragon.hpMax)
     self.dragon_battle:GetDefenceDragon():SetHp(defend_dragon.hp, defend_dragon.hpMax)
 
     return self.dragon_battle:PromsieOfFight():next(function()
-        return promise.all(self.dragon_battle:GetAttackDragon():ShowIsWin(attack_dragon.isWin),
-            self.dragon_battle:GetDefenceDragon():ShowIsWin(defend_dragon.isWin))
+        return attack_dragon.isWin and
+            self.dragon_battle:PromiseOfVictory() or
+            self.dragon_battle:PromiseOfDefeat()
     end):next(function()
+        local buff_attack = attack_dragon.isWin and 100 or 50
+        local buff_defence = attack_dragon.isWin and 50 or 100
+        self.dragon_battle:GetAttackDragon():ShowBuff(attack_dragon.isWin)
+        self.dragon_battle:GetDefenceDragon():ShowBuff(not attack_dragon.isWin)
         return self:PormiseOfSchedule(1, function(percent)
-            self.dragon_battle:GetAttackDragon():SetHp(attack_dragon.hp - percent * attack_dragon.hpDecreased, attack_dragon.hpMax):ShowBuff()
-                :SetBuff(string.format(_("加成 + %d%%"), math.floor(percent * 100)))
-            self.dragon_battle:GetDefenceDragon():SetHp(defend_dragon.hp - percent * defend_dragon.hpDecreased, defend_dragon.hpMax):ShowBuff()
-                :SetBuff(string.format(_("加成 + %d%%"), math.floor(percent * 50)))
+            self.dragon_battle:GetAttackDragon()
+            :SetHp(attack_dragon.hp - percent * attack_dragon.hpDecreased, attack_dragon.hpMax)
+                :SetBuff(string.format(_("加成 + %d%%"), math.floor(percent * buff_attack)))
+            self.dragon_battle:GetDefenceDragon()
+            :SetHp(defend_dragon.hp - percent * defend_dragon.hpDecreased, defend_dragon.hpMax)
+                :SetBuff(string.format(_("加成 + %d%%"), math.floor(percent * buff_defence)))
         end)
     end):next(self:Delay(1)):next(function()
-        return self.dragon_battle:PromsieOfHide()
+        return promise.all(attack_dragon.isWin and
+            self.dragon_battle:PromiseOfVictoryHide() or
+            self.dragon_battle:PromiseOfDefeatHide(),
+            self.dragon_battle:PromsieOfHide())
     end)
 end
 function GameUIReplayNew:PlaySoldierBattle(battle)
@@ -1183,7 +1227,7 @@ function GameUIReplayNew:PromiseOfPlayDamage(count, x, y)
         size = 30,
         color = 0xff0000,
     }):addTo(self.ui_map.damage_node)
-    :align(display.CENTER, x, y):runAction(speed)
+        :align(display.CENTER, x, y):runAction(speed)
     return p
 end
 function GameUIReplayNew:HurtSoldierLeft(corps)
@@ -1382,6 +1426,7 @@ function GameUIReplayNew:Reset()
     self.round = 1
     self:Stop()
     self.ui_map.damage_node:removeAllChildren()
+    self.ui_map.dragon_node:removeAllChildren()
     self.ui_map.battle_node:removeAllChildren()
     self.left = nil
     self.right = nil
@@ -1415,10 +1460,7 @@ function GameUIReplayNew:Stop()
         self.timer_node:stopAllActions()
     end
     for _,v in ipairs(self.ui_map.damage_node:getChildren()) do
-        local a = v:getActionByTag(SPEED_TAG)
-        if a then
-            a:stopAllActions()
-        end
+        v:stopAllActions()
     end
     self.ui_map.battle_background1:stopAllActions()
     if self.left then
@@ -1514,11 +1556,14 @@ end
 ------
 function GameUIReplayNew:BuildUI()
     local ui_map = {}
-    local clip = display.newClippingRegionNode(cc.rect(0,0, 588, 400)):addTo(self):pos(window.left + 25, window.bottom + 580)
+    local clip = display.newClippingRegionNode(cc.rect(0,0, 588, 400))
+        :addTo(self):pos(window.left + 25, window.bottom + 580)
     ui_map.battle_background1 = display.newSprite("back_ground_grassLand.png")
         :addTo(clip):align(display.LEFT_BOTTOM)
     ui_map.battle_node = display.newNode():addTo(clip)
     ui_map.damage_node = display.newNode():addTo(clip)
+    ui_map.dragon_node = display.newNode():addTo(self, 2)
+        :pos(window.left + 27, window.bottom + 590)
 
     local top = display.newSprite("back_ground_replay_1.png"):addTo(self, 1)
         :align(display.TOP_CENTER, display.cx, window.top)
@@ -1685,6 +1730,7 @@ function GameUIReplayNew:BuildUI()
 end
 
 return GameUIReplayNew
+
 
 
 
