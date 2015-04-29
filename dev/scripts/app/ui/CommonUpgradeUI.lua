@@ -476,21 +476,21 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
             isVisible = #city:GetUpgradingBuildings()>=city:BuildQueueCounts(),
             isSatisfy = #city:GetUpgradingBuildings()<city:BuildQueueCounts(),
             icon="hammer_31x33.png",
-            description=_("建造队列已满")..(GameUtils:formatNumber(#city:GetUpgradingBuildings())).."/"..city:BuildQueueCounts()
+            description=_("建造队列已满")..#city:GetUpgradingBuildings().."/"..city:BuildQueueCounts()
         },
         {
             resource_type = _("木材"),
             isVisible = building:GetLevelUpWood()>0,
             isSatisfy = wood>=building:GetLevelUpWood(),
             icon="res_wood_82x73.png",
-            description=GameUtils:formatNumber(wood).."/"..GameUtils:formatNumber(building:GetLevelUpWood())
+            description=wood.."/"..building:GetLevelUpWood()
         },
         {
             resource_type = _("石料"),
             isVisible = building:GetLevelUpStone()>0,
             isSatisfy = stone>=building:GetLevelUpStone() ,
             icon="res_stone_88x82.png",
-            description=GameUtils:formatNumber(stone).."/"..GameUtils:formatNumber(building:GetLevelUpStone())
+            description=stone.."/"..building:GetLevelUpStone()
         },
 
         {
@@ -498,7 +498,7 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
             isVisible = building:GetLevelUpIron()>0,
             isSatisfy = iron>=building:GetLevelUpIron() ,
             icon="res_iron_91x63.png",
-            description=GameUtils:formatNumber(iron).."/"..GameUtils:formatNumber(building:GetLevelUpIron())
+            description=iron.."/"..building:GetLevelUpIron()
         },
 
         {
@@ -506,7 +506,7 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
             isVisible = building:GetLevelUpCitizen()>0,
             isSatisfy = population>=building:GetLevelUpCitizen() ,
             icon="res_citizen_88x82.png",
-            description=GameUtils:formatNumber(population).."/"..GameUtils:formatNumber(building:GetLevelUpCitizen())
+            description=population.."/"..building:GetLevelUpCitizen()
         },
 
         {
@@ -514,28 +514,28 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
             isVisible = building:GetLevelUpBlueprints()>0,
             isSatisfy = materials["blueprints"]>=building:GetLevelUpBlueprints() ,
             icon="blueprints_128x128.png",
-            description=GameUtils:formatNumber(materials["blueprints"]).."/"..GameUtils:formatNumber(building:GetLevelUpBlueprints())
+            description=materials["blueprints"].."/"..building:GetLevelUpBlueprints()
         },
         {
             resource_type = _("建造工具"),
             isVisible = building:GetLevelUpTools()>0,
             isSatisfy = materials["tools"]>=building:GetLevelUpTools() ,
             icon="tools_128x128.png",
-            description=GameUtils:formatNumber(materials["tools"]).."/"..GameUtils:formatNumber(building:GetLevelUpTools())
+            description=materials["tools"].."/"..building:GetLevelUpTools()
         },
         {
             resource_type =_("砖石瓦片"),
             isVisible = building:GetLevelUpTiles()>0,
             isSatisfy = materials["tiles"]>=building:GetLevelUpTiles() ,
             icon="tiles_128x128.png",
-            description=GameUtils:formatNumber(materials["tiles"]).."/"..GameUtils:formatNumber(building:GetLevelUpTiles())
+            description=materials["tiles"].."/"..building:GetLevelUpTiles()
         },
         {
             resource_type = _("滑轮组"),
             isVisible = building:GetLevelUpPulley()>0,
             isSatisfy = materials["pulley"]>=building:GetLevelUpPulley() ,
             icon="pulley_128x128.png",
-            description=GameUtils:formatNumber(materials["pulley"]).."/"..GameUtils:formatNumber(building:GetLevelUpPulley())
+            description=materials["pulley"].."/"..building:GetLevelUpPulley()
         },
     }
 

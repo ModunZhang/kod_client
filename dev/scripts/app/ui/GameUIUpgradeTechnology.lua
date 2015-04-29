@@ -312,7 +312,7 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
             isVisible = cost.coin >0,
             isSatisfy = coin >= cost.coin,
             icon="res_coin_81x68.png",
-            description=  GameUtils:formatNumber(coin) .."/".. GameUtils:formatNumber(cost.coin)
+            description=  coin .."/".. cost.coin
         })
     table.insert(requirements,
         {
@@ -320,7 +320,7 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
             isVisible = cost.blueprints>0,
             isSatisfy = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["blueprints"]>=cost.blueprints,
             icon="blueprints_112x112.png",
-            description= GameUtils:formatNumber(City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["blueprints"]) .."/"..  GameUtils:formatNumber(cost.blueprints)
+            description= City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["blueprints"] .."/"..  cost.blueprints
         })
     table.insert(requirements,
         {
@@ -328,7 +328,7 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
             isVisible = cost.tools>0,
             isSatisfy = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tools"]>=cost.tools,
             icon="tools_112x112.png",
-            description= GameUtils:formatNumber(City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tools"]) .."/".. GameUtils:formatNumber(cost.tools)
+            description= City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tools"] .."/".. cost.tools
         })
     table.insert(requirements,
         {
@@ -336,7 +336,7 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
             isVisible = cost.tiles>0,
             isSatisfy = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tiles"]>=cost.tiles,
             icon="tiles_112x112.png",
-            description= GameUtils:formatNumber(City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tiles"]) .. "/" .. GameUtils:formatNumber(cost.tiles)
+            description= City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tiles"] .. "/" .. cost.tiles
         })
     table.insert(requirements,
         {
@@ -344,7 +344,7 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
             isVisible = cost.pulley>0,
             isSatisfy = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["pulley"]>=cost.pulley,
             icon="pulley_112x112.png",
-            description = GameUtils:formatNumber(City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["pulley"]) .. "/" .. GameUtils:formatNumber(cost.pulley)
+            description = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["pulley"] .. "/" .. cost.pulley
         })
 
     return requirements
@@ -512,5 +512,6 @@ function GameUIUpgradeTechnology:CheckMeIsReachLimitLevel()
 end
 
 return GameUIUpgradeTechnology
+
 
 
