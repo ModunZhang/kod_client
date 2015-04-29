@@ -504,7 +504,7 @@ bool LabelTextFormatter::ellipsisText(Label *theLabel, std::u16string& _currentU
         }
     }
     text = _currentUTF16String;
-    return true;
+    return false;
 }
 
 bool LabelTextFormatter::multilineText(Label *theLabel)
