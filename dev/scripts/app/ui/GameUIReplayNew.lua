@@ -517,367 +517,367 @@ local report_ = {
 }
 
 
--- local report1 = {
---     ["type"] = "attackCity",
---     ["index"] = 2,
---     ["createTime"] = "1430291447534",
---     ["id"] = "4kOz7dFf",
---     ["isSaved"] = false,
---     ["isRead"] = true,
---     ["attackCity"] = {
---         ["attackPlayerData"] = {
---             ["alliance"] = {
---                 ["id"] = "NyeZGSFM",
---                 ["flag"] = "10,12,9,14,8",
---                 ["name"] = "The Brave Oceanus",
---                 ["tag"] = "TBO",
---             }
---             ,
---             ["name"] = "iPad",
---             ["fightWithDefenceWall"] = json.null,
---             ["id"] = "V1IRzeOG",
---             ["rewards"] = {
---                 [1] = {
---                     ["type"] = "resources",
---                     ["name"] = "blood",
---                     ["count"] = 1545,
---                 }
---             ,
---             }
---             ,
---             ["icon"] = 3,
---             ["fightWithDefenceTroop"] = {
---                 ["dragon"] = {
---                     ["type"] = "blueDragon",
---                     ["hpDecreased"] = 61,
---                     ["level"] = 10,
---                     ["hp"] = 88,
---                     ["expAdd"] = 6486,
---                 }
---                 ,
---                 ["soldiers"] = {
---                     [1] = {
---                         ["count"] = 750,
---                         ["star"] = 2,
---                         ["name"] = "meatWagon",
---                         ["countDecreased"] = 212,
---                     }
---                 ,
---                 }
---             ,
---             }
---         ,
---         }
---         ,
---         ["attackTarget"] = {
---             ["cityName"] = "city_VkgljLxOz",
---             ["name"] = "老干爹",
---             ["terrain"] = "desert",
---             ["alliance"] = {
---                 ["id"] = "E12NVxdM",
---                 ["flag"] = "10,6,7,19,12",
---                 ["name"] = "Stables of Augeas",
---                 ["tag"] = "SoA",
---             }
---             ,
---             ["id"] = "41esLxuM",
---             ["location"] = {
---                 ["y"] = 21,
---                 ["x"] = 44,
---             }
---         ,
---         }
---         ,
---         ["defencePlayerData"] = {
---             ["dragon"] = {
---                 ["type"] = "redDragon",
---                 ["hpDecreased"] = 26,
---                 ["level"] = 20,
---                 ["hp"] = 222,
---                 ["expAdd"] = 3816,
---             }
---             ,
---             ["alliance"] = {
---                 ["id"] = "E12NVxdM",
---                 ["flag"] = "10,6,7,19,12",
---                 ["name"] = "Stables of Augeas",
---                 ["tag"] = "SoA",
---             }
---             ,
---             ["name"] = "老干爹",
---             ["wall"] = json.null,
---             ["id"] = "41esLxuM",
---             ["rewards"] = {
---                 [1] = {
---                     ["type"] = "resources",
---                     ["name"] = "blood",
---                     ["count"] = 3605,
---                 }
---             ,
---             }
---             ,
---             ["icon"] = 3,
---             ["soldiers"] = {
---                 [1] = {
---                     ["count"] = 196,
---                     ["star"] = 2,
---                     ["name"] = "meatWagon",
---                     ["countDecreased"] = 92,
---                 }
---                 ,
---                 [2] = {
---                     ["count"] = 200,
---                     ["star"] = 2,
---                     ["name"] = "deathKnight",
---                     ["countDecreased"] = 140,
---                 }
---                 ,
---                 [3] = {
---                     ["count"] = 200,
---                     ["star"] = 1,
---                     ["name"] = "ballista",
---                     ["countDecreased"] = 140,
---                 }
---                 ,
---                 [4] = {
---                     ["count"] = 200,
---                     ["star"] = 1,
---                     ["name"] = "catapult",
---                     ["countDecreased"] = 140,
---                 }
---                 ,
---                 [5] = {
---                     ["count"] = 200,
---                     ["star"] = 2,
---                     ["name"] = "skeletonArcher",
---                     ["countDecreased"] = 140,
---                 }
---                 ,
---                 [6] = {
---                     ["count"] = 200,
---                     ["star"] = 2,
---                     ["name"] = "skeletonWarrior",
---                     ["countDecreased"] = 126,
---                 }
---                 ,
---                 [7] = {
---                     ["count"] = 200,
---                     ["star"] = 1,
---                     ["name"] = "horseArcher",
---                     ["countDecreased"] = 0,
---                 }
---                 ,
---                 [8] = {
---                     ["count"] = 200,
---                     ["star"] = 1,
---                     ["name"] = "lancer",
---                     ["countDecreased"] = 0,
---                 }
---                 ,
---                 [9] = {
---                     ["count"] = 200,
---                     ["star"] = 1,
---                     ["name"] = "crossbowman",
---                     ["countDecreased"] = 0,
---                 }
---                 ,
---                 [10] = {
---                     ["count"] = 200,
---                     ["star"] = 1,
---                     ["name"] = "ranger",
---                     ["countDecreased"] = 0,
---                 }
---                 ,
---                 [11] = {
---                     ["count"] = 200,
---                     ["star"] = 1,
---                     ["name"] = "sentinel",
---                     ["countDecreased"] = 0,
---                 }
---                 ,
---                 [12] = {
---                     ["count"] = 200,
---                     ["star"] = 1,
---                     ["name"] = "swordsman",
---                     ["countDecreased"] = 0,
---                 }
---             ,
---             }
---         ,
---         }
---         ,
---         ["fightWithDefencePlayerReports"] = {
---             ["defencePlayerSoldierRoundDatas"] = {
---                 [1] = {
---                     ["soldierName"] = "meatWagon",
---                     ["moraleDecreased"] = 24,
---                     ["soldierWoundedCount"] = 28,
---                     ["morale"] = 100,
---                     ["soldierStar"] = 2,
---                     ["isWin"] = false,
---                     ["soldierDamagedCount"] = 92,
---                     ["soldierCount"] = 196,
---                 }
---                 ,
---                 [2] = {
---                     ["soldierName"] = "deathKnight",
---                     ["moraleDecreased"] = 35,
---                     ["soldierWoundedCount"] = 42,
---                     ["morale"] = 100,
---                     ["soldierStar"] = 2,
---                     ["isWin"] = false,
---                     ["soldierDamagedCount"] = 140,
---                     ["soldierCount"] = 200,
---                 }
---                 ,
---                 [3] = {
---                     ["soldierName"] = "ballista",
---                     ["moraleDecreased"] = 35,
---                     ["soldierWoundedCount"] = 42,
---                     ["morale"] = 100,
---                     ["soldierStar"] = 1,
---                     ["isWin"] = false,
---                     ["soldierDamagedCount"] = 140,
---                     ["soldierCount"] = 200,
---                 }
---                 ,
---                 [4] = {
---                     ["soldierName"] = "catapult",
---                     ["moraleDecreased"] = 35,
---                     ["soldierWoundedCount"] = 42,
---                     ["morale"] = 100,
---                     ["soldierStar"] = 1,
---                     ["isWin"] = false,
---                     ["soldierDamagedCount"] = 140,
---                     ["soldierCount"] = 200,
---                 }
---                 ,
---                 [5] = {
---                     ["soldierName"] = "skeletonArcher",
---                     ["moraleDecreased"] = 35,
---                     ["soldierWoundedCount"] = 42,
---                     ["morale"] = 100,
---                     ["soldierStar"] = 2,
---                     ["isWin"] = false,
---                     ["soldierDamagedCount"] = 140,
---                     ["soldierCount"] = 200,
---                 }
---                 ,
---                 [6] = {
---                     ["soldierName"] = "skeletonWarrior",
---                     ["moraleDecreased"] = 32,
---                     ["soldierWoundedCount"] = 38,
---                     ["morale"] = 100,
---                     ["soldierStar"] = 2,
---                     ["isWin"] = false,
---                     ["soldierDamagedCount"] = 126,
---                     ["soldierCount"] = 200,
---                 }
---             ,
---             }
---             ,
---             ["defencePlayerDragonFightData"] = {
---                 ["hpMax"] = 1304,
---                 ["type"] = "redDragon",
---                 ["isWin"] = true,
---                 ["hp"] = 222,
---                 ["hpDecreased"] = 26,
---             }
---             ,
---             ["attackPlayerSoldierRoundDatas"] = {
---                 [1] = {
---                     ["soldierName"] = "meatWagon",
---                     ["moraleDecreased"] = 4,
---                     ["soldierWoundedCount"] = 15,
---                     ["morale"] = 100,
---                     ["soldierStar"] = 2,
---                     ["isWin"] = true,
---                     ["soldierDamagedCount"] = 48,
---                     ["soldierCount"] = 750,
---                 }
---                 ,
---                 [2] = {
---                     ["soldierName"] = "meatWagon",
---                     ["moraleDecreased"] = 7,
---                     ["soldierWoundedCount"] = 14,
---                     ["morale"] = 96,
---                     ["soldierStar"] = 2,
---                     ["isWin"] = true,
---                     ["soldierDamagedCount"] = 46,
---                     ["soldierCount"] = 702,
---                 }
---                 ,
---                 [3] = {
---                     ["soldierName"] = "meatWagon",
---                     ["moraleDecreased"] = 10,
---                     ["soldierWoundedCount"] = 12,
---                     ["morale"] = 89,
---                     ["soldierStar"] = 2,
---                     ["isWin"] = true,
---                     ["soldierDamagedCount"] = 37,
---                     ["soldierCount"] = 656,
---                 }
---                 ,
---                 [4] = {
---                     ["soldierName"] = "meatWagon",
---                     ["moraleDecreased"] = 25,
---                     ["soldierWoundedCount"] = 14,
---                     ["morale"] = 79,
---                     ["soldierStar"] = 2,
---                     ["isWin"] = true,
---                     ["soldierDamagedCount"] = 46,
---                     ["soldierCount"] = 619,
---                 }
---                 ,
---                 [5] = {
---                     ["soldierName"] = "meatWagon",
---                     ["moraleDecreased"] = 20,
---                     ["soldierWoundedCount"] = 6,
---                     ["morale"] = 54,
---                     ["soldierStar"] = 2,
---                     ["isWin"] = true,
---                     ["soldierDamagedCount"] = 18,
---                     ["soldierCount"] = 573,
---                 }
---                 ,
---                 [6] = {
---                     ["soldierName"] = "meatWagon",
---                     ["moraleDecreased"] = 34,
---                     ["soldierWoundedCount"] = 6,
---                     ["morale"] = 34,
---                     ["soldierStar"] = 2,
---                     ["isWin"] = true,
---                     ["soldierDamagedCount"] = 17,
---                     ["soldierCount"] = 555,
---                 }
---             ,
---             }
---             ,
---             ["attackPlayerWallRoundDatas"] = json.null,
---             ["defencePlayerWallRoundDatas"] = json.null,
---             ["attackPlayerDragonFightData"] = {
---                 ["hpMax"] = 216,
---                 ["type"] = "blueDragon",
---                 ["isWin"] = false,
---                 ["hp"] = 88,
---                 ["hpDecreased"] = 61,
---             }
---         ,
---         }
---     ,
---     }
--- ,
--- }
+local report1 = {
+    ["type"] = "attackCity",
+    ["index"] = 2,
+    ["createTime"] = "1430291447534",
+    ["id"] = "4kOz7dFf",
+    ["isSaved"] = false,
+    ["isRead"] = true,
+    ["attackCity"] = {
+        ["attackPlayerData"] = {
+            ["alliance"] = {
+                ["id"] = "NyeZGSFM",
+                ["flag"] = "10,12,9,14,8",
+                ["name"] = "The Brave Oceanus",
+                ["tag"] = "TBO",
+            }
+            ,
+            ["name"] = "iPad",
+            ["fightWithDefenceWall"] = json.null,
+            ["id"] = "V1IRzeOG",
+            ["rewards"] = {
+                [1] = {
+                    ["type"] = "resources",
+                    ["name"] = "blood",
+                    ["count"] = 1545,
+                }
+            ,
+            }
+            ,
+            ["icon"] = 3,
+            ["fightWithDefenceTroop"] = {
+                ["dragon"] = {
+                    ["type"] = "blueDragon",
+                    ["hpDecreased"] = 61,
+                    ["level"] = 10,
+                    ["hp"] = 88,
+                    ["expAdd"] = 6486,
+                }
+                ,
+                ["soldiers"] = {
+                    [1] = {
+                        ["count"] = 750,
+                        ["star"] = 2,
+                        ["name"] = "meatWagon",
+                        ["countDecreased"] = 212,
+                    }
+                ,
+                }
+            ,
+            }
+        ,
+        }
+        ,
+        ["attackTarget"] = {
+            ["cityName"] = "city_VkgljLxOz",
+            ["name"] = "老干爹",
+            ["terrain"] = "desert",
+            ["alliance"] = {
+                ["id"] = "E12NVxdM",
+                ["flag"] = "10,6,7,19,12",
+                ["name"] = "Stables of Augeas",
+                ["tag"] = "SoA",
+            }
+            ,
+            ["id"] = "41esLxuM",
+            ["location"] = {
+                ["y"] = 21,
+                ["x"] = 44,
+            }
+        ,
+        }
+        ,
+        ["defencePlayerData"] = {
+            ["dragon"] = {
+                ["type"] = "redDragon",
+                ["hpDecreased"] = 26,
+                ["level"] = 20,
+                ["hp"] = 222,
+                ["expAdd"] = 3816,
+            }
+            ,
+            ["alliance"] = {
+                ["id"] = "E12NVxdM",
+                ["flag"] = "10,6,7,19,12",
+                ["name"] = "Stables of Augeas",
+                ["tag"] = "SoA",
+            }
+            ,
+            ["name"] = "老干爹",
+            ["wall"] = json.null,
+            ["id"] = "41esLxuM",
+            ["rewards"] = {
+                [1] = {
+                    ["type"] = "resources",
+                    ["name"] = "blood",
+                    ["count"] = 3605,
+                }
+            ,
+            }
+            ,
+            ["icon"] = 3,
+            ["soldiers"] = {
+                [1] = {
+                    ["count"] = 196,
+                    ["star"] = 2,
+                    ["name"] = "meatWagon",
+                    ["countDecreased"] = 92,
+                }
+                ,
+                [2] = {
+                    ["count"] = 200,
+                    ["star"] = 2,
+                    ["name"] = "deathKnight",
+                    ["countDecreased"] = 140,
+                }
+                ,
+                [3] = {
+                    ["count"] = 200,
+                    ["star"] = 1,
+                    ["name"] = "ballista",
+                    ["countDecreased"] = 140,
+                }
+                ,
+                [4] = {
+                    ["count"] = 200,
+                    ["star"] = 1,
+                    ["name"] = "catapult",
+                    ["countDecreased"] = 140,
+                }
+                ,
+                [5] = {
+                    ["count"] = 200,
+                    ["star"] = 2,
+                    ["name"] = "skeletonArcher",
+                    ["countDecreased"] = 140,
+                }
+                ,
+                [6] = {
+                    ["count"] = 200,
+                    ["star"] = 2,
+                    ["name"] = "skeletonWarrior",
+                    ["countDecreased"] = 126,
+                }
+                ,
+                [7] = {
+                    ["count"] = 200,
+                    ["star"] = 1,
+                    ["name"] = "horseArcher",
+                    ["countDecreased"] = 0,
+                }
+                ,
+                [8] = {
+                    ["count"] = 200,
+                    ["star"] = 1,
+                    ["name"] = "lancer",
+                    ["countDecreased"] = 0,
+                }
+                ,
+                [9] = {
+                    ["count"] = 200,
+                    ["star"] = 1,
+                    ["name"] = "crossbowman",
+                    ["countDecreased"] = 0,
+                }
+                ,
+                [10] = {
+                    ["count"] = 200,
+                    ["star"] = 1,
+                    ["name"] = "ranger",
+                    ["countDecreased"] = 0,
+                }
+                ,
+                [11] = {
+                    ["count"] = 200,
+                    ["star"] = 1,
+                    ["name"] = "sentinel",
+                    ["countDecreased"] = 0,
+                }
+                ,
+                [12] = {
+                    ["count"] = 200,
+                    ["star"] = 1,
+                    ["name"] = "swordsman",
+                    ["countDecreased"] = 0,
+                }
+            ,
+            }
+        ,
+        }
+        ,
+        ["fightWithDefencePlayerReports"] = {
+            ["defencePlayerSoldierRoundDatas"] = {
+                [1] = {
+                    ["soldierName"] = "meatWagon",
+                    ["moraleDecreased"] = 24,
+                    ["soldierWoundedCount"] = 28,
+                    ["morale"] = 100,
+                    ["soldierStar"] = 2,
+                    ["isWin"] = false,
+                    ["soldierDamagedCount"] = 92,
+                    ["soldierCount"] = 196,
+                }
+                ,
+                [2] = {
+                    ["soldierName"] = "deathKnight",
+                    ["moraleDecreased"] = 35,
+                    ["soldierWoundedCount"] = 42,
+                    ["morale"] = 100,
+                    ["soldierStar"] = 2,
+                    ["isWin"] = false,
+                    ["soldierDamagedCount"] = 140,
+                    ["soldierCount"] = 200,
+                }
+                ,
+                [3] = {
+                    ["soldierName"] = "ballista",
+                    ["moraleDecreased"] = 35,
+                    ["soldierWoundedCount"] = 42,
+                    ["morale"] = 100,
+                    ["soldierStar"] = 1,
+                    ["isWin"] = false,
+                    ["soldierDamagedCount"] = 140,
+                    ["soldierCount"] = 200,
+                }
+                ,
+                [4] = {
+                    ["soldierName"] = "catapult",
+                    ["moraleDecreased"] = 35,
+                    ["soldierWoundedCount"] = 42,
+                    ["morale"] = 100,
+                    ["soldierStar"] = 1,
+                    ["isWin"] = false,
+                    ["soldierDamagedCount"] = 140,
+                    ["soldierCount"] = 200,
+                }
+                ,
+                [5] = {
+                    ["soldierName"] = "skeletonArcher",
+                    ["moraleDecreased"] = 35,
+                    ["soldierWoundedCount"] = 42,
+                    ["morale"] = 100,
+                    ["soldierStar"] = 2,
+                    ["isWin"] = false,
+                    ["soldierDamagedCount"] = 140,
+                    ["soldierCount"] = 200,
+                }
+                ,
+                [6] = {
+                    ["soldierName"] = "skeletonWarrior",
+                    ["moraleDecreased"] = 32,
+                    ["soldierWoundedCount"] = 38,
+                    ["morale"] = 100,
+                    ["soldierStar"] = 2,
+                    ["isWin"] = false,
+                    ["soldierDamagedCount"] = 126,
+                    ["soldierCount"] = 200,
+                }
+            ,
+            }
+            ,
+            ["defencePlayerDragonFightData"] = {
+                ["hpMax"] = 1304,
+                ["type"] = "redDragon",
+                ["isWin"] = true,
+                ["hp"] = 222,
+                ["hpDecreased"] = 26,
+            }
+            ,
+            ["attackPlayerSoldierRoundDatas"] = {
+                [1] = {
+                    ["soldierName"] = "meatWagon",
+                    ["moraleDecreased"] = 4,
+                    ["soldierWoundedCount"] = 15,
+                    ["morale"] = 100,
+                    ["soldierStar"] = 2,
+                    ["isWin"] = true,
+                    ["soldierDamagedCount"] = 48,
+                    ["soldierCount"] = 750,
+                }
+                ,
+                [2] = {
+                    ["soldierName"] = "meatWagon",
+                    ["moraleDecreased"] = 7,
+                    ["soldierWoundedCount"] = 14,
+                    ["morale"] = 96,
+                    ["soldierStar"] = 2,
+                    ["isWin"] = true,
+                    ["soldierDamagedCount"] = 46,
+                    ["soldierCount"] = 702,
+                }
+                ,
+                [3] = {
+                    ["soldierName"] = "meatWagon",
+                    ["moraleDecreased"] = 10,
+                    ["soldierWoundedCount"] = 12,
+                    ["morale"] = 89,
+                    ["soldierStar"] = 2,
+                    ["isWin"] = true,
+                    ["soldierDamagedCount"] = 37,
+                    ["soldierCount"] = 656,
+                }
+                ,
+                [4] = {
+                    ["soldierName"] = "meatWagon",
+                    ["moraleDecreased"] = 25,
+                    ["soldierWoundedCount"] = 14,
+                    ["morale"] = 79,
+                    ["soldierStar"] = 2,
+                    ["isWin"] = true,
+                    ["soldierDamagedCount"] = 46,
+                    ["soldierCount"] = 619,
+                }
+                ,
+                [5] = {
+                    ["soldierName"] = "meatWagon",
+                    ["moraleDecreased"] = 20,
+                    ["soldierWoundedCount"] = 6,
+                    ["morale"] = 54,
+                    ["soldierStar"] = 2,
+                    ["isWin"] = true,
+                    ["soldierDamagedCount"] = 18,
+                    ["soldierCount"] = 573,
+                }
+                ,
+                [6] = {
+                    ["soldierName"] = "meatWagon",
+                    ["moraleDecreased"] = 34,
+                    ["soldierWoundedCount"] = 6,
+                    ["morale"] = 34,
+                    ["soldierStar"] = 2,
+                    ["isWin"] = true,
+                    ["soldierDamagedCount"] = 17,
+                    ["soldierCount"] = 555,
+                }
+            ,
+            }
+            ,
+            ["attackPlayerWallRoundDatas"] = json.null,
+            ["defencePlayerWallRoundDatas"] = json.null,
+            ["attackPlayerDragonFightData"] = {
+                ["hpMax"] = 216,
+                ["type"] = "blueDragon",
+                ["isWin"] = false,
+                ["hp"] = 88,
+                ["hpDecreased"] = 61,
+            }
+        ,
+        }
+    ,
+    }
+,
+}
 
 
 -------------------
--- local Report = import("..entity.Report")
--- User = {
---     Id = function() return 1 end
--- }
+local Report = import("..entity.Report")
+User = {
+    Id = function() return 1 end
+}
 function GameUIReplayNew:ctor(report, callback)
     -- report = Report:DecodeFromJsonData(report1)
-    -- report = report_
+    report = report_
     assert(report.GetFightAttackName)
     assert(report.GetFightDefenceName)
     assert(report.IsDragonFight)
@@ -933,15 +933,15 @@ function GameUIReplayNew:OnMoveInStage()
             self:Replay()
         elseif not self.ui_map.speedup.speed then
             self.ui_map.speedup.speed = 2
-            self.ui_map.speedup:setButtonLabelString(_("2倍速"))
+            self.ui_map.speedup:setButtonLabelString(_("x2"))
             self:SpeedUp(2)
         elseif self.ui_map.speedup.speed == 2 then
             self.ui_map.speedup.speed = 4
-            self.ui_map.speedup:setButtonLabelString(_("4倍速"))
+            self.ui_map.speedup:setButtonLabelString(_("x4"))
             self:SpeedUp(4)
         elseif self.ui_map.speedup.speed == 4 then
             self.ui_map.speedup.speed = nil
-            self.ui_map.speedup:setButtonLabelString(_("加速"))
+            self.ui_map.speedup:setButtonLabelString(_("x1"))
             self:SpeedUp(1)
         end
     end)
@@ -1095,12 +1095,12 @@ function GameUIReplayNew:DecodeStateBySide(side, is_left)
     if state == "enter" then
         if is_left then
             if side.soldier == "wall" then
-                self.left = NewWall(self):addTo(self.ui_map.battle_background1):pos(50, Y)
+                self.left = NewWall(self):addTo(self.ui_map.battle_node):pos(50, Y)
                 action = promise.new():next(BattleObject:TurnRight()):next(function()
-                    return promise.new(self:MoveBattleBgBy(2, 90))
-                        :next(function()
-                            return self.left
-                        end):resolve(self.ui_map.battle_background1)
+                    return promise.all(self:PromiseOfMoveBattleObj(self.left, 2, 90),
+                        self:PromiseOfMoveBattleObj(self.ui_map.battle_background1, 2, 90))
+                end):next(function()
+                    return self.left
                 end)
             else
                 self.left = NewCorps(self, side.soldier, side.star)
@@ -1113,12 +1113,12 @@ function GameUIReplayNew:DecodeStateBySide(side, is_left)
             self:EnterSoldiersLeft()
         else
             if side.soldier == "wall" then
-                self.right = NewWall(self):addTo(self.ui_map.battle_background1):pos(650, Y)
+                self.right = NewWall(self):addTo(self.ui_map.battle_node):pos(650, Y)
                 action = promise.new():next(BattleObject:TurnLeft()):next(function()
-                    return promise.new(self:MoveBattleBgBy(2, -90))
-                        :next(function()
-                            return self.right
-                        end):resolve(self.ui_map.battle_background1)
+                    return promise.all(self:PromiseOfMoveBattleObj(self.right, 2, -90),
+                        self:PromiseOfMoveBattleObj(self.ui_map.battle_background1, 2, -90))
+                end):next(function()
+                    return self.right
                 end)
             else
                 self.right = NewCorps(self, side.soldier, side.star, is_pve_battle):addTo(self.ui_map.battle_node):pos(start_right, Y)
@@ -1140,10 +1140,10 @@ function GameUIReplayNew:DecodeStateBySide(side, is_left)
     elseif state == "hurt" then
         action = BattleObject:Do():next(function(corps)
             if is_left then
-                return promise.any(corps:hit(), self:HurtSoldierLeft())
+                return promise.any(corps:hit(), self:HurtSoldierLeft(corps))
                     :next(function() return corps end)
             else
-                return promise.any(corps:hit(), self:HurtSoldierRight())
+                return promise.any(corps:hit(), self:HurtSoldierRight(corps))
                     :next(function() return corps end)
             end
         end):next(function(corps)
@@ -1169,14 +1169,33 @@ function GameUIReplayNew:DecodeStateBySide(side, is_left)
     end
     return action
 end
-function GameUIReplayNew:HurtSoldierLeft()
+function GameUIReplayNew:PromiseOfPlayDamage(count, x, y)
+    local p = promise.new()
+    local speed = cc.Speed:create(transition.sequence({
+        cc.MoveBy:create(0.6, cc.p(0, 20)),
+        cc.CallFunc:create(function() p:resolve() end),
+        cc.RemoveSelf:create(),
+    }), self:Speed())
+    speed:setTag(SPEED_TAG)
+
+    UIKit:ttfLabel({
+        text = "-"..count,
+        size = 30,
+        color = 0xff0000,
+    }):addTo(self.ui_map.damage_node)
+    :align(display.CENTER, x, y):runAction(speed)
+    return p
+end
+function GameUIReplayNew:HurtSoldierLeft(corps)
     local round = self:GetFightAttackSoldierByRound(self.round)
     local soldier = self:TopSoldierLeft()
     local soldierCount = round.soldierCount or round.wallHp
     local soldierDamagedCount = round.soldierDamagedCount or round.wallDamagedHp
     local morale = round.morale or 100
     local moraleDecreased = round.moraleDecreased or 0
+    local x,y = corps:getPosition()
     return promise.all(
+        self:PromiseOfPlayDamage(soldierDamagedCount, x, y),
         self.ui_map.soldier_count_attack:PromiseOfProgressTo(0.5, (soldierCount - soldierDamagedCount) / soldier.count * 100),
         self:PormiseOfSchedule(0.5, function(percent)
             local count = math.ceil(soldierCount - soldierDamagedCount * percent)
@@ -1193,14 +1212,16 @@ function GameUIReplayNew:HurtSoldierLeft()
         end)
     )
 end
-function GameUIReplayNew:HurtSoldierRight()
+function GameUIReplayNew:HurtSoldierRight(corps)
     local round = self:GetFightDefenceSoldierByRound(self.round)
     local soldier = self:TopSoldierRight()
     local soldierCount = round.soldierCount or round.wallHp
     local soldierDamagedCount = round.soldierDamagedCount or round.wallDamagedHp
     local morale = round.morale or 100
     local moraleDecreased = round.moraleDecreased or 0
+    local x,y = corps:getPosition()
     return promise.all(
+        self:PromiseOfPlayDamage(soldierDamagedCount, x, y),
         self.ui_map.soldier_count_defence:PromiseOfProgressTo(0.5, (soldierCount - soldierDamagedCount) / soldier.count * 100),
         self:PormiseOfSchedule(0.5, function(percent)
             local count = math.ceil(soldierCount - soldierDamagedCount * percent)
@@ -1338,6 +1359,12 @@ function GameUIReplayNew:SpeedUp(speed)
     if self.right then
         self.right:RefreshSpeed()
     end
+    for _,v in ipairs(self.ui_map.damage_node:getChildren()) do
+        local a = v:getActionByTag(SPEED_TAG)
+        if a then
+            a:setSpeed(self:Speed())
+        end
+    end
     self.ui_map.soldier_count_attack:RefreshSpeed()
     self.ui_map.soldier_morale_attack:RefreshSpeed()
     self.ui_map.soldier_count_defence:RefreshSpeed()
@@ -1354,6 +1381,7 @@ function GameUIReplayNew:Reset()
     end
     self.round = 1
     self:Stop()
+    self.ui_map.damage_node:removeAllChildren()
     self.ui_map.battle_node:removeAllChildren()
     self.left = nil
     self.right = nil
@@ -1361,7 +1389,7 @@ function GameUIReplayNew:Reset()
 
     self.ui_map.arrow_green:hide()
     self.ui_map.speedup.speed = nil
-    self.ui_map.speedup:setButtonLabelString(_("加速"))
+    self.ui_map.speedup:setButtonLabelString(_("x1"))
     self.ui_map.pass:show()
 
     self.ui_map.soldier_inbattle_attack:hide()
@@ -1386,6 +1414,12 @@ function GameUIReplayNew:Stop()
     if self.timer_node then
         self.timer_node:stopAllActions()
     end
+    for _,v in ipairs(self.ui_map.damage_node:getChildren()) do
+        local a = v:getActionByTag(SPEED_TAG)
+        if a then
+            a:stopAllActions()
+        end
+    end
     self.ui_map.battle_background1:stopAllActions()
     if self.left then
         self.left:Stop()
@@ -1399,17 +1433,15 @@ function GameUIReplayNew:Stop()
     self.ui_map.soldier_count_defence:Stop()
     self.ui_map.soldier_morale_defence:Stop()
 end
-function GameUIReplayNew:MoveBattleBgBy(time, x)
-    return function(battle_bg)
-        local p = promise.new()
-        local speed = cc.Speed:create(transition.sequence({
-            cc.MoveBy:create(time, cc.p(x, 0)),
-            cc.CallFunc:create(function() p:resolve(battle_bg) end),
-        }), self:Speed())
-        speed:setTag(SPEED_TAG)
-        battle_bg:runAction(speed)
-        return p
-    end
+function GameUIReplayNew:PromiseOfMoveBattleObj(obj, time, x)
+    local p = promise.new()
+    local speed = cc.Speed:create(transition.sequence({
+        cc.MoveBy:create(time, cc.p(x, 0)),
+        cc.CallFunc:create(function() p:resolve() end),
+    }), self:Speed())
+    speed:setTag(SPEED_TAG)
+    obj:runAction(speed)
+    return p
 end
 function GameUIReplayNew:PormiseOfSchedule(time, func)
     local p = promise.new()
@@ -1486,6 +1518,7 @@ function GameUIReplayNew:BuildUI()
     ui_map.battle_background1 = display.newSprite("back_ground_grassLand.png")
         :addTo(clip):align(display.LEFT_BOTTOM)
     ui_map.battle_node = display.newNode():addTo(clip)
+    ui_map.damage_node = display.newNode():addTo(clip)
 
     local top = display.newSprite("back_ground_replay_1.png"):addTo(self, 1)
         :align(display.TOP_CENTER, display.cx, window.top)
@@ -1652,6 +1685,13 @@ function GameUIReplayNew:BuildUI()
 end
 
 return GameUIReplayNew
+
+
+
+
+
+
+
 
 
 
