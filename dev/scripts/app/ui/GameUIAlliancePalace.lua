@@ -177,10 +177,10 @@ function GameUIAlliancePalace:CreateAwardMemberItem(member,index)
     self.items[member:Id()] = item
 end
 function GameUIAlliancePalace:OpenAwardDialog(member)
-    local dialog = WidgetPopDialog.new(282,_("奖励"),window.top-160):AddToCurrentScene()
+    local dialog = WidgetPopDialog.new(282,_("奖励"),window.top-160):addTo(self,201)
     local body = dialog:GetBody()
     local body_size = body:getContentSize()
-    self:GetHonourNode():addTo(body):align(display.BOTTOM_LEFT,50,60)
+    local hoour_node = self:GetHonourNode(0,true):addTo(body):align(display.BOTTOM_LEFT,50,60)
 
     -- 滑动条部分
     local slider_bg = display.newSprite("back_ground_580x136.png"):addTo(body)
@@ -199,7 +199,8 @@ function GameUIAlliancePalace:OpenAwardDialog(member)
         :addTo(slider_bg)
         :align(display.CENTER, slider_bg:getContentSize().width/2,  65)
         :OnSliderValueChanged(function(event)
-                body.button:setButtonEnabled(math.floor(event.value) ~= 0)
+            body.button:setButtonEnabled(math.floor(event.value) ~= 0)
+            hoour_node:RefreshHonour(math.floor(event.value),true)
         end)
         :LayoutValueLabel(WidgetSliderWithInput.STYLE_LAYOUT.TOP,75)
     -- icon
@@ -249,19 +250,19 @@ function GameUIAlliancePalace:GetLastThreeDaysKill(lastThreeDaysKillData)
     end
     return kill
 end
-function GameUIAlliancePalace:GetHonourNode(honour)
+function GameUIAlliancePalace:GetHonourNode(honour,isDeduct)
     local node = display.newNode()
     node:setContentSize(cc.size(160,36))
     -- 荣耀值
     display.newSprite("honour_128x128.png"):align(display.CENTER, 0, 0):addTo(node):scale(42/128)
     local honour_bg = display.newSprite("back_ground_114x36.png"):align(display.CENTER,80, 0):addTo(node)
     local honour_label = UIKit:ttfLabel({
-        text = honour or self.alliance:Honour(),
+        text = GameUtils:formatNumber(honour or self.alliance:Honour()),
         size = 20,
         color = 0x403c2f,
     }):addTo(honour_bg):align(display.CENTER,honour_bg:getContentSize().width/2,honour_bg:getContentSize().height/2)
     function node:RefreshHonour(honour)
-        honour_label:setString(honour)
+        honour_label:setString((isDeduct and "-" or "")..GameUtils:formatNumber(honour))
     end
     return node
 end
