@@ -492,9 +492,9 @@ bool LabelTextFormatter::ellipsisText(Label *theLabel, std::u16string& _currentU
             Status has_ellipsis = LabelTextFormatter::_ellipsisText(&labelutil, text, text, lettersInfo, _limitShowCount, fontutil._newAtlas, kerningsutil1._kernings);
             if ( has_ellipsis.is_cut || has_ellipsis.is_height_max )
             {
-                if ( text.size() > 6 )
+                // if ( text.size() > 6 )
                 {
-                    text = text.substr(0, text.size() - 3);
+                    text = text.substr(0, text.size() - 2);
                     text.push_back('.');
                     text.push_back('.');
                     text.push_back('.');
