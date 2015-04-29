@@ -383,10 +383,7 @@ function GameUIMail:DelegateInbox( listView, tag, idx )
     end
 end
 function GameUIMail:CreateInboxContent()
-    local listview = self.inbox_listview
-    local item = listview:newItem()
     local item_width, item_height = 568,118
-    item:setItemSize(item_width, item_height)
     local content = display.newNode()
     content:setContentSize(cc.size(item_width, item_height))
     -- 标题背景框
@@ -528,10 +525,7 @@ function GameUIMail:DelegateSavedMails( listView, tag, idx )
     end
 end
 function GameUIMail:CreateSavedMailContent()
-    local listview = self.save_mails_listview
-    local item = listview:newItem()
     local item_width, item_height = 568,118
-    item:setItemSize(item_width, item_height)
     local content = display.newNode()
     content:setContentSize(cc.size(item_width, item_height))
     -- 标题背景框
@@ -669,10 +663,7 @@ function GameUIMail:DelegateSendMails( listView, tag, idx )
     end
 end
 function GameUIMail:CreateSendMailContent()
-    local listview = self.send_mail_listview
-    local item = listview:newItem()
     local item_width, item_height = 568,118
-    item:setItemSize(item_width, item_height)
     local content = display.newNode()
     content:setContentSize(cc.size(item_width, item_height))
     -- 标题背景框
@@ -1230,10 +1221,7 @@ function GameUIMail:DelegateReport( listView, tag, idx )
     end
 end
 function GameUIMail:CreateReportContent()
-    local list = self.report_listview
-    local item = list:newItem()
     local item_width, item_height = 568,150
-    item:setItemSize(item_width, item_height)
     local content = display.newNode()
     content:setContentSize(cc.size(item_width, item_height))
     local parent = self
@@ -1486,10 +1474,7 @@ function GameUIMail:DelegateSavedReport( listView, tag, idx )
     end
 end
 function GameUIMail:CreateSavedReportContent()
-    local list = self.saved_reports_listview
-    local item = list:newItem()
     local item_width, item_height = 568,150
-    item:setItemSize(item_width, item_height)
     local content = display.newNode()
     content:setContentSize(cc.size(item_width, item_height))
     local parent = self

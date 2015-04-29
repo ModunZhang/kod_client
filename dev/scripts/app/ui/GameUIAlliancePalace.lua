@@ -37,20 +37,20 @@ function GameUIAlliancePalace:OnMoveInStage()
         },
     }, function(tag)
         if tag == 'impose' then
+            self:InitImposePart()
             self.impose_layer:setVisible(true)
         else
             self.impose_layer:setVisible(false)
+            self.impose_layer:Clear()
         end
         if tag == 'info' then
             self.info_layer:setVisible(true)
+            self:InitInfoPart()
         else
             self.info_layer:setVisible(false)
+            self.info_layer:Clear()
         end
     end):pos(window.cx, window.bottom + 34)
-    -- impose_layer
-    self:InitImposePart()
-    --info_layer
-    self:InitInfoPart()
 
     local alliance = self.alliance
     alliance:AddListenOnType(self,Alliance.LISTEN_TYPE.BASIC)
@@ -60,9 +60,19 @@ function GameUIAlliancePalace:CreateBetweenBgAndTitle()
     GameUIAlliancePalace.super.CreateBetweenBgAndTitle(self)
 
     -- impose_layer
-    self.impose_layer = display.newLayer():addTo(self:GetView())
+    local impose_layer = display.newLayer():addTo(self:GetView())
+    function impose_layer:Clear()
+        self:removeAllChildren()
+        self.current_honour = nil
+        self.award_menmber_listview = nil
+    end
+    self.impose_layer = impose_layer
     -- info_layer
-    self.info_layer = display.newLayer():addTo(self:GetView())
+    local info_layer = display.newLayer():addTo(self:GetView())
+    function info_layer:Clear()
+        self:removeAllChildren()
+    end
+    self.info_layer = info_layer
 end
 function GameUIAlliancePalace:onExit()
     local alliance = self.alliance
@@ -82,20 +92,22 @@ function GameUIAlliancePalace:InitImposePart()
 
     -- 荣耀值
     self.current_honour = self:GetHonourNode():addTo(layer):align(display.CENTER,window.right-100, window.top_bottom-5)
-
+    
+    self.sort_member = self:GetSortMembers()
     -- 可发放奖励成员列表
     local list,list_node = UIKit:commonListView({
+        async = true, --异步加载
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
         viewRect = cc.rect(0, 0,568,window.betweenHeaderAndTab-80),
     })
+    list:setRedundancyViewVal(168)
+    list:setDelegate(handler(self, self.DelegateAwardList))
+    list:reload()
     list_node:addTo(layer):align(display.BOTTOM_CENTER, window.cx, window.bottom_top+20)
     self.award_menmber_listview = list
-
-    self:SetAwardMemberList()
-
 end
-function GameUIAlliancePalace:SetAwardMemberList()
-    self.award_menmber_listview:removeAllItems()
+function GameUIAlliancePalace:GetSortMembers()
+    -- 按照当前击杀排序后的 members列表
     local alliance = self.alliance
     local members = alliance:GetAllMembers()
     local sort_member = {}
@@ -105,31 +117,39 @@ function GameUIAlliancePalace:SetAwardMemberList()
     table.sort(sort_member,function (a,b)
         return self:GetLastThreeDaysKill(a:LastThreeDaysKillData()) > self:GetLastThreeDaysKill(b:LastThreeDaysKillData())
     end)
-    self.items = {}
-    for i,v in ipairs(sort_member) do
-        self:CreateAwardMemberItem(v,i)
-    end
-    self.award_menmber_listview:reload()
+    return sort_member
 end
-function GameUIAlliancePalace:CreateAwardMemberItem(member,index)
-    local list = self.award_menmber_listview
-    local item = list:newItem()
+function GameUIAlliancePalace:DelegateAwardList(  listView, tag, idx )
+    if cc.ui.UIListView.COUNT_TAG == tag then
+        return #self.sort_member
+    elseif cc.ui.UIListView.CELL_TAG == tag then
+        local item
+        local content
+        item = listView:dequeueItem()
+        if not item then
+            item = listView:newItem()
+            content = self:CreateAwardContent()
+            item:addContent(content)
+        else
+            content = item:getContent()
+        end
+        content:SetData(idx)
+        local size = content:getContentSize()
+        item:setItemSize(size.width, size.height)
+        return item
+    else
+    end
+end
+function GameUIAlliancePalace:CreateAwardContent()
     local item_width,item_height = 568,168
-    item:setItemSize(item_width,item_height)
     local content = WidgetUIBackGround.new({width=item_width,height=item_height},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
     local title_bg = display.newScale9Sprite("title_blue_430x30.png",item_width/2,item_height-30,cc.size(550,30),cc.rect(15,10,400,10))
         :addTo(content)
-    -- 玩家头像
-    local head_bg = display.newSprite("head_bg_46x46.png"):addTo(title_bg):pos(30,title_bg:getContentSize().height/2)
-    local head_icon = display.newSprite("head_38x44.png"):addTo(head_bg):pos(head_bg:getContentSize().width/2,head_bg:getContentSize().height/2)
     -- 玩家名字
-    UIKit:ttfLabel({
-        text = index.."."..member:Name(),
+    local name = UIKit:ttfLabel({
         size = 22,
         color = 0xffedae,
     }):align(display.LEFT_CENTER, 60, title_bg:getContentSize().height/2):addTo(title_bg)
-
-
     -- 上次发放奖励时间
     local last_reward_time = UIKit:ttfLabel({
         size = 20,
@@ -143,22 +163,18 @@ function GameUIAlliancePalace:CreateAwardMemberItem(member,index)
     }):align(display.BOTTOM_LEFT, 10 , 10)
         :addTo(content)
 
-    -- 奖励按钮
-    WidgetPushButton.new({normal = "blue_btn_up_148x58.png",pressed = "blue_btn_down_148x58.png"})
-        :setButtonLabel(UIKit:ttfLabel({
-            text = _("奖赏"),
-            size = 24,
-            color = 0xffedae,
-            shadow= true
-        }))
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-                self:OpenAwardDialog(member)
-            end
-        end):align(display.BOTTOM_RIGHT, item_width-10,10):addTo(content)
-
     local palace_ui = self
-    function item:RefreshItem(member)
+    function content:SetData(idx,member)
+        local index = idx or self.index
+        self.index = index
+        local member = member or palace_ui.sort_member[index]
+        self.member = member
+        name:setString(index.."."..member:Name())
+        if self.head_icon then
+            self.head_icon:removeFromParent(true)
+        end
+        self.head_icon = UIKit:GetPlayerCommonIcon(member:Icon()):addTo(title_bg):pos(20,title_bg:getContentSize().height/2):scale(0.4)
+
         local lastRewardData = member:LastRewardData()
         local lastRewardTime = tolua.type(lastRewardData) == "table" and NetService:formatTimeAsTimeAgoStyleByServerTime( lastRewardData.time ) or _("无")
         local lastRewardCount = tolua.type(lastRewardData) == "table" and string.formatnumberthousands(lastRewardData.count) or _("无")
@@ -169,17 +185,54 @@ function GameUIAlliancePalace:CreateAwardMemberItem(member,index)
         }
         widget_info:SetInfo(info)
         last_reward_time:setString(lastRewardTime)
+
+        -- 奖励按钮
+        if self.button then
+            self.button:removeFromParent(true)
+        end
+        self.button = WidgetPushButton.new({normal = "blue_btn_up_148x58.png",pressed = "blue_btn_down_148x58.png"})
+            :setButtonLabel(UIKit:ttfLabel({
+                text = _("奖赏"),
+                size = 24,
+                color = 0xffedae,
+                shadow= true
+            }))
+            :onButtonClicked(function(event)
+                if event.name == "CLICKED_EVENT" then
+                    palace_ui:OpenAwardDialog(member)
+                end
+            end):align(display.BOTTOM_RIGHT, item_width-10,10):addTo(self)
+
     end
-    item:RefreshItem(member)
-    item:addContent(content)
-    list:addItem(item)
-    self.items[member:Id()] = item
+
+    function content:GetContentData()
+        return self.member
+    end
+    return content
 end
+
 function GameUIAlliancePalace:OpenAwardDialog(member)
     local dialog = WidgetPopDialog.new(282,_("奖励"),window.top-160):addTo(self,201)
     local body = dialog:GetBody()
     local body_size = body:getContentSize()
-    local hoour_node = self:GetHonourNode(0,true):addTo(body):align(display.BOTTOM_LEFT,50,60)
+    local hoour_node = display.newNode():addTo(body):align(display.BOTTOM_LEFT,50,60)
+    -- 荣耀值
+    local honour_icon = display.newSprite("honour_128x128.png"):align(display.CENTER,50,60):addTo(body):scale(42/128)
+    local deduct_honour_label = UIKit:ttfLabel({
+        text = "0",
+        size = 20,
+        color = 0x7e0000,
+    }):addTo(body):align(display.LEFT_CENTER,honour_icon:getPositionX()+20,honour_icon:getPositionY())
+    local divide = UIKit:ttfLabel({
+        text = "/",
+        size = 20,
+        color = 0x403c2f,
+    }):addTo(body):align(display.CENTER,deduct_honour_label:getPositionX()+ deduct_honour_label:getContentSize().width + 6,deduct_honour_label:getPositionY())
+    local current_honour_label = UIKit:ttfLabel({
+        text = GameUtils:formatNumber(self.alliance:Honour()),
+        size = 20,
+        color = 0x403c2f,
+    }):addTo(body):align(display.LEFT_CENTER,divide:getPositionX()+6,deduct_honour_label:getPositionY())
 
     -- 滑动条部分
     local slider_bg = display.newSprite("back_ground_580x136.png"):addTo(body)
@@ -198,8 +251,11 @@ function GameUIAlliancePalace:OpenAwardDialog(member)
         :addTo(slider_bg)
         :align(display.CENTER, slider_bg:getContentSize().width/2,  65)
         :OnSliderValueChanged(function(event)
-            body.button:setButtonEnabled(math.floor(event.value) ~= 0)
-            hoour_node:RefreshHonour(math.floor(event.value),true)
+            local value = math.floor(event.value)
+            body.button:setButtonEnabled(value ~= 0)
+            deduct_honour_label:setString((value ~= 0 and "-" or "")..GameUtils:formatNumber(value))
+            divide:setPositionX(deduct_honour_label:getPositionX()+deduct_honour_label:getContentSize().width + 6)
+            current_honour_label:setPositionX(divide:getPositionX()+6)
         end)
         :LayoutValueLabel(WidgetSliderWithInput.STYLE_LAYOUT.TOP,75)
     -- icon
@@ -247,7 +303,7 @@ function GameUIAlliancePalace:GetLastThreeDaysKill(lastThreeDaysKillData)
     end
     return kill
 end
-function GameUIAlliancePalace:GetHonourNode(honour,isDeduct)
+function GameUIAlliancePalace:GetHonourNode(honour)
     local node = display.newNode()
     node:setContentSize(cc.size(160,36))
     -- 荣耀值
@@ -259,8 +315,7 @@ function GameUIAlliancePalace:GetHonourNode(honour,isDeduct)
         color = 0x403c2f,
     }):addTo(honour_bg):align(display.CENTER,honour_bg:getContentSize().width/2,honour_bg:getContentSize().height/2)
     function node:RefreshHonour(honour)
-        honour_label:setString((isDeduct and "-" or "")..GameUtils:formatNumber(honour))
-        honour_label:setColor(isDeduct and UIKit:hex2c4b(0x7e0000) or UIKit:hex2c4b(0x403c2f))
+        honour_label:setString(GameUtils:formatNumber(honour))
     end
     return node
 end
@@ -342,7 +397,6 @@ function GameUIAlliancePalace:InitInfoPart()
             :align(display.LEFT_CENTER))
         :setButtonsLayoutMargin(0, 130, 0, 0)
         :onButtonSelectChanged(function(event)
-            -- self.selected_rebuild_to_building = rebuild_list[event.selected]
             self.select_terrian_index = event.selected
             local t_name = {
                 {
@@ -412,29 +466,42 @@ end
 function GameUIAlliancePalace:OnAllianceBasicChanged(alliance,changed_map)
     if changed_map.honour then
         local new = changed_map.honour.new
-        self.current_honour:RefreshHonour(new)
+        if self.current_honour then
+            self.current_honour:RefreshHonour(new)
+        end
     end
 end
 function GameUIAlliancePalace:OnMemberChanged(alliance,changed_map)
+    self.sort_member = self:GetSortMembers()
     if not changed_map then return end
-    if changed_map[1] then
-        for k,v in pairs(changed_map[1]) do
-            self:CreateAwardMemberItem(v,LuaUtils:table_size(self.award_menmber_listview:getItems()) + 1)
+    if #changed_map[1]>0 then
+        if self.award_menmber_listview then
+            self.award_menmber_listview:asyncLoadWithCurrentPosition_()
         end
-        self.award_menmber_listview:reload()
     end
-    if changed_map[3] then
-        self:SetAwardMemberList()
+    if #changed_map[3]>0 then
+        if self.award_menmber_listview then
+            self.award_menmber_listview:asyncLoadWithCurrentPosition_()
+        end
     end
     if changed_map[2] then
         for k,v in pairs(changed_map[2]) do
-            if self.items[v:Id()] then
-                self.items[v:Id()]:RefreshItem(v)
+            if self.award_menmber_listview then
+                for i,listitem in ipairs(self.award_menmber_listview:getItems()) do
+                    local content = listitem:getContent()
+                    local content_member = content:GetContentData()
+                    if content_member:Id() == v:Id() then
+                        content:SetData(nil,v)
+                    end
+                end
             end
         end
     end
 end
 return GameUIAlliancePalace
+
+
+
 
 
 
