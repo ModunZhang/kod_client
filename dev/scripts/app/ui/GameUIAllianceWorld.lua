@@ -2,7 +2,6 @@
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
-local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local UIListView = import(".UIListView")
 local UIScrollView = import(".UIScrollView")
 local window = import("..utils.window")

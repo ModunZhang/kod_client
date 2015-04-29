@@ -9,7 +9,6 @@ local WidgetInfoWithTitle = import('..widget.WidgetInfoWithTitle')
 local SpriteConfig = import("..sprites.SpriteConfig")
 local WidgetInfo = import('..widget.WidgetInfo')
 local Localize = import('..utils.Localize')
-local FullScreenPopDialogUI = import('.FullScreenPopDialogUI')
 local GameUIPResourceBuilding = UIKit:createUIClass('GameUIPResourceBuilding',"GameUIUpgradeBuilding")
 local intInit = GameDatas.PlayerInitData.intInit
 local buildings = GameDatas.Buildings.buildings
@@ -220,9 +219,7 @@ function GameUIPResourceBuilding:CheckSwitch(switch_to_building_type)
     local current_building = self.building
     local city = current_building:BelongCity()
     if city:GetUser():GetGemResource():GetValue()<intInit.switchProductionBuilding.value then
-        FullScreenPopDialogUI.new()
-            :AddToCurrentScene()
-            :SetTitle("提示")
+        UIKit:showMessageDialog(_("提示"),_("金龙币不足"))
             :CreateOKButton(
                 {
                     listener = function ()
@@ -232,19 +229,12 @@ function GameUIPResourceBuilding:CheckSwitch(switch_to_building_type)
                     btn_name= _("前往商店")
                 }
             )
-            :SetPopMessage(_("金龙币不足"))
         return
     elseif (city:GetMaxHouseCanBeBuilt(current_building:GetHouseType())-current_building:GetMaxHouseNum())<#city:GetBuildingByType(current_building:GetHouseType()) then
-        FullScreenPopDialogUI.new()
-            :AddToCurrentScene()
-            :SetTitle("提示")
-            :SetPopMessage(_("小屋数量过多"))
+        UIKit:showMessageDialog(_("提示"),_("小屋数量过多"))
         return
     elseif current_building:IsUpgrading() then
-        FullScreenPopDialogUI.new()
-            :AddToCurrentScene()
-            :SetTitle("提示")
-            :SetPopMessage(_("建筑正在升级"))
+        UIKit:showMessageDialog(_("提示"),_("建筑正在升级"))
         return
     end
 
@@ -276,18 +266,15 @@ function GameUIPResourceBuilding:CheckSwitch(switch_to_building_type)
             end)
         end
         if not limit then
-            FullScreenPopDialogUI.new()
-                :AddToCurrentScene()
-                :SetTitle("提示")
-                :SetPopMessage(string.format(_("前置建筑%s等级需要大于等于%d级"),Localize.building_name[preName],current_building:GetLevel()+preLevel))
+            UIKit:showMessageDialog(_("提示"),string.format(_("前置建筑%s等级需要大于等于%d级"),Localize.building_name[preName],current_building:GetLevel()+preLevel))
                 :CreateOKButton(
-                {
-                    listener = function ()
-                        self:GotoPreconditionBuilding(preName)
-                    end,
-                    btn_name= _("前往")
-                }
-            )
+                    {
+                        listener = function ()
+                            self:GotoPreconditionBuilding(preName)
+                        end,
+                        btn_name= _("前往")
+                    }
+                )
             return
         end
     end
@@ -306,6 +293,8 @@ function GameUIPResourceBuilding:GotoPreconditionBuilding(preName)
     self:LeftButtonClicked()
 end
 return GameUIPResourceBuilding
+
+
 
 
 

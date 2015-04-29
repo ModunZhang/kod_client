@@ -12,7 +12,6 @@ local UILib = import(".UILib")
 local Arrow = import(".Arrow")
 local WidgetChangeMap = import("..widget.WidgetChangeMap")
 local GameUIHelp = import(".GameUIHelp")
-local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local Alliance = import("..entity.Alliance")
 local GrowUpTaskManager = import("..entity.GrowUpTaskManager")
 local GameUIHome = UIKit:createUIClass('GameUIHome')
@@ -396,11 +395,9 @@ function GameUIHome:CreateTop()
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
             if not Alliance_Manager:GetMyAlliance():IsDefault() then
-                GameUIHelp.new():AddToCurrentScene(true)
+                UIKit:newGameUI("GameUIHelp"):AddToCurrentScene(true)
             else
-                FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                    :SetPopMessage(_("加入联盟才能激活帮助功能"))
-                    :AddToCurrentScene()
+                UIKit:showMessageDialog(_("提示"),_("加入联盟才能激活帮助功能"))
             end
         end
     end)
@@ -470,6 +467,7 @@ function GameUIHome:Find()
 end
 
 return GameUIHome
+
 
 
 

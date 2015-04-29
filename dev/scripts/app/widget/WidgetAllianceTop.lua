@@ -28,7 +28,6 @@ function WidgetAllianceTop:onEnter()
         padding = {left = 0, right = 0, top = 10, bottom = 0},
         nBounce = true
     }:onTouch(function (event)
-        dump(event,"UIPageView event")
         if event.name == "pageChange" then
             if event.pageIdx == 1 then
                 mark_1:setPositionX(size.width/2+11)

@@ -1,6 +1,5 @@
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
-local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local window = import("..utils.window")
 
@@ -131,12 +130,7 @@ function GameUIAlliancePosition:ctor()
                 local x = string.trim(editbox_x:getText())
                 local y = string.trim(editbox_y:getText())
                 if string.len(x) == 0 or string.len(y) == 0 then
-                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                        :SetPopMessage(_("请输入坐标"))
-                        :CreateOKButton({
-                            listener =  function()end
-                        })
-                        :AddToCurrentScene()
+                    UIKit:showMessageDialog(_("提示"),_("请输入坐标"))
                     return
                 end
                 local map_layer = display.getRunningScene():GetSceneLayer()

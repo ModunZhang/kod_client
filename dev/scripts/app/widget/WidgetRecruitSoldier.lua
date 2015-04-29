@@ -1,6 +1,5 @@
 local GameUtils = GameUtils
 local cocos_promise = import("..utils.cocos_promise")
-local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local UILib = import("..ui.UILib")
 local Localize = import("..utils.Localize")
 local MaterialManager = import("..entity.MaterialManager")
@@ -269,20 +268,22 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
             }))
             :onButtonClicked(function(event)
                 if City:GetUser():GetGemResource():GetValue()< tonumber(self.gem_label:getString())then
-                    FullScreenPopDialogUI.new()
-                        :SetTitle(_("提示"))
-                        :SetPopMessage(_("您当前没有足够金龙币"))
-                        :CreateOKButton():AddToCurrentScene()
+                    UIKit:showMessageDialog(_("陛下"),_("您当前没有足够金龙币")):CreateOKButton(
+                        {
+                            listener = function ()
+                                UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                                self:Close()
+                            end,
+                            btn_name= _("前往商店")
+                        }
+                    )
                     return
                 end
 
                 if SPECIAL[self.soldier_name] then
                     local not_enough_material = self:CheckMaterials(self.count)
                     if not_enough_material then
-                        FullScreenPopDialogUI.new()
-                            :SetTitle(_("招募材料不足"))
-                            :SetPopMessage(_("您当前没有足够材料"))
-                            :CreateCancelButton():AddToCurrentScene()
+                        UIKit:showMessageDialog(_("招募材料不足"),_("您当前没有足够材料"))
                     else
                         NetManager:getInstantRecruitSpecialSoldierPromise(self.soldier_name, self.count)
                     end
@@ -665,6 +666,7 @@ end
 
 
 return WidgetRecruitSoldier
+
 
 
 

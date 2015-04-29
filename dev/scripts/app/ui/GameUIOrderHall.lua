@@ -4,7 +4,6 @@ local WidgetUIBackGround2 = import("..widget.WidgetUIBackGround2")
 local WidgetStockGoods = import("..widget.WidgetStockGoods")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetDropList = import("..widget.WidgetDropList")
-local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local SpriteConfig = import("..sprites.SpriteConfig")
 local UIListView = import(".UIListView")
 local UILib = import(".UILib")
@@ -166,10 +165,7 @@ function GameUIOrderHall:CreateVillageItem(village_type,village_level)
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
                     if alliance:Honour()<need_honour then
-                        FullScreenPopDialogUI.new()
-                            :SetTitle(_("提示"))
-                            :SetPopMessage(_("荣耀点不足"))
-                            :AddToCurrentScene()
+                        UIKit:showMessageDialog(_("提示"),_("荣耀点不足"))
                     else
                         NetManager:getUpgradeAllianceVillagePromise(village_type)
                     end

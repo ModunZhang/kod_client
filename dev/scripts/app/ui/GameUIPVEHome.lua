@@ -1,5 +1,4 @@
 local WidgetChangeMap = import("..widget.WidgetChangeMap")
-local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local UIPageView = import("..ui.UIPageView")
 local UILib = import("..ui.UILib")
 local window = import("..utils.window")
@@ -58,8 +57,7 @@ function GameUIPVEHome:CreateTop()
     ):addTo(top_bg)
         :align(display.LEFT_CENTER, 20, -5)
         :onButtonClicked(function()
-            FullScreenPopDialogUI.new():SetTitle(_("返回起点"))
-                :SetPopMessage(_("返回当前关卡的起点需要消耗您10个金龙币,您是否同意?"))
+            UIKit:showMessageDialog(_("返回起点"),_("返回当前关卡的起点需要消耗您10个金龙币,您是否同意?"))
                 :CreateOKButton({
                     listener =  function()
                         self.user:SetPveData(nil, nil, 10)
@@ -73,7 +71,7 @@ function GameUIPVEHome:CreateTop()
                             self.layer:MoveCharTo(self.user:GetPVEDatabase():GetCharPosition())
                         end)
                     end
-                }):CreateCancelButton():AddToCurrentScene()
+                }):CreateCancelButton()
 
         end):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -150,6 +148,7 @@ end
 
 
 return GameUIPVEHome
+
 
 
 

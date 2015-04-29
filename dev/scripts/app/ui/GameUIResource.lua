@@ -5,7 +5,6 @@
 local GameUIResource = UIKit:createUIClass("GameUIResource","GameUIUpgradeBuilding")
 local ResourceManager = import("..entity.ResourceManager")
 local WidgetInfoWithTitle = import("..widget.WidgetInfoWithTitle")
-local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local WidgetMoveHouse = import("..widget.WidgetMoveHouse")
 local UILib = import(".UILib")
 local City = City

@@ -1,5 +1,4 @@
 local UIListView = import(".UIListView")
-local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local WidgetRequirementListview = import("..widget.WidgetRequirementListview")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
@@ -198,8 +197,7 @@ function GameUIUnlockBuilding:SetUpgradeRequirementListview()
 end
 
 function GameUIUnlockBuilding:PopNotSatisfyDialog(listener,can_not_update_type)
-    local dialog = FullScreenPopDialogUI.new()
-    self:getParent():addChild(dialog,2002)
+    local dialog = UIKit:showMessageDialog()
     if can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.RESOURCE_NOT_ENOUGH then
         local required_gems =self.building:getUpgradeRequiredGems()
         local owen_gem = City:GetUser():GetGemResource():GetValue()

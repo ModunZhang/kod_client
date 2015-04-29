@@ -3,7 +3,6 @@ local promise = import("..utils.promise")
 local window = import("..utils.window")
 local BuildingRegister = import("..entity.BuildingRegister")
 local MaterialManager = import("..entity.MaterialManager")
-local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local WidgetBuyBuildingQueue = import("..widget.WidgetBuyBuildingQueue")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushButton = import("..widget.WidgetPushButton")
@@ -80,7 +79,7 @@ function GameUIBuild:LoadBuildingQueue()
         -- :setButtonEnabled(false)
         :onButtonClicked(function ( event )
             if event.name == "CLICKED_EVENT" then
-                WidgetBuyBuildingQueue.new():AddToCurrentScene()
+                UIKit:newWidgetUI("WidgetBuyBuildingQueue"):AddToCurrentScene()
             end
         end)
 
@@ -167,11 +166,10 @@ function GameUIBuild:OnBuildOnItem(item)
         resource_gems = resource_gems + DataUtils:buyResource(resource_config.resources, has_resourcce)
         resource_gems = resource_gems + DataUtils:buyMaterial(resource_config.materials, m)
     end
-    print("resource_gems>>>>",resource_gems)
     if current > 0 and resource_gems == 0 then
         self:BuildWithRuins(self.select_ruins, item.building.building_type)
     else
-        local dialog = FullScreenPopDialogUI.new():addTo(self:GetView())
+        local dialog =  UIKit:showMessageDialog()
         local required_gems = 0
         if current <= 0 then
             required_gems = DataUtils:getGemByTimeInterval(upgrading_buildings[1]:GetUpgradingLeftTimeByCurrentTime(current_time))
@@ -358,6 +356,7 @@ end
 
 
 return GameUIBuild
+
 
 
 

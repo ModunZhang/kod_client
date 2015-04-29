@@ -102,10 +102,10 @@ function GameUISetting:OnButtonClicked(button)
 		UIKit:newGameUI('GameUIShop', City):AddToCurrentScene(true)
 		-- UIKit:newGameUI("GameUITips"):AddToCurrentScene(true)
 	elseif tag == 5 then
-		WidgetRankingList.new("player"):AddToCurrentScene(true)
+		UIKit:newWidgetUI("WidgetRankingList", "player"):AddToCurrentScene(true)
 	elseif tag == 6 then
 		if not Alliance_Manager:GetMyAlliance():IsDefault() then
-			WidgetRankingList.new("alliance"):AddToCurrentScene(true)
+			UIKit:newWidgetUI("WidgetRankingList","alliance"):AddToCurrentScene(true)
 		else
 			GameGlobalUI:showTips("提示", "玩家未加入联盟")
 		end

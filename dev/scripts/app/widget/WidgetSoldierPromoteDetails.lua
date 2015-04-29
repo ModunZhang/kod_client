@@ -5,7 +5,6 @@
 local WidgetPopDialog = import(".WidgetPopDialog")
 local WidgetInfoText = import(".WidgetInfoText")
 local WidgetPushButton = import(".WidgetPushButton")
-local WidgetPromoteSoldier = import(".WidgetPromoteSoldier")
 local window = import("..utils.window")
 local Localize = import("..utils.Localize")
 local UILib = import("..ui.UILib")
@@ -222,7 +221,7 @@ function WidgetSoldierPromoteDetails:onEnter()
             color = 0xfff3c7
         }))
         :onButtonClicked(function(event)
-            WidgetPromoteSoldier.new(soldier_type,self.building:GetType()):AddToCurrentScene()
+            UIKit:newWidgetUI("WidgetPromoteSoldier",soldier_type,self.building:GetType()):AddToCurrentScene()
             self:LeftButtonClicked()
         end)
 end

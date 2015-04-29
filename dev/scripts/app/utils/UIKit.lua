@@ -483,8 +483,8 @@ function UIKit:commonListView_1(params)
     local viewRect = params.viewRect
     viewRect.x = 0
     viewRect.y = 0
-    local list_node = display.newScale9Sprite("background_568x556.png",x,y,cc.size(viewRect.width+20,viewRect.height+24),cc.rect(10,10,548,536))
-    local list = UIListView.new(params):addTo(list_node):pos(10,12)
+    local list_node = display.newScale9Sprite("background_568x556.png",x,y,cc.size(viewRect.width,viewRect.height+24),cc.rect(10,10,548,536))
+    local list = UIListView.new(params):addTo(list_node):pos(0,12)
     return list,list_node
 end
 function UIKit:createLineItem(params)
@@ -540,15 +540,18 @@ end
 
 function UIKit:showMessageDialog(title,tips,ok_callback,cancel_callback,visible_x_button,x_button_callback)
     title = title or _("提示")
+    tips = tips or ""
     if type(visible_x_button) ~= 'boolean' then visible_x_button = true end
     local dialog = UIKit:newGameUI("FullScreenPopDialogUI",x_button_callback):SetTitle(title):SetPopMessage(tips)
-        :CreateOKButton({
+    if ok_callback then
+        dialog:CreateOKButton({
             listener =  function ()
                 if ok_callback then
                     ok_callback()
                 end
             end
         })
+    end
 
     if cancel_callback then
         dialog:CreateCancelButton({
@@ -560,6 +563,7 @@ function UIKit:showMessageDialog(title,tips,ok_callback,cancel_callback,visible_
     if not visible_x_button then
         dialog:DisableAutoClose()
     end
+    dialog:setLocalZOrder(3000)
     dialog:AddToCurrentScene()
     return dialog
 end
@@ -581,14 +585,14 @@ end
 function UIKit:WaitForNet(delay)
     local scene = display.getRunningScene()
     -- if scene.__cname  ~= 'MainScene' and scene.WaitForNet then
-        scene:WaitForNet(delay)
+    scene:WaitForNet(delay)
     -- end
 end
 
 function UIKit:NoWaitForNet()
     local scene = display.getRunningScene()
     -- if scene.__cname  ~= 'MainScene' and scene.NoWaitForNet then
-        scene:NoWaitForNet()
+    scene:NoWaitForNet()
     -- end
 end
 
@@ -665,6 +669,7 @@ function UIKit:getIapPackageName(productId)
     local Localize = import(".Localize", CURRENT_MODULE_NAME)
     return Localize.iap_package_name[productId]
 end
+
 
 
 

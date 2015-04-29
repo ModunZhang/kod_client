@@ -6,7 +6,6 @@ local WidgetPopDialog = import(".WidgetPopDialog")
 local window = import("..utils.window")
 local Localize = import("..utils.Localize")
 local UILib = import("..ui.UILib")
-local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local WidgetRequirementListview = import(".WidgetRequirementListview")
 local MaterialManager = import("..entity.MaterialManager")
 local SoldierManager = import("..entity.SoldierManager")
@@ -257,9 +256,7 @@ function WidgetPromoteSoldier:PopNotSatisfyDialog(upgrade_listener,results)
     for k,v in pairs(results) do
         message = message .. v.."\n"
     end
-    local dialog =  FullScreenPopDialogUI.new():SetTitle(_("提示"))
-        :SetPopMessage(message)
-        :AddToCurrentScene()
+    local dialog = UIKit:showMessageDialog(_("陛下"),message)
     return dialog
 end
 function WidgetPromoteSoldier:GetInstantUpgradeGems()

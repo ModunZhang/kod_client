@@ -5,7 +5,6 @@
 
 local WidgetPushButton = import(".WidgetPushButton")
 local WidgetUIBackGround = import(".WidgetUIBackGround")
-local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local Enum = import("..utils.Enum")
 local window = import("..utils.window")
 local Localize = import("..utils.Localize")
@@ -85,11 +84,15 @@ function WidgetUseItems:Create(params)
         dialog = self:OpenHeroBloodDialog(item)
     elseif item_type == "stamina" then
         dialog = self:OpenStrengthDialog(item)
-    elseif item_type == "dragonExp"
-        or item_type == "dragonHp"
-    then
+    elseif item_type == "dragonHp" then
         if params.dragon then
-            dialog = self:OpenOneDragonItemDialog(item,params.dragon)
+            dialog = self:OpenOneDragonHPItemDialog(item,params.dragon)
+        else
+            dialog = self:OpenIncreaseDragonExpOrHp(item)
+        end
+    elseif item_type == "dragonExp" then
+        if params.dragon then
+            dialog = self:OpenOneDragonItemExpDialog(item,params.dragon)
         else
             dialog = self:OpenIncreaseDragonExpOrHp(item)
         end
@@ -148,13 +151,7 @@ function WidgetUseItems:OpenChangePlayerOrCityName(item)
     self:CreateItemBox(item,function ()
         local newName = string.trim(editbox:getText())
         if string.len(newName) == 0 then
-            FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                :SetPopMessage(_("请输入新的名称"))
-                :CreateOKButton(
-                    {
-                        listener = function()end
-                    })
-                :AddToCurrentScene()
+            UIKit:showMessageDialog(_("陛下"),_("请输入新的名称"))
         else
             return true
         end
@@ -344,26 +341,36 @@ function WidgetUseItems:OpenHeroBloodDialog( item )
     end
     return dialog
 end
-function WidgetUseItems:OpenOneDragonItemDialog( item ,dragon)
+
+function WidgetUseItems:OpenOneDragonItemExpDialog( item ,dragon)
     local same_items = ItemManager:GetSameTypeItems(item)
     local increase_type = string.split(item:Name(),"_")[1]
-    local dialog = UIKit:newWidgetUI("WidgetPopDialog",#same_items*130+150,increase_type == "dragonHp" and _("增加龙的生命值") or _("增加龙的经验"),window.top-230)
+    local dialog = UIKit:newWidgetUI("WidgetPopDialog",#same_items*130+200, _("增加龙的经验"),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
-    local blood_bg = display.newScale9Sprite("back_ground_398x97.png",size.width/2,size.height-50,cc.size(556,58),cc.rect(10,10,378,77))
-        :addTo(body)
-    -- local blood_icon = display.newSprite("buff_tool.png"):addTo(blood_bg):align(display.CENTER, 40, blood_bg:getContentSize().height/2):scale(0.2)
     UIKit:ttfLabel({
-        text = increase_type == "dragonHp" and _("生命值") or _("经验"),
-        size = 22,
-        color = 0x797154,
-    }):align(display.LEFT_CENTER,40,blood_bg:getContentSize().height/2)
-        :addTo(blood_bg)
-    local dragon_value = UIKit:ttfLabel({
-        text = increase_type == "dragonHp" and dragon:Hp() or "LV"..dragon:Level().."  "  ..dragon:Exp().."/"..dragon:GetMaxExp(),
+        text = Localize.dragon[dragon:Type()],
+        size = 28,
+        color = 0x403c2f,
+    }):align(display.CENTER,size.width/2,size.height-45)
+        :addTo(body)
+    local blood_bg = display.newScale9Sprite("back_ground_398x97.png",size.width/2,size.height-100,cc.size(556,58),cc.rect(10,10,378,77))
+        :addTo(body)
+    UIKit:ttfLabel({
+        text = "LV"..dragon:Level().."/"..dragon:GetMaxLevel(),
         size = 22,
         color = 0x28251d,
-    }):align(display.RIGHT_CENTER,blood_bg:getContentSize().width-40,blood_bg:getContentSize().height/2)
+    }):align(display.LEFT_CENTER,20,blood_bg:getContentSize().height/2)
+        :addTo(blood_bg)
+    local exp_icon = display.newSprite("dragonskill_xp_51x63.png")
+        :align(display.CENTER,blood_bg:getContentSize().width-120,blood_bg:getContentSize().height/2)
+        :addTo(blood_bg)
+        :scale(0.6)
+    local dragon_value = UIKit:ttfLabel({
+        text = dragon:Exp().."/"..dragon:GetMaxExp(),
+        size = 22,
+        color = 0x28251d,
+    }):align(display.LEFT_CENTER,exp_icon:getPositionX()+20,blood_bg:getContentSize().height/2)
         :addTo(blood_bg)
 
 
@@ -399,19 +406,90 @@ function WidgetUseItems:OpenOneDragonItemDialog( item ,dragon)
     -- 添加龙的信息监听
     local dragon_manager = City:GetDragonEyrie():GetDragonManager()
     dragon_manager:AddListenOnType(dialog,dragon_manager.LISTEN_TYPE.OnBasicChanged)
-    dragon_manager:AddListenOnType(dialog,dragon_manager.LISTEN_TYPE.OnHPChanged)
     dialog:addCloseCleanFunc(function ()
         dragon_manager:RemoveListenerOnType(dialog,dragon_manager.LISTEN_TYPE.OnBasicChanged)
+    end)
+
+    function dialog:OnBasicChanged()
+        if increase_type == "dragonExp" then
+            dragon_value:setString("LV"..dragon:Level().."  "  ..dragon:Exp().."/"..dragon:GetMaxExp())
+        end
+    end
+    return dialog
+end
+
+function WidgetUseItems:OpenOneDragonHPItemDialog( item ,dragon)
+    local same_items = ItemManager:GetSameTypeItems(item)
+    local dialog = UIKit:newWidgetUI("WidgetPopDialog",#same_items*130+200, _("增加龙的生命值"),window.top-230)
+    local body = dialog:GetBody()
+    local size = body:getContentSize()
+    UIKit:ttfLabel({
+        text = Localize.dragon[dragon:Type()],
+        size = 28,
+        color = 0x403c2f,
+    }):align(display.CENTER,size.width/2,size.height-45)
+        :addTo(body)
+
+
+    local bg,progressTimer = nil,nil
+    bg = display.newSprite("process_bar_540x40.png")
+        :addTo(body)
+        :align(display.CENTER, size.width/2,size.height-100)
+    progressTimer = UIKit:commonProgressTimer("progress_bar_540x40_2.png"):addTo(bg):align(display.LEFT_CENTER,0,20)
+    progressTimer:setPercentage(math.floor(dragon:Hp()/dragon:GetMaxHP()*100))
+    local iconbg = display.newSprite("drgon_process_icon_bg.png")
+        :addTo(bg)
+        :align(display.LEFT_BOTTOM, -13,-2)
+    display.newSprite("dragon_lv_icon.png")
+        :addTo(iconbg)
+        :pos(iconbg:getContentSize().width/2,iconbg:getContentSize().height/2)
+    local dragon_hp_label = UIKit:ttfLabel({
+        text = dragon:Hp().."/"..dragon:GetMaxHP(),
+        color = 0xfff3c7,
+        shadow = true,
+        size = 20
+    }):addTo(bg):align(display.LEFT_CENTER, 40, 20)
+
+
+    local list_bg = self:GetListBg(size.width/2,(#same_items * 130+24)/2+30, 568, #same_items * 130+24)
+        :addTo(body)
+
+    local which_bg = true
+
+    for i,v in ipairs(same_items) do
+        if not (v:Count()<1 and not v:IsSell()) then
+            self:CreateItemBox(
+                v,
+                function ()
+                    return true
+                end,
+                function ()
+                    local item_name = v:Name()
+                    NetManager:getUseItemPromise(item_name,{[item_name] = {
+                        dragonType = dragon:Type()
+                    }})
+                end,
+                function ()
+                    local item_name = v:Name()
+                    NetManager:getBuyAndUseItemPromise(item_name,{[item_name] = {
+                        dragonType = dragon:Type()
+                    }})
+                end,
+                which_bg
+            ):addTo(list_bg):align(display.CENTER,568/2,#same_items * 130+12 - 130/2 - (i-1)*130)
+            which_bg = not which_bg
+        end
+    end
+    -- 添加龙的信息监听
+    local dragon_manager = City:GetDragonEyrie():GetDragonManager()
+    dragon_manager:AddListenOnType(dialog,dragon_manager.LISTEN_TYPE.OnHPChanged)
+    dialog:addCloseCleanFunc(function ()
         dragon_manager:RemoveListenerOnType(dialog,dragon_manager.LISTEN_TYPE.OnHPChanged)
     end)
     function dialog:OnHPChanged()
         if increase_type == "dragonHp" then
-            dragon_value:setString(dragon:Hp())
-        end
-    end
-    function dialog:OnBasicChanged()
-        if increase_type == "dragonExp" then
-            dragon_value:setString("LV"..dragon:Level().."  "  ..dragon:Exp().."/"..dragon:GetMaxExp())
+            dragon_hp_label:setString(dragon:Hp().."/"..dragon:GetMaxHP())
+            progressTimer:setPercentage(math.floor(dragon:Hp()/dragon:GetMaxHP()*100))
         end
     end
     return dialog
@@ -684,13 +762,7 @@ function WidgetUseItems:OpenChestDialog( item )
                     if ItemManager:CanOpenChest(use_item)  then
                         return true
                     else
-                        FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                            :SetPopMessage(_("没有钥匙"))
-                            :CreateOKButton(
-                                {
-                                    listener = function()end
-                                })
-                            :AddToCurrentScene()
+                        UIKit:showMessageDialog(_("陛下"),_("没有钥匙"))
                     end
                 end,
                 function ()
@@ -1013,8 +1085,7 @@ function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc,buyAndUseFun
             local item_name = item:Name()
             btn_call_back = function ()
                 if item:Price() > User:GetGemResource():GetValue() then
-                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                        :SetPopMessage(_("金龙币不足"))
+                    UIKit:showMessageDialog(_("陛下"),_("金龙币不足"))
                         :CreateOKButton(
                             {
                                 listener = function ()
@@ -1023,7 +1094,6 @@ function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc,buyAndUseFun
                                 btn_name= _("前往商店")
                             }
                         )
-                        :AddToCurrentScene()
                 else
                     buyAndUseFunc()
                 end
@@ -1081,6 +1151,9 @@ function WidgetUseItems:GetListBg(x,y,width,height)
     return display.newScale9Sprite("background_568x556.png",x,y,cc.size(width,height),cc.rect(10,10,548,536))
 end
 return WidgetUseItems
+
+
+
 
 
 

@@ -8,7 +8,6 @@ local WidgetRequirementListview = import("..widget.WidgetRequirementListview")
 local HEIGHT = 694
 local window = import("..utils.window")
 local MaterialManager = import("..entity.MaterialManager")
-local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 
 function GameUIUpgradeTechnology:ctor(productionTechnology)
     self.productionTechnology = productionTechnology
@@ -72,7 +71,7 @@ function GameUIUpgradeTechnology:GetLevelUpBuffTimeStr()
         buildTime = self:GetProductionTechnology():GetNextLevelUpCost().buildTime
     end
     buildTime = self:GetProductionTechnology():GetLevelUpCost().buildTime
-    return   string.format("(-%s)",GameUtils:formatTimeStyle1(DataUtils:getTechnilogyUpgradeBuffTime(buildTime))) 
+    return   string.format("(-%s)",GameUtils:formatTimeStyle1(DataUtils:getTechnilogyUpgradeBuffTime(buildTime)))
 end
 
 function GameUIUpgradeTechnology:GetLevelUpTimeStr()
@@ -106,7 +105,7 @@ function GameUIUpgradeTechnology:RefreshUI()
     self.lv_label:setString(self:GetTechLevelStr())
     self.current_effect_val_label:setString(self:GetBuffEffectStr())
     if not tech:IsReachLimitLevel() then
-         self.upgrade_info_icon:show()
+        self.upgrade_info_icon:show()
         self.next_effect_val_label:setString(self:GetNextLevelBuffEffectStr())
         self.time_label:setString(self:GetLevelUpTimeStr())
         self.need_gems_label:setString(self:GetUpgradeNowGems())
@@ -194,12 +193,12 @@ function GameUIUpgradeTechnology:BuildUI()
     self.current_effect_val_label = current_effect_val_label
 
     self.upgrade_info_icon = display.newSprite("teach_upgrade_icon_15x17.png"):align(display.LEFT_BOTTOM, line_2:getPositionX() + 50,
-         line_2:getPositionY() + 10):addTo(bg_node)
+        line_2:getPositionY() + 10):addTo(bg_node)
     local next_effect_val_label = UIKit:ttfLabel({
         text = "", --self:GetProductionTechnology():GetNextLevelBuffEffectVal() * 100  .. "%",
         size = 22,
         color= 0x403c2f
-    }):align(display.LEFT_BOTTOM,self.upgrade_info_icon:getPositionX() + self.upgrade_info_icon:getContentSize().width + 12, 
+    }):align(display.LEFT_BOTTOM,self.upgrade_info_icon:getPositionX() + self.upgrade_info_icon:getContentSize().width + 12,
         current_effect_val_label:getPositionY()):addTo(bg_node)
     self.next_effect_val_label = next_effect_val_label
     local btn_now = UIKit:commonButtonWithBG(
@@ -264,16 +263,16 @@ function GameUIUpgradeTechnology:BuildUI()
             contents = requirements,
         }):addTo(bg_node):pos(30,40)
     end
-    
+
     self:RefreshUI()
     if self:CheckIsMeUpgrade() then
-         self.upgradeNowButton:hide()
-         self.upgrade_button:hide()
-         self.need_gems_icon:hide()
-         self.need_gems_label:hide()
-         self.time_icon:hide()
-         self.time_label:hide()
-         self.buff_time_label:hide()
+        self.upgradeNowButton:hide()
+        self.upgrade_button:hide()
+        self.need_gems_icon:hide()
+        self.need_gems_label:hide()
+        self.time_icon:hide()
+        self.time_label:hide()
+        self.buff_time_label:hide()
     end
 end
 
@@ -321,7 +320,7 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
             isVisible = cost.blueprints>0,
             isSatisfy = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["blueprints"]>=cost.blueprints,
             icon="blueprints_112x112.png",
-            description= GameUtils:formatNumber(City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["blueprints"]) .."/"..  GameUtils:formatNumber(cost.blueprints) 
+            description= GameUtils:formatNumber(City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["blueprints"]) .."/"..  GameUtils:formatNumber(cost.blueprints)
         })
     table.insert(requirements,
         {
@@ -329,7 +328,7 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
             isVisible = cost.tools>0,
             isSatisfy = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tools"]>=cost.tools,
             icon="tools_112x112.png",
-            description= GameUtils:formatNumber(City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tools"]) .."/".. GameUtils:formatNumber(cost.tools) 
+            description= GameUtils:formatNumber(City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tools"]) .."/".. GameUtils:formatNumber(cost.tools)
         })
     table.insert(requirements,
         {
@@ -337,7 +336,7 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
             isVisible = cost.tiles>0,
             isSatisfy = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tiles"]>=cost.tiles,
             icon="tiles_112x112.png",
-            description= GameUtils:formatNumber(City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tiles"]) .. "/" .. GameUtils:formatNumber(cost.tiles)  
+            description= GameUtils:formatNumber(City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tiles"]) .. "/" .. GameUtils:formatNumber(cost.tiles)
         })
     table.insert(requirements,
         {
@@ -345,7 +344,7 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
             isVisible = cost.pulley>0,
             isSatisfy = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["pulley"]>=cost.pulley,
             icon="pulley_112x112.png",
-            description = GameUtils:formatNumber(City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["pulley"]) .. "/" .. GameUtils:formatNumber(cost.pulley) 
+            description = GameUtils:formatNumber(City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["pulley"]) .. "/" .. GameUtils:formatNumber(cost.pulley)
         })
 
     return requirements
@@ -369,13 +368,9 @@ function GameUIUpgradeTechnology:OnUpgradButtonClicked()
             self:LeftButtonClicked()
         end)
     else
-        local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示")):SetPopMessage(msg)
-            :CreateOKButton({
-                listener =  function ()
-                    self:ForceUpgrade(gems_cost)
-                end})
-            :CreateNeeds({value = gems_cost})
-            :AddToCurrentScene(true)
+        UIKit:showMessageDialog(_("提示"),msg, function ()
+            self:ForceUpgrade(gems_cost)
+        end):CreateNeeds({value = gems_cost})
     end
 end
 
@@ -517,4 +512,5 @@ function GameUIUpgradeTechnology:CheckMeIsReachLimitLevel()
 end
 
 return GameUIUpgradeTechnology
+
 

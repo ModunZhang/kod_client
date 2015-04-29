@@ -5,7 +5,6 @@
 local WidgetPushButton = import(".WidgetPushButton")
 local Localize_item = import("..utils.Localize_item")
 local SmallDialogUI = import("..ui.SmallDialogUI")
-local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local Enum = import("..utils.Enum")
 
 local WidgetAccelerateGroup = class("WidgetAccelerateGroup",function ()
@@ -103,8 +102,7 @@ function WidgetAccelerateGroup:ctor(eventType,eventId)
                     }})
                 else
                     if speedUp_item:Price() > User:GetGemResource():GetValue() then
-                        FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                            :SetPopMessage(_("金龙币不足"))
+                        UIKit:showMessageDialog(_("陛下"),_("金龙币不足"))
                             :CreateOKButton(
                                 {
                                     listener = function ()
@@ -113,7 +111,6 @@ function WidgetAccelerateGroup:ctor(eventType,eventId)
                                     btn_name= _("前往商店")
                                 }
                             )
-                            :AddToCurrentScene()
                     else
                         NetManager:getBuyAndUseItemPromise(speedUp_item_name,{[speedUp_item_name] = {
                             eventType = eventType,
@@ -137,6 +134,7 @@ function WidgetAccelerateGroup:ResetAccButtons()
     end
 end
 return WidgetAccelerateGroup
+
 
 
 
