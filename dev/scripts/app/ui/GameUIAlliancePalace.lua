@@ -263,6 +263,7 @@ function GameUIAlliancePalace:GetHonourNode(honour,isDeduct)
     }):addTo(honour_bg):align(display.CENTER,honour_bg:getContentSize().width/2,honour_bg:getContentSize().height/2)
     function node:RefreshHonour(honour)
         honour_label:setString((isDeduct and "-" or "")..GameUtils:formatNumber(honour))
+        honour_label:setColor(isDeduct and UIKit:hex2c4b(0x7e0000) or UIKit:hex2c4b(0x403c2f))
     end
     return node
 end
