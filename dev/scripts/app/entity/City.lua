@@ -102,13 +102,14 @@ function City:GetRecommendTask()
     local building_map = {}
     self:IteratorCanUpgradeBuildings(function(building)
         if building:CanUpgrade() and building:IsUnlocked() then
-            building_map[building:GetType()] = true
+            building_map[building:GetType()] = building
         end
     end)
     local tasks = self:GetUser():GetTaskManager():GetAvailableTasksByCategory(GrowUpTaskManager.TASK_CATEGORY.BUILD)
     local re_task
     for i,v in pairs(tasks.tasks) do
-        if not re_task or (building_map[v:BuildingType()] and v.index < re_task.index) then
+        local building = building_map[v:BuildingType()]
+        if not re_task or (building and not building:IsUpgrading() and v.index < re_task.index) then
             re_task = v
         end
     end
