@@ -737,7 +737,7 @@ function GameUIAllianceBattle:OpenRequestFightList()
 end
 function GameUIAllianceBattle:GetFightRequestsInfo()
     local alliance = self.alliance
-    local fight_requests = alliance:GetFightRequest()
+    local fight_requests = alliance:FightRequests()
     local info = {}
 
     for _,id in pairs(fight_requests) do
