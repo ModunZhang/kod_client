@@ -229,6 +229,8 @@ function WidgetMarchEvents:Reset()
     self.node:stopAllActions()
     self.arrow:flipY(true)
     self:Lock(false)
+    local has_events = self:GetAllianceBelvedere():HasMyEvents()
+    self:setVisible(has_events)
 end
 
 function WidgetMarchEvents:Load()

@@ -483,34 +483,31 @@ function City:GetMaxHouseCanBeBuilt(house_type)
     end
     return max
 end
-local function get_unlock_buildings(buildings)
+function City:GetBuildingsIsUnlocked()
     local r = {}
-    for i, v in ipairs(buildings) do
+    for _,v in pairs(self:GetAllBuildings()) do
         if v:IsUnlocked() or v:IsUnlocking() then
             table.insert(r, v)
         end
     end
+    if self:GetTower():IsUnlocked() or self:GetTower():IsUnlocking() then
+        table.insert(r, self:GetTower())
+    end
+    if self:GetGate():IsUnlocked() or self:GetGate():IsUnlocking() then
+        table.insert(r, self:GetGate())
+    end
+    table.sort(r, function(a, b)
+        return a:GetLevel() < b:GetLevel()
+    end)
     return r
 end
-function City:GetBuildingsIsUnlocked()
-    return get_unlock_buildings(self:GetNeedUnlockBuildings())
-end
 function City:GetUnlockedFunctionBuildings()
-    return get_unlock_buildings(self:GetAllBuildings())
-end
-function City:GetNeedUnlockBuildings()
     local r = {}
-    for i, v in pairs(self:GetAllBuildings()) do
-        table.insert(r, v)
+    for _,v in ipairs(self.buildings) do
+        if v:IsUnlocked() or v:IsUnlocking() then
+            table.insert(r, v)
+        end
     end
-    -- for i, v in pairs(self:GetCanUpgradingTowers()) do
-    --     table.insert(r, v)
-    -- end
-    table.insert(r, self:GetTower())
-    table.insert(r, self:GetGate())
-    table.sort(r, function(a, b)
-        return a:GetType() == b:GetType() and a:IsAheadOfBuilding(b) or a:IsImportantThanBuilding(b)
-    end)
     return r
 end
 function City:GetAllBuildings()
@@ -522,7 +519,7 @@ function City:GetHousesWhichIsBuilded()
         table.insert(r, v)
     end
     table.sort(r, function(a, b)
-        local compare = a:GetLevel() - b:GetLevel()
+        local compare = b:GetLevel() - a:GetLevel()
         return compare == 0 and a:IsAheadOfBuilding(b) or (compare > 0 and true or false)
     end)
     return r
@@ -1649,6 +1646,8 @@ function City:FindProductionTechEventById(_id)
 end
 
 return City
+
+
 
 
 
