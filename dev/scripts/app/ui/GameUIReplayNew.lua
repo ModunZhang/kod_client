@@ -870,14 +870,14 @@ local report1 = {
 }
 
 
--------------------
-local Report = import("..entity.Report")
-User = {
-    Id = function() return 1 end
-}
+-- -------------------
+-- local Report = import("..entity.Report")
+-- User = {
+--     Id = function() return 1 end
+-- }
 function GameUIReplayNew:ctor(report, callback)
     -- report = Report:DecodeFromJsonData(report1)
-    report = report_
+    -- report = report_
     assert(report.GetFightAttackName)
     assert(report.GetFightDefenceName)
     assert(report.IsDragonFight)
