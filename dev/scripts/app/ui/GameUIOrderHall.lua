@@ -1,7 +1,5 @@
 local window = import("..utils.window")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
-local WidgetUIBackGround2 = import("..widget.WidgetUIBackGround2")
-local WidgetStockGoods = import("..widget.WidgetStockGoods")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetDropList = import("..widget.WidgetDropList")
 local SpriteConfig = import("..sprites.SpriteConfig")
@@ -12,8 +10,6 @@ local Alliance = import("..entity.Alliance")
 local Localize = import("..utils.Localize")
 local AllianceVillage = GameDatas.AllianceVillage
 
--- 联盟成员采集熟练度列表一次加载条数
-local LOADING_NUM = 3
 local collect_type  = {_("木材"),
     _("石料"),
     _("铁矿"),
@@ -167,7 +163,10 @@ function GameUIOrderHall:CreateVillageItem(village_type,village_level)
                     if alliance:Honour()<need_honour then
                         UIKit:showMessageDialog(_("提示"),_("荣耀点不足"))
                     else
-                        NetManager:getUpgradeAllianceVillagePromise(village_type)
+                        NetManager:getUpgradeAllianceVillagePromise(village_type):done(function ( response )
+                            GameGlobalUI:showTips(_("升级成功"),_("新的村落将会在下次系统刷新时出现"))
+                            return response
+                        end)
                     end
                 end
             end):align(display.CENTER, 480, 40):addTo(content)
@@ -205,15 +204,17 @@ end
 function GameUIOrderHall:InitProficiencyPart()
     local layer = self.proficiency_layer
     local list,list_node = UIKit:commonListView({
-        viewRect = cc.rect(0, 0,608, 500),
+        async = true, --异步加载
+        viewRect = cc.rect(0, 0,568, 500),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
     })
+    list:setRedundancyViewVal(100)
+    list:setDelegate(handler(self, self.DelegateProficiency))
     list_node:addTo(layer):align(display.BOTTOM_CENTER, window.cx, window.bottom_top+20)
     self.proficiency_listview = list
     local my_ranking_bg = display.newScale9Sprite("back_ground_516x60.png", window.cx, window.top_bottom - 210,cc.size(548,52),cc.rect(15,10,486,40))
         :addTo(layer)
     self.my_ranking_label = UIKit:ttfLabel({
-        text = _("我的木材熟练度排名:")..33,
         size = 22,
         color = 0x403c2f,
     }):align(display.CENTER, my_ranking_bg:getContentSize().width/2 , my_ranking_bg:getContentSize().height/2)
@@ -243,14 +244,10 @@ function GameUIOrderHall:InitProficiencyPart()
         dimensions = cc.size(500,0)
     }):align(display.CENTER, desc_bg:getContentSize().width/2 , desc_bg:getContentSize().height/2)
         :addTo(desc_bg)
-
-
-
 end
 function GameUIOrderHall:ChangeProficiencyOption(option)
-    self.proficiency_listview:removeAllItems()
+    self.option = option
     local sortByProficiencyMember = {}
-    self.current_loading_num = 1
     self.alliance:IteratorAllMembers(function ( id,member )
         table.insert(sortByProficiencyMember, member)
     end)
@@ -258,13 +255,7 @@ function GameUIOrderHall:ChangeProficiencyOption(option)
         return a:GetCollectLevelByType(option)>b:GetCollectLevelByType(option)
     end)
     self.sortByProficiencyMember = sortByProficiencyMember
-    self:LoadMember(option)
-    print("current_loading_num",self.current_loading_num,"sortByProficiencyMember",#sortByProficiencyMember)
-    if self.current_loading_num<=#sortByProficiencyMember then
-        self:CreateLoadingMoreItem()
-    end
     self.proficiency_listview:reload()
-    self.option = option
 
     -- 更新我的对应排名
     for i,v in ipairs(sortByProficiencyMember) do
@@ -273,38 +264,39 @@ function GameUIOrderHall:ChangeProficiencyOption(option)
         end
     end
 end
-function GameUIOrderHall:LoadMember(option)
-    local sortByProficiencyMember = self.sortByProficiencyMember
-    local current_index = self.current_loading_num
-    local load_to_index = current_index+LOADING_NUM-1<#sortByProficiencyMember and current_index+LOADING_NUM-1 or #sortByProficiencyMember
-    for i = current_index,load_to_index do
-        self:CreateProficiencyItem(sortByProficiencyMember[i],i,option)
-    end
-    self.current_loading_num = load_to_index + 1
-    if (self.current_loading_num-1) == #sortByProficiencyMember then
-        local listview =self.proficiency_listview
-        if self.loading_more_item then
-            listview:removeItem(self.loading_more_item)
+function GameUIOrderHall:DelegateProficiency(listView, tag, idx )
+    if cc.ui.UIListView.COUNT_TAG == tag then
+        local count = 0
+        if self.sortByProficiencyMember then
+            count = #self.sortByProficiencyMember
         end
-        local _,pre_y = listview.container:getPosition()
-        local item_height = 100
-        listview.container:setPositionY(pre_y+item_height)
+        return count
+    elseif cc.ui.UIListView.CELL_TAG == tag then
+        local item
+        local content
+        item = listView:dequeueItem()
+        if not item then
+            item = listView:newItem()
+            content = self:CreateProficiencyContent()
+            item:addContent(content)
+        else
+            content = item:getContent()
+        end
+        content:SetData(idx)
+        local size = content:getContentSize()
+        item:setItemSize(size.width, size.height)
+        return item
+    else
     end
 end
-function GameUIOrderHall:CreateProficiencyItem(member,index,option)
-    if not member then
-        return
-    end
-    local item = self.proficiency_listview:newItem()
+function GameUIOrderHall:CreateProficiencyContent()
     local item_width,item_height = 568 , 100
-    item:setItemSize(item_width, item_height)
     local content = WidgetUIBackGround.new({
         width = item_width,
         height = item_height,
     },WidgetUIBackGround.STYLE_TYPE.STYLE_2)
 
-    UIKit:ttfLabel({
-        text = index..".",
+    local index_label = UIKit:ttfLabel({
         size = 22,
         color = 0x403c2f,
     }):align(display.LEFT_CENTER, 10 , item_height/2)
@@ -313,78 +305,65 @@ function GameUIOrderHall:CreateProficiencyItem(member,index,option)
     local title_bg = display.newScale9Sprite("back_ground_166x84.png",114,item_height/2,cc.size(162,78),cc.rect(15,10,136,64))
         :addTo(content)
     -- 职位对应icon
-    display.newSprite(UILib.alliance_title_icon[member:Title()])
+    local title_icon = display.newSprite("back_ground_166x84.png")
         :align(display.CENTER, title_bg:getContentSize().width/2, title_bg:getContentSize().height-20)
         :addTo(title_bg)
     -- 名字
-    UIKit:ttfLabel({
-        text = member:Name(),
+    local name_label = UIKit:ttfLabel({
         size = 20,
         color = 0x403c2f,
     }):align(display.CENTER, title_bg:getContentSize().width/2 , 20)
         :addTo(title_bg)
-
     -- 等级经验
     local level_bg = display.newScale9Sprite("back_ground_166x84.png",290,item_height/2,cc.size(162,78),cc.rect(15,10,136,64))
         :addTo(content)
     -- 等级
-    UIKit:ttfLabel({
-        text = _("等级")..member:GetCollectLevelByType(option),
+    local level_label = UIKit:ttfLabel({
         size = 20,
         color = 0x403c2f,
     }):align(display.CENTER, level_bg:getContentSize().width/2 , level_bg:getContentSize().height-20)
         :addTo(level_bg)
     -- 经验
-    local exp , expTo = member:GetCollectExpsByType(option)
-    UIKit:ttfLabel({
-        text = exp.."/"..expTo,
+    local exp_label = UIKit:ttfLabel({
         size = 20,
         color = 0x403c2f,
     }):align(display.CENTER, level_bg:getContentSize().width/2 , 20)
         :addTo(level_bg)
-
     -- 采集速度
     local speed_bg = display.newScale9Sprite("back_ground_166x84.png",466,item_height/2,cc.size(162,78),cc.rect(15,10,136,64))
         :addTo(content)
-    -- 等级
     UIKit:ttfLabel({
         text = _("采集速度"),
         size = 20,
         color = 0x403c2f,
     }):align(display.CENTER, speed_bg:getContentSize().width/2 , speed_bg:getContentSize().height-20)
         :addTo(speed_bg)
-        print("option===",option)
-    UIKit:ttfLabel({
-        text = "+"..(member:GetCollectEffectByType(option)*100).."%",
+
+    local speed_label = UIKit:ttfLabel({
         size = 20,
         color = 0x403c2f,
     }):align(display.CENTER, speed_bg:getContentSize().width/2 , 20)
         :addTo(speed_bg)
 
-    item:addContent(content)
-    self.proficiency_listview:insertItemAndRefresh(item,index)
+    local parent = self
+    function content:SetData( idx ,member)
+        local member = member or parent.sortByProficiencyMember[idx]
+        self.member = member
+        index_label:setString(idx..".")
+        title_icon:setTexture(UILib.alliance_title_icon[member:Title()])
+        name_label:setString(member:Name())
+        local option = parent.option
+        level_label:setString(_("等级")..member:GetCollectLevelByType(option))
+        local exp , expTo = member:GetCollectExpsByType(option)
+        exp_label:setString(exp.."/"..expTo)
+        speed_label:setString("+"..(member:GetCollectEffectByType(option)*100).."%")
+    end
+    function content:GetContentData()
+        return self.member
+    end
+    return content
 end
-function GameUIOrderHall:CreateLoadingMoreItem()
-    local listview = self.proficiency_listview
-    local item = listview:newItem()
-    local item_width, item_height = 568 , 210
-    item:setItemSize(item_width, item_height)
-    -- 加载更多按钮
-    local loading_more_button = WidgetPushButton.new():setButtonLabel(UIKit:ttfLabel({
-        text = _("载入更多..."),
-        size = 24,
-        color = 0xfff3c7}))
-        :align(display.CENTER, item_width/2, item_height/2)
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-                self:LoadMember(self.option)
-            end
-        end)
-    item:addContent(loading_more_button)
-    listview:addItem(item)
-    listview:reload()
-    self.loading_more_item = item
-end
+
 function GameUIOrderHall:OnVillageLevelsChanged(alliance)
     dump(alliance:GetVillageLevels())
     for k,v in pairs(alliance:GetVillageLevels()) do
@@ -403,6 +382,7 @@ function GameUIOrderHall:OnBuildingInfoChange(building)
 
 end
 return GameUIOrderHall
+
 
 
 
