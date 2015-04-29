@@ -362,17 +362,17 @@ function WidgetUseItems:OpenOneDragonItemExpDialog( item ,dragon)
         color = 0x28251d,
     }):align(display.LEFT_CENTER,20,blood_bg:getContentSize().height/2)
         :addTo(blood_bg)
-    local exp_icon = display.newSprite("dragonskill_xp_51x63.png")
-        :align(display.CENTER,blood_bg:getContentSize().width-120,blood_bg:getContentSize().height/2)
-        :addTo(blood_bg)
-        :scale(0.6)
     local dragon_value = UIKit:ttfLabel({
         text = dragon:Exp().."/"..dragon:GetMaxExp(),
         size = 22,
         color = 0x28251d,
-    }):align(display.LEFT_CENTER,exp_icon:getPositionX()+20,blood_bg:getContentSize().height/2)
+    }):align(display.RIGHT_CENTER,blood_bg:getContentSize().width-20,blood_bg:getContentSize().height/2)
         :addTo(blood_bg)
 
+    local exp_icon = display.newSprite("dragonskill_xp_51x63.png")
+        :align(display.CENTER,dragon_value:getPositionX() - dragon_value:getContentSize().width - 20,blood_bg:getContentSize().height/2)
+        :addTo(blood_bg)
+        :scale(0.6)
 
     local list_bg = self:GetListBg(size.width/2,(#same_items * 130+24)/2+30, 568, #same_items * 130+24)
         :addTo(body)
@@ -412,7 +412,8 @@ function WidgetUseItems:OpenOneDragonItemExpDialog( item ,dragon)
 
     function dialog:OnBasicChanged()
         if increase_type == "dragonExp" then
-            dragon_value:setString("LV"..dragon:Level().."  "  ..dragon:Exp().."/"..dragon:GetMaxExp())
+            dragon_value:setString(dragon:Exp().."/"..dragon:GetMaxExp())
+            exp_icon:setPositionX(dragon_value:getPositionX() - dragon_value:getContentSize().width - 20)
         end
     end
     return dialog

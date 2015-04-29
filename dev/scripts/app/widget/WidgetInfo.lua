@@ -24,7 +24,7 @@ function WidgetInfo:ctor(params)
         color = 0x615b44
     }):align(display.CENTER,width/2,height/2):addTo(self.info_bg)
     if info then
-        self:CreateInfoItem(info)
+        self:SetInfo(info)
     else
         self.empty_label:show()
     end

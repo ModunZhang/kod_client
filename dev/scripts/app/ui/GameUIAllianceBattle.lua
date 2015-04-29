@@ -467,7 +467,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
 
         local info_bg = WidgetUIBackGround.new({width = 540,height = 434},WidgetUIBackGround.STYLE_TYPE.STYLE_6)
             :align(display.TOP_CENTER,window.cx, info_bg_y):addTo(layer)
-       
+
         self.info_listview = UIListView.new{
             viewRect = cc.rect(9, 10, 522, 414),
             direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
@@ -1118,7 +1118,7 @@ function GameUIAllianceBattle:CreateAllianceItem(alliance)
         color = 0x403c2f,
     }):align(display.LEFT_CENTER,200,30)
         :addTo(content)
-    if alliance._id ~= Alliance_Manager:GetMyAlliance():Id() then
+    if alliance._id ~= self.alliance:Id() then
         -- 进入按钮
         local enter_btn = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
             :setButtonLabel(UIKit:ttfLabel({
@@ -1221,22 +1221,24 @@ function GameUIAllianceBattle:OpenOtherAllianceDetails(alliance)
     addAttr(_("语言"),basic.language,10,20)
     addAttr(_("战斗力"),basic.power,350,60)
     addAttr(_("击杀"),basic.kill,350,20)
-    -- 进入按钮
-    local enter_btn = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
-        :setButtonLabel(UIKit:ttfLabel({
-            text = _("进入"),
-            size = 24,
-            color = 0xffedae,
-            shadow= true
-        }))
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-                app:EnterViewModelAllianceScene(alliance._id)
-            end
-        end):align(display.RIGHT_CENTER,w-35,h-100):addTo(body)
+
+    if alliance._id ~= self.alliance:Id() then
+        -- 进入按钮
+        local enter_btn = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
+            :setButtonLabel(UIKit:ttfLabel({
+                text = _("进入"),
+                size = 24,
+                color = 0xffedae,
+                shadow= true
+            }))
+            :onButtonClicked(function(event)
+                if event.name == "CLICKED_EVENT" then
+                    app:EnterViewModelAllianceScene(alliance._id)
+                end
+            end):align(display.RIGHT_CENTER,w-35,h-100):addTo(body)
+    end
     WidgetInfo.new({
         info={
-            -- {_("名城占领时间"),"2d 23h 4m"},
             {_("击杀部队人口"),string.formatnumberthousands(countInfo.kill)},
             {_("阵亡部队人口"),string.formatnumberthousands(countInfo.beKilled)},
             {_("击溃城市"),string.formatnumberthousands(countInfo.routCount)},
@@ -1296,6 +1298,7 @@ function GameUIAllianceBattle:OnAllianceFightReportsChanged(changed_map)
 end
 
 return GameUIAllianceBattle
+
 
 
 

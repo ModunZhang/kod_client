@@ -441,8 +441,8 @@ function GameUIGacha:InitOrdinary()
         }))
             :setButtonLabelOffset(0,0)
 
-        local btn_images = {normal = "green_btn_up_250x65.png",
-            pressed = "green_btn_down_250x65.png"
+        local btn_images = {normal = "green_btn_up_252x77.png",
+            pressed = "green_btn_down_252x77.png"
         }
         button:setButtonImage(cc.ui.UIPushButton.NORMAL, btn_images["normal"], true)
         button:setButtonImage(cc.ui.UIPushButton.PRESSED, btn_images["pressed"], true)
