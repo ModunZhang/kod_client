@@ -47,7 +47,7 @@ function AllianceBuildingSprite:RefreshSprite()
     end
     local map_layer = self:GetMapLayer()
     local x,y = map_layer:GetLogicMap():ConvertToMapPosition(self:GetEntity():GetLogicPosition())
-    self.info = display.newNode():addTo(map_layer:GetInfoNode()):pos(x, y - 50):scale(0.8)
+    self.info = display.newNode():addTo(map_layer:GetInfoNode()):pos(x, y - 50):scale(0.8):zorder(x * y)
 
     
     local banners = self.is_my_alliance and UILib.my_city_banner or UILib.enemy_city_banner

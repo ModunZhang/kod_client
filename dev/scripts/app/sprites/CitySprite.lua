@@ -33,8 +33,9 @@ function CitySprite:RefreshSprite()
     end
 
     local map_layer = self:GetMapLayer()
-    local x,y = map_layer:GetLogicMap():ConvertToMapPosition(self:GetEntity():GetLogicPosition())
-    self.info = display.newNode():addTo(map_layer:GetInfoNode()):pos(x, y - 50):scale(0.8)
+    local lx,ly = self:GetEntity():GetLogicPosition()
+    local x,y = map_layer:GetLogicMap():ConvertToMapPosition(lx,ly)
+    self.info = display.newNode():addTo(map_layer:GetInfoNode()):pos(x, y - 50):scale(0.8):zorder(x * y)
 
     self.banner = display.newSprite("city_banner.png"):addTo(self.info):align(display.CENTER_TOP)
     self.level = UIKit:ttfLabel({
