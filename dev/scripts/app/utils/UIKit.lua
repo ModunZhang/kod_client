@@ -483,8 +483,8 @@ function UIKit:commonListView_1(params)
     local viewRect = params.viewRect
     viewRect.x = 0
     viewRect.y = 0
-    local list_node = display.newScale9Sprite("background_568x556.png",x,y,cc.size(viewRect.width+20,viewRect.height+24),cc.rect(10,10,548,536))
-    local list = UIListView.new(params):addTo(list_node):pos(10,12)
+    local list_node = display.newScale9Sprite("background_568x556.png",x,y,cc.size(viewRect.width,viewRect.height+24),cc.rect(10,10,548,536))
+    local list = UIListView.new(params):addTo(list_node):pos(0,12)
     return list,list_node
 end
 function UIKit:createLineItem(params)
