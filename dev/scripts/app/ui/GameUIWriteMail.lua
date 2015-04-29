@@ -2,8 +2,6 @@ local Enum = import("..utils.Enum")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
-local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
-
 
 local GameUIWriteMail = class("GameUIWriteMail",WidgetPopDialog)
 GameUIWriteMail.SEND_TYPE = Enum("PERSONAL_MAIL","ALLIANCE_MAIL")
@@ -99,21 +97,15 @@ function GameUIWriteMail:ctor(send_type,contacts)
 end
 function GameUIWriteMail:SendMail(addressee,title,content)
     if not title or string.trim(title)=="" then
-        FullScreenPopDialogUI.new():SetTitle(_("提示"))
-            :SetPopMessage(_("请填写邮件主题"))
-            :AddToCurrentScene()
+        UIKit:showMessageDialog(_("陛下"),_("请填写邮件主题"))
         return
     elseif not content or string.trim(content)=="" then
-        FullScreenPopDialogUI.new():SetTitle(_("提示"))
-            :SetPopMessage(_("请填写邮件内容"))
-            :AddToCurrentScene()
+        UIKit:showMessageDialog(_("陛下"),_("请填写邮件内容"))
         return
     end
     if self.send_type == PERSONAL_MAIL then
         if not addressee or string.trim(addressee)=="" then
-            FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                :SetPopMessage(_("请填写正确的收件人ID"))
-                :AddToCurrentScene()
+            UIKit:showMessageDialog(_("陛下"),_("请填写正确的收件人ID"))
             return
         end
         NetManager:getSendPersonalMailPromise(addressee, title, content,self.contacts):done(function(result)
@@ -154,6 +146,7 @@ return GameUIWriteMail
 
 
    
+
 
 
 

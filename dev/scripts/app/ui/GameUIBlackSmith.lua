@@ -307,8 +307,7 @@ function GameUIBlackSmith:CreateEquipmentByType(equip_type)
     end
 
     equip_clicked = function(event)
-        WidgetMakeEquip.new(equip_type, self.black_smith, self.black_smith_city):AddToCurrentScene()
-        -- :align(display.CENTER, display.cx, display.cy)
+        UIKit:newWidgetUI("WidgetMakeEquip", equip_type, self.black_smith, self.black_smith_city):AddToCurrentScene()
     end
     info_clicked = function(event)
         print("info_clicked", equip_type)

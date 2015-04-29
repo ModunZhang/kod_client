@@ -5,7 +5,6 @@ local WidgetUIBackGround2= import("..widget.WidgetUIBackGround2")
 local WidgetBackGroudWhite = import("..widget.WidgetBackGroudWhite")
 local Alliance = import("..entity.Alliance")
 local Localize = import("..utils.Localize")
-local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local intInit = GameDatas.PlayerInitData.intInit
 
@@ -338,10 +337,6 @@ function GameUIHelp:OnHelpEventChanged(changed_help_event)
         end
     end
     self.help_all_button:setVisible(self:IsAbleToHelpAll())
-end
-function GameUIHelp:AddToCurrentScene(anima)
-    display.getRunningScene():addChild(self,3000)
-    return self
 end
 function GameUIHelp:OnCountInfoChanged()
     self:SetLoyalty()

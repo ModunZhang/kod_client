@@ -50,7 +50,7 @@ function WidgetSliderWithInput:ctor(params)
                         end
                     end
                 }
-                WidgetInput.new(p):AddToCurrentScene()
+                UIKit:newWidgetUI("WidgetInput",p):AddToCurrentScene()
             end
         end):align(display.CENTER, slider:getCascadeBoundingBox().size.width,30):addTo(self)
 

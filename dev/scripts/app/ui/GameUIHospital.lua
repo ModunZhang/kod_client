@@ -5,7 +5,6 @@ local WidgetSoldierBox = import("..widget.WidgetSoldierBox")
 local WidgetTimerProgressStyleTwo = import("..widget.WidgetTimerProgressStyleTwo")
 local WidgetTreatSoldier = import("..widget.WidgetTreatSoldier")
 local SoldierManager = import("..entity.SoldierManager")
-local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local GameUITreatSoldierSpeedUp = import(".GameUITreatSoldierSpeedUp")
 local HospitalUpgradeBuilding = import("..entity.HospitalUpgradeBuilding")
 
@@ -227,11 +226,9 @@ function GameUIHospital:TreatListener()
     end
     local isAbleToTreat =self.building:IsAbleToTreat(soldiers)
     if #soldiers<1 then
-        local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
-            :SetPopMessage(_("没有伤兵需要治愈")):AddToCurrentScene()
+        UIKit:showMessageDialog(_("提示"),_("没有伤兵需要治愈"))
     elseif City:GetUser():GetGemResource():GetValue()< self.building:GetTreatGems(soldiers) then
-        local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
-            :SetPopMessage(_("没有足够的金龙币补充资源"))
+        UIKit:showMessageDialog(_("提示"),_("没有足够的金龙币补充资源"))
             :CreateOKButton(
                 {
                     listener = function ()
@@ -239,31 +236,27 @@ function GameUIHospital:TreatListener()
                         self:LeftButtonClicked()
                     end,
                     btn_name= _("前往商店")
-                }
-            ):AddToCurrentScene()
+                })
     elseif isAbleToTreat==HospitalUpgradeBuilding.CAN_NOT_TREAT.TREATING_AND_LACK_RESOURCE then
-        local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
-            :SetPopMessage(_("正在治愈，资源不足"))
+        UIKit:showMessageDialog(_("提示"),_("正在治愈，资源不足"))
             :CreateOKButton(
                 {
                     listener = treat_fun
                 }
             )
-            :CreateNeeds({value = self.building:GetTreatGems(soldiers)}):AddToCurrentScene()
+            :CreateNeeds({value = self.building:GetTreatGems(soldiers)})
     elseif isAbleToTreat==HospitalUpgradeBuilding.CAN_NOT_TREAT.LACK_RESOURCE then
-        local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
-            :SetPopMessage(_("资源不足，是否花费金龙币补足"))
+        UIKit:showMessageDialog(_("提示"),_("资源不足，是否花费金龙币补足"))
             :CreateOKButton({
                 listener = treat_fun
             })
-            :CreateNeeds({value = self.building:GetTreatGems(soldiers)}):AddToCurrentScene()
+            :CreateNeeds({value = self.building:GetTreatGems(soldiers)})
     elseif isAbleToTreat==HospitalUpgradeBuilding.CAN_NOT_TREAT.TREATING then
-        local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
-            :SetPopMessage(_("正在治愈，是否花费魔法石立即完成"))
+        UIKit:showMessageDialog(_("提示"),_("正在治愈，是否花费魔法石立即完成"))
             :CreateOKButton({
                 listener = treat_fun
             })
-            :CreateNeeds({value = self.building:GetTreatGems(soldiers)}):AddToCurrentScene()
+            :CreateNeeds({value = self.building:GetTreatGems(soldiers)})
     else
         treat_fun()
     end
@@ -280,19 +273,16 @@ function GameUIHospital:TreatNowListener()
         NetManager:getInstantTreatSoldiersPromise(soldiers)
     end
     if #soldiers<1 then
-        local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
-            :SetPopMessage(_("没有伤兵需要治愈")):AddToCurrentScene()
+        UIKit:showMessageDialog(_("提示"),_("没有伤兵需要治愈"))
     elseif self.treat_all_now_need_gems>City:GetUser():GetGemResource():GetValue() then
-        local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
-            :SetPopMessage(_("金龙币补足")) :CreateOKButton(
-                {
-                    listener = function ()
-                        UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
-                        self:LeftButtonClicked()
-                    end,
-                    btn_name= _("前往商店")
-                }
-            ):AddToCurrentScene()
+        UIKit:showMessageDialog(_("提示"),_("金龙币不足")):CreateOKButton(
+            {
+                listener = function ()
+                    UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                    self:LeftButtonClicked()
+                end,
+                btn_name= _("前往商店")
+            })
     else
         treat_fun()
     end
@@ -509,6 +499,8 @@ function GameUIHospital:OnSoliderStarCountChanged(soldier_manager,star_changed_m
     end
 end
 return GameUIHospital
+
+
 
 
 

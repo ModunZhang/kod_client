@@ -111,7 +111,7 @@ function WidgetPromoteSoliderList:CreateSoliderBox(soldier_type,index,star)
                     color = 0xfff3c7
                 }))
                 :onButtonClicked(function(event)
-                    WidgetSoldierPromoteDetails.new(soldier_type,star,self.building):AddToCurrentScene()
+                    UIKit:newWidgetUI("WidgetSoldierPromoteDetails",soldier_type,star,self.building):AddToCurrentScene()
                 end)
         end
     end
@@ -167,7 +167,7 @@ function WidgetPromoteSoliderList:CreateSoliderBox(soldier_type,index,star)
                         color = 0xfff3c7
                     }))
                     :onButtonClicked(function(event)
-                        WidgetSoldierPromoteDetails.new(soldier_type,star,parent.building):AddToCurrentScene()
+                        UIKit:newWidgetUI("WidgetSoldierPromoteDetails",soldier_type,star,parent.building):AddToCurrentScene()
                     end)
             end
         elseif self.button and status ~= "toUnlock"then
@@ -221,6 +221,8 @@ function WidgetPromoteSoliderList:OnSoldierStarEventsChanged(soldier_manager,cha
 end
 
 return WidgetPromoteSoliderList
+
+
 
 
 

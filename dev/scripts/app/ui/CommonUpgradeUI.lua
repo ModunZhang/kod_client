@@ -1,6 +1,5 @@
 local SmallDialogUI = import(".SmallDialogUI")
 local UIListView = import(".UIListView")
-local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local Localize = import("..utils.Localize")
 local window = import("..utils.window")
 local UpgradeBuilding = import("..entity.UpgradeBuilding")
@@ -601,7 +600,6 @@ function CommonUpgradeUI:InitAccelerationPart()
     -- 可免费加速提示
     -- 背景框
     WidgetUIBackGround.new({width = 546,height=90},WidgetUIBackGround.STYLE_TYPE.STYLE_3):align(display.CENTER,  display.cx, display.top - 540):addTo(self.acc_layer)
-    -- display.newSprite("upgrade_introduce_bg.png", display.cx, display.top - 540):addTo(self.acc_layer)
     self.acc_tip_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         font = UIKit:getFontFilePath(),
@@ -682,8 +680,7 @@ function CommonUpgradeUI:ResetAccButtons()
 end
 
 function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
-    local dialog = FullScreenPopDialogUI.new()
-    self:getParent():addChild(dialog,100,101)
+    local dialog = UIKit:showMessageDialog()
     if can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.RESOURCE_NOT_ENOUGH then
         local required_gems =self.building:getUpgradeRequiredGems()
         local owen_gem = City:GetUser():GetGemResource():GetValue()

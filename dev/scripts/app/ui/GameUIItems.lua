@@ -7,7 +7,6 @@ local WidgetRoundTabButtons = import("..widget.WidgetRoundTabButtons")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
-local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local window = import("..utils.window")
 local Localize = import("..utils.Localize")
 local Localize_item = import("..utils.Localize_item")
@@ -215,8 +214,7 @@ function GameUIItems:CreateShopContentByIndex( idx )
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
                     if items:Price() > User:GetGemResource():GetValue() then
-                        FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                            :SetPopMessage(_("金龙币不足"))
+                        UIKit:showMessageDialog(_("提示"),_("金龙币不足"))
                             :CreateOKButton(
                                 {
                                     listener = function ()
@@ -225,7 +223,6 @@ function GameUIItems:CreateShopContentByIndex( idx )
                                     btn_name= _("前往商店")
                                 }
                             )
-                            :AddToCurrentScene()
                     else
                         NetManager:getBuyItemPromise(items:Name(),1)
                     end
@@ -528,6 +525,7 @@ function GameUIItems:OnItemsChanged( changed_map )
     end
 end
 return GameUIItems
+
 
 
 

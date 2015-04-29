@@ -6,7 +6,6 @@ local WidgetPopDialog = import(".WidgetPopDialog")
 local window = import("..utils.window")
 local Localize = import("..utils.Localize")
 local UILib = import("..ui.UILib")
-local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local MilitaryTechnology = import("..entity.MilitaryTechnology")
 local WidgetRequirementListview = import(".WidgetRequirementListview")
 local MaterialManager = import("..entity.MaterialManager")
@@ -91,15 +90,13 @@ function WidgetUpgradeMilitaryTech:UpgradeButtons()
                 end
 
                 if self.tech:IsAbleToUpgradeNow() then
-                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                        :SetPopMessage(_("金龙币不足"))
+                    UIKit:showMessageDialog(_("陛下"),_("金龙币不足"))
                         :CreateOKButton({
                             listener =  function ()
                                 UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
                                 self:LeftButtonClicked()
                             end
                         })
-                        :AddToCurrentScene()
                 else
                     upgrade_listener()
                 end
@@ -230,13 +227,11 @@ function WidgetUpgradeMilitaryTech:PopNotSatisfyDialog(upgrade_listener,results)
     for k,v in pairs(results) do
         message = message .. v.."\n"
     end
-    FullScreenPopDialogUI.new():SetTitle(_("提示"))
-        :SetPopMessage(message)
+    UIKit:showMessageDialog(_("陛下"),message)
         :CreateOKButton({
             listener =  upgrade_listener
         })
         :CreateNeeds({value = self.tech:GetUpgradeGems()})
-        :AddToCurrentScene()
 end
 function WidgetUpgradeMilitaryTech:OnMilitaryTechsDataChanged(city,changed_map)
     for k,v in pairs(changed_map) do
@@ -256,6 +251,7 @@ function WidgetUpgradeMilitaryTech:OnMilitaryTechsDataChanged(city,changed_map)
     end
 end
 return WidgetUpgradeMilitaryTech
+
 
 
 

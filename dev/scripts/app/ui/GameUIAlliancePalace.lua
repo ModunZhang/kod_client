@@ -11,7 +11,6 @@ local UIListView = import(".UIListView")
 local WidgetInfoWithTitle = import("..widget.WidgetInfoWithTitle")
 local WidgetInfoNotListView = import("..widget.WidgetInfoNotListView")
 local Localize = import("..utils.Localize")
-local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local WidgetInfo = import("..widget.WidgetInfo")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local WidgetSliderWithInput = import("..widget.WidgetSliderWithInput")
@@ -224,9 +223,7 @@ function GameUIAlliancePalace:OpenAwardDialog(member)
                     NetManager:getGiveLoyaltyToAllianceMemberPromise(member:Id(),slider:GetValue())
                     dialog:LeftButtonClicked()
                 else
-                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                        :SetPopMessage(_("只有盟主拥有权限"))
-                        :AddToCurrentScene()
+                    UIKit:showMessageDialog(_("提示"),_("只有盟主拥有权限"))
                 end
             end
         end):align(display.BOTTOM_RIGHT, body_size.width-20,30):addTo(body)
@@ -384,16 +381,12 @@ function GameUIAlliancePalace:InitInfoPart()
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 if need_honour>self.alliance:Honour() then
-                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                        :SetPopMessage(_("联盟荣耀值不足"))
-                        :AddToCurrentScene()
+                    UIKit:showMessageDialog(_("提示"),_("联盟荣耀值不足"))
                 else
                     if self.alliance:GetSelf():CanEditAlliance() then
                         NetManager:getEditAllianceTerrianPromise(self:MapIndexToTerrian(self.select_terrian_index))
                     else
-                        FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                            :SetPopMessage(_("权限不足"))
-                            :AddToCurrentScene()
+                        UIKit:showMessageDialog(_("提示"),_("权限不足"))
                     end
                 end
 

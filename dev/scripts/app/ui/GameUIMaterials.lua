@@ -219,7 +219,7 @@ function GameUIMaterials:GetDragonEquipmentsByType(dragon_type)
         [2] = { title = _("绿色套装"), equipments = {}},
         [3] = { title = _("蓝色套装"), equipments = {}},
         [4] = { title = _("紫色套装"), equipments = {}},
-        -- [5] = { title = _("橙色套装"), equipments = {}},
+    -- [5] = { title = _("橙色套装"), equipments = {}},
     }
     for name, v in pairs(EQUIPMENTS) do
         if v.usedFor == dragon_type and dragon_equipments[v.maxStar] then
@@ -323,8 +323,7 @@ function GameUIMaterials:CreateEquipmentByType(equip_type)
     end
 
     equip_clicked = function(event)
-        WidgetMakeEquip.new(equip_type, self.blackSmith, self.blackSmith:BelongCity()):AddToCurrentScene()
-        -- :align(display.CENTER, display.cx, display.cy)
+        UIKit:newWidgetUI("WidgetMakeEquip", equip_type, self.blackSmith, self.blackSmith:BelongCity()):AddToCurrentScene()
     end
     info_clicked = function(event)
         print("info_clicked", equip_type)
@@ -334,6 +333,7 @@ function GameUIMaterials:CreateEquipmentByType(equip_type)
 end
 
 return GameUIMaterials
+
 
 
 

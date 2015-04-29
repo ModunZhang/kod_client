@@ -230,10 +230,7 @@ function GameUIAllianceTitle:CreateEditTitleUI()
             :onButtonClicked(function(event)
                 local newTitle = string.trim(editbox:getText())
                 if string.len(newTitle) == 0 then
-                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                        :SetPopMessage(_("请输入联盟职位名称"))
-                        :CreateOKButton(function()end)
-                        :AddToCurrentScene()
+                    UIKit:showMessageDialog(_("陛下"),_("请输入联盟职位名称"))
                     return
                 end
                 NetManager:getEditAllianceTitleNamePromise(self.title_,newTitle):done(function()

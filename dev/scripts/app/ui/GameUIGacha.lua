@@ -6,7 +6,6 @@ local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
 local window = import("..utils.window")
 local Localize_item = import("..utils.Localize_item")
 local WidgetPushButton = import("..widget.WidgetPushButton")
-local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local WidgetGachaItemBox = import("..widget.WidgetGachaItemBox")
 local intInit = GameDatas.PlayerInitData.intInit
 
@@ -411,13 +410,7 @@ function GameUIGacha:InitOrdinary()
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 if User:GetOddFreeNormalGachaCount()<1 and self.city:GetResourceManager():GetCasinoTokenResource():GetValue()<intInit.casinoTokenNeededPerNormalGacha.value then
-                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                        :SetPopMessage(_("赌币不足"))
-                        :CreateOKButton(
-                            {
-                                listener = function()end
-                            })
-                        :AddToCurrentScene()
+                    UIKit:showMessageDialog(_("提示"),_("赌币不足"))
                 else
                     NetManager:getNormalGachaPromise():done(function(response)
                         if response.msg.playerData then
@@ -505,13 +498,7 @@ function GameUIGacha:InitDeluxe()
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 if self.city:GetResourceManager():GetCasinoTokenResource():GetValue()<intInit.casinoTokenNeededPerAdvancedGacha.value then
-                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                        :SetPopMessage(_("赌币不足"))
-                        :CreateOKButton(
-                            {
-                                listener = function()end
-                            })
-                        :AddToCurrentScene()
+                    UIKit:showMessageDialog(_("提示"),_("赌币不足"))
                 else
                     NetManager:getAdvancedGachaPromise():done(function(response)
                         if response.msg.playerData then

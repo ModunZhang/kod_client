@@ -119,7 +119,7 @@ function GameUIDragonEquipment:TabButtonEvent_info()
           :onButtonClicked(function()
               local blackSmith = City:GetFirstBuildingByType("blackSmith")
               if blackSmith:IsUnlocked() then
-                 WidgetMakeEquip.new(self:GetEquipment():GetCanLoadConfig().name, blackSmith, City):AddToCurrentScene()
+                 UIKit:newWidgetUI("WidgetMakeEquip", self:GetEquipment():GetCanLoadConfig().name, blackSmith, City):AddToCurrentScene()
               end
           end)
         self.makeButton = makeButton

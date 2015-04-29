@@ -1,7 +1,6 @@
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local UIListView = import(".UIListView")
-local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local Alliance = import("..entity.Alliance")
 local Observer = import("..entity.Observer")
 local window = import("..utils.window")
@@ -307,9 +306,7 @@ end
 function GameUIAllianceContribute:IsAbleToContribute()
     local r_type = self.group:GetSelectedType()
     if not r_type then
-        FullScreenPopDialogUI.new():SetTitle(_("提示"))
-            :SetPopMessage(_("请选择一种资源"))
-            :AddToCurrentScene()
+        UIKit:showMessageDialog(_("提示"),_("请选择一种资源"))
         return false
     end
     local count  = self:GetDonateValueByType(r_type).count
@@ -322,12 +319,7 @@ function GameUIAllianceContribute:IsAbleToContribute()
         r_count = City.resource_manager:GetResourceByType(CON_TYPE[r_type]):GetResourceValueByCurrentTime(app.timer:GetServerTime())
     end
     if r_count<count then
-        FullScreenPopDialogUI.new():SetTitle(_("提示"))
-            :SetPopMessage(_("选择捐赠的物资不足"))
-            :CreateOKButton({
-                listener =  function()end
-            })
-            :AddToCurrentScene()
+        UIKit:showMessageDialog(_("提示"),_("选择捐赠的物资不足"))
         return false
     end
     return true

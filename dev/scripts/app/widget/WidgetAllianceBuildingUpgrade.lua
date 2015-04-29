@@ -1,4 +1,3 @@
-local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local Enum = import("..utils.Enum")
 local Localize = import("..utils.Localize")
 local AllianceMap = import("..entity.AllianceMap")
@@ -73,10 +72,7 @@ function WidgetAllianceBuildingUpgrade:onEnter()
             listener = function ()
                 local err = self:IsAbleToUpgrade()
                 if err then
-                    FullScreenPopDialogUI.new()
-                        :SetTitle(_("提示"))
-                        :SetPopMessage(ERR_MESSAGE[err])
-                        :AddToCurrentScene()
+                    UIKit:showMessageDialog(_("陛下"),ERR_MESSAGE[err])
                 else
                     NetManager:getUpgradeAllianceBuildingPromise(self.building.name)
                 end

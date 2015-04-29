@@ -1,6 +1,5 @@
 local cocos_promise = import("..utils.cocos_promise")
 local promise = import("..utils.promise")
-local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local GameUIWatchTowerTroopDetail = import("..ui.GameUIWatchTowerTroopDetail")
 local WidgetMoveHouse = import("..widget.WidgetMoveHouse")
 local TutorialLayer = import("..ui.TutorialLayer")
@@ -416,10 +415,7 @@ function MyCityScene:OpenUI(building)
             local _,_,index = self.city:GetUser():GetPVEDatabase():GetCharPosition()
             app:EnterPVEScene(index)
         else
-            FullScreenPopDialogUI.new()
-                :AddToCurrentScene()
-                :SetTitle("陛下")
-                :SetPopMessage("必须有一条空闲的龙，才能进入pve")
+            UIKit:showMessageDialog(_("陛下"),_("必须有一条空闲的龙，才能进入pve"))
         end
     elseif type_ == "FairGround" then
         UIKit:newGameUI("GameUIGacha", self.city):AddToCurrentScene(true):DisableAutoClose()

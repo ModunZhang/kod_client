@@ -1,6 +1,5 @@
 local GameUtils = GameUtils
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
-local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local WidgetSliderWithInput = import("..widget.WidgetSliderWithInput")
 local window = import("..utils.window")
 local UILib = import("..ui.UILib")
@@ -127,15 +126,11 @@ function WidgetBuyGoods:ctor(item)
         :setButtonLabel(UIKit:commonButtonLable({text = _("购买")}))
         :onButtonClicked(function(event)
             if item:IsAdvancedItem() and not Alliance_Manager:GetMyAlliance():GetSelf():CanBuyAdvancedItemsFromAllianceShop() then
-                FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                    :SetPopMessage(_("购买需要精英或以上权限"))
-                    :AddToCurrentScene()
+                UIKit:showMessageDialog(_("陛下"),_("购买需要精英或以上权限"))
                 return
             end
             if slider:GetValue()<1 then
-                FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                    :SetPopMessage(_("请输入正确的购买数量"))
-                    :AddToCurrentScene()
+                UIKit:showMessageDialog(_("陛下"),_("请输入正确的购买数量"))
                 return
             end
             NetManager:getBuyAllianceItemPromise(item:Name(),slider:GetValue()):done(function ( response )
@@ -163,6 +158,7 @@ function WidgetBuyGoods:OnCountChanged(count)
     self.loyalty_label:setColor(UIKit:hex2c4b(member:Loyalty()<need_loyalty and 0x7e0000 or 0x403c2f))
 end
 return WidgetBuyGoods
+
 
 
 

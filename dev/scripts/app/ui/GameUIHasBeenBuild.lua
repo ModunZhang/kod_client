@@ -163,7 +163,7 @@ function Item:RebindEventListener()
         :align(display.CENTER, 32, 32)
         :onButtonClicked(function(event)
             local building = self.building
-            WidgetBuildingIntroduce.new(self.building):AddToCurrentScene(true)
+            UIKit:newWidgetUI("WidgetBuildingIntroduce", self.building):AddToCurrentScene(true)
         end)
 
     if self.free_speedUp then
@@ -471,7 +471,7 @@ function GameUIHasBeenBuild:LoadBuildingQueue()
         :align(display.CENTER, back_ground:getContentSize().width - 25, back_ground:getContentSize().height/2)
         :onButtonClicked(function ( event )
             if event.name == "CLICKED_EVENT" then
-                WidgetBuyBuildingQueue.new():AddToCurrentScene()
+                UIKit:newWidgetUI("WidgetBuyBuildingQueue"):AddToCurrentScene()
             end
         end)
 

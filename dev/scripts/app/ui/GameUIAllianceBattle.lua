@@ -4,7 +4,6 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local WidgetPages = import("..widget.WidgetPages")
 local WidgetUIBackGround2 = import("..widget.WidgetUIBackGround2")
-local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local WidgetInfo = import("..widget.WidgetInfo")
 local Alliance = import("..entity.Alliance")
 local AllianceMoonGate = import("..entity.AllianceMoonGate")
@@ -201,9 +200,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
                 :onButtonClicked(function(event)
                     if event.name == "CLICKED_EVENT" then
                         if self.alliance:IsRequested() then
-                            FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                                :SetPopMessage(_("已经发送过开战请求"))
-                                :AddToCurrentScene()
+                            UIKit:showMessageDialog(_("提示"),_("已经发送过开战请求"))
                             return
                         end
                         NetManager:getRequestAllianceToFightPromose()
@@ -283,9 +280,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
                 :onButtonClicked(function(event)
                     if event.name == "CLICKED_EVENT" then
                         if self.alliance:Status()=="fight" or self.alliance:Status()=="prepare" then
-                            FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                                :SetPopMessage(_("联盟正在战争准备期或战争期"))
-                                :AddToCurrentScene()
+                            UIKit:showMessageDialog(_("提示"),_("联盟正在战争准备期或战争期"))
                             return
                         end
                         NetManager:getFindAllianceToFightPromose()
@@ -571,7 +566,7 @@ function GameUIAllianceBattle:OpenAllianceDetails(isOur)
     local alliance_terrain = isOur and alliance:Terrain() or enemy_alliance:Terrain()
 
 
-    local body = WidgetPopDialog.new(726,_("联盟详情")):AddToCurrentScene():GetBody()
+    local body = UIKit:newWidgetUI("WidgetPopDialog",726,_("联盟详情")):AddToCurrentScene():GetBody()
     local rb_size = body:getContentSize()
 
 
@@ -675,7 +670,7 @@ end
 
 
 function GameUIAllianceBattle:OpenWarDetails()
-    local body = WidgetPopDialog.new(608,_("联盟对战")):AddToCurrentScene():GetBody()
+    local body = UIKit:newWidgetUI("WidgetPopDialog",608,_("联盟对战")):AddToCurrentScene():GetBody()
     local rb_size = body:getContentSize()
 
     local war_introduce_table = {
@@ -731,7 +726,7 @@ function GameUIAllianceBattle:OpenWarDetails()
 
 end
 function GameUIAllianceBattle:OpenRequestFightList()
-    local body = WidgetPopDialog.new(500,_("请求开战玩家")):AddToCurrentScene():GetBody()
+    local body = UIKit:newWidgetUI("WidgetPopDialog",500,_("请求开战玩家")):AddToCurrentScene():GetBody()
     local rb_size = body:getContentSize()
 
     WidgetInfo.new({
@@ -956,9 +951,7 @@ function GameUIAllianceBattle:AddHistoryItem(report,index)
         revenge_button:onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 if self.alliance:Status()~="peace" then
-                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                        :SetPopMessage(_("已经处于联盟战期间"))
-                        :AddToCurrentScene()
+                    UIKit:showMessageDialog(_("提示"),_("已经处于联盟战期间"))
                     return
                 end
                 NetManager:getRevengeAlliancePromise(report.id):done(function ()

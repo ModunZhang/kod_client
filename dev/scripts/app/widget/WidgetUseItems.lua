@@ -5,7 +5,6 @@
 
 local WidgetPushButton = import(".WidgetPushButton")
 local WidgetUIBackGround = import(".WidgetUIBackGround")
-local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local Enum = import("..utils.Enum")
 local window = import("..utils.window")
 local Localize = import("..utils.Localize")
@@ -152,13 +151,7 @@ function WidgetUseItems:OpenChangePlayerOrCityName(item)
     self:CreateItemBox(item,function ()
         local newName = string.trim(editbox:getText())
         if string.len(newName) == 0 then
-            FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                :SetPopMessage(_("请输入新的名称"))
-                :CreateOKButton(
-                    {
-                        listener = function()end
-                    })
-                :AddToCurrentScene()
+            UIKit:showMessageDialog(_("陛下"),_("请输入新的名称"))
         else
             return true
         end
@@ -438,9 +431,9 @@ function WidgetUseItems:OpenOneDragonHPItemDialog( item ,dragon)
         :addTo(body)
 
 
-        local bg,progressTimer = nil,nil
+    local bg,progressTimer = nil,nil
     bg = display.newSprite("process_bar_540x40.png")
-    :addTo(body)
+        :addTo(body)
         :align(display.CENTER, size.width/2,size.height-100)
     progressTimer = UIKit:commonProgressTimer("progress_bar_540x40_2.png"):addTo(bg):align(display.LEFT_CENTER,0,20)
     progressTimer:setPercentage(math.floor(dragon:Hp()/dragon:GetMaxHP()*100))
@@ -451,10 +444,10 @@ function WidgetUseItems:OpenOneDragonHPItemDialog( item ,dragon)
         :addTo(iconbg)
         :pos(iconbg:getContentSize().width/2,iconbg:getContentSize().height/2)
     local dragon_hp_label = UIKit:ttfLabel({
-         text = dragon:Hp().."/"..dragon:GetMaxHP(),
-         color = 0xfff3c7,
-         shadow = true,
-         size = 20
+        text = dragon:Hp().."/"..dragon:GetMaxHP(),
+        color = 0xfff3c7,
+        shadow = true,
+        size = 20
     }):addTo(bg):align(display.LEFT_CENTER, 40, 20)
 
 
@@ -769,13 +762,7 @@ function WidgetUseItems:OpenChestDialog( item )
                     if ItemManager:CanOpenChest(use_item)  then
                         return true
                     else
-                        FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                            :SetPopMessage(_("没有钥匙"))
-                            :CreateOKButton(
-                                {
-                                    listener = function()end
-                                })
-                            :AddToCurrentScene()
+                        UIKit:showMessageDialog(_("陛下"),_("没有钥匙"))
                     end
                 end,
                 function ()
@@ -1098,8 +1085,7 @@ function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc,buyAndUseFun
             local item_name = item:Name()
             btn_call_back = function ()
                 if item:Price() > User:GetGemResource():GetValue() then
-                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                        :SetPopMessage(_("金龙币不足"))
+                    UIKit:showMessageDialog(_("陛下"),_("金龙币不足"))
                         :CreateOKButton(
                             {
                                 listener = function ()
@@ -1108,7 +1094,6 @@ function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc,buyAndUseFun
                                 btn_name= _("前往商店")
                             }
                         )
-                        :AddToCurrentScene()
                 else
                     buyAndUseFunc()
                 end
@@ -1166,6 +1151,7 @@ function WidgetUseItems:GetListBg(x,y,width,height)
     return display.newScale9Sprite("background_568x556.png",x,y,cc.size(width,height),cc.rect(10,10,548,536))
 end
 return WidgetUseItems
+
 
 
 

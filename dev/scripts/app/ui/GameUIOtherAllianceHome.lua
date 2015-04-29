@@ -8,7 +8,6 @@ local window = import("..utils.window")
 local Alliance = import("..entity.Alliance")
 local Flag = import("..entity.Flag")
 local WidgetChangeMap = import("..widget.WidgetChangeMap")
-local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 
 
 function GameUIOtherAllianceHome:OnSceneMove(logic_x, logic_y, alliance_view)
