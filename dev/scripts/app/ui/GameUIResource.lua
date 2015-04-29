@@ -218,7 +218,7 @@ function GameUIResource:CreateInfomation()
         title = _("总计"),
         h = 226
     }):addTo(self.infomationLayer)
-        :align(display.TOP_CENTER, window.cx,secondLine:getPositionY()-200)
+        :align(display.TOP_CENTER, window.cx,secondLine:getPositionY()-240)
 
 
 
