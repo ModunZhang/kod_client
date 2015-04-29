@@ -517,8 +517,366 @@ local report_ = {
 }
 
 
+-- local report1 = {
+--     ["type"] = "attackCity",
+--     ["index"] = 2,
+--     ["createTime"] = "1430291447534",
+--     ["id"] = "4kOz7dFf",
+--     ["isSaved"] = false,
+--     ["isRead"] = true,
+--     ["attackCity"] = {
+--         ["attackPlayerData"] = {
+--             ["alliance"] = {
+--                 ["id"] = "NyeZGSFM",
+--                 ["flag"] = "10,12,9,14,8",
+--                 ["name"] = "The Brave Oceanus",
+--                 ["tag"] = "TBO",
+--             }
+--             ,
+--             ["name"] = "iPad",
+--             ["fightWithDefenceWall"] = json.null,
+--             ["id"] = "V1IRzeOG",
+--             ["rewards"] = {
+--                 [1] = {
+--                     ["type"] = "resources",
+--                     ["name"] = "blood",
+--                     ["count"] = 1545,
+--                 }
+--             ,
+--             }
+--             ,
+--             ["icon"] = 3,
+--             ["fightWithDefenceTroop"] = {
+--                 ["dragon"] = {
+--                     ["type"] = "blueDragon",
+--                     ["hpDecreased"] = 61,
+--                     ["level"] = 10,
+--                     ["hp"] = 88,
+--                     ["expAdd"] = 6486,
+--                 }
+--                 ,
+--                 ["soldiers"] = {
+--                     [1] = {
+--                         ["count"] = 750,
+--                         ["star"] = 2,
+--                         ["name"] = "meatWagon",
+--                         ["countDecreased"] = 212,
+--                     }
+--                 ,
+--                 }
+--             ,
+--             }
+--         ,
+--         }
+--         ,
+--         ["attackTarget"] = {
+--             ["cityName"] = "city_VkgljLxOz",
+--             ["name"] = "老干爹",
+--             ["terrain"] = "desert",
+--             ["alliance"] = {
+--                 ["id"] = "E12NVxdM",
+--                 ["flag"] = "10,6,7,19,12",
+--                 ["name"] = "Stables of Augeas",
+--                 ["tag"] = "SoA",
+--             }
+--             ,
+--             ["id"] = "41esLxuM",
+--             ["location"] = {
+--                 ["y"] = 21,
+--                 ["x"] = 44,
+--             }
+--         ,
+--         }
+--         ,
+--         ["defencePlayerData"] = {
+--             ["dragon"] = {
+--                 ["type"] = "redDragon",
+--                 ["hpDecreased"] = 26,
+--                 ["level"] = 20,
+--                 ["hp"] = 222,
+--                 ["expAdd"] = 3816,
+--             }
+--             ,
+--             ["alliance"] = {
+--                 ["id"] = "E12NVxdM",
+--                 ["flag"] = "10,6,7,19,12",
+--                 ["name"] = "Stables of Augeas",
+--                 ["tag"] = "SoA",
+--             }
+--             ,
+--             ["name"] = "老干爹",
+--             ["wall"] = json.null,
+--             ["id"] = "41esLxuM",
+--             ["rewards"] = {
+--                 [1] = {
+--                     ["type"] = "resources",
+--                     ["name"] = "blood",
+--                     ["count"] = 3605,
+--                 }
+--             ,
+--             }
+--             ,
+--             ["icon"] = 3,
+--             ["soldiers"] = {
+--                 [1] = {
+--                     ["count"] = 196,
+--                     ["star"] = 2,
+--                     ["name"] = "meatWagon",
+--                     ["countDecreased"] = 92,
+--                 }
+--                 ,
+--                 [2] = {
+--                     ["count"] = 200,
+--                     ["star"] = 2,
+--                     ["name"] = "deathKnight",
+--                     ["countDecreased"] = 140,
+--                 }
+--                 ,
+--                 [3] = {
+--                     ["count"] = 200,
+--                     ["star"] = 1,
+--                     ["name"] = "ballista",
+--                     ["countDecreased"] = 140,
+--                 }
+--                 ,
+--                 [4] = {
+--                     ["count"] = 200,
+--                     ["star"] = 1,
+--                     ["name"] = "catapult",
+--                     ["countDecreased"] = 140,
+--                 }
+--                 ,
+--                 [5] = {
+--                     ["count"] = 200,
+--                     ["star"] = 2,
+--                     ["name"] = "skeletonArcher",
+--                     ["countDecreased"] = 140,
+--                 }
+--                 ,
+--                 [6] = {
+--                     ["count"] = 200,
+--                     ["star"] = 2,
+--                     ["name"] = "skeletonWarrior",
+--                     ["countDecreased"] = 126,
+--                 }
+--                 ,
+--                 [7] = {
+--                     ["count"] = 200,
+--                     ["star"] = 1,
+--                     ["name"] = "horseArcher",
+--                     ["countDecreased"] = 0,
+--                 }
+--                 ,
+--                 [8] = {
+--                     ["count"] = 200,
+--                     ["star"] = 1,
+--                     ["name"] = "lancer",
+--                     ["countDecreased"] = 0,
+--                 }
+--                 ,
+--                 [9] = {
+--                     ["count"] = 200,
+--                     ["star"] = 1,
+--                     ["name"] = "crossbowman",
+--                     ["countDecreased"] = 0,
+--                 }
+--                 ,
+--                 [10] = {
+--                     ["count"] = 200,
+--                     ["star"] = 1,
+--                     ["name"] = "ranger",
+--                     ["countDecreased"] = 0,
+--                 }
+--                 ,
+--                 [11] = {
+--                     ["count"] = 200,
+--                     ["star"] = 1,
+--                     ["name"] = "sentinel",
+--                     ["countDecreased"] = 0,
+--                 }
+--                 ,
+--                 [12] = {
+--                     ["count"] = 200,
+--                     ["star"] = 1,
+--                     ["name"] = "swordsman",
+--                     ["countDecreased"] = 0,
+--                 }
+--             ,
+--             }
+--         ,
+--         }
+--         ,
+--         ["fightWithDefencePlayerReports"] = {
+--             ["defencePlayerSoldierRoundDatas"] = {
+--                 [1] = {
+--                     ["soldierName"] = "meatWagon",
+--                     ["moraleDecreased"] = 24,
+--                     ["soldierWoundedCount"] = 28,
+--                     ["morale"] = 100,
+--                     ["soldierStar"] = 2,
+--                     ["isWin"] = false,
+--                     ["soldierDamagedCount"] = 92,
+--                     ["soldierCount"] = 196,
+--                 }
+--                 ,
+--                 [2] = {
+--                     ["soldierName"] = "deathKnight",
+--                     ["moraleDecreased"] = 35,
+--                     ["soldierWoundedCount"] = 42,
+--                     ["morale"] = 100,
+--                     ["soldierStar"] = 2,
+--                     ["isWin"] = false,
+--                     ["soldierDamagedCount"] = 140,
+--                     ["soldierCount"] = 200,
+--                 }
+--                 ,
+--                 [3] = {
+--                     ["soldierName"] = "ballista",
+--                     ["moraleDecreased"] = 35,
+--                     ["soldierWoundedCount"] = 42,
+--                     ["morale"] = 100,
+--                     ["soldierStar"] = 1,
+--                     ["isWin"] = false,
+--                     ["soldierDamagedCount"] = 140,
+--                     ["soldierCount"] = 200,
+--                 }
+--                 ,
+--                 [4] = {
+--                     ["soldierName"] = "catapult",
+--                     ["moraleDecreased"] = 35,
+--                     ["soldierWoundedCount"] = 42,
+--                     ["morale"] = 100,
+--                     ["soldierStar"] = 1,
+--                     ["isWin"] = false,
+--                     ["soldierDamagedCount"] = 140,
+--                     ["soldierCount"] = 200,
+--                 }
+--                 ,
+--                 [5] = {
+--                     ["soldierName"] = "skeletonArcher",
+--                     ["moraleDecreased"] = 35,
+--                     ["soldierWoundedCount"] = 42,
+--                     ["morale"] = 100,
+--                     ["soldierStar"] = 2,
+--                     ["isWin"] = false,
+--                     ["soldierDamagedCount"] = 140,
+--                     ["soldierCount"] = 200,
+--                 }
+--                 ,
+--                 [6] = {
+--                     ["soldierName"] = "skeletonWarrior",
+--                     ["moraleDecreased"] = 32,
+--                     ["soldierWoundedCount"] = 38,
+--                     ["morale"] = 100,
+--                     ["soldierStar"] = 2,
+--                     ["isWin"] = false,
+--                     ["soldierDamagedCount"] = 126,
+--                     ["soldierCount"] = 200,
+--                 }
+--             ,
+--             }
+--             ,
+--             ["defencePlayerDragonFightData"] = {
+--                 ["hpMax"] = 1304,
+--                 ["type"] = "redDragon",
+--                 ["isWin"] = true,
+--                 ["hp"] = 222,
+--                 ["hpDecreased"] = 26,
+--             }
+--             ,
+--             ["attackPlayerSoldierRoundDatas"] = {
+--                 [1] = {
+--                     ["soldierName"] = "meatWagon",
+--                     ["moraleDecreased"] = 4,
+--                     ["soldierWoundedCount"] = 15,
+--                     ["morale"] = 100,
+--                     ["soldierStar"] = 2,
+--                     ["isWin"] = true,
+--                     ["soldierDamagedCount"] = 48,
+--                     ["soldierCount"] = 750,
+--                 }
+--                 ,
+--                 [2] = {
+--                     ["soldierName"] = "meatWagon",
+--                     ["moraleDecreased"] = 7,
+--                     ["soldierWoundedCount"] = 14,
+--                     ["morale"] = 96,
+--                     ["soldierStar"] = 2,
+--                     ["isWin"] = true,
+--                     ["soldierDamagedCount"] = 46,
+--                     ["soldierCount"] = 702,
+--                 }
+--                 ,
+--                 [3] = {
+--                     ["soldierName"] = "meatWagon",
+--                     ["moraleDecreased"] = 10,
+--                     ["soldierWoundedCount"] = 12,
+--                     ["morale"] = 89,
+--                     ["soldierStar"] = 2,
+--                     ["isWin"] = true,
+--                     ["soldierDamagedCount"] = 37,
+--                     ["soldierCount"] = 656,
+--                 }
+--                 ,
+--                 [4] = {
+--                     ["soldierName"] = "meatWagon",
+--                     ["moraleDecreased"] = 25,
+--                     ["soldierWoundedCount"] = 14,
+--                     ["morale"] = 79,
+--                     ["soldierStar"] = 2,
+--                     ["isWin"] = true,
+--                     ["soldierDamagedCount"] = 46,
+--                     ["soldierCount"] = 619,
+--                 }
+--                 ,
+--                 [5] = {
+--                     ["soldierName"] = "meatWagon",
+--                     ["moraleDecreased"] = 20,
+--                     ["soldierWoundedCount"] = 6,
+--                     ["morale"] = 54,
+--                     ["soldierStar"] = 2,
+--                     ["isWin"] = true,
+--                     ["soldierDamagedCount"] = 18,
+--                     ["soldierCount"] = 573,
+--                 }
+--                 ,
+--                 [6] = {
+--                     ["soldierName"] = "meatWagon",
+--                     ["moraleDecreased"] = 34,
+--                     ["soldierWoundedCount"] = 6,
+--                     ["morale"] = 34,
+--                     ["soldierStar"] = 2,
+--                     ["isWin"] = true,
+--                     ["soldierDamagedCount"] = 17,
+--                     ["soldierCount"] = 555,
+--                 }
+--             ,
+--             }
+--             ,
+--             ["attackPlayerWallRoundDatas"] = json.null,
+--             ["defencePlayerWallRoundDatas"] = json.null,
+--             ["attackPlayerDragonFightData"] = {
+--                 ["hpMax"] = 216,
+--                 ["type"] = "blueDragon",
+--                 ["isWin"] = false,
+--                 ["hp"] = 88,
+--                 ["hpDecreased"] = 61,
+--             }
+--         ,
+--         }
+--     ,
+--     }
+-- ,
+-- }
+
+
 -------------------
+-- local Report = import("..entity.Report")
+-- User = {
+--     Id = function() return 1 end
+-- }
 function GameUIReplayNew:ctor(report, callback)
+    -- report = Report:DecodeFromJsonData(report1)
     -- report = report_
     assert(report.GetFightAttackName)
     assert(report.GetFightDefenceName)
@@ -597,10 +955,10 @@ function GameUIReplayNew:OnMoveInStage()
 end
 function GameUIReplayNew:onExit()
     GameUIReplayNew.super.onExit(self)
-    app:GetAudioManager():PlayGameMusic()
     if type(self.callback) == "function" then
         self.callback()
     end
+    app:GetAudioManager():PlayGameMusic()
 end
 function GameUIReplayNew:GetOrderedAttackSoldiers()
     return self.report:GetOrderedAttackSoldiers()
@@ -1249,8 +1607,8 @@ function GameUIReplayNew:BuildUI()
     }:addTo(bottom):pos(10, 100):setBounceable(false)
 
     ui_map.list_view_layer = display.newLayer()
-    -- newColorLayer(cc.c4b(100,100,100,0))
-    :addTo(bottom):pos(10, 100)
+        -- newColorLayer(cc.c4b(100,100,100,0))
+        :addTo(bottom):pos(10, 100)
     ui_map.list_view_layer:setContentSize(cc.size(590,390))
     ui_map.list_view_layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
         ui_map.list_view_attack:onTouch_(event)
@@ -1294,6 +1652,7 @@ function GameUIReplayNew:BuildUI()
 end
 
 return GameUIReplayNew
+
 
 
 
