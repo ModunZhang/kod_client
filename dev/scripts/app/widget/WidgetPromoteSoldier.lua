@@ -194,7 +194,8 @@ function WidgetPromoteSoldier:UpgradeRequirement()
             resource_type = Localize.fight_reward.coin,
             isVisible = level_up_config.upgradeCoinNeed>0,
             isSatisfy = current_coin>level_up_config.upgradeCoinNeed,
-            icon=UILib.resource.coin,description=current_coin..'/'..level_up_config.upgradeCoinNeed
+            icon=UILib.resource.coin,
+            description=current_coin..'/'..level_up_config.upgradeCoinNeed
         },
         {
             resource_type = _("科技点数"),
