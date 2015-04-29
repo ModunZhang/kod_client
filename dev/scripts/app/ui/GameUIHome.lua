@@ -38,6 +38,7 @@ function GameUIHome:OnResourceChanged(resource_manager)
     self.gem_label:setString(string.formatnumberthousands(gem_number))
 end
 function GameUIHome:OnUpgradingBegin()
+    self:OnTaskChanged()
 end
 function GameUIHome:OnUpgrading()
 end
