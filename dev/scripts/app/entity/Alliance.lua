@@ -459,6 +459,7 @@ function Alliance:OnAllianceDataChanged(alliance_data,refresh_time,deltaData)
     self:OnAllianceFightRequestsChanged(alliance_data, deltaData)
 
     self:OnVillageLevelsChanged(alliance_data, deltaData)
+    self:OnVillagesChanged(alliance_data,deltaData)
     self.alliance_shrine:OnAllianceDataChanged(alliance_data,deltaData,refresh_time)
     self.alliance_map:OnAllianceDataChanged(alliance_data, deltaData)
     --TODO:
@@ -472,8 +473,6 @@ function Alliance:OnAllianceDataChanged(alliance_data,refresh_time,deltaData)
     self:OnStrikeMarchReturnEventsDataChanged(alliance_data,deltaData,refresh_time)
 
     self:OnVillageEventsDataChanged(alliance_data,deltaData,refresh_time)
-
-    self:DecodeAllianceVillages(alliance_data,deltaData)
 
     -- 联盟道具管理
     self.items_manager:OnItemsChanged(alliance_data,deltaData)
@@ -1179,7 +1178,7 @@ function Alliance:FindVillageEventByVillageId(village_id)
     return nil
 end
 --TODO:检测村落重新刷新ui更新是否有bug
-function Alliance:DecodeAllianceVillages(alliance_data,deltaData)
+function Alliance:OnVillagesChanged(alliance_data,deltaData)
     if not alliance_data.villages then return end
     local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.villages ~= nil
