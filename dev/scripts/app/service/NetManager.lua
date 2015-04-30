@@ -112,7 +112,7 @@ local function get_response_mail_msg(response)
                             is_changed_saved_mails = true
                             client_index = MailManager:GetSavedMailByServerIndex(k) - 1
                         else
-                            client_index = mail_index - 1 
+                            client_index = mail_index - 1
                         end
                         newKey = newKey..client_index..(i~=len and "." or "")
                     else
@@ -182,7 +182,7 @@ local function get_response_report_msg(response)
                 for i=1,len do
                     local k = tonumber(keys[i]) or keys[i]
                     if type(k) == "number" then
-                        local client_index 
+                        local client_index
                         local report_index = MailManager:GetReportByServerIndex(k)
                         if report_index then
                             client_index = report_index - 1
@@ -949,6 +949,11 @@ function NetManager:getHelpAllAllianceMemberSpeedUpPromise()
     return get_none_blocking_request_promise("logic.allianceHandler.helpAllAllianceMemberSpeedUp", {}
         , "协助所有玩家加速失败!"):done(get_response_msg)
 end
+-- 解锁玩家第二条行军队列
+function NetManager:getUnlockPlayerSecondMarchQueuePromise()
+    return get_blocking_request_promise("logic.playerHandler.unlockPlayerSecondMarchQueue", {}
+        , "解锁玩家第二条行军队列失败!"):done(get_response_msg)
+end
 -- 创建联盟
 function NetManager:getCreateAlliancePromise(name, tag, language, terrain, flag)
     return get_blocking_request_promise("logic.allianceHandler.createAlliance", {
@@ -1636,6 +1641,7 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
 
 
 
