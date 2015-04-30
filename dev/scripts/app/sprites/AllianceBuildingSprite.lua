@@ -81,14 +81,15 @@ function AllianceBuildingSprite:PlayAni()
     if self:GetEntity():GetAllianceBuildingInfo().name == "shrine" then
         local armature = ccs.Armature:create("shengdi")
             :addTo(self, 1, ANI_TAG):pos(self:GetSpriteOffset())
+        local bone = armature:getBone("Layer1")
+        bone:addDisplay(display.newNode(), 0)
+        bone:changeDisplayWithIndex(0, true)
         armature:setAnchorPoint(cc.p(0.5, 0.33))
         armature:getAnimation():playWithIndex(0, -1, -1)
-        self:GetSprite():hide()
     end
 end
 function AllianceBuildingSprite:StopAni()
     self:removeChildByTag(ANI_TAG)
-    self:GetSprite():show()
 end
 
 
