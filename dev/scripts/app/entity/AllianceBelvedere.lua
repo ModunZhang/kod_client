@@ -20,7 +20,7 @@ function AllianceBelvedere:GetMarchLimit()
 end
 
 function AllianceBelvedere:IsReachEventLimit()
-	return self:GetMarchLimit() >= #self:GetMyEvents()
+	return self:GetMarchLimit() <= #self:GetMyEvents()
 end
 
 function AllianceBelvedere:GetEnemyAlliance()

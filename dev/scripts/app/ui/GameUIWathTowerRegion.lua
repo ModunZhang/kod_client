@@ -187,7 +187,8 @@ function GameUIWathTowerRegion:GetMyEventItemWithIndex(index,isOpen,entity)
                         )
                 else
                     NetManager:getUnlockPlayerSecondMarchQueuePromise():done(function (response)
-                        self:RefreshListView("march")
+                        GameGlobalUI:showTips(_("提示"),_("永久行军队列+1"),name,event_name)
+                        self:LeftButtonClicked()
                         return response
                     end)
                 end

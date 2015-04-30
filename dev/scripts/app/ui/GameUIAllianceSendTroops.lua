@@ -89,6 +89,7 @@ function GameUIAllianceSendTroops:ctor(march_callback,params)
             manager:addArmatureFileInfo(v)
         end
     end
+    self.alliance = Alliance_Manager:GetMyAlliance()
     self.soldier_manager = City:GetSoldierManager()
     self.dragon_manager = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager()
     self.soldiers_table = {}
@@ -193,6 +194,20 @@ function GameUIAllianceSendTroops:OnMoveInStage()
                     return
                 elseif #soldiers == 0 then
                     UIKit:showMessageDialog(_("提示"),_("请选择要派遣的部队"))
+                    return
+                elseif self.alliance:GetAllianceBelvedere():IsReachEventLimit() then
+                    local dialog = UIKit:showMessageDialog(_("提示"),_("没有空闲的行军队列"))
+                    if self.alliance:GetAllianceBelvedere():GetMarchLimit() < 2 then
+                        dialog:CreateOKButton(
+                            {
+                                listener = function ()
+                                    UIKit:newGameUI('GameUIWathTowerRegion',City,'march'):AddToCurrentScene(true)
+                                    self:LeftButtonClicked()
+                                end,
+                                btn_name= _("前往")
+                            }
+                        )
+                    end
                     return
                 end
                 if self.dragon:IsHpLow() then
@@ -738,6 +753,7 @@ function GameUIAllianceSendTroops:onExit()
 end
 
 return GameUIAllianceSendTroops
+
 
 
 
