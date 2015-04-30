@@ -187,6 +187,7 @@ function GameUIWatchTower:GetMyEventItemWithIndex(index,isOpen,entity)
                         )
                 else
                     NetManager:getUnlockPlayerSecondMarchQueuePromise():done(function (response)
+                        GameGlobalUI:showTips(_("提示"),_("永久行军队列+1"),name,event_name)
                         self:LeftButtonClicked()
                         return response
                     end)
@@ -606,5 +607,6 @@ function GameUIWatchTower:OnRetreatButtonClicked(entity,cb)
 end
 
 return GameUIWatchTower
+
 
 
