@@ -113,7 +113,7 @@ function GameUIDragonEquipmentMake:GetMakeRequirement()
 	if self.blackSmith:IsUnlocked() then
 		desc = self.blackSmith:IsEquipmentEventEmpty() and "1/0" or "1/1"
 	else
-		desc = "0/0"
+		desc = _("铁匠铺还未解锁")
 	end
     table.insert(requirements,
     {
