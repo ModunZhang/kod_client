@@ -724,7 +724,7 @@ end
 function NetManager:getInstantRecruitSpecialSoldierPromise(soldierName, count)
     return get_recruitSpecialSoldier_promise(soldierName, count, true):done(function()
         app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
-        GameGlobalUI:showTips(_("治愈士兵完成"),Localize.soldier_name[soldierName].."X"..count)
+        GameGlobalUI:showTips(_("招募士兵完成"),Localize.soldier_name[soldierName].."X"..count)
     end)
 end
 -- 普通治疗士兵
@@ -744,7 +744,7 @@ function NetManager:getInstantTreatSoldiersPromise(soldiers)
             local m_name = Localize.soldier_name[v.name]
             get_list = get_list .. m_name .. "X"..v.count.." "
         end
-        GameGlobalUI:showTips(_("招募士兵完成"),get_list)
+        GameGlobalUI:showTips(_("治愈士兵完成"),get_list)
     end)
 end
 -- 孵化
