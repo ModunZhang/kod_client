@@ -101,16 +101,25 @@ end
 function City:GetRecommendTask()
     local building_map = {}
     self:IteratorCanUpgradeBuildings(function(building)
-        if building:CanUpgrade() and building:IsUnlocked() then
-            building_map[building:GetType()] = building
+        if building:IsUnlocked() then
+            local highest = building_map[building:GetType()]
+            building_map[building:GetType()] = not highest and 
+            building or 
+            (building:GetLevel() > highest:GetLevel() and 
+                building or 
+                highest)
         end
     end)
+    for k,v in pairs(building_map) do
+        if v:IsUpgrading() or not v:CanUpgrade() then
+            building_map[k] = nil
+        end
+    end
     local tasks = self:GetUser():GetTaskManager():GetAvailableTasksByCategory(GrowUpTaskManager.TASK_CATEGORY.BUILD)
     local re_task
     for i,v in pairs(tasks.tasks) do
-        local building = building_map[v:BuildingType()]
-        if not re_task or (building and not building:IsUpgrading() and v.index < re_task.index) then
-            re_task = v
+        if building_map[v:BuildingType()] then
+            re_task = not re_task and v or (v.index < re_task.index and v or re_task)
         end
     end
     return re_task
@@ -774,9 +783,6 @@ function City:IteratorCanUpgradeBuildings(func)
     self:IteratorFunctionBuildingsByFunc(function(key, building)
         func(building)
     end)
-    -- self:IteratorTowersByFunc(function(key, building)
-    --     func(building)
-    -- end)
     func(self:GetTower())
     func(self:GetGate())
 end
@@ -1647,6 +1653,9 @@ function City:FindProductionTechEventById(_id)
 end
 
 return City
+
+
+
 
 
 
