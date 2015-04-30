@@ -292,6 +292,9 @@ local SOLDIER_ANIMATION_FILES = {
     },
     wall = {
         "animations/chengqiang_1.ExportJson",
+    },
+    shrine = {
+        "animations/shengdi.ExportJson",
     }
 }
 local SOLDIER_IMAGES = {
