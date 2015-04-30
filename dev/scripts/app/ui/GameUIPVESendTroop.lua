@@ -117,7 +117,7 @@ function GameUIPVESendTroop:OnMoveInStage()
                 end
                 local dragonType = self.dragon:Type()
                 local soldiers = self:GetSelectSoldier()
-                if self.dragon:Status() ~= "free" then
+                if not self.dragon:IsFree() and not self.dragon:IsDefenced() then
                     UIKit:showMessageDialog(_("陛下"),_("龙未处于空闲状态"))
                     return
                 elseif self.dragon:Hp()<1 then
@@ -132,16 +132,32 @@ function GameUIPVESendTroop:OnMoveInStage()
                         :CreateOKButton(
                             {
                                 listener =  function ()
-                                    self.march_callback(dragonType,soldiers)
-                                    -- 确认派兵后关闭界面
-                                    self:LeftButtonClicked()
+                                    if self.dragon:IsDefenced() then
+                                        NetManager:getCancelDefenceDragonPromise():done(function()
+                                            self.march_callback(dragonType,soldiers)
+                                            -- 确认派兵后关闭界面
+                                            self:LeftButtonClicked()
+                                        end)
+                                    else
+                                        self.march_callback(dragonType,soldiers)
+                                        -- 确认派兵后关闭界面
+                                        self:LeftButtonClicked()
+                                    end
                                 end
                             }
                         )
                 else
-                    self.march_callback(dragonType,soldiers)
-                    -- 确认派兵后关闭界面
-                    self:LeftButtonClicked()
+                    if self.dragon:IsDefenced() then
+                        NetManager:getCancelDefenceDragonPromise():done(function()
+                            self.march_callback(dragonType,soldiers)
+                            -- 确认派兵后关闭界面
+                            self:LeftButtonClicked()
+                        end)
+                    else
+                        self.march_callback(dragonType,soldiers)
+                        -- 确认派兵后关闭界面
+                        self:LeftButtonClicked()
+                    end
 
                 end
             end
@@ -673,6 +689,8 @@ function GameUIPVESendTroop:onExit()
 end
 
 return GameUIPVESendTroop
+
+
 
 
 

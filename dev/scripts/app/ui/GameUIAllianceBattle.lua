@@ -1192,7 +1192,7 @@ function GameUIAllianceBattle:OpenOtherAllianceDetails(alliance)
     -- 盟主名字
     display.newSprite("alliance_item_leader_39x39.png"):addTo(body):pos(178,h-100)
     UIKit:ttfLabel({
-        text = alliance.archon,
+        text = alliance.archer,
         size = 22,
         color = 0x403c2f,
     }):align(display.LEFT_CENTER, 198,h-100)
