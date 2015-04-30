@@ -204,7 +204,7 @@ function GameUIAllianceSendTroops:OnMoveInStage()
                                     UIKit:newGameUI('GameUIWathTowerRegion',City,'march'):AddToCurrentScene(true)
                                     self:LeftButtonClicked()
                                 end,
-                                btn_name= _("前往")
+                                btn_name= _("前往解锁")
                             }
                         )
                     end

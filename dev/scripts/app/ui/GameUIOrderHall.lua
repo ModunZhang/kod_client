@@ -39,18 +39,16 @@ function GameUIOrderHall:OnMoveInStage()
     }, function(tag)
         if tag == 'village' then
             self.village_layer:setVisible(true)
-            if not self.village_listview then
-                self:InitVillagePart()
-            end
+            self:InitVillagePart()
         else
+            self.village_layer:Reset()
             self.village_layer:setVisible(false)
         end
         if tag == 'proficiency' then
             self.proficiency_layer:setVisible(true)
-            if not self.proficiency_listview then
-                self:InitProficiencyPart()
-            end
+            self:InitProficiencyPart()
         else
+            self.proficiency_layer:Reset()
             self.proficiency_layer:setVisible(false)
         end
     end):pos(window.cx, window.bottom + 34)
@@ -63,9 +61,21 @@ function GameUIOrderHall:CreateBetweenBgAndTitle()
     GameUIOrderHall.super.CreateBetweenBgAndTitle(self)
 
     -- village_layer
-    self.village_layer = display.newLayer():addTo(self:GetView())
+    local village_layer = display.newLayer():addTo(self:GetView())
+    self.village_layer = village_layer
+    function village_layer:Reset()
+        self.village_listview = nil
+        self.village_items = {}
+        self:removeAllChildren()
+    end
     -- proficiency_layer
-    self.proficiency_layer = display.newLayer():addTo(self:GetView())
+    local proficiency_layer = display.newLayer():addTo(self:GetView())
+    self.proficiency_layer = proficiency_layer
+    function proficiency_layer:Reset()
+        self.proficiency_listview = nil
+        self.proficiency_drop_list = nil
+        self:removeAllChildren()
+    end
 end
 
 function GameUIOrderHall:InitVillagePart()
