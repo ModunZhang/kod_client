@@ -9,7 +9,7 @@ keep[1] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 30
+	["buildTime"] = 60
 }
 keep[2] = {
 	["level"] = 2,
@@ -20,7 +20,7 @@ keep[2] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 60
+	["buildTime"] = 120
 }
 keep[3] = {
 	["level"] = 3,
@@ -31,7 +31,7 @@ keep[3] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 120
+	["buildTime"] = 180
 }
 keep[4] = {
 	["level"] = 4,
@@ -42,7 +42,7 @@ keep[4] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 300
+	["buildTime"] = 360
 }
 keep[5] = {
 	["level"] = 5,
@@ -53,7 +53,7 @@ keep[5] = {
 	["tools"] = 0,
 	["tiles"] = 0,
 	["pulley"] = 0,
-	["buildTime"] = 600
+	["buildTime"] = 480
 }
 keep[6] = {
 	["level"] = 6,
