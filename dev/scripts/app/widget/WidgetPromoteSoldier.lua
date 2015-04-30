@@ -6,7 +6,6 @@ local WidgetPopDialog = import(".WidgetPopDialog")
 local window = import("..utils.window")
 local Localize = import("..utils.Localize")
 local UILib = import("..ui.UILib")
-local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local WidgetRequirementListview = import(".WidgetRequirementListview")
 local MaterialManager = import("..entity.MaterialManager")
 local SoldierManager = import("..entity.SoldierManager")
@@ -195,7 +194,8 @@ function WidgetPromoteSoldier:UpgradeRequirement()
             resource_type = Localize.fight_reward.coin,
             isVisible = level_up_config.upgradeCoinNeed>0,
             isSatisfy = current_coin>level_up_config.upgradeCoinNeed,
-            icon=UILib.resource.coin,description=current_coin..'/'..level_up_config.upgradeCoinNeed
+            icon=UILib.resource.coin,
+            description=current_coin..'/'..level_up_config.upgradeCoinNeed
         },
         {
             resource_type = _("科技点数"),
@@ -257,9 +257,7 @@ function WidgetPromoteSoldier:PopNotSatisfyDialog(upgrade_listener,results)
     for k,v in pairs(results) do
         message = message .. v.."\n"
     end
-    local dialog =  FullScreenPopDialogUI.new():SetTitle(_("提示"))
-        :SetPopMessage(message)
-        :AddToCurrentScene()
+    local dialog = UIKit:showMessageDialog(_("陛下"),message)
     return dialog
 end
 function WidgetPromoteSoldier:GetInstantUpgradeGems()

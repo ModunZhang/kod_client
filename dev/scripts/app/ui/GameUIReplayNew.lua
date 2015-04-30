@@ -204,33 +204,39 @@ local dragon_ani_map = {
 local function newDragon(replay_ui, dragon_type, level)
     local dragon_type = dragon_type or "redDragon"
     local node = display.newNode()
-    node.name = UIKit:ttfLabel({
-        text = string.format(_("%s(等级%d)"), Localize.dragon[dragon_type], level),
+
+    node.level = UIKit:ttfLabel({
+        text = level,
         size = 20,
         color = 0xffedae,
-    }):align(display.CENTER, 45, 180):addTo(node)
+    }):align(display.CENTER, -65, 180):addTo(node)
 
-    node.progress = display.newProgressTimer("progress_bar_262x16.png", display.PROGRESS_TIMER_BAR)
-        :addTo(node):align(display.LEFT_CENTER, -85, 158):setScaleX(0.975)
+    node.name = UIKit:ttfLabel({
+        text = Localize.dragon[dragon_type],
+        size = 20,
+        color = 0xffedae,
+    }):align(display.CENTER, 80, 180):addTo(node)
+
+    node.progress = display.newProgressTimer("progress_bar_dragon_hp.png", display.PROGRESS_TIMER_BAR)
+        :addTo(node):align(display.LEFT_CENTER, -85, 145)
     node.progress:setBarChangeRate(cc.p(1,0))
     node.progress:setMidpoint(cc.p(0,0))
-    node.progress:setPercentage(80)
+    -- node.progress:setPercentage(80)
 
     node.hp = UIKit:ttfLabel({
-        size = 14,
+        size = 12,
         color = 0xffedae,
-    }):align(display.CENTER, 45, 160):addTo(node):hide()
+    }):align(display.CENTER, 45, 145):addTo(node):hide()
 
     node.result = UIKit:ttfLabel({
         size = 20,
         color = 0x00be36
-    }):align(display.CENTER, 120, -55):addTo(node):hide()
+    }):align(display.CENTER, 120, -55):addTo(node,1):hide()
 
     node.buff = UIKit:ttfLabel({
-        text = "hello",
         size = 20,
         color = 0x00be36
-    }):align(display.CENTER, 20, -55):addTo(node):hide()
+    }):align(display.CENTER, 65, -55):addTo(node,1):hide()
 
     local ani_name, left_x, right_x, scale, Y = unpack(dragon_ani_map[dragon_type])
     local dragon = ccs.Armature:create(ani_name):scale(0.6)
@@ -238,10 +244,13 @@ local function newDragon(replay_ui, dragon_type, level)
     dragon:getAnimation():play("idle", -1, -1)
     dragon:setScale(scale, scale)
     function node:TurnLeft()
-        self.progress:setPositionX(170)
-        self.progress:setScaleX(-0.975)
+        self.name:pos(15, 180)
+        self.level:pos(150, 180)
+        self.hp:pos(45, 147)
+        self.progress:setScaleX(-1)
+        self.progress:pos(170, 147)
         self.result:setPositionX(-35)
-        self.buff:setPositionX(80)
+        self.buff:setPositionX(35)
         dragon:setPositionX(right_x)
         dragon:setScale(- scale, scale)
         return self
@@ -274,7 +283,8 @@ local function newDragon(replay_ui, dragon_type, level)
         self.buff:setString(buff)
         return self
     end
-    function node:ShowBuff()
+    function node:ShowBuff(is_win)
+        self:SetReulst(is_win)
         self.buff:show()
         return self
     end
@@ -288,6 +298,8 @@ local function newDragon(replay_ui, dragon_type, level)
 end
 local function newDragonBattle(replay_ui, dragonAttack, dragonAttackLevel, dragonDefence, dragonDefenceLevel)
     local dragon_battle = ccs.Armature:create("paizi")
+    dragon_battle.result = ccs.Armature:create("paizi"):addTo(dragon_battle, 100):hide()
+
     local left_bone = dragon_battle:getBone("Layer4")
     local left_dragon = newDragon(replay_ui, dragonAttack.dragonType, dragonAttackLevel):addTo(left_bone):pos(-360, -50)
     left_bone:addDisplay(left_dragon, 0)
@@ -303,9 +315,9 @@ local function newDragonBattle(replay_ui, dragonAttack, dragonAttackLevel, drago
     function dragon_battle:GetDefenceDragon()
         return right_dragon
     end
-    function dragon_battle:PromiseOfAnimation()
+    function dragon_battle:PromiseOfAnimation(animation)
         local p = promise.new()
-        self:getAnimation():setMovementEventCallFunc(function(armatureBack, movementType, movementID)
+        animation:setMovementEventCallFunc(function(armatureBack, movementType, movementID)
             if movementType == ccs.MovementEventType.complete then
                 p:resolve()
             end
@@ -316,23 +328,45 @@ local function newDragonBattle(replay_ui, dragonAttack, dragonAttackLevel, drago
         self:getAnimation():play("Animation1", -1, 0)
         app:GetAudioManager():PlayeEffectSoundWithKey("BATTLE_DRAGON")
         self:RefreshSpeed()
-        return self:PromiseOfAnimation()
+        return self:PromiseOfAnimation(self:getAnimation())
     end
     function dragon_battle:PromsieOfHide()
         self:getAnimation():play("Animation2", -1, 0)
         self:RefreshSpeed()
-        return self:PromiseOfAnimation()
+        return self:PromiseOfAnimation(self:getAnimation())
     end
     function dragon_battle:RefreshSpeed()
         self:getAnimation():setSpeedScale(replay_ui:Speed())
+        self.result:getAnimation():setSpeedScale(replay_ui:Speed())
         left_dragon:RefreshSpeed()
         right_dragon:RefreshSpeed()
         return self
     end
     function dragon_battle:Stop()
         self:getAnimation():stop()
+        self.result:getAnimation():stop()
         left_dragon:stopAllActions()
         right_dragon:stopAllActions()
+    end
+    function dragon_battle:PromiseOfVictory()
+        self.result:show():getAnimation():playWithIndex(2, -1, 0)
+        self:RefreshSpeed()
+        return self:PromiseOfAnimation(self.result:getAnimation())
+    end
+    function dragon_battle:PromiseOfDefeat()
+        self.result:show():getAnimation():playWithIndex(3, -1, 0)
+        self:RefreshSpeed()
+        return self:PromiseOfAnimation(self.result:getAnimation())
+    end
+    function dragon_battle:PromiseOfVictoryHide()
+        self.result:show():getAnimation():playWithIndex(4, -1, 0)
+        self:RefreshSpeed()
+        return self:PromiseOfAnimation(self.result:getAnimation())
+    end
+    function dragon_battle:PromiseOfDefeatHide()
+        self.result:show():getAnimation():playWithIndex(5, -1, 0)
+        self:RefreshSpeed()
+        return self:PromiseOfAnimation(self.result:getAnimation())
     end
     return dragon_battle
 end
@@ -517,8 +551,366 @@ local report_ = {
 }
 
 
--------------------
+local report1 = {
+    ["type"] = "attackCity",
+    ["index"] = 2,
+    ["createTime"] = "1430291447534",
+    ["id"] = "4kOz7dFf",
+    ["isSaved"] = false,
+    ["isRead"] = true,
+    ["attackCity"] = {
+        ["attackPlayerData"] = {
+            ["alliance"] = {
+                ["id"] = "NyeZGSFM",
+                ["flag"] = "10,12,9,14,8",
+                ["name"] = "The Brave Oceanus",
+                ["tag"] = "TBO",
+            }
+            ,
+            ["name"] = "iPad",
+            ["fightWithDefenceWall"] = json.null,
+            ["id"] = "V1IRzeOG",
+            ["rewards"] = {
+                [1] = {
+                    ["type"] = "resources",
+                    ["name"] = "blood",
+                    ["count"] = 1545,
+                }
+            ,
+            }
+            ,
+            ["icon"] = 3,
+            ["fightWithDefenceTroop"] = {
+                ["dragon"] = {
+                    ["type"] = "blueDragon",
+                    ["hpDecreased"] = 61,
+                    ["level"] = 10,
+                    ["hp"] = 88,
+                    ["expAdd"] = 6486,
+                }
+                ,
+                ["soldiers"] = {
+                    [1] = {
+                        ["count"] = 750,
+                        ["star"] = 2,
+                        ["name"] = "meatWagon",
+                        ["countDecreased"] = 212,
+                    }
+                ,
+                }
+            ,
+            }
+        ,
+        }
+        ,
+        ["attackTarget"] = {
+            ["cityName"] = "city_VkgljLxOz",
+            ["name"] = "老干爹",
+            ["terrain"] = "desert",
+            ["alliance"] = {
+                ["id"] = "E12NVxdM",
+                ["flag"] = "10,6,7,19,12",
+                ["name"] = "Stables of Augeas",
+                ["tag"] = "SoA",
+            }
+            ,
+            ["id"] = "41esLxuM",
+            ["location"] = {
+                ["y"] = 21,
+                ["x"] = 44,
+            }
+        ,
+        }
+        ,
+        ["defencePlayerData"] = {
+            ["dragon"] = {
+                ["type"] = "redDragon",
+                ["hpDecreased"] = 26,
+                ["level"] = 20,
+                ["hp"] = 222,
+                ["expAdd"] = 3816,
+            }
+            ,
+            ["alliance"] = {
+                ["id"] = "E12NVxdM",
+                ["flag"] = "10,6,7,19,12",
+                ["name"] = "Stables of Augeas",
+                ["tag"] = "SoA",
+            }
+            ,
+            ["name"] = "老干爹",
+            ["wall"] = json.null,
+            ["id"] = "41esLxuM",
+            ["rewards"] = {
+                [1] = {
+                    ["type"] = "resources",
+                    ["name"] = "blood",
+                    ["count"] = 3605,
+                }
+            ,
+            }
+            ,
+            ["icon"] = 3,
+            ["soldiers"] = {
+                [1] = {
+                    ["count"] = 196,
+                    ["star"] = 2,
+                    ["name"] = "meatWagon",
+                    ["countDecreased"] = 92,
+                }
+                ,
+                [2] = {
+                    ["count"] = 200,
+                    ["star"] = 2,
+                    ["name"] = "deathKnight",
+                    ["countDecreased"] = 140,
+                }
+                ,
+                [3] = {
+                    ["count"] = 200,
+                    ["star"] = 1,
+                    ["name"] = "ballista",
+                    ["countDecreased"] = 140,
+                }
+                ,
+                [4] = {
+                    ["count"] = 200,
+                    ["star"] = 1,
+                    ["name"] = "catapult",
+                    ["countDecreased"] = 140,
+                }
+                ,
+                [5] = {
+                    ["count"] = 200,
+                    ["star"] = 2,
+                    ["name"] = "skeletonArcher",
+                    ["countDecreased"] = 140,
+                }
+                ,
+                [6] = {
+                    ["count"] = 200,
+                    ["star"] = 2,
+                    ["name"] = "skeletonWarrior",
+                    ["countDecreased"] = 126,
+                }
+                ,
+                [7] = {
+                    ["count"] = 200,
+                    ["star"] = 1,
+                    ["name"] = "horseArcher",
+                    ["countDecreased"] = 0,
+                }
+                ,
+                [8] = {
+                    ["count"] = 200,
+                    ["star"] = 1,
+                    ["name"] = "lancer",
+                    ["countDecreased"] = 0,
+                }
+                ,
+                [9] = {
+                    ["count"] = 200,
+                    ["star"] = 1,
+                    ["name"] = "crossbowman",
+                    ["countDecreased"] = 0,
+                }
+                ,
+                [10] = {
+                    ["count"] = 200,
+                    ["star"] = 1,
+                    ["name"] = "ranger",
+                    ["countDecreased"] = 0,
+                }
+                ,
+                [11] = {
+                    ["count"] = 200,
+                    ["star"] = 1,
+                    ["name"] = "sentinel",
+                    ["countDecreased"] = 0,
+                }
+                ,
+                [12] = {
+                    ["count"] = 200,
+                    ["star"] = 1,
+                    ["name"] = "swordsman",
+                    ["countDecreased"] = 0,
+                }
+            ,
+            }
+        ,
+        }
+        ,
+        ["fightWithDefencePlayerReports"] = {
+            ["defencePlayerSoldierRoundDatas"] = {
+                [1] = {
+                    ["soldierName"] = "meatWagon",
+                    ["moraleDecreased"] = 24,
+                    ["soldierWoundedCount"] = 28,
+                    ["morale"] = 100,
+                    ["soldierStar"] = 2,
+                    ["isWin"] = false,
+                    ["soldierDamagedCount"] = 92,
+                    ["soldierCount"] = 196,
+                }
+                ,
+                [2] = {
+                    ["soldierName"] = "deathKnight",
+                    ["moraleDecreased"] = 35,
+                    ["soldierWoundedCount"] = 42,
+                    ["morale"] = 100,
+                    ["soldierStar"] = 2,
+                    ["isWin"] = false,
+                    ["soldierDamagedCount"] = 140,
+                    ["soldierCount"] = 200,
+                }
+                ,
+                [3] = {
+                    ["soldierName"] = "ballista",
+                    ["moraleDecreased"] = 35,
+                    ["soldierWoundedCount"] = 42,
+                    ["morale"] = 100,
+                    ["soldierStar"] = 1,
+                    ["isWin"] = false,
+                    ["soldierDamagedCount"] = 140,
+                    ["soldierCount"] = 200,
+                }
+                ,
+                [4] = {
+                    ["soldierName"] = "catapult",
+                    ["moraleDecreased"] = 35,
+                    ["soldierWoundedCount"] = 42,
+                    ["morale"] = 100,
+                    ["soldierStar"] = 1,
+                    ["isWin"] = false,
+                    ["soldierDamagedCount"] = 140,
+                    ["soldierCount"] = 200,
+                }
+                ,
+                [5] = {
+                    ["soldierName"] = "skeletonArcher",
+                    ["moraleDecreased"] = 35,
+                    ["soldierWoundedCount"] = 42,
+                    ["morale"] = 100,
+                    ["soldierStar"] = 2,
+                    ["isWin"] = false,
+                    ["soldierDamagedCount"] = 140,
+                    ["soldierCount"] = 200,
+                }
+                ,
+                [6] = {
+                    ["soldierName"] = "skeletonWarrior",
+                    ["moraleDecreased"] = 32,
+                    ["soldierWoundedCount"] = 38,
+                    ["morale"] = 100,
+                    ["soldierStar"] = 2,
+                    ["isWin"] = false,
+                    ["soldierDamagedCount"] = 126,
+                    ["soldierCount"] = 200,
+                }
+            ,
+            }
+            ,
+            ["defencePlayerDragonFightData"] = {
+                ["hpMax"] = 1304,
+                ["type"] = "redDragon",
+                ["isWin"] = true,
+                ["hp"] = 222,
+                ["hpDecreased"] = 26,
+            }
+            ,
+            ["attackPlayerSoldierRoundDatas"] = {
+                [1] = {
+                    ["soldierName"] = "meatWagon",
+                    ["moraleDecreased"] = 4,
+                    ["soldierWoundedCount"] = 15,
+                    ["morale"] = 100,
+                    ["soldierStar"] = 2,
+                    ["isWin"] = true,
+                    ["soldierDamagedCount"] = 48,
+                    ["soldierCount"] = 750,
+                }
+                ,
+                [2] = {
+                    ["soldierName"] = "meatWagon",
+                    ["moraleDecreased"] = 7,
+                    ["soldierWoundedCount"] = 14,
+                    ["morale"] = 96,
+                    ["soldierStar"] = 2,
+                    ["isWin"] = true,
+                    ["soldierDamagedCount"] = 46,
+                    ["soldierCount"] = 702,
+                }
+                ,
+                [3] = {
+                    ["soldierName"] = "meatWagon",
+                    ["moraleDecreased"] = 10,
+                    ["soldierWoundedCount"] = 12,
+                    ["morale"] = 89,
+                    ["soldierStar"] = 2,
+                    ["isWin"] = true,
+                    ["soldierDamagedCount"] = 37,
+                    ["soldierCount"] = 656,
+                }
+                ,
+                [4] = {
+                    ["soldierName"] = "meatWagon",
+                    ["moraleDecreased"] = 25,
+                    ["soldierWoundedCount"] = 14,
+                    ["morale"] = 79,
+                    ["soldierStar"] = 2,
+                    ["isWin"] = true,
+                    ["soldierDamagedCount"] = 46,
+                    ["soldierCount"] = 619,
+                }
+                ,
+                [5] = {
+                    ["soldierName"] = "meatWagon",
+                    ["moraleDecreased"] = 20,
+                    ["soldierWoundedCount"] = 6,
+                    ["morale"] = 54,
+                    ["soldierStar"] = 2,
+                    ["isWin"] = true,
+                    ["soldierDamagedCount"] = 18,
+                    ["soldierCount"] = 573,
+                }
+                ,
+                [6] = {
+                    ["soldierName"] = "meatWagon",
+                    ["moraleDecreased"] = 34,
+                    ["soldierWoundedCount"] = 6,
+                    ["morale"] = 34,
+                    ["soldierStar"] = 2,
+                    ["isWin"] = true,
+                    ["soldierDamagedCount"] = 17,
+                    ["soldierCount"] = 555,
+                }
+            ,
+            }
+            ,
+            ["attackPlayerWallRoundDatas"] = json.null,
+            ["defencePlayerWallRoundDatas"] = json.null,
+            ["attackPlayerDragonFightData"] = {
+                ["hpMax"] = 216,
+                ["type"] = "blueDragon",
+                ["isWin"] = false,
+                ["hp"] = 88,
+                ["hpDecreased"] = 61,
+            }
+        ,
+        }
+    ,
+    }
+,
+}
+
+
+-- -------------------
+-- local Report = import("..entity.Report")
+-- User = {
+--     Id = function() return 1 end
+-- }
 function GameUIReplayNew:ctor(report, callback)
+    -- report = Report:DecodeFromJsonData(report1)
     -- report = report_
     assert(report.GetFightAttackName)
     assert(report.GetFightDefenceName)
@@ -533,6 +925,7 @@ function GameUIReplayNew:ctor(report, callback)
     assert(report.GetReportResult)
     assert(report.GetAttackDragonLevel)
     assert(report.GetAttackDragonLevel)
+    assert(report.GetAttackTargetTerrain())
     GameUIReplayNew.super.ctor(self)
     self.report = report
     local soldiers = self.report:GetOrderedDefenceSoldiers()
@@ -575,15 +968,15 @@ function GameUIReplayNew:OnMoveInStage()
             self:Replay()
         elseif not self.ui_map.speedup.speed then
             self.ui_map.speedup.speed = 2
-            self.ui_map.speedup:setButtonLabelString(_("2倍速"))
+            self.ui_map.speedup:setButtonLabelString(_("x2"))
             self:SpeedUp(2)
         elseif self.ui_map.speedup.speed == 2 then
             self.ui_map.speedup.speed = 4
-            self.ui_map.speedup:setButtonLabelString(_("4倍速"))
+            self.ui_map.speedup:setButtonLabelString(_("x4"))
             self:SpeedUp(4)
         elseif self.ui_map.speedup.speed == 4 then
             self.ui_map.speedup.speed = nil
-            self.ui_map.speedup:setButtonLabelString(_("加速"))
+            self.ui_map.speedup:setButtonLabelString(_("x1"))
             self:SpeedUp(1)
         end
     end)
@@ -597,10 +990,10 @@ function GameUIReplayNew:OnMoveInStage()
 end
 function GameUIReplayNew:onExit()
     GameUIReplayNew.super.onExit(self)
-    app:GetAudioManager():PlayGameMusic()
     if type(self.callback) == "function" then
         self.callback()
     end
+    app:GetAudioManager():PlayGameMusic()
 end
 function GameUIReplayNew:GetOrderedAttackSoldiers()
     return self.report:GetOrderedAttackSoldiers()
@@ -686,22 +1079,32 @@ function GameUIReplayNew:PlayDragonBattle()
     local defend_dragon_level = self.report:GetDefenceDragonLevel()
 
     self.dragon_battle = newDragonBattle(self, attack_dragon, attack_dragon_level, defend_dragon, defend_dragon_level)
-        :addTo(self.ui_map.battle_node):align(display.CENTER, 275, 155)
+        :addTo(self.ui_map.dragon_node):align(display.CENTER, 275, 155)
     self.dragon_battle:GetAttackDragon():SetHp(attack_dragon.hp, attack_dragon.hpMax)
     self.dragon_battle:GetDefenceDragon():SetHp(defend_dragon.hp, defend_dragon.hpMax)
 
     return self.dragon_battle:PromsieOfFight():next(function()
-        return promise.all(self.dragon_battle:GetAttackDragon():ShowIsWin(attack_dragon.isWin),
-            self.dragon_battle:GetDefenceDragon():ShowIsWin(defend_dragon.isWin))
+        return attack_dragon.isWin and
+            self.dragon_battle:PromiseOfVictory() or
+            self.dragon_battle:PromiseOfDefeat()
     end):next(function()
+        local buff_attack = attack_dragon.isWin and 100 or 50
+        local buff_defence = attack_dragon.isWin and 50 or 100
+        self.dragon_battle:GetAttackDragon():ShowBuff(attack_dragon.isWin)
+        self.dragon_battle:GetDefenceDragon():ShowBuff(not attack_dragon.isWin)
         return self:PormiseOfSchedule(1, function(percent)
-            self.dragon_battle:GetAttackDragon():SetHp(attack_dragon.hp - percent * attack_dragon.hpDecreased, attack_dragon.hpMax):ShowBuff()
-                :SetBuff(string.format(_("加成 + %d%%"), math.floor(percent * 100)))
-            self.dragon_battle:GetDefenceDragon():SetHp(defend_dragon.hp - percent * defend_dragon.hpDecreased, defend_dragon.hpMax):ShowBuff()
-                :SetBuff(string.format(_("加成 + %d%%"), math.floor(percent * 50)))
+            self.dragon_battle:GetAttackDragon()
+            :SetHp(attack_dragon.hp - percent * attack_dragon.hpDecreased, attack_dragon.hpMax)
+                :SetBuff(string.format(_("加成 + %d%%"), math.floor(percent * buff_attack)))
+            self.dragon_battle:GetDefenceDragon()
+            :SetHp(defend_dragon.hp - percent * defend_dragon.hpDecreased, defend_dragon.hpMax)
+                :SetBuff(string.format(_("加成 + %d%%"), math.floor(percent * buff_defence)))
         end)
     end):next(self:Delay(1)):next(function()
-        return self.dragon_battle:PromsieOfHide()
+        return promise.all(attack_dragon.isWin and
+            self.dragon_battle:PromiseOfVictoryHide() or
+            self.dragon_battle:PromiseOfDefeatHide(),
+            self.dragon_battle:PromsieOfHide())
     end)
 end
 function GameUIReplayNew:PlaySoldierBattle(battle)
@@ -737,12 +1140,12 @@ function GameUIReplayNew:DecodeStateBySide(side, is_left)
     if state == "enter" then
         if is_left then
             if side.soldier == "wall" then
-                self.left = NewWall(self):addTo(self.ui_map.battle_background1):pos(50, Y)
+                self.left = NewWall(self):addTo(self.ui_map.battle_node):pos(50, Y)
                 action = promise.new():next(BattleObject:TurnRight()):next(function()
-                    return promise.new(self:MoveBattleBgBy(2, 90))
-                        :next(function()
-                            return self.left
-                        end):resolve(self.ui_map.battle_background1)
+                    return promise.all(self:PromiseOfMoveBattleObj(self.left, 2, 90),
+                        self:PromiseOfMoveBattleObj(self.ui_map.battle_background1, 2, 90))
+                end):next(function()
+                    return self.left
                 end)
             else
                 self.left = NewCorps(self, side.soldier, side.star)
@@ -755,12 +1158,12 @@ function GameUIReplayNew:DecodeStateBySide(side, is_left)
             self:EnterSoldiersLeft()
         else
             if side.soldier == "wall" then
-                self.right = NewWall(self):addTo(self.ui_map.battle_background1):pos(650, Y)
+                self.right = NewWall(self):addTo(self.ui_map.battle_node):pos(650, Y)
                 action = promise.new():next(BattleObject:TurnLeft()):next(function()
-                    return promise.new(self:MoveBattleBgBy(2, -90))
-                        :next(function()
-                            return self.right
-                        end):resolve(self.ui_map.battle_background1)
+                    return promise.all(self:PromiseOfMoveBattleObj(self.right, 2, -90),
+                        self:PromiseOfMoveBattleObj(self.ui_map.battle_background1, 2, -90))
+                end):next(function()
+                    return self.right
                 end)
             else
                 self.right = NewCorps(self, side.soldier, side.star, is_pve_battle):addTo(self.ui_map.battle_node):pos(start_right, Y)
@@ -782,10 +1185,10 @@ function GameUIReplayNew:DecodeStateBySide(side, is_left)
     elseif state == "hurt" then
         action = BattleObject:Do():next(function(corps)
             if is_left then
-                return promise.any(corps:hit(), self:HurtSoldierLeft())
+                return promise.any(corps:hit(), self:HurtSoldierLeft(corps))
                     :next(function() return corps end)
             else
-                return promise.any(corps:hit(), self:HurtSoldierRight())
+                return promise.any(corps:hit(), self:HurtSoldierRight(corps))
                     :next(function() return corps end)
             end
         end):next(function(corps)
@@ -811,14 +1214,33 @@ function GameUIReplayNew:DecodeStateBySide(side, is_left)
     end
     return action
 end
-function GameUIReplayNew:HurtSoldierLeft()
+function GameUIReplayNew:PromiseOfPlayDamage(count, x, y)
+    local p = promise.new()
+    local speed = cc.Speed:create(transition.sequence({
+        cc.MoveBy:create(0.6, cc.p(0, 20)),
+        cc.CallFunc:create(function() p:resolve() end),
+        cc.RemoveSelf:create(),
+    }), self:Speed())
+    speed:setTag(SPEED_TAG)
+
+    UIKit:ttfLabel({
+        text = "-"..count,
+        size = 30,
+        color = 0xff0000,
+    }):addTo(self.ui_map.damage_node)
+        :align(display.CENTER, x, y):runAction(speed)
+    return p
+end
+function GameUIReplayNew:HurtSoldierLeft(corps)
     local round = self:GetFightAttackSoldierByRound(self.round)
     local soldier = self:TopSoldierLeft()
     local soldierCount = round.soldierCount or round.wallHp
     local soldierDamagedCount = round.soldierDamagedCount or round.wallDamagedHp
     local morale = round.morale or 100
     local moraleDecreased = round.moraleDecreased or 0
+    local x,y = corps:getPosition()
     return promise.all(
+        self:PromiseOfPlayDamage(soldierDamagedCount, x, y),
         self.ui_map.soldier_count_attack:PromiseOfProgressTo(0.5, (soldierCount - soldierDamagedCount) / soldier.count * 100),
         self:PormiseOfSchedule(0.5, function(percent)
             local count = math.ceil(soldierCount - soldierDamagedCount * percent)
@@ -835,14 +1257,16 @@ function GameUIReplayNew:HurtSoldierLeft()
         end)
     )
 end
-function GameUIReplayNew:HurtSoldierRight()
+function GameUIReplayNew:HurtSoldierRight(corps)
     local round = self:GetFightDefenceSoldierByRound(self.round)
     local soldier = self:TopSoldierRight()
     local soldierCount = round.soldierCount or round.wallHp
     local soldierDamagedCount = round.soldierDamagedCount or round.wallDamagedHp
     local morale = round.morale or 100
     local moraleDecreased = round.moraleDecreased or 0
+    local x,y = corps:getPosition()
     return promise.all(
+        self:PromiseOfPlayDamage(soldierDamagedCount, x, y),
         self.ui_map.soldier_count_defence:PromiseOfProgressTo(0.5, (soldierCount - soldierDamagedCount) / soldier.count * 100),
         self:PormiseOfSchedule(0.5, function(percent)
             local count = math.ceil(soldierCount - soldierDamagedCount * percent)
@@ -980,6 +1404,12 @@ function GameUIReplayNew:SpeedUp(speed)
     if self.right then
         self.right:RefreshSpeed()
     end
+    for _,v in ipairs(self.ui_map.damage_node:getChildren()) do
+        local a = v:getActionByTag(SPEED_TAG)
+        if a then
+            a:setSpeed(self:Speed())
+        end
+    end
     self.ui_map.soldier_count_attack:RefreshSpeed()
     self.ui_map.soldier_morale_attack:RefreshSpeed()
     self.ui_map.soldier_count_defence:RefreshSpeed()
@@ -996,6 +1426,8 @@ function GameUIReplayNew:Reset()
     end
     self.round = 1
     self:Stop()
+    self.ui_map.damage_node:removeAllChildren()
+    self.ui_map.dragon_node:removeAllChildren()
     self.ui_map.battle_node:removeAllChildren()
     self.left = nil
     self.right = nil
@@ -1003,7 +1435,7 @@ function GameUIReplayNew:Reset()
 
     self.ui_map.arrow_green:hide()
     self.ui_map.speedup.speed = nil
-    self.ui_map.speedup:setButtonLabelString(_("加速"))
+    self.ui_map.speedup:setButtonLabelString(_("x1"))
     self.ui_map.pass:show()
 
     self.ui_map.soldier_inbattle_attack:hide()
@@ -1028,6 +1460,9 @@ function GameUIReplayNew:Stop()
     if self.timer_node then
         self.timer_node:stopAllActions()
     end
+    for _,v in ipairs(self.ui_map.damage_node:getChildren()) do
+        v:stopAllActions()
+    end
     self.ui_map.battle_background1:stopAllActions()
     if self.left then
         self.left:Stop()
@@ -1041,17 +1476,15 @@ function GameUIReplayNew:Stop()
     self.ui_map.soldier_count_defence:Stop()
     self.ui_map.soldier_morale_defence:Stop()
 end
-function GameUIReplayNew:MoveBattleBgBy(time, x)
-    return function(battle_bg)
-        local p = promise.new()
-        local speed = cc.Speed:create(transition.sequence({
-            cc.MoveBy:create(time, cc.p(x, 0)),
-            cc.CallFunc:create(function() p:resolve(battle_bg) end),
-        }), self:Speed())
-        speed:setTag(SPEED_TAG)
-        battle_bg:runAction(speed)
-        return p
-    end
+function GameUIReplayNew:PromiseOfMoveBattleObj(obj, time, x)
+    local p = promise.new()
+    local speed = cc.Speed:create(transition.sequence({
+        cc.MoveBy:create(time, cc.p(x, 0)),
+        cc.CallFunc:create(function() p:resolve() end),
+    }), self:Speed())
+    speed:setTag(SPEED_TAG)
+    obj:runAction(speed)
+    return p
 end
 function GameUIReplayNew:PormiseOfSchedule(time, func)
     local p = promise.new()
@@ -1124,10 +1557,14 @@ end
 ------
 function GameUIReplayNew:BuildUI()
     local ui_map = {}
-    local clip = display.newClippingRegionNode(cc.rect(0,0, 588, 400)):addTo(self):pos(window.left + 25, window.bottom + 580)
+    local clip = display.newClippingRegionNode(cc.rect(0,0, 588, 400))
+        :addTo(self):pos(window.left + 25, window.bottom + 580)
     ui_map.battle_background1 = display.newSprite("back_ground_grassLand.png")
         :addTo(clip):align(display.LEFT_BOTTOM)
     ui_map.battle_node = display.newNode():addTo(clip)
+    ui_map.damage_node = display.newNode():addTo(clip)
+    ui_map.dragon_node = display.newNode():addTo(self, 2)
+        :pos(window.left + 27, window.bottom + 590)
 
     local top = display.newSprite("back_ground_replay_1.png"):addTo(self, 1)
         :align(display.TOP_CENTER, display.cx, window.top)
@@ -1249,8 +1686,8 @@ function GameUIReplayNew:BuildUI()
     }:addTo(bottom):pos(10, 100):setBounceable(false)
 
     ui_map.list_view_layer = display.newLayer()
-    -- newColorLayer(cc.c4b(100,100,100,0))
-    :addTo(bottom):pos(10, 100)
+        -- newColorLayer(cc.c4b(100,100,100,0))
+        :addTo(bottom):pos(10, 100)
     ui_map.list_view_layer:setContentSize(cc.size(590,390))
     ui_map.list_view_layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
         ui_map.list_view_attack:onTouch_(event)
@@ -1294,6 +1731,15 @@ function GameUIReplayNew:BuildUI()
 end
 
 return GameUIReplayNew
+
+
+
+
+
+
+
+
+
 
 
 

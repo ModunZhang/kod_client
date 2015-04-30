@@ -483,8 +483,8 @@ function UIKit:commonListView_1(params)
     local viewRect = params.viewRect
     viewRect.x = 0
     viewRect.y = 0
-    local list_node = display.newScale9Sprite("background_568x556.png",x,y,cc.size(viewRect.width+20,viewRect.height+24),cc.rect(10,10,548,536))
-    local list = UIListView.new(params):addTo(list_node):pos(10,12)
+    local list_node = display.newScale9Sprite("background_568x556.png",x,y,cc.size(viewRect.width,viewRect.height+24),cc.rect(10,10,548,536))
+    local list = UIListView.new(params):addTo(list_node):pos(0,12)
     return list,list_node
 end
 function UIKit:createLineItem(params)
@@ -540,15 +540,18 @@ end
 
 function UIKit:showMessageDialog(title,tips,ok_callback,cancel_callback,visible_x_button,x_button_callback)
     title = title or _("提示")
+    tips = tips or ""
     if type(visible_x_button) ~= 'boolean' then visible_x_button = true end
     local dialog = UIKit:newGameUI("FullScreenPopDialogUI",x_button_callback):SetTitle(title):SetPopMessage(tips)
-        :CreateOKButton({
+    if ok_callback then
+        dialog:CreateOKButton({
             listener =  function ()
                 if ok_callback then
                     ok_callback()
                 end
             end
         })
+    end
 
     if cancel_callback then
         dialog:CreateCancelButton({
@@ -560,6 +563,7 @@ function UIKit:showMessageDialog(title,tips,ok_callback,cancel_callback,visible_
     if not visible_x_button then
         dialog:DisableAutoClose()
     end
+    dialog:setLocalZOrder(3000)
     dialog:AddToCurrentScene()
     return dialog
 end
@@ -581,14 +585,14 @@ end
 function UIKit:WaitForNet(delay)
     local scene = display.getRunningScene()
     -- if scene.__cname  ~= 'MainScene' and scene.WaitForNet then
-        scene:WaitForNet(delay)
+    scene:WaitForNet(delay)
     -- end
 end
 
 function UIKit:NoWaitForNet()
     local scene = display.getRunningScene()
     -- if scene.__cname  ~= 'MainScene' and scene.NoWaitForNet then
-        scene:NoWaitForNet()
+    scene:NoWaitForNet()
     -- end
 end
 
@@ -665,6 +669,47 @@ function UIKit:getIapPackageName(productId)
     local Localize = import(".Localize", CURRENT_MODULE_NAME)
     return Localize.iap_package_name[productId]
 end
+
+function UIKit:addTipsToNode( node,tips )
+    node:setTouchEnabled(true)
+    node:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+        if event.name == "began" then
+            local tips_bg = display.newScale9Sprite("back_ground_240x73.png",0,0,cc.size(240,73),cc.rect(10,10,220,53))
+                :addTo(node):align(display.CENTER)
+            tips_bg:setTag(100)
+            local text_1 = UIKit:ttfLabel({text = tips,size = 20 ,color = 0xfff2b3})
+                :addTo(tips_bg)
+            text_1:setGlobalZOrder(100)
+            tips_bg:size(text_1:getContentSize().width+20,text_1:getContentSize().height+40)
+            local t_size = tips_bg:getContentSize()
+            text_1:align(display.CENTER, t_size.width/2, t_size.height/2)
+            tips_bg:setGlobalZOrder(100)
+
+            local world_postion = node:getParent():convertToWorldSpace(cc.p(node:getPosition()))
+            local tip_x = 0
+            if world_postion.x < display.cx then
+                tip_x = t_size.width/2
+            else
+                tip_x = node:getContentSize().width -t_size.width/2
+            end
+            tips_bg:setPosition(tip_x, node:getContentSize().height + t_size.height/2)
+        elseif event.name == "ended" then
+            if node:getChildByTag(100) then
+                node:removeChildByTag(100, true)
+            end
+        elseif event.name == "moved" then
+            local rect = node:convertToNodeSpace(cc.p(event.x,event.y))
+            local box = node:getContentSize()
+            if box.width < rect.x or rect.x < 0 or box.height < rect.y or rect.y < 0 then
+                if node:getChildByTag(100) then
+                    node:removeChildByTag(100, true)
+                end
+            end
+        end
+        return true
+    end)
+end
+
 
 
 

@@ -163,7 +163,7 @@ function Item:RebindEventListener()
         :align(display.CENTER, 32, 32)
         :onButtonClicked(function(event)
             local building = self.building
-            WidgetBuildingIntroduce.new(self.building):AddToCurrentScene(true)
+            UIKit:newWidgetUI("WidgetBuildingIntroduce", self.building):AddToCurrentScene(true)
         end)
 
     if self.free_speedUp then
@@ -438,7 +438,7 @@ function GameUIHasBeenBuild:OnUpgrading(building, current_time, city)
 end
 function GameUIHasBeenBuild:OnUpgradingFinished(building, city)
     self:UpdateBuildingQueue(city)
-    self:RefreshAllItems()
+    self:RefreshCurrentList()
 end
 function GameUIHasBeenBuild:RefreshAllItems()
     local list = self.house_list_view or self.function_list_view or {}
@@ -471,7 +471,7 @@ function GameUIHasBeenBuild:LoadBuildingQueue()
         :align(display.CENTER, back_ground:getContentSize().width - 25, back_ground:getContentSize().height/2)
         :onButtonClicked(function ( event )
             if event.name == "CLICKED_EVENT" then
-                WidgetBuyBuildingQueue.new():AddToCurrentScene()
+                UIKit:newWidgetUI("WidgetBuyBuildingQueue"):AddToCurrentScene()
             end
         end)
 
@@ -515,6 +515,16 @@ function GameUIHasBeenBuild:TabButtons()
     end):pos(window.cx, window.bottom + 34)
 end
 -- function
+function GameUIHasBeenBuild:RefreshCurrentList()
+    if self.house_list_view then
+        self:UnloadHouseListView()
+        self:LoadHouseListView()
+    end
+    if self.function_list_view then
+        self:UnloadFunctionListView()
+        self:LoadFunctionListView()
+    end
+end
 function GameUIHasBeenBuild:LoadFunctionListView()
     if not self.function_list_view then
         self.function_list_view , self.function_list_node= self:CreateListView(self.build_city:GetBuildingsIsUnlocked())

@@ -8,7 +8,7 @@
    eJzt0rkRwlAAxNAfmCsAGwLO/vtkczeg/aNAMyrgLWOMQzqmpfyv6ZbWCf6ZXuk9wRNsaExjLU+woTGNtTzBhsY01vIEGxrTWMsTbGhMYy1PsKExjbU8wYbGNNbyBBsa01jLE2xoTGMtT7ChMY21PMGGxjTW8gQbGtNYyxNsaGz/p3ROlwl+S/f0mOA/6Zt+EzzBhsY01vIEGxrTWMsTbGhMYy1PsKExjbU8wYbGNNbyBBsa01jLE2xoTGMtT7ChMY21PMGGxjTW8gQbGtNYyxNsaExjLU+woTGNtTzBhsb2/weLHUPL
   </data>
  </layer>
- <layer name="layer2" width="51" height="106" visible="0">
+ <layer name="layer2" width="51" height="106">
   <data encoding="base64" compression="zlib">
    eJztxrENwCAQBEEaAzKbzKb/ZnwVEDl6zUgrbWsAAAAAAAAAAAAA/+tppFngr3SnVeCf9KZd4AEAAAAAAAAAAAA4+wBGVSpw
   </data>

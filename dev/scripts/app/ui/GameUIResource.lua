@@ -5,7 +5,6 @@
 local GameUIResource = UIKit:createUIClass("GameUIResource","GameUIUpgradeBuilding")
 local ResourceManager = import("..entity.ResourceManager")
 local WidgetInfoWithTitle = import("..widget.WidgetInfoWithTitle")
-local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local WidgetMoveHouse = import("..widget.WidgetMoveHouse")
 local UILib = import(".UILib")
 local City = City
@@ -219,7 +218,7 @@ function GameUIResource:CreateInfomation()
         title = _("总计"),
         h = 226
     }):addTo(self.infomationLayer)
-        :align(display.TOP_CENTER, window.cx,secondLine:getPositionY()-200)
+        :align(display.TOP_CENTER, window.cx,secondLine:getPositionY()-240)
 
 
 

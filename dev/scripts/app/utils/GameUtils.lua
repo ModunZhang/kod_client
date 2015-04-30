@@ -75,7 +75,7 @@ function GameUtils:formatNumber(number)
         r = num/math.pow(10,9)
         local _,decimals = math.modf(r)
         if decimals ~= 0 then
-            format = "%.1fB"
+            format = "%.2fB"
         else
             format = "%dB"
         end
@@ -83,7 +83,7 @@ function GameUtils:formatNumber(number)
         r = num/math.pow(10,6)
         local _,decimals = math.modf(r)
         if decimals ~= 0 then
-            format = "%.1fM"
+            format = "%.2fM"
         else
             format = "%dM"
         end
@@ -91,7 +91,7 @@ function GameUtils:formatNumber(number)
         r = num/math.pow(10,3)
         local _,decimals = math.modf(r)
         if decimals ~= 0 then
-            format = "%.1fK"
+            format = "%.2fK"
         else
             format = "%dK"
         end

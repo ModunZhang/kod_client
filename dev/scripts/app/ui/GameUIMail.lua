@@ -10,7 +10,6 @@ local Flag = import("..entity.Flag")
 local WidgetDropList = import("..widget.WidgetDropList")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local UILib = import(".UILib")
-local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local GameUICollectReport = import(".GameUICollectReport")
 local Report = import("..entity.Report")
 
@@ -160,8 +159,7 @@ function GameUIMail:CreateMailControlBox()
             if event.name == "CLICKED_EVENT" then
                 local control_type = self:GetCurrentSelectType()
                 local replace_text = (control_type == "mail" and _("邮件")) or (control_type == "report" and _("战报"))
-                FullScreenPopDialogUI.new():SetTitle(string.format(_("删除%s"),replace_text))
-                    :SetPopMessage(string.format(_("您即将删除所选%s,删除的%s将无法恢复,您确定要这么做吗?"),replace_text,replace_text))
+                UIKit:showMessageDialog(string.format(_("删除%s"),replace_text),string.format(_("您即将删除所选%s,删除的%s将无法恢复,您确定要这么做吗?"),replace_text,replace_text))
                     :CreateOKButton(
                         {
                             listener =function ()
@@ -234,7 +232,6 @@ function GameUIMail:CreateMailControlBox()
                             end
                         }
                     )
-                    :AddToCurrentScene()
             end
         end):align(display.LEFT_CENTER,select_all_btn:getPositionX() + select_all_btn:getCascadeBoundingBox().size.width+gap_x,h/2-6):addTo(box)
     local mark_read_btn = WidgetPushButton.new({normal = "brown_btn_up_132x98.png",pressed = "brown_btn_down_132x98.png"})
@@ -386,10 +383,7 @@ function GameUIMail:DelegateInbox( listView, tag, idx )
     end
 end
 function GameUIMail:CreateInboxContent()
-    local listview = self.inbox_listview
-    local item = listview:newItem()
     local item_width, item_height = 568,118
-    item:setItemSize(item_width, item_height)
     local content = display.newNode()
     content:setContentSize(cc.size(item_width, item_height))
     -- 标题背景框
@@ -531,10 +525,7 @@ function GameUIMail:DelegateSavedMails( listView, tag, idx )
     end
 end
 function GameUIMail:CreateSavedMailContent()
-    local listview = self.save_mails_listview
-    local item = listview:newItem()
     local item_width, item_height = 568,118
-    item:setItemSize(item_width, item_height)
     local content = display.newNode()
     content:setContentSize(cc.size(item_width, item_height))
     -- 标题背景框
@@ -672,10 +663,7 @@ function GameUIMail:DelegateSendMails( listView, tag, idx )
     end
 end
 function GameUIMail:CreateSendMailContent()
-    local listview = self.send_mail_listview
-    local item = listview:newItem()
     local item_width, item_height = 568,118
-    item:setItemSize(item_width, item_height)
     local content = display.newNode()
     content:setContentSize(cc.size(item_width, item_height))
     -- 标题背景框
@@ -1233,10 +1221,7 @@ function GameUIMail:DelegateReport( listView, tag, idx )
     end
 end
 function GameUIMail:CreateReportContent()
-    local list = self.report_listview
-    local item = list:newItem()
     local item_width, item_height = 568,150
-    item:setItemSize(item_width, item_height)
     local content = display.newNode()
     content:setContentSize(cc.size(item_width, item_height))
     local parent = self
@@ -1489,10 +1474,7 @@ function GameUIMail:DelegateSavedReport( listView, tag, idx )
     end
 end
 function GameUIMail:CreateSavedReportContent()
-    local list = self.saved_reports_listview
-    local item = list:newItem()
     local item_width, item_height = 568,150
-    item:setItemSize(item_width, item_height)
     local content = display.newNode()
     content:setContentSize(cc.size(item_width, item_height))
     local parent = self
@@ -1797,24 +1779,16 @@ function GameUIMail:ReplyMail(mail,content)
     local addressee = mail.fromId
     local title = mail.title
     if not addressee or string.trim(addressee)=="" then
-        FullScreenPopDialogUI.new():SetTitle(_("提示"))
-            :SetPopMessage(_("请填写正确的收件人ID"))
-            :AddToCurrentScene(true)
+        UIKit:showMessageDialog(_("提示"),_("请填写正确的收件人ID"))
         return
     elseif addressee == User:Id() then
-        FullScreenPopDialogUI.new():SetTitle(_("提示"))
-            :SetPopMessage(_("不能向自己发送邮件"))
-            :AddToCurrentScene(true)
+        UIKit:showMessageDialog(_("提示"),_("不能向自己发送邮件"))
         return
     elseif not title or string.trim(title)=="" then
-        FullScreenPopDialogUI.new():SetTitle(_("提示"))
-            :SetPopMessage(_("请填写邮件主题"))
-            :AddToCurrentScene(true)
+        UIKit:showMessageDialog(_("提示"),_("请填写邮件主题"))
         return
     elseif not content or string.trim(content)=="" then
-        FullScreenPopDialogUI.new():SetTitle(_("提示"))
-            :SetPopMessage(_("请填写邮件内容"))
-            :AddToCurrentScene(true)
+        UIKit:showMessageDialog(_("提示"),_("请填写邮件内容"))
         return
     end
     NetManager:getSendPersonalMailPromise(addressee, _("RE:")..title, content,{
@@ -2010,6 +1984,8 @@ function GameUIMail:GetEnemyAllianceTag(report)
 end
 
 return GameUIMail
+
+
 
 
 

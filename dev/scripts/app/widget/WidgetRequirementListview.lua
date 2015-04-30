@@ -43,7 +43,6 @@ function WidgetRequirementListview:RefreshListView(contents)
         return
     end
     for k,v in pairs(contents ) do
-        -- print(k,v)
         if v.isVisible then
             -- 需求已添加，则更新最新资源数据
             if self.added_items[v.resource_type] then
@@ -60,11 +59,13 @@ function WidgetRequirementListview:RefreshListView(contents)
                 if v.isSatisfy then
                     -- 符合条件，添加钩钩图标
                     content.mark:setTexture("yes_40x40.png")
-                    content.resource_value[1]:setString(split_desc[1])
+                    local v_1 = tonumber(split_desc[1]) and string.formatnumberthousands(tonumber(split_desc[1])) or split_desc[1]
+                    content.resource_value[1]:setString(v_1)
                     content.resource_value[1]:setColor(UIKit:hex2c4b(0x403c2f))
                     if split_desc[2] then
-                        content.resource_value[2]:setString("/"..split_desc[2])
+                        content.resource_value[2]:setString("/"..string.formatnumberthousands(tonumber(split_desc[2])))
                         content.resource_value[2]:setColor(UIKit:hex2c4b(0x403c2f))
+                        content.resource_value[2]:setPositionX(content.resource_value[1]:getPositionX()+content.resource_value[1]:getContentSize().width)
                     end
                 else
                     if v.canNotBuy then
@@ -94,16 +95,17 @@ function WidgetRequirementListview:RefreshListView(contents)
                         content.mark:setTexture("wow_40x40.png")
                     end
                     -- 条件未达到，自己的数据红色显示
-                    content.resource_value[1]:setString(split_desc[1])
+                    local v_1 = tonumber(split_desc[1]) and string.formatnumberthousands(tonumber(split_desc[1])) or split_desc[1]
+                    content.resource_value[1]:setString(v_1)
                     content.resource_value[1]:setColor(split_desc[2] and UIKit:hex2c4b(0x7e0000) or UIKit:hex2c4b(0x403c2f))
                     if split_desc[2] then
-                        content.resource_value[2]:setString("/"..split_desc[2])
+                        content.resource_value[2]:setString("/"..string.formatnumberthousands(tonumber(split_desc[2])))
                         if v.resource_type == "building_queue" then
                             content.resource_value[2]:setColor(UIKit:hex2c4b(0x7e0000))
                         else
                             content.resource_value[2]:setColor(UIKit:hex2c4b(0x403c2f))
                         end
-                        content.resource_value[2]:setPositionX(content.resource_value[1]:getPositionX()+content.resource_value[1]:getContentSize().width) 
+                        content.resource_value[2]:setPositionX(content.resource_value[1]:getPositionX()+content.resource_value[1]:getContentSize().width)
                     end
                 end
             else
@@ -124,14 +126,15 @@ function WidgetRequirementListview:RefreshListView(contents)
                     -- 符合条件，添加钩钩图标
                     content.mark = display.newSprite("yes_40x40.png", item_width/2-25, 0):addTo(content)
                     content.resource_value  = {}
+                    local v_1 = tonumber(split_desc[1]) and string.formatnumberthousands(tonumber(split_desc[1])) or split_desc[1]
                     content.resource_value[1] = UIKit:ttfLabel({
-                        text = split_desc[1],
+                        text = v_1,
                         size = 22,
                         color = 0x403c2f
                     }):align(display.LEFT_CENTER,-180,0):addTo(content)
                     if split_desc[2] then
                         content.resource_value[2] = UIKit:ttfLabel({
-                            text = "/"..split_desc[2],
+                            text = "/"..string.formatnumberthousands(tonumber(split_desc[2])),
                             size = 22,
                             color = 0x403c2f
                         }):align(display.LEFT_CENTER,content.resource_value[1]:getPositionX()+content.resource_value[1]:getContentSize().width,0):addTo(content)
@@ -164,14 +167,15 @@ function WidgetRequirementListview:RefreshListView(contents)
                     end
                     -- 条件未达到，自己的数据红色显示
                     content.resource_value  = {}
+                    local v_1 = tonumber(split_desc[1]) and string.formatnumberthousands(tonumber(split_desc[1])) or split_desc[1]
                     content.resource_value[1] = UIKit:ttfLabel({
-                        text = split_desc[1],
+                        text = v_1,
                         size = 22,
                         color = split_desc[2] and 0x7e0000 or 0x403c2f
                     }):align(display.LEFT_CENTER,-180,0):addTo(content)
                     if split_desc[2] then
                         content.resource_value[2] = UIKit:ttfLabel({
-                            text = "/"..split_desc[2],
+                            text = "/"..string.formatnumberthousands(tonumber(split_desc[2])),
                             size = 22,
                             color = v.resource_type == "building_queue" and 0x7e0000 or 0x403c2f
                         }):align(display.LEFT_CENTER,content.resource_value[1]:getPositionX()+content.resource_value[1]:getContentSize().width,0):addTo(content)
@@ -199,6 +203,7 @@ function WidgetRequirementListview:RefreshListView(contents)
 end
 
 return WidgetRequirementListview
+
 
 
 

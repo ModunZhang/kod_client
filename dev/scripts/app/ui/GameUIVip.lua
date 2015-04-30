@@ -79,17 +79,17 @@ function GameUIVip:AdapterPlayerList()
     if not alliance:IsDefault() then
         local member = alliance:GetMemeberById(DataManager:getUserData()._id)
     end
-    table.insert(infos,{_("职位"),member and member:Title() or ""})
+    table.insert(infos,{_("采集粮食熟练度"),User:GetFoodCollectLevel()})
+    table.insert(infos,{_("采集铁矿熟练度"),User:GetIronCollectLevel()})
+    table.insert(infos,{_("采集石料熟练度"),User:GetStoneCollectLevel()})
+    table.insert(infos,{_("采集木材熟练度"),User:GetWoodCollectLevel()})
+    table.insert(infos,{_("防御胜利"),User:DefenceWin()})
+    table.insert(infos,{_("进攻胜利"),User:AttackWin()})
+    table.insert(infos,{_("胜率"),User:AttackTotal() ~= 0 and string.format("%.2f%%",(User:AttackWin()/User:AttackTotal())*100) or 0})
+    table.insert(infos,{_("击杀"),string.formatnumberthousands(User:Kill())})
+    table.insert(infos,{_("忠诚值"),GameUtils:formatNumber(User:Loyalty())})
     table.insert(infos,{_("联盟"),alliance and alliance:Name() or ""})
-    table.insert(infos,{_("忠诚值"),member and member:Loyalty() or ""})
-    table.insert(infos,{_("击杀"),member and member:Kill() or ""})
-    table.insert(infos,{_("胜率"),"假的"})
-    table.insert(infos,{_("进攻胜利"),"假的"})
-    table.insert(infos,{_("防御胜利"),"假的"})
-    table.insert(infos,{_("采集木材熟练度"),"假的"})
-    table.insert(infos,{_("采集石料熟练度"),"假的"})
-    table.insert(infos,{_("采集铁矿熟练度"),"假的"})
-    table.insert(infos,{_("采集粮食熟练度"),"假的"})
+    table.insert(infos,{_("职位"),member and member:Title() or ""})
     return infos
 end
 
@@ -756,7 +756,7 @@ function GameUIVip:SetVIPInfo(level)
     self.widget_info:SetInfo(info)
 end
 function GameUIVip:OpenVIPDetails(show_vip_level)
-    local layer = WidgetPopDialog.new(737,_("VIP"),display.top-140,"title_purple_600x52.png")
+    local layer = UIKit:newWidgetUI("WidgetPopDialog", 737,_("VIP"),display.top-140,"title_purple_600x52.png")
         :AddToCurrentScene()
     local body = layer:GetBody()
     local size = body:getContentSize()
@@ -891,6 +891,10 @@ function GameUIVip:OnVipEventTimer( vip_event_new )
 end
 
 return GameUIVip
+
+
+
+
 
 
 

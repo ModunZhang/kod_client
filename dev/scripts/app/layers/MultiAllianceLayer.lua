@@ -7,6 +7,7 @@ local AllianceView = import(".AllianceView")
 local MapLayer = import(".MapLayer")
 local MultiAllianceLayer = class("MultiAllianceLayer", MapLayer)
 local ZORDER = Enum("BACKGROUND", "BUILDING", "INFO", "LINE", "CORPS")
+local fmod = math.fmod
 local floor = math.floor
 local min = math.min
 local max = math.max
@@ -32,7 +33,7 @@ function MultiAllianceLayer:ctor(arrange, ...)
 
 
     -- local x, y = 13, 36
-    -- local len = 9
+    -- local len = 10
     -- local count = 1
     -- for i = x - len, x + len do
     --     self:CreateCorps(
@@ -46,40 +47,6 @@ function MultiAllianceLayer:ctor(arrange, ...)
     --     count = count + 1
     -- end
 
-    -- for i = x - len, x + len do
-    --     self:CreateCorps(
-    --         count,
-    --         {x = x, y = y, index = 1},
-    --         {x = i, y = y - 10, index = 1},
-    --         timer:GetServerTime(),
-    --         timer:GetServerTime() + 30
-    --     )
-    --     count = count + 1
-    -- end
-
-
-    -- for i = y - len, y + len do
-    --     self:CreateCorps(
-    --         count,
-    --         {x = x, y = y, index = 1},
-    --         {x = x + 10, y = i, index = 1},
-    --         timer:GetServerTime(),
-    --         timer:GetServerTime() + 30
-    --     )
-    --     count = count + 1
-    -- end
-
-
-    -- for i = y - len, y + len do
-    --     self:CreateCorps(
-    --         count,
-    --         {x = x, y = y, index = 1},
-    --         {x = x - 10, y = i, index = 1},
-    --         timer:GetServerTime(),
-    --         timer:GetServerTime() + 30
-    --     )
-    --     count = count + 1
-    -- end
 
 end
 function MultiAllianceLayer:onCleanup()
@@ -222,15 +189,13 @@ function MultiAllianceLayer:InitAllianceEvent()
     end
 end
 function MultiAllianceLayer:StartCorpsTimer()
-    local time = 0
     self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt)
-        time = time + dt
-        local cur_time = timer:GetServerTime()
+        local time = timer:GetServerTime()
         for id, corps in pairs(self.corps_map) do
             if corps then
                 local march_info = corps.march_info
                 local total_time = march_info.finish_time - march_info.start_time
-                local elapse_time = cur_time - march_info.start_time
+                local elapse_time = time - march_info.start_time
                 if elapse_time <= total_time then
                     local cur_vec = cc.pAdd(cc.pMul(march_info.normal, march_info.speed * elapse_time), march_info.start_info.real)
                     corps:pos(cur_vec.x, cur_vec.y)
@@ -239,10 +204,7 @@ function MultiAllianceLayer:StartCorpsTimer()
                 end
                 local line = self.lines_map[id]
                 if line then
-                    local shader_program = line:getFilter():getGLProgramState()
-                    shader_program:setUniformFloat("curTime", time)
-                    -- local percent = elapse_time / total_time
-                    -- shader_program:setUniformFloat("percent", min(max(0, percent), 1))
+                    line:getFilter():getGLProgramState():setUniformFloat("percent", fmod(time - floor(time), 1.0))
                 end
             end
         end
@@ -541,8 +503,7 @@ function MultiAllianceLayer:CreateLine(id, march_info)
             frag = "shaders/multi_tex.fs",
             shaderName = "lineShader"..unit_count,
             unit_count = unit_count,
-            curTime = 0,
-        -- percent = 0,
+            percent = 0,
         })
     ))
     sprite:setScaleY(scale)
@@ -557,7 +518,6 @@ function MultiAllianceLayer:GetMarchInfoWith(id, logic_start_point, logic_end_po
     local degree = math.deg(cc.pGetAngle(vector, {x = 0, y = 1}))
     local length = cc.pGetLength(vector)
     local scale = length / 22
-    local unit_count = math.floor(scale)
     return {
         start_info = {real = spt, logic = logic_start_point},
         end_info = {real = ept, logic = logic_end_point},

@@ -20,45 +20,7 @@ function WidgetGachaItemBox:ctor(gacha_item,isSenior)
     self:SetNodeEvent(gacha_box)
 end
 function WidgetGachaItemBox:SetNodeEvent(gacha_box)
-    gacha_box:setTouchEnabled(true)
-    gacha_box:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
-        if event.name == "began" then
-            local tip_x = 0
-            if self:getPositionX() < display.cx then
-                tip_x = 70
-            else
-                tip_x = -70
-            end
-            local tips_bg = display.newScale9Sprite("back_ground_240x73.png",tip_x,0,cc.size(240,73),cc.rect(10,10,220,53))
-                :addTo(self):align(display.CENTER)
-            tips_bg:setTag(100)
-            local text_1 = UIKit:ttfLabel({text = Localize_item.item_name[self.gacha_item.itemName],size = 20 ,color = 0xfff2b3})
-                :addTo(tips_bg)
-            text_1:setGlobalZOrder(100)
-            local text_2 = UIKit:ttfLabel({text = "X "..self.gacha_item.itemCount,size = 20 ,color = 0xfff2b3})
-                :addTo(tips_bg)
-            text_2:setGlobalZOrder(100)
-            tips_bg:size(math.max(text_1:getContentSize().width,text_2:getContentSize().width)+20,73)
-            local t_size = tips_bg:getContentSize()
-            text_1:align(display.CENTER, t_size.width/2, 50)
-
-            text_2:align(display.CENTER, t_size.width/2, 20)
-            tips_bg:setGlobalZOrder(100)
-        elseif event.name == "ended" then
-            if self:getChildByTag(100) then
-                self:removeChildByTag(100, true)
-            end
-        elseif event.name == "moved" then
-            local rect = self:convertToNodeSpace(cc.p(event.x,event.y))
-            local box = self:getContentSize()
-            if box.width/2 < rect.x or rect.x<-box.width/2 or box.height/2 < rect.y or rect.y < -box.height/2 then
-                if self:getChildByTag(100) then
-                    self:removeChildByTag(100, true)
-                end
-            end
-        end
-        return true
-    end)
+    UIKit:addTipsToNode( gacha_box,Localize_item.item_name[self.gacha_item.itemName] )
 end
 -- 设置起点或取消起点状态
 function WidgetGachaItemBox:SetOrginStatus()

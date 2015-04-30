@@ -5,7 +5,6 @@ local WidgetSoldierDetails = import("..widget.WidgetSoldierDetails")
 local HospitalUpgradeBuilding = import("..entity.HospitalUpgradeBuilding")
 local SoldierManager = import("..entity.SoldierManager")
 local UILib = import("..ui.UILib")
-local FullScreenPopDialogUI = import("..ui.FullScreenPopDialogUI")
 local WidgetSlider = import("..widget.WidgetSlider")
 local Localize = import("..utils.Localize")
 local WidgetPushButton = import("..widget.WidgetPushButton")
@@ -259,11 +258,9 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
                 self:instant_button_clicked()
             end
             if self.count<1 then
-                local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                    :SetPopMessage(_("请设置要治愈的伤兵数")):AddToCurrentScene()
+                UIKit:showMessageDialog(_("陛下"),_("请设置要治愈的伤兵数"))
             elseif self.treat_now_gems>City:GetUser():GetGemResource():GetValue() then
-                local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                    :SetPopMessage(_("金龙币补足"))
+                UIKit:showMessageDialog(_("陛下"),_("金龙币不足"))
                     :CreateOKButton(
                         {
                             listener = function ()
@@ -272,8 +269,7 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
                                 self:getParent():LeftButtonClicked()
                             end,
                             btn_name= _("前往商店")
-                        }
-                    ):AddToCurrentScene()
+                        })
             else
                 treat_fun()
             end
@@ -321,11 +317,9 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
             end
             local isAbleToTreat =hospital:IsAbleToTreat(soldiers)
             if self.count<1 then
-                local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                    :SetPopMessage(_("请设置要治愈的伤兵数")):AddToCurrentScene()
+                UIKit:showMessageDialog(_("陛下"),_("请设置要治愈的伤兵数"))
             elseif City:GetUser():GetGemResource():GetValue()< hospital:GetTreatGems(soldiers) then
-                local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                    :SetPopMessage(_("没有足够的金龙币补充资源"))
+                UIKit:showMessageDialog(_("陛下"),_("没有足够的金龙币补充资源"))
                     :CreateOKButton(
                         {
                             listener = function ()
@@ -335,30 +329,27 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
                             end,
                             btn_name= _("前往商店")
                         }
-                    ):AddToCurrentScene()
+                    )
             elseif isAbleToTreat==HospitalUpgradeBuilding.CAN_NOT_TREAT.TREATING_AND_LACK_RESOURCE then
-                local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                    :SetPopMessage(_("正在治愈，资源不足"))
+                UIKit:showMessageDialog(_("陛下"),_("正在治愈，资源不足"))
                     :CreateOKButton(
                         {
                             listener = treat_fun
                         }
                     )
-                    :CreateNeeds({value = hospital:GetTreatGems(soldiers)}):AddToCurrentScene()
+                    :CreateNeeds({value = hospital:GetTreatGems(soldiers)})
             elseif isAbleToTreat==HospitalUpgradeBuilding.CAN_NOT_TREAT.LACK_RESOURCE then
-                local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                    :SetPopMessage(_("资源不足，是否花费金龙币补足"))
+                UIKit:showMessageDialog(_("陛下"),_("资源不足，是否花费金龙币补足"))
                     :CreateOKButton({
                         listener = treat_fun
                     })
-                    :CreateNeeds({value = hospital:GetTreatGems(soldiers)}):AddToCurrentScene()
+                    :CreateNeeds({value = hospital:GetTreatGems(soldiers)})
             elseif isAbleToTreat==HospitalUpgradeBuilding.CAN_NOT_TREAT.TREATING then
-                local dialog = FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                    :SetPopMessage(_("正在治愈，是否花费魔法石立即完成"))
+                UIKit:showMessageDialog(_("陛下"),_("正在治愈，是否花费魔法石立即完成"))
                     :CreateOKButton({
                         listener = treat_fun
                     })
-                    :CreateNeeds({value = hospital:GetTreatGems(soldiers)}):AddToCurrentScene()
+                    :CreateNeeds({value = hospital:GetTreatGems(soldiers)})
             else
                 treat_fun()
             end
@@ -493,6 +484,8 @@ function WidgetTreatSoldier:OnCountChanged(count)
     self.gem_label:setString(self.treat_now_gems)
 end
 return WidgetTreatSoldier
+
+
 
 
 

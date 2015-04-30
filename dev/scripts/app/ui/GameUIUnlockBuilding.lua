@@ -1,5 +1,4 @@
 local UIListView = import(".UIListView")
-local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local WidgetRequirementListview = import("..widget.WidgetRequirementListview")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
@@ -164,27 +163,73 @@ function GameUIUnlockBuilding:SetUpgradeRequirementListview()
     local has_materials =City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
     local pre_condition = building:IsBuildingUpgradeLegal()
     local requirements = {
-        {resource_type = _("前置条件"),isVisible = building:GetLevel()>5, isSatisfy = not pre_condition,canNotBuy=true,
-            icon="hammer_31x33.png",description = building:GetPreConditionDesc()},
-        {resource_type = _("建造队列"),isVisible = true, isSatisfy = #City:GetUpgradingBuildings()<City:BuildQueueCounts(),
-            icon="hammer_31x33.png",description=_("建造队列")..(City:BuildQueueCounts()-GameUtils:formatNumber(#City:GetUpgradingBuildings())).."/"..City:BuildQueueCounts()},
-        {resource_type = _("木材"),isVisible = self.building:GetLevelUpWood()>0,      isSatisfy = wood>=self.building:GetLevelUpWood(),
-            icon="res_wood_82x73.png",description=wood.."/"..self.building:GetLevelUpWood()},
+        {
+            resource_type = _("前置条件"),
+            isVisible = building:GetLevel()>5,
+            isSatisfy = not pre_condition,
+            canNotBuy=true,
+            icon="hammer_31x33.png",
+            description = building:GetPreConditionDesc()
+        },
+        {
+            resource_type = _("建造队列"),
+            isVisible = true,
+            isSatisfy = #City:GetUpgradingBuildings()<City:BuildQueueCounts(),
+            icon="hammer_31x33.png",
+            description=_("建造队列")..(City:BuildQueueCounts()-#City:GetUpgradingBuildings()).."/"..City:BuildQueueCounts()
+        },
+        {
+            resource_type = _("木材"),
+            isVisible = self.building:GetLevelUpWood()>0,
+            isSatisfy = wood>=self.building:GetLevelUpWood(),
+            icon="res_wood_82x73.png",
+            description= wood.."/"..self.building:GetLevelUpWood()
+        },
 
-        {resource_type = _("石料"),isVisible = self.building:GetLevelUpStone()>0,     isSatisfy = stone>=self.building:GetLevelUpStone() ,
-            icon="res_stone_88x82.png",description=stone.."/"..self.building:GetLevelUpStone()},
+        {
+            resource_type = _("石料"),
+            isVisible = self.building:GetLevelUpStone()>0,
+            isSatisfy = stone>=self.building:GetLevelUpStone() ,
+            icon="res_stone_88x82.png",
+            description=stone.."/"..self.building:GetLevelUpStone()
+        },
 
-        {resource_type = _("铁矿"),isVisible = self.building:GetLevelUpIron()>0,      isSatisfy = iron>=self.building:GetLevelUpIron() ,
-            icon="res_iron_91x63.png",description=iron.."/"..self.building:GetLevelUpIron()},
+        {
+            resource_type = _("铁矿"),
+            isVisible = self.building:GetLevelUpIron()>0,
+            isSatisfy = iron>=self.building:GetLevelUpIron() ,
+            icon="res_iron_91x63.png",
+            description=iron.."/"..self.building:GetLevelUpIron()
+        },
 
-        {resource_type = _("建筑蓝图"),isVisible = self.building:GetLevelUpBlueprints()>0,isSatisfy = has_materials.blueprints>=self.building:GetLevelUpBlueprints() ,
-            icon="blueprints_128x128.png",description=has_materials.blueprints.."/"..self.building:GetLevelUpBlueprints()},
-        {resource_type = _("建造工具"),isVisible = self.building:GetLevelUpTools()>0,     isSatisfy = has_materials.tools>=self.building:GetLevelUpTools() ,
-            icon="tools_128x128.png",description=has_materials.tools.."/"..self.building:GetLevelUpTools()},
-        {resource_type = _("砖石瓦片"),isVisible = self.building:GetLevelUpTiles()>0,     isSatisfy = has_materials.tiles>=self.building:GetLevelUpTiles() ,
-            icon="tiles_128x128.png",description=has_materials.tiles.."/"..self.building:GetLevelUpTiles()},
-        {resource_type = _("滑轮组"),isVisible = self.building:GetLevelUpPulley()>0,    isSatisfy = has_materials.pulley>=self.building:GetLevelUpPulley() ,
-            icon="pulley_128x128.png",description=has_materials.pulley.."/"..self.building:GetLevelUpPulley()},
+        {
+            resource_type = _("建筑蓝图"),
+            isVisible = self.building:GetLevelUpBlueprints()>0,
+            isSatisfy = has_materials.blueprints>=self.building:GetLevelUpBlueprints() ,
+            icon="blueprints_128x128.png",
+            description=has_materials.blueprints.."/"..self.building:GetLevelUpBlueprints()
+        },
+        {
+            resource_type = _("建造工具"),
+            isVisible = self.building:GetLevelUpTools()>0,
+            isSatisfy = has_materials.tools>=self.building:GetLevelUpTools() ,
+            icon="tools_128x128.png",
+            description=has_materials.tools.."/"..self.building:GetLevelUpTools()
+        },
+        {
+            resource_type = _("砖石瓦片"),
+            isVisible = self.building:GetLevelUpTiles()>0,
+            isSatisfy = has_materials.tiles>=self.building:GetLevelUpTiles() ,
+            icon="tiles_128x128.png",
+            description=has_materials.tiles.."/"..self.building:GetLevelUpTiles()
+        },
+        {
+            resource_type = _("滑轮组"),
+            isVisible = self.building:GetLevelUpPulley()>0,
+            isSatisfy = has_materials.pulley>=self.building:GetLevelUpPulley() ,
+            icon="pulley_128x128.png",
+            description=has_materials.pulley.."/"..self.building:GetLevelUpPulley()
+        },
     }
 
     if not self.requirement_listview then
@@ -198,8 +243,7 @@ function GameUIUnlockBuilding:SetUpgradeRequirementListview()
 end
 
 function GameUIUnlockBuilding:PopNotSatisfyDialog(listener,can_not_update_type)
-    local dialog = FullScreenPopDialogUI.new()
-    self:getParent():addChild(dialog,2002)
+    local dialog = UIKit:showMessageDialog()
     if can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.RESOURCE_NOT_ENOUGH then
         local required_gems =self.building:getUpgradeRequiredGems()
         local owen_gem = City:GetUser():GetGemResource():GetValue()
@@ -260,6 +304,7 @@ end
 
 
 return GameUIUnlockBuilding
+
 
 
 

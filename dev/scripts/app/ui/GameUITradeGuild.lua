@@ -4,7 +4,6 @@ local WidgetRoundTabButtons = import("..widget.WidgetRoundTabButtons")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
-local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local WidgetInfo = import("..widget.WidgetInfo")
 local WidgetSliderWithInput = import("..widget.WidgetSliderWithInput")
 local MaterialManager = import("..entity.MaterialManager")
@@ -291,15 +290,13 @@ function GameUITradeGuild:CreateSellItemForListView(listView,goods)
                     end)
                 end
                 if City:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())<goods.itemData.price*goods.itemData.count then
-                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                        :SetPopMessage(_("银币不足,是否使用金龙币补充"))
+                    UIKit:showMessageDialog(_("陛下"),_("银币不足,是否使用金龙币补充"))
                         :CreateOKButton({
                             listener = function ()
                                 buy_func()
                             end
                         })
                         :CreateNeeds({value = DataUtils:buyResource({coin = goods.itemData.price*goods.itemData.count}, {coin=City:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())})})
-                        :AddToCurrentScene()
                     return
                 end
                 buy_func()
@@ -660,7 +657,7 @@ function GameUITradeGuild:GetOnSellGoods()
     return sell_goods
 end
 function GameUITradeGuild:OpenDollyIntro()
-    local layer = WidgetPopDialog.new(350,_("资源小车"),display.top-240):AddToCurrentScene()
+    local layer = UIKit:newWidgetUI("WidgetPopDialog", 350,_("资源小车"),display.top-240):AddToCurrentScene()
     local body = layer:GetBody()
     local w,h = body:getContentSize().width,body:getContentSize().height
 
@@ -1112,6 +1109,8 @@ function GameUITradeGuild:GetMaterialIndexByName(material_type)
     return build_temp[material_type] or teach_temp[material_type]
 end
 return GameUITradeGuild
+
+
 
 
 

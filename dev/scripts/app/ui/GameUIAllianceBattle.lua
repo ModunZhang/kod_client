@@ -4,7 +4,6 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local WidgetPages = import("..widget.WidgetPages")
 local WidgetUIBackGround2 = import("..widget.WidgetUIBackGround2")
-local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local WidgetInfo = import("..widget.WidgetInfo")
 local Alliance = import("..entity.Alliance")
 local AllianceMoonGate = import("..entity.AllianceMoonGate")
@@ -201,9 +200,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
                 :onButtonClicked(function(event)
                     if event.name == "CLICKED_EVENT" then
                         if self.alliance:IsRequested() then
-                            FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                                :SetPopMessage(_("已经发送过开战请求"))
-                                :AddToCurrentScene()
+                            UIKit:showMessageDialog(_("提示"),_("已经发送过开战请求"))
                             return
                         end
                         NetManager:getRequestAllianceToFightPromose()
@@ -283,9 +280,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
                 :onButtonClicked(function(event)
                     if event.name == "CLICKED_EVENT" then
                         if self.alliance:Status()=="fight" or self.alliance:Status()=="prepare" then
-                            FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                                :SetPopMessage(_("联盟正在战争准备期或战争期"))
-                                :AddToCurrentScene()
+                            UIKit:showMessageDialog(_("提示"),_("联盟正在战争准备期或战争期"))
                             return
                         end
                         NetManager:getFindAllianceToFightPromose()
@@ -472,7 +467,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
 
         local info_bg = WidgetUIBackGround.new({width = 540,height = 434},WidgetUIBackGround.STYLE_TYPE.STYLE_6)
             :align(display.TOP_CENTER,window.cx, info_bg_y):addTo(layer)
-       
+
         self.info_listview = UIListView.new{
             viewRect = cc.rect(9, 10, 522, 414),
             direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
@@ -571,7 +566,7 @@ function GameUIAllianceBattle:OpenAllianceDetails(isOur)
     local alliance_terrain = isOur and alliance:Terrain() or enemy_alliance:Terrain()
 
 
-    local body = WidgetPopDialog.new(726,_("联盟详情")):AddToCurrentScene():GetBody()
+    local body = UIKit:newWidgetUI("WidgetPopDialog",726,_("联盟详情")):AddToCurrentScene():GetBody()
     local rb_size = body:getContentSize()
 
 
@@ -675,7 +670,7 @@ end
 
 
 function GameUIAllianceBattle:OpenWarDetails()
-    local body = WidgetPopDialog.new(608,_("联盟对战")):AddToCurrentScene():GetBody()
+    local body = UIKit:newWidgetUI("WidgetPopDialog",608,_("联盟对战")):AddToCurrentScene():GetBody()
     local rb_size = body:getContentSize()
 
     local war_introduce_table = {
@@ -731,7 +726,7 @@ function GameUIAllianceBattle:OpenWarDetails()
 
 end
 function GameUIAllianceBattle:OpenRequestFightList()
-    local body = WidgetPopDialog.new(500,_("请求开战玩家")):AddToCurrentScene():GetBody()
+    local body = UIKit:newWidgetUI("WidgetPopDialog",500,_("请求开战玩家")):AddToCurrentScene():GetBody()
     local rb_size = body:getContentSize()
 
     WidgetInfo.new({
@@ -742,7 +737,7 @@ function GameUIAllianceBattle:OpenRequestFightList()
 end
 function GameUIAllianceBattle:GetFightRequestsInfo()
     local alliance = self.alliance
-    local fight_requests = alliance:GetFightRequest()
+    local fight_requests = alliance:FightRequests()
     local info = {}
 
     for _,id in pairs(fight_requests) do
@@ -956,9 +951,7 @@ function GameUIAllianceBattle:AddHistoryItem(report,index)
         revenge_button:onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 if self.alliance:Status()~="peace" then
-                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                        :SetPopMessage(_("已经处于联盟战期间"))
-                        :AddToCurrentScene()
+                    UIKit:showMessageDialog(_("提示"),_("已经处于联盟战期间"))
                     return
                 end
                 NetManager:getRevengeAlliancePromise(report.id):done(function ()
@@ -1125,7 +1118,7 @@ function GameUIAllianceBattle:CreateAllianceItem(alliance)
         color = 0x403c2f,
     }):align(display.LEFT_CENTER,200,30)
         :addTo(content)
-    if alliance._id ~= Alliance_Manager:GetMyAlliance():Id() then
+    if alliance._id ~= self.alliance:Id() then
         -- 进入按钮
         local enter_btn = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
             :setButtonLabel(UIKit:ttfLabel({
@@ -1199,7 +1192,7 @@ function GameUIAllianceBattle:OpenOtherAllianceDetails(alliance)
     -- 盟主名字
     display.newSprite("alliance_item_leader_39x39.png"):addTo(body):pos(178,h-100)
     UIKit:ttfLabel({
-        text = alliance.archon,
+        text = alliance.archer,
         size = 22,
         color = 0x403c2f,
     }):align(display.LEFT_CENTER, 198,h-100)
@@ -1228,22 +1221,24 @@ function GameUIAllianceBattle:OpenOtherAllianceDetails(alliance)
     addAttr(_("语言"),basic.language,10,20)
     addAttr(_("战斗力"),basic.power,350,60)
     addAttr(_("击杀"),basic.kill,350,20)
-    -- 进入按钮
-    local enter_btn = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
-        :setButtonLabel(UIKit:ttfLabel({
-            text = _("进入"),
-            size = 24,
-            color = 0xffedae,
-            shadow= true
-        }))
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-                app:EnterViewModelAllianceScene(alliance._id)
-            end
-        end):align(display.RIGHT_CENTER,w-35,h-100):addTo(body)
+
+    if alliance._id ~= self.alliance:Id() then
+        -- 进入按钮
+        local enter_btn = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
+            :setButtonLabel(UIKit:ttfLabel({
+                text = _("进入"),
+                size = 24,
+                color = 0xffedae,
+                shadow= true
+            }))
+            :onButtonClicked(function(event)
+                if event.name == "CLICKED_EVENT" then
+                    app:EnterViewModelAllianceScene(alliance._id)
+                end
+            end):align(display.RIGHT_CENTER,w-35,h-100):addTo(body)
+    end
     WidgetInfo.new({
         info={
-            -- {_("名城占领时间"),"2d 23h 4m"},
             {_("击杀部队人口"),string.formatnumberthousands(countInfo.kill)},
             {_("阵亡部队人口"),string.formatnumberthousands(countInfo.beKilled)},
             {_("击溃城市"),string.formatnumberthousands(countInfo.routCount)},
@@ -1303,6 +1298,7 @@ function GameUIAllianceBattle:OnAllianceFightReportsChanged(changed_map)
 end
 
 return GameUIAllianceBattle
+
 
 
 

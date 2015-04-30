@@ -4,7 +4,6 @@ local TabButtons = import('.TabButtons')
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetUIBackGround2= import("..widget.WidgetUIBackGround2")
-local FullScreenPopDialogUI= import(".FullScreenPopDialogUI")
 local WidgetPopDialog= import("..widget.WidgetPopDialog")
 local WidgetUseItems= import("..widget.WidgetUseItems")
 local Localize = import("..utils.Localize")
@@ -283,7 +282,7 @@ end
 function GameUIKeep:CreateChangeTerrainWindow()
     local layer = WidgetPopDialog.new(450,_("城市地形修改")):addTo(self,201)
     local body = layer:GetBody()
-    
+
     local bg1 = display.newScale9Sprite("back_ground_104x132.png",x,y,cc.size(580,264),cc.rect(10,10,84,112))
         :addTo(body):align(display.CENTER,304, 294)
 
@@ -419,9 +418,7 @@ function GameUIKeep:CreateChangeTerrainWindow()
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 if User:GetGemResource():GetValue()<intInit.changeTerrainNeedGemCount.value then
-                    FullScreenPopDialogUI.new()
-                        :AddToCurrentScene()
-                        :SetTitle("提示")
+                    UIKit:showMessageDialog(_("提示"),_("金龙币不足"))
                         :CreateOKButton(
                             {
                                 listener = function ()
@@ -431,7 +428,6 @@ function GameUIKeep:CreateChangeTerrainWindow()
                                 btn_name= _("前往商店")
                             }
                         )
-                        :SetPopMessage(_("金龙币不足"))
                     return
                 end
                 local selected_index = 1
@@ -442,9 +438,7 @@ function GameUIKeep:CreateChangeTerrainWindow()
                     end
                 end
                 if selected_index==default_index then
-                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                        :SetPopMessage(_("请选择不同的地形"))
-                        :AddToCurrentScene()
+                    UIKit:showMessageDialog(_("提示"),_("请选择不同的地形"))
                     return
                 end
                 if selected_index == 1 then
@@ -517,6 +511,7 @@ end
 
 
 return GameUIKeep
+
 
 
 

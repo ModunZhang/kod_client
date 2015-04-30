@@ -50,7 +50,7 @@ function WidgetSliderWithInput:ctor(params)
                         end
                     end
                 }
-                WidgetInput.new(p):AddToCurrentScene()
+                UIKit:newWidgetUI("WidgetInput",p):AddToCurrentScene()
             end
         end):align(display.CENTER, slider:getCascadeBoundingBox().size.width,30):addTo(self)
 
@@ -75,8 +75,12 @@ function WidgetSliderWithInput:ctor(params)
         local btn_unit  = ""
         if e_value>=1000 then
             local f_value = GameUtils:formatNumber(e_value)
-            btn_value = string.sub(f_value,1,-2)
-            btn_unit = string.sub(f_value,-1,-1)
+            if change_unit == 1000 then
+                btn_value = string.sub(f_value,1,-2)
+                btn_unit = string.sub(f_value,-1,-1)
+            else
+                btn_value = string.sub(f_value,1,-2)
+            end
         else
             btn_value = e_value
         end
@@ -86,6 +90,9 @@ function WidgetSliderWithInput:ctor(params)
             self.btn_text:setString(tonumber(btn_value))
         end
         self.soldier_total_count:setString(string.format(btn_unit.."/ %s", GameUtils:formatNumber(self.max)))
+        if self.valueChangedFunc then
+            self.valueChangedFunc(event)
+        end
     end)
 
     local soldier_total_count = UIKit:ttfLabel({
@@ -112,31 +119,7 @@ function WidgetSliderWithInput:AddSliderReleaseEventListener(func)
     return self
 end
 function WidgetSliderWithInput:OnSliderValueChanged(func)
-    self.slider:onSliderValueChanged(function(event)
-        local change_unit
-        if self.unit == "K" then
-            change_unit = 1000
-        else
-            change_unit = 1
-        end
-        local e_value = math.floor(event.value*change_unit)
-        local btn_value
-        local btn_unit  = ""
-        if e_value>=1000 then
-            local f_value = GameUtils:formatNumber(e_value)
-            btn_value = string.sub(f_value,1,-2)
-            btn_unit = string.sub(f_value,-1,-1)
-        else
-            btn_value = e_value
-        end
-        if btn_unit == "K" then
-            self.btn_text:setString(math.floor(tonumber(btn_value)))
-        else
-            self.btn_text:setString(tonumber(btn_value))
-        end
-        self.soldier_total_count:setString(string.format(btn_unit.."/ %s", GameUtils:formatNumber(self.max)))
-        func(event)
-    end)
+    self.valueChangedFunc = func
     return self
 end
 function WidgetSliderWithInput:LayoutValueLabel(layout,offset)

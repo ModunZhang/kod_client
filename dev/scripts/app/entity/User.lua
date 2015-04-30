@@ -24,7 +24,23 @@ User.LISTEN_TYPE = Enum(
     "IAP_GIFTS_CHANGE",
     "IAP_GIFTS_TIMER",
     "TASK",
-    "ALLIANCE_DONATE")
+    "ALLIANCE_DONATE",
+    "ALLIANCE_INFO")
+local collect_type  = {"woodExp",
+    "stoneExp",
+    "ironExp",
+    "foodExp",
+    "coinExp"}
+local collect_exp_config  = {"wood",
+    "stone",
+    "iron",
+    "food",
+    "coin"}
+local COLLECT_TYPE = Enum("WOOD",
+    "STONE",
+    "IRON",
+    "FOOD",
+    "COIN")
 local TASK = User.LISTEN_TYPE.TASK
 local BASIC = User.LISTEN_TYPE.BASIC
 local RESOURCE = User.LISTEN_TYPE.RESOURCE
@@ -49,6 +65,8 @@ property(User, "terrain", "grassLand")
 property(User, "id", 0)
 property(User, "attackWin", 0)
 property(User, "strikeWin", 0)
+property(User, "defenceWin", 0)
+property(User, "attackTotal", 0)
 property(User, "kill", 0)
 property(User, "language", "cn")
 property(User, "recruitQueue", 1)
@@ -59,6 +77,14 @@ property(User, "gcId", "")
 property(User, "serverId", "")
 property(User, "requestToAllianceEvents", {})
 property(User, "inviteToAllianceEvents", {})
+property(User, "allianceInfo", {
+    loyalty = 0,
+    woodExp = 0,
+    stoneExp = 0,
+    ironExp = 0,
+    foodExp = 0,
+    coinExp = 0,
+})
 property(User, "allianceDonate", {
     wood = 1,
     stone = 1,
@@ -116,6 +142,33 @@ function User:UseStrength(num)
         return true
     end
     return false
+end
+function User:GetCollectLevelByType(collectType)
+    local exp = self.allianceInfo[collect_type[collectType]]
+    local config = GameDatas.PlayerVillageExp[collect_exp_config[collectType]]
+    for i = #config,1,-1 do
+        if exp>=config[i].expFrom then
+            return i
+        end
+    end
+end
+function User:GetWoodCollectLevel()
+    return self:GetCollectLevelByType(COLLECT_TYPE.WOOD)
+end
+function User:GetStoneCollectLevel()
+    return self:GetCollectLevelByType(COLLECT_TYPE.STONE)
+end
+function User:GetIronCollectLevel()
+    return self:GetCollectLevelByType(COLLECT_TYPE.IRON)
+end
+function User:GetFoodCollectLevel()
+    return self:GetCollectLevelByType(COLLECT_TYPE.FOOD)
+end
+function User:GetCoinCollectLevel()
+    return self:GetCollectLevelByType(COLLECT_TYPE.COIN)
+end
+function User:Loyalty()
+    return self.allianceInfo.loyalty
 end
 function User:HasAnyStength(num)
     return self:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()) >= (num or 1)
@@ -256,6 +309,7 @@ function User:OnUserDataChanged(userData, current_time, deltaData)
     self:OnIapGiftsChanged(userData, deltaData)
     self:GetPVEDatabase():OnUserDataChanged(userData, deltaData)
     self:OnAllianceDonateChanged(userData, deltaData)
+    self:OnAllianceInfoChanged(userData, deltaData)
     if self.growUpTaskManger:OnUserDataChanged(userData, deltaData) then
         self:OnTaskChanged()
     end
@@ -543,11 +597,28 @@ function User:OnBasicInfoChanged(userData, deltaData)
         self:SetMarchQueue(basicInfo.marchQueue)
         self:SetAttackWin(basicInfo.attackWin)
         self:SetStrikeWin(basicInfo.strikeWin)
+        self:SetDefenceWin(basicInfo.defenceWin)
+        self:SetAttackTotal(basicInfo.attackTotal)
         self:SetKill(basicInfo.kill)
         self:SetLanguage(basicInfo.language)
         self:SetRecruitQueue(basicInfo.recruitQueue)
     end
     return self
+end
+function User:OnAllianceInfoChanged( userData, deltaData )
+    local is_fully_update = deltaData == nil
+    local is_delta_update = not is_fully_update and deltaData.allianceInfo
+    if is_fully_update then
+       self.allianceInfo = clone(userData.allianceInfo)
+    end
+    if is_delta_update then
+        for i,v in pairs(deltaData.allianceInfo) do
+            self.allianceInfo[i] = v
+        end
+    end
+    self:NotifyListeneOnType(User.LISTEN_TYPE.ALLIANCE_INFO, function(listener)
+        listener:OnAllianceInfoChanged()
+    end)
 end
 function User:OnAllianceDonateChanged( userData, deltaData )
     local is_fully_update = deltaData == nil

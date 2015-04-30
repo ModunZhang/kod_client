@@ -7,7 +7,6 @@ local WidgetProgress = import("..widget.WidgetProgress")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetInfoWithTitle = import("..widget.WidgetInfoWithTitle")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
-local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local StarBar = import("..ui.StarBar")
 local UILib = import(".UILib")
 local Localize = import("..utils.Localize")
@@ -241,25 +240,13 @@ function GameUITownHall:CreateQuestItem(quest,index)
                             re_desc = re_desc .. Localize.fight_reward[v.resource_type].."X"..v.count.." "
                         end
                         GameGlobalUI:showTips(_("每日任务完成"),_("获得")..re_desc)
-                        
+
                     end)
                     TownHallUI.isFinishedQuest = false
                 end)
             else
                 progress:setVisible(true)
                 status = _("正在")..Localize.daily_quests_name[quest.index]
-                -- control_btn:setButtonImage(cc.ui.UIPushButton.NORMAL, "green_btn_up_148x58.png", true)
-                -- control_btn:setButtonImage(cc.ui.UIPushButton.PRESSED,"green_btn_down_148x58.png", true)
-                -- control_btn:setButtonLabel(
-                --     UIKit:commonButtonLable({
-                --         color = 0xfff3c7,
-                --         text  = _("加速")
-                --     })
-                -- ):onButtonClicked(function(event)
-                --     FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                --         :SetPopMessage(_("暂无加速功能"))
-                --         :AddToCurrentScene()
-                -- end)
             end
             need_time_label:setVisible(false)
             add_star_btn:hide()
@@ -275,17 +262,11 @@ function GameUITownHall:CreateQuestItem(quest,index)
                 })
             ):onButtonClicked(function(event)
                 if TownHallUI.isFinishedQuest then
-                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                        :SetPopMessage(_("请先领取已经完成的任务的奖励"))
-                        :CreateOKButton()
-                        :AddToCurrentScene()
+                    UIKit:showMessageDialog(_("陛下"),_("请先领取已经完成的任务的奖励"))
                     return
                 end
                 if TownHallUI.started_quest_item then
-                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                        :SetPopMessage(_("已经有一个任务正在进行中"))
-                        :CreateOKButton()
-                        :AddToCurrentScene()
+                    UIKit:showMessageDialog(_("陛下"),_("已经有一个任务正在进行中"))
                     return
                 end
                 NetManager:getStartDailyQuestPromise(quest.id)
@@ -515,6 +496,7 @@ function GameUITownHall:OnBuildingUpgrading()
 end
 
 return GameUITownHall
+
 
 
 

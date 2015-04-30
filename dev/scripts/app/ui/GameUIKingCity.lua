@@ -5,7 +5,6 @@
 local window = import("..utils.window")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushButton = import("..widget.WidgetPushButton")
-local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local UIListView = import(".UIListView")
 
 local GameUIKingCity = UIKit:createUIClass('GameUIKingCity',"GameUIWithCommonHeader")
@@ -132,10 +131,7 @@ function GameUIKingCity:CreateTitleItem(list,params)
      WidgetPushButton.new({normal = "next_32x38.png",pressed = "next_32x38.png"})
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
-                        FullScreenPopDialogUI.new()
-                            :SetTitle(_("提示"))
-                            :SetPopMessage(_("权限不足,不能任命头衔"))
-                            :AddToCurrentScene()
+                    UIKit:showMessageDialog(_("提示"),_("权限不足,不能任命头衔"))
                 end
             end):align(display.CENTER, item_width-25, 66):addTo(content)
 end

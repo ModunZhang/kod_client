@@ -1,8 +1,6 @@
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
-
-local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local Localize = import("..utils.Localize")
 local UILib = import(".UILib")
 
@@ -53,8 +51,7 @@ function GameUICollectReport:ctor(report)
         }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                FullScreenPopDialogUI.new():SetTitle(_("删除战报"))
-                    :SetPopMessage(_("您即将删除所选战报,删除后将无法恢复,您确定要这么做吗?"))
+                UIKit:showMessageDialog(_("删除战报"),_("您即将删除所选战报,删除后将无法恢复,您确定要这么做吗?"))
                     :CreateOKButton(
                         {
                             listener =function ()
@@ -64,7 +61,6 @@ function GameUICollectReport:ctor(report)
                             end
                         }
                     )
-                    :AddToCurrentScene()
             end
         end):align(display.CENTER,106,50):addTo(body)
     -- 收藏按钮
@@ -105,7 +101,7 @@ function GameUICollectReport:CreateBootyPart()
         -- 战利品列表
         booty_list_bg = WidgetUIBackGround.new({width = item_width,height = booty_list_height+16},WidgetUIBackGround.STYLE_TYPE.STYLE_6)
             :align(display.CENTER,0,-25)
-       
+
         local booty_list_bg_size = booty_list_bg:getContentSize()
         booty_group:addChild(booty_list_bg)
 
@@ -177,6 +173,7 @@ return GameUICollectReport
 
 
    
+
 
 
 

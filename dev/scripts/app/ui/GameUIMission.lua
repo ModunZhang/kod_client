@@ -286,7 +286,7 @@ function GameUIMission:OnGetAchievementRewardButtonClicked(data)
 end
 
 function GameUIMission:OnTodoAchievementMissionClicked(data)
-    WidgetGrowUpTask.new(data):AddToCurrentScene(true)
+    UIKit:newWidgetUI("WidgetGrowUpTask", data):AddToCurrentScene(true)
 end
 
 function GameUIMission:OnRecommendMissionClicked()

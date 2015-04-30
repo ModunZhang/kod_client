@@ -7,7 +7,6 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local UIScrollView = import(".UIScrollView")
 local Localize = import("..utils.Localize")
 local UIListView = import(".UIListView")
-local FullScreenPopDialogUI = import(".FullScreenPopDialogUI")
 local WidgetSlider = import("..widget.WidgetSlider")
 local WidgetSelectDragon = import("..widget.WidgetSelectDragon")
 local WidgetInput = import("..widget.WidgetInput")
@@ -113,46 +112,52 @@ function GameUIPVESendTroop:OnMoveInStage()
             if event.name == "CLICKED_EVENT" then
                 assert(tolua.type(self.march_callback)=="function")
                 if not self.dragon then
-                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                        :SetPopMessage(_("您还没有龙,快去孵化一只巨龙吧"))
-                        :AddToCurrentScene()
+                    UIKit:showMessageDialog(_("陛下"),_("快去孵化一只巨龙吧"))
                     return
                 end
                 local dragonType = self.dragon:Type()
                 local soldiers = self:GetSelectSoldier()
-                if self.dragon:Status() ~= "free" then
-                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                        :SetPopMessage(_("龙未处于空闲状态"))
-                        :AddToCurrentScene()
+                if not self.dragon:IsFree() and not self.dragon:IsDefenced() then
+                    UIKit:showMessageDialog(_("陛下"),_("龙未处于空闲状态"))
                     return
                 elseif self.dragon:Hp()<1 then
-                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                        :SetPopMessage(_("选择的龙已经死亡"))
-                        :AddToCurrentScene()
+                    UIKit:showMessageDialog(_("陛下"),_("选择的龙已经死亡"))
                     return
                 elseif #soldiers == 0 then
-                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                        :SetPopMessage(_("请选择要派遣的部队"))
-                        :AddToCurrentScene()
+                    UIKit:showMessageDialog(_("陛下"),_("请选择要派遣的部队"))
                     return
                 end
                 if self.dragon:IsHpLow() then
-                    FullScreenPopDialogUI.new():SetTitle(_("提示"))
-                        :SetPopMessage(_("您的龙的HP低于20%,有很大几率阵亡,确定要派出吗?"))
+                    UIKit:showMessageDialog(_("陛下"),_("您的龙的HP低于20%,有很大几率阵亡,确定要派出吗?"))
                         :CreateOKButton(
                             {
                                 listener =  function ()
-                                    self.march_callback(dragonType,soldiers)
-                                    -- 确认派兵后关闭界面
-                                    self:LeftButtonClicked()
+                                    if self.dragon:IsDefenced() then
+                                        NetManager:getCancelDefenceDragonPromise():done(function()
+                                            self.march_callback(dragonType,soldiers)
+                                            -- 确认派兵后关闭界面
+                                            self:LeftButtonClicked()
+                                        end)
+                                    else
+                                        self.march_callback(dragonType,soldiers)
+                                        -- 确认派兵后关闭界面
+                                        self:LeftButtonClicked()
+                                    end
                                 end
                             }
                         )
-                        :AddToCurrentScene()
                 else
-                    self.march_callback(dragonType,soldiers)
-                    -- 确认派兵后关闭界面
-                    self:LeftButtonClicked()
+                    if self.dragon:IsDefenced() then
+                        NetManager:getCancelDefenceDragonPromise():done(function()
+                            self.march_callback(dragonType,soldiers)
+                            -- 确认派兵后关闭界面
+                            self:LeftButtonClicked()
+                        end)
+                    else
+                        self.march_callback(dragonType,soldiers)
+                        -- 确认派兵后关闭界面
+                        self:LeftButtonClicked()
+                    end
 
                 end
             end
@@ -312,7 +317,7 @@ function GameUIPVESendTroop:SelectSoldiers()
                             end
                         end
                     }
-                    WidgetInput.new(p):AddToCurrentScene()
+                    UIKit:newWidgetUI("WidgetInput", p):AddToCurrentScene()
                 end
             end):align(display.CENTER,  340,90):addTo(content)
         local btn_text = UIKit:ttfLabel({
@@ -684,6 +689,9 @@ function GameUIPVESendTroop:onExit()
 end
 
 return GameUIPVESendTroop
+
+
+
 
 
 
