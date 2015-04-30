@@ -1,3 +1,4 @@
+local Localize = import("..utils.Localize")
 local window = import("..utils.window")
 local WidgetEventTabButtons = import("..widget.WidgetEventTabButtons")
 local UIPageView = import("..ui.UIPageView")
@@ -130,9 +131,26 @@ function GameUIAllianceHome:InitArrow()
     self.enemy_arrows = {}
 
     -- my city
-    self.arrow = cc.ui.UIPushButton.new({normal = "location_arrow_up.png",pressed = "location_arrow_down.png"})
-        :addTo(self, -1):align(display.TOP_CENTER):hide():onButtonClicked(function()
-        self:ReturnMyCity()
+    self.arrow = cc.ui.UIPushButton.new({normal = "location_arrow_up.png",
+        pressed = "location_arrow_down.png"})
+        :addTo(self, -1):align(display.TOP_CENTER):hide()
+        :onButtonClicked(function()
+            self:ReturnMyCity()
+            local map = {
+                woodVillage = 0,
+                stoneVillage= 0,
+                ironVillage = 0,
+                foodVillage = 0,
+                coinVillage = 0,
+            }
+            self.alliance:GetAllianceMap():IteratorAllObjects(function(_, entity)
+                if entity:GetType() == "village" then
+                    map[entity:GetName()] = map[entity:GetName()] + 1
+                end
+            end)
+            for k,v in pairs(map) do
+                print(Localize.village_name[k], v)
+            end
         end)
     self.arrow_label = cc.ui.UILabel.new({
         size = 20,
@@ -179,7 +197,7 @@ function GameUIAllianceHome:CreateOperationButton()
             local __,count = alliance_belvedere:HasEvents()
             self.alliance_belvedere_events_count = WidgetNumberTips.new():addTo(button):pos(20,-20)
             self.alliance_belvedere_events_count:SetNumber(count)
-             print("CheckVisible----->1",count)
+            print("CheckVisible----->1",count)
             function button:CheckVisible()
                 local hasEvent,count = alliance_belvedere:HasEvents()
                 if self.alliance_belvedere_events_count then
@@ -685,4 +703,6 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
+
+
 
