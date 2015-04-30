@@ -218,21 +218,21 @@ function GameUIAlliancePalace:OpenAwardDialog(member)
     local hoour_node = display.newNode():addTo(body):align(display.BOTTOM_LEFT,50,60)
     -- 荣耀值
     local honour_icon = display.newSprite("honour_128x128.png"):align(display.CENTER,50,60):addTo(body):scale(42/128)
-    local deduct_honour_label = UIKit:ttfLabel({
-        text = "0",
-        size = 20,
-        color = 0x7e0000,
-    }):addTo(body):align(display.LEFT_CENTER,honour_icon:getPositionX()+20,honour_icon:getPositionY())
-    local divide = UIKit:ttfLabel({
-        text = "/",
-        size = 20,
-        color = 0x403c2f,
-    }):addTo(body):align(display.CENTER,deduct_honour_label:getPositionX()+ deduct_honour_label:getContentSize().width + 6,deduct_honour_label:getPositionY())
     local current_honour_label = UIKit:ttfLabel({
         text = GameUtils:formatNumber(self.alliance:Honour()),
+        size = 22,
+        color = 0x403c2f,
+    }):addTo(body):align(display.LEFT_CENTER,honour_icon:getPositionX()+20,honour_icon:getPositionY())
+    local divide = UIKit:ttfLabel({
+        text = "-",
         size = 20,
         color = 0x403c2f,
-    }):addTo(body):align(display.LEFT_CENTER,divide:getPositionX()+6,deduct_honour_label:getPositionY())
+    }):addTo(body):align(display.CENTER,current_honour_label:getPositionX()+ current_honour_label:getContentSize().width + 6,current_honour_label:getPositionY())
+    local deduct_honour_label = UIKit:ttfLabel({
+        text = "0",
+        size = 22,
+        color = 0x7e0000,
+    }):addTo(body):align(display.LEFT_CENTER,divide:getPositionX()+6,current_honour_label:getPositionY())
 
     -- 滑动条部分
     local slider_bg = display.newSprite("back_ground_580x136.png"):addTo(body)
@@ -253,9 +253,9 @@ function GameUIAlliancePalace:OpenAwardDialog(member)
         :OnSliderValueChanged(function(event)
             local value = math.floor(event.value)
             body.button:setButtonEnabled(value ~= 0)
-            deduct_honour_label:setString((value ~= 0 and "-" or "")..GameUtils:formatNumber(value))
-            divide:setPositionX(deduct_honour_label:getPositionX()+deduct_honour_label:getContentSize().width + 6)
-            current_honour_label:setPositionX(divide:getPositionX()+6)
+            deduct_honour_label:setString(GameUtils:formatNumber(value))
+            divide:setPositionX(current_honour_label:getPositionX()+ current_honour_label:getContentSize().width + 6)
+            deduct_honour_label:setPositionX(divide:getPositionX()+6)
         end)
         :LayoutValueLabel(WidgetSliderWithInput.STYLE_LAYOUT.TOP,75)
     -- icon
