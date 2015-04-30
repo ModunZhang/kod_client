@@ -295,7 +295,7 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
             isVisible = true,
             isSatisfy = not City:HaveProductionTechEvent(),
             icon="hammer_31x33.png",
-            description= City:HaveProductionTechEvent() and "1/1" or "0/1"
+            description= City:HaveProductionTechEvent() and "1/1" or "1/0"
         })
     if unLockByTech:Index() ~= current_tech:Index() then
         table.insert(requirements,

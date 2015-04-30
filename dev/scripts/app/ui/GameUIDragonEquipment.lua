@@ -6,7 +6,6 @@ local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local GameUIDragonEquipment = UIKit:createUIClass("GameUIDragonEquipment","UIAutoClose")
 local StarBar = import(".StarBar")
 local UIListView = import(".UIListView")
-local config_category = GameDatas.DragonEyrie
 local WidgetDragonEquipIntensify = import("..widget.WidgetDragonEquipIntensify")
 local BODY_HEIGHT = 664
 local BODY_WIDTH = 608
@@ -401,7 +400,7 @@ end
 
 -- 调用龙巢详情界面的函数获取道具图标
 function GameUIDragonEquipment:GetEquipmentItem()
-    return GameUIDragonEyrieDetail:GetEquipmentItem(self:GetEquipment())
+    return GameUIDragonEyrieDetail:GetEquipmentItem(self:GetEquipment(),self.dragon:Star(),false)
 end
 
 function GameUIDragonEquipment:RefreshInfoUI()

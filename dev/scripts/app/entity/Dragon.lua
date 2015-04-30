@@ -309,6 +309,14 @@ function Dragon:GetEquipmentByBody( category )
 	end
 end
 
+function Dragon:IsAllEquipmentsLoaded()
+	for __,v in ipairs(self:Equipments()) do
+		if not v:IsLoaded() then
+			return false
+		end
+	end
+	return true
+end
 
 --装备
 function Dragon:Equipments()
