@@ -349,7 +349,7 @@ function DataUtils:getPlayerSoldiersMarchTime(soldiers,fromAllianceDoc, fromLoca
         totalCitizen = totalCitizen + soldier_info.soldier_citizen
         totalSpeed = totalSpeed + baseSpeed / soldier_info.soldier_march * soldier_info.soldier_citizen
     end
-    return math.ceil(totalSpeed / totalCitizen * distance)
+    return totalCitizen == 0 and 0 or math.ceil(totalSpeed / totalCitizen * distance)
 end
 
 function DataUtils:getPlayerMarchTimeBuffEffectValue()
