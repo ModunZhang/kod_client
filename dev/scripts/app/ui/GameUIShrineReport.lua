@@ -227,7 +227,6 @@ function GameUIShrineReport:GetPlayerDataItem(playerData)
         size = 22,
         color = 0x403c2f
     }):addTo(node):align(display.LEFT_BOTTOM,strength_icon:getPositionX(),strength_icon:getPositionY()+strength_icon:getContentSize().height+15)
-    print(label:getPositionY()+label:getContentSize().height+20)
     local x,y = strength_icon:getPositionX()+strength_icon:getContentSize().width+280,95
     for i,v in ipairs(playerData.rewards) do
         local item = display.newSprite("shire_reward_70x70.png")
