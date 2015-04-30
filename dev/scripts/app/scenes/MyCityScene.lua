@@ -242,6 +242,7 @@ function MyCityScene:OnUserBasicChanged(user, changed)
 end
 function MyCityScene:OnUpgradingBegin()
     app:GetAudioManager():PlayeEffectSoundWithKey("UI_BUILDING_UPGRADE_START")
+    self:GetSceneLayer():CheckCanUpgrade()
 end
 function MyCityScene:OnUpgrading()
 
