@@ -72,7 +72,7 @@ function GameUIDragonEquipment:onEnter()
         {tag = "intensify",label = _("强化")},
     }, function(tag)
        self:OnTabButtonClicked(tag)
-    end):align(display.BOTTOM_CENTER,304,10):addTo(backgroundImage)
+    end,2):align(display.BOTTOM_CENTER,304,10):addTo(backgroundImage)
 
     self.tab_buttons:SetTabButtonWillSelectListener(function(tag)
         if "intensify" == tag then

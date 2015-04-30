@@ -8,7 +8,39 @@ local WidgetRoundTabButtons = class("WidgetRoundTabButtons", function()
     return display.newSprite("back_ground_564x74.png")
 end)
 
-function WidgetRoundTabButtons:ctor(buttons, listener)
+WidgetRoundTabButtons.STYLES = {
+    WHITE = 1,
+    BROWN = 2,
+}
+
+local STYLE_IMAGES = 
+{
+    {
+        { on = "tab_btn_up_106x58.png", off = "tab_btn_down_106x58.png",},
+        { on = "tab_btn_up_110x58.png", off = "tab_btn_down_110x58.png",},
+        { on = "tab_btn_up_106x58_1.png", off = "tab_btn_down_106x58_1.png",}
+    },
+    {
+        { on = "tab_btn_up_106x58.png", off = "tab_btn_down_brown_106x58.png",},
+        { on = "tab_btn_up_110x58.png", off = "tab_btn_down_brown_110x58.png",},
+        { on = "tab_btn_up_106x58_1.png", off = "tab_btn_down_brown_106x58_1.png",}
+    }
+}
+
+local STYLE_LABEL_PARAMS = {
+    {
+        enable = 0x403c2f,
+        unable = 0x00c0ff
+    },
+    {
+        enable = 0xffedae,
+        unable = 0x00c0ff
+    }
+}
+
+function WidgetRoundTabButtons:ctor(buttons, listener,style)
+    style = style or self.STYLES.WHITE 
+    self.style = style
     self.callbacks = {}
     self.tabListener = listener
     local width = 548
@@ -21,17 +53,8 @@ function WidgetRoundTabButtons:ctor(buttons, listener)
     local default
 
     for i, v in ipairs(buttons) do
-    	local images = i ==1 and {
-            on = "tab_btn_up_106x58.png", 
-            off = "tab_btn_down_106x58.png",
-        } or i == #buttons and {
-            on = "tab_btn_up_106x58_1.png", 
-            off = "tab_btn_down_106x58_1.png",
-        }
-        or {
-            on = "tab_btn_up_110x58.png", 
-            off = "tab_btn_down_110x58.png",
-        } 
+    	local images = i == 1 and STYLE_IMAGES[style][1] or i == #buttons and STYLE_IMAGES[style][3]
+        or STYLE_IMAGES[style][2]
         
         local widget = WidgetTab.new(images, unit_width, 60)
             :addTo(node)
