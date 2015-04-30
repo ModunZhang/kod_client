@@ -46,26 +46,30 @@ function ShrineReport:GetFightReportObjectWithJson(json_data)
 		json_data.attackDragonFightData,
 		json_data.defenceDragonFightData,
 		json_data.attackSoldierRoundDatas,
-		json_data.defenceSoldierRoundDatas
+		json_data.defenceSoldierRoundDatas,
+		json_data.fightResult == "attackWin"
 	)
 	return shrinePlayFightReport
 end
 
 -- 战斗回放相关获取数据方法
-function ShrinePlayFightReport:ctor(attackName,defenceName,attackDragonRoundData,defenceDragonRoundData,fightAttackSoldierRoundData,fightDefenceSoldierRoundData)
+function ShrinePlayFightReport:ctor(attackName,defenceName,attackDragonRoundData,defenceDragonRoundData,fightAttackSoldierRoundData,fightDefenceSoldierRoundData,isWin)
 	self.attackName = attackName
 	self.defenceName = defenceName
 	self.attackDragonRoundData = attackDragonRoundData
 	self.defenceDragonRoundData = defenceDragonRoundData
 	self.fightAttackSoldierRoundData = fightAttackSoldierRoundData
 	self.fightDefenceSoldierRoundData = fightDefenceSoldierRoundData
+	self.isWin = isWin
 	for __,v in ipairs(fightAttackSoldierRoundData) do
 		v.name = v.soldierName
 		v.star = v.soldierStar
+		v.count = v.soldierCount
 	end
 	for __,v in ipairs(fightDefenceSoldierRoundData) do
 		v.name = v.soldierName
 		v.star = v.soldierStar
+		v.count = v.soldierCount
 	end
 end
 
@@ -105,5 +109,19 @@ function ShrinePlayFightReport:GetOrderedAttackSoldiers()
 end
 function ShrinePlayFightReport:GetOrderedDefenceSoldiers()
    return self.fightDefenceSoldierRoundData or {}
+end
+function ShrinePlayFightReport:GetReportResult()
+	return self.isWin
+end
+function ShrinePlayFightReport:GetAttackDragonLevel()
+	return self.attackDragonRoundData.level
+end
+
+function ShrinePlayFightReport:GetAttackTargetTerrain()
+	return Alliance_Manager:GetMyAlliance():Terrain()
+end
+
+function ShrinePlayFightReport:GetDefenceDragonLevel()
+	return self.defenceDragonRoundData.level
 end
 return ShrineReport

@@ -356,7 +356,7 @@ function WidgetUseItems:OpenOneDragonItemExpDialog( item ,dragon)
         :addTo(body)
     local blood_bg = display.newScale9Sprite("back_ground_398x97.png",size.width/2,size.height-100,cc.size(556,58),cc.rect(10,10,378,77))
         :addTo(body)
-    UIKit:ttfLabel({
+    local dragon_level = UIKit:ttfLabel({
         text = "LV"..dragon:Level().."/"..dragon:GetMaxLevel(),
         size = 22,
         color = 0x28251d,
@@ -414,6 +414,7 @@ function WidgetUseItems:OpenOneDragonItemExpDialog( item ,dragon)
         if increase_type == "dragonExp" then
             dragon_value:setString(dragon:Exp().."/"..dragon:GetMaxExp())
             exp_icon:setPositionX(dragon_value:getPositionX() - dragon_value:getContentSize().width - 20)
+            dragon_level:setString("LV"..dragon:Level().."/"..dragon:GetMaxLevel())
         end
     end
     return dialog

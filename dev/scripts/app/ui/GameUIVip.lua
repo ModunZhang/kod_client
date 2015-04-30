@@ -83,9 +83,9 @@ function GameUIVip:AdapterPlayerList()
     table.insert(infos,{_("采集铁矿熟练度"),User:GetIronCollectLevel()})
     table.insert(infos,{_("采集石料熟练度"),User:GetStoneCollectLevel()})
     table.insert(infos,{_("采集木材熟练度"),User:GetWoodCollectLevel()})
-    table.insert(infos,{_("防御胜利"),"假的"})
+    table.insert(infos,{_("防御胜利"),User:DefenceWin()})
     table.insert(infos,{_("进攻胜利"),User:AttackWin()})
-    table.insert(infos,{_("胜率"),"假的"})
+    table.insert(infos,{_("胜率"),User:AttackTotal() ~= 0 and string.format("%.2f%%",(User:AttackWin()/User:AttackTotal())*100) or 0})
     table.insert(infos,{_("击杀"),string.formatnumberthousands(User:Kill())})
     table.insert(infos,{_("忠诚值"),GameUtils:formatNumber(User:Loyalty())})
     table.insert(infos,{_("联盟"),alliance and alliance:Name() or ""})
@@ -891,6 +891,8 @@ function GameUIVip:OnVipEventTimer( vip_event_new )
 end
 
 return GameUIVip
+
+
 
 
 
