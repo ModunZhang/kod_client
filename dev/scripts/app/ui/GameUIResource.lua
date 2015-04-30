@@ -347,19 +347,28 @@ function GameUIResource:ChaiButtonAction( event )
     local house_location = tile:GetBuildingLocation(self.building)
     local torch_count = ItemManager:GetItemByName("torch"):Count()
     if torch_count<1 then
-        NetManager:getBuyAndUseItemPromise("torch",{
-            torch = {
-                buildingLocation = tile.location_id,
-                houseLocation = house_location,
-            }
-        })
+        UIKit:showMessageDialog(_("提示"),_("是否确认拆除?"),function ()
+            NetManager:getBuyAndUseItemPromise("torch",{
+                torch = {
+                    buildingLocation = tile.location_id,
+                    houseLocation = house_location,
+                }
+            })
+        end,
+        function ()
+        end)
+
     else
-        NetManager:getUseItemPromise("torch",{
-            torch = {
-                buildingLocation = tile.location_id,
-                houseLocation = house_location,
-            }
-        })
+        UIKit:showMessageDialog(_("提示"),_("是否确认拆除?"),function ()
+            NetManager:getUseItemPromise("torch",{
+                torch = {
+                    buildingLocation = tile.location_id,
+                    houseLocation = house_location,
+                }
+            })
+        end,
+        function ()
+        end)
     end
 
     self:LeftButtonClicked(nil)
@@ -397,6 +406,8 @@ function GameUIResource:OnResourceChanged(resource_manager)
 end
 
 return GameUIResource
+
+
 
 
 
