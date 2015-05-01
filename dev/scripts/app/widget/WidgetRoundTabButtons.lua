@@ -80,10 +80,10 @@ function WidgetRoundTabButtons:PushButton(tab)
     for _, v in pairs(self.tabs) do
         if v ~= tab then
             v:Enable(true):Active(false)
-            v.label:setColor(UIKit:hex2c3b(0x403c2f))
+            v.label:setColor(UIKit:hex2c3b(STYLE_LABEL_PARAMS[self.style].enable))
         else
             v:Enable(false):Active(true)
-            v.label:setColor(UIKit:hex2c3b(0x00c0ff))
+            v.label:setColor(UIKit:hex2c3b(STYLE_LABEL_PARAMS[self.style].unable))
         end
     end
     self:OnSelectTag(tab.tag)

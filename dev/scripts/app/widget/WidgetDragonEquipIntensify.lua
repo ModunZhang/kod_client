@@ -17,8 +17,9 @@ function WidgetDragonEquipIntensify:ctor(delegate,equipmentName,current_count,ma
     self.resolveEquipmentName = resolveEquipmentName
     --ui
 	super_.ctor(self,{normal = "back_ground_104x132.png"})
-	local icon_bg = display.newSprite("box_104x104_2.png"):addTo(self):pos(0,16)
-	local icon_ = display.newSprite(self:GetEqIcon(equipmentName))
+	local bg,icon = self:GetBgImageAndIcon()
+	local icon_bg = display.newSprite(bg):addTo(self):pos(0,16)
+	local icon_ = display.newSprite(icon)
 	icon_:addTo(icon_bg):setScale(0.6):pos(52,52)
 	display.newSprite("i_icon_20x20.png"):align(display.LEFT_BOTTOM, 5, 5):addTo(icon_bg)
 	local labelbg = display.newSprite("number_bg_102x30.png"):addTo(self):pos(0,-50)
@@ -67,6 +68,11 @@ function WidgetDragonEquipIntensify:Action(type)
 	self.cancelButton:setVisible(self.current_count>0)
 end
 
+function WidgetDragonEquipIntensify:GetBgImageAndIcon()
+	local config = self:GetEquipmetFromConfig(self.equipment_)
+	local bgImages = {"box_104x104_1.png","box_104x104_2.png","box_104x104_3.png","box_104x104_4.png"}
+    return bgImages[config.maxStar],UILib.equipment[self.equipment_]
+end
 
 function WidgetDragonEquipIntensify:Reset()
 	self.current_count = 0
@@ -76,10 +82,6 @@ end
 
 function WidgetDragonEquipIntensify:GetEquipmetFromConfig( equipmentName )
 	return config_equipments[equipmentName]
-end
-
-function WidgetDragonEquipIntensify:GetEqIcon(equipmentName)
- 	return UILib.equipment[equipmentName]
 end
 
 function WidgetDragonEquipIntensify:GetEqCategory(equipment)

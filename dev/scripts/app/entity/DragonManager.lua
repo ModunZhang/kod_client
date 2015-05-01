@@ -296,7 +296,9 @@ function DragonManager:RefreshDragonData( dragons,resource_refresh_time,hp_recov
             if dragon then
                 local dragonIsHated_ = dragon:Ishated()
                 local isDefenced = dragon:IsDefenced()
+                local old_star = dragon:Star()
                 dragon:Update(v) -- include UpdateEquipmetsAndSkills
+                local star_chaned =  dragon:Star() > old_star
                 if not need_notify_defence then
                     need_notify_defence = isDefenced ~= dragon:IsDefenced()
                 end
@@ -306,7 +308,7 @@ function DragonManager:RefreshDragonData( dragons,resource_refresh_time,hp_recov
                     end)
                 else
                     self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnBasicChanged,function(lisenter)
-                        lisenter.OnBasicChanged(lisenter)
+                        lisenter.OnBasicChanged(lisenter,dragon,star_chaned)
                     end)
                 end
             end
