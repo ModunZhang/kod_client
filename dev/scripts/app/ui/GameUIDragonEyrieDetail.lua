@@ -228,7 +228,7 @@ function GameUIDragonEyrieDetail:CreateNodeIf_equipment()
     })):align(display.BOTTOM_CENTER, 273, 20)
         :addTo(content_box)
         :onButtonClicked(function()
-
+            self:OnLoadAllButtonClicked()
         end)
     self:PlaceEquipmentBoxIntoEqNode()
     -- self:FillEquipemtBox()
@@ -236,6 +236,8 @@ function GameUIDragonEyrieDetail:CreateNodeIf_equipment()
     return self.equipment_node
 end
 
+function GameUIDragonEyrieDetail:OnLoadAllButtonClicked()
+end
 
 --返回装备图片信息 return 背景图 装备图
 function GameUIDragonEyrieDetail:GetEquipmentItemImageInfo(equipment_obj,dragon_star)
@@ -578,7 +580,7 @@ function GameUIDragonEyrieDetail:CreateNodeIf_info()
     local info_node = display.newNode():addTo(self:GetView())
     local list_bg = display.newScale9Sprite("box_bg_546x214.png")
         :addTo(info_node)
-        :align(display.LEFT_BOTTOM, window.left+45,30)
+        :align(display.LEFT_BOTTOM, window.left+45,window.bottom + 30)
         :size(546, 212)
     self.info_list = UIListView.new({
         viewRect = cc.rect(13,10, 520, 192),

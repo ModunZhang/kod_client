@@ -6,11 +6,10 @@ local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local GameUIDragonEquipment = UIKit:createUIClass("GameUIDragonEquipment","UIAutoClose")
 local StarBar = import(".StarBar")
 local UIListView = import(".UIListView")
-local config_category = GameDatas.DragonEyrie
 local WidgetDragonEquipIntensify = import("..widget.WidgetDragonEquipIntensify")
-local BODY_HEIGHT = 664
+local BODY_HEIGHT = 780
 local BODY_WIDTH = 608
-local LISTVIEW_WIDTH = 568
+local LISTVIEW_WIDTH = 548
 local cocos_promise = import("..utils.cocos_promise")
 local Localize = import("..utils.Localize")
 local WidgetPushButton = import("..widget.WidgetPushButton")
@@ -69,11 +68,11 @@ function GameUIDragonEquipment:onEnter()
       end)
 
      self.tab_buttons = WidgetRoundTabButtons.new({
-        {tag = "info",label = _("信息"),default = true},
-        {tag = "intensify",label = _("强化")},
+        {tag = "intensify",label = _("强化"),default = true},
+        {tag = "info",label = _("信息")},
     }, function(tag)
        self:OnTabButtonClicked(tag)
-    end):align(display.BOTTOM_CENTER,304,10):addTo(backgroundImage)
+    end,2):align(display.BOTTOM_CENTER,304,10):addTo(backgroundImage)
 
     self.tab_buttons:SetTabButtonWillSelectListener(function(tag)
         if "intensify" == tag then
@@ -102,27 +101,6 @@ end
 function GameUIDragonEquipment:TabButtonEvent_info()
     if not self.ui_node_info then
         local node = display.newNode():addTo(self.ui_node_main)
-        local label = UIKit:ttfLabel({
-            text = _("立即前往铁匠铺制作"),
-            size = 18,
-            color = 0x403c2f,
-        }):addTo(node):align(display.BOTTOM_CENTER,BODY_WIDTH/2,90)
-        local makeButton  = WidgetPushButton.new({
-            normal = "yellow_btn_up_186x66.png",
-            pressed = "yellow_btn_down_186x66.png"
-        }):addTo(node)
-          :align(display.BOTTOM_CENTER,BODY_WIDTH/2,100 + label:getContentSize().height)
-          :setButtonLabel("normal", UIKit:commonButtonLable({
-              text = _("制作"),
-              size = 24,
-          }))
-          :onButtonClicked(function()
-              local blackSmith = City:GetFirstBuildingByType("blackSmith")
-              if blackSmith:IsUnlocked() then
-                 UIKit:newWidgetUI("WidgetMakeEquip", self:GetEquipment():GetCanLoadConfig().name, blackSmith, City):AddToCurrentScene()
-              end
-          end)
-        self.makeButton = makeButton
         local mainEquipment = self:GetEquipmentItem()
           :addTo(node):align(display.LEFT_TOP,15,self.titleBar:getPositionY() - 10)
         self.info_mainEquipment = mainEquipment
@@ -135,10 +113,16 @@ function GameUIDragonEquipment:TabButtonEvent_info()
             color = 0xffedae,
         }):addTo(name_bar):align(display.LEFT_CENTER, 14,15)
         local count_label = UIKit:ttfLabel({
-            text = _("数量") .. " " .. self:GetCurrentEquipmentCount() .. "/" ..  City:GetFirstBuildingByType("materialDepot"):GetMaxMaterial(),
+            text = "",
             size = 22,
             color= 0x403c2f
-        }):addTo(node):align(display.LEFT_BOTTOM,name_bar:getPositionX(),mainEquipment:getPositionY() - mainEquipment:getContentSize().height + 8)
+        }):addTo(node):align(display.LEFT_BOTTOM,name_bar:getPositionX() + 16,mainEquipment:getPositionY() - mainEquipment:getContentSize().height + 20)
+        local tip_label = UIKit:ttfLabel({
+            text = "-1",
+            color= 0x8c3708,
+            size = 22
+        }):addTo(node):align(display.LEFT_BOTTOM,count_label:getPositionX() +count_label:getContentSize().width + 5,count_label:getPositionY())
+        self.count_tip_label = tip_label
         self.count_label = count_label
         local load_button = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png",disabled = "grey_btn_148x58.png"})
           :addTo(node)
@@ -168,18 +152,18 @@ function GameUIDragonEquipment:TabButtonEvent_info()
               end)
           end)
         self.reset_button = reset_button
+
+        local list,list_node = UIKit:commonListView_1({
+            viewRect = cc.rect(0, 0, LISTVIEW_WIDTH, 160),
+            direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
+        })
+        list_node:addTo(node):align(display.TOP_CENTER, BODY_WIDTH/2, load_button:getPositionY() - 26)
+        self.info_list = list
         local desc_label = UIKit:ttfLabel({
             text = _("消耗相同一个装备，重新随机装备的加成属性"),
             size = 20,
-            color= 0x403c2f
-        }):addTo(node):align(display.TOP_CENTER, BODY_WIDTH/2, load_button:getPositionY() - 26)
-
-        local list,list_node = UIKit:commonListView_1({
-            viewRect = cc.rect(0, 0, LISTVIEW_WIDTH, 142),
-            direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
-        })
-        list_node:addTo(node):align(display.CENTER_TOP, BODY_WIDTH/2, desc_label:getPositionY() - desc_label:getContentSize().height - 14)
-        self.info_list = list
+            color= 0x615b44
+        }):addTo(node):align(display.TOP_CENTER, BODY_WIDTH/2, list_node:getPositionY() - list_node:getContentSize().height - 10)
         self.ui_node_info = node
     end
     if self.intensify_eq_list then
@@ -217,17 +201,26 @@ function GameUIDragonEquipment:TabButtonEvent_intensify()
           end)
         self.intensify_button = intensify_button
 
-
+        local desc_label = UIKit:ttfLabel({
+            text = string.format(_("巨龙%d星装备"),self.dragon:Star()),
+            size = 22,
+            color= 0x403c2f
+        }):addTo(node):align(display.LEFT_BOTTOM,name_bar:getPositionX() + 16,mainEquipment:getPositionY() - mainEquipment:getContentSize().height + 20)
+        self.intensify_desc_label = desc_label
         local list,list_node = UIKit:commonListView_1({
-            viewRect = cc.rect(0, 0, LISTVIEW_WIDTH, 80),
+            viewRect = cc.rect(0, 0, LISTVIEW_WIDTH, 120),
             direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
         })
         list_node:addTo(node):align(display.CENTER_TOP, BODY_WIDTH/2, intensify_button:getPositionY() - 10)
         self.intensify_list = list
-
+        local intensify_tip_label = UIKit:ttfLabel({
+            text = _("选择多余的装备进行强化"),
+            size = 20,
+            color= 0x403c2f
+        }):align(display.TOP_CENTER, BODY_WIDTH/2, list_node:getPositionY() - list_node:getContentSize().height - 22):addTo(node)
         local progressBg = display.newSprite("progress_bar_540x40_1.png")
           :addTo(node)
-          :align(display.CENTER_TOP, BODY_WIDTH/2,list_node:getPositionY() - 115)
+          :align(display.CENTER_TOP, BODY_WIDTH/2,intensify_tip_label:getPositionY() - intensify_tip_label:getContentSize().height - 18)
 
         local greenProgress = UIKit:commonProgressTimer("progress_bar_540x40_4.png")
           :addTo(progressBg)
@@ -250,7 +243,6 @@ function GameUIDragonEquipment:TabButtonEvent_intensify()
           viewRect = cc.rect(progressBg:getPositionX() - 270, 90, 540, 272),
           direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
           alignment = cc.ui.UIListView.ALIGNMENT_LEFT,
-          -- bgColor = UIKit:hex2c4b(0x7a000000),
         }:addTo(node)
         self.ui_node_intensify = node
     end
@@ -260,28 +252,21 @@ end
 
 
 --type 为活力 力量 buffer 1 2 3
-function GameUIDragonEquipment:GetListItem(index,type,title,value)
-	local bg = display.newScale9Sprite(string.format("resource_item_bg%d.png",index%2)):size(LISTVIEW_WIDTH - 24,40)
-	local icon = "dragon_vitality_33x42.png"
-  if type == 2 then
-    icon = "dragon_strength_27x31.png"
-  elseif type == 3 then
-    icon = "dragon_buffs_34x31.png"
-  end
-  local iconImage = display.newSprite(icon):pos(25, bg:getContentSize().height/2):addTo(bg)
-  UIKit:ttfLabel({
-      text = title,
-      size = 20,
-      color = 0x615b44,
-      align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
-  }):addTo(bg):pos(iconImage:getPositionX()+20,iconImage:getPositionY())
-  UIKit:ttfLabel({
-      text = value,
-      size = 20,
-      align = cc.ui.UILabel.TEXT_ALIGN_RIGHT, 
-      color = 0x403c2f,
-  }):addTo(bg):align(display.RIGHT_BOTTOM, bg:getContentSize().width-10, 10)
-	return bg
+function GameUIDragonEquipment:GetListItem(index,title,value)
+	local bg = display.newScale9Sprite(string.format("resource_item_bg%d.png",index%2)):size(LISTVIEW_WIDTH - 20,40)
+    UIKit:ttfLabel({
+        text = title,
+        size = 20,
+        color = 0x615b44,
+        align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
+    }):addTo(bg):align(display.LEFT_CENTER,14,20)
+    UIKit:ttfLabel({
+        text = value,
+        size = 20,
+        align = cc.ui.UILabel.TEXT_ALIGN_RIGHT, 
+        color = 0x403c2f,
+    }):addTo(bg):align(display.RIGHT_CENTER, LISTVIEW_WIDTH - 30, 20)
+  return bg
 end
 
 function GameUIDragonEquipment:WidgetDragonEquipIntensifyEvent(widgetDragonEquipIntensify)
@@ -305,9 +290,9 @@ function GameUIDragonEquipment:WidgetDragonEquipIntensifyEvent(widgetDragonEquip
       self.exp_label:setString(str)
       if percent >= 100 then
         local config =  equipment:GetNextStarDetailConfig()
-        self:RefreshIntensifyListViewBuffVal(config.vitality,config.strength)
+        self:RefreshIntensifyListViewBuffVal(config.vitality,config.strength,config.leadership)
       else
-        self:RefreshIntensifyListViewBuffVal(0,0)
+        self:RefreshIntensifyListViewBuffVal(0,0,0)
       end
       self.greenProgress:setPercentage(percent)
     end
@@ -326,9 +311,7 @@ function GameUIDragonEquipment:IntensifyButtonClicked()
       return  
   end 
   local equipment = self:GetEquipment()
-  NetManager:getEnhanceDragonEquipmentPromise(self.dragon:Type(),equipment:Body(),equipments):done(function(result)
-      self:RefreshIntensifyUI()
-  end)
+  NetManager:getEnhanceDragonEquipmentPromise(self.dragon:Type(),equipment:Body(),equipments)
 end
 
 function GameUIDragonEquipment:RefreshEquipmentItem(isInfo)
@@ -345,17 +328,29 @@ function GameUIDragonEquipment:RefreshEquipmentItem(isInfo)
     end
 end
 
-function GameUIDragonEquipment:RefreshIntensifyUI()
+function GameUIDragonEquipment:RefreshIntensifyUI(isAnimationyellowProcess)
+  if type(isAnimationyellowProcess) ~= 'boolean' then isAnimationyellowProcess = false end
   self:RefreshEquipmentItem(false)
   local equipment = self:GetEquipment()
   if equipment:Star() < self.dragon:Star() then 
     self.exp_label:setString(equipment.exp .. "/" .. equipment:GetNextStarDetailConfig().enhanceExp)
-    self.yellowProgress:setPercentage((equipment:Exp() or 0)/equipment:GetNextStarDetailConfig().enhanceExp * 100)
     self.greenProgress:setPercentage((equipment:Exp() or 0)/equipment:GetNextStarDetailConfig().enhanceExp * 100)
+    if isAnimationyellowProcess then
+        local action = cc.ProgressTo:create(0.5, (equipment:Exp() or 0)/equipment:GetNextStarDetailConfig().enhanceExp * 100)
+        self.yellowProgress:runAction(action)
+    else
+      self.yellowProgress:setPercentage((equipment:Exp() or 0)/equipment:GetNextStarDetailConfig().enhanceExp * 100)
+    end
   else
-    self.yellowProgress:setPercentage(100)
-    self.greenProgress:setPercentage(100)
+      self.greenProgress:setPercentage(100)
+    if isAnimationyellowProcess then
+        local action = cc.ProgressTo:create(0.5, 100)
+        self.yellowProgress:runAction(action)
+    else
+        self.yellowProgress:setPercentage(100)
+    end
     self.exp_label:setString(_("装备已达到最大星级"))
+    self.intensify_button:setButtonEnabled(false)
   end
   self:RefreshIntensifyEquipmentListView()
   self:RefreshIntensifyListView()
@@ -401,7 +396,7 @@ end
 
 -- 调用龙巢详情界面的函数获取道具图标
 function GameUIDragonEquipment:GetEquipmentItem()
-    return GameUIDragonEyrieDetail:GetEquipmentItem(self:GetEquipment())
+    return GameUIDragonEyrieDetail:GetEquipmentItem(self:GetEquipment(),self.dragon:Star(),false)
 end
 
 function GameUIDragonEquipment:RefreshInfoUI()
@@ -416,10 +411,9 @@ function GameUIDragonEquipment:RefreshInfoUI()
         self.reset_button:show()
         self.reset_button:setButtonEnabled(self:GetCurrentEquipmentCount() > 0)
     end
-    self.count_label:setString(_("数量") .. " " .. self:GetCurrentEquipmentCount() .. "/" ..  City:GetFirstBuildingByType("materialDepot"):GetMaxMaterial())
+    self.count_label:setString(_("当前数量") .. " " .. self:GetCurrentEquipmentCount())
+    self.count_tip_label:setPositionX(self.count_label:getPositionX() + self.count_label:getContentSize().width + 5)
     self:RefreshInfoListView()
-    local blackSmith = City:GetFirstBuildingByType("blackSmith")
-    self.makeButton:setButtonEnabled(blackSmith:IsUnlocked())
 end
 
 function GameUIDragonEquipment:GetPlayerEquipments()
@@ -446,7 +440,7 @@ function GameUIDragonEquipment:OnBasicChanged()
   if self.tab_buttons:GetSelectedButtonTag() == 'info' then
       self:RefreshInfoUI()
   else
-      self:RefreshIntensifyUI()
+      self:RefreshIntensifyUI(true)
   end
 end
 
@@ -458,12 +452,14 @@ function GameUIDragonEquipment:GetEquipmentEffect(needBuff)
   local r = {}
   local equipment = self:GetEquipment()
   local vitality,strength = equipment:GetVitalityAndStrengh()
-  table.insert(r,{1,_("活力"),vitality})
-  table.insert(r,{2,_("力量"),strength})
+  local leadership = equipment:GetLeadership()
+  table.insert(r,{_("活力"),vitality})
+  table.insert(r,{_("力量"),strength})
+  table.insert(r,{_("领导力"),leadership})
   if needBuff then
     local buffers = equipment:GetBufferAndEffect()
     for __,v in ipairs(buffers) do
-        table.insert(r,{3,Localize.dragon_buff_effection[v[1]],string.format("%d%%",v[2]*100)})
+        table.insert(r,{Localize.dragon_buff_effection[v[1]],string.format("%d%%",v[2]*100)})
     end
   end
   return r
@@ -475,7 +471,7 @@ function GameUIDragonEquipment:RefreshInfoListView()
   self.info_list:removeAllItems()
   table.foreach(data,function(index,dataItem)
     local item = self.info_list:newItem()
-    local content = self:GetListItem(index,tonumber(dataItem[1]),dataItem[2],dataItem[3])
+    local content = self:GetListItem(index,dataItem[1],dataItem[2])
     item:addContent(content)
     item:setItemSize(LISTVIEW_WIDTH,40)
     self.info_list:addItem(item)
@@ -487,37 +483,33 @@ function GameUIDragonEquipment:RefreshIntensifyListView()
   self.intensify_list:removeAllItems()
   local equipment = self:GetEquipment()
   local vitality,strength = equipment:GetVitalityAndStrengh()
-  local item = self:GetIntensifyListItem(1,1,_("活力"),vitality)
+  local item = self:GetIntensifyListItem(1,_("活力"),vitality)
   self.intensify_list:addItem(item)
-  item = self:GetIntensifyListItem(2,2,_("力量"),strength)
+  item = self:GetIntensifyListItem(2,_("力量"),strength)
+  self.intensify_list:addItem(item)
+  local leadership = equipment:GetLeadership()
+  item = self:GetIntensifyListItem(3,_("领导力"),leadership)
   self.intensify_list:addItem(item)
   self.intensify_list:reload()
 end
 
 
-function GameUIDragonEquipment:GetIntensifyListItem(index,type,title,value)
+function GameUIDragonEquipment:GetIntensifyListItem(index,title,value)
   local item = self.intensify_list:newItem()
-  local bg = display.newScale9Sprite(string.format("resource_item_bg%d.png",index%2)):size(LISTVIEW_WIDTH - 24,40)
-  local icon = "dragon_vitality_33x42.png"
-  if type == 2 then
-    icon = "dragon_strength_27x31.png"
-  elseif type == 3 then
-    icon = "dragon_buffs_34x31.png"
-  end
-  local iconImage = display.newSprite(icon):pos(25, bg:getContentSize().height/2):addTo(bg)
+  local bg = display.newScale9Sprite(string.format("resource_item_bg%d.png",index%2)):size(LISTVIEW_WIDTH - 20,40)
   UIKit:ttfLabel({
       text = title,
       size = 20,
       color = 0x615b44,
       align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
-  }):addTo(bg):pos(iconImage:getPositionX()+20,iconImage:getPositionY())
+  }):addTo(bg):align(display.LEFT_CENTER,14,20)
 
   local val_label = UIKit:ttfLabel({
       text = value,
       size = 20,
       align = cc.ui.UILabel.TEXT_ALIGN_RIGHT, 
       color = 0x403c2f,
-  }):addTo(bg):align(display.RIGHT_BOTTOM, bg:getContentSize().width-10, 10)
+  }):addTo(bg):align(display.RIGHT_CENTER, bg:getContentSize().width-10, 20)
   item.val_label = val_label
 
   local buff_label = UIKit:ttfLabel({
@@ -525,21 +517,22 @@ function GameUIDragonEquipment:GetIntensifyListItem(index,type,title,value)
     size = 20,
     color = 0x309700,
     align = cc.TEXT_ALIGNMENT_RIGHT
-  }):addTo(bg):align(display.RIGHT_BOTTOM, bg:getContentSize().width-10, 10):hide()
+  }):addTo(bg):align(display.RIGHT_CENTER, bg:getContentSize().width-10, 20):hide()
   item.buff_label = buff_label
   item:addContent(bg)
-  item:setItemSize(LISTVIEW_WIDTH - 24,40)
+  item:setItemSize(LISTVIEW_WIDTH,40)
   return item
 end
 
-function GameUIDragonEquipment:RefreshIntensifyListViewBuffVal(vitality_add,strength_add)
+function GameUIDragonEquipment:RefreshIntensifyListViewBuffVal(vitality_add,strength_add,leadership_add)
+    print("RefreshIntensifyListViewBuffVal--->",vitality_add,strength_add)
     local items = self.intensify_list:getItems()
     if #items == 0 then return end
     local vitality_item = items[1]
     if not vitality_item or not vitality_item.buff_label then return end
     if vitality_add == 0 then
         vitality_item.buff_label:hide()
-        vitality_item.val_label:setPositionX(LISTVIEW_WIDTH - 34)
+        vitality_item.val_label:setPositionX(LISTVIEW_WIDTH - 30)
     else
         vitality_item.buff_label:setString("+" .. vitality_add)
         vitality_item.val_label:setPositionX(vitality_item.buff_label:getPositionX() - vitality_item.buff_label:getContentSize().width - 10)
@@ -551,11 +544,22 @@ function GameUIDragonEquipment:RefreshIntensifyListViewBuffVal(vitality_add,stre
     if not strength_item or not strength_item.buff_label then return end
     if strength_add == 0 then
         strength_item.buff_label:hide()
-        strength_item.val_label:setPositionX(LISTVIEW_WIDTH - 34)
+        strength_item.val_label:setPositionX(LISTVIEW_WIDTH - 30)
     else
         strength_item.buff_label:setString("+" .. strength_add)
         strength_item.val_label:setPositionX(strength_item.buff_label:getPositionX() - strength_item.buff_label:getContentSize().width - 10)
         strength_item.buff_label:show()
+    end
+
+    local leadership_item = items[3]
+    if not leadership_item or not leadership_item.buff_label then return end
+    if leadership_add == 0 then
+        leadership_item.buff_label:hide()
+        leadership_item.val_label:setPositionX(LISTVIEW_WIDTH - 30)
+    else
+        leadership_item.buff_label:setString("+" .. leadership_add)
+        leadership_item.val_label:setPositionX(leadership_item.buff_label:getPositionX() - leadership_item.buff_label:getContentSize().width - 10)
+        leadership_item.buff_label:show()
     end
 end
 
