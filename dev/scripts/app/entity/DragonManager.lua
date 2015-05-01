@@ -13,6 +13,7 @@ local promise = import("..utils.promise")
 DragonManager.promise_callbacks = {}
 local DragonEvent = import(".DragonEvent")
 local DragonDeathEvent = import(".DragonDeathEvent")
+local config_intInit = GameDatas.PlayerInitData.intInit
 
 DragonManager.LISTEN_TYPE = Enum("OnHPChanged","OnBasicChanged","OnDragonHatched","OnDragonEventChanged","OnDragonEventTimer","OnDefencedDragonChanged",
     "OnDragonDeathEventChanged","OnDragonDeathEventTimer","OnDragonDeathEventRefresh")
@@ -295,7 +296,9 @@ function DragonManager:RefreshDragonData( dragons,resource_refresh_time,hp_recov
             if dragon then
                 local dragonIsHated_ = dragon:Ishated()
                 local isDefenced = dragon:IsDefenced()
+                local old_star = dragon:Star()
                 dragon:Update(v) -- include UpdateEquipmetsAndSkills
+                local star_chaned =  dragon:Star() > old_star
                 if not need_notify_defence then
                     need_notify_defence = isDefenced ~= dragon:IsDefenced()
                 end
@@ -305,7 +308,7 @@ function DragonManager:RefreshDragonData( dragons,resource_refresh_time,hp_recov
                     end)
                 else
                     self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnBasicChanged,function(lisenter)
-                        lisenter.OnBasicChanged(lisenter)
+                        lisenter.OnBasicChanged(lisenter,dragon,star_chaned)
                     end)
                 end
             end
@@ -388,6 +391,20 @@ function DragonManager:OnHPChanged()
     end)
 end
 
+function DragonManager:GetHateNeedMinutes(dragonType)
+    if self:NoDragonHated() then return 0 end
+    return config_intInit['playerHatchDragonNeedMinutes']['value']
+end
+
+function DragonManager:NoDragonHated()
+    for __,dragon in pairs(self:GetDragons()) do
+        if dragon:Ishated() then
+            return false
+        end
+    end
+    return true
+end
+
 --新手引导
 function DragonManager:PromiseOfFinishEquipementDragon()
     local p = promise.new()
@@ -410,5 +427,7 @@ function DragonManager:CheckFinishEquipementDragonPormise()
         end
     end
 end
+
+
 
 return DragonManager

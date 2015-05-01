@@ -309,6 +309,14 @@ function Dragon:GetEquipmentByBody( category )
 	end
 end
 
+function Dragon:IsAllEquipmentsLoaded()
+	for __,v in ipairs(self:Equipments()) do
+		if not v:IsLoaded() then
+			return false
+		end
+	end
+	return true
+end
 
 --装备
 function Dragon:Equipments()
@@ -333,7 +341,11 @@ end
 
 --升级需要的经验值
 function Dragon:GetMaxExp()	
-	return config_dragonLevel[self:Level() + 1 ] and config_dragonLevel[self:Level() + 1 ].expNeed or 0
+	if self:Level() == self:GetMaxLevel() then
+		return config_dragonLevel[self:GetMaxLevel()] and config_dragonLevel[self:GetMaxLevel()].expNeed or 0
+	else
+		return config_dragonLevel[self:Level() + 1 ] and config_dragonLevel[self:Level() + 1 ].expNeed or 0
+	end
 end
 --当前星级最大等级
 function Dragon:GetMaxLevel()
