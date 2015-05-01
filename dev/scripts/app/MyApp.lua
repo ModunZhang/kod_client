@@ -150,6 +150,10 @@ function MyApp:retryConnectServer(need_disconnect)
         NetManager:disconnect()
         print("MyApp:retryConnectServer--->1")
     end
+    --如果在登录界面并且未进入游戏忽略
+    if display.getRunningScene().__cname == 'MainScene' and not NetManager.m_was_inited_game then
+        return
+    end
     if NetManager.m_logicServer.host and NetManager.m_logicServer.port then
         UIKit:WaitForNet(2)
         scheduler.performWithDelayGlobal(function()
