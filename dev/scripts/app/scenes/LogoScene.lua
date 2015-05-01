@@ -34,7 +34,7 @@ end
 --预先加载登录界面使用的大图
 function LogoScene:loadSplashResources()
     --加载splash界面使用的图片
-    display.addImageAsync("splash_beta_logo_515x119.png",function()
+    display.addImageAsync("splash_beta_logo_467x113.png",function()
         display.addImageAsync("splash_beta_bg_3987x1136.jpg",function()end)
     end)
 end
