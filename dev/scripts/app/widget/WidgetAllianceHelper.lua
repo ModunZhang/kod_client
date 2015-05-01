@@ -39,9 +39,10 @@ function WidgetAllianceHelper:ctor()
 	self.terrain_info = math.random(self.count_of_landforms)
 	--旗帜的所有图案
 	self.images_of_graphics = {}
+	table.insert(self.images_of_graphics,{name = 1,image = "transparent_1x1.png"})
 	for i=1,19 do
 	    local imageName = string.format("alliance_graphic_88x88_%d",i)
-	    table.insert(self.images_of_graphics,{name = i,image = imageName .. ".png"})
+	    table.insert(self.images_of_graphics,{name = i + 1,image = imageName .. ".png"})
 	end
 	--旗帜背景布局样式
 	self.images_of_category = {}
@@ -50,8 +51,8 @@ function WidgetAllianceHelper:ctor()
 		self.images_of_category[i] = {name = i,image = bodyButtonImageName .. ".png"}
 	end
 	--对应三种地形
-	self.images_of_terrain_rhombus = {"greensward_540x378.png","greensward_540x378.png","greensward_540x378.png"}
-	self.images_of_terrain_rectangle = {"rectangle_terrain_216x282.png","rectangle_terrain_216x282.png","rectangle_terrain_216x282.png"}
+	self.images_of_terrain_rhombus = {"rhombus_grassLand_83x61.png","rhombus_desert_83x61.png","rhombus_iceField_83x61.png"}
+	self.images_of_terrain_rectangle = {"rectangle_grassLand_178x263.png","rectangle_desert_178x263.png","rectangle_iceField_178x263.png"}
 
 end
 
@@ -210,18 +211,17 @@ function WidgetAllianceHelper:CreateFlagWithRhombusTerrain(terrain_info,obj_flag
     local terrain = self:GetRhombusTerrainImageByIndex(terrain_info)
     local terrain_sprite = display.newSprite(terrain)
         :addTo(node)
-        :scale(0.258)
     local shadow = display.newSprite("alliance_flag_shadow_113x79.png")
         :addTo(node)
-        :align(display.RIGHT_BOTTOM, terrain_sprite:getPositionX()+27, terrain_sprite:getPositionY()-23)
-        :scale(0.7)
+        :align(display.RIGHT_BOTTOM, terrain_sprite:getPositionX()+14, terrain_sprite:getPositionY() - 14)
+        :scale(0.4)
     local base = display.newSprite("alliance_flag_base_84x89.png")
         :addTo(node)
-        :align(display.RIGHT_BOTTOM, terrain_sprite:getPositionX()+27, terrain_sprite:getPositionY()-23)
-        :scale(0.7)
+        :align(display.RIGHT_BOTTOM, terrain_sprite:getPositionX()+14, terrain_sprite:getPositionY()-14)
+        :scale(0.4)
     local flag_node = self:CreateFlagContentSprite(obj_flag):addTo(node)
-        :align(display.RIGHT_BOTTOM, terrain_sprite:getPositionX() - 42, terrain_sprite:getPositionY()+5)
-        :scale(0.7)
+        :align(display.RIGHT_BOTTOM, terrain_sprite:getPositionX() - 26, terrain_sprite:getPositionY())
+        :scale(0.4)
 
     return node,terrain_sprite,flag_node
 end

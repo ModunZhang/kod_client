@@ -2,7 +2,7 @@ local Flag = class("Flag")
 local count_config = {
     backstyle=10,
     colors=12,
-    graphics=19,
+    graphics=20,
 }
 
 function Flag:ctor()
