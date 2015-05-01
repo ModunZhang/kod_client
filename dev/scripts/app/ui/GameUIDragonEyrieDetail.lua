@@ -102,12 +102,14 @@ end
 function GameUIDragonEyrieDetail:OnMoveInStage()
     GameUIDragonEyrieDetail.super.OnMoveInStage(self)
     self:BuildUI()
+    self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnHPChanged)
     self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
     City:GetMaterialManager():AddObserver(self)
 end
 
 function GameUIDragonEyrieDetail:OnMoveOutStage()
     self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
+    self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnHPChanged)
     City:GetMaterialManager():RemoveObserver(self)
     GameUIDragonEyrieDetail.super.OnMoveOutStage(self)
 end
@@ -173,6 +175,8 @@ function GameUIDragonEyrieDetail:RefreshUI()
     local dragon = self:GetDragon()
     local button_tag = self.tab_buttons:GetCurrentTag()
     if button_tag == 'equipment' then
+        self.dragon_hp_label:setString(dragon:Hp() .. "/" .. dragon:GetMaxHP())
+        self.hp_process_timer:setPercentage(dragon:Hp()/dragon:GetMaxHP()*100)
         self.hp_process_bg:show()
         self.equipment_ui.promotionLevel_label:setString(self:GetUpgradDragonStarTips(dragon))
         local canloadAnyEq = self:FillEquipemtBox()
@@ -183,6 +187,8 @@ function GameUIDragonEyrieDetail:RefreshUI()
         self:RefreshSkillList()
         self.skill_ui.blood_label:setString(City:GetResourceManager():GetBloodResource():GetValue())
     else
+        self.dragon_hp_label:setString(dragon:Hp() .. "/" .. dragon:GetMaxHP())
+        self.hp_process_timer:setPercentage(dragon:Hp()/dragon:GetMaxHP()*100)
         self.hp_process_bg:show()
         self:RefreshInfoListView()
          self.info_strenth_label:setString(string.formatnumberthousands(dragon:TotalStrength()))
@@ -316,7 +322,11 @@ function GameUIDragonEyrieDetail:FillEquipemtBox()
 end
 
 function GameUIDragonEyrieDetail:OnDragonHpItemUseButtonClicked()
-    
+    local widgetUseItems = WidgetUseItems.new():Create({
+        item_type = WidgetUseItems.USE_TYPE.DRAGON_HP,
+        dragon = self:GetDragon()
+    })
+    widgetUseItems:AddToCurrentScene()
 end
 
 function GameUIDragonEyrieDetail:UpgradeDragonStar()
@@ -384,6 +394,16 @@ function GameUIDragonEyrieDetail:GetEquipmentItem(equipment_obj,dragon_star,need
     end
     return equipment_node
 end
+
+function GameUIDragonEyrieDetail:OnHPChanged()
+    local dragon = self:GetDragon()
+    if not dragon:Ishated() then return end
+    if self.dragon_hp_label and self.dragon_hp_label:isVisible() then
+        self.dragon_hp_label:setString(dragon:Hp() .. "/" .. dragon:GetMaxHP())
+        self.hp_process_timer:setPercentage(dragon:Hp()/dragon:GetMaxHP()*100)
+    end
+end
+
 
 function GameUIDragonEyrieDetail:OnBasicChanged(dragon,star_chaned)
     if self:GetDragon():Type() ~= dragon:Type() then return end
