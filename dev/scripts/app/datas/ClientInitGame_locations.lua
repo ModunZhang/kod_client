@@ -132,7 +132,7 @@ locations[13] = {
 }
 locations[14] = {
 	["index"] = 14,
-	["building_type"] = "townHall",
+	["building_type"] = "tradeGuild",
 	["x"] = 36,
 	["y"] = 29,
 	["w"] = 6,
@@ -142,7 +142,7 @@ locations[14] = {
 }
 locations[15] = {
 	["index"] = 15,
-	["building_type"] = "toolShop",
+	["building_type"] = "townHall",
 	["x"] = 36,
 	["y"] = 19,
 	["w"] = 6,
@@ -152,7 +152,7 @@ locations[15] = {
 }
 locations[16] = {
 	["index"] = 16,
-	["building_type"] = "tradeGuild",
+	["building_type"] = "toolShop",
 	["x"] = 36,
 	["y"] = 9,
 	["w"] = 6,
