@@ -852,6 +852,9 @@ function GameUtils:DoBattle(attacker, defencer, terrain)
     function report:IsAttackWin()
         return is_attack_win
     end
+    function report:IsAttackCamp()
+        return true
+    end
     function report:GetReportResult()
         return self:IsAttackWin()
     end
