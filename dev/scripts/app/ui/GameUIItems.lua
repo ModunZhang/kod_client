@@ -464,9 +464,12 @@ function GameUIItems:UseItemFunc( items )
             UIKit:PlayUseItemAni(items)
         end)
     else
-        WidgetUseItems.new():Create({
+        local dialog = WidgetUseItems.new():Create({
             item = items
-        }):AddToCurrentScene()
+        })
+        if dialog then
+            dialog:AddToCurrentScene()
+        end
     end
 end
 function GameUIItems:OnItemsChanged( changed_map )
@@ -525,6 +528,7 @@ function GameUIItems:OnItemsChanged( changed_map )
     end
 end
 return GameUIItems
+
 
 
 
