@@ -1109,7 +1109,7 @@ function GameUIAllianceBattle:CreateAllianceItem(alliance)
     }):align(display.LEFT_CENTER,200,70)
         :addTo(content)
     -- 联盟击杀
-    display.newSprite("hit_icon_29x32.png")
+    display.newSprite("battle_39x38.png")
         :align(display.CENTER, 180,30)
         :addTo(content)
     local hit_label  = UIKit:ttfLabel({

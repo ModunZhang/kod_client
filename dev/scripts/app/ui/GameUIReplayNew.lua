@@ -925,7 +925,7 @@ function GameUIReplayNew:ctor(report, callback)
     assert(report.GetReportResult)
     assert(report.GetAttackDragonLevel)
     assert(report.GetAttackDragonLevel)
-    assert(report.GetAttackTargetTerrain())
+    assert(report.GetAttackTargetTerrain)
     GameUIReplayNew.super.ctor(self)
     self.report = report
     local soldiers = self.report:GetOrderedDefenceSoldiers()
