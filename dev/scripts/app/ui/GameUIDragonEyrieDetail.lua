@@ -20,6 +20,7 @@ local GameUIDragonHateSpeedUp = import(".GameUIDragonHateSpeedUp")
 local UILib = import(".UILib")
 local MaterialManager = import("..entity.MaterialManager")
 local WidgetPushTransparentButton = import("..widget.WidgetPushTransparentButton")
+local GameUIShowDragonUpStarAnimation = import(".GameUIShowDragonUpStarAnimation")
 -- building = DragonEyrie
 function GameUIDragonEyrieDetail:ctor(city,building,dragon_type)
     GameUIDragonEyrieDetail.super.ctor(self,city,_("龙巢"))
@@ -396,7 +397,7 @@ function GameUIDragonEyrieDetail:GetEquipmentItem(equipment_obj,dragon_star,need
     end
     return equipment_node
 end
-
+-- oldParam = 
 function GameUIDragonEyrieDetail:OnBasicChanged(dragon,star_chaned)
     if self:GetDragon():Type() ~= dragon:Type() then return end
     if star_chaned then
@@ -428,7 +429,8 @@ function GameUIDragonEyrieDetail:OnBasicChanged(dragon,star_chaned)
 end
 
 function GameUIDragonEyrieDetail:ShowUpgradeStarSuccess()
-    GameGlobalUI:showTips(_("提示"),"龙晋级成功")
+    -- GameGlobalUI:showTips(_("提示"),"龙晋级成功")
+    GameUIShowDragonUpStarAnimation.new(self:GetDragon()):addTo(self)
 end
 
 function GameUIDragonEyrieDetail:OnTabButtonClicked(tag)
