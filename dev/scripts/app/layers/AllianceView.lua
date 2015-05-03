@@ -15,6 +15,8 @@ end)
 local intInit = GameDatas.AllianceInitData.intInit
 local floor = math.floor
 local random = math.random
+local max = math.max
+local ipairs = ipairs
 local function random_indexes_in_rect(number, rect)
     local indexes = {}
     local count = 0
@@ -158,6 +160,7 @@ function AllianceView:OnBuildingInfoChange()
 end
 function AllianceView:OnBuildingFullUpdate(allianceMap)
     self:RefreshBuildings(allianceMap)
+    self:OnSceneScale()
 end
 function AllianceView:RefreshBuildings(alliance_map)
     self:IteratorAllianceObjects(function(_,v) v:removeFromParent() end)
@@ -182,6 +185,7 @@ function AllianceView:OnBuildingDeltaUpdate(allianceMap, deltaMapObjects)
             self:RefreshEntity(allianceMap:GetMapObjects()[index])
         end
     end
+    self:OnSceneScale()
 end
 function AllianceView:RefreshEntity(entity)
     self.objects[entity:Id()]:removeFromParent()
@@ -247,11 +251,11 @@ function AllianceView:EmptyGround(x, y)
     end
 end
 function AllianceView:OnSceneScale(s)
---     for _,v in pairs(self.objects) do
---         if v:GetEntity():GetType() == "member" then
---             v:OnSceneScale(s)
---         end
---     end
+    if s then self.scale = s end
+    local scale = max(2 - self.scale, 0.8)
+    for i,v in ipairs(self:GetLayer():GetInfoNode():getChildren()) do
+        v:setScale(scale)
+    end
 end
 
 
