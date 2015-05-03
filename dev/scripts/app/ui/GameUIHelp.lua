@@ -212,7 +212,7 @@ function GameUIHelp:GetHelpEventDesc( eventData )
         if names[2] == "hpAdd" then
             return string.format(_("研发%s血量增加 Lv %d"),Localize.soldier_category[names[1]],eventData:Level()+1)
         end
-        return string.format(_("研发%s对%s的攻击到 Lv %d"),Localize.soldier_category[names[1]],Localize.soldier_category[names[2]],eventData:Level()+1)
+        return string.format(_("研发%s对%s的攻击到 Lv %d"),Localize.soldier_category[names[1]],Localize.soldier_category[names[2]],eventData:Level())
     elseif type == "soldierStarEvents" then
         return string.format(_("晋升%s的星级 star %d"),Localize.soldier_name[name],eventData:Level()+1)
     elseif type == "materialEvents" then
@@ -228,7 +228,7 @@ function GameUIHelp:GetHelpEventDesc( eventData )
     elseif type == "dragonDeathEvents" then
         return _("未处理")
     elseif type == "productionTechEvents" then
-        return _("未处理")
+        return string.format(_("正在研发%s到 Level %d"),Localize.productiontechnology_name[name],eventData:Level())
     end
 end
 function GameUIHelp:CreateHelpItem(event)
