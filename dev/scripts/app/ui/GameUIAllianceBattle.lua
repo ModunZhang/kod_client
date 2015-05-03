@@ -752,7 +752,7 @@ function GameUIAllianceBattle:InitHistoryRecord()
     local layer = self.history_layer
     local list,list_node = UIKit:commonListView({
         async = true, --异步加载
-        viewRect = cc.rect(0, 0,608, 786),
+        viewRect = cc.rect(0, 0,568, 786),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
     },false)
     list:setRedundancyViewVal(294)
