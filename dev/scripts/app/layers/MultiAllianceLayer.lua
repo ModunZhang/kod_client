@@ -443,7 +443,7 @@ function MultiAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, fini
         if index < 0 or index > 8 then index = 1 end
         local corps = display.newNode():addTo(self:GetCorpsNode())
         local ani,scalex
-        local is_strike = not soldiers
+        local is_strike = not soldiers or #soldiers == 0
         if is_strike then
             ani,scalex = unpack(dragon_dir_map[index])
             local dragon_ani = UILib.dragon_animations[dragonType or "redDragon"][1]
