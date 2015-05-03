@@ -27,8 +27,8 @@ local scale = value_return
 local level = value_return
 
 
-local decorator = function(deco_type, deco_name, offset, scale)
-    return {deco_type = deco_type, deco_name = deco_name, offset = offset or {}, scale = scale}
+local decorator = function(deco_type, deco_name, offset, scale, always)
+    return {deco_type = deco_type, deco_name = deco_name, offset = offset or {}, scale = scale, always = always}
 end
 local function create_config(b, e, png, offset, scale, ...)
     return {
@@ -60,6 +60,27 @@ local function create_building_config(building_type, ...)
             end
         end
         assert(false, "没有找到建筑配置表")
+    end
+    function config:GetAnimationConfigsByLevel(level)
+        local config = self:GetConfigByLevel(level)
+        local r = {}
+        for _,v in ipairs(config.decorator) do
+            if v.always then
+                table.insert(r, v)
+            end
+        end
+        return r
+    end
+    function config:GetImageConfigsByLevel(level)
+        local config = self:GetConfigByLevel()
+        local config = self:GetConfigByLevel()
+        local r = {}
+        for _,v in ipairs(config.decorator) do
+            if v.always then
+                table.insert(r, v)
+            end
+        end
+        return r
     end
     SpriteConfig[building_type] = config
 end
@@ -100,11 +121,11 @@ create_building_config(
 )
 create_building_config(
     "watchTower"
-    ,create_config(MIN_LEVEL, MAX_LEVEL, "watchTower_230x348.png", offset(50, 180), scale(1), decorator("animation", "liaowangta"))
+    ,create_config(MIN_LEVEL, MAX_LEVEL, "watchTower_230x348.png", offset(50, 180), scale(1), decorator("animation", "liaowangta", nil, nil, true))
 )
 create_building_config(
     "warehouse"
-    ,create_config(MIN_LEVEL, MAX_LEVEL, "warehouse_232x214.png", offset(-5, 105), scale(1), decorator("animation", "ziyuancangku"))
+    ,create_config(MIN_LEVEL, MAX_LEVEL, "warehouse_232x214.png", offset(-5, 105), scale(1), decorator("animation", "ziyuancangku", nil, nil, true))
 )
 create_building_config(
     "toolShop"
@@ -123,7 +144,7 @@ create_building_config(
 create_building_config(
     "barracks"
     ,create_config(MIN_LEVEL, 0, "locked_tile.png", offset(20, 120), scale(1))
-    ,create_config(1, MAX_LEVEL, "barracks_252x240.png", offset(20, 120), scale(1), decorator("animation", "bingyin_1"), decorator("animation", "bingyin"))
+    ,create_config(1, MAX_LEVEL, "barracks_252x240.png", offset(20, 120), scale(1), decorator("animation", "bingyin_1"), decorator("animation", "bingyin", nil, nil, true))
 )
 create_building_config(
     "blackSmith"
@@ -148,7 +169,7 @@ create_building_config(
 create_building_config(
     "mill"
     ,create_config(MIN_LEVEL, 0, "locked_tile.png", offset(20, 120), scale(1))
-    ,create_config(1, MAX_LEVEL, "mill_288x260.png", offset(20, 100), scale(1), decorator("animation", "mofang"))
+    ,create_config(1, MAX_LEVEL, "mill_288x260.png", offset(20, 100), scale(1), decorator("animation", "mofang", nil, nil, true))
 )
 create_building_config(
     "hospital"
@@ -163,7 +184,7 @@ create_building_config(
 create_building_config(
     "tradeGuild"
     ,create_config(MIN_LEVEL, 0, "locked_tile.png", offset(20, 120), scale(1))
-    ,create_config(1, MAX_LEVEL, "tradeGuild_248x234.png", offset(20, 100), scale(1), decorator("animation", "maoyihanghui"))
+    ,create_config(1, MAX_LEVEL, "tradeGuild_248x234.png", offset(20, 100), scale(1), decorator("animation", "maoyihanghui", nil, nil, true))
 )
 create_building_config(
     "academy"
