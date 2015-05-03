@@ -116,6 +116,10 @@ function WidgetUpgradeMilitaryTech:UpgradeButtons()
                 local upgrade_listener = function()
                     NetManager:getUpgradeMilitaryTechPromise(self.tech:Name())
                     self:LeftButtonClicked()
+                    local tech_ui = UIKit:GetUIInstance("GameUIMilitaryTechBuilding")
+                    if tech_ui then
+                        tech_ui:LeftButtonClicked()
+                    end
                 end
 
                 local results = self.tech:IsAbleToUpgrade()
