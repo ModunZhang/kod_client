@@ -309,15 +309,15 @@ function GameUIStrikeReport:CreateBelligerentsItem(height,player,isSelf)
     UIKit:ttfLabel({
         text = player.name or Localize.village_name[player.type] ,
         size = 20,
-        color = 0x403c2f
-    }):align(display.LEFT_CENTER,90, height-25)
+        color = 0x403c2f,
+    }):align(display.CENTER,170, height-25)
         :addTo(player_item)
 
     UIKit:ttfLabel({
-        text = player.type and _("Level").." "..player.level or player.alliance.name ,
+        text = player.type and _("Level").." "..player.level or "["..player.alliance.tag.."]" ,
         size = 22,
         color = 0xffedae
-    }):align(display.LEFT_CENTER,90,  height-75)
+    }):align(display.CENTER,170,  height-75)
         :addTo(player_item)
 
     return player_item
