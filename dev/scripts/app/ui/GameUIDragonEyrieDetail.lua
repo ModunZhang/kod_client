@@ -74,27 +74,21 @@ function GameUIDragonEyrieDetail:CreateProgressTimer()
     local iconbg = display.newSprite("drgon_process_icon_bg.png")
         :addTo(bg)
         :align(display.LEFT_BOTTOM, -13,-2)
-    display.newSprite("dragon_lv_icon.png")
+    display.newSprite("dragonskill_xp_51x63.png")
         :addTo(iconbg)
         :pos(iconbg:getContentSize().width/2,iconbg:getContentSize().height/2)
+        :scale(0.9)
     self.dragon_hp_label = UIKit:ttfLabel({
          text = "120/360",
          color = 0xfff3c7,
          shadow = true,
          size = 20
     }):addTo(bg):align(display.LEFT_CENTER, 40, 20)
-
-    UIKit:ttfLabel({
-         text = "+" .. self.building:GetHPRecoveryPerHour() .. "/h",
-         color = 0xfff3c7,
-         shadow = true,
-         size = 20
-    }):addTo(bg):align(display.RIGHT_CENTER, bg:getContentSize().width - 50, 20)
     local add_button = WidgetPushButton.new({normal = "add_btn_up_50x50.png",pressed = "add_btn_down_50x50.png"})
         :addTo(bg)
         :align(display.CENTER_RIGHT,bg:getContentSize().width+10,20)
         :onButtonClicked(function()
-            self:OnDragonHpItemUseButtonClicked()
+            self:OnDragonExpItemUseButtonClicked()
         end)
     return bg,progressTimer
 end
@@ -173,6 +167,8 @@ function GameUIDragonEyrieDetail:RefreshUI()
     local dragon = self:GetDragon()
     local button_tag = self.tab_buttons:GetCurrentTag()
     if button_tag == 'equipment' then
+        self.dragon_hp_label:setString(dragon:Exp() .. "/" .. dragon:GetMaxExp())
+        self.hp_process_timer:setPercentage(dragon:Exp()/dragon:GetMaxExp()*100)
         self.hp_process_bg:show()
         self.equipment_ui.promotionLevel_label:setString(self:GetUpgradDragonStarTips(dragon))
         local canloadAnyEq = self:FillEquipemtBox()
@@ -183,6 +179,8 @@ function GameUIDragonEyrieDetail:RefreshUI()
         self:RefreshSkillList()
         self.skill_ui.blood_label:setString(City:GetResourceManager():GetBloodResource():GetValue())
     else
+        self.dragon_hp_label:setString(dragon:Exp() .. "/" .. dragon:GetMaxExp())
+        self.hp_process_timer:setPercentage(dragon:Exp() / dragon:GetMaxExp()*100)
         self.hp_process_bg:show()
         self:RefreshInfoListView()
          self.info_strenth_label:setString(string.formatnumberthousands(dragon:TotalStrength()))
@@ -237,6 +235,16 @@ function GameUIDragonEyrieDetail:CreateNodeIf_equipment()
 end
 
 function GameUIDragonEyrieDetail:OnLoadAllButtonClicked()
+    if #self.can_load_equipemts ~= 0 then
+        local eq = self.can_load_equipemts[1]
+        NetManager:getLoadDragonEquipmentPromise(eq:Type(),eq:Body(),eq:GetCanLoadConfig().name):done(function(msg)
+            self:FillEquipemtBox()
+            self:OnLoadAllButtonClicked()
+
+        end)
+    else
+        return 
+    end
 end
 
 --返回装备图片信息 return 背景图 装备图
@@ -293,7 +301,7 @@ end
 
 function GameUIDragonEyrieDetail:FillEquipemtBox()
     assert(self.equipment_boxs['armguardLeft'])
-    local anyEqCanLoad = false
+    self.can_load_equipemts = {}
     local final_point = self.dragon_world_point
     if self.equipment_nodes then
         for k,v in pairs(self.equipment_nodes) do
@@ -304,19 +312,23 @@ function GameUIDragonEyrieDetail:FillEquipemtBox()
     local dragon = self:GetDragon()
     for body,box in pairs(self.equipment_boxs) do
         local eq = dragon:GetEquipmentByBody(body)
-        if not anyEqCanLoad and not eq:IsLoaded() and self:CheckCanLoadEquipment(eq) then
-            anyEqCanLoad = true
+        if not eq:IsLoaded() and self:CheckCanLoadEquipment(eq) then
+            table.insert(self.can_load_equipemts,eq)
         end
         local node = self:GetEquipmentItem(eq,dragon:Star(),true):addTo(box):pos(52,52)
         node.final_point = box:convertToNodeSpace(final_point)
         node.need_animation = not eq:IsLocked()
         self.equipment_nodes[body] = node
     end
-    return anyEqCanLoad
+    return #self.can_load_equipemts > 0
 end
 
-function GameUIDragonEyrieDetail:OnDragonHpItemUseButtonClicked()
-    
+function GameUIDragonEyrieDetail:OnDragonExpItemUseButtonClicked()
+    local widgetUseItems = WidgetUseItems.new():Create({
+        item_type = WidgetUseItems.USE_TYPE.DRAGON_EXP,
+        dragon = self:GetDragon()
+    })
+    widgetUseItems:AddToCurrentScene()
 end
 
 function GameUIDragonEyrieDetail:UpgradeDragonStar()
