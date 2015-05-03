@@ -34,18 +34,15 @@ function Observer:RemoveAllObserver()
 	self.observer = {}
 end
 function Observer:RemoveObserver(observer)
-	for i, v in ipairs(self.observer) do
+	for i,v in ipairs(self.observer) do
 		if v == observer then
 			return table.remove(self.observer, i)
 		end
 	end
 end
 function Observer:NotifyObservers(func)
-	for i, v in ipairs(self.observer) do
-		if type(v) == nil then table.remove(self.observer,i) return end
-		if func(v) then
-			return
-		end
+	for _,v in pairs(self.observer) do
+		if func(v) then return end
 	end
 end
 
