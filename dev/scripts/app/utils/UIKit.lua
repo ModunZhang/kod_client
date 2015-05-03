@@ -584,16 +584,16 @@ end
 
 function UIKit:WaitForNet(delay)
     local scene = display.getRunningScene()
-    -- if scene.__cname  ~= 'MainScene' and scene.WaitForNet then
-    scene:WaitForNet(delay)
-    -- end
+    if scene.WaitForNet then
+        scene:WaitForNet(delay)
+    end
 end
 
 function UIKit:NoWaitForNet()
     local scene = display.getRunningScene()
-    -- if scene.__cname  ~= 'MainScene' and scene.NoWaitForNet then
-    scene:NoWaitForNet()
-    -- end
+    if scene.NoWaitForNet then
+        scene:NoWaitForNet()
+    end
 end
 
 function UIKit:getErrorCodeData(code)
