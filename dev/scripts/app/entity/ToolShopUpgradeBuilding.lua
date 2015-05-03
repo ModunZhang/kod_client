@@ -10,8 +10,8 @@ local BUILDING = "building"
 
 function ToolShopUpgradeBuilding:ctor(building_info)
     self.toolShop_building_observer = Observer.new()
-    self.building_event = self:CreateEvent("building")
-    self.technology_event = self:CreateEvent("technology")
+    self.building_event = self:CreateEvent(BUILDING)
+    self.technology_event = self:CreateEvent(TECHNOLOGY)
     self.category = {
         building = self.building_event,
         technology = self.technology_event,
@@ -160,7 +160,7 @@ end
 local needs = {"Wood", "Stone", "Iron", "time"}
 function ToolShopUpgradeBuilding:GetNeedByCategory(category)
     local config = config_function[self:GetEfficiencyLevel()]
-    local key = category == "building" and "Bm" or "Am"
+    local key = category == BUILDING and "Bm" or "Am"
     local need = {}
     for _, v in ipairs(needs) do
         table.insert(need, config[string.format("product%s%s", key, v)])
@@ -202,8 +202,8 @@ function ToolShopUpgradeBuilding:OnUserDataChanged(...)
     local BUILDING_EVENT = 1
     local TECHNOLOGY_EVENT = 2
     local category_map = {
-        [BUILDING_EVENT] = "building",
-        [TECHNOLOGY_EVENT] = "technology",
+        [BUILDING_EVENT] = BUILDING,
+        [TECHNOLOGY_EVENT] = TECHNOLOGY,
     }
     local events = {
         [BUILDING_EVENT] = nil,
