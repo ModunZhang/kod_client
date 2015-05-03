@@ -99,7 +99,7 @@ function DragonManager:GetCanFightPowerfulDragonType()
     local dragonWidget = 0
     local dragonType = ""
     for k,dragon in pairs(self:GetDragons()) do
-        if dragon:Status()=="free" and not dragon:IsDead() then
+        if (dragon:Status()=="free" or dragon:Status()=="defence") and not dragon:IsDead() then
             if dragon:GetWeight() > dragonWidget then
                 dragonWidget = dragon:GetWeight()
                 dragonType = k

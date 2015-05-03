@@ -168,7 +168,6 @@ function UpgradeBuilding:OnUserDataChanged(userData, current_time, location_id, 
             return
         end
     end
-    print("UpgradeBuilding:OnUserDataChanged", location_id, sub_location_id)
     local event, level, finished_time, type_
     if self:BelongCity():IsHouse(self) then
         event = self:GetHouseEventByLocations(userData, location_id, sub_location_id)
@@ -185,7 +184,7 @@ function UpgradeBuilding:OnUserDataChanged(userData, current_time, location_id, 
     end
     self:OnEvent(event)
     if level and finished_time then
-        if display.getRunningScene().__cname ~= "MainScene" and is_delta_update and level ~= self.level then
+        if display.getRunningScene().__cname ~= "MainScene" and level ~= self.level then
             GameGlobalUI:showTips(_("提示"),string.format(_('建造%s至%d级完成'),Localize.building_name[self:GetType()],level))
         end
         self:OnHandle(level, finished_time)

@@ -188,7 +188,7 @@ function WidgetPromoteSoldier:UpgradeRequirement()
             isVisible = City:GetSoldierManager():GetUpgradingMilitaryTechNum(self.building_type)>0,
             isSatisfy = not  City:GetSoldierManager():IsUpgradingMilitaryTech(self.building_type),
             icon="hammer_31x33.png",
-            description= _("升级队列已满")..":"..City:GetSoldierManager():GetUpgradingMilitaryTechNum(self.building_type).."/1"
+            description= _("升级队列已满")..":"..(1-City:GetSoldierManager():GetUpgradingMilitaryTechNum(self.building_type)).."/1"
         },
         {
             resource_type = Localize.fight_reward.coin,

@@ -132,33 +132,16 @@ function GameUIPVESendTroop:OnMoveInStage()
                         :CreateOKButton(
                             {
                                 listener =  function ()
-                                    if self.dragon:IsDefenced() then
-                                        NetManager:getCancelDefenceDragonPromise():done(function()
-                                            self.march_callback(dragonType,soldiers)
-                                            -- 确认派兵后关闭界面
-                                            self:LeftButtonClicked()
-                                        end)
-                                    else
-                                        self.march_callback(dragonType,soldiers)
-                                        -- 确认派兵后关闭界面
-                                        self:LeftButtonClicked()
-                                    end
+                                    self.march_callback(dragonType,soldiers)
+                                    -- 确认派兵后关闭界面
+                                    self:LeftButtonClicked()
                                 end
                             }
                         )
                 else
-                    if self.dragon:IsDefenced() then
-                        NetManager:getCancelDefenceDragonPromise():done(function()
-                            self.march_callback(dragonType,soldiers)
-                            -- 确认派兵后关闭界面
-                            self:LeftButtonClicked()
-                        end)
-                    else
-                        self.march_callback(dragonType,soldiers)
-                        -- 确认派兵后关闭界面
-                        self:LeftButtonClicked()
-                    end
-
+                    self.march_callback(dragonType,soldiers)
+                    -- 确认派兵后关闭界面
+                    self:LeftButtonClicked()
                 end
             end
 
@@ -689,6 +672,7 @@ function GameUIPVESendTroop:onExit()
 end
 
 return GameUIPVESendTroop
+
 
 
 

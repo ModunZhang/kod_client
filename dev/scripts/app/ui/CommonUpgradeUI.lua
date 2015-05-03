@@ -470,7 +470,7 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
             isVisible = #city:GetUpgradingBuildings()>=city:BuildQueueCounts(),
             isSatisfy = #city:GetUpgradingBuildings()<city:BuildQueueCounts(),
             icon="hammer_31x33.png",
-            description=_("建造队列已满")..#city:GetUpgradingBuildings().."/"..city:BuildQueueCounts()
+            description=_("建造队列已满")..(city:BuildQueueCounts()-#city:GetUpgradingBuildings()).."/"..1
         },
         {
             resource_type = _("木材"),

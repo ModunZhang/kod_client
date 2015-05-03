@@ -64,7 +64,7 @@ function GameUITownHall:CreateDwelling()
     local admin_layer = display.newLayer():addTo(self:GetView()):pos(window.left+20,window.bottom_top+10)
     admin_layer:setContentSize(cc.size(layer_width,layer_height))
     local layer_width,layer_height = 600,window.betweenHeaderAndTab
-    self.dwelling = self:CreateDwellingItemWithListView():addTo(admin_layer):align(display.TOP_CENTER,layer_width/2,layer_height-20)
+    self.dwelling = self:CreateDwellingItemWithListView():addTo(admin_layer):align(display.TOP_CENTER,layer_width/2,layer_height-60)
     self.admin_layer = admin_layer
 end
 function GameUITownHall:CreateAdministration()
