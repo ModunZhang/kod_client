@@ -44,6 +44,23 @@ function GameUIUnlockBuilding:Init()
     self.building_image = display.newScale9Sprite(build_png, display.cx-197, display.top-245):addTo(self)
     self.building_image:setAnchorPoint(cc.p(0.5,0.5))
     self.building_image:setScale(124/self.building_image:getContentSize().width)
+    
+    local configs = SpriteConfig[self.building:GetType()]:GetAnimationConfigsByLevel(1)
+    local p = self.building_image:getAnchorPointInPoints()
+    for _,v in ipairs(configs) do
+        if v.deco_type == "image" then
+            display.newSprite(v.deco_name):addTo(self.building_image)
+            :pos(p.x + v.offset.x, p.y + v.offset.y)
+        elseif v.deco_type == "animation" then
+            local offset = v.offset
+            local armature = ccs.Armature:create(v.deco_name)
+                :addTo(self.building_image):scale(v.scale or 1)
+                :align(display.CENTER, offset.x or p.x, offset.y or p.y)
+            armature:getAnimation():setSpeedScale(2)
+            armature:getAnimation():playWithIndex(0)
+        end
+    end
+
     self:InitBuildingIntroduces()
 
     -- upgrade now button
