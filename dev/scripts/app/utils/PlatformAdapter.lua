@@ -79,13 +79,6 @@ function PlatformAdapter:mac()
         filePath = string.gsub(filePath,"animations/","animations_mac/")
         return filePath
     end
-    local input = cc.ui.UIInput.new
-    cc.ui.UIInput.new = function(...)
-        local edit = input(...)
-        edit.setIgnoreWhiteSpaceInput = function(...)
-        end
-        return edit
-    end
 end
 
 

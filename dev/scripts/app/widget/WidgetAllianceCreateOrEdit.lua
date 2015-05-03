@@ -275,13 +275,12 @@ function WidgetAllianceCreateOrEdit:createTextfieldPanel()
         size = cc.size(552,48),
     })
     editbox_tag:setPlaceHolder(_("最多可输入3字符"))
-    editbox_tag:setMaxLength(3)
+    -- editbox_tag:setMaxLength(3)
     editbox_tag:setFont(UIKit:getEditBoxFont(),18)
     editbox_tag:setFontColor(cc.c3b(0,0,0))
     editbox_tag:setPlaceholderFontColor(UIKit:hex2c3b(0xccc49e))
     editbox_tag:setReturnType(cc.KEYBOARD_RETURNTYPE_DONE)
     editbox_tag:align(display.LEFT_BOTTOM,0,limitLabel:getContentSize().height+10):addTo(node)
-    editbox_tag:setIgnoreWhiteSpaceInput(true) -- 忽略空格输入
     self.editbox_tag = editbox_tag
     if not self:IsCreate() then
     	editbox_tag:setText(Alliance_Manager:GetMyAlliance():Tag())

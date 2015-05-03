@@ -198,10 +198,6 @@ static const int CC_EDIT_BOX_PADDING = 5;
 - (BOOL)textFieldShouldEndEditing:(UITextField *)sender
 {
     CCLOG("textFieldShouldEndEditing...");
-    if (getEditBoxImplIOS()->isIgnoreWhiteSpaceInput())
-    {
-        sender.text = [self trimAllWhiteSpace:sender.text];
-    }
     editState_ = NO;
     getEditBoxImplIOS()->refreshInactiveText();
     
@@ -243,16 +239,6 @@ static const int CC_EDIT_BOX_PADDING = 5;
  */
 - (BOOL)textField:(UITextField *) textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-    if (getEditBoxImplIOS()->isIgnoreWhiteSpaceInput())
-    {
-        NSUInteger oldLength = [[self trimAllWhiteSpace:textField.text] length];
-        NSUInteger replacementLength = [[self trimAllWhiteSpace:string] length];
-        NSUInteger rangeLength = range.length;
-        NSUInteger newLength = oldLength - rangeLength + replacementLength;
-        return newLength <= getEditBoxImplIOS()->getMaxLength();
-    }
-    else
-    {
         if (getEditBoxImplIOS()->getMaxLength() < 0)
         {
             return YES;
@@ -265,7 +251,6 @@ static const int CC_EDIT_BOX_PADDING = 5;
         NSUInteger newLength = oldLength - rangeLength + replacementLength;
         
         return newLength <= getEditBoxImplIOS()->getMaxLength();
-    }
 }
 -(NSString*)trimAllWhiteSpace:(NSString *)str
 {
@@ -282,10 +267,6 @@ static const int CC_EDIT_BOX_PADDING = 5;
 {
     if (getEditBoxImplIOS()->getMaxLength() > 0)
     {
-        if (getEditBoxImplIOS()->isIgnoreWhiteSpaceInput())
-        {
-            textField_.text = [self trimAllWhiteSpace:textField_.text];
-        }
         if (textField_.text.length > getEditBoxImplIOS()->getMaxLength())
         {
             textField_.text = [textField_.text substringToIndex:getEditBoxImplIOS()->getMaxLength()];

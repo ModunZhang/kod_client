@@ -94,17 +94,9 @@ namespace cocos2d {
             void setDelegate(EditBoxDelegate* pDelegate) { _delegate = pDelegate; };
             EditBoxDelegate* getDelegate() { return _delegate; };
             EditBox* getEditBox() { return _editBox; };
-            bool isIgnoreWhiteSpaceInput()
-            {
-                return _ignoreWhiteSpaceInput;
-            }
-            void setIgnoreWhiteSpaceInput(bool ignore){
-                _ignoreWhiteSpaceInput = ignore;
-            };
         protected:
             EditBoxDelegate* _delegate;
             EditBox* _editBox;
-            bool _ignoreWhiteSpaceInput;
         };
         
         // This method must be implemented at each subclass of EditBoxImpl.
