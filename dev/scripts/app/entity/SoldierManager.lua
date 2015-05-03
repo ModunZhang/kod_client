@@ -667,13 +667,13 @@ function SoldierManager:OnTimer(current_time)
     end)
 end
 function SoldierManager:OnSoldierStarEventsTimer(star_event)
-    self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.OnSoldierStarEventsTimer,function(lisenter)
-        lisenter.OnSoldierStarEventsTimer(lisenter,star_event)
+    self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.OnSoldierStarEventsTimer,function(listener)
+        listener.OnSoldierStarEventsTimer(listener,star_event)
     end)
 end
 function SoldierManager:OnMilitaryTechEventsTimer(tech_event)
-    self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.OnMilitaryTechEventsTimer,function(lisenter)
-        lisenter.OnMilitaryTechEventsTimer(lisenter,tech_event)
+    self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.OnMilitaryTechEventsTimer,function(listener)
+        listener.OnMilitaryTechEventsTimer(listener,tech_event)
     end)
 end
 return SoldierManager

@@ -108,16 +108,23 @@ end
 function BlackSmithUpgradeBuilding:MakeEquipmentWithFinishTime(equipment, finished_time, id)
     local event = self.making_event
     event:SetContentWithFinishTime(equipment, finished_time, id)
-    self.black_smith_building_observer:NotifyObservers(function(lisenter)
-        lisenter:OnBeginMakeEquipmentWithEvent(self, event)
+    self.black_smith_building_observer:NotifyObservers(function(listener)
+        listener:OnBeginMakeEquipmentWithEvent(self, event)
     end)
 end
 function BlackSmithUpgradeBuilding:EndMakeEquipmentWithCurrentTime()
     local event = self.making_event
     local equipment = event:Content()
     event:SetContentWithFinishTime(nil, 0)
-    self.black_smith_building_observer:NotifyObservers(function(lisenter)
-        lisenter:OnEndMakeEquipmentWithEvent(self, event, equipment)
+    self.black_smith_building_observer:NotifyObservers(function(listener)
+        listener:OnEndMakeEquipmentWithEvent(self, event, equipment)
+    end)
+end
+function BlackSmithUpgradeBuilding:SpeedUpMakingEquipment()
+    self.black_smith_building_observer:NotifyObservers(function(listener)
+        if listener.OnSpeedUpMakingEquipment then
+            listener:OnSpeedUpMakingEquipment()
+        end
     end)
 end
 function BlackSmithUpgradeBuilding:GetMakingTimeByEquipment(equipment)
@@ -128,8 +135,8 @@ end
 function BlackSmithUpgradeBuilding:OnTimer(current_time)
     local event = self.making_event
     if event:IsMaking() then
-        self.black_smith_building_observer:NotifyObservers(function(lisenter)
-            lisenter:OnMakingEquipmentWithEvent(self, event, current_time)
+        self.black_smith_building_observer:NotifyObservers(function(listener)
+            listener:OnMakingEquipmentWithEvent(self, event, current_time)
         end)
     end
     BlackSmithUpgradeBuilding.super.OnTimer(self, current_time)
@@ -160,7 +167,11 @@ function BlackSmithUpgradeBuilding:OnUserDataChanged(...)
         if self:IsEquipmentEventEmpty() then
             self:MakeEquipmentWithFinishTime(event.name, finished_time, event.id)
         else
-            self:GetMakeEquipmentEvent():SetContentWithFinishTime(event.name, finished_time, event.id)
+            local makingEvent = self:GetMakeEquipmentEvent()
+            if finished_time ~= makingEvent:FinishTime() then
+                self:SpeedUpMakingEquipment()
+                self:GetMakeEquipmentEvent():SetContentWithFinishTime(event.name, finished_time, event.id)
+            end
         end
     elseif not self:IsEquipmentEventEmpty() then
         self:EndMakeEquipmentWithCurrentTime()

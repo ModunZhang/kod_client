@@ -35,6 +35,9 @@ function WidgetEventTabButtons:isTouchInViewRect(event)
     return cc.rectContainsPoint(viewRect, cc.p(event.x, event.y))
 end
 -- 建筑事件
+function WidgetEventTabButtons:OnSpeedUpBuilding()
+    self:EventChangeOn("build")
+end
 function WidgetEventTabButtons:OnDestoryDecorator()
     self:EventChangeOn("build")
 end
@@ -77,6 +80,9 @@ function WidgetEventTabButtons:OnEndRecruit(barracks)
     self:EventChangeOn("soldier")
 end
 -- 装备事件
+function WidgetEventTabButtons:OnSpeedUpMakingEquipment()
+    self:EventChangeOn("material")
+end
 function WidgetEventTabButtons:OnBeginMakeEquipmentWithEvent(black_smith, event)
     self:GetTabByKey("material"):SetOrResetProgress(self:EventPercent(event))
     self:EventChangeOn("material", true)
@@ -95,6 +101,9 @@ function WidgetEventTabButtons:OnEndMakeEquipmentWithEvent(black_smith, event, e
     self:EventChangeOn("material")
 end
 -- 材料事件
+function WidgetEventTabButtons:OnSpeedUpMakingMaterial()
+    self:EventChangeOn("material")
+end
 function WidgetEventTabButtons:OnBeginMakeMaterialsWithEvent(tool_shop, event)
     self:GetTabByKey("material"):SetOrResetProgress(self:EventPercent(event))
     self:EventChangeOn("material", true)

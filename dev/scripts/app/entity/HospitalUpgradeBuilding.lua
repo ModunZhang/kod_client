@@ -120,16 +120,16 @@ end
 function HospitalUpgradeBuilding:TreatSoldiersWithFinishTime(soldiers, finish_time, id)
     local event = self.treat_event
     event:SetTreatInfo(soldiers, finish_time, id)
-    self.hospital_building_observer:NotifyObservers(function(lisenter)
-        lisenter:OnBeginTreat(self, event)
+    self.hospital_building_observer:NotifyObservers(function(listener)
+        listener:OnBeginTreat(self, event)
     end)
 end
 function HospitalUpgradeBuilding:EndTreatSoldiersWithCurrentTime(current_time)
     local event = self.treat_event
     local soldiers = self.treat_event.soldiers
     event:SetTreatInfo(nil, 0,nil)
-    self.hospital_building_observer:NotifyObservers(function(lisenter)
-        lisenter:OnEndTreat(self, event, soldiers, current_time)
+    self.hospital_building_observer:NotifyObservers(function(listener)
+        listener:OnEndTreat(self, event, soldiers, current_time)
     end)
 end
 -- 获取治疗士兵时间
@@ -152,8 +152,8 @@ end
 function HospitalUpgradeBuilding:OnTimer(current_time)
     local event = self.treat_event
     if event:IsTreating() then
-        self.hospital_building_observer:NotifyObservers(function(lisenter)
-            lisenter:OnTreating(self, event, current_time)
+        self.hospital_building_observer:NotifyObservers(function(listener)
+            listener:OnTreating(self, event, current_time)
         end)
     end
     HospitalUpgradeBuilding.super.OnTimer(self, current_time)
