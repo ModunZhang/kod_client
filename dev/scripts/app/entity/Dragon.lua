@@ -334,7 +334,7 @@ function Dragon:DefaultEquipments()
     r[self.DRAGON_BODY.sting] = DragonEquipment.new("sting",self:Type())
     return r
 end
---TODO:服务器需要修改
+
 function Dragon:GetMaxHP()
 	return self:TotalVitality() * 4
 end
@@ -350,6 +350,16 @@ end
 --当前星级最大等级
 function Dragon:GetMaxLevel()
 	return config_dragonStar[self:Star()] and config_dragonStar[self:Star()].levelMax or 0
+end
+-- 升星后的值变动
+function Dragon:GetPromotionedDifferentVal()
+	local old_star = self:Star() - 1
+	local old_max_level = config_dragonStar[old_star].levelMax
+	local old_level_config = config_dragonLevel[old_max_level]
+	local oldStrenth =  old_level_config.strength
+	local oldVitality =  old_level_config.vitality
+	local oldLeadership = old_level_config.leadership
+	return self:Strength() - oldStrenth,self:Vitality() - oldVitality,self:Leadership() - oldLeadership
 end
 
 --是否达到晋级等级
