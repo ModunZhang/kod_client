@@ -132,6 +132,7 @@ function ToolShopUpgradeBuilding:IsMakingMaterialsByCategory(category, current_t
     return self.category[category]:IsMaking(current_time)
 end
 function ToolShopUpgradeBuilding:MakeMaterialsByCategoryWithFinishTime(category, materials, finished_time,id)
+    if self.category[category]:IsMaking(current_time) then return end
     local event = self.category[category]
     event:SetContent(materials, finished_time,id)
     self.toolShop_building_observer:NotifyObservers(function(lisenter)
@@ -139,6 +140,7 @@ function ToolShopUpgradeBuilding:MakeMaterialsByCategoryWithFinishTime(category,
     end)
 end
 function ToolShopUpgradeBuilding:EndMakeMaterialsByCategoryWithCurrentTime(category, materials, current_time, id)
+    if self.category[category]:IsStored(current_time) then return end
     local event = self.category[category]
     event:SetContent(materials, 0, id)
     self.toolShop_building_observer:NotifyObservers(function(lisenter)
