@@ -35,6 +35,9 @@ function WidgetEventTabButtons:isTouchInViewRect(event)
     return cc.rectContainsPoint(viewRect, cc.p(event.x, event.y))
 end
 -- 建筑事件
+function WidgetEventTabButtons:OnSpeedUpBuilding()
+    self:EventChangeOn("build")
+end
 function WidgetEventTabButtons:OnDestoryDecorator()
     self:EventChangeOn("build")
 end

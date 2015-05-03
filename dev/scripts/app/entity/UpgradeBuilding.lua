@@ -159,6 +159,15 @@ function UpgradeBuilding:OnTimer(current_time)
         end)
     end
 end
+function UpgradeBuilding:SpeedUpBuilding()
+    if self:IsUpgrading() then
+        self.upgrade_building_observer:NotifyObservers(function(listener)
+            if listener.OnSpeedUpBuilding then
+                listener:OnSpeedUpBuilding()
+            end
+        end)
+    end
+end
 function UpgradeBuilding:OnUserDataChanged(userData, current_time, location_id, sub_location_id, deltaData)
     local is_fully_update = not deltaData or (deltaData.houseEvents or deltaData.buildingEvents)
     local is_delta_update = not is_fully_update and deltaData and deltaData.buildings
@@ -251,6 +260,9 @@ function UpgradeBuilding:OnHandle(level, finish_time)
             local total = self:GetUpgradeTimeToNextLevel()
             self:UpgradeByCurrentTime(finish_time - total - DataUtils:getBuildingBuff(total))
         elseif self.upgrade_to_next_level_time ~= 0 and finish_time ~= 0 then
+            if self.upgrade_to_next_level_time ~= finish_time then
+                self:SpeedUpBuilding()
+            end
             self.upgrade_to_next_level_time = finish_time
             self:GeneralLocalPush()
         elseif self.upgrade_to_next_level_time ~= 0 and finish_time == 0 then
