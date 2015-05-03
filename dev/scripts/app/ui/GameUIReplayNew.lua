@@ -926,6 +926,9 @@ function GameUIReplayNew:ctor(report, callback)
     assert(report.GetAttackDragonLevel)
     assert(report.GetAttackDragonLevel)
     assert(report.GetAttackTargetTerrain)
+    if report:IsDragonFight() then
+        assert(report.IsAttackCamp)
+    end
     GameUIReplayNew.super.ctor(self)
     self.report = report
     local soldiers = self.report:GetOrderedDefenceSoldiers()
@@ -1083,28 +1086,32 @@ function GameUIReplayNew:PlayDragonBattle()
     self.dragon_battle:GetAttackDragon():SetHp(attack_dragon.hp, attack_dragon.hpMax)
     self.dragon_battle:GetDefenceDragon():SetHp(defend_dragon.hp, defend_dragon.hpMax)
 
-    return self.dragon_battle:PromsieOfFight():next(function()
-        return attack_dragon.isWin and
-            self.dragon_battle:PromiseOfVictory() or
-            self.dragon_battle:PromiseOfDefeat()
-    end):next(function()
-        local buff_attack = attack_dragon.isWin and 100 or 50
-        local buff_defence = attack_dragon.isWin and 50 or 100
-        self.dragon_battle:GetAttackDragon():ShowBuff(attack_dragon.isWin)
-        self.dragon_battle:GetDefenceDragon():ShowBuff(not attack_dragon.isWin)
-        return self:PormiseOfSchedule(1, function(percent)
-            self.dragon_battle:GetAttackDragon()
-            :SetHp(attack_dragon.hp - percent * attack_dragon.hpDecreased, attack_dragon.hpMax)
-                :SetBuff(string.format(_("加成 + %d%%"), math.floor(percent * buff_attack)))
-            self.dragon_battle:GetDefenceDragon()
-            :SetHp(defend_dragon.hp - percent * defend_dragon.hpDecreased, defend_dragon.hpMax)
-                :SetBuff(string.format(_("加成 + %d%%"), math.floor(percent * buff_defence)))
+    local is_win = (self.report:IsAttackCamp() and attack_dragon.isWin) or 
+                    (not self.report:IsAttackCamp() and not attack_dragon.isWin)
+    return self:PromiseOfDelay(0.5):next(function()
+        return self.dragon_battle:PromsieOfFight():next(function()
+            return is_win and
+                self.dragon_battle:PromiseOfVictory() or
+                self.dragon_battle:PromiseOfDefeat()
+        end):next(function()
+            local buff_attack = attack_dragon.isWin and 100 or 50
+            local buff_defence = attack_dragon.isWin and 50 or 100
+            self.dragon_battle:GetAttackDragon():ShowBuff(attack_dragon.isWin)
+            self.dragon_battle:GetDefenceDragon():ShowBuff(not attack_dragon.isWin)
+            return self:PormiseOfSchedule(1, function(percent)
+                self.dragon_battle:GetAttackDragon()
+                    :SetHp(attack_dragon.hp - percent * attack_dragon.hpDecreased, attack_dragon.hpMax)
+                    :SetBuff(string.format(_("加成 + %d%%"), math.floor(percent * buff_attack)))
+                self.dragon_battle:GetDefenceDragon()
+                    :SetHp(defend_dragon.hp - percent * defend_dragon.hpDecreased, defend_dragon.hpMax)
+                    :SetBuff(string.format(_("加成 + %d%%"), math.floor(percent * buff_defence)))
+            end)
+        end):next(self:Delay(1)):next(function()
+            return promise.all(is_win and 
+                self.dragon_battle:PromiseOfVictoryHide() or
+                self.dragon_battle:PromiseOfDefeatHide(),
+                self.dragon_battle:PromsieOfHide())
         end)
-    end):next(self:Delay(1)):next(function()
-        return promise.all(attack_dragon.isWin and
-            self.dragon_battle:PromiseOfVictoryHide() or
-            self.dragon_battle:PromiseOfDefeatHide(),
-            self.dragon_battle:PromsieOfHide())
     end)
 end
 function GameUIReplayNew:PlaySoldierBattle(battle)
@@ -1731,6 +1738,7 @@ function GameUIReplayNew:BuildUI()
 end
 
 return GameUIReplayNew
+
 
 
 

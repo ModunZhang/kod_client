@@ -930,7 +930,7 @@ local GET_DRAGON_EQUIPMENT_IMAGE = function(dragon_name,body_name,star)
     elseif "crown" == body_name then
         body_str  = "Crown"
     elseif "orb" == body_name then
-        body_str  = "Orb"
+        body_str  = "Ord"
     elseif "chest" ==  body_name then
         body_str  = "Chest"
     elseif "sting" == body_name then

@@ -132,7 +132,7 @@ locations[13] = {
 }
 locations[14] = {
 	["index"] = 14,
-	["building_type"] = "townHall",
+	["building_type"] = "tradeGuild",
 	["x"] = 36,
 	["y"] = 29,
 	["w"] = 6,
@@ -142,7 +142,7 @@ locations[14] = {
 }
 locations[15] = {
 	["index"] = 15,
-	["building_type"] = "toolShop",
+	["building_type"] = "townHall",
 	["x"] = 36,
 	["y"] = 19,
 	["w"] = 6,
@@ -152,7 +152,7 @@ locations[15] = {
 }
 locations[16] = {
 	["index"] = 16,
-	["building_type"] = "tradeGuild",
+	["building_type"] = "toolShop",
 	["x"] = 36,
 	["y"] = 9,
 	["w"] = 6,
@@ -162,7 +162,7 @@ locations[16] = {
 }
 locations[17] = {
 	["index"] = 17,
-	["building_type"] = "workshop",
+	["building_type"] = "trainingGround",
 	["x"] = 6,
 	["y"] = 49,
 	["w"] = 6,
@@ -172,7 +172,7 @@ locations[17] = {
 }
 locations[18] = {
 	["index"] = 18,
-	["building_type"] = "trainingGround",
+	["building_type"] = "hunterHall",
 	["x"] = 16,
 	["y"] = 49,
 	["w"] = 6,
@@ -182,7 +182,7 @@ locations[18] = {
 }
 locations[19] = {
 	["index"] = 19,
-	["building_type"] = "hunterHall",
+	["building_type"] = "stable",
 	["x"] = 26,
 	["y"] = 49,
 	["w"] = 6,
@@ -192,7 +192,7 @@ locations[19] = {
 }
 locations[20] = {
 	["index"] = 20,
-	["building_type"] = "stable",
+	["building_type"] = "workshop",
 	["x"] = 36,
 	["y"] = 49,
 	["w"] = 6,

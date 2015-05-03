@@ -377,6 +377,7 @@ function WidgetAllianceCreateOrEdit:RefreshButtonState()
 	self.graphic_right_button:setSeqState(flag:GetFrontSeqColor(),false)
 	self.graphic_type_button:setSeqState(flag:GetFrontStyle(),false)
 	self.colorButton_right:setButtonEnabled(flag:GetBackStyle() ~= 1)
+	self.graphic_right_button:setButtonEnabled(flag:GetFrontStyle() ~= 1)
 end
 
 function WidgetAllianceCreateOrEdit:AdapterCreateData2Server_()
@@ -395,6 +396,7 @@ function WidgetAllianceCreateOrEdit:OnFlagTypeButtonClicked()
 	flag:SetBackStyle(self.flag_type_button:GetSeqState())
 	flag:SetBackColors(self.colorButton_left:GetSeqState(),self.colorButton_right:GetSeqState())
 	self.colorButton_right:setButtonEnabled(flag:GetBackStyle() ~= 1)
+	self.graphic_right_button:setButtonEnabled(flag:GetFrontStyle() ~= 1)
 	self:RefrshFlagSprite(1)
 end
 
@@ -403,6 +405,7 @@ function WidgetAllianceCreateOrEdit:OnGraphicTypeButtonClicked()
 	flag:SetFrontStyle(self.graphic_type_button:GetSeqState())
 	flag:SetFrontColor(self.graphic_right_button:GetSeqState())
 	self.colorButton_right:setButtonEnabled(flag:GetBackStyle() ~= 1)
+	self.graphic_right_button:setButtonEnabled(flag:GetFrontStyle() ~= 1)
 	self:RefrshFlagSprite(2)
 end
 return WidgetAllianceCreateOrEdit

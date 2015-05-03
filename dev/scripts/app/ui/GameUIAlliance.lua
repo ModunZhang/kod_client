@@ -444,7 +444,7 @@ function GameUIAlliance:getCommonListItem_(listType,alliance)
         :align(display.LEFT_TOP, 6, bg:getContentSize().height - 10)
 
     local flag_sprite = self.alliance_ui_helper:CreateFlagWithRhombusTerrain(terrain,Flag.new():DecodeFromJson(flag_info))
-    flag_sprite:addTo(flag_box):scale(0.6)
+    flag_sprite:addTo(flag_box)
     flag_sprite:pos(50,40)
 
     local titleBg = display.newScale9Sprite("alliance_event_type_cyan_222x30.png",0,0, cc.size(438,30), cc.rect(7,7,190,16))
@@ -712,7 +712,7 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
 
     self.ui_overview.my_alliance_flag = self.alliance_ui_helper:CreateFlagWithRhombusTerrain(Alliance_Manager:GetMyAlliance():Terrain(),Alliance_Manager:GetMyAlliance():Flag())
         :addTo(flag_box)
-        :pos(70,50):scale(0.8)
+        :pos(70,50):scale(1.5)
     display.newSprite("info_26x26.png"):align(display.LEFT_BOTTOM, 0, 0):addTo(flag_box)
     WidgetPushTransparentButton.new(cc.rect(0,0,134,134))
         :align(display.LEFT_BOTTOM,0,0)
