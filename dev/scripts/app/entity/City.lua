@@ -507,7 +507,12 @@ function City:GetBuildingsIsUnlocked()
         table.insert(r, self:GetGate())
     end
     table.sort(r, function(a, b)
-        return a:GetLevel() < b:GetLevel()
+        if a:GetLevel() < b:GetLevel() then
+            return true
+        elseif a:GetLevel() > b:GetLevel() then
+            return false
+        end
+        return a:IsImportantThanBuilding(b)
     end)
     return r
 end
