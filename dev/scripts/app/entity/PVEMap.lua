@@ -157,16 +157,16 @@ function PVEMap:ModifyObject(x, y, searched, type)
             if v.searched ~= searched then
                 old_searched = v.searched
                 v.searched = searched
-                self:NotifyObservers(function(lisenter)
-                    lisenter:OnObjectChanged(v)
+                self:NotifyObservers(function(listener)
+                    listener:OnObjectChanged(v)
                 end)
             end
             return
         end
     end
     table.insert(self.searched_objects, PVEObject.new(x, y, searched, type, self))
-    self:NotifyObservers(function(lisenter)
-        lisenter:OnObjectChanged(self.searched_objects[#self.searched_objects])
+    self:NotifyObservers(function(listener)
+        listener:OnObjectChanged(self.searched_objects[#self.searched_objects])
     end)
 
     return function() self:ModifyObject(x, y, old_searched, type) end

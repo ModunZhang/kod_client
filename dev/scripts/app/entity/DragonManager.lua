@@ -185,8 +185,8 @@ function DragonManager:RefreshDragonEvents(user_data,deltaData)
                 end
             end
         )
-        self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnDragonEventChanged,function(lisenter)
-            lisenter.OnDragonEventChanged(lisenter,GameUtils:pack_event_table(changed_map))
+        self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnDragonEventChanged,function(listener)
+            listener.OnDragonEventChanged(listener,GameUtils:pack_event_table(changed_map))
         end)
     end
 end
@@ -198,8 +198,8 @@ function DragonManager:IteratorDragonEvents(func)
 end
 
 function DragonManager:OnDragonEventTimer(dragonEvent)
-    self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnDragonEventTimer,function(lisenter)
-        lisenter.OnDragonEventTimer(lisenter,dragonEvent)
+    self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnDragonEventTimer,function(listener)
+        listener.OnDragonEventTimer(listener,dragonEvent)
     end)
 end
 
@@ -223,8 +223,8 @@ function DragonManager:RefreshDragonDeathEvents(user_data,deltaData)
                 self.dragonDeathEvents[dragonDeathEvent:DragonType()] = dragonDeathEvent
             end
         end
-        self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnDragonDeathEventRefresh,function(lisenter)
-            lisenter.OnDragonDeathEventRefresh(lisenter,self.dragonDeathEvents)
+        self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnDragonDeathEventRefresh,function(listener)
+            listener.OnDragonDeathEventRefresh(listener,self.dragonDeathEvents)
         end)
     end
     if is_delta_update and not is_full_array then
@@ -256,8 +256,8 @@ function DragonManager:RefreshDragonDeathEvents(user_data,deltaData)
                 end
             end
         )
-        self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnDragonDeathEventChanged,function(lisenter)
-            lisenter.OnDragonDeathEventChanged(lisenter,GameUtils:pack_event_table(changed_map))
+        self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnDragonDeathEventChanged,function(listener)
+            listener.OnDragonDeathEventChanged(listener,GameUtils:pack_event_table(changed_map))
         end)
     end
 end
@@ -273,8 +273,8 @@ function DragonManager:GetDragonDeathEventByType(dragonType)
 end
 
 function DragonManager:OnDragonDeathEventTimer(dragonDeathEvent)
-    self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnDragonDeathEventTimer,function(lisenter)
-        lisenter.OnDragonDeathEventTimer(lisenter,dragonDeathEvent)
+    self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnDragonDeathEventTimer,function(listener)
+        listener.OnDragonDeathEventTimer(listener,dragonDeathEvent)
     end)
 end
 
@@ -303,20 +303,20 @@ function DragonManager:RefreshDragonData( dragons,resource_refresh_time,hp_recov
                     need_notify_defence = isDefenced ~= dragon:IsDefenced()
                 end
                 if dragonIsHated_ ~= dragon:Ishated() then
-                    self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnDragonHatched,function(lisenter)
-                        lisenter.OnDragonHatched(lisenter,dragon)
+                    self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnDragonHatched,function(listener)
+                        listener.OnDragonHatched(listener,dragon)
                     end)
                 else
-                    self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnBasicChanged,function(lisenter)
-                        lisenter.OnBasicChanged(lisenter,dragon,star_chaned)
+                    self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnBasicChanged,function(listener)
+                        listener.OnBasicChanged(listener,dragon,star_chaned)
                     end)
                 end
             end
             self:checkHPRecoveryIf_(dragon,resource_refresh_time,hp_recovery_perHour)
         end
         if need_notify_defence then
-            self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnDefencedDragonChanged,function(lisenter)
-                    lisenter.OnDefencedDragonChanged(lisenter,self:GetDefenceDragon())
+            self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnDefencedDragonChanged,function(listener)
+                    listener.OnDefencedDragonChanged(listener,self:GetDefenceDragon())
             end)
         end
     end
@@ -386,8 +386,8 @@ function DragonManager:OnTimer(current_time)
 end
 
 function DragonManager:OnHPChanged()
-    self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnHPChanged,function(lisenter)
-        lisenter.OnHPChanged(lisenter)
+    self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnHPChanged,function(listener)
+        listener.OnHPChanged(listener)
     end)
 end
 

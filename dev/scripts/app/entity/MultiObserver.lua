@@ -20,8 +20,8 @@ function MultiObserver:ClearAllListener()
     end)
 end
 function MultiObserver:NotifyListeneOnType(listenerType, func)
-    self.listeners[listenerType]:NotifyObservers(function(lisenter)
-        func(lisenter)
+    self.listeners[listenerType]:NotifyObservers(function(listener)
+        func(listener)
     end)
 end
 

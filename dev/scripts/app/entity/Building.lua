@@ -118,15 +118,15 @@ function Building:SetOrient(orient)
         local old_orient = self.orient
         self.orient = orient
         self.w, self.h = self.h, self.w
-        self.base_building_observer:NotifyObservers(function(lisenter)
-            lisenter:OnOrientChanged(old_orient, orient, self.w, self.h)
+        self.base_building_observer:NotifyObservers(function(listener)
+            listener:OnOrientChanged(old_orient, orient, self.w, self.h)
         end)
     end
 end
 function Building:SetLogicPosition(x, y)
     self.x, self.y = x, y
-    self.base_building_observer:NotifyObservers(function(lisenter)
-        lisenter:OnLogicPositionChanged(x, y)
+    self.base_building_observer:NotifyObservers(function(listener)
+        listener:OnLogicPositionChanged(x, y)
     end)
 end
 function Building:GetLogicPosition()

@@ -97,14 +97,14 @@ function UpgradeBuilding:InstantUpgradeTo(level)
     self.upgrade_to_next_level_time = 0
 
     self:CancelLocalPush()
-    self.upgrade_building_observer:NotifyObservers(function(lisenter)
-        lisenter:OnBuildingUpgradeFinished(self)
+    self.upgrade_building_observer:NotifyObservers(function(listener)
+        listener:OnBuildingUpgradeFinished(self)
     end)
 end
 function UpgradeBuilding:UpgradeByCurrentTime(current_time)
     self:GeneralLocalPush()
-    self.upgrade_building_observer:NotifyObservers(function(lisenter)
-        lisenter:OnBuildingUpgradingBegin(self, current_time)
+    self.upgrade_building_observer:NotifyObservers(function(listener)
+        listener:OnBuildingUpgradingBegin(self, current_time)
     end)
 end
 function UpgradeBuilding:GetUpgradeTimeToNextLevel()
@@ -154,8 +154,8 @@ function UpgradeBuilding:CancelLocalPush()
 end
 function UpgradeBuilding:OnTimer(current_time)
     if self:IsUpgrading() then
-        self.upgrade_building_observer:NotifyObservers(function(lisenter)
-            lisenter:OnBuildingUpgrading(self, current_time)
+        self.upgrade_building_observer:NotifyObservers(function(listener)
+            listener:OnBuildingUpgrading(self, current_time)
         end)
     end
 end
@@ -177,8 +177,8 @@ function UpgradeBuilding:OnUserDataChanged(userData, current_time, location_id, 
         level, finished_time, type_ = self:GetBuildingInfoByEventAndLocation(userData, event, location_id)
         if type_ ~= self:GetType() then
             self.building_type = type_
-            self.base_building_observer:NotifyObservers(function(lisenter)
-                lisenter:OnTransformed(self)
+            self.base_building_observer:NotifyObservers(function(listener)
+                listener:OnTransformed(self)
             end)
         end
     end

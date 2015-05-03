@@ -122,8 +122,8 @@ end
 function BarracksUpgradeBuilding:RecruitSoldiersWithFinishTime(soldier_type, count, finish_time,id)
     local event = self.recruit_event
     event:SetRecruitInfo(soldier_type, count, finish_time,id)
-    self.barracks_building_observer:NotifyObservers(function(lisenter)
-        lisenter:OnBeginRecruit(self, event)
+    self.barracks_building_observer:NotifyObservers(function(listener)
+        listener:OnBeginRecruit(self, event)
     end)
 
     self:CheckRecruit(soldier_type)
@@ -133,8 +133,8 @@ function BarracksUpgradeBuilding:EndRecruitSoldiersWithCurrentTime(current_time)
     local soldier_type = self.recruit_event.soldier_type
     local soldier_count = self.recruit_event.soldier_count
     event:SetRecruitInfo(nil, 0, 0,nil)
-    self.barracks_building_observer:NotifyObservers(function(lisenter)
-        lisenter:OnEndRecruit(self, event, soldier_type, soldier_count, current_time)
+    self.barracks_building_observer:NotifyObservers(function(listener)
+        listener:OnEndRecruit(self, event, soldier_type, soldier_count, current_time)
     end)
 
     self:CheckFinish(soldier_type)
@@ -158,8 +158,8 @@ end
 function BarracksUpgradeBuilding:OnTimer(current_time)
     local event = self.recruit_event
     if event:IsRecruting() then
-        self.barracks_building_observer:NotifyObservers(function(lisenter)
-            lisenter:OnRecruiting(self, event, current_time)
+        self.barracks_building_observer:NotifyObservers(function(listener)
+            listener:OnRecruiting(self, event, current_time)
         end)
     end
     BarracksUpgradeBuilding.super.OnTimer(self, current_time)
