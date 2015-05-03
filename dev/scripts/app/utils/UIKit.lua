@@ -563,7 +563,7 @@ function UIKit:showMessageDialog(title,tips,ok_callback,cancel_callback,visible_
     if not visible_x_button then
         dialog:DisableAutoClose()
     end
-    dialog:setLocalZOrder(3000)
+    dialog:zorder(3000)
     dialog:AddToCurrentScene()
     return dialog
 end
