@@ -311,7 +311,11 @@ function GameUIDragonEquipment:IntensifyButtonClicked()
       return  
   end 
   local equipment = self:GetEquipment()
-  NetManager:getEnhanceDragonEquipmentPromise(self.dragon:Type(),equipment:Body(),equipments)
+  NetManager:getEnhanceDragonEquipmentPromise(self.dragon:Type(),equipment:Body(),equipments):done(function()
+      if string.len(self.intensify_tips) > 0 then
+        GameGlobalUI:showTips(_("装备强化成功"),self.intensify_tips)
+      end
+  end)
 end
 
 function GameUIDragonEquipment:RefreshEquipmentItem(isInfo)
@@ -525,7 +529,8 @@ function GameUIDragonEquipment:GetIntensifyListItem(index,title,value)
 end
 
 function GameUIDragonEquipment:RefreshIntensifyListViewBuffVal(vitality_add,strength_add,leadership_add)
-    print("RefreshIntensifyListViewBuffVal--->",vitality_add,strength_add)
+    print("RefreshIntensifyListViewBuffVal--->",vitality_add,strength_add,leadership_add)
+    local tips_global = ""
     local items = self.intensify_list:getItems()
     if #items == 0 then return end
     local vitality_item = items[1]
@@ -537,6 +542,7 @@ function GameUIDragonEquipment:RefreshIntensifyListViewBuffVal(vitality_add,stre
         vitality_item.buff_label:setString("+" .. vitality_add)
         vitality_item.val_label:setPositionX(vitality_item.buff_label:getPositionX() - vitality_item.buff_label:getContentSize().width - 10)
         vitality_item.buff_label:show()
+        tips_global = tips_global .. _("活力") .. "+" .. vitality_add
     end
 
     local strength_item = items[2]
@@ -549,6 +555,7 @@ function GameUIDragonEquipment:RefreshIntensifyListViewBuffVal(vitality_add,stre
         strength_item.buff_label:setString("+" .. strength_add)
         strength_item.val_label:setPositionX(strength_item.buff_label:getPositionX() - strength_item.buff_label:getContentSize().width - 10)
         strength_item.buff_label:show()
+        tips_global = tips_global .. "," ..  _("力量") .. "+" .. strength_add
     end
 
     local leadership_item = items[3]
@@ -560,7 +567,9 @@ function GameUIDragonEquipment:RefreshIntensifyListViewBuffVal(vitality_add,stre
         leadership_item.buff_label:setString("+" .. leadership_add)
         leadership_item.val_label:setPositionX(leadership_item.buff_label:getPositionX() - leadership_item.buff_label:getContentSize().width - 10)
         leadership_item.buff_label:show()
+        tips_global = tips_global .. "," ..  _("领导力") .. "+" .. leadership_add
     end
+    self.intensify_tips = tips_global
 end
 
 function GameUIDragonEquipment:Find()

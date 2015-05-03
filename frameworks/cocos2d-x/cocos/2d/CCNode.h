@@ -130,23 +130,23 @@ public:
     /// @} end of initializers
 
     //dannyhe quick Lua evnet dispath callback
-    virtual bool ccTouchBegan(Touch *pTouch, Event *pEvent)
-    {
-        CCLOG("Node---->ccTouchBegan from luaEventNode\n");
-        return false;
-    }
-    virtual void ccTouchMoved(Touch *pTouch, Event *pEvent)
-    {
-        CCLOG("Node---->ccTouchMoved from luaEventNode\n");
-    }
-    virtual void ccTouchEnded(Touch *pTouch, Event *pEvent)
-    {
-        CCLOG("Node---->ccTouchEnded from luaEventNode\n");
-    }
-    virtual void ccTouchCancelled(Touch *pTouch, Event *pEvent)
-    {
-        CCLOG("Node---->ccTouchCancelled from luaEventNode\n");
-    }
+    // virtual bool ccTouchBegan(Touch *pTouch, Event *pEvent)
+    // {
+    //     CCLOG("Node---->ccTouchBegan from luaEventNode\n");
+    //     return false;
+    // }
+    // virtual void ccTouchMoved(Touch *pTouch, Event *pEvent)
+    // {
+    //     CCLOG("Node---->ccTouchMoved from luaEventNode\n");
+    // }
+    // virtual void ccTouchEnded(Touch *pTouch, Event *pEvent)
+    // {
+    //     CCLOG("Node---->ccTouchEnded from luaEventNode\n");
+    // }
+    // virtual void ccTouchCancelled(Touch *pTouch, Event *pEvent)
+    // {
+    //     CCLOG("Node---->ccTouchCancelled from luaEventNode\n");
+    // }
 
     /// @{
     /// @name Setters & Getters for Graphic Peroperties

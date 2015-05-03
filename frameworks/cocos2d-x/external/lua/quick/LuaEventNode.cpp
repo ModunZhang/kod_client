@@ -43,7 +43,7 @@ LuaEventNode::LuaEventNode(Node *node)
 : _bTouchCaptureEnabled(true)
 , _bTouchSwallowEnabled(true)
 , _bTouchEnabled(false)
-, _bSendEventToNode(false)
+//, _bSendEventToNode(false)
 , _eTouchMode(modeTouchesOneByOne)
 , _nodePreuse(nullptr)
 {
@@ -280,15 +280,15 @@ void LuaEventNode::setLuaTouchEnabled(bool enabled)
     }
 }
 //dannyhe
-bool LuaEventNode::isSendEventToNode()
-{
-    return (_node!=nullptr) && _bSendEventToNode;
-}
+// bool LuaEventNode::isSendEventToNode()
+// {
+//     return (_node!=nullptr) && _bSendEventToNode;
+// }
 
-void LuaEventNode::setSendEventToNode(bool value)
-{
-    _bSendEventToNode = value;
-}
+//void LuaEventNode::setSendEventToNode(bool value)
+//{
+//    _bSendEventToNode = value;
+//}
 
 void LuaEventNode::setTouchMode(int mode)
 {
@@ -312,10 +312,10 @@ int LuaEventNode::getTouchMode()
 bool LuaEventNode::ccTouchBegan(Touch *pTouch, Event *pEvent)
 {
     //dannyhe
-    if(this->isSendEventToNode())
-    {
-        return this->getActiveNode()->ccTouchBegan(pTouch, pEvent);
-    }
+    // if(this->isSendEventToNode())
+    // {
+    //     return this->getActiveNode()->ccTouchBegan(pTouch, pEvent);
+    // }
     CC_UNUSED_PARAM(pTouch);
     CC_UNUSED_PARAM(pEvent);
     {
@@ -327,10 +327,10 @@ bool LuaEventNode::ccTouchBegan(Touch *pTouch, Event *pEvent)
 void LuaEventNode::ccTouchMoved(Touch *pTouch, Event *pEvent)
 {
     //dannyhe
-    if (this->isSendEventToNode())
-    {
-       return this->getActiveNode()->ccTouchMoved(pTouch, pEvent);
-    }
+    // if (this->isSendEventToNode())
+    // {
+    //    return this->getActiveNode()->ccTouchMoved(pTouch, pEvent);
+    // }
     CC_UNUSED_PARAM(pTouch);
     CC_UNUSED_PARAM(pEvent);
     {
@@ -341,10 +341,10 @@ void LuaEventNode::ccTouchMoved(Touch *pTouch, Event *pEvent)
 void LuaEventNode::ccTouchEnded(Touch *pTouch, Event *pEvent)
 {
     //dannyhe
-    if (this->isSendEventToNode())
-    {
-       return this->getActiveNode()->ccTouchEnded(pTouch, pEvent);
-    }
+    // if (this->isSendEventToNode())
+    // {
+    //    return this->getActiveNode()->ccTouchEnded(pTouch, pEvent);
+    // }
     CC_UNUSED_PARAM(pTouch);
     CC_UNUSED_PARAM(pEvent);
     {
@@ -355,10 +355,10 @@ void LuaEventNode::ccTouchEnded(Touch *pTouch, Event *pEvent)
 void LuaEventNode::ccTouchCancelled(Touch *pTouch, Event *pEvent)
 {
     //dannyhe
-    if (this->isSendEventToNode())
-    {
-       return this->getActiveNode()->ccTouchCancelled(pTouch, pEvent);
-    }
+    // if (this->isSendEventToNode())
+    // {
+    //    return this->getActiveNode()->ccTouchCancelled(pTouch, pEvent);
+    // }
     CC_UNUSED_PARAM(pTouch);
     CC_UNUSED_PARAM(pEvent);
     {

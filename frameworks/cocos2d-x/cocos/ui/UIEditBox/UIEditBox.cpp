@@ -44,7 +44,6 @@ EditBox::EditBox(void)
 , _colPlaceHolder(Color3B::GRAY)
 , _maxLength(0)
 , _adjustHeight(0.0f)
-, _ignoreWhiteSpaceInput(false)
 #if CC_ENABLE_SCRIPT_BINDING
 , _scriptEditBoxHandler(0)
 #endif
@@ -72,15 +71,6 @@ void EditBox::setEnable(bool enable)
     if (_editBoxImpl!=nullptr)
     {
         _editBoxImpl->setEnable(enable);
-    }
-}
-//dannyhe
-void EditBox::setIgnoreWhiteSpaceInput(bool ignore)
-{
-    _ignoreWhiteSpaceInput = ignore;
-    if (_editBoxImpl!=nullptr)
-    {
-        _editBoxImpl->setIgnoreWhiteSpaceInput(ignore);
     }
 }
 EditBox* EditBox::create(const Size& size,

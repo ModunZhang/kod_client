@@ -182,6 +182,11 @@ function UpgradingSprite:GetBeforeConfig()
     end
 end
 function UpgradingSprite:GetLogicZorder()
+    if self:GetEntity():GetType() == "keep" then
+        return 1
+    elseif self:GetEntity():GetType() == "dragonEyrie" then
+        return 2
+    end
     local x, y = self:GetLogicPosition()
     return self:GetMapLayer():GetZOrderBy(self, x, y)
 end

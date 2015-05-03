@@ -147,7 +147,6 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
                 NetManager:getInstantMakeDragonEquipmentPromise(equip_type):catch(function(err)
                     dump(err:reason())
                 end)
-                self:Close()
             end
         end)
 
