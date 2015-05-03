@@ -161,8 +161,8 @@ function ItemManager:IteratorItmeEvents(func)
     end
 end
 function ItemManager:OnItemEventTimer(itemEvent)
-    self:NotifyListeneOnType(ItemManager.LISTEN_TYPE.OnItemEventTimer,function(lisenter)
-        lisenter.OnItemEventTimer(lisenter,itemEvent)
+    self:NotifyListeneOnType(ItemManager.LISTEN_TYPE.OnItemEventTimer,function(listener)
+        listener.OnItemEventTimer(listener,itemEvent)
     end)
 end
 function ItemManager:GetItemEventByType( type )

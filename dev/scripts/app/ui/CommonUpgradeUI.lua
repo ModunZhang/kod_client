@@ -105,32 +105,26 @@ function CommonUpgradeUI:InitCommonPart()
     self:InitNextLevelEfficiency()
     self:SetBuildingLevel()
 end
-local ani_map = {
-    mill = 1,
-    foundry = 1,
-    watchTower = 1,
-    barracks = 2,
-}
 function CommonUpgradeUI:ReloadBuildingImage()
     if self.building_image then
         self.building_image:removeFromParent()
     end
     local config = SpriteConfig[self.building:GetType()]:GetConfigByLevel(self.building:GetLevel())
-    self.building_image = display.newSprite(config.png, 0, 0):addTo(self):pos(display.cx-196, display.top-158)
-    if ani_map[self.building:GetType()] then
-        local p = self.building_image:getAnchorPointInPoints()
-        for i,v in ipairs(config.decorator) do
-            if ani_map[self.building:GetType()] == i then
-                if v.deco_type == "image" then
-                    display.newSprite(v.deco_name):addTo(self.building_image):pos(p.x + v.offset.x, p.y + v.offset.y)
-                elseif v.deco_type == "animation" then
-                    local offset = v.offset
-                    local armature = ccs.Armature:create(v.deco_name):addTo(self.building_image):
-                        scale(v.scale or 1):align(display.CENTER, offset.x or p.x, offset.y or p.y)
-                    armature:getAnimation():setSpeedScale(2)
-                    armature:getAnimation():playWithIndex(0)
-                end
-            end
+    local configs = SpriteConfig[self.building:GetType()]:GetAnimationConfigsByLevel(self.building:GetLevel())
+    self.building_image = display.newSprite(config.png, 0, 0)
+    :addTo(self):pos(display.cx-196, display.top-158)
+    local p = self.building_image:getAnchorPointInPoints()
+    for _,v in ipairs(configs) do
+        if v.deco_type == "image" then
+            display.newSprite(v.deco_name):addTo(self.building_image)
+            :pos(p.x + v.offset.x, p.y + v.offset.y)
+        elseif v.deco_type == "animation" then
+            local offset = v.offset
+            local armature = ccs.Armature:create(v.deco_name)
+                :addTo(self.building_image):scale(v.scale or 1)
+                :align(display.CENTER, offset.x or p.x, offset.y or p.y)
+            armature:getAnimation():setSpeedScale(2)
+            armature:getAnimation():playWithIndex(0)
         end
     end
     if self.building:GetType()=="watchTower" or self.building:GetType()=="tower" then
@@ -476,7 +470,7 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
             isVisible = #city:GetUpgradingBuildings()>=city:BuildQueueCounts(),
             isSatisfy = #city:GetUpgradingBuildings()<city:BuildQueueCounts(),
             icon="hammer_31x33.png",
-            description=_("建造队列已满")..#city:GetUpgradingBuildings().."/"..city:BuildQueueCounts()
+            description=_("建造队列已满")..(city:BuildQueueCounts()-#city:GetUpgradingBuildings()).."/"..1
         },
         {
             resource_type = _("木材"),

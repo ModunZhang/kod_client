@@ -507,7 +507,12 @@ function City:GetBuildingsIsUnlocked()
         table.insert(r, self:GetGate())
     end
     table.sort(r, function(a, b)
-        return a:GetLevel() < b:GetLevel()
+        if a:GetLevel() < b:GetLevel() then
+            return true
+        elseif a:GetLevel() > b:GetLevel() then
+            return false
+        end
+        return a:IsImportantThanBuilding(b)
     end)
     return r
 end
@@ -1133,6 +1138,13 @@ end
 function City:OnBuildingUpgrading(building, current_time)
     self:NotifyListeneOnType(City.LISTEN_TYPE.UPGRADE_BUILDING, function(listener)
         listener:OnUpgrading(building, current_time, self)
+    end)
+end
+function City:OnSpeedUpBuilding()
+    self:NotifyListeneOnType(City.LISTEN_TYPE.UPGRADE_BUILDING, function(listener)
+        if listener.OnSpeedUpBuilding then
+            listener:OnSpeedUpBuilding()
+        end
     end)
 end
 function City:OnBuildingUpgradeFinished(building)

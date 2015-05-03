@@ -108,20 +108,9 @@ function SpriteButton:ctor(sprite, city)
         local tile = self.sprite:GetEntity()
         local unlock_point = city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint(city)
         if tile and unlock_point > 0 and city:IsTileCanbeUnlockAt(tile.x, tile.y) then
-             -- homeUI的zorder在调用GameUIBase的AddToScene方法时默认ZOrder为2000，所以这里全屏置顶的界面设置为2001
-            display.getRunningScene():addChild(GameUIUnlockBuilding.new(city,tile),2001)
+             UIKit:newGameUI("GameUIUnlockBuilding", city,tile):AddToCurrentScene(true)
         end
     end)
-    -- self:SetConfirmTouchListener(function()
-        -- local tile = self.sprite:GetEntity()
-        -- local unlock_point = city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint(city)
-        -- if tile and unlock_point > 0 and city:IsTileCanbeUnlockAt(tile.x, tile.y) then
-            -- self:TranslateToSatateByName("unlocked")
-        --     -- NetManager:instantUpgradeBuildingByLocation(tile.location_id, NOT_HANDLE)
-        --     -- homeUI的zorder在调用GameUIBase的AddToScene方法时默认ZOrder为2000，所以这里全屏置顶的界面设置为2001
-        --     display.getRunningScene():addChild(GameUIUnlockBuilding.new(city,tile),2001)
-        -- end
-    -- end)
 
     self:AddState("locked", LockState.new(self))
     self:AddState("confirm", ConfirmState.new(self))

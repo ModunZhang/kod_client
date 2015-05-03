@@ -543,6 +543,7 @@ function WidgetUseItems:OpenIncreaseDragonExpOrHp( item )
     local dragons = dragon_manager:GetDragonsSortWithPowerful()
     local dragon_num = LuaUtils:table_size(dragons)
     if dragon_num==0 then
+        UIKit:showMessageDialog(_("提示"),_("您还没孵化巨龙,快去龙巢孵化一只吧!"))
         return
     end
     local checkbox_image = {

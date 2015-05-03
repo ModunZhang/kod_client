@@ -276,7 +276,7 @@ function GameUIHome:CreateTop()
         :align(display.LEFT_BOTTOM, display.width>640 and 58 or 64, 10):setCascadeOpacityEnabled(true)
     self.player_icon = UIKit:GetPlayerIconOnly(User:Icon()):addTo(player_bg):pos(55, 60):scale(0.75)
     self.exp = display.newSprite("player_exp_bar_110x106.png"):addTo(player_bg):pos(55, 53)
-    local level_bg = display.newSprite("level_bg_74x21.png"):addTo(player_bg):pos(55, 20):setCascadeOpacityEnabled(true)
+    local level_bg = display.newSprite("level_bg_74x21.png"):addTo(player_bg):pos(55, 19):setCascadeOpacityEnabled(true)
     self.level_label = UIKit:ttfLabel({
         size = 20,
         color = 0xfff1cc,

@@ -20,7 +20,6 @@ function WidgetAllianceEnterButtonProgress:OnTimer()
 
         local percent = math.floor((statusFinishTime-current_time)/(statusFinishTime-statusStartTime)*100)
         self:setPercentage(percent)
-        print("percent???",percent)
 
         if statusFinishTime>current_time then
             self.time_label:setString(GameUtils:formatTimeStyle1(statusFinishTime-current_time))

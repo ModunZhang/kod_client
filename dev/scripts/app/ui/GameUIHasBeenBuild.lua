@@ -12,7 +12,7 @@ local GameUIHasBeenBuild = UIKit:createUIClass('GameUIHasBeenBuild', "GameUIWith
 local NOT_ABLE_TO_UPGRADE = UpgradeBuilding.NOT_ABLE_TO_UPGRADE
 local timer = app.timer
 local building_config_map = {
-    ["keep"] = {scale = 0.3, offset = {x = 10, y = -20}},
+    ["keep"] = {scale = 0.25, offset = {x = 10, y = -20}},
     ["watchTower"] = {scale = 0.3, offset = {x = 10, y = -10}},
     ["warehouse"] = {scale = 0.5, offset = {x = 10, y = -10}},
     ["dragonEyrie"] = {scale = 0.3, offset = {x = 0, y = -10}},
@@ -67,7 +67,7 @@ function Item:ctor(parent_ui)
     display.newSprite("bg_134x134.png"):addTo(back_ground):pos((left_x + right_x) / 2, h/2)
 
     self.building_icon = cc.ui.UIImage.new("info_26x26.png")
-        :addTo(back_ground):align(display.BOTTOM_CENTER, (left_x + right_x) / 2, 30)
+        :addTo(back_ground):align(display.CENTER, (left_x + right_x) / 2, h/2)
 
     local title_blue = cc.ui.UIImage.new("title_blue_412x30.png", {scale9 = true})
         :addTo(back_ground):align(display.LEFT_CENTER, right_x, h - 23)
@@ -133,19 +133,20 @@ function Item:ctor(parent_ui)
             color = UIKit:hex2c3b(0xffedae)}))
 end
 function Item:SetBuildingType(building_type, level)
-    local left_x, right_x = 5, 150
-    local base_x, base_y = (left_x + right_x) / 2, 30
-    local config = building_config_map[building_type]
+    local config = SpriteConfig[building_type]
     local png = SpriteConfig[building_type]:GetConfigByLevel(level).png
-
     self.title_label:setString(Localize.building_name[building_type])
     self.building_icon:setTexture(png)
-    self.building_icon:scale(config.scale)
-    self.building_icon:pos(base_x + config.offset.x, base_y + config.offset.y)
+    self.building_icon:scale(building_config_map[building_type].scale)
+    self.building_icon:removeAllChildren()
+    local p = self.building_icon:getAnchorPointInPoints()
+    for _,v in ipairs(config:GetStaticImagesByLevel()) do
+        display.newSprite(v):addTo(self.building_icon):pos(p.x, p.y)
+    end
     return self
 end
 function Item:SetConditionLabel(label, color)
-    self.condition_label:setString(label)
+    self.condition_label:show():setString(label)
     if color then
         self.condition_label:setColor(color)
     end
@@ -371,6 +372,8 @@ function Item:ChangeStatus(status)
         self:HideInstantButton()
         self:HideNormalButton()
         self:HideProgress()
+        self.speed_up:hide()
+        self.condition_label:hide()
     end
     self.status = status
     return self
