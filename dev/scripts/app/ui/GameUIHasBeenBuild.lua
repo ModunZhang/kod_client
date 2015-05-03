@@ -12,7 +12,7 @@ local GameUIHasBeenBuild = UIKit:createUIClass('GameUIHasBeenBuild', "GameUIWith
 local NOT_ABLE_TO_UPGRADE = UpgradeBuilding.NOT_ABLE_TO_UPGRADE
 local timer = app.timer
 local building_config_map = {
-    ["keep"] = {scale = 0.3, offset = {x = 10, y = -20}},
+    ["keep"] = {scale = 0.25, offset = {x = 10, y = -20}},
     ["watchTower"] = {scale = 0.3, offset = {x = 10, y = -10}},
     ["warehouse"] = {scale = 0.5, offset = {x = 10, y = -10}},
     ["dragonEyrie"] = {scale = 0.3, offset = {x = 0, y = -10}},
@@ -146,7 +146,7 @@ function Item:SetBuildingType(building_type, level)
     return self
 end
 function Item:SetConditionLabel(label, color)
-    self.condition_label:setString(label)
+    self.condition_label:show():setString(label)
     if color then
         self.condition_label:setColor(color)
     end
@@ -373,6 +373,7 @@ function Item:ChangeStatus(status)
         self:HideNormalButton()
         self:HideProgress()
         self.speed_up:hide()
+        self.condition_label:hide()
     end
     self.status = status
     return self
