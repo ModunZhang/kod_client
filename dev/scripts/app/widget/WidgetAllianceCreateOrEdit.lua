@@ -79,10 +79,10 @@ function WidgetAllianceCreateOrEdit:CreateAllianceButtonClicked()
 	local data = self:AdapterCreateData2Server_()
 	local errMsg = ""
 	if string.utf8len(data.name) < 3 or string.utf8len(data.name) > 20 or string.find(data.name,"%p") then
-		errMsg = _("联盟名称不合法")
+		errMsg = _("联盟名称不合法") .. _("只允许字母、数字和空格，需要3~20个字符")
 	end 
 	if string.utf8len(data.tag) < 1 or string.utf8len(data.tag) > 3 or not string.match(data.tag,"^%w%w?%w?") then
-		errMsg = _("联盟标签不合法")
+		errMsg = _("联盟标签不合法") .. _("只允许字母、数字需要1~3个字符")
 	end
 	if self:IsCreate() then
 		if config_intInit.createAllianceGem.value > User:GetGemResource():GetValue() then
@@ -275,7 +275,6 @@ function WidgetAllianceCreateOrEdit:createTextfieldPanel()
         size = cc.size(552,48),
     })
     editbox_tag:setPlaceHolder(_("最多可输入3字符"))
-    -- editbox_tag:setMaxLength(3)
     editbox_tag:setFont(UIKit:getEditBoxFont(),18)
     editbox_tag:setFontColor(cc.c3b(0,0,0))
     editbox_tag:setPlaceholderFontColor(UIKit:hex2c3b(0xccc49e))
@@ -303,7 +302,6 @@ function WidgetAllianceCreateOrEdit:createTextfieldPanel()
         size = cc.size(510,48),
     })
     editbox_name:setPlaceHolder(_("最多可输入20字符"))
-    editbox_name:setMaxLength(20)
     editbox_name:setFont(UIKit:getEditBoxFont(),18)
     editbox_name:setFontColor(cc.c3b(0,0,0))
     editbox_name:setPlaceholderFontColor(UIKit:hex2c3b(0xccc49e))
