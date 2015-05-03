@@ -59,10 +59,10 @@ function GameUIWriteMail:ctor(send_type,contacts)
         {cc.ui.UILabel.LABEL_TYPE_TTF,
             text = _("内容："),
             font = UIKit:getFontFilePath(),
-            size = 18,
+            size = 20,
             dimensions = cc.size(410,24),
             color = UIKit:hex2c3b(0x797154)
-        }):align(display.LEFT_CENTER,30,r_size.height-180)
+        }):align(display.LEFT_CENTER,58,r_size.height-180)
         :addTo(write_mail)
     -- 回复的邮件内容
     self.textView = ccui.UITextView:create(cc.size(580,472),display.newScale9Sprite("background_580X472.png"))
