@@ -70,6 +70,7 @@ function GameUIWriteMail:ctor(send_type,contacts)
     textView:addTo(write_mail):align(display.CENTER_BOTTOM,r_size.width/2,76)
     textView:setReturnType(cc.KEYBOARD_RETURNTYPE_DEFAULT)
     textView:setFont(UIKit:getEditBoxFont(), 24)
+    textView:setMaxLength(1024)
 
     textView:setFontColor(cc.c3b(0,0,0))
 

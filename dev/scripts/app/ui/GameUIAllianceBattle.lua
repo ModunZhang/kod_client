@@ -651,7 +651,7 @@ function GameUIAllianceBattle:OpenAllianceDetails(isOur)
             color = 0x403c2f,
         }):align(display.RIGHT_CENTER,520,20)
             :addTo(content)
-        display.newSprite("battle_39x38.png")
+        display.newSprite("battle_33x33.png")
             :align(display.RIGHT_CENTER,510-t:getContentSize().width,20)
             :addTo(content)
         item:addContent(content)
@@ -1109,7 +1109,7 @@ function GameUIAllianceBattle:CreateAllianceItem(alliance)
     }):align(display.LEFT_CENTER,200,70)
         :addTo(content)
     -- 联盟击杀
-    display.newSprite("battle_39x38.png")
+    display.newSprite("battle_33x33.png")
         :align(display.CENTER, 180,30)
         :addTo(content)
     local hit_label  = UIKit:ttfLabel({

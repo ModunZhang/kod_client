@@ -387,15 +387,15 @@ function GameUIAllianceHome:CreateTop()
             end
         end
         if status=="fight"  then
-            our_num_icon:setTexture("battle_39x38.png")
-            enemy_num_icon:setTexture("battle_39x38.png")
+            our_num_icon:setTexture("battle_33x33.png")
+            enemy_num_icon:setTexture("battle_33x33.png")
             enemy_num_icon:scale(1.0)
 
             self:SetOurPowerOrKill(alliance:GetMyAllianceFightCountData().kill)
             self:SetEnemyPowerOrKill(alliance:GetEnemyAllianceFightCountData().kill)
         elseif status=="protect" then
-            our_num_icon:setTexture("battle_39x38.png")
-            enemy_num_icon:setTexture("battle_39x38.png")
+            our_num_icon:setTexture("battle_33x33.png")
+            enemy_num_icon:setTexture("battle_33x33.png")
             enemy_num_icon:scale(1.0)
             local our_reprot_data_kill = alliance:GetOurLastAllianceFightReportsData().kill
             local enemy_reprot_data_kill = alliance:GetEnemyLastAllianceFightReportsData().kill
