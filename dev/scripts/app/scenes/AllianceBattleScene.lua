@@ -23,7 +23,7 @@ function AllianceBattleScene:onEnter()
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
     self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
     app:GetAudioManager():PlayGameMusic()
-    self:GetSceneLayer():ZoomTo(0.6)
+    self:GetSceneLayer():ZoomTo(0.8)
 end
 function AllianceBattleScene:LoadAnimation()
     UILib.loadSolidersAnimation()
