@@ -81,7 +81,7 @@ function GameUITower:InitInfo()
         title = _("总计"),
         h = 266
         }):addTo(self.info_layer)
-    :align(display.TOP_CENTER, window.cx, window.top-100)
+    :align(display.TOP_CENTER, window.cx, window.top-140)
 end
 
 return GameUITower
