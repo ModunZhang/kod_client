@@ -489,10 +489,9 @@ function WidgetUseItems:OpenOneDragonHPItemDialog( item ,dragon)
         dragon_manager:RemoveListenerOnType(dialog,dragon_manager.LISTEN_TYPE.OnHPChanged)
     end)
     function dialog:OnHPChanged()
-        if increase_type == "dragonHp" then
-            dragon_hp_label:setString(dragon:Hp().."/"..dragon:GetMaxHP())
-            progressTimer:setPercentage(math.floor(dragon:Hp()/dragon:GetMaxHP()*100))
-        end
+        print("OnHPChanged>>>")
+        dragon_hp_label:setString(dragon:Hp().."/"..dragon:GetMaxHP())
+        progressTimer:setPercentage(math.floor(dragon:Hp()/dragon:GetMaxHP()*100))
     end
     return dialog
 end
@@ -1154,6 +1153,7 @@ function WidgetUseItems:GetListBg(x,y,width,height)
     return display.newScale9Sprite("background_568x556.png",x,y,cc.size(width,height),cc.rect(10,10,548,536))
 end
 return WidgetUseItems
+
 
 
 
