@@ -294,7 +294,7 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
             isVisible = true,
             isSatisfy = not City:HaveProductionTechEvent(),
             icon="hammer_31x33.png",
-            description= City:HaveProductionTechEvent() and "1/1" or "1/0"
+            description= City:HaveProductionTechEvent() and "0/1" or "1/1"
         })
     if unLockByTech:Index() ~= current_tech:Index() then
         table.insert(requirements,
@@ -366,6 +366,10 @@ function GameUIUpgradeTechnology:OnUpgradButtonClicked()
     elseif gems_cost == 0 then
         NetManager:getUpgradeProductionTechPromise(self:GetProductionTechnology():Name(),false):done(function()
             self:LeftButtonClicked()
+            local acdemy = UIKit:GetUIInstance("GameUIAcademy")
+            if acdemy then
+                acdemy:LeftButtonClicked()
+            end
         end)
     else
         UIKit:showMessageDialog(_("提示"),msg, function ()
