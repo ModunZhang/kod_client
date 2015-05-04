@@ -464,7 +464,7 @@ function MultiAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, fini
         corps:setScaleY(math.abs(scalex))
         corps.march_info = march_info
         self.corps_map[id] = corps
-        self:CreateLine(id, march_info)
+        self:CreateLine(id, march_info, is_enemy)
     else
         self:UpdateCorpsBy(self.corps_map[id], march_info)
     end
@@ -572,9 +572,7 @@ function MultiAllianceLayer:PromiseOfFlashEmptyGround(building, is_my_alliance)
         self.click_empty:removeFromParent()
     end
     local x,y = alliance_view:GetLogicMap():ConvertToMapPosition(building:GetEntity():GetLogicPosition())
-    local click = display.newSprite("click_empty.png"):addTo(self:GetBuildingNode()):pos(x,y)
-    click:setContentSize(cc.size(160,160))
-    self.click_empty = click:addTo(self:GetBuildingNode()):pos(x - 80, y - 80)
+    self.click_empty = display.newSprite("click_empty.png"):addTo(self:GetBuildingNode()):pos(x,y)
     self.click_empty:setOpacity(128)
     transition.fadeTo(self.click_empty, {
         opacity = 255, time = 0.5,
