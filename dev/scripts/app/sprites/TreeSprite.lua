@@ -21,6 +21,7 @@ function TreeSprite:CreateSprite()
     local terrain = self:GetMapLayer():Terrain()
     local ppsprite
     local sprite
+    local index = math.random(2)
     repeat
         if (xb and xb:NeedWalls()) or 
             (yb and yb:NeedWalls()) or 
@@ -28,7 +29,7 @@ function TreeSprite:CreateSprite()
             (xyb and xyb:NeedWalls()) then
             break
         end
-        sprite = display.newSprite(string.format("trees_up_%s.png", terrain))
+        sprite = display.newSprite(string.format("trees_up_%d_%s.png", index, terrain))
         ppsprite = sprite
     until true
     repeat
@@ -39,9 +40,9 @@ function TreeSprite:CreateSprite()
             break
         end
         if sprite then
-            sprite = display.newSprite(string.format("trees_right_%s.png", terrain)):addTo(sprite):align(display.LEFT_BOTTOM)
+            sprite = display.newSprite(string.format("trees_right_%d_%s.png", index, terrain)):addTo(sprite):align(display.LEFT_BOTTOM)
         else
-            sprite = display.newSprite(string.format("trees_right_%s.png", terrain))
+            sprite = display.newSprite(string.format("trees_right_%d_%s.png", index, terrain))
             ppsprite = sprite
         end
     until true
@@ -53,9 +54,9 @@ function TreeSprite:CreateSprite()
             break
         end
         if sprite then
-            sprite = display.newSprite(string.format("trees_left_%s.png", terrain)):addTo(sprite):align(display.LEFT_BOTTOM)
+            sprite = display.newSprite(string.format("trees_left_%d_%s.png", index, terrain)):addTo(sprite):align(display.LEFT_BOTTOM)
         else
-            sprite = display.newSprite(string.format("trees_left_%s.png", terrain))
+            sprite = display.newSprite(string.format("trees_left_%d_%s.png", index, terrain))
             ppsprite = sprite
         end
     until true
@@ -65,9 +66,9 @@ function TreeSprite:CreateSprite()
             break
         end
         if sprite then
-            sprite = display.newSprite(string.format("trees_down_%s.png", terrain)):addTo(sprite):align(display.LEFT_BOTTOM)
+            sprite = display.newSprite(string.format("trees_down_%d_%s.png", index, terrain)):addTo(sprite):align(display.LEFT_BOTTOM)
         else
-            sprite = display.newSprite(string.format("trees_down_%s.png", terrain))
+            sprite = display.newSprite(string.format("trees_down_%d_%s.png", index, terrain))
             ppsprite = sprite
         end
     until true

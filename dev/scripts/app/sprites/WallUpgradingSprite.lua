@@ -8,7 +8,7 @@ local offset_map = {
         [Orient.Y] = {-16, 49},
         [Orient.NEG_X] = {15, 49},
         [Orient.NEG_Y] = {-16, 49},
-        gate = {-62, 72}
+        gate = {-62, 74}
     },
     [2] = {
         [Orient.X] = {15, 49},
@@ -55,12 +55,12 @@ end
 function WallUpgradingSprite:GetFlipX()
     local entity = self:GetEntity()
     if entity:GetOrient() == Orient.X then
-        return true
+        return false
     elseif entity:GetOrient() == Orient.Y then
         -- return entity:IsGate()
         return false
     elseif entity:GetOrient() == Orient.NEG_X then
-        return true
+        return false
     elseif entity:GetOrient() == Orient.NEG_Y then
         return false
     end

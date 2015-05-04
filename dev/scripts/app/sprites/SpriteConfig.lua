@@ -106,136 +106,136 @@ create_building_config(
 
 create_building_config(
     {"keep"}
-    ,create_config(MIN_LEVEL, level(1), "keep_1_420x390.png", offset(60, 225), scale(1), decorator("image", "keep_1_d_168x222.png", offset(124, -100)))
-    ,create_config(level(2), level(5), "keep_2_436x436.png", offset(60, 245), scale(1), decorator("image", "keep_2_d_172x230.png", offset(126, -126)))
-    ,create_config(level(6), MAX_LEVEL, "keep_3_480x526.png", offset(60, 285), scale(1), decorator("image", "keep_3_d_184x240.png", offset(121, -167)))
+    ,create_config(MIN_LEVEL, level(1), "keep_1.png", offset(60, 225), scale(1), decorator("image", "keep_1_d.png", offset(124, -100)))
+    ,create_config(level(2), level(5), "keep_2.png", offset(60, 245), scale(1), decorator("image", "keep_2_d.png", offset(126, -126)))
+    ,create_config(level(6), MAX_LEVEL, "keep_3.png", offset(60, 285), scale(1), decorator("image", "keep_3_d.png", offset(121, -167)))
 )
 create_building_config(
     {"dragonEyrie"}
-    ,create_config(MIN_LEVEL, MAX_LEVEL, "dragonEyrie_350x288.png", offset(45, 158), scale(1))
+    ,create_config(MIN_LEVEL, MAX_LEVEL, "dragonEyrie.png", offset(45, 158), scale(1))
 )
 create_building_config(
     {"watchTower", "#root/liaowangta/00000.png"}
-    ,create_config(MIN_LEVEL, MAX_LEVEL, "watchTower_230x348.png", offset(50, 180), scale(1), decorator("animation", "liaowangta", nil, nil, true))
+    ,create_config(MIN_LEVEL, MAX_LEVEL, "watchTower.png", offset(50, 180), scale(1), decorator("animation", "liaowangta", nil, nil, true))
 )
 create_building_config(
     {"warehouse", "#root/ziyuancangku/00000.png"}
-    ,create_config(MIN_LEVEL, MAX_LEVEL, "warehouse_232x214.png", offset(-5, 105), scale(1), decorator("animation", "ziyuancangku", nil, nil, true))
+    ,create_config(MIN_LEVEL, MAX_LEVEL, "warehouse.png", offset(-5, 105), scale(1), decorator("animation", "ziyuancangku", nil, nil, true))
 )
 create_building_config(
     {"toolShop"}
     ,create_config(MIN_LEVEL, 0, "locked_tile.png", offset(20, 120), scale(1))
-    ,create_config(1, MAX_LEVEL, "toolShop_228x232.png", offset(20, 100), scale(1), smoke(100, 147))
+    ,create_config(1, MAX_LEVEL, "toolShop.png", offset(20, 100), scale(1), smoke(100, 147))
 )
 create_building_config(
     {"materialDepot"}
     ,create_config(MIN_LEVEL, 0, "locked_tile.png", offset(20, 120), scale(1))
-    ,create_config(1, MAX_LEVEL, "materialDepot_198x236.png", offset(20, 100), scale(1))
+    ,create_config(1, MAX_LEVEL, "materialDepot.png", offset(20, 100), scale(1))
 )
 create_building_config(
     {"armyCamp"}
-    ,create_config(MIN_LEVEL, MAX_LEVEL, "armyCamp_294x264.png", offset(20, 100), scale(1))
+    ,create_config(MIN_LEVEL, MAX_LEVEL, "armyCamp.png", offset(20, 100), scale(1))
 )
 create_building_config(
     {"barracks", "#root/bingying/qizi/00000.png"}
     ,create_config(MIN_LEVEL, 0, "locked_tile.png", offset(20, 120), scale(1))
-    ,create_config(1, MAX_LEVEL, "barracks_252x240.png", offset(20, 120), scale(1), decorator("animation", "bingyin_1"), decorator("animation", "bingyin", nil, nil, true))
+    ,create_config(1, MAX_LEVEL, "barracks.png", offset(20, 120), scale(1), decorator("animation", "bingyin_1"), decorator("animation", "bingyin", nil, nil, true))
 )
 create_building_config(
     {"blackSmith"}
     ,create_config(MIN_LEVEL, 0, "locked_tile.png", offset(20, 120), scale(1))
-    ,create_config(1, MAX_LEVEL, "blackSmith_208x244.png", offset(20, 100), scale(1), smoke(17, 181), smoke(28, 196))
+    ,create_config(1, MAX_LEVEL, "blackSmith.png", offset(20, 100), scale(1), smoke(17, 181), smoke(28, 196))
 )
 create_building_config(
     {"foundry"}
     ,create_config(MIN_LEVEL, 0, "locked_tile.png", offset(20, 120), scale(1))
-    ,create_config(1, MAX_LEVEL, "foundry_258x254.png", offset(20, 120), scale(1), smoke(45, 203), smoke(69, 170))
+    ,create_config(1, MAX_LEVEL, "foundry.png", offset(20, 120), scale(1), smoke(45, 203), smoke(69, 170))
 )
 create_building_config(
     {"stoneMason"}
     ,create_config(MIN_LEVEL, 0, "locked_tile.png", offset(20, 120), scale(1))
-    ,create_config(1, MAX_LEVEL, "stoneMason_260x238.png", offset(20, 100), scale(1))
+    ,create_config(1, MAX_LEVEL, "stoneMason.png", offset(20, 100), scale(1))
 )
 create_building_config(
     {"lumbermill"}
     ,create_config(MIN_LEVEL, 0, "locked_tile.png", offset(20, 120), scale(1))
-    ,create_config(1, MAX_LEVEL, "lumbermill_270x232.png", offset(20, 100), scale(1))
+    ,create_config(1, MAX_LEVEL, "lumbermill.png", offset(20, 100), scale(1))
 )
 create_building_config(
     {"mill", "#root/mofang/00000.png"}
     ,create_config(MIN_LEVEL, 0, "locked_tile.png", offset(20, 120), scale(1))
-    ,create_config(1, MAX_LEVEL, "mill_288x260.png", offset(20, 100), scale(1), decorator("animation", "mofang", nil, nil, true))
+    ,create_config(1, MAX_LEVEL, "mill.png", offset(20, 100), scale(1), decorator("animation", "mofang", nil, nil, true))
 )
 create_building_config(
     {"hospital"}
     ,create_config(MIN_LEVEL, 0, "locked_tile.png", offset(20, 120), scale(1))
-    ,create_config(1, MAX_LEVEL, "hospital_258x230.png", offset(40, 100), scale(1), decorator("animation", "yiyuan"))
+    ,create_config(1, MAX_LEVEL, "hospital.png", offset(40, 100), scale(1), decorator("animation", "yiyuan"))
 )
 create_building_config(
     {"townHall"}
     ,create_config(MIN_LEVEL, 0, "locked_tile.png", offset(20, 120), scale(1))
-    ,create_config(1, MAX_LEVEL, "townHall_280x294.png", offset(20, 140), scale(1), decorator("animation", "shizhenting"))
+    ,create_config(1, MAX_LEVEL, "townHall.png", offset(20, 140), scale(1), decorator("animation", "shizhenting"))
 )
 create_building_config(
     {"tradeGuild", "#root/maoyihanghui/000.png"}
     ,create_config(MIN_LEVEL, 0, "locked_tile.png", offset(20, 120), scale(1))
-    ,create_config(1, MAX_LEVEL, "tradeGuild_248x234.png", offset(20, 100), scale(1), decorator("animation", "maoyihanghui", nil, nil, true))
+    ,create_config(1, MAX_LEVEL, "tradeGuild.png", offset(20, 100), scale(1), decorator("animation", "maoyihanghui", nil, nil, true))
 )
 create_building_config(
     {"academy"}
     ,create_config(MIN_LEVEL, 0, "locked_tile.png", offset(20, 120), scale(1))
-    ,create_config(1, MAX_LEVEL, "academy_214x224.png", offset(20, 120), scale(1), decorator("animation", "xueyuan"))
+    ,create_config(1, MAX_LEVEL, "academy.png", offset(20, 120), scale(1), decorator("animation", "xueyuan"))
 )
 create_building_config(
     {"workshop"}
     ,create_config(MIN_LEVEL, 0, "locked_tile.png", offset(20, 120), scale(1))
-    ,create_config(1, MAX_LEVEL, "workShop_230x240.png", offset(20, 130), scale(1), smoke(19, 181))
+    ,create_config(1, MAX_LEVEL, "workShop.png", offset(20, 130), scale(1), smoke(19, 181))
 )
 create_building_config(
     {"trainingGround"}
     ,create_config(MIN_LEVEL, 0, "locked_tile.png", offset(20, 120), scale(1))
-    ,create_config(1, MAX_LEVEL, "trainingGround_270x194.png", offset(20, 100), scale(1))
+    ,create_config(1, MAX_LEVEL, "trainingGround.png", offset(20, 100), scale(1))
 )
 create_building_config(
     {"hunterHall"}
     ,create_config(MIN_LEVEL, 0, "locked_tile.png", offset(20, 120), scale(1))
-    ,create_config(1, MAX_LEVEL, "hunterHall_246x234.png", offset(20, 100), scale(1))
+    ,create_config(1, MAX_LEVEL, "hunterHall.png", offset(20, 100), scale(1))
 )
 create_building_config(
     {"stable"}
     ,create_config(MIN_LEVEL, 0, "locked_tile.png", offset(20, 120), scale(1))
-    ,create_config(1, MAX_LEVEL, "stable_252x250.png", offset(20, 130), scale(1))
+    ,create_config(1, MAX_LEVEL, "stable.png", offset(20, 130), scale(1))
 )
 -- 装饰小屋
 create_building_config(
     {"dwelling"}
-    ,create_config(MIN_LEVEL, level(1), "dwelling_1_100x124.png", offset(0, 50), scale(1))
-    ,create_config(level(2), level(2), "dwelling_2_128x144.png", offset(0, 60), scale(1))
-    ,create_config(level(3), MAX_LEVEL, "dwelling_3_132x150.png", offset(0, 60), scale(1))
+    ,create_config(MIN_LEVEL, level(1), "dwelling_1.png", offset(0, 50), scale(1))
+    ,create_config(level(2), level(2), "dwelling_2.png", offset(0, 60), scale(1))
+    ,create_config(level(3), MAX_LEVEL, "dwelling_3.png", offset(0, 60), scale(1))
 )
 create_building_config(
     {"farmer"}
-    ,create_config(MIN_LEVEL, level(1), "farmer_1_142x122.png", offset(0, 50), scale(1))
-    ,create_config(level(2), level(2), "farmer_2_130x126.png", offset(0, 50), scale(1))
-    ,create_config(level(3), MAX_LEVEL, "farmer_3_118x122.png", offset(0, 50), scale(1))
+    ,create_config(MIN_LEVEL, level(1), "farmer_1.png", offset(0, 50), scale(1))
+    ,create_config(level(2), level(2), "farmer_2.png", offset(0, 50), scale(1))
+    ,create_config(level(3), MAX_LEVEL, "farmer_3.png", offset(0, 50), scale(1))
 )
 create_building_config(
     {"woodcutter"}
-    ,create_config(MIN_LEVEL, level(1), "woodcutter_1_150x108.png", offset(0, 50), scale(1))
-    ,create_config(level(2), level(2), "woodcutter_2_146x136.png", offset(0, 60), scale(1))
-    ,create_config(level(3), MAX_LEVEL, "woodcutter_3_148x146.png", offset(0, 70), scale(1))
+    ,create_config(MIN_LEVEL, level(1), "woodcutter_1.png", offset(0, 50), scale(1))
+    ,create_config(level(2), level(2), "woodcutter_2.png", offset(0, 60), scale(1))
+    ,create_config(level(3), MAX_LEVEL, "woodcutter_3.png", offset(0, 70), scale(1))
 )
 create_building_config(
     {"quarrier"}
-    ,create_config(MIN_LEVEL, level(1), "quarrier_1_118x112.png", offset(0, 50), scale(1))
-    ,create_config(level(2), level(2), "quarrier_2_144x130.png", offset(0, 60), scale(1))
-    ,create_config(level(3), MAX_LEVEL, "quarrier_3_150x158.png", offset(0, 70), scale(1))
+    ,create_config(MIN_LEVEL, level(1), "quarrier_1.png", offset(0, 50), scale(1))
+    ,create_config(level(2), level(2), "quarrier_2.png", offset(0, 60), scale(1))
+    ,create_config(level(3), MAX_LEVEL, "quarrier_3.png", offset(0, 70), scale(1))
 )
 create_building_config(
     {"miner"}
-    ,create_config(MIN_LEVEL, level(1), "miner_1_124x118.png", offset(0, 50), scale(1))
-    ,create_config(level(2), level(2), "miner_2_128x120.png", offset(0, 50), scale(1))
-    ,create_config(level(3), MAX_LEVEL, "miner_3_130x126.png", offset(0, 50), scale(1))
+    ,create_config(MIN_LEVEL, level(1), "miner_1.png", offset(0, 50), scale(1))
+    ,create_config(level(2), level(2), "miner_2.png", offset(0, 50), scale(1))
+    ,create_config(level(3), MAX_LEVEL, "miner_3.png", offset(0, 50), scale(1))
 )
 
 -- walls
@@ -255,33 +255,33 @@ create_building_config(
 -- village
 create_building_config(
     {"coinVillage"}
-    ,create_config(MIN_LEVEL, level(3), "dwelling_1_100x124.png", offset(0, 50), scale(1))
-    ,create_config(level(4), level(6), "dwelling_2_128x144.png", offset(0, 60), scale(1))
-    ,create_config(level(7), MAX_LEVEL, "dwelling_3_132x150.png", offset(0, 60), scale(1))
+    ,create_config(MIN_LEVEL, level(3), "dwelling_1.png", offset(0, 50), scale(1))
+    ,create_config(level(4), level(6), "dwelling_2.png", offset(0, 60), scale(1))
+    ,create_config(level(7), MAX_LEVEL, "dwelling_3.png", offset(0, 60), scale(1))
 )
 create_building_config(
     {"foodVillage"}
-    ,create_config(MIN_LEVEL, level(3), "farmer_1_142x122.png", offset(0, 50), scale(1))
-    ,create_config(level(4), level(6), "farmer_2_130x126.png", offset(0, 50), scale(1))
-    ,create_config(level(7), MAX_LEVEL, "farmer_3_118x122.png", offset(0, 50), scale(1))
+    ,create_config(MIN_LEVEL, level(3), "farmer_1.png", offset(0, 50), scale(1))
+    ,create_config(level(4), level(6), "farmer_2.png", offset(0, 50), scale(1))
+    ,create_config(level(7), MAX_LEVEL, "farmer_3.png", offset(0, 50), scale(1))
 )
 create_building_config(
     {"woodVillage"}
-    ,create_config(MIN_LEVEL, level(3), "woodcutter_1_150x108.png", offset(0, 50), scale(1))
-    ,create_config(level(4), level(6), "woodcutter_2_146x136.png", offset(0, 60), scale(1))
-    ,create_config(level(7), MAX_LEVEL, "woodcutter_3_148x146.png", offset(0, 70), scale(1))
+    ,create_config(MIN_LEVEL, level(3), "woodcutter_1.png", offset(0, 50), scale(1))
+    ,create_config(level(4), level(6), "woodcutter_2.png", offset(0, 60), scale(1))
+    ,create_config(level(7), MAX_LEVEL, "woodcutter_3.png", offset(0, 70), scale(1))
 )
 create_building_config(
     {"stoneVillage"}
-    ,create_config(MIN_LEVEL, level(3), "quarrier_1_118x112.png", offset(0, 50), scale(1))
-    ,create_config(level(4), level(6), "quarrier_2_144x130.png", offset(0, 60), scale(1))
-    ,create_config(level(7), MAX_LEVEL, "quarrier_3_150x158.png", offset(0, 70), scale(1))
+    ,create_config(MIN_LEVEL, level(3), "quarrier_1.png", offset(0, 50), scale(1))
+    ,create_config(level(4), level(6), "quarrier_2.png", offset(0, 60), scale(1))
+    ,create_config(level(7), MAX_LEVEL, "quarrier_3.png", offset(0, 70), scale(1))
 )
 create_building_config(
     {"ironVillage"}
-    ,create_config(MIN_LEVEL, level(3), "miner_1_124x118.png", offset(0, 50), scale(1))
-    ,create_config(level(4), level(6), "miner_2_128x120.png", offset(0, 50), scale(1))
-    ,create_config(level(7), MAX_LEVEL, "miner_3_130x126.png", offset(0, 50), scale(1))
+    ,create_config(MIN_LEVEL, level(3), "miner_1.png", offset(0, 50), scale(1))
+    ,create_config(level(4), level(6), "miner_2.png", offset(0, 50), scale(1))
+    ,create_config(level(7), MAX_LEVEL, "miner_3.png", offset(0, 50), scale(1))
 )
 
 return SpriteConfig

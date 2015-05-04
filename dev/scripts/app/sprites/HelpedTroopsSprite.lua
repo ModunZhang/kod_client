@@ -8,7 +8,7 @@ function HelpedTroopsSprite:ctor(city_layer, index, x, y)
     HelpedTroopsSprite.super.ctor(self, city_layer, nil, ax, ay)
 end
 function HelpedTroopsSprite:GetSpriteFile()
-    return "armyCamp_294x264.png"
+    return "armyCamp.png"
 end
 function HelpedTroopsSprite:GetIndex()
 	return self.index
