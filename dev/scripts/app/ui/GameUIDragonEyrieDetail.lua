@@ -70,7 +70,7 @@ end
 function GameUIDragonEyrieDetail:CreateProgressTimer()
     local bg,progressTimer = nil,nil
     bg = display.newSprite("process_bar_540x40.png")
-    progressTimer = UIKit:commonProgressTimer("progress_bar_540x40_2.png"):addTo(bg):align(display.LEFT_CENTER,0,20)
+    progressTimer = UIKit:commonProgressTimer("bar_color_540x40.png"):addTo(bg):align(display.LEFT_CENTER,0,20)
     progressTimer:setPercentage(0)
     local iconbg = display.newSprite("drgon_process_icon_bg.png")
         :addTo(bg)
