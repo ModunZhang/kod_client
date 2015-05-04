@@ -10,6 +10,7 @@ local WidgetUseItems = import("..widget.WidgetUseItems")
 local config_day14 = GameDatas.Activities.day14
 local SpriteConfig = import("..sprites.SpriteConfig")
 local unlockPlayerSecondMarchQueue_price = GameDatas.PlayerInitData.intInit.unlockPlayerSecondMarchQueue.value
+local GameUIActivityReward = import(".GameUIActivityReward")
 
 function GameUIWatchTower:ctor(city,building,default_tab)
     default_tab = default_tab or "upgrade"
@@ -207,7 +208,7 @@ function GameUIWatchTower:GetMyEventItemWithIndex(index,isOpen,entity)
 
 
         UIKit:ttfLabel({
-            text =  string.format(_("累计签到%s天，永久+1进攻队列"),countInfo.day14 .. "/" .. #config_day14 ),
+            text =  string.format(_("累计签到%s天，永久+1进攻队列"),#config_day14 ),
             size = 22,
             color= 0x403c2f
         }):addTo(bg):align(display.LEFT_TOP, 164, event_bg:getPositionY() + 104)
@@ -525,7 +526,7 @@ end
 --event
 --签到按钮
 function GameUIWatchTower:OnSignButtonClikced()
-    UIKit:newGameUI("GameUIActivity",City):AddToCurrentScene()
+    UIKit:newGameUI("GameUIActivityReward",GameUIActivityReward.REWARD_TYPE.CONTINUITY):AddToCurrentScene()
 end
 
 --内容过滤
