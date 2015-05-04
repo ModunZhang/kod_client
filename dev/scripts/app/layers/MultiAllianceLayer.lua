@@ -261,13 +261,8 @@ function MultiAllianceLayer:ManagerCorpsFromChangedMap(changed_map,is_strkie)
                         app:GetAudioManager():PlayeEffectSoundWithKey("ATTACK_PLAYER_ARRIVE")
                     end
                 elseif player_role == marchEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER then
-                    local __,alliance_id = marchEvent:FromLocation()
-                    if Alliance_Manager:HaveEnemyAlliance() and alliance_id == Alliance_Manager:GetEnemyAlliance():Id() then
-                        if is_strkie then
-                            app:GetAudioManager():PlayeEffectSoundWithKey("STRIKE_PLAYER_ARRIVE")
-                        else
-                            app:GetAudioManager():PlayeEffectSoundWithKey("ATTACK_PLAYER_ARRIVE")
-                        end
+                    if not marchEvent:IsMarchAttackEvent() then -- return 
+                        app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_BACK")
                     end
                 end
             end

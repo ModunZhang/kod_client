@@ -530,6 +530,7 @@ function GameUIDragonEyrieMain:CreateDragonScrollNode()
 			:align(display.CENTER,x,y)
 			:hide()
 		v.armature = dragon_armature
+		dragon_armature:GetSprite():getAnimation():stop()
 		if dragon:Ishated() then
 			v.armature:show()
 			v.dragon_image:hide()
@@ -546,7 +547,7 @@ function GameUIDragonEyrieMain:OnEnterIndexEvent(index)
 		if not self:GetCurrentDragon():Ishated() then return end
 		eyrie.dragon_image:hide()
 		eyrie.armature:show()
-		-- eyrie.armature:PlayAnimation("Idle")
+		eyrie.armature:PlayAnimation("idle")
 	end
 end
 
@@ -564,7 +565,7 @@ function GameUIDragonEyrieMain:OnLeaveIndexEvent(index)
 	if self.draongContentNode then
 		local eyrie = self.draongContentNode:GetItemByIndex(index)
 		if not self:GetCurrentDragon():Ishated() then return end
-		-- eyrie.armature:GetSprite():stop()
+		eyrie.armature:GetSprite():getAnimation():stop()
 		-- eyrie.armature:hide()
 		-- eyrie.dragon_image:show()
 	end

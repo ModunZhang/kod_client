@@ -181,6 +181,9 @@ end
 function Dragon:IsHpLow()
 	return math.floor(self.hp/self:GetMaxHP()*100)<20
 end
+function Dragon:WarningStrikeDragon()
+	return math.ceil(self.hp/self:GetMaxHP()*100) <= 10
+end
 
 function Dragon:GetLocalizedStatus()
 	return self:IsDead() and Localize.dragon_status.dead or Localize.dragon_status[self:Status()]

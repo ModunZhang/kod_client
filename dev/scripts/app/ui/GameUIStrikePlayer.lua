@@ -58,7 +58,13 @@ function GameUIStrikePlayer:BuildUI()
 			text = _("突袭")
 		}))
 		:onButtonClicked(function()
-			self:OnStrikeButtonClicked()
+			local select_DragonType = self:GetSelectDragonType()
+			local dragon = self:GetDragonManager():GetDragon(select_DragonType)
+			if dragon:WarningStrikeDragon() then
+				UIKit:showMessageDialog(_("提示"),_("您派出的龙可能会因血量过低而死亡，您确定还要派出吗？"), function()
+					self:OnStrikeButtonClicked()
+				end, function()end)
+			end
 		end)
     self:RefreshListView()
 end
