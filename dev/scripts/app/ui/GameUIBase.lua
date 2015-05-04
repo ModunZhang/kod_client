@@ -28,7 +28,6 @@ function GameUIBase:onEnter()
     if ext.closeKeyboard then
         ext.closeKeyboard()
     end
-    UIKit:CheckOpenUI(self)
 end
 
 function GameUIBase:onEnterTransitionFinish()
@@ -78,6 +77,7 @@ end
 
 function GameUIBase:OnMoveInStage()
 -- app:lockInput(false)
+    UIKit:CheckOpenUI(self)
 end
 
 function GameUIBase:OnMoveOutStage()

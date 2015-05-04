@@ -7,7 +7,6 @@ local GameUINpc = import("..ui.GameUINpc")
 local Arrow = import("..ui.Arrow")
 local Sprite = import("..sprites.Sprite")
 local SoldierManager = import("..entity.SoldierManager")
-local City = import("..entity.City")
 local User = import("..entity.User")
 local CityScene = import(".CityScene")
 local MyCityScene = class("MyCityScene", CityScene)
@@ -74,90 +73,7 @@ function MyCityScene:GetHomePage()
     return self.home_page
 end
 function MyCityScene:onEnterTransitionFinish()
-    if device.platform == "mac" then
-        return
-    end
-    local city = self:GetCity()
-    local scene = self
-    local check_map = {
-        [1] = function()
-            if #City:GetUnlockedFunctionBuildings() <= 4 then
-                return City:GetHouseByPosition(12, 12)
-            end
-            return true
-        end,
-        [2] = function()
-            if #City:GetUnlockedFunctionBuildings() <= 4 then
-                local building = City:GetHouseByPosition(12, 12)
-                return not building:IsUpgrading() and building:GetLevel() == 1
-            end
-            return true
-        end,
-        [3] = function()
-            if #City:GetUnlockedFunctionBuildings() <= 4 then
-                return City:GetHouseByPosition(15, 12)
-            end
-            return true
-        end,
-        [4] = function()
-            if #City:GetUnlockedFunctionBuildings() <= 4 then
-                local building = City:GetHouseByPosition(15, 12)
-                return not building:IsUpgrading() and building:GetLevel() == 1
-            end
-            return true
-        end,
-        [5] = function()
-            if #City:GetUnlockedFunctionBuildings() <= 4 then
-                return City:GetHouseByPosition(18, 12)
-            end
-            return true
-        end,
-        [6] = function()
-            if #City:GetUnlockedFunctionBuildings() <= 4 then
-                local building = City:GetHouseByPosition(18, 12)
-                return not building:IsUpgrading() and building:GetLevel() == 1
-            end
-            return true
-        end,
-        [7] = function()
-            if #City:GetUnlockedFunctionBuildings() <= 4 then
-                local building = City:GetFirstBuildingByType("keep")
-                return building:GetLevel() == 2 or (building:IsUpgrading() and building:GetLevel() == 1)
-            end
-            return true
-        end,
-        [8] = function()
-            if #City:GetUnlockedFunctionBuildings() <= 4 then
-                local building = City:GetFirstBuildingByType("keep")
-                return not building:IsUpgrading() and building:GetLevel() == 2
-            end
-            return true
-        end,
-        [9] = function()
-            if #City:GetUnlockedFunctionBuildings() <= 4 then
-                return false
-            end
-            return true
-        end,
-        [10] = function()
-            if #City:GetUnlockedFunctionBuildings() <= 5 then
-                local building = City:GetFirstBuildingByType("barracks")
-                return not building:IsUpgrading() and building:GetLevel() == 1
-            end
-            return true
-        end,
-        [11] = function()
-            local count = City:GetSoldierManager():GetCountBySoldierType("swordsman")
-            local barracks = City:GetFirstBuildingByType("barracks")
-            if count > 0 or barracks:IsRecruting() then
-                return true
-            end
-        end,
-    }
-    local function check(step)
-        local check_func = check_map[step]
-        return not check_func and true or check_func()
-    end
+
 end
 function MyCityScene:CreateHomePage()
     local home = UIKit:newGameUI('GameUIHome', self:GetCity()):AddToScene(self)
@@ -423,7 +339,9 @@ function MyCityScene:OpenUI(building)
         UIKit:newGameUI("GameUIGacha", self.city):AddToCurrentScene(true):DisableAutoClose()
     end
 end
+
 return MyCityScene
+
 
 
 

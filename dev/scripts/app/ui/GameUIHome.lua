@@ -456,8 +456,10 @@ end
 function GameUIHome:Find()
     local item
     self.event_tab:IteratorAllItem(function(_, v)
-        item = v:GetSpeedUpButton()
-        return true
+        if v.GetSpeedUpButton then
+            item = v:GetSpeedUpButton()
+            return true
+        end
     end)
     return cocos_promise.defer(function()
         if not item then

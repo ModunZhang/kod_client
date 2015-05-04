@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import sys
 import codecs
 import traceback
 
@@ -566,7 +567,11 @@ with codecs.open('./fte.lua', 'w', 'utf-8') as lua_file:
 				match_dot()
 		
 	try:
-		with codecs.open('./test1.fte', 'r', 'utf-8') as f:
+		fte_file_name = './test1.fte'
+		if len(sys.argv) > 1:
+			fte_file_name = sys.argv[1]
+
+		with codecs.open(fte_file_name, 'r', 'utf-8') as f:
 			tokens = parse_tokens(f.read())
 			# print tokens
 			match_start()

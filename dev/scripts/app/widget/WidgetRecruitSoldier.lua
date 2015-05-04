@@ -428,9 +428,7 @@ function WidgetRecruitSoldier:onEnter()
     self.slider_input:SetValue(max)
 
     self.city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
-    UIKit:CheckOpenUI(self)
     app.timer:AddListener(self)
-
 end
 function WidgetRecruitSoldier:onExit()
     self.barracks:RemoveBarracksListener(self)
