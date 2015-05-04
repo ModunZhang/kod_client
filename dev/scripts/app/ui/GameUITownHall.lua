@@ -245,6 +245,17 @@ function GameUITownHall:CreateQuestItem(quest,index)
                     TownHallUI.isFinishedQuest = false
                 end)
             else
+                control_btn:setButtonImage(cc.ui.UIPushButton.NORMAL, "green_btn_up_148x58.png", true)
+                control_btn:setButtonImage(cc.ui.UIPushButton.PRESSED,"green_btn_down_148x58.png", true)
+                control_btn:removeAllEventListeners()
+                control_btn:setButtonLabel(
+                    UIKit:commonButtonLable({
+                        color = 0xfff3c7,
+                        text  = _("加速")
+                    })
+                ):onButtonClicked(function(event)
+                    
+                end)
                 progress:setVisible(true)
                 status = _("正在")..Localize.daily_quests_name[quest.index]
             end
