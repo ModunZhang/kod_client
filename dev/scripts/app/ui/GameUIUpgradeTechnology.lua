@@ -366,6 +366,10 @@ function GameUIUpgradeTechnology:OnUpgradButtonClicked()
     elseif gems_cost == 0 then
         NetManager:getUpgradeProductionTechPromise(self:GetProductionTechnology():Name(),false):done(function()
             self:LeftButtonClicked()
+            local acdemy = UIKit:GetUIInstance("GameUIAcademy")
+            if acdemy then
+                acdemy:LeftButtonClicked()
+            end
         end)
     else
         UIKit:showMessageDialog(_("提示"),msg, function ()
