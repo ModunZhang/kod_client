@@ -77,7 +77,6 @@ function GameUIDragonEyrieMain:OnDragonDeathEventTimer(dragonDeathEvent)
 		and self.progress_content_death  
 		and self.progress_content_death:isVisible() 
 		then
-			self.dragonDeathEvent__ = dragonDeathEvent
 			self.progress_death:setPercentage(dragonDeathEvent:GetPercent())
 			self.dragon_death_label:setString(GameUtils:formatTimeStyleDayHour(dragonDeathEvent:GetTime()))
 	end
@@ -85,7 +84,6 @@ end
 
 function GameUIDragonEyrieMain:OnDragonEventTimer(dragonEvent)
 	if self:GetCurrentDragon():Type() == dragonEvent:DragonType() and self.hate_timer_label and self.hate_timer_label:isVisible() then
-		self.dragonEvent__ = dragonEvent
 		self.hate_timer_label:setString(string.format("需要时间: %s",GameUtils:formatTimeStyleDayHour(dragonEvent:GetTime())))
 	end
 end
@@ -491,7 +489,7 @@ end
 
 
 function GameUIDragonEyrieMain:OnHateSpeedUpClicked()
-    UIKit:newGameUI("GameUIDragonHateSpeedUp", self.dragon_manager,self.dragonEvent__):AddToCurrentScene(true)
+    UIKit:newGameUI("GameUIDragonHateSpeedUp", self.dragon_manager,self:GetCurrentDragon():Type()):AddToCurrentScene(true)
 end
 
 
@@ -610,7 +608,7 @@ function GameUIDragonEyrieMain:OnDragonExpItemUseButtonClicked()
 end
 
 function GameUIDragonEyrieMain:OnDragonDeathSpeedUpClicked()
-	UIKit:newGameUI("GameUIDragonDeathSpeedUp", self.dragonDeathEvent__):AddToCurrentScene(true)
+	UIKit:newGameUI("GameUIDragonDeathSpeedUp", self.dragon_manager,self:GetCurrentDragon():Type()):AddToCurrentScene(true)
 end
 
 --fte

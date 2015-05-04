@@ -35,6 +35,10 @@ function MarchAttackEvent:Reset()
 	self:RemoveAllObserver()
 end
 
+function MarchAttackEvent:IsMarchAttackEvent()
+	return true
+end
+
 function MarchAttackEvent:OnTimer(current_time)
 	self.times_ = math.ceil(self:ArriveTime() - current_time)
 	if self.times_ >= 0 then

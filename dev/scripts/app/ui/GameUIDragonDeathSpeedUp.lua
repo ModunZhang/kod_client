@@ -8,8 +8,9 @@ local GameUtils = GameUtils
 local Localize = import("..utils.Localize")
 local DragonManager = import("..entity.DragonManager")
 
-function GameUIDragonDeathSpeedUp:ctor(dragonDeathEvent)
+function GameUIDragonDeathSpeedUp:ctor(dragon_manager,dragon_type)
 	GameUIDragonDeathSpeedUp.super.ctor(self)
+	local dragonDeathEvent = dragon_manager:GetDragonDeathEventByType(dragon_type) 
 	self:SetAccBtnsGroup(self:GetEventType(),dragonDeathEvent:Id())
     self:SetAccTips(_("龙的复活没有免费加速"))
     self:SetUpgradeTip(Localize.dragon[dragonDeathEvent:DragonType()] .. _("正在复活"))

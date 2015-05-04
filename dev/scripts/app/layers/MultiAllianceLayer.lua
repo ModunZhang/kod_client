@@ -286,10 +286,16 @@ end
 
 
 function MultiAllianceLayer:CreateCorpsIf(marchEvent)
-    local from,allianceId = marchEvent:FromLocation()
+    local from,from_alliance_id = marchEvent:FromLocation()
     from.index = self:GetAllianceViewIndexById(allianceId)
-    local to,allianceId   = marchEvent:TargetLocation()
+    local to,to_alliance_id   = marchEvent:TargetLocation()
     to.index = self:GetAllianceViewIndexById(allianceId)
+    local is_enemy = false
+    if marchEvent:IsMarchAttackEvent() then
+        is_enemy = self:GetMyAlliance():Id() ~= allianceId_from
+    else -- return 
+        is_enemy = self:GetMyAlliance():Id() ~= allianceId_to
+    end
     self:CreateCorps(
         marchEvent:Id(),
         from,
@@ -297,7 +303,8 @@ function MultiAllianceLayer:CreateCorpsIf(marchEvent)
         marchEvent:StartTime(),
         marchEvent:ArriveTime(),
         marchEvent:AttackPlayerData().dragon.type,
-        marchEvent:AttackPlayerData().soldiers
+        marchEvent:AttackPlayerData().soldiers,
+        is_enemy
     )
 end
 local dragon_dir_map = {

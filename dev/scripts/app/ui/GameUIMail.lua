@@ -667,10 +667,10 @@ function GameUIMail:CreateSendMailContent()
     local content = display.newNode()
     content:setContentSize(cc.size(item_width, item_height))
     -- 标题背景框
-    local title_bg = display.newSprite("title_blue_482x30.png",item_width-482/2-2, item_height-24)
+    local title_bg = display.newScale9Sprite("title_blue_482x30.png",item_width/2, item_height-24,cc.size(552,30),cc.rect(10,5,462,20))
         :addTo(content,2)
     -- 不变的模板部分
-    local content_title_bg = display.newScale9Sprite("back_ground_516x60.png",item_width-4,10,cc.size(482,60),cc.rect(15,10,486,40))
+    local content_title_bg = display.newScale9Sprite("back_ground_516x60.png",item_width-8,10,cc.size(552,60),cc.rect(15,10,486,40))
         :align(display.RIGHT_BOTTOM)
         :addTo(content,2)
 
@@ -722,8 +722,6 @@ function GameUIMail:CreateSendMailContent()
                 end
             end):addTo(self)
             :pos(item_width/2, item_height/2)
-
-        title_bg:setTexture(mail.isRead and "title_grey_482x30.png" or "title_blue_482x30.png")
 
         local mail_icon = display.newSprite(mail.fromId == "__system" and "icon_system_mail.png" or "mail_state_user_not_read.png")
             :align(display.LEFT_CENTER,11, 24):addTo(content_title_bg)

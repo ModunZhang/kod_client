@@ -36,6 +36,7 @@ end
 function GameUIStrikeReport:GetBooty()
     local booty = {}
     if self.report:GetMyRewards() then
+
         for k,v in pairs(self.report:GetMyRewards()) do
             table.insert(booty, {
                 resource_type = Localize.fight_reward[v.name],
@@ -85,6 +86,11 @@ function GameUIStrikeReport:onEnter()
     local strike_result_image = display.newSprite(report_result_img)
         :align(display.CENTER_TOP, rb_size.width/2, rb_size.height-10)
         :addTo(report_body)
+    local shadow_layer = UIKit:shadowLayer()
+    shadow_layer:setContentSize(590,30)
+    shadow_layer:align(display.CENTER, 0, 0)
+        :addTo(strike_result_image)
+
     local strike_result_label = cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -449,6 +455,7 @@ function GameUIStrikeReport:CreateEnemyResource()
     -- 构建所有资源标签项
     local r_item_bg_color_flag = true
     local added_r_item_count = 0
+
     for k,r_parms in pairs(unpack_resources) do
         local r_item_bg_image = r_item_bg_color_flag and "back_ground_546X36_1.png" or "back_ground_546X36_2.png"
         local r_item_bg = display.newSprite(r_item_bg_image)
@@ -484,11 +491,12 @@ function GameUIStrikeReport:CreateEnemyResource()
 end
 function GameUIStrikeReport:GetEnemyResource(resources)
     local unpack_resources = {}
-    for k,v in pairs(resources) do
+    for k,v in pairs({"wood","stone","food","iron"}) do
+        local va = resources[v]
         table.insert(unpack_resources, {
-            resource_type = Localize.fight_reward[k],
-            icon= UILib.resource[k],
-            value = v,
+            resource_type = Localize.fight_reward[v],
+            icon= UILib.resource[v],
+            value = va,
         }
         )
     end

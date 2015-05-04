@@ -286,7 +286,7 @@ function DragonManager:RefreshDragonData( dragons,resource_refresh_time,hp_recov
             local dragon = Dragon.new(k,v.strength,v.vitality,v.status,v.star,v.level,v.exp,v.hp or 0)
             dragon:UpdateEquipmetsAndSkills(v)
             self:AddDragon(dragon)
-            self:checkHPRecoveryIf_(dragon,resource_refresh_time,hp_recovery_perHour)
+            self:checkHPRecoveryIf_(dragon,v.hpRefreshTime/1000,hp_recovery_perHour)
         end
     elseif dragons and deltaData.dragons then
         --遍历更新龙信息

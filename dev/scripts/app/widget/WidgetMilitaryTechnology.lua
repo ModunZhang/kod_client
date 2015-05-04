@@ -92,7 +92,7 @@ function WidgetMilitaryTechnology:CreateItem(tech)
 
     local soldiers = string.split(tech:Name(), "_")
     local soldier_category = Localize.soldier_category
-    local line1 = create_line_item("icon_hit.png",tech:GetTechLocalize(),"+"..(tech:GetAtkEff()*100).."%"):addTo(content):align(display.LEFT_CENTER, 10, 60)
+    local line1 = create_line_item("battle_33x33.png",tech:GetTechLocalize(),"+"..(tech:GetAtkEff()*100).."%"):addTo(content):align(display.LEFT_CENTER, 10, 60)
     local line2 = create_line_item("icon_teac.png",tech:GetTechCategory(),"+"..tech:GetTechPoint()):addTo(content):align(display.LEFT_CENTER, 10, 20)
 
     function item:LevelUpRefresh(tech)

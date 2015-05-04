@@ -48,34 +48,27 @@ function GameUIDragonSkill:onEnter()
   local skill_sp = display.newSprite(skill_icon):addTo(skillBg):pos(55,55)
   skill_sp:scale(80/skill_sp:getContentSize().width)
 
-  local titleLabel = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = Localize.dragon_skill[self.skill:Name()] .. " (LV" .. self.skill:Level() .. ")",
-        font = UIKit:getFontFilePath(),
-        size = 24,
-        align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
-        color = UIKit:hex2c3b(0x403c2f)
-	}):addTo(self.backgroundImage):align(display.LEFT_TOP,skillBg:getPositionX()+skillBg:getContentSize().width+20,skillBg:getPositionY()-10)
+  local titleLabel = UIKit:ttfLabel({
+      text = Localize.dragon_skill[self.skill:Name()] .. " (LV" .. self.skill:Level() .. ")",
+      size = 24,
+      color= 0x403c2f,
+      align = cc.ui.UILabel.TEXT_ALIGN_LEFT
+  }):addTo(self.backgroundImage):align(display.LEFT_TOP,skillBg:getPositionX()+skillBg:getContentSize().width+20,skillBg:getPositionY()-10)
   self.titleLabel = titleLabel
-	local descLabel = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = self:GetSkillEffection(),
-        font = UIKit:getFontFilePath(),
-        size = 20,
-        align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
-        color = UIKit:hex2c3b(0x403c2f)
-	}):addTo(self.backgroundImage):align(display.LEFT_TOP, skillBg:getPositionX()+skillBg:getContentSize().width+20, titleLabel:getPositionY()- titleLabel:getContentSize().height - 10)
+  local descLabel = UIKit:ttfLabel({
+      text = self:GetSkillEffection(),
+      size = 20,
+      color=0x403c2f,
+      align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
+  }):addTo(self.backgroundImage):align(display.LEFT_TOP, skillBg:getPositionX()+skillBg:getContentSize().width+20, titleLabel:getPositionY()- titleLabel:getContentSize().height - 10)
   self.descLabel = descLabel
 	local upgradeButton = WidgetPushButton.new({
     normal = "yellow_btn_up_185x65.png",
     pressed = "yellow_btn_down_185x65.png"}, {scale9 = false},{disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}})
-      :setButtonLabel("normal",cc.ui.UILabel.new({
-          UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+      :setButtonLabel("normal", UIKit:commonButtonLable({
           text = _("学习"),
-          font = UIKit:getFontFilePath(),
-          size = 24,
           align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
-          color = UIKit:hex2c3b(0xfff3c7)
+          size = 24,
       }))
       :addTo(self.backgroundImage)
       :align(display.LEFT_TOP,skillBg:getPositionX()+skillBg:getContentSize().width+260,titleBar:getPositionY() - 20)
@@ -138,23 +131,20 @@ function GameUIDragonSkill:GetListItem(index,key,val)
 	end
 	local icon = display.newSprite(imageIcon):addTo(bg):pos(30,bg:getContentSize().height/2)
 	icon:setScale(0.5)
-	local titleLable = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = title,
-        font = UIKit:getFontFilePath(),
-        size = 20,
-        align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
-        color = UIKit:hex2c3b(0x615b44)
-	}):addTo(bg):pos(icon:getPositionX()+30,bg:getContentSize().height/2)
+  local titleLable = UIKit:ttfLabel({
+      text = title,
+      size = 20,
+      align = cc.ui.UILabel.TEXT_ALIGN_LEFT, 
+      color = 0x615b44
+  })
+  :addTo(bg):align(display.LEFT_CENTER, icon:getPositionX()+30, 24)
 
-	local valLabel = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = val,
-        font = UIKit:getFontFilePath(),
-        size = 20,
-        align = cc.ui.UILabel.TEXT_ALIGN_RIGHT, 
-        color = UIKit:hex2c3b(0x403c2f)
-	}):pos(bg:getContentSize().width - 50,bg:getContentSize().height/2):addTo(bg)
+  local valLabel = UIKit:ttfLabel({
+      text = val,
+      size = 20,
+      align = cc.ui.UILabel.TEXT_ALIGN_RIGHT, 
+      color = 0x403c2f
+  }):align(display.RIGHT_CENTER, 510,24):addTo(bg)
 	return bg
 end
 
