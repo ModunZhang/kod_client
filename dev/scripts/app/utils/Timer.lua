@@ -19,7 +19,7 @@ function Timer:GetServerTime()
 end
 function Timer:OnTimer(dt)
     for _, v in pairs(self.time_listeners) do
-    	v:OnTimer(self:GetServerTime())
+    	-- v:OnTimer(self:GetServerTime())
     end
 end
 function Timer:Start()
