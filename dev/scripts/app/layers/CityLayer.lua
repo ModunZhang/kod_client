@@ -457,6 +457,7 @@ function CityLayer:UpdateTilesWithCity(city)
         v:removeFromParent()
     end
     self.tiles = {}
+    math.randomseed(123456789)
     city:IteratorTilesByFunc(function(x, y, tile)
         if tile.locked or (tile.x == 2 and tile.y == 5) then
             table.insert(self.tiles, self:CreateTileWithTile(tile):addTo(city_node))
