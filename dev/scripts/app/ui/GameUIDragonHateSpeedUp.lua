@@ -8,8 +8,9 @@ local Localize = import("..utils.Localize")
 local WidgetSpeedUp = import("..widget.WidgetSpeedUp")
 local GameUIDragonHateSpeedUp = class("GameUIDragonHateSpeedUp", WidgetSpeedUp)
 
-function GameUIDragonHateSpeedUp:ctor(dragon_manager,hateEvent)
+function GameUIDragonHateSpeedUp:ctor(dragon_manager,dragon_type)
 	GameUIDragonHateSpeedUp.super.ctor(self)
+	local hateEvent = dragon_manager:GetDragonEventByDragonType(dragon_type)
 	self.hateEvent = hateEvent
 	self.dragon_manager = dragon_manager
 

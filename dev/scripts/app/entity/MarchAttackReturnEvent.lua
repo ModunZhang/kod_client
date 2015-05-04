@@ -24,4 +24,9 @@ function MarchAttackReturnEvent:TargetLocation()
 	return self:AttackPlayerData().location,self:AttackPlayerData().alliance.id
 end
 
+
+function MarchAttackEvent:IsMarchAttackEvent()
+	return false
+end
+
 return MarchAttackReturnEvent

@@ -69,7 +69,7 @@ extern "C" const char* GetDeviceModel()
 //log
 static NSFileHandle *outFile = NULL;
 static NSString *logFilePath = NULL;
-static dispatch_queue_t aDQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+static dispatch_queue_t aDQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
 extern "C" void WriteLog_(const char *str)
 {
     if (logFilePath == NULL)
