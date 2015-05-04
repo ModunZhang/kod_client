@@ -71,7 +71,7 @@ function WidgetUpgradeMilitaryTech:CurrentInfo()
         color = 0x403c2f,
     }):align(display.CENTER, bg:getContentSize().width/2 , bg:getContentSize().height/2)
         :addTo(bg)
-    self.line1 = create_line_item("icon_hit.png",tech:GetTechLocalize(),"+"..(tech:GetNextLevlAtkEff()*100).."%"):addTo(body):align(display.CENTER, size.width/2, size.height-120)
+    self.line1 = create_line_item("battle_33x33.png",tech:GetTechLocalize(),"+"..(tech:GetNextLevlAtkEff()*100).."%"):addTo(body):align(display.CENTER, size.width/2, size.height-120)
     self.line2 = create_line_item("icon_teac.png",tech:GetTechCategory(),"+"..tech:GetNextLevlTechPoint()):addTo(body):align(display.CENTER, size.width/2, size.height-170)
 end
 function WidgetUpgradeMilitaryTech:UpgradeButtons()

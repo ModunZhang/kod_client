@@ -48,6 +48,10 @@ function GameUIWarReport:onEnter()
     
 
     -- 战斗发生时间
+    local shadow_layer = UIKit:shadowLayer()
+    shadow_layer:setContentSize(590,30)
+    shadow_layer:align(display.CENTER, 0, 0)
+        :addTo(war_result_image)
     local war_result_label = UIKit:ttfLabel(
         {
             text = GameUtils:formatTimeStyle2(math.floor(report.createTime/1000)),

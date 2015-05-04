@@ -85,6 +85,11 @@ function GameUIStrikeReport:onEnter()
     local strike_result_image = display.newSprite(report_result_img)
         :align(display.CENTER_TOP, rb_size.width/2, rb_size.height-10)
         :addTo(report_body)
+    local shadow_layer = UIKit:shadowLayer()
+    shadow_layer:setContentSize(590,30)
+    shadow_layer:align(display.CENTER, 0, 0)
+        :addTo(strike_result_image)
+        
     local strike_result_label = cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,

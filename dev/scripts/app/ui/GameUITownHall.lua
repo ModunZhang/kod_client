@@ -245,6 +245,17 @@ function GameUITownHall:CreateQuestItem(quest,index)
                     TownHallUI.isFinishedQuest = false
                 end)
             else
+                control_btn:setButtonImage(cc.ui.UIPushButton.NORMAL, "green_btn_up_148x58.png", true)
+                control_btn:setButtonImage(cc.ui.UIPushButton.PRESSED,"green_btn_down_148x58.png", true)
+                control_btn:removeAllEventListeners()
+                control_btn:setButtonLabel(
+                    UIKit:commonButtonLable({
+                        color = 0xfff3c7,
+                        text  = _("加速")
+                    })
+                ):onButtonClicked(function(event)
+                    
+                end)
                 progress:setVisible(true)
                 status = _("正在")..Localize.daily_quests_name[quest.index]
             end
@@ -351,10 +362,8 @@ function GameUITownHall:CreateDwellingItemWithListView()
     local lineItems = {}
     for i, v in ipairs({1,2}) do
         table.insert(lineItems, self:CreateDwellingLineItem(520,i==1):addTo(widget.info_bg, 2)
-            :pos(size.width/2, 32+(i-1)*40))
+            :pos(size.width/2-4, 31+(i-1)*40))
     end
-
-
 
     function widget:GetLineByIndex(index)
         return lineItems[index]
@@ -366,7 +375,7 @@ end
 function GameUITownHall:CreateDwellingLineItem(width,flag)
     local left, right = 0, width
     local node =   display.newScale9Sprite(flag and "back_ground_548x40_1.png" or "back_ground_548x40_2.png")
-    node:size(524,40)
+    node:size(520,40)
     local condition = cc.ui.UILabel.new({
         size = 20,
         font = UIKit:getFontFilePath(),
