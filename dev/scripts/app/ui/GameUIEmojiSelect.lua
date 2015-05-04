@@ -41,8 +41,6 @@ function GameUIEmojiSelect:BuildUI()
             elseif 2 == event.pageIdx then
               	self.page:setPositionX(two_x)
             end
-        elseif event.name == "clicked" then
-        	-- dump(event,"event---->")
         end
     end):addTo(bg)
     pv:setTouchEnabled(true)
@@ -53,7 +51,7 @@ function GameUIEmojiSelect:BuildUI()
     item:addChild(content)
     pv:addItem(item)    
     item = pv:newItem()
-    content = self:BuildEmojiNode(111)
+    content = self:BuildEmojiNode(111,220)
     item:addChild(content)
     pv:addItem(item)   
     pv:reload()
@@ -66,7 +64,6 @@ function GameUIEmojiSelect:BuildEmojiNode(start_index,end_index)
 	for index = start_index,end_index do
 		local img = EmojiTable[index]
 		local __,__,key = string.find(img, "(.+)%.")
-		-- assert(key,EmojiTable[index])
 		local button = WidgetPushButton.new({normal = "#" .. img}):addTo(emoji_node):pos(x,y):scale(0.7)
 		button:onButtonClicked(function()
 			self:callFunc__(key)
@@ -87,7 +84,6 @@ function GameUIEmojiSelect:OnMoveOutStage()
 end
 
 function GameUIEmojiSelect:callFunc__(key)
-	print("callFunc__----->",key,self.selectFunc_)
 	if self.selectFunc_ then
 		self.selectFunc_("[" .. key .. "]")
 	end
