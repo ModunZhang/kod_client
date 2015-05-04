@@ -59,6 +59,9 @@ function GameUIAllianceBattle:OnMoveInStage()
                 self:InitOtherAlliance()
                 NetManager:getNearedAllianceInfosPromise():done(function(response)
                     if response.msg.allianceInfos then
+                        table.sort(response.msg.allianceInfos,function ( a,b )
+                            return a.basicInfo.power > b.basicInfo.power
+                        end)
                         self:RefreshAllianceListview(response.msg.allianceInfos)
                     end
                 end)
@@ -1046,7 +1049,7 @@ function GameUIAllianceBattle:InitOtherAlliance()
 
 end
 
-function GameUIAllianceBattle:CreateAllianceItem(alliance)
+function GameUIAllianceBattle:CreateAllianceItem(alliance,index)
     local basic = alliance.basicInfo
     local countInfo = alliance.countInfo
 
@@ -1082,7 +1085,7 @@ function GameUIAllianceBattle:CreateAllianceItem(alliance)
         :addTo(content)
     -- 搜索出的条目index
     local index_box  = UIKit:ttfLabel({
-        text = "1",
+        text = index,
         size = 22,
         color = 0xffedae,
     }):align(display.LEFT_CENTER, 10, title_bg:getContentSize().height/2):addTo(title_bg,2)
@@ -1133,8 +1136,8 @@ end
 
 function GameUIAllianceBattle:RefreshAllianceListview(alliances)
     self.alliance_listview:removeAllItems()
-    for k,v in pairs(alliances) do
-        self:CreateAllianceItem(v)
+    for k,v in ipairs(alliances) do
+        self:CreateAllianceItem(v,k)
     end
     self.alliance_listview:reload()
 end
