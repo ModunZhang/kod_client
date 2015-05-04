@@ -893,6 +893,7 @@ function GameUIAlliance:RefreshFlag()
             self.ui_overview.my_alliance_flag = self.alliance_ui_helper:CreateFlagWithRhombusTerrain(Alliance_Manager:GetMyAlliance():Terrain(),Alliance_Manager:GetMyAlliance():Flag())
                 :addTo(self.flag_box)
                 :pos(x,y)
+                :scale(1.5)
         end
     end
 end

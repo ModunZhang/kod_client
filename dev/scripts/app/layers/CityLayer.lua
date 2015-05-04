@@ -293,10 +293,10 @@ function CityLayer:ReloadSceneBackground()
     end
     self.background = display.newNode():addTo(self, SCENE_BACKGROUND)
     local terrain = self:Terrain()
-    local left_1 = string.format("left_background_1_%s.png", terrain)
-    local left_2 = string.format("left_background_2_%s.png", terrain)
-    local right_1 = string.format("right_background_1_%s.png", terrain)
-    local right_2 = string.format("right_background_2_%s.png", terrain)
+    local left_1 = string.format("left_background_1_%s.jpg", terrain)
+    local left_2 = string.format("left_background_2_%s.jpg", terrain)
+    local right_1 = string.format("right_background_1_%s.jpg", terrain)
+    local right_2 = string.format("right_background_2_%s.jpg", terrain)
     local left1 = display.newSprite(left_1):addTo(self.background):align(display.LEFT_BOTTOM)
     local left2 = display.newSprite(left_2):addTo(self.background):align(display.LEFT_BOTTOM, 0, left1:getContentSize().height)
     local right1 = display.newSprite(right_1):addTo(self.background):align(display.LEFT_BOTTOM, left2:getContentSize().width, 0)
@@ -457,6 +457,7 @@ function CityLayer:UpdateTilesWithCity(city)
         v:removeFromParent()
     end
     self.tiles = {}
+    math.randomseed(123456789)
     city:IteratorTilesByFunc(function(x, y, tile)
         if tile.locked or (tile.x == 2 and tile.y == 5) then
             table.insert(self.tiles, self:CreateTileWithTile(tile):addTo(city_node))

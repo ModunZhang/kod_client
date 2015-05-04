@@ -26,7 +26,6 @@ function GameUIUnlockBuilding:OnResourceChanged(resource_manager)
     self:SetUpgradeRequirementListview()
 end
 function GameUIUnlockBuilding:onEnter()
-    UIKit:CheckOpenUI(self)
 end
 function GameUIUnlockBuilding:onExit()
     self.city:GetResourceManager():RemoveObserver(self)
