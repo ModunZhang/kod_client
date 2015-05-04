@@ -484,7 +484,7 @@ end
 
 function GameUIActivityReward:ui_PLAYER_LEVEL_UP()
 	local box = display.newSprite("alliance_item_flag_box_126X126.png"):align(display.LEFT_TOP, 20,self.height - 30):addTo(self.bg)
-	display.newSprite("keep_1_420x390.png",63,63):addTo(box):scale(126/420)
+	display.newSprite("keep_1.png",63,63):addTo(box):scale(126/420)
 	local title_bg = display.newScale9Sprite("alliance_event_type_cyan_222x30.png",0,0, cc.size(390,30), cc.rect(7,7,190,16))
 		:align(display.LEFT_TOP, 180, self.height - 30):addTo(self.bg)
 	UIKit:ttfLabel({

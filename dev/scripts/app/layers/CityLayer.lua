@@ -374,7 +374,7 @@ function CityLayer:InitWithCity(city)
     self.helpedByTroops = helpedByTroops
 
     -- pve 入口
-    self.pve_airship = self:CreateAirship(-7, 6):addTo(city_node)
+    self.pve_airship = self:CreateAirship(-9, 4):addTo(city_node)
     self.fair_ground = self:CreateFairGround(60, 45):addTo(city_node)
 
 
@@ -458,7 +458,7 @@ function CityLayer:UpdateTilesWithCity(city)
     end
     self.tiles = {}
     city:IteratorTilesByFunc(function(x, y, tile)
-        if tile.locked then
+        if tile.locked or (tile.x == 2 and tile.y == 5) then
             table.insert(self.tiles, self:CreateTileWithTile(tile):addTo(city_node))
         end
     end)
@@ -472,6 +472,7 @@ function CityLayer:UpdateTreesWithCity(city)
         v:removeFromParent()
     end
     self.trees = {}
+    math.randomseed(123456789)
     city:IteratorTilesByFunc(function(x, y, tile)
         if tile:IsOutOfWalls() and tile.x ~= 2 then
             table.insert(self.trees, self:CreateTreeWithTile(tile):addTo(city_node))

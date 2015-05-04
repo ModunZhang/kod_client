@@ -555,13 +555,6 @@ local ALLIANCE_TITLE_ICON = {
     member = "1_11x24.png",
     archon = "alliance_item_leader_39x39.png"
 }
-local VILLAGE = {
-    woodVillage = "woodcutter_1_150x108.png",
-    stoneVillage="woodcutter_1_150x108.png",
-    ironVillage = "woodcutter_1_150x108.png",
-    foodVillage = "woodcutter_1_150x108.png",
-    coinVillage = "woodcutter_1_150x108.png",
-}
 local ITEM = {
     movingConstruction = "movingConstruction_101x101.png",
     torch = "torch_101x101.png",
@@ -1058,7 +1051,6 @@ return {
     equipment =EQUIPMENT,
     alliance_title_icon =ALLIANCE_TITLE_ICON,
     buff = BUFF,
-    village = VILLAGE,
     item = ITEM,
     daily_task_icon = DAILY_TASK_ICON,
     building_animations = BUILDING_ANIMATIONS,

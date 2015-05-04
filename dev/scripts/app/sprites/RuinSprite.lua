@@ -2,7 +2,7 @@ local Sprite = import(".Sprite")
 local RuinSprite = class("RuinSprite", Sprite)
 local random = math.random
 function RuinSprite:ctor(city_layer, entity)
-    self.png_index = random(3)
+    self.png_index = random(2)
     local x, y = city_layer:GetLogicMap():ConvertToMapPosition(entity:GetLogicPosition())
     RuinSprite.super.ctor(self, city_layer, entity, x, y)
 end
@@ -10,9 +10,9 @@ function RuinSprite:GetSpriteFile()
 	return string.format("ruin_%d.png", self.png_index)
 end
 function RuinSprite:GetSpriteOffset()
-	if self.png_index == 3 then
-		return 0, 40
-	end
+	-- if self.png_index == 3 then
+	-- 	return 0, 40
+	-- end
     return 0, 35
 end
 function RuinSprite:EnterEditMode()

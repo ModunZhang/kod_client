@@ -7,15 +7,15 @@ local HEAD_SPRITE = 2
 local offset_map = {
     [1] = {
         [Orient.X] = {15, 75},
-        [Orient.Y] = {-14, 74},
+        [Orient.Y] = {-16, 74},
         [Orient.NEG_X] = {83, 83},
         [Orient.NEG_Y] = {-82, 83},
         [Orient.DOWN] = {0, 71},
-        [Orient.RIGHT] = {-10, 63},
-        [Orient.LEFT] = {16, 62},
+        [Orient.RIGHT] = {-10, 66},
+        [Orient.LEFT] = {17, 64},
         [Orient.UP] = {0, -7},
         [Orient.NONE] = {0, 71},
-        right_end = {-17, 31},
+        right_end = {-9, 36},
         left_end = {-44, 73}
     },
     [2] = {
@@ -97,7 +97,7 @@ function TowerUpgradingSprite:GetFlipX()
     if entity:GetOrient() == Orient.X then
         return false
     elseif entity:GetOrient() == Orient.Y then
-        return true
+        return false
     elseif entity:GetOrient() == Orient.NEG_X then
         return false
     elseif entity:GetOrient() == Orient.NEG_Y then

@@ -16,7 +16,7 @@ function FairGroundSprite:GetEntity()
     }
 end
 function FairGroundSprite:GetSpriteFile()
-    return "Fairground_386x297.png"
+    return "Fairground.png"
 end
 function FairGroundSprite:GetSpriteOffset()
     return 80, 130

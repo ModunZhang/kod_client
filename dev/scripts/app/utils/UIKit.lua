@@ -200,9 +200,9 @@ end
 function UIKit:getImageByBuildingType( building_type ,level)
     local level_1,level_2 = 2 ,3
     if building_type=="keep" then
-        return "keep_760x855.png"
+        return "keep_1.png"
     elseif building_type=="dragonEyrie" then
-        return "dragonEyrie_566x464.png"
+        return "dragonEyrie.png"
     elseif building_type=="watchTower" then
         return "watchTower_445x638.png"
     elseif building_type=="warehouse" then
@@ -212,7 +212,7 @@ function UIKit:getImageByBuildingType( building_type ,level)
     elseif building_type=="materialDepot" then
         return "materialDepot_1_438x531.png"
     elseif building_type=="armyCamp" then
-        return "armyCamp_485x444.png"
+        return "armyCamp.png"
     elseif building_type=="barracks" then
         return "barracks_553x536.png"
     elseif building_type=="blackSmith" then

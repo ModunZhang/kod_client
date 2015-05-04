@@ -382,23 +382,23 @@ function GameUIWarReport:CreateArmyItem(title,troop,dragon,enemy_troop,round_dat
         army_info = {
             {
                 bg_image = "back_ground_254x28_1.png",
-                title = _("Troops"),
+                title = _("部队"),
                 value = troopTotal,
             },
             {
                 bg_image = "back_ground_254x28_2.png",
-                title = _("Survived"),
-                value = troopTotal-totalDamaged-totalWounded,
+                title = _("存活"),
+                value = troopTotal-totalDamaged,
             },
             {
                 bg_image = "back_ground_254x28_1.png",
-                title = _("Wounded"),
+                title = _("伤兵"),
                 value = totalWounded,
             },
             {
                 bg_image = "back_ground_254x28_2.png",
-                title = _("Killed"),
-                value = killed,
+                title = _("被消灭"),
+                value = totalDamaged - totalWounded,
                 color = 0x7e0000,
             },
             {

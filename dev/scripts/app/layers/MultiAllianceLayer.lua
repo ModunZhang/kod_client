@@ -459,7 +459,7 @@ function MultiAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, fini
         corps:setScaleY(math.abs(scalex))
         corps.march_info = march_info
         self.corps_map[id] = corps
-        self:CreateLine(id, march_info)
+        self:CreateLine(id, march_info, is_enemy)
     else
         self:UpdateCorpsBy(self.corps_map[id], march_info)
     end
@@ -491,15 +491,20 @@ end
 function MultiAllianceLayer:IsExistCorps(id)
     return self.corps_map[id] ~= nil
 end
-function MultiAllianceLayer:CreateLine(id, march_info)
+function MultiAllianceLayer:CreateLine(id, march_info, is_enemy)
     if self.lines_map[id] then
         self.lines_map[id]:removeFromParent()
     end
     local middle = cc.pMidpoint(march_info.start_info.real, march_info.end_info.real)
-    local scale = march_info.length / 22
+    local scale = march_info.length / 32
     local unit_count = math.floor(scale)
-    local sprite = display.newSprite("arrow_16x22.png", nil, nil, {class=cc.FilteredSpriteWithOne})
-        :addTo(self:GetLineNode()):pos(middle.x, middle.y):rotation(march_info.degree)
+    local sprite = display.newSprite(is_enemy and
+        "arrow_red_22x32.png" or
+        "arrow_blue_22x32.png"
+        , nil, nil, {class=cc.FilteredSpriteWithOne})
+        :addTo(self:GetLineNode())
+        :pos(middle.x, middle.y)
+        :rotation(march_info.degree)
     sprite:setFilter(filter.newFilter("CUSTOM",
         json.encode({
             frag = "shaders/multi_tex.fs",
@@ -635,6 +640,7 @@ end
 
 
 return MultiAllianceLayer
+
 
 
 
