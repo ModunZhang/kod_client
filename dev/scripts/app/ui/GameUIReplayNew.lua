@@ -333,7 +333,9 @@ local function newDragonBattle(replay_ui, dragonAttack, dragonAttackLevel, drago
     function dragon_battle:PromsieOfHide()
         self:getAnimation():play("Animation2", -1, 0)
         self:RefreshSpeed()
-        return self:PromiseOfAnimation(self:getAnimation())
+        return self:PromiseOfAnimation(self:getAnimation()):next(function()
+            self:hide()
+        end)
     end
     function dragon_battle:RefreshSpeed()
         self:getAnimation():setSpeedScale(replay_ui:Speed())
@@ -1029,7 +1031,7 @@ function GameUIReplayNew:RefreshSoldierListView(list_view, soldiers, is_pve_sold
 end
 function GameUIReplayNew:ShowResult()
     if not self.result then
-        self.result = ccs.Armature:create("win"):addTo(self, 1):align(display.CENTER, window.cx, window.cy + 250)
+        self.result = ccs.Armature:create("win"):addTo(self, 10):align(display.CENTER, window.cx, window.cy + 250)
         if self.report:GetReportResult() then
             self.result:getAnimation():play("Victory", -1, 0)
             app:GetAudioManager():PlayeEffectSoundWithKey("BATTLE_VICTORY")
@@ -1086,8 +1088,8 @@ function GameUIReplayNew:PlayDragonBattle()
     self.dragon_battle:GetAttackDragon():SetHp(attack_dragon.hp, attack_dragon.hpMax)
     self.dragon_battle:GetDefenceDragon():SetHp(defend_dragon.hp, defend_dragon.hpMax)
 
-    local is_win = (self.report:IsAttackCamp() and attack_dragon.isWin) or 
-                    (not self.report:IsAttackCamp() and not attack_dragon.isWin)
+    local is_win = (self.report:IsAttackCamp() and attack_dragon.isWin) or
+        (not self.report:IsAttackCamp() and not attack_dragon.isWin)
     return self:PromiseOfDelay(0.5):next(function()
         return self.dragon_battle:PromsieOfFight():next(function()
             return is_win and
@@ -1107,7 +1109,7 @@ function GameUIReplayNew:PlayDragonBattle()
                     :SetBuff(string.format(_("加成 + %d%%"), math.floor(percent * buff_defence)))
             end)
         end):next(self:Delay(1)):next(function()
-            return promise.all(is_win and 
+            return promise.all(is_win and
                 self.dragon_battle:PromiseOfVictoryHide() or
                 self.dragon_battle:PromiseOfDefeatHide(),
                 self.dragon_battle:PromsieOfHide())
@@ -1738,6 +1740,7 @@ function GameUIReplayNew:BuildUI()
 end
 
 return GameUIReplayNew
+
 
 
 

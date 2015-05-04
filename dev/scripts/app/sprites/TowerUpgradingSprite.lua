@@ -12,7 +12,7 @@ local offset_map = {
         [Orient.NEG_Y] = {-82, 83},
         [Orient.DOWN] = {0, 71},
         [Orient.RIGHT] = {-10, 63},
-        [Orient.LEFT] = {16, 62},
+        [Orient.LEFT] = {14, 56},
         [Orient.UP] = {0, -7},
         [Orient.NONE] = {0, 71},
         right_end = {-17, 31},
@@ -97,7 +97,7 @@ function TowerUpgradingSprite:GetFlipX()
     if entity:GetOrient() == Orient.X then
         return false
     elseif entity:GetOrient() == Orient.Y then
-        return true
+        return false
     elseif entity:GetOrient() == Orient.NEG_X then
         return false
     elseif entity:GetOrient() == Orient.NEG_Y then

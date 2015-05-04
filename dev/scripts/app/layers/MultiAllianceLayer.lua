@@ -489,15 +489,20 @@ end
 function MultiAllianceLayer:IsExistCorps(id)
     return self.corps_map[id] ~= nil
 end
-function MultiAllianceLayer:CreateLine(id, march_info)
+function MultiAllianceLayer:CreateLine(id, march_info, is_enemy)
     if self.lines_map[id] then
         self.lines_map[id]:removeFromParent()
     end
     local middle = cc.pMidpoint(march_info.start_info.real, march_info.end_info.real)
-    local scale = march_info.length / 22
+    local scale = march_info.length / 32
     local unit_count = math.floor(scale)
-    local sprite = display.newSprite("arrow_16x22.png", nil, nil, {class=cc.FilteredSpriteWithOne})
-        :addTo(self:GetLineNode()):pos(middle.x, middle.y):rotation(march_info.degree)
+    local sprite = display.newSprite(is_enemy and
+        "arrow_red_22x32.png" or
+        "arrow_blue_22x32.png"
+        , nil, nil, {class=cc.FilteredSpriteWithOne})
+        :addTo(self:GetLineNode())
+        :pos(middle.x, middle.y)
+        :rotation(march_info.degree)
     sprite:setFilter(filter.newFilter("CUSTOM",
         json.encode({
             frag = "shaders/multi_tex.fs",
@@ -560,7 +565,9 @@ function MultiAllianceLayer:PromiseOfFlashEmptyGround(building, is_my_alliance)
         self.click_empty:removeFromParent()
     end
     local x,y = alliance_view:GetLogicMap():ConvertToMapPosition(building:GetEntity():GetLogicPosition())
-    self.click_empty = display.newSprite("click_empty.png"):addTo(self:GetBuildingNode()):pos(x,y)
+    local click = display.newSprite("click_empty.png"):addTo(self:GetBuildingNode()):pos(x,y)
+    click:setContentSize(cc.size(160,160))
+    self.click_empty = click:addTo(self:GetBuildingNode()):pos(x - 80, y - 80)
     self.click_empty:setOpacity(128)
     transition.fadeTo(self.click_empty, {
         opacity = 255, time = 0.5,
@@ -633,6 +640,7 @@ end
 
 
 return MultiAllianceLayer
+
 
 
 
