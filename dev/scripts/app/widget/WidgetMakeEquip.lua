@@ -144,8 +144,8 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
         }))
         :onButtonClicked(function(event)
             if self:IsAbleToMakeEqui(true) then
-                NetManager:getInstantMakeDragonEquipmentPromise(equip_type):catch(function(err)
-                    dump(err:reason())
+                NetManager:getInstantMakeDragonEquipmentPromise(equip_type):done(function()
+                    self:RefreshUI()
                 end)
             end
         end)
@@ -304,19 +304,20 @@ function WidgetMakeEquip:onEnter()
     self.black_smith:AddBlackSmithListener(self)
     self.city:GetMaterialManager():AddObserver(self)
     self.city:GetResourceManager():AddObserver(self)
-
-
+    self:RefreshUI()
+end
+function WidgetMakeEquip:onExit()
+    self.black_smith:RemoveBlackSmithListener(self)
+    self.city:GetMaterialManager():RemoveObserver(self)
+    self.city:GetResourceManager():RemoveObserver(self)
+end
+function WidgetMakeEquip:RefreshUI()
     self:UpdateEquipCounts()
     self:UpdateMaterials()
     self:UpdateBuildLabel(self.black_smith:IsEquipmentEventEmpty() and 0 or 1)
     self:UpdateCoin(self.city:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()))
     self:UpdateGemLabel()
     self:UpdateBuffTime()
-end
-function WidgetMakeEquip:onExit()
-    self.black_smith:RemoveBlackSmithListener(self)
-    self.city:GetMaterialManager():RemoveObserver(self)
-    self.city:GetResourceManager():RemoveObserver(self)
 end
 -- 装备数量监听
 function WidgetMakeEquip:OnMaterialsChanged(material_manager, material_type, changed)
