@@ -397,8 +397,8 @@ function GameUIWarReport:CreateArmyItem(title,troop,dragon,enemy_troop,round_dat
             },
             {
                 bg_image = "back_ground_254x28_2.png",
-                title = _("伤亡"),
-                value = killed,
+                title = _("被消灭"),
+                value = totalDamaged - totalWounded,
                 color = 0x7e0000,
             },
             {
