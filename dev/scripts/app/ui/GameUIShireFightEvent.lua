@@ -255,7 +255,7 @@ function GameUIShireFightEvent:GetListItem(arrived,obj)
 		size = 20,
 		color = 0x797154
 	}):align(display.LEFT_BOTTOM,line_1:getPositionX(),line_1:getPositionY() + 8):addTo(bg)
-	local city_name = arrived and obj.cityName or obj:AttackPlayerData().cityName
+	local city_name = arrived and obj.name or obj:AttackPlayerData().name
 	local dragon_val_label =  UIKit:ttfLabel({
 		text = city_name,
 		size = 20,

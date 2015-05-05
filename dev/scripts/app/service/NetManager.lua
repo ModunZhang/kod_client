@@ -997,12 +997,12 @@ end
 function NetManager:getSearchAllianceByTagPromsie(tag)
     return get_blocking_request_promise("logic.allianceHandler.searchAllianceByTag", {
         tag = tag
-    }, "搜索特定标签联盟失败!"):done(get_response_msg)
+    }, "搜索特定标签联盟失败!")
 end
 -- 搜索能直接加入联盟
 function NetManager:getFetchCanDirectJoinAlliancesPromise()
     return get_blocking_request_promise("logic.allianceHandler.getCanDirectJoinAlliances", nil
-        , "搜索直接加入联盟失败!"):done(get_response_msg)
+        , "搜索直接加入联盟失败!")
 end
 -- 邀请加入联盟
 function NetManager:getInviteToJoinAlliancePromise(memberId)
@@ -1231,7 +1231,7 @@ end
 function NetManager:getSearchAllianceInfoByTagPromise(tag)
     return get_blocking_request_promise("logic.allianceHandler.searchAllianceInfoByTag",
         {tag=tag},
-        "根据Tag搜索联盟战斗数据失败!"):done(get_response_msg)
+        "根据Tag搜索联盟战斗数据失败!")
 end
 --突袭玩家城市
 function NetManager:getStrikePlayerCityPromise(dragonType,defencePlayerId)
@@ -1533,15 +1533,16 @@ end
 
 -- 获取排行榜
 function NetManager:getPlayerRankPromise(rankType, fromRank)
-    return get_blocking_request_promise("logic.playerHandler.getPlayerRankList",{
+    return get_blocking_request_promise("rank.rankHandler.getPlayerRankList",{
         rankType = rankType,
-        fromRank = fromRank or 0
+        fromRank = fromRank or 0,
     },"获取排行榜失败!")
 end
 function NetManager:getAllianceRankPromise(rankType, fromRank)
-    return get_blocking_request_promise("logic.playerHandler.getAllianceRankList",{
+    return get_blocking_request_promise("rank.rankHandler.getAllianceRankList",{
+        allianceId = Alliance_Manager:GetMyAlliance():Id(),
         rankType = rankType,
-        fromRank = fromRank or 0
+        fromRank = fromRank or 0,
     },"获取排行榜失败!")
 end
 -- 获取GameCenter账号绑定状态

@@ -129,8 +129,8 @@ function MultiAllianceLayer:InitAllianceView()
         --     {borderColor = cc.c4f(1.0, 0.0, 0.0, 1.0),
         --         borderWidth = 5}):addTo(self.building)
     else
-        alliance_view1 = AllianceView.new(self, self.alliances[1], 0, 103):addTo(self)
-        alliance_view2 = AllianceView.new(self, self.alliances[2], 0, 52):addTo(self)
+        alliance_view1 = AllianceView.new(self, self.alliances[1], 0, 104):addTo(self)
+        alliance_view2 = AllianceView.new(self, self.alliances[2], 0, 53):addTo(self)
         -- local sx, sy = alliance_view1:GetLogicMap():ConvertToMapPosition(-0.5, 51.5)
         -- local ex, ey = alliance_view1:GetLogicMap():ConvertToMapPosition(51.5, 51.5)
         -- display.newLine({{sx, sy}, {ex, ey}},
@@ -282,14 +282,14 @@ end
 
 function MultiAllianceLayer:CreateCorpsIf(marchEvent)
     local from,from_alliance_id = marchEvent:FromLocation()
-    from.index = self:GetAllianceViewIndexById(allianceId)
+    from.index = self:GetAllianceViewIndexById(from_alliance_id)
     local to,to_alliance_id   = marchEvent:TargetLocation()
-    to.index = self:GetAllianceViewIndexById(allianceId)
+    to.index = self:GetAllianceViewIndexById(to_alliance_id)
     local is_enemy = false
     if marchEvent:IsMarchAttackEvent() then
-        is_enemy = self:GetMyAlliance():Id() ~= allianceId_from
+        is_enemy = self:GetMyAlliance():Id() ~= from_alliance_id
     else -- return 
-        is_enemy = self:GetMyAlliance():Id() ~= allianceId_to
+        is_enemy = self:GetMyAlliance():Id() ~= to_alliance_id
     end
     self:CreateCorps(
         marchEvent:Id(),

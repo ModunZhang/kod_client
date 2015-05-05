@@ -138,6 +138,10 @@ function GameUIAllianceTitle:OnBuyAllianceArchonButtonClicked()
         NetManager:getBuyAllianceArchon():done(function(response)
            UIKit:showMessageDialog(nil, _("竞选盟主成功"), function()
            end)
+           local ui_alliance = UIKit:GetUIInstance("GameUIAlliance")
+           if ui_alliance and ui_alliance.RefreshMemberListIf then
+                ui_alliance:RefreshMemberListIf()
+           end
         end)
     end
 end
@@ -200,7 +204,7 @@ function GameUIAllianceTitle:CreateEditTitleUI()
         text = _("修改联盟职位名称"),
         size = 22,
         color = 0xffedae
-    }):addTo(title_bar):align(display.LEFT_BOTTOM, 100, 10)
+    }):addTo(title_bar):align(display.CENTER, 300, 26)
 
     UIKit:ttfLabel({
         text = _("职位名称"),
@@ -236,6 +240,10 @@ function GameUIAllianceTitle:CreateEditTitleUI()
                 NetManager:getEditAllianceTitleNamePromise(self.title_,newTitle):done(function()
  					self:RefreshTitle()
 					layer:removeFromParent(true)
+                    local ui_alliance = UIKit:GetUIInstance("GameUIAlliance")
+                    if ui_alliance and ui_alliance.RefreshMemberListIf then
+                        ui_alliance:RefreshMemberListIf()
+                    end
 		 		end):fail(function()
 		 			layer:removeFromParent(true)
 		 		end)

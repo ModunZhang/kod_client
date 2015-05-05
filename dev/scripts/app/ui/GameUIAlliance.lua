@@ -421,7 +421,6 @@ end
 
 --  listType:join appy invate
 function GameUIAlliance:getCommonListItem_(listType,alliance)
-    dump(alliance,"alliance----->")
     local targetListView = nil
     local item = nil
     local terrain,flag_info = nil,nil
@@ -584,6 +583,15 @@ function GameUIAlliance:getCommonListItem_(listType,alliance)
             :addTo(bg)
         memberValLabel:setString(string.format("%s/%s",alliance.members,alliance.membersMax))
     elseif listType == self.COMMON_LIST_ITEM_TYPE.APPLY then
+          local leaderIcon = display.newSprite("alliance_item_leader_39x39.png")
+            :addTo(bg)
+            :align(display.LEFT_TOP,titleBg:getPositionX() - titleBg:getContentSize().width, titleBg:getPositionY() - titleBg:getContentSize().height -12)
+        local leaderLabel = UIKit:ttfLabel({
+            text = alliance.archon,
+            size = 22,
+            color = 0x403c2f
+        }):addTo(bg):align(display.LEFT_TOP,leaderIcon:getPositionX()+leaderIcon:getContentSize().width+15, leaderIcon:getPositionY()-4)
+
         local cancel_button = WidgetPushButton.new({normal = "red_btn_up_148x58.png",pressed = "red_btn_down_148x58.png"})
             :setButtonLabel(
                 UIKit:ttfLabel({
@@ -615,6 +623,8 @@ function GameUIAlliance:commonListItemAction( listType,item,alliance,tag)
         if  alliance.joinType == 'all' then --如果是直接加入
             NetManager:getJoinAllianceDirectlyPromise(alliance.id):fail(function()
                 self:SearchAllianAction(self.editbox_tag_search:getText())
+            end):done(function()
+                 GameGlobalUI:showTips(_("提示"),string.format(_("加入%s联盟成功!"),alliance.name))
             end)
         else
             NetManager:getRequestToJoinAlliancePromise(alliance.id):done(function()
@@ -634,6 +644,17 @@ function GameUIAlliance:commonListItemAction( listType,item,alliance,tag)
         NetManager:getHandleJoinAllianceInvitePromise(alliance.id,tag~=1):done(function()
             if tag == 1 then
             self:RefreshInvateListView()
+            else
+                GameGlobalUI:showTips(_("提示"),string.format(_("加入%s联盟成功!"),alliance.name))
+            end
+        end):fail(function(msg)
+            if tag ~= 1 then -- 同意
+                local code = msg.errcode and msg.errcode[1].code or nil
+                if code then
+                    if UIKit:getErrorCodeKey(code) == 'allianceNotExist' then
+                        self:commonListItemAction(listType,item,alliance,1)
+                    end
+                end
             end
         end)
     end
@@ -995,7 +1016,7 @@ function GameUIAlliance:HaveAlliaceUI_membersIf()
 
         local button = display.newSprite("info_16x33.png"):addTo(title_bar):align(display.RIGHT_CENTER, 400, 15):scale(0.7)
         WidgetPushTransparentButton.new(cc.rect(0,0,428,30)):addTo(title_bar):align(display.LEFT_BOTTOM,0,0):onButtonClicked(function()
-            self:OnAllianceTitleClicked(title)
+            self:OnAllianceTitleClicked("archon")
         end)
         local line_2 = display.newScale9Sprite("dividing_line_594x2.png"):addTo(self.member_list_bg)
             :align(display.LEFT_BOTTOM,title_bar:getPositionX(),650)
@@ -1024,7 +1045,7 @@ function GameUIAlliance:HaveAlliaceUI_membersIf()
         local title_icon = display.newSprite(imageName)
             :align(display.LEFT_BOTTOM, line_1:getPositionX(), line_1:getPositionY() + 5)
             :addTo(self.member_list_bg)
-        UIKit:ttfLabel({
+        self.member_list_bg.archon_title_label = UIKit:ttfLabel({
             text = display_title,
             size = 22,
             color= 0x403c2f,
@@ -1043,6 +1064,12 @@ function GameUIAlliance:HaveAlliaceUI_membersIf()
     return self.member_list_bg
 end
 
+function GameUIAlliance:RefreshMemberListIf()
+    if self.tab_buttons:GetSelectedButtonTag() == 'members' then
+        self:RefreshMemberList()
+    end
+end
+
 function GameUIAlliance:RefreshMemberList()
     if not self.memberListView then return end
     if self.member_list_bg.player_icon then
@@ -1059,6 +1086,8 @@ function GameUIAlliance:RefreshMemberList()
     else
         self.member_list_bg.loginLabel:setString(_("最后登录:") .. NetService:formatTimeAsTimeAgoStyleByServerTime(archon.lastLoginTime))
     end
+     local display_title,___ = self:GetAllianceTitleAndLevelPng("archon")
+    self.member_list_bg.archon_title_label:setString(display_title)
     self.member_list_bg.view_archon_info_button:setVisible(User:Id() ~= archon:Id())
     --list view
     self.memberListView:removeAllItems()

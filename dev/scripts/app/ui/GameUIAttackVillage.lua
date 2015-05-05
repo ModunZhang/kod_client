@@ -682,7 +682,7 @@ function GameUIAttackVillage:GetWarResult()
 end
 function GameUIAttackVillage:GetFightTarget()
     local t = self.report:GetAttackTarget()
-    return _("Battle at ")..t.cityName.." ("..t.location.x..","..t.location.y..")"
+    return _("Battle at ")..t.name.." ("..t.location.x..","..t.location.y..")"
 end
 function GameUIAttackVillage:GetRewards()
     return  self.report:GetMyRewards()
