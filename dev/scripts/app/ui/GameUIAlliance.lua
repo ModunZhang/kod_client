@@ -1028,7 +1028,7 @@ function GameUIAlliance:HaveAlliaceUI_membersIf()
         local title_icon = display.newSprite(imageName)
             :align(display.LEFT_BOTTOM, line_1:getPositionX(), line_1:getPositionY() + 5)
             :addTo(self.member_list_bg)
-        UIKit:ttfLabel({
+        self.member_list_bg.archon_title_label = UIKit:ttfLabel({
             text = display_title,
             size = 22,
             color= 0x403c2f,
@@ -1047,6 +1047,12 @@ function GameUIAlliance:HaveAlliaceUI_membersIf()
     return self.member_list_bg
 end
 
+function GameUIAlliance:RefreshMemberListIf()
+    if self.tab_buttons:GetSelectedButtonTag() == 'members' then
+        self:RefreshMemberList()
+    end
+end
+
 function GameUIAlliance:RefreshMemberList()
     if not self.memberListView then return end
     if self.member_list_bg.player_icon then
@@ -1063,6 +1069,8 @@ function GameUIAlliance:RefreshMemberList()
     else
         self.member_list_bg.loginLabel:setString(_("最后登录:") .. NetService:formatTimeAsTimeAgoStyleByServerTime(archon.lastLoginTime))
     end
+     local display_title,___ = self:GetAllianceTitleAndLevelPng("archon")
+    self.member_list_bg.archon_title_label:setString(display_title)
     self.member_list_bg.view_archon_info_button:setVisible(User:Id() ~= archon:Id())
     --list view
     self.memberListView:removeAllItems()
