@@ -90,15 +90,15 @@ function GameUIKeep:CreateCityBasicInfo()
         :scale(building_cp.scale)
 
     -- 修改城市名字item
-    self.city_name_item = self:CreateLineItem({
-        title_1 =  _("城市名字"),
-        title_2 =  City:GetCityName(),
-        button_label =  _("修改"),
-        listener =  function ()
-            self:CreateModifyCityNameWindow()
-        end,
-    }):align(display.LEFT_CENTER, display.cx-120, display.top-160)
-        :addTo(self.info_layer)
+    -- self.city_name_item = self:CreateLineItem({
+    --     title_1 =  _("城市名字"),
+    --     title_2 =  City:GetCityName(),
+    --     button_label =  _("修改"),
+    --     listener =  function ()
+    --         self:CreateModifyCityNameWindow()
+    --     end,
+    -- }):align(display.LEFT_CENTER, display.cx-120, display.top-160)
+    --     :addTo(self.info_layer)
     -- 修改地形
     self:CreateLineItem({
         title_1 =  _("城市地形"),
@@ -107,7 +107,7 @@ function GameUIKeep:CreateCityBasicInfo()
         listener =  function ()
             self:CreateChangeTerrainWindow()
         end,
-    }):align(display.LEFT_CENTER, display.cx-120, display.top-240)
+    }):align(display.LEFT_CENTER, display.cx-120, display.top-160)
         :addTo(self.info_layer)
 end
 
