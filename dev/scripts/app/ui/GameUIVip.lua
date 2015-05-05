@@ -205,18 +205,19 @@ function GameUIVip:InitVip()
 end
 
 function GameUIVip:InitAD()
-    local ad_clip_rect = display.newClippingRegionNode(cc.rect(window.cx-592/2,window.top_bottom-119,592,139)):addTo(self.vip_layer)
+    display.newSprite("box_617x147.png"):align(display.TOP_CENTER,window.cx,window.top_bottom+22):addTo(self.vip_layer)
+    local ad_clip_rect = display.newClippingRegionNode(cc.rect(window.cx-592/2,window.top_bottom-122,592,146)):addTo(self.vip_layer)
     self.ad_clip_rect = ad_clip_rect
     math.randomseed(tostring(os.time()):reverse():sub(1, 6))
 
     self.current_ad_index = math.random(1,#self:GetStoreData())
-    self.current_ad = self:CreateAD(self.current_ad_index):addTo(ad_clip_rect):align(display.LEFT_BOTTOM,window.cx-592/2,window.top_bottom-119)
+    self.current_ad = self:CreateAD(self.current_ad_index):addTo(ad_clip_rect):align(display.LEFT_BOTTOM,window.cx-592/2,window.top_bottom-122)
 
     self.ad_handle = scheduler.scheduleGlobal(handler(self, self.MoveAD), 10.0, false)
 end
 function GameUIVip:MoveAD()
     self.current_ad_index = self.current_ad_index==#self:GetStoreData() and 1 or (self.current_ad_index + 1)
-    local current_ad = self:CreateAD(self.current_ad_index):addTo(self.ad_clip_rect):align(display.LEFT_BOTTOM,window.cx-592/2+592,window.top_bottom-119)
+    local current_ad = self:CreateAD(self.current_ad_index):addTo(self.ad_clip_rect):align(display.LEFT_BOTTOM,window.cx-592/2+592,window.top_bottom-122)
     transition.moveTo(self.current_ad, {
         x = self.current_ad:getPositionX() -592, y = y, time = 1.0,
         onComplete = function()
