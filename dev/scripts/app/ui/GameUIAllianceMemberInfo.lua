@@ -24,7 +24,8 @@ end
 function GameUIAllianceMemberInfo:OnMoveInStage()
     GameUIAllianceMemberInfo.super.OnMoveInStage(self)
     local shadowLayer = UIKit:shadowLayer():addTo(self)
-    local main_height,min_y = 900,window.bottom + 10
+    -- local main_height,min_y = 900,window.bottom + 10
+    local main_height,min_y = 750,window.bottom + 120
 
 
     local bg = WidgetUIBackGround.new({height=main_height}):addTo(shadowLayer):pos(window.left+20,min_y)
@@ -101,7 +102,8 @@ function GameUIAllianceMemberInfo:BuildUI()
             end)
             :addTo(self.bg)
     end
-    local player_node = WidgetPlayerNode.new(cc.size(564,794),self)
+    -- local player_node = WidgetPlayerNode.new(cc.size(564,794),self)
+    local player_node = WidgetPlayerNode.new(cc.size(564,644),self)
         :addTo(self.bg):pos(22,82)
     self.player_node = player_node
 end

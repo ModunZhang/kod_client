@@ -80,9 +80,7 @@ function GameUITownHall:CreateAdministration()
         text = _("每日任务"),
         size = 22,
         color = 0x403c2f,
-    }):align(display.RIGHT_CENTER, layer_width/2+30, 600):addTo(admin_layer)
-    display.newSprite("info_26x26.png"):align(display.CENTER, layer_width/2+50, 600)
-        :addTo(admin_layer)
+    }):align(display.CENTER, layer_width/2, 600):addTo(admin_layer)
 
 
     -- 刷新倒计时
@@ -312,7 +310,7 @@ function GameUITownHall:CreateQuestItem(quest,index)
             local re = string.split(v,":")
             local reward_icon = display.newSprite(UILib.resource[re[2]]):addTo(reward_bg):pos(origin_x+(k-1)*180,reward_bg:getContentSize().height/2)
             local max = math.max(reward_icon:getContentSize().width,reward_icon:getContentSize().height)
-            reward_icon:scale(40/max)
+            reward_icon:scale(36/max)
 
             local reward_count = re[3]*quest.star*(1+0.2*TownHallUI.town_hall:GetLevel())
             table.insert(total_rewards, {resource_type=re[2],count = reward_count})
@@ -320,7 +318,7 @@ function GameUITownHall:CreateQuestItem(quest,index)
                 text = reward_count,
                 size = 20,
                 color = 0x403c2f,
-            }):align(display.LEFT_CENTER,reward_icon:getPositionX()+20,reward_bg:getContentSize().height/2):addTo(reward_bg)
+            }):align(display.LEFT_CENTER,reward_icon:getPositionX()+30,reward_bg:getContentSize().height/2):addTo(reward_bg)
         end
         self.total_rewards = total_rewards
         return self
@@ -388,8 +386,8 @@ function GameUITownHall:CreateDwellingLineItem(width,flag)
         size = 20,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_RIGHT,
-        color = UIKit:hex2c3b(0x615b44)
-    }):addTo(node, 2):align(display.RIGHT_CENTER, right - 70, 20)
+        color = UIKit:hex2c3b(0x403c2f)
+    }):addTo(node, 2):align(display.RIGHT_CENTER, right - 55, 20)
 
     local check = cc.ui.UICheckBoxButton.new({on = "yes_40x40.png", off = "no_40x40.png" })
         :addTo(node)
