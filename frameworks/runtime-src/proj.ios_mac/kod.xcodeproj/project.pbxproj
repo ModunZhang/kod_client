@@ -16,6 +16,7 @@
 		3F1ECBBB1AA53C000012DD9F /* res in Resources */ = {isa = PBXBuildFile; fileRef = 3F1ECBB91AA53C000012DD9F /* res */; };
 		3F1ECBBC1AA53C000012DD9F /* scripts in Resources */ = {isa = PBXBuildFile; fileRef = 3F1ECBBA1AA53C000012DD9F /* scripts */; };
 		3F3120C71AC3E3A40016F4CA /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F3120C51AC3E3A40016F4CA /* MBProgressHUD.m */; };
+		3F5436511AF86283006DFC80 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3F5436531AF86283006DFC80 /* InfoPlist.strings */; };
 		3F7FA3B71AA6FC4B0011BDE2 /* libjansson.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F7FA3B41AA6FC4B0011BDE2 /* libjansson.a */; };
 		3F7FA3B81AA6FC4B0011BDE2 /* libpomelo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F7FA3B51AA6FC4B0011BDE2 /* libpomelo.a */; };
 		3F7FA3B91AA6FC4B0011BDE2 /* libuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F7FA3B61AA6FC4B0011BDE2 /* libuv.a */; };
@@ -213,6 +214,8 @@
 		3F1ECBBA1AA53C000012DD9F /* scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = scripts; path = ../../../update/scripts; sourceTree = "<group>"; };
 		3F3120C51AC3E3A40016F4CA /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		3F3120C61AC3E3A40016F4CA /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		3F5436521AF86283006DFC80 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3F5436541AF86289006DFC80 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		3F7FA3B41AA6FC4B0011BDE2 /* libjansson.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libjansson.a; sourceTree = "<group>"; };
 		3F7FA3B51AA6FC4B0011BDE2 /* libpomelo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpomelo.a; sourceTree = "<group>"; };
 		3F7FA3B61AA6FC4B0011BDE2 /* libuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libuv.a; sourceTree = "<group>"; };
@@ -1518,6 +1521,7 @@
 				3F1ECBBA1AA53C000012DD9F /* scripts */,
 				3FF4DC941AA4650D00CDFAF9 /* Images.xcassets */,
 				C05D1C111923449100B808A4 /* config.json */,
+				3F5436531AF86283006DFC80 /* InfoPlist.strings */,
 			);
 			name = Resources;
 			path = ../Resources;
@@ -1654,6 +1658,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3FF4DD5A1AA46DEC00CDFAF9 /* uv_idea.png in Resources */,
+				3F5436511AF86283006DFC80 /* InfoPlist.strings in Resources */,
 				3F1ECBBB1AA53C000012DD9F /* res in Resources */,
 				3FF4DD551AA46DEC00CDFAF9 /* UserVoice.strings in Resources */,
 				3FC173251AC00A9D00128301 /* Droid Sans Fallback.ttf in Resources */,
@@ -1815,6 +1820,16 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		3F5436531AF86283006DFC80 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3F5436521AF86283006DFC80 /* en */,
+				3F5436541AF86289006DFC80 /* zh-Hans */,
+			);
+			name = InfoPlist.strings;
+			path = kod;
+			sourceTree = SOURCE_ROOT;
+		};
 		3FF4DD2C1AA46DEC00CDFAF9 /* UserVoice.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
