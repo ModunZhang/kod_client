@@ -253,7 +253,7 @@ function AllianceView:EmptyGround(x, y)
 end
 
 function AllianceView:OnSceneScale(s)
-    if not s then self.scale = s end
+    if s then self.scale = s end
     local scale = self.scale
     local l = max(0.5, scale) - 0.5
     local r = 0.8 - min(0.8, scale)
