@@ -240,11 +240,7 @@ function Alliance:GetMembersCountInfo()
             online = online + 1
         end
     end
-    local palace = self:GetAllianceMap():FindAllianceBuildingInfoByName("palace")
-    if palace and config_palace[palace.level] then
-        maxCount = config_palace[palace.level].memberCount
-    end
-    return count,online,maxCount
+    return count,online,self:MaxMembers()
 end
 function Alliance:OnMemberChanged(changed_map)
     self:NotifyListeneOnType(Alliance.LISTEN_TYPE.MEMBER, function(listener)
@@ -431,6 +427,18 @@ function Alliance:OnJoinEventsChanged()
         listener:OnJoinEventsChanged(self)
     end)
 end
+--更新联盟的成员人数限制
+function Alliance:UpdateMaxMemberCount(alliacne_data)
+    if alliacne_data and alliacne_data.buildings then
+        for __,v in ipairs(alliacne_data.buildings) do
+            if v.name == 'palace' then
+                self:SetMaxMembers(config_palace[v.level].memberCount)
+                break
+            end
+        end
+    end
+end
+
 function Alliance:OnAllianceDataChanged(alliance_data,refresh_time,deltaData)
     if alliance_data.notice then
         self:SetNotice(alliance_data.notice)
@@ -441,6 +449,7 @@ function Alliance:OnAllianceDataChanged(alliance_data,refresh_time,deltaData)
     if alliance_data.titles then
         self:SetTitleNames(alliance_data.titles)
     end
+    self:UpdateMaxMemberCount(alliance_data)
     self:OnAllianceBasicInfoChangedFirst(alliance_data,deltaData)
     self:OnAllianceFightReportsChanged(alliance_data, deltaData)
 
