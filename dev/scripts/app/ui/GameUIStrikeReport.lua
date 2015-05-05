@@ -107,7 +107,7 @@ function GameUIStrikeReport:onEnter()
             font = UIKit:getFontFilePath(),
             size = 18,
             -- dimensions = cc.size(200,0),
-            color = UIKit:hex2c3b(0x797154)
+            color = UIKit:hex2c3b(0x615b44)
         }):align(display.LEFT_CENTER, 20, rb_size.height-170)
         :addTo(report_body)
     local strike_result_label = cc.ui.UILabel.new(
@@ -117,7 +117,7 @@ function GameUIStrikeReport:onEnter()
             font = UIKit:getFontFilePath(),
             size = 18,
             -- dimensions = cc.size(200,0),
-            color = UIKit:hex2c3b(0x797154)
+            color = UIKit:hex2c3b(0x615b44)
         }):align(display.LEFT_CENTER, 20, rb_size.height-200)
         :addTo(report_body)
     -- 突袭战报详细内容展示

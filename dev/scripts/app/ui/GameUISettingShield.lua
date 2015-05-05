@@ -43,7 +43,7 @@ function GameUISettingShield:BuildUI()
 	UIKit:ttfLabel({
 	  	text = _("你无法收到屏蔽用户发送的邮件。同时在聊天界面也看不到这个用户的任何发言。"),
         size = 20,
-        color=0x797154,
+        color=0x615b44,
         align=cc.TEXT_ALIGNMENT_CENTER,
         dimensions = cc.size(556, 60),
 	}):addTo(tip_bg):align(display.CENTER, 278, 53)

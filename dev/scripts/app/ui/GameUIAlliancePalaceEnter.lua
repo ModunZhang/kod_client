@@ -33,7 +33,7 @@ end
 
 function GameUIAlliancePalaceEnter:GetBuildingInfo()
 	local location = {
-        {_("坐标"),0x797154},
+        {_("坐标"),0x615b44},
         {self:GetLocation(),0x403c2f},
     }
     local member_count,cities = _("未知"),_("未知")
@@ -43,12 +43,12 @@ function GameUIAlliancePalaceEnter:GetBuildingInfo()
     	cities = 10
     end
     local label_2 = {
-        {_("成员"),0x797154},
+        {_("成员"),0x615b44},
         {member_count,0x403c2f},
     } 
     local label_3 = 
     {
-	    {_("占领城市"),0x797154},
+	    {_("占领城市"),0x615b44},
 	    {cities,0x403c2f},
     }
   	return {location,label_2}

@@ -115,7 +115,7 @@ function GameUITips:GetItem(index,image,title,text,scale)
 	}):align(display.LEFT_TOP,130,115):addTo(content)
 	UIKit:ttfLabel({
 		text = text,
-		color= 0x797154,
+		color= 0x615b44,
 		size = 20,
 		dimensions = cc.size(410, 65)
 	}):align(display.LEFT_TOP,130,title_label:getPositionY() - 30):addTo(content)

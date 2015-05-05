@@ -134,7 +134,7 @@ function GameUIShireFightEvent:BuildUI()
 		text = _("参与联盟GVE活动获得的奖励，击杀数量越高奖励越丰富，派出的部队会在战斗结束后返回。根据到达的先后顺序进行战斗排序"),
 		dimensions = cc.size(554,82),
 		size = 20,
-		color = 0x797154
+		color = 0x615b44
 	}):align(display.CENTER,287,51):addTo(tips_box)
 	self:RefreshListView()
 	local icon_bg = display.newSprite("back_ground_43x43.png")
@@ -232,7 +232,7 @@ function GameUIShireFightEvent:GetListItem(arrived,obj)
 	local power_title_label = UIKit:ttfLabel({
 		text = _("坐标"),
 		size = 20,
-		color = 0x797154
+		color = 0x615b44
 	}):align(display.LEFT_BOTTOM,line_2:getPositionX(),line_2:getPositionY() + 8):addTo(bg)
 	local location_x,location_y = 0,0
 	if arrived then
@@ -253,7 +253,7 @@ function GameUIShireFightEvent:GetListItem(arrived,obj)
 	local dragon_title_label =  UIKit:ttfLabel({
 		text = _("来自"),
 		size = 20,
-		color = 0x797154
+		color = 0x615b44
 	}):align(display.LEFT_BOTTOM,line_1:getPositionX(),line_1:getPositionY() + 8):addTo(bg)
 	local city_name = arrived and obj.name or obj:AttackPlayerData().name
 	local dragon_val_label =  UIKit:ttfLabel({

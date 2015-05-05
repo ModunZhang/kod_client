@@ -261,7 +261,7 @@ function WidgetResources:AddResourceItem(parms)
         -- local tax_time = townHall:IsInImposing() and GameUtils:formatTimeStyle1(townHall:GetTaxEvent():LeftTime(app.timer:GetServerTime())) or ""
         -- item.tax = createTipItem({
         --     title = title_value,
-        --     title_color = UIKit:hex2c3b(0x797154),
+        --     title_color = UIKit:hex2c3b(0x615b44),
         --     value = tax_time ,
         --     value_color = UIKit:hex2c3b(0x403c2f),
         --     x = 40,
@@ -271,7 +271,7 @@ function WidgetResources:AddResourceItem(parms)
         --  空闲人口
         -- item.free_citizen = createTipItem({
         --     title = _("空闲人口"),
-        --     title_color = UIKit:hex2c3b(0x797154),
+        --     title_color = UIKit:hex2c3b(0x615b44),
         --     value = occupy_citizen ,
         --     value_color = UIKit:hex2c3b(0x403c2f),
         --     x = 40,

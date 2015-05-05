@@ -69,7 +69,7 @@ function WidgetPVEDialog:Refresh()
     UIKit:ttfLabel({
         text = self:GetDesc(),
         size = 18,
-        color = 0x797154,
+        color = 0x615b44,
         dimensions = cc.size(300,0)
     }):align(display.LEFT_TOP, 220, h*0.5 + 50):addTo(dialog)
 

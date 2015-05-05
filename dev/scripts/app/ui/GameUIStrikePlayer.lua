@@ -107,7 +107,7 @@ function GameUIStrikePlayer:GetItem(dragon,power_dragon_type)
 	UIKit:ttfLabel({
 		text = _("生命值") .. " " .. dragon:Hp() .. "/" .. dragon:GetMaxHP(),
 		size = 20,
-		color= 0x797154
+		color= 0x615b44
 	}):align(display.LEFT_CENTER,20,63):addTo(content_box)
 	local color = 0x007c23
 	if dragon:Status() == 'march' then

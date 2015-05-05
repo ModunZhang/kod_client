@@ -156,7 +156,7 @@ function GameUIAllianceTitle:RefreshListView(index)
     		UIKit:ttfLabel({
 				text = v[1],
 				size = 20,
-				color = 0x797154,
+				color = 0x615b44,
 			}):addTo(bg):align(display.LEFT_CENTER, 10, 23)
 			local icon_image = v[2] and  "yes_40x40.png" or "no_40x40.png"
 			display.newSprite(icon_image):align(display.RIGHT_CENTER,537,23):addTo(bg)
@@ -209,7 +209,7 @@ function GameUIAllianceTitle:CreateEditTitleUI()
     UIKit:ttfLabel({
         text = _("职位名称"),
         size = 20,
-        color = 0x797154
+        color = 0x615b44
     }):addTo(bg):align(display.LEFT_TOP, 20,150-40)
 
     local editbox = cc.ui.UIInput.new({
