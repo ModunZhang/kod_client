@@ -85,10 +85,12 @@ end
 function GameUINpc:InitDialog(...)
     self.dialog_index = 1
     self.dialog = {...}
+    self.dialog_clicked_callbacks = {}
     local dialog_index_callbacks = {
         [0] = {}
     }
     for i, dialog in ipairs(self.dialog) do
+        self.dialog_clicked_callbacks[i] = {}
         dialog_index_callbacks[i] = {}
         local keyword_map = {}
         local words = dialog.words
@@ -120,21 +122,16 @@ function GameUINpc:InitDialog(...)
         end
         dialog.real_words = table.concat(str_array, "")
         dialog.keyword_map = keyword_map
+        dialog.brow = dialog.brow
     end
     self.dialog_index_callbacks = dialog_index_callbacks
 end
-function GameUINpc:onEnter()
-    GameUINpc.super.onEnter(self)
+function GameUINpc:OnMoveInStage()
+    GameUINpc.super.OnMoveInStage(self)
     self:setLocalZOrder(3001)
     self:setTouchSwallowEnabled(true)
     self:EnableReceiveClickMsg(true)
-    
-    local middle_x = display.cx - 100
-    self.dialog_bg = display.newSprite("pop_tip_bg.png")
-        :addTo(self):align(display.LEFT_BOTTOM, middle_x, 0)
-    display.newSprite("npc_1.png"):addTo(self)
-        :align(display.CENTER_BOTTOM, middle_x - 75, 0):scale(0.2)
-    self:StartDialog()
+    self.ui_map = self:BuildUI()
 end
 function GameUINpc:onExit()
     GameUINpc.super.onExit(self)
@@ -147,7 +144,9 @@ function GameUINpc:OnClick()
     if self.label and self.label:getActionByTag(LETTER_ACTION) then
         self:ShowWords(self:CurrentDialog(), false)
     else
+        local index = self.dialog_index
         self:NextDialog()
+        self:OnDialogClicked(index)
     end
 end
 function GameUINpc:NextDialog()
@@ -164,6 +163,10 @@ function GameUINpc:ShowWords(dialog, ani)
     if self.label then
         self.label:removeFromParent()
         self.label = nil
+    end
+    if dialog.brow and self.npc_brow ~= dialog.brow then
+        self.npc_brow = dialog.brow
+        self.ui_map.npc:getAnimation():play(self.npc_brow, -1, 0)
     end
     self.label = self:CreateLabel()
     self.label:setString(dialog.real_words or "")
@@ -183,15 +186,15 @@ function GameUINpc:Reset()
     end
 end
 function GameUINpc:CreateLabel()
+    local size = self.ui_map.dialog_bg:getContentSize()
     local label = UIKit:ttfLabel({
         text = "",
-        size = 24,
-        color = 0x403c2f,
+        size = 22,
+        color = 0xffedae,
         align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
-    }):addTo(self.dialog_bg):align(display.LEFT_TOP, 30, 140)
+    }):addTo(self.ui_map.dialog_bg):align(display.LEFT_TOP, size.width / 2 - 20, size.height - 40)
     label:setLineBreakWithoutSpace(true)
-    label:setMaxLineWidth(350)
-    -- label:setAdditionalKerning(1)
+    label:setMaxLineWidth(310)
     return label
 end
 function GameUINpc:Wait()
@@ -208,6 +211,22 @@ function GameUINpc:Resume()
 end
 function GameUINpc:EnableReceiveClickMsg(enable)
     self.unenable = not enable
+end
+function GameUINpc:OnDialogClicked(index)
+    local callbacks = self.dialog_clicked_callbacks[index]
+    if callbacks and #callbacks > 0 then
+        callbacks[1]()
+        table.remove(callbacks, 1)
+    end
+end
+function GameUINpc:PromiseOfDialogEndWithClicked(index)
+    local p = promise.new()
+    local callbacks = self.dialog_clicked_callbacks[index]
+    assert(#callbacks == 0)
+    table.insert(callbacks, function()
+        return p:resolve(self)
+    end)
+    return p
 end
 function GameUINpc:OnDialogEnded(index)
     local callbacks = self.dialog_index_callbacks[index]
@@ -262,7 +281,6 @@ function GameUINpc:PromiseOfSay(...)
         instance:StartDialog()
     else
         instance = UIKit:newGameUI('GameUINpc', ...):AddToCurrentScene(true)
-        UIKit:newGameUI('GameUINpc', {words = "欢迎来到kod的世界, 在这里您将带头{冲锋}!"}):AddToScene(self, true)
     end
     return instance:PromiseOfDialogEnded(#{...})
 end
@@ -289,6 +307,29 @@ function GameUINpc:PromiseOfLeave()
 end
 function GameUINpc:PromiseOfEnter()
     assert(false)
+end
+function GameUINpc:BuildUI()
+    local ui_map = {}
+    
+    -- ui_map.background = display.newSprite("fte_background1.jpg"):addTo(self)
+    -- :align(display.CENTER_TOP, display.cx, display.height)
+    ui_map.dialog_bg = display.newSprite("fte_background.png")
+        :addTo(self):align(display.CENTER_BOTTOM, display.cx, 0)
+    local size = ui_map.dialog_bg:getContentSize()
+
+    ui_map.next = display.newSprite("fte_next_arrow.png"):addTo(ui_map.dialog_bg)
+    :align(display.CENTER_BOTTOM, size.width - 50, 20)
+    ui_map.next:runAction(cc.RepeatForever:create(transition.sequence{
+        cc.MoveBy:create(0.4, cc.p(5, 0)),
+        cc.MoveBy:create(0.4, cc.p(-5, 0))
+    }))
+        
+    local manager = ccs.ArmatureDataManager:getInstance()
+    manager:addArmatureFileInfo(DEBUG_GET_ANIMATION_PATH("animations/npc_nv.ExportJson"))
+    ui_map.npc = ccs.Armature:create("npc_nv"):addTo(ui_map.dialog_bg)
+    :align(display.BOTTOM_CENTER, 130, 0)
+
+    return ui_map
 end
 
 return GameUINpc

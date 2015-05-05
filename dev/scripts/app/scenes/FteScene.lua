@@ -1,0 +1,34 @@
+local GameUINpc = import("app.ui.GameUINpc")
+local cocos_promise = import("..utils.cocos_promise")
+local FteScene = class("FteScene", function()
+    return display.newScene("FteScene")
+end)
+
+function FteScene:ctor()
+	self.several = UIKit:ttfLabel({
+        text = _("数周之后..."),
+        size = 30,
+        color = 0xffedae,
+    }):addTo(self):align(display.CENTER, display.cx, display.cy):hide()
+	self.npc = UIKit:newGameUI('GameUINpc', 
+		{words = _("太好了, 你终于醒过来了, 觉醒者...我的名字叫赛琳娜，我们寻找那你这样的觉醒者已经很长时间了..."), brow = "smile"},
+		{words = "我建议你最好别乱动, 你刚刚在同黑龙作战的过程中受了伤, 伤口还没复原...", brow = "smile"},
+		{words = "我知道你好友很多疑问, 不过首先, 我们需要前往寻找一个安全的地方?", brow = "smile"}):AddToScene(self, true)
+	self.npc:PromiseOfDialogEndWithClicked(3):next(function()
+		self.npc:removeFromParent()
+		return UIKit:newGameUI('GameUISelectTerrain'):AddToScene(self, true):PromiseOfSelectDragon()
+	end):next(function()
+		self.several:show()
+	end):next(cocos_promise.delay(3)):next(function()
+		app:EnterMyCityScene()
+	end)
+end
+function FteScene:onEnterTransitionFinish()
+	self.npc:StartDialog()
+end
+function FteScene:onExit()
+
+end
+
+
+return FteScene
