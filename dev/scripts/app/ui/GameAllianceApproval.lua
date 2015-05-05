@@ -108,6 +108,13 @@ end
 function GameAllianceApproval:OnAgreeButtonClicked(memberId)
 	NetManager:getApproveJoinAllianceRequestPromise(memberId):done(function(result)
 		self:RefreshListView()
+		end):fail(function(msg)
+			local code = msg.errcode and msg.errcode[1].code or nil
+			if code then
+				if UIKit:getErrorCodeKey(code) == 'playerCancelTheJoinRequestToTheAlliance' then
+					self:OnRefuseButtonClicked(memberId)
+				end
+			end
 	end)
 end
 

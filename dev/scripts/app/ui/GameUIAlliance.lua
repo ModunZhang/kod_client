@@ -647,6 +647,15 @@ function GameUIAlliance:commonListItemAction( listType,item,alliance,tag)
             else
                 GameGlobalUI:showTips(_("提示"),string.format(_("加入%s联盟成功!"),alliance.name))
             end
+        end):fail(function(msg)
+            if tag ~= 1 then -- 同意
+                local code = msg.errcode and msg.errcode[1].code or nil
+                if code then
+                    if UIKit:getErrorCodeKey(code) == 'allianceNotExist' then
+                        self:commonListItemAction(listType,item,alliance,1)
+                    end
+                end
+            end
         end)
     end
 end
