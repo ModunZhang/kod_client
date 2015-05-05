@@ -138,7 +138,7 @@ function WidgetUseItems:OpenChangePlayerOrCityName(item)
         font = UIKit:getFontFilePath(),
     })
     editbox:setPlaceHolder(eidtbox_holder)
-    editbox:setMaxLength(14)
+    editbox:setMaxLength(12)
     editbox:setFont(UIKit:getEditBoxFont(),22)
     editbox:setFontColor(cc.c3b(0,0,0))
     editbox:setPlaceholderFontColor(cc.c3b(204,196,158))
