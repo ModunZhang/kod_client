@@ -549,10 +549,10 @@ function CityLayer:RefreshSoldiers(soldier_manager)
         {x = 8, y = 18, soldier_type = "deathKnight", scale = 1},
         {x = 2, y = 18, soldier_type = "meatWagon", scale = 1},
 
-        {x = 8, y = 17.5, soldier_type = "lancer", scale = 1},
-        {x = 6, y = 17.5, soldier_type = "swordsman", scale = 1},
-        {x = 4, y = 17.5, soldier_type = "ranger", scale = 1},
-        {x = 2, y = 17.5, soldier_type = "catapult", scale = 0.8},
+        {x = 8, y = 15.5, soldier_type = "lancer", scale = 1},
+        {x = 6, y = 15.5, soldier_type = "swordsman", scale = 1},
+        {x = 4, y = 15.5, soldier_type = "ranger", scale = 1},
+        {x = 2, y = 15.5, soldier_type = "catapult", scale = 0.8},
 
         {x = 8, y = 13, soldier_type = "horseArcher", scale = 1},
         {x = 6, y = 13, soldier_type = "sentinel", scale = 1},

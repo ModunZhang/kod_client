@@ -282,14 +282,14 @@ end
 
 function MultiAllianceLayer:CreateCorpsIf(marchEvent)
     local from,from_alliance_id = marchEvent:FromLocation()
-    from.index = self:GetAllianceViewIndexById(allianceId)
+    from.index = self:GetAllianceViewIndexById(from_alliance_id)
     local to,to_alliance_id   = marchEvent:TargetLocation()
-    to.index = self:GetAllianceViewIndexById(allianceId)
+    to.index = self:GetAllianceViewIndexById(to_alliance_id)
     local is_enemy = false
     if marchEvent:IsMarchAttackEvent() then
-        is_enemy = self:GetMyAlliance():Id() ~= allianceId_from
+        is_enemy = self:GetMyAlliance():Id() ~= from_alliance_id
     else -- return 
-        is_enemy = self:GetMyAlliance():Id() ~= allianceId_to
+        is_enemy = self:GetMyAlliance():Id() ~= to_alliance_id
     end
     self:CreateCorps(
         marchEvent:Id(),
