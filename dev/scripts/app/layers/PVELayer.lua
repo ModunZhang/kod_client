@@ -179,7 +179,7 @@ function PVELayer:PromiseOfTrap()
     local t = 0.025
     local r = 5
     local exclamation_time = 0.5
-    local exclamation_scale = 0.2
+    local exclamation_scale = 1
     local size = self.char:getContentSize()
     local s = display.newSprite("exclamation.png")
         :addTo(self.char):pos(size.width*0.4, size.height*0.4):scale(0)
