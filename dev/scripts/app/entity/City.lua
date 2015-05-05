@@ -1024,7 +1024,7 @@ function City:OnUserDataChanged(userData, current_time, deltaData)
     -- 更新基本信息
     local basicInfo = userData.basicInfo
     self.build_queue = basicInfo.buildQueue
-    self:SetCityName(basicInfo.cityName)
+    self:SetCityName(basicInfo.name)
     -- 最后才更新资源
 
     local is_fully_update = deltaData == nil
