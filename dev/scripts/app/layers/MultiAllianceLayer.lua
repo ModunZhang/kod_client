@@ -129,8 +129,8 @@ function MultiAllianceLayer:InitAllianceView()
         --     {borderColor = cc.c4f(1.0, 0.0, 0.0, 1.0),
         --         borderWidth = 5}):addTo(self.building)
     else
-        alliance_view1 = AllianceView.new(self, self.alliances[1], 0, 103):addTo(self)
-        alliance_view2 = AllianceView.new(self, self.alliances[2], 0, 52):addTo(self)
+        alliance_view1 = AllianceView.new(self, self.alliances[1], 0, 104):addTo(self)
+        alliance_view2 = AllianceView.new(self, self.alliances[2], 0, 53):addTo(self)
         -- local sx, sy = alliance_view1:GetLogicMap():ConvertToMapPosition(-0.5, 51.5)
         -- local ex, ey = alliance_view1:GetLogicMap():ConvertToMapPosition(51.5, 51.5)
         -- display.newLine({{sx, sy}, {ex, ey}},
