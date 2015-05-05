@@ -1563,7 +1563,7 @@ function City:CheckDependTechsLockState(tech)
     local changed = {}
     local targetTechs = self:FindDependOnTheTechs(tech)
     for _,tech_ in ipairs(targetTechs) do
-        tech_:SetEnable(tech:Level() >= tech_:UnlockLevel() and tech_:IsOpen())
+        tech_:SetEnable(tech:Level() >= tech_:UnlockLevel() and tech_:IsOpen() and tech_:AcademyLevel() <= self:GetAcademyBuildingLevel())
         table.insert(changed,tech_)
     end
     return changed
@@ -1573,9 +1573,18 @@ function City:FastUpdateAllTechsLockState()
     self:IteratorTechs(function(index,tech)
         local unLockByTech = self:FindTechByIndex(tech:UnlockBy())
         if unLockByTech then
-            tech:SetEnable(tech:UnlockLevel() <= unLockByTech:Level() and tech:IsOpen())
+            tech:SetEnable(tech:UnlockLevel() <= unLockByTech:Level() and tech:IsOpen() and tech:AcademyLevel() <= self:GetAcademyBuildingLevel())
         end
     end)
+end
+
+function City:GetAcademyBuildingLevel()
+    local building = self:GetFirstBuildingByType('academy')
+    if building then 
+        return building:GetLevel()
+    else
+        return 0
+    end
 end
 
 
