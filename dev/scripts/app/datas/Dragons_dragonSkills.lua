@@ -2,7 +2,7 @@ local dragonSkills = GameDatas.Dragons.dragonSkills
 
 dragonSkills[1] = {
 	["level"] = 1,
-	["effect"] = 0.010000,
+	["effect"] = 0.020000,
 	["infantryEnhanceBloodCost"] = 20,
 	["archerEnhanceBloodCost"] = 20,
 	["dragonBloodBloodCost"] = 30,
@@ -19,7 +19,7 @@ dragonSkills[1] = {
 }
 dragonSkills[2] = {
 	["level"] = 2,
-	["effect"] = 0.020000,
+	["effect"] = 0.040000,
 	["infantryEnhanceBloodCost"] = 50,
 	["archerEnhanceBloodCost"] = 50,
 	["dragonBloodBloodCost"] = 70,
@@ -36,7 +36,7 @@ dragonSkills[2] = {
 }
 dragonSkills[3] = {
 	["level"] = 3,
-	["effect"] = 0.030000,
+	["effect"] = 0.060000,
 	["infantryEnhanceBloodCost"] = 90,
 	["archerEnhanceBloodCost"] = 90,
 	["dragonBloodBloodCost"] = 120,
@@ -53,7 +53,7 @@ dragonSkills[3] = {
 }
 dragonSkills[4] = {
 	["level"] = 4,
-	["effect"] = 0.040000,
+	["effect"] = 0.080000,
 	["infantryEnhanceBloodCost"] = 130,
 	["archerEnhanceBloodCost"] = 130,
 	["dragonBloodBloodCost"] = 170,
@@ -70,7 +70,7 @@ dragonSkills[4] = {
 }
 dragonSkills[5] = {
 	["level"] = 5,
-	["effect"] = 0.050000,
+	["effect"] = 0.100000,
 	["infantryEnhanceBloodCost"] = 170,
 	["archerEnhanceBloodCost"] = 170,
 	["dragonBloodBloodCost"] = 230,
@@ -87,7 +87,7 @@ dragonSkills[5] = {
 }
 dragonSkills[6] = {
 	["level"] = 6,
-	["effect"] = 0.060000,
+	["effect"] = 0.120000,
 	["infantryEnhanceBloodCost"] = 420,
 	["archerEnhanceBloodCost"] = 420,
 	["dragonBloodBloodCost"] = 560,
@@ -104,7 +104,7 @@ dragonSkills[6] = {
 }
 dragonSkills[7] = {
 	["level"] = 7,
-	["effect"] = 0.070000,
+	["effect"] = 0.140000,
 	["infantryEnhanceBloodCost"] = 610,
 	["archerEnhanceBloodCost"] = 610,
 	["dragonBloodBloodCost"] = 810,
@@ -121,7 +121,7 @@ dragonSkills[7] = {
 }
 dragonSkills[8] = {
 	["level"] = 8,
-	["effect"] = 0.080000,
+	["effect"] = 0.160000,
 	["infantryEnhanceBloodCost"] = 810,
 	["archerEnhanceBloodCost"] = 810,
 	["dragonBloodBloodCost"] = 1080,
@@ -138,7 +138,7 @@ dragonSkills[8] = {
 }
 dragonSkills[9] = {
 	["level"] = 9,
-	["effect"] = 0.090000,
+	["effect"] = 0.180000,
 	["infantryEnhanceBloodCost"] = 1040,
 	["archerEnhanceBloodCost"] = 1040,
 	["dragonBloodBloodCost"] = 1390,
@@ -155,7 +155,7 @@ dragonSkills[9] = {
 }
 dragonSkills[10] = {
 	["level"] = 10,
-	["effect"] = 0.100000,
+	["effect"] = 0.200000,
 	["infantryEnhanceBloodCost"] = 1290,
 	["archerEnhanceBloodCost"] = 1290,
 	["dragonBloodBloodCost"] = 1710,
@@ -172,7 +172,7 @@ dragonSkills[10] = {
 }
 dragonSkills[11] = {
 	["level"] = 11,
-	["effect"] = 0.110000,
+	["effect"] = 0.220000,
 	["infantryEnhanceBloodCost"] = 3330,
 	["archerEnhanceBloodCost"] = 3330,
 	["dragonBloodBloodCost"] = 4430,
@@ -189,7 +189,7 @@ dragonSkills[11] = {
 }
 dragonSkills[12] = {
 	["level"] = 12,
-	["effect"] = 0.120000,
+	["effect"] = 0.240000,
 	["infantryEnhanceBloodCost"] = 4940,
 	["archerEnhanceBloodCost"] = 4940,
 	["dragonBloodBloodCost"] = 6580,
@@ -206,7 +206,7 @@ dragonSkills[12] = {
 }
 dragonSkills[13] = {
 	["level"] = 13,
-	["effect"] = 0.130000,
+	["effect"] = 0.260000,
 	["infantryEnhanceBloodCost"] = 6860,
 	["archerEnhanceBloodCost"] = 6860,
 	["dragonBloodBloodCost"] = 9140,
@@ -223,7 +223,7 @@ dragonSkills[13] = {
 }
 dragonSkills[14] = {
 	["level"] = 14,
-	["effect"] = 0.140000,
+	["effect"] = 0.280000,
 	["infantryEnhanceBloodCost"] = 9090,
 	["archerEnhanceBloodCost"] = 9090,
 	["dragonBloodBloodCost"] = 12110,
@@ -240,7 +240,7 @@ dragonSkills[14] = {
 }
 dragonSkills[15] = {
 	["level"] = 15,
-	["effect"] = 0.150000,
+	["effect"] = 0.300000,
 	["infantryEnhanceBloodCost"] = 11620,
 	["archerEnhanceBloodCost"] = 11620,
 	["dragonBloodBloodCost"] = 15490,
@@ -257,7 +257,7 @@ dragonSkills[15] = {
 }
 dragonSkills[16] = {
 	["level"] = 16,
-	["effect"] = 0.160000,
+	["effect"] = 0.320000,
 	["infantryEnhanceBloodCost"] = 22120,
 	["archerEnhanceBloodCost"] = 22120,
 	["dragonBloodBloodCost"] = 29500,
@@ -274,7 +274,7 @@ dragonSkills[16] = {
 }
 dragonSkills[17] = {
 	["level"] = 17,
-	["effect"] = 0.170000,
+	["effect"] = 0.340000,
 	["infantryEnhanceBloodCost"] = 30110,
 	["archerEnhanceBloodCost"] = 30110,
 	["dragonBloodBloodCost"] = 40150,
@@ -291,7 +291,7 @@ dragonSkills[17] = {
 }
 dragonSkills[18] = {
 	["level"] = 18,
-	["effect"] = 0.180000,
+	["effect"] = 0.360000,
 	["infantryEnhanceBloodCost"] = 39330,
 	["archerEnhanceBloodCost"] = 39330,
 	["dragonBloodBloodCost"] = 52430,
@@ -308,7 +308,7 @@ dragonSkills[18] = {
 }
 dragonSkills[19] = {
 	["level"] = 19,
-	["effect"] = 0.190000,
+	["effect"] = 0.380000,
 	["infantryEnhanceBloodCost"] = 49770,
 	["archerEnhanceBloodCost"] = 49770,
 	["dragonBloodBloodCost"] = 66360,
@@ -325,7 +325,7 @@ dragonSkills[19] = {
 }
 dragonSkills[20] = {
 	["level"] = 20,
-	["effect"] = 0.200000,
+	["effect"] = 0.400000,
 	["infantryEnhanceBloodCost"] = 61440,
 	["archerEnhanceBloodCost"] = 61440,
 	["dragonBloodBloodCost"] = 81920,

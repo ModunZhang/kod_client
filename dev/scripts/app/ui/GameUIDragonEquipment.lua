@@ -365,25 +365,42 @@ function GameUIDragonEquipment:RefreshIntensifyEquipmentListView( ... )
   self.intensify_eq_list:removeAllItems()
   local equipment = self:GetEquipment()
   local lineCount = self:GetPlayerEquipmentsListData(5)
-  for i=1,lineCount do
-      local item =self.intensify_eq_list:newItem()
-      local node = display.newNode()
-      local lineData = self:GetPlayerEquipmentsListData(5,i)
-      for j=1,#lineData do
-          local perData = lineData[j]
-          local tempNode = WidgetDragonEquipIntensify.new(self,perData[1],0,perData[2],equipment:Name())
-          :addTo(node)
-          local x = tempNode:getCascadeBoundingBox().width/2 + (j-1) * (tempNode:getCascadeBoundingBox().width +5)
-          tempNode:pos(x,tempNode:getCascadeBoundingBox().height/2)
-          table.insert(self.allEquipemnts,tempNode)
+  if lineCount > 0 then
+    for i=1,lineCount do
+        local item =self.intensify_eq_list:newItem()
+        local node = display.newNode()
+        local lineData = self:GetPlayerEquipmentsListData(5,i)
+        for j=1,#lineData do
+            local perData = lineData[j]
+            local tempNode = WidgetDragonEquipIntensify.new(self,perData[1],0,perData[2],equipment:Name())
+            :addTo(node)
+            local x = tempNode:getCascadeBoundingBox().width/2 + (j-1) * (tempNode:getCascadeBoundingBox().width +5)
+            tempNode:pos(x,tempNode:getCascadeBoundingBox().height/2)
+            table.insert(self.allEquipemnts,tempNode)
+        end
+        item:addContent(node)
+        node:size(540, 132)
+        item:setMargin({left = 0, right = 0, top = 1, bottom = 5})
+        item:setItemSize(540, 132,false)
+        self.intensify_eq_list:addItem(item)
       end
-      item:addContent(node)
-      node:size(540, 132)
-      item:setMargin({left = 0, right = 0, top = 0, bottom = 5})
-      item:setItemSize(540, 132,false)
-      self.intensify_eq_list:addItem(item)
-    end
-    self.intensify_eq_list:reload()
+  else
+    local item =self.intensify_eq_list:newItem()
+    local node = display.newNode()
+    local button = WidgetPushButton.new({normal = "box_104x104_1.png"}):align(display.LEFT_BOTTOM,0,0):addTo(node)
+    display.newSprite("dragon_load_eq_37x38.png"):align(display.RIGHT_BOTTOM,104, 5):addTo(button)
+    button:onButtonClicked(function()
+      --TODO:铁匠铺添加接口显示相应
+      UIKit:newGameUI("GameUIBlackSmith",City,City:GetFirstBuildingByType("blackSmith")):AddToCurrentScene(true)
+    end)
+    item:addContent(node)
+    node:size(540, 104)
+    item:setMargin({left = 0, right = 0, top = 0, bottom = 5})
+    item:setItemSize(540, 104,false)
+    self.intensify_eq_list:addItem(item)
+  end
+  self.intensify_eq_list:reload()
+
 
 end
 

@@ -48,6 +48,7 @@ function GameUIDragonEyrieMain:OnDragonHatched(dragon)
 	local eyrie = self.draongContentNode:GetItemByIndex(localIndex)
 	eyrie.dragon_image:hide()
 	eyrie.armature:show()
+	eyrie.armature:PlayAnimation("idle")
 	self:RefreshUI()
 end
 

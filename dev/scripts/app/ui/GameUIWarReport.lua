@@ -45,7 +45,7 @@ function GameUIWarReport:onEnter()
     local war_result_image = display.newSprite(result_img)
         :align(display.CENTER_TOP, rb_size.width/2, rb_size.height-16)
         :addTo(report_body)
-    
+
 
     -- 战斗发生时间
     local shadow_layer = UIKit:shadowLayer()
@@ -179,7 +179,7 @@ function GameUIWarReport:CreateBootyPart()
         -- 战利品列表
         booty_list_bg = WidgetUIBackGround.new({width = item_width,height = booty_list_height+16},WidgetUIBackGround.STYLE_TYPE.STYLE_6)
             :align(display.CENTER,0,-25)
-        
+
         local booty_list_bg_size = booty_list_bg:getContentSize()
         booty_group:addChild(booty_list_bg)
 
@@ -255,7 +255,12 @@ function GameUIWarReport:FightWithHelpDefencePlayerReports()
 
         local right_player_dragon = report:GetEnemyHelpFightDragon()
 
-        self:CreateArmyGroup(left_player_troop,right_player_troop,left_player_dragon,right_player_dragon)
+        -- RoundDatas
+        local left_round = report:GetMyRoundDatas()
+
+        local right_round = report:GetEnemyRoundDatas()
+
+        self:CreateArmyGroup(left_player_troop,right_player_troop,left_player_dragon,right_player_dragon,left_round,right_round)
         -- 击杀敌方
         if right_player_troop then
             self:KillEnemy(right_player_troop)
@@ -330,7 +335,7 @@ function GameUIWarReport:CreateArmyItem(title,troop,dragon,enemy_troop,round_dat
     local army_item = self:CreateSmallBackGround({height=h})
 
     local t_bg = display.newScale9Sprite(isSelf and "back_ground_blue_254x42.png" or "back_ground_red_254x42.png", 0, 0,cc.size(256,34),cc.rect(10,10,234,22))
-    :align(display.CENTER_TOP,w/2, h):addTo(army_item)
+        :align(display.CENTER_TOP,w/2, h):addTo(army_item)
     -- local t_bg = display.newSprite("report_title_252X30.png"):align(display.CENTER_TOP, w/2, h-3)
     --     :addTo(army_item)
     UIKit:ttfLabel({
@@ -467,7 +472,7 @@ function GameUIWarReport:CreateBelligerentsItem(player,isSelf)
     display.newScale9Sprite(isSelf and "back_ground_blue_254x42.png" or "back_ground_red_254x42.png", 1, 0,cc.size(256,50),cc.rect(10,10,234,22)):align(display.LEFT_BOTTOM):addTo(player_item)
     -- 玩家头像
     UIKit:GetPlayerCommonIcon(player.icon):addTo(player_item,1):align(display.CENTER, 50, height/2):setScale(0.7)
-    
+
     -- 玩家名称
     UIKit:ttfLabel({
         text = player.name or Localize.village_name[player.type] ,
@@ -553,15 +558,15 @@ function GameUIWarReport:CreateSoldiersInfo(soldier)
     local soldier_type = soldier.name
     local soldier_ui_config = UILib.soldier_image[soldier_type][soldier_level]
     local color_bg = display.newSprite(UILib.soldier_color_bg_images[soldier_type])
-            :scale(104/128)
-            :align(display.LEFT_BOTTOM)
+        :scale(104/128)
+        :align(display.LEFT_BOTTOM)
     local soldier_head_icon = display.newSprite(soldier_ui_config):align(display.CENTER,color_bg:getContentSize().width/2,color_bg:getContentSize().height/2)
     soldier_head_icon:addTo(color_bg)
 
     local soldier_head_bg  = display.newSprite("box_soldier_128x128.png")
         :align(display.CENTER, soldier_head_icon:getContentSize().width/2, soldier_head_icon:getContentSize().height-64)
         :addTo(soldier_head_icon)
-    
+
 
     UIKit:ttfLabel({
         text = soldier.count,
@@ -655,7 +660,7 @@ function GameUIWarReport:CreateSmallBackGround(params)
             color = 0xffedae
         }):align(display.CENTER,t_bg:getContentSize().width/2, 15):addTo(t_bg)
     end
-   
+
     return r_bg
 end
 
@@ -689,6 +694,7 @@ function GameUIWarReport:GetRewards()
     return  self.report:GetMyRewards()
 end
 return GameUIWarReport
+
 
 
 

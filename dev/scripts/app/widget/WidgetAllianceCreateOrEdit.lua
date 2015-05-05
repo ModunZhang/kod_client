@@ -100,7 +100,9 @@ function WidgetAllianceCreateOrEdit:CreateAllianceButtonClicked()
 		return 
 	end
 	if self:IsCreate() then
-		NetManager:getCreateAlliancePromise(data.name,data.tag,data.language,data.terrain,data.flag):done()
+		NetManager:getCreateAlliancePromise(data.name,data.tag,data.language,data.terrain,data.flag):done(function()
+			 GameGlobalUI:showTips(_("提示"),_("创建联盟成功!"))
+		end)
 	else
 		local my_alliance = Alliance_Manager:GetMyAlliance()
 		if not self:GetFlagInfomation():IsDifferentWith(Alliance_Manager:GetMyAlliance():Flag()) 
@@ -111,6 +113,7 @@ function WidgetAllianceCreateOrEdit:CreateAllianceButtonClicked()
 			UIKit:showMessageDialog(_("提示"),_("联盟信息当前没有任何改动!"))
 		else
 			NetManager:getEditAllianceBasicInfoPromise(data.name,data.tag,data.language,data.flag):done(function(result)
+				GameGlobalUI:showTips(_("提示"),_("修改联盟信息成功!"))
 				if self.callback and type(self.callback) == 'function' then
 					self.callback()
 				end
