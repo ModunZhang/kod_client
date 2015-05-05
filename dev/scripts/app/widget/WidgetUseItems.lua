@@ -255,14 +255,14 @@ function WidgetUseItems:OpenResourceDialog( item )
 
     local list,list_node = UIKit:commonListView_1({
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
-        viewRect = cc.rect(0, 0,570,4 * 130),
+        viewRect = cc.rect(0, 0,546,4 * 130),
     })
     list_node:addTo(body):align(display.BOTTOM_CENTER, size.width/2,20)
     local which_bg = true
     for i,v in ipairs(same_items) do
         if not (v:Count()<1 and not v:IsSell()) then
             local list_item = list:newItem()
-            list_item:setItemSize(570,130)
+            list_item:setItemSize(546,130)
             list_item:addContent(self:CreateItemBox(
                 v,
                 function ()
@@ -858,7 +858,7 @@ function WidgetUseItems:OpenNormalDialog( item )
 end
 function WidgetUseItems:OpenVipActive( item )
     local same_items = ItemManager:GetSameTypeItems(item)
-    local dialog = UIKit:newWidgetUI("WidgetPopDialog",4 * 130+24 +80,_("激活VIP"),window.top-230)
+    local dialog = UIKit:newWidgetUI("WidgetPopDialog",3 * 130+24 +80,_("激活VIP"),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
     -- 是否激活 vip
@@ -893,7 +893,7 @@ function WidgetUseItems:OpenVipActive( item )
 
     local list,list_node = UIKit:commonListView_1({
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
-        viewRect = cc.rect(0, 0,570,4 * 130),
+        viewRect = cc.rect(0, 0,546,3 * 130),
     })
     list_node:addTo(body):align(display.BOTTOM_CENTER, size.width/2,20)
 
@@ -901,7 +901,7 @@ function WidgetUseItems:OpenVipActive( item )
     for i,v in ipairs(same_items) do
         if not (v:Count()<1 and not v:IsSell()) then
             local list_item = list:newItem()
-            list_item:setItemSize(570,130)
+            list_item:setItemSize(546,130)
             list_item:addContent(self:CreateItemBox(
                 v,
                 function ()
@@ -1071,7 +1071,7 @@ function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc,buyAndUseFun
             text = item:GetLocalizeName(),
             size = 24,
             color = 0x403c2f,
-        }):addTo(body):align(display.LEFT_CENTER,130, body:getContentSize().height-20)
+        }):addTo(body):align(display.LEFT_CENTER,130, body:getContentSize().height-22)
         -- 道具介绍
         UIKit:ttfLabel({
             text = item:GetLocalizeDesc(),

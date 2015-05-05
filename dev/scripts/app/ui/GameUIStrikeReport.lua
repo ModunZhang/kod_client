@@ -17,10 +17,9 @@ end
 function GameUIStrikeReport:GetReportLevel()
     local report = self.report
     local level = report:GetStrikeLevel()
-    local report_level = level==1 and _("没有得到任何情报") or _("得到一封%s级的情报")
+    local report_level = level == 1 and _("没有得到任何情报") or _("得到一封%s级的情报")
     local level_map ={
         "",
-        "D",
         "C",
         "B",
         "A",

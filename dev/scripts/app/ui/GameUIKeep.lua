@@ -13,28 +13,27 @@ local intInit = GameDatas.PlayerInitData.intInit
 local GameUIKeep = UIKit:createUIClass('GameUIKeep',"GameUIUpgradeBuilding")
 
 local building_config_map = {
-    ["keep"] = {scale = 0.28, offset = {x = 80, y = 80}},
+    ["keep"] = {scale = 0.25, offset = {x = 80, y = 80}},
     ["watchTower"] = {scale = 0.4, offset = {x = 80, y = 70}},
-    ["warehouse"] = {scale = 0.4, offset = {x = 70, y = 70}},
+    ["warehouse"] = {scale = 0.5, offset = {x = 70, y = 70}},
     ["dragonEyrie"] = {scale = 0.35, offset = {x = 70, y = 70}},
-    ["toolShop"] = {scale = 0.4, offset = {x = 80, y = 70}},
-    ["materialDepot"] = {scale = 0.4, offset = {x = 70, y = 70}},
-    ["armyCamp"] = {scale = 0.4, offset = {x = 80, y = 80}},
-    ["barracks"] = {scale = 0.4, offset = {x = 80, y = 70}},
-    ["blackSmith"] = {scale = 0.4, offset = {x = 75, y = 70}},
-    ["foundry"] = {scale = 0.45, offset = {x = 75, y = 80}},
-    ["stoneMason"] = {scale = 0.44, offset = {x = 80, y = 75}},
-    ["lumbermill"] = {scale = 0.45, offset = {x = 80, y = 80}},
-    ["mill"] = {scale = 0.45, offset = {x = 80, y = 80}},
-    ["hospital"] = {scale = 0.45, offset = {x = 80, y = 80}},
-    ["townHall"] = {scale = 0.45, offset = {x = 80, y = 80}},
-    ["tradeGuild"] = {scale = 0.4, offset = {x = 80, y = 80}},
-    ["academy"] = {scale = 0.4, offset = {x = 80, y = 80}},
+    ["toolShop"] = {scale = 0.5, offset = {x = 80, y = 70}},
+    ["materialDepot"] = {scale = 0.5, offset = {x = 70, y = 70}},
+    ["barracks"] = {scale = 0.5, offset = {x = 80, y = 70}},
+    ["blackSmith"] = {scale = 0.5, offset = {x = 75, y = 70}},
+    ["foundry"] = {scale = 0.47, offset = {x = 75, y = 74}},
+    ["stoneMason"] = {scale = 0.47, offset = {x = 76, y = 75}},
+    ["lumbermill"] = {scale = 0.45, offset = {x = 80, y = 74}},
+    ["mill"] = {scale = 0.45, offset = {x = 76, y = 74}},
+    ["hospital"] = {scale = 0.5, offset = {x = 80, y = 75}},
+    ["townHall"] = {scale = 0.45, offset = {x = 76, y = 74}},
+    ["tradeGuild"] = {scale = 0.5, offset = {x = 74, y = 74}},
+    ["academy"] = {scale = 0.5, offset = {x = 80, y = 74}},
     ["prison"] = {scale = 0.4, offset = {x = 80, y = 80}},
-    ["hunterHall"] = {scale = 0.4, offset = {x = 80, y = 80}},
-    ["trainingGround"] = {scale = 0.4, offset = {x = 80, y = 80}},
-    ["stable"] = {scale = 0.4, offset = {x = 80, y = 80}},
-    ["workshop"] = {scale = 0.4, offset = {x = 80, y = 80}},
+    ["hunterHall"] = {scale = 0.5, offset = {x = 74, y = 74}},
+    ["trainingGround"] = {scale = 0.5, offset = {x = 76, y = 74}},
+    ["stable"] = {scale = 0.46, offset = {x = 74, y = 74}},
+    ["workshop"] = {scale = 0.46, offset = {x = 74, y = 74}},
 }
 
 function GameUIKeep:ctor(city,building)
@@ -244,7 +243,7 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
                 aglin = ui.TEXT_ALIGN_LEFT,
                 valign = ui.TEXT_VALIGN_CENTER,
                 dimensions = cc.size(354, 65),
-                color = 0x797154}):align(display.TOP_LEFT, -120, 10)
+                color = 0x615b44}):align(display.TOP_LEFT, -120, 10)
             content:addWidget(building_tip)
 
             -- 建筑图片 放置区域左右边框

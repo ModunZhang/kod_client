@@ -250,7 +250,7 @@ function GameUIOrderHall:InitProficiencyPart()
     UIKit:ttfLabel({
         text = _("显示联盟成员的村落采集资源熟练度,每采集一定的村落资源,就会增加一定的熟练度,熟练度越高,采集相应村落资源的速度就会越快"),
         size = 20,
-        color = 0x797154,
+        color = 0x615b44,
         dimensions = cc.size(500,0)
     }):align(display.CENTER, desc_bg:getContentSize().width/2 , desc_bg:getContentSize().height/2)
         :addTo(desc_bg)

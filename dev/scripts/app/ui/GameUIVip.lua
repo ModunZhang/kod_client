@@ -776,11 +776,11 @@ function GameUIVip:OpenVIPDetails(show_vip_level)
                     -- 增加VIP点数按钮
                     local increase_vip_label = UIKit:ttfLabel({
                         text = _("增加VIP点数"),
-                        size = 20,
+                        size = 22,
                         color = 0xfff3c7})
                     increase_vip_label:enableShadow()
                     local btn = WidgetPushButton.new(
-                        {normal = "yellow_button_highlight_190x46.png", pressed = "yellow_button_190x46.png"},
+                        {normal = "yellow_btn_up_186x66.png", pressed = "yellow_btn_down_186x66.png"},
                         {scale9 = false}
                     ):setButtonLabel(increase_vip_label)
                         :addTo(body):align(display.CENTER, size.width/2, 80)
@@ -820,11 +820,11 @@ function GameUIVip:OpenVIPDetails(show_vip_level)
                     -- 激活VIP按钮
                     local active_vip_label = UIKit:ttfLabel({
                         text = _("激活VIP"),
-                        size = 20,
+                        size = 22,
                         color = 0xfff3c7})
                     active_vip_label:enableShadow()
                     local active_button = WidgetPushButton.new(
-                        {normal = "yellow_button_highlight_190x46.png", pressed = "yellow_button_190x46.png"},
+                        {normal = "yellow_btn_up_186x66.png", pressed = "yellow_btn_down_186x66.png"},
                         {scale9 = false},
                         {
                             disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
