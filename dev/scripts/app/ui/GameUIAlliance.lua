@@ -421,7 +421,6 @@ end
 
 --  listType:join appy invate
 function GameUIAlliance:getCommonListItem_(listType,alliance)
-    dump(alliance,"alliance----->")
     local targetListView = nil
     local item = nil
     local terrain,flag_info = nil,nil
@@ -584,6 +583,15 @@ function GameUIAlliance:getCommonListItem_(listType,alliance)
             :addTo(bg)
         memberValLabel:setString(string.format("%s/%s",alliance.members,alliance.membersMax))
     elseif listType == self.COMMON_LIST_ITEM_TYPE.APPLY then
+          local leaderIcon = display.newSprite("alliance_item_leader_39x39.png")
+            :addTo(bg)
+            :align(display.LEFT_TOP,titleBg:getPositionX() - titleBg:getContentSize().width, titleBg:getPositionY() - titleBg:getContentSize().height -12)
+        local leaderLabel = UIKit:ttfLabel({
+            text = alliance.archon,
+            size = 22,
+            color = 0x403c2f
+        }):addTo(bg):align(display.LEFT_TOP,leaderIcon:getPositionX()+leaderIcon:getContentSize().width+15, leaderIcon:getPositionY()-4)
+
         local cancel_button = WidgetPushButton.new({normal = "red_btn_up_148x58.png",pressed = "red_btn_down_148x58.png"})
             :setButtonLabel(
                 UIKit:ttfLabel({
