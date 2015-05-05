@@ -253,8 +253,10 @@ function AllianceView:EmptyGround(x, y)
 end
 
 function AllianceView:OnSceneScale(s)
-    local l = max(0.5, s) - 0.5
-    local r = 0.8 - min(0.8, s)
+    if s then self.scale = s end
+    local scale = self.scale
+    local l = max(0.5, scale) - 0.5
+    local r = 0.8 - min(0.8, scale)
     self:GetLayer():GetInfoNode():opacity(l / (l + r) * 255)
 end
 
