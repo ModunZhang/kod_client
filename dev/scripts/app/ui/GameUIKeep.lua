@@ -65,9 +65,7 @@ function GameUIKeep:OnMoveInStage()
     end):pos(window.cx, window.bottom + 34)
 
 end
-function GameUIKeep:OnCityNameChanged(cityName)
-    self.city_name_item:SetValue(cityName)
-end
+
 function GameUIKeep:onExit()
     self.city:RemoveListenerOnType(self, City.LISTEN_TYPE.CITY_NAME)
     GameUIKeep.super.onExit(self)
@@ -88,16 +86,22 @@ function GameUIKeep:CreateCityBasicInfo()
         :addTo(left_frame):pos(building_cp.offset.x, building_cp.offset.y)
         :scale(building_cp.scale)
 
-    -- 修改城市名字item
-    -- self.city_name_item = self:CreateLineItem({
-    --     title_1 =  _("城市名字"),
-    --     title_2 =  City:GetCityName(),
-    --     button_label =  _("修改"),
-    --     listener =  function ()
-    --         self:CreateModifyCityNameWindow()
-    --     end,
-    -- }):align(display.LEFT_CENTER, display.cx-120, display.top-160)
-    --     :addTo(self.info_layer)
+    local city_postion = "0,0"
+    if not Alliance_Manager:GetMyAlliance():IsDefault() then
+        local alliance = Alliance_Manager:GetMyAlliance()
+        local mapObject = alliance:GetAllianceMap():FindMapObjectById(alliance:GetSelf():MapId())
+        local x, y = mapObject:GetLogicPosition()
+        city_postion = x..","..y
+    end
+    self:CreateLineItem({
+        title_1 =  _("城市坐标"),
+        title_2 =  "("..city_postion..")",
+        button_label =  _("修改"),
+        listener =  function ()
+            self:CreateModifyCityNameWindow()
+        end,
+    }):align(display.LEFT_CENTER, display.cx-120, display.top-160)
+        :addTo(self.info_layer)
     -- 修改地形
     self:CreateLineItem({
         title_1 =  _("城市地形"),
@@ -106,7 +110,7 @@ function GameUIKeep:CreateCityBasicInfo()
         listener =  function ()
             self:CreateChangeTerrainWindow()
         end,
-    }):align(display.LEFT_CENTER, display.cx-120, display.top-160)
+    }):align(display.LEFT_CENTER, display.cx-120, display.top-240)
         :addTo(self.info_layer)
 end
 
@@ -121,7 +125,7 @@ function GameUIKeep:CreateLineItem(params)
             font = UIKit:getFontFilePath(),
             size = 16,
             color = UIKit:hex2c3b(0x665f49)
-        }):align(display.LEFT_BOTTOM, 0, 40)
+        }):align(display.LEFT_BOTTOM, 0, 34)
         :addTo(line)
     local value_label = cc.ui.UILabel.new(
         {
@@ -130,25 +134,27 @@ function GameUIKeep:CreateLineItem(params)
             font = UIKit:getFontFilePath(),
             size = 22,
             color = UIKit:hex2c3b(0x29261c)
-        }):align(display.LEFT_BOTTOM, 0, 10)
+        }):align(display.LEFT_BOTTOM, 0, 2)
         :addTo(line)
-    local button = WidgetPushButton.new({normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"}
-        ,{}
-        ,{
-            disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
-        })
-        :setButtonLabel(UIKit:ttfLabel({
-            text = params.button_label,
-            size = 20,
-            color = 0xffedae,
-        }))
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-                params.listener()
-            end
-        end)
-        :align(display.RIGHT_BOTTOM, line_size.width, 5)
-        :addTo(line)
+    if params.button_label then
+        local button = WidgetPushButton.new({normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"}
+            ,{}
+            ,{
+                disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
+            })
+            :setButtonLabel(UIKit:ttfLabel({
+                text = params.button_label,
+                size = 20,
+                color = 0xffedae,
+            }))
+            :onButtonClicked(function(event)
+                if event.name == "CLICKED_EVENT" then
+                    params.listener()
+                end
+            end)
+            :align(display.RIGHT_BOTTOM, line_size.width, 5)
+            :addTo(line)
+    end
     function line:SetValue(value)
         value_label:setString(value)
     end
@@ -510,6 +516,7 @@ end
 
 
 return GameUIKeep
+
 
 
 
