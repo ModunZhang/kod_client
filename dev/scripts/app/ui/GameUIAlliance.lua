@@ -999,7 +999,7 @@ function GameUIAlliance:HaveAlliaceUI_membersIf()
 
         local button = display.newSprite("info_16x33.png"):addTo(title_bar):align(display.RIGHT_CENTER, 400, 15):scale(0.7)
         WidgetPushTransparentButton.new(cc.rect(0,0,428,30)):addTo(title_bar):align(display.LEFT_BOTTOM,0,0):onButtonClicked(function()
-            self:OnAllianceTitleClicked(title)
+            self:OnAllianceTitleClicked("archon")
         end)
         local line_2 = display.newScale9Sprite("dividing_line_594x2.png"):addTo(self.member_list_bg)
             :align(display.LEFT_BOTTOM,title_bar:getPositionX(),650)

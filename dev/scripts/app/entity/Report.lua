@@ -318,9 +318,9 @@ function Report:GetBattleAt()
     if self.type == Report.REPORT_TYPE[CITYBESTRIKED]
         or self.type == Report.REPORT_TYPE[STRIKECITY]
     then
-        return data.strikeTarget.cityName
+        return data.strikeTarget.name
     elseif self.type == Report.REPORT_TYPE[ATTACKCITY] then
-        return data.attackTarget.cityName
+        return data.attackTarget.name
     elseif self.type == Report.REPORT_TYPE[VILLAGEBESTRIKED]
         or self.type == Report.REPORT_TYPE[STRIKEVILLAGE]
     then

@@ -223,9 +223,6 @@ function GameUIBase:CreateVerticalListViewDetached(left_bottom_x, left_bottom_y,
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }
 end
-function GameUIBase:CreatePopupBg(height)
-    return WidgetUIBackGround.new({height=height})
-end
 function GameUIBase:CreateTutorialLayer()
     local node = display.newNode():addTo(self, 3000)
     local left = display.newColorLayer(cc.c4b(255, 0, 0, 50)):addTo(node, 0)
