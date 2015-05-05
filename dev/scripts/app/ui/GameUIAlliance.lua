@@ -616,7 +616,7 @@ function GameUIAlliance:commonListItemAction( listType,item,alliance,tag)
             NetManager:getJoinAllianceDirectlyPromise(alliance.id):fail(function()
                 self:SearchAllianAction(self.editbox_tag_search:getText())
             end):done(function()
-                 GameGlobalUI:showTips(_("提示"),_("加入联盟成功!"))
+                 GameGlobalUI:showTips(_("提示"),string.format(_("加入%s联盟成功!"),alliance.name))
             end)
         else
             NetManager:getRequestToJoinAlliancePromise(alliance.id):done(function()
@@ -637,7 +637,7 @@ function GameUIAlliance:commonListItemAction( listType,item,alliance,tag)
             if tag == 1 then
             self:RefreshInvateListView()
             else
-                 GameGlobalUI:showTips(_("提示"),_("加入联盟成功!"))
+                GameGlobalUI:showTips(_("提示"),string.format(_("加入%s联盟成功!"),alliance.name))
             end
         end)
     end
