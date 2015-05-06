@@ -30,11 +30,11 @@ end
 function GameUIAllianceShopEnter:GetBuildingInfo()
     if self:IsMyAlliance() then
         local location = {
-            {_("坐标"),0x797154},
+            {_("坐标"),0x615b44},
             {self:GetLocation(),0x403c2f},
         }
         local label_2 = {
-            {_("高级道具数量"),0x797154},
+            {_("高级道具数量"),0x615b44},
             {"50",0x403c2f},
         }
 
@@ -48,11 +48,11 @@ function GameUIAllianceShopEnter:GetBuildingInfo()
         return {location,label_2}
     else
         local location = {
-            {_("坐标"),0x797154},
+            {_("坐标"),0x615b44},
             {self:GetLocation(),0x403c2f},
         }
         local label_2 = {
-            {_("高级道具数量"),0x797154},
+            {_("高级道具数量"),0x615b44},
             {_("未知"),0x403c2f},
         }
         return {location,label_2}

@@ -63,7 +63,7 @@ function GameUIWarReport:onEnter()
         {
             text = self:GetFightTarget(),
             size = 18,
-            color = 0x797154
+            color = 0x615b44
         }):align(display.LEFT_CENTER, 20, rb_size.height-170)
         :addTo(report_body)
 
@@ -74,7 +74,7 @@ function GameUIWarReport:onEnter()
         {
             text = string.format(_("战斗地形:%s(派出%s获得额外力量)"),Localize.terrain[terrain],terrain=="grassLand" and _("绿龙") or terrain=="desert" and _("红龙") or terrain=="iceField" and _("蓝龙")),
             size = 18,
-            color = 0x797154
+            color = 0x615b44
         }):align(display.LEFT_CENTER, 20, rb_size.height-195)
         :addTo(report_body)
 
@@ -157,8 +157,8 @@ function GameUIWarReport:GetBooty()
     local booty = {}
     for k,v in pairs(self:GetRewards()) do
         table.insert(booty, {
-            resource_type = Localize.fight_reward[v.name],
-            icon= UILib.resource[v.name],
+            resource_type = Localize.fight_reward[v.name] or Localize.equip[v.name],
+            icon= UILib.resource[v.name] or UILib.equipment[v.name],
             value = v.count
         })
     end

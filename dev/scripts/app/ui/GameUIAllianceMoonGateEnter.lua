@@ -29,20 +29,20 @@ end
 
 function GameUIAllianceMoonGateEnter:GetBuildingInfo()
 	local location = {
-        {_("坐标"),0x797154},
+        {_("坐标"),0x615b44},
         {self:GetLocation(),0x403c2f},
     }
     local label_2 = {
-        {_("开战的王城"),0x797154},
+        {_("开战的王城"),0x615b44},
         {_("未知"),0x403c2f},
     } 
     local label_3 = {
-        {_("占领者"),0x797154},
+        {_("占领者"),0x615b44},
         {_("未知"),0x403c2f},
     } 
     local label_4 = 
     {
-	    {_("状态"),0x797154},
+	    {_("状态"),0x615b44},
         {_("未开启"),0x403c2f},
     }
   	return {location,label_2,label_3,label_4}

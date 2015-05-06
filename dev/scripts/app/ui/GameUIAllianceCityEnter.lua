@@ -110,16 +110,16 @@ end
 
 function GameUIAllianceCityEnter:GetBuildingInfo()
     local location = {
-        {_("坐标"),0x797154},
+        {_("坐标"),0x615b44},
         {self:GetLocation(),0x403c2f},
     }
     local player_name = {
-        {_("玩家"),0x797154},
+        {_("玩家"),0x615b44},
         {self:GetMember().name,0x403c2f},
     }
 
     local help_count = {
-        {_("协防玩家"),0x797154},
+        {_("协防玩家"),0x615b44},
         {self:GetMember().helpedByTroopsCount,0x403c2f},
     }
     return {location,player_name,help_count}

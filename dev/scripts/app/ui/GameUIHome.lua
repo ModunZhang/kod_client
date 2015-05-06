@@ -248,7 +248,7 @@ function GameUIHome:CreateTop()
 
     -- 资源图片和文字
     local first_row = 18
-    local first_col = 30
+    local first_col = 18
     local label_padding = 20
     local padding_width = 100
     local padding_height = 35
@@ -263,7 +263,7 @@ function GameUIHome:CreateTop()
         local row = i > 3 and 1 or 0
         local col = (i - 1) % 3
         local x, y = first_col + col * padding_width, first_row - (row * padding_height)
-        display.newSprite(v[1]):addTo(button):pos(x, y):scale(0.25)
+        display.newSprite(v[1]):addTo(button):pos(x, y):scale(0.3)
         self[v[2]] = UIKit:ttfLabel({text = "",
             size = 18,
             color = 0xf3f0b6,

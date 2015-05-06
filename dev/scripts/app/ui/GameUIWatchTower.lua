@@ -247,24 +247,24 @@ function GameUIWatchTower:GetMyEventItemWithIndex(index,isOpen,entity)
             local desctition_label = UIKit:ttfLabel({
                 text = _("目的地"),
                 size = 20,
-                color= 0x797154
+                color= 0x615b44
             }):align(display.LEFT_TOP,164,153):addTo(bg)
             local line_1 = display.newScale9Sprite("dividing_line.png"):size(390,2):addTo(bg):align(display.LEFT_TOP,164, 125)
             local desctition_label_val =  UIKit:ttfLabel({
                 text = entity:GetDestination(),
                 size = 20,
-                color= 0x797154
+                color= 0x615b44
             }):align(display.RIGHT_TOP,554,153):addTo(bg)
             local localtion_label = UIKit:ttfLabel({
                 text = _("坐标"),
                 size = 20,
-                color= 0x797154
+                color= 0x615b44
             }):align(display.LEFT_TOP,164,115):addTo(bg)
             local line_2 = display.newScale9Sprite("dividing_line.png"):size(390,2):addTo(bg):align(display.LEFT_TOP,164, 87)
             local localtion_label_val =  UIKit:ttfLabel({
                 text = entity:GetDestinationLocation(),
                 size = 20,
-                color= 0x797154
+                color= 0x615b44
             }):align(display.RIGHT_TOP,554,115):addTo(bg)
             tile_label:setString(entity:GetTitle())
             if entity:GetTypeStr() == 'HELPTO' then
@@ -376,24 +376,24 @@ function GameUIWatchTower:GetOtherEventItem(entity)
     local desctition_label = UIKit:ttfLabel({
         text = _("来自"),
         size = 20,
-        color= 0x797154
+        color= 0x615b44
     }):align(display.LEFT_TOP,164,153):addTo(bg)
     local line_1 = display.newScale9Sprite("dividing_line.png"):size(390,2):addTo(bg):align(display.LEFT_TOP,164, 125)
     local desctition_label_val =  UIKit:ttfLabel({
         text = self:GetEntityFromCityName(entity),
         size = 20,
-        color= 0x797154
+        color= 0x615b44
     }):align(display.RIGHT_TOP,554,153):addTo(bg)
     local localtion_label = UIKit:ttfLabel({
         text = _("玩家"),
         size = 20,
-        color= 0x797154
+        color= 0x615b44
     }):align(display.LEFT_TOP,164,115):addTo(bg)
     local line_2 = display.newScale9Sprite("dividing_line.png"):size(390,2):addTo(bg):align(display.LEFT_TOP,164, 87)
     local localtion_label_val =  UIKit:ttfLabel({
         text = self:GetEntityAttackPlayerName(entity),
         size = 20,
-        color= 0x797154
+        color= 0x615b44
     }):align(display.RIGHT_TOP,554,115):addTo(bg)
     local dragon_png = UILib.dragon_head[self:GetEntityDragonType(entity)]
     if dragon_png then

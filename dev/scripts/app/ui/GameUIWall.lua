@@ -11,9 +11,9 @@ local timer = app.timer
 local WidgetUseItems = import("..widget.WidgetUseItems")
 local WidgetSelectWallDragon = import("..widget.WidgetSelectWallDragon")
 
-function GameUIWall:ctor(city,building)
+function GameUIWall:ctor(city,building,default_tab)
 	self.city = city
-    GameUIWall.super.ctor(self,city,Localize.building_name[building:GetType()],building)
+    GameUIWall.super.ctor(self,city,Localize.building_name[building:GetType()],building,default_tab)
     self.dragon_manager = city:GetFirstBuildingByType("dragonEyrie"):GetDragonManager()
     self.dragon_manager:AddListenOnType(self,self.dragon_manager.LISTEN_TYPE.OnHPChanged)
 end
@@ -157,7 +157,7 @@ function GameUIWall:CreateMilitaryUIIf()
 	local level_title_label = UIKit:ttfLabel({
 		text = level_str,
 		size = 20,
-		color= 0x797154
+		color= 0x615b44
 	}):align(display.LEFT_BOTTOM,name_label:getPositionX(), tips_label:getPositionY() + tips_label:getContentSize().height + 20):addTo(top_bg)
 	self.level_title_label = level_title_label
 	self.dragon_level_label = UIKit:ttfLabel({
@@ -271,7 +271,7 @@ function GameUIWall:GetListItem(index,data)
 	UIKit:ttfLabel({
 		text = data.title,
 		size = 20,
-		color= 0x797154
+		color= 0x615b44
 	}):align(display.LEFT_CENTER, 20, 21):addTo(content)
 	local val_x = 540
 	if data.buffer then --buffer

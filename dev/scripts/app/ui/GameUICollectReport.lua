@@ -34,7 +34,7 @@ function GameUICollectReport:ctor(report)
         {
             text = self:GetFightTarget(),
             size = 18,
-            color = 0x797154
+            color = 0x615b44
         }):align(display.LEFT_CENTER, 40, r_size.height-220)
         :addTo(body)
 

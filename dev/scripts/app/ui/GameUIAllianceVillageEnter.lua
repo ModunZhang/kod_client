@@ -131,7 +131,7 @@ end
 function GameUIAllianceVillageEnter:GetBuildingInfo()
 	if self:IsRuins() then
 		return {{
-	        {_("坐标"),0x797154},
+	        {_("坐标"),0x615b44},
 	        {self:GetLocation(),0x403c2f},
     	}}
 	end
@@ -148,7 +148,7 @@ function GameUIAllianceVillageEnter:GetBuildingInfo()
 		self:GetEnemyAlliance():AddListenOnType(self,self:GetEnemyAlliance().LISTEN_TYPE.OnVillageEventsDataChanged)
 	end
 	local location = {
-        {_("坐标"),0x797154},
+        {_("坐标"),0x615b44},
         {self:GetLocation(),0x403c2f},
     }
 	local labels = {}
@@ -159,15 +159,15 @@ function GameUIAllianceVillageEnter:GetBuildingInfo()
 	 		villageEvent = self:GetEnemyAlliance():FindVillageEventByVillageId(village_id)
 		    if villageEvent then  --敌方联盟人占领
 		      	local occupy_label = {
-            		{_("占领者"),0x797154},
+            		{_("占领者"),0x615b44},
             		{villageEvent:PlayerData().name,0x403c2f}
         		}
         		local current_collect_label =  {
-		            {_("当前采集"),0x797154},
+		            {_("当前采集"),0x615b44},
 		            {villageEvent:CollectCount() .. "(" .. villageEvent:CollectPercent()  .. "%)",0x403c2f,900},
         		}
         		local end_time_label = {
-		            {_("完成时间"),0x797154},
+		            {_("完成时间"),0x615b44},
 		            {
 		                villageEvent:GetTime() == 0 and _("已完成") or GameUtils:formatTimeStyle1(villageEvent:GetTime()),
 		                0x403c2f,
@@ -182,7 +182,7 @@ function GameUIAllianceVillageEnter:GetBuildingInfo()
 				self:GetEnemyAlliance():AddListenOnType(self,self:GetEnemyAlliance().LISTEN_TYPE.OnVillageEventTimer)
 		    else --没人占领
 		    	local no_one_label = {
-		            {_("占领者"),0x797154},
+		            {_("占领者"),0x615b44},
 		            {_("无"),0x403c2f}
         		}
         		labels = {location,no_one_label}
@@ -193,7 +193,7 @@ function GameUIAllianceVillageEnter:GetBuildingInfo()
 		    end
 		else --没人占领
 			local no_one_label = {
-		        {_("占领者"),0x797154},
+		        {_("占领者"),0x615b44},
 		        {_("无"),0x403c2f}
 			}
 			labels = {location,no_one_label}
@@ -204,15 +204,15 @@ function GameUIAllianceVillageEnter:GetBuildingInfo()
 		end
 	else --我方占领
 		local occupy_label = {
-            		{_("占领者"),0x797154},
+            		{_("占领者"),0x615b44},
             		{villageEvent:PlayerData().name,0x403c2f}
         		}
 		local current_collect_label =  {
-            {_("当前采集"),0x797154},
+            {_("当前采集"),0x615b44},
              {villageEvent:CollectCount() .. "(" .. villageEvent:CollectPercent()  .. "%)",0x403c2f,900},
 		}
 		local end_time_label = {
-            {_("完成时间"),0x797154},
+            {_("完成时间"),0x615b44},
             {
                 villageEvent:GetTime() == 0 and _("已完成") or GameUtils:formatTimeStyle1(villageEvent:GetTime()),
                 0x403c2f,

@@ -33,7 +33,7 @@ end
 
 function GameUIAllianceOrderHallEnter:GetBuildingInfo()
 	local location = {
-        {_("坐标"),0x797154},
+        {_("坐标"),0x615b44},
         {self:GetLocation(),0x403c2f},
     }
     local village_count,current_collect_village = _("未知"),_("未知")
@@ -42,12 +42,12 @@ function GameUIAllianceOrderHallEnter:GetBuildingInfo()
     	current_collect_village = _("暂无")
     end
     local label_2 = {
-        {_("当前村落数量"),0x797154},
+        {_("当前村落数量"),0x615b44},
         {village_count,0x403c2f},
     } 
     local label_3 = 
     {
-	    {_("当前采集村落"),0x797154},
+	    {_("当前采集村落"),0x615b44},
         {current_collect_village,0x403c2f},
     }
   	return {location,label_2,label_3}

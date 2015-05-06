@@ -196,7 +196,7 @@ function GameUIUpgradeTechnology:BuildUI()
     local current_effect_desc = UIKit:ttfLabel({
         text = self:GetProductionTechnology():GetBuffLocalizedDesc(),
         size = 20,
-        color= 0x797154
+        color= 0x615b44
     }):align(display.LEFT_BOTTOM,line_1:getPositionX(), line_1:getPositionY() + 5):addTo(bg_node)
     local next_effect_val_label = UIKit:ttfLabel({
         text = "", --self:GetProductionTechnology():GetNextLevelBuffEffectVal() * 100  .. "%",
@@ -220,7 +220,7 @@ function GameUIUpgradeTechnology:BuildUI()
     local current_power_desc = UIKit:ttfLabel({
         text = _("战斗力"),
         size = 20,
-        color= 0x797154
+        color= 0x615b44
     }):addTo(bg_node):align(display.LEFT_BOTTOM,line_2:getPositionX(), line_2:getPositionY() + 5)
 
     local next_power_val_label = UIKit:ttfLabel({

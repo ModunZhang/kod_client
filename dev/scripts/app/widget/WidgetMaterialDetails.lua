@@ -56,7 +56,7 @@ function WidgetMaterialDetails:InitMaterialDetails(material_type,material_name)
             size = 22,
             valign = ui.TEXT_VALIGN_TOP,
             dimensions = cc.size(320, 120),
-            color = UIKit:hex2c3b(0x797154)
+            color = UIKit:hex2c3b(0x615b44)
         }):align(display.LEFT_TOP, 150,bg_height-70)
         :addTo(bg)
    

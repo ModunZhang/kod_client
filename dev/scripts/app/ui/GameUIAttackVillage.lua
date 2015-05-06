@@ -80,7 +80,7 @@ function GameUIAttackVillage:onEnter()
         {
             text = self:GetFightTarget(),
             size = 18,
-            color = 0x797154
+            color = 0x615b44
         }):align(display.LEFT_CENTER, 20, rb_size.height-170)
         :addTo(report_body)
 
@@ -88,7 +88,7 @@ function GameUIAttackVillage:onEnter()
         {
             text = _("战斗地形：沙漠（派出红龙获得额外力量）--服务器未推送战斗地形数据"),
             size = 18,
-            color = 0x797154
+            color = 0x615b44
         }):align(display.LEFT_CENTER, 20, rb_size.height-195)
         :addTo(report_body)
 

@@ -193,9 +193,9 @@ function CityScene:GotoLogicPointInstant(x, y)
     local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(x, y)
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
 end
-function CityScene:GotoLogicPoint(x, y)
+function CityScene:GotoLogicPoint(x, y, speed)
     local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(x, y)
-    return self:GetSceneLayer():PromiseOfMove(point.x, point.y)
+    return self:GetSceneLayer():PromiseOfMove(point.x, point.y, speed)
 end
 function CityScene:PlayBackgroundMusic()
     app:GetAudioManager():PlayGameMusic()

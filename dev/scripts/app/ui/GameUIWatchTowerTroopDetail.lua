@@ -289,7 +289,7 @@ function GameUIWatchTowerTroopDetail:GetTipsItem()
 	UIKit:ttfLabel({
 		text = _("瞭望塔等级不足,暂时不能查看"),
 		size = 20,
-		color= 0x797154
+		color= 0x615b44
 	}):align(display.CENTER, 273, 19):addTo(item)
 	return item
 end
@@ -311,7 +311,7 @@ function GameUIWatchTowerTroopDetail:GetSubItem(ITEM_TYPE,index,item_data)
 	local title_label = UIKit:ttfLabel({
 		text = item_data[1],
 		size = 20,
-		color= 0x797154
+		color= 0x615b44
 	}):align(display.LEFT_CENTER, 12, 19):addTo(item)
 	if ITEM_TYPE == self.ITEM_TYPE.DRAGON_INFO then
 		local val_label = UIKit:ttfLabel({

@@ -33,7 +33,7 @@ function GameUISettingContactUs:BuildUI()
 	UIKit:ttfLabel({
 		text = _("你将使用你的邮箱向我们发送一份邮件"),
 		size = 20,
-		color= 0x797154
+		color= 0x615b44
 	}):align(display.CENTER_TOP,304, 735):addTo(bg)
 	self.list_view = UIListView.new{
         viewRect = cc.rect(26,50,556,650),

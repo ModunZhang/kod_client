@@ -797,14 +797,9 @@ local function on_move(_, sprite)
     sprite:OnSceneMove()
 end
 function CityLayer:OnSceneMove()
-    -- self:IteratorCanUpgradingBuilding(on_move)
     table.foreach(self.tiles, function(_, sprite)
         sprite:OnSceneMove()
     end)
-    -- table.foreach(self.ruins, on_move)
-    -- if self.road then
-    --     on_move(nil, self.road)
-    -- end
     local move_widget = self.city_scene:GetSceneUILayer():getChildByTag(989)
     if move_widget then
         local ruins = move_widget:GetRuins()
@@ -813,7 +808,9 @@ function CityLayer:OnSceneMove()
             move_widget:setPosition(world_pos.x, world_pos.y)
         end
     end
-    -- self:UpdateWeather()
+    for i,v in ipairs(self.city_scene:GetMarkBuildings()) do
+        v:OnSceneMove()
+    end
     self.city_scene:GetSceneUILayer():OnSceneMove()
 end
 function CityLayer:UpdateWeather()

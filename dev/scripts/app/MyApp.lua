@@ -252,6 +252,9 @@ end
 function MyApp:EnterMyCityScene()
     app:enterScene("MyCityScene", {City}, "custom", -1, transition_)
 end
+function MyApp:EnterFteScene()
+    app:enterScene("FteScene", nil, "custom", -1, transition_)
+end
 function MyApp:EnterMyAllianceSceneWithTips(tips)
     UIKit:showMessageDialog(nil,tips,function()
         self:EnterMyAllianceScene()

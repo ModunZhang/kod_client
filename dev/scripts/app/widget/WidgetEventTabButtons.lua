@@ -379,12 +379,11 @@ function WidgetEventTabButtons:CreateProgressItem()
     ,{
         disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
     }):addTo(node):align(display.RIGHT_CENTER, WIDGET_WIDTH - 6, half_height)
-        :setButtonLabel(cc.ui.UILabel.new({
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        :setButtonLabel(UIKit:ttfLabel({
             text = _("加速"),
             size = 18,
-            font = UIKit:getFontFilePath(),
-            color = UIKit:hex2c3b(0xfff3c7)}))
+            color = 0xfff3c7,
+            shadow = true}))
     function node:SetProgressInfo(str, percent)
         self.desc:setString(str)
         self.progress:setPercentage(percent)
@@ -408,12 +407,11 @@ function WidgetEventTabButtons:CreateProgressItem()
         return self
     end
     function node:SetButtonLabel(str)
-        self.speed_btn:setButtonLabel(cc.ui.UILabel.new({
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        self.speed_btn:setButtonLabel(UIKit:ttfLabel({
             text = str,
             size = 18,
-            font = UIKit:getFontFilePath(),
-            color = UIKit:hex2c3b(0xfff3c7)}))
+            color = 0xfff3c7,
+            shadow = true}))
         return self
     end
     function node:GetSpeedUpButton()
@@ -870,7 +868,6 @@ function WidgetEventTabButtons:LoadTechnologyEvents()
     for i = #technology_events, 1, -1 do
         print(i, technology_events[i][1])
     end
-    dump(technology_events)
     for i,v in ipairs(technology_events) do
         local building_type, event = unpack(v)
         local desc = military_techs_desc[building_type]
