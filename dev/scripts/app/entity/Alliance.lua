@@ -471,7 +471,6 @@ function Alliance:OnAllianceDataChanged(alliance_data,refresh_time,deltaData)
     self:OnVillagesChanged(alliance_data,deltaData)
     self.alliance_shrine:OnAllianceDataChanged(alliance_data,deltaData,refresh_time)
     self.alliance_map:OnAllianceDataChanged(alliance_data, deltaData)
-    --TODO:
 
     self:OnAttackMarchEventsDataChanged(alliance_data,deltaData,refresh_time)
 
@@ -660,10 +659,10 @@ end
 
 function Alliance:CallEventsChangedListeners(LISTEN_TYPE,changed_map)
     self:NotifyListeneOnType(LISTEN_TYPE, function(listener)
-        listener[Alliance.LISTEN_TYPE[LISTEN_TYPE]](listener,changed_map)
+        listener[Alliance.LISTEN_TYPE[LISTEN_TYPE]](listener,changed_map,self)
     end)
     if self:GetAllianceBelvedere()[Alliance.LISTEN_TYPE[LISTEN_TYPE]] then
-        self:GetAllianceBelvedere()[Alliance.LISTEN_TYPE[LISTEN_TYPE]](self:GetAllianceBelvedere(),changed_map)
+        self:GetAllianceBelvedere()[Alliance.LISTEN_TYPE[LISTEN_TYPE]](self:GetAllianceBelvedere(),changed_map,self)
     end
 end
 

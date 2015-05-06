@@ -9,6 +9,7 @@ local GameUIStrikePlayer = import(".GameUIStrikePlayer")
 local WidgetAllianceEnterButtonProgress = import("..widget.WidgetAllianceEnterButtonProgress")
 local SpriteConfig = import("..sprites.SpriteConfig")
 local UILib = import(".UILib")
+local BelvedereEntity = import("..entity.BelvedereEntity")
 
 function GameUIAllianceVillageEnter:ctor(building,isMyAlliance,my_alliance,enemy_alliance)
 	GameUIAllianceVillageEnter.super.ctor(self,building,isMyAlliance,my_alliance)
@@ -376,12 +377,17 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
 		end
 	else --我方占领
 		if villageEvent:GetPlayerRole() == villageEvent.EVENT_PLAYER_ROLE.Me then --自己占领
-			local che_button = self:BuildOneButton("capture_38x56.png",_("撤军"),{down = "TROOP_BACK"}):onButtonClicked(function()
+			local che_button = self:BuildOneButton("capture_38x56.png",_("撤军")):onButtonClicked(function()
 
 				NetManager:getRetreatFromVillagePromise(villageEvent:VillageData().alliance.id,villageEvent:Id())
 				self:LeftButtonClicked()
 			end)
-	        buttons =  {che_button}
+
+			local info_button = self:BuildOneButton("icon_info_56x56.png",_("部队")):onButtonClicked(function()
+				self:FindTroopShowInfoFromAllianceBelvedere()
+				self:LeftButtonClicked()
+			end)
+	        buttons =  {che_button,info_button}
 	    elseif villageEvent:GetPlayerRole() ==   villageEvent.EVENT_PLAYER_ROLE.Ally then --盟友占领
 			local attack_button = self:BuildOneButton("capture_38x56.png",_("占领")):onButtonClicked(function()
 	     		if self:CheckCanAttackVillage() then
@@ -401,6 +407,18 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
 	    end
  	end
  	return buttons
+end
+
+function GameUIAllianceVillageEnter:FindTroopShowInfoFromAllianceBelvedere()
+	local village_id = self:GetVillageInfo().id
+    local villageEvent = self:GetMyAlliance():FindVillageEventByVillageId(village_id)
+    if villageEvent then
+    	if villageEvent:GetPlayerRole() == villageEvent.EVENT_PLAYER_ROLE.Me then 
+    		local belvedereEntity = BelvedereEntity.new(villageEvent)
+			belvedereEntity:SetType(BelvedereEntity.ENTITY_TYPE.COLLECT)
+			UIKit:newGameUI("GameUIWatchTowerMyTroopsDetail",belvedereEntity):AddToCurrentScene(true)
+    	end
+    end
 end
 
 function GameUIAllianceVillageEnter:OnMoveOutStage()

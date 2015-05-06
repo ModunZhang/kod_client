@@ -40,9 +40,9 @@ end
 
 
 
-function GameUIChatChannel:OnMoveOutStage()
+function GameUIChatChannel:onCleanup()
     self:GetChatManager():RemoveListenerOnType(self,ChatManager.LISTEN_TYPE.TO_TOP)
-    GameUIChatChannel.super.OnMoveOutStage(self)    
+    GameUIChatChannel.super.onCleanup(self)    
 end
 
 function GameUIChatChannel:TO_TOP(data)
