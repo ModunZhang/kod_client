@@ -1,9 +1,11 @@
 local cocos_promise = import("..utils.cocos_promise")
+local Localize = import("..utils.Localize")
 local promise = import("..utils.promise")
 local GameUIWatchTowerTroopDetail = import("..ui.GameUIWatchTowerTroopDetail")
 local WidgetMoveHouse = import("..widget.WidgetMoveHouse")
 local TutorialLayer = import("..ui.TutorialLayer")
 local GameUINpc = import("..ui.GameUINpc")
+local WidgetFteArrow = import("..widget.WidgetFteArrow")
 local Arrow = import("..ui.Arrow")
 local Sprite = import("..sprites.Sprite")
 local SoldierManager = import("..entity.SoldierManager")
@@ -16,6 +18,7 @@ function MyCityScene:ctor(...)
     self.util_node = display.newNode():addTo(self)
     MyCityScene.super.ctor(self, ...)
     self.clicked_callbacks = {}
+    self.mark_buildings = {}
 end
 function MyCityScene:onEnter()
     MyCityScene.super.onEnter(self)
@@ -73,7 +76,17 @@ function MyCityScene:GetHomePage()
     return self.home_page
 end
 function MyCityScene:onEnterTransitionFinish()
-
+    local npc = UIKit:newGameUI('GameUINpc', {words = _("我们到了...现在你的伤也恢复的差不多了, 让我们来测试一下你觉醒者的能力吧..."), brow = "smile"}):AddToScene(self, true)
+    npc.is_should_start = true
+    npc:EnableReceiveClickMsg(false)
+    npc:PromiseOfDialogEnded(1):next(function()
+        npc:EnableReceiveClickMsg(true)
+    end)
+    npc:PromiseOfDialogEndWithClicked(1):next(function()
+        return GameUINpc:PromiseOfLeave()
+    end):next(function()
+        return self:PromiseOfClickBuilding(18, 8)
+    end)
 end
 function MyCityScene:CreateHomePage()
     local home = UIKit:newGameUI('GameUIHome', self:GetCity()):AddToScene(self)
@@ -93,7 +106,11 @@ function MyCityScene:PromiseOfClickBuilding(x, y)
     assert(#self.clicked_callbacks == 0)
     local arrow
     self:GetSceneLayer():FindBuildingBy(x, y):next(function(building)
-        arrow = Arrow.new():addTo(self.arrow_layer)
+        table.insert(self.mark_buildings, building)
+        local mx, my = building:GetEntity():GetMidLogicPosition()
+        self:GotoLogicPoint(mx, my, 5)
+        local str = string.format(_("点击建筑: %s"), Localize.building_name[building:GetEntity():GetType()])
+        arrow = WidgetFteArrow.new(str):addTo(self.arrow_layer):TurnDown()
         building:AddObserver(arrow)
         building:OnSceneMove()
     end)
@@ -142,6 +159,12 @@ function MyCityScene:GetLockButtonsByBuildingType(building_type)
         end
     end)
     return cocos_promise.defer(function() return lock_button end)
+end
+function MyCityScene:GetMarkBuildings()
+    return self.mark_buildings
+end
+function MyCityScene:RemoveAllMarkBuildings()
+    self.mark_buildings = {}
 end
 
 
@@ -341,6 +364,7 @@ function MyCityScene:OpenUI(building)
 end
 
 return MyCityScene
+
 
 
 

@@ -79,8 +79,9 @@ function GameUINpc:ctor(...)
         return true
     end)
     self:InitDialog(...)
-    -- self.enter_callbacks = {}
+    self.enter_callbacks = {}
     self.leave_callbacks = {}
+    self:Resume()
 end
 function GameUINpc:InitDialog(...)
     self.dialog_index = 1
@@ -129,9 +130,11 @@ end
 function GameUINpc:OnMoveInStage()
     GameUINpc.super.OnMoveInStage(self)
     self:setLocalZOrder(3001)
-    self:setTouchSwallowEnabled(true)
-    self:EnableReceiveClickMsg(true)
     self.ui_map = self:BuildUI()
+    if self.is_should_start then
+        self:StartDialog()
+    end
+    self:OnEnter()
 end
 function GameUINpc:onExit()
     GameUINpc.super.onExit(self)
@@ -164,9 +167,13 @@ function GameUINpc:ShowWords(dialog, ani)
         self.label:removeFromParent()
         self.label = nil
     end
-    if dialog.brow and self.npc_brow ~= dialog.brow then
+    if self.npc_brow ~= dialog.brow then
         self.npc_brow = dialog.brow
-        self.ui_map.npc:getAnimation():play(self.npc_brow, -1, 0)
+        if self.npc_brow then
+            self.ui_map.npc:getAnimation():play(self.npc_brow, -1, 0)
+        else
+            self.ui_map.npc:getAnimation():playWithIndex(0, -1, 0)
+        end
     end
     self.label = self:CreateLabel()
     self.label:setString(dialog.real_words or "")
@@ -178,7 +185,8 @@ function GameUINpc:Reset()
     self.dialog = {}
     self.dialog_index = 1
     self.dialog_index_callbacks = {}
-    -- self.enter_callbacks = {}
+    self.dialog_clicked_callbacks = {}
+    self.enter_callbacks = {}
     self.leave_callbacks = {}
     if self.label then
         self.label:removeFromParent()
@@ -228,13 +236,6 @@ function GameUINpc:PromiseOfDialogEndWithClicked(index)
     end)
     return p
 end
-function GameUINpc:OnDialogEnded(index)
-    local callbacks = self.dialog_index_callbacks[index]
-    if callbacks and #callbacks > 0 then
-        callbacks[1]()
-        table.remove(callbacks, 1)
-    end
-end
 function GameUINpc:PromiseOfActive()
     if UIKit:getRegistry().isObjectExists("GameUINpc") then
         UIKit:getRegistry().getObject("GameUINpc"):EnableReceiveClickMsg(true)
@@ -259,6 +260,13 @@ function GameUINpc:PromiseOfLockInput()
     end
     return cocos_promise.defer()
 end
+function GameUINpc:OnDialogEnded(index)
+    local callbacks = self.dialog_index_callbacks[index]
+    if callbacks and #callbacks > 0 then
+        callbacks[1]()
+        table.remove(callbacks, 1)
+    end
+end
 function GameUINpc:PromiseOfDialogEnded(index)
     local p = promise.new()
     local callbacks = self.dialog_index_callbacks[index]
@@ -281,8 +289,9 @@ function GameUINpc:PromiseOfSay(...)
         instance:StartDialog()
     else
         instance = UIKit:newGameUI('GameUINpc', ...):AddToCurrentScene(true)
+        instance.is_should_start = true
     end
-    return instance:PromiseOfDialogEnded(#{...})
+    return instance:PromiseOfDialogEndWithClicked(#{...})
 end
 function GameUINpc:OnLeave()
     local callbacks = self.leave_callbacks
@@ -305,14 +314,29 @@ function GameUINpc:PromiseOfLeave()
     end
     return cocos_promise.defer()
 end
+function GameUINpc:OnEnter()
+    local callbacks = self.enter_callbacks
+    if #callbacks > 0 then
+        callbacks[1]()
+        table.remove(callbacks, 1)
+    end
+end
 function GameUINpc:PromiseOfEnter()
-    assert(false)
+    if UIKit:getRegistry().isObjectExists("GameUINpc") then
+        local instance = UIKit:getRegistry().getObject("GameUINpc")
+        local p = promise.new()
+        local callbacks = instance.enter_callbacks
+        assert(#callbacks == 0)
+        table.insert(callbacks, function()
+            return p:resolve()
+        end)
+        return p
+    end
+    return cocos_promise.defer()
 end
 function GameUINpc:BuildUI()
     local ui_map = {}
-    
-    -- ui_map.background = display.newSprite("fte_background1.jpg"):addTo(self)
-    -- :align(display.CENTER_TOP, display.cx, display.height)
+    display.newColorLayer(cc.c4b(0,0,0,180)):addTo(self):setTouchEnabled(false)
     ui_map.dialog_bg = display.newSprite("fte_background.png")
         :addTo(self):align(display.CENTER_BOTTOM, display.cx, 0)
     local size = ui_map.dialog_bg:getContentSize()
