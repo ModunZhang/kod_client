@@ -28,6 +28,19 @@ function FteScene:ctor()
     end)):next(cocos_promise.delay(1)):next(function()
         app:EnterMyCityScene()
     end)
+
+    cc.ui.UIPushButton.new(
+        {normal = "yellow_btn_up_148x58.png",
+            pressed = "yellow_btn_down_148x58.png"}
+    ):setButtonLabel(UIKit:ttfLabel({
+        text = _("跳过"),
+        size = 24,
+        color = 0xffedae,
+        shadow= true
+    })):addTo(self, 4000):pos(display.cx, display.cy):onButtonClicked(function()
+        UIKit:closeAllUI()
+        app:EnterMyCityScene()
+    end)
 end
 function FteScene:onEnterTransitionFinish()
     self.npc:StartDialog()

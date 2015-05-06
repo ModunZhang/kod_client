@@ -76,17 +76,7 @@ function MyCityScene:GetHomePage()
     return self.home_page
 end
 function MyCityScene:onEnterTransitionFinish()
-    local npc = UIKit:newGameUI('GameUINpc', {words = _("我们到了...现在你的伤也恢复的差不多了, 让我们来测试一下你觉醒者的能力吧..."), brow = "smile"}):AddToScene(self, true)
-    npc.is_should_start = true
-    npc:EnableReceiveClickMsg(false)
-    npc:PromiseOfDialogEnded(1):next(function()
-        npc:EnableReceiveClickMsg(true)
-    end)
-    npc:PromiseOfDialogEndWithClicked(1):next(function()
-        return GameUINpc:PromiseOfLeave()
-    end):next(function()
-        return self:PromiseOfClickBuilding(18, 8)
-    end)
+    -- self:RunFte()
 end
 function MyCityScene:CreateHomePage()
     local home = UIKit:newGameUI('GameUIHome', self:GetCity()):AddToScene(self)
@@ -363,35 +353,53 @@ function MyCityScene:OpenUI(building)
     end
 end
 
+function MyCityScene:RunFte()
+    local npc = UIKit:newGameUI('GameUINpc', {words = _("我们到了...现在你的伤也恢复的差不多了, 让我们来测试一下你觉醒者的能力吧..."), brow = "smile"}):AddToScene(self, true)
+    npc.is_should_start = true
+    npc:EnableReceiveClickMsg(false)
+    npc:PromiseOfDialogEnded(1):next(function()
+        npc:EnableReceiveClickMsg(true)
+    end)
+    npc:PromiseOfDialogEndWithClicked(1):next(function()
+        return GameUINpc:PromiseOfLeave()
+    end):next(function()
+        return self:PromiseOfClickBuilding(18, 8)
+    end):next(function()
+        return UIKit:PromiseOfOpen("GameUIDragonEyrieMain")
+    end):next(function(ui)
+        return ui:PromiseOfFte()
+    end)
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 return MyCityScene
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
