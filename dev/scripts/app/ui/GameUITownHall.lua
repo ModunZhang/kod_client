@@ -15,8 +15,8 @@ local WidgetInfo = import("..widget.WidgetInfo")
 local dailyQuests_config = GameDatas.DailyQuests.dailyQuests
 local dailyQuestStar_config = GameDatas.DailyQuests.dailyQuestStar
 local GameUITownHall = UIKit:createUIClass("GameUITownHall", "GameUIUpgradeBuilding")
-function GameUITownHall:ctor(city, townHall)
-    GameUITownHall.super.ctor(self, city, _("市政厅"), townHall)
+function GameUITownHall:ctor(city, townHall,default_tab)
+    GameUITownHall.super.ctor(self, city, _("市政厅"), townHall,default_tab)
     self.town_hall_city = city
     self.town_hall = townHall
 end

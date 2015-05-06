@@ -12,7 +12,7 @@ function GameUIDailyQuestSpeedUp:ctor(quest)
     dump(quest)
     self.quest = quest
     self:SetAccBtnsGroup(self:GetEventType(),quest.id)
-    self:SetAccTips(_("每日不能免费加速"))
+    self:SetAccTips(_("每日任务不能免费加速"))
     self:SetUpgradeTip(string.format(_("正在%s"),Localize.daily_quests_name[quest.index]))
     local current_time = app.timer:GetServerTime()
     local show_time = quest.finishTime/1000-current_time <0 and 0 or quest.finishTime/1000-current_time

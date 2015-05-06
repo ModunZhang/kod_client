@@ -280,44 +280,44 @@ function MyCityScene:OpenUI(building)
     if type_ == "ruins" and not self:IsEditMode() then
         UIKit:newGameUI('GameUIBuild', city, building:GetEntity()):AddToScene(self, true)
     elseif type_ == "keep" then
-        self._keep_page = UIKit:newGameUI('GameUIKeep',city,building:GetEntity())
+        self._keep_page = UIKit:newGameUI('GameUIKeep',city,building:GetEntity(),"info")
         self._keep_page:AddToScene(self, true)
     elseif type_ == "dragonEyrie" then
-        UIKit:newGameUI('GameUIDragonEyrieMain', city,building:GetEntity()):AddToCurrentScene(true)
+        UIKit:newGameUI('GameUIDragonEyrieMain', city,building:GetEntity(),nil,"dragon"):AddToCurrentScene(true)
     elseif type_ == "toolShop" then
-        UIKit:newGameUI('GameUIToolShop', city, building:GetEntity()):AddToScene(self, true)
+        UIKit:newGameUI('GameUIToolShop', city, building:GetEntity(),"manufacture"):AddToScene(self, true)
     elseif type_ == "blackSmith" then
         UIKit:newGameUI('GameUIBlackSmith', city, building:GetEntity()):AddToScene(self, true)
     elseif type_ == "materialDepot" then
-        UIKit:newGameUI('GameUIMaterialDepot', city, building:GetEntity()):AddToScene(self, true)
+    UIKit:newGameUI('GameUIMaterialDepot', city, building:GetEntity(),"info"):AddToScene(self, true)
     elseif type_ == "barracks" then
-        UIKit:newGameUI('GameUIBarracks', city, building:GetEntity()):AddToScene(self, true)
+        UIKit:newGameUI('GameUIBarracks', city, building:GetEntity(),"recruit"):AddToScene(self, true)
     elseif type_ == "academy" then
-        self._armyCamp_page = UIKit:newGameUI('GameUIAcademy',city,building:GetEntity()):AddToScene(self, true)
+        self._armyCamp_page = UIKit:newGameUI('GameUIAcademy',city,building:GetEntity(),"technology"):AddToScene(self, true)
     elseif type_ == "townHall" then
-        self._armyCamp_page = UIKit:newGameUI('GameUITownHall',city,building:GetEntity()):AddToScene(self, true)
+        self._armyCamp_page = UIKit:newGameUI('GameUITownHall',city,building:GetEntity(),"administration"):AddToScene(self, true)
     elseif type_ == "foundry"
         or type_ == "stoneMason"
         or type_ == "lumbermill"
         or type_ == "mill" then
         self._armyCamp_page = UIKit:newGameUI('GameUIPResourceBuilding',city,building:GetEntity()):AddToScene(self, true)
     elseif type_ == "warehouse" then
-        self._warehouse_page = UIKit:newGameUI('GameUIWarehouse',city,building:GetEntity())
+        self._warehouse_page = UIKit:newGameUI('GameUIWarehouse',city,building:GetEntity(),"resource")
         self._warehouse_page:AddToScene(self, true)
     elseif iskindof(building:GetEntity(), 'ResourceUpgradeBuilding') then
         if type_ == "dwelling" then
-            UIKit:newGameUI('GameUIDwelling',building:GetEntity(), city):AddToCurrentScene(true)
+            UIKit:newGameUI('GameUIDwelling',building:GetEntity(), city,"citizen"):AddToCurrentScene(true)
         else
             UIKit:newGameUI('GameUIResource',building:GetEntity()):AddToCurrentScene(true)
         end
     elseif type_ == "hospital" then
-        UIKit:newGameUI('GameUIHospital', city, building:GetEntity()):AddToScene(self, true)
+        UIKit:newGameUI('GameUIHospital', city, building:GetEntity(),"heal"):AddToScene(self, true)
     elseif type_ == "watchTower" then
         UIKit:newGameUI('GameUIWatchTower', city, building:GetEntity()):AddToScene(self, true)
     elseif type_ == "tradeGuild" then
-        UIKit:newGameUI('GameUITradeGuild', city, building:GetEntity()):AddToScene(self, true)
+        UIKit:newGameUI('GameUITradeGuild', city, building:GetEntity(),"buy"):AddToScene(self, true)
     elseif type_ == "wall" then
-        UIKit:newGameUI('GameUIWall', city, building:GetEntity()):AddToScene(self, true)
+        UIKit:newGameUI('GameUIWall', city, building:GetEntity(),"military"):AddToScene(self, true)
     elseif type_ == "tower" then
         UIKit:newGameUI('GameUITower', city, building:GetEntity():BelongCity():GetTower()):AddToScene(self, true)
     elseif type_ == "trainingGround"
@@ -325,7 +325,7 @@ function MyCityScene:OpenUI(building)
         or type_ == "hunterHall"
         or type_ == "workshop"
     then
-        UIKit:newGameUI('GameUIMilitaryTechBuilding', city, building:GetEntity()):AddToScene(self, true)
+        UIKit:newGameUI('GameUIMilitaryTechBuilding', city, building:GetEntity(),"tech"):AddToScene(self, true)
     elseif type_ == "airship" then
         local dragon_manger = city:GetDragonEyrie():GetDragonManager()
         local dragon_type = dragon_manger:GetCanFightPowerfulDragonType()

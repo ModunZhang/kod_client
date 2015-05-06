@@ -43,9 +43,9 @@ local function get_goods_unit(goods_name)
     end
 end
 
-function GameUITradeGuild:ctor(city,building)
+function GameUITradeGuild:ctor(city,building, default_tab)
     local bn = Localize.building_name
-    GameUITradeGuild.super.ctor(self,city,bn[building:GetType()],building)
+    GameUITradeGuild.super.ctor(self,city,bn[building:GetType()],building,default_tab)
     self.trade_manager = User:GetTradeManager()
     self.max_sell_queue = self.building:GetMaxSellQueue()
 end

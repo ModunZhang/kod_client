@@ -17,8 +17,8 @@ local GameUIDragonDeathSpeedUp = import(".GameUIDragonDeathSpeedUp")
 local UICheckBoxButton = import(".UICheckBoxButton")
 
 -- lockDragon: 是否锁定选择龙的操作,默认不锁定
-function GameUIDragonEyrieMain:ctor(city,building,lockDragon)
-	GameUIDragonEyrieMain.super.ctor(self,city,_("龙巢"),building)
+function GameUIDragonEyrieMain:ctor(city,building,lockDragon,default_tab)
+	GameUIDragonEyrieMain.super.ctor(self,city,_("龙巢"),building,default_tab)
 	self.building = building
 	self.city = city
 	self.draong_index = 1

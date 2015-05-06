@@ -106,8 +106,8 @@ function WidgetMilitaryTechnology:CreateItem(tech)
 
     function item:LevelUpRefresh(tech)
         tech_level:setString(string.format("Lv%d",tech:Level()))
-        line1:SetText("+"..(tech:GetAtkEff()*100).."%",(tech:GetNextLevlAtkEff()*100).."%")
-        line2:SetText("+"..tech:GetTechPoint(),tech:GetNextLevlTechPoint())
+        line1:SetText((tech:GetAtkEff()*100).."%",(tech:GetNextLevlAtkEff()*100).."%")
+        line2:SetText(tech:GetTechPoint(),tech:GetNextLevlTechPoint())
         if tech:IsMaxLevel() then
             upgrade_btn:hide()
         end

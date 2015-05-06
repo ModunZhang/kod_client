@@ -10,8 +10,8 @@ local UILib = import(".UILib")
 local City = City
 local UIListView = import(".UIListView")
 local window = import("..utils.window")
-function GameUIResource:ctor(building)
-    GameUIResource.super.ctor(self, City, self:GetTitleByType(building),building)
+function GameUIResource:ctor(building,default_tab)
+    GameUIResource.super.ctor(self, City, self:GetTitleByType(building),building,default_tab)
     self.building = building
     self.dataSource = self:GetDataSource()
 end

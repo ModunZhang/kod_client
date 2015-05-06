@@ -19,9 +19,9 @@ local building_map_tech = {
 }
 
 local GameUIMilitaryTechBuilding = UIKit:createUIClass('GameUIMilitaryTechBuilding',"GameUIUpgradeBuilding")
-function GameUIMilitaryTechBuilding:ctor(city,building)
+function GameUIMilitaryTechBuilding:ctor(city,building,default_tab)
     local bn = Localize.building_name
-    GameUIMilitaryTechBuilding.super.ctor(self,city,bn[building:GetType()],building)
+    GameUIMilitaryTechBuilding.super.ctor(self,city,bn[building:GetType()],building,default_tab)
 end
 
 function GameUIMilitaryTechBuilding:OnMoveInStage()

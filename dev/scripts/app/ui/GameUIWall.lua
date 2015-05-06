@@ -11,9 +11,9 @@ local timer = app.timer
 local WidgetUseItems = import("..widget.WidgetUseItems")
 local WidgetSelectWallDragon = import("..widget.WidgetSelectWallDragon")
 
-function GameUIWall:ctor(city,building)
+function GameUIWall:ctor(city,building,default_tab)
 	self.city = city
-    GameUIWall.super.ctor(self,city,Localize.building_name[building:GetType()],building)
+    GameUIWall.super.ctor(self,city,Localize.building_name[building:GetType()],building,default_tab)
     self.dragon_manager = city:GetFirstBuildingByType("dragonEyrie"):GetDragonManager()
     self.dragon_manager:AddListenOnType(self,self.dragon_manager.LISTEN_TYPE.OnHPChanged)
 end

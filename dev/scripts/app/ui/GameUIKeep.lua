@@ -36,8 +36,8 @@ local building_config_map = {
     ["workshop"] = {scale = 0.46, offset = {x = 74, y = 74}},
 }
 
-function GameUIKeep:ctor(city,building)
-    GameUIKeep.super.ctor(self,city,_("城堡"),building)
+function GameUIKeep:ctor(city,building,default_tab)
+    GameUIKeep.super.ctor(self,city,_("城堡"),building,default_tab)
 end
 
 function GameUIKeep:OnMoveInStage()

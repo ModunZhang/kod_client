@@ -13,8 +13,8 @@ local WidgetRecruitSoldier = import("..widget.WidgetRecruitSoldier")
 local SoldierManager = import("..entity.SoldierManager")
 local GameUIBarracks = UIKit:createUIClass("GameUIBarracks", "GameUIUpgradeBuilding")
 local WidgetRecruitSoldier_tag = 1
-function GameUIBarracks:ctor(city, barracks)
-    GameUIBarracks.super.ctor(self, city, _("兵营"),barracks)
+function GameUIBarracks:ctor(city, barracks,default_tab)
+    GameUIBarracks.super.ctor(self, city, _("兵营"),barracks,default_tab)
     self.barracks_city = city
     self.barracks = barracks
 
