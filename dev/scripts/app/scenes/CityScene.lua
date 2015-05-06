@@ -127,7 +127,7 @@ function CityScene:CreateSceneUILayer()
         end
     end
     function scene_ui_layer:OnSceneMove()
-        if self.indicator then
+        if self.indicator and self.building__.GetWorldPosition then
             local _,top = self.building__:GetWorldPosition()
             self.indicator:pos(top.x, top.y)
         end
