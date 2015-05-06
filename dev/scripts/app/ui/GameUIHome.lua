@@ -203,7 +203,7 @@ function GameUIHome:CreateTop()
 
 
     -- 玩家名字背景加文字
-    local ox = 159
+    local ox = 150
     local name_bg = display.newSprite("player_name_bg_168x30.png"):addTo(top_bg)
         :align(display.TOP_LEFT, ox, top_bg:getContentSize().height-10):setCascadeOpacityEnabled(true)
     self.name_label = cc.ui.UILabel.new({
@@ -274,14 +274,14 @@ function GameUIHome:CreateTop()
     -- 玩家信息背景
     local player_bg = display.newSprite("player_bg_110x106.png"):addTo(top_bg, 2)
         :align(display.LEFT_BOTTOM, display.width>640 and 58 or 64, 10):setCascadeOpacityEnabled(true)
-    self.player_icon = UIKit:GetPlayerIconOnly(User:Icon()):addTo(player_bg):pos(55, 60):scale(0.75)
+    self.player_icon = UIKit:GetPlayerIconOnly(User:Icon()):addTo(player_bg):pos(55, 64):scale(0.72)
     self.exp = display.newSprite("player_exp_bar_110x106.png"):addTo(player_bg):pos(55, 53)
-    local level_bg = display.newSprite("level_bg_74x21.png"):addTo(player_bg):pos(55, 19):setCascadeOpacityEnabled(true)
+    local level_bg = display.newSprite("level_bg_72x19.png"):addTo(player_bg):pos(55, 18):setCascadeOpacityEnabled(true)
     self.level_label = UIKit:ttfLabel({
-        size = 20,
+        size = 14,
         color = 0xfff1cc,
         shadow = true,
-    }):addTo(level_bg):align(display.CENTER, 37, 12)
+    }):addTo(level_bg):align(display.CENTER, 37, 11)
 
     -- vip
     local vip_btn = cc.ui.UIPushButton.new(
