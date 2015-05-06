@@ -188,6 +188,9 @@ function Alliance:OnPropertyChange(property_name, old_value, new_value)
     if is_new_alliance then
         self:OnOperation("join")
     end
+    if property_name == "status" and new_value == "fight" and display.getRunningScene().__cname ~= "MainScene" then
+        app:GetAudioManager():PlayeEffectSoundWithKey("BATTLE_START")
+    end
     self:OnBasicChanged{
         [property_name] = {old = old_value, new = new_value}
     }

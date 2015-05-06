@@ -224,7 +224,7 @@ function GameUITownHall:CreateQuestItem(quest,index)
                 status = _("任务完成")
                 control_btn:setButtonImage(cc.ui.UIPushButton.NORMAL, "yellow_btn_up_148x58.png", true)
                 control_btn:setButtonImage(cc.ui.UIPushButton.PRESSED,"yellow_btn_down_148x58.png", true)
-                control_btn:removeAllEventListeners()
+                control_btn:removeEventListener(cc.ui.UIPushButton.CLICKED_EVENT)
                 local total_rewards = self.total_rewards
                 control_btn:setButtonLabel(
                     UIKit:commonButtonLable({
@@ -245,7 +245,7 @@ function GameUITownHall:CreateQuestItem(quest,index)
             else
                 control_btn:setButtonImage(cc.ui.UIPushButton.NORMAL, "green_btn_up_148x58.png", true)
                 control_btn:setButtonImage(cc.ui.UIPushButton.PRESSED,"green_btn_down_148x58.png", true)
-                control_btn:removeAllEventListeners()
+                control_btn:removeEventListener(cc.ui.UIPushButton.CLICKED_EVENT)
                 control_btn:setButtonLabel(
                     UIKit:commonButtonLable({
                         color = 0xfff3c7,
