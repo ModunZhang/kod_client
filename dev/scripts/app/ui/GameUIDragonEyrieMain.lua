@@ -5,6 +5,8 @@
 local GameUIDragonEyrieMain = UIKit:createUIClass("GameUIDragonEyrieMain","GameUIUpgradeBuilding")
 local GameUtils = GameUtils
 local window = import("..utils.window")
+local TutorialLayer = import(".TutorialLayer")
+local WidgetFteArrow = import("..widget.WidgetFteArrow")
 local cocos_promise = import("..utils.cocos_promise")
 local StarBar = import(".StarBar")
 local DragonManager = import("..entity.DragonManager")
@@ -98,7 +100,6 @@ end
 
 
 function GameUIDragonEyrieMain:OnMoveInStage()
-	GameUIDragonEyrieMain.super.OnMoveInStage(self)
 	self:CreateUI()
 	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnHPChanged)
 	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
@@ -108,6 +109,7 @@ function GameUIDragonEyrieMain:OnMoveInStage()
 	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventChanged)
 	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventRefresh)
 	self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventTimer)
+	GameUIDragonEyrieMain.super.OnMoveInStage(self)
 end
 
 function GameUIDragonEyrieMain:OnMoveOutStage()
@@ -498,7 +500,7 @@ end
 
 
 function GameUIDragonEyrieMain:OnEnergyButtonClicked()
-	NetManager:getHatchDragonPromise(self:GetCurrentDragon():Type())
+	return NetManager:getHatchDragonPromise(self:GetCurrentDragon():Type())
 end
 
 function GameUIDragonEyrieMain:GetCurrentDragon()
@@ -617,6 +619,9 @@ function GameUIDragonEyrieMain:OnDragonDeathSpeedUpClicked()
 end
 
 --fte
+function GameUIDragonEyrieMain:CreateFteLayer()
+	return TutorialLayer.new(self.hate_button):addTo(self, 999):Enable()
+end
 function GameUIDragonEyrieMain:Find(type_)
 	if type_ == "dragon" then
 		return cocos_promise.defer(function()
@@ -632,4 +637,17 @@ function GameUIDragonEyrieMain:WaitTag(type_)
         return self
     end)
 end
+function GameUIDragonEyrieMain:PromiseOfFte()
+	-- local p = promise.new()
+	-- self:OnEnergyButtonClicked():done(function() 
+	-- 	p:resolve()
+	-- end)
+	-- local fte_layer = self:CreateFteLayer()
+	-- local r = self.hate_button:getCascadeBoundingBox()
+	-- WidgetFteArrow.new(_("点击按钮: 孵化")):addTo(fte_layer):TurnUp():pos(r.x + r.width/2, r.y)
+	-- return p
+	-- return cocos_promise.defer()
+end
 return GameUIDragonEyrieMain
+
+
