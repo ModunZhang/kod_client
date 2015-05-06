@@ -157,8 +157,8 @@ function GameUIWarReport:GetBooty()
     local booty = {}
     for k,v in pairs(self:GetRewards()) do
         table.insert(booty, {
-            resource_type = Localize.fight_reward[v.name],
-            icon= UILib.resource[v.name],
+            resource_type = Localize.fight_reward[v.name] or Localize.equip[v.name],
+            icon= UILib.resource[v.name] or UILib.equipment[v.name],
             value = v.count
         })
     end
