@@ -660,7 +660,7 @@ function GameUIVip:CreateVIPItem(params)
             text = params.second_label,
             font = UIKit:getFontFilePath(),
             size = 20,
-            color = UIKit:hex2c3b(0x797154)
+            color = UIKit:hex2c3b(0x615b44)
         }):align(display.LEFT_CENTER,140, 60)
         :addTo(body)
     local button_label_str,normal_img,pressed_img

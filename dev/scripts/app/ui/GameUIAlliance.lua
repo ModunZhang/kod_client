@@ -359,7 +359,7 @@ function GameUIAlliance:NoAllianceTabEvent_inviteIf()
     UIKit:ttfLabel({
         text = _("下列联盟邀请你加入"),
         size = 22,
-        color= 0x797154,
+        color= 0x615b44,
         align = cc.TEXT_ALIGNMENT_CENTER
     }):align(display.BOTTOM_CENTER,window.cx,760):addTo(invateNode)
     self.invateListView = list
@@ -393,7 +393,7 @@ function GameUIAlliance:NoAllianceTabEvent_applyIf()
     UIKit:ttfLabel({
         text = _("下列等待联盟审批"),
         size = 22,
-        color= 0x797154,
+        color= 0x615b44,
         align = cc.TEXT_ALIGNMENT_CENTER
     }):align(display.BOTTOM_CENTER,window.cx,760):addTo(applyNode)
     self:RefreshApplyListView()
@@ -460,7 +460,7 @@ function GameUIAlliance:getCommonListItem_(listType,alliance)
     local memberTitleLabel = UIKit:ttfLabel({
         text = _("成员"),
         size = 20,
-        color = 0x797154
+        color = 0x615b44
     }):addTo(info_bg):align(display.LEFT_TOP,10,info_bg:getContentSize().height - 10)
 
     local memberValLabel = UIKit:ttfLabel({
@@ -473,7 +473,7 @@ function GameUIAlliance:getCommonListItem_(listType,alliance)
     local fightingTitleLabel = UIKit:ttfLabel({
         text = _("战斗力"),
         size = 20,
-        color = 0x797154
+        color = 0x615b44
     }):addTo(info_bg):align(display.LEFT_TOP, 340, memberTitleLabel:getPositionY())
 
     local fightingValLabel = UIKit:ttfLabel({
@@ -486,7 +486,7 @@ function GameUIAlliance:getCommonListItem_(listType,alliance)
     local languageTitleLabel = UIKit:ttfLabel({
         text = _("语言"),
         size = 20,
-        color = 0x797154
+        color = 0x615b44
     }):addTo(info_bg):align(display.LEFT_BOTTOM,memberTitleLabel:getPositionX(),10)
 
     local languageValLabel = UIKit:ttfLabel({
@@ -499,7 +499,7 @@ function GameUIAlliance:getCommonListItem_(listType,alliance)
     local killTitleLabel = UIKit:ttfLabel({
         text = _("击杀"),
         size = 20,
-        color = 0x797154,
+        color = 0x615b44,
         align = ui.TEXT_ALIGN_RIGHT,
     }):addTo(info_bg):align(display.LEFT_BOTTOM, fightingTitleLabel:getPositionX(),10)
 
@@ -778,7 +778,7 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
     local languageLabel = UIKit:ttfLabel({
         text = _("在线人数"),
         size = 20,
-        color = 0x797154,
+        color = 0x615b44,
     }):addTo(headerBg):align(display.LEFT_BOTTOM,line_2:getPositionX()+5,line_2:getPositionY() + 2)
     local m_count,m_online,m_maxCount = Alliance_Manager:GetMyAlliance():GetMembersCountInfo()
     local languageLabelVal =  UIKit:ttfLabel({
@@ -797,7 +797,7 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
     local tagLabel = UIKit:ttfLabel({
         text = _("联盟人数"),
         size = 20,
-        color = 0x797154,
+        color = 0x615b44,
     }):addTo(headerBg)
         :align(display.LEFT_BOTTOM,languageLabel:getPositionX(),line_1:getPositionY() + 2)
 
@@ -816,7 +816,7 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
     local languageLabel = UIKit:ttfLabel({
         text = _("语言"),
         size = 20,
-        color = 0x797154,
+        color = 0x615b44,
     }):addTo(headerBg)
         :align(display.LEFT_BOTTOM,tagLabel:getPositionX(),line_0:getPositionY() + 2)
     local languageLabelVal = UIKit:ttfLabel({
@@ -864,7 +864,7 @@ function GameUIAlliance:GetEventItemByIndexAndEvent(index,event)
     UIKit:ttfLabel({
         text = GameUtils:formatTimeStyle2(event.time/1000),
         size = 18,
-        color = 0x797154
+        color = 0x615b44
     }):addTo(bg):align(display.LEFT_BOTTOM,10, 5)
     local contentLabel = UIKit:ttfLabel({
         text = self:GetEventContent(event),
@@ -994,7 +994,7 @@ function GameUIAlliance:HaveAlliaceUI_membersIf()
         self.refresh_label = UIKit:ttfLabel({
             text = _("下拉刷新"),
             size = 18,
-            color= 0x797154
+            color= 0x615b44
         }):align(display.CENTER, 284, 590):addTo(self.member_list_bg):hide()
         self.memberListView = list
         list_node:addTo(self.member_list_bg):pos(5,10)
@@ -1168,7 +1168,7 @@ function GameUIAlliance:GetMemberItem(title)
         UIKit:ttfLabel({
             text = _("<空>"),
             size = 22,
-            color= 0x797154
+            color= 0x615b44
         }):align(display.CENTER, 279, 33):addTo(tips)
     end
     item:addContent(node)
@@ -1189,7 +1189,7 @@ function GameUIAlliance:GetNormalSubItem(index,playerName,level,power,memberId,i
     local lvLabel =  UIKit:ttfLabel({
         text = "LV " .. level,
         size = 20,
-        color = 0x797154,
+        color = 0x615b44,
     }):addTo(item):align(display.LEFT_CENTER,icon:getPositionX()+icon:getCascadeBoundingBox().width + 180, 33)
     local powerIcon = display.newSprite("dragon_strength_27x31.png"):align(display.LEFT_CENTER,icon:getPositionX()+icon:getCascadeBoundingBox().width+255,33)
         :addTo(item)
@@ -1273,12 +1273,12 @@ function GameUIAlliance:HaveAlliaceUI_infomationIf()
     }
     self.joinTypeButton = UICanCanelCheckBoxButtonGroup.new(display.TOP_TO_BOTTOM)
         :addButton(UICheckBoxButton.new(checkbox_image)
-            :setButtonLabel(UIKit:ttfLabel({text = _("允许玩家立即加入联盟"),size = 20,color = 0x797154}))
+            :setButtonLabel(UIKit:ttfLabel({text = _("允许玩家立即加入联盟"),size = 20,color = 0x615b44}))
             :setButtonLabelOffset(40, 0)
             :align(display.LEFT_CENTER)
             :setButtonSelected(Alliance_Manager:GetMyAlliance():JoinType() == "all"))
         :addButton(UICheckBoxButton.new(checkbox_image)
-            :setButtonLabel(UIKit:ttfLabel({text = _("玩家仅能通过申请或者邀请的方式加入"),size = 20,color = 0x797154}))
+            :setButtonLabel(UIKit:ttfLabel({text = _("玩家仅能通过申请或者邀请的方式加入"),size = 20,color = 0x615b44}))
             :setButtonLabelOffset(40, 0)
             :align(display.LEFT_CENTER)
             :setButtonSelected(Alliance_Manager:GetMyAlliance():JoinType() ~= "all"))
@@ -1427,7 +1427,7 @@ function GameUIAlliance:CreateInvateUI()
     UIKit:ttfLabel({
         text = _("邀请玩家加入"),
         size = 20,
-        color = 0x797154
+        color = 0x615b44
     }):addTo(bg):align(display.LEFT_TOP, 20,150-40)
 
     local editbox = cc.ui.UIInput.new({

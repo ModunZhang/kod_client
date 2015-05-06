@@ -248,7 +248,7 @@ function GameUIHome:CreateTop()
 
     -- 资源图片和文字
     local first_row = 18
-    local first_col = 30
+    local first_col = 18
     local label_padding = 20
     local padding_width = 100
     local padding_height = 35

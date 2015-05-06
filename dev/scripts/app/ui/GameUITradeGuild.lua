@@ -200,7 +200,7 @@ function GameUITradeGuild:LoadResource(goods_details,goods_type)
 
     -- 资源选择框
     local options = self:CreateOptions(goods_details)
-        :pos(40, h-135):addTo(layer)
+        :pos(40, h-140):addTo(layer)
         :onButtonSelectChanged(function(event)
             self:RefreshSellListView(goods_type,event.selected)
         end)
@@ -395,8 +395,8 @@ function GameUITradeGuild:GetGoodsTypeMapToString(goods_type)
 end
 function GameUITradeGuild:CreateOptions(params)
     local checkbox_image = {
-        off = "box_120x120_1.png",
-        on = "box_132x132.png",
+        off = "box_136x136_1.png",
+        on = "box_136x136_2.png",
     }
     local group = cc.ui.UICheckBoxButtonGroup.new(display.LEFT_TO_RIGHT)
 
@@ -407,9 +407,12 @@ function GameUITradeGuild:CreateOptions(params)
             :align(display.CENTER,0,0)
             :addTo(checkBoxButton):scale(0.8)
         group:addButton(checkBoxButton)
-        local num_bg = display.newSprite("number_bg_98x26.png")
-            :align(display.BOTTOM_CENTER, 0, -checkBoxButton:getCascadeBoundingBox().size.height/2+10)
-            :addTo(checkBoxButton)
+        -- local num_bg = display.newSprite("number_bg_98x26.png")
+        --     :align(display.BOTTOM_CENTER, 0, -checkBoxButton:getCascadeBoundingBox().size.height/2+10)
+        --     :addTo(checkBoxButton)
+        local num_bg = UIKit:shadowLayer()
+        num_bg:setContentSize(cc.size(104,26))
+        num_bg:addTo(checkBoxButton):pos(-50,-checkBoxButton:getCascadeBoundingBox().size.height/2+15)
         local num_value = UIKit:ttfLabel(
             {
                 text = GameUtils:formatNumber(v[2]),
@@ -426,7 +429,7 @@ function GameUITradeGuild:CreateOptions(params)
             end
         end
     end
-    group:setButtonsLayoutMargin(0, 27, 0, 0)
+    group:setButtonsLayoutMargin(0, 4, 0, 0)
 
     return group
 end

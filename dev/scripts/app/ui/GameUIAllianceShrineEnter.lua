@@ -94,16 +94,16 @@ function GameUIAllianceShrineEnter:GetBuildingInfo()
 		people_count =   #events > 0 and  #events[1]:PlayerTroops() .. "/" .. events[1]:Stage():SuggestPlayer() or _("暂无")
 	end
 	local location = {
-        {_("坐标"),0x797154},
+        {_("坐标"),0x615b44},
         {self:GetLocation(),0x403c2f},
     }
     local doing_event = {
-        {_("正在进行的事件"),0x797154},
+        {_("正在进行的事件"),0x615b44},
         {running_event,0x403c2f},
     } 
     local join_people = 
     {
-	    {_("参与部队"),0x797154},
+	    {_("参与部队"),0x615b44},
 	    {people_count,0x403c2f},
     }
   	return {location,doing_event,join_people}

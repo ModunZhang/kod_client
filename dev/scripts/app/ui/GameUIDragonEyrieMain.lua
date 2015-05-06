@@ -386,7 +386,7 @@ function GameUIDragonEyrieMain:CreateDragonContentNodeIf()
 		self.info_panel = info_panel
     	local strength_title_label =  UIKit:ttfLabel({
 			text = _("力量"),
-			color = 0x797154,
+			color = 0x615b44,
 			size  = 20
 		}):addTo(info_panel):align(display.LEFT_BOTTOM,10,45)
 		self.strength_val_label =  UIKit:ttfLabel({
@@ -397,7 +397,7 @@ function GameUIDragonEyrieMain:CreateDragonContentNodeIf()
 
 		local vitality_title_label =  UIKit:ttfLabel({
 			text = _("活力"),
-			color = 0x797154,
+			color = 0x615b44,
 			size  = 20
 		}):addTo(info_panel):align(display.LEFT_BOTTOM,10,10)
 
@@ -409,7 +409,7 @@ function GameUIDragonEyrieMain:CreateDragonContentNodeIf()
 
 		local leadership_title_label =  UIKit:ttfLabel({
 			text = _("领导力"),
-			color = 0x797154,
+			color = 0x615b44,
 			size  = 20
 		}):addTo(info_panel):align(display.LEFT_BOTTOM,10,80)
 

@@ -252,7 +252,7 @@ function GameUITownHall:CreateQuestItem(quest,index)
                         text  = _("加速")
                     })
                 ):onButtonClicked(function(event)
-                    
+                    UIKit:newGameUI("GameUIDailyQuestSpeedUp", quest):AddToCurrentScene()
                 end)
                 progress:setVisible(true)
                 status = _("正在")..Localize.daily_quests_name[quest.index]

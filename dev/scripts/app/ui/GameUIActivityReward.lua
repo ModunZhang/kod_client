@@ -208,7 +208,7 @@ function GameUIActivityReward:GetOnLineItem(item_key,time_str,rewards,flag,timeP
 	local desc_label = UIKit:ttfLabel({
 		text = rewards,
 		size = 20,
-		color= 0x797154
+		color= 0x615b44
 	}):align(display.LEFT_CENTER, 120, 58):addTo(content)
 
 	if flag == 1 then
@@ -382,7 +382,7 @@ function GameUIActivityReward:GetContinutyListItem(reward_type,item_key,time_str
 	local desc_label = UIKit:ttfLabel({
 		text = rewards_str,
 		size = 20,
-		color= 0x797154
+		color= 0x615b44
 	}):align(display.LEFT_CENTER, 120, 38):addTo(content)
 
 	if flag == 1 or flag == 3 then

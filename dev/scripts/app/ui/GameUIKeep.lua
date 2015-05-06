@@ -13,7 +13,7 @@ local intInit = GameDatas.PlayerInitData.intInit
 local GameUIKeep = UIKit:createUIClass('GameUIKeep',"GameUIUpgradeBuilding")
 
 local building_config_map = {
-    ["keep"] = {scale = 0.25, offset = {x = 80, y = 80}},
+    ["keep"] = {scale = 0.3, offset = {x = 80, y = 74}},
     ["watchTower"] = {scale = 0.4, offset = {x = 80, y = 70}},
     ["warehouse"] = {scale = 0.5, offset = {x = 70, y = 70}},
     ["dragonEyrie"] = {scale = 0.35, offset = {x = 70, y = 70}},
@@ -96,10 +96,6 @@ function GameUIKeep:CreateCityBasicInfo()
     self:CreateLineItem({
         title_1 =  _("城市坐标"),
         title_2 =  "("..city_postion..")",
-        button_label =  _("修改"),
-        listener =  function ()
-            self:CreateModifyCityNameWindow()
-        end,
     }):align(display.LEFT_CENTER, display.cx-120, display.top-160)
         :addTo(self.info_layer)
     -- 修改地形
@@ -233,7 +229,7 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
                 color = 0xffedae}):align(display.CENTER_LEFT, 14, title_bg:getContentSize().height/2)
                 :addTo(title_bg)
             if canUnlock then
-                display.newSprite("dragon_next_icon_28x31.png"):align(display.CENTER, 260, 0):addTo(content, 10)
+                display.newSprite("activity_next_32x37.png"):align(display.CENTER, 260, 0):addTo(content, 10)
             end
 
             UIKit:ttfLabel({
@@ -248,8 +244,8 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
                 size = 20,
                 aglin = ui.TEXT_ALIGN_LEFT,
                 valign = ui.TEXT_VALIGN_CENTER,
-                dimensions = cc.size(354, 65),
-                color = 0x615b44}):align(display.TOP_LEFT, -120, 10)
+                dimensions = cc.size(374, 0),
+                color = 0x615b44}):align(display.CENTER_LEFT, -120, -10)
             content:addWidget(building_tip)
 
             -- 建筑图片 放置区域左右边框
@@ -403,7 +399,7 @@ function GameUIKeep:CreateChangeTerrainWindow()
             font = UIKit:getFontFilePath(),
             size = 20,
             dimensions = cc.size(260,100),
-            color = UIKit:hex2c3b(0x797154)
+            color = UIKit:hex2c3b(0x615b44)
         }):align(display.LEFT_TOP, 140, 80)
         :addTo(bg2)
     -- 回复按钮

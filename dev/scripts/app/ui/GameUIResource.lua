@@ -256,7 +256,7 @@ function GameUIResource:GetListItem(index,title,val)
         font = UIKit:getFontFilePath(),
         size = 20,
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
-        color = UIKit:hex2c3b(0x797154),
+        color = UIKit:hex2c3b(0x615b44),
         valign = cc.ui.UILabel.TEXT_VALIGN_CENTER})
         :addTo(bg)
         :pos(10,20)

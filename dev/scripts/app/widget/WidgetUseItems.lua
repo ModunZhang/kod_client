@@ -138,7 +138,7 @@ function WidgetUseItems:OpenChangePlayerOrCityName(item)
         font = UIKit:getFontFilePath(),
     })
     editbox:setPlaceHolder(eidtbox_holder)
-    editbox:setMaxLength(14)
+    editbox:setMaxLength(12)
     editbox:setFont(UIKit:getEditBoxFont(),22)
     editbox:setFontColor(cc.c3b(0,0,0))
     editbox:setPlaceholderFontColor(cc.c3b(204,196,158))
@@ -298,7 +298,7 @@ function WidgetUseItems:OpenHeroBloodDialog( item )
     UIKit:ttfLabel({
         text = _("英雄之血"),
         size = 22,
-        color = 0x797154,
+        color = 0x615b44,
     }):align(display.LEFT_CENTER,40,blood_bg:getContentSize().height/2)
         :addTo(blood_bg)
     local blood_value = UIKit:ttfLabel({
@@ -506,7 +506,7 @@ function WidgetUseItems:OpenStrengthDialog( item )
     UIKit:ttfLabel({
         text = _("探索体力值"),
         size = 22,
-        color = 0x797154,
+        color = 0x615b44,
     }):align(display.LEFT_CENTER,80,blood_bg:getContentSize().height/2)
         :addTo(blood_bg)
     UIKit:ttfLabel({
@@ -580,7 +580,7 @@ function WidgetUseItems:OpenIncreaseDragonExpOrHp( item )
         local dragon_vitality = UIKit:ttfLabel({
             text = text_1,
             size = 20,
-            color = 0x797154,
+            color = 0x615b44,
         }):align(display.LEFT_CENTER,20,60)
             :addTo(box_bg)
 

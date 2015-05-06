@@ -34,7 +34,7 @@ function GameUISettingFaqDetail:BuildUI()
 	UIKit:ttfLabel({
 		text = self.data.title,
 		size = 20,
-		color= 0x797154
+		color= 0x615b44
 	}):align(display.TOP_CENTER, 304,732):addTo(bg)
 	local list_bg = UIKit:CreateBoxPanelWithBorder({width = 556,height = 648}):align(display.BOTTOM_CENTER, 304, 33):addTo(bg)
 	self.list_view = UIListView.new{

@@ -119,7 +119,7 @@ function WidgetResources:InitAllResources()
         },
         coin = {
             resource_icon="res_coin_81x68.png",
-            resource_current_value=crm:GetCoinResource():GetResourceValueByCurrentTime(current_time),
+            resource_current_value=GameUtils:formatNumber(crm:GetCoinResource():GetResourceValueByCurrentTime(current_time)),
             total_income=GameUtils:formatNumber(crm:GetCoinResource():GetProductionPerHour()).."/h",
             occupy_citizen=GameUtils:formatNumber(self.city:GetResourceManager():GetPopulationResource():GetNoneAllocatedByTime(current_time)),
             type = "coin"
@@ -261,7 +261,7 @@ function WidgetResources:AddResourceItem(parms)
         -- local tax_time = townHall:IsInImposing() and GameUtils:formatTimeStyle1(townHall:GetTaxEvent():LeftTime(app.timer:GetServerTime())) or ""
         -- item.tax = createTipItem({
         --     title = title_value,
-        --     title_color = UIKit:hex2c3b(0x797154),
+        --     title_color = UIKit:hex2c3b(0x615b44),
         --     value = tax_time ,
         --     value_color = UIKit:hex2c3b(0x403c2f),
         --     x = 40,
@@ -271,7 +271,7 @@ function WidgetResources:AddResourceItem(parms)
         --  空闲人口
         -- item.free_citizen = createTipItem({
         --     title = _("空闲人口"),
-        --     title_color = UIKit:hex2c3b(0x797154),
+        --     title_color = UIKit:hex2c3b(0x615b44),
         --     value = occupy_citizen ,
         --     value_color = UIKit:hex2c3b(0x403c2f),
         --     x = 40,

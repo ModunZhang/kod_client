@@ -496,15 +496,15 @@ function UIKit:createLineItem(params)
         {
             text = params.text_1,
             size = 20,
-            color = 0x797154
-        }):align(display.LEFT_BOTTOM, 0, 0)
+            color = 0x615b44
+        }):align(display.LEFT_BOTTOM, 0, 4)
         :addTo(line)
     local value_label = self:ttfLabel(
         {
             text = params.text_2,
             size = 22,
             color = 0x403c2f
-        }):align(display.RIGHT_BOTTOM, line_size.width, 0)
+        }):align(display.RIGHT_BOTTOM, line_size.width, 4)
         :addTo(line)
 
     function line:SetValue(value)
