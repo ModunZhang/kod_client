@@ -52,7 +52,7 @@ end
 function GameUIAllianceTitle:BuildUI()
 	local bg = WidgetUIBackGround.new({height=614}):pos(window.left+20,window.bottom+150)
     self:addTouchAbleChild(bg)
-	local title_bar = display.newSprite("title_blue_600x52.png")
+	local title_bar = display.newSprite("title_blue_600x56.png")
 		:addTo(bg)
 		:align(display.CENTER_BOTTOM, 304, 600)
 	UIKit:closeButton():addTo(title_bar)
@@ -190,7 +190,7 @@ end
 function GameUIAllianceTitle:CreateEditTitleUI()
     local layer = UIKit:shadowLayer()
     local bg = WidgetUIBackGround.new({height=150}):addTo(layer):pos(window.left+20,window.cy-20)
-    local title_bar = display.newSprite("title_blue_600x52.png")
+    local title_bar = display.newSprite("title_blue_600x56.png")
         :addTo(bg)
         :align(display.LEFT_BOTTOM, 0,150-15)
 

@@ -175,7 +175,7 @@ function GameUIAlliance:CreateAllianceTips()
     local shadowLayer = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
         :addTo(self:GetView())
     local backgroundImage = WidgetUIBackGround.new({height=542}):addTo(shadowLayer):pos(window.left+20,window.top - 700)
-    local titleBar = display.newSprite("title_blue_600x52.png")
+    local titleBar = display.newSprite("title_blue_600x56.png")
         :pos(backgroundImage:getContentSize().width/2, backgroundImage:getContentSize().height+8)
         :addTo(backgroundImage)
     local mainTitleLabel = UIKit:ttfLabel({
@@ -1408,7 +1408,7 @@ end
 function GameUIAlliance:CreateInvateUI()
     local layer = UIKit:shadowLayer()
     local bg = WidgetUIBackGround.new({height=150}):addTo(layer):pos(window.left+20,window.cy-20)
-    local title_bar = display.newSprite("title_blue_600x52.png")
+    local title_bar = display.newSprite("title_blue_600x56.png")
         :addTo(bg)
         :align(display.LEFT_BOTTOM, 0,150-15)
 
