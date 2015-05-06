@@ -24,7 +24,6 @@ function WidgetPopDialog:ctor(height,title_text,y,title_bg)
                 self:LeftButtonClicked()
             end
         end):align(display.CENTER, rb_size.width-34,rb_size.height+10):addTo(body)
-    display.newSprite("icon_x_64x64.png"):addTo(self.close_btn)
 end
 
 function WidgetPopDialog:GetBody()
