@@ -119,7 +119,7 @@ function WidgetResources:InitAllResources()
         },
         coin = {
             resource_icon="res_coin_81x68.png",
-            resource_current_value=crm:GetCoinResource():GetResourceValueByCurrentTime(current_time),
+            resource_current_value=GameUtils:formatNumber(crm:GetCoinResource():GetResourceValueByCurrentTime(current_time)),
             total_income=GameUtils:formatNumber(crm:GetCoinResource():GetProductionPerHour()).."/h",
             occupy_citizen=GameUtils:formatNumber(self.city:GetResourceManager():GetPopulationResource():GetNoneAllocatedByTime(current_time)),
             type = "coin"
