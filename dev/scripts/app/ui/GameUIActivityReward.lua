@@ -317,7 +317,7 @@ end
 
 function GameUIActivityReward:ui_CONTINUITY()
 	UIKit:ttfLabel({
-		text = _("在未来的14天连续登陆，每天都会有来自王城的援军前来投奔你，连续登陆15天免费解锁第二条行军队列！"),
+		text = _("在未来的14天连续登陆，每天都会有来自王城的援军前来投奔你，连续登陆14天免费解锁第二条行军队列！"),
 		size = 20,
 		color= 0x403c2f,
 		dimensions = cc.size(500,0),
