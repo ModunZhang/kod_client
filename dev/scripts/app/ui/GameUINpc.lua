@@ -72,6 +72,7 @@ local function mark_key_word(s, e, key_word, keyword_map)
 end
 function GameUINpc:ctor(...)
     GameUINpc.super.ctor(self)
+    self.unenable = true
     self:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
         if event.name == "ended" and not self.unenable then
             self:OnClick()
@@ -81,7 +82,6 @@ function GameUINpc:ctor(...)
     self:InitDialog(...)
     self.enter_callbacks = {}
     self.leave_callbacks = {}
-    self:Resume()
 end
 function GameUINpc:InitDialog(...)
     self.dialog_index = 1
@@ -135,6 +135,7 @@ function GameUINpc:OnMoveInStage()
         self:StartDialog()
     end
     self:OnEnter()
+    self:Resume()
 end
 function GameUINpc:onExit()
     GameUINpc.super.onExit(self)
