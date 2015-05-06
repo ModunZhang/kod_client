@@ -1029,6 +1029,7 @@ function City:OnUserDataChanged(userData, current_time, deltaData)
 
     local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.resources and deltaData.resources.refreshTime
+    is_delta_update = is_delta_update or (deltaData and deltaData.soldiers)
     if is_delta_update then
         need_update_resouce_buildings = true
     end
