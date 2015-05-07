@@ -32,6 +32,9 @@ function GameUIAllianceShrine:OnPerceotionChanged()
 		self.stage_ui.insight_label:setString(display_str)
 		self.stage_ui.progressBar:setPercentage(resource:GetResourceValueByCurrentTime(app.timer:GetServerTime())/resource:GetValueLimit()*100)
 	end
+	if self.stage_ui and self.stage_ui.perHour_label then
+		self.stage_ui.perHour_label:setString(string.format("+%s/h",resource:GetProductionPerHour()))
+	end
 end
 
 function GameUIAllianceShrine:OnFightEventTimerChanged(event)
@@ -58,13 +61,17 @@ function  GameUIAllianceShrine:OnNewStageOpened( change_map )
 end
 
 function GameUIAllianceShrine:OnMoveOutStage()
+	GameUIAllianceShrine.super.OnMoveOutStage(self)
+end
+
+function GameUIAllianceShrine:onCleanup()
 	self.event_bind_to_label = nil
 	self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnPerceotionChanged)
 	self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnFightEventTimerChanged)
 	self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsChanged)
 	self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnNewStageOpened)
 	self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsRefresh)
-	GameUIAllianceShrine.super.OnMoveOutStage(self)
+	GameUIAllianceShrine.super.onCleanup(self)
 end
 
 
@@ -182,7 +189,14 @@ function GameUIAllianceShrine:TabEvent_stage()
 		color = 0xfff3c7
 	}):align(display.LEFT_CENTER,40,20):addTo(bar_bg)
 	progressBar:setPercentage(resource:GetResourceValueByCurrentTime(app.timer:GetServerTime())/resource:GetValueLimit()*100)
+	local perHour_label = UIKit:ttfLabel({
+		text = string.format("+%s/h",resource:GetProductionPerHour()),
+		size = 20,
+		color= 0xfff3c7,
+		align = cc.TEXT_ALIGNMENT_RIGHT
+	}):addTo(bar_bg):align(display.RIGHT_CENTER,530,20)
 	self.stage_ui.insight_label = insight_label
+	self.stage_ui.perHour_label = perHour_label
 	self.stage_ui.progressBar = progressBar
 	--title
 
@@ -192,9 +206,8 @@ function GameUIAllianceShrine:TabEvent_stage()
 
 	local left_button = WidgetPushButton.new(
 			{normal = "shrine_page_btn_normal_52x44.png",pressed = "shrine_page_btn_light_52x44.png"},
-			{scale9 = false},
-			{disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}}
-		):addTo(title_bg):align(display.LEFT_CENTER,7,29)
+			{scale9 = false}
+		):addTo(title_bg):align(display.LEFT_CENTER,9,31)
 		:onButtonClicked(function()
 			self:ChangeStagePage(-1)
 		end)
@@ -205,9 +218,8 @@ function GameUIAllianceShrine:TabEvent_stage()
 
 	local right_button = WidgetPushButton.new(
 			{normal = "shrine_page_btn_normal_52x44.png",pressed = "shrine_page_btn_light_52x44.png"},
-			{scale9 = false},
-			{disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}}
-		):addTo(title_bg):align(display.RIGHT_CENTER,557,29)
+			{scale9 = false}
+		):addTo(title_bg):align(display.RIGHT_CENTER,559,31)
 		:onButtonClicked(function()
 			self:ChangeStagePage(1)
 		end)
@@ -218,9 +230,9 @@ function GameUIAllianceShrine:TabEvent_stage()
 	local stage_label = UIKit:ttfLabel({
 		text = self:GetAllianceShrine():GetMainStageDescName(self:GetStagePage()),
 		size = 20,
-		color = 0x5d563f
+		color = 0xffedae
 		})
-		:align(display.LEFT_BOTTOM,70,15)
+		:align(display.LEFT_CENTER,70,29)
 		:addTo(title_bg)
 	self.stage_ui.stage_label = stage_label
 	local star_bar = StarBar.new({
@@ -229,13 +241,13 @@ function GameUIAllianceShrine:TabEvent_stage()
        		fill = "Stars_bar_highlight.png", 
        		num = 1,
        		-- scale = 0.8,
-    }):addTo(title_bg):align(display.RIGHT_BOTTOM,430,13)
+    }):addTo(title_bg):align(display.RIGHT_CENTER,430,29)
     local current,total = self:GetAllianceShrine():GetStarInfoByMainStage(self:GetStagePage())
     local percentLabel = UIKit:ttfLabel({
-    	color = 0x5d563f,
+    	color = 0xffedae,
     	size = 20,
     	text = current .. "/" .. total
-    }):align(display.LEFT_BOTTOM,431,15):addTo(title_bg)
+    }):align(display.LEFT_CENTER,431,29):addTo(title_bg)
     self.stage_ui.percentLabel = percentLabel
     local list,list_node = UIKit:commonListView({
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
@@ -311,7 +323,8 @@ function GameUIAllianceShrine:GetStageListItem(index,stage_obj)
 			size = 20,
 			color = 0xfff3c7
 		}):align(display.LEFT_CENTER,20,13):addTo(power_bg)
-		WidgetPushButton.new({
+
+		local button = WidgetPushButton.new({
 				normal = "blue_btn_up_148x58.png",
 				pressed = "blue_btn_down_148x58.png"
 			}):align(display.RIGHT_BOTTOM, 560, 15)
@@ -321,9 +334,15 @@ function GameUIAllianceShrine:GetStageListItem(index,stage_obj)
 					size = 20,
 					color = 0xfff3c7
 			}))
-			:onButtonClicked(function(event)
-				self:OnResearchButtonClick(stage_obj)
+		button:onButtonClicked(function(event)
+				self:OnResearchButtonClick(stage_obj,button)
 			end)
+		UIKit:ttfLabel({
+			text = _("已激活"),
+			size = 22,
+			color= 0x930000,
+			align = cc.TEXT_ALIGNMENT_RIGHT,
+		}):addTo(bg):align(display.CENTER, 486, 44)
 		local sp = display.newSprite(troop_image):align(display.RIGHT_BOTTOM, 550, 0):addTo(logo_bg)
 		display.newSprite("alliance_shire_stage_soldier_shadow_128x107.png"):addTo(sp):align(display.LEFT_BOTTOM, 0, 0)
 	end
@@ -341,8 +360,9 @@ function GameUIAllianceShrine:RefreshStageListView()
 	self.stage_list:reload()
 end
 
-function GameUIAllianceShrine:OnResearchButtonClick(stage_obj)
+function GameUIAllianceShrine:OnResearchButtonClick(stage_obj,sender)
 	UIKit:newGameUI("GameUIAllianceShrineDetail",stage_obj,self:GetAllianceShrine(),true):AddToCurrentScene(true)
+	if sender then sender:hide() end
 end
 
 --战斗事件

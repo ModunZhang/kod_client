@@ -156,6 +156,7 @@ function AllianceShrine:InitOrUpdatePerception(alliance_data)
 			end
 		end
 		local shire_building = config_shrine[building.level]
+		print("SetProductionPerHour----->",resource_refresh_time,shire_building.pRecoveryPerHour,shire_building.perception)
         self.perception:SetProductionPerHour(resource_refresh_time,shire_building.pRecoveryPerHour)
         self.perception:SetValueLimit(shire_building.perception)
     else
