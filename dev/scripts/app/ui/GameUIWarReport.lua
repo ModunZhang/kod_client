@@ -38,7 +38,7 @@ function GameUIWarReport:onEnter()
     cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
         :onButtonClicked(function(event)
             self:removeFromParent()
-        end):align(display.CENTER, title:getContentSize().width-20, title:getContentSize().height-20)
+        end):align(display.CENTER, title:getContentSize().width-26, title:getContentSize().height-26)
         :addTo(title)
     -- 战争结果图片
     local result_img = self.report:GetReportResult() and "report_victory_590x137.png" or "report_failure_590x137.png"
@@ -155,6 +155,7 @@ end
 
 function GameUIWarReport:GetBooty()
     local booty = {}
+    dump(self:GetRewards())
     for k,v in pairs(self:GetRewards()) do
         table.insert(booty, {
             resource_type = Localize.fight_reward[v.name] or Localize.equip_material[v.name],

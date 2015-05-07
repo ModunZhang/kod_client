@@ -19,18 +19,18 @@ local function create_line_item(icon,text_1,text_2,text_3)
         color = 0x615b44,
     }):align(display.LEFT_BOTTOM, 40 , 2)
         :addTo(line)
-    local text3 = UIKit:ttfLabel({
-        text = text_3,
-        size = 22,
-        color = 0x403c2f,
-    }):align(display.RIGHT_BOTTOM, 384 , 2)
-        :addTo(line)
-    local green_icon = display.newSprite("teach_upgrade_icon_15x17.png"):align(display.BOTTOM_CENTER, text3:getPositionX()-text3:getContentSize().width-14, 6):addTo(line)
+    local green_icon = display.newSprite("teach_upgrade_icon_15x17.png"):align(display.BOTTOM_CENTER, 320 , 6):addTo(line)
     local text2 = UIKit:ttfLabel({
         text = text_2,
         size = 22,
         color = 0x403c2f,
-    }):align(display.RIGHT_BOTTOM, green_icon:getPositionX()-14 , 2)
+    }):align(display.RIGHT_BOTTOM, green_icon:getPositionX() - 20 , 2)
+        :addTo(line)
+    local text3 = UIKit:ttfLabel({
+        text = text_3,
+        size = 22,
+        color = 0x403c2f,
+    }):align(display.LEFT_BOTTOM, green_icon:getPositionX() + 16 , 2)
         :addTo(line)
 
     function line:SetText(text_2,text_3)
