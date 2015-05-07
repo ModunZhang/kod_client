@@ -41,7 +41,6 @@ function GameUIKeep:ctor(city,building,default_tab)
 end
 
 function GameUIKeep:OnMoveInStage()
-    GameUIKeep.super.OnMoveInStage(self)
     self:CreateTabButtons({
         {
             label = _("信息"),
@@ -63,7 +62,7 @@ function GameUIKeep:OnMoveInStage()
             end
         end
     end):pos(window.cx, window.bottom + 34)
-
+    GameUIKeep.super.OnMoveInStage(self)
 end
 
 function GameUIKeep:onExit()
@@ -498,15 +497,6 @@ function GameUIKeep:CreateBackGroundWithTitle(title_string)
         return node
     end
     return leyer
-end
-
-
-
----
-function GameUIKeep:Find()
-    return cocos_promise.defer(function()
-        return self.upgrade_layer.upgrade_btn
-    end)
 end
 
 

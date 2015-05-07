@@ -81,7 +81,7 @@ end
 function GameUIHome:FadeToSelf(isFullDisplay)
     self:setCascadeOpacityEnabled(true)
     local opacity = isFullDisplay == true and 255 or 0
-    local p = isFullDisplay and 0 or 99999999
+    local p = isFullDisplay and 0 or 0
     transition.fadeTo(self, {opacity = opacity, time = 0.2,
         onComplete = function()
             self:pos(p, p)
@@ -450,9 +450,7 @@ function GameUIHome:RefreshVIP()
 end
 
 -- fte
-function GameUIHome:DefferShow(tab_type)
-    return self.event_tab:PromiseOfShowTab(tab_type):next(function() return self end)
-end
+local WidgetFteArrow = import("..widget.WidgetFteArrow")
 function GameUIHome:Find()
     local item
     self.event_tab:IteratorAllItem(function(_, v)
@@ -461,54 +459,44 @@ function GameUIHome:Find()
             return true
         end
     end)
-    return cocos_promise.defer(function()
-        if not item then
-            promise.reject({code = -1, msg = "没有找到对应item"}, "")
+    return item
+end
+function GameUIHome:PromiseOfFteFreeSpeedUp()
+    if #City:GetUpgradingBuildings() > 0 then
+        if not self.event_tab:IsShow() then
+            self.event_tab:EventChangeOn("build", true)
         end
-        return item
-    end)
+        self.event_tab:PromiseOfPopUp():next(function()
+            self:GetFteLayer():SetTouchObject(self:Find())
+            local r = self:Find():getCascadeBoundingBox()
+            self:GetFteLayer().arrow = WidgetFteArrow.new(_("5分钟以下免费加速，激活VIP提升免费加速时间，VIP等级越高，可免费加速时间越高"))
+                :addTo(self:GetFteLayer()):TurnUp(true):align(display.RIGHT_TOP, r.x + r.width/2, r.y - 10)
+        end)
+        return City:PromiseOfFinishUpgradingByLevel(nil, nil):next(function()
+            self:DestoryFteLayer()
+        end)
+    end
+    return cocos_promise.defer()
+end
+function GameUIHome:PromiseOfFteInstantSpeedUp()
+    if #City:GetUpgradingBuildings() > 0 then
+        if not self.event_tab:IsShow() then
+            self.event_tab:EventChangeOn("build", true)
+        end
+        self.event_tab:PromiseOfPopUp():next(function()
+            self:GetFteLayer():SetTouchObject(self:Find())
+            local r = self:Find():getCascadeBoundingBox()
+            self:GetFteLayer().arrow = WidgetFteArrow.new(_("立即完成升级"))
+                :addTo(self:GetFteLayer()):TurnRight(true):align(display.RIGHT_CENTER, r.x - 10, r.y + r.height/2)
+        end)
+        return City:PromiseOfFinishUpgradingByLevel(nil, nil):next(function()
+            self:DestoryFteLayer()
+        end)
+    end
+    return cocos_promise.defer()
 end
 
 return GameUIHome
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

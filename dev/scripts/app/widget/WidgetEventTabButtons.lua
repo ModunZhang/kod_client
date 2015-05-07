@@ -563,6 +563,9 @@ end
 function WidgetEventTabButtons:IsShow()
     return not self.arrow:isFlippedY()
 end
+function WidgetEventTabButtons:IsShowing()
+    return self.node:getNumberOfRunningActions() > 0
+end
 function WidgetEventTabButtons:ResizeBelowHorizon(new_height)
     local height = new_height < ITEM_HEIGHT and ITEM_HEIGHT or new_height
     local size = self.back_ground:getContentSize()
@@ -591,6 +594,9 @@ function WidgetEventTabButtons:PromiseOfShow()
         self:Reload()
         return cocos_promise.promiseOfMoveTo(self.node, 0, 0, 0.15, "sineIn"):next(function()
             self.arrow:flipY(false)
+            if self.pop_callbacks and #self.pop_callbacks > 0 then
+                table.remove(self.pop_callbacks, 1)()
+            end
         end)
     end
     return cocos_promise.defer()
@@ -993,7 +999,24 @@ end
 function WidgetEventTabButtons:GetProductionTechnologyEventProgressInfo(event)
     return _("研发") .. event:Entity():GetLocalizedName() .. " " .. GameUtils:formatTimeStyle1(event:GetTime()),event:GetPercent()
 end
+
+function WidgetEventTabButtons:PromiseOfPopUp()
+    local p = promise.new()
+    self.pop_callbacks = {}
+    if not self:IsShow() or self:IsShowing() then
+        table.insert(self.pop_callbacks, function()
+            p:resolve()
+        end)
+        return p
+    end
+    return cocos_promise.defer()
+end
+
+
+
+
 return WidgetEventTabButtons
+
 
 
 

@@ -4,6 +4,7 @@
 -- GameUIBase is a CCLayer
 local cocos_promise = import("..utils.cocos_promise")
 local window = import("..utils.window")
+local TutorialLayer = import(".TutorialLayer")
 local UIListView = import(".UIListView")
 local WidgetBackGroundTabButtons = import('..widget.WidgetBackGroundTabButtons')
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
@@ -69,6 +70,7 @@ function GameUIBase:onCleanup()
     if UIKit:getRegistry().isObjectExists(self.__cname) then
         UIKit:getRegistry().removeObject(self.__cname)
     end
+    UIKit:CheckCloseUI(self.__cname)
 end
 
 
@@ -299,6 +301,22 @@ function GameUIBase:Lock()
 end
 function GameUIBase:Find()
     assert(false)
+end
+
+function GameUIBase:GetFteLayer()
+    if not self.fte_layer then
+        self.fte_layer = self:CreateFteLayer()
+    end
+    return self.fte_layer
+end
+function GameUIBase:DestoryFteLayer()
+    if self.fte_layer then
+        self.fte_layer:removeFromParent()
+    end
+    self.fte_layer = nil
+end
+function GameUIBase:CreateFteLayer()
+    return TutorialLayer.new():addTo(self, 2000):Enable()
 end
 
 return GameUIBase

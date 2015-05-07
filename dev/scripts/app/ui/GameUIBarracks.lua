@@ -21,7 +21,6 @@ function GameUIBarracks:ctor(city, barracks,default_tab)
     self.special_soldier_items={}
 end
 function GameUIBarracks:OnMoveInStage()
-    GameUIBarracks.super.OnMoveInStage(self)
     self.soldier_map = {}
     self.timerAndTips = self:CreateTimerAndTips()
     self.recruit = self:CreateSoldierUI()
@@ -32,6 +31,7 @@ function GameUIBarracks:OnMoveInStage()
     self.barracks_city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
     self.barracks_city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
     app.timer:AddListener(self)
+    GameUIBarracks.super.OnMoveInStage(self)
 end
 function GameUIBarracks:onExit()
     self.barracks:RemoveUpgradeListener(self)
@@ -220,8 +220,7 @@ function GameUIBarracks:CreateItemWithListView(list_view, soldiers)
                     return
                 end
                 WidgetRecruitSoldier.new(self.barracks, self.barracks_city, soldier_name)
-                    :addTo(self,1000, WidgetRecruitSoldier_tag)
-                    :align(display.CENTER, window.cx, 500 / 2)
+                    :addTo(self,1000, WidgetRecruitSoldier_tag):pos(0,0)
             end):addTo(row_item)
                 :alignByPoint(cc.p(0.5, 0.5), origin_x + (unit_width + gap_x) * (i - 1) + unit_width / 2, 0)
                 :SetSoldier(soldier_name, self.barracks_city:GetSoldierManager():GetStarBySoldierType(soldier_name))
@@ -330,25 +329,40 @@ function GameUIBarracks:OnTimer(current_time)
     end
 end
 --fte
-function GameUIBarracks:Lock()
+local WidgetFteArrow = import("..widget.WidgetFteArrow")
+function GameUIBarracks:Find()
+    return self.soldier_map["swordsman"]
+end
+function GameUIBarracks:PromiseOfFte()
     self.list_view:getScrollNode():setTouchEnabled(false)
-    return cocos_promise.defer(function() return self end)
-end
-function GameUIBarracks:Find(control_type)
-    if control_type == "recruit" then
-        return cocos_promise.defer(function()
-            return self.tab_buttons:GetTabByTag("recruit")
-        end)
-    elseif control_type == "swordsman" then
-        return cocos_promise.defer(function()
-            return self.soldier_map["swordsman"]
-        end)
-    end
-end
-function GameUIBarracks:WaitTag(type_)
-    return self.tab_buttons:PromiseOfTag(type_):next(function()
-        return self
+    self.list_view.touchNode_:setTouchEnabled(false)
+    self:Find():setTouchSwallowEnabled(true)
+
+    self:GetFteLayer():SetTouchObject(self:Find())
+
+    local r = self:Find():getCascadeBoundingBox()
+    self:GetFteLayer().arrow = WidgetFteArrow.new(_("点击招募步兵"))
+    :addTo(self:GetFteLayer()):TurnLeft()
+    :align(display.LEFT_CENTER, r.x + r.width + 10, r.y + r.height/2)
+
+    return WidgetRecruitSoldier:PormiseOfOpen():next(function(ui)
+        if self:GetFteLayer().arrow then
+            self:GetFteLayer().arrow:removeFromParent()
+        end
+        self:GetFteLayer().arrow = nil
+        self:GetFteLayer():Reset()
+
+        return ui:PormiseOfFte()
+    end):next(function()
+        return self:PromsieOfExit()
     end)
+end
+function GameUIBarracks:PromsieOfExit()
+    self:GetFteLayer():SetTouchObject(self:GetHomeButton())
+    local r = self:GetHomeButton():getCascadeBoundingBox()
+    self:GetFteLayer().arrow = WidgetFteArrow.new(_("返回城市"))
+        :addTo(self:GetFteLayer()):TurnLeft():align(display.LEFT_CENTER, r.x + r.width + 30, r.y + r.height/2)
+    return UIKit:PromiseOfClose("GameUIBarracks")
 end
 
 

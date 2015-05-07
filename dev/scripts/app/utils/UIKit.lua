@@ -26,15 +26,21 @@ local CURRENT_MODULE_NAME = ...
 UIKit.BTN_COLOR = Enum("YELLOW","BLUE","GREEN","RED","PURPLE")
 UIKit.UITYPE = Enum("BACKGROUND","WIDGET","MESSAGEDIALOG")
 UIKit.open_ui_callbacks = {}
+UIKit.close_ui_callbacks = {}
 
+function UIKit:CheckOpenUI(ui)
+    local callbacks = self.open_ui_callbacks
+    if #callbacks > 0 and callbacks[1](ui) then
+        table.remove(callbacks, 1)
+    end
+end
 function UIKit:PromiseOfOpen(ui_name)
     if UIKit:GetUIInstance(ui_name) then
         return cocos_promise.defer(function() return UIKit:GetUIInstance(ui_name) end )
     end
-    local callbacks = self.open_ui_callbacks
-    assert(#callbacks == 0)
+    self.open_ui_callbacks = {}
     local p = promise.new()
-    table.insert(callbacks, function(ui)
+    table.insert(self.open_ui_callbacks, function(ui)
         if ui_name == ui.__cname then
             p:resolve(ui)
             return true
@@ -42,14 +48,22 @@ function UIKit:PromiseOfOpen(ui_name)
     end)
     return p
 end
-function UIKit:CheckOpenUI(ui)
-    local callbacks = self.open_ui_callbacks
-    if #callbacks > 0 and callbacks[1](ui) then
+function UIKit:CheckCloseUI(ui_name)
+    local callbacks = self.close_ui_callbacks
+    if #callbacks > 0 and callbacks[1](ui_name) then
         table.remove(callbacks, 1)
     end
 end
-function UIKit:ClearPromise()
-    self.open_ui_callbacks = {}
+function UIKit:PromiseOfClose(name)
+    self.close_ui_callbacks = {}
+    local p = promise.new()
+    table.insert(self.close_ui_callbacks, function(ui_name)
+        if name == ui_name then
+            p:resolve()
+            return true
+        end
+    end)
+    return p
 end
 function UIKit:GetUIInstance(ui_name)
     if self:getRegistry().isObjectExists(ui_name) then

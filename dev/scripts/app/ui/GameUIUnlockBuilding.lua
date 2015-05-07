@@ -315,10 +315,17 @@ end
 
 
 -- fte
+local WidgetFteArrow = import("..widget.WidgetFteArrow")
 function GameUIUnlockBuilding:Find()
-    return cocos_promise.defer(function()
-        return self.upgrade_btn
-    end)
+    return self.upgrade_btn
+end
+function GameUIUnlockBuilding:PormiseOfFte()
+    self:GetFteLayer():SetTouchObject(self:Find())
+    local r = self:Find():getCascadeBoundingBox()
+    local str = string.format(_("点击解锁新建筑：%s"), Localize.building_name[self.building:GetType()])
+    self:GetFteLayer().arrow = WidgetFteArrow.new(str):addTo(self:GetFteLayer())
+    :TurnRight():align(display.RIGHT_CENTER, r.x - 20, r.y + r.height/2)
+    return City:PromiseOfUpgradingByLevel(self.building:GetType())
 end
 
 

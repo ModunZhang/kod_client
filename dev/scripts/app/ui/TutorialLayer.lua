@@ -44,6 +44,7 @@ end
 function TutorialLayer:Reset()
     self.count = 0
     for _, v in pairs{ self.left, self.right, self.top, self.bottom } do
+        v:pos(0,0)
         v:setTouchEnabled(false)
     end
     self.object = nil
@@ -74,6 +75,13 @@ function TutorialLayer:GetClickedRect()
         return self.object:getCascadeBoundingBox()
     else
         return cc.rect(0, 0, display.width, display.height)
+    end
+end
+function TutorialLayer:RemoveAllOtherChildren()
+    for i,v in ipairs(self:getChildren()) do
+        if self.left ~= v or self.right ~= v or self.top ~= v or self.bottom ~= v then
+            v:removeFromParent()
+        end
     end
 end
 -- function TutorialLayer:DeferShow(control, angle, offset_x, offset_y)

@@ -57,9 +57,8 @@ local function load_more(rank_list, new_datas)
         table.insert(rank_list, v)
     end
 end
-function WidgetRankingList:onEnter()
-    WidgetRankingList.super.onEnter(self)
-
+function WidgetRankingList:OnMoveInStage()
+    WidgetRankingList.super.OnMoveInStage(self)
     local body = self:GetBody()
     local size = body:getContentSize()
 
