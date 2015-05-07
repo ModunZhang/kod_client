@@ -162,7 +162,9 @@ function GameUIHome:OnUserBasicChanged(fromEntity,changed_map)
     if changed_map.icon then
         self.player_icon:setTexture(UILib.player_icon[changed_map.icon.new])
     end
-
+    if changed_map.levelExp then
+        self:RefreshExp()
+    end
     self:RefreshData()
 end
 function GameUIHome:OnHelpEventChanged(changed_map)
@@ -275,7 +277,11 @@ function GameUIHome:CreateTop()
     local player_bg = display.newSprite("player_bg_110x106.png"):addTo(top_bg, 2)
         :align(display.LEFT_BOTTOM, display.width>640 and 58 or 64, 10):setCascadeOpacityEnabled(true)
     self.player_icon = UIKit:GetPlayerIconOnly(User:Icon()):addTo(player_bg):pos(55, 64):scale(0.72)
-    self.exp = display.newSprite("player_exp_bar_110x106.png"):addTo(player_bg):pos(55, 53)
+    -- self.exp = display.newSprite("player_exp_bar_110x106.png"):addTo(player_bg):pos(55, 53)
+    self.exp = display.newProgressTimer("player_exp_bar_110x106.png", display.PROGRESS_TIMER_RADIAL):addTo(player_bg):pos(55, 53)
+    self.exp:setRotationSkewY(180)
+    self:RefreshExp()
+
     local level_bg = display.newSprite("level_bg_72x19.png"):addTo(player_bg):pos(55, 18):setCascadeOpacityEnabled(true)
     self.level_label = UIKit:ttfLabel({
         size = 14,
@@ -433,7 +439,12 @@ end
 function GameUIHome:OnVipEventOver( vip_event )
     self:RefreshVIP()
 end
-
+function GameUIHome:RefreshExp()
+    local exp_config = GameDatas.PlayerInitData.playerLevel[User:Level()]
+    local currentExp = User:LevelExp() - exp_config.expFrom
+    local maxExp = exp_config.expTo - exp_config.expFrom
+    self.exp:setPercentage(currentExp/maxExp*100)
+end
 function GameUIHome:RefreshVIP()
     local vip_btn = self.vip_btn
     local vip_btn_img = User:IsVIPActived() and "vip_bg_110x124.png" or "vip_bg_disable_110x124.png"
@@ -470,6 +481,7 @@ function GameUIHome:Find()
 end
 
 return GameUIHome
+
 
 
 

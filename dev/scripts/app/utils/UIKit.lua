@@ -685,7 +685,6 @@ function UIKit:addTipsToNode( node,tips , include_node)
             local t_size = tips_bg:getContentSize()
             text_1:align(display.CENTER, t_size.width/2, t_size.height/2)
             tips_bg:zorder(999999)
-
             local node_postioon = include_node:convertToNodeSpace(world_postion) 
             tips_bg:setPosition(node_postioon.x, node_postioon.y + node:getContentSize().height/2)
         elseif event.name == "ended" then
