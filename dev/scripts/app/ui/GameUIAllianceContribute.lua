@@ -51,7 +51,7 @@ function GameUIAllianceContribute:ctor()
     self.donate_eff = UIKit:ttfLabel({
         text = "",
         size = 20,
-        color = 0x514d3e,
+        color = 0x615b44,
     }):align(display.LEFT_CENTER, 20,40)
         :addTo(self.body)
 
@@ -244,13 +244,13 @@ function GameUIAllianceContribute:CreateContributeItem(params)
     local own_title_label = UIKit:ttfLabel({
         text = _("拥有"),
         size = 20,
-        color = 0x514d3e,
+        color = 0x403c2f,
     }):align(display.LEFT_CENTER, 90,60)
         :addTo(item)
     local donate_title_label = UIKit:ttfLabel({
         text = _("捐赠"),
         size = 20,
-        color = 0x514d3e,
+        color = 0x403c2f,
     }):align(display.LEFT_CENTER, 90,20)
         :addTo(item)
     local own_label = UIKit:ttfLabel({
