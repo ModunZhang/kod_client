@@ -151,7 +151,7 @@ function GameUIGacha:CreateGachaPool(layer)
     local current_box,current_index
     for i=1,16 do
 
-        local gahca_box =WidgetGachaItemBox.new(gacha_item_table[i],isSenior):addTo(layer,2)
+        local gahca_box =WidgetGachaItemBox.new(gacha_item_table[i],isSenior,self):addTo(layer,2)
         if i<6 then
             if i>1 then
                 x = x+box_width+gap
