@@ -12,7 +12,7 @@ local AllianceShrine = import("..entity.AllianceShrine")
 local Alliance = import("..entity.Alliance")
 local Dragon_head_image = import(".UILib").dragon_head
 local WidgetPushTransparentButton = import("..widget.WidgetPushTransparentButton")
-
+local GameUtils = GameUtils
 function GameUIShireFightEvent:ctor(fight_event,allianceShrine)
 	GameUIShireFightEvent.super.ctor(self,790,_("事件详情"),window.top - 50)
 	self.fight_event = fight_event
@@ -31,8 +31,8 @@ function GameUIShireFightEvent:onEnter()
 end
 
 function GameUIShireFightEvent:OnFightEventTimerChanged(event)
-	if event:StageName() == self:GetFightEvent():StageName() then
-		self.time_label:setString(_("派兵时间") .. " " .. GameUtils:formatTimeStyle1(event:GetTime()))
+	if event:Id() == self:GetFightEvent():Id() then
+		self.time_label:setString(string.format(_("派兵时间 %s"),GameUtils:formatTimeStyle1(event:GetTime())))
 	end
 end
 
@@ -121,7 +121,7 @@ function GameUIShireFightEvent:BuildUI()
 	display.newSprite("hourglass_30x38.png"):align(display.CENTER, 22, 22):addTo(icon_bg)
 
 	self.time_label = UIKit:ttfLabel({
-		text =  string.format(_("派兵时间%s"),GameUtils:formatTimeStyle1(self:GetFightEvent():GetTime())),
+		text =  string.format(_("派兵时间 %s"),GameUtils:formatTimeStyle1(self:GetFightEvent():GetTime())),
 		size = 22,
 		color = 0x403c2f
 	}):align(display.LEFT_TOP,icon_bg:getPositionX()+icon_bg:getContentSize().width*0.7+10,icon_bg:getPositionY()):addTo(background)
@@ -267,9 +267,21 @@ function GameUIShireFightEvent:DispathSoliderButtonClicked()
 		UIKit:showMessageDialog(nil,_("你已经向圣地派遣了部队"))
 		return
 	end
-	UIKit:newGameUI("GameUIAllianceSendTroops",function(dragonType,soldiers)
-		NetManager:getMarchToShrinePromose(self:GetFightEvent():Id(),dragonType,soldiers)
-	end,{toLocation = self:GetAllianceShrineLocation(),targetIsMyAlliance = true}):AddToCurrentScene(true)
+	UIKit:newGameUI("GameUIAllianceSendTroops",function(dragonType,soldiers,total_march_time,gameuialliancesendtroops)
+		if total_march_time >=  self:GetFightEvent():GetTime() then
+			UIKit:showMessageDialog(_("提示"),
+				_("检测到你的行军时间大于圣地事件时间,可能部队未达到之前，圣地事件已结束。是否继续派兵?"),
+				function()
+					NetManager:getMarchToShrinePromose(self:GetFightEvent():Id(),dragonType,soldiers)
+					gameuialliancesendtroops:LeftButtonClicked()
+				end,
+				function()
+				end)
+		else
+			NetManager:getMarchToShrinePromose(self:GetFightEvent():Id(),dragonType,soldiers)
+			gameuialliancesendtroops:LeftButtonClicked()
+		end
+	end,{toLocation = self:GetAllianceShrineLocation(),targetIsMyAlliance = true,returnCloseAction = true}):AddToCurrentScene(true)
 end
 
 function GameUIShireFightEvent:InfomationButtonClicked()
