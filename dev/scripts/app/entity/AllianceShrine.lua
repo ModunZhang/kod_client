@@ -198,6 +198,10 @@ function AllianceShrine:OnFightEventTimerChanged(fightEvent)
 		self:GetAlliance():GetAllianceBelvedere():OnFightEventTimerChanged(fightEvent)
 	end
 end
+--是否有圣地事件
+function AllianceShrine:HaveEvent()
+	return not LuaUtils:table_empty(self.shrineEvents)
+end
 
 function AllianceShrine:RefreshEvents(alliance_data,deltaData,refresh_time)
 	local is_fully_update = deltaData == nil
@@ -359,7 +363,7 @@ function AllianceShrine:GetShrineEvents()
 		table.insert(r,v)
 	end
 	table.sort( r, function(a,b)
-		return a:StartTime() < b:StartTime()
+		return a:StartTime() > b:StartTime()
 	end)
 	return r
 end

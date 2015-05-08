@@ -9,7 +9,7 @@ local UIListView = import(".UIListView")
 local AllianceShrine = import("..entity.AllianceShrine")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local UILib = import(".UILib")
-
+local GameUtils = GameUtils
 function GameUIAllianceShrine:ctor(city,default_tab,building)
 	GameUIAllianceShrine.super.ctor(self, city, _("联盟圣地"),default_tab,building)
 	self.default_tab = default_tab
