@@ -43,12 +43,10 @@ function GameUIHome:OnResourceChanged(resource_manager)
     self.coin_label:setString(GameUtils:formatNumber(coin_number))
     self.gem_label:setString(string.formatnumberthousands(gem_number))
 
-    self.wood_label:setColor(wood_resource:IsOverLimit() and UIKit:hex2c4b(0x7e0000) or wood_resource:IsOverWarning() and UIKit:hex2c4b(0xff8400) or UIKit:hex2c4b(0xf3f0b6))
-    self.food_label:setColor(food_resource:IsOverLimit() and UIKit:hex2c4b(0x7e0000) or food_resource:IsOverWarning() and UIKit:hex2c4b(0xff8400) or UIKit:hex2c4b(0xf3f0b6))
-    self.iron_label:setColor(iron_resource:IsOverLimit() and UIKit:hex2c4b(0x7e0000) or iron_resource:IsOverWarning() and UIKit:hex2c4b(0xff8400) or UIKit:hex2c4b(0xf3f0b6))
-    self.stone_label:setColor(stone_resource:IsOverLimit() and UIKit:hex2c4b(0x7e0000) or stone_resource:IsOverWarning() and UIKit:hex2c4b(0xff8400) or UIKit:hex2c4b(0xf3f0b6))
-    self.citizen_label:setColor(citizen_resource:IsOverLimit() and UIKit:hex2c4b(0x7e0000) or citizen_resource:IsOverWarning() and UIKit:hex2c4b(0xff8400) or UIKit:hex2c4b(0xf3f0b6))
-
+    self.wood_label:setColor(wood_resource:IsOverLimit() and UIKit:hex2c4b(0xff3c00) or UIKit:hex2c4b(0xf3f0b6))
+    self.food_label:setColor(food_resource:IsOverLimit() and UIKit:hex2c4b(0xff3c00) or UIKit:hex2c4b(0xf3f0b6))
+    self.iron_label:setColor(iron_resource:IsOverLimit() and UIKit:hex2c4b(0xff3c00) or UIKit:hex2c4b(0xf3f0b6))
+    self.stone_label:setColor(stone_resource:IsOverLimit() and UIKit:hex2c4b(0xff3c00) or UIKit:hex2c4b(0xf3f0b6))
 end
 function GameUIHome:OnUpgradingBegin()
     self:OnTaskChanged()
