@@ -409,7 +409,7 @@ local logic_event_map = {
     end,
     -- alliance
     onAllianceDataChanged = function(success, response)
-        if success then
+        if success and DataManager:hasUserData() then
             LuaUtils:outputTable("onAllianceDataChanged", response)
             local user_alliance_data = DataManager:getUserAllianceData()
             local edit = decodeInUserDataFromDeltaData(user_alliance_data, response)
@@ -417,7 +417,7 @@ local logic_event_map = {
         end
     end,
     onJoinAllianceSuccess = function(success, response)
-        if success then
+        if success and DataManager:hasUserData() then
             DataManager:setEnemyAllianceData(response.enemyAllianceData)
             DataManager:setUserAllianceData(response.allianceData)
             local user_data = DataManager:getUserData()
@@ -426,20 +426,22 @@ local logic_event_map = {
         end
     end,
     onEnemyAllianceDataChanged = function(success, response)
-        LuaUtils:outputTable("onEnemyAllianceDataChanged", response)
-        if success then
+        if success and DataManager:hasUserData() then
+            LuaUtils:outputTable("onEnemyAllianceDataChanged", response)
             local user_enemy_alliance_data = DataManager:getEnemyAllianceData()
             local edit = decodeInUserDataFromDeltaData(user_enemy_alliance_data,response)
             DataManager:setEnemyAllianceData(user_enemy_alliance_data,edit)
         end
     end,
     onAllianceFight = function(success, response)
-        LuaUtils:outputTable("onAllianceFight", response)
-        local user_enemy_alliance_data = response.enemyAllianceData
-        DataManager:setEnemyAllianceData(user_enemy_alliance_data)
-        local user_alliance_data = DataManager:getUserAllianceData()
-        local edit = decodeInUserDataFromDeltaData(user_alliance_data, response.allianceData)
-        DataManager:setUserAllianceData(user_alliance_data, edit)
+        if success and DataManager:hasUserData() then
+            LuaUtils:outputTable("onAllianceFight", response)
+            local user_enemy_alliance_data = response.enemyAllianceData
+            DataManager:setEnemyAllianceData(user_enemy_alliance_data)
+            local user_alliance_data = DataManager:getUserAllianceData()
+            local edit = decodeInUserDataFromDeltaData(user_alliance_data, response.allianceData)
+            DataManager:setUserAllianceData(user_alliance_data, edit)
+        end
     end
 }
 ---
@@ -1645,6 +1647,7 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
 
 
 
