@@ -104,7 +104,7 @@ function GameUIGacha:CreateGachaPool(layer)
         :align(display.CENTER, window.cx, window.top_bottom-390)
 
     -- 抽到物品背景
-    local draw_thing_bg  = display.newSprite("back_ground_320x172.png"):addTo(layer)
+    local draw_thing_bg  = display.newSprite("back_ground_320x146.png"):addTo(layer)
         :align(display.CENTER, window.cx, window.top_bottom-510)
     -- 当前赌币
     display.newSprite("icon_casinoToken.png"):addTo(draw_thing_bg)

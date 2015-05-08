@@ -248,7 +248,7 @@ function GameUIDragonEyrieMain:CreateDeathEventProgressTimer()
 	progressTimer = UIKit:commonProgressTimer("progress_bar_yellow_364x40.png"):addTo(bg):align(display.LEFT_CENTER,0,20)
 	progressTimer:setPercentage(0)
 	local icon_bg = display.newSprite("back_ground_43x43.png"):align(display.LEFT_CENTER, -20, 20):addTo(bg)
-	display.newSprite("hourglass_39x46.png"):align(display.CENTER, 22, 22):addTo(icon_bg):scale(0.8)
+	display.newSprite("hourglass_30x38.png"):align(display.CENTER, 22, 22):addTo(icon_bg):scale(0.8)
 	self.dragon_death_label = UIKit:ttfLabel({
 		text = "",
 		size = 22,

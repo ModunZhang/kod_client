@@ -8,6 +8,7 @@ local cocos_promise = import(".cocos_promise")
 local promise = import(".promise")
 local Enum = import("..utils.Enum")
 local WidgetPushButton = import("..widget.WidgetPushButton")
+local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local UILib = import("..ui.UILib")
 local UIListView = import("..ui.UIListView")
 
@@ -483,7 +484,7 @@ function UIKit:commonListView_1(params)
     local viewRect = params.viewRect
     viewRect.x = 0
     viewRect.y = 0
-    local list_node = display.newScale9Sprite("background_568x556.png",x,y,cc.size(viewRect.width+20,viewRect.height+24),cc.rect(10,10,548,536))
+    local list_node = WidgetUIBackGround.new({width = viewRect.width+20,height = viewRect.height+22},WidgetUIBackGround.STYLE_TYPE.STYLE_6)
     local list = UIListView.new(params):addTo(list_node):pos(10,12)
     return list,list_node
 end

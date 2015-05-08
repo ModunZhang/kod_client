@@ -46,14 +46,14 @@ local VIP_EFFECIVE_ALL_TYPE = Enum(
 -- VIP 效果总览
 local VIP_EFFECIVE_ALL = {
     freeSpeedup = _("立即完成建筑时间"),
-    helpSpeedup = _("协助加速(城建和科技) 1分钟+升级事件剩余时间的"),
+    helpSpeedup = _("协助加速效果提升"),
     woodProductionAdd = _("木材产量增加"),
     stoneProductionAdd = _("石料产量增加"),
     ironProductionAdd = _("铁矿产量增加"),
     foodProductionAdd = _("粮食产量增加"),
     citizenRecoveryAdd = _("城民增长速度"),
     marchSpeedAdd = _("提升行军速度"),
-    normalGachaAdd = _("每日免费Gacha+"),
+    normalGachaAdd = _("每日游乐场免费抽奖次数+"),
     storageProtectAdd = _("暗仓保护上限提升"),
     wallHpRecoveryAdd = _("城墙修复速度提升"),
     dragonExpAdd =  _("巨龙获得经验值加成"),
@@ -798,20 +798,11 @@ function GameUIVip:OpenVIPDetails(show_vip_level)
                     cc.ui.UILabel.new(
                         {
                             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-                            text = _("到达等级赠送"),
+                            text = _("到达等级后自动激活24小时"),
                             font = UIKit:getFontFilePath(),
                             size = 20,
                             color = UIKit:hex2c3b(0xefdea3)
-                        }):align(display.LEFT_CENTER, 120, 70)
-                        :addTo(not_reach_bg)
-                    cc.ui.UILabel.new(
-                        {
-                            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-                            text = _("7 DAY"),
-                            font = UIKit:getFontFilePath(),
-                            size = 18,
-                            color = UIKit:hex2c3b(0x403c2f)
-                        }):align(display.CENTER, 70, 12)
+                        }):align(display.LEFT_CENTER, 120, 47)
                         :addTo(not_reach_bg)
                     layer.status_node = not_reach_bg
                 end

@@ -166,7 +166,7 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
         local length = size.width - margin_x * 2
         local origin_x, origin_y, gap_x = margin_x, 32, length / 3
         local specialMaterials = string.split(soldier_config.specialMaterials,",")
-        table.insert(specialMaterials, { "citizen", "res_citizen_44x50.png" })
+        table.insert(specialMaterials, { "citizen", "res_citizen_88x82.png" })
         for k,v in pairs(specialMaterials) do
             local x = origin_x + (k - 1) * gap_x
             local need_image,res_type
@@ -374,7 +374,7 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
         self.normal_button = button
 
         -- 时间glass
-        cc.ui.UIImage.new("hourglass_39x46.png"):addTo(button, 2)
+        cc.ui.UIImage.new("hourglass_30x38.png"):addTo(button, 2)
             :align(display.LEFT_CENTER, -90, -55):scale(0.7)
 
         -- 时间
