@@ -97,6 +97,46 @@ function MapScene:CreateMultiTouchLayer()
     end)
     return touch_layer
 end
+function MapScene:CreateTutorialLayer()
+    local layer = display.newLayer():addTo(self, 2000)
+    layer:setTouchSwallowEnabled(true)
+    local touch_judgment = self.touch_judgment
+    layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+        if touch_judgment then
+            local touch_type, pre_x, pre_y, x, y = event.name, event.prevX, event.prevY, event.x, event.y
+            if touch_type == "began" then
+                touch_judgment:OnTouchBegan(pre_x, pre_y, x, y)
+                return true
+            elseif touch_type == "moved" then
+            -- touch_judgment:OnTouchMove(pre_x, pre_y, x, y)
+            elseif touch_type == "ended" then
+                touch_judgment:OnTouchEnd(pre_x, pre_y, x, y)
+            elseif touch_type == "cancelled" then
+                touch_judgment:OnTouchCancelled(pre_x, pre_y, x, y)
+            end
+        end
+        return true
+    end)
+    local count = 0
+    function layer:Enable()
+        count = count + 1
+        if count > 0 then
+            layer:setTouchEnabled(true)
+        end
+    end
+    function layer:Disable()
+        count = count - 1
+        if count <= 0 then
+            layer:setTouchEnabled(false)
+        end
+    end
+    function layer:Reset()
+        count = 0
+        layer:setTouchEnabled(false)
+        return self
+    end
+    return layer:Reset()
+end
 function MapScene:OnOneTouch(pre_x, pre_y, x, y, touch_type)
     self:OneTouch(pre_x, pre_y, x, y, touch_type)
 end

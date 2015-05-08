@@ -27,8 +27,6 @@ function GameUIBuild:ctor(city, building)
     app:GetAudioManager():PlayBuildingEffectByType("woodcutter")
 end
 function GameUIBuild:OnMoveInStage()
-    GameUIBuild.super.OnMoveInStage(self)
-
     self.queue = self:LoadBuildingQueue():addTo(self:GetView())
     self:UpdateBuildingQueue(self.build_city)
 
@@ -48,6 +46,8 @@ function GameUIBuild:OnMoveInStage()
     end
     self.base_list_view:reload()
     self:OnCityChanged()
+
+    GameUIBuild.super.OnMoveInStage(self)
 end
 function GameUIBuild:onExit()
     self.build_city:RemoveListenerOnType(self, self.build_city.LISTEN_TYPE.UPGRADE_BUILDING)
@@ -334,10 +334,8 @@ function GameUIBuild:CreateItemWithListView(list_view)
 end
 
 --- fte
-function GameUIBuild:Lock()
-    self.base_list_view:getScrollNode():setTouchEnabled(false)
-    return cocos_promise.defer(function() return self end)
-end
+local check = import("..fte.check")
+local WidgetFteArrow = import("..widget.WidgetFteArrow")
 function GameUIBuild:Find(building_type)
     local item
     table.foreach(self.base_resource_building_items, function(_, v)
@@ -346,12 +344,24 @@ function GameUIBuild:Find(building_type)
             return true
         end
     end)
-    return cocos_promise.defer(function()
-        if not item then
-            promise.reject({code = -1, msg = "没有找到对应item"}, building_type)
-        end
-        return item
-    end)
+    return item
+end
+local house_map = setmetatable({
+    dwelling = _("建造住宅, 提升城民上限"),
+}, {__index = function() return _("点击建造") end})
+function GameUIBuild:PromiseOfFte(house_type)
+    self.base_list_view:getScrollNode():setTouchEnabled(false)
+    self:GetFteLayer():SetTouchObject(self:Find(house_type))
+    local r = self:Find(house_type):getCascadeBoundingBox()
+    self:Find(house_type):setTouchSwallowEnabled(true)
+    self:GetFteLayer().arrow = WidgetFteArrow.new(house_map[house_type])
+        :addTo(self:GetFteLayer())
+    if house_type == "dwelling" then
+        self:GetFteLayer().arrow:TurnUp(true):align(display.RIGHT_TOP, r.x + r.width/2, r.y - 10)
+    else
+        self:GetFteLayer().arrow:TurnDown():align(display.BOTTOM_CENTER, r.x + r.width/2, r.y + r.height + 10)
+    end
+    return City:PromiseOfUpgradingByLevel(house_type, 0)
 end
 
 

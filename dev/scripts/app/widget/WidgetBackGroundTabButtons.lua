@@ -43,8 +43,8 @@ function WidgetBackGroundTabButtons:ctor(buttons, listener)
 end
 function WidgetBackGroundTabButtons:SelectTab(tag)
     for _, tab in pairs(self.tabs) do
-        if button.tag == tag then
-            self:PushButton(button)
+        if tab.tag == tag then
+            self:PushButton(tab)
             return
         end
     end

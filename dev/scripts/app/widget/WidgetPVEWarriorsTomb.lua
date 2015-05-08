@@ -19,6 +19,7 @@ function WidgetPVEWarriorsTomb:SetUpButtons()
         {
             {
                 label = _("安葬"), 
+                icon = "pve_icon_bury.png",
                 callback = function()
                     if self:HasGem(10) then
                         local rollback = self:Search()

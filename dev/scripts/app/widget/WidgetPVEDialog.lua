@@ -75,6 +75,7 @@ function WidgetPVEDialog:Refresh()
 
     --
     local param = self:SetUpButtons()
+    self.btns = {}
     for i = #param, 1, -1 do
         local btn = cc.ui.UIPushButton.new({normal = "btn_138x110.png",pressed = "btn_pressed_138x110.png"})
             :addTo(dialog):pos(w - (#param - i + 0.5) * 138, - 110*0.5 + 10)
@@ -94,6 +95,8 @@ function WidgetPVEDialog:Refresh()
                     end
                 end
             end)
+        btn.param = param
+        self.btns[i] = btn
         if param[i].icon then
             display.newSprite(param[i].icon):addTo(btn, -1):pos(0, 12)
         end

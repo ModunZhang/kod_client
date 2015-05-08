@@ -92,7 +92,7 @@ end
 function GameUIHome:FadeToSelf(isFullDisplay)
     self:setCascadeOpacityEnabled(true)
     local opacity = isFullDisplay == true and 255 or 0
-    local p = isFullDisplay and 0 or 99999999
+    local p = isFullDisplay and 0 or 0
     transition.fadeTo(self, {opacity = opacity, time = 0.2,
         onComplete = function()
             self:pos(p, p)
@@ -304,7 +304,7 @@ function GameUIHome:CreateTop()
     local vip_btn = cc.ui.UIPushButton.new(
         {},
         {scale9 = false}
-    ):addTo(top_bg):align(display.CENTER, ox + 195, 50)
+    ):addTo(top_bg):align(display.CENTER, ox + 195, 65)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 UIKit:newGameUI('GameUIVip', City,"VIP"):AddToCurrentScene(true)
@@ -313,7 +313,7 @@ function GameUIHome:CreateTop()
     local vip_btn_img = User:IsVIPActived() and "vip_bg_110x124.png" or "vip_bg_disable_110x124.png"
     vip_btn:setButtonImage(cc.ui.UIPushButton.NORMAL, vip_btn_img, true)
     vip_btn:setButtonImage(cc.ui.UIPushButton.PRESSED, vip_btn_img, true)
-    self.vip_level = display.newNode():addTo(vip_btn):pos(-3, 15):scale(0.8)
+    self.vip_level = display.newNode():addTo(vip_btn):pos(-3, 0):scale(0.8)
     self.vip_btn = vip_btn
 
 
@@ -352,6 +352,7 @@ function GameUIHome:CreateTop()
             end
         end
     end)
+    self.quest_bar_bg = quest_bar_bg
     display.newSprite("quest_icon_27x42.png"):addTo(quest_bar_bg):pos(-162, 0)
     self.quest_label = cc.ui.UILabel.new({
         size = 20,
@@ -472,9 +473,8 @@ function GameUIHome:RefreshVIP()
 end
 
 -- fte
-function GameUIHome:DefferShow(tab_type)
-    return self.event_tab:PromiseOfShowTab(tab_type):next(function() return self end)
-end
+local WidgetFteArrow = import("..widget.WidgetFteArrow")
+local WidgetFteMark = import("..widget.WidgetFteMark")
 function GameUIHome:Find()
     local item
     self.event_tab:IteratorAllItem(function(_, v)
@@ -483,59 +483,59 @@ function GameUIHome:Find()
             return true
         end
     end)
-    return cocos_promise.defer(function()
-        if not item then
-            promise.reject({code = -1, msg = "没有找到对应item"}, "")
+    return item
+end
+function GameUIHome:FindVip()
+    return self.vip_btn
+end
+function GameUIHome:PromiseOfFteFreeSpeedUp()
+    if #City:GetUpgradingBuildings() > 0 then
+        if not self.event_tab:IsShow() then
+            self.event_tab:EventChangeOn("build", true)
         end
-        return item
+        self:GetFteLayer():Reset()
+        self.event_tab:PromiseOfPopUp():next(function()
+            self:GetFteLayer():SetTouchObject(self:Find())
+            local r = self:Find():getCascadeBoundingBox()
+            self:GetFteLayer().arrow = WidgetFteArrow.new(_("5分钟以下免费加速，激活VIP提升免费加速时间，VIP等级越高，可免费加速时间越高"))
+                :addTo(self:GetFteLayer()):TurnUp(true):align(display.RIGHT_TOP, r.x + r.width/2, r.y - 10)
+        end)
+        return City:PromiseOfFinishUpgradingByLevel(nil, nil):next(function()
+            self:DestoryFteLayer()
+        end)
+    end
+    return cocos_promise.defer()
+end
+function GameUIHome:PromiseOfFteInstantSpeedUp()
+    if #City:GetUpgradingBuildings() > 0 then
+        if not self.event_tab:IsShow() then
+            self.event_tab:EventChangeOn("build", true)
+        end
+        self:GetFteLayer():Reset()
+        self.event_tab:PromiseOfPopUp():next(function()
+            self:GetFteLayer():SetTouchObject(self:Find())
+            local r = self:Find():getCascadeBoundingBox()
+            self:GetFteLayer().arrow = WidgetFteArrow.new(_("立即完成升级"))
+                :addTo(self:GetFteLayer()):TurnRight(true):align(display.RIGHT_CENTER, r.x - 10, r.y + r.height/2)
+        end)
+        return City:PromiseOfFinishUpgradingByLevel(nil, nil):next(function()
+            self:DestoryFteLayer()
+        end)
+    end
+    return cocos_promise.defer()
+end
+function GameUIHome:PromiseOfActivePromise()
+    self:GetFteLayer():SetTouchObject(self:FindVip())
+    local r = self:FindVip():getCascadeBoundingBox()
+    self:GetFteLayer().arrow = WidgetFteArrow.new(_("点击VIP，免费激活VIP"))
+        :addTo(self:GetFteLayer()):TurnUp():align(display.TOP_CENTER, r.x + r.width/2, r.y)
+
+    return UIKit:PromiseOfOpen("GameUIVip"):next(function(ui)
+        self:GetFteLayer():removeFromParent()
+        return ui:PromiseOfFte()
     end)
 end
 
 return GameUIHome
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

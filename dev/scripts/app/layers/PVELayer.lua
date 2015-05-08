@@ -9,8 +9,8 @@ local SpriteConfig = import("..sprites.SpriteConfig")
 local UILib = import("..ui.UILib")
 local MapLayer = import(".MapLayer")
 local PVELayer = class("PVELayer", MapLayer)
-local ZORDER = Enum("BACKGROUND", "BUILDING", "OBJECT", "FOG")
-
+local ZORDER = Enum("BACKGROUND", "BUILDING", "OBJECT", "FOG", "FTE")
+PVELayer.ZORDER = ZORDER
 
 local pve_color = {
     cc.c3b(  0,   0,   0), -- "iceField",
@@ -62,6 +62,8 @@ function PVELayer:ctor(user)
 
     self.building_layer = display.newNode():addTo(self.scene_node, ZORDER.BUILDING)
     self.object_layer = display.newNode():addTo(self.scene_node, ZORDER.OBJECT)
+    self.fte_layer = display.newNode():addTo(self.scene_node, ZORDER.FTE)
+
     self.normal_map = NormalMapAnchorBottomLeftReverseY.new({
         tile_w = 80,
         tile_h = 80,
@@ -174,6 +176,9 @@ function PVELayer:GetSpriteBy(x, y)
         end
     end
 end
+function PVELayer:GetFteLayer()
+    return self.fte_layer
+end
 function PVELayer:PromiseOfTrap()
     local p = promise.new()
     local t = 0.025
@@ -266,7 +271,6 @@ function PVELayer:LoadFog()
 end
 function PVELayer:GetFog(x, y)
     return self.war_fog_layer:getTileAt(cc.p(x, y))
-        -- return self.fogs[x][y]
 end
 function PVELayer:ConvertLogicPositionToMapPosition(lx, ly)
     local map_pos = cc.p(self.normal_map:ConvertToMapPosition(lx, ly))

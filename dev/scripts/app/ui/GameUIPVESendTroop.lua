@@ -32,7 +32,6 @@ function GameUIPVESendTroop:ctor(pve_soldiers,march_callback)
 end
 
 function GameUIPVESendTroop:OnMoveInStage()
-    GameUIPVESendTroop.super.OnMoveInStage(self)
 
     self:SelectDragonPart()
     self:SelectSoldiers()
@@ -101,7 +100,7 @@ function GameUIPVESendTroop:OnMoveInStage()
     end):align(display.LEFT_CENTER,window.left+50,window.top-910):addTo(self:GetView())
     self.max_btn = max_btn
 
-    local march_btn = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
+    self.march_btn = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
         :setButtonLabel(UIKit:ttfLabel({
             text = _("进攻"),
             size = 24,
@@ -149,6 +148,8 @@ function GameUIPVESendTroop:OnMoveInStage()
 
 
     City:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
+
+    GameUIPVESendTroop.super.OnMoveInStage(self)
 end
 function GameUIPVESendTroop:AdapterMaxButton(max)
     local btn_labe = max and _("最大") or self.is_now_max and _("最大") or _("最小")
@@ -671,7 +672,56 @@ function GameUIPVESendTroop:onExit()
     GameUIPVESendTroop.super.onExit(self)
 end
 
+-- fte
+local promise = import("..utils.promise")
+local WidgetFteArrow = import("..widget.WidgetFteArrow")
+function GameUIPVESendTroop:PormiseOfFte()
+    return self:PromiseOfMax():next(function()
+        return self:PromiseOfAttack()
+    end)
+end
+function GameUIPVESendTroop:PromiseOfMax()
+    if self:GetFteLayer().arrow then
+        self:GetFteLayer().arrow:removeFromParent()
+        self:GetFteLayer().arrow = nil
+    end
+
+    local r = self.max_btn:getCascadeBoundingBox()
+    self:GetFteLayer().arrow = WidgetFteArrow.new(_("点击最大"))
+        :addTo(self:GetFteLayer()):TurnLeft()
+        :align(display.LEFT_CENTER, r.x + r.width, r.y + r.height/2)
+    self:GetFteLayer():SetTouchObject(self.max_btn):Enable()
+
+    local p = promise.new(function()
+        if self:GetFteLayer().arrow then
+            self:GetFteLayer().arrow:removeFromParent()
+        end
+        self:GetFteLayer().arrow = nil
+        self:GetFteLayer():Reset()
+    end)
+    self.max_btn:onButtonClicked(function()
+        p:resolve()
+    end)
+    return p
+end
+function GameUIPVESendTroop:PromiseOfAttack()
+    if self:GetFteLayer().arrow then
+        self:GetFteLayer().arrow:removeFromParent()
+        self:GetFteLayer().arrow = nil
+    end
+
+    local r = self.march_btn:getCascadeBoundingBox()
+    self:GetFteLayer().arrow = WidgetFteArrow.new(_("点击进攻"))
+        :addTo(self:GetFteLayer()):TurnRight()
+        :align(display.RIGHT_CENTER, r.x - 20, r.y + r.height/2)
+    self:GetFteLayer():SetTouchObject(self.march_btn):Enable()
+
+    return UIKit:PromiseOfOpen("GameUIReplayNew")
+end
+
+
 return GameUIPVESendTroop
+
 
 
 
