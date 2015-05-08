@@ -756,7 +756,7 @@ function GameUIVip:SetVIPInfo(level)
     self.widget_info:SetInfo(info)
 end
 function GameUIVip:OpenVIPDetails(show_vip_level)
-    local layer = WidgetPopDialog.new( 737,_("VIP"),display.top-140,"title_purple_600x52.png")
+    local layer = WidgetPopDialog.new( 737,_("VIP"),display.top-140,"title_purple_600x56.png")
         :addTo(self,201)
     local body = layer:GetBody()
     local size = body:getContentSize()
