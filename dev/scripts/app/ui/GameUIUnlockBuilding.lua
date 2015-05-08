@@ -315,6 +315,7 @@ end
 
 
 -- fte
+local mockData = import("..fte.mockData")
 local WidgetFteArrow = import("..widget.WidgetFteArrow")
 function GameUIUnlockBuilding:Find()
     return self.upgrade_btn
@@ -322,10 +323,23 @@ end
 function GameUIUnlockBuilding:PormiseOfFte()
     self:GetFteLayer():SetTouchObject(self:Find())
     local r = self:Find():getCascadeBoundingBox()
+
+    self:Find().button:removeEventListenersByEvent("CLICKED_EVENT")
+    self:Find().button:onButtonClicked(function()
+        self:Find().button:setButtonEnabled(false)
+
+        mockData.UpgradeBuildingTo(self.building:GetType(), self.building:GetNextLevel())
+
+        self:removeFromParent()
+    end)
+
+
     local str = string.format(_("点击解锁新建筑：%s"), Localize.building_name[self.building:GetType()])
     self:GetFteLayer().arrow = WidgetFteArrow.new(str):addTo(self:GetFteLayer())
     :TurnRight():align(display.RIGHT_CENTER, r.x - 20, r.y + r.height/2)
-    return City:PromiseOfUpgradingByLevel(self.building:GetType())
+
+
+    return self.city:PromiseOfUpgradingByLevel(self.building:GetType())
 end
 
 

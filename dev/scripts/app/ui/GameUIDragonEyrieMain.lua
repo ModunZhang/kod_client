@@ -245,19 +245,19 @@ function GameUIDragonEyrieMain:CreateProgressTimer()
 end
 
 function GameUIDragonEyrieMain:CreateDeathEventProgressTimer()
-	local bg,progressTimer = nil,nil
-	bg = display.newSprite("progress_bar_364x40_1.png")
-	progressTimer = UIKit:commonProgressTimer("progress_bar_yellow_364x40.png"):addTo(bg):align(display.LEFT_CENTER,0,20)
-	progressTimer:setPercentage(0)
-	local icon_bg = display.newSprite("back_ground_43x43.png"):align(display.LEFT_CENTER, -20, 20):addTo(bg)
-	display.newSprite("hourglass_30x38.png"):align(display.CENTER, 22, 22):addTo(icon_bg):scale(0.8)
-	self.dragon_death_label = UIKit:ttfLabel({
-		text = "",
-		size = 22,
-		color= 0xfff3c7,
-		shadow= true
-	}):addTo(bg):align(display.LEFT_CENTER, 50,20)
-	return bg,progressTimer
+    local bg,progressTimer = nil,nil
+    bg = display.newSprite("progress_bar_364x40_1.png")
+    progressTimer = UIKit:commonProgressTimer("progress_bar_yellow_364x40.png"):addTo(bg):align(display.LEFT_CENTER,0,20)
+    progressTimer:setPercentage(0)
+    local icon_bg = display.newSprite("back_ground_43x43.png"):align(display.LEFT_CENTER, -20, 20):addTo(bg)
+    display.newSprite("hourglass_30x38.png"):align(display.CENTER, 22, 22):addTo(icon_bg):scale(0.8)
+    self.dragon_death_label = UIKit:ttfLabel({
+        text = "",
+        size = 22,
+        color= 0xfff3c7,
+        shadow= true
+    }):addTo(bg):align(display.LEFT_CENTER, 50,20)
+    return bg,progressTimer
 end
 
 function GameUIDragonEyrieMain:CreateDragonContentNodeIf()
@@ -622,8 +622,13 @@ end
 
 --fte
 local check = import("..fte.check")
-function GameUIDragonEyrieMain:Find()
+local mockData = import("..fte.mockData")
+local DiffFunction = import("..utils.DiffFunction")
+function GameUIDragonEyrieMain:FindHateBtn()
     return self.hate_button
+end
+function GameUIDragonEyrieMain:FindGarrisonBtn()
+    return self.garrison_button
 end
 function GameUIDragonEyrieMain:PromiseOfFte()
     local p = cocos_promise.defer()
@@ -646,38 +651,46 @@ function GameUIDragonEyrieMain:PromiseOfFte()
     return p
 end
 function GameUIDragonEyrieMain:PromiseOfHate()
-    local r = self:Find():getCascadeBoundingBox()
-    self:GetFteLayer():SetTouchObject(self:Find())
+    local r = self:FindHateBtn():getCascadeBoundingBox()
+    self:GetFteLayer():SetTouchObject(self:FindHateBtn())
     self:GetFteLayer().arrow = WidgetFteArrow.new(_("点击按钮：孵化"))
         :addTo(self:GetFteLayer()):TurnUp():pos(r.x + r.width/2, r.y - 40)
 
-    self:Find():removeEventListenersByEvent("CLICKED_EVENT")
-    self:Find():onButtonClicked(function()
-        -- exp = 66, 
-        -- star = 1,  
-        -- level = 1
-        -- hp = 57, 
-        -- status = "free", 
+    self:FindHateBtn():removeEventListenersByEvent("CLICKED_EVENT")
+    self:FindHateBtn():onButtonClicked(function()
+        self:FindHateBtn():setButtonEnabled(false)
+        
+        mockData.HateDragon("redDragon")
     end)
-
 
     return self.dragon_manager:PromiseOfHate():next(function()
         self:GetFteLayer():removeFromParent()
     end)
 end
 function GameUIDragonEyrieMain:PormiseOfDefence()
-    self.garrison_button:setTouchSwallowEnabled(true)
-    self:GetFteLayer():SetTouchObject(self.garrison_button)
-    local r = self.garrison_button:getCascadeBoundingBox()
+    self:FindGarrisonBtn():setTouchSwallowEnabled(true)
+    self:GetFteLayer():SetTouchObject(self:FindGarrisonBtn())
+
+    self:FindGarrisonBtn():removeEventListenersByEvent("CLICKED_EVENT")
+    self:FindGarrisonBtn():onButtonClicked(function()
+        self:FindGarrisonBtn():setButtonEnabled(false)
+
+        mockData.DefenceDragon("redDragon")
+    end)
+
+    local r = self:FindGarrisonBtn():getCascadeBoundingBox()
     self:GetFteLayer().arrow = WidgetFteArrow.new(_("点击设置：巨龙在城市驻防，如果敌军入侵，巨龙会自动带领士兵进行防御"))
         :addTo(self:GetFteLayer()):TurnUp(false):align(display.LEFT_TOP, r.x, r.y - 30)
 
     return self.dragon_manager:PromiseOfDefence():next(function()
         self:GetFteLayer():removeFromParent()
-        self.garrison_button:setButtonEnabled(false)
+        self:FindGarrisonBtn():setButtonEnabled(false)
     end)
 end
 return GameUIDragonEyrieMain
+
+
+
 
 
 

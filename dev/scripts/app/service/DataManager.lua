@@ -3,7 +3,7 @@ local initData = import("..fte.initData")
 function DataManager:setUserData( userData, deltaData )
     self.user = userData
     if global_fte then
-        self:OnUserDataChanged(initData, app.timer:GetServerTime())
+        self:setFteUserDeltaData()
     else
         self:OnUserDataChanged(self.user, app.timer:GetServerTime(), deltaData)
     end
@@ -13,18 +13,21 @@ function DataManager:setUserAllianceData(allianceData,deltaData)
     if allianceData == json.null then return end
     Alliance_Manager:OnAllianceDataChanged(allianceData,app.timer:GetServerTime(),deltaData)
 end
-
 function DataManager:getUserAllianceData()
     return self.allianceData
 end
 
-function DataManager:getUserData(  )
+function DataManager:getUserData()
     return self.user
 end
 function DataManager:hasUserData()
     return type(self.user) == "table"
 end
-function DataManager:getInitData(  )
+
+function DataManager:setFteUserDeltaData(deltaData)
+    self:OnUserDataChanged(self:getFteData(), app.timer:GetServerTime(), deltaData)
+end
+function DataManager:getFteData()
     return initData
 end
 

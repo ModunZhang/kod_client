@@ -52,7 +52,7 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
     local label_origin_x = 190
     -- bg
     local back_ground = WidgetUIBackGround.new({height=500,isFrame="yes"})
-    :addTo(self):align(display.BOTTOM_CENTER, display.cx, 0)
+        :addTo(self):align(display.BOTTOM_CENTER, display.cx, 0)
     back_ground:setTouchEnabled(true)
 
     -- title
@@ -671,20 +671,19 @@ end
 function WidgetRecruitSoldier:PormiseOfFte()
     local fte_layer = self:getParent():GetFteLayer()
     fte_layer:Enable():SetTouchObject(self:Find())
+    
     local r = self:Find():getCascadeBoundingBox()
-    fte_layer.arrow = WidgetFteArrow.new(_("立即开始招募，招募士兵会消耗城民"))
-        :addTo(fte_layer):TurnRight()
-        :align(display.RIGHT_CENTER, r.x - 10, r.y + r.height/2)
-    return City:PromiseOfRecruitSoldier("swordsman"):next(function()
-        if fte_layer.arrow then
-            fte_layer.arrow:removeFromParent()
-        end
-        fte_layer.arrow = nil
+    WidgetFteArrow.new(_("立即开始招募，招募士兵会消耗城民")):addTo(fte_layer)
+        :TurnRight():align(display.RIGHT_CENTER, r.x - 10, r.y + r.height/2)
+    
+    return self.city:PromiseOfRecruitSoldier("swordsman"):next(function()
+        fte_layer:removeFromParent()
     end)
 end
 
 
 return WidgetRecruitSoldier
+
 
 
 

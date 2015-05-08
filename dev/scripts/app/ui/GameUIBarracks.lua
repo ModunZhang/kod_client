@@ -337,21 +337,12 @@ function GameUIBarracks:PromiseOfFte()
     self.list_view:getScrollNode():setTouchEnabled(false)
     self.list_view.touchNode_:setTouchEnabled(false)
     self:Find():setTouchSwallowEnabled(true)
-
     self:GetFteLayer():SetTouchObject(self:Find())
-
     local r = self:Find():getCascadeBoundingBox()
-    self:GetFteLayer().arrow = WidgetFteArrow.new(_("点击招募步兵"))
-    :addTo(self:GetFteLayer()):TurnLeft()
+    WidgetFteArrow.new(_("点击招募步兵")):addTo(self:GetFteLayer()):TurnLeft()
     :align(display.LEFT_CENTER, r.x + r.width + 10, r.y + r.height/2)
-
     return WidgetRecruitSoldier:PormiseOfOpen():next(function(ui)
-        if self:GetFteLayer().arrow then
-            self:GetFteLayer().arrow:removeFromParent()
-        end
-        self:GetFteLayer().arrow = nil
-        self:GetFteLayer():Reset()
-
+        self:GetFteLayer():removeFromParent()
         return ui:PormiseOfFte()
     end):next(function()
         return self:PromsieOfExit("GameUIBarracks")
