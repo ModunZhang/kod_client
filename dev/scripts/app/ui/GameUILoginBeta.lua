@@ -255,13 +255,17 @@ function GameUILoginBeta:connectLogicServer()
     end)
 
 end
-
+local check = import("..fte.check")
 function GameUILoginBeta:login()
     NetManager:getLoginPromise():done(function(response)
         ext.market_sdk.onPlayerLogin(User:Id(),User:Name(),User:ServerName())
         ext.market_sdk.onPlayerLevelUp(User:Level())
         self:performWithDelay(function()
-  		    app:EnterFteScene()
+            if check("SelectTerrain") then
+  		        app:EnterFteScene()
+            else
+                app:EnterMyCityScene()
+            end
         end, 0.3)
     end):catch(function(err)
         dump(err)

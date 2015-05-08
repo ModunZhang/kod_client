@@ -71,7 +71,7 @@ function WidgetPVEDialog:Refresh()
         size = 18,
         color = 0x615b44,
         dimensions = cc.size(300,0)
-    }):align(display.LEFT_TOP, 220, h*0.5 + 50):addTo(dialog)
+    }):align(display.LEFT_TOP, 220, h*0.5 + 86):addTo(dialog)
 
     --
     local param = self:SetUpButtons()
