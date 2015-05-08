@@ -1,5 +1,5 @@
 DataManager = {}
-
+local initData = import("..fte.initData")
 function DataManager:setUserData( userData, deltaData )
     self.user = userData
     self:OnUserDataChanged(self.user, app.timer:GetServerTime(), deltaData)
@@ -16,6 +16,12 @@ end
 
 function DataManager:getUserData(  )
     return self.user
+end
+function DataManager:hasUserData()
+	return type(self.user) == "table"
+end
+function DataManager:getInitData(  )
+	return initData
 end
 
 function DataManager:setEnemyAllianceData(enemyAllianceData,deltaData)
