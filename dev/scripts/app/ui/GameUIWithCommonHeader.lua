@@ -214,15 +214,15 @@ function GameUIWithCommonHeader:CreateTabButtons(param, func)
 end
 local WidgetFteArrow = import("..widget.WidgetFteArrow")
 function GameUIWithCommonHeader:PromsieOfExit(ui_name)
-    self:GetFteLayer():removeFromParent()
-    self:GetFteLayer():SetTouchObject(self:GetHomeButton()):Enable()
+    self:GetFteLayer():SetTouchObject(self:GetHomeButton())
     local r = self:GetHomeButton():getCascadeBoundingBox()
-    self:GetFteLayer().arrow = WidgetFteArrow.new(_("返回城市"))
-        :addTo(self:GetFteLayer()):TurnLeft():align(display.LEFT_CENTER, r.x + r.width + 30, r.y + r.height/2)
+    WidgetFteArrow.new(_("返回城市")):addTo(self:GetFteLayer()):TurnLeft()
+        :align(display.LEFT_CENTER, r.x + r.width + 30, r.y + r.height/2)
     return UIKit:PromiseOfClose(ui_name)
 end
 
 return GameUIWithCommonHeader
+
 
 
 

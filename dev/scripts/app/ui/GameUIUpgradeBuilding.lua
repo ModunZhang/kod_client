@@ -47,6 +47,7 @@ end
 
 
 --
+local mockData = import("..fte.mockData")
 local WidgetFteArrow = import("..widget.WidgetFteArrow")
 function GameUIUpgradeBuilding:Find()
     return self.upgrade_layer.upgrade_btn
@@ -54,9 +55,20 @@ end
 function GameUIUpgradeBuilding:PromiseOfFte()
     self.tabs:SelectTab("upgrade")
     self:GetFteLayer():SetTouchObject(self:Find())
+
+    self:Find():removeEventListenersByEvent("CLICKED_EVENT")
+    self:Find():onButtonClicked(function()
+        self:Find():setButtonEnabled(false)
+
+        mockData.UpgradeBuildingTo(self.building:GetType(), self.building:GetNextLevel())
+
+        self:LeftButtonClicked()
+    end)
+
     local r = self:Find():getCascadeBoundingBox()
     self:GetFteLayer().arrow = WidgetFteArrow.new(_("点击升级"))
         :addTo(self:GetFteLayer()):TurnDown():align(display.BOTTOM_CENTER, r.x + r.width/2, r.y + r.height + 10)
+
     return City:PromiseOfUpgradingByLevel(self:GetBuilding():GetType())
 end
 
