@@ -59,8 +59,13 @@ function GameUIUpgradeBuilding:PromiseOfFte()
     self:Find():removeEventListenersByEvent("CLICKED_EVENT")
     self:Find():onButtonClicked(function()
         self:Find():setButtonEnabled(false)
-
-        mockData.UpgradeBuildingTo(self.building:GetType(), self.building:GetNextLevel())
+        if self.building:IsHouse() then
+            local tile = self.building:BelongCity():GetTileWhichBuildingBelongs(self.building)
+            mockData.UpgradeHouseTo(tile.location_id, tile:GetBuildingLocation(self.building),
+                self.building:GetType(), self.building:GetNextLevel())
+        else
+            mockData.UpgradeBuildingTo(self.building:GetType(), self.building:GetNextLevel())
+        end
 
         self:LeftButtonClicked()
     end)
@@ -69,10 +74,11 @@ function GameUIUpgradeBuilding:PromiseOfFte()
     self:GetFteLayer().arrow = WidgetFteArrow.new(_("点击升级"))
         :addTo(self:GetFteLayer()):TurnDown():align(display.BOTTOM_CENTER, r.x + r.width/2, r.y + r.height + 10)
 
-    return City:PromiseOfUpgradingByLevel(self:GetBuilding():GetType())
+    return self.building:BelongCity():PromiseOfUpgradingByLevel(self:GetBuilding():GetType())
 end
 
 return GameUIUpgradeBuilding
+
 
 
 
