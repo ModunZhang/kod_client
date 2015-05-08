@@ -325,16 +325,16 @@ function PVEScene:onEnterTransitionFinish()
     self:RunFte()
 end
 function PVEScene:RunFte()
-    if check("ALL") then
-        return
-    end
-    if check("ExplorePve") then
-        self:PromiseOfAttackMiner():next(function()
-            return self:PromiseOfIntroduce()
-        end):next(function()
-            return self:PromiseOfExit()
-        end)
-    end
+    -- if check("ALL") then
+    --     return
+    -- end
+    -- if check("ExplorePve") then
+    --     self:PromiseOfAttackMiner():next(function()
+    --         return self:PromiseOfIntroduce()
+    --     end):next(function()
+    --         return self:PromiseOfExit()
+    --     end)
+    -- end
 end
 function PVEScene:PromiseOfAttackMiner()
     self:GetTutorialLayer():Enable()
