@@ -279,6 +279,7 @@ function GameUIGacha:CreateGachaPool(layer)
         self.award =self.award or {} -- 抽到物品的图标和名字node,开启下次抽奖需移除
         local item_name = item[1]
         print("item_name==",item_name)
+        dump(item,"StartLotteryDraw")
         self.current_gacha_item_count = item[2]
         self.current_gacha_item_name = item_name
         layer:EnAbleButton(false)
@@ -426,7 +427,13 @@ function GameUIGacha:InitOrdinary()
                                 local key = string.split(v[1], ".")[1]
                                 if key == "items" then
                                     items[1] = v[2].name
-                                    items[2] = v[2].count
+                                    local count
+                                    for __,gacha_config in ipairs(NORMAL) do
+                                        if gacha_config.itemName == v[2].name then
+                                            count = gacha_config.itemCount
+                                        end
+                                    end
+                                    items[2] = count
                                 end
                             end
                             -- 首先重置gacha池
@@ -516,7 +523,13 @@ function GameUIGacha:InitDeluxe()
                             for i,v in ipairs(data) do
                                 local key = string.split(v[1], ".")[1]
                                 if key == "items" then
-                                    table.insert(items, {v[2].name,v[2].count})
+                                    local count
+                                    for __,gacha_config in ipairs(ADVANCED) do
+                                        if gacha_config.itemName == v[2].name then
+                                            count = gacha_config.itemCount
+                                        end
+                                    end
+                                    table.insert(items, {v[2].name,count})
                                 end
                             end
                             -- 首先重置gacha池
@@ -596,6 +609,7 @@ function GameUIGacha:OnCountInfoChanged()
     end
 end
 return GameUIGacha
+
 
 
 
