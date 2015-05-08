@@ -10,6 +10,7 @@ local UIListView = import(".UIListView")
 local Alliance_Manager = Alliance_Manager
 local UILib = import(".UILib")
 local WidgetPushButton = import("..widget.WidgetPushButton")
+local Localize = import("..utils.Localize")
 
 function GameUIAllianceShrineRewardList:ctor(shrineStage)
 	GameUIAllianceShrineRewardList.super.ctor(self,464,_("事件完成奖励"),window.top - 101)
@@ -47,13 +48,13 @@ function GameUIAllianceShrineRewardList:GetListItem(index,data)
 	local content = display.newScale9Sprite(string.format("resource_item_bg%d.png",index % 2)):size(547,94)
 	
 	
-	local iconImage = "GoldKill_icon_66x76.png"
+	local iconImage = "goldKill_icon_76x84.png"
 	if index == 1 then
-		iconImage = "GoldKill_icon_66x76.png"
+		iconImage = "goldKill_icon_76x84.png"
 	elseif index == 2 then
-		iconImage = "SilverKill_icon_66x76.png"
+		iconImage = "silverKill_icon_76x84.png"
 	elseif index == 3 then
-		iconImage = "BronzeKill_icon_66x76.png"
+		iconImage = "bronzeKill_icon_76x84.png"
 	end
 	local icon = display.newSprite(iconImage):align(display.LEFT_CENTER,6,47):addTo(content)
 	local strength_icon = display.newSprite("battle_33x33.png")
@@ -79,11 +80,13 @@ function GameUIAllianceShrineRewardList:GetListItem(index,data)
 				local sp = display.newSprite(UILib.dragon_material_pic_map[v.sub_type]):align(display.CENTER,59,59)
 				local size = sp:getContentSize()
 				sp:scale(100/math.max(size.width,size.height)):addTo(item)
+				UIKit:addTipsToNode(item,Localize.equip_material[v.sub_type],self)
 			elseif v.type == 'allianceInfo' then
 				if v.sub_type == 'loyalty' then
 					local sp = display.newSprite("loyalty_128x128.png"):align(display.CENTER,59,59)
 					sp:scale(0.78):addTo(item)
 				end
+				UIKit:addTipsToNode(item,_("忠诚值"),self)
 			end
 		UIKit:ttfLabel({
 			text = "x" .. v.count,

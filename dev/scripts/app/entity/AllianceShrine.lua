@@ -34,7 +34,7 @@ end
 function AllianceShrine:OnBuildingInfoChange(building)
 	if building.name == 'shrine' and self.perception then
 		local shire_building = config_shrine[building.level]
-        self.perception:SetProductionPerHour(app.timer:GetServerTime(),shire_building.pRecovery)
+        self.perception:SetProductionPerHour(app.timer:GetServerTime(),shire_building.pRecoveryPerHour)
         self.perception:SetValueLimit(shire_building.perception)
 	end
 end
@@ -156,7 +156,6 @@ function AllianceShrine:InitOrUpdatePerception(alliance_data)
 			end
 		end
 		local shire_building = config_shrine[building.level]
-		print("SetProductionPerHour----->",resource_refresh_time,shire_building.pRecoveryPerHour,shire_building.perception)
         self.perception:SetProductionPerHour(resource_refresh_time,shire_building.pRecoveryPerHour)
         self.perception:SetValueLimit(shire_building.perception)
     else
@@ -405,17 +404,8 @@ end
 function AllianceShrine:GetMainStageDescName(statge_index)
 	return statge_index .. ".章节名本地化缺失"
 end
-
+-- 限制玩家只能派遣一支部队去圣地
 function AllianceShrine:CheckPlayerCanDispathSoldiers(playerId)
-	--check 已经驻防的部队
-	-- for _,shireEvent in ipairs(self:GetShrineEvents()) do
-	-- 	for _,shireEventPlayer in ipairs(shireEvent:PlayerTroops()) do
-	-- 		if shireEventPlayer.id == playerId then
-	-- 			printInfo("%s","已经驻防的部队检查到玩家信息")
-	-- 			return false
-	-- 		end
-	-- 	end
-	-- end
 	if self:GetShrineEventByPlayerId(playerId) then 
 		printInfo("%s","已经驻防的部队检查到玩家信息")
 		return false
@@ -431,11 +421,11 @@ function AllianceShrine:CheckPlayerCanDispathSoldiers(playerId)
 end
 
 function AllianceShrine:CheckSelfCanDispathSoldiers()
-	return self:CheckPlayerCanDispathSoldiers(DataManager:getUserData()._id)
+	return self:CheckPlayerCanDispathSoldiers(User:Id())
 end
 
 function AllianceShrine:GetSelfJoinedShrineEvent()
-	return self:GetShrineEventByPlayerId(DataManager:getUserData()._id)
+	return self:GetShrineEventByPlayerId(User:Id())
 end
 
 function AllianceShrine:GetShrineEventByPlayerId(playerId)

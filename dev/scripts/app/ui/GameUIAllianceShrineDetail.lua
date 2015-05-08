@@ -12,7 +12,7 @@ local WidgetSoldierBox = import("..widget.WidgetSoldierBox")
 local WidgetPushTransparentButton = import("..widget.WidgetPushTransparentButton")
 local AllianceShrine = import("..entity.AllianceShrine")
 local UILib = import(".UILib")
-
+local Localize = import("..utils.Localize")
 function GameUIAllianceShrineDetail:ctor(shrineStage,allianceShrine,isActivate)
 	local HEIGHT = 738
 	self.isActivate_ = isActivate or false
@@ -234,12 +234,15 @@ function GameUIAllianceShrineDetail:RefreshItemListView()
 			local sp = display.newSprite(UILib.dragon_material_pic_map[v.sub_type]):align(display.CENTER,59,59)
 			local size = sp:getContentSize()
 			sp:scale(100/math.max(size.width,size.height)):addTo(content)
+			UIKit:addTipsToNode(content,Localize.equip_material[v.sub_type],self)
 		elseif v.type == 'allianceInfo' then
 			if v.sub_type == 'loyalty' then
 				local sp = display.newSprite("loyalty_128x128.png"):align(display.CENTER,59,59)
 				sp:scale(0.78):addTo(content)
 			end
+			UIKit:addTipsToNode(content,_("忠诚值"),self)
 		end
+		
 		item:addContent(content)
 		item:setMargin({left = 10, right = 70, top = 0, bottom = 0})
 		item:setItemSize(118,118,false)
