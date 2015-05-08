@@ -388,6 +388,7 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
     self:SetSoldier(soldier_type, star)
 end
 function WidgetTreatSoldier:onEnter()
+    City:GetResourceManager():AddObserver(self)
     City:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
 end
 function WidgetTreatSoldier:onExit()
@@ -413,7 +414,6 @@ function WidgetTreatSoldier:SetSoldier(soldier_type, star)
     display.newSprite("box_soldier_128x128.png"):addTo(self.soldier):align(display.CENTER, 0,0)
     self.soldier_config = soldier_config
     self.soldier_ui_config = soldier_ui_config
-    self.slider_input:SetValue(self:GetMaxTreatNum())
     return self
 end
 function WidgetTreatSoldier:GetMaxTreatNum()
@@ -456,6 +456,7 @@ function WidgetTreatSoldier:OnResourceChanged(resource_manager)
         v.total:setString(GameUtils:formatNumber(total))
     end
     self.res_total_map = res_map
+    self.slider_input:SetValue(self:GetMaxTreatNum())
 end
 function WidgetTreatSoldier:OnInstantButtonClicked(func)
     self.instant_button_clicked = func
