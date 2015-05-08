@@ -8,6 +8,14 @@ local ruin_map = {
     "ruin_2.png",
     "ruin_3.png",
 }
+function RuinSprite:GetWorldPosition()
+    return self:convertToWorldSpace(cc.p(self:GetSpriteOffset())),
+        self:convertToWorldSpace(cc.p(self:GetSpriteTopPosition()))
+end
+function RuinSprite:GetSpriteTopPosition()
+    local x, y = RuinSprite.super.GetSpriteTopPosition(self)
+    return x, y + 50
+end
 function RuinSprite:ctor(city_layer, entity)
     self.png_index = random(#ruin_map)
     local x, y = city_layer:GetLogicMap():ConvertToMapPosition(entity:GetLogicPosition())

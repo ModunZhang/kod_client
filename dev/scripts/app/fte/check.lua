@@ -175,12 +175,18 @@ end
 return function(key)
     if key == "SelectTerrain" then
         return not is_select_terrain()
+    elseif key == "ALL" then
+        -- local count = 0
+        -- for k,v in pairs(DataManager:getUserData().buildings) do
+        --     if v.level > 1 then
+        --         count = count + 1
+        --     end
+        -- end
+        -- return count > 1
+        return false
     end
-    return not cc.UserDefault:getInstance():getStringForKey(key)
-    -- if not check_map[key] then return assert(false, key) end
-    -- local is_finished = not check_map[key]()
-    -- print(string.format("check [ %s ] : %s", key, is_finished and "true" or "false"))
-    -- return is_finished
+    return true
+    -- return not cc.UserDefault:getInstance():getStringForKey(key)
 end
 
 

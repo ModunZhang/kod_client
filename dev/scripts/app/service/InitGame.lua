@@ -4,15 +4,24 @@ local AllianceManager_ = import("..entity.AllianceManager")
 local User_ = import("..entity.User")
 local MailManager_ = import("..entity.MailManager")
 local ItemManager_ = import("..entity.ItemManager")
+local initData = import("..fte.initData")
 
 local app = app
 local timer = app.timer
 return function(userData)
-    User = User_.new(userData._id)
+    if global_fte then
+        User = User_.new(initData._id)
+    else
+        User = User_.new(userData._id)
+    end
     Alliance_Manager = AllianceManager_.new()
     MailManager = MailManager_.new()
     ItemManager = ItemManager_.new()
-    City = City_.new(userData):SetUser(User)
+    if global_fte then
+        City = City_.new(initData):SetUser(User)
+    else
+        City = City_.new(userData):SetUser(User)
+    end
 
     DataManager:setUserData(userData)
 

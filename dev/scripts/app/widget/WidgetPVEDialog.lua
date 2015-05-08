@@ -110,11 +110,11 @@ function WidgetPVEDialog:GetTitle()
 end
 function WidgetPVEDialog:GetBrief()
     if self:GetObject():IsUnSearched() then
-        return _('未探索')
+        return _("未探索")
     elseif self:GetObject():IsSearched() then
         return _("已探索")
-    else
-        return string.format("%s%d%s", _("还剩"), self:GetObject():Left(), _("层"))
+    else 
+        return string.format(_("剩余层数:%d"),self:GetObject():Left())
     end
 end
 function WidgetPVEDialog:GetDesc()

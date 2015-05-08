@@ -2,85 +2,15 @@ local promise = import("..utils.promise")
 local GameGlobalUIUtils = import("..ui.GameGlobalUIUtils")
 local Localize_item = import("..utils.Localize_item")
 local Localize = import("..utils.Localize")
+local decodeInUserDataFromDeltaData = import("..utils.DiffFunction")
 local cocos_promise = import("..utils.cocos_promise")
 
-NetManager = {}
 local SUCCESS_CODE = 200
 local FAILED_CODE = 500
 local TIME_OUT = 15
---- 解析服务器返回的数据
-local unpack = unpack
-local ipairs = ipairs
-local table = table
-local function decodeInUserDataFromDeltaData(userData, deltaData)
-    local edit = {}
-    for _,v in ipairs(deltaData) do
-        local origin_key,value = unpack(v)
-        local is_json_null = value == json.null
-        local keys = string.split(origin_key, ".")
-        if #keys == 1 then
-            local k = unpack(keys)
-            k = tonumber(k) or k
-            if type(k) == "number" then -- 索引更新
-                k = k + 1
-                if is_json_null then            -- 认为是删除
-                    edit[k].remove = edit[k].remove or {}
-                    table.insert(edit[k].remove, userData[k])
-                elseif userData[k] then         -- 认为更新
-                    edit[k].edit = edit[k].edit or {}
-                    table.insert(edit[k].edit, value)
-                else                            -- 认为添加
-                    edit[k].add = edit[k].add or {}
-                    table.insert(edit[k].add, value)
-                end
-            else -- key更新
-                edit[k] = value
-            end
-            userData[k] = value
-        else
-            local tmp = edit
-            local curRoot = userData
-            local len = #keys
-            for i = 1,len do
-                local v = keys[i]
-                local k = tonumber(v) or v
-                if type(k) == "number" then k = k + 1 end
-                local parent_root = tmp
-                if i ~= len then
-                    if type(k) == "number" then
-                        tmp.edit = tmp.edit or {}
-                        table.insert(tmp.edit, curRoot[k])
-                    end
-                    curRoot[k] = curRoot[k] or {}
-                    curRoot = curRoot[k]
-                    tmp[k] = tmp[k] or {}
-                    tmp = tmp[k]
-                else
-                    if type(k) == "number" then
-                        if is_json_null then
-                            tmp.remove = tmp.remove or {}
-                            table.insert(tmp.remove, curRoot[k])
-                            table.remove(curRoot, k)
-                        elseif curRoot[k] then
-                            tmp.edit = tmp.edit or {}
-                            table.insert(tmp.edit, value)
-                            curRoot[k] = value
-                        else
-                            tmp.add = tmp.add or {}
-                            table.insert(tmp.add, value)
-                            curRoot[k] = value
-                        end
-                    else
-                        tmp[k] = value
-                        curRoot[k] = value
-                    end
-                end
-            end
-        end
-    end
-    return edit
-end
 
+
+NetManager = {}
 -- 过滤器
 local function get_response_msg(response)
     if response.msg.playerData then
@@ -836,7 +766,7 @@ function NetManager:getSendPersonalMailPromise(memberId, title, content , contac
             -- 保存联系人
             contacts.time = app.timer:GetServerTime()
             app:GetGameDefautlt():addRecentContacts(contacts)
-            GameGlobalUI:showTips(_("提示"),_('发送邮件成功'))
+            GameGlobalUI:showTips(_("提示"),_("发送邮件成功"))
         end
         return response
     end)
@@ -889,7 +819,7 @@ function NetManager:getSendAllianceMailPromise(title, content)
         title = title,
         content = content,
     }, "发送联盟邮件失败!"):done(get_response_msg):done(function ( response )
-        GameGlobalUI:showTips(_("提示"),_('发送邮件成功'))
+        GameGlobalUI:showTips(_("提示"),_("发送邮件成功"))
         return response
     end)
 end
@@ -1399,7 +1329,7 @@ function NetManager:getBuyItemPromise(itemName,count)
         itemName = itemName,
         count = count,
     }, "购买道具失败!"):done(get_response_msg):done(function ()
-        GameGlobalUI:showTips(_("提示"),string.format(_('购买%s道具成功'),Localize_item.item_name[itemName]))
+        GameGlobalUI:showTips(_("提示"),string.format(_("购买%s道具成功"),Localize_item.item_name[itemName]))
         ext.market_sdk.onPlayerBuyGameItems(itemName,count,DataUtils:GetItemPriceByItemName(itemName))
         app:GetAudioManager():PlayeEffectSoundWithKey("BUY_ITEM")
     end)
@@ -1410,7 +1340,7 @@ function NetManager:getUseItemPromise(itemName,params)
         itemName = itemName,
         params = params,
     }, "使用道具失败!"):done(get_response_msg):done(function ()
-        GameGlobalUI:showTips(_("提示"),string.format(_('使用%s道具成功'),Localize_item.item_name[itemName]))
+        GameGlobalUI:showTips(_("提示"),string.format(_("使用%s道具成功"),Localize_item.item_name[itemName]))
         if itemName == "torch" then
             app:GetAudioManager():PlayeEffectSoundWithKey("UI_BUILDING_DESTROY")
         else
@@ -1425,7 +1355,7 @@ function NetManager:getBuyAndUseItemPromise(itemName,params)
         itemName = itemName,
         params = params,
     }, "购买并使用道具失败!"):done(get_response_msg):done(function()
-        GameGlobalUI:showTips(_("提示"),string.format(_('使用%s道具成功'),Localize_item.item_name[itemName]))
+        GameGlobalUI:showTips(_("提示"),string.format(_("使用%s道具成功"),Localize_item.item_name[itemName]))
         if itemName == "torch" then
             app:GetAudioManager():PlayeEffectSoundWithKey("UI_BUILDING_DESTROY")
         else

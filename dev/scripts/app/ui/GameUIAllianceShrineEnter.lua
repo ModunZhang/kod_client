@@ -5,6 +5,7 @@
 local UILib = import(".UILib")
 local GameUIAllianceShrineEnter = UIKit:createUIClass("GameUIAllianceShrineEnter","GameUIAllianceEnterBase")
 local buildingName = GameDatas.AllianceInitData.buildingName
+local Localize = import("..utils.Localize")
 
 function GameUIAllianceShrineEnter:ctor(building,isMyAlliance,alliance,enemy_alliance)
 	GameUIAllianceShrineEnter.super.ctor(self,building,isMyAlliance,alliance,enemy_alliance)
@@ -75,7 +76,7 @@ function GameUIAllianceShrineEnter:GetBuildingType()
 end
 
 function GameUIAllianceShrineEnter:GetBuildingDesc()
-	return "本地化缺失"
+	return Localize.building_description.alliance_building_shrine
 end
 
 function GameUIAllianceShrineEnter:FixedUI()

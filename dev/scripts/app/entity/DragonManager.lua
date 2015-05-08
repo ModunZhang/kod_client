@@ -178,7 +178,7 @@ function DragonManager:RefreshDragonEvents(user_data,deltaData)
                     dragonEvent = DragonEvent.new()
                     dragonEvent:UpdateData(event_data)
 
-                    GameGlobalUI:showTips(_("提示"),string.format(_('孵化%s完成'),Localize.dragon[event_data.dragonType]))
+                    GameGlobalUI:showTips(_("提示"),string.format(_("孵化%s完成"),Localize.dragon[event_data.dragonType]))
 
                     return dragonEvent
                 end
@@ -250,7 +250,7 @@ function DragonManager:RefreshDragonDeathEvents(user_data,deltaData)
                     self.dragonDeathEvents[event_data.dragonType] = nil
                     dragonDeathEvent = DragonDeathEvent.new()
                     dragonDeathEvent:UpdateData(event_data)
-                    GameGlobalUI:showTips(_("提示"),string.format(_('%s已经复活'),Localize.dragon[event_data.dragonType]))
+                    GameGlobalUI:showTips(_("提示"),string.format(_("%s已经复活"),Localize.dragon[event_data.dragonType]))
                     return dragonDeathEvent
                 end
             end

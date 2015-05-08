@@ -473,6 +473,7 @@ function GameUIHome:RefreshVIP()
 end
 
 -- fte
+local mockData = import("..fte.mockData")
 local WidgetFteArrow = import("..widget.WidgetFteArrow")
 local WidgetFteMark = import("..widget.WidgetFteMark")
 function GameUIHome:Find()
@@ -493,15 +494,23 @@ function GameUIHome:PromiseOfFteFreeSpeedUp()
         if not self.event_tab:IsShow() then
             self.event_tab:EventChangeOn("build", true)
         end
-        self:GetFteLayer():Reset()
+        self:GetFteLayer()
         self.event_tab:PromiseOfPopUp():next(function()
             self:GetFteLayer():SetTouchObject(self:Find())
+            self:Find():removeEventListenersByEvent("CLICKED_EVENT")
+            self:Find():onButtonClicked(function()
+                self:Find():setButtonEnabled(false)
+
+                mockData.FinishBuildHouseAt(self:GetBuildingLocation())
+            end)
+
             local r = self:Find():getCascadeBoundingBox()
             self:GetFteLayer().arrow = WidgetFteArrow.new(_("5分钟以下免费加速，激活VIP提升免费加速时间，VIP等级越高，可免费加速时间越高"))
                 :addTo(self:GetFteLayer()):TurnUp(true):align(display.RIGHT_TOP, r.x + r.width/2, r.y - 10)
         end)
+
         return City:PromiseOfFinishUpgradingByLevel(nil, nil):next(function()
-            self:DestoryFteLayer()
+            self:GetFteLayer():removeFromParent()
         end)
     end
     return cocos_promise.defer()
@@ -511,18 +520,47 @@ function GameUIHome:PromiseOfFteInstantSpeedUp()
         if not self.event_tab:IsShow() then
             self.event_tab:EventChangeOn("build", true)
         end
-        self:GetFteLayer():Reset()
+        self:GetFteLayer()
         self.event_tab:PromiseOfPopUp():next(function()
             self:GetFteLayer():SetTouchObject(self:Find())
+
+            self:Find():removeEventListenersByEvent("CLICKED_EVENT")
+            self:Find():onButtonClicked(function()
+                self:Find():setButtonEnabled(false)
+
+                local building = self:GetBuilding()
+                if building:IsHouse() then
+                    mockData.FinishBuildHouseAt(self:GetBuildingLocation())
+                else
+                    mockData.FinishUpgradingBuilding(building:GetType(), building:GetNextLevel())
+                end
+
+            end)
+
             local r = self:Find():getCascadeBoundingBox()
             self:GetFteLayer().arrow = WidgetFteArrow.new(_("立即完成升级"))
                 :addTo(self:GetFteLayer()):TurnRight(true):align(display.RIGHT_CENTER, r.x - 10, r.y + r.height/2)
+
+
         end)
-        return City:PromiseOfFinishUpgradingByLevel(nil, nil):next(function()
-            self:DestoryFteLayer()
+
+        return City:PromiseOfFinishUpgradingByLevel():next(function()
+            self:GetFteLayer():removeFromParent()
         end)
     end
     return cocos_promise.defer()
+end
+function GameUIHome:GetBuildingLocation()
+    local building = self.city:GetUpgradingBuildings()[1]
+    assert(building)
+    local x,y = building:GetLogicPosition()
+    local tile = self.city:GetTileByBuildingPosition(x, y)
+    return tile.location_id
+end
+function GameUIHome:GetBuilding()
+    local building = self.city:GetUpgradingBuildings()[1]
+    assert(building)
+    return building
 end
 function GameUIHome:PromiseOfActivePromise()
     self:GetFteLayer():SetTouchObject(self:FindVip())
@@ -537,5 +575,6 @@ function GameUIHome:PromiseOfActivePromise()
 end
 
 return GameUIHome
+
 
 
