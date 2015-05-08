@@ -131,39 +131,6 @@ function GameUIChatChannel:CreateTextFieldBody()
         end)
     end)
     self.sendChatButton = sendChatButton
-    
-    -- body button
-
-	-- local emojiButton = cc.ui.UIPushButton.new({normal = "chat_expression.png",pressed = "chat_expression_highlight.png",},{scale9 = false})
-	-- 	:onButtonClicked(function(event)
- --            -- if CONFIG_IS_DEBUG then
- --                self:CreateEmojiPanel()
- --            -- end
- --    	end)
- --    	:addTo(self:GetView())
- --    	:align(display.LEFT_TOP,self.editbox:getPositionX()+self.editbox:getContentSize().width+10, window.top - 100)
- --        :zorder(2)
- --    local plusButton = cc.ui.UIPushButton.new({normal = "chat_add.png",pressed = "chat_add_highlight.png",}, {scale9 = false})
- --    	:onButtonClicked(function(event)
- --            if CONFIG_IS_DEBUG then
- --                if self._channelType == ChatManager.CHANNNEL_TYPE.ALLIANCE then
- --                    if Alliance_Manager:GetMyAlliance():IsDefault() then 
- --                        UIKit:showMessageDialog(_("错误"),_("未加入联盟"),function()end)
- --                        return
- --                    end
- --                end
- --                local msg = editbox:getText()
- --                if not msg or string.len(string.trim(msg)) == 0 then 
- --                    UIKit:showMessageDialog(_("错误"), _("聊天内容不能为空"),function()end)
- --                    return 
- --                end  
- --                editbox:setText('')
- --                self:GetChatManager():SendChat(self._channelType,msg)
- --            end
-	-- 	end)
-	-- 	:addTo(self:GetView())
-	-- 	:align(display.LEFT_TOP, emojiButton:getPositionX()+emojiButton:getCascadeBoundingBox().size.width+10,emojiButton:getPositionY()-2)
- --        :zorder(2)
 end
 
 function GameUIChatChannel:CreateShopButton()
