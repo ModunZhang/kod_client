@@ -208,7 +208,6 @@ function GameUIChatChannel:GetChatIcon(icon)
     local bg = display.newSprite("chat_hero_background_66x66.png")
     local icon = UIKit:GetPlayerIconOnly(icon):addTo(bg):align(display.LEFT_BOTTOM,-5, 1)
     bg.icon = icon
-    -- local size = icon:getContentSize()
     icon:scale(0.6)
     return bg
 end
