@@ -766,7 +766,7 @@ function NetManager:getSendPersonalMailPromise(memberId, title, content , contac
             -- 保存联系人
             contacts.time = app.timer:GetServerTime()
             app:GetGameDefautlt():addRecentContacts(contacts)
-            GameGlobalUI:showTips(_("提示"),_('发送邮件成功'))
+            GameGlobalUI:showTips(_("提示"),_("发送邮件成功"))
         end
         return response
     end)
@@ -819,7 +819,7 @@ function NetManager:getSendAllianceMailPromise(title, content)
         title = title,
         content = content,
     }, "发送联盟邮件失败!"):done(get_response_msg):done(function ( response )
-        GameGlobalUI:showTips(_("提示"),_('发送邮件成功'))
+        GameGlobalUI:showTips(_("提示"),_("发送邮件成功"))
         return response
     end)
 end
@@ -1329,7 +1329,7 @@ function NetManager:getBuyItemPromise(itemName,count)
         itemName = itemName,
         count = count,
     }, "购买道具失败!"):done(get_response_msg):done(function ()
-        GameGlobalUI:showTips(_("提示"),string.format(_('购买%s道具成功'),Localize_item.item_name[itemName]))
+        GameGlobalUI:showTips(_("提示"),string.format(_("购买%s道具成功"),Localize_item.item_name[itemName]))
         ext.market_sdk.onPlayerBuyGameItems(itemName,count,DataUtils:GetItemPriceByItemName(itemName))
         app:GetAudioManager():PlayeEffectSoundWithKey("BUY_ITEM")
     end)
@@ -1340,7 +1340,7 @@ function NetManager:getUseItemPromise(itemName,params)
         itemName = itemName,
         params = params,
     }, "使用道具失败!"):done(get_response_msg):done(function ()
-        GameGlobalUI:showTips(_("提示"),string.format(_('使用%s道具成功'),Localize_item.item_name[itemName]))
+        GameGlobalUI:showTips(_("提示"),string.format(_("使用%s道具成功"),Localize_item.item_name[itemName]))
         if itemName == "torch" then
             app:GetAudioManager():PlayeEffectSoundWithKey("UI_BUILDING_DESTROY")
         else
@@ -1355,7 +1355,7 @@ function NetManager:getBuyAndUseItemPromise(itemName,params)
         itemName = itemName,
         params = params,
     }, "购买并使用道具失败!"):done(get_response_msg):done(function()
-        GameGlobalUI:showTips(_("提示"),string.format(_('使用%s道具成功'),Localize_item.item_name[itemName]))
+        GameGlobalUI:showTips(_("提示"),string.format(_("使用%s道具成功"),Localize_item.item_name[itemName]))
         if itemName == "torch" then
             app:GetAudioManager():PlayeEffectSoundWithKey("UI_BUILDING_DESTROY")
         else

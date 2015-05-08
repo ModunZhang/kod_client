@@ -65,7 +65,7 @@ local VIP_EFFECIVE_ALL = {
 }
 
 function GameUIVip:ctor(city,default_tag)
-    GameUIVip.super.ctor(self,city,_("PLAYER INFO"))
+    GameUIVip.super.ctor(self,city,_("玩家信息"))
     self.default_tag = default_tag
 end
 
@@ -503,7 +503,7 @@ function GameUIVip:CreateVIPStatus()
     local widget_info = WidgetInfoNotListView.new(
         {
             info={
-                {_("当前VIP等级"),_("Lv").." "..User:GetVipLevel()},
+                {_("当前VIP等级"),_("等级").." "..User:GetVipLevel()},
                 {_("下一次登录"),"+"..loginDays[User:GetCountInfo().vipLoginDaysCount].expAdd},
                 {_("连续登录"),User:GetCountInfo().vipLoginDaysCount},
             }

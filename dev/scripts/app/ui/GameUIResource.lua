@@ -280,9 +280,9 @@ function GameUIResource:RefreshListView()
 end
 
 function GameUIResource:GetDataSource()
-    local dataSource = {{_('待建地基'),'x' .. #self.city:GetRuinsNotBeenOccupied()}}
+    local dataSource = {{_("待建地基"),'x' .. #self.city:GetRuinsNotBeenOccupied()}}
     local decorators = self.city:GetDecoratorsByType(self.building:GetType())
-    table.insert(dataSource,{_('可建造数量'),#decorators .. '/' .. self.city:GetMaxHouseCanBeBuilt(self.building:GetType())})
+    table.insert(dataSource,{_("可建造数量"),#decorators .. '/' .. self.city:GetMaxHouseCanBeBuilt(self.building:GetType())})
     local resource = self.city.resource_manager:GetResourceByType(self.building:GetUpdateResourceType())
     local __,__,title = self:GetTitleByType(self.building)
     table.insert(dataSource,{title,string.format("%d/h",resource:GetProductionPerHour())})
@@ -318,15 +318,15 @@ end
 function GameUIResource:GetTitleByType(building)
     local type = building:GetUpdateResourceType()
     if type == ResourceManager.RESOURCE_TYPE.WOOD then
-        return _('木工小屋'),_('木材产量'),_("当前产出木材")
+        return _("木工小屋"),_("木材产量"),_("当前产出木材")
     elseif type == ResourceManager.RESOURCE_TYPE.IRON then
-        return _('矿工小屋'),_('铁矿产量'),_("当前产出铁矿")
+        return _("矿工小屋"),_("铁矿产量"),_("当前产出铁矿")
     elseif type == ResourceManager.RESOURCE_TYPE.STONE then
-        return _('石匠小屋'),_('石料产量'),_("当前产出铁矿")
+        return _("石匠小屋"),_("石料产量"),_("当前产出铁矿")
     elseif type == ResourceManager.RESOURCE_TYPE.FOOD then
-        return _('农夫小屋'),_('粮食产量'),_("当前产出铁矿")
+        return _("农夫小屋"),_("粮食产量"),_("当前产出铁矿")
     elseif type == ResourceManager.RESOURCE_TYPE.POPULATION then
-        return _('住宅'),_('城民上限'),_("当前城民增长")
+        return _("住宅"),_("城民上限"),_("当前城民增长")
     else
         assert(false)
     end
