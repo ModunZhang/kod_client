@@ -408,7 +408,7 @@ function GameUIAllianceHome:CreateTop()
                 enemy_num_icon:scale(1.0)
             else
                 enemy_num_icon:setTexture("res_citizen_88x82.png")
-                enemy_num_icon:scale(0.7)
+                enemy_num_icon:scale(0.4)
                 self:SetEnemyPowerOrKill(alliance:GetFightRequestPlayerNum())
             end
             our_num_icon:setTexture("power_24x29.png")
