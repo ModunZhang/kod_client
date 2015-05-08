@@ -796,6 +796,7 @@ local function on_move(_, sprite)
     sprite:OnSceneMove()
 end
 function CityLayer:OnSceneMove()
+    CityLayer.super.OnSceneMove(self)
     table.foreach(self.tiles, function(_, sprite)
         sprite:OnSceneMove()
     end)
@@ -807,18 +808,11 @@ function CityLayer:OnSceneMove()
             move_widget:setPosition(world_pos.x, world_pos.y)
         end
     end
-    for i,v in ipairs(self.city_scene:GetMarkBuildings()) do
-        v:OnSceneMove()
-    end
-    self.city_scene:GetSceneUILayer():OnSceneMove()
 end
 function CityLayer:UpdateWeather()
     local size = self:getContentSize()
     local pos = self:convertToNodeSpace(cc.p(display.cx, display.cy))
     self.weather_glstate:setUniformVec2("u_position", {x = pos.x / size.width, y = pos.y / size.height})
-end
-function CityLayer:OnSceneScale()
-    self.city_scene:OnSceneScale(self)
 end
 function CityLayer:HideLevelUpNode()
     self:IteratorCanUpgradingBuilding(function(_, sprite)

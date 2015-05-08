@@ -225,7 +225,7 @@ function GameUIBase:CreateVerticalListViewDetached(left_bottom_x, left_bottom_y,
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }
 end
-function GameUIBase:CreateTutorialLayer()
+function GameUIBase:CreateFteLayer()
     local node = display.newNode():addTo(self, 3000)
     local left = display.newColorLayer(cc.c4b(255, 0, 0, 50)):addTo(node, 0)
     local right = display.newColorLayer(cc.c4b(255, 0, 0, 50)):addTo(node, 0)
@@ -309,9 +309,6 @@ function GameUIBase:GetFteLayer()
         return self:CreateFteLayer()
     end
     return self:getChildByTag(FTE_TAG):Enable()
-end
-function GameUIBase:DestoryFteLayer()
-    self:removeChildByTag(FTE_TAG)
 end
 function GameUIBase:CreateFteLayer()
     return TutorialLayer.new():addTo(self, 2000, FTE_TAG):Enable()

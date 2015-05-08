@@ -622,6 +622,9 @@ end
 
 --fte
 local check = import("..fte.check")
+function GameUIDragonEyrieMain:Find()
+    return self.hate_button
+end
 function GameUIDragonEyrieMain:PromiseOfFte()
     local p = cocos_promise.defer()
     if check("HateDragon") then
@@ -643,10 +646,20 @@ function GameUIDragonEyrieMain:PromiseOfFte()
     return p
 end
 function GameUIDragonEyrieMain:PromiseOfHate()
-    local r = self.hate_button:getCascadeBoundingBox()
-    self:GetFteLayer():SetTouchObject(self.hate_button)
+    local r = self:Find():getCascadeBoundingBox()
+    self:GetFteLayer():SetTouchObject(self:Find())
     self:GetFteLayer().arrow = WidgetFteArrow.new(_("点击按钮：孵化"))
         :addTo(self:GetFteLayer()):TurnUp():pos(r.x + r.width/2, r.y - 40)
+
+    self:Find():removeEventListenersByEvent("CLICKED_EVENT")
+    self:Find():onButtonClicked(function()
+        -- exp = 66, 
+        -- star = 1,  
+        -- level = 1
+        -- hp = 57, 
+        -- status = "free", 
+    end)
+
 
     return self.dragon_manager:PromiseOfHate():next(function()
         self:GetFteLayer():removeFromParent()

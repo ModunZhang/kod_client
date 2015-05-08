@@ -58,6 +58,10 @@ local function transition_(scene, status)
     end
 end
 
+
+global_fte = false
+
+
 function MyApp:ctor()
     MyApp.super.ctor(self)
     self:InitGameBase()

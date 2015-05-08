@@ -35,7 +35,6 @@ end
 function PVEScene:onEnter()
     PVEScene.super.onEnter(self)
     self.home_page = self:CreateHomePage()
-    self.tutorial_layer = self:CreateTutorialLayer()
     local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(self.user:GetPVEDatabase():GetCharPosition())
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
     self:GetSceneLayer():ZoomTo(0.8)
@@ -322,9 +321,10 @@ local WidgetFteArrow = import("..widget.WidgetFteArrow")
 local WidgetFteMark = import("..widget.WidgetFteMark")
 local check = import("..fte.check")
 function PVEScene:onEnterTransitionFinish()
-    self:RunFte()
+    -- self:RunFte()
 end
 function PVEScene:RunFte()
+    -- self.tutorial_layer = self:CreateFteLayer()
     -- if check("ALL") then
     --     return
     -- end
