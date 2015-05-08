@@ -29,6 +29,25 @@ function GameUIDragonEyrieDetail:ctor(city,building,dragon_type)
     self.dragon = self.dragon_manager:GetDragon(dragon_type)
 end
 
+
+function GameUIDragonEyrieDetail:CreateHomeButton()
+     local home_button = cc.ui.UIPushButton.new(
+        {normal = "home_btn_up.png",pressed = "home_btn_down.png",disabled = "home_btn_disabled.png"}, nil, {down = "HOME_PAGE"})
+        :onButtonClicked(function(event)
+            local main_ui = UIKit:GetUIInstance("GameUIDragonEyrieMain")
+            if main_ui then
+                main_ui:LeftButtonClicked()
+            end
+            self:LeftButtonClicked()
+        end)
+        :align(display.LEFT_TOP, 50 , 86)
+    cc.ui.UIImage.new("home_icon.png")
+        :pos(34, -50)
+        :addTo(home_button)
+        :scale(0.8)
+    return home_button
+end
+
 function GameUIDragonEyrieDetail:CreateBetweenBgAndTitle()
     self.content_node = display.newNode():addTo(self:GetView())
     local clipNode = display.newClippingRegionNode(cc.rect(0,0,614,519))
@@ -346,6 +365,11 @@ function GameUIDragonEyrieDetail:UpgradeDragonStar()
         UIKit:showMessageDialog(_("提示"), _("所有装备未达到最高星级"), function()end)
         return
     end
+
+    if dragon:Star() == 4 then
+        UIKit:showMessageDialog(_("提示"), _("5星上限即将开放!"), function()end)
+    end
+
     NetManager:getUpgradeDragonStarPromise(dragon:Type())
 end
 
@@ -369,16 +393,15 @@ function GameUIDragonEyrieDetail:GetEquipmentItem(equipment_obj,dragon_star,need
             if needInfoIcon then
                 display.newSprite("i_icon_20x20.png"):align(display.LEFT_BOTTOM, 5, 5):addTo(equipment_node)
             end
-            local bg = UIKit:shadowLayer():size(20,88):addTo(equipment_node):pos(equipment_node:getContentSize().width-28,8)
             StarBar.new({
                 max = equipment_obj:MaxStar(),
                 bg = "Stars_bar_bg.png",
                 fill = "Stars_bar_highlight.png",
-                num = equipment_obj:Star(),
+                num =  equipment_obj:Star(),
                 margin = 0,
                 direction = StarBar.DIRECTION_VERTICAL,
                 scale = 0.55,
-            }):addTo(bg):align(display.LEFT_BOTTOM,1,2)
+            }):addTo(equipment_node):align(display.LEFT_BOTTOM,equipment_node:getContentSize().width-30,15)
         else
             local icon = UIKit:getDiscolorrationSprite(equipmentImage)
                 :addTo(equipment_node)
@@ -400,7 +423,7 @@ function GameUIDragonEyrieDetail:GetEquipmentItem(equipment_obj,dragon_star,need
     end
     return equipment_node
 end
--- oldParam = 
+
 function GameUIDragonEyrieDetail:OnBasicChanged(dragon,star_chaned)
     if self:GetDragon():Type() ~= dragon:Type() then return end
     if star_chaned then
@@ -418,6 +441,7 @@ function GameUIDragonEyrieDetail:OnBasicChanged(dragon,star_chaned)
                     action_1 = transition.sequence({action_1,cc.CallFunc:create(function()
                         self:RefreshUI()
                         self:ShowUpgradeStarSuccess()
+                        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
                     end)})
                     v:runAction(action_1)
                     v:runAction(action_2:clone())
@@ -432,7 +456,6 @@ function GameUIDragonEyrieDetail:OnBasicChanged(dragon,star_chaned)
 end
 
 function GameUIDragonEyrieDetail:ShowUpgradeStarSuccess()
-    -- GameGlobalUI:showTips(_("提示"),"龙晋级成功")
     GameUIShowDragonUpStarAnimation.new(self:GetDragon()):addTo(self)
 end
 
@@ -499,15 +522,16 @@ function GameUIDragonEyrieDetail:CreateNodeIf_skill()
         :align(display.RIGHT_CENTER,add_button:getPositionX() - 50,add_button:getPositionY())
 
     self.skill_ui.blood_label = blood_label
-    local magic_bottle = display.newSprite("dragon_magic_bottle.png")
+    local magic_bottle = display.newSprite("dragonskill_blood_51x63.png") 
         :align(display.LEFT_CENTER,15, blood_label:getPositionY())
         :addTo(header_bg)
+        :scale(0.46)
     UIKit:ttfLabel({
         text = _("英雄之血"),
         size = 20,
         color = 0x403c2f,
         align = cc.TEXT_ALIGNMENT_LEFT
-    }):align(display.LEFT_CENTER, magic_bottle:getPositionX() + magic_bottle:getContentSize().width + 10, magic_bottle:getPositionY()):addTo(header_bg)
+    }):align(display.LEFT_CENTER, magic_bottle:getPositionX() + magic_bottle:getCascadeBoundingBox().width + 10, magic_bottle:getPositionY()):addTo(header_bg)
     self.skill_ui.magic_bottle = magic_bottle
     self.skill_node = skill_node
     return self.skill_node

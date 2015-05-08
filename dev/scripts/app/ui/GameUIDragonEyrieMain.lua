@@ -111,7 +111,20 @@ function GameUIDragonEyrieMain:OnMoveInStage()
     self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventChanged)
     self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventRefresh)
     self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventTimer)
+    City:AddListenOnType(self,City.LISTEN_TYPE.UPGRADE_BUILDING)
     GameUIDragonEyrieMain.super.OnMoveInStage(self)
+end
+
+function GameUIDragonEyrieMain:OnUpgradingBegin()
+end
+
+function GameUIDragonEyrieMain:OnUpgradingFinished(building)
+    if building:GetType() == self:GetBuilding():GetType() and self.dragon_hp_recovery_count_label then
+        self.dragon_hp_recovery_count_label:setString(string.format("+%s/h",self:GetBuilding():GetHPRecoveryPerHour()))
+    end
+end
+
+function GameUIDragonEyrieMain:OnUpgrading()
 end
 
 function GameUIDragonEyrieMain:OnMoveOutStage()
@@ -123,6 +136,7 @@ function GameUIDragonEyrieMain:OnMoveOutStage()
     self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventChanged)
     self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventRefresh)
     self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventTimer)
+    City:RemoveListenerOnType(self,City.LISTEN_TYPE.UPGRADE_BUILDING)
     GameUIDragonEyrieMain.super.OnMoveOutStage(self)
 end
 
@@ -229,8 +243,8 @@ function GameUIDragonEyrieMain:CreateProgressTimer()
         size = 20
     }):addTo(bg):align(display.LEFT_CENTER, 40, 20)
 
-    UIKit:ttfLabel({
-        text = "+" .. self.building:GetHPRecoveryPerHour() .. "/h",
+    self.dragon_hp_recovery_count_label = UIKit:ttfLabel({
+        text = string.format("+%s/h",self.building:GetHPRecoveryPerHour()),
         color = 0xfff3c7,
         shadow = true,
         size = 20
@@ -392,36 +406,36 @@ function GameUIDragonEyrieMain:CreateDragonContentNodeIf()
             text = _("力量"),
             color = 0x615b44,
             size  = 20
-        }):addTo(info_panel):align(display.LEFT_BOTTOM,10,45)
+        }):addTo(info_panel):align(display.LEFT_BOTTOM,10,80)--  10 45
         self.strength_val_label =  UIKit:ttfLabel({
             text = "",
             color = 0x403c2f,
             size  = 20
-        }):addTo(info_panel):align(display.LEFT_BOTTOM, 100, 45)
+        }):addTo(info_panel):align(display.LEFT_BOTTOM, 100, 80) -- 活力
 
         local vitality_title_label =  UIKit:ttfLabel({
             text = _("活力"),
             color = 0x615b44,
             size  = 20
-        }):addTo(info_panel):align(display.LEFT_BOTTOM,10,10)
+        }):addTo(info_panel):align(display.LEFT_BOTTOM,10,45) -- 领导力 10
 
         self.vitality_val_label =  UIKit:ttfLabel({
             text = "",
             color = 0x403c2f,
             size  = 20
-        }):addTo(info_panel):align(display.LEFT_BOTTOM, 100, 10)
+        }):addTo(info_panel):align(display.LEFT_BOTTOM, 100, 45)
 
         local leadership_title_label =  UIKit:ttfLabel({
             text = _("领导力"),
             color = 0x615b44,
             size  = 20
-        }):addTo(info_panel):align(display.LEFT_BOTTOM,10,80)
+        }):addTo(info_panel):align(display.LEFT_BOTTOM,10,10) -- 力量
 
         self.leadership_val_label =  UIKit:ttfLabel({
             text = "",
             color = 0x403c2f,
             size  = 20
-        }):addTo(info_panel):align(display.LEFT_BOTTOM, 100, 80)
+        }):addTo(info_panel):align(display.LEFT_BOTTOM, 100, 10)
 
         self.state_label = UIKit:ttfLabel({
             text = "",

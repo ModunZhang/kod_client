@@ -290,7 +290,8 @@ function GameUIDragonEquipment:WidgetDragonEquipIntensifyEvent(widgetDragonEquip
       self.exp_label:setString(str)
       if percent >= 100 then
         local config =  equipment:GetNextStarDetailConfig()
-        self:RefreshIntensifyListViewBuffVal(config.vitality,config.strength,config.leadership)
+        local current_config = equipment:GetDetailConfig()
+        self:RefreshIntensifyListViewBuffVal(config.vitality - current_config.vitality,config.strength - current_config.strength,config.leadership - current_config.leadership)
       else
         self:RefreshIntensifyListViewBuffVal(0,0,0)
       end
@@ -554,7 +555,7 @@ function GameUIDragonEquipment:RefreshIntensifyListViewBuffVal(vitality_add,stre
     if not vitality_item or not vitality_item.buff_label then return end
     if vitality_add == 0 then
         vitality_item.buff_label:hide()
-        vitality_item.val_label:setPositionX(LISTVIEW_WIDTH - 30)
+        vitality_item.val_label:setPositionX(LISTVIEW_WIDTH - 10)
     else
         vitality_item.buff_label:setString("+" .. vitality_add)
         vitality_item.val_label:setPositionX(vitality_item.buff_label:getPositionX() - vitality_item.buff_label:getContentSize().width - 10)
@@ -567,7 +568,7 @@ function GameUIDragonEquipment:RefreshIntensifyListViewBuffVal(vitality_add,stre
     if not strength_item or not strength_item.buff_label then return end
     if strength_add == 0 then
         strength_item.buff_label:hide()
-        strength_item.val_label:setPositionX(LISTVIEW_WIDTH - 30)
+        strength_item.val_label:setPositionX(LISTVIEW_WIDTH - 10)
     else
         strength_item.buff_label:setString("+" .. strength_add)
         strength_item.val_label:setPositionX(strength_item.buff_label:getPositionX() - strength_item.buff_label:getContentSize().width - 10)
@@ -579,7 +580,7 @@ function GameUIDragonEquipment:RefreshIntensifyListViewBuffVal(vitality_add,stre
     if not leadership_item or not leadership_item.buff_label then return end
     if leadership_add == 0 then
         leadership_item.buff_label:hide()
-        leadership_item.val_label:setPositionX(LISTVIEW_WIDTH - 30)
+        leadership_item.val_label:setPositionX(LISTVIEW_WIDTH - 10)
     else
         leadership_item.buff_label:setString("+" .. leadership_add)
         leadership_item.val_label:setPositionX(leadership_item.buff_label:getPositionX() - leadership_item.buff_label:getContentSize().width - 10)

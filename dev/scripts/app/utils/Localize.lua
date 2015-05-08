@@ -150,10 +150,10 @@ local DRAGON_BUFF_EFFECTION = {
     ["infantryLoadAdd"] = _("提升步兵负重加成"),
     ["infantryMarchAdd"] = _("步兵行军速度加成"),
 
-    ["hHunterAtkAdd"] = _("弓手攻击加成"),
-    ["hunterHpAdd"] = _("弓手生命值加成"),
-    ["hunterLoadAdd"] = _("弓手负重加成"),
-    ["hunterMarchAdd"] = _("弓手行军速度加成"),
+    ["archerAtkAdd"] = _("弓手攻击加成"),
+    ["archerHpAdd"] = _("弓手生命值加成"),
+    ["archerLoadAdd"] = _("弓手负重加成"),
+    ["archerMarchAdd"] = _("弓手行军速度加成"),
 
     ["cavalryAtkAdd"] = _("骑兵攻击加成"),
     ["cavalryHpAdd"] = _("骑兵生命值加成"),
