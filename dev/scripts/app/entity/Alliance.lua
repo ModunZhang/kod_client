@@ -188,6 +188,9 @@ function Alliance:OnPropertyChange(property_name, old_value, new_value)
     if is_new_alliance then
         self:OnOperation("join")
     end
+    if property_name == "status" and new_value == "fight" and display.getRunningScene().__cname ~= "MainScene" then
+        app:GetAudioManager():PlayeEffectSoundWithKey("BATTLE_START")
+    end
     self:OnBasicChanged{
         [property_name] = {old = old_value, new = new_value}
     }
@@ -471,7 +474,6 @@ function Alliance:OnAllianceDataChanged(alliance_data,refresh_time,deltaData)
     self:OnVillagesChanged(alliance_data,deltaData)
     self.alliance_shrine:OnAllianceDataChanged(alliance_data,deltaData,refresh_time)
     self.alliance_map:OnAllianceDataChanged(alliance_data, deltaData)
-    --TODO:
 
     self:OnAttackMarchEventsDataChanged(alliance_data,deltaData,refresh_time)
 
@@ -660,10 +662,10 @@ end
 
 function Alliance:CallEventsChangedListeners(LISTEN_TYPE,changed_map)
     self:NotifyListeneOnType(LISTEN_TYPE, function(listener)
-        listener[Alliance.LISTEN_TYPE[LISTEN_TYPE]](listener,changed_map)
+        listener[Alliance.LISTEN_TYPE[LISTEN_TYPE]](listener,changed_map,self)
     end)
     if self:GetAllianceBelvedere()[Alliance.LISTEN_TYPE[LISTEN_TYPE]] then
-        self:GetAllianceBelvedere()[Alliance.LISTEN_TYPE[LISTEN_TYPE]](self:GetAllianceBelvedere(),changed_map)
+        self:GetAllianceBelvedere()[Alliance.LISTEN_TYPE[LISTEN_TYPE]](self:GetAllianceBelvedere(),changed_map,self)
     end
 end
 

@@ -88,7 +88,7 @@ function GameUIShireFightEvent:BuildUI()
 	local background = WidgetUIBackGround.new({height = HEIGHT})
 		:addTo(layer)
 		:pos(window.left+22,window.top - 101 - HEIGHT)
-	local title_bar = display.newSprite("title_blue_600x52.png"):align(display.LEFT_BOTTOM, 0,HEIGHT - 15):addTo(background)
+	local title_bar = display.newSprite("title_blue_600x56.png"):align(display.LEFT_BOTTOM, 0,HEIGHT - 15):addTo(background)
 	UIKit:ttfLabel({
 		text = _("事件详情"),
 		size = 22,

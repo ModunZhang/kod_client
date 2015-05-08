@@ -15,12 +15,18 @@ local config_day14 = GameDatas.Activities.day14
 local SpriteConfig = import("..sprites.SpriteConfig")
 local unlockPlayerSecondMarchQueue_price = GameDatas.PlayerInitData.intInit.unlockPlayerSecondMarchQueue.value
 local GameUIActivityReward = import(".GameUIActivityReward")
+local WidgetPushTransparentButton = import("..widget.WidgetPushTransparentButton")
 
 function GameUIWathTowerRegion:ctor(city,default_tab)
     default_tab = default_tab or 'march'
     GameUIWathTowerRegion.super.ctor(self,city,_("战斗"))
     self.belvedere = Alliance_Manager:GetMyAlliance():GetAllianceBelvedere()
     self.default_tab = default_tab
+    self.building = self:GetCity():GetFirstBuildingByType("watchTower")
+end
+
+function GameUIWathTowerRegion:GetBuilding()
+    return self.building
 end
 
 function GameUIWathTowerRegion:GetCity()
@@ -141,6 +147,14 @@ function GameUIWathTowerRegion:GetMyEventItemWithIndex(index,isOpen,entity)
     local title_bg  = display.newSprite("title_blue_558x34.png")
         :align(display.TOP_CENTER,284, 198)
         :addTo(bg)
+    if entity then
+        display.newSprite("info_16x33.png"):align(display.RIGHT_CENTER,540, 17):addTo(title_bg):scale(26/33)
+        WidgetPushTransparentButton.new(cc.rect(0,0,558,34))
+            :addTo(title_bg):align(display.LEFT_BOTTOM, 0, 0)
+            :onButtonClicked(function()
+                UIKit:newGameUI("GameUIWatchTowerMyTroopsDetail",entity):AddToCurrentScene(true)
+            end)
+    end
     local tile_label = UIKit:ttfLabel({
         text = "",
         size = 20,
@@ -419,15 +433,16 @@ function GameUIWathTowerRegion:OnEventDetailButtonClicked(entity)
     local strEntityType = entity:GetType()
     if strEntityType == entity.ENTITY_TYPE.MARCH_OUT then
         if entity:WithObject():MarchType() == "helpDefence" then
-            NetManager:getHelpDefenceMarchEventDetailPromise(entity:WithObject():Id()):done(function(response)
-                UIKit:newGameUI("GameUIWatchTowerTroopDetail",GameUIWatchTowerTroopDetail.DATA_TYPE.MARCH,response.msg.eventDetail,DataManager:getUserData()._id)
+            NetManager:getHelpDefenceMarchEventDetailPromise(entity:WithObject():Id(),Alliance_Manager:GetMyAlliance():Id()):done(function(response)
+                UIKit:newGameUI("GameUIWatchTowerTroopDetail",GameUIWatchTowerTroopDetail.DATA_TYPE.MARCH,response.msg.eventDetail,User:Id())
                     :AddToCurrentScene(true)
             end)
         else
             local my_status = Alliance_Manager:GetMyAlliance():Status()
             if my_status == "prepare" or  my_status == "fight" then
-                NetManager:getAttackMarchEventDetailPromise(entity:WithObject():Id()):done(function(response)
-                    UIKit:newGameUI("GameUIWatchTowerTroopDetail",GameUIWatchTowerTroopDetail.DATA_TYPE.HELP_DEFENCE,response,DataManager:getUserData()._id)
+                local __,alliance_id = entity:WithObject():FromLocation()
+                NetManager:getAttackMarchEventDetailPromise(entity:WithObject():Id(),alliance_id):done(function(response)
+                    UIKit:newGameUI("GameUIWatchTowerTroopDetail",GameUIWatchTowerTroopDetail.DATA_TYPE.HELP_DEFENCE,response.msg.eventDetail,User:Id())
                         :AddToCurrentScene(true)
                 end)
             else
@@ -437,8 +452,9 @@ function GameUIWathTowerRegion:OnEventDetailButtonClicked(entity)
     elseif strEntityType == entity.ENTITY_TYPE.STRIKE_OUT then
         local my_status = Alliance_Manager:GetMyAlliance():Status()
         if my_status == "prepare" or  my_status == "fight" then
-            NetManager:getStrikeMarchEventDetailPromise(entity:WithObject():Id()):done(function(response)
-                UIKit:newGameUI("GameUIWatchTowerTroopDetail",GameUIWatchTowerTroopDetail.DATA_TYPE.STRIKE,response,DataManager:getUserData()._id)
+            local __,alliance_id = entity:WithObject():FromLocation()
+            NetManager:getStrikeMarchEventDetailPromise(entity:WithObject():Id(),alliance_id):done(function(response)
+                UIKit:newGameUI("GameUIWatchTowerTroopDetail",GameUIWatchTowerTroopDetail.DATA_TYPE.STRIKE,response.msg.eventDetail,User:Id())
                     :AddToCurrentScene(true)
             end)
         else
@@ -535,14 +551,9 @@ end
 --内容过滤
 function GameUIWathTowerRegion:GetEntityFromCityName(entity)
     if entity:GetType() == entity.ENTITY_TYPE.MARCH_OUT and entity:WithObject():MarchType() == "helpDefence" then
-        return entity:GetFromCityName()
+        return entity:GetDestinationLocation()
     end
-    local level = self:GetBuilding():GetLevel()
-    if not self:GetAllianceBelvedere():CanDisplayCommingCityName(level) then
-        return '?'
-    else
-        return entity:GetFromCityName()
-    end
+    return entity:GetDestinationLocation()
 end
 
 function GameUIWathTowerRegion:GetEntityAttackPlayerName(entity)

@@ -25,7 +25,7 @@ function GameUIWarReport:onEnter()
     local report = self.report
     local report_body = self.body
     local rb_size = report_body:getContentSize()
-    local title = display.newSprite("title_blue_600x52.png"):align(display.CENTER, rb_size.width/2, rb_size.height+10)
+    local title = display.newSprite("title_blue_600x56.png"):align(display.CENTER, rb_size.width/2, rb_size.height+10)
         :addTo(report_body)
     local title_label = UIKit:ttfLabel(
         {
@@ -38,7 +38,7 @@ function GameUIWarReport:onEnter()
     cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
         :onButtonClicked(function(event)
             self:removeFromParent()
-        end):align(display.CENTER, title:getContentSize().width-20, title:getContentSize().height-20)
+        end):align(display.CENTER, title:getContentSize().width-26, title:getContentSize().height-26)
         :addTo(title)
     -- 战争结果图片
     local result_img = self.report:GetReportResult() and "report_victory_590x137.png" or "report_failure_590x137.png"
@@ -155,10 +155,11 @@ end
 
 function GameUIWarReport:GetBooty()
     local booty = {}
+    dump(self:GetRewards())
     for k,v in pairs(self:GetRewards()) do
         table.insert(booty, {
-            resource_type = Localize.fight_reward[v.name],
-            icon= UILib.resource[v.name],
+            resource_type = Localize.fight_reward[v.name] or Localize.equip_material[v.name],
+            icon= UILib.resource[v.name] or UILib.dragon_material_pic_map[v.name],
             value = v.count
         })
     end

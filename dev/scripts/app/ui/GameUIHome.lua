@@ -22,12 +22,18 @@ local timer = app.timer
 
 function GameUIHome:OnResourceChanged(resource_manager)
     local server_time = timer:GetServerTime()
-    local wood_number = resource_manager:GetWoodResource():GetResourceValueByCurrentTime(server_time)
-    local food_number = resource_manager:GetFoodResource():GetResourceValueByCurrentTime(server_time)
-    local iron_number = resource_manager:GetIronResource():GetResourceValueByCurrentTime(server_time)
-    local stone_number = resource_manager:GetStoneResource():GetResourceValueByCurrentTime(server_time)
-    local citizen_number = resource_manager:GetPopulationResource():GetNoneAllocatedByTime(server_time)
-    local coin_number = resource_manager:GetCoinResource():GetResourceValueByCurrentTime(server_time)
+    local wood_resource = resource_manager:GetWoodResource()
+    local food_resource = resource_manager:GetFoodResource()
+    local iron_resource = resource_manager:GetIronResource()
+    local stone_resource = resource_manager:GetStoneResource()
+    local citizen_resource = resource_manager:GetPopulationResource()
+    local coin_resource = resource_manager:GetCoinResource()
+    local wood_number = wood_resource:GetResourceValueByCurrentTime(server_time)
+    local food_number = food_resource:GetResourceValueByCurrentTime(server_time)
+    local iron_number = iron_resource:GetResourceValueByCurrentTime(server_time)
+    local stone_number = stone_resource:GetResourceValueByCurrentTime(server_time)
+    local citizen_number = citizen_resource:GetNoneAllocatedByTime(server_time)
+    local coin_number = coin_resource:GetResourceValueByCurrentTime(server_time)
     local gem_number = self.city:GetUser():GetGemResource():GetValue()
     self.wood_label:setString(GameUtils:formatNumber(wood_number))
     self.food_label:setString(GameUtils:formatNumber(food_number))
@@ -36,6 +42,11 @@ function GameUIHome:OnResourceChanged(resource_manager)
     self.citizen_label:setString(GameUtils:formatNumber(citizen_number))
     self.coin_label:setString(GameUtils:formatNumber(coin_number))
     self.gem_label:setString(string.formatnumberthousands(gem_number))
+
+    self.wood_label:setColor(wood_resource:IsOverLimit() and UIKit:hex2c4b(0xff3c00) or UIKit:hex2c4b(0xf3f0b6))
+    self.food_label:setColor(food_resource:IsOverLimit() and UIKit:hex2c4b(0xff3c00) or UIKit:hex2c4b(0xf3f0b6))
+    self.iron_label:setColor(iron_resource:IsOverLimit() and UIKit:hex2c4b(0xff3c00) or UIKit:hex2c4b(0xf3f0b6))
+    self.stone_label:setColor(stone_resource:IsOverLimit() and UIKit:hex2c4b(0xff3c00) or UIKit:hex2c4b(0xf3f0b6))
 end
 function GameUIHome:OnUpgradingBegin()
     self:OnTaskChanged()
@@ -162,7 +173,9 @@ function GameUIHome:OnUserBasicChanged(fromEntity,changed_map)
     if changed_map.icon then
         self.player_icon:setTexture(UILib.player_icon[changed_map.icon.new])
     end
-
+    if changed_map.levelExp then
+        self:RefreshExp()
+    end
     self:RefreshData()
 end
 function GameUIHome:OnHelpEventChanged(changed_map)
@@ -203,7 +216,7 @@ function GameUIHome:CreateTop()
 
 
     -- 玩家名字背景加文字
-    local ox = 159
+    local ox = 150
     local name_bg = display.newSprite("player_name_bg_168x30.png"):addTo(top_bg)
         :align(display.TOP_LEFT, ox, top_bg:getContentSize().height-10):setCascadeOpacityEnabled(true)
     self.name_label = cc.ui.UILabel.new({
@@ -249,7 +262,7 @@ function GameUIHome:CreateTop()
     -- 资源图片和文字
     local first_row = 18
     local first_col = 18
-    local label_padding = 20
+    local label_padding = 15
     local padding_width = 100
     local padding_height = 35
     for i, v in ipairs({
@@ -274,14 +287,18 @@ function GameUIHome:CreateTop()
     -- 玩家信息背景
     local player_bg = display.newSprite("player_bg_110x106.png"):addTo(top_bg, 2)
         :align(display.LEFT_BOTTOM, display.width>640 and 58 or 64, 10):setCascadeOpacityEnabled(true)
-    self.player_icon = UIKit:GetPlayerIconOnly(User:Icon()):addTo(player_bg):pos(55, 60):scale(0.75)
-    self.exp = display.newSprite("player_exp_bar_110x106.png"):addTo(player_bg):pos(55, 53)
-    local level_bg = display.newSprite("level_bg_74x21.png"):addTo(player_bg):pos(55, 19):setCascadeOpacityEnabled(true)
+    self.player_icon = UIKit:GetPlayerIconOnly(User:Icon()):addTo(player_bg):pos(55, 64):scale(0.72)
+    -- self.exp = display.newSprite("player_exp_bar_110x106.png"):addTo(player_bg):pos(55, 53)
+    self.exp = display.newProgressTimer("player_exp_bar_110x106.png", display.PROGRESS_TIMER_RADIAL):addTo(player_bg):pos(55, 53)
+    self.exp:setRotationSkewY(180)
+    self:RefreshExp()
+
+    local level_bg = display.newSprite("level_bg_72x19.png"):addTo(player_bg):pos(55, 18):setCascadeOpacityEnabled(true)
     self.level_label = UIKit:ttfLabel({
-        size = 20,
+        size = 14,
         color = 0xfff1cc,
         shadow = true,
-    }):addTo(level_bg):align(display.CENTER, 37, 12)
+    }):addTo(level_bg):align(display.CENTER, 37, 11)
 
     -- vip
     local vip_btn = cc.ui.UIPushButton.new(
@@ -434,7 +451,12 @@ end
 function GameUIHome:OnVipEventOver( vip_event )
     self:RefreshVIP()
 end
-
+function GameUIHome:RefreshExp()
+    local exp_config = GameDatas.PlayerInitData.playerLevel[User:Level()]
+    local currentExp = User:LevelExp() - exp_config.expFrom
+    local maxExp = exp_config.expTo - exp_config.expFrom
+    self.exp:setPercentage(currentExp/maxExp*100)
+end
 function GameUIHome:RefreshVIP()
     local vip_btn = self.vip_btn
     local vip_btn_img = User:IsVIPActived() and "vip_bg_110x124.png" or "vip_bg_disable_110x124.png"
@@ -515,11 +537,5 @@ function GameUIHome:PromiseOfActivePromise()
 end
 
 return GameUIHome
-
-
-
-
-
-
 
 

@@ -25,7 +25,7 @@ function GameUIAttackVillage:onEnter()
     local report = self.report
     local report_body = self.body
     local rb_size = report_body:getContentSize()
-    local title = display.newSprite("title_blue_600x52.png"):align(display.CENTER, rb_size.width/2, rb_size.height+10)
+    local title = display.newSprite("title_blue_600x56.png"):align(display.CENTER, rb_size.width/2, rb_size.height+10)
         :addTo(report_body)
     local title_label = UIKit:ttfLabel(
         {

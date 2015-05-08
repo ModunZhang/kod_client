@@ -140,7 +140,7 @@ function GameUIAllianceCityEnter:GetEnterButtons()
             local help_button
             local can_not_help_in_city = City:IsHelpedToTroopsWithPlayerId(member:Id())
             if can_not_help_in_city then
-                help_button = self:BuildOneButton("help_defense_44x56.png",_("撤防"),{down = "TROOP_BACK"}):onButtonClicked(function()
+                help_button = self:BuildOneButton("help_defense_44x56.png",_("撤防")):onButtonClicked(function()
                     NetManager:getRetreatFromHelpedAllianceMemberPromise(member:Id())
                     self:LeftButtonClicked()
                 end)

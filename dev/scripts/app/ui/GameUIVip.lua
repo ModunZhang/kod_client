@@ -596,7 +596,7 @@ function GameUIVip:CreateBackGroundWithTitle(title_string)
     local body = WidgetUIBackGround.new({height=643}):align(display.TOP_CENTER,display.cx,display.top-200)
     layer:addTouchAbleChild(body)
     local rb_size = body:getContentSize()
-    local title = display.newSprite("title_blue_600x52.png"):align(display.CENTER, rb_size.width/2, rb_size.height+10)
+    local title = display.newSprite("title_blue_600x56.png"):align(display.CENTER, rb_size.width/2, rb_size.height+10)
         :addTo(body)
     local title_label = cc.ui.UILabel.new(
         {

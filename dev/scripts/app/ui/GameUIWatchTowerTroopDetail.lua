@@ -2,6 +2,7 @@
 -- Author: Danny He
 -- Date: 2015-01-13 10:22:48
 --
+--查看来袭的部队信息和驻防到对方城市的部队信息
 local GameUIWatchTowerTroopDetail = UIKit:createUIClass("GameUIWatchTowerTroopDetail")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local window = import("..utils.window")
@@ -84,7 +85,7 @@ function GameUIWatchTowerTroopDetail:onEnter()
 	UIKit:shadowLayer():addTo(self)
 	self.backgroundImage = WidgetUIBackGround.new({height=824}):addTo(self)
 	self.backgroundImage:pos((display.width - self.backgroundImage:getContentSize().width)/2,window.bottom_top)
-	local title_bar = display.newSprite("title_blue_600x52.png")
+	local title_bar = display.newSprite("title_blue_600x56.png")
 		:addTo(self.backgroundImage)
 		:align(display.CENTER_BOTTOM, 304, 810)
 	UIKit:closeButton():addTo(title_bar)
@@ -129,8 +130,10 @@ function GameUIWatchTowerTroopDetail:RefreshListView()
 	self.listView:addItem(item)
 	item = self:GetItem(self.ITEM_TYPE.DRAGON_EQUIPMENT,self:GetEventData()) 
 	self.listView:addItem(item)
-	item = self:GetItem(self.ITEM_TYPE.SOLIDERS,self:GetEventData()) 
-	self.listView:addItem(item)	
+	if  self:GetDataType() ~= self.DATA_TYPE.STRIKE then
+		item = self:GetItem(self.ITEM_TYPE.SOLIDERS,self:GetEventData()) 
+		self.listView:addItem(item)	
+	end
 	item = self:GetItem(self.ITEM_TYPE.DRAGON_SKILL,self:GetEventData()) 
 	self.listView:addItem(item)
 	item = self:GetItem(self.ITEM_TYPE.TECHNOLOGY,self:GetEventData()) 
@@ -192,7 +195,7 @@ function GameUIWatchTowerTroopDetail:GetItem(ITEM_TYPE,item_data)
 	       		max = 4,
 	       		bg = "Stars_bar_bg.png",
 	       		fill = "Stars_bar_highlight.png", 
-	       		num = 1,
+	       		num = item_data.dragon.star,
 	    	}):addTo(title_bar):align(display.RIGHT_CENTER,538,19)
 	    end
 		local y = 0
