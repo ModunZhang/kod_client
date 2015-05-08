@@ -161,6 +161,8 @@ function UIKit:getRegistry()
 end
 
 function UIKit:closeAllUI()
+    UIKit.open_ui_callbacks = {}
+    UIKit.close_ui_callbacks = {}
     for name,v in pairs(self:getRegistry().objects_) do
         if v.__isBase and v.__type ~= self.UITYPE.BACKGROUND then
             v:LeftButtonClicked()

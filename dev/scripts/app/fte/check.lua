@@ -33,6 +33,9 @@ end
 local function is_finish_recruit_soldiers(type_, count)
     return City:GetSoldierManager():GetCountBySoldierType(type_) >= count
 end
+local function is_fight_in_pve()
+    return User:GetPVEDatabase():GetMapByIndex(1):SearchedObjectsCount() > 0
+end
 local check_map = {
     ["HateDragon"] = function()
         local dragon_manger = City:GetDragonEyrie():GetDragonManager()
@@ -44,7 +47,10 @@ local check_map = {
         local dragon_manger = City:GetDragonEyrie():GetDragonManager()
         return dragon_manger:GetDragon("redDragon"):IsDefenced() or
             dragon_manger:GetDragon("greenDragon"):IsDefenced() or
-            dragon_manger:GetDragon("blueDragon"):IsDefenced()
+            dragon_manger:GetDragon("blueDragon"):IsDefenced() or
+            City:GetFirstBuildingByType("keep"):GetLevel() > 1 or
+            #City:GetAllDecorators() > 0 or
+            is_finish_recruit_soldiers("swordsman", 1)
     end,
     ["BuildDwelling_18x12"] = function()
         return is_finish_built_at(18, 12)
@@ -65,7 +71,7 @@ local check_map = {
         return is_finish_speedup_building_by_level("barracks", 0)
     end,
     ["RecruitSoldiers"] = function()
-        return is_finish_built_at(8, 22) or is_finish_recruit_soldiers("swordsman", 10)
+        return is_finish_recruit_soldiers("swordsman", 10) or is_fight_in_pve()
     end,
     ["BuildFarmer_8x22"] = function()
         return is_finish_built_at(8, 22)
@@ -80,14 +86,87 @@ local check_map = {
         return is_finish_speed_at(8, 22, 1)
     end,
     ["ExplorePve"] = function()
-        return false
+        return is_fight_in_pve() or
+                City:GetFirstBuildingByType("keep"):GetLevel() > 2
     end,
+    ["ActiveVip"] = function()
+        return User:IsVIPActived() or 
+                City:GetFirstBuildingByType("keep"):GetLevel() > 2
+    end,
+    ["UpgradeKeep2"] = function()
+        return is_finish_upgrade_building_by_level("keep", 2)
+    end,
+    ["FreeSpeedUpKeep2"] = function()
+        return is_finish_speedup_building_by_level("keep", 2)
+    end,
+    ["UpgradeKeep3"] = function()
+        return is_finish_upgrade_building_by_level("keep", 3)
+    end,
+    ["FreeSpeedUpKeep3"] = function()
+        return is_finish_speedup_building_by_level("keep", 3)
+    end,
+    ["UpgradeKeep4"] = function()
+        return is_finish_upgrade_building_by_level("keep", 4)
+    end,
+    ["FreeSpeedUpKeep4"] = function()
+        return is_finish_speedup_building_by_level("keep", 4)
+    end,
+    ["UnlockHospital0"] = function()
+        return is_finish_upgrade_building_by_level("hospital", 0)
+    end,
+    ["SpeedupHospital0"] = function()
+        return is_finish_speedup_building_by_level("hospital", 0)
+    end,
+    ["UnlockAcademy0"] = function()
+        return is_finish_upgrade_building_by_level("academy", 0)
+    end,
+    ["SpeedupAcademy0"] = function()
+        return is_finish_speedup_building_by_level("academy", 0)
+    end,
+    ["UnlockMaterialDepot0"] = function()
+        return is_finish_upgrade_building_by_level("materialDepot", 0)
+    end,
+    ["SpeedupMaterialDepot0"] = function()
+        return is_finish_speedup_building_by_level("materialDepot", 0)
+    end,
+    ["BuildWoodcutter_18x22"] = function()
+        return is_finish_built_at(18, 22)
+    end,
+    ["FreeSpeedUpWoodcutter_18x22"] = function()
+        return is_finish_speed_at(18, 22, 0)
+    end,
+    ["BuildQuarrier_28x22"] = function()
+        return is_finish_built_at(28, 22)
+    end,
+    ["FreeSpeedUpQuarrier_28x22"] = function()
+        return is_finish_speed_at(28, 22, 0)
+    end,
+    ["BuildMiner_28x12"] = function()
+        return is_finish_built_at(28, 12)
+    end,
+    ["FreeSpeedUpMiner_28x12"] = function()
+        return is_finish_speed_at(28, 12, 0)
+    end,
+    ["GetRewards"] = function()
+        return User:GetTaskManager():IsGetAnyCityBuildRewards()
+    end,
+    ["ALL"] = function()
+        local count = 0
+        for i,v in ipairs(City:GetAllBuildings()) do
+            if v:GetLevel() > 1 then
+                count = count + 1
+            end
+        end
+        return not (count > 1 or User:GetTaskManager():IsGetAnyCityBuildRewards())
+    end
 }
 
 
 return function(key)
     if not check_map[key] then return assert(false, key) end
-    return not check_map[key]()
+    local is_finished = not check_map[key]()
+    print(string.format("check [ %s ] : %s", key, is_finished and "true" or "false"))
+    return is_finished
 end
 
 

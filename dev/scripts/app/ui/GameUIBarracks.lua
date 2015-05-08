@@ -354,15 +354,8 @@ function GameUIBarracks:PromiseOfFte()
 
         return ui:PormiseOfFte()
     end):next(function()
-        return self:PromsieOfExit()
+        return self:PromsieOfExit("GameUIBarracks")
     end)
-end
-function GameUIBarracks:PromsieOfExit()
-    self:GetFteLayer():SetTouchObject(self:GetHomeButton())
-    local r = self:GetHomeButton():getCascadeBoundingBox()
-    self:GetFteLayer().arrow = WidgetFteArrow.new(_("返回城市"))
-        :addTo(self:GetFteLayer()):TurnLeft():align(display.LEFT_CENTER, r.x + r.width + 30, r.y + r.height/2)
-    return UIKit:PromiseOfClose("GameUIBarracks")
 end
 
 

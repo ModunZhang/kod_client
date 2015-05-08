@@ -95,6 +95,7 @@ function WidgetPVEDialog:Refresh()
                     end
                 end
             end)
+        btn.param = param
         self.btns[i] = btn
         if param[i].icon then
             display.newSprite(param[i].icon):addTo(btn, -1):pos(0, 12)

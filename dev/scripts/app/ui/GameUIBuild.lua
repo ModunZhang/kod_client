@@ -346,10 +346,9 @@ function GameUIBuild:Find(building_type)
     end)
     return item
 end
-local house_map = {
+local house_map = setmetatable({
     dwelling = _("建造住宅, 提升城民上限"),
-    farmer = _("点击建造"),
-}
+}, {__index = function() return _("点击建造") end})
 function GameUIBuild:PromiseOfFte(house_type)
     self.base_list_view:getScrollNode():setTouchEnabled(false)
     self:GetFteLayer():SetTouchObject(self:Find(house_type))
@@ -360,7 +359,7 @@ function GameUIBuild:PromiseOfFte(house_type)
     if house_type == "dwelling" then
         self:GetFteLayer().arrow:TurnUp(true):align(display.RIGHT_TOP, r.x + r.width/2, r.y - 10)
     else
-        self:GetFteLayer().arrow:TurnUp():align(display.TOP_CENTER, r.x + r.width/2, r.y - 10)
+        self:GetFteLayer().arrow:TurnDown():align(display.BOTTOM_CENTER, r.x + r.width/2, r.y + r.height + 10)
     end
     return City:PromiseOfUpgradingByLevel(house_type, 0)
 end

@@ -624,20 +624,19 @@ end
 local check = import("..fte.check")
 function GameUIDragonEyrieMain:PromiseOfFte()
     local p = cocos_promise.defer()
-    local fte_layer = self:GetFteLayer()
-    if not check("HateDragon") then
+    if check("HateDragon") then
         p:next(function()
             return self:PromiseOfHate()
         end)
     end
-    if not check("DefenceDragon") then
+    if check("DefenceDragon") then
         p:next(function()
             return GameUINpc:PromiseOfSayImportant({words = _("不可思议，传说是真的？！觉醒者过让能够号令龙族。。。大人您真是厉害！"), brow = "shy"}):next(function()
                 return GameUINpc:PromiseOfLeave()
             end):next(function()
                 return self:PormiseOfDefence()
             end):next(function()
-            	return self:PromsieOfExit()
+                return self:PromsieOfExit("GameUIDragonEyrieMain")
             end)
         end)
     end
@@ -649,76 +648,24 @@ function GameUIDragonEyrieMain:PromiseOfHate()
     self:GetFteLayer().arrow = WidgetFteArrow.new(_("点击按钮：孵化"))
         :addTo(self:GetFteLayer()):TurnUp():pos(r.x + r.width/2, r.y - 40)
 
-    local p = promise.new(function()
-        if self:GetFteLayer().arrow then
-            self:GetFteLayer().arrow:removeFromParent()
-        end
-        self:GetFteLayer().arrow = nil
+    return self.dragon_manager:PromiseOfHate():next(function()
+        self:GetFteLayer():removeFromParent()
     end)
-    self.hate_button:removeEventListenersByEvent("CLICKED_EVENT")
-    self.hate_button:onButtonClicked(function()
-        self:OnEnergyButtonClicked():done(function()
-            p:resolve()
-        end)
-    end)
-    return p
 end
 function GameUIDragonEyrieMain:PormiseOfDefence()
-	self.garrison_button:setTouchSwallowEnabled(true)
-    local p = promise.new(function()
-        self.garrison_button:setButtonEnabled(false)
-        if self:GetFteLayer().arrow then
-            self:GetFteLayer().arrow:removeFromParent()
-        end
-        self:GetFteLayer().arrow = nil
-    end)
-
-
+    self.garrison_button:setTouchSwallowEnabled(true)
     self:GetFteLayer():SetTouchObject(self.garrison_button)
     local r = self.garrison_button:getCascadeBoundingBox()
     self:GetFteLayer().arrow = WidgetFteArrow.new(_("点击设置：巨龙在城市驻防，如果敌军入侵，巨龙会自动带领士兵进行防御"))
         :addTo(self:GetFteLayer()):TurnUp(false):align(display.LEFT_TOP, r.x, r.y - 30)
 
-    self.garrison_button:removeEventListenersByEvent("CLICKED_EVENT")
-    self.garrison_button:onButtonClicked(function()
-        local target = self.garrison_button:isButtonSelected()
-        local dragon = self:GetCurrentDragon()
-        if target then
-            if not dragon:Ishated() then
-                UIKit:showMessageDialog(nil,_("龙还未孵化"))
-                self.garrison_button:setButtonSelected(not target,false)
-                return
-            end
-            if dragon:IsFree() then
-                NetManager:getSetDefenceDragonPromise(dragon:Type()):done(function()
-                    GameGlobalUI:showTips(_("提示"),_("设置龙驻防成功"))
-                    p:resolve()
-                end)
-            else
-                UIKit:showMessageDialog(nil,_("龙未处于空闲状态"))
-                self.garrison_button:setButtonSelected(not target,false)
-            end
-        else
-            if dragon:IsDefenced() then
-                NetManager:getCancelDefenceDragonPromise():done(function()
-                    GameGlobalUI:showTips(_("提示"),_("取消龙驻防成功"))
-                end)
-            else
-                UIKit:showMessageDialog(nil,_("还没有龙驻防"))
-                self.garrison_button:setButtonSelected(not target,false)
-            end
-        end
+    return self.dragon_manager:PromiseOfDefence():next(function()
+        self:GetFteLayer():removeFromParent()
+        self.garrison_button:setButtonEnabled(false)
     end)
-    return p
-end
-function GameUIDragonEyrieMain:PromsieOfExit()
-	self:GetFteLayer():SetTouchObject(self:GetHomeButton())
-    local r = self:GetHomeButton():getCascadeBoundingBox()
-    self:GetFteLayer().arrow = WidgetFteArrow.new(_("返回城市"))
-        :addTo(self:GetFteLayer()):TurnLeft():align(display.LEFT_CENTER, r.x + r.width + 30, r.y + r.height/2)
-	return UIKit:PromiseOfClose("GameUIDragonEyrieMain")
 end
 return GameUIDragonEyrieMain
+
 
 
 

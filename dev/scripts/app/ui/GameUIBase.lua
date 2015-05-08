@@ -303,20 +303,18 @@ function GameUIBase:Find()
     assert(false)
 end
 
+local FTE_TAG = 119
 function GameUIBase:GetFteLayer()
-    if not self.fte_layer then
-        self.fte_layer = self:CreateFteLayer()
+    if not self:getChildByTag(FTE_TAG) then
+        return self:CreateFteLayer()
     end
-    return self.fte_layer
+    return self:getChildByTag(FTE_TAG):Enable()
 end
 function GameUIBase:DestoryFteLayer()
-    if self.fte_layer then
-        self.fte_layer:removeFromParent()
-    end
-    self.fte_layer = nil
+    self:removeChildByTag(FTE_TAG)
 end
 function GameUIBase:CreateFteLayer()
-    return TutorialLayer.new():addTo(self, 2000):Enable()
+    return TutorialLayer.new():addTo(self, 2000, FTE_TAG):Enable()
 end
 
 return GameUIBase

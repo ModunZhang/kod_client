@@ -148,7 +148,6 @@ function GameUIVip:WidgetPlayerNode_DataSource(name)
     end
 end
 function GameUIVip:OnMoveInStage()
-    GameUIVip.super.OnMoveInStage(self)
     self:CreateTabButtons({
         {
             label = _("信息"),
@@ -187,7 +186,7 @@ function GameUIVip:OnMoveInStage()
         end
     end):pos(window.cx, window.bottom + 34)
     User:AddListenOnType(self, User.LISTEN_TYPE.BASIC)
-
+    GameUIVip.super.OnMoveInStage(self)
 end
 function GameUIVip:onExit()
     User:RemoveListenerOnType(self, User.LISTEN_TYPE.BASIC)
@@ -838,6 +837,7 @@ function GameUIVip:OpenVIPDetails(show_vip_level)
                             end
                         end)
                     layer.status_node = active_button
+                    self.active_button = active_button
                 else
                     local reach_bg = display.newSprite("vip_bg_4.png")
                     reach_bg:align(display.CENTER, size.width/2, 40)
@@ -891,60 +891,27 @@ function GameUIVip:OnVipEventTimer( vip_event_new )
     end
 end
 
+-- fte
+local WidgetFteArrow = import("..widget.WidgetFteArrow")
+local WidgetFteMark = import("..widget.WidgetFteMark")
+function GameUIVip:FindActiveBtn()
+    return self.active_button
+end
+function GameUIVip:PromiseOfFte()
+    self:GetFteLayer():SetTouchObject(self:FindActiveBtn())
+    local r = self:FindActiveBtn():getCascadeBoundingBox()
+    self:GetFteLayer().arrow = WidgetFteArrow.new(_("激活VIP"))
+        :addTo(self:GetFteLayer()):TurnUp():align(display.TOP_CENTER, r.x + r.width/2, r.y - 20)
+
+    return WidgetUseItems:PromiseOfOpen("vipActive"):next(function(ui)
+        self:GetFteLayer():removeFromParent()
+        return ui:PromiseOfFte()
+    end):next(function()
+        return self:PromsieOfExit("GameUIVip")
+    end)
+end
+
 return GameUIVip
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

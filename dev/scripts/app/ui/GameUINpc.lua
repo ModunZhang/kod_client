@@ -144,6 +144,7 @@ function GameUINpc:onExit()
 end
 function GameUINpc:StartDialog()
     self:ShowWords(self:CurrentDialog())
+    return self
 end
 function GameUINpc:OnClick()
     if self.label and self.label:getActionByTag(LETTER_ACTION) then
@@ -364,7 +365,7 @@ function GameUINpc:PromiseOfEnter()
 end
 function GameUINpc:BuildUI()
     local ui_map = {}
-    display.newColorLayer(cc.c4b(0,0,0,180)):addTo(self):setTouchEnabled(false)
+    ui_map.background = display.newColorLayer(cc.c4b(0,0,0,180)):addTo(self):setTouchEnabled(false)
     ui_map.dialog_bg = display.newSprite("fte_background.png")
         :addTo(self):align(display.CENTER_BOTTOM, display.cx, 0)
     local size = ui_map.dialog_bg:getContentSize()

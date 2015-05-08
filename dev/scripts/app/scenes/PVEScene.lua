@@ -20,6 +20,7 @@ local PVEDefine = import("..entity.PVEDefine")
 local PVEObject = import("..entity.PVEObject")
 local PVELayer = import("..layers.PVELayer")
 local GameUIPVEHome = import("..ui.GameUIPVEHome")
+local GameUINpc = import("..ui.GameUINpc")
 local UILib = import("..ui.UILib")
 local MapScene = import(".MapScene")
 local PVEScene = class("PVEScene", MapScene)
@@ -33,7 +34,7 @@ function PVEScene:ctor(user)
 end
 function PVEScene:onEnter()
     PVEScene.super.onEnter(self)
-    self:CreateHomePage()
+    self.home_page = self:CreateHomePage()
     self.tutorial_layer = self:CreateTutorialLayer()
     local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(self.user:GetPVEDatabase():GetCharPosition())
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
@@ -115,10 +116,10 @@ function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
     -- 检查fte
     if not self:CheckCanMoveDelta(offset_x, offset_y) then return end
 
-    if self:GetSceneLayer():CanMove(tx, ty) and 
+    if self:GetSceneLayer():CanMove(tx, ty) and
         self.user:HasAnyStength() then
         -- 能走的话检查fte
-        
+
         if not self.user:GetPVEDatabase():IsInTrap() then
             self.user:GetPVEDatabase():ReduceNextEnemyStep()
         end
@@ -126,7 +127,7 @@ function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
         self.user:UseStrength(1)
         self:GetSceneLayer():MoveCharTo(tx, ty)
 
-        if self:GetSceneLayer():GetTileInfo(tx, ty) > 0 and 
+        if self:GetSceneLayer():GetTileInfo(tx, ty) > 0 and
             self:CheckCanMoveTo(tx, ty) then
             self:OpenUI(tx, ty)
         else
@@ -276,7 +277,7 @@ function PVEScene:CheckCanMoveDelta(ox, oy)
 end
 function PVEScene:CheckCanMoveTo(x, y)
     if not self.move_data then return true end
-    if self.move_data.callback(x, y) then 
+    if self.move_data.callback(x, y) then
         self.move_data = nil
         self:CheckDirection()
         return true
@@ -318,33 +319,85 @@ end
 
 -- fte
 local WidgetFteArrow = import("..widget.WidgetFteArrow")
+local WidgetFteMark = import("..widget.WidgetFteMark")
+local check = import("..fte.check")
 function PVEScene:onEnterTransitionFinish()
     self:RunFte()
 end
 function PVEScene:RunFte()
+    if check("ALL") then
+        return
+    end
+    if check("ExplorePve") then
+        self:PromiseOfAttackMiner():next(function()
+            return self:PromiseOfIntroduce()
+        end):next(function()
+            return self:PromiseOfExit()
+        end)
+    end
+end
+function PVEScene:PromiseOfAttackMiner()
+    self:GetTutorialLayer():Enable()
+
     local cx,cy = self:GetCurrentPos()
     local str = (cx == 9 and cy == 12) and _("请点击目标") or _("这里是我们的目的地，点击屏幕左侧向左移动")
-    
     local x,y = self:GetSceneLayer():GetFog(9, 12):getPosition()
-    self:GetSceneLayer():GetFteLayer().arrow = WidgetFteArrow.new(str)
-        :addTo(self:GetSceneLayer():GetFteLayer())
-        :TurnDown():align(display.BOTTOM_CENTER, x + 45, y + 80)
 
-    self:GetTutorialLayer():Enable()
-    return promise.all(UIKit:PromiseOfOpen("WidgetPVEMiner"), 
-        self:PromiseOfMoveTo(9, 12)):next(function()
+    self:GetSceneLayer():GetFteLayer().arrow =
+        WidgetFteArrow.new(str):addTo(self:GetSceneLayer():GetFteLayer())
+            :TurnDown():align(display.BOTTOM_CENTER, x + 45, y + 80)
+    return promise.all(UIKit:PromiseOfOpen("WidgetPVEMiner"),
+        self:PromiseOfMoveTo(9, 12)):next(function(results)
         if self:GetSceneLayer():GetFteLayer().arrow then
             self:GetSceneLayer():GetFteLayer().arrow:removeFromParent()
         end
         self:GetSceneLayer():GetFteLayer().arrow = nil
-    end):next(function(results)
         return results[1]:PormiseOfFte()
+        end):catch(function() end)
+end
+function PVEScene:PromiseOfIntroduce()
+    local r = self:GetHomePage().pve_back:getCascadeBoundingBox()
+    self:GetMark():Size(r.width, r.height):pos(r.x + r.width/2, r.y + r.height/2)
+    return GameUINpc:PromiseOfSay({words = _("领主大人，探索会消耗体力值，但击败敌军可以获得资源和材料。。。"), npc = "man"}):next(function()
+        local r1 = self:GetHomePage().box:getCascadeBoundingBox()
+        local r2 = self:GetHomePage().exploring:getCascadeBoundingBox()
+        local r = cc.rectUnion(r1, r2)
+        self:GetMark():Size(r.width, r.height):pos(r.x + r.width/2, r.y + r.height/2 - 30)
+        return GameUINpc:PromiseOfSay({words = _("当你探索玩整个地图还会获得一笔丰厚的奖励"), npc = "man"})
     end):next(function()
-        self:GetTutorialLayer():Disable()
+        self:DestoryMark()
+        return GameUINpc:PromiseOfLeave()
     end)
+end
+function PVEScene:PromiseOfExit()
+    self:GetTutorialLayer():Reset()
+    local r = self:GetHomePage().change_map:GetWorldRect()
+    self:GetHomePage():GetFteLayer():SetTouchRect(r)
+    self:GetHomePage():GetFteLayer().arrow = WidgetFteArrow.new(_("返回城市"))
+        :addTo(self:GetHomePage():GetFteLayer())
+        :TurnLeft():align(display.LEFT_CENTER, r.x + r.width + 20, r.y + r.width/2)
+end
+function PVEScene:GetMark()
+    if not self.mark then
+        self.mark = WidgetFteMark.new():addTo(self, 2000)
+    end
+    return self.mark
+end
+function PVEScene:DestoryMark()
+    self.mark:removeFromParent()
+    self.mark = nil
 end
 
 return PVEScene
+
+
+
+
+
+
+
+
+
 
 
 
