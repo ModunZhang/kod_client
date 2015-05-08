@@ -16,8 +16,9 @@ local app = app
 local timer = app.timer
 local DEBUG_LOCAL = false
 function CityScene:ctor(city)
-    CityScene.super.ctor(self)
+    self.mark_buildings = {}
     self.city = city
+    CityScene.super.ctor(self)
 end
 function CityScene:onEnter()
     self:LoadAnimation()
@@ -284,6 +285,16 @@ function CityScene:OnTouchMove(pre_x, pre_y, x, y)
         end
     end
     CityScene.super.OnTouchMove(self, pre_x, pre_y, x, y)
+end
+
+function CityScene:InsertMarkBuildings(building)
+    table.insert(self.mark_buildings, building)
+end
+function CityScene:GetMarkBuildings()
+    return self.mark_buildings
+end
+function CityScene:RemoveAllMarkBuildings()
+    self.mark_buildings = {}
 end
 
 

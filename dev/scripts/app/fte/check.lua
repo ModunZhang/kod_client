@@ -1,4 +1,6 @@
-
+local function check_step(key)
+    return cc.UserDefault:getInstance():getStringForKey(key)
+end
 
 local function is_finish_upgrade_building_by_level(building_type, level)
     local building = City:GetFirstBuildingByType(building_type)
@@ -162,11 +164,23 @@ local check_map = {
 }
 
 
+local function is_select_terrain()
+    for k,v in pairs(DataManager:getUserData().dragons) do
+        if v.star > 0 then
+            return true
+        end
+    end
+end
+
 return function(key)
-    if not check_map[key] then return assert(false, key) end
-    local is_finished = not check_map[key]()
-    print(string.format("check [ %s ] : %s", key, is_finished and "true" or "false"))
-    return is_finished
+    if key == "SelectTerrain" then
+        return not is_select_terrain()
+    end
+    return not cc.UserDefault:getInstance():getStringForKey(key)
+    -- if not check_map[key] then return assert(false, key) end
+    -- local is_finished = not check_map[key]()
+    -- print(string.format("check [ %s ] : %s", key, is_finished and "true" or "false"))
+    -- return is_finished
 end
 
 

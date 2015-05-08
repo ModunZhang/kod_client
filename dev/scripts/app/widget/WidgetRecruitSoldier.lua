@@ -374,7 +374,7 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name,soldier_star)
         local anchorNode = display.newNode():addTo(back_ground, 3):pos(size.width - 120, 110)
 
         -- 时间glass
-        cc.ui.UIImage.new("hourglass_30x38.png"):addTo(button, 2)
+        cc.ui.UIImage.new("hourglass_30x38.png"):addTo(self.normal_button, 2)
             :align(display.LEFT_CENTER, -90, -55):scale(0.7)
 
         -- 时间
