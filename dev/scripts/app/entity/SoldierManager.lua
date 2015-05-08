@@ -315,7 +315,7 @@ function SoldierManager:OnUserDataChanged(user_data,current_time, deltaData)
             end
         end
         if #soldier_star_changed > 0 then
-            GameGlobalUI:showTips(_("士兵晋级完成"),string.format(_('晋级%s至%d星完成'),Localize.soldier_name[soldier_star_changed[1]],self:GetStarBySoldierType(soldier_star_changed[1])))
+            GameGlobalUI:showTips(_("士兵晋级完成"),string.format(_("晋级%s至%d星完成"),Localize.soldier_name[soldier_star_changed[1]],self:GetStarBySoldierType(soldier_star_changed[1])))
             self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED,function(listener)
                 listener:OnSoliderStarCountChanged(self, soldier_star_changed)
             end)

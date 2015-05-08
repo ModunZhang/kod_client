@@ -13,6 +13,7 @@ local Enum = import("..utils.Enum")
 local ShrineFightEvent = import(".ShrineFightEvent")
 local ShrineReport = import(".ShrineReport")
 local GameUtils = GameUtils
+local Localize = import("..utils.Localize")
 
 AllianceShrine.LISTEN_TYPE = Enum(
 	"OnPerceotionChanged",
@@ -406,7 +407,7 @@ function AllianceShrine:GetSubStagesByMainStage(statge_index)
 end
 
 function AllianceShrine:GetMainStageDescName(statge_index)
-	return statge_index .. ".章节名本地化缺失"
+	return Localize.shrine_desc[string.format("main_stage_%s",statge_index)]
 end
 -- 限制玩家只能派遣一支部队去圣地
 function AllianceShrine:CheckPlayerCanDispathSoldiers(playerId)

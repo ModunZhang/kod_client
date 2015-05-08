@@ -249,7 +249,7 @@ function GameUIGacha:CreateGachaPool(layer)
                         end
                         table.insert(self.award, award)
                         -- table.insert(self.award, gacha_box_lable)
-                        GameGlobalUI:showTips(_("提示"),string.format(_('获得%s x%d'),Localize_item.item_name[self.current_gacha_item_name],self.current_gacha_item_count))
+                        GameGlobalUI:showTips(_("提示"),string.format(_("获得%s x%d"),Localize_item.item_name[self.current_gacha_item_name],self.current_gacha_item_count))
                         if self.continuous_draw_items and self.continuous_draw_items[self.continuous_index] then
                             self:StartLotteryDraw(self.continuous_draw_items[self.continuous_index])
                             self.continuous_index = self.continuous_index + 1

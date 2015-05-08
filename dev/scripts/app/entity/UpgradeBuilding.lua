@@ -194,7 +194,7 @@ function UpgradeBuilding:OnUserDataChanged(userData, current_time, location_id, 
     self:OnEvent(event)
     if level and finished_time then
         if display.getRunningScene().__cname ~= "MainScene" and level ~= self.level then
-            GameGlobalUI:showTips(_("提示"),string.format(_('建造%s至%d级完成'),Localize.building_name[self:GetType()],level))
+            GameGlobalUI:showTips(_("提示"),string.format(_("建造%s至%d级完成"),Localize.building_name[self:GetType()],level))
         end
         self:OnHandle(level, finished_time)
     end

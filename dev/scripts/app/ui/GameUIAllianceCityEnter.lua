@@ -104,7 +104,7 @@ function GameUIAllianceCityEnter:GetBuildingType()
 end
 
 function GameUIAllianceCityEnter:GetBuildingDesc()
-    return "本地化缺失"
+    return ""
 end
 
 

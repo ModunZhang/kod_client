@@ -732,7 +732,7 @@ function User:OnDailyQuestsEventsChanged(userData,deltaData)
                         table.insert(edit,data)
 
                         if data.finishTime == 0 then
-                            GameGlobalUI:showTips(_("提示"),string.format(_('每日任务%s完成'),Localize.daily_quests_name[data.index]))
+                            GameGlobalUI:showTips(_("提示"),string.format(_("每日任务%s完成"),Localize.daily_quests_name[data.index]))
                         end
                     end
                 end

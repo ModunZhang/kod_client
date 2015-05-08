@@ -5,7 +5,7 @@
 -- 联盟圣地关卡
 local AllianceShrineStage = class("AllianceShrineStage")
 local property = import("..utils.property")
-
+local Localize = import("..utils.Localize")
 
 function AllianceShrineStage:ctor(config)
 	property(self,"isLocked",true)
@@ -37,11 +37,11 @@ function AllianceShrineStage:OnPropertyChange()
 end
 
 function AllianceShrineStage:GetDescStageName()
-	return string.gsub(self:StageName(),'_','-') .. " 本地化缺失"
+	return Localize.shrine_desc[self:StageName()][1]
 end
 
 function AllianceShrineStage:GetStageDesc()
-	return "关卡描述" .. self:StageName() .. "本地化缺失"
+	return Localize.shrine_desc[self:StageName()][2]
 end
 
 function AllianceShrineStage:Reset()

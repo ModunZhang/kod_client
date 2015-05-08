@@ -301,7 +301,7 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
             efficiency = string.format("%s+%d,",bd.miner_poduction,addtion)
         end
     else
-        efficiency = (_("本地化未添加"))
+        assert(false,"本地化丢失")
     end
     -- 增加power,每个建筑都有的属性
     efficiency = efficiency ..string.format("%s+%d",bd.power,building:GetNextLevelPower()-building:GetPower())
