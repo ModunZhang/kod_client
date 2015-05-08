@@ -261,7 +261,7 @@ function GameUILoginBeta:login()
         ext.market_sdk.onPlayerLogin(User:Id(),User:Name(),User:ServerName())
         ext.market_sdk.onPlayerLevelUp(User:Level())
         self:performWithDelay(function()
-            if check("SelectTerrain") then
+            if check("SelectTerrain") and false then
   		        app:EnterFteScene()
             else
                 app:EnterMyCityScene()
