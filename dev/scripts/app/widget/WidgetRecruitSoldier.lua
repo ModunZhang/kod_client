@@ -589,7 +589,6 @@ function WidgetRecruitSoldier:CheckNeedResource(total_resouce, count)
 end
 function WidgetRecruitSoldier:GetCurrentMaxRecruitNum(total_resouce)
     local soldier_config = self.soldier_config
-    local current_res_map = {}
     local total_map = total_resouce
     local max_count = math.huge
     for k, v in pairs(self.res_map) do
