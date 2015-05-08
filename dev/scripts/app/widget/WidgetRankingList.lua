@@ -4,6 +4,7 @@ local window = import("..utils.window")
 local Flag = import("..entity.Flag")
 local UIListView = import("..ui.UIListView")
 local WidgetPushButton = import(".WidgetPushButton")
+local WidgetUIBackGround = import(".WidgetUIBackGround")
 local WidgetPopDialog = import(".WidgetPopDialog")
 local WidgetAllianceHelper = import(".WidgetAllianceHelper")
 local WidgetDropList = import("..widget.WidgetDropList")
@@ -72,8 +73,8 @@ function WidgetRankingList:OnMoveInStage()
     }):align(display.CENTER, bg:getContentSize().width/2, bg:getContentSize().height/2)
         :addTo(bg)
 
-
-    display.newSprite("background_568x556.png"):addTo(body):align(display.CENTER, size.width / 2, size.height / 2 - 80)
+    WidgetUIBackGround.new({width = 568,height = 550},WidgetUIBackGround.STYLE_TYPE.STYLE_6)
+        :addTo(body):align(display.CENTER, size.width / 2, size.height / 2 - 80)
 
     self.listview = UIListView.new{
         async = true, --异步加载

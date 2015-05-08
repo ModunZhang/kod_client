@@ -278,7 +278,7 @@ function GameUIUpgradeTechnology:BuildUI()
 
 
     --升级所需时间
-    local time_icon = display.newSprite("hourglass_39x46.png")
+    local time_icon = display.newSprite("hourglass_30x38.png")
         :addTo(bg_node)
         :scale(0.6)
         :align(display.LEFT_TOP, btn_bg:getPositionX() - 185,btn_bg:getPositionY() - 65 - 10)

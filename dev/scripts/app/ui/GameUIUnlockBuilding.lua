@@ -122,7 +122,7 @@ function GameUIUnlockBuilding:Init()
     }):align(display.LEFT_CENTER,display.cx-240,display.top-440):addTo(self)
     self:SetUpgradeNowNeedGems()
     --升级所需时间
-    display.newSprite("hourglass_39x46.png", display.cx+100, display.top-440):addTo(self):setScale(0.6)
+    display.newSprite("hourglass_30x38.png", display.cx+100, display.top-440):addTo(self):setScale(0.6)
     self.upgrade_time = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         font = UIKit:getFontFilePath(),

@@ -359,7 +359,7 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
         })
 
     -- 时间glass
-    cc.ui.UIImage.new("hourglass_39x46.png"):addTo(button, 2)
+    cc.ui.UIImage.new("hourglass_30x38.png"):addTo(button, 2)
         :align(display.LEFT_CENTER, -90, -55):scale(0.7)
 
     -- 时间

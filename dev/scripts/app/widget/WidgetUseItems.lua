@@ -1158,7 +1158,7 @@ function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc,buyAndUseFun
 end
 
 function WidgetUseItems:GetListBg(x,y,width,height)
-    return display.newScale9Sprite("background_568x556.png",x,y,cc.size(width,height),cc.rect(10,10,548,536))
+    return display.newScale9Sprite("background_568x120.png",x,y,cc.size(width,height),cc.rect(10,10,548,100))
 end
 
 
