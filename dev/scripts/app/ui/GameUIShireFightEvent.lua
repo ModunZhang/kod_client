@@ -118,7 +118,7 @@ function GameUIShireFightEvent:BuildUI()
 	local icon_bg = display.newSprite("back_ground_43x43.png")
 		:align(display.LEFT_TOP, 20, 650)
 		:addTo(background):scale(0.7)
-	display.newSprite("hourglass_39x46.png"):align(display.CENTER, 22, 22):addTo(icon_bg)
+	display.newSprite("hourglass_30x38.png"):align(display.CENTER, 22, 22):addTo(icon_bg)
 
 	self.time_label = UIKit:ttfLabel({
 		text =  string.format(_("派兵时间%s"),GameUtils:formatTimeStyle1(self:GetFightEvent():GetTime())),
@@ -126,7 +126,7 @@ function GameUIShireFightEvent:BuildUI()
 		color = 0x403c2f
 	}):align(display.LEFT_TOP,icon_bg:getPositionX()+icon_bg:getContentSize().width*0.7+10,icon_bg:getPositionY()):addTo(background)
 
-	local population_icon = display.newSprite("res_citizen_44x50.png"):scale(0.7):align(display.RIGHT_TOP,550,icon_bg:getPositionY()+2):addTo(background)
+	local population_icon = display.newSprite("res_citizen_88x82.png"):scale(0.35):align(display.RIGHT_TOP,550,icon_bg:getPositionY()+2):addTo(background)
 	self.popultaion_label = UIKit:ttfLabel({
 		text = #self:GetFightEvent():PlayerTroops(),
 		size = 22,
@@ -195,7 +195,7 @@ function GameUIShireFightEvent:GetListItem(arrived,obj)
 	local icon_bg = display.newSprite("back_ground_43x43.png")
 		:align(display.LEFT_BOTTOM, icon:getPositionX()+icon:getContentSize().width + 10, 20)
 		:addTo(content):scale(0.7)
-	display.newSprite("hourglass_39x46.png"):align(display.CENTER, 22, 22):addTo(icon_bg)
+	display.newSprite("hourglass_30x38.png"):align(display.CENTER, 22, 22):addTo(icon_bg)
 	local time_label_text = ""
 	if not arrived then
 		time_label_text =  string.format("%s后到达",GameUtils:formatTimeStyle1(obj:GetTime()))

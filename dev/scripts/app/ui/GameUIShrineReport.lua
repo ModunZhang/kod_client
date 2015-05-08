@@ -67,7 +67,7 @@ end
 function GameUIShrineReport:CreateIf_fight_detail()
     if self.fight_detail_list_node then return self.fight_detail_list_node end
     local viewRect = cc.rect(10,12,548,545)
-    local list_node = display.newScale9Sprite("background_568x556.png",0,0,cc.size(viewRect.width+20,viewRect.height+24),cc.rect(10,10,548,536))
+    local list_node = display.newScale9Sprite("background_568x120.png",0,0,cc.size(viewRect.width+20,viewRect.height+24),cc.rect(10,10,548,100))
     local list = cc.ui.UIListView.new({
         viewRect = viewRect,
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
@@ -281,7 +281,7 @@ function GameUIShrineReport:CreateIf_data_statistics()
     }):addTo(logo):align(display.CENTER,295,120)
     self.data_statistics_node = data_statistics_node
     local viewRect = cc.rect(10,12,548,444)
-    local list_node = display.newScale9Sprite("background_568x556.png",0,0,cc.size(viewRect.width+20,viewRect.height+24),cc.rect(10,10,548,536))
+    local list_node = display.newScale9Sprite("background_568x120.png",0,0,cc.size(viewRect.width+20,viewRect.height+24),cc.rect(10,10,548,100))
     local list = cc.ui.UIListView.new({
         viewRect = viewRect,
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,

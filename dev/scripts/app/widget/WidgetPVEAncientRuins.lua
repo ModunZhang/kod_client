@@ -19,6 +19,7 @@ function WidgetPVEAncientRuins:SetUpButtons()
         {
             {
                 label = _("捐献"), 
+                icon = "pve_icon_contribute.png",
                 callback = function()
                     if self:HasGem(20) then
                         local rollback = self:Search()

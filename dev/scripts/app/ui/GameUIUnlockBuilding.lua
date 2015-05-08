@@ -122,7 +122,7 @@ function GameUIUnlockBuilding:Init()
     }):align(display.LEFT_CENTER,display.cx-240,display.top-440):addTo(self)
     self:SetUpgradeNowNeedGems()
     --升级所需时间
-    display.newSprite("hourglass_39x46.png", display.cx+100, display.top-440):addTo(self):setScale(0.6)
+    display.newSprite("hourglass_30x38.png", display.cx+100, display.top-440):addTo(self):setScale(0.6)
     self.upgrade_time = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         font = UIKit:getFontFilePath(),
@@ -315,10 +315,17 @@ end
 
 
 -- fte
+local WidgetFteArrow = import("..widget.WidgetFteArrow")
 function GameUIUnlockBuilding:Find()
-    return cocos_promise.defer(function()
-        return self.upgrade_btn
-    end)
+    return self.upgrade_btn
+end
+function GameUIUnlockBuilding:PormiseOfFte()
+    self:GetFteLayer():SetTouchObject(self:Find())
+    local r = self:Find():getCascadeBoundingBox()
+    local str = string.format(_("点击解锁新建筑：%s"), Localize.building_name[self.building:GetType()])
+    self:GetFteLayer().arrow = WidgetFteArrow.new(str):addTo(self:GetFteLayer())
+    :TurnRight():align(display.RIGHT_CENTER, r.x - 20, r.y + r.height/2)
+    return City:PromiseOfUpgradingByLevel(self.building:GetType())
 end
 
 

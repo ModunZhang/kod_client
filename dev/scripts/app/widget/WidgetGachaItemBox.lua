@@ -16,7 +16,6 @@ function WidgetGachaItemBox:ctor(gacha_item,isSenior,include_tips_node)
     self.isSenior = isSenior
     local gacha_box = display.newSprite("box_gacha_92x92.png"):addTo(self)
     -- item icon
-    print("self:GetGachaItemIcon()>",self:GetGachaItemIcon())
     local item_icon = display.newScale9Sprite(self:GetGachaItemIcon()):addTo(self)
     item_icon:scale(74/item_icon:getContentSize().width)
     self:SetNodeEvent(gacha_box,include_tips_node)
@@ -120,13 +119,11 @@ function WidgetGachaItemBox:ResetLigt()
 
 end
 function WidgetGachaItemBox:GetGachaItemName()
-    local sp = string.split(self.gacha_item.itemName, ":")
-    return sp[2]
+   return self.gacha_item.itemName
 end
 function WidgetGachaItemBox:GetGachaItemIcon( )
     local name = self:GetGachaItemName()
-    print("name",name)
-    return UILib.item[name] or UILib.resource[name]
+    return UILib.item[name]
 end
 function WidgetGachaItemBox:RemoveSelectStatus( )
     if self.select_box then

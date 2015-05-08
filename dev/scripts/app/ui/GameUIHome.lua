@@ -22,12 +22,18 @@ local timer = app.timer
 
 function GameUIHome:OnResourceChanged(resource_manager)
     local server_time = timer:GetServerTime()
-    local wood_number = resource_manager:GetWoodResource():GetResourceValueByCurrentTime(server_time)
-    local food_number = resource_manager:GetFoodResource():GetResourceValueByCurrentTime(server_time)
-    local iron_number = resource_manager:GetIronResource():GetResourceValueByCurrentTime(server_time)
-    local stone_number = resource_manager:GetStoneResource():GetResourceValueByCurrentTime(server_time)
-    local citizen_number = resource_manager:GetPopulationResource():GetNoneAllocatedByTime(server_time)
-    local coin_number = resource_manager:GetCoinResource():GetResourceValueByCurrentTime(server_time)
+    local wood_resource = resource_manager:GetWoodResource()
+    local food_resource = resource_manager:GetFoodResource()
+    local iron_resource = resource_manager:GetIronResource()
+    local stone_resource = resource_manager:GetStoneResource()
+    local citizen_resource = resource_manager:GetPopulationResource()
+    local coin_resource = resource_manager:GetCoinResource()
+    local wood_number = wood_resource:GetResourceValueByCurrentTime(server_time)
+    local food_number = food_resource:GetResourceValueByCurrentTime(server_time)
+    local iron_number = iron_resource:GetResourceValueByCurrentTime(server_time)
+    local stone_number = stone_resource:GetResourceValueByCurrentTime(server_time)
+    local citizen_number = citizen_resource:GetNoneAllocatedByTime(server_time)
+    local coin_number = coin_resource:GetResourceValueByCurrentTime(server_time)
     local gem_number = self.city:GetUser():GetGemResource():GetValue()
     self.wood_label:setString(GameUtils:formatNumber(wood_number))
     self.food_label:setString(GameUtils:formatNumber(food_number))
@@ -36,6 +42,11 @@ function GameUIHome:OnResourceChanged(resource_manager)
     self.citizen_label:setString(GameUtils:formatNumber(citizen_number))
     self.coin_label:setString(GameUtils:formatNumber(coin_number))
     self.gem_label:setString(string.formatnumberthousands(gem_number))
+
+    self.wood_label:setColor(wood_resource:IsOverLimit() and UIKit:hex2c4b(0xff3c00) or UIKit:hex2c4b(0xf3f0b6))
+    self.food_label:setColor(food_resource:IsOverLimit() and UIKit:hex2c4b(0xff3c00) or UIKit:hex2c4b(0xf3f0b6))
+    self.iron_label:setColor(iron_resource:IsOverLimit() and UIKit:hex2c4b(0xff3c00) or UIKit:hex2c4b(0xf3f0b6))
+    self.stone_label:setColor(stone_resource:IsOverLimit() and UIKit:hex2c4b(0xff3c00) or UIKit:hex2c4b(0xf3f0b6))
 end
 function GameUIHome:OnUpgradingBegin()
     self:OnTaskChanged()
@@ -81,7 +92,7 @@ end
 function GameUIHome:FadeToSelf(isFullDisplay)
     self:setCascadeOpacityEnabled(true)
     local opacity = isFullDisplay == true and 255 or 0
-    local p = isFullDisplay and 0 or 99999999
+    local p = isFullDisplay and 0 or 0
     transition.fadeTo(self, {opacity = opacity, time = 0.2,
         onComplete = function()
             self:pos(p, p)
@@ -162,7 +173,9 @@ function GameUIHome:OnUserBasicChanged(fromEntity,changed_map)
     if changed_map.icon then
         self.player_icon:setTexture(UILib.player_icon[changed_map.icon.new])
     end
-
+    if changed_map.levelExp then
+        self:RefreshExp()
+    end
     self:RefreshData()
 end
 function GameUIHome:OnHelpEventChanged(changed_map)
@@ -275,7 +288,11 @@ function GameUIHome:CreateTop()
     local player_bg = display.newSprite("player_bg_110x106.png"):addTo(top_bg, 2)
         :align(display.LEFT_BOTTOM, display.width>640 and 58 or 64, 10):setCascadeOpacityEnabled(true)
     self.player_icon = UIKit:GetPlayerIconOnly(User:Icon()):addTo(player_bg):pos(55, 64):scale(0.72)
-    self.exp = display.newSprite("player_exp_bar_110x106.png"):addTo(player_bg):pos(55, 53)
+    -- self.exp = display.newSprite("player_exp_bar_110x106.png"):addTo(player_bg):pos(55, 53)
+    self.exp = display.newProgressTimer("player_exp_bar_110x106.png", display.PROGRESS_TIMER_RADIAL):addTo(player_bg):pos(55, 53)
+    self.exp:setRotationSkewY(180)
+    self:RefreshExp()
+
     local level_bg = display.newSprite("level_bg_72x19.png"):addTo(player_bg):pos(55, 18):setCascadeOpacityEnabled(true)
     self.level_label = UIKit:ttfLabel({
         size = 14,
@@ -287,7 +304,7 @@ function GameUIHome:CreateTop()
     local vip_btn = cc.ui.UIPushButton.new(
         {},
         {scale9 = false}
-    ):addTo(top_bg):align(display.CENTER, ox + 195, 50)
+    ):addTo(top_bg):align(display.CENTER, ox + 195, 65)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 UIKit:newGameUI('GameUIVip', City,"VIP"):AddToCurrentScene(true)
@@ -296,7 +313,7 @@ function GameUIHome:CreateTop()
     local vip_btn_img = User:IsVIPActived() and "vip_bg_110x124.png" or "vip_bg_disable_110x124.png"
     vip_btn:setButtonImage(cc.ui.UIPushButton.NORMAL, vip_btn_img, true)
     vip_btn:setButtonImage(cc.ui.UIPushButton.PRESSED, vip_btn_img, true)
-    self.vip_level = display.newNode():addTo(vip_btn):pos(-3, 15):scale(0.8)
+    self.vip_level = display.newNode():addTo(vip_btn):pos(-3, 0):scale(0.8)
     self.vip_btn = vip_btn
 
 
@@ -335,6 +352,7 @@ function GameUIHome:CreateTop()
             end
         end
     end)
+    self.quest_bar_bg = quest_bar_bg
     display.newSprite("quest_icon_27x42.png"):addTo(quest_bar_bg):pos(-162, 0)
     self.quest_label = cc.ui.UILabel.new({
         size = 20,
@@ -433,7 +451,12 @@ end
 function GameUIHome:OnVipEventOver( vip_event )
     self:RefreshVIP()
 end
-
+function GameUIHome:RefreshExp()
+    local exp_config = GameDatas.PlayerInitData.playerLevel[User:Level()]
+    local currentExp = User:LevelExp() - exp_config.expFrom
+    local maxExp = exp_config.expTo - exp_config.expFrom
+    self.exp:setPercentage(currentExp/maxExp*100)
+end
 function GameUIHome:RefreshVIP()
     local vip_btn = self.vip_btn
     local vip_btn_img = User:IsVIPActived() and "vip_bg_110x124.png" or "vip_bg_disable_110x124.png"
@@ -450,9 +473,8 @@ function GameUIHome:RefreshVIP()
 end
 
 -- fte
-function GameUIHome:DefferShow(tab_type)
-    return self.event_tab:PromiseOfShowTab(tab_type):next(function() return self end)
-end
+local WidgetFteArrow = import("..widget.WidgetFteArrow")
+local WidgetFteMark = import("..widget.WidgetFteMark")
 function GameUIHome:Find()
     local item
     self.event_tab:IteratorAllItem(function(_, v)
@@ -461,58 +483,59 @@ function GameUIHome:Find()
             return true
         end
     end)
-    return cocos_promise.defer(function()
-        if not item then
-            promise.reject({code = -1, msg = "没有找到对应item"}, "")
+    return item
+end
+function GameUIHome:FindVip()
+    return self.vip_btn
+end
+function GameUIHome:PromiseOfFteFreeSpeedUp()
+    if #City:GetUpgradingBuildings() > 0 then
+        if not self.event_tab:IsShow() then
+            self.event_tab:EventChangeOn("build", true)
         end
-        return item
+        self:GetFteLayer():Reset()
+        self.event_tab:PromiseOfPopUp():next(function()
+            self:GetFteLayer():SetTouchObject(self:Find())
+            local r = self:Find():getCascadeBoundingBox()
+            self:GetFteLayer().arrow = WidgetFteArrow.new(_("5分钟以下免费加速，激活VIP提升免费加速时间，VIP等级越高，可免费加速时间越高"))
+                :addTo(self:GetFteLayer()):TurnUp(true):align(display.RIGHT_TOP, r.x + r.width/2, r.y - 10)
+        end)
+        return City:PromiseOfFinishUpgradingByLevel(nil, nil):next(function()
+            self:DestoryFteLayer()
+        end)
+    end
+    return cocos_promise.defer()
+end
+function GameUIHome:PromiseOfFteInstantSpeedUp()
+    if #City:GetUpgradingBuildings() > 0 then
+        if not self.event_tab:IsShow() then
+            self.event_tab:EventChangeOn("build", true)
+        end
+        self:GetFteLayer():Reset()
+        self.event_tab:PromiseOfPopUp():next(function()
+            self:GetFteLayer():SetTouchObject(self:Find())
+            local r = self:Find():getCascadeBoundingBox()
+            self:GetFteLayer().arrow = WidgetFteArrow.new(_("立即完成升级"))
+                :addTo(self:GetFteLayer()):TurnRight(true):align(display.RIGHT_CENTER, r.x - 10, r.y + r.height/2)
+        end)
+        return City:PromiseOfFinishUpgradingByLevel(nil, nil):next(function()
+            self:DestoryFteLayer()
+        end)
+    end
+    return cocos_promise.defer()
+end
+function GameUIHome:PromiseOfActivePromise()
+    self:GetFteLayer():SetTouchObject(self:FindVip())
+    local r = self:FindVip():getCascadeBoundingBox()
+    self:GetFteLayer().arrow = WidgetFteArrow.new(_("点击VIP，免费激活VIP"))
+        :addTo(self:GetFteLayer()):TurnUp():align(display.TOP_CENTER, r.x + r.width/2, r.y)
+
+    return UIKit:PromiseOfOpen("GameUIVip"):next(function(ui)
+        self:GetFteLayer():removeFromParent()
+        return ui:PromiseOfFte()
     end)
 end
 
 return GameUIHome
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

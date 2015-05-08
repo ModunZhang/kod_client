@@ -7,6 +7,7 @@ local window = import("..utils.window")
 local Localize_item = import("..utils.Localize_item")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetGachaItemBox = import("..widget.WidgetGachaItemBox")
+local WidgetUseItems = import("..widget.WidgetUseItems")
 local intInit = GameDatas.PlayerInitData.intInit
 
 local NORMAL = GameDatas.Gacha.normal
@@ -103,8 +104,8 @@ function GameUIGacha:CreateGachaPool(layer)
         :align(display.CENTER, window.cx, window.top_bottom-390)
 
     -- 抽到物品背景
-    local draw_thing_bg  = display.newSprite("back_ground_320x172.png"):addTo(layer)
-        :align(display.CENTER, window.cx, window.top_bottom-510)
+    local draw_thing_bg  = display.newSprite("back_ground_320x146.png"):addTo(layer)
+        :align(display.CENTER, window.cx, window.top_bottom-500)
     -- 当前赌币
     display.newSprite("icon_casinoToken.png"):addTo(draw_thing_bg)
         :align(display.CENTER, 120,122):scale(0.3)
@@ -411,7 +412,10 @@ function GameUIGacha:InitOrdinary()
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 if User:GetOddFreeNormalGachaCount()<1 and self.city:GetResourceManager():GetCasinoTokenResource():GetValue()<intInit.casinoTokenNeededPerNormalGacha.value then
-                    UIKit:showMessageDialog(_("提示"),_("赌币不足"))
+                    WidgetUseItems.new():Create({
+                        item_type = WidgetUseItems.USE_TYPE.RESOURCE,
+                        item_name = "casinoTokenClass_1"
+                    }):AddToCurrentScene()
                 else
                     NetManager:getNormalGachaPromise():done(function(response)
                         if response.msg.playerData then
@@ -500,7 +504,10 @@ function GameUIGacha:InitDeluxe()
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 if self.city:GetResourceManager():GetCasinoTokenResource():GetValue()<intInit.casinoTokenNeededPerAdvancedGacha.value then
-                    UIKit:showMessageDialog(_("提示"),_("赌币不足"))
+                    WidgetUseItems.new():Create({
+                        item_type = WidgetUseItems.USE_TYPE.RESOURCE,
+                        item_name = "casinoTokenClass_1"
+                    }):AddToCurrentScene()
                 else
                     NetManager:getAdvancedGachaPromise():done(function(response)
                         if response.msg.playerData then
@@ -589,6 +596,9 @@ function GameUIGacha:OnCountInfoChanged()
     end
 end
 return GameUIGacha
+
+
+
 
 
 
