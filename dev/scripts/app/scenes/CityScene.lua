@@ -207,11 +207,6 @@ end
 function CityScene:ChangeTerrain()
     self:GetSceneLayer():ChangeTerrain()
 end
-function CityScene:CreateArrowLayer()
-    local arrow_layer = display.newLayer():addTo(self, 2)
-    arrow_layer:setTouchSwallowEnabled(false)
-    return arrow_layer
-end
 function CityScene:EnterEditMode()
     self:GetSceneLayer():EnterEditMode()
 end
@@ -234,7 +229,7 @@ function CityScene:OnTowersChanged(old_towers, new_towers)
 end
 function CityScene:OnGateChanged(old_walls, new_walls)
 end
-function CityScene:OnSceneScale(scene_layer)
+function CityScene:OnSceneScale(s)
 end
 function CityScene:OnTouchBegan(pre_x, pre_y, x, y)
     if not DEBUG_LOCAL then return end
@@ -287,15 +282,15 @@ function CityScene:OnTouchMove(pre_x, pre_y, x, y)
     CityScene.super.OnTouchMove(self, pre_x, pre_y, x, y)
 end
 
-function CityScene:InsertMarkBuildings(building)
-    table.insert(self.mark_buildings, building)
-end
-function CityScene:GetMarkBuildings()
-    return self.mark_buildings
-end
-function CityScene:RemoveAllMarkBuildings()
-    self.mark_buildings = {}
-end
+-- function CityScene:InsertMarkBuildings(building)
+--     table.insert(self.mark_buildings, building)
+-- end
+-- function CityScene:GetMarkBuildings()
+--     return self.mark_buildings
+-- end
+-- function CityScene:RemoveAllMarkBuildings()
+--     self.mark_buildings = {}
+-- end
 
 
 

@@ -232,11 +232,22 @@ function WidgetUpgradeMilitaryTech:PopNotSatisfyDialog(upgrade_listener,results)
     for k,v in pairs(results) do
         message = message .. v.."\n"
     end
+    local need_gems = self.tech:GetUpgradeGems()
+    local current_gem = User:GetGemResource():GetValue()
     UIKit:showMessageDialog(_("陛下"),message)
         :CreateOKButton({
-            listener =  upgrade_listener
+            listener =  current_gem < need_gems and function ()
+                UIKit:showMessageDialog(_("陛下"),_("金龙币不足"))
+                    :CreateOKButton({
+                        listener =  function ()
+                            UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                            self:LeftButtonClicked()
+                        end
+                    })
+            end
+            or upgrade_listener
         })
-        :CreateNeeds({value = self.tech:GetUpgradeGems()})
+        :CreateNeeds({value = need_gems})
 end
 function WidgetUpgradeMilitaryTech:OnMilitaryTechsDataChanged(city,changed_map)
     for k,v in pairs(changed_map) do
@@ -256,6 +267,8 @@ function WidgetUpgradeMilitaryTech:OnMilitaryTechsDataChanged(city,changed_map)
     end
 end
 return WidgetUpgradeMilitaryTech
+
+
 
 
 
