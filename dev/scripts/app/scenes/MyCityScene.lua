@@ -21,7 +21,6 @@ function MyCityScene:ctor(...)
     self.util_node = display.newNode():addTo(self)
     MyCityScene.super.ctor(self, ...)
     self.clicked_callbacks = {}
-    self.mark_buildings = {}
 end
 function MyCityScene:onEnter()
     MyCityScene.super.onEnter(self)
@@ -168,15 +167,6 @@ function MyCityScene:GetLockButtonsByBuildingType(building_type)
     end)
     assert(lock_button)
     return lock_button
-end
-function MyCityScene:InsertMarkBuildings(building)
-    table.insert(self.mark_buildings, building)
-end
-function MyCityScene:GetMarkBuildings()
-    return self.mark_buildings
-end
-function MyCityScene:RemoveAllMarkBuildings()
-    self.mark_buildings = {}
 end
 
 
