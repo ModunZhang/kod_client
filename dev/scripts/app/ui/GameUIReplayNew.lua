@@ -301,12 +301,12 @@ local function newDragonBattle(replay_ui, dragonAttack, dragonAttackLevel, drago
     dragon_battle.result = ccs.Armature:create("paizi"):addTo(dragon_battle, 100):hide()
 
     local left_bone = dragon_battle:getBone("Layer4")
-    local left_dragon = newDragon(replay_ui, dragonAttack.dragonType, dragonAttackLevel):addTo(left_bone):pos(-360, -50)
+    local left_dragon = newDragon(replay_ui, dragonAttack.type, dragonAttackLevel):addTo(left_bone):pos(-360, -50)
     left_bone:addDisplay(left_dragon, 0)
     left_bone:changeDisplayWithIndex(0, true)
 
     local right_bone = dragon_battle:getBone("Layer5")
-    local right_dragon = newDragon(replay_ui, dragonDefence.dragonType, dragonDefenceLevel):TurnLeft():addTo(right_bone):pos(238, -82)
+    local right_dragon = newDragon(replay_ui, dragonDefence.type, dragonDefenceLevel):TurnLeft():addTo(right_bone):pos(238, -82)
     right_bone:addDisplay(right_dragon, 0)
     right_bone:changeDisplayWithIndex(0, true)
     function dragon_battle:GetAttackDragon()
@@ -440,7 +440,7 @@ local report_ = {
     GetDefenceDragonLevel = function() return 2 end,
     GetFightAttackDragonRoundData = function()
         return {
-            dragonType = "redDragon",
+            type = "redDragon",
             hp = 1000,
             hpDecreased = 90,
             hpMax = 1000,
@@ -449,7 +449,7 @@ local report_ = {
     end,
     GetFightDefenceDragonRoundData = function()
         return {
-            dragonType = "blackDragon",
+            type = "blackDragon",
             hp = 1000,
             hpDecreased = 90,
             hpMax = 1000,
@@ -550,6 +550,7 @@ local report_ = {
     IsFightWall = function() return false end,
     IsPveBattle = function() return false end,
     GetAttackTargetTerrain = function() return "iceField" end,
+    IsAttackCamp = function() return true end,
 }
 
 
@@ -1082,6 +1083,8 @@ function GameUIReplayNew:PlayDragonBattle()
     local attack_dragon_level = self.report:GetAttackDragonLevel()
     local defend_dragon = self.report:GetFightDefenceDragonRoundData()
     local defend_dragon_level = self.report:GetDefenceDragonLevel()
+
+    dump(attack_dragon)
 
     self.dragon_battle = newDragonBattle(self, attack_dragon, attack_dragon_level, defend_dragon, defend_dragon_level)
         :addTo(self.ui_map.dragon_node):align(display.CENTER, 275, 155)
