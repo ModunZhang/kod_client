@@ -283,12 +283,12 @@ function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
     end
 end
 local ui_map = setmetatable({
-    ruins          = {"GameUIBuild"               ,                           },
-    keep           = {"GameUIKeep"                ,        "upgrade",         },
+    ruins          = {"GameUIFteBuild"            ,                           },
+    keep           = {"GameUIFteKeep"             ,        "upgrade",         },
     watchTower     = {"GameUIWatchTower"          ,                           },
     warehouse      = {"GameUIWarehouse"           ,       "resource",         },
-    dragonEyrie    = {"GameUIDragonEyrieMain"     ,              nil, "dragon"},
-    barracks       = {"GameUIBarracks"            ,        "recruit",         },
+    dragonEyrie    = {"GameUIFteDragonEyrieMain"  ,              nil, "dragon"},
+    barracks       = {"GameUIFteBarracks"         ,        "recruit",         },
     hospital       = {"GameUIHospital"            ,           "heal",         },
     academy        = {"GameUIAcademy"             ,     "technology",         },
     materialDepot  = {"GameUIMaterialDepot"       ,           "info",         },
@@ -305,7 +305,7 @@ local ui_map = setmetatable({
     stable         = {"GameUIMilitaryTechBuilding",           "tech",         },
     workshop       = {"GameUIMilitaryTechBuilding",           "tech",         },
     dwelling       = {"GameUIDwelling"            ,        "citizen",         },
-    farmer         = {"GameUIResource"            ,},
+    farmer         = {"GameUIFteResource"         ,},
     woodcutter     = {"GameUIResource"            ,},
     quarrier       = {"GameUIResource"            ,},
     miner          = {"GameUIResource"            ,},
@@ -494,7 +494,7 @@ function MyCityScene:PromiseOfHateDragonAndDefence()
     end):next(function()
         return self:PromiseOfClickBuilding(18, 8)
     end):next(function()
-        return UIKit:PromiseOfOpen("GameUIDragonEyrieMain")
+        return UIKit:PromiseOfOpen("GameUIFteDragonEyrieMain")
     end):next(function(ui)
         return ui:PromiseOfFte()
     end)
@@ -512,7 +512,7 @@ end
 function MyCityScene:PromiseOfBuildHouse(x, y, house_type, msg)
     return self:PromiseOfClickBuilding(x, y, house_type, msg)
         :next(function()
-            return UIKit:PromiseOfOpen("GameUIBuild")
+            return UIKit:PromiseOfOpen("GameUIFteBuild")
         end):next(function(ui)
         return ui:PromiseOfFte(house_type)
         end)
@@ -529,7 +529,7 @@ end
 function MyCityScene:PromiseOfUpgradeKeep()
     return self:PromiseOfClickBuilding(8, 8)
         :next(function()
-            return UIKit:PromiseOfOpen("GameUIKeep")
+            return UIKit:PromiseOfOpen("GameUIFteKeep")
         end):next(function(ui)
         return ui:PromiseOfFte()
         end)
@@ -578,7 +578,7 @@ function MyCityScene:PromiseOfRecruitSoldier()
     end):next(function()
         return self:PromiseOfClickBuilding(6, 29)
     end):next(function()
-        return UIKit:PromiseOfOpen("GameUIBarracks")
+        return UIKit:PromiseOfOpen("GameUIFteBarracks")
     end):next(function(ui)
         return ui:PromiseOfFte()
     end)
@@ -619,7 +619,7 @@ function MyCityScene:PromiseOfUpgradeKeepTo5()
     return self:PromiseOfClickBuilding(8, 8, nil, _("将城堡升级到5级"), {
         direction = "up"
     }):next(function()
-        return UIKit:PromiseOfOpen("GameUIKeep")
+        return UIKit:PromiseOfOpen("GameUIFteKeep")
     end):next(function(ui)
         return ui:PromiseOfFte()
     end)

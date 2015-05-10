@@ -5,6 +5,7 @@ local WidgetUseItems = import("..widget.WidgetUseItems")
 local WidgetPVEKeel = import("..widget.WidgetPVEKeel")
 local WidgetPVECamp = import("..widget.WidgetPVECamp")
 local WidgetPVEMiner = import("..widget.WidgetPVEMiner")
+local WidgetPVEFteMiner = import("..widget.WidgetPVEFteMiner")
 local WidgetPVEFarmer = import("..widget.WidgetPVEFarmer")
 local WidgetPVEObelisk = import("..widget.WidgetPVEObelisk")
 local WidgetPVEQuarrier = import("..widget.WidgetPVEQuarrier")
@@ -160,7 +161,7 @@ local building_ui_map = setmetatable({
     [PVEDefine.START_AIRSHIP]      = WidgetPVEStartAirship,
     [PVEDefine.WOODCUTTER]         = WidgetPVEWoodcutter,
     [PVEDefine.QUARRIER]           = WidgetPVEQuarrier,
-    [PVEDefine.MINER]              = WidgetPVEMiner,
+    [PVEDefine.MINER]              = WidgetPVEFteMiner,
     [PVEDefine.FARMER]             = WidgetPVEFarmer,
     [PVEDefine.CAMP]               = WidgetPVECamp,
     [PVEDefine.CRASHED_AIRSHIP]    = WidgetPVECrashedAirship,
@@ -344,7 +345,7 @@ function PVEScene:PromiseOfFindNpc()
         :TurnDown():align(display.BOTTOM_CENTER, x + 45, y + 80)
 
     return promise.all(
-        UIKit:PromiseOfOpen("WidgetPVEMiner"),
+        UIKit:PromiseOfOpen("WidgetPVEFteMiner"),
         self:PromiseOfMoveTo(npc_x, npc_y)
     ):next(function(results)
         self:GetSceneLayer():GetFteLayer():removeAllChildren()

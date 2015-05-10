@@ -1170,6 +1170,7 @@ local WidgetFteMark = import("..widget.WidgetFteMark")
 function WidgetUseItems:PromiseOfOpen(item_type)
     local p = promise.new()
     WidgetUseItems.open_data = { item_type = item_type, open_callback = function(ui)
+            ui.__type  = UIKit.UITYPE.BACKGROUND
             function ui:Find()
                 return self.list.items_[1]:getContent().use_btn
             end

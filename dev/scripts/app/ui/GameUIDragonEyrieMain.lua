@@ -8,8 +8,6 @@ local window = import("..utils.window")
 local GameUINpc = import(".GameUINpc")
 local TutorialLayer = import(".TutorialLayer")
 local WidgetFteArrow = import("..widget.WidgetFteArrow")
-local promise = import("..utils.promise")
-local cocos_promise = import("..utils.cocos_promise")
 local StarBar = import(".StarBar")
 local DragonManager = import("..entity.DragonManager")
 local WidgetDragons = import("..widget.WidgetDragons")
@@ -634,75 +632,7 @@ function GameUIDragonEyrieMain:OnDragonDeathSpeedUpClicked()
     UIKit:newGameUI("GameUIDragonDeathSpeedUp", self.dragon_manager,self:GetCurrentDragon():Type()):AddToCurrentScene(true)
 end
 
---fte
-local check = import("..fte.check")
-local mockData = import("..fte.mockData")
-local DiffFunction = import("..utils.DiffFunction")
-function GameUIDragonEyrieMain:FindHateBtn()
-    return self.hate_button
-end
-function GameUIDragonEyrieMain:FindGarrisonBtn()
-    return self.garrison_button
-end
-function GameUIDragonEyrieMain:PromiseOfFte()
-    local p = cocos_promise.defer()
-    if not check("HateDragon") then
-        p:next(function()
-            return self:PromiseOfHate()
-        end)
-    end
-    if not check("DefenceDragon") then
-        p:next(function()
-            return GameUINpc:PromiseOfSayImportant(
-                {words = _("不可思议，传说是真的？！觉醒者过让能够号令龙族。。。大人您真是厉害！"), brow = "shy"}
-            ):next(function()
-                return GameUINpc:PromiseOfLeave()
-            end):next(function()
-                return self:PormiseOfDefence()
-            end):next(function()
-                return self:PromsieOfExit("GameUIDragonEyrieMain")
-            end)
-        end)
-    end
-    return p
-end
-function GameUIDragonEyrieMain:PromiseOfHate()
-    local r = self:FindHateBtn():getCascadeBoundingBox()
-    self:GetFteLayer():SetTouchObject(self:FindHateBtn())
-    self:GetFteLayer().arrow = WidgetFteArrow.new(_("点击按钮：孵化"))
-        :addTo(self:GetFteLayer()):TurnUp():pos(r.x + r.width/2, r.y - 40)
 
-    self:FindHateBtn():removeEventListenersByEvent("CLICKED_EVENT")
-    self:FindHateBtn():onButtonClicked(function()
-        self:FindHateBtn():setButtonEnabled(false)
-
-        mockData.HateDragon()
-    end)
-
-    return self.dragon_manager:PromiseOfHate():next(function()
-        self:GetFteLayer():removeFromParent()
-    end)
-end
-function GameUIDragonEyrieMain:PormiseOfDefence()
-    self:FindGarrisonBtn():setTouchSwallowEnabled(true)
-    self:GetFteLayer():SetTouchObject(self:FindGarrisonBtn())
-
-    self:FindGarrisonBtn():removeEventListenersByEvent("CLICKED_EVENT")
-    self:FindGarrisonBtn():onButtonClicked(function()
-        self:FindGarrisonBtn():setButtonEnabled(false)
-
-        mockData.DefenceDragon()
-    end)
-
-    local r = self:FindGarrisonBtn():getCascadeBoundingBox()
-    self:GetFteLayer().arrow = WidgetFteArrow.new(_("点击设置：巨龙在城市驻防，如果敌军入侵，巨龙会自动带领士兵进行防御"))
-        :addTo(self:GetFteLayer()):TurnUp(false):align(display.LEFT_TOP, r.x, r.y - 30)
-
-    return self.dragon_manager:PromiseOfDefence():next(function()
-        self:GetFteLayer():removeFromParent()
-        self:FindGarrisonBtn():setButtonEnabled(false)
-    end)
-end
 return GameUIDragonEyrieMain
 
 
