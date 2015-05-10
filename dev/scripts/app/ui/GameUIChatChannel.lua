@@ -458,7 +458,7 @@ function GameUIChatChannel:GetBlackListItem(chat,width)
     local bg = display.newScale9Sprite("chat_setting_item_bg.png")
     bg:size(width,bg:getContentSize().height)
     --content
-    local iconBg = UIKit:GetPlayerCommonIcon():scale(0.8):addTo(bg,2):pos(60,math.floor(bg:getContentSize().height/2))
+    local iconBg = UIKit:GetPlayerCommonIcon(chat.icon):scale(0.8):addTo(bg,2):pos(60,math.floor(bg:getContentSize().height/2))
     local nameLabel = cc.ui.UILabel.new({
         UILabelType = 2,
         text = chat.name or "player" ,
@@ -625,10 +625,11 @@ function GameUIChatChannel:CreatePlayerMenu(event,chat)
             color= 0xffedae
         }))
         :onButtonClicked(function(event)
-            self:GetChatManager():AddBlockChat(chat)
+            if self:GetChatManager():AddBlockChat(chat) then
+                UIKit:showMessageDialog(nil,_("屏蔽成功!"))
+                self:RefreshListView()
+            end
             menuLayer:removeFromParent(true)
-            self:RefreshListView()
-            UIKit:showMessageDialog(nil,_("屏蔽成功"))
         end)
         :align(display.LEFT_BOTTOM,  window.left + 258,window.bottom +  2)
         :addTo(menuLayer)
@@ -638,14 +639,14 @@ function GameUIChatChannel:CreatePlayerMenu(event,chat)
     shieldButton:setButtonLabelOffset(0,-30)
 
     --chat_report
-    local reportButton = WidgetPushButton.new({normal="chat_button_n_124x92.png",pressed="chat_button_h_124x92.png",disabled = "chat_button_d_124x92.png"}, {scale9 = false})
+    local reportButton = WidgetPushButton.new({normal="chat_button_d_124x92.png",pressed="chat_button_d_124x92.png",disabled = "chat_button_d_124x92.png"}, {scale9 = false})
         :setButtonLabel("normal", UIKit:commonButtonLable({
             text = _("举报"),
             size = 16,
             color= 0xffedae
         }))
         :onButtonClicked(function(event)
-            menuLayer:removeFromParent(true)
+            -- menuLayer:removeFromParent(true)
         end)
         :align(display.LEFT_BOTTOM, window.left + 382,window.bottom +  2)
         :addTo(menuLayer)
@@ -653,7 +654,6 @@ function GameUIChatChannel:CreatePlayerMenu(event,chat)
     local label = reportButton:getButtonLabel()
     display.newSprite("chat_report_62x56.png"):align(display.CENTER,label:getPositionX(), label:getPositionY()+10):addTo(reportButton)
     reportButton:setButtonLabelOffset(0,-30)
-    reportButton:setButtonEnabled(false)
     --chat_mail
     local mailButton = WidgetPushButton.new({normal="chat_button_n_124x92.png",pressed="chat_button_h_124x92.png"}, {scale9 = false})
         :setButtonLabel("normal",  UIKit:commonButtonLable({
