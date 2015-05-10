@@ -164,18 +164,8 @@ local check_map = {
 }
 
 
-local function is_select_terrain()
-    for k,v in pairs(DataManager:getUserData().dragons) do
-        if v.star > 0 then
-            return true
-        end
-    end
-end
-
 return function(key)
-    if key == "SelectTerrain" then
-        return not is_select_terrain()
-    elseif key == "ALL" then
+    if key == "ALL" then
         -- local count = 0
         -- for k,v in pairs(DataManager:getUserData().buildings) do
         --     if v.level > 1 then
@@ -185,8 +175,8 @@ return function(key)
         -- return count > 1
         return false
     end
-    return true
-    -- return not cc.UserDefault:getInstance():getStringForKey(key)
+    local real_key = DataManager:getUserData()._id.."_"..key
+    return cc.UserDefault:getInstance():getBoolForKey(real_key)
 end
 
 

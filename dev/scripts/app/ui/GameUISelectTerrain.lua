@@ -29,31 +29,12 @@ function GameUISelectTerrain:OnMoveInStage()
 
     self.ui_map.select:onButtonClicked(function(event)
         self.ui_map.select:setButtonEnabled(false)
-        if self.terrainType == "grassLand" then
-            NetManager:getChangeToGrassPromise():done(function()
-                if self.select_promise then
-                    self.select_promise:resolve()
-                end
-            end):fail(function()
-                self.ui_map.select:setButtonEnabled(true)
-            end)
-        elseif self.terrainType == "desert" then
-            NetManager:getChangeToDesertPromise():done(function()
-                if self.select_promise then
-                    self.select_promise:resolve()
-                end
-            end):fail(function()
-                self.ui_map.select:setButtonEnabled(true)
-            end)
-        elseif self.terrainType == "iceField" then
-            NetManager:getChangeToIceFieldPromise():done(function()
-                if self.select_promise then
-                    self.select_promise:resolve()
-                end
-            end):fail(function()
-                self.ui_map.select:setButtonEnabled(true)
-            end)
-        end
+        -- self.terrainType
+        NetManager:initPlayerData("desert"):done(function()
+                self.select_promise:resolve()
+        end):fail(function()
+            self.ui_map.select:setButtonEnabled(true)
+        end)
     end)
 end
 local terrain_map = {
@@ -173,6 +154,7 @@ function GameUISelectTerrain:BuildUI()
 end
 
 return GameUISelectTerrain
+
 
 
 

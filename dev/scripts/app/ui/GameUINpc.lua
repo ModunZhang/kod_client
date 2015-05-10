@@ -74,6 +74,7 @@ function GameUINpc:ctor(...)
     GameUINpc.super.ctor(self)
     self.unenable = true
     self:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+        -- dump(event)
         if event.name == "ended" and not self.unenable then
             self:OnClick()
         end

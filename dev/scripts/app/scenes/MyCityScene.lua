@@ -65,6 +65,9 @@ function MyCityScene:onEnterTransitionFinish()
     self:RunFte()
 end
 function MyCityScene:CreateHomePage()
+    if UIKit:GetUIInstance("GameUIHome") then
+        UIKit:GetUIInstance("GameUIHome"):removeFromParent()
+    end
     local home = UIKit:newGameUI('GameUIHome', self:GetCity()):AddToScene(self)
     home:setLocalZOrder(10)
     home:setTouchSwallowEnabled(false)
@@ -344,225 +347,143 @@ end
 
 
 
+local check = import("..fte.check")
 local mockData = import("..fte.mockData")
 function MyCityScene:RunFte()
-    if not global_fte then return end
+    if not GLOBAL_FTE then return end
     self:GetFteLayer():Enable()
     cocos_promise.defer():next(function()
         self:GetFteLayer():Disable()
-        return self:PromiseOfHateDragonAndDefence()
-    end):next(function()
-        return self:PromiseOfBuildFirstHouse(18, 12, "dwelling")
-    end):next(function()
-        return self:GetHomePage():PromiseOfFteFreeSpeedUp()
-    end):next(function()
-        return self:PromiseOfFirstUpgradeKeep()
-    end):next(function()
-        return self:GetHomePage():PromiseOfFteInstantSpeedUp()
-    end):next(function()
-        return self:PromiseOfUnlockBuilding("barracks")
-    end):next(function()
-        return self:GetHomePage():PromiseOfFteInstantSpeedUp()
-    end):next(function()
-        return self:PromiseOfRecruitSoldier("swordsman")
-    end):next(function()
-        return self:PromiseOfBuildHouse(8, 22, "farmer")
-    end):next(function()
-        return self:GetHomePage():PromiseOfFteInstantSpeedUp()
-    end):next(function()
-        return self:PromiseOfUpgradeByBuildingType(8, 22, "farmer", _("点击农夫小屋, 将其升级到等级2"))
-    end):next(function()
-        return self:GetHomePage():PromiseOfFteInstantSpeedUp()
-    end)
-        -- :next(function()
-        --     return self:PromiseOfExplorePve()
-        -- end)
-        :next(function()
-            return self:PromiseOfActiveVip()
-        end):next(function()
-        return self:PromiseOfUpgradeKeepTo5()
-        end):next(function()
-        return self:GetHomePage():PromiseOfFteInstantSpeedUp()
-        end):next(function()
-        return self:PromiseOfUpgradeKeepTo5()
-        end):next(function()
-        return self:GetHomePage():PromiseOfFteInstantSpeedUp()
-        end):next(function()
-        return self:PromiseOfUpgradeKeepTo5()
-        end):next(function()
-        return self:GetHomePage():PromiseOfFteInstantSpeedUp()
-        end):next(function()
-        return self:PromiseOfUnlockHospital()
-        end):next(function()
-        return self:GetHomePage():PromiseOfFteInstantSpeedUp()
-        end):next(function()
-        return self:PromiseOfUnlockBuilding("academy")
-        end):next(function()
-        return self:GetHomePage():PromiseOfFteInstantSpeedUp()
-        end):next(function()
-        return self:PromiseOfUnlockBuilding("materialDepot")
-        end):next(function()
-        return self:GetHomePage():PromiseOfFteInstantSpeedUp()
-        end):next(function()
-        return self:PromiseOfBuildWoodcutter()
-        end):next(function()
-        return self:GetHomePage():PromiseOfFteInstantSpeedUp()
-        end):next(function()
-        return self:PromiseOfBuildHouse(28, 22, "quarrier", _("建造石匠小屋"))
-        end):next(function()
-        return self:GetHomePage():PromiseOfFteInstantSpeedUp()
-        end):next(function()
-        return self:PromiseOfBuildHouse(28, 12, "miner", _("建造矿工小屋"))
-        end):next(function()
-        return self:GetHomePage():PromiseOfFteInstantSpeedUp()
-        end)
-end
-function MyCityScene:PromiseOfFte()
-    if check("ALL") then
-        return
-    end
-    local root_promise = cocos_promise.defer()
-    root_promise:next(function()
-        if check("HateDragon") or
-            check("DefenceDragon") then
+        if not check("HateDragon") or 
+            not check("DefenceDragon") then
             return self:PromiseOfHateDragonAndDefence()
         end
     end):next(function()
-        if check("BuildDwelling_18x12") then
+        if not check("BuildHouseAt_3_3") then
             return self:PromiseOfBuildFirstHouse(18, 12, "dwelling")
         end
     end):next(function()
-        if check("FreeSpeedUpDwelling_18x12") then
+        if not check("FinishBuildHouseAt_3_1") then
             return self:GetHomePage():PromiseOfFteFreeSpeedUp()
         end
     end):next(function()
-        if check("UpgradeKeep1") then
+        if not check("UpgradeBuildingTo_keep_2") then
             return self:PromiseOfFirstUpgradeKeep()
         end
     end):next(function()
-        if check("FreeSpeedUpKeep1") then
+        if not check("FinishUpgradingBuilding_keep_2") then
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
-        if check("UnlockBarracks0") then
+        if not check("UpgradeBuildingTo_barracks_1") then
             return self:PromiseOfUnlockBuilding("barracks")
         end
     end):next(function()
-        if check("SpeedupBarracks0") then
+        if not check("FinishUpgradingBuilding_barracks_1") then
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
-        if check("RecruitSoldiers") then
+        if not check("RecruitSoldier_swordsman_10") then
             return self:PromiseOfRecruitSoldier("swordsman")
         end
     end):next(function()
-        if check("BuildFarmer_8x22") then
+        if not check("BuildHouseAt_5_3") then
             return self:PromiseOfBuildHouse(8, 22, "farmer")
         end
     end):next(function()
-        if check("FreeSpeedUpFarmer_8x22") then
+        if not check("FinishBuildHouseAt_5_1") then
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
-        if check("UpgradeFarmer1_8x22") then
+        if not check("UpgradeHouseTo_5_3_2") then
             return self:PromiseOfUpgradeByBuildingType(8, 22, "farmer", _("点击农夫小屋, 将其升级到等级2"))
         end
     end):next(function()
-        if check("FreeSpeedUpFarmer1_8x22") then
+        if not check("FinishBuildHouseAt_5_2") then
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
-        if check("ExplorePve") then
+        if not check("FightWithNpc") then
             return self:PromiseOfExplorePve()
         end
     end):next(function()
-        if check("ActiveVip") then
+        if not check("ActiveVip") then
             return self:PromiseOfActiveVip()
         end
     end):next(function()
-        if check("UpgradeKeep2") then
+        if not check("UpgradeBuildingTo_keep_3") then
             return self:PromiseOfUpgradeKeepTo5()
         end
     end):next(function()
-        if check("FreeSpeedUpKeep2") then
+        if not check("FinishUpgradingBuilding_keep_3") then
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
-        if check("UpgradeKeep3") then
+        if not check("UpgradeBuildingTo_keep_4") then
             return self:PromiseOfUpgradeKeepTo5()
         end
     end):next(function()
-        if check("FreeSpeedUpKeep3") then
+        if not check("FinishUpgradingBuilding_keep_4") then
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
-        if check("UpgradeKeep4") then
+        if not check("UpgradeBuildingTo_keep_5") then
             return self:PromiseOfUpgradeKeepTo5()
         end
     end):next(function()
-        if check("FreeSpeedUpKeep4") then
+        if not check("FinishUpgradingBuilding_keep_5") then
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
-        if check("UnlockHospital0") then
-            return GameUINpc:PromiseOfSayImportant({words = _("这还差不多！现在让我们一口气来解锁{医院}，{学院}，{材料库房}。。。"), brow = "smile"}):next(function()
-                return GameUINpc:PromiseOfLeave()
-            end):next(function()
-                return self:PromiseOfUnlockBuilding("hospital")
-            end)
+        if not check("UpgradeBuildingTo_hospital_1") then
+            return self:PromiseOfUnlockHospital()
         end
     end):next(function()
-        if check("SpeedupHospital0") then
+        if not check("FinishUpgradingBuilding_hospital_1") then
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
-        if check("UnlockAcademy0") then
+        if not check("UpgradeBuildingTo_academy_1") then
             return self:PromiseOfUnlockBuilding("academy")
         end
     end):next(function()
-        if check("SpeedupAcademy0") then
+        if not check("FinishUpgradingBuilding_academy_1") then
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
-        if check("UnlockMaterialDepot0") then
+        if not check("UpgradeBuildingTo_materialDepot_1") then
             return self:PromiseOfUnlockBuilding("materialDepot")
         end
     end):next(function()
-        if check("SpeedupMaterialDepot0") then
+        if not check("FinishUpgradingBuilding_materialDepot_1") then
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
-        if check("BuildWoodcutter_18x22") then
-            return GameUINpc:PromiseOfSayImportant({words = _("城市是不是一下繁荣起来了呢？建造{木工小屋}，{石匠小屋}，{旷工小屋}，就算领主你不在，资源也会不停的增长。。。")}):next(function()
-                return GameUINpc:PromiseOfLeave()
-            end):next(function()
-                return self:PromiseOfBuildHouse(18, 22, "woodcutter", _("建造木工小屋"))
-            end)
+        if not check("BuildHouseAt_6_3") then
+            return self:PromiseOfBuildWoodcutter()
         end
     end):next(function()
-        if check("FreeSpeedUpWoodcutter_18x22") then
+        if not check("FinishBuildHouseAt_6_1") then
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
-        if check("BuildQuarrier_28x22") then
+        if not check("BuildHouseAt_7_3") then
             return self:PromiseOfBuildHouse(28, 22, "quarrier", _("建造石匠小屋"))
         end
     end):next(function()
-        if check("FreeSpeedUpQuarrier_28x22") then
+        if not check("FinishBuildHouseAt_7_1") then
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
-        if check("BuildMiner_28x12") then
+        if not check("BuildHouseAt_8_3") then
             return self:PromiseOfBuildHouse(28, 12, "miner", _("建造矿工小屋"))
         end
     end):next(function()
-        if check("FreeSpeedUpMiner_28x12") then
+        if not check("FinishBuildHouseAt_8_1") then
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
-        if check("GetRewards") then
-            return self:PromiseOfGetRewards()
-        end
+        return self:PromiseOfFteEnd()
     end)
 end
 function MyCityScene:PromiseOfHateDragonAndDefence()
@@ -649,7 +570,7 @@ function MyCityScene:PromiseOfUnlockBuilding(building_type)
         return ui:PormiseOfFte()
     end)
 end
-function MyCityScene:PromiseOfRecruitSoldier(soldier_type)
+function MyCityScene:PromiseOfRecruitSoldier()
     return GameUINpc:PromiseOfSayImportant(
         {words = _("年轻人，带兵打仗可不是过家家，如果你信得过我这把老骨头，就让我来教教你。。。"), npc = "man"}
     ):next(function()
@@ -721,6 +642,23 @@ function MyCityScene:PromiseOfBuildWoodcutter()
         return self:PromiseOfBuildHouse(18, 22, "woodcutter", _("建造木工小屋"))
     end)
 end
+local FTE_MARK_TAG = 120
+function MyCityScene:PromiseOfFteEnd()
+    local r = self:GetHomePage().quest_bar_bg:getCascadeBoundingBox()
+    WidgetFteMark.new():addTo(self, 4000, FTE_MARK_TAG):Size(r.width, r.height)
+    :pos(r.x + r.width/2, r.y + r.height/2)
+
+    GameUINpc:PromiseOfSayImportant(
+        {words = _("看来大人你已经能够顺利接管这座城市了。。。如果不知道该干什么可以点击左上角的推荐任务")}
+    ):next(function()
+        self:removeChildByTag(FTE_MARK_TAG)
+        return GameUINpc:PromiseOfSayImportant({words = _("完成任务后，可以点击任务按钮，我为大人准备了丰厚的奖赏。。。")})
+    end):next(function()
+        GLOBAL_FTE = false
+        app:ReloadUserData()
+        app:EnterMyCityScene()
+    end)
+end
 
 
 function MyCityScene:PromiseOfGetRewards()
@@ -752,39 +690,7 @@ function MyCityScene:PromiseOfGetRewards()
 end
 
 
-
 return MyCityScene
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

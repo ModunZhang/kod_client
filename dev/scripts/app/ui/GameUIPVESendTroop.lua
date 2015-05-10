@@ -681,40 +681,25 @@ function GameUIPVESendTroop:PormiseOfFte()
     end)
 end
 function GameUIPVESendTroop:PromiseOfMax()
-    if self:GetFteLayer().arrow then
-        self:GetFteLayer().arrow:removeFromParent()
-        self:GetFteLayer().arrow = nil
-    end
-
     local r = self.max_btn:getCascadeBoundingBox()
-    self:GetFteLayer().arrow = WidgetFteArrow.new(_("点击最大"))
-        :addTo(self:GetFteLayer()):TurnLeft()
-        :align(display.LEFT_CENTER, r.x + r.width, r.y + r.height/2)
-    self:GetFteLayer():SetTouchObject(self.max_btn):Enable()
+    self:GetFteLayer():SetTouchObject(self.max_btn)
 
-    local p = promise.new(function()
-        if self:GetFteLayer().arrow then
-            self:GetFteLayer().arrow:removeFromParent()
-        end
-        self:GetFteLayer().arrow = nil
-        self:GetFteLayer():Reset()
-    end)
+    WidgetFteArrow.new(_("点击最大")):addTo(self:GetFteLayer()):TurnLeft()
+        :align(display.LEFT_CENTER, r.x + r.width, r.y + r.height/2)
+
+    local p = promise.new()
     self.max_btn:onButtonClicked(function()
+        self:GetFteLayer():removeFromParent()
         p:resolve()
     end)
     return p
 end
 function GameUIPVESendTroop:PromiseOfAttack()
-    if self:GetFteLayer().arrow then
-        self:GetFteLayer().arrow:removeFromParent()
-        self:GetFteLayer().arrow = nil
-    end
-
     local r = self.march_btn:getCascadeBoundingBox()
-    self:GetFteLayer().arrow = WidgetFteArrow.new(_("点击进攻"))
-        :addTo(self:GetFteLayer()):TurnRight()
-        :align(display.RIGHT_CENTER, r.x - 20, r.y + r.height/2)
-    self:GetFteLayer():SetTouchObject(self.march_btn):Enable()
+    self:GetFteLayer():SetTouchObject(self.march_btn)
+
+    WidgetFteArrow.new(_("点击进攻")):addTo(self:GetFteLayer()):TurnRight()
+    :align(display.RIGHT_CENTER, r.x - 20, r.y + r.height/2)
 
     return UIKit:PromiseOfOpen("GameUIReplayNew")
 end

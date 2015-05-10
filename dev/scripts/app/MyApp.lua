@@ -59,8 +59,6 @@ local function transition_(scene, status)
 end
 
 
-global_fte = false
-
 
 function MyApp:ctor()
     MyApp.super.ctor(self)
@@ -299,6 +297,12 @@ function MyApp:pushScene(sceneName, args, transitionType, time, more)
     local sceneClass = require(scenePackageName)
     local scene = sceneClass.new(unpack(checktable(args)))
     display.pushScene(scene, transitionType, time, more)
+end
+
+function MyApp:ReloadUserData()
+    local InitGame = import("app.service.InitGame")
+    assert(DataManager:hasUserData())
+    InitGame(DataManager:getUserData())
 end
 
 function MyApp:getSupportMailFormat(category,logMsg)
