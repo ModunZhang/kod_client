@@ -305,8 +305,17 @@ function MyApp:pushScene(sceneName, args, transitionType, time, more)
     local scene = sceneClass.new(unpack(checktable(args)))
     display.pushScene(scene, transitionType, time, more)
 end
-
-function MyApp:ReloadUserData()
+local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
+function MyApp:EnterUserMode()
+    GLOBAL_FTE = false
+    if DataManager.handle__ then
+        scheduler.unscheduleGlobal(DataManager.handle__)
+        DataManager.handle__ = nil
+    end
+    if DataManager.handle_soldier__ then
+        scheduler.unscheduleGlobal(DataManager.handle_soldier__)
+        DataManager.handle_soldier__ = nil
+    end
     local InitGame = import("app.service.InitGame")
     assert(DataManager:hasUserData())
     InitGame(DataManager:getUserData())

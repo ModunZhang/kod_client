@@ -263,7 +263,9 @@ function GameUILoginBeta:login()
             if DataManager:getUserData().basicInfo.terrain == "__NONE__" then
   		        app:EnterFteScene()
             else
-                self:checkFte()
+                if GLOBAL_FTE then
+                    self:checkFte()
+                end
                 app:EnterMyCityScene()
             end
         end, 0.3)
@@ -514,8 +516,7 @@ function GameUILoginBeta:checkFte()
     end
     if check("FinishBuildHouseAt_8_1") then
         mockData.FinishBuildHouseAt(8,1)
-        GLOBAL_FTE = false
-        app:ReloadUserData()
+        app:EnterUserMode()
     end
 end
 

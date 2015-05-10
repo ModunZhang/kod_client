@@ -654,8 +654,7 @@ function MyCityScene:PromiseOfFteEnd()
         self:removeChildByTag(FTE_MARK_TAG)
         return GameUINpc:PromiseOfSayImportant({words = _("完成任务后，可以点击任务按钮，我为大人准备了丰厚的奖赏。。。")})
     end):next(function()
-        GLOBAL_FTE = false
-        app:ReloadUserData()
+        app:EnterUserMode()
         app:EnterMyCityScene()
     end)
 end

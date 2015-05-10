@@ -9,8 +9,8 @@ local normal = GameDatas.Soldiers.normal
 
 local function mock(t)
     local delta = DiffFunction(DataManager:getFteData(), t)
-    -- dump(t, "t", 10)
-    -- dump(delta, "delta", 10)
+    LuaUtils:outputTable(t)
+    LuaUtils:outputTable(delta) 
     DataManager:setFteUserDeltaData(delta)
 end
 local function remove_global_shceduler()
@@ -70,7 +70,7 @@ local function FinishBuildHouseAt(building_location_id, level)
 end
 local function BuildHouseAt(building_location_id, house_location_id, house_type)
     local start_time = NetManager:getServerTime()
-    local buildTime = HouseLevelUp[house_type][1].buildTime
+    local buildTime = 10 or HouseLevelUp[house_type][1].buildTime 
     mock{
         {
             "houseEvents.0",
@@ -93,7 +93,9 @@ local function BuildHouseAt(building_location_id, house_location_id, house_type)
     }
 
     DataManager.handle__ = scheduler.performWithDelayGlobal(function()
-        if DataManager:getFteData().houseEvents and #DataManager:getFteData().houseEvents > 0 then
+        if DataManager:getFteData() and 
+            DataManager:getFteData().houseEvents and 
+            #DataManager:getFteData().houseEvents > 0 then
             FinishBuildHouseAt(building_location_id, 1)
         end
     end, buildTime)
@@ -105,7 +107,7 @@ local function BuildHouseAt(building_location_id, house_location_id, house_type)
 end
 local function UpgradeHouseTo(building_location_id, house_location_id, house_type, level)
     local start_time = NetManager:getServerTime()
-    local buildTime = HouseLevelUp[house_type][level].buildTime
+    local buildTime = 10 or HouseLevelUp[house_type][level].buildTime
     mock{
         {
             "houseEvents.0",
@@ -120,7 +122,9 @@ local function UpgradeHouseTo(building_location_id, house_location_id, house_typ
     }
 
     DataManager.handle__ = scheduler.performWithDelayGlobal(function()
-        if DataManager:getFteData().houseEvents and #DataManager:getFteData().houseEvents > 0 then
+        if DataManager:getFteData() and 
+            DataManager:getFteData().houseEvents and 
+            #DataManager:getFteData().houseEvents > 0 then
             FinishBuildHouseAt(building_location_id, level)
         end
     end, buildTime)
@@ -167,7 +171,7 @@ local function UpgradeBuildingTo(type, level)
     end
     assert(location_id)
     local start_time = NetManager:getServerTime()
-    local buildTime = BuildingLevelUp[type][level].buildTime
+    local buildTime = 10 or BuildingLevelUp[type][level].buildTime
     mock{
         {"buildingEvents.0",
             {
@@ -180,7 +184,9 @@ local function UpgradeBuildingTo(type, level)
     }
 
     DataManager.handle__ = scheduler.performWithDelayGlobal(function()
-        if DataManager:getFteData().buildingEvents and #DataManager:getFteData().buildingEvents > 0 then
+        if DataManager:getFteData() and
+            DataManager:getFteData().buildingEvents and 
+            #DataManager:getFteData().buildingEvents > 0 then
             FinishUpgradingBuilding(type, level)
         end
     end, buildTime)
@@ -226,9 +232,12 @@ local function RecruitSoldier(type_, count)
         }
     }
     DataManager.handle_soldier__ = scheduler.performWithDelayGlobal(function()
-        if DataManager:getFteData().soldierEvents and #DataManager:getFteData().soldierEvents > 0 then
+        if DataManager:getFteData() and
+            DataManager:getFteData().soldierEvents and 
+            #DataManager:getFteData().soldierEvents > 0 then
             FinishRecruitSoldier()
         end
+        DataManager.handle_soldier__ = nil
     end, recruitTime)
 
     local key = string.format("RecruitSoldier_%s_%d", type_, count)

@@ -4,6 +4,7 @@ local AllianceManager_ = import("..entity.AllianceManager")
 local User_ = import("..entity.User")
 local MailManager_ = import("..entity.MailManager")
 local ItemManager_ = import("..entity.ItemManager")
+local check = import("..fte.check")
 local initData = import("..fte.initData")
 
 local app = app
@@ -11,6 +12,10 @@ local timer = app.timer
 return function(userData)
     DataManager.user = userData
     timer:Clear()
+
+    if check("ALL") then
+        GLOBAL_FTE = false
+    end
 
     Alliance_Manager = AllianceManager_.new()
     MailManager = MailManager_.new()
