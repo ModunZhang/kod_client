@@ -607,10 +607,6 @@ function GameUIDragonEyrieDetail:RefreshSkillList()
 end
 
 function GameUIDragonEyrieDetail:SkillListItemClicked(skill)
-    -- if skill:IsLocked() then 
-    --     UIKit:showMessageDialog(nil, _("该技能未解锁!"))
-    --     return 
-    -- end
     UIKit:newGameUI("GameUIDragonSkill",self.building,skill):AddToCurrentScene(true)
 end
 
