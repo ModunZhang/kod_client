@@ -1575,7 +1575,11 @@ function City:FastUpdateAllTechsLockState()
     self:IteratorTechs(function(index,tech)
         local unLockByTech = self:FindTechByIndex(tech:UnlockBy())
         if unLockByTech then
-            tech:SetEnable(tech:UnlockLevel() <= unLockByTech:Level() and tech:IsOpen() and tech:AcademyLevel() <= self:GetAcademyBuildingLevel())
+            if unLockByTech:Index() == tech:Index() then
+                tech:SetEnable(true)
+            else
+                tech:SetEnable(tech:UnlockLevel() <= unLockByTech:Level() and tech:IsOpen() and tech:AcademyLevel() <= self:GetAcademyBuildingLevel())
+            end
         end
     end)
 end
