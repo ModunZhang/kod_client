@@ -162,7 +162,7 @@ function GameUIDragonEyrieDetail:OnResourceChanged(resource_manager)
     GameUIDragonEyrieDetail.super.OnResourceChanged(self,resource_manager)
     if not self:GetDragon():Ishated() then return end
     if self.skill_ui and self.skill_ui.blood_label then
-        self.skill_ui.blood_label:setString(resource_manager:GetBloodResource():GetValue())
+        self.skill_ui.blood_label:setString(string.formatnumberthousands(resource_manager:GetBloodResource():GetValue()))
     end
 end
 
@@ -508,7 +508,7 @@ function GameUIDragonEyrieDetail:CreateNodeIf_skill()
     }:addTo(list_bg)
     local add_button = WidgetPushButton.new({normal = "add_btn_up_50x50.png",pressed = "add_btn_down_50x50.png"})
         :addTo(header_bg)
-        :scale(0.7)
+        -- :scale(0.7)
         :align(display.RIGHT_CENTER,540,20)
         :onButtonClicked(function()
             self:OnHeroBloodUseItemClicked()
@@ -522,7 +522,7 @@ function GameUIDragonEyrieDetail:CreateNodeIf_skill()
         align = cc.TEXT_ALIGNMENT_RIGHT
     })
         :addTo(header_bg)
-        :align(display.RIGHT_CENTER,add_button:getPositionX() - 50,add_button:getPositionY())
+        :align(display.RIGHT_CENTER,add_button:getPositionX() - 65,add_button:getPositionY())
 
     self.skill_ui.blood_label = blood_label
     local magic_bottle = display.newSprite("heroBlood_3_128x128.png") 
