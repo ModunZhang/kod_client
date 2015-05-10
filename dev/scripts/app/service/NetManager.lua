@@ -502,7 +502,18 @@ function NetManager:getLoginPromise(deviceId)
         return response
     end)
 end
-
+-- 初始化玩家数据
+function NetManager:initPlayerData(terrain)
+    if DataManager:getUserData().basicInfo.terrain ~= "__NONE__" then
+        assert(false)
+    end
+    assert(terrain == "grassLand" or
+        terrain == "desert" or
+        terrain == "iceField" )
+    return get_blocking_request_promise("logic.playerHandler.initPlayerData", {
+        terrain = terrain
+    }, "初始化玩家数据失败!"):done(get_response_msg)
+end
 -- 个人修改地形
 local function get_changeTerrain_promise(terrain)
     return get_blocking_request_promise("logic.playerHandler.setTerrain", {
@@ -1561,6 +1572,7 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
 
 
 

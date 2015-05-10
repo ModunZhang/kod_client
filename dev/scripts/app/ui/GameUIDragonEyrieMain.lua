@@ -646,14 +646,16 @@ function GameUIDragonEyrieMain:FindGarrisonBtn()
 end
 function GameUIDragonEyrieMain:PromiseOfFte()
     local p = cocos_promise.defer()
-    if check("HateDragon") then
+    if not check("HateDragon") then
         p:next(function()
             return self:PromiseOfHate()
         end)
     end
-    if check("DefenceDragon") then
+    if not check("DefenceDragon") then
         p:next(function()
-            return GameUINpc:PromiseOfSayImportant({words = _("不可思议，传说是真的？！觉醒者过让能够号令龙族。。。大人您真是厉害！"), brow = "shy"}):next(function()
+            return GameUINpc:PromiseOfSayImportant(
+                {words = _("不可思议，传说是真的？！觉醒者过让能够号令龙族。。。大人您真是厉害！"), brow = "shy"}
+            ):next(function()
                 return GameUINpc:PromiseOfLeave()
             end):next(function()
                 return self:PormiseOfDefence()
@@ -673,8 +675,8 @@ function GameUIDragonEyrieMain:PromiseOfHate()
     self:FindHateBtn():removeEventListenersByEvent("CLICKED_EVENT")
     self:FindHateBtn():onButtonClicked(function()
         self:FindHateBtn():setButtonEnabled(false)
-        
-        mockData.HateDragon("redDragon")
+
+        mockData.HateDragon()
     end)
 
     return self.dragon_manager:PromiseOfHate():next(function()
@@ -689,7 +691,7 @@ function GameUIDragonEyrieMain:PormiseOfDefence()
     self:FindGarrisonBtn():onButtonClicked(function()
         self:FindGarrisonBtn():setButtonEnabled(false)
 
-        mockData.DefenceDragon("redDragon")
+        mockData.DefenceDragon()
     end)
 
     local r = self:FindGarrisonBtn():getCascadeBoundingBox()
@@ -702,6 +704,7 @@ function GameUIDragonEyrieMain:PormiseOfDefence()
     end)
 end
 return GameUIDragonEyrieMain
+
 
 
 

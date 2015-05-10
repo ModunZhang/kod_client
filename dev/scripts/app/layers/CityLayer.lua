@@ -114,7 +114,6 @@ function CityLayer:GetClickedObject(world_x, world_y)
             end
         end
     end
-    print("=======>", #clicked_list.sprite_clicked)
     for _,v in ipairs(clicked_list.sprite_clicked) do
         print(v:GetEntity():GetType(), v:getLocalZOrder())
     end

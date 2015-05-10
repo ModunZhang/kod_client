@@ -97,7 +97,15 @@ function GameUIAllianceMemberInfo:BuildUI()
             )
             :align(display.CENTER_BOTTOM,self.bg:getContentSize().width/2,15)
             :onButtonClicked(function(event)
-                self:OnPlayerButtonClicked(5)
+                 local mail = GameUIWriteMail.new(GameUIWriteMail.SEND_TYPE.PERSONAL_MAIL,{
+                    id = self.player_info.id,
+                    name = self.player_info.name,
+                    icon = self.player_info.icon,
+                    allianceTag = self.player_info.alliance.tag,
+                })
+                mail:SetTitle(_("个人邮件"))
+                mail:SetAddressee(self.player_info.name)
+                mail:addTo(self)
             end)
             :addTo(self.bg)
     end

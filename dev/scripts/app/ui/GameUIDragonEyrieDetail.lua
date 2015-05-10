@@ -162,7 +162,7 @@ function GameUIDragonEyrieDetail:OnResourceChanged(resource_manager)
     GameUIDragonEyrieDetail.super.OnResourceChanged(self,resource_manager)
     if not self:GetDragon():Ishated() then return end
     if self.skill_ui and self.skill_ui.blood_label then
-        self.skill_ui.blood_label:setString(resource_manager:GetBloodResource():GetValue())
+        self.skill_ui.blood_label:setString(string.formatnumberthousands(resource_manager:GetBloodResource():GetValue()))
     end
 end
 
@@ -190,6 +190,7 @@ function GameUIDragonEyrieDetail:RefreshUI()
     --     self.skill_ui.listView:removeAllItems()
     -- end
     if button_tag == 'equipment' then
+        self.lv_label:show()
         self.dragon_hp_label:setString(dragon:Exp() .. "/" .. dragon:GetMaxExp())
         self.hp_process_timer:setPercentage(dragon:Exp()/dragon:GetMaxExp()*100)
         self.hp_process_bg:show()
@@ -201,7 +202,9 @@ function GameUIDragonEyrieDetail:RefreshUI()
         self.hp_process_bg:hide()
         self:RefreshSkillList()
         self.skill_ui.blood_label:setString(City:GetResourceManager():GetBloodResource():GetValue())
+        self.lv_label:hide()
     else
+        self.lv_label:show()
         self.dragon_hp_label:setString(dragon:Exp() .. "/" .. dragon:GetMaxExp())
         self.hp_process_timer:setPercentage(dragon:Exp() / dragon:GetMaxExp()*100)
         self.hp_process_bg:show()
@@ -495,17 +498,17 @@ function GameUIDragonEyrieDetail:CreateNodeIf_skill()
     self.skill_ui = {}
     local skill_node = display.newNode():addTo(self:GetView())
 
-    local list_bg = UIKit:CreateBoxPanel(316)
+    local list_bg = UIKit:CreateBoxPanel(346)
         :addTo(skill_node)
         :pos(window.left+45,self.dragon_base:getPositionY()-self.dragon_base:getContentSize().height - 320 - 90)
-    local header_bg = UIKit:CreateBoxPanel9({height = 40}):addTo(skill_node):align(display.LEFT_BOTTOM, list_bg:getPositionX(), list_bg:getPositionY()+316+10)
+    local header_bg = UIKit:CreateBoxPanel9({height = 40}):addTo(skill_node):align(display.LEFT_BOTTOM, list_bg:getPositionX(), list_bg:getPositionY()+316+40)
     local list = UIListView.new {
-        viewRect = cc.rect(8,8, 548, 302),
+        viewRect = cc.rect(3,8, 548, 332),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
     }:addTo(list_bg)
     local add_button = WidgetPushButton.new({normal = "add_btn_up_50x50.png",pressed = "add_btn_down_50x50.png"})
         :addTo(header_bg)
-        :scale(0.7)
+        -- :scale(0.7)
         :align(display.RIGHT_CENTER,540,20)
         :onButtonClicked(function()
             self:OnHeroBloodUseItemClicked()
@@ -519,7 +522,7 @@ function GameUIDragonEyrieDetail:CreateNodeIf_skill()
         align = cc.TEXT_ALIGNMENT_RIGHT
     })
         :addTo(header_bg)
-        :align(display.RIGHT_CENTER,add_button:getPositionX() - 50,add_button:getPositionY())
+        :align(display.RIGHT_CENTER,add_button:getPositionX() - 65,add_button:getPositionY())
 
     self.skill_ui.blood_label = blood_label
     local magic_bottle = display.newSprite("heroBlood_3_128x128.png") 

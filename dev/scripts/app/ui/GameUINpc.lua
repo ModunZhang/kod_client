@@ -74,6 +74,7 @@ function GameUINpc:ctor(...)
     GameUINpc.super.ctor(self)
     self.unenable = true
     self:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+        -- dump(event)
         if event.name == "ended" and not self.unenable then
             self:OnClick()
         end
@@ -82,6 +83,7 @@ function GameUINpc:ctor(...)
     self:InitDialog(...)
     self.enter_callbacks = {}
     self.leave_callbacks = {}
+    self.__type  = UIKit.UITYPE.BACKGROUND
 end
 function GameUINpc:InitDialog(...)
     self.dialog_index = 1

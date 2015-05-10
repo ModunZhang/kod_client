@@ -1189,7 +1189,6 @@ function WidgetUseItems:PromiseOfOpen(item_type)
                 :align(display.RIGHT_CENTER, r.x - 20, r.y + r.height/2)
 
 
-
                 local p1 = promise.new(function()
                     local r = self:FindLabel():getCascadeBoundingBox()
                     r.x = r.x - 20
@@ -1199,8 +1198,8 @@ function WidgetUseItems:PromiseOfOpen(item_type)
 
                     self:GetFteLayer():SetTouchObject(self:FindCloseBtn())
                     local r = self:FindCloseBtn():getCascadeBoundingBox()
-                    self:GetFteLayer().arrow = WidgetFteArrow.new(_("已经激活VIP，关闭窗口"))
-                        :addTo(self:GetFteLayer()):TurnRight():align(display.RIGHT_CENTER, r.x - 20, r.y + r.height/2)
+                    WidgetFteArrow.new(_("已经激活VIP，关闭窗口")):addTo(self:GetFteLayer())
+                    :TurnRight():align(display.RIGHT_CENTER, r.x - 20, r.y + r.height/2)
 
                     local p2 = promise.new()
                     self:FindCloseBtn():onButtonClicked(function()
@@ -1237,44 +1236,6 @@ end
 
 
 return WidgetUseItems
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -137,6 +137,8 @@ function GameUIDragonSkill:UpgradeButtonClicked()
       GameGlobalUI:showTips(_("提示"),_("技能学习成功!"))
       if self:SkillIsMaxLevel() then
           self:LeftButtonClicked()
+      else
+        self:RefreshUI()
       end
   end)
 end
