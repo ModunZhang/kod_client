@@ -414,6 +414,12 @@ end
 local check = import("..fte.check")
 local mockData = import("..fte.mockData")
 function GameUILoginBeta:checkFte()
+    if check("FinishBuildHouseAt_8_1") then
+        -- mockData.FinishBuildHouseAt(8,1)
+        app:EnterUserMode()
+        return
+    end
+
     local dragon_type
     for k,v in pairs(DataManager:getUserData().dragons) do
         if v.star > 0 then
@@ -515,7 +521,7 @@ function GameUILoginBeta:checkFte()
         mockData.BuildHouseAt(8,3,"miner")
     end
     if check("FinishBuildHouseAt_8_1") then
-        mockData.FinishBuildHouseAt(8,1)
+        -- mockData.FinishBuildHouseAt(8,1)
         app:EnterUserMode()
     end
 end
