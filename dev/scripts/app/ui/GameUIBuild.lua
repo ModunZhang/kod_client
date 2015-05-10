@@ -345,6 +345,7 @@ function GameUIBuild:Find(building_type)
         if v.building.building_type == building_type then
             item = v:GetBuildButton()
         else
+            v.SetBuildEnable = function()end
             v:GetBuildButton():setButtonEnabled(false)
         end
     end)

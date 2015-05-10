@@ -149,6 +149,7 @@ end
 function GameUINpc:OnClick()
     if self.label and self.label:getActionByTag(LETTER_ACTION) then
         self:ShowWords(self:CurrentDialog(), false)
+        self:OnDialogEnded(self.dialog_index)
     else
         local index = self.dialog_index
         self:NextDialog()

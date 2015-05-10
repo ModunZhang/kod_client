@@ -14,7 +14,7 @@ function RuinSprite:GetWorldPosition()
 end
 function RuinSprite:GetSpriteTopPosition()
     local x, y = RuinSprite.super.GetSpriteTopPosition(self)
-    return x, y + 50
+    return x, y
 end
 function RuinSprite:ctor(city_layer, entity)
     self.png_index = random(#ruin_map)

@@ -209,7 +209,7 @@ function GameUIHome:CreateTop()
         {scale9 = false}
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
-            UIKit:newGameUI('GameUIVip', City,"info"):AddToCurrentScene(true)
+            UIKit:newGameUI('GameUIVip', self.city,"info"):AddToCurrentScene(true)
         end
     end):addTo(top_bg):align(display.LEFT_CENTER,top_bg:getContentSize().width/2-2, top_bg:getContentSize().height/2+10)
     button:setRotationSkewY(180)
@@ -307,7 +307,7 @@ function GameUIHome:CreateTop()
     ):addTo(top_bg):align(display.CENTER, ox + 195, 65)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                UIKit:newGameUI('GameUIVip', City,"VIP"):AddToCurrentScene(true)
+                UIKit:newGameUI('GameUIVip', self.city,"VIP"):AddToCurrentScene(true)
             end
         end)
     local vip_btn_img = User:IsVIPActived() and "vip_bg_110x124.png" or "vip_bg_disable_110x124.png"
@@ -368,7 +368,7 @@ function GameUIHome:CreateTop()
         {scale9 = false}
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
-            UIKit:newGameUI("GameUIActivity",City):AddToCurrentScene(true)
+            UIKit:newGameUI("GameUIActivity",self.city):AddToCurrentScene(true)
         end
     end):addTo(self):pos(display.left+40, display.top-200)
     local order = WidgetAutoOrder.new(WidgetAutoOrder.ORIENTATION.TOP_TO_BOTTOM,20):addTo(self):pos(display.right-50, display.top-200)
@@ -487,7 +487,7 @@ function GameUIHome:FindVip()
     return self.vip_btn
 end
 function GameUIHome:PromiseOfFteFreeSpeedUp()
-    if #City:GetUpgradingBuildings() > 0 then
+    if #self.city:GetUpgradingBuildings() > 0 then
         if not self.event_tab:IsShow() then
             self.event_tab:EventChangeOn("build", true)
         end
@@ -498,7 +498,7 @@ function GameUIHome:PromiseOfFteFreeSpeedUp()
             self:Find():onButtonClicked(function()
                 self:Find():setButtonEnabled(false)
 
-                mockData.FinishBuildHouseAt(self:GetBuildingLocation())
+                mockData.FinishBuildHouseAt(self:GetBuildingLocation(), 1)
             end)
 
             local r = self:Find():getCascadeBoundingBox()
@@ -506,14 +506,14 @@ function GameUIHome:PromiseOfFteFreeSpeedUp()
                 :addTo(self:GetFteLayer()):TurnUp(true):align(display.RIGHT_TOP, r.x + r.width/2, r.y - 10)
         end)
 
-        return City:PromiseOfFinishUpgradingByLevel(nil, nil):next(function()
+        return self.city:PromiseOfFinishUpgradingByLevel(nil, nil):next(function()
             self:GetFteLayer():removeFromParent()
         end)
     end
     return cocos_promise.defer()
 end
 function GameUIHome:PromiseOfFteInstantSpeedUp()
-    if #City:GetUpgradingBuildings() > 0 then
+    if #self.city:GetUpgradingBuildings() > 0 then
         if not self.event_tab:IsShow() then
             self.event_tab:EventChangeOn("build", true)
         end
@@ -527,7 +527,7 @@ function GameUIHome:PromiseOfFteInstantSpeedUp()
 
                 local building = self:GetBuilding()
                 if building:IsHouse() then
-                    mockData.FinishBuildHouseAt(self:GetBuildingLocation())
+                    mockData.FinishBuildHouseAt(self:GetBuildingLocation(), building:GetNextLevel())
                 else
                     mockData.FinishUpgradingBuilding(building:GetType(), building:GetNextLevel())
                 end
@@ -541,7 +541,7 @@ function GameUIHome:PromiseOfFteInstantSpeedUp()
 
         end)
 
-        return City:PromiseOfFinishUpgradingByLevel():next(function()
+        return self.city:PromiseOfFinishUpgradingByLevel():next(function()
             self:GetFteLayer():removeFromParent()
         end)
     end
@@ -562,8 +562,9 @@ end
 function GameUIHome:PromiseOfActivePromise()
     self:GetFteLayer():SetTouchObject(self:FindVip())
     local r = self:FindVip():getCascadeBoundingBox()
-    self:GetFteLayer().arrow = WidgetFteArrow.new(_("点击VIP，免费激活VIP"))
-        :addTo(self:GetFteLayer()):TurnUp():align(display.TOP_CENTER, r.x + r.width/2, r.y)
+
+    WidgetFteArrow.new(_("点击VIP，免费激活VIP")):addTo(self:GetFteLayer())
+    :TurnUp():align(display.TOP_CENTER, r.x + r.width/2, r.y)
 
     return UIKit:PromiseOfOpen("GameUIVip"):next(function(ui)
         self:GetFteLayer():removeFromParent()

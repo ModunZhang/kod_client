@@ -1164,12 +1164,12 @@ end
 
 -- fte
 local promise = import("..utils.promise")
+local mockData = import("..fte.mockData")
 local WidgetFteArrow = import("..widget.WidgetFteArrow")
 local WidgetFteMark = import("..widget.WidgetFteMark")
 function WidgetUseItems:PromiseOfOpen(item_type)
     local p = promise.new()
     WidgetUseItems.open_data = { item_type = item_type, open_callback = function(ui)
-
             function ui:Find()
                 return self.list.items_[1]:getContent().use_btn
             end
@@ -1182,49 +1182,46 @@ function WidgetUseItems:PromiseOfOpen(item_type)
             function ui:PromiseOfFte()
                 self.list:getScrollNode():setTouchEnabled(false)
                 self:Find():setTouchSwallowEnabled(true)
-                self:Find():removeEventListenersByEvent("CLICKED_EVENT")
 
                 self:GetFteLayer():SetTouchObject(self:Find())
                 local r = self:Find():getCascadeBoundingBox()
-                self:GetFteLayer().arrow = WidgetFteArrow.new(_("使用VIP激活1天"))
-                    :addTo(self:GetFteLayer()):TurnRight():align(display.RIGHT_CENTER, r.x - 20, r.y + r.height/2)
+                WidgetFteArrow.new(_("使用VIP激活1天")):addTo(self:GetFteLayer()):TurnRight()
+                :align(display.RIGHT_CENTER, r.x - 20, r.y + r.height/2)
 
-                local p = promise.new(function()
-                    self:GetFteLayer().arrow:removeFromParent()
-                    self:GetFteLayer().arrow = nil
+
+
+                local p1 = promise.new(function()
                     local r = self:FindLabel():getCascadeBoundingBox()
                     r.x = r.x - 20
                     r.width = r.width + 40
-                    WidgetFteMark.new():addTo(self:GetFteLayer())
-                        :Size(r.width, r.height):pos(r.x + r.width/2, r.y + r.height/2)
+                    WidgetFteMark.new():addTo(self:GetFteLayer()):Size(r.width, r.height)
+                    :pos(r.x + r.width/2, r.y + r.height/2)
 
                     self:GetFteLayer():SetTouchObject(self:FindCloseBtn())
                     local r = self:FindCloseBtn():getCascadeBoundingBox()
                     self:GetFteLayer().arrow = WidgetFteArrow.new(_("已经激活VIP，关闭窗口"))
                         :addTo(self:GetFteLayer()):TurnRight():align(display.RIGHT_CENTER, r.x - 20, r.y + r.height/2)
 
-                    local p1 = promise.new()
+                    local p2 = promise.new()
                     self:FindCloseBtn():onButtonClicked(function()
-                        p1:resolve()
+                        p2:resolve()
                     end)
-                    return p1
+                    return p2
                 end)
+
+
+                self:Find():removeEventListenersByEvent("CLICKED_EVENT")
                 self:Find():onButtonClicked(function()
-                    if ItemManager:GetItemByName("vipActive_3"):Count() > 0 then
-                        NetManager:getUseItemPromise("vipActive_3", {}):done(function()
-                            p:resolve()
-                        end)
-                    else
-                        NetManager:getBuyAndUseItemPromise("vipActive_3", {}):done(function()
-                            p:resolve()
-                        end)
-                    end
+                    self:GetFteLayer():removeFromParent()
+                    mockData.ActiveVip()
+                    p1:resolve()
                 end)
-                return p
+
+
+                return p1
             end
 
-
-            return p:resolve(ui)
+        return p:resolve(ui)
     end}
     return p
 end
@@ -1240,6 +1237,10 @@ end
 
 
 return WidgetUseItems
+
+
+
+
 
 
 

@@ -522,10 +522,10 @@ function GameUIDragonEyrieDetail:CreateNodeIf_skill()
         :align(display.RIGHT_CENTER,add_button:getPositionX() - 50,add_button:getPositionY())
 
     self.skill_ui.blood_label = blood_label
-    local magic_bottle = display.newSprite("dragonskill_blood_51x63.png") 
+    local magic_bottle = display.newSprite("heroBlood_3_128x128.png") 
         :align(display.LEFT_CENTER,15, blood_label:getPositionY())
         :addTo(header_bg)
-        :scale(0.46)
+        :scale(0.3)
     UIKit:ttfLabel({
         text = _("英雄之血"),
         size = 20,
@@ -607,10 +607,6 @@ function GameUIDragonEyrieDetail:RefreshSkillList()
 end
 
 function GameUIDragonEyrieDetail:SkillListItemClicked(skill)
-    if skill:IsLocked() then 
-        UIKit:showMessageDialog(nil, _("该技能未解锁!"))
-        return 
-    end
     UIKit:newGameUI("GameUIDragonSkill",self.building,skill):AddToCurrentScene(true)
 end
 

@@ -891,8 +891,8 @@ end
 function GameUIVip:PromiseOfFte()
     self:GetFteLayer():SetTouchObject(self:FindActiveBtn())
     local r = self:FindActiveBtn():getCascadeBoundingBox()
-    self:GetFteLayer().arrow = WidgetFteArrow.new(_("激活VIP"))
-        :addTo(self:GetFteLayer()):TurnUp():align(display.TOP_CENTER, r.x + r.width/2, r.y - 20)
+    WidgetFteArrow.new(_("激活VIP")):addTo(self:GetFteLayer())
+    :TurnUp():align(display.TOP_CENTER, r.x + r.width/2, r.y - 20)
 
     return WidgetUseItems:PromiseOfOpen("vipActive"):next(function(ui)
         self:GetFteLayer():removeFromParent()

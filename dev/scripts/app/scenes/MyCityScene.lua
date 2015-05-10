@@ -99,11 +99,11 @@ function MyCityScene:PromiseOfClickBuilding(x, y, for_build, msg, arrow_param)
 
             self:GetInfoLayer():removeAllChildren()
             local arrow = WidgetFteArrow.new(msg or str)
-                :addTo(self:GetInfoLayer()):TurnDown():pos(top_point.x, top_point.y)
+                :addTo(self:GetInfoLayer()):TurnDown():pos(top_point.x, top_point.y + 50)
 
             if arrow_param then
                 if arrow_param.direction == "up" then
-                    arrow:TurnUp():align(display.CENTER, top_point.x + 0, top_point.y - 300)
+                    arrow:TurnUp():pos(top_point.x + 0, top_point.y - 300)
                 end
             end
         end)
@@ -342,11 +342,14 @@ function MyCityScene:OpenUI(building)
     end
 end
 
+
+
+local mockData = import("..fte.mockData")
 function MyCityScene:RunFte()
     if not global_fte then return end
     self:GetFteLayer():Enable()
-
     cocos_promise.defer():next(function()
+        self:GetFteLayer():Disable()
         return self:PromiseOfHateDragonAndDefence()
     end):next(function()
         return self:PromiseOfBuildFirstHouse(18, 12, "dwelling")
@@ -362,7 +365,57 @@ function MyCityScene:RunFte()
         return self:GetHomePage():PromiseOfFteInstantSpeedUp()
     end):next(function()
         return self:PromiseOfRecruitSoldier("swordsman")
+    end):next(function()
+        return self:PromiseOfBuildHouse(8, 22, "farmer")
+    end):next(function()
+        return self:GetHomePage():PromiseOfFteInstantSpeedUp()
+    end):next(function()
+        return self:PromiseOfUpgradeByBuildingType(8, 22, "farmer", _("点击农夫小屋, 将其升级到等级2"))
+    end):next(function()
+        return self:GetHomePage():PromiseOfFteInstantSpeedUp()
     end)
+        -- :next(function()
+        --     return self:PromiseOfExplorePve()
+        -- end)
+        :next(function()
+            return self:PromiseOfActiveVip()
+        end):next(function()
+        return self:PromiseOfUpgradeKeepTo5()
+        end):next(function()
+        return self:GetHomePage():PromiseOfFteInstantSpeedUp()
+        end):next(function()
+        return self:PromiseOfUpgradeKeepTo5()
+        end):next(function()
+        return self:GetHomePage():PromiseOfFteInstantSpeedUp()
+        end):next(function()
+        return self:PromiseOfUpgradeKeepTo5()
+        end):next(function()
+        return self:GetHomePage():PromiseOfFteInstantSpeedUp()
+        end):next(function()
+        return self:PromiseOfUnlockHospital()
+        end):next(function()
+        return self:GetHomePage():PromiseOfFteInstantSpeedUp()
+        end):next(function()
+        return self:PromiseOfUnlockBuilding("academy")
+        end):next(function()
+        return self:GetHomePage():PromiseOfFteInstantSpeedUp()
+        end):next(function()
+        return self:PromiseOfUnlockBuilding("materialDepot")
+        end):next(function()
+        return self:GetHomePage():PromiseOfFteInstantSpeedUp()
+        end):next(function()
+        return self:PromiseOfBuildWoodcutter()
+        end):next(function()
+        return self:GetHomePage():PromiseOfFteInstantSpeedUp()
+        end):next(function()
+        return self:PromiseOfBuildHouse(28, 22, "quarrier", _("建造石匠小屋"))
+        end):next(function()
+        return self:GetHomePage():PromiseOfFteInstantSpeedUp()
+        end):next(function()
+        return self:PromiseOfBuildHouse(28, 12, "miner", _("建造矿工小屋"))
+        end):next(function()
+        return self:GetHomePage():PromiseOfFteInstantSpeedUp()
+        end)
 end
 function MyCityScene:PromiseOfFte()
     if check("ALL") then
@@ -561,12 +614,13 @@ function MyCityScene:PromiseOfUpgradeKeep()
         end)
 end
 function MyCityScene:PromiseOfUpgradeByBuildingType(x, y, type_, msg)
-    return self:PromiseOfClickBuilding(x, y, nil, msg):next(function()
-        local ui = unpack(ui_map[type_])
-        return UIKit:PromiseOfOpen(ui)
-    end):next(function(ui)
+    return self:PromiseOfClickBuilding(x, y, nil, msg)
+        :next(function()
+            local ui = unpack(ui_map[type_])
+            return UIKit:PromiseOfOpen(ui)
+        end):next(function(ui)
         return ui:PromiseOfFte()
-    end)
+        end)
 end
 function MyCityScene:PromiseOfUnlockBuilding(building_type)
     self.touch_layer:setTouchEnabled(false)
@@ -574,19 +628,21 @@ function MyCityScene:PromiseOfUnlockBuilding(building_type)
     local x,y = self:GetCity():GetFirstBuildingByType(building_type):GetMidLogicPosition()
     local tutorial = TutorialLayer.new():addTo(self):Enable()
 
-    return promise.all(self:GotoLogicPoint(x, y, 5):next(function()
-        tutorial:SetTouchObject(self:GetLockButtonsByBuildingType(building_type))
+    return promise.all(
+        self:GotoLogicPoint(x, y, 5):next(function()
+            WidgetFteArrow.new(_("点击解锁新建筑"))
+                :addTo(self:GetLockButtonsByBuildingType(building_type), 1, 123)
+                :TurnUp():align(display.TOP_CENTER, 0, -50)
 
-        WidgetFteArrow.new(_("点击解锁新建筑"))
-            :addTo(self:GetLockButtonsByBuildingType(building_type), 1, 123)
-            :TurnUp():align(display.TOP_CENTER, 0, -50)
-    end),
-    self:PromiseOfClickLockButton(building_type)):next(function()
+            tutorial:SetTouchObject(self:GetLockButtonsByBuildingType(building_type))
+        end),
+        self:PromiseOfClickLockButton(building_type)
+    ):next(function()
         self.touch_layer:setTouchEnabled(true)
 
         tutorial:removeFromParent()
-        self:GetLockButtonsByBuildingType(building_type)
-            :getChildByTag(123):removeFromParent()
+
+        self:GetLockButtonsByBuildingType(building_type):removeChildByTag(123)
 
         return UIKit:PromiseOfOpen("GameUIUnlockBuilding")
     end):next(function(ui)
@@ -594,7 +650,7 @@ function MyCityScene:PromiseOfUnlockBuilding(building_type)
     end)
 end
 function MyCityScene:PromiseOfRecruitSoldier(soldier_type)
-    return GameUINpc:PromiseOfSay(
+    return GameUINpc:PromiseOfSayImportant(
         {words = _("年轻人，带兵打仗可不是过家家，如果你信得过我这把老骨头，就让我来教教你。。。"), npc = "man"}
     ):next(function()
         return GameUINpc:PromiseOfLeave()
@@ -607,37 +663,36 @@ function MyCityScene:PromiseOfRecruitSoldier(soldier_type)
     end)
 end
 function MyCityScene:PromiseOfExplorePve()
-    return GameUINpc:PromiseOfSay({words = _("很好，我没有看错你！从今天起，我，皇家骑士克里冈，愿带领我的手下追随大人征战四方。。。"), npc = "man"})
-        :next(function()
-            local p = promise.new()
-            local rewards = NotifyItem.new({type = "soldiers", name = "swordsman", count = 100}, {type = "soldiers", name = "ranger", count = 100})
-            self:GetCity():GetUser():ResetPveData()
-            self:GetCity():GetUser():SetPveData(nil, rewards)
-            NetManager:getSetPveDataPromise(
-                self:GetCity():GetUser():EncodePveDataAndResetFightRewardsData()
-            ):done(function()
-                GameGlobalUI:showTips(_("获得奖励"), rewards)
-                p:resolve()
-            end)
-            return p
-        end):next(function()
-        return GameUINpc:PromiseOfSay({words = _("领主大人，光靠城市基本的资源产出，无法满足我们的发展需求。。。"), npc = "man"},
-            {words = _("我倒是知道一个地方，有些危险，但有着丰富的物资，也许我们尝试着探索。。。"), npc = "man"})
-        end):next(function()
+    return GameUINpc:PromiseOfSayImportant(
+        {words = _("很好，我没有看错你！从今天起，我，皇家骑士克里冈，愿带领我的手下追随大人征战四方。。。"), npc = "man"}
+    ):next(function()
+        mockData.GetSoldier()
+        GameGlobalUI:showTips(
+            _("获得奖励"),
+            NotifyItem.new({type = "soldiers", name = "swordsman", count = 100},
+                {type = "soldiers", name = "ranger", count = 100})
+        )
+    end):next(function()
+        return GameUINpc:PromiseOfSay(
+            {words = _("领主大人，光靠城市基本的资源产出，无法满足我们的发展需求。。。"), npc = "man"},
+            {words = _("我倒是知道一个地方，有些危险，但有着丰富的物资，也许我们尝试着探索。。。"), npc = "man"}
+        )
+    end):next(function()
         return GameUINpc:PromiseOfLeave()
-        end):next(function()
+    end):next(function()
         return self:PromiseOfClickBuilding(-9, 4, nil, _("点击飞艇进入探险地图"))
-        end):next(function()
+    end):next(function()
         return promise.new()
-        end)
+    end)
 end
 function MyCityScene:PromiseOfActiveVip()
-    return GameUINpc:PromiseOfSayImportant({words = _("领主大人，你跑到哪里去了，人家可是找了你半天了。。。我们得抓紧时间解锁更多建筑！"), brow = "smile"})
-        :next(function()
-            return GameUINpc:PromiseOfLeave()
-        end):next(function()
+    return GameUINpc:PromiseOfSayImportant(
+        {words = _("领主大人，你跑到哪里去了，人家可是找了你半天了。。。我们得抓紧时间解锁更多建筑！"), brow = "smile"}
+    ):next(function()
+        return GameUINpc:PromiseOfLeave()
+    end):next(function()
         return self:GetHomePage():PromiseOfActivePromise()
-        end)
+    end)
 end
 function MyCityScene:PromiseOfUpgradeKeepTo5()
     return self:PromiseOfClickBuilding(8, 8, nil, _("将城堡升级到5级"), {
@@ -648,6 +703,26 @@ function MyCityScene:PromiseOfUpgradeKeepTo5()
         return ui:PromiseOfFte()
     end)
 end
+function MyCityScene:PromiseOfUnlockHospital()
+    return GameUINpc:PromiseOfSayImportant(
+        {words = _("这还差不多！现在让我们一口气来解锁{医院}，{学院}，{材料库房}。。。"), brow = "smile"}
+    ):next(function()
+        return GameUINpc:PromiseOfLeave()
+    end):next(function()
+        return self:PromiseOfUnlockBuilding("hospital")
+    end)
+end
+function MyCityScene:PromiseOfBuildWoodcutter()
+    return GameUINpc:PromiseOfSayImportant(
+        {words = _("城市是不是一下繁荣起来了呢？建造{木工小屋}，{石匠小屋}，{旷工小屋}，就算领主你不在，资源也会不停的增长。。。")}
+    ):next(function()
+        return GameUINpc:PromiseOfLeave()
+    end):next(function()
+        return self:PromiseOfBuildHouse(18, 22, "woodcutter", _("建造木工小屋"))
+    end)
+end
+
+
 function MyCityScene:PromiseOfGetRewards()
     self:GetHomePage():GetFteLayer().mark = WidgetFteMark.new():addTo(self:GetHomePage():GetFteLayer())
     local r = self:GetHomePage().quest_bar_bg:getCascadeBoundingBox()
@@ -679,6 +754,21 @@ end
 
 
 return MyCityScene
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
