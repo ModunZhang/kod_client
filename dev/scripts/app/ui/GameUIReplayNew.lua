@@ -21,6 +21,20 @@ local LEFT_TAG1  = tags.LEFT_TAG1
 local RIGHT_TAG1 = tags.RIGHT_TAG1
 
 
+local function iter(a, i)
+    local v1 = a[i]
+    i = i + 1
+    local v2 = a[i]
+    if v2 then
+        return i, v1, v2
+    end
+end
+
+local function tuple_ipairs(a)
+    return iter, a, 0
+end
+
+
 local function decode_battle_from_report(report)
     local attacks = clone(report:GetFightAttackSoldierRoundData())
     local defends = clone(report:GetFightDefenceSoldierRoundData())
@@ -1248,7 +1262,7 @@ function GameUIReplayNew:HurtSoldierLeft(corps)
     local soldier = self:TopSoldierLeft()
     local soldierCount = round.soldierCount or round.wallHp
     local soldierDamagedCount = round.soldierDamagedCount or round.wallDamagedHp
-    local morale = round.morale or 100
+    local morale = round.morale or self.ui_map.soldier_morale_attack:GetPercent()
     local moraleDecreased = round.moraleDecreased or 0
     local x,y = corps:getPosition()
     return promise.all(
@@ -1645,6 +1659,9 @@ function GameUIReplayNew:BuildUI()
             progress:setPercentage(percent)
             return self
         end
+        function node:GetPercent()
+            return progress:getPercentage()
+        end
         function node:PromiseOfProgressTo(time, percent)
             local p = promise.new()
             local speed = cc.Speed:create(transition.sequence({
@@ -1743,6 +1760,7 @@ function GameUIReplayNew:BuildUI()
 end
 
 return GameUIReplayNew
+
 
 
 
