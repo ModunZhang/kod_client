@@ -653,8 +653,8 @@ function WidgetRecruitSoldier:OnSoliderStarCountChanged(soldier_manager,star_cha
 end
 
 -- fte
+local mockData = import("..fte.mockData")
 local promise = import("..utils.promise")
-local TutorialLayer = import("..ui.TutorialLayer")
 local WidgetFteArrow = import("..widget.WidgetFteArrow")
 WidgetRecruitSoldier.open_callbacks = {}
 function WidgetRecruitSoldier:PormiseOfOpen()
@@ -671,6 +671,18 @@ end
 function WidgetRecruitSoldier:PormiseOfFte()
     local fte_layer = self:getParent():GetFteLayer()
     fte_layer:Enable():SetTouchObject(self:Find())
+
+    self:Find():removeEventListenersByEvent("CLICKED_EVENT")
+    self:Find():onButtonClicked(function()
+        self:Find():setButtonEnabled(false)
+
+        mockData.RecruitSoldier(self.soldier_name, self.count)
+
+        self:Close()
+    end)
+
+
+    
     
     local r = self:Find():getCascadeBoundingBox()
     WidgetFteArrow.new(_("立即开始招募，招募士兵会消耗城民")):addTo(fte_layer)

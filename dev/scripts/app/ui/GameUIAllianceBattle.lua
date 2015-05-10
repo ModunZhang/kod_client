@@ -172,7 +172,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
         cc.ui.UIImage.new("res_citizen_88x82.png")
             :align(display.CENTER,request_fight_bg:getContentSize().width-120, request_fight_bg:getContentSize().height/2)
             :addTo(request_fight_bg)
-            :scale(0.7)
+            :scale(0.4)
 
         self.request_num_label = UIKit:ttfLabel(
             {
