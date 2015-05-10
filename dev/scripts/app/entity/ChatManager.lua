@@ -221,6 +221,7 @@ function ChatManager:FetchLastChannelMessage()
 end
 
 function ChatManager:FetchAllChatMessageFromServer()
+	self:emptyChannel_()
 	NetManager:getFetchChatPromise():done(function(messages)
 		-- self:HandleNetMessage('onAllChat',messages)
 	end)

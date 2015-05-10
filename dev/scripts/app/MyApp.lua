@@ -190,6 +190,9 @@ function MyApp:retryConnectServer(need_disconnect)
                         end,nil,false)
                     end
                 end
+            end):done(function()
+                print("MyApp:retryConnectServer--->fetchChats")
+                app:GetChatManager():FetchAllChatMessageFromServer()
             end):always(function()
                 print("MyApp:retryConnectServer--->8")
                 UIKit:NoWaitForNet()
