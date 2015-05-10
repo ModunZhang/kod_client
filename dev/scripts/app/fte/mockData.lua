@@ -202,7 +202,7 @@ local function ActiveVip()
             {
                 id = 1,
                 startTime = start_time,
-                finishTime = start_time + 4 * 60 * 60 * 1000
+                finishTime = start_time + 24 * 60 * 60 * 1000
             }
         }
     }
