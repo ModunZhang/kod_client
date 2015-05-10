@@ -6,10 +6,14 @@ local UICheckBoxButton = import(".UICheckBoxButton")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local GameUISelectTerrain = class("GameUISelectTerrain", WidgetPopDialog)
 
+
+    
+
 function GameUISelectTerrain:ctor()
     GameUISelectTerrain.super.ctor(self, 776, _("我们应该去哪儿?"), display.top - 100)
     self:DisableCloseBtn()
     self:DisableAutoClose()
+    self.__type  = UIKit.UITYPE.BACKGROUND
 end
 function GameUISelectTerrain:OnMoveInStage()
     GameUISelectTerrain.super.OnMoveInStage(self)
@@ -29,8 +33,7 @@ function GameUISelectTerrain:OnMoveInStage()
 
     self.ui_map.select:onButtonClicked(function(event)
         self.ui_map.select:setButtonEnabled(false)
-        -- self.terrainType
-        NetManager:initPlayerData("desert"):done(function()
+        NetManager:initPlayerData(self.terrainType):done(function()
                 self.select_promise:resolve()
         end):fail(function()
             self.ui_map.select:setButtonEnabled(true)

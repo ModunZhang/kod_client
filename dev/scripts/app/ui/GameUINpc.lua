@@ -83,6 +83,7 @@ function GameUINpc:ctor(...)
     self:InitDialog(...)
     self.enter_callbacks = {}
     self.leave_callbacks = {}
+    self.__type  = UIKit.UITYPE.BACKGROUND
 end
 function GameUINpc:InitDialog(...)
     self.dialog_index = 1

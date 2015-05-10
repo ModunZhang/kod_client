@@ -199,6 +199,10 @@ function MyApp:retryConnectServer(need_disconnect)
        
     end
 end
+function MyApp:ReloadGame()
+    self:onEnterBackground()
+    self:onEnterForeground()
+end
 
 function MyApp:onEnterBackground()
     dump("onEnterBackground------>")
