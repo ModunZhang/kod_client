@@ -70,7 +70,7 @@ local function FinishBuildHouseAt(building_location_id, level)
 end
 local function BuildHouseAt(building_location_id, house_location_id, house_type)
     local start_time = NetManager:getServerTime()
-    local buildTime = 10 or HouseLevelUp[house_type][1].buildTime 
+    local buildTime = HouseLevelUp[house_type][1].buildTime 
     mock{
         {
             "houseEvents.0",
@@ -107,7 +107,7 @@ local function BuildHouseAt(building_location_id, house_location_id, house_type)
 end
 local function UpgradeHouseTo(building_location_id, house_location_id, house_type, level)
     local start_time = NetManager:getServerTime()
-    local buildTime = 10 or HouseLevelUp[house_type][level].buildTime
+    local buildTime = HouseLevelUp[house_type][level].buildTime
     mock{
         {
             "houseEvents.0",
@@ -171,7 +171,7 @@ local function UpgradeBuildingTo(type, level)
     end
     assert(location_id)
     local start_time = NetManager:getServerTime()
-    local buildTime = 10 or BuildingLevelUp[type][level].buildTime
+    local buildTime = BuildingLevelUp[type][level].buildTime
     mock{
         {"buildingEvents.0",
             {

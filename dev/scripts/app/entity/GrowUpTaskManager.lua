@@ -67,7 +67,7 @@ function resource_meta:Desc()
     return Localize.fight_reward[self.name]
 end
 function resource_meta:CountDesc()
-    return self.count
+    return GameUtils:formatNumber(self.count)
 end
 function resource_meta:Icon()
     return rewards_icon_map[self.name]

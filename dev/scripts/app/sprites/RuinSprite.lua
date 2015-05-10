@@ -25,7 +25,7 @@ function RuinSprite:GetSpriteFile()
     return ruin_map[self.png_index]
 end
 function RuinSprite:GetSpriteOffset()
-	if self.png_index == 3 then
+	if self.png_index == 5 then
 		return 0, 40
 	end
     return 0, 35
