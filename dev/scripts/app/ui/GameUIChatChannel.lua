@@ -81,13 +81,13 @@ function GameUIChatChannel:CreateTextFieldBody()
             end
             if self._channelType == ChatManager.CHANNNEL_TYPE.ALLIANCE then
                 if Alliance_Manager:GetMyAlliance():IsDefault() then
-                    UIKit:showMessageDialog(_("错误"),_("未加入联盟"),function()end,nil,false)
+                    GameGlobalUI:showTips(_("错误"),_("未加入联盟"))
                     return
                 end
             end
             local msg = editbox:getText()
             if not msg or string.len(string.trim(msg)) == 0 then 
-                UIKit:showMessageDialog(_("错误"), _("聊天内容不能为空"),function()end,nil,false)
+                GameGlobalUI:showTips(_("错误"), _("聊天内容不能为空"))
                 return 
             end  
             editbox:setText('')
@@ -116,13 +116,13 @@ function GameUIChatChannel:CreateTextFieldBody()
     sendChatButton:onButtonClicked(function()
        if self._channelType == ChatManager.CHANNNEL_TYPE.ALLIANCE then
             if Alliance_Manager:GetMyAlliance():IsDefault() then 
-                UIKit:showMessageDialog(_("错误"),_("未加入联盟"),function()end)
+                GameGlobalUI:showTips(_("错误"),_("未加入联盟"))
                 return
             end
         end
         local msg = editbox:getText()
         if not msg or string.len(string.trim(msg)) == 0 then 
-            UIKit:showMessageDialog(_("错误"), _("聊天内容不能为空"),function()end)
+            GameGlobalUI:showTips(_("错误"), _("聊天内容不能为空"))
             return 
         end  
         editbox:setText('')

@@ -2,7 +2,7 @@
 -- Author: Your Name
 -- Date: 2014-10-21 22:55:03
 --
-local GameUIAllianceMemberInfo = UIKit:createUIClass("GameUIAllianceMemberInfo")
+local GameUIAllianceMemberInfo = UIKit:createUIClass("GameUIAllianceMemberInfo","UIAutoClose")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local window = import("..utils.window")
 local UIListView = import(".UIListView")
@@ -23,12 +23,11 @@ end
 
 function GameUIAllianceMemberInfo:OnMoveInStage()
     GameUIAllianceMemberInfo.super.OnMoveInStage(self)
-    local shadowLayer = UIKit:shadowLayer():addTo(self)
-    -- local main_height,min_y = 900,window.bottom + 10
     local main_height,min_y = 750,window.bottom + 120
 
 
-    local bg = WidgetUIBackGround.new({height=main_height}):addTo(shadowLayer):pos(window.left+20,min_y)
+    local bg = WidgetUIBackGround.new({height=main_height}):pos(window.left+20,min_y)
+    self:addTouchAbleChild(bg)
     local title_bar = display.newSprite("title_blue_600x56.png")
         :addTo(bg)
         :align(display.LEFT_BOTTOM, 0, main_height - 15)
@@ -102,7 +101,6 @@ function GameUIAllianceMemberInfo:BuildUI()
             end)
             :addTo(self.bg)
     end
-    -- local player_node = WidgetPlayerNode.new(cc.size(564,794),self)
     local player_node = WidgetPlayerNode.new(cc.size(564,644),self)
         :addTo(self.bg):pos(22,82)
     self.player_node = player_node

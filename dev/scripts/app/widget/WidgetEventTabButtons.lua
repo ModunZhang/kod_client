@@ -964,9 +964,6 @@ function WidgetEventTabButtons:OnProductionTechnologyEventTimer(event)
     end
 end
 function WidgetEventTabButtons:OnProductionTechnologyEventDataChanged(changed_map)
-    self:OnProductionTechnologyEventDataRefresh(changed_map)
-end
-function WidgetEventTabButtons:OnProductionTechnologyEventDataRefresh(changed_map)
     changed_map = changed_map or {}
     if changed_map.added and #changed_map.added > 0 then
         self:EventChangeOn("technology", true)
@@ -975,6 +972,9 @@ function WidgetEventTabButtons:OnProductionTechnologyEventDataRefresh(changed_ma
         app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
         self:EventChangeOn("technology")
     end
+end
+function WidgetEventTabButtons:OnProductionTechnologyEventDataRefresh()
+    self:EventChangeOn("technology")
 end
 
 function WidgetEventTabButtons:ProductionTechnologyEventUpgradeOrSpeedup(event)
