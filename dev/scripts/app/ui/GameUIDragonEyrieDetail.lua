@@ -522,15 +522,16 @@ function GameUIDragonEyrieDetail:CreateNodeIf_skill()
         :align(display.RIGHT_CENTER,add_button:getPositionX() - 50,add_button:getPositionY())
 
     self.skill_ui.blood_label = blood_label
-    local magic_bottle = display.newSprite("dragon_magic_bottle.png")
+    local magic_bottle = display.newSprite("dragonskill_blood_51x63.png") 
         :align(display.LEFT_CENTER,15, blood_label:getPositionY())
         :addTo(header_bg)
+        :scale(0.46)
     UIKit:ttfLabel({
         text = _("英雄之血"),
         size = 20,
         color = 0x403c2f,
         align = cc.TEXT_ALIGNMENT_LEFT
-    }):align(display.LEFT_CENTER, magic_bottle:getPositionX() + magic_bottle:getContentSize().width + 10, magic_bottle:getPositionY()):addTo(header_bg)
+    }):align(display.LEFT_CENTER, magic_bottle:getPositionX() + magic_bottle:getCascadeBoundingBox().width + 10, magic_bottle:getPositionY()):addTo(header_bg)
     self.skill_ui.magic_bottle = magic_bottle
     self.skill_node = skill_node
     return self.skill_node
