@@ -271,7 +271,7 @@ function GameUIUpgradeTechnology:BuildUI()
         :align(display.LEFT_TOP, btn_now:getPositionX(), btn_now:getPositionY() - 65 - 10)
     self.need_gems_icon = gem
     self.need_gems_label = UIKit:ttfLabel({
-        text = "",--self:GetUpgradeNowGems(),
+        text = "",
         size = 20,
         color= 0x403c2f
     }):align(display.LEFT_TOP,gem:getPositionX() + gem:getCascadeBoundingBox().width + 10, gem:getPositionY()):addTo(bg_node)
@@ -284,7 +284,7 @@ function GameUIUpgradeTechnology:BuildUI()
         :align(display.LEFT_TOP, btn_bg:getPositionX() - 185,btn_bg:getPositionY() - 65 - 10)
     self.time_icon = time_icon
     self.time_label = UIKit:ttfLabel({
-        text = "",--GameUtils:formatTimeStyle1(self:GetProductionTechnology():GetLevelUpCost().buildTime),
+        text = "",
         size = 18,
         color= 0x403c2f
     }):align(display.LEFT_TOP, time_icon:getPositionX()+time_icon:getCascadeBoundingBox().width + 10, time_icon:getPositionY()):addTo(bg_node)

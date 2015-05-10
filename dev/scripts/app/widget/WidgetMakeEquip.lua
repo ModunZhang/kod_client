@@ -184,6 +184,10 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
             if self:IsAbleToMakeEqui(false) then
                 NetManager:getMakeDragonEquipmentPromise(equip_type):catch(function(err)
                     dump(err:reason())
+                end):done(function()
+                    if not UIKit:GetUIInstance("GameUIBlackSmith") then
+                        app:GetAudioManager():PlayeEffectSoundWithKey("UI_BLACKSMITH_FORGE")
+                    end
                 end)
                 self:Close()
             end
@@ -481,6 +485,10 @@ function WidgetMakeEquip:IsAbleToMakeEqui(isFinishNow)
             UIKit:showMessageDialog(_("提示"),message,function()
                 NetManager:getMakeDragonEquipmentPromise(self.equip_type):catch(function(err)
                     dump(err:reason())
+                end):done(function()
+                    if not UIKit:GetUIInstance("GameUIBlackSmith") then
+                        app:GetAudioManager():PlayeEffectSoundWithKey("UI_BLACKSMITH_FORGE")
+                    end
                 end)
                 self:Close()
             end):CreateNeeds({value = need_gems})
