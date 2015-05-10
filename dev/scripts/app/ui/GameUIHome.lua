@@ -60,8 +60,10 @@ end
 function GameUIHome:OnTaskChanged()
     self.task = self.city:GetRecommendTask()
     if self.task then
+        self.quest_bar_bg:show()
         self.quest_label:setString(self.task:Title())
     else
+        self.quest_bar_bg:hide()
         self.quest_label:setString(_("当前没有推荐任务!"))
     end
 end

@@ -347,6 +347,8 @@ end
 
 
 
+
+-- fte
 local check = import("..fte.check")
 local mockData = import("..fte.mockData")
 function MyCityScene:RunFte()
