@@ -19,6 +19,26 @@ function LogoScene:onEnter()
     self.layer = cc.LayerColor:create(cc.c4b(255,255,255,255)):addTo(self)
     self.sprite = display.newScale9Sprite("batcat_logo_368x390.png", display.cx, display.cy):addTo(self.layer)
     self:performWithDelay(function() self:beginAnimate() end,0.5)
+
+
+    -- UILib.loadPveAnimation()
+    -- self.box = ccs.Armature:create("lanse"):addTo(self)
+    --     :align(display.CENTER, 0, display.height):scale(0.25)
+
+    -- local mid = self.box:getParent():convertToNodeSpace(cc.p(display.cx - 50, display.cy))
+    -- local time = 0.4
+    -- local m = transition.create(cc.MoveTo:create(time, mid), {easing = "backOut"})
+    -- local s = transition.create(cc.ScaleTo:create(time, 0.7), {easing = nil})
+    -- self.box:runAction(transition.sequence{
+    --     cc.Spawn:create(m, s),
+    --     cc.CallFunc:create(function()
+    --         self.box:getAnimation():playWithIndex(0, -1, 0)
+    --     end),
+    -- })
+
+    
+
+
     -- WidgetFteMark.new():Size(100, 200):addTo(self):pos(display.cx, display.cy)
 
     -- GameUINpc:PromiseOfSay({words = _("领主大人，光靠城市基本的资源产出，无法满足我们的发展需求。。。"), npc = "man"},
@@ -55,6 +75,11 @@ function LogoScene:onEnter()
 
 
     -- UIKit:newGameUI("GameUIReplayNew"):AddToCurrentScene(true)
+
+    -- UIKit:newGameUI("GameUIPveGetRewards", 0, display.height):AddToCurrentScene(true)
+    -- :AddClickOutFunc(function(ui)
+    --     ui:LeftButtonClicked()
+    -- end)
 end
 
 function LogoScene:beginAnimate()
@@ -86,6 +111,7 @@ function LogoScene:onExit()
 end
 
 return LogoScene
+
 
 
 
