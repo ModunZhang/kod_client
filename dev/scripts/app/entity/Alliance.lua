@@ -108,6 +108,7 @@ function Alliance:GetItemsManager()
     return self.items_manager
 end
 function Alliance:ResetAllListeners()
+    self.alliance_shrine:ClearAllListener()
     self.alliance_map:ClearAllListener()
     self:ClearAllListener()
 end

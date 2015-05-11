@@ -46,14 +46,18 @@ function PVEScene:onExit()
     PVEScene.super.onExit(self)
     self.user:ResetPveData()
     if not GLOBAL_FTE then
-        NetManager:getSetPveDataPromise(
-            self.user:EncodePveDataAndResetFightRewardsData(),
-            true
-        ):fail(function()
-            -- 失败回滚
-            local location = DataManager:getUserData().pve.location
-            self.user:GetPVEDatabase():SetCharPosition(location.x, location.y, location.z)
-        end)
+        local location = DataManager:getUserData().pve.location
+        local x,y,z = self.user:GetPVEDatabase():GetCharPosition()
+        if location.x ~= x or location.y ~= y or location.z ~= z then
+            NetManager:getSetPveDataPromise(
+                self.user:EncodePveDataAndResetFightRewardsData(),
+                true
+            ):fail(function()
+                -- 失败回滚
+                local location = DataManager:getUserData().pve.location
+                self.user:GetPVEDatabase():SetCharPosition(location.x, location.y, location.z)
+            end)
+        end
     end
 end
 function PVEScene:LoadAnimation()
@@ -394,6 +398,7 @@ function PVEScene:DestoryMark()
 end
 
 return PVEScene
+
 
 
 
