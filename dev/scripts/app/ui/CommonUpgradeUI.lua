@@ -318,6 +318,12 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
         if next_config.defencePower - current_config.defencePower > 0 then
             efficiency = efficiency .. string.format(_("防御力+%d,"),next_config.defencePower - current_config.defencePower)
         end
+    elseif self.building:GetType()=="academy" then
+        local current_config = self.building:GetAcademyConfig()
+        local next_config = self.building:GetAcademyNextLevelConfig()
+        if next_config.efficiency - current_config.efficiency > 0 then
+            efficiency = string.format(_("学院科技研发速度+%d%%,"),(next_config.efficiency - current_config.efficiency)*100)
+        end
     else
         assert(false,"本地化丢失")
     end
