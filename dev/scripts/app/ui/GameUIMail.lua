@@ -1753,7 +1753,7 @@ function GameUIMail:OpenReplyMail(mail)
         :addTo(reply_mail):align(display.CENTER, reply_mail:getContentSize().width-92, 46)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                self:ReplyMail(mail.fromId, _("RE:")..mail.title, textView:getText())
+                self:ReplyMail(mail, _("RE:")..mail.title, textView:getText())
                 dialog:LeftButtonClicked()
             end
         end)
@@ -1773,9 +1773,8 @@ end
     @param title 邮件主题
     @param content 邮件内容 
 ]]
-function GameUIMail:ReplyMail(mail,content)
+function GameUIMail:ReplyMail(mail,title,content)
     local addressee = mail.fromId
-    local title = mail.title
     if not addressee or string.trim(addressee)=="" then
         UIKit:showMessageDialog(_("提示"),_("请填写正确的收件人ID"))
         return
