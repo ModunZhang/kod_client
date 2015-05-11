@@ -12,7 +12,7 @@ function __G__TRACKBACK__(errorMessage)
  --            dump(errDesc)
  --        else
  --    		local subject,body = app:getSupportMailFormat(_("致命性Bug上报"),errDesc)
- --    		local canSendMail = ext.sysmail.sendMail('vip@batcatstudio.com',subject,body,function()end)
+ --    		local canSendMail = ext.sysmail.sendMail('bugs@batcatstudio.com',subject,body,function()end)
  --    		if not canSendMail then
  --    			UIKit:showMessageDialog(_("错误"),_("您尚未设置邮件：请前往IOS系统“设置”-“邮件、通讯录、日历”-“添加账户”处设置"),function()end)
  --    		end

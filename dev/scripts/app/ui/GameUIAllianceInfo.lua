@@ -8,8 +8,7 @@ local WidgetRoundTabButtons = import("..widget.WidgetRoundTabButtons")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetAllianceHelper = import("..widget.WidgetAllianceHelper")
 local WidgetPushButton = import("..widget.WidgetPushButton")
-
-
+local Alliance_Manager = Alliance_Manager
 
 local GameUIAllianceInfo = class("GameUIAllianceInfo", WidgetPopDialog)
 
@@ -18,6 +17,11 @@ function GameUIAllianceInfo:ctor(alliance,default_tab)
     self.alliance = alliance
     self.default_tab = default_tab
     self.alliance_ui_helper = WidgetAllianceHelper.new()
+end
+
+
+function GameUIAllianceInfo:GetAlliance()
+    return Alliance_Manager:GetMyAlliance()
 end
 
 function GameUIAllianceInfo:onExit()

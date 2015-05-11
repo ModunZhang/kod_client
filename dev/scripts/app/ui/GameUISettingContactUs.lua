@@ -53,10 +53,10 @@ function GameUISettingContactUs:RefreshListView()
 end
 function GameUISettingContactUs:GetData()
 	local data = {
-		{title = _("支付遇到了问题"),mail = 'vip@batcatstudio.com'},
-		{title = _("游戏老是报错"),mail = 'vip@batcatstudio.com'},
-		{title = _("致命性Bug上报"),mail = 'vip@batcatstudio.com',subtitle = _("查实后我们将提供奖励")},
-		{title = _("其他问题"),mail = 'vip@batcatstudio.com'},
+		{title = _("支付遇到了问题"),mail = 'support@batcatstudio.com'},
+		{title = _("游戏老是报错"),mail = 'support@batcatstudio.com'},
+		{title = _("致命性Bug上报"),mail = 'support@batcatstudio.com',subtitle = _("查实后我们将提供奖励")},
+		{title = _("其他问题"),mail = 'support@batcatstudio.com'},
 	}
 	return data
 end

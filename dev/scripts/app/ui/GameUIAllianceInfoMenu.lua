@@ -8,11 +8,33 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 
 local GameUIAllianceInfoMenu = UIKit:createUIClass("GameUIAllianceInfoMenu","UIAutoClose")
 
-function GameUIAllianceInfoMenu:ctor()
+function GameUIAllianceInfoMenu:ctor(callback)
     GameUIAllianceInfoMenu.super.ctor(self)
-    self.body = display.newSprite("back_ground_588x346.png"):align(display.BOTTOM_CENTER, window.cx, window.bottom_top - 70)
+    self.body = display.newSprite("back_ground_588x346.png"):align(display.BOTTOM_CENTER, window.cx, window.bottom_top - 416) --window.bottom_top - 70
     local body = self.body
     self:addTouchAbleChild(body)
+    self.callback = callback
+end
+
+function GameUIAllianceInfoMenu:UIAnimationMoveIn()
+    
+    transition.moveTo(self.body,{
+        time = 0.15,
+        y = window.bottom_top - 70,
+        onComplete = function()
+            self:OnMoveInStage()
+        end
+    })
+end
+function GameUIAllianceInfoMenu:UIAnimationMoveOut()
+    self:CallEventCallback("uiAnimationMoveout", self.body)
+     transition.moveBy(self.body,{
+        time = 0.15,
+        y = window.bottom_top - 416,
+        onComplete = function()
+            self:OnMoveOutStage()
+        end
+    })
 end
 
 function GameUIAllianceInfoMenu:onExit()
@@ -23,6 +45,7 @@ function GameUIAllianceInfoMenu:onEnter()
     self:LoadAllMenus()
 end
 function GameUIAllianceInfoMenu:LoadAllMenus()
+
     local body = self.body
     local size = body:getContentSize()
 
@@ -34,8 +57,7 @@ function GameUIAllianceInfoMenu:LoadAllMenus()
             }))
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
-                	UIKit:newGameUI("GameUIAllianceInfo",nil,"info"):AddToCurrentScene(true)
-                	self:LeftButtonClicked()
+                    self:CallButtonActionWithTag("allianceInfo")
                 end
             end)
             :align(display.CENTER_TOP, size.width/2, 325)
@@ -50,6 +72,7 @@ function GameUIAllianceInfoMenu:LoadAllMenus()
             }))
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
+                    self:CallButtonActionWithTag("playerInfo")
                 end
             end)
             :align(display.CENTER_TOP, size.width/2, 260)
@@ -64,6 +87,7 @@ function GameUIAllianceInfoMenu:LoadAllMenus()
             }))
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
+                    self:CallButtonActionWithTag("sendMail")
                 end
             end)
             :align(display.CENTER_TOP, size.width/2, 195)
@@ -78,6 +102,7 @@ function GameUIAllianceInfoMenu:LoadAllMenus()
             }))
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
+                    self:CallButtonActionWithTag("copyAction")
                 end
             end)
             :align(display.CENTER_TOP, size.width/2, 130)
@@ -92,12 +117,38 @@ function GameUIAllianceInfoMenu:LoadAllMenus()
             }))
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
+                    self:CallButtonActionWithTag("blockChat")
                 end
             end)
             :align(display.CENTER_TOP, size.width/2, 65)
             :addTo(body)
     display.newSprite("chat_shield_62x56.png"):addTo(button):pos(-240,-28):scale(36/62)
 end
+
+function GameUIAllianceInfoMenu:CallButtonActionWithTag(tag)
+    self.tag_call = tag
+    self:LeftButtonClicked()
+end
+
+function GameUIAllianceInfoMenu:CallEventCallback(event,data)
+    if self.callback then self.callback(event,data) end
+end
+
+function GameUIAllianceInfoMenu:OnMoveOutStage()
+    self:CallEventCallback('out',self.body)
+    local tag = self.tag_call or ""
+    if tag == 'allianceInfo' then
+        UIKit:newGameUI("GameUIAllianceInfo",nil,"info"):AddToCurrentScene(true)
+    else
+        if self.callback then self.callback("buttonCallback",tag) end
+    end
+    GameUIAllianceInfoMenu.super.OnMoveOutStage(self)
+end
+
+function GameUIAllianceInfoMenu:OnMoveInStage()
+    self:CallEventCallback('in',self.body)
+end
+
 return GameUIAllianceInfoMenu
 
 
