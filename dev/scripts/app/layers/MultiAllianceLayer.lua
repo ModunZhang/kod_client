@@ -584,6 +584,7 @@ function MultiAllianceLayer:CreateLine(id, march_info, is_enemy)
             frag = "shaders/multi_tex.fs",
             shaderName = "lineShader"..unit_count,
             unit_count = unit_count,
+            unit_len = 1 / unit_count,
             percent = 0,
             elapse = 0,
         })
