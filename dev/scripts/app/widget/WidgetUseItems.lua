@@ -941,11 +941,28 @@ function WidgetUseItems:OpenWarSpeedupDialog( item ,march_event)
     local body = dialog:GetBody()
     local size = body:getContentSize()
 
+    -- 金龙币数量
+    local gem_label = UIKit:ttfLabel({
+        text = string.formatnumberthousands(User:GetGemResource():GetValue()),
+        size = 20,
+        color = 0x403c2f,
+    }):addTo(body):align(display.RIGHT_CENTER,size.width - 30 ,size.height-50)
+    -- gem icon
+    local gem_icon = display.newSprite("gem_icon_62x61.png")
+        :align(display.RIGHT_CENTER,gem_label:getPositionX() - gem_label:getContentSize().width - 10,size.height-50)
+        :addTo(body)
+        :scale(0.6)
+    UIKit:ttfLabel({
+        text = _("拥有:"),
+        size = 20,
+        color = 0x403c2f,
+    }):addTo(body):align(display.RIGHT_CENTER,gem_icon:getPositionX() - gem_icon:getContentSize().width * 0.6 - 10,size.height-50)
+
     local buff_status_label = UIKit:ttfLabel({
         text = _("剩余时间:")..GameUtils:formatTimeStyle1(march_event:WithObject():GetTime()),
         size = 22,
         color = 0x007c23,
-    }):addTo(body):align(display.CENTER,size.width/2, size.height-50)
+    }):addTo(body):align(display.LEFT_CENTER,30, size.height-50)
 
     local list_bg = self:GetListBg(size.width/2,(#same_items * 130+24)/2+30, 568, #same_items * 130+24)
         :addTo(body)
@@ -1002,9 +1019,26 @@ function WidgetUseItems:OpenWarSpeedupDialog( item ,march_event)
     return dialog
 end
 function WidgetUseItems:OpenRetreatTroopDialog( item,event )
-    local dialog = UIKit:newWidgetUI("WidgetPopDialog", 130 +80,item:GetLocalizeName(),window.top-230)
+    local dialog = UIKit:newWidgetUI("WidgetPopDialog", 130 + 80 + 40,item:GetLocalizeName(),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
+    -- 金龙币数量
+    local gem_label = UIKit:ttfLabel({
+        text = string.formatnumberthousands(User:GetGemResource():GetValue()),
+        size = 20,
+        color = 0x403c2f,
+    }):addTo(body):align(display.RIGHT_CENTER,size.width - 30 ,size.height-45)
+    -- gem icon
+    local gem_icon = display.newSprite("gem_icon_62x61.png")
+        :align(display.RIGHT_CENTER,gem_label:getPositionX() - gem_label:getContentSize().width - 10,size.height-45)
+        :addTo(body)
+        :scale(0.6)
+    UIKit:ttfLabel({
+        text = _("拥有:"),
+        size = 20,
+        color = 0x403c2f,
+    }):addTo(body):align(display.RIGHT_CENTER,gem_icon:getPositionX() - gem_icon:getContentSize().width * 0.6 - 10,size.height-45)
+
 
     local item_box_bg = self:GetListBg(size.width/2,100,568,154):addTo(body)
 
@@ -1174,56 +1208,56 @@ local WidgetFteMark = import("..widget.WidgetFteMark")
 function WidgetUseItems:PromiseOfOpen(item_type)
     local p = promise.new()
     WidgetUseItems.open_data = { item_type = item_type, open_callback = function(ui)
-            ui.__type  = UIKit.UITYPE.BACKGROUND
-            function ui:Find()
-                return self.list.items_[1]:getContent().use_btn
-            end
-            function ui:FindLabel()
-                return self.vip_status_label
-            end
-            function ui:FindCloseBtn()
-                return self.close_btn
-            end
-            function ui:PromiseOfFte()
-                self.list:getScrollNode():setTouchEnabled(false)
-                self:Find():setTouchSwallowEnabled(true)
+        ui.__type  = UIKit.UITYPE.BACKGROUND
+        function ui:Find()
+            return self.list.items_[1]:getContent().use_btn
+        end
+        function ui:FindLabel()
+            return self.vip_status_label
+        end
+        function ui:FindCloseBtn()
+            return self.close_btn
+        end
+        function ui:PromiseOfFte()
+            self.list:getScrollNode():setTouchEnabled(false)
+            self:Find():setTouchSwallowEnabled(true)
 
-                self:GetFteLayer():SetTouchObject(self:Find())
-                local r = self:Find():getCascadeBoundingBox()
-                WidgetFteArrow.new(_("使用VIP激活1天")):addTo(self:GetFteLayer()):TurnRight()
+            self:GetFteLayer():SetTouchObject(self:Find())
+            local r = self:Find():getCascadeBoundingBox()
+            WidgetFteArrow.new(_("使用VIP激活1天")):addTo(self:GetFteLayer()):TurnRight()
                 :align(display.RIGHT_CENTER, r.x - 20, r.y + r.height/2)
 
 
-                local p1 = promise.new(function()
-                    local r = self:FindLabel():getCascadeBoundingBox()
-                    r.x = r.x - 20
-                    r.width = r.width + 40
-                    WidgetFteMark.new():addTo(self:GetFteLayer()):Size(r.width, r.height)
+            local p1 = promise.new(function()
+                local r = self:FindLabel():getCascadeBoundingBox()
+                r.x = r.x - 20
+                r.width = r.width + 40
+                WidgetFteMark.new():addTo(self:GetFteLayer()):Size(r.width, r.height)
                     :pos(r.x + r.width/2, r.y + r.height/2)
 
-                    self:GetFteLayer():SetTouchObject(self:FindCloseBtn())
-                    local r = self:FindCloseBtn():getCascadeBoundingBox()
-                    WidgetFteArrow.new(_("已经激活VIP，关闭窗口")):addTo(self:GetFteLayer())
+                self:GetFteLayer():SetTouchObject(self:FindCloseBtn())
+                local r = self:FindCloseBtn():getCascadeBoundingBox()
+                WidgetFteArrow.new(_("已经激活VIP，关闭窗口")):addTo(self:GetFteLayer())
                     :TurnRight():align(display.RIGHT_CENTER, r.x - 20, r.y + r.height/2)
 
-                    local p2 = promise.new()
-                    self:FindCloseBtn():onButtonClicked(function()
-                        p2:resolve()
-                    end)
-                    return p2
+                local p2 = promise.new()
+                self:FindCloseBtn():onButtonClicked(function()
+                    p2:resolve()
                 end)
+                return p2
+            end)
 
 
-                self:Find():removeEventListenersByEvent("CLICKED_EVENT")
-                self:Find():onButtonClicked(function()
-                    self:GetFteLayer():removeFromParent()
-                    mockData.ActiveVip()
-                    p1:resolve()
-                end)
+            self:Find():removeEventListenersByEvent("CLICKED_EVENT")
+            self:Find():onButtonClicked(function()
+                self:GetFteLayer():removeFromParent()
+                mockData.ActiveVip()
+                p1:resolve()
+            end)
 
 
-                return p1
-            end
+            return p1
+        end
 
         return p:resolve(ui)
     end}
@@ -1241,6 +1275,9 @@ end
 
 
 return WidgetUseItems
+
+
+
 
 
 
