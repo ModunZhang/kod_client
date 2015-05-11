@@ -21,6 +21,8 @@ function GameUIUnlockBuilding:ctor( city, tile )
     self:setNodeEventEnabled(true)
     self:Init()
     self.city:GetResourceManager():AddObserver(self)
+    
+    self.__type  = UIKit.UITYPE.BACKGROUND
 end
 function GameUIUnlockBuilding:OnResourceChanged(resource_manager)
     self:SetUpgradeRequirementListview()

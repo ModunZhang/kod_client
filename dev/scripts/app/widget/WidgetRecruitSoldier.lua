@@ -680,9 +680,6 @@ function WidgetRecruitSoldier:PormiseOfFte()
 
         self:Close()
     end)
-
-
-    
     
     local r = self:Find():getCascadeBoundingBox()
     WidgetFteArrow.new(_("立即开始招募，招募士兵会消耗城民")):addTo(fte_layer)

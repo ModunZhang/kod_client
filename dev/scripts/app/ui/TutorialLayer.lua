@@ -5,15 +5,20 @@ local TutorialLayer = class('TutorialLayer', function()
     return display.newNode()
 end)
 
+local debug = false
+
 function TutorialLayer:ctor(obj)
-    self.left = display.newColorLayer(cc.c4b(255, 0, 0, 100)):addTo(self, -1)
-    self.right = display.newColorLayer(cc.c4b(255, 0, 0, 100)):addTo(self, -1)
-    self.top = display.newColorLayer(cc.c4b(255, 0, 0, 100)):addTo(self, -1)
-    self.bottom = display.newColorLayer(cc.c4b(255, 0, 0, 100)):addTo(self, -1)
-    -- self.left = display.newLayer():addTo(self, 0)
-    -- self.right = display.newLayer():addTo(self, 0)
-    -- self.top = display.newLayer():addTo(self, 0)
-    -- self.bottom = display.newLayer():addTo(self, 0)
+    if debug then
+        self.left = display.newColorLayer(cc.c4b(255, 0, 0, 100)):addTo(self, -1)
+        self.right = display.newColorLayer(cc.c4b(255, 0, 0, 100)):addTo(self, -1)
+        self.top = display.newColorLayer(cc.c4b(255, 0, 0, 100)):addTo(self, -1)
+        self.bottom = display.newColorLayer(cc.c4b(255, 0, 0, 100)):addTo(self, -1)
+    else
+        self.left = display.newLayer():addTo(self, 0)
+        self.right = display.newLayer():addTo(self, 0)
+        self.top = display.newLayer():addTo(self, 0)
+        self.bottom = display.newLayer():addTo(self, 0)
+    end
     local left, right, top, bottom = self.left, self.right, self.top, self.bottom
     for _, v in pairs{ left, right, top, bottom } do
         v:setContentSize(cc.size(display.width, display.height))
@@ -100,6 +105,8 @@ end
 -- end
 
 return TutorialLayer
+
+
 
 
 

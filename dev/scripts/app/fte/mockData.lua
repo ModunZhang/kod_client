@@ -1,4 +1,6 @@
 local DiffFunction = import("..utils.DiffFunction")
+local check = import(".check")
+local mark = import(".mark")
 local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
 local BuildingLevelUp = GameDatas.BuildingLevelUp
 local HouseLevelUp = GameDatas.HouseLevelUp
@@ -7,8 +9,8 @@ local normal = GameDatas.Soldiers.normal
 
 local function mock(t)
     local delta = DiffFunction(DataManager:getFteData(), t)
-    dump(t)
-    dump(delta)
+    LuaUtils:outputTable(t)
+    LuaUtils:outputTable(delta) 
     DataManager:setFteUserDeltaData(delta)
 end
 local function remove_global_shceduler()
@@ -18,10 +20,19 @@ local function remove_global_shceduler()
     end
 end
 
+local function get_dragon_type()
+    for k,v in pairs(DataManager:getUserData().dragons) do
+        if v.star > 0 then
+            return k
+        end
+    end
+    assert(false)
+end
 
 
-local function HateDragon(type_)
-    local dragon_str = string.format("dragons.%s", type_)
+
+local function HateDragon()
+    local dragon_str = string.format("dragons.%s", get_dragon_type())
     mock{
         {dragon_str..".hpRefreshTime", NetManager:getServerTime()},
         {dragon_str..".star", 1},
@@ -29,12 +40,18 @@ local function HateDragon(type_)
         {dragon_str..".level", 1},
         {dragon_str..".hp", 60},
     }
+    if not check("HateDragon") then
+        mark("HateDragon")
+    end
 end
-local function DefenceDragon(type_)
-    local dragon_str = string.format("dragons.%s", type_)
+local function DefenceDragon()
+    local dragon_str = string.format("dragons.%s", get_dragon_type())
     mock{
         {dragon_str..".status", "defence"},
     }
+    if not check("DefenceDragon") then
+        mark("DefenceDragon")
+    end
 end
 
 
@@ -45,10 +62,15 @@ local function FinishBuildHouseAt(building_location_id, level)
         {"houseEvents.0", json.null},
         {string.format("buildings.location_%d.houses.1.level", building_location_id), level}
     }
+
+    local key = string.format("FinishBuildHouseAt_%d_%d", building_location_id, level)
+    if not check(key) then
+        mark(key)
+    end
 end
 local function BuildHouseAt(building_location_id, house_location_id, house_type)
     local start_time = NetManager:getServerTime()
-    local buildTime = HouseLevelUp[house_type][1].buildTime
+    local buildTime = HouseLevelUp[house_type][1].buildTime 
     mock{
         {
             "houseEvents.0",
@@ -71,10 +93,17 @@ local function BuildHouseAt(building_location_id, house_location_id, house_type)
     }
 
     DataManager.handle__ = scheduler.performWithDelayGlobal(function()
-        if DataManager:getFteData().houseEvents and #DataManager:getFteData().houseEvents > 0 then
-            FinishBuildHouseAt(building_location_id)
+        if DataManager:getFteData() and 
+            DataManager:getFteData().houseEvents and 
+            #DataManager:getFteData().houseEvents > 0 then
+            FinishBuildHouseAt(building_location_id, 1)
         end
     end, buildTime)
+
+    local key = string.format("BuildHouseAt_%d_%d", building_location_id, house_location_id)
+    if not check(key) then
+        mark(key)
+    end
 end
 local function UpgradeHouseTo(building_location_id, house_location_id, house_type, level)
     local start_time = NetManager:getServerTime()
@@ -93,10 +122,17 @@ local function UpgradeHouseTo(building_location_id, house_location_id, house_typ
     }
 
     DataManager.handle__ = scheduler.performWithDelayGlobal(function()
-        if DataManager:getFteData().houseEvents and #DataManager:getFteData().houseEvents > 0 then
+        if DataManager:getFteData() and 
+            DataManager:getFteData().houseEvents and 
+            #DataManager:getFteData().houseEvents > 0 then
             FinishBuildHouseAt(building_location_id, level)
         end
     end, buildTime)
+
+    local key = string.format("UpgradeHouseTo_%d_%d_%d", building_location_id, house_location_id, level)
+    if not check(key) then
+        mark(key)
+    end
 end
 
 
@@ -119,6 +155,11 @@ local function FinishUpgradingBuilding(type, level)
             string.format("buildings.location_%d.level", location_id), level
         }
     }
+
+    local key = string.format("FinishUpgradingBuilding_%s_%d", type, level)
+    if not check(key) then
+        mark(key)
+    end
 end
 local function UpgradeBuildingTo(type, level)
     local location_id
@@ -143,10 +184,17 @@ local function UpgradeBuildingTo(type, level)
     }
 
     DataManager.handle__ = scheduler.performWithDelayGlobal(function()
-        if DataManager:getFteData().buildingEvents and #DataManager:getFteData().buildingEvents > 0 then
+        if DataManager:getFteData() and
+            DataManager:getFteData().buildingEvents and 
+            #DataManager:getFteData().buildingEvents > 0 then
             FinishUpgradingBuilding(type, level)
         end
     end, buildTime)
+
+    local key = string.format("UpgradeBuildingTo_%s_%d", type, level)
+    if not check(key) then
+        mark(key)
+    end
 end
 
 
@@ -161,6 +209,11 @@ local function FinishRecruitSoldier()
             {"soldierEvents.0", json.null},
             {"soldiers.name", soldierEvents.count}
         }
+    end
+
+    local key = string.format("FinishRecruitSoldier")
+    if not check(key) then
+        mark(key)
     end
 end
 
@@ -179,10 +232,18 @@ local function RecruitSoldier(type_, count)
         }
     }
     DataManager.handle_soldier__ = scheduler.performWithDelayGlobal(function()
-        if DataManager:getFteData().soldierEvents and #DataManager:getFteData().soldierEvents > 0 then
+        if DataManager:getFteData() and
+            DataManager:getFteData().soldierEvents and 
+            #DataManager:getFteData().soldierEvents > 0 then
             FinishRecruitSoldier()
         end
+        DataManager.handle_soldier__ = nil
     end, recruitTime)
+
+    local key = string.format("RecruitSoldier_%s_%d", type_, count)
+    if not check(key) then
+        mark(key)
+    end
 end
 
 
@@ -192,6 +253,11 @@ local function GetSoldier()
         {"soldiers.swordsman", 100},
         {"soldiers.ranger", 100}
     }
+
+    local key = string.format("GetSoldier")
+    if not check(key) then
+        mark(key)
+    end
 end
 
 local function ActiveVip()
@@ -207,7 +273,31 @@ local function ActiveVip()
         }
     }
 
+    local key = string.format("ActiveVip")
+    if not check(key) then
+        mark(key)
+    end
 end
+
+
+
+local function FightWithNpc()
+    mock{
+        {"pve.floors.0",
+            {
+                level = 1,
+                fogs = "0000000000000000000000000000000000m|10W|300|700{F00yV00u|00m|10W|300|700000000000000000000000000000000000",
+                objects = "[[9,12,1]]"
+            }
+        }
+    }
+
+    local key = string.format("FightWithNpc")
+    if not check(key) then
+        mark(key)
+    end
+end
+
 
 
 
@@ -223,7 +313,10 @@ return {
     RecruitSoldier = RecruitSoldier,
     GetSoldier = GetSoldier,
     ActiveVip = ActiveVip,
+    FightWithNpc = FightWithNpc,
 }
+
+
 
 
 

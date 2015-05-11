@@ -461,7 +461,7 @@ end
 -- 重写OpenUDID
 local getOpenUDID = device.getOpenUDID
 device.getOpenUDID = function()
-    -- if true then return "dannyhe" end
+    -- if true then return "10_2" end
     if CONFIG_IS_DEBUG then
         local device_id
         local udid = cc.UserDefault:getInstance():getStringForKey("udid")
@@ -502,7 +502,18 @@ function NetManager:getLoginPromise(deviceId)
         return response
     end)
 end
-
+-- 初始化玩家数据
+function NetManager:initPlayerData(terrain)
+    if DataManager:getUserData().basicInfo.terrain ~= "__NONE__" then
+        assert(false)
+    end
+    assert(terrain == "grassLand" or
+        terrain == "desert" or
+        terrain == "iceField" )
+    return get_blocking_request_promise("logic.playerHandler.initPlayerData", {
+        terrain = terrain
+    }, "初始化玩家数据失败!"):done(get_response_msg)
+end
 -- 个人修改地形
 local function get_changeTerrain_promise(terrain)
     return get_blocking_request_promise("logic.playerHandler.setTerrain", {
@@ -1101,28 +1112,12 @@ function NetManager:getFindAllianceToFightPromose()
     return get_blocking_request_promise("logic.allianceHandler.findAllianceToFight",
         {}, "查找合适的联盟进行战斗失败!"):done(get_response_msg)
 end
---行军到月门
-function NetManager:getMarchToMoonGatePromose(dragonType,soldiers)
-    return get_blocking_request_promise("logic.allianceHandler.marchToMoonGate",
-        {dragonType = dragonType,
-            soldiers = soldiers}, "行军到月门失败!"):done(get_response_msg)
-end
 --获取对手联盟数据
 function NetManager:getFtechAllianceViewDataPromose(targetAllianceId)
     return get_blocking_request_promise("logic.allianceHandler.getAllianceViewData",
         {targetAllianceId = targetAllianceId,
             includeMoonGateData = true
         },"获取对手联盟数据失败!")
-end
---从月门撤兵
-function NetManager:getRetreatFromMoonGatePromose()
-    return get_blocking_request_promise("logic.allianceHandler.retreatFromMoonGate",{},
-        "从月门撤兵失败!"):done(get_response_msg)
-end
---联盟战月门挑战
-function NetManager:getChallengeMoonGateEnemyTroopPromose()
-    return get_blocking_request_promise("logic.allianceHandler.challengeMoonGateEnemyTroop",{},
-        "联盟战月门挑战失败!"):done(get_response_msg)
 end
 --请求联盟进行联盟战
 function NetManager:getRequestAllianceToFightPromose()
@@ -1577,6 +1572,7 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
 
 
 

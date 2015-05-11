@@ -2,9 +2,7 @@ DataManager = {}
 local initData = import("..fte.initData")
 function DataManager:setUserData( userData, deltaData )
     self.user = userData
-    if global_fte then
-        self:setFteUserDeltaData()
-    else
+    if not GLOBAL_FTE then
         self:OnUserDataChanged(self.user, app.timer:GetServerTime(), deltaData)
     end
 end
@@ -25,7 +23,9 @@ function DataManager:hasUserData()
 end
 
 function DataManager:setFteUserDeltaData(deltaData)
-    self:OnUserDataChanged(self:getFteData(), app.timer:GetServerTime(), deltaData)
+    if GLOBAL_FTE then
+        self:OnUserDataChanged(self:getFteData(), app.timer:GetServerTime(), deltaData)
+    end
 end
 function DataManager:getFteData()
     return initData

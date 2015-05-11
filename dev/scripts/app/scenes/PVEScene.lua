@@ -5,6 +5,7 @@ local WidgetUseItems = import("..widget.WidgetUseItems")
 local WidgetPVEKeel = import("..widget.WidgetPVEKeel")
 local WidgetPVECamp = import("..widget.WidgetPVECamp")
 local WidgetPVEMiner = import("..widget.WidgetPVEMiner")
+local WidgetPVEFteMiner = import("..widget.WidgetPVEFteMiner")
 local WidgetPVEFarmer = import("..widget.WidgetPVEFarmer")
 local WidgetPVEObelisk = import("..widget.WidgetPVEObelisk")
 local WidgetPVEQuarrier = import("..widget.WidgetPVEQuarrier")
@@ -44,14 +45,16 @@ end
 function PVEScene:onExit()
     PVEScene.super.onExit(self)
     self.user:ResetPveData()
-    NetManager:getSetPveDataPromise(
-        self.user:EncodePveDataAndResetFightRewardsData(),
-        true
-    ):fail(function()
-        -- 失败回滚
-        local location = DataManager:getUserData().pve.location
-        self.user:GetPVEDatabase():SetCharPosition(location.x, location.y, location.z)
-    end)
+    if not GLOBAL_FTE then
+        NetManager:getSetPveDataPromise(
+            self.user:EncodePveDataAndResetFightRewardsData(),
+            true
+        ):fail(function()
+            -- 失败回滚
+            local location = DataManager:getUserData().pve.location
+            self.user:GetPVEDatabase():SetCharPosition(location.x, location.y, location.z)
+        end)
+    end
 end
 function PVEScene:LoadAnimation()
     UILib.loadSolidersAnimation()
@@ -68,9 +71,6 @@ function PVEScene:CreateHomePage()
 end
 function PVEScene:GetHomePage()
     return self.home_page
-end
-function PVEScene:GetTutorialLayer()
-    return self.tutorial_layer
 end
 function PVEScene:CreateDirectionArrow()
     if not self:getChildByTag(DIRECTION_TAG) then
@@ -128,7 +128,7 @@ function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
 
         if self:GetSceneLayer():GetTileInfo(tx, ty) > 0 and
             self:CheckCanMoveTo(tx, ty) then
-            self:OpenUI(tx, ty)
+            self:CheckBuilding(tx, ty)
         else
             self:CheckTrap()
         end
@@ -150,38 +150,32 @@ function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
         }):AddToCurrentScene()
     end
 end
-function PVEScene:OpenUI(x, y)
+function PVEScene:CheckBuilding(x, y)
     local gid = self:GetSceneLayer():GetTileInfo(x, y)
     if gid <= 0 then return end
     self:PormiseOfCheckObject(x, y, gid):done(function()
-        if gid == PVEDefine.START_AIRSHIP then
-            WidgetPVEStartAirship.new(x, y, self.user):AddToScene(self, true)
-        elseif gid == PVEDefine.WOODCUTTER then
-            WidgetPVEWoodcutter.new(x, y, self.user):AddToScene(self, true)
-        elseif gid == PVEDefine.QUARRIER then
-            WidgetPVEQuarrier.new(x, y, self.user):AddToScene(self, true)
-        elseif gid == PVEDefine.MINER then
-            WidgetPVEMiner.new(x, y, self.user):AddToScene(self, true)
-        elseif gid == PVEDefine.FARMER then
-            WidgetPVEFarmer.new(x, y, self.user):AddToScene(self, true)
-        elseif gid == PVEDefine.CAMP then
-            WidgetPVECamp.new(x, y, self.user):AddToScene(self, true)
-        elseif gid == PVEDefine.CRASHED_AIRSHIP then
-            WidgetPVECrashedAirship.new(x, y, self.user):AddToScene(self, true)
-        elseif gid == PVEDefine.CONSTRUCTION_RUINS then
-            WidgetPVEConstructionRuins.new(x, y, self.user):AddToScene(self, true)
-        elseif gid == PVEDefine.KEEL then
-            WidgetPVEKeel.new(x, y, self.user):AddToScene(self, true)
-        elseif gid == PVEDefine.WARRIORS_TOMB then
-            WidgetPVEWarriorsTomb.new(x, y, self.user):AddToScene(self, true)
-        elseif gid == PVEDefine.OBELISK then
-            WidgetPVEObelisk.new(x, y, self.user):AddToScene(self, true)
-        elseif gid == PVEDefine.ANCIENT_RUINS then
-            WidgetPVEAncientRuins.new(x, y, self.user):AddToScene(self, true)
-        elseif gid == PVEDefine.ENTRANCE_DOOR then
-            WidgetPVEEntranceDoor.new(x, y, self.user):AddToScene(self, true)
-        end
+        self:OpenUI(x, y)
     end)
+end
+local building_ui_map = setmetatable({
+    [PVEDefine.START_AIRSHIP]      = WidgetPVEStartAirship,
+    [PVEDefine.WOODCUTTER]         = WidgetPVEWoodcutter,
+    [PVEDefine.QUARRIER]           = WidgetPVEQuarrier,
+    [PVEDefine.MINER]              = WidgetPVEFteMiner,
+    [PVEDefine.FARMER]             = WidgetPVEFarmer,
+    [PVEDefine.CAMP]               = WidgetPVECamp,
+    [PVEDefine.CRASHED_AIRSHIP]    = WidgetPVECrashedAirship,
+    [PVEDefine.CONSTRUCTION_RUINS] = WidgetPVEConstructionRuins,
+    [PVEDefine.KEEL]               = WidgetPVEKeel,
+    [PVEDefine.WARRIORS_TOMB]      = WidgetPVEWarriorsTomb,
+    [PVEDefine.OBELISK]            = WidgetPVEObelisk,
+    [PVEDefine.ANCIENT_RUINS]      = WidgetPVEAncientRuins,
+    [PVEDefine.ENTRANCE_DOOR]      = WidgetPVEEntranceDoor,
+}, {__index = function() assert(false) end})
+function PVEScene:OpenUI(x, y)
+    local gid = self:GetSceneLayer():GetTileInfo(x, y)
+    if gid <= 0 then return end
+    building_ui_map[gid].new(x, y, self.user):AddToScene(self, true)
 end
 function PVEScene:CheckTrap()
     if self.user:GetPVEDatabase():IsInTrap() then
@@ -316,53 +310,60 @@ function PVEScene:CheckDirection()
     end
 end
 
+
 -- fte
+local check = import("..fte.check")
+local mockData = import("..fte.mockData")
 local WidgetFteArrow = import("..widget.WidgetFteArrow")
 local WidgetFteMark = import("..widget.WidgetFteMark")
-local check = import("..fte.check")
 function PVEScene:onEnterTransitionFinish()
-    -- self:RunFte()
+    if GLOBAL_FTE then
+        self:RunFte()
+    end
 end
 function PVEScene:RunFte()
-    -- self.tutorial_layer = self:CreateFteLayer()
-    -- if check("ALL") then
-    --     return
-    -- end
-    -- if check("ExplorePve") then
-    --     self:PromiseOfAttackMiner():next(function()
-    --         return self:PromiseOfIntroduce()
-    --     end):next(function()
-    --         return self:PromiseOfExit()
-    --     end)
-    -- end
+    if not check("FightWithNpc") then
+        return self:PromiseOfFindNpc()
+            :next(function(npc_ui)
+                return npc_ui:PormiseOfFte()
+            end):next(function()
+            return self:PromiseOfIntroduce()
+            end):next(function()
+            return self:PromiseOfExit()
+            end)
+    end
 end
-function PVEScene:PromiseOfAttackMiner()
-    self:GetTutorialLayer():Enable()
-
+local NPC_POS = {9, 12}
+function PVEScene:PromiseOfFindNpc()
+    self:GetFteLayer():Enable()
+    local npc_x, npc_y = unpack(NPC_POS)
+    local x,y = self:GetSceneLayer():GetFog(npc_x, npc_y):getPosition()
     local cx,cy = self:GetCurrentPos()
-    local str = (cx == 9 and cy == 12) and _("请点击目标") or _("这里是我们的目的地，点击屏幕左侧向左移动")
-    local x,y = self:GetSceneLayer():GetFog(9, 12):getPosition()
+    local str = (cx == npc_x and cy == npc_y) and _("请点击目标") or _("这里是我们的目的地，点击屏幕左侧向左移动")
 
-    self:GetSceneLayer():GetFteLayer().arrow =
-        WidgetFteArrow.new(str):addTo(self:GetSceneLayer():GetFteLayer())
-            :TurnDown():align(display.BOTTOM_CENTER, x + 45, y + 80)
-    return promise.all(UIKit:PromiseOfOpen("WidgetPVEMiner"),
-        self:PromiseOfMoveTo(9, 12)):next(function(results)
-        if self:GetSceneLayer():GetFteLayer().arrow then
-            self:GetSceneLayer():GetFteLayer().arrow:removeFromParent()
-        end
-        self:GetSceneLayer():GetFteLayer().arrow = nil
-        return results[1]:PormiseOfFte()
-        end):catch(function() end)
+    WidgetFteArrow.new(str):addTo(self:GetSceneLayer():GetFteLayer())
+        :TurnDown():align(display.BOTTOM_CENTER, x + 45, y + 80)
+
+    return promise.all(
+        UIKit:PromiseOfOpen("WidgetPVEFteMiner"),
+        self:PromiseOfMoveTo(npc_x, npc_y)
+    ):next(function(results)
+        self:GetSceneLayer():GetFteLayer():removeAllChildren()
+        return results[1]
+    end)
 end
 function PVEScene:PromiseOfIntroduce()
     local r = self:GetHomePage().pve_back:getCascadeBoundingBox()
     self:GetMark():Size(r.width, r.height):pos(r.x + r.width/2, r.y + r.height/2)
-    return GameUINpc:PromiseOfSay({words = _("领主大人，探索会消耗体力值，但击败敌军可以获得资源和材料。。。"), npc = "man"}):next(function()
+
+    return GameUINpc:PromiseOfSay(
+        {words = _("领主大人，探索会消耗体力值，但击败敌军可以获得资源和材料。。。"), npc = "man"}
+    ):next(function()
         local r1 = self:GetHomePage().box:getCascadeBoundingBox()
         local r2 = self:GetHomePage().exploring:getCascadeBoundingBox()
         local r = cc.rectUnion(r1, r2)
         self:GetMark():Size(r.width, r.height):pos(r.x + r.width/2, r.y + r.height/2 - 30)
+
         return GameUINpc:PromiseOfSay({words = _("当你探索玩整个地图还会获得一笔丰厚的奖励"), npc = "man"})
     end):next(function()
         self:DestoryMark()
@@ -370,16 +371,20 @@ function PVEScene:PromiseOfIntroduce()
     end)
 end
 function PVEScene:PromiseOfExit()
-    self:GetTutorialLayer():Reset()
+    self:GetFteLayer():Reset()
     local r = self:GetHomePage().change_map:GetWorldRect()
+    self:GetHomePage().change_map.btn:removeEventListenersByEvent("CLICKED_EVENT")
+    self:GetHomePage().change_map.btn:onButtonClicked(function()
+        app:EnterMyCityScene()
+    end)
+
     self:GetHomePage():GetFteLayer():SetTouchRect(r)
-    self:GetHomePage():GetFteLayer().arrow = WidgetFteArrow.new(_("返回城市"))
-        :addTo(self:GetHomePage():GetFteLayer())
+    WidgetFteArrow.new(_("返回城市")):addTo(self:GetHomePage():GetFteLayer())
         :TurnLeft():align(display.LEFT_CENTER, r.x + r.width + 20, r.y + r.width/2)
 end
 function PVEScene:GetMark()
     if not self.mark then
-        self.mark = WidgetFteMark.new():addTo(self, 2000)
+        self.mark = WidgetFteMark.new():addTo(self):zorder(4000)
     end
     return self.mark
 end
@@ -389,18 +394,6 @@ function PVEScene:DestoryMark()
 end
 
 return PVEScene
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

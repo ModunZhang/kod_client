@@ -157,7 +157,12 @@ function WidgetRankingList:ReloadRank(rank)
     if rank.myData.rank == json.null then
         self.my_ranking:setString(_("暂无排名"))
     else
-        local str = self.type_ == "player" and _("我的战斗力排行") or _("我的联盟战斗力排行")
+        local str 
+        if self.type_ == "player" then
+            str = self.drop_list:GetSelectdTag() == "power" and _("我的战斗力排行") or _("我的击杀排行")
+        else
+            str = self.drop_list:GetSelectdTag() == "power" and _("我的联盟战斗力排行") or _("我的联盟击杀排行")
+        end
         self.my_ranking:setString(string.format("%s : %d", str, rank.myData.rank))
     end
     self.current_rank = rank
