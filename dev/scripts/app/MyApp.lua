@@ -427,7 +427,7 @@ function MyApp:__checkGameCenter()
         if string.len(gcId) > 0 and NetManager:isConnected() and User and not User:IsBindGameCenter() then
             NetManager:getGcBindStatusPromise(gcId):done(function(response)
             if not response.msg.isBind then
-                NetManager:getBindGcIdPromise(gc_id):done(function()
+                NetManager:getBindGcIdPromise(gcId):done(function()
                     app:EndCheckGameCenterIf()
                 end)
             end

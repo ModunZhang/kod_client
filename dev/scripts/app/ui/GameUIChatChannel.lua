@@ -51,7 +51,9 @@ function GameUIChatChannel:TO_TOP(data)
     if count > 0 then
         isLastMessageInViewRect = self.listView:getItemWithLogicIndex(count)
     end
-    if #self:GetDataSource() == 0 or isLastMessageInViewRect then
+    if #self:GetDataSource() == 0 then
+        self:RefreshListView()
+    elseif isLastMessageInViewRect and not self.isModeVoew then
         self:RefreshListView()
     else
         LuaUtils:table_insert_top(self.dataSource_,data)
@@ -560,124 +562,52 @@ end
 
 
 function GameUIChatChannel:CreatePlayerMenu(event,chat)
+    local listView = event.listView
     local item = event.item
-    local menuLayer = UIKit:shadowLayer()
-    menuLayer:setTouchEnabled(true)
-    menuLayer:addTo(self,PLAYERMENU_ZORDER):pos(0, 0)
-    -- local tabBg = display.newSprite("chat_tab_backgroud.png"):align(display.LEFT_BOTTOM, 0, 0):addTo(menuLayer)
-    menuLayer:addNodeEventListener(cc.NODE_TOUCH_EVENT,function()
-        menuLayer:removeFromParent(true)
-    end)
     local x,y = item:getPosition()
     local p = item:getParent():convertToWorldSpace(cc.p(x,y))
-    local targetP = menuLayer:convertToNodeSpace(p)
-    local newItem = self:GetChatItemCell()
-    self:HandleCellUIData(newItem,chat,false)
-    newItem.transition_action = nil
-    newItem:setPosition(targetP)
-    newItem:addTo(menuLayer)
-    --copy
-    local copyButton = WidgetPushButton.new({normal="chat_button_n_124x92.png",pressed="chat_button_h_124x92.png"}, {scale9 = false})
-        :setButtonLabel("normal",UIKit:commonButtonLable({
-            text = _("复制"),
-            size = 16,
-            color= 0xffedae
-        }))
-        :onButtonClicked(function(event)
-            local labelText = chat.text
-            if chat._translate_ and chat._translateMode_ then
-                labelText = chat._translate_
+    local targetY = window.cy - 100
+    local distance = targetY - p.y
+    if distance <= 0 then
+        targetY = p.y 
+    end
+    local callback = function(msg,data)
+        if msg == 'in' then
+            self.isModeVoew = true
+            local layer = data
+            if distance > 0 then
+                listView:scrollBy(0,distance)
             end
-            ext.copyText(labelText)
-            menuLayer:removeFromParent(true)
-            UIKit:showMessageDialog(nil,_("复制成功"))
-        end)
-        :align(display.LEFT_BOTTOM,window.left + 10, window.bottom + 2)
-        :addTo(menuLayer)
-        :setTouchSwallowEnabled(true)
-    local label = copyButton:getButtonLabel()
-    display.newSprite("chat_copy_62x56.png"):align(display.CENTER,label:getPositionX(), label:getPositionY()+10):addTo(copyButton)
-    copyButton:setButtonLabelOffset(0,-30)
+            local targetP = layer:convertToNodeSpace(cc.p(p.x,targetY))
+            local newItem = self:GetChatItemCell()
+            self:HandleCellUIData(newItem,chat,false)
+            newItem.transition_action = nil
+            newItem:setPosition(targetP)
+            newItem:addTo(layer)
+            layer.item = newItem
+        elseif msg == 'uiAnimationMoveout' then
+            local layer = data
+            if layer.item then layer.item:removeSelf() end
+        elseif msg == 'buttonCallback' then
+            if data == 'playerInfo' then
+                UIKit:newGameUI("GameUIAllianceMemberInfo",false,chat.id):AddToCurrentScene(true)
+            elseif data == 'sendMail' then
+            elseif data == 'copyAction' then
+            elseif data == 'blockChat' then
 
-    --chat_check_out
-    local checkButton = WidgetPushButton.new({normal="chat_button_n_124x92.png",pressed="chat_button_h_124x92.png"}, {scale9 = false})
-        :setButtonLabel("normal",UIKit:commonButtonLable({
-            text = _("查看信息"),
-            size = 16,
-            color= 0xffedae
-        }))
-        :onButtonClicked(function(event)
-            menuLayer:removeFromParent(true)
-            UIKit:newGameUI("GameUIAllianceMemberInfo",false,chat.id):AddToCurrentScene(true)
-        end)
-        :setTouchSwallowEnabled(true)
-        :align(display.LEFT_BOTTOM, window.left + 134 ,window.bottom +  2)
-        :addTo(menuLayer)
-    local label = checkButton:getButtonLabel()
-    display.newSprite("chat_check_out_62x56.png"):align(display.CENTER,label:getPositionX(), label:getPositionY()+10):addTo(checkButton)
-    checkButton:setButtonLabelOffset(0,-30)
-
-    --chat_shield
-    local shieldButton = WidgetPushButton.new({normal="chat_button_n_124x92.png",pressed="chat_button_h_124x92.png"}, {scale9 = false})
-        :setButtonLabel("normal",UIKit:commonButtonLable({
-            text = _("屏蔽"),
-            size = 16,
-            color= 0xffedae
-        }))
-        :onButtonClicked(function(event)
-            if self:GetChatManager():AddBlockChat(chat) then
-                UIKit:showMessageDialog(nil,_("屏蔽成功!"))
-                self:RefreshListView()
             end
-            menuLayer:removeFromParent(true)
-        end)
-        :align(display.LEFT_BOTTOM,  window.left + 258,window.bottom +  2)
-        :addTo(menuLayer)
-        :setTouchSwallowEnabled(true)
-    local label = shieldButton:getButtonLabel()
-    display.newSprite("chat_shield_62x56.png"):align(display.CENTER,label:getPositionX(), label:getPositionY()+10):addTo(shieldButton)
-    shieldButton:setButtonLabelOffset(0,-30)
-
-    --chat_report
-    local reportButton = WidgetPushButton.new({normal="chat_button_d_124x92.png",pressed="chat_button_d_124x92.png",disabled = "chat_button_d_124x92.png"}, {scale9 = false})
-        :setButtonLabel("normal", UIKit:commonButtonLable({
-            text = _("举报"),
-            size = 16,
-            color= 0xffedae
-        }))
-        :onButtonClicked(function(event)
-            -- menuLayer:removeFromParent(true)
-        end)
-        :align(display.LEFT_BOTTOM, window.left + 382,window.bottom +  2)
-        :addTo(menuLayer)
-        :setTouchSwallowEnabled(true)
-    local label = reportButton:getButtonLabel()
-    display.newSprite("chat_report_62x56.png"):align(display.CENTER,label:getPositionX(), label:getPositionY()+10):addTo(reportButton)
-    reportButton:setButtonLabelOffset(0,-30)
-    --chat_mail
-    local mailButton = WidgetPushButton.new({normal="chat_button_n_124x92.png",pressed="chat_button_h_124x92.png"}, {scale9 = false})
-        :setButtonLabel("normal",  UIKit:commonButtonLable({
-            text = _("邮件"),
-            size = 16,
-            color= 0xffedae
-        }))
-        :onButtonClicked(function(event)
-            menuLayer:removeFromParent(true)
-            local mail = GameUIWriteMail.new(GameUIWriteMail.SEND_TYPE.PERSONAL_MAIL,{
-                    id = chat.id,
-                    name = chat.name,
-                    icon = chat.icon,
-                    allianceTag = chat.allianceTag,
-                })
-            mail:SetTitle(_("个人邮件"))
-            mail:addTo(self,201)
-        end)
-        :setTouchSwallowEnabled(true)
-        :align(display.LEFT_BOTTOM, window.left + 506 ,window.bottom +  2)
-        :addTo(menuLayer)
-    local label = mailButton:getButtonLabel()
-    display.newSprite("chat_mail_62x56.png"):align(display.CENTER,label:getPositionX(), label:getPositionY()+10):addTo(mailButton)
-    mailButton:setButtonLabelOffset(0,-30)
+        elseif msg == 'out' then
+            if listView:getItemWithLogicIndex(#self:GetDataSource() - 7) then
+                listView:scrollAuto()
+            else
+                if distance > 0 then
+                    listView:scrollBy(0,-distance)
+                end
+            end
+            self.isModeVoew = false
+        end
+    end
+    UIKit:newGameUI("GameUIAllianceInfoMenu",callback):AddToCurrentScene(true)
 end
 
 function GameUIChatChannel:CreateEmojiPanel()

@@ -76,8 +76,9 @@ end
 function GameUIVip:AdapterPlayerList()
     local infos = {}
     local alliance = Alliance_Manager:GetMyAlliance()
+    local member
     if not alliance:IsDefault() then
-        local member = alliance:GetMemeberById(DataManager:getUserData()._id)
+        member = alliance:GetMemeberById(User:Id())
     end
     table.insert(infos,{_("采集粮食熟练度"),User:GetFoodCollectLevel()})
     table.insert(infos,{_("采集铁矿熟练度"),User:GetIronCollectLevel()})
