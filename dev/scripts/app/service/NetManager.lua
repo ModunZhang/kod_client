@@ -461,7 +461,6 @@ end
 -- 重写OpenUDID
 local getOpenUDID = device.getOpenUDID
 device.getOpenUDID = function()
-    -- if true then return "103_0" end
     if CONFIG_IS_DEBUG then
         local device_id
         local udid = cc.UserDefault:getInstance():getStringForKey("udid")
@@ -623,15 +622,15 @@ local function get_makeDragonEquipment_promise(equipment_name, finish_now)
     return get_blocking_request_promise("logic.playerHandler.makeDragonEquipment", {
         equipmentName = equipment_name,
         finishNow = finish_now or false
-    }, "打造装备失败!"):done(get_response_msg)
+    }, "打造装备失败!"):done(get_response_msg):done(function()
+        app:GetAudioManager():PlayeEffectSoundWithKey("UI_BLACKSMITH_FORGE")
+    end)
 end
 function NetManager:getMakeDragonEquipmentPromise(equipment_name)
     return get_makeDragonEquipment_promise(equipment_name)
 end
 function NetManager:getInstantMakeDragonEquipmentPromise(equipment_name)
-    return get_makeDragonEquipment_promise(equipment_name, true):done(function()
-        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
-    end)
+    return get_makeDragonEquipment_promise(equipment_name, true)
 end
 -- 招募士兵
 local function get_recruitNormalSoldier_promise(soldierName, count, finish_now)

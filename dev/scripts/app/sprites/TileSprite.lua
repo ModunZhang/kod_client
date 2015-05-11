@@ -5,7 +5,6 @@ local random = math.random
 
 local surface = {
     grassLand = {
-
         "unlock_tile_surface_1_grassLand.png",
         "unlock_tile_surface_2_grassLand.png",
         "unlock_tile_surface_3_grassLand.png",
@@ -26,7 +25,7 @@ function TileSprite:ctor(city_layer, entity, x, y)
     if entity:NeedWalls() then
         self:GetSprite():hide()
     end
-    local sx,ex,sy,ey = 200,250,150,200
+    local sx,ex,sy,ey = 200,230,150,200
     local maps = surface[self:GetMapLayer():Terrain()]
     for i = 1,2 do
         display.newSprite(maps[math.random(#maps)]):addTo(self:GetSprite())
@@ -40,23 +39,31 @@ end
 function TileSprite:CreateSprite()
     local sprite = TileSprite.super.CreateSprite(self)
     local tile = self:GetEntity()
-    local x, y, city = tile.x, tile.y, tile.city
-    if y == 5 and x == 2 then
+    local x, y = tile.x, tile.y
+    if x == 2 then
         local dx, dy = 510/2, 310/2
-        for i = 1, 2 do
-            display.newSprite(string.format("unlock_road_%s.png",
-                self:GetMapLayer():Terrain())):addTo(self):pos(-dx * i, -dy * i)
+        sprite:setTexture(self:GetUnlockTilePng())
+        display.newSprite(self:GetRoadPng()):addTo(sprite):pos(dx, dy)
+        if y == 5 and x == 2 then
+            for i = 1, 2 do
+                display.newSprite(string.format("unlock_road_%s.png",
+                    self:GetMapLayer():Terrain())):addTo(self):pos(-dx * i, -dy * i)
+            end
         end
     end
     return sprite
 end
 function TileSprite:GetSpriteFile()
-    local tile = self:GetEntity()
-    local x, y, city = tile.x, tile.y, tile.city
-    if x == 2 then
-        return string.format("unlock_road_%s.png", self:GetMapLayer():Terrain())
+    if self:GetEntity().x == 2 then
+        return self:GetRoadPng()
     end
+    return self:GetUnlockTilePng()
+end
+function TileSprite:GetUnlockTilePng()
     return string.format("unlock_tile_1_%s.png", self:GetMapLayer():Terrain())
+end
+function TileSprite:GetRoadPng()
+    return string.format("unlock_road_%s.png", self:GetMapLayer():Terrain())
 end
 -- function TileSprite:GetSpriteOffset()
 --     local tile = self:GetEntity()
@@ -71,6 +78,7 @@ function TileSprite:GetLogicZorder()
     return - 1
 end
 return TileSprite
+
 
 
 

@@ -108,6 +108,7 @@ function Alliance:GetItemsManager()
     return self.items_manager
 end
 function Alliance:ResetAllListeners()
+    self.alliance_shrine:ClearAllListener()
     self.alliance_map:ClearAllListener()
     self:ClearAllListener()
 end
@@ -187,9 +188,6 @@ function Alliance:OnPropertyChange(property_name, old_value, new_value)
     local is_new_alliance = property_name == "id" and (old_value == nil or old_value == json.null) and new_value ~= nil
     if is_new_alliance then
         self:OnOperation("join")
-    end
-    if property_name == "status" and new_value == "fight" and display.getRunningScene().__cname ~= "MainScene" then
-        app:GetAudioManager():PlayeEffectSoundWithKey("BATTLE_START")
     end
     self:OnBasicChanged{
         [property_name] = {old = old_value, new = new_value}
@@ -649,6 +647,10 @@ function Alliance:OnTimer(current_time)
     self:IteratorVillageEvents(function(villageEvent)
         villageEvent:OnTimer(current_time)
     end)
+    if self:Status() == "prepare" and math.floor(self:StatusFinishTime() / 1000) == math.floor(current_time) then
+        app:GetAudioManager():PlayeEffectSoundWithKey("BATTLE_START")   
+    end
+
 end
 
 --行军事件

@@ -32,6 +32,10 @@ function DataManager:getFteData()
 end
 
 function DataManager:setEnemyAllianceData(enemyAllianceData,deltaData)
+    if not Alliance_Manager then
+        print(debug.traceback("", 2))
+        assert(false)
+    end
     self.enemyAllianceData = enemyAllianceData
     Alliance_Manager:OnEnemyAllianceDataChanged(enemyAllianceData,app.timer:GetServerTime(),deltaData)
 end
@@ -41,6 +45,10 @@ function DataManager:getEnemyAllianceData()
 end
 
 function DataManager:OnUserDataChanged(userData,timer, deltaData)
+    if not User or not ItemManager or not City or not Alliance_Manager or not MailManager then
+        print(debug.traceback("", 2))
+        assert(false)
+    end
     User:OnUserDataChanged(userData, timer, deltaData)
     ItemManager:OnUserDataChanged(userData, timer, deltaData)
     City:OnUserDataChanged(userData, timer, deltaData)
