@@ -198,7 +198,7 @@ function WidgetPVEDialog:Fight()
             local report = GameUtils:DoBattle(
                 {dragon = attack_dragon, soldiers = attack_soldier},
                 {dragon = enemy.dragon, soldiers = enemy.soldiers},
-                self:GetObject():GetMap():Terrain()
+                self:GetObject():GetMap():Terrain(), self:GetTitle()
             )
 
             if report:IsAttackWin() then

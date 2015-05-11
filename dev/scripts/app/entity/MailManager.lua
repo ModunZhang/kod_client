@@ -268,6 +268,10 @@ function MailManager:FetchSavedMailsFromServer(fromIndex)
     end)
 end
 function MailManager:GetSendMails()
+    -- 按时间排序
+    table.sort(self.sendMails,function ( a , b )
+        return a.sendTime > b.sendTime
+    end)
     return self.sendMails
 end
 function MailManager:FetchSendMailsFromServer(fromIndex)

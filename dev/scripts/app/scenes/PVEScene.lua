@@ -210,7 +210,7 @@ function PVEScene:CheckTrap()
                     local report = GameUtils:DoBattle(
                         {dragon = attack_dragon, soldiers = attack_soldier},
                         {dragon = enemy.dragon, soldiers = enemy.soldiers},
-                        trap_obj:GetMap():Terrain()
+                        trap_obj:GetMap():Terrain(), _("散兵游勇")
                     )
                     if report:IsAttackWin() then
                         self.user:SetPveData(report:GetAttackKDA(), enemy.rewards)

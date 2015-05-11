@@ -755,7 +755,7 @@ local function getPlayerSoldierMoraleDecreasedPercent(dragon)
 
     return basePercent - skillBuff
 end
-function GameUtils:DoBattle(attacker, defencer, terrain)
+function GameUtils:DoBattle(attacker, defencer, terrain, enemy_name)
     local clone_attacker_soldiers = clone(attacker.soldiers)
     local clone_defencer_soldiers = clone(defencer.soldiers)
     local attacker_soldiers = createPlayerSoldiersForFight(attacker.soldiers, attacker.dragon.dragon, terrain or "iceFiled")
@@ -820,10 +820,10 @@ function GameUtils:DoBattle(attacker, defencer, terrain)
     function report:IsPveBattle()
     end
     function report:GetFightAttackName()
-        return _("进攻方")
+        return User:Name()
     end
     function report:GetFightDefenceName()
-        return _("防守方")
+        return enemy_name
     end
     function report:IsDragonFight()
         return true

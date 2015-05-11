@@ -130,7 +130,8 @@ function GameUISetting:OnButtonClicked(button)
 			ext.userVoice()
 		end
 	elseif tag == 12 then
-		UIKit:newGameUI("GameUISettingFaq"):AddToCurrentScene(self)
+		-- UIKit:newGameUI("GameUISettingFaq"):AddToCurrentScene(self)
+       	UIKit:newGameUI("GameUISettingContactUs"):AddToCurrentScene(true)
 	end
 end
 

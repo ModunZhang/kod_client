@@ -58,13 +58,13 @@ function GameUIAlliancePalace:OnMoveInStage()
 end
 function GameUIAlliancePalace:CreateBetweenBgAndTitle()
     GameUIAlliancePalace.super.CreateBetweenBgAndTitle(self)
-
+    local parent = self
     -- impose_layer
     local impose_layer = display.newLayer():addTo(self:GetView())
     function impose_layer:Clear()
         self:removeAllChildren()
-        self.current_honour = nil
-        self.award_menmber_listview = nil
+        parent.current_honour = nil
+        parent.award_menmber_listview = nil
     end
     self.impose_layer = impose_layer
     -- info_layer
