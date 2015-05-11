@@ -1,5 +1,5 @@
 #ifdef GL_ES
-precision mediump float;
+precision highp float;
 #endif
 
 varying vec4 v_fragmentColor;
@@ -10,5 +10,8 @@ uniform float percent;
 uniform float elapse;
 void main(void)
 {
-	gl_FragColor = texture2D( CC_Texture0, vec2( v_texCoord.x, mod( mod( v_texCoord.y, unit_len ) * unit_count + percent, 1.0 ) ) ) * smoothstep(elapse - 0.1, elapse, 1.0 - v_texCoord.y);
+	float p = smoothstep(elapse - 0.1, elapse, 1.0 - v_texCoord.y);
+	float y = mod( v_texCoord.y, unit_len ) * unit_count;
+	float ry = mod( y + percent, 1.0 );
+	gl_FragColor = texture2D( CC_Texture0, vec2( v_texCoord.x, ry ) ) * p;
 }
