@@ -299,9 +299,9 @@ local base_event_map = {
     disconnect = function(success, response)
         print("server----->disconnect---->")
         if NetManager.m_netService:isConnected() then
-            UIKit:showMessageDialog(_("错误"), _("服务器连接断开,请检测你的网络环境后重试!"), function()
+            UIKit:showKeyMessageDialog(_("错误"), _("服务器连接断开,请检测你的网络环境后重试!"), function()
                 app:retryConnectServer()
-            end,nil,false)
+            end)
         end
     end,
     timeout = function(success, response)
@@ -310,9 +310,9 @@ local base_event_map = {
     onKick = function(success, response)
         print("server----->onKick---->")
         NetManager:disconnect()
-        UIKit:showMessageDialog(_("提示"), _("服务器连接断开!"), function()
+        UIKit:showKeyMessageDialog(_("提示"), _("服务器连接断开!"), function()
             app:restart(false)
-        end,nil,false)
+        end)
     end,
 }
 
