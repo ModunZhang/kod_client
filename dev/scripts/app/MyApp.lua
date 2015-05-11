@@ -235,7 +235,7 @@ function MyApp:lockInput(b)
     --     lockInputCount = lockInputCount - 1
     -- end
     -- if lockInputCount > 0 then
-    cc.Director:getInstance():getEventDispatcher():setEnabled(b)
+    cc.Director:getInstance():getEventDispatcher():setEnabled(not b)
     -- elseif lockInputCount == 0 then
         -- cc.Director:getInstance():getEventDispatcher():setEnabled(not b)
     -- end
