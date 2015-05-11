@@ -227,10 +227,10 @@ local function get_request_promise(request_route, data, m)
     end)
     return p
 end
-local function get_blocking_request_promise(request_route, data, m,need_catch)
+local function get_blocking_request_promise(request_route, data, m,need_catch,loading_ui_time)
     --默认后面的处理需要主动catch错误
     need_catch = type(need_catch) == 'boolean' and need_catch or false
-    UIKit:WaitForNet()
+    UIKit:WaitForNet(loading_ui_time)
     local p = cocos_promise.promiseWithTimeOut(get_request_promise(request_route, data, m), TIME_OUT):always(function()
         UIKit:NoWaitForNet()
     end)
@@ -461,7 +461,7 @@ end
 -- 重写OpenUDID
 local getOpenUDID = device.getOpenUDID
 device.getOpenUDID = function()
-    if true then return "103_0" end
+    -- if true then return "103_0" end
     if CONFIG_IS_DEBUG then
         local device_id
         local udid = cc.UserDefault:getInstance():getStringForKey("udid")
@@ -1125,6 +1125,11 @@ function NetManager:getRequestAllianceToFightPromose()
         "请求联盟进行联盟战失败!"):done(get_response_msg)
 end
 
+--请求联盟数据
+function NetManager:getAllianceInfoPromise(allianceId)
+      return get_blocking_request_promise("logic.allianceHandler.getAllianceInfo",{allianceId = allianceId},
+        "请求联盟数据失败!",false,0)
+end
 --协防
 function NetManager:getHelpAllianceMemberDefencePromise(dragonType, soldiers, targetPlayerId)
     return get_blocking_request_promise("logic.allianceHandler.helpAllianceMemberDefence",

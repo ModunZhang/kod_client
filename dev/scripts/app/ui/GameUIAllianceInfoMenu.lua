@@ -8,12 +8,14 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 
 local GameUIAllianceInfoMenu = UIKit:createUIClass("GameUIAllianceInfoMenu","UIAutoClose")
 
-function GameUIAllianceInfoMenu:ctor(callback)
+function GameUIAllianceInfoMenu:ctor(callback,alliance_buttong_str,enable_alliance_info)
     GameUIAllianceInfoMenu.super.ctor(self)
     self.body = display.newSprite("back_ground_588x346.png"):align(display.BOTTOM_CENTER, window.cx, window.bottom_top - 416) --window.bottom_top - 70
     local body = self.body
     self:addTouchAbleChild(body)
     self.callback = callback
+    self.alliance_buttong_str = alliance_buttong_str or ""
+    self.enable_alliance_info = enable_alliance_info or false
 end
 
 function GameUIAllianceInfoMenu:UIAnimationMoveIn()
@@ -49,9 +51,9 @@ function GameUIAllianceInfoMenu:LoadAllMenus()
     local body = self.body
     local size = body:getContentSize()
 
-	local button = WidgetPushButton.new({normal = "brown_btn_up_552x56.png",pressed = "brown_btn_down_552x56.png"})
+	local button = WidgetPushButton.new({normal = "brown_btn_up_552x56.png",pressed = "brown_btn_down_552x56.png",disabled = "disbale_552x56.png"})
             :setButtonLabel(UIKit:ttfLabel({
-                text = _("查看联盟"),
+                text = self.alliance_buttong_str ,
                 size = 20,
                 color = 0xffedae,
             }))
@@ -61,7 +63,7 @@ function GameUIAllianceInfoMenu:LoadAllMenus()
                 end
             end)
             :align(display.CENTER_TOP, size.width/2, 325)
-            :addTo(body)
+            :addTo(body):setButtonEnabled(self.enable_alliance_info)
     display.newSprite("icon_check_alliance_36x40.png"):addTo(button):pos(-240,-28)
 
    local button =  WidgetPushButton.new({normal = "brown_btn_up_552x56.png",pressed = "brown_btn_down_552x56.png"})
@@ -137,11 +139,7 @@ end
 function GameUIAllianceInfoMenu:OnMoveOutStage()
     self:CallEventCallback('out',self.body)
     local tag = self.tag_call or ""
-    if tag == 'allianceInfo' then
-        UIKit:newGameUI("GameUIAllianceInfo",nil,"info"):AddToCurrentScene(true)
-    else
-        if self.callback then self.callback("buttonCallback",tag) end
-    end
+    if self.callback then self.callback("buttonCallback",tag) end
     GameUIAllianceInfoMenu.super.OnMoveOutStage(self)
 end
 
