@@ -208,6 +208,7 @@ function User:EncodePveDataAndResetFightRewardsData()
         },
         fightData = fightData,
         rewards = rewards,
+        -- rewardedFloor = nil,
     }
 end
 function User:ResetAllListeners()

@@ -128,12 +128,14 @@ function GameUIPVEHome:CreateTop()
         ,{})
         :addTo(top_bg, 1):align(display.CENTER, 80, 55):scale(0.8)
         :onButtonClicked(function(event)
-            self.box:getAnimation():playWithIndex(0, -1, 0)
-            -- self.box:getAnimation():gotoAndPause(85)
+            self.box:hide()
+            self:GetRewards()
         end)
     self.box_bg = box
     self.box = ccs.Armature:create("lanse"):addTo(box)
         :align(display.CENTER, - 20, 10):scale(0.25)
+
+    self:SetBoxStatus(not self.layer:CurrentPVEMap():IsRewarded())
 
     UIKit:ttfLabel({
         text = string.format("%d. %s", self.layer:CurrentPVEMap():GetIndex(), self.layer:CurrentPVEMap():Name()),
@@ -155,13 +157,46 @@ function GameUIPVEHome:CreateBottom()
     self.change_map = WidgetChangeMap.new(WidgetChangeMap.MAP_TYPE.PVE):addTo(self)
 end
 
+function GameUIPVEHome:SetBoxStatus(can_get)
+    self.box:show()
+    self.box_bg:setButtonEnabled(can_get)
+    if can_get then
+        self.box:getAnimation():stop()
+    else
+        self.box:getAnimation():playWithIndex(0)
+        self.box:getAnimation():gotoAndPause(85)
+    end
+end
+function GameUIPVEHome:GetRewards()
+    local index = self.layer:CurrentPVEMap():GetIndex()
+    self.user:ResetPveData()
+    self.user:SetPveData(nil, {
+        {
+            type = "items",
+            name = "woodBonus_1",
+            count = 9,
+        },
+        {
+            type = "items",
+            name = "stoneBonus_1",
+            count = 9,
+        },
+    }, nil)
+    local data = self.user:EncodePveDataAndResetFightRewardsData()
+    data.rewardedFloor = index
+    NetManager:getSetPveDataPromise(data)
+
+    local wp = self.box:getParent():convertToWorldSpace(cc.p(self.box:getPosition()))
+    UIKit:newGameUI("GameUIPveGetRewards", wp.x, wp.y):AddToCurrentScene(true)
+        :AddClickOutFunc(function(ui)
+            ui:LeftButtonClicked()
+            self:SetBoxStatus(not self.layer:CurrentPVEMap():IsRewarded())
+        end)
+end
+
 
 
 return GameUIPVEHome
-
-
-
-
 
 
 

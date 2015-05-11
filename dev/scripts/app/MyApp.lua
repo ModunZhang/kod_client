@@ -227,18 +227,18 @@ function MyApp:onEnterResume()
     LuaUtils:outputTable("onEnterResume", {})
 end
 
-local lockInputCount = 0
+-- local lockInputCount = 0
 function MyApp:lockInput(b)
-    if b then
-        lockInputCount = lockInputCount + 1
-    else
-        lockInputCount = lockInputCount - 1
-    end
-    if lockInputCount > 0 then
-        cc.Director:getInstance():getEventDispatcher():setEnabled(false)
-    elseif lockInputCount == 0 then
-        cc.Director:getInstance():getEventDispatcher():setEnabled(true)
-    end
+    -- if b then
+    --     lockInputCount = lockInputCount + 1
+    -- else
+    --     lockInputCount = lockInputCount - 1
+    -- end
+    -- if lockInputCount > 0 then
+    cc.Director:getInstance():getEventDispatcher():setEnabled(b)
+    -- elseif lockInputCount == 0 then
+        -- cc.Director:getInstance():getEventDispatcher():setEnabled(not b)
+    -- end
 end
 function MyApp:EnterFriendCityScene(id)
     self:EnterCitySceneByPlayerAndAlliance(id, true)
