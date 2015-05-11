@@ -227,8 +227,12 @@ function GameUIWarReport:CreateBootyPart()
 end
 
 function GameUIWarReport:CreateWarStatisticsPart()
-    self:FightWithHelpDefencePlayerReports()
-    self:FightWithDefencePlayerReports()
+    local report = self.report
+    if report:IsHasHelpDefencePlayer() then
+        self:FightWithHelpDefencePlayerReports()
+    else
+        self:FightWithDefencePlayerReports()
+    end
 end
 
 function GameUIWarReport:FightWithHelpDefencePlayerReports()
@@ -695,6 +699,7 @@ function GameUIWarReport:GetRewards()
     return  self.report:GetMyRewards()
 end
 return GameUIWarReport
+
 
 
 
