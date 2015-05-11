@@ -471,7 +471,7 @@ function UIKit:commonButtonWithBG(options)
     return btn_bg
 end
 
-function UIKit:commonListView(params,topEnding,bottomEnding)
+function UIKit:commonListView(params,topEnding,bottomEnding,useSysUI)
     assert(params.direction==cc.ui.UIScrollView.DIRECTION_VERTICAL,"错误！只支持上下滑动")
     local viewRect = params.viewRect
     viewRect.x = 0
@@ -479,7 +479,9 @@ function UIKit:commonListView(params,topEnding,bottomEnding)
     local list_node = display.newNode()
     list_node:ignoreAnchorPointForPosition(false)
     list_node:setContentSize(cc.size(viewRect.width,viewRect.height))
-    local list = UIListView.new(params):addTo(list_node)
+    local ui_class = UIListView 
+    if useSysUI then  ui_class = cc.ui.UIListView end
+    local list = ui_class.new(params):addTo(list_node)
     -- 是否有顶部的边界条，默认有
     local isTopEnding
     if tolua.type(topEnding)~="nil" then

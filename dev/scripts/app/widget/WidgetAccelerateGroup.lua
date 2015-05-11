@@ -53,14 +53,13 @@ function WidgetAccelerateGroup:ctor(eventType,eventId)
         end
         table.insert(self.gem_images, gem_icon)
         -- 花销数值
-        table.insert(self.own_labels, cc.ui.UILabel.new({
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        local own_label = UIKit:ttfLabel({
             text = cost_text,
-            font = UIKit:getFontFilePath(),
             size = 20,
-            color = UIKit:hex2c3b(0x403c2f)
+            color = 0x403c2f
         }):align(display.CENTER, width/2-220+gap_x*math.mod(i-1,4), 160-gap_y*math.floor((i-1)/4))
-            :addTo(self))
+            :addTo(self)
+        table.insert(self.own_labels, own_label)
 
         -- 时间按钮
         local time_button = WidgetPushButton.new({normal = "upgrade_time_"..i..".png"},{scale9 = false}
@@ -102,7 +101,7 @@ function WidgetAccelerateGroup:ctor(eventType,eventId)
             if event.name == "CLICKED_EVENT" then
                 acc_button:setVisible(false)
                 time_button:setVisible(true)
-                if speedUp_item_num>0 then
+                if string.find(own_label:getString(),_("拥有")) then
                     NetManager:getUseItemPromise(speedUp_item_name,{[speedUp_item_name] = {
                         eventType = eventType,
                         eventId = eventId

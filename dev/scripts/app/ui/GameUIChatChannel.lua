@@ -571,6 +571,25 @@ function GameUIChatChannel:CreatePlayerMenu(event,chat)
     if distance <= 0 then
         targetY = p.y 
     end
+    local alliance_string = _("查看联盟")
+    local my_alliance = Alliance_Manager:GetMyAlliance()
+    local has_other_alliane = chat.allianceId and string.len(chat.allianceId) > 0
+    local is_invate_action,enbale_alliance_info = false,true
+    if my_alliance:IsDefault() then -- 我没有联盟
+        if has_other_alliane then
+            alliance_string = _("加入联盟")
+        else
+            alliance_string = _("无联盟信息")
+            enbale_alliance_info = false
+        end
+    else
+        if not has_other_alliane then
+            alliance_string = _("邀请加入")
+            is_invate_action = true
+        else
+            alliance_string = _("查看联盟")
+        end
+    end
     local callback = function(msg,data)
         if msg == 'in' then
             self.isModeVoew = true
@@ -592,9 +611,39 @@ function GameUIChatChannel:CreatePlayerMenu(event,chat)
             if data == 'playerInfo' then
                 UIKit:newGameUI("GameUIAllianceMemberInfo",false,chat.id):AddToCurrentScene(true)
             elseif data == 'sendMail' then
+                local mail = GameUIWriteMail.new(GameUIWriteMail.SEND_TYPE.PERSONAL_MAIL,{
+                    id = chat.id,
+                    name = chat.name,
+                    icon = chat.icon,
+                    allianceTag = chat.allianceTag,
+                })
+                mail:SetTitle(_("个人邮件"))
+                mail:addTo(self,201)
             elseif data == 'copyAction' then
+                local labelText = chat.text
+                if chat._translate_ and chat._translateMode_ then
+                    labelText = chat._translate_
+                end
+                ext.copyText(labelText)
+                GameGlobalUI:showTips(_("提示"),_("复制成功"))
             elseif data == 'blockChat' then
-
+                self:GetChatManager():AddBlockChat(chat)
+                self:RefreshListView()
+                GameGlobalUI:showTips(_("提示"),_("屏蔽成功"))
+            elseif data == 'allianceInfo' then
+                if not is_invate_action then
+                    if chat.allianceId and string.len(chat.allianceId) > 0 then
+                        UIKit:newGameUI("GameUIAllianceInfo",chat.allianceId):AddToCurrentScene(true)
+                    end
+                else
+                    if my_alliance:GetSelf():CanInvatePlayer() then
+                        NetManager:getInviteToJoinAlliancePromise(chat.id):done(function()
+                            UIKit:showMessageDialog(_("提示"), _("邀请发送成功"), function()end)
+                        end)
+                    else
+                        UIKit:showMessageDialog(_("提示"), _("您没有此操作权限"), function()end)
+                    end
+                end
             end
         elseif msg == 'out' then
             if listView:getItemWithLogicIndex(#self:GetDataSource() - 7) then
@@ -607,7 +656,7 @@ function GameUIChatChannel:CreatePlayerMenu(event,chat)
             self.isModeVoew = false
         end
     end
-    UIKit:newGameUI("GameUIAllianceInfoMenu",callback):AddToCurrentScene(true)
+    UIKit:newGameUI("GameUIAllianceInfoMenu",callback,alliance_string,enbale_alliance_info):AddToCurrentScene(true)
 end
 
 function GameUIChatChannel:CreateEmojiPanel()

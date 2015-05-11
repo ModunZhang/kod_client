@@ -98,7 +98,7 @@ function WidgetUseItems:Create(params)
     elseif item_type == "chest" then
         dialog = self:OpenChestDialog(item)
     elseif item_type == "vipPoint" then
-        dialog = self:OpenNormalDialog(item)
+        dialog = self:OpenVipPointDialog(item)
     elseif item_type == "vipActive" then
         dialog = self:OpenVipActive(item)
     elseif item_type == "buff" or item:Category() == Item.CATEGORY.BUFF then
@@ -824,9 +824,13 @@ function WidgetUseItems:OpenMoveTheCityDialog( item ,params)
     ):addTo(item_box_bg):align(display.CENTER,item_box_bg:getContentSize().width/2,item_box_bg:getContentSize().height/2)
     return dialog
 end
-function WidgetUseItems:OpenNormalDialog( item )
+function WidgetUseItems:OpenVipPointDialog(item)
+    return self:OpenNormalDialog(item,_("增加VIP点数"))
+end
+
+function WidgetUseItems:OpenNormalDialog( item ,title)
     local same_items = ItemManager:GetSameTypeItems(item)
-    local dialog = UIKit:newWidgetUI("WidgetPopDialog",#same_items * 130 +100,item:GetLocalizeName(),window.top-230)
+    local dialog = UIKit:newWidgetUI("WidgetPopDialog",#same_items * 130 +100,title or item:GetLocalizeName(),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
 
