@@ -112,12 +112,12 @@ function CommonUpgradeUI:ReloadBuildingImage()
     local config = SpriteConfig[self.building:GetType()]:GetConfigByLevel(self.building:GetLevel())
     local configs = SpriteConfig[self.building:GetType()]:GetAnimationConfigsByLevel(self.building:GetLevel())
     self.building_image = display.newSprite(config.png, 0, 0)
-    :addTo(self):pos(display.cx-196, display.top-158)
+        :addTo(self):pos(display.cx-196, display.top-158)
     local p = self.building_image:getAnchorPointInPoints()
     for _,v in ipairs(configs) do
         if v.deco_type == "image" then
             display.newSprite(v.deco_name):addTo(self.building_image)
-            :pos(p.x + v.offset.x, p.y + v.offset.y)
+                :pos(p.x + v.offset.x, p.y + v.offset.y)
         elseif v.deco_type == "animation" then
             local offset = v.offset
             local armature = ccs.Armature:create(v.deco_name)
@@ -299,6 +299,24 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
         local addtion = building:GetNextLevelProductionPerHour()-building:GetProductionPerHour()
         if addtion>0 then
             efficiency = string.format("%s+%d,",bd.miner_poduction,addtion)
+        end
+    elseif self.building:GetType()=="wall" then
+        local current_config = self.building:GetWallConfig()
+        local next_config = self.building:GetWallNextLevelConfig()
+        if next_config.wallHp - current_config.wallHp > 0 then
+            efficiency = string.format(_("城墙血量+%d,"),next_config.wallHp - current_config.wallHp)
+        end
+        if next_config.wallRecovery - current_config.wallRecovery > 0 then
+            efficiency = efficiency .. string.format(_("城墙血量回复+%d/小时,"),next_config.wallRecovery - current_config.wallRecovery)
+        end
+    elseif self.building:GetType()=="tower" then
+        local current_config = self.building:GetTowerConfig()
+        local next_config = self.building:GetTowerNextLevelConfig()
+        if next_config.infantry - current_config.infantry > 0 then
+            efficiency = string.format(_("攻击+%d,"),next_config.infantry - current_config.infantry)
+        end
+        if next_config.defencePower - current_config.defencePower > 0 then
+            efficiency = efficiency .. string.format(_("防御力+%d,"),next_config.defencePower - current_config.defencePower)
         end
     else
         assert(false,"本地化丢失")
@@ -783,6 +801,8 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
+
 
 
 
