@@ -22,7 +22,12 @@ function TowerEntity:GetAtk()
     local c = config[level]
     return c.infantry,c.archer,c.cavalry,c.siege,c.defencePower
 end
-
+function TowerEntity:GetTowerConfig()
+    return self.config_building_function[self:GetType()][self:GetLevel()]
+end
+function TowerEntity:GetTowerNextLevelConfig()
+    return self.config_building_function[self:GetType()][self:GetNextLevel()]
+end
 return TowerEntity
 
 

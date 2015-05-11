@@ -146,6 +146,9 @@ end
 function WallUpgradeBuilding:GetWallConfig()
     return config_wall[self:GetLevel()]
 end
+function WallUpgradeBuilding:GetWallNextLevelConfig()
+    return config_wall[self:GetNextLevel()]
+end
 
 
 return WallUpgradeBuilding
