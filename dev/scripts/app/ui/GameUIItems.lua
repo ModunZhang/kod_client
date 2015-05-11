@@ -85,7 +85,7 @@ function GameUIItems:InitShop()
     self.shop_dropList = WidgetRoundTabButtons.new({
         {tag = "menu_1",label = "特殊",default = true},
         {tag = "menu_2",label = "持续增益"},
-        {tag = "menu_3",label = "增益"},
+        {tag = "menu_3",label = "资源"},
         {tag = "menu_4",label = "时间加速"},
     }, function(tag)
         self.top_tab = tag
@@ -307,7 +307,7 @@ function GameUIItems:InitMyItems()
     self.myItems_dropList = WidgetRoundTabButtons.new({
         {tag = "menu_1",label = "特殊"},
         {tag = "menu_2",label = "持续增益"},
-        {tag = "menu_3",label = "增益"},
+        {tag = "menu_3",label = "资源"},
         {tag = "menu_4",label = "时间加速"},
     }, function(tag)
         self.top_tab = tag
