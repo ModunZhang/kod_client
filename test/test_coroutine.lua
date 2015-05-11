@@ -185,7 +185,7 @@ local function cat(...)
 end
 
 for i, v in ipairs({1,2,3,4}) do
- print(i, v)
+    print(i, v)
 end
 -- print(next)
 a = {1, 2, 3, 4}
@@ -1859,9 +1859,49 @@ print(a:Id4())
 
 
 
+-- for k,v in pairs(string) do
+--     print(k,v)
+-- end
+
+
+print(string.gsub("hello, up-down!", "%A", "."))
+s = "Deadline is 30/05/1999, firm"
+date = "%d%d/%d%d/%d%d%d%d"
+print(string.sub(s, string.find(s, date)))
+print(string.gsub("a", "%a+", "word | "))
+
+
+print(string.gsub("a (enclosed (in) parentheses) line",
+    "%b()", ""))
+
+
+-- 1. 替换json里面的null
+-- null ->json.null
+-- 2. 替换json里面的key
+-- (\")(.*)(\")(\s*)(\:) ->$2$4 =
+-- 3. 替换json里面的 []
+-- (=\s*\[)([\s\w\d{}=,"'|\[]*)(\]\s*,?)  ->= {$2},
 
 
 
+a = {11,12,13,4,5,6,7,8,9,10}
+
+    function iter(a, i)
+      local v1 = a[i]
+      i = i + 1
+      local v2 = a[i]
+      if v2 then
+        return i, v1, v2
+      end
+    end
+    
+    function tuple_ipairs (a)
+      return iter, a, 0
+    end
+
+for i,v1,v2 in tuple_ipairs(a) do
+    print(i,v1,v2)
+end
 
 
 

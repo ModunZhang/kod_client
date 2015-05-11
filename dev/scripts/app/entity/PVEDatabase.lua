@@ -17,6 +17,9 @@ end
 function PVEDatabase:MapLen()
     return #self.pve_maps
 end
+function PVEDatabase:GetRewardedList()
+    return DataManager:getUserData().pve.rewardedFloors
+end
 function PVEDatabase:OnUserDataChanged(userData, deltaData)
     local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.pve and deltaData.pve.floors
