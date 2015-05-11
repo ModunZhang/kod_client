@@ -128,8 +128,10 @@ function GameUIPVEHome:CreateTop()
         ,{})
         :addTo(top_bg, 1):align(display.CENTER, 80, 55):scale(0.8)
         :onButtonClicked(function(event)
-            self.box:hide()
-            self:GetRewards()
+            if self.layer:ExploreDegree() >= 1.0 then
+                self.box:hide()
+                self:GetRewards()
+            end
         end)
     self.box_bg = box
     self.box = ccs.Armature:create("lanse"):addTo(box)
