@@ -669,7 +669,6 @@ function GrowUpTaskManager:GetAvailableTaskByTag(tag, func)
         count = count + (gap - t.index + 1)
         table.insert(r, setmetatable(t, meta_map[tag]))
     end
-    print(tag, count, #config + 1 - count, #config + 1)
     return r, #config + 1 - count, #config + 1
 end
 function GrowUpTaskManager:GetCompleteTaskCount()
