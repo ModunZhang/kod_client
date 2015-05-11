@@ -712,19 +712,37 @@ end
 
 ]]
 function UIListView:increaseOrReduceItem_(nNeedAdjust)
-    -- if self.nTest > 0 then
-    --  return
-    -- end
-    -- print("enter increase reduceItem")
-
     if 0 == #self.items_ then
-        -- print("ERROR items count is 0")
+        print("ERROR items count is 0")
         return
     end
 
+    local getContainerCascadeBoundingBox = function ()
+        local boundingBox
+        for i, item in ipairs(self.items_) do
+            local w,h = item:getItemSize()
+            local x,y = item:getPosition()
+            local anchor = item:getAnchorPoint()
+            x = x - anchor.x * w
+            y = y - anchor.y * h
+
+            if boundingBox then
+                boundingBox = cc.rectUnion(boundingBox, cc.rect(x, y, w, h))
+            else
+                boundingBox = cc.rect(x, y, w, h)
+            end
+        end
+
+        local point = self.container:convertToWorldSpace(cc.p(boundingBox.x, boundingBox.y))
+        boundingBox.x = point.x
+        boundingBox.y = point.y
+        return boundingBox
+    end
+
     local count = self.delegate_[UIListView.DELEGATE](self, UIListView.COUNT_TAG)
-    local nNeedAdjust = nNeedAdjust or 2 --作为是否还需要再增加或减少item的标志,2表示上下两个方向或左右都需要调整
-    local cascadeBound = self.container:getCascadeBoundingBox()
+    local nNeedAdjust = 2 --作为是否还需要再增加或减少item的标志,2表示上下两个方向或左右都需要调整
+    local cascadeBound = getContainerCascadeBoundingBox()
+    local localPos = self:convertToNodeSpace(cc.p(cascadeBound.x, cascadeBound.y))
     local item
     local itemW, itemH
 
@@ -732,20 +750,14 @@ function UIListView:increaseOrReduceItem_(nNeedAdjust)
     -- dump(cascadeBound, "increaseOrReduceItem_ cascadeBound:")
     -- dump(self.viewRect_, "increaseOrReduceItem_ viewRect:")
 
-    if self.bTest1 then
-        printInfo("===================================================")
-        return
-        -- dump(cascadeBound, "cascadeBound:")
-    end
-
     if UIScrollView.DIRECTION_VERTICAL == self.direction then
 
         --ahead part of view
-        local disH = cascadeBound.y + cascadeBound.height - self.viewRect_.y - self.viewRect_.height
+        local disH = localPos.y + cascadeBound.height - self.viewRect_.y - self.viewRect_.height
         local tempIdx
         item = self.items_[1]
         if not item then
-            printInfo("increaseOrReduceItem_ item is nil, all item count:" .. #self.items_)
+            print("increaseOrReduceItem_ item is nil, all item count:" .. #self.items_)
             return
         end
         tempIdx = item.idx_
@@ -754,7 +766,6 @@ function UIListView:increaseOrReduceItem_(nNeedAdjust)
             itemW, itemH = item:getItemSize()
             if cascadeBound.height - itemH > self.viewRect_.height
                 and disH - itemH > self.redundancyViewVal then
-                print("tempIdx", tempIdx)
                 self:unloadOneItem_(tempIdx)
             else
                 nNeedAdjust = nNeedAdjust - 1
@@ -764,7 +775,6 @@ function UIListView:increaseOrReduceItem_(nNeedAdjust)
             tempIdx = tempIdx - 1
             if tempIdx > 0 then
                 local localPoint = self.container:convertToNodeSpace(cc.p(cascadeBound.x, cascadeBound.y + cascadeBound.height))
-                print("loadOneItem_, tempIdx", tempIdx, true)
                 item = self:loadOneItem_(localPoint, tempIdx, true)
             end
             if nil == item then
@@ -772,12 +782,8 @@ function UIListView:increaseOrReduceItem_(nNeedAdjust)
             end
         end
 
-        if self.bTest1 then
-        -- dump(cascadeBound, "cascadeBound:")
-        end
-
         --part after view
-        disH = self.viewRect_.y - cascadeBound.y
+        disH = self.viewRect_.y - localPos.y
         item = self.items_[#self.items_]
         if not item then
             return
@@ -797,7 +803,6 @@ function UIListView:increaseOrReduceItem_(nNeedAdjust)
             tempIdx = tempIdx + 1
             if tempIdx <= count then
                 local localPoint = self.container:convertToNodeSpace(cc.p(cascadeBound.x, cascadeBound.y))
-                print("loadOneItem_, tempIdx", tempIdx, false)
                 item = self:loadOneItem_(localPoint, tempIdx)
             end
             if nil == item then
@@ -805,8 +810,8 @@ function UIListView:increaseOrReduceItem_(nNeedAdjust)
             end
         end
     else
-        --left part of view 横向列表
-        local disW = self.viewRect_.x - cascadeBound.x
+        --left part of view
+        local disW = self.viewRect_.x - localPos.x
         item = self.items_[1]
         local tempIdx = item.idx_
         if disW > self.redundancyViewVal then
@@ -830,7 +835,7 @@ function UIListView:increaseOrReduceItem_(nNeedAdjust)
         end
 
         --right part of view
-        disW = cascadeBound.x + cascadeBound.width - self.viewRect_.x - self.viewRect_.width
+        disW = localPos.x + cascadeBound.width - self.viewRect_.x - self.viewRect_.width
         item = self.items_[#self.items_]
         tempIdx = item.idx_
         if disW > self.redundancyViewVal then
@@ -854,10 +859,10 @@ function UIListView:increaseOrReduceItem_(nNeedAdjust)
         end
     end
 
+    -- print("increaseOrReduceItem_() adjust:" .. nNeedAdjust)
+    -- print("increaseOrReduceItem_() item count:" .. #self.items_)
     if nNeedAdjust > 0 then
-        print("increaseOrReduceItem_() adjust:" .. nNeedAdjust)
-        print("increaseOrReduceItem_() item count:" .. #self.items_)
-        return self:increaseOrReduceItem_(nNeedAdjust)
+        return self:increaseOrReduceItem_()
     end
 end
 
