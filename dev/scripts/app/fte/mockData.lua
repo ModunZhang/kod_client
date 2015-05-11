@@ -10,7 +10,7 @@ local normal = GameDatas.Soldiers.normal
 local function mock(t)
     local delta = DiffFunction(DataManager:getFteData(), t)
     LuaUtils:outputTable(t)
-    LuaUtils:outputTable(delta) 
+    LuaUtils:outputTable(delta)
     DataManager:setFteUserDeltaData(delta)
 end
 local function remove_global_shceduler()
@@ -58,10 +58,25 @@ end
 
 local function FinishBuildHouseAt(building_location_id, level)
     remove_global_shceduler()
-    mock{
+
+    local modify = {
         {"houseEvents.0", json.null},
         {string.format("buildings.location_%d.houses.1.level", building_location_id), level}
     }
+
+    if building_location_id == 5 and level > 1 then
+        local newindex = #DataManager:getFteData().growUpTasks.cityBuild
+        table.insert(
+            modify, {
+                string.format("growUpTasks.cityBuild.%d", newindex), {
+                    id = 351,
+                    index = 1,
+                    name = "farmer",
+                    rewarded = false
+                }
+            })
+    end
+    mock(modify)
 
     local key = string.format("FinishBuildHouseAt_%d_%d", building_location_id, level)
     if not check(key) then
@@ -70,7 +85,7 @@ local function FinishBuildHouseAt(building_location_id, level)
 end
 local function BuildHouseAt(building_location_id, house_location_id, house_type)
     local start_time = NetManager:getServerTime()
-    local buildTime = HouseLevelUp[house_type][1].buildTime 
+    local buildTime = HouseLevelUp[house_type][1].buildTime
     mock{
         {
             "houseEvents.0",
@@ -93,8 +108,8 @@ local function BuildHouseAt(building_location_id, house_location_id, house_type)
     }
 
     DataManager.handle__ = scheduler.performWithDelayGlobal(function()
-        if DataManager:getFteData() and 
-            DataManager:getFteData().houseEvents and 
+        if DataManager:getFteData() and
+            DataManager:getFteData().houseEvents and
             #DataManager:getFteData().houseEvents > 0 then
             FinishBuildHouseAt(building_location_id, 1)
         end
@@ -122,8 +137,8 @@ local function UpgradeHouseTo(building_location_id, house_location_id, house_typ
     }
 
     DataManager.handle__ = scheduler.performWithDelayGlobal(function()
-        if DataManager:getFteData() and 
-            DataManager:getFteData().houseEvents and 
+        if DataManager:getFteData() and
+            DataManager:getFteData().houseEvents and
             #DataManager:getFteData().houseEvents > 0 then
             FinishBuildHouseAt(building_location_id, level)
         end
@@ -134,9 +149,6 @@ local function UpgradeHouseTo(building_location_id, house_location_id, house_typ
         mark(key)
     end
 end
-
-
-
 local function FinishUpgradingBuilding(type, level)
     remove_global_shceduler()
     local location_id
@@ -147,7 +159,7 @@ local function FinishUpgradingBuilding(type, level)
         end
     end
     assert(location_id)
-    mock{
+    local modify = {
         {
             "buildingEvents.0", json.null
         },
@@ -155,6 +167,18 @@ local function FinishUpgradingBuilding(type, level)
             string.format("buildings.location_%d.level", location_id), level
         }
     }
+    if type == "keep" and level > 1 then
+        local newindex = #DataManager:getFteData().growUpTasks.cityBuild
+        table.insert(modify, {
+            string.format("growUpTasks.cityBuild.%d", newindex), {
+                id = level - 2,
+                index = level - 1,
+                name = "keep",
+                rewarded = false
+            }
+        })
+    end
+    mock(modify)
 
     local key = string.format("FinishUpgradingBuilding_%s_%d", type, level)
     if not check(key) then
@@ -185,7 +209,7 @@ local function UpgradeBuildingTo(type, level)
 
     DataManager.handle__ = scheduler.performWithDelayGlobal(function()
         if DataManager:getFteData() and
-            DataManager:getFteData().buildingEvents and 
+            DataManager:getFteData().buildingEvents and
             #DataManager:getFteData().buildingEvents > 0 then
             FinishUpgradingBuilding(type, level)
         end
@@ -233,7 +257,7 @@ local function RecruitSoldier(type_, count)
     }
     DataManager.handle_soldier__ = scheduler.performWithDelayGlobal(function()
         if DataManager:getFteData() and
-            DataManager:getFteData().soldierEvents and 
+            DataManager:getFteData().soldierEvents and
             #DataManager:getFteData().soldierEvents > 0 then
             FinishRecruitSoldier()
         end
@@ -315,6 +339,11 @@ return {
     ActiveVip = ActiveVip,
     FightWithNpc = FightWithNpc,
 }
+
+
+
+
+
 
 
 
