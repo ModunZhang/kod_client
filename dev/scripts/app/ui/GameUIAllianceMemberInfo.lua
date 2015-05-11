@@ -259,8 +259,16 @@ end
 function GameUIAllianceMemberInfo:WidgetPlayerNode_DataSource(name)
     print("UIKit:GetPlayerIconImage(self.player_info.icon)--->",UIKit:GetPlayerIconImage(self.player_info.icon))
     if name == 'BasicInfoData' then
+        local location
+        if self.isMyAlliance then
+            local alliacne = Alliance_Manager:GetMyAlliance()
+            local member = alliacne:GetMemeberById(self.player_info.id)
+            local allianceObj = alliacne:GetAllianceMap():FindMapObjectById(member:MapId())
+            location = string.format("(%d,%d)",allianceObj:GetLogicPosition())
+        end
         local level = User:GetPlayerLevelByExp(self.player_info.levelExp)
         return {
+            location = location,
             name = self.player_info.name,
             lv = level,
             currentExp = self.player_info.levelExp,

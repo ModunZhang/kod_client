@@ -981,6 +981,16 @@ function GameUIAlliance:MembersListonTouch(event)
         else
             self.refresh_label:hide()
         end
+    elseif "clicked" == event.name then 
+        local item = event.item
+        if not item then return end
+        local list_data = self.list_dataSource[item.idx_]
+        local data = list_data.data
+        if list_data.data_type == 2 and list_data.data ~= '__empty' and User:Id() ~= data.id then
+            UIKit:newGameUI("GameUIAllianceMemberInfo",true,data.id):AddToCurrentScene(true)
+        elseif list_data.data_type == 1 then
+            self:OnAllianceTitleClicked(data)
+        end
     end
 end
 function GameUIAlliance:HaveAlliaceUI_membersIf()
@@ -990,10 +1000,11 @@ function GameUIAlliance:HaveAlliaceUI_membersIf()
         local list,list_node = UIKit:commonListView({
             viewRect = cc.rect(0, 0,560,618),
             direction = UIScrollView.DIRECTION_VERTICAL,
-            -- bgColor = UIKit:hex2c4b(0x7a000000),
+            async = true,
             trackTop = true,
         })
         list:onTouch(handler(self, self.MembersListonTouch))
+        list:setDelegate(handler(self, self.MembersListsourceDelegate))
         self.refresh_label = UIKit:ttfLabel({
             text = _("下拉刷新"),
             size = 18,
@@ -1006,6 +1017,10 @@ function GameUIAlliance:HaveAlliaceUI_membersIf()
             :addTo(self.member_list_bg)
             :align(display.LEFT_TOP,5,784)
         self.member_list_bg.player_icon_box = box
+        self.member_list_bg.view_archon_info_button_really = WidgetPushTransparentButton.new(cc.rect(0,0,560,134)):addTo(self.member_list_bg):align(display.LEFT_TOP,5,784):onButtonClicked(function() 
+            local archon = Alliance_Manager:GetMyAlliance():GetAllianceArchon()
+            self:OnPlayerDetailButtonClicked(archon:Id())
+        end)
         local title_bar =  display.newScale9Sprite("alliance_event_type_darkblue_222x30.png",0,0, cc.size(428,30), cc.rect(7,7,190,16))
             :addTo(self.member_list_bg)
             :align(display.LEFT_TOP, 136, 782)
@@ -1059,8 +1074,7 @@ function GameUIAlliance:HaveAlliaceUI_membersIf()
             :align(display.RIGHT_BOTTOM,554,line_1:getPositionY()+4)
             :addTo(self.member_list_bg)
             :onButtonClicked(function()
-                local archon = Alliance_Manager:GetMyAlliance():GetAllianceArchon()
-                self:OnPlayerDetailButtonClicked(archon:Id())
+            
             end)
     end
     self:RefreshMemberList()
@@ -1071,6 +1085,200 @@ function GameUIAlliance:RefreshMemberListIf()
     if self.tab_buttons:GetSelectedButtonTag() == 'members' then
         self:RefreshMemberList()
     end
+end
+
+
+function GameUIAlliance:GetMemberItemContent()
+    local node = display.newNode():size(560,78)
+    local content_title = display.newSprite("title_blue_558x34.png"):align(display.LEFT_BOTTOM, 0, 0):addTo(node)
+    local button = display.newSprite("info_16x33.png"):align(display.RIGHT_CENTER,545,17):addTo(content_title):scale(0.7)
+    node.content_title = content_title
+    local title_label= UIKit:ttfLabel({
+        text = "title",
+        size = 22,
+        color = 0xffedae,
+    }):addTo(content_title):align(display.LEFT_CENTER,268, 17)
+    content_title.title_label = title_label
+    for key,v in pairs(UILib.alliance_title_icon) do
+        local num_sp = display.newSprite(v):addTo(content_title):align(display.RIGHT_CENTER,258,17)
+        content_title[key] = num_sp
+    end
+    local content_memeber = display.newSprite("mission_box_558x66.png"):align(display.LEFT_BOTTOM,0, 6):addTo(node)
+    node.content_memeber = content_memeber
+
+    local empty_label = UIKit:ttfLabel({
+            text = _("<空>"),
+            size = 22,
+            color= 0x615b44
+    }):align(display.CENTER, 279, 33):addTo(content_memeber)
+    content_memeber.empty_label = empty_label
+
+    local player_icon = self:GetPlayerIconSprite():scale(0.5):align(display.LEFT_CENTER,15, 33):addTo(content_memeber)
+    content_memeber.player_icon = player_icon
+
+    local nameLabel = UIKit:ttfLabel({
+        text = "",
+        size = 20,
+        color = 0x403c2f,
+        dimensions = cc.size(175,30),
+        ellipsis = true
+    }):addTo(content_memeber):align(display.LEFT_CENTER,player_icon:getPositionX()+player_icon:getCascadeBoundingBox().width + 5,33)
+
+    content_memeber.nameLabel = nameLabel
+    local lvLabel =  UIKit:ttfLabel({
+        text = "",
+        size = 20,
+        color = 0x615b44,
+    }):addTo(content_memeber):align(display.LEFT_CENTER,nameLabel:getPositionX()+ 180, 33)
+    content_memeber.lvLabel = lvLabel
+    local powerIcon = display.newSprite("dragon_strength_27x31.png"):align(display.LEFT_CENTER,nameLabel:getPositionX()+255,33)
+        :addTo(content_memeber)
+    content_memeber.powerIcon = powerIcon
+    local powerLabel = UIKit:ttfLabel({
+        text = "12323",
+        size = 22,
+        color = 0x403c2f,
+        align = cc.TEXT_ALIGNMENT_LEFT,
+    }):addTo(content_memeber):align(display.LEFT_CENTER,powerIcon:getPositionX()+35,33)
+    content_memeber.powerLabel = powerLabel
+
+    local info_sprite = display.newSprite("alliacne_search_29x33.png"):align(display.RIGHT_CENTER,548,33):addTo(content_memeber)
+    content_memeber.info_sprite = info_sprite
+    return node
+end
+
+
+function GameUIAlliance:FillDataToAllianceItem(list_data,content,item)
+    local real_content 
+    local data = list_data.data
+    if list_data.data_type == 1 then -- title
+        content.content_memeber:hide()
+        content.content_title:show()
+        real_content = content.content_title
+        local title,__ = self:GetAllianceTitleAndLevelPng(data)
+        real_content.title_label:setString(title)
+        for k,__ in pairs(UILib.alliance_title_icon) do
+            if k == data then
+                real_content[k]:show()
+            else
+                real_content[k]:hide()
+            end
+        end
+        content:size(560,46)
+        item:setItemSize(560,46)
+    else
+        content.content_memeber:show()
+        content.content_title:hide()
+        real_content = content.content_memeber
+        if data == '__empty' then
+            real_content.empty_label:show()
+            real_content.player_icon:hide()
+            real_content.nameLabel:hide()
+            real_content.lvLabel:hide()
+            real_content.powerIcon:hide()
+            real_content.powerLabel:hide()
+            real_content.info_sprite:hide()
+        else
+            real_content.empty_label:hide()
+            real_content.player_icon:show()
+            real_content.nameLabel:show()
+            real_content.lvLabel:show()
+            real_content.powerIcon:show()
+            real_content.powerLabel:show()
+            if data:Id() == User:Id() then
+                real_content.info_sprite:hide()
+            else
+                real_content.info_sprite:show()
+            end
+
+            real_content.nameLabel:setString(data.name)
+            real_content.lvLabel:setString(string.format("LV %d",User:GetPlayerLevelByExp(data.levelExp)))
+            real_content.powerLabel:setString(string.formatnumberthousands(data.power))
+
+            local isOnline = (type(data.online) == 'boolean' and data.online) and true or false
+            real_content.player_icon.icon:setTexture(UIKit:GetPlayerIconImage(data.icon))
+            if isOnline then
+                real_content.player_icon.icon:clearFilter()
+                real_content.player_icon:clearFilter()
+            else
+                if not real_content.player_icon.icon:getFilter() then
+                    real_content.player_icon.icon:setFilter(filter.newFilter("CUSTOM", json.encode({frag = "shaders/ps_discoloration.fs",shaderName = "ps_discoloration"})))
+                    real_content.player_icon:setFilter(filter.newFilter("CUSTOM", json.encode({frag = "shaders/ps_discoloration.fs",shaderName = "ps_discoloration"})))
+                end
+            end
+        end
+        content:size(560,78)
+        item:setItemSize(560,78)
+    end
+end
+
+function GameUIAlliance:MembersListsourceDelegate(listView, tag, idx)
+    if cc.ui.UIListView.COUNT_TAG == tag then
+        return #self.list_dataSource 
+    elseif cc.ui.UIListView.CELL_TAG == tag then
+        local item
+        local content
+        local data = self.list_dataSource[idx]
+        item = self.memberListView:dequeueItem()
+        if not item then
+            item = self.memberListView:newItem()
+            content = self:GetMemberItemContent()
+            item:addContent(content)
+        else
+            content = item:getContent()
+        end
+        self:FillDataToAllianceItem(data,content,item)
+        return item
+    else
+    end
+end
+function GameUIAlliance:RefreshMembersListDataSource()
+    self.data_members = clone(Alliance_Manager:GetMyAlliance():GetAllMembers())
+    table.sort(self.data_members, function(a,b)
+        local isOnline_a = (type(a.online) == 'boolean' and a.online) and true or false
+        local isOnline_b = (type(b.online) == 'boolean' and b.online) and true or false
+        if isOnline_a == isOnline_b then
+            return a.power > b.power
+        else
+            return isOnline_a
+        end
+    end)
+    local data = self:filterMemberList("general")
+    local next_data = self:filterMemberList("quartermaster")
+    table.insertto(data,next_data)
+    next_data = self:filterMemberList("supervisor")
+    table.insertto(data,next_data)
+    next_data = self:filterMemberList("elite")
+    table.insertto(data,next_data) 
+    next_data = self:filterMemberList("member")
+    table.insertto(data,next_data)
+    self.list_dataSource = data
+end
+
+
+function GameUIAlliance:filterMemberList(title)
+    local filter_data = LuaUtils:table_filter(self.data_members,function(k,v)
+        return v:Title() == title
+    end)
+
+    local result = {{data_type = 1 , data = title}}
+    if LuaUtils:table_size(filter_data) == 0 then
+        table.insert(result,{data_type = 2 , data = "__empty"})
+    else
+        --player
+        table.foreach(filter_data,function(k,v)
+            table.insert(result,{data_type = 2 , data = v})
+        end)
+    end
+    return result
+end
+
+
+function GameUIAlliance:GetPlayerIconSprite()
+    local bg = display.newSprite("chat_hero_background.png", nil, nil, {class=cc.FilteredSpriteWithOne})
+    local icon = display.newSprite(UIKit:GetPlayerIconImage(1), nil, nil, {class=cc.FilteredSpriteWithOne}):addTo(bg):align(display.CENTER,56,65)
+    bg.icon = icon
+    return bg
 end
 
 function GameUIAlliance:RefreshMemberList()
@@ -1092,128 +1300,14 @@ function GameUIAlliance:RefreshMemberList()
      local display_title,___ = self:GetAllianceTitleAndLevelPng("archon")
     self.member_list_bg.archon_title_label:setString(display_title)
     self.member_list_bg.view_archon_info_button:setVisible(User:Id() ~= archon:Id())
-    --list view
-    self.memberListView:removeAllItems()
-
-    local item = self:GetMemberItem("general")
-    self.memberListView:addItem(item)
-    item = self:GetMemberItem("quartermaster")
-    self.memberListView:addItem(item)
-
-    item = self:GetMemberItem("supervisor")
-    self.memberListView:addItem(item)
-    item = self:GetMemberItem("elite")
-    self.memberListView:addItem(item)
-    item = self:GetMemberItem("member")
-    self.memberListView:addItem(item)
-
-
-
+    self.member_list_bg.view_archon_info_button_really:setButtonEnabled(User:Id() ~= archon:Id())
+    self:RefreshMembersListDataSource()
     self.memberListView:reload()
 end
 
 function GameUIAlliance:GetAllianceTitleAndLevelPng(title)
     local alliance = Alliance_Manager:GetMyAlliance()
     return alliance:GetTitles()[title],UILib.alliance_title_icon[title]
-end
-
---title is alliance title
-function GameUIAlliance:GetMemberItem(title)
-    local item = self.memberListView:newItem()
-    local filter_data = LuaUtils:table_filter(Alliance_Manager:GetMyAlliance():GetAllMembers(),function(k,v)
-        return v:Title() == title
-    end)
-    local data = {}
-    table.foreach(filter_data,function(k,v)
-        table.insert(data,v)
-    end)
-    table.sort( data, function(a,b)
-        local isOnline_a = (type(a.online) == 'boolean' and a.online) and true or false
-        local isOnline_b = (type(b.online) == 'boolean' and b.online) and true or false
-        if isOnline_a == isOnline_b then
-            return a.power > b.power
-        else
-            return isOnline_a
-        end
-    end)
-    local header_title,number_image = self:GetAllianceTitleAndLevelPng(title)
-    local count = #data
-    -- 71 = 66 + 5
-    local height = 34 + count * 71 + 15
-    if count == 0 then
-        height = 120 -- 120 = 34 + 71 + 15
-    end
-    local node = display.newNode():size(560,height)
-    local title_bar = display.newSprite("title_blue_558x34.png"):align(display.LEFT_TOP, 0, height):addTo(node)
-    local button = display.newSprite("info_16x33.png")
-        :align(display.RIGHT_CENTER,545,17)
-        :addTo(title_bar)
-        :scale(0.7)
-    WidgetPushTransparentButton.new(cc.rect(0,0,560,38)):addTo(title_bar):align(display.LEFT_BOTTOM,0,0):onButtonClicked(function(event)
-            self:OnAllianceTitleClicked(title)
-        end)
-    local title_label= UIKit:ttfLabel({
-        text = header_title,
-        size = 22,
-        color = 0xffedae,
-    }):addTo(title_bar):align(display.LEFT_CENTER,268, 17)
-    local num = display.newSprite(number_image):addTo(title_bar)
-        :align(display.RIGHT_CENTER,258,17)
-    local y = height - 39
-    if count > 0 then
-        for i,v in ipairs(data) do
-            local isOnline = (type(v.online) == 'boolean' and v.online) and true or false
-            self:GetNormalSubItem(i,v.name,User:GetPlayerLevelByExp(v.levelExp),v.power,v.id,v.icon,isOnline):addTo(node):align(display.LEFT_TOP, 0, y)
-            y = y - 71
-        end
-    else
-        local tips = display.newSprite("mission_box_558x66.png"):align(display.LEFT_TOP,0, y):addTo(node)
-        UIKit:ttfLabel({
-            text = _("<空>"),
-            size = 22,
-            color= 0x615b44
-        }):align(display.CENTER, 279, 33):addTo(tips)
-    end
-    item:addContent(node)
-    item:setItemSize(560,height)
-    return item
-end
-
-function GameUIAlliance:GetNormalSubItem(index,playerName,level,power,memberId,icon,online)
-    local item = display.newSprite("mission_box_558x66.png")
-    local icon = UIKit:GetPlayerCommonIcon(icon,online):scale(0.5):align(display.LEFT_CENTER,15, 33):addTo(item)
-    local nameLabel = UIKit:ttfLabel({
-        text = playerName,
-        size = 20,
-        color = 0x403c2f,
-        dimensions = cc.size(175,30),
-        ellipsis = true
-    }):addTo(item):align(display.LEFT_CENTER,icon:getPositionX()+icon:getCascadeBoundingBox().width + 5,33)
-    local lvLabel =  UIKit:ttfLabel({
-        text = "LV " .. level,
-        size = 20,
-        color = 0x615b44,
-    }):addTo(item):align(display.LEFT_CENTER,icon:getPositionX()+icon:getCascadeBoundingBox().width + 180, 33)
-    local powerIcon = display.newSprite("dragon_strength_27x31.png"):align(display.LEFT_CENTER,icon:getPositionX()+icon:getCascadeBoundingBox().width+255,33)
-        :addTo(item)
-    local powerLabel = UIKit:ttfLabel({
-        text = string.formatnumberthousands(power),
-        size = 22,
-        color = 0x403c2f,
-        align = cc.TEXT_ALIGNMENT_LEFT,
-    }):addTo(item):align(display.LEFT_CENTER,powerIcon:getPositionX()+35,33)
-    if User:Id()~= memberId then
-        display.newSprite("alliacne_search_29x33.png")
-            :align(display.RIGHT_CENTER,548,33)
-            :addTo(item)
-        WidgetPushTransparentButton.new(cc.rect(0,0,558,66))
-            :align(display.LEFT_BOTTOM,0,0)
-            :addTo(item)
-            :onButtonClicked(function()
-                 self:OnPlayerDetailButtonClicked(memberId)
-            end)
-    end
-    return item
 end
 
 function GameUIAlliance:OnAllianceTitleClicked( title )
