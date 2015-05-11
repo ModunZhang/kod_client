@@ -613,15 +613,6 @@ function GameUIAllianceBattle:OpenAllianceDetails(isOur)
     addAttr(_("战斗力"),string.formatnumberthousands(alliance_power),350,rb_size.height-100)
     addAttr(_("击杀"),string.formatnumberthousands(alliance_kill),350,rb_size.height-140)
 
-    -- display.newSprite("dividing_line_594x2.png")
-    --     :align(display.CENTER, rb_size.width/2, rb_size.height-160)
-    --     :addTo(body)
-    -- self.member_listview = UIListView.new{
-    --     -- bgColor = UIKit:hex2c4b(0x7a990000),
-    --     viewRect = cc.rect(7, 14, 594, 550),
-    --     direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
-    -- }:addTo(body)
-
     self.member_listview = WidgetInfo.new({h=492}):addTo(body)
         :align(display.BOTTOM_CENTER,rb_size.width/2,40)
         :GetListView()
@@ -642,12 +633,7 @@ function GameUIAllianceBattle:OpenAllianceDetails(isOur)
         }):align(display.LEFT_CENTER,20,20)
             :addTo(content)
 
-        UIKit:ttfLabel({
-            text = "LV"..member.level,
-            size = 22,
-            color = 0x403c2f,
-        }):align(display.CENTER,content:getContentSize().width/2,20)
-            :addTo(content)
+       :addTo(content)
 
         local t = UIKit:ttfLabel({
             text = string.formatnumberthousands(member.kill),
