@@ -217,7 +217,9 @@ function MultiAllianceLayer:StartCorpsTimer()
                 end
                 local line = self.lines_map[id]
                 if line then
-                    line:getFilter():getGLProgramState():setUniformFloat("percent", fmod(time - floor(time), 1.0))
+                    local program = line:getFilter():getGLProgramState()
+                    program:setUniformFloat("percent", fmod(time - floor(time), 1.0))
+                    program:setUniformFloat("elapse", line.is_enemy and elapse_time / total_time or 0)
                 end
             end
         end
@@ -229,15 +231,15 @@ function MultiAllianceLayer:CreateAllianceCorps(alliance)
         table.foreachi(alliance:GetAttackMarchEvents(),function(_,event)
             self:CreateCorpsIf(event)
         end)
-        table.foreachi(alliance:GetAttackMarchReturnEvents(),function(_,event)
-            self:CreateCorpsIf(event)
-        end)
-        table.foreachi(alliance:GetStrikeMarchEvents(),function(_,event)
-            self:CreateCorpsIf(event)
-        end)
-        table.foreachi(alliance:GetStrikeMarchReturnEvents(),function(_,event)
-            self:CreateCorpsIf(event)
-        end)
+    table.foreachi(alliance:GetAttackMarchReturnEvents(),function(_,event)
+        self:CreateCorpsIf(event)
+    end)
+    table.foreachi(alliance:GetStrikeMarchEvents(),function(_,event)
+        self:CreateCorpsIf(event)
+    end)
+    table.foreachi(alliance:GetStrikeMarchReturnEvents(),function(_,event)
+        self:CreateCorpsIf(event)
+    end)
     else
         --敌方联盟
         local my_alliance_belvedere = self:GetMyAlliance():GetAllianceBelvedere()
@@ -315,7 +317,7 @@ function MultiAllianceLayer:ManagerCorpsFromChangedMap(changed_map,is_strkie,all
                             app:GetAudioManager():PlayeEffectSoundWithKey("ATTACK_PLAYER_ARRIVE")
                         end
                     elseif player_role == marchEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER then
-                        if marchEvent:IsReturnEvent() then -- return 
+                        if marchEvent:IsReturnEvent() then -- return
                             app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_BACK")
                         end
                     end
@@ -360,7 +362,7 @@ function MultiAllianceLayer:CreateCorpsIf(marchEvent)
     local is_enemy = false
     if not marchEvent:IsReturnEvent() then
         is_enemy = self:GetMyAlliance():Id() ~= from_alliance_id
-    else -- return 
+    else -- return
         is_enemy = self:GetMyAlliance():Id() ~= to_alliance_id
     end
     self:CreateCorps(
@@ -583,9 +585,11 @@ function MultiAllianceLayer:CreateLine(id, march_info, is_enemy)
             shaderName = "lineShader"..unit_count,
             unit_count = unit_count,
             percent = 0,
+            elapse = 0,
         })
     ))
     sprite:setScaleY(scale)
+    sprite.is_enemy = is_enemy
     self.lines_map[id] = sprite
     return sprite
 end
@@ -712,6 +716,8 @@ end
 
 
 return MultiAllianceLayer
+
+
 
 
 

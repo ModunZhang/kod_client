@@ -183,7 +183,7 @@ function GameUIPVEHome:GetRewards()
         },
     }, nil)
     local data = self.user:EncodePveDataAndResetFightRewardsData()
-    data.rewardedFloor = index
+    data.pveData.rewardedFloor = index
     NetManager:getSetPveDataPromise(data)
 
     local wp = self.box:getParent():convertToWorldSpace(cc.p(self.box:getPosition()))
