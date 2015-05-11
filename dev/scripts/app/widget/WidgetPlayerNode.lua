@@ -155,6 +155,14 @@ function WidgetPlayerNode:GetBasicInfoItemNode(basic_data)
 		size = 20,
 		color= 0xffedae
 	}):align(display.LEFT_CENTER, 20, 15):addTo(name_bar)
+	if data_source.location then
+		UIKit:ttfLabel({
+			text = data_source.location ,
+			size = 20,
+			color= 0xffedae,
+			align=cc.TEXT_ALIGNMENT_RIGHT,
+		}):align(display.RIGHT_CENTER, 400, 15):addTo(name_bar)
+	end
 	if self:CallDelegate_(DELEGATE_METHODS.PlayerCanClickedButton,{"PlayerName"}) then
 		local icon_edit = display.newSprite("alliance_notice_icon_26x26.png"):addTo(name_bar):align(display.RIGHT_CENTER,400, 15)
 		WidgetPushTransparentButton.new(cc.rect(0,0,430,30))
