@@ -493,7 +493,6 @@ function WidgetUseItems:OpenOneDragonHPItemDialog( item ,dragon)
         dragon_manager:RemoveListenerOnType(dialog,dragon_manager.LISTEN_TYPE.OnHPChanged)
     end)
     function dialog:OnHPChanged()
-        print("OnHPChanged>>>")
         dragon_hp_label:setString(dragon:Hp().."/"..dragon:GetMaxHP())
         progressTimer:setPercentage(math.floor(dragon:Hp()/dragon:GetMaxHP()*100))
     end
