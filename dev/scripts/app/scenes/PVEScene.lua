@@ -55,7 +55,7 @@ function PVEScene:onExit()
             ):fail(function()
                 -- 失败回滚
                 local location = DataManager:getUserData().pve.location
-                self.user:GetPVEDatabase():SetCharPosition(location.x, location.y, location.z)
+                User:GetPVEDatabase():SetCharPosition(location.x, location.y, location.z)
             end)
         end
     end
@@ -129,6 +129,8 @@ function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
 
         self.user:UseStrength(1)
         self:GetSceneLayer():MoveCharTo(tx, ty)
+        local move_sfx = {"PVE_MOVE1", "PVE_MOVE2", "PVE_MOVE3"}
+        app:GetAudioManager():PlayeEffectSoundWithKey(move_sfx[math.random(#move_sfx)])
 
         if self:GetSceneLayer():GetTileInfo(tx, ty) > 0 and
             self:CheckCanMoveTo(tx, ty) then
@@ -179,6 +181,10 @@ local building_ui_map = setmetatable({
 function PVEScene:OpenUI(x, y)
     local gid = self:GetSceneLayer():GetTileInfo(x, y)
     if gid <= 0 then return end
+    local object = self.user:GetCurrentPVEMap():GetObjectByCoord(x, y)
+    if not object or not object:Type() then
+        self.user:GetCurrentPVEMap():ModifyObject(x, y, 0, gid)
+    end
     building_ui_map[gid].new(x, y, self.user):AddToScene(self, true)
 end
 function PVEScene:CheckTrap()

@@ -68,7 +68,7 @@ function GameUIAllianceHome:onEnter()
     -- 中间按钮
     self:CreateOperationButton()
     self:AddOrRemoveListener(true)
-    -- self:Schedule()
+    self:Schedule()
 end
 function GameUIAllianceHome:onExit()
     self:AddOrRemoveListener(false)
@@ -122,13 +122,32 @@ function GameUIAllianceHome:OnHelpToTroopsChanged()
     self.operation_button_order:RefreshOrder()
 end
 function GameUIAllianceHome:Schedule()
-    local action_node = display.newNode():addTo(self)
-    action_node:schedule(function()
-        if self.alliance:IsDefault() then return end
+    local alliance = self.alliance
+    local alliance_map = alliance:GetAllianceMap()
+    local myself = alliance:GetSelf()
+    local screen_rect = self.screen_rect
+    display.newNode():addTo(self):schedule(function()
+        if alliance:IsDefault() then return end
         local lx,ly,view = self.multialliancelayer:GetAllianceCoordWithPoint(display.cx, display.cy)
         self:UpdateCoordinate(lx, ly, view)
-        self:UpdateAllArrows(lx, ly, view)
-    end, 0.1)
+    end, 0.5)
+    display.newNode():addTo(self):schedule(function()
+        if alliance:IsDefault() then return end
+        local lx,ly,view = self.multialliancelayer:GetAllianceCoordWithPoint(display.cx, display.cy)
+        local layer = view:GetLayer()
+        local x,y = alliance_map:FindMapObjectById(myself:MapId()):GetMidLogicPosition()
+        self:UpdateMyCityArrows(screen_rect, alliance, layer, x,y)
+    end, 0)
+    display.newNode():addTo(self):schedule(function()
+        if alliance:IsDefault() then return end
+        local lx,ly,view = self.multialliancelayer:GetAllianceCoordWithPoint(display.cx, display.cy)
+        local layer = view:GetLayer()
+        local x,y = alliance_map:FindMapObjectById(myself:MapId()):GetMidLogicPosition()
+        self:UpdateMyAllianceBuildingArrows(screen_rect, alliance, layer)
+        if Alliance_Manager:HaveEnemyAlliance() then
+            self:UpdateEnemyArrows(screen_rect, Alliance_Manager:GetEnemyAlliance(), layer, lx, ly)
+        end
+    end, 0.05)
 end
 
 function GameUIAllianceHome:InitArrow()

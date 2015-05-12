@@ -50,6 +50,14 @@ function MultiAllianceLayer:ctor(arrange, ...)
     --     count = count + 1
     -- end
 end
+function MultiAllianceLayer:Schedule()
+    self.info_action:schedule(function()
+        local scale = self:getScale()
+        local l = max(0.5, scale) - 0.5
+        local r = 0.8 - min(0.8, scale)
+        self:GetInfoNode():opacity(l / (l + r) * 255)
+    end, 0.1)
+end
 function MultiAllianceLayer:onCleanup()
     self:AddOrRemoveAllianceEvent(false)
     self:AddAllianceBelvedereEvent(false)
@@ -694,14 +702,6 @@ function MultiAllianceLayer:GetAllianceCoordWithPoint(x, y)
         end
     end
     return logic_x, logic_y, alliance_view
-end
-function MultiAllianceLayer:Schedule()
-    self.info_action:schedule(function()
-        local scale = self:getScale()
-        local l = max(0.5, scale) - 0.5
-        local r = 0.8 - min(0.8, scale)
-        self:GetInfoNode():opacity(l / (l + r) * 255)
-    end, 0.1)
 end
 
 

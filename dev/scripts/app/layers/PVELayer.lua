@@ -153,6 +153,20 @@ function PVELayer:OnObjectChanged(object)
         self:NotifyExploring()
     end
 end
+local offset_map = {
+    [PVEDefine.WOODCUTTER] = {80, 0},
+    [PVEDefine.QUARRIER] = {80, 0},
+    [PVEDefine.MINER] = {80, 0},
+    [PVEDefine.FARMER] = {80, 0},
+    [PVEDefine.CAMP] = {50, -80},
+    [PVEDefine.CRASHED_AIRSHIP] = {80, 0},
+    [PVEDefine.CONSTRUCTION_RUINS] = {80, 0},
+    [PVEDefine.KEEL] = {150, 0},
+    [PVEDefine.WARRIORS_TOMB] = {80, 0},
+    [PVEDefine.OBELISK] = {50, -50},
+    [PVEDefine.ANCIENT_RUINS] = {100, 0},
+    [PVEDefine.ENTRANCE_DOOR] = {100, 0},
+}
 function PVELayer:SetObjectStatus(object)
     if not object:Type() then
         object:SetType(self:GetTileInfo(object:Position()))
@@ -160,12 +174,11 @@ function PVELayer:SetObjectStatus(object)
     if object:IsSearched() then
         local sprite = self:GetSpriteBy(object:Position())
         if sprite then
+            local x,y = unpack(offset_map[object:Type()])
             local size1 = sprite:getContentSize()
-            local flag = display.newSprite("alliacne_search_29x33.png")
-            local size2 = flag:getContentSize()
-            local x = size1.width - size2.width*0.5
-            local y = size2.height * 0.5
-            flag:pos(x, y):addTo(sprite)
+            local flag = display.newSprite("pve_icon_flag.png")
+            :align(display.BOTTOM_RIGHT, x, y)
+            :addTo(sprite, 10)
         end
     end
 end
