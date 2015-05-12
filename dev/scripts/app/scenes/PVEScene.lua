@@ -94,7 +94,14 @@ function PVEScene:DestroyDirectionArrow()
     self:removeChildByTag(DIRECTION_TAG)
 end
 function PVEScene:OnLocationChanged(is_pos_changed, is_switch_floor)
-    
+    local location = DataManager:getUserData().pve.location
+    if is_switch_floor then
+        self.user:GetPVEDatabase():SetCharPosition(location.x, location.y, location.z)
+        app:EnterPVEScene(location.z)
+    elseif is_pos_changed then
+        self:GetSceneLayer():MoveCharTo(location.x, location.y)
+    end
+    assert(false)
 end
 function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
     -- 有动画就什么都不处理
