@@ -18,6 +18,8 @@ local random = math.random
 local max = math.max
 local min = math.min
 local ipairs = ipairs
+local pairs = pairs
+local MINE,FRIEND,ENEMY,VILLAGE_TAG = 1, 2, 3, 4
 local function random_indexes_in_rect(number, rect)
     local indexes = {}
     local count = 0
@@ -47,6 +49,7 @@ function AllianceView:ctor(layer, alliance, logic_base_x, logic_base_y)
     self.layer = layer
     self.alliance = alliance
     self.objects = {}
+    self.village_map = {}
     logic_base_x = logic_base_x or 0
     logic_base_y = logic_base_y or 53
     self.normal_map = NormalMapAnchorBottomLeftReverseY.new{
@@ -105,6 +108,9 @@ local terrain_map = {
     }
 }
 function AllianceView:InitAlliance()
+    self.my_allinace_id = Alliance_Manager:GetMyAlliance():Id()
+    self.is_my_alliance = self.my_allinace_id == self.alliance:Id()
+    self.mine_player_id = Alliance_Manager:GetMyAlliance():GetSelf():Id()
     local background = self:GetLayer():GetBackGround()
     local array = terrain_map[self:Terrain()]
     if #array > 0 then
@@ -164,11 +170,22 @@ end
 function AllianceView:OnBuildingFullUpdate(allianceMap)
     self:RefreshBuildings(allianceMap)
 end
+function AllianceView:OnVillageEventsDataChanged(changed_map)
+    for k,v in pairs(changed_map.added or {}) do
+        self:RefreshVillageEvent(v, true)
+    end
+    for k,v in pairs(changed_map.removed or {}) do
+        self:RefreshVillageEvent(v, false)
+    end
+end
 function AllianceView:RefreshBuildings(alliance_map)
     self:IteratorAllianceObjects(function(_,v) v:removeFromParent() end)
     self.objects = {}
     alliance_map:IteratorAllObjects(function(_, entity)
         self.objects[entity:Id()] = self:CreateObject(entity)
+    end)
+    self:GetAlliance():IteratorVillageEvents(function(event)
+        self:RefreshVillageEvent(event, true)
     end)
 end
 function AllianceView:OnBuildingDeltaUpdate(allianceMap, deltaMapObjects)
@@ -187,23 +204,49 @@ function AllianceView:OnBuildingDeltaUpdate(allianceMap, deltaMapObjects)
             self:RefreshEntity(allianceMap:GetMapObjects()[index])
         end
     end
+    self:GetAlliance():IteratorVillageEvents(function(event)
+        self:RefreshVillageEvent(event, true)
+    end)
 end
 function AllianceView:RefreshEntity(entity)
     self.objects[entity:Id()]:removeFromParent()
     self.objects[entity:Id()] = self:CreateObject(entity)
 end
+function AllianceView:RefreshVillageEvent(village_event, is_add)
+    local mapId = village_event:VillageData().id
+    local player_data = village_event:PlayerData()
+    local aid = player_data.alliance.id
+    local pid = player_data.id
+    local obj = self.objects[mapId]
+    if obj then
+        if is_add then
+            local ally = pid == self.mine_player_id and MINE or 
+            (self.my_allinace_id == aid and FRIEND or ENEMY)
+            local flag = obj:getChildByTag(VILLAGE_TAG)
+            if flag then
+                flag:SetAlly(ally)
+            else
+                local x,y = obj:GetSpriteTopPosition()
+                self:CreateVillageFlag(ally)
+                    :addTo(obj, 1, VILLAGE_TAG)
+                    :pos(x,y+50):scale(1.5)
+            end
+        else
+            obj:removeChildByTag(VILLAGE_TAG)
+        end
+    end
+end
 function AllianceView:CreateObject(entity)
-    local is_my_alliance = Alliance_Manager:GetMyAlliance():Id() == self.alliance:Id()
     local type_ = entity:GetType()
     local object
     if type_ == "building" then
-        object = AllianceBuildingSprite.new(self, entity, is_my_alliance):addTo(self:GetBuildingNode())
+        object = AllianceBuildingSprite.new(self, entity, self.is_my_alliance):addTo(self:GetBuildingNode())
     elseif type_ == "member" then
-        object = CitySprite.new(self, entity, is_my_alliance):addTo(self:GetBuildingNode())
+        object = CitySprite.new(self, entity, self.is_my_alliance):addTo(self:GetBuildingNode())
     elseif type_ == "village" then
-        object = VillageSprite.new(self, entity, is_my_alliance):addTo(self:GetBuildingNode())
+        object = VillageSprite.new(self, entity, self.is_my_alliance):addTo(self:GetBuildingNode())
     elseif type_ == "decorate" then
-        object = AllianceDecoratorSprite.new(self, entity, is_my_alliance):addTo(self:GetBuildingNode())
+        object = AllianceDecoratorSprite.new(self, entity, self.is_my_alliance):addTo(self:GetBuildingNode())
     end
     return object
 end
@@ -252,8 +295,36 @@ function AllianceView:EmptyGround(x, y)
     end
 end
 
+local flag_map = {
+    [MINE] = {"village_flag_mine.png", "village_icon_mine.png"},
+    [FRIEND] = {"village_flag_friend.png", "village_icon_friend.png"},
+    [ENEMY] = {"village_flag_enemy.png", "village_icon_enemy.png"},
+}
+
+
+function AllianceView:CreateVillageFlag(e)
+    local head,circle = unpack(flag_map[e])
+    local flag = display.newSprite(head)
+    flag:setAnchorPoint(cc.p(0.5, 0.62))
+    local p = flag:getAnchorPointInPoints()
+    display.newSprite(circle)
+        :addTo(flag,0,1):pos(p.x, p.y)
+        :runAction(
+            cc.RepeatForever:create(transition.sequence{cc.RotateBy:create(2, -360)})
+        )
+    function flag:SetAlly(e)
+        local head,circle = unpack(flag_map[e])
+        self.flag:setTexture(head)
+        self.flag:getChildByTag(1):setTexture(circle)
+    end
+    return flag
+end
+
 
 return AllianceView
+
+
+
 
 
 

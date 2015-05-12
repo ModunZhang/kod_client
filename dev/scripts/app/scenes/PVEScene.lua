@@ -32,6 +32,7 @@ function PVEScene:ctor(user)
     self:LoadAnimation()
     PVEScene.super.ctor(self)
     self.user = user
+    self.move_step = 1
 end
 function PVEScene:onEnter()
     PVEScene.super.onEnter(self)
@@ -129,8 +130,12 @@ function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
 
         self.user:UseStrength(1)
         self:GetSceneLayer():MoveCharTo(tx, ty)
-        local move_sfx = {"PVE_MOVE1", "PVE_MOVE2", "PVE_MOVE3"}
-        app:GetAudioManager():PlayeEffectSoundWithKey(move_sfx[math.random(#move_sfx)])
+
+        app:GetAudioManager():PlayeEffectSoundWithKey(string.format("PVE_MOVE%d", self.move_step))
+        self.move_step = self.move_step + 1
+        if self.move_step > 3 then
+            self.move_step = 1
+        end
 
         if self:GetSceneLayer():GetTileInfo(tx, ty) > 0 and
             self:CheckCanMoveTo(tx, ty) then
