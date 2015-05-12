@@ -7,6 +7,7 @@ local FteScene = class("FteScene", function()
 end)
 
 function FteScene:ctor()
+    local text = _("数周之后。。。")
     self.several = UIKit:ttfLabel({
         text = "",
         size = 30,
@@ -22,7 +23,7 @@ function FteScene:ctor()
     end):next(function()
         UIKit:GetUIInstance("GameUISelectTerrain"):removeFromParent()
         self.several:show()
-        self.several:setString(_("数周之后。。。"))
+        self.several:setString(text)
     end):next(self:PormiseOfSchedule(1, function(percent)
         self.several:setString(utf8.substr(text, 1, math.ceil(utf8.len(text) * percent)))
     end)):next(cocos_promise.delay(1)):next(function()

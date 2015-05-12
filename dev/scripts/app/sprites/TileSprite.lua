@@ -30,10 +30,8 @@ local surface = {
 }
 
 function TileSprite:ctor(city_layer, entity, x, y)
+    self.roads = {}
     TileSprite.super.ctor(self, city_layer, entity, x, y)
-    if entity:NeedWalls() then
-        self:GetSprite():hide()
-    end
     local sx,ex,sy,ey = 200,230,150,200
     local maps = surface[self:GetMapLayer():Terrain()]
     for i = 1,2 do
@@ -46,6 +44,11 @@ function TileSprite:ReloadSpriteCauseTerrainChanged()
     self.sprite = self:CreateSprite():addTo(self, SPRITE)
 end
 function TileSprite:CreateSprite()
+    for k,v in pairs(self.roads) do
+        v:removeFromParent()
+    end
+    self.roads = {}
+    
     local sprite = TileSprite.super.CreateSprite(self)
     local tile = self:GetEntity()
     local x, y = tile.x, tile.y
@@ -55,17 +58,18 @@ function TileSprite:CreateSprite()
         display.newSprite(self:GetRoadPng()):addTo(sprite):pos(dx, dy)
         if y == 5 and x == 2 then
             for i = 1, 2 do
-                display.newSprite(string.format("unlock_road_%s.png",
-                    self:GetMapLayer():Terrain())):addTo(self):pos(-dx * i, -dy * i)
+                table.insert(self.roads, 
+                    display.newSprite(string.format("unlock_road_%s.png",
+                    self:GetMapLayer():Terrain())):addTo(self):pos(-dx * i, -dy * i))
             end
         end
+    end
+    if self:GetEntity():NeedWalls() then
+        sprite:hide()
     end
     return sprite
 end
 function TileSprite:GetSpriteFile()
-    if self:GetEntity().x == 2 then
-        return self:GetRoadPng()
-    end
     return self:GetUnlockTilePng()
 end
 function TileSprite:GetUnlockTilePng()

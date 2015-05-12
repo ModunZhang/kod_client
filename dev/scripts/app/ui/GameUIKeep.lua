@@ -466,6 +466,9 @@ function GameUIKeep:PlayCloudAnimation()
             cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
             cc.CallFunc:create(function() self:LeftButtonClicked() end),
             cc.FadeOut:create(0.75),
+            cc.CallFunc:create(function() 
+                armature:removeFromParent()
+            end),
         }
     )
 end
