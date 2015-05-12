@@ -17,7 +17,16 @@ local surface = {
         "unlock_tile_surface_2_desert.png",
         "unlock_tile_surface_3_desert.png",
         "unlock_tile_surface_4_desert.png",
-    }
+    },
+    iceField = {
+        "unlock_tile_surface_1_iceField.png",
+        "unlock_tile_surface_2_iceField.png",
+        "unlock_tile_surface_3_iceField.png",
+        "unlock_tile_surface_4_iceField.png",
+        "unlock_tile_surface_5_iceField.png",
+        "unlock_tile_surface_6_iceField.png",
+        "unlock_tile_surface_7_iceField.png",
+    },
 }
 
 function TileSprite:ctor(city_layer, entity, x, y)

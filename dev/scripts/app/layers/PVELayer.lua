@@ -305,9 +305,6 @@ function PVELayer:getContentSize()
     end
     return self.content_size
 end
-function PVELayer:OnSceneMove()
-
-end
 function PVELayer:OnSceneScale()
 
 end

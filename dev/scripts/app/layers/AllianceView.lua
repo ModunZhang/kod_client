@@ -64,11 +64,13 @@ function AllianceView:onEnter()
     self:GetAlliance():GetAllianceMap():AddListenOnType(self, AllianceMap.LISTEN_TYPE.BUILDING)
     self:GetAlliance():GetAllianceMap():AddListenOnType(self, AllianceMap.LISTEN_TYPE.BUILDING_INFO)
     self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.MEMBER)
+    self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.OnVillageEventsDataChanged)
 end
 function AllianceView:onExit()
     self:GetAlliance():GetAllianceMap():RemoveListenerOnType(self, AllianceMap.LISTEN_TYPE.BUILDING)
     self:GetAlliance():GetAllianceMap():RemoveListenerOnType(self, AllianceMap.LISTEN_TYPE.BUILDING_INFO)
     self:GetAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.MEMBER)
+    self:GetAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.OnVillageEventsDataChanged)
 end
 function AllianceView:ChangeTerrain()
     local terrain = self:Terrain()

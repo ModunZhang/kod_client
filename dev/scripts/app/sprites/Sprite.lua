@@ -7,13 +7,6 @@ local Sprite = class("Sprite", function(...)
 end)
 
 local SPRITE = 0
----- 回调
-function Sprite:OnSceneMove()
-    local world_point = self:GetWorldPosition()
-    self:NotifyObservers(function(listener)
-        listener:OnPositionChanged(world_point.x, world_point.y)
-    end)
-end
 function Sprite:GetWorldPosition()
     return self:getParent():convertToWorldSpace(cc.p(self:GetCenterPosition()))
 end

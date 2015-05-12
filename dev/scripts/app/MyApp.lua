@@ -319,6 +319,8 @@ function MyApp:EnterUserMode()
     local InitGame = import("app.service.InitGame")
     assert(DataManager:hasUserData())
     InitGame(DataManager:getUserData())
+    DataManager:setUserAllianceData(DataManager.allianceData)
+    DataManager:setEnemyAllianceData(DataManager.enemyAllianceData)
 end
 
 function MyApp:getSupportMailFormat(category,logMsg)

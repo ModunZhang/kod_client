@@ -209,9 +209,6 @@ function MapScene:OnTouchMove(pre_x, pre_y, x, y)
     local diffY = new_point.y - old_point.y 
     self.scene_layer:setPosition(cc.p(old_x + diffX, old_y + diffY))
     self:GetInfoLayer():pos(self.scene_layer:getPosition())
-    -- local mx, my, ELASTIC = self.scene_layer:GetCollideLength()
-    -- local rx, ry = 1- sqrt((abs(mx)/ELASTIC)), 1 - sqrt((abs(my)/ELASTIC))
-    -- self.scene_layer:setPosition(cc.p(old_x + diffX * rx, old_y + diffY * ry))
 end
 function MapScene:OnTouchClicked(pre_x, pre_y, x, y)
     return self.event_manager:TouchCounts() == 0
@@ -225,20 +222,13 @@ function MapScene:OnTouchExtend(old_speed_x, old_speed_y, new_speed_x, new_speed
     speed.x = speed.x > max_speed and max_speed or speed.x
     speed.y = speed.y > max_speed and max_speed or speed.y
     self.scene_layer:setPosition(cc.p(x + sp.x, y + sp.y))
-    -- local mx, my, ELASTIC = self.scene_layer:GetCollideLength()
-    -- local rx, ry = 1- sqrt((abs(mx)/ELASTIC)), 1 - sqrt((abs(my)/ELASTIC))
-    -- self.scene_layer:setPosition(cc.p(x + sp.x * rx, y + sp.y * ry))
-    -- if self.scene_layer:MakeElastic() then
-    --     self.touch_judgment:ResetTouch()
-    -- end
-end
-function MapScene:OnSceneScale()
+    self:GetInfoLayer():pos(self.scene_layer:getPosition())
 end
 function MapScene:OnSceneMove()
-    self:GetInfoLayer():pos(self.scene_layer:getPosition())
-    if self:GetSceneUILayer().OnSceneMove then
-        self:GetSceneUILayer():OnSceneMove()
-    end
+   self:GetInfoLayer():pos(self.scene_layer:getPosition()) 
+end
+function MapScene:OnSceneScale()
+
 end
 
 return MapScene

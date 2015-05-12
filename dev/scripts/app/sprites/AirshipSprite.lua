@@ -2,12 +2,6 @@ local Sprite = import(".Sprite")
 local AirshipSprite = class("AirshipSprite", Sprite)
 
 
-function AirshipSprite:OnSceneMove()
-    local world_point, top = self:GetWorldPosition()
-    self:NotifyObservers(function(listener)
-        listener:OnPositionChanged(world_point.x, world_point.y, top.x, top.y)
-    end)
-end
 function AirshipSprite:GetWorldPosition()
     return self:convertToWorldSpace(cc.p(self:GetSpriteOffset())),
         self:convertToWorldSpace(cc.p(self:GetSpriteTopPosition()))

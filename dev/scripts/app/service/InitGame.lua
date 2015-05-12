@@ -13,13 +13,9 @@ return function(userData)
     DataManager.user = userData
     timer:Clear()
 
-    if check("ALL") then
-        GLOBAL_FTE = false
-    end
-
-    Alliance_Manager = AllianceManager_.new()
     MailManager = MailManager_.new()
     ItemManager = ItemManager_.new()
+    Alliance_Manager = AllianceManager_.new()
     if GLOBAL_FTE then
         User = User_.new(initData._id)
         City = City_.new(initData):SetUser(User)

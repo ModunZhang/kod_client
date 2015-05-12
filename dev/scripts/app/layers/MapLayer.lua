@@ -178,7 +178,7 @@ function MapLayer:setPosition(position)
     local rx = x >= 0 and min(left_bottom_pos.x, right_top_pos.x) or max(left_bottom_pos.x, right_top_pos.x)
     local ry = y >= 0 and min(left_bottom_pos.y, right_top_pos.y) or max(left_bottom_pos.y, right_top_pos.y)
     super.setPosition(self, cc.p(rx, ry))
-    self:OnSceneMove(is_collide1 or is_collide2)
+    self.scene:OnSceneMove()
 end
 function MapLayer:GetLeftBottomPositionWithConstrain(x, y)
     local parent_node = self:getParent()
@@ -215,9 +215,6 @@ function MapLayer:getContentWidthAndHeight()
 end
 function MapLayer:getContentSize()
     assert(false, "你应该在子类实现这个函数 getContentSize")
-end
-function MapLayer:OnSceneMove()
-    self.scene:OnSceneMove()
 end
 function MapLayer:OnSceneScale(s)
     self.scene:OnSceneScale(s)

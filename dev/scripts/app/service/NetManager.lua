@@ -461,7 +461,7 @@ end
 -- 重写OpenUDID
 local getOpenUDID = device.getOpenUDID
 device.getOpenUDID = function()
-    -- if true then return "dannyhemac" end
+    if true then return "gz1" end
     if CONFIG_IS_DEBUG then
         local device_id
         local udid = cc.UserDefault:getInstance():getStringForKey("udid")

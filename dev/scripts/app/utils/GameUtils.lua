@@ -592,10 +592,16 @@ function GameUtils:SoldierSoldierBattle(attackSoldiers, attackWoundedSoldierPerc
             attackDamagedSoldierCount = ceil(sqrt(attackTotalPower * defenceTotalPower) * DAMAGE_FACTOR / attackSoldier.hp)
             defenceDamagedSoldierCount = ceil(attackTotalPower * 0.5 / defenceSoldier.hp)
         end
-        if attackDamagedSoldierCount > attackSoldier.currentCount * 0.7 then
+        if (attackDamagedSoldierCount > attackSoldier.currentCount) then
+            attackDamagedSoldierCount = attackSoldier.currentCount
+        end
+        if (defenceDamagedSoldierCount > defenceSoldier.currentCount) then
+            defenceDamagedSoldierCount = defenceSoldier.currentCount
+        end
+        if (attackSoldier.currentCount >= 50 and attackDamagedSoldierCount > attackSoldier.currentCount * 0.7) then
             attackDamagedSoldierCount = ceil(attackSoldier.currentCount * 0.7)
         end
-        if defenceDamagedSoldierCount > defenceSoldier.currentCount * 0.7 then
+        if (defenceSoldier.currentCount >= 50 and defenceDamagedSoldierCount > defenceSoldier.currentCount * 0.7) then
             defenceDamagedSoldierCount = ceil(defenceSoldier.currentCount * 0.7)
         end
         --
@@ -770,7 +776,7 @@ function GameUtils:DoBattle(attacker, defencer, terrain, enemy_name)
 
     local attackWoundedSoldierPercent = getPlayerTreatSoldierPercent(attacker.dragon.dragon)
     local attackSoldierMoraleDecreasedPercent = getPlayerSoldierMoraleDecreasedPercent(attacker.dragon.dragon)
-    local attack_soldier, defence_soldier, is_attack_win = 
+    local attack_soldier, defence_soldier, is_attack_win =
         GameUtils:SoldierSoldierBattle(
             attacker_soldiers, attackWoundedSoldierPercent, attackSoldierMoraleDecreasedPercent,
             defencer_soldiers, 0.4, 1
@@ -872,6 +878,7 @@ end
 
 
 return GameUtils
+
 
 
 
