@@ -187,6 +187,7 @@ local SCENE_BACKGROUND = 1
 local BACK_NODE = 2
 local CITY_LAYER = 3
 local SKY_LAYER = 4
+local INFO_LAYER = 5
 local CITY_BACKGROUND = 1
 local ROAD_NODE = 2
 local BUILDING_NODE = 3
@@ -229,6 +230,7 @@ end
 function CityLayer:InitCity()
     self.city_layer = display.newLayer():addTo(self, CITY_LAYER):align(display.BOTTOM_LEFT, 47, 158 + 250)
     self.sky_layer = display.newLayer():addTo(self, SKY_LAYER):align(display.BOTTOM_LEFT)
+    self.info_layer = display.newLayer():addTo(self, INFO_LAYER):align(display.BOTTOM_LEFT)
     self.position_node = cc.TMXTiledMap:create("tmxmaps/city_road2.tmx"):addTo(self.city_layer):hide()
     self.city_node = display.newLayer():addTo(self.city_layer, BUILDING_NODE):align(display.BOTTOM_LEFT)
     local origin_point = self:GetPositionIndex(0, 0)
@@ -240,6 +242,9 @@ function CityLayer:InitCity()
         base_x = origin_point.x,
         base_y = origin_point.y
     })
+end
+function CityLayer:GetInfoLayer()
+    return self.info_layer
 end
 function CityLayer:GetPositionIndex(x, y)
     return self:GetPositionLayer():getPositionAt(cc.p(x, y))

@@ -159,7 +159,7 @@ function PVEObject:DecodeToRewards(raw, func)
         return k, {
             type = rtype,
             name = rname,
-            count = func(self:Floor(), count),
+            count = is_not_boss and func(self:Floor(), count) or count,
             probability = probability
         }
     end)

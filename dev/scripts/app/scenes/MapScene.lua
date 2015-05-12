@@ -87,9 +87,6 @@ end
 function MapScene:GetSceneLayer()
     return self.scene_layer
 end
-function MapScene:GetInfoLayer()
-    return self.info_layer
-end
 function MapScene:CreateSceneLayer()
     assert(false, "必须在子类实现生成场景的方法")
 end
@@ -113,7 +110,7 @@ function MapScene:GetFteLayer()
     return child
 end
 function MapScene:CreateFteLayer()
-    local layer = display.newLayer():addTo(self, 2000, FTE_TAG)
+    local layer = display.newColorLayer(cc.c4b(0, 255, 0, 100)):addTo(self, 2000, FTE_TAG)
     layer:setTouchSwallowEnabled(true)
     local touch_judgment = self.touch_judgment
     layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
@@ -134,11 +131,11 @@ function MapScene:CreateFteLayer()
     end)
     function layer:Enable()
         self:setTouchEnabled(true)
-        return self
+        return self:show()
     end
     function layer:Disable()
         self:setTouchEnabled(false)
-        return self
+        return self:hide()
     end
     function layer:Reset()
         return self:Disable()
@@ -209,7 +206,6 @@ function MapScene:OnTouchMove(pre_x, pre_y, x, y)
     local diffX = new_point.x - old_point.x
     local diffY = new_point.y - old_point.y 
     self.scene_layer:setPosition(cc.p(old_x + diffX, old_y + diffY))
-    self:GetInfoLayer():pos(self.scene_layer:getPosition())
 end
 function MapScene:OnTouchClicked(pre_x, pre_y, x, y)
     return self.event_manager:TouchCounts() == 0
@@ -223,11 +219,8 @@ function MapScene:OnTouchExtend(old_speed_x, old_speed_y, new_speed_x, new_speed
     speed.x = speed.x > max_speed and max_speed or speed.x
     speed.y = speed.y > max_speed and max_speed or speed.y
     self.scene_layer:setPosition(cc.p(x + sp.x, y + sp.y))
-    self:GetInfoLayer():pos(self.scene_layer:getPosition())
 end
-function MapScene:OnSceneMove()
-   self:GetInfoLayer():pos(self.scene_layer:getPosition()) 
-end
+
 
 return MapScene
 

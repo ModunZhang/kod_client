@@ -14,7 +14,6 @@ local User = import("..entity.User")
 local NotifyItem = import("..entity.NotifyItem")
 local CityScene = import(".CityScene")
 local MyCityScene = class("MyCityScene", CityScene)
-
 local ipairs = ipairs
 
 function MyCityScene:ctor(...)
@@ -188,8 +187,9 @@ function MyCityScene:PromiseOfClickBuilding(x, y, for_build, msg, arrow_param)
             self:GotoLogicPoint(mx, my, 5)
 
             local mid,top = building:GetWorldPosition()
-            local middle_point = self:GetInfoLayer():convertToNodeSpace(mid)
-            local top_point = self:GetInfoLayer():convertToNodeSpace(top)
+            local info_layer = self:GetSceneLayer():GetInfoLayer()
+            local middle_point = info_layer:convertToNodeSpace(mid)
+            local top_point = info_layer:convertToNodeSpace(top)
 
             local str
             if not msg then
@@ -200,9 +200,9 @@ function MyCityScene:PromiseOfClickBuilding(x, y, for_build, msg, arrow_param)
                 end
             end
 
-            self:GetInfoLayer():removeAllChildren()
+            info_layer:removeAllChildren()
             local arrow = WidgetFteArrow.new(msg or str)
-                :addTo(self:GetInfoLayer()):TurnDown():pos(top_point.x, top_point.y + 50)
+                :addTo(info_layer):TurnDown():pos(top_point.x, top_point.y + 50)
 
             if arrow_param then
                 if arrow_param.direction == "up" then
@@ -224,12 +224,12 @@ function MyCityScene:PromiseOfClickBuilding(x, y, for_build, msg, arrow_param)
 end
 function MyCityScene:BeginClickFte()
     self.clicked_callbacks = {}
-    self:GetInfoLayer():removeAllChildren()
+    self:GetSceneLayer():GetInfoLayer():removeAllChildren()
     self:GetFteLayer():Enable()
 end
 function MyCityScene:EndClickFte()
     self.clicked_callbacks = {}
-    self:GetInfoLayer():removeAllChildren()
+    self:GetSceneLayer():GetInfoLayer():removeAllChildren()
     self:GetFteLayer():Disable()
 end
 function MyCityScene:CheckClickPromise(building)

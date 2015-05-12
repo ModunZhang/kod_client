@@ -55,7 +55,7 @@ function PVEScene:onExit()
             ):fail(function()
                 -- 失败回滚
                 local location = DataManager:getUserData().pve.location
-                self.user:GetPVEDatabase():SetCharPosition(location.x, location.y, location.z)
+                User:GetPVEDatabase():SetCharPosition(location.x, location.y, location.z)
             end)
         end
     end
