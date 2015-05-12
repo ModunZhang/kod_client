@@ -102,6 +102,7 @@ function GameUILoginBeta:createStartGame()
     self.start_ui = button
 
     button:onButtonClicked(function()
+        self.startGame = true
         local sp = cc.Spawn:create(cc.ScaleTo:create(1,1.5),cc.FadeOut:create(1))
         local seq = transition.sequence({sp,cc.CallFunc:create(function()
                 self:connectLogicServer()
@@ -271,20 +272,20 @@ function GameUILoginBeta:login()
         end, 0.3)
     end):catch(function(err)
         dump(err)
+        NetManager:disconnect()
         local content, title = err:reason()
         if title == 'timeout' then
             content = _("请求超时")
         else
             local code = content.code
-            if UIKit:getErrorCodeKey(content.code) == 'reLoginNeeded' then
-                self:login()
-                return
+            if UIKit:getErrorCodeKey(content.code) == 'playerAlreadyLogin' then
+                content = _("玩家已经登录")
             else
-                content = _("登录游戏失败!")
+                content = UIKit:getErrorCodeData(code).message
             end
         end
         self:showError(content,function()
-			self:login()
+			self:connectLogicServer()
 		end)
     end):always(function()
         UIKit:NoWaitForNet()

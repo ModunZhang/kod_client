@@ -89,9 +89,9 @@ function UIKit:newGameUI(gameUIName,... )
     local viewPackageName = app.packageRoot .. ".ui." .. gameUIName
     local viewClass = require(viewPackageName)
     local instance = viewClass.new(...)
-    if gameUIName ~= 'FullScreenPopDialogUI' then
+    -- if gameUIName ~= 'FullScreenPopDialogUI' then
         self.Registry.setObject(instance,gameUIName)
-    end
+    -- end
     return instance
 end
 function UIKit:newWidgetUI(gameUIName,... )
@@ -165,8 +165,11 @@ function UIKit:closeAllUI(force)
     UIKit.open_ui_callbacks = {}
     UIKit.close_ui_callbacks = {}
     for name,v in pairs(self:getRegistry().objects_) do
-        if (v.__isBase and v.__type ~= self.UITYPE.BACKGROUND) or force then
-            v:LeftButtonClicked()
+        if v.__isBase and v.__type ~= self.UITYPE.BACKGROUND then
+            if v.__type == self.UITYPE.MESSAGEDIALOG and v.__key__dialog then 
+            else
+                v:LeftButtonClicked()
+            end
         end
     end
 end
@@ -555,6 +558,27 @@ function UIKit:showMessageDialogCanCanleNotAutoClose(title,tips,ok_callback,canc
     dialog:DisableAutoClose()
     dialog:AddToCurrentScene()
     return dialog
+end
+
+function UIKit:isKeyMessageDialogShow()
+    dump(self:getRegistry().objects_,"self:getRegistry().objects_--->")
+    for name,v in pairs(self:getRegistry().objects_) do
+        if v.__isBase and v.__type == self.UITYPE.MESSAGEDIALOG then
+            if v.__key__dialog then
+                return true
+            end
+        end
+    end
+    return false
+end
+
+function UIKit:showKeyMessageDialog(title,tips,ok_callback,cancel_callback)
+    if self:isKeyMessageDialogShow() then
+        print("忽略了一次关键性弹窗")
+        return 
+    end
+    local dialog =  UIKit:showMessageDialog(title,tips,ok_callback,cancel_callback,false,nil)
+    dialog.__key__dialog = true
 end
 
 function UIKit:showMessageDialog(title,tips,ok_callback,cancel_callback,visible_x_button,x_button_callback)

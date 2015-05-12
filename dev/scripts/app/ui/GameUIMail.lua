@@ -412,8 +412,9 @@ function GameUIMail:CreateInboxContent()
     local mail_content_title_label =  UIKit:ttfLabel(
         {
             size = 20,
-            dimensions = cc.size(580,0),
-            color = 0x403c2f
+            color = 0x403c2f,
+            ellipsis = true,
+            dimensions = cc.size(370,20),
         }):align(display.LEFT_CENTER, 60, content_title_bg:getContentSize().height/2)
         :addTo(content_title_bg)
 
@@ -1002,12 +1003,13 @@ function GameUIMail:ShowSendMailDetails(mail)
             color = UIKit:hex2c3b(0x615b44)
         }):align(display.LEFT_CENTER, 155, bg:getContentSize().height-100)
         :addTo(bg)
-    local subject_content_label = cc.ui.UILabel.new(
-        {cc.ui.UILabel.LABEL_TYPE_TTF,
+    local subject_content_label = UIKit:ttfLabel(
+        {
             text = mail.title,
-            font = UIKit:getFontFilePath(),
             size = 20,
-            color = UIKit:hex2c3b(0x403c2f)
+            color = 0x403c2f,
+            ellipsis = true,
+            dimensions = cc.size(300,20)
         }):align(display.LEFT_CENTER,155 + subject_label:getContentSize().width+20, bg:getContentSize().height-100)
         :addTo(bg)
     -- 日期
@@ -1068,12 +1070,13 @@ function GameUIMail:ShowMailDetails(mail)
             color = UIKit:hex2c3b(0x615b44)
         }):align(display.LEFT_CENTER, 155, size.height-60)
         :addTo(body)
-    local subject_content_label = cc.ui.UILabel.new(
-        {cc.ui.UILabel.LABEL_TYPE_TTF,
+    local subject_content_label = UIKit:ttfLabel(
+        {
             text = mail.title,
-            font = UIKit:getFontFilePath(),
             size = 20,
-            color = UIKit:hex2c3b(0x403c2f)
+            color = 0x403c2f,
+            ellipsis = true,
+            dimensions = cc.size(300,20)
         }):align(display.LEFT_CENTER,155 + subject_label:getContentSize().width+20, size.height-60)
         :addTo(body)
     -- 日期
