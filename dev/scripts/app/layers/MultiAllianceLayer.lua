@@ -365,6 +365,21 @@ function MultiAllianceLayer:CreateCorpsIf(marchEvent)
     else -- return
         is_enemy = self:GetMyAlliance():Id() ~= to_alliance_id
     end
+    if not is_enemy then
+        if not marchEvent:IsReturnEvent() then
+            if marchEvent:GetPlayerRole() == marchEvent.MARCH_EVENT_PLAYER_ROLE.SENDER  then
+                print("--->我的路线!")
+            else
+                print("--->盟友的路线!")
+            end
+        else -- return
+            if marchEvent:GetPlayerRole() == marchEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER  then
+                print("--->我的路线!")
+            else
+                print("--->盟友的路线!")
+            end
+        end
+    end
     self:CreateCorps(
         marchEvent:Id(),
         from,

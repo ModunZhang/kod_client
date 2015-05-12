@@ -274,6 +274,12 @@ function GameUILoginBeta:login()
         dump(err)
         NetManager:disconnect()
         local content, title = err:reason()
+        if title == 'syntaxError' then
+                self:showError(content,function()
+                    app:restart(false)
+            end)
+            return
+        end
         if title == 'timeout' then
             content = _("请求超时")
         else
