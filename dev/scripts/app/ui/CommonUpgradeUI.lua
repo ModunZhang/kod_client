@@ -335,6 +335,15 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
         if next_recovery - recovery > 0 then
             efficiency = efficiency .. string.format(_("资源小车回复速度+%d/小时,"),(next_recovery - recovery))
         end
+    elseif self.building:GetType()=="tradeGuild"
+        or self.building:GetType()=="stable"
+        or self.building:GetType()=="hunterHall"
+        or self.building:GetType()=="workshop" then
+        local eff = self.building:GetEfficiency()
+        local next_eff = self.building:GetNextLevelEfficiency()
+        if next_eff - eff > 0 then
+            efficiency = string.format(_("科技升级速度+%d%%,"),(next_eff - eff) * 100)
+        end
     else
         assert(false,"本地化丢失")
     end
@@ -818,6 +827,7 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
 
 
 
