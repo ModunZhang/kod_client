@@ -324,6 +324,17 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
         if next_config.efficiency - current_config.efficiency > 0 then
             efficiency = string.format(_("学院科技研发速度+%d%%,"),(next_config.efficiency - current_config.efficiency)*100)
         end
+    elseif self.building:GetType()=="tradeGuild" then
+        local cart = self.building:GetMaxCart()
+        local next_cart = self.building:GetNextLevelMaxCart()
+        local recovery = self.building:GetCartRecovery()
+        local next_recovery = self.building:GetNextLevelCartRecovery()
+        if next_cart - cart > 0 then
+            efficiency = string.format(_("资源小车上限+%d,"),(next_cart - cart))
+        end
+        if next_recovery - recovery > 0 then
+            efficiency = efficiency .. string.format(_("资源小车回复速度+%d/小时,"),(next_recovery - recovery))
+        end
     else
         assert(false,"本地化丢失")
     end
