@@ -123,6 +123,8 @@ function GameUIAllianceHome:OnHelpToTroopsChanged()
 end
 function GameUIAllianceHome:Schedule()
     local alliance = self.alliance
+    local alliance_map = alliance:GetAllianceMap()
+    local myself = alliance:GetSelf()
     local screen_rect = self.screen_rect
     display.newNode():addTo(self):schedule(function()
         if alliance:IsDefault() then return end
@@ -133,19 +135,19 @@ function GameUIAllianceHome:Schedule()
         if alliance:IsDefault() then return end
         local lx,ly,view = self.multialliancelayer:GetAllianceCoordWithPoint(display.cx, display.cy)
         local layer = view:GetLayer()
-        local x,y = alliance:GetAllianceMap():FindMapObjectById(alliance:GetSelf():MapId()):GetMidLogicPosition()
+        local x,y = alliance_map:FindMapObjectById(myself:MapId()):GetMidLogicPosition()
         self:UpdateMyCityArrows(screen_rect, alliance, layer, x,y)
     end, 0)
     display.newNode():addTo(self):schedule(function()
         if alliance:IsDefault() then return end
         local lx,ly,view = self.multialliancelayer:GetAllianceCoordWithPoint(display.cx, display.cy)
         local layer = view:GetLayer()
-        local x,y = alliance:GetAllianceMap():FindMapObjectById(alliance:GetSelf():MapId()):GetMidLogicPosition()
+        local x,y = alliance_map:FindMapObjectById(myself:MapId()):GetMidLogicPosition()
         self:UpdateMyAllianceBuildingArrows(screen_rect, alliance, layer)
         if Alliance_Manager:HaveEnemyAlliance() then
-            self:UpdateEnemyArrows(screen_rect, Alliance_Manager:GetEnemyAlliance(), layer, logic_x, logic_y)
+            self:UpdateEnemyArrows(screen_rect, Alliance_Manager:GetEnemyAlliance(), layer, lx, ly)
         end
-    end, 0.1)
+    end, 0.05)
 end
 
 function GameUIAllianceHome:InitArrow()

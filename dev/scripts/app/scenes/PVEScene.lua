@@ -132,7 +132,6 @@ function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
         local move_sfx = {"PVE_MOVE1", "PVE_MOVE2", "PVE_MOVE3"}
         app:GetAudioManager():PlayeEffectSoundWithKey(move_sfx[math.random(#move_sfx)])
 
-
         if self:GetSceneLayer():GetTileInfo(tx, ty) > 0 and
             self:CheckCanMoveTo(tx, ty) then
             self:CheckBuilding(tx, ty)
