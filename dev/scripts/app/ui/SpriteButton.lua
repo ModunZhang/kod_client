@@ -69,6 +69,7 @@ function SpriteButton:OnUpgradingBegin(building, current_time, city)
     self:OnTileChanged(city)
 end
 function SpriteButton:OnUpgrading(building, current_time, city)
+
 end
 function SpriteButton:OnUpgradingFinished(building, city)
     self:OnTileChanged(city)
@@ -118,6 +119,9 @@ function SpriteButton:ctor(sprite, city)
     self:AddState("can_not_unlocked", CannotUnlockState.new(self))
 
     self:OnTileChanged(city)
+end
+function SpriteButton:IsShow()
+    return self.lock_button:isVisible()
 end
 function SpriteButton:SetLockTouchListener(func)
     self.lock_button:onButtonClicked(function(event)

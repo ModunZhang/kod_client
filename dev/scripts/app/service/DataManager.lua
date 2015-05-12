@@ -8,7 +8,12 @@ function DataManager:setUserData( userData, deltaData )
 end
 function DataManager:setUserAllianceData(allianceData,deltaData)
     self.allianceData = allianceData
+    if GLOBAL_FTE then return end
     if allianceData == json.null then return end
+    if not Alliance_Manager then
+        print(debug.traceback("", 2))
+        assert(false)
+    end
     Alliance_Manager:OnAllianceDataChanged(allianceData,app.timer:GetServerTime(),deltaData)
 end
 function DataManager:getUserAllianceData()
@@ -32,11 +37,12 @@ function DataManager:getFteData()
 end
 
 function DataManager:setEnemyAllianceData(enemyAllianceData,deltaData)
+    self.enemyAllianceData = enemyAllianceData
+    if GLOBAL_FTE then return end
     if not Alliance_Manager then
         print(debug.traceback("", 2))
         assert(false)
     end
-    self.enemyAllianceData = enemyAllianceData
     Alliance_Manager:OnEnemyAllianceDataChanged(enemyAllianceData,app.timer:GetServerTime(),deltaData)
 end
 
@@ -55,5 +61,6 @@ function DataManager:OnUserDataChanged(userData,timer, deltaData)
     Alliance_Manager:OnUserDataChanged(userData, timer, deltaData)
     MailManager:OnUserDataChanged(userData, timer, deltaData)
 end
+
 
 

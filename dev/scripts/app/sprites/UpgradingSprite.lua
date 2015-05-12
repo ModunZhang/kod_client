@@ -4,12 +4,6 @@ local Sprite = import(".Sprite")
 local UpgradingSprite = class("UpgradingSprite", Sprite)
 ----
 
-function UpgradingSprite:OnSceneMove()
-    local world_point, top = self:GetWorldPosition()
-    self:NotifyObservers(function(listener)
-        listener:OnPositionChanged(world_point.x, world_point.y, top.x, top.y)
-    end)
-end
 function UpgradingSprite:GetWorldPosition()
     return self:convertToWorldSpace(cc.p(self:GetSpriteOffset())),
         self:convertToWorldSpace(cc.p(self:GetSpriteTopPosition()))
@@ -41,7 +35,6 @@ function UpgradingSprite:OnBuildingUpgradeFinished(building)
     -- end)
     self:RefreshSprite()
     -- self:RefreshShadow()
-    -- self:OnSceneMove()
 
     -- animation
     self:StopBuildingAnimation()
@@ -209,20 +202,12 @@ function UpgradingSprite:CreateLevelNode()
     self.text_field:setSkewY(-30)
 end
 function UpgradingSprite:ShowLevelUpNode()
-    if self.status == "show" then
-        return
-    end
     self.level_bg:stopAllActions()
     self.level_bg:fadeTo(0.5, 255)
-    self.status = "show"
 end
 function UpgradingSprite:HideLevelUpNode()
-    if self.status == "hide" then
-        return
-    end
     self.level_bg:stopAllActions()
     self.level_bg:fadeTo(0.5, 0)
-    self.status = "hide"
 end
 return UpgradingSprite
 

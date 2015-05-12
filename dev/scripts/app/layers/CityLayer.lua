@@ -149,20 +149,18 @@ function CityLayer:OnCreateDecorator(building)
     city_node:addChild(house)
     table.insert(self.houses, house)
 
-    self:NotifyObservers(function(listener)
-        listener:OnCreateDecoratorSprite(house)
-    end)
+    -- self:NotifyObservers(function(listener)
+    --     listener:OnCreateDecoratorSprite(house)
+    -- end)
 end
 function CityLayer:OnDestoryDecorator(destory_decorator, release_ruins)
     for i, house in pairs(self.houses) do
         local x, y = house:GetLogicPosition()
         if destory_decorator:IsSamePositionWith(house) then
-            self:NotifyObservers(function(listener)
-                listener:OnDestoryDecoratorSprite(house)
-            end)
-
-            table.remove(self.houses, i)
-            house:removeFromParent()
+            -- self:NotifyObservers(function(listener)
+            --     listener:OnDestoryDecoratorSprite(house)
+            -- end)
+            table.remove(self.houses, i):removeFromParent()
             break
         end
     end
@@ -490,9 +488,9 @@ function CityLayer:UpdateWallsWithCity(city)
     end
     self.walls = new_walls
 
-    self:NotifyObservers(function(listener)
-        listener:OnGateChanged(old_walls, new_walls)
-    end)
+    -- self:NotifyObservers(function(listener)
+    --     listener:OnGateChanged(old_walls, new_walls)
+    -- end)
 
     for _, v in pairs(old_walls) do
         v:DestorySelf()
@@ -509,9 +507,9 @@ function CityLayer:UpdateTowersWithCity(city)
     end
     self.towers = new_towers
 
-    self:NotifyObservers(function(listener)
-        listener:OnTowersChanged(old_towers, new_towers)
-    end)
+    -- self:NotifyObservers(function(listener)
+    --     listener:OnTowersChanged(old_towers, new_towers)
+    -- end)
 
     for k, v in pairs(old_towers) do
         v:DestorySelf()
@@ -791,23 +789,6 @@ function CityLayer:getContentSize()
     end
     return self.content_size
 end
-local function on_move(_, sprite)
-    sprite:OnSceneMove()
-end
-function CityLayer:OnSceneMove()
-    CityLayer.super.OnSceneMove(self)
-    table.foreach(self.tiles, function(_, sprite)
-        sprite:OnSceneMove()
-    end)
-    local move_widget = self.city_scene:GetSceneUILayer():getChildByTag(989)
-    if move_widget then
-        local ruins = move_widget:GetRuins()
-        if ruins then
-            local world_pos = ruins:GetWorldPosition()
-            move_widget:setPosition(world_pos.x, world_pos.y)
-        end
-    end
-end
 function CityLayer:UpdateWeather()
     local size = self:getContentSize()
     local pos = self:convertToNodeSpace(cc.p(display.cx, display.cy))
@@ -825,36 +806,5 @@ function CityLayer:ShowLevelUpNode()
 end
 
 return CityLayer
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
