@@ -154,17 +154,17 @@ function PVELayer:OnObjectChanged(object)
     end
 end
 local offset_map = {
-    [PVEDefine.WOODCUTTER] = {80, 0},
+    [PVEDefine.WOODCUTTER] = {70, 0},
     [PVEDefine.QUARRIER] = {80, 0},
     [PVEDefine.MINER] = {80, 0},
-    [PVEDefine.FARMER] = {80, 0},
-    [PVEDefine.CAMP] = {50, -80},
+    [PVEDefine.FARMER] = {60, 0},
+    [PVEDefine.CAMP] = {0, -80},
     [PVEDefine.CRASHED_AIRSHIP] = {80, 0},
-    [PVEDefine.CONSTRUCTION_RUINS] = {80, 0},
+    [PVEDefine.CONSTRUCTION_RUINS] = {100, 0},
     [PVEDefine.KEEL] = {150, 0},
     [PVEDefine.WARRIORS_TOMB] = {80, 0},
-    [PVEDefine.OBELISK] = {50, -50},
-    [PVEDefine.ANCIENT_RUINS] = {100, 0},
+    [PVEDefine.OBELISK] = {0, -50},
+    [PVEDefine.ANCIENT_RUINS] = {90, 50},
     [PVEDefine.ENTRANCE_DOOR] = {100, 0},
 }
 function PVELayer:SetObjectStatus(object)
@@ -177,7 +177,7 @@ function PVELayer:SetObjectStatus(object)
             local x,y = unpack(offset_map[object:Type()])
             local size1 = sprite:getContentSize()
             local flag = display.newSprite("pve_icon_flag.png")
-            :align(display.BOTTOM_RIGHT, x, y)
+            :align(display.BOTTOM_RIGHT, x, y):scale(1.5)
             :addTo(sprite, 10)
         end
     end
