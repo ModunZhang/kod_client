@@ -32,12 +32,12 @@ local offset_map = {
         left_end = {-44, 73}
     },
     [3] = {
-        [Orient.X] = {15, 75},
+        [Orient.X] = {14, 75},
         [Orient.Y] = {-10, 73},
         [Orient.NEG_X] = {83, 83},
         [Orient.NEG_Y] = {-82, 83},
         [Orient.DOWN] = {0, 73},
-        [Orient.RIGHT] = {-15, 61},
+        [Orient.RIGHT] = {-16, 62},
         [Orient.LEFT] = {19, 62},
         [Orient.UP] = {0, -7},
         [Orient.NONE] = {-2, 63},
