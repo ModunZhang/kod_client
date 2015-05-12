@@ -320,6 +320,7 @@ local base_event_map = {
 local logic_event_map = {
     -- player
     onPlayerDataChanged = function(success, response)
+        if not NetManager.m_was_inited_game then return end
         if success then
             local user_data = DataManager:getUserData()
             local edit = decodeInUserDataFromDeltaData(user_data, response)
@@ -328,17 +329,20 @@ local logic_event_map = {
     end,
     -- chat
     onChat = function(success, response)
+        if not NetManager.m_was_inited_game then return end
         if success then
             app:GetChatManager():HandleNetMessage("onChat", response)
         end
     end,
     onAllChat = function(success, response)
+        if not NetManager.m_was_inited_game then return end
         if success then
             app:GetChatManager():HandleNetMessage("onAllChat", response)
         end
     end,
     -- alliance
     onAllianceDataChanged = function(success, response)
+        if not NetManager.m_was_inited_game then return end
         if success and DataManager:hasUserData() then
             LuaUtils:outputTable("onAllianceDataChanged", response)
             local user_alliance_data = DataManager:getUserAllianceData()
@@ -347,6 +351,7 @@ local logic_event_map = {
         end
     end,
     onJoinAllianceSuccess = function(success, response)
+        if not NetManager.m_was_inited_game then return end
         if success and DataManager:hasUserData() then
             DataManager:setEnemyAllianceData(response.enemyAllianceData)
             DataManager:setUserAllianceData(response.allianceData)
@@ -356,6 +361,7 @@ local logic_event_map = {
         end
     end,
     onEnemyAllianceDataChanged = function(success, response)
+        if not NetManager.m_was_inited_game then return end
         if success and DataManager:hasUserData() then
             LuaUtils:outputTable("onEnemyAllianceDataChanged", response)
             local user_enemy_alliance_data = DataManager:getEnemyAllianceData()
@@ -364,6 +370,7 @@ local logic_event_map = {
         end
     end,
     onAllianceFight = function(success, response)
+        if not NetManager.m_was_inited_game then return end
         if success and DataManager:hasUserData() then
             LuaUtils:outputTable("onAllianceFight", response)
             local user_enemy_alliance_data = response.enemyAllianceData
