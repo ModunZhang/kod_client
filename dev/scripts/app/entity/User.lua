@@ -322,7 +322,6 @@ function User:OnUserDataChanged(userData, current_time, deltaData)
     self:OnDailyQuestsEventsChanged(userData,deltaData)
     -- 交易
     self.trade_manager:OnUserDataChanged(userData,deltaData)
-    self:GetPVEDatabase():OnUserDataChanged(userData, deltaData)
 
     -- vip event
     self:OnVipEventDataChange(userData, deltaData)

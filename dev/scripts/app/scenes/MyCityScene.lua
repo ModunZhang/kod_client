@@ -392,6 +392,7 @@ function MyCityScene:OpenUI(building)
         else
             UIKit:showMessageDialog(_("陛下"),_("必须有一条空闲的龙，才能进入pve"))
         end
+        app:GetAudioManager():PlayeEffectSoundWithKey("AIRSHIP")
     elseif type_ == "FairGround" then
         UIKit:newGameUI("GameUIGacha", self.city):AddToScene(self, true):DisableAutoClose()
     else
