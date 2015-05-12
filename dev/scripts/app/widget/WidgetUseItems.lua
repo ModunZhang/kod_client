@@ -506,7 +506,7 @@ function WidgetUseItems:OpenStrengthDialog( item )
     local size = body:getContentSize()
     local blood_bg = display.newScale9Sprite("back_ground_398x97.png",size.width/2,size.height-50,cc.size(556,58),cc.rect(10,10,378,77))
         :addTo(body)
-    local blood_icon = display.newSprite("buff_tool.png"):addTo(blood_bg):align(display.CENTER, 40, blood_bg:getContentSize().height/2):scale(0.2)
+    local blood_icon = display.newSprite("stamina_3_128x128.png"):addTo(blood_bg):align(display.CENTER, 40, blood_bg:getContentSize().height/2):scale(0.4)
     UIKit:ttfLabel({
         text = _("探索体力值"),
         size = 22,
