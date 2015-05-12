@@ -178,7 +178,7 @@ function PVELayer:SetObjectStatus(object)
             local size1 = sprite:getContentSize()
             local flag = display.newSprite("pve_icon_flag.png")
             :align(display.BOTTOM_RIGHT, x, y)
-            :addTo(sprite)
+            :addTo(sprite, 10)
         end
     end
 end
