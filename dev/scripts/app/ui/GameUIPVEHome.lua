@@ -137,7 +137,7 @@ function GameUIPVEHome:CreateTop()
     self.box = ccs.Armature:create("lanse"):addTo(box)
         :align(display.CENTER, - 20, 10):scale(0.25)
 
-    self:SetBoxStatus(self.layer:CurrentPVEMap():IsRewarded())
+    self:SetBoxStatus(not self.layer:CurrentPVEMap():IsRewarded())
 
     UIKit:ttfLabel({
         text = string.format("%d. %s", self.layer:CurrentPVEMap():GetIndex(), self.layer:CurrentPVEMap():Name()),
@@ -170,6 +170,9 @@ function GameUIPVEHome:SetBoxStatus(can_get)
     end
 end
 function GameUIPVEHome:GetRewards()
+    local index = self.layer:CurrentPVEMap():GetIndex()
+    local rewards = GameDatas.PlayerInitData.pveLevel[index]
+    local _1,name = unpack(string.split(rewards.itemName, ":"))
     self.user:ResetPveData()
     self.user:SetPveData(nil, {
         {

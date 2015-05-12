@@ -2,7 +2,7 @@ local PVEMap = import(".PVEMap")
 local PVEDatabase = class("PVEDatabase")
 
 local MAX_FLOOR = 24
-local TRAP_NPC_STEPS = 10
+local TRAP_NPC_STEPS = math.huge
 function PVEDatabase:ctor(user)
     self.user = user
     self.char_x = 12
