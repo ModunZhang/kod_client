@@ -501,6 +501,7 @@ function GameUIStrikeReport:CreateEnemyTechnology()
 
     -- 敌方科技列表部分高度
     local militaryTechs = self.report:GetStrikeIntelligence().militaryTechs
+    if not militaryTechs then return end
     local r_count = #militaryTechs
     local r_list_height = r_count * r_tip_height
 
