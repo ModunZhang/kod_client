@@ -73,7 +73,6 @@ local desc_map = {
 }
 function GameUISelectTerrain:RefreshDragon(terrainType)
     UILib.loadDragonAnimation()
-    terrainType = terrainType or "grassLand"
     self.ui_map.dragon_background:setTexture(string.format("fte_select_dragon_%s.jpg", terrainType))
     self.ui_map.dragon_background:removeAllChildren()
     local ani_name, ox, oy = unpack(terrain_map[terrainType])

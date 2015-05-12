@@ -42,6 +42,7 @@ function PVEScene:onEnter()
     self:GetSceneLayer():ZoomTo(0.8)
     self:GetSceneLayer():MoveCharTo(self.user:GetPVEDatabase():GetCharPosition())
     app:GetAudioManager():PlayGameMusic("PVEScene")
+    self.user:GetPVEDatabase():SetLocationHandle(self)
 end
 function PVEScene:onExit()
     PVEScene.super.onExit(self)
@@ -91,6 +92,9 @@ function PVEScene:GetDirectionArrow()
 end
 function PVEScene:DestroyDirectionArrow()
     self:removeChildByTag(DIRECTION_TAG)
+end
+function PVEScene:OnLocationChanged(is_pos_changed, is_switch_floor)
+    
 end
 function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
     -- 有动画就什么都不处理

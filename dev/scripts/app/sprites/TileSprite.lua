@@ -32,12 +32,6 @@ local surface = {
 function TileSprite:ctor(city_layer, entity, x, y)
     self.roads = {}
     TileSprite.super.ctor(self, city_layer, entity, x, y)
-    local sx,ex,sy,ey = 200,230,150,200
-    local maps = surface[self:GetMapLayer():Terrain()]
-    for i = 1,2 do
-        display.newSprite(maps[math.random(#maps)]):addTo(self:GetSprite())
-            :pos(sx + math.random(ex - sx), sy + math.random(ey - sy))
-    end
 end
 function TileSprite:ReloadSpriteCauseTerrainChanged()
     self.sprite:removeFromParent()
@@ -62,6 +56,13 @@ function TileSprite:CreateSprite()
                     display.newSprite(string.format("unlock_road_%s.png",
                     self:GetMapLayer():Terrain())):addTo(self):pos(-dx * i, -dy * i))
             end
+        end
+    else
+        local sx,ex,sy,ey = 200,230,150,200
+        local maps = surface[self:GetMapLayer():Terrain()]
+        for i = 1,2 do
+            display.newSprite(maps[math.random(#maps)]):addTo(sprite)
+                :pos(sx + math.random(ex - sx), sy + math.random(ey - sy))
         end
     end
     if self:GetEntity():NeedWalls() then
