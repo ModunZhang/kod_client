@@ -202,20 +202,12 @@ function UpgradingSprite:CreateLevelNode()
     self.text_field:setSkewY(-30)
 end
 function UpgradingSprite:ShowLevelUpNode()
-    if self.status == "show" then
-        return
-    end
     self.level_bg:stopAllActions()
     self.level_bg:fadeTo(0.5, 255)
-    self.status = "show"
 end
 function UpgradingSprite:HideLevelUpNode()
-    if self.status == "hide" then
-        return
-    end
     self.level_bg:stopAllActions()
     self.level_bg:fadeTo(0.5, 0)
-    self.status = "hide"
 end
 return UpgradingSprite
 

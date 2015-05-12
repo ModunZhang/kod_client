@@ -31,7 +31,6 @@ function AllianceBattleScene:LoadAnimation()
 end
 function AllianceBattleScene:CreateAllianceUI()
     local home_page = GameUIAllianceHome.new(self:GetAlliance(), self:GetSceneLayer()):addTo(self)
-    -- self:GetSceneLayer():AddObserver(home_page)
     home_page:setTouchSwallowEnabled(false)
     self.home_page = home_page
 end

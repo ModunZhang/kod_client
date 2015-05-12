@@ -18,6 +18,7 @@ MultiAllianceLayer.ARRANGE = Enum("H", "V")
 function MultiAllianceLayer:ctor(arrange, ...)
     Observer.extend(self)
     MultiAllianceLayer.super.ctor(self, 0.4, 1.2)
+    self.info_action = display.newNode():addTo(self)
     self.arrange = arrange
     self.alliances = {...}
     self.alliance_views = {}
@@ -31,6 +32,7 @@ function MultiAllianceLayer:ctor(arrange, ...)
     self:AddOrRemoveAllianceEvent(true)
     self:AddAllianceBelvedereEvent(true)
     self:StartCorpsTimer()
+    self:Schedule()
 
 
     -- local x, y = 13, 36
@@ -47,8 +49,6 @@ function MultiAllianceLayer:ctor(arrange, ...)
     --     )
     --     count = count + 1
     -- end
-
-
 end
 function MultiAllianceLayer:onCleanup()
     self:AddOrRemoveAllianceEvent(false)
@@ -695,10 +695,13 @@ function MultiAllianceLayer:GetAllianceCoordWithPoint(x, y)
     end
     return logic_x, logic_y, alliance_view
 end
-function MultiAllianceLayer:OnSceneScale(s)
-    for _,v in pairs(self.alliance_views) do
-        v:OnSceneScale(s)
-    end
+function MultiAllianceLayer:Schedule()
+    self.info_action:schedule(function()
+        local scale = self:getScale()
+        local l = max(0.5, scale) - 0.5
+        local r = 0.8 - min(0.8, scale)
+        self:GetInfoNode():opacity(l / (l + r) * 255)
+    end, 0.1)
 end
 
 
@@ -708,28 +711,6 @@ end
 
 
 return MultiAllianceLayer
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

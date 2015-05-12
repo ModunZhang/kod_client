@@ -305,9 +305,6 @@ function PVELayer:getContentSize()
     end
     return self.content_size
 end
-function PVELayer:OnSceneScale()
-
-end
 function PVELayer:GotoLogicPointInstant(x, y)
     local point = self:ConvertLogicPositionToMapPosition(x, y)
     self:GotoMapPositionInMiddle(point.x, point.y)

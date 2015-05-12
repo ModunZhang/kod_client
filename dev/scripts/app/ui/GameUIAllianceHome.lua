@@ -68,7 +68,7 @@ function GameUIAllianceHome:onEnter()
     -- 中间按钮
     self:CreateOperationButton()
     self:AddOrRemoveListener(true)
-    self:Schedule()
+    -- self:Schedule()
 end
 function GameUIAllianceHome:onExit()
     self:AddOrRemoveListener(false)
@@ -128,7 +128,7 @@ function GameUIAllianceHome:Schedule()
         local lx,ly,view = self.multialliancelayer:GetAllianceCoordWithPoint(display.cx, display.cy)
         self:UpdateCoordinate(lx, ly, view)
         self:UpdateAllArrows(lx, ly, view)
-    end, 0.001)
+    end, 0.1)
 end
 
 function GameUIAllianceHome:InitArrow()

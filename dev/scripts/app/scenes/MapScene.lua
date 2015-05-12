@@ -29,8 +29,9 @@ function MapScene:OnUserBasicChanged(user, changed)
     end
 end
 function MapScene:onEnter()
-    self.scene_node = display.newClippingRegionNode(cc.rect(0, 0, display.width, display.height)):addTo(self)
-    self.scene_node:setContentSize(cc.size(display.width, display.height))
+    -- self.scene_node = display.newClippingRegionNode(cc.rect(0, 0, display.width, display.height)):addTo(self)
+    -- self.scene_node:setContentSize(cc.size(display.width, display.height))
+    self.scene_node = display.newNode():addTo(self)
     self.scene_layer = self:CreateSceneLayer():addTo(self:GetSceneNode(), 0)
     self.scene_layer.scene = self
     self.touch_layer = self:CreateMultiTouchLayer():addTo(self:GetSceneNode(), 1)
@@ -226,9 +227,6 @@ function MapScene:OnTouchExtend(old_speed_x, old_speed_y, new_speed_x, new_speed
 end
 function MapScene:OnSceneMove()
    self:GetInfoLayer():pos(self.scene_layer:getPosition()) 
-end
-function MapScene:OnSceneScale()
-
 end
 
 return MapScene

@@ -163,7 +163,6 @@ function AllianceView:OnBuildingInfoChange()
 end
 function AllianceView:OnBuildingFullUpdate(allianceMap)
     self:RefreshBuildings(allianceMap)
-    self:OnSceneScale()
 end
 function AllianceView:RefreshBuildings(alliance_map)
     self:IteratorAllianceObjects(function(_,v) v:removeFromParent() end)
@@ -188,7 +187,6 @@ function AllianceView:OnBuildingDeltaUpdate(allianceMap, deltaMapObjects)
             self:RefreshEntity(allianceMap:GetMapObjects()[index])
         end
     end
-    self:OnSceneScale()
 end
 function AllianceView:RefreshEntity(entity)
     self.objects[entity:Id()]:removeFromParent()
@@ -252,14 +250,6 @@ function AllianceView:EmptyGround(x, y)
             end
         }
     end
-end
-
-function AllianceView:OnSceneScale(s)
-    if s then self.scale = s end
-    local scale = self.scale
-    local l = max(0.5, scale) - 0.5
-    local r = 0.8 - min(0.8, scale)
-    self:GetLayer():GetInfoNode():opacity(l / (l + r) * 255)
 end
 
 

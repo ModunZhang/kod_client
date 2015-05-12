@@ -8,7 +8,6 @@ local app = app
 local timer = app.timer
 local DEBUG_LOCAL = false
 function CityScene:ctor(city)
-    self.mark_buildings = {}
     self.city = city
     CityScene.super.ctor(self)
 end
@@ -20,22 +19,6 @@ function CityScene:onEnter()
     self:PlayBackgroundMusic()
     self:GotoLogicPointInstant(6, 4)
     self:GetSceneLayer():ZoomTo(1)
-
-    -- local sprite = display.newSprite("batcat_logo_368x390.png", 0, 0, {class=cc.FilteredSpriteWithOne}):addTo(self):align(display.LEFT_BOTTOM)
-    -- sprite:setScaleX(display.width/368)
-    -- sprite:setScaleY(display.height/390)
-    -- sprite:setFilter(filter.newFilter("CUSTOM", json.encode({
-    --     frag = "shaders/snow.fs",
-    --     shaderName = "snow",
-    --     u_resolution = {display.width, display.height},
-    --     curTime = 0,
-    -- })))
-    -- local time = 0
-    -- sprite:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt)
-    --     time = time + dt
-    --     sprite:getFilter():getGLProgramState():setUniformFloat("curTime", time)
-    -- end)
-    -- sprite:scheduleUpdate()
 end
 function CityScene:onExit()
     UILib.unLoadBuildingAnimation()
@@ -90,8 +73,6 @@ end
 --- callback override
 function CityScene:OnTilesChanged(tiles)
 end
-function CityScene:OnSceneScale(s)
-end
 function CityScene:OnTouchBegan(pre_x, pre_y, x, y)
     if not DEBUG_LOCAL then return end
     local citynode = self:GetSceneLayer():GetCityNode()
@@ -142,17 +123,6 @@ function CityScene:OnTouchMove(pre_x, pre_y, x, y)
     end
     CityScene.super.OnTouchMove(self, pre_x, pre_y, x, y)
 end
-
--- function CityScene:InsertMarkBuildings(building)
---     table.insert(self.mark_buildings, building)
--- end
--- function CityScene:GetMarkBuildings()
---     return self.mark_buildings
--- end
--- function CityScene:RemoveAllMarkBuildings()
---     self.mark_buildings = {}
--- end
-
 
 
 

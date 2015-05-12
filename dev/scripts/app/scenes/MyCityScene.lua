@@ -15,6 +15,7 @@ local NotifyItem = import("..entity.NotifyItem")
 local CityScene = import(".CityScene")
 local MyCityScene = class("MyCityScene", CityScene)
 
+local ipairs = ipairs
 
 function MyCityScene:ctor(...)
     self.clicked_callbacks = {}
@@ -52,6 +53,7 @@ function MyCityScene:LeaveEditMode()
 end
 function MyCityScene:CreateSceneUILayer()
     local city = self.city
+    local scene_layer = self:GetSceneLayer()
     local scene_ui_layer = display.newLayer()
     scene_ui_layer:setTouchEnabled(true)
     scene_ui_layer:setTouchSwallowEnabled(false)
@@ -113,6 +115,19 @@ function MyCityScene:CreateSceneUILayer()
     end
     function scene_ui_layer:Schedule()
         display.newNode():addTo(self):schedule(function()
+            if scene_layer:getScale() < (scene_layer:GetScaleRange()) * 1.3 then
+                if self.is_show == nil or  self.is_show == true then
+                    scene_layer:HideLevelUpNode()
+                    self.is_show = false
+                end
+            else
+                if self.is_show == nil or  self.is_show == false then
+                    scene_layer:ShowLevelUpNode()
+                    self.is_show = true
+                end
+            end
+        end, 0.5)
+        display.newNode():addTo(self):schedule(function()
             for i,v in ipairs(self.lock_buttons) do
                 if v:IsShow() then
                     local wp = v.sprite:getParent():convertToWorldSpace(cc.p(v.sprite:getPosition()))
@@ -120,6 +135,8 @@ function MyCityScene:CreateSceneUILayer()
                     v:pos(lp.x, lp.y)
                 end
             end
+        end, 0)
+        display.newNode():addTo(self):schedule(function()
             local building = self.building__
             if self.indicator and building then
                 local wp = building:convertToWorldSpace(cc.p(building:GetSpriteTopPosition()))
@@ -130,8 +147,9 @@ function MyCityScene:CreateSceneUILayer()
             if widget and widget.move_to_ruins then
                 local wp = widget.move_to_ruins:GetWorldPosition()
                 widget:pos(wp.x, wp.y)
+                widget.building_image:scale(scene_layer:getScale())
             end
-        end, 0.001)
+        end, 0.0001)
     end
     scene_ui_layer:Schedule()
     return scene_ui_layer
@@ -278,17 +296,6 @@ function MyCityScene:OnTilesChanged(tiles)
         end
     end)
 end
-function MyCityScene:OnSceneScale(s)
-    if self:GetSceneLayer():getScale() < (self:GetSceneLayer():GetScaleRange()) * 1.3 then
-        self:GetSceneLayer():HideLevelUpNode()
-    else
-        self:GetSceneLayer():ShowLevelUpNode()
-    end
-    local widget_move_house = self:GetSceneUILayer():getChildByTag(WidgetMoveHouse.ADD_TAG)
-    if widget_move_house then
-        widget_move_house:OnSceneScale()
-    end
-end
 function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
     if not MyCityScene.super.OnTouchClicked(self, pre_x, pre_y, x, y) then return end
     if self.util_node:getNumberOfRunningActions() > 0 then return end
@@ -403,7 +410,7 @@ function MyCityScene:RunFte()
     self:GetFteLayer():Enable()
     cocos_promise.defer():next(function()
         self:GetFteLayer():Disable()
-        if not check("HateDragon") or 
+        if not check("HateDragon") or
             not check("DefenceDragon") then
             return self:PromiseOfHateDragonAndDefence()
         end
@@ -695,7 +702,7 @@ local FTE_MARK_TAG = 120
 function MyCityScene:PromiseOfFteEnd()
     local r = self:GetHomePage().quest_bar_bg:getCascadeBoundingBox()
     WidgetFteMark.new():addTo(self, 4000, FTE_MARK_TAG):Size(r.width, r.height)
-    :pos(r.x + r.width/2, r.y + r.height/2)
+        :pos(r.x + r.width/2, r.y + r.height/2)
 
     GameUINpc:PromiseOfSayImportant(
         {words = _("看来大人你已经能够顺利接管这座城市了。。。如果不知道该干什么可以点击左上角的推荐任务")}
@@ -739,6 +746,9 @@ end
 
 
 return MyCityScene
+
+
+
 
 
 
