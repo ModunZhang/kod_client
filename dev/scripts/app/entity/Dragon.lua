@@ -465,7 +465,6 @@ function Dragon:TotalLeadership()
 			leadership = leadership + leadership_add
 		end
 	end
-	leadership = leadership + User:GetVIPDragonLeaderShipAdd()
 	return leadership
 end
 
@@ -485,6 +484,7 @@ function Dragon:__getDragonLeadershipBuff()
 			effect = effect + buffData[2]
 		end
 	end)
+	effect = effect + User:GetVIPDragonLeaderShipAdd()
 	return effect
 end
 return Dragon

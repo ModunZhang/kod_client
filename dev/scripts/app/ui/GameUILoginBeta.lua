@@ -300,9 +300,9 @@ end
 
 function GameUILoginBeta:showError(msg,cb)
     msg = msg or ""
-    UIKit:showMessageDialog(_("提示"),msg, function()
+    UIKit:showKeyMessageDialog(_("提示"),msg, function()
         if cb then cb() end
-    end, nil, false)
+    end)
 end
 -- Auto Update
 --------------------------------------------------------------------------------------------------------------

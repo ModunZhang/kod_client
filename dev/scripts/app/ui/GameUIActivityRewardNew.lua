@@ -98,32 +98,25 @@ function GameUIActivityRewardNew:RefreshUI()
 		end
 	elseif self:GetRewardType() == self.REWARD_TYPE.CONTINUITY then
 		self:RefreshContinutyList()
+	elseif self:GetRewardType() == self.REWARD_TYPE.FIRST_IN_PURGURE then
+		local countInfo = User:GetCountInfo()
+		self.purgure_get_button:setButtonEnabled(countInfo.iapCount > 0 and not countInfo.isFirstIAPRewardsGeted)
+	elseif self:GetRewardType() == self.REWARD_TYPE.PLAYER_LEVEL_UP then
+		self:RefreshLevelUpListView()
 	end
-	-- elseif self:GetRewardType() == self.REWARD_TYPE.PLAYER_LEVEL_UP then
-	-- 	self:RefreshLevelUpListView()
-	-- elseif self:GetRewardType() == self.REWARD_TYPE.FIRST_IN_PURGURE then
-	-- 	local countInfo = User:GetCountInfo()
-	-- 	self.purgure_get_button:setButtonEnabled(countInfo.iapCount > 0 and not countInfo.isFirstIAPRewardsGeted)
-	-- elseif self:GetRewardType() == self.REWARD_TYPE.ONLINE then
-	-- 	self:RefreshOnLineList()
-	-- end
 end
 
 function GameUIActivityRewardNew:OnTimer(current_time)
-	-- if self.time_label then
-	-- 	local time =  current_time + self.diff_time
-	-- 	self.time_label:setString(GameUtils:formatTimeStyle1(time))
-	-- end
-	-- if self.level_up_time_label then
-	-- 	self.player_level_up_time_residue = self.player_level_up_time - current_time
-	-- 	if self.player_level_up_time_residue > 0 then
-	-- 		self.level_up_time_label:setString(GameUtils:formatTimeStyle1(self.player_level_up_time_residue))
-	-- 	else
-	-- 		self.level_up_time_label:hide()
-	-- 		self.level_up_time_desc_label:hide()
-	-- 		self.level_up_state_label:show()
-	-- 	end
-	-- end
+	if self.level_up_time_label then
+		self.player_level_up_time_residue = self.player_level_up_time - current_time
+		if self.player_level_up_time_residue > 0 then
+			self.level_up_time_label:setString(GameUtils:formatTimeStyle1(self.player_level_up_time_residue))
+		else
+			self.level_up_time_label:hide()
+			self.level_up_time_desc_label:hide()
+			self.level_up_state_label:show()
+		end
+	end
 end
 
 
@@ -193,6 +186,7 @@ function GameUIActivityRewardNew:ui_EVERY_DAY_LOGIN()
 			:onButtonClicked(function()
 				self:On_EVERY_DAY_LOGIN_GetReward(i,rewards[i])
 			end)
+		UIKit:addTipsToNode(button,Localize_item.item_name[rewards[i].reward],self)
 		table.insert(self.rewards_buttons,button)
 		local enable = display.newSprite(UILib.item[rewards[i].reward], 55, -54, {class=cc.FilteredSpriteWithOne}):addTo(button)
 		local size = enable:getContentSize()
@@ -201,7 +195,6 @@ function GameUIActivityRewardNew:ui_EVERY_DAY_LOGIN()
 		button.icon = enable
 		button.check_bg = check_bg
 		display.newSprite("activity_check_body_34x34.png"):addTo(check_bg):pos(17,17)
-		print(flag,geted)
 		if i > flag then -- other day
 			check_bg:hide()
 			enable:clearFilter()
@@ -305,11 +298,12 @@ function GameUIActivityRewardNew:GetContinutyListItem(reward_type,item_key,time_
 		local sp = UIKit:getDiscolorrationSprite(self:GetItemImage(reward_type,item_key))
 		local size = sp:getContentSize()
 		sp:scale(90/math.max(size.width,size.height)):pos(55,54):addTo(item_bg)
-
+		UIKit:addTipsToNode(sp,rewards_str,self)
 	else
 		local sp = display.newSprite(self:GetItemImage(reward_type,item_key),55,54):addTo(item_bg)
 		local size = sp:getContentSize()
 		sp:scale(90/math.max(size.width,size.height))
+		UIKit:addTipsToNode(sp,rewards_str,self)
 	end
 	local time_label = UIKit:ttfLabel({
 		text = time_str,
@@ -405,6 +399,7 @@ function GameUIActivityRewardNew:ui_FIRST_IN_PURGURE()
 			local sp = display.newSprite(self:GetItemImage(reward_type,reward_name),55,54):addTo(item_bg)
 			local size = sp:getContentSize()
 			sp:scale(90/math.max(size.width,size.height))
+			UIKit:addTipsToNode(sp,Localize_item.item_name[reward_name] .. " x" .. count,self)
 			x = x  + 110 + 35 
 			if index % 2 == 0 then 
 				x = 300
@@ -547,10 +542,13 @@ function GameUIActivityRewardNew:GetRewardLevelUpItem(index,title,rewards,flag)
 	local x = 104
 	local tips_str = ""
 	for __,v in ipairs(rewards) do
-		local __,reward_name,count = unpack(v)
-		tips_str = Localize_item.item_name[reward_name] .. " x" .. count
+		local reward_type,reward_name,count = unpack(v)
+		tips_str = tips_str .. Localize_item.item_name[reward_name] .. " x" .. count
 		local item_bg = display.newSprite("activity_item_bg_110x108.png"):align(display.LEFT_CENTER, x, 52):addTo(content):scale(94/110)
-		display.newSprite("activity_item_icon_90x90.png",55,54):addTo(item_bg)
+		local sp = display.newSprite(self:GetItemImage(reward_type,reward_name),55,54):addTo(item_bg)
+		local size = sp:getContentSize()
+		sp:scale(90/math.max(size.width,size.height))
+		UIKit:addTipsToNode(sp,Localize_item.item_name[reward_name] .. " x" .. count,self)
 		x = x + 130
 	end
 	if flag == 1 then

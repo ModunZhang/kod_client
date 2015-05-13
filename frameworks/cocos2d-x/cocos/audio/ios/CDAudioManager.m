@@ -379,7 +379,7 @@ static BOOL configured = FALSE;
                 CDLOGINFO(@"Denshion::CDAudioManager - Other audio is playing audio will be shared");
                 //_audioSessionCategory = kAudioSessionCategory_AmbientSound;
                 _audioSessionCategory = AVAudioSessionCategoryAmbient;
-                willPlayBackgroundMusic = NO;
+                willPlayBackgroundMusic = YES;
             } else {
                 CDLOGINFO(@"Denshion::CDAudioManager - Other audio is not playing audio will be exclusive");
                 //_audioSessionCategory = kAudioSessionCategory_SoloAmbientSound;
@@ -616,9 +616,9 @@ static BOOL configured = FALSE;
 -(void) setResignBehavior:(tAudioManagerResignBehavior) resignBehavior autoHandle:(BOOL) autoHandle { 
 
     if (!_isObservingAppEvents && autoHandle) {
-        [[NSNotificationCenter defaultCenter] addObserver:self    selector:@selector(applicationWillResignActive:) name:@"UIApplicationWillResignActiveNotification" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self    selector:@selector(applicationDidBecomeActive:) name:@"UIApplicationDidBecomeActiveNotification" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self    selector:@selector(applicationWillTerminate:) name:@"UIApplicationWillTerminateNotification" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self    selector:@selector(applicationWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self    selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self    selector:@selector(applicationWillTerminate:) name:UIApplicationWillTerminateNotification object:nil];
         _isObservingAppEvents = TRUE;
     }
     _resignBehavior = resignBehavior;

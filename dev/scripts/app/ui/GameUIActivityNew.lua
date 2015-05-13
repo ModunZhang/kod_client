@@ -12,8 +12,11 @@ local UIListView = import(".UIListView")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local User = User
 local config_day14 = GameDatas.Activities.day14
+local config_levelup = GameDatas.Activities.levelup
 local config_intInit = GameDatas.PlayerInitData.intInit
 local GameUIActivityRewardNew = import(".GameUIActivityRewardNew")
+local WidgetPushButton = import("..widget.WidgetPushButton")
+local Localize_item = import("..utils.Localize_item")
 
 GameUIActivityNew.ITEMS_TYPE = Enum("EVERY_DAY_LOGIN","ONLINE","CONTINUITY","FIRST_IN_PURGURE","PLAYER_LEVEL_UP")
 
@@ -35,6 +38,9 @@ end
 function GameUIActivityNew:onCleanup()
 	app.timer:RemoveListener(self)
 	User:RemoveListenerOnType(self,User.LISTEN_TYPE.COUNT_INFO)
+	User:RemoveListenerOnType(self,User.LISTEN_TYPE.IAP_GIFTS_REFRESH)
+    User:RemoveListenerOnType(self,User.LISTEN_TYPE.IAP_GIFTS_CHANGE)
+    User:RemoveListenerOnType(self,User.LISTEN_TYPE.IAP_GIFTS_TIMER)
 	GameUIActivityNew.super.onCleanup(self)
 end
 
@@ -98,10 +104,30 @@ function GameUIActivityNew:RefreshActivityListView()
 		item = self:GetActivityItem(self.ITEMS_TYPE.FIRST_IN_PURGURE)
 		self.activity_list_view:addItem(item)	
 	end
-	--TODO:
-	item = self:GetActivityItem(self.ITEMS_TYPE.PLAYER_LEVEL_UP)
-	self.activity_list_view:addItem(item)
+	if self.player_level_up_time - app.timer:GetServerTime() > 0 and not self:CheckFinishAllLevelUpActiIf() then
+		item = self:GetActivityItem(self.ITEMS_TYPE.PLAYER_LEVEL_UP)
+		self.activity_list_view:addItem(item)
+	end
 	self.activity_list_view:reload()
+end
+
+function GameUIActivityNew:CheckFinishAllLevelUpActiIf()
+	local checkLevelInUserCountInfoRewards = function(level)
+		local countInfo = User:GetCountInfo()
+		for __,v in ipairs(countInfo.levelupRewards) do
+			if v == level then
+				return true
+			end
+		end
+		return false
+	end
+	for __,v in ipairs(config_levelup) do
+		if not checkLevelInUserCountInfoRewards(v.level) then
+			return false
+
+		end
+	end
+	return true
 end
 
 function GameUIActivityNew:OnCountInfoChanged()
@@ -241,6 +267,203 @@ function GameUIActivityNew:GetActivityItem(item_type)
 	item:addContent(bg)
 	item:setItemSize(576, 190)
 	return item
+end
+
+function GameUIActivityNew:CreateTabIf_award()
+	if not self.award_list then
+		local list,list_node = UIKit:commonListView({
+	        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
+	        viewRect = cc.rect(0,0,576,772),
+	        async = true,
+
+	    })
+	    list_node:addTo(self:GetView()):pos(window.left + 35,window.bottom_top + 20)
+	    self.award_list = list
+	    self.award_list:setDelegate(handler(self, self.sourceDelegateAwardList))
+	    User:AddListenOnType(self,User.LISTEN_TYPE.IAP_GIFTS_REFRESH)
+	    User:AddListenOnType(self,User.LISTEN_TYPE.IAP_GIFTS_CHANGE)
+	    User:AddListenOnType(self,User.LISTEN_TYPE.IAP_GIFTS_TIMER)
+	end
+	self:RefreshAwardList()
+	return self.award_list
+end
+
+function GameUIActivityNew:RefreshAwardList()
+	self:RefreshAwardListDataSource()
+	self.award_list:reload()
+end
+
+function GameUIActivityNew:RefreshAwardListDataSource()
+	self.award_dataSource = {}
+	self.award_logic_index_map = {}
+	local index = 1
+	for key,v in pairs(User:GetIapGifts()) do
+		self.award_logic_index_map[key] = index
+		table.insert(self.award_dataSource,v)
+		index = index + 1
+	end
+end
+
+function GameUIActivityNew:OnIapGiftsRefresh()
+	if self.award_list and self.tab_buttons:GetSelectedButtonTag() == 'award' then
+		self:RefreshAwardList()
+	end
+end
+
+function GameUIActivityNew:OnIapGiftsChanged(changed_map)
+	if self.award_list and self.tab_buttons:GetSelectedButtonTag() == 'award' then
+		self:RefreshAwardList()
+	end
+end
+
+
+function GameUIActivityNew:OnIapGiftTimer(iapGift)
+	if not self.award_logic_index_map then return end
+	local index = self.award_logic_index_map[iapGift:Id()]
+	local item = self.award_list:getItemWithLogicIndex(index)
+	if not item then return end
+	local content = item:getContent()
+	if iapGift:GetTime() >= 0 then
+		content.time_out_label:hide()
+		content.red_btn:hide()
+		content.time_label:setString(GameUtils:formatTimeStyle1(iapGift:GetTime()))
+		content.time_label:show()
+		content.time_desc_label:show()
+		content.yellow_btn:show()
+
+	else
+		content.time_label:hide()
+		content.time_desc_label:hide()
+		content.yellow_btn:hide()
+		content.time_out_label:show()
+		content.red_btn:show()
+		self.award_logic_index_map[index] = nil -- remove refresh item event 
+	end
+end
+
+function GameUIActivityNew:sourceDelegateAwardList(listView, tag, idx)
+	if cc.ui.UIListView.COUNT_TAG == tag then
+        return #self.award_dataSource
+    elseif cc.ui.UIListView.CELL_TAG == tag then
+        local item
+        local content
+        local data = self.award_dataSource[idx]
+        item = self.award_list:dequeueItem()
+        if not item then
+            item = self.award_list:newItem()
+            content = self:GetAwardListContent()
+            item:addContent(content)
+        else
+            content = item:getContent()
+        end
+        self:FillAwardItemContent(content,data,idx)
+        item:setItemSize(576,164)
+        return item
+    else
+    end
+end
+
+function GameUIActivityNew:GetAwardListContent()
+	local content = WidgetUIBackGround.new({width = 576,height = 149},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
+	local title_bg = display.newSprite("activity_title_552x42.png"):align(display.TOP_CENTER,288,145):addTo(content)
+	local title_label = UIKit:ttfLabel({
+		text = "",--string.format(_("获得%s"),Localize_item.item_name[data.name]),
+		size = 22,
+		color= 0xfed36c
+	}):align(display.CENTER,276, 21):addTo(title_bg)
+	display.newSprite("activity_box_552x112.png"):align(display.CENTER_BOTTOM,288, 10):addTo(content,2)
+	local icon_bg = display.newSprite("activity_icon_box_78x78.png"):align(display.LEFT_BOTTOM, 20, 20):addTo(content)
+	local reward_icon = display.newSprite(nil, 39, 39):addTo(icon_bg)
+	local contenet_label = RichText.new({width = 400,size = 20,color = 0x403c2f})
+	local str = "[{\"type\":\"text\", \"value\":\"%s\"},{\"type\":\"text\",\"color\":0x076886,\"value\":\"%s\"},{\"type\":\"text\", \"value\":\"%s\"}]"
+	str = string.format(str,_("盟友"),"xxx",_("赠送!"))
+	contenet_label:Text(str):align(display.LEFT_BOTTOM,115,67):addTo(content)
+
+	local time_out_label = UIKit:ttfLabel({
+		text = _("已过期。请每日登陆关注"),
+		color= 0x943a09,
+		size = 20
+	}):align(display.LEFT_BOTTOM,115,31):addTo(content)
+
+	local yellow_btn = WidgetPushButton.new({
+		normal = "yellow_btn_up_148x58.png",
+		pressed= "yellow_btn_down_148x58.png"
+		})
+		:align(display.BOTTOM_RIGHT, 560, 18)
+		:addTo(content)
+		:setButtonLabel("normal", UIKit:commonButtonLable({
+			text = _("领取"),
+		}))
+		:onButtonClicked(function()
+			self:OnAwardButtonClicked(content.idx)
+		end)
+	local red_btn = WidgetPushButton.new({
+		normal = "red_btn_up_148x58.png",
+		pressed= "red_btn_down_148x58.png"
+		})
+		:align(display.BOTTOM_RIGHT, 560, 18)
+		:addTo(content)
+		:setButtonLabel("normal", UIKit:commonButtonLable({
+			text = _("放弃"),
+		}))
+		:onButtonClicked(function()
+			self:OnAwardButtonClicked(content.idx)
+		end)
+	local time_label = UIKit:ttfLabel({
+		text = "00:00:00",
+		color= 0x008b0a,
+		size = 20
+	}):align(display.LEFT_BOTTOM,115,31):addTo(content)
+	local time_desc_label =  UIKit:ttfLabel({
+		text = _("到期,请尽快领取"),
+		color= 0x403c2f,
+		size = 20
+	}):align(display.LEFT_BOTTOM,time_label:getPositionX()+time_label:getContentSize().width,31):addTo(content)
+
+	content.title_label = title_label
+	content.reward_icon = reward_icon
+	content.contenet_label = contenet_label
+	content.time_out_label = time_out_label
+	content.time_label = time_label
+	content.time_desc_label = time_desc_label
+	content.yellow_btn = yellow_btn
+	content.red_btn = red_btn
+	content:size(576,164)
+	return content
+end
+
+function GameUIActivityNew:FillAwardItemContent(content,data,idx)
+	content.idx = idx
+	content.reward_icon:setTexture(UILib.item[data.name])
+	content.reward_icon:scale(0.6)
+	content.title_label:setString(string.format(_("获得%s"),Localize_item.item_name[data.name]))
+	local str = "[{\"type\":\"text\", \"value\":\"%s\"},{\"type\":\"text\",\"color\":0x076886,\"value\":\"%s\"},{\"type\":\"text\", \"value\":\"%s\"}]"
+	str = string.format(str,_("盟友"),data.from,_("赠送!"))
+	content.contenet_label:Text(str):align(display.LEFT_BOTTOM,115,67)
+	content.time_label:setString(GameUtils:formatTimeStyle1(data:GetTime()))
+	if data:GetTime() < 0 then
+		content.time_label:hide()
+		content.time_desc_label:hide()
+		content.yellow_btn:hide()
+		content.time_out_label:show()
+		content.red_btn:show()
+	else
+		content.time_label:show()
+		content.time_desc_label:show()
+		content.yellow_btn:show()
+		content.time_out_label:hide()
+		content.red_btn:hide()
+	end
+end
+
+
+function GameUIActivityNew:OnAwardButtonClicked(idx)
+	local data = self.award_dataSource[idx]
+	if data then
+		NetManager:getIapGiftPromise(data:Id()):done(function()
+			GameGlobalUI:showTips(_("提示"),Localize_item.item_name[data:Name()] .. " x" .. data:Count())
+		end)
+	end
 end
 
 return GameUIActivityNew
