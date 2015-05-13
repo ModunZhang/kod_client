@@ -313,6 +313,11 @@ end
 function GameUIBase:CreateFteLayer()
     return TutorialLayer.new():addTo(self, 2000, FTE_TAG):Enable()
 end
+function GameUIBase:DestroyFteLayer()
+    if self:getChildByTag(FTE_TAG) then
+        self:getChildByTag(FTE_TAG):removeFromParent()
+    end
+end
 
 return GameUIBase
 

@@ -25,6 +25,7 @@ function GameUIPVEFteSendTroop:PromiseOfMax()
 
     local p = promise.new()
     self.max_btn:onButtonClicked(function()
+        self.max_btn:setButtonEnabled(false)
         self:GetFteLayer():removeFromParent()
         p:resolve()
     end)

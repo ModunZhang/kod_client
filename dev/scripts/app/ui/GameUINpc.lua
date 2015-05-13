@@ -72,18 +72,10 @@ local function mark_key_word(s, e, key_word, keyword_map)
 end
 function GameUINpc:ctor(...)
     GameUINpc.super.ctor(self)
-    self.unenable = true
-    self:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
-        -- dump(event)
-        if event.name == "ended" and not self.unenable then
-            self:OnClick()
-        end
-        return true
-    end)
-    self:InitDialog(...)
-    self.enter_callbacks = {}
+    self.touch_action_node = display.newNode():addTo(self)
     self.leave_callbacks = {}
     self.__type  = UIKit.UITYPE.BACKGROUND
+    self:InitDialog(...)
 end
 function GameUINpc:InitDialog(...)
     self.dialog_index = 1
@@ -136,13 +128,18 @@ function GameUINpc:OnMoveInStage()
     if self.is_should_start then
         self:StartDialog()
     end
-    self:OnEnter()
-    self:Resume()
     self:RefreshNpc(self:CurrentDialog())
+    self:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+        if event.name == "ended" and self.touch_action_node:getNumberOfRunningActions() == 0 then
+            self.touch_action_node:performWithDelay(function()end, 0.2)
+            self:OnClick()
+        end
+        return true
+    end)
 end
 function GameUINpc:onExit()
-    GameUINpc.super.onExit(self)
     self:OnLeave()
+    GameUINpc.super.onExit(self)
 end
 function GameUINpc:StartDialog()
     self:ShowWords(self:CurrentDialog())
@@ -202,7 +199,6 @@ function GameUINpc:Reset()
     self.dialog_index = 1
     self.dialog_index_callbacks = {}
     self.dialog_clicked_callbacks = {}
-    self.enter_callbacks = {}
     self.leave_callbacks = {}
     if self.label then
         self.label:removeFromParent()
@@ -221,21 +217,6 @@ function GameUINpc:CreateLabel()
     label:setMaxLineWidth(300)
     return label
 end
-function GameUINpc:Wait()
-    self:setTouchSwallowEnabled(false)
-    self:EnableReceiveClickMsg(false)
-end
-function GameUINpc:ResumeToNextDialog()
-    self:Resume()
-    self:NextDialog()
-end
-function GameUINpc:Resume()
-    self:setTouchSwallowEnabled(true)
-    self:EnableReceiveClickMsg(true)
-end
-function GameUINpc:EnableReceiveClickMsg(enable)
-    self.unenable = not enable
-end
 function GameUINpc:OnDialogClicked(index)
     local callbacks = self.dialog_clicked_callbacks[index]
     if callbacks and #callbacks > 0 then
@@ -251,30 +232,6 @@ function GameUINpc:PromiseOfDialogEndWithClicked(index)
         return p:resolve(self)
     end)
     return p
-end
-function GameUINpc:PromiseOfActive()
-    if UIKit:getRegistry().isObjectExists("GameUINpc") then
-        UIKit:getRegistry().getObject("GameUINpc"):EnableReceiveClickMsg(true)
-    end
-    return cocos_promise.defer()
-end
-function GameUINpc:PromiseOfInActive()
-    if UIKit:getRegistry().isObjectExists("GameUINpc") then
-        UIKit:getRegistry().getObject("GameUINpc"):EnableReceiveClickMsg(false)
-    end
-    return cocos_promise.defer()
-end
-function GameUINpc:PromiseOfInput()
-    if UIKit:getRegistry().isObjectExists("GameUINpc") then
-        UIKit:getRegistry().getObject("GameUINpc"):setTouchSwallowEnabled(false)
-    end
-    return cocos_promise.defer()
-end
-function GameUINpc:PromiseOfLockInput()
-    if UIKit:getRegistry().isObjectExists("GameUINpc") then
-        UIKit:getRegistry().getObject("GameUINpc"):setTouchSwallowEnabled(true)
-    end
-    return cocos_promise.defer()
 end
 function GameUINpc:OnDialogEnded(index)
     local callbacks = self.dialog_index_callbacks[index]
@@ -292,10 +249,6 @@ function GameUINpc:PromiseOfDialogEnded(index)
     end)
     return p
 end
-function GameUINpc:NextOfSay(...)
-    local args = {...}
-    return function() return GameUINpc:PromiseOfSay(unpack(args)) end
-end
 function GameUINpc:PromiseOfSay(...)
     local instance
     if UIKit:getRegistry().isObjectExists("GameUINpc") then
@@ -308,24 +261,6 @@ function GameUINpc:PromiseOfSay(...)
         instance.is_should_start = true
     end
     return instance:PromiseOfDialogEndWithClicked(#{...})
-end
-function GameUINpc:PromiseOfSayImportant(...)
-    assert(#{...} == 1)
-    local instance
-    if UIKit:getRegistry().isObjectExists("GameUINpc") then
-        instance = UIKit:getRegistry().getObject("GameUINpc")
-        instance:Reset()
-        instance:InitDialog(...)
-        instance:StartDialog()
-    else
-        instance = UIKit:newGameUI('GameUINpc', ...):AddToCurrentScene(true)
-        instance.is_should_start = true
-    end
-    -- instance:EnableReceiveClickMsg(false)
-    -- instance:PromiseOfDialogEnded(1):next(function()
-    --     instance:EnableReceiveClickMsg(true)
-    -- end)
-    return instance:PromiseOfDialogEndWithClicked(1)
 end
 function GameUINpc:OnLeave()
     local callbacks = self.leave_callbacks
@@ -343,25 +278,6 @@ function GameUINpc:PromiseOfLeave()
             return p:resolve()
         end)
         instance:LeftButtonClicked()
-        return p
-    end
-    return cocos_promise.defer()
-end
-function GameUINpc:OnEnter()
-    local callbacks = self.enter_callbacks
-    if #callbacks > 0 then
-        callbacks[1]()
-        table.remove(callbacks, 1)
-    end
-end
-function GameUINpc:PromiseOfEnter()
-    if UIKit:getRegistry().isObjectExists("GameUINpc") then
-        local instance = UIKit:getRegistry().getObject("GameUINpc")
-        local p = promise.new()
-        instance.enter_callbacks = {}
-        table.insert(instance.enter_callbacks, function()
-            return p:resolve()
-        end)
         return p
     end
     return cocos_promise.defer()
