@@ -622,41 +622,8 @@ function GameUIAllianceBattle:OpenAllianceDetails(isOur)
     for i,v in ipairs(player_kill) do
         table.insert(infos, {name = v.name, kill = v.kill})
     end
-    dump(infos,"infos")
     WidgetInfoAllianceKills.new({h=492,info = infos}):addTo(body)
         :align(display.BOTTOM_CENTER,rb_size.width/2,40)
-
-    -- local function addMemberItem(member,flag,i)
-    --     local item = self.member_listview:newItem()
-    --     item:setItemSize(548,40)
-    --     local content = flag and display.newSprite("back_ground_548x40_1.png")
-    --         or display.newSprite("back_ground_548x40_2.png")
-
-    --     content:setContentSize(548,40)
-
-
-    --     UIKit:ttfLabel({
-    --         text = i.."."..member.name,
-    --         size = 22,
-    --         color = 0x403c2f,
-    --     }):align(display.LEFT_CENTER,20,20)
-    --         :addTo(content)
-
-    --    :addTo(content)
-
-    --     local t = UIKit:ttfLabel({
-    --         text = string.formatnumberthousands(member.kill),
-    --         size = 22,
-    --         color = 0x403c2f,
-    --     }):align(display.RIGHT_CENTER,520,20)
-    --         :addTo(content)
-    --     display.newSprite("battle_33x33.png")
-    --         :align(display.RIGHT_CENTER,510-t:getContentSize().width,20)
-    --         :addTo(content)
-    --     item:addContent(content)
-    --     self.member_listview:addItem(item)
-    -- end
-    
 end
 
 

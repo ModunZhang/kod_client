@@ -94,7 +94,13 @@ function GameUIHelpDefence:CreateSoldierNode()
     local TroopShow = display.newNode()
     TroopShow:setContentSize(cc.size(grass_width,grass_height))
     TroopShow:align(display.BOTTOM_LEFT, window.cx-304, window.top_bottom-250)
-    display.newSprite("battle_bg_grass_611x275.png")
+    local land_image = {
+        desert = "battle_bg_desert_611x275.png",
+        iceField = "battle_bg_iceField_611x275.png",
+        grassLand = "battle_bg_grass_611x275.png"
+    }
+    local land_bg = land_image[User:Terrain()]
+    display.newSprite(land_bg)
         :align(display.LEFT_BOTTOM,window.cx-304, window.top_bottom-250):addTo(view)
     TroopShow.offset_x = 0
     TroopShow.bound_box_width = grass_width
@@ -163,13 +169,13 @@ function GameUIHelpDefence:CreateSoldierNode()
         -- 因为士兵动画的锚点为CENTER，需要的滑动区域的宽度需要多加士兵动画设计宽度180/2
         current_x = current_x - 180/2
         if current_x<grass_width then
-            table.insert(self.soldier_crops,display.newSprite("battle_bg_grass_611x275.png")
+            table.insert(self.soldier_crops,display.newSprite(land_bg)
                 :align(display.LEFT_BOTTOM,0,0):addTo(self))
         end
         if current_x<0 then
             local need_bg_count = math.ceil(math.abs(current_x)/grass_width)
             for i=1,need_bg_count do
-                table.insert(self.soldier_crops,display.newSprite("battle_bg_grass_611x275.png")
+                table.insert(self.soldier_crops,display.newSprite(land_bg)
                     :align(display.LEFT_BOTTOM,-grass_width*i,0):addTo(self))
             end
             self.offset_x = grass_width -(math.abs(current_x)-(need_bg_count-1)*grass_width)
