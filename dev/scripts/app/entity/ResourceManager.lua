@@ -45,7 +45,9 @@ local dump_resources = function(...)
     end), name)
 end
 
-function ResourceManager:ctor()
+function ResourceManager:ctor(city)
+    self.city = city
+    self.user = self.city:GetUser()
     ResourceManager.super.ctor(self)
     self.resources = {
         [WOOD] = AutomaticUpdateResource.new(),
@@ -113,7 +115,7 @@ function ResourceManager:OnResourceChanged()
 end
 --获取食物的生产量
 function ResourceManager:GetFoodProductionPerHour()
-    return City:GetSoldierManager():GetTotalUpkeep() + self:GetFoodResource():GetProductionPerHour()
+    return self.city:GetSoldierManager():GetTotalUpkeep() + self:GetFoodResource():GetProductionPerHour()
 end
 function ResourceManager:UpdateByCity(city, current_time)
     -- 产量
@@ -326,13 +328,14 @@ function ResourceManager:GetTotalBuffData(city)
     end
     dump_resources(item_buff_map, "道具对资源的影响--->")
     --vip buff
+    local user = self.user
     local vip_buff_map = {
-        [WOOD] = User:GetVIPWoodProductionAdd(),
-        [FOOD] = User:GetVIPFoodProductionAdd(),
-        [IRON] = User:GetVIPIronProductionAdd(),
-        [STONE] = User:GetVIPStoneProductionAdd(),
-        [POPULATION] = User:GetVIPCitizenRecoveryAdd(),
-        [WALLHP] = User:GetVIPWallHpRecoveryAdd(),
+        [WOOD] = user:GetVIPWoodProductionAdd(),
+        [FOOD] = user:GetVIPFoodProductionAdd(),
+        [IRON] = user:GetVIPIronProductionAdd(),
+        [STONE] = user:GetVIPStoneProductionAdd(),
+        [POPULATION] = user:GetVIPCitizenRecoveryAdd(),
+        [WALLHP] = user:GetVIPWallHpRecoveryAdd(),
         [COIN] = 0,
         [CART] = 0,
     }
