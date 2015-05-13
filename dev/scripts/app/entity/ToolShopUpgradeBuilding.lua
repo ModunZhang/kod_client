@@ -240,13 +240,17 @@ function ToolShopUpgradeBuilding:OnUserDataChanged(...)
             local is_making_end = finished_time == 0
             if is_making_end then
                 self:EndMakeMaterialsByCategoryWithCurrentTime(category, event.materials, current_time, event.id)
+                self:CancelToolsLocalPush(event.id)
             elseif self:IsMaterialsEmptyByCategory(category) then
                 self:MakeMaterialsByCategoryWithFinishTime(category, event.materials, current_time, finished_time, event.id)
+                local makingEvent = self:GetMakeMaterialsEventByCategory(category)
+                self:GeneralToolsLocalPush(makingEvent)
             else
                 local makingEvent = self:GetMakeMaterialsEventByCategory(category)
                 if finished_time ~= makingEvent:FinishTime() then
                     self:SpeedUpMakingMaterial()
                     self:GetMakeMaterialsEventByCategory(category):SetContent(event.materials, finished_time, event.id)
+                    self:GeneralToolsLocalPush(makingEvent)
                 end
             end
         else
@@ -256,7 +260,17 @@ function ToolShopUpgradeBuilding:OnUserDataChanged(...)
         end
     end
 end
-
+function ToolShopUpgradeBuilding:GeneralToolsLocalPush(event)
+    if ext and ext.localpush then
+        local title = string.format(_("制造%d个材料完成"), event:TotalCount())
+        app:GetPushManager():UpdateBuildPush(event:FinishTime(), title, event.id)
+    end
+end
+function ToolShopUpgradeBuilding:CancelToolsLocalPush(event_id)
+    if ext and ext.localpush then
+        app:GetPushManager():CancelBuildPush(event_id)
+    end
+end
 return ToolShopUpgradeBuilding
 
 
