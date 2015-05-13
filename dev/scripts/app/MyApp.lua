@@ -164,7 +164,7 @@ function MyApp:retryConnectServer(need_disconnect)
     end
     if NetManager.m_logicServer.host and NetManager.m_logicServer.port then
         UIKit:WaitForNet(2)
-        scheduler.performWithDelayGlobal(function()
+        -- scheduler.performWithDelayGlobal(function()
             NetManager:getConnectLogicServerPromise():next(function()
                 print("MyApp:debug--->2")
                 return NetManager:getLoginPromise()
@@ -178,6 +178,10 @@ function MyApp:retryConnectServer(need_disconnect)
                     UIKit:showKeyMessageDialog(_("错误"), _("服务器连接断开,请检测你的网络环境后重试!"), function()
                         app:retryConnectServer(false)
                     end)
+                elseif title == 'syntaxError' then
+                    UIKit:showMessageDialog(_("错误"), content,function()
+                        app:restart(false)
+                    end,nil,false)
                 else
                     if UIKit:getErrorCodeKey(content.code) == 'playerAlreadyLogin' then
                         print("MyApp:debug--->5")
@@ -198,7 +202,7 @@ function MyApp:retryConnectServer(need_disconnect)
                 print("MyApp:debug--->7")
                 UIKit:NoWaitForNet()
             end)      
-        end,1)
+        -- end,1)
        
     end
 end

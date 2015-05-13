@@ -893,6 +893,13 @@ local IAP_PACKAGE_IMAGE = {
     },
 }
 
+local ACTIVITY_IMAGE_CONFIG = {
+    EVERY_DAY_LOGIN = "activity_logo_550x128.png",
+    CONTINUITY = "gem_logo_592x139_3.png",
+    FIRST_IN_PURGURE = "gem_logo_592x139_4.png",
+    PLAYER_LEVEL_UP = "gem_logo_592x139_1.png"
+}
+
 local PRODUC_TIONTECHS_IMAGE = {
     crane = "crane_128x128.png",
     stoneCarving = "stoneCarving_128x128.png",
@@ -1078,6 +1085,7 @@ return {
     player_icon = PLAYER_ICON,
     my_city_banner = my_city_banner,
     enemy_city_banner = enemy_city_banner,
+    activity_image_config = ACTIVITY_IMAGE_CONFIG,
 }
 
 

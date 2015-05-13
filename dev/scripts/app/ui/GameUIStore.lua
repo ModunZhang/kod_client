@@ -38,7 +38,7 @@ function GameUIStore:GetStoreData()
 		temp_data['gem'] = v.gem
 		temp_data['name'] = Localize.iap_package_name[v.productId]
 		temp_data['order'] = v.order
-		local rewards,rewards_price = self:FormatGemRewards(v.rewards)
+		local rewards,rewards_price = self:FormatGemRewards(v.rewards,v.allianceRewards)
 		temp_data['rewards'] = rewards
 		temp_data['rewards_price'] = rewards_price
 		temp_data['config'] = UILib.iap_package_image[v.productId]
@@ -47,7 +47,7 @@ function GameUIStore:GetStoreData()
 	return data
 end
 
-function GameUIStore:FormatGemRewards(rewards)
+function GameUIStore:FormatGemRewards(rewards,allianceRewards)
 	local result_rewards = {}
 	local rewards_price = {}
 	local all_rewards = string.split(rewards, ",")
@@ -56,6 +56,14 @@ function GameUIStore:FormatGemRewards(rewards)
 		local category,key,count = unpack(one_reward)
 		table.insert(result_rewards,{category = category,key = key,count = count})
 		rewards_price[key] = count
+	end
+	if allianceRewards then
+		local all_alliance_rewards = string.split(allianceRewards,",")
+		for __,v in ipairs(all_alliance_rewards) do
+			local one_reward = string.split(v,":")
+			local category,key,count = unpack(one_reward)
+			table.insert(result_rewards,{category = category,key = key,count = count,isToAlliance = true})
+		end
 	end
 	return result_rewards,DataUtils:getItemsPrice(rewards_price)
 end
