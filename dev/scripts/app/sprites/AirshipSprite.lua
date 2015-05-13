@@ -6,6 +6,10 @@ function AirshipSprite:GetWorldPosition()
     return self:convertToWorldSpace(cc.p(self:GetSpriteOffset())),
         self:convertToWorldSpace(cc.p(self:GetSpriteTopPosition()))
 end
+function AirshipSprite:GetSpriteTopPosition()
+    local x,y = AirshipSprite.super.GetSpriteTopPosition(self)
+    return x, y - 50
+end
 function AirshipSprite:ctor(city_layer, x, y)
     self.logic_x, self.logic_y = x, y
     AirshipSprite.super.ctor(self, city_layer, nil, city_layer:GetLogicMap():ConvertToMapPosition(x, y))
