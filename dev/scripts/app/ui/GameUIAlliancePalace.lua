@@ -435,7 +435,7 @@ function GameUIAlliancePalace:InitInfoPart()
     -- 购买使用按钮
     WidgetPushButton.new({normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"})
         :setButtonLabel(UIKit:ttfLabel({
-            text = _("购买使用"),
+            text = _("修改"),
             size = 24,
             color = 0xffedae,
             shadow= true
@@ -444,6 +444,8 @@ function GameUIAlliancePalace:InitInfoPart()
             if event.name == "CLICKED_EVENT" then
                 if need_honour>self.alliance:Honour() then
                     UIKit:showMessageDialog(_("提示"),_("联盟荣耀值不足"))
+                elseif self.alliance:Status() == "fight" then
+                    UIKit:showMessageDialog(_("提示"),_("战争期不能修改联盟地形"))
                 else
                     if self.alliance:GetSelf():CanEditAlliance() then
                         NetManager:getEditAllianceTerrianPromise(self:MapIndexToTerrian(self.select_terrian_index))
@@ -507,6 +509,7 @@ function GameUIAlliancePalace:OnMemberChanged(alliance,changed_map)
     end
 end
 return GameUIAlliancePalace
+
 
 
 
