@@ -519,8 +519,7 @@ function UIKit:commonListView_1(params)
 end
 function UIKit:createLineItem(params)
     -- 分割线
-    local line = display.newScale9Sprite("dividing_line.png")
-    line:size(params.width,2)
+    local line = display.newScale9Sprite("dividing_line.png",0,0,cc.size(params.width,2),cc.rect(10,2,382,2))
     local line_size = line:getContentSize()
     self:ttfLabel(
         {
