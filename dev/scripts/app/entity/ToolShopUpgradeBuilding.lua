@@ -84,8 +84,8 @@ function ToolShopUpgradeBuilding:CreateEvent(category)
     function event:IsEmpty()
         return self.finished_time == 0 and #self.content == 0
     end
-    function event:IsMaking()
-        return self.finished_time ~= 0
+    function event:IsMaking(current_time)
+        return current_time < self.finished_time 
     end
     event:Init(category)
     return event
@@ -188,12 +188,7 @@ function ToolShopUpgradeBuilding:GetNextLevelProduction()
 end
 function ToolShopUpgradeBuilding:IsNeedToUpdate()
     if self.level > 0 then
-        for _, event in pairs(self.category) do
-            if event:IsMaking() then
-                return true
-            end
-        end
-        return self.upgrade_to_next_level_time ~= 0
+        return true
     end
 end
 function ToolShopUpgradeBuilding:OnTimer(current_time)
