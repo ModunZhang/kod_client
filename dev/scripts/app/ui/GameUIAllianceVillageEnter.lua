@@ -312,7 +312,7 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
 		        	if self:CheckCanAttackVillage() then
 						UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
 		                    NetManager:getAttackVillagePromise(dragonType,soldiers,villageEvent:VillageData().alliance.id,village_id)
-		                end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition()}):AddToCurrentScene(true)
+		                end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition(),terrian = self:IsMyAlliance() and self:GetMyAlliance():Terrain() or self:GetEnemyAlliance():Terrain()}):AddToCurrentScene(true)
 					end
 					self:LeftButtonClicked()
 				end)
@@ -329,7 +329,7 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
 		     		if self:CheckCanAttackVillage() then
 						UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
 		                    NetManager:getAttackVillagePromise(dragonType,soldiers,alliance_id,village_id)
-		                end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition()}):AddToCurrentScene(true)
+		                end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition(),terrian = self:IsMyAlliance() and self:GetMyAlliance():Terrain() or self:GetEnemyAlliance():Terrain()}):AddToCurrentScene(true)
 					end
 					self:LeftButtonClicked()
 				end)
@@ -355,7 +355,7 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
 	     		if self:CheckCanAttackVillage() then
 					UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
 	                    NetManager:getAttackVillagePromise(dragonType,soldiers,alliance_id,village_id)
-	                end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition()}):AddToCurrentScene(true)
+	                end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition(),terrian = self:IsMyAlliance() and self:GetMyAlliance():Terrain() or self:GetEnemyAlliance():Terrain()}):AddToCurrentScene(true)
 				end
 				self:LeftButtonClicked()
 			end)
@@ -393,7 +393,7 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
 	     		if self:CheckCanAttackVillage() then
 					UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
 	                    NetManager:getAttackVillagePromise(dragonType,soldiers,alliance_id,village_id)
-	                end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition()}):AddToCurrentScene(true)
+	                end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition(),terrian = self:IsMyAlliance() and self:GetMyAlliance():Terrain() or self:GetEnemyAlliance():Terrain()}):AddToCurrentScene(true)
 				end
 				self:LeftButtonClicked()
 			end)

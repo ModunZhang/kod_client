@@ -51,35 +51,35 @@ local soldier_ani_width = {
     meatWagon = 180,
 }
 
-function GameUIHelpDefence:ctor(city,dragon,soldiers)
+function GameUIHelpDefence:ctor(city,helped_troop,details)
     GameUIHelpDefence.super.ctor(self,city, _("协防"))
     -- self.dragon = dragon
-    self.soldiers = soldiers
+    dump(helped_troop,"helped_troop")
+    LuaUtils:outputTable("details", details)
+    self.helped_troop = helped_troop
+    self.details = details
+    self.soldiers = details.soldiers
     self.dragon = city:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon("redDragon")
 end
 function GameUIHelpDefence:OnMoveInStage()
     GameUIHelpDefence.super.OnMoveInStage(self)
     local troop_show = self:CreateSoldierNode()
     local soldier_show_table = {}
-    local soldier_manager = self.city:GetSoldierManager()
-    local soldiers = soldier_manager:GetSoldierMap()
-    for soldier_type,soldier_number in pairs(soldiers) do
-        local soldier_level = soldier_manager:GetStarBySoldierType(soldier_type)
-        local soldier_config = soldier_manager:GetSoldierConfig(soldier_type)
-        if soldier_number>0 then
-            table.insert(soldier_show_table, {
-                soldier_type = soldier_type,
-                power = soldier_config.power*soldier_number,
-                soldier_num = soldier_number,
-                soldier_weight = soldier_config.load*soldier_number,
-                soldier_citizen = soldier_config.citizen*soldier_number,
-                soldier_march = soldier_config.march,
-                soldier_star = soldier_level
-            })
-        end
+    local soldiers = self.soldiers
+    for i,soldier in ipairs(soldiers) do
+        local soldier_level = soldier.star
+        local soldier_config = self.city:GetSoldierManager():GetSoldierConfig(soldier.name)
+        local soldier_number = soldier.count
+        table.insert(soldier_show_table, {
+            soldier_type = soldier.name,
+            power = soldier_config.power * soldier_number,
+            soldier_num = soldier_number,
+            soldier_weight = soldier_config.load * soldier_number,
+            soldier_citizen = soldier_config.citizen * soldier_number,
+            soldier_star = soldier_level
+        })
     end
     troop_show:ShowOrRefreasTroops(soldier_show_table)
-
 
     self:DragonPart()
     self:PlayerPart()
@@ -290,7 +290,7 @@ function GameUIHelpDefence:CreateSoldierNode()
     return TroopShow
 end
 function GameUIHelpDefence:DragonPart()
-    local dragon = self.dragon
+    local dragon = self.details.dragon
 
     local dragon_frame = display.newSprite("alliance_item_flag_box_126X126.png")
         :align(display.LEFT_CENTER, window.left+47,window.top-425)
@@ -299,7 +299,7 @@ function GameUIHelpDefence:DragonPart()
     local dragon_bg = display.newSprite("chat_hero_background.png")
         :align(display.LEFT_CENTER, 7,dragon_frame:getContentSize().height/2)
         :addTo(dragon_frame)
-    local dragon_img = cc.ui.UIImage.new(dragon:Type()..".png")
+    local dragon_img = cc.ui.UIImage.new(dragon.type..".png")
         :align(display.CENTER, dragon_bg:getContentSize().width/2, dragon_bg:getContentSize().height/2+5)
         :addTo(dragon_bg)
     local box_bg = display.newSprite("box_426X126.png")
@@ -307,7 +307,7 @@ function GameUIHelpDefence:DragonPart()
         :addTo(dragon_frame)
     -- 龙，等级
     local dragon_name = UIKit:ttfLabel({
-        text = Localize.dragon[dragon:Type()].."（LV ".. dragon:Level()..")",
+        text = Localize.dragon[dragon.type].."（LV ".. dragon.level..")",
         size = 22,
         color = 0x514d3e,
     }):align(display.LEFT_CENTER,10,100)
@@ -320,7 +320,7 @@ function GameUIHelpDefence:DragonPart()
     }):align(display.LEFT_CENTER,10,60)
         :addTo(box_bg)
     local dragon_vitality = UIKit:ttfLabel({
-        text = dragon:Hp().."/"..dragon:GetMaxHP(),
+        text = dragon.hp,
         size = 20,
         color = 0x514d3e,
     }):align(display.RIGHT_CENTER,416,60)
@@ -334,7 +334,7 @@ function GameUIHelpDefence:DragonPart()
     }):align(display.LEFT_CENTER,10,30)
         :addTo(box_bg)
     local dragon_power = UIKit:ttfLabel({
-        text = dragon:GetWeight(),
+        text = DataUtils:getDragonTotalStrengthFromJson(dragon.star,dragon.level,dragon.skills,dragon.equipments),
         size = 20,
         color = 0x514d3e,
     }):align(display.RIGHT_CENTER,416,30)
@@ -342,6 +342,7 @@ function GameUIHelpDefence:DragonPart()
 
 end
 function GameUIHelpDefence:PlayerPart()
+    local helped_troop = self.helped_troop
     local view = self:GetView()
     local head_frame = display.newSprite("alliance_item_flag_box_126X126.png")
         :align(display.LEFT_CENTER, window.left+47,window.top-565)
@@ -355,7 +356,7 @@ function GameUIHelpDefence:PlayerPart()
             head_frame:getPositionY() + head_frame:getContentSize().height/2 - 15)
         :addTo(view)
     UIKit:ttfLabel({
-        text = _("协防玩家姓名"),
+        text = helped_troop.name,
         size = 22,
         color = 0xffedae,
     }):align(display.LEFT_CENTER,10,title_bg:getContentSize().height/2)
@@ -373,13 +374,14 @@ function GameUIHelpDefence:PlayerPart()
         {
             width = 395,
             text_1 = _("等级"),
-            text_2 = 11,
+            text_2 = User:GetPlayerLevelByExp(helped_troop.levelExp),
         }
     ):align(display.LEFT_CENTER,head_frame:getPositionX() + head_frame:getContentSize().width + 20 , head_frame:getPositionY() - head_frame:getContentSize().height/2)
         :addTo(view)
 
 end
 return GameUIHelpDefence
+
 
 
 
