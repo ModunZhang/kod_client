@@ -53,9 +53,6 @@ local soldier_ani_width = {
 
 function GameUIHelpDefence:ctor(city,helped_troop,details)
     GameUIHelpDefence.super.ctor(self,city, _("协防"))
-    -- self.dragon = dragon
-    dump(helped_troop,"helped_troop")
-    LuaUtils:outputTable("details", details)
     self.helped_troop = helped_troop
     self.details = details
     self.soldiers = details.soldiers
@@ -342,13 +339,13 @@ function GameUIHelpDefence:DragonPart()
 
 end
 function GameUIHelpDefence:PlayerPart()
-    local helped_troop = self.helped_troop
+    local player = self.details.player
     local view = self:GetView()
     local head_frame = display.newSprite("alliance_item_flag_box_126X126.png")
         :align(display.LEFT_CENTER, window.left+47,window.top-565)
         :addTo(view)
 
-    UIKit:GetPlayerCommonIcon():addTo(head_frame):align(display.CENTER, head_frame:getContentSize().width/2, head_frame:getContentSize().height/2)
+    UIKit:GetPlayerCommonIcon(player.icon):addTo(head_frame):align(display.CENTER, head_frame:getContentSize().width/2, head_frame:getContentSize().height/2)
 
     local title_bg = display.newScale9Sprite("title_blue_430x30.png",0,0,cc.size(412,30),cc.rect(10,10,410,10))
         :align(display.LEFT_CENTER,
@@ -356,7 +353,7 @@ function GameUIHelpDefence:PlayerPart()
             head_frame:getPositionY() + head_frame:getContentSize().height/2 - 15)
         :addTo(view)
     UIKit:ttfLabel({
-        text = helped_troop.name,
+        text = player.name,
         size = 22,
         color = 0xffedae,
     }):align(display.LEFT_CENTER,10,title_bg:getContentSize().height/2)
@@ -366,7 +363,7 @@ function GameUIHelpDefence:PlayerPart()
         {
             width = 395,
             text_1 = _("力量"),
-            text_2 = string.formatnumberthousands(1111),
+            text_2 = string.formatnumberthousands(player.power),
         }
     ):align(display.LEFT_CENTER,head_frame:getPositionX() + head_frame:getContentSize().width + 20 , head_frame:getPositionY() - 20)
         :addTo(view)
@@ -374,7 +371,7 @@ function GameUIHelpDefence:PlayerPart()
         {
             width = 395,
             text_1 = _("等级"),
-            text_2 = User:GetPlayerLevelByExp(helped_troop.levelExp),
+            text_2 = User:GetPlayerLevelByExp(player.levelExp),
         }
     ):align(display.LEFT_CENTER,head_frame:getPositionX() + head_frame:getContentSize().width + 20 , head_frame:getPositionY() - head_frame:getContentSize().height/2)
         :addTo(view)
