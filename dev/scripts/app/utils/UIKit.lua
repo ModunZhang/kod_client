@@ -166,7 +166,7 @@ function UIKit:getRegistry()
     return self.Registry
 end
 
-function UIKit:closeAllUI(force)
+function UIKit:closeAllUI()
     UIKit.open_ui_callbacks = {}
     UIKit.close_ui_callbacks = {}
     for name,v in pairs(self:getRegistry().objects_) do

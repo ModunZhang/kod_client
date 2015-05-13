@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="45" height="45" tilewidth="100" tileheight="100" nextobjectid="1">
+<map version="1.0" orientation="orthogonal" width="45" height="45" tilewidth="100" tileheight="100">
  <tileset firstgid="1" name="edit" tilewidth="100" tileheight="100">
   <image source="edit.png" width="400" height="400"/>
  </tileset>
  <layer name="layer1" width="45" height="45">
   <data encoding="base64" compression="zlib">
-   eJzVmYkOwiAMhtF5TF1g7/+0umQk3R9ZuWm/hIRtHBXbUqgxOll/xe3F7sXt72kdny0pK+nvYEws/+aj81pos5JnKnMK78T2MTyZ74s5ypkqcy6vwv4x63wrnKM2VGbbYPxHgzHp2rpgq/FMpE7XdpTME9/kQA3d6K3vNlCXjBZ99mz+m/PP0vzchgQbRDibzN27U/1uqm84Q4INfhLb4zqXxgI9oGtbGiO1slfUK4k2yMHtg9J9Xa/4eSPXj8ymXDdG/A90bbXEG61149JgTAl7CnJlvpecu0dxts73noJE4O8RRtwVlDLCb3D6ylFD5t46pDHeCJ0HU2PalqAuuUBdMrX9c0i3S+2OEmuDPews9ndpu9/YwH2wxT14bTTGoq33lCVzzDM0xnUjdSPWT+CdlUZ9Du2D0mJnSs7ZisvheXLyP3NEGzzD+rwqzadijhVzo5h3xZztCn1xDvoO+4bysVr5Au7CCso=
+   eJzVmYkOwyAIht26o7u07/+0W5M2oX+meKH4JSa29WAOEMWYMVl+xW3FbsVt72kdny0pC+nvYEws/+aj81pos5BnKnMKz8T2MdyZ729zlDNV5lwehf1j1vlSOEdtqMxWYPybwJh0bR18+wjMl8tE6nRtUeZWTHyTAzV0o7W+W09dMyF91sjqvzn/rM3PrWiwQYSzydy9O9XvpvqGEBps8JXYHte5NBZoAV3b0hhJyl5RrzTaIAe3D2r3da3i55VcPzKbct3o8T/QtR0l3pDWjZPAmBr2FOTMfC85d/citM7XloJEsN8j9LgrKKWH3+D0laOGzK11aMR4w3ceTI1pJUFdcp66Zmr7Z59ul9odJdYGW9hZ7O8a7X5jBfdBiXvw2owYi0rvKe/MMUOMGNf11I1YP4F3ViPqs28f1BY7U3LOVlwObycn/zNHtMEz7J5XpflUzLFibhTzrpizXaAvzkHfYV9fPnZUvlJYCtc=
   </data>
  </layer>
 </map>

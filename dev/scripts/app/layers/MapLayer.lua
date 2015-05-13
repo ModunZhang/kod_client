@@ -115,7 +115,6 @@ function MapLayer:ZoomBy(scale, x, y)
     local cur_x, cur_y = self:getPosition()
     local new_position = cc.p(cur_x + scene_mid_point.x - new_scene_mid_point.x, cur_y + scene_mid_point.y - new_scene_mid_point.y)
     self:setPosition(new_position)
-    self:OnSceneScale(self:getScale())
     return self
 end
 function MapLayer:ZoomEnd()
@@ -169,6 +168,7 @@ function MapLayer:GotoMapPositionInMiddle(x, y)
     self:setPosition(cc.p(current_x + dx, current_y + dy))
 end
 local floor = math.floor
+local getmetatable = getmetatable
 function MapLayer:setPosition(position)
     local x, y = position.x, position.y
     local super = getmetatable(self)
@@ -178,7 +178,6 @@ function MapLayer:setPosition(position)
     local rx = x >= 0 and min(left_bottom_pos.x, right_top_pos.x) or max(left_bottom_pos.x, right_top_pos.x)
     local ry = y >= 0 and min(left_bottom_pos.y, right_top_pos.y) or max(left_bottom_pos.y, right_top_pos.y)
     super.setPosition(self, cc.p(rx, ry))
-    self:OnSceneMove(is_collide1 or is_collide2)
 end
 function MapLayer:GetLeftBottomPositionWithConstrain(x, y)
     local parent_node = self:getParent()
@@ -215,12 +214,6 @@ function MapLayer:getContentWidthAndHeight()
 end
 function MapLayer:getContentSize()
     assert(false, "你应该在子类实现这个函数 getContentSize")
-end
-function MapLayer:OnSceneMove()
-    self.scene:OnSceneMove()
-end
-function MapLayer:OnSceneScale(s)
-    self.scene:OnSceneScale(s)
 end
 return MapLayer
 

@@ -32,6 +32,7 @@ function PVEScene:ctor(user)
     self:LoadAnimation()
     PVEScene.super.ctor(self)
     self.user = user
+    self.move_step = 1
 end
 function PVEScene:onEnter()
     PVEScene.super.onEnter(self)
@@ -41,6 +42,7 @@ function PVEScene:onEnter()
     self:GetSceneLayer():ZoomTo(0.8)
     self:GetSceneLayer():MoveCharTo(self.user:GetPVEDatabase():GetCharPosition())
     app:GetAudioManager():PlayGameMusic("PVEScene")
+    self.user:GetPVEDatabase():SetLocationHandle(self)
 end
 function PVEScene:onExit()
     PVEScene.super.onExit(self)
@@ -55,7 +57,7 @@ function PVEScene:onExit()
             ):fail(function()
                 -- 失败回滚
                 local location = DataManager:getUserData().pve.location
-                self.user:GetPVEDatabase():SetCharPosition(location.x, location.y, location.z)
+                User:GetPVEDatabase():SetCharPosition(location.x, location.y, location.z)
             end)
         end
     end
@@ -90,6 +92,16 @@ function PVEScene:GetDirectionArrow()
 end
 function PVEScene:DestroyDirectionArrow()
     self:removeChildByTag(DIRECTION_TAG)
+end
+function PVEScene:OnLocationChanged(is_pos_changed, is_switch_floor)
+    local location = DataManager:getUserData().pve.location
+    if is_switch_floor then
+        self.user:GetPVEDatabase():SetCharPosition(location.x, location.y, location.z)
+        app:EnterPVEScene(location.z)
+    elseif is_pos_changed then
+        self:GetSceneLayer():MoveCharTo(location.x, location.y)
+    end
+    assert(false)
 end
 function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
     -- 有动画就什么都不处理
@@ -129,6 +141,12 @@ function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
 
         self.user:UseStrength(1)
         self:GetSceneLayer():MoveCharTo(tx, ty)
+
+        app:GetAudioManager():PlayeEffectSoundWithKey(string.format("PVE_MOVE%d", self.move_step))
+        self.move_step = self.move_step + 1
+        if self.move_step > 3 then
+            self.move_step = 1
+        end
 
         if self:GetSceneLayer():GetTileInfo(tx, ty) > 0 and
             self:CheckCanMoveTo(tx, ty) then
@@ -179,6 +197,10 @@ local building_ui_map = setmetatable({
 function PVEScene:OpenUI(x, y)
     local gid = self:GetSceneLayer():GetTileInfo(x, y)
     if gid <= 0 then return end
+    local object = self.user:GetCurrentPVEMap():GetObjectByCoord(x, y)
+    if not object or not object:Type() then
+        self.user:GetCurrentPVEMap():ModifyObject(x, y, 0, gid)
+    end
     building_ui_map[gid].new(x, y, self.user):AddToScene(self, true)
 end
 function PVEScene:CheckTrap()

@@ -2,7 +2,7 @@ local PVEMap = import(".PVEMap")
 local PVEDatabase = class("PVEDatabase")
 
 local MAX_FLOOR = 24
-local TRAP_NPC_STEPS = 10
+local TRAP_NPC_STEPS = math.huge
 function PVEDatabase:ctor(user)
     self.user = user
     self.char_x = 12
@@ -19,6 +19,12 @@ function PVEDatabase:MapLen()
 end
 function PVEDatabase:GetRewardedList()
     return DataManager:getUserData().pve.rewardedFloors
+end
+function PVEDatabase:SetLocationHandle(location_handle)
+    self.location_handle = location_handle
+end
+function PVEDatabase:ResetLocationHander()
+    self.location_handle = nil
 end
 function PVEDatabase:OnUserDataChanged(userData, deltaData)
     local is_fully_update = deltaData == nil
@@ -44,6 +50,9 @@ function PVEDatabase:OnUserDataChanged(userData, deltaData)
     self.char_x = location.x
     self.char_y = location.y
     self.char_floor = location.z
+    if type(self.location_handle) == "function" then
+        self.location_handle:OnLocationChanged(is_pos_changed, is_switch_floor)
+    end
 end
 function PVEDatabase:ReduceNextEnemyStep()
     self.next_enemy_step = self.next_enemy_step - 1
@@ -71,6 +80,7 @@ function PVEDatabase:GetMapByIndex(index)
     return self.pve_maps[index]
 end
 function PVEDatabase:ResetAllMapsListener()
+    self:ResetLocationHander()
     for k,v in pairs(self.pve_maps) do
         v:RemoveAllObserver()
     end

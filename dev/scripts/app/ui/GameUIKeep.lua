@@ -367,7 +367,7 @@ function GameUIKeep:CreateChangeTerrainWindow()
     local prop_bg = display.newSprite("box_118x118.png")
         :align(display.LEFT_CENTER, 10, 70):addTo(bg2)
     display.newSprite("change_city_name.png")
-        :align(display.CENTER, 59, 59):addTo(prop_bg):scale(0.7)
+        :align(display.CENTER, 59, 59):addTo(prop_bg):scale(100/128)
     local num_bg = display.newSprite("back_ground_118x36.png")
         :align(display.CENTER, 480, 100):addTo(bg2)
     local gem_img = display.newSprite("gem_icon_62x61.png")
@@ -466,6 +466,9 @@ function GameUIKeep:PlayCloudAnimation()
             cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
             cc.CallFunc:create(function() self:LeftButtonClicked() end),
             cc.FadeOut:create(0.75),
+            cc.CallFunc:create(function() 
+                armature:removeFromParent()
+            end),
         }
     )
 end

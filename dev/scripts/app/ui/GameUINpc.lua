@@ -321,10 +321,10 @@ function GameUINpc:PromiseOfSayImportant(...)
         instance = UIKit:newGameUI('GameUINpc', ...):AddToCurrentScene(true)
         instance.is_should_start = true
     end
-    instance:EnableReceiveClickMsg(false)
-    instance:PromiseOfDialogEnded(1):next(function()
-        instance:EnableReceiveClickMsg(true)
-    end)
+    -- instance:EnableReceiveClickMsg(false)
+    -- instance:PromiseOfDialogEnded(1):next(function()
+    --     instance:EnableReceiveClickMsg(true)
+    -- end)
     return instance:PromiseOfDialogEndWithClicked(1)
 end
 function GameUINpc:OnLeave()

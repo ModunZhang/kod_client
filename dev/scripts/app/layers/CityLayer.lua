@@ -149,20 +149,18 @@ function CityLayer:OnCreateDecorator(building)
     city_node:addChild(house)
     table.insert(self.houses, house)
 
-    self:NotifyObservers(function(listener)
-        listener:OnCreateDecoratorSprite(house)
-    end)
+    -- self:NotifyObservers(function(listener)
+    --     listener:OnCreateDecoratorSprite(house)
+    -- end)
 end
 function CityLayer:OnDestoryDecorator(destory_decorator, release_ruins)
     for i, house in pairs(self.houses) do
         local x, y = house:GetLogicPosition()
         if destory_decorator:IsSamePositionWith(house) then
-            self:NotifyObservers(function(listener)
-                listener:OnDestoryDecoratorSprite(house)
-            end)
-
-            table.remove(self.houses, i)
-            house:removeFromParent()
+            -- self:NotifyObservers(function(listener)
+            --     listener:OnDestoryDecoratorSprite(house)
+            -- end)
+            table.remove(self.houses, i):removeFromParent()
             break
         end
     end
@@ -189,6 +187,7 @@ local SCENE_BACKGROUND = 1
 local BACK_NODE = 2
 local CITY_LAYER = 3
 local SKY_LAYER = 4
+local INFO_LAYER = 5
 local CITY_BACKGROUND = 1
 local ROAD_NODE = 2
 local BUILDING_NODE = 3
@@ -231,6 +230,7 @@ end
 function CityLayer:InitCity()
     self.city_layer = display.newLayer():addTo(self, CITY_LAYER):align(display.BOTTOM_LEFT, 47, 158 + 250)
     self.sky_layer = display.newLayer():addTo(self, SKY_LAYER):align(display.BOTTOM_LEFT)
+    self.info_layer = display.newLayer():addTo(self, INFO_LAYER):align(display.BOTTOM_LEFT)
     self.position_node = cc.TMXTiledMap:create("tmxmaps/city_road2.tmx"):addTo(self.city_layer):hide()
     self.city_node = display.newLayer():addTo(self.city_layer, BUILDING_NODE):align(display.BOTTOM_LEFT)
     local origin_point = self:GetPositionIndex(0, 0)
@@ -242,6 +242,9 @@ function CityLayer:InitCity()
         base_x = origin_point.x,
         base_y = origin_point.y
     })
+end
+function CityLayer:GetInfoLayer()
+    return self.info_layer
 end
 function CityLayer:GetPositionIndex(x, y)
     return self:GetPositionLayer():getPositionAt(cc.p(x, y))
@@ -490,9 +493,9 @@ function CityLayer:UpdateWallsWithCity(city)
     end
     self.walls = new_walls
 
-    self:NotifyObservers(function(listener)
-        listener:OnGateChanged(old_walls, new_walls)
-    end)
+    -- self:NotifyObservers(function(listener)
+    --     listener:OnGateChanged(old_walls, new_walls)
+    -- end)
 
     for _, v in pairs(old_walls) do
         v:DestorySelf()
@@ -509,9 +512,9 @@ function CityLayer:UpdateTowersWithCity(city)
     end
     self.towers = new_towers
 
-    self:NotifyObservers(function(listener)
-        listener:OnTowersChanged(old_towers, new_towers)
-    end)
+    -- self:NotifyObservers(function(listener)
+    --     listener:OnTowersChanged(old_towers, new_towers)
+    -- end)
 
     for k, v in pairs(old_towers) do
         v:DestorySelf()
@@ -791,23 +794,6 @@ function CityLayer:getContentSize()
     end
     return self.content_size
 end
-local function on_move(_, sprite)
-    sprite:OnSceneMove()
-end
-function CityLayer:OnSceneMove()
-    CityLayer.super.OnSceneMove(self)
-    table.foreach(self.tiles, function(_, sprite)
-        sprite:OnSceneMove()
-    end)
-    local move_widget = self.city_scene:GetSceneUILayer():getChildByTag(989)
-    if move_widget then
-        local ruins = move_widget:GetRuins()
-        if ruins then
-            local world_pos = ruins:GetWorldPosition()
-            move_widget:setPosition(world_pos.x, world_pos.y)
-        end
-    end
-end
 function CityLayer:UpdateWeather()
     local size = self:getContentSize()
     local pos = self:convertToNodeSpace(cc.p(display.cx, display.cy))
@@ -825,36 +811,5 @@ function CityLayer:ShowLevelUpNode()
 end
 
 return CityLayer
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

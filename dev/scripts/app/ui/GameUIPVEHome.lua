@@ -1,11 +1,11 @@
 local WidgetChangeMap = import("..widget.WidgetChangeMap")
 local UIPageView = import("..ui.UIPageView")
 local UILib = import("..ui.UILib")
+local Localize_item = import("..utils.Localize_item")
 local window = import("..utils.window")
 local GameUIPVEHome = UIKit:createUIClass('GameUIPVEHome')
 local WidgetHomeBottom = import("..widget.WidgetHomeBottom")
 local WidgetUseItems = import("..widget.WidgetUseItems")
-local RichText = import("..widget.RichText")
 local ChatManager = import("..entity.ChatManager")
 local WidgetChat = import("..widget.WidgetChat")
 local timer = app.timer
@@ -171,34 +171,34 @@ function GameUIPVEHome:SetBoxStatus(can_get)
 end
 function GameUIPVEHome:GetRewards()
     local index = self.layer:CurrentPVEMap():GetIndex()
+    local rewards = GameDatas.PlayerInitData.pveLevel[index]
+    local _1,name = unpack(string.split(rewards.itemName, ":"))
     self.user:ResetPveData()
     self.user:SetPveData(nil, {
         {
             type = "items",
-            name = "woodBonus_1",
-            count = 9,
-        },
-        {
-            type = "items",
-            name = "stoneBonus_1",
-            count = 9,
+            name = name,
+            count = rewards.count,
         },
     }, nil)
     local data = self.user:EncodePveDataAndResetFightRewardsData()
     data.pveData.rewardedFloor = index
-    NetManager:getSetPveDataPromise(data)
-
-    local wp = self.box:getParent():convertToWorldSpace(cc.p(self.box:getPosition()))
-    UIKit:newGameUI("GameUIPveGetRewards", wp.x, wp.y):AddToCurrentScene(true)
-        :AddClickOutFunc(function(ui)
-            ui:LeftButtonClicked()
-            self:SetBoxStatus(not self.layer:CurrentPVEMap():IsRewarded())
-        end)
+    NetManager:getSetPveDataPromise(data):done(function()
+        local wp = self.box:getParent():convertToWorldSpace(cc.p(self.box:getPosition()))
+        UIKit:newGameUI("GameUIPveGetRewards", wp.x, wp.y):AddToCurrentScene(true)
+            :AddClickOutFunc(function(ui)
+                ui:LeftButtonClicked()
+                self:SetBoxStatus(not self.layer:CurrentPVEMap():IsRewarded())
+                GameGlobalUI:showTips(_("获得奖励"), Localize_item.item_name[name].."x"..rewards.count)
+            end)
+    end)
 end
 
 
 
 return GameUIPVEHome
+
+
 
 
 

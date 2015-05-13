@@ -346,7 +346,7 @@ end
 
 -- 设置伤兵比例条
 function GameUIHospital:SetProgressCasualtyRate()
-    self.heal_layer.ProgressTimer:setPercentage(self.city:GetSoldierManager():GetTotalTreatSoldierCount()/self.building:GetMaxCasualty())
+    self.heal_layer.ProgressTimer:setPercentage(self.city:GetSoldierManager():GetTotalTreatSoldierCount()/self.building:GetMaxCasualty() * 100)
 end
 -- 设置伤兵比例条文本框
 function GameUIHospital:SetProgressCasualtyRateLabel()

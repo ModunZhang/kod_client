@@ -47,9 +47,7 @@ function AllianceScene:IsEditMode()
     return not self:GetHomePage():IsDisplayOn()
 end
 function AllianceScene:CreateAllianceUI()
-    -- local home_page = UIKit:newGameUI('GameUIAllianceHome',Alliance_Manager:GetMyAlliance()):AddToScene(self)
-    local home_page = GameUIAllianceHome.new(self:GetAlliance()):addTo(self)
-    self:GetSceneLayer():AddObserver(home_page)
+    local home_page = GameUIAllianceHome.new(self:GetAlliance(), self:GetSceneLayer()):addTo(self)
     home_page:setTouchSwallowEnabled(false)
     self.home_page = home_page
 end

@@ -201,7 +201,7 @@ local soldier_arrange = {
 }
 local function NewCorps(replay_ui, soldier, star, is_pve_soldier)
     local arrange = soldier_arrange[soldier]
-    return Corps.new(soldier, star, arrange.row, arrange.col, nil, nil, is_pve_battle, replay_ui)
+    return Corps.new(soldier, star, arrange.row, arrange.col, nil, nil, is_pve_soldier, replay_ui)
 end
 
 local function NewWall(replay_ui)

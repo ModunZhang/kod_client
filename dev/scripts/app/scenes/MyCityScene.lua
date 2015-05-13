@@ -1,21 +1,20 @@
 local cocos_promise = import("..utils.cocos_promise")
 local Localize = import("..utils.Localize")
 local promise = import("..utils.promise")
+local SpriteButton = import("..ui.SpriteButton")
 local GameUIWatchTowerTroopDetail = import("..ui.GameUIWatchTowerTroopDetail")
 local WidgetMoveHouse = import("..widget.WidgetMoveHouse")
-local check = import("..fte.check")
 local TutorialLayer = import("..ui.TutorialLayer")
 local GameUINpc = import("..ui.GameUINpc")
 local WidgetFteArrow = import("..widget.WidgetFteArrow")
 local WidgetFteMark = import("..widget.WidgetFteMark")
-local Arrow = import("..ui.Arrow")
 local Sprite = import("..sprites.Sprite")
 local SoldierManager = import("..entity.SoldierManager")
 local User = import("..entity.User")
 local NotifyItem = import("..entity.NotifyItem")
 local CityScene = import(".CityScene")
 local MyCityScene = class("MyCityScene", CityScene)
-
+local ipairs = ipairs
 
 function MyCityScene:ctor(...)
     self.clicked_callbacks = {}
@@ -25,9 +24,6 @@ end
 function MyCityScene:onEnter()
     MyCityScene.super.onEnter(self)
     self.home_page = self:CreateHomePage()
-    -- self:GetSceneLayer():IteratorInnnerBuildings(function(_, building)
-    --     self:GetSceneUILayer():NewUIFromBuildingSprite(building)
-    -- end)
 
     self:GetCity():AddListenOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
     self:GetCity():GetUser():AddListenOnType(self, User.LISTEN_TYPE.BASIC)
@@ -53,6 +49,109 @@ function MyCityScene:LeaveEditMode()
     self:GetSceneUILayer():LeaveEditMode()
     self:GetHomePage():DisplayOn()
     self:GetSceneUILayer():removeChildByTag(WidgetMoveHouse.ADD_TAG, true)
+end
+function MyCityScene:CreateSceneUILayer()
+    local city = self.city
+    local scene_layer = self:GetSceneLayer()
+    local scene_ui_layer = display.newLayer()
+    scene_ui_layer:setTouchEnabled(true)
+    scene_ui_layer:setTouchSwallowEnabled(false)
+    scene_ui_layer.action_node = display.newNode():addTo(scene_ui_layer)
+    scene_ui_layer.lock_buttons = {}
+    function scene_ui_layer:NewLockButtonFromBuildingSprite(building_sprite)
+        local lock_button = SpriteButton.new(building_sprite, city):addTo(self, 1)
+        city:AddListenOnType(lock_button, city.LISTEN_TYPE.UPGRADE_BUILDING)
+        table.insert(self.lock_buttons, lock_button)
+    end
+    function scene_ui_layer:RemoveAllLockButtons()
+        for _, v in pairs(self.lock_buttons) do
+            v:removeFromParent()
+            city:RemoveListenerOnType(v, city.LISTEN_TYPE.UPGRADE_BUILDING)
+        end
+        self.lock_buttons = {}
+    end
+    function scene_ui_layer:ShowIndicatorOnBuilding(building_sprite)
+        if not self.indicator then
+            self.building__ = building_sprite
+            self.indicator = display.newNode():addTo(self):zorder(1001)
+            local r = 30
+            local len = 50
+            local x = math.sin(math.rad(r)) * len
+            local y = math.sin(math.rad(90 - r)) * len
+            display.newSprite("arrow_home.png")
+                :addTo(self.indicator)
+                :align(display.BOTTOM_CENTER, 10, 10)
+                :rotation(r)
+                :runAction(cc.RepeatForever:create(transition.sequence{
+                    cc.MoveBy:create(0.4, cc.p(-x, -y)),
+                    cc.MoveBy:create(0.4, cc.p(x, y)),
+                }))
+            self.action_node:stopAllActions()
+            self.action_node:performWithDelay(function()
+                self:HideIndicator()
+            end, 4.0)
+        end
+    end
+    function scene_ui_layer:HideIndicator()
+        if self.indicator then
+            self.action_node:stopAllActions()
+            self.indicator:removeFromParent()
+            self.indicator = nil
+        end
+    end
+    function scene_ui_layer:EnterEditMode()
+        table.foreach(self.lock_buttons, function(_, v)
+            v:hide()
+        end)
+    end
+    function scene_ui_layer:LeaveEditMode()
+        table.foreach(self.lock_buttons, function(_, v)
+            v:show()
+        end)
+    end
+    function scene_ui_layer:IteratorLockButtons(func)
+        table.foreach(self.lock_buttons, func)
+    end
+    function scene_ui_layer:Schedule()
+        display.newNode():addTo(self):schedule(function()
+            if scene_layer:getScale() < (scene_layer:GetScaleRange()) * 1.3 then
+                if self.is_show == nil or  self.is_show == true then
+                    scene_layer:HideLevelUpNode()
+                    self.is_show = false
+                end
+            else
+                if self.is_show == nil or  self.is_show == false then
+                    scene_layer:ShowLevelUpNode()
+                    self.is_show = true
+                end
+            end
+        end, 0.5)
+        display.newNode():addTo(self):schedule(function()
+            for i,v in ipairs(self.lock_buttons) do
+                if v:IsShow() then
+                    local wp = v.sprite:getParent():convertToWorldSpace(cc.p(v.sprite:getPosition()))
+                    local lp = v:getParent():convertToNodeSpace(cc.p(wp.x, wp.y))
+                    v:pos(lp.x, lp.y)
+                end
+            end
+        end, 0)
+        display.newNode():addTo(self):schedule(function()
+            local building = self.building__
+            if self.indicator and building then
+                local wp = building:convertToWorldSpace(cc.p(building:GetSpriteTopPosition()))
+                local lp = self.indicator:getParent():convertToNodeSpace(wp)
+                self.indicator:pos(lp.x, lp.y)
+            end
+            local widget = self:getChildByTag(WidgetMoveHouse.ADD_TAG)
+            if widget and widget.move_to_ruins then
+                local wp = widget.move_to_ruins:GetWorldPosition()
+                widget:pos(wp.x, wp.y)
+                widget.building_image:scale(scene_layer:getScale())
+            end
+        end, 0.0001)
+    end
+    scene_ui_layer:Schedule()
+    return scene_ui_layer
 end
 -- 给对应建筑添加指示动画
 function MyCityScene:AddIndicateForBuilding(building_sprite)
@@ -88,8 +187,9 @@ function MyCityScene:PromiseOfClickBuilding(x, y, for_build, msg, arrow_param)
             self:GotoLogicPoint(mx, my, 5)
 
             local mid,top = building:GetWorldPosition()
-            local middle_point = self:GetInfoLayer():convertToNodeSpace(mid)
-            local top_point = self:GetInfoLayer():convertToNodeSpace(top)
+            local info_layer = self:GetSceneLayer():GetInfoLayer()
+            local middle_point = info_layer:convertToNodeSpace(mid)
+            local top_point = info_layer:convertToNodeSpace(top)
 
             local str
             if not msg then
@@ -100,9 +200,9 @@ function MyCityScene:PromiseOfClickBuilding(x, y, for_build, msg, arrow_param)
                 end
             end
 
-            self:GetInfoLayer():removeAllChildren()
+            info_layer:removeAllChildren()
             local arrow = WidgetFteArrow.new(msg or str)
-                :addTo(self:GetInfoLayer()):TurnDown():pos(top_point.x, top_point.y + 50)
+                :addTo(info_layer):TurnDown():pos(top_point.x, top_point.y + 50)
 
             if arrow_param then
                 if arrow_param.direction == "up" then
@@ -124,12 +224,12 @@ function MyCityScene:PromiseOfClickBuilding(x, y, for_build, msg, arrow_param)
 end
 function MyCityScene:BeginClickFte()
     self.clicked_callbacks = {}
-    self:GetInfoLayer():removeAllChildren()
+    self:GetSceneLayer():GetInfoLayer():removeAllChildren()
     self:GetFteLayer():Enable()
 end
 function MyCityScene:EndClickFte()
     self.clicked_callbacks = {}
-    self:GetInfoLayer():removeAllChildren()
+    self:GetSceneLayer():GetInfoLayer():removeAllChildren()
     self:GetFteLayer():Disable()
 end
 function MyCityScene:CheckClickPromise(building)
@@ -159,8 +259,6 @@ function MyCityScene:GetLockButtonsByBuildingType(building_type)
     return lock_button
 end
 
-
-
 ---
 function MyCityScene:OnSoliderStarCountChanged(soldier_manager, soldier_star_changed)
     self:GetSceneLayer():OnSoliderStarCountChanged(soldier_manager, soldier_star_changed)
@@ -185,62 +283,18 @@ function MyCityScene:OnUpgradingFinished(building)
     self:GetSceneLayer():CheckCanUpgrade()
     app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
 end
-function MyCityScene:OnCreateDecoratorSprite(building_sprite)
--- self:GetSceneUILayer():NewUIFromBuildingSprite(building_sprite)
-end
-function MyCityScene:OnDestoryDecoratorSprite(building_sprite)
--- app:GetAudioManager():PlayeEffectSoundWithKey("UI_BUILDING_DESTROY")
--- self:GetSceneUILayer():RemoveUIFromBuildingSprite(building_sprite)
-end
 function MyCityScene:OnTilesChanged(tiles)
     local city = self:GetCity()
     self:GetSceneUILayer():RemoveAllLockButtons()
     table.foreach(tiles, function(_, tile)
-        if tile:GetEntity().location_id then
-            local building = city:GetBuildingByLocationId(tile:GetEntity().location_id)
+        local tile_entity = tile:GetEntity()
+        if (city:IsTileCanbeUnlockAt(tile_entity.x, tile_entity.y)) then
+            local building = city:GetBuildingByLocationId(tile_entity.location_id)
             if building and not building:IsUpgrading() then
                 self:GetSceneUILayer():NewLockButtonFromBuildingSprite(tile)
             end
         end
     end)
-end
-function MyCityScene:OnTowersChanged(old_towers, new_towers)
--- table.foreach(old_towers, function(k, tower)
---     -- if tower:GetEntity():IsUnlocked() then
---     self:GetSceneUILayer():RemoveUIFromBuildingSprite(tower)
---     -- end
--- end)
--- table.foreach(new_towers, function(k, tower)
---     -- if tower:GetEntity():IsUnlocked() then
---     self:GetSceneUILayer():NewUIFromBuildingSprite(tower)
---     -- end
--- end)
-end
-function MyCityScene:OnGateChanged(old_walls, new_walls)
--- table.foreach(old_walls, function(k, wall)
---     if wall:GetEntity():IsGate() then
---         self:GetSceneUILayer():RemoveUIFromBuildingSprite(wall)
---     end
--- end)
-
--- table.foreach(new_walls, function(k, wall)
---     if wall:GetEntity():IsGate() then
---         self:GetSceneUILayer():NewUIFromBuildingSprite(wall)
---     end
--- end)
-end
-function MyCityScene:OnSceneScale(s)
-    if self:GetSceneLayer():getScale() < (self:GetSceneLayer():GetScaleRange()) * 1.3 then
-        -- self:GetSceneUILayer():HideLevelUpNode()
-        self:GetSceneLayer():HideLevelUpNode()
-    else
-        -- self:GetSceneUILayer():ShowLevelUpNode()
-        self:GetSceneLayer():ShowLevelUpNode()
-    end
-    local widget_move_house = self:GetSceneUILayer():getChildByTag(WidgetMoveHouse.ADD_TAG)
-    if widget_move_house then
-        widget_move_house:OnSceneScale()
-    end
 end
 function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
     if not MyCityScene.super.OnTouchClicked(self, pre_x, pre_y, x, y) then return end
@@ -338,6 +392,7 @@ function MyCityScene:OpenUI(building)
         else
             UIKit:showMessageDialog(_("陛下"),_("必须有一条空闲的龙，才能进入pve"))
         end
+        app:GetAudioManager():PlayeEffectSoundWithKey("AIRSHIP")
     elseif type_ == "FairGround" then
         UIKit:newGameUI("GameUIGacha", self.city):AddToScene(self, true):DisableAutoClose()
     else
@@ -356,7 +411,7 @@ function MyCityScene:RunFte()
     self:GetFteLayer():Enable()
     cocos_promise.defer():next(function()
         self:GetFteLayer():Disable()
-        if not check("HateDragon") or 
+        if not check("HateDragon") or
             not check("DefenceDragon") then
             return self:PromiseOfHateDragonAndDefence()
         end
@@ -648,7 +703,7 @@ local FTE_MARK_TAG = 120
 function MyCityScene:PromiseOfFteEnd()
     local r = self:GetHomePage().quest_bar_bg:getCascadeBoundingBox()
     WidgetFteMark.new():addTo(self, 4000, FTE_MARK_TAG):Size(r.width, r.height)
-    :pos(r.x + r.width/2, r.y + r.height/2)
+        :pos(r.x + r.width/2, r.y + r.height/2)
 
     GameUINpc:PromiseOfSayImportant(
         {words = _("看来大人你已经能够顺利接管这座城市了。。。如果不知道该干什么可以点击左上角的推荐任务")}
@@ -692,6 +747,9 @@ end
 
 
 return MyCityScene
+
+
+
 
 
 

@@ -92,7 +92,7 @@ function GameUIAlliancePalace:InitImposePart()
 
     -- 荣耀值
     self.current_honour = self:GetHonourNode():addTo(layer):align(display.CENTER,window.right-100, window.top_bottom-5)
-    
+
     self.sort_member = self:GetSortMembers()
     -- 可发放奖励成员列表
     local list,list_node = UIKit:commonListView({
@@ -233,6 +233,10 @@ function GameUIAlliancePalace:OpenAwardDialog(member)
         size = 22,
         color = 0x7e0000,
     }):addTo(body):align(display.LEFT_CENTER,divide:getPositionX()+6,current_honour_label:getPositionY())
+    current_honour_label:setVisible(self.alliance:Honour() ~= 0)
+    deduct_honour_label:setVisible(self.alliance:Honour() ~= 0)
+    divide:setVisible(self.alliance:Honour() ~= 0)
+    honour_icon:setVisible(self.alliance:Honour() ~= 0)
 
     -- 滑动条部分
     local slider_bg = display.newSprite("back_ground_580x136.png"):addTo(body)
@@ -256,6 +260,10 @@ function GameUIAlliancePalace:OpenAwardDialog(member)
             deduct_honour_label:setString(GameUtils:formatNumber(value))
             divide:setPositionX(current_honour_label:getPositionX()+ current_honour_label:getContentSize().width + 6)
             deduct_honour_label:setPositionX(divide:getPositionX()+6)
+            current_honour_label:setVisible(value ~= 0)
+            deduct_honour_label:setVisible(value ~= 0)
+            divide:setVisible(value ~= 0)
+            honour_icon:setVisible(value ~= 0)
         end)
         :LayoutValueLabel(WidgetSliderWithInput.STYLE_LAYOUT.TOP,75)
     -- icon
@@ -499,6 +507,7 @@ function GameUIAlliancePalace:OnMemberChanged(alliance,changed_map)
     end
 end
 return GameUIAlliancePalace
+
 
 
 

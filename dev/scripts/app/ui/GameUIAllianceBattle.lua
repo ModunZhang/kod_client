@@ -1213,14 +1213,15 @@ function GameUIAllianceBattle:OpenOtherAllianceDetails(alliance)
         -- 进入按钮
         local enter_btn = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
             :setButtonLabel(UIKit:ttfLabel({
-                text = _("进入"),
+                text = _("查看"),
                 size = 24,
                 color = 0xffedae,
                 shadow= true
             }))
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
-                    app:EnterViewModelAllianceScene(alliance._id)
+                    -- app:EnterViewModelAllianceScene(alliance._id)
+                    UIKit:newGameUI("GameUIAllianceInfo", alliance._id):AddToCurrentScene(true)
                 end
             end):align(display.RIGHT_CENTER,w-35,h-100):addTo(body)
     end

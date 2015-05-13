@@ -30,8 +30,7 @@ function AllianceBattleScene:LoadAnimation()
     UILib.loadDragonAnimation()
 end
 function AllianceBattleScene:CreateAllianceUI()
-    local home_page = GameUIAllianceHome.new(self:GetAlliance()):addTo(self)
-    self:GetSceneLayer():AddObserver(home_page)
+    local home_page = GameUIAllianceHome.new(self:GetAlliance(), self:GetSceneLayer()):addTo(self)
     home_page:setTouchSwallowEnabled(false)
     self.home_page = home_page
 end
