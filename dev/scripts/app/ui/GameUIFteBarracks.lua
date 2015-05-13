@@ -23,6 +23,7 @@ function GameUIFteBarracks:PromiseOfFte()
     :align(display.LEFT_CENTER, r.x + r.width + 10, r.y + r.height/2)
     
     return WidgetRecruitSoldier:PormiseOfOpen():next(function(ui)
+        ui:removeNodeEventListener(ui._nextScriptEventHandleIndex_)
         self:GetFteLayer():removeFromParent()
         return ui:PormiseOfFte()
     end):next(function()

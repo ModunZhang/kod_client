@@ -3,7 +3,6 @@ local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local WidgetPages = import("..widget.WidgetPages")
-local WidgetUIBackGround2 = import("..widget.WidgetUIBackGround2")
 local WidgetInfo = import("..widget.WidgetInfo")
 local WidgetInfoAllianceKills = import("..widget.WidgetInfoAllianceKills")
 local Alliance = import("..entity.Alliance")
@@ -153,7 +152,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
         :addTo(layer)
     if self.alliance:Status() == "peace" then
         -- 请求开战玩家数量
-        local request_fight_bg =display.newSprite("back_ground_556x58.png")
+        local request_fight_bg = WidgetUIBackGround.new({width = 556,height = 58},WidgetUIBackGround.STYLE_TYPE.STYLE_6)
             :align(display.TOP_CENTER, window.cx, window.top - 140)
             :addTo(layer)
         WidgetPushButton.new({normal = "info_26x26.png",
@@ -623,41 +622,8 @@ function GameUIAllianceBattle:OpenAllianceDetails(isOur)
     for i,v in ipairs(player_kill) do
         table.insert(infos, {name = v.name, kill = v.kill})
     end
-    dump(infos,"infos")
     WidgetInfoAllianceKills.new({h=492,info = infos}):addTo(body)
         :align(display.BOTTOM_CENTER,rb_size.width/2,40)
-
-    -- local function addMemberItem(member,flag,i)
-    --     local item = self.member_listview:newItem()
-    --     item:setItemSize(548,40)
-    --     local content = flag and display.newSprite("back_ground_548x40_1.png")
-    --         or display.newSprite("back_ground_548x40_2.png")
-
-    --     content:setContentSize(548,40)
-
-
-    --     UIKit:ttfLabel({
-    --         text = i.."."..member.name,
-    --         size = 22,
-    --         color = 0x403c2f,
-    --     }):align(display.LEFT_CENTER,20,20)
-    --         :addTo(content)
-
-    --    :addTo(content)
-
-    --     local t = UIKit:ttfLabel({
-    --         text = string.formatnumberthousands(member.kill),
-    --         size = 22,
-    --         color = 0x403c2f,
-    --     }):align(display.RIGHT_CENTER,520,20)
-    --         :addTo(content)
-    --     display.newSprite("battle_33x33.png")
-    --         :align(display.RIGHT_CENTER,510-t:getContentSize().width,20)
-    --         :addTo(content)
-    --     item:addContent(content)
-    --     self.member_listview:addItem(item)
-    -- end
-    
 end
 
 

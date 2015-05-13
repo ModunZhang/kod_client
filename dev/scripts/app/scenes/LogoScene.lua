@@ -49,7 +49,7 @@ function LogoScene:onEnter()
     --     {words = "我建议你最好别乱动, 你刚刚在同黑龙作战的过程中受了伤, 伤口还没复原..."},
     --     {words = "我知道你好友很多疑问, 不过首先, 我们需要前往寻找一个安全的地方?", npc = "man"})
 
-    -- GameUINpc:PromiseOfSayImportant({words = "太好了，你终于醒过来了，觉醒者。。。我的名字叫赛琳娜，我们寻找那你这样的觉醒者已经很长时间了。。。,太好了，你终于醒过来了，觉醒者。。。我的名字叫赛琳娜，我们寻找那你这样的觉醒者已经很长时间了。。。"})
+    -- GameUINpc:PromiseOfSay({words = "太好了，你终于醒过来了，觉醒者。。。我的名字叫赛琳娜，我们寻找那你这样的觉醒者已经很长时间了。。。,太好了，你终于醒过来了，觉醒者。。。我的名字叫赛琳娜，我们寻找那你这样的觉醒者已经很长时间了。。。"})
     -- :next(function()
     --     return GameUINpc:PromiseOfLeave()
     -- end):next(function()

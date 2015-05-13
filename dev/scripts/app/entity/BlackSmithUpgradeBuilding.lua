@@ -75,7 +75,7 @@ function BlackSmithUpgradeBuilding:CreateEvent()
         return self.id
     end
     function event:ContentDesc()
-        return string.format("%s %s", _("正在制作"), Localize.equip[self:Content()])
+        return string.format(_("正在制作 %s"), Localize.equip[self:Content()])
     end
     function event:TimeDesc(time)
         return GameUtils:formatTimeStyle1(self:LeftTime(time)), self:Percent(time)
@@ -115,6 +115,7 @@ end
 function BlackSmithUpgradeBuilding:EndMakeEquipmentWithCurrentTime()
     local event = self.making_event
     local equipment = event:Content()
+    self:CancelToolsLocalPush(event.id)
     event:SetContentWithFinishTime(nil, 0)
     self.black_smith_building_observer:NotifyObservers(function(listener)
         listener:OnEndMakeEquipmentWithEvent(self, event, equipment)
@@ -168,17 +169,30 @@ function BlackSmithUpgradeBuilding:OnUserDataChanged(...)
     local event = userData.dragonEquipmentEvents[1]
     if event then
         local finished_time = event.finishTime / 1000
-        if self:IsEquipmentEventEmpty() then
+        local makingEvent = self:GetMakeEquipmentEvent()
+        if makingEvent:IsEmpty() then
             self:MakeEquipmentWithFinishTime(event.name, finished_time, event.id)
+            self:GeneralToolsLocalPush(makingEvent)
         else
-            local makingEvent = self:GetMakeEquipmentEvent()
             if finished_time ~= makingEvent:FinishTime() then
                 self:SpeedUpMakingEquipment()
                 self:GetMakeEquipmentEvent():SetContentWithFinishTime(event.name, finished_time, event.id)
+                self:GeneralToolsLocalPush(makingEvent)
             end
         end
     elseif not self:IsEquipmentEventEmpty() then
         self:EndMakeEquipmentWithCurrentTime()
+    end
+end
+function BlackSmithUpgradeBuilding:GeneralToolsLocalPush(event)
+    if ext and ext.localpush then
+        local title = string.format(_("制造%s装备完成"), Localize.equip[event:Content()])
+        app:GetPushManager():UpdateBuildPush(event:FinishTime(), title, event.id)
+    end
+end
+function BlackSmithUpgradeBuilding:CancelToolsLocalPush(event_id)
+    if ext and ext.localpush then
+        app:GetPushManager():CancelBuildPush(event_id)
     end
 end
 

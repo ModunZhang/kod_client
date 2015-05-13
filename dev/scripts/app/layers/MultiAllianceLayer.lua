@@ -18,7 +18,7 @@ local MINE,FRIEND,ENEMY,VILLAGE_TAG = 1,2,3,4
 MultiAllianceLayer.ARRANGE = Enum("H", "V")
 
 function MultiAllianceLayer:ctor(arrange, ...)
-    self.refresh_village_node = display.newNode()
+    self.refresh_village_node = display.newNode():addTo(self)
     self.my_allinace_id = Alliance_Manager:GetMyAlliance():Id()
     self.mine_player_id = Alliance_Manager:GetMyAlliance():GetSelf():Id()
 
@@ -194,7 +194,7 @@ function MultiAllianceLayer:RefreshAllVillageEvents()
                 self:RefreshVillageEvent(event, true)
             end)
         end
-    end, 0)
+    end, 0.0001)
 
 end
 function MultiAllianceLayer:RefreshVillageEvent(village_event, is_add)
@@ -448,18 +448,19 @@ function MultiAllianceLayer:CreateCorpsIf(marchEvent)
     else -- return
         is_enemy = self:GetMyAlliance():Id() ~= to_alliance_id
     end
+    local ally = ENEMY
     if not is_enemy then
         if not marchEvent:IsReturnEvent() then
             if marchEvent:GetPlayerRole() == marchEvent.MARCH_EVENT_PLAYER_ROLE.SENDER  then
-                print("--->我的路线!")
+                ally = MINE
             else
-                print("--->盟友的路线!")
+                ally = FRIEND
             end
         else -- return
             if marchEvent:GetPlayerRole() == marchEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER  then
-                print("--->我的路线!")
+                ally = MINE
             else
-                print("--->盟友的路线!")
+                ally = FRIEND
             end
         end
     end
@@ -471,7 +472,7 @@ function MultiAllianceLayer:CreateCorpsIf(marchEvent)
         marchEvent:ArriveTime(),
         marchEvent:AttackPlayerData().dragon.type,
         marchEvent:AttackPlayerData().soldiers,
-        is_enemy
+        ally
     )
 end
 local dragon_dir_map = {
@@ -607,7 +608,7 @@ local function move_soldiers(corps, ani, dir_index, first_soldier)
             :align(display.CENTER, x, y):getAnimation():play(ani)
     end
 end
-function MultiAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, finish_time, dragonType, soldiers, is_enemy)
+function MultiAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, finish_time, dragonType, soldiers, ally)
     local march_info = self:GetMarchInfoWith(id, start_pos, end_pos)
     march_info.start_time = start_time
     march_info.finish_time = finish_time
@@ -631,7 +632,7 @@ function MultiAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, fini
         corps:setScaleY(math.abs(scalex))
         corps.march_info = march_info
         self.corps_map[id] = corps
-        self:CreateLine(id, march_info, is_enemy)
+        self:CreateLine(id, march_info, ally)
     else
         self:UpdateCorpsBy(self.corps_map[id], march_info)
     end
@@ -663,16 +664,19 @@ end
 function MultiAllianceLayer:IsExistCorps(id)
     return self.corps_map[id] ~= nil
 end
-function MultiAllianceLayer:CreateLine(id, march_info, is_enemy)
+local line_ally_map = {
+    [MINE] = "arrow_green_22x32.png",
+    [FRIEND] = "arrow_blue_22x32.png",
+    [ENEMY] = "arrow_red_22x32.png",
+}
+function MultiAllianceLayer:CreateLine(id, march_info, ally)
     if self.lines_map[id] then
         self.lines_map[id]:removeFromParent()
     end
     local middle = cc.pMidpoint(march_info.start_info.real, march_info.end_info.real)
     local scale = march_info.length / 32
     local unit_count = math.floor(scale)
-    local sprite = display.newSprite(is_enemy and
-        "arrow_red_22x32.png" or
-        "arrow_blue_22x32.png"
+    local sprite = display.newSprite(line_ally_map[ally]
         , nil, nil, {class=cc.FilteredSpriteWithOne})
         :addTo(self:GetLineNode())
         :pos(middle.x, middle.y)

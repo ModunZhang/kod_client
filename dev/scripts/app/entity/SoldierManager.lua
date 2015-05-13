@@ -20,7 +20,9 @@ SoldierManager.LISTEN_TYPE = Enum("SOLDIER_CHANGED",
     "OnMilitaryTechEventsTimer",
     "ALL_SOLDIER_STAR_EVENTS_CHANGED")
 
-function SoldierManager:ctor()
+function SoldierManager:ctor(city)
+    self.city = city
+    self.user = self.city:GetUser()
     SoldierManager.super.ctor(self)
     self.soldier_map = {
         ["sentinel"] = 0,
@@ -108,7 +110,7 @@ function SoldierManager:GetGarrisonSoldierCount()
 end
 -- 获取派兵上限
 function SoldierManager:GetTroopPopulation()
-    local armyCamps = City:GetBuildingByType("armyCamp")
+    local armyCamps = self.city:GetBuildingByType("armyCamp")
     local troopPopulation = 0
     for k,v in pairs(armyCamps) do
         troopPopulation = troopPopulation + v:GetTroopPopulation()
@@ -125,8 +127,8 @@ function SoldierManager:GetTotalUpkeep()
         total = math.ceil(total * (1 - ItemManager:GetBuffEffect("quarterMaster")))
     end
     -- vip效果
-    if User:IsVIPActived() then
-        total = total * (1-User:GetVIPSoldierConsumeSub())
+    if self.user:IsVIPActived() then
+        total = total * (1-self.user:GetVIPSoldierConsumeSub())
     end
     return total
 end
@@ -659,12 +661,14 @@ function SoldierManager:__OnSoldierStarEventsChanged(__soldierStarEvents)
 end
 
 function SoldierManager:OnTimer(current_time)
-    self:IteratorSoldierStarEvents(function(star_event)
-        star_event:OnTimer(current_time)
-    end)
-    self:IteratorMilitaryTechEvents(function(tech_event)
-        tech_event:OnTimer(current_time)
-    end)
+    -- LuaUtils:TimeCollect(function()
+        self:IteratorSoldierStarEvents(function(star_event)
+            star_event:OnTimer(current_time)
+        end)
+        self:IteratorMilitaryTechEvents(function(tech_event)
+            tech_event:OnTimer(current_time)
+        end)
+    -- end, "SoldierManager:OnTimer")
 end
 function SoldierManager:OnSoldierStarEventsTimer(star_event)
     self:NotifyListeneOnType(SoldierManager.LISTEN_TYPE.OnSoldierStarEventsTimer,function(listener)

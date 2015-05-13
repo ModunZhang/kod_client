@@ -8,6 +8,9 @@ local pow = math.pow
 local ceil = math.ceil
 local sqrt = math.sqrt
 local floor = math.floor
+local modf = math.modf
+local pairs = pairs
+local ipairs = ipairs
 local round = function(v)
     return floor(v + 0.5)
 end
@@ -71,25 +74,25 @@ function GameUtils:formatNumber(number)
     local num = tonumber(number)
     local r = 0
     local format = "%d"
-    if num >= math.pow(10,9) then
-        r = num/math.pow(10,9)
-        local _,decimals = math.modf(r)
+    if num >= 1000000000--[[math.pow(10,9)]] then
+        r = num/1000000000--[[math.pow(10,9)]]
+        local _,decimals = modf(r)
         if decimals ~= 0 then
             format = "%.2fB"
         else
             format = "%dB"
         end
-    elseif num >= math.pow(10,6) then
-        r = num/math.pow(10,6)
-        local _,decimals = math.modf(r)
+    elseif num >= 1000000--[[math.pow(10,6)]] then
+        r = num/1000000--[[math.pow(10,6)]]
+        local _,decimals = modf(r)
         if decimals ~= 0 then
             format = "%.2fM"
         else
             format = "%dM"
         end
-    elseif num >=  math.pow(10,3) then
-        r = num/math.pow(10,3)
-        local _,decimals = math.modf(r)
+    elseif num >= 1000--[[math.pow(10,3)]] then
+        r = num/1000--[[math.pow(10,3)]]
+        local _,decimals = modf(r)
         if decimals ~= 0 then
             format = "%.2fK"
         else

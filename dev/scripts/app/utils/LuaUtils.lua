@@ -4,7 +4,7 @@ LuaUtils = {}
 function LuaUtils:TimeCollect(func, msg)
     local t = os.clock()
     func()
-    print_(string.format("%s : eplapse time %.5f", msg or "time", os.clock() - t))
+    io.write(string.format("%s : eplapse time %.6f\n", msg or "time", (os.clock() - t)))
 end
 
 

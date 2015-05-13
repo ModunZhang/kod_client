@@ -30,7 +30,7 @@ function GameUIFteDragonEyrieMain:PromiseOfFte()
     end
     if not check("DefenceDragon") then
         p:next(function()
-            return GameUINpc:PromiseOfSayImportant(
+            return GameUINpc:PromiseOfSay(
                 {words = _("不可思议，传说是真的？！觉醒者过让能够号令龙族。。。大人您真是厉害！"), brow = "shy"}
             ):next(function()
                 return GameUINpc:PromiseOfLeave()
