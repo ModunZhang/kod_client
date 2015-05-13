@@ -4,7 +4,6 @@
 --
 
 local WidgetPushButton = import(".WidgetPushButton")
-local WidgetUIBackGround = import(".WidgetUIBackGround")
 local Enum = import("..utils.Enum")
 local window = import("..utils.window")
 local Localize = import("..utils.Localize")

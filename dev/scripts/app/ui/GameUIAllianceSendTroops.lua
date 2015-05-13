@@ -642,7 +642,7 @@ function GameUIAllianceSendTroops:CreateTroopsShow()
     end
 
     function TroopShow:RefreshScrollNode(current_x)
-        -- 因为士兵动画的锚点为CENTER，需要的滑动区域的宽度需要多加士兵动画设计快读180/2
+        -- 因为士兵动画的锚点为CENTER，需要的滑动区域的宽度需要多加士兵动画设计宽度180/2
         current_x = current_x - 180/2
         if current_x<grass_width then
             table.insert(self.soldier_crops,display.newSprite("battle_bg_grass_611x275.png")

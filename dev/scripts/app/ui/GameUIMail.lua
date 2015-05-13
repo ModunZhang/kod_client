@@ -468,8 +468,10 @@ function GameUIMail:CreateInboxContent()
         }):setButtonSelected(tolua.type(mail.isSaved)=="nil" or mail.isSaved,true):onButtonStateChanged(function(event)
             parent:SaveOrUnsaveMail(mail,event.target)
         end):addTo(content_title_bg):align(display.RIGHT_CENTER, content_title_bg:getContentSize().width+4, content_title_bg:getContentSize().height/2)
-
-        parent:CreateCheckBox(self):align(display.LEFT_CENTER,14,item_height/2)
+        if self.check_box then
+            self.check_box:removeFromParent(true)
+        end
+        self.check_box = parent:CreateCheckBox(self):align(display.LEFT_CENTER,14,item_height/2)
             :addTo(self)
     end
 
@@ -608,8 +610,10 @@ function GameUIMail:CreateSavedMailContent()
         }):setButtonSelected(tolua.type(mail.isSaved)=="nil" or mail.isSaved,true):onButtonStateChanged(function(event)
             parent:SaveOrUnsaveMail(mail,event.target)
         end):addTo(content_title_bg):align(display.RIGHT_CENTER, content_title_bg:getContentSize().width+4, content_title_bg:getContentSize().height/2)
-
-        parent:CreateCheckBox(self):align(display.LEFT_CENTER,14,item_height/2)
+        if self.check_box then
+            self.check_box:removeFromParent(true)
+        end
+        self.check_box = parent:CreateCheckBox(self):align(display.LEFT_CENTER,14,item_height/2)
             :addTo(self)
     end
 
@@ -1378,7 +1382,10 @@ function GameUIMail:CreateReportContent()
                 }):align(display.LEFT_CENTER, 350, 27)
                 :addTo(report_content_bg)
         end
-        cc.ui.UICheckBoxButton.new({
+        if self.save_check_box then
+            self.save_check_box:removeFromParent(true)
+        end
+        self.save_check_box = cc.ui.UICheckBoxButton.new({
             off = "report_saved_button_normal.png",
             off_pressed = "report_saved_button_normal.png",
             off_disabled = "report_saved_button_normal.png",
@@ -1389,7 +1396,10 @@ function GameUIMail:CreateReportContent()
             parent:SaveOrUnsaveReport(report,event.target)
         end):addTo(self):pos(249+item_width/2, -41+item_height/2)
             :setButtonSelected(report:IsSaved(),true)
-        parent:CreateCheckBox(self):align(display.LEFT_CENTER,10,-18+item_height/2)
+        if self.check_box then
+            self.check_box:removeFromParent(true)
+        end
+        self.check_box = parent:CreateCheckBox(self):align(display.LEFT_CENTER,10,-18+item_height/2)
             :addTo(self)
     end
 
@@ -1631,7 +1641,10 @@ function GameUIMail:CreateSavedReportContent()
                 }):align(display.LEFT_CENTER, 350, 27)
                 :addTo(report_content_bg)
         end
-        cc.ui.UICheckBoxButton.new({
+        if self.save_check_box then
+            self.save_check_box:removeFromParent(true)
+        end
+        self.save_check_box = cc.ui.UICheckBoxButton.new({
             off = "report_saved_button_normal.png",
             off_pressed = "report_saved_button_normal.png",
             off_disabled = "report_saved_button_normal.png",
@@ -1642,7 +1655,11 @@ function GameUIMail:CreateSavedReportContent()
             parent:SaveOrUnsaveReport(report,event.target)
         end):addTo(self):pos(249+item_width/2, -41+item_height/2)
             :setButtonSelected(report:IsSaved(),true)
-        parent:CreateCheckBox(self):align(display.LEFT_CENTER,10,-18+item_height/2)
+        if self.check_box then
+            self.check_box:removeFromParent(true)
+        end
+
+        self.check_box = parent:CreateCheckBox(self):align(display.LEFT_CENTER,10,-18+item_height/2)
             :addTo(self)
     end
 
@@ -1984,6 +2001,10 @@ function GameUIMail:GetEnemyAllianceTag(report)
 end
 
 return GameUIMail
+
+
+
+
 
 
 

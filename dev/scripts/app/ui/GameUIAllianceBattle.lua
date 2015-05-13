@@ -3,7 +3,6 @@ local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local WidgetPages = import("..widget.WidgetPages")
-local WidgetUIBackGround2 = import("..widget.WidgetUIBackGround2")
 local WidgetInfo = import("..widget.WidgetInfo")
 local WidgetInfoAllianceKills = import("..widget.WidgetInfoAllianceKills")
 local Alliance = import("..entity.Alliance")
@@ -153,7 +152,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
         :addTo(layer)
     if self.alliance:Status() == "peace" then
         -- 请求开战玩家数量
-        local request_fight_bg =display.newSprite("back_ground_556x58.png")
+        local request_fight_bg = WidgetUIBackGround.new({width = 556,height = 58},WidgetUIBackGround.STYLE_TYPE.STYLE_6)
             :align(display.TOP_CENTER, window.cx, window.top - 140)
             :addTo(layer)
         WidgetPushButton.new({normal = "info_26x26.png",
