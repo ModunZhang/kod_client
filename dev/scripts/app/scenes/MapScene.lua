@@ -110,7 +110,7 @@ function MapScene:GetFteLayer()
     return child
 end
 function MapScene:CreateFteLayer()
-    local layer = display.newColorLayer(cc.c4b(0, 255, 0, 100)):addTo(self, 2000, FTE_TAG)
+    local layer = display.newLayer(--[[cc.c4b(0, 255, 0, 100)]]):addTo(self, 2000, FTE_TAG)
     layer:setTouchSwallowEnabled(true)
     local touch_judgment = self.touch_judgment
     layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
