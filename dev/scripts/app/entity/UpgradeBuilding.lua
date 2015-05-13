@@ -152,8 +152,11 @@ function UpgradeBuilding:CancelLocalPush()
         app:GetPushManager():CancelBuildPush(pushIdentity)
     end
 end
+function UpgradeBuilding:IsNeedToUpdate()
+    return self.upgrade_to_next_level_time ~= 0
+end
 function UpgradeBuilding:OnTimer(current_time)
-    if self:IsUpgrading() then
+    if self.upgrade_to_next_level_time >= current_time then
         self.upgrade_building_observer:NotifyObservers(function(listener)
             listener:OnBuildingUpgrading(self, current_time)
         end)
