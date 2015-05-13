@@ -13,21 +13,29 @@ local Arrow = import(".Arrow")
 local WidgetChangeMap = import("..widget.WidgetChangeMap")
 local GameUIHelp = import(".GameUIHelp")
 local Alliance = import("..entity.Alliance")
+local ResourceManager = import("..entity.ResourceManager")
 local GrowUpTaskManager = import("..entity.GrowUpTaskManager")
 local GameUIHome = UIKit:createUIClass('GameUIHome')
 
 
 local app = app
 local timer = app.timer
+local WOOD          = ResourceManager.RESOURCE_TYPE.WOOD
+local FOOD          = ResourceManager.RESOURCE_TYPE.FOOD
+local IRON          = ResourceManager.RESOURCE_TYPE.IRON
+local STONE         = ResourceManager.RESOURCE_TYPE.STONE
+local POPULATION    = ResourceManager.RESOURCE_TYPE.POPULATION
+local COIN          = ResourceManager.RESOURCE_TYPE.COIN
 
 function GameUIHome:OnResourceChanged(resource_manager)
     local server_time = timer:GetServerTime()
-    local wood_resource = resource_manager:GetWoodResource()
-    local food_resource = resource_manager:GetFoodResource()
-    local iron_resource = resource_manager:GetIronResource()
-    local stone_resource = resource_manager:GetStoneResource()
-    local citizen_resource = resource_manager:GetPopulationResource()
-    local coin_resource = resource_manager:GetCoinResource()
+    local allresources = resource_manager:GetAllResources()
+    local wood_resource = allresources[WOOD]
+    local food_resource = allresources[FOOD]
+    local iron_resource = allresources[IRON]
+    local stone_resource = allresources[STONE]
+    local citizen_resource = allresources[POPULATION]
+    local coin_resource = allresources[COIN]
     local wood_number = wood_resource:GetResourceValueByCurrentTime(server_time)
     local food_number = food_resource:GetResourceValueByCurrentTime(server_time)
     local iron_number = iron_resource:GetResourceValueByCurrentTime(server_time)

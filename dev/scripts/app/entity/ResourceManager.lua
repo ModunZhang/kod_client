@@ -75,6 +75,9 @@ end
 function ResourceManager:OnTimer(current_time)
     self:OnResourceChanged()
 end
+function ResourceManager:GetAllResources()
+    return self.resources
+end
 function ResourceManager:GetWallHpResource()
     return self.resources[WALLHP]
 end
@@ -184,6 +187,7 @@ function ResourceManager:UpdateByCity(city, current_time)
             end
         end
     end)
+    dump_resources(total_production_map, "小屋对资源的影响--->")
     -- buff对资源的影响
     local buff_production_map,buff_limt_map = self:GetTotalBuffData(city)
     self.resource_citizen = citizen_map

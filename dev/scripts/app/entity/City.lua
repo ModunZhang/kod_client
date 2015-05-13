@@ -817,11 +817,9 @@ function City:IteratorCanUpgradeBuildingsByUserData(user_data, current_time, del
     end
 end
 function City:IteratorAllNeedTimerEntity(current_time)
-    -- LuaUtils:TimeCollect(function()
-        for _,v in ipairs(self.need_update_buildings) do
-            v:OnTimer(current_time)
-        end
-    -- end, "need_update_buildings : "..#self.need_update_buildings)
+    for _,v in ipairs(self.need_update_buildings) do
+        v:OnTimer(current_time)
+    end
     self.resource_manager:OnTimer(current_time)
 end
 -- 遍历顺序影响城墙的生成
@@ -894,11 +892,9 @@ end
 -- 功能函数
 function City:OnTimer(time)
         self:IteratorAllNeedTimerEntity(time)
-    -- LuaUtils:TimeCollect(function()
         self:IteratorProductionTechEvents(function(v)
             v:OnTimer(time)
         end)
-    -- end, "IteratorProductionTechEvents")
 end
 function City:CreateDecorator(current_time, decorator_building)
     insert(self.decorators, decorator_building)
