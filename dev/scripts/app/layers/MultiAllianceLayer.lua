@@ -18,7 +18,7 @@ local MINE,FRIEND,ENEMY,VILLAGE_TAG = 1,2,3,4
 MultiAllianceLayer.ARRANGE = Enum("H", "V")
 
 function MultiAllianceLayer:ctor(arrange, ...)
-    self.refresh_village_node = display.newNode()
+    self.refresh_village_node = display.newNode():addTo(self)
     self.my_allinace_id = Alliance_Manager:GetMyAlliance():Id()
     self.mine_player_id = Alliance_Manager:GetMyAlliance():GetSelf():Id()
 
@@ -194,7 +194,7 @@ function MultiAllianceLayer:RefreshAllVillageEvents()
                 self:RefreshVillageEvent(event, true)
             end)
         end
-    end, 0)
+    end, 0.0001)
 
 end
 function MultiAllianceLayer:RefreshVillageEvent(village_event, is_add)
