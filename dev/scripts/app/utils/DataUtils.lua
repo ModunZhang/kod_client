@@ -420,10 +420,24 @@ function DataUtils:getFreeSpeedUpLimitTime()
     return User:GetVIPFreeSpeedUpTime() * 60
 end
 
-function DataUtils:getPlayerOnlineTimeMinutes()
+local config_online = GameDatas.Activities.online
+function DataUtils:GetPlayerNextOnlineTimePoint()
+    local on_line_time = self:getPlayerOnlineTimeMinutes()
+    for __,v in pairs(config_online) do
+        if v.onLineMinutes > on_line_time then
+            return v.timePoint
+        end
+    end
+end
+
+function DataUtils:getPlayerOnlineTimeSecondes()
     local countInfo = User:GetCountInfo()
     local onlineTime = countInfo.todayOnLineTime + (NetManager:getServerTime() - countInfo.lastLoginTime)
-    return math.floor(onlineTime / 1000 / 60)
+    return math.floor(onlineTime / 1000)
+end
+
+function DataUtils:getPlayerOnlineTimeMinutes()
+    return math.floor(self:getPlayerOnlineTimeSecondes() / 60)
 end
 -- 根据vip exp获得vip等级,当前等级已升经验百分比
 function DataUtils:getPlayerVIPLevel(exp)

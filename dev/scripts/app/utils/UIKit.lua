@@ -761,3 +761,15 @@ function UIKit:addTipsToNode( node,tips , include_node)
         return true
     end)
 end
+
+function UIKit:GetItemImage(reward_type,item_key)
+    if reward_type == 'soldiers' then
+        return UILib.soldier_image[item_key][1]
+    elseif reward_type == 'resource' 
+        or reward_type == 'special' 
+        or reward_type == 'speedup' 
+        or reward_type == 'buff' 
+        or reward_type == 'buff' then
+        return UILib.item[item_key]
+    end
+end

@@ -23,11 +23,13 @@ local Localize_item = import("..utils.Localize_item")
 local height_config = {
 	EVERY_DAY_LOGIN = 762,
 	CONTINUITY = 762,
+	ONLINE = 762,
 	FIRST_IN_PURGURE = 762,
 	PLAYER_LEVEL_UP = 762,
 }
 local ui_titles = {
 	EVERY_DAY_LOGIN = _("每日登陆奖励"),
+	ONLINE = _("在线奖励"),
 	CONTINUITY = _("王城援军"),
 	FIRST_IN_PURGURE = _("首次充值奖励"),
 	PLAYER_LEVEL_UP = _("新手冲级奖励"),
@@ -38,7 +40,7 @@ GameUIActivityRewardNew.REWARD_TYPE = Enum("EVERY_DAY_LOGIN","ONLINE","CONTINUIT
 function GameUIActivityRewardNew:ctor(reward_type)
 	GameUIActivityRewardNew.super.ctor(self)
 	self.reward_type = reward_type
-	if self:GetRewardType() == self.REWARD_TYPE.PLAYER_LEVEL_UP then
+	if self:GetRewardType() == self.REWARD_TYPE.PLAYER_LEVEL_UP or self:GetRewardType() == self.REWARD_TYPE.ONLINE then
 		local countInfo = User:GetCountInfo()
 		self.player_level_up_time = countInfo.registerTime/1000 + config_intInit.playerLevelupRewardsHours.value * 60 * 60 -- 单位秒
 		self.player_level_up_time_residue = self.player_level_up_time - app.timer:GetServerTime() 
@@ -57,7 +59,7 @@ function GameUIActivityRewardNew:onEnter()
 end
 
 function GameUIActivityRewardNew:onExit()
-	if self:GetRewardType() == self.REWARD_TYPE.PLAYER_LEVEL_UP then
+	if self:GetRewardType() == self.REWARD_TYPE.PLAYER_LEVEL_UP or self:GetRewardType() == self.REWARD_TYPE.ONLINE then
 		app.timer:RemoveListener(self)
 	end
 	User:RemoveListenerOnType(self,User.LISTEN_TYPE.COUNT_INFO)
@@ -97,16 +99,33 @@ function GameUIActivityRewardNew:RefreshUI()
 			end
 		end
 	elseif self:GetRewardType() == self.REWARD_TYPE.CONTINUITY then
-		self:RefreshContinutyList()
+		self:RefreshContinutyList(false)
 	elseif self:GetRewardType() == self.REWARD_TYPE.FIRST_IN_PURGURE then
 		local countInfo = User:GetCountInfo()
 		self.purgure_get_button:setButtonEnabled(countInfo.iapCount > 0 and not countInfo.isFirstIAPRewardsGeted)
 	elseif self:GetRewardType() == self.REWARD_TYPE.PLAYER_LEVEL_UP then
-		self:RefreshLevelUpListView()
+		self:RefreshLevelUpListView(false)
+	elseif self:GetRewardType() == self.REWARD_TYPE.ONLINE then
+		self:RefreshOnLineList(false)
 	end
 end
 
 function GameUIActivityRewardNew:OnTimer(current_time)
+	if self.online_time_label and self.online_time then
+		local time = self.online_time + current_time
+		self.online_time_label:setString(GameUtils:formatTimeStyle1(time))
+		--item update
+		for k,v in pairs(self.need_update_online_item) do
+			local diff_time = config_online[k].onLineMinutes * 60 - time
+			if diff_time > 0 then
+				v.time_label:setString(GameUtils:formatTimeStyle1(diff_time))
+				print("GameUtils:formatTimeStyle1(time)---->",GameUtils:formatTimeStyle1(time),GameUtils:formatTimeStyle1(diff_time))
+			else
+				self:RefreshOnLineList(false)
+				break
+			end
+		end
+	end
 	if self.level_up_time_label then
 		self.player_level_up_time_residue = self.player_level_up_time - current_time
 		if self.player_level_up_time_residue > 0 then
@@ -240,7 +259,6 @@ function GameUIActivityRewardNew:On_EVERY_DAY_LOGIN_GetReward(index,reward)
 		end)
 	else
 		if index > real_index then
-			GameGlobalUI:showTips(_("提示"),string.format(_("你还不能领取%s"),Localize_item.item_name[reward.reward]))
 		else
 			GameGlobalUI:showTips(_("提示"),string.format(_("你已领取%s"),Localize_item.item_name[reward.reward]))
 		end
@@ -260,32 +278,56 @@ function GameUIActivityRewardNew:ui_CONTINUITY()
         viewRect = cc.rect(26,20,556,630),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(self.bg)
-    self:RefreshContinutyList()
+    self:RefreshContinutyList(true)
 end
 
 
-function GameUIActivityRewardNew:RefreshContinutyList()
-	self.list_view:removeAllItems()
-	local data = self:GetContinutyListData()
-	for __,v in ipairs(data) do
-		local reward_type,item_key,time_str,rewards_str,flag = unpack(v)
-		local item = self:GetContinutyListItem(reward_type,item_key,time_str,rewards_str,flag)
-		self.list_view:addItem(item)
+function GameUIActivityRewardNew:RefreshContinutyList(needClean)
+	if needClean then
+		self.list_view:removeAllItems()
+		local data = self:GetContinutyListData()
+		for __,v in ipairs(data) do
+			local reward_type,item_key,time_str,rewards_str,flag = unpack(v)
+			local item = self:GetContinutyListItem(reward_type,item_key,time_str,rewards_str,flag)
+			self.list_view:addItem(item)
+		end
+		self.list_view:reload()
+	else
+		local items = self.list_view:getItems()
+		if #items == 0 then return end
+		local data = self:GetContinutyListData()
+		for index,v in ipairs(data) do
+			local reward_type,item_key,time_str,rewards_str,flag = unpack(v)
+			local item = items[index]
+			if flag == 1 then 
+				item.sp.check_bg:show()
+				item.title_label:show()
+				item.button:hide()
+				item.title_label:setString(_("已领取"))
+				if not item.sp:getFilter() then
+					item.sp:setFilter(filter.newFilter("CUSTOM", json.encode({frag = "shaders/ps_discoloration.fs",shaderName = "ps_discoloration"})))
+				end
+			elseif flag == 3 then
+				item.sp.check_bg:hide()
+				item.title_label:show()
+				item.button:hide()
+				item.title_label:setString(_("明天领取"))
+			elseif flag == 2 then
+				item.sp.check_bg:hide()
+				item.title_label:hide()
+				item.button:show()
+				if item.sp:getFilter() then
+					item.sp:clearFilter()
+				end
+			else
+				item.sp.check_bg:hide()
+				item.title_label:hide()
+				item.button:hide()
+			end
+		end
 	end
-	self.list_view:reload()
 end
 
-function GameUIActivityRewardNew:GetItemImage(reward_type,item_key)
-	if reward_type == 'soldiers' then
-		return UILib.soldier_image[item_key][1]
-	elseif reward_type == 'resource' 
-		or reward_type == 'special' 
-		or reward_type == 'speedup' 
-		or reward_type == 'buff' 
-		or reward_type == 'buff' then
-		return UILib.item[item_key]
-	end
-end
 
 function GameUIActivityRewardNew:GetContinutyListItem(reward_type,item_key,time_str,rewards_str,flag)
 	local item = self.list_view:newItem()
@@ -294,17 +336,27 @@ function GameUIActivityRewardNew:GetContinutyListItem(reward_type,item_key,time_
 		height= 116
 	})
 	local item_bg = display.newSprite("activity_item_bg_110x108.png"):align(display.LEFT_CENTER, 5, 58):addTo(content)
+	-- if flag == 1 then
+	-- 	local sp = UIKit:getDiscolorrationSprite(UIKit:GetItemImage(reward_type,item_key))
+	-- 	local size = sp:getContentSize()
+	-- 	sp:scale(90/math.max(size.width,size.height)):pos(55,54):addTo(item_bg)
+	-- 	UIKit:addTipsToNode(sp,rewards_str,self)
+	-- else
+	-- 	local sp = display.newSprite(UIKit:GetItemImage(reward_type,item_key),55,54):addTo(item_bg)
+	-- 	local size = sp:getContentSize()
+	-- 	sp:scale(90/math.max(size.width,size.height))
+	-- 	UIKit:addTipsToNode(sp,rewards_str,self)
+	-- end
+	local sp = display.newSprite(UIKit:GetItemImage(reward_type,item_key), 55,54, {class=cc.FilteredSpriteWithOne}):addTo(item_bg)
+	local size = sp:getContentSize()
+	sp:scale(90/math.max(size.width,size.height))
+	local check_bg = display.newSprite("activity_check_bg_34x34.png"):align(display.RIGHT_BOTTOM,110,0):addTo(item_bg)
+	display.newSprite("activity_check_body_34x34.png"):addTo(check_bg):pos(17,17)
+	sp.check_bg = check_bg
 	if flag == 1 then
-		local sp = UIKit:getDiscolorrationSprite(self:GetItemImage(reward_type,item_key))
-		local size = sp:getContentSize()
-		sp:scale(90/math.max(size.width,size.height)):pos(55,54):addTo(item_bg)
-		UIKit:addTipsToNode(sp,rewards_str,self)
-	else
-		local sp = display.newSprite(self:GetItemImage(reward_type,item_key),55,54):addTo(item_bg)
-		local size = sp:getContentSize()
-		sp:scale(90/math.max(size.width,size.height))
-		UIKit:addTipsToNode(sp,rewards_str,self)
+		sp:setFilter(filter.newFilter("CUSTOM", json.encode({frag = "shaders/ps_discoloration.fs",shaderName = "ps_discoloration"})))
 	end
+	item.sp = sp
 	local time_label = UIKit:ttfLabel({
 		text = time_str,
 		size = 22,
@@ -317,24 +369,40 @@ function GameUIActivityRewardNew:GetContinutyListItem(reward_type,item_key,time_
 		color= 0x615b44
 	}):align(display.LEFT_CENTER, 120, 38):addTo(content)
 
-	if flag == 1 or flag == 3 then
-		UIKit:ttfLabel({
+	local title_label =	UIKit:ttfLabel({
 			text = flag == 1 and _("已领取") or _("明天领取"),
 			size = 22,
 			color= 0x514d3e
 		}):align(display.RIGHT_CENTER,518, 58):addTo(content)
-	elseif flag == 2 then
-		WidgetPushButton.new({normal = 'yellow_btn_up_148x58.png',pressed = 'yellow_btn_down_148x58.png',disabled = 'gray_btn_148x58.png'})
-			:setButtonLabel("normal", UIKit:commonButtonLable({
-				text = _("领取")
-			}))
-			:addTo(content)
-			:pos(473,58)
-			:onButtonClicked(function()
-				NetManager:getDay14RewardPromise():done(function()
-					GameGlobalUI:showTips(_("提示"),rewards_str)
-				end)
+	local button = WidgetPushButton.new({normal = 'yellow_btn_up_148x58.png',pressed = 'yellow_btn_down_148x58.png',disabled = 'gray_btn_148x58.png'})
+		:setButtonLabel("normal", UIKit:commonButtonLable({
+			text = _("领取")
+		}))
+		:addTo(content)
+		:pos(473,58)
+		:onButtonClicked(function()
+			NetManager:getDay14RewardPromise():done(function()
+				GameGlobalUI:showTips(_("提示"),rewards_str)
 			end)
+		end)
+	item.title_label = title_label
+	item.button = button
+	if flag == 1 then
+		check_bg:show()
+		button:hide()
+		check_bg:hide()
+	elseif flag == 3 then
+		title_label:show()
+		button:hide()
+		check_bg:hide()
+	elseif flag == 2 then
+		check_bg:hide()
+		title_label:hide()
+		button:show()
+	else
+		check_bg:hide()
+		button:hide()
+		title_label:hide()
 	end
 	item:addContent(content)
 	item:setMargin({left = 0, right = 0, top = 0, bottom = 5})
@@ -351,10 +419,10 @@ function GameUIActivityRewardNew:GetContinutyListData()
 		local flag = 0
 		if v.day <= countInfo.day14RewardsCount then
 			flag = 1 
-		elseif v.day == countInfo.day14RewardsCount + 1 and countInfo.day14RewardsCount == countInfo.day14 then
-			flag = 3
 		elseif v.day == countInfo.day14 and countInfo.day14 > countInfo.day14RewardsCount then
 			flag = 2
+		elseif v.day == countInfo.day14 + 1  then
+			flag = 3
 		end
 		local name = self:GetRewardName(reward_type, item_key)
 		table.insert(r,{reward_type,item_key,string.format(_("第%s天"),v.day), name .. "x" .. count,flag})
@@ -365,7 +433,11 @@ end
 
 function GameUIActivityRewardNew:GetRewardName(reward_type,reward_key)
 	print("reward_type,reward_key---->",reward_type,reward_key)
-	if reward_type == 'special' then
+	if reward_type == 'resource' 
+		or reward_type == 'special' 
+		or reward_type == 'speedup' 
+		or reward_type == 'buff' 
+		or reward_type == 'buff'then
 		return Localize_item.item_name[reward_key]
 	elseif reward_type == 'soldiers' then
 		return Localize.soldier_name[reward_key]
@@ -396,7 +468,7 @@ function GameUIActivityRewardNew:ui_FIRST_IN_PURGURE()
 			local reward_type,reward_name,count = unpack(reward)
 			tips_str = tips_str .. Localize_item.item_name[reward_name] .. " x" .. count
 			local item_bg = display.newSprite("activity_item_bg_110x108.png"):align(display.LEFT_TOP, x, y):addTo(self.bg)
-			local sp = display.newSprite(self:GetItemImage(reward_type,reward_name),55,54):addTo(item_bg)
+			local sp = display.newSprite(UIKit:GetItemImage(reward_type,reward_name),55,54):addTo(item_bg)
 			local size = sp:getContentSize()
 			sp:scale(90/math.max(size.width,size.height))
 			UIKit:addTipsToNode(sp,Localize_item.item_name[reward_name] .. " x" .. count,self)
@@ -474,18 +546,40 @@ function GameUIActivityRewardNew:ui_PLAYER_LEVEL_UP()
         viewRect = cc.rect(13,10,542,524),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(list_bg)
-    self:RefreshLevelUpListView()
+    self:RefreshLevelUpListView(true)
 end
 
-function GameUIActivityRewardNew:RefreshLevelUpListView()
-	self.list_view:removeAllItems()
-	local data = self:GetLevelUpData()
-	for index,v in ipairs(data) do
-		local title,rewards,flag = unpack(v)
-		local item = self:GetRewardLevelUpItem(index,title,rewards,flag)
-		self.list_view:addItem(item)
+function GameUIActivityRewardNew:RefreshLevelUpListView(needClean)
+	if needClean then
+		self.list_view:removeAllItems()
+		local data = self:GetLevelUpData()
+		for index,v in ipairs(data) do
+			local title,rewards,flag = unpack(v)
+			local item = self:GetRewardLevelUpItem(index,title,rewards,flag)
+			self.list_view:addItem(item)
+		end
+		self.list_view:reload()
+	else
+		local items = self.list_view:getItems()
+		if #items == 0 then return end
+		local data = self:GetLevelUpData()
+		for index,v in ipairs(data) do
+			local title,rewards,flag = unpack(v)
+			local item = items[index]
+			if flag == 1 then
+				item.title_label:show()
+				item.button:hide()
+			elseif flag == 2 then
+				item.title_label:hide()
+				item.button:show()
+				item.button:setButtonEnabled(true)
+			else
+				item.button:setButtonEnabled(false)
+				item.button:show()
+				item.title_label:hide()
+			end
+		end
 	end
-	self.list_view:reload()
 end
 -- flag 1.已领取 2.可以领取 3.不能领取
 function GameUIActivityRewardNew:GetLevelUpData()
@@ -545,35 +639,270 @@ function GameUIActivityRewardNew:GetRewardLevelUpItem(index,title,rewards,flag)
 		local reward_type,reward_name,count = unpack(v)
 		tips_str = tips_str .. Localize_item.item_name[reward_name] .. " x" .. count
 		local item_bg = display.newSprite("activity_item_bg_110x108.png"):align(display.LEFT_CENTER, x, 52):addTo(content):scale(94/110)
-		local sp = display.newSprite(self:GetItemImage(reward_type,reward_name),55,54):addTo(item_bg)
+		local sp = display.newSprite(UIKit:GetItemImage(reward_type,reward_name),55,54):addTo(item_bg)
 		local size = sp:getContentSize()
 		sp:scale(90/math.max(size.width,size.height))
 		UIKit:addTipsToNode(sp,Localize_item.item_name[reward_name] .. " x" .. count,self)
 		x = x + 130
 	end
-	if flag == 1 then
-		UIKit:ttfLabel({
+	local title_label = UIKit:ttfLabel({
 			text = _("已领取"),
 			size = 22,
 			color= 0x514d3e
 		}):align(display.LEFT_CENTER,436, 54):addTo(content)
-	else
-		WidgetPushButton.new({normal = 'yellow_btn_up_148x58.png',pressed = 'yellow_btn_down_148x58.png',disabled = 'gray_btn_148x58.png'})
+	item.title_label = title_label
+	local button = WidgetPushButton.new({normal = 'yellow_btn_up_148x58.png',pressed = 'yellow_btn_down_148x58.png',disabled = 'gray_btn_148x58.png'})
 			:setButtonLabel("normal", UIKit:commonButtonLable({
 				text = _("领取")
 			}))
 			:addTo(content)
 			:pos(450,54)
-			:setButtonEnabled(flag == 2)
 			:onButtonClicked(function()
 				NetManager:getLevelupRewardPromise(index):done(function()
 					GameGlobalUI:showTips(_("提示"),tips_str)
 				end)
 			end)
+	item.button = button
+	if flag == 1 then
+		title_label:show()
+		button:hide()
+	elseif flag == 2 then
+		title_label:hide()
+		button:show()
+		button:setButtonEnabled(true)
+	else
+		button:setButtonEnabled(false)
+		button:show()
+		title_label:hide()
 	end
 	item:addContent(content)
 	item:setItemSize(548,104)
 	return item
+end
+----------------------
+function GameUIActivityRewardNew:ui_ONLINE()
+	local countInfo = User:GetCountInfo()
+    local onlineTime = math.floor((countInfo.todayOnLineTime - countInfo.lastLoginTime)/1000)
+	self.online_time = onlineTime
+	UIKit:ttfLabel({
+		text = _("每日在线时间到达，即可领取珍贵的道具和金龙币"),
+		size = 20,
+		color= 0x403c2f
+	}):align(display.CENTER_TOP,304,self.height - 30):addTo(self.bg)
+	UIKit:ttfLabel({
+		text = _("今日已在线："),
+		size = 20,
+		color= 0x403c2f
+	}):align(display.TOP_RIGHT, 304,self.height - 60):addTo(self.bg)
+	self.online_time_label = UIKit:ttfLabel({
+		text = GameUtils:formatTimeStyle1(DataUtils:getPlayerOnlineTimeSecondes()),
+		size = 22,
+		color= 0x318200
+	}):align(display.TOP_LEFT, 304,self.height - 60):addTo(self.bg)
+	self.online_list_view = UIListView.new{
+        viewRect = cc.rect(26,20,556,630),
+        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
+    }:addTo(self.bg)
+    self:RefreshOnLineList(true)
+end
+
+function GameUIActivityRewardNew:GetOnLineItem(reward_type,item_key,time_str,rewards,flag,timePoint,next_point)
+	local item = self.online_list_view:newItem()
+	local content = UIKit:CreateBoxPanelWithBorder({
+		width = 556,
+		height= 116
+	})
+	local item_bg = display.newSprite("activity_item_bg_110x108.png"):align(display.LEFT_CENTER, 5, 58):addTo(content)
+	local image = UIKit:GetItemImage(reward_type,item_key)
+	-- if flag == 1 then
+	-- 	local sp = UIKit:getDiscolorrationSprite(image):pos(55,54):addTo(item_bg)
+	-- 	local size = sp:getContentSize()
+	-- 	sp:scale(90/math.max(size.width,size.height))
+	-- 	local check_bg = display.newSprite("activity_check_bg_34x34.png"):align(display.RIGHT_BOTTOM,105,3):addTo(item_bg,2)
+	-- 	display.newSprite("activity_check_body_34x34.png"):addTo(check_bg):pos(17,17)
+	-- 	UIKit:addTipsToNode(sp,rewards,self)
+	-- else
+	-- 	local sp = display.newSprite(image,55,54):addTo(item_bg)
+	-- 	local size = sp:getContentSize()
+	-- 	sp:scale(90/math.max(size.width,size.height))
+	-- 	UIKit:addTipsToNode(sp,rewards,self)
+	-- end
+	local sp = display.newSprite(image, 55,54, {class=cc.FilteredSpriteWithOne}):addTo(item_bg)
+	local size = sp:getContentSize()
+	sp:scale(90/math.max(size.width,size.height))
+	UIKit:addTipsToNode(sp,rewards,self)
+	local check_bg = display.newSprite("activity_check_bg_34x34.png"):align(display.RIGHT_BOTTOM,110,0):addTo(item_bg)
+	display.newSprite("activity_check_body_34x34.png"):addTo(check_bg):pos(17,17)
+	sp.check_bg = check_bg
+	item.sp = sp
+	if flag == 1 then
+		sp:setFilter(filter.newFilter("CUSTOM", json.encode({frag = "shaders/ps_discoloration.fs",shaderName = "ps_discoloration"})))
+	end
+	local time_label = UIKit:ttfLabel({
+		text = time_str,
+		size = 22,
+		color= 0x514d3e
+	}):align(display.LEFT_TOP, 120, 105):addTo(content)
+
+	local desc_label = UIKit:ttfLabel({
+		text = rewards,
+		size = 20,
+		color= 0x615b44
+	}):align(display.LEFT_CENTER, 120, 58):addTo(content)
+
+	local got_label = UIKit:ttfLabel({
+		text = _("已领取"),
+		size = 22,
+		color= 0x514d3e
+	}):align(display.CENTER, 471, 35):addTo(content)
+	local button = WidgetPushButton.new({normal = 'yellow_btn_up_148x58.png',pressed = 'yellow_btn_down_148x58.png',disabled = 'gray_btn_148x58.png'})
+			:setButtonLabel("normal", UIKit:commonButtonLable({
+				text = _("领取")
+			}))
+			:addTo(content)
+			:pos(471,35)
+			
+			:onButtonClicked(function()
+				NetManager:getOnlineRewardPromise(timePoint):done(function()
+					GameGlobalUI:showTips(_("提示"),rewards)
+				end)
+			end)
+	local time_label = UIKit:ttfLabel({
+		text = "",
+		size = 20,
+		color= 0x489200,
+		align = cc.TEXT_ALIGNMENT_LEFT,
+	}):addTo(content):align(display.CENTER,471,35)
+	item.got_label = got_label
+	item.button = button
+	item.time_label = time_label
+	if flag == 1 then
+		got_label:show()
+		button:hide()
+		time_label:hide()
+		check_bg:show()
+	else
+		check_bg:hide()
+		got_label:hide()
+		if flag == 2 then
+			time_label:hide()
+			-- button:setButtonEnabled(true)
+		else
+			button:hide()
+			if timePoint == next_point then
+				local time = self.online_time + app.timer:GetServerTime()
+				local diff_time = config_online[timePoint].onLineMinutes * 60 - time
+				time_label:setString(GameUtils:formatTimeStyle1(diff_time))
+				self.need_update_online_item[timePoint] = item
+			elseif timePoint > next_point then
+				time_label:setString(_("还不能领取"))
+				time_label:setColor(UIKit:hex2c3b(0x514d3e))
+			end
+		end
+	end
+	item:addContent(content)
+	item:setMargin({left = 0, right = 0, top = 0, bottom = 5})
+	item:setItemSize(556, 116,false)
+	return item
+end
+
+function GameUIActivityRewardNew:RefreshOnLineList(needClean)
+	if needClean then
+		self.need_update_online_item = {}
+		self.online_list_view:removeAllItems()
+		local data = self:GetOnLineTimePointData()
+		local next_point = self:GetNextOnlineTimePoint()
+		for __,v in ipairs(data) do
+			local reward_type,item_key,time_str,rewards,flag,timePoint = unpack(v)
+			local item = self:GetOnLineItem(reward_type,item_key,time_str,rewards,flag,timePoint,next_point)
+			self.online_list_view:addItem(item)
+		end
+		self.online_list_view:reload()
+	else
+		local items = self.online_list_view:getItems()
+		if #items <= 0 then return end
+		self.need_update_online_item = {}
+		local data = self:GetOnLineTimePointData()
+		local next_point = self:GetNextOnlineTimePoint()
+		for index,v in ipairs(data) do
+			local item = items[index]
+			local reward_type,item_key,time_str,rewards,flag,timePoint = unpack(v)
+			if flag == 1 then
+				item.got_label:show()
+				item.button:hide()
+				item.time_label:hide()
+				if not item.sp:getFilter() then
+					item.sp:setFilter(filter.newFilter("CUSTOM", json.encode({frag = "shaders/ps_discoloration.fs",shaderName = "ps_discoloration"})))
+				end
+				item.sp.check_bg:show()
+			else
+				item.sp.check_bg:hide()
+				item.got_label:hide()
+				if flag == 2 then
+					item.time_label:hide()
+					item.button:show()
+					if item.sp:getFilter() then
+						item.sp:clearFilter()
+					end
+				else
+					if not item.sp:getFilter() then
+						item.sp:setFilter(filter.newFilter("CUSTOM", json.encode({frag = "shaders/ps_discoloration.fs",shaderName = "ps_discoloration"})))
+					end
+					item.button:hide()
+					item.time_label:show()
+					if timePoint == next_point then
+						local time = self.online_time + app.timer:GetServerTime()
+						local diff_time = config_online[timePoint].onLineMinutes * 60 - time
+						item.time_label:setColor(UIKit:hex2c3b(0x489200))
+						item.time_label:setString(GameUtils:formatTimeStyle1(diff_time))
+						self.need_update_online_item[timePoint] = item
+					elseif timePoint > next_point then
+						item.time_label:setString(_("还不能领取"))
+						item.time_label:setColor(UIKit:hex2c3b(0x514d3e))
+					end
+				end
+			end
+		end
+	end
+end
+--flag 1.已领取 2.可以领取 3.还不能领取
+function GameUIActivityRewardNew:GetOnLineTimePointData()
+	local on_line_time = DataUtils:getPlayerOnlineTimeMinutes()
+	local r = {}
+	for __,v in pairs(config_online) do
+		local flag = 3
+		if v.onLineMinutes <= on_line_time then
+			if self:IsTimePointRewarded(v.timePoint) then
+				flag = 1
+			else
+				flag = 2
+			end
+		end
+		local reward_type,item_key,count = unpack(string.split(v.rewards,":"))
+		local name = self:GetRewardName(reward_type,item_key)
+		table.insert(r,{reward_type,item_key,string.format(_("在线%s分钟"),v.onLineMinutes),name .. "x" .. count,flag,v.timePoint})
+	end
+	return r
+end
+
+
+function GameUIActivityRewardNew:IsTimePointRewarded(timepoint)
+	local countInfo = User:GetCountInfo()
+	for __,v in ipairs(countInfo.todayOnLineTimeRewards) do
+		if v == timepoint then
+			return true
+		end
+	end
+	return false 
+end
+
+function GameUIActivityRewardNew:GetNextOnlineTimePoint()
+	local on_line_time = DataUtils:getPlayerOnlineTimeMinutes()
+	for __,v in pairs(config_online) do
+		if v.onLineMinutes > on_line_time then
+			return v.timePoint
+		end
+	end
 end
 
 return GameUIActivityRewardNew
