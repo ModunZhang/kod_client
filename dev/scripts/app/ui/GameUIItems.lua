@@ -449,6 +449,11 @@ function GameUIItems:UseItemFunc( items )
         if string.find(name,"dragonChest") then
             clone_dragon_materials = clone(self.city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.DRAGON))
         end
+        -- 木,铜,银,金宝箱
+        local clone_items
+        if string.find(name,"chest") then
+            clone_items = clone(ItemManager:GetItems())
+        end
         NetManager:getUseItemPromise(items:Name(),{}):done(function (response)
             if string.find(name,"dragonChest") then
                 local message = ""
@@ -459,7 +464,17 @@ function GameUIItems:UseItemFunc( items )
                     end
                 end
                 GameGlobalUI:showTips(_("获得"),message)
+            elseif string.find(name,"chest") then
+                local message = ""
+                for i,v in ipairs(response.msg.playerData) do
+                    if string.find(v[1],"items") then
+                        local m_name = string.split(v[1], ".")[2]
+                        message = message .. Localize_item.item_name[m_name].."x"..(v[2]-clone_items[m_name]:Count()).." "
+                    end
+                end
+                GameGlobalUI:showTips(_("获得"),message)
             end
+
             UIKit:PlayUseItemAni(items)
         end)
     else
@@ -527,6 +542,9 @@ function GameUIItems:OnItemsChanged( changed_map )
     end
 end
 return GameUIItems
+
+
+
 
 
 
