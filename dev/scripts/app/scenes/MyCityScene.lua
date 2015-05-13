@@ -372,9 +372,11 @@ function MyCityScene:OpenUI(building)
     local city = self:GetCity()
     if iskindof(building, "HelpedTroopsSprite") then
         local helped = city:GetHelpedByTroops()[building:GetIndex()]
-        local type_ = GameUIWatchTowerTroopDetail.DATA_TYPE.HELP_DEFENCE
         local user = self.city:GetUser()
-        UIKit:newGameUI("GameUIWatchTowerTroopDetail", type_, helped, user:Id(),false):AddToCurrentScene(true)
+        NetManager:getHelpDefenceTroopDetailPromise(user:Id(),helped.id):done(function(response)
+            LuaUtils:outputTable("response", response)
+            UIKit:newGameUI("GameUIHelpDefence",self.city, helped ,response.msg.troopDetail):AddToCurrentScene(true)
+        end)
         return
     end
     local entity = building:GetEntity()
@@ -779,6 +781,7 @@ end
 
 
 return MyCityScene
+
 
 
 
