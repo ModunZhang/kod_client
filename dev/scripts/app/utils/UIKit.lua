@@ -21,6 +21,7 @@ UIKit =
     {
         Registry   = import('framework.cc.Registry'),
         GameUIBase = import('..ui.GameUIBase'),
+        messageDialogs = {}
     }
 local CURRENT_MODULE_NAME = ...
 
@@ -80,7 +81,8 @@ function UIKit:createUIClass(className, baseName)
 end
 
 function UIKit:newGameUI(gameUIName,... )
-    if gameUIName ~= 'FullScreenPopDialogUI' then
+    if gameUIName == 'FullScreenPopDialogUI' then
+    else
         if self.Registry.isObjectExists(gameUIName) then
             print("已经创建过一个Object-->",gameUIName)
             return {AddToCurrentScene=function(...)end,AddToScene=function(...)end} -- 适配后面的调用不报错
@@ -89,13 +91,16 @@ function UIKit:newGameUI(gameUIName,... )
     local viewPackageName = app.packageRoot .. ".ui." .. gameUIName
     local viewClass = require(viewPackageName)
     local instance = viewClass.new(...)
-    -- if gameUIName ~= 'FullScreenPopDialogUI' then
+    if gameUIName == 'FullScreenPopDialogUI' then
+        self:addMessageDialog(instance)
+    else
         self.Registry.setObject(instance,gameUIName)
-    -- end
+    end
     return instance
 end
 function UIKit:newWidgetUI(gameUIName,... )
-    if gameUIName ~= 'FullScreenPopDialogUI' then
+    if gameUIName == 'FullScreenPopDialogUI' then
+    else
         if self.Registry.isObjectExists(gameUIName) then
             print("已经创建过一个Object-->",gameUIName)
             return {AddToCurrentScene=function(...)end,AddToScene=function(...)end} -- 适配后面的调用不报错
@@ -166,10 +171,13 @@ function UIKit:closeAllUI()
     UIKit.close_ui_callbacks = {}
     for name,v in pairs(self:getRegistry().objects_) do
         if v.__isBase and v.__type ~= self.UITYPE.BACKGROUND then
-            if v.__type == self.UITYPE.MESSAGEDIALOG and v.__key__dialog then 
-            else
-                v:LeftButtonClicked()
-            end
+            v:LeftButtonClicked()
+        end
+    end
+
+    for __,v in pairs(self.messageDialogs) do
+        if v:GetUserData() ~= '__key__dialog' then
+            v:LeftButtonClicked()
         end
     end
 end
@@ -559,16 +567,24 @@ function UIKit:showMessageDialogCanCanleNotAutoClose(title,tips,ok_callback,canc
     return dialog
 end
 
+function UIKit:addMessageDialog(instance)
+    print(instance:GetUserData(),"addMessageDialog---->")
+    dump(self.messageDialogs,"self.messageDialogs----->")
+    self.messageDialogs[instance:GetUserData()] = instance
+end
+
+function UIKit:removeMesssageDialog(instance)
+    print(instance:GetUserData(),"removeMesssageDialog---->")
+    dump(self.messageDialogs,"self.messageDialogs----->")
+    self.messageDialogs[instance:GetUserData()] = nil 
+end
+
 function UIKit:isKeyMessageDialogShow()
-    dump(self:getRegistry().objects_,"self:getRegistry().objects_--->")
-    for name,v in pairs(self:getRegistry().objects_) do
-        if v.__isBase and v.__type == self.UITYPE.MESSAGEDIALOG then
-            if v.__key__dialog then
-                return true
-            end
-        end
-    end
-    return false
+    return self.messageDialogs['__key__dialog'] ~= nil
+end
+
+function UIKit:isMessageDialogShow(instance)
+    return self.messageDialogs[instance:GetUserData()] ~= nil
 end
 
 function UIKit:showKeyMessageDialog(title,tips,ok_callback,cancel_callback)
@@ -576,15 +592,14 @@ function UIKit:showKeyMessageDialog(title,tips,ok_callback,cancel_callback)
         print("忽略了一次关键性弹窗")
         return 
     end
-    local dialog =  UIKit:showMessageDialog(title,tips,ok_callback,cancel_callback,false,nil)
-    dialog.__key__dialog = true
+    local dialog =  UIKit:showMessageDialog(title,tips,ok_callback,cancel_callback,false,nil,"__key__dialog")
 end
 
-function UIKit:showMessageDialog(title,tips,ok_callback,cancel_callback,visible_x_button,x_button_callback)
+function UIKit:showMessageDialog(title,tips,ok_callback,cancel_callback,visible_x_button,x_button_callback,user_data)
     title = title or _("提示")
     tips = tips or ""
     if type(visible_x_button) ~= 'boolean' then visible_x_button = true end
-    local dialog = UIKit:newGameUI("FullScreenPopDialogUI",x_button_callback):SetTitle(title):SetPopMessage(tips)
+    local dialog = UIKit:newGameUI("FullScreenPopDialogUI",x_button_callback,user_data):SetTitle(title):SetPopMessage(tips)
     if ok_callback then
         dialog:CreateOKButton({
             listener =  function ()

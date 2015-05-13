@@ -14,8 +14,9 @@ function DragonEyrieUpgradeBuilding:ctor(building_info)
     DragonEyrieUpgradeBuilding.super.ctor(self,building_info)
     self:SetDragonManager(DragonManager.new())
 end
-
-
+function DragonEyrieUpgradeBuilding:IsNeedToUpdate()
+    return true
+end
 function DragonEyrieUpgradeBuilding:OnTimer(current_time)
     DragonEyrieUpgradeBuilding.super.OnTimer(self,current_time)
     self:GetDragonManager():OnTimer(current_time)

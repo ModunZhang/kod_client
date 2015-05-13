@@ -363,16 +363,46 @@ function GameUIHome:CreateTop()
         color = UIKit:hex2c3b(0xfffeb3)})
         :addTo(quest_bar_bg):align(display.LEFT_CENTER, -120, 0)
 
-
-    -- 礼物按钮
+    local left_order =  WidgetAutoOrder.new(WidgetAutoOrder.ORIENTATION.TOP_TO_BOTTOM,20):addTo(self):pos(display.left+40, display.top-200)
+    -- 活动按钮
     local button = cc.ui.UIPushButton.new(
+        {normal = "tips_66x64.png", pressed = "tips_66x64.png"},
+        {scale9 = false}
+    )
+    button:onButtonClicked(function(event)
+        if event.name == "CLICKED_EVENT" then
+            UIKit:newGameUI("GameUIActivityNew",self.city):AddToCurrentScene(true)
+        end
+    end)
+    function button:CheckVisible()
+        return true
+    end
+    function button:GetElementSize()
+        return button:getCascadeBoundingBox().size
+    end
+    left_order:AddElement(button)
+    --在线活动
+    local activity_button = cc.ui.UIPushButton.new(
         {normal = "activity_68x78.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
+            -- UIKit:newGameUI("GameUIActivity",self.city):AddToCurrentScene(true)
             UIKit:newGameUI("GameUIActivity",self.city):AddToCurrentScene(true)
         end
-    end):addTo(self):pos(display.left+40, display.top-200)
+    end)
+    
+
+    function activity_button:CheckVisible()
+        return true
+    end
+
+    function activity_button:GetElementSize()
+        return activity_button:getCascadeBoundingBox().size
+    end
+
+    left_order:AddElement(activity_button)
+    left_order:RefreshOrder()
     local order = WidgetAutoOrder.new(WidgetAutoOrder.ORIENTATION.TOP_TO_BOTTOM,20):addTo(self):pos(display.right-50, display.top-200)
     -- BUFF按钮
     local buff_button = cc.ui.UIPushButton.new(
@@ -389,25 +419,6 @@ function GameUIHome:CreateTop()
         return buff_button:getCascadeBoundingBox().size
     end
     order:AddElement(buff_button)
-    -- tips
-    local button = cc.ui.UIPushButton.new(
-        {normal = "tips_66x64.png", pressed = "tips_66x64.png"},
-        {scale9 = false}
-    )
-    button:onButtonClicked(function(event)
-        if event.name == "CLICKED_EVENT" then
-            UIKit:newGameUI("GameUITips",button,function ()
-                order:RefreshOrder()
-            end):AddToCurrentScene(true)
-        end
-    end)
-    function button:CheckVisible()
-        return not app:GetGameDefautlt():getBasicInfoValueForKey("NEVER_SHOW_TIP_ICON")
-    end
-    function button:GetElementSize()
-        return button:getCascadeBoundingBox().size
-    end
-    order:AddElement(button)
 
     -- 协助加速按钮
     self.help_button = cc.ui.UIPushButton.new(

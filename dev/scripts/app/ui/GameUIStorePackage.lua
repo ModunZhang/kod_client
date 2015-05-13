@@ -94,9 +94,14 @@ function GameUIStorePackage:GetItem(index,reward)
 
 	local icon = display.newSprite(UILib.item[reward.key]):align(display.LEFT_CENTER, 14, 24):addTo(content)
 	icon:scale(36/math.max(icon:getContentSize().width,icon:getContentSize().height))
-
+	local item_name = ""
+	if reward.isToAlliance then
+		item_name = string.format(_("赠送给联盟成员的%s"),Localize_item.item_name[reward.key])
+	else
+		item_name = Localize_item.item_name[reward.key]
+	end
 	UIKit:ttfLabel({
-		text = Localize_item.item_name[reward.key],
+		text = item_name,
 		size = 22,
 		color= 0x403c2f
 	}):align(display.LEFT_CENTER, 62, 24):addTo(content)
@@ -137,7 +142,6 @@ function GameUIStorePackage:CreateBuyButton()
 end
 
 function GameUIStorePackage:OnBuyButtonClicked()
-	dump(self:GetData().productId,"buy----->")
 	app:getStore().purchaseWithProductId(self:GetData().productId,1)
 	device.showActivityIndicator()
 end

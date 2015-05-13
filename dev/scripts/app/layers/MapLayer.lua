@@ -1,7 +1,7 @@
 local promise = import("..utils.promise")
 local MapLayer = class("MapLayer", function(...)
     local layer = display.newLayer()
-    layer:setAnchorPoint(0, 0)
+    layer:setAnchorPoint(cc.p(0, 0))
     layer:setNodeEventEnabled(true)
     return layer
 end)
