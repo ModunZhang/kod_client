@@ -22,6 +22,22 @@ function cc.c3b( _r,_g,_b )
     end
     return setmetatable(c, c3b_m_)
 end
+local c4b_ = cc.c4b
+function cc.c4b(...)
+    local rgba = {...}
+    if #rgba == 0 then
+        return c4b_(0,0,0,0)
+    elseif #rgba == 1 then
+        return c4b_(rgba[1], rgba[1], rgba[1], rgba[1])
+    elseif #rgba == 2 then
+        return c4b_(rgba[1], rgba[2], rgba[2], rgba[2])
+    elseif #rgba == 3 then
+        return c4b_(rgba[1], rgba[2], rgba[3], rgba[3])
+    elseif #rgba >= 4 then
+        return c4b_(rgba[1], rgba[2], rgba[3], rgba[4])
+    end
+end
+cc.c4f = cc.c4b
 
 
 
