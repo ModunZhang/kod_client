@@ -18,11 +18,11 @@ return function(userData)
     Alliance_Manager = AllianceManager_.new()
     if GLOBAL_FTE then
         User = User_.new(initData._id)
-        City = City_.new(initData):SetUser(User)
+        City = City_.new(User):InitWithJsonData(initData)
         DataManager:setFteUserDeltaData()
     else
         User = User_.new(userData._id)
-        City = City_.new(userData):SetUser(User)
+        City = City_.new(User):InitWithJsonData(userData)
         DataManager:setUserData(userData)
     end
 

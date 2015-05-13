@@ -80,13 +80,12 @@ local function illegal_filter(key, func)
     func()
 end
 -- 初始化
-function City:ctor(json_data)
+function City:ctor(user)
     City.super.ctor(self)
-    self.resource_manager = ResourceManager.new()
-    self.soldier_manager = SoldierManager.new()
-    self.material_manager = MaterialManager.new()
-
-    self.belong_user = nil
+    self.belong_user = user
+    self.resource_manager = ResourceManager.new(self)
+    self.soldier_manager = SoldierManager.new(self)
+    self.material_manager = MaterialManager.new(self)
     self.buildings = {}
     self.walls = {}
     self.tower = TowerEntity.new({building_type = "tower", city = self}):AddUpgradeListener(self)
@@ -102,11 +101,7 @@ function City:ctor(json_data)
     self:InitLocations()
     self:InitRuins()
 
-    if json_data then
-        self:InitWithJsonData(json_data)
-    end
-
-    --
+    -- fte
     self.upgrading_building_callbacks = {}
     self.finish_upgrading_callbacks = {}
 end
@@ -115,10 +110,10 @@ function City:GetRecommendTask()
     self:IteratorCanUpgradeBuildings(function(building)
         if building:IsUnlocked() then
             local highest = building_map[building:GetType()]
-            building_map[building:GetType()] = not highest and 
-            building or 
-            (building:GetLevel() > highest:GetLevel() and 
-                building or 
+            building_map[building:GetType()] = not highest and
+                building or
+                (building:GetLevel() > highest:GetLevel() and
+                building or
                 highest)
         end
     end)
@@ -138,11 +133,6 @@ function City:GetRecommendTask()
 end
 function City:GetUser()
     return self.belong_user
-end
-function City:SetUser(user)
-    assert(not self.belong_user, "用户一经指定就不可更改")
-    self.belong_user = user
-    return self
 end
 local function get_building_event_by_location(location_id, building_events)
     for k, v in pairs(building_events or {}) do
@@ -233,11 +223,12 @@ function City:InitWithJsonData(userData)
     end)
     self:InitDecorators(init_decorators)
     self:GenerateWalls()
+    return self
 end
 function City:ResetAllListeners()
     self.upgrading_building_callbacks = {}
     self.finish_upgrading_callbacks = {}
-    
+
     self.resource_manager:RemoveAllObserver()
     self.soldier_manager:ClearAllListener()
     self.material_manager:RemoveAllObserver()
@@ -826,10 +817,11 @@ function City:IteratorCanUpgradeBuildingsByUserData(user_data, current_time, del
     end
 end
 function City:IteratorAllNeedTimerEntity(current_time)
-    
-    for i,v in ipairs(self.need_update_buildings) do
-        v:OnTimer(current_time)
-    end
+    -- LuaUtils:TimeCollect(function()
+        for _,v in ipairs(self.need_update_buildings) do
+            v:OnTimer(current_time)
+        end
+    -- end, "need_update_buildings : "..#self.need_update_buildings)
     self.resource_manager:OnTimer(current_time)
 end
 -- 遍历顺序影响城墙的生成
@@ -901,10 +893,12 @@ function City:GetNeighbourRuinWithSpecificRuin(ruin)
 end
 -- 功能函数
 function City:OnTimer(time)
-    self:IteratorAllNeedTimerEntity(time)
-    self:IteratorProductionTechEvents(function(v)
-        v:OnTimer(time)
-    end)
+        self:IteratorAllNeedTimerEntity(time)
+    -- LuaUtils:TimeCollect(function()
+        self:IteratorProductionTechEvents(function(v)
+            v:OnTimer(time)
+        end)
+    -- end, "IteratorProductionTechEvents")
 end
 function City:CreateDecorator(current_time, decorator_building)
     insert(self.decorators, decorator_building)
@@ -1053,7 +1047,7 @@ function City:OnUserDataChanged(userData, current_time, deltaData)
         insert(need_update_buildings, self:GetTower())
     end
     local gate = self:GetGate()
-    if gate and gate:IsNeedToUpdate() then
+    if gate and (gate:IsNeedToUpdate()) then
         insert(need_update_buildings, gate)
     end
     self.need_update_buildings = need_update_buildings
@@ -1599,7 +1593,7 @@ end
 
 function City:GetAcademyBuildingLevel()
     local building = self:GetFirstBuildingByType('academy')
-    if building then 
+    if building then
         return building:GetLevel()
     else
         return 0
@@ -1701,6 +1695,8 @@ function City:FindProductionTechEventById(_id)
 end
 
 return City
+
+
 
 
 

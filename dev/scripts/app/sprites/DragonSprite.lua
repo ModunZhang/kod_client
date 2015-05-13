@@ -32,6 +32,8 @@ function DragonSprite:CreateSprite(terrain)
         dragon_animation = "red_long"
     elseif terrain == "iceField" then
         dragon_animation = "blue_long"
+    else
+        return display.newNode()
     end
     local armature = ccs.Armature:create(dragon_animation)
     armature:setAnchorPoint(anchor_map[terrain])
