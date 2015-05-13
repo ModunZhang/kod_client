@@ -817,7 +817,9 @@ local ALLIANCE_DECORATE_NAME = {
     decorate_mountain = _("山"),
     decorate_tree = _("树")
 }
-
+local LOGIN_TIPS = {
+    _("提示：预留一定的空闲城民，兵营将他们训练成士兵")
+}
 return {
     equip_material = EQUIP_MATERIAL_LOCALIZE,
     equip = EQUIP_LOCALIZE,
@@ -871,5 +873,6 @@ return {
     alliance_language = ALLIANCE_LANGUAGE,
     alliance_decorate_name = ALLIANCE_DECORATE_NAME,
     shrine_desc = SHRINE_DESC,
+    login_tips = LOGIN_TIPS,
 }
 

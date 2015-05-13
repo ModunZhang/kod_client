@@ -13,7 +13,7 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 function GameUITips:ctor(active_button,callback)
 	GameUITips.super.ctor(self)
 	self.show_never_again = true
-	self.never_show_again = app:GetGameDefautlt():getBasicInfoValueForKey("NEVER_SHOW_TIP_ICON")
+	-- self.never_show_again = app:GetGameDefautlt():getBasicInfoValueForKey("NEVER_SHOW_TIP_ICON")
 	self.active_button = active_button
 	self.callback = callback
 end
@@ -64,22 +64,22 @@ function GameUITips:BuildUI()
 	        on_disabled = "checkbox_selectd.png",
 
 	}
-	if self.show_never_again then
-		local button = WidgetPushButton.new({normal = 'activity_check_bg_55x51.png'})
-			:addTo(bg)
-			:align(display.LEFT_BOTTOM,15, 25)
-		local check_state = display.newSprite("activity_check_body_55x51.png"):addTo(button):pos(27,25)
-		check_state:setVisible(self.never_show_again)
-		button.check_state = check_state
-		button:onButtonClicked(function()
-			self.never_show_again = not self.never_show_again
-			app:GetGameDefautlt():setBasicInfoBoolValueForKey("NEVER_SHOW_TIP_ICON",self.never_show_again)
-			app:GetGameDefautlt():flush()
-			button.check_state:setVisible(self.never_show_again)
-			self.callback()
-		end)
-		UIKit:ttfLabel({text = _("不再显示"),size = 22,color = 0x514d3e}):align(display.LEFT_CENTER, 80, 50):addTo(bg)
-	end
+	-- if self.show_never_again then
+	-- 	local button = WidgetPushButton.new({normal = 'activity_check_bg_55x51.png'})
+	-- 		:addTo(bg)
+	-- 		:align(display.LEFT_BOTTOM,15, 25)
+	-- 	local check_state = display.newSprite("activity_check_body_55x51.png"):addTo(button):pos(27,25)
+	-- 	check_state:setVisible(self.never_show_again)
+	-- 	button.check_state = check_state
+	-- 	button:onButtonClicked(function()
+	-- 		self.never_show_again = not self.never_show_again
+	-- 		app:GetGameDefautlt():setBasicInfoBoolValueForKey("NEVER_SHOW_TIP_ICON",self.never_show_again)
+	-- 		app:GetGameDefautlt():flush()
+	-- 		button.check_state:setVisible(self.never_show_again)
+	-- 		self.callback()
+	-- 	end)
+	-- 	UIKit:ttfLabel({text = _("不再显示"),size = 22,color = 0x514d3e}):align(display.LEFT_CENTER, 80, 50):addTo(bg)
+	-- end
 	self:RefreshListView()
 end
 
@@ -126,10 +126,10 @@ function GameUITips:GetItem(index,image,title,text,scale)
 end
 
 function GameUITips:LeftButtonClicked()
-	if self.active_button then
-		self.active_button:setVisible(not app:GetGameDefautlt():getBasicInfoValueForKey("NEVER_SHOW_TIP_ICON"))
-		print(tolua.type(self.active_button),"self.active_button---->")
-	end
+	-- if self.active_button then
+	-- 	self.active_button:setVisible(not app:GetGameDefautlt():getBasicInfoValueForKey("NEVER_SHOW_TIP_ICON"))
+	-- 	print(tolua.type(self.active_button),"self.active_button---->")
+	-- end
 	GameUITips.super.LeftButtonClicked(self)
 end
 
