@@ -149,6 +149,11 @@ function HospitalUpgradeBuilding:GetSoldierConfigByType(soldier_type)
     local config = NORMAL[config_name] or SPECIAL[soldier_type]
     return config
 end
+function HospitalUpgradeBuilding:IsNeedToUpdate()
+    if self.level > 0 then
+        return self.upgrade_to_next_level_time ~= 0 or self.treat_event:IsTreating()
+    end
+end
 function HospitalUpgradeBuilding:OnTimer(current_time)
     local event = self.treat_event
     if event:IsTreating() then

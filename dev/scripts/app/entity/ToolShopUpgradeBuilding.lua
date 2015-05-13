@@ -5,6 +5,8 @@ local UpgradeBuilding = import(".UpgradeBuilding")
 local ToolShopUpgradeBuilding = class("ToolShopUpgradeBuilding", UpgradeBuilding)
 
 
+local unpack = unpack
+local pairs = pairs
 local TECHNOLOGY = "technology"
 local BUILDING = "building"
 
@@ -82,8 +84,8 @@ function ToolShopUpgradeBuilding:CreateEvent(category)
     function event:IsEmpty()
         return self.finished_time == 0 and #self.content == 0
     end
-    function event:IsMaking(current_time)
-        return current_time < self.finished_time
+    function event:IsMaking()
+        return self.finished_time ~= 0
     end
     event:Init(category)
     return event
@@ -184,7 +186,16 @@ function ToolShopUpgradeBuilding:GetNextLevelProduction()
     local config = config_function[self:GetNextLevel()]
     return config["production"]
 end
-
+function ToolShopUpgradeBuilding:IsNeedToUpdate()
+    if self.level > 0 then
+        for _, event in pairs(self.category) do
+            if event:IsMaking() then
+                return true
+            end
+        end
+        return self.upgrade_to_next_level_time ~= 0
+    end
+end
 function ToolShopUpgradeBuilding:OnTimer(current_time)
     for _, event in pairs(self.category) do
         if event:IsMaking(current_time) then

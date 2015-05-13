@@ -158,6 +158,11 @@ function BarracksUpgradeBuilding:GetMaxRecruitSoldierCount()
     end
     return 0
 end
+function BarracksUpgradeBuilding:IsNeedToUpdate()
+    if self.level > 0 then
+        return self.upgrade_to_next_level_time ~= 0 or self.recruit_event:IsRecruting()
+    end
+end
 function BarracksUpgradeBuilding:OnTimer(current_time)
     local event = self.recruit_event
     if event:IsRecruting() then
