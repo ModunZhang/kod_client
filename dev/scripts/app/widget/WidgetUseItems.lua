@@ -1250,6 +1250,7 @@ function WidgetUseItems:PromiseOfOpen(item_type)
             self:Find():onButtonClicked(function()
                 self:GetFteLayer():removeFromParent()
                 mockData.ActiveVip()
+                app.timer:OnTimer(0)
                 p1:resolve()
             end)
 

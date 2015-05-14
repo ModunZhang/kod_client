@@ -54,7 +54,9 @@ function GameUIUpgradeBuilding:Find()
 end
 function GameUIUpgradeBuilding:PromiseOfFte()
     self.tabs:SelectTab("upgrade")
+    self.upgrade_layer.acc_layer.acc_button:setButtonEnabled(false)
     self:GetFteLayer():SetTouchObject(self:Find())
+
 
     self:Find():removeEventListenersByEvent("CLICKED_EVENT")
     self:Find():onButtonClicked(function()

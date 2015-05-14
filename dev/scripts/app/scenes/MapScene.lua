@@ -12,7 +12,7 @@ function MapScene:ctor()
     User:ResetAllListeners()
     City:ResetAllListeners()
     Alliance_Manager:GetMyAlliance():ResetAllListeners()
-    
+
     self.blur_count = 1
     self.event_manager = EventManager.new(self)
     self.touch_judgment = TouchJudgment.new(self)
@@ -110,9 +110,15 @@ function MapScene:GetFteLayer()
     return child
 end
 function MapScene:CreateFteLayer()
-    local layer = display.newLayer(--[[cc.c4b(0, 255, 0, 100)]]):addTo(self, 2000, FTE_TAG)
+    local layer
+    if GLOBAL_FTE_DEBUG then
+        layer = display.newColorLayer(cc.c4b(0, 0, 255, 100)):addTo(self, 2000, FTE_TAG)
+    else
+        layer = display.newLayer(--[[cc.c4b(0, 255, 0, 100)]]):addTo(self, 2000, FTE_TAG)
+    end
     layer:setTouchSwallowEnabled(true)
     local touch_judgment = self.touch_judgment
+    local touch_layer = self.touch_layer
     layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
         if touch_judgment then
             local touch_type, pre_x, pre_y, x, y = event.name, event.prevX, event.prevY, event.x, event.y
@@ -131,10 +137,12 @@ function MapScene:CreateFteLayer()
     end)
     function layer:Enable()
         self:setTouchEnabled(true)
+        touch_layer:setTouchEnabled(false)
         return self:show()
     end
     function layer:Disable()
         self:setTouchEnabled(false)
+        touch_layer:setTouchEnabled(true)
         return self:hide()
     end
     function layer:Reset()
@@ -190,9 +198,9 @@ function MapScene:OnTouchBegan(pre_x, pre_y, x, y)
 
 end
 function MapScene:OnTouchEnd(pre_x, pre_y, x, y, speed)
-    -- if not speed and self.scene_layer:MakeElastic() then
-    --     self.touch_judgment:ResetTouch()
-    -- end
+-- if not speed and self.scene_layer:MakeElastic() then
+--     self.touch_judgment:ResetTouch()
+-- end
 end
 function MapScene:OnTouchCancelled(pre_x, pre_y, x, y)
     print("OnTouchCancelled")
@@ -204,7 +212,7 @@ function MapScene:OnTouchMove(pre_x, pre_y, x, y)
     local new_point = parent:convertToNodeSpace(cc.p(x, y))
     local old_x, old_y = self.scene_layer:getPosition()
     local diffX = new_point.x - old_point.x
-    local diffY = new_point.y - old_point.y 
+    local diffY = new_point.y - old_point.y
     self.scene_layer:setPosition(cc.p(old_x + diffX, old_y + diffY))
 end
 function MapScene:OnTouchClicked(pre_x, pre_y, x, y)
@@ -223,6 +231,7 @@ end
 
 
 return MapScene
+
 
 
 
