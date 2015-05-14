@@ -6,6 +6,7 @@ local WidgetPushButton = import(".WidgetPushButton")
 local WidgetPushTransparentButton = class("WidgetPushTransparentButton",WidgetPushButton)
 
 function WidgetPushTransparentButton:ctor(rect,event_to,args)
+	args = args or  {}
 	WidgetPushTransparentButton.super.ctor(self,{normal = "transparent_1x1.png"},{scale9 = true},unpack(args))
 	self:setButtonSize(rect.width, rect.height)
 	if event_to then
