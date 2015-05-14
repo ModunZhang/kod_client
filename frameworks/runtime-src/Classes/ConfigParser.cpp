@@ -4,7 +4,10 @@
 #include "json/stringbuffer.h"
 #include "json/writer.h"
 #include "ConfigParser.h"
+
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_WP8)
 #include "FileServer.h"
+#endif
 
 #define CONFIG_FILE "config.json"
 #define CONSOLE_PORT 6010
@@ -26,7 +29,7 @@ ConfigParser *ConfigParser::getInstance(void)
 
 void ConfigParser::purge()
 {
-	CC_SAFE_DELETE(s_sharedConfigParserInstance);
+    CC_SAFE_DELETE(s_sharedConfigParserInstance);
 }
 
 void ConfigParser::readConfig()
@@ -42,11 +45,11 @@ void ConfigParser::readConfig()
     searchPathArray.insert(searchPathArray.begin(), writePath);
     FileUtils::getInstance()->setSearchPaths(searchPathArray);
 #endif
-    
+
     // read config file
     string fullPathFile = FileUtils::getInstance()->fullPathForFilename(CONFIG_FILE);
     string fileContent = FileUtils::getInstance()->getStringFromFile(fullPathFile);
-  
+
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     // revert search path
     searchPathArray.erase(searchPathArray.end() - 1);
@@ -55,12 +58,12 @@ void ConfigParser::readConfig()
 
     if(fileContent.empty())
         return;
-    
+
     if (_docRootjson.Parse<0>(fileContent.c_str()).HasParseError()) {
         cocos2d::log("read json file %s failed because of %s", fullPathFile.c_str(), _docRootjson.GetParseError());
         return;
     }
-    
+
     if (_docRootjson.HasMember("init_cfg"))
     {
         if(_docRootjson["init_cfg"].IsObject())
@@ -76,7 +79,7 @@ void ConfigParser::readConfig()
                     _initViewSize.height = _initViewSize.width;
                     _initViewSize.width = tmpvalue;
                 }
-                
+
             }
             if (objectInitView.HasMember("name") && objectInitView["name"].IsString())
             {
@@ -130,7 +133,7 @@ _isLandscape(true),
 _isWindowTop(false),
 _consolePort(CONSOLE_PORT),
 _uploadPort(UPLOAD_PORT),
-_viewName("kod"),
+_viewName("__PROJECT_COCOS_NAME__"),
 _entryfile("src/main.lua"),
 _initViewSize(WIN_WIDTH, WIN_HEIGHT)
 {

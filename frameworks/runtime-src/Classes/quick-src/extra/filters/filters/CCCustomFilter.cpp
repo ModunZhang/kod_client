@@ -8,21 +8,21 @@ NS_CC_EXT_BEGIN
 
 CustomFilter* CustomFilter::create()
 {
-	CustomFilter* __filter = new CustomFilter();
-	__filter->autorelease();
-	return __filter;
+    CustomFilter* __filter = new CustomFilter();
+    __filter->autorelease();
+    return __filter;
 }
 
 CustomFilter* CustomFilter::create(std::string paramsStr)
 {
-	CustomFilter* __filter = CustomFilter::create();
-	__filter->setParameter(paramsStr.c_str());
-	return __filter;
+    CustomFilter* __filter = CustomFilter::create();
+    __filter->setParameter(paramsStr.c_str());
+    return __filter;
 }
 
 CustomFilter::CustomFilter()
 {
-	this->shaderName = nullptr;
+    this->shaderName = nullptr;
 }
 
 GLProgram* CustomFilter::loadShader()
@@ -45,7 +45,7 @@ GLProgram* CustomFilter::loadShader()
     
     GLProgram* __p = GLProgram::createWithByteArrays(vertShader, fragShader);
 
-	return __p;
+    return __p;
 }
 
 void CustomFilter::setParameter(const char* paramsStr)
@@ -104,7 +104,7 @@ void CustomFilter::setUniforms(GLProgram* $cgp)
                     case 4: {
                         _pProgramState->setUniformVec4(name,
                             Vec4(it->value[0u].GetDouble(), it->value[1].GetDouble(),
-                                 it->value[2].GetDouble(), it->value[2].GetDouble()));
+                                 it->value[2].GetDouble(), it->value[3].GetDouble()));
                         break;
                     }
                     default: {
