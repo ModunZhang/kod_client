@@ -218,6 +218,7 @@ function WidgetPlayerNode:GetBasicInfoItemNode(basic_data)
 			}))
 			:onButtonClicked(function()
 				ext.copyText(data_source.playerId)
+				 GameGlobalUI:showTips(_("提示"),_("复制成功"))
 			end)
 	end
 	item:addContent(node)
