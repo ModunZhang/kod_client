@@ -5,6 +5,8 @@
 local GameUILoginBeta = UIKit:createUIClass('GameUILoginBeta','GameUISplashBeta')
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local LOCAL_RESOURCES_PERCENT = 60
+local Localize = import("..utils.Localize")
+local WidgetPushTransparentButton = import("..widget.WidgetPushTransparentButton")
 
 function GameUILoginBeta:ctor()
     GameUILoginBeta.super.ctor(self)
@@ -59,57 +61,66 @@ end
 -- UI
 --------------------------------------------------------------------------------------------------------------
 function GameUILoginBeta:createProgressBar()
-    local bar = display.newSprite("splash_process_bg.png"):addTo(self.ui_layer):pos(display.cx,display.bottom+150)
-    local progressFill = display.newSprite("splash_process_color.png")
+    local bar = display.newSprite("splash_process_bg_606x25.png"):addTo(self.ui_layer):pos(display.cx,display.bottom+150)
+    local progressFill = display.newSprite("splash_process_color_606x25.png")
     local ProgressTimer = cc.ProgressTimer:create(progressFill)
     ProgressTimer:setType(display.PROGRESS_TIMER_BAR)
     ProgressTimer:setBarChangeRate(cc.p(1,0))
     ProgressTimer:setMidpoint(cc.p(0,0))
     ProgressTimer:align(display.LEFT_BOTTOM, 0, 0):addTo(bar)
     ProgressTimer:setPercentage(1)
-    display.newSprite("splash_process_bound.png"):align(display.LEFT_BOTTOM, -10, -4):addTo(bar)
     local label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = "Loading(1/3)...",
+        text = "",
         font = UIKit:getFontFilePath(),
-        size = 12,
-        align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
-        color = UIKit:hex2c3b(0xf3f0b6),
-        valign = cc.VERTICAL_TEXT_ALIGNMENT_CENTER,
-    }):addTo(bar):align(display.CENTER,bar:getContentSize().width/2,bar:getContentSize().height/2)
+        size = 14,
+        align = cc.TEXT_ALIGNMENT_CENTER,
+        color = UIKit:hex2c3b(0xf5fee9),
+    }):addTo(bar):align(display.CENTER,303,13)
     self.progressTips = label
     self.progressTimer = ProgressTimer
     self.progress_bar = bar
 end
 
 function GameUILoginBeta:createTips()
-    local bgImage = display.newSprite("splash_tips_bg.png"):addTo(self.ui_layer):pos(display.cx,display.bottom+100)
+    local random = math.random(#Localize.login_tips)
     local label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = _("提示:预留一定的空闲城民,兵营将他们训练成士兵"),
+        text = Localize.login_tips[random],
         font = UIKit:getFontFilePath(),
         size = 18,
-        align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
-        color = UIKit:hex2c3b(0xaaa87f),
-    }):addTo(bgImage):align(display.CENTER,bgImage:getContentSize().width/2,bgImage:getContentSize().height/2)
+        align = cc.TEXT_ALIGNMENT_CENTER,
+        color = UIKit:hex2c3b(0xb7c2a0),
+        dimensions = cc.size(460,0)
+    })
+    local size = label:getContentSize()
+    local real_size =  cc.size(544,size.height)
+    local bgImage = display.newScale9Sprite("splash_tips_bg_544x30.png", display.cx,display.bottom+100, cc.size(544,size.height), cc.rect(30,0,484,30))
+        :addTo(self.ui_layer)
+    label:addTo(bgImage):align(display.CENTER,272,size.height/2)
     self.tips_ui = bgImage
 end
 
 function GameUILoginBeta:createStartGame()
-    local button = WidgetPushButton.new({
-         normal = "start_game_481x31.png"
-    },nil,nil,{down = "SPLASH_BUTTON_START"}):addTo(self.ui_layer):pos(display.cx,display.bottom+150):hide()
-    self.start_ui = button
-
+    local star_game_sprite = display.newSprite("start_game_292x28.png"):addTo(self.ui_layer):pos(display.cx,display.bottom+150):hide()
+    self.star_game_sprite = star_game_sprite
+    local button = WidgetPushTransparentButton.new(cc.rect(0,0,display.width,display.height),nil,{nil,{down = "DRAGON_STRIKE"}})
+        :addTo(self.ui_layer):hide():align(display.LEFT_BOTTOM, 0, 0)
+    self.start_button = button
     button:onButtonClicked(function()
+        button:setButtonEnabled(false)
         self.startGame = true
         local sp = cc.Spawn:create(cc.ScaleTo:create(1,1.5),cc.FadeOut:create(1))
         local seq = transition.sequence({sp,cc.CallFunc:create(function()
                 self:connectLogicServer()
             end)})
-            button:setButtonEnabled(false)
-            self.start_ui:runAction(seq)
+            self.star_game_sprite:runAction(seq)
         end)
+end
+
+function GameUILoginBeta:showStartState()
+    self.star_game_sprite:show()
+    self.start_button:show()
 end
 
 function GameUILoginBeta:createVerLabel()
@@ -119,7 +130,7 @@ function GameUILoginBeta:createVerLabel()
         font = UIKit:getFontFilePath(),
         size = 18,
         align = cc.ui.UILabel.TEXT_ALIGN_CENTER, 
-        color = cc.c3b(0,0,0),
+        color = UIKit:hex2c3b(0x2a575d),
     }):addTo(self.ui_layer,2)
     :align(display.RIGHT_BOTTOM,display.right-2,display.bottom)
 end
@@ -127,7 +138,7 @@ end
 function GameUILoginBeta:showVersion()
     if  CONFIG_IS_DEBUG or device.platform == 'mac' then
         local __debugVer = require("debug_version")
-        self.verLabel:setString(string.format(_("版本:%s(%s)"), ext.getAppVersion(), __debugVer))
+        self.verLabel:setString(string.format(_("版本%s(%s)"), ext.getAppVersion(), __debugVer))
     else
         local jsonPath = cc.FileUtils:getInstance():fullPathForFilename("fileList.json")
         local file = io.open(jsonPath)
@@ -135,7 +146,7 @@ function GameUILoginBeta:showVersion()
         file:close()
 
         local tag = json.decode(jsonString).tag
-        local version = string.format(_("版本:%s(%s)"), ext.getAppVersion(), tag)
+        local version = string.format(_("版本%s(%s)"), ext.getAppVersion(), tag)
         self.verLabel:setString(version)
     end
 end
@@ -157,16 +168,16 @@ function GameUILoginBeta:onCleanup()
 	-- clean  all  unused textures
 	cc.Director:getInstance():getTextureCache():removeTextureForKey("splash_beta_bg_3987x1136.jpg")
  	cc.Director:getInstance():getTextureCache():removeTextureForKey("splash_logo_515x92.png")
- 	cc.Director:getInstance():getTextureCache():removeTextureForKey("splash_process_color.png")
- 	cc.Director:getInstance():getTextureCache():removeTextureForKey("splash_process_bg.png")
- 	cc.Director:getInstance():getTextureCache():removeTextureForKey("splash_tips_bg.png")
- 	cc.Director:getInstance():getTextureCache():removeTextureForKey("splash_process_bound.png")
+ 	cc.Director:getInstance():getTextureCache():removeTextureForKey("splash_process_color_606x25.png")
+ 	cc.Director:getInstance():getTextureCache():removeTextureForKey("splash_process_bg_606x25.png")
+    cc.Director:getInstance():getTextureCache():removeTextureForKey("splash_tips_bg_544x30.png")
+ 	cc.Director:getInstance():getTextureCache():removeTextureForKey("start_game_292x28.png.png")
 end
 
 
 function GameUILoginBeta:loadLocalResources()
 	self:setProgressPercent(0)
-	self:setProgressText(_("加载游戏资源..."))
+	self:setProgressText(_("正在加载游戏资源..."))
 	--TODO:这里暂时用emoji图片和已经合图的动画文件测试 60的进度用来加载资源
 	local count = #self.local_resources
 	for i,v in ipairs(self.local_resources) do
@@ -221,7 +232,7 @@ function GameUILoginBeta:getLogicServerInfo()
         self:performWithDelay(function()
             self.progress_bar:hide()
             self.tips_ui:hide()
-            self.start_ui:show()
+            self:showStartState()
         end, 0.5) 
     end):catch(function(err)
         local content, title = err:reason()

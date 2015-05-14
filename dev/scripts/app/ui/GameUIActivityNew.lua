@@ -18,7 +18,7 @@ local GameUIActivityRewardNew = import(".GameUIActivityRewardNew")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local Localize_item = import("..utils.Localize_item")
 
-GameUIActivityNew.ITEMS_TYPE = Enum("EVERY_DAY_LOGIN","ONLINE","CONTINUITY","FIRST_IN_PURGURE","PLAYER_LEVEL_UP")
+GameUIActivityNew.ITEMS_TYPE = Enum("EVERY_DAY_LOGIN","CONTINUITY","FIRST_IN_PURGURE","PLAYER_LEVEL_UP")
 
 local titles = {
 	EVERY_DAY_LOGIN = _("每日登陆奖励"),
@@ -181,6 +181,11 @@ function GameUIActivityNew:GetActivityItem(item_type)
 	local content = display.newSprite(UILib.activity_image_config[self.ITEMS_TYPE[item_type]]):align(display.CENTER_TOP,288, 144):addTo(bg)
 	if item_type ~= self.ITEMS_TYPE.EVERY_DAY_LOGIN then
 		local size = content:getContentSize()
+		if item_type == self.ITEMS_TYPE.PLAYER_LEVEL_UP then
+			display.newSprite("activity_layer_blue_546x108.png"):align(display.RIGHT_CENTER, size.width,size.height/2+2):addTo(content)
+		else
+			display.newSprite("activity_layer_red_546x108.png"):align(display.RIGHT_CENTER, size.width,size.height/2+2):addTo(content)
+		end
 		content:scale(550/math.max(size.width,size.height))
 	end
 	display.newSprite("activity_box_552x130.png"):align(display.CENTER_TOP,288, 144):addTo(bg)
