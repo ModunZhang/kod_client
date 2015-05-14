@@ -438,10 +438,9 @@ end
 
 function UIListView:addCommonTipsNodeIf__()
     if #self.items_ == 0 then
-        local viewRect = self:getViewRect()
-        local size = cc.size(viewRect.width,viewRect.height)
         local item = self:newItem()
         local content = self:getCommonTipsContent()
+        local size = content:getContentSize()
         item:addContent(content)
         item:setItemSize(size.width,size.height)
         self:addItem(item)
@@ -449,6 +448,8 @@ function UIListView:addCommonTipsNodeIf__()
 end
 
 function UIListView:getCommonTipsContent()
+    local viewRect = self:getViewRect()
+    local node = display.newNode():size(viewRect.width,viewRect.height)
     local tipsLabel= display.newTTFLabel({
         text = self.tipsString,
         font = UIKit:getFontFilePath(),
@@ -456,8 +457,8 @@ function UIListView:getCommonTipsContent()
         color = UIKit:hex2c3b(0x615b44),
         align = cc.TEXT_ALIGNMENT_CENTER,
         valign = cc.VERTICAL_TEXT_ALIGNMENT_CENTER,
-    })
-    return tipsLabel
+    }):addTo(node):align(display.CENTER, viewRect.width/2, viewRect.height/2)
+    return node
 end
 
 --[[--
@@ -1435,16 +1436,17 @@ function UIListView:self_sourceDelegate(listView, tag, idx)
         elseif UIListView.CELL_TAG == tag then
             local item = self:dequeueItem()
             if not item then
-                local viewRect = self:getViewRect()
-                item = self:newItem(self:getCommonTipsContent())
-                item:setItemSize(viewRect.width,viewRect.height)
+                local content = self:getCommonTipsContent()
+                local size = content:getContentSize()
+                item = self:newItem(content)
+                item:setItemSize(size.width,size.height)
             else
-                local viewRect = self:getViewRect()
                 local content = item:getContent()
                 if content then content:removeSelf() end
                 content = self:getCommonTipsContent()
+                local size = content:getContentSize()
                 item:addContent(content)
-                item:setItemSize(viewRect.width,viewRect.height)
+                item:setItemSize(size.width,size.height)
             end
             return item
         else
