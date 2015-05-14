@@ -102,7 +102,7 @@ function UIListView:ctor(params)
     self.redundancyViewVal = 0 --异步的视图两个方向上的冗余大小,横向代表宽,竖向代表高
     self.nTest = 0
     self.trackTop = params.trackTop or false -- 是否追终与上边的距离
-    self.tipsString = params.tipsString or _("暂时没有数据") -- 统一提示信息
+    self.tipsString = params.tipsString or _("暂时没有内容") -- 统一提示信息
     if type(params.needTips) == 'boolean' then
         self.needTips =  params.needTips 
     else
@@ -437,24 +437,27 @@ function UIListView:isItemInViewRect(pos)
 end
 
 function UIListView:addCommonTipsNodeIf__()
-    print("addCommonTipsNodeIf__---->",#self.items_)
     if #self.items_ == 0 then
         local viewRect = self:getViewRect()
         local size = cc.size(viewRect.width,viewRect.height)
-        local tipsNode = display.newNode():size(size.width,size.height)
-        local tipsLabel= display.newTTFLabel({
-            text = self.tipsString,
-            font = UIKit:getFontFilePath(),
-            size = 22,
-            color = UIKit:hex2c3b(0x615b44),
-            align = cc.TEXT_ALIGNMENT_CENTER,
-            valign = cc.VERTICAL_TEXT_ALIGNMENT_CENTER,
-        }):align(display.CENTER, size.width/2, size.height/2):addTo(tipsNode)
         local item = self:newItem()
-        item:addContent(tipsNode)
+        local content = self:getCommonTipsContent()
+        item:addContent(content)
         item:setItemSize(size.width,size.height)
         self:addItem(item)
     end
+end
+
+function UIListView:getCommonTipsContent()
+    local tipsLabel= display.newTTFLabel({
+        text = self.tipsString,
+        font = UIKit:getFontFilePath(),
+        size = 20,
+        color = UIKit:hex2c3b(0x615b44),
+        align = cc.TEXT_ALIGNMENT_CENTER,
+        valign = cc.VERTICAL_TEXT_ALIGNMENT_CENTER,
+    })
+    return tipsLabel
 end
 
 --[[--
@@ -465,7 +468,6 @@ end
 
 ]]
 function UIListView:reload()
-    print("UIListView:reload--->")
     if self.bAsyncLoad then
         self:asyncLoad_()
     else
@@ -768,7 +770,7 @@ function UIListView:increaseOrReduceItem_(nNeedAdjust)
         return boundingBox
     end
 
-    local count = self.delegate_[UIListView.DELEGATE](self, UIListView.COUNT_TAG)
+    local count = self:callAsyncLoadDelegate_(self, UIListView.COUNT_TAG)
     local nNeedAdjust = 2 --作为是否还需要再增加或减少item的标志,2表示上下两个方向或左右都需要调整
     local cascadeBound = getContainerCascadeBoundingBox()
     local localPos = self:convertToNodeSpace(cc.p(cascadeBound.x, cascadeBound.y))
@@ -907,7 +909,7 @@ function UIListView:asyncLoad_()
     self.container:setPosition(0, 0)
     self.container:setContentSize(cc.size(0, 0))
 
-    local count = self.delegate_[UIListView.DELEGATE](self, UIListView.COUNT_TAG)
+    local count = self:callAsyncLoadDelegate_(self, UIListView.COUNT_TAG)
 
     self.items_ = {}
     local itemW, itemH = 0, 0
@@ -971,7 +973,7 @@ function UIListView:asyncLoadWithCurrentPosition_()
         end
     end
 
-    local count = self.delegate_[UIListView.DELEGATE](self, UIListView.COUNT_TAG)
+    local count = self:callAsyncLoadDelegate_(self, UIListView.COUNT_TAG)
     -- 取较小值
     local end_idx
     if items[#items] then
@@ -1085,7 +1087,7 @@ function UIListView:loadOneItem_(originPoint, idx, bBefore)
     local posX, posY = originPoint.x, originPoint.y
     local content
 
-    item = self.delegate_[UIListView.DELEGATE](self, UIListView.CELL_TAG, idx)
+    item = self:callAsyncLoadDelegate_(self, UIListView.CELL_TAG, idx)
     if nil == item then
         printInfo("ERROR! UIListView load nil item")
         return
@@ -1170,7 +1172,7 @@ function UIListView:unloadOneItem_(idx)
     -- item:removeFromParentAndCleanup(false)
     self.container:removeChild(item)
 
-    self.delegate_[UIListView.DELEGATE](self, UIListView.UNLOAD_CELL_TAG, idx)
+    self:callAsyncLoadDelegate_(self, UIListView.UNLOAD_CELL_TAG, idx)
 end
 
 --[[--
@@ -1415,6 +1417,40 @@ function UIListView:isItemFullyInViewRect(pos)
     bound.x = nodePoint.x
     bound.y = nodePoint.y
     return self:rectWholeInRect(self.viewRect_,bound)
+end
+
+function UIListView:callAsyncLoadDelegate_(...)
+    local args = {...}
+    if self.delegate_[UIListView.DELEGATE](self, UIListView.COUNT_TAG) > 0 then
+        return self.delegate_[UIListView.DELEGATE](unpack(args))
+    else
+        return self:self_sourceDelegate(unpack(args))
+    end
+end
+
+function UIListView:self_sourceDelegate(listView, tag, idx)
+    if listView == self then
+        if UIListView.COUNT_TAG == tag then
+            return 1
+        elseif UIListView.CELL_TAG == tag then
+            local item = self:dequeueItem()
+            if not item then
+                local viewRect = self:getViewRect()
+                item = self:newItem(self:getCommonTipsContent())
+                item:setItemSize(viewRect.width,viewRect.height)
+            else
+                local viewRect = self:getViewRect()
+                local content = item:getContent()
+                if content then content:removeSelf() end
+                content = self:getCommonTipsContent()
+                item:addContent(content)
+                item:setItemSize(viewRect.width,viewRect.height)
+            end
+            return item
+        else
+
+        end
+    end
 end
 -- end
 ------------------------------------------------------------------------------------------------------------------------------------------
