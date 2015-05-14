@@ -5,10 +5,8 @@ local TutorialLayer = class('TutorialLayer', function()
     return display.newNode()
 end)
 
-local debug = false
-
 function TutorialLayer:ctor(obj)
-    if debug then
+    if GLOBAL_FTE_DEBUG then
         self.left = display.newColorLayer(cc.c4b(255, 0, 0, 100)):addTo(self, -1)
         self.right = display.newColorLayer(cc.c4b(255, 0, 0, 100)):addTo(self, -1)
         self.top = display.newColorLayer(cc.c4b(255, 0, 0, 100)):addTo(self, -1)
