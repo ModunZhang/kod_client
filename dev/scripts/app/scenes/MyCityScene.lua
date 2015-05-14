@@ -362,6 +362,7 @@ local ui_map = setmetatable({
     tower          = {"GameUITower"               ,},
     airship        = {},
     FairGround     = {},
+    square         = {},
 }, {__index = function() assert(false) end})
 function MyCityScene:OpenUI(building)
     local city = self:GetCity()
@@ -392,6 +393,8 @@ function MyCityScene:OpenUI(building)
         app:GetAudioManager():PlayeEffectSoundWithKey("AIRSHIP")
     elseif type_ == "FairGround" then
         UIKit:newGameUI("GameUIGacha", self.city):AddToScene(self, true):DisableAutoClose()
+    elseif type_ == "square" then
+        UIKit:newGameUI("GameUISquare", self.city):AddToScene(self, true)
     else
         UIKit:newGameUI(uiarrays[1], city, entity, uiarrays[2], uiarrays[3]):AddToScene(self, true)
     end

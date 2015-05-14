@@ -117,7 +117,15 @@ function CityLayer:GetClickedObject(world_x, world_y)
     for _,v in ipairs(clicked_list.sprite_clicked) do
         print(v:GetEntity():GetType(), v:getLocalZOrder())
     end
-    return clicked_list.logic_clicked[1] or clicked_list.sprite_clicked[1]
+    local building = clicked_list.logic_clicked[1] or clicked_list.sprite_clicked[1]
+    if building then
+        return building
+    else
+        local tile = self.city_scene:GetCity():GetTileByBuildingPosition(logic_x, logic_y)
+        if tile and tile.location_id == 2 then
+            return self.square
+        end
+    end
 end
 function CityLayer:OnTileLocked(city)
     self:OnTileChanged(city)
@@ -300,9 +308,50 @@ function CityLayer:ReloadSceneBackground()
     local right_1 = string.format("right_background_1_%s.jpg", terrain)
     local right_2 = string.format("right_background_2_%s.jpg", terrain)
     local left1 = display.newSprite(left_1):addTo(self.background):align(display.LEFT_BOTTOM)
-    local left2 = display.newSprite(left_2):addTo(self.background):align(display.LEFT_BOTTOM, 0, left1:getContentSize().height)
-    local right1 = display.newSprite(right_1):addTo(self.background):align(display.LEFT_BOTTOM, left2:getContentSize().width, 0)
-    local right2 = display.newSprite(right_2):addTo(self.background):align(display.LEFT_BOTTOM, left2:getContentSize().width, right1:getContentSize().height)
+    -- local left2 = display.newSprite(left_2):addTo(self.background):align(display.LEFT_BOTTOM, 0, left1:getContentSize().height)
+    local square = display.newSprite(left_2, nil, nil, {class=cc.FilteredSpriteWithOne}):addTo(self.background)
+        :align(display.LEFT_BOTTOM, 0, left1:getContentSize().height)
+    local right1 = display.newSprite(right_1):addTo(self.background):align(display.LEFT_BOTTOM, square:getContentSize().width, 0)
+    local right2 = display.newSprite(right_2):addTo(self.background):align(display.LEFT_BOTTOM, square:getContentSize().width, right1:getContentSize().height)
+
+    function square:GetEntity()
+        return {
+            GetType = function()
+                return "square"
+            end
+        }
+    end
+    function square:BeginFlash(time)
+        local start = 0
+        self:setFilter(filter.newFilter("CUSTOM", json.encode({
+            frag = "shaders/flashAt.fs",
+            shaderName = "flash1",
+            startTime = start,
+            curTime = start,
+            lastTime = 0.5,
+            rect = {0.815,0.543,0.21,0.26},
+            srm = {1.0, 1.54, -45, 0.4},
+        })))
+        self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt)
+            start = start + dt
+            if start > time then
+                self:ResetFlashStatus()
+            else
+                self:getFilter():getGLProgramState():setUniformFloat("curTime", start)
+            end
+        end)
+        self:scheduleUpdate()
+    end
+    function square:Flash(time)
+        self:ResetFlashStatus()
+        self:BeginFlash(time)
+    end
+    function square:ResetFlashStatus()
+        self:unscheduleUpdate()
+        self:removeNodeEventListenersByEvent(cc.NODE_ENTER_FRAME_EVENT)
+        self:clearFilter()
+    end
+    self.square = square
 end
 function CityLayer:InitWithCity(city)
     city:AddListenOnType(self, city.LISTEN_TYPE.UNLOCK_TILE)
@@ -811,5 +860,11 @@ function CityLayer:ShowLevelUpNode()
 end
 
 return CityLayer
+
+
+
+
+
+
 
 
