@@ -457,6 +457,7 @@ function MailManager:OnReportsChanged( reports )
     end
 end
 function MailManager:OnSavedReportsChanged( savedReports )
+    if not savedReports then return end
     self.savedReports = {}
     for k,v in pairs(savedReports) do
         table.insert(self.savedReports, Report:DecodeFromJsonData(clone(v)))

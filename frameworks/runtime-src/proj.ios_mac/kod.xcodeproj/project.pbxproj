@@ -216,6 +216,7 @@
 		3F3120C61AC3E3A40016F4CA /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
 		3F5436521AF86283006DFC80 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		3F5436541AF86289006DFC80 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		3F5A3CC11B042DB90001BE8C /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		3F7FA3B41AA6FC4B0011BDE2 /* libjansson.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libjansson.a; sourceTree = "<group>"; };
 		3F7FA3B51AA6FC4B0011BDE2 /* libpomelo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpomelo.a; sourceTree = "<group>"; };
 		3F7FA3B61AA6FC4B0011BDE2 /* libuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libuv.a; sourceTree = "<group>"; };
@@ -1825,6 +1826,7 @@
 			children = (
 				3F5436521AF86283006DFC80 /* en */,
 				3F5436541AF86289006DFC80 /* zh-Hans */,
+				3F5A3CC11B042DB90001BE8C /* zh-Hant */,
 			);
 			name = InfoPlist.strings;
 			path = kod;

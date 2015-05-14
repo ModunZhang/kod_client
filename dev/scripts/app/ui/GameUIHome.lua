@@ -16,7 +16,7 @@ local Alliance = import("..entity.Alliance")
 local ResourceManager = import("..entity.ResourceManager")
 local GrowUpTaskManager = import("..entity.GrowUpTaskManager")
 local GameUIHome = UIKit:createUIClass('GameUIHome')
-
+local WidgetAutoOrderAwardButton = import("..widget.WidgetAutoOrderAwardButton")
 
 local app = app
 local timer = app.timer
@@ -154,6 +154,7 @@ function GameUIHome:AddOrRemoveListener(isAdd)
         user:AddListenOnType(self, user.LISTEN_TYPE.TASK)
         user:AddListenOnType(self, user.LISTEN_TYPE.VIP_EVENT_ACTIVE)
         user:AddListenOnType(self, user.LISTEN_TYPE.VIP_EVENT_OVER)
+        user:AddListenOnType(self, user.LISTEN_TYPE.COUNT_INFO)
     else
         city:RemoveListenerOnType(self, self.city.LISTEN_TYPE.UPGRADE_BUILDING)
         city:RemoveListenerOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
@@ -167,6 +168,7 @@ function GameUIHome:AddOrRemoveListener(isAdd)
         user:RemoveListenerOnType(self, user.LISTEN_TYPE.TASK)
         user:RemoveListenerOnType(self, user.LISTEN_TYPE.VIP_EVENT_ACTIVE)
         user:RemoveListenerOnType(self, user.LISTEN_TYPE.VIP_EVENT_OVER)
+        user:RemoveListenerOnType(self, user.LISTEN_TYPE.COUNT_INFO)
     end
 end
 function GameUIHome:OnAllianceBasicChanged(fromEntity,changed_map)
@@ -390,24 +392,17 @@ function GameUIHome:CreateTop()
     end
     left_order:AddElement(button)
     --在线活动
-    local activity_button = cc.ui.UIPushButton.new(
-        {normal = "activity_68x78.png"},
-        {scale9 = false}
-    ):onButtonClicked(function(event)
-        if event.name == "CLICKED_EVENT" then
-            -- UIKit:newGameUI("GameUIActivity",self.city):AddToCurrentScene(true)
-            UIKit:newGameUI("GameUIActivity",self.city):AddToCurrentScene(true)
-        end
-    end)
+    local activity_button = WidgetAutoOrderAwardButton.new(self)
+       
     
 
-    function activity_button:CheckVisible()
-        return true
-    end
+    -- function activity_button:CheckVisible()
+    --     return true
+    -- end
 
-    function activity_button:GetElementSize()
-        return activity_button:getCascadeBoundingBox().size
-    end
+    -- function activity_button:GetElementSize()
+    --     return activity_button:getCascadeBoundingBox().size
+    -- end
 
     left_order:AddElement(activity_button)
     left_order:RefreshOrder()
@@ -456,8 +451,10 @@ function GameUIHome:CreateTop()
 
     order:RefreshOrder()
     self.top_order_group = order
+    self.left_order_group = left_order
     return top_bg
 end
+
 function GameUIHome:CreateBottom()
     local bottom_bg = WidgetHomeBottom.new(self.city):addTo(self)
         :align(display.BOTTOM_CENTER, display.cx, display.bottom)
@@ -591,6 +588,10 @@ function GameUIHome:PromiseOfActivePromise()
         self:GetFteLayer():removeFromParent()
         return ui:PromiseOfFte()
     end)
+end
+
+function GameUIHome:OnCountInfoChanged()
+    self.left_order_group:RefreshOrder()
 end
 
 return GameUIHome
