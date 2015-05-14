@@ -322,7 +322,7 @@ function GameUIMission:GetDailyListData()
         local text_table = Localize.daily_tasks[v]
         local tmp_data = dailyTasks[v]
         if text_table and tmp_data then
-            table.insert(r,{category = v,percent = #tmp_data/5,title = text_table.title ,image = UILib.daily_task_icon[v],desc = text_table.desc})
+            table.insert(r,{category = v,percent = #tmp_data/4,title = text_table.title ,image = UILib.daily_task_icon[v],desc = text_table.desc})
         end
     end
     dump(r,"GetDailyListData----->")
@@ -332,7 +332,7 @@ end
 
 function GameUIMission:RefreshDailyListWithItemAndKeyOfDaily(item,key_of_daily)
     local tmp_data = self.city:GetUser():GetDailyTasksInfo(key_of_daily)
-    local percent = #tmp_data/5
+    local percent = #tmp_data/4
     if percent >= 1 then
         item.finfish_tip_label:show()
         item.progress_bg:hide()
