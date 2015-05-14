@@ -56,9 +56,7 @@ function GameUIFteDragonEyrieMain:PromiseOfHate()
         mockData.HateDragon()
     end)
 
-    return self.dragon_manager:PromiseOfHate():next(function()
-        self:GetFteLayer():removeFromParent()
-    end)
+    return self.dragon_manager:PromiseOfHate()
 end
 function GameUIFteDragonEyrieMain:PormiseOfDefence()
     self:FindGarrisonBtn():setTouchSwallowEnabled(true)
@@ -76,7 +74,6 @@ function GameUIFteDragonEyrieMain:PormiseOfDefence()
         :addTo(self:GetFteLayer()):TurnUp(false):align(display.LEFT_TOP, r.x, r.y - 30)
 
     return self.dragon_manager:PromiseOfDefence():next(function()
-        self:GetFteLayer():removeFromParent()
         self:FindGarrisonBtn():setButtonEnabled(false)
     end)
 end

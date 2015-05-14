@@ -21,6 +21,7 @@ function LogoScene:onEnter()
     self:performWithDelay(function() self:beginAnimate() end,0.5)
 
 
+
     -- UILib.loadPveAnimation()
     -- self.box = ccs.Armature:create("lanse"):addTo(self)
     --     :align(display.CENTER, 0, display.height):scale(0.25)
@@ -36,7 +37,105 @@ function LogoScene:onEnter()
     --     end),
     -- })
 
+    -- local emitter = cc.ParticleSystemQuad:create("particles/Upsidedown.plist"):addTo(self)
+    -- emitter:pos(display.cx,display.cy)
+
+
+
+
+    -- display.newSprite("barracks.png"):addTo(self):pos(display.cx, display.cy)
     
+
+
+    -- local emitter = cc.ParticleSystemQuad:createWithTotalParticles(2):addTo(self)
+    --     emitter:setDuration(-1)
+    --     emitter:setEmitterMode(0)
+    --     emitter:setPositionType(2)
+    --     emitter:setAngle(45)
+    --     emitter:setPosVar(cc.p(0,0))
+    --     emitter:setLife(3)
+    --     emitter:setLifeVar(0)
+    --     emitter:setStartSize(25)
+    --     emitter:setEndSize(35)
+    --     emitter:setGravity(cc.p(0,0))
+    --     emitter:setSpeed(25)
+    --     emitter:setSpeedVar(0)
+    --     emitter:setStartColor(cc.c4f(1))
+    --     emitter:setEndColor(cc.c4f(1,1,1,0))
+    --     emitter:setEmissionRate(1)
+    --     emitter:setBlendAdditive(false)
+    --     emitter:setTexture(cc.Director:getInstance():getTextureCache():addImage("z.png"))
+    --     emitter:updateWithNoTime()
+    --     emitter:pos(display.cx + 50,display.cy + 50)
+
+
+    -- display.newSprite("my_keep_1.png"):addTo(self):pos(display.cx, display.cy)
+
+
+    -- local emitter = cc.ParticleSun:createWithTotalParticles(50)
+    -- emitter:setPosVar(cc.p(30,0))
+    -- emitter:setSpeed(60)
+    -- emitter:setStartSize(70)
+    -- emitter:setAngleVar(0)
+    -- emitter:setEmissionRate(emitter:getTotalParticles()/emitter:getLife())
+    -- emitter:setTexture(cc.Director:getInstance():getTextureCache():addImage("fire.png"))
+    -- emitter:addTo(self):pos(display.cx, display.cy-30)
+    -- local emitter = cc.ParticleFire:createWithTotalParticles(20)
+    -- emitter:setPosVar(cc.p(30,0))
+    -- emitter:setLife(1)
+    -- emitter:setLifeVar(0.5)
+    -- emitter:setStartSize(70)
+    -- emitter:setStartSizeVar(10)
+    -- emitter:setSpeed(50)
+    -- emitter:setSpeedVar(50)
+    -- emitter:setEmissionRate(emitter:getTotalParticles()/emitter:getLife())
+    -- emitter:setTexture(cc.Director:getInstance():getTextureCache():addImage("fire.png"))
+    -- emitter:addTo(self):pos(display.cx, display.cy-30)
+
+    
+
+
+
+
+
+
+
+    -- local emitter = cc.ParticleSnow:createWithTotalParticles(100):addTo(self)
+    -- local pos_x, pos_y = emitter:getPosition()
+    -- emitter:setPosition(pos_x, pos_y - 110)
+    -- emitter:setLife(3)
+    -- emitter:setLifeVar(1)
+
+    -- -- gravity
+    -- emitter:setGravity(cc.p(0, -10))
+
+    -- -- speed of particles
+    -- emitter:setSpeed(130)
+    -- emitter:setSpeedVar(30)
+
+    -- local startColor = emitter:getStartColor()
+    -- startColor.r = 0.9
+    -- startColor.g = 0.9
+    -- startColor.b = 0.9
+    -- emitter:setStartColor(startColor)
+
+    -- local startColorVar = emitter:getStartColorVar()
+    -- startColorVar.b = 0.1
+    -- emitter:setStartColorVar(startColorVar)
+
+    -- emitter:setEmissionRate(emitter:getTotalParticles() / emitter:getLife())
+
+    -- emitter:setTexture(cc.Director:getInstance():getTextureCache():addImage("+.png"))
+
+
+
+
+
+    -- local emitter = cc.ParticleFire:createWithTotalParticles(10):addTo(self)
+    -- emitter:setTexture(cc.Director:getInstance():getTextureCache():addImage("+.png"))
+    -- emitter:pos(display.cx,display.cy)
+    -- emitter:setPositionType(2)
+    -- emitter:setEmissionRate(3)
 
 
     -- WidgetFteMark.new():Size(100, 200):addTo(self):pos(display.cx, display.cy)

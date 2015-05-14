@@ -597,6 +597,7 @@ local ITEM = {
     casinoTokenClass_2 = "casinoTokenClass_2_128x128.png",
     casinoTokenClass_3 = "casinoTokenClass_3_128x128.png",
     casinoTokenClass_4 = "casinoTokenClass_4_128x128.png",
+    casinoTokenClass_5 = "casinoTokenClass_5_128x128.png",
 
     masterOfDefender_1 = "masterOfDefender_1_128x128.png",
     masterOfDefender_2 = "masterOfDefender_2_128x128.png",

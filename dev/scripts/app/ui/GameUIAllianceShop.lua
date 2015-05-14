@@ -83,11 +83,21 @@ function GameUIAllianceShop:OnMoveInStage()
         if tag == 'record' and not self.record_list then
             self:InitRecordPart()
         end
+
+        if tag ~= "upgrade" then
+            if not self.honourAndLoyalty then
+                self.honourAndLoyalty = self:HonourAndLoyalty():addTo(self:GetView()):align(display.CENTER, window.cx, window.top_bottom - 30)
+            end
+            self.honourAndLoyalty:show()
+        else
+            self.honourAndLoyalty:hide()
+        end
     end):pos(window.cx, window.bottom + 34)
     self.alliance:GetItemsManager():AddListenOnType(self,AllianceItemsManager.LISTEN_TYPE.ITEM_CHANGED)
     self.alliance:GetItemsManager():AddListenOnType(self,AllianceItemsManager.LISTEN_TYPE.ITEM_LOGS_CHANGED)
     self.alliance:GetAllianceMap():AddListenOnType(self,AllianceMap.LISTEN_TYPE.BUILDING_INFO)
-
+    self.alliance:AddListenOnType(self, self.alliance.LISTEN_TYPE.BASIC)
+    User:AddListenOnType(self,User.LISTEN_TYPE.ALLIANCE_INFO)
 end
 function GameUIAllianceShop:CreateBetweenBgAndTitle()
     GameUIAllianceShop.super.CreateBetweenBgAndTitle(self)
@@ -103,15 +113,61 @@ function GameUIAllianceShop:onExit()
     self.alliance:GetItemsManager():RemoveListenerOnType(self,AllianceItemsManager.LISTEN_TYPE.ITEM_CHANGED)
     self.alliance:GetItemsManager():RemoveListenerOnType(self,AllianceItemsManager.LISTEN_TYPE.ITEM_LOGS_CHANGED)
     self.alliance:GetAllianceMap():RemoveListenerOnType(self,AllianceMap.LISTEN_TYPE.BUILDING_INFO)
+    User:RemoveListenerOnType(self,User.LISTEN_TYPE.ALLIANCE_INFO)
+    self.alliance:RemoveListenerOnType(self, self.alliance.LISTEN_TYPE.BASIC)
     GameUIAllianceShop.super.onExit(self)
+end
+-- 荣耀值和忠诚值
+function GameUIAllianceShop:HonourAndLoyalty()
+    local node = display.newNode()
+    node:setContentSize(cc.size(560,34))
+    -- 荣耀值
+    local h_title = UIKit:ttfLabel({
+        text = _("荣耀值"),
+        size = 20,
+        color = 0x615b44
+    }):addTo(node):align(display.LEFT_CENTER, 0 , 17)
+    local bg = WidgetUIBackGround.new({width = 126,height = 34},WidgetUIBackGround.STYLE_TYPE.STYLE_3)
+        :addTo(node):align(display.LEFT_CENTER, h_title:getPositionX() + h_title:getContentSize().width + 20, h_title:getPositionY())
+    display.newSprite("honour_128x128.png"):addTo(bg):align(display.LEFT_CENTER, -10, bg:getContentSize().height/2):scale(0.3)
+    -- 荣耀值
+    local honour_label = UIKit:ttfLabel({
+        text = string.formatnumberthousands(self.alliance:Honour()),
+        size = 20,
+        color = 0x615b44
+    }):addTo(bg):align(display.CENTER, bg:getContentSize().width/2 , bg:getContentSize().height/2)
+
+    -- 忠诚值
+    local bg = WidgetUIBackGround.new({width = 126,height = 34},WidgetUIBackGround.STYLE_TYPE.STYLE_3)
+        :addTo(node):align(display.RIGHT_CENTER, 560, 17)
+    display.newSprite("loyalty_128x128.png"):addTo(bg):align(display.LEFT_CENTER, -16, bg:getContentSize().height/2):scale(0.4)
+    local h_title = UIKit:ttfLabel({
+        text = _("忠诚值"),
+        size = 20,
+        color = 0x615b44
+    }):addTo(node):align(display.RIGHT_CENTER, bg:getPositionX() - bg:getContentSize().width - 20 , 17)
+    -- 荣耀值
+    local loyalty_label = UIKit:ttfLabel({
+        text = string.formatnumberthousands(User:Loyalty()),
+        size = 20,
+        color = 0x615b44
+    }):addTo(bg):align(display.CENTER, bg:getContentSize().width/2 , bg:getContentSize().height/2)
+
+    function node:SetHonour( honour )
+        honour_label:setString(string.formatnumberthousands(honour))
+    end
+    function node:SetLoyalty( loyalty )
+        loyalty_label:setString(string.formatnumberthousands(loyalty))
+    end
+    return node
 end
 function GameUIAllianceShop:InitGoodsPart()
     local layer = self.goods_layer
     local list_width = 558
     local list,list_node = UIKit:commonListView({
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
-        viewRect = cc.rect(41, window.bottom_top,list_width , window.betweenHeaderAndTab),
-    },false)
+        viewRect = cc.rect(41, window.bottom_top,list_width , window.betweenHeaderAndTab - 100),
+    })
     list_node:addTo(layer):align(display.BOTTOM_CENTER, window.cx,window.bottom_top+20)
     self.goods_listview = list
 
@@ -286,8 +342,8 @@ function GameUIAllianceShop:InitStockPart()
     local list_width = 558
     local list,list_node = UIKit:commonListView({
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
-        viewRect = cc.rect(41, window.bottom_top,list_width , window.betweenHeaderAndTab),
-    },false)
+        viewRect = cc.rect(41, window.bottom_top,list_width , window.betweenHeaderAndTab - 100),
+    })
     list_node:addTo(layer):align(display.BOTTOM_CENTER, window.cx,window.bottom_top+20)
     self.stock_listview = list
 
@@ -348,18 +404,28 @@ function GameUIAllianceShop:InitRecordPart()
     local layer = self.goods_record_layer
     local list,list_node = UIKit:commonListView({
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
-        viewRect = cc.rect(41, window.bottom_top,568 , window.betweenHeaderAndTab-10),
-    },false)
+        viewRect = cc.rect(41, window.bottom_top,568 , window.betweenHeaderAndTab-100),
+    })
     list_node:addTo(layer):align(display.BOTTOM_CENTER, window.cx,window.bottom_top+20)
     self.record_list = list
 
     local item_logs = self.alliance:GetItemsManager():GetItemLogs()
-    self.record_logs_items = {}
-    for i,v in ipairs(item_logs) do
-        self:CreateRecordItem(v)
+    if #item_logs == 0 then
+        NetManager:getItemLogsPromise(self.alliance:Id()):done(function ( response )
+            self.record_logs_items = {}
+            for i,v in ipairs(item_logs) do
+                self:CreateRecordItem(v)
+            end
+            self.record_list:reload()
+            return response
+        end)
+    else
+        self.record_logs_items = {}
+        for i,v in ipairs(item_logs) do
+            self:CreateRecordItem(v)
+        end
+        self.record_list:reload()
     end
-
-    self.record_list:reload()
 end
 
 function GameUIAllianceShop:CreateRecordItem(item_log,index)
@@ -461,7 +527,18 @@ function GameUIAllianceShop:OnBuildingInfoChange(building)
         end
     end
 end
+function GameUIAllianceShop:OnAllianceInfoChanged()
+    self.honourAndLoyalty:SetLoyalty(User:Loyalty())
+end
+function GameUIAllianceShop:OnAllianceBasicChanged(alliance,changed_map)
+    if changed_map.honour then
+        self.honourAndLoyalty:SetHonour(alliance:Honour())
+    end
+end
 return GameUIAllianceShop
+
+
+
 
 
 

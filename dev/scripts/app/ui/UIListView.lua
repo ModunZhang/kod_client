@@ -742,7 +742,7 @@ end
 ]]
 function UIListView:increaseOrReduceItem_(nNeedAdjust)
     if 0 == #self.items_ then
-        print("ERROR items count is 0")
+        -- print("ERROR items count is 0")
         return
     end
 

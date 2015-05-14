@@ -5,10 +5,8 @@ local TutorialLayer = class('TutorialLayer', function()
     return display.newNode()
 end)
 
-local debug = false
-
 function TutorialLayer:ctor(obj)
-    if debug then
+    if GLOBAL_FTE_DEBUG then
         self.left = display.newColorLayer(cc.c4b(255, 0, 0, 100)):addTo(self, -1)
         self.right = display.newColorLayer(cc.c4b(255, 0, 0, 100)):addTo(self, -1)
         self.top = display.newColorLayer(cc.c4b(255, 0, 0, 100)):addTo(self, -1)
@@ -50,7 +48,7 @@ function TutorialLayer:Reset()
     self.count = 0
     for _, v in pairs{ self.left, self.right, self.top, self.bottom } do
         v:pos(0,0)
-        v:setTouchEnabled(false)
+        v:setTouchEnabled(true)
     end
     self.object = nil
     self.world_rect = nil
@@ -90,19 +88,7 @@ function TutorialLayer:RemoveAllOtherChildren()
         end
     end
 end
--- function TutorialLayer:DeferShow(control, angle, offset_x, offset_y)
---     local rect = control:getCascadeBoundingBox()
---     local x = rect.x + rect.width * 0.5
---     local y = rect.y + rect.height * 0.5
---     self.arrow:OnPositionChanged(x, y)
---     self.arrow:Set(angle, offset_x, offset_y):show()
---     self:Enable():SetTouchObject(control)
---     return cocos_promise.defer(function() return control end)
--- end
--- function TutorialLayer:DefferHide()
---     self.arrow:hide()
---     return cocos_promise.defer()
--- end
+
 
 return TutorialLayer
 

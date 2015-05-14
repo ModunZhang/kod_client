@@ -580,7 +580,6 @@ function GameUIAllianceBattle:OpenAllianceDetails(isOur)
         :addTo(body)
     local a_helper = WidgetAllianceHelper.new()
     local flag_sprite = a_helper:CreateFlagWithRhombusTerrain(alliance_terrain,alliance_flag)
-    flag_sprite:scale(0.85)
     flag_sprite:align(display.CENTER, flag_bg:getContentSize().width/2, flag_bg:getContentSize().height/2-20)
         :addTo(flag_bg)
     -- 联盟名称
@@ -628,7 +627,8 @@ end
 
 
 function GameUIAllianceBattle:OpenWarDetails()
-    local body = UIKit:newWidgetUI("WidgetPopDialog",608,_("联盟对战")):AddToCurrentScene():GetBody()
+    local layer = UIKit:newWidgetUI("WidgetPopDialog",608,_("联盟对战")):AddToCurrentScene()
+    local body = layer:GetBody()
     local rb_size = body:getContentSize()
 
     local war_introduce_table = {
@@ -641,20 +641,14 @@ function GameUIAllianceBattle:OpenWarDetails()
     local info_bg = WidgetUIBackGround.new({
         width = 574,
         height = 422,
-        top_img = "back_ground_top_2.png",
-        bottom_img = "back_ground_bottom_2.png",
-        mid_img = "back_ground_mid_2.png",
-        u_height = 10,
-        b_height = 10,
-        m_height = 1,
-    }):align(display.TOP_CENTER,rb_size.width/2,rb_size.height-90):addTo(body)
+    },WidgetUIBackGround.STYLE_TYPE.STYLE_6):align(display.TOP_CENTER,rb_size.width/2,rb_size.height-90):addTo(body)
     local war_introduce_label = UIKit:ttfLabel({
         text = "概述，准备期。战争期，保护期的描述。",
         size = 20,
         color = 0x403c2f,
         dimensions = cc.size(550,0)
     })
-        :align(display.LEFT_TOP,12,416)
+        :align(display.LEFT_TOP,12,410)
         :addTo(info_bg)
 
     WidgetPages.new({
@@ -714,6 +708,12 @@ function GameUIAllianceBattle:InitHistoryRecord()
     },false)
     list:setRedundancyViewVal(294)
     list:setDelegate(handler(self, self.HistoryDelegate))
+    if #self.alliance:GetAllianceFightReports() == 0 then
+        NetManager:getAllianceFightReportsPromise(self.alliance:Id()):done(function ( response )
+            list:reload()
+            return response
+        end)
+    end
     list:reload()
     list_node:addTo(layer):align(display.BOTTOM_CENTER, window.cx, window.bottom_top+20)
     self.history_listview = list
@@ -736,6 +736,9 @@ function GameUIAllianceBattle:HistoryDelegate(listView, tag, idx)
         content:SetData(idx)
         local size = content:getContentSize()
         item:setItemSize(size.width, size.height)
+        if idx == #self.alliance:GetAllianceFightReports() then
+            NetManager:getAllianceFightReportsPromise(self.alliance:Id())
+        end
         return item
     else
     end
@@ -1126,7 +1129,6 @@ function GameUIAllianceBattle:OpenOtherAllianceDetails(alliance)
     local a_helper = WidgetAllianceHelper.new()
     local flag_sprite = a_helper:CreateFlagWithRhombusTerrain(basic.terrain
         ,Flag.new():DecodeFromJson(basic.flag))
-    flag_sprite:scale(0.8)
     flag_sprite:align(display.CENTER, flag_bg:getContentSize().width/2, flag_bg:getContentSize().height/2-20)
         :addTo(flag_bg)
 

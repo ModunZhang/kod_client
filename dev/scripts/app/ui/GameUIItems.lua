@@ -29,11 +29,11 @@ function GameUIItems:OnMoveInStage()
         {
             label = _("商城"),
             tag = "shop",
-            default = true
         },
         {
             label = _("我的道具"),
             tag = "myItems",
+            default = true
         },
     }, function(tag)
         self.shop_layer:setVisible(tag == 'shop')

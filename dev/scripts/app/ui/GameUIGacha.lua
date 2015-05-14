@@ -589,7 +589,8 @@ function GameUIGacha:OnCountInfoChanged()
         })):setButtonLabelOffset(0,20)
 
         local btn_images = {normal = "green_btn_up_252x78.png",
-            pressed = "green_btn_down_252x78.png"
+            pressed = "green_btn_down_252x78.png",
+            disabled = "grey_btn_252x78.png",
         }
         button:setButtonImage(cc.ui.UIPushButton.NORMAL, btn_images["normal"], true)
         button:setButtonImage(cc.ui.UIPushButton.PRESSED, btn_images["pressed"], true)
@@ -610,6 +611,7 @@ function GameUIGacha:OnCountInfoChanged()
     end
 end
 return GameUIGacha
+
 
 
 
