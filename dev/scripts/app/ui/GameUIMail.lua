@@ -344,6 +344,13 @@ function GameUIMail:InitInbox(mails)
     }:addTo(self.inbox_layer)
     self.inbox_listview:setRedundancyViewVal(200)
     self.inbox_listview:setDelegate(handler(self, self.DelegateInbox))
+    if 0 == #self.manager:GetMails() then
+        self.manager:FetchMailsFromServer(#self.manager:GetMails()):done(function ( response )
+            self.inbox_listview:reload()
+            self.has_mail_label:setVisible(not (self.manager:GetMails() and #self.manager:GetMails()>0))
+            return response
+        end)
+    end
     self.inbox_listview:reload()
     -- 没有邮件
     self.has_mail_label = UIKit:ttfLabel({
@@ -489,6 +496,13 @@ function GameUIMail:InitSaveMails(mails)
     }:addTo(self.saved_layer)
     self.save_mails_listview:setRedundancyViewVal(200)
     self.save_mails_listview:setDelegate(handler(self, self.DelegateSavedMails))
+    if #self.manager:GetSavedMails() == 0 then
+        self.manager:FetchSavedMailsFromServer(#self.manager:GetSavedMails()):done(function ( response )
+            self.save_mails_listview:reload()
+            self.has_saved_mail_label:setVisible(not (self.manager:GetSavedMails() and #self.manager:GetSavedMails()>0))
+            return response
+        end)
+    end
     self.save_mails_listview:reload()
     -- 没有保存战报
     self.has_saved_mail_label = UIKit:ttfLabel({
@@ -631,6 +645,13 @@ function GameUIMail:InitSendMails(mails)
     }:addTo(self.sent_layer)
     self.send_mail_listview:setRedundancyViewVal(200)
     self.send_mail_listview:setDelegate(handler(self, self.DelegateSendMails))
+    if #self.manager:GetSendMails() == 0 then
+        self.manager:FetchSendMailsFromServer(#self.manager:GetSendMails()):done(function ( response )
+            self.send_mail_listview:reload()
+            self.has_send_label:setVisible(not (self.manager:GetSendMails() and #self.manager:GetSendMails()>0))
+            return response
+        end)
+    end
     self.send_mail_listview:reload()
     -- 没有发送邮件
     self.has_send_label = UIKit:ttfLabel({
@@ -1185,6 +1206,13 @@ function GameUIMail:InitReport()
     }:addTo(self.report_layer)
     self.report_listview:setRedundancyViewVal(200)
     self.report_listview:setDelegate(handler(self, self.DelegateReport))
+    if #self.manager:GetReports() == 0 then
+        self.manager:FetchReportsFromServer(#self.manager:GetReports()):done(function ( response )
+            self.report_listview:reload()
+            self.has_report_label:setVisible(not (self.manager:GetReports() and #self.manager:GetReports()>0))
+            return response
+        end)
+    end
     self.report_listview:reload()
     -- 没有战报
     local reports = self.manager:GetReports()
@@ -1382,8 +1410,8 @@ function GameUIMail:CreateReportContent()
                 }):align(display.LEFT_CENTER, 350, 27)
                 :addTo(report_content_bg)
         end
-       
-       cc.ui.UICheckBoxButton.new({
+
+        cc.ui.UICheckBoxButton.new({
             off = "report_saved_button_normal.png",
             off_pressed = "report_saved_button_normal.png",
             off_disabled = "report_saved_button_normal.png",
@@ -1394,7 +1422,7 @@ function GameUIMail:CreateReportContent()
             parent:SaveOrUnsaveReport(report,event.target)
         end):addTo(self):pos(249+item_width/2, -41+item_height/2)
             :setButtonSelected(report:IsSaved(),true)
-      
+
         parent:CreateCheckBox(self):align(display.LEFT_CENTER,10,-18+item_height/2)
             :addTo(self)
     end
@@ -1431,6 +1459,13 @@ function GameUIMail:InitSavedReports()
 
                 self.saved_reports_listview:setRedundancyViewVal(200)
                 self.saved_reports_listview:setDelegate(handler(self, self.DelegateSavedReport))
+                if #self.manager:GetSavedReports() == 0 then
+                    self.manager:FetchSavedReportsFromServer(#self.manager:GetSavedReports()):done(function ( response )
+                        self.saved_reports_listview:reload()
+                        self.saved_reports_listview:setVisible(#self.manager:GetSavedReports() < 1)
+                        return response
+                    end)
+                end
                 self.saved_reports_listview:reload()
                 -- 没有保存战报
                 self.has_saved_report_label = UIKit:ttfLabel({
@@ -1637,7 +1672,7 @@ function GameUIMail:CreateSavedReportContent()
                 }):align(display.LEFT_CENTER, 350, 27)
                 :addTo(report_content_bg)
         end
-      
+
         cc.ui.UICheckBoxButton.new({
             off = "report_saved_button_normal.png",
             off_pressed = "report_saved_button_normal.png",
@@ -1992,6 +2027,9 @@ function GameUIMail:GetEnemyAllianceTag(report)
 end
 
 return GameUIMail
+
+
+
 
 
 

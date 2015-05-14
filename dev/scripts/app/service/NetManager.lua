@@ -468,7 +468,7 @@ end
 -- 重写OpenUDID
 local getOpenUDID = device.getOpenUDID
 device.getOpenUDID = function()
-    -- if true then return "gz1" end
+    -- if true then return "aj2" end
     if CONFIG_IS_DEBUG then
         local device_id
         local udid = cc.UserDefault:getInstance():getStringForKey("udid")
@@ -975,6 +975,19 @@ function NetManager:getRequestToJoinAlliancePromise(allianceId)
         allianceId = allianceId
     }, "请求加入联盟失败!"):done(get_response_msg)
 end
+-- 获取联盟战历史记录
+function NetManager:getAllianceFightReportsPromise(allianceId)
+    return get_blocking_request_promise("logic.allianceHandler.getAllianceFightReports", {
+        allianceId = allianceId
+    }, "获取联盟战历史记录失败!"):done(get_response_msg)
+end
+-- 获取联盟商店买入卖出记录
+function NetManager:getItemLogsPromise(allianceId)
+    return get_blocking_request_promise("logic.allianceHandler.getItemLogs", {
+        allianceId = allianceId
+    }, "获取联盟商店买入卖出记录失败!"):done(get_response_msg)
+end
+
 -- 获取玩家信息
 function NetManager:getPlayerInfoPromise(memberId)
     return get_blocking_request_promise("logic.playerHandler.getPlayerInfo", {
