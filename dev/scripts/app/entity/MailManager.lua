@@ -241,11 +241,9 @@ function MailManager:FetchMailsFromServer(fromIndex)
     return NetManager:getFetchMailsPromise(fromIndex):done(function(response)
         if response.msg.mails then
             local user_data = DataManager:getUserData()
-            local fetch_mails = {}
             for i,v in ipairs(response.msg.mails) do
                 table.insert(user_data.mails, v)
                 self:AddMailsToEnd(clone(v))
-                table.insert(fetch_mails, clone(v))
             end
         end
         return response
@@ -258,11 +256,9 @@ function MailManager:FetchSavedMailsFromServer(fromIndex)
     return NetManager:getFetchSavedMailsPromise(fromIndex):done(function (response)
         if response.msg.mails then
             local user_data = DataManager:getUserData()
-            local fetch_mails = {}
             for i,v in ipairs(response.msg.mails) do
                 table.insert(user_data.savedMails, v)
                 self:AddSavedMailsToEnd(clone(v))
-                table.insert(fetch_mails, clone(v))
             end
         end
     end)
@@ -278,11 +274,9 @@ function MailManager:FetchSendMailsFromServer(fromIndex)
     return NetManager:getFetchSendMailsPromise(fromIndex):done(function(response)
         if response.msg.mails then
             local user_data = DataManager:getUserData()
-            local fetch_mails = {}
             for i,v in ipairs(response.msg.mails) do
                 table.insert(user_data.sendMails, v)
                 self:AddSendMailsToEnd(clone(v))
-                table.insert(fetch_mails, clone(v))
             end
         end
     end)
@@ -304,20 +298,19 @@ function MailManager:OnMailStatusChanged( mailStatus )
     end)
 end
 function MailManager:OnMailsChanged( mails )
-    self.mails = clone(mails)
+    self.mails = mails and clone(mails) or {}
 end
 function MailManager:OnSavedMailsChanged( savedMails )
-    self.savedMails = clone(savedMails)
+    self.savedMails = savedMails and clone(savedMails) or {}
 end
 function MailManager:OnSendMailsChanged( sendMails )
-    self.sendMails = clone(sendMails)
+    self.sendMails = sendMails and clone(sendMails) or {}
 end
 
 function MailManager:OnNewMailsChanged( mails )
     local add_mails = {}
     local remove_mails = {}
     local edit_mails = {}
-    dump(mails,"OnNewMailsChanged")
     for type,mail in pairs(mails) do
         if type == "add" then
             for i,data in ipairs(mail) do
@@ -361,7 +354,6 @@ function MailManager:OnNewSavedMailsChanged( savedMails,isRead )
     local add_mails = {}
     local remove_mails = {}
     local edit_mails = {}
-    dump(savedMails,"savedMails")
     if isRead then
         table.insert(edit_mails, savedMails)
         for i,v in ipairs(self.savedMails) do
@@ -452,13 +444,14 @@ end
 
 function MailManager:OnReportsChanged( reports )
     self.reports = {}
+    if not reports then return end
     for k,v in pairs(reports) do
         table.insert(self.reports, Report:DecodeFromJsonData(clone(v)))
     end
 end
 function MailManager:OnSavedReportsChanged( savedReports )
-    if not savedReports then return end
     self.savedReports = {}
+    if not savedReports then return end
     for k,v in pairs(savedReports) do
         table.insert(self.savedReports, Report:DecodeFromJsonData(clone(v)))
     end
@@ -575,11 +568,9 @@ function MailManager:FetchReportsFromServer(fromIndex)
         :done(function (response)
             if response.msg.reports then
                 local user_data = DataManager:getUserData()
-                local fetch_reports = {}
                 for i,v in ipairs(response.msg.reports) do
                     table.insert(user_data.reports, v)
                     self:AddReportsToEnd(clone(v))
-                    table.insert(fetch_reports, clone(v))
                 end
             end
         end)
@@ -588,14 +579,12 @@ function MailManager:GetSavedReports()
     return self.savedReports
 end
 function MailManager:FetchSavedReportsFromServer(fromIndex)
-    NetManager:getSavedReportsPromise(fromIndex):done(function (response)
+    return NetManager:getSavedReportsPromise(fromIndex):done(function (response)
         if response.msg.reports then
             local user_data = DataManager:getUserData()
-            local fetch_reports = {}
             for i,v in ipairs(response.msg.reports) do
                 table.insert(user_data.reports, v)
                 self:AddSavedReportsToEnd(clone(v))
-                table.insert(fetch_reports, v)
             end
         end
     end)

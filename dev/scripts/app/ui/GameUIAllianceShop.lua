@@ -354,12 +354,22 @@ function GameUIAllianceShop:InitRecordPart()
     self.record_list = list
 
     local item_logs = self.alliance:GetItemsManager():GetItemLogs()
-    self.record_logs_items = {}
-    for i,v in ipairs(item_logs) do
-        self:CreateRecordItem(v)
+    if #item_logs == 0 then
+        NetManager:getItemLogsPromise(self.alliance:Id()):done(function ( response )
+            self.record_logs_items = {}
+            for i,v in ipairs(item_logs) do
+                self:CreateRecordItem(v)
+            end
+            self.record_list:reload()
+            return response
+        end)
+    else
+        self.record_logs_items = {}
+        for i,v in ipairs(item_logs) do
+            self:CreateRecordItem(v)
+        end
+        self.record_list:reload()
     end
-
-    self.record_list:reload()
 end
 
 function GameUIAllianceShop:CreateRecordItem(item_log,index)
@@ -462,6 +472,7 @@ function GameUIAllianceShop:OnBuildingInfoChange(building)
     end
 end
 return GameUIAllianceShop
+
 
 
 
