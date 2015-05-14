@@ -201,7 +201,6 @@ function GameUINpc:RefreshNpc(dialog)
     end
 end
 function GameUINpc:Reset()
-    print_("Reset")
     self:ResetClick()
     self.dialog = {}
     self.dialog_index = 1
@@ -238,7 +237,6 @@ function GameUINpc:PromiseOfDialogEndWithClicked(index)
     local callbacks = self.dialog_clicked_callbacks[index]
     assert(#callbacks == 0)
     table.insert(callbacks, function()
-        print_("PromiseOfDialogEndWithClicked : ".. index)
         return p:resolve(self)
     end)
     return p
@@ -256,7 +254,6 @@ function GameUINpc:PromiseOfDialogEnded(index)
     local callbacks = self.dialog_index_callbacks[index]
     assert(#callbacks == 0)
     table.insert(callbacks, function()
-        print_("PromiseOfDialogEnded : ".. index)
         return p:resolve(self)
     end)
     return p
@@ -268,12 +265,9 @@ function GameUINpc:PromiseOfSay(...)
         instance:Reset()
         instance:InitDialog(...)
         instance:StartDialog()
-        print_("PromiseOfSay")
     else
         instance = UIKit:newGameUI('GameUINpc', ...):AddToCurrentScene(true)
         instance.is_should_start = true
-
-        print_("PromiseOfSay is_should_start")
     end
     return instance:PromiseOfDialogEndWithClicked(#{...})
 end

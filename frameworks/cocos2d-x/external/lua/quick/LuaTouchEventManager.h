@@ -56,7 +56,7 @@ public:
      */
     static void destroyInstance();
 
-    
+
     void addTouchableNode(LuaEventNode *node);
     void removeTouchableNode(LuaEventNode *node);
 
@@ -93,24 +93,24 @@ protected:
     void dispatchingTouchEvent(const std::vector<Touch*>& touches, Event *pEvent, int event);
     void dispatchingTouchEventReal(const std::vector<Touch*>& touches, Event *pEvent, int event);
     
-	void cleanDisabledNode();
+    void cleanDisabledNode();
 
 
     /** Walks though scene graph to get the draw order for each node, it's called before sorting event listener with scene graph priority */
     void visitTarget(Node* node, bool isRootNode);
 
     /** The map of node and LuaEventNode */
-    std::unordered_map<Node*, LuaEventNode*> _nodeLuaEventNodeMap;
+    std::unordered_map<unsigned int, LuaEventNode*> _nodeLuaEventNodeMap;
 
     /** The map of node and its event priority */
-    std::unordered_map<Node*, int> _nodePriorityMap;
+    std::unordered_map<unsigned int, int> _nodePriorityMap;
 
     /** key: Global Z Order, value: Sorted Nodes */
     std::unordered_map<float, std::vector<Node*>> _globalZOrderNodeMap;
 
     int _nodePriorityIndex;
 
-	bool _bDispatching;
+    bool _bDispatching;
 };
 
 // end of LuaTouchEventManager group

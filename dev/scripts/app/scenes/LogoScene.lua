@@ -80,6 +80,8 @@ function LogoScene:onEnter()
     -- emitter:setEmissionRate(emitter:getTotalParticles()/emitter:getLife())
     -- emitter:setTexture(cc.Director:getInstance():getTextureCache():addImage("fire.png"))
     -- emitter:addTo(self):pos(display.cx, display.cy-30)
+
+    
     -- local emitter = cc.ParticleFire:createWithTotalParticles(20)
     -- emitter:setPosVar(cc.p(30,0))
     -- emitter:setLife(1)
