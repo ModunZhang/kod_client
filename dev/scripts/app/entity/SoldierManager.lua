@@ -166,6 +166,13 @@ function SoldierManager:GetTotalSoldierCount()
     end
     return total_count
 end
+function SoldierManager:HasAnyWoundedSoldiers()
+    for _,v in pairs(self.treatSoldiers_map) do
+        if v > 0 then
+            return true
+        end
+    end
+end
 function SoldierManager:GetTotalTreatSoldierCount()
     local total_count = 0
     for k, v in pairs(self.treatSoldiers_map) do
