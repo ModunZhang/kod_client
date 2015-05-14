@@ -215,7 +215,6 @@ function MyCityScene:PromiseOfClickBuilding(x, y, for_build, msg, arrow_param)
     table.insert(self.clicked_callbacks, function(building)
         local x_, y_ = building:GetEntity():GetLogicPosition()
         if x == x_ and y == y_ then
-            self:EndClickFte()
             p:resolve()
             return true
         end
@@ -232,19 +231,16 @@ function MyCityScene:EndClickFte()
     self:GetSceneLayer():GetInfoLayer():removeAllChildren()
     self:GetFteLayer():Disable()
 end
-function MyCityScene:CheckClickPromise(building)
+function MyCityScene:CheckClickPromise(building, func)
     if #self.clicked_callbacks > 0 then
         if self.clicked_callbacks[1](building) then
             table.remove(self.clicked_callbacks, 1)
-            return
+            func()
+            self:EndClickFte()
         end
-        return true
+    else
+        func()
     end
-end
-function MyCityScene:PromiseOfClickLockButton(building_type)
-    return UIKit:PromiseOfOpen("GameUIUnlockBuilding"):next(function(ui)
-        return ui
-    end)
 end
 function MyCityScene:GetLockButtonsByBuildingType(building_type)
     local lock_button
@@ -327,10 +323,9 @@ function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
                 self:GetSceneUILayer():getChildByTag(WidgetMoveHouse.ADD_TAG):SetMoveToRuins(building)
                 return
             end
-            if self:CheckClickPromise(building) then
-                return
-            end
-            self:OpenUI(building)
+            self:CheckClickPromise(building, function()
+                self:OpenUI(building)
+            end)
         end)
     elseif self:IsEditMode() then
         self:LeaveEditMode()
@@ -410,170 +405,139 @@ local check = import("..fte.check")
 local mockData = import("..fte.mockData")
 function MyCityScene:RunFte()
     if not GLOBAL_FTE then return end
-    self:GetFteLayer():Enable()
+    self.touch_layer:removeFromParent()
+    self:GetFteLayer():Disable()
+
     cocos_promise.defer():next(function()
         if not check("HateDragon") or
             not check("DefenceDragon") then
-            self:GetFteLayer():Disable()
             return self:PromiseOfHateDragonAndDefence()
         end
     end):next(function()
         if not check("BuildHouseAt_3_3") then
-            self:GetFteLayer():Disable()
             return self:PromiseOfBuildFirstHouse(18, 12, "dwelling")
         end
     end):next(function()
         if not check("FinishBuildHouseAt_3_1") then
-            self:GetFteLayer():Disable()
             return self:GetHomePage():PromiseOfFteFreeSpeedUp()
         end
     end):next(function()
         if not check("UpgradeBuildingTo_keep_2") then
-            self:GetFteLayer():Disable()
             return self:PromiseOfFirstUpgradeKeep()
         end
     end):next(function()
         if not check("FinishUpgradingBuilding_keep_2") then
-            self:GetFteLayer():Disable()
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
         if not check("UpgradeBuildingTo_barracks_1") then
-            self:GetFteLayer():Disable()
             return self:PromiseOfUnlockBuilding("barracks")
         end
     end):next(function()
         if not check("FinishUpgradingBuilding_barracks_1") then
-            self:GetFteLayer():Disable()
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
         if not check("RecruitSoldier_swordsman_10") then
-            self:GetFteLayer():Disable()
             return self:PromiseOfRecruitSoldier("swordsman")
         end
     end):next(function()
         if not check("BuildHouseAt_5_3") then
-            self:GetFteLayer():Disable()
             return self:PromiseOfBuildHouse(8, 22, "farmer")
         end
     end):next(function()
         if not check("FinishBuildHouseAt_5_1") then
-            self:GetFteLayer():Disable()
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
         if not check("UpgradeHouseTo_5_3_2") then
-            self:GetFteLayer():Disable()
             return self:PromiseOfUpgradeByBuildingType(8, 22, "farmer", _("点击农夫小屋, 将其升级到等级2"))
         end
     end):next(function()
         if not check("FinishBuildHouseAt_5_2") then
-            self:GetFteLayer():Disable()
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
         if not check("FightWithNpc") then
-            self:GetFteLayer():Disable()
             return self:PromiseOfExplorePve()
         end
     end):next(function()
         if not check("ActiveVip") then
-            self:GetFteLayer():Disable()
             return self:PromiseOfActiveVip()
         end
     end):next(function()
         if not check("UpgradeBuildingTo_keep_3") then
-            self:GetFteLayer():Disable()
             return self:PromiseOfUpgradeKeepTo5()
         end
     end):next(function()
         if not check("FinishUpgradingBuilding_keep_3") then
-            self:GetFteLayer():Disable()
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
         if not check("UpgradeBuildingTo_keep_4") then
-            self:GetFteLayer():Disable()
             return self:PromiseOfUpgradeKeepTo5()
         end
     end):next(function()
         if not check("FinishUpgradingBuilding_keep_4") then
-            self:GetFteLayer():Disable()
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
         if not check("UpgradeBuildingTo_keep_5") then
-            self:GetFteLayer():Disable()
             return self:PromiseOfUpgradeKeepTo5()
         end
     end):next(function()
         if not check("FinishUpgradingBuilding_keep_5") then
-            self:GetFteLayer():Disable()
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
         if not check("UpgradeBuildingTo_hospital_1") then
-            self:GetFteLayer():Disable()
             return self:PromiseOfUnlockHospital()
         end
     end):next(function()
         if not check("FinishUpgradingBuilding_hospital_1") then
-            self:GetFteLayer():Disable()
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
         if not check("UpgradeBuildingTo_academy_1") then
-            self:GetFteLayer():Disable()
             return self:PromiseOfUnlockBuilding("academy")
         end
     end):next(function()
         if not check("FinishUpgradingBuilding_academy_1") then
-            self:GetFteLayer():Disable()
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
         if not check("UpgradeBuildingTo_materialDepot_1") then
-            self:GetFteLayer():Disable()
             return self:PromiseOfUnlockBuilding("materialDepot")
         end
     end):next(function()
         if not check("FinishUpgradingBuilding_materialDepot_1") then
-            self:GetFteLayer():Disable()
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
         if not check("BuildHouseAt_6_3") then
-            self:GetFteLayer():Disable()
             return self:PromiseOfBuildWoodcutter()
         end
     end):next(function()
         if not check("FinishBuildHouseAt_6_1") then
-            self:GetFteLayer():Disable()
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
         if not check("BuildHouseAt_7_3") then
-            self:GetFteLayer():Disable()
             return self:PromiseOfBuildHouse(28, 22, "quarrier", _("建造石匠小屋"))
         end
     end):next(function()
         if not check("FinishBuildHouseAt_7_1") then
-            self:GetFteLayer():Disable()
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
         if not check("BuildHouseAt_8_3") then
-            self:GetFteLayer():Disable()
             return self:PromiseOfBuildHouse(28, 12, "miner", _("建造矿工小屋"))
         end
     end):next(function()
         if not check("FinishBuildHouseAt_8_1") then
-            self:GetFteLayer():Disable()
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
-        self:GetFteLayer():Disable()
         return self:PromiseOfFteEnd()
     end)
 end
@@ -635,29 +599,18 @@ function MyCityScene:PromiseOfUpgradeByBuildingType(x, y, type_, msg)
         end)
 end
 function MyCityScene:PromiseOfUnlockBuilding(building_type)
-    self.touch_layer:setTouchEnabled(false)
-
     local x,y = self:GetCity():GetFirstBuildingByType(building_type):GetMidLogicPosition()
-    local tutorial = TutorialLayer.new():addTo(self):Enable()
-
-    return promise.all(
-        self:GotoLogicPoint(x, y, 5):next(function()
-
-            WidgetFteArrow.new(_("点击解锁新建筑")):TurnUp():align(display.TOP_CENTER, 0, -50)
+    local tutorial = TutorialLayer.new():addTo(self, 2001)
+    return self:GotoLogicPoint(x, y, 5):next(function()
+        WidgetFteArrow.new(_("点击解锁新建筑")):TurnUp():align(display.TOP_CENTER, 0, -50)
             :addTo(self:GetLockButtonsByBuildingType(building_type), 1, 123)
 
-            tutorial:SetTouchObject(self:GetLockButtonsByBuildingType(building_type))
-        end),
-        self:PromiseOfClickLockButton(building_type)
-    ):next(function()
-        self.touch_layer:setTouchEnabled(true)
-
-        tutorial:removeFromParent()
-
-        self:GetLockButtonsByBuildingType(building_type):removeChildByTag(123)
-
+        tutorial:SetTouchObject(self:GetLockButtonsByBuildingType(building_type))
+    end):next(function()
         return UIKit:PromiseOfOpen("GameUIUnlockBuilding")
     end):next(function(ui)
+        tutorial:removeFromParent()
+        self:GetLockButtonsByBuildingType(building_type):removeChildByTag(123)
         return ui:PormiseOfFte()
     end)
 end
@@ -781,6 +734,8 @@ end
 
 
 return MyCityScene
+
+
 
 
 

@@ -30,10 +30,16 @@ UIKit.UITYPE = Enum("BACKGROUND","WIDGET","MESSAGEDIALOG")
 UIKit.open_ui_callbacks = {}
 UIKit.close_ui_callbacks = {}
 
-function UIKit:CheckOpenUI(ui)
+function UIKit:CheckOpenUI(ui, isopen)
     local callbacks = self.open_ui_callbacks
-    if #callbacks > 0 and callbacks[1](ui) then
-        table.remove(callbacks, 1)
+    if #callbacks > 0 then
+        if isopen then
+            ui:GetFteLayer()
+        else
+            if callbacks[1](ui) then
+                table.remove(callbacks, 1)
+            end
+        end
     end
 end
 function UIKit:PromiseOfOpen(ui_name)

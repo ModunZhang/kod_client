@@ -118,7 +118,6 @@ function MapScene:CreateFteLayer()
     end
     layer:setTouchSwallowEnabled(true)
     local touch_judgment = self.touch_judgment
-    local touch_layer = self.touch_layer
     layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
         if touch_judgment then
             local touch_type, pre_x, pre_y, x, y = event.name, event.prevX, event.prevY, event.x, event.y
@@ -137,12 +136,10 @@ function MapScene:CreateFteLayer()
     end)
     function layer:Enable()
         self:setTouchEnabled(true)
-        touch_layer:setTouchEnabled(false)
         return self:show()
     end
     function layer:Disable()
         self:setTouchEnabled(false)
-        touch_layer:setTouchEnabled(true)
         return self:hide()
     end
     function layer:Reset()
