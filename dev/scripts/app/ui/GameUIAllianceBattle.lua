@@ -1129,7 +1129,6 @@ function GameUIAllianceBattle:OpenOtherAllianceDetails(alliance)
     local a_helper = WidgetAllianceHelper.new()
     local flag_sprite = a_helper:CreateFlagWithRhombusTerrain(basic.terrain
         ,Flag.new():DecodeFromJson(basic.flag))
-    flag_sprite:scale(0.8)
     flag_sprite:align(display.CENTER, flag_bg:getContentSize().width/2, flag_bg:getContentSize().height/2-20)
         :addTo(flag_bg)
 
