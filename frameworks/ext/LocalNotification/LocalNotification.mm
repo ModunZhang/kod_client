@@ -16,6 +16,7 @@ static std::map<std::string, bool> m_localNotificationState;
 
 void cancelAll()
 {
+    NSLog(@"cancelAll------>");
     [[UIApplication sharedApplication] cancelAllLocalNotifications];
 }
 
@@ -50,6 +51,7 @@ bool addNotification(const char *type, long finishTime, const char *body, const 
                                       nil];
     
     [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+    NSLog(@"scheduleLocalNotification--->[%s]%@::%s,%@",identity,[[NSDate alloc] initWithTimeIntervalSince1970:finishTime],type,[NSString stringWithUTF8String:body]);
     return  true;
 }
 
@@ -57,12 +59,13 @@ bool cancelNotificationWithIdentity(const char* identity)
 {
     
     NSArray *notifications = [[UIApplication sharedApplication] scheduledLocalNotifications];
+    NSLog(@"cancelNotificationWithIdentity------>%s",identity);
     for (UILocalNotification *notification in notifications)
     {
         BOOL shouldCancel = NO;
         
         NSString* identityObject = (NSString*)[notification.userInfo objectForKey:@"identity"];
-        if (identityObject && [identityObject respondsToSelector:@selector(longLongValue)])
+        if (identityObject)
         {
             const char * userinfostring = [identityObject UTF8String];
             if (strlen(userinfostring) == 0)
@@ -71,9 +74,9 @@ bool cancelNotificationWithIdentity(const char* identity)
             }
             else
             {
-                shouldCancel = strcmp(identity, userinfostring) == 0;           }
+                shouldCancel = strcmp(identity, userinfostring) == 0;
+            }
         }
-        
         if (shouldCancel)
         {
             [[UIApplication sharedApplication] cancelLocalNotification:notification];
@@ -96,7 +99,12 @@ static int tolua_localpush_addNotification(lua_State* tolua_S)
 {
 #ifndef TOLUA_RELEASE
     tolua_Error tolua_err;
-    if (lua_gettop(tolua_S)< 3)
+    if ((lua_gettop(tolua_S)< 4) ||
+        !tolua_isstring(tolua_S, 1, 0, &tolua_err) ||
+        !tolua_isnumber(tolua_S, 2, 0, &tolua_err) ||
+        !tolua_isstring(tolua_S, 3, 0, &tolua_err) ||
+        !tolua_isstring(tolua_S, 4, 0, &tolua_err)
+        )
         goto tolua_lerror;
     else
 #endif

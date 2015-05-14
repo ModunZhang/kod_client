@@ -183,7 +183,8 @@ function WidgetRequirementListview:RefreshListView(contents)
                 end
                 -- 资源类型icon
                 local resource_type_icon = display.newSprite(v.icon, -item_width/2+35, 0):addTo(content)
-                resource_type_icon:setScale(40/resource_type_icon:getContentSize().width)
+                local size = resource_type_icon:getContentSize()
+                resource_type_icon:setScale(40/math.max(size.width,size.height))
                 item:addContent(content)
                 local index = v.canNotBuy and 1
                 self.listview:addItem(item,index)

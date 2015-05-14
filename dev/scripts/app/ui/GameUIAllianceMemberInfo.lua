@@ -76,7 +76,7 @@ function GameUIAllianceMemberInfo:BuildUI()
                     :addTo(self.bg)
                     :setButtonLabel("normal", UIKit:ttfLabel({
                         text = titles[i],
-                        size = 18,
+                        size = 20,
                         color= 0xffedae,
                         shadow= true
                     }))
