@@ -49,9 +49,9 @@ function GameUIAllianceNoticeOrDescEdit:OnMoveInStage()
         :setButtonLabel(
         	UIKit:ttfLabel({
 				text = _("取消"),
-				size = 20,
+				size = 22,
 				shadow = true,
-				color = 0xfff3c7
+				color = 0xffedae
 			})
 		)
 		:onButtonClicked(function()
@@ -63,14 +63,14 @@ function GameUIAllianceNoticeOrDescEdit:OnMoveInStage()
         :setButtonLabel(
         	UIKit:ttfLabel({
 				text = _("确定"),
-				size = 20,
+				size = 22,
 				shadow = true,
-				color = 0xfff3c7
+				color = 0xffedae
 			})
 		)
 		:onButtonClicked(handler(self, self.onOkButtonClicked))
 		:addTo(bg_node)
-		:align(display.RIGHT_BOTTOM,bg_node:getCascadeBoundingBox().width - 120, 20)
+		:align(display.RIGHT_BOTTOM,bg_node:getCascadeBoundingBox().width - 100, 20)
 end
 
 function GameUIAllianceNoticeOrDescEdit:onOkButtonClicked()

@@ -213,8 +213,9 @@ function WidgetPlayerNode:GetBasicInfoItemNode(basic_data)
 		})
 			:align(display.RIGHT_BOTTOM,progress_bg:getPositionX() + progress_bg:getContentSize().width, vip_bg:getPositionY())
 			:addTo(node)
-			:setButtonLabel("normal", UIKit:ttfLabel({
-				text = _("复制玩家ID")
+			:setButtonLabel("normal",UIKit:commonButtonLable({
+				text = _("复制玩家ID"),
+				size = 22,
 			}))
 			:onButtonClicked(function()
 				ext.copyText(data_source.playerId)

@@ -253,7 +253,7 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
     local  condition_bg_1 = display.newSprite("back_ground_548x40_1.png")
         :addTo(condition_bg)
         :align(display.TOP_CENTER, 284, 90)
-    cc.ui.UIImage.new("hammer_31x33.png"):addTo(condition_bg_1, 2)
+    cc.ui.UIImage.new("hammer_33x40.png"):addTo(condition_bg_1, 2)
         :align(display.CENTER, 30, 20)
 
     self.build_label = cc.ui.UILabel.new({

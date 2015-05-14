@@ -504,14 +504,14 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
             resource_type = _("前置条件"),
             isVisible = building:GetLevel()>5,
             isSatisfy = not pre_condition,canNotBuy=true,
-            icon="hammer_31x33.png",
+            icon="hammer_33x40.png",
             description = building:GetPreConditionDesc(),jump_call = handler(self,self.GotoPreconditionBuilding)
         },
         {
             resource_type = "building_queue",
             isVisible = #city:GetUpgradingBuildings()>=city:BuildQueueCounts(),
             isSatisfy = #city:GetUpgradingBuildings()<city:BuildQueueCounts(),
-            icon="hammer_31x33.png",
+            icon="hammer_33x40.png",
             description=_("建造队列已满")..(city:BuildQueueCounts()-#city:GetUpgradingBuildings()).."/"..1
         },
         {

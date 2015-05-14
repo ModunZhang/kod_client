@@ -46,12 +46,12 @@ function WidgetAllianceCreateOrEdit:onEnter()
     	end)
 		local gemIcon = display.newSprite("gem_icon_62x61.png")
 			:addTo(self)
-			:align(display.LEFT_BOTTOM,okButton:getPositionX() - 360,12)
+			:align(display.LEFT_BOTTOM,okButton:getPositionX() - 345,28)
 			:scale(0.5)
 		local gemLabel = UIKit:ttfLabel({
 			text = self:IsCreate() and config_intInit.createAllianceGem.value or config_intInit.editAllianceBasicInfoGem.value,
-			size = 16,
-			color = 0x615b44
+			size = 22,
+			color = 0x403c2f
 		})
 			:addTo(self)
 			:align(display.LEFT_CENTER, gemIcon:getPositionX()+gemIcon:getCascadeBoundingBox().width + 4,gemIcon:getPositionY() + gemIcon:getCascadeBoundingBox().height/2)

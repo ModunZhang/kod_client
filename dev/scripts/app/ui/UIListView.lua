@@ -102,6 +102,12 @@ function UIListView:ctor(params)
     self.redundancyViewVal = 0 --异步的视图两个方向上的冗余大小,横向代表宽,竖向代表高
     self.nTest = 0
     self.trackTop = params.trackTop or false -- 是否追终与上边的距离
+    self.tipsString = params.tipsString or _("暂时没有数据") -- 统一提示信息
+    if type(params.needTips) == 'boolean' then
+        self.needTips =  params.needTips 
+    else
+        self.needTips = true
+    end
 end
 
 function UIListView:onCleanup()
@@ -430,6 +436,27 @@ function UIListView:isItemInViewRect(pos)
     return cc.rectIntersectsRect(self.viewRect_, bound)
 end
 
+function UIListView:addCommonTipsNodeIf__()
+    print("addCommonTipsNodeIf__---->",#self.items_)
+    if #self.items_ == 0 then
+        local viewRect = self:getViewRect()
+        local size = cc.size(viewRect.width,viewRect.height)
+        local tipsNode = display.newNode():size(size.width,size.height)
+        local tipsLabel= display.newTTFLabel({
+            text = self.tipsString,
+            font = UIKit:getFontFilePath(),
+            size = 22,
+            color = UIKit:hex2c3b(0x615b44),
+            align = cc.TEXT_ALIGNMENT_CENTER,
+            valign = cc.VERTICAL_TEXT_ALIGNMENT_CENTER,
+        }):align(display.CENTER, size.width/2, size.height/2):addTo(tipsNode)
+        local item = self:newItem()
+        item:addContent(tipsNode)
+        item:setItemSize(size.width,size.height)
+        self:addItem(item)
+    end
+end
+
 --[[--
 
 加载列表
@@ -438,9 +465,11 @@ end
 
 ]]
 function UIListView:reload()
+    print("UIListView:reload--->")
     if self.bAsyncLoad then
         self:asyncLoad_()
     else
+        self:addCommonTipsNodeIf__()
         self:layout_()
     end
 

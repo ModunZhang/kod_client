@@ -372,7 +372,7 @@ function GameUIActivityNew:GetAwardListContent()
 	local content = WidgetUIBackGround.new({width = 576,height = 149},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
 	local title_bg = display.newSprite("activity_title_552x42.png"):align(display.TOP_CENTER,288,145):addTo(content)
 	local title_label = UIKit:ttfLabel({
-		text = "",--string.format(_("获得%s"),Localize_item.item_name[data.name]),
+		text = "",
 		size = 22,
 		color= 0xfed36c
 	}):align(display.CENTER,276, 21):addTo(title_bg)
@@ -394,7 +394,7 @@ function GameUIActivityNew:GetAwardListContent()
 		normal = "yellow_btn_up_148x58.png",
 		pressed= "yellow_btn_down_148x58.png"
 		})
-		:align(display.BOTTOM_RIGHT, 560, 18)
+		:align(display.BOTTOM_RIGHT, 556, 18)
 		:addTo(content)
 		:setButtonLabel("normal", UIKit:commonButtonLable({
 			text = _("领取"),
@@ -406,7 +406,7 @@ function GameUIActivityNew:GetAwardListContent()
 		normal = "red_btn_up_148x58.png",
 		pressed= "red_btn_down_148x58.png"
 		})
-		:align(display.BOTTOM_RIGHT, 560, 18)
+		:align(display.BOTTOM_RIGHT, 556, 18)
 		:addTo(content)
 		:setButtonLabel("normal", UIKit:commonButtonLable({
 			text = _("放弃"),

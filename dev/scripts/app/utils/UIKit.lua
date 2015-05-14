@@ -423,7 +423,7 @@ end
 function UIKit:commonButtonLable(params)
     if not params then params = {} end
     params.color = params.color or 0xffedae
-    params.size  = params.size or 24
+    params.size  = params.size or 22
     params.shadow = true
     return UIKit:ttfLabel(params)
 end

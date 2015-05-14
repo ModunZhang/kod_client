@@ -336,17 +336,6 @@ function GameUIActivityRewardNew:GetContinutyListItem(reward_type,item_key,time_
 		height= 116
 	})
 	local item_bg = display.newSprite("activity_item_bg_110x108.png"):align(display.LEFT_CENTER, 5, 58):addTo(content)
-	-- if flag == 1 then
-	-- 	local sp = UIKit:getDiscolorrationSprite(UIKit:GetItemImage(reward_type,item_key))
-	-- 	local size = sp:getContentSize()
-	-- 	sp:scale(90/math.max(size.width,size.height)):pos(55,54):addTo(item_bg)
-	-- 	UIKit:addTipsToNode(sp,rewards_str,self)
-	-- else
-	-- 	local sp = display.newSprite(UIKit:GetItemImage(reward_type,item_key),55,54):addTo(item_bg)
-	-- 	local size = sp:getContentSize()
-	-- 	sp:scale(90/math.max(size.width,size.height))
-	-- 	UIKit:addTipsToNode(sp,rewards_str,self)
-	-- end
 	local sp = display.newSprite(UIKit:GetItemImage(reward_type,item_key), 55,54, {class=cc.FilteredSpriteWithOne}):addTo(item_bg)
 	local size = sp:getContentSize()
 	sp:scale(90/math.max(size.width,size.height))
@@ -373,13 +362,13 @@ function GameUIActivityRewardNew:GetContinutyListItem(reward_type,item_key,time_
 			text = flag == 1 and _("已领取") or _("明天领取"),
 			size = 22,
 			color= 0x514d3e
-		}):align(display.RIGHT_CENTER,518, 58):addTo(content)
+		}):align(display.RIGHT_CENTER,518, 35):addTo(content)
 	local button = WidgetPushButton.new({normal = 'yellow_btn_up_148x58.png',pressed = 'yellow_btn_down_148x58.png',disabled = 'gray_btn_148x58.png'})
 		:setButtonLabel("normal", UIKit:commonButtonLable({
 			text = _("领取")
 		}))
 		:addTo(content)
-		:pos(473,58)
+		:pos(473,41)
 		:onButtonClicked(function()
 			NetManager:getDay14RewardPromise():done(function()
 				GameGlobalUI:showTips(_("提示"),rewards_str)
@@ -502,8 +491,8 @@ end
 
 function GameUIActivityRewardNew:ui_PLAYER_LEVEL_UP()
 	local box = display.newSprite("alliance_item_flag_box_126X126.png"):align(display.LEFT_TOP, 20,self.height - 30):addTo(self.bg)
-	display.newSprite("keep_1.png",63,63):addTo(box):scale(126/420)
-	local title_bg = display.newScale9Sprite("alliance_event_type_cyan_222x30.png",0,0, cc.size(390,30), cc.rect(7,7,190,16))
+	display.newSprite("keep_1.png",70,63):addTo(box):scale(120/420)
+	local title_bg = display.newScale9Sprite("alliance_event_type_darkblue_222x30.png",0,0, cc.size(390,30), cc.rect(7,7,190,16))
 		:align(display.LEFT_TOP, 180, self.height - 30):addTo(self.bg)
 	UIKit:ttfLabel({
 		text = string.format("当前等级：LV %s",City:GetFirstBuildingByType('keep'):GetLevel()),
@@ -514,7 +503,7 @@ function GameUIActivityRewardNew:ui_PLAYER_LEVEL_UP()
 		text = _("倒计时:"),
 			size = 20,
 			color= 0x403c2f
-	}):align(display.LEFT_TOP, 190, title_bg:getPositionY() -  40):addTo(self.bg)
+	}):align(display.LEFT_TOP, 190, title_bg:getPositionY() -  50):addTo(self.bg)
 	local level_up_time_label = UIKit:ttfLabel({
 		text = GameUtils:formatTimeStyle1(self.player_level_up_time_residue),
 		size = 20,
@@ -525,7 +514,7 @@ function GameUIActivityRewardNew:ui_PLAYER_LEVEL_UP()
 		text = _("已失效"),
 		size = 20,
 		color= 0x403c2f
-	}):align(display.LEFT_TOP,190,title_bg:getPositionY() -  40):addTo(self.bg)
+	}):align(display.LEFT_TOP,190,title_bg:getPositionY() -  50):addTo(self.bg)
 	self.level_up_time_label = level_up_time_label
 	self.level_up_time_desc_label = level_up_time_desc_label
 	self.level_up_state_label = level_up_state_label
@@ -632,7 +621,7 @@ function GameUIActivityRewardNew:GetRewardLevelUpItem(index,title,rewards,flag)
 		text = title,
 		size = 22,
 		color= 0x514d3e
-	}):align(display.LEFT_CENTER, 34, 52):addTo(content)
+	}):align(display.LEFT_CENTER, 24, 52):addTo(content)
 	local x = 104
 	local tips_str = ""
 	for __,v in ipairs(rewards) do
@@ -714,19 +703,6 @@ function GameUIActivityRewardNew:GetOnLineItem(reward_type,item_key,time_str,rew
 	})
 	local item_bg = display.newSprite("activity_item_bg_110x108.png"):align(display.LEFT_CENTER, 5, 58):addTo(content)
 	local image = UIKit:GetItemImage(reward_type,item_key)
-	-- if flag == 1 then
-	-- 	local sp = UIKit:getDiscolorrationSprite(image):pos(55,54):addTo(item_bg)
-	-- 	local size = sp:getContentSize()
-	-- 	sp:scale(90/math.max(size.width,size.height))
-	-- 	local check_bg = display.newSprite("activity_check_bg_34x34.png"):align(display.RIGHT_BOTTOM,105,3):addTo(item_bg,2)
-	-- 	display.newSprite("activity_check_body_34x34.png"):addTo(check_bg):pos(17,17)
-	-- 	UIKit:addTipsToNode(sp,rewards,self)
-	-- else
-	-- 	local sp = display.newSprite(image,55,54):addTo(item_bg)
-	-- 	local size = sp:getContentSize()
-	-- 	sp:scale(90/math.max(size.width,size.height))
-	-- 	UIKit:addTipsToNode(sp,rewards,self)
-	-- end
 	local sp = display.newSprite(image, 55,54, {class=cc.FilteredSpriteWithOne}):addTo(item_bg)
 	local size = sp:getContentSize()
 	sp:scale(90/math.max(size.width,size.height))
@@ -757,10 +733,11 @@ function GameUIActivityRewardNew:GetOnLineItem(reward_type,item_key,time_str,rew
 	}):align(display.CENTER, 471, 35):addTo(content)
 	local button = WidgetPushButton.new({normal = 'yellow_btn_up_148x58.png',pressed = 'yellow_btn_down_148x58.png',disabled = 'gray_btn_148x58.png'})
 			:setButtonLabel("normal", UIKit:commonButtonLable({
-				text = _("领取")
+				text = _("领取"),
+				size = 22,
 			}))
 			:addTo(content)
-			:pos(471,35)
+			:pos(471,41)
 			
 			:onButtonClicked(function()
 				NetManager:getOnlineRewardPromise(timePoint):done(function()
