@@ -179,6 +179,8 @@ function GameUISelenaQuestion:GetListItem(index,question)
 		end)
 	local check_state = display.newSprite("activity_check_body_55x51.png"):addTo(button):pos(27,0):hide()
 	button.check_state = check_state
+	local wrong_state = display.newSprite("wrong_41x45.png"):addTo(button):pos(27,0):hide()
+	button.wrong_state = wrong_state
 	content:size(560,height)
 	item:addContent(content)
 	item:setMargin({left = 0, right = 0, top = 0, bottom = 11})
@@ -271,15 +273,18 @@ function GameUISelenaQuestion:LoadNextQuestion()
 end
 
 function GameUISelenaQuestion:OnAnswerButtonClicked(index,button)
-	if button then
-		button.check_state:show()
-	end
 	local question = self:GetCurrentQuestion()
 	if question.correct == index then --correct! 
+		if button then
+			button.check_state:show()
+		end
 		self:ShowTips(true,function()
 			self:LoadNextQuestion()
 		end)
 	else
+		if button then
+			button.wrong_state:show()
+		end
 		self:ShowTips(false,function()
 			self:GetWelcomeLayer(self.WELCOME_UI_TYPE.FAILED):show()
 			self:GetQuestionLayer():hide()
