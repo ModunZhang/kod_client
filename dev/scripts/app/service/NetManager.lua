@@ -205,6 +205,24 @@ local function get_alliance_joinrequestevents_response_msg(response)
     return response
 end
 
+-- 只更新联盟战历史记录
+local function get_alliance_alliancefightreports_response_msg(response)
+    if response.msg.allianceFightReports then
+        DataManager:getUserAllianceData().allianceFightReports = response.msg.allianceFightReports
+        Alliance_Manager:GetMyAlliance():OnAllianceFightRequestsChanged(DataManager:getUserAllianceData())
+    end
+    return response
+end
+
+-- 只更新物品记录
+local function get_alliance_itemlogs_response_msg(response)
+    if response.msg.itemLogs then
+        DataManager:getUserAllianceData().itemLogs = response.msg.itemLogs
+        -- Alliance_Manager:GetMyAlliance():OnAllianceFightRequestsChanged(DataManager:getUserAllianceData())
+    end
+    return response
+end
+
 local function check_response(m)
     return function(result)
         if result.success then
@@ -983,19 +1001,6 @@ function NetManager:getRequestToJoinAlliancePromise(allianceId)
         allianceId = allianceId
     }, "请求加入联盟失败!"):done(get_response_msg)
 end
--- 获取联盟战历史记录
-function NetManager:getAllianceFightReportsPromise(allianceId)
-    return get_blocking_request_promise("logic.allianceHandler.getAllianceFightReports", {
-        allianceId = allianceId
-    }, "获取联盟战历史记录失败!"):done(get_response_msg)
-end
--- 获取联盟商店买入卖出记录
-function NetManager:getItemLogsPromise(allianceId)
-    return get_blocking_request_promise("logic.allianceHandler.getItemLogs", {
-        allianceId = allianceId
-    }, "获取联盟商店买入卖出记录失败!"):done(get_response_msg)
-end
-
 -- 获取玩家信息
 function NetManager:getPlayerInfoPromise(memberId)
     return get_blocking_request_promise("logic.playerHandler.getPlayerInfo", {
@@ -1063,6 +1068,18 @@ function NetManager:getJoinRequestEventsPromise(allianceId)
     return get_blocking_request_promise("logic.allianceHandler.getJoinRequestEvents", {
         allianceId = allianceId
     }, "获取所有请求加入联盟的申请失败!"):done(get_alliance_joinrequestevents_response_msg)
+end
+-- 获取联盟战历史记录
+function NetManager:getAllianceFightReportsPromise(allianceId)
+    return get_blocking_request_promise("logic.allianceHandler.getAllianceFightReports", {
+        allianceId = allianceId
+    }, "获取联盟战历史记录失败!"):done(get_alliance_alliancefightreports_response_msg)
+end
+-- 获取联盟商店买入卖出记录
+function NetManager:getItemLogsPromise(allianceId)
+    return get_blocking_request_promise("logic.allianceHandler.getItemLogs", {
+        allianceId = allianceId
+    }, "获取联盟商店买入卖出记录失败!"):done(get_alliance_itemlogs_response_msg)
 end
 --处理联盟的对玩家的邀请
 local function getHandleJoinAllianceInvitePromise(allianceId, agree)

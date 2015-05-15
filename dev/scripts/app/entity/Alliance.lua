@@ -72,7 +72,7 @@ property(Alliance, "joinRequestEvents", nil)
 property(Alliance, "villages", {})
 property(Alliance, "villageLevels", {})
 property(Alliance, "allianceFight", {})
-property(Alliance, "allianceFightReports", {})
+property(Alliance, "allianceFightReports", nil)
 function Alliance:ctor()
     Alliance.super.ctor(self)
     self.flag = Flag:RandomFlag()
@@ -257,9 +257,6 @@ function Alliance:IsRequested()
             return true
         end
     end
-end
-function Alliance:GetAllianceFightReports()
-    return self.allianceFightReports
 end
 function Alliance:GetLastAllianceFightReports()
     local last_report

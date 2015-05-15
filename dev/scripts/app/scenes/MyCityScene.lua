@@ -33,7 +33,6 @@ function MyCityScene:onEnter()
     local alliance_map = alliance:GetAllianceMap()
     local allianceShirine = alliance:GetAllianceShrine()
     alliance_map:AddListenOnType(allianceShirine, alliance_map.LISTEN_TYPE.BUILDING_INFO)
-    app:sendApnIdIf()
 
 
     -- cc.ui.UIPushButton.new({normal = "lock_btn.png",pressed = "lock_btn.png"})
@@ -155,7 +154,11 @@ function MyCityScene:GetHomePage()
     return self.home_page
 end
 function MyCityScene:onEnterTransitionFinish()
-    self:RunFte()
+    if GLOBAL_FTE then 
+        self:RunFte()
+    else
+        app:sendApnIdIf()
+    end
 end
 function MyCityScene:CreateHomePage()
     if UIKit:GetUIInstance("GameUIHome") then
@@ -413,7 +416,6 @@ end
 local check = import("..fte.check")
 local mockData = import("..fte.mockData")
 function MyCityScene:RunFte()
-    if not GLOBAL_FTE then return end
     self.touch_layer:removeFromParent()
     self:GetFteLayer():Disable()
 
