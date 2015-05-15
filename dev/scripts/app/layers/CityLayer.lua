@@ -121,7 +121,7 @@ function CityLayer:GetClickedObject(world_x, world_y)
     if building then
         return building
     else
-        local tile = self.city_scene:GetCity():GetTileByBuildingPosition(logic_x, logic_y)
+        local tile = self.scene:GetCity():GetTileByBuildingPosition(logic_x, logic_y)
         if tile and tile.location_id == 2 then
             return self.square
         end
@@ -202,8 +202,8 @@ local BUILDING_NODE = 3
 local WEATHER_NODE = 4
 function CityLayer:ctor(city_scene)
     Observer.extend(self)
-    CityLayer.super.ctor(self, 0.6, 1.5)
-    self.city_scene = city_scene
+    CityLayer.super.ctor(self, city_scene, 0.6, 1.5)
+    self.scene = city_scene
     self.buildings = {}
     self.houses = {}
     self.towers = {}
@@ -229,7 +229,7 @@ function CityLayer:ConvertLogicPositionToMapPosition(lx, ly)
     return self:convertToNodeSpace(self:GetCityNode():convertToWorldSpace(map_pos))
 end
 function CityLayer:Terrain()
-    return self.city_scene:GetCity():GetUser():Terrain()
+    return self.scene:GetCity():GetUser():Terrain()
 end
 --
 function CityLayer:InitBackground()

@@ -17,14 +17,14 @@ local pairs = pairs
 local MINE,FRIEND,ENEMY,VILLAGE_TAG = 1,2,3,4
 MultiAllianceLayer.ARRANGE = Enum("H", "V")
 
-function MultiAllianceLayer:ctor(arrange, ...)
+function MultiAllianceLayer:ctor(scene, arrange, ...)
     self.refresh_village_node = display.newNode():addTo(self)
     self.my_allinace_id = Alliance_Manager:GetMyAlliance():Id()
     self.mine_player_id = Alliance_Manager:GetMyAlliance():GetSelf():Id()
 
 
     Observer.extend(self)
-    MultiAllianceLayer.super.ctor(self, 0.4, 1.2)
+    MultiAllianceLayer.super.ctor(self, scene, 0.4, 1.2)
     self.info_action = display.newNode():addTo(self)
     self.arrange = arrange
     self.alliances = {...}

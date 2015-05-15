@@ -60,6 +60,7 @@ function GameUIUpgradeBuilding:PromiseOfFte()
 
     self:Find():removeEventListenersByEvent("CLICKED_EVENT")
     self:Find():onButtonClicked(function()
+        self.upgrade_layer.acc_layer.acc_button:setButtonEnabled(false)
         self:Find():setButtonEnabled(false)
         if self.building:IsHouse() then
             local tile = self.building:BelongCity():GetTileWhichBuildingBelongs(self.building)

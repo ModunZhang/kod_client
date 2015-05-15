@@ -708,7 +708,7 @@ function GameUIAllianceBattle:InitHistoryRecord()
     },false)
     list:setRedundancyViewVal(294)
     list:setDelegate(handler(self, self.HistoryDelegate))
-    if #self.alliance:GetAllianceFightReports() == 0 then
+    if self.alliance:AllianceFightReports() == nil then
         NetManager:getAllianceFightReportsPromise(self.alliance:Id()):done(function ( response )
             list:reload()
             return response
@@ -720,7 +720,7 @@ function GameUIAllianceBattle:InitHistoryRecord()
 end
 function GameUIAllianceBattle:HistoryDelegate(listView, tag, idx)
     if cc.ui.UIListView.COUNT_TAG == tag then
-        return #self.alliance:GetAllianceFightReports()
+        return #(self.alliance:AllianceFightReports() or {})
     elseif cc.ui.UIListView.CELL_TAG == tag then
         local item
         local content
@@ -736,9 +736,9 @@ function GameUIAllianceBattle:HistoryDelegate(listView, tag, idx)
         content:SetData(idx)
         local size = content:getContentSize()
         item:setItemSize(size.width, size.height)
-        if idx == #self.alliance:GetAllianceFightReports() then
-            NetManager:getAllianceFightReportsPromise(self.alliance:Id())
-        end
+        -- if idx == #self.alliance:AllianceFightReports() then
+        --     NetManager:getAllianceFightReportsPromise(self.alliance:Id())
+        -- end
         return item
     else
     end
@@ -837,7 +837,7 @@ function GameUIAllianceBattle:CreateHistoryContent()
     local parent = self
     function content:SetData( idx )
         local alliance = parent.alliance
-        local report = alliance:GetAllianceFightReports()[idx]
+        local report = alliance:AllianceFightReports()[idx]
         self.report = report
         -- 各项数据
         local win

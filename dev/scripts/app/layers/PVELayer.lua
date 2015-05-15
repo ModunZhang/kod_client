@@ -40,8 +40,8 @@ local pve_color = {
 }
 
 
-function PVELayer:ctor(user)
-    PVELayer.super.ctor(self, 0.5, 1)
+function PVELayer:ctor(scene, user)
+    PVELayer.super.ctor(self, scene, 0.5, 1)
     self.pve_listener = Observer.new()
     self.user = user
     self.pve_map = user:GetCurrentPVEMap()
