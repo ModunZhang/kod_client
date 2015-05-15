@@ -342,7 +342,7 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
         if next_recovery - recovery > 0 then
             efficiency = efficiency .. string.format(_("资源小车回复速度+%d/小时,"),(next_recovery - recovery))
         end
-    elseif self.building:GetType()=="tradeGuild"
+    elseif self.building:GetType()=="trainingGround"
         or self.building:GetType()=="stable"
         or self.building:GetType()=="hunterHall"
         or self.building:GetType()=="workshop" then

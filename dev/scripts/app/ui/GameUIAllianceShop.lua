@@ -1,6 +1,5 @@
 local window = import("..utils.window")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
-local WidgetUIBackGround2 = import("..widget.WidgetUIBackGround2")
 local WidgetBuyGoods = import("..widget.WidgetBuyGoods")
 local WidgetStockGoods = import("..widget.WidgetStockGoods")
 local WidgetPushButton = import("..widget.WidgetPushButton")
@@ -89,7 +88,9 @@ function GameUIAllianceShop:OnMoveInStage()
             end
             self.honourAndLoyalty:show()
         else
-            self.honourAndLoyalty:hide()
+            if self.honourAndLoyalty then
+                self.honourAndLoyalty:hide()
+            end
         end
     end):pos(window.cx, window.bottom + 34)
     self.alliance:GetItemsManager():AddListenOnType(self,AllianceItemsManager.LISTEN_TYPE.ITEM_CHANGED)
@@ -291,7 +292,7 @@ function GameUIAllianceShop:CreateGoodsBox(goods)
         :addTo(box_button)
     display.newSprite("loyalty_128x128.png"):align(display.CENTER, 24, num_bg:getContentSize().height/2-2):addTo(num_bg):scale(34/128)
     UIKit:ttfLabel({
-        text = goods:SellPriceInAlliance(),
+        text = GameUtils:formatNumber(goods:SellPriceInAlliance()),
         size = 22,
         color = 0x423f32,
     }):align(display.LEFT_CENTER, num_bg:getContentSize().width/2-18, num_bg:getContentSize().height/2-2):addTo(num_bg)
@@ -327,7 +328,7 @@ function GameUIAllianceShop:CreateStockGoodsBox(goods)
         :addTo(box_button)
     display.newSprite("honour_128x128.png"):align(display.CENTER, 24, num_bg:getContentSize().height/2-2):addTo(num_bg):scale(34/128)
     UIKit:ttfLabel({
-        text = goods:BuyPriceInAlliance(),
+        text = GameUtils:formatNumber(goods:BuyPriceInAlliance()),
         size = 22,
         color = 0x423f32,
     }):align(display.LEFT_CENTER, num_bg:getContentSize().width/2-18, num_bg:getContentSize().height/2-2):addTo(num_bg)
