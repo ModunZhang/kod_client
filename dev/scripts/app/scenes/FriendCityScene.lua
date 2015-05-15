@@ -1,14 +1,15 @@
 local Sprite = import("..sprites.Sprite")
 local CityScene = import(".CityScene")
 local FriendCityScene = class("FriendCityScene", CityScene)
-function FriendCityScene:ctor(user, city)
+function FriendCityScene:ctor(user, city, location)
     FriendCityScene.super.ctor(self, city)
     self.user = user
     self.city = city
+    self.location = location
 end
 function FriendCityScene:onEnter()
     FriendCityScene.super.onEnter(self)
-    UIKit:newGameUI('GameUICityInfo', self.user):AddToScene(self):setTouchSwallowEnabled(false)
+    UIKit:newGameUI('GameUICityInfo', self.user, self.location):AddToScene(self):setTouchSwallowEnabled(false)
 end
 
 function FriendCityScene:OnTouchClicked(pre_x, pre_y, x, y)

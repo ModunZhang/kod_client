@@ -5,9 +5,10 @@ local WidgetChangeMap = import("..widget.WidgetChangeMap")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local GameUICityInfo = UIKit:createUIClass('GameUICityInfo')
 
-function GameUICityInfo:ctor(user)
+function GameUICityInfo:ctor(user, location)
     GameUICityInfo.super.ctor(self, {type = UIKit.UITYPE.BACKGROUND})
     self.user = user
+    self.location = location
 end
 
 function GameUICityInfo:onEnter()
@@ -163,7 +164,7 @@ function GameUICityInfo:CreateBottom()
         color = UIKit:hex2c3b(0xe19319)})
         :addTo(bottom_bg):align(display.LEFT_CENTER, 250, display.bottom + 101/2)
 
-    local map_node = WidgetChangeMap.new(WidgetChangeMap.MAP_TYPE.OTHER_CITY):addTo(self)
+    local map_node = WidgetChangeMap.new(WidgetChangeMap.MAP_TYPE.OTHER_CITY, self.location):addTo(self)
 end
 
 return GameUICityInfo

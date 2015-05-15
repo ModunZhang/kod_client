@@ -8,22 +8,33 @@ local AllianceBattleScene = class("AllianceBattleScene", MapScene)
 local GameUIAllianceHome = import("..ui.GameUIAllianceHome")
 local Alliance = import("..entity.Alliance")
 
-function AllianceBattleScene:ctor()
+function AllianceBattleScene:ctor(location)
+    self.location = location
     self.util_node = display.newNode():addTo(self)
     AllianceBattleScene.super.ctor(self)
 end
 function AllianceBattleScene:onEnter()
     self:LoadAnimation()
-
     AllianceBattleScene.super.onEnter(self)
     self:CreateAllianceUI()
-    local mapObject = self:GetAlliance():GetAllianceMap():FindMapObjectById(self:GetAlliance():GetSelf():MapId())
-    local location = mapObject.location
-    local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(location.x, location.y, self:GetAlliance():Id())
-    self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
     self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
     app:GetAudioManager():PlayGameMusic()
     self:GetSceneLayer():ZoomTo(0.8)
+
+    if self.location then
+        self:GotoPosition(self.location.x, self.location.y,self.location.id)
+    else
+        self:GotoCurrentPosition()
+    end
+end
+function AllianceBattleScene:GotoCurrentPosition()
+    local mapObject = self:GetAlliance():GetAllianceMap():FindMapObjectById(self:GetAlliance():GetSelf():MapId())
+    local location = mapObject.location
+    self:GotoPosition(location.x,location.y,self:GetAlliance():Id())
+end
+function AllianceBattleScene:GotoPosition(x,y,aid)
+    local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(x,y,aid)
+    self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
 end
 function AllianceBattleScene:LoadAnimation()
     UILib.loadSolidersAnimation()

@@ -57,6 +57,7 @@ function GameUIHelpDefence:ctor(city,helped_troop,details)
     self.details = details
     self.soldiers = details.soldiers
     self.dragon = city:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon("redDragon")
+    app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_RECRUIT")
 end
 function GameUIHelpDefence:OnMoveInStage()
     GameUIHelpDefence.super.OnMoveInStage(self)
