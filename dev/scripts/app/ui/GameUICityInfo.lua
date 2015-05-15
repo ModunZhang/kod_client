@@ -6,7 +6,7 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local GameUICityInfo = UIKit:createUIClass('GameUICityInfo')
 
 function GameUICityInfo:ctor(user)
-    GameUICityInfo.super.ctor(self)
+    GameUICityInfo.super.ctor(self, {type = UIKit.UITYPE.BACKGROUND})
     self.user = user
 end
 

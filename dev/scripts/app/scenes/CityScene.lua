@@ -19,6 +19,12 @@ function CityScene:onEnter()
     self:PlayBackgroundMusic()
     self:GotoLogicPointInstant(6, 4)
     self:GetSceneLayer():ZoomTo(1)
+
+    --  cc.ui.UIPushButton.new({normal = "lock_btn.png",pressed = "lock_btn.png"})
+    -- :addTo(self, 1000000):pos(display.cx, display.cy + 300)
+    -- :onButtonClicked(function()
+    --     app:ReloadGame()
+    -- end)
 end
 function CityScene:onExit()
     UILib.unLoadBuildingAnimation()
