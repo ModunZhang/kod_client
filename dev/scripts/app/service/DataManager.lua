@@ -3,7 +3,9 @@ local initData = import("..fte.initData")
 function DataManager:setUserData( userData, deltaData )
     self.user = userData
     if not GLOBAL_FTE then
-        self:OnUserDataChanged(self.user, app.timer:GetServerTime(), deltaData)
+        LuaUtils:TimeCollect(function()
+            self:OnUserDataChanged(self.user, app.timer:GetServerTime(), deltaData)
+        end, "DataManager:setUserData")
     end
 end
 function DataManager:setUserAllianceData(allianceData,deltaData)
@@ -14,7 +16,9 @@ function DataManager:setUserAllianceData(allianceData,deltaData)
         print(debug.traceback("", 2))
         assert(false)
     end
-    Alliance_Manager:OnAllianceDataChanged(allianceData,app.timer:GetServerTime(),deltaData)
+    LuaUtils:TimeCollect(function()
+        Alliance_Manager:OnAllianceDataChanged(allianceData,app.timer:GetServerTime(),deltaData)
+    end, "DataManager:setUserAllianceData")
 end
 function DataManager:getUserAllianceData()
     return self.allianceData
@@ -29,7 +33,9 @@ end
 
 function DataManager:setFteUserDeltaData(deltaData)
     if GLOBAL_FTE then
-        self:OnUserDataChanged(self:getFteData(), app.timer:GetServerTime(), deltaData)
+        LuaUtils:TimeCollect(function()
+            self:OnUserDataChanged(self:getFteData(), app.timer:GetServerTime(), deltaData)
+        end, "DataManager:setFteUserDeltaData")
     end
 end
 function DataManager:getFteData()
@@ -43,7 +49,9 @@ function DataManager:setEnemyAllianceData(enemyAllianceData,deltaData)
         print(debug.traceback("", 2))
         assert(false)
     end
-    Alliance_Manager:OnEnemyAllianceDataChanged(enemyAllianceData,app.timer:GetServerTime(),deltaData)
+    LuaUtils:TimeCollect(function()
+        Alliance_Manager:OnEnemyAllianceDataChanged(enemyAllianceData,app.timer:GetServerTime(),deltaData)
+    end, "DataManager:setEnemyAllianceData")
 end
 
 function DataManager:getEnemyAllianceData()

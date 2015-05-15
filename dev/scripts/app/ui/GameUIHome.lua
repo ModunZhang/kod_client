@@ -1,6 +1,7 @@
 local cocos_promise = import("..utils.cocos_promise")
 local promise = import("..utils.promise")
 local window = import("..utils.window")
+local colors = import("..utils.colors")
 local WidgetChat = import("..widget.WidgetChat")
 local WidgetNumberTips = import("..widget.WidgetNumberTips")
 local WidgetHomeBottom = import("..widget.WidgetHomeBottom")
@@ -26,8 +27,8 @@ local STONE         = ResourceManager.RESOURCE_TYPE.STONE
 local POPULATION    = ResourceManager.RESOURCE_TYPE.POPULATION
 local COIN          = ResourceManager.RESOURCE_TYPE.COIN
 
-local red_color = UIKit:hex2c4b(0xff3c00)
-local normal_color = UIKit:hex2c4b(0xf3f0b6)
+local red_color = colors.hex_403c2f
+local normal_color = colors.hex_f3f0b6
 function GameUIHome:OnResourceChanged(resource_manager)
     local server_time = timer:GetServerTime()
     local allresources = resource_manager:GetAllResources()
