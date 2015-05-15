@@ -27,6 +27,7 @@ local MapScene = import(".MapScene")
 local PVEScene = class("PVEScene", MapScene)
 local DIRECTION_TAG = 911
 
+
 local timer = app.timer
 function PVEScene:ctor(user)
     self:LoadAnimation()
@@ -81,7 +82,7 @@ end
 function PVEScene:CreateDirectionArrow()
     if not self:getChildByTag(DIRECTION_TAG) then
         return WidgetDirectionSelect.new():pos(display.cx, display.cy)
-            :addTo(self, 10, DIRECTION_TAG):EnableDirection():hide()
+            :addTo(self, 10, DIRECTION_TAG):EnableDirection():hide():scale(1.5)
     end
 end
 function PVEScene:GetDirectionArrow()
@@ -406,9 +407,8 @@ function PVEScene:PromiseOfExit()
         app:EnterMyCityScene()
     end)
 
-    self:GetHomePage():GetFteLayer():SetTouchRect(r)
     WidgetFteArrow.new(_("返回城市")):addTo(self:GetHomePage():GetFteLayer())
-        :TurnLeft():align(display.LEFT_CENTER, r.x + r.width + 20, r.y + r.width/2)
+        :TurnDown(false):align(display.LEFT_BOTTOM, r.x + 20, r.y + r.width + 20)
 end
 function PVEScene:GetMark()
     if not self.mark then

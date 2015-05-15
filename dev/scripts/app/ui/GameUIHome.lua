@@ -521,8 +521,9 @@ function GameUIHome:PromiseOfFteFreeSpeedUp()
             end)
 
             local r = self:Find():getCascadeBoundingBox()
-            self:GetFteLayer().arrow = WidgetFteArrow.new(_("5分钟以下免费加速，激活VIP提升免费加速时间，VIP等级越高，可免费加速时间越高"))
-                :addTo(self:GetFteLayer()):TurnUp(true):align(display.RIGHT_TOP, r.x + r.width/2, r.y - 10)
+            WidgetFteArrow.new(_("5分钟以下免费加速，激活VIP提升免费加速时间，VIP等级越高，可免费加速时间越高"))
+                :addTo(self:GetFteLayer()):TurnDown(true)
+                :align(display.RIGHT_BOTTOM, r.x + r.width/2 + 30, r.y + 50)
         end)
 
         return self.city:PromiseOfFinishUpgradingByLevel(nil, nil):next(function()
@@ -554,9 +555,9 @@ function GameUIHome:PromiseOfFteInstantSpeedUp()
             end)
 
             local r = self:Find():getCascadeBoundingBox()
-            self:GetFteLayer().arrow = WidgetFteArrow.new(_("立即完成升级"))
-                :addTo(self:GetFteLayer()):TurnRight(true):align(display.RIGHT_CENTER, r.x - 10, r.y + r.height/2)
-
+            WidgetFteArrow.new(_("立即完成升级"))
+                :addTo(self:GetFteLayer()):TurnDown(true)
+                :align(display.RIGHT_BOTTOM, r.x + r.width/2 + 30, r.y + 50)
 
         end)
 

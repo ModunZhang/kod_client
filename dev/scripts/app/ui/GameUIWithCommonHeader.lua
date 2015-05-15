@@ -224,8 +224,8 @@ function GameUIWithCommonHeader:PromsieOfExit(ui_name)
     self:GetFteLayer():SetTouchObject(self:GetHomeButton())
     local r = self:GetHomeButton():getCascadeBoundingBox()
 
-    WidgetFteArrow.new(_("返回城市")):addTo(self:GetFteLayer()):TurnLeft()
-        :align(display.LEFT_CENTER, r.x + r.width + 30, r.y + r.height/2)
+     WidgetFteArrow.new(_("返回城市"))
+        :addTo(self:GetFteLayer()):TurnUp(false):align(display.LEFT_TOP, r.x + 25, r.y - 20)
 
     return UIKit:PromiseOfClose(ui_name)
 end

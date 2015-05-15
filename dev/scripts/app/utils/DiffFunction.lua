@@ -23,10 +23,12 @@ return function(base, delta)
                     edit[k].add = edit[k].add or {}
                     insert(edit[k].add, value)
                 end
-            else -- key更新
+            elseif edit[k] then
                 edit[k] = value
             end
-            base[k] = value
+            if base[k] then
+                base[k] = value
+            end
         else
             local tmp = edit
             local curRoot = base

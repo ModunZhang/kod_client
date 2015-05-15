@@ -135,7 +135,7 @@ function PVELayer:LoadPlayer()
     local p = ariship:getAnchorPointInPoints()
     armature:align(display.CENTER, p.x - 10, p.y + 40):getAnimation():playWithIndex(0)
     armature:getAnimation():setSpeedScale(2)
-    ariship:setAnchorPoint(cc.p(0.3, 0.5))
+    ariship:setAnchorPoint(cc.p(0.4, 0.6))
     ariship:runAction(cc.RepeatForever:create(transition.sequence{
         cc.MoveBy:create(5, cc.p(0, 10)),
         cc.MoveBy:create(5, cc.p(0, -10))

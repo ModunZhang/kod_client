@@ -34,6 +34,7 @@ function UIKit:CheckOpenUI(ui, isopen)
     local callbacks = self.open_ui_callbacks
     if #callbacks > 0 then
         if isopen then
+            ui.__type  = UIKit.UITYPE.BACKGROUND
             ui:GetFteLayer()
         else
             if callbacks[1](ui) then
@@ -629,8 +630,8 @@ function UIKit:showMessageDialog(title,tips,ok_callback,cancel_callback,visible_
     if not visible_x_button then
         dialog:DisableAutoClose()
     end
-    dialog:zorder(3000)
     dialog:AddToCurrentScene()
+    dialog:zorder(3001)
     return dialog
 end
 
