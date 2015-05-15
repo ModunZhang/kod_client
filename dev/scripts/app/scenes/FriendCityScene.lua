@@ -15,9 +15,12 @@ function FriendCityScene:OnTouchClicked(pre_x, pre_y, x, y)
 	local building = self:GetSceneLayer():GetClickedObject(x, y)
     if building then
         if iskindof(building, "HelpedTroopsSprite") then
-            local type_ = GameUIWatchTowerTroopDetail.DATA_TYPE.HELP_DEFENCE
             local helped = self.city:GetHelpedByTroops()[building:GetIndex()]
-            UIKit:newGameUI("GameUIWatchTowerTroopDetail", type_, helped, self.user:Id()):AddToCurrentScene(true)
+            local user = self.city:GetUser()
+            NetManager:getHelpDefenceTroopDetailPromise(user:Id(), helped.id):done(function(response)
+                LuaUtils:outputTable("response", response)
+                UIKit:newGameUI("GameUIHelpDefence",self.city, helped ,response.msg.troopDetail):AddToCurrentScene(true)
+            end)
         end
     end
 end
