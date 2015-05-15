@@ -357,9 +357,11 @@ function GameUIHome:CreateTop()
             end
             if building then
                 local current_scene = display.getRunningScene()
-                current_scene:GotoLogicPoint(building:GetMidLogicPosition())
                 local building_sprite = current_scene:GetSceneLayer():FindBuildingSpriteByBuilding(building, self.city)
-                current_scene:AddIndicateForBuilding(building_sprite)
+                local x,y = building:GetMidLogicPosition()
+                current_scene:GotoLogicPoint(x,y,40):next(function()
+                    current_scene:AddIndicateForBuilding(building_sprite)
+                end)
             end
         end
     end)
@@ -392,8 +394,8 @@ function GameUIHome:CreateTop()
     left_order:AddElement(button)
     --在线活动
     local activity_button = WidgetAutoOrderAwardButton.new(self)
-       
-    
+
+
 
     -- function activity_button:CheckVisible()
     --     return true
@@ -581,7 +583,7 @@ function GameUIHome:PromiseOfActivePromise()
     local r = self:FindVip():getCascadeBoundingBox()
 
     WidgetFteArrow.new(_("点击VIP，免费激活VIP")):addTo(self:GetFteLayer())
-    :TurnUp():align(display.TOP_CENTER, r.x + r.width/2, r.y)
+        :TurnUp():align(display.TOP_CENTER, r.x + r.width/2, r.y)
 
     return UIKit:PromiseOfOpen("GameUIVip"):next(function(ui)
         self:GetFteLayer():removeFromParent()
@@ -594,6 +596,7 @@ function GameUIHome:OnCountInfoChanged()
 end
 
 return GameUIHome
+
 
 
 

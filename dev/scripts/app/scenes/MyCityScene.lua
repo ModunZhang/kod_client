@@ -56,35 +56,35 @@ function MyCityScene:CreateSceneUILayer()
     scene_ui_layer:setTouchEnabled(true)
     scene_ui_layer:setTouchSwallowEnabled(false)
     scene_ui_layer.action_node = display.newNode():addTo(scene_ui_layer)
-    function scene_ui_layer:ShowIndicatorOnBuilding(building_sprite)
-        if not self.indicator then
-            self.building__ = building_sprite
-            self.indicator = display.newNode():addTo(self):zorder(1001)
-            local r = 30
-            local len = 50
-            local x = math.sin(math.rad(r)) * len
-            local y = math.sin(math.rad(90 - r)) * len
-            display.newSprite("arrow_home.png")
-                :addTo(self.indicator)
-                :align(display.BOTTOM_CENTER, 10, 10)
-                :rotation(r)
-                :runAction(cc.RepeatForever:create(transition.sequence{
-                    cc.MoveBy:create(0.4, cc.p(-x, -y)),
-                    cc.MoveBy:create(0.4, cc.p(x, y)),
-                }))
-            self.action_node:stopAllActions()
-            self.action_node:performWithDelay(function()
-                self:HideIndicator()
-            end, 4.0)
-        end
-    end
-    function scene_ui_layer:HideIndicator()
-        if self.indicator then
-            self.action_node:stopAllActions()
-            self.indicator:removeFromParent()
-            self.indicator = nil
-        end
-    end
+    -- function scene_ui_layer:ShowIndicatorOnBuilding(building_sprite)
+    --     if not self.indicator then
+    --         self.building__ = building_sprite
+    --         self.indicator = display.newNode():addTo(self):zorder(1001)
+    --         local r = 30
+    --         local len = 50
+    --         local x = math.sin(math.rad(r)) * len
+    --         local y = math.sin(math.rad(90 - r)) * len
+    --         display.newSprite("arrow_home.png")
+    --             :addTo(self.indicator)
+    --             :align(display.BOTTOM_CENTER, 10, 10)
+    --             :rotation(r)
+    --             :runAction(cc.RepeatForever:create(transition.sequence{
+    --                 cc.MoveBy:create(0.4, cc.p(-x, -y)),
+    --                 cc.MoveBy:create(0.4, cc.p(x, y)),
+    --             }))
+    --         self.action_node:stopAllActions()
+    --         self.action_node:performWithDelay(function()
+    --             self:HideIndicator()
+    --         end, 4.0)
+    --     end
+    -- end
+    -- function scene_ui_layer:HideIndicator()
+    --     if self.indicator then
+    --         self.action_node:stopAllActions()
+    --         self.indicator:removeFromParent()
+    --         self.indicator = nil
+    --     end
+    -- end
     function scene_ui_layer:Schedule()
         display.newNode():addTo(self):schedule(function()
             if scene_layer:getScale() < (scene_layer:GetScaleRange()) * 1.3 then
@@ -139,7 +139,10 @@ function MyCityScene:NewLockButtonFromBuildingSprite(building_sprite)
 end
 -- 给对应建筑添加指示动画
 function MyCityScene:AddIndicateForBuilding(building_sprite)
-    self:GetSceneUILayer():ShowIndicatorOnBuilding(building_sprite)
+    -- self:GetSceneUILayer():ShowIndicatorOnBuilding(building_sprite)
+    Sprite:PromiseOfFlash(building_sprite):next(function()
+        self:OpenUI(building_sprite)
+    end)
 end
 function MyCityScene:GetHomePage()
     return self.home_page
@@ -294,7 +297,7 @@ function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
 
     local building = self:GetSceneLayer():GetClickedObject(x, y)
     if building then
-        self:GetSceneUILayer():HideIndicator()
+        -- self:GetSceneUILayer():HideIndicator()
 
         local buildings = {}
         if building:GetEntity():GetType() == "wall" then

@@ -14,7 +14,6 @@ function MapLayer:ctor(scene, min_scale, max_scale)
     self.max_scale = max_scale
     self.target_position = nil
     self.target_scale = nil
-    self.move_callbacks = {}
     local node = display.newNode():addTo(self)
     node:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt)
         local target_position = self.target_position
@@ -30,8 +29,9 @@ function MapLayer:ctor(scene, min_scale, max_scale)
             if (tx - current_x) * (tx - new_x) <= 0 and (ty - current_y) * (ty - new_y) <= 0 then
                 self.target_position = nil
                 new_x, new_y = tx, ty
-                if #self.move_callbacks > 0 then
-                    (table.remove(self.move_callbacks, 1))()
+                if self.move_callback then
+                    self.move_callback()
+                    self.move_callback = nil
                 end
             else
                 target_position[3] = speed * 0.98 > 8 and speed * 0.98 or 8
@@ -73,6 +73,7 @@ function MapLayer:MoveToPosition(map_x, map_y, speed_)
 end
 function MapLayer:StopMoveAnimation()
     self.target_position = nil
+    self.move_callback = nil
 end
 function MapLayer:GetLogicMap()
     return nil
@@ -80,12 +81,9 @@ end
 function MapLayer:PromiseOfMove(map_x, map_y, speed_)
     local scene_mid_point = self:getParent():convertToNodeSpace(cc.p(display.cx, display.cy))
     local len = cc.pGetLength(scene_mid_point, cc.p(map_x, map_y))
-    self.move_callbacks = {}
-    local p = promise.new()
     self:MoveToPosition(map_x, map_y, speed_ or len)
-    table.insert(self.move_callbacks, function()
-        p:resolve()
-    end)
+    local p = promise.new()
+    self.move_callback = function()p:resolve()end
     return p
 end
 function MapLayer:StopScaleAnimation()
@@ -216,6 +214,7 @@ function MapLayer:getContentSize()
     assert(false, "你应该在子类实现这个函数 getContentSize")
 end
 return MapLayer
+
 
 
 

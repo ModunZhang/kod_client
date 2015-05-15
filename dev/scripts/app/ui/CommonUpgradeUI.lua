@@ -799,10 +799,12 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
                         local current_scene = display.getRunningScene()
                         local building_sprite = current_scene:GetSceneLayer():FindBuildingSpriteByBuilding(jump_building, city)
                         self:getParent():getParent():LeftButtonClicked()
-                        current_scene:GotoLogicPoint(jump_building:GetMidLogicPosition())
-                        if current_scene.AddIndicateForBuilding then
-                            current_scene:AddIndicateForBuilding(building_sprite)
-                        end
+                        local x,y = jump_building:GetMidLogicPosition()
+                        current_scene:GotoLogicPoint(x,y,40):next(function()
+                            if current_scene.AddIndicateForBuilding then
+                                current_scene:AddIndicateForBuilding(building_sprite)
+                            end
+                        end)
                     end,
                     btn_name= _("前往")
                 }
@@ -827,6 +829,8 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
+
 
 
 

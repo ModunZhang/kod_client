@@ -496,7 +496,7 @@ function UIKit:commonListView(params,topEnding,bottomEnding,useSysUI)
     local list_node = display.newNode()
     list_node:ignoreAnchorPointForPosition(false)
     list_node:setContentSize(cc.size(viewRect.width,viewRect.height))
-    local ui_class = UIListView 
+    local ui_class = UIListView
     if useSysUI then  ui_class = cc.ui.UIListView end
     local list = ui_class.new(params):addTo(list_node)
     -- 是否有顶部的边界条，默认有
@@ -582,7 +582,7 @@ end
 function UIKit:removeMesssageDialog(instance)
     print(instance:GetUserData(),"removeMesssageDialog---->")
     dump(self.messageDialogs,"self.messageDialogs----->")
-    self.messageDialogs[instance:GetUserData()] = nil 
+    self.messageDialogs[instance:GetUserData()] = nil
 end
 
 function UIKit:isKeyMessageDialogShow()
@@ -596,7 +596,7 @@ end
 function UIKit:showKeyMessageDialog(title,tips,ok_callback,cancel_callback)
     if self:isKeyMessageDialogShow() then
         print("忽略了一次关键性弹窗")
-        return 
+        return
     end
     local dialog =  UIKit:showMessageDialog(title,tips,ok_callback,cancel_callback,false,nil,"__key__dialog")
 end
@@ -676,10 +676,12 @@ function UIKit:GotoPreconditionBuilding(jump_building)
     end
     local current_scene = display.getRunningScene()
     local building_sprite = current_scene:GetSceneLayer():FindBuildingSpriteByBuilding(jump_building, city)
-    current_scene:GotoLogicPoint(jump_building:GetMidLogicPosition())
-    if current_scene.AddIndicateForBuilding then
-        current_scene:AddIndicateForBuilding(building_sprite)
-    end
+    local x,y = jump_building:GetMidLogicPosition()
+    current_scene:GotoLogicPoint(x,y,40):next(function()
+        if current_scene.AddIndicateForBuilding then
+            current_scene:AddIndicateForBuilding(building_sprite)
+        end
+    end)
 end
 -- 暂时只有宝箱
 function UIKit:PlayUseItemAni(items)
@@ -748,7 +750,7 @@ function UIKit:addTipsToNode( node,tips , include_node)
             local t_size = tips_bg:getContentSize()
             text_1:align(display.CENTER, t_size.width/2, t_size.height/2)
             tips_bg:zorder(999999)
-            local node_postioon = include_node:convertToNodeSpace(world_postion) 
+            local node_postioon = include_node:convertToNodeSpace(world_postion)
             tips_bg:setPosition(node_postioon.x, node_postioon.y + node:getContentSize().height/2)
         elseif event.name == "ended" then
             if include_node:getChildByTag(100) then
@@ -770,11 +772,12 @@ end
 function UIKit:GetItemImage(reward_type,item_key)
     if reward_type == 'soldiers' then
         return UILib.soldier_image[item_key][1]
-    elseif reward_type == 'resource' 
-        or reward_type == 'special' 
-        or reward_type == 'speedup' 
-        or reward_type == 'buff' 
+    elseif reward_type == 'resource'
+        or reward_type == 'special'
+        or reward_type == 'speedup'
+        or reward_type == 'buff'
         or reward_type == 'buff' then
         return UILib.item[item_key]
     end
 end
+
