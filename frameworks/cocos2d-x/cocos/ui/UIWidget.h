@@ -772,10 +772,10 @@ protected:
     std::string _callbackType;
     std::string _callbackName;
     //dannyhe
-    // virtual bool ccTouchBegan(Touch *pTouch, Event *pEvent) override;
-    // virtual void ccTouchMoved(Touch *pTouch, Event *pEvent) override;
-    // virtual void ccTouchEnded(Touch *pTouch, Event *pEvent) override;
-    // virtual void ccTouchCancelled(Touch *pTouch, Event *pEvent) override;
+     virtual bool ccTouchBegan(Touch *pTouch, Event *pEvent) override;
+     virtual void ccTouchMoved(Touch *pTouch, Event *pEvent) override;
+     virtual void ccTouchEnded(Touch *pTouch, Event *pEvent) override;
+     virtual void ccTouchCancelled(Touch *pTouch, Event *pEvent) override;
 
 private:
     class FocusNavigationController;

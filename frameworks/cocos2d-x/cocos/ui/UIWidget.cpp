@@ -32,7 +32,7 @@ THE SOFTWARE.
 #include "base/CCEventDispatcher.h"
 #include "ui/UILayoutComponent.h"
 //dannyhe
-// #include "../external/lua/quick/LuaNodeManager.h"
+#include "../external/lua/quick/LuaNodeManager.h"
 NS_CC_BEGIN
 
 namespace ui {
@@ -527,15 +527,15 @@ void Widget::setTouchEnabled(bool enable)
     if (_touchEnabled)
     {
 //dannyhe
-// #if CC_ENABLE_SCRIPT_BINDING
-//         auto mng = LuaNodeManager::getInstance();
-//         auto lnode = mng->getLuaNodeByNode(this, true);
-//         if (!lnode) {
-//             return;
-//         }
-//         lnode->setSendEventToNode(true);
-//         lnode->setLuaTouchEnabled(true);
-// #else
+ #if CC_ENABLE_SCRIPT_BINDING
+         auto mng = LuaNodeManager::getInstance();
+         auto lnode = mng->getLuaNodeByNode(this, true);
+         if (!lnode) {
+             return;
+         }
+        lnode->setIsSendEventToNode(true);
+        lnode->setLuaTouchEnabled(true);
+ #else
         _touchListener = EventListenerTouchOneByOne::create();
         CC_SAFE_RETAIN(_touchListener);
         _touchListener->setSwallowTouches(true);
@@ -544,43 +544,42 @@ void Widget::setTouchEnabled(bool enable)
         _touchListener->onTouchEnded = CC_CALLBACK_2(Widget::onTouchEnded, this);
         _touchListener->onTouchCancelled = CC_CALLBACK_2(Widget::onTouchCancelled, this);
         _eventDispatcher->addEventListenerWithSceneGraphPriority(_touchListener, this);
-// #endif
+ #endif
     }
     else
     {
 //dannyhe
-// #if CC_ENABLE_SCRIPT_BINDING
-//         auto mng = LuaNodeManager::getInstance();
-//         auto lnode = mng->getLuaNodeByNode(this, true);
-//         if (!lnode) {
-//             return;
-//         }
-//         lnode->setSendEventToNode(false);
-//         lnode->setLuaTouchEnabled(false);
-// #else
+ #if CC_ENABLE_SCRIPT_BINDING
+         auto mng = LuaNodeManager::getInstance();
+         auto lnode = mng->getLuaNodeByNode(this, true);
+         if (!lnode) {
+             return;
+         }
+         lnode->setIsSendEventToNode(false);
+         lnode->setLuaTouchEnabled(false);
+ #else
         _eventDispatcher->removeEventListener(_touchListener);
         CC_SAFE_RELEASE_NULL(_touchListener);
-// #endif
+ #endif
     }
 }
 //dannyhe
-    
-// bool Widget::ccTouchBegan(Touch *pTouch, Event *pEvent)
-// {
-//     return this->onTouchBegan(pTouch, NULL);
-// }
-// void Widget::ccTouchMoved(Touch *pTouch, Event *pEvent)
-// {
-//      this->onTouchMoved(pTouch, NULL);
-// }
-// void Widget::ccTouchEnded(Touch *pTouch, Event *pEvent)
-// {
-//     this->onTouchEnded(pTouch, NULL);
-// }
-// void Widget::ccTouchCancelled(Touch *pTouch, Event *pEvent)
-// {
-//     this->onTouchCancelled(pTouch, NULL);
-// }
+ bool Widget::ccTouchBegan(Touch *pTouch, Event *pEvent)
+ {
+     return this->onTouchBegan(pTouch, NULL);
+ }
+ void Widget::ccTouchMoved(Touch *pTouch, Event *pEvent)
+ {
+      this->onTouchMoved(pTouch, NULL);
+ }
+ void Widget::ccTouchEnded(Touch *pTouch, Event *pEvent)
+ {
+     this->onTouchEnded(pTouch, NULL);
+ }
+ void Widget::ccTouchCancelled(Touch *pTouch, Event *pEvent)
+ {
+     this->onTouchCancelled(pTouch, NULL);
+ }
 bool Widget::isTouchEnabled() const
 {
     return _touchEnabled;
