@@ -344,8 +344,8 @@ function GameUIMail:InitInbox(mails)
     }:addTo(self.inbox_layer)
     self.inbox_listview:setRedundancyViewVal(200)
     self.inbox_listview:setDelegate(handler(self, self.DelegateInbox))
-    if 0 == #self.manager:GetMails() then
-        self.manager:FetchMailsFromServer(#self.manager:GetMails()):done(function ( response )
+    if not mails then
+        self.manager:FetchMailsFromServer(0):done(function ( response )
             self.inbox_listview:reload()
             return response
         end)
@@ -354,7 +354,8 @@ function GameUIMail:InitInbox(mails)
 end
 function GameUIMail:DelegateInbox( listView, tag, idx )
     if cc.ui.UIListView.COUNT_TAG == tag then
-        local mails_count = #self.manager:GetMails()
+        local mails = self.manager:GetMails()
+        local mails_count = not mails and 0 or #mails
         return mails_count
     elseif cc.ui.UIListView.CELL_TAG == tag then
         local item
@@ -488,8 +489,8 @@ function GameUIMail:InitSaveMails(mails)
     }:addTo(self.saved_layer)
     self.save_mails_listview:setRedundancyViewVal(200)
     self.save_mails_listview:setDelegate(handler(self, self.DelegateSavedMails))
-    if #self.manager:GetSavedMails() == 0 then
-        self.manager:FetchSavedMailsFromServer(#self.manager:GetSavedMails()):done(function ( response )
+    if not self.manager:GetSavedMails() then
+        self.manager:FetchSavedMailsFromServer(0):done(function ( response )
             self.save_mails_listview:reload()
             return response
         end)
@@ -498,7 +499,8 @@ function GameUIMail:InitSaveMails(mails)
 end
 function GameUIMail:DelegateSavedMails( listView, tag, idx )
     if cc.ui.UIListView.COUNT_TAG == tag then
-        local mails_count = #self.manager:GetSavedMails()
+        local saved_mails = self.manager:GetSavedMails()
+        local mails_count = not saved_mails and 0 or #saved_mails
         return mails_count
     elseif cc.ui.UIListView.CELL_TAG == tag then
         local item
@@ -629,8 +631,8 @@ function GameUIMail:InitSendMails(mails)
     }:addTo(self.sent_layer)
     self.send_mail_listview:setRedundancyViewVal(200)
     self.send_mail_listview:setDelegate(handler(self, self.DelegateSendMails))
-    if #self.manager:GetSendMails() == 0 then
-        self.manager:FetchSendMailsFromServer(#self.manager:GetSendMails()):done(function ( response )
+    if not mails then
+        self.manager:FetchSendMailsFromServer(0):done(function ( response )
             self.send_mail_listview:reload()
             return response
         end)
@@ -639,7 +641,8 @@ function GameUIMail:InitSendMails(mails)
 end
 function GameUIMail:DelegateSendMails( listView, tag, idx )
     if cc.ui.UIListView.COUNT_TAG == tag then
-        local mails_count = #self.manager:GetSendMails()
+        local send_mails = self.manager:GetSendMails()
+        local mails_count = not send_mails and 0 or #send_mails 
         return mails_count
     elseif cc.ui.UIListView.CELL_TAG == tag then
         local item
@@ -1173,8 +1176,8 @@ function GameUIMail:InitReport()
     }:addTo(self.report_layer)
     self.report_listview:setRedundancyViewVal(200)
     self.report_listview:setDelegate(handler(self, self.DelegateReport))
-    if #self.manager:GetReports() == 0 then
-        self.manager:FetchReportsFromServer(#self.manager:GetReports()):done(function ( response )
+    if not self.manager:GetReports() then
+        self.manager:FetchReportsFromServer(0):done(function ( response )
             self.report_listview:reload()
             return response
         end)
@@ -1184,7 +1187,9 @@ end
 
 function GameUIMail:DelegateReport( listView, tag, idx )
     if cc.ui.UIListView.COUNT_TAG == tag then
-        return #self.manager:GetReports()
+        local reports = self.manager:GetReports()
+        local count = not reports and 0 or #reports
+        return count
     elseif cc.ui.UIListView.CELL_TAG == tag then
         local item
         local content
@@ -1415,10 +1420,9 @@ function GameUIMail:InitSavedReports()
 
                 self.saved_reports_listview:setRedundancyViewVal(200)
                 self.saved_reports_listview:setDelegate(handler(self, self.DelegateSavedReport))
-                if #self.manager:GetSavedReports() == 0 then
-                    self.manager:FetchSavedReportsFromServer(#self.manager:GetSavedReports()):done(function ( response )
+                if not self.manager:GetSavedReports() then
+                    self.manager:FetchSavedReportsFromServer(0):done(function ( response )
                         self.saved_reports_listview:reload()
-                        self.saved_reports_listview:setVisible(#self.manager:GetSavedReports() < 1)
                         return response
                     end)
                 end
@@ -1434,7 +1438,9 @@ end
 
 function GameUIMail:DelegateSavedReport( listView, tag, idx )
     if cc.ui.UIListView.COUNT_TAG == tag then
-        return #self.manager:GetSavedReports()
+        local saved_reports = self.manager:GetSavedReports()
+        local count = not saved_reports and 0 or #saved_reports
+        return count
     elseif cc.ui.UIListView.CELL_TAG == tag then
         local item
         local content
@@ -1468,9 +1474,9 @@ function GameUIMail:CreateSavedReportContent()
     function content:GetContentData()
         return self.report
     end
-    function content:SetData(idx,report)
+    function content:SetData(idx,new_report)
         self:removeAllChildren()
-        local report = report or parent.manager:GetSavedReports()[idx]
+        local report = new_report or parent.manager:GetSavedReports()[idx]
         self.report = report
         local c_size = self:getContentSize()
         WidgetPushButton.new({normal = "back_ground_568x150.png"})
@@ -1504,6 +1510,7 @@ function GameUIMail:CreateSavedReportContent()
                 title_bg_image = "title_red_558x34.png"
             end
         end
+        print("saved reports title image=",title_bg_image)
         local title_bg = display.newSprite(title_bg_image, item_width/2, 52+item_height/2):addTo(self)
         local report_title =  UIKit:ttfLabel(
             {

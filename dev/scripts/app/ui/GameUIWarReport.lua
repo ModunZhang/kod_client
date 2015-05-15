@@ -155,7 +155,6 @@ end
 
 function GameUIWarReport:GetBooty()
     local booty = {}
-    dump(self:GetRewards())
     for k,v in pairs(self:GetRewards()) do
         table.insert(booty, {
             resource_type = Localize.fight_reward[v.name] or Localize.equip_material[v.name],

@@ -42,6 +42,8 @@ return function(base, delta)
                     if type(k) == "number" then
                         tmp.edit = tmp.edit or {}
                         insert(tmp.edit, curRoot[k])
+                    elseif not curRoot[k] then
+                        break
                     end
                     curRoot[k] = curRoot[k] or {}
                     curRoot = curRoot[k]
