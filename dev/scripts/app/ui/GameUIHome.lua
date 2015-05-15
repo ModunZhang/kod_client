@@ -470,7 +470,8 @@ function GameUIHome:OnVipEventOver( vip_event )
     self:RefreshVIP()
 end
 function GameUIHome:RefreshExp()
-    self.exp:setPercentage(User:LevelExp()/User:GetCurrentLevelMaxExp(User:GetPlayerLevelByExp(User:LevelExp()))*100)
+    local current_level = User:GetPlayerLevelByExp(User:LevelExp())
+    self.exp:setPercentage( (User:LevelExp() - User:GetCurrentLevelExp(current_level))/(User:GetCurrentLevelMaxExp(current_level) - User:GetCurrentLevelExp(current_level)) * 100)
 end
 function GameUIHome:RefreshVIP()
     local vip_btn = self.vip_btn
@@ -595,6 +596,7 @@ function GameUIHome:OnCountInfoChanged()
 end
 
 return GameUIHome
+
 
 
 

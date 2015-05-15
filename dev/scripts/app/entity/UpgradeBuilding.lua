@@ -282,6 +282,9 @@ function UpgradeBuilding:OnHandle(level, finish_time)
     end
 end
 ----
+function UpgradeBuilding:GetFunctionConfig()
+    return self.config_building_function
+end
 function UpgradeBuilding:GetNextLevelPower()
     return self.config_building_function[self:GetType()][self:GetNextLevel()].power
 end
