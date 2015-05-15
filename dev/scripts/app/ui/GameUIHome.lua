@@ -214,7 +214,6 @@ function GameUIHome:CreateTop()
     if display.width>640 then
         top_bg:scale(display.width/768)
     end
-
     -- 玩家按钮
     local button = cc.ui.UIPushButton.new(
         {normal = "player_btn_up_314x86.png", pressed = "player_btn_down_314x86.png"},
@@ -225,8 +224,6 @@ function GameUIHome:CreateTop()
         end
     end):addTo(top_bg):align(display.LEFT_CENTER,top_bg:getContentSize().width/2-2, top_bg:getContentSize().height/2+10)
     button:setRotationSkewY(180)
-
-
     -- 玩家名字背景加文字
     local ox = 150
     local name_bg = display.newSprite("player_name_bg_168x30.png"):addTo(top_bg)
@@ -258,9 +255,6 @@ function GameUIHome:CreateTop()
         shadow = true
     }):addTo(top_bg):align(display.LEFT_CENTER, ox + 14, 42)
 
-
-
-    -----------------------
     -- 资源按钮
     local button = cc.ui.UIPushButton.new(
         {normal = "player_btn_up_314x86.png", pressed = "player_btn_down_314x86.png"},
@@ -290,9 +284,6 @@ function GameUIHome:CreateTop()
         local x, y = first_col + col * padding_width, first_row - (row * padding_height)
         display.newSprite(v[1]):addTo(button):pos(x, y):scale(0.3)
 
-        -- self[v[2]] = cc.Label:createWithBMFont("fonts/konqa32.fnt", "hello")
-        -- :addTo(button):pos(x + label_padding, y)
-
         self[v[2]] = UIKit:ttfLabel({text = "",
             size = 18,
             color = 0xf3f0b6,
@@ -301,16 +292,19 @@ function GameUIHome:CreateTop()
     end
 
     -- 玩家信息背景
-    local player_bg = display.newSprite("player_bg_110x106.png"):addTo(top_bg, 2)
-        :align(display.LEFT_BOTTOM, display.width>640 and 58 or 64, 10):setCascadeOpacityEnabled(true)
-    self.player_icon = UIKit:GetPlayerIconOnly(User:Icon()):addTo(player_bg):pos(55, 64):scale(0.72)
-    -- self.exp = display.newSprite("player_exp_bar_110x106.png"):addTo(player_bg):pos(55, 53)
-    self.exp = display.newProgressTimer("player_exp_bar_110x106.png", display.PROGRESS_TIMER_RADIAL):addTo(player_bg):pos(55, 53)
+    local player_bg = display.newSprite("player_bg_110x106.png")
+    :align(display.LEFT_BOTTOM, display.width>640 and 58 or 64, 10)
+    :addTo(top_bg, 2):setCascadeOpacityEnabled(true)
+    self.player_icon = UIKit:GetPlayerIconOnly(User:Icon())
+    :addTo(player_bg):pos(55, 64):scale(0.72)
+    self.exp = display.newProgressTimer("player_exp_bar_110x106.png", 
+        display.PROGRESS_TIMER_RADIAL):addTo(player_bg):pos(55, 53)
     self.exp:setRotationSkewY(180)
     self:RefreshExp()
 
     local level_bg = display.newSprite("level_bg_72x19.png"):addTo(player_bg):pos(55, 18):setCascadeOpacityEnabled(true)
     self.level_label = UIKit:ttfLabel({
+        text = "",
         size = 14,
         color = 0xfff1cc,
         shadow = true,
