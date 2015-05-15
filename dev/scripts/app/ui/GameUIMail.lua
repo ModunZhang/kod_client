@@ -347,18 +347,10 @@ function GameUIMail:InitInbox(mails)
     if 0 == #self.manager:GetMails() then
         self.manager:FetchMailsFromServer(#self.manager:GetMails()):done(function ( response )
             self.inbox_listview:reload()
-            self.has_mail_label:setVisible(not (self.manager:GetMails() and #self.manager:GetMails()>0))
             return response
         end)
     end
     self.inbox_listview:reload()
-    -- 没有邮件
-    self.has_mail_label = UIKit:ttfLabel({
-        text = _("当前没有内容"),
-        size = 20,
-        color = 0x615b44
-    }):align(display.CENTER,window.cx,window.cy):addTo(self.inbox_layer)
-    self.has_mail_label:setVisible(not (mails and #mails>0))
 end
 function GameUIMail:DelegateInbox( listView, tag, idx )
     if cc.ui.UIListView.COUNT_TAG == tag then
@@ -499,18 +491,10 @@ function GameUIMail:InitSaveMails(mails)
     if #self.manager:GetSavedMails() == 0 then
         self.manager:FetchSavedMailsFromServer(#self.manager:GetSavedMails()):done(function ( response )
             self.save_mails_listview:reload()
-            self.has_saved_mail_label:setVisible(not (self.manager:GetSavedMails() and #self.manager:GetSavedMails()>0))
             return response
         end)
     end
     self.save_mails_listview:reload()
-    -- 没有保存战报
-    self.has_saved_mail_label = UIKit:ttfLabel({
-        text = _("当前没有内容"),
-        size = 20,
-        color = 0x615b44
-    }):align(display.CENTER,window.cx,window.cy):addTo(self.saved_layer)
-    self.has_saved_mail_label:setVisible(not (mails and #mails>0))
 end
 function GameUIMail:DelegateSavedMails( listView, tag, idx )
     if cc.ui.UIListView.COUNT_TAG == tag then
@@ -648,18 +632,10 @@ function GameUIMail:InitSendMails(mails)
     if #self.manager:GetSendMails() == 0 then
         self.manager:FetchSendMailsFromServer(#self.manager:GetSendMails()):done(function ( response )
             self.send_mail_listview:reload()
-            self.has_send_label:setVisible(not (self.manager:GetSendMails() and #self.manager:GetSendMails()>0))
             return response
         end)
     end
     self.send_mail_listview:reload()
-    -- 没有发送邮件
-    self.has_send_label = UIKit:ttfLabel({
-        text = _("当前没有内容"),
-        size = 20,
-        color = 0x615b44
-    }):align(display.CENTER,window.cx,window.cy):addTo(self.sent_layer)
-    self.has_send_label:setVisible(not (mails and #mails>0))
 end
 function GameUIMail:DelegateSendMails( listView, tag, idx )
     if cc.ui.UIListView.COUNT_TAG == tag then
@@ -911,9 +887,6 @@ function GameUIMail:OnInboxMailsChanged(changed_mails)
             self.inbox_listview:asyncLoadWithCurrentPosition_()
         end
     end
-    if self.has_mail_label then
-        self.has_mail_label:setVisible(#self.inbox_listview:getItems()==0)
-    end
 end
 
 function GameUIMail:OnSavedMailsChanged(changed_mails)
@@ -944,9 +917,6 @@ function GameUIMail:OnSavedMailsChanged(changed_mails)
             end
         end
     end
-    if self.has_saved_mail_label then
-        self.has_saved_mail_label:setVisible(#self.save_mails_listview:getItems()<1)
-    end
 end
 function GameUIMail:OnSendMailsChanged(changed_mails)
     if not self.send_mail_listview then
@@ -962,9 +932,6 @@ function GameUIMail:OnSendMailsChanged(changed_mails)
         if #changed_mails.remove_mails > 0 then
             self.send_mail_listview:asyncLoadWithCurrentPosition_()
         end
-    end
-    if self.has_send_label then
-        self.has_send_label:setVisible(#self.send_mail_listview:getItems()<1)
     end
 end
 function GameUIMail:MailUnreadChanged(unreads)
@@ -1209,19 +1176,10 @@ function GameUIMail:InitReport()
     if #self.manager:GetReports() == 0 then
         self.manager:FetchReportsFromServer(#self.manager:GetReports()):done(function ( response )
             self.report_listview:reload()
-            self.has_report_label:setVisible(not (self.manager:GetReports() and #self.manager:GetReports()>0))
             return response
         end)
     end
     self.report_listview:reload()
-    -- 没有战报
-    local reports = self.manager:GetReports()
-    self.has_report_label = UIKit:ttfLabel({
-        text = _("当前没有内容"),
-        size = 20,
-        color = 0x615b44
-    }):align(display.CENTER,window.cx,window.cy):addTo(self.report_layer)
-    self.has_report_label:setVisible(not (reports and #reports>0))
 end
 
 function GameUIMail:DelegateReport( listView, tag, idx )
@@ -1444,8 +1402,6 @@ function GameUIMail:InitSavedReports()
                 self.save_mails_listview:show()
 
                 self.saved_reports_listview:hide()
-                self.has_saved_report_label:hide()
-                self.has_saved_mail_label:setVisible(#self.save_mails_listview:getItems()<1)
             end
             if tag == 'menu_1' then
                 if self.save_mails_listview then
@@ -1467,19 +1423,8 @@ function GameUIMail:InitSavedReports()
                     end)
                 end
                 self.saved_reports_listview:reload()
-                -- 没有保存战报
-                self.has_saved_report_label = UIKit:ttfLabel({
-                    text = _("当前没有内容"),
-                    size = 20,
-                    color = 0x615b44
-                }):align(display.CENTER,window.cx,window.cy):addTo(self.saved_layer)
-                self.has_saved_report_label:setVisible(not (#self.manager:GetSavedReports()>0))
-
+                
                 self.saved_reports_listview:setVisible(true)
-                self.has_saved_report_label:setVisible(#self.saved_reports_listview:getItems()<1)
-                if self.has_saved_mail_label then
-                    self.has_saved_mail_label:hide()
-                end
             end
         end
     )
@@ -1867,9 +1812,6 @@ function GameUIMail:OnReportsChanged( changed_map )
             self.report_listview:asyncLoadWithCurrentPosition_()
         end
     end
-    if self.has_report_label then
-        self.has_report_label:setVisible(#self.report_listview:getItems()<1)
-    end
 end
 function GameUIMail:OnSavedReportsChanged( changed_map )
     if not self.saved_reports_listview then
@@ -1895,9 +1837,6 @@ function GameUIMail:OnSavedReportsChanged( changed_map )
         if #changed_map.remove > 0 then
             self.saved_reports_listview:asyncLoadWithCurrentPosition_()
         end
-    end
-    if self.has_saved_report_label then
-        self.has_saved_report_label:setVisible(self.save_dropList:GetSelectdTag() == "menu_1" and #self.saved_reports_listview:getItems()<1)
     end
 end
 function GameUIMail:SaveOrUnsaveReport(report,target)

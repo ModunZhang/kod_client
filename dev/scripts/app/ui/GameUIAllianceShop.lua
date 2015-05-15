@@ -31,7 +31,6 @@ function GameUIAllianceShop:InitUnLockItems()
             self.unlock_items[v] = true
         end
     end
-    dump(self.unlock_items)
 end
 function GameUIAllianceShop:CheckSell(item_type)
     return self.unlock_items[item_type]

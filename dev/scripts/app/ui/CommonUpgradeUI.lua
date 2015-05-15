@@ -9,6 +9,7 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetAccelerateGroup = import("..widget.WidgetAccelerateGroup")
 
+
 local SpriteConfig = import("..sprites.SpriteConfig")
 
 
@@ -96,10 +97,16 @@ function CommonUpgradeUI:InitCommonPart()
         :addTo(level_bg)
     -- 建筑功能介绍
     -- 建筑图片 放置区域左右边框
-    cc.ui.UIImage.new("building_frame_36x136.png"):align(display.CENTER, display.cx-250, display.top-175)
-        :addTo(self):setFlippedX(true)
-    cc.ui.UIImage.new("building_frame_36x136.png"):align(display.CENTER, display.cx-145, display.top-175)
-        :addTo(self)
+    -- cc.ui.UIImage.new("building_frame_36x136.png"):align(display.CENTER, display.cx-250, display.top-175)
+    --     :addTo(self):setFlippedX(true)
+    WidgetPushButton.new({normal = "alliance_item_flag_box_126X126.png"})
+        :onButtonClicked(function(event)
+            if event.name == "CLICKED_EVENT" then
+                UIKit:newGameUI("GameUICityBuildingInfo", self.building):AddToCurrentScene(true)
+            end
+        end):align(display.CENTER, display.cx-200, display.top-175)
+        :addTo(self):scale(136/126)
+   
     self:ReloadBuildingImage()
     self:InitBuildingIntroduces()
     self:InitNextLevelEfficiency()
@@ -827,6 +834,7 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
 
 
 
