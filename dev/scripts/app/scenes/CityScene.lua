@@ -130,6 +130,23 @@ function CityScene:OnTouchMove(pre_x, pre_y, x, y)
     CityScene.super.OnTouchMove(self, pre_x, pre_y, x, y)
 end
 
+function CityScene:CollectBuildings(building_sprite)
+    local r = {}
+    if building_sprite:GetEntity():GetType() == "wall" then
+        for _,v in ipairs(self:GetSceneLayer():GetWalls()) do
+            table.insert(r, v)
+        end
+        for _,v in ipairs(self:GetSceneLayer():GetTowers()) do
+            table.insert(r, v)
+        end
+    elseif building_sprite:GetEntity():GetType() == "tower" then
+        r = {unpack(self:GetSceneLayer():GetTowers())}
+    else
+        r = {building_sprite}
+    end
+    return r
+end
+
 
 
 return CityScene

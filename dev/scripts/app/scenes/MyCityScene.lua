@@ -139,8 +139,7 @@ function MyCityScene:NewLockButtonFromBuildingSprite(building_sprite)
 end
 -- 给对应建筑添加指示动画
 function MyCityScene:AddIndicateForBuilding(building_sprite)
-    -- self:GetSceneUILayer():ShowIndicatorOnBuilding(building_sprite)
-    Sprite:PromiseOfFlash(building_sprite):next(function()
+    Sprite:PromiseOfFlash(unpack(self:CollectBuildings(building_sprite))):next(function()
         self:OpenUI(building_sprite, "upgrade")
     end)
 end
@@ -148,7 +147,7 @@ function MyCityScene:GetHomePage()
     return self.home_page
 end
 function MyCityScene:onEnterTransitionFinish()
-    if GLOBAL_FTE then 
+    if GLOBAL_FTE then
         self:RunFte()
     else
         app:sendApnIdIf()
@@ -301,27 +300,8 @@ function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
 
     local building = self:GetSceneLayer():GetClickedObject(x, y)
     if building then
-        -- self:GetSceneUILayer():HideIndicator()
-
-        local buildings = {}
-        if building:GetEntity():GetType() == "wall" then
-            for i,v in ipairs(self:GetSceneLayer():GetWalls()) do
-                table.insert(buildings, v)
-            end
-            for i,v in ipairs(self:GetSceneLayer():GetTowers()) do
-                table.insert(buildings, v)
-            end
-        elseif building:GetEntity():GetType() == "tower" then
-            buildings = {unpack(self:GetSceneLayer():GetTowers())}
-        else
-            buildings = {building}
-        end
-
-        app:lockInput(true)
-        self.util_node:performWithDelay(function()
-            app:lockInput(false)
-        end, 0.5)
-        Sprite:PromiseOfFlash(unpack(buildings)):next(function()
+        app:lockInput(true);self.util_node:performWithDelay(function()app:lockInput()end,0.5)
+        Sprite:PromiseOfFlash(unpack(self:CollectBuildings(building))):next(function()
             if self:IsEditMode() then
                 self:GetSceneUILayer():getChildByTag(WidgetMoveHouse.ADD_TAG):SetMoveToRuins(building)
                 return
@@ -612,7 +592,7 @@ function MyCityScene:PromiseOfUnlockBuilding(building_type)
             :addTo(self:GetLockButtonsByBuildingType(building_type), 1, 123)
 
         return self:GotoLogicPoint(x, y, 5):next(function()
-                tutorial:SetTouchObject(self:GetLockButtonsByBuildingType(building_type))
+            tutorial:SetTouchObject(self:GetLockButtonsByBuildingType(building_type))
         end):next(function()
             return UIKit:PromiseOfOpen("GameUIUnlockBuilding")
         end):next(function(ui)
@@ -746,6 +726,7 @@ end
 
 
 return MyCityScene
+
 
 
 
