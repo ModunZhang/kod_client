@@ -229,7 +229,7 @@ function GameUIAlliance:CreateAllianceTips()
         alignment = UIListView.ALIGNMENT_LEFT,
     }:addTo(list_bg)
 
-    local tips = {_("将城市迁入联盟领地，受到联盟保护"),_("将城市迁入联盟领地，受到联盟保护"),_("将城市迁入联盟领地，受到联盟保护"),_("将城市迁入联盟领地，受到联盟保护"),_("将城市迁入联盟领地，受到联盟保护"),_("将城市迁入联盟领地，受到联盟保护"),_("将城市迁入联盟领地，受到联盟保护")}
+    local tips = {_("将城市迁入联盟领地，受到联盟保护"),_("加入联盟好处提示2"),_("加入联盟好处提示3"),_("加入联盟好处提示4"),_("加入联盟好处提示5"),_("加入联盟好处提示6"),_("加入联盟好处提示6")}
     for i,v in ipairs(tips) do
         local item = scrollView:newItem()
         local content = display.newNode()
@@ -240,9 +240,11 @@ function GameUIAlliance:CreateAllianceTips()
             text = v,
             size = 20,
             color = 0x403c2f,
-            align = cc.TEXT_ALIGNMENT_LEFT
+            align = cc.TEXT_ALIGNMENT_LEFT,
+            bgColor = UIKit:hex2c4b(0x7a000000),
         }):addTo(content):align(display.LEFT_BOTTOM, star:getPositionX()+star:getContentSize().width+10, star:getPositionY()-2)
         item:addContent(content)
+        content:size(546,48)
         item:setItemSize(546,48)
         scrollView:addItem(item)
     end

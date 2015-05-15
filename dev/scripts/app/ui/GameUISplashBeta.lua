@@ -22,14 +22,9 @@ function GameUISplashBeta:onEnter()
 	display.newSprite("splash_logo_515x92.png")
 		:align(display.TOP_CENTER, display.cx, display.top - 100)
 		:addTo(self.ui_layer)
-	if not app:GetGameDefautlt():getBasicInfoValueForKey("SHOW_FIST_LOGIN_PAGE_SUCCESS") then
-		self:CreateNormalBg()
-		app:GetGameDefautlt():getBasicInfoValueForKey("SHOW_FIST_LOGIN_PAGE_SUCCESS",true)
-	else
 		self:CreateBottomAnimate()
-	end
 end
-
+-- 仅仅显示背景图
 function GameUISplashBeta:CreateNormalBg()
 	local sp = self:CreateBgSprite():align(display.LEFT_BOTTOM, 0, 0):addTo(self.bottom_layer)
 end

@@ -26,6 +26,10 @@ function AllianceScene:onEnter()
     local alliance_map = self:GetAlliance():GetAllianceMap()
     local allianceShirine = self:GetAlliance():GetAllianceShrine()
     alliance_map:AddListenOnType(allianceShirine,alliance_map.LISTEN_TYPE.BUILDING_INFO)
+    if not app:GetGameDefautlt():getBasicInfoValueForKey("SHOW_REGION_TIPS") then
+        UIKit:newGameUI("GameUITips"):AddToScene(self, true)
+        app:GetGameDefautlt():getBasicInfoValueForKey("SHOW_REGION_TIPS",true)
+    end
 end
 function AllianceScene:LoadAnimation()
     UILib.loadSolidersAnimation()
