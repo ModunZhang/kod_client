@@ -816,6 +816,15 @@ local ALLIANCE_DECORATE_NAME = {
 local LOGIN_TIPS = {
     _("提示：预留一定的空闲城民，兵营将他们训练成士兵")
 }
+
+local SERVER_NAME = {
+    bronze = _("青铜级"),
+    silver = _("白银级"),
+    gold  = _("黄金级"),
+    platinum = _("铂金级"),
+    diamond = _("钻石级"),
+    master = _("大师级"),
+}
 return {
     equip_material = EQUIP_MATERIAL_LOCALIZE,
     equip = EQUIP_LOCALIZE,
@@ -870,6 +879,7 @@ return {
     alliance_decorate_name = ALLIANCE_DECORATE_NAME,
     shrine_desc = SHRINE_DESC,
     login_tips = LOGIN_TIPS,
+    server_name = SERVER_NAME,
 }
 
 

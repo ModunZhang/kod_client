@@ -142,12 +142,12 @@ function GameUIShop:onEnter()
             end
         end)
 
-    local member_id
-    for _, v in ipairs(Alliance_Manager:GetMyAlliance():JoinRequestEvents()) do
-        if v.id ~=  DataManager:getUserData()._id then
-            member_id = v.id
-        end
-    end
+    -- local member_id
+    -- for _, v in ipairs(Alliance_Manager:GetMyAlliance():JoinRequestEvents()) do
+    --     if v.id ~=  DataManager:getUserData()._id then
+    --         member_id = v.id
+    --     end
+    -- end
     local join_btn = WidgetPushButton.new(
         {normal = "green_btn_up_169x86.png", pressed = "green_btn_down_169x86.png"},
         {scale9 = false}

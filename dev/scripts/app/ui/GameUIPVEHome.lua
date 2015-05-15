@@ -90,7 +90,7 @@ function GameUIPVEHome:CreateTop()
     local gem_button = cc.ui.UIPushButton.new(
         {normal = "gem_btn_up.png", pressed = "gem_btn_down.png"}
     ):onButtonClicked(function(event)
-        UIKit:newGameUI('GameUIShop', City):AddToCurrentScene(true)
+        UIKit:newGameUI('GameUIStore'):AddToCurrentScene(true)
     end):addTo(top_bg):align(display.RIGHT_TOP, size.width - 45, 85)
     cc.ui.UIImage.new("gem_icon_62x61.png"):addTo(gem_button):pos(-60, -62)
     self.gem_label = UIKit:ttfLabel({

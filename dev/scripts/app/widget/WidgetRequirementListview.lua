@@ -1,4 +1,3 @@
--- 需求列表控件
 local UIListView = import("..ui.UIListView")
 local WidgetRequirementListview = class("WidgetRequirementListview", function ()
     local layer = cc.Layer:create()

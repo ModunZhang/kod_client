@@ -175,7 +175,7 @@ function PVEObject:SearchNext()
     self.searched = self.searched + 1
 end
 function PVEObject:IsLast()
-    return self:Left() == 1
+    return self:Left() == 0
 end
 function PVEObject:Left()
     return self:Total() - self:Searched()

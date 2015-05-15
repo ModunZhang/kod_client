@@ -32,7 +32,11 @@ return function(userData)
     timer:AddListener(Alliance_Manager)
     timer:Start()
 
-    app:GetChatManager():FetchAllChatMessageFromServer()
+
+    if not GLOBAL_FTE then
+        app:GetChatManager():FetchAllChatMessageFromServer()
+    end
+
     if ext.gamecenter.isGameCenterEnabled() and not ext.gamecenter.isAuthenticated() then
          ext.gamecenter.authenticate(false)
     end
