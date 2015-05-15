@@ -1,9 +1,6 @@
 local promise = import("..utils.promise")
 local MapLayer = class("MapLayer", function(...)
-    local layer = display.newLayer()
-    layer:setAnchorPoint(cc.p(0, 0))
-    layer:setNodeEventEnabled(true)
-    return layer
+    return display.newLayer():align(display.BOTTOM_LEFT):setNodeEventEnabled(true)
 end)
 
 local SPEED = 10
@@ -11,7 +8,8 @@ local min = math.min
 local max = math.max
 local abs = math.abs
 ----
-function MapLayer:ctor(min_scale, max_scale)
+function MapLayer:ctor(scene, min_scale, max_scale)
+    self.scene = scene
     self.min_scale = min_scale
     self.max_scale = max_scale
     self.target_position = nil
@@ -115,6 +113,7 @@ function MapLayer:ZoomBy(scale, x, y)
     local cur_x, cur_y = self:getPosition()
     local new_position = cc.p(cur_x + scene_mid_point.x - new_scene_mid_point.x, cur_y + scene_mid_point.y - new_scene_mid_point.y)
     self:setPosition(new_position)
+    self.scene:OnSceneScale()
     return self
 end
 function MapLayer:ZoomEnd()
@@ -178,6 +177,7 @@ function MapLayer:setPosition(position)
     local rx = x >= 0 and min(left_bottom_pos.x, right_top_pos.x) or max(left_bottom_pos.x, right_top_pos.x)
     local ry = y >= 0 and min(left_bottom_pos.y, right_top_pos.y) or max(left_bottom_pos.y, right_top_pos.y)
     super.setPosition(self, cc.p(rx, ry))
+    self.scene:OnSceneMove()
 end
 function MapLayer:GetLeftBottomPositionWithConstrain(x, y)
     local parent_node = self:getParent()

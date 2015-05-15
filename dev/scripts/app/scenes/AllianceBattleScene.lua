@@ -53,9 +53,9 @@ function AllianceBattleScene:CreateSceneLayer()
     local pos = self:GetAlliance():FightPosition()
     local arrange = (pos == "top" or pos == "bottom") and MultiAllianceLayer.ARRANGE.V or MultiAllianceLayer.ARRANGE.H
     if pos == "top" or pos == "left" then
-        return MultiAllianceLayer.new(arrange, self:GetAlliance(), self:GetEnemyAlliance())
+        return MultiAllianceLayer.new(self, arrange, self:GetAlliance(), self:GetEnemyAlliance())
     else
-        return MultiAllianceLayer.new(arrange, self:GetEnemyAlliance(), self:GetAlliance())
+        return MultiAllianceLayer.new(self, arrange, self:GetEnemyAlliance(), self:GetAlliance())
     end
 end
 function AllianceBattleScene:GotoLogicPosition(x, y, id)

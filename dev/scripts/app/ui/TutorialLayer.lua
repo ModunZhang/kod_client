@@ -1,6 +1,5 @@
 local cocos_promise = import("..utils.cocos_promise")
 local promise = import("..utils.promise")
-local Arrow = import(".Arrow")
 local TutorialLayer = class('TutorialLayer', function()
     return display.newNode()
 end)
@@ -21,7 +20,6 @@ function TutorialLayer:ctor(obj)
     for _, v in pairs{ left, right, top, bottom } do
         v:setContentSize(cc.size(display.width, display.height))
     end
-    -- self.arrow = Arrow.new():addTo(self):hide()
     self:Reset()
     self:SetTouchObject(obj)
     self:setLocalZOrder(3000)

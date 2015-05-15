@@ -67,7 +67,7 @@ function PVEScene:LoadAnimation()
     UILib.loadPveAnimation()
 end
 function PVEScene:CreateSceneLayer()
-    return PVELayer.new(self.user)
+    return PVELayer.new(self, self.user)
 end
 function PVEScene:CreateHomePage()
     local home_page = GameUIPVEHome.new(self.user, self):AddToScene(self, true)

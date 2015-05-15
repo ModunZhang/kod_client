@@ -1,7 +1,6 @@
 local cocos_promise = import("..utils.cocos_promise")
 local Localize = import("..utils.Localize")
 local promise = import("..utils.promise")
-local SpriteButton = import("..ui.SpriteButton")
 local GameUIWatchTowerTroopDetail = import("..ui.GameUIWatchTowerTroopDetail")
 local WidgetMoveHouse = import("..widget.WidgetMoveHouse")
 local TutorialLayer = import("..ui.TutorialLayer")
@@ -40,14 +39,14 @@ function MyCityScene:onExit()
     MyCityScene.super.onExit(self)
 end
 function MyCityScene:EnterEditMode()
-    MyCityScene.super.EnterEditMode(self)
-    self:GetSceneUILayer():EnterEditMode()
+    self:GetTopLayer():hide()
     self:GetHomePage():DisplayOff()
+    MyCityScene.super.EnterEditMode(self)
 end
 function MyCityScene:LeaveEditMode()
-    MyCityScene.super.LeaveEditMode(self)
-    self:GetSceneUILayer():LeaveEditMode()
+    self:GetTopLayer():show()
     self:GetHomePage():DisplayOn()
+    MyCityScene.super.LeaveEditMode(self)
     self:GetSceneUILayer():removeChildByTag(WidgetMoveHouse.ADD_TAG, true)
 end
 function MyCityScene:CreateSceneUILayer()
@@ -57,19 +56,6 @@ function MyCityScene:CreateSceneUILayer()
     scene_ui_layer:setTouchEnabled(true)
     scene_ui_layer:setTouchSwallowEnabled(false)
     scene_ui_layer.action_node = display.newNode():addTo(scene_ui_layer)
-    scene_ui_layer.lock_buttons = {}
-    function scene_ui_layer:NewLockButtonFromBuildingSprite(building_sprite)
-        local lock_button = SpriteButton.new(building_sprite, city):addTo(self, 1)
-        city:AddListenOnType(lock_button, city.LISTEN_TYPE.UPGRADE_BUILDING)
-        table.insert(self.lock_buttons, lock_button)
-    end
-    function scene_ui_layer:RemoveAllLockButtons()
-        for _, v in pairs(self.lock_buttons) do
-            v:removeFromParent()
-            city:RemoveListenerOnType(v, city.LISTEN_TYPE.UPGRADE_BUILDING)
-        end
-        self.lock_buttons = {}
-    end
     function scene_ui_layer:ShowIndicatorOnBuilding(building_sprite)
         if not self.indicator then
             self.building__ = building_sprite
@@ -99,19 +85,6 @@ function MyCityScene:CreateSceneUILayer()
             self.indicator = nil
         end
     end
-    function scene_ui_layer:EnterEditMode()
-        table.foreach(self.lock_buttons, function(_, v)
-            v:hide()
-        end)
-    end
-    function scene_ui_layer:LeaveEditMode()
-        table.foreach(self.lock_buttons, function(_, v)
-            v:show()
-        end)
-    end
-    function scene_ui_layer:IteratorLockButtons(func)
-        table.foreach(self.lock_buttons, func)
-    end
     function scene_ui_layer:Schedule()
         display.newNode():addTo(self):schedule(function()
             if scene_layer:getScale() < (scene_layer:GetScaleRange()) * 1.3 then
@@ -126,15 +99,6 @@ function MyCityScene:CreateSceneUILayer()
                 end
             end
         end, 0.5)
-        display.newNode():addTo(self):schedule(function()
-            for i,v in ipairs(self.lock_buttons) do
-                if v:IsShow() then
-                    local wp = v.sprite:getParent():convertToWorldSpace(cc.p(v.sprite:getPosition()))
-                    local lp = v:getParent():convertToNodeSpace(cc.p(wp.x, wp.y))
-                    v:pos(lp.x, lp.y)
-                end
-            end
-        end, 0)
         display.newNode():addTo(self):schedule(function()
             local building = self.building__
             if self.indicator and building then
@@ -152,6 +116,26 @@ function MyCityScene:CreateSceneUILayer()
     end
     scene_ui_layer:Schedule()
     return scene_ui_layer
+end
+function MyCityScene:IteratorLockButtons(func)
+    for i,v in ipairs(self:GetTopLayer():getChildren()) do
+        if func(v) then
+            return
+        end
+    end
+end
+function MyCityScene:NewLockButtonFromBuildingSprite(building_sprite)
+    local wp = building_sprite:GetWorldPosition()
+    local lp = self:GetTopLayer():convertToNodeSpace(wp)
+    local button = cc.ui.UIPushButton.new({normal = "lock_btn.png",pressed = "lock_btn.png"})
+        :addTo(self:GetTopLayer()):pos(lp.x,lp.y)
+        :onButtonClicked(function()
+            if self.city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint(self.city) > 0 then
+                UIKit:newGameUI("GameUIUnlockBuilding", self.city, building_sprite:GetEntity()):AddToCurrentScene(true)
+            end
+        end)
+    button.sprite = building_sprite
+    return button
 end
 -- 给对应建筑添加指示动画
 function MyCityScene:AddIndicateForBuilding(building_sprite)
@@ -245,13 +229,14 @@ end
 function MyCityScene:GetLockButtonsByBuildingType(building_type)
     local lock_button
     local location_id = self:GetCity():GetLocationIdByBuildingType(building_type)
-    self:GetSceneUILayer():IteratorLockButtons(function(_, v)
+    self:IteratorLockButtons(function(v)
+        print(v.sprite:GetEntity().location_id, location_id)
         if v.sprite:GetEntity().location_id == location_id then
             lock_button = v
             return true
         end
     end)
-    assert(lock_button)
+    assert(lock_button, building_type)
     return lock_button
 end
 
@@ -268,6 +253,10 @@ end
 function MyCityScene:OnUpgradingBegin()
     app:GetAudioManager():PlayeEffectSoundWithKey("UI_BUILDING_UPGRADE_START")
     self:GetSceneLayer():CheckCanUpgrade()
+    local can_unlock = self.city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint(self.city) > 0
+    self:IteratorLockButtons(function(v)
+        v:setVisible(can_unlock)
+    end)
 end
 function MyCityScene:OnUpgrading()
 
@@ -278,19 +267,26 @@ function MyCityScene:OnUpgradingFinished(building)
     end
     self:GetSceneLayer():CheckCanUpgrade()
     app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
+
+    local can_unlock = self.city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint(self.city) > 0
+    self:IteratorLockButtons(function(v)
+        v:setVisible(can_unlock)
+    end)
 end
 function MyCityScene:OnTilesChanged(tiles)
+    self:GetTopLayer():removeAllChildren()
+    local can_unlock = self.city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint(self.city) > 0
     local city = self:GetCity()
-    self:GetSceneUILayer():RemoveAllLockButtons()
     table.foreach(tiles, function(_, tile)
         local tile_entity = tile:GetEntity()
         if (city:IsTileCanbeUnlockAt(tile_entity.x, tile_entity.y)) then
             local building = city:GetBuildingByLocationId(tile_entity.location_id)
             if building and not building:IsUpgrading() then
-                self:GetSceneUILayer():NewLockButtonFromBuildingSprite(tile)
+                self:NewLockButtonFromBuildingSprite(tile):setVisible(can_unlock)
             end
         end
     end)
+    print("#self:GetTopLayer():getChildren()", #self:GetTopLayer():getChildren())
 end
 function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
     if not MyCityScene.super.OnTouchClicked(self, pre_x, pre_y, x, y) then return end
@@ -603,19 +599,24 @@ function MyCityScene:PromiseOfUpgradeByBuildingType(x, y, type_, msg)
 end
 function MyCityScene:PromiseOfUnlockBuilding(building_type)
     local x,y = self:GetCity():GetFirstBuildingByType(building_type):GetMidLogicPosition()
+
     local tutorial = TutorialLayer.new():addTo(self, 2001)
-    return self:GotoLogicPoint(x, y, 5):next(function()
+    return cocos_promise.defer(function()
         WidgetFteArrow.new(_("点击解锁新建筑")):TurnUp():align(display.TOP_CENTER, 0, -50)
             :addTo(self:GetLockButtonsByBuildingType(building_type), 1, 123)
 
-        tutorial:SetTouchObject(self:GetLockButtonsByBuildingType(building_type))
-    end):next(function()
-        return UIKit:PromiseOfOpen("GameUIUnlockBuilding")
-    end):next(function(ui)
-        tutorial:removeFromParent()
-        self:GetLockButtonsByBuildingType(building_type):removeChildByTag(123)
-        return ui:PormiseOfFte()
+        return self:GotoLogicPoint(x, y, 5):next(function()
+                tutorial:SetTouchObject(self:GetLockButtonsByBuildingType(building_type))
+        end):next(function()
+            return UIKit:PromiseOfOpen("GameUIUnlockBuilding")
+        end):next(function(ui)
+            tutorial:removeFromParent()
+            self:GetLockButtonsByBuildingType(building_type):removeChildByTag(123)
+            return ui:PormiseOfFte()
+        end)
+
     end)
+
 end
 function MyCityScene:PromiseOfRecruitSoldier()
     return GameUINpc:PromiseOfSay(
@@ -701,6 +702,8 @@ function MyCityScene:PromiseOfFteEnd()
         self:removeChildByTag(FTE_MARK_TAG)
         return GameUINpc:PromiseOfSay({words = _("完成任务后，可以点击任务按钮，我为大人准备了丰厚的奖赏。。。")})
     end):next(function()
+        app:GetPushManager():CancelAll()
+        UIKit:closeAllUI()
         app:EnterUserMode()
         app:EnterMyCityScene()
     end)
@@ -737,6 +740,12 @@ end
 
 
 return MyCityScene
+
+
+
+
+
+
 
 
 
