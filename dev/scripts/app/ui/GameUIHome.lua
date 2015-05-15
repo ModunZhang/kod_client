@@ -1,7 +1,6 @@
 local cocos_promise = import("..utils.cocos_promise")
 local promise = import("..utils.promise")
 local window = import("..utils.window")
-local colors = import("..utils.colors")
 local WidgetChat = import("..widget.WidgetChat")
 local WidgetNumberTips = import("..widget.WidgetNumberTips")
 local WidgetHomeBottom = import("..widget.WidgetHomeBottom")
@@ -27,8 +26,8 @@ local STONE         = ResourceManager.RESOURCE_TYPE.STONE
 local POPULATION    = ResourceManager.RESOURCE_TYPE.POPULATION
 local COIN          = ResourceManager.RESOURCE_TYPE.COIN
 
-local red_color = colors.hex_403c2f
-local normal_color = colors.hex_f3f0b6
+local red_color = UIKit:hex2c4b(0xff3c00) 
+local normal_color = UIKit:hex2c4b(0xf3f0b6)
 function GameUIHome:OnResourceChanged(resource_manager)
     local server_time = timer:GetServerTime()
     local allresources = resource_manager:GetAllResources()
@@ -215,7 +214,6 @@ function GameUIHome:CreateTop()
     if display.width>640 then
         top_bg:scale(display.width/768)
     end
-
     -- 玩家按钮
     local button = cc.ui.UIPushButton.new(
         {normal = "player_btn_up_314x86.png", pressed = "player_btn_down_314x86.png"},
@@ -226,8 +224,6 @@ function GameUIHome:CreateTop()
         end
     end):addTo(top_bg):align(display.LEFT_CENTER,top_bg:getContentSize().width/2-2, top_bg:getContentSize().height/2+10)
     button:setRotationSkewY(180)
-
-
     -- 玩家名字背景加文字
     local ox = 150
     local name_bg = display.newSprite("player_name_bg_168x30.png"):addTo(top_bg)
@@ -259,9 +255,6 @@ function GameUIHome:CreateTop()
         shadow = true
     }):addTo(top_bg):align(display.LEFT_CENTER, ox + 14, 42)
 
-
-
-    -----------------------
     -- 资源按钮
     local button = cc.ui.UIPushButton.new(
         {normal = "player_btn_up_314x86.png", pressed = "player_btn_down_314x86.png"},
@@ -291,9 +284,6 @@ function GameUIHome:CreateTop()
         local x, y = first_col + col * padding_width, first_row - (row * padding_height)
         display.newSprite(v[1]):addTo(button):pos(x, y):scale(0.3)
 
-        -- self[v[2]] = cc.Label:createWithBMFont("fonts/konqa32.fnt", "hello")
-        -- :addTo(button):pos(x + label_padding, y)
-
         self[v[2]] = UIKit:ttfLabel({text = "",
             size = 18,
             color = 0xf3f0b6,
@@ -302,16 +292,19 @@ function GameUIHome:CreateTop()
     end
 
     -- 玩家信息背景
-    local player_bg = display.newSprite("player_bg_110x106.png"):addTo(top_bg, 2)
-        :align(display.LEFT_BOTTOM, display.width>640 and 58 or 64, 10):setCascadeOpacityEnabled(true)
-    self.player_icon = UIKit:GetPlayerIconOnly(User:Icon()):addTo(player_bg):pos(55, 64):scale(0.72)
-    -- self.exp = display.newSprite("player_exp_bar_110x106.png"):addTo(player_bg):pos(55, 53)
-    self.exp = display.newProgressTimer("player_exp_bar_110x106.png", display.PROGRESS_TIMER_RADIAL):addTo(player_bg):pos(55, 53)
+    local player_bg = display.newSprite("player_bg_110x106.png")
+    :align(display.LEFT_BOTTOM, display.width>640 and 58 or 64, 10)
+    :addTo(top_bg, 2):setCascadeOpacityEnabled(true)
+    self.player_icon = UIKit:GetPlayerIconOnly(User:Icon())
+    :addTo(player_bg):pos(55, 64):scale(0.72)
+    self.exp = display.newProgressTimer("player_exp_bar_110x106.png", 
+        display.PROGRESS_TIMER_RADIAL):addTo(player_bg):pos(55, 53)
     self.exp:setRotationSkewY(180)
     self:RefreshExp()
 
     local level_bg = display.newSprite("level_bg_72x19.png"):addTo(player_bg):pos(55, 18):setCascadeOpacityEnabled(true)
     self.level_label = UIKit:ttfLabel({
+        text = "",
         size = 14,
         color = 0xfff1cc,
         shadow = true,
@@ -477,7 +470,8 @@ function GameUIHome:OnVipEventOver( vip_event )
     self:RefreshVIP()
 end
 function GameUIHome:RefreshExp()
-    self.exp:setPercentage(User:LevelExp()/User:GetCurrentLevelMaxExp(User:GetPlayerLevelByExp(User:LevelExp()))*100)
+    local current_level = User:GetPlayerLevelByExp(User:LevelExp())
+    self.exp:setPercentage( (User:LevelExp() - User:GetCurrentLevelExp(current_level))/(User:GetCurrentLevelMaxExp(current_level) - User:GetCurrentLevelExp(current_level)) * 100)
 end
 function GameUIHome:RefreshVIP()
     local vip_btn = self.vip_btn
@@ -527,8 +521,9 @@ function GameUIHome:PromiseOfFteFreeSpeedUp()
             end)
 
             local r = self:Find():getCascadeBoundingBox()
-            self:GetFteLayer().arrow = WidgetFteArrow.new(_("5分钟以下免费加速，激活VIP提升免费加速时间，VIP等级越高，可免费加速时间越高"))
-                :addTo(self:GetFteLayer()):TurnUp(true):align(display.RIGHT_TOP, r.x + r.width/2, r.y - 10)
+            WidgetFteArrow.new(_("5分钟以下免费加速，激活VIP提升免费加速时间，VIP等级越高，可免费加速时间越高"))
+                :addTo(self:GetFteLayer()):TurnDown(true)
+                :align(display.RIGHT_BOTTOM, r.x + r.width/2 + 30, r.y + 50)
         end)
 
         return self.city:PromiseOfFinishUpgradingByLevel(nil, nil):next(function()
@@ -560,9 +555,9 @@ function GameUIHome:PromiseOfFteInstantSpeedUp()
             end)
 
             local r = self:Find():getCascadeBoundingBox()
-            self:GetFteLayer().arrow = WidgetFteArrow.new(_("立即完成升级"))
-                :addTo(self:GetFteLayer()):TurnRight(true):align(display.RIGHT_CENTER, r.x - 10, r.y + r.height/2)
-
+            WidgetFteArrow.new(_("立即完成升级"))
+                :addTo(self:GetFteLayer()):TurnDown(true)
+                :align(display.RIGHT_BOTTOM, r.x + r.width/2 + 30, r.y + 50)
 
         end)
 
@@ -602,6 +597,7 @@ function GameUIHome:OnCountInfoChanged()
 end
 
 return GameUIHome
+
 
 
 

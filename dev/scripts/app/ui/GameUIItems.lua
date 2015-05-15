@@ -39,19 +39,19 @@ function GameUIItems:OnMoveInStage()
         self.shop_layer:setVisible(tag == 'shop')
         self.myItems_layer:setVisible(tag == 'myItems')
         if tag == 'shop' then
-            if self.top_tab and self.shop_dropList then
-                self.shop_dropList:PushButton(self.shop_dropList:GetTabByTag(self.top_tab))
-            end
             if not self.shop_dropList then
                 self:InitShop()
             end
+            if self.top_tab and self.shop_dropList then
+                self.shop_dropList:PushButton(self.shop_dropList:GetTabByTag(self.top_tab))
+            end
         end
         if tag == 'myItems' then
-            if not self.myItems_dropList then
-                self:InitMyItems()
-            end
             if self.top_tab and self.myItems_dropList then
                 self.myItems_dropList:PushButton(self.myItems_dropList:GetTabByTag(self.top_tab))
+            end
+            if not self.myItems_dropList then
+                self:InitMyItems()
             end
         end
     end):pos(window.cx, window.bottom + 34)
@@ -83,7 +83,7 @@ function GameUIItems:InitShop()
     self.shop_listview = list
 
     self.shop_dropList = WidgetRoundTabButtons.new({
-        {tag = "menu_1",label = "特殊",default = true},
+        {tag = "menu_1",label = "特殊"},
         {tag = "menu_2",label = "持续增益"},
         {tag = "menu_3",label = "资源"},
         {tag = "menu_4",label = "时间加速"},
@@ -305,7 +305,7 @@ function GameUIItems:InitMyItems()
     self.myItems_listview = list
 
     self.myItems_dropList = WidgetRoundTabButtons.new({
-        {tag = "menu_1",label = "特殊"},
+        {tag = "menu_1",label = "特殊",default = true},
         {tag = "menu_2",label = "持续增益"},
         {tag = "menu_3",label = "资源"},
         {tag = "menu_4",label = "时间加速"},

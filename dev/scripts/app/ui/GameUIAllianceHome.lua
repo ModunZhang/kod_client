@@ -412,12 +412,17 @@ function GameUIAllianceHome:CreateTop()
                 enemy_flag:setTag(201)
                 enemy_name_label:setString("["..enemyAlliance:Tag().."] "..enemyAlliance:Name())
             elseif status=="protect" then
-                local enemy_reprot_data = alliance:GetEnemyLastAllianceFightReportsData()
-                local enemy_flag = ui_helper:CreateFlagContentSprite(Flag.new():DecodeFromJson(enemy_reprot_data.flag)):scale(0.5)
-                enemy_flag:align(display.CENTER,100-enemy_flag:getCascadeBoundingBox().size.width, -30)
-                    :addTo(enemy_name_bg)
-                enemy_flag:setTag(201)
-                enemy_name_label:setString("["..enemy_reprot_data.tag.."] "..enemy_reprot_data.name)
+                if self.alliance:AllianceFightReports() == nil then
+                    NetManager:getAllianceFightReportsPromise(self.alliance:Id()):done(function ( response )
+                        local enemy_reprot_data = alliance:GetEnemyLastAllianceFightReportsData()
+                        local enemy_flag = ui_helper:CreateFlagContentSprite(Flag.new():DecodeFromJson(enemy_reprot_data.flag)):scale(0.5)
+                        enemy_flag:align(display.CENTER,100-enemy_flag:getCascadeBoundingBox().size.width, -30)
+                            :addTo(enemy_name_bg)
+                        enemy_flag:setTag(201)
+                        enemy_name_label:setString("["..enemy_reprot_data.tag.."] "..enemy_reprot_data.name)
+                        return response
+                    end)
+                end
             end
         end
         if status=="fight"  then
@@ -710,7 +715,6 @@ function GameUIAllianceHome:OnTimer(current_time)
     local status = self.alliance:Status()
     if status ~= "peace" then
         local statusFinishTime = self.alliance:StatusFinishTime()
-        -- print("OnTimer == ",math.floor(statusFinishTime/1000)>current_time,math.floor(statusFinishTime/1000),current_time)
         if math.floor(statusFinishTime/1000)>current_time then
             self.time_label:setString(GameUtils:formatTimeStyle1(math.floor(statusFinishTime/1000)-current_time))
         end
@@ -738,6 +742,7 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
+
 
 
 

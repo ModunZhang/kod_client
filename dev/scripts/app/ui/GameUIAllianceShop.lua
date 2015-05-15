@@ -1,6 +1,5 @@
 local window = import("..utils.window")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
-local WidgetUIBackGround2 = import("..widget.WidgetUIBackGround2")
 local WidgetBuyGoods = import("..widget.WidgetBuyGoods")
 local WidgetStockGoods = import("..widget.WidgetStockGoods")
 local WidgetPushButton = import("..widget.WidgetPushButton")
@@ -31,7 +30,6 @@ function GameUIAllianceShop:InitUnLockItems()
             self.unlock_items[v] = true
         end
     end
-    dump(self.unlock_items)
 end
 function GameUIAllianceShop:CheckSell(item_type)
     return self.unlock_items[item_type]
@@ -90,7 +88,9 @@ function GameUIAllianceShop:OnMoveInStage()
             end
             self.honourAndLoyalty:show()
         else
-            self.honourAndLoyalty:hide()
+            if self.honourAndLoyalty then
+                self.honourAndLoyalty:hide()
+            end
         end
     end):pos(window.cx, window.bottom + 34)
     self.alliance:GetItemsManager():AddListenOnType(self,AllianceItemsManager.LISTEN_TYPE.ITEM_CHANGED)
@@ -292,7 +292,7 @@ function GameUIAllianceShop:CreateGoodsBox(goods)
         :addTo(box_button)
     display.newSprite("loyalty_128x128.png"):align(display.CENTER, 24, num_bg:getContentSize().height/2-2):addTo(num_bg):scale(34/128)
     UIKit:ttfLabel({
-        text = goods:SellPriceInAlliance(),
+        text = GameUtils:formatNumber(goods:SellPriceInAlliance()),
         size = 22,
         color = 0x423f32,
     }):align(display.LEFT_CENTER, num_bg:getContentSize().width/2-18, num_bg:getContentSize().height/2-2):addTo(num_bg)
@@ -328,7 +328,7 @@ function GameUIAllianceShop:CreateStockGoodsBox(goods)
         :addTo(box_button)
     display.newSprite("honour_128x128.png"):align(display.CENTER, 24, num_bg:getContentSize().height/2-2):addTo(num_bg):scale(34/128)
     UIKit:ttfLabel({
-        text = goods:BuyPriceInAlliance(),
+        text = GameUtils:formatNumber(goods:BuyPriceInAlliance()),
         size = 22,
         color = 0x423f32,
     }):align(display.LEFT_CENTER, num_bg:getContentSize().width/2-18, num_bg:getContentSize().height/2-2):addTo(num_bg)
@@ -410,14 +410,17 @@ function GameUIAllianceShop:InitRecordPart()
     self.record_list = list
 
     local item_logs = self.alliance:GetItemsManager():GetItemLogs()
-    if #item_logs == 0 then
+    if not item_logs then
         NetManager:getItemLogsPromise(self.alliance:Id()):done(function ( response )
-            self.record_logs_items = {}
-            for i,v in ipairs(item_logs) do
-                self:CreateRecordItem(v)
+            local item_logs = self.alliance:GetItemsManager():GetItemLogs()
+            if item_logs then
+                self.record_logs_items = {}
+                for i,v in ipairs(item_logs) do
+                    self:CreateRecordItem(v)
+                end
+                self.record_list:reload()
+                return response
             end
-            self.record_list:reload()
-            return response
         end)
     else
         self.record_logs_items = {}
@@ -536,6 +539,7 @@ function GameUIAllianceShop:OnAllianceBasicChanged(alliance,changed_map)
     end
 end
 return GameUIAllianceShop
+
 
 
 

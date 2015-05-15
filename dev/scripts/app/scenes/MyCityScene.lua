@@ -34,12 +34,6 @@ function MyCityScene:onEnter()
     local allianceShirine = alliance:GetAllianceShrine()
     alliance_map:AddListenOnType(allianceShirine, alliance_map.LISTEN_TYPE.BUILDING_INFO)
 
-
-    -- cc.ui.UIPushButton.new({normal = "lock_btn.png",pressed = "lock_btn.png"})
-    -- :addTo(self, 1000000):pos(display.cx, display.cy + 300)
-    -- :onButtonClicked(function()
-    --     app:ReloadGame()
-    -- end)
 end
 function MyCityScene:onExit()
     MyCityScene.super.onExit(self)
@@ -147,7 +141,7 @@ end
 function MyCityScene:AddIndicateForBuilding(building_sprite)
     -- self:GetSceneUILayer():ShowIndicatorOnBuilding(building_sprite)
     Sprite:PromiseOfFlash(building_sprite):next(function()
-        self:OpenUI(building_sprite)
+        self:OpenUI(building_sprite, "upgrade")
     end)
 end
 function MyCityScene:GetHomePage()
@@ -373,7 +367,7 @@ local ui_map = setmetatable({
     FairGround     = {},
     square         = {},
 }, {__index = function() assert(false) end})
-function MyCityScene:OpenUI(building)
+function MyCityScene:OpenUI(building, default_tab)
     local city = self:GetCity()
     if iskindof(building, "HelpedTroopsSprite") then
         local helped = city:GetHelpedByTroops()[building:GetIndex()]
@@ -405,7 +399,7 @@ function MyCityScene:OpenUI(building)
     elseif type_ == "square" then
         UIKit:newGameUI("GameUISquare", self.city):AddToScene(self, true)
     else
-        UIKit:newGameUI(uiarrays[1], city, entity, uiarrays[2], uiarrays[3]):AddToScene(self, true)
+        UIKit:newGameUI(uiarrays[1], city, entity, default_tab or uiarrays[2], uiarrays[3]):AddToScene(self, true)
     end
 end
 

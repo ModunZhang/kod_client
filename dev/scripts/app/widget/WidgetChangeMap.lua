@@ -13,7 +13,7 @@ local WidgetChangeMap = class("WidgetChangeMap", function ()
 end)
 WidgetChangeMap.MAP_TYPE = Enum("OUR_CITY", "OTHER_CITY", "OUR_ALLIANCE", "OTHER_ALLIANCE", "PVE")
 
-function WidgetChangeMap:ctor(map_type)
+function WidgetChangeMap:ctor(map_type, location)
     -- 设置位置位移参数
     local scale_x = 1
     if display.width >640 then
@@ -30,13 +30,13 @@ function WidgetChangeMap:ctor(map_type)
                     UIKit:showMessageDialog(_("陛下"),_("未加入联盟!"))
                     return
                 end
-                app:EnterMyAllianceScene()
+                app:EnterMyAllianceScene(location)
             elseif map_type == WidgetChangeMap.MAP_TYPE.OTHER_CITY then
-                app:EnterMyAllianceSceneOrMyCityScene()
+                app:EnterMyAllianceSceneOrMyCityScene(location)
             elseif map_type == WidgetChangeMap.MAP_TYPE.OUR_ALLIANCE then
                 app:EnterMyCityScene()
             elseif map_type == WidgetChangeMap.MAP_TYPE.OTHER_ALLIANCE then
-                app:EnterMyAllianceScene()
+                app:EnterMyAllianceScene(location)
             elseif map_type == WidgetChangeMap.MAP_TYPE.PVE then
                 app:EnterMyCityScene()
             end

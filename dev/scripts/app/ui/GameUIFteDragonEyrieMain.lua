@@ -70,7 +70,7 @@ function GameUIFteDragonEyrieMain:PormiseOfDefence()
 
     local r = self:FindGarrisonBtn():getCascadeBoundingBox()
     WidgetFteArrow.new(_("点击设置：巨龙在城市驻防，如果敌军入侵，巨龙会自动带领士兵进行防御"))
-        :addTo(self:GetFteLayer()):TurnUp(false):align(display.LEFT_TOP, r.x, r.y - 30)
+        :addTo(self:GetFteLayer()):TurnUp(false):align(display.LEFT_TOP, r.x + 30, r.y - 20)
 
     return self.dragon_manager:PromiseOfDefence():next(function()
         self:FindGarrisonBtn():setButtonEnabled(false)

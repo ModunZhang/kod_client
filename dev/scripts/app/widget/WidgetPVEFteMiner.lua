@@ -78,7 +78,7 @@ function WidgetPVEFteMiner:PromiseOfExit()
     self:GetFteLayer():SetTouchObject(self.btns[2])
 
     WidgetFteArrow.new(_("点击离开")):addTo(self:GetFteLayer())
-        :TurnRight():align(display.RIGHT_CENTER, r.x - 20, r.y + r.height/2)
+        :TurnRight():align(display.RIGHT_CENTER, r.x, r.y + r.height/2)
 
     return UIKit:PromiseOfClose("WidgetPVEFteMiner")
 end

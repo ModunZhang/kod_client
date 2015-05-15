@@ -34,6 +34,7 @@ function UIKit:CheckOpenUI(ui, isopen)
     local callbacks = self.open_ui_callbacks
     if #callbacks > 0 then
         if isopen then
+            ui.__type  = UIKit.UITYPE.BACKGROUND
             ui:GetFteLayer()
         else
             if callbacks[1](ui) then
@@ -126,23 +127,26 @@ function UIKit:getEditBoxFont()
     return "DroidSansFallback"
 end
 
+local color_map = {}
 function UIKit:hex2rgba(hexNum)
-    local a = bit:_rshift(hexNum,24)
-    if a < 0 then
-        a = a + 0x100
+    if not color_map[hexNum] then
+        local a = bit:_rshift(hexNum,24)
+        if a < 0 then
+            a = a + 0x100
+        end
+        local r = bit:_and(bit:_rshift(hexNum,16),0xff)
+        local g = bit:_and(bit:_rshift(hexNum,8),0xff)
+        local b = bit:_and(hexNum,0xff)
+        print(string.format("hex2rgba:%x --> %d %d %d %d",hexNum,r,g,b,a))
+        color_map[hexNum] = {r,g,b,a}
     end
-    local r = bit:_and(bit:_rshift(hexNum,16),0xff)
-    local g = bit:_and(bit:_rshift(hexNum,8),0xff)
-    local b = bit:_and(hexNum,0xff)
-    print(string.format("hex2rgba:%x --> %d %d %d %d",hexNum,r,g,b,a))
-    return r,g,b,a
+    return unpack(color_map[hexNum])
 end
 
 function UIKit:hex2c3b(hexNum)
     local r,g,b = self:hex2rgba(hexNum)
     return cc.c3b(r,g,b)
 end
-
 function UIKit:hex2c4b(hexNum)
     local r,g,b,a = self:hex2rgba(hexNum)
     return cc.c4b(r,g,b,a)
@@ -626,8 +630,8 @@ function UIKit:showMessageDialog(title,tips,ok_callback,cancel_callback,visible_
     if not visible_x_button then
         dialog:DisableAutoClose()
     end
-    dialog:zorder(3000)
     dialog:AddToCurrentScene()
+    dialog:zorder(3001)
     return dialog
 end
 
@@ -780,4 +784,5 @@ function UIKit:GetItemImage(reward_type,item_key)
         return UILib.item[item_key]
     end
 end
+
 

@@ -247,21 +247,23 @@ function MyApp:lockInput(b)
         -- cc.Director:getInstance():getEventDispatcher():setEnabled(not b)
     -- end
 end
-function MyApp:EnterFriendCityScene(id)
-    self:EnterCitySceneByPlayerAndAlliance(id, true)
+function MyApp:EnterFriendCityScene(id, location)
+    self:EnterCitySceneByPlayerAndAlliance(id, true, location)
 end
-function MyApp:EnterPlayerCityScene(id)
-    self:EnterCitySceneByPlayerAndAlliance(id, false)
+function MyApp:EnterPlayerCityScene(id, location)
+    self:EnterCitySceneByPlayerAndAlliance(id, false, location)
 end
-function MyApp:EnterCitySceneByPlayerAndAlliance(id, is_my_alliance)
+function MyApp:EnterCitySceneByPlayerAndAlliance(id, is_my_alliance, location)
     NetManager:getPlayerCityInfoPromise(id):done(function(response)
         local user_data = response.msg.playerViewData
         local user = User_.new(user_data):OnBasicInfoChanged(user_data)
-        local city = City.new(user):InitWithJsonData(user_data):OnUserDataChanged(user_data, app.timer:GetServerTime())
+        local city = City.new(user)
+        :InitWithJsonData(user_data)
+        :OnUserDataChanged(user_data, app.timer:GetServerTime())
         if is_my_alliance then
-            app:enterScene("FriendCityScene", {user, city}, "custom", -1, transition_)
+            app:enterScene("FriendCityScene", {user, city, location}, "custom", -1, transition_)
         else
-            app:enterScene("OtherCityScene", {user, city}, "custom", -1, transition_)
+            app:enterScene("OtherCityScene", {user, city, location}, "custom", -1, transition_)
         end
     end)
 end
@@ -276,7 +278,7 @@ function MyApp:EnterMyAllianceSceneWithTips(tips)
         self:EnterMyAllianceScene()
     end,nil,false)
 end
-function MyApp:EnterMyAllianceScene()
+function MyApp:EnterMyAllianceScene(location)
     if Alliance_Manager:GetMyAlliance():IsDefault() then
         UIKit:showMessageDialog(_("提示"),_("未加入联盟!"),function()end)
         return
@@ -287,16 +289,16 @@ function MyApp:EnterMyAllianceScene()
     if my_status == "prepare" or  my_status == "fight" then
         alliance_name = "AllianceBattleScene"
     end
-    app:enterScene(alliance_name, nil, "custom", -1, transition_)
+    app:enterScene(alliance_name, {location}, "custom", -1, transition_)
 end
-function MyApp:EnterMyAllianceSceneOrMyCityScene()
+function MyApp:EnterMyAllianceSceneOrMyCityScene(location)
     if not Alliance_Manager:GetMyAlliance():IsDefault() then
         local my_status = Alliance_Manager:GetMyAlliance():Status()
         local alliance_name = "AllianceScene"
         if my_status == "prepare" or  my_status == "fight" then
             alliance_name = "AllianceBattleScene"   
         end
-        app:enterScene(alliance_name, nil, "custom", -1, transition_)
+        app:enterScene(alliance_name, {location}, "custom", -1, transition_)
     else
         app:enterScene("MyCityScene", {City}, "custom", -1, transition_)
     end
