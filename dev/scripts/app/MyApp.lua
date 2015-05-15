@@ -276,7 +276,7 @@ end
 function MyApp:EnterMyAllianceSceneWithTips(tips)
     UIKit:showMessageDialog(nil,tips,function()
         self:EnterMyAllianceScene()
-    end,nil,false)
+    end,nil,false,nil,"alliance_war_tips")
 end
 function MyApp:EnterMyAllianceScene(location)
     if Alliance_Manager:GetMyAlliance():IsDefault() then
