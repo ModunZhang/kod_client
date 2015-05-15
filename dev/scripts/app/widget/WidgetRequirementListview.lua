@@ -1,4 +1,4 @@
--- 需求列表控件
+local colors = import("..utils.colors")
 local UIListView = import("..ui.UIListView")
 local WidgetRequirementListview = class("WidgetRequirementListview", function ()
     local layer = cc.Layer:create()
@@ -61,10 +61,10 @@ function WidgetRequirementListview:RefreshListView(contents)
                     content.mark:setTexture("yes_40x40.png")
                     local v_1 = tonumber(split_desc[1]) and string.formatnumberthousands(tonumber(split_desc[1])) or split_desc[1]
                     content.resource_value[1]:setString(v_1)
-                    content.resource_value[1]:setColor(UIKit:hex2c4b(0x403c2f))
+                    content.resource_value[1]:setColor(colors.hex_403c2f)
                     if split_desc[2] then
                         content.resource_value[2]:setString("/"..string.formatnumberthousands(tonumber(split_desc[2])))
-                        content.resource_value[2]:setColor(UIKit:hex2c4b(0x403c2f))
+                        content.resource_value[2]:setColor(colors.hex_403c2f)
                         content.resource_value[2]:setPositionX(content.resource_value[1]:getPositionX()+content.resource_value[1]:getContentSize().width)
                     end
                 else
@@ -97,13 +97,13 @@ function WidgetRequirementListview:RefreshListView(contents)
                     -- 条件未达到，自己的数据红色显示
                     local v_1 = tonumber(split_desc[1]) and string.formatnumberthousands(tonumber(split_desc[1])) or split_desc[1]
                     content.resource_value[1]:setString(v_1)
-                    content.resource_value[1]:setColor(split_desc[2] and UIKit:hex2c4b(0x7e0000) or UIKit:hex2c4b(0x403c2f))
+                    content.resource_value[1]:setColor(split_desc[2] and colors.hex_7e0000 or colors.hex_403c2f)
                     if split_desc[2] then
                         content.resource_value[2]:setString("/"..string.formatnumberthousands(tonumber(split_desc[2])))
                         if v.resource_type == "building_queue" then
-                            content.resource_value[2]:setColor(UIKit:hex2c4b(0x7e0000))
+                            content.resource_value[2]:setColor(colors.hex_7e0000)
                         else
-                            content.resource_value[2]:setColor(UIKit:hex2c4b(0x403c2f))
+                            content.resource_value[2]:setColor(colors.hex_403c2f)
                         end
                         content.resource_value[2]:setPositionX(content.resource_value[1]:getPositionX()+content.resource_value[1]:getContentSize().width)
                     end

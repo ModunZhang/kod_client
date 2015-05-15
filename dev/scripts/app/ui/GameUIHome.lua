@@ -1,6 +1,7 @@
 local cocos_promise = import("..utils.cocos_promise")
 local promise = import("..utils.promise")
 local window = import("..utils.window")
+local colors = import("..utils.colors")
 local WidgetChat = import("..widget.WidgetChat")
 local WidgetNumberTips = import("..widget.WidgetNumberTips")
 local WidgetHomeBottom = import("..widget.WidgetHomeBottom")
@@ -26,6 +27,8 @@ local STONE         = ResourceManager.RESOURCE_TYPE.STONE
 local POPULATION    = ResourceManager.RESOURCE_TYPE.POPULATION
 local COIN          = ResourceManager.RESOURCE_TYPE.COIN
 
+local red_color = colors.hex_403c2f
+local normal_color = colors.hex_f3f0b6
 function GameUIHome:OnResourceChanged(resource_manager)
     local server_time = timer:GetServerTime()
     local allresources = resource_manager:GetAllResources()
@@ -49,11 +52,10 @@ function GameUIHome:OnResourceChanged(resource_manager)
     self.citizen_label:setString(GameUtils:formatNumber(citizen_number))
     self.coin_label:setString(GameUtils:formatNumber(coin_number))
     self.gem_label:setString(string.formatnumberthousands(gem_number))
-
-    self.wood_label:setColor(wood_resource:IsOverLimit() and UIKit:hex2c4b(0xff3c00) or UIKit:hex2c4b(0xf3f0b6))
-    self.food_label:setColor(food_resource:IsOverLimit() and UIKit:hex2c4b(0xff3c00) or UIKit:hex2c4b(0xf3f0b6))
-    self.iron_label:setColor(iron_resource:IsOverLimit() and UIKit:hex2c4b(0xff3c00) or UIKit:hex2c4b(0xf3f0b6))
-    self.stone_label:setColor(stone_resource:IsOverLimit() and UIKit:hex2c4b(0xff3c00) or UIKit:hex2c4b(0xf3f0b6))
+    self.wood_label:setColor(wood_resource:IsOverLimit() and red_color or normal_color)
+    self.food_label:setColor(food_resource:IsOverLimit() and red_color or normal_color)
+    self.iron_label:setColor(iron_resource:IsOverLimit() and red_color or normal_color)
+    self.stone_label:setColor(stone_resource:IsOverLimit() and red_color or normal_color)
 end
 function GameUIHome:OnUpgradingBegin()
     self:OnTaskChanged()
@@ -288,6 +290,10 @@ function GameUIHome:CreateTop()
         local col = (i - 1) % 3
         local x, y = first_col + col * padding_width, first_row - (row * padding_height)
         display.newSprite(v[1]):addTo(button):pos(x, y):scale(0.3)
+
+        -- self[v[2]] = cc.Label:createWithBMFont("fonts/konqa32.fnt", "hello")
+        -- :addTo(button):pos(x + label_padding, y)
+
         self[v[2]] = UIKit:ttfLabel({text = "",
             size = 18,
             color = 0xf3f0b6,
@@ -596,6 +602,7 @@ function GameUIHome:OnCountInfoChanged()
 end
 
 return GameUIHome
+
 
 
 

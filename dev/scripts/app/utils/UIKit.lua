@@ -134,7 +134,7 @@ function UIKit:hex2rgba(hexNum)
     local r = bit:_and(bit:_rshift(hexNum,16),0xff)
     local g = bit:_and(bit:_rshift(hexNum,8),0xff)
     local b = bit:_and(hexNum,0xff)
-    -- print(string.format("hex2rgba:%x --> %d %d %d %d",hexNum,r,g,b,a))
+    print(string.format("hex2rgba:%x --> %d %d %d %d",hexNum,r,g,b,a))
     return r,g,b,a
 end
 

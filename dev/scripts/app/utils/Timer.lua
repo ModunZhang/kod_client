@@ -22,9 +22,11 @@ function Timer:GetServerTime()
     return NetManager:getServerTime() / 1000.0
 end
 function Timer:OnTimer(dt)
+    LuaUtils:TimeCollect(function()
     for _,v in pairs(self.time_listeners) do
         v:OnTimer(self:GetServerTime())
     end
+    end)
 end
 function Timer:Start()
     if not self.handle then
