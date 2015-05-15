@@ -4,7 +4,6 @@
 --
 
 local WidgetPushButton = import(".WidgetPushButton")
-local colors = import("..utils.colors")
 local Enum = import("..utils.Enum")
 local window = import("..utils.window")
 local Localize = import("..utils.Localize")
@@ -228,10 +227,10 @@ function WidgetUseItems:OpenBuffDialog( item )
             local time = item_event_new:GetTime()
             if time >0 then
                 buff_status_label:setString(_("已激活,剩余时间:")..GameUtils:formatTimeStyle1(time))
-                buff_status_label:setColor(colors.hex_007c23)
+                buff_status_label:setColor(UIKit:hex2c4b(0x007c23))
             else
                 buff_status_label:setString(_("未激活"))
-                buff_status_label:setColor(colors.hex_403c2f)
+                buff_status_label:setColor(UIKit:hex2c4b(0x403c2f))
             end
         end
     end
@@ -239,7 +238,7 @@ function WidgetUseItems:OpenBuffDialog( item )
         for i,v in ipairs(changed_map[3]) do
             if item_event and v:Id() == item_event:Id() then
                 buff_status_label:setString(_("未激活"))
-                buff_status_label:setColor(colors.hex_403c2f)
+                buff_status_label:setColor(UIKit:hex2c4b(0x403c2f))
             end
         end
     end
@@ -887,10 +886,10 @@ function WidgetUseItems:OpenVipActive( item )
         local time = vip_event_new:GetTime()
         if time >0 then
             vip_status_label:setString(_("已激活,剩余时间:")..GameUtils:formatTimeStyle1(time))
-            vip_status_label:setColor(colors.hex_007c23)
+            vip_status_label:setColor(UIKit:hex2c4b(0x007c23))
         else
             vip_status_label:setString(_("未激活"))
-            vip_status_label:setColor(colors.hex_403c2f)
+            vip_status_label:setColor(UIKit:hex2c4b(0x403c2f))
         end
     end
     dialog:addCloseCleanFunc(function ()
