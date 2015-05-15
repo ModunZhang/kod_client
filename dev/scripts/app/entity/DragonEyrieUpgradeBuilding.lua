@@ -29,7 +29,7 @@ end
 function DragonEyrieUpgradeBuilding:OnUserDataChanged(...)
     DragonEyrieUpgradeBuilding.super.OnUserDataChanged(self, ...)
 
-    local user_data, current_time, location_id,sub_location,deltaData = ...
+    local user_data, current_time, location_info, sub_location,deltaData = ...
     self:GetDragonManager():OnUserDataChanged(user_data, current_time, deltaData,self:GetHPRecoveryPerHour())
 end
 

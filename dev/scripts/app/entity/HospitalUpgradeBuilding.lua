@@ -166,7 +166,7 @@ end
 
 function HospitalUpgradeBuilding:OnUserDataChanged(...)
     HospitalUpgradeBuilding.super.OnUserDataChanged(self, ...)
-    local userData, current_time, location_id, sub_location_id, deltaData = ...
+    local userData, current_time, location_info, sub_location_id, deltaData = ...
 
     if not userData.treatSoldierEvents then return end
 
