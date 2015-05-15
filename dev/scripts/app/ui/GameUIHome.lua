@@ -26,7 +26,7 @@ local STONE         = ResourceManager.RESOURCE_TYPE.STONE
 local POPULATION    = ResourceManager.RESOURCE_TYPE.POPULATION
 local COIN          = ResourceManager.RESOURCE_TYPE.COIN
 
-local red_color = UIKit:hex2c4b(0x403c2f)
+local red_color = UIKit:hex2c4b(0xff3c00) 
 local normal_color = UIKit:hex2c4b(0xf3f0b6)
 function GameUIHome:OnResourceChanged(resource_manager)
     local server_time = timer:GetServerTime()
@@ -348,11 +348,12 @@ function GameUIHome:CreateTop()
         {scale9 = false}
     ):addTo(top_bg):pos(255, -10):onButtonClicked(function(event)
         if self.task then
+            local building_type = self.task:BuildingType()
             local building
-            if self.task:BuildingType() == "tower" then
+            if building_type == "tower" then
                 building = self.city:GetNearGateTower()
             else
-                building = self.city:GetHighestBuildingByType(self.task:BuildingType())
+                building = self.city:GetHighestBuildingByType(building_type)
             end
             if building then
                 local current_scene = display.getRunningScene()

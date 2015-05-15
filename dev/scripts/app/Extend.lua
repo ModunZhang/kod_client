@@ -246,7 +246,7 @@ function display.newScene(name)
     function scene:WaitForNet(delay)
         local child = self:getChildByTag(WAI_TAG)
         if not child then
-            UIKit:newGameUI("GameUIWatiForNetWork",delay):AddToScene(self, true):zorder(2001):setTag(WAI_TAG)
+            UIKit:newGameUI("GameUIWatiForNetWork",delay):AddToScene(self, true):zorder(4001):setTag(WAI_TAG)
         else
             child:DelayShow(delay)
         end

@@ -43,6 +43,8 @@ LuaEventNode::LuaEventNode(Node *node)
 : _bTouchCaptureEnabled(true)
 , _bTouchSwallowEnabled(true)
 , _bTouchEnabled(false)
+//dannyhe
+, _bIsSendEventToNode(false)
 , _eTouchMode(modeTouchesOneByOne)
 {
     _node = node;
@@ -298,7 +300,15 @@ bool LuaEventNode::ccTouchBegan(Touch *pTouch, Event *pEvent)
     CC_UNUSED_PARAM(pTouch);
     CC_UNUSED_PARAM(pEvent);
     {
-        executeScriptTouchHandler(CCTOUCHBEGAN, pTouch);
+        //dannyhe
+        if(_bIsSendEventToNode)
+        {
+            getActiveNode()->ccTouchBegan(pTouch, pEvent);
+        }
+        else
+        {
+            executeScriptTouchHandler(CCTOUCHBEGAN, pTouch);
+        }
     }
     return true;
 }
@@ -308,7 +318,15 @@ void LuaEventNode::ccTouchMoved(Touch *pTouch, Event *pEvent)
     CC_UNUSED_PARAM(pTouch);
     CC_UNUSED_PARAM(pEvent);
     {
-        executeScriptTouchHandler(CCTOUCHMOVED, pTouch);
+        //dannyhe
+        if(_bIsSendEventToNode)
+        {
+            getActiveNode()->ccTouchMoved(pTouch, pEvent);
+        }
+        else
+        {
+            executeScriptTouchHandler(CCTOUCHMOVED, pTouch);
+        }
     }
 }
 
@@ -317,7 +335,15 @@ void LuaEventNode::ccTouchEnded(Touch *pTouch, Event *pEvent)
     CC_UNUSED_PARAM(pTouch);
     CC_UNUSED_PARAM(pEvent);
     {
-        executeScriptTouchHandler(CCTOUCHENDED, pTouch);
+        //dannyhe
+        if(_bIsSendEventToNode)
+        {
+            getActiveNode()->ccTouchEnded(pTouch, pEvent);
+        }
+        else
+        {
+            executeScriptTouchHandler(CCTOUCHENDED, pTouch);
+        }
     }
 }
 
@@ -326,7 +352,15 @@ void LuaEventNode::ccTouchCancelled(Touch *pTouch, Event *pEvent)
     CC_UNUSED_PARAM(pTouch);
     CC_UNUSED_PARAM(pEvent);
     {
-        executeScriptTouchHandler(CCTOUCHCANCELLED, pTouch);
+        //dannyhe
+        if (_bIsSendEventToNode)
+        {
+            getActiveNode()->ccTouchEnded(pTouch, pEvent);
+        }
+        else
+        {
+            executeScriptTouchHandler(CCTOUCHCANCELLED, pTouch);
+        }
     }
 }
 

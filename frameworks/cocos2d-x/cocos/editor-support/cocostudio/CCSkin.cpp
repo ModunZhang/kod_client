@@ -58,6 +58,13 @@ Skin *Skin::create()
 
 Skin *Skin::createWithSpriteFrameName(const std::string& pszSpriteFrameName)
 {
+    //dannyhe
+    SpriteFrame *pFrame = SpriteFrameCache::getInstance()->getSpriteFrameByName(pszSpriteFrameName);
+    if (!pFrame)
+    {
+        CCLOG("Cann't find CCSpriteFrame with %s. Please check your .plist file", pszSpriteFrameName.c_str());
+        return nullptr;
+    }
     Skin *skin = new (std::nothrow) Skin();
     if(skin && skin->initWithSpriteFrameName(pszSpriteFrameName))
     {

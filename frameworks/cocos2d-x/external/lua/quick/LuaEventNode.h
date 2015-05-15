@@ -101,7 +101,14 @@ public:
     virtual void ccTouchesCancelled(const std::vector<Touch*>& touches, Event *pEvent);
     virtual void ccTouchesAdded(const std::vector<Touch*>& touches, Event *pEvent);
     virtual void ccTouchesRemoved(const std::vector<Touch*>& touches, Event *pEvent);
-
+    //dannyhe
+    bool isSendEventToNode() const{
+        return _bIsSendEventToNode;
+    };
+    void setIsSendEventToNode(bool sendToNode)
+    {
+        _bIsSendEventToNode = sendToNode;
+    };
 private:
     LuaEventNode(Node *node);
 
@@ -113,7 +120,8 @@ private:
     bool _bTouchSwallowEnabled;
     bool _bTouchEnabled;
     int _eTouchMode;
-
+    //dannyhe
+    bool _bIsSendEventToNode;
     virtual int executeScriptTouchHandler(int nEventType, Touch *pTouch, int phase = 1);
     virtual int executeScriptTouchHandler(int nEventType, const std::vector<Touch*>& touches, int phase = 1);
     

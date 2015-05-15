@@ -24,7 +24,10 @@ function AllianceScene:onEnter()
     local allianceShirine = self:GetAlliance():GetAllianceShrine()
     alliance_map:AddListenOnType(allianceShirine,alliance_map.LISTEN_TYPE.BUILDING_INFO)
 
-
+    if not app:GetGameDefautlt():getBasicInfoValueForKey("SHOW_REGION_TIPS") then
+        UIKit:newGameUI("GameUITips","region"):AddToScene(self, true)
+        app:GetGameDefautlt():getBasicInfoValueForKey("SHOW_REGION_TIPS",true)
+    end
     if self.location then
         self:GotoPosition(self.location.x, self.location.y)
     else

@@ -83,7 +83,8 @@ function GameUILoginBeta:createProgressBar()
 end
 
 function GameUILoginBeta:createTips()
-    local random = math.random(#Localize.login_tips)
+    math.randomseed(tostring(os.time()):reverse():sub(1, 6))
+    local random = math.random(1,#Localize.login_tips)
     local label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = Localize.login_tips[random],
