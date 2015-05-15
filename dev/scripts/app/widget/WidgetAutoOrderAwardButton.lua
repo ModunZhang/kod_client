@@ -87,7 +87,7 @@ end
 
 function WidgetAutoOrderAwardButton:StopAction()
 	self.sprite_[1]:stopAllActions()
-	self.sprite_[1]:runAction(cc.RotateBy:create(0, 0))
+	self.sprite_[1]:runAction(cc.RotateTo:create(0, 0))
 	
 end
 
