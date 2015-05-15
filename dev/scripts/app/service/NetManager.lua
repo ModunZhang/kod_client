@@ -196,6 +196,15 @@ local function get_enemy_alliance_response_msg(response)
     return response
 end
 
+-- 只更新联盟的请求加入信息
+local function get_alliance_joinrequestevents_response_msg(response)
+    if response.msg.joinRequestEvents then
+        DataManager:getUserAllianceData().joinRequestEvents = response.msg.joinRequestEvents
+        Alliance_Manager:GetMyAlliance():OnJoinRequestEventsChanged(DataManager:getUserAllianceData())
+    end
+    return response
+end
+
 local function check_response(m)
     return function(result)
         if result.success then
@@ -1048,6 +1057,12 @@ end
 --获取所有聊天信息
 function NetManager:getFetchChatPromise()
     return get_none_blocking_request_promise("chat.chatHandler.getAll",nil, "获取聊天信息失败!")
+end
+-- 获取所有请求加入联盟的申请
+function NetManager:getJoinRequestEventsPromise(allianceId)
+    return get_blocking_request_promise("logic.allianceHandler.getJoinRequestEvents", {
+        allianceId = allianceId
+    }, "获取所有请求加入联盟的申请失败!"):done(get_alliance_joinrequestevents_response_msg)
 end
 --处理联盟的对玩家的邀请
 local function getHandleJoinAllianceInvitePromise(allianceId, agree)
