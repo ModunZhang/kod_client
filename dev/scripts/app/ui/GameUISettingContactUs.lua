@@ -29,7 +29,7 @@ function GameUISettingContactUs:BuildUI()
 		size = 22,
 		shadow = true,
 		color = 0xffedae
-	}):addTo(titleBar):align(display.CENTER,300,24)
+	}):addTo(titleBar):align(display.CENTER,300,28)
 	UIKit:ttfLabel({
 		text = _("你将使用你的邮箱向我们发送一份邮件"),
 		size = 20,

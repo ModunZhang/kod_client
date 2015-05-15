@@ -1536,7 +1536,7 @@ end
 
 -- 切换服务器
 function NetManager:getSwitchServer(serverId)
-    return get_blocking_request_promise("logic.playerHandler.switchServer",{serverId=serverId},"切换服务器失败!")
+    return get_none_blocking_request_promise("logic.playerHandler.switchServer",{serverId=serverId},"切换服务器失败!")
 end
 
 -- 购买联盟盟主职位

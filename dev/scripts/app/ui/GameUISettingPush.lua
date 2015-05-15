@@ -33,7 +33,7 @@ function GameUISettingPush:BuildUI()
 		size = 22,
 		shadow = true,
 		color = 0xffedae
-	}):addTo(titleBar):align(display.CENTER,300,24)
+	}):addTo(titleBar):align(display.CENTER,300,28)
  	local building_push_bg = UIKit:CreateBoxPanelWithBorder({width = 556,height = 96})
  		:align(display.CENTER_TOP,304,732)
  		:addTo(bg)

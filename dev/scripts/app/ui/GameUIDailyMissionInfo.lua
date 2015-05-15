@@ -40,7 +40,7 @@ function GameUIDailyMissionInfo:BuildUI()
 		size = 22,
 		shadow = true,
 		color = 0xffedae
-	}):addTo(titleBar):align(display.CENTER,300,24)
+	}):addTo(titleBar):align(display.CENTER,300,28)
 	local list_bg = display.newScale9Sprite("box_bg_546x214.png"):size(568,404):addTo(bg):align(display.BOTTOM_CENTER, 304, 25)
 	self.info_list = UIListView.new({
         viewRect = cc.rect(11,10, 546, 384),

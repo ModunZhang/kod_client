@@ -1042,6 +1042,14 @@ local enemy_city_banner = {
     [5] = "enemy_city_helped_banner.png",
 }
 
+local server_level_image = {
+    bronze = "server_level_bronze_112x114.png",
+    silver = "server_level_silver_112x114.png",
+    gold = "server_level_gold_112x114.png",
+    platinum = "server_level_gold_112x114.png",
+    diamond = "server_level_gold_112x114.png",
+    master = "server_level_gold_112x114.png",
+}
 return {
     resource = RESOURCE,
     soldier_bg = STAR_BG,
@@ -1087,6 +1095,7 @@ return {
     my_city_banner = my_city_banner,
     enemy_city_banner = enemy_city_banner,
     activity_image_config = ACTIVITY_IMAGE_CONFIG,
+    server_level_image = server_level_image,
 }
 
 
