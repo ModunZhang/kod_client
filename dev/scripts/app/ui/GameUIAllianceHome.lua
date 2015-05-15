@@ -710,7 +710,6 @@ function GameUIAllianceHome:OnTimer(current_time)
     local status = self.alliance:Status()
     if status ~= "peace" then
         local statusFinishTime = self.alliance:StatusFinishTime()
-        -- print("OnTimer == ",math.floor(statusFinishTime/1000)>current_time,math.floor(statusFinishTime/1000),current_time)
         if math.floor(statusFinishTime/1000)>current_time then
             self.time_label:setString(GameUtils:formatTimeStyle1(math.floor(statusFinishTime/1000)-current_time))
         end

@@ -645,7 +645,7 @@ function Alliance:OnTimer(current_time)
         villageEvent:OnTimer(current_time)
     end)
     if self:Status() == "prepare" and math.floor(self:StatusFinishTime() / 1000) == math.floor(current_time) then
-        app:GetAudioManager():PlayeEffectSoundWithKey("BATTLE_START")   
+        app:GetAudioManager():PlayeEffectSoundWithKey("BATTLE_START")
     end
 
 end
@@ -1237,5 +1237,6 @@ function Alliance:IsMyAlliance()
 end
 
 return Alliance
+
 
 

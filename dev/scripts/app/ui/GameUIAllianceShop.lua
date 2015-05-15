@@ -410,14 +410,17 @@ function GameUIAllianceShop:InitRecordPart()
     self.record_list = list
 
     local item_logs = self.alliance:GetItemsManager():GetItemLogs()
-    if #item_logs == 0 then
+    if not item_logs then
         NetManager:getItemLogsPromise(self.alliance:Id()):done(function ( response )
-            self.record_logs_items = {}
-            for i,v in ipairs(item_logs) do
-                self:CreateRecordItem(v)
+            local item_logs = self.alliance:GetItemsManager():GetItemLogs()
+            if item_logs then
+                self.record_logs_items = {}
+                for i,v in ipairs(item_logs) do
+                    self:CreateRecordItem(v)
+                end
+                self.record_list:reload()
+                return response
             end
-            self.record_list:reload()
-            return response
         end)
     else
         self.record_logs_items = {}
@@ -536,6 +539,7 @@ function GameUIAllianceShop:OnAllianceBasicChanged(alliance,changed_map)
     end
 end
 return GameUIAllianceShop
+
 
 
 
