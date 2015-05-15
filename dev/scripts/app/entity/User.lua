@@ -790,11 +790,7 @@ function User:GetPlayerLevelByExp(exp)
     return 0
 end
 function User:GetCurrentLevelExp(level)
-    local config = config_playerLevel[tonumber(level)]
-    if not config then
-        return config_playerLevel[level].expTo
-    else
-        return config.expFrom
+        return config_playerLevel[level].expFrom
     end
 end
 function User:GetCurrentLevelMaxExp(level)
