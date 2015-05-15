@@ -34,12 +34,6 @@ function MyCityScene:onEnter()
     local allianceShirine = alliance:GetAllianceShrine()
     alliance_map:AddListenOnType(allianceShirine, alliance_map.LISTEN_TYPE.BUILDING_INFO)
 
-
-    -- cc.ui.UIPushButton.new({normal = "lock_btn.png",pressed = "lock_btn.png"})
-    -- :addTo(self, 1000000):pos(display.cx, display.cy + 300)
-    -- :onButtonClicked(function()
-    --     app:ReloadGame()
-    -- end)
 end
 function MyCityScene:onExit()
     MyCityScene.super.onExit(self)

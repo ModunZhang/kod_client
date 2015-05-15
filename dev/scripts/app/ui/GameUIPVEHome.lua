@@ -20,7 +20,7 @@ end
 function GameUIPVEHome:ctor(user, scene)
     self.user = user
     self.layer = scene:GetSceneLayer()
-    GameUIPVEHome.super.ctor(self)
+    GameUIPVEHome.super.ctor(self, {type = UIKit.UITYPE.BACKGROUND})
 end
 function GameUIPVEHome:onEnter()
     self:CreateTop()
