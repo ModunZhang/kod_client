@@ -934,7 +934,7 @@ function GameUIReplayNew:ShowStrongOrWeak()
     elseif vs == "weak" then
         self.ui_map.arrow_green:show():flipX(true)
     else
-        self.ui_map.arrow_green:show()
+        self.ui_map.arrow_green:hide()
     end
 end
 function GameUIReplayNew:Replay()
