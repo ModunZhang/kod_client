@@ -156,8 +156,9 @@ function Sprite:Flash(time)
     self:BeginFlash(time)
 end
 function Sprite:ResetFlashStatus()
-    self:GetSprite():clearFilter()
+    self:unscheduleUpdate()
     self:GetSprite():removeNodeEventListenersByEvent(cc.NODE_ENTER_FRAME_EVENT)
+    self:GetSprite():clearFilter()
 end
 function Sprite:BeginFlash(time)
     self.flash_time = 0

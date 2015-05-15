@@ -62,7 +62,7 @@ function AllianceScene:onExit()
     AllianceScene.super.onExit(self)
 end
 function AllianceScene:CreateSceneLayer()
-    return MultiAllianceLayer.new(nil, self:GetAlliance())
+    return MultiAllianceLayer.new(self, nil, self:GetAlliance())
 end
 function AllianceScene:GotoLogicPosition(x, y)
     local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(x, y)

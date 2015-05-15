@@ -73,6 +73,9 @@ end
 function GameUINpc:ctor(...)
     GameUINpc.super.ctor(self)
     self.touch_action_node = display.newNode():addTo(self)
+    self.btn = cc.ui.UIPushButton.new({normal = "+_red.png",pressed = "+_red.png"}, nil, {})
+        :setButtonSize(display.width,display.height):align(display.LEFT_BOTTOM)
+        :addTo(self):setOpacity(0)
     self.leave_callbacks = {}
     self.__type  = UIKit.UITYPE.BACKGROUND
     self:InitDialog(...)
@@ -129,12 +132,11 @@ function GameUINpc:OnMoveInStage()
         self:StartDialog()
     end
     self:RefreshNpc(self:CurrentDialog())
-    self:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
-        if event.name == "ended" and self.touch_action_node:getNumberOfRunningActions() == 0 then
-            self.touch_action_node:performWithDelay(function()end, 0.2)
+    self.btn:onButtonClicked(function()
+        -- if self.touch_action_node:getNumberOfRunningActions() == 0 then
+            -- self.touch_action_node:performWithDelay(function()end, 0.2)
             self:OnClick()
-        end
-        return true
+        -- end
     end)
 end
 function GameUINpc:onExit()
@@ -185,6 +187,10 @@ function GameUINpc:ShowWords(dialog, ani)
     self:hide_letter(self.label)
     self:show_letter(self.label, ani == nil and true or ani)
 end
+function GameUINpc:ResetClick()
+    self.touch_action_node:stopAllActions()
+    self.touch_action_node:performWithDelay(function()end, 0.1)
+end
 function GameUINpc:RefreshNpc(dialog)
     if dialog.npc == "man" then
         self.ui_map.man:show()
@@ -195,6 +201,7 @@ function GameUINpc:RefreshNpc(dialog)
     end
 end
 function GameUINpc:Reset()
+    self:ResetClick()
     self.dialog = {}
     self.dialog_index = 1
     self.dialog_index_callbacks = {}
@@ -223,6 +230,7 @@ function GameUINpc:OnDialogClicked(index)
         callbacks[1]()
         table.remove(callbacks, 1)
     end
+    self:ResetClick()
 end
 function GameUINpc:PromiseOfDialogEndWithClicked(index)
     local p = promise.new()
@@ -239,6 +247,7 @@ function GameUINpc:OnDialogEnded(index)
         callbacks[1]()
         table.remove(callbacks, 1)
     end
+    self:ResetClick()
 end
 function GameUINpc:PromiseOfDialogEnded(index)
     local p = promise.new()
@@ -306,6 +315,9 @@ function GameUINpc:BuildUI()
 end
 
 return GameUINpc
+
+
+
 
 
 

@@ -67,7 +67,7 @@ function PVEScene:LoadAnimation()
     UILib.loadPveAnimation()
 end
 function PVEScene:CreateSceneLayer()
-    return PVELayer.new(self.user)
+    return PVELayer.new(self, self.user)
 end
 function PVEScene:CreateHomePage()
     local home_page = GameUIPVEHome.new(self.user, self):AddToScene(self, true)
@@ -382,6 +382,7 @@ function PVEScene:PromiseOfIntroduce()
     local r = self:GetHomePage().pve_back:getCascadeBoundingBox()
     self:GetMark():Size(r.width, r.height):pos(r.x + r.width/2, r.y + r.height/2)
 
+    self:GetFteLayer():Enable()
     return GameUINpc:PromiseOfSay(
         {words = _("领主大人，探索会消耗体力值，但击败敌军可以获得资源和材料。。。"), npc = "man"}
     ):next(function()
@@ -392,6 +393,7 @@ function PVEScene:PromiseOfIntroduce()
 
         return GameUINpc:PromiseOfSay({words = _("当你探索玩整个地图还会获得一笔丰厚的奖励"), npc = "man"})
     end):next(function()
+        self:GetFteLayer():Disable()
         self:DestoryMark()
         return GameUINpc:PromiseOfLeave()
     end)

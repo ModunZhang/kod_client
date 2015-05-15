@@ -46,19 +46,17 @@ end
 function GameUIFteDragonEyrieMain:PromiseOfHate()
     local r = self:FindHateBtn():getCascadeBoundingBox()
     self:GetFteLayer():SetTouchObject(self:FindHateBtn())
-    self:GetFteLayer().arrow = WidgetFteArrow.new(_("点击按钮：孵化"))
-        :addTo(self:GetFteLayer()):TurnUp():pos(r.x + r.width/2, r.y - 40)
+    WidgetFteArrow.new(_("点击按钮：孵化")):addTo(self:GetFteLayer())
+    :TurnUp():pos(r.x + r.width/2, r.y - 40)
 
     self:FindHateBtn():removeEventListenersByEvent("CLICKED_EVENT")
     self:FindHateBtn():onButtonClicked(function()
         self:FindHateBtn():setButtonEnabled(false)
-
+        self:DestroyFteLayer()
         mockData.HateDragon()
     end)
 
-    return self.dragon_manager:PromiseOfHate():next(function()
-        self:GetFteLayer():removeFromParent()
-    end)
+    return self.dragon_manager:PromiseOfHate()
 end
 function GameUIFteDragonEyrieMain:PormiseOfDefence()
     self:FindGarrisonBtn():setTouchSwallowEnabled(true)
@@ -67,17 +65,16 @@ function GameUIFteDragonEyrieMain:PormiseOfDefence()
     self:FindGarrisonBtn():removeEventListenersByEvent("CLICKED_EVENT")
     self:FindGarrisonBtn():onButtonClicked(function()
         self:FindGarrisonBtn():setButtonEnabled(false)
-
         mockData.DefenceDragon()
     end)
 
     local r = self:FindGarrisonBtn():getCascadeBoundingBox()
-    self:GetFteLayer().arrow = WidgetFteArrow.new(_("点击设置：巨龙在城市驻防，如果敌军入侵，巨龙会自动带领士兵进行防御"))
+    WidgetFteArrow.new(_("点击设置：巨龙在城市驻防，如果敌军入侵，巨龙会自动带领士兵进行防御"))
         :addTo(self:GetFteLayer()):TurnUp(false):align(display.LEFT_TOP, r.x, r.y - 30)
 
     return self.dragon_manager:PromiseOfDefence():next(function()
-        self:GetFteLayer():removeFromParent()
         self:FindGarrisonBtn():setButtonEnabled(false)
+        self:DestroyFteLayer()
     end)
 end
 

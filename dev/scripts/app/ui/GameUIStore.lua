@@ -134,7 +134,8 @@ function GameUIStore:GetItemBuyButton(data)
 	local label = UIKit:ttfLabel({
 		text = _("购买"),
 		size = 24,
-		color= 0xfff3c7
+		color= 0xfff3c7,
+		shadow= true,
 	})
 	button:onButtonClicked(function()
 		self:OnBuyButtonClicked(data.productId)
@@ -170,8 +171,10 @@ function GameUIStore:AddRewardsForItem(content,data)
 	for i=1,3 do
 		local reward = rewards[i]
 		if reward then
-			local icon = display.newSprite(UILib.item[reward.key]):align(display.LEFT_CENTER, x_1, y):addTo(content)
-			icon:scale(36/math.max(icon:getContentSize().width,icon:getContentSize().height))
+			local bg = display.newSprite("box_118x118.png"):align(display.LEFT_CENTER, x_1, y):addTo(content)
+			local icon = display.newSprite(UILib.item[reward.key]):align(display.CENTER, 59, 59):addTo(bg)
+			icon:scale(100/math.max(icon:getContentSize().width,icon:getContentSize().height))
+			bg:scale(0.3)
 			UIKit:ttfLabel({
 				text = Localize_item.item_name[reward.key],
 				size = 20,

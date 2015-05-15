@@ -33,6 +33,8 @@
 #include "lua_cocos2dx_coco_studio_manual.hpp"
 #include "lua_cocos2dx_ui_manual.hpp"
 
+extern int removeLuaTouchNode(Node *node);
+
 NS_CC_BEGIN
 
 LuaEngine* LuaEngine::_defaultEngine = nullptr;
@@ -79,6 +81,11 @@ void LuaEngine::removeScriptObjectByObject(Ref* pObj)
 void LuaEngine::removeScriptHandler(int nHandler)
 {
     _stack->removeScriptHandler(nHandler);
+}
+
+void LuaEngine::removeTouchNodeEvent(Node *node)
+{
+    removeLuaTouchNode(node);
 }
 
 int LuaEngine::executeString(const char *codes)
@@ -387,13 +394,13 @@ int LuaEngine::handleKeypadEvent(void* data)
     switch(action)
     {
         case EventKeyboard::KeyCode::KEY_BACKSPACE:
-			_stack->pushString("backClicked");
-			break;
-		case EventKeyboard::KeyCode::KEY_MENU:
+            _stack->pushString("backClicked");
+            break;
+        case EventKeyboard::KeyCode::KEY_MENU:
             _stack->pushString("menuClicked");
-			break;
-		default:
-			break;
+            break;
+        default:
+            break;
     }
 
     int ret = _stack->executeFunctionByHandler(handler, 1);

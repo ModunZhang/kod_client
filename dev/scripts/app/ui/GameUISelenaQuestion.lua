@@ -46,7 +46,7 @@ function GameUISelenaQuestion:BuildUI()
 		size = 22,
 		shadow = true,
 		color = 0xffedae
-	}):addTo(titleBar):align(display.CENTER,300,24)
+	}):addTo(titleBar):align(display.CENTER,300,28)
 	local npc_bg = display.newSprite("selenaquestion_bg_580x536.png"):align(display.TOP_CENTER, 304, 860):addTo(bg)
 	local npc_animation = ccs.Armature:create("npc_nv"):addTo(npc_bg):align(display.BOTTOM_CENTER, 290, 6)
 	self.npc_animation = npc_animation

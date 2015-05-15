@@ -487,7 +487,6 @@ function NetManager:getLoginPromise(deviceId)
     local device_id = device.getOpenUDID()
     return get_none_blocking_request_promise("logic.entryHandler.login", {deviceId = deviceId or device_id}, nil, true):next(function(response)
         if response.success then
-            app:GetPushManager():CancelAll()
             local playerData = response.msg.playerData
             local user_alliance_data = response.msg.allianceData
             local user_enemy_alliance_data = response.msg.enemyAllianceData

@@ -22,6 +22,7 @@ function GameUIBase:ctor(params)
     self.__isBase = true
     params = checktable(params)
     self.__type  = params.type or UIKit.UITYPE.WIDGET
+    UIKit:CheckOpenUI(self, true)
     return true
 end
 
@@ -241,9 +242,7 @@ function GameUIBase:CreateFteLayer()
     return TutorialLayer.new():addTo(self, 2000, FTE_TAG):Enable()
 end
 function GameUIBase:DestroyFteLayer()
-    if self:getChildByTag(FTE_TAG) then
-        self:getChildByTag(FTE_TAG):removeFromParent()
-    end
+    self:removeChildByTag(FTE_TAG)
 end
 
 return GameUIBase

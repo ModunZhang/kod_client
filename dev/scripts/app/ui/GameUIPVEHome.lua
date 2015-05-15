@@ -19,7 +19,6 @@ function GameUIPVEHome:DisplayOff()
 end
 function GameUIPVEHome:ctor(user, scene)
     self.user = user
-    self.scene = scene
     self.layer = scene:GetSceneLayer()
     GameUIPVEHome.super.ctor(self)
 end

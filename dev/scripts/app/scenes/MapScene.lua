@@ -33,16 +33,17 @@ function MapScene:onEnter()
     -- self.scene_node:setContentSize(cc.size(display.width, display.height))
     self.scene_node = display.newNode():addTo(self)
     self.scene_layer = self:CreateSceneLayer():addTo(self:GetSceneNode(), 0)
-    self.scene_layer.scene = self
     self.touch_layer = self:CreateMultiTouchLayer():addTo(self:GetSceneNode(), 1)
     if type(self.CreateSceneUILayer) == "function" then
         self.scene_ui_layer = self:CreateSceneUILayer():addTo(self:GetSceneNode(), 2)
     end
-    self.info_layer = display.newNode():addTo(self:GetSceneNode(), 3)
-    self.info_layer:setTouchSwallowEnabled(false)
+    self.top_layer = display.newNode():addTo(self:GetSceneNode(), 3)
 end
 function MapScene:onExit()
     self.touch_judgment:destructor()
+end
+function MapScene:GetTopLayer()
+    return self.top_layer 
 end
 function MapScene:BlurRenderScene()
     self.blur_count = self.blur_count - 1
@@ -118,7 +119,6 @@ function MapScene:CreateFteLayer()
     end
     layer:setTouchSwallowEnabled(true)
     local touch_judgment = self.touch_judgment
-    local touch_layer = self.touch_layer
     layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
         if touch_judgment then
             local touch_type, pre_x, pre_y, x, y = event.name, event.prevX, event.prevY, event.x, event.y
@@ -137,12 +137,10 @@ function MapScene:CreateFteLayer()
     end)
     function layer:Enable()
         self:setTouchEnabled(true)
-        touch_layer:setTouchEnabled(false)
         return self:show()
     end
     function layer:Disable()
         self:setTouchEnabled(false)
-        touch_layer:setTouchEnabled(true)
         return self:hide()
     end
     function layer:Reset()
@@ -228,8 +226,13 @@ function MapScene:OnTouchExtend(old_speed_x, old_speed_y, new_speed_x, new_speed
     speed.y = speed.y > max_speed and max_speed or speed.y
     self.scene_layer:setPosition(cc.p(x + sp.x, y + sp.y))
 end
-
-
+function MapScene:OnSceneMove()
+    self.top_layer:pos(self.scene_layer:getPosition())
+end
+function MapScene:OnSceneScale()
+    self.top_layer:pos(self.scene_layer:getPosition())
+    self.top_layer:scale(self.scene_layer:getScale())
+end
 return MapScene
 
 

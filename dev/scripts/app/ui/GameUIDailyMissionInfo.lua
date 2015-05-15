@@ -81,7 +81,7 @@ function GameUIDailyMissionInfo:BuildUI()
 end
 
 function GameUIDailyMissionInfo:RefreshListUI()
-    local percentage = #User:GetDailyTasksInfo(self:GetKeyOfDaily()) / 5 
+    local percentage = #User:GetDailyTasksInfo(self:GetKeyOfDaily()) / 4
     self.progress:setPercentage(percentage * 100)
     self.button_finish_icon:setVisible(User:CheckDailyTasksWasRewarded(self:GetKeyOfDaily()))
 	self:RefreshListView()
