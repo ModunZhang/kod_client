@@ -7,7 +7,15 @@ end
 function TowerEntity:UniqueKey()
     return string.format("%s", self:GetType())
 end
-function TowerEntity:OnUserDataChanged(user_data, current_time)
+function TowerEntity:OnUserDataChanged(user_data, current_time, deltaData)
+    local is_fully_update = not deltaData or deltaData.buildingEvents
+    local is_delta_update = not is_fully_update and deltaData and deltaData.buildings
+    if is_delta_update then
+        if not deltaData.buildings["location_22"] then
+            return
+        end
+    end
+
     local event = self:GetBuildingEventFromUserDataByLocation(user_data, 22)
     self:OnEvent(event)
     local level, finished_time = self:GetBuildingInfoByEventAndLocation(user_data, event, 22)

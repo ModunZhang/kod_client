@@ -106,7 +106,7 @@ local house_type = {
     ["miner"] = true,
 }
 function Building:IsHouse()
-    return house_type[self:GetType()]
+    return house_type[self.building_type]
 end
 function Building:GetOrient()
     return self.orient

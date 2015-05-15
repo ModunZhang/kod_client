@@ -26,8 +26,10 @@ function DragonEyrieUpgradeBuilding:EnergyMax()
     return config_function[self:GetEfficiencyLevel()].energyMax
 end
 
-function DragonEyrieUpgradeBuilding:OnUserDataChanged(user_data, current_time, location_id,sub_location,deltaData)
-    DragonEyrieUpgradeBuilding.super.OnUserDataChanged(self,user_data, current_time, location_id, sub_location, deltaData)
+function DragonEyrieUpgradeBuilding:OnUserDataChanged(...)
+    DragonEyrieUpgradeBuilding.super.OnUserDataChanged(self, ...)
+
+    local user_data, current_time, location_id,sub_location,deltaData = ...
     self:GetDragonManager():OnUserDataChanged(user_data, current_time, deltaData,self:GetHPRecoveryPerHour())
 end
 

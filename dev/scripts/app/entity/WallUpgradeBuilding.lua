@@ -135,7 +135,14 @@ function WallUpgradeBuilding:IntersectWithOtherWall(other_wall)
     end
     assert(false)
 end
-function WallUpgradeBuilding:OnUserDataChanged(user_data, current_time)
+function WallUpgradeBuilding:OnUserDataChanged(user_data, current_time, deltaData)
+    local is_fully_update = not deltaData or deltaData.buildingEvents
+    local is_delta_update = not is_fully_update and deltaData and deltaData.buildings
+    if is_delta_update then
+        if not deltaData.buildings["location_21"] then
+            return
+        end
+    end
     local event = self:GetBuildingEventFromUserDataByLocation(user_data, 21)
     self:OnEvent(event)
     local level, finished_time = self:GetBuildingInfoByEventAndLocation(user_data, event, 21)
