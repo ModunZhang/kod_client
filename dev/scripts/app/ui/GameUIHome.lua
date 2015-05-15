@@ -26,7 +26,7 @@ local STONE         = ResourceManager.RESOURCE_TYPE.STONE
 local POPULATION    = ResourceManager.RESOURCE_TYPE.POPULATION
 local COIN          = ResourceManager.RESOURCE_TYPE.COIN
 
-local red_color = UIKit:hex2c4b(0x403c2f)
+local red_color = UIKit:hex2c4b(0xff3c00) 
 local normal_color = UIKit:hex2c4b(0xf3f0b6)
 function GameUIHome:OnResourceChanged(resource_manager)
     local server_time = timer:GetServerTime()
