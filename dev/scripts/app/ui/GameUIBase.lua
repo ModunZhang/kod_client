@@ -70,6 +70,7 @@ end
 
 function GameUIBase:onCleanup()
     print("onCleanup->",self.__cname)
+    GameGlobalUI:clearMessageQueue()
     if UIKit:getRegistry().isObjectExists(self.__cname) then
         UIKit:getRegistry().removeObject(self.__cname)
     end

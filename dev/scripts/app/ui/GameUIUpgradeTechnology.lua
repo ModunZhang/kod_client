@@ -166,7 +166,11 @@ function GameUIUpgradeTechnology:GetTechIcon()
 end
 
 function GameUIUpgradeTechnology:BuildUI()
-    local bg_node =  WidgetUIBackGround.new({height = HEIGHT,isFrame = "no"}):align(display.TOP_CENTER, window.cx, window.top_bottom - 50)
+    local y = window.top_bottom - 50
+    if HEIGHT == 200 then
+        y = window.top_bottom - 200
+    end
+    local bg_node =  WidgetUIBackGround.new({height = HEIGHT,isFrame = "no"}):align(display.TOP_CENTER, window.cx, y)
     self:addTouchAbleChild(bg_node)
     local title_bar = display.newSprite("title_blue_600x56.png"):align(display.BOTTOM_CENTER,304,HEIGHT - 15):addTo(bg_node)
     UIKit:closeButton():align(display.RIGHT_BOTTOM,600, 0):addTo(title_bar):onButtonClicked(function()
@@ -207,7 +211,7 @@ function GameUIUpgradeTechnology:BuildUI()
     }):align(display.RIGHT_BOTTOM,line_1:getPositionX()+ 422,current_effect_desc:getPositionY()):addTo(bg_node)
     self.next_effect_val_label = next_effect_val_label
 
-    self.upgrade_info_icon = display.newSprite("teach_upgrade_icon_15x17.png"):align(display.RIGHT_BOTTOM, next_effect_val_label:getPositionX() - 50,
+    self.upgrade_info_icon = display.newSprite("teach_upgrade_icon_15x17.png"):align(display.RIGHT_BOTTOM, next_effect_val_label:getPositionX() - 70,
         next_effect_val_label:getPositionY() + 5):addTo(bg_node)
 
     local current_effect_val_label = UIKit:ttfLabel({
@@ -215,7 +219,7 @@ function GameUIUpgradeTechnology:BuildUI()
         size = 22,
         color= 0x403c2f,
         align = cc.TEXT_ALIGNMENT_RIGHT,
-    }):align(display.RIGHT_BOTTOM,self.upgrade_info_icon:getPositionX() - 35, next_effect_val_label:getPositionY()):addTo(bg_node)
+    }):align(display.RIGHT_BOTTOM,self.upgrade_info_icon:getPositionX() - 55, next_effect_val_label:getPositionY()):addTo(bg_node)
     self.current_effect_val_label = current_effect_val_label
 
     local current_power_desc = UIKit:ttfLabel({
@@ -231,7 +235,7 @@ function GameUIUpgradeTechnology:BuildUI()
         align = cc.TEXT_ALIGNMENT_RIGHT,
     }):align(display.RIGHT_BOTTOM,line_2:getPositionX()+ 422,current_power_desc:getPositionY()):addTo(bg_node)
     self.next_power_val_label = next_power_val_label
-    self.upgrade_power_icon = display.newSprite("teach_upgrade_icon_15x17.png"):align(display.RIGHT_BOTTOM, next_power_val_label:getPositionX() - 50,
+    self.upgrade_power_icon = display.newSprite("teach_upgrade_icon_15x17.png"):align(display.RIGHT_BOTTOM, next_power_val_label:getPositionX() - 70,
         next_power_val_label:getPositionY() + 5):addTo(bg_node)
 
     local current_power_val_label = UIKit:ttfLabel({
@@ -239,7 +243,7 @@ function GameUIUpgradeTechnology:BuildUI()
         size = 22,
         color= 0x403c2f,
         align = cc.TEXT_ALIGNMENT_RIGHT,
-    }):align(display.RIGHT_BOTTOM,self.upgrade_power_icon:getPositionX() - 35, next_power_val_label:getPositionY()):addTo(bg_node)
+    }):align(display.RIGHT_BOTTOM,self.upgrade_power_icon:getPositionX() - 55, next_power_val_label:getPositionY()):addTo(bg_node)
     self.current_power_val_label = current_power_val_label
     local btn_now = UIKit:commonButtonWithBG(
         {
@@ -343,7 +347,8 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
                 isVisible = true,
                 isSatisfy = unLockByTech:Level() >= current_tech:UnlockLevel(),
                 icon= unLockByTech:GetImageName(),
-                description= _("等级达到") .. current_tech:UnlockLevel()
+                description= _("等级达到") .. current_tech:UnlockLevel(),
+                canNotBuy = true,
             })
     end
      table.insert(requirements,
@@ -352,7 +357,8 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
             isVisible = true,
             isSatisfy = current_tech:AcademyLevel() <= City:GetAcademyBuildingLevel(),
             icon="academy.png",
-            description = _("等级达到") .. current_tech:AcademyLevel()
+            description = _("等级达到") .. current_tech:AcademyLevel(),
+            canNotBuy = true,
         })
     table.insert(requirements,
         {
@@ -395,7 +401,9 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
             description = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["pulley"] .. "/" .. cost.pulley
         })  
    
-
+    table.sort( requirements, function(a,b)
+        return not a.isSatisfy and b.isSatisfy
+    end)
     return requirements
 end
 
