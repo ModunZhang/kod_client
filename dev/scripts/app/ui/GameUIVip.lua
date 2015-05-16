@@ -243,7 +243,9 @@ function GameUIVip:CreateAD(index)
                 self:LeftButtonClicked()
             end
         end)
-    local info_bg = display.newSprite("back_ground_430X115.png"):addTo(ad)
+
+    local info_bg = display.newSprite(data.config.desc):addTo(ad)
+    display.newSprite("store_gem_260x116.png"):addTo(info_bg):align(display.CENTER, 0, info_bg:getContentSize().height/2)
     if data.config.npc then
         info_bg:align(display.RIGHT_CENTER, 552, 73)
         display.newSprite(data.config.npc):align(display.RIGHT_BOTTOM, 592, 0):addTo(ad)
@@ -255,19 +257,19 @@ function GameUIVip:CreateAD(index)
         color= 0xffd200,
         size = 30,
         align = cc.TEXT_ALIGNMENT_CENTER,
-    }):align(display.CENTER, 290, 80):addTo(info_bg)
+    }):align(display.CENTER, 150, 75):addTo(info_bg)
 
     UIKit:ttfLabel({
         text = data.gem,
         size = 30,
         color= 0xffd200,
-    }):align(display.TOP_CENTER, 290, 72):addTo(info_bg)
+    }):align(display.TOP_CENTER, 150, 65):addTo(info_bg)
 
     UIKit:ttfLabel({
         text = string.format(_("+价值%d的道具"),data.rewards_price),
         size = 20,
         color= 0xffd200
-    }):align(display.CENTER, 290,24):addTo(info_bg)
+    }):align(display.CENTER, 150,15):addTo(info_bg)
 
     return ad
 end
