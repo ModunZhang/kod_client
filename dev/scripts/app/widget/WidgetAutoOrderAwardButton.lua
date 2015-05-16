@@ -82,12 +82,15 @@ function WidgetAutoOrderAwardButton:OnCountInfoChanged()
 end
 
 function WidgetAutoOrderAwardButton:StarAction()
+	print("WidgetAutoOrderAwardButton:StarAction---->")
+	self:StopAction()
 	self.sprite_[1]:runAction(self:GetShakeAction())
 end
 
 function WidgetAutoOrderAwardButton:StopAction()
+	print("WidgetAutoOrderAwardButton:StopAction---->")
 	self.sprite_[1]:stopAllActions()
-	self.sprite_[1]:runAction(cc.RotateTo:create(0, 0))
+	self.sprite_[1]:setRotation(0)
 	
 end
 

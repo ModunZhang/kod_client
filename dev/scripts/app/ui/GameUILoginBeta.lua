@@ -265,6 +265,7 @@ function GameUILoginBeta:connectLogicServer()
         	   self:connectLogicServer()
             end,1)
         end)
+        UIKit:NoWaitForNet()
     end)
 
 end
