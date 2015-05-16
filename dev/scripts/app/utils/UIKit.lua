@@ -594,7 +594,11 @@ function UIKit:isKeyMessageDialogShow()
 end
 
 function UIKit:isMessageDialogShow(instance)
-    return self.messageDialogs[instance:GetUserData()] ~= nil
+    return instance and instance.__cname == 'FullScreenPopDialogUI' and self:isMessageDialogShowWithUserData(instance:GetUserData())
+end
+
+function UIKit:isMessageDialogShowWithUserData(userData)
+    return self.messageDialogs[userData] ~= nil
 end
 
 function UIKit:showKeyMessageDialog(title,tips,ok_callback,cancel_callback)
