@@ -322,7 +322,7 @@ function GameUIItems:FilterMyItems( items )
     local f_items = {}
     for i,v in ipairs(items) do
         if v:Name() == "chest_1" then
-            -- print('FilterMyItems ==',v:Count(),tolua.type(v:Count()))
+        -- print('FilterMyItems ==',v:Count(),tolua.type(v:Count()))
         end
         if v:Count() > 0 then
             table.insert(f_items, v)
@@ -453,6 +453,23 @@ function GameUIItems:UseItemFunc( items )
         -- 木,铜,银,金宝箱
         local clone_items
         if string.find(name,"chest") then
+            -- 需要对应的钥匙
+            if name == "chest_2" then
+                if ItemManager:GetItemByName("chestKey_2"):Count() < 1 then
+                    UIKit:showMessageDialog(_("陛下"),_("开启铜宝箱需要铜钥匙"))
+                    return
+                end
+            elseif name == "chest_3" then
+                if ItemManager:GetItemByName("chestKey_3"):Count() < 1 then
+                    UIKit:showMessageDialog(_("陛下"),_("开启银宝箱需要银钥匙"))
+                    return
+                end
+            elseif name == "chest_4" then
+                if ItemManager:GetItemByName("chestKey_4"):Count() < 1 then
+                    UIKit:showMessageDialog(_("陛下"),_("开启金宝箱需要金钥匙"))
+                    return
+                end
+            end
             clone_items = clone(ItemManager:GetItems())
         end
         NetManager:getUseItemPromise(items:Name(),{}):done(function (response)
@@ -514,6 +531,7 @@ function GameUIItems:OnItemsChanged( changed_map )
     end
 end
 return GameUIItems
+
 
 
 
