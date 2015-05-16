@@ -89,7 +89,7 @@ local cityBuild_meta = {}
 cityBuild_meta.__index = cityBuild_meta
 function cityBuild_meta:Title()
     local config = self:Config()
-    return string.format("将%s升级到等级%d", Localize.building_name[config.name], config.level)
+    return string.format(_("将%s升级到等级%d"), Localize.building_name[config.name], config.level)
 end
 function cityBuild_meta:Desc()
     return Localize.building_description[self:Config().name]
@@ -113,7 +113,7 @@ local dragonLevel_meta = {}
 dragonLevel_meta.__index = dragonLevel_meta
 function dragonLevel_meta:Title()
     local config = self:Config()
-    return string.format("将%s升级到等级%d", Localize.dragon[config.type], config.level)
+    return string.format(_("将%s升级到等级%d"), Localize.dragon[config.type], config.level)
 end
 function dragonLevel_meta:Desc()
     return Localize.dragon_buffer[self:Config().type]
@@ -135,7 +135,7 @@ local dragonStar_meta = {}
 dragonStar_meta.__index = dragonStar_meta
 function dragonStar_meta:Title()
     local config = self:Config()
-    return string.format("将%s提升到星级%d", Localize.dragon[config.type], config.star)
+    return string.format(_("将%s提升到星级%d"), Localize.dragon[config.type], config.star)
 end
 function dragonStar_meta:Desc()
     return Localize.dragon_buffer[self:Config().type]
@@ -156,7 +156,7 @@ local dragonSkill_meta = {}
 dragonSkill_meta.__index = dragonSkill_meta
 function dragonSkill_meta:Title()
     local config = self:Config()
-    return string.format("将%s-%s提升到等级%d", Localize.dragon[config.type], Localize.dragon_skill[config.name], config.level)
+    return string.format(_("将%s技能%s提升到等级%d"), Localize.dragon[config.type], Localize.dragon_skill[config.name], config.level)
 end
 function dragonSkill_meta:Desc()
     return Localize.dragon_skill_effection[self:Config().name]
@@ -178,7 +178,7 @@ local productionTech_meta = {}
 productionTech_meta.__index = productionTech_meta
 function productionTech_meta:Title()
     local config = self:Config()
-    return string.format("将%s科技研发到等级%d", Localize.productiontechnology_name[config.name], config.level)
+    return string.format(_("将%s科技研发到等级%d"), Localize.productiontechnology_name[config.name], config.level)
 end
 function productionTech_meta:Desc()
     return Localize.productiontechnology_buffer[self:Config().name]
@@ -199,7 +199,7 @@ local militaryTech_meta = {}
 militaryTech_meta.__index = militaryTech_meta
 function militaryTech_meta:Title()
     local config = self:Config()
-    return string.format("将%s科技研发到等级%d", Localize.getMilitaryTechnologyName(config.name), config.level)
+    return string.format(_("将%s科技研发到等级%d"), Localize.getMilitaryTechnologyName(config.name), config.level)
 end
 function militaryTech_meta:Desc()
     return Localize.getMilitaryTechnologyName(self:Config().name)
@@ -220,7 +220,7 @@ local soldierStar_meta = {}
 soldierStar_meta.__index = soldierStar_meta
 function soldierStar_meta:Title()
     local config = self:Config()
-    return string.format("将%s提升到星级%d", Localize.soldier_name[config.name], config.star)
+    return string.format(_("将%s提升到星级%d"), Localize.soldier_name[config.name], config.star)
 end
 function soldierStar_meta:Desc()
     return Localize.soldier_name[self:Config().name]
@@ -242,7 +242,7 @@ local soldierCount_meta = {}
 soldierCount_meta.__index = soldierCount_meta
 function soldierCount_meta:Title()
     local config = self:Config()
-    return string.format("招募%s个%s", config.count, Localize.soldier_name[config.name])
+    return string.format(_("招募%s个%s"), config.count, Localize.soldier_name[config.name])
 end
 function soldierCount_meta:Desc()
     return Localize.soldier_name[self:Config().name]
@@ -262,10 +262,10 @@ end
 local pveCount_meta = {}
 pveCount_meta.__index = pveCount_meta
 function pveCount_meta:Title()
-    return string.format("探索步数达到%d", self:Config().count)
+    return string.format(_("探索步数达到%d"), self:Config().count)
 end
 function pveCount_meta:Desc()
-    return string.format("探索步数达到%d", self:Config().count)
+    return string.format(_("探索步数达到%d描述"), self:Config().count)
 end
 function pveCount_meta:GetRewards()
     return get_rewards(self:Config())
@@ -282,10 +282,10 @@ end
 local attackWin_meta = {}
 attackWin_meta.__index = attackWin_meta
 function attackWin_meta:Title()
-    return string.format("攻击玩家获胜%d次", self:Config().count)
+    return string.format(_("攻击玩家获胜%d次"), self:Config().count)
 end
 function attackWin_meta:Desc()
-    return string.format("攻击玩家获胜%d次", self:Config().count)
+    return string.format(_("攻击玩家获胜%d次描述"), self:Config().count)
 end
 function attackWin_meta:GetRewards()
     return get_rewards(self:Config())
@@ -302,10 +302,10 @@ end
 local strikeWin_meta = {}
 strikeWin_meta.__index = strikeWin_meta
 function strikeWin_meta:Title()
-    return string.format("突袭玩家获胜%d次", self:Config().count)
+    return string.format(_("突袭玩家获胜%d次"), self:Config().count)
 end
 function strikeWin_meta:Desc()
-    return string.format("突袭玩家获胜%d次", self:Config().count)
+    return string.format(_("突袭玩家获胜%d次描述"), self:Config().count)
 end
 function strikeWin_meta:GetRewards()
     return get_rewards(self:Config())
@@ -323,10 +323,10 @@ end
 local playerKill_meta = {}
 playerKill_meta.__index = playerKill_meta
 function playerKill_meta:Title()
-    return string.format("击杀积分达到%d次", self:Config().kill)
+    return string.format(_("击杀积分达到%d"), self:Config().kill)
 end
 function playerKill_meta:Desc()
-    return string.format("击杀积分达到%d次", self:Config().kill)
+    return string.format(_("击杀积分达到%d描述"), self:Config().kill)
 end
 function playerKill_meta:GetRewards()
     return get_rewards(self:Config())
@@ -343,10 +343,10 @@ end
 local playerPower_meta = {}
 playerPower_meta.__index = playerPower_meta
 function playerPower_meta:Title()
-    return string.format("power值到达%d", self:Config().power)
+    return string.format(_("power值到达%d"), self:Config().power)
 end
 function playerPower_meta:Desc()
-    return string.format("power值到达%d", self:Config().power)
+    return string.format(_("power值到达%d描述"), self:Config().power)
 end
 function playerPower_meta:GetRewards()
     return get_rewards(self:Config())
