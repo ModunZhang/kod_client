@@ -436,12 +436,15 @@ function GameUIAllianceHome:CreateTop()
             our_num_icon:setTexture("battle_33x33.png")
             enemy_num_icon:setTexture("battle_33x33.png")
             enemy_num_icon:scale(1.0)
-            local our_reprot_data_kill = alliance:GetOurLastAllianceFightReportsData().kill
-            local enemy_reprot_data_kill = alliance:GetEnemyLastAllianceFightReportsData().kill
-            self:SetOurPowerOrKill(our_reprot_data_kill)
-
-            self:SetEnemyPowerOrKill(enemy_reprot_data_kill)
-
+            if alliance:AllianceFightReports() == nil then
+                NetManager:getAllianceFightReportsPromise(alliance:Id()):done(function ( response )
+                    local our_reprot_data_kill = alliance:GetOurLastAllianceFightReportsData().kill
+                    local enemy_reprot_data_kill = alliance:GetEnemyLastAllianceFightReportsData().kill
+                    self:SetOurPowerOrKill(our_reprot_data_kill)
+                    self:SetEnemyPowerOrKill(enemy_reprot_data_kill)
+                    return response
+                end)
+            end
         else
             if status~="peace" then
                 enemy_num_icon:setTexture("power_24x29.png")
@@ -742,6 +745,7 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
+
 
 
 

@@ -1,3 +1,90 @@
+local EQUIP_MATERIAL_DESC_LOCALIZE = {
+    ["ingo_1"] = _("打造红龙，蓝龙和绿龙1星装备所必须的材料"),
+    ["ingo_2"] = _("打造红龙，蓝龙和绿龙2星装备所必须的材料"),
+    ["ingo_3"] = _("打造红龙，蓝龙和绿龙3星装备所必须的材料"),
+    ["ingo_4"] = _("打造红龙，蓝龙和绿龙4星装备所必须的材料"),
+    ["redSoul_2"] = _("打造红龙2星装备所必须的材料"),
+    ["redSoul_3"] = _("打造红龙3星装备所必须的材料"),
+    ["redSoul_4"] = _("打造红龙4星装备所必须的材料"),
+    ["blueSoul_2"] = _("打造蓝龙2星装备所必须的材料"),
+    ["blueSoul_3"] = _("打造蓝龙3星装备所必须的材料"),
+    ["blueSoul_4"] = _("打造蓝龙4星装备所必须的材料"),
+    ["greenSoul_2"] = _("打造绿龙2星装备所必须的材料"),
+    ["greenSoul_3"] = _("打造绿龙3星装备所必须的材料"),
+    ["greenSoul_4"] = _("打造绿龙4星装备所必须的材料"),
+    ["redCrystal_1"] = _("打造红龙1星装备所必须的材料"),
+    ["redCrystal_2"] = _("打造红龙2星装备所必须的材料"),
+    ["redCrystal_3"] = _("打造红龙3星装备所必须的材料"),
+    ["redCrystal_4"] = _("打造红龙4星装备所必须的材料"),
+    ["blueCrystal_1"] = _("打造蓝龙1星装备所必须的材料"),
+    ["blueCrystal_2"] = _("打造蓝龙2星装备所必须的材料"),
+    ["blueCrystal_3"] = _("打造蓝龙3星装备所必须的材料"),
+    ["blueCrystal_4"] = _("打造蓝龙4星装备所必须的材料"),
+    ["greenCrystal_1"] = _("打造绿龙1星装备所必须的材料"),
+    ["greenCrystal_2"] = _("打造绿龙2星装备所必须的材料"),
+    ["greenCrystal_3"] = _("打造绿龙3星装备所必须的材料"),
+    ["greenCrystal_4"] = _("打造绿龙4星装备所必须的材料"),
+    ["runes_1"] = _("打造红龙，蓝龙和绿龙1星装备所必须的材料"),
+    ["runes_2"] = _("打造红龙，蓝龙和绿龙2星装备所必须的材料"),
+    ["runes_3"] = _("打造红龙，蓝龙和绿龙3星装备所必须的材料"),
+    ["runes_4"] = _("打造红龙，蓝龙和绿龙4星装备所必须的材料"),
+}
+
+local MATERIALS_DESC_MAP = {
+    blueprints =  _("用于建造高等级建筑和研发高级科技"),
+    tools =  _("用于建造高等级建筑和研发高级科技"),
+    tiles =  _("用于建造高等级建筑和研发高级科技"),
+    pulley =  _("用于建造高等级建筑和研发高级科技"),
+    trainingFigure =   _("用于在训练营地提升步兵的属性"),
+    bowTarget = _("用于在猎手大厅提升弓手的属性"),
+    saddle =  _("用于在马厩提升骑兵的属性"),
+    ironPart =   _("用于在马厩提升骑兵的属性"),
+}
+
+local EQUIP_MATERIAL_DESC_LOCALIZE = {
+    ["ingo_1"] = _("打造红龙，蓝龙和绿龙1星装备所必须的材料"),
+    ["ingo_2"] = _("打造红龙，蓝龙和绿龙2星装备所必须的材料"),
+    ["ingo_3"] = _("打造红龙，蓝龙和绿龙3星装备所必须的材料"),
+    ["ingo_4"] = _("打造红龙，蓝龙和绿龙4星装备所必须的材料"),
+    ["redSoul_2"] = _("打造红龙2星装备所必须的材料"),
+    ["redSoul_3"] = _("打造红龙3星装备所必须的材料"),
+    ["redSoul_4"] = _("打造红龙4星装备所必须的材料"),
+    ["blueSoul_2"] = _("打造蓝龙2星装备所必须的材料"),
+    ["blueSoul_3"] = _("打造蓝龙3星装备所必须的材料"),
+    ["blueSoul_4"] = _("打造蓝龙4星装备所必须的材料"),
+    ["greenSoul_2"] = _("打造绿龙2星装备所必须的材料"),
+    ["greenSoul_3"] = _("打造绿龙3星装备所必须的材料"),
+    ["greenSoul_4"] = _("打造绿龙4星装备所必须的材料"),
+    ["redCrystal_1"] = _("打造红龙1星装备所必须的材料"),
+    ["redCrystal_2"] = _("打造红龙2星装备所必须的材料"),
+    ["redCrystal_3"] = _("打造红龙3星装备所必须的材料"),
+    ["redCrystal_4"] = _("打造红龙4星装备所必须的材料"),
+    ["blueCrystal_1"] = _("打造蓝龙1星装备所必须的材料"),
+    ["blueCrystal_2"] = _("打造蓝龙2星装备所必须的材料"),
+    ["blueCrystal_3"] = _("打造蓝龙3星装备所必须的材料"),
+    ["blueCrystal_4"] = _("打造蓝龙4星装备所必须的材料"),
+    ["greenCrystal_1"] = _("打造绿龙1星装备所必须的材料"),
+    ["greenCrystal_2"] = _("打造绿龙2星装备所必须的材料"),
+    ["greenCrystal_3"] = _("打造绿龙3星装备所必须的材料"),
+    ["greenCrystal_4"] = _("打造绿龙4星装备所必须的材料"),
+    ["runes_1"] = _("打造红龙，蓝龙和绿龙1星装备所必须的材料"),
+    ["runes_2"] = _("打造红龙，蓝龙和绿龙2星装备所必须的材料"),
+    ["runes_3"] = _("打造红龙，蓝龙和绿龙3星装备所必须的材料"),
+    ["runes_4"] = _("打造红龙，蓝龙和绿龙4星装备所必须的材料"),
+}
+
+local SOLDIER_DESC_MATERIAL = {
+    ["deathHand"] = _("用于招募亡灵兵种的材料。在探险过程中有一定几率会遭遇亡灵部队，击败他们后获得"),
+    ["heroBones"] = _("用于招募亡灵兵种的材料。在探险过程中有一定几率会遭遇亡灵部队，击败他们后获得"),
+    ["soulStone"] = _("用于招募亡灵兵种的材料。在探险过程中有一定几率会遭遇亡灵部队，击败他们后获得"),
+    ["magicBox"] = _("用于招募亡灵兵种的材料。在探险过程中有一定几率会遭遇亡灵部队，击败他们后获得"),
+    ["confessionHood"] = _("士兵材料"),
+    ["brightRing"] = _("士兵材料"),
+    ["holyBook"] = _("士兵材料"),
+    ["brightAlloy"] = _("士兵材料")
+}
+
+
 local EQUIP_MATERIAL_LOCALIZE = {
     ["ingo_1"] = _("铁锭"),
     ["ingo_2"] = _("钢锭"),
@@ -889,7 +976,12 @@ return {
     shrine_desc = SHRINE_DESC,
     login_tips = LOGIN_TIPS,
     server_name = SERVER_NAME,
+    equip_material_desc_localize = EQUIP_MATERIAL_DESC_LOCALIZE,
+    materials_desc_map = MATERIALS_DESC_MAP,
+    equip_material_desc_localize  = EQUIP_MATERIAL_DESC_LOCALIZE,
+    soldier_desc_material = SOLDIER_DESC_MATERIAL,
 }
+
 
 
 

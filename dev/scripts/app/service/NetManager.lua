@@ -209,7 +209,7 @@ end
 local function get_alliance_alliancefightreports_response_msg(response)
     if response.msg.allianceFightReports then
         DataManager:getUserAllianceData().allianceFightReports = response.msg.allianceFightReports
-        Alliance_Manager:GetMyAlliance():OnAllianceFightRequestsChanged(DataManager:getUserAllianceData())
+        Alliance_Manager:GetMyAlliance():OnAllianceFightReportsChanged(DataManager:getUserAllianceData())
     end
     return response
 end

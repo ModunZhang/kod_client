@@ -97,7 +97,6 @@ function City:ctor(user)
     self.productionTechs = {}
     self.productionTechEvents = {}
     self.build_queue = 0
-    self.locations_decorators = {}
     self.need_update_buildings = {}
     self:InitLocations()
     self:InitRuins()
@@ -297,6 +296,7 @@ function City:InitBuildings(buildings)
 end
 function City:InitLocations()
     self.locations = GameDatas.ClientInitGame.locations
+    self.locations_decorators = {}
     table.foreach(self.locations, function(location_id, location)
         self.locations_decorators[location_id] = {}
     end)
@@ -814,25 +814,23 @@ function City:IteratorCanUpgradeBuildingsByUserData(user_data, current_time, del
 
     local buildings = user_data.buildings
     if is_fully_update or is_delta_update then
-            self:IteratorDecoratorBuildingsByFunc(function(key, building)
-                local tile = self:GetTileWhichBuildingBelongs(building)
-                local location_info = buildings[format("location_%d", tile.location_id)]
-                local sub_location_id = tile:GetBuildingLocation(building)
-                building:OnUserDataChanged(user_data, current_time, location_info, sub_location_id, deltaData, house_events_map[tile.location_id * 100 + sub_location_id])
-            end)
-        LuaUtils:TimeCollect(function()
-            self:IteratorFunctionBuildingsByFunc(function(key, building)
-                local location_info = buildings[format("location_%d", self:GetTileWhichBuildingBelongs(building).location_id)]
-                local event = building_events_map[location_info.location]
-                building:OnUserDataChanged(user_data, current_time, location_info, nil, deltaData, event)
-            end)
-        end, "City:OnUserDataChanged")
-        self:GetGate():OnUserDataChanged(user_data, current_time, deltaData, buildings["location_21"], building_events_map[21])
-        self:GetTower():OnUserDataChanged(user_data, current_time, deltaData, buildings["location_22"], building_events_map[22])
+        self:IteratorDecoratorBuildingsByFunc(function(key, building)
+            local tile = self:GetTileWhichBuildingBelongs(building)
+            local location_info = buildings[format("location_%d", tile.location_id)]
+            local sub_location_id = tile:GetBuildingLocation(building)
+            building:OnUserDataChanged(user_data, current_time, location_info, sub_location_id, deltaData, house_events_map[tile.location_id * 100 + sub_location_id])
+        end)
+        self:IteratorFunctionBuildingsByFunc(function(key, building)
+            local location_info = buildings[format("location_%d", self:GetTileWhichBuildingBelongs(building).location_id)]
+            local event = building_events_map[location_info.location]
+            building:OnUserDataChanged(user_data, current_time, location_info, nil, deltaData, event)
+        end)
+        self:GetGate():OnUserDataChanged(user_data, current_time, buildings["location_21"], nil, deltaData, building_events_map[21])
+        self:GetTower():OnUserDataChanged(user_data, current_time, buildings["location_22"], nil, deltaData, building_events_map[22])
     else
         self:IteratorFunctionBuildingsByFunc(function(key, building)
             local tile = self:GetTileWhichBuildingBelongs(building)
-                local location_info = buildings[format("location_%d", tile.location_id)]
+            local location_info = buildings[format("location_%d", tile.location_id)]
             building:OnUserDataChanged(user_data, current_time, location_info, nil, deltaData, building_events_map[tile.location_id])
         end)
     end

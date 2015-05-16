@@ -344,7 +344,7 @@ function GameUIDailyMissionInfo:GetMissionConfig()
         		title = _("在商店购买任意一个道具"),
                 isDesc = false,
         		func = function()
-        			UIKit:newGameUI("GameUIItems",City):AddToCurrentScene(true)
+        			UIKit:newGameUI("GameUIItems",City,"shop"):AddToCurrentScene(true)
                     return true
         		end
         	}

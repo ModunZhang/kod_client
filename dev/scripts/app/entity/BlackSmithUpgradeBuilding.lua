@@ -149,15 +149,15 @@ end
 function BlackSmithUpgradeBuilding:OnUserDataChanged(...)
     BlackSmithUpgradeBuilding.super.OnUserDataChanged(self, ...)
     local userData, current_time, location_info, sub_location_id, deltaData = ...
-    
-    if not userData.dragonEquipmentEvents then return end
-
+    self:OnFunctionDataChange(userData, deltaData, current_time)
+end
+function BlackSmithUpgradeBuilding:OnFunctionDataChange(userData, deltaData, current_time)
     local is_fully_update = deltaData == nil
     local is_delta_update = self:IsUnlocked() and deltaData and deltaData.dragonEquipmentEvents
     if not is_fully_update and not is_delta_update then
-        return 
+        return false
     end
-    print("BlackSmithUpgradeBuilding:OnUserDataChanged")
+    print("BlackSmithUpgradeBuilding:OnFunctionDataChange")
 
     if is_delta_update then
         local dragonEquipmentEvents = deltaData.dragonEquipmentEvents

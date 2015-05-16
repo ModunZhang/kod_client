@@ -3,11 +3,13 @@ local TowerEntity = class("TowerEntity", UpgradeBuilding)
 local abs = math.abs
 function TowerEntity:ctor(building_info)
     TowerEntity.super.ctor(self, building_info)
+    self.building_location_id = 21
 end
 function TowerEntity:UniqueKey()
     return string.format("%s", self:GetType())
 end
-function TowerEntity:OnUserDataChanged(user_data, current_time, deltaData, location_info, event)
+function TowerEntity:OnUserDataChanged(...)
+    local userData, current_time, location_info, sub_location_id, deltaData, event = ...
     local is_fully_update = not deltaData or deltaData.buildingEvents
     local is_delta_update = not is_fully_update and deltaData and deltaData.buildings
     if is_delta_update then
