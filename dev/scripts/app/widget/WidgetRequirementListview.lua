@@ -73,11 +73,11 @@ function WidgetRequirementListview:RefreshListView(contents)
                         if v.jump_call then
                             content.mark:stopAllActions()
 
-                            local seq_1 = transition.sequence{
-                                cc.ScaleTo:create(0.4, 0.5),
-                                cc.ScaleTo:create(0.4, 1)
-                            }
-                            content.mark:runAction(cc.RepeatForever:create(seq_1))
+                            -- local seq_1 = transition.sequence{
+                            --     cc.ScaleTo:create(0.4, 0.5),
+                            --     cc.ScaleTo:create(0.4, 1)
+                            -- }
+                            -- content.mark:runAction(cc.RepeatForever:create(seq_1))
 
                             content.bg:setNodeEventEnabled(true)
                             content.bg:setTouchEnabled(true)
@@ -146,11 +146,11 @@ function WidgetRequirementListview:RefreshListView(contents)
                             content.mark:removeAllNodeEventListeners()
                             content.mark:stopAllActions()
 
-                            local seq_1 = transition.sequence{
-                                cc.ScaleTo:create(0.4, 0.5),
-                                cc.ScaleTo:create(0.4, 1)
-                            }
-                            content.mark:runAction(cc.RepeatForever:create(seq_1))
+                            -- local seq_1 = transition.sequence{
+                            --     cc.ScaleTo:create(0.4, 0.5),
+                            --     cc.ScaleTo:create(0.4, 1)
+                            -- }
+                            -- content.mark:runAction(cc.RepeatForever:create(seq_1))
                             content.mark:setNodeEventEnabled(true)
                             content.mark:setTouchEnabled(true)
                             content.mark:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)

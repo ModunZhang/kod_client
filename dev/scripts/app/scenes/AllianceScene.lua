@@ -30,6 +30,9 @@ function AllianceScene:onEnter()
     end
     if self.location then
         self:GotoPosition(self.location.x, self.location.y)
+        if self.location.callback then
+            self.location.callback(self)
+        end
     else
         self:GotoCurrentPosition()
     end
@@ -218,6 +221,7 @@ function AllianceScene:ReEnterScene()
     app:enterScene("AllianceScene")
 end
 return AllianceScene
+
 
 
 

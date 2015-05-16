@@ -23,6 +23,9 @@ function AllianceBattleScene:onEnter()
 
     if self.location then
         self:GotoPosition(self.location.x, self.location.y,self.location.id)
+        if self.location.callback then
+            self.location.callback(self)
+        end
     else
         self:GotoCurrentPosition()
     end
