@@ -175,16 +175,16 @@ end
 function BarracksUpgradeBuilding:OnUserDataChanged(...)
     BarracksUpgradeBuilding.super.OnUserDataChanged(self, ...)
     local userData, current_time, location_info, sub_location_id, deltaData = ...
-
-    if not userData.soldierEvents then return end
-
+    self:OnFunctionDataChange(userData, deltaData, current_time)
+end
+function BarracksUpgradeBuilding:OnFunctionDataChange(userData,deltaData,current_time)
     local is_fully_update = deltaData == nil
     local is_delta_update = self:IsUnlocked() and deltaData and deltaData.soldierEvents
     if not is_fully_update and not is_delta_update then
-        return 
+        return false
     end
 
-    print("BarracksUpgradeBuilding:OnUserDataChanged")
+    print("BarracksUpgradeBuilding:OnFunctionDataChange")
 
     if is_delta_update then
         local soldierEvents = deltaData.soldierEvents
@@ -196,9 +196,9 @@ function BarracksUpgradeBuilding:OnUserDataChanged(...)
     if event then
         local finished_time = event.finishTime / 1000
         if self.recruit_event:IsEmpty() then
-            self:RecruitSoldiersWithFinishTime(event.name, event.count, finished_time,event.id)
+            self:RecruitSoldiersWithFinishTime(event.name,event.count,finished_time,event.id)
         else
-            self.recruit_event:SetRecruitInfo(event.name, event.count, finished_time,event.id)
+            self.recruit_event:SetRecruitInfo(event.name,event.count,finished_time,event.id)
         end
     else
         if self.recruit_event:IsRecruting() then
