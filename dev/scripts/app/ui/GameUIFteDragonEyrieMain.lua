@@ -3,7 +3,14 @@ local GameUIFteDragonEyrieMain = UIKit:createUIClass("GameUIFteDragonEyrieMain",
 
 
 function GameUIFteDragonEyrieMain:ctor(...)
-    GameUIFteDragonEyrieMain.super.ctor(self, ...)
+    local dragon_type
+    for k,v in pairs(DataManager:getUserData().dragons) do
+        if v.star > 0 then
+            dragon_type = k
+        end
+    end
+    local city,building,default_tab,lockDragon = ...
+    GameUIFteDragonEyrieMain.super.ctor(self, city,building,default_tab,lockDragon, dragon_type)
     self.__type  = UIKit.UITYPE.BACKGROUND
 end
 

@@ -24,6 +24,7 @@ local max = math.max
 local ipairs = ipairs
 local pairs = pairs
 local insert = table.insert
+local format = string.format
 -- 枚举定义
 City.RETURN_CODE = Enum(
     "INNER_ROUND_NOT_UNLOCKED",
@@ -800,19 +801,39 @@ end
 function City:IteratorCanUpgradeBuildingsByUserData(user_data, current_time, deltaData)
     local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and (deltaData.buildings or deltaData.buildingEvents or deltaData.houseEvents)
+    
+    local building_events_map = {}
+    for _,v in ipairs(user_data.buildingEvents) do
+        building_events_map[v.location] = v
+    end
+
+    local house_events_map = {}
+    for _,v in ipairs(user_data.houseEvents) do
+        house_events_map[v.buildingLocation * 100 + v.houseLocation] = v
+    end
+
+    local buildings = user_data.buildings
     if is_fully_update or is_delta_update then
-        self:IteratorDecoratorBuildingsByFunc(function(key, building)
-            local tile = self:GetTileWhichBuildingBelongs(building)
-            building:OnUserDataChanged(user_data, current_time, tile.location_id, tile:GetBuildingLocation(building), deltaData)
-        end)
-        self:IteratorFunctionBuildingsByFunc(function(key, building)
-            building:OnUserDataChanged(user_data, current_time, self:GetLocationIdByBuilding(building), nil, deltaData)
-        end)
-        self:GetTower():OnUserDataChanged(user_data, current_time, deltaData)
-        self:GetGate():OnUserDataChanged(user_data, current_time, deltaData)
+            self:IteratorDecoratorBuildingsByFunc(function(key, building)
+                local tile = self:GetTileWhichBuildingBelongs(building)
+                local location_info = buildings[format("location_%d", tile.location_id)]
+                local sub_location_id = tile:GetBuildingLocation(building)
+                building:OnUserDataChanged(user_data, current_time, location_info, sub_location_id, deltaData, house_events_map[tile.location_id * 100 + sub_location_id])
+            end)
+        LuaUtils:TimeCollect(function()
+            self:IteratorFunctionBuildingsByFunc(function(key, building)
+                local location_info = buildings[format("location_%d", self:GetTileWhichBuildingBelongs(building).location_id)]
+                local event = building_events_map[location_info.location]
+                building:OnUserDataChanged(user_data, current_time, location_info, nil, deltaData, event)
+            end)
+        end, "City:OnUserDataChanged")
+        self:GetGate():OnUserDataChanged(user_data, current_time, deltaData, buildings["location_21"], building_events_map[21])
+        self:GetTower():OnUserDataChanged(user_data, current_time, deltaData, buildings["location_22"], building_events_map[22])
     else
         self:IteratorFunctionBuildingsByFunc(function(key, building)
-            building:OnUserDataChanged(user_data, current_time, self:GetLocationIdByBuilding(building), nil, deltaData)
+            local tile = self:GetTileWhichBuildingBelongs(building)
+                local location_info = buildings[format("location_%d", tile.location_id)]
+            building:OnUserDataChanged(user_data, current_time, location_info, nil, deltaData, building_events_map[tile.location_id])
         end)
     end
 end
@@ -891,10 +912,10 @@ function City:GetNeighbourRuinWithSpecificRuin(ruin)
 end
 -- 功能函数
 function City:OnTimer(time)
-        self:IteratorAllNeedTimerEntity(time)
-        self:IteratorProductionTechEvents(function(v)
-            v:OnTimer(time)
-        end)
+    self:IteratorAllNeedTimerEntity(time)
+    self:IteratorProductionTechEvents(function(v)
+        v:OnTimer(time)
+    end)
 end
 function City:CreateDecorator(current_time, decorator_building)
     insert(self.decorators, decorator_building)
@@ -988,7 +1009,6 @@ function City:OnUserDataChanged(userData, current_time, deltaData)
     local need_update_resouce_buildings, is_unlock_any_tiles, unlock_table = self:OnHouseChanged(userData, current_time, deltaData)
     -- 更新建筑信息
     self:IteratorCanUpgradeBuildingsByUserData(userData, current_time, deltaData)
-
     -- 更新地块信息
     if is_unlock_any_tiles then
         LuaUtils:outputTable("unlock_table", unlock_table)
@@ -1691,6 +1711,7 @@ function City:FindProductionTechEventById(_id)
 end
 
 return City
+
 
 
 
