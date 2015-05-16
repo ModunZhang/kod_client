@@ -274,9 +274,13 @@ function MyApp:EnterFteScene()
     app:enterScene("FteScene", nil, "custom", -1, transition_)
 end
 function MyApp:EnterMyAllianceSceneWithTips(tips)
+    if UIKit:isMessageDialogShowWithUserData("alliance_war_tips") then
+        self:EnterMyAllianceScene()
+        return
+    end
     UIKit:showMessageDialog(nil,tips,function()
         self:EnterMyAllianceScene()
-    end,nil,false)
+    end,nil,false,nil,"alliance_war_tips")
 end
 function MyApp:EnterMyAllianceScene(location)
     if Alliance_Manager:GetMyAlliance():IsDefault() then

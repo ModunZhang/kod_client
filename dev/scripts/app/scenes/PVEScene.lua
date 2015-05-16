@@ -406,7 +406,7 @@ function PVEScene:PromiseOfExit()
     self:GetHomePage().change_map.btn:onButtonClicked(function()
         app:EnterMyCityScene()
     end)
-
+    self:GetHomePage():GetFteLayer():SetTouchRect(r)
     WidgetFteArrow.new(_("返回城市")):addTo(self:GetHomePage():GetFteLayer())
         :TurnDown(false):align(display.LEFT_BOTTOM, r.x + 20, r.y + r.width + 20)
 end

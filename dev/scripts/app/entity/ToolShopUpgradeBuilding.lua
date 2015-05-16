@@ -204,16 +204,18 @@ end
 
 function ToolShopUpgradeBuilding:OnUserDataChanged(...)
     ToolShopUpgradeBuilding.super.OnUserDataChanged(self, ...)
-    local userData, current_time, location_id, sub_location_id, deltaData = ...
-
-    if not userData.materialEvents then return end
-
+    local userData, current_time, location_info, sub_location_id, deltaData = ...
+    self:OnFunctionDataChange(userData, deltaData, current_time)
+end
+function ToolShopUpgradeBuilding:OnFunctionDataChange(userData, deltaData, current_time)
     local is_fully_update = deltaData == nil
     local is_delta_update = self:IsUnlocked() and deltaData and deltaData.materialEvents
     if not is_fully_update and not is_delta_update then
         return 
     end
-    print("ToolShopUpgradeBuilding:OnUserDataChanged")
+    
+    print("ToolShopUpgradeBuilding:OnFunctionDataChange")
+
     local BUILDING_EVENT = 1
     local TECHNOLOGY_EVENT = 2
     local category_map = {
@@ -225,7 +227,7 @@ function ToolShopUpgradeBuilding:OnUserDataChanged(...)
         [TECHNOLOGY_EVENT] = nil,
     }
 
-    for k, v in pairs(userData.materialEvents) do
+    for _,v in pairs(userData.materialEvents) do
         if v.category == "buildingMaterials" then
             events[BUILDING_EVENT] = v
         elseif v.category == "technologyMaterials" then
@@ -233,7 +235,7 @@ function ToolShopUpgradeBuilding:OnUserDataChanged(...)
         end
     end
 
-    for category_index, category in ipairs(category_map) do
+    for category_index,category in ipairs(category_map) do
         local event = events[category_index]
         if event then
             local finished_time = event.finishTime / 1000

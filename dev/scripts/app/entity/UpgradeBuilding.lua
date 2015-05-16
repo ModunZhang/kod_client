@@ -1,10 +1,16 @@
 
 local Observer = import(".Observer")
-local Building = import(".Building")
 local DataUtils = import("..utils.DataUtils")
 local MaterialManager = import("..entity.MaterialManager")
+local Building = import(".Building")
 local UpgradeBuilding = class("UpgradeBuilding", Building)
 local Localize = import("..utils.Localize")
+
+local pairs = pairs
+local ipairs = ipairs
+local format = string.format
+
+
 UpgradeBuilding.NOT_ABLE_TO_UPGRADE = {
     TILE_NOT_UNLOCKED = _("地块未解锁"),
     IS_MAX_LEVEL = _("建筑已经达到最高等级"),
@@ -36,7 +42,7 @@ function UpgradeBuilding:GetFreeSpeedupTime()
     return DataUtils:getFreeSpeedUpLimitTime()
 end
 function UpgradeBuilding:EventType()
-    return self:BelongCity():IsHouse(self) and "houseEvents" or "buildingEvents"
+    return self:IsHouse() and "houseEvents" or "buildingEvents"
 end
 function UpgradeBuilding:UniqueUpgradingKey()
     return self.unique_upgrading_key
@@ -142,7 +148,7 @@ end
 function UpgradeBuilding:GeneralLocalPush()
     if ext and ext.localpush then
         local pushIdentity = self.x .. self.y .. self.w .. self.h .. self.orient
-        local title = string.format(_("修建%s到LV%d完成"),Localize.getLocaliedKeyByType(self.building_type),(self.level+1))
+        local title = format(_("修建%s到LV%d完成"),Localize.getLocaliedKeyByType(self.building_type),(self.level+1))
         app:GetPushManager():UpdateBuildPush(self.upgrade_to_next_level_time,title,pushIdentity)
     end
 end
@@ -171,22 +177,21 @@ function UpgradeBuilding:SpeedUpBuilding()
         end)
     end
 end
-function UpgradeBuilding:OnUserDataChanged(userData, current_time, location_id, sub_location_id, deltaData)
+function UpgradeBuilding:OnUserDataChanged(userData, current_time, location_info, sub_location_id, deltaData, event)
     local is_fully_update = not deltaData or (deltaData.houseEvents or deltaData.buildingEvents)
     local is_delta_update = not is_fully_update and deltaData and deltaData.buildings
+    local location_id = location_info.location
     if is_delta_update then
-        local builidng_key = string.format("location_%d", location_id)
+        local builidng_key = format("location_%d", location_id)
         if not deltaData.buildings[builidng_key] then
             return
         end
     end
-    local event, level, finished_time, type_
-    if self:BelongCity():IsHouse(self) then
-        event = self:GetHouseEventByLocations(userData, location_id, sub_location_id)
-        level, finished_time = self:GetHouseInfoByEventAndLocation(userData, event, location_id, sub_location_id)
+    local level, finished_time, type_
+    if self:IsHouse() then
+        level, finished_time = self:GetHouseInfoByEventAndLocation(userData, event, location_info, sub_location_id)
     else
-        event = self:GetBuildingEventFromUserDataByLocation(userData, location_id)
-        level, finished_time, type_ = self:GetBuildingInfoByEventAndLocation(userData, event, location_id)
+        level, type_, finished_time = location_info.level, location_info.type, (event == nil and 0 or event.finishTime / 1000)
         if type_ ~= self:GetType() then
             self.building_type = type_
             self.base_building_observer:NotifyObservers(function(listener)
@@ -197,57 +202,20 @@ function UpgradeBuilding:OnUserDataChanged(userData, current_time, location_id, 
     self:OnEvent(event)
     if level and finished_time then
         if display.getRunningScene().__cname ~= "MainScene" and level ~= self.level then
-            GameGlobalUI:showTips(_("提示"),string.format(_("建造%s至%d级完成"),Localize.building_name[self:GetType()],level))
+            GameGlobalUI:showTips(_("提示"),format(_("建造%s至%d级完成"),Localize.building_name[self:GetType()],level))
         end
         self:OnHandle(level, finished_time)
     end
 end
-function UpgradeBuilding:GetHouseInfoByEventAndLocation(user_data, event, location_id, sub_location_id)
-    local finishTime = event == nil and 0 or event.finishTime / 1000
-    local level = self:GetLevel()
-    local buildings = user_data.buildings
-    local building_key = string.format("location_%d", location_id)
-    if buildings and buildings[building_key] then
-        for _, v in pairs(buildings[building_key].houses) do
-            if v.location == sub_location_id then
-                level = v.level
-                break
-            end
-        end
-    elseif not event then
-        finishTime = self.upgrade_to_next_level_time
-    end
-    return level, finishTime
-end
-function UpgradeBuilding:GetHouseEventByLocations(user_data, location_id, sub_location_id)
-    for k, v in pairs(user_data.houseEvents or {}) do
-        if v.buildingLocation == location_id and
-            v.houseLocation == sub_location_id then
-            return v
+function UpgradeBuilding:GetHouseInfoByEventAndLocation(user_data, event, location_info, sub_location_id)
+    local level = self.level
+    for _, v in pairs(location_info.houses) do
+        if v.location == sub_location_id then
+            level = v.level
+            break
         end
     end
-end
-function UpgradeBuilding:GetBuildingInfoByEventAndLocation(user_data, event, location)
-    local finishTime = event == nil and 0 or event.finishTime / 1000
-    local level = self:GetLevel()
-    local type_ = self:GetType()
-    local buildings = user_data.buildings
-    local building_key = string.format("location_%d", location)
-    if buildings and buildings[building_key] then
-        local location_info = buildings[building_key]
-        level = location_info.level
-        type_ = location_info.type
-    elseif not event then
-        finishTime = self.upgrade_to_next_level_time
-    end
-    return level, finishTime, type_
-end
-function UpgradeBuilding:GetBuildingEventFromUserDataByLocation(user_data, location)
-    for _,v in ipairs(user_data.buildingEvents or {}) do
-        if v.location == location then
-            return v
-        end
-    end
+    return level, event == nil and 0 or event.finishTime / 1000
 end
 function UpgradeBuilding:OnEvent(event)
     if event then
@@ -362,7 +330,7 @@ function UpgradeBuilding:IsBuildingUpgradeLegal()
         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.IS_MAX_UNLOCK
     end
     local config
-    if city:IsHouse(self) then
+    if self:IsHouse() then
         config = GameDatas.Houses.houses[self:GetType()]
     else
         local location_id = city:GetLocationIdByBuildingType(self:GetType())
@@ -398,7 +366,7 @@ end
 function UpgradeBuilding:GetPreConditionDesc()
     local city =  self:BelongCity()
     local config
-    if city:IsHouse(self) then
+    if self:IsHouse(self) then
         config = GameDatas.Houses.houses[self:GetType()]
     else
         local location_id = city:GetLocationIdByBuildingType(self:GetType())
@@ -407,13 +375,13 @@ function UpgradeBuilding:GetPreConditionDesc()
     local configParams = string.split(config.preCondition,"_")
     local preName = configParams[2]
     local preLevel = tonumber(configParams[3])
-    return string.format(_("需要%s达到%d级"),Localize.building_name[preName],self:GetLevel()+preLevel)
+    return format(_("需要%s达到%d级"),Localize.building_name[preName],self:GetLevel()+preLevel)
 end
 -- 获取等级最高建筑的升级前置条件建筑
 function UpgradeBuilding:GetPreConditionBuilding()
     local city =  self:BelongCity()
     local config
-    if city:IsHouse(self) then
+    if self:IsHouse() then
         config = GameDatas.Houses.houses[self:GetType()]
     else
         local location_id = city:GetLocationIdByBuildingType(self:GetType())
@@ -518,6 +486,8 @@ function UpgradeBuilding:getUpgradeRequiredGems()
 end
 
 return UpgradeBuilding
+
+
 
 
 

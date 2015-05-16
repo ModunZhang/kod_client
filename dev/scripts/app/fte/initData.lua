@@ -7,7 +7,9 @@ return {
         pulley = 0,
         blueprints = 0
     },
-    items = { },
+    items = {
+        vipActive_3 = 1,
+    },
     deals = { },
     inviteToAllianceEvents = { },
     itemEvents = { },
