@@ -1,6 +1,7 @@
 #ifndef __kod_commonutils__
 #define __kod_commonutils__
-
+#define kKeychainBatcatStudioIdentifier          @"kKeychainBatcatStudioIdentifier"
+#define kKeychainBatcatStudioKeyChainService             @"com.batcatstudio.keychain"
 //copy text to Pasteboard
 extern "C" void CopyText(const char * text);
 extern "C" void DisableIdleTimer(bool disable=false);
@@ -12,4 +13,6 @@ extern "C" const char* GetAppVersion();
 extern "C" const char* GetAppBundleVersion();
 extern "C" const char* GetDeviceToken();
 extern "C" long long getOSTime();
+extern "C" const char* GetOpenUdid();
+extern "C" void registereForRemoteNotifications();
 #endif

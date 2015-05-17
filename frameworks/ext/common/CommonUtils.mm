@@ -3,7 +3,8 @@
 #include <sys/utsname.h>
 #import "AppController.h"
 #import <CoreFoundation/CoreFoundation.h>
-
+#import "UICKeyChainStore.h"
+#import <CommonCrypto/CommonDigest.h> // Need to import for CC_MD5 access
 extern "C" void CopyText(const char * text)
 {
     [UIPasteboard generalPasteboard].string = [NSString stringWithUTF8String:text];
@@ -107,4 +108,50 @@ extern "C" long long getOSTime()
 {
     double currentTime = CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970;
     return (long long)(currentTime * 1000);
+}
+
+
+extern "C" const char* GetOpenUdid()
+{
+    NSString *_openUDID = [UICKeyChainStore stringForKey:kKeychainBatcatStudioIdentifier service:kKeychainBatcatStudioKeyChainService];
+    if(!_openUDID){
+        CFUUIDRef uuid = CFUUIDCreate(kCFAllocatorDefault);
+        CFStringRef cfstring = CFUUIDCreateString(kCFAllocatorDefault, uuid);
+        const char *cStr = CFStringGetCStringPtr(cfstring,CFStringGetFastestEncoding(cfstring));
+        unsigned char result[16];
+        CC_MD5( cStr, strlen(cStr), result );
+        CFRelease(uuid);
+        CFRelease(cfstring);
+        
+        _openUDID = [NSString stringWithFormat:
+                     @"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%08x",
+                     result[0], result[1], result[2], result[3],
+                     result[4], result[5], result[6], result[7],
+                     result[8], result[9], result[10], result[11],
+                     result[12], result[13], result[14], result[15],
+                     (NSUInteger)(arc4random() % NSUIntegerMax)];
+
+        
+        UICKeyChainStore *store = [UICKeyChainStore keyChainStoreWithService:kKeychainBatcatStudioKeyChainService];
+        [store setString:_openUDID forKey:kKeychainBatcatStudioIdentifier];
+        [store synchronize];
+    }
+    NSLog(@"GetOpenUdid:%@",_openUDID);
+    return [_openUDID UTF8String];
+}
+
+extern "C" void registereForRemoteNotifications()
+{
+    UIApplication *application = [UIApplication sharedApplication];
+    if ([application respondsToSelector:@selector(isRegisteredForRemoteNotifications)]) {
+        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeBadge|UIUserNotificationTypeAlert|UIUserNotificationTypeSound
+                                                                                 categories:nil];
+        [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+        [[UIApplication sharedApplication] registerForRemoteNotifications];
+    }
+    else
+    {
+        [[UIApplication sharedApplication]registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
+    }
+
 }

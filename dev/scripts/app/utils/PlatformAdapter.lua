@@ -48,6 +48,7 @@ end
 
 
 function PlatformAdapter:mac()
+    ext.getOpenUDID = device.getOpenUDID
     ccui.UITextView = {}
     setmetatable(ccui.UITextView,{
         __index= function( ... )

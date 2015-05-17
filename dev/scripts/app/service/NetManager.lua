@@ -501,7 +501,7 @@ function NetManager:getConnectLogicServerPromise()
     end)
 end
 -- 重写OpenUDID
-local getOpenUDID = device.getOpenUDID
+local getOpenUDID = ext.getOpenUDID
 device.getOpenUDID = function()
     -- if true then return "aj2" end
     if CONFIG_IS_DEBUG then

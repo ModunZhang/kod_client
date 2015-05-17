@@ -786,6 +786,12 @@ function UIKit:GetItemImage(reward_type,item_key)
         or reward_type == 'buff'
         or reward_type == 'buff' then
         return UILib.item[item_key]
+    elseif reward_type == 'dragonMaterials' then
+        return UILib.dragon_material_pic_map[item_key]
+    elseif reward_type == 'allianceInfo' then
+        if item_key == 'loyalty' then
+            return "loyalty_128x128.png"
+        end
     end
 end
 
