@@ -186,7 +186,6 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
     self.slider_input = WidgetSliderWithInput.new({max = treat_max}):addTo(back_ground):align(display.LEFT_CENTER, 25, 330)
         :SetSliderSize(445, 24)
         :OnSliderValueChanged(function(event)
-            dump(event)
             self:OnCountChanged(math.floor(event.value))
         end)
         :LayoutValueLabel(WidgetSliderWithInput.STYLE_LAYOUT.RIGHT,0)
@@ -456,7 +455,10 @@ function WidgetTreatSoldier:OnResourceChanged(resource_manager)
         v.total:setString(GameUtils:formatNumber(total))
     end
     self.res_total_map = res_map
-    self.slider_input:SetValue(self:GetMaxTreatNum())
+    if not self.isSet then
+        self.slider_input:SetValue(self:GetMaxTreatNum())
+        self.isSet = true
+    end
 end
 function WidgetTreatSoldier:OnInstantButtonClicked(func)
     self.instant_button_clicked = func
@@ -494,6 +496,7 @@ function WidgetTreatSoldier:OnCountChanged(count)
     self.gem_label:setString(self.treat_now_gems)
 end
 return WidgetTreatSoldier
+
 
 
 
