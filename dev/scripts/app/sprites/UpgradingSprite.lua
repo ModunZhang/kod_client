@@ -101,7 +101,6 @@ function UpgradingSprite:ctor(city_layer, entity)
     end
     self:CheckCondition()
 
-
     -- if entity:IsUnlocked() and self:GetShadowConfig() then
     --     self:CreateShadow(self:GetShadowConfig())
     -- end

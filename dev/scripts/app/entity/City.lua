@@ -825,7 +825,7 @@ function City:IteratorCanUpgradeBuildingsByUserData(user_data, current_time, del
             local location_info = buildings["location_"..location_id]
             v:OnUserDataChanged(user_data, current_time, location_info, nil, deltaData, building_events_map[location_id])
             local houses = self:GetDecoratorsByLocationId(location_id)
-            for _,house_info in ipairs(location_info.houses) do
+            for _,house_info in pairs(location_info.houses) do
                 local house_location = house_info.location
                 houses[house_location]:OnUserDataChanged(user_data, current_time, nil, house_info, deltaData, house_events_map[location_id * 100 + house_location])
             end
@@ -864,8 +864,9 @@ function City:IteratorCanUpgradeBuildingsByUserData(user_data, current_time, del
         end
         for k,v in pairs(need_delta_update_houses_events) do
             local location_info = buildings[format("location_%d", v.buildingLocation)]
+            LuaUtils:outputTable(location_info)
             local house_location_info
-            for _,house in ipairs(location_info.houses) do
+            for _,house in pairs(location_info.houses) do
                 if house.location == v.houseLocation then
                     house_location_info = house
                     break
