@@ -1,6 +1,6 @@
 -- 0 - disable debug info, 1 - less debug info, 2 - verbose debug info
 DEBUG = 2
-DEBUG_FPS = false
+DEBUG_FPS = true
 DEBUG_MEM = false
 
 -- design resolution
@@ -47,7 +47,7 @@ CONFIG_APP_URL = {
 CONFIG_IS_LOCAL = false
 CONFIG_IS_DEBUG = true
 CONFIG_LOG_DEBUG_FILE = true -- 记录日志文件
-GLOBAL_FTE = true
+GLOBAL_FTE = false
 GLOBAL_FTE_DEBUG = false
 
 CONFIG_SCREEN_AUTOSCALE_CALLBACK = function(w, h, deviceModel)

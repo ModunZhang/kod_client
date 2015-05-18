@@ -8,13 +8,7 @@ local WidgetPopDialog = import(".WidgetPopDialog")
 local UILib = import("..ui.UILib")
 
 
-local WidgetMakeEquip = class("WidgetMakeEquip", WidgetPopDialog
-    --     function()
-    --     local node = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
-    --     node:setNodeEventEnabled(true)
-    --     return node
-    -- end
-    )
+local WidgetMakeEquip = class("WidgetMakeEquip", WidgetPopDialog)
 local STAR_BG = {
     "box_104x104_1.png",
     "box_104x104_2.png",
@@ -182,7 +176,11 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
         }))
         :onButtonClicked(function(event)
             if self:IsAbleToMakeEqui(false) then
-                NetManager:getMakeDragonEquipmentPromise(equip_type)
+                NetManager:getMakeDragonEquipmentPromise(equip_type):done(function (response)
+                    GameGlobalUI:showTips(_("提示"),string.format(_("已在制造%s"),EQUIP_LOCALIZE[equip_type]))
+                    return response
+                end)
+
                 self:Close()
             end
         end)
@@ -248,7 +246,7 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
     local condition_bg = WidgetUIBackGround.new({width = 568,height = 100},WidgetUIBackGround.STYLE_TYPE.STYLE_6)
         :addTo(back_ground)
         :align(display.CENTER, size.width/2, 200)
-   
+
     -- 建造队列
     local  condition_bg_1 = display.newSprite("back_ground_548x40_1.png")
         :addTo(condition_bg)
@@ -487,3 +485,4 @@ function WidgetMakeEquip:IsAbleToMakeEqui(isFinishNow)
 end
 
 return WidgetMakeEquip
+
