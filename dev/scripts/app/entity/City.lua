@@ -1012,11 +1012,12 @@ function City:DestoryDecoratorByPosition(current_time, x, y)
 end
 ----------- 功能扩展点
 function City:OnUserDataChanged(userData, current_time, deltaData)
-    local need_update_resouce_buildings, is_unlock_any_tiles, unlock_table = self:OnHouseChanged(userData, current_time, deltaData)
-    -- 更新建筑信息
+    local need_update_resouce_buildings, is_unlock_any_tiles, unlock_table
     LuaUtils:TimeCollect(function()
+    need_update_resouce_buildings, is_unlock_any_tiles, unlock_table = self:OnHouseChanged(userData, current_time, deltaData)
+    end, "City:OnHouseChanged")
+    -- 更新建筑信息
         self:IteratorCanUpgradeBuildingsByUserData(userData, current_time, deltaData)
-    end, "City:IteratorCanUpgradeBuildingsByUserData")
     -- 更新地块信息
     if is_unlock_any_tiles then
         LuaUtils:outputTable("unlock_table", unlock_table)
@@ -1096,33 +1097,36 @@ function City:OnHouseChanged(userData, current_time, deltaData)
             break
         end
     end
-    table.foreach(buildings, function(key, location)
+
+    table.foreach(buildings, function(_, location)
         local location_id = location.location
-        illegal_filter(key, function()
+        illegal_filter(_, function()
             local building = self:GetBuildingByLocationId(location_id)
-            local is_unlocking = building:GetLevel() == 0 and (location.level > 0)
+            local is_unlocked = building:GetLevel() == 0 and (location.level > 0)
             local tile = self:GetTileByLocationId(location_id)
-            if is_unlocking and tile.locked then
+            if is_unlocked and tile.locked then
                 is_unlock_any_tiles = true
                 insert(unlock_table, {x = tile.x, y = tile.y})
             end
 
             -- 拆除 or 交换
             local decorators = self:GetDecoratorsByLocationId(location_id)
-            table.foreach(decorators, function(key, building)
+            table.foreach(decorators, function(_, building)
+
                 -- 当前位置有小建筑并且推送的数据里面没有就认为是拆除
-                local tile = self:GetTileWhichBuildingBelongs(building)
-                local location_id = tile:GetBuildingLocation(building)
-                local building_info = find_building_info_by_location(location.houses, location_id)
+                local house_location_id = tile:GetBuildingLocation(building)
+                local house_info = find_building_info_by_location(location.houses, house_location_id)
+                
                 -- 没有找到，就是已经被拆除了
                 -- 如果类型不对，也认为是拆除
-                if not building_info or (building_info.type ~= building:GetType()) then
+                if not house_info or (house_info.type ~= building:GetType()) then
                     self:DestoryDecorator(current_time, building)
                 end
+
             end)
 
             -- 新建的
-            table.foreach(location.houses, function(key, house)
+            table.foreach(location.houses, function(_, house)
                 -- 当前位置没有小建筑并且推送的数据里面有就认为新建小建筑
                 if not decorators[house.location] then
                     local absolute_x, absolute_y = tile:GetAbsolutePositionByLocation(house.location)
