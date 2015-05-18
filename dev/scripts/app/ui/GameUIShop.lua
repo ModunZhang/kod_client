@@ -51,17 +51,19 @@ function GameUIShop:onEnter()
         {scale9 = false}
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = "重置玩家数据和联盟",
+        text = "重新生成OpenUDID",
         size = 20,
         font = UIKit:getFontFilePath(),
         color = UIKit:hex2c3b(0xfff3c7)}))
         :addTo(content)
         :align(display.CENTER, window.left + 500, window.top - 500)
         :onButtonClicked(function()
-            math.randomseed(os.time())
-            cc.UserDefault:getInstance():setStringForKey("udid", math.random(1234567890))
-            cc.UserDefault:getInstance():flush()
-            app:restart()
+            if device.platform == 'ios' then
+                ext.clearOpenUdid()
+                app:restart()
+            elseif device.platform == 'mac' then
+                 device.showAlert("提示","改代码!",{_("确定")})
+            end
         end)
 
 

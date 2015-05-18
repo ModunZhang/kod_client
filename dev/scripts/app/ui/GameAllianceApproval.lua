@@ -9,7 +9,7 @@ local UIScrollView = import(".UIScrollView")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushTransparentButton = import("..widget.WidgetPushTransparentButton")
-
+--TODO:list 异步
 function GameAllianceApproval:onEnter()
     GameAllianceApproval.super.onEnter(self)
     local layer = UIKit:shadowLayer():addTo(self)
@@ -27,12 +27,12 @@ function GameAllianceApproval:onEnter()
         color = 0xffedae,
         size = 22,
     }):align(display.CENTER, 300, 26):addTo(title_bar)
-    local list,list_node = UIKit:commonListView({
-        viewRect = cc.rect(0, 0,568,687),
-        direction = UIScrollView.DIRECTION_VERTICAL,
-    })
-    list_node:addTo(bg):pos(20,30)
-    self.listView = list
+    local list_bg = display.newScale9Sprite("box_bg_546x214.png"):size(590,707):addTo(bg):align(display.CENTER_BOTTOM,304,30)
+    local list_view = UIListView.new{
+        viewRect = cc.rect(11,10,568,687),
+        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
+    }:addTo(list_bg)
+    self.listView = list_view
 
     if Alliance_Manager:GetMyAlliance():JoinRequestEvents() == nil then
         NetManager:getJoinRequestEventsPromise(
@@ -48,7 +48,7 @@ end
 function GameAllianceApproval:RefreshListView()
     self.listView:removeAllItems()
     table.foreachi(Alliance_Manager:GetMyAlliance():JoinRequestEvents(),function(k,v)
-        local newItem = self:GetListItem(v)
+        local newItem = self:GetListItem(k,v)
         self.listView:addItem(newItem)
     end)
     self.listView:reload()
@@ -59,9 +59,9 @@ function GameAllianceApproval:OnPlayerDetailButtonClicked(memberId)
     UIKit:newGameUI('GameUIAllianceMemberInfo',false,memberId,function()end):AddToCurrentScene(true)
 end
 
-function GameAllianceApproval:GetListItem(player)
+function GameAllianceApproval:GetListItem(index,player)
     local item = self.listView:newItem()
-    local bg = WidgetUIBackGround.new({width = 568,height = 152},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
+    local bg = display.newScale9Sprite(string.format("resource_item_bg%d.png",index % 2)):size(568,152)
     local icon_box = display.newSprite("alliance_item_flag_box_126X126.png"):align(display.LEFT_BOTTOM, 10,15):addTo(bg)
     UIKit:GetPlayerCommonIcon():addTo(icon_box):pos(icon_box:getContentSize().width/2,icon_box:getContentSize().height/2)
     WidgetPushTransparentButton.new(cc.rect(0,0,126,126))
