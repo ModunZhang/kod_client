@@ -48,6 +48,7 @@ end
 
 
 function PlatformAdapter:mac()
+    ext.getOpenUDID = device.getOpenUDID
     ccui.UITextView = {}
     setmetatable(ccui.UITextView,{
         __index= function( ... )
@@ -79,6 +80,17 @@ function PlatformAdapter:mac()
         filePath = string.gsub(filePath,"animations/","animations_mac/")
         return filePath
     end
+    local print__ = print 
+    printLog = function(tag, fmt, ...)
+        local t = {
+            "[",
+            string.upper(tostring(tag)),
+            "] ",
+            string.format(tostring(fmt), ...)
+        }
+        print__(table.concat(t))
+    end
+    print = function(...)end
 end
 
 

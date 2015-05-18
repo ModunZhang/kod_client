@@ -110,7 +110,7 @@ function GameUILoginBeta:createStartGame()
     self.start_button = button
     button:onButtonClicked(function()
         button:setButtonEnabled(false)
-        self.startGame = true
+        display.getRunningScene().startGame = true
         local sp = cc.Spawn:create(cc.ScaleTo:create(1,1.5),cc.FadeOut:create(1))
         local seq = transition.sequence({sp,cc.CallFunc:create(function()
                 self:connectLogicServer()
@@ -265,6 +265,7 @@ function GameUILoginBeta:connectLogicServer()
         	   self:connectLogicServer()
             end,1)
         end)
+        UIKit:NoWaitForNet()
     end)
 
 end

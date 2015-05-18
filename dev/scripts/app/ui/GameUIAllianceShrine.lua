@@ -20,6 +20,7 @@ function GameUIAllianceShrine:ctor(city,default_tab,building)
 	self:GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsChanged)
 	self:GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnNewStageOpened)
 	self:GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsRefresh)
+	self:GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineReportsChanged)
 	assert(self.allianceShrine)
 	self.event_bind_to_label = {}
 end
@@ -35,6 +36,10 @@ function GameUIAllianceShrine:OnPerceotionChanged()
 	if self.stage_ui and self.stage_ui.perHour_label then
 		self.stage_ui.perHour_label:setString(string.format("+%s/h",resource:GetProductionPerHour()))
 	end
+end
+
+function GameUIAllianceShrine:OnShrineReportsChanged(change_map)
+	self:RefreshUI()
 end
 
 function GameUIAllianceShrine:OnFightEventTimerChanged(event)
@@ -78,6 +83,7 @@ function GameUIAllianceShrine:onCleanup()
 	self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsChanged)
 	self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnNewStageOpened)
 	self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsRefresh)
+	self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineReportsChanged)
 	GameUIAllianceShrine.super.onCleanup(self)
 end
 
@@ -146,7 +152,13 @@ function GameUIAllianceShrine:RefreshUI()
 	elseif tag == 'fight_event' then
 		self:RefreshFightListView()
 	elseif tag == 'events_history' then
-		self:RefreshEventsListView()
+		if self:GetAllianceShrine():IsNeedRequestReportFromServer() then
+			NetManager:getShrineReportsPromise():done(function()
+				self:RefreshEventsListView()
+			end)
+		else
+			self:RefreshEventsListView()
+		end
 	end
 end
 

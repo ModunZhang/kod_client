@@ -966,7 +966,7 @@ function GameUIShop:onEnter()
         {scale9 = false}
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = "iOS购买金龙币",
+        text = "OpenUDID调试",
         size = 20,
         font = UIKit:getFontFilePath(),
         color =  cc.c3b(255,0,0)
@@ -974,18 +974,8 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 500, window.top - 1600)
         :onButtonClicked(function(event)
-            if device.platform == 'ios' then
-                -- print(Store.canMakePurchases(),"Store.canMakePurchases--->")
-
-                -- Store.loadProducts({"kod.1dollar"}, function(data)
-                --     dump(data,"data---->")
-                -- end)
-                -- Store.purchase("kod.1dollar")
-                app:getStore().purchaseWithProductId("product_1",1)
-            else
-                device.showAlert("提示",device.platform .. " is not support for IAP",{_("确定")})
-            end
-
+                local str = string.format("OpenUDID:%s",device.getOpenUDID())
+                device.showAlert("提示",str,{_("确定")})
         end)
     item:addContent(content)
     item:setItemSize(640, 1000)
