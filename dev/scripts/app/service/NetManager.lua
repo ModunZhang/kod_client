@@ -173,7 +173,15 @@ local function get_response_delete_report_msg(response)
 
     return response
 end
-
+-- 只更新市政厅每日任务
+local function get_daily_quests_response_msg(response)
+    LuaUtils:outputTable("response", response)
+    if response.msg.playerData then
+        DataManager:getUserData().dailyQuests = response.msg.playerData[1][2]
+        User:OnDailyQuestsChanged(DataManager:getUserData())
+    end
+    return response
+end
 local function get_alliance_response_msg(response)
     if response.msg.allianceData then
         local user_alliance_data = DataManager:getUserAllianceData()
@@ -771,7 +779,7 @@ end
 -- 获取每日任务列表
 function NetManager:getDailyQuestsPromise()
     return get_blocking_request_promise("logic.playerHandler.getDailyQuests", {},
-        "获取每日任务列表失败!"):done(get_response_msg)
+        "获取每日任务列表失败!"):done(get_daily_quests_response_msg)
 end
 -- 为每日任务中某个任务增加星级
 function NetManager:getAddDailyQuestStarPromise(questId)
