@@ -467,6 +467,7 @@ function GameUIActivityNew:OnAwardButtonClicked(idx)
 	if data then
 		NetManager:getIapGiftPromise(data:Id()):done(function()
 			GameGlobalUI:showTips(_("提示"),Localize_item.item_name[data:Name()] .. " x" .. data:Count())
+			app:GetAudioManager():PlayeEffectSoundWithKey("BUY_ITEM")
 		end)
 	end
 end
