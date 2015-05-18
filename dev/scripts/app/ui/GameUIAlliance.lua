@@ -944,7 +944,11 @@ function GameUIAlliance:MembersListonTouch(event)
         local list_data = self.list_dataSource[item.idx_]
         local data = list_data.data
         if list_data.data_type == 2 and list_data.data ~= '__empty' and User:Id() ~= data.id then
-            UIKit:newGameUI("GameUIAllianceMemberInfo",true,data.id):AddToCurrentScene(true)
+            UIKit:newGameUI("GameUIAllianceMemberInfo",true,data.id,function()
+        if self.tab_buttons:GetSelectedButtonTag() == 'members' then
+            self:RefreshMemberList()
+        end
+    end):AddToCurrentScene(true)
         elseif list_data.data_type == 1 then
             self:OnAllianceTitleClicked(data)
         end
