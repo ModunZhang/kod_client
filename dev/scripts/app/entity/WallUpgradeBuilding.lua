@@ -1,25 +1,31 @@
 local Orient = import("..entity.Orient")
-local UpgradeBuilding = import(".UpgradeBuilding")
-local WallUpgradeBuilding = class("WallUpgradeBuilding", UpgradeBuilding)
+local Building = import(".Building")
+local WallUpgradeBuilding = class("WallUpgradeBuilding", Building)
 local config_wall = GameDatas.BuildingFunction.wall
 local abs = math.abs
 local max = math.max
 function WallUpgradeBuilding:ctor(wall_info)
-    WallUpgradeBuilding.super.ctor(self, wall_info)
+    WallUpgradeBuilding.super.ctor(self,wall_info)
     self.len = wall_info.len
     self.w, self.h = self:GetSize()
     self.location_id = wall_info.location_id
-    self.building_location_id = 22
+    self.real_entity = self:BelongCity():GetGate()
 end
-function WallUpgradeBuilding:UniqueKey()
-    return self:GetType()
+function WallUpgradeBuilding:GetRealEntity()
+    return self.real_entity
 end
-function WallUpgradeBuilding:CopyValueFrom(building)
-    WallUpgradeBuilding.super.CopyValueFrom(self, building)
-    self.len = building.len
-    self.w, self.h = building:GetSize()
-    self.is_gate = building.is_gate
+function WallUpgradeBuilding:AddUpgradeListener(listener)
+    if self:IsGate() then
+        self.real_entity:AddUpgradeListener(listener)
+    end
 end
+function WallUpgradeBuilding:RemoveUpgradeListener(listener)
+    if self:IsGate() then
+        self.real_entity:RemoveUpgradeListener(listener)
+    end
+end
+
+----
 function WallUpgradeBuilding:GetSize()
     if self.orient == Orient.X then
         return 1, self.len
@@ -135,27 +141,6 @@ function WallUpgradeBuilding:IntersectWithOtherWall(other_wall)
         return {x = wall1.x, y = wall2.y, orient = Orient.NONE, sub_orient = Orient.LEFT}
     end
     assert(false)
-end
-function WallUpgradeBuilding:OnUserDataChanged(...)
-    local userData, current_time, location_info, sub_location_id, deltaData, event = ...
-    local is_fully_update = not deltaData or deltaData.buildingEvents
-    local is_delta_update = not is_fully_update and deltaData and deltaData.buildings
-    if is_delta_update then
-        if not deltaData.buildings["location_21"] then
-            return
-        end
-    end
-    self:OnEvent(event)
-    local level, finished_time = location_info.level, event == nil and 0 or event.finishTime / 1000
-    if level and finished_time then
-        self:OnHandle(level, finished_time)
-    end
-end
-function WallUpgradeBuilding:GetWallConfig()
-    return config_wall[self:GetLevel()]
-end
-function WallUpgradeBuilding:GetWallNextLevelConfig()
-    return config_wall[self:GetNextLevel()]
 end
 
 

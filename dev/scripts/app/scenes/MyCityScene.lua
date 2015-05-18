@@ -360,7 +360,11 @@ function MyCityScene:OpenUI(building, default_tab)
         return
     end
     local entity = building:GetEntity()
-    entity = "tower" == entity:GetType() and entity:BelongCity():GetTower() or entity
+    if entity:GetType() == "wall" then
+        entity = city:GetGate()
+    elseif entity:GetType() == "tower" then
+        entity = city:GetTower()
+    end
     local type_ = entity:GetType()
     local uiarrays = ui_map[type_]
     if type_ == "ruins" and not self:IsEditMode() then

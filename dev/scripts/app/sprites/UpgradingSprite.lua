@@ -8,8 +8,6 @@ function UpgradingSprite:GetWorldPosition()
     return self:convertToWorldSpace(cc.p(self:GetSpriteOffset())),
         self:convertToWorldSpace(cc.p(self:GetSpriteTopPosition()))
 end
-function UpgradingSprite:OnOrientChanged()
-end
 function UpgradingSprite:OnLogicPositionChanged(x, y)
     self:SetPositionWithZOrder(self:GetLogicMap():ConvertToMapPosition(x, y))
 end
@@ -79,8 +77,7 @@ function UpgradingSprite:CheckCondition()
     --     listener:OnCheckUpgradingCondition(self)
     -- end)
     if not self.level_bg then return end
-    local city = self:GetEntity():BelongCity()
-    building = self:GetEntity():GetType() == "tower" and city:GetTower() or self:GetEntity()
+    local building = self:GetEntity():GetRealEntity()
     local level = building:GetLevel()
     local canUpgrade = building:CanUpgrade()
     self.level_bg:setVisible(level > 0)
@@ -164,14 +161,14 @@ function UpgradingSprite:GetAniArray()
 end
 function UpgradingSprite:GetCurrentConfig()
     if self.config then
-        return self.config:GetConfigByLevel(self.entity:GetLevel())
+        return self.config:GetConfigByLevel(self:GetEntity():GetRealEntity():GetLevel())
     else
         return nil
     end
 end
 function UpgradingSprite:GetBeforeConfig()
     if self.config then
-        return self.config:GetConfigByLevel(self.entity:GetBeforeLevel())
+        return self.config:GetConfigByLevel(self:GetEntity():GetRealEntity():GetBeforeLevel())
     else
         return nil
     end

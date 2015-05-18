@@ -35,6 +35,9 @@ function UpgradeBuilding:ctor(building_info)
     self.upgrade_building_observer = Observer.new()
     self.unique_upgrading_key = nil
 end
+function UpgradeBuilding:GetRealEntity()
+    return self
+end
 function UpgradeBuilding:IsAbleToFreeSpeedUpByTime(time)
     return self:GetFreeSpeedupTime() >= self:GetUpgradingLeftTimeByCurrentTime(time)
 end
@@ -51,10 +54,10 @@ function UpgradeBuilding:ResetAllListeners()
     UpgradeBuilding.super.ResetAllListeners(self)
     self:GetUpgradeObserver():RemoveAllObserver()
 end
-function UpgradeBuilding:CopyListenerFrom(building)
-    UpgradeBuilding.super.CopyListenerFrom(self, building)
-    self.upgrade_building_observer:CopyListenerFrom(building:GetUpgradeObserver())
-end
+-- function UpgradeBuilding:CopyListenerFrom(building)
+--     UpgradeBuilding.super.CopyListenerFrom(self, building)
+--     self.upgrade_building_observer:CopyListenerFrom(building:GetUpgradeObserver())
+-- end
 function UpgradeBuilding:AddUpgradeListener(listener)
     assert(listener.OnBuildingUpgradingBegin)
     assert(listener.OnBuildingUpgradeFinished)
@@ -177,19 +180,10 @@ function UpgradeBuilding:SpeedUpBuilding()
         end)
     end
 end
-function UpgradeBuilding:OnUserDataChanged(userData, current_time, location_info, sub_location_id, deltaData, event)
-    local is_fully_update = not deltaData or (deltaData.houseEvents or deltaData.buildingEvents)
-    local is_delta_update = not is_fully_update and deltaData and deltaData.buildings
-    local location_id = location_info.location
-    if is_delta_update then
-        local builidng_key = format("location_%d", location_id)
-        if not deltaData.buildings[builidng_key] then
-            return
-        end
-    end
+function UpgradeBuilding:OnUserDataChanged(userData, current_time, location_info, house_location_info, deltaData, event)
     local level, finished_time, type_
     if self:IsHouse() then
-        level, finished_time = self:GetHouseInfoByEventAndLocation(userData, event, location_info, sub_location_id)
+        level, finished_time = house_location_info.level, (event == nil and 0 or event.finishTime / 1000)
     else
         level, type_, finished_time = location_info.level, location_info.type, (event == nil and 0 or event.finishTime / 1000)
         if type_ ~= self:GetType() then
@@ -389,13 +383,7 @@ function UpgradeBuilding:GetPreConditionBuilding()
     end
     local configParams = string.split(config.preCondition,"_")
     local preName = configParams[2]
-    local highest_level_building
-    if preName ~= "tower" then
-        highest_level_building = city:GetHighestBuildingByType(preName)
-    else
-        highest_level_building = city:GetNearGateTower()
-    end
-    return highest_level_building or city:GetRuinsNotBeenOccupied()[1] or preName
+    return city:PreconditionByBuildingType(preName) or city:GetRuinsNotBeenOccupied()[1] or preName
 end
 function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
     local city = self:BelongCity()
