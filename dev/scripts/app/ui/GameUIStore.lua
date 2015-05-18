@@ -41,7 +41,7 @@ function GameUIStore:GetStoreData()
 		local rewards,rewards_price = self:FormatGemRewards(v.rewards,v.allianceRewards)
 		temp_data['rewards'] = rewards
 		temp_data['rewards_price'] = rewards_price
-		temp_data['config'] = UILib.iap_package_image[v.productId]
+		temp_data['config'] = UILib.iap_package_image[v.name]
 		table.insert(data,temp_data)
 	end
 	return data

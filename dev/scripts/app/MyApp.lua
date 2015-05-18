@@ -398,7 +398,7 @@ function MyApp:transactionObserver(event)
             device.hideActivityIndicator()
             local msg = response.msg
             if msg.transactionId then
-                GameGlobalUI:showTips(_("提示"),string.format("您已获得%s,到物品里面查看",UIKit:getIapPackageName(transaction.productIdentifier)))
+                UIKit:showMessageDialog(_("恭喜"), string.format("您已获得%s,到物品里面查看",UIKit:getIapPackageName(transaction.productIdentifier)))
                 Store.finishTransaction(transaction)
                 ext.market_sdk.onPlayerChargeSuccess(transaction.transactionIdentifier)
             end

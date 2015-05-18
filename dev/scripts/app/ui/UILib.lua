@@ -870,7 +870,7 @@ local IAP_PACKAGE_IMAGE = {
         more = {normal = "store_more_black_button_n_584x34.png",pressed = "store_more_black_button_l_584x34.png"},
         small_content = "store_item_content_black_s_588x186.png",
     },
-    product__3 = {
+    product_3 = {
         content = "store_item_black_610x514.png",
         logo = "gem_logo_592x139_3.png",
         desc = "store_desc_red_282x92.png",

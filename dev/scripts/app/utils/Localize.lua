@@ -834,13 +834,13 @@ local ALLIANCE_BUILDINGS = {
     palace = _("联盟宫殿")
 }
 
-local IAP_PACKAGE_NAME = {
-    product_1 = _("新手大礼包"),
-    product_2 = _("探险家礼包"),
-    product__3 = _("铁血军团礼包"),
-    product_4 = _("帝国荣耀礼包"),
-    product_5 = _("龙族王朝礼包"),
-}
+local IAP_PACKAGE_NAME = {}
+IAP_PACKAGE_NAME["com.dragonfall.2500dragoncoins"] = _("新手大礼包")
+IAP_PACKAGE_NAME["com.dragonfall.5500dragoncoins"] = _("探险家礼包")
+IAP_PACKAGE_NAME["com.dragonfall.12000dragoncoins"] = _("铁血军团礼包")
+IAP_PACKAGE_NAME["com.dragonfall.35000dragoncoins"] = _("帝国荣耀礼包")
+IAP_PACKAGE_NAME["com.dragonfall.80000dragoncoins"] = _("龙族王朝礼包")
+
 
 local DAILY_QUESTS_NAME = {
     [0] = _("修复起重机"),
