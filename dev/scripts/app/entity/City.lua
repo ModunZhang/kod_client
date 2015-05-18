@@ -1103,12 +1103,7 @@ function City:OnUserDataChanged(userData, current_time, deltaData)
     end
 
     local need_update_buildings = {}
-    for k,v in pairs(self.building_location_map) do
-        if v:IsNeedToUpdate() then
-            insert(need_update_buildings, building)
-        end
-    end
-    self:IteratorDecoratorBuildingsByFunc(function(key, building)
+    self:IteratorCanUpgradeBuildings(function(building)
         if building:IsNeedToUpdate() then
             insert(need_update_buildings, building)
         end
@@ -1726,6 +1721,7 @@ function City:FindProductionTechEventById(_id)
 end
 
 return City
+
 
 
 
