@@ -551,11 +551,14 @@ function GameUIChatChannel:CreatePlayerMenu(event,chat)
                 end
             end
         elseif msg == 'out' then
-            if listView:getItemWithLogicIndex(#self:GetDataSource() - 7) then
-                listView:scrollAuto()
-            else
-                if distance > 0 then
-                    listView:scrollBy(0,-distance)
+            local tag = data.tag
+            if tag ~= 'blockChat' then
+                if listView:getItemWithLogicIndex(#self:GetDataSource() - 7) then
+                    listView:scrollAuto()
+                else
+                    if distance > 0 then
+                        listView:scrollBy(0,-distance)
+                    end
                 end
             end
             self.isModeVoew = false

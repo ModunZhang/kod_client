@@ -6,12 +6,13 @@
 local PlatformAdapter = {}
 
 function PlatformAdapter:android()
+    device.getOpenUDID = ext.getOpenUDID
     --openudid
-    if ext.getOpenUDID then
-        device.getOpenUDID = function ()
-            return ext.getOpenUDID()
-        end
-    end
+    -- if ext.getOpenUDID then
+    --     device.getOpenUDID = function ()
+    --         return ext.getOpenUDID()
+    --     end
+    -- end
 end
 
 --[[
@@ -29,6 +30,7 @@ end
 ]]--
 
 function PlatformAdapter:ios()
+    device.getOpenUDID = ext.getOpenUDID
     if CONFIG_LOG_DEBUG_FILE then
         local print__ = print
          print = function ( ... )
@@ -48,7 +50,6 @@ end
 
 
 function PlatformAdapter:mac()
-    ext.getOpenUDID = device.getOpenUDID
     ccui.UITextView = {}
     setmetatable(ccui.UITextView,{
         __index= function( ... )

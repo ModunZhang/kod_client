@@ -73,6 +73,9 @@ static NSString *logFilePath = NULL;
 static dispatch_queue_t aDQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
 extern "C" void WriteLog_(const char *str)
 {
+#ifndef DEBUG
+    NSAssert(false, @"WriteLog_这个方法绝对不能在发布环境里调用");
+#else
     if (logFilePath == NULL)
     {
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
@@ -89,6 +92,7 @@ extern "C" void WriteLog_(const char *str)
         [outFile writeData:data];
         //outFile close
     });
+#endif
 }
 
 extern "C" const char* GetAppVersion()
@@ -153,5 +157,16 @@ extern "C" void registereForRemoteNotifications()
     {
         [[UIApplication sharedApplication]registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
     }
+
+}
+
+extern "C" void ClearOpenUdidData()
+{
+#ifndef DEBUG
+    NSAssert(false, @"ClearOpenUdidData这个方法绝对不能在发布环境里调用");
+#else
+    UICKeyChainStore *store = [UICKeyChainStore keyChainStoreWithService:kKeychainBatcatStudioKeyChainService];
+    [store removeItemForKey:kKeychainBatcatStudioIdentifier];
+#endif
 
 }

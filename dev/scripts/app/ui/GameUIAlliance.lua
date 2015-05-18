@@ -25,6 +25,7 @@ local GameUIWriteMail = import('.GameUIWriteMail')
 local UILib = import(".UILib")
 local UICheckBoxButton = import(".UICheckBoxButton")
 local UICanCanelCheckBoxButtonGroup = import('.UICanCanelCheckBoxButtonGroup')
+local GameUtils = GameUtils
 GameUIAlliance.COMMON_LIST_ITEM_TYPE = Enum("JOIN","INVATE","APPLY")
 
 --
@@ -635,9 +636,11 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
         :addTo(overviewNode):align(display.CENTER_BOTTOM, window.width/2,10)
 
     local eventListView = UIListView.new {
-        viewRect = cc.rect(0, 12, 540,340),
+        viewRect = cc.rect(10, 12, 520,340),
         direction = UIScrollView.DIRECTION_VERTICAL,
+        async = true,
     }:addTo(events_bg)
+    eventListView:setDelegate(handler(self, self.EventListViewsourceDelegate))
     self.eventListView = eventListView
     self:RefreshEventListView()
 
@@ -782,34 +785,53 @@ function GameUIAlliance:RefreshNoticeView()
     self.ui_overview.noticeView:reload()
 end
 
-function GameUIAlliance:GetEventItemByIndexAndEvent(index,event)
-    local item = self.eventListView:newItem()
-    local bg = display.newSprite(string.format("alliance_events_bg_520x84_%d.png",index%2))
-    local title_bg_image = self:GetEventTitleImageByEvent(event)
-    local title_bg = display.newSprite(title_bg_image):addTo(bg):align(display.LEFT_TOP, 0,70)
-    UIKit:ttfLabel({
-        text = event.key or "",
+function GameUIAlliance:GetEventItemByIndexAndEvent()
+    local content = display.newNode():size(520,84)
+    local bg0 = display.newSprite("alliance_events_bg_520x84_0.png"):addTo(content):align(display.LEFT_BOTTOM, 0, 0)
+    local bg1 = display.newSprite("alliance_events_bg_520x84_1.png"):addTo(content):align(display.LEFT_BOTTOM, 0, 0)
+    local normal = display.newSprite("alliance_event_type_darkblue_222x30.png"):addTo(content):align(display.LEFT_TOP, 0,70)
+    local important = display.newSprite("alliance_event_type_green_222x30.png"):addTo(content):align(display.LEFT_TOP, 0,70)
+    local war = display.newSprite("alliance_event_type_red_222x30.png"):addTo(content):align(display.LEFT_TOP, 0,70)
+    local title_label = UIKit:ttfLabel({
+        text = "title",
         size = 20,
         color = 0xffedae
-    }):addTo(title_bg):align(display.LEFT_BOTTOM,10,5)
-
-    UIKit:ttfLabel({
-        text = GameUtils:formatTimeStyle2(event.time/1000),
+    }):addTo(content):align(display.LEFT_CENTER,10,55)
+    local time_label = UIKit:ttfLabel({
+        text = "time",
         size = 18,
         color = 0x615b44
-    }):addTo(bg):align(display.LEFT_BOTTOM,10, 5)
-    local contentLabel = UIKit:ttfLabel({
-        text = self:GetEventContent(event),
+    }):addTo(content):align(display.LEFT_BOTTOM,10, 5)
+    local content_label = UIKit:ttfLabel({
+        text = "content",
         size = 20,
         color = 0x403c2f,
         dimensions = cc.size(300, 60)
     }):align(display.LEFT_CENTER,0,0)
-    contentLabel:pos(title_bg:getPositionX()+title_bg:getContentSize().width + 10,42)
-    contentLabel:addTo(bg)
-    --end
-    item:addContent(bg)
-    item:setItemSize(520,84)
-    return item
+    content_label:pos(normal:getPositionX()+normal:getContentSize().width + 10,42):addTo(content)
+    content.bg0 = bg0
+    content.bg1 = bg1
+    content.normal = normal
+    content.important = important
+    content.war = war
+    content.title_label = title_label
+    content.time_label = time_label
+    content.content_label = content_label
+    return content
+end
+
+function GameUIAlliance:RefreshEventsListItem(content,data,idx)
+    content[string.format("bg%d",idx % 2)]:hide()
+    for __,v in ipairs({"normal","important","war"}) do
+        if v == data.category then
+            content[v]:show()
+        else
+            content[v]:hide()
+        end
+    end
+    content.title_label:setString(data.key or "")
+    content.time_label:setString(GameUtils:formatTimeStyle2(data.time/1000))
+    content.content_label:setString( self:GetEventContent(data))
 end
 
 function GameUIAlliance:GetEventContent(event)
@@ -822,18 +844,6 @@ function GameUIAlliance:GetEventContent(event)
         table.insert(params, v)
     end
     return string.format(Localize.alliance_events[event_type],unpack(params))
-end
-
-
-function GameUIAlliance:GetEventTitleImageByEvent(event)
-    local category = event.category
-    if category == 'normal' then
-        return "alliance_event_type_darkblue_222x30.png"
-    elseif category == 'important' then
-        return "alliance_event_type_green_222x30.png"
-    elseif category == 'war' then
-        return "alliance_event_type_red_222x30.png"
-    end
 end
 
 function GameUIAlliance:RefreshFlag()
@@ -864,14 +874,32 @@ function GameUIAlliance:RefreshOverViewUI()
 end
 
 function GameUIAlliance:RefreshEventListView()
-    local events = Alliance_Manager:GetMyAlliance():Events()
-    self.eventListView:removeAllItems()
-    for i = #events, 1, -1 do
-        self.eventListView:addItem(self:GetEventItemByIndexAndEvent(i,events[i]))
-    end
+    self.event_list_data_source = Alliance_Manager:GetMyAlliance():Events()
     self.eventListView:reload()
 end
 
+function GameUIAlliance:EventListViewsourceDelegate(listView, tag, idx)
+    if cc.ui.UIListView.COUNT_TAG == tag then
+        return #self.event_list_data_source
+    elseif cc.ui.UIListView.CELL_TAG == tag then
+        local item
+        local content
+        local data = self.event_list_data_source[idx]
+        item = self.eventListView:dequeueItem()
+        if not item then
+            item = self.eventListView:newItem()
+            content = self:GetEventItemByIndexAndEvent()
+            item:addContent(content)
+        else
+            content = item:getContent()
+        end
+        self:RefreshEventsListItem(content,data,idx)
+        content:size(520,84)
+        item:setItemSize(520,84)
+        return item
+    else
+    end
+end
 function GameUIAlliance:OnAllianceSettingButtonClicked(event)
     local my_alliance = Alliance_Manager:GetMyAlliance()
     local my_alliance_status = my_alliance:Status()
@@ -916,7 +944,11 @@ function GameUIAlliance:MembersListonTouch(event)
         local list_data = self.list_dataSource[item.idx_]
         local data = list_data.data
         if list_data.data_type == 2 and list_data.data ~= '__empty' and User:Id() ~= data.id then
-            UIKit:newGameUI("GameUIAllianceMemberInfo",true,data.id):AddToCurrentScene(true)
+            UIKit:newGameUI("GameUIAllianceMemberInfo",true,data.id,function()
+        if self.tab_buttons:GetSelectedButtonTag() == 'members' then
+            self:RefreshMemberList()
+        end
+    end):AddToCurrentScene(true)
         elseif list_data.data_type == 1 then
             self:OnAllianceTitleClicked(data)
         end

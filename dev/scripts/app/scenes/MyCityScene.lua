@@ -147,6 +147,7 @@ function MyCityScene:GetHomePage()
     return self.home_page
 end
 function MyCityScene:onEnterTransitionFinish()
+    MyCityScene.super.onEnterTransitionFinish(self)
     if GLOBAL_FTE then
         self:RunFte()
     else

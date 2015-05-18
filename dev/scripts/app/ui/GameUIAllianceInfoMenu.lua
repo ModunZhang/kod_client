@@ -137,8 +137,8 @@ function GameUIAllianceInfoMenu:CallEventCallback(event,data)
 end
 
 function GameUIAllianceInfoMenu:OnMoveOutStage()
-    self:CallEventCallback('out',self.body)
     local tag = self.tag_call or ""
+    self:CallEventCallback('out',{layer = self.body,tag = tag})
     if self.callback then self.callback("buttonCallback",tag) end
     GameUIAllianceInfoMenu.super.OnMoveOutStage(self)
 end

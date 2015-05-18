@@ -34,6 +34,12 @@ function FteScene:onEnter()
 end
 function FteScene:onEnterTransitionFinish()
     self.npc:StartDialog()
+    printLog("Info", "Check MessageDialog :%s",self.__cname)
+    local message = UIKit:getMessageDialogWillShow()
+    if message then
+        message:AddToScene(self,true)
+        UIKit:clearMessageDialogWillShow()
+    end
 end
 function FteScene:onExit()
 

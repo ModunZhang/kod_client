@@ -551,7 +551,8 @@ function UIKit:createLineItem(params)
     end
     return line
 end
-
+-- MessageDialog
+------------------------------------------------------------------------------------------------------------------------------------------------ 
 function UIKit:showMessageDialogCanCanleNotAutoClose(title,tips,ok_callback,cancel_callback)
     title = title or _("提示")
     local dialog = UIKit:newGameUI("FullScreenPopDialogUI",x_button_callback)
@@ -573,20 +574,20 @@ function UIKit:showMessageDialogCanCanleNotAutoClose(title,tips,ok_callback,canc
         btn_name = _("取消")
     })
     dialog:DisableAutoClose()
-    dialog:AddToCurrentScene()
+    self:__addMessageDialogToCurrentScene(dialog)
     return dialog
 end
 
 function UIKit:addMessageDialog(instance)
     print(instance:GetUserData(),"addMessageDialog---->")
-    dump(self.messageDialogs,"self.messageDialogs----->")
     self.messageDialogs[instance:GetUserData()] = instance
+    dump(self.messageDialogs,"self.messageDialogs----->")
 end
 
 function UIKit:removeMesssageDialog(instance)
     print(instance:GetUserData(),"removeMesssageDialog---->")
-    dump(self.messageDialogs,"self.messageDialogs----->")
     self.messageDialogs[instance:GetUserData()] = nil
+    dump(self.messageDialogs,"self.messageDialogs----->")
 end
 
 function UIKit:isKeyMessageDialogShow()
@@ -634,7 +635,7 @@ function UIKit:showMessageDialog(title,tips,ok_callback,cancel_callback,visible_
     if not visible_x_button then
         dialog:DisableAutoClose()
     end
-    dialog:AddToCurrentScene()
+    self:__addMessageDialogToCurrentScene(dialog)
     dialog:zorder(3001)
     return dialog
 end
@@ -649,10 +650,40 @@ function UIKit:showEvaluateDialog()
         :CreateCancelButton({
             listener = function ()
             end,btn_name = _("残忍的拒绝")
-        })dialog:AddToCurrentScene()
+        })
+        self:__addMessageDialogToCurrentScene(dialog)
     return dialog
 end
 
+function UIKit:__addMessageDialogToCurrentScene(dialog)
+    local current_scene = display.getRunningScene()
+    if current_scene then
+        if tolua.type(current_scene) ~= 'cc.Scene' then
+            self:addMessageDialogWillShow(dialog)
+        else
+            dialog:AddToScene(current_scene, true)
+        end
+    end
+end
+
+function UIKit:getMessageDialogWillShow()
+    printLog("info", "getMessageDialogWillShow--->%s",self.willShowMessage_ or "nil")
+    return self.willShowMessage_ 
+end
+function UIKit:clearMessageDialogWillShow()
+    self.willShowMessage_ = nil
+end
+--如果是__key__dialog强制替换
+function UIKit:addMessageDialogWillShow(messageDialog)
+    if self.willShowMessage_ then
+        if messageDialog:GetUserData() == '__key__dialog' then
+            self.willShowMessage_ = messageDialog
+        end
+    else
+        self.willShowMessage_ = messageDialog
+    end
+end
+------------------------------------------------------------------------------------------------------------
 function UIKit:WaitForNet(delay)
     local scene = display.getRunningScene()
     if scene.WaitForNet then
@@ -679,7 +710,6 @@ function UIKit:GotoPreconditionBuilding(jump_building)
     local city = jump_building:BelongCity()
     if tolua.type(jump_building) == "string" then
         UIKit:showMessageDialog(_("提示"),string.format(_("请首先建造%s"),Localize.building_name[jump_building]),function()end)
-            :AddToCurrentScene()
         return
     end
     local current_scene = display.getRunningScene()
