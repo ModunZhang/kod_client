@@ -32,6 +32,7 @@ function WidgetRequirementListview:ctor(parms)
     -- 缓存已经添加的升级条件项,供刷新时使用
     self.added_items = {}
     self.top_index = 0
+    self.top_index_1 = 0
     self:RefreshListView(self.contents)
 end
 
@@ -175,9 +176,13 @@ function WidgetRequirementListview:RefreshListView(contents)
                 resource_type_icon:setScale(40/math.max(size.width,size.height))
                 item:addContent(content)
                 local index
-                if  v.canNotBuy and not v.isSatisfy then
-                    self.top_index = self.top_index + 1
-                    index = self.top_index
+                if  v.canNotBuy then
+                    if not v.isSatisfy then
+                        self.top_index = self.top_index + 1
+                        index = self.top_index
+                    else
+                        index = self.top_index + 1
+                    end
                 end
                 self.listview:addItem(item,index)
                 self.added_items[v.resource_type] = item
@@ -195,6 +200,7 @@ function WidgetRequirementListview:RefreshListView(contents)
 end
 
 return WidgetRequirementListview
+
 
 
 
