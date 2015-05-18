@@ -803,12 +803,12 @@ function City:IteratorCanUpgradeBuildingsByUserData(user_data, current_time, del
     local is_delta_update = not is_fully_update and (deltaData.buildings or deltaData.buildingEvents or deltaData.houseEvents)
     
     local building_events_map = {}
-    for _,v in ipairs(user_data.buildingEvents) do
+    for _,v in ipairs(user_data.buildingEvents or {}) do
         building_events_map[v.location] = v
     end
 
     local house_events_map = {}
-    for _,v in ipairs(user_data.houseEvents) do
+    for _,v in ipairs(user_data.houseEvents or {}) do
         house_events_map[v.buildingLocation * 100 + v.houseLocation] = v
     end
 

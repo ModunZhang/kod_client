@@ -897,7 +897,7 @@ function GameUIVip:PromiseOfFte()
     :TurnDown():align(display.BOTTOM_CENTER, r.x + r.width/2, r.y + r.height + 10)
 
     return WidgetUseItems:PromiseOfOpen("vipActive"):next(function(ui)
-        self:DestroyFteLayer()
+        self:GetFteLayer:removeAllChildren()
         return ui:PromiseOfFte()
     end):next(function()
         return self:PromsieOfExit("GameUIVip")

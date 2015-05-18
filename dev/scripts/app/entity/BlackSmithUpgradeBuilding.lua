@@ -157,6 +157,9 @@ function BlackSmithUpgradeBuilding:OnFunctionDataChange(userData, deltaData, cur
     if not is_fully_update and not is_delta_update then
         return false
     end
+
+    if not userData.dragonEquipmentEvents then return end
+
     print("BlackSmithUpgradeBuilding:OnFunctionDataChange")
 
     if is_delta_update then
