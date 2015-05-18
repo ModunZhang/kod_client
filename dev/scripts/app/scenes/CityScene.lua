@@ -147,7 +147,9 @@ function CityScene:CollectBuildings(building_sprite)
     return r
 end
 
-
+function CityScene:onEnterTransitionFinish()
+    CityScene.super.onEnterTransitionFinish(self)
+end
 
 return CityScene
 

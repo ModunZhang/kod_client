@@ -551,7 +551,8 @@ function UIKit:createLineItem(params)
     end
     return line
 end
-
+-- MessageDialog
+------------------------------------------------------------------------------------------------------------------------------------------------ 
 function UIKit:showMessageDialogCanCanleNotAutoClose(title,tips,ok_callback,cancel_callback)
     title = title or _("提示")
     local dialog = UIKit:newGameUI("FullScreenPopDialogUI",x_button_callback)
@@ -573,20 +574,20 @@ function UIKit:showMessageDialogCanCanleNotAutoClose(title,tips,ok_callback,canc
         btn_name = _("取消")
     })
     dialog:DisableAutoClose()
-    dialog:AddToCurrentScene()
+    self:__addMessageDialogToCurrentScene(dialog)
     return dialog
 end
 
 function UIKit:addMessageDialog(instance)
     print(instance:GetUserData(),"addMessageDialog---->")
-    dump(self.messageDialogs,"self.messageDialogs----->")
     self.messageDialogs[instance:GetUserData()] = instance
+    dump(self.messageDialogs,"self.messageDialogs----->")
 end
 
 function UIKit:removeMesssageDialog(instance)
     print(instance:GetUserData(),"removeMesssageDialog---->")
-    dump(self.messageDialogs,"self.messageDialogs----->")
     self.messageDialogs[instance:GetUserData()] = nil
+    dump(self.messageDialogs,"self.messageDialogs----->")
 end
 
 function UIKit:isKeyMessageDialogShow()
@@ -634,7 +635,7 @@ function UIKit:showMessageDialog(title,tips,ok_callback,cancel_callback,visible_
     if not visible_x_button then
         dialog:DisableAutoClose()
     end
-    dialog:AddToCurrentScene()
+    self:__addMessageDialogToCurrentScene(dialog)
     dialog:zorder(3001)
     return dialog
 end
@@ -649,10 +650,40 @@ function UIKit:showEvaluateDialog()
         :CreateCancelButton({
             listener = function ()
             end,btn_name = _("残忍的拒绝")
-        })dialog:AddToCurrentScene()
+        })
+        self:__addMessageDialogToCurrentScene(dialog)
     return dialog
 end
 
+function UIKit:__addMessageDialogToCurrentScene(dialog)
+    local current_scene = display.getRunningScene()
+    if current_scene then
+        if tolua.type(current_scene) ~= 'cc.Scene' then
+            self:addMessageDialogWillShow(dialog)
+        else
+            dialog:AddToScene(current_scene, true)
+        end
+    end
+end
+
+function UIKit:getMessageDialogWillShow()
+    printLog("info", "getMessageDialogWillShow--->%s",self.willShowMessage_ or "nil")
+    return self.willShowMessage_ 
+end
+function UIKit:clearMessageDialogWillShow()
+    self.willShowMessage_ = nil
+end
+--如果是__key__dialog强制替换
+function UIKit:addMessageDialogWillShow(messageDialog)
+    if self.willShowMessage_ then
+        if messageDialog:GetUserData() == '__key__dialog' then
+            self.willShowMessage_ = messageDialog
+        end
+    else
+        self.willShowMessage_ = messageDialog
+    end
+end
+------------------------------------------------------------------------------------------------------------
 function UIKit:WaitForNet(delay)
     local scene = display.getRunningScene()
     if scene.WaitForNet then
@@ -679,7 +710,6 @@ function UIKit:GotoPreconditionBuilding(jump_building)
     local city = jump_building:BelongCity()
     if tolua.type(jump_building) == "string" then
         UIKit:showMessageDialog(_("提示"),string.format(_("请首先建造%s"),Localize.building_name[jump_building]),function()end)
-            :AddToCurrentScene()
         return
     end
     local current_scene = display.getRunningScene()
@@ -746,35 +776,43 @@ end
 function UIKit:addTipsToNode( node,tips , include_node)
     node:setTouchEnabled(true)
     node:setTouchSwallowEnabled(false)
+    local tips_bg
+    if not include_node:getChildByTag(9090) then
+        tips_bg = display.newScale9Sprite("back_ground_240x73.png",0,0,cc.size(240,73),cc.rect(10,10,220,53))
+            :addTo(include_node):align(display.BOTTOM_CENTER)
+        tips_bg:setTag(9090)
+        local text_1 = UIKit:ttfLabel({text = tips,size = 20 ,color = 0xfff2b3})
+            :addTo(tips_bg)
+        tips_bg:size(text_1:getContentSize().width+20,text_1:getContentSize().height+40)
+        local t_size = tips_bg:getContentSize()
+        text_1:align(display.CENTER, t_size.width/2, t_size.height/2)
+        tips_bg:zorder(999999)
+        tips_bg:hide()
+        function tips_bg:SetTips( tips )
+            text_1:setString(tips)
+        end
+    else
+        tips_bg = include_node:getChildByTag(9090)
+    end
     node:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
         if event.name == "began" then
             local world_postion = node:getParent():convertToWorldSpace(cc.p(node:getPosition()))
-            local tips_bg = display.newScale9Sprite("back_ground_240x73.png",0,0,cc.size(240,73),cc.rect(10,10,220,53))
-                :addTo(include_node):align(display.BOTTOM_CENTER)
-            tips_bg:setTag(100)
-            local text_1 = UIKit:ttfLabel({text = tips,size = 20 ,color = 0xfff2b3})
-                :addTo(tips_bg)
-            tips_bg:size(text_1:getContentSize().width+20,text_1:getContentSize().height+40)
-            local t_size = tips_bg:getContentSize()
-            text_1:align(display.CENTER, t_size.width/2, t_size.height/2)
-            tips_bg:zorder(999999)
             local node_postioon = include_node:convertToNodeSpace(world_postion)
             tips_bg:setPosition(node_postioon.x, node_postioon.y + node:getContentSize().height/2)
+            tips_bg:SetTips(tips)
+            tips_bg:show()
         elseif event.name == "ended" then
-            if include_node:getChildByTag(100) then
-                include_node:removeChildByTag(100, true)
-            end
+            tips_bg:hide()
         elseif event.name == "moved" then
             local rect = node:convertToNodeSpace(cc.p(event.x,event.y))
             local box = node:getContentSize()
             if box.width < rect.x or rect.x < 0 or box.height < rect.y or rect.y < 0 then
-                if include_node:getChildByTag(100) then
-                    include_node:removeChildByTag(100, true)
-                end
+                tips_bg:hide()
             end
         end
         return true
     end)
+    return tips_bg
 end
 
 function UIKit:GetItemImage(reward_type,item_key)
@@ -794,5 +832,9 @@ function UIKit:GetItemImage(reward_type,item_key)
         end
     end
 end
+
+
+
+
 
 

@@ -233,6 +233,15 @@ function MapScene:OnSceneScale()
     self.top_layer:pos(self.scene_layer:getPosition())
     self.top_layer:scale(self.scene_layer:getScale())
 end
+
+function MapScene:onEnterTransitionFinish()
+    printLog("Info", "Check MessageDialog :%s",self.__cname)
+    local message = UIKit:getMessageDialogWillShow()
+    if message then
+        message:AddToScene(self,true)
+        UIKit:clearMessageDialogWillShow()
+    end
+end
 return MapScene
 
 

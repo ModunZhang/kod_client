@@ -158,18 +158,20 @@ function MailManager:ModifyMail(mail)
         end
     end
     -- 如果收件箱没找到对应邮件,则在收藏夹找一下
-    for k,v in pairs(self.savedMails) do
-        if v.id == mail.id then
-            if mail.isSaved ~= v.isSaved then
-                self:OnNewSavedMailsChanged(mail)
+    if self.savedMails then
+        for k,v in pairs(self.savedMails) do
+            if v.id == mail.id then
+                if mail.isSaved ~= v.isSaved then
+                    self:OnNewSavedMailsChanged(mail)
+                end
+                if mail.isRead then
+                    self:OnNewSavedMailsChanged(mail,true)
+                end
+                for i,modify in pairs(mail) do
+                    v[i] = modify
+                end
+                return v
             end
-            if mail.isRead then
-                self:OnNewSavedMailsChanged(mail,true)
-            end
-            for i,modify in pairs(mail) do
-                v[i] = modify
-            end
-            return v
         end
     end
 end
@@ -645,6 +647,7 @@ function MailManager:FetchSavedReportsFromServer(fromIndex)
     end)
 end
 return MailManager
+
 
 
 

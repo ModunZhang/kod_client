@@ -254,6 +254,15 @@ function display.newScene(name)
     function scene:NoWaitForNet()
         self:removeChildByTag(WAI_TAG, true)
     end
+
+    function scene:onEnterTransitionFinish()
+        printLog("Info", "Check MessageDialog :%s",self.__cname)
+        local message = UIKit:getMessageDialogWillShow()
+        if message then
+            message:AddToScene(self,true)
+            UIKit:clearMessageDialogWillShow()
+        end
+    end
     return scene
 end
 

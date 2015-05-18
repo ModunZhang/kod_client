@@ -568,6 +568,12 @@ static int tolua_ext_getOpenUdid(lua_State* tolua_S)
     return 1;
 }
 
+static int tolua_ext_clearOpenUdid(lua_State* tolua_S)
+{
+    ClearOpenUdidData();
+    return 0;
+}
+
 static int tolua_ext_registereForRemoteNotifications(lua_State* tolua_S)
 {
     registereForRemoteNotifications();
@@ -757,8 +763,9 @@ static void ResgisterGlobalExtFunctions(lua_State* tolua_S)
     tolua_function(tolua_S, "getAppBuildVersion", tolua_ext_get_app_build_version);
     tolua_function(tolua_S, "__logFile", tolua_ext_log_file);
     tolua_function(tolua_S, "getDeviceToken", tolua_ext_get_device_token);
-    tolua_function(tolua_S,"getOpenUDID",tolua_ext_getOpenUdid);
-    tolua_function(tolua_S,"registereForRemoteNotifications",tolua_ext_registereForRemoteNotifications);
+    tolua_function(tolua_S, "getOpenUDID",tolua_ext_getOpenUdid);
+    tolua_function(tolua_S, "registereForRemoteNotifications",tolua_ext_registereForRemoteNotifications);
+    tolua_function(tolua_S, "clearOpenUdid",tolua_ext_clearOpenUdid);
     
 }
 

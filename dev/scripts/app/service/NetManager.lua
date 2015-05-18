@@ -16,7 +16,7 @@ local function get_response_msg(response)
     if response.msg.playerData then
         local user_data = DataManager:getUserData()
         local edit = decodeInUserDataFromDeltaData(user_data, response.msg.playerData)
-        LuaUtils:outputTable(edit)
+        LuaUtils:outputTable(edit,"edit")
         DataManager:setUserData(user_data, edit)
         return response
     end
@@ -367,6 +367,7 @@ local logic_event_map = {
         if success then
             local user_data = DataManager:getUserData()
             local edit = decodeInUserDataFromDeltaData(user_data, response)
+            LuaUtils:outputTable("edit", edit)
             DataManager:setUserData(user_data, edit)
         end
     end,
@@ -507,23 +508,6 @@ function NetManager:getConnectLogicServerPromise()
     return get_connectLogicServer_promise():next(function(result)
         self:InitEventsMap(base_event_map, logic_event_map)
     end)
-end
--- 重写OpenUDID
-local getOpenUDID = ext.getOpenUDID
-device.getOpenUDID = function()
-    -- if true then return "aj2" end
-    if CONFIG_IS_DEBUG then
-        local device_id
-        local udid = cc.UserDefault:getInstance():getStringForKey("udid")
-        if udid and #udid > 0 then
-            device_id = udid
-        else
-            device_id = getOpenUDID()
-        end
-        return device_id
-    else
-        return getOpenUDID()
-    end
 end
 -- 登录
 function NetManager:getLoginPromise(deviceId)
