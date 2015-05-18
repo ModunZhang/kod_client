@@ -401,9 +401,9 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
             description = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["pulley"] .. "/" .. cost.pulley
         })  
    
-    table.sort( requirements, function(a,b)
-        return not a.isSatisfy and b.isSatisfy
-    end)
+    -- table.sort( requirements, function(a,b)
+    --     return not a.isSatisfy and b.isSatisfy
+    -- end)
     return requirements
 end
 

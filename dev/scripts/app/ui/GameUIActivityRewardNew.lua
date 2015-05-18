@@ -256,6 +256,7 @@ function GameUIActivityRewardNew:On_EVERY_DAY_LOGIN_GetReward(index,reward)
 	if countInfo.day60 > countInfo.day60RewardsCount and real_index == index then 
 		NetManager:getDay60RewardPromise():done(function()
 			GameGlobalUI:showTips(_("提示"),string.format(_("恭喜您获得 %s x %d"),Localize_item.item_name[reward.reward],reward.count))
+			app:GetAudioManager():PlayeEffectSoundWithKey("BUY_ITEM")
 		end)
 	else
 		if index > real_index then
@@ -372,6 +373,7 @@ function GameUIActivityRewardNew:GetContinutyListItem(reward_type,item_key,time_
 		:onButtonClicked(function()
 			NetManager:getDay14RewardPromise():done(function()
 				GameGlobalUI:showTips(_("提示"),rewards_str)
+				app:GetAudioManager():PlayeEffectSoundWithKey("BUY_ITEM")
 			end)
 		end)
 	item.title_label = title_label
@@ -451,11 +453,11 @@ function GameUIActivityRewardNew:ui_FIRST_IN_PURGURE()
 			}))
 			:addTo(self.bg)
 			:pos(435,54)
-	local tips_str = ""
+	local tips_list = {}
 	for index,reward in ipairs(rewards) do
 		if index <= 6 then 
 			local reward_type,reward_name,count = unpack(reward)
-			tips_str = tips_str .. Localize_item.item_name[reward_name] .. " x" .. count
+			table.insert(tips_list, Localize_item.item_name[reward_name] .. " x" .. count)
 			local item_bg = display.newSprite("activity_item_bg_110x108.png"):align(display.LEFT_TOP, x, y):addTo(self.bg)
 			local sp = display.newSprite(UIKit:GetItemImage(reward_type,reward_name),55,54):addTo(item_bg)
 			local size = sp:getContentSize()
@@ -468,9 +470,11 @@ function GameUIActivityRewardNew:ui_FIRST_IN_PURGURE()
 			end
 		end
 	end
+	local tips_str = table.concat(tips_list, ",")
 	self.purgure_get_button:onButtonClicked(function()
 		NetManager:getFirstIAPRewardsPromise():done(function()
 			GameGlobalUI:showTips(_("提示"),tips_str)
+			app:GetAudioManager():PlayeEffectSoundWithKey("BUY_ITEM")
 		end)
 	end)
 	self.purgure_get_button:setButtonEnabled(countInfo.iapCount > 0 and not countInfo.isFirstIAPRewardsGeted)
@@ -623,10 +627,10 @@ function GameUIActivityRewardNew:GetRewardLevelUpItem(index,title,rewards,flag)
 		color= 0x514d3e
 	}):align(display.LEFT_CENTER, 24, 52):addTo(content)
 	local x = 104
-	local tips_str = ""
+	local reward_list = {}
 	for __,v in ipairs(rewards) do
 		local reward_type,reward_name,count = unpack(v)
-		tips_str = tips_str .. Localize_item.item_name[reward_name] .. " x" .. count
+		table.insert(reward_list, Localize_item.item_name[reward_name] .. " x" .. count)
 		local item_bg = display.newSprite("activity_item_bg_110x108.png"):align(display.LEFT_CENTER, x, 52):addTo(content):scale(94/110)
 		local sp = display.newSprite(UIKit:GetItemImage(reward_type,reward_name),55,54):addTo(item_bg)
 		local size = sp:getContentSize()
@@ -640,6 +644,7 @@ function GameUIActivityRewardNew:GetRewardLevelUpItem(index,title,rewards,flag)
 			color= 0x514d3e
 		}):align(display.LEFT_CENTER,436, 54):addTo(content)
 	item.title_label = title_label
+	local tips_str = table.concat(reward_list, ",")
 	local button = WidgetPushButton.new({normal = 'yellow_btn_up_148x58.png',pressed = 'yellow_btn_down_148x58.png',disabled = 'gray_btn_148x58.png'})
 			:setButtonLabel("normal", UIKit:commonButtonLable({
 				text = _("领取")
@@ -649,6 +654,7 @@ function GameUIActivityRewardNew:GetRewardLevelUpItem(index,title,rewards,flag)
 			:onButtonClicked(function()
 				NetManager:getLevelupRewardPromise(index):done(function()
 					GameGlobalUI:showTips(_("提示"),tips_str)
+					app:GetAudioManager():PlayeEffectSoundWithKey("BUY_ITEM")
 				end)
 			end)
 	item.button = button
@@ -742,6 +748,7 @@ function GameUIActivityRewardNew:GetOnLineItem(reward_type,item_key,time_str,rew
 			:onButtonClicked(function()
 				NetManager:getOnlineRewardPromise(timePoint):done(function()
 					GameGlobalUI:showTips(_("提示"),rewards)
+					app:GetAudioManager():PlayeEffectSoundWithKey("BUY_ITEM")
 				end)
 			end)
 	local time_label = UIKit:ttfLabel({
