@@ -361,7 +361,7 @@ local BUILDING_DESCRIPTION = {
     ["mill_farmer"] = _("农夫小屋数量"),
     ["mill_protection"] = _("粮食保护"),
 
-    ["stoneMason"] = _("石匠作坊能够提升可建造的石匠小屋数量和石料的生产效率，周围修建一定数量的石匠小屋还能获得额外的石料产量加成"),
+    ["stoneMason"] = _("石匠工坊能够提升可建造的石匠小屋数量和石料的生产效率，周围修建一定数量的石匠小屋还能获得额外的石料产量加成"),
     ["stoneMason_quarrier"] = _("石匠小屋数量"),
     ["stoneMason_protection"] = _("石料保护"),
 
@@ -462,7 +462,7 @@ local BUILDING_NAME = {
     ["blackSmith"] = _("铁匠铺"),
     ["lumbermill"] = _("锯木坊"),
     ["mill"] = _("磨坊"),
-    ["stoneMason"] = _("石匠作坊"),
+    ["stoneMason"] = _("石匠工坊"),
     ["foundry"] = _("铸造坊"),
     ["townHall"] = _("市政厅"),
     ["warehouse"] = _("资源仓库"),
