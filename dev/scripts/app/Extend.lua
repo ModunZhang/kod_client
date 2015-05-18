@@ -255,15 +255,14 @@ function display.newScene(name)
         self:removeChildByTag(WAI_TAG, true)
     end
 
-    -- function scene:onEnterTransitionFinish()
-    --     printLog("Info", "Base cc.Scene Check UI :%s",self.__cname)
-    --     local message = UIKit:getMessageDialogWillShow()
-    --     if message then
-    --         message:AddToScene(self,true)
-    --         UIKit:clearMessageDialogWillShow()
-    --     end
-    -- end
-    printLog("Info","create scene:%s -->onEnterTransitionFinish:%s", name,type(scene.onEnterTransitionFinish))
+    function scene:onEnterTransitionFinish()
+        printLog("Info", "Check MessageDialog :%s",self.__cname)
+        local message = UIKit:getMessageDialogWillShow()
+        if message then
+            message:AddToScene(self,true)
+            UIKit:clearMessageDialogWillShow()
+        end
+    end
     return scene
 end
 

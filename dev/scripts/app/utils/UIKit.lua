@@ -667,6 +667,7 @@ function UIKit:__addMessageDialogToCurrentScene(dialog)
 end
 
 function UIKit:getMessageDialogWillShow()
+    printLog("info", "getMessageDialogWillShow--->%s",self.willShowMessage_ or "nil")
     return self.willShowMessage_ 
 end
 function UIKit:clearMessageDialogWillShow()

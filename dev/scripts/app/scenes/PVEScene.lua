@@ -344,6 +344,7 @@ local mockData = import("..fte.mockData")
 local WidgetFteArrow = import("..widget.WidgetFteArrow")
 local WidgetFteMark = import("..widget.WidgetFteMark")
 function PVEScene:onEnterTransitionFinish()
+    PVEScene.super.onEnterTransitionFinish(self)
     if GLOBAL_FTE then
         self:RunFte()
     end
