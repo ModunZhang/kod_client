@@ -562,6 +562,18 @@ tolua_lerror:
 #endif
 }
 
+static int tolua_ext_getOpenUdid(lua_State* tolua_S)
+{
+    tolua_pushstring(tolua_S, GetOpenUdid());
+    return 1;
+}
+
+static int tolua_ext_registereForRemoteNotifications(lua_State* tolua_S)
+{
+    registereForRemoteNotifications();
+    return 0;
+}
+
 static int tolua_ext_disableIdleTimer(lua_State* tolua_S)
 {
 #ifndef TOLUA_RELEASE
@@ -745,9 +757,9 @@ static void ResgisterGlobalExtFunctions(lua_State* tolua_S)
     tolua_function(tolua_S, "getAppBuildVersion", tolua_ext_get_app_build_version);
     tolua_function(tolua_S, "__logFile", tolua_ext_log_file);
     tolua_function(tolua_S, "getDeviceToken", tolua_ext_get_device_token);
-#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
-    tolua_function(tolua_S,"getOpenUDID",tolua_ext_getOpenUDID);
-#endif
+    tolua_function(tolua_S,"getOpenUDID",tolua_ext_getOpenUdid);
+    tolua_function(tolua_S,"registereForRemoteNotifications",tolua_ext_registereForRemoteNotifications);
+    
 }
 
 

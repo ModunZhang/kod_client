@@ -172,83 +172,9 @@ end
 
 function GameUIAlliance:CreateAllianceTips()
     Alliance_Manager.open_alliance = true
-    local shadowLayer = display.newColorLayer(UIKit:hex2c4b(0x7a000000))
-        :addTo(self:GetView())
-    local backgroundImage = WidgetUIBackGround.new({height=542}):addTo(shadowLayer):pos(window.left+20,window.top - 700)
-    local titleBar = display.newSprite("title_blue_600x56.png")
-        :pos(backgroundImage:getContentSize().width/2, backgroundImage:getContentSize().height+8)
-        :addTo(backgroundImage)
-    local mainTitleLabel = UIKit:ttfLabel({
-        text = _("创建联盟"),
-        size = 24,
-        color= 0xffedae
-    })
-        :addTo(titleBar)
-        :align(display.CENTER,titleBar:getContentSize().width/2,titleBar:getContentSize().height/2)
-    UIKit:closeButton()
-        :align(display.BOTTOM_RIGHT,titleBar:getContentSize().width,0)
-        :addTo(titleBar)
-        :onButtonClicked(function(event)
-            shadowLayer:removeFromParent()
-        end)
-    local title_bg = display.newSprite("green_title_639x39.png")
-        :addTo(backgroundImage)
-        :align(display.LEFT_TOP, -15, titleBar:getPositionY()-titleBar:getContentSize().height/2-5)
-    UIKit:ttfLabel({
-        text = _("联盟的强大功能！"),
-        size = 24,
-        color= 0xffeca5,
-        shadow=true,
-    }):addTo(title_bg):align(display.CENTER,title_bg:getContentSize().width/2,title_bg:getContentSize().height/2+5)
-
-    local list_bg = display.newScale9Sprite("box_bg_546x214.png")
-        :size(572,354)
-        :addTo(backgroundImage)
-        :align(display.TOP_CENTER, backgroundImage:getContentSize().width/2, title_bg:getPositionY() - title_bg:getContentSize().height - 5)
-    local btn_bg = UIKit:commonButtonWithBG(
-        {
-            w=185,
-            h=65,
-            style = UIKit.BTN_COLOR.YELLOW,
-            labelParams ={
-                text = _("确定"),
-                size = 22,
-                color = 0xfff3c7,
-            },
-            listener = function ()
-                shadowLayer:removeFromParent(true)
-            end,
-        }
-    ):pos(backgroundImage:getContentSize().width/2,50)
-        :addTo(backgroundImage)
-    closeButton = btn_bg.button
-
-    local scrollView = UIListView.new {
-        viewRect = cc.rect(13,10, 546, 334),
-        direction = UIScrollView.DIRECTION_VERTICAL,
-        alignment = UIListView.ALIGNMENT_LEFT,
-    }:addTo(list_bg)
-
-    local tips = {_("将城市迁入联盟领地，受到联盟保护"),_("加入联盟好处提示2"),_("加入联盟好处提示3"),_("加入联盟好处提示4"),_("加入联盟好处提示5"),_("加入联盟好处提示6"),_("加入联盟好处提示6")}
-    for i,v in ipairs(tips) do
-        local item = scrollView:newItem()
-        local content = display.newNode()
-        local png = string.format("resource_item_bg%d.png",i % 2)
-        display.newScale9Sprite(png):size(546,48):align(display.LEFT_BOTTOM,0,0):addTo(content)
-        local star = display.newSprite("alliance_star_23x23.png"):addTo(content):align(display.LEFT_BOTTOM, 10, 10)
-        UIKit:ttfLabel({
-            text = v,
-            size = 20,
-            color = 0x403c2f,
-            align = cc.TEXT_ALIGNMENT_LEFT,
-            bgColor = UIKit:hex2c4b(0x7a000000),
-        }):addTo(content):align(display.LEFT_BOTTOM, star:getPositionX()+star:getContentSize().width+10, star:getPositionY()-2)
-        item:addContent(content)
-        content:size(546,48)
-        item:setItemSize(546,48)
-        scrollView:addItem(item)
-    end
-    scrollView:reload()
+    self:performWithDelay(function()
+        UIKit:newGameUI('GameUIAllianceJoinTips'):AddToCurrentScene(true)
+    end, 0.2)
 end
 
 -- TabButtons event

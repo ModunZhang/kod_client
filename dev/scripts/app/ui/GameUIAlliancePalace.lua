@@ -228,15 +228,16 @@ function GameUIAlliancePalace:OpenAwardDialog(member)
         size = 20,
         color = 0x403c2f,
     }):addTo(body):align(display.CENTER,current_honour_label:getPositionX()+ current_honour_label:getContentSize().width + 6,current_honour_label:getPositionY())
+
     local deduct_honour_label = UIKit:ttfLabel({
         text = "0",
         size = 22,
         color = 0x7e0000,
     }):addTo(body):align(display.LEFT_CENTER,divide:getPositionX()+6,current_honour_label:getPositionY())
-    current_honour_label:setVisible(self.alliance:Honour() ~= 0)
-    deduct_honour_label:setVisible(self.alliance:Honour() ~= 0)
-    divide:setVisible(self.alliance:Honour() ~= 0)
-    honour_icon:setVisible(self.alliance:Honour() ~= 0)
+    current_honour_label:hide()
+    deduct_honour_label:hide()
+    divide:hide()
+    honour_icon:hide()
 
     -- 滑动条部分
     local slider_bg = display.newSprite("back_ground_580x136.png"):addTo(body)

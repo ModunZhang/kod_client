@@ -46,7 +46,7 @@ end
 
 function WidgetMaterialBox:GetMaterialImage(material_type,material_name)
     local metarial = ""
-    if material_type == MaterialManager.MATERIAL_TYPE.BUILD then
+    if material_type == MaterialManager.MATERIAL_TYPE.BUILD or material_type == MaterialManager.MATERIAL_TYPE.TECHNOLOGY then
         metarial = "materials"
     elseif material_type == MaterialManager.MATERIAL_TYPE.DRAGON  then
         metarial = "dragon_material_pic_map"

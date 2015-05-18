@@ -173,7 +173,15 @@ local function get_response_delete_report_msg(response)
 
     return response
 end
-
+-- 只更新市政厅每日任务
+local function get_daily_quests_response_msg(response)
+    LuaUtils:outputTable("response", response)
+    if response.msg.playerData then
+        DataManager:getUserData().dailyQuests = response.msg.playerData[1][2]
+        User:OnDailyQuestsChanged(DataManager:getUserData())
+    end
+    return response
+end
 local function get_alliance_response_msg(response)
     if response.msg.allianceData then
         local user_alliance_data = DataManager:getUserAllianceData()
@@ -209,7 +217,15 @@ end
 local function get_alliance_alliancefightreports_response_msg(response)
     if response.msg.allianceFightReports then
         DataManager:getUserAllianceData().allianceFightReports = response.msg.allianceFightReports
-        Alliance_Manager:GetMyAlliance():OnAllianceFightRequestsChanged(DataManager:getUserAllianceData())
+        Alliance_Manager:GetMyAlliance():OnAllianceFightReportsChanged(DataManager:getUserAllianceData())
+    end
+    return response
+end
+--只更新圣地战斗记录
+local function get_alliance_allianceshrinereports_response_msg(response)
+    if response.msg.shrineReports then
+        DataManager:getUserAllianceData().shrineReports = response.msg.shrineReports
+        Alliance_Manager:GetMyAlliance():GetAllianceShrine():OnShrineReportsDataChanged(DataManager:getUserAllianceData())
     end
     return response
 end
@@ -493,7 +509,7 @@ function NetManager:getConnectLogicServerPromise()
     end)
 end
 -- 重写OpenUDID
-local getOpenUDID = device.getOpenUDID
+local getOpenUDID = ext.getOpenUDID
 device.getOpenUDID = function()
     -- if true then return "aj2" end
     if CONFIG_IS_DEBUG then
@@ -771,7 +787,7 @@ end
 -- 获取每日任务列表
 function NetManager:getDailyQuestsPromise()
     return get_blocking_request_promise("logic.playerHandler.getDailyQuests", {},
-        "获取每日任务列表失败!"):done(get_response_msg)
+        "获取每日任务列表失败!"):done(get_daily_quests_response_msg)
 end
 -- 为每日任务中某个任务增加星级
 function NetManager:getAddDailyQuestStarPromise(questId)
@@ -1074,6 +1090,11 @@ function NetManager:getAllianceFightReportsPromise(allianceId)
     return get_blocking_request_promise("logic.allianceHandler.getAllianceFightReports", {
         allianceId = allianceId
     }, "获取联盟战历史记录失败!"):done(get_alliance_alliancefightreports_response_msg)
+end
+--获取联盟圣地战历史记录
+function NetManager:getShrineReportsPromise()
+    return get_blocking_request_promise("logic.allianceHandler.getShrineReports",nil,
+     "获取联盟圣地战历史记录失败!"):done(get_alliance_allianceshrinereports_response_msg)
 end
 -- 获取联盟商店买入卖出记录
 function NetManager:getItemLogsPromise(allianceId)

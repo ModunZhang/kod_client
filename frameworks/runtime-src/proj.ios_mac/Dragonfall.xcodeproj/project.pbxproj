@@ -16,6 +16,7 @@
 		3F1ECBBB1AA53C000012DD9F /* res in Resources */ = {isa = PBXBuildFile; fileRef = 3F1ECBB91AA53C000012DD9F /* res */; };
 		3F1ECBBC1AA53C000012DD9F /* scripts in Resources */ = {isa = PBXBuildFile; fileRef = 3F1ECBBA1AA53C000012DD9F /* scripts */; };
 		3F3120C71AC3E3A40016F4CA /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F3120C51AC3E3A40016F4CA /* MBProgressHUD.m */; };
+		3F47011E1B08BF4D001DDF24 /* UICKeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F47011D1B08BF4D001DDF24 /* UICKeyChainStore.m */; };
 		3F5436511AF86283006DFC80 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3F5436531AF86283006DFC80 /* InfoPlist.strings */; };
 		3F7FA3B71AA6FC4B0011BDE2 /* libjansson.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F7FA3B41AA6FC4B0011BDE2 /* libjansson.a */; };
 		3F7FA3B81AA6FC4B0011BDE2 /* libpomelo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F7FA3B51AA6FC4B0011BDE2 /* libpomelo.a */; };
@@ -214,6 +215,8 @@
 		3F1ECBBA1AA53C000012DD9F /* scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = scripts; path = ../../../update/scripts; sourceTree = "<group>"; };
 		3F3120C51AC3E3A40016F4CA /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		3F3120C61AC3E3A40016F4CA /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		3F47011C1B08BF4D001DDF24 /* UICKeyChainStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UICKeyChainStore.h; sourceTree = "<group>"; };
+		3F47011D1B08BF4D001DDF24 /* UICKeyChainStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICKeyChainStore.m; sourceTree = "<group>"; };
 		3F5436521AF86283006DFC80 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		3F5436541AF86289006DFC80 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		3F5A3CC11B042DB90001BE8C /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
@@ -638,6 +641,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		3F47011B1B08BF4D001DDF24 /* UICKeyChainStore */ = {
+			isa = PBXGroup;
+			children = (
+				3F47011C1B08BF4D001DDF24 /* UICKeyChainStore.h */,
+				3F47011D1B08BF4D001DDF24 /* UICKeyChainStore.m */,
+			);
+			path = UICKeyChainStore;
+			sourceTree = "<group>";
+		};
 		3F7FA3B31AA6FC4B0011BDE2 /* lib */ = {
 			isa = PBXGroup;
 			children = (
@@ -660,6 +672,7 @@
 		3FF4DC981AA4686700CDFAF9 /* ext */ = {
 			isa = PBXGroup;
 			children = (
+				3F47011B1B08BF4D001DDF24 /* UICKeyChainStore */,
 				3FF4DC991AA4686700CDFAF9 /* common */,
 				3FF4DC9C1AA4686700CDFAF9 /* crc */,
 				3FF4DC9E1AA4686700CDFAF9 /* GameCenter */,
@@ -1737,6 +1750,7 @@
 				9F9106BE19F5614900AD5CAB /* CCBrightnessFilter.cpp in Sources */,
 				9F9106CE19F5614900AD5CAB /* CCHazeFilter.cpp in Sources */,
 				9F91074419F5614900AD5CAB /* SBJsonParser.m in Sources */,
+				3F47011E1B08BF4D001DDF24 /* UICKeyChainStore.m in Sources */,
 				9F91074C19F5614900AD5CAB /* ReachabilityIOSMac.m in Sources */,
 				9F91077A19F5614900AD5CAB /* lsqlite3.c in Sources */,
 				3FF4DD101AA46AF100CDFAF9 /* memory.c in Sources */,
