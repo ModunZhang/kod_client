@@ -88,12 +88,12 @@ function CityLayer:GetClickedObject(world_x, world_y)
     end)
     if clicked_list.logic_clicked[1] then
         if clicked_list.logic_clicked[1]:GetEntity():GetType() == "wall" then
-            clicked_list.logic_clicked[1] = self:GetGate()
+            clicked_list.logic_clicked[1] = self:GetCityGate()
         end
     end
     if clicked_list.sprite_clicked[1] then
         if clicked_list.sprite_clicked[1]:GetEntity():GetType() == "wall" then
-            clicked_list.sprite_clicked[1] = self:GetGate()
+            clicked_list.sprite_clicked[1] = self:GetCityGate()
         end
     end
     if self:IsEditMode() then
@@ -774,7 +774,7 @@ end
 function CityLayer:IteratorRuins(func)
     table.foreach(self.ruins, func)
 end
-function CityLayer:GetGate()
+function CityLayer:GetCityGate()
     local gate
     table.foreach(self.walls, function(_, v)
         if v:GetEntity():IsGate() then

@@ -699,23 +699,6 @@ end
 --     City:InitDecorators({})
 -- end
 
--- function test_building_listener()
---     --
---     local keep = City:GetFirstBuildingByType("keep")
---     keep:AddBaseListener({
---         OnOrientChanged = function(self, old_orient, new_orient, new_w, new_h)
---             assert_equal(Orient.X, old_orient)
---             assert_equal(Orient.Y, new_orient)
---             assert_equal(10, new_w)
---             assert_equal(9, new_h)
---         end,
---         OnLogicPositionChanged = function(self, x, y)
---             assert_equal(0, x)
---             assert_equal(0, y)
---         end
---     })
---     keep:SetLogicPosition(0, 0)
---     keep:SetOrient(Orient.Y)
 -- end
 
 

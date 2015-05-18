@@ -69,7 +69,7 @@ function Building:ResetAllListeners()
     self:GetBaseObserver():RemoveAllObserver()
 end
 function Building:AddBaseListener(listener)
-    assert(listener.OnOrientChanged)
+    -- assert(listener.OnOrientChanged)
     assert(listener.OnLogicPositionChanged)
     assert(listener.OnTransformed)
     return self.base_building_observer:AddObserver(listener)
@@ -77,9 +77,9 @@ end
 function Building:RemoveBaseListener(listener)
     self.base_building_observer:RemoveObserver(listener)
 end
-function Building:CopyListenerFrom(building)
-    self.base_building_observer:CopyListenerFrom(building:GetBaseObserver())
-end
+-- function Building:CopyListenerFrom(building)
+--     self.base_building_observer:CopyListenerFrom(building:GetBaseObserver())
+-- end
 function Building:CopyValueFrom(building)
     self.x = building.x
     self.y = building.y
@@ -111,18 +111,18 @@ end
 function Building:GetOrient()
     return self.orient
 end
-function Building:SetOrient(orient)
-    if not self.can_change_head then return end
-    assert(orient == Orient.X or orient == Orient.Y)
-    if self.orient ~= orient then
-        local old_orient = self.orient
-        self.orient = orient
-        self.w, self.h = self.h, self.w
-        self.base_building_observer:NotifyObservers(function(listener)
-            listener:OnOrientChanged(old_orient, orient, self.w, self.h)
-        end)
-    end
-end
+-- function Building:SetOrient(orient)
+--     if not self.can_change_head then return end
+--     assert(orient == Orient.X or orient == Orient.Y)
+--     if self.orient ~= orient then
+--         local old_orient = self.orient
+--         self.orient = orient
+--         self.w, self.h = self.h, self.w
+--         self.base_building_observer:NotifyObservers(function(listener)
+--             listener:OnOrientChanged(old_orient, orient, self.w, self.h)
+--         end)
+--     end
+-- end
 function Building:SetLogicPosition(x, y)
     self.x, self.y = x, y
     self.base_building_observer:NotifyObservers(function(listener)

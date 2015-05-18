@@ -349,12 +349,7 @@ function GameUIHome:CreateTop()
     ):addTo(top_bg):pos(255, -10):onButtonClicked(function(event)
         if self.task then
             local building_type = self.task:BuildingType()
-            local building
-            if building_type == "tower" then
-                building = self.city:GetNearGateTower()
-            else
-                building = self.city:GetHighestBuildingByType(building_type)
-            end
+            local building = self.city:PreconditionByBuildingType(building_type)
             if building then
                 local current_scene = display.getRunningScene()
                 local building_sprite = current_scene:GetSceneLayer():FindBuildingSpriteByBuilding(building, self.city)
