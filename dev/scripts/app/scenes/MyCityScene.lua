@@ -693,7 +693,9 @@ function MyCityScene:PromiseOfFteEnd()
         self:removeChildByTag(FTE_MARK_TAG)
         return GameUINpc:PromiseOfSay({words = _("完成任务后，可以点击任务按钮，我为大人准备了丰厚的奖赏。。。")})
     end):next(function()
-        ext.registereForRemoteNotifications()
+        if ext.registereForRemoteNotifications then
+            ext.registereForRemoteNotifications()
+        end
         app:GetPushManager():CancelAll()
         UIKit:closeAllUI()
         app:EnterUserMode()
