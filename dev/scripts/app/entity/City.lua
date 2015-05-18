@@ -535,15 +535,6 @@ function City:GetBuildingsIsUnlocked()
     end)
     return r
 end
-function City:GetUnlockedFunctionBuildings()
-    local r = {}
-    for _,v in ipairs(self.buildings) do
-        if v:IsUnlocked() or v:IsUnlocking() then
-            insert(r, v)
-        end
-    end
-    return r
-end
 function City:GetAllBuildings()
     return self.buildings
 end
@@ -583,14 +574,6 @@ end
 function City:GetBuildingByLocationId(location_id)
     return self.building_location_map[location_id]
 end
-function City:GetBuildingByTypeWithSpecificPosition(building_type, x, y)
-    for _, v in pairs(self:GetBuildingByType(building_type)) do
-        if v.x == x and v.y == y then
-            return v
-        end
-    end
-    return nil
-end
 function City:GetFirstBuildingByType(type_)
     if only_one_buildings_map[type_] then
         return self[type_]
@@ -628,9 +611,6 @@ function City:GetBuildingByType(type_)
     self:IteratorDecoratorBuildingsByFunc(filter)
     return find_buildings
 end
-function City:GetHouseByPosition(x, y)
-    return self:GetDecoratorByPosition(x, y)
-end
 function City:GetDecoratorByPosition(x, y)
     local find_decorator = nil
     self:IteratorDecoratorBuildingsByFunc(function(key, building)
@@ -641,30 +621,6 @@ function City:GetDecoratorByPosition(x, y)
     end)
     return find_decorator
 end
-function City:GetTilesFaceToGate()
-    local r = {}
-    local tile = self:GetTileFaceToGate()
-    if tile then
-        local x = tile.x
-        for i = tile.y, 5 do
-            insert(r, self:GetTileByIndex(x, i))
-        end
-    end
-    return r
-end
-function City:GetTileFaceToGate()
-    for k, v in pairs(self.walls) do
-        if v:IsGate() then
-            local tile = self:GetTileWhichBuildingBelongs(v)
-            if tile then
-                return tile
-            else
-                local x, y = self:GetTileIndexPosition(v.x, v.y)
-                return Tile.new({x = x, y = y, locked = false, city = self})
-            end
-        end
-    end
-end
 function City:GetTileWhichBuildingBelongs(building)
     if building:GetType() == "watchTower" then
         return self:GetTileByLocationId(2)
@@ -672,10 +628,7 @@ function City:GetTileWhichBuildingBelongs(building)
     return self:GetTileByBuildingPosition(building.x, building.y)
 end
 function City:GetTileByBuildingPosition(x, y)
-    return self:GetTileByIndex(self:GetTileIndexPosition(x, y))
-end
-function City:GetTileIndexPosition(x, y)
-    return floor(x / 10) + 1, floor(y / 10) + 1
+    return self:GetTileByIndex(floor(x / 10) + 1, floor(y / 10) + 1)
 end
 function City:GetTileByLocationId(location_id)
     local location_info = self:GetLocationById(location_id)
@@ -718,25 +671,25 @@ function City:IsTileCanbeUnlockAt(x, y)
     -- 临边未解锁
     return false, self.RETURN_CODE.EDGE_BESIDE_NOT_UNLOCKED
 end
-function City:GetUnlockTowerLimit()
-    local t = {
-        [1] = 3,
-        [2] = 5,
-        [3] = 7,
-        [4] = 9,
-        [5] = 11,
-    }
-    return t[self:GetUnlockAround()]
-end
-function City:GetUnlockAround()
-    local t = { 5, 4, 3, 2, 1 }
-    for _, round_number in ipairs(t) do
-        if self:IsUnlockedInAroundNumber(round_number) then
-            return round_number
-        end
-    end
-    assert(false)
-end
+-- local t = {
+--     [1] = 3,
+--     [2] = 5,
+--     [3] = 7,
+--     [4] = 9,
+--     [5] = 11,
+-- }
+-- function City:GetUnlockTowerLimit()
+--     return t[self:GetUnlockAround()]
+-- end
+-- function City:GetUnlockAround()
+--     local t = { 5, 4, 3, 2, 1 }
+--     for _, round_number in ipairs(t) do
+--         if self:IsUnlockedInAroundNumber(round_number) then
+--             return round_number
+--         end
+--     end
+--     assert(false)
+-- end
 function City:IsUnlockedInAroundNumber(roundNumber)
     if roundNumber <= 0 then
         return true
@@ -793,7 +746,7 @@ end
 -- end
 -- 工具
 function City:IteratorCanUpgradeBuildings(func)
-    for k,v in pairs(self.building_location_map) do
+    for _,v in pairs(self.building_location_map) do
         func(v)
     end
     self:IteratorDecoratorBuildingsByFunc(function(key, building)
@@ -1722,6 +1675,7 @@ function City:FindProductionTechEventById(_id)
 end
 
 return City
+
 
 
 
