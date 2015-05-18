@@ -788,7 +788,7 @@ function City:IteratorCanUpgradeBuildingsByUserData(user_data, current_time, del
         for k,location_info in pairs(deltaData.buildings or {}) do
             if location_info then
                 local location_id = buildings[k].location
-                if location_info.level then
+                if location_info.level or location_info.type then
                     insert(need_delta_update_buildings, location_id)
                 end
                 local houses = location_info.houses
@@ -817,7 +817,6 @@ function City:IteratorCanUpgradeBuildingsByUserData(user_data, current_time, del
         end
         for k,v in pairs(need_delta_update_houses_events) do
             local location_info = buildings[format("location_%d", v.buildingLocation)]
-            LuaUtils:outputTable(location_info)
             local house_location_info
             for _,house in pairs(location_info.houses) do
                 if house.location == v.houseLocation then
@@ -1012,10 +1011,7 @@ function City:DestoryDecoratorByPosition(current_time, x, y)
 end
 ----------- 功能扩展点
 function City:OnUserDataChanged(userData, current_time, deltaData)
-    local need_update_resouce_buildings, is_unlock_any_tiles, unlock_table
-    LuaUtils:TimeCollect(function()
-    need_update_resouce_buildings, is_unlock_any_tiles, unlock_table = self:OnHouseChanged(userData, current_time, deltaData)
-    end, "City:OnHouseChanged")
+    local need_update_resouce_buildings, is_unlock_any_tiles, unlock_table = self:OnHouseChanged(userData, current_time, deltaData)
     -- 更新建筑信息
         self:IteratorCanUpgradeBuildingsByUserData(userData, current_time, deltaData)
     -- 更新地块信息
@@ -1053,6 +1049,7 @@ function City:OnUserDataChanged(userData, current_time, deltaData)
         resource_refresh_time = userData.resources.refreshTime / 1000
         self.resource_manager:UpdateFromUserDataByTime(userData.resources, resource_refresh_time)
     end
+
     if need_update_resouce_buildings then
         self.resource_manager:UpdateByCity(self, resource_refresh_time)
     end

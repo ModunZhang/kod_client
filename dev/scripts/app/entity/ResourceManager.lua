@@ -131,9 +131,7 @@ function ResourceManager:UpdateByCity(city, current_time)
     end
 
     -- 城墙
-    local wallBuilding = city:GetGate()
-    local wall_hp_production_per_hour = wallBuilding:GetWallConfig().wallRecovery
-
+    local wall_config = city:GetGate():GetWallConfig()
     local total_production_map = {
         [WOOD] = 0,
         [FOOD] = 0,
@@ -141,13 +139,12 @@ function ResourceManager:UpdateByCity(city, current_time)
         [STONE] = 0,
         [COIN] = 0,
         [POPULATION] = 0,
-        [WALLHP] = wall_hp_production_per_hour or 0,
+        [WALLHP] = wall_config.wallRecovery or 0,
         [CART] = cart_recovery,
     }
 
     -- 上限
     local max_wood, max_food, max_iron, max_stone = city:GetFirstBuildingByType("warehouse"):GetResourceValueLimit()
-    local wall_max_hp = wallBuilding:GetWallConfig().wallHp
     local total_limit_map = {
         [WOOD] = max_wood,
         [FOOD] = max_food,
@@ -156,7 +153,7 @@ function ResourceManager:UpdateByCity(city, current_time)
         [COIN] = math.huge,
         [POPULATION] = intInit.initCitizen.value,
         [CART] = max_cart,
-        [WALLHP] = wall_max_hp or 0,
+        [WALLHP] = wall_config.wallHp or 0,
     }
 
     local citizen_map = {
@@ -169,27 +166,31 @@ function ResourceManager:UpdateByCity(city, current_time)
         [CART] = 0,
     }
     local total_citizen = 0
-    --小屋对资源的影响
-    city:IteratorDecoratorBuildingsByFunc(function(key, decorator)
-        if iskindof(decorator, 'ResourceUpgradeBuilding') then
-            local resource_type = decorator:GetUpdateResourceType()
-            if resource_type then
-                local citizen = decorator:GetCitizen()
-                total_citizen = total_citizen + citizen
-                total_production_map[resource_type] = total_production_map[resource_type] + decorator:GetProductionPerHour()
-                if citizen_map[resource_type] then
-                    citizen_map[resource_type] = citizen_map[resource_type] + citizen
+    LuaUtils:TimeCollect(function()
+
+            --小屋对资源的影响
+            city:IteratorDecoratorBuildingsByFunc(function(_, decorator)
+                if iskindof(decorator, 'ResourceUpgradeBuilding') then
+                    local resource_type = decorator:GetUpdateResourceType()
+                    if resource_type then
+                        local citizen = decorator:GetCitizen()
+                        total_citizen = total_citizen + citizen
+                        total_production_map[resource_type] = total_production_map[resource_type] + decorator:GetProductionPerHour()
+                        if citizen_map[resource_type] then
+                            citizen_map[resource_type] = citizen_map[resource_type] + citizen
+                        end
+                        if POPULATION == resource_type then
+                            total_production_map[COIN] = total_production_map[COIN] + decorator:GetProductionPerHour()
+                            total_limit_map[POPULATION] = total_limit_map[POPULATION] + decorator:GetProductionLimit()
+                        end
+                    end
                 end
-                if POPULATION == resource_type then
-                    total_production_map[COIN] = total_production_map[COIN] + decorator:GetProductionPerHour()
-                    total_limit_map[POPULATION] = total_limit_map[POPULATION] + decorator:GetProductionLimit()
-                end
-            end
-        end
-    end)
+            end)
+    end, "house")
     dump_resources(total_production_map, "小屋对资源的影响--->")
     -- buff对资源的影响
-    local buff_production_map,buff_limt_map = self:GetTotalBuffData(city)
+    local buff_production_map,buff_limt_map
+    buff_production_map,buff_limt_map = self:GetTotalBuffData(city)
     self.resource_citizen = citizen_map
     self:GetPopulationResource():SetLowLimitResource(total_citizen)
     for resource_type, production in pairs(total_production_map) do
@@ -355,6 +356,8 @@ end
 
 
 return ResourceManager
+
+
 
 
 
