@@ -56,7 +56,7 @@ function GameUIHelpDefence:ctor(city,helped_troop,details)
     self.helped_troop = helped_troop
     self.details = details
     self.soldiers = details.soldiers
-    self.dragon = city:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon("redDragon")
+    self.dragon = details.dragon
     app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_RECRUIT")
 end
 function GameUIHelpDefence:OnMoveInStage()
@@ -199,23 +199,13 @@ function GameUIHelpDefence:CreateSoldierNode()
     end
     function TroopShow:SetPower(power)
         local power_item = createInfoItem(_("战斗力"),string.formatnumberthousands(power))
-            :align(display.CENTER,30,0)
+            :align(display.CENTER,200,0)
             :addTo(info_bg)
         return self
     end
     function TroopShow:SetCitizen(citizen)
-        local citizen_item = createInfoItem(_("部队容量"),citizen.."/"..parent.dragon:LeadCitizen())
-        citizen_item:align(display.CENTER,310-citizen_item:getContentSize().width/2,0)
-            :addTo(info_bg)
-        self.exceed_lead = citizen > parent.dragon:LeadCitizen()
-        return self
-    end
-    function TroopShow:IsExceed()
-        return self.exceed_lead
-    end
-    function TroopShow:SetWeight(weight)
-        local weight_item = createInfoItem(_("负重"),string.formatnumberthousands(weight))
-        weight_item:align(display.CENTER,620-weight_item:getContentSize().width-30,0)
+        local citizen_item = createInfoItem(_("部队人口"),citizen)
+        citizen_item:align(display.CENTER,410-citizen_item:getContentSize().width/2,0)
             :addTo(info_bg)
         return self
     end
@@ -281,14 +271,13 @@ function GameUIHelpDefence:CreateSoldierNode()
         self:RefreshScrollNode(x)
         info_bg:removeAllChildren()
         self:SetPower(total_power)
-        self:SetWeight(total_weight)
         self:SetCitizen(total_citizen)
     end
 
     return TroopShow
 end
 function GameUIHelpDefence:DragonPart()
-    local dragon = self.details.dragon
+    local dragon = self.dragon
 
     local dragon_frame = display.newSprite("alliance_item_flag_box_126X126.png")
         :align(display.LEFT_CENTER, window.left+47,window.top-425)
@@ -324,7 +313,7 @@ function GameUIHelpDefence:DragonPart()
     }):align(display.RIGHT_CENTER,416,60)
         :addTo(box_bg)
 
-    -- 龙活力
+    -- 龙力量
     UIKit:ttfLabel({
         text = _("力量"),
         size = 20,
@@ -363,7 +352,7 @@ function GameUIHelpDefence:PlayerPart()
     UIKit:createLineItem(
         {
             width = 395,
-            text_1 = _("力量"),
+            text_1 = _("战斗力"),
             text_2 = string.formatnumberthousands(player.power),
         }
     ):align(display.LEFT_CENTER,head_frame:getPositionX() + head_frame:getContentSize().width + 20 , head_frame:getPositionY() - 20)
@@ -379,6 +368,7 @@ function GameUIHelpDefence:PlayerPart()
 
 end
 return GameUIHelpDefence
+
 
 
 

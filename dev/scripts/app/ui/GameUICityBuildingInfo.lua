@@ -228,7 +228,7 @@ function GameUICityBuildingInfo:onEnter()
         self.gap = gap
         self.attrs = attrs
         -- 标题
-        local content, max_height = self:CreateContent(titles,nil,0x615b44)
+        local content, max_height = self:CreateContent(titles,nil,0x615b44,"upgrade_resources_background_3.png")
         content:align(display.TOP_CENTER, list_node:getContentSize().width/2, list_node:getContentSize().height-10)
             :addTo(list_node)
 
@@ -345,7 +345,7 @@ function GameUICityBuildingInfo:CreateDetails()
 
     return content
 end
-function GameUICityBuildingInfo:CreateContent(content,index,color)
+function GameUICityBuildingInfo:CreateContent(content,index,color,image)
     local temp_labels = {} -- 创建出所有label，找出高度最高的
     local max_height = 0
     local list_width = 0
@@ -366,14 +366,13 @@ function GameUICityBuildingInfo:CreateContent(content,index,color)
         table.insert(temp_labels, label)
     end
     max_height = max_height + 20
-    local bg_image = (index and index == self.building_level and "back_ground_520x48.png") or (self.flag and "upgrade_resources_background_2.png" or "upgrade_resources_background_3.png")
+    local bg_image = image or (index and index == self.building_level and "back_ground_520x48.png") or (index%2 == 1 and "upgrade_resources_background_2.png" or "upgrade_resources_background_3.png")
 
     local content = display.newScale9Sprite(bg_image,0,0,cc.size(520,max_height),cc.rect(10,10,500,26))
     for i,v in ipairs(temp_labels) do
         v:addTo(content)
         v:setPositionY(max_height/2)
     end
-    self.flag = not self.flag
     return content , max_height
 end
 

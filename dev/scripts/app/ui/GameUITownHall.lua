@@ -313,7 +313,7 @@ function GameUITownHall:CreateQuestItem(quest,index)
             local reward_count = re[3]*quest.star*(1+0.2*TownHallUI.town_hall:GetLevel())
             table.insert(total_rewards, {resource_type=re[2],count = reward_count})
             UIKit:ttfLabel({
-                text = reward_count,
+                text = string.formatnumberthousands(reward_count),
                 size = 20,
                 color = 0x403c2f,
             }):align(display.LEFT_CENTER,reward_icon:getPositionX()+30,reward_bg:getContentSize().height/2):addTo(reward_bg)

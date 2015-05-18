@@ -799,6 +799,7 @@ function UIKit:addTipsToNode( node,tips , include_node)
             local world_postion = node:getParent():convertToWorldSpace(cc.p(node:getPosition()))
             local node_postioon = include_node:convertToNodeSpace(world_postion)
             tips_bg:setPosition(node_postioon.x, node_postioon.y + node:getContentSize().height/2)
+            tips_bg:SetTips(tips)
             tips_bg:show()
         elseif event.name == "ended" then
             tips_bg:hide()

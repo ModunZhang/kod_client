@@ -642,7 +642,7 @@ end
 function GameUIMail:DelegateSendMails( listView, tag, idx )
     if cc.ui.UIListView.COUNT_TAG == tag then
         local send_mails = self.manager:GetSendMails()
-        local mails_count = not send_mails and 0 or #send_mails 
+        local mails_count = not send_mails and 0 or #send_mails
         return mails_count
     elseif cc.ui.UIListView.CELL_TAG == tag then
         local item
@@ -874,13 +874,11 @@ function GameUIMail:OnInboxMailsChanged(changed_mails)
     end
     if changed_mails.edit_mails then
         for _,edit_mail in pairs(changed_mails.edit_mails) do
-            if self.inbox_listview then
-                for i,listitem in ipairs(self.inbox_listview:getItems()) do
-                    local content = listitem:getContent()
-                    local content_mail = content:GetContentData()
-                    if content_mail.id == edit_mail.id then
-                        content:SetData(nil,edit_mail)
-                    end
+            for i,listitem in ipairs(self.inbox_listview:getItems()) do
+                local content = listitem:getContent()
+                local content_mail = content:GetContentData()
+                if content_mail.id == edit_mail.id then
+                    content:SetData(nil,edit_mail)
                 end
             end
         end
@@ -1427,7 +1425,7 @@ function GameUIMail:InitSavedReports()
                     end)
                 end
                 self.saved_reports_listview:reload()
-                
+
                 self.saved_reports_listview:setVisible(true)
             end
         end
@@ -1973,6 +1971,7 @@ function GameUIMail:GetEnemyAllianceTag(report)
 end
 
 return GameUIMail
+
 
 
 

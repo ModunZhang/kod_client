@@ -16,7 +16,7 @@ local function get_response_msg(response)
     if response.msg.playerData then
         local user_data = DataManager:getUserData()
         local edit = decodeInUserDataFromDeltaData(user_data, response.msg.playerData)
-        LuaUtils:outputTable(edit)
+        LuaUtils:outputTable(edit,"edit")
         DataManager:setUserData(user_data, edit)
         return response
     end
@@ -367,6 +367,7 @@ local logic_event_map = {
         if success then
             local user_data = DataManager:getUserData()
             local edit = decodeInUserDataFromDeltaData(user_data, response)
+            LuaUtils:outputTable("edit", edit)
             DataManager:setUserData(user_data, edit)
         end
     end,
