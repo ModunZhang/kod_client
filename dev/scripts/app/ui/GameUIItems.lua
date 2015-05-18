@@ -96,7 +96,7 @@ function GameUIItems:InitShop()
 end
 function GameUIItems:ReloadShopList( tag )
     self.shop_select_tag = tag
-    self.shop_listview:asyncLoadWithCurrentPosition_()
+    self.shop_listview:reload()
 end
 function GameUIItems:sourceDelegate(listView, tag, idx)
     if cc.ui.UIListView.COUNT_TAG == tag then
@@ -316,14 +316,11 @@ function GameUIItems:InitMyItems()
 end
 function GameUIItems:ReloadMyItemsList( tag )
     self.my_item_tag = tag
-    self.myItems_listview:asyncLoadWithCurrentPosition_()
+    self.myItems_listview:reload()
 end
 function GameUIItems:FilterMyItems( items )
     local f_items = {}
     for i,v in ipairs(items) do
-        if v:Name() == "chest_1" then
-        -- print('FilterMyItems ==',v:Count(),tolua.type(v:Count()))
-        end
         if v:Count() > 0 then
             table.insert(f_items, v)
         end
