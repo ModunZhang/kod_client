@@ -184,6 +184,8 @@ function BarracksUpgradeBuilding:OnFunctionDataChange(userData,deltaData,current
         return false
     end
 
+    if not userData.soldierEvents then return end
+
     print("BarracksUpgradeBuilding:OnFunctionDataChange")
 
     if is_delta_update then

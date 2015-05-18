@@ -213,6 +213,8 @@ function ToolShopUpgradeBuilding:OnFunctionDataChange(userData, deltaData, curre
     if not is_fully_update and not is_delta_update then
         return 
     end
+
+    if not userData.materialEvents then return end
     
     print("ToolShopUpgradeBuilding:OnFunctionDataChange")
 
@@ -226,6 +228,7 @@ function ToolShopUpgradeBuilding:OnFunctionDataChange(userData, deltaData, curre
         [BUILDING_EVENT] = nil,
         [TECHNOLOGY_EVENT] = nil,
     }
+
 
     for _,v in pairs(userData.materialEvents) do
         if v.category == "buildingMaterials" then
