@@ -1479,6 +1479,13 @@ function City:PromiseOfFinishSoldier(soldier_type)
     return self:GetFirstBuildingByType("barracks"):PromiseOfFinishSoldier(soldier_type)
 end
 --
+function City:PromiseOfTreatSoldier(soldier_type)
+    return self:GetFirstBuildingByType("hospital"):PromiseOfTreatSoldier(soldier_type)
+end
+function City:PromiseOfFinishTreatSoldier(soldier_type)
+    return self:GetFirstBuildingByType("hospital"):PromiseOfFinishTreatSoldier(soldier_type)
+end
+--
 function City:PromiseOfFinishEquipementDragon()
     return self:GetDragonEyrie():GetDragonManager():PromiseOfFinishEquipementDragon()
 end

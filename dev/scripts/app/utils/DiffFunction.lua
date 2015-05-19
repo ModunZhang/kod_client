@@ -2,12 +2,13 @@ local unpack = unpack
 local ipairs = ipairs
 local insert = table.insert
 local tonumber = tonumber
+local split = string.split
 return function(base, delta)
     local edit = {}
     for _,v in ipairs(delta) do
         local origin_key,value = unpack(v)
         local is_json_null = value == json.null
-        local keys = string.split(origin_key, ".")
+        local keys = split(origin_key, ".")
         if #keys == 1 then
             local k = unpack(keys)
             k = tonumber(k) or k

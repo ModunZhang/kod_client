@@ -388,17 +388,19 @@ function PVEScene:PromiseOfIntroduce()
     return GameUINpc:PromiseOfSay(
         {words = _("领主大人，探索会消耗体力值，但击败敌军可以获得资源和材料。。。"), npc = "man"}
     ):next(function()
-        local r1 = self:GetHomePage().box:getCascadeBoundingBox()
-        local r2 = self:GetHomePage().exploring:getCascadeBoundingBox()
-        local r = cc.rectUnion(r1, r2)
-        self:GetMark():Size(r.width, r.height):pos(r.x + r.width/2, r.y + r.height/2 - 30)
-
-        return GameUINpc:PromiseOfSay({words = _("当你探索玩整个地图还会获得一笔丰厚的奖励"), npc = "man"})
-    end):next(function()
         self:GetFteLayer():Disable()
         self:DestoryMark()
         return GameUINpc:PromiseOfLeave()
     end)
+
+    -- :next(function()
+    --     local r1 = self:GetHomePage().box:getCascadeBoundingBox()
+    --     local r2 = self:GetHomePage().exploring:getCascadeBoundingBox()
+    --     local r = cc.rectUnion(r1, r2)
+    --     self:GetMark():Size(r.width, r.height):pos(r.x + r.width/2, r.y + r.height/2 - 30)
+
+    --     return GameUINpc:PromiseOfSay({words = _("当你探索玩整个地图还会获得一笔丰厚的奖励"), npc = "man"})
+    -- end)
 end
 function PVEScene:PromiseOfExit()
     self:GetFteLayer():Reset()

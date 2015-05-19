@@ -49,7 +49,6 @@ function GameUIHospital:CreateBetweenBgAndTitle()
 end
 
 function GameUIHospital:OnMoveInStage()
-    GameUIHospital.super.OnMoveInStage(self)
     self:CreateTabButtons({
         {
             label = _("治愈"),
@@ -76,6 +75,8 @@ function GameUIHospital:OnMoveInStage()
     self.city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
     self.building:AddHospitalListener(self)
     self.building:AddUpgradeListener(self)
+
+    GameUIHospital.super.OnMoveInStage(self)
 end
 
 function GameUIHospital:onExit()

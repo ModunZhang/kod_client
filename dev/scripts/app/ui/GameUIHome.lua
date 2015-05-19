@@ -501,6 +501,18 @@ end
 function GameUIHome:FindVip()
     return self.vip_btn
 end
+function GameUIHome:PromiseOfFteWaitFinish()
+    if #self.city:GetUpgradingBuildings() > 0 then
+        if not self.event_tab:IsShow() then
+            self.event_tab:EventChangeOn("build", true)
+        end
+        self:GetFteLayer()
+        return self.city:PromiseOfFinishUpgradingByLevel(nil, nil):next(function()
+            self:GetFteLayer():removeFromParent()
+        end)
+    end
+    return cocos_promise.defer()
+end
 function GameUIHome:PromiseOfFteFreeSpeedUp()
     if #self.city:GetUpgradingBuildings() > 0 then
         if not self.event_tab:IsShow() then
@@ -513,13 +525,17 @@ function GameUIHome:PromiseOfFteFreeSpeedUp()
             self:Find():onButtonClicked(function()
                 self:Find():setButtonEnabled(false)
 
-                mockData.FinishBuildHouseAt(self:GetBuildingLocation(), 1)
+                local building = self:GetBuilding()
+                if building:IsHouse() then
+                    mockData.FinishBuildHouseAt(self:GetBuildingLocation(), building:GetNextLevel())
+                else
+                    mockData.FinishUpgradingBuilding(building:GetType(), building:GetNextLevel())
+                end
             end)
 
             local r = self:Find():getCascadeBoundingBox()
-            WidgetFteArrow.new(_("5分钟以下免费加速，激活VIP提升免费加速时间，VIP等级越高，可免费加速时间越高"))
-                :addTo(self:GetFteLayer()):TurnDown(true)
-                :align(display.RIGHT_BOTTOM, r.x + r.width/2 + 30, r.y + 50)
+            WidgetFteArrow.new(_("5分钟以下免费加速")):addTo(self:GetFteLayer())
+            :TurnDown(true):align(display.RIGHT_BOTTOM, r.x + r.width/2 + 30, r.y + 50)
         end)
 
         return self.city:PromiseOfFinishUpgradingByLevel(nil, nil):next(function()
