@@ -142,11 +142,18 @@ function WidgetMaterialDetails:CreateOriginItem(listView,label,callback)
         }):align(display.LEFT_CENTER, 40,  item_height/2)
         :addTo(bg)
     -- 来源链接button
-    WidgetPushButton.new({normal = "next_32x38.png",
-        pressed = "next_32x38.png"}):align(display.CENTER_RIGHT,item_width-8, item_height/2):addTo(bg)
-        :onButtonClicked(function (event)
-            callback()
-        end)
+    -- WidgetPushButton.new({normal = "next_32x38.png",
+    --     pressed = "next_32x38.png"}):align(display.CENTER_RIGHT,item_width-8, item_height/2):addTo(bg)
+    --     :onButtonClicked(function (event)
+    --     end)
+    display.newSprite("next_32x38.png"):align(display.CENTER_RIGHT,item_width-8, item_height/2):addTo(bg)
+
+    cc.ui.UIPushButton.new():onButtonClicked(function (event)
+        callback()
+    end)
+        :addTo(bg)
+        :pos(item_width/2, item_height/2)
+        :size(item_width,item_height)
     item:addContent(bg)
     listView:addItem(item)
     self.flag = not self.flag
@@ -175,6 +182,7 @@ function WidgetMaterialDetails:GetProduceHeight(material_type)
 end
 
 return WidgetMaterialDetails
+
 
 
 
