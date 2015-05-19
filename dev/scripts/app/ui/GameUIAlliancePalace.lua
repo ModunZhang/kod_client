@@ -4,10 +4,10 @@ local WidgetUIBackGround2 = import("..widget.WidgetUIBackGround2")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetAllianceBuildingUpgrade = import("..widget.WidgetAllianceBuildingUpgrade")
 local GameUIAlliancePalace = UIKit:createUIClass('GameUIAlliancePalace', "GameUIAllianceBuilding")
+local UIListView = import(".UIListView")
 local Flag = import("..entity.Flag")
 local NetService = import('..service.NetService')
 local Alliance = import("..entity.Alliance")
-local UIListView = import(".UIListView")
 local WidgetInfoWithTitle = import("..widget.WidgetInfoWithTitle")
 local WidgetInfoNotListView = import("..widget.WidgetInfoNotListView")
 local Localize = import("..utils.Localize")
@@ -137,7 +137,15 @@ function GameUIAlliancePalace:DelegateAwardList(  listView, tag, idx )
         local size = content:getContentSize()
         item:setItemSize(size.width, size.height)
         return item
-    else
+    elseif UIListView.ASY_REFRESH == tag then
+        for i,v in ipairs(listView:getItems()) do
+            if v.idx_ == idx then
+                local content = v:getContent()
+                content:SetData(idx)
+                local size = content:getContentSize()
+                v:setItemSize(size.width, size.height)
+            end
+        end
     end
 end
 function GameUIAlliancePalace:CreateAwardContent()
