@@ -261,8 +261,12 @@ end
 function Alliance:GetLastAllianceFightReports()
     local last_report
     for _,v in pairs(self.allianceFightReports) do
-        if not last_report or v.fightTime > last_report.fightTime then
+        if not last_report then
             last_report = v
+        else
+            if v.fightTime > last_report.fightTime then
+                last_report = v
+            end
         end
     end
     return last_report

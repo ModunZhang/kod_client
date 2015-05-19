@@ -108,7 +108,10 @@ function GameUIAllianceBattle:OnTimer(current_time)
     end
     if self.history_layer:isVisible() then
         for k,listitem in pairs(self.history_listview:getItems()) do
-            listitem:getContent():RefreshRevengeTime(current_time)
+            local content = listitem:getContent()
+            if content.RefreshRevengeTime then
+                listitem:getContent():RefreshRevengeTime(current_time)
+            end
         end
     end
 end
@@ -749,13 +752,13 @@ function GameUIAllianceBattle:HistoryDelegate(listView, tag, idx)
     end
 end
 function GameUIAllianceBattle:CreateHistoryContent()
-    local w,h = 568,294
+    local w,h = 568,570
     local content = WidgetUIBackGround.new({height=h,width=w},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
     -- 战斗发生时间
     local fight_time_label = UIKit:ttfLabel({
         size = 20,
         color = 0x615b44,
-    }):align(display.LEFT_CENTER,20, 40)
+    }):align(display.LEFT_CENTER,20, 60)
         :addTo(content)
 
     local fight_bg = display.newSprite("report_back_ground.png")
@@ -802,7 +805,7 @@ function GameUIAllianceBattle:CreateHistoryContent()
         :addTo(fight_bg)
 
     -- 击杀数，击溃城市
-    local info_bg = WidgetUIBackGround.new({width = 540,height = 110},WidgetUIBackGround.STYLE_TYPE.STYLE_6)
+    local info_bg = WidgetUIBackGround.new({width = 540,height = 388},WidgetUIBackGround.STYLE_TYPE.STYLE_6)
         :align(display.BOTTOM_CENTER,w/2,80):addTo(content)
     local function createItem(info,meetFlag)
         local content
@@ -831,12 +834,12 @@ function GameUIAllianceBattle:CreateHistoryContent()
 
     local revenge_time_label = UIKit:ttfLabel({
         size = 24,
-    }):align(display.LEFT_CENTER, 30, 30)
+    }):align(display.LEFT_CENTER, 20, 30)
         :addTo(content)
     local title_label = UIKit:ttfLabel({
         size = 24,
         color = 0x615b44,
-    }):align(display.LEFT_CENTER, 30, 30)
+    }):align(display.LEFT_CENTER, 20, 30)
         :addTo(content)
 
     local parent = self
@@ -896,9 +899,21 @@ function GameUIAllianceBattle:CreateHistoryContent()
         local info_message = {
             {string.formatnumberthousands(ourAlliance.kill),_("总击杀"),string.formatnumberthousands(enemyAlliance.kill)},
             {string.formatnumberthousands(ourAlliance.routCount),_("击溃城市"),string.formatnumberthousands(enemyAlliance.routCount)},
+            {string.formatnumberthousands(ourAlliance.strikeCount),_("突袭次数"),string.formatnumberthousands(enemyAlliance.strikeCount)},
+            {string.formatnumberthousands(ourAlliance.strikeSuccessCount),_("突袭成功"),string.formatnumberthousands(enemyAlliance.strikeSuccessCount)},
+            {string.formatnumberthousands(ourAlliance.attackCount),_("进攻次数"),string.formatnumberthousands(enemyAlliance.attackCount)},
+            {string.formatnumberthousands(ourAlliance.attackSuccessCount),_("进攻成功"),string.formatnumberthousands(enemyAlliance.attackSuccessCount)},
+            {"阿拉蕾",_("头号杀手"),"无"},
+            {string.formatnumberthousands(ourAlliance.honour),_("荣耀值奖励"),string.formatnumberthousands(enemyAlliance.honour)},
         }
-        createItem(info_message[1],true):align(display.CENTER, 270, 33):addTo(info_bg)
-        createItem(info_message[2],false):align(display.CENTER, 270, 79):addTo(info_bg)
+        local b_flag = true
+        local origin_y = 388 - 33
+        local gap_y = 46
+        for i,v in ipairs(info_message) do
+            createItem(v,b_flag):align(display.CENTER, 270, origin_y - (i-1)*gap_y):addTo(info_bg)
+            b_flag = not b_flag
+        end
+        -- createItem(info_message[2],false):align(display.CENTER, 270, 79):addTo(info_bg)
 
         -- 只有权限大于将军的玩家可以请求复仇
         local isEqualOrGreater = alliance:GetMemeberById(DataManager:getUserData()._id)
@@ -1252,6 +1267,7 @@ function GameUIAllianceBattle:OnAllianceFightReportsChanged(changed_map)
 end
 
 return GameUIAllianceBattle
+
 
 
 
