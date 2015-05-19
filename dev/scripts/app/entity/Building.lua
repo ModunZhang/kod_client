@@ -42,6 +42,7 @@ local sort_map = Enum(
     "wall",
     "tower"
 )
+local pairs = pairs
 
 
 function Building:ctor(building_info)
@@ -147,7 +148,7 @@ function Building:IsNearByBuildingWithLength(building, len)
     local mid_x, mid_y = self:GetMidLogicPosition()
     local w, h = self:GetSize()
     local half_w, half_h = w/2, h/2
-    for k, v in pairs({
+    for _,v in pairs({
         {start_x, start_y},
         {start_x, end_y},
         {end_x, start_y},

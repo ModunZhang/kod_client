@@ -208,7 +208,9 @@ function MyApp:retryConnectServer(need_disconnect)
 end
 function MyApp:ReloadGame()
     self:onEnterBackground()
-    self:onEnterForeground()
+    scheduler.performWithDelayGlobal(function()
+        self:onEnterForeground()
+    end, 2)
 end
 
 function MyApp:onEnterBackground()

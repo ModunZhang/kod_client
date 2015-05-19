@@ -133,9 +133,7 @@ function BlackSmithUpgradeBuilding:GetMakingTimeByEquipment(equipment)
     return config.makeTime
 end
 function BlackSmithUpgradeBuilding:IsNeedToUpdate()
-    if self.level > 0 then
-        return self.upgrade_to_next_level_time ~= 0 or self.making_event:IsMaking()
-    end
+    return self.upgrade_to_next_level_time ~= 0 or (self.level > 0 and self.making_event:IsMaking())
 end
 function BlackSmithUpgradeBuilding:OnTimer(current_time)
     local event = self.making_event

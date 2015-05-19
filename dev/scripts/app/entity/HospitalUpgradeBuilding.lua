@@ -150,9 +150,7 @@ function HospitalUpgradeBuilding:GetSoldierConfigByType(soldier_type)
     return config
 end
 function HospitalUpgradeBuilding:IsNeedToUpdate()
-    if self.level > 0 then
-        return self.upgrade_to_next_level_time ~= 0 or self.treat_event:IsTreating()
-    end
+    return self.upgrade_to_next_level_time ~= 0 or (self.level > 0 and self.treat_event:IsTreating())
 end
 function HospitalUpgradeBuilding:OnTimer(current_time)
     local event = self.treat_event
