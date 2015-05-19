@@ -5,6 +5,7 @@ local WidgetPVEFteMiner = class("WidgetPVEFteMiner", WidgetPVEMiner)
 function WidgetPVEFteMiner:ctor(...)
     WidgetPVEFteMiner.super.ctor(self, ...)
     self.__type  = UIKit.UITYPE.BACKGROUND
+    self:DisableAutoClose()
 end
 
 
