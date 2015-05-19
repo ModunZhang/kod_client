@@ -133,8 +133,8 @@ function GameUIVip:WidgetPlayerNode_DataSource(name)
         return {
             name = User:Name(),
             lv = User:Level(),
-            currentExp = User:LevelExp(),
-            maxExp = exp_config.expTo,
+            currentExp = User:LevelExp() - exp_config.expFrom,
+            maxExp = exp_config.expTo - exp_config.expFrom,
             power = User:Power(),
             playerId = User:Id(),
             playerIcon = User:Icon(),
