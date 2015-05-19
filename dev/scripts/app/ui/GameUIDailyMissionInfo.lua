@@ -11,10 +11,31 @@ local UIKit = UIKit
 local UIListView = import(".UIListView")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetPushTransparentButton = import("..widget.WidgetPushTransparentButton")
+local config_stringInit = GameDatas.PlayerInitData.stringInit
+local Localize_item = import("..utils.Localize_item")
 
 function GameUIDailyMissionInfo:ctor(key_of_daily)
 	GameUIDailyMissionInfo.super.ctor(self)
 	self.key_of_daily = key_of_daily
+end
+
+function GameUIDailyMissionInfo:GetRewardsStr()
+    local key_of_daily = self:GetKeyOfDaily()
+    local config_key = ""
+    if key_of_daily == 'empireRise' then
+        config_key = 'empireRiseDailyTaskRewards'
+    elseif key_of_daily == 'brotherClub' then
+        config_key = 'brotherClubDailyTaskRewards'
+    elseif key_of_daily == 'conqueror' then
+        config_key = 'conquerorDailyTaskRewards'  
+    elseif key_of_daily == 'growUp' then
+        config_key = 'growUpDailyTaskRewards'
+    end
+    local config_rewards = config_stringInit[config_key].value
+    if config_rewards then
+        local reward_type,reward_key,count = unpack(string.split(config_rewards,":"))
+        return string.format("%s x%s",Localize_item.item_name[reward_key],count)
+    end
 end
 
 function GameUIDailyMissionInfo:onEnter()
@@ -66,6 +87,10 @@ function GameUIDailyMissionInfo:BuildUI()
         :addTo(bg)
         :scale(174/400)
     self.button_finish_animation = yin_box
+    local button_finish_sprite = display.newSprite("#root/yin/a0002.png"):align(display.RIGHT_BOTTOM, 562,456)
+        :addTo(bg)
+        :scale(174/400)
+    self.button_finish_sprite = button_finish_sprite
     local button = WidgetPushTransparentButton.new(cc.rect(0,0,174,141))
         :align(display.RIGHT_BOTTOM, 562,456)
         :addTo(bg)
@@ -85,6 +110,13 @@ function GameUIDailyMissionInfo:RefreshListUI()
     self.progress:setPercentage(percentage * 100)
     self.button_finish_icon:setVisible(User:CheckDailyTasksWasRewarded(self:GetKeyOfDaily()))
 	self:RefreshListView()
+    if User:CheckDailyTasksWasRewarded(self:GetKeyOfDaily()) then
+        self.button_finish_sprite:show()
+        self.button_finish_animation:hide()
+    else
+        self.button_finish_sprite:hide()
+        self.button_finish_animation:show()
+    end
 end
 
 
@@ -96,10 +128,19 @@ function GameUIDailyMissionInfo:GetProgressBar()
 end
 
 function GameUIDailyMissionInfo:GetRewardFromServer()
+    local percentage = #User:GetDailyTasksInfo(self:GetKeyOfDaily()) / 4
+    if percentage < 1 then
+        GameGlobalUI:showTips(_("提示"),_("你还未完成所有任务"))
+        return
+    end
     if not User:CheckDailyTasksWasRewarded(self:GetKeyOfDaily()) then
         NetManager:getDailyTaskRewards(self:GetKeyOfDaily()):done(function()
             self.button_finish_animation:getAnimation():play("Animation1", -1, 0)
+            app:GetAudioManager():PlayeEffectSoundWithKey("USE_ITEM")
+            GameGlobalUI:showTips(_("恭喜"),self:GetRewardsStr())
         end)
+    else
+        GameGlobalUI:showTips(_("提示"),_("你已经领取了该奖励"))
     end
 end
 

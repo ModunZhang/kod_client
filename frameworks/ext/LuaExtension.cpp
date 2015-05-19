@@ -783,7 +783,6 @@ static void ResgisterGlobalExtFunctions(lua_State* tolua_S)
     tolua_function(tolua_S, "getOpenUDID",tolua_ext_getOpenUdid);
     tolua_function(tolua_S, "registereForRemoteNotifications",tolua_ext_registereForRemoteNotifications);
     tolua_function(tolua_S, "clearOpenUdid",tolua_ext_clearOpenUdid);
-    
 }
 
 
