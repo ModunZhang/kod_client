@@ -326,7 +326,7 @@ return {
         sentinel = 0,
         crossbowman = 0,
         ranger = 0,
-        swordsman = 0
+        swordsman = 12
     },
     houseEvents = { },
     buildingEvents = { },
