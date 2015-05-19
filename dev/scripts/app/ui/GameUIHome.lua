@@ -26,7 +26,7 @@ local STONE         = ResourceManager.RESOURCE_TYPE.STONE
 local POPULATION    = ResourceManager.RESOURCE_TYPE.POPULATION
 local COIN          = ResourceManager.RESOURCE_TYPE.COIN
 
-local red_color = UIKit:hex2c4b(0xff3c00) 
+local red_color = UIKit:hex2c4b(0xff3c00)
 local normal_color = UIKit:hex2c4b(0xf3f0b6)
 function GameUIHome:OnResourceChanged(resource_manager)
     local server_time = timer:GetServerTime()
@@ -293,11 +293,11 @@ function GameUIHome:CreateTop()
 
     -- 玩家信息背景
     local player_bg = display.newSprite("player_bg_110x106.png")
-    :align(display.LEFT_BOTTOM, display.width>640 and 58 or 64, 10)
-    :addTo(top_bg, 2):setCascadeOpacityEnabled(true)
+        :align(display.LEFT_BOTTOM, display.width>640 and 58 or 60, 10)
+        :addTo(top_bg, 2):setCascadeOpacityEnabled(true)
     self.player_icon = UIKit:GetPlayerIconOnly(User:Icon())
-    :addTo(player_bg):pos(55, 64):scale(0.72)
-    self.exp = display.newProgressTimer("player_exp_bar_110x106.png", 
+        :addTo(player_bg):pos(55, 64):scale(0.72)
+    self.exp = display.newProgressTimer("player_exp_bar_110x106.png",
         display.PROGRESS_TIMER_RADIAL):addTo(player_bg):pos(55, 53)
     self.exp:setRotationSkewY(180)
     self:RefreshExp()
@@ -609,6 +609,7 @@ function GameUIHome:OnCountInfoChanged()
 end
 
 return GameUIHome
+
 
 
 

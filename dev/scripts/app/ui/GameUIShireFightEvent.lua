@@ -272,13 +272,17 @@ function GameUIShireFightEvent:DispathSoliderButtonClicked()
             UIKit:showMessageDialog(_("提示"),
                 _("检测到你的行军时间大于圣地事件时间,可能部队未达到之前，圣地事件已结束。是否继续派兵?"),
                 function()
-                    NetManager:getMarchToShrinePromose(self:GetFightEvent():Id(),dragonType,soldiers)
+                    NetManager:getMarchToShrinePromose(self:GetFightEvent():Id(),dragonType,soldiers):done(function()
+                        app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_SENDOUT")
+                    end)
                     gameuialliancesendtroops:LeftButtonClicked()
                 end,
                 function()
                 end)
         else
-            NetManager:getMarchToShrinePromose(self:GetFightEvent():Id(),dragonType,soldiers)
+            NetManager:getMarchToShrinePromose(self:GetFightEvent():Id(),dragonType,soldiers):done(function()
+                app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_SENDOUT")
+            end)
             gameuialliancesendtroops:LeftButtonClicked()
         end
     end,{toLocation = self:GetAllianceShrineLocation(),targetIsMyAlliance = true,returnCloseAction = true}):AddToCurrentScene(true)

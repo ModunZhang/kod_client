@@ -11,9 +11,7 @@ local bg_music_map = {
 	AllianceScene = "bgm_peace.mp3",
 	PVEScene = "bgm_battle.mp3",
 	AllianceBattleScene = "bgm_battle.mp3",
-	grassLand = "sfx_glassland.mp3",
-	iceField = "sfx_icefiled.mp3",
-	desert = "sfx_desert.mp3",
+	AllianceBattleScene_sfx = "sfx_battle.mp3",
 }
 
 local effect_sound_map = {
@@ -308,15 +306,17 @@ function AudioManager:OnBackgroundMusicCompletion()
 		or lastFilename == 'sfx_glassland' 
 		or lastFilename == 'sfx_icefiled' 
 		then
-			if lastFilename == 'bgm_peace' or lastFilename == 'bgm_battle' then
+			if lastFilename == 'bgm_peace' or lastFilename == 'bgm_battle'  or lastFilename == 'sfx_battle' then
 				if scene_name == 'MyCityScene' then
 					self:PlayGameMusic("MyCityScene",false) -- sfx_city
 				elseif scene_name == 'AllianceBattleScene' then
 					local alliance = Alliance_Manager:GetMyAlliance()
 					local status = alliance:Status()
 					if status == 'prepare' or status == 'fight' then
-						if current_scene.PlayCurrentTerrainMusic then
-							current_scene:PlayCurrentTerrainMusic()
+						if  lastFilename == 'sfx_battle' then
+							self:PlayGameMusic("AllianceBattleScene",false)
+						elseif lastFilename == 'bgm_battle' then
+							self:PlayGameMusic("AllianceBattleScene_sfx",false)
 						end
 					else
 						self:PlayGameMusic("AllianceScene",false)
