@@ -68,9 +68,11 @@ extern "C" const char* GetDeviceModel()
                                encoding:NSUTF8StringEncoding]UTF8String];
 }
 //log
+#ifdef DEBUG
 static NSFileHandle *outFile = NULL;
 static NSString *logFilePath = NULL;
 static dispatch_queue_t aDQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
+#endif
 extern "C" void WriteLog_(const char *str)
 {
 #ifndef DEBUG
@@ -117,7 +119,11 @@ extern "C" long long getOSTime()
 
 extern "C" const char* GetOpenUdid()
 {
-    NSString *_openUDID = [UICKeyChainStore stringForKey:kKeychainBatcatStudioIdentifier service:kKeychainBatcatStudioKeyChainService];
+    NSError *error = nil;
+    NSString *_openUDID = [UICKeyChainStore stringForKey:kKeychainBatcatStudioIdentifier service:kKeychainBatcatStudioKeyChainService error:&error];
+    if (error) {
+        NSLog(@"%@", error.localizedDescription);
+    }
     if(!_openUDID){
         CFUUIDRef uuid = CFUUIDCreate(kCFAllocatorDefault);
         CFStringRef cfstring = CFUUIDCreateString(kCFAllocatorDefault, uuid);
@@ -137,8 +143,11 @@ extern "C" const char* GetOpenUdid()
 
         
         UICKeyChainStore *store = [UICKeyChainStore keyChainStoreWithService:kKeychainBatcatStudioKeyChainService];
-        [store setString:_openUDID forKey:kKeychainBatcatStudioIdentifier];
-        [store synchronize];
+        NSError *error = nil;
+        [store setString:_openUDID forKey:kKeychainBatcatStudioIdentifier error:&error];
+        if (error) {
+            NSLog(@"%@", error.localizedDescription);
+        }
     }
     NSLog(@"GetOpenUdid:%@",_openUDID);
     return [_openUDID UTF8String];

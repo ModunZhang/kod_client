@@ -131,7 +131,6 @@ function GameUISettingServer:sourceDelegate(listView, tag, idx)
         self:FillDataItem(content,data)
         item:setItemSize(560,130)
         return item
-    else
     end
 end
 
@@ -236,9 +235,19 @@ function GameUISettingServer:listviewListener(event)
     if "clicked" == event.name then
     	local server = self.data[event.itemPos]
     	self.server_code = server.id
-		listView:asyncLoadWithCurrentPosition_()
+    	self:RefreshCurrentPageList()
 		self:RefreshServerInfo()
     end
+end
+
+function GameUISettingServer:RefreshCurrentPageList()
+	local items = self.list_view:getItems()
+	for __,v in ipairs(items) do
+		local idx = v.idx_ 
+		local server = self.data[idx]
+		local content = v:getContent()
+		self:FillDataItem(content,server)
+	end
 end
 
 function GameUISettingServer:RefreshServerInfo()

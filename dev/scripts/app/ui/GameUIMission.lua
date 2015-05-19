@@ -241,6 +241,7 @@ function GameUIMission:listviewListener(event)
         local really_pos = pos - 2 - #self:GetAchievementMissionData(true)
         if really_pos > 0 then
             local data = self:GetAchievementMissionData(false)[really_pos]
+            app:GetAudioManager():PlayeEffectSoundWithKey("NORMAL_DOWN")
             self:OnTodoAchievementMissionClicked(data)
         end
     end
@@ -431,6 +432,7 @@ function GameUIMission:dailyListviewListener(event)
     if "clicked" == event.name then
         local pos = event.itemPos
         local keys_of_daily = KEYS_OF_DAILY[pos]
+        app:GetAudioManager():PlayeEffectSoundWithKey("NORMAL_DOWN")
         UIKit:newGameUI("GameUIDailyMissionInfo",keys_of_daily):AddToCurrentScene(true)
     end
 end

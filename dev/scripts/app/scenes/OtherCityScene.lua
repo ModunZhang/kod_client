@@ -15,7 +15,7 @@ end
 function OtherCityScene:OnTouchClicked(pre_x, pre_y, x, y)
 	local building = self:GetSceneLayer():GetClickedObject(x, y)
     if building then
-        app:lockInput(true);self:performWithDelay(function()app:lockInput()end,0.5)
+        app:lockInput(true);self:performWithDelay(function()app:lockInput()end,0.3)
         Sprite:PromiseOfFlash(unpack(self:CollectBuildings(building)))
     end
 end

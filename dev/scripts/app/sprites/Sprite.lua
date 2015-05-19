@@ -139,7 +139,7 @@ function Sprite:GetLogicMap()
 end
 
 --- effects
-local FLASH_TIME = 0.5
+local FLASH_TIME = 0.3
 function Sprite:PromiseOfFlash(...)
     local sprites = {...}
     local director = cc.Director:getInstance()

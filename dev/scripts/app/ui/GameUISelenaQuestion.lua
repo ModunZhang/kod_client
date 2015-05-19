@@ -204,9 +204,9 @@ function GameUISelenaQuestion:RefreshQuestionLayer(question)
 end
 
 function GameUISelenaQuestion:GetWelcomeLayer(welcome_ui_type)
-	self._question_index = -1
 	welcome_ui_type = welcome_ui_type or self.WELCOME_UI_TYPE.WELCOME
 	local msg,button_title = self:GetMsgAndButtonTitleByWelcomeType(welcome_ui_type)
+	self._question_index = -1
 	if self.welcome_layer then
 		self.welcome_layer.setInfo(msg,button_title)
 		return self.welcome_layer
@@ -345,7 +345,7 @@ end
 function GameUISelenaQuestion:CheckFinishSelenaTestIf()
 	local data = User:GetDailyTasksInfo("empireRise")
 	for __,v in ipairs(data) do
-		if v == 4 then
+		if v == 3 then
 			return true
 		end
 	end

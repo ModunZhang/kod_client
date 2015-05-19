@@ -8,13 +8,14 @@
 
 #include "ext_uservoice.h"
 #import "UserVoice.h"
-
-void OpenUserVoice()
+#define utf8strToNSString(str) [NSString stringWithUTF8String:str]
+void OpenUserVoice(const char* site,int forumId,const char* email,const char* user_name,const char* guid)
 {
-    UVConfig *config = [UVConfig configWithSite:@"dannyhe.uservoice.com"];
-    config.forumId = 280112;
-     [config identifyUserWithEmail:@"email@example.com" name:@"User Name" guid:@"USER_ID"];
+    UVConfig *config = [UVConfig configWithSite:utf8strToNSString(site)]; //dannyhe.uservoice.com
+    config.forumId = forumId; // 280112
+    [config identifyUserWithEmail:utf8strToNSString(email) name:utf8strToNSString(user_name) guid:utf8strToNSString(guid)];
     [UserVoice initialize:config];
     // Call this wherever you want to launch UserVoice
     [UserVoice presentUserVoiceForumForParentViewController:[[[UIApplication sharedApplication]keyWindow] rootViewController]];
+    
 }
