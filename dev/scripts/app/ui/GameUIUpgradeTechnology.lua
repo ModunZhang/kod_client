@@ -444,6 +444,10 @@ function GameUIUpgradeTechnology:ForceUpgrade(gem_cost)
     else
         NetManager:getUpgradeProductionTechPromise(self:GetProductionTechnology():Name(),false):done(function(msg)
             self:LeftButtonClicked()
+            local acdemy = UIKit:GetUIInstance("GameUIAcademy")
+            if acdemy then
+                acdemy:LeftButtonClicked()
+            end
         end)
     end
 end

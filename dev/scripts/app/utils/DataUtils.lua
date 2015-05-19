@@ -572,6 +572,16 @@ function DataUtils:GetNextRecruitTime()
     return dt1
 end
 
+function DataUtils:GetDragonSkillUnLockStar(skillName)
+    for __,v in ipairs(config_dragonStar) do
+        local unlockSkills = string.split(v.skillsUnlocked,',')
+        for __,skill_name in ipairs(unlockSkills) do
+            if skill_name == skillName then
+                return v.star
+            end
+        end
+    end
+end
 
 return DataUtils
 
