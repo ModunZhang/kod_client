@@ -63,12 +63,23 @@ function DataManager:OnUserDataChanged(userData,timer, deltaData)
         print(debug.traceback("", 2))
         assert(false)
     end
-    User:OnUserDataChanged(userData, timer, deltaData)
-    ItemManager:OnUserDataChanged(userData, timer, deltaData)
-    City:OnUserDataChanged(userData, timer, deltaData)
-    Alliance_Manager:OnUserDataChanged(userData, timer, deltaData)
-    MailManager:OnUserDataChanged(userData, timer, deltaData)
+    LuaUtils:TimeCollect(function()
+        User:OnUserDataChanged(userData, timer, deltaData)
+    end, "User:OnUserDataChanged")
+    LuaUtils:TimeCollect(function()
+        ItemManager:OnUserDataChanged(userData, timer, deltaData)
+    end, "ItemManager:OnUserDataChanged")
+    LuaUtils:TimeCollect(function()
+        City:OnUserDataChanged(userData, timer, deltaData)
+    end, "City:OnUserDataChanged")
+    LuaUtils:TimeCollect(function()
+        Alliance_Manager:OnUserDataChanged(userData, timer, deltaData)
+    end, "Alliance_Manager:OnUserDataChanged")
+    LuaUtils:TimeCollect(function()
+        MailManager:OnUserDataChanged(userData, timer, deltaData)
+    end, "MailManager:OnUserDataChanged")
 end
+
 
 
 
