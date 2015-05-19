@@ -200,7 +200,7 @@ function PVELayer:PromiseOfTrap()
     local exclamation_scale = 1
     local size = self.char:getContentSize()
     local s = display.newSprite("exclamation.png")
-        :addTo(self.char):pos(size.width*0.4, size.height*0.4):scale(0)
+        :addTo(self.char):pos(size.width*0.3, size.height*0.3):scale(0)
     self.char:runAction(transition.sequence({
         cc.RotateBy:create(t, r),
         cc.RotateBy:create(t, -r),
