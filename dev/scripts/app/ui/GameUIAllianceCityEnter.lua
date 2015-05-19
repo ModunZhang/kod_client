@@ -150,7 +150,7 @@ function GameUIAllianceCityEnter:GetEnterButtons()
                     if not alliance:CheckHelpDefenceMarchEventsHaveTarget(playerId) then
                         UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
                             NetManager:getHelpAllianceMemberDefencePromise(dragonType, soldiers, playerId)
-                        end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition(),terrian = member.terrian}):AddToCurrentScene(true)
+                        end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition()):AddToCurrentScene(true)
                         self:LeftButtonClicked()
                     else
                         UIKit:showMessageDialog(_("错误"), _("已有协防部队正在行军"), function()end)
@@ -191,7 +191,7 @@ function GameUIAllianceCityEnter:GetEnterButtons()
                     return
                 end
                 NetManager:getAttackPlayerCityPromise(dragonType, soldiers, member:Id())
-            end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition(),terrian = member.terrian}):AddToCurrentScene(true)
+            end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition()}):AddToCurrentScene(true)
             self:LeftButtonClicked()
         end)
     local my_allaince = Alliance_Manager:GetMyAlliance()

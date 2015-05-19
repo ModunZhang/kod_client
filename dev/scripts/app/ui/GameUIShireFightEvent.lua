@@ -281,7 +281,7 @@ function GameUIShireFightEvent:DispathSoliderButtonClicked()
             NetManager:getMarchToShrinePromose(self:GetFightEvent():Id(),dragonType,soldiers)
             gameuialliancesendtroops:LeftButtonClicked()
         end
-    end,{toLocation = self:GetAllianceShrineLocation(),targetIsMyAlliance = true,returnCloseAction = true,terrian = Alliance_Manager:GetMyAlliance():Terrain()}):AddToCurrentScene(true)
+    end,{toLocation = self:GetAllianceShrineLocation(),targetIsMyAlliance = true,returnCloseAction = true}):AddToCurrentScene(true)
 end
 
 function GameUIShireFightEvent:InfomationButtonClicked()

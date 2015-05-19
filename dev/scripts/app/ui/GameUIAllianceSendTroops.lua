@@ -84,7 +84,7 @@ function GameUIAllianceSendTroops:ctor(march_callback,params)
     self.returnCloseAction = type(params.returnCloseAction) == 'boolean' and params.returnCloseAction or false
     self.toLocation = params.toLocation or cc.p(0,0)
     self.targetIsMyAlliance = type(params.targetIsMyAlliance) == 'boolean' and params.targetIsMyAlliance or true
-    self.terrain = params.terrain or "grassLand"
+    self.terrain = User:Terrain()
     GameUIAllianceSendTroops.super.ctor(self,City,_("准备进攻"))
     local manager = ccs.ArmatureDataManager:getInstance()
     for _, anis in pairs(UILib.soldier_animation_files) do
