@@ -149,8 +149,10 @@ function GameUIAllianceCityEnter:GetEnterButtons()
                     local playerId = member:Id()
                     if not alliance:CheckHelpDefenceMarchEventsHaveTarget(playerId) then
                         UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
-                            NetManager:getHelpAllianceMemberDefencePromise(dragonType, soldiers, playerId)
-                        end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition()):AddToCurrentScene(true)
+                            NetManager:getHelpAllianceMemberDefencePromise(dragonType, soldiers, playerId):done(function()
+                                app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_SENDOUT")
+                            end)
+                        end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition()}):AddToCurrentScene(true)
                         self:LeftButtonClicked()
                     else
                         UIKit:showMessageDialog(_("错误"), _("已有协防部队正在行军"), function()end)
@@ -190,7 +192,9 @@ function GameUIAllianceCityEnter:GetEnterButtons()
                     UIKit:showMessageDialog(_("提示"),_("玩家处于保护状态,不能进攻或突袭"), function()end)
                     return
                 end
-                NetManager:getAttackPlayerCityPromise(dragonType, soldiers, member:Id())
+                NetManager:getAttackPlayerCityPromise(dragonType, soldiers, member:Id()):done(function()
+                    app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_SENDOUT")
+                end)
             end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition()}):AddToCurrentScene(true)
             self:LeftButtonClicked()
         end)

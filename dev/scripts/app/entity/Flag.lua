@@ -4,7 +4,7 @@ local count_config = {
     colors=12,
     graphics=20,
 }
-
+local random_key = {}
 function Flag:ctor()
     self.form_index = 2
     self.form_color_index_1 = 10
@@ -84,14 +84,21 @@ local randomseed = math.randomseed
 
 function Flag:RandomFlag()
     local flag = Flag.new()
-    randomseed(tostring(os.time()):reverse():sub(1, 6))
+    randomseed(tostring(os.time()):reverse():sub(1, 10))
     flag:SetBackStyle(random(count_config.backstyle))
     local oneColor = random(0,count_config.colors - 1) + 1
     local otherColor = random(count_config.colors)
     flag:SetBackColors(oneColor, otherColor)
-    flag:SetFrontStyle(random(count_config.graphics))
+    local random_num = random(count_config.graphics)
+    if LuaUtils:table_size(random_key) >= count_config.graphics then random_key = {} end
+    while random_key[random_num] do
+        random_num = random(count_config.graphics)
+    end
+    random_key[random_num] = true
+    flag:SetFrontStyle(random_num)
     oneColor = random(0,count_config.colors - 2) + 2
     flag:SetFrontColor(oneColor)
+    
     return flag
 end
 function Flag:EncodeToJson()

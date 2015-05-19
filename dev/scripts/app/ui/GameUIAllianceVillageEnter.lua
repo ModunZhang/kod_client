@@ -311,7 +311,9 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
                 local attack_button = self:BuildOneButton("capture_38x56.png",_("占领")):onButtonClicked(function()
                     if self:CheckCanAttackVillage() then
                         UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
-                            NetManager:getAttackVillagePromise(dragonType,soldiers,villageEvent:VillageData().alliance.id,village_id)
+                            NetManager:getAttackVillagePromise(dragonType,soldiers,villageEvent:VillageData().alliance.id,village_id):done(function()
+                                app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_SENDOUT")
+                            end)
                         end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition()}):AddToCurrentScene(true)
                     end
                     self:LeftButtonClicked()
@@ -328,7 +330,9 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
                 local attack_button = self:BuildOneButton("capture_38x56.png",_("占领")):onButtonClicked(function()
                     if self:CheckCanAttackVillage() then
                         UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
-                            NetManager:getAttackVillagePromise(dragonType,soldiers,alliance_id,village_id)
+                            NetManager:getAttackVillagePromise(dragonType,soldiers,alliance_id,village_id):done(function()
+                                app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_SENDOUT")
+                            end)
                         end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition()}):AddToCurrentScene(true)
                     end
                     self:LeftButtonClicked()
@@ -354,7 +358,9 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
         local attack_button = self:BuildOneButton("capture_38x56.png",_("占领")):onButtonClicked(function()
             if self:CheckCanAttackVillage() then
                 UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
-                    NetManager:getAttackVillagePromise(dragonType,soldiers,alliance_id,village_id)
+                    NetManager:getAttackVillagePromise(dragonType,soldiers,alliance_id,village_id):done(function()
+                        app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_SENDOUT")
+                    end)
                 end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition()}):AddToCurrentScene(true)
             end
             self:LeftButtonClicked()
@@ -392,7 +398,9 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
         local attack_button = self:BuildOneButton("capture_38x56.png",_("占领")):onButtonClicked(function()
             if self:CheckCanAttackVillage() then
                 UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
-                    NetManager:getAttackVillagePromise(dragonType,soldiers,alliance_id,village_id)
+                    NetManager:getAttackVillagePromise(dragonType,soldiers,alliance_id,village_id):done(function()
+                        app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_SENDOUT")
+                    end)
                 end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition()}):AddToCurrentScene(true)
             end
             self:LeftButtonClicked()

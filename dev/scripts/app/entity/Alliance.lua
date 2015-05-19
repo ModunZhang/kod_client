@@ -918,7 +918,7 @@ function Alliance:OnStrikeMarchEventsDataChanged(alliance_data,deltaData,refresh
         end)
         self.strikeMarchEvents = {}
         for _,v in ipairs(alliance_data.strikeMarchEvents) do
-            local strikeMarchEvent = MarchAttackEvent.new()
+            local strikeMarchEvent = MarchAttackEvent.new(true)
             strikeMarchEvent:UpdateData(v,refresh_time)
             self.strikeMarchEvents[strikeMarchEvent:Id()] = strikeMarchEvent
             strikeMarchEvent:AddObserver(self)
@@ -929,7 +929,7 @@ function Alliance:OnStrikeMarchEventsDataChanged(alliance_data,deltaData,refresh
         local changed_map = GameUtils:Handler_DeltaData_Func(
             deltaData.strikeMarchEvents
             ,function(event_data)
-                local strikeMarchEvent = MarchAttackEvent.new()
+                local strikeMarchEvent = MarchAttackEvent.new(true)
                 strikeMarchEvent:UpdateData(event_data,refresh_time)
                 self.strikeMarchEvents[strikeMarchEvent:Id()] = strikeMarchEvent
                 strikeMarchEvent:AddObserver(self)
@@ -947,7 +947,7 @@ function Alliance:OnStrikeMarchEventsDataChanged(alliance_data,deltaData,refresh
                     local strikeMarchEvent = self.strikeMarchEvents[event_data.id]
                     strikeMarchEvent:Reset()
                     self.strikeMarchEvents[event_data.id] = nil
-                    strikeMarchEvent = MarchAttackEvent.new()
+                    strikeMarchEvent = MarchAttackEvent.new(true)
                     strikeMarchEvent:UpdateData(event_data,refresh_time)
                     return strikeMarchEvent
                 end
@@ -973,7 +973,7 @@ function Alliance:OnStrikeMarchReturnEventsDataChanged(alliance_data,deltaData,r
         end)
         self.strikeMarchReturnEvents = {}
         for _,v in ipairs(alliance_data.strikeMarchReturnEvents) do
-            local strikeMarchReturnEvent = MarchAttackReturnEvent.new()
+            local strikeMarchReturnEvent = MarchAttackReturnEvent.new(true)
             strikeMarchReturnEvent:UpdateData(v,refresh_time)
             self.strikeMarchReturnEvents[strikeMarchReturnEvent:Id()] = strikeMarchReturnEvent
             strikeMarchReturnEvent:AddObserver(self)
@@ -984,7 +984,7 @@ function Alliance:OnStrikeMarchReturnEventsDataChanged(alliance_data,deltaData,r
         local changed_map = GameUtils:Handler_DeltaData_Func(
             deltaData.strikeMarchReturnEvents
             ,function(event_data)
-                local strikeMarchReturnEvent = MarchAttackReturnEvent.new()
+                local strikeMarchReturnEvent = MarchAttackReturnEvent.new(true)
                 strikeMarchReturnEvent:UpdateData(event_data,refresh_time)
                 self.strikeMarchReturnEvents[strikeMarchReturnEvent:Id()] = strikeMarchReturnEvent
                 strikeMarchReturnEvent:AddObserver(self)
@@ -1002,7 +1002,7 @@ function Alliance:OnStrikeMarchReturnEventsDataChanged(alliance_data,deltaData,r
                     local strikeMarchReturnEvent = self.strikeMarchReturnEvents[event_data.id]
                     strikeMarchReturnEvent:Reset()
                     self.strikeMarchReturnEvents[event_data.id] = nil
-                    strikeMarchReturnEvent = MarchAttackReturnEvent.new()
+                    strikeMarchReturnEvent = MarchAttackReturnEvent.new(true)
                     strikeMarchReturnEvent:UpdateData(event_data,refresh_time)
                     return strikeMarchReturnEvent
                 end

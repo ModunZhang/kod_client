@@ -289,8 +289,8 @@ function GameUIAllianceEnterBase:GetEnterButtonByIndex( idx )
     return self.EnterButtonNodes[idx]
 end
 function GameUIAllianceEnterBase:GetEnterButtons()
-    if self:IsMyAlliance() then
-        local move_city_button = self:BuildOneButton("icon_move_city.png",_("迁移城市")):onButtonClicked(function()
+    if self:IsMyAlliance() then 
+        local move_city_button = self:BuildOneButton("icon_move_player_city.png",_("迁移城市")):onButtonClicked(function()
             if self:GetMyAlliance():Status() == 'fight' then
                 UIKit:showMessageDialog(nil, _("战争期不能移动"),function()end)
                 return
