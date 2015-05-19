@@ -4,6 +4,7 @@ GameUtils = {
 local NORMAL = GameDatas.Soldiers.normal
 local SPECIAL = GameDatas.Soldiers.special
 local soldier_vs = GameDatas.ClientInitGame.soldier_vs
+local string = string
 local pow = math.pow
 local ceil = math.ceil
 local sqrt = math.sqrt
@@ -11,6 +12,7 @@ local floor = math.floor
 local modf = math.modf
 local pairs = pairs
 local ipairs = ipairs
+local tonumber = tonumber
 local round = function(v)
     return floor(v + 0.5)
 end
