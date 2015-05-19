@@ -736,11 +736,16 @@ function GameUIAllianceBattle:HistoryDelegate(listView, tag, idx)
         content:SetData(idx)
         local size = content:getContentSize()
         item:setItemSize(size.width, size.height)
-        -- if idx == #self.alliance:AllianceFightReports() then
-        --     NetManager:getAllianceFightReportsPromise(self.alliance:Id())
-        -- end
         return item
-    else
+    elseif UIListView.ASY_REFRESH == tag then
+        for i,v in ipairs(listView:getItems()) do
+            if v.idx_ == idx then
+                local content = v:getContent()
+                content:SetData(idx)
+                local size = content:getContentSize()
+                v:setItemSize(size.width, size.height)
+            end
+        end
     end
 end
 function GameUIAllianceBattle:CreateHistoryContent()

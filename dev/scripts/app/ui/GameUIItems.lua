@@ -9,6 +9,7 @@ local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local window = import("..utils.window")
 local Localize = import("..utils.Localize")
+local UIListView = import(".UIListView")
 local Localize_item = import("..utils.Localize_item")
 local UILib = import("..ui.UILib")
 local Item = import("..entity.Item")
@@ -122,7 +123,15 @@ function GameUIItems:sourceDelegate(listView, tag, idx)
         local size = content:getContentSize()
         item:setItemSize(size.width, size.height)
         return item
-    else
+    elseif UIListView.ASY_REFRESH == tag then
+        for i,v in ipairs(listView:getItems()) do
+            if v.idx_ == idx then
+                local content = v:getContent()
+                content:SetData(idx)
+                local size = content:getContentSize()
+                v:setItemSize(size.width, size.height)
+            end
+        end
     end
 end
 function GameUIItems:FilterShopItems( items )
@@ -365,7 +374,15 @@ function GameUIItems:myItemSourceDelegate(listView, tag, idx)
         local size = content:getContentSize()
         item:setItemSize(size.width, size.height)
         return item
-    else
+    elseif UIListView.ASY_REFRESH == tag then
+        for i,v in ipairs(listView:getItems()) do
+            if v.idx_ == idx then
+                local content = v:getContent()
+                content:SetData(idx)
+                local size = content:getContentSize()
+                v:setItemSize(size.width, size.height)
+            end
+        end
     end
 end
 function GameUIItems:CreateMyItemContentByIndex( idx )
@@ -536,6 +553,8 @@ function GameUIItems:OnItemsChanged( changed_map )
     end
 end
 return GameUIItems
+
+
 
 
 

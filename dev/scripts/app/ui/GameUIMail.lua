@@ -379,7 +379,15 @@ function GameUIMail:DelegateInbox( listView, tag, idx )
             end
         end
         return item
-    else
+    elseif UIListView.ASY_REFRESH == tag then
+        for i,v in ipairs(listView:getItems()) do
+            if v.idx_ == idx then
+                local content = v:getContent()
+                content:SetData(idx)
+                local size = content:getContentSize()
+                v:setItemSize(size.width, size.height)
+            end
+        end
     end
 end
 function GameUIMail:CreateInboxContent()
@@ -524,7 +532,15 @@ function GameUIMail:DelegateSavedMails( listView, tag, idx )
             end
         end
         return item
-    else
+    elseif UIListView.ASY_REFRESH == tag then
+        for i,v in ipairs(listView:getItems()) do
+            if v.idx_ == idx then
+                local content = v:getContent()
+                content:SetData(idx)
+                local size = content:getContentSize()
+                v:setItemSize(size.width, size.height)
+            end
+        end
     end
 end
 function GameUIMail:CreateSavedMailContent()
@@ -664,7 +680,15 @@ function GameUIMail:DelegateSendMails( listView, tag, idx )
             self.manager:FetchSendMailsFromServer(#self.manager:GetSendMails())
         end
         return item
-    else
+    elseif UIListView.ASY_REFRESH == tag then
+        for i,v in ipairs(listView:getItems()) do
+            if v.idx_ == idx then
+                local content = v:getContent()
+                content:SetData(idx)
+                local size = content:getContentSize()
+                v:setItemSize(size.width, size.height)
+            end
+        end
     end
 end
 function GameUIMail:CreateSendMailContent()
@@ -1211,7 +1235,15 @@ function GameUIMail:DelegateReport( listView, tag, idx )
         end
 
         return item
-    else
+    elseif UIListView.ASY_REFRESH == tag then
+        for i,v in ipairs(listView:getItems()) do
+            if v.idx_ == idx then
+                local content = v:getContent()
+                content:SetData(idx)
+                local size = content:getContentSize()
+                v:setItemSize(size.width, size.height)
+            end
+        end
     end
 end
 function GameUIMail:CreateReportContent()
@@ -1461,7 +1493,15 @@ function GameUIMail:DelegateSavedReport( listView, tag, idx )
             end
         end
         return item
-    else
+    elseif UIListView.ASY_REFRESH == tag then
+        for i,v in ipairs(listView:getItems()) do
+            if v.idx_ == idx then
+                local content = v:getContent()
+                content:SetData(idx)
+                local size = content:getContentSize()
+                v:setItemSize(size.width, size.height)
+            end
+        end
     end
 end
 function GameUIMail:CreateSavedReportContent()
