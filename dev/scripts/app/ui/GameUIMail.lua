@@ -696,7 +696,7 @@ function GameUIMail:CreateSendMailContent()
     local content = display.newNode()
     content:setContentSize(cc.size(item_width, item_height))
     -- 标题背景框
-    local title_bg = display.newScale9Sprite("title_blue_482x30.png",item_width/2, item_height-24,cc.size(552,30),cc.rect(10,5,462,20))
+    local title_bg = display.newScale9Sprite("title_grey_482x30.png",item_width/2, item_height-24,cc.size(552,30),cc.rect(10,5,462,20))
         :addTo(content,2)
     -- 不变的模板部分
     local content_title_bg = display.newScale9Sprite("back_ground_516x60.png",item_width-8,10,cc.size(552,60),cc.rect(15,10,486,40))
