@@ -642,7 +642,7 @@ function GameUIActivityRewardNew:GetRewardLevelUpItem(index,title,rewards,flag)
 			text = _("已领取"),
 			size = 22,
 			color= 0x514d3e
-		}):align(display.LEFT_CENTER,436, 54):addTo(content)
+		}):align(display.CENTER,450, 54):addTo(content)
 	item.title_label = title_label
 	local tips_str = table.concat(reward_list, ",")
 	local button = WidgetPushButton.new({normal = 'yellow_btn_up_148x58.png',pressed = 'yellow_btn_down_148x58.png',disabled = 'gray_btn_148x58.png'})
