@@ -46,10 +46,10 @@ end
 
 
 function GameUIDailyMissionInfo:BuildUI()
-	local bg = WidgetUIBackGround.new({height=630})
+	local bg = WidgetUIBackGround.new({height=552})
     self:addTouchAbleChild(bg)
-	bg:pos(((display.width - bg:getContentSize().width)/2),window.bottom_top + 100)
-	local titleBar = display.newSprite("title_blue_600x56.png"):align(display.LEFT_BOTTOM,3,615):addTo(bg)
+	bg:pos(((display.width - bg:getContentSize().width)/2),window.bottom_top + 178)
+	local titleBar = display.newSprite("title_blue_600x56.png"):align(display.LEFT_BOTTOM,3,537):addTo(bg)
 	local closeButton = UIKit:closeButton()
 	   	:addTo(titleBar)
 	   	:align(display.BOTTOM_RIGHT,titleBar:getContentSize().width,0)
@@ -62,9 +62,9 @@ function GameUIDailyMissionInfo:BuildUI()
 		shadow = true,
 		color = 0xffedae
 	}):addTo(titleBar):align(display.CENTER,300,28)
-	local list_bg = display.newScale9Sprite("box_bg_546x214.png"):size(568,404):addTo(bg):align(display.BOTTOM_CENTER, 304, 25)
+	local list_bg = display.newScale9Sprite("box_bg_546x214.png"):size(568,326):addTo(bg):align(display.BOTTOM_CENTER, 304, 25)
 	self.info_list = UIListView.new({
-        viewRect = cc.rect(11,10, 546, 384),
+        viewRect = cc.rect(11,10, 546, 306),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
 	}):addTo(list_bg)
 
@@ -72,27 +72,27 @@ function GameUIDailyMissionInfo:BuildUI()
 		text = _("完成下列任务,领取奖励"),
 		color= 0x403c2f,
 		size = 20,
-	}):align(display.LEFT_BOTTOM, 22, 474):addTo(bg)
+	}):align(display.LEFT_BOTTOM, 22, 396):addTo(bg)
 	local progress_bg,progress = self:GetProgressBar()
-	progress_bg:align(display.LEFT_BOTTOM, 22, 516):addTo(bg)
+	progress_bg:align(display.LEFT_BOTTOM, 22, 436):addTo(bg)
 	self.progress = progress
 	UIKit:ttfLabel({
 		text = _("当前进度"),
 		color= 0x403c2f,
 		size = 20,
-	}):align(display.LEFT_BOTTOM,22,562):addTo(bg)
+	}):align(display.LEFT_BOTTOM,22,484):addTo(bg)
 
     local yin_box = ccs.Armature:create("yin_box")
-        :align(display.RIGHT_BOTTOM, 562,456)
+        :align(display.RIGHT_BOTTOM, 562,378)
         :addTo(bg)
         :scale(174/400)
     self.button_finish_animation = yin_box
-    local button_finish_sprite = display.newSprite("#root/yin/a0002.png"):align(display.RIGHT_BOTTOM, 562,456)
+    local button_finish_sprite = display.newSprite("#root/yin/a0002.png"):align(display.RIGHT_BOTTOM, 562,378)
         :addTo(bg)
         :scale(174/400)
     self.button_finish_sprite = button_finish_sprite
     local button = WidgetPushTransparentButton.new(cc.rect(0,0,174,141))
-        :align(display.RIGHT_BOTTOM, 562,456)
+        :align(display.RIGHT_BOTTOM, 562,378)
         :addTo(bg)
 		:onButtonClicked(function()
 			self:GetRewardFromServer()
