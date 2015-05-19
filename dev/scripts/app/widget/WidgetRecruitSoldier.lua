@@ -681,9 +681,9 @@ function WidgetRecruitSoldier:PormiseOfFte()
         self:Close()
     end)
 
-    local r = self:Find():getCascadeBoundingBox()
+    local r = self:Find():getBoundingBox()
     WidgetFteArrow.new(_("立即开始招募，招募士兵会消耗城民")):addTo(fte_layer)
-        :TurnRight():align(display.RIGHT_CENTER, r.x - 10, r.y + r.height/2)
+        :TurnRight():align(display.RIGHT_CENTER, r.x - 20, r.y + r.height/2)
 
     return self.city:PromiseOfRecruitSoldier("swordsman"):next(function()
         fte_layer:removeFromParent()
