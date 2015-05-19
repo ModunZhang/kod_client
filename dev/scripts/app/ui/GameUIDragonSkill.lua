@@ -104,6 +104,7 @@ function GameUIDragonSkill:onEnter()
           		self:UpgradeButtonClicked()
           end)
         upgradeButton:setButtonEnabled(self:CanUpgrade())
+
         self.upgradeButton = upgradeButton
      local requirements = self:GetRequirements()
      self.listView = WidgetRequirementListview.new({
@@ -188,6 +189,17 @@ function GameUIDragonSkill:GetRequirements()
       isSatisfy = blood >= self.skill:GetBloodCost(),
       icon="heroBlood_3_128x128.png",
       description= string.format("%s/%s",blood,self.skill:GetBloodCost())
+  })
+  local star = self.skill:Star()
+  local need_star = DataUtils:GetDragonSkillUnLockStar(self.skill:Name())
+  table.insert(requirements,
+  {
+      resource_type = "dragon_star",
+      isVisible = true,
+      isSatisfy = star >= need_star,
+      icon="dragon_star_40x40.png",
+      description= string.format(_("龙的星级达到%d星"),need_star),
+      canNotBuy = true,
   })
   return requirements
 end
