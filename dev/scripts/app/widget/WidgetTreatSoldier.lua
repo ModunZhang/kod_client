@@ -259,7 +259,7 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
             end
             if self.count<1 then
                 UIKit:showMessageDialog(_("陛下"),_("请设置要治愈的伤兵数"))
-            elseif self.treat_now_gems>City:GetUser():GetGemResource():GetValue() then
+            elseif self.treat_now_gems > City:GetUser():GetGemResource():GetValue() then
                 UIKit:showMessageDialog(_("陛下"),_("金龙币不足"))
                     :CreateOKButton(
                         {
@@ -484,7 +484,7 @@ function WidgetTreatSoldier:OnCountChanged(count)
     for k, v in pairs(self.res_map) do
         local total = total_map[k] == nil and 0 or total_map[k]
         local current = soldier_config[k] * count
-        local rs_k = "treatCoin"
+        local rs_k = "coin"
         current_res_map[rs_k] = current
         local color = total >= current and UIKit:hex2c3b(0x403c2f) or display.COLOR_RED
         v.need:setString(string.format("/ %s", GameUtils:formatNumber(current)))
