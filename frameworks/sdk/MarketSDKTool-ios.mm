@@ -11,8 +11,8 @@
 #include "tolua_fix.h"
 //MARK:定义宏
 #define USE_TAKING_DATA true
-#define TD_APP_ID @"13842425C091E33B40189A1C9BB6B433"
-#define TD_CHANNEL_ID @"China"
+#define TD_APP_ID @"3309C905801D8D028876DB821ADB0123"
+#define TD_CHANNEL_ID @"All"
 
 static MarketSDKTool *s_MarketSDKTool = NULL; // pointer to singleton
 #ifdef USE_TAKING_DATA

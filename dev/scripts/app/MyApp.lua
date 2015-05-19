@@ -372,7 +372,7 @@ function MyApp:sendApnIdIf()
         token = string.sub(token,2,string.len(token)-1)
         token = string.gsub(token," ","")
     end
-    if token ~= User:ApnId() then
+    if token ~= User:ApnId() and string.len(token) > 0 then
         NetManager:getSetApnIdPromise(token)
     end
 end

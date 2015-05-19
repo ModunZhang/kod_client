@@ -416,7 +416,7 @@ end
 
 function User:CheckDailyTasksWasRewarded(task_type)
     for __,v in ipairs(self:GetAllDailyTasks().rewarded) do
-        return v == task_type
+        if v == task_type then return true end
     end
     return false
 end
