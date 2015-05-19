@@ -38,9 +38,13 @@ function MapScene:onEnter()
         self.scene_ui_layer = self:CreateSceneUILayer():addTo(self:GetSceneNode(), 2)
     end
     self.top_layer = display.newNode():addTo(self:GetSceneNode(), 3)
+    self.screen_layer = display.newNode():addTo(self:GetSceneNode(), 4)
 end
 function MapScene:onExit()
     self.touch_judgment:destructor()
+end
+function MapScene:GetScreenLayer()
+    return self.screen_layer
 end
 function MapScene:GetTopLayer()
     return self.top_layer 

@@ -43,6 +43,7 @@ UIListView.CELL_SIZE_TAG            = "CellSize"
 UIListView.COUNT_TAG                = "Count"
 UIListView.CLICKED_TAG              = "Clicked"
 UIListView.UNLOAD_CELL_TAG          = "UnloadCell"
+UIListView.ASY_REFRESH              = "refresh"
 
 UIListView.BG_ZORDER                = -1
 UIListView.CONTENT_ZORDER           = 10
@@ -958,10 +959,18 @@ end
 
 ]]
 function UIListView:asyncLoadWithCurrentPosition_()
+    local count = self:callAsyncLoadDelegate_(self, UIListView.COUNT_TAG)
+    local current_min_index,current_max_index = math.huge,0
     for i,v in ipairs(self:getItems()) do
-        local content = v:getContent()
-        assert(content.SetData,"非重置刷新异步UIListView，必须有SetData方法")
-        content:SetData(v.idx_)
+        current_min_index = math.min(current_min_index,v.idx_)
+        current_max_index = math.max(current_max_index,v.idx_)
+    end
+    for i = current_min_index, current_max_index do
+        if i > count then
+            self:unloadOneItem_(i)
+        else
+            self:callAsyncLoadDelegate_(self, UIListView.ASY_REFRESH , i)
+        end
     end
     return self
 end

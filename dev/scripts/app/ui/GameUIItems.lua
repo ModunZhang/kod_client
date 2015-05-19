@@ -9,6 +9,7 @@ local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local window = import("..utils.window")
 local Localize = import("..utils.Localize")
+local UIListView = import(".UIListView")
 local Localize_item = import("..utils.Localize_item")
 local UILib = import("..ui.UILib")
 local Item = import("..entity.Item")
@@ -94,9 +95,13 @@ function GameUIItems:InitShop()
         self:ReloadShopList(tag)
     end):align(display.TOP_CENTER,window.cx,window.top-84):addTo(layer)
 end
-function GameUIItems:ReloadShopList( tag )
+function GameUIItems:ReloadShopList( tag ,isRefresh)
     self.shop_select_tag = tag
-    self.shop_listview:asyncLoadWithCurrentPosition_()
+    if isRefresh then
+        self.shop_listview:asyncLoadWithCurrentPosition_()
+    else
+        self.shop_listview:reload()
+    end
 end
 function GameUIItems:sourceDelegate(listView, tag, idx)
     if cc.ui.UIListView.COUNT_TAG == tag then
@@ -118,7 +123,15 @@ function GameUIItems:sourceDelegate(listView, tag, idx)
         local size = content:getContentSize()
         item:setItemSize(size.width, size.height)
         return item
-    else
+    elseif UIListView.ASY_REFRESH == tag then
+        for i,v in ipairs(listView:getItems()) do
+            if v.idx_ == idx then
+                local content = v:getContent()
+                content:SetData(idx)
+                local size = content:getContentSize()
+                v:setItemSize(size.width, size.height)
+            end
+        end
     end
 end
 function GameUIItems:FilterShopItems( items )
@@ -314,16 +327,17 @@ function GameUIItems:InitMyItems()
         self:ReloadMyItemsList(tag)
     end):align(display.TOP_CENTER,window.cx,window.top-84):addTo(layer)
 end
-function GameUIItems:ReloadMyItemsList( tag )
+function GameUIItems:ReloadMyItemsList( tag ,isRefresh)
     self.my_item_tag = tag
-    self.myItems_listview:asyncLoadWithCurrentPosition_()
+    if isRefresh then
+        self.myItems_listview:asyncLoadWithCurrentPosition_()
+    else
+        self.myItems_listview:reload()
+    end
 end
 function GameUIItems:FilterMyItems( items )
     local f_items = {}
     for i,v in ipairs(items) do
-        if v:Name() == "chest_1" then
-        -- print('FilterMyItems ==',v:Count(),tolua.type(v:Count()))
-        end
         if v:Count() > 0 then
             table.insert(f_items, v)
         end
@@ -360,7 +374,15 @@ function GameUIItems:myItemSourceDelegate(listView, tag, idx)
         local size = content:getContentSize()
         item:setItemSize(size.width, size.height)
         return item
-    else
+    elseif UIListView.ASY_REFRESH == tag then
+        for i,v in ipairs(listView:getItems()) do
+            if v.idx_ == idx then
+                local content = v:getContent()
+                content:SetData(idx)
+                local size = content:getContentSize()
+                v:setItemSize(size.width, size.height)
+            end
+        end
     end
 end
 function GameUIItems:CreateMyItemContentByIndex( idx )
@@ -507,30 +529,34 @@ end
 function GameUIItems:OnItemsChanged( changed_map )
     if changed_map[1] and #changed_map[1] > 0  then
         if self.myItems_layer:isVisible() then
-            self:ReloadMyItemsList( self.my_item_tag)
+            self:ReloadMyItemsList( self.my_item_tag , true)
         end
         if self.shop_layer:isVisible() then
-            self:ReloadShopList( self.shop_select_tag)
+            self:ReloadShopList( self.shop_select_tag, true)
         end
     end
     if changed_map[2] and #changed_map[2] > 0 then
         if self.myItems_layer:isVisible() then
-            self:ReloadMyItemsList( self.my_item_tag)
+            self:ReloadMyItemsList( self.my_item_tag, true)
         end
         if self.shop_layer:isVisible() then
-            self:ReloadShopList( self.shop_select_tag)
+            self:ReloadShopList( self.shop_select_tag, true)
         end
     end
     if changed_map[3] and #changed_map[3] > 0 then
         if self.myItems_layer:isVisible() then
-            self:ReloadMyItemsList( self.my_item_tag)
+            self:ReloadMyItemsList( self.my_item_tag, true)
         end
         if self.shop_layer:isVisible() then
-            self:ReloadShopList( self.shop_select_tag)
+            self:ReloadShopList( self.shop_select_tag, true)
         end
     end
 end
 return GameUIItems
+
+
+
+
 
 
 

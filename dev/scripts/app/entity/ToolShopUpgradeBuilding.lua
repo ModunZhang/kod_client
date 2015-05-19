@@ -187,8 +187,13 @@ function ToolShopUpgradeBuilding:GetNextLevelProduction()
     return config["production"]
 end
 function ToolShopUpgradeBuilding:IsNeedToUpdate()
-    if self.level > 0 then
+    if self.upgrade_to_next_level_time ~= 0 then
         return true
+    end
+    for _,event in pairs(self.category) do
+        if event.id then
+            return true
+        end
     end
 end
 function ToolShopUpgradeBuilding:OnTimer(current_time)

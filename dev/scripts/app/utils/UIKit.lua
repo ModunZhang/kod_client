@@ -552,7 +552,7 @@ function UIKit:createLineItem(params)
     return line
 end
 -- MessageDialog
------------------------------------------------------------------------------------------------------------------------------------------------- 
+------------------------------------------------------------------------------------------------------------------------------------------------
 function UIKit:showMessageDialogCanCanleNotAutoClose(title,tips,ok_callback,cancel_callback)
     title = title or _("提示")
     local dialog = UIKit:newGameUI("FullScreenPopDialogUI",x_button_callback)
@@ -651,7 +651,7 @@ function UIKit:showEvaluateDialog()
             listener = function ()
             end,btn_name = _("残忍的拒绝")
         })
-        self:__addMessageDialogToCurrentScene(dialog)
+    self:__addMessageDialogToCurrentScene(dialog)
     return dialog
 end
 
@@ -668,7 +668,7 @@ end
 
 function UIKit:getMessageDialogWillShow()
     printLog("info", "getMessageDialogWillShow--->%s",self.willShowMessage_ or "nil")
-    return self.willShowMessage_ 
+    return self.willShowMessage_
 end
 function UIKit:clearMessageDialogWillShow()
     self.willShowMessage_ = nil
@@ -790,6 +790,9 @@ function UIKit:addTipsToNode( node,tips , include_node)
         tips_bg:hide()
         function tips_bg:SetTips( tips )
             text_1:setString(tips)
+            self:size(text_1:getContentSize().width+20,text_1:getContentSize().height+40)
+            local t_size = self:getContentSize()
+            text_1:align(display.CENTER, t_size.width/2, t_size.height/2)
         end
     else
         tips_bg = include_node:getChildByTag(9090)
@@ -832,6 +835,7 @@ function UIKit:GetItemImage(reward_type,item_key)
         end
     end
 end
+
 
 
 

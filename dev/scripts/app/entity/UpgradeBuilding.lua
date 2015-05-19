@@ -186,7 +186,7 @@ function UpgradeBuilding:OnUserDataChanged(userData, current_time, location_info
         level, finished_time = house_location_info.level, (event == nil and 0 or event.finishTime / 1000)
     else
         level, type_, finished_time = location_info.level, location_info.type, (event == nil and 0 or event.finishTime / 1000)
-        if type_ ~= self:GetType() then
+        if type_ ~= self.building_type then
             self.building_type = type_
             self.base_building_observer:NotifyObservers(function(listener)
                 listener:OnTransformed(self)

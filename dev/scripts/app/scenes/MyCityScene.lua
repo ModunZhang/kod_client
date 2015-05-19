@@ -100,12 +100,12 @@ function MyCityScene:CreateSceneUILayer()
             end
         end, 0.5)
         display.newNode():addTo(self):schedule(function()
-            local building = self.building__
-            if self.indicator and building then
-                local wp = building:convertToWorldSpace(cc.p(building:GetSpriteTopPosition()))
-                local lp = self.indicator:getParent():convertToNodeSpace(wp)
-                self.indicator:pos(lp.x, lp.y)
-            end
+            -- local building = self.building__
+            -- if self.indicator and building then
+            --     local wp = building:convertToWorldSpace(cc.p(building:GetSpriteTopPosition()))
+            --     local lp = self.indicator:getParent():convertToNodeSpace(wp)
+            --     self.indicator:pos(lp.x, lp.y)
+            -- end
             local widget = self:getChildByTag(WidgetMoveHouse.ADD_TAG)
             if widget and widget.move_to_ruins then
                 local wp = widget.move_to_ruins:GetWorldPosition()

@@ -415,6 +415,7 @@ function GameUIAllianceHome:CreateTop()
                 if alliance:AllianceFightReports() == nil then
                     NetManager:getAllianceFightReportsPromise(alliance:Id()):done(function ( response )
                         local enemy_reprot_data = alliance:GetEnemyLastAllianceFightReportsData()
+                        LuaUtils:outputTable("protect enemy_reprot_data", enemy_reprot_data)
                         local enemy_flag = ui_helper:CreateFlagContentSprite(Flag.new():DecodeFromJson(enemy_reprot_data.flag)):scale(0.5)
                         enemy_flag:align(display.CENTER,100-enemy_flag:getCascadeBoundingBox().size.width, -30)
                             :addTo(enemy_name_bg)
@@ -422,6 +423,14 @@ function GameUIAllianceHome:CreateTop()
                         enemy_name_label:setString("["..enemy_reprot_data.tag.."] "..enemy_reprot_data.name)
                         return response
                     end)
+                else
+                    local enemy_reprot_data = alliance:GetEnemyLastAllianceFightReportsData()
+                    LuaUtils:outputTable("protect enemy_reprot_data", enemy_reprot_data)
+                    local enemy_flag = ui_helper:CreateFlagContentSprite(Flag.new():DecodeFromJson(enemy_reprot_data.flag)):scale(0.5)
+                    enemy_flag:align(display.CENTER,100-enemy_flag:getCascadeBoundingBox().size.width, -30)
+                        :addTo(enemy_name_bg)
+                    enemy_flag:setTag(201)
+                    enemy_name_label:setString("["..enemy_reprot_data.tag.."] "..enemy_reprot_data.name)
                 end
             end
         end
@@ -444,6 +453,11 @@ function GameUIAllianceHome:CreateTop()
                     self:SetEnemyPowerOrKill(enemy_reprot_data_kill)
                     return response
                 end)
+            else
+                local our_reprot_data_kill = alliance:GetOurLastAllianceFightReportsData().kill
+                local enemy_reprot_data_kill = alliance:GetEnemyLastAllianceFightReportsData().kill
+                self:SetOurPowerOrKill(our_reprot_data_kill)
+                self:SetEnemyPowerOrKill(enemy_reprot_data_kill)
             end
         else
             if status~="peace" then
@@ -745,6 +759,8 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
+
+
 
 
 

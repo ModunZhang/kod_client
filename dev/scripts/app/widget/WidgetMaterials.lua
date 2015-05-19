@@ -154,16 +154,16 @@ end
 function WidgetMaterials:CreateSelectButton()
     self.dropList = WidgetRoundTabButtons.new(
         {
-            {tag = "1",label = _("建筑&科技"),default = true},
-            {tag = "2",label = _("特殊兵种")},
+            {tag = "1",label = _("特殊兵种"),default = true},
+            {tag = "2",label = _("建筑&科技")},
             {tag = "3",label = _("龙")},
         },
         function(tag)
             if tag == '1' then
-                self:SelectOneTypeMaterials(MaterialManager.MATERIAL_TYPE.BUILD)
+                self:SelectOneTypeMaterials(MaterialManager.MATERIAL_TYPE.SOLDIER)
             end
             if tag == '2' then
-                self:SelectOneTypeMaterials(MaterialManager.MATERIAL_TYPE.SOLDIER)
+                self:SelectOneTypeMaterials(MaterialManager.MATERIAL_TYPE.BUILD)
             end
             if tag == '3' then
                 self:SelectOneTypeMaterials(MaterialManager.MATERIAL_TYPE.DRAGON)
