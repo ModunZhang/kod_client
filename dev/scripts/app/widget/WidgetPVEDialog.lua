@@ -203,7 +203,12 @@ function WidgetPVEDialog:Fight()
 
             if report:IsAttackWin() then
                 local rollback = self:Search()
-                local rewards = self:GetObject():IsLast() and enemy.rewards + self:GetObject():GetNpcRewards() or enemy.rewards
+                local rewards
+                if self:GetObject():IsBoss() or not self:GetObject():IsLast() then
+                    rewards = enemy.rewards
+                else
+                    rewards = enemy.rewards + self:GetObject():GetNpcRewards()
+                end
                 self.user:SetPveData(report:GetAttackKDA(), rewards)
                 NetManager:getSetPveDataPromise(
                     self.user:EncodePveDataAndResetFightRewardsData()

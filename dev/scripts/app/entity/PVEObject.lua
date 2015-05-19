@@ -122,6 +122,7 @@ local m = getmetatable(NotifyItem)
 function PVEObject:GetNpcRewards(select)
     for k, v in pairs(PVEDefine) do
         if v == self.type then
+            assert(pve_npc[k])
             local rewards = self:DecodeToRewards(pve_npc[k].rewards)
             if pve_npc[k].rewards_type == "all" then
                 return rewards
@@ -173,6 +174,9 @@ function PVEObject:IsSearched()
 end
 function PVEObject:SearchNext()
     self.searched = self.searched + 1
+end
+function PVEObject:IsBoss()
+    return not (normal_map[self.type] or elite_map[self.type])
 end
 function PVEObject:IsLast()
     return self:Left() == 0
