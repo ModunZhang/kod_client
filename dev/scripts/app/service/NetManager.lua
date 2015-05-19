@@ -806,11 +806,11 @@ function NetManager:getSendPersonalMailPromise(memberId, title, content , contac
         title = title,
         content = content,
     }, "发送个人邮件失败!"):done(get_response_msg):done(function ( response )
+        GameGlobalUI:showTips(_("提示"),_("发送邮件成功"))
         if contacts then
             -- 保存联系人
             contacts.time = app.timer:GetServerTime()
             app:GetGameDefautlt():addRecentContacts(contacts)
-            GameGlobalUI:showTips(_("提示"),_("发送邮件成功"))
         end
         return response
     end)
