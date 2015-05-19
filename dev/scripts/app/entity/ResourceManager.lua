@@ -169,26 +169,24 @@ function ResourceManager:UpdateByCity(city, current_time)
         [CART] = 0,
     }
     local total_citizen = 0
-    LuaUtils:TimeCollect(function()
-        --小屋对资源的影响
-        city:IteratorDecoratorBuildingsByFunc(function(_, decorator)
-            if iskindof(decorator, 'ResourceUpgradeBuilding') then
-                local resource_type = decorator:GetUpdateResourceType()
-                if resource_type then
-                    local citizen = decorator:GetCitizen()
-                    total_citizen = total_citizen + citizen
-                    total_production_map[resource_type] = total_production_map[resource_type] + decorator:GetProductionPerHour()
-                    if citizen_map[resource_type] then
-                        citizen_map[resource_type] = citizen_map[resource_type] + citizen
-                    end
-                    if POPULATION == resource_type then
-                        total_production_map[COIN] = total_production_map[COIN] + decorator:GetProductionPerHour()
-                        total_limit_map[POPULATION] = total_limit_map[POPULATION] + decorator:GetProductionLimit()
-                    end
+    --小屋对资源的影响
+    city:IteratorDecoratorBuildingsByFunc(function(_, decorator)
+        if iskindof(decorator, 'ResourceUpgradeBuilding') then
+            local resource_type = decorator:GetUpdateResourceType()
+            if resource_type then
+                local citizen = decorator:GetCitizen()
+                total_citizen = total_citizen + citizen
+                total_production_map[resource_type] = total_production_map[resource_type] + decorator:GetProductionPerHour()
+                if citizen_map[resource_type] then
+                    citizen_map[resource_type] = citizen_map[resource_type] + citizen
+                end
+                if POPULATION == resource_type then
+                    total_production_map[COIN] = total_production_map[COIN] + decorator:GetProductionPerHour()
+                    total_limit_map[POPULATION] = total_limit_map[POPULATION] + decorator:GetProductionLimit()
                 end
             end
-        end)
-    end, "house")
+        end
+    end)
     dump_resources(total_production_map, "小屋对资源的影响--->")
     -- buff对资源的影响
     local buff_production_map,buff_limt_map
@@ -278,7 +276,7 @@ function ResourceManager:GetTotalBuffData(city)
             local count = 0
             local house_type = resource_building:GetHouseType()
             for k,house in pairs(houses) do
-                if house:GetType() == house_type and 
+                if house:GetType() == house_type and
                     resource_building:IsNearByBuildingWithLength(house, 2) then
                     count = count + 1
                     houses[k] = nil
@@ -303,7 +301,7 @@ function ResourceManager:GetTotalBuffData(city)
             target_map[resource_type] = target_map[resource_type] + buff_value
         end
     end)
-    
+
     --道具buuff
     local item_buff_map = {
         [WOOD] = 0,
@@ -356,6 +354,7 @@ end
 
 
 return ResourceManager
+
 
 
 
