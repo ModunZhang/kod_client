@@ -20,12 +20,19 @@ function GameUIStore:OnMoveInStage()
 	self:CreateUI()
 end
 
+function GameUIStore:onEnter()
+	GameUIStore.super.onEnter(self)
+	local layer = display.newColorLayer(cc.c4b(13,17,19,255))
+	layer:addTo(self:GetView()):size(614,window.betweenHeaderAndTab + 90)
+	layer:pos(window.left+math.ceil((window.width - 614)/2), window.bottom + 14)
+	self.content_layer = layer
+end
+
 function GameUIStore:CreateUI()
 	self.listView = UIListView.new({
-		bgColor = cc.c4b(13,17,19,255),
-        viewRect = cc.rect(window.left+math.ceil((window.width - 614)/2), window.bottom + 14, 614,window.betweenHeaderAndTab + 90),
+        viewRect = cc.rect(0,0, 614,window.betweenHeaderAndTab + 90),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
-	}):addTo(self:GetView())
+	}):addTo(self.content_layer)
 	self:RefreshListView()
 end
 

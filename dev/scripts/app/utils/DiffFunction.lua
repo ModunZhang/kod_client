@@ -24,7 +24,7 @@ return function(base, delta)
                     edit[k].add = edit[k].add or {}
                     insert(edit[k].add, value)
                 end
-            elseif edit[k] then
+            elseif base[k] then
                 edit[k] = value
             end
             if base[k] then

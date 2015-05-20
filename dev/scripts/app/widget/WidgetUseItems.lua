@@ -1007,12 +1007,18 @@ function WidgetUseItems:OpenWarSpeedupDialog( item ,march_event)
         end
     end
 
+    function dialog:OnResourceChanged(resource_manager)
+        gem_label:setString(string.formatnumberthousands(User:GetGemResource():GetValue()))
+    end
+
     local alliance = Alliance_Manager:GetMyAlliance()
 
     alliance:AddListenOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
+    City:GetResourceManager():AddObserver(dialog)
 
     dialog:addCloseCleanFunc(function ()
         alliance:RemoveListenerOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
+        City:GetResourceManager():RemoveObserver(dialog)
     end)
     return dialog
 end
@@ -1077,13 +1083,17 @@ function WidgetUseItems:OpenRetreatTroopDialog( item,event )
             end
         end
     end
+    function dialog:OnResourceChanged(resource_manager)
+        gem_label:setString(string.formatnumberthousands(User:GetGemResource():GetValue()))
+    end
 
     local alliance = Alliance_Manager:GetMyAlliance()
-
+    City:GetResourceManager():AddObserver(dialog)
     alliance:AddListenOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
 
     dialog:addCloseCleanFunc(function ()
         alliance:RemoveListenerOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
+        City:GetResourceManager():RemoveObserver(dialog)
     end)
     return dialog
 end
@@ -1274,6 +1284,9 @@ end
 
 
 return WidgetUseItems
+
+
+
 
 
 

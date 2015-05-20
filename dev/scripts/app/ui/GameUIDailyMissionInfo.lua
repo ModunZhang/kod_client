@@ -234,7 +234,7 @@ function GameUIDailyMissionInfo:GetMissionConfig()
                 isDesc = false,
         		func = function()
         			UIKit:newGameUI("GameUISelenaQuestion"):AddToCurrentScene(true)
-                    return true
+                    return false
         		end
         	},
         	{
@@ -249,7 +249,7 @@ function GameUIDailyMissionInfo:GetMissionConfig()
         				return false
         			end
         			UIKit:newGameUI("GameUIToolShop", City,building):AddToCurrentScene(true)
-                    return true
+                    return false
         		end
         	}
     	},
@@ -304,7 +304,7 @@ function GameUIDailyMissionInfo:GetMissionConfig()
         				return false
         			end
                     UIKit:newGameUI("GameUIAllianceContribute"):AddToCurrentScene(true)
-                    return true
+                    return false
         		end
         	},
         	{
@@ -318,7 +318,7 @@ function GameUIDailyMissionInfo:GetMissionConfig()
                     end
                     local building = Alliance_Manager:GetMyAlliance():GetAllianceMap():FindAllianceBuildingInfoByName("shop")
                     UIKit:newGameUI("GameUIAllianceShop",City,"goods",building):AddToCurrentScene(true)
-                    return true
+                    return false
         		end
         	},
         	{
@@ -331,7 +331,7 @@ function GameUIDailyMissionInfo:GetMissionConfig()
                         return false
                     end
                     UIKit:newGameUI("GameUIHelp"):AddToCurrentScene(true)
-                    return true
+                    return false
         		end
         	},
         	{
@@ -373,7 +373,7 @@ function GameUIDailyMissionInfo:GetMissionConfig()
         			local blackSmith = City:GetFirstBuildingByType("blackSmith")
                         if blackSmith:IsUnlocked() then
                             UIKit:newGameUI("GameUIBlackSmith",City,blackSmith):AddToCurrentScene(true)
-                            return true
+                            return false
                         else
                             GameGlobalUI:showTips(_("错误"),_("你还未建造铁匠铺"))
                             return false
@@ -386,7 +386,7 @@ function GameUIDailyMissionInfo:GetMissionConfig()
                 isDesc = false,
         		func = function()
         			UIKit:newGameUI("GameUIItems",City,"shop"):AddToCurrentScene(true)
-                    return true
+                    return false
         		end
         	}
 	    }

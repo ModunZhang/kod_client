@@ -79,7 +79,7 @@ function GameUIActivityNew:CreateTabIf_activity()
 	if not self.activity_list_view then
 		local list = UIListView.new({
 	        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
-	        viewRect = cc.rect(window.left + 35,window.bottom_top + 20,576,772),
+	        viewRect = cc.rect((window.width - 612)/2,window.bottom_top + 20,612,785),
 	    }):addTo(self:GetView())
 	    list:onTouch(handler(self, self.OnActivityListViewTouch))
 	    self.activity_list_view = list
@@ -156,13 +156,14 @@ function GameUIActivityNew:OnActivityListViewTouch(event)
 end
 
 function GameUIActivityNew:OnSelectActivityAtItem(item_type)
+	app:GetAudioManager():PlayeEffectSoundWithKey("NORMAL_DOWN")
 	UIKit:newGameUI("GameUIActivityRewardNew",GameUIActivityRewardNew.REWARD_TYPE[self.ITEMS_TYPE[item_type]]):AddToCurrentScene(true)
 end
 
 function GameUIActivityNew:GetFirstPurgureTips()
 	local str = _("首次充值%s金额")
 	local s,e = string.find(str,"%%s")
-	return string.format("[{\"type\":\"text\", \"value\":\"%s\"},{\"type\":\"text\",\"color\":0x489200,\"size\":22,\"value\":\"%s\"},{\"type\":\"text\", \"value\":\"%s\"}]",
+	return string.format("[{\"type\":\"text\", \"value\":\"%s\"},{\"type\":\"text\",\"color\":0xa2ff00,\"size\":22,\"value\":\"%s\"},{\"type\":\"text\", \"value\":\"%s\"}]",
 		string.sub(str,1,s - 1),_("任意"),string.sub(str,e+1))
 end
 
@@ -170,26 +171,19 @@ function GameUIActivityNew:GetActivityItem(item_type)
 	local countInfo = User:GetCountInfo()
 	local item = self.activity_list_view:newItem()
 	item.item_type = item_type
-	local bg = WidgetUIBackGround.new({width = 576,height = 190},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
-	local title_bg = display.newSprite("activity_title_552x36.png"):align(display.TOP_CENTER,288,180):addTo(bg)
+	local bg = display.newSprite("activity_bg_612x198.png")
 	local title_txt = titles[self.ITEMS_TYPE[item_type]]
 	UIKit:ttfLabel({
 		text = title_txt,
 		size = 22,
 		color= 0xfed36c
-	}):align(display.CENTER,276, 21):addTo(title_bg)
-	local content = display.newSprite(UILib.activity_image_config[self.ITEMS_TYPE[item_type]]):align(display.CENTER_TOP,288, 144):addTo(bg)
+	}):align(display.CENTER_TOP,306, 188):addTo(bg)
+	local content = display.newSprite(UILib.activity_image_config[self.ITEMS_TYPE[item_type]]):align(display.CENTER_BOTTOM,306, 12):addTo(bg)
+	local size = content:getContentSize()
 	if item_type ~= self.ITEMS_TYPE.EVERY_DAY_LOGIN then
-		local size = content:getContentSize()
-		if item_type == self.ITEMS_TYPE.PLAYER_LEVEL_UP then
-			display.newSprite("activity_layer_blue_546x108.png"):align(display.RIGHT_CENTER, size.width,size.height/2+2):addTo(content)
-		else
-			display.newSprite("activity_layer_red_546x108.png"):align(display.RIGHT_CENTER, size.width,size.height/2+2):addTo(content)
-		end
-		content:scale(550/math.max(size.width,size.height))
+		display.newSprite("activity_layer_blue_586x114.png"):align(display.RIGHT_CENTER, size.width,size.height/2+2):addTo(content)
 	end
-	display.newSprite("activity_box_552x130.png"):align(display.CENTER_TOP,288, 144):addTo(bg)
-	display.newSprite("activity_next_32x37.png"):align(display.LEFT_CENTER, 528, 80):addTo(bg)
+	display.newSprite("activity_next_32x37.png"):align(display.LEFT_CENTER, 566, 80):addTo(bg)
 
 	if item_type == self.ITEMS_TYPE.EVERY_DAY_LOGIN then
 		local title_label = UIKit:ttfLabel({
@@ -198,42 +192,76 @@ function GameUIActivityNew:GetActivityItem(item_type)
 			color= 0xffedae,
 			align = cc.TEXT_ALIGNMENT_LEFT,
 			shadow= true
-		}):align(display.LEFT_BOTTOM,310,80):addTo(bg)
-		local content_label = UIKit:ttfLabel({
-			text = countInfo.day60 > countInfo.day60RewardsCount and _("今日未签到") or _("今日已签到"),
+		}):align(display.LEFT_BOTTOM,362,92):addTo(bg)
+		local today_label = UIKit:ttfLabel({
+			text = _("今日"),
 			size = 20,
 			color= 0xffedae,
 			align = cc.TEXT_ALIGNMENT_LEFT,
 			shadow= true
-		}):align(display.LEFT_BOTTOM,310,42):addTo(bg)
+		}):align(display.LEFT_BOTTOM,362,54):addTo(bg)
+		local sign_str,sign_color = _("已签到"),0xa2ff00
+		if countInfo.day60 > countInfo.day60RewardsCount then
+			sign_str = _("未签到")
+			sign_color = 0xff4e00
+		end
+		local sign_bg = display.newSprite("activity_day_bg_104x34.png")
+			:align(display.LEFT_BOTTOM,today_label:getPositionX()+today_label:getContentSize().width + 6,50)
+			:addTo(bg)
+		local content_label = UIKit:ttfLabel({
+			text = sign_str,
+			size = 20,
+			color= sign_color
+		}):align(display.CENTER, 52, 17):addTo(sign_bg)
 	elseif item_type == self.ITEMS_TYPE.CONTINUITY then
 		local title_label = UIKit:ttfLabel({
-			text = _("连续登陆，获得来自王城的援军"),
+			text = _("连续登陆，来自王城的援军"),
 			size = 20,
 			color= 0xffedae,
 			align = cc.TEXT_ALIGNMENT_LEFT,
 			shadow= true
-		}):align(display.LEFT_BOTTOM,214,90):addTo(bg)
+		}):align(display.LEFT_BOTTOM,298,90):addTo(bg)
 
-		local day_bg = display.newSprite("activity_day_bg_104x34.png"):align(display.LEFT_BOTTOM,214,45):addTo(bg)
-		UIKit:ttfLabel({
-			text = string.format(_("%d/%d天"),countInfo.day14,#config_day14),
-			size = 18,
+		local day_label = UIKit:ttfLabel({
+			text = string.format(_("%d/%d"),countInfo.day14,#config_day14),
+			size = 20,
+			color= 0xa2ff00,
+			shadow= true,
+			align = cc.TEXT_ALIGNMENT_LEFT,
+		}):addTo(bg):align(display.LEFT_BOTTOM, 298, 46)
+		local day_label2 = UIKit:ttfLabel({
+			text = _("天"),
+			size = 20,
 			color= 0xffedae,
 			shadow= true,
-			align = cc.TEXT_ALIGNMENT_CENTER,
-		}):addTo(day_bg):align(display.CENTER, 52, 17)
-		local content_label = UIKit:ttfLabel({
-			text = countInfo.day14 > countInfo.day14RewardsCount and _("今日未领取") or _("今日已领取"),
+			align = cc.TEXT_ALIGNMENT_LEFT,
+		}):align(display.LEFT_BOTTOM, day_label:getPositionX()+day_label:getContentSize().width+4, 46):addTo(bg)
+		local today_label = UIKit:ttfLabel({
+			text = _("今日"),
 			size = 20,
 			color= 0xffedae,
 			align = cc.TEXT_ALIGNMENT_LEFT,
 			shadow= true
-		}):align(display.LEFT_CENTER,330,62):addTo(bg)
+		}):align(display.LEFT_BOTTOM,day_label2:getPositionX()+day_label2:getContentSize().width + 15,46):addTo(bg)
+		local got_bg = display.newSprite("activity_day_bg_104x34.png")
+			:align(display.LEFT_BOTTOM,today_label:getPositionX()+today_label:getContentSize().width+6,42)
+			:addTo(bg)
+		local str,color = _("已领取"),0xa2ff00
+		if countInfo.day14 > countInfo.day14RewardsCount then
+			str = _("未领取")
+			color= 0xff4e00
+		end
+		local content_label = UIKit:ttfLabel({
+			text = str,
+			size = 20,
+			color= color,
+			align = cc.TEXT_ALIGNMENT_CENTER,
+			shadow= true
+		}):align(display.CENTER,52,17):addTo(got_bg)
 	elseif item_type == self.ITEMS_TYPE.FIRST_IN_PURGURE then
 		local title_label = RichText.new({width = 400,size = 20,color = 0xffedae,shadow = true})
 		local str = self:GetFirstPurgureTips()
-		title_label:Text(str):align(display.LEFT_BOTTOM,262,82):addTo(bg)
+		title_label:Text(str):align(display.LEFT_BOTTOM,298,82):addTo(bg)
 		-- 
 		local content_label = UIKit:ttfLabel({
 			text = _("永久获得第二条建筑队列"),
@@ -241,7 +269,7 @@ function GameUIActivityNew:GetActivityItem(item_type)
 			color= 0xffedae,
 			align = cc.TEXT_ALIGNMENT_LEFT,
 			shadow= true
-		}):align(display.LEFT_CENTER,262,62):addTo(bg)
+		}):align(display.LEFT_CENTER,298,62):addTo(bg)
 	elseif item_type == self.ITEMS_TYPE.PLAYER_LEVEL_UP then
 		local title_label = UIKit:ttfLabel({
 			text = _("活动时间类，升级智慧中心，获得丰厚奖励"),
@@ -250,7 +278,7 @@ function GameUIActivityNew:GetActivityItem(item_type)
 			align = cc.TEXT_ALIGNMENT_LEFT,
 			shadow= true,
 			dimensions = cc.size(272, 0)
-		}):align(display.LEFT_TOP,260,126):addTo(bg)
+		}):align(display.LEFT_TOP,298,126):addTo(bg)
 
 		local time_desc_label = UIKit:ttfLabel({
 			text = _("倒计时:"),
@@ -258,24 +286,25 @@ function GameUIActivityNew:GetActivityItem(item_type)
 			color= 0xffedae,
 			align = cc.TEXT_ALIGNMENT_LEFT,
 			shadow= true
-		}):align(display.LEFT_BOTTOM,260,40):addTo(bg)
+		}):align(display.LEFT_BOTTOM,298,40):addTo(bg)
 		local time_label = UIKit:ttfLabel({
 			text = GameUtils:formatTimeStyle1(self.player_level_up_time_residue),
 			size = 20,
-			color= 0x489200,
+			color= 0xa2ff00,
 			align = cc.TEXT_ALIGNMENT_LEFT,
 			shadow= true
-		}):align(display.LEFT_BOTTOM,260 + time_desc_label:getContentSize().width + 10,40):addTo(bg)
+		}):align(display.LEFT_BOTTOM,298 + time_desc_label:getContentSize().width + 10,40):addTo(bg)
 		item.time_label = time_label
 	end
-	bg:size(576,190)
+	-- bg:size(576,190)
 	item:addContent(bg)
-	item:setItemSize(576, 190)
+	item:setMargin({left = 0, right = 0, top = 0, bottom = 5})
+	item:setItemSize(612, 190,false)
 	return item
 end
 
 function GameUIActivityNew:CreateTabIf_award()
-	if not self.award_list then
+	if not self.award_list_view then
 		local list,list_node = UIKit:commonListView({
 	        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
 	        viewRect = cc.rect(0,0,576,772),
@@ -284,13 +313,14 @@ function GameUIActivityNew:CreateTabIf_award()
 	    })
 	    list_node:addTo(self:GetView()):pos(window.left + 35,window.bottom_top + 20)
 	    self.award_list = list
+	    self.award_list_view = list_node
 	    self.award_list:setDelegate(handler(self, self.sourceDelegateAwardList))
 	    User:AddListenOnType(self,User.LISTEN_TYPE.IAP_GIFTS_REFRESH)
 	    User:AddListenOnType(self,User.LISTEN_TYPE.IAP_GIFTS_CHANGE)
 	    User:AddListenOnType(self,User.LISTEN_TYPE.IAP_GIFTS_TIMER)
 	end
 	self:RefreshAwardList()
-	return self.award_list
+	return self.award_list_view
 end
 
 function GameUIActivityNew:RefreshAwardList()
