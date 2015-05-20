@@ -7,7 +7,7 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetAllianceHelper = import("..widget.WidgetAllianceHelper")
 local Flag = import("..entity.Flag")
-local WidgetDropList = import("..widget.WidgetDropList")
+local WidgetRoundTabButtons = import("..widget.WidgetRoundTabButtons")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local UILib = import(".UILib")
 local GameUICollectReport = import(".GameUICollectReport")
@@ -1425,7 +1425,7 @@ function GameUIMail:CreateReportContent()
 end
 
 function GameUIMail:InitSavedReports()
-    local dropList = WidgetDropList.new(
+    local dropList = WidgetRoundTabButtons.new(
         {
             {tag = "menu_1",label = "战报",default = true},
             {tag = "menu_2",label = "邮件"},
@@ -1444,7 +1444,7 @@ function GameUIMail:InitSavedReports()
                 end
                 self.saved_reports_listview = UIListView.new{
                     async = true, --异步加载
-                    viewRect = cc.rect(display.cx-284, display.top-870, 612, 710),
+                    viewRect = cc.rect(display.cx-284, display.top-870, 568, 710),
                     direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
                 }:addTo(self.saved_layer)
 
@@ -1462,7 +1462,7 @@ function GameUIMail:InitSavedReports()
             end
         end
     )
-    dropList:align(display.TOP_CENTER,display.cx,display.top-100):addTo(self.saved_layer,2)
+    dropList:align(display.TOP_CENTER,display.cx,display.top-80):addTo(self.saved_layer,2)
     self.save_dropList = dropList
 end
 
