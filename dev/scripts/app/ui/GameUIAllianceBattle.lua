@@ -858,6 +858,8 @@ function GameUIAllianceBattle:CreateHistoryContent()
         local ourAlliance = report.attackAllianceId == alliance:Id() and report.attackAlliance or report.defenceAlliance
         local enemyAlliance = report.attackAllianceId == alliance:Id() and report.defenceAlliance or report.attackAlliance
         local killMax = report.killMax
+        LuaUtils:outputTable("killMax", killMax)
+        LuaUtils:outputTable("report", report)
 
         fight_time_label:setString(GameUtils:formatTimeStyle2(math.floor(fightTime/1000)))
         local win_text = win and _("胜利") or _("失败")
@@ -904,7 +906,7 @@ function GameUIAllianceBattle:CreateHistoryContent()
             {string.formatnumberthousands(ourAlliance.strikeSuccessCount),_("突袭成功"),string.formatnumberthousands(enemyAlliance.strikeSuccessCount)},
             {string.formatnumberthousands(ourAlliance.attackCount),_("进攻次数"),string.formatnumberthousands(enemyAlliance.attackCount)},
             {string.formatnumberthousands(ourAlliance.attackSuccessCount),_("进攻成功"),string.formatnumberthousands(enemyAlliance.attackSuccessCount)},
-            {killMax.allianceId == alliance:Id() and killMax.name or _("无"),_("头号杀手"),killMax.allianceId ~= alliance:Id() and killMax.name or _("无")},
+            {killMax.allianceId == alliance:Id() and killMax.playerName or _("无"),_("头号杀手"),killMax.allianceId ~= alliance:Id() and killMax.playerName or _("无")},
             {string.formatnumberthousands(ourAlliance.honour),_("荣耀值奖励"),string.formatnumberthousands(enemyAlliance.honour)},
         }
         local b_flag = true
