@@ -1006,7 +1006,7 @@ function GameUIMail:ShowSendMailDetails(mail)
         :addTo(bg)
     local subject_content_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = mail.toName,
+            text = Localize.mails[mail.toName] or mail.toName,
             font = UIKit:getFontFilePath(),
             size = 20,
             dimensions = cc.size(0,24),
@@ -1068,8 +1068,8 @@ function GameUIMail:ShowSendMailDetails(mail)
 end
 --邮件详情弹出框
 function GameUIMail:ShowMailDetails(mail)
-    local title_string = (mail.fromAllianceTag~="" and "["..mail.fromAllianceTag.."] "..mail.fromName) or mail.fromName
-    title_string = mail.fromName == "__system" and _("系统邮件") or title_string
+    local name = Localize.mails[mail.fromName] or mail.fromName
+    local title_string = (mail.fromAllianceTag~="" and "["..mail.fromAllianceTag.."] "..name) or name
     local dialog = WidgetPopDialog.new(768,title_string):addTo(self,201)
     local body = dialog:GetBody()
     local size = body:getContentSize()
