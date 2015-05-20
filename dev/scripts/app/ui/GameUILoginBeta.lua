@@ -434,11 +434,11 @@ end
 local check = import("..fte.check")
 local mockData = import("..fte.mockData")
 function GameUILoginBeta:checkFte()
-    if check("FinishBuildHouseAt_8_1") then
-        -- mockData.FinishBuildHouseAt(8,1)
-        app:EnterUserMode()
-        return
-    end
+    -- if check("FinishBuildHouseAt_8_1") then
+    --     -- mockData.FinishBuildHouseAt(8,1)
+    --     app:EnterUserMode()
+    --     return
+    -- end
 
     local dragon_type
     for k,v in pairs(DataManager:getUserData().dragons) do
@@ -473,6 +473,7 @@ function GameUILoginBeta:checkFte()
     end
     if check("RecruitSoldier_swordsman_10") then
         mockData.RecruitSoldier("swordsman", 10)
+        mockData.FinishRecruitSoldier()
     end
     if check("BuildHouseAt_5_3") then
         mockData.BuildHouseAt(5,3,"farmer")
@@ -480,20 +481,11 @@ function GameUILoginBeta:checkFte()
     if check("FinishBuildHouseAt_5_1") then
         mockData.FinishBuildHouseAt(5,1)
     end
-    if check("UpgradeHouseTo_5_3_2") then
-        mockData.UpgradeHouseTo(5,3,"farmer",2)
-    end
-    if check("FinishBuildHouseAt_5_2") then
-        mockData.FinishBuildHouseAt(5,2)
-    end
     if check("GetSoldier") then
         mockData.GetSoldier()
     end
-    if check("FightWithNpc") then
-        mockData.FightWithNpc()
-    end
-    if check("ActiveVip") then
-        mockData.ActiveVip()
+    if check("FightWithNpc1") then
+        mockData.FightWithNpc(1)
     end
     if check("UpgradeBuildingTo_keep_3") then
         mockData.UpgradeBuildingTo("keep", 3)
@@ -501,17 +493,23 @@ function GameUILoginBeta:checkFte()
     if check("FinishUpgradingBuilding_keep_3") then
         mockData.FinishUpgradingBuilding("keep",3)
     end
-    if check("UpgradeBuildingTo_keep_4") then
-        mockData.UpgradeBuildingTo("keep", 4)
-    end
-    if check("FinishUpgradingBuilding_keep_5") then
-        mockData.FinishUpgradingBuilding("keep",5)
-    end
     if check("UpgradeBuildingTo_hospital_1") then
         mockData.UpgradeBuildingTo("hospital",1)
     end
     if check("FinishUpgradingBuilding_hospital_1") then
         mockData.FinishUpgradingBuilding("hospital",1)
+    end
+    if check("TreatSoldier") then
+        mockData.TreatSoldier("swordsman", 12)
+    end
+    if check("BuildHouseAt_6_3") then
+        mockData.BuildHouseAt(6,3,"woodcutter")
+    end
+    if check("UpgradeBuildingTo_keep_4") then
+        mockData.UpgradeBuildingTo("keep", 4)
+    end
+    if check("FinishUpgradingBuilding_keep_4") then
+        mockData.FinishUpgradingBuilding("keep",4)
     end
     if check("UpgradeBuildingTo_academy_1") then
         mockData.UpgradeBuildingTo("academy",1)
@@ -519,30 +517,29 @@ function GameUILoginBeta:checkFte()
     if check("FinishUpgradingBuilding_academy_1") then
         mockData.FinishUpgradingBuilding("academy",1)
     end
+    if check("Research") then
+        mockData.Research()
+    end
+    if check("UpgradeBuildingTo_keep_5") then
+        mockData.UpgradeBuildingTo("keep", 5)
+    end
+    if check("FinishUpgradingBuilding_keep_5") then
+        mockData.FinishUpgradingBuilding("keep",5)
+    end
     if check("UpgradeBuildingTo_materialDepot_1") then
         mockData.UpgradeBuildingTo("materialDepot",1)
     end
     if check("FinishUpgradingBuilding_materialDepot_1") then
         mockData.FinishUpgradingBuilding("materialDepot",1)
     end
-    if check("BuildHouseAt_6_3") then
-        mockData.BuildHouseAt(6,3,"woodcutter")
-    end
-    if check("FinishBuildHouseAt_6_1") then
+    if check("CheckMaterials") then
         mockData.FinishBuildHouseAt(6,1)
     end
-    if check("BuildHouseAt_7_3") then
-        mockData.BuildHouseAt(7,3,"quarrier")
+    if check("FightWithNpc2") then
+        mockData.FightWithNpc(2)
     end
-    if check("FinishBuildHouseAt_7_1") then
-        mockData.FinishBuildHouseAt(7,1)
-    end
-    if check("BuildHouseAt_8_3") then
-        mockData.BuildHouseAt(8,3,"miner")
-    end
-    if check("FinishBuildHouseAt_8_1") then
-        -- mockData.FinishBuildHouseAt(8,1)
-        app:EnterUserMode()
+    if check("FightWithNpc3") then
+        mockData.FightWithNpc(3)
     end
 end
 

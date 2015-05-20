@@ -202,7 +202,7 @@ function PVEScene:OpenUI(x, y)
     if not object or not object:Type() then
         self.user:GetCurrentPVEMap():ModifyObject(x, y, 0, gid)
     end
-    building_ui_map[gid].new(x, y, self.user):AddToScene(self, true)
+    return building_ui_map[gid].new(x, y, self.user):AddToScene(self, true)
 end
 function PVEScene:CheckTrap()
     if self.user:GetPVEDatabase():IsInTrap() then
@@ -343,6 +343,7 @@ local check = import("..fte.check")
 local mockData = import("..fte.mockData")
 local WidgetFteArrow = import("..widget.WidgetFteArrow")
 local WidgetFteMark = import("..widget.WidgetFteMark")
+local NPC_POS = {9, 12}
 function PVEScene:onEnterTransitionFinish()
     PVEScene.super.onEnterTransitionFinish(self)
     if GLOBAL_FTE then
@@ -350,18 +351,54 @@ function PVEScene:onEnterTransitionFinish()
     end
 end
 function PVEScene:RunFte()
-    if not check("FightWithNpc") then
-        return self:PromiseOfFindNpc()
-            :next(function(npc_ui)
-                return npc_ui:PormiseOfFte()
-            end):next(function()
-            return self:PromiseOfIntroduce()
-            end):next(function()
-            return self:PromiseOfExit()
-            end)
+    self.touch_layer:removeFromParent()
+    self:GetFteLayer():LockAll()
+    local p = cocos_promise.defer()
+    if not check("FightWithNpc1") then
+        p:next(function()
+            self:GetFteLayer():UnlockAll()
+            return self:PromiseOfFindNpc()
+                :next(function(npc_ui)
+                    return npc_ui:PormiseOfFte():next(function()
+                        return npc_ui:PromiseOfExit()
+                    end)
+                end):next(function()
+                return self:PromiseOfIntroduce()
+                end):next(function()
+                return self:PromiseOfExit()
+                end):next(function()
+                return promise.new()
+                end)
+        end)
+    end
+    if not check("FightWithNpc2") then
+        p:next(function()
+            self:GetFteLayer():UnlockAll()
+            return self:PromiseOfFindNpc()
+                :next(function(npc_ui)
+                    return npc_ui:PormiseOfFte():next(function()
+                        return npc_ui
+                    end)
+                end)
+        end)
+    end
+    if not check("FightWithNpc3") then
+        p:next(function(ui)
+            if not ui then
+                ui = self:OpenUI(unpack(NPC_POS))
+            end
+            return ui:PormiseOfFte()
+                :next(function()
+                    self:GetFteLayer():UnlockAll()
+                    return ui:PromiseOfExit()
+                end):next(function()
+                return self:PromiseOfIntroduce1()
+                end):next(function()
+                return self:PromiseOfExit()
+                end)
+        end)
     end
 end
-local NPC_POS = {9, 12}
 function PVEScene:PromiseOfFindNpc()
     self:GetFteLayer():Enable()
     local npc_x, npc_y = unpack(NPC_POS)
@@ -402,6 +439,14 @@ function PVEScene:PromiseOfIntroduce()
     --     return GameUINpc:PromiseOfSay({words = _("当你探索玩整个地图还会获得一笔丰厚的奖励"), npc = "man"})
     -- end)
 end
+function PVEScene:PromiseOfIntroduce1()
+    self:GetFteLayer():Enable()
+    return GameUINpc:PromiseOfSay(
+        {words = _("亡灵兵种属性极高而且没有维护费用,有了特殊材料,我们就可以招募他们了."), npc = "man"}
+    ):next(function()
+        return GameUINpc:PromiseOfLeave()
+    end)
+end
 function PVEScene:PromiseOfExit()
     self:GetFteLayer():Reset()
     local r = self:GetHomePage().change_map:GetWorldRect()
@@ -425,6 +470,15 @@ function PVEScene:DestoryMark()
 end
 
 return PVEScene
+
+
+
+
+
+
+
+
+
 
 
 

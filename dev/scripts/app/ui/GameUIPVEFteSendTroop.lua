@@ -38,7 +38,10 @@ function GameUIPVEFteSendTroop:PromiseOfAttack()
     WidgetFteArrow.new(_("点击进攻")):addTo(self:GetFteLayer())
     :TurnDown():align(display.CENTER_BOTTOM, r.x + r.width/2, r.y + 70)
 
-    return UIKit:PromiseOfOpen("GameUIReplayNew"):next(function(ui) ui:DestroyFteLayer() end)
+    return UIKit:PromiseOfOpen("GameUIReplayNew"):next(function(ui) 
+        ui:DestroyFteLayer()
+        return UIKit:PromiseOfClose("GameUIReplayNew")
+    end)
 end
 
 return GameUIPVEFteSendTroop
