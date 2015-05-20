@@ -979,9 +979,8 @@ function NetManager:getSearchAllianceByTagPromsie(tag)
     }, "搜索特定标签联盟失败!")
 end
 -- 搜索能直接加入联盟
-function NetManager:getFetchCanDirectJoinAlliancesPromise()
-    return get_blocking_request_promise("logic.allianceHandler.getCanDirectJoinAlliances", nil
-        , "搜索直接加入联盟失败!")
+function NetManager:getFetchCanDirectJoinAlliancesPromise(fromIndex)
+    return get_blocking_request_promise("logic.allianceHandler.getCanDirectJoinAlliances", {fromIndex = fromIndex},"搜索直接加入联盟失败!")
 end
 -- 邀请加入联盟
 function NetManager:getInviteToJoinAlliancePromise(memberId)
