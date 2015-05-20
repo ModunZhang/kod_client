@@ -16,7 +16,7 @@ local function get_player_response_msg(response)
     if response.msg.playerData then
         local user_data = DataManager:getUserData()
         local edit = decodeInUserDataFromDeltaData(user_data, response.msg.playerData)
-        LuaUtils:outputTable(edit,"edit")
+        LuaUtils:outputTable("edit",edit)
         DataManager:setUserData(user_data, edit)
         return response
     end
@@ -368,6 +368,16 @@ local logic_event_map = {
             local user_data = DataManager:getUserData()
             local edit = decodeInUserDataFromDeltaData(user_data, response)
             LuaUtils:outputTable("edit", edit)
+            -- 在客户端没有 mails 或者 reports key时，收到邮件或者战报需要增加未读字段数值
+            if not user_data.reports or not user_data.mails then
+                for i,v in ipairs(response) do
+                    if string.find(v[1],"reports") then
+                        MailManager:IncreaseUnReadReportNum(1)
+                    elseif string.find(v[1],"mails") then
+                        MailManager:IncreaseUnReadMailsNum(1)
+                    end
+                end
+            end
             DataManager:setUserData(user_data, edit)
         end
     end,
@@ -1077,7 +1087,7 @@ end
 --获取联盟圣地战历史记录
 function NetManager:getShrineReportsPromise()
     return get_blocking_request_promise("logic.allianceHandler.getShrineReports",nil,
-     "获取联盟圣地战历史记录失败!"):done(get_alliance_allianceshrinereports_response_msg)
+        "获取联盟圣地战历史记录失败!"):done(get_alliance_allianceshrinereports_response_msg)
 end
 -- 获取联盟商店买入卖出记录
 function NetManager:getItemLogsPromise(allianceId)
@@ -1182,7 +1192,7 @@ end
 
 --请求联盟数据
 function NetManager:getAllianceInfoPromise(allianceId)
-      return get_blocking_request_promise("logic.allianceHandler.getAllianceInfo",{allianceId = allianceId},
+    return get_blocking_request_promise("logic.allianceHandler.getAllianceInfo",{allianceId = allianceId},
         "请求联盟数据失败!",false,0)
 end
 --协防
@@ -1632,6 +1642,8 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
+
 
 
 

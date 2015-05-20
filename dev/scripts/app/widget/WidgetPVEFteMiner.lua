@@ -51,8 +51,7 @@ function WidgetPVEFteMiner:PormiseOfFte()
                             GameGlobalUI:showTips(_("获得奖励"), rewards)
                         end
                     end):AddToCurrentScene(true)
-
-                    mockData.FightWithNpc()
+                    mockData.FightWithNpc(self:GetObject():Searched())
                 else
                     UIKit:newGameUI("GameUIReplayNew", report):AddToCurrentScene(true)
                 end
@@ -70,13 +69,12 @@ function WidgetPVEFteMiner:PormiseOfFte()
         :next(function(ui)
             self:GetFteLayer():removeFromParent()
             return ui:PormiseOfFte()
-        end):next(function()
-        return self:PromiseOfExit()
         end)
 end
 function WidgetPVEFteMiner:PromiseOfExit()
-    local r = self.btns[2]:getCascadeBoundingBox()
-    self:GetFteLayer():SetTouchObject(self.btns[2])
+    local btn = self.btns[2] or self.btns[1]
+    local r = btn:getCascadeBoundingBox()
+    self:GetFteLayer():SetTouchObject(btn)
 
     WidgetFteArrow.new(_("点击离开")):addTo(self:GetFteLayer())
         :TurnRight():align(display.RIGHT_CENTER, r.x, r.y + r.height/2)

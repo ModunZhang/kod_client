@@ -23,6 +23,7 @@ end
 
 function MailManager:IncreaseUnReadMailsNum(num)
     self.unread_mail = self.unread_mail + num
+    GameGlobalUI:showTips(_("提示"),_("你有一封新的邮件"))
     self:NotifyListeneOnType(MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED,function(listener)
         listener:MailUnreadChanged({mail=self.unread_mail})
     end)
@@ -457,7 +458,6 @@ function MailManager:OnUserDataChanged(userData,timer,deltaData)
 
     -- 战报部分
     if is_fully_update then
-        LuaUtils:outputTable("userData.reports", userData.reports)
         self:OnReportsChanged(userData.reports)
         self:OnSavedReportsChanged(userData.savedReports)
     end
