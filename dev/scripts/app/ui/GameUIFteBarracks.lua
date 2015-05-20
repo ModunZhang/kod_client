@@ -50,7 +50,6 @@ function GameUIFteBarracks:PromiseOfFteSpecial()
         function ui:GetRecruitSpecialTime()
             return true
         end
-        ui:OnTimer(app.timer:GetServerTime())
         self:GetFteLayer():removeFromParent()
         return ui:PromiseOfFteSpecial()
     end):next(function()

@@ -32,7 +32,7 @@ for i,layer in ipairs(map.layers) do
         	layer.data[i] = layer.data[i] - min + 1
         end
         for i,v in ipairs(layer.data) do
-        	if v > 0 then
+        	if v > 0 and #buildings_map >= v then
         		local index = (i-1)
         		print(buildings_map[v], index % layer.width, math.floor(index / layer.width))
         	end

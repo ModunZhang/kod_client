@@ -12,10 +12,30 @@ end
 -- fte
 local mockData = import("..fte.mockData")
 local WidgetFteArrow = import("..widget.WidgetFteArrow")
+local fte = {
+        {
+            ["soldiers"] = "deathKnight,1;skeletonWarrior,1",
+            ["rewards"] = "soldierMaterials,deathHand,1;soldierMaterials,soulStone,1"
+        },
+        {
+            ["soldiers"] = "meatWagon,1;skeletonArcher,1",
+            ["rewards"] = "soldierMaterials,heroBones,1;soldierMaterials,magicBox,1"
+        }
+    }
 function WidgetPVEFteMiner:PormiseOfFte()
     local ui = self
+
     function ui:Fight()
-        local enemy = self:GetObject():GetNextEnemy()
+        local obj = self:GetObject()
+            
+        function obj:GetEnemyByIndex(index)
+            if index == 1 then
+                return self:DecodeToEnemy(self:GetEnemyInfo(index))
+            end
+            return self:DecodeToEnemy(fte[index - 1])
+        end
+
+        local enemy = obj:GetNextEnemy()
         UIKit:newGameUI('GameUIPVEFteSendTroop',
             enemy.soldiers,-- pve 怪数据
             function(dragonType, soldiers)

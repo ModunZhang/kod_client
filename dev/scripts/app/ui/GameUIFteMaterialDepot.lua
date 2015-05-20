@@ -28,6 +28,10 @@ function GameUIFteMaterialDepot:PromiseOfFte()
         local ui = UIKit:newWidgetUI("WidgetMaterialDetails",MaterialManager.MATERIAL_TYPE.SOLDIER,"soulStone",0):AddToCurrentScene()
         ui.__type = UIKit.UITYPE.BACKGROUND
 
+        ui:Find().button:removeEventListenersByEvent("CLICKED_EVENT")
+        ui:Find().button:onButtonClicked(function()
+            app:EnterPVEFteScene(1)
+        end)
         ui:GetFteLayer():SetTouchObject(ui:Find())
 	    local r = ui:Find():getCascadeBoundingBox()
 	    WidgetFteArrow.new(_("点击查看")):addTo(ui:GetFteLayer()):TurnUp()

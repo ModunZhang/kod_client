@@ -277,10 +277,12 @@ function GameUILoginBeta:login()
             if DataManager:getUserData().basicInfo.terrain == "__NONE__" then
   		        app:EnterFteScene()
             else
+                self:checkFte()
                 if GLOBAL_FTE then
-                    self:checkFte()
+                    app:EnterMyCityFteScene()
+                else
+                    app:EnterMyCityScene()
                 end
-                app:EnterMyCityScene()
             end
         end, 0.3)
     end):catch(function(err)
@@ -434,11 +436,10 @@ end
 local check = import("..fte.check")
 local mockData = import("..fte.mockData")
 function GameUILoginBeta:checkFte()
-    -- if check("FinishBuildHouseAt_8_1") then
-    --     -- mockData.FinishBuildHouseAt(8,1)
-    --     app:EnterUserMode()
-    --     return
-    -- end
+    if check("BuildHouseAt_8_3") then
+        app:EnterUserMode()
+        return
+    end
 
     local dragon_type
     for k,v in pairs(DataManager:getUserData().dragons) do
@@ -471,7 +472,7 @@ function GameUILoginBeta:checkFte()
     if check("FinishUpgradingBuilding_barracks_1") then
         mockData.FinishUpgradingBuilding("barracks",1)
     end
-    if check("RecruitSoldier_swordsman_10") then
+    if check("RecruitSoldier_swordsman") then
         mockData.RecruitSoldier("swordsman", 10)
         mockData.FinishRecruitSoldier()
     end
@@ -540,6 +541,16 @@ function GameUILoginBeta:checkFte()
     end
     if check("FightWithNpc3") then
         mockData.FightWithNpc(3)
+    end
+    if check("RecruitSoldier_skeletonWarrior") then
+        mockData.RecruitSoldier("skeletonWarrior", 1)
+        mockData.FinishRecruitSoldier()
+    end
+    if check("BuildHouseAt_7_3") then
+        mockData.BuildHouseAt(7,3,"quarrier")
+    end
+    if check("BuildHouseAt_8_3") then
+        mockData.BuildHouseAt(8,3,"miner")
     end
 end
 

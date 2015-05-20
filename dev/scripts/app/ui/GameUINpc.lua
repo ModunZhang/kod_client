@@ -2,6 +2,7 @@ local cocos_promise = import("..utils.cocos_promise")
 local utf8 = import("..utils.utf8")
 local promise = import("..utils.promise")
 local window = import("..utils.window")
+local WidgetMaskFilter = import("..widget.WidgetMaskFilter")
 local GameUINpc = UIKit:createUIClass("GameUINpc")
 local LETTER_ACTION = 1001
 
@@ -133,10 +134,7 @@ function GameUINpc:OnMoveInStage()
     end
     self:RefreshNpc(self:CurrentDialog())
     self.btn:onButtonClicked(function()
-        -- if self.touch_action_node:getNumberOfRunningActions() == 0 then
-            -- self.touch_action_node:performWithDelay(function()end, 0.2)
-            self:OnClick()
-        -- end
+        self:OnClick()
     end)
 end
 function GameUINpc:onExit()
@@ -172,6 +170,7 @@ function GameUINpc:ShowWords(dialog, ani)
         self.label:removeFromParent()
         self.label = nil
     end
+    self.ui_map.background:FocusOnRect(dialog.rect)
     if self.npc_brow ~= dialog.brow then
         self.npc_brow = dialog.brow
         if self.npc_brow then
@@ -293,7 +292,7 @@ function GameUINpc:PromiseOfLeave()
 end
 function GameUINpc:BuildUI()
     local ui_map = {}
-    ui_map.background = display.newColorLayer(cc.c4b(0,0,0,180)):addTo(self):setTouchEnabled(false)
+    ui_map.background = WidgetMaskFilter.new():addTo(self):pos(display.cx, display.cy)
     ui_map.dialog_bg = display.newSprite("fte_background.png")
         :addTo(self):align(display.CENTER_BOTTOM, display.cx, 0)
     local size = ui_map.dialog_bg:getContentSize()

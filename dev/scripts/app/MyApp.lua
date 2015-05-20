@@ -269,6 +269,9 @@ function MyApp:EnterCitySceneByPlayerAndAlliance(id, is_my_alliance, location)
         end
     end)
 end
+function MyApp:EnterMyCityFteScene()
+    app:enterScene("MyCityFteScene", {City}, "custom", -1, transition_)
+end
 function MyApp:EnterMyCityScene()
     app:enterScene("MyCityScene", {City}, "custom", -1, transition_)
 end
@@ -313,6 +316,10 @@ function MyApp:EnterPVEScene(level)
     User:GotoPVEMapByLevel(level)
     app:enterScene("PVEScene", {User}, "custom", -1, transition_)
 end
+function MyApp:EnterPVEFteScene(level)
+    User:GotoPVEMapByLevel(level)
+    app:enterScene("PVEFteScene", {User}, "custom", -1, transition_)
+end
 
 function MyApp:pushScene(sceneName, args, transitionType, time, more)
     local scenePackageName = "app.scenes." .. sceneName
@@ -330,6 +337,14 @@ function MyApp:EnterUserMode()
     if DataManager.handle_soldier__ then
         scheduler.unscheduleGlobal(DataManager.handle_soldier__)
         DataManager.handle_soldier__ = nil
+    end
+    if DataManager.handle_treat__ then
+        scheduler.unscheduleGlobal(DataManager.handle_treat__)
+        DataManager.handle_treat__ = nil
+    end
+    if DataManager.handle_tech__ then
+        scheduler.unscheduleGlobal(DataManager.handle_tech__)
+        DataManager.handle_tech__ = nil
     end
     local InitGame = import("app.service.InitGame")
     assert(DataManager:hasUserData())
