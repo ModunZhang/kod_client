@@ -994,7 +994,7 @@ function GameUIMail:ShowSendMailDetails(mail)
     content_bg:align(display.LEFT_BOTTOM,(bg:getContentSize().width-content_bg:getContentSize().width)/2,30)
 
     -- player head icon
-    UIKit:GetPlayerCommonIcon():align(display.CENTER, 76, bg:getContentSize().height - 90):addTo(bg)
+    UIKit:GetPlayerCommonIcon(mail.fromIcon):align(display.CENTER, 76, bg:getContentSize().height - 90):addTo(bg)
     -- 收件人
     local subject_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -1078,7 +1078,7 @@ function GameUIMail:ShowMailDetails(mail)
     content_bg:pos((size.width-content_bg:getContentSize().width)/2,80)
 
     -- player head icon
-    UIKit:GetPlayerCommonIcon():align(display.CENTER, 76, size.height - 80):addTo(body)
+    UIKit:GetPlayerCommonIcon(mail.fromIcon):align(display.CENTER, 76, size.height - 80):addTo(body)
 
     -- 主题
     local subject_label = cc.ui.UILabel.new(
