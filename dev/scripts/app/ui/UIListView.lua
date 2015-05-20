@@ -977,6 +977,9 @@ function UIListView:asyncLoadWithCurrentPosition_()
             self:callAsyncLoadDelegate_(self, UIListView.ASY_REFRESH , i)
         end
     end
+    if count == 0 then
+        self:reload()
+    end
     return self
 end
 
