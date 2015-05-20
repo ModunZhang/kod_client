@@ -1384,7 +1384,7 @@ end
 
 function UIListView:callAsyncLoadDelegate_(...)
     local args = {...}
-    if self.delegate_[UIListView.DELEGATE](self, UIListView.COUNT_TAG) > 0 then
+    if self.delegate_[UIListView.DELEGATE] then
         return self.delegate_[UIListView.DELEGATE](unpack(args))
     else
         return self:self_sourceDelegate(unpack(args))
