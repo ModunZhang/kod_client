@@ -333,6 +333,65 @@ local function FightWithNpc()
 end
 
 
+local function FinishTreatSoldier()
+    if DataManager.handle_treat__ then
+        scheduler.unscheduleGlobal(DataManager.handle_treat__)
+        DataManager.handle_treat__ = nil
+    end
+
+    local treatSoldierEvents = DataManager:getFteData().treatSoldierEvents
+    if treatSoldierEvents and #treatSoldierEvents > 0 then
+        mock{
+            {"treatSoldierEvents.0", json.null},
+        }
+    end
+
+    local key = string.format("FinishTreatSoldier")
+    if not check(key) then
+        mark(key)
+        ext.market_sdk.onPlayerEvent("治疗士兵完成", key)
+    end
+end
+
+
+local function TreatSoldier(type_, count)
+    local start_time = NetManager:getServerTime()
+    local treatTime = normal[type_.."_1"].treatTime * count
+    mock{
+        {string.format("woundedSoldiers.%s", type_), 0},
+        {
+            "treatSoldierEvents.0",
+            {
+                id = 1,
+                soldiers = {
+                    {
+                        name = type_,
+                        count = count
+                    }
+                },
+                startTime = start_time,
+                finishTime = start_time + treatTime * 1000,
+            }
+        }
+    }
+
+    DataManager.handle_treat__ = scheduler.performWithDelayGlobal(function()
+        if DataManager:getFteData() and
+            DataManager:getFteData().treatSoldierEvents and
+            #DataManager:getFteData().treatSoldierEvents > 0 then
+            FinishTreatSoldier()
+        end
+        DataManager.handle_treat__ = nil
+    end, treatTime)
+
+    local key = string.format("TreatSoldier_%s_%d", type_, count)
+    if not check(key) then
+        mark(key)
+        ext.market_sdk.onPlayerEvent("治疗士兵", key)
+    end
+end
+
+
 
 
 
@@ -345,10 +404,13 @@ return {
     UpgradeBuildingTo = UpgradeBuildingTo,
     FinishUpgradingBuilding = FinishUpgradingBuilding,
     RecruitSoldier = RecruitSoldier,
+    TreatSoldier = TreatSoldier,
     GetSoldier = GetSoldier,
     ActiveVip = ActiveVip,
     FightWithNpc = FightWithNpc,
 }
+
+
 
 
 

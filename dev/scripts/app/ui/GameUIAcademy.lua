@@ -67,7 +67,6 @@ function GameUIAcademy:GetNodeForKey(key)
 end
 
 function GameUIAcademy:OnMoveInStage()
-	GameUIAcademy.super.OnMoveInStage(self)
 	self:CreateTabButtons({
         {
             label = _("科技"),
@@ -90,6 +89,8 @@ function GameUIAcademy:OnMoveInStage()
     City:AddListenOnType(self,City.LISTEN_TYPE.PRODUCTION_EVENT_TIMER)
     City:AddListenOnType(self,City.LISTEN_TYPE.PRODUCTION_EVENT_REFRESH)
     City:AddListenOnType(self,City.LISTEN_TYPE.UPGRADE_BUILDING)
+
+    GameUIAcademy.super.OnMoveInStage(self)
 end
 
 

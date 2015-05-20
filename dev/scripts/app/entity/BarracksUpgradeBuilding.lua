@@ -12,6 +12,8 @@ function BarracksUpgradeBuilding:ctor(...)
     self.soldier_star = 1
     self.recruit_event = self:CreateEvent()
     BarracksUpgradeBuilding.super.ctor(self, ...)
+
+    
     self.recruit_soldier_callbacks = {}
     self.finish_soldier_callbacks = {}
 end
