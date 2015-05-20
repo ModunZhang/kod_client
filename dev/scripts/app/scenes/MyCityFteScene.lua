@@ -182,9 +182,10 @@ local check = import("..fte.check")
 local mockData = import("..fte.mockData")
 function MyCityFteScene:RunFte()
     self.touch_layer:removeFromParent()
-    self:GetFteLayer():Enable()
+    self:GetFteLayer():LockAll()
 
     cocos_promise.defer():next(function()
+        self:GetFteLayer():UnlockAll()
         if not check("HateDragon") or
             not check("DefenceDragon") then
             return self:PromiseOfHateDragonAndDefence()
@@ -215,7 +216,7 @@ function MyCityFteScene:RunFte()
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
-        if not check("RecruitSoldier_swordsman_10") then
+        if not check("RecruitSoldier_swordsman") then
             return self:PromiseOfRecruitSoldier("swordsman")
         end
     end):next(function()
@@ -295,7 +296,7 @@ function MyCityFteScene:RunFte()
             return self:PromiseOfCheckMaterials()
         end
     end):next(function()
-        if not check("RecruitSoldier_skeletonWarrior_1") then
+        if not check("RecruitSoldier_skeletonWarrior") then
             return self:PromiseOfRecruitSpecial()
         end
     end):next(function()

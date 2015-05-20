@@ -71,6 +71,7 @@ function GameUIUpgradeBuilding:PromiseOfFte()
         end
 
         self:LeftButtonClicked()
+        self.upgrade_layer.acc_layer.acc_button:setButtonEnabled(false)
     end)
 
     local r = self:Find():getCascadeBoundingBox()
