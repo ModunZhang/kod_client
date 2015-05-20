@@ -959,7 +959,12 @@ end
 
 ]]
 function UIListView:asyncLoadWithCurrentPosition_()
-    local count = self:callAsyncLoadDelegate_(self, UIListView.COUNT_TAG)
+    local count 
+    if self.delegate_[UIListView.DELEGATE] then
+        count = self.delegate_[UIListView.DELEGATE](self, UIListView.COUNT_TAG)
+    else
+        count = self:self_sourceDelegate(self, UIListView.COUNT_TAG)
+    end
     local current_min_index,current_max_index = math.huge,0
     for i,v in ipairs(self:getItems()) do
         current_min_index = math.min(current_min_index,v.idx_)
@@ -1384,7 +1389,7 @@ end
 
 function UIListView:callAsyncLoadDelegate_(...)
     local args = {...}
-    if self.delegate_[UIListView.DELEGATE] then
+    if self.delegate_[UIListView.DELEGATE](self, UIListView.COUNT_TAG) > 0 then
         return self.delegate_[UIListView.DELEGATE](unpack(args))
     else
         return self:self_sourceDelegate(unpack(args))
