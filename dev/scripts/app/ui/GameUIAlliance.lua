@@ -244,7 +244,7 @@ end
 
 -- tag ~= nil -->search
 function GameUIAlliance:GetJoinList(tag)
-    if tag then
+    if tag and string.len(tag) >  0 then
         NetManager:getSearchAllianceByTagPromsie(tag):done(function(response)
             if not response.msg or not response.msg.allianceDatas then return end
             if response.msg.allianceDatas  then
@@ -462,24 +462,6 @@ function GameUIAlliance:GetJoinListItemContent()
             size = 22,
             color = 0x403c2f
     }):addTo(bg):align(display.LEFT_TOP,leaderIcon:getPositionX()+leaderIcon:getContentSize().width+15, leaderIcon:getPositionY()-4)
-    -- local join_button = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"}):setButtonLabel(UIKit:ttfLabel({text = _("加入"),
-    --     size = 20,
-    --     shadow = true,
-    --     color = 0xfff3c7
-    -- })):align(display.RIGHT_TOP,558,156):addTo(bg)
-    -- :onButtonClicked(function(event)
-
-    -- end)
-
-    -- local apply_button = WidgetPushButton.new({normal = "blue_btn_up_148x58.png",pressed = "blue_btn_down_148x58.png"}):setButtonLabel(UIKit:ttfLabel({text = _("申请"),
-    --     size = 20,
-    --     shadow = true,
-    --     color = 0xfff3c7
-    -- })):align(display.RIGHT_TOP,titleBg:getPositionX(),titleBg:getPositionY() - titleBg:getContentSize().height -10):addTo(bg)
-    -- :onButtonClicked(function(event)
-        
-    -- end)
-
     bg.nameLabel = nameLabel
     bg.memberValLabel = memberValLabel
     bg.fightingValLabel = fightingValLabel
@@ -489,17 +471,12 @@ function GameUIAlliance:GetJoinListItemContent()
     return bg
 end
 
-function GameUIAlliance:RefreshJoinListView(data)
-    -- assert(data)
-    -- self.joinListView:removeAllItems()
-    -- for i,v in ipairs(data) do
-    --     local newItem = self:getCommonListItem_(self.COMMON_LIST_ITEM_TYPE.JOIN,v)
-    --     self.joinListView:addItem(newItem)
-    -- end
+function GameUIAlliance:RefreshJoinListView()
     self.joinListView:reload()
 end
 
 function GameUIAlliance:SearchAllianAction(tag)
+    if tag then tag = string.trim(tag) end
     self:GetJoinList(tag)
 end
 
