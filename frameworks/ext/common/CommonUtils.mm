@@ -116,9 +116,13 @@ extern "C" long long getOSTime()
     return (long long)(currentTime * 1000);
 }
 
-
+static NSString * shared_openUDID = NULL;
 extern "C" const char* GetOpenUdid()
 {
+    if(shared_openUDID!=NULL)
+    {
+        return [shared_openUDID UTF8String];
+    }
     NSError *error = nil;
     NSString *_openUDID = [UICKeyChainStore stringForKey:kKeychainBatcatStudioIdentifier service:kKeychainBatcatStudioKeyChainService error:&error];
     if (error) {
@@ -150,7 +154,8 @@ extern "C" const char* GetOpenUdid()
         }
     }
     NSLog(@"GetOpenUdid:%@",_openUDID);
-    return [_openUDID UTF8String];
+    shared_openUDID = [[NSString alloc]initWithString:_openUDID];
+    return [shared_openUDID UTF8String];
 }
 
 extern "C" void registereForRemoteNotifications()

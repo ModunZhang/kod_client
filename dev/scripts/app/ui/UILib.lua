@@ -895,7 +895,7 @@ local IAP_PACKAGE_IMAGE = {
 }
 
 local ACTIVITY_IMAGE_CONFIG = {
-    EVERY_DAY_LOGIN = "activity_logo_550x128.png",
+    EVERY_DAY_LOGIN = "activity_logo_589x138.png",
     CONTINUITY = "gem_logo_592x139_3.png",
     FIRST_IN_PURGURE = "gem_logo_592x139_4.png",
     PLAYER_LEVEL_UP = "gem_logo_592x139_1.png"
