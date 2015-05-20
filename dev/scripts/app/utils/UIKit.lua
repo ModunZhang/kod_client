@@ -176,7 +176,11 @@ function UIKit:getRegistry()
     return self.Registry
 end
 
-function UIKit:closeAllUI()
+function UIKit:closeAllUI(force)
+    if force then
+        self.open_ui_callbacks = {}
+        self.close_ui_callbacks = {}
+    end
     for name,v in pairs(self:getRegistry().objects_) do
         if v.__isBase and v.__type ~= self.UITYPE.BACKGROUND and v.__cname ~= 'GameUISelenaQuestion' then
             v:LeftButtonClicked()

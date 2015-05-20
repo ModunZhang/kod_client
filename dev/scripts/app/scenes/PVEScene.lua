@@ -48,19 +48,17 @@ end
 function PVEScene:onExit()
     PVEScene.super.onExit(self)
     self.user:ResetPveData()
-    if not GLOBAL_FTE then
-        local location = DataManager:getUserData().pve.location
-        local x,y,z = self.user:GetPVEDatabase():GetCharPosition()
-        if location.x ~= x or location.y ~= y or location.z ~= z then
-            NetManager:getSetPveDataPromise(
-                self.user:EncodePveDataAndResetFightRewardsData(),
-                true
-            ):fail(function()
-                -- 失败回滚
-                local location = DataManager:getUserData().pve.location
-                User:GetPVEDatabase():SetCharPosition(location.x, location.y, location.z)
-            end)
-        end
+    local location = DataManager:getUserData().pve.location
+    local x,y,z = self.user:GetPVEDatabase():GetCharPosition()
+    if location.x ~= x or location.y ~= y or location.z ~= z then
+        NetManager:getSetPveDataPromise(
+            self.user:EncodePveDataAndResetFightRewardsData(),
+            true
+        ):fail(function()
+            -- 失败回滚
+            local location = DataManager:getUserData().pve.location
+            User:GetPVEDatabase():SetCharPosition(location.x, location.y, location.z)
+        end)
     end
 end
 function PVEScene:LoadAnimation()
@@ -106,8 +104,10 @@ function PVEScene:OnLocationChanged(is_pos_changed, is_switch_floor)
 end
 function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
     -- 有动画就什么都不处理
-    if not PVEScene.super.OnTouchClicked(self, pre_x, pre_y, x, y) then return end
-    if self:GetSceneLayer():GetChar():getNumberOfRunningActions() > 0 then return end
+    if self.event_manager:TouchCounts() ~= 0 or
+        self:GetSceneLayer():GetChar():getNumberOfRunningActions() > 0 then
+        return
+    end
 
     -- 获取当前点
     -- 检查是不是在中心
@@ -120,7 +120,7 @@ function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
 
     -- 检查目标如果在原地，则打开原地的界面
     local new_x, new_y = self:GetClickedPos(x, y)
-    if new_x == old_x and new_y == old_y and self:CheckCanMoveTo(old_x, old_y) then
+    if new_x == old_x and new_y == old_y then
         return self:OpenUI(old_x, old_y)
     end
     -- 检查行走偏移, 得到目标点
@@ -129,12 +129,8 @@ function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
     local offset_y = is_offset_x and 0 or (new_y - old_y) / math.abs(new_y - old_y)
     local tx, ty = old_x + offset_x, old_y + offset_y
 
-    -- 检查fte
-    if not self:CheckCanMoveDelta(offset_x, offset_y) then return end
-
     if self:GetSceneLayer():CanMove(tx, ty) and
         self.user:HasAnyStength() then
-        -- 能走的话检查fte
 
         if not self.user:GetPVEDatabase():IsInTrap() then
             self.user:GetPVEDatabase():ReduceNextEnemyStep()
@@ -149,8 +145,7 @@ function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
             self.move_step = 1
         end
 
-        if self:GetSceneLayer():GetTileInfo(tx, ty) > 0 and
-            self:CheckCanMoveTo(tx, ty) then
+        if self:GetSceneLayer():GetTileInfo(tx, ty) > 0 then
             self:CheckBuilding(tx, ty)
         else
             self:CheckTrap()
@@ -184,7 +179,7 @@ local building_ui_map = setmetatable({
     [PVEDefine.START_AIRSHIP]      = WidgetPVEStartAirship,
     [PVEDefine.WOODCUTTER]         = WidgetPVEWoodcutter,
     [PVEDefine.QUARRIER]           = WidgetPVEQuarrier,
-    [PVEDefine.MINER]              = WidgetPVEFteMiner,
+    [PVEDefine.MINER]              = WidgetPVEMiner,
     [PVEDefine.FARMER]             = WidgetPVEFarmer,
     [PVEDefine.CAMP]               = WidgetPVECamp,
     [PVEDefine.CRASHED_AIRSHIP]    = WidgetPVECrashedAirship,
@@ -289,187 +284,13 @@ function PVEScene:GetCenterPos()
     local point = self:GetSceneLayer():GetSceneNode():convertToNodeSpace(cc.p(display.cx, display.cy))
     return logic_map:ConvertToLogicPosition(point.x, point.y)
 end
-function PVEScene:CheckCanMoveDelta(ox, oy)
-    if not self.move_data then return true end
-    local x,y = self:GetCurrentPos()
-    return math.abs(x + ox - self.move_data.x) <= math.abs(x - self.move_data.x) and
-        math.abs(y + oy - self.move_data.y) <= math.abs(y - self.move_data.y)
-end
-function PVEScene:CheckCanMoveTo(x, y)
-    if not self.move_data then return true end
-    if self.move_data.callback(x, y) then
-        self.move_data = nil
-        self:CheckDirection()
-        return true
-    end
-    self:CheckDirection()
-end
-function PVEScene:PromiseOfMoveTo(x, y)
-    local p = promise.new()
-    self.move_data = {
-        callback = function(x_, y_)
-            if x == x_ and y == y_ then
-                p:resolve()
-                return true
-            end
-        end,
-        x = x,
-        y = y,
-    }
-    self:CheckDirection()
-    return p
-end
-function PVEScene:CheckDirection()
-    if self.move_data then
-        local x,y = self:GetCurrentPos()
-        if x == self.move_data.x and y == self.move_data.y then
-            self:GetDirectionArrow():hide()
-        else
-            local left = x - self.move_data.x > 0
-            local right = x - self.move_data.x < 0
-            local up = y - self.move_data.y < 0
-            local down = y - self.move_data.y > 0
-            self:GetDirectionArrow():show()
-                :EnableDirection(left, right, up, down)
-        end
-    else
-        self:GetDirectionArrow():hide()
-    end
-end
 
 
--- fte
-local check = import("..fte.check")
-local mockData = import("..fte.mockData")
-local WidgetFteArrow = import("..widget.WidgetFteArrow")
-local WidgetFteMark = import("..widget.WidgetFteMark")
-local NPC_POS = {9, 12}
-function PVEScene:onEnterTransitionFinish()
-    PVEScene.super.onEnterTransitionFinish(self)
-    if GLOBAL_FTE then
-        self:RunFte()
-    end
-end
-function PVEScene:RunFte()
-    self.touch_layer:removeFromParent()
-    self:GetFteLayer():LockAll()
-    local p = cocos_promise.defer()
-    if not check("FightWithNpc1") then
-        p:next(function()
-            self:GetFteLayer():UnlockAll()
-            return self:PromiseOfFindNpc()
-                :next(function(npc_ui)
-                    return npc_ui:PormiseOfFte():next(function()
-                        return npc_ui:PromiseOfExit()
-                    end)
-                end):next(function()
-                return self:PromiseOfIntroduce()
-                end):next(function()
-                return self:PromiseOfExit()
-                end):next(function()
-                return promise.new()
-                end)
-        end)
-    end
-    if not check("FightWithNpc2") then
-        p:next(function()
-            self:GetFteLayer():UnlockAll()
-            return self:PromiseOfFindNpc()
-                :next(function(npc_ui)
-                    return npc_ui:PormiseOfFte():next(function()
-                        return npc_ui
-                    end)
-                end)
-        end)
-    end
-    if not check("FightWithNpc3") then
-        p:next(function(ui)
-            if not ui then
-                ui = self:OpenUI(unpack(NPC_POS))
-            end
-            return ui:PormiseOfFte()
-                :next(function()
-                    self:GetFteLayer():UnlockAll()
-                    return ui:PromiseOfExit()
-                end):next(function()
-                return self:PromiseOfIntroduce1()
-                end):next(function()
-                return self:PromiseOfExit()
-                end)
-        end)
-    end
-end
-function PVEScene:PromiseOfFindNpc()
-    self:GetFteLayer():Enable()
-    local npc_x, npc_y = unpack(NPC_POS)
-    local x,y = self:GetSceneLayer():GetFog(npc_x, npc_y):getPosition()
-    local cx,cy = self:GetCurrentPos()
-    local str = (cx == npc_x and cy == npc_y) and _("请点击目标") or _("这里是我们的目的地，点击屏幕左侧向左移动")
 
-    WidgetFteArrow.new(str):addTo(self:GetSceneLayer():GetFteLayer())
-        :TurnDown():align(display.BOTTOM_CENTER, x + 45, y + 80)
 
-    return promise.all(
-        UIKit:PromiseOfOpen("WidgetPVEFteMiner"),
-        self:PromiseOfMoveTo(npc_x, npc_y)
-    ):next(function(results)
-        self:GetSceneLayer():GetFteLayer():removeAllChildren()
-        return results[1]
-    end)
-end
-function PVEScene:PromiseOfIntroduce()
-    local r = self:GetHomePage().pve_back:getCascadeBoundingBox()
-    self:GetMark():Size(r.width, r.height):pos(r.x + r.width/2, r.y + r.height/2)
-
-    self:GetFteLayer():Enable()
-    return GameUINpc:PromiseOfSay(
-        {words = _("领主大人，探索会消耗体力值，但击败敌军可以获得资源和材料。。。"), npc = "man"}
-    ):next(function()
-        self:GetFteLayer():Disable()
-        self:DestoryMark()
-        return GameUINpc:PromiseOfLeave()
-    end)
-
-    -- :next(function()
-    --     local r1 = self:GetHomePage().box:getCascadeBoundingBox()
-    --     local r2 = self:GetHomePage().exploring:getCascadeBoundingBox()
-    --     local r = cc.rectUnion(r1, r2)
-    --     self:GetMark():Size(r.width, r.height):pos(r.x + r.width/2, r.y + r.height/2 - 30)
-
-    --     return GameUINpc:PromiseOfSay({words = _("当你探索玩整个地图还会获得一笔丰厚的奖励"), npc = "man"})
-    -- end)
-end
-function PVEScene:PromiseOfIntroduce1()
-    self:GetFteLayer():Enable()
-    return GameUINpc:PromiseOfSay(
-        {words = _("亡灵兵种属性极高而且没有维护费用,有了特殊材料,我们就可以招募他们了."), npc = "man"}
-    ):next(function()
-        return GameUINpc:PromiseOfLeave()
-    end)
-end
-function PVEScene:PromiseOfExit()
-    self:GetFteLayer():Reset()
-    local r = self:GetHomePage().change_map:GetWorldRect()
-    self:GetHomePage().change_map.btn:removeEventListenersByEvent("CLICKED_EVENT")
-    self:GetHomePage().change_map.btn:onButtonClicked(function()
-        app:EnterMyCityScene()
-    end)
-    self:GetHomePage():GetFteLayer():SetTouchRect(r)
-    WidgetFteArrow.new(_("返回城市")):addTo(self:GetHomePage():GetFteLayer())
-        :TurnDown(false):align(display.LEFT_BOTTOM, r.x + 20, r.y + r.width + 20)
-end
-function PVEScene:GetMark()
-    if not self.mark then
-        self.mark = WidgetFteMark.new():addTo(self):zorder(4000)
-    end
-    return self.mark
-end
-function PVEScene:DestoryMark()
-    self.mark:removeFromParent()
-    self.mark = nil
-end
 
 return PVEScene
+
 
 
 

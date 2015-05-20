@@ -269,6 +269,9 @@ function MyApp:EnterCitySceneByPlayerAndAlliance(id, is_my_alliance, location)
         end
     end)
 end
+function MyApp:EnterMyCityFteScene()
+    app:enterScene("MyCityFteScene", {City}, "custom", -1, transition_)
+end
 function MyApp:EnterMyCityScene()
     app:enterScene("MyCityScene", {City}, "custom", -1, transition_)
 end
@@ -312,6 +315,10 @@ end
 function MyApp:EnterPVEScene(level)
     User:GotoPVEMapByLevel(level)
     app:enterScene("PVEScene", {User}, "custom", -1, transition_)
+end
+function MyApp:EnterPVEFteScene(level)
+    User:GotoPVEMapByLevel(level)
+    app:enterScene("PVEFteScene", {User}, "custom", -1, transition_)
 end
 
 function MyApp:pushScene(sceneName, args, transitionType, time, more)

@@ -227,7 +227,7 @@ function MapScene:OnTouchMove(pre_x, pre_y, x, y)
     self.scene_layer:setPosition(cc.p(old_x + diffX, old_y + diffY))
 end
 function MapScene:OnTouchClicked(pre_x, pre_y, x, y)
-    return self.event_manager:TouchCounts() == 0
+
 end
 function MapScene:OnTouchExtend(old_speed_x, old_speed_y, new_speed_x, new_speed_y, millisecond, is_end)
     local parent = self.scene_layer:getParent()
