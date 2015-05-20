@@ -156,6 +156,7 @@ function GameUIActivityNew:OnActivityListViewTouch(event)
 end
 
 function GameUIActivityNew:OnSelectActivityAtItem(item_type)
+	app:GetAudioManager():PlayeEffectSoundWithKey("NORMAL_DOWN")
 	UIKit:newGameUI("GameUIActivityRewardNew",GameUIActivityRewardNew.REWARD_TYPE[self.ITEMS_TYPE[item_type]]):AddToCurrentScene(true)
 end
 
@@ -191,14 +192,14 @@ function GameUIActivityNew:GetActivityItem(item_type)
 			color= 0xffedae,
 			align = cc.TEXT_ALIGNMENT_LEFT,
 			shadow= true
-		}):align(display.LEFT_BOTTOM,298,92):addTo(bg)
+		}):align(display.LEFT_BOTTOM,362,92):addTo(bg)
 		local today_label = UIKit:ttfLabel({
 			text = _("今日"),
 			size = 20,
 			color= 0xffedae,
 			align = cc.TEXT_ALIGNMENT_LEFT,
 			shadow= true
-		}):align(display.LEFT_BOTTOM,298,54):addTo(bg)
+		}):align(display.LEFT_BOTTOM,362,54):addTo(bg)
 		local sign_str,sign_color = _("已签到"),0xa2ff00
 		if countInfo.day60 > countInfo.day60RewardsCount then
 			sign_str = _("未签到")

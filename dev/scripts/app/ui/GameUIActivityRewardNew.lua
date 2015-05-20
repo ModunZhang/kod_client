@@ -24,7 +24,7 @@ local height_config = {
 	EVERY_DAY_LOGIN = 762,
 	CONTINUITY = 762,
 	ONLINE = 762,
-	FIRST_IN_PURGURE = 762,
+	FIRST_IN_PURGURE = 746,
 	PLAYER_LEVEL_UP = 762,
 }
 local ui_titles = {
@@ -102,7 +102,14 @@ function GameUIActivityRewardNew:RefreshUI()
 		self:RefreshContinutyList(false)
 	elseif self:GetRewardType() == self.REWARD_TYPE.FIRST_IN_PURGURE then
 		local countInfo = User:GetCountInfo()
-		self.purgure_get_button:setButtonEnabled(countInfo.iapCount > 0 and not countInfo.isFirstIAPRewardsGeted)
+		if countInfo.iapCount > 0 and not countInfo.isFirstIAPRewardsGeted then
+			self.purgure_get_button:show()
+			self.go_store_button:hide()
+		end
+		if countInfo.iapCount <= 0 then
+			self.purgure_get_button:hide()
+			self.go_store_button:show()
+		end
 	elseif self:GetRewardType() == self.REWARD_TYPE.PLAYER_LEVEL_UP then
 		self:RefreshLevelUpListView(false)
 	elseif self:GetRewardType() == self.REWARD_TYPE.ONLINE then
@@ -330,7 +337,7 @@ function GameUIActivityRewardNew:RefreshContinutyList(needClean)
 end
 
 
-function GameUIActivityRewardNew:GetContinutyListItem(reward_type,item_key,time_str,rewards_str,flag)
+function GameUIActivityRewardNew:GetContinutyListItem(reward_type,item_key,time_str,rewards_str,flag,current_str)
 	local item = self.list_view:newItem()
 	local content = UIKit:CreateBoxPanelWithBorder({
 		width = 556,
@@ -347,6 +354,7 @@ function GameUIActivityRewardNew:GetContinutyListItem(reward_type,item_key,time_
 		sp:setFilter(filter.newFilter("CUSTOM", json.encode({frag = "shaders/ps_discoloration.fs",shaderName = "ps_discoloration"})))
 	end
 	item.sp = sp
+	UIKit:addTipsToNode(sp,rewards_str,self)
 	local time_label = UIKit:ttfLabel({
 		text = time_str,
 		size = 22,
@@ -406,24 +414,50 @@ function GameUIActivityRewardNew:GetContinutyListData()
 	local r = {}
 	local countInfo = User:GetCountInfo()
 	for i,v in ipairs(config_day14) do
-		local reward_type,item_key,count = unpack(string.split(v.rewards,":"))
-		local flag = 0
-		if v.day <= countInfo.day14RewardsCount then
-			flag = 1 
-		elseif v.day == countInfo.day14 and countInfo.day14 > countInfo.day14RewardsCount then
-			flag = 2
-		elseif v.day == countInfo.day14 + 1  then
-			flag = 3
+		local config_rewards = string.split(v.rewards,",")
+		if #config_rewards == 1 then 
+			local reward_type,item_key,count = unpack(string.split(v.rewards,":"))
+			local flag = 0
+			if v.day <= countInfo.day14RewardsCount then
+				flag = 1 
+			elseif v.day == countInfo.day14 and countInfo.day14 > countInfo.day14RewardsCount then
+				flag = 2
+			elseif v.day == countInfo.day14 + 1  then
+				flag = 3
+			end
+			local name = self:GetRewardName(reward_type, item_key)
+			table.insert(r,{reward_type,item_key,string.format(_("第%s天"),v.day), name .. "x" .. count,flag})
+		else
+			local final_rewards = {}
+			for __,one_reward in ipairs(config_rewards) do
+				local reward_type,item_key,count = unpack(string.split(one_reward,":"))
+				local str = string.format("%s x%d",self:GetRewardName(reward_type, item_key),count)
+				table.insert(final_rewards, str)
+			end
+			local final_rewards_str = table.concat(final_rewards, ",")
+
+			for __,one_reward in ipairs(config_rewards) do
+				local reward_type,item_key,count = unpack(string.split(one_reward,":"))
+				if reward_type == 'soldiers' then
+					local flag = 0
+					if v.day <= countInfo.day14RewardsCount then
+						flag = 1 
+					elseif v.day == countInfo.day14 and countInfo.day14 > countInfo.day14RewardsCount then
+						flag = 2
+					elseif v.day == countInfo.day14 + 1  then
+						flag = 3
+					end
+					local str = string.format("%s x%d",self:GetRewardName(reward_type, item_key),count)
+					table.insert(r,{reward_type,item_key,string.format(_("第%s天"),v.day),final_rewards_str,flag})
+				end
+			end
 		end
-		local name = self:GetRewardName(reward_type, item_key)
-		table.insert(r,{reward_type,item_key,string.format(_("第%s天"),v.day), name .. "x" .. count,flag})
 	end
 	return r
 end
 
 
 function GameUIActivityRewardNew:GetRewardName(reward_type,reward_key)
-	print("reward_type,reward_key---->",reward_type,reward_key)
 	if reward_type == 'resource' 
 		or reward_type == 'special' 
 		or reward_type == 'speedup' 
@@ -442,30 +476,41 @@ function GameUIActivityRewardNew:GetRewardName(reward_type,reward_key)
 end
 -----------------------
 function GameUIActivityRewardNew:ui_FIRST_IN_PURGURE()
-	local bar = display.newSprite("activity_first_purgure_598x190.png"):align(display.TOP_CENTER, 304,self.height - 20):addTo(self.bg)
-	display.newSprite("Npc.png"):align(display.RIGHT_BOTTOM, 305, -20):addTo(self.bg):scale(552/423)
+	local bar = display.newSprite("activity_first_purgure_587x176.png"):align(display.TOP_CENTER, 304,self.height - 15):addTo(self.bg)
+	local bg = display.newSprite("selenaquestion_bg_580x536.png"):addTo(self.bg):align(display.TOP_CENTER, 304, self.height - 15 - 176):scale(587/580)
+	display.newSprite("Npc.png"):align(display.RIGHT_BOTTOM, 315, -10):addTo(self.bg):scale(552/423)
+	local reward_bg = display.newSprite("activity_first_purgure_reward_bg_290x506.png"):align(display.LEFT_BOTTOM, 260, 14):addTo(bg)
 	local countInfo = User:GetCountInfo()
 	local rewards = self:GetFirstPurgureRewards()
-	local x,y = 300,self.height - 245
-	self.purgure_get_button = WidgetPushButton.new({normal = 'yellow_btn_up_148x58.png',pressed = 'yellow_btn_down_148x58.png',disabled = 'gray_btn_148x58.png'})
+	local x,y = 20,500
+	self.purgure_get_button = WidgetPushButton.new({normal = 'yellow_btn_up_186x66.png',pressed = 'yellow_btn_down_186x66.png'})
 			:setButtonLabel("normal", UIKit:commonButtonLable({
 				text = _("领取")
 			}))
-			:addTo(self.bg)
-			:pos(435,54)
+			:addTo(reward_bg)
+			:pos(145,58)
+	self.go_store_button = WidgetPushButton.new({normal = 'green_btn_up_186x66.png',pressed = 'green_btn_down_186x66.png'})
+			:setButtonLabel("normal", UIKit:commonButtonLable({
+				text = _("前往充值")
+			}))
+			:addTo(reward_bg)
+			:pos(145,58)
+			:onButtonClicked(function()
+				UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+			end)
 	local tips_list = {}
 	for index,reward in ipairs(rewards) do
 		if index <= 6 then 
 			local reward_type,reward_name,count = unpack(reward)
 			table.insert(tips_list, Localize_item.item_name[reward_name] .. " x" .. count)
-			local item_bg = display.newSprite("activity_item_bg_110x108.png"):align(display.LEFT_TOP, x, y):addTo(self.bg)
+			local item_bg = display.newSprite("activity_item_bg_110x108.png"):align(display.LEFT_TOP, x, y):addTo(reward_bg)
 			local sp = display.newSprite(UIKit:GetItemImage(reward_type,reward_name),55,54):addTo(item_bg)
 			local size = sp:getContentSize()
 			sp:scale(90/math.max(size.width,size.height))
 			UIKit:addTipsToNode(sp,Localize_item.item_name[reward_name] .. " x" .. count,self)
 			x = x  + 110 + 35 
 			if index % 2 == 0 then 
-				x = 300
+				x = 20
 				y = y - 108 - 21 
 			end
 		end
@@ -477,7 +522,14 @@ function GameUIActivityRewardNew:ui_FIRST_IN_PURGURE()
 			app:GetAudioManager():PlayeEffectSoundWithKey("BUY_ITEM")
 		end)
 	end)
-	self.purgure_get_button:setButtonEnabled(countInfo.iapCount > 0 and not countInfo.isFirstIAPRewardsGeted)
+	if countInfo.iapCount > 0 and not countInfo.isFirstIAPRewardsGeted then
+		self.purgure_get_button:show()
+		self.go_store_button:hide()
+	end
+	if countInfo.iapCount <= 0 then
+		self.purgure_get_button:hide()
+		self.go_store_button:show()
+	end
 end
 
 function GameUIActivityRewardNew:GetFirstPurgureRewards()
