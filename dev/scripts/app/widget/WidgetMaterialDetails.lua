@@ -132,6 +132,7 @@ function WidgetMaterialDetails:InitMaterialDetails(material_type,material_name)
         end)
     end
     list:reload()
+    self.listview = list
 end
 
 function WidgetMaterialDetails:CreateOriginItem(listView,label,callback)
@@ -188,6 +189,11 @@ function WidgetMaterialDetails:GetProduceHeight(material_type)
     elseif material_type == MaterialManager.MATERIAL_TYPE.SOLDIER  then
         return 57
     end
+end
+
+-- fte
+function WidgetMaterialDetails:Find()
+    return self.listview:getItems()[1]
 end
 
 return WidgetMaterialDetails

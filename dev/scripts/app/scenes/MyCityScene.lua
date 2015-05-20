@@ -366,8 +366,8 @@ local ui_map = setmetatable({
     dragonEyrie    = {"GameUIFteDragonEyrieMain"  ,         "dragon",         },
     barracks       = {"GameUIFteBarracks"         ,        "recruit",         },
     hospital       = {"GameUIFteHospital"         ,           "heal",         },
-    academy        = {"GameUIAcademy"             ,     "technology",         },
-    materialDepot  = {"GameUIMaterialDepot"       ,           "info",         },
+    academy        = {"GameUIFteAcademy"          ,     "technology",         },
+    materialDepot  = {"GameUIFteMaterialDepot"    ,           "info",         },
     blackSmith     = {"GameUIBlackSmith"          ,},
     foundry        = {"GameUIPResourceBuilding"   ,},
     stoneMason     = {"GameUIPResourceBuilding"   ,},
@@ -439,24 +439,23 @@ local check = import("..fte.check")
 local mockData = import("..fte.mockData")
 function MyCityScene:RunFte()
     self.touch_layer:removeFromParent()
-    self:GetFteLayer():Disable()
+    self:GetFteLayer():Enable()
 
     cocos_promise.defer():next(function()
-        -- if not check("HateDragon") or
-        --     not check("DefenceDragon") then
-        --     return self:PromiseOfHateDragonAndDefence()
-        -- end
+        if not check("HateDragon") or
+            not check("DefenceDragon") then
+            return self:PromiseOfHateDragonAndDefence()
+        end
     end)
-    -- :next(function()
-    --     if not check("BuildHouseAt_3_3") then
-    --         return self:PromiseOfBuildFirstHouse(18, 12, "dwelling")
-    --     end
-    -- end):next(function()
-    --     if not check("FinishBuildHouseAt_3_1") then
-    --         return self:GetHomePage():PromiseOfFteWaitFinish()
-    --     end
-    -- end)
     :next(function()
+        if not check("BuildHouseAt_3_3") then
+            return self:PromiseOfBuildFirstHouse(18, 12, "dwelling")
+        end
+    end):next(function()
+        if not check("FinishBuildHouseAt_3_1") then
+            return self:GetHomePage():PromiseOfFteWaitFinish()
+        end
+    end):next(function()
         if not check("UpgradeBuildingTo_keep_2") then
             return self:PromiseOfFirstUpgradeKeep()
         end
@@ -465,33 +464,31 @@ function MyCityScene:RunFte()
         if not check("FinishUpgradingBuilding_keep_2") then
             return self:GetHomePage():PromiseOfFteFreeSpeedUp()
         end
-    end)
-    -- :next(function()
-    --     if not check("UpgradeBuildingTo_barracks_1") then
-    --         return self:PromiseOfUnlockBuilding("barracks")
-    --     end
-    -- end):next(function()
-    --     if not check("FinishUpgradingBuilding_barracks_1") then
-    --         return self:GetHomePage():PromiseOfFteInstantSpeedUp()
-    --     end
-    -- end):next(function()
-    --     if not check("RecruitSoldier_swordsman_10") then
-    --         return self:PromiseOfRecruitSoldier("swordsman")
-    --     end
-    -- end):next(function()
-    --     if not check("BuildHouseAt_5_3") then
-    --         return self:PromiseOfBuildHouse(8, 22, "farmer")
-    --     end
-    -- end):next(function()
-    --     if not check("FinishBuildHouseAt_5_1") then
-    --         return self:GetHomePage():PromiseOfFteWaitFinish()
-    --     end
-    -- end):next(function()
-    --     if not check("FightWithNpc") then
-    --         return self:PromiseOfExplorePve()
-    --     end
-    -- end)
-    :next(function()
+    end):next(function()
+        if not check("UpgradeBuildingTo_barracks_1") then
+            return self:PromiseOfUnlockBuilding("barracks")
+        end
+    end):next(function()
+        if not check("FinishUpgradingBuilding_barracks_1") then
+            return self:GetHomePage():PromiseOfFteInstantSpeedUp()
+        end
+    end):next(function()
+        if not check("RecruitSoldier_swordsman_10") then
+            return self:PromiseOfRecruitSoldier("swordsman")
+        end
+    end):next(function()
+        if not check("BuildHouseAt_5_3") then
+            return self:PromiseOfBuildHouse(8, 22, "farmer")
+        end
+    end):next(function()
+        if not check("FinishBuildHouseAt_5_1") then
+            return self:GetHomePage():PromiseOfFteWaitFinish()
+        end
+    end):next(function()
+        if not check("FightWithNpc1") then
+            return self:PromiseOfExplorePve()
+        end
+    end):next(function()
         if not check("UpgradeBuildingTo_keep_3") then
             return self:PromiseOfUpgradeKeepForHospital()
         end
@@ -508,7 +505,7 @@ function MyCityScene:RunFte()
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
-        if not check("Heal") then
+        if not check("TreatSoldier") then
             return self:PromiseOfHeal()
         end
     end):next(function()
@@ -535,42 +532,41 @@ function MyCityScene:RunFte()
         if not check("Research") then
             return self:PromiseOfResearch()
         end
+    end):next(function()
+        if not check("UpgradeBuildingTo_keep_5") then
+            return self:PromiseOfUpgradeKeepForMaterialDepot()
+        end
+    end):next(function()
+        if not check("FinishUpgradingBuilding_keep_5") then
+            return self:GetHomePage():PromiseOfFteInstantSpeedUp()
+        end
+    end):next(function()
+        if not check("UpgradeBuildingTo_materialDepot_1") then
+            return self:PromiseOfUnlockBuilding("materialDepot")
+        end
+    end):next(function()
+        if not check("FinishUpgradingBuilding_materialDepot_1") then
+            return self:GetHomePage():PromiseOfFteInstantSpeedUp()
+        end
+    end):next(function()
+        if not check("FightWithNpc2") or not check("FightWithNpc3") then
+            return self:PromiseOfCheckMaterials()
+        end
+    end):next(function()
+        if not check("RecruitSoldier_skeletonWarrior_1") then
+            return self:PromiseOfRecruitSpecial()
+        end
+    end):next(function()
+        if not check("BuildHouseAt_7_3") then
+            return self:PromiseOfBuildQuarrier()
+        end
+    end):next(function()
+        if not check("BuildHouseAt_8_3") then
+            return self:PromiseOfBuildHouse(28, 12, "miner", _("建造矿工小屋"))
+        end
+    end):next(function()
+        return self:PromiseOfFteEnd()
     end)
-    -- :next(function()
-    --     if not check("UpgradeBuildingTo_materialDepot_1") then
-    --         return self:PromiseOfUnlockBuilding("materialDepot")
-    --     end
-    -- end):next(function()
-    --     if not check("FinishUpgradingBuilding_materialDepot_1") then
-    --         return self:GetHomePage():PromiseOfFteInstantSpeedUp()
-    --     end
-    -- end):next(function()
-    --     if not check("BuildHouseAt_6_3") then
-    --         return self:PromiseOfBuildWoodcutter()
-    --     end
-    -- end):next(function()
-    --     if not check("FinishBuildHouseAt_6_1") then
-    --         return self:GetHomePage():PromiseOfFteInstantSpeedUp()
-    --     end
-    -- end):next(function()
-    --     if not check("BuildHouseAt_7_3") then
-    --         return self:PromiseOfBuildHouse(28, 22, "quarrier", _("建造石匠小屋"))
-    --     end
-    -- end):next(function()
-    --     if not check("FinishBuildHouseAt_7_1") then
-    --         return self:GetHomePage():PromiseOfFteInstantSpeedUp()
-    --     end
-    -- end):next(function()
-    --     if not check("BuildHouseAt_8_3") then
-    --         return self:PromiseOfBuildHouse(28, 12, "miner", _("建造矿工小屋"))
-    --     end
-    -- end):next(function()
-    --     if not check("FinishBuildHouseAt_8_1") then
-    --         return self:GetHomePage():PromiseOfFteInstantSpeedUp()
-    --     end
-    -- end):next(function()
-    --     return self:PromiseOfFteEnd()
-    -- end)
 end
 function MyCityScene:PromiseOfHateDragonAndDefence()
     return GameUINpc:PromiseOfSay(
@@ -612,15 +608,15 @@ function MyCityScene:PromiseOfFirstUpgradeKeep()
         return self:PromiseOfUpgradeKeep()
     end)
 end
-function MyCityScene:PromiseOfUpgradeByBuildingType(x, y, type_, msg)
-    return self:PromiseOfClickBuilding(x, y, nil, msg)
-        :next(function()
-            local ui = unpack(ui_map[type_])
-            return UIKit:PromiseOfOpen(ui)
-        end):next(function(ui)
-        return ui:PromiseOfFte()
-        end)
-end
+-- function MyCityScene:PromiseOfUpgradeByBuildingType(x, y, type_, msg)
+--     return self:PromiseOfClickBuilding(x, y, nil, msg)
+--         :next(function()
+--             local ui = unpack(ui_map[type_])
+--             return UIKit:PromiseOfOpen(ui)
+--         end):next(function(ui)
+--         return ui:PromiseOfFte()
+--         end)
+-- end
 function MyCityScene:PromiseOfUnlockBuilding(building_type)
     local x,y = self:GetCity():GetFirstBuildingByType(building_type):GetMidLogicPosition()
 
@@ -694,7 +690,7 @@ function MyCityScene:PromiseOfUpgradeKeepForHospital()
     ):next(function()
         return GameUINpc:PromiseOfLeave()
     end):next(function()
-        return self:PromiseOfUpgradeKeep(_("升级城堡到等级3,来解锁医院"))
+        return self:PromiseOfUpgradeKeep(_("升级城堡来解锁医院"))
     end)
 end
 function MyCityScene:PromiseOfUpgradeKeepForAcademy()
@@ -703,7 +699,16 @@ function MyCityScene:PromiseOfUpgradeKeepForAcademy()
     ):next(function()
         return GameUINpc:PromiseOfLeave()
     end):next(function()
-        return self:PromiseOfUpgradeKeep(_("升级城堡到等级4,来解锁学院"))
+        return self:PromiseOfUpgradeKeep(_("升级城堡来解锁学院"))
+    end)
+end
+function MyCityScene:PromiseOfUpgradeKeepForMaterialDepot()
+    return GameUINpc:PromiseOfSay(
+        {words = _("领主大人, 你听过灵魂石吗?那是用来召唤亡灵战士的...不过我不确定我们有这玩意儿"), npc = "man"}
+    ):next(function()
+        return GameUINpc:PromiseOfLeave()
+    end):next(function()
+        return self:PromiseOfUpgradeKeep(_("升级城堡来解锁材料库房"))
     end)
 end
 function MyCityScene:PromiseOfUpgradeKeep(msg)
@@ -752,8 +757,6 @@ function MyCityScene:PromiseOfFteEnd()
         {words = _("看来大人你已经能够顺利接管这座城市了。。。如果不知道该干什么可以点击左上角的推荐任务")}
     ):next(function()
         self:removeChildByTag(FTE_MARK_TAG)
-        return GameUINpc:PromiseOfSay({words = _("完成任务后，可以点击任务按钮，我为大人准备了丰厚的奖赏。。。")})
-    end):next(function()
         if ext.registereForRemoteNotifications then
             ext.registereForRemoteNotifications()
         end
@@ -773,11 +776,37 @@ function MyCityScene:PromiseOfHeal()
 end
 function MyCityScene:PromiseOfResearch()
     return self:PromiseOfClickBuilding(26, 29)
-    -- :next(function()
-    --     return UIKit:PromiseOfOpen("GameUIFteHospital")
-    -- end):next(function(ui)
-    --     return ui:PromiseOfFte()
-    -- end)
+    :next(function()
+        return UIKit:PromiseOfOpen("GameUIFteAcademy")
+    end):next(function(ui)
+        return ui:PromiseOfFte()
+    end)
+end
+function MyCityScene:PromiseOfCheckMaterials()
+    return self:PromiseOfClickBuilding(26, 19)
+    :next(function()
+        return UIKit:PromiseOfOpen("GameUIFteMaterialDepot")
+    end):next(function(ui)
+        return ui:PromiseOfFte()
+    end)
+end
+function MyCityScene:PromiseOfRecruitSpecial()
+    ui_map.barracks[2] = "specialRecruit"
+    return self:PromiseOfClickBuilding(6, 29)
+    :next(function()
+        return UIKit:PromiseOfOpen("GameUIFteBarracks")
+    end):next(function(ui)
+        return ui:PromiseOfFteSpecial()
+    end)
+end
+function MyCityScene:PromiseOfBuildQuarrier()
+    return GameUINpc:PromiseOfSay(
+        {words = _("建造石匠小屋和矿工小屋,就算领主大人不在,工人们也会不停生产资源")}
+    ):next(function()
+        return GameUINpc:PromiseOfLeave()
+    end):next(function()
+        return self:PromiseOfBuildHouse(28, 22, "quarrier", _("建造石匠小屋"))
+    end)
 end
 
 

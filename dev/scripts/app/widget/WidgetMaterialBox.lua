@@ -12,6 +12,7 @@ function WidgetMaterialBox:ctor(material_type,material_name,cb,is_has_i_icon)
         material_bg:onButtonClicked(cb)
     end
         
+    self.material_bg = material_bg
     local rect = material_bg:getCascadeBoundingBox()
 
     -- 图标背景框
@@ -37,6 +38,9 @@ function WidgetMaterialBox:ctor(material_type,material_name,cb,is_has_i_icon)
         color = 0x403c2f
     }):addTo(number_bg):align(display.CENTER, size.width / 2, size.height/2)
 
+end
+function WidgetMaterialBox:GetButton()
+    return self.material_bg
 end
 function WidgetMaterialBox:SetNumber(number)
     self.number_bg:show()

@@ -124,6 +124,7 @@ function MapScene:CreateFteLayer()
     layer:setTouchSwallowEnabled(true)
     local touch_judgment = self.touch_judgment
     layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+        if self.lock then return end
         if touch_judgment then
             local touch_type, pre_x, pre_y, x, y = event.name, event.prevX, event.prevY, event.x, event.y
             if touch_type == "began" then
@@ -139,6 +140,14 @@ function MapScene:CreateFteLayer()
         end
         return true
     end)
+    function layer:LockAll()
+        self.lock = true
+        self:Enable()
+    end
+    function layer:UnlockAll()
+        self.lock = false
+        self:Disable()
+    end
     function layer:Enable()
         self:setTouchEnabled(true)
         return self:show()

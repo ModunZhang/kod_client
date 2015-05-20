@@ -318,7 +318,10 @@ function CityLayer:ReloadSceneBackground()
         return {
             GetType = function()
                 return "square"
-            end
+            end,
+            GetLogicPosition = function()
+                return -1, -1
+            end,
         }
     end
     function square:BeginFlash(time)

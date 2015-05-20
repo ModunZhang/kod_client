@@ -6,6 +6,7 @@ local BuildingLevelUp = GameDatas.BuildingLevelUp
 local HouseLevelUp = GameDatas.HouseLevelUp
 local locations = GameDatas.ClientInitGame.locations
 local normal = GameDatas.Soldiers.normal
+local special = GameDatas.Soldiers.special
 
 local function mock(t)
     local delta = DiffFunction(DataManager:getFteData(), t)
@@ -248,7 +249,8 @@ local function FinishRecruitSoldier()
 end
 
 local function RecruitSoldier(type_, count)
-    local recruitTime = normal[type_.."_1"].recruitTime * count
+    local soldier_config = special[type_] or normal[type_.."_1"]
+    local recruitTime = soldier_config.recruitTime * count
     mock{
         {
             "soldierEvents.0",
@@ -314,18 +316,19 @@ end
 
 
 
-local function FightWithNpc()
+local function FightWithNpc(floor)
     mock{
         {"pve.floors.0",
             {
                 level = 1,
                 fogs = "0000000000000000000000000000000000m|10W|300|700{F00yV00u|00m|10W|300|700000000000000000000000000000000000",
-                objects = "[[9,12,1]]"
+                objects = string.format("[[9,12,%d]]", floor)
             }
-        }
+        },
+        {"pve.location.x", 9}
     }
 
-    local key = string.format("FightWithNpc")
+    local key = string.format("FightWithNpc%d", floor)
     if not check(key) then
         mark(key)
         ext.market_sdk.onPlayerEvent("探索pve", key)
@@ -384,14 +387,69 @@ local function TreatSoldier(type_, count)
         DataManager.handle_treat__ = nil
     end, treatTime)
 
-    local key = string.format("TreatSoldier_%s_%d", type_, count)
+    local key = string.format("TreatSoldier")
     if not check(key) then
         mark(key)
         ext.market_sdk.onPlayerEvent("治疗士兵", key)
     end
 end
 
+local function FinishResearch()
+    if DataManager.handle_tech__ then
+        scheduler.unscheduleGlobal(DataManager.handle_tech__)
+        DataManager.handle_tech__ = nil
+    end
+    mock{
+        {"productionTechEvents.0", json.null}
+    }
 
+    local key = string.format("FinishResearch")
+    if not check(key) then
+        mark(key)
+        ext.market_sdk.onPlayerEvent("研发科技完成", key)
+    end
+end
+
+
+
+local function Research()
+    local start_time = NetManager:getServerTime()
+    local researchTime = 1 * 60
+    mock{
+        {
+            "productionTechEvents.0",
+            {
+                id = 1,
+                startTime = start_time,
+                name = "forestation",
+                finishTime = start_time + researchTime * 1000
+            }
+        }
+    }
+    DataManager.handle_tech__ = scheduler.performWithDelayGlobal(function()
+        if DataManager:getFteData() and
+            DataManager:getFteData().productionTechEvents and
+            #DataManager:getFteData().productionTechEvents > 0 then
+            FinishResearch()
+        end
+        DataManager.handle_tech__ = nil
+    end, researchTime)
+
+    local key = string.format("Research")
+    if not check(key) then
+        mark(key)
+        ext.market_sdk.onPlayerEvent("研发科技", key)
+    end
+end
+
+
+local function CheckMaterials()
+    local key = string.format("CheckMaterials")
+    if not check(key) then
+        mark(key)
+        ext.market_sdk.onPlayerEvent("查看材料", key)
+    end
+end
 
 
 
@@ -404,11 +462,15 @@ return {
     UpgradeBuildingTo = UpgradeBuildingTo,
     FinishUpgradingBuilding = FinishUpgradingBuilding,
     RecruitSoldier = RecruitSoldier,
+    FinishRecruitSoldier = FinishRecruitSoldier,
     TreatSoldier = TreatSoldier,
+    Research = Research,
     GetSoldier = GetSoldier,
     ActiveVip = ActiveVip,
     FightWithNpc = FightWithNpc,
+    CheckMaterials = CheckMaterials,
 }
+
 
 
 
