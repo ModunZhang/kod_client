@@ -331,6 +331,14 @@ function MyApp:EnterUserMode()
         scheduler.unscheduleGlobal(DataManager.handle_soldier__)
         DataManager.handle_soldier__ = nil
     end
+    if DataManager.handle_treat__ then
+        scheduler.unscheduleGlobal(DataManager.handle_treat__)
+        DataManager.handle_treat__ = nil
+    end
+    if DataManager.handle_tech__ then
+        scheduler.unscheduleGlobal(DataManager.handle_tech__)
+        DataManager.handle_tech__ = nil
+    end
     local InitGame = import("app.service.InitGame")
     assert(DataManager:hasUserData())
     InitGame(DataManager:getUserData())

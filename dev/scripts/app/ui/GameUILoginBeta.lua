@@ -434,11 +434,10 @@ end
 local check = import("..fte.check")
 local mockData = import("..fte.mockData")
 function GameUILoginBeta:checkFte()
-    -- if check("FinishBuildHouseAt_8_1") then
-    --     -- mockData.FinishBuildHouseAt(8,1)
-    --     app:EnterUserMode()
-    --     return
-    -- end
+    if check("BuildHouseAt_8_3") then
+        app:EnterUserMode()
+        return
+    end
 
     local dragon_type
     for k,v in pairs(DataManager:getUserData().dragons) do
@@ -540,6 +539,16 @@ function GameUILoginBeta:checkFte()
     end
     if check("FightWithNpc3") then
         mockData.FightWithNpc(3)
+    end
+    if check("RecruitSoldier_skeletonWarrior_1") then
+        mockData.RecruitSoldier("skeletonWarrior", 1)
+        mockData.FinishRecruitSoldier()
+    end
+    if check("BuildHouseAt_7_3") then
+        mockData.BuildHouseAt(7,3,"quarrier")
+    end
+    if check("BuildHouseAt_8_3") then
+        mockData.BuildHouseAt(8,3,"miner")
     end
 end
 

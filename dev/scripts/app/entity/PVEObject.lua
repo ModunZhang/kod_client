@@ -67,18 +67,31 @@ end
 function PVEObject:GetNextEnemy()
     return self:GetEnemyByIndex(self.searched + 1)
 end
--- 当前数值*关卡数^3-(关卡数-1)*20
--- 当前数值*关卡数^2
+local fte = {
+    {
+        ["soldiers"] = "deathKnight,1;skeletonWarrior,1",
+        ["rewards"] = "soldierMaterials,deathHand,1;soldierMaterials,soulStone,1"
+    },
+    {
+        ["soldiers"] = "meatWagon,1;skeletonArcher,1",
+        ["rewards"] = "soldierMaterials,heroBones,1;soldierMaterials,magicBox,1"
+    }
+}
 function PVEObject:GetEnemyByIndex(index)
+    if self.x ~= 9 or self.y ~= 12 or self:Floor() ~= 1 or index <= 1 then
+        return self:DecodeToEnemy(self:GetEnemyInfo(index))
+    end
+    return self:DecodeToEnemy(fte[index - 1])
+end
+function PVEObject:GetEnemyInfo(index)
     local unique = self.type == PVEDefine.TRAP and random(#pve_normal) or self.x * self.y * (index + self.type)
     if normal_map[self.type] then
-        return self:DecodeToEnemy(pve_normal[unique % #pve_normal + 1])
+        return pve_normal[unique % #pve_normal + 1]
     elseif elite_map[self.type] then
-        return self:DecodeToEnemy(pve_elite[unique % #pve_elite + 1])
+        return pve_elite[unique % #pve_elite + 1]
     elseif self.type == PVEDefine.ENTRANCE_DOOR then
-        return self:DecodeToEnemy(pve_boss[self:Floor()])
+        return pve_boss[self:Floor()]
     end
-    return {}
 end
 function PVEObject:DecodeToEnemy(raw_data)
     local raw_dragon
@@ -201,6 +214,8 @@ function PVEObject:Dump()
 end
 
 return PVEObject
+
+
 
 
 

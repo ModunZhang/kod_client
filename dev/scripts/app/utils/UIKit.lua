@@ -177,14 +177,11 @@ function UIKit:getRegistry()
 end
 
 function UIKit:closeAllUI()
-    UIKit.open_ui_callbacks = {}
-    UIKit.close_ui_callbacks = {}
     for name,v in pairs(self:getRegistry().objects_) do
         if v.__isBase and v.__type ~= self.UITYPE.BACKGROUND and v.__cname ~= 'GameUISelenaQuestion' then
             v:LeftButtonClicked()
         end
     end
-
     for __,v in pairs(self.messageDialogs) do
         if v:GetUserData() ~= '__key__dialog' then
             v:LeftButtonClicked()
