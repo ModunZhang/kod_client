@@ -1001,8 +1001,42 @@ function WidgetUseItems:OpenWarSpeedupDialog( item ,march_event)
         if march_event:WithObject():Id() == attackMarchEvent:Id() and (attackMarchEvent:GetPlayerRole() == attackMarchEvent.MARCH_EVENT_PLAYER_ROLE.SENDER
             or attackMarchEvent:GetPlayerRole() == attackMarchEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER) then
             buff_status_label:setString(_("剩余时间:")..GameUtils:formatTimeStyle1(attackMarchEvent:GetTime()))
-            if attackMarchEvent:GetTime()==1 then
-                dialog:LeftButtonClicked()
+        end
+    end
+
+    function dialog:OnAttackMarchEventDataChanged(changed_map,alliance)
+        if changed_map.removed then
+            for i,v in ipairs(changed_map.removed) do
+                if v:Id() == march_event:WithObject():Id() then
+                    self:LeftButtonClicked()
+                end
+            end
+        end
+    end
+    function dialog:OnAttackMarchReturnEventDataChanged(changed_map)
+        if changed_map.removed then
+            for i,v in ipairs(changed_map.removed) do
+                if v:Id() == march_event:WithObject():Id() then
+                    self:LeftButtonClicked()
+                end
+            end
+        end
+    end
+    function dialog:OnStrikeMarchEventDataChanged(changed_map)
+        if changed_map.removed then
+            for i,v in ipairs(changed_map.removed) do
+                if v:Id() == march_event:WithObject():Id() then
+                    self:LeftButtonClicked()
+                end
+            end
+        end
+    end
+    function dialog:OnStrikeMarchReturnEventDataChanged(changed_map)
+        if changed_map.removed then
+            for i,v in ipairs(changed_map.removed) do
+                if v:Id() == march_event:WithObject():Id() then
+                    self:LeftButtonClicked()
+                end
             end
         end
     end
@@ -1014,10 +1048,21 @@ function WidgetUseItems:OpenWarSpeedupDialog( item ,march_event)
     local alliance = Alliance_Manager:GetMyAlliance()
 
     alliance:AddListenOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
+    alliance:AddListenOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
+    alliance:AddListenOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
+    alliance:AddListenOnType(dialog,Alliance.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
+    alliance:AddListenOnType(dialog,Alliance.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)
+
+
+
     City:GetResourceManager():AddObserver(dialog)
 
     dialog:addCloseCleanFunc(function ()
         alliance:RemoveListenerOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
+        alliance:RemoveListenerOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
+        alliance:RemoveListenerOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
+        alliance:RemoveListenerOnType(dialog,Alliance.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
+        alliance:RemoveListenerOnType(dialog,Alliance.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)
         City:GetResourceManager():RemoveObserver(dialog)
     end)
     return dialog
@@ -1284,6 +1329,14 @@ end
 
 
 return WidgetUseItems
+
+
+
+
+
+
+
+
 
 
 

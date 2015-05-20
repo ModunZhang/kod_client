@@ -753,6 +753,12 @@ local WONDER_TITLE_BUFF = {
     curse_7 = _("木材产量-10%，石料产量-10%，建造速度-5%"),
 }
 
+local MAILS = {
+    __system = _("系统邮件"),
+    __archon = _("盟主"),
+    __allianceMembers = _("联盟所有成员"),
+}
+
 local  getBuildingLocalizedKeyByBuildingType = function(name)
     local building_config = GameDatas.Buildings.buildings
     for _,v in ipairs(building_config) do
@@ -980,6 +986,7 @@ return {
     materials_desc_map = MATERIALS_DESC_MAP,
     equip_material_desc_localize  = EQUIP_MATERIAL_DESC_LOCALIZE,
     soldier_desc_material = SOLDIER_DESC_MATERIAL,
+    mails = MAILS,
 }
 
 

@@ -273,12 +273,12 @@ end
 function ToolShopUpgradeBuilding:GeneralToolsLocalPush(event)
     if ext and ext.localpush then
         local title = string.format(_("制造%d个材料完成"), event:TotalCount())
-        app:GetPushManager():UpdateBuildPush(event:FinishTime(), title, event.id)
+        app:GetPushManager():UpdateToolEquipmentPush(event:FinishTime(), title, event.id)
     end
 end
 function ToolShopUpgradeBuilding:CancelToolsLocalPush(event_id)
     if ext and ext.localpush then
-        app:GetPushManager():CancelBuildPush(event_id)
+        app:GetPushManager():CancelToolEquipmentPush(event_id)
     end
 end
 return ToolShopUpgradeBuilding

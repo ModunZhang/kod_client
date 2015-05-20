@@ -520,6 +520,7 @@ function GameUIActivityRewardNew:ui_FIRST_IN_PURGURE()
 		NetManager:getFirstIAPRewardsPromise():done(function()
 			GameGlobalUI:showTips(_("提示"),tips_str)
 			app:GetAudioManager():PlayeEffectSoundWithKey("BUY_ITEM")
+			self:LeftButtonClicked()
 		end)
 	end)
 	if countInfo.iapCount > 0 and not countInfo.isFirstIAPRewardsGeted then

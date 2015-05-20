@@ -65,7 +65,7 @@ function GameUIAllianceInfo:RefreshListDataSource()
     next_data = self:filterMemberList("supervisor")
     table.insertto(data,next_data)
     next_data = self:filterMemberList("elite")
-    table.insertto(data,next_data) 
+    table.insertto(data,next_data)
     next_data = self:filterMemberList("member")
     table.insertto(data,next_data)
     self.list_dataSource = data
@@ -250,11 +250,11 @@ end
 function GameUIAllianceInfo:OnJoinActionClicked(joinType,sender)
     if  joinType == 'all' then --如果是直接加入
         NetManager:getJoinAllianceDirectlyPromise(self:GetAllianceData().id):fail(function()
-            
-        end):done(function()
-             GameGlobalUI:showTips(_("提示"),string.format(_("加入%s联盟成功!"),self:GetAllianceData().name))
-             self:LeftButtonClicked()
-        end)
+
+            end):done(function()
+        GameGlobalUI:showTips(_("提示"),string.format(_("加入%s联盟成功!"),self:GetAllianceData().name))
+        self:LeftButtonClicked()
+            end)
     else
         NetManager:getRequestToJoinAlliancePromise(self:GetAllianceData().id):done(function()
             UIKit:showMessageDialog(_("申请成功"),
@@ -262,9 +262,9 @@ function GameUIAllianceInfo:OnJoinActionClicked(joinType,sender)
                 function()end)
             sender:setButtonEnabled(false)
         end):fail(function()
-        end)
+            end)
     end
-    -- 
+    --
 end
 function GameUIAllianceInfo:LoadContact()
     if self.mail_layer then return self.mail_layer end
@@ -357,6 +357,10 @@ function GameUIAllianceInfo:SendMail(addressee,title,content)
         UIKit:showMessageDialog(_("陛下"),_("请填写正确的收件人ID"))
         return
     end
+    if User:Id() == addressee then
+        UIKit:showMessageDialog(_("陛下"),_("不能给自己发送邮件"))
+        return
+    end
     NetManager:getSendPersonalMailPromise(addressee, title, content,self.contacts):done(function(result)
         self:removeFromParent()
         return result
@@ -384,7 +388,7 @@ function GameUIAllianceInfo:LoadMembers()
         :size(126,134)
         :addTo(layer)
         :align(display.LEFT_TOP,22,664)
-    WidgetPushTransparentButton.new(cc.rect(0,0,560,134)):addTo(layer):align(display.LEFT_TOP,22,664):onButtonClicked(function() 
+    WidgetPushTransparentButton.new(cc.rect(0,0,560,134)):addTo(layer):align(display.LEFT_TOP,22,664):onButtonClicked(function()
         UIKit:newGameUI("GameUIAllianceMemberInfo",false,archon_data.id):AddToCurrentScene(true)
     end)
     local title_bar =  display.newScale9Sprite("alliance_event_type_darkblue_222x30.png",0,0, cc.size(428,30), cc.rect(7,7,190,16))
@@ -436,7 +440,7 @@ function GameUIAllianceInfo:LoadMembers()
     }):align(display.LEFT_BOTTOM, title_icon:getPositionX()+title_icon:getContentSize().width + 10,title_icon:getPositionY()):addTo(layer)
 
     local view_detail = display.newSprite("alliacne_search_29x33.png"):align(display.RIGHT_BOTTOM,line_1:getPositionX() + 428,line_1:getPositionY()+4):addTo(layer)
-   
+
     self:RefreshMemberList()
     return self.member_layer
 end
@@ -444,7 +448,7 @@ end
 function GameUIAllianceInfo:GetAllianceTitleAndLevelPng(title)
     local titles = self:GetAllianceData().titles
     local final_title = titles[title]
-    if string.sub(final_title, 1, 2) == "__" then 
+    if string.sub(final_title, 1, 2) == "__" then
         final_title = Localize.alliance_title[title]
     end
     return final_title,UILib.alliance_title_icon[title]
@@ -474,9 +478,9 @@ function GameUIAllianceInfo:GetMemberItemContent()
     node.content_memeber = content_memeber
 
     local empty_label = UIKit:ttfLabel({
-            text = _("<空>"),
-            size = 22,
-            color= 0x615b44
+        text = _("<空>"),
+        size = 22,
+        color= 0x615b44
     }):align(display.CENTER, 279, 33):addTo(content_memeber)
     content_memeber.empty_label = empty_label
 
@@ -523,7 +527,7 @@ function GameUIAllianceInfo:GetPlayerIconSprite()
 end
 
 function GameUIAllianceInfo:FillDataToAllianceItem(list_data,content,item)
-    local real_content 
+    local real_content
     local data = list_data.data
     if list_data.data_type == 1 then -- title
         content.content_memeber:hide()
@@ -584,7 +588,7 @@ end
 
 function GameUIAllianceInfo:sourceDelegate(listView, tag, idx)
     if cc.ui.UIListView.COUNT_TAG == tag then
-        return #self.list_dataSource 
+        return #self.list_dataSource
     elseif cc.ui.UIListView.CELL_TAG == tag then
         local item
         local content
@@ -616,6 +620,7 @@ function GameUIAllianceInfo:listviewListener(event)
     end
 end
 return GameUIAllianceInfo
+
 
 
 
