@@ -39,18 +39,20 @@ function WidgetAutoOrderAwardButton:SetTimeInfo(time)
 	if self.time_label then
 		if math.floor(time) > 0 then
 			self.time_label:setString(os.date("!%H:%M:%S",time))
-			self.time_label:show()
+			self.time_bg:show()
 		else
-			self.time_label:hide()
+			self.time_bg:hide()
 		end
 	else
 		if time > 0 then
 			local label = UIKit:ttfLabel({
 				text = os.date("!%H:%M:%S",time),
 				size = 20,
-				align = cc.TEXT_ALIGNMENT_LEFT,
+				align = cc.TEXT_ALIGNMENT_CENTER,
 			})
-			label:addTo(self):align(display.CENTER,0,-45)
+			local time_bg = display.newSprite("online_time_bg_96x36.png"):addTo(self):align(display.CENTER,0,-55):scale(0.7)
+			label:addTo(time_bg):align(display.CENTER,48,18)
+			self.time_bg = time_bg
 			self.time_label = label
 		end
 	end
@@ -71,7 +73,7 @@ function WidgetAutoOrderAwardButton:OnTimer(dt)
 		if  math.floor(diff_time) > 0 then
 			self:SetTimeInfo(diff_time)
 		else
-			if self.time_label then self.time_label:hide() end
+			if self.time_label then self.time_bg:hide() end
 			self:CheckState()
 		end
 	end
