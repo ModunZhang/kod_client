@@ -243,7 +243,7 @@ end
 
 local function RecruitSoldier(type_, count)
     local soldier_config = special[type_] or normal[type_.."_1"]
-    local recruitTime = soldier_config.recruitTime * count
+    local recruitTime = 30
     mock{
         {
             "soldierEvents.0",
@@ -265,7 +265,7 @@ local function RecruitSoldier(type_, count)
         DataManager.handle_soldier__ = nil
     end, recruitTime)
 
-    local key = string.format("RecruitSoldier_%s", type_, count)
+    local key = string.format("RecruitSoldier_%s", type_)
     if not check(key) then
         mark(key)
         ext.market_sdk.onPlayerEvent("招募士兵", key)

@@ -26,9 +26,6 @@ function MyCityFteScene:PromiseOfClickBuilding(x, y, for_build, msg, arrow_param
     self:GetSceneLayer()
         :FindBuildingBy(x, y)
         :next(function(building)
-            local mx, my = building:GetEntity():GetMidLogicPosition()
-            self:GotoLogicPoint(mx, my, 5)
-
             local mid,top = building:GetWorldPosition()
             local info_layer = self:GetSceneLayer():GetInfoLayer()
             local middle_point = info_layer:convertToNodeSpace(mid)
@@ -45,13 +42,28 @@ function MyCityFteScene:PromiseOfClickBuilding(x, y, for_build, msg, arrow_param
 
             info_layer:removeAllChildren()
             local arrow = WidgetFteArrow.new(msg or str)
-                :addTo(info_layer):TurnDown():pos(top_point.x, top_point.y + 50)
-
+                :addTo(info_layer, 1, 119):TurnDown():pos(top_point.x, top_point.y + 50)
             if arrow_param then
                 if arrow_param.direction == "up" then
                     arrow:TurnUp():pos(top_point.x + 0, top_point.y - 300)
                 end
             end
+
+
+            local mx, my = building:GetEntity():GetMidLogicPosition()
+            self:GotoLogicPoint(mx, my, 5)
+            :next(function()
+                local rect
+                if info_layer:getChildByTag(119) then
+                    local rect1 = info_layer:getChildByTag(119):getCascadeBoundingBox()
+                    local rect2 = building:getCascadeBoundingBox()
+                    rect = cc.rectUnion(rect1, rect2)
+                else
+                    rect = building:getCascadeBoundingBox()
+                end
+                self:GetFteLayer():FocusOnRect(rect)
+            end)
+
         end)
 
     local p = promise.new()
@@ -66,13 +78,15 @@ function MyCityFteScene:PromiseOfClickBuilding(x, y, for_build, msg, arrow_param
 end
 function MyCityFteScene:BeginClickFte()
     self.clicked_callbacks = {}
-    self:GetSceneLayer():GetInfoLayer():removeAllChildren()
+    self:GetFteLayer():FocusOnRect()
     self:GetFteLayer():Enable()
+    self:GetSceneLayer():GetInfoLayer():removeAllChildren()
 end
 function MyCityFteScene:EndClickFte()
     self.clicked_callbacks = {}
-    self:GetSceneLayer():GetInfoLayer():removeAllChildren()
+    self:GetFteLayer():FocusOnRect()
     self:GetFteLayer():Disable()
+    self:GetSceneLayer():GetInfoLayer():removeAllChildren()
 end
 function MyCityFteScene:CheckClickPromise(building, func)
     if #self.clicked_callbacks > 0 then
@@ -124,7 +138,7 @@ local ui_map = setmetatable({
     stable         = {"GameUIMilitaryTechBuilding",           "tech",         },
     workshop       = {"GameUIMilitaryTechBuilding",           "tech",         },
     dwelling       = {"GameUIDwelling"            ,        "citizen",         },
-    farmer         = {"GameUIFteResource"         ,},
+    farmer         = {"GameUIResource"            ,},
     woodcutter     = {"GameUIResource"            ,},
     quarrier       = {"GameUIResource"            ,},
     miner          = {"GameUIResource"            ,},
@@ -185,129 +199,158 @@ function MyCityFteScene:RunFte()
     self:GetFteLayer():LockAll()
 
     cocos_promise.defer():next(function()
-        self:GetFteLayer():UnlockAll()
         if not check("HateDragon") or
             not check("DefenceDragon") then
+            self:GetFteLayer():UnlockAll()
             return self:PromiseOfHateDragonAndDefence()
         end
     end):next(function()
         if not check("BuildHouseAt_3_3") then
+            self:GetFteLayer():UnlockAll()
             return self:PromiseOfBuildFirstHouse(18, 12, "dwelling")
         end
     end):next(function()
         if not check("FinishBuildHouseAt_3_1") then
+            self:GetFteLayer():UnlockAll()
             return self:GetHomePage():PromiseOfFteWaitFinish()
         end
     end):next(function()
         if not check("UpgradeBuildingTo_keep_2") then
+            self:GetFteLayer():UnlockAll()
             return self:PromiseOfFirstUpgradeKeep()
         end
-    end)
-    :next(function()
+    end):next(function()
         if not check("FinishUpgradingBuilding_keep_2") then
+            self:GetFteLayer():UnlockAll()
             return self:GetHomePage():PromiseOfFteFreeSpeedUp()
         end
     end):next(function()
         if not check("UpgradeBuildingTo_barracks_1") then
+            self:GetFteLayer():UnlockAll()
             return self:PromiseOfUnlockBuilding("barracks")
         end
     end):next(function()
         if not check("FinishUpgradingBuilding_barracks_1") then
+            self:GetFteLayer():UnlockAll()
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
         if not check("RecruitSoldier_swordsman") then
+            self:GetFteLayer():UnlockAll()
             return self:PromiseOfRecruitSoldier("swordsman")
         end
     end):next(function()
         if not check("BuildHouseAt_5_3") then
+            self:GetFteLayer():UnlockAll()
             return self:PromiseOfBuildHouse(8, 22, "farmer")
         end
     end):next(function()
         if not check("FinishBuildHouseAt_5_1") then
+            self:GetFteLayer():UnlockAll()
             return self:GetHomePage():PromiseOfFteWaitFinish()
         end
     end):next(function()
         if not check("FightWithNpc1") then
+            self:GetFteLayer():UnlockAll()
             return self:PromiseOfExplorePve()
         end
     end):next(function()
         if not check("UpgradeBuildingTo_keep_3") then
+            self:GetFteLayer():UnlockAll()
             return self:PromiseOfUpgradeKeepForHospital()
         end
     end):next(function()
         if not check("FinishUpgradingBuilding_keep_3") then
+            self:GetFteLayer():UnlockAll()
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
         if not check("UpgradeBuildingTo_hospital_1") then
+            self:GetFteLayer():UnlockAll()
             return self:PromiseOfUnlockBuilding("hospital")
         end
     end):next(function()
         if not check("FinishUpgradingBuilding_hospital_1") then
+            self:GetFteLayer():UnlockAll()
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
         if not check("TreatSoldier") then
+            self:GetFteLayer():UnlockAll()
             return self:PromiseOfHeal()
         end
     end):next(function()
         if not check("BuildHouseAt_6_3") then
+            self:GetFteLayer():UnlockAll()
             return self:PromiseOfBuildWoodcutter()
         end
     end):next(function()
         if not check("UpgradeBuildingTo_keep_4") then
+            self:GetFteLayer():UnlockAll()
             return self:PromiseOfUpgradeKeepForAcademy()
         end
     end):next(function()
         if not check("FinishUpgradingBuilding_keep_4") then
+            self:GetFteLayer():UnlockAll()
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
         if not check("UpgradeBuildingTo_academy_1") then
+            self:GetFteLayer():UnlockAll()
             return self:PromiseOfUnlockBuilding("academy")
         end
     end):next(function()
         if not check("FinishUpgradingBuilding_academy_1") then
+            self:GetFteLayer():UnlockAll()
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
         if not check("Research") then
+            self:GetFteLayer():UnlockAll()
             return self:PromiseOfResearch()
         end
     end):next(function()
         if not check("UpgradeBuildingTo_keep_5") then
+            self:GetFteLayer():UnlockAll()
             return self:PromiseOfUpgradeKeepForMaterialDepot()
         end
     end):next(function()
         if not check("FinishUpgradingBuilding_keep_5") then
+            self:GetFteLayer():UnlockAll()
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
         if not check("UpgradeBuildingTo_materialDepot_1") then
+            self:GetFteLayer():UnlockAll()
             return self:PromiseOfUnlockBuilding("materialDepot")
         end
     end):next(function()
         if not check("FinishUpgradingBuilding_materialDepot_1") then
+            self:GetFteLayer():UnlockAll()
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
         if not check("FightWithNpc2") or not check("FightWithNpc3") then
+            self:GetFteLayer():UnlockAll()
             return self:PromiseOfCheckMaterials()
         end
     end):next(function()
         if not check("RecruitSoldier_skeletonWarrior") then
+            self:GetFteLayer():UnlockAll()
             return self:PromiseOfRecruitSpecial()
         end
     end):next(function()
         if not check("BuildHouseAt_7_3") then
+            self:GetFteLayer():UnlockAll()
             return self:PromiseOfBuildQuarrier()
         end
     end):next(function()
         if not check("BuildHouseAt_8_3") then
+            self:GetFteLayer():UnlockAll()
             return self:PromiseOfBuildHouse(28, 12, "miner", _("建造矿工小屋"))
         end
     end):next(function()
+        self:GetFteLayer():UnlockAll()
         return self:PromiseOfFteEnd()
     end)
 end
@@ -512,7 +555,7 @@ function MyCityFteScene:PromiseOfFteEnd()
         :pos(r.x + r.width/2, r.y + r.height/2)
 
     GameUINpc:PromiseOfSay(
-        {words = _("看来大人你已经能够顺利接管这座城市了。。。如果不知道该干什么可以点击左上角的推荐任务")}
+        {words = _("看来大人你已经能够顺利接管这座城市了。。。如果不知道该干什么可以点击左上角的推荐任务"), rect = r}
     ):next(function()
         self:removeChildByTag(FTE_MARK_TAG)
         if ext.registereForRemoteNotifications then

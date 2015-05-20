@@ -55,6 +55,7 @@ end
 function GameUIUpgradeBuilding:PromiseOfFte()
     self.tabs:SelectTab("upgrade")
     self.upgrade_layer.acc_layer.acc_button:setButtonEnabled(false)
+    self.upgrade_layer.OnBuildingUpgradingBegin = function() end
     self:GetFteLayer():SetTouchObject(self:Find())
 
 

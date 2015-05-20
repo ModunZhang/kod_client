@@ -135,7 +135,7 @@ local building_ui_map = setmetatable({
 }, {__index = function() assert(false) end})
 function PVEFteScene:OpenUI(x, y)
     local gid = self:GetSceneLayer():GetTileInfo(x, y)
-    if gid <= 0 then return end
+    if gid ~= PVEDefine.MINER then return end
     local object = self.user:GetCurrentPVEMap():GetObjectByCoord(x, y)
     if not object or not object:Type() then
         self.user:GetCurrentPVEMap():ModifyObject(x, y, 0, gid)
@@ -275,7 +275,7 @@ function PVEFteScene:PromiseOfIntroduce()
 
     self:GetFteLayer():Enable()
     return GameUINpc:PromiseOfSay(
-        {words = _("领主大人，探索会消耗体力值，但击败敌军可以获得资源和材料。。。"), npc = "man"}
+        {words = _("领主大人，探索会消耗体力值，但击败敌军可以获得资源和材料。。。"), npc = "man", rect = r}
     ):next(function()
         self:GetFteLayer():Disable()
         self:DestoryMark()

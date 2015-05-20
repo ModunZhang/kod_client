@@ -1,3 +1,4 @@
+local WidgetMaskFilter = import("..widget.WidgetMaskFilter")
 local cocos_promise = import("..utils.cocos_promise")
 local promise = import("..utils.promise")
 local TutorialLayer = class('TutorialLayer', function()
@@ -20,6 +21,7 @@ function TutorialLayer:ctor(obj)
     for _, v in pairs{ left, right, top, bottom } do
         v:setContentSize(cc.size(display.width, display.height))
     end
+    self.mask = WidgetMaskFilter.new():addTo(self):pos(display.cx, display.cy)
     self:Reset()
     self:SetTouchObject(obj)
     self:setLocalZOrder(3000)
@@ -50,6 +52,8 @@ function TutorialLayer:Reset()
     end
     self.object = nil
     self.world_rect = nil
+    self.mask:hide()
+    self.mask:FocusOnRect()
     return self
 end
 function TutorialLayer:SetTouchObject(obj)
@@ -69,6 +73,9 @@ function TutorialLayer:UpdateClickedRegion(rect)
     self.right:pos(rect.x + rect.width, 0)
     self.top:pos(0, rect.y + rect.height)
     self.bottom:pos(0, rect.y - display.height)
+
+    self.mask:show()
+    self.mask:FocusOnRect(rect)
 end
 function TutorialLayer:GetClickedRect()
     if self.world_rect then
