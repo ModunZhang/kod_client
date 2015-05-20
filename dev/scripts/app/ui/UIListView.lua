@@ -105,7 +105,7 @@ function UIListView:ctor(params)
     self.trackTop = params.trackTop or false -- 是否追终与上边的距离
     self.tipsString = params.tipsString or _("暂时没有内容") -- 统一提示信息
     if type(params.needTips) == 'boolean' then
-        self.needTips =  params.needTips 
+        self.needTips =  params.needTips
     else
         self.needTips = true
     end
@@ -362,7 +362,7 @@ function UIListView:removeItem(listItem, bAni)
     if UIScrollView.DIRECTION_VERTICAL == self.direction then
         if pos == 1 then
             self:moveItems(1, #self.items_, -itemW, itemH, bAni)
-        else    
+        else
             self:moveItems(1, pos - 1, -itemW, -itemH, bAni)
         end
     else
@@ -959,7 +959,7 @@ end
 
 ]]
 function UIListView:asyncLoadWithCurrentPosition_()
-    local count 
+    local count
     if self.delegate_[UIListView.DELEGATE] then
         count = self.delegate_[UIListView.DELEGATE](self, UIListView.COUNT_TAG)
     else
@@ -1192,7 +1192,7 @@ function UIListView:scrollBy(x, y)
     if self:isTrackTop() and UIScrollView.DIRECTION_VERTICAL == self.direction then
         local __,disY = self:getSlideDistance()
         if disY > 0 then
-             self:notifyListener_({name = "top_distance_changed",disY = disY})
+            self:notifyListener_({name = "top_distance_changed",disY = disY})
         end
     end
     if self.actualRect_ then
@@ -1316,7 +1316,7 @@ function UIListView:insertItemAndRefresh(listItem, pos)
     self:layout_()
     local item_width,item_height = listItem:getItemSize()
     if self.direction == UIListView.DIRECTION_VERTICAL then
-    self.container:setPosition(0, pre_y-item_height)
+        self.container:setPosition(0, pre_y-item_height)
         -- print("insertItemAndRefresh  item_height=",item_height,"pre_y=",pre_y)
     else
         self.container:setPosition(0, self.viewRect_.height - self.size.height)
@@ -1391,11 +1391,15 @@ function UIListView:isItemFullyInViewRect(pos)
 end
 
 function UIListView:callAsyncLoadDelegate_(...)
-    local args = {...}
-    if self.delegate_[UIListView.DELEGATE](self, UIListView.COUNT_TAG) > 0 then
-        return self.delegate_[UIListView.DELEGATE](unpack(args))
+    if self.tipsString then
+        local args = {...}
+        if self.delegate_[UIListView.DELEGATE](self, UIListView.COUNT_TAG) > 0 then
+            return self.delegate_[UIListView.DELEGATE](unpack(args))
+        else
+            return self:self_sourceDelegate(unpack(args))
+        end
     else
-        return self:self_sourceDelegate(unpack(args))
+        return self.delegate_[UIListView.DELEGATE](unpack(args))
     end
 end
 
@@ -1429,6 +1433,7 @@ end
 
 
 return UIListView
+
 
 
 
