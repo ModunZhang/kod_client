@@ -285,6 +285,11 @@ function MyCityFteScene:RunFte()
             return self:PromiseOfBuildWoodcutter()
         end
     end):next(function()
+        if not check("FinishBuildHouseAt_6_3") then
+            self:GetFteLayer():UnlockAll()
+            return self:GetHomePage():PromiseOfFteWaitFinish()
+        end
+    end):next(function()
         if not check("UpgradeBuildingTo_keep_4") then
             self:GetFteLayer():UnlockAll()
             return self:PromiseOfUpgradeKeepForAcademy()
@@ -343,6 +348,11 @@ function MyCityFteScene:RunFte()
         if not check("BuildHouseAt_7_3") then
             self:GetFteLayer():UnlockAll()
             return self:PromiseOfBuildQuarrier()
+        end
+    end):next(function()
+        if not check("FinishBuildHouseAt_7_3") then
+            self:GetFteLayer():UnlockAll()
+            return self:GetHomePage():PromiseOfFteWaitFinish()
         end
     end):next(function()
         if not check("BuildHouseAt_8_3") then
