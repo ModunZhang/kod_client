@@ -13,7 +13,7 @@ local GameUIWriteMail = import('.GameUIWriteMail')
 local WidgetPlayerNode = import("..widget.WidgetPlayerNode")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local Localize = import("..utils.Localize")
-
+local config_playerLevel = GameDatas.PlayerInitData.playerLevel
 function GameUIAllianceMemberInfo:ctor(isMyAlliance,memberId,func_call)
     GameUIAllianceMemberInfo.super.ctor(self)
     self.isMyAlliance = isMyAlliance or false
@@ -267,12 +267,13 @@ function GameUIAllianceMemberInfo:WidgetPlayerNode_DataSource(name)
             location = string.format("(%d,%d)",allianceObj:GetLogicPosition())
         end
         local level = User:GetPlayerLevelByExp(self.player_info.levelExp)
+        local exp_config = config_playerLevel[level]
         return {
             location = location,
             name = self.player_info.name,
             lv = level,
-            currentExp = self.player_info.levelExp,
-            maxExp = User:GetCurrentLevelMaxExp(level),
+            currentExp = self.player_info.levelExp  - exp_config.expFrom,
+            maxExp =  exp_config.expTo - exp_config.expFrom,
             power = self.player_info.power,
             playerId = self.player_info.id,
             playerIcon = self.player_info.icon,

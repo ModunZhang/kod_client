@@ -10,7 +10,7 @@ local UIScrollView = import(".UIScrollView")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushTransparentButton = import("..widget.WidgetPushTransparentButton")
-
+--异步列表按钮事件修复
 function GameAllianceApproval:ctor()
     GameAllianceApproval.super.ctor(self,754,_("申请审批"),window.top_bottom)
 end
@@ -78,6 +78,22 @@ function GameAllianceApproval:RefreshListItemContent(content,player,idx)
     content.name_label:setString(player.name or " ")
     content.power_label:setString(string.formatnumberthousands(player.power))
     content.player_icon.icon:setTexture(UIKit:GetPlayerIconImage(player.icon))
+    if content.rejectButton then
+        content.rejectButton:removeSelf()
+        content.argreeButton:removeSelf()
+    end
+    content.rejectButton = WidgetPushButton.new({normal = "red_btn_up_148x58.png",pressed = "red_btn_down_148x58.png"}):setButtonLabel(UIKit:commonButtonLable({
+                color = 0xfff3c7,
+                text  = _("拒绝")
+        })):align(display.LEFT_TOP,141, 73):onButtonClicked(function(event)
+            self:OnRefuseButtonClicked(content.idx)
+        end):addTo(content)
+    content.argreeButton = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"}):setButtonLabel(UIKit:commonButtonLable({
+                text = _("同意"),
+                color = 0xfff3c7
+        })):align(display.LEFT_TOP,401,73):onButtonClicked(function(event)
+            self:OnAgreeButtonClicked(content.idx)
+        end):addTo(content)
 end
 
 function GameAllianceApproval:GetListItemContent()
@@ -109,18 +125,7 @@ function GameAllianceApproval:GetListItemContent()
         align = cc.TEXT_ALIGNMENT_LEFT,
     }):align(display.LEFT_BOTTOM,power_icon:getPositionX()+power_icon:getContentSize().width + 2,power_icon:getPositionY()):addTo(content)
 
-    local rejectButton = WidgetPushButton.new({normal = "red_btn_up_148x58.png",pressed = "red_btn_down_148x58.png"}):setButtonLabel(UIKit:commonButtonLable({
-                color = 0xfff3c7,
-                text  = _("拒绝")
-        })):align(display.LEFT_TOP,line:getPositionX(), line:getPositionY() - 5):onButtonClicked(function(event)
-            self:OnRefuseButtonClicked(content.idx)
-        end):addTo(content)
-    local argreeButton = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"}):setButtonLabel(UIKit:commonButtonLable({
-                text = _("同意"),
-                color = 0xfff3c7
-        })):align(display.LEFT_TOP,power_icon:getPositionX(),line:getPositionY() - 5):onButtonClicked(function(event)
-            self:OnAgreeButtonClicked(content.idx)
-        end):addTo(content)
+   
     content.player_icon = player_icon
     content.name_label = name_label
     content.power_label = power_label

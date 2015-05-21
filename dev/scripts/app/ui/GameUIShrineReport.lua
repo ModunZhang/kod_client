@@ -157,10 +157,7 @@ function GameUIShrineReport:GetFightItemContent()
         size = 20,
         color= 0x403c2f
     }):align(display.LEFT_BOTTOM,122, 8):addTo(content_part)
-    local button = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
-        :addTo(content_part):setButtonLabel("normal", UIKit:commonButtonLable({text = _("回放")})):align(display.RIGHT_BOTTOM,538, 8):onButtonClicked(function()
-            self:OnRePlayClicked(content_part.idx)
-        end)
+    
     local result_label = UIKit:ttfLabel({
         text = "",
         size = 20,
@@ -215,6 +212,14 @@ function GameUIShrineReport:fillFightItemContent(item_content,list_data,item,ite
         end
         content:show()
         content.idx = item_idx
+        if content.button then
+            content.button:removeSelf()
+        end
+        local button = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
+        :addTo(content):setButtonLabel("normal", UIKit:commonButtonLable({text = _("回放")})):align(display.RIGHT_BOTTOM,538, 8):onButtonClicked(function()
+            self:OnRePlayClicked(content.idx)
+        end)
+        content.button = button
         item_content:size(548,92)
         item:setItemSize(548,92)
     end
@@ -358,14 +363,7 @@ function GameUIShrineReport:GetPlayerDataItemContent()
     reward_bg1:scale(0.54)
     reward_bg2:scale(0.54)
     reward_bg3:scale(0.54)
-    local next_button = WidgetPushButton.new({normal = "shrine_page_control_26x34.png"}):align(display.RIGHT_CENTER, 540, 40):addTo(content)
-        :onButtonClicked(function()
-            self:OnRewardPageButtonClicked(1,content)
-        end)
-    local pre_button = WidgetPushButton.new({normal = "shrine_page_control_26x34.png"},{flipX = true}):align(display.RIGHT_CENTER, 540, 40):addTo(content)
-        :onButtonClicked(function() 
-            self:OnRewardPageButtonClicked(-1,content)
-        end)
+   
     content:size(548,80)
     content.bg0 = bg0
     content.bg1 = bg1
@@ -378,12 +376,29 @@ function GameUIShrineReport:GetPlayerDataItemContent()
     content.reward_bg1 = reward_bg1
     content.reward_bg2 = reward_bg2
     content.reward_bg3 = reward_bg3
-    content.next_button = next_button
-    content.pre_button = pre_button
     return content
 end
 
 function GameUIShrineReport:fillPlayerDataItemContent(content,list_data,item,idx)
+    if content.next_button then
+        content.next_button:removeSelf()
+    end 
+    if content.pre_button then
+        content.pre_button:removeSelf()
+    end
+
+    local next_button = WidgetPushButton.new({normal = "shrine_page_control_26x34.png"}):align(display.RIGHT_CENTER, 540, 40):addTo(content)
+        :onButtonClicked(function()
+            self:OnRewardPageButtonClicked(1,content)
+        end)
+    local pre_button = WidgetPushButton.new({normal = "shrine_page_control_26x34.png"},{flipX = true}):align(display.RIGHT_CENTER, 540, 40):addTo(content)
+        :onButtonClicked(function() 
+            self:OnRewardPageButtonClicked(-1,content)
+        end)
+
+    content.pre_button = pre_button
+    content.next_button = next_button
+
     content.name_label:setString(string.format("%d.%s",idx,list_data.name))
     content.kill_label:setString(string.formatnumberthousands(list_data.kill or 0))
     if list_data.id == User:Id() then

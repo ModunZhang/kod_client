@@ -5,16 +5,11 @@
 local WidgetAutoOrderAwardButton = class("WidgetAutoOrderAwardButton",cc.ui.UIPushButton)
 local config_online = GameDatas.Activities.online
 local UILib = import("..ui.UILib")
+local User = User
 
-function WidgetAutoOrderAwardButton:ctor(animation_object)
+function WidgetAutoOrderAwardButton:ctor()
 	WidgetAutoOrderAwardButton.super.ctor(self,{normal = "activity_68x78.png"})
-	time = time or 0
-	self:SetTimeInfo(time)
-	local countInfo = User:GetCountInfo()
-    local onlineTime = (countInfo.todayOnLineTime - countInfo.lastLoginTime)/1000
-	self.online_time = onlineTime
 	self:setNodeEventEnabled(true)
-	self.animation_object = animation_object
 	self:onButtonClicked(handler(self, self.OnAwradButtonClicked))
 end
 
@@ -23,20 +18,9 @@ function WidgetAutoOrderAwardButton:OnAwradButtonClicked(event)
 	UIKit:newGameUI("GameUIActivityRewardNew",2):AddToCurrentScene(true)
 end
 
-function WidgetAutoOrderAwardButton:GetItemImage(reward_type,item_key)
-    if reward_type == 'soldiers' then
-        return UILib.soldier_image[item_key][1]
-    elseif reward_type == 'resource' 
-        or reward_type == 'special' 
-        or reward_type == 'speedup' 
-        or reward_type == 'buff' 
-        or reward_type == 'buff' then
-        return UILib.item[item_key]
-    end
-end
 
 function WidgetAutoOrderAwardButton:SetTimeInfo(time) 
-	if self.time_label then
+	if self.time_bg then
 		if math.floor(time) > 0 then
 			self.time_label:setString(os.date("!%H:%M:%S",time))
 			self.time_bg:show()
@@ -44,21 +28,23 @@ function WidgetAutoOrderAwardButton:SetTimeInfo(time)
 			self.time_bg:hide()
 		end
 	else
-		if time > 0 then
-			local label = UIKit:ttfLabel({
-				text = os.date("!%H:%M:%S",time),
-				size = 20,
-				align = cc.TEXT_ALIGNMENT_CENTER,
-			})
-			local time_bg = display.newSprite("online_time_bg_96x36.png"):addTo(self):align(display.CENTER,0,-55):scale(0.7)
-			label:addTo(time_bg):align(display.CENTER,48,18)
-			self.time_bg = time_bg
-			self.time_label = label
-		end
+		local label = UIKit:ttfLabel({
+			text = os.date("!%H:%M:%S",time),
+			size = 20,
+			align = cc.TEXT_ALIGNMENT_CENTER,
+		})
+		local time_bg = display.newSprite("online_time_bg_96x36.png"):addTo(self):align(display.CENTER,0,-55):scale(0.7)
+		label:addTo(time_bg):align(display.CENTER,48,18)
+		self.time_bg = time_bg
+		self.time_label = label
+		self.time_bg:setVisible(time > 0)
 	end
 end
---放到使用的地方
+
 function WidgetAutoOrderAwardButton:onEnter()
+	local countInfo = User:GetCountInfo()
+    local onlineTime = (countInfo.todayOnLineTime - countInfo.lastLoginTime)/1000
+	self.online_time = onlineTime
 	app.timer:AddListener(self)
 end
 
@@ -73,24 +59,17 @@ function WidgetAutoOrderAwardButton:OnTimer(dt)
 		if  math.floor(diff_time) > 0 then
 			self:SetTimeInfo(diff_time)
 		else
-			if self.time_label then self.time_bg:hide() end
 			self:CheckState()
 		end
 	end
 end
 
-function WidgetAutoOrderAwardButton:OnCountInfoChanged()
-	self:CheckVisible()
-end
-
 function WidgetAutoOrderAwardButton:StarAction()
-	print("WidgetAutoOrderAwardButton:StarAction---->")
 	self:StopAction()
 	self.sprite_[1]:runAction(self:GetShakeAction())
 end
 
 function WidgetAutoOrderAwardButton:StopAction()
-	print("WidgetAutoOrderAwardButton:StopAction---->")
 	self.sprite_[1]:stopAllActions()
 	self.sprite_[1]:setRotation(0)
 	
@@ -119,6 +98,10 @@ end
 
 -- For WidgetAutoOrder
 function WidgetAutoOrderAwardButton:CheckVisible()
+	local countInfo = User:GetCountInfo()
+    local onlineTime = (countInfo.todayOnLineTime - countInfo.lastLoginTime)/1000
+    print("CheckVisible------>",onlineTime)
+	self.online_time = onlineTime
 	self:CheckState()
 	return self.visible___ 
 end
@@ -154,9 +137,6 @@ function WidgetAutoOrderAwardButton:CheckState()
 			self:StopAction()
 			self.can_get = false
 		end
-		local awards = config_online[self.timePoint].rewards
-		local reward_type,reward_key,reward_count = unpack(string.split(awards,":"))
-		self.awards = {reward_type = reward_type,reward_key = reward_key,reward_count = reward_count}
 	else
 		self.visible___ = false 
 	end

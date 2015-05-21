@@ -63,10 +63,14 @@ function GameUIStrikePlayer:BuildUI()
 
 			local alliance = Alliance_Manager:GetMyAlliance()
 			if alliance:GetAllianceBelvedere():IsReachEventLimit() then
-				UIKit:showMessageDialog(_("提示"),_("没有空闲的行军队列"),function()
-					UIKit:newGameUI('GameUIWathTowerRegion',City,'march'):AddToCurrentScene(true)
-				end)
-				return
+				UIKit:showMessageDialogWithParams({
+        			content = _("没有空闲的行军队列"),
+        			ok_callback = function()
+        				UIKit:newGameUI('GameUIWathTowerRegion',City,'march'):AddToCurrentScene(true)
+        			end,
+        			ok_string = _("前往解锁")
+    			})
+    			return
 			end
 
 			if dragon:WarningStrikeDragon() then
