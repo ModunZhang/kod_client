@@ -1057,6 +1057,22 @@ local CITY_TERRAIN_ICON = {
     grassLand = "city_terrain_grassLand_142x142.png",
     iceField = "city_terrain_iceField_142x142.png",
 }
+
+local ALLIANCE_LANGUAGE_FRAME = {
+    all = "all.png",
+    en  = "en.png",
+    fr  = "fr.png",
+    cn  = "cn.png",
+    tw  = "tw.png",
+    de  = "de.png",
+    ko  = "ko.png",
+    ja  = "ja.png",
+    ru  = "ru.png",
+    es  = "es.png",
+    pt  = "pt.png",
+    it  = "it.png",
+}
+
 return {
     resource = RESOURCE,
     soldier_bg = STAR_BG,
@@ -1104,6 +1120,7 @@ return {
     activity_image_config = ACTIVITY_IMAGE_CONFIG,
     server_level_image = server_level_image,
     city_terrain_icon = CITY_TERRAIN_ICON,
+    alliance_language_frame = ALLIANCE_LANGUAGE_FRAME,
 }
 
 

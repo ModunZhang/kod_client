@@ -175,19 +175,21 @@ end
 function UIKit:getRegistry()
     return self.Registry
 end
-
+--[[ 
+不会关闭的界面:答题界面  联盟结算界面 网络相关的信息弹出框 联盟对战相关的弹出框
+--]]
 function UIKit:closeAllUI(force)
     if force then
         self.open_ui_callbacks = {}
         self.close_ui_callbacks = {}
     end
     for name,v in pairs(self:getRegistry().objects_) do
-        if v.__isBase and v.__type ~= self.UITYPE.BACKGROUND and v.__cname ~= 'GameUISelenaQuestion' then
+        if v.__isBase and v.__type ~= self.UITYPE.BACKGROUND and v.__cname ~= 'GameUISelenaQuestion'  and v.__cname ~= 'GameUIWarSummary' then
             v:LeftButtonClicked()
         end
     end
     for __,v in pairs(self.messageDialogs) do
-        if v:GetUserData() ~= '__key__dialog' then
+        if v:GetUserData() ~= '__key__dialog' and '__alliance_war_tips__' ~= v:GetUserData() then
             v:LeftButtonClicked()
         end
     end
@@ -365,7 +367,6 @@ function UIKit:CreateEventTitle(...)
     return node
 end
 
--- TODO: 玩家头像
 function UIKit:GetPlayerCommonIcon(key,isOnline)
     isOnline = type(isOnline) ~= 'boolean' and true or isOnline
     local heroBg = isOnline and display.newSprite("chat_hero_background.png") or self:getDiscolorrationSprite("chat_hero_background.png")
@@ -665,7 +666,7 @@ function UIKit:showMessageDialogWithParams(params)
     local dialog = UIKit:newGameUI("FullScreenPopDialogUI",x_button_callback,user_data):SetTitle(title):SetPopMessage(content):zorder(zorder)
 
     dialog:CreateOKButton({listener = ok_callback,btn_name = ok_string})
-    if cancel_callback then
+    if params.cancel_callback then
         dialog:CreateCancelButton({listener = cancel_callback,btn_name = _("取消")})
     end
     dialog:VisibleXButton(visible_x_button)
