@@ -7,15 +7,15 @@ varying vec2 v_texCoord;
 
 // 分辨率
 uniform vec2 iResolution;
-
+float RADIUS = distance(vec2(0.5), vec2(0.0));
+vec2 MIDDLE = vec2(0.5, 0.5);
 
 void main(void)
 {
-	vec2 point = gl_FragCoord.xy/iResolution.xy;	
-	vec2 mid_point = vec2(0.5);
-	float radius = distance(mid_point, vec2(0.0));
-	float alpha = distance(point, mid_point) / radius;
-	gl_FragColor = vec4(0.0, 0.0, 0.0, alpha);	
+	vec2 point = gl_FragCoord.xy/iResolution.xy - MIDDLE;
+	point.x *= iResolution.x/iResolution.y;
+	float alpha = smoothstep(0.0, 0.7, distance(point, vec2(0.0)) / RADIUS);
+	gl_FragColor = vec4(0.0, 0.0, 0.0, alpha);
 }
 
 // void main(void)
