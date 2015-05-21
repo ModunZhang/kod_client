@@ -96,7 +96,7 @@ function ScanPng1()
 function ScanPng2()
 {
 	local png_name=$1
-	local result=$(grep -rle $png_name $script_path $res_path)
+	local result=$(grep -rle $png_name $script_path)
 	local array=(${result// / });
 	if [ ${#array[*]} -gt 0 ]; then
 		echo "find" ${#array[*]} "in files" $png_name
@@ -106,14 +106,23 @@ function ScanPng2()
 	fi
 }
 
-Begin;
-cd ../dev/scripts/app
+# cd ../../res/tmxmaps
+# res_path=$(pwd)
+# cd ../../../tools
+# cd $1
+
+cur_path=$(pwd)
+
+cd $cur_path
+cd ../dev/scripts/app/
 script_path=$(pwd)
-cd ../../res/tmxmaps
+
+cd $cur_path
+cd ../dev/res/images
 res_path=$(pwd)
-cd ../../../tools
-cd $1
-files=(*) 
+
+Begin;
+files=(*.png) 
 for f in ${files[*]}
 do
 	if [ ${f##*.} != "sh" ]; then
@@ -121,7 +130,6 @@ do
 	fi
 done
 End;
-
 
 
 # Begin;
