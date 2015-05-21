@@ -213,7 +213,7 @@ function GameUIAllianceCityEnter:GetEnterButtons()
             UIKit:showMessageDialog(_("提示"),_("玩家处于保护状态,不能进攻或突袭"), function()end)
             return
         end
-        UIKit:newGameUI("GameUIStrikePlayer",member:Id()):AddToCurrentScene(true)
+        UIKit:newGameUI("GameUIStrikePlayer",1,{memberId = member:Id(),targetIsMyAlliance = false,toLocation = self:GetLogicPosition()}):AddToCurrentScene(true)
         self:LeftButtonClicked()
     end)
     strike_button:setButtonEnabled(my_allaince:Status() == "fight")
