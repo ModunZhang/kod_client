@@ -31,7 +31,7 @@ function AirshipSprite:GetEntity()
             return self.logic_x, self.logic_y
         end,
         GetMidLogicPosition = function()
-            return self.logic_x, self.logic_y
+            return self.logic_x + 3, self.logic_y + 3
         end
     }
 end
