@@ -1,4 +1,5 @@
 local window = import("..utils.window")
+local WidgetMaskFilter = import("..widget.WidgetMaskFilter")
 local EventManager = import("..layers.EventManager")
 local TouchJudgment = import("..layers.TouchJudgment")
 local MapScene = class("MapScene", function()
@@ -37,7 +38,7 @@ function MapScene:onEnter()
     if type(self.CreateSceneUILayer) == "function" then
         self.scene_ui_layer = self:CreateSceneUILayer():addTo(self:GetSceneNode(), 2)
     end
-    self.top_layer = display.newNode():addTo(self:GetSceneNode(), 3)
+    self.top_layer = display.newNode():addTo(self, 3)
     self.screen_layer = display.newNode():addTo(self:GetSceneNode(), 4)
 end
 function MapScene:onExit()
@@ -93,7 +94,7 @@ function MapScene:GetSceneLayer()
     return self.scene_layer
 end
 function MapScene:CreateSceneLayer()
-    assert(false, "蹇呴』鍦ㄥ瓙绫诲疄鐜扮敓鎴愬満鏅殑鏂规硶")
+    assert(false, "必须在子类实现生成场景的方法")
 end
 function MapScene:CreateMultiTouchLayer()
     local touch_layer = display.newLayer()
@@ -106,7 +107,7 @@ function MapScene:CreateMultiTouchLayer()
     end)
     return touch_layer
 end
-local FTE_TAG = 119
+local FTE_TAG = 11900
 function MapScene:GetFteLayer()
     local child = self:getChildByTag(FTE_TAG)
     if not child then
@@ -121,6 +122,7 @@ function MapScene:CreateFteLayer()
     else
         layer = display.newLayer(--[[cc.c4b(0, 255, 0, 100)]]):addTo(self, 2000, FTE_TAG)
     end
+    local mask_filter = WidgetMaskFilter.new():addTo(layer):pos(display.cx, display.cy)
     layer:setTouchSwallowEnabled(true)
     local touch_judgment = self.touch_judgment
     layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
@@ -156,7 +158,14 @@ function MapScene:CreateFteLayer()
         self:setTouchEnabled(false)
         return self:hide()
     end
+    function layer:FocusOnRect(rect)
+        mask_filter:setVisible(rect ~= nil)
+        mask_filter:FocusOnRect(rect)
+        return self
+    end
     function layer:Reset()
+        mask_filter:hide()
+        mask_filter:FocusOnRect()
         return self:Disable()
     end
     return layer:Reset()
@@ -189,7 +198,7 @@ function MapScene:OnTwoTouch(x1, y1, x2, y2, event_type)
     elseif event_type == "ended" then
         scene:ZoomEnd()
         self.distance = nil
-        -- 鐨瓔鏁堟灉
+        -- 皮筋效果
         self:MakeElastic()
     end
 end
@@ -227,7 +236,7 @@ function MapScene:OnTouchMove(pre_x, pre_y, x, y)
     self.scene_layer:setPosition(cc.p(old_x + diffX, old_y + diffY))
 end
 function MapScene:OnTouchClicked(pre_x, pre_y, x, y)
-    return self.event_manager:TouchCounts() == 0
+
 end
 function MapScene:OnTouchExtend(old_speed_x, old_speed_y, new_speed_x, new_speed_y, millisecond, is_end)
     local parent = self.scene_layer:getParent()
@@ -243,8 +252,8 @@ function MapScene:OnSceneMove()
     self.top_layer:pos(self.scene_layer:getPosition())
 end
 function MapScene:OnSceneScale()
-    self.top_layer:pos(self.scene_layer:getPosition())
     self.top_layer:scale(self.scene_layer:getScale())
+    self.top_layer:pos(self.scene_layer:getPosition())
 end
 
 function MapScene:onEnterTransitionFinish()

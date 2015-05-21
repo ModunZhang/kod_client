@@ -10,6 +10,7 @@ local Flag = import("..entity.Flag")
 local WidgetRoundTabButtons = import("..widget.WidgetRoundTabButtons")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local UILib = import(".UILib")
+local Localize = import("..utils.Localize")
 local GameUICollectReport = import(".GameUICollectReport")
 local Report = import("..entity.Report")
 
@@ -457,7 +458,7 @@ function GameUIMail:CreateInboxContent()
         local mail_icon = display.newSprite(mail.fromId == "__system" and "icon_system_mail.png" or "mail_state_user_not_read.png")
             :align(display.LEFT_CENTER,11, 24):addTo(content_title_bg)
 
-        local from_name = mail.fromName == "__system" and _("系统邮件") or mail.fromName
+        local from_name = Localize.mails[mail.fromName] or mail.fromName
         from_name_label:setString(_("From")..":"..((mail.fromAllianceTag~="" and "["..mail.fromAllianceTag.."]"..from_name) or from_name))
         date_label:setString(GameUtils:formatTimeStyle2(mail.sendTime/1000))
         mail_content_title_label:setString(mail.fromName == "__system" and _(mail.title) or mail.title)
@@ -608,7 +609,8 @@ function GameUIMail:CreateSavedMailContent()
         local mail_icon = display.newSprite(mail.fromId == "__system" and "icon_system_mail.png" or "mail_state_user_not_read.png")
             :align(display.LEFT_CENTER,11, 24):addTo(content_title_bg)
 
-        from_name_label:setString(_("From")..":"..((mail.fromAllianceTag~="" and "["..mail.fromAllianceTag.."]"..mail.fromName) or mail.fromName))
+        local from_name = Localize.mails[mail.fromName] or mail.fromName
+        from_name_label:setString(_("From")..":"..((mail.fromAllianceTag~="" and "["..mail.fromAllianceTag.."]"..from_name) or from_name))
         date_label:setString(GameUtils:formatTimeStyle2(mail.sendTime/1000))
         mail_content_title_label:setString(mail.title)
 
@@ -754,8 +756,8 @@ function GameUIMail:CreateSendMailContent()
 
         local mail_icon = display.newSprite(mail.fromId == "__system" and "icon_system_mail.png" or "mail_state_user_not_read.png")
             :align(display.LEFT_CENTER,11, 24):addTo(content_title_bg)
-
-        from_name_label:setString(_("From")..":"..((mail.fromAllianceTag~="" and "["..mail.fromAllianceTag.."]"..mail.fromName) or mail.fromName))
+        local name = Localize.mails[mail.fromName] or mail.fromName
+        from_name_label:setString(_("From")..":"..((mail.fromAllianceTag~="" and "["..mail.fromAllianceTag.."]".. name or name)))
         date_label:setString(GameUtils:formatTimeStyle2(mail.sendTime/1000))
         mail_content_title_label:setString(mail.title)
     end
@@ -992,7 +994,7 @@ function GameUIMail:ShowSendMailDetails(mail)
     content_bg:align(display.LEFT_BOTTOM,(bg:getContentSize().width-content_bg:getContentSize().width)/2,30)
 
     -- player head icon
-    UIKit:GetPlayerCommonIcon():align(display.CENTER, 76, bg:getContentSize().height - 90):addTo(bg)
+    UIKit:GetPlayerCommonIcon(mail.fromIcon):align(display.CENTER, 76, bg:getContentSize().height - 90):addTo(bg)
     -- 收件人
     local subject_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -1004,7 +1006,7 @@ function GameUIMail:ShowSendMailDetails(mail)
         :addTo(bg)
     local subject_content_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = mail.toName,
+            text = Localize.mails[mail.toName] or mail.toName,
             font = UIKit:getFontFilePath(),
             size = 20,
             dimensions = cc.size(0,24),
@@ -1066,8 +1068,8 @@ function GameUIMail:ShowSendMailDetails(mail)
 end
 --邮件详情弹出框
 function GameUIMail:ShowMailDetails(mail)
-    local title_string = (mail.fromAllianceTag~="" and "["..mail.fromAllianceTag.."] "..mail.fromName) or mail.fromName
-    title_string = mail.fromName == "__system" and _("系统邮件") or title_string
+    local name = Localize.mails[mail.fromName] or mail.fromName
+    local title_string = (mail.fromAllianceTag~="" and "["..mail.fromAllianceTag.."] "..name) or name
     local dialog = WidgetPopDialog.new(768,title_string):addTo(self,201)
     local body = dialog:GetBody()
     local size = body:getContentSize()
@@ -1076,7 +1078,7 @@ function GameUIMail:ShowMailDetails(mail)
     content_bg:pos((size.width-content_bg:getContentSize().width)/2,80)
 
     -- player head icon
-    UIKit:GetPlayerCommonIcon():align(display.CENTER, 76, size.height - 80):addTo(body)
+    UIKit:GetPlayerCommonIcon(mail.fromIcon):align(display.CENTER, 76, size.height - 80):addTo(body)
 
     -- 主题
     local subject_label = cc.ui.UILabel.new(
@@ -1700,8 +1702,8 @@ function GameUIMail:OpenReplyMail(mail)
     local addressee_input_box_image = display.newSprite("input_box.png",350, r_size.height-70):addTo(reply_mail)
     local addressee_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = mail.fromAllianceTag~="" and _("RE:").."["..mail.fromAllianceTag.."]"..mail.fromName
-            or _("RE:")..mail.fromName,
+            text = mail.fromAllianceTag~="" and "["..mail.fromAllianceTag.."]"..mail.fromName
+            or mail.fromName,
             font = UIKit:getFontFilePath(),
             size = 18,
             dimensions = cc.size(410,24),
@@ -2011,6 +2013,8 @@ function GameUIMail:GetEnemyAllianceTag(report)
 end
 
 return GameUIMail
+
+
 
 
 

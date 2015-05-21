@@ -50,6 +50,10 @@ end
 
 function GameUIAllianceHome:onEnter()
     GameUIAllianceHome.super.onEnter(self)
+    -- 获取历史记录
+    if self.alliance:AllianceFightReports() == nil then
+        NetManager:getAllianceFightReportsPromise(self.alliance:Id())
+    end
     self.city = City
     self.visible_count = 1
     self.top = self:CreateTop()
@@ -412,26 +416,12 @@ function GameUIAllianceHome:CreateTop()
                 enemy_flag:setTag(201)
                 enemy_name_label:setString("["..enemyAlliance:Tag().."] "..enemyAlliance:Name())
             elseif status=="protect" then
-                if alliance:AllianceFightReports() == nil then
-                    NetManager:getAllianceFightReportsPromise(alliance:Id()):done(function ( response )
-                        local enemy_reprot_data = alliance:GetEnemyLastAllianceFightReportsData()
-                        LuaUtils:outputTable("protect enemy_reprot_data", enemy_reprot_data)
-                        local enemy_flag = ui_helper:CreateFlagContentSprite(Flag.new():DecodeFromJson(enemy_reprot_data.flag)):scale(0.5)
-                        enemy_flag:align(display.CENTER,100-enemy_flag:getCascadeBoundingBox().size.width, -30)
-                            :addTo(enemy_name_bg)
-                        enemy_flag:setTag(201)
-                        enemy_name_label:setString("["..enemy_reprot_data.tag.."] "..enemy_reprot_data.name)
-                        return response
-                    end)
-                else
-                    local enemy_reprot_data = alliance:GetEnemyLastAllianceFightReportsData()
-                    LuaUtils:outputTable("protect enemy_reprot_data", enemy_reprot_data)
-                    local enemy_flag = ui_helper:CreateFlagContentSprite(Flag.new():DecodeFromJson(enemy_reprot_data.flag)):scale(0.5)
-                    enemy_flag:align(display.CENTER,100-enemy_flag:getCascadeBoundingBox().size.width, -30)
-                        :addTo(enemy_name_bg)
-                    enemy_flag:setTag(201)
-                    enemy_name_label:setString("["..enemy_reprot_data.tag.."] "..enemy_reprot_data.name)
-                end
+                local enemy_reprot_data = alliance:GetEnemyLastAllianceFightReportsData()
+                local enemy_flag = ui_helper:CreateFlagContentSprite(Flag.new():DecodeFromJson(enemy_reprot_data.flag)):scale(0.5)
+                enemy_flag:align(display.CENTER,100-enemy_flag:getCascadeBoundingBox().size.width, -30)
+                    :addTo(enemy_name_bg)
+                enemy_flag:setTag(201)
+                enemy_name_label:setString("["..enemy_reprot_data.tag.."] "..enemy_reprot_data.name)
             end
         end
         if status=="fight"  then
@@ -445,20 +435,10 @@ function GameUIAllianceHome:CreateTop()
             our_num_icon:setTexture("battle_33x33.png")
             enemy_num_icon:setTexture("battle_33x33.png")
             enemy_num_icon:scale(1.0)
-            if alliance:AllianceFightReports() == nil then
-                NetManager:getAllianceFightReportsPromise(alliance:Id()):done(function ( response )
-                    local our_reprot_data_kill = alliance:GetOurLastAllianceFightReportsData().kill
-                    local enemy_reprot_data_kill = alliance:GetEnemyLastAllianceFightReportsData().kill
-                    self:SetOurPowerOrKill(our_reprot_data_kill)
-                    self:SetEnemyPowerOrKill(enemy_reprot_data_kill)
-                    return response
-                end)
-            else
-                local our_reprot_data_kill = alliance:GetOurLastAllianceFightReportsData().kill
-                local enemy_reprot_data_kill = alliance:GetEnemyLastAllianceFightReportsData().kill
-                self:SetOurPowerOrKill(our_reprot_data_kill)
-                self:SetEnemyPowerOrKill(enemy_reprot_data_kill)
-            end
+            local our_reprot_data_kill = alliance:GetOurLastAllianceFightReportsData().kill
+            local enemy_reprot_data_kill = alliance:GetEnemyLastAllianceFightReportsData().kill
+            self:SetOurPowerOrKill(our_reprot_data_kill)
+            self:SetEnemyPowerOrKill(enemy_reprot_data_kill)
         else
             if status~="peace" then
                 enemy_num_icon:setTexture("power_24x29.png")
@@ -523,6 +503,7 @@ function GameUIAllianceHome:OnAllianceBasicChanged(alliance,changed_map)
     if changed_map.honour then
         self.page_top:SetHonour(GameUtils:formatNumber(changed_map.honour.new))
     elseif changed_map.status then
+        LuaUtils:outputTable("OnAllianceBasicChanged changed_map", changed_map)
         self.top:Refresh()
     elseif changed_map.name then
         self.self_name_label:setString("["..alliance:Tag().."] "..changed_map.name.new)
@@ -759,6 +740,7 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
+
 
 
 

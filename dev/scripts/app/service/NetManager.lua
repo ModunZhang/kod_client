@@ -369,11 +369,16 @@ local logic_event_map = {
             local edit = decodeInUserDataFromDeltaData(user_data, response)
             LuaUtils:outputTable("edit", edit)
             -- 在客户端没有 mails 或者 reports key时，收到邮件或者战报需要增加未读字段数值
-            if not user_data.reports or not user_data.mails then
+            if not user_data.reports then
                 for i,v in ipairs(response) do
                     if string.find(v[1],"reports") then
                         MailManager:IncreaseUnReadReportNum(1)
-                    elseif string.find(v[1],"mails") then
+                    end
+                end
+            end
+            if not user_data.mails then
+                for i,v in ipairs(response) do
+                    if string.find(v[1],"mails") then
                         MailManager:IncreaseUnReadMailsNum(1)
                     end
                 end
