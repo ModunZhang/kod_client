@@ -8,6 +8,7 @@ local GameUIWriteMail = import(".GameUIWriteMail")
 local SpriteConfig = import("..sprites.SpriteConfig")
 local WidgetAllianceEnterButtonProgress = import("..widget.WidgetAllianceEnterButtonProgress")
 local Alliance = import("..entity.Alliance")
+local UILib = import(".UILib")
 
 function GameUIAllianceCityEnter:ctor(building,isMyAlliance,my_alliance,enemy_alliance)
     GameUIAllianceCityEnter.super.ctor(self,building,isMyAlliance,my_alliance)
@@ -84,20 +85,27 @@ function GameUIAllianceCityEnter:GetUITitle()
 end
 
 function GameUIAllianceCityEnter:GetBuildingImage()
-    local sprite_config_key = self:IsMyAlliance() and "my_keep" or "other_keep"
-    local build_png = SpriteConfig[sprite_config_key]:GetConfigByLevel(self:GetMember():KeepLevel()).png
-    return build_png
+    return ""
 end
 
 function GameUIAllianceCityEnter:GetBuildImageSprite()
-    return nil
+    local sprite_config_key = self:IsMyAlliance() and "my_keep" or "other_keep"
+    local build_png = SpriteConfig[sprite_config_key]:GetConfigByLevel(self:GetMember():KeepLevel()).png
+    local bg_png = UILib.city_terrain_icon[self:GetMember():Terrain()]
+    local bg_sprite = display.newSprite(bg_png)
+    local build_sprite = display.newSprite(build_png):addTo(bg_sprite):pos(71,71)
+    local size = build_sprite:getContentSize()
+    build_sprite:scale(110/math.max(size.width,size.height))
+    return bg_sprite
 end
 
 function GameUIAllianceCityEnter:GetBuildImageInfomation(sprite)
-    local size = sprite:getContentSize()
-    return 110/math.max(size.width,size.height),97,self:GetUIHeight() - 90 
+    return 0.9,97,self:GetUIHeight() - 90 
 end
 
+function GameUIAllianceCityEnter:IsShowBuildingBox()
+    return false
+end
 
 function GameUIAllianceCityEnter:GetBuildingType()
     return 'member'
