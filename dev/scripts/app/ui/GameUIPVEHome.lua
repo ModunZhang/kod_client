@@ -8,6 +8,7 @@ local WidgetHomeBottom = import("..widget.WidgetHomeBottom")
 local WidgetUseItems = import("..widget.WidgetUseItems")
 local ChatManager = import("..entity.ChatManager")
 local WidgetChat = import("..widget.WidgetChat")
+local WidgetPveEvent = import("..widget.WidgetPveEvent")
 local timer = app.timer
 
 
@@ -24,10 +25,16 @@ function GameUIPVEHome:ctor(user, scene)
 end
 function GameUIPVEHome:onEnter()
     self:CreateTop()
-    self:CreateBottom()
+    self.bottom = self:CreateBottom()
+
+    local ratio = self.bottom:getScale()
+    self.event_tab = WidgetPveEvent.new(ratio)
+    local rect1 = self.chat:getCascadeBoundingBox()
+    local x, y = rect1.x, rect1.y + rect1.height - 2
+    self.event_tab:addTo(self):pos(x, y)
+
     self:OnExploreChanged(self.layer)
     self:OnResourceChanged(self.user)
-
     self:AddOrRemoveListener(true)
 end
 function GameUIPVEHome:onExit()
@@ -153,7 +160,7 @@ end
 function GameUIPVEHome:CreateBottom()
     local bottom_bg = WidgetHomeBottom.new(City):addTo(self)
         :align(display.BOTTOM_CENTER, display.cx, display.bottom)
-    WidgetChat.new():addTo(bottom_bg)
+    self.chat = WidgetChat.new():addTo(bottom_bg)
         :align(display.CENTER, bottom_bg:getContentSize().width/2, bottom_bg:getContentSize().height-11)
     self.change_map = WidgetChangeMap.new(WidgetChangeMap.MAP_TYPE.PVE):addTo(self)
 end

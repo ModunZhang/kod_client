@@ -438,7 +438,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
 
         else
             UIKit:ttfLabel({
-                text = _("本次联盟会战结束后奖励,总击杀越高奖励越高.获胜方获得70%的总奖励,失败方获得剩下的,获胜联盟击杀前5名的玩家还将平分奖励的金龙币"),
+                text = _("本次联盟会战结束后奖励,总击杀越高奖励越高.获胜方获得70%的总奖励,失败方获得剩下的,获胜联盟击杀第1名的玩家还将平分奖励的金龙币"),
                 size = 20,
                 color = 0x615b44,
                 -- align = cc.ui.TEXT_ALIGN_CENTER,
@@ -453,7 +453,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
                 :addTo(honour_bg,2)
                 :scale(50/128)
             UIKit:ttfLabel({
-                text = "未定义",
+                text = string.formatnumberthousands(GameDatas.AllianceInitData.fightRewards[User:ServerLevel()].honour),
                 size = 20,
                 color = 0x514d3e,
             }):addTo(honour_bg,2)
@@ -466,7 +466,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
                 :addTo(gem_bg,2)
                 :scale(0.7)
             UIKit:ttfLabel({
-                text = "未定义",
+                text = string.formatnumberthousands(GameDatas.AllianceInitData.fightRewards[User:ServerLevel()].gem),
                 size = 20,
                 color = 0x514d3e,
             }):addTo(gem_bg,2)

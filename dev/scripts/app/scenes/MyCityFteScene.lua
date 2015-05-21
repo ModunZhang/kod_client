@@ -568,9 +568,6 @@ function MyCityFteScene:PromiseOfFteEnd()
         {words = _("看来大人你已经能够顺利接管这座城市了。。。如果不知道该干什么可以点击左上角的推荐任务"), rect = r}
     ):next(function()
         self:removeChildByTag(FTE_MARK_TAG)
-        if ext.registereForRemoteNotifications then
-            ext.registereForRemoteNotifications()
-        end
         app:GetPushManager():CancelAll()
         UIKit:closeAllUI(true)
         app:EnterUserMode()

@@ -313,8 +313,8 @@ function PVELayer:getContentSize()
     if not self.content_size then
         local layer = self.background:getLayer("layer1")
         self.content_size = layer:getContentSize()
-        self.content_size.width = self.content_size.width * 2
-        self.content_size.height = self.content_size.height * 3
+        self.content_size.width = self.content_size.width + 1000
+        self.content_size.height = self.content_size.height + 1000
     end
     return self.content_size
 end
