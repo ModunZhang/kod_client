@@ -102,6 +102,41 @@ function PVEScene:OnLocationChanged(is_pos_changed, is_switch_floor)
     end
     assert(false)
 end
+function PVEScene:PormiseOfCheckObject(x, y, type)
+    local object = self.user:GetCurrentPVEMap():GetObjectByCoord(x, y)
+    if not object or not object:Type() then
+        self.user:GetCurrentPVEMap():ModifyObject(x, y, 0, type)
+        self.user:ResetPveData()
+        return NetManager:getSetPveDataPromise(
+            self.user:EncodePveDataAndResetFightRewardsData()
+        ):fail(function()
+            -- 失败回滚
+            local location = DataManager:getUserData().pve.location
+            self.user:GetPVEDatabase():SetCharPosition(location.x, location.y, location.z)
+            self:GetSceneLayer():MoveCharTo(self.user:GetPVEDatabase():GetCharPosition())
+        end)
+    else
+        return cocos_promise.defer()
+    end
+end
+function PVEScene:OnTwoTouch()
+
+end
+function PVEScene:GetCurrentPos()
+    local logic_map = self:GetSceneLayer():GetLogicMap()
+    local char_x,char_y = self:GetSceneLayer():GetChar():getPosition()
+    return logic_map:ConvertToLogicPosition(char_x, char_y)
+end
+function PVEScene:GetClickedPos(x, y)
+    local logic_map = self:GetSceneLayer():GetLogicMap()
+    local point = self:GetSceneLayer():GetSceneNode():convertToNodeSpace(cc.p(x, y))
+    return logic_map:ConvertToLogicPosition(point.x, point.y)
+end
+function PVEScene:GetCenterPos()
+    local logic_map = self:GetSceneLayer():GetLogicMap()
+    local point = self:GetSceneLayer():GetSceneNode():convertToNodeSpace(cc.p(display.cx, display.cy))
+    return logic_map:ConvertToLogicPosition(point.x, point.y)
+end
 function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
     -- 有动画就什么都不处理
     if self.event_manager:TouchCounts() ~= 0 or
@@ -230,11 +265,13 @@ function PVEScene:CheckTrap()
                         {dragon = enemy.dragon, soldiers = enemy.soldiers},
                         trap_obj:GetMap():Terrain(), _("散兵游勇")
                     )
+
                     if report:IsAttackWin() then
                         self.user:SetPveData(report:GetAttackKDA(), enemy.rewards)
                     else
                         self.user:SetPveData(report:GetAttackKDA())
                     end
+
                     NetManager:getSetPveDataPromise(
                         self.user:EncodePveDataAndResetFightRewardsData()
                     ):done(function()
@@ -243,49 +280,27 @@ function PVEScene:CheckTrap()
                                 GameGlobalUI:showTips(_("获得奖励"), enemy.rewards)
                             end
                         end):AddToCurrentScene(true)
+
+                        self:CheckPveTask(report)
+
                     end)
                 end):AddToCurrentScene(true)
         end)
         self.user:GetPVEDatabase():ResetNextEnemyCounter()
     end
 end
-function PVEScene:PormiseOfCheckObject(x, y, type)
-    local object = self.user:GetCurrentPVEMap():GetObjectByCoord(x, y)
-    if not object or not object:Type() then
-        self.user:GetCurrentPVEMap():ModifyObject(x, y, 0, type)
-        self.user:ResetPveData()
-        return NetManager:getSetPveDataPromise(
-            self.user:EncodePveDataAndResetFightRewardsData()
-        ):fail(function()
-            -- 失败回滚
-            local location = DataManager:getUserData().pve.location
-            self.user:GetPVEDatabase():SetCharPosition(location.x, location.y, location.z)
-            self:GetSceneLayer():MoveCharTo(self.user:GetPVEDatabase():GetCharPosition())
-        end)
-    else
-        return cocos_promise.defer()
+function PVEScene:CheckPveTask(report)
+    local name,count,target_count,ok = self.user:GetPVEDatabase():GetTarget()
+    if ok and target_count > count then
+        for i,v in ipairs(report:GetDefenceKDA().soldiers) do
+            if v.name == name then
+                self.user:GetPVEDatabase():IncKillCount(v.damagedCount)
+                break
+            end
+        end
     end
+    self:GetHomePage().event_tab:PromiseOfSwitch()
 end
-function PVEScene:OnTwoTouch()
-
-end
-function PVEScene:GetCurrentPos()
-    local logic_map = self:GetSceneLayer():GetLogicMap()
-    local char_x,char_y = self:GetSceneLayer():GetChar():getPosition()
-    return logic_map:ConvertToLogicPosition(char_x, char_y)
-end
-function PVEScene:GetClickedPos(x, y)
-    local logic_map = self:GetSceneLayer():GetLogicMap()
-    local point = self:GetSceneLayer():GetSceneNode():convertToNodeSpace(cc.p(x, y))
-    return logic_map:ConvertToLogicPosition(point.x, point.y)
-end
-function PVEScene:GetCenterPos()
-    local logic_map = self:GetSceneLayer():GetLogicMap()
-    local point = self:GetSceneLayer():GetSceneNode():convertToNodeSpace(cc.p(display.cx, display.cy))
-    return logic_map:ConvertToLogicPosition(point.x, point.y)
-end
-
-
 
 
 

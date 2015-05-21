@@ -28,7 +28,7 @@ function GameUIPVEHome:onEnter()
     self.bottom = self:CreateBottom()
 
     local ratio = self.bottom:getScale()
-    self.event_tab = WidgetPveEvent.new(ratio)
+    self.event_tab = WidgetPveEvent.new(self.user, ratio)
     local rect1 = self.chat:getCascadeBoundingBox()
     local x, y = rect1.x, rect1.y + rect1.height - 2
     self.event_tab:addTo(self):pos(x, y)
@@ -129,21 +129,19 @@ function GameUIPVEHome:CreateTop()
         color = 0xffedae,
     }):addTo(pve_back):align(display.CENTER, size.width / 2, 25)
 
-    local box = cc.ui.UIPushButton.new(
+    self.box_bg = cc.ui.UIPushButton.new(
         {normal = "back_ground_box.png", pressed = "back_ground_box.png"}
         ,{})
         :addTo(top_bg, 1):align(display.CENTER, 80, 55):scale(0.8)
         :onButtonClicked(function(event)
             if self.layer:ExploreDegree() >= 1.0 then
-                self.box:hide()
-                self:GetRewards()
+                -- self.box:hide()
+                -- self:GetRewards()
             end
         end)
-    self.box_bg = box
-    self.box = ccs.Armature:create("lanse"):addTo(box)
-        :align(display.CENTER, - 20, 10):scale(0.25)
-
-    self:SetBoxStatus(not self.layer:CurrentPVEMap():IsRewarded())
+    -- self.box = ccs.Armature:create("lanse"):addTo(box)
+    --     :align(display.CENTER, - 20, 10):scale(0.25)
+    -- self:SetBoxStatus(not self.layer:CurrentPVEMap():IsRewarded())
 
     UIKit:ttfLabel({
         text = string.format("%d. %s", self.layer:CurrentPVEMap():GetIndex(), self.layer:CurrentPVEMap():Name()),
@@ -169,39 +167,39 @@ function GameUIPVEHome:CreateBottom()
     return bottom_bg
 end
 
-function GameUIPVEHome:SetBoxStatus(can_get)
-    self.box:show()
-    self.box_bg:setButtonEnabled(can_get)
-    if can_get then
-        self.box:getAnimation():stop()
-    else
-        self.box:getAnimation():playWithIndex(0)
-        self.box:getAnimation():gotoAndPause(85)
-    end
-end
+-- function GameUIPVEHome:SetBoxStatus(can_get)
+--     self.box:show()
+--     self.box_bg:setButtonEnabled(can_get)
+--     if can_get then
+--         self.box:getAnimation():stop()
+--     else
+--         self.box:getAnimation():playWithIndex(0)
+--         self.box:getAnimation():gotoAndPause(85)
+--     end
+-- end
 function GameUIPVEHome:GetRewards()
-    local index = self.layer:CurrentPVEMap():GetIndex()
-    local rewards = GameDatas.PlayerInitData.pveLevel[index]
-    local _1,name = unpack(string.split(rewards.itemName, ":"))
-    self.user:ResetPveData()
-    self.user:SetPveData(nil, {
-        {
-            type = "items",
-            name = name,
-            count = rewards.count,
-        },
-    }, nil)
-    local data = self.user:EncodePveDataAndResetFightRewardsData()
-    data.pveData.rewardedFloor = index
-    NetManager:getSetPveDataPromise(data):done(function()
-        local wp = self.box:getParent():convertToWorldSpace(cc.p(self.box:getPosition()))
-        UIKit:newGameUI("GameUIPveGetRewards", wp.x, wp.y):AddToCurrentScene(true)
-            :AddClickOutFunc(function(ui)
-                ui:LeftButtonClicked()
-                self:SetBoxStatus(not self.layer:CurrentPVEMap():IsRewarded())
-                GameGlobalUI:showTips(_("获得奖励"), Localize_item.item_name[name].."x"..rewards.count)
-            end)
-    end)
+    -- local index = self.layer:CurrentPVEMap():GetIndex()
+    -- local rewards = GameDatas.PlayerInitData.pveLevel[index]
+    -- local _1,name = unpack(string.split(rewards.itemName, ":"))
+    -- self.user:ResetPveData()
+    -- self.user:SetPveData(nil, {
+    --     {
+    --         type = "items",
+    --         name = name,
+    --         count = rewards.count,
+    --     },
+    -- }, nil)
+    -- local data = self.user:EncodePveDataAndResetFightRewardsData()
+    -- data.pveData.rewardedFloor = index
+    -- NetManager:getSetPveDataPromise(data):done(function()
+    --     local wp = self.box:getParent():convertToWorldSpace(cc.p(self.box:getPosition()))
+    --     UIKit:newGameUI("GameUIPveGetRewards", wp.x, wp.y):AddToCurrentScene(true)
+    --         :AddClickOutFunc(function(ui)
+    --             ui:LeftButtonClicked()
+    --             self:SetBoxStatus(not self.layer:CurrentPVEMap():IsRewarded())
+    --             GameGlobalUI:showTips(_("获得奖励"), Localize_item.item_name[name].."x"..rewards.count)
+    --         end)
+    -- end)
 end
 
 
