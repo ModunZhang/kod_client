@@ -25,6 +25,10 @@ end
 
 function GameUIAllianceBattle:OnMoveInStage()
     GameUIAllianceBattle.super.OnMoveInStage(self)
+    -- 获取历史记录
+    if self.alliance:AllianceFightReports() == nil then
+        NetManager:getAllianceFightReportsPromise(self.alliance:Id())
+    end
     self:CreateTabButtons({
         {
             label = _("战争统计"),
@@ -711,12 +715,6 @@ function GameUIAllianceBattle:InitHistoryRecord()
     },false)
     list:setRedundancyViewVal(294)
     list:setDelegate(handler(self, self.HistoryDelegate))
-    if self.alliance:AllianceFightReports() == nil then
-        NetManager:getAllianceFightReportsPromise(self.alliance:Id()):done(function ( response )
-            list:reload()
-            return response
-        end)
-    end
     list:reload()
     list_node:addTo(layer):align(display.BOTTOM_CENTER, window.cx, window.bottom_top+20)
     self.history_listview = list
@@ -845,7 +843,11 @@ function GameUIAllianceBattle:CreateHistoryContent()
     local parent = self
     function content:SetData( idx )
         local alliance = parent.alliance
-        local report = alliance:AllianceFightReports()[idx]
+        local cloneReports = clone(alliance:AllianceFightReports())
+        table.sort(cloneReports,function ( a , b )
+            return a.fightTime > b.fightTime
+        end)
+        local report = cloneReports[idx]
         self.report = report
         -- 各项数据
         local win
