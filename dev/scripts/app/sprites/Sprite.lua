@@ -7,6 +7,7 @@ local Sprite = class("Sprite", function(...)
     return Observer.extend(display.newNode(), ...)
 end)
 
+local modf = math.modf
 local SPRITE = 0
 function Sprite:GetWorldPosition()
     return self:getParent():convertToWorldSpace(cc.p(self:GetCenterPosition()))
@@ -157,22 +158,22 @@ function Sprite:ResetFlashStatus()
     self:GetSprite():removeNodeEventListenersByEvent(cc.NODE_ENTER_FRAME_EVENT)
     self:GetSprite():clearFilter()
 end
-function Sprite:BeginFlash(time)
-    self.flash_time = 0
+function Sprite:BeginFlash(lastTime)
+    self.time = 0
+    local _,fract = modf(self.time, lastTime) 
+    local ratio = fract / lastTime
     self:GetSprite():setFilter(filter.newFilter("CUSTOM", json.encode({
         frag = "shaders/flash.fs",
         shaderName = "flash",
-        startTime = self.flash_time,
-        curTime = self.flash_time,
-        lastTime = time,
+        ratio = ratio,
     })))
-
     self:GetSprite():addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt)
-        self.flash_time = self.flash_time + dt
-        if self.flash_time > time then
+        self.time = self.time + dt
+        if self.time > lastTime then
             self:ResetFlashStatus()
         else
-            self:GetSprite():getFilter():getGLProgramState():setUniformFloat("curTime", self.flash_time)
+            local _,fract = modf(self.time, lastTime) 
+            self:GetSprite():getFilter():getGLProgramState():setUniformFloat("ratio", fract / lastTime)
         end
     end)
     self:GetSprite():scheduleUpdate()

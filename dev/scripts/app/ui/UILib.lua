@@ -13,6 +13,7 @@ local function getAniNameFromAnimationFiles(animation_files)
 end
 
 local PLAYER_ICON = {
+    [0] = "Icon_empireRise_91x117.png", -- 系统头像
     "player_icon_1.png",
     "player_icon_2.png",
     "player_icon_3.png",

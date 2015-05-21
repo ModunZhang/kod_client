@@ -526,10 +526,12 @@ function GameUIHome:PromiseOfFteFreeSpeedUp()
                 self:Find():setButtonEnabled(false)
 
                 local building = self:GetBuilding()
-                if building:IsHouse() then
-                    mockData.FinishBuildHouseAt(self:GetBuildingLocation(), building:GetNextLevel())
-                else
-                    mockData.FinishUpgradingBuilding(building:GetType(), building:GetNextLevel())
+                if building then
+                    if building:IsHouse() then
+                        mockData.FinishBuildHouseAt(self:GetBuildingLocation(), building:GetNextLevel())
+                    else
+                        mockData.FinishUpgradingBuilding(building:GetType(), building:GetNextLevel())
+                    end
                 end
             end)
 
@@ -558,10 +560,12 @@ function GameUIHome:PromiseOfFteInstantSpeedUp()
                 self:Find():setButtonEnabled(false)
 
                 local building = self:GetBuilding()
-                if building:IsHouse() then
-                    mockData.FinishBuildHouseAt(self:GetBuildingLocation(), building:GetNextLevel())
-                else
-                    mockData.FinishUpgradingBuilding(building:GetType(), building:GetNextLevel())
+                if building then
+                    if building:IsHouse() then
+                        mockData.FinishBuildHouseAt(self:GetBuildingLocation(), building:GetNextLevel())
+                    else
+                        mockData.FinishUpgradingBuilding(building:GetType(), building:GetNextLevel())
+                    end
                 end
 
             end)
