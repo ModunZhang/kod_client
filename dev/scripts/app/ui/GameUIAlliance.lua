@@ -348,7 +348,7 @@ function GameUIAlliance:RefreshJoinListContent(alliance,content,idx)
             size = 20,
             shadow = true,
             color = 0xfff3c7
-        })):align(display.RIGHT_TOP,titleBg:getPositionX(),titleBg:getPositionY() - titleBg:getContentSize().height -10):addTo(content)
+        })):align(display.RIGHT_TOP,558,156):addTo(content)
         :onButtonClicked(function(event)
             self:OnJoinListActionButtonClicked(idx)
         end)

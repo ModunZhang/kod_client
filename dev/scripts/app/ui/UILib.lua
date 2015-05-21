@@ -1051,6 +1051,12 @@ local server_level_image = {
     diamond = "server_level_gold_112x114.png",
     master = "server_level_gold_112x114.png",
 }
+
+local CITY_TERRAIN_ICON = {
+    desert = "city_terrain_desert_142x142.png",
+    grassLand = "city_terrain_grassLand_142x142.png",
+    iceField = "city_terrain_iceField_142x142.png",
+}
 return {
     resource = RESOURCE,
     soldier_bg = STAR_BG,
@@ -1097,6 +1103,7 @@ return {
     enemy_city_banner = enemy_city_banner,
     activity_image_config = ACTIVITY_IMAGE_CONFIG,
     server_level_image = server_level_image,
+    city_terrain_icon = CITY_TERRAIN_ICON,
 }
 
 

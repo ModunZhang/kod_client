@@ -76,7 +76,7 @@ function MyCityScene:onEnter()
     -- emitter:setStartColorVar(cc.c4f(0,0,0,0.1))
     -- emitter:setEndColor(cc.c4f(1,1,1,0.5))
     -- emitter:setEmissionRate(emitter:getTotalParticles() / emitter:getLife())
-    -- emitter:setTexture(cc.Director:getInstance():getTextureCache():addImage("454.png"))
+    -- emitter:setTexture(cc.Director:getInstance():getTextureCache():addImage("rain.png"))
 end
 function MyCityScene:onExit()
     MyCityScene.super.onExit(self)
