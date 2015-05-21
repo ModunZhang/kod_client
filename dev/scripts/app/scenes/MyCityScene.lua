@@ -50,7 +50,7 @@ function MyCityScene:onEnter()
     -- emitter:setEmissionRate(emitter:getTotalParticles() / emitter:getLife())
     -- emitter:setTexture(cc.Director:getInstance():getTextureCache():addImage("snow.png"))
 
---
+    --
     -- local emitter = cc.ParticleRain:createWithTotalParticles(50)
     -- :addTo(self)
     -- :pos(display.cx + 80, display.height)
@@ -191,6 +191,9 @@ function MyCityScene:GetHomePage()
 end
 function MyCityScene:onEnterTransitionFinish()
     MyCityScene.super.onEnterTransitionFinish(self)
+    if ext.registereForRemoteNotifications then
+        ext.registereForRemoteNotifications()
+    end
     app:sendApnIdIf()
 end
 function MyCityScene:CreateHomePage()
@@ -268,7 +271,7 @@ function MyCityScene:OnTilesChanged(tiles)
     print("#self:GetTopLayer():getChildren()", #self:GetTopLayer():getChildren())
 end
 function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
-    if self.event_manager:TouchCounts() ~= 0 or 
+    if self.event_manager:TouchCounts() ~= 0 or
         self.util_node:getNumberOfRunningActions() > 0 then return end
 
     local building = self:GetSceneLayer():GetClickedObject(x, y)
@@ -359,6 +362,7 @@ function MyCityScene:OpenUI(building, default_tab)
 end
 
 return MyCityScene
+
 
 
 

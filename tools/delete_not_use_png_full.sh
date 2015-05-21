@@ -96,7 +96,7 @@ function ScanPng1()
 function ScanPng2()
 {
 	local png_name=$1
-	local result=$(grep -rle $png_name $script_path)
+	local result=$(grep -wrle $png_name $script_path)
 	local array=(${result// / });
 	if [ ${#array[*]} -gt 0 ]; then
 		echo "find" ${#array[*]} "in files" $png_name
