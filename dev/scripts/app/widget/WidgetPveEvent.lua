@@ -156,7 +156,7 @@ end
 function WidgetPveEvent:CreateItem()
     local node = display.newSprite("tab_event_bar.png")
     local half_height = node:getContentSize().height / 2
-    node.progress = display.newProgressTimer("tab_progress_bar.png",
+    node.progress = display.newProgressTimer("pve_tab_progress_bar.png",
         display.PROGRESS_TIMER_BAR):addTo(node)
         :align(display.LEFT_CENTER, 4, half_height)
     node.progress:setBarChangeRate(cc.p(1,0))
