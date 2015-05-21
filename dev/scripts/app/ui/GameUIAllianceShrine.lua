@@ -400,7 +400,6 @@ end
 
 function GameUIAllianceShrine:OnResearchButtonClick(stage_obj,sender)
 	UIKit:newGameUI("GameUIAllianceShrineDetail",stage_obj,self:GetAllianceShrine(),true):AddToCurrentScene(true)
-	if sender then sender:hide() end
 end
 
 --战斗事件
@@ -489,6 +488,7 @@ function GameUIAllianceShrine:GetFight_List_Item(event)
 end
 
 function GameUIAllianceShrine:RefreshFightListView()
+
 	self.fight_list:removeAllItems()
 	for i,event in ipairs(self:GetAllianceShrine():GetShrineEvents()) do	
 		local item = self.fight_list:newItem()

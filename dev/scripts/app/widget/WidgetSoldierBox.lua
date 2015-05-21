@@ -47,7 +47,11 @@ function WidgetSoldierBox:SetSoldier(soldier_type, star)
     return self
 end
 function WidgetSoldierBox:SetNumber(number)
-    self.number:setString(string.formatnumberthousands(number))
+    if type(number) == 'string' then
+        self.number:setString(number)
+    elseif type(number) == 'number' then
+        self.number:setString(string.formatnumberthousands(number))
+    end
     return self
 end
 function WidgetSoldierBox:Enable(b)
