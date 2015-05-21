@@ -182,7 +182,6 @@ function GameUIMail:CreateMailControlBox()
                                                 self.manager:FetchMailsFromServer(#self.manager:GetMails()):done(function ( response )
                                                     self.inbox_listview:asyncLoadWithCurrentPosition_()
                                                     self.is_deleting = false
-                                                    self.has_mail_label:setVisible(#self.inbox_listview:getItems()==0)
                                                     return response
                                                 end)
                                             end
@@ -193,7 +192,6 @@ function GameUIMail:CreateMailControlBox()
                                                 self.manager:FetchSavedMailsFromServer(#self.manager:GetSavedMails()):done(function ( response )
                                                     self.save_mails_listview:asyncLoadWithCurrentPosition_()
                                                     self.is_deleting = false
-                                                    self.has_saved_mail_label:setVisible(#self.save_mails_listview:getItems()==0)
                                                     return response
                                                 end)
                                             end
@@ -212,7 +210,6 @@ function GameUIMail:CreateMailControlBox()
                                                 self.manager:FetchReportsFromServer(#self.manager:GetReports()):done(function ( response )
                                                     self.report_listview:asyncLoadWithCurrentPosition_()
                                                     self.is_deleting = false
-                                                    self.has_report_label:setVisible(#self.report_listview:getItems()==0)
                                                     return response
                                                 end)
                                             end
@@ -223,7 +220,6 @@ function GameUIMail:CreateMailControlBox()
                                                 self.manager:FetchReportsFromServer(#self.manager:GetSavedReports()):done(function ( response )
                                                     self.saved_reports_listview:asyncLoadWithCurrentPosition_()
                                                     self.is_deleting = false
-                                                    self.has_report_label:setVisible(#self.saved_reports_listview:getItems()==0)
                                                     return response
                                                 end)
                                             end
@@ -304,7 +300,6 @@ function GameUIMail:CreateBetweenBgAndTitle()
     local inbox_layer = self.inbox_layer
     function inbox_layer:ClearAll()
         parent.inbox_listview = nil
-        parent.has_mail_label = nil
         self:removeAllChildren()
     end
 
@@ -312,7 +307,6 @@ function GameUIMail:CreateBetweenBgAndTitle()
     local report_layer = self.report_layer
     function report_layer:ClearAll()
         parent.report_listview = nil
-        parent.has_report_label = nil
         self:removeAllChildren()
     end
 
@@ -321,8 +315,6 @@ function GameUIMail:CreateBetweenBgAndTitle()
     function saved_layer:ClearAll()
         parent.save_mails_listview = nil
         parent.saved_reports_listview = nil
-        parent.has_saved_report_label = nil
-        parent.has_saved_mail_label = nil
         self.save_dropList = nil
         self:removeAllChildren()
     end
@@ -332,7 +324,6 @@ function GameUIMail:CreateBetweenBgAndTitle()
     local sent_layer = self.sent_layer
     function sent_layer:ClearAll()
         parent.send_mail_listview = nil
-        parent.has_send_label = nil
         self:removeAllChildren()
     end
 end
