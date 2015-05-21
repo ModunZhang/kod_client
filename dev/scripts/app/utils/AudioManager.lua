@@ -19,7 +19,7 @@ local bg_music_map = {
 
 local effect_sound_map = {
 	NORMAL_DOWN = "sfx_tap_button.mp3",
-	NORMAL_UP = "ui_button_down.mp3",
+	-- NORMAL_UP = "ui_button_down.mp3",
 	HOME_PAGE = "sfx_tap_homePage.mp3",
 	OPEN_MAIL = "sfx_open_mail.mp3",
 	USE_ITEM = "sfx_use_item.mp3",
@@ -312,7 +312,17 @@ function AudioManager:OnBackgroundMusicCompletion()
 		then
 			if lastFilename == 'bgm_peace' or lastFilename == 'bgm_battle'  or lastFilename == 'sfx_battle' then
 				if scene_name == 'MyCityScene' then
-					self:PlayGameMusic("MyCityScene",false) -- sfx_city
+					local alliance = Alliance_Manager:GetMyAlliance()
+					local status = alliance:Status()
+					if status == 'prepare' or status == 'fight' then
+						if  lastFilename == 'sfx_battle' then
+							self:PlayGameMusic("AllianceBattleScene",false)
+						elseif lastFilename == 'bgm_battle' then
+							self:PlayGameMusic("AllianceBattleScene_sfx",false)
+						end
+					else
+						self:PlayGameMusic("MyCityScene",false) -- sfx_city
+					end
 				elseif scene_name == 'AllianceBattleScene' then
 					local alliance = Alliance_Manager:GetMyAlliance()
 					local status = alliance:Status()

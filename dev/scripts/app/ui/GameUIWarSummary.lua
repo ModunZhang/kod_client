@@ -159,7 +159,12 @@ function GameUIWarSummary:onEnter()
                 shadow= true
             })):onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                app:EnterMyAllianceScene()
+                local scene_name = display.getRunningScene().__cname
+                if scene_name == 'AllianceBattleScene' or scene_name == 'AllianceScene' then
+                    app:EnterMyAllianceScene()
+                elseif scene_name == 'MyCityScene' then
+                    self:LeftButtonClicked()
+                end
             end
             end)
         return response
