@@ -89,6 +89,7 @@ function GameUIAllianceHome:AddOrRemoveListener(isAdd)
         city:AddListenOnType(self,city.LISTEN_TYPE.HELPED_TO_TROOPS)
         city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
         city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
+        User:AddListenOnType(self, User.LISTEN_TYPE.ALLIANCE_INFO)
         local alliance_belvedere = self.alliance:GetAllianceBelvedere()
         alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
         alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
@@ -105,6 +106,7 @@ function GameUIAllianceHome:AddOrRemoveListener(isAdd)
         city:RemoveListenerOnType(self,city.LISTEN_TYPE.HELPED_TO_TROOPS)
         city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
         city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
+        User:RemoveListenerOnType(self, User.LISTEN_TYPE.ALLIANCE_INFO)
         local alliance_belvedere = self.alliance:GetAllianceBelvedere()
         alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
         alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
@@ -518,24 +520,13 @@ function GameUIAllianceHome:OnAllianceBasicChanged(alliance,changed_map)
     end
 end
 function GameUIAllianceHome:OnMemberChanged(alliance)
-    local self_member = alliance:GetMemeberById(DataManager:getUserData()._id)
-    self.page_top:SetLoyalty(GameUtils:formatNumber(self_member.loyalty))
+-- local self_member = alliance:GetMemeberById(DataManager:getUserData()._id)
+-- self.page_top:SetLoyalty(GameUtils:formatNumber(self_member.loyalty))
 end
--- function GameUIAllianceHome:OnAllianceCountInfoChanged(alliance,countInfo)
---     self.count = 0
---     local status = self.alliance:Status()
---     if status=="fight" or status=="protect" then
---         print("self.count",self.count)
---         LuaUtils:outputTable("GameUIAllianceHome:OnAllianceCountInfoChanged==countInfo", countInfo)
---         self.count = self.count + 1
---         if countInfo.kill then
---             self.top:SetOurPowerOrKill(countInfo.kill)
---         end
---         if countInfo.beKilled then
---             self.top:SetEnemyPowerOrKill(countInfo.beKilled)
---         end
---     end
--- end
+function GameUIAllianceHome:OnAllianceInfoChanged()
+    self.page_top:SetLoyalty(GameUtils:formatNumber(User:Loyalty()))
+end
+
 local deg = math.deg
 local ceil = math.ceil
 local point = cc.p
@@ -739,6 +730,7 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
+
 
 
 

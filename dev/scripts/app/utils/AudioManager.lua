@@ -12,6 +12,9 @@ local bg_music_map = {
 	PVEScene = "bgm_battle.mp3",
 	AllianceBattleScene = "bgm_battle.mp3",
 	AllianceBattleScene_sfx = "sfx_battle.mp3",
+	grassLand = "sfx_grassland.mp3",
+	iceField = "sfx_icefield.mp3",
+	desert = "sfx_desert.mp3",
 }
 
 local effect_sound_map = {
@@ -305,6 +308,7 @@ function AudioManager:OnBackgroundMusicCompletion()
 		or lastFilename == 'sfx_desert' 
 		or lastFilename == 'sfx_glassland' 
 		or lastFilename == 'sfx_icefiled' 
+		or lastFilename == 'sfx_battle' 
 		then
 			if lastFilename == 'bgm_peace' or lastFilename == 'bgm_battle'  or lastFilename == 'sfx_battle' then
 				if scene_name == 'MyCityScene' then

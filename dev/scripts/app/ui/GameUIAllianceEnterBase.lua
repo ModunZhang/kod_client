@@ -195,10 +195,10 @@ function GameUIAllianceEnterBase:InitBuildingDese()
         dimensions = cc.size(400,0)
     }):align(display.LEFT_TOP, 180, self:GetUIHeight()-20):addTo(body)
 
-    self.process_bar_bg = display.newSprite("Progress_bar_1.png"):align(display.LEFT_TOP, 180, self:GetUIHeight()-30):addTo(body)
-    self.progressTimer = UIKit:commonProgressTimer("progress_bar_366x34.png"):addTo(self.process_bar_bg):align(display.LEFT_BOTTOM,0,0):scale(386/366)
+    self.process_bar_bg = display.newSprite("process_bg_394x40.png"):align(display.LEFT_TOP, 186, self:GetUIHeight()-30):addTo(body)
+    self.progressTimer = UIKit:commonProgressTimer("process_color_394x40.png"):addTo(self.process_bar_bg):align(display.LEFT_BOTTOM,0,0)
     self.progressTimer:setPercentage(100)
-    self.process_icon_bg =   display.newSprite("back_ground_43x43.png"):addTo(self.process_bar_bg):pos(10,18)
+    self.process_icon_bg =   display.newSprite("back_ground_43x43.png"):addTo(self.process_bar_bg):pos(10,20)
     local icon,scale = self:GetProcessIcon()
     self.process_icon =  display.newSprite(icon):addTo(self.process_icon_bg):pos(21,21):scale(scale)
     self.process_label = UIKit:ttfLabel({
@@ -206,7 +206,7 @@ function GameUIAllianceEnterBase:InitBuildingDese()
         color = 0xfff3c7,
         shadow = true,
         text = self:GetProcessLabelText()
-    }):align(display.LEFT_CENTER,self.process_icon_bg:getPositionX() + 40,self.process_icon_bg:getPositionY()):addTo(self.process_bar_bg)
+    }):align(display.LEFT_CENTER,self.process_icon_bg:getPositionX() + 40,20):addTo(self.process_bar_bg)
 end
 
 function GameUIAllianceEnterBase:GetProgressTimer()
@@ -337,7 +337,7 @@ function GameUIAllianceEnterBase:GetDescLabel()
 end
 
 function GameUIAllianceEnterBase:GetProcessIcon()
-    return "wall_36x41.png",1
+    return  "icon_wall_83x103.png",0.4
 end
 
 function GameUIAllianceEnterBase:GetProcessLabelText()

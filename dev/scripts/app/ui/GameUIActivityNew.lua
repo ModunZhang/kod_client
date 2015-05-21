@@ -79,7 +79,7 @@ function GameUIActivityNew:CreateTabIf_activity()
 	if not self.activity_list_view then
 		local list = UIListView.new({
 	        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
-	        viewRect = cc.rect((window.width - 612)/2,window.bottom_top + 20,612,785),
+	        viewRect = cc.rect(window.left+(window.width - 612)/2,window.bottom_top + 20,612,785),
 	    }):addTo(self:GetView())
 	    list:onTouch(handler(self, self.OnActivityListViewTouch))
 	    self.activity_list_view = list

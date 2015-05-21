@@ -159,7 +159,7 @@ function WidgetAllianceTop:CreateBtnsPageItem()
     local member = alliance:GetSelf()
     self.loyalty_label = UIKit:ttfLabel(
         {
-            text = GameUtils:formatNumber(member:Loyalty()),
+            text = GameUtils:formatNumber(User:Loyalty()),
             size = 18,
             color = 0xf5e8c4
         }):align(display.LEFT_CENTER, -15, loyalty_btn:getContentSize().height/2-10)
