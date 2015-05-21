@@ -7,7 +7,7 @@ local WIDGET_WIDTH = 640
 local WIDGET_HEIGHT = 300
 local ITEM_HEIGHT = 47
 
-local WidgetPveEvent = class("WidgetPveEvent", function()
+local WidgetPVEEvent = class("WidgetPVEEvent", function()
     local rect = cc.rect(0, 0, WIDGET_WIDTH, WIDGET_HEIGHT)
     local node = display.newClippingRegionNode(rect)
     node:setTouchEnabled(true)
@@ -26,13 +26,13 @@ local WidgetPveEvent = class("WidgetPveEvent", function()
     end)
     return node:setCascadeOpacityEnabled(true)
 end)
-function WidgetPveEvent:isTouchInViewRect(event)
+function WidgetPVEEvent:isTouchInViewRect(event)
     local viewRect = self:convertToWorldSpace(cc.p(self.view_rect.x, self.view_rect.y))
     viewRect.width = self.view_rect.width
     viewRect.height = self.view_rect.height
     return cc.rectContainsPoint(viewRect, cc.p(event.x, event.y))
 end
-function WidgetPveEvent:ctor(user, ratio)
+function WidgetPVEEvent:ctor(user, ratio)
     self.view_rect = cc.rect(0, 0, WIDGET_WIDTH * ratio, (WIDGET_HEIGHT) * ratio)
     self:setClippingRegion(self.view_rect)
 
@@ -49,13 +49,13 @@ function WidgetPveEvent:ctor(user, ratio)
     self:Reset()
     self:PromiseOfSwitch()
 end
-function WidgetPveEvent:CreateBackGround()
+function WidgetPVEEvent:CreateBackGround()
     local back = cc.ui.UIImage.new("tab_background_640x106.png", {scale9 = true,
         capInsets = cc.rect(2, 2, WIDGET_WIDTH - 4, 106 - 4)
     }):align(display.LEFT_BOTTOM):setLayoutSize(WIDGET_WIDTH, ITEM_HEIGHT + 2)
     return back
 end
-function WidgetPveEvent:InsertItem(item, pos)
+function WidgetPVEEvent:InsertItem(item, pos)
     if type(item) == "table" then
         local count = #item
         for i = count, 1, -1 do
@@ -68,7 +68,7 @@ function WidgetPveEvent:InsertItem(item, pos)
         v:pos(1, (i-1) * ITEM_HEIGHT + 25)
     end
 end
-function WidgetPveEvent:InsertItem_(item, pos)
+function WidgetPVEEvent:InsertItem_(item, pos)
     item:addTo(self.back_ground, 2)
     if pos then
         table.insert(self.item_array, pos, item)
@@ -76,20 +76,20 @@ function WidgetPveEvent:InsertItem_(item, pos)
         table.insert(self.item_array, item)
     end
 end
-function WidgetPveEvent:IteratorItems(func)
+function WidgetPVEEvent:IteratorItems(func)
     for __,v in ipairs(self.item_array) do
         func(v)
     end
 end
-function WidgetPveEvent:Lock(lock)
+function WidgetPVEEvent:Lock(lock)
     self.locked = lock
 end
-function WidgetPveEvent:PromiseOfSwitch()
+function WidgetPVEEvent:PromiseOfSwitch()
     return self:PromiseOfHide():next(function()
         return self:PromiseOfShow()
     end)
 end
-function WidgetPveEvent:PromiseOfHide()
+function WidgetPVEEvent:PromiseOfHide()
     self.node:stopAllActions()
     self:Lock(true)
     local hide_height = - self.back_ground:getContentSize().height
@@ -97,7 +97,7 @@ function WidgetPveEvent:PromiseOfHide()
         self:Reset()
     end)
 end
-function WidgetPveEvent:PromiseOfShow()
+function WidgetPVEEvent:PromiseOfShow()
     local _,_,_,ok = self:GetTarget()
     if ok then
         self:Reload()
@@ -108,18 +108,18 @@ function WidgetPveEvent:PromiseOfShow()
     end
     return cocos_promise.defer()
 end
-function WidgetPveEvent:Reload()
+function WidgetPVEEvent:Reload()
     self:Reset()
     self:Load()
 end
-function WidgetPveEvent:Reset()
+function WidgetPVEEvent:Reset()
     self.back_ground:removeAllChildren()
     self.item_array = {}
     self:ResizeBelowHorizon(0)
     self.node:stopAllActions()
     self:Lock(false)
 end
-function WidgetPveEvent:Load()
+function WidgetPVEEvent:Load()
     local name, count, target_count, ok = self:GetTarget()
     if ok then
         local item = self:CreateItem()
@@ -138,16 +138,16 @@ function WidgetPveEvent:Load()
     end
     self:ResizeBelowHorizon(self:Length())
 end
-function WidgetPveEvent:Length()
+function WidgetPVEEvent:Length()
     return #self.item_array * ITEM_HEIGHT + 2
 end
-function WidgetPveEvent:ResizeBelowHorizon(new_height)
+function WidgetPVEEvent:ResizeBelowHorizon(new_height)
     local height = new_height < ITEM_HEIGHT and ITEM_HEIGHT or new_height
     local size = self.back_ground:getContentSize()
     self.back_ground:setContentSize(cc.size(size.width, height))
     self.node:setPositionY(- height)
 end
-function WidgetPveEvent:GetTarget()
+function WidgetPVEEvent:GetTarget()
     local name, count, target_count, ok = self.user:GetPVEDatabase():GetTarget()
     if not ok then
         self.user:GetPVEDatabase():NewTarget()
@@ -159,7 +159,7 @@ end
 
 --------------
 
-function WidgetPveEvent:CreateItem()
+function WidgetPVEEvent:CreateItem()
     local node = display.newSprite("tab_event_bar.png")
     local half_height = node:getContentSize().height / 2
     node.progress = display.newProgressTimer("pve_tab_progress_bar.png",
@@ -208,6 +208,6 @@ function WidgetPveEvent:CreateItem()
     return node:align(display.LEFT_CENTER)
 end
 
-return WidgetPveEvent
+return WidgetPVEEvent
 
 

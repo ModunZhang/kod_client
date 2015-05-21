@@ -9,7 +9,7 @@ local WidgetHomeBottom = import("..widget.WidgetHomeBottom")
 local WidgetUseItems = import("..widget.WidgetUseItems")
 local ChatManager = import("..entity.ChatManager")
 local WidgetChat = import("..widget.WidgetChat")
-local WidgetPveEvent = import("..widget.WidgetPveEvent")
+local WidgetPVEEvent = import("..widget.WidgetPVEEvent")
 local timer = app.timer
 
 
@@ -29,7 +29,7 @@ function GameUIPVEHome:onEnter()
     self.bottom = self:CreateBottom()
 
     local ratio = self.bottom:getScale()
-    self.event_tab = WidgetPveEvent.new(self.user, ratio)
+    self.event_tab = WidgetPVEEvent.new(self.user, ratio)
     local rect1 = self.chat:getCascadeBoundingBox()
     local x, y = rect1.x, rect1.y + rect1.height - 2
     self.event_tab:addTo(self):pos(x, y)
