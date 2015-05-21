@@ -17,7 +17,7 @@ local config_intInit = GameDatas.PlayerInitData.intInit
 local GameUIActivityRewardNew = import(".GameUIActivityRewardNew")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local Localize_item = import("..utils.Localize_item")
-
+--异步列表按钮事件修复
 GameUIActivityNew.ITEMS_TYPE = Enum("EVERY_DAY_LOGIN","CONTINUITY","FIRST_IN_PURGURE","PLAYER_LEVEL_UP")
 
 local titles = {
@@ -360,18 +360,26 @@ function GameUIActivityNew:OnIapGiftTimer(iapGift)
 	local content = item:getContent()
 	if iapGift:GetTime() >= 0 then
 		content.time_out_label:hide()
-		content.red_btn:hide()
+		if content.red_btn then
+			content.red_btn:hide()
+		end
 		content.time_label:setString(GameUtils:formatTimeStyle1(iapGift:GetTime()))
 		content.time_label:show()
 		content.time_desc_label:show()
-		content.yellow_btn:show()
+		if content.yellow_btn then
+			content.yellow_btn:show()
+		end
 
 	else
 		content.time_label:hide()
 		content.time_desc_label:hide()
-		content.yellow_btn:hide()
+		if content.yellow_btn then
+			content.yellow_btn:hide()
+		end
 		content.time_out_label:show()
-		content.red_btn:show()
+		if content.red_btn then
+			content.red_btn:show()
+		end
 		self.award_logic_index_map[index] = nil -- remove refresh item event 
 	end
 end
@@ -420,30 +428,7 @@ function GameUIActivityNew:GetAwardListContent()
 		size = 20
 	}):align(display.LEFT_BOTTOM,115,31):addTo(content)
 
-	local yellow_btn = WidgetPushButton.new({
-		normal = "yellow_btn_up_148x58.png",
-		pressed= "yellow_btn_down_148x58.png"
-		})
-		:align(display.BOTTOM_RIGHT, 556, 18)
-		:addTo(content)
-		:setButtonLabel("normal", UIKit:commonButtonLable({
-			text = _("领取"),
-		}))
-		:onButtonClicked(function()
-			self:OnAwardButtonClicked(content.idx)
-		end)
-	local red_btn = WidgetPushButton.new({
-		normal = "red_btn_up_148x58.png",
-		pressed= "red_btn_down_148x58.png"
-		})
-		:align(display.BOTTOM_RIGHT, 556, 18)
-		:addTo(content)
-		:setButtonLabel("normal", UIKit:commonButtonLable({
-			text = _("放弃"),
-		}))
-		:onButtonClicked(function()
-			self:OnAwardButtonClicked(content.idx)
-		end)
+	
 	local time_label = UIKit:ttfLabel({
 		text = "00:00:00",
 		color= 0x008b0a,
@@ -476,19 +461,48 @@ function GameUIActivityNew:FillAwardItemContent(content,data,idx)
 	str = string.format(str,_("盟友"),data.from,_("赠送!"))
 	content.contenet_label:Text(str):align(display.LEFT_BOTTOM,115,67)
 	content.time_label:setString(GameUtils:formatTimeStyle1(data:GetTime()))
+	if content.yellow_btn then
+		content.yellow_btn:removeSelf()
+	end
+	if content.red_btn then
+		content.red_btn:removeSelf()
+	end
 	if data:GetTime() < 0 then
 		content.time_label:hide()
 		content.time_desc_label:hide()
-		content.yellow_btn:hide()
 		content.time_out_label:show()
-		content.red_btn:show()
+		local red_btn = WidgetPushButton.new({
+			normal = "red_btn_up_148x58.png",
+			pressed= "red_btn_down_148x58.png"
+			})
+			:align(display.BOTTOM_RIGHT, 556, 18)
+			:addTo(content)
+			:setButtonLabel("normal", UIKit:commonButtonLable({
+				text = _("放弃"),
+			}))
+			:onButtonClicked(function()
+				self:OnAwardButtonClicked(content.idx)
+			end)
+		content.red_btn = red_btn
 	else
 		content.time_label:show()
 		content.time_desc_label:show()
-		content.yellow_btn:show()
 		content.time_out_label:hide()
-		content.red_btn:hide()
+		local yellow_btn = WidgetPushButton.new({
+			normal = "yellow_btn_up_148x58.png",
+			pressed= "yellow_btn_down_148x58.png"
+			})
+			:align(display.BOTTOM_RIGHT, 556, 18)
+			:addTo(content)
+			:setButtonLabel("normal", UIKit:commonButtonLable({
+				text = _("领取"),
+			}))
+			:onButtonClicked(function()
+				self:OnAwardButtonClicked(content.idx)
+			end)
+		content.yellow_btn = yellow_btn
 	end
+
 end
 
 

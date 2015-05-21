@@ -214,12 +214,12 @@ function GameUIAllianceHome:CreateOperationButton()
         local y =  first_row + col*label_padding
         local button = WidgetPushButton.new({normal = v[1]})
             :onButtonClicked(handler(self, self.OnMidButtonClicked))
-            :setButtonLabel("normal",cc.ui.UILabel.new({text = v[2],
-                size = 16,
-                font = UIKit:getFontFilePath(),
-                color = UIKit:hex2c3b(0xf5e8c4)}
-            )
-            )
+            -- :setButtonLabel("normal",cc.ui.UILabel.new({text = v[2],
+            --     size = 16,
+            --     font = UIKit:getFontFilePath(),
+            --     color = UIKit:hex2c3b(0xf5e8c4)}
+            -- )
+            -- )
             :setButtonLabelOffset(0, -40)
         button:setTag(i)
         button:setTouchSwallowEnabled(true)
