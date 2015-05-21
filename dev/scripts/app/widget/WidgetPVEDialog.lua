@@ -113,7 +113,7 @@ function WidgetPVEDialog:GetBrief()
         return _("未探索")
     elseif self:GetObject():IsSearched() then
         return _("已探索")
-    else 
+    else
         return string.format(_("剩余层数:%d"),self:GetObject():Left())
     end
 end
@@ -201,6 +201,7 @@ function WidgetPVEDialog:Fight()
                 self:GetObject():GetMap():Terrain(), self:GetTitle()
             )
 
+
             if report:IsAttackWin() then
                 local rollback = self:Search()
                 local rewards
@@ -218,6 +219,9 @@ function WidgetPVEDialog:Fight()
                             GameGlobalUI:showTips(_("获得奖励"), rewards)
                         end
                     end):AddToCurrentScene(true)
+
+                    self:CheckPveTask(report)
+
                 end):fail(function()
                     rollback()
                 end)
@@ -227,14 +231,33 @@ function WidgetPVEDialog:Fight()
                     self.user:EncodePveDataAndResetFightRewardsData()
                 ):done(function()
                     UIKit:newGameUI("GameUIReplayNew", report):AddToCurrentScene(true)
+
+                    self:CheckPveTask(report)
+
                 end)
             end
         end):AddToCurrentScene(true)
 end
 
+function WidgetPVEDialog:CheckPveTask(report)
+    local name,count,target_count,ok = self.user:GetPVEDatabase():GetTarget()
+    if ok and target_count > count then
+        for i,v in ipairs(report:GetDefenceKDA().soldiers) do
+            if v.name == name then
+                self.user:GetPVEDatabase():IncKillCount(v.damagedCount)
+                LuaUtils:outputTable({self.user:GetPVEDatabase():GetTarget()})
+                break
+            end
+        end
+    end
+    local pve_scene = self:getParent()
+    pve_scene:GetHomePage().event_tab:PromiseOfSwitch()
+end
+
 
 
 return WidgetPVEDialog
+
 
 
 
