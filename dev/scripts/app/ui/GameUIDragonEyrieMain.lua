@@ -547,7 +547,7 @@ function GameUIDragonEyrieMain:CreateDragonScrollNode()
         local dragon_armature = DragonSprite.new(display.getRunningScene():GetSceneLayer(),dragon:GetTerrain())
             :addTo(v)
             :pos(240,440)
-            :hide()
+            :hide():scale(0.9)
         v.armature = dragon_armature
         dragon_armature:GetSprite():getAnimation():stop()
         if dragon:Ishated() then
