@@ -1,5 +1,6 @@
 local Localize = import("..utils.Localize")
 local promise = import("..utils.promise")
+local WidgetPVEGetTaskRewards = import("..widget.WidgetPVEGetTaskRewards")
 local cocos_promise = import("..utils.cocos_promise")
 local timer = app.timer
 local WIDGET_WIDTH = 640
@@ -128,7 +129,12 @@ function WidgetPveEvent:Load()
         if count >= target_count then
             item:SetCanGet()
         end
-        self:InsertItem(item)
+        self:InsertItem(item:OnClicked(function()
+            local name,count,target_count,ok = self.user:GetPVEDatabase():GetTarget()
+            if ok then
+                WidgetPVEGetTaskRewards.new(name, nil, (count/target_count) * 100):AddToCurrentScene(true)
+            end
+        end))
     end
     self:ResizeBelowHorizon(self:Length())
 end

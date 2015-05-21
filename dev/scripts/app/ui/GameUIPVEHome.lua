@@ -4,6 +4,7 @@ local UILib = import("..ui.UILib")
 local Localize_item = import("..utils.Localize_item")
 local window = import("..utils.window")
 local GameUIPVEHome = UIKit:createUIClass('GameUIPVEHome')
+local WidgetPVEGetRewards = import("..widget.WidgetPVEGetRewards")
 local WidgetHomeBottom = import("..widget.WidgetHomeBottom")
 local WidgetUseItems = import("..widget.WidgetUseItems")
 local ChatManager = import("..entity.ChatManager")
@@ -134,14 +135,9 @@ function GameUIPVEHome:CreateTop()
         ,{})
         :addTo(top_bg, 1):align(display.CENTER, 80, 55):scale(0.8)
         :onButtonClicked(function(event)
-            if self.layer:ExploreDegree() >= 1.0 then
-                -- self.box:hide()
-                -- self:GetRewards()
-            end
+            WidgetPVEGetRewards.new(self.layer:ExploreDegree() * 100):AddToCurrentScene(true)
         end)
-    -- self.box = ccs.Armature:create("lanse"):addTo(box)
-    --     :align(display.CENTER, - 20, 10):scale(0.25)
-    -- self:SetBoxStatus(not self.layer:CurrentPVEMap():IsRewarded())
+
 
     UIKit:ttfLabel({
         text = string.format("%d. %s", self.layer:CurrentPVEMap():GetIndex(), self.layer:CurrentPVEMap():Name()),
