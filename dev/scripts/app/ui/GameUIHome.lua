@@ -121,8 +121,6 @@ function GameUIHome:onEnter()
     self:CreateTop()
     self.bottom = self:CreateBottom()
 
-    WidgetChangeMap.new(WidgetChangeMap.MAP_TYPE.OUR_CITY):addTo(self)
-
     local ratio = self.bottom:getScale()
     self.event_tab = WidgetEventTabButtons.new(self.city, ratio)
     local rect1 = self.chat:getCascadeBoundingBox()
@@ -457,6 +455,9 @@ function GameUIHome:CreateBottom()
 
     self.chat = WidgetChat.new():addTo(bottom_bg)
         :align(display.CENTER, bottom_bg:getContentSize().width/2, bottom_bg:getContentSize().height-11)
+        
+    self.change_map = WidgetChangeMap.new(WidgetChangeMap.MAP_TYPE.OUR_CITY):addTo(self)
+
     return bottom_bg
 end
 function GameUIHome:OnVipEventActive( vip_event )

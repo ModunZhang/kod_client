@@ -187,9 +187,12 @@ function WidgetEventTabButtons:ctor(city, ratio)
     self:setClippingRegion(self.view_rect)
 
     self.item_array = {}
-    local node = display.newNode():addTo(self)
-    node:scale(ratio)
-    cc.Layer:create():addTo(node):pos(0, -WIDGET_HEIGHT + TAB_HEIGHT):setContentSize(cc.size(WIDGET_WIDTH, WIDGET_HEIGHT + TAB_HEIGHT)):setCascadeOpacityEnabled(true)
+    local node = display.newNode():addTo(self):scale(ratio)
+    
+    cc.Layer:create():addTo(node):pos(0, -WIDGET_HEIGHT + TAB_HEIGHT)
+    :setContentSize(cc.size(WIDGET_WIDTH, WIDGET_HEIGHT + TAB_HEIGHT))
+    :setCascadeOpacityEnabled(true)
+
     self.node = node
     self.tab_buttons, self.tab_map = self:CreateTabButtons()
     self.tab_buttons:addTo(node, 2):pos(0, 0)

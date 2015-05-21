@@ -2,7 +2,7 @@ local promise = import("..utils.promise")
 local cocos_promise = import("..utils.cocos_promise")
 local timer = app.timer
 local WIDGET_WIDTH = 640
-local WIDGET_HEIGHT = 600
+local WIDGET_HEIGHT = 300
 local ITEM_HEIGHT = 47
 
 local WidgetPveEvent = class("WidgetPveEvent", function()
@@ -31,14 +31,16 @@ function WidgetPveEvent:isTouchInViewRect(event)
     return cc.rectContainsPoint(viewRect, cc.p(event.x, event.y))
 end
 function WidgetPveEvent:ctor(ratio)
-    self:setNodeEventEnabled(true)
     self.view_rect = cc.rect(0, 0, WIDGET_WIDTH * ratio, (WIDGET_HEIGHT) * ratio)
     self:setClippingRegion(self.view_rect)
+    
     self.item_array = {}
     self.node = display.newNode():addTo(self):scale(ratio)
+
     cc.Layer:create():addTo(self.node):pos(0, -WIDGET_HEIGHT)
     :setContentSize(cc.size(WIDGET_WIDTH, WIDGET_HEIGHT))
     :setCascadeOpacityEnabled(true)
+
     self.back_ground = self:CreateBackGround():addTo(self.node)
     self:Reset()
     self:PromiseOfSwitch()
@@ -113,7 +115,7 @@ function WidgetPveEvent:Reset()
     self:Lock(false)
 end
 function WidgetPveEvent:Load()
-    self:InsertItem(self:CreateBottom())
+    -- self:InsertItem(self:CreateBottom())
     self:ResizeBelowHorizon(self:Length(#self.item_array))
 end
 function WidgetPveEvent:Length(array_len)
