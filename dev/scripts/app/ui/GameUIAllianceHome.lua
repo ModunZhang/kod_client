@@ -23,6 +23,10 @@ local cc = cc
 function GameUIAllianceHome:ctor(alliance, multialliancelayer)
     GameUIAllianceHome.super.ctor(self)
     self.alliance = alliance
+    -- 获取历史记录
+    if self.alliance:AllianceFightReports() == nil then
+        NetManager:getAllianceFightReportsPromise(self.alliance:Id())
+    end
     self.multialliancelayer = multialliancelayer
 end
 function GameUIAllianceHome:DisplayOn()
@@ -50,10 +54,7 @@ end
 
 function GameUIAllianceHome:onEnter()
     GameUIAllianceHome.super.onEnter(self)
-    -- 获取历史记录
-    if self.alliance:AllianceFightReports() == nil then
-        NetManager:getAllianceFightReportsPromise(self.alliance:Id())
-    end
+    
     self.city = City
     self.visible_count = 1
     self.top = self:CreateTop()

@@ -302,41 +302,39 @@ function GameUIAllianceBattle:InitBattleStatistics()
         local our_alliance = self.alliance
         -- local enemy_alliance = self.alliance:GetAllianceMoonGate():GetEnemyAlliance()
         local enemy_alliance = Alliance_Manager:GetEnemyAlliance()
-        local top_bg = display.newSprite("back_ground_580x118.png")
-            :align(display.TOP_CENTER, window.cx, window.top-120)
+        local top_bg = display.newSprite("back_ground_540x70.png")
+            :align(display.TOP_CENTER, window.cx, window.top-140)
             :addTo(layer)
         -- :scale(0.85)
         local t_size = top_bg:getContentSize()
-
-        local self_alliance_bg = WidgetPushButton.new({normal = "button_blue_normal_314X88.png",
-            pressed = "button_blue_pressed_314X88.png"})
+        
+        local self_alliance_bg = WidgetPushButton.new({normal = "button_blue_normal_232x64.png",
+            pressed = "button_blue_pressed_232x64.png"})
             :onButtonClicked(function()
                 self:OpenAllianceDetails(true)
             end)
-            :align(display.RIGHT_CENTER,t_size.width/2, t_size.height/2)
+            :align(display.RIGHT_CENTER,t_size.width/2-35, t_size.height/2)
             :addTo(top_bg)
-            :scale(0.8)
-        local enemy_alliance_bg = WidgetPushButton.new({normal = "button_red_normal_314X88.png",
-            pressed = "button_red_pressed_314X88.png"})
+        local enemy_alliance_bg = WidgetPushButton.new({normal = "button_red_normal_232x64.png",
+            pressed = "button_red_pressed_232x64.png"})
             :onButtonClicked(function()
                 self:OpenAllianceDetails(false)
             end)
-            :align(display.LEFT_CENTER,t_size.width/2, t_size.height/2)
+            :align(display.LEFT_CENTER,t_size.width/2+35, t_size.height/2)
             :addTo(top_bg)
-            :scale(0.8)
         -- 己方联盟名字
         local our_alliance_tag = UIKit:ttfLabel({
             text = "["..our_alliance:Tag().."]",
             size = 26,
             color = 0xffedae,
         }):addTo(self_alliance_bg)
-            :align(display.CENTER,-180,14)
+            :align(display.CENTER,-120,14)
         local our_alliance_name = UIKit:ttfLabel({
             text = our_alliance:Name(),
             size = 26,
             color = 0xffedae,
         }):addTo(self_alliance_bg)
-            :align(display.CENTER,-180,-14)
+            :align(display.CENTER,-120,-14)
         -- 敌方联盟名字
         local a_tag = ""
         local a_name = ""
@@ -352,13 +350,13 @@ function GameUIAllianceBattle:InitBattleStatistics()
             size = 26,
             color = 0xffedae,
         }):addTo(enemy_alliance_bg)
-            :align(display.CENTER,180,14)
+            :align(display.CENTER,120,14)
         local enemy_alliance_name = UIKit:ttfLabel({
             text =a_name,
             size = 26,
             color = 0xffedae,
         }):addTo(enemy_alliance_bg)
-            :align(display.CENTER,180,-14)
+            :align(display.CENTER,120,-14)
         local period_bg = display.newSprite("box_104x104.png")
             :align(display.CENTER, t_size.width/2, t_size.height/2-4)
             :addTo(top_bg)
