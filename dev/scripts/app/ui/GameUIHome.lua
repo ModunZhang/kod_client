@@ -127,8 +127,8 @@ function GameUIHome:onEnter()
     self.event_tab = WidgetEventTabButtons.new(self.city, ratio)
     local rect1 = self.chat:getCascadeBoundingBox()
     local x, y = rect1.x, rect1.y + rect1.height - 2
-
     self.event_tab:addTo(self):pos(x, y)
+
     self:AddOrRemoveListener(true)
     self:OnResourceChanged(city:GetResourceManager())
     self:RefreshData()

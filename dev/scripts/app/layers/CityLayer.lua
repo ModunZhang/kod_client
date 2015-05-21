@@ -328,10 +328,10 @@ function CityLayer:ReloadSceneBackground()
         local start = 0
         self:setFilter(filter.newFilter("CUSTOM", json.encode({
             frag = "shaders/flashAt.fs",
-            shaderName = "flash1",
+            shaderName = "flashAt",
             startTime = start,
             curTime = start,
-            lastTime = 0.5,
+            lastTime = time,
             rect = {0.815,0.543,0.21,0.26},
             srm = {1.0, 1.54, -45, 0.4},
         })))
