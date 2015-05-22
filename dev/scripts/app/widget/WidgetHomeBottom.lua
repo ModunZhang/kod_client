@@ -78,7 +78,7 @@ function WidgetHomeBottom:OnBottomButtonClicked(event)
     if not tag then return end
     if tag == 4 then -- tag 4 = alliance button
         UIKit:newGameUI('GameUIAlliance'):AddToCurrentScene(true)
-        self.alliance_btn:removeChildByTag(111)
+        -- self.alliance_btn:removeChildByTag(111)
         self.alliance_btn:removeChildByTag(222)
     elseif tag == 3 then
         UIKit:newGameUI('GameUIMail',self.city):AddToCurrentScene(true)
@@ -96,11 +96,11 @@ end
 local WidgetFteArrow = import(".WidgetFteArrow")
 local WidgetFteMark = import(".WidgetFteMark")
 function WidgetHomeBottom:TipsOnAlliance()
-    WidgetFteMark.new()
-        :Size(100, 100)
-        :addTo(self.alliance_btn, 1, 111)
+    -- WidgetFteMark.new()
+    --     :Size(100, 100)
+    --     :addTo(self.alliance_btn, 1, 111)
 
-    WidgetFteArrow.new(_("点击查看联盟"))
+    WidgetFteArrow.new(_("加入或创建联盟\n开启多人团战玩法"))
         :TurnDown():align(display.BOTTOM_CENTER, 0, 50)
         :addTo(self.alliance_btn, 1, 222)
 end

@@ -45,7 +45,7 @@ function PVEScene:onEnter()
     app:GetAudioManager():PlayGameMusic("PVEScene")
     self.user:GetPVEDatabase():SetLocationHandle(self)
 end
-function PVEFteScene:onEnterTransitionFinish()
+function PVEScene:onEnterTransitionFinish()
     if not cc.UserDefault:getInstance():getBoolForKey("first_in_pve") then
         -- cc.UserDefault:getInstance():setBoolForKey("first_in_pve", true)
         -- cc.UserDefault:flush()

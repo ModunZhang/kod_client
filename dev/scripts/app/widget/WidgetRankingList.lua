@@ -215,6 +215,8 @@ function WidgetRankingList:CreatePlayerContentByIndex(idx)
     local size = item:getContentSize()
     item.bg2 = display.newSprite("background1_548x76.png"):addTo(item)
         :pos(size.width/2, size.height/2)
+    item.bg3 = display.newSprite("background3_548x76.png"):addTo(item)
+        :pos(size.width/2, size.height/2)
     display.newSprite("background_57x57.png"):addTo(item):pos(120, 40)
     local player_head_icon = UIKit:GetPlayerIconOnly():addTo(item,1):pos(120, 40):scale(0.5)
     display.newSprite("dragon_strength_27x31.png"):addTo(item):pos(400, 40)
@@ -245,8 +247,11 @@ function WidgetRankingList:CreatePlayerContentByIndex(idx)
         item.player_icon:setTexture(UIKit:GetPlayerIconImage(data.icon))
         return self
     end
+    local ranklist = self
     function item:SetIndex(index)
-        self.bg2:setVisible(index % 2 == 0)
+        local is_mine = ranklist.current_rank.myData.rank == index
+        self.bg2:setVisible(index % 2 == 0 and not is_mine)
+        self.bg3:setVisible(is_mine)
         if index <= 3 then
             self.rank:hide()
             self.crown:setTexture(crown_map[index])
@@ -264,6 +269,9 @@ function WidgetRankingList:CreateAllianceContentByIndex(idx)
     local size = item:getContentSize()
 
     item.bg2 = display.newSprite("background1_548x76.png"):addTo(item)
+        :pos(size.width/2, size.height/2)
+
+    item.bg3 = display.newSprite("background3_548x76.png"):addTo(item)
         :pos(size.width/2, size.height/2)
 
 
@@ -307,8 +315,11 @@ function WidgetRankingList:CreateAllianceContentByIndex(idx)
             :addTo(self):align(display.CENTER, 80, 5):scale(0.5)
         return self
     end
+    local ranklist = self
     function item:SetIndex(index)
-        self.bg2:setVisible(index % 2 == 0)
+        local is_mine = ranklist.current_rank.myData.rank == index
+        self.bg2:setVisible(index % 2 == 0 and not is_mine)
+        self.bg3:setVisible(is_mine)
         if index <= 3 then
             self.rank:hide()
             self.crown:setTexture(crown_map[index])
