@@ -11,9 +11,11 @@ local window = import("..utils.window")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetRoundTabButtons = import("..widget.WidgetRoundTabButtons")
 
-function GameUITips:ctor(default_tab)
+function GameUITips:ctor(default_tab, title, is_hide_tab)
 	GameUITips.super.ctor(self)
 	self.default_tab = default_tab or "city"
+	self.title = title
+	self.is_hide_tab = is_hide_tab
 end
 
 function GameUITips:onEnter()
@@ -34,7 +36,7 @@ function GameUITips:BuildUI()
 	   		self:LeftButtonClicked()
 	   	end)
 	UIKit:ttfLabel({
-		text = _("游戏说明"),
+		text = self.title or _("游戏说明"),
 		size = 22,
 		shadow = true,
 		color = 0xffedae
@@ -43,9 +45,13 @@ function GameUITips:BuildUI()
 	self.tab_buttons = WidgetRoundTabButtons.new({
         {tag = "city",label = _("城市"),default = self.default_tab == "city"},
         {tag = "region",label = _("区域地图"),default = self.default_tab == "region"},
+        {tag = "pve",label = _("探险地图"),default = self.default_tab == "pve"},
     }, function(tag)
        self:OnTabButtonClicked(tag)
     end,2):align(display.CENTER_BOTTOM,304,15):addTo(bg)
+    if self.is_hide_tab then
+    	self.tab_buttons:hide()
+    end
 end
 
 function GameUITips:OnTabButtonClicked(tag)
@@ -151,6 +157,41 @@ function GameUITips:CreateUIIf_region()
 	end
 	self.region_node = node
 	return self.region_node
+end
+
+
+
+function GameUITips:CreateUIIf_pve()
+	if self.pve_node then
+		return self.pve_node
+	end
+	local node = display.newNode():size(608,747):addTo(self.bg)
+	display.newSprite("pve_tips_554x340.png"):align(display.CENTER_TOP, 306, 740):addTo(node)
+
+	local tips_bg = UIKit:CreateBoxPanelWithBorder({width = 556,height = 263}):align(display.BOTTOM_CENTER, 304, 120):addTo(node)
+	local x,y = 10,250
+	for index,v in ipairs(self:RegionTips()) do
+		local star = display.newSprite("alliance_star_23x23.png"):align(display.LEFT_TOP, x, y):addTo(tips_bg)
+		UIKit:ttfLabel({
+			text = v,
+			size = 18,
+			color=0x403c2f,
+			dimensions = cc.size(496,56)
+		}):align(display.LEFT_TOP,x + 28, y+2):addTo(tips_bg)
+		y = y - 52
+	end
+	self.pve_node = node
+	return self.pve_node
+end
+local pve_tips = {
+		_("探索未知的领域,经历种种艰难险阻和奇闻异事,更可藉此获得大量的资源及特殊道具!"),
+		_("地图探索度达到100%之后,即可获得珍贵的金龙币奖励!"),
+		_('找到每层"异界之门",击败凶残的BOSS,即可进击下一层!'),
+		_("探索只神秘的终极关卡,就能获得巨额的奖励以及异常稀有的个人专属头像!"),
+		_("联盟会战胜利后，联盟获得大量的荣誉点数"),
+	}
+function GameUITips:PveTips()
+	return pve_tips
 end
 
 return GameUITips
