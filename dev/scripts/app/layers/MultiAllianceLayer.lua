@@ -485,7 +485,7 @@ local dragon_dir_map = {
     {"flying_45", 1}, -- y-
 }
 local soldier_scale = 1
-local corps_scale = 1
+local corps_scale = 1.5
 local soldier_dir_map = {
     [0] = {"move_45", - corps_scale, soldier_scale}, -- x-,y+
     {"move_45", - corps_scale, soldier_scale}, -- x-,y+

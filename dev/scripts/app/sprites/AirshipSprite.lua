@@ -42,7 +42,7 @@ function AirshipSprite:CreateSprite()
     local sprite = AirshipSprite.super.CreateSprite(self)
     local armature = ccs.Armature:create("feiting"):addTo(sprite)
     local p = sprite:getAnchorPointInPoints()
-    armature:align(display.CENTER, p.x - 10, p.y + 40):getAnimation():playWithIndex(0)
+    armature:align(display.CENTER, p.x - 16, p.y + 36):getAnimation():playWithIndex(0)
     armature:getAnimation():setSpeedScale(2)
     return sprite
 end

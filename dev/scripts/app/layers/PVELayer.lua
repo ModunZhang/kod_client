@@ -133,7 +133,7 @@ function PVELayer:LoadPlayer()
     local ariship = display.newSprite("airship.png"):addTo(self.char):scale(0.5)
     local armature = ccs.Armature:create("feiting"):addTo(ariship)
     local p = ariship:getAnchorPointInPoints()
-    armature:align(display.CENTER, p.x - 10, p.y + 40):getAnimation():playWithIndex(0)
+    armature:align(display.CENTER, p.x - 16, p.y + 36):getAnimation():playWithIndex(0)
     armature:getAnimation():setSpeedScale(2)
     ariship:setAnchorPoint(cc.p(0.4, 0.6))
     ariship:runAction(cc.RepeatForever:create(transition.sequence{
