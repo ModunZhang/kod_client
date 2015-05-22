@@ -44,6 +44,8 @@ function PVEScene:onEnter()
     self:GetSceneLayer():MoveCharTo(self.user:GetPVEDatabase():GetCharPosition())
     app:GetAudioManager():PlayGameMusic("PVEScene")
     self.user:GetPVEDatabase():SetLocationHandle(self)
+
+    UIKit:newGameUI("GameUITips", "pve", _("玩法介绍"), true, 680):AddToScene(self, true)
 end
 function PVEScene:onExit()
     PVEScene.super.onExit(self)

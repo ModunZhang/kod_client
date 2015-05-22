@@ -11,11 +11,12 @@ local window = import("..utils.window")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetRoundTabButtons = import("..widget.WidgetRoundTabButtons")
 
-function GameUITips:ctor(default_tab, title, is_hide_tab)
+function GameUITips:ctor(default_tab, title, is_hide_tab, height)
 	GameUITips.super.ctor(self)
 	self.default_tab = default_tab or "city"
 	self.title = title
 	self.is_hide_tab = is_hide_tab
+	self.height = height or 762
 end
 
 function GameUITips:onEnter()
@@ -24,11 +25,12 @@ function GameUITips:onEnter()
 end
 
 function GameUITips:BuildUI()
-	local bg = WidgetUIBackGround.new({height=762})
+	local bg = WidgetUIBackGround.new({height=self.height})
 	self:addTouchAbleChild(bg)
 	self.bg = bg
 	bg:pos(((display.width - bg:getContentSize().width)/2),window.bottom_top)
-	local titleBar = display.newSprite("title_blue_600x56.png"):align(display.LEFT_BOTTOM,3,747):addTo(bg)
+	local titleBar = display.newSprite("title_blue_600x56.png")
+	:align(display.LEFT_BOTTOM,3,bg:getContentSize().height - 15):addTo(bg)
 	local closeButton = cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"}, {scale9 = false})
 	   	:addTo(titleBar)
 	   	:align(display.BOTTOM_RIGHT,titleBar:getContentSize().width,0)
@@ -68,7 +70,9 @@ function GameUITips:CreateUIIf_city()
 		self:RefreshCityListView()
 		return self.city_node
 	end
-	local list_bg = display.newScale9Sprite("box_bg_546x214.png"):size(568,636):addTo(self.bg):align(display.TOP_CENTER, 304, 732)
+	local list_bg = display.newScale9Sprite("box_bg_546x214.png")
+	:size(568,636):addTo(self.bg)
+	:align(display.TOP_CENTER, 304, self.bg:getContentSize().height - 30)
 	self.city_node = list_bg
 
 	self.city_list = UIListView.new({
@@ -140,10 +144,14 @@ function GameUITips:CreateUIIf_region()
 		return self.region_node
 	end
 	local node = display.newNode():size(608,747):addTo(self.bg)
-	display.newSprite("region_tips_556x344.png"):align(display.CENTER_TOP, 304, 740):addTo(node)
+	display.newSprite("region_tips_556x344.png")
+	:align(display.CENTER_TOP, 304, self.bg:getContentSize().height - 30)
+	:addTo(node)
 
 
-	local tips_bg = UIKit:CreateBoxPanelWithBorder({width = 556,height = 263}):align(display.BOTTOM_CENTER, 304, 120):addTo(node)
+	local tips_bg = UIKit:CreateBoxPanelWithBorder({width = 556,height = 263})
+	:align(display.BOTTOM_CENTER, 304, self.bg:getContentSize().height - 655)
+	:addTo(node)
 	local x,y = 10,250
 	for index,v in ipairs(self:RegionTips()) do
 		local star = display.newSprite("alliance_star_23x23.png"):align(display.LEFT_TOP, x, y):addTo(tips_bg)
@@ -166,12 +174,18 @@ function GameUITips:CreateUIIf_pve()
 		return self.pve_node
 	end
 	local node = display.newNode():size(608,747):addTo(self.bg)
-	display.newSprite("pve_tips_554x340.png"):align(display.CENTER_TOP, 306, 740):addTo(node)
+	display.newSprite("pve_tips_554x340.png")
+	:align(display.CENTER_TOP, 305, self.bg:getContentSize().height - 30)
+	:addTo(node)
 
-	local tips_bg = UIKit:CreateBoxPanelWithBorder({width = 556,height = 263}):align(display.BOTTOM_CENTER, 304, 120):addTo(node)
+
+	local tips_bg = UIKit:CreateBoxPanelWithBorder({width = 556,height = 263})
+	:align(display.BOTTOM_CENTER, 304, self.bg:getContentSize().height - 655)
+	:addTo(node)
 	local x,y = 10,250
 	for index,v in ipairs(self:RegionTips()) do
-		local star = display.newSprite("alliance_star_23x23.png"):align(display.LEFT_TOP, x, y):addTo(tips_bg)
+		local star = display.newSprite("alliance_star_23x23.png")
+		:align(display.LEFT_TOP, x, y):addTo(tips_bg)
 		UIKit:ttfLabel({
 			text = v,
 			size = 18,
