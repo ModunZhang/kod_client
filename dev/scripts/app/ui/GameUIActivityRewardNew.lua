@@ -823,7 +823,6 @@ function GameUIActivityRewardNew:GetOnLineItem(reward_type,item_key,time_str,rew
 		got_label:hide()
 		if flag == 2 then
 			time_label:hide()
-			-- button:setButtonEnabled(true)
 		else
 			button:hide()
 			if timePoint == next_point then
@@ -882,9 +881,9 @@ function GameUIActivityRewardNew:RefreshOnLineList(needClean)
 						item.sp:clearFilter()
 					end
 				else
-					if not item.sp:getFilter() then
-						item.sp:setFilter(filter.newFilter("CUSTOM", json.encode({frag = "shaders/ps_discoloration.fs",shaderName = "ps_discoloration"})))
-					end
+					-- if not item.sp:getFilter() then
+					-- 	item.sp:setFilter(filter.newFilter("CUSTOM", json.encode({frag = "shaders/ps_discoloration.fs",shaderName = "ps_discoloration"})))
+					-- end
 					item.button:hide()
 					item.time_label:show()
 					if timePoint == next_point then
