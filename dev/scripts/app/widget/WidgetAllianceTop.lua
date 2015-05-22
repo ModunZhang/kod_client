@@ -146,7 +146,7 @@ function WidgetAllianceTop:CreateBtnsPageItem()
         :addTo(content)
     -- 忠诚值
     display.newSprite("loyalty_128x128.png")
-        :align(display.CENTER, -40,loyalty_btn:getContentSize().height/2-4)
+        :align(display.CENTER, -40,loyalty_btn:getContentSize().height/2)
         :addTo(loyalty_btn)
         :scale(42/128)
     UIKit:ttfLabel(

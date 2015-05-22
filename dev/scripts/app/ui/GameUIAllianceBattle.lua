@@ -307,7 +307,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
             :addTo(layer)
         -- :scale(0.85)
         local t_size = top_bg:getContentSize()
-        
+
         local self_alliance_bg = WidgetPushButton.new({normal = "button_blue_normal_232x64.png",
             pressed = "button_blue_pressed_232x64.png"})
             :onButtonClicked(function()
@@ -325,13 +325,13 @@ function GameUIAllianceBattle:InitBattleStatistics()
         -- 己方联盟名字
         local our_alliance_tag = UIKit:ttfLabel({
             text = "["..our_alliance:Tag().."]",
-            size = 26,
+            size = 22,
             color = 0xffedae,
         }):addTo(self_alliance_bg)
             :align(display.CENTER,-120,14)
         local our_alliance_name = UIKit:ttfLabel({
             text = our_alliance:Name(),
-            size = 26,
+            size = 22,
             color = 0xffedae,
         }):addTo(self_alliance_bg)
             :align(display.CENTER,-120,-14)
@@ -347,13 +347,13 @@ function GameUIAllianceBattle:InitBattleStatistics()
         end
         local enemy_alliance_tag = UIKit:ttfLabel({
             text =a_tag,
-            size = 26,
+            size = 22,
             color = 0xffedae,
         }):addTo(enemy_alliance_bg)
             :align(display.CENTER,120,14)
         local enemy_alliance_name = UIKit:ttfLabel({
             text =a_name,
-            size = 26,
+            size = 22,
             color = 0xffedae,
         }):addTo(enemy_alliance_bg)
             :align(display.CENTER,120,-14)
@@ -474,11 +474,11 @@ function GameUIAllianceBattle:InitBattleStatistics()
             info_bg_y = window.top-380
         end
 
-        local info_bg = WidgetUIBackGround.new({width = 540,height = 434},WidgetUIBackGround.STYLE_TYPE.STYLE_6)
+        local info_bg = WidgetUIBackGround.new({width = 540,height = 340},WidgetUIBackGround.STYLE_TYPE.STYLE_6)
             :align(display.TOP_CENTER,window.cx, info_bg_y):addTo(layer)
 
         self.info_listview = UIListView.new{
-            viewRect = cc.rect(9, 10, 522, 414),
+            viewRect = cc.rect(9, 10, 522, 320),
             direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
         }:addTo(info_bg)
         self:RefreshFightInfoList()
@@ -488,23 +488,55 @@ end
 function GameUIAllianceBattle:RefreshFightInfoList()
     if self.info_listview then
         self.info_listview:removeAllItems()
+        local alliance = self.alliance
         local our, enemy
-        if self.alliance:Status() == "protect" then
-            local report = self.alliance:GetLastAllianceFightReports()
-            our = self.alliance:Id() == report.attackAllianceId and report.attackAlliance or report.defenceAlliance
-            enemy = self.alliance:Id() == report.attackAllianceId and report.defenceAlliance or report.attackAlliance
+        local ourKillMaxName,enemyKillMaxName
+        if alliance:Status() == "protect" then
+            local report = alliance:GetLastAllianceFightReports()
+            our = alliance:Id() == report.attackAllianceId and report.attackAlliance or report.defenceAlliance
+            enemy = alliance:Id() == report.attackAllianceId and report.defenceAlliance or report.attackAlliance
+            local killMax = report.report
+
+            ourKillMaxName = killMax.allianceId == alliance:Id() and killMax.playerName ~= json.null and killMax.playerName or _("无")
+            enemyKillMaxName = killMax.allianceId ~= alliance:Id() and killMax.playerName  ~= json.null and killMax.playerName or _("无")
+
         else
-            our = self.alliance:GetMyAllianceFightCountData()
-            enemy = self.alliance:GetEnemyAllianceFightCountData()
+            our = alliance:GetMyAllianceFightCountData()
+            enemy = alliance:GetEnemyAllianceFightCountData()
+            local ourKills = alliance:GetMyAllianceFightPlayerKills()
+            local enemyKills = alliance:GetEnemyAllianceFightPlayerKills()
+
+            local temp_name,temp_kills = "",0
+            for i,v in ipairs(ourKills) do
+                if v.kill > temp_kills then
+                    temp_kills = v.kill
+                    temp_name = v.name
+                end
+            end
+            local enemy_temp_name,enemy_temp_kills = "",0
+            for i,v in ipairs(enemyKills) do
+                if v.kill > enemy_temp_kills then
+                    enemy_temp_kills = v.kill
+                    enemy_temp_name = v.name
+                end
+            end
+            if temp_kills < enemy_temp_kills then
+                ourKillMaxName = _("无")
+                enemyKillMaxName = enemy_temp_name
+            else
+                ourKillMaxName = temp_name
+                enemyKillMaxName = _("无")
+            end
         end
         if our then
             local info_message = {
-                {string.formatnumberthousands(our.kill),_("击杀数"),string.formatnumberthousands(enemy.kill)},
+                {string.formatnumberthousands(our.kill),_("击杀积分"),string.formatnumberthousands(enemy.kill)},
                 {our.routCount,_("击溃城市"),enemy.routCount},
                 {our.attackCount,_("进攻次数"),enemy.attackCount},
                 {our.strikeCount,_("突袭次数"),enemy.strikeCount},
                 {our.attackSuccessCount,_("获胜进攻"),enemy.attackSuccessCount},
                 {our.strikeSuccessCount,_("突袭成功"),enemy.strikeSuccessCount},
+                {ourKillMaxName,_("头号杀手"),enemyKillMaxName},
             }
             self:CreateInfoItem(self.info_listview,info_message)
         end
@@ -1270,6 +1302,7 @@ function GameUIAllianceBattle:OnAllianceFightReportsChanged(changed_map)
 end
 
 return GameUIAllianceBattle
+
 
 
 
