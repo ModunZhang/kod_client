@@ -245,13 +245,11 @@ function WidgetPVEDialog:CheckPveTask(report)
         for i,v in ipairs(report:GetDefenceKDA().soldiers) do
             if v.name == name then
                 self.user:GetPVEDatabase():IncKillCount(v.damagedCount)
-                LuaUtils:outputTable({self.user:GetPVEDatabase():GetTarget()})
                 break
             end
         end
     end
-    local pve_scene = self:getParent()
-    pve_scene:GetHomePage().event_tab:PromiseOfSwitch()
+    self:getParent():GetHomePage().event_tab:PromiseOfSwitch()
 end
 
 
