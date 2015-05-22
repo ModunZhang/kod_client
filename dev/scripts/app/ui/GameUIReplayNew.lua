@@ -222,12 +222,14 @@ local function newDragon(replay_ui, dragon_type, level)
         text = level,
         size = 20,
         color = 0xffedae,
+        shadow = true,
     }):align(display.CENTER, -65, 180):addTo(node)
 
     node.name = UIKit:ttfLabel({
         text = Localize.dragon[dragon_type],
         size = 20,
         color = 0xffedae,
+        shadow = true,
     }):align(display.CENTER, 80, 180):addTo(node)
 
     node.progress = display.newProgressTimer("progress_bar_dragon_hp.png", display.PROGRESS_TIMER_BAR)
@@ -237,18 +239,21 @@ local function newDragon(replay_ui, dragon_type, level)
     -- node.progress:setPercentage(80)
 
     node.hp = UIKit:ttfLabel({
-        size = 12,
+        size = 15,
         color = 0xffedae,
+        shadow = true,
     }):align(display.CENTER, 45, 145):addTo(node):hide()
 
     node.result = UIKit:ttfLabel({
         size = 20,
-        color = 0x00be36
+        color = 0x00be36,
+        shadow = true,
     }):align(display.CENTER, 120, -55):addTo(node,1):hide()
 
     node.buff = UIKit:ttfLabel({
         size = 20,
-        color = 0x00be36
+        color = 0x00be36,
+        shadow = true,
     }):align(display.CENTER, 65, -55):addTo(node,1):hide()
 
     local ani_name, left_x, right_x, scale, Y = unpack(dragon_ani_map[dragon_type])
@@ -395,6 +400,7 @@ local function newSoldierInBattle(list_view, is_left)
     local name = UIKit:ttfLabel({
         color = 0xffedae,
         size = 20,
+        shadow = true,
     }):addTo(title):align(display.CENTER, s1.width/2, 13)
 
     local soldier = WidgetSoldier.new("ranger", 1, false):addTo(content):pos(50, 50):scale(88/128)
@@ -404,11 +410,13 @@ local function newSoldierInBattle(list_view, is_left)
     local type_ = UIKit:ttfLabel({
         color = 0x403c2f,
         size = 20,
+    -- shadow = true,
     }):addTo(content):align(display.LEFT_CENTER, s1.width/2 - 25, 75)
 
     local status = UIKit:ttfLabel({
         color = 0x007c23,
         size = 22,
+    -- shadow = true,
     }):addTo(content):align(display.LEFT_CENTER, s1.width/2 - 25, 35)
 
 
@@ -1120,6 +1128,7 @@ function GameUIReplayNew:PromiseOfPlayDamage(count, x, y)
         text = "-"..count,
         size = 30,
         color = 0xff0000,
+        shadow = true,
     }):addTo(self.ui_map.damage_node)
         :align(display.CENTER, x, y):runAction(speed)
     return p
@@ -1467,23 +1476,27 @@ function GameUIReplayNew:BuildUI()
     ui_map.attackName = UIKit:ttfLabel({
         color = 0xffedae,
         size = 22,
+        shadow = true,
     }):addTo(top):align(display.CENTER, 150, 445)
 
     ui_map.defenceName = UIKit:ttfLabel({
         color = 0xffedae,
         size = 22,
+        shadow = true,
     }):addTo(top):align(display.CENTER, top_size.width - 150, 445)
 
     UIKit:ttfLabel({
         text = _("进攻方"),
         color = 0xffedae,
         size = 22,
+        shadow = true,
     }):addTo(top):align(display.CENTER, 150, 405)
 
     UIKit:ttfLabel({
         text = _("防守方"),
         color = 0xffedae,
         size = 22,
+        shadow = true,
     }):addTo(top):align(display.CENTER, top_size.width - 150, 405)
 
     display.newSprite("soldier_count_icon.png"):addTo(top):pos(120, 70)
@@ -1509,6 +1522,7 @@ function GameUIReplayNew:BuildUI()
         local text = UIKit:ttfLabel({
             color = 0xffedae,
             size = 18,
+            shadow = true,
         }):addTo(node):align(display.CENTER)
         function node:align(anchorPoint, x, y)
             progress:align(anchorPoint)
@@ -1598,36 +1612,45 @@ function GameUIReplayNew:BuildUI()
     ui_map.speedup = cc.ui.UIPushButton.new(
         {normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"},
         {scale9 = false}
-    ):setButtonLabel(cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = _("加速"),
-        size = 24,
-        color = UIKit:hex2c3b(0xfff3c7)}))
-        :addTo(bottom):align(display.CENTER, 110, 50)
+    ):setButtonLabel(
+        UIKit:ttfLabel({
+            text = _("加速"),
+            color = 0xfff3c7,
+            size = 24,
+            shadow = true,
+        })
+    ):addTo(bottom):align(display.CENTER, 110, 50)
 
     ui_map.close = cc.ui.UIPushButton.new(
         {normal = "red_btn_up_148x58.png",pressed = "red_btn_down_148x58.png"},
         {scale9 = false}
-    ):setButtonLabel(cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = _("关闭"),
-        size = 24,
-        color = UIKit:hex2c3b(0xfff3c7)}))
-        :addTo(bottom):align(display.CENTER, s1.width - 110, 50)
+    ):setButtonLabel(
+        UIKit:ttfLabel({
+            text = _("关闭"),
+            color = 0xfff3c7,
+            size = 24,
+            shadow = true,
+        })
+    ):addTo(bottom):align(display.CENTER, s1.width - 110, 50)
 
     ui_map.pass = cc.ui.UIPushButton.new(
         {normal = "red_btn_up_148x58.png",pressed = "red_btn_down_148x58.png"},
         {scale9 = false}
-    ):setButtonLabel(cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = _("跳过"),
-        size = 24,
-        color = UIKit:hex2c3b(0xfff3c7)}))
-        :addTo(bottom):align(display.CENTER, s1.width - 110, 50)
+    ):setButtonLabel(
+        UIKit:ttfLabel({
+            text = _("跳过"),
+            color = 0xfff3c7,
+            size = 24,
+            shadow = true,
+        })
+    ):addTo(bottom):align(display.CENTER, s1.width - 110, 50)
     return ui_map
 end
 
 return GameUIReplayNew
+
+
+
 
 
 
