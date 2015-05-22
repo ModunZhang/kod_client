@@ -153,7 +153,7 @@ function GameUIWarSummary:onEnter()
             {normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"}
         ):addTo(content):align(display.CENTER,w/2,45)
             :setButtonLabel(UIKit:ttfLabel({
-                text = _("离开战场"),
+                text = _("确定"),
                 size = 24,
                 color = 0xffedae,
                 shadow= true
