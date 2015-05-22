@@ -445,6 +445,15 @@ local function CheckMaterials()
 end
 
 
+local function Skip()
+    local key = "BuildHouseAt_8_3"
+    if not check(key) then
+        mark(key)
+        ext.market_sdk.onPlayerEvent("跳过", key)
+    end
+end
+
+
 
 return {
     HateDragon = HateDragon,
@@ -462,6 +471,7 @@ return {
     ActiveVip = ActiveVip,
     FightWithNpc = FightWithNpc,
     CheckMaterials = CheckMaterials,
+    Skip = Skip,
 }
 
 

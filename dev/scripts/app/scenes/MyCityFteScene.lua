@@ -17,6 +17,20 @@ local MyCityFteScene = class("MyCityFteScene", MyCityScene)
 function MyCityFteScene:ctor(...)
     MyCityFteScene.super.ctor(self, ...)
     self.clicked_callbacks = {}
+
+
+    cc.ui.UIPushButton.new({normal = "lock_btn.png",pressed = "lock_btn.png"})
+    :addTo(self, 1000000):align(display.RIGHT_TOP, display.width, display.height)
+    :onButtonClicked(function()
+        self:Skip()
+    end):setOpacity(0)
+    UIKit:ttfLabel({
+        text = _("跳过"),
+        size = 30,
+        color = 0xffedae,
+        align = cc.TEXT_ALIGNMENT_CENTER,
+    }):addTo(self, 1000000)
+    :align(display.RIGHT_TOP, display.width, display.height)
 end
 function MyCityFteScene:onEnterTransitionFinish()
     self:RunFte()
@@ -568,11 +582,18 @@ function MyCityFteScene:PromiseOfFteEnd()
         {words = _("看来大人你已经能够顺利接管这座城市了。。。如果不知道该干什么可以点击左上角的推荐任务"), rect = r}
     ):next(function()
         self:removeChildByTag(FTE_MARK_TAG)
-        app:GetPushManager():CancelAll()
-        UIKit:closeAllUI(true)
-        app:EnterUserMode()
-        app:EnterMyCityScene()
+        self:EnterMyCity()
     end)
+end
+function MyCityFteScene:Skip()
+    mockData.Skip()
+    self:EnterMyCity()
+end
+function MyCityFteScene:EnterMyCity()
+    app:GetPushManager():CancelAll()
+    UIKit:closeAllUI(true)
+    app:EnterUserMode()
+    app:EnterMyCityScene()
 end
 
 
