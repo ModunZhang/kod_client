@@ -63,25 +63,25 @@ end
 -- end
 --------------------------------------------------------------------------------------------------
 
-local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
-local MultiObserver = import(".MultiObserver")
-local ChatManager = class("ChatManager",MultiObserver)
-local Enum = import("..utils.Enum")
-local PUSH_INTVAL = 2 -- 推送的时间间隔
-local SIZE_MUST_PUSH = 5 -- 如果队列中数量达到指定条数立即推送
-ChatManager.LISTEN_TYPE = Enum("TO_TOP","TO_REFRESH")
+local scheduler           = require(cc.PACKAGE_NAME .. ".scheduler")
+local MultiObserver       = import(".MultiObserver")
+local ChatManager         = class("ChatManager",MultiObserver)
+local Enum                = import("..utils.Enum")
+local PUSH_INTVAL         = 2 -- 推送的时间间隔
+local SIZE_MUST_PUSH      = 5 -- 如果队列中数量达到指定条数立即推送
+ChatManager.LISTEN_TYPE   = Enum("TO_TOP","TO_REFRESH")
 ChatManager.CHANNNEL_TYPE = {GLOBAL = 1 ,ALLIANCE = 2}
-local BLOCK_LIST_KEY = "CHAT_BLOCK_LIST"
+local BLOCK_LIST_KEY      = "CHAT_BLOCK_LIST"
 
 function ChatManager:ctor(gameDefault)
 	ChatManager.super.ctor(self)
-	self.gameDefault = gameDefault
-	self.emojiUtil = EmojiUtil.new()
-	self.global_channel = {}
+	self.gameDefault      = gameDefault
+	self.emojiUtil        = EmojiUtil.new()
+	self.global_channel   = {}
 	self.alliance_channel = {}
-	self.push_buff_queue = {}
-	self.___handle___ = scheduler.scheduleGlobal(handler(self, self.__checkNotifyIf),PUSH_INTVAL)
-	self._blockedIdList_ = self:GetGameDefault():getBasicInfoValueForKey(BLOCK_LIST_KEY,{})
+	self.push_buff_queue  = {}
+	self.___handle___     = scheduler.scheduleGlobal(handler(self, self.__checkNotifyIf),PUSH_INTVAL)
+	self._blockedIdList_  = self:GetGameDefault():getBasicInfoValueForKey(BLOCK_LIST_KEY,{})
 end
 
 function ChatManager:GetEmojiUtil()
