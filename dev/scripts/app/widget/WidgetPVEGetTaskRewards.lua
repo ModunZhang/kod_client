@@ -1,12 +1,14 @@
+local Localize_item = import("..utils.Localize_item")
 local UILib = import("..ui.UILib")
 local WidgetPopDialog = import(".WidgetPopDialog")
 local WidgetPVEGetTaskRewards = class("WidgetPVEGetTaskRewards", WidgetPopDialog)
 
 
-function WidgetPVEGetTaskRewards:ctor(soldierName, coinClass, percent)
-    WidgetPVEGetTaskRewards.super.ctor(self, 414, _("完成奖励"), display.cy + 150)
-    self.soldierName = soldierName or "swordsman"
-    self.coinClass = coinClass or "coinClass_1"
+function WidgetPVEGetTaskRewards:ctor(soldierName, reward, percent)
+    WidgetPVEGetTaskRewards.super.ctor(self, 414, _("完成奖励"), display.cy + 250)
+    self.soldierName = soldierName or "ranger"
+    self.coinClass = reward.coinClass or "coinClass_1"
+    self.count = reward.count or 1
     self.percent = percent or 0
 end
 function WidgetPVEGetTaskRewards:onEnter()
@@ -14,22 +16,22 @@ function WidgetPVEGetTaskRewards:onEnter()
     local s = self:GetBody():getContentSize()
 
     local soldier_bg = display.newSprite("red_bg_128x128.png")
-    :addTo(self:GetBody()):pos(70, s.height - 90):scale(0.8)
+        :addTo(self:GetBody()):pos(70, s.height - 90):scale(0.8)
     local s1 = soldier_bg:getContentSize()
     display.newSprite(UILib.black_soldier_image[self.soldierName][2]):addTo(soldier_bg):pos(s1.width/2, s1.height/2)
     display.newSprite("box_soldier_128x128.png"):addTo(soldier_bg):pos(s1.width/2, s1.height/2)
 
     UIKit:ttfLabel({text = _("击杀进度:"), size = 20, color = 0x403c2f}):addTo(self:GetBody())
-    :align(display.LEFT_CENTER, 130, s.height - 60)
+        :align(display.LEFT_CENTER, 130, s.height - 60)
 
     local pbg = display.newSprite("progress_bar_458x40_1.png"):addTo(self:GetBody())
-    :align(display.LEFT_CENTER, 130, s.height - 110)
+        :align(display.LEFT_CENTER, 130, s.height - 110)
     local s2 = pbg:getContentSize()
     UIKit:commonProgressTimer("progress_bar_458x40_2.png"):addTo(pbg)
-    :align(display.LEFT_CENTER, 0, s2.height/2):setPercentage(self.percent)
+        :align(display.LEFT_CENTER, 0, s2.height/2):setPercentage(self.percent)
 
     UIKit:ttfLabel({text = string.format("%d%%", self.percent), size = 22, color = 0xffedae, shadow = true}):addTo(pbg,1)
-    :align(display.CENTER, s2.width/2, s2.height/2)
+        :align(display.CENTER, s2.width/2, s2.height/2)
 
     local bg = display.newSprite("pve_background_568x151.png"):addTo(self:GetBody())
         :pos(s.width/2, s.height - 230)
@@ -47,16 +49,40 @@ function WidgetPVEGetTaskRewards:onEnter()
         dimensions = cc.size(380, 70),
         margin = 1,
         lineHeight = 35,
-    })
-        :addTo(bg):align(display.LEFT_TOP, 150, s1.height-60)
+    }):addTo(bg):align(display.LEFT_TOP, 150, s1.height-60)
 
 
-    cc.ui.UIPushButton.new({normal = "yellow_btn_up_185x65.png",pressed = "yellow_btn_down_185x65.png", disabled = "yellow_disable_185x65.png"})
+    self.get_btn = cc.ui.UIPushButton.new({normal = "yellow_btn_up_185x65.png",pressed = "yellow_btn_down_185x65.png", disabled = "yellow_disable_185x65.png"})
         :addTo(self:GetBody()):pos(s.width/2, 60)
         :setButtonLabel(UIKit:ttfLabel({text = _("领取"), size = 24, color = 0xffedae}))
         :onButtonClicked(function()
-
-            end):setButtonEnabled(self.percent >= 100)
+            local name,count,target_count,ok = User:GetPVEDatabase():GetTarget()
+            if ok and count >= target_count then
+                User:ResetPveData()
+                User:SetPveData(nil, {
+                    {
+                        type = "items",
+                        name = self.coinClass,
+                        count = self.count,
+                    },
+                }, nil)
+                local data = User:EncodePveDataAndResetFightRewardsData()
+                NetManager:getSetPveDataPromise(data):done(function()
+                    GameGlobalUI:showTips(_("获得奖励"), Localize_item.item_name[self.coinClass].."x"..self.count)
+                end)
+                User:GetPVEDatabase():NewTarget()
+                self:getParent():GetHomePage().event_tab:PromiseOfSwitch()
+                self:LeftButtonClicked()
+            end
+        end):setButtonEnabled(false)
+    self:RefreshStatus()
+end
+function WidgetPVEGetTaskRewards:RefreshStatus()
+    local name,count,target_count,ok = User:GetPVEDatabase():GetTarget()
+    if count >= target_count then
+        self.get_btn:setButtonEnabled(true)
+        self.get_btn:setButtonLabelString(_("领取"))
+    end
 end
 
 
@@ -64,4 +90,6 @@ end
 
 
 return WidgetPVEGetTaskRewards
+
+
 

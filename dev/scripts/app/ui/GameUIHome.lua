@@ -125,7 +125,7 @@ function GameUIHome:onEnter()
     self.event_tab = WidgetEventTabButtons.new(self.city, ratio)
     local rect1 = self.chat:getCascadeBoundingBox()
     local x, y = rect1.x, rect1.y + rect1.height - 2
-    self.event_tab:addTo(self):pos(x, y)
+    self.event_tab:addTo(self,0):pos(x, y)
 
     self:AddOrRemoveListener(true)
     self:OnResourceChanged(city:GetResourceManager())
@@ -450,13 +450,13 @@ function GameUIHome:CreateTop()
 end
 
 function GameUIHome:CreateBottom()
-    local bottom_bg = WidgetHomeBottom.new(self.city):addTo(self)
+    local bottom_bg = WidgetHomeBottom.new(self.city):addTo(self, 1)
         :align(display.BOTTOM_CENTER, display.cx, display.bottom)
 
     self.chat = WidgetChat.new():addTo(bottom_bg)
         :align(display.CENTER, bottom_bg:getContentSize().width/2, bottom_bg:getContentSize().height-11)
         
-    self.change_map = WidgetChangeMap.new(WidgetChangeMap.MAP_TYPE.OUR_CITY):addTo(self)
+    self.change_map = WidgetChangeMap.new(WidgetChangeMap.MAP_TYPE.OUR_CITY):addTo(self, 1)
 
     return bottom_bg
 end
@@ -608,9 +608,11 @@ function GameUIHome:PromiseOfActivePromise()
         return ui:PromiseOfFte()
     end)
 end
-
 function GameUIHome:OnCountInfoChanged()
     self.left_order_group:RefreshOrder()
+end
+function GameUIHome:PromiseOfFteAlliance()
+    self.bottom:TipsOnAlliance()
 end
 
 return GameUIHome

@@ -239,8 +239,8 @@ function MultiAllianceLayer:CreateVillageFlag(e)
         )
     function flag:SetAlly(e)
         local head,circle = unpack(flag_map[e])
-        self.flag:setTexture(head)
-        self.flag:getChildByTag(1):setTexture(circle)
+        self:setTexture(head)
+        self:getChildByTag(1):setTexture(circle)
     end
     return flag
 end

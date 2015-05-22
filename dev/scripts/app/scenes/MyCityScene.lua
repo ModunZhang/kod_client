@@ -195,6 +195,23 @@ function MyCityScene:onEnterTransitionFinish()
         ext.registereForRemoteNotifications()
     end
     app:sendApnIdIf()
+
+    if not cc.UserDefault:getInstance():getBoolForKey("first_in_city_scene") and 
+        Alliance_Manager:GetMyAlliance():IsDefault() then
+        -- cc.UserDefault:getInstance():setBoolForKey("first_in_city_scene", true)
+        -- cc.UserDefault:flush()
+        app:lockInput(true)
+        cocos_promise.defer(function()
+            app:lockInput(false)
+        end):next(function()
+            return GameUINpc:PromiseOfSay(
+                {words = _("领主大人，这个世界上的觉醒者并不只有你一人。介入他们或者创建联盟邀请他们加入，会让我们发展得更顺利")}
+            )
+        end):next(function()
+            self:GetHomePage():PromiseOfFteAlliance()
+            return GameUINpc:PromiseOfLeave()
+        end)
+    end
 end
 function MyCityScene:CreateHomePage()
     if UIKit:GetUIInstance("GameUIHome") then
@@ -362,6 +379,10 @@ function MyCityScene:OpenUI(building, default_tab)
 end
 
 return MyCityScene
+
+
+
+
 
 
 

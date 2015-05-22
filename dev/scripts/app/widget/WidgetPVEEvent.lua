@@ -124,7 +124,7 @@ function WidgetPVEEvent:Load()
     if ok then
         local item = self:CreateItem()
             :SetProgressInfo(
-                string.format(_("通缉 : %s        %d/%d"), Localize.soldier_name[name], count, target_count),
+                string.format(_("通缉令 : %s        %d/%d"), Localize.soldier_name[name], count, target_count),
                 (count / target_count) * 100)
         if count >= target_count then
             item:SetCanGet()
@@ -132,7 +132,7 @@ function WidgetPVEEvent:Load()
         self:InsertItem(item:OnClicked(function()
             local name,count,target_count,ok = self.user:GetPVEDatabase():GetTarget()
             if ok then
-                WidgetPVEGetTaskRewards.new(name, nil, (count/target_count) * 100):AddToCurrentScene(true)
+                WidgetPVEGetTaskRewards.new(name, {}, (count/target_count) * 100):AddToCurrentScene(true)
             end
         end))
     end

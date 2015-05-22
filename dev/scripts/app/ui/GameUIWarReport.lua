@@ -199,7 +199,7 @@ function GameUIWarReport:CreateBootyPart()
                 color = 0x403c2f
             }):align(display.LEFT_CENTER,80,23):addTo(booty_item_bg)
             UIKit:ttfLabel({
-                text = booty_parms.value,
+                text = string.formatnumberthousands(booty_parms.value),
                 size = 22,
                 color = booty_parms.value>0 and 0x288400 or 0x7e0000
             }):align(display.RIGHT_CENTER,booty_list_bg_size.width-30,23):addTo(booty_item_bg)

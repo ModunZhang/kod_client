@@ -20,7 +20,13 @@ function MailManager:ctor()
     print("DataManager>>> reports",user_data.reports)
     print("DataManager>>> savedReports",user_data.savedReports)
 end
-
+function MailManager:Reset()
+    self.mails = nil
+    self.savedMails = nil
+    self.sendMails = nil
+    self.reports = nil
+    self.savedReports = nil
+end
 function MailManager:IncreaseUnReadMailsNum(num)
     self.unread_mail = self.unread_mail + num
     GameGlobalUI:showTips(_("提示"),_("你有一封新的邮件"))
@@ -463,6 +469,7 @@ function MailManager:OnUserDataChanged(userData,timer,deltaData)
     end
     local is_delta_update = not is_fully_update and deltaData.reports ~= nil
     if is_delta_update then
+        LuaUtils:outputTable("deltaData.reports", deltaData.reports)
         self:OnNewReportsChanged(deltaData.reports)
     end
 

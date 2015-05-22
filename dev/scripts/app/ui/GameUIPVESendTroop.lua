@@ -100,7 +100,7 @@ function GameUIPVESendTroop:OnMoveInStage()
     end):align(display.LEFT_CENTER,window.left+50,window.top-910):addTo(self:GetView())
     self.max_btn = max_btn
 
-    self.march_btn = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
+    self.march_btn = WidgetPushButton.new({normal = "red_btn_up_148x58.png",pressed = "red_btn_down_148x58.png"})
         :setButtonLabel(UIKit:ttfLabel({
             text = _("进攻"),
             size = 24,

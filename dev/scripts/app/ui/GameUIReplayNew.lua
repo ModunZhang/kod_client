@@ -864,7 +864,7 @@ function GameUIReplayNew:OnMoveInStage()
         elseif self.ui_map.speedup.speed == 4 then
             self.ui_map.speedup.speed = nil
             self.ui_map.speedup:setButtonLabelString(_("x1"))
-            self:SpeedUp(1)
+            self:SpeedUp()
         end
     end)
     self.ui_map.close:onButtonClicked(function()
@@ -1269,8 +1269,9 @@ function GameUIReplayNew:IsAllDefeated(soldiers)
     end
     return true
 end
+local DEFAULT_SPEED = 1.5
 function GameUIReplayNew:SpeedUp(speed)
-    self.speed = speed or 1
+    self.speed = speed or DEFAULT_SPEED
     local a = self.timer_node:getActionByTag(SPEED_TAG)
     if a then
         a:setSpeed(self.speed)
@@ -1309,10 +1310,10 @@ function GameUIReplayNew:SpeedUp(speed)
     self.ui_map.soldier_morale_defence:RefreshSpeed()
 end
 function GameUIReplayNew:Speed()
-    return self.speed or 1
+    return self.speed or DEFAULT_SPEED
 end
 function GameUIReplayNew:Reset()
-    self:SpeedUp(1)
+    self:SpeedUp()
     if self.result then
         self.result:removeFromParent()
         self.result = nil
@@ -1615,7 +1616,7 @@ function GameUIReplayNew:BuildUI()
         :addTo(bottom):align(display.CENTER, s1.width - 110, 50)
 
     ui_map.pass = cc.ui.UIPushButton.new(
-        {normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"},
+        {normal = "red_btn_up_148x58.png",pressed = "red_btn_down_148x58.png"},
         {scale9 = false}
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,

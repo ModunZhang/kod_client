@@ -130,13 +130,19 @@ function GameUIPVEHome:CreateTop()
         color = 0xffedae,
     }):addTo(pve_back):align(display.CENTER, size.width / 2, 25)
 
-    self.box_bg = cc.ui.UIPushButton.new(
+    local reward_btn = cc.ui.UIPushButton.new(
         {normal = "back_ground_box.png", pressed = "back_ground_box.png"}
         ,{})
         :addTo(top_bg, 1):align(display.CENTER, 80, 55):scale(0.8)
         :onButtonClicked(function(event)
-            WidgetPVEGetRewards.new(self.layer:ExploreDegree() * 100):AddToCurrentScene(true)
+            WidgetPVEGetRewards.new({gemClass = "gemClass_1", count = 1}, self.layer:ExploreDegree() * 100):AddToCurrentScene(true)
         end)
+
+    self.reward = display.newSprite(UILib.item["gemClass_1"],nil,nil,{class=cc.FilteredSpriteWithOne})
+        :addTo(reward_btn):scale(0.6)
+    self:RefreshRewards()
+
+
 
 
     UIKit:ttfLabel({
@@ -174,33 +180,42 @@ end
 --     end
 -- end
 function GameUIPVEHome:GetRewards()
-    -- local index = self.layer:CurrentPVEMap():GetIndex()
-    -- local rewards = GameDatas.PlayerInitData.pveLevel[index]
-    -- local _1,name = unpack(string.split(rewards.itemName, ":"))
-    -- self.user:ResetPveData()
-    -- self.user:SetPveData(nil, {
-    --     {
-    --         type = "items",
-    --         name = name,
-    --         count = rewards.count,
-    --     },
-    -- }, nil)
-    -- local data = self.user:EncodePveDataAndResetFightRewardsData()
-    -- data.pveData.rewardedFloor = index
-    -- NetManager:getSetPveDataPromise(data):done(function()
-    --     local wp = self.box:getParent():convertToWorldSpace(cc.p(self.box:getPosition()))
-    --     UIKit:newGameUI("GameUIPveGetRewards", wp.x, wp.y):AddToCurrentScene(true)
-    --         :AddClickOutFunc(function(ui)
-    --             ui:LeftButtonClicked()
-    --             self:SetBoxStatus(not self.layer:CurrentPVEMap():IsRewarded())
-    --             GameGlobalUI:showTips(_("获得奖励"), Localize_item.item_name[name].."x"..rewards.count)
-    --         end)
-    -- end)
+-- local index = self.layer:CurrentPVEMap():GetIndex()
+-- local rewards = GameDatas.PlayerInitData.pveLevel[index]
+-- local _1,name = unpack(string.split(rewards.itemName, ":"))
+-- self.user:ResetPveData()
+-- self.user:SetPveData(nil, {
+--     {
+--         type = "items",
+--         name = name,
+--         count = rewards.count,
+--     },
+-- }, nil)
+-- local data = self.user:EncodePveDataAndResetFightRewardsData()
+-- data.pveData.rewardedFloor = index
+-- NetManager:getSetPveDataPromise(data):done(function()
+--     local wp = self.box:getParent():convertToWorldSpace(cc.p(self.box:getPosition()))
+--     UIKit:newGameUI("GameUIPveGetRewards", wp.x, wp.y):AddToCurrentScene(true)
+--         :AddClickOutFunc(function(ui)
+--             ui:LeftButtonClicked()
+--             self:SetBoxStatus(not self.layer:CurrentPVEMap():IsRewarded())
+--             GameGlobalUI:showTips(_("获得奖励"), Localize_item.item_name[name].."x"..rewards.count)
+--         end)
+-- end)
+end
+function GameUIPVEHome:RefreshRewards()
+    self.reward:setTexture(UILib.item["gemClass_1"])
+    if self.layer:CurrentPVEMap():IsRewarded() then
+        self.reward:setFilter(filter.newFilter("GRAY", {0.2, 0.3, 0.5, 0.1}))
+    else
+        self.reward:clearFilter()
+    end
 end
 
 
 
 return GameUIPVEHome
+
 
 
 

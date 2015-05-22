@@ -215,6 +215,9 @@ end
 
 function MyApp:onEnterBackground()
     dump("onEnterBackground------>")
+    if MailManager then
+        MailManager:Reset()
+    end
     NetManager:disconnect()
     self:flushIf()
 end
@@ -474,6 +477,11 @@ function __G__GAME_CENTER_CALLBACK(gc_name,gc_id)
             ext.gamecenter.gc_bind = response.msg.isBind
         end)
     end
+end
+
+
+my_print = function(...)
+    LuaUtils:outputTable({...})
 end
 
 return MyApp
