@@ -210,10 +210,14 @@ local crown_map = {
     "crown_silver_46x40.png",
     "crown_brass_46x40.png",
 }
+local NORMAL_COLOR = UIKit:hex2c3b(0x403c2f)
+local MINE_COLOR = UIKit:hex2c3b(0xffedae)
 function WidgetRankingList:CreatePlayerContentByIndex(idx)
     local item = display.newSprite("background2_548x76.png")
     local size = item:getContentSize()
     item.bg2 = display.newSprite("background1_548x76.png"):addTo(item)
+        :pos(size.width/2, size.height/2)
+    item.bg3 = display.newSprite("background3_548x76.png"):addTo(item)
         :pos(size.width/2, size.height/2)
     display.newSprite("background_57x57.png"):addTo(item):pos(120, 40)
     local player_head_icon = UIKit:GetPlayerIconOnly():addTo(item,1):pos(120, 40):scale(0.5)
@@ -245,8 +249,17 @@ function WidgetRankingList:CreatePlayerContentByIndex(idx)
         item.player_icon:setTexture(UIKit:GetPlayerIconImage(data.icon))
         return self
     end
+    local ranklist = self
     function item:SetIndex(index)
-        self.bg2:setVisible(index % 2 == 0)
+        local is_mine = ranklist.current_rank.myData.rank == index
+        self.bg2:setVisible(index % 2 == 0 and not is_mine)
+        self.bg3:setVisible(is_mine)
+
+        local c = is_mine and MINE_COLOR or NORMAL_COLOR 
+        self.rank:setColor(c)
+        self.name:setColor(c)
+        self.value:setColor(c)
+
         if index <= 3 then
             self.rank:hide()
             self.crown:setTexture(crown_map[index])
@@ -264,6 +277,9 @@ function WidgetRankingList:CreateAllianceContentByIndex(idx)
     local size = item:getContentSize()
 
     item.bg2 = display.newSprite("background1_548x76.png"):addTo(item)
+        :pos(size.width/2, size.height/2)
+
+    item.bg3 = display.newSprite("background3_548x76.png"):addTo(item)
         :pos(size.width/2, size.height/2)
 
 
@@ -307,8 +323,17 @@ function WidgetRankingList:CreateAllianceContentByIndex(idx)
             :addTo(self):align(display.CENTER, 80, 5):scale(0.5)
         return self
     end
+    local ranklist = self
     function item:SetIndex(index)
-        self.bg2:setVisible(index % 2 == 0)
+        local is_mine = ranklist.current_rank.myData.rank == index
+        self.bg2:setVisible(index % 2 == 0 and not is_mine)
+        self.bg3:setVisible(is_mine)
+
+        local c = is_mine and MINE_COLOR or NORMAL_COLOR 
+        self.rank:setColor(c)
+        self.name:setColor(c)
+        self.value:setColor(c)
+
         if index <= 3 then
             self.rank:hide()
             self.crown:setTexture(crown_map[index])
