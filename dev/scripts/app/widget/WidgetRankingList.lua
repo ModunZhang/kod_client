@@ -210,6 +210,8 @@ local crown_map = {
     "crown_silver_46x40.png",
     "crown_brass_46x40.png",
 }
+local NORMAL_COLOR = UIKit:hex2c3b(0x403c2f)
+local MINE_COLOR = UIKit:hex2c3b(0xffedae)
 function WidgetRankingList:CreatePlayerContentByIndex(idx)
     local item = display.newSprite("background2_548x76.png")
     local size = item:getContentSize()
@@ -252,6 +254,12 @@ function WidgetRankingList:CreatePlayerContentByIndex(idx)
         local is_mine = ranklist.current_rank.myData.rank == index
         self.bg2:setVisible(index % 2 == 0 and not is_mine)
         self.bg3:setVisible(is_mine)
+
+        local c = is_mine and MINE_COLOR or NORMAL_COLOR 
+        self.rank:setColor(c)
+        self.name:setColor(c)
+        self.value:setColor(c)
+
         if index <= 3 then
             self.rank:hide()
             self.crown:setTexture(crown_map[index])
@@ -320,6 +328,12 @@ function WidgetRankingList:CreateAllianceContentByIndex(idx)
         local is_mine = ranklist.current_rank.myData.rank == index
         self.bg2:setVisible(index % 2 == 0 and not is_mine)
         self.bg3:setVisible(is_mine)
+
+        local c = is_mine and MINE_COLOR or NORMAL_COLOR 
+        self.rank:setColor(c)
+        self.name:setColor(c)
+        self.value:setColor(c)
+
         if index <= 3 then
             self.rank:hide()
             self.crown:setTexture(crown_map[index])
