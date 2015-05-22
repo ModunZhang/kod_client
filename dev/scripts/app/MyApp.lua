@@ -215,6 +215,7 @@ end
 
 function MyApp:onEnterBackground()
     dump("onEnterBackground------>")
+    MailManager:Reset()
     NetManager:disconnect()
     self:flushIf()
 end
