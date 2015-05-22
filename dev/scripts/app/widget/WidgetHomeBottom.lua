@@ -54,6 +54,9 @@ function WidgetHomeBottom:ctor(city)
         elseif i == 3 then
             self.mail_count = WidgetNumberTips.new():addTo(self):pos(x+20, first_row+20)
             self.mail_count:setLocalZOrder(11)
+        elseif i == 4 then
+            self.alliance_btn = button
+            self.alliance_btn:setLocalZOrder(9)
         end
     end
 end
@@ -61,7 +64,7 @@ function WidgetHomeBottom:onEnter()
     local user = self.city:GetUser()
     MailManager:AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
     user:AddListenOnType(self, user.LISTEN_TYPE.TASK)
-    
+
     self:OnTaskChanged()
     self:MailUnreadChanged()
 end
@@ -75,6 +78,8 @@ function WidgetHomeBottom:OnBottomButtonClicked(event)
     if not tag then return end
     if tag == 4 then -- tag 4 = alliance button
         UIKit:newGameUI('GameUIAlliance'):AddToCurrentScene(true)
+        self.alliance_btn:removeChildByTag(111)
+        self.alliance_btn:removeChildByTag(222)
     elseif tag == 3 then
         UIKit:newGameUI('GameUIMail',self.city):AddToCurrentScene(true)
     elseif tag == 2 then
@@ -87,7 +92,22 @@ function WidgetHomeBottom:OnBottomButtonClicked(event)
 end
 
 
+-- fte
+local WidgetFteArrow = import(".WidgetFteArrow")
+local WidgetFteMark = import(".WidgetFteMark")
+function WidgetHomeBottom:TipsOnAlliance()
+    WidgetFteMark.new()
+        :Size(100, 100)
+        :addTo(self.alliance_btn, 1, 111)
+
+    WidgetFteArrow.new(_("点击查看联盟"))
+        :TurnDown():align(display.BOTTOM_CENTER, 0, 50)
+        :addTo(self.alliance_btn, 1, 222)
+end
+
+
 return WidgetHomeBottom
+
 
 
 
