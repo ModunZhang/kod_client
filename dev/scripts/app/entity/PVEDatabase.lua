@@ -86,6 +86,30 @@ function PVEDatabase:ResetAllMapsListener()
     end
 end
 
+-------- 
+function PVEDatabase:GetTarget()
+    local user_default = cc.UserDefault:getInstance()
+    local name = user_default:getStringForKey("pve_task")
+    return name, user_default:getIntegerForKey("pve_task_count"), user_default:getIntegerForKey("pve_task_target_count"), #name > 0
+end
+function PVEDatabase:NewTarget(name, count)
+    local user_default = cc.UserDefault:getInstance()
+    user_default:setStringForKey("pve_task", "swordsman")
+    user_default:setIntegerForKey("pve_task_count", 0)
+    user_default:setIntegerForKey("pve_task_target_count", 100)
+    user_default:flush()
+end
+function PVEDatabase:IncKillCount(count)
+    local user_default = cc.UserDefault:getInstance()
+    if #user_default:getStringForKey("pve_task") > 0 then
+        local kill_count = user_default:getIntegerForKey("pve_task_count")
+        local kill_target = user_default:getIntegerForKey("pve_task_target_count")
+        kill_count = kill_count + count > kill_target and kill_target or (kill_count + count)
+        user_default:setIntegerForKey("pve_task_count", kill_count)
+        user_default:flush()
+    end
+end
+
 
 return PVEDatabase
 

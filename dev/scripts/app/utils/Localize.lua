@@ -899,6 +899,7 @@ local ALLIANCE_LANGUAGE = {
     ru  = _("俄语"),
     es  = _("西班牙语"),
     pt  = _("葡萄牙语"),
+    it  = _("意大利语"),
 }
 
 local ALLIANCE_DECORATE_NAME = {

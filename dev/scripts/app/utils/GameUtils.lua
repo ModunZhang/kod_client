@@ -830,6 +830,25 @@ function GameUtils:DoBattle(attacker, defencer, terrain, enemy_name)
         end
         return {dragon = dragon, soldiers = soldiers}
     end
+    function report:GetDefenceKDA()
+        -- 兵种战损
+        local r = {}
+        for _,v in ipairs(defence_soldier) do
+            r[v.soldierName] = {damagedCount = 0, woundedCount = 0}
+        end
+        for _,v in ipairs(defence_soldier) do
+            local soldier = r[v.soldierName]
+            soldier.damagedCount = soldier.damagedCount + v.soldierDamagedCount
+            soldier.woundedCount = soldier.woundedCount + v.soldierWoundedCount
+        end
+        local soldiers = {}
+        for k,v in pairs(r) do
+            if v.damagedCount > 0 then
+                table.insert(soldiers, {name = k, damagedCount = v.damagedCount, woundedCount = v.woundedCount})
+            end
+        end
+        return {soldiers = soldiers}
+    end
     function report:IsPveBattle()
     end
     function report:GetFightAttackName()

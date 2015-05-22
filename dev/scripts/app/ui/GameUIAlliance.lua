@@ -802,6 +802,11 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
         :pos(16,events_title:getPositionY()+events_title:getContentSize().height+10)
     local titileBar = display.newScale9Sprite("alliance_event_type_darkblue_222x30.png",0,0, cc.size(438,30), cc.rect(7,7,190,16))
         :addTo(headerBg):align(display.TOP_RIGHT, headerBg:getContentSize().width - 10, headerBg:getContentSize().height - 20)
+    local language_sprite = display.newSprite(string.format("#%s",UILib.alliance_language_frame[Alliance_Manager:GetMyAlliance():DefaultLanguage()]))
+        :align(display.RIGHT_CENTER, 410,15)
+        :addTo(titileBar)
+        :scale(0.5)
+    self.ui_overview.language_sprite = language_sprite
     local flag_box = display.newScale9Sprite("alliance_item_flag_box_126X126.png"):size(134,134)
         :align(display.TOP_LEFT,20, headerBg:getContentSize().height - 20):addTo(headerBg)
     self.flag_box = flag_box
@@ -895,19 +900,19 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
         :addTo(headerBg)
         :align(display.LEFT_BOTTOM,line_1:getPositionX(),line_1:getPositionY()+30)
     local languageLabel = UIKit:ttfLabel({
-        text = _("语言"),
+        text = _("联盟战斗力"),
         size = 20,
         color = 0x615b44,
     }):addTo(headerBg)
         :align(display.LEFT_BOTTOM,tagLabel:getPositionX(),line_0:getPositionY() + 2)
     local languageLabelVal = UIKit:ttfLabel({
-        text = Localize.alliance_language[Alliance_Manager:GetMyAlliance():DefaultLanguage()],
+        text = string.formatnumberthousands(Alliance_Manager:GetMyAlliance():Power()),
         size = 20,
         color = 0x403c2f,
     })
         :addTo(headerBg)
         :align(display.RIGHT_BOTTOM,languageLabelVal:getPositionX(),languageLabel:getPositionY())
-    self.ui_overview.languageLabelVal = languageLabelVal
+    self.ui_overview.powerLabel = languageLabelVal
     self.overviewNode = overviewNode
     return self.overviewNode
 end
@@ -1014,7 +1019,8 @@ function GameUIAlliance:RefreshOverViewUI()
         self.ui_overview.nameLabel:setString(string.format("[%s] %s",alliance_data:Tag(),alliance_data:Name()))
         self.ui_overview.memberCountLabel:setString(string.format("%s/%s",m_count,m_maxCount))
         self.ui_overview.online_count_label:setString(m_online)
-        self.ui_overview.languageLabelVal:setString(Localize.alliance_language[alliance_data:DefaultLanguage()])
+        self.ui_overview.powerLabel:setString(string.formatnumberthousands(alliance_data:Power()))
+        self.ui_overview.language_sprite:setSpriteFrame(UILib.alliance_language_frame[alliance_data:DefaultLanguage()])
         self:RefreshNoticeView()
     end
 end

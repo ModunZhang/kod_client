@@ -399,10 +399,6 @@ function MultiAllianceLayer:ManagerCorpsFromChangedMap(changed_map,is_strkie,all
                         else
                             app:GetAudioManager():PlayeEffectSoundWithKey("ATTACK_PLAYER_ARRIVE")
                         end
-                    elseif player_role == marchEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER then
-                        if marchEvent:IsReturnEvent() and not marchEvent:IsStrikeEvent() then -- return
-                            app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_BACK")
-                        end
                     end
                 end
                 self:DeleteCorpsById(marchEvent:Id())
