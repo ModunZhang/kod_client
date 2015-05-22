@@ -1,5 +1,5 @@
 local GameUIWatiForNetWork = UIKit:createUIClass("GameUIWatiForNetWork")
-local modf = math.modf
+local fmod = math.fmod
 function GameUIWatiForNetWork:ctor(delay)
     GameUIWatiForNetWork.super.ctor(self)
     self.delay = delay and checkint(delay) or 1
@@ -53,16 +53,14 @@ function GameUIWatiForNetWork:onEnter()
         {class=cc.FilteredSpriteWithOne}):addTo(self.loading):scale(0.8)
 
     local time, flashTime = 0, 1
-    local _,ratio = (modf(time, flashTime) / flashTime)
     icon:setFilter(filter.newFilter("CUSTOM", json.encode({
         frag = "shaders/flash.fs",
         shaderName = "flash1",
-        ratio = ratio,
+        ratio = fmod(time, flashTime) / flashTime,
     })))
     icon:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt)
         time = time + dt
-        local _,ratio = modf(time, flashTime)
-        icon:getFilter():getGLProgramState():setUniformFloat("ratio", ratio / flashTime)
+        icon:getFilter():getGLProgramState():setUniformFloat("ratio", fmod(time, flashTime) / flashTime)
     end)
     icon:scheduleUpdate()
 
