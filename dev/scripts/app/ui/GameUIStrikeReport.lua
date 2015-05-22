@@ -215,7 +215,7 @@ function GameUIStrikeReport:CreateBootyPart()
             local color = (self.report:Type() == "strikeCity" or self.report:Type() == "strikeVillage") and 0x288400 or 0x770000
             cc.ui.UILabel.new({
                 UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-                text = ((self.report:Type() == "strikeCity" or self.report:Type() == "strikeVillage") and "" or "-")..booty_parms.value,
+                text = ((self.report:Type() == "strikeCity" or self.report:Type() == "strikeVillage") and "" or "-")..string.formatnumberthousands(booty_parms.value),
                 font = UIKit:getFontFilePath(),
                 size = 22,
                 color = UIKit:hex2c3b(color)
@@ -801,6 +801,7 @@ function GameUIStrikeReport:GetProbableNum(num)
 end
 
 return GameUIStrikeReport
+
 
 
 
