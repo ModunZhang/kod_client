@@ -183,7 +183,7 @@ function GameUITips:CreateUIIf_pve()
 	:align(display.BOTTOM_CENTER, 304, self.bg:getContentSize().height - 655)
 	:addTo(node)
 	local x,y = 10,250
-	for index,v in ipairs(self:RegionTips()) do
+	for index,v in ipairs(self:PveTips()) do
 		local star = display.newSprite("alliance_star_23x23.png")
 		:align(display.LEFT_TOP, x, y):addTo(tips_bg)
 		UIKit:ttfLabel({
