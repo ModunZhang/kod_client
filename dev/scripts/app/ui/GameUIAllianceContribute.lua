@@ -60,7 +60,13 @@ function GameUIAllianceContribute:ctor()
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 if self:IsAbleToContribute() then
-                    NetManager:getDonateToAlliancePromise(self.group:GetSelectedType())
+                    NetManager:getDonateToAlliancePromise(self.group:GetSelectedType()):done(function ( response )
+                        for i,v in ipairs(response.msg.playerData) do
+                            if v[1] == "allianceInfo.loyalty" then
+                                GameGlobalUI:showTips(_("捐赠成功"),string.format(_("获得%d点忠诚值"),v[2]))
+                            end
+                        end
+                    end)
                 end
             end
         end)
@@ -353,6 +359,8 @@ function GameUIAllianceContribute:OnAllianceDonateChanged()
     self:RefreashEff()
 end
 return GameUIAllianceContribute
+
+
 
 
 
