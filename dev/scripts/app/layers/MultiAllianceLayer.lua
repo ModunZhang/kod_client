@@ -6,6 +6,7 @@ local Observer = import("..entity.Observer")
 local AllianceView = import(".AllianceView")
 local MapLayer = import(".MapLayer")
 local MultiAllianceLayer = class("MultiAllianceLayer", MapLayer)
+local intInit = GameDatas.AllianceInitData.intInit
 local ZORDER = Enum("BACKGROUND", "BUILDING", "INFO", "LINE", "CORPS")
 local fmod = math.fmod
 local floor = math.floor
@@ -140,15 +141,15 @@ function MultiAllianceLayer:InitAllianceView()
     end
     if MultiAllianceLayer.ARRANGE.H == self.arrange then
         alliance_view1 = AllianceView.new(self, self.alliances[1], 0):addTo(self)
-        alliance_view2 = AllianceView.new(self, self.alliances[2], 51):addTo(self)
+        alliance_view2 = AllianceView.new(self, self.alliances[2], intInit.allianceRegionMapWidth.value):addTo(self)
         -- local sx, sy = alliance_view1:GetLogicMap():ConvertToMapPosition(50.5, -3.5)
         -- local ex, ey = alliance_view1:GetLogicMap():ConvertToMapPosition(50.5, 51.5)
         -- display.newLine({{sx, sy}, {ex, ey}},
         --     {borderColor = cc.c4f(1.0, 0.0, 0.0, 1.0),
         --         borderWidth = 5}):addTo(self.building)
     else
-        alliance_view1 = AllianceView.new(self, self.alliances[1], 0, 104):addTo(self)
-        alliance_view2 = AllianceView.new(self, self.alliances[2], 0, 53):addTo(self)
+        alliance_view1 = AllianceView.new(self, self.alliances[1], 0, intInit.allianceRegionMapHeight.value * 2 + 2):addTo(self)
+        alliance_view2 = AllianceView.new(self, self.alliances[2], 0, intInit.allianceRegionMapHeight.value + 2):addTo(self)
         -- local sx, sy = alliance_view1:GetLogicMap():ConvertToMapPosition(-0.5, 51.5)
         -- local ex, ey = alliance_view1:GetLogicMap():ConvertToMapPosition(51.5, 51.5)
         -- display.newLine({{sx, sy}, {ex, ey}},
@@ -314,15 +315,15 @@ function MultiAllianceLayer:CreateAllianceCorps(alliance)
         table.foreachi(alliance:GetAttackMarchEvents(),function(_,event)
             self:CreateCorpsIf(event)
         end)
-        table.foreachi(alliance:GetAttackMarchReturnEvents(),function(_,event)
-            self:CreateCorpsIf(event)
-        end)
-        table.foreachi(alliance:GetStrikeMarchEvents(),function(_,event)
-            self:CreateCorpsIf(event)
-        end)
-        table.foreachi(alliance:GetStrikeMarchReturnEvents(),function(_,event)
-            self:CreateCorpsIf(event)
-        end)
+    table.foreachi(alliance:GetAttackMarchReturnEvents(),function(_,event)
+        self:CreateCorpsIf(event)
+    end)
+    table.foreachi(alliance:GetStrikeMarchEvents(),function(_,event)
+        self:CreateCorpsIf(event)
+    end)
+    table.foreachi(alliance:GetStrikeMarchReturnEvents(),function(_,event)
+        self:CreateCorpsIf(event)
+    end)
     else
         --敌方联盟
         local my_alliance_belvedere = self:GetMyAlliance():GetAllianceBelvedere()
@@ -455,9 +456,9 @@ function MultiAllianceLayer:CreateCorpsIf(marchEvent)
         else -- return
             if marchEvent:GetPlayerRole() == marchEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER  then
                 ally = MINE
-            else
-                ally = FRIEND
-            end
+        else
+            ally = FRIEND
+        end
         end
     end
     self:CreateCorps(
@@ -743,15 +744,18 @@ function MultiAllianceLayer:PromiseOfFlashEmptyGround(building, is_my_alliance)
     end
     local x,y = alliance_view:GetLogicMap():ConvertToMapPosition(building:GetEntity():GetLogicPosition())
     self.click_empty = display.newSprite("click_empty.png"):addTo(self:GetBuildingNode()):pos(x,y)
-    self.click_empty:setOpacity(128)
-    transition.fadeTo(self.click_empty, {
-        opacity = 255, time = 0.5,
-        onComplete = function()
-            self.click_empty:removeFromParent()
-            self.click_empty = nil
-            p:resolve()
-        end
-    })
+    self.click_empty:setOpacity(0)
+    self.click_empty:runAction(
+        transition.sequence{
+            cc.FadeTo:create(0.15, 255),
+            cc.FadeTo:create(0.15, 0),
+            cc.CallFunc:create(function()
+                self.click_empty:removeFromParent()
+                self.click_empty = nil
+                p:resolve()
+            end)
+        }
+    )
     return p
 end
 
@@ -801,6 +805,9 @@ end
 
 
 return MultiAllianceLayer
+
+
+
 
 
 
