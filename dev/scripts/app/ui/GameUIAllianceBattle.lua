@@ -495,7 +495,7 @@ function GameUIAllianceBattle:RefreshFightInfoList()
             local report = alliance:GetLastAllianceFightReports()
             our = alliance:Id() == report.attackAllianceId and report.attackAlliance or report.defenceAlliance
             enemy = alliance:Id() == report.attackAllianceId and report.defenceAlliance or report.attackAlliance
-            local killMax = report.report
+            local killMax = report.killMax
 
             ourKillMaxName = killMax.allianceId == alliance:Id() and killMax.playerName ~= json.null and killMax.playerName or _("无")
             enemyKillMaxName = killMax.allianceId ~= alliance:Id() and killMax.playerName  ~= json.null and killMax.playerName or _("无")
