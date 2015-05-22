@@ -196,7 +196,8 @@ function MyCityScene:onEnterTransitionFinish()
     end
     app:sendApnIdIf()
 
-    if not cc.UserDefault:getInstance():getBoolForKey("first_in_city_scene") then
+    if not cc.UserDefault:getInstance():getBoolForKey("first_in_city_scene") and 
+        Alliance_Manager:GetMyAlliance():IsDefault() then
         -- cc.UserDefault:getInstance():setBoolForKey("first_in_city_scene", true)
         -- cc.UserDefault:flush()
         app:lockInput(true)
