@@ -83,10 +83,10 @@ function AllianceScene:GotoLogicPosition(x, y)
 end
 function AllianceScene:OnTouchClicked(pre_x, pre_y, x, y)
     if self.event_manager:TouchCounts() ~= 0 or
-        self.util_node:getNumberOfRunningActions() > 0 then 
-        return 
+        self.util_node:getNumberOfRunningActions() > 0 then
+        return
     end
-    
+
     local building = self:GetSceneLayer():GetClickedObject(x, y)
     if building then
         app:lockInput(true)
@@ -117,7 +117,9 @@ function AllianceScene:OpenUI(building)
 end
 function AllianceScene:OnAllianceBasicChanged(alliance,changed_map)
     if changed_map.terrain then
-        app:EnterMyAllianceScene()
+        UIKit:showMessageDialog(nil,_("联盟地形已经改变"),function()
+            app:EnterMyAllianceScene()
+        end,nil,false,nil)
     end
 end
 function AllianceScene:ChangeTerrain()
@@ -224,6 +226,7 @@ function AllianceScene:ReEnterScene()
     app:enterScene("AllianceScene")
 end
 return AllianceScene
+
 
 
 
