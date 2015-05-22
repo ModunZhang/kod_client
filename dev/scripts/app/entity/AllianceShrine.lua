@@ -339,7 +339,14 @@ function AllianceShrine:DecodeObjectsFromJsonAlliance(alliance_data,deltaData,re
 end
 
 function AllianceShrine:GetShireObjectFromMap()
-	return self:GetAlliance():GetAllianceMap():FindAllianceBuildingInfoByName("shrine")
+	local object
+	self:GetAlliance():GetAllianceMap():IteratorAllianceBuildings(function(__,map_obj)
+		if map_obj.name == 'shrine' then
+			object = map_obj
+			return true
+		end
+	end)
+	return object
 end
 
 function AllianceShrine:GetPlayerLocation(playerId)

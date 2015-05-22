@@ -2,22 +2,22 @@
 -- Author: Danny He
 -- Date: 2015-01-21 16:07:41
 --
-local GameUIChatChannel = UIKit:createUIClass('GameUIChatChannel','GameUIWithCommonHeader')
+local GameUIChatChannel          = UIKit:createUIClass('GameUIChatChannel','GameUIWithCommonHeader')
 local WidgetBackGroundTabButtons = import('..widget.WidgetBackGroundTabButtons')
-local NetService = import('..service.NetService')
-local window = import("..utils.window")
-local UIListView = import(".UIListView")
-local ChatManager = import("..entity.ChatManager")
-local RichText = import("..widget.RichText")
-local GameUIWriteMail = import('.GameUIWriteMail')
-local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
-local WidgetPushButton = import("..widget.WidgetPushButton")
-local WidgetChatSendPushButton = import("..widget.WidgetChatSendPushButton")
+local NetService                 = import('..service.NetService')
+local window                     = import("..utils.window")
+local UIListView                 = import(".UIListView")
+local ChatManager                = import("..entity.ChatManager")
+local RichText                   = import("..widget.RichText")
+local GameUIWriteMail            = import('.GameUIWriteMail')
+local WidgetUIBackGround         = import("..widget.WidgetUIBackGround")
+local WidgetPushButton           = import("..widget.WidgetPushButton")
+local WidgetChatSendPushButton   = import("..widget.WidgetChatSendPushButton")
 
-local LISTVIEW_WIDTH = 556
+local LISTVIEW_WIDTH    = 556
 local PLAYERMENU_ZORDER = 201
-local BASE_CELL_HEIGHT = 82
-local CELL_FIX_WIDTH = 484
+local BASE_CELL_HEIGHT  = 82
+local CELL_FIX_WIDTH    = 484
 
 function GameUIChatChannel:ctor(default_tag)
 	GameUIChatChannel.super.ctor(self,City,_("聊天"))
@@ -374,6 +374,7 @@ function GameUIChatChannel:HandleCellUIData(mainContent,chat,update_time)
         --重新布局
         local adjustFunc = function()
             local height = content_label:getCascadeBoundingBox().height or 0
+            height = math.max(height,20)
             middle:setContentSize(cc.size(CELL_FIX_WIDTH,height))
             header:align(display.RIGHT_BOTTOM, LISTVIEW_WIDTH, bottom:getContentSize().height+middle:getContentSize().height)
             local fix_height = height - 20
@@ -388,6 +389,7 @@ function GameUIChatChannel:HandleCellUIData(mainContent,chat,update_time)
         return adjustFunc()
     else
         local height = content_label:getCascadeBoundingBox().height or 0
+        height = math.max(height,20)
         local fix_height = height - 20
         middle:setContentSize(cc.size(CELL_FIX_WIDTH,height))
         header:align(display.LEFT_BOTTOM, 0, bottom:getContentSize().height+middle:getContentSize().height)

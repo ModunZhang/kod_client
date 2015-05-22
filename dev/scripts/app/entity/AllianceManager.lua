@@ -84,44 +84,39 @@ function AllianceManager:RefreshAllianceSceneIf(old_alliance_status)
         self.tipUserWar = false
         if self:HaveEnemyAlliance() then
             self:GetEnemyAlliance():Reset()
-            if scene_name == 'AllianceBattleScene' then
-                if not UIKit:GetUIInstance('GameUIWarSummary') then
-                    UIKit:newGameUI("GameUIWarSummary"):AddToCurrentScene(true)
-                end
-            elseif scene_name == 'AllianceScene' then
-                if not UIKit:GetUIInstance('GameUIWarSummary') then
-                    UIKit:newGameUI("GameUIWarSummary"):AddToCurrentScene(true)
-                end
-            elseif scene_name == 'MyCityScene' then
-                if not UIKit:GetUIInstance('GameUIWarSummary') then
-                    UIKit:newGameUI("GameUIWarSummary"):AddToCurrentScene(true)
-                end
+        end
+        if old_alliance_status == "" then return end
+        app:GetAudioManager():PlayGameMusic()
+        if scene_name == 'AllianceBattleScene' or scene_name == 'AllianceScene' or scene_name == 'MyCityScene' then
+            if not UIKit:GetUIInstance('GameUIWarSummary') then
+                UIKit:newGameUI("GameUIWarSummary"):AddToCurrentScene(true)
             end
         end
     end
     if (my_alliance_status == 'prepare' or my_alliance_status == 'fight') then
-            if scene_name == 'AllianceScene' then
+        app:GetAudioManager():PlayGameMusic()
+        if scene_name == 'AllianceScene' then
+            if not UIKit:isMessageDialogShowWithUserData("__alliance_war_tips__") then
+                UIKit:showMessageDialog(nil,_("联盟对战已开始，您将进入自己联盟对战地图。"),function()
+                    app:EnterMyAllianceScene()
+                end,nil,false,nil,"__alliance_war_tips__")
+            end
+        elseif scene_name == 'MyCityScene' then
+            if not self.tipUserWar then
+                self.tipUserWar = true
                 if not UIKit:isMessageDialogShowWithUserData("__alliance_war_tips__") then
-                    UIKit:showMessageDialog(nil,_("联盟对战已开始，您将进入自己联盟对战地图。"),function()
-                        app:EnterMyAllianceScene()
-                    end,nil,false,nil,"__alliance_war_tips__")
-                end
-            elseif scene_name == 'MyCityScene' then
-                if not self.tipUserWar then
-                    self.tipUserWar = true
-                    if not UIKit:isMessageDialogShowWithUserData("__alliance_war_tips__") then
-                        UIKit:showMessageDialogWithParams({
-                            content = _("联盟对战已开始，您将进入自己联盟对战地图。"),
-                            ok_callback = function()
-                                app:EnterMyAllianceScene()
-                            end,
-                            cancel_callback = function()end,
-                            auto_close = false,
-                            user_data = '__alliance_war_tips__'
-                        })
-                    end
+                    UIKit:showMessageDialogWithParams({
+                        content = _("联盟对战已开始，您将进入自己联盟对战地图。"),
+                        ok_callback = function()
+                            app:EnterMyAllianceScene()
+                        end,
+                        cancel_callback = function()end,
+                        auto_close = false,
+                        user_data = '__alliance_war_tips__'
+                    })
                 end
             end
+        end
     end
     
 end
