@@ -471,21 +471,21 @@ function MultiAllianceLayer:CreateCorpsIf(marchEvent)
         ally
     )
 end
+local corps_scale = 1.5
 local dragon_dir_map = {
-    [0] = {"flying_45", -1}, -- x-,y+
-    {"flying_45", -1}, -- x-,y+
-    {"flying_-45", -1}, -- x-
+    [0] = {"flying_45", -corps_scale}, -- x-,y+
+    {"flying_45", -corps_scale}, -- x-,y+
+    {"flying_-45", -corps_scale}, -- x-
 
-    {"flying_-45", -1}, -- x-,y-
-    {"flying_-45", 1}, -- y+
-    {"flying_-45", 1}, -- x+,y+
+    {"flying_-45", -corps_scale}, -- x-,y-
+    {"flying_-45", corps_scale}, -- y+
+    {"flying_-45", corps_scale}, -- x+,y+
 
-    {"flying_45", 1}, -- x+
-    {"flying_45", 1}, -- x+,y-
-    {"flying_45", 1}, -- y-
+    {"flying_45", corps_scale}, -- x+
+    {"flying_45", corps_scale}, -- x+,y-
+    {"flying_45", corps_scale}, -- y-
 }
 local soldier_scale = 1
-local corps_scale = 1.5
 local soldier_dir_map = {
     [0] = {"move_45", - corps_scale, soldier_scale}, -- x-,y+
     {"move_45", - corps_scale, soldier_scale}, -- x-,y+
