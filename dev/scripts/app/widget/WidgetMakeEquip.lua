@@ -342,11 +342,9 @@ end
 function WidgetMakeEquip:UpdateEquipCounts()
     local material_manager = self.city:GetMaterialManager()
     local cur = material_manager:GetMaterialsByType(MaterialManager.MATERIAL_TYPE.EQUIPMENT)[self.equip_type]
-    local max = self.city:GetFirstBuildingByType("materialDepot"):GetMaxDragonEquipment()
-    local label = string.format("%d/%d", cur, max)
-    if label ~= self.number:getString() then
-        self.number:setString(label)
-    end
+    -- local max = self.city:GetFirstBuildingByType("materialDepot"):GetMaxDragonEquipment()
+    local label = string.format("%d", cur, max)
+    self.number:setString(label)
 end
 -- 更新材料数量
 function WidgetMakeEquip:UpdateMaterials()
