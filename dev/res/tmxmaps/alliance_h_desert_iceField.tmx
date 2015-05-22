@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="102" height="55" tilewidth="160" tileheight="160">
+<map version="1.0" orientation="orthogonal" width="42" height="25" tilewidth="160" tileheight="160">
  <tileset firstgid="1" name="terrain" tilewidth="160" tileheight="160">
   <image source="terrain.png" width="1440" height="1440"/>
  </tileset>
- <layer name="layer1" width="102" height="55">
+ <layer name="layer1" width="42" height="25">
   <data encoding="base64" compression="zlib">
-   eJzt1LtxAlEUwNBdDARgQ8C3/0p9y5DeKNCMKjj7tm2H6Wfa5X+cTtN5gb9M1+l3gf+bbtN9gX9Mz+m1wL+nz/Rd4An+5FiOWZ7gT47lmOUJ/uRYjlme4E+O5ZjlCf7kWI5ZnuBPjuWY5Qn+5FiOWZ7gT47lmOUJ/uRYjlme4E+O5ZjlCf7kWI5ZnuBPjuWY5Qn+5FiOWZ7gT47lmOUJ/uRYjlme4E+O5ZjlCf7kWI5ZnuBPjuWY5Qn+5FiOWZ7gT47lmOUJ/uRYjlme4E+O5ZjlCf7kWI5ZnuBPjuWY5Qn+5FiOWZ7gT47lmOX/AeE8Dmc=
+   eJzt0akRgEAAxdBdLsEpYIH+KyWSAr6MyEz8q6WUjnqqoR9opCn4My20Bn+jnY7gn3RRC/5ND73BT1nrrrvuuuuuu+6666677rrrrvv/PxNQMcw=
   </data>
  </layer>
- <layer name="layer2" width="102" height="55">
+ <layer name="layer2" width="42" height="25">
   <data encoding="base64" compression="zlib">
-   eJzt1LENwkAUREF3AmSGDOi/N//0Krgna0bafKN3HPfwmD1nr80/WJ2z9+yz+wiL7+w3++8+wkLHmnSsSceadKxJx5p0rEnHmnSsSceadKxJx5p0rEnHmnSsSceadKxJx5p0rEnHmnSsSceadKxJx5p0rEnHmnSsSceadKxJx5p0rEnHmnSsSceadKxJx5p0rEnHmnSsSceadKxJx5p0rEnHmnSsSceadKxJx5p0rEnHmnSsScea7taxC6gQGlM=
+   eJzt0bENwCAQBEE6Mc4MGab/3rgOSFYiYEe69PXSlsJ6spq98F3al7Wsn35kY2R/Nk8/smF3lt1ZdmfZnWV3lt1ZdmfZnWV3lt1Zt3dfeY8L6Q==
   </data>
  </layer>
 </map>
