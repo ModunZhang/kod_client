@@ -1615,7 +1615,7 @@ function GameUIReplayNew:BuildUI()
         :addTo(bottom):align(display.CENTER, s1.width - 110, 50)
 
     ui_map.pass = cc.ui.UIPushButton.new(
-        {normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"},
+        {normal = "red_btn_up_148x58.png",pressed = "red_btn_down_148x58.png"},
         {scale9 = false}
     ):setButtonLabel(cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,

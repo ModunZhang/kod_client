@@ -45,6 +45,13 @@ function PVEScene:onEnter()
     app:GetAudioManager():PlayGameMusic("PVEScene")
     self.user:GetPVEDatabase():SetLocationHandle(self)
 end
+function PVEFteScene:onEnterTransitionFinish()
+    if not cc.UserDefault:getInstance():getBoolForKey("first_in_pve") then
+        -- cc.UserDefault:getInstance():setBoolForKey("first_in_pve", true)
+        -- cc.UserDefault:flush()
+        UIKit:newGameUI("GameUITips", "pve", _("玩法介绍"), true, 680):AddToScene(self, true)
+    end
+end
 function PVEScene:onExit()
     PVEScene.super.onExit(self)
     self.user:ResetPveData()

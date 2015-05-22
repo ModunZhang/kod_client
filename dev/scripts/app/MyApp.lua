@@ -479,6 +479,11 @@ function __G__GAME_CENTER_CALLBACK(gc_name,gc_id)
     end
 end
 
+
+my_print = function(...)
+    LuaUtils:outputTable({...})
+end
+
 return MyApp
 
 
