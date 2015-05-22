@@ -106,7 +106,7 @@ function CommonUpgradeUI:InitCommonPart()
             end
         end):align(display.CENTER, display.cx-200, display.top-175)
         :addTo(self):scale(136/126)
-   
+
     self:ReloadBuildingImage()
     self:InitBuildingIntroduces()
     self:InitNextLevelEfficiency()
@@ -205,7 +205,8 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
             efficiency = efficiency .. string.format("%s+%d,",bd.vitalityRecoveryPerHour,additon)
         end
     elseif self.building:GetType()=="watchTower" then
-        efficiency = string.format("%s,",bd["watchTower_"..self.building:GetLevel()])
+        local warning = GameDatas.ClientInitGame.watchTower
+        efficiency = string.format("%s,",string.format(bd["watchTower_"..self.building:GetLevel()],warning[self.building:GetLevel()].waringMinute))
     elseif self.building:GetType()=="warehouse" then
         local additon = building:GetResourceNextLevelValueLimit()-building:GetResourceValueLimit()
         if additon>0 then
@@ -836,3 +837,6 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
+
+
