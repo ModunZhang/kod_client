@@ -472,7 +472,7 @@ function MultiAllianceLayer:CreateCorpsIf(marchEvent)
         ally
     )
 end
-local corps_scale = 1.5
+local corps_scale = 1.2
 local dragon_dir_map = {
     [0] = {"flying_45", -corps_scale}, -- x-,y+
     {"flying_45", -corps_scale}, -- x-,y+
