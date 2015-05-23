@@ -100,9 +100,15 @@ function AllianceScene:OnTouchClicked(pre_x, pre_y, x, y)
                 self:OpenUI(building)
             end)
         else
-            self:GetSceneLayer():PromiseOfFlashEmptyGround(building, true):next(function()
-                self:OpenUI(building)
-            end)
+            -- if self.alliance_obj_to_move then
+            --     local mapObj = self.alliance_obj_to_move.obj
+            --     local x,y = mapObj:GetMidLogicPosition()
+            --     local w,h = mapObj:GetSize()
+            -- else
+                self:GetSceneLayer():PromiseOfFlashEmptyGround(building, true):next(function()
+                    self:OpenUI(building)
+                end)
+            -- end
         end
     elseif self:IsEditMode() then
         self:LeaveEditMode()
