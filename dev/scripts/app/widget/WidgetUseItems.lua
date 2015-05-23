@@ -959,7 +959,7 @@ function WidgetUseItems:OpenWarSpeedupDialog( item ,march_event)
     }):addTo(body):align(display.RIGHT_CENTER,gem_icon:getPositionX() - gem_icon:getContentSize().width * 0.6 - 10,size.height-50)
 
     local buff_status_label = UIKit:ttfLabel({
-        text = string.format( _("剩余时间: %s"), GameUtils:formatTimeStyle1(march_event:WithObject():GetTime()) )
+        text = string.format( _("剩余时间: %s"), GameUtils:formatTimeStyle1(march_event:WithObject():GetTime()) ),
         size = 22,
         color = 0x007c23,
     }):addTo(body):align(display.LEFT_CENTER,30, size.height-50)
