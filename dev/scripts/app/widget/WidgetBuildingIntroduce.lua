@@ -43,7 +43,7 @@ function WidgetBuildingIntroduce:SetUpgradeRequirementListview()
 
 
         {
-            resource_type = _("建筑蓝图"),
+            resource_type = _("工程图纸"),
             isVisible = self.building:GetLevelUpBlueprints()>0,
             isSatisfy = materials["blueprints"]>self.building:GetLevelUpBlueprints() ,
             icon="blueprints_112x112.png",

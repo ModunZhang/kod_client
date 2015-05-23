@@ -298,7 +298,7 @@ function GameUIAllianceInfo:LoadContact()
         size = cc.size(446,40),
         font = UIKit:getFontFilePath(),
     })
-    editbox_subject:setPlaceHolder(_("最多可输入140字符"))
+    editbox_subject:setPlaceHolder(string.format(_("最多可输入%d字符"),140))
     editbox_subject:setMaxLength(140)
     editbox_subject:setFont(UIKit:getEditBoxFont(),22)
     editbox_subject:setFontColor(cc.c3b(0,0,0))
@@ -347,18 +347,18 @@ function GameUIAllianceInfo:LoadContact()
 end
 function GameUIAllianceInfo:SendMail(addressee,title,content)
     if not title or string.trim(title)=="" then
-        UIKit:showMessageDialog(_("陛下"),_("请填写邮件主题"))
+        UIKit:showMessageDialog(_("主人"),_("请填写邮件主题"))
         return
     elseif not content or string.trim(content)=="" then
-        UIKit:showMessageDialog(_("陛下"),_("请填写邮件内容"))
+        UIKit:showMessageDialog(_("主人"),_("请填写邮件内容"))
         return
     end
     if not addressee or string.trim(addressee)=="" then
-        UIKit:showMessageDialog(_("陛下"),_("请填写正确的收件人ID"))
+        UIKit:showMessageDialog(_("主人"),_("请填写正确的收件人ID"))
         return
     end
     if User:Id() == addressee then
-        UIKit:showMessageDialog(_("陛下"),_("不能给自己发送邮件"))
+        UIKit:showMessageDialog(_("主人"),_("不能给自己发送邮件"))
         return
     end
     NetManager:getSendPersonalMailPromise(addressee, title, content,self.contacts):done(function(result)

@@ -2,31 +2,31 @@ local fightRewards = GameDatas.AllianceInitData.fightRewards
 
 fightRewards["bronze"] = {
 	["type"] = "bronze",
-	["honour"] = 10000,
-	["gem"] = 100
+	["honour"] = 3000,
+	["gem"] = 10
 }
 fightRewards["silver"] = {
 	["type"] = "silver",
-	["honour"] = 20000,
-	["gem"] = 200
+	["honour"] = 7500,
+	["gem"] = 20
 }
 fightRewards["gold"] = {
 	["type"] = "gold",
-	["honour"] = 50000,
-	["gem"] = 500
+	["honour"] = 15000,
+	["gem"] = 50
 }
 fightRewards["platinum"] = {
 	["type"] = "platinum",
-	["honour"] = 100000,
-	["gem"] = 1000
+	["honour"] = 32000,
+	["gem"] = 100
 }
 fightRewards["diamond"] = {
 	["type"] = "diamond",
-	["honour"] = 200000,
-	["gem"] = 2000
+	["honour"] = 70000,
+	["gem"] = 200
 }
 fightRewards["master"] = {
 	["type"] = "master",
-	["honour"] = 300000,
-	["gem"] = 5000
+	["honour"] = 120000,
+	["gem"] = 500
 }

@@ -277,7 +277,7 @@ function WidgetAllianceCreateOrEdit:createTextfieldPanel()
         image = "alliance_editbox_575x48.png",
         size = cc.size(552,48),
     })
-    editbox_tag:setPlaceHolder(_("最多可输入3字符"))
+    editbox_tag:setPlaceHolder(string.format(_("最多可输入%d字符"),3))
     editbox_tag:setFont(UIKit:getEditBoxFont(),18)
     editbox_tag:setFontColor(cc.c3b(0,0,0))
     editbox_tag:setPlaceholderFontColor(UIKit:hex2c3b(0xccc49e))
@@ -304,7 +304,7 @@ function WidgetAllianceCreateOrEdit:createTextfieldPanel()
         image = "alliance_editbox_575x48.png",
         size = cc.size(510,48),
     })
-    editbox_name:setPlaceHolder(_("最多可输入20字符"))
+    editbox_name:setPlaceHolder(string.format(_("最多可输入%d字符"),20))
     editbox_name:setFont(UIKit:getEditBoxFont(),18)
     editbox_name:setFontColor(cc.c3b(0,0,0))
     editbox_name:setPlaceholderFontColor(UIKit:hex2c3b(0xccc49e))

@@ -135,7 +135,7 @@ function MilitaryTechnology:IsAbleToUpgrade()
 
     local results = {}
     if City:GetSoldierManager():IsUpgradingMilitaryTech(self.building) then
-        table.insert(results, _("升级军事科技队列占用"))
+        table.insert(results, _("升级军事科技队列被占用"))
     end
     if current_coin<level_up_config.coin then
         table.insert(results, string.format( _("银币不足 需要补充 %d"), level_up_config.coin - current_coin ) )

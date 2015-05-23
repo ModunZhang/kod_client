@@ -2,61 +2,61 @@ local palace = GameDatas.AllianceBuilding.palace
 
 palace[1] = {
 	["level"] = 1,
-	["needHonour"] = 17200,
-	["memberCount"] = 11,
-	["power"] = 172
+	["needHonour"] = 300,
+	["memberCount"] = 15,
+	["power"] = 8
 }
 palace[2] = {
 	["level"] = 2,
-	["needHonour"] = 34500,
-	["memberCount"] = 12,
-	["power"] = 345
+	["needHonour"] = 1000,
+	["memberCount"] = 20,
+	["power"] = 25
 }
 palace[3] = {
 	["level"] = 3,
-	["needHonour"] = 69000,
-	["memberCount"] = 13,
-	["power"] = 690
+	["needHonour"] = 3300,
+	["memberCount"] = 25,
+	["power"] = 83
 }
 palace[4] = {
 	["level"] = 4,
-	["needHonour"] = 138100,
-	["memberCount"] = 14,
-	["power"] = 1381
+	["needHonour"] = 27100,
+	["memberCount"] = 30,
+	["power"] = 678
 }
 palace[5] = {
 	["level"] = 5,
-	["needHonour"] = 276200,
-	["memberCount"] = 15,
-	["power"] = 2762
+	["needHonour"] = 94600,
+	["memberCount"] = 35,
+	["power"] = 2365
 }
 palace[6] = {
 	["level"] = 6,
-	["needHonour"] = 552400,
-	["memberCount"] = 16,
-	["power"] = 5524
+	["needHonour"] = 272100,
+	["memberCount"] = 40,
+	["power"] = 6803
 }
 palace[7] = {
 	["level"] = 7,
-	["needHonour"] = 1277300,
-	["memberCount"] = 17,
-	["power"] = 12773
+	["needHonour"] = 618000,
+	["memberCount"] = 45,
+	["power"] = 15450
 }
 palace[8] = {
 	["level"] = 8,
-	["needHonour"] = 2404100,
-	["memberCount"] = 18,
-	["power"] = 24041
+	["needHonour"] = 1317400,
+	["memberCount"] = 50,
+	["power"] = 32935
 }
 palace[9] = {
 	["level"] = 9,
-	["needHonour"] = 4757700,
-	["memberCount"] = 19,
-	["power"] = 47577
+	["needHonour"] = 3138600,
+	["memberCount"] = 55,
+	["power"] = 78465
 }
 palace[10] = {
 	["level"] = 10,
-	["needHonour"] = 8785200,
-	["memberCount"] = 20,
-	["power"] = 87852
+	["needHonour"] = 5725200,
+	["memberCount"] = 60,
+	["power"] = 143130
 }

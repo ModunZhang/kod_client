@@ -290,7 +290,7 @@ function GameUITradeGuild:CreateSellItemForListView(listView,goods)
                     end)
                 end
                 if City:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())<goods.itemData.price*goods.itemData.count then
-                    UIKit:showMessageDialog(_("陛下"),_("银币不足,是否使用金龙币补充"))
+                    UIKit:showMessageDialog(_("主人"),_("银币不足,是否使用金龙币补充"))
                         :CreateOKButton({
                             listener = function ()
                                 buy_func()

@@ -103,7 +103,7 @@ function BelvedereEntity:GetEventPrefix()
 	elseif self:GetType() == self.ENTITY_TYPE.STRIKE_RETURN then
 		return string.format(_("返回中 (%s)"),self:GetDestinationLocation())
 	elseif self:GetType() == self.ENTITY_TYPE.SHIRNE then
-		return string.format(_("圣地战中 %s(%s)"),self:WithObject():Stage():GetDescStageName(),self:GetDestinationLocation())
+		return string.format(_("正在参加圣地战 %s(%s)"),self:WithObject():Stage():GetDescStageName(),self:GetDestinationLocation())
 	end
 end
 

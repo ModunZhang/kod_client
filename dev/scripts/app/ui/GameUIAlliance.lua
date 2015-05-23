@@ -102,9 +102,6 @@ function GameUIAlliance:RefreshMainUI()
     self.main_content:removeAllChildren()
     if Alliance_Manager:GetMyAlliance():IsDefault() then
         self:CreateNoAllianceUI()
-        if not Alliance_Manager.open_alliance then
-            self:CreateAllianceTips()
-        end
     else
         self:CreateHaveAlliaceUI()
     end
@@ -114,11 +111,6 @@ function GameUIAlliance:CreateBetweenBgAndTitle()
     self.main_content = display.newNode():addTo(self:GetView()):pos(window.left,window.bottom_top)
     self.main_content:setContentSize(cc.size(window.width,window.betweenHeaderAndTab))
 end
-
--- function GameUIAlliance:OnMoveInStage()
---     GameUIAlliance.super.OnMoveInStage(self)
---     self:AddListenerOfMyAlliance()
--- end
 
 function GameUIAlliance:OnMoveOutStage()
     local myAlliance = Alliance_Manager:GetMyAlliance()
@@ -169,13 +161,6 @@ function GameUIAlliance:CreateNoAllianceUI()
             end
         end
     ):pos(window.cx, window.bottom + 34)
-end
-
-function GameUIAlliance:CreateAllianceTips()
-    Alliance_Manager.open_alliance = true
-    self:performWithDelay(function()
-        UIKit:newGameUI('GameUIAllianceJoinTips'):AddToCurrentScene(true)
-    end, 0.2)
 end
 
 -- TabButtons event
@@ -1130,7 +1115,7 @@ function GameUIAlliance:HaveAlliaceUI_membersIf()
             :addTo(self.member_list_bg)
             :align(display.LEFT_TOP,5,784)
         self.member_list_bg.player_icon_box = box
-        self.member_list_bg.view_archon_info_button_really = WidgetPushTransparentButton.new(cc.rect(0,0,560,134)):addTo(self.member_list_bg):align(display.LEFT_TOP,5,784):onButtonClicked(function() 
+        self.member_list_bg.view_archon_info_button_really = WidgetPushTransparentButton.new(cc.rect(0,0,560,100)):addTo(self.member_list_bg):align(display.LEFT_BOTTOM,5,650):onButtonClicked(function() 
             local archon = Alliance_Manager:GetMyAlliance():GetAllianceArchon()
             self:OnPlayerDetailButtonClicked(archon:Id())
         end)

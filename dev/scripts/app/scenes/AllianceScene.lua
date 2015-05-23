@@ -133,7 +133,7 @@ function AllianceScene:ChangeTerrain()
 end
 function AllianceScene:OnOperation(alliance,operation_type)
     if operation_type == "quit" then
-        UIKit:showMessageDialog(_("提示"),_("您已经退出联盟"), function()
+        UIKit:showMessageDialog(_("提示"),_("你已经退出联盟"), function()
             app:EnterMyCityScene()
         end,nil,false)
     end
@@ -204,7 +204,7 @@ function AllianceScene:CheckCanMoveAllianceObject(x,y)
     if self.alliance_obj_to_move then
         UIKit:showMessageDialog(nil
             ,string.format(
-                _("可以移动%s到%s将消耗荣耀值%s,确认移动?")
+                _("你可以移动%s到%s将消耗荣耀值%s,确认要移动吗?")
                 ,self.alliance_obj_to_move.name
                 ,"(" .. x .."," .. y .. ")"
                 ,self.alliance_obj_to_move.honour
@@ -216,7 +216,7 @@ function AllianceScene:CheckCanMoveAllianceObject(x,y)
                         self:LeaveEditMode()
                     end)
                 else
-                    UIKit:showMessageDialog(nil, _("不能移动到目标点位"),function()end)
+                    UIKit:showMessageDialog(nil, _("无法移动到目标位置"),function()end)
                 end
             end
             ,nil

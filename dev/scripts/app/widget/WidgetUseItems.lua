@@ -154,7 +154,7 @@ function WidgetUseItems:OpenChangePlayerOrCityName(item)
     self:CreateItemBox(item,function ()
         local newName = string.trim(editbox:getText())
         if string.len(newName) == 0 then
-            UIKit:showMessageDialog(_("陛下"),_("请输入新的名称"))
+            UIKit:showMessageDialog(_("主人"),_("请输入新的名称"))
         else
             return true
         end
@@ -766,7 +766,7 @@ function WidgetUseItems:OpenChestDialog( item )
                     if ItemManager:CanOpenChest(use_item)  then
                         return true
                     else
-                        UIKit:showMessageDialog(_("陛下"),_("没有钥匙"))
+                        UIKit:showMessageDialog(_("主人"),_("没有钥匙"))
                     end
                 end,
                 function ()
@@ -1187,7 +1187,7 @@ function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc,buyAndUseFun
             local item_name = item:Name()
             btn_call_back = function ()
                 if item:Price() > User:GetGemResource():GetValue() then
-                    UIKit:showMessageDialog(_("陛下"),_("金龙币不足"))
+                    UIKit:showMessageDialog(_("主人"),_("金龙币不足"))
                         :CreateOKButton(
                             {
                                 listener = function ()

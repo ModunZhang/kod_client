@@ -61,7 +61,7 @@ function GameUIArmyCamp:CreateTopPart()
     cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("Total Troops Population"),
+            text = _("部队总人口"),
             font = UIKit:getFontFilePath(),
             size = 18,
             color = UIKit:hex2c3b(0x665f49)

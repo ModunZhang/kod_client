@@ -101,12 +101,7 @@ static void __CallLuaCallback(const char *gcName,const char *gcId)
 
 - (void)authenticate:(BOOL) forceLogin
 {
-    if (![KodGameCenter isGameCenterAPIAvailable])
-    {
-        __CallLuaCallback("","");
-        return;
-    }
-    
+   
     if ([self isAuthenticated])
     {
         __CallLuaCallback([self.localPlayer.alias UTF8String],[self.localPlayer.playerID UTF8String]);
@@ -118,19 +113,47 @@ static void __CallLuaCallback(const char *gcName,const char *gcId)
         return;
     }
     
-    [self.localPlayer authenticateWithCompletionHandler:^(NSError* error)
-     {
-         if(self.localPlayer.authenticated) // Authentication Successful
+    if (![KodGameCenter isGameCenterAPIAvailable])
+    {
+        __CallLuaCallback("","");
+        return;
+    }
+    
+    if (SYSTEM_VERSION_LESS_THAN(@"6.0"))
+    {
+        [self.localPlayer authenticateWithCompletionHandler:^(NSError *error)
          {
-             __CallLuaCallback([self.localPlayer.alias UTF8String],[self.localPlayer.playerID UTF8String]);
-         }
-         else
-         {
-              __CallLuaCallback("","");
-         }
-     }];
+             [self checkLocalPlayer];
+         }];
+    }
+    else
+    {
+        [self.localPlayer setAuthenticateHandler:(^(UIViewController* viewcontroller, NSError *error) {
+            if (!error && viewcontroller)
+            {
+                [[[[UIApplication sharedApplication]keyWindow] rootViewController]presentViewController:viewcontroller animated:YES completion:nil];
+            }
+            else
+            {
+                [self checkLocalPlayer];
+            }
+        })];
+    }
+}
+- (void)checkLocalPlayer
+{
+    if(self.localPlayer.authenticated) // Authentication Successful
+    {
+        __CallLuaCallback([self.localPlayer.alias UTF8String],[self.localPlayer.playerID UTF8String]);
+    }
+    else
+    {
+        __CallLuaCallback("","");
+    }
 }
 @end
+
+
 
 //MARK:C Part
 static KodGameCenter *shareIntance = nil;

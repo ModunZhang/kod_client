@@ -321,7 +321,7 @@ function MyCityScene:OpenUI(building, default_tab)
             local _,_,index = self.city:GetUser():GetPVEDatabase():GetCharPosition()
             app:EnterPVEScene(index)
         else
-            UIKit:showMessageDialog(_("陛下"),_("必须有一条空闲的龙，才能进入pve"))
+            UIKit:showMessageDialog(_("主人"),_("需要一条空闲状态的魔龙才能探险"))
         end
         app:GetAudioManager():PlayeEffectSoundWithKey("AIRSHIP")
     elseif type_ == "FairGround" then

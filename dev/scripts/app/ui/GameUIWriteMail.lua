@@ -44,7 +44,7 @@ function GameUIWriteMail:ctor(send_type,contacts)
         font = UIKit:getFontFilePath(),
     })
     local editbox_subject = self.editbox_subject
-    editbox_subject:setPlaceHolder(_("最多可输入140字符"))
+    editbox_subject:setPlaceHolder(string.format(_("最多可输入%d字符"),140))
     editbox_subject:setMaxLength(137)
     editbox_subject:setFont(UIKit:getEditBoxFont(),22)
     editbox_subject:setFontColor(cc.c3b(0,0,0))
@@ -98,15 +98,15 @@ function GameUIWriteMail:ctor(send_type,contacts)
 end
 function GameUIWriteMail:SendMail(addressee,title,content)
     if not title or string.trim(title)=="" then
-        UIKit:showMessageDialog(_("陛下"),_("请填写邮件主题"))
+        UIKit:showMessageDialog(_("主人"),_("请填写邮件主题"))
         return
     elseif not content or string.trim(content)=="" then
-        UIKit:showMessageDialog(_("陛下"),_("请填写邮件内容"))
+        UIKit:showMessageDialog(_("主人"),_("请填写邮件内容"))
         return
     end
     if self.send_type == PERSONAL_MAIL then
         if not addressee or string.trim(addressee)=="" then
-            UIKit:showMessageDialog(_("陛下"),_("请填写正确的收件人ID"))
+            UIKit:showMessageDialog(_("主人"),_("请填写正确的收件人ID"))
             return
         end
         NetManager:getSendPersonalMailPromise(addressee, title, content,self.contacts):done(function(result)
