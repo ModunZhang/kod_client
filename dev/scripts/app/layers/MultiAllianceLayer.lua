@@ -740,17 +740,10 @@ function MultiAllianceLayer:PromiseOfFlashEmptyGround(building, is_my_alliance)
             break
         end
     end
-    self:GetBuildingNode():removeChildByTag(CLICK_EMPTY_TAG)
+    self:RemoveClickNode()
     local click_node = display.newSprite("click_empty.png"):addTo(self:GetBuildingNode(), 10000, CLICK_EMPTY_TAG)
     local logic_map = alliance_view:GetLogicMap()
     local lx,ly = building:GetEntity():GetLogicPosition()
-    -- for x = ceil(lx - range/2), floor(lx + range/2) do
-    --     for y = ceil(ly - range/2), floor(ly + range/2) do
-    --         display.newSprite("click_empty.png"):addTo(click_node)
-    --         :pos(logic_map:ConvertToLocalPosition(x - lx, y - ly))
-    --         :scale(0.9)
-    --     end
-    -- end
     local p = promise.new()
     click_node:pos(logic_map:ConvertToMapPosition(lx,ly)):opacity(0)
         :runAction(
@@ -758,12 +751,19 @@ function MultiAllianceLayer:PromiseOfFlashEmptyGround(building, is_my_alliance)
                 cc.FadeTo:create(0.15, 255),
                 cc.FadeTo:create(0.15, 0),
                 cc.CallFunc:create(function()
-                    self:GetBuildingNode():removeChildByTag(CLICK_EMPTY_TAG)
                     p:resolve()
+                    self:RemoveClickNode()
                 end)
             }
         )
     return p
+end
+function MultiAllianceLayer:AddClickNode()
+    self:RemoveClickNode()
+    return display.newNode():addTo(self:GetBuildingNode(), 10000, CLICK_EMPTY_TAG)
+end
+function MultiAllianceLayer:RemoveClickNode()
+    self:GetBuildingNode():removeChildByTag(CLICK_EMPTY_TAG)
 end
 
 ----- override
