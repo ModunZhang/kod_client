@@ -553,7 +553,7 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
         },
 
         {
-            resource_type = _("建筑蓝图"),
+            resource_type = _("工程图纸"),
             isVisible = building:GetLevelUpBlueprints()>0,
             isSatisfy = materials["blueprints"]>=building:GetLevelUpBlueprints() ,
             icon="blueprints_128x128.png",

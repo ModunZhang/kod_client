@@ -32,8 +32,8 @@ function GameUISettingLanguage:BuildUI()
 	}):addTo(titleBar):align(display.CENTER,300,28)
 	local code = app:GetGameLanguage()
 	local languages = {
-		{image = 'flag_en_83x83.png',code = 'en_US'},
 		{image = 'flag_zh_83x83.png',code = 'zh_Hans'},
+		{image = 'flag_zh_Hant_83x83.png',code = 'zh_Hant'},
 	}
 	local x,y = 20,732
 	for i,v in ipairs(languages) do

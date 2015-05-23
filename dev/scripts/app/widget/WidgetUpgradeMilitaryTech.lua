@@ -91,7 +91,7 @@ function WidgetUpgradeMilitaryTech:UpgradeButtons()
                 end
 
                 if self.tech:IsAbleToUpgradeNow() then
-                    UIKit:showMessageDialog(_("陛下"),_("金龙币不足"))
+                    UIKit:showMessageDialog(_("主人"),_("金龙币不足"))
                         :CreateOKButton({
                             listener =  function ()
                                 UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
@@ -234,10 +234,10 @@ function WidgetUpgradeMilitaryTech:PopNotSatisfyDialog(upgrade_listener,results)
     end
     local need_gems = self.tech:GetUpgradeGems()
     local current_gem = User:GetGemResource():GetValue()
-    UIKit:showMessageDialog(_("陛下"),message)
+    UIKit:showMessageDialog(_("主人"),message)
         :CreateOKButton({
             listener =  current_gem < need_gems and function ()
-                UIKit:showMessageDialog(_("陛下"),_("金龙币不足"))
+                UIKit:showMessageDialog(_("主人"),_("金龙币不足"))
                     :CreateOKButton({
                         listener =  function ()
                             UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)

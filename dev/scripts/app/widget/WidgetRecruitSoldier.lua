@@ -299,7 +299,7 @@ function WidgetRecruitSoldier:AddButtons()
         }))
         :onButtonClicked(function(event)
             if City:GetUser():GetGemResource():GetValue()< tonumber(self.gem_label:getString())then
-                UIKit:showMessageDialog(_("陛下"),_("您当前没有足够金龙币")):CreateOKButton(
+                UIKit:showMessageDialog(_("主人"),_("您当前没有足够金龙币")):CreateOKButton(
                     {
                         listener = function ()
                             UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)

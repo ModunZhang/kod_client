@@ -287,7 +287,7 @@ function GameUIDailyMissionInfo:GetMissionConfig()
 		                local _,_,index = City:GetUser():GetPVEDatabase():GetCharPosition()
 		                app:EnterPVEScene(index)
 		            else
-		                GameGlobalUI:showTips(_("错误"),_("必须有一条空闲的龙，才能进入pve"))
+		                GameGlobalUI:showTips(_("错误"),_("需要一条空闲状态的魔龙才能探险"))
                         return false
 		            end
         		end

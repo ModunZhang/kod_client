@@ -127,11 +127,11 @@ function WidgetBuyGoods:ctor(item)
         :setButtonLabel(UIKit:commonButtonLable({text = _("购买")}))
         :onButtonClicked(function(event)
             if item:IsAdvancedItem() and not Alliance_Manager:GetMyAlliance():GetSelf():CanBuyAdvancedItemsFromAllianceShop() then
-                UIKit:showMessageDialog(_("陛下"),_("购买需要精英或以上权限"))
+                UIKit:showMessageDialog(_("主人"),_("购买需要精英或以上权限"))
                 return
             end
             if slider:GetValue()<1 then
-                UIKit:showMessageDialog(_("陛下"),_("请输入正确的购买数量"))
+                UIKit:showMessageDialog(_("主人"),_("请输入正确的购买数量"))
                 return
             end
             NetManager:getBuyAllianceItemPromise(item:Name(),slider:GetValue()):done(function ( response )

@@ -7,7 +7,7 @@ local FteScene = class("FteScene", function()
 end)
 
 function FteScene:ctor()
-    local text = _("数周之后。。。")
+    local text = _("数周之后…")
     self.several = UIKit:ttfLabel({
         text = "",
         size = 30,

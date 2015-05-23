@@ -257,7 +257,7 @@ function WidgetPromoteSoldier:PopNotSatisfyDialog(upgrade_listener,results)
     for k,v in pairs(results) do
         message = message .. v.."\n"
     end
-    local dialog = UIKit:showMessageDialog(_("陛下"),message)
+    local dialog = UIKit:showMessageDialog(_("主人"),message)
     return dialog
 end
 function WidgetPromoteSoldier:GetInstantUpgradeGems()
@@ -299,7 +299,7 @@ function WidgetPromoteSoldier:IsAbleToUpgradeSecond()
     local current_coin = City:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     local results = {}
     if City:GetSoldierManager():IsUpgradingMilitaryTech(self.building_type) then
-        table.insert(results, _("升级军事科技队列占用"))
+        table.insert(results, _("升级军事科技队列被占用"))
     end
     if current_coin<level_up_config.upgradeCoinNeed then
         table.insert(results, _("银币不足").." ".._("需要补充")..(level_up_config.upgradeCoinNeed-current_coin))
