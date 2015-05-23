@@ -71,7 +71,7 @@ function WidgetAllianceBuildingUpgrade:onEnter()
             listener = function ()
                 local err = self:IsAbleToUpgrade()
                 if err then
-                    UIKit:showMessageDialog(_("陛下"),ERR_MESSAGE[err])
+                    UIKit:showMessageDialog(_("主人"),ERR_MESSAGE[err])
                 else
                     NetManager:getUpgradeAllianceBuildingPromise(self.building.name)
                 end

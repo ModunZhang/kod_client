@@ -105,7 +105,7 @@ function GameUIChatChannel:CreateTextFieldBody()
         size = cc.size(417,51),
         listener = onEdit,
     })
-    editbox:setPlaceHolder(_("最多可输入140字符"))
+    editbox:setPlaceHolder(string.format(_("最多可输入%d字符"),140))
     editbox:setMaxLength(140)
     editbox:setFont(UIKit:getEditBoxFont(),22)
     editbox:setFontColor(cc.c3b(0,0,0))

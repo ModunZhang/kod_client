@@ -49,6 +49,7 @@ CONFIG_IS_DEBUG = true
 CONFIG_LOG_DEBUG_FILE = true -- 记录日志文件
 GLOBAL_FTE = true
 GLOBAL_FTE_DEBUG = false
+GAME_DEFAULT_LANGUAGE = 'zh_Hant' -- 游戏首次安装启动的默认语言 如果为nil则根据设备的语言为首次启动语言
 
 CONFIG_SCREEN_AUTOSCALE_CALLBACK = function(w, h, deviceModel)
     if w/h > 640/960 then

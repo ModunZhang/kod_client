@@ -190,7 +190,7 @@ function MyCityFteScene:OpenUI(building, default_tab)
             local _,_,index = self.city:GetUser():GetPVEDatabase():GetCharPosition()
             app:EnterPVEFteScene(1)
         else
-            UIKit:showMessageDialog(_("陛下"),_("必须有一条空闲的龙，才能进入pve"))
+            UIKit:showMessageDialog(_("主人"),_("需要一条空闲状态的魔龙才能探险"))
         end
         app:GetAudioManager():PlayeEffectSoundWithKey("AIRSHIP")
     elseif type_ == "FairGround" then
@@ -411,7 +411,7 @@ function MyCityFteScene:PromiseOfBuildHouse(x, y, house_type, msg)
 end
 function MyCityFteScene:PromiseOfFirstUpgradeKeep()
     return GameUINpc:PromiseOfSay(
-        {words = _("非常好，现在我们来升级城堡！城堡等级越高，可以解锁更多建筑。。。")}
+        {words = _("非常好，现在我们来升级城堡！城堡等级越高，可以解锁更多建筑…")}
     ):next(function()
         return GameUINpc:PromiseOfLeave()
     end):next(function()
@@ -465,7 +465,7 @@ function MyCityFteScene:PromiseOfExplorePve()
         )
     end):next(function()
         return GameUINpc:PromiseOfSay(
-            {words = _("领主大人，光靠城市基本的资源产出，无法满足我们的发展需求。。。"), npc = "man"},
+            {words = _("领主大人，光靠城市基本的资源产出，无法满足我们的发展需求…"), npc = "man"},
             {words = _("我倒是知道一个地方，有些危险，但有着丰富的物资，也许我们尝试着探索。。。"), npc = "man"}
         )
     end):next(function()

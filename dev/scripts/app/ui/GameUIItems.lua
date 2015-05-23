@@ -478,17 +478,17 @@ function GameUIItems:UseItemFunc( items )
             -- 需要对应的钥匙
             if name == "chest_2" then
                 if ItemManager:GetItemByName("chestKey_2"):Count() < 1 then
-                    UIKit:showMessageDialog(_("陛下"),_("开启铜宝箱需要铜钥匙"))
+                    UIKit:showMessageDialog(_("主人"),_("开启铜宝箱需要铜钥匙"))
                     return
                 end
             elseif name == "chest_3" then
                 if ItemManager:GetItemByName("chestKey_3"):Count() < 1 then
-                    UIKit:showMessageDialog(_("陛下"),_("开启银宝箱需要银钥匙"))
+                    UIKit:showMessageDialog(_("主人"),_("开启银宝箱需要银钥匙"))
                     return
                 end
             elseif name == "chest_4" then
                 if ItemManager:GetItemByName("chestKey_4"):Count() < 1 then
-                    UIKit:showMessageDialog(_("陛下"),_("开启金宝箱需要金钥匙"))
+                    UIKit:showMessageDialog(_("主人"),_("开启金宝箱需要金钥匙"))
                     return
                 end
             end

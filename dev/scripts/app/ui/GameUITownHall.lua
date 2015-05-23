@@ -269,11 +269,11 @@ function GameUITownHall:CreateQuestItem(quest,index)
                 })
             ):onButtonClicked(function(event)
                 if TownHallUI.isFinishedQuest then
-                    UIKit:showMessageDialog(_("陛下"),_("请先领取已经完成的任务的奖励"))
+                    UIKit:showMessageDialog(_("主人"),_("请先领取已经完成的任务的奖励"))
                     return
                 end
                 if TownHallUI.started_quest_item then
-                    UIKit:showMessageDialog(_("陛下"),_("已经有一个任务正在进行中"))
+                    UIKit:showMessageDialog(_("主人"),_("已经有一个任务正在进行中"))
                     return
                 end
                 NetManager:getStartDailyQuestPromise(quest.id)

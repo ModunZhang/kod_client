@@ -111,23 +111,23 @@ function GameUIPVESendTroop:OnMoveInStage()
             if event.name == "CLICKED_EVENT" then
                 assert(tolua.type(self.march_callback)=="function")
                 if not self.dragon then
-                    UIKit:showMessageDialog(_("陛下"),_("快去孵化一只巨龙吧"))
+                    UIKit:showMessageDialog(_("主人"),_("快去孵化一只巨龙吧"))
                     return
                 end
                 local dragonType = self.dragon:Type()
                 local soldiers = self:GetSelectSoldier()
                 if not self.dragon:IsFree() and not self.dragon:IsDefenced() then
-                    UIKit:showMessageDialog(_("陛下"),_("龙未处于空闲状态"))
+                    UIKit:showMessageDialog(_("主人"),_("龙未处于空闲状态"))
                     return
                 elseif self.dragon:Hp()<1 then
-                    UIKit:showMessageDialog(_("陛下"),_("选择的龙已经死亡"))
+                    UIKit:showMessageDialog(_("主人"),_("选择的龙已经死亡"))
                     return
                 elseif #soldiers == 0 then
-                    UIKit:showMessageDialog(_("陛下"),_("请选择要派遣的部队"))
+                    UIKit:showMessageDialog(_("主人"),_("请选择要派遣的部队"))
                     return
                 end
                 if self.dragon:IsHpLow() then
-                    UIKit:showMessageDialog(_("陛下"),_("您的龙的HP低于20%,有很大几率阵亡,确定要派出吗?"))
+                    UIKit:showMessageDialog(_("主人"),_("您的龙的HP低于20%,有很大几率阵亡,确定要派出吗?"))
                         :CreateOKButton(
                             {
                                 listener =  function ()

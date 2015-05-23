@@ -111,21 +111,21 @@ function GameUtils:formatTimeAsTimeAgoStyle( time )
     if(time <= 0) then
         timeText = _("刚刚")
     elseif(time == 1) then
-        timeText = _("1秒前")
+        timeText = string.format(_("%d秒前"), 1)
     elseif(time < 60) then
         timeText = string.format(_("%d秒前"), time)
     elseif(time == 60) then
-        timeText = _("1分钟前")
+        timeText = string.format(_("%d分钟前"), 1)
     elseif(time < 3600) then
         time = math.ceil(time / 60)
         timeText = string.format(_("%d分钟前"), time)
     elseif(time == 3600) then
-        timeText = _("1小时前")
+        timeText = string.format(_("%d小时前"), 1)
     elseif(time < 86400) then
         time = math.ceil(time / 3600)
         timeText = string.format(_("%d小时前"), time)
     elseif(time == 86400) then
-        timeText = _("1天前")
+        timeText = string.format(_("%d天前"), 1)
     else
         time = math.ceil(time / 86400)
         timeText = string.format(_("%d天前"), time)
@@ -302,6 +302,7 @@ end
 
 
 --ver 2.2.4
+--TODO:return po文件对应的语言代码！
 function GameUtils:getCurrentLanguage()
     local mapping = {
         "en_US",

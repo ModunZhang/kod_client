@@ -275,7 +275,7 @@ function PVEFteScene:PromiseOfIntroduce()
 
     self:GetFteLayer():Enable()
     return GameUINpc:PromiseOfSay(
-        {words = _("领主大人，探索会消耗体力值，但击败敌军可以获得资源和材料。。。"), npc = "man", rect = r}
+        {words = _("领主大人，探索会消耗体力值，但击败敌军可以获得资源和材料…"), npc = "man", rect = r}
     ):next(function()
         self:GetFteLayer():Disable()
         self:DestoryMark()

@@ -124,7 +124,8 @@ function MyApp:InitGameBase()
     self.GameDefautlt_ = GameDefautlt.new()
     self.AudioManager_ = AudioManager.new(self:GetGameDefautlt())
     self.LocalPushManager_ = LocalPushManager.new(self:GetGameDefautlt())
-    self.gameLanguage_ = self:GetGameDefautlt():getBasicInfoValueForKey("GAME_LANGUAGE",GameUtils:getCurrentLanguage())
+    local language_code = GAME_DEFAULT_LANGUAGE or GameUtils:getCurrentLanguage()
+    self.gameLanguage_ = self:GetGameDefautlt():getBasicInfoValueForKey("GAME_LANGUAGE",language_code)
     self.ChatManager_  = ChatManager.new(self:GetGameDefautlt())
 end
 
@@ -164,7 +165,6 @@ function MyApp:retryConnectServer(need_disconnect)
     end
     if NetManager.m_logicServer.host and NetManager.m_logicServer.port then
         UIKit:WaitForNet(2)
-        -- scheduler.performWithDelayGlobal(function()
             NetManager:getConnectLogicServerPromise():next(function()
                 print("MyApp:debug--->2")
                 return NetManager:getLoginPromise()
@@ -201,9 +201,7 @@ function MyApp:retryConnectServer(need_disconnect)
             end):always(function()
                 print("MyApp:debug--->7")
                 UIKit:NoWaitForNet()
-            end)      
-        -- end,1)
-       
+            end)
     end
 end
 function MyApp:ReloadGame()
@@ -283,7 +281,7 @@ function MyApp:EnterFteScene()
 end
 function MyApp:EnterMyAllianceScene(location)
     if Alliance_Manager:GetMyAlliance():IsDefault() then
-        UIKit:showMessageDialog(_("提示"),_("未加入联盟!"),function()end)
+        UIKit:showMessageDialog(_("提示"),_("加入联盟后开放此功能!"),function()end)
         return
     end
 
@@ -361,7 +359,7 @@ function MyApp:getSupportMailFormat(category,logMsg)
     local OSVersion  = "OS Version:" .. ext.getOSVersion()
 
     local format_str = "\n\n\n\n\n---------------%s---------------\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s"
-    local result_str = string.format(format_str,_("不要删除"),UTCTime,GameName,Version,Username,Server,OpenUDID,Category,Language,DeviceType,OSVersion)
+    local result_str = string.format(format_str,_("不能删除"),UTCTime,GameName,Version,Username,Server,OpenUDID,Category,Language,DeviceType,OSVersion)
     if logMsg then
         result_str = string.format("%s\n---------------Log---------------\n%s",result_str,logMsg)
     end

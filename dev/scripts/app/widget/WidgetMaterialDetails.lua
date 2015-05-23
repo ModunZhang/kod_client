@@ -74,7 +74,7 @@ function WidgetMaterialDetails:InitMaterialDetails(material_type,material_name)
             if City:GetFirstBuildingByType("toolShop"):IsUnlocked() then
                 UIKit:newGameUI("GameUIToolShop", City, City:GetFirstBuildingByType("toolShop"),"manufacture"):AddToCurrentScene(true)
             else
-                UIKit:showMessageDialog(_("陛下"),_("您还没有解锁工具作坊"))
+                UIKit:showMessageDialog(_("主人"),_("您还没有解锁工具作坊"))
             end
         end)
     elseif material_type == MaterialManager.MATERIAL_TYPE.DRAGON  then
@@ -94,7 +94,7 @@ function WidgetMaterialDetails:InitMaterialDetails(material_type,material_name)
                     end
                 end
             else
-                UIKit:showMessageDialog(_("陛下"),_("您还没有加入联盟"))
+                UIKit:showMessageDialog(_("主人"),_("您还没有加入联盟"))
             end
         end)
         self:CreateOriginItem(list,_("购买&使用初级巨龙宝箱"),function ()
@@ -113,7 +113,7 @@ function WidgetMaterialDetails:InitMaterialDetails(material_type,material_name)
                     end
                 })
             else
-                UIKit:showMessageDialog(_("陛下"),_("您还没有加入联盟"))
+                UIKit:showMessageDialog(_("主人"),_("您还没有加入联盟"))
             end
 
         end)
@@ -126,7 +126,7 @@ function WidgetMaterialDetails:InitMaterialDetails(material_type,material_name)
                 local _,_,index = city:GetUser():GetPVEDatabase():GetCharPosition()
                 app:EnterPVEScene(index)
             else
-                UIKit:showMessageDialog(_("陛下"),_("必须有一条空闲的龙，才能进入pve"))
+                UIKit:showMessageDialog(_("主人"),_("需要一条空闲状态的魔龙才能探险"))
             end
             app:GetAudioManager():PlayeEffectSoundWithKey("AIRSHIP")
         end)

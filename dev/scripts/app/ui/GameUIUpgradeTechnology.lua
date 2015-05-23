@@ -370,7 +370,7 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
         })
     table.insert(requirements,
         {
-            resource_type = _("建筑蓝图"),
+            resource_type = _("工程图纸"),
             isVisible = cost.blueprints>0,
             isSatisfy = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["blueprints"]>=cost.blueprints,
             icon="blueprints_112x112.png",
