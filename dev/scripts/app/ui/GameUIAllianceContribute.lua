@@ -60,10 +60,11 @@ function GameUIAllianceContribute:ctor()
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 if self:IsAbleToContribute() then
+                    local current_loyalty = User:Loyalty()
                     NetManager:getDonateToAlliancePromise(self.group:GetSelectedType()):done(function ( response )
                         for i,v in ipairs(response.msg.playerData) do
                             if v[1] == "allianceInfo.loyalty" then
-                                GameGlobalUI:showTips(_("捐赠成功"),string.format(_("获得%d点忠诚值"),v[2]))
+                                GameGlobalUI:showTips(_("捐赠成功"),string.format(_("获得%d点忠诚值"),v[2]-current_loyalty))
                             end
                         end
                     end)
