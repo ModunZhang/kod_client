@@ -191,7 +191,7 @@ function WidgetUseItems:OpenBuffDialog( item )
         color = item_event and 0x007c23 or 0x403c2f,
     }):addTo(body):align(display.CENTER,size.width/2, size.height-50)
     if item_event then
-        buff_status_label:setString(_("已激活,剩余时间:")..GameUtils:formatTimeStyle1(item_event:GetTime()))
+        buff_status_label:setString(string.format( _("已激活,剩余时间:%s"), GameUtils:formatTimeStyle1(item_event:GetTime()) ))
     else
         buff_status_label:setString(_("未激活"))
     end
@@ -226,7 +226,7 @@ function WidgetUseItems:OpenBuffDialog( item )
         if item_event and item_event_new:Type() == item_event:Type() then
             local time = item_event_new:GetTime()
             if time >0 then
-                buff_status_label:setString(_("已激活,剩余时间:")..GameUtils:formatTimeStyle1(time))
+                buff_status_label:setString(string.format( _("已激活,剩余时间:%s"), GameUtils:formatTimeStyle1(time) ))
                 buff_status_label:setColor(UIKit:hex2c4b(0x007c23))
             else
                 buff_status_label:setString(_("未激活"))
@@ -578,7 +578,7 @@ function WidgetUseItems:OpenIncreaseDragonExpOrHp( item )
             :addTo(box_bg,2)
 
         -- 经验 or hp
-        local text_1 = increase_type == "dragonHp" and _("生命值")..dragon:Hp().."/"..dragon:GetMaxHP() or _("经验值")..dragon:Exp().."/"..dragon:GetMaxExp()
+        local text_1 = increase_type == "dragonHp" and string.format( _("生命值 %d/%d"), dragon:Hp(), dragon:GetMaxHP() ) or string.format( _("经验值 %d/%d"), dragon:Exp(), dragon:GetMaxExp() )
         local dragon_vitality = UIKit:ttfLabel({
             text = text_1,
             size = 20,
@@ -734,7 +734,7 @@ function WidgetUseItems:OpenIncreaseDragonExpOrHp( item )
         if increase_type == "dragonHp" then
             for i,v in ipairs(dragon_boxes) do
                 local dragon = dragon_manager:GetDragon(v:GetDragonType())
-                v:setDragonVitality( _("生命值")..dragon:Hp().."/"..dragon:GetMaxHP())
+                v:setDragonVitality( string.format( _("生命值 %d/%d"), dragon:Hp(), dragon:GetMaxHP() ) )
             end
         end
     end
@@ -742,7 +742,7 @@ function WidgetUseItems:OpenIncreaseDragonExpOrHp( item )
         if increase_type == "dragonExp" then
             for i,v in ipairs(dragon_boxes) do
                 local dragon = dragon_manager:GetDragon(v:GetDragonType())
-                v:setDragonVitality(_("经验值")..dragon:Exp().."/"..dragon:GetMaxExp())
+                v:setDragonVitality( string.format( _("经验值 %d/%d"), dragon:Exp(), dragon:GetMaxExp() ) )
                 v:setDragonName( Localize.dragon[dragon:Type()] .."(LV "..dragon:Level()..")")
             end
         end
@@ -874,7 +874,8 @@ function WidgetUseItems:OpenVipActive( item )
         color = vip_event:IsActived() and 0x007c23 or 0x403c2f,
     }):addTo(body):align(display.CENTER,size.width/2, size.height-35)
     if vip_event:IsActived() then
-        vip_status_label:setString(_("已激活,剩余时间:")..GameUtils:formatTimeStyle1(vip_event:GetTime()))
+        local left_time_str = GameUtils:formatTimeStyle1(vip_event:GetTime())
+        vip_status_label:setString( string.format( _("已激活,剩余时间:%s"), left_time_str ) )
     else
         vip_status_label:setString(_("未激活"))
     end
@@ -885,7 +886,8 @@ function WidgetUseItems:OpenVipActive( item )
     function dialog:OnVipEventTimer( vip_event_new )
         local time = vip_event_new:GetTime()
         if time >0 then
-            vip_status_label:setString(_("已激活,剩余时间:")..GameUtils:formatTimeStyle1(time))
+            local left_time_str = GameUtils:formatTimeStyle1(time)
+            vip_status_label:setString( string.format( _("已激活,剩余时间:%s"), left_time_str ) )
             vip_status_label:setColor(UIKit:hex2c4b(0x007c23))
         else
             vip_status_label:setString(_("未激活"))
@@ -957,7 +959,7 @@ function WidgetUseItems:OpenWarSpeedupDialog( item ,march_event)
     }):addTo(body):align(display.RIGHT_CENTER,gem_icon:getPositionX() - gem_icon:getContentSize().width * 0.6 - 10,size.height-50)
 
     local buff_status_label = UIKit:ttfLabel({
-        text = _("剩余时间:")..GameUtils:formatTimeStyle1(march_event:WithObject():GetTime()),
+        text = string.format( _("剩余时间: %s"), GameUtils:formatTimeStyle1(march_event:WithObject():GetTime()) )
         size = 22,
         color = 0x007c23,
     }):addTo(body):align(display.LEFT_CENTER,30, size.height-50)
@@ -1000,7 +1002,8 @@ function WidgetUseItems:OpenWarSpeedupDialog( item ,march_event)
     function dialog:OnAttackMarchEventTimerChanged( attackMarchEvent )
         if march_event:WithObject():Id() == attackMarchEvent:Id() and (attackMarchEvent:GetPlayerRole() == attackMarchEvent.MARCH_EVENT_PLAYER_ROLE.SENDER
             or attackMarchEvent:GetPlayerRole() == attackMarchEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER) then
-            buff_status_label:setString(_("剩余时间:")..GameUtils:formatTimeStyle1(attackMarchEvent:GetTime()))
+            local left_time_str = GameUtils:formatTimeStyle1(attackMarchEvent:GetTime())
+            buff_status_label:setString(string.format(_("剩余时间:%s"), left_time_str))
         end
     end
 
@@ -1212,7 +1215,7 @@ function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc,buyAndUseFun
             local num_bg = display.newSprite("back_ground_118x36.png"):addTo(body):align(display.CENTER,470,94)
 
             local own_label = UIKit:ttfLabel({
-                text = _("拥有")..":"..item:Count(),
+                text = string.format(_("拥有:%d"), item:Count()),
                 size = 20,
                 color = 0x403c2f,
             }):addTo(num_bg):align(display.CENTER,num_bg:getContentSize().width/2, num_bg:getContentSize().height/2)

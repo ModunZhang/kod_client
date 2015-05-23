@@ -79,10 +79,10 @@ function WidgetAllianceCreateOrEdit:CreateAllianceButtonClicked()
 	local data = self:AdapterCreateData2Server_()
 	local errMsg = ""
 	if string.utf8len(data.name) < 3 or string.utf8len(data.name) > 20 or string.find(data.name,"%p") then
-		errMsg = _("联盟名称不合法") .. _("只允许字母、数字和空格，需要3~20个字符")
+		errMsg = _("联盟名称不合法只允许字母、数字和空格，需要3~20个字符")
 	end 
 	if string.utf8len(data.tag) < 1 or string.utf8len(data.tag) > 3 or not string.match(data.tag,"^%w%w?%w?$") then
-		errMsg = _("联盟标签不合法") .. _("只允许字母、数字需要1~3个字符")
+		errMsg = _("联盟标签不合法只允许字母、数字需要1~3个字符")
 	end
 	if self:IsCreate() then
 		if config_intInit.createAllianceGem.value > User:GetGemResource():GetValue() then

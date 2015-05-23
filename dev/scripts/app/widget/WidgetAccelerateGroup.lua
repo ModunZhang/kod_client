@@ -45,7 +45,7 @@ function WidgetAccelerateGroup:ctor(eventType,eventId)
         local gem_icon = display.newSprite("gem_icon_62x61.png"):addTo(cost_bg):align(display.CENTER, 20, cost_bg:getContentSize().height/2):scale(0.6)
 
         if speedUp_item_num>0 then
-            cost_text = _("拥有")..speedUp_item_num
+            cost_text = string.format( _("拥有%d"), speedUp_item_num )
             gem_icon:hide()
         else
             cost_text = speedUp_item:Price()
@@ -150,7 +150,7 @@ function WidgetAccelerateGroup:OnItemsChanged( changed_map )
         local speed_item = ItemManager:GetItemByName("speedup_"..i)
         local count = speed_item:Count()
         if count>0 then
-            self.own_labels[i]:setString(_("拥有")..count)
+            self.own_labels[i]:setString( string.format( _("拥有%d"), count ) )
             self.gem_images[i]:hide()
         else
             self.own_labels[i]:setString(speed_item:Price())

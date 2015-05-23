@@ -131,11 +131,11 @@ function WidgetAllianceBuildingUpgrade:InitNextLevelEfficiency()
     self:SetUpgradeEfficiency()
 end
 function WidgetAllianceBuildingUpgrade:SetBuildingLevel()
-    self.builging_level:setString(_("等级").." ".. self.building.level)
+    self.builging_level:setString( string.format( _("等级 %d"), self.building.level ) )
     if #self.building_config == self.building.level then
         self.next_level:setString(_("等级已满"))
     else
-        self.next_level:setString(_("等级") .. " ".. self.building.level+1)
+        self.next_level:setString( string.format( _("等级 %d"), self.building.level+1 ) )
     end
 end
 
@@ -157,7 +157,7 @@ function WidgetAllianceBuildingUpgrade:SetUpgradeEfficiency()
         elseif building.name == "orderHall" then
             efficiency = _("各类型的村落个数+1")
         else
-            efficiency = "本地化缺失" .. building.name
+            efficiency = string.format( "本地化缺失%s", building.name )
         end
     end
 
@@ -184,7 +184,7 @@ function WidgetAllianceBuildingUpgrade:InitRequirement()
             isVisible = true,
             isSatisfy = alliance:GetSelf():CanUpgradeAllianceBuilding() ,
             icon="alliance_item_leader_39x39.png",
-            description= _("职位大于等于")..Localize.alliance_title.quartermaster},
+            description= string.format( _("职位大于等于%s"), Localize.alliance_title.quartermaster )},
     }
     if not self.requirement_listview then
         self.requirement_listview = WidgetRequirementListview.new({

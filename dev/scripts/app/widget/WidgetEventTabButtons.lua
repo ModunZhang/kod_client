@@ -916,11 +916,11 @@ end
 function WidgetEventTabButtons:BuildingDescribe(building)
     local upgrade_info
     if iskindof(building, "ResourceUpgradeBuilding") and building:IsBuilding() then
-        upgrade_info = string.format("%s", _("建造"))
+        upgrade_info = _("建造")
     elseif building:IsUnlocking() then
-        upgrade_info = string.format("%s", _("解锁"))
+        upgrade_info = _("解锁")
     else
-        upgrade_info = string.format("%s%d", _("升级到 等级"), building:GetNextLevel())
+        upgrade_info = string.format( _("升级到 等级%d"), building:GetNextLevel())
     end
     local time, percent = self:BuildingPercent(building)
     local str = string.format("%s (%s) %s",
@@ -937,15 +937,15 @@ function WidgetEventTabButtons:SoldierDescribe(event)
     local soldier_type, count = event:GetRecruitInfo()
     local soldier_name = Localize.soldier_name[soldier_type]
     local time, percent = self:EventPercent(event)
-    return string.format("%s%s x%d %s", _("招募"), soldier_name, count, GameUtils:formatTimeStyle1(time)), percent
+    return string.format( _("招募%s x%d %s"), soldier_name, count, GameUtils:formatTimeStyle1(time) ), percent
 end
 function WidgetEventTabButtons:EquipmentDescribe(event)
     local time, percent = self:EventPercent(event)
-    return string.format("%s %s %s", _("正在制作"), Localize.equip[event:Content()], GameUtils:formatTimeStyle1(time)), percent
+    return string.format( _("正在制作 %s %s"), Localize.equip[event:Content()], GameUtils:formatTimeStyle1(time)), percent
 end
 function WidgetEventTabButtons:MaterialDescribe(event)
     local time, percent = self:EventPercent(event)
-    return string.format("%s x%d %s", _("制造材料"), event:TotalCount(), GameUtils:formatTimeStyle1(time)), percent
+    return string.format( _("制造材料 x%d %s"), event:TotalCount(), GameUtils:formatTimeStyle1(time)), percent
 end
 function WidgetEventTabButtons:MilitaryTechDescribe(event)
     local time, percent = self:EventPercent(event)

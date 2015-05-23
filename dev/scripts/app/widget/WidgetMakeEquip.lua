@@ -23,7 +23,9 @@ local DRAGON_BG = {
 
 -- local EQUIP_LOCALIZE = Localize.equip_material
 local EQUIP_LOCALIZE = Localize.equip
+local EQUIP_MAKE = Localize.equip_make
 local DRAGON_LOCALIZE = Localize.dragon
+local DRAGON_ONLY = Localize.dragon_only
 local BODY_LOCALIZE = Localize.body
 function WidgetMakeEquip:ctor(equip_type, black_smith, city)
     WidgetMakeEquip.super.ctor(self,862,_("制造装备"),display.top-80)
@@ -104,7 +106,7 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
 
     -- used for dragon
     cc.ui.UILabel.new({
-        text = string.format("%s%s%s", _("仅供"), DRAGON_LOCALIZE[equip_config.usedFor], _("装备")),
+        text = DRAGON_ONLY[equip_config.usedFor],
         size = 18,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_RIGHT,
@@ -177,7 +179,7 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
         :onButtonClicked(function(event)
             if self:IsAbleToMakeEqui(false) then
                 NetManager:getMakeDragonEquipmentPromise(equip_type):done(function (response)
-                    GameGlobalUI:showTips(_("提示"),string.format(_("已在制造%s"),EQUIP_LOCALIZE[equip_type]))
+                    GameGlobalUI:showTips(_("提示"), EQUIP_MAKE[equip_type])
                     return response
                 end)
 
@@ -366,7 +368,7 @@ end
 function WidgetMakeEquip:UpdateBuildLabel(queue)
     local is_enough = queue == 0
     -- self.normal_build_btn:setButtonEnabled(is_enough)
-    local label = string.format("%s %d/%d", _("制造队列"), 1,queue)
+    local label = string.format(_("制造队列 %d/%d"), 1,queue)
     if label ~= self.build_label:getString() then
         self.build_label:setString(label)
     end
@@ -377,7 +379,7 @@ end
 function WidgetMakeEquip:UpdateCoin(coin)
     local equip_config = self.equip_config
     local need_coin = equip_config.coin
-    local label = string.format("%s %s/%s", _("需要银币"),  GameUtils:formatNumber(coin),GameUtils:formatNumber(need_coin))
+    local label = string.format( _("需要银币 %s/%s"),  GameUtils:formatNumber(coin),GameUtils:formatNumber(need_coin))
     if self.coin_label:getString() ~= label then
         self.coin_label:setString(label)
     end
@@ -457,13 +459,14 @@ function WidgetMakeEquip:IsAbleToMakeEqui(isFinishNow)
             local making_event = self.black_smith:GetMakeEquipmentEvent()
             local time_gem = DataUtils:getGemByTimeInterval(making_event:LeftTime(app.timer:GetServerTime()))
             need_gems = need_gems + time_gem
-            table.insert(not_suitble, _("完成当前制造队列,需要")..time_gem)
+            table.insert(not_suitble, string.format( _("完成当前制造队列,需要%d"), time_gem ) )
         end
         -- 检查银币
         local current_coin = city:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
         if equip_config.coin>current_coin then
             local coin_gem = DataUtils:buyResource({coin = equip_config.coin}, {coin =current_coin })
-            table.insert(not_suitble, _("银币不足,需要")..coin_gem)
+
+            table.insert(not_suitble, string.format( _("银币不足,需要%d"), coin_gem ) )
             need_gems = need_gems + coin_gem
         end
 

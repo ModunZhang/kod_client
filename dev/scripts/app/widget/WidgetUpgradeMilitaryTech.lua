@@ -67,7 +67,7 @@ function WidgetUpgradeMilitaryTech:CurrentInfo()
 
     local tech = self.tech
     self.upgrade_tip = UIKit:ttfLabel({
-        text = tech:GetTechLocalize().." (".._("升级到").." Lv"..(tech:Level()+1)..")",
+        text = tech:GetTechLocalize()..string.format( _(" (升级到 Lv%d)"), tech:Level()+1 ),
         size = 22,
         color = 0x403c2f,
     }):align(display.CENTER, bg:getContentSize().width/2 , bg:getContentSize().height/2)
@@ -172,7 +172,8 @@ function WidgetUpgradeMilitaryTech:UpgradeRequirement()
             isVisible = City:GetSoldierManager():GetUpgradingMilitaryTechNum(self.tech:Building())>0,
             isSatisfy = not  City:GetSoldierManager():IsUpgradingMilitaryTech(self.tech:Building()),
             icon="hammer_33x40.png",
-            description= _("升级队列已满")..":"..(1-City:GetSoldierManager():GetUpgradingMilitaryTechNum(self.tech:Building())).."/1"
+
+            description= string.format( _("升级队列已满:%d/1"), (1-City:GetSoldierManager():GetUpgradingMilitaryTechNum(self.tech:Building())) ),
         },
         {
             resource_type = Localize.fight_reward.coin,
@@ -259,7 +260,8 @@ function WidgetUpgradeMilitaryTech:OnMilitaryTechsDataChanged(city,changed_map)
             self.tech = v
             self.upgrade_time:setString(GameUtils:formatTimeStyle1(v:GetUpgradeTime()))
             self.upgrade_now_need_gems_label:setString(v:GetInstantUpgradeGems())
-            self.upgrade_tip:setString(v:GetTechLocalize().." (".._("升级到").." Lv"..(v:Level()+1)..")")
+
+            self.upgrade_tip:setString(v:GetTechLocalize()..string.format( _(" (升级到 Lv%d)"), (v:Level()+1) ))
             self.line1:SetText("+"..(v:GetAtkEff()*100).."%")
             self.line2:SetText("+"..v:GetTechPoint())
             self:UpgradeRequirement()

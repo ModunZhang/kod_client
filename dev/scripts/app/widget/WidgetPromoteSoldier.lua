@@ -188,7 +188,7 @@ function WidgetPromoteSoldier:UpgradeRequirement()
             isVisible = City:GetSoldierManager():GetUpgradingMilitaryTechNum(self.building_type)>0,
             isSatisfy = not  City:GetSoldierManager():IsUpgradingMilitaryTech(self.building_type),
             icon="hammer_33x40.png",
-            description= _("升级队列已满")..":"..(1-City:GetSoldierManager():GetUpgradingMilitaryTechNum(self.building_type)).."/1"
+            description= string.format( _("升级队列已满:%d/1"), 1-City:GetSoldierManager():GetUpgradingMilitaryTechNum(self.building_type) )
         },
         {
             resource_type = Localize.fight_reward.coin,
@@ -302,7 +302,7 @@ function WidgetPromoteSoldier:IsAbleToUpgradeSecond()
         table.insert(results, _("升级军事科技队列占用"))
     end
     if current_coin<level_up_config.upgradeCoinNeed then
-        table.insert(results, _("银币不足").." ".._("需要补充")..(level_up_config.upgradeCoinNeed-current_coin))
+        table.insert(results, string.format( _("银币不足 需要补充 %d"), level_up_config.upgradeCoinNeed-current_coin ) )
     end
 
 

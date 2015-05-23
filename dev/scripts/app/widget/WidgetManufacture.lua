@@ -356,7 +356,7 @@ function WidgetManufacture:CreateMaterialItemWithListView(list_view, title, mate
             local stone_cur = resource_manager:GetStoneResource():GetResourceValueByCurrentTime(time)
             local iron_cur = resource_manager:GetIronResource():GetResourceValueByCurrentTime(time)
             local number, wood, stone, iron, time = toolShop:GetNeedByCategory(category)
-            describe:setString(_("随机制造")..string.format("%d", number).._("个材料"))
+            describe:setString( string.format(_("随机制造%d个材料"), number) )
             self:SetNeedNumber({wood_cur, wood}, {stone_cur, stone}, {iron_cur, iron}, time)
             return self
         end
@@ -396,7 +396,7 @@ function WidgetManufacture:CreateMaterialItemWithListView(list_view, title, mate
             :addTo(material, 2):align(display.CENTER, 351 + 120, height)
 
         function material:SetNumber(number)
-            describe:setString(_("制造材料")..string.format(" %d ", number).._("完成!"))
+            describe:setString(string.format( _("制造材料x%d 完成!", number ) )
             return self
         end
         function material:SetClicked(func)
@@ -440,7 +440,7 @@ function WidgetManufacture:CreateMaterialItemWithListView(list_view, title, mate
             local percent = elapse_time * 100.0 / total_time
 
             self:GetProgressBox():show()
-                :SetDescribe(string.format("%s X%d", _("制造材料"), number))
+                :SetDescribe(string.format(_("制造材料 x%d"), number))
                 :SetProgressInfo(GameUtils:formatTimeStyle1(event:LeftTime(server_time)), percent)
 
             self:GetMaterial():hide()
