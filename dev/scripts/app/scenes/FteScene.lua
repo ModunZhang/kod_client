@@ -7,6 +7,19 @@ local FteScene = class("FteScene", function()
 end)
 
 function FteScene:ctor()
+
+end
+function FteScene:onEnter()
+    
+end
+function FteScene:onEnterTransitionFinish()
+    printLog("Info", "Check MessageDialog :%s",self.__cname)
+    local message = UIKit:getMessageDialogWillShow()
+    if message then
+        message:AddToScene(self,true)
+        UIKit:clearMessageDialogWillShow()
+    end
+
     local text = _("数周之后…")
     self.several = UIKit:ttfLabel({
         text = "",
@@ -17,8 +30,10 @@ function FteScene:ctor()
         {words = _("太好了，你终于醒过来了，觉醒者。。。我的名字叫赛琳娜，我们寻找那你这样的觉醒者已经很长时间了。。。"), brow = "smile"},
         {words = "我建议你最好别乱动，你刚刚在同黑龙作战的过程中受了伤，伤口还没复原。。。"},
         {words = "我知道你好友很多疑问，不过首先，我们需要前往寻找一个安全的地方？"}):AddToScene(self, true)
-	self.npc:PromiseOfDialogEndWithClicked(3):next(function()
-    	GameUINpc:PromiseOfLeave()
+
+    self.npc:PromiseOfDialogEndWithClicked(3):next(function()
+        return GameUINpc:PromiseOfLeave()
+    end):next(function()
         return UIKit:newGameUI('GameUISelectTerrain'):AddToScene(self, true):PromiseOfSelectDragon()
     end):next(function()
         UIKit:GetUIInstance("GameUISelectTerrain"):removeFromParent()
@@ -32,18 +47,7 @@ function FteScene:ctor()
             app:EnterMyCityScene()
         end
     end)
-end
-function FteScene:onEnter()
-    
-end
-function FteScene:onEnterTransitionFinish()
     self.npc:StartDialog()
-    printLog("Info", "Check MessageDialog :%s",self.__cname)
-    local message = UIKit:getMessageDialogWillShow()
-    if message then
-        message:AddToScene(self,true)
-        UIKit:clearMessageDialogWillShow()
-    end
 end
 function FteScene:onExit()
 
