@@ -454,6 +454,7 @@ function Alliance:OnAllianceDataChanged(alliance_data,refresh_time,deltaData)
         self:SetTitleNames(alliance_data.titles)
     end
     self:UpdateMaxMemberCount(alliance_data)
+    self:OnAllianceFightChanged(alliance_data, deltaData)
     self:OnAllianceBasicInfoChangedFirst(alliance_data,deltaData)
     self:OnAllianceFightReportsChanged(alliance_data, deltaData)
 
@@ -467,7 +468,6 @@ function Alliance:OnAllianceDataChanged(alliance_data,refresh_time,deltaData)
 
     self:OnAllianceCountInfoChanged(alliance_data, deltaData)
 
-    self:OnAllianceFightChanged(alliance_data, deltaData)
 
     self:OnAllianceFightRequestsChanged(alliance_data, deltaData)
 
