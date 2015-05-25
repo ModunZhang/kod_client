@@ -11,6 +11,9 @@ local WidgetHomeBottom = class("WidgetHomeBottom", function()
 end)
 
 
+local ALLIANCE_TAG = 222
+
+
 function WidgetHomeBottom:MailUnreadChanged(...)
     self.mail_count:SetNumber(MailManager:GetUnReadMailsNum()+MailManager:GetUnReadReportsNum())
 end
@@ -78,8 +81,7 @@ function WidgetHomeBottom:OnBottomButtonClicked(event)
     if not tag then return end
     if tag == 4 then -- tag 4 = alliance button
         UIKit:newGameUI('GameUIAlliance'):AddToCurrentScene(true)
-        -- self.alliance_btn:removeChildByTag(111)
-        self.alliance_btn:removeChildByTag(222)
+        self.alliance_btn:removeChildByTag(ALLIANCE_TAG)
     elseif tag == 3 then
         UIKit:newGameUI('GameUIMail',self.city):AddToCurrentScene(true)
     elseif tag == 2 then
@@ -99,10 +101,14 @@ function WidgetHomeBottom:TipsOnAlliance()
     -- WidgetFteMark.new()
     --     :Size(100, 100)
     --     :addTo(self.alliance_btn, 1, 111)
+    self.alliance_btn:removeChildByTag(ALLIANCE_TAG)
 
     WidgetFteArrow.new(_("加入或创建联盟\n开启多人团战玩法"))
         :TurnDown():align(display.BOTTOM_CENTER, 0, 50)
-        :addTo(self.alliance_btn, 1, 222)
+        :addTo(self.alliance_btn, 1, ALLIANCE_TAG)
+
+    self:stopAllActions()
+    self:performWithDelay(function() self.alliance_btn:removeChildByTag(ALLIANCE_TAG) end, 5)
 end
 
 

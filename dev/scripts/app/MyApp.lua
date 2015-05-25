@@ -229,6 +229,10 @@ function MyApp:onEnterForeground()
     UIKit:closeAllUI()
     dump("onEnterForeground------>")
     local scene = display.getRunningScene()
+    if scene.__cname == "MyCityScene" and 
+        not DataManager:getUserData().countInfo.firstJoinAllianceRewardGeted then
+        scene:GetHomePage():PromiseOfFteAlliance()
+    end
     self:retryConnectServer(false)
 end
 function MyApp:onEnterPause()
