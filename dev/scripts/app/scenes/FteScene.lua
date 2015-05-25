@@ -34,7 +34,7 @@ function FteScene:ctor()
     end)
 end
 function FteScene:onEnter()
-    
+    app:GetAudioManager():PlayGameMusic('MyCityScene')
 end
 function FteScene:onEnterTransitionFinish()
     self.npc:StartDialog()

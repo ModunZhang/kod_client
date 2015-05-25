@@ -167,13 +167,17 @@ function AudioManager:PlaySoldierStepEffectByType(type_)
 	end
 end
 -- isLoop 默认为false
-function AudioManager:PlayGameMusic(scene_name,isLoop)
+function AudioManager:PlayGameMusic(scene_name,isLoop,forcePlay)
 	printLog("AudioManager","PlayGameMusic----->%s",scene_name or "nil")
 	if self.music_handle then
 		cc.Director:getInstance():getScheduler():unscheduleScriptEntry(self.music_handle)
 		self:SetBgMusicVolume(1.0)
 	end
 	if type(isLoop) ~= 'boolean' then isLoop = false end
+	if forcePlay then
+		self:PlayGameMusicWithMapKey(scene_name,isLoop)
+		return
+	end
 	if Alliance_Manager then
 		local alliance = Alliance_Manager:GetMyAlliance()
 		local status = alliance:Status()
@@ -200,7 +204,7 @@ function AudioManager:PlayGameMusic(scene_name,isLoop)
 		-- 	end
 		-- end
 	else
-		local file_key = scene_name
+		local file_key = scene_name or display.getRunningScene().__cname
 		self:PlayGameMusicWithMapKey(file_key,isLoop)
 	end
 end

@@ -842,7 +842,7 @@ function GameUIReplayNew:ctor(report, callback)
 end
 function GameUIReplayNew:OnMoveInStage()
     GameUIReplayNew.super.OnMoveInStage(self)
-    app:GetAudioManager():PlayGameMusic("AllianceBattleScene",true)
+    app:GetAudioManager():PlayGameMusic("AllianceBattleScene",true,true)
     self.ui_map = self:BuildUI()
     self.ui_map.battle_background1:setTexture(string.format("back_ground_%s.png", self.report:GetAttackTargetTerrain()))
     self.ui_map.attackName:setString(self.report:GetFightAttackName())
