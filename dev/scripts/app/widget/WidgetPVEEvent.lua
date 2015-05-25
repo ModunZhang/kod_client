@@ -98,7 +98,7 @@ function WidgetPVEEvent:PromiseOfHide()
     end)
 end
 function WidgetPVEEvent:PromiseOfShow()
-    local _,_,_,ok = self:GetTarget()
+    local _,ok = self:GetWanted()
     if ok then
         self:Reload()
         self.node:stopAllActions()
@@ -120,19 +120,19 @@ function WidgetPVEEvent:Reset()
     self:Lock(false)
 end
 function WidgetPVEEvent:Load()
-    local name, count, target_count, ok = self:GetTarget()
+    local target, ok = self:GetWanted()
     if ok then
         local item = self:CreateItem()
             :SetProgressInfo(
-                string.format(_("通缉令 : %s        %d/%d"), Localize.soldier_name[name], count, target_count),
-                (count / target_count) * 100)
-        if count >= target_count then
+                string.format(_("通缉令 : %s        %d/%d"), Localize.soldier_name[target.name], target.count, target.target),
+                (target.count / target.target) * 100)
+        if target.count >= target.target then
             item:SetCanGet()
         end
         self:InsertItem(item:OnClicked(function()
-            local name,count,target_count,ok = self.user:GetPVEDatabase():GetTarget()
+            local target,ok = self.user:GetPVEDatabase():GetTarget()
             if ok then
-                WidgetPVEGetTaskRewards.new(name, {}, (count/target_count) * 100):AddToCurrentScene(true)
+                WidgetPVEGetTaskRewards.new(target.name, target.coin, (target.count/target.target) * 100):AddToCurrentScene(true)
             end
         end))
     end
@@ -147,13 +147,13 @@ function WidgetPVEEvent:ResizeBelowHorizon(new_height)
     self.back_ground:setContentSize(cc.size(size.width, height))
     self.node:setPositionY(- height)
 end
-function WidgetPVEEvent:GetTarget()
-    local name, count, target_count, ok = self.user:GetPVEDatabase():GetTarget()
+function WidgetPVEEvent:GetWanted()
+    local target, ok = self.user:GetPVEDatabase():GetTarget()
     if not ok then
         self.user:GetPVEDatabase():NewTarget()
+        return self.user:GetPVEDatabase():GetTarget()
     end
-    name, count, target_count, ok = self.user:GetPVEDatabase():GetTarget()
-    return name, count, target_count, ok
+    return target, ok
 end
 
 

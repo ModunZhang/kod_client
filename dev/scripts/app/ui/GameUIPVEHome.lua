@@ -10,6 +10,7 @@ local WidgetUseItems = import("..widget.WidgetUseItems")
 local ChatManager = import("..entity.ChatManager")
 local WidgetChat = import("..widget.WidgetChat")
 local WidgetPVEEvent = import("..widget.WidgetPVEEvent")
+local pve_level = GameDatas.ClientInitGame.pve_level
 local timer = app.timer
 
 
@@ -58,7 +59,7 @@ function GameUIPVEHome:OnResourceChanged(user)
     self.gem_label:setString(string.formatnumberthousands(user:GetGemResource():GetValue()))
 end
 function GameUIPVEHome:OnExploreChanged(pve_layer)
-    self.exploring:setString(string.format("探索度 %.2f%%", pve_layer:ExploreDegree() * 100))
+    self.exploring:setString(string.format(_("探索度 %.2f%%"), pve_layer:ExploreDegree() * 100))
 end
 function GameUIPVEHome:CreateTop()
     local top_bg = display.newSprite("head_bg.png")
@@ -135,10 +136,11 @@ function GameUIPVEHome:CreateTop()
         ,{})
         :addTo(top_bg, 1):align(display.CENTER, 80, 55):scale(0.8)
         :onButtonClicked(function(event)
-            WidgetPVEGetRewards.new({gemClass = "gemClass_1", count = 1}, self.layer:ExploreDegree() * 100):AddToCurrentScene(true)
+            local reward = pve_level[self.layer:CurrentPVEMap():GetIndex()]
+            WidgetPVEGetRewards.new({gemClass = self:GetRewardItemName(), count = reward.count}, self.layer:ExploreDegree() * 100):AddToCurrentScene(true)
         end)
 
-    self.reward = display.newSprite(UILib.item["gemClass_1"],nil,nil,{class=cc.FilteredSpriteWithOne})
+    self.reward = display.newSprite(UILib.item[self:GetRewardItemName()],nil,nil,{class=cc.FilteredSpriteWithOne})
         :addTo(reward_btn):scale(0.6)
     self:RefreshRewards()
 
@@ -204,12 +206,17 @@ function GameUIPVEHome:GetRewards()
 -- end)
 end
 function GameUIPVEHome:RefreshRewards()
-    self.reward:setTexture(UILib.item["gemClass_1"])
+    self.reward:setTexture(UILib.item[self:GetRewardItemName()])
     if self.layer:CurrentPVEMap():IsRewarded() then
         self.reward:setFilter(filter.newFilter("GRAY", {0.2, 0.3, 0.5, 0.1}))
     else
         self.reward:clearFilter()
     end
+end
+function GameUIPVEHome:GetRewardItemName()
+    local reward = pve_level[self.layer:CurrentPVEMap():GetIndex()]
+    local _,itemName = unpack(string.split(reward.itemName, ":"))
+    return itemName
 end
 
 

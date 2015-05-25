@@ -86,17 +86,38 @@ function PVEDatabase:ResetAllMapsListener()
     end
 end
 
--------- 
+--------
+local pve_wanted = GameDatas.ClientInitGame.pve_wanted
 function PVEDatabase:GetTarget()
     local user_default = cc.UserDefault:getInstance()
     local name = user_default:getStringForKey("pve_task")
-    return name, user_default:getIntegerForKey("pve_task_count"), user_default:getIntegerForKey("pve_task_target_count"), #name > 0
+    return {
+        name = name,
+        count = user_default:getIntegerForKey("pve_task_count"),
+        target = user_default:getIntegerForKey("pve_task_target_count"),
+        coin = user_default:getIntegerForKey("pve_task_coin"),
+    }, #name > 0
 end
 function PVEDatabase:NewTarget(name, count)
+    local old,ok = self:GetTarget()
+    local wanted = pve_wanted[self.user:GetCurrentPVEMap():GetIndex()]
+    local soldierName, count, coin = "swordsman", 100, 2500
+    local soldiers = {}
+    for k,v in pairs(wanted) do
+        if k == "coin" then
+            coin = v
+        elseif k ~= "floor" then
+            if not ok or (ok and k ~= old.name) then
+                table.insert(soldiers, {name = k, count = v})
+            end
+        end
+    end
+    local wanted_soldier = soldiers[math.random(#soldiers)]
     local user_default = cc.UserDefault:getInstance()
-    user_default:setStringForKey("pve_task", "swordsman")
+    user_default:setStringForKey("pve_task", wanted_soldier.name)
     user_default:setIntegerForKey("pve_task_count", 0)
-    user_default:setIntegerForKey("pve_task_target_count", 100)
+    user_default:setIntegerForKey("pve_task_target_count", wanted_soldier.count)
+    user_default:setIntegerForKey("pve_task_coin", coin)
     user_default:flush()
 end
 function PVEDatabase:IncKillCount(count)
@@ -112,6 +133,8 @@ end
 
 
 return PVEDatabase
+
+
 
 
 
