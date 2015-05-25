@@ -328,7 +328,7 @@ function GameUIAllianceShrine:GetStageListItem(index,stage_obj)
 		text = stage_obj:GetStageDesc(),
 		size = 18,
 		color=  desc_color,
-		dimensions = cc.size(530,74) 
+		dimensions = cc.size(400,74) 
 	}):align(display.LEFT_TOP, 10, 82):addTo(logo_bg)
 	local stage_star = stage_obj:Star()
 	local x,y = 14,15
@@ -451,7 +451,7 @@ function GameUIAllianceShrine:GetFight_List_Item(event)
 	local bg = WidgetUIBackGround.new({width = 568,height = 172},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
 	local title_bg =  display.newSprite("title_blue_558x34.png"):align(display.TOP_CENTER, 284, 168):addTo(bg)
 	UIKit:ttfLabel({
-		text =  event:Stage():GetStageDesc(),
+		text =  event:Stage():GetDescStageName(),
 		size = 22,
 		color = 0xffedae,
 	}):align(display.LEFT_CENTER, 10, 17):addTo(title_bg)

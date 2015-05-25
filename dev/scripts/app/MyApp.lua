@@ -105,6 +105,7 @@ end
 function MyApp:InitI18N()
     local currentLanFile = string.format("i18n/%s.mo", self:GetGameLanguage())
     local currentLanFilePath = cc.FileUtils:getInstance():fullPathForFilename(currentLanFile)
+    printLog("I18N","i18n file name:%s",currentLanFilePath)
     if cc.FileUtils:getInstance():isFileExist(currentLanFilePath) then
         _ = require("app.utils.Gettext").gettextFromFile(currentLanFilePath)
     end

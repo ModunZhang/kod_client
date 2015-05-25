@@ -80,8 +80,6 @@ function ShrinePlayFightReport:formatOrderedAttackSoldiers()
 	for index,v in ipairs(self.fightAttackSoldierRoundData) do
 		if not result[v.soldierName] then
 			result[v.soldierName] = {name = v.soldierName,star = v.soldierStar,count = v.soldierCount or 0,index = index}
-		else
-			result[v.soldierName].count = result[v.soldierName].count + v.soldierCount
 		end
 	end
 	for ___,v in pairs(result) do
@@ -96,8 +94,6 @@ function ShrinePlayFightReport:formatOrderedAttackSoldiers()
 	for index,v in ipairs(self.fightDefenceSoldierRoundData) do
 		if not result[v.soldierName] then
 			result[v.soldierName] = {name = v.soldierName,star = v.soldierStar,count = v.soldierCount or 0,index = index}
-		else
-			result[v.soldierName].count = result[v.soldierName].count + v.soldierCount
 		end
 	end
 	for ___,v in pairs(result) do
