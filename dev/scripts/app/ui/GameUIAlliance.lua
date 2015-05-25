@@ -30,9 +30,10 @@ GameUIAlliance.COMMON_LIST_ITEM_TYPE = Enum("JOIN","INVATE","APPLY")
 local JOIN_LIST_PAGE_SIZE = 10
 --
 --------------------------------------------------------------------------------
-function GameUIAlliance:ctor()
+function GameUIAlliance:ctor(default_tab)
     GameUIAlliance.super.ctor(self,City,_("联盟"))
     self.alliance_ui_helper = WidgetAllianceHelper.new()
+    self.default_tab = default_tab or "join"
 end
 
 function GameUIAlliance:OnAllianceBasicChanged(alliance, changed_map)
@@ -133,20 +134,22 @@ function GameUIAlliance:CreateNoAllianceUI()
             {
                 label = _("创建"),
                 tag = "create",
-
+                default = self.default_tab == 'create'
             },
             {
                 label = _("加入"),
                 tag = "join",
-                default = true,
+                default = self.default_tab == 'join'
             },
             {
                 label = _("邀请"),
                 tag = "invite",
+                default = self.default_tab == 'invite'
             },
             {
                 label = _("申请"),
                 tag = "apply",
+                default = self.default_tab == 'apply'
             },
         },
         function(tag)
