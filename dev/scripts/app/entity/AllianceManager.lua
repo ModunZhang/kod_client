@@ -80,7 +80,7 @@ function AllianceManager:RefreshAllianceSceneIf(old_alliance_status)
     local my_alliance_status = my_alliance:Status()
     if old_alliance_status == my_alliance_status then return end
     local scene_name = display.getRunningScene().__cname
-    if (my_alliance_status == 'protect' or my_alliance_status == 'peace') then
+    if (my_alliance_status == 'protect') then
         self.tipUserWar = false
         if self:HaveEnemyAlliance() then
             self:GetEnemyAlliance():Reset()

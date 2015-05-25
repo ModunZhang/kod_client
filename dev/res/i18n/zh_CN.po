@@ -1,0 +1,7163 @@
+# This file was generated from i18n.xlsx
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2015-05-23 18:19+0800\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: xls-to-po 1.0\n"
+
+msgid "错误"
+msgstr "错误"
+
+msgid "服务器连接断开,请检测你的网络环境后重试!"
+msgstr "服务器连接断开,请检测你的网络环境后重试!"
+
+msgid "玩家已经登录"
+msgstr "玩家已经登录"
+
+msgid "提示"
+msgstr "提示"
+
+msgid "加入联盟后开放此功能!"
+msgstr "加入联盟后开放此功能!"
+
+msgid "不能删除"
+msgstr "不能删除"
+
+msgid "确定"
+msgstr "确定"
+
+msgid "恭喜"
+msgstr "恭喜"
+
+msgid "升级木工小屋，石匠小屋，矿工小屋，农夫小屋会占用城民，因此我们应该："
+msgstr "升级木工小屋，石匠小屋，矿工小屋，农夫小屋会占用城民，因此我们应该："
+
+msgid "优先升级住宅"
+msgstr "优先升级住宅"
+
+msgid "鼓励城民生育"
+msgstr "鼓励城民生育"
+
+msgid "进攻其他玩家，抢些人回来！"
+msgstr "进攻其他玩家，抢些人回来！"
+
+msgid "扩建城市可以解锁更多新建筑，获得更多坑位，那么怎么扩建城市呢？"
+msgstr "扩建城市可以解锁更多新建筑，获得更多坑位，那么怎么扩建城市呢？"
+
+msgid "升级城堡"
+msgstr "升级城堡"
+
+msgid "向神灵祈祷"
+msgstr "向神灵祈祷"
+
+msgid "雇佣奴隶开垦荒地"
+msgstr "雇佣奴隶开垦荒地"
+
+msgid "龙如果想要晋升星级，下面哪一个不是必要条件？"
+msgstr "龙如果想要晋升星级，下面哪一个不是必要条件？"
+
+msgid "升级龙的技能"
+msgstr "升级龙的技能"
+
+msgid "提升龙的等级"
+msgstr "提升龙的等级"
+
+msgid "强化龙的装备"
+msgstr "强化龙的装备"
+
+msgid "想要提升龙的技能等级，你需要下面哪一种资源？"
+msgstr "想要提升龙的技能等级，你需要下面哪一种资源？"
+
+msgid "英雄之血"
+msgstr "英雄之血"
+
+msgid "技能点数"
+msgstr "技能点数"
+
+msgid "信用卡"
+msgstr "信用卡"
+
+msgid "匹配联盟战斗是根据什么条件进行匹配的？"
+msgstr "匹配联盟战斗是根据什么条件进行匹配的？"
+
+msgid "你联盟的战斗力"
+msgstr "你联盟的战斗力"
+
+msgid "你和开发者之间的关系"
+msgstr "你和开发者之间的关系"
+
+msgid "你自己的战斗力"
+msgstr "你自己的战斗力"
+
+msgid "升级联盟宫殿可以获得什么好处？"
+msgstr "升级联盟宫殿可以获得什么好处？"
+
+msgid "提升联盟的成员上限"
+msgstr "提升联盟的成员上限"
+
+msgid "能够扩大联盟领地"
+msgstr "能够扩大联盟领地"
+
+msgid "能够建一个私人泳池"
+msgstr "能够建一个私人泳池"
+
+msgid "如果不驻防龙城市将不会主动防御敌方的进攻，那么在哪里设置驻防在城市的龙呢？"
+msgstr "如果不驻防龙城市将不会主动防御敌方的进攻，那么在哪里设置驻防在城市的龙呢？"
+
+msgid "在城市的城墙"
+msgstr "在城市的城墙"
+
+msgid "在城市的城堡"
+msgstr "在城市的城堡"
+
+msgid "在地图上选一座高耸的山峰"
+msgstr "在地图上选一座高耸的山峰"
+
+msgid "如何在强化龙装备的过程中，获得更多经验值，最快提升装备强化的星级？"
+msgstr "如何在强化龙装备的过程中，获得更多经验值，最快提升装备强化的星级？"
+
+msgid "用相同部位，相同龙的装备强化"
+msgstr "用相同部位，相同龙的装备强化"
+
+msgid "用相同颜色的装备强化"
+msgstr "用相同颜色的装备强化"
+
+msgid "用刚刚炼制出的装备强化"
+msgstr "用刚刚炼制出的装备强化"
+
+msgid "建筑升级到一定等级后需要特殊的建筑材料，这些建筑材料主要来自哪种渠道？"
+msgstr "建筑升级到一定等级后需要特殊的建筑材料，这些建筑材料主要来自哪种渠道？"
+
+msgid "生产自工具作坊"
+msgstr "生产自工具作坊"
+
+msgid "带领部队在外征战"
+msgstr "带领部队在外征战"
+
+msgid "生产自车间"
+msgstr "生产自车间"
+
+msgid "联盟荣耀值是非常重要的资源，哪种方式不是联盟获得荣耀值的方式？"
+msgstr "联盟荣耀值是非常重要的资源，哪种方式不是联盟获得荣耀值的方式？"
+
+msgid "给联盟盟主点赞"
+msgstr "给联盟盟主点赞"
+
+msgid "参加联盟匹配战"
+msgstr "参加联盟匹配战"
+
+msgid "向联盟捐赠资源"
+msgstr "向联盟捐赠资源"
+
+msgid "下面哪种方式，不能提升战斗后可治愈伤兵的上限？"
+msgstr "下面哪种方式，不能提升战斗后可治愈伤兵的上限？"
+
+msgid "升级城市中住宅"
+msgstr "升级城市中住宅"
+
+msgid "升级城市中医院"
+msgstr "升级城市中医院"
+
+msgid "升级学院中的相应科技"
+msgstr "升级学院中的相应科技"
+
+msgid "在联盟匹配战时，你可以通过龙突袭敌方玩家城市获得什么？"
+msgstr "在联盟匹配战时，你可以通过龙突袭敌方玩家城市获得什么？"
+
+msgid "敌方城市的相关情报"
+msgstr "敌方城市的相关情报"
+
+msgid "抢走敌方城市的银币"
+msgstr "抢走敌方城市的银币"
+
+msgid "消耗敌方龙的生命值"
+msgstr "消耗敌方龙的生命值"
+
+msgid "如何提升城市中住宅的可建造数量？"
+msgstr "如何提升城市中住宅的可建造数量？"
+
+msgid "提升市政厅的等级"
+msgstr "提升市政厅的等级"
+
+msgid "提升住宅的等级"
+msgstr "提升住宅的等级"
+
+msgid "提升城堡等级"
+msgstr "提升城堡等级"
+
+msgid "如何提升城市中木材小屋的可建造数量？"
+msgstr "如何提升城市中木材小屋的可建造数量？"
+
+msgid "提升锯木工坊的等级"
+msgstr "提升锯木工坊的等级"
+
+msgid "提升木工小屋的等级"
+msgstr "提升木工小屋的等级"
+
+msgid "如何提升城市中石料小屋的可建造数量？"
+msgstr "如何提升城市中石料小屋的可建造数量？"
+
+msgid "提升石匠工坊的等级"
+msgstr "提升石匠工坊的等级"
+
+msgid "提升石料小屋的等级"
+msgstr "提升石料小屋的等级"
+
+msgid "如何提升城市中矿工小屋的可建造数量？"
+msgstr "如何提升城市中矿工小屋的可建造数量？"
+
+msgid "提升铸造工坊的等级"
+msgstr "提升铸造工坊的等级"
+
+msgid "提升矿工小屋的等级"
+msgstr "提升矿工小屋的等级"
+
+msgid "如何提升城市中农场小屋的可建造数量？"
+msgstr "如何提升城市中农场小屋的可建造数量？"
+
+msgid "提升磨坊的等级"
+msgstr "提升磨坊的等级"
+
+msgid "升级农夫小屋的等级"
+msgstr "升级农夫小屋的等级"
+
+msgid "如何将住宅，木材小屋，石料小屋，矿工小屋，农夫小屋在城市中移动位置？"
+msgstr "如何将住宅，木材小屋，石料小屋，矿工小屋，农夫小屋在城市中移动位置？"
+
+msgid "在小屋-信息中使用建筑移动按钮"
+msgstr "在小屋-信息中使用建筑移动按钮"
+
+msgid "用手指拖动想要移动的建筑"
+msgstr "用手指拖动想要移动的建筑"
+
+msgid "用你的意念进行移动"
+msgstr "用你的意念进行移动"
+
+msgid "当城墙的耐久度完全降低到0时会产生什么后果？"
+msgstr "当城墙的耐久度完全降低到0时会产生什么后果？"
+
+msgid "敌方联盟会获得额外的联盟积分"
+msgstr "敌方联盟会获得额外的联盟积分"
+
+msgid "你将无法派遣部队"
+msgstr "你将无法派遣部队"
+
+msgid "损失所有的资源"
+msgstr "损失所有的资源"
+
+msgid "通过探险可以获得大量的资源，稀有材料和道具，那么从什么敌方进入探险地图呢？"
+msgstr "通过探险可以获得大量的资源，稀有材料和道具，那么从什么敌方进入探险地图呢？"
+
+msgid "城堡旁边的飞艇"
+msgstr "城堡旁边的飞艇"
+
+msgid "联盟领地的月门"
+msgstr "联盟领地的月门"
+
+msgid "城市中的龙巢"
+msgstr "城市中的龙巢"
+
+msgid "以下哪一个条件是控制龙装备的材料掉落的数量和品质？"
+msgstr "以下哪一个条件是控制龙装备的材料掉落的数量和品质？"
+
+msgid "在一场战斗中获得更多的击杀积分"
+msgstr "在一场战斗中获得更多的击杀积分"
+
+msgid "和赛琳娜搞好关系"
+msgstr "和赛琳娜搞好关系"
+
+msgid "击杀掉敌方的龙"
+msgstr "击杀掉敌方的龙"
+
+msgid "联盟会战一旦由联盟盟主发起，并匹配成功后，会发生什么？"
+msgstr "联盟会战一旦由联盟盟主发起，并匹配成功后，会发生什么？"
+
+msgid "己方和敌方的联盟领地拼接到一起"
+msgstr "己方和敌方的联盟领地拼接到一起"
+
+msgid "有发生什么吗？不知道"
+msgstr "有发生什么吗？不知道"
+
+msgid "会获得一大笔联盟荣耀值"
+msgstr "会获得一大笔联盟荣耀值"
+
+msgid "想要带兵出征，下面哪一个条件不是必要的条件？"
+msgstr "想要带兵出征，下面哪一个条件不是必要的条件？"
+
+msgid "必须派出英雄"
+msgstr "必须派出英雄"
+
+msgid "必须派出一条巨龙"
+msgstr "必须派出一条巨龙"
+
+msgid "必须派出军事单位"
+msgstr "必须派出军事单位"
+
+msgid "想要提升部队的最大派出人口上限，下面哪一个方式不是正确的方式？"
+msgstr "想要提升部队的最大派出人口上限，下面哪一个方式不是正确的方式？"
+
+msgid "装备并强化龙的发球"
+msgstr "装备并强化龙的发球"
+
+msgid "如何提升联盟领地上村落的等级，从而在采集过程中获得更多资源？"
+msgstr "如何提升联盟领地上村落的等级，从而在采集过程中获得更多资源？"
+
+msgid "在联盟的秩序大厅中升级科技"
+msgstr "在联盟的秩序大厅中升级科技"
+
+msgid "给村落提供帮助"
+msgstr "给村落提供帮助"
+
+msgid "向联盟盟主发邮件"
+msgstr "向联盟盟主发邮件"
+
+msgid "如何提升自己在联盟领地上采集村落中资源的效率?"
+msgstr "如何提升自己在联盟领地上采集村落中资源的效率?"
+
+msgid "尽量采集同一种资源，从而提升该资源的采集熟练度"
+msgstr "尽量采集同一种资源，从而提升该资源的采集熟练度"
+
+msgid "赶快充值吧！"
+msgstr "赶快充值吧！"
+
+msgid "提升联盟宫殿的等级"
+msgstr "提升联盟宫殿的等级"
+
+msgid "在什么地方可以花费忠诚值购买原本需要花费金龙币才能获得道具？"
+msgstr "在什么地方可以花费忠诚值购买原本需要花费金龙币才能获得道具？"
+
+msgid "联盟领地中的商店"
+msgstr "联盟领地中的商店"
+
+msgid "联盟领地的联盟宫殿"
+msgstr "联盟领地的联盟宫殿"
+
+msgid "城市中的贸易行会"
+msgstr "城市中的贸易行会"
+
+msgid "当发觉你的盟友被攻击，你如何帮助盟友抵御这次攻击？"
+msgstr "当发觉你的盟友被攻击，你如何帮助盟友抵御这次攻击？"
+
+msgid "选中盟友城市并派出部队协防"
+msgstr "选中盟友城市并派出部队协防"
+
+msgid "给盟友要送一封邮件并支持他"
+msgstr "给盟友要送一封邮件并支持他"
+
+msgid "在聊天频道强烈谴责这种行为"
+msgstr "在聊天频道强烈谴责这种行为"
+
+msgid "已经招募的部队会持续消耗粮食，当粮食为0时，你的部队会发生什么？"
+msgstr "已经招募的部队会持续消耗粮食，当粮食为0时，你的部队会发生什么？"
+
+msgid "什么都会不发生"
+msgstr "什么都会不发生"
+
+msgid "士兵的战斗力会降低"
+msgstr "士兵的战斗力会降低"
+
+msgid "士兵会不停的逃走"
+msgstr "士兵会不停的逃走"
+
+msgid "在探险时可能会获得一些特殊材料，可以招募特殊的亡灵兵种，那么亡灵兵种有什么特殊属性？"
+msgstr "在探险时可能会获得一些特殊材料，可以招募特殊的亡灵兵种，那么亡灵兵种有什么特殊属性？"
+
+msgid "不会持续消耗粮食"
+msgstr "不会持续消耗粮食"
+
+msgid "长得很特别"
+msgstr "长得很特别"
+
+msgid "没有什么特别"
+msgstr "没有什么特别"
+
+msgid "想要招募更高级的兵种，你需要在训练营地，猎手大厅，马厩，车间中对兵种晋级。那么晋级需要的条件是什么？"
+msgstr "想要招募更高级的兵种，你需要在训练营地，猎手大厅，马厩，车间中对兵种晋级。那么晋级需要的条件是什么？"
+
+msgid "升级军事科技，提升兵种的军事科技水平"
+msgstr "升级军事科技，提升兵种的军事科技水平"
+
+msgid "积攒经验值"
+msgstr "积攒经验值"
+
+msgid "收集一套兵种的卡牌"
+msgstr "收集一套兵种的卡牌"
+
+msgid "在城市中的城堡中，可以变更城市的地形，那么变更城市的地形有什么具体的好处？"
+msgstr "在城市中的城堡中，可以变更城市的地形，那么变更城市的地形有什么具体的好处？"
+
+msgid "提升对应龙的生命恢复速度"
+msgstr "提升对应龙的生命恢复速度"
+
+msgid "换个口味，没什么作用"
+msgstr "换个口味，没什么作用"
+
+msgid "获得不同的资源产量加成"
+msgstr "获得不同的资源产量加成"
+
+msgid "在进攻敌方城市的时候，可以观察其地形，并派出相应的龙带领部队战斗，这么做的好处是？"
+msgstr "在进攻敌方城市的时候，可以观察其地形，并派出相应的龙带领部队战斗，这么做的好处是？"
+
+msgid "提升龙的力量，并获得额外的兵种加成"
+msgstr "提升龙的力量，并获得额外的兵种加成"
+
+msgid "这个信息没什么价值"
+msgstr "这个信息没什么价值"
+
+msgid "派出相应的兵种可以获得加成"
+msgstr "派出相应的兵种可以获得加成"
+
+msgid "在联盟宫殿，可以变更联盟的地形，那么变更联盟的地形有什么特殊的用途？"
+msgstr "在联盟宫殿，可以变更联盟的地形，那么变更联盟的地形有什么特殊的用途？"
+
+msgid "击杀敌方单位时，会掉落对应龙的装备材料"
+msgstr "击杀敌方单位时，会掉落对应龙的装备材料"
+
+msgid "用来区分敌我双方的领土不一样"
+msgstr "用来区分敌我双方的领土不一样"
+
+msgid "你的城市正被敌军突袭"
+msgstr "你的城市正被敌军突袭"
+
+msgid "你的城市正被敌军攻击"
+msgstr "你的城市正被敌军攻击"
+
+msgid "联盟对战已开始，您将进入自己联盟对战地图。"
+msgstr "联盟对战已开始，您将进入自己联盟对战地图。"
+
+msgid "建造%s至%d级完成"
+msgstr "建造%s至%d级完成"
+
+msgid "招募%s X%d完成"
+msgstr "招募%s X%d完成"
+
+msgid "正在协防玩家%s"
+msgstr "正在协防玩家%s"
+
+msgid "正在进行村落采集"
+msgstr "正在进行村落采集"
+
+msgid "进攻玩家城市(行军中)"
+msgstr "进攻玩家城市(行军中)"
+
+msgid "协防玩家城市(行军中)"
+msgstr "协防玩家城市(行军中)"
+
+msgid "占领村落(行军中)"
+msgstr "占领村落(行军中)"
+
+msgid "攻打联盟圣地(行军中)"
+msgstr "攻打联盟圣地(行军中)"
+
+msgid "进攻玩家城市(返回中)"
+msgstr "进攻玩家城市(返回中)"
+
+msgid "协防玩家城市(返回中)"
+msgstr "协防玩家城市(返回中)"
+
+msgid "占领村落(返回中)"
+msgstr "占领村落(返回中)"
+
+msgid "攻打联盟圣地(返回中)"
+msgstr "攻打联盟圣地(返回中)"
+
+msgid "突袭玩家城市(行军中)"
+msgstr "突袭玩家城市(行军中)"
+
+msgid "突袭村落(行军中)"
+msgstr "突袭村落(行军中)"
+
+msgid "突袭玩家城市(返回中)"
+msgstr "突袭玩家城市(返回中)"
+
+msgid "突袭村落(返回中)"
+msgstr "突袭村落(返回中)"
+
+msgid "正在协防 %s (%s)"
+msgstr "正在协防 %s (%s)"
+
+msgid "正在采集%sLv%s (%s)"
+msgstr "正在采集%sLv%s (%s)"
+
+msgid "进军圣地 (%s)"
+msgstr "进军圣地 (%s)"
+
+msgid "前往协防 %s(%s)"
+msgstr "前往协防 %s(%s)"
+
+msgid "正在进攻 %s(%s)"
+msgstr "正在进攻 %s(%s)"
+
+msgid "返回中 (%s)"
+msgstr "返回中 (%s)"
+
+msgid "正在突袭 %s(%s)"
+msgstr "正在突袭 %s(%s)"
+
+msgid "正在参加圣地战 %s(%s)"
+msgstr "正在参加圣地战 %s(%s)"
+
+msgid "圣地"
+msgstr "圣地"
+
+msgid "正在制作 %s"
+msgstr "正在制作 %s"
+
+msgid "制造%s装备完成"
+msgstr "制造%s装备完成"
+
+msgid "生产科技升级完成"
+msgstr "生产科技升级完成"
+
+msgid "孵化%s完成"
+msgstr "孵化%s完成"
+
+msgid "%s已经复活"
+msgstr "%s已经复活"
+
+msgid "城市建设"
+msgstr "城市建设"
+
+msgid "培养巨龙"
+msgstr "培养巨龙"
+
+msgid "研发科技"
+msgstr "研发科技"
+
+msgid "招募部队"
+msgstr "招募部队"
+
+msgid "冒险与征服"
+msgstr "冒险与征服"
+
+msgid "将%s升级到等级%d"
+msgstr "将%s升级到等级%d"
+
+msgid "将%s提升到星级%d"
+msgstr "将%s提升到星级%d"
+
+msgid "将%s技能%s提升到等级%d"
+msgstr "将%s技能%s提升到等级%d"
+
+msgid "将%s科技研发到等级%d"
+msgstr "将%s科技研发到等级%d"
+
+msgid "招募%s个%s"
+msgstr "招募%s个%s"
+
+msgid "探索步数达到%d"
+msgstr "探索步数达到%d"
+
+msgid "探索步数达到%d描述"
+msgstr "探索步数达到%d描述"
+
+msgid "攻击玩家获胜%d次"
+msgstr "攻击玩家获胜%d次"
+
+msgid "攻击玩家获胜%d次描述"
+msgstr "攻击玩家获胜%d次描述"
+
+msgid "突袭玩家获胜%d次"
+msgstr "突袭玩家获胜%d次"
+
+msgid "突袭玩家获胜%d次描述"
+msgstr "突袭玩家获胜%d次描述"
+
+msgid "击杀积分达到%d"
+msgstr "击杀积分达到%d"
+
+msgid "击杀积分达到%d描述"
+msgstr "击杀积分达到%d描述"
+
+msgid "power值到达%d"
+msgstr "power值到达%d"
+
+msgid "power值到达%d描述"
+msgstr "power值到达%d描述"
+
+msgid "%s血量增加"
+msgstr "%s血量增加"
+
+msgid "%s对%s的攻击"
+msgstr "%s对%s的攻击"
+
+msgid "晋升%s的星级"
+msgstr "晋升%s的星级"
+
+msgid "%s帮助升级%s成功"
+msgstr "%s帮助升级%s成功"
+
+msgid "%s X %d "
+msgstr "%s X %d "
+
+msgid "治愈%s完成"
+msgstr "治愈%s完成"
+
+msgid "你有一封新的邮件"
+msgstr "你有一封新的邮件"
+
+msgid "制造装备完成"
+msgstr "制造装备完成"
+
+msgid "获得材料"
+msgstr "获得材料"
+
+msgid "研发科技-%s血量增加到 Lv %d"
+msgstr "研发科技-%s血量增加到 Lv %d"
+
+msgid "研发科技-%s对%s的攻击到 Lv %d"
+msgstr "研发科技-%s对%s的攻击到 Lv %d"
+
+msgid "步兵科技"
+msgstr "步兵科技"
+
+msgid "骑兵科技"
+msgstr "骑兵科技"
+
+msgid "弓手科技"
+msgstr "弓手科技"
+
+msgid "攻城科技"
+msgstr "攻城科技"
+
+msgid "升级军事科技队列被占用"
+msgstr "升级军事科技队列被占用"
+
+msgid "银币不足 需要补充 %d"
+msgstr "银币不足 需要补充 %d"
+
+msgid "木人桩 需要补充 %d"
+msgstr "木人桩 需要补充 %d"
+
+msgid "箭靶 需要补充 %d"
+msgstr "箭靶 需要补充 %d"
+
+msgid "马鞍 需要补充 %d"
+msgstr "马鞍 需要补充 %d"
+
+msgid "精铁零件 需要补充 %d"
+msgstr "精铁零件 需要补充 %d"
+
+msgid "突袭成功"
+msgstr "突袭成功"
+
+msgid "突袭失败"
+msgstr "突袭失败"
+
+msgid "突袭村落成功"
+msgstr "突袭村落成功"
+
+msgid "突袭村落失败"
+msgstr "突袭村落失败"
+
+msgid "防守突袭失败"
+msgstr "防守突袭失败"
+
+msgid "防守突袭成功"
+msgstr "防守突袭成功"
+
+msgid "防守突袭村落成功"
+msgstr "防守突袭村落成功"
+
+msgid "防守突袭村落失败"
+msgstr "防守突袭村落失败"
+
+msgid "进攻协防部队成功"
+msgstr "进攻协防部队成功"
+
+msgid "进攻协防部队失败"
+msgstr "进攻协防部队失败"
+
+msgid "进攻城市成功"
+msgstr "进攻城市成功"
+
+msgid "进攻城市失败"
+msgstr "进攻城市失败"
+
+msgid "防守城市成功"
+msgstr "防守城市成功"
+
+msgid "防守城市失败"
+msgstr "防守城市失败"
+
+msgid "协助防守城市成功"
+msgstr "协助防守城市成功"
+
+msgid "协助防守城市失败"
+msgstr "协助防守城市失败"
+
+msgid "进攻村落成功"
+msgstr "进攻村落成功"
+
+msgid "进攻村落失败"
+msgstr "进攻村落失败"
+
+msgid "防守村落成功"
+msgstr "防守村落成功"
+
+msgid "防守村落失败"
+msgstr "防守村落失败"
+
+msgid "采集报告"
+msgstr "采集报告"
+
+msgid "%s完成"
+msgstr "%s完成"
+
+msgid "治愈士兵完成"
+msgstr "治愈士兵完成"
+
+msgid "招募士兵完成"
+msgstr "招募士兵完成"
+
+msgid "士兵晋级完成"
+msgstr "士兵晋级完成"
+
+msgid "晋级%s至%d星完成"
+msgstr "晋级%s至%d星完成"
+
+msgid "军事科技升级完成"
+msgstr "军事科技升级完成"
+
+msgid "晋升%s的星级 star %d"
+msgstr "晋升%s的星级 star %d"
+
+msgid "制造%d个材料完成"
+msgstr "制造%d个材料完成"
+
+msgid "地块未解锁"
+msgstr "地块未解锁"
+
+msgid "建筑已经达到最高等级"
+msgstr "建筑已经达到最高等级"
+
+msgid "建造数量已达建造上限"
+msgstr "建造数量已达建造上限"
+
+msgid "请首先提升城堡等级"
+msgstr "请首先提升城堡等级"
+
+msgid "资源不足"
+msgstr "资源不足"
+
+msgid "建造队列不足"
+msgstr "建造队列不足"
+
+msgid "资源不足.建造队列不足"
+msgstr "资源不足.建造队列不足"
+
+msgid "金龙币不足"
+msgstr "金龙币不足"
+
+msgid "等级小于0级"
+msgstr "等级小于0级"
+
+msgid "建筑正在升级"
+msgstr "建筑正在升级"
+
+msgid "城民上限不足,无法升级小屋,请升级或建造住宅"
+msgstr "城民上限不足,无法升级小屋,请升级或建造住宅"
+
+msgid "前置建筑等级未满足"
+msgstr "前置建筑等级未满足"
+
+msgid "修建%s到LV%d完成"
+msgstr "修建%s到LV%d完成"
+
+msgid "需要%s达到%d级"
+msgstr "需要%s达到%d级"
+
+msgid "每日任务%s完成"
+msgstr "每日任务%s完成"
+
+msgid "联盟地形已经改变"
+msgstr "联盟地形已经改变"
+
+msgid "你已经退出联盟"
+msgstr "你已经退出联盟"
+
+msgid "你可以移动%s到%s将消耗荣耀值%s,确认要移动吗?"
+msgstr "你可以移动%s到%s将消耗荣耀值%s,确认要移动吗?"
+
+msgid "无法移动到目标位置"
+msgstr "无法移动到目标位置"
+
+msgid "数周之后…"
+msgstr "数周之后…"
+
+msgid "太好了，你终于醒过来了，觉醒者。。。我的名字叫赛琳娜，我们寻找那你这样的觉醒者已经很长时间了。。。"
+msgstr "太好了，你终于醒过来了，觉醒者。。。我的名字叫赛琳娜，我们寻找那你这样的觉醒者已经很长时间了。。。"
+
+msgid "跳过"
+msgstr "跳过"
+
+msgid "点击空地：建造%s"
+msgstr "点击空地：建造%s"
+
+msgid "点击建筑：%s"
+msgstr "点击建筑：%s"
+
+msgid "主人"
+msgstr "主人"
+
+msgid "需要一条空闲状态的魔龙才能探险"
+msgstr "需要一条空闲状态的魔龙才能探险"
+
+msgid "建造矿工小屋"
+msgstr "建造矿工小屋"
+
+msgid "我们到了。。。现在你的伤也恢复的差不多了，让我们来测试一下你觉醒者的能力吧。。。"
+msgstr "我们到了。。。现在你的伤也恢复的差不多了，让我们来测试一下你觉醒者的能力吧。。。"
+
+msgid "拥有了驾驭龙族的力量，一定能击败邪恶的黑龙，重建帝国的荣耀！"
+msgstr "拥有了驾驭龙族的力量，一定能击败邪恶的黑龙，重建帝国的荣耀！"
+
+msgid "不过可惜这座城市太弱小了，我们得重头开始发展。建造住宅为城市提供空闲城民，用于生产资源和招募部队。。。"
+msgstr "不过可惜这座城市太弱小了，我们得重头开始发展。建造住宅为城市提供空闲城民，用于生产资源和招募部队。。。"
+
+msgid "非常好，现在我们来升级城堡！城堡等级越高，可以解锁更多建筑…"
+msgstr "非常好，现在我们来升级城堡！城堡等级越高，可以解锁更多建筑…"
+
+msgid "点击解锁%s"
+msgstr "点击解锁%s"
+
+msgid "年轻人，带兵打仗可不是过家家，如果你信得过我这把老骨头，就让我来教教你。。。"
+msgstr "年轻人，带兵打仗可不是过家家，如果你信得过我这把老骨头，就让我来教教你。。。"
+
+msgid "很好，我没有看错你！从今天起，我，皇家骑士克里冈，愿带领我的手下追随大人征战四方。。。"
+msgstr "很好，我没有看错你！从今天起，我，皇家骑士克里冈，愿带领我的手下追随大人征战四方。。。"
+
+msgid "获得奖励"
+msgstr "获得奖励"
+
+msgid "领主大人，光靠城市基本的资源产出，无法满足我们的发展需求…"
+msgstr "领主大人，光靠城市基本的资源产出，无法满足我们的发展需求…"
+
+msgid "我倒是知道一个地方，有些危险，但有着丰富的物资，也许我们尝试着探索。。。"
+msgstr "我倒是知道一个地方，有些危险，但有着丰富的物资，也许我们尝试着探索。。。"
+
+msgid "点击飞艇进入探险地图"
+msgstr "点击飞艇进入探险地图"
+
+msgid "领主大人，你跑到哪里去了，人家可是找了你半天了。。。我们得抓紧时间解锁更多建筑！"
+msgstr "领主大人，你跑到哪里去了，人家可是找了你半天了。。。我们得抓紧时间解锁更多建筑！"
+
+msgid "领主大人, 你跑到那里去了...有士兵受伤了?我们需要解锁医院来治愈他们"
+msgstr "领主大人, 你跑到那里去了...有士兵受伤了?我们需要解锁医院来治愈他们"
+
+msgid "升级城堡来解锁医院"
+msgstr "升级城堡来解锁医院"
+
+msgid "领主大人, 解锁学院可以研发科技, 获得额外木材产出加成..."
+msgstr "领主大人, 解锁学院可以研发科技, 获得额外木材产出加成..."
+
+msgid "升级城堡来解锁学院"
+msgstr "升级城堡来解锁学院"
+
+msgid "领主大人, 你听过灵魂石吗?那是用来召唤亡灵战士的...不过我不确定我们有这玩意儿"
+msgstr "领主大人, 你听过灵魂石吗?那是用来召唤亡灵战士的...不过我不确定我们有这玩意儿"
+
+msgid "升级城堡来解锁材料库房"
+msgstr "升级城堡来解锁材料库房"
+
+msgid "领主大人, 建造和升级建筑需要大量的木材. 建造木工小屋能不停产出木材"
+msgstr "领主大人, 建造和升级建筑需要大量的木材. 建造木工小屋能不停产出木材"
+
+msgid "建造木工小屋"
+msgstr "建造木工小屋"
+
+msgid "建造石匠小屋和矿工小屋,就算领主大人不在,工人们也会不停生产资源"
+msgstr "建造石匠小屋和矿工小屋,就算领主大人不在,工人们也会不停生产资源"
+
+msgid "建造石匠小屋"
+msgstr "建造石匠小屋"
+
+msgid "看来大人你已经能够顺利接管这座城市了。。。如果不知道该干什么可以点击左上角的推荐任务"
+msgstr "看来大人你已经能够顺利接管这座城市了。。。如果不知道该干什么可以点击左上角的推荐任务"
+
+msgid "领主大人，这个世界上的觉醒者并不只有你一人。介入他们或者创建联盟邀请他们加入，会让我们发展得更顺利"
+msgstr "领主大人，这个世界上的觉醒者并不只有你一人。介入他们或者创建联盟邀请他们加入，会让我们发展得更顺利"
+
+msgid "请点击目标"
+msgstr "请点击目标"
+
+msgid "这里是我们的目的地，点击屏幕左侧向左移动"
+msgstr "这里是我们的目的地，点击屏幕左侧向左移动"
+
+msgid "领主大人，探索会消耗体力值，但击败敌军可以获得资源和材料…"
+msgstr "领主大人，探索会消耗体力值，但击败敌军可以获得资源和材料…"
+
+msgid "亡灵兵种属性极高而且没有维护费用,有了特殊材料,我们就可以招募他们了."
+msgstr "亡灵兵种属性极高而且没有维护费用,有了特殊材料,我们就可以招募他们了."
+
+msgid "返回城市"
+msgstr "返回城市"
+
+msgid "玩法介绍"
+msgstr "玩法介绍"
+
+msgid "散兵游勇"
+msgstr "散兵游勇"
+
+msgid "未知错误!"
+msgstr "未知错误!"
+
+msgid "与服务器的链接中断，请检查你的网络环境后重试!"
+msgstr "与服务器的链接中断，请检查你的网络环境后重试!"
+
+msgid "服务器连接断开!"
+msgstr "服务器连接断开!"
+
+msgid "发送邮件成功"
+msgstr "发送邮件成功"
+
+msgid "购买%s道具成功"
+msgstr "购买%s道具成功"
+
+msgid "使用%s道具成功"
+msgstr "使用%s道具成功"
+
+msgid "连接服务器失败,请检测你的网络环境!"
+msgstr "连接服务器失败,请检测你的网络环境!"
+
+msgid "等级 "
+msgstr "等级 "
+
+msgid "等级已满 "
+msgstr "等级已满 "
+
+msgid "城墙血量+%d,"
+msgstr "城墙血量+%d,"
+
+msgid "城墙血量回复+%d/小时,"
+msgstr "城墙血量回复+%d/小时,"
+
+msgid "攻击+%d,"
+msgstr "攻击+%d,"
+
+msgid "防御力+%d,"
+msgstr "防御力+%d,"
+
+msgid "学院科技研发速度+%d%%,"
+msgstr "学院科技研发速度+%d%%,"
+
+msgid "资源小车上限+%d,"
+msgstr "资源小车上限+%d,"
+
+msgid "资源小车回复速度+%d/小时,"
+msgstr "资源小车回复速度+%d/小时,"
+
+msgid "科技升级速度+%d%%,"
+msgstr "科技升级速度+%d%%,"
+
+msgid "立即升级"
+msgstr "立即升级"
+
+msgid "升级"
+msgstr "升级"
+
+msgid "前置条件"
+msgstr "前置条件"
+
+msgid "建造队列已满"
+msgstr "建造队列已满"
+
+msgid "木材"
+msgstr "木材"
+
+msgid "石料"
+msgstr "石料"
+
+msgid "铁矿"
+msgstr "铁矿"
+
+msgid "空闲城民"
+msgstr "空闲城民"
+
+msgid "工程图纸"
+msgstr "工程图纸"
+
+msgid "建造工具"
+msgstr "建造工具"
+
+msgid "砖石瓦片"
+msgstr "砖石瓦片"
+
+msgid "滑轮组"
+msgstr "滑轮组"
+
+msgid "升级需求"
+msgstr "升级需求"
+
+msgid "正在升级 %s 到等级 %d"
+msgstr "正在升级 %s 到等级 %d"
+
+msgid "免费加速"
+msgstr "免费加速"
+
+msgid "小于5分钟时，可使用免费加速.激活VIP X后，小于5分钟时可使用免费加速"
+msgstr "小于5分钟时，可使用免费加速.激活VIP X后，小于5分钟时可使用免费加速"
+
+msgid "补充资源"
+msgstr "补充资源"
+
+msgid "您当前没有足够的资源,是否花费魔法石立即补充"
+msgstr "您当前没有足够的资源,是否花费魔法石立即补充"
+
+msgid "立即开始"
+msgstr "立即开始"
+
+msgid "您当前没有空闲的建筑,是否花费魔法石立即完成上一个队列"
+msgstr "您当前没有空闲的建筑,是否花费魔法石立即完成上一个队列"
+
+msgid "请首先建造%s"
+msgstr "请首先建造%s"
+
+msgid "前往"
+msgstr "前往"
+
+msgid "前往商店"
+msgstr "前往商店"
+
+msgid "取消"
+msgstr "取消"
+
+msgid "申请审批"
+msgstr "申请审批"
+
+msgid "拒绝"
+msgstr "拒绝"
+
+msgid "同意"
+msgstr "同意"
+
+msgid "建筑升级完成"
+msgstr "建筑升级完成"
+
+msgid "小屋升级完成"
+msgstr "小屋升级完成"
+
+msgid "学院"
+msgstr "学院"
+
+msgid "科技"
+msgstr "科技"
+
+msgid "研发队列空闲"
+msgstr "研发队列空闲"
+
+msgid "选择一个技能进行研发"
+msgstr "选择一个技能进行研发"
+
+msgid "加速"
+msgstr "加速"
+
+msgid "正在研发%s到 Level %d"
+msgstr "正在研发%s到 Level %d"
+
+msgid "该技能暂未开放！"
+msgstr "该技能暂未开放！"
+
+msgid "每日登陆奖励"
+msgstr "每日登陆奖励"
+
+msgid "王城援军"
+msgstr "王城援军"
+
+msgid "首次充值奖励"
+msgstr "首次充值奖励"
+
+msgid "新手冲级奖励"
+msgstr "新手冲级奖励"
+
+msgid "活动"
+msgstr "活动"
+
+msgid "奖励"
+msgstr "奖励"
+
+msgid "首次充值%s金额"
+msgstr "首次充值%s金额"
+
+msgid "任意"
+msgstr "任意"
+
+msgid "免费领取海量道具"
+msgstr "免费领取海量道具"
+
+msgid "今日"
+msgstr "今日"
+
+msgid "已签到"
+msgstr "已签到"
+
+msgid "未签到"
+msgstr "未签到"
+
+msgid "连续登陆，来自王城的援军"
+msgstr "连续登陆，来自王城的援军"
+
+msgid "%d/%d"
+msgstr "%d/%d"
+
+msgid "天"
+msgstr "天"
+
+msgid "已领取"
+msgstr "已领取"
+
+msgid "未领取"
+msgstr "未领取"
+
+msgid "永久获得第二条建筑队列"
+msgstr "永久获得第二条建筑队列"
+
+msgid "活动时间类，升级智慧中心，获得丰厚奖励"
+msgstr "活动时间类，升级智慧中心，获得丰厚奖励"
+
+msgid "倒计时:"
+msgstr "倒计时:"
+
+msgid "盟友"
+msgstr "盟友"
+
+msgid "赠送!"
+msgstr "赠送!"
+
+msgid "已过期。请每日登陆关注"
+msgstr "已过期。请每日登陆关注"
+
+msgid "到期,请尽快领取"
+msgstr "到期,请尽快领取"
+
+msgid "获得%s"
+msgstr "获得%s"
+
+msgid "放弃"
+msgstr "放弃"
+
+msgid "领取"
+msgstr "领取"
+
+msgid "在线奖励"
+msgstr "在线奖励"
+
+msgid "领取30日奖励后，刷新奖励列表"
+msgstr "领取30日奖励后，刷新奖励列表"
+
+msgid "恭喜您获得 %s x %d"
+msgstr "恭喜您获得 %s x %d"
+
+msgid "你已领取%s"
+msgstr "你已领取%s"
+
+msgid "在未来的14天连续登陆，每天都会有来自王城的援军前来投奔你，连续登陆14天免费解锁第二条行军队列！"
+msgstr "在未来的14天连续登陆，每天都会有来自王城的援军前来投奔你，连续登陆14天免费解锁第二条行军队列！"
+
+msgid "明天领取"
+msgstr "明天领取"
+
+msgid "第%s天"
+msgstr "第%s天"
+
+msgid "行军队列"
+msgstr "行军队列"
+
+msgid "建筑队列"
+msgstr "建筑队列"
+
+msgid "前往充值"
+msgstr "前往充值"
+
+msgid "已失效"
+msgstr "已失效"
+
+msgid "活动期间，升级城堡获得丰厚奖励"
+msgstr "活动期间，升级城堡获得丰厚奖励"
+
+msgid "等级%s"
+msgstr "等级%s"
+
+msgid "每日在线时间到达，即可领取珍贵的道具和金龙币"
+msgstr "每日在线时间到达，即可领取珍贵的道具和金龙币"
+
+msgid "今日已在线："
+msgstr "今日已在线："
+
+msgid "还不能领取"
+msgstr "还不能领取"
+
+msgid "在线%s分钟"
+msgstr "在线%s分钟"
+
+msgid "联盟"
+msgstr "联盟"
+
+msgid "创建"
+msgstr "创建"
+
+msgid "加入"
+msgstr "加入"
+
+msgid "邀请"
+msgstr "邀请"
+
+msgid "申请"
+msgstr "申请"
+
+msgid "搜索联盟标签"
+msgstr "搜索联盟标签"
+
+msgid "加入%s联盟成功!"
+msgstr "加入%s联盟成功!"
+
+msgid "申请成功"
+msgstr "申请成功"
+
+msgid "您的申请已发送至%s,如果被接受将加入该联盟,如果被拒绝,将收到一封通知邮件."
+msgstr "您的申请已发送至%s,如果被接受将加入该联盟,如果被拒绝,将收到一封通知邮件."
+
+msgid "成员"
+msgstr "成员"
+
+msgid "战斗力"
+msgstr "战斗力"
+
+msgid "语言"
+msgstr "语言"
+
+msgid "击杀"
+msgstr "击杀"
+
+msgid "下列联盟邀请你加入"
+msgstr "下列联盟邀请你加入"
+
+msgid "下列等待联盟审批"
+msgstr "下列等待联盟审批"
+
+msgid "撤销"
+msgstr "撤销"
+
+msgid "总览"
+msgstr "总览"
+
+msgid "信息"
+msgstr "信息"
+
+msgid "事件记录"
+msgstr "事件记录"
+
+msgid "联盟公告"
+msgstr "联盟公告"
+
+msgid "您没有此操作权限"
+msgstr "您没有此操作权限"
+
+msgid "在线人数"
+msgstr "在线人数"
+
+msgid "联盟人数"
+msgstr "联盟人数"
+
+msgid "联盟战斗力"
+msgstr "联盟战斗力"
+
+msgid "未设置联盟公告"
+msgstr "未设置联盟公告"
+
+msgid "联盟对战期不能修改联盟信息"
+msgstr "联盟对战期不能修改联盟信息"
+
+msgid "下拉刷新"
+msgstr "下拉刷新"
+
+msgid "<空>"
+msgstr "<空>"
+
+msgid "在线"
+msgstr "在线"
+
+msgid "最后登录:"
+msgstr "最后登录:"
+
+msgid "联盟描述"
+msgstr "联盟描述"
+
+msgid "允许玩家立即加入联盟"
+msgstr "允许玩家立即加入联盟"
+
+msgid "玩家仅能通过申请或者邀请的方式加入"
+msgstr "玩家仅能通过申请或者邀请的方式加入"
+
+msgid "你将设置联盟加入方式为"
+msgstr "你将设置联盟加入方式为"
+
+msgid "退出联盟"
+msgstr "退出联盟"
+
+msgid "邀请加入"
+msgstr "邀请加入"
+
+msgid "审批申请"
+msgstr "审批申请"
+
+msgid "群邮件"
+msgstr "群邮件"
+
+msgid "未设置联盟描述"
+msgstr "未设置联盟描述"
+
+msgid "仅当联盟成员为空时,盟主才能退出联盟"
+msgstr "仅当联盟成员为空时,盟主才能退出联盟"
+
+msgid "您必须在没有部队在外行军的情况下，才可以退出联盟。退出联盟会损失当前未打开的联盟礼物。"
+msgstr "您必须在没有部队在外行军的情况下，才可以退出联盟。退出联盟会损失当前未打开的联盟礼物。"
+
+msgid "联盟邮件"
+msgstr "联盟邮件"
+
+msgid "发送联盟所有成员"
+msgstr "发送联盟所有成员"
+
+msgid "邀请加入联盟"
+msgstr "邀请加入联盟"
+
+msgid "邀请玩家加入"
+msgstr "邀请玩家加入"
+
+msgid "输入邀请的玩家ID"
+msgstr "输入邀请的玩家ID"
+
+msgid "发送"
+msgstr "发送"
+
+msgid "非法的玩家ID"
+msgstr "非法的玩家ID"
+
+msgid "邀请发送成功"
+msgstr "邀请发送成功"
+
+msgid "联盟设置"
+msgstr "联盟设置"
+
+msgid "联盟会战"
+msgstr "联盟会战"
+
+msgid "战争统计"
+msgstr "战争统计"
+
+msgid "历史记录"
+msgstr "历史记录"
+
+msgid "其他联盟"
+msgstr "其他联盟"
+
+msgid "请求开战玩家"
+msgstr "请求开战玩家"
+
+msgid "向盟主和将军请求联盟会战"
+msgstr "向盟主和将军请求联盟会战"
+
+msgid "请求开战!"
+msgstr "请求开战!"
+
+msgid "已经发送过开战请求"
+msgstr "已经发送过开战请求"
+
+msgid "参加联盟会战,赢得荣誉,金龙币和丰厚战利品,联盟处在和平期可以主动匹配或被其他联盟匹配进行联盟会战"
+msgstr "参加联盟会战,赢得荣誉,金龙币和丰厚战利品,联盟处在和平期可以主动匹配或被其他联盟匹配进行联盟会战"
+
+msgid "联盟处在和平期可以主动匹配或被其他联盟匹配进行联盟会战"
+msgstr "联盟处在和平期可以主动匹配或被其他联盟匹配进行联盟会战"
+
+msgid "联盟会战会根据联盟战斗力匹配,你可以通过以下方式提升联盟战斗力"
+msgstr "联盟会战会根据联盟战斗力匹配,你可以通过以下方式提升联盟战斗力"
+
+msgid "1，招募更多的玩家加入联盟"
+msgstr "1，招募更多的玩家加入联盟"
+
+msgid "2，在城市中招募更多的部队"
+msgstr "2，在城市中招募更多的部队"
+
+msgid "3，努力提升城市建筑等级"
+msgstr "3，努力提升城市建筑等级"
+
+msgid "4，提升龙的等级,技能和装备"
+msgstr "4，提升龙的等级,技能和装备"
+
+msgid "准备好了,那就开战吧"
+msgstr "准备好了,那就开战吧"
+
+msgid "开始战斗!"
+msgstr "开始战斗!"
+
+msgid "联盟正在战争准备期或战争期"
+msgstr "联盟正在战争准备期或战争期"
+
+msgid "不需要保护,立即开战!"
+msgstr "不需要保护,立即开战!"
+
+msgid "本次联盟会战结束后奖励,总击杀越高奖励越高.获胜方获得70%的总奖励,失败方获得剩下的,获胜联盟击杀第1名的玩家还将平分奖励的金龙币"
+msgstr "本次联盟会战结束后奖励,总击杀越高奖励越高.获胜方获得70%的总奖励,失败方获得剩下的,获胜联盟击杀第1名的玩家还将平分奖励的金龙币"
+
+msgid "无"
+msgstr "无"
+
+msgid "击杀积分"
+msgstr "击杀积分"
+
+msgid "击溃城市"
+msgstr "击溃城市"
+
+msgid "进攻次数"
+msgstr "进攻次数"
+
+msgid "突袭次数"
+msgstr "突袭次数"
+
+msgid "获胜进攻"
+msgstr "获胜进攻"
+
+msgid "头号杀手"
+msgstr "头号杀手"
+
+msgid "联盟详情"
+msgstr "联盟详情"
+
+msgid "联盟对战"
+msgstr "联盟对战"
+
+msgid ""
+"系统匹配两个战斗力相近的联盟，将彼此的领地拼接到一起。每场联盟匹配战，根据所在天梯服务器的等级，只要进行匹配就会有奖励。需要将军和盟主才能开战。"
+msgstr ""
+"系统匹配两个战斗力相近的联盟，将彼此的领地拼接到一起。每场联盟匹配战，根据所在天梯服务器的等级，只要进行匹配就会有奖励。需要将军和盟主才能开战。"
+
+msgid "成功匹配到对手后，会有一个准备时间。此时无法对敌方进攻或者突袭，也无法移动城市的位置。请召唤你的盟友，让他们做好战斗准备。"
+msgstr "成功匹配到对手后，会有一个准备时间。此时无法对敌方进攻或者突袭，也无法移动城市的位置。请召唤你的盟友，让他们做好战斗准备。"
+
+msgid ""
+"进入战争期后，双方可以派兵攻打对方城市，抢占对方的村落。击杀敌方单位可以增加本场匹配战的总奖励。若击溃敌方玩家城市，还可以获得额外的荣耀值奖励加成。"
+msgstr ""
+"进入战争期后，双方可以派兵攻打对方城市，抢占对方的村落。击杀敌方单位可以增加本场匹配战的总奖励。若击溃敌方玩家城市，还可以获得额外的荣耀值奖励加成。"
+
+msgid "联盟匹配战结束后，参战双方都会进入保护期，此时不会被其他联盟攻打。"
+msgstr "联盟匹配战结束后，参战双方都会进入保护期，此时不会被其他联盟攻打。"
+
+msgid "概述"
+msgstr "概述"
+
+msgid "准备期"
+msgstr "准备期"
+
+msgid "战争期"
+msgstr "战争期"
+
+msgid "保护期"
+msgstr "保护期"
+
+msgid "明白"
+msgstr "明白"
+
+msgid "胜利"
+msgstr "胜利"
+
+msgid "失败"
+msgstr "失败"
+
+msgid "总击杀"
+msgstr "总击杀"
+
+msgid "进攻成功"
+msgstr "进攻成功"
+
+msgid "荣耀值奖励"
+msgstr "荣耀值奖励"
+
+msgid "复仇"
+msgstr "复仇"
+
+msgid "已经处于联盟战期间"
+msgstr "已经处于联盟战期间"
+
+msgid "已过期"
+msgstr "已过期"
+
+msgid "剩余复仇时间:"
+msgstr "剩余复仇时间:"
+
+msgid "查看"
+msgstr "查看"
+
+msgid "联盟信息"
+msgstr "联盟信息"
+
+msgid "击杀部队人口"
+msgstr "击杀部队人口"
+
+msgid "阵亡部队人口"
+msgstr "阵亡部队人口"
+
+msgid "联盟战胜利"
+msgstr "联盟战胜利"
+
+msgid "联盟战失败"
+msgstr "联盟战失败"
+
+msgid "胜率"
+msgstr "胜率"
+
+msgid "和平期"
+msgstr "和平期"
+
+msgid "等级"
+msgstr "等级"
+
+msgid "坐标"
+msgstr "坐标"
+
+msgid "玩家"
+msgstr "玩家"
+
+msgid "协防玩家"
+msgstr "协防玩家"
+
+msgid "进入"
+msgstr "进入"
+
+msgid "撤防"
+msgstr "撤防"
+
+msgid "协防"
+msgstr "协防"
+
+msgid "已有协防部队正在行军"
+msgstr "已有协防部队正在行军"
+
+msgid "邮件"
+msgstr "邮件"
+
+msgid "个人邮件"
+msgstr "个人邮件"
+
+msgid "进攻"
+msgstr "进攻"
+
+msgid "玩家处于保护状态,不能进攻或突袭"
+msgstr "玩家处于保护状态,不能进攻或突袭"
+
+msgid "突袭"
+msgstr "突袭"
+
+msgid "联盟捐献"
+msgstr "联盟捐献"
+
+msgid "捐赠成功"
+msgstr "捐赠成功"
+
+msgid "获得%d点忠诚值"
+msgstr "获得%d点忠诚值"
+
+msgid "捐赠"
+msgstr "捐赠"
+
+msgid "额外获得荣誉+%d%%，忠诚+%d%%"
+msgstr "额外获得荣誉+%d%%，忠诚+%d%%"
+
+msgid "拥有"
+msgstr "拥有"
+
+msgid "请选择一种资源"
+msgstr "请选择一种资源"
+
+msgid "选择捐赠的物资不足"
+msgstr "选择捐赠的物资不足"
+
+msgid "可拆除,需要职位在将军以上的玩家,并且花费一定的荣誉值"
+msgstr "可拆除,需要职位在将军以上的玩家,并且花费一定的荣誉值"
+
+msgid "占地"
+msgstr "占地"
+
+msgid "移动"
+msgstr "移动"
+
+msgid "战争期不能移动"
+msgstr "战争期不能移动"
+
+msgid "联盟荣耀值不足"
+msgstr "联盟荣耀值不足"
+
+msgid "空地"
+msgstr "空地"
+
+msgid "迁移城市"
+msgstr "迁移城市"
+
+msgid "联盟将军可将联盟建筑移动到空地,玩家可将自己的城市移动到空地处,空地定期刷新放逐者的村落,树木,山脉和湖泊"
+msgstr "联盟将军可将联盟建筑移动到空地,玩家可将自己的城市移动到空地处,空地定期刷新放逐者的村落,树木,山脉和湖泊"
+
+msgid "战斗"
+msgstr "战斗"
+
+msgid "我方"
+msgstr "我方"
+
+msgid "敌方"
+msgstr "敌方"
+
+msgid "联系盟主"
+msgstr "联系盟主"
+
+msgid "成员列表"
+msgstr "成员列表"
+
+msgid "联盟未设置联盟描述"
+msgstr "联盟未设置联盟描述"
+
+msgid "收件人"
+msgstr "收件人"
+
+msgid "主题"
+msgstr "主题"
+
+msgid "最多可输入%d字符"
+msgstr "最多可输入%d字符"
+
+msgid "内容"
+msgstr "内容"
+
+msgid "请填写邮件主题"
+msgstr "请填写邮件主题"
+
+msgid "请填写邮件内容"
+msgstr "请填写邮件内容"
+
+msgid "请填写正确的收件人ID"
+msgstr "请填写正确的收件人ID"
+
+msgid "不能给自己发送邮件"
+msgstr "不能给自己发送邮件"
+
+msgid "查看玩家"
+msgstr "查看玩家"
+
+msgid "发送邮件"
+msgstr "发送邮件"
+
+msgid "复制"
+msgstr "复制"
+
+msgid "屏蔽"
+msgstr "屏蔽"
+
+msgid "加入联盟"
+msgstr "加入联盟"
+
+msgid "联盟强大功能!"
+msgstr "联盟强大功能!"
+
+msgid "将城市迁入联盟领地，受到联盟保护"
+msgstr "将城市迁入联盟领地，受到联盟保护"
+
+msgid "从联盟盟友获得免费的加速"
+msgstr "从联盟盟友获得免费的加速"
+
+msgid "在联盟领地的村落采集丰富的资源"
+msgstr "在联盟领地的村落采集丰富的资源"
+
+msgid "购买联盟商店的专属道具"
+msgstr "购买联盟商店的专属道具"
+
+msgid "解锁特殊的联盟GvE任务"
+msgstr "解锁特殊的联盟GvE任务"
+
+msgid "解锁刺激的联盟GvG对战"
+msgstr "解锁刺激的联盟GvG对战"
+
+msgid "免费获得联盟成员赠送的礼物"
+msgstr "免费获得联盟成员赠送的礼物"
+
+msgid "以及更多强大联盟功能..."
+msgstr "以及更多强大联盟功能..."
+
+msgid "忠诚值"
+msgstr "忠诚值"
+
+msgid "联盟商店"
+msgstr "联盟商店"
+
+msgid "忠诚值是玩家自己的属性，退出联盟后依然保留"
+msgstr "忠诚值是玩家自己的属性，退出联盟后依然保留"
+
+msgid "忠诚值可以在联盟商店中购买道具"
+msgstr "忠诚值可以在联盟商店中购买道具"
+
+msgid "向联盟捐赠资源可以增加忠诚值"
+msgstr "向联盟捐赠资源可以增加忠诚值"
+
+msgid "帮助盟友加速科技研发和建筑升级的时间"
+msgstr "帮助盟友加速科技研发和建筑升级的时间"
+
+msgid "玩家信息"
+msgstr "玩家信息"
+
+msgid "逐出"
+msgstr "逐出"
+
+msgid "移交盟主"
+msgstr "移交盟主"
+
+msgid "降级"
+msgstr "降级"
+
+msgid "晋级"
+msgstr "晋级"
+
+msgid "您确定逐出玩家:%s?"
+msgstr "您确定逐出玩家:%s?"
+
+msgid "您确定移交盟主职位给:%s?"
+msgstr "您确定移交盟主职位给:%s?"
+
+msgid "%s已降级为%s"
+msgstr "%s已降级为%s"
+
+msgid "%s已晋级为%s"
+msgstr "%s已晋级为%s"
+
+msgid "职位"
+msgstr "职位"
+
+msgid "最后登陆"
+msgstr "最后登陆"
+
+msgid "您不能操作此等级成员"
+msgstr "您不能操作此等级成员"
+
+msgid "您没有此权限"
+msgstr "您没有此权限"
+
+msgid "您不是盟主"
+msgstr "您不是盟主"
+
+msgid "该成员已经是最低等级"
+msgstr "该成员已经是最低等级"
+
+msgid "该成员已经是最高等级"
+msgstr "该成员已经是最高等级"
+
+msgid "月门"
+msgstr "月门"
+
+msgid "开战的王城"
+msgstr "开战的王城"
+
+msgid "未知"
+msgstr "未知"
+
+msgid "占领者"
+msgstr "占领者"
+
+msgid "状态"
+msgstr "状态"
+
+msgid "未开启"
+msgstr "未开启"
+
+msgid "王城"
+msgstr "王城"
+
+msgid "最多输入600个字符"
+msgstr "最多输入600个字符"
+
+msgid "秩序大厅"
+msgstr "秩序大厅"
+
+msgid "暂无"
+msgstr "暂无"
+
+msgid "当前村落数量"
+msgstr "当前村落数量"
+
+msgid "当前采集村落"
+msgstr "当前采集村落"
+
+msgid "熟练度"
+msgstr "熟练度"
+
+msgid "村落管理"
+msgstr "村落管理"
+
+msgid "联盟宫殿"
+msgstr "联盟宫殿"
+
+msgid "联盟荣耀"
+msgstr "联盟荣耀"
+
+msgid "最近三日击杀"
+msgstr "最近三日击杀"
+
+msgid "最近奖励"
+msgstr "最近奖励"
+
+msgid "奖赏"
+msgstr "奖赏"
+
+msgid "增加忠诚值"
+msgstr "增加忠诚值"
+
+msgid "只有盟主拥有权限"
+msgstr "只有盟主拥有权限"
+
+msgid "地形定义"
+msgstr "地形定义"
+
+msgid "需要职位是联盟盟主"
+msgstr "需要职位是联盟盟主"
+
+msgid "草地地形能产出绿龙装备材料，每当在自己的领土上完成任务，或者击杀一点战斗力的敌方单位，就由一定几率获得装备材料。"
+msgstr "草地地形能产出绿龙装备材料，每当在自己的领土上完成任务，或者击杀一点战斗力的敌方单位，就由一定几率获得装备材料。"
+
+msgid "草地"
+msgstr "草地"
+
+msgid "绿龙"
+msgstr "绿龙"
+
+msgid "雪地"
+msgstr "雪地"
+
+msgid "蓝龙"
+msgstr "蓝龙"
+
+msgid "沙漠"
+msgstr "沙漠"
+
+msgid "红龙"
+msgstr "红龙"
+
+msgid "%s地形能产出%s装备材料，每当在自己的领土上完成任务，或者击杀一点战斗力的敌方单位，就由一定几率获得装备材料。"
+msgstr "%s地形能产出%s装备材料，每当在自己的领土上完成任务，或者击杀一点战斗力的敌方单位，就由一定几率获得装备材料。"
+
+msgid "修改"
+msgstr "修改"
+
+msgid "战争期不能修改联盟地形"
+msgstr "战争期不能修改联盟地形"
+
+msgid "权限不足"
+msgstr "权限不足"
+
+msgid "占领城市"
+msgstr "占领城市"
+
+msgid "定位坐标"
+msgstr "定位坐标"
+
+msgid "请输入坐标"
+msgstr "请输入坐标"
+
+msgid "定位"
+msgstr "定位"
+
+msgid "准备进攻"
+msgstr "准备进攻"
+
+msgid "最大"
+msgstr "最大"
+
+msgid "行军"
+msgstr "行军"
+
+msgid "您还没有龙,快去孵化一只巨龙吧"
+msgstr "您还没有龙,快去孵化一只巨龙吧"
+
+msgid "龙未处于空闲状态"
+msgstr "龙未处于空闲状态"
+
+msgid "选择的龙已经死亡"
+msgstr "选择的龙已经死亡"
+
+msgid "派出的部队超过了所选龙的带兵上限"
+msgstr "派出的部队超过了所选龙的带兵上限"
+
+msgid "请选择要派遣的部队"
+msgstr "请选择要派遣的部队"
+
+msgid "没有空闲的行军队列"
+msgstr "没有空闲的行军队列"
+
+msgid "前往解锁"
+msgstr "前往解锁"
+
+msgid "您的龙的HP低于20%,有很大几率阵亡,确定要派出吗?"
+msgstr "您的龙的HP低于20%,有很大几率阵亡,确定要派出吗?"
+
+msgid "最小"
+msgstr "最小"
+
+msgid "生命值"
+msgstr "生命值"
+
+msgid "选择"
+msgstr "选择"
+
+msgid "选中出战的巨龙"
+msgstr "选中出战的巨龙"
+
+msgid "部队容量"
+msgstr "部队容量"
+
+msgid "负重"
+msgstr "负重"
+
+msgid "商店"
+msgstr "商店"
+
+msgid "商品"
+msgstr "商品"
+
+msgid "进货"
+msgstr "进货"
+
+msgid "商品记录"
+msgstr "商品记录"
+
+msgid "荣耀值"
+msgstr "荣耀值"
+
+msgid "普通道具"
+msgstr "普通道具"
+
+msgid "高级道具"
+msgstr "高级道具"
+
+msgid "补充"
+msgstr "补充"
+
+msgid "购买"
+msgstr "购买"
+
+msgid "高级道具数量"
+msgstr "高级道具数量"
+
+msgid "有新的货物补充"
+msgstr "有新的货物补充"
+
+msgid "商店记录"
+msgstr "商店记录"
+
+msgid "购买商品"
+msgstr "购买商品"
+
+msgid "联盟圣地"
+msgstr "联盟圣地"
+
+msgid "感知力:%s"
+msgstr "感知力:%s"
+
+msgid "联盟危机"
+msgstr "联盟危机"
+
+msgid "战斗事件"
+msgstr "战斗事件"
+
+msgid "已激活"
+msgstr "已激活"
+
+msgid "调查"
+msgstr "调查"
+
+msgid "建议玩家数量"
+msgstr "建议玩家数量"
+
+msgid "建议部队战斗力"
+msgstr "建议部队战斗力"
+
+msgid "进行中"
+msgstr "进行中"
+
+msgid "派兵"
+msgstr "派兵"
+
+msgid "参与玩家"
+msgstr "参与玩家"
+
+msgid "人均战斗力"
+msgstr "人均战斗力"
+
+msgid "详情"
+msgstr "详情"
+
+msgid "正在进行"
+msgstr "正在进行"
+
+msgid "注:一场战斗中,每名玩家只能派出一支部队"
+msgstr "注:一场战斗中,每名玩家只能派出一支部队"
+
+msgid "激活事件"
+msgstr "激活事件"
+
+msgid "需要感知力"
+msgstr "需要感知力"
+
+msgid "事件完成奖励"
+msgstr "事件完成奖励"
+
+msgid "敌方部队阵容"
+msgstr "敌方部队阵容"
+
+msgid "敌方总战斗力"
+msgstr "敌方总战斗力"
+
+msgid "正在进行的事件"
+msgstr "正在进行的事件"
+
+msgid "参与部队"
+msgstr "参与部队"
+
+msgid "战争事件"
+msgstr "战争事件"
+
+msgid "完成目标获得"
+msgstr "完成目标获得"
+
+msgid "联盟权限"
+msgstr "联盟权限"
+
+msgid "竞选盟主"
+msgstr "竞选盟主"
+
+msgid "盟主离线超过7天可以使用竞选盟主和盟主职位对换"
+msgstr "盟主离线超过7天可以使用竞选盟主和盟主职位对换"
+
+msgid "你已经是盟主"
+msgstr "你已经是盟主"
+
+msgid "竞选盟主成功"
+msgstr "竞选盟主成功"
+
+msgid "修改联盟职位名称"
+msgstr "修改联盟职位名称"
+
+msgid "职位名称"
+msgstr "职位名称"
+
+msgid "请输入联盟职位名称"
+msgstr "请输入联盟职位名称"
+
+msgid "废弃的村落"
+msgstr "废弃的村落"
+
+msgid "当前采集"
+msgstr "当前采集"
+
+msgid "完成时间"
+msgstr "完成时间"
+
+msgid "已完成"
+msgstr "已完成"
+
+msgid "撤军"
+msgstr "撤军"
+
+msgid "部队"
+msgstr "部队"
+
+msgid "占领"
+msgstr "占领"
+
+msgid "世界地图"
+msgstr "世界地图"
+
+msgid "统治联盟"
+msgstr "统治联盟"
+
+msgid "国王"
+msgstr "国王"
+
+msgid "开服时间"
+msgstr "开服时间"
+
+msgid "人口密度"
+msgstr "人口密度"
+
+msgid "迁移"
+msgstr "迁移"
+
+msgid "首都"
+msgstr "首都"
+
+msgid "军用帐篷"
+msgstr "军用帐篷"
+
+msgid "部队总人口"
+msgstr "部队总人口"
+
+msgid "维护费"
+msgstr "维护费"
+
+msgid "驻防部队人口"
+msgstr "驻防部队人口"
+
+msgid "出征部队人口"
+msgstr "出征部队人口"
+
+msgid "月门中的部队"
+msgstr "月门中的部队"
+
+msgid "出发地"
+msgstr "出发地"
+
+msgid "目的地"
+msgstr "目的地"
+
+msgid "标记"
+msgstr "标记"
+
+msgid "战斗地形：沙漠（派出红龙获得额外力量）--服务器未推送战斗地形数据"
+msgstr "战斗地形：沙漠（派出红龙获得额外力量）--服务器未推送战斗地形数据"
+
+msgid "回放"
+msgstr "回放"
+
+msgid "删除"
+msgstr "删除"
+
+msgid "战利品"
+msgstr "战利品"
+
+msgid "无战利品"
+msgstr "无战利品"
+
+msgid "与协防方战斗统计"
+msgstr "与协防方战斗统计"
+
+msgid "防守方战斗统计"
+msgstr "防守方战斗统计"
+
+msgid "你的部队"
+msgstr "你的部队"
+
+msgid "敌方部队"
+msgstr "敌方部队"
+
+msgid "Troops"
+msgstr "Troops"
+
+msgid "Survived"
+msgstr "Survived"
+
+msgid "Wounded"
+msgstr "Wounded"
+
+msgid "Killed"
+msgstr "Killed"
+
+msgid "Level"
+msgstr "Level"
+
+msgid "XP"
+msgstr "XP"
+
+msgid "HP"
+msgstr "HP"
+
+msgid "无部队"
+msgstr "无部队"
+
+msgid "击杀敌方"
+msgstr "击杀敌方"
+
+msgid "我方损失"
+msgstr "我方损失"
+
+msgid "城墙"
+msgstr "城墙"
+
+msgid "城墙生命值"
+msgstr "城墙生命值"
+
+msgid "城墙受损"
+msgstr "城墙受损"
+
+msgid "Battle at "
+msgstr "Battle at "
+
+msgid "兵营"
+msgstr "兵营"
+
+msgid "招募"
+msgstr "招募"
+
+msgid "招募队列空闲"
+msgstr "招募队列空闲"
+
+msgid "请选择一个兵种进行招募"
+msgstr "请选择一个兵种进行招募"
+
+msgid "亡灵部队"
+msgstr "亡灵部队"
+
+msgid "精灵部队"
+msgstr "精灵部队"
+
+msgid "召唤"
+msgstr "召唤"
+
+msgid "招募开启中"
+msgstr "招募开启中"
+
+msgid "下一次开启招募:"
+msgstr "下一次开启招募:"
+
+msgid "兵营%d级解锁"
+msgstr "兵营%d级解锁"
+
+msgid "招募士兵不能免费加速"
+msgstr "招募士兵不能免费加速"
+
+msgid "铁匠铺"
+msgstr "铁匠铺"
+
+msgid "建造队列空闲"
+msgstr "建造队列空闲"
+
+msgid "请选择一个装备进行制造"
+msgstr "请选择一个装备进行制造"
+
+msgid "正在制作"
+msgstr "正在制作"
+
+msgid "红龙装备"
+msgstr "红龙装备"
+
+msgid "蓝龙装备"
+msgstr "蓝龙装备"
+
+msgid "绿龙装备"
+msgstr "绿龙装备"
+
+msgid "灰色套装"
+msgstr "灰色套装"
+
+msgid "绿色套装"
+msgstr "绿色套装"
+
+msgid "蓝色套装"
+msgstr "蓝色套装"
+
+msgid "紫色套装"
+msgstr "紫色套装"
+
+msgid "橙色套装"
+msgstr "橙色套装"
+
+msgid "制造装备不能免费加速"
+msgstr "制造装备不能免费加速"
+
+msgid "制造装备"
+msgstr "制造装备"
+
+msgid "增益"
+msgstr "增益"
+
+msgid "城市增益效果"
+msgstr "城市增益效果"
+
+msgid "战争增益效果"
+msgstr "战争增益效果"
+
+msgid "住宅"
+msgstr "住宅"
+
+msgid "农夫小屋"
+msgstr "农夫小屋"
+
+msgid "木工小屋"
+msgstr "木工小屋"
+
+msgid "石匠小屋"
+msgstr "石匠小屋"
+
+msgid "矿工小屋"
+msgstr "矿工小屋"
+
+msgid "待建地基"
+msgstr "待建地基"
+
+msgid "城民上限不足,请首先升级或建造小屋"
+msgstr "城民上限不足,请首先升级或建造小屋"
+
+msgid "已达到最大建筑数量"
+msgstr "已达到最大建筑数量"
+
+msgid "满足条件"
+msgstr "满足条件"
+
+msgid "您当前资源不足，补足需要金龙币"
+msgstr "您当前资源不足，补足需要金龙币"
+
+msgid "您当前没有空闲的建筑队列,是否花费魔法石立即完成上一个队列"
+msgstr "您当前没有空闲的建筑队列,是否花费魔法石立即完成上一个队列"
+
+msgid "建筑数量"
+msgstr "建筑数量"
+
+msgid "建造"
+msgstr "建造"
+
+msgid "数量"
+msgstr "数量"
+
+msgid "聊天"
+msgstr "聊天"
+
+msgid "对不起你的聊天频率太频繁"
+msgstr "对不起你的聊天频率太频繁"
+
+msgid "未加入联盟"
+msgstr "未加入联盟"
+
+msgid "聊天内容不能为空"
+msgstr "聊天内容不能为空"
+
+msgid "世界"
+msgstr "世界"
+
+msgid "查看联盟"
+msgstr "查看联盟"
+
+msgid "无联盟信息"
+msgstr "无联盟信息"
+
+msgid "复制成功"
+msgstr "复制成功"
+
+msgid "屏蔽成功"
+msgstr "屏蔽成功"
+
+msgid "可解锁地块"
+msgstr "可解锁地块"
+
+msgid "可协助加速"
+msgstr "可协助加速"
+
+msgid "瞭望塔效果"
+msgstr "瞭望塔效果"
+
+msgid "资源存储上限"
+msgstr "资源存储上限"
+
+msgid "暗仓保护"
+msgstr "暗仓保护"
+
+msgid "巨龙生命值恢复每小时"
+msgstr "巨龙生命值恢复每小时"
+
+msgid "制造工具数量"
+msgstr "制造工具数量"
+
+msgid "材料存储上限"
+msgstr "材料存储上限"
+
+msgid "最大招募"
+msgstr "最大招募"
+
+msgid "新解锁士兵"
+msgstr "新解锁士兵"
+
+msgid "提升炼制速度"
+msgstr "提升炼制速度"
+
+msgid "增加矿工小屋"
+msgstr "增加矿工小屋"
+
+msgid "增加铁矿保护"
+msgstr "增加铁矿保护"
+
+msgid "增加石匠小屋"
+msgstr "增加石匠小屋"
+
+msgid "增加石料保护"
+msgstr "增加石料保护"
+
+msgid "增加木工小屋"
+msgstr "增加木工小屋"
+
+msgid "增加木材保护"
+msgstr "增加木材保护"
+
+msgid "增加农夫小屋"
+msgstr "增加农夫小屋"
+
+msgid "增加粮食保护"
+msgstr "增加粮食保护"
+
+msgid "容纳伤兵上限"
+msgstr "容纳伤兵上限"
+
+msgid "增加住宅"
+msgstr "增加住宅"
+
+msgid "提升任务奖励"
+msgstr "提升任务奖励"
+
+msgid "运输车总量"
+msgstr "运输车总量"
+
+msgid "运输车生产"
+msgstr "运输车生产"
+
+msgid "提升科技研发速度"
+msgstr "提升科技研发速度"
+
+msgid "提升弓手招募速度"
+msgstr "提升弓手招募速度"
+
+msgid "提升步兵招募速度"
+msgstr "提升步兵招募速度"
+
+msgid "提升骑兵招募速度"
+msgstr "提升骑兵招募速度"
+
+msgid "提升攻城机械招募速度"
+msgstr "提升攻城机械招募速度"
+
+msgid "城墙攻击"
+msgstr "城墙攻击"
+
+msgid "城墙防御"
+msgstr "城墙防御"
+
+msgid "耐久度"
+msgstr "耐久度"
+
+msgid "耐久度恢复每小时"
+msgstr "耐久度恢复每小时"
+
+msgid "城民上限"
+msgstr "城民上限"
+
+msgid "银币产出每小时"
+msgstr "银币产出每小时"
+
+msgid "木材产出每小时"
+msgstr "木材产出每小时"
+
+msgid "石料产出每小时"
+msgstr "石料产出每小时"
+
+msgid "铁矿产出每小时"
+msgstr "铁矿产出每小时"
+
+msgid "粮食产出每小时"
+msgstr "粮食产出每小时"
+
+msgid "村落定期生成数量"
+msgstr "村落定期生成数量"
+
+msgid "联盟成员"
+msgstr "联盟成员"
+
+msgid "可进货道具"
+msgstr "可进货道具"
+
+msgid "感知力上限"
+msgstr "感知力上限"
+
+msgid "感知力恢复每小时"
+msgstr "感知力恢复每小时"
+
+msgid "level"
+msgstr "level"
+
+msgid "power"
+msgstr "power"
+
+msgid "perception"
+msgstr "perception"
+
+msgid "pRecoveryPerHour"
+msgstr "pRecoveryPerHour"
+
+msgid "战斗值："
+msgstr "战斗值："
+
+msgid "采集战报"
+msgstr "采集战报"
+
+msgid "删除战报"
+msgstr "删除战报"
+
+msgid "您即将删除所选战报,删除后将无法恢复,您确定要这么做吗?"
+msgstr "您即将删除所选战报,删除后将无法恢复,您确定要这么做吗?"
+
+msgid "Battle at %s (%d,%d)"
+msgstr "Battle at %s (%d,%d)"
+
+msgid "完成下列任务,领取奖励"
+msgstr "完成下列任务,领取奖励"
+
+msgid "当前进度"
+msgstr "当前进度"
+
+msgid "你还未完成所有任务"
+msgstr "你还未完成所有任务"
+
+msgid "你已经领取了该奖励"
+msgstr "你已经领取了该奖励"
+
+msgid "升级一次建筑"
+msgstr "升级一次建筑"
+
+msgid "招募一次兵种"
+msgstr "招募一次兵种"
+
+msgid "你还未建造兵营"
+msgstr "你还未建造兵营"
+
+msgid "成功通关塞琳娜的考验"
+msgstr "成功通关塞琳娜的考验"
+
+msgid "制造一批建筑材料"
+msgstr "制造一批建筑材料"
+
+msgid "你还未建造工具作坊"
+msgstr "你还未建造工具作坊"
+
+msgid "参加一次联盟会战"
+msgstr "参加一次联盟会战"
+
+msgid "对地方玩家城市进行一次进攻"
+msgstr "对地方玩家城市进行一次进攻"
+
+msgid "占领一座村落"
+msgstr "占领一座村落"
+
+msgid "搭乘飞艇进行一次探索"
+msgstr "搭乘飞艇进行一次探索"
+
+msgid "进行一次联盟捐赠"
+msgstr "进行一次联盟捐赠"
+
+msgid "你还未加入联盟"
+msgstr "你还未加入联盟"
+
+msgid "在联盟商店购买一次道具"
+msgstr "在联盟商店购买一次道具"
+
+msgid "协助一次盟友建造加速"
+msgstr "协助一次盟友建造加速"
+
+msgid "对盟友进行一次协防"
+msgstr "对盟友进行一次协防"
+
+msgid "加速一次正在升级的建筑"
+msgstr "加速一次正在升级的建筑"
+
+msgid "加速一支正在招募的兵种"
+msgstr "加速一支正在招募的兵种"
+
+msgid "打造一件龙的装备"
+msgstr "打造一件龙的装备"
+
+msgid "你还未建造铁匠铺"
+msgstr "你还未建造铁匠铺"
+
+msgid "在商店购买任意一个道具"
+msgstr "在商店购买任意一个道具"
+
+msgid "每日任务不能免费加速"
+msgstr "每日任务不能免费加速"
+
+msgid "正在%s"
+msgstr "正在%s"
+
+msgid "龙的复活没有免费加速"
+msgstr "龙的复活没有免费加速"
+
+msgid "正在复活"
+msgstr "正在复活"
+
+msgid "强化"
+msgstr "强化"
+
+msgid "龙装备未装备上不能强化"
+msgstr "龙装备未装备上不能强化"
+
+msgid "装备"
+msgstr "装备"
+
+msgid "重置"
+msgstr "重置"
+
+msgid "消耗相同一个装备，重新随机装备的加成属性"
+msgstr "消耗相同一个装备，重新随机装备的加成属性"
+
+msgid "巨龙%d星装备"
+msgstr "巨龙%d星装备"
+
+msgid "选择多余的装备进行强化"
+msgstr "选择多余的装备进行强化"
+
+msgid "请选择用来强化的装备"
+msgstr "请选择用来强化的装备"
+
+msgid "装备强化成功"
+msgstr "装备强化成功"
+
+msgid "装备已达到最大星级"
+msgstr "装备已达到最大星级"
+
+msgid "当前数量"
+msgstr "当前数量"
+
+msgid "活力"
+msgstr "活力"
+
+msgid "力量"
+msgstr "力量"
+
+msgid "领导力"
+msgstr "领导力"
+
+msgid "制造"
+msgstr "制造"
+
+msgid "需要材料"
+msgstr "需要材料"
+
+msgid "铁匠铺还未解锁"
+msgstr "铁匠铺还未解锁"
+
+msgid "附加随机属性数量"
+msgstr "附加随机属性数量"
+
+msgid "龙巢"
+msgstr "龙巢"
+
+msgid "晋级需要龙的等级到达%d级，集齐已解锁装备，并全部强化到%d星"
+msgstr "晋级需要龙的等级到达%d级，集齐已解锁装备，并全部强化到%d星"
+
+msgid "晋级需要龙的等级到达%d级，集齐全部装备，并全部强化到%d星"
+msgstr "晋级需要龙的等级到达%d级，集齐全部装备，并全部强化到%d星"
+
+msgid "龙未达到晋级等级"
+msgstr "龙未达到晋级等级"
+
+msgid "所有装备未达到最高星级"
+msgstr "所有装备未达到最高星级"
+
+msgid "5星上限即将开放!"
+msgstr "5星上限即将开放!"
+
+msgid "带兵量"
+msgstr "带兵量"
+
+msgid "龙"
+msgstr "龙"
+
+msgid "需要时间: %s"
+msgstr "需要时间: %s"
+
+msgid "龙还未孵化"
+msgstr "龙还未孵化"
+
+msgid "设置龙驻防成功"
+msgstr "设置龙驻防成功"
+
+msgid "取消龙驻防成功"
+msgstr "取消龙驻防成功"
+
+msgid "还没有龙驻防"
+msgstr "还没有龙驻防"
+
+msgid "龙巢同一时间只能孵化一只巨龙"
+msgstr "龙巢同一时间只能孵化一只巨龙"
+
+msgid "开始孵化"
+msgstr "开始孵化"
+
+msgid "龙的孵化没有免费加速"
+msgstr "龙的孵化没有免费加速"
+
+msgid "正在孵化"
+msgstr "正在孵化"
+
+msgid "技能学习"
+msgstr "技能学习"
+
+msgid "学习"
+msgstr "学习"
+
+msgid "学习条件"
+msgstr "学习条件"
+
+msgid "技能已经达到最大等级"
+msgstr "技能已经达到最大等级"
+
+msgid "技能学习成功!"
+msgstr "技能学习成功!"
+
+msgid "龙的星级达到%d星"
+msgstr "龙的星级达到%d星"
+
+msgid "城民"
+msgstr "城民"
+
+msgid "查看详情"
+msgstr "查看详情"
+
+msgid "点击招募步兵"
+msgstr "点击招募步兵"
+
+msgid "点击查看"
+msgstr "点击查看"
+
+msgid "建造住宅, 提升城民上限"
+msgstr "建造住宅, 提升城民上限"
+
+msgid "点击建造"
+msgstr "点击建造"
+
+msgid "不可思议，传说是真的？！觉醒者过让能够号令龙族。。。大人您真是厉害！"
+msgstr "不可思议，传说是真的？！觉醒者过让能够号令龙族。。。大人您真是厉害！"
+
+msgid "点击按钮：孵化"
+msgstr "点击按钮：孵化"
+
+msgid "点击设置：巨龙在城市驻防，如果敌军入侵，巨龙会自动带领士兵进行防御"
+msgstr "点击设置：巨龙在城市驻防，如果敌军入侵，巨龙会自动带领士兵进行防御"
+
+msgid "点击治愈"
+msgstr "点击治愈"
+
+msgid "果然没有...不过也碍事...我的探子已经找到了他们的一处聚集地,请大人随我来"
+msgstr "果然没有...不过也碍事...我的探子已经找到了他们的一处聚集地,请大人随我来"
+
+msgid "开始研发"
+msgstr "开始研发"
+
+msgid "激活VIP"
+msgstr "激活VIP"
+
+msgid "游乐场"
+msgstr "游乐场"
+
+msgid "普通抽奖"
+msgstr "普通抽奖"
+
+msgid "高级抽奖"
+msgstr "高级抽奖"
+
+msgid "获得%s x%d"
+msgstr "获得%s x%d"
+
+msgid "每日获得免费抽奖机会，激活VIP5 以上，每日可获得额外的免费抽奖机会"
+msgstr "每日获得免费抽奖机会，激活VIP5 以上，每日可获得额外的免费抽奖机会"
+
+msgid "免费抽奖"
+msgstr "免费抽奖"
+
+msgid "开始抽奖"
+msgstr "开始抽奖"
+
+msgid "购买任意金额的金龙币可以解锁高级抽奖,高级抽奖一次可以获得三种不同的道具"
+msgstr "购买任意金额的金龙币可以解锁高级抽奖,高级抽奖一次可以获得三种不同的道具"
+
+msgid "前置建筑条件不满足, 请前往。"
+msgstr "前置建筑条件不满足, 请前往。"
+
+msgid "正在建造"
+msgstr "正在建造"
+
+msgid "正在解锁"
+msgstr "正在解锁"
+
+msgid "正在升级到 等级"
+msgstr "正在升级到 等级"
+
+msgid "已经到最大等级了"
+msgstr "已经到最大等级了"
+
+msgid "从等级"
+msgstr "从等级"
+
+msgid "升级到等级"
+msgstr "升级到等级"
+
+msgid "建筑列表"
+msgstr "建筑列表"
+
+msgid "功能建筑"
+msgstr "功能建筑"
+
+msgid "资源建筑"
+msgstr "资源建筑"
+
+msgid "协助加速"
+msgstr "协助加速"
+
+msgid "帮助联盟成员加速并获得联盟忠诚值，激活VIP后能够提升为盟友加速效果"
+msgstr "帮助联盟成员加速并获得联盟忠诚值，激活VIP后能够提升为盟友加速效果"
+
+msgid "全部帮助"
+msgstr "全部帮助"
+
+msgid "每日获得最大忠诚度："
+msgstr "每日获得最大忠诚度："
+
+msgid "正在升级"
+msgstr "正在升级"
+
+msgid "研发%s血量增加 等级 %d"
+msgstr "研发%s血量增加 等级 %d"
+
+msgid "研发%s对%s的攻击到 等级 %d"
+msgstr "研发%s对%s的攻击到 等级 %d"
+
+msgid "未处理"
+msgstr "未处理"
+
+msgid "帮助"
+msgstr "帮助"
+
+msgid "部队人口"
+msgstr "部队人口"
+
+msgid "当前没有推荐任务!"
+msgstr "当前没有推荐任务!"
+
+msgid "加入联盟才能激活帮助功能"
+msgstr "加入联盟才能激活帮助功能"
+
+msgid "5分钟以下免费加速"
+msgstr "5分钟以下免费加速"
+
+msgid "立即完成升级"
+msgstr "立即完成升级"
+
+msgid "点击VIP，免费激活VIP"
+msgstr "点击VIP，免费激活VIP"
+
+msgid "医院"
+msgstr "医院"
+
+msgid "治愈"
+msgstr "治愈"
+
+msgid "治愈所有伤兵"
+msgstr "治愈所有伤兵"
+
+msgid "立即治愈"
+msgstr "立即治愈"
+
+msgid "没有伤兵需要治愈"
+msgstr "没有伤兵需要治愈"
+
+msgid "没有足够的金龙币补充资源"
+msgstr "没有足够的金龙币补充资源"
+
+msgid "正在治愈，资源不足"
+msgstr "正在治愈，资源不足"
+
+msgid "资源不足，是否花费金龙币补足"
+msgstr "资源不足，是否花费金龙币补足"
+
+msgid "正在治愈，是否花费魔法石立即完成"
+msgstr "正在治愈，是否花费魔法石立即完成"
+
+msgid "治愈伤兵"
+msgstr "治愈伤兵"
+
+msgid "正在治愈%d人口的伤兵"
+msgstr "正在治愈%d人口的伤兵"
+
+msgid "道具"
+msgstr "道具"
+
+msgid "商城"
+msgstr "商城"
+
+msgid "我的道具"
+msgstr "我的道具"
+
+msgid "使用"
+msgstr "使用"
+
+msgid "开启铜宝箱需要铜钥匙"
+msgstr "开启铜宝箱需要铜钥匙"
+
+msgid "开启银宝箱需要银钥匙"
+msgstr "开启银宝箱需要银钥匙"
+
+msgid "开启金宝箱需要金钥匙"
+msgstr "开启金宝箱需要金钥匙"
+
+msgid "获得"
+msgstr "获得"
+
+msgid "城堡"
+msgstr "城堡"
+
+msgid "城市坐标"
+msgstr "城市坐标"
+
+msgid "城市地形"
+msgstr "城市地形"
+
+msgid "可解锁建筑"
+msgstr "可解锁建筑"
+
+msgid "提示:升级城堡获得解锁建筑机会!"
+msgstr "提示:升级城堡获得解锁建筑机会!"
+
+msgid "已解锁"
+msgstr "已解锁"
+
+msgid "未解锁"
+msgstr "未解锁"
+
+msgid "城市地形修改"
+msgstr "城市地形修改"
+
+msgid "%s地形能提升50%% %s的活力回复速度"
+msgstr "%s地形能提升50%% %s的活力回复速度"
+
+msgid "变换地形"
+msgstr "变换地形"
+
+msgid "提供兵种招募，升级增加每次招募的最大数量"
+msgstr "提供兵种招募，升级增加每次招募的最大数量"
+
+msgid "购买使用"
+msgstr "购买使用"
+
+msgid "请选择不同的地形"
+msgstr "请选择不同的地形"
+
+msgid "占领王城的联盟盟主当选国王，可以给任一玩家指定头衔同时该联盟将获得大量的荣誉值"
+msgstr "占领王城的联盟盟主当选国王，可以给任一玩家指定头衔同时该联盟将获得大量的荣誉值"
+
+msgid "头衔"
+msgstr "头衔"
+
+msgid "大法官"
+msgstr "大法官"
+
+msgid "所有部队的生命值+15%。维护费-5%"
+msgstr "所有部队的生命值+15%。维护费-5%"
+
+msgid "勇士"
+msgstr "勇士"
+
+msgid "所有部队的攻击力+10%,生命值+10%,行军速度+10%"
+msgstr "所有部队的攻击力+10%,生命值+10%,行军速度+10%"
+
+msgid "废物"
+msgstr "废物"
+
+msgid "所有部队的攻击力-10%,生命值-10%,行军速度-10%"
+msgstr "所有部队的攻击力-10%,生命值-10%,行军速度-10%"
+
+msgid "权限不足,不能任命头衔"
+msgstr "权限不足,不能任命头衔"
+
+msgid "恭喜你达到"
+msgstr "恭喜你达到"
+
+msgid "等级 %d"
+msgstr "等级 %d"
+
+msgid "版本%s(%s)"
+msgstr "版本%s(%s)"
+
+msgid "正在加载游戏资源..."
+msgstr "正在加载游戏资源..."
+
+msgid "连接网关服务器...."
+msgstr "连接网关服务器...."
+
+msgid "连接网关服务器失败!"
+msgstr "连接网关服务器失败!"
+
+msgid "请求超时"
+msgstr "请求超时"
+
+msgid "服务器维护中"
+msgstr "服务器维护中"
+
+msgid "获取游戏服务器信息失败!"
+msgstr "获取游戏服务器信息失败!"
+
+msgid "连接游戏服务器失败!"
+msgstr "连接游戏服务器失败!"
+
+msgid "检查游戏更新...."
+msgstr "检查游戏更新...."
+
+msgid "检查游戏更新失败!"
+msgstr "检查游戏更新失败!"
+
+msgid "游戏版本过低,请更新!"
+msgstr "游戏版本过低,请更新!"
+
+msgid "文件下载失败!"
+msgstr "文件下载失败!"
+
+msgid "更新进度:%d%%"
+msgstr "更新进度:%d%%"
+
+msgid "收件箱"
+msgstr "收件箱"
+
+msgid "战报"
+msgstr "战报"
+
+msgid "收藏夹"
+msgstr "收藏夹"
+
+msgid "已发送"
+msgstr "已发送"
+
+msgid "全选"
+msgstr "全选"
+
+msgid "删除%s"
+msgstr "删除%s"
+
+msgid "您即将删除所选%s,删除的%s将无法恢复,您确定要这么做吗?"
+msgstr "您即将删除所选%s,删除的%s将无法恢复,您确定要这么做吗?"
+
+msgid "标记已读"
+msgstr "标记已读"
+
+msgid "From"
+msgstr "From"
+
+msgid "日期"
+msgstr "日期"
+
+msgid "主题: "
+msgstr "主题: "
+
+msgid "日期: "
+msgstr "日期: "
+
+msgid "回复"
+msgstr "回复"
+
+msgid "资源采集报告"
+msgstr "资源采集报告"
+
+msgid "To"
+msgstr "To"
+
+msgid "回复邮件"
+msgstr "回复邮件"
+
+msgid "收件人："
+msgstr "收件人："
+
+msgid "主题："
+msgstr "主题："
+
+msgid "RE:"
+msgstr "RE:"
+
+msgid "内容："
+msgstr "内容："
+
+msgid "不能向自己发送邮件"
+msgstr "不能向自己发送邮件"
+
+msgid "材料库房"
+msgstr "材料库房"
+
+msgid "制造材料"
+msgstr "制造材料"
+
+msgid "晋升"
+msgstr "晋升"
+
+msgid "任务"
+msgstr "任务"
+
+msgid "成就任务"
+msgstr "成就任务"
+
+msgid "日常任务"
+msgstr "日常任务"
+
+msgid "赛琳娜:"
+msgstr "赛琳娜:"
+
+msgid "大人,我们现在应该:"
+msgstr "大人,我们现在应该:"
+
+msgid "已完成任务"
+msgstr "已完成任务"
+
+msgid "今日的任务已经全部完成！"
+msgstr "今日的任务已经全部完成！"
+
+msgid "点击领取奖励"
+msgstr "点击领取奖励"
+
+msgid "联盟月门"
+msgstr "联盟月门"
+
+msgid "王城争霸 未开启"
+msgstr "王城争霸 未开启"
+
+msgid "开战王城"
+msgstr "开战王城"
+
+msgid "当前占领者"
+msgstr "当前占领者"
+
+msgid "地形"
+msgstr "地形"
+
+msgid "占领联盟"
+msgstr "占领联盟"
+
+msgid "每日产出"
+msgstr "每日产出"
+
+msgid "大量联盟荣耀值"
+msgstr "大量联盟荣耀值"
+
+msgid "少量联盟荣耀值"
+msgstr "少量联盟荣耀值"
+
+msgid "粮食"
+msgstr "粮食"
+
+msgid "资源总量"
+msgstr "资源总量"
+
+msgid "当前等级"
+msgstr "当前等级"
+
+msgid "荣耀点不足"
+msgstr "荣耀点不足"
+
+msgid "升级成功"
+msgstr "升级成功"
+
+msgid "新的村落将会在下次系统刷新时出现"
+msgstr "新的村落将会在下次系统刷新时出现"
+
+msgid "木材熟练度排名"
+msgstr "木材熟练度排名"
+
+msgid "石料熟练度排名"
+msgstr "石料熟练度排名"
+
+msgid "铁矿熟练度排名"
+msgstr "铁矿熟练度排名"
+
+msgid "粮食熟练度排名"
+msgstr "粮食熟练度排名"
+
+msgid "显示联盟成员的村落采集资源熟练度,每采集一定的村落资源,就会增加一定的熟练度,熟练度越高,采集相应村落资源的速度就会越快"
+msgstr "显示联盟成员的村落采集资源熟练度,每采集一定的村落资源,就会增加一定的熟练度,熟练度越高,采集相应村落资源的速度就会越快"
+
+msgid "我的%s熟练度排名:"
+msgstr "我的%s熟练度排名:"
+
+msgid "采集速度"
+msgstr "采集速度"
+
+msgid "锻造工坊"
+msgstr "锻造工坊"
+
+msgid "石匠工坊"
+msgstr "石匠工坊"
+
+msgid "锯木工房"
+msgstr "锯木工房"
+
+msgid "磨坊"
+msgstr "磨坊"
+
+msgid "铁矿产量"
+msgstr "铁矿产量"
+
+msgid "石材产量"
+msgstr "石材产量"
+
+msgid "木材产量"
+msgstr "木材产量"
+
+msgid "粮食产量"
+msgstr "粮食产量"
+
+msgid "达到"
+msgstr "达到"
+
+msgid "+5%%%s"
+msgstr "+5%%%s"
+
+msgid "周围2格范围的%s数量"
+msgstr "周围2格范围的%s数量"
+
+msgid "改建"
+msgstr "改建"
+
+msgid "满足下列条件,可将%s改建成以上建筑,改建后该建筑的等级保留"
+msgstr "满足下列条件,可将%s改建成以上建筑,改建后该建筑的等级保留"
+
+msgid "%s数量"
+msgstr "%s数量"
+
+msgid "≤%d"
+msgstr "≤%d"
+
+msgid "金龙币"
+msgstr "金龙币"
+
+msgid "立即转换"
+msgstr "立即转换"
+
+msgid "小屋数量过多"
+msgstr "小屋数量过多"
+
+msgid "前置建筑%s等级需要大于等于%d级"
+msgstr "前置建筑%s等级需要大于等于%d级"
+
+msgid "点击最大"
+msgstr "点击最大"
+
+msgid "点击进攻"
+msgstr "点击进攻"
+
+msgid "返回起点"
+msgstr "返回起点"
+
+msgid "返回当前关卡的起点需要消耗您10个金龙币,您是否同意?"
+msgstr "返回当前关卡的起点需要消耗您10个金龙币,您是否同意?"
+
+msgid "快去孵化一只巨龙吧"
+msgstr "快去孵化一只巨龙吧"
+
+msgid "科技研发"
+msgstr "科技研发"
+
+msgid "获胜"
+msgstr "获胜"
+
+msgid "x2"
+msgstr "x2"
+
+msgid "x4"
+msgstr "x4"
+
+msgid "x1"
+msgstr "x1"
+
+msgid "加成 + %d%%"
+msgstr "加成 + %d%%"
+
+msgid "进攻方"
+msgstr "进攻方"
+
+msgid "防守方"
+msgstr "防守方"
+
+msgid "关闭"
+msgstr "关闭"
+
+msgid "拆除这个建筑"
+msgstr "拆除这个建筑"
+
+msgid "返还城民"
+msgstr "返还城民"
+
+msgid "城民增长"
+msgstr "城民增长"
+
+msgid "拆除"
+msgstr "拆除"
+
+msgid "购买&拆除"
+msgstr "购买&拆除"
+
+msgid "移动这个建筑"
+msgstr "移动这个建筑"
+
+msgid "用来调换城市内的资源建筑的位置"
+msgstr "用来调换城市内的资源建筑的位置"
+
+msgid "购买&移动"
+msgstr "购买&移动"
+
+msgid "总计"
+msgstr "总计"
+
+msgid "银币产量"
+msgstr "银币产量"
+
+msgid "可建造数量"
+msgstr "可建造数量"
+
+msgid "当前产出银币"
+msgstr "当前产出银币"
+
+msgid "当前产出木材"
+msgstr "当前产出木材"
+
+msgid "当前产出铁矿"
+msgstr "当前产出铁矿"
+
+msgid "石料产量"
+msgstr "石料产量"
+
+msgid "当前城民增长"
+msgstr "当前城民增长"
+
+msgid "正在建造或者升级小屋,不能拆除!"
+msgstr "正在建造或者升级小屋,不能拆除!"
+
+msgid "是否确认拆除?"
+msgstr "是否确认拆除?"
+
+msgid "资源总览"
+msgstr "资源总览"
+
+msgid "资源"
+msgstr "资源"
+
+msgid "材料"
+msgstr "材料"
+
+msgid "我们应该去哪儿?"
+msgstr "我们应该去哪儿?"
+
+msgid "绿龙的聚集地"
+msgstr "绿龙的聚集地"
+
+msgid "绿龙生命恢复速度+10%"
+msgstr "绿龙生命恢复速度+10%"
+
+msgid "战斗中, 绿龙力量+10%"
+msgstr "战斗中, 绿龙力量+10%"
+
+msgid "红龙的聚集地"
+msgstr "红龙的聚集地"
+
+msgid "红龙生命恢复速度+10%"
+msgstr "红龙生命恢复速度+10%"
+
+msgid "战斗中, 红龙力量+10%"
+msgstr "战斗中, 红龙力量+10%"
+
+msgid "蓝龙的聚集地"
+msgstr "蓝龙的聚集地"
+
+msgid "蓝龙生命恢复速度+10%"
+msgstr "蓝龙生命恢复速度+10%"
+
+msgid "战斗中, 蓝龙力量+10%"
+msgstr "战斗中, 蓝龙力量+10%"
+
+msgid "塞琳娜的考验"
+msgstr "塞琳娜的考验"
+
+msgid "回答正确!"
+msgstr "回答正确!"
+
+msgid "回答错误!"
+msgstr "回答错误!"
+
+msgid "抱歉"
+msgstr "抱歉"
+
+msgid "大人，我准备了一些小小测试，如果你每日能连续答对10道题，我会奖赏你哦！"
+msgstr "大人，我准备了一些小小测试，如果你每日能连续答对10道题，我会奖赏你哦！"
+
+msgid "开始吧"
+msgstr "开始吧"
+
+msgid "大人，恭喜你已经答对所有问题！你可以在每日任务中领取我为你准备的一份小礼物哦！"
+msgstr "大人，恭喜你已经答对所有问题！你可以在每日任务中领取我为你准备的一份小礼物哦！"
+
+msgid "再来一局"
+msgstr "再来一局"
+
+msgid "回答错误！大人，你本次答题一共回答正确%s道问题，请你继续努力哦！"
+msgstr "回答错误！大人，你本次答题一共回答正确%s道问题，请你继续努力哦！"
+
+msgid "连续答题 %s"
+msgstr "连续答题 %s"
+
+msgid "塞琳娜:"
+msgstr "塞琳娜:"
+
+msgid "你正在回答问题,如果关闭此界面，之前回答正确的题目数将被清零,是否继续关闭该界面"
+msgstr "你正在回答问题,如果关闭此界面，之前回答正确的题目数将被清零,是否继续关闭该界面"
+
+msgid "更多"
+msgstr "更多"
+
+msgid "世界时间:"
+msgstr "世界时间:"
+
+msgid "账号绑定"
+msgstr "账号绑定"
+
+msgid "选择服务器"
+msgstr "选择服务器"
+
+msgid "游戏说明"
+msgstr "游戏说明"
+
+msgid "个人排行榜"
+msgstr "个人排行榜"
+
+msgid "联盟排行榜"
+msgstr "联盟排行榜"
+
+msgid "音乐"
+msgstr "音乐"
+
+msgid "音效"
+msgstr "音效"
+
+msgid "推送通知"
+msgstr "推送通知"
+
+msgid "已屏蔽用户"
+msgstr "已屏蔽用户"
+
+msgid "我有建议"
+msgstr "我有建议"
+
+msgid "遇到问题"
+msgstr "遇到问题"
+
+msgid "切换账号"
+msgstr "切换账号"
+
+msgid "开始绑定"
+msgstr "开始绑定"
+
+msgid "当前账号状态:已绑定"
+msgstr "当前账号状态:已绑定"
+
+msgid "你的账号已经和GameCenter绑定"
+msgstr "你的账号已经和GameCenter绑定"
+
+msgid ""
+"当前账号已经和一个GameCenter账号之间绑定。你可以在设置中切换你的GameCenter账号来创建新的账号，也可以在其他ios设备上用当前GameCenter账号登录，在其他ios设备上进行游戏"
+msgstr ""
+"当前账号已经和一个GameCenter账号之间绑定。你可以在设置中切换你的GameCenter账号来创建新的账号，也可以在其他ios设备上用当前GameCenter账号登录，在其他ios设备上进行游戏"
+
+msgid "当前GameCenter:已登录"
+msgstr "当前GameCenter:已登录"
+
+msgid "当前状态:已绑定"
+msgstr "当前状态:已绑定"
+
+msgid "当前账号已经和当前GameCenter账号绑定，请保管好你的GameCenter账号"
+msgstr "当前账号已经和当前GameCenter账号绑定，请保管好你的GameCenter账号"
+
+msgid "当前GameCenter下存在其他游戏账号，点击切换按钮，会立即登录另一个GameCenter游戏账号"
+msgstr "当前GameCenter下存在其他游戏账号，点击切换按钮，会立即登录另一个GameCenter游戏账号"
+
+msgid "当前状态:未绑定"
+msgstr "当前状态:未绑定"
+
+msgid ""
+"当前GameCenter下没有绑定的账号，你可以在此创建一个全新的游戏账号。点击下方的按钮后，会登出当前账号，使用新的GameCenter账号进行游戏"
+msgstr ""
+"当前GameCenter下没有绑定的账号，你可以在此创建一个全新的游戏账号。点击下方的按钮后，会登出当前账号，使用新的GameCenter账号进行游戏"
+
+msgid "创建新账号"
+msgstr "创建新账号"
+
+msgid "当前GameCenter:未登录"
+msgstr "当前GameCenter:未登录"
+
+msgid "当前状态:未知"
+msgstr "当前状态:未知"
+
+msgid "请在ios设置中登录你的GameCenter账号，或点击下面的按钮进行绑定"
+msgstr "请在ios设置中登录你的GameCenter账号，或点击下面的按钮进行绑定"
+
+msgid "当前账号状态:未绑定"
+msgstr "当前账号状态:未绑定"
+
+msgid "你的账号尚未进行绑定，存在丢失风险"
+msgstr "你的账号尚未进行绑定，存在丢失风险"
+
+msgid "请在系统设置中，登陆GameCenter 会自动绑定游戏账号。绑定后的游戏账号会更加安全，同时可以在其他IOS设备登陆此账号"
+msgstr "请在系统设置中，登陆GameCenter 会自动绑定游戏账号。绑定后的游戏账号会更加安全，同时可以在其他IOS设备登陆此账号"
+
+msgid "注意:如果当前账号状态是未绑定，切换Game Center的其他账号会导致当前账号的丢失，并无法找回，请慎重操作。"
+msgstr "注意:如果当前账号状态是未绑定，切换Game Center的其他账号会导致当前账号的丢失，并无法找回，请慎重操作。"
+
+msgid "联系我们"
+msgstr "联系我们"
+
+msgid "你将使用你的邮箱向我们发送一份邮件"
+msgstr "你将使用你的邮箱向我们发送一份邮件"
+
+msgid "支付遇到了问题"
+msgstr "支付遇到了问题"
+
+msgid "游戏老是报错"
+msgstr "游戏老是报错"
+
+msgid "致命性Bug上报"
+msgstr "致命性Bug上报"
+
+msgid "查实后我们将提供奖励"
+msgstr "查实后我们将提供奖励"
+
+msgid "其他问题"
+msgstr "其他问题"
+
+msgid "写邮件"
+msgstr "写邮件"
+
+msgid "您尚未设置邮件：请前往IOS系统“设置”-“邮件、通讯录、日历”-“添加账户”处设置"
+msgstr "您尚未设置邮件：请前往IOS系统“设置”-“邮件、通讯录、日历”-“添加账户”处设置"
+
+msgid "描述你的问题"
+msgstr "描述你的问题"
+
+msgid "选择语言"
+msgstr "选择语言"
+
+msgid ""
+"修改游戏语言为%s?\n"
+"确认后游戏将重新启动"
+msgstr ""
+"修改游戏语言为%s?\n"
+"确认后游戏将重新启动"
+
+msgid "建筑队列完成提醒"
+msgstr "建筑队列完成提醒"
+
+msgid "招募兵种完成提醒"
+msgstr "招募兵种完成提醒"
+
+msgid "科技研发完成提醒"
+msgstr "科技研发完成提醒"
+
+msgid "工具&装备制造完成提醒"
+msgstr "工具&装备制造完成提醒"
+
+msgid "瞭望塔预警提醒"
+msgstr "瞭望塔预警提醒"
+
+msgid "切换服务器"
+msgstr "切换服务器"
+
+msgid "你已加入联盟不能切换服务器，退出联盟后重试。"
+msgstr "你已加入联盟不能切换服务器，退出联盟后重试。"
+
+msgid "你只能在未加入联盟的情况下，迁移服务器，执行此操作不会清空你当前的进度。"
+msgstr "你只能在未加入联盟的情况下，迁移服务器，执行此操作不会清空你当前的进度。"
+
+msgid "每次进行联盟匹配奖励"
+msgstr "每次进行联盟匹配奖励"
+
+msgid "人口"
+msgstr "人口"
+
+msgid "你在这儿"
+msgstr "你在这儿"
+
+msgid "屏蔽用户"
+msgstr "屏蔽用户"
+
+msgid "你无法收到屏蔽用户发送的邮件。同时在聊天界面也看不到这个用户的任何发言。"
+msgstr "你无法收到屏蔽用户发送的邮件。同时在聊天界面也看不到这个用户的任何发言。"
+
+msgid "取消屏蔽"
+msgstr "取消屏蔽"
+
+msgid "事件详情"
+msgstr "事件详情"
+
+msgid "派兵时间 %s"
+msgstr "派兵时间 %s"
+
+msgid "参与联盟GVE活动获得的奖励，击杀数量越高奖励越丰富，派出的部队会在战斗结束后返回。根据到达的先后顺序进行战斗排序"
+msgstr "参与联盟GVE活动获得的奖励，击杀数量越高奖励越丰富，派出的部队会在战斗结束后返回。根据到达的先后顺序进行战斗排序"
+
+msgid "驻扎中"
+msgstr "驻扎中"
+
+msgid "来自"
+msgstr "来自"
+
+msgid "你已经向圣地派遣了部队"
+msgstr "你已经向圣地派遣了部队"
+
+msgid "检测到你的行军时间大于圣地事件时间,可能部队未达到之前，圣地事件已结束。是否继续派兵?"
+msgstr "检测到你的行军时间大于圣地事件时间,可能部队未达到之前，圣地事件已结束。是否继续派兵?"
+
+msgid "晋级成功"
+msgstr "晋级成功"
+
+msgid "正在前往目标突袭"
+msgstr "正在前往目标突袭"
+
+msgid "战斗详情"
+msgstr "战斗详情"
+
+msgid "数据统计"
+msgstr "数据统计"
+
+msgid "回合%s"
+msgstr "回合%s"
+
+msgid "联盟获得"
+msgstr "联盟获得"
+
+msgid "广场"
+msgstr "广场"
+
+msgid "获得金龙币"
+msgstr "获得金龙币"
+
+msgid "礼包中包含下列所有物品"
+msgstr "礼包中包含下列所有物品"
+
+msgid "+价值%d的道具"
+msgstr "+价值%d的道具"
+
+msgid "礼包详情"
+msgstr "礼包详情"
+
+msgid "赠送给联盟成员的%s"
+msgstr "赠送给联盟成员的%s"
+
+msgid "准备突袭"
+msgstr "准备突袭"
+
+msgid "派出巨龙突袭可以侦查到敌方的城市信息"
+msgstr "派出巨龙突袭可以侦查到敌方的城市信息"
+
+msgid "您派出的龙可能会因血量过低而死亡，您确定还要派出吗？"
+msgstr "您派出的龙可能会因血量过低而死亡，您确定还要派出吗？"
+
+msgid "没有得到任何情报"
+msgstr "没有得到任何情报"
+
+msgid "得到一封%s级的情报"
+msgstr "得到一封%s级的情报"
+
+msgid "战斗统计"
+msgstr "战斗统计"
+
+msgid "敌方情报"
+msgstr "敌方情报"
+
+msgid "资源产量"
+msgstr "资源产量"
+
+msgid "无军事科技"
+msgstr "无军事科技"
+
+msgid "军事科技水平"
+msgstr "军事科技水平"
+
+msgid "%s对%s攻击"
+msgstr "%s对%s攻击"
+
+msgid "弓箭手科技"
+msgstr "弓箭手科技"
+
+msgid "投石车科技"
+msgstr "投石车科技"
+
+msgid "龙没有技能"
+msgstr "龙没有技能"
+
+msgid "龙的技能"
+msgstr "龙的技能"
+
+msgid "没有驻防部队"
+msgstr "没有驻防部队"
+
+msgid "驻防部队"
+msgstr "驻防部队"
+
+msgid "敌方龙没有驻防"
+msgstr "敌方龙没有驻防"
+
+msgid "敌方龙没有装备"
+msgstr "敌方龙没有装备"
+
+msgid "龙的装备"
+msgstr "龙的装备"
+
+msgid "城市"
+msgstr "城市"
+
+msgid "区域地图"
+msgstr "区域地图"
+
+msgid "探险地图"
+msgstr "探险地图"
+
+msgid "1.建造住宅"
+msgstr "1.建造住宅"
+
+msgid "建造和升级住宅能提升城民数量，生产资源的小屋需要占用城民"
+msgstr "建造和升级住宅能提升城民数量，生产资源的小屋需要占用城民"
+
+msgid "2.获取资源"
+msgstr "2.获取资源"
+
+msgid "建造和升级木工小屋，石匠小屋，旷工小屋，农夫小屋获得更多资源"
+msgstr "建造和升级木工小屋，石匠小屋，旷工小屋，农夫小屋获得更多资源"
+
+msgid "3.升级主城堡"
+msgstr "3.升级主城堡"
+
+msgid "升级城堡能够提升建筑的等级上限，解锁更多的地块和新的建筑"
+msgstr "升级城堡能够提升建筑的等级上限，解锁更多的地块和新的建筑"
+
+msgid "4.招募部队"
+msgstr "4.招募部队"
+
+msgid "在兵营招募部队，招募出的部队会持续消耗粮食，请务必保证自己的粮食产量充足"
+msgstr "在兵营招募部队，招募出的部队会持续消耗粮食，请务必保证自己的粮食产量充足"
+
+msgid "5.飞艇探索"
+msgstr "5.飞艇探索"
+
+msgid "使用飞艇，带领部队探索外域，获得资源还能增长巨龙等级，提升带兵总量"
+msgstr "使用飞艇，带领部队探索外域，获得资源还能增长巨龙等级，提升带兵总量"
+
+msgid "6.加入联盟"
+msgstr "6.加入联盟"
+
+msgid "解锁联盟领地，参加联盟会战，并解锁更多新奇的玩法"
+msgstr "解锁联盟领地，参加联盟会战，并解锁更多新奇的玩法"
+
+msgid "选择木材、石料、铁矿、粮食村落采集资源，满足发展城市和联盟的需求"
+msgstr "选择木材、石料、铁矿、粮食村落采集资源，满足发展城市和联盟的需求"
+
+msgid "激活并参与圣地战，和盟友并肩作战，赢取丰厚的稀缺材料"
+msgstr "激活并参与圣地战，和盟友并肩作战，赢取丰厚的稀缺材料"
+
+msgid "参加联盟会战，来一场争锋相对的较量，进攻敌方联盟的城市获得大量积分和资源"
+msgstr "参加联盟会战，来一场争锋相对的较量，进攻敌方联盟的城市获得大量积分和资源"
+
+msgid "如果你的盟友不幸成为敌方攻击的目标，协助盟友击退外敌"
+msgstr "如果你的盟友不幸成为敌方攻击的目标，协助盟友击退外敌"
+
+msgid "联盟会战胜利后，联盟获得大量的荣誉点数"
+msgstr "联盟会战胜利后，联盟获得大量的荣誉点数"
+
+msgid "探索未知的领域,经历种种艰难险阻和奇闻异事,更可藉此获得大量的资源及特殊道具!"
+msgstr "探索未知的领域,经历种种艰难险阻和奇闻异事,更可藉此获得大量的资源及特殊道具!"
+
+msgid "地图探索度达到100%之后,即可获得珍贵的金龙币奖励!"
+msgstr "地图探索度达到100%之后,即可获得珍贵的金龙币奖励!"
+
+msgid "探索只神秘的终极关卡,就能获得巨额的奖励以及异常稀有的个人专属头像!"
+msgstr "探索只神秘的终极关卡,就能获得巨额的奖励以及异常稀有的个人专属头像!"
+
+msgid "工具作坊"
+msgstr "工具作坊"
+
+msgid "制作"
+msgstr "制作"
+
+msgid "生产材料不能免费加速"
+msgstr "生产材料不能免费加速"
+
+msgid "对步兵攻击"
+msgstr "对步兵攻击"
+
+msgid "对骑兵攻击"
+msgstr "对骑兵攻击"
+
+msgid "对弓箭手攻击"
+msgstr "对弓箭手攻击"
+
+msgid "对投石车攻击"
+msgstr "对投石车攻击"
+
+msgid "防御力"
+msgstr "防御力"
+
+msgid "市政厅"
+msgstr "市政厅"
+
+msgid "市政"
+msgstr "市政"
+
+msgid "每日任务"
+msgstr "每日任务"
+
+msgid "刷新时间"
+msgstr "刷新时间"
+
+msgid "更新中"
+msgstr "更新中"
+
+msgid "任务完成"
+msgstr "任务完成"
+
+msgid "获取奖励"
+msgstr "获取奖励"
+
+msgid "每日任务完成"
+msgstr "每日任务完成"
+
+msgid "正在"
+msgstr "正在"
+
+msgid "开始"
+msgstr "开始"
+
+msgid "请先领取已经完成的任务的奖励"
+msgstr "请先领取已经完成的任务的奖励"
+
+msgid "已经有一个任务正在进行中"
+msgstr "已经有一个任务正在进行中"
+
+msgid "周围2格范围的住宅数量"
+msgstr "周围2格范围的住宅数量"
+
+msgid "增加"
+msgstr "增加"
+
+msgid "我的商品"
+msgstr "我的商品"
+
+msgid "单价"
+msgstr "单价"
+
+msgid "总价"
+msgstr "总价"
+
+msgid "购买%s成功"
+msgstr "购买%s成功"
+
+msgid "银币不足,是否使用金龙币补充"
+msgstr "银币不足,是否使用金龙币补充"
+
+msgid "资源小车"
+msgstr "资源小车"
+
+msgid "每小时制造"
+msgstr "每小时制造"
+
+msgid "出售"
+msgstr "出售"
+
+msgid "交易成功"
+msgstr "交易成功"
+
+msgid "等待交易"
+msgstr "等待交易"
+
+msgid "下架"
+msgstr "下架"
+
+msgid "空闲"
+msgstr "空闲"
+
+msgid "选择你多余的资源或者材料进行出售"
+msgstr "选择你多余的资源或者材料进行出售"
+
+msgid "需要贸易行会"
+msgstr "需要贸易行会"
+
+msgid "出售商品需要马车来运输，马车不足则无法出售。在学院提升马车的科技，能够提高每个马车容纳资源和材料的数量"
+msgstr "出售商品需要马车来运输，马车不足则无法出售。在学院提升马车的科技，能够提高每个马车容纳资源和材料的数量"
+
+msgid "容纳资源"
+msgstr "容纳资源"
+
+msgid "容纳材料"
+msgstr "容纳材料"
+
+msgid "出售资源"
+msgstr "出售资源"
+
+msgid "每1K售价"
+msgstr "每1K售价"
+
+msgid "出售数量不能为零"
+msgstr "出售数量不能为零"
+
+msgid "资源小车数量不足"
+msgstr "资源小车数量不足"
+
+msgid "出售%s成功"
+msgstr "出售%s成功"
+
+msgid "治疗伤兵不能免费加速"
+msgstr "治疗伤兵不能免费加速"
+
+msgid "解锁建筑"
+msgstr "解锁建筑"
+
+msgid "立即解锁"
+msgstr "立即解锁"
+
+msgid "解锁"
+msgstr "解锁"
+
+msgid "建造队列"
+msgstr "建造队列"
+
+msgid "解锁需求"
+msgstr "解锁需求"
+
+msgid "点击解锁新建筑：%s"
+msgstr "点击解锁新建筑：%s"
+
+msgid "点击升级"
+msgstr "点击升级"
+
+msgid "立即研发"
+msgstr "立即研发"
+
+msgid "研发"
+msgstr "研发"
+
+msgid "研发需求"
+msgstr "研发需求"
+
+msgid "升级队列"
+msgstr "升级队列"
+
+msgid "等级达到"
+msgstr "等级达到"
+
+msgid "学院等级"
+msgstr "学院等级"
+
+msgid "银币"
+msgstr "银币"
+
+msgid "已有科技升级队列,需加速完成该队列花费金龙币"
+msgstr "已有科技升级队列,需加速完成该队列花费金龙币"
+
+msgid "升级所需物品不足,购买所缺物品需花费金龙币"
+msgstr "升级所需物品不足,购买所缺物品需花费金龙币"
+
+msgid "立即完成建筑时间"
+msgstr "立即完成建筑时间"
+
+msgid "协助加速效果提升"
+msgstr "协助加速效果提升"
+
+msgid "木材产量增加"
+msgstr "木材产量增加"
+
+msgid "石料产量增加"
+msgstr "石料产量增加"
+
+msgid "铁矿产量增加"
+msgstr "铁矿产量增加"
+
+msgid "粮食产量增加"
+msgstr "粮食产量增加"
+
+msgid "城民增长速度"
+msgstr "城民增长速度"
+
+msgid "提升行军速度"
+msgstr "提升行军速度"
+
+msgid "每日游乐场免费抽奖次数+"
+msgstr "每日游乐场免费抽奖次数+"
+
+msgid "暗仓保护上限提升"
+msgstr "暗仓保护上限提升"
+
+msgid "城墙修复速度提升"
+msgstr "城墙修复速度提升"
+
+msgid "巨龙获得经验值加成"
+msgstr "巨龙获得经验值加成"
+
+msgid "巨龙体力恢复速度"
+msgstr "巨龙体力恢复速度"
+
+msgid "所有军事单位攻击力提升"
+msgstr "所有军事单位攻击力提升"
+
+msgid "所有军事单位防御力提升"
+msgstr "所有军事单位防御力提升"
+
+msgid "提升带兵上限"
+msgstr "提升带兵上限"
+
+msgid "维护费用减少"
+msgstr "维护费用减少"
+
+msgid "采集粮食熟练度"
+msgstr "采集粮食熟练度"
+
+msgid "采集铁矿熟练度"
+msgstr "采集铁矿熟练度"
+
+msgid "采集石料熟练度"
+msgstr "采集石料熟练度"
+
+msgid "采集木材熟练度"
+msgstr "采集木材熟练度"
+
+msgid "防御胜利"
+msgstr "防御胜利"
+
+msgid "进攻胜利"
+msgstr "进攻胜利"
+
+msgid "VIP"
+msgstr "VIP"
+
+msgid "已激活,剩余时间:"
+msgstr "已激活,剩余时间:"
+
+msgid "未激活VIP"
+msgstr "未激活VIP"
+
+msgid "增加VIP点数"
+msgstr "增加VIP点数"
+
+msgid "当前VIP等级"
+msgstr "当前VIP等级"
+
+msgid "下一次登录"
+msgstr "下一次登录"
+
+msgid "连续登录"
+msgstr "连续登录"
+
+msgid "分钟"
+msgstr "分钟"
+
+msgid "到达等级后自动激活24小时"
+msgstr "到达等级后自动激活24小时"
+
+msgid "已达成"
+msgstr "已达成"
+
+msgid "驻防"
+msgstr "驻防"
+
+msgid "・不驻防巨龙，所有城市中的部队将不会进行防御。"
+msgstr "・不驻防巨龙，所有城市中的部队将不会进行防御。"
+
+msgid "・驻防巨龙能在敌方进攻时，自动带兵参战。"
+msgstr "・驻防巨龙能在敌方进攻时，自动带兵参战。"
+
+msgid "・驻防巨龙能防御敌方进行的突袭，获得城市的信息"
+msgstr "・驻防巨龙能防御敌方进行的突袭，获得城市的信息"
+
+msgid "请选择一个巨龙驻防"
+msgstr "请选择一个巨龙驻防"
+
+msgid "当前城市地形:%s"
+msgstr "当前城市地形:%s"
+
+msgid "城墙耐久度"
+msgstr "城墙耐久度"
+
+msgid "・防御敌方进攻时，可能会损失城墙的生命值。"
+msgstr "・防御敌方进攻时，可能会损失城墙的生命值。"
+
+msgid "・当生命值为0时，地方联盟将击溃你的城市，获得额外的联盟积分。"
+msgstr "・当生命值为0时，地方联盟将击溃你的城市，获得额外的联盟积分。"
+
+msgid "选择%s会获得战斗力加成"
+msgstr "选择%s会获得战斗力加成"
+
+msgid "龙的力量"
+msgstr "龙的力量"
+
+msgid "最大兵量"
+msgstr "最大兵量"
+
+msgid "战斗地形:%s(派出%s获得额外力量)"
+msgstr "战斗地形:%s(派出%s获得额外力量)"
+
+msgid "存活"
+msgstr "存活"
+
+msgid "伤兵"
+msgstr "伤兵"
+
+msgid "被消灭"
+msgstr "被消灭"
+
+msgid "战斗结算"
+msgstr "战斗结算"
+
+msgid "仓库"
+msgstr "仓库"
+
+msgid "来袭"
+msgstr "来袭"
+
+msgid "进军"
+msgstr "进军"
+
+msgid "签到"
+msgstr "签到"
+
+msgid "永久行军队列+1"
+msgstr "永久行军队列+1"
+
+msgid "累计签到%s天，永久+1进攻队列"
+msgstr "累计签到%s天，永久+1进攻队列"
+
+msgid "待命中"
+msgstr "待命中"
+
+msgid "去联盟领地搜索目标"
+msgstr "去联盟领地搜索目标"
+
+msgid "联盟未处于战争期"
+msgstr "联盟未处于战争期"
+
+msgid "确定撤军?"
+msgstr "确定撤军?"
+
+msgid "军事单位"
+msgstr "军事单位"
+
+msgid "战争增益"
+msgstr "战争增益"
+
+msgid "部队详情"
+msgstr "部队详情"
+
+msgid "[%d星]%s"
+msgstr "[%d星]%s"
+
+msgid "瞭望塔等级不足,暂时不能查看"
+msgstr "瞭望塔等级不足,暂时不能查看"
+
+msgid "发邮件"
+msgstr "发邮件"
+
+msgid "暂时没有内容"
+msgstr "暂时没有内容"
+
+msgid "刚刚"
+msgstr "刚刚"
+
+msgid "%d秒前"
+msgstr "%d秒前"
+
+msgid "%d分钟前"
+msgstr "%d分钟前"
+
+msgid "%d小时前"
+msgstr "%d小时前"
+
+msgid "%d天前"
+msgstr "%d天前"
+
+msgid "%d天%d小时"
+msgstr "%d天%d小时"
+
+msgid "hello"
+msgstr "hello"
+
+msgid "world"
+msgstr "world"
+
+msgid "打造红龙，蓝龙和绿龙1星装备所必须的材料"
+msgstr "打造红龙，蓝龙和绿龙1星装备所必须的材料"
+
+msgid "打造红龙，蓝龙和绿龙2星装备所必须的材料"
+msgstr "打造红龙，蓝龙和绿龙2星装备所必须的材料"
+
+msgid "打造红龙，蓝龙和绿龙3星装备所必须的材料"
+msgstr "打造红龙，蓝龙和绿龙3星装备所必须的材料"
+
+msgid "打造红龙，蓝龙和绿龙4星装备所必须的材料"
+msgstr "打造红龙，蓝龙和绿龙4星装备所必须的材料"
+
+msgid "打造红龙2星装备所必须的材料"
+msgstr "打造红龙2星装备所必须的材料"
+
+msgid "打造红龙3星装备所必须的材料"
+msgstr "打造红龙3星装备所必须的材料"
+
+msgid "打造红龙4星装备所必须的材料"
+msgstr "打造红龙4星装备所必须的材料"
+
+msgid "打造蓝龙2星装备所必须的材料"
+msgstr "打造蓝龙2星装备所必须的材料"
+
+msgid "打造蓝龙3星装备所必须的材料"
+msgstr "打造蓝龙3星装备所必须的材料"
+
+msgid "打造蓝龙4星装备所必须的材料"
+msgstr "打造蓝龙4星装备所必须的材料"
+
+msgid "打造绿龙2星装备所必须的材料"
+msgstr "打造绿龙2星装备所必须的材料"
+
+msgid "打造绿龙3星装备所必须的材料"
+msgstr "打造绿龙3星装备所必须的材料"
+
+msgid "打造绿龙4星装备所必须的材料"
+msgstr "打造绿龙4星装备所必须的材料"
+
+msgid "打造红龙1星装备所必须的材料"
+msgstr "打造红龙1星装备所必须的材料"
+
+msgid "打造蓝龙1星装备所必须的材料"
+msgstr "打造蓝龙1星装备所必须的材料"
+
+msgid "打造绿龙1星装备所必须的材料"
+msgstr "打造绿龙1星装备所必须的材料"
+
+msgid "用于建造高等级建筑和研发高级科技"
+msgstr "用于建造高等级建筑和研发高级科技"
+
+msgid "用于在训练营地提升步兵的属性"
+msgstr "用于在训练营地提升步兵的属性"
+
+msgid "用于在猎手大厅提升弓手的属性"
+msgstr "用于在猎手大厅提升弓手的属性"
+
+msgid "用于在马厩提升骑兵的属性"
+msgstr "用于在马厩提升骑兵的属性"
+
+msgid "用于招募亡灵兵种的材料。在探险过程中有一定几率会遭遇亡灵部队，击败他们后获得"
+msgstr "用于招募亡灵兵种的材料。在探险过程中有一定几率会遭遇亡灵部队，击败他们后获得"
+
+msgid "士兵材料"
+msgstr "士兵材料"
+
+msgid "铁锭"
+msgstr "铁锭"
+
+msgid "钢锭"
+msgstr "钢锭"
+
+msgid "秘银锭"
+msgstr "秘银锭"
+
+msgid "黑铁锭"
+msgstr "黑铁锭"
+
+msgid "炽热之魂1阶"
+msgstr "炽热之魂1阶"
+
+msgid "炽热之魂2阶"
+msgstr "炽热之魂2阶"
+
+msgid "炽热之魂3阶"
+msgstr "炽热之魂3阶"
+
+msgid "冰霜之魂1阶"
+msgstr "冰霜之魂1阶"
+
+msgid "冰霜之魂2阶"
+msgstr "冰霜之魂2阶"
+
+msgid "冰霜之魂3阶"
+msgstr "冰霜之魂3阶"
+
+msgid "森林之魂1阶"
+msgstr "森林之魂1阶"
+
+msgid "森林之魂2阶"
+msgstr "森林之魂2阶"
+
+msgid "森林之魂3阶"
+msgstr "森林之魂3阶"
+
+msgid "瑕疵红水晶"
+msgstr "瑕疵红水晶"
+
+msgid "红水晶"
+msgstr "红水晶"
+
+msgid "无暇的红水晶"
+msgstr "无暇的红水晶"
+
+msgid "完美的红水晶"
+msgstr "完美的红水晶"
+
+msgid "瑕疵蓝水晶"
+msgstr "瑕疵蓝水晶"
+
+msgid "蓝水晶"
+msgstr "蓝水晶"
+
+msgid "无暇的蓝水晶"
+msgstr "无暇的蓝水晶"
+
+msgid "完美的蓝水晶"
+msgstr "完美的蓝水晶"
+
+msgid "瑕疵绿水晶"
+msgstr "瑕疵绿水晶"
+
+msgid "绿水晶"
+msgstr "绿水晶"
+
+msgid "无暇的绿水晶"
+msgstr "无暇的绿水晶"
+
+msgid "完美的绿水晶"
+msgstr "完美的绿水晶"
+
+msgid "远古符文"
+msgstr "远古符文"
+
+msgid "元素符文"
+msgstr "元素符文"
+
+msgid "纯粹符文"
+msgstr "纯粹符文"
+
+msgid "泰坦符文"
+msgstr "泰坦符文"
+
+msgid "巨人头冠"
+msgstr "巨人头冠"
+
+msgid "熔岩头冠"
+msgstr "熔岩头冠"
+
+msgid "狂怒头冠"
+msgstr "狂怒头冠"
+
+msgid "撒旦头冠"
+msgstr "撒旦头冠"
+
+msgid "原力头冠"
+msgstr "原力头冠"
+
+msgid "奥术头冠"
+msgstr "奥术头冠"
+
+msgid "飓风头冠"
+msgstr "飓风头冠"
+
+msgid "风暴头冠"
+msgstr "风暴头冠"
+
+msgid "欢欣头冠"
+msgstr "欢欣头冠"
+
+msgid "洞察头冠"
+msgstr "洞察头冠"
+
+msgid "神秘头冠"
+msgstr "神秘头冠"
+
+msgid "虚灵头冠"
+msgstr "虚灵头冠"
+
+msgid "熔岩胸甲"
+msgstr "熔岩胸甲"
+
+msgid "狂怒胸甲"
+msgstr "狂怒胸甲"
+
+msgid "撒旦胸甲"
+msgstr "撒旦胸甲"
+
+msgid "奥术胸甲"
+msgstr "奥术胸甲"
+
+msgid "飓风胸甲"
+msgstr "飓风胸甲"
+
+msgid "风暴胸甲"
+msgstr "风暴胸甲"
+
+msgid "洞察胸甲"
+msgstr "洞察胸甲"
+
+msgid "神秘胸甲"
+msgstr "神秘胸甲"
+
+msgid "虚灵胸甲"
+msgstr "虚灵胸甲"
+
+msgid "熔岩尾刺"
+msgstr "熔岩尾刺"
+
+msgid "狂怒尾刺"
+msgstr "狂怒尾刺"
+
+msgid "撒旦尾刺"
+msgstr "撒旦尾刺"
+
+msgid "奥术尾刺"
+msgstr "奥术尾刺"
+
+msgid "飓风尾刺"
+msgstr "飓风尾刺"
+
+msgid "风暴尾刺"
+msgstr "风暴尾刺"
+
+msgid "洞察尾刺"
+msgstr "洞察尾刺"
+
+msgid "神秘尾刺"
+msgstr "神秘尾刺"
+
+msgid "虚灵尾刺"
+msgstr "虚灵尾刺"
+
+msgid "熔岩法球"
+msgstr "熔岩法球"
+
+msgid "狂怒法球"
+msgstr "狂怒法球"
+
+msgid "撒旦法球"
+msgstr "撒旦法球"
+
+msgid "奥术法球"
+msgstr "奥术法球"
+
+msgid "飓风法球"
+msgstr "飓风法球"
+
+msgid "风暴法球"
+msgstr "风暴法球"
+
+msgid "洞察法球"
+msgstr "洞察法球"
+
+msgid "神秘法球"
+msgstr "神秘法球"
+
+msgid "虚灵法球"
+msgstr "虚灵法球"
+
+msgid "巨人护臂"
+msgstr "巨人护臂"
+
+msgid "熔岩护臂"
+msgstr "熔岩护臂"
+
+msgid "狂怒护臂"
+msgstr "狂怒护臂"
+
+msgid "撒旦护臂"
+msgstr "撒旦护臂"
+
+msgid "原力护臂"
+msgstr "原力护臂"
+
+msgid "奥术护臂"
+msgstr "奥术护臂"
+
+msgid "飓风护臂"
+msgstr "飓风护臂"
+
+msgid "风暴护臂"
+msgstr "风暴护臂"
+
+msgid "欢欣护臂"
+msgstr "欢欣护臂"
+
+msgid "洞察护臂"
+msgstr "洞察护臂"
+
+msgid "神秘护臂"
+msgstr "神秘护臂"
+
+msgid "虚灵护臂"
+msgstr "虚灵护臂"
+
+msgid "已在制造巨人头冠"
+msgstr "已在制造巨人头冠"
+
+msgid "已在制造熔岩头冠"
+msgstr "已在制造熔岩头冠"
+
+msgid "已在制造狂怒头冠"
+msgstr "已在制造狂怒头冠"
+
+msgid "已在制造撒旦头冠"
+msgstr "已在制造撒旦头冠"
+
+msgid "已在制造原力头冠"
+msgstr "已在制造原力头冠"
+
+msgid "已在制造奥术头冠"
+msgstr "已在制造奥术头冠"
+
+msgid "已在制造飓风头冠"
+msgstr "已在制造飓风头冠"
+
+msgid "已在制造风暴头冠"
+msgstr "已在制造风暴头冠"
+
+msgid "已在制造欢欣头冠"
+msgstr "已在制造欢欣头冠"
+
+msgid "已在制造洞察头冠"
+msgstr "已在制造洞察头冠"
+
+msgid "已在制造神秘头冠"
+msgstr "已在制造神秘头冠"
+
+msgid "已在制造虚灵头冠"
+msgstr "已在制造虚灵头冠"
+
+msgid "已在制造熔岩胸甲"
+msgstr "已在制造熔岩胸甲"
+
+msgid "已在制造狂怒胸甲"
+msgstr "已在制造狂怒胸甲"
+
+msgid "已在制造撒旦胸甲"
+msgstr "已在制造撒旦胸甲"
+
+msgid "已在制造奥术胸甲"
+msgstr "已在制造奥术胸甲"
+
+msgid "已在制造飓风胸甲"
+msgstr "已在制造飓风胸甲"
+
+msgid "已在制造风暴胸甲"
+msgstr "已在制造风暴胸甲"
+
+msgid "已在制造洞察胸甲"
+msgstr "已在制造洞察胸甲"
+
+msgid "已在制造神秘胸甲"
+msgstr "已在制造神秘胸甲"
+
+msgid "已在制造虚灵胸甲"
+msgstr "已在制造虚灵胸甲"
+
+msgid "已在制造熔岩尾刺"
+msgstr "已在制造熔岩尾刺"
+
+msgid "已在制造狂怒尾刺"
+msgstr "已在制造狂怒尾刺"
+
+msgid "已在制造撒旦尾刺"
+msgstr "已在制造撒旦尾刺"
+
+msgid "已在制造奥术尾刺"
+msgstr "已在制造奥术尾刺"
+
+msgid "已在制造飓风尾刺"
+msgstr "已在制造飓风尾刺"
+
+msgid "已在制造风暴尾刺"
+msgstr "已在制造风暴尾刺"
+
+msgid "已在制造洞察尾刺"
+msgstr "已在制造洞察尾刺"
+
+msgid "已在制造神秘尾刺"
+msgstr "已在制造神秘尾刺"
+
+msgid "已在制造虚灵尾刺"
+msgstr "已在制造虚灵尾刺"
+
+msgid "已在制造熔岩法球"
+msgstr "已在制造熔岩法球"
+
+msgid "已在制造狂怒法球"
+msgstr "已在制造狂怒法球"
+
+msgid "已在制造撒旦法球"
+msgstr "已在制造撒旦法球"
+
+msgid "已在制造奥术法球"
+msgstr "已在制造奥术法球"
+
+msgid "已在制造飓风法球"
+msgstr "已在制造飓风法球"
+
+msgid "已在制造风暴法球"
+msgstr "已在制造风暴法球"
+
+msgid "已在制造洞察法球"
+msgstr "已在制造洞察法球"
+
+msgid "已在制造神秘法球"
+msgstr "已在制造神秘法球"
+
+msgid "已在制造虚灵法球"
+msgstr "已在制造虚灵法球"
+
+msgid "已在制造巨人护臂"
+msgstr "已在制造巨人护臂"
+
+msgid "已在制造熔岩护臂"
+msgstr "已在制造熔岩护臂"
+
+msgid "已在制造狂怒护臂"
+msgstr "已在制造狂怒护臂"
+
+msgid "已在制造撒旦护臂"
+msgstr "已在制造撒旦护臂"
+
+msgid "已在制造原力护臂"
+msgstr "已在制造原力护臂"
+
+msgid "已在制造奥术护臂"
+msgstr "已在制造奥术护臂"
+
+msgid "已在制造飓风护臂"
+msgstr "已在制造飓风护臂"
+
+msgid "已在制造风暴护臂"
+msgstr "已在制造风暴护臂"
+
+msgid "已在制造欢欣护臂"
+msgstr "已在制造欢欣护臂"
+
+msgid "已在制造洞察护臂"
+msgstr "已在制造洞察护臂"
+
+msgid "已在制造神秘护臂"
+msgstr "已在制造神秘护臂"
+
+msgid "已在制造虚灵护臂"
+msgstr "已在制造虚灵护臂"
+
+msgid "建筑图纸"
+msgstr "建筑图纸"
+
+msgid "建筑工具"
+msgstr "建筑工具"
+
+msgid "木人桩"
+msgstr "木人桩"
+
+msgid "箭靶"
+msgstr "箭靶"
+
+msgid "马鞍"
+msgstr "马鞍"
+
+msgid "精铁零件"
+msgstr "精铁零件"
+
+msgid "黑龙"
+msgstr "黑龙"
+
+msgid "仅供红龙装备"
+msgstr "仅供红龙装备"
+
+msgid "仅供蓝龙装备"
+msgstr "仅供蓝龙装备"
+
+msgid "仅供绿龙装备"
+msgstr "仅供绿龙装备"
+
+msgid "仅供黑龙装备"
+msgstr "仅供黑龙装备"
+
+msgid "头部"
+msgstr "头部"
+
+msgid "胸部"
+msgstr "胸部"
+
+msgid "尾部"
+msgstr "尾部"
+
+msgid "法球"
+msgstr "法球"
+
+msgid "护臂"
+msgstr "护臂"
+
+msgid "右护臂"
+msgstr "右护臂"
+
+msgid "左护臂"
+msgstr "左护臂"
+
+msgid "提升龙的生命值上限"
+msgstr "提升龙的生命值上限"
+
+msgid "提升步兵的攻击和生命"
+msgstr "提升步兵的攻击和生命"
+
+msgid "提升龙的总攻击"
+msgstr "提升龙的总攻击"
+
+msgid "提升攻城攻击和生命"
+msgstr "提升攻城攻击和生命"
+
+msgid "提升骑兵攻击和生命"
+msgstr "提升骑兵攻击和生命"
+
+msgid "提升弓手攻击和生命"
+msgstr "提升弓手攻击和生命"
+
+msgid "增加行军速度"
+msgstr "增加行军速度"
+
+msgid "增加敌方士气损失"
+msgstr "增加敌方士气损失"
+
+msgid "减少己方士气损失"
+msgstr "减少己方士气损失"
+
+msgid "增加带兵量"
+msgstr "增加带兵量"
+
+msgid "增加对城墙的伤害"
+msgstr "增加对城墙的伤害"
+
+msgid "减少敌方的暗仓保护比例"
+msgstr "减少敌方的暗仓保护比例"
+
+msgid "增加捕获敌军几率"
+msgstr "增加捕获敌军几率"
+
+msgid "提升阵亡士兵的治愈率"
+msgstr "提升阵亡士兵的治愈率"
+
+msgid "提升一定比例的英雄之血获得量"
+msgstr "提升一定比例的英雄之血获得量"
+
+msgid "龙之血脉"
+msgstr "龙之血脉"
+
+msgid "步兵强化"
+msgstr "步兵强化"
+
+msgid "龙之吐息"
+msgstr "龙之吐息"
+
+msgid "攻城强化"
+msgstr "攻城强化"
+
+msgid "骑兵强化"
+msgstr "骑兵强化"
+
+msgid "弓手强化"
+msgstr "弓手强化"
+
+msgid "迅捷之力"
+msgstr "迅捷之力"
+
+msgid "狂乱"
+msgstr "狂乱"
+
+msgid "忘却痛苦"
+msgstr "忘却痛苦"
+
+msgid "统帅之力"
+msgstr "统帅之力"
+
+msgid "山崩地裂"
+msgstr "山崩地裂"
+
+msgid "贪婪"
+msgstr "贪婪"
+
+msgid "暗算"
+msgstr "暗算"
+
+msgid "恢复"
+msgstr "恢复"
+
+msgid "饥渴"
+msgstr "饥渴"
+
+msgid "步兵攻击加成"
+msgstr "步兵攻击加成"
+
+msgid "步兵生命值加成"
+msgstr "步兵生命值加成"
+
+msgid "提升步兵负重加成"
+msgstr "提升步兵负重加成"
+
+msgid "步兵行军速度加成"
+msgstr "步兵行军速度加成"
+
+msgid "弓手攻击加成"
+msgstr "弓手攻击加成"
+
+msgid "弓手生命值加成"
+msgstr "弓手生命值加成"
+
+msgid "弓手负重加成"
+msgstr "弓手负重加成"
+
+msgid "弓手行军速度加成"
+msgstr "弓手行军速度加成"
+
+msgid "骑兵攻击加成"
+msgstr "骑兵攻击加成"
+
+msgid "骑兵生命值加成"
+msgstr "骑兵生命值加成"
+
+msgid "骑兵负重加成"
+msgstr "骑兵负重加成"
+
+msgid "骑兵行军速度加成"
+msgstr "骑兵行军速度加成"
+
+msgid "攻城系攻击加成"
+msgstr "攻城系攻击加成"
+
+msgid "攻城系生命值加成"
+msgstr "攻城系生命值加成"
+
+msgid "攻城系负重加成"
+msgstr "攻城系负重加成"
+
+msgid "攻城系行军速度加成"
+msgstr "攻城系行军速度加成"
+
+msgid "带兵上限加成"
+msgstr "带兵上限加成"
+
+msgid "可治愈伤兵几率加成"
+msgstr "可治愈伤兵几率加成"
+
+msgid "城堡是权力的的象征，城市的核心建筑，升级能够解锁更多的地块，提供更高的建筑等级"
+msgstr "城堡是权力的的象征，城市的核心建筑，升级能够解锁更多的地块，提供更高的建筑等级"
+
+msgid "可解锁的地块"
+msgstr "可解锁的地块"
+
+msgid "被协助加速次数"
+msgstr "被协助加速次数"
+
+msgid "瞭望塔显示部队在联盟领地上的行军情况，同时也能预警敌方部队来袭，并提供相关信息"
+msgstr "瞭望塔显示部队在联盟领地上的行军情况，同时也能预警敌方部队来袭，并提供相关信息"
+
+msgid "显示己方领地上的行军事件及其路线，预警%.1f分钟内的敌方行军事件"
+msgstr "显示己方领地上的行军事件及其路线，预警%.1f分钟内的敌方行军事件"
+
+msgid "提供来袭部队的玩家名称，预警%.1f分钟内的敌方行军事件"
+msgstr "提供来袭部队的玩家名称，预警%.1f分钟内的敌方行军事件"
+
+msgid "预警%.1f分钟内的敌方行军事件"
+msgstr "预警%.1f分钟内的敌方行军事件"
+
+msgid "显示敌方的所有行军事件及其路线，预警%.1f分钟内的敌方行军事件"
+msgstr "显示敌方的所有行军事件及其路线，预警%.1f分钟内的敌方行军事件"
+
+msgid "提供来袭部队的龙的类型，预警%.1f分钟内的敌方行军事件"
+msgstr "提供来袭部队的龙的类型，预警%.1f分钟内的敌方行军事件"
+
+msgid "可以在敌方领地，查看敌方玩家的城市布局(不能点击建筑)，预警%.1f分钟内的敌方行军事件"
+msgstr "可以在敌方领地，查看敌方玩家的城市布局(不能点击建筑)，预警%.1f分钟内的敌方行军事件"
+
+msgid "提供详情按钮，可以查看敌军的详细信息：龙的等级和星级，预警%.1f分钟内的敌方行军事件"
+msgstr "提供详情按钮，可以查看敌军的详细信息：龙的等级和星级，预警%.1f分钟内的敌方行军事件"
+
+msgid "可以查看敌军的详细信息：显示龙的当前HP和HP上限，预警%.1f分钟内的敌方行军事件"
+msgstr "可以查看敌军的详细信息：显示龙的当前HP和HP上限，预警%.1f分钟内的敌方行军事件"
+
+msgid "可以查看敌军的详细信息：显示敌方部队的兵种名称，预警%.1f分钟内的敌方行军事件"
+msgstr "可以查看敌军的详细信息：显示敌方部队的兵种名称，预警%.1f分钟内的敌方行军事件"
+
+msgid "可以查看敌军的详细信息：显示龙的力量，预警%.1f分钟内的敌方行军事件"
+msgstr "可以查看敌军的详细信息：显示龙的力量，预警%.1f分钟内的敌方行军事件"
+
+msgid "可以查看敌军的详细信息: 显示敌方部队的兵种名称，预警%.1f分钟内的敌方行军事件"
+msgstr "可以查看敌军的详细信息: 显示敌方部队的兵种名称，预警%.1f分钟内的敌方行军事件"
+
+msgid "可以查看敌军的详细信息：显示龙的已装备的装备及其星级，预警%.1f分钟内的敌方行军事件"
+msgstr "可以查看敌军的详细信息：显示龙的已装备的装备及其星级，预警%.1f分钟内的敌方行军事件"
+
+msgid "可以查看敌军的详细信息：显示敌方部队的星级和模糊数量，预警%.1f分钟内的敌方行军事件"
+msgstr "可以查看敌军的详细信息：显示敌方部队的星级和模糊数量，预警%.1f分钟内的敌方行军事件"
+
+msgid "可以在敌方领地，查看其他联盟领地的玩家的城市建筑具体等级，预警%.1f分钟内的敌方行军事件"
+msgstr "可以在敌方领地，查看其他联盟领地的玩家的城市建筑具体等级，预警%.1f分钟内的敌方行军事件"
+
+msgid "显示敌方激活的战争增益，预警%.1f分钟内的敌方行军事件"
+msgstr "显示敌方激活的战争增益，预警%.1f分钟内的敌方行军事件"
+
+msgid "可以查看敌军的详细信息：显示龙的技能等级，预警%.1f分钟内的敌方行军事件"
+msgstr "可以查看敌军的详细信息：显示龙的技能等级，预警%.1f分钟内的敌方行军事件"
+
+msgid "可以查看敌军的详细信息：显示敌方部队的具体数量，预警%.1f分钟内的敌方行军事件"
+msgstr "可以查看敌军的详细信息：显示敌方部队的具体数量，预警%.1f分钟内的敌方行军事件"
+
+msgid "可以查看敌方城市中得协防部队的详细信息：龙的详细信息，预警%.1f分钟内的敌方行军事件"
+msgstr "可以查看敌方城市中得协防部队的详细信息：龙的详细信息，预警%.1f分钟内的敌方行军事件"
+
+msgid "可以查看敌方城市中得协防部队的详细信息：显示敌方部队的兵种名称，预警%.1f分钟内的敌方行军事件"
+msgstr "可以查看敌方城市中得协防部队的详细信息：显示敌方部队的兵种名称，预警%.1f分钟内的敌方行军事件"
+
+msgid "可以查看敌方城市中得协防部队的详细信息：龙的装备情况和龙的力量，预警%.1f分钟内的敌方行军事件"
+msgstr "可以查看敌方城市中得协防部队的详细信息：龙的装备情况和龙的力量，预警%.1f分钟内的敌方行军事件"
+
+msgid "学院提供的科技能够提升城市的生产和防御能力，等级越高研发速度越快"
+msgstr "学院提供的科技能够提升城市的生产和防御能力，等级越高研发速度越快"
+
+msgid "研发速度"
+msgstr "研发速度"
+
+msgid "训练营地提供步兵的相关科技，增强步兵的各方面属性，建筑等级越高招募步兵的速度越快"
+msgstr "训练营地提供步兵的相关科技，增强步兵的各方面属性，建筑等级越高招募步兵的速度越快"
+
+msgid "步兵招募速度"
+msgstr "步兵招募速度"
+
+msgid "猎手大厅提供弓手的相关科技，增强弓手的各方面属性，建筑等级越高招募弓手的速度越快"
+msgstr "猎手大厅提供弓手的相关科技，增强弓手的各方面属性，建筑等级越高招募弓手的速度越快"
+
+msgid "弓手招募速度"
+msgstr "弓手招募速度"
+
+msgid "马厩提供骑兵的相关科技，增强骑兵的各方面属性，建筑等级越高招募骑兵的速度越快"
+msgstr "马厩提供骑兵的相关科技，增强骑兵的各方面属性，建筑等级越高招募骑兵的速度越快"
+
+msgid "骑兵招募速度"
+msgstr "骑兵招募速度"
+
+msgid "车间提供攻城器械的相关科技，增强攻城器械的各方面属性，建筑等级越高招募攻城器械的速度越快"
+msgstr "车间提供攻城器械的相关科技，增强攻城器械的各方面属性，建筑等级越高招募攻城器械的速度越快"
+
+msgid "攻城器械招募速度"
+msgstr "攻城器械招募速度"
+
+msgid "城墙能够有效抵御敌方的进攻，当敌方部队来袭时会自动将城内的部队驻防，升级能够提升城墙的生命值。将龙设置在城墙上驻防还能够持续获得一定的经验值"
+msgstr ""
+"城墙能够有效抵御敌方的进攻，当敌方部队来袭时会自动将城内的部队驻防，升级能够提升城墙的生命值。将龙设置在城墙上驻防还能够持续获得一定的经验值"
+
+msgid "城墙恢复"
+msgstr "城墙恢复"
+
+msgid "防御塔提供城墙攻击的能力，每解锁一圈地块会增加2座防御塔，升级防御塔等级能提升攻击力。"
+msgstr "防御塔提供城墙攻击的能力，每解锁一圈地块会增加2座防御塔，升级防御塔等级能提升攻击力。"
+
+msgid "提供城墙攻击力"
+msgstr "提供城墙攻击力"
+
+msgid "龙巢可以查看龙的信息，强化龙的装备并晋级，升级建筑能够提升在城市中的龙体力恢复速度"
+msgstr "龙巢可以查看龙的信息，强化龙的装备并晋级，升级建筑能够提升在城市中的龙体力恢复速度"
+
+msgid "每小时恢复龙的生命值"
+msgstr "每小时恢复龙的生命值"
+
+msgid "医院提供治愈伤兵的功能，每次进攻或防守都能将一部分阵亡的士兵转化为伤兵并治愈，升级建筑能够提升伤兵的最大容量上限"
+msgstr "医院提供治愈伤兵的功能，每次进攻或防守都能将一部分阵亡的士兵转化为伤兵并治愈，升级建筑能够提升伤兵的最大容量上限"
+
+msgid "监狱有一定的几率捕获来袭的敌军，并能够使用特殊的道具折磨敌军，升级建筑能够获得更多的敌军关押时间"
+msgstr "监狱有一定的几率捕获来袭的敌军，并能够使用特殊的道具折磨敌军，升级建筑能够获得更多的敌军关押时间"
+
+msgid "抓获几率"
+msgstr "抓获几率"
+
+msgid "囚禁时间"
+msgstr "囚禁时间"
+
+msgid "工具作坊提供建筑材料和科技材料的制作，每次制作都能随机获得一些材料，升级建筑能够提升每次制作材料的数量"
+msgstr "工具作坊提供建筑材料和科技材料的制作，每次制作都能随机获得一些材料，升级建筑能够提升每次制作材料的数量"
+
+msgid "一次随机生产道具"
+msgstr "一次随机生产道具"
+
+msgid "个"
+msgstr "个"
+
+msgid "兵营提供军事单位的招募，用于进攻敌方城市，采集资源和城墙驻防，升级建筑能够提升每次招募的最大数量"
+msgstr "兵营提供军事单位的招募，用于进攻敌方城市，采集资源和城墙驻防，升级建筑能够提升每次招募的最大数量"
+
+msgid "最大招募人口数量"
+msgstr "最大招募人口数量"
+
+msgid "贸易行会提供玩家之间资源和材料的交易，需要消耗运输小车提出自己的资源需求，升级建筑能够提升运输小车的总量和生产速度"
+msgstr "贸易行会提供玩家之间资源和材料的交易，需要消耗运输小车提出自己的资源需求，升级建筑能够提升运输小车的总量和生产速度"
+
+msgid "最大运输小车数量"
+msgstr "最大运输小车数量"
+
+msgid "每小时运输小车"
+msgstr "每小时运输小车"
+
+msgid "铁匠铺能够将平时收集到的特殊材料打造成龙的装备，升级建筑能够提升装备打造的速度"
+msgstr "铁匠铺能够将平时收集到的特殊材料打造成龙的装备，升级建筑能够提升装备打造的速度"
+
+msgid "打造装备速度"
+msgstr "打造装备速度"
+
+msgid "锯木坊能够提升可建造的木工小屋数量和木材的生产效率，周围修建一定数量的木工小屋还能获得额外的木材产量加成"
+msgstr "锯木坊能够提升可建造的木工小屋数量和木材的生产效率，周围修建一定数量的木工小屋还能获得额外的木材产量加成"
+
+msgid "木工小屋数量"
+msgstr "木工小屋数量"
+
+msgid "木材保护"
+msgstr "木材保护"
+
+msgid "磨坊能够提升可建造的农夫小屋数量和粮食的生产效率，周围修建一定数量的农夫小屋还能获得额外的粮食产量加成"
+msgstr "磨坊能够提升可建造的农夫小屋数量和粮食的生产效率，周围修建一定数量的农夫小屋还能获得额外的粮食产量加成"
+
+msgid "农夫小屋数量"
+msgstr "农夫小屋数量"
+
+msgid "粮食保护"
+msgstr "粮食保护"
+
+msgid "石匠工坊能够提升可建造的石匠小屋数量和石料的生产效率，周围修建一定数量的石匠小屋还能获得额外的石料产量加成"
+msgstr "石匠工坊能够提升可建造的石匠小屋数量和石料的生产效率，周围修建一定数量的石匠小屋还能获得额外的石料产量加成"
+
+msgid "石匠小屋数量"
+msgstr "石匠小屋数量"
+
+msgid "石料保护"
+msgstr "石料保护"
+
+msgid "铸造坊能够提升可建造的矿工小屋数量和铁矿的生产效率，周围修建一定数量的矿工小屋还能获得额外的铁矿产量加成"
+msgstr "铸造坊能够提升可建造的矿工小屋数量和铁矿的生产效率，周围修建一定数量的矿工小屋还能获得额外的铁矿产量加成"
+
+msgid "矿工小屋数量"
+msgstr "矿工小屋数量"
+
+msgid "铁矿保护"
+msgstr "铁矿保护"
+
+msgid "市政厅能够提升可建造的住宅数量，并向城市中得空闲城民征税。周围建立一定数量的住宅，可获得额外的城民增长"
+msgstr "市政厅能够提升可建造的住宅数量，并向城市中得空闲城民征税。周围建立一定数量的住宅，可获得额外的城民增长"
+
+msgid "住宅数量"
+msgstr "住宅数量"
+
+msgid "每次征收银币"
+msgstr "每次征收银币"
+
+msgid "资源仓库存放木材，石料，铁矿，粮食。建筑等级越高，每种资源存放的上限越大。"
+msgstr "资源仓库存放木材，石料，铁矿，粮食。建筑等级越高，每种资源存放的上限越大。"
+
+msgid "材料库房能够存储各种材料，建筑等级越高，每种材料的存放上限越高。"
+msgstr "材料库房能够存储各种材料，建筑等级越高，每种材料的存放上限越高。"
+
+msgid "军帐提供出兵时的带兵上限，建筑等级越高，每次出兵和防御时可派出的部队人口上限越大。"
+msgstr "军帐提供出兵时的带兵上限，建筑等级越高，每次出兵和防御时可派出的部队人口上限越大。"
+
+msgid "部队人口上限"
+msgstr "部队人口上限"
+
+msgid "住宅能够容纳，每隔一段时间增加一些空闲城民。升级建筑提升城民的最大上限和城民的增长速度"
+msgstr "住宅能够容纳，每隔一段时间增加一些空闲城民。升级建筑提升城民的最大上限和城民的增长速度"
+
+msgid "提供城民上限"
+msgstr "提供城民上限"
+
+msgid "每小时城民恢复速度"
+msgstr "每小时城民恢复速度"
+
+msgid "将城民派往木工小屋获得持续的木材产出。建筑等级越高需要更多的城民，木材产出也会更高。"
+msgstr "将城民派往木工小屋获得持续的木材产出。建筑等级越高需要更多的城民，木材产出也会更高。"
+
+msgid "每小时木材产量"
+msgstr "每小时木材产量"
+
+msgid "将城民派往农夫小屋获得持续的粮食产出。建筑等级越高需要更多的城民，粮食产出也会更高。"
+msgstr "将城民派往农夫小屋获得持续的粮食产出。建筑等级越高需要更多的城民，粮食产出也会更高。"
+
+msgid "每小时粮食产量"
+msgstr "每小时粮食产量"
+
+msgid "将城民派往石匠小屋获得持续的石料产出。建筑等级越高需要更多的城民，石料产出也会更高。"
+msgstr "将城民派往石匠小屋获得持续的石料产出。建筑等级越高需要更多的城民，石料产出也会更高。"
+
+msgid "每小时石料产量"
+msgstr "每小时石料产量"
+
+msgid "将城民派往矿工小屋获得持续的铁矿产出。建筑等级越高需要更多的城民，铁矿产出也会更高。"
+msgstr "将城民派往矿工小屋获得持续的铁矿产出。建筑等级越高需要更多的城民，铁矿产出也会更高。"
+
+msgid "每小时铁矿产量"
+msgstr "每小时铁矿产量"
+
+msgid ""
+"联盟商店能够提供部分商城售卖的道具，联盟成员可以通过忠诚值来兑换。部分高级道具需要花费荣耀值购买后，才能兑换。提升建筑等级能解锁更多高级道具。"
+msgstr ""
+"联盟商店能够提供部分商城售卖的道具，联盟成员可以通过忠诚值来兑换。部分高级道具需要花费荣耀值购买后，才能兑换。提升建筑等级能解锁更多高级道具。"
+
+msgid "秩序大厅管理着联盟领地上的村落，并可以消耗荣耀值提升村落的等级。建筑等级越高，定期刷新的村落越多。"
+msgstr "秩序大厅管理着联盟领地上的村落，并可以消耗荣耀值提升村落的等级。建筑等级越高，定期刷新的村落越多。"
+
+msgid "月门是通往王城的传送门，占领王城后，联盟每天可以获得大量的荣耀值。升级月门可以提升参加王城争夺战的部队数量。"
+msgstr "月门是通往王城的传送门，占领王城后，联盟每天可以获得大量的荣耀值。升级月门可以提升参加王城争夺战的部队数量。"
+
+msgid "圣地消耗感知力预知联盟将要发生的危机，解决这些危机能够获得丰厚奖励。提升圣地等级能够提升感知力上限和恢复速度。"
+msgstr "圣地消耗感知力预知联盟将要发生的危机，解决这些危机能够获得丰厚奖励。提升圣地等级能够提升感知力上限和恢复速度。"
+
+msgid "联盟宫殿是联盟的核心建筑,联盟盟主可以在这里给忠诚的拥护者颁发奖励.建筑等级越高,联盟的成员就越多。"
+msgstr "联盟宫殿是联盟的核心建筑,联盟盟主可以在这里给忠诚的拥护者颁发奖励.建筑等级越高,联盟的成员就越多。"
+
+msgid "分裂的王国"
+msgstr "分裂的王国"
+
+msgid "叛军的愤怒"
+msgstr "叛军的愤怒"
+
+msgid "黑暗契约"
+msgstr "黑暗契约"
+
+msgid "荣耀的火焰"
+msgstr "荣耀的火焰"
+
+msgid "邪恶苏醒"
+msgstr "邪恶苏醒"
+
+msgid "黑龙带来的灾难还没有结束，一批强盗又在四处作乱，我们需要控制局势"
+msgstr "黑龙带来的灾难还没有结束，一批强盗又在四处作乱，我们需要控制局势"
+
+msgid "寻找线索"
+msgstr "寻找线索"
+
+msgid "这批强盗一定是有备而来，我们必须找到他们的老巢才能一举消灭他们"
+msgstr "这批强盗一定是有备而来，我们必须找到他们的老巢才能一举消灭他们"
+
+msgid "抓活口"
+msgstr "抓活口"
+
+msgid "我们抓到活口来为我们带路，设下圈套等他们自投罗网"
+msgstr "我们抓到活口来为我们带路，设下圈套等他们自投罗网"
+
+msgid "搜索边境"
+msgstr "搜索边境"
+
+msgid "被捕的强盗已经招认他们的老巢就在边境附近的一处洞穴，我们必须尽快行动"
+msgstr "被捕的强盗已经招认他们的老巢就在边境附近的一处洞穴，我们必须尽快行动"
+
+msgid "地底深处"
+msgstr "地底深处"
+
+msgid "这个洞穴居然还通往别处，紧跟着这些恶徒，找出他们的幕后主使"
+msgstr "这个洞穴居然还通往别处，紧跟着这些恶徒，找出他们的幕后主使"
+
+msgid "背叛者的秘密"
+msgstr "背叛者的秘密"
+
+msgid "原来这一切都是叛军搞的鬼，为了联盟的安定，我们必须粉碎这个阴谋"
+msgstr "原来这一切都是叛军搞的鬼，为了联盟的安定，我们必须粉碎这个阴谋"
+
+msgid "强敌来袭"
+msgstr "强敌来袭"
+
+msgid "我们的行动惹怒了叛军的首领，一支叛军的先锋正在赶往这里，做好战斗准备"
+msgstr "我们的行动惹怒了叛军的首领，一支叛军的先锋正在赶往这里，做好战斗准备"
+
+msgid "坚守"
+msgstr "坚守"
+
+msgid "敌人进攻虽然猛烈，但他们长途奔袭不可能持续进攻，坚守过这波进攻就有希望"
+msgstr "敌人进攻虽然猛烈，但他们长途奔袭不可能持续进攻，坚守过这波进攻就有希望"
+
+msgid "毫无防备"
+msgstr "毫无防备"
+
+msgid "正面战场敌方无法占到优势，一定会趁乱偷袭，我们得防着他们的小伎俩"
+msgstr "正面战场敌方无法占到优势，一定会趁乱偷袭，我们得防着他们的小伎俩"
+
+msgid "主动出击"
+msgstr "主动出击"
+
+msgid "叛军的主力依然疲惫，我们主动出击一定能打他们一个措手不及"
+msgstr "叛军的主力依然疲惫，我们主动出击一定能打他们一个措手不及"
+
+msgid "前后夹击"
+msgstr "前后夹击"
+
+msgid "如果我们能分出一股部队从侧面猛攻敌方，那么击败叛军就是迟早的事"
+msgstr "如果我们能分出一股部队从侧面猛攻敌方，那么击败叛军就是迟早的事"
+
+msgid "暗黑之心"
+msgstr "暗黑之心"
+
+msgid "虽然隐隐中不安，但叛军已然溃逃，我们还是尽可能的消弱叛军的力量"
+msgstr "虽然隐隐中不安，但叛军已然溃逃，我们还是尽可能的消弱叛军的力量"
+
+msgid "黑龙军团"
+msgstr "黑龙军团"
+
+msgid "叛军的头目尽然已经向黑龙效忠，我们不是他们的对手必须尽快撤离"
+msgstr "叛军的头目尽然已经向黑龙效忠，我们不是他们的对手必须尽快撤离"
+
+msgid "生死搏斗"
+msgstr "生死搏斗"
+
+msgid "已经没有别的选择，必须全力一搏，或许才有一线生机"
+msgstr "已经没有别的选择，必须全力一搏，或许才有一线生机"
+
+msgid "逃出生天"
+msgstr "逃出生天"
+
+msgid "穿过这片峡谷并守住谷口，任由敌方有千军万马也无法发挥作用，冲啊"
+msgstr "穿过这片峡谷并守住谷口，任由敌方有千军万马也无法发挥作用，冲啊"
+
+msgid "地狱之门"
+msgstr "地狱之门"
+
+msgid "我们需要更多援军，这将是一场血腥的厮杀。英勇的领主们，胜败在此一举"
+msgstr "我们需要更多援军，这将是一场血腥的厮杀。英勇的领主们，胜败在此一举"
+
+msgid "扭住局势"
+msgstr "扭住局势"
+
+msgid "敌方所有主力都派出了，如果能够击杀这支部队，那么局势将被我们扭转啊"
+msgstr "敌方所有主力都派出了，如果能够击杀这支部队，那么局势将被我们扭转啊"
+
+msgid "贪婪者"
+msgstr "贪婪者"
+
+msgid "我们赢得了暂时的胜利，但黑龙军团留下的战利品却成为了其他领主争夺的目标，我们必须防止事态恶化"
+msgstr "我们赢得了暂时的胜利，但黑龙军团留下的战利品却成为了其他领主争夺的目标，我们必须防止事态恶化"
+
+msgid "纷争又起"
+msgstr "纷争又起"
+
+msgid "大战刚刚结束，这些贪婪的领主就不顾联盟之约，公然抢夺战利品，这样的行为必须受到惩罚"
+msgstr "大战刚刚结束，这些贪婪的领主就不顾联盟之约，公然抢夺战利品，这样的行为必须受到惩罚"
+
+msgid "旧仇恨"
+msgstr "旧仇恨"
+
+msgid "原来我们的强大早就遭来其他领主的不满，既然他们不顾联盟之约，我们也无需手下留情"
+msgstr "原来我们的强大早就遭来其他领主的不满，既然他们不顾联盟之约，我们也无需手下留情"
+
+msgid "抉择"
+msgstr "抉择"
+
+msgid "公正终将得到伸张，如果他们放弃那些抢夺的财宝，那么我们就主动出击，给他们点教训"
+msgstr "公正终将得到伸张，如果他们放弃那些抢夺的财宝，那么我们就主动出击，给他们点教训"
+
+msgid "大敌当前"
+msgstr "大敌当前"
+
+msgid "这些叛徒知道单打独斗不是我们的对手，竟然联合起来对抗我们。若想要得到联盟的统治权，必须要付出惨痛的代价"
+msgstr "这些叛徒知道单打独斗不是我们的对手，竟然联合起来对抗我们。若想要得到联盟的统治权，必须要付出惨痛的代价"
+
+msgid "命运的火与悲"
+msgstr "命运的火与悲"
+
+msgid "曾经的战友竟然也会倒戈相向，胜者即是正义，拿起手中的武器准备出击"
+msgstr "曾经的战友竟然也会倒戈相向，胜者即是正义，拿起手中的武器准备出击"
+
+msgid "混乱之王"
+msgstr "混乱之王"
+
+msgid "混乱的联盟需要新的王者，如果这是命运的安排，那我们只有接受这个挑战"
+msgstr "混乱的联盟需要新的王者，如果这是命运的安排，那我们只有接受这个挑战"
+
+msgid "瞭望塔"
+msgstr "瞭望塔"
+
+msgid "训练营地"
+msgstr "训练营地"
+
+msgid "猎手大厅"
+msgstr "猎手大厅"
+
+msgid "马厩"
+msgstr "马厩"
+
+msgid "车间"
+msgstr "车间"
+
+msgid "防御塔"
+msgstr "防御塔"
+
+msgid "监狱"
+msgstr "监狱"
+
+msgid "贸易行会"
+msgstr "贸易行会"
+
+msgid "锯木坊"
+msgstr "锯木坊"
+
+msgid "铸造坊"
+msgstr "铸造坊"
+
+msgid "资源仓库"
+msgstr "资源仓库"
+
+msgid "军帐"
+msgstr "军帐"
+
+msgid "联盟盟主"
+msgstr "联盟盟主"
+
+msgid "将军"
+msgstr "将军"
+
+msgid "军需官"
+msgstr "军需官"
+
+msgid "监事"
+msgstr "监事"
+
+msgid "精英"
+msgstr "精英"
+
+msgid "向联盟慷慨捐赠，提升荣耀值%s"
+msgstr "向联盟慷慨捐赠，提升荣耀值%s"
+
+msgid "在联盟中的职位被降级到%s"
+msgstr "在联盟中的职位被降级到%s"
+
+msgid "一个新成员加入联盟"
+msgstr "一个新成员加入联盟"
+
+msgid "一个玩家被逐出联盟"
+msgstr "一个玩家被逐出联盟"
+
+msgid "一个玩家申请加入我们的联盟"
+msgstr "一个玩家申请加入我们的联盟"
+
+msgid "一个新的联盟公告发布"
+msgstr "一个新的联盟公告发布"
+
+msgid "一个新的联盟宣言发布"
+msgstr "一个新的联盟宣言发布"
+
+msgid "将%s与我盟的外交关系改变为%s"
+msgstr "将%s与我盟的外交关系改变为%s"
+
+msgid "晋升为联盟新的盟主"
+msgstr "晋升为联盟新的盟主"
+
+msgid "向联盟商店补充了一批新的高级道具"
+msgstr "向联盟商店补充了一批新的高级道具"
+
+msgid "%s 升级到 %s"
+msgstr "%s 升级到 %s"
+
+msgid "最近更改联盟的名称为%s"
+msgstr "最近更改联盟的名称为%s"
+
+msgid "最近更改联盟的标签"
+msgstr "最近更改联盟的标签"
+
+msgid "修改联盟旗帜"
+msgstr "修改联盟旗帜"
+
+msgid "修改联盟地形为%s"
+msgstr "修改联盟地形为%s"
+
+msgid "修改联盟语言更改为%s"
+msgstr "修改联盟语言更改为%s"
+
+msgid "激活了圣地的神秘事件"
+msgstr "激活了圣地的神秘事件"
+
+msgid "在联盟中的职位被晋级到%s"
+msgstr "在联盟中的职位被晋级到%s"
+
+msgid "步兵"
+msgstr "步兵"
+
+msgid "弓手"
+msgstr "弓手"
+
+msgid "骑兵"
+msgstr "骑兵"
+
+msgid "攻城"
+msgstr "攻城"
+
+msgid "剑士"
+msgstr "剑士"
+
+msgid "哨兵"
+msgstr "哨兵"
+
+msgid "弓箭手"
+msgstr "弓箭手"
+
+msgid "弩弓手"
+msgstr "弩弓手"
+
+msgid "枪骑兵"
+msgstr "枪骑兵"
+
+msgid "弓骑兵"
+msgstr "弓骑兵"
+
+msgid "投石车"
+msgstr "投石车"
+
+msgid "弩车"
+msgstr "弩车"
+
+msgid "骷髅勇士"
+msgstr "骷髅勇士"
+
+msgid "骷髅射手"
+msgstr "骷髅射手"
+
+msgid "死亡骑士"
+msgstr "死亡骑士"
+
+msgid "绞肉机"
+msgstr "绞肉机"
+
+msgid "牧师"
+msgstr "牧师"
+
+msgid "猎魔人"
+msgstr "猎魔人"
+
+msgid "圣骑士"
+msgstr "圣骑士"
+
+msgid "蒸汽坦克"
+msgstr "蒸汽坦克"
+
+msgid "等待"
+msgstr "等待"
+
+msgid "战斗中"
+msgstr "战斗中"
+
+msgid "击溃!"
+msgstr "击溃!"
+
+msgid "死亡之手"
+msgstr "死亡之手"
+
+msgid "英雄枯骨"
+msgstr "英雄枯骨"
+
+msgid "灵魂石"
+msgstr "灵魂石"
+
+msgid "魔能之盒"
+msgstr "魔能之盒"
+
+msgid "空闲中"
+msgstr "空闲中"
+
+msgid "出征中"
+msgstr "出征中"
+
+msgid "驻防中"
+msgstr "驻防中"
+
+msgid "已阵亡"
+msgstr "已阵亡"
+
+msgid "城墙血量"
+msgstr "城墙血量"
+
+msgid "经验值"
+msgstr "经验值"
+
+msgid "购买联盟商店内的低级道具"
+msgstr "购买联盟商店内的低级道具"
+
+msgid "接受联盟礼物"
+msgstr "接受联盟礼物"
+
+msgid "购买联盟商店内的高级道具"
+msgstr "购买联盟商店内的高级道具"
+
+msgid "发送联盟邀请"
+msgstr "发送联盟邀请"
+
+msgid "管理联盟申请"
+msgstr "管理联盟申请"
+
+msgid "踢出成员"
+msgstr "踢出成员"
+
+msgid "提升成员职位"
+msgstr "提升成员职位"
+
+msgid "降职成员职位"
+msgstr "降职成员职位"
+
+msgid "修改联盟描述"
+msgstr "修改联盟描述"
+
+msgid "修改联盟加入方式"
+msgstr "修改联盟加入方式"
+
+msgid "补充联盟商店内的高级道具"
+msgstr "补充联盟商店内的高级道具"
+
+msgid "修改联盟公告"
+msgstr "修改联盟公告"
+
+msgid "发送联盟群邮件"
+msgstr "发送联盟群邮件"
+
+msgid "升级联盟建筑"
+msgstr "升级联盟建筑"
+
+msgid "移动联盟中的树林/山脉/湖泊"
+msgstr "移动联盟中的树林/山脉/湖泊"
+
+msgid "激活圣地联盟危机"
+msgstr "激活圣地联盟危机"
+
+msgid "激活联盟会战"
+msgstr "激活联盟会战"
+
+msgid "更改联盟名称/联盟标签"
+msgstr "更改联盟名称/联盟标签"
+
+msgid "更改联盟旗帜"
+msgstr "更改联盟旗帜"
+
+msgid "更改联盟地形"
+msgstr "更改联盟地形"
+
+msgid "设置联盟语言"
+msgstr "设置联盟语言"
+
+msgid "移交盟主职位"
+msgstr "移交盟主职位"
+
+msgid "更改职位名称"
+msgstr "更改职位名称"
+
+msgid "木材村落"
+msgstr "木材村落"
+
+msgid "矿石村落"
+msgstr "矿石村落"
+
+msgid "铁矿村落"
+msgstr "铁矿村落"
+
+msgid "粮食村落"
+msgstr "粮食村落"
+
+msgid "硬币村落"
+msgstr "硬币村落"
+
+msgid "孵化红龙"
+msgstr "孵化红龙"
+
+msgid "孵化蓝龙"
+msgstr "孵化蓝龙"
+
+msgid "孵化绿龙"
+msgstr "孵化绿龙"
+
+msgid "红龙能提升部队在草地上的作战能力。"
+msgstr "红龙能提升部队在草地上的作战能力。"
+
+msgid "蓝龙能提升部队在草地上的作战能力。"
+msgstr "蓝龙能提升部队在草地上的作战能力。"
+
+msgid "绿龙能提升部队在草地上的作战能力。"
+msgstr "绿龙能提升部队在草地上的作战能力。"
+
+msgid "起重机"
+msgstr "起重机"
+
+msgid "快速维修"
+msgstr "快速维修"
+
+msgid "钢筋加固"
+msgstr "钢筋加固"
+
+msgid "急救帐篷"
+msgstr "急救帐篷"
+
+msgid "殖民地"
+msgstr "殖民地"
+
+msgid "谈判技巧"
+msgstr "谈判技巧"
+
+msgid "石雕技巧"
+msgstr "石雕技巧"
+
+msgid "冶炼技巧"
+msgstr "冶炼技巧"
+
+msgid "高级箭塔"
+msgstr "高级箭塔"
+
+msgid "陷阱"
+msgstr "陷阱"
+
+msgid "暗仓建设"
+msgstr "暗仓建设"
+
+msgid "后勤学"
+msgstr "后勤学"
+
+msgid "造林技巧"
+msgstr "造林技巧"
+
+msgid "种植技巧"
+msgstr "种植技巧"
+
+msgid "啤酒供应"
+msgstr "啤酒供应"
+
+msgid "再生药剂"
+msgstr "再生药剂"
+
+msgid "工程绘图"
+msgstr "工程绘图"
+
+msgid "铸造钱币"
+msgstr "铸造钱币"
+
+msgid "增加建筑速度"
+msgstr "增加建筑速度"
+
+msgid "增加城墙维修速度"
+msgstr "增加城墙维修速度"
+
+msgid "增加城墙的单位血量防御值"
+msgstr "增加城墙的单位血量防御值"
+
+msgid "增加医院的伤兵容量"
+msgstr "增加医院的伤兵容量"
+
+msgid "增加占领村落时采集资源的速度"
+msgstr "增加占领村落时采集资源的速度"
+
+msgid "增加劝降敌军的几率"
+msgstr "增加劝降敌军的几率"
+
+msgid "增加石料产量"
+msgstr "增加石料产量"
+
+msgid "增加铁矿产量"
+msgstr "增加铁矿产量"
+
+msgid "增加防御箭塔的攻击力"
+msgstr "增加防御箭塔的攻击力"
+
+msgid "增加监狱的抓捕士兵的上限"
+msgstr "增加监狱的抓捕士兵的上限"
+
+msgid "增加资源保护比例"
+msgstr "增加资源保护比例"
+
+msgid "增加马车的资源和材料容量的上限"
+msgstr "增加马车的资源和材料容量的上限"
+
+msgid "增加木材产量"
+msgstr "增加木材产量"
+
+msgid "增加粮食产量"
+msgstr "增加粮食产量"
+
+msgid "住宅城民上限加成"
+msgstr "住宅城民上限加成"
+
+msgid "增加治愈伤兵速度"
+msgstr "增加治愈伤兵速度"
+
+msgid "增加生产材料速度"
+msgstr "增加生产材料速度"
+
+msgid "提升市政厅获得银币产量"
+msgstr "提升市政厅获得银币产量"
+
+msgid "增加建筑速度完成"
+msgstr "增加建筑速度完成"
+
+msgid "增加城墙维修速度完成"
+msgstr "增加城墙维修速度完成"
+
+msgid "增加城墙的单位血量防御值完成"
+msgstr "增加城墙的单位血量防御值完成"
+
+msgid "增加医院的伤兵容量完成"
+msgstr "增加医院的伤兵容量完成"
+
+msgid "增加占领村落时采集资源的速度完成"
+msgstr "增加占领村落时采集资源的速度完成"
+
+msgid "增加劝降敌军的几率完成"
+msgstr "增加劝降敌军的几率完成"
+
+msgid "增加石料产量完成"
+msgstr "增加石料产量完成"
+
+msgid "增加铁矿产量完成"
+msgstr "增加铁矿产量完成"
+
+msgid "增加防御箭塔的攻击力完成"
+msgstr "增加防御箭塔的攻击力完成"
+
+msgid "增加监狱的抓捕士兵的上限完成"
+msgstr "增加监狱的抓捕士兵的上限完成"
+
+msgid "增加资源保护比例完成"
+msgstr "增加资源保护比例完成"
+
+msgid "增加马车的资源和材料容量的上限完成"
+msgstr "增加马车的资源和材料容量的上限完成"
+
+msgid "增加木材产量完成"
+msgstr "增加木材产量完成"
+
+msgid "增加粮食产量完成"
+msgstr "增加粮食产量完成"
+
+msgid "住宅城民上限加成完成"
+msgstr "住宅城民上限加成完成"
+
+msgid "增加治愈伤兵速度完成"
+msgstr "增加治愈伤兵速度完成"
+
+msgid "增加生产材料速度完成"
+msgstr "增加生产材料速度完成"
+
+msgid "提升市政厅获得银币产量完成"
+msgstr "提升市政厅获得银币产量完成"
+
+msgid "高庭"
+msgstr "高庭"
+
+msgid "圣冠堡"
+msgstr "圣冠堡"
+
+msgid "诺兰德"
+msgstr "诺兰德"
+
+msgid "雨城"
+msgstr "雨城"
+
+msgid "顿沃城"
+msgstr "顿沃城"
+
+msgid "洛克瓦伦"
+msgstr "洛克瓦伦"
+
+msgid "卡纳"
+msgstr "卡纳"
+
+msgid "黑铁堡"
+msgstr "黑铁堡"
+
+msgid "洛斯摩尔"
+msgstr "洛斯摩尔"
+
+msgid "边关城"
+msgstr "边关城"
+
+msgid "明月城"
+msgstr "明月城"
+
+msgid "寒冰城"
+msgstr "寒冰城"
+
+msgid "银登城"
+msgstr "银登城"
+
+msgid "灰格里芬"
+msgstr "灰格里芬"
+
+msgid "孤崖"
+msgstr "孤崖"
+
+msgid "帝王之师"
+msgstr "帝王之师"
+
+msgid "暗天使"
+msgstr "暗天使"
+
+msgid "战争修士"
+msgstr "战争修士"
+
+msgid "灰骑士"
+msgstr "灰骑士"
+
+msgid "钢铁之手"
+msgstr "钢铁之手"
+
+msgid "极限战士"
+msgstr "极限战士"
+
+msgid "守望者"
+msgstr "守望者"
+
+msgid "恐惧折磨"
+msgstr "恐惧折磨"
+
+msgid "瘟疫之源"
+msgstr "瘟疫之源"
+
+msgid "腐化之种"
+msgstr "腐化之种"
+
+msgid "暗影魔咒"
+msgstr "暗影魔咒"
+
+msgid "血之祭祀"
+msgstr "血之祭祀"
+
+msgid "丧失神智"
+msgstr "丧失神智"
+
+msgid "寒霜之触"
+msgstr "寒霜之触"
+
+msgid "部队攻击+10%，部队防御+10%，带兵上限+10%"
+msgstr "部队攻击+10%，部队防御+10%，带兵上限+10%"
+
+msgid "木材/石料/铁矿/粮食产量+10%，暗仓保护+10%"
+msgstr "木材/石料/铁矿/粮食产量+10%，暗仓保护+10%"
+
+msgid "建造速度+10%，研发速度+10%，城墙恢复速度+20%"
+msgstr "建造速度+10%，研发速度+10%，城墙恢复速度+20%"
+
+msgid "招募速度+10%，维护费用-10%，带兵上限+10%"
+msgstr "招募速度+10%，维护费用-10%，带兵上限+10%"
+
+msgid "部队防御+10%，铁矿产量+10%，粮食产量+10%"
+msgstr "部队防御+10%，铁矿产量+10%，粮食产量+10%"
+
+msgid "部队攻击+5%，龙的生命恢复+10%"
+msgstr "部队攻击+5%，龙的生命恢复+10%"
+
+msgid "木材产量+10%，石料产量+10%，建造速度+5%"
+msgstr "木材产量+10%，石料产量+10%，建造速度+5%"
+
+msgid "部队攻击-10%，部队防御-10%，带兵上限-10%"
+msgstr "部队攻击-10%，部队防御-10%，带兵上限-10%"
+
+msgid "暗仓保护-10%，行军速度-10%，治疗伤兵速度-20%"
+msgstr "暗仓保护-10%，行军速度-10%，治疗伤兵速度-20%"
+
+msgid "木材/石料/铁矿/粮食产量-10%，招募速度-10%"
+msgstr "木材/石料/铁矿/粮食产量-10%，招募速度-10%"
+
+msgid "城墙恢复速度-10%，龙的生命恢复-10%"
+msgstr "城墙恢复速度-10%，龙的生命恢复-10%"
+
+msgid "铁矿产量-10%，粮食产量-10%，招募速度-5%"
+msgstr "铁矿产量-10%，粮食产量-10%，招募速度-5%"
+
+msgid "维护费用增加+10%，研发速度-10%"
+msgstr "维护费用增加+10%，研发速度-10%"
+
+msgid "木材产量-10%，石料产量-10%，建造速度-5%"
+msgstr "木材产量-10%，石料产量-10%，建造速度-5%"
+
+msgid "系统邮件"
+msgstr "系统邮件"
+
+msgid "盟主"
+msgstr "盟主"
+
+msgid "联盟所有成员"
+msgstr "联盟所有成员"
+
+msgid "英文"
+msgstr "英文"
+
+msgid "简体中文"
+msgstr "简体中文"
+
+msgid "繁体中文"
+msgstr "繁体中文"
+
+msgid "帝国崛起"
+msgstr "帝国崛起"
+
+msgid "处理城市中的政务,获得奖励"
+msgstr "处理城市中的政务,获得奖励"
+
+msgid "征服者"
+msgstr "征服者"
+
+msgid "用武力赢取荣耀和奖励"
+msgstr "用武力赢取荣耀和奖励"
+
+msgid "兄弟会"
+msgstr "兄弟会"
+
+msgid "为了联盟兄弟两肋插刀"
+msgstr "为了联盟兄弟两肋插刀"
+
+msgid "超凡之路"
+msgstr "超凡之路"
+
+msgid "使用特殊能力提升成长速度"
+msgstr "使用特殊能力提升成长速度"
+
+msgid "回答正确"
+msgstr "回答正确"
+
+msgid "答的好"
+msgstr "答的好"
+
+msgid "大答特答"
+msgstr "大答特答"
+
+msgid "主宰考场"
+msgstr "主宰考场"
+
+msgid "答题如麻"
+msgstr "答题如麻"
+
+msgid "无题能挡"
+msgstr "无题能挡"
+
+msgid "变态答题"
+msgstr "变态答题"
+
+msgid "妖怪般的答题"
+msgstr "妖怪般的答题"
+
+msgid "如出题人一般"
+msgstr "如出题人一般"
+
+msgid "超越出题的人全对"
+msgstr "超越出题的人全对"
+
+msgid "新手大礼包"
+msgstr "新手大礼包"
+
+msgid "探险家礼包"
+msgstr "探险家礼包"
+
+msgid "铁血军团礼包"
+msgstr "铁血军团礼包"
+
+msgid "帝国荣耀礼包"
+msgstr "帝国荣耀礼包"
+
+msgid "龙族王朝礼包"
+msgstr "龙族王朝礼包"
+
+msgid "修复起重机"
+msgstr "修复起重机"
+
+msgid "酿造啤酒"
+msgstr "酿造啤酒"
+
+msgid "植木造林"
+msgstr "植木造林"
+
+msgid "石料开采"
+msgstr "石料开采"
+
+msgid "炼制钢铁"
+msgstr "炼制钢铁"
+
+msgid "收割麦子"
+msgstr "收割麦子"
+
+msgid "绘制草图"
+msgstr "绘制草图"
+
+msgid "鼓舞士气"
+msgstr "鼓舞士气"
+
+msgid "开拓土地"
+msgstr "开拓土地"
+
+msgid "加强戒备"
+msgstr "加强戒备"
+
+msgid "初始头像男-1"
+msgstr "初始头像男-1"
+
+msgid "初始头像男-2"
+msgstr "初始头像男-2"
+
+msgid "初始头像男-3"
+msgstr "初始头像男-3"
+
+msgid "初始头像女-1"
+msgstr "初始头像女-1"
+
+msgid "初始头像女-2"
+msgstr "初始头像女-2"
+
+msgid "初始头像女-3"
+msgstr "初始头像女-3"
+
+msgid "刺客"
+msgstr "刺客"
+
+msgid "术士"
+msgstr "术士"
+
+msgid "贵妇"
+msgstr "贵妇"
+
+msgid "旧神"
+msgstr "旧神"
+
+msgid "默认解锁"
+msgstr "默认解锁"
+
+msgid "击杀累计到达1,000,000后解锁"
+msgstr "击杀累计到达1,000,000后解锁"
+
+msgid "战斗力到达1,000,000后解锁"
+msgstr "战斗力到达1,000,000后解锁"
+
+msgid "成为VIP10后解锁"
+msgstr "成为VIP10后解锁"
+
+msgid "城堡提升到40级后解锁"
+msgstr "城堡提升到40级后解锁"
+
+msgid "飞艇探险通关暮光高地第三层后解锁"
+msgstr "飞艇探险通关暮光高地第三层后解锁"
+
+msgid "所有语言"
+msgstr "所有语言"
+
+msgid "英语"
+msgstr "英语"
+
+msgid "法语"
+msgstr "法语"
+
+msgid "德语"
+msgstr "德语"
+
+msgid "韩语"
+msgstr "韩语"
+
+msgid "日语"
+msgstr "日语"
+
+msgid "俄语"
+msgstr "俄语"
+
+msgid "西班牙语"
+msgstr "西班牙语"
+
+msgid "葡萄牙语"
+msgstr "葡萄牙语"
+
+msgid "意大利语"
+msgstr "意大利语"
+
+msgid "湖"
+msgstr "湖"
+
+msgid "山"
+msgstr "山"
+
+msgid "树"
+msgstr "树"
+
+msgid "提示：预留一定的空闲城民，兵营将他们训练成士兵"
+msgstr "提示：预留一定的空闲城民，兵营将他们训练成士兵"
+
+msgid "登录提示帮助2"
+msgstr "登录提示帮助2"
+
+msgid "登录提示帮助3"
+msgstr "登录提示帮助3"
+
+msgid "登录提示帮助4"
+msgstr "登录提示帮助4"
+
+msgid "登录提示帮助5"
+msgstr "登录提示帮助5"
+
+msgid "登录提示帮助6"
+msgstr "登录提示帮助6"
+
+msgid "登录提示帮助7"
+msgstr "登录提示帮助7"
+
+msgid "登录提示帮助8"
+msgstr "登录提示帮助8"
+
+msgid "登录提示帮助9"
+msgstr "登录提示帮助9"
+
+msgid "登录提示帮助10"
+msgstr "登录提示帮助10"
+
+msgid "青铜级"
+msgstr "青铜级"
+
+msgid "白银级"
+msgstr "白银级"
+
+msgid "黄金级"
+msgstr "黄金级"
+
+msgid "铂金级"
+msgstr "铂金级"
+
+msgid "钻石级"
+msgstr "钻石级"
+
+msgid "大师级"
+msgstr "大师级"
+
+msgid "小时"
+msgstr "小时"
+
+msgid "城防大师"
+msgstr "城防大师"
+
+msgid "诡计之雾"
+msgstr "诡计之雾"
+
+msgid "木材生产加成"
+msgstr "木材生产加成"
+
+msgid "石料生产加成"
+msgstr "石料生产加成"
+
+msgid "铁矿生产加成"
+msgstr "铁矿生产加成"
+
+msgid "粮食生产加成"
+msgstr "粮食生产加成"
+
+msgid "银币生产加成"
+msgstr "银币生产加成"
+
+msgid "城民增长加成"
+msgstr "城民增长加成"
+
+msgid "龙语卷轴"
+msgstr "龙语卷轴"
+
+msgid "战争号角"
+msgstr "战争号角"
+
+msgid "龙族纹章"
+msgstr "龙族纹章"
+
+msgid "行军加速"
+msgstr "行军加速"
+
+msgid "防御加成"
+msgstr "防御加成"
+
+msgid "攻城机械攻击加成"
+msgstr "攻城机械攻击加成"
+
+msgid "%d小时城防大师"
+msgstr "%d小时城防大师"
+
+msgid "%d小时军需官"
+msgstr "%d小时军需官"
+
+msgid "%d小时诡计之雾"
+msgstr "%d小时诡计之雾"
+
+msgid "%d小时木材生产加成"
+msgstr "%d小时木材生产加成"
+
+msgid "%d小时石料生产加成"
+msgstr "%d小时石料生产加成"
+
+msgid "%d小时铁矿生产加成"
+msgstr "%d小时铁矿生产加成"
+
+msgid "%d小时粮食生产加成"
+msgstr "%d小时粮食生产加成"
+
+msgid "%d小时银币生产加成"
+msgstr "%d小时银币生产加成"
+
+msgid "%d小时城民增长加成"
+msgstr "%d小时城民增长加成"
+
+msgid "%d小时龙语卷轴"
+msgstr "%d小时龙语卷轴"
+
+msgid "%d小时战争号角"
+msgstr "%d小时战争号角"
+
+msgid "%d小时龙族纹章"
+msgstr "%d小时龙族纹章"
+
+msgid "%d小时行军加速"
+msgstr "%d小时行军加速"
+
+msgid "%d小时防御加成"
+msgstr "%d小时防御加成"
+
+msgid "%d小时步兵攻击加成"
+msgstr "%d小时步兵攻击加成"
+
+msgid "%d小时弓手攻击加成"
+msgstr "%d小时弓手攻击加成"
+
+msgid "%d小时骑兵攻击加成"
+msgstr "%d小时骑兵攻击加成"
+
+msgid "%d小时攻城机械攻击加成"
+msgstr "%d小时攻城机械攻击加成"
+
+msgid "%s木材"
+msgstr "%s木材"
+
+msgid "%s石料"
+msgstr "%s石料"
+
+msgid "%s铁矿"
+msgstr "%s铁矿"
+
+msgid "%s粮食"
+msgstr "%s粮食"
+
+msgid "%s银币"
+msgstr "%s银币"
+
+msgid "%d金龙币"
+msgstr "%d金龙币"
+
+msgid "%d%%空闲城民"
+msgstr "%d%%空闲城民"
+
+msgid "%s赌场筹码"
+msgstr "%s赌场筹码"
+
+msgid "建筑移动"
+msgstr "建筑移动"
+
+msgid "火炬"
+msgstr "火炬"
+
+msgid "玩家改名卡"
+msgstr "玩家改名卡"
+
+msgid "城市改名卡"
+msgstr "城市改名卡"
+
+msgid "撤军令"
+msgstr "撤军令"
+
+msgid "城市移动"
+msgstr "城市移动"
+
+msgid "%d龙经验值"
+msgstr "%d龙经验值"
+
+msgid "%d点龙的生命值"
+msgstr "%d点龙的生命值"
+
+msgid "%d英雄之血"
+msgstr "%d英雄之血"
+
+msgid "体力药剂(小)"
+msgstr "体力药剂(小)"
+
+msgid "体力药剂(中)"
+msgstr "体力药剂(中)"
+
+msgid "体力药剂(大)"
+msgstr "体力药剂(大)"
+
+msgid "%d点城墙的生命值"
+msgstr "%d点城墙的生命值"
+
+msgid "初级巨龙宝箱"
+msgstr "初级巨龙宝箱"
+
+msgid "中级巨龙宝箱"
+msgstr "中级巨龙宝箱"
+
+msgid "高级巨龙宝箱"
+msgstr "高级巨龙宝箱"
+
+msgid "木宝箱"
+msgstr "木宝箱"
+
+msgid "铜宝箱"
+msgstr "铜宝箱"
+
+msgid "银宝箱"
+msgstr "银宝箱"
+
+msgid "金宝箱"
+msgstr "金宝箱"
+
+msgid "铜钥匙"
+msgstr "铜钥匙"
+
+msgid "银钥匙"
+msgstr "银钥匙"
+
+msgid "金钥匙"
+msgstr "金钥匙"
+
+msgid "VIP激活%s"
+msgstr "VIP激活%s"
+
+msgid "%dVIP点数"
+msgstr "%dVIP点数"
+
+msgid "%s加速"
+msgstr "%s加速"
+
+msgid "普通战争沙漏"
+msgstr "普通战争沙漏"
+
+msgid "强化战争沙漏"
+msgstr "强化战争沙漏"
+
+msgid "战败时无法被掠夺资源，但城墙会受到攻击。同时防御时的战损下降20%%，持续%d小时"
+msgstr "战败时无法被掠夺资源，但城墙会受到攻击。同时防御时的战损下降20%%，持续%d小时"
+
+msgid "减少25%%的维护费用，持续%d小时"
+msgstr "减少25%%的维护费用，持续%d小时"
+
+msgid "敌方突袭成功后无法获得侦查情报，也无法抢到银币（仅对玩家本人有效，对协防玩家无效）持续%d小时"
+msgstr "敌方突袭成功后无法获得侦查情报，也无法抢到银币（仅对玩家本人有效，对协防玩家无效）持续%d小时"
+
+msgid "木材产量提升50%%，持续%d小时"
+msgstr "木材产量提升50%%，持续%d小时"
+
+msgid "石料产量提升50%%，持续%d小时"
+msgstr "石料产量提升50%%，持续%d小时"
+
+msgid "铁矿产量提升50%%，持续%d小时"
+msgstr "铁矿产量提升50%%，持续%d小时"
+
+msgid "粮食产量提升50%%，持续%d小时"
+msgstr "粮食产量提升50%%，持续%d小时"
+
+msgid "银币产量提升50%%，持续%d小时"
+msgstr "银币产量提升50%%，持续%d小时"
+
+msgid "增加城民增长速度50%%，持续%d小时"
+msgstr "增加城民增长速度50%%，持续%d小时"
+
+msgid "提升龙在战斗中获得的经验值30%%，持续%d小时"
+msgstr "提升龙在战斗中获得的经验值30%%，持续%d小时"
+
+msgid "提升龙的基础带兵量30%%，持续%d小时"
+msgstr "提升龙的基础带兵量30%%，持续%d小时"
+
+msgid "提升所有龙的生命值恢复速度30%%，持续%d小时"
+msgstr "提升所有龙的生命值恢复速度30%%，持续%d小时"
+
+msgid "提升所有兵种的行军速度30%%，持续%d小时"
+msgstr "提升所有兵种的行军速度30%%，持续%d小时"
+
+msgid "提升所有兵种的生命值30%%，持续%d小时"
+msgstr "提升所有兵种的生命值30%%，持续%d小时"
+
+msgid "提升所有步兵的攻击30%%，持续%d小时"
+msgstr "提升所有步兵的攻击30%%，持续%d小时"
+
+msgid "提升所有弓手的攻击30%%，持续%d小时"
+msgstr "提升所有弓手的攻击30%%，持续%d小时"
+
+msgid "提升所有骑兵的攻击30%%，持续%d小时"
+msgstr "提升所有骑兵的攻击30%%，持续%d小时"
+
+msgid "提升所有攻城器械的攻击30%%，持续%d小时"
+msgstr "提升所有攻城器械的攻击30%%，持续%d小时"
+
+msgid "用来调换城市内的资源建筑或装饰建筑的位置"
+msgstr "用来调换城市内的资源建筑或装饰建筑的位置"
+
+msgid "立即摧毁一座建筑"
+msgstr "立即摧毁一座建筑"
+
+msgid "使用该道具更改你的玩家名称"
+msgstr "使用该道具更改你的玩家名称"
+
+msgid "使用该道具更改你获得敌方的城市名称"
+msgstr "使用该道具更改你获得敌方的城市名称"
+
+msgid "召唤一支出征在外的部队返回城市"
+msgstr "召唤一支出征在外的部队返回城市"
+
+msgid "允许玩家将自己的城市移动到联盟领地的指定坐标"
+msgstr "允许玩家将自己的城市移动到联盟领地的指定坐标"
+
+msgid "立即增加龙的经验值%d"
+msgstr "立即增加龙的经验值%d"
+
+msgid "选择一条空闲或驻防的龙，立即恢复%d点龙的生命值"
+msgstr "选择一条空闲或驻防的龙，立即恢复%d点龙的生命值"
+
+msgid "升级龙技能必须的材料，使用后里获得获得%d英雄之血"
+msgstr "升级龙技能必须的材料，使用后里获得获得%d英雄之血"
+
+msgid "补足玩家探索地图所需的体力药剂"
+msgstr "补足玩家探索地图所需的体力药剂"
+
+msgid "使用后，立即为城墙恢复%d点生命值"
+msgstr "使用后，立即为城墙恢复%d点生命值"
+
+msgid "1~2星龙的装备所需材料，打开后按照奖励列表抽取3次"
+msgstr "1~2星龙的装备所需材料，打开后按照奖励列表抽取3次"
+
+msgid "2~3星龙的装备所需材料，打开后按照奖励列表抽取3次"
+msgstr "2~3星龙的装备所需材料，打开后按照奖励列表抽取3次"
+
+msgid "3~4星龙的装备所需材料，打开后按照奖励列表抽取3次"
+msgstr "3~4星龙的装备所需材料，打开后按照奖励列表抽取3次"
+
+msgid "装有其他道具的箱子，可以直接打开，随机获得一种道具（可多个）"
+msgstr "装有其他道具的箱子，可以直接打开，随机获得一种道具（可多个）"
+
+msgid "装有其他道具的箱子，随机获得一种道具（可多个），需要铜钥匙才能打开"
+msgstr "装有其他道具的箱子，随机获得一种道具（可多个），需要铜钥匙才能打开"
+
+msgid "装有其他道具的箱子，随机获得一种道具（可多个），需要银钥匙才能打开"
+msgstr "装有其他道具的箱子，随机获得一种道具（可多个），需要银钥匙才能打开"
+
+msgid "装有其他道具的箱子，随机获得一种道具（可多个），需要金钥匙才能打开"
+msgstr "装有其他道具的箱子，随机获得一种道具（可多个），需要金钥匙才能打开"
+
+msgid "用来打开铜宝箱的钥匙"
+msgstr "用来打开铜宝箱的钥匙"
+
+msgid "用来打开银宝箱的钥匙"
+msgstr "用来打开银宝箱的钥匙"
+
+msgid "用来打开金宝箱的钥匙"
+msgstr "用来打开金宝箱的钥匙"
+
+msgid "激活你当前的VIP等级特权，效果持续%s"
+msgstr "激活你当前的VIP等级特权，效果持续%s"
+
+msgid "增加%dVIP点数，以提高你的VIP等级"
+msgstr "增加%dVIP点数，以提高你的VIP等级"
+
+msgid "将当前事件的剩余时间缩短%s"
+msgstr "将当前事件的剩余时间缩短%s"
+
+msgid "立即减少%d%%的行军时间"
+msgstr "立即减少%d%%的行军时间"
+
+msgid "北风苔原"
+msgstr "北风苔原"
+
+msgid "环形山脉"
+msgstr "环形山脉"
+
+msgid "凄凉戈壁"
+msgstr "凄凉戈壁"
+
+msgid "血色冰原"
+msgstr "血色冰原"
+
+msgid "灼热峡谷"
+msgstr "灼热峡谷"
+
+msgid "悲伤沼泽"
+msgstr "悲伤沼泽"
+
+msgid "诅咒沙地"
+msgstr "诅咒沙地"
+
+msgid "暮光高地"
+msgstr "暮光高地"
+
+msgid "幽魂谷"
+msgstr "幽魂谷"
+
+msgid "支持一个"
+msgstr "支持一个"
+
+msgid "残忍的拒绝"
+msgstr "残忍的拒绝"
+
+msgid "拥有%d"
+msgstr "拥有%d"
+
+msgid "使用立即减少升级时间"
+msgstr "使用立即减少升级时间"
+
+msgid "等级已满"
+msgstr "等级已满"
+
+msgid "已达到最大等级"
+msgstr "已达到最大等级"
+
+msgid "成员总数+%d,联盟战斗力+%d"
+msgstr "成员总数+%d,联盟战斗力+%d"
+
+msgid "联盟洞察力恢复速度+%d"
+msgstr "联盟洞察力恢复速度+%d"
+
+msgid "道具个数+%d"
+msgstr "道具个数+%d"
+
+msgid "各类型的村落个数+1"
+msgstr "各类型的村落个数+1"
+
+msgid "荣耀点"
+msgstr "荣耀点"
+
+msgid "职位大于等于%s"
+msgstr "职位大于等于%s"
+
+msgid "联盟名称不合法只允许字母、数字和空格，需要3~20个字符"
+msgstr "联盟名称不合法只允许字母、数字和空格，需要3~20个字符"
+
+msgid "联盟标签不合法只允许字母、数字需要1~3个字符"
+msgstr "联盟标签不合法只允许字母、数字需要1~3个字符"
+
+msgid "创建联盟成功!"
+msgstr "创建联盟成功!"
+
+msgid "联盟信息当前没有任何改动!"
+msgstr "联盟信息当前没有任何改动!"
+
+msgid "修改联盟信息成功!"
+msgstr "修改联盟信息成功!"
+
+msgid "联盟旗帜"
+msgstr "联盟旗帜"
+
+msgid "草地——产出强化绿龙的材料，更容易培养绿龙，更容易培养绿龙，草地产出绿金龙币，建造资源加成类的铺筑建筑"
+msgstr "草地——产出强化绿龙的材料，更容易培养绿龙，更容易培养绿龙，草地产出绿金龙币，建造资源加成类的铺筑建筑"
+
+msgid "联盟地形"
+msgstr "联盟地形"
+
+msgid "只允许字母、数字需要1~3个字符"
+msgstr "只允许字母、数字需要1~3个字符"
+
+msgid "联盟标签"
+msgstr "联盟标签"
+
+msgid "只允许字母、数字和空格，需要3~20个字符"
+msgstr "只允许字母、数字和空格，需要3~20个字符"
+
+msgid "联盟名称"
+msgstr "联盟名称"
+
+msgid "联盟语言"
+msgstr "联盟语言"
+
+msgid "未激活"
+msgstr "未激活"
+
+msgid "升级条件"
+msgstr "升级条件"
+
+msgid "建筑描述"
+msgstr "建筑描述"
+
+msgid "购买建造队列"
+msgstr "购买建造队列"
+
+msgid "购买需要精英或以上权限"
+msgstr "购买需要精英或以上权限"
+
+msgid "请输入正确的购买数量"
+msgstr "请输入正确的购买数量"
+
+msgid "购买成功"
+msgstr "购买成功"
+
+msgid "农夫"
+msgstr "农夫"
+
+msgid "伐木工"
+msgstr "伐木工"
+
+msgid "矿工"
+msgstr "矿工"
+
+msgid "矿产产量"
+msgstr "矿产产量"
+
+msgid "石匠"
+msgstr "石匠"
+
+msgid "上限"
+msgstr "上限"
+
+msgid "提示：预留一定的空闲城民，兵营将这些空闲城民训练成士兵"
+msgstr "提示：预留一定的空闲城民，兵营将这些空闲城民训练成士兵"
+
+msgid "技能"
+msgstr "技能"
+
+msgid "任务奖励"
+msgstr "任务奖励"
+
+msgid "打开"
+msgstr "打开"
+
+msgid "查看已拥有的建筑"
+msgstr "查看已拥有的建筑"
+
+msgid "查看现有的士兵"
+msgstr "查看现有的士兵"
+
+msgid "查看材料"
+msgstr "查看材料"
+
+msgid "训练营地空闲"
+msgstr "训练营地空闲"
+
+msgid "猎手大厅空闲"
+msgstr "猎手大厅空闲"
+
+msgid "马厩空闲"
+msgstr "马厩空闲"
+
+msgid "车间空闲"
+msgstr "车间空闲"
+
+msgid "查看学院科技"
+msgstr "查看学院科技"
+
+msgid "升级到 等级%d"
+msgstr "升级到 等级%d"
+
+msgid "招募%s x%d %s"
+msgstr "招募%s x%d %s"
+
+msgid "正在制作 %s %s"
+msgstr "正在制作 %s %s"
+
+msgid "制造材料 x%d %s"
+msgstr "制造材料 x%d %s"
+
+msgid "物品"
+msgstr "物品"
+
+msgid ""
+"加入或创建联盟\n"
+"开启多人团战玩法"
+msgstr ""
+"加入或创建联盟\n"
+"开启多人团战玩法"
+
+msgid "当前没有内容"
+msgstr "当前没有内容"
+
+msgid "最近联系人"
+msgstr "最近联系人"
+
+msgid "向其他玩家发送邮件,会自动添加到最近联系人列表"
+msgstr "向其他玩家发送邮件,会自动添加到最近联系人列表"
+
+msgid "立即制造"
+msgstr "立即制造"
+
+msgid "制造队列"
+msgstr "制造队列"
+
+msgid "制造队列 %d/%d"
+msgstr "制造队列 %d/%d"
+
+msgid "需要银币 %s/%s"
+msgstr "需要银币 %s/%s"
+
+msgid "材料不足"
+msgstr "材料不足"
+
+msgid "完成当前制造队列,需要%d"
+msgstr "完成当前制造队列,需要%d"
+
+msgid "银币不足,需要%d"
+msgstr "银币不足,需要%d"
+
+msgid "生产建筑所需材料"
+msgstr "生产建筑所需材料"
+
+msgid "获取建筑材料"
+msgstr "获取建筑材料"
+
+msgid "军事科技所需材料"
+msgstr "军事科技所需材料"
+
+msgid "获取科技材料"
+msgstr "获取科技材料"
+
+msgid "随机制造10个材料"
+msgstr "随机制造10个材料"
+
+msgid "生产"
+msgstr "生产"
+
+msgid "随机制造%d个材料"
+msgstr "随机制造%d个材料"
+
+msgid "制造材料完成"
+msgstr "制造材料完成"
+
+msgid "制造材料x%d 完成!"
+msgstr "制造材料x%d 完成!"
+
+msgid "制造材料 x%d"
+msgstr "制造材料 x%d"
+
+msgid "撤退"
+msgstr "撤退"
+
+msgid "材料详情"
+msgstr "材料详情"
+
+msgid "由工具作坊生产"
+msgstr "由工具作坊生产"
+
+msgid "您还没有解锁工具作坊"
+msgstr "您还没有解锁工具作坊"
+
+msgid "参加联盟圣地战"
+msgstr "参加联盟圣地战"
+
+msgid "您还没有加入联盟"
+msgstr "您还没有加入联盟"
+
+msgid "购买&使用初级巨龙宝箱"
+msgstr "购买&使用初级巨龙宝箱"
+
+msgid "联盟匹配战中击杀敌军掉落"
+msgstr "联盟匹配战中击杀敌军掉落"
+
+msgid "前往飞艇探险"
+msgstr "前往飞艇探险"
+
+msgid "特殊兵种"
+msgstr "特殊兵种"
+
+msgid "建筑&科技"
+msgstr "建筑&科技"
+
+msgid "请选择一个科技进行研发"
+msgstr "请选择一个科技进行研发"
+
+msgid "上古遗迹 等级%d"
+msgstr "上古遗迹 等级%d"
+
+msgid "你还想进入上古遗迹, 一名僧侣却拦住了你说道, \"我们正在祈福, 无关人等还是赶紧离开!\""
+msgstr "你还想进入上古遗迹, 一名僧侣却拦住了你说道, \"我们正在祈福, 无关人等还是赶紧离开!\""
+
+msgid "一群僧侣正在上古遗迹中进行仪式。见你走近, 其中一名僧侣小声告诉你, 只要你捐献20个金龙币, 他们便赐予你一件宝物。"
+msgstr "一群僧侣正在上古遗迹中进行仪式。见你走近, 其中一名僧侣小声告诉你, 只要你捐献20个金龙币, 他们便赐予你一件宝物。"
+
+msgid "离开"
+msgstr "离开"
+
+msgid "捐献"
+msgstr "捐献"
+
+msgid "野外营地等级%d"
+msgstr "野外营地等级%d"
+
+msgid "你看到营地有火光, 走到近前却是空空荡荡。你感觉纳闷, 这里怎么如此眼熟。"
+msgstr "你看到营地有火光, 走到近前却是空空荡荡。你感觉纳闷, 这里怎么如此眼熟。"
+
+msgid "你击败了部队的主力, 但部队剩下的士兵向你发起了冲锋。"
+msgstr "你击败了部队的主力, 但部队剩下的士兵向你发起了冲锋。"
+
+msgid "你大胆地闯入了一支不明身份部队的营地, 一场战斗一触即发。"
+msgstr "你大胆地闯入了一支不明身份部队的营地, 一场战斗一触即发。"
+
+msgid "建筑废墟 等级%d"
+msgstr "建筑废墟 等级%d"
+
+msgid "你又花费了数小时搜索建筑废墟, 却一无所获。"
+msgstr "你又花费了数小时搜索建筑废墟, 却一无所获。"
+
+msgid "废弃的建筑残骸, 不知道是否能找到一些有价值的东西, 是否愿意花费3点体力搜索这里?"
+msgstr "废弃的建筑残骸, 不知道是否能找到一些有价值的东西, 是否愿意花费3点体力搜索这里?"
+
+msgid "搜索"
+msgstr "搜索"
+
+msgid "坠毁的飞艇 等级%d"
+msgstr "坠毁的飞艇 等级%d"
+
+msgid "一艘飞艇的残骸, 可惜里面的物资早已被人洗劫一空。"
+msgstr "一艘飞艇的残骸, 可惜里面的物资早已被人洗劫一空。"
+
+msgid "强盗眼看不是你的对手, 想要烧毁这里的物资, 如果不阻拦他们那就得不到任何东西。"
+msgstr "强盗眼看不是你的对手, 想要烧毁这里的物资, 如果不阻拦他们那就得不到任何东西。"
+
+msgid "你发现了一艘坠毁的飞艇, 其中的有大量的物资, 但当你走近时却发现那里已经被强盗占领。"
+msgstr "你发现了一艘坠毁的飞艇, 其中的有大量的物资, 但当你走近时却发现那里已经被强盗占领。"
+
+msgid "未探索"
+msgstr "未探索"
+
+msgid "已探索"
+msgstr "已探索"
+
+msgid "剩余层数:%d"
+msgstr "剩余层数:%d"
+
+msgid "异界之门 等级%d"
+msgstr "异界之门 等级%d"
+
+msgid "在没有什么能阻挡你前进了, 你可以直接前往下一个关卡。"
+msgstr "在没有什么能阻挡你前进了, 你可以直接前往下一个关卡。"
+
+msgid "你能感觉到一个一场强大的生物驻守在这里, 阻挡着你继续前进, 但想要前往下一关卡必须击败它。"
+msgstr "你能感觉到一个一场强大的生物驻守在这里, 阻挡着你继续前进, 但想要前往下一关卡必须击败它。"
+
+msgid "传送"
+msgstr "传送"
+
+msgid "通缉令 : %s        %d/%d"
+msgstr "通缉令 : %s        %d/%d"
+
+msgid "废弃的农夫小屋 等级%d"
+msgstr "废弃的农夫小屋 等级%d"
+
+msgid "点击离开"
+msgstr "点击离开"
+
+msgid "完成奖励"
+msgstr "完成奖励"
+
+msgid "关卡探索进度"
+msgstr "关卡探索进度"
+
+msgid "探索进度达到100%可以领取，我看好你哟。"
+msgstr "探索进度达到100%可以领取，我看好你哟。"
+
+msgid "击杀进度:"
+msgstr "击杀进度:"
+
+msgid "通缉令"
+msgstr "通缉令"
+
+msgid "击杀完成之后可获得大量银币，加油哦。"
+msgstr "击杀完成之后可获得大量银币，加油哦。"
+
+msgid "龙骨 等级%d"
+msgstr "龙骨 等级%d"
+
+msgid "\"我已经把一切都给了你, \"虚空中灵魂道, \"你还是快走吧!\""
+msgstr "\"我已经把一切都给了你, \"虚空中灵魂道, \"你还是快走吧!\""
+
+msgid "你发现了一具阵亡的巨龙骸骨, 恍惚间, 有声音在低语, \"你想获得我的知识, 还是我的生命?\""
+msgstr "你发现了一具阵亡的巨龙骸骨, 恍惚间, 有声音在低语, \"你想获得我的知识, 还是我的生命?\""
+
+msgid "知识"
+msgstr "知识"
+
+msgid "生命"
+msgstr "生命"
+
+msgid "废弃的矿工小屋 等级%d"
+msgstr "废弃的矿工小屋 等级%d"
+
+msgid "方尖碑 等级%d"
+msgstr "方尖碑 等级%d"
+
+msgid "你发现一座用你从未见过的石头雕刻的石碑。你上前仔细观察一番, 石碑上突然闪现一个神秘的符文没入你的身体, 让你感觉身体中充满了力量。"
+msgstr "你发现一座用你从未见过的石头雕刻的石碑。你上前仔细观察一番, 石碑上突然闪现一个神秘的符文没入你的身体, 让你感觉身体中充满了力量。"
+
+msgid "探索"
+msgstr "探索"
+
+msgid "废弃的石匠小屋 等级%d"
+msgstr "废弃的石匠小屋 等级%d"
+
+msgid "你已经除掉了这里的叛军, 这里的居民都向你表示感激!"
+msgstr "你已经除掉了这里的叛军, 这里的居民都向你表示感激!"
+
+msgid "你已经突破了叛军第一层的防御, 你感觉到前方有更强大的敌人..."
+msgstr "你已经突破了叛军第一层的防御, 你感觉到前方有更强大的敌人..."
+
+msgid "胜利就在眼前, 前方就是叛军的将领, 将击败你便能永久占领此地!"
+msgstr "胜利就在眼前, 前方就是叛军的将领, 将击败你便能永久占领此地!"
+
+msgid "这里被叛军占领, 居民希望你能将他们赶走并愿意向你提供一些报酬。"
+msgstr "这里被叛军占领, 居民希望你能将他们赶走并愿意向你提供一些报酬。"
+
+msgid "选择关卡"
+msgstr "选择关卡"
+
+msgid "飞艇"
+msgstr "飞艇"
+
+msgid "手下向你汇报, 飞艇一切准备就绪, \"长官希望前往何处?\""
+msgstr "手下向你汇报, 飞艇一切准备就绪, \"长官希望前往何处?\""
+
+msgid "起点"
+msgstr "起点"
+
+msgid "勇士之墓 等级%d"
+msgstr "勇士之墓 等级%d"
+
+msgid "陵墓之中仿佛有几个人形虚影正在向你招手, 你不禁背心一凉, 还是赶紧离开吧"
+msgstr "陵墓之中仿佛有几个人形虚影正在向你招手, 你不禁背心一凉, 还是赶紧离开吧"
+
+msgid "你发现一些未被安葬的战士的遗骸, 是否花费10个金龙币将他们安葬?"
+msgstr "你发现一些未被安葬的战士的遗骸, 是否花费10个金龙币将他们安葬?"
+
+msgid "安葬"
+msgstr "安葬"
+
+msgid "废弃的木工小屋 等级%d"
+msgstr "废弃的木工小屋 等级%d"
+
+msgid "头衔为空，占领王城后可以给其他玩家指定头衔"
+msgstr "头衔为空，占领王城后可以给其他玩家指定头衔"
+
+msgid "勋章"
+msgstr "勋章"
+
+msgid "复制玩家ID"
+msgstr "复制玩家ID"
+
+msgid "兵种晋级"
+msgstr "兵种晋级"
+
+msgid "立即晋级"
+msgstr "立即晋级"
+
+msgid "升级队列已满:%d/1"
+msgstr "升级队列已满:%d/1"
+
+msgid "科技点数"
+msgstr "科技点数"
+
+msgid "科技点未达到要求"
+msgstr "科技点未达到要求"
+
+msgid "正在晋级"
+msgstr "正在晋级"
+
+msgid "战斗力排行榜"
+msgstr "战斗力排行榜"
+
+msgid "击杀排行榜"
+msgstr "击杀排行榜"
+
+msgid "暂无排名"
+msgstr "暂无排名"
+
+msgid "我的战斗力排行"
+msgstr "我的战斗力排行"
+
+msgid "我的击杀排行"
+msgstr "我的击杀排行"
+
+msgid "我的联盟战斗力排行"
+msgstr "我的联盟战斗力排行"
+
+msgid "我的联盟击杀排行"
+msgstr "我的联盟击杀排行"
+
+msgid "强势对抗"
+msgstr "强势对抗"
+
+msgid "弱势对抗"
+msgstr "弱势对抗"
+
+msgid "下一次开启招募:%s"
+msgstr "下一次开启招募:%s"
+
+msgid "立即招募"
+msgstr "立即招募"
+
+msgid "您当前没有足够金龙币"
+msgstr "您当前没有足够金龙币"
+
+msgid "招募材料不足"
+msgstr "招募材料不足"
+
+msgid "您当前没有足够材料"
+msgstr "您当前没有足够材料"
+
+msgid "队列不足"
+msgstr "队列不足"
+
+msgid "您当前没有足够的队列"
+msgstr "您当前没有足够的队列"
+
+msgid "您当前没有足够的资源"
+msgstr "您当前没有足够的资源"
+
+msgid "是否花费魔法石立即补充"
+msgstr "是否花费魔法石立即补充"
+
+msgid "立即开始招募，招募士兵会消耗城民"
+msgstr "立即开始招募，招募士兵会消耗城民"
+
+msgid "点击招募"
+msgstr "点击招募"
+
+msgid "正在征税"
+msgstr "正在征税"
+
+msgid "当前没有进行征税"
+msgstr "当前没有进行征税"
+
+msgid "单位产能"
+msgstr "单位产能"
+
+msgid "占用人口"
+msgstr "占用人口"
+
+msgid "维护费用"
+msgstr "维护费用"
+
+msgid "空闲人口"
+msgstr "空闲人口"
+
+msgid "总力量"
+msgstr "总力量"
+
+msgid "选择头像"
+msgstr "选择头像"
+
+msgid "已装备"
+msgstr "已装备"
+
+msgid "选择驻防龙"
+msgstr "选择驻防龙"
+
+msgid "没有空闲的龙"
+msgstr "没有空闲的龙"
+
+msgid "兵种详情"
+msgstr "兵种详情"
+
+msgid "解散"
+msgstr "解散"
+
+msgid "对城墙攻击"
+msgstr "对城墙攻击"
+
+msgid "行军速度"
+msgstr "行军速度"
+
+msgid "对步兵的攻击"
+msgstr "对步兵的攻击"
+
+msgid "对弓手的攻击"
+msgstr "对弓手的攻击"
+
+msgid "对骑兵的攻击"
+msgstr "对骑兵的攻击"
+
+msgid "对攻城器械的攻击"
+msgstr "对攻城器械的攻击"
+
+msgid "对城墙的攻击"
+msgstr "对城墙的攻击"
+
+msgid "需要人口"
+msgstr "需要人口"
+
+msgid "维护费费用"
+msgstr "维护费费用"
+
+msgid "下一步"
+msgstr "下一步"
+
+msgid "小于%dmin时可以使用免费加速"
+msgstr "小于%dmin时可以使用免费加速"
+
+msgid "联盟拥有"
+msgstr "联盟拥有"
+
+msgid "需要军需官或以上权限"
+msgstr "需要军需官或以上权限"
+
+msgid "请输入正确的进货数量"
+msgstr "请输入正确的进货数量"
+
+msgid "进货成功"
+msgstr "进货成功"
+
+msgid "请设置要治愈的伤兵数"
+msgstr "请设置要治愈的伤兵数"
+
+msgid "研发军事科技"
+msgstr "研发军事科技"
+
+msgid " (升级到 Lv%d)"
+msgstr " (升级到 Lv%d)"
+
+msgid "更改玩家名称"
+msgstr "更改玩家名称"
+
+msgid "输入新的玩家名称"
+msgstr "输入新的玩家名称"
+
+msgid "更改城市名称"
+msgstr "更改城市名称"
+
+msgid "输入新的城市名称"
+msgstr "输入新的城市名称"
+
+msgid "请输入新的名称"
+msgstr "请输入新的名称"
+
+msgid "激活增益道具"
+msgstr "激活增益道具"
+
+msgid "已激活,剩余时间:%s"
+msgstr "已激活,剩余时间:%s"
+
+msgid "增益道具"
+msgstr "增益道具"
+
+msgid "增加龙的经验"
+msgstr "增加龙的经验"
+
+msgid "增加龙的生命值"
+msgstr "增加龙的生命值"
+
+msgid "探索体力值"
+msgstr "探索体力值"
+
+msgid "您还没孵化巨龙,快去龙巢孵化一只吧!"
+msgstr "您还没孵化巨龙,快去龙巢孵化一只吧!"
+
+msgid "生命值 %d/%d"
+msgstr "生命值 %d/%d"
+
+msgid "经验值 %d/%d"
+msgstr "经验值 %d/%d"
+
+msgid "请选择巨龙"
+msgstr "请选择巨龙"
+
+msgid "没有钥匙"
+msgstr "没有钥匙"
+
+msgid "战争沙漏"
+msgstr "战争沙漏"
+
+msgid "拥有:"
+msgstr "拥有:"
+
+msgid "剩余时间: %s"
+msgstr "剩余时间: %s"
+
+msgid "剩余时间:%s"
+msgstr "剩余时间:%s"
+
+msgid "购买&使用"
+msgstr "购买&使用"
+
+msgid "拥有:%d"
+msgstr "拥有:%d"
+
+msgid "使用VIP激活1天"
+msgstr "使用VIP激活1天"
+
+msgid "已经激活VIP，关闭窗口"
+msgstr "已经激活VIP，关闭窗口"
+
+msgid "游戏出现了bug,点击确定按钮发邮件给我们"
+msgstr "游戏出现了bug,点击确定按钮发邮件给我们"

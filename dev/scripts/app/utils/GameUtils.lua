@@ -306,7 +306,7 @@ end
 function GameUtils:getCurrentLanguage()
     local mapping = {
         "en_US",
-        "zh_Hans",
+        "zh_CN",
         "fr",
         "it",
         "de",
@@ -318,7 +318,7 @@ function GameUtils:getCurrentLanguage()
         "hu",
         "pt",
         "ar",
-        "zh_Hant"
+        "zh_TW"
     }
     return mapping[cc.Application:getInstance():getCurrentLanguage() + 1]
 end
