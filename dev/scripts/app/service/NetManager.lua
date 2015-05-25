@@ -1594,6 +1594,10 @@ end
 function NetManager:getBuyAllianceArchon()
     return get_blocking_request_promise("logic.allianceHandler.buyAllianceArchon"):done(get_player_response_msg)
 end
+--领取首次加入联盟奖励
+function NetManager:getFirstJoinAllianceRewardPromise()
+    return get_blocking_request_promise("logic.playerHandler.getFirstJoinAllianceReward",nil,"领取首次加入联盟奖励失败!"):done(get_player_response_msg)
+end
 ----------------------------------------------------------------------------------------------------------------
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"

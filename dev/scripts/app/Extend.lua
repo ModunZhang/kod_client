@@ -266,42 +266,6 @@ function display.newScene(name)
     return scene
 end
 
-
-display.__newLayer = display.newLayer
-
-function display.newLayer()
-    local layer = display.__newLayer()
-    layer:setCascadeOpacityEnabled(true)
-    return layer
-end
-display.__newNode = display.newNode
-function display.newNode()
-    local node = display.__newNode()
-    node:setCascadeOpacityEnabled(true)
-    return node
-end
-display.__newSprite = display.newSprite
-function display.newSprite(...)
-    local sp = display.__newSprite(...)
-    sp:setCascadeOpacityEnabled(true)
-    return sp
-end
-display.__newScale9Sprite = display.newScale9Sprite
-
-function display.newScale9Sprite(...)
-    local sp = display.__newScale9Sprite(...)
-    sp:setCascadeOpacityEnabled(true)
-    return sp
-end
-
-display.__newClippingRegionNode = display.newClippingRegionNode
-
-function display.newClippingRegionNode(...)
-    local node = display.__newClippingRegionNode(...)
-    node:setCascadeOpacityEnabled(true)
-    return node
-end
-
 --打开json对null的支持
 local cjson = require("cjson")
 cjson.decode_lua_nil(false)

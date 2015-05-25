@@ -14,11 +14,27 @@ local User = User
 local config_shrineStage = GameDatas.AllianceInitData.shrineStage
 local UILib = import(".UILib")
 local UIKit = UIKit
+local config_soldiers_normal = GameDatas.Soldiers.normal
+local config_soldiers_special = GameDatas.Soldiers.special
 
 GameUIShrineReport.LABEL_COLOR = {
     WIN = UIKit:hex2c3b(0x007c23),LOSE = UIKit:hex2c3b(0x980101),
     ME  = UIKit:hex2c3b(0xffedae),OTHER = UIKit:hex2c3b(0x403c2f)
 }
+
+
+function GameUIShrineReport:GetSoldierKillScore(soldier_name,star,count)
+    count = count or 0
+    star  = star or 1
+    local key = string.format("%s_%d",soldier_name,star)
+    local config = config_soldiers_normal[key]
+    if not config then
+        config = config_soldiers_special[key]
+    end
+    if not config  or  not config.killScore then return 0 end
+    return config.killScore * count
+end
+
 function GameUIShrineReport:ctor(shrineReport)
     GameUIShrineReport.super.ctor(self,750,_("事件详情"),window.top - 82)
     self.shrineReport_ = shrineReport
@@ -49,8 +65,8 @@ end
 function GameUIShrineReport:BuildUI()
     local background = self:GetBody()
     self.tab_buttons = WidgetRoundTabButtons.new({
-        {tag = "fight_detail",label = _("战斗详情"),default = true},
-        {tag = "data_statistics",label = _("数据统计")},
+        {tag = "data_statistics",label = _("数据统计"),default = true},
+        {tag = "fight_detail",label = _("战斗详情")},
     }, function(tag)
         self:OnTabButtonClicked(tag)
     end,2):align(display.BOTTOM_CENTER,background:getContentSize().width/2,16):addTo(background)
@@ -192,12 +208,8 @@ function GameUIShrineReport:fillFightItemContent(item_content,list_data,item,ite
         local real_data = list_data.data
         --data
         content.name_label:setString(real_data.playerName or "")
-        if list_data.player_data then
-            content.kill_label:setString(string.formatnumberthousands(list_data.player_data.kill or 0))
-            if list_data.player_data.icon then
-                content.player_icon.icon:setTexture(UIKit:GetPlayerIconImage(list_data.player_data.icon))
-            end
-        end
+        content.kill_label:setString(string.formatnumberthousands(real_data.killScore or 0))
+        content.player_icon.icon:setTexture(UIKit:GetPlayerIconImage(real_data.playerIcon))
         local isWin = real_data.fightResult == "attackWin" 
         content.result_label:setColor(isWin and self.LABEL_COLOR.WIN or self.LABEL_COLOR.LOSE)
         content.result_label:setString(isWin and _("胜利") or _("失败"))
@@ -233,11 +245,16 @@ function GameUIShrineReport:adapterFightDataToListView()
         table.insert(data_source,{type = 1,data = i,index = i})
         for j=#rounds.roundDatas,1,-1 do
             local data = rounds.roundDatas[j]
-            local normal_data = {type = 2,data = data,index = j}
+            local killScore = 0
+            for __,v in ipairs(data.defenceSoldierRoundDatas) do
+                killScore = killScore +  self:GetSoldierKillScore(v.soldierName,v.soldierStar,v.soldierDamagedCount)
+            end
+            data.killScore = killScore
             local palyer_data = player_map[data.playerId]
             if palyer_data then
-                normal_data.player_data = {icon = palyer_data.icon,kill = palyer_data.kill}
+                data.playerIcon = palyer_data.icon
             end
+            local normal_data = {type = 2,data = data,index = j}
             table.insert(data_source,normal_data)
         end
     end
