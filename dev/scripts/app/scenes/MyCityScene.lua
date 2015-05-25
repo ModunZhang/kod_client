@@ -31,9 +31,11 @@ function MyCityScene:onEnter()
     local alliance = Alliance_Manager:GetMyAlliance()
     local alliance_map = alliance:GetAllianceMap()
     local allianceShirine = alliance:GetAllianceShrine()
+    alliance:AddListenOnType(self, alliance.LISTEN_TYPE.OPERATION)
     alliance_map:AddListenOnType(allianceShirine, alliance_map.LISTEN_TYPE.BUILDING_INFO)
 
 
+    self.firstJoinAllianceRewardGeted = DataManager:getUserData().countInfo.firstJoinAllianceRewardGeted
     -- cc.ui.UIPushButton.new({normal = "lock_btn.png",pressed = "lock_btn.png"})
     -- :addTo(self, 1000000):align(display.RIGHT_TOP, display.width, display.height)
     -- :onButtonClicked(function(event)
@@ -159,6 +161,14 @@ end
 function MyCityScene:GetHomePage()
     return self.home_page
 end
+function MyCityScene:OnOperation(alliance, op)
+    if op == "join" and
+        Alliance_Manager:HasBeenJoinedAlliance() and
+        not self.firstJoinAllianceRewardGeted
+    then
+        self:GetHomePage():PromiseOfFteAllianceMap()
+    end
+end
 function MyCityScene:onEnterTransitionFinish()
     MyCityScene.super.onEnterTransitionFinish(self)
     if ext.registereForRemoteNotifications then
@@ -166,7 +176,7 @@ function MyCityScene:onEnterTransitionFinish()
     end
     app:sendApnIdIf()
 
-    if DataManager:getUserData().countInfo.firstJoinAllianceRewardGeted then
+    if Alliance_Manager:HasBeenJoinedAlliance() then
         return
     end
     local userdefault = cc.UserDefault:getInstance()
@@ -356,6 +366,7 @@ function MyCityScene:OpenUI(building, default_tab)
 end
 
 return MyCityScene
+
 
 
 

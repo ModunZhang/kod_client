@@ -8,6 +8,12 @@ function AllianceManager:ctor()
     self.enemy_alliance:SetIsMyAlliance(false)
 end
 
+
+function AllianceManager:HasBeenJoinedAlliance()
+    return DataManager:getUserData().countInfo.firstJoinAllianceRewardGeted or 
+        not self:GetMyAlliance():IsDefault()
+end
+
 function AllianceManager:GetMyAlliance()
     return self.my_alliance
 end
