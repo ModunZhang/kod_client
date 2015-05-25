@@ -507,14 +507,14 @@ function GameUIAllianceBattle:RefreshFightInfoList()
             local enemyKills = alliance:GetEnemyAllianceFightPlayerKills()
 
             local temp_name,temp_kills = "",0
-            for i,v in ipairs(ourKills) do
+            for i,v in ipairs(ourKills or {}) do
                 if v.kill > temp_kills then
                     temp_kills = v.kill
                     temp_name = v.name
                 end
             end
             local enemy_temp_name,enemy_temp_kills = "",0
-            for i,v in ipairs(enemyKills) do
+            for i,v in ipairs(enemyKills or {}) do
                 if v.kill > enemy_temp_kills then
                     enemy_temp_kills = v.kill
                     enemy_temp_name = v.name

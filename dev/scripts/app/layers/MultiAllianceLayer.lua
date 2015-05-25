@@ -9,6 +9,7 @@ local MultiAllianceLayer = class("MultiAllianceLayer", MapLayer)
 local intInit = GameDatas.AllianceInitData.intInit
 local ZORDER = Enum("BACKGROUND", "BUILDING", "INFO", "LINE", "CORPS")
 local fmod = math.fmod
+local ceil = math.ceil
 local floor = math.floor
 local min = math.min
 local max = math.max
@@ -726,6 +727,7 @@ function MultiAllianceLayer:GetClickedObject(world_x, world_y)
     local logic_x, logic_y, alliance_view = self:GetAllianceCoordWithPoint(world_x, world_y)
     return alliance_view:GetClickedObject(world_x, world_y), self:GetMyAlliance():Id() == alliance_view:GetAlliance():Id()
 end
+local CLICK_EMPTY_TAG = 911
 function MultiAllianceLayer:PromiseOfFlashEmptyGround(building, is_my_alliance)
     local alliance_view
     for i,v in ipairs(self.alliance_views) do
@@ -738,25 +740,30 @@ function MultiAllianceLayer:PromiseOfFlashEmptyGround(building, is_my_alliance)
             break
         end
     end
+    self:RemoveClickNode()
+    local click_node = display.newSprite("click_empty.png"):addTo(self:GetBuildingNode(), 10000, CLICK_EMPTY_TAG)
+    local logic_map = alliance_view:GetLogicMap()
+    local lx,ly = building:GetEntity():GetLogicPosition()
     local p = promise.new()
-    if self.click_empty then
-        self.click_empty:removeFromParent()
-    end
-    local x,y = alliance_view:GetLogicMap():ConvertToMapPosition(building:GetEntity():GetLogicPosition())
-    self.click_empty = display.newSprite("click_empty.png"):addTo(self:GetBuildingNode()):pos(x,y)
-    self.click_empty:setOpacity(0)
-    self.click_empty:runAction(
-        transition.sequence{
-            cc.FadeTo:create(0.15, 255),
-            cc.FadeTo:create(0.15, 0),
-            cc.CallFunc:create(function()
-                self.click_empty:removeFromParent()
-                self.click_empty = nil
-                p:resolve()
-            end)
-        }
-    )
+    click_node:pos(logic_map:ConvertToMapPosition(lx,ly)):opacity(0)
+        :runAction(
+            transition.sequence{
+                cc.FadeTo:create(0.15, 255),
+                cc.FadeTo:create(0.15, 0),
+                cc.CallFunc:create(function()
+                    p:resolve()
+                    self:RemoveClickNode()
+                end)
+            }
+        )
     return p
+end
+function MultiAllianceLayer:AddClickNode()
+    self:RemoveClickNode()
+    return display.newNode():addTo(self:GetBuildingNode(), 10000, CLICK_EMPTY_TAG)
+end
+function MultiAllianceLayer:RemoveClickNode()
+    self:GetBuildingNode():removeChildByTag(CLICK_EMPTY_TAG)
 end
 
 ----- override
@@ -805,6 +812,10 @@ end
 
 
 return MultiAllianceLayer
+
+
+
+
 
 
 
