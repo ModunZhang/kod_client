@@ -37,6 +37,7 @@ end
 
 function MailManager:IncreaseUnReadReportNum(num)
     self.unread_report = self.unread_report + num
+    GameGlobalUI:showTips(_("提示"),_("你有一封新的邮件"))
     self:NotifyListeneOnType(MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED,function(listener)
         listener:MailUnreadChanged({report=self.unread_report})
     end)

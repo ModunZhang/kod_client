@@ -124,10 +124,26 @@ function GameUIPResourceBuilding:RebuildPart()
             local next_x =  gap_x*(add_count+1) + building_image_width/2+add_count*building_image_width
             local item_flag = display.newSprite("alliance_item_flag_box_126X126.png"):align(display.CENTER, next_x, 450):addTo(bg)
 
-            local build_png = SpriteConfig[r_type]:GetConfigByLevel(self.building:GetLevel()).png
-            local builing_icon = display.newSprite(build_png)
+            -- local build_png = SpriteConfig[r_type]:GetConfigByLevel(self.building:GetLevel()).png
+            -- local builing_icon = display.newSprite(build_png)
+            --     :align(display.CENTER, item_flag:getContentSize().width/2, item_flag:getContentSize().height/2)
+            --     :addTo(item_flag)
+            local config = SpriteConfig[r_type]:GetConfigByLevel(self.building:GetLevel())
+            local configs = SpriteConfig[r_type]:GetAnimationConfigsByLevel(self.building:GetLevel())
+            local building_image = display.newSprite(config.png, 0, 0)
                 :align(display.CENTER, item_flag:getContentSize().width/2, item_flag:getContentSize().height/2)
                 :addTo(item_flag)
+            local p = building_image:getAnchorPointInPoints()
+            for _,v in ipairs(configs) do
+                if v.deco_type == "animation" then
+                    local offset = v.offset
+                    local armature = ccs.Armature:create(v.deco_name)
+                        :addTo(building_image):scale(v.scale or 1)
+                        :align(display.CENTER, offset.x or p.x, offset.y or p.y)
+                    armature:getAnimation():setSpeedScale(2)
+                    armature:getAnimation():playWithIndex(0)
+                end
+            end
             -- building name label
             local name_bg = display.newSprite("back_ground_134x30.png")
                 :align(display.CENTER, next_x ,350)
@@ -141,7 +157,7 @@ function GameUIPResourceBuilding:RebuildPart()
                 }):align(display.CENTER, name_bg:getContentSize().width/2 ,name_bg:getContentSize().height/2)
                 :addTo(name_bg)
             rebuild_list[add_count+1] = r_type
-            builing_icon:setScale(building_image_width/builing_icon:getContentSize().width)
+            building_image:setScale(building_image_width/building_image:getContentSize().width)
             add_count = add_count + 1
         end
     end
@@ -286,6 +302,7 @@ function GameUIPResourceBuilding:GotoPreconditionBuilding(preName)
     self:LeftButtonClicked()
 end
 return GameUIPResourceBuilding
+
 
 
 

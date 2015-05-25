@@ -1580,6 +1580,13 @@ function NetManager:getIapGiftPromise(giftId)
     },"获取联盟其他玩家赠送的礼品!"):done(get_player_response_msg)
 end
 
+
+-- 完成fte
+function NetManager:getFinishFTE()
+    return get_blocking_request_promise("logic.playerHandler.finishFTE", nil,"完成fte失败!"):done(get_player_response_msg)
+end
+
+
 --获取服务器列表
 function NetManager:getServersPromise()
     return get_blocking_request_promise("logic.playerHandler.getServers",nil,"获取服务器列表失败!")

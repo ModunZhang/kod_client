@@ -138,7 +138,7 @@ function AllianceScene:PromiseOfShowPlaceInfo(squares, lx, ly)
         local x,y,is_not_red = unpack(v)
         display.newSprite("click_empty.png"):addTo(click_node)
             :pos(logic_map:ConvertToLocalPosition(lx - x, ly - y))
-            :scale(0.96):setColor(is_not_red and display.COLOR_WHITE or display.COLOR_RED)
+            :scale(0.96):setColor(is_not_red and display.COLOR_BLUE or display.COLOR_RED)
     end
     local p = promise.new()
     click_node:pos(logic_map:ConvertToMapPosition(lx,ly)):opacity(0)
