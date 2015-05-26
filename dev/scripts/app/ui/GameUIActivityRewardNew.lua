@@ -675,7 +675,7 @@ end
 
 function GameUIActivityRewardNew:GetRewardLevelUpItem(index,title,rewards,flag)
     local item = self.list_view:newItem()
-    local content = display.newScale9Sprite(string.format("resource_item_bg%d.png", index % 2)):size(548,104)
+    local content = display.newScale9Sprite(string.format("back_ground_548x40_%d.png", index % 2 == 0 and 1 or 2)):size(548,104)
     local title_label = UIKit:ttfLabel({
         text = title,
         size = 22,

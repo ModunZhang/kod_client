@@ -161,7 +161,7 @@ end
 
 function GameUIDailyMissionInfo:GetItem(index,item_data,isFinish)
     local item = self.info_list:newItem()
-    local content = display.newScale9Sprite(string.format("resource_item_bg%d.png",index % 2)):size(546,78)
+    local content = display.newScale9Sprite(string.format("back_ground_548x40_%d.png", index % 2 == 0 and 1 or 2)):size(546,78)
     UIKit:ttfLabel({
         text = item_data.title,
         size = 20,
@@ -411,4 +411,5 @@ end
 
 return GameUIDailyMissionInfo
 -- 608x630
+
 

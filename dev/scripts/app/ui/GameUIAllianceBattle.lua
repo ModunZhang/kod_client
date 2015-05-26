@@ -201,7 +201,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
                 color = 0x403c2f,
             }):addTo(layer)
                 :align(display.LEFT_CENTER,window.left+50,window.top-280)
-            WidgetPushButton.new({normal = "yellow_btn_up_186x66.png",pressed = "yellow_btn_down_186x66.png",disable="grey_btn_186x66"})
+            WidgetPushButton.new({normal = "yellow_btn_up_186x66.png",pressed = "yellow_btn_down_186x66.png",disable="grey_btn_186x66.png"})
                 :setButtonLabel(UIKit:ttfLabel({
                     text = _("请求开战!"),
                     size = 24,
@@ -281,7 +281,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
                 color = 0x403c2f,
             }):addTo(layer)
                 :align(display.LEFT_CENTER,window.left+50,window.top-740)
-            WidgetPushButton.new({normal = "yellow_btn_up_186x66.png",pressed = "yellow_btn_down_186x66.png",disable="grey_btn_186x66"})
+            WidgetPushButton.new({normal = "yellow_btn_up_186x66.png",pressed = "yellow_btn_down_186x66.png",disable="grey_btn_186x66.png"})
                 :setButtonLabel(UIKit:ttfLabel({
                     text = _("开始战斗!"),
                     size = 24,
@@ -420,7 +420,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
                     color = 0x403c2f,
                 }):addTo(layer)
                     :align(display.LEFT_CENTER,window.left+50,window.top-830)
-                WidgetPushButton.new({normal = "yellow_btn_up_186x66.png",pressed = "yellow_btn_down_186x66.png",disable="grey_btn_186x66"})
+                WidgetPushButton.new({normal = "yellow_btn_up_186x66.png",pressed = "yellow_btn_down_186x66.png",disable="grey_btn_186x66.png"})
                     :setButtonLabel(UIKit:ttfLabel({
                         text = _("开始战斗!"),
                         size = 24,

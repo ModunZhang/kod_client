@@ -47,7 +47,9 @@ function UpgradingSprite:OnBuildingUpgradeFinished(building)
     -- animation
     self:StopBuildingAnimation()
 
-    if display.getRunningScene().__cname == "MyCityScene" then
+    if display.getRunningScene().__cname == "MyCityScene" or
+        display.getRunningScene().__cname == "MyCityFteScene" 
+        then
         local home_page = display.getRunningScene():GetHomePage()
         local _,tp = self:GetWorldPosition()
         home_page:ShowPowerAni(tp)

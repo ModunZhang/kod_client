@@ -188,10 +188,10 @@ function WidgetEventTabButtons:ctor(city, ratio)
 
     self.item_array = {}
     local node = display.newNode():addTo(self):scale(ratio)
-    
+
     cc.Layer:create():addTo(node):pos(0, -WIDGET_HEIGHT + TAB_HEIGHT)
-    :setContentSize(cc.size(WIDGET_WIDTH, WIDGET_HEIGHT + TAB_HEIGHT))
-    :setCascadeOpacityEnabled(true)
+        :setContentSize(cc.size(WIDGET_WIDTH, WIDGET_HEIGHT + TAB_HEIGHT))
+        :setCascadeOpacityEnabled(true)
 
     self.node = node
     self.tab_buttons, self.tab_map = self:CreateTabButtons()
@@ -376,6 +376,12 @@ function WidgetEventTabButtons:CreateProgressItem()
         color = 0xd1ca95,
     }):addTo(node):align(display.LEFT_CENTER, 10, half_height)
 
+    node.time = UIKit:ttfLabel({
+        text = "Time",
+        size = 18,
+        color = 0xd1ca95,
+    }):addTo(node):align(display.RIGHT_CENTER, 470, half_height)
+
     node.speed_btn = WidgetPushButton.new({normal = "green_btn_up_154x39.png",
         pressed = "green_btn_down_154x39.png",
     }
@@ -388,8 +394,9 @@ function WidgetEventTabButtons:CreateProgressItem()
             size = 18,
             color = 0xfff3c7,
             shadow = true}))
-    function node:SetProgressInfo(str, percent)
+    function node:SetProgressInfo(str, percent, time)
         self.desc:setString(str)
+        self.time:setString(time or "")
         self.progress:setPercentage(percent)
         return self
     end
@@ -923,11 +930,10 @@ function WidgetEventTabButtons:BuildingDescribe(building)
         upgrade_info = string.format( _("升级到 等级%d"), building:GetNextLevel())
     end
     local time, percent = self:BuildingPercent(building)
-    local str = string.format("%s (%s) %s",
+    local str = string.format("%s (%s)",
         Localize.building_name[building:GetType()],
-        upgrade_info,
-        GameUtils:formatTimeStyle1(time))
-    return str, percent
+        upgrade_info)
+    return str, percent , GameUtils:formatTimeStyle1(time)
 end
 function WidgetEventTabButtons:BuildingPercent(building)
     local time = timer:GetServerTime()
@@ -937,19 +943,19 @@ function WidgetEventTabButtons:SoldierDescribe(event)
     local soldier_type, count = event:GetRecruitInfo()
     local soldier_name = Localize.soldier_name[soldier_type]
     local time, percent = self:EventPercent(event)
-    return string.format( _("招募%s x%d %s"), soldier_name, count, GameUtils:formatTimeStyle1(time) ), percent
+    return string.format( _("招募%s x%d"), soldier_name, count), percent,GameUtils:formatTimeStyle1(time)
 end
 function WidgetEventTabButtons:EquipmentDescribe(event)
     local time, percent = self:EventPercent(event)
-    return string.format( _("正在制作 %s %s"), Localize.equip[event:Content()], GameUtils:formatTimeStyle1(time)), percent
+    return string.format( _("正在制作 %s"), Localize.equip[event:Content()]), percent , GameUtils:formatTimeStyle1(time)
 end
 function WidgetEventTabButtons:MaterialDescribe(event)
     local time, percent = self:EventPercent(event)
-    return string.format( _("制造材料 x%d %s"), event:TotalCount(), GameUtils:formatTimeStyle1(time)), percent
+    return string.format( _("制造材料 x%d"), event:TotalCount()), percent , GameUtils:formatTimeStyle1(time)
 end
 function WidgetEventTabButtons:MilitaryTechDescribe(event)
     local time, percent = self:EventPercent(event)
-    return string.format("%s  %s", event:GetLocalizeDesc(), GameUtils:formatTimeStyle1(time)), percent
+    return string.format("%s", event:GetLocalizeDesc()), percent , GameUtils:formatTimeStyle1(time)
 end
 function WidgetEventTabButtons:EventPercent(event)
     local time = timer:GetServerTime()
@@ -1020,6 +1026,8 @@ end
 
 
 return WidgetEventTabButtons
+
+
 
 
 

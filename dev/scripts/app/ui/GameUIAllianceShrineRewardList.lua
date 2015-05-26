@@ -45,7 +45,7 @@ end
 
 function GameUIAllianceShrineRewardList:GetListItem(index,data) 
 	local item = self.rewards_listView:newItem()
-	local content = display.newScale9Sprite(string.format("resource_item_bg%d.png",index % 2)):size(547,94)
+	local content = display.newScale9Sprite(string.format("back_ground_548x40_%d.png", index % 2 == 0 and 1 or 2)):size(547,94)
 	
 	
 	local iconImage = "goldKill_icon_76x84.png"
