@@ -250,7 +250,7 @@ function MyCityFteScene:RunFte()
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
-        if not check("RecruitSoldier_swordsman") then
+        if not check("InstantRecruitSoldier") then
             self:GetFteLayer():UnlockAll()
             return self:PromiseOfRecruitSoldier("swordsman")
         end
