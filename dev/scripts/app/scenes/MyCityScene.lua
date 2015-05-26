@@ -30,9 +30,7 @@ function MyCityScene:onEnter()
 
     local alliance = Alliance_Manager:GetMyAlliance()
     local alliance_map = alliance:GetAllianceMap()
-    local allianceShirine = alliance:GetAllianceShrine()
     alliance:AddListenOnType(self, alliance.LISTEN_TYPE.OPERATION)
-    alliance_map:AddListenOnType(allianceShirine, alliance_map.LISTEN_TYPE.BUILDING_INFO)
 
 
     self.firstJoinAllianceRewardGeted = DataManager:getUserData().countInfo.firstJoinAllianceRewardGeted
