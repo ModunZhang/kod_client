@@ -54,6 +54,7 @@ function WidgetPVEDialog:Refresh()
         ccs.Armature:create(image):addTo(dialog):pos(50 + 133 * 0.5, h*0.5 + 20):scale(s or 1):getAnimation():gotoAndPause(0)
     end
 
+    -- 
     --
     local level_bg = display.newScale9Sprite("back_ground_166x84.png",0 , 0,cc.size(138,34),cc.rect(15,10,136,64))
         :addTo(dialog):pos(50 + 133 * 0.5, h*0.5 - 80)
@@ -63,6 +64,20 @@ function WidgetPVEDialog:Refresh()
         size = 20,
         color = 0x514d3e,
     }):addTo(level_bg):align(display.CENTER, size.width/2 , size.height/2)
+
+
+    level_bg:setVisible(self:GetObject():Total() == 0)
+
+    local flag = display.newNode():addTo(dialog):pos(50 + 133 * 0.5, h*0.5 - 80)
+    flag:setVisible(self:GetObject():Total() > 0)    
+
+    local ww = 40
+    local searched_png = "pve_icon_searched.png"
+    local un_searched_png = "pve_icon_floor.png"
+    display.newSprite(self:GetObject():Searched() >= 1 and searched_png or un_searched_png):addTo(flag):pos(-ww,0)
+    display.newSprite(self:GetObject():Searched() >= 2 and searched_png or un_searched_png):addTo(flag):pos(0,0)
+    display.newSprite(self:GetObject():Searched() >= 3 and searched_png or un_searched_png):addTo(flag):pos(ww,0)
+
 
     --
     UIKit:ttfLabel({
