@@ -233,7 +233,7 @@ function WidgetPlayerNode:BuildDataItemNode(data_list_data)
 	local data_list_data = data_list_data or self:CallDelegate_(DELEGATE_METHODS.DataSource,{"DataInfoData"})
 	local item = self:GetListView():newItem()
 	if #data_list_data == 0 then return end
-	local box_height = #data_list_data * 48 + 64
+	local box_height = #data_list_data * 48 + 66
 	local node = display.newNode():size(self:GetSize().width,box_height)
 	local data_panel = UIKit:commonTitleBox(box_height):addTo(node):pos((self:GetSize().width - 540)/2,0) --width:540
 	UIKit:ttfLabel({

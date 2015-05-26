@@ -407,9 +407,6 @@ function GameUITradeGuild:CreateOptions(params)
             :align(display.CENTER,0,0)
             :addTo(checkBoxButton):scale(0.8)
         group:addButton(checkBoxButton)
-        -- local num_bg = display.newSprite("number_bg_98x26.png")
-        --     :align(display.BOTTOM_CENTER, 0, -checkBoxButton:getCascadeBoundingBox().size.height/2+10)
-        --     :addTo(checkBoxButton)
         local num_bg = UIKit:shadowLayer()
         num_bg:setContentSize(cc.size(104,26))
         num_bg:addTo(checkBoxButton):pos(-50,-checkBoxButton:getCascadeBoundingBox().size.height/2+15)
@@ -543,8 +540,9 @@ function GameUITradeGuild:CreateSellItem(list,index)
             :addTo(goods_bg)
         goods_icon:scale(84/math.max(goods_icon:getContentSize().width,goods_icon:getContentSize().height))
         -- 商品数量背景框
-        local goods_num_bg = display.newSprite("number_bg_98x26.png")
-            :align(display.BOTTOM_CENTER, goods_bg:getContentSize().width/2, 13)
+        local goods_num_bg = UIKit:shadowLayer()
+        goods_num_bg:setContentSize(cc.size(102,26))
+        goods_num_bg:align(display.BOTTOM_CENTER, 8, 8)
             :addTo(goods_bg)
         UIKit:ttfLabel(
             {
@@ -692,7 +690,7 @@ function GameUITradeGuild:OpenDollyIntro()
         :addTo(body)
     -- 确定
     WidgetPushButton.new(
-        {normal = "yellow_btn_up_185x65.png",pressed = "yellow_btn_down_185x65.png"}
+        {normal = "yellow_btn_up_186x66.png",pressed = "yellow_btn_down_186x66.png"}
     ):addTo(body)
         :align(display.CENTER, w/2,50)
         :setButtonLabel(UIKit:ttfLabel({

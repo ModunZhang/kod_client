@@ -235,8 +235,8 @@ function GameUIDragonEyrieDetail:CreateNodeIf_equipment()
     equipment_box:addTo(content_box):pos(8,5)
     self.equipment_ui.equipment_box = equipment_box
     self.equipment_ui.upgrade_star_btn = WidgetPushButton.new({
-        normal = "yellow_btn_up_185x65.png",
-        pressed = "yellow_btn_down_185x65.png"
+        normal = "yellow_btn_up_186x66.png",
+        pressed = "yellow_btn_down_186x66.png"
     }):setButtonLabel("normal", UIKit:commonButtonLable({
         text = _("晋级")
     })):align(display.BOTTOM_CENTER, 273, 20)
@@ -245,8 +245,8 @@ function GameUIDragonEyrieDetail:CreateNodeIf_equipment()
             self:UpgradeDragonStar()
         end)
     self.equipment_ui.load_equipment_btn = WidgetPushButton.new({
-        normal = "pink_btn_up_148x58.png",
-        pressed = "pink_btn_down_148x58.png"
+        normal = "purple_btn_up_148x58.png",
+        pressed = "purple_btn_down_148x58.png"
     }):setButtonLabel("normal", UIKit:commonButtonLable({
         text = _("装备")
     })):align(display.BOTTOM_CENTER, 273, 20)

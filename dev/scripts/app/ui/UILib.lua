@@ -142,12 +142,12 @@ local DRAGON_MATERIAL_PIC_MAP = {
 local SOLDIER_METARIAL = {
     ["heroBones"] = "heroBones_128x128.png",
     ["magicBox"] = "magicBox_128x128.png",
-    ["holyBook"] = "insight_icon_45x45.png",
-    ["brightAlloy"] = "insight_icon_45x45.png",
+    ["holyBook"] = "magicBox_128x128.png",
+    ["brightAlloy"] = "magicBox_128x128.png",
     ["soulStone"] = "soulStone_128x128.png",
     ["deathHand"] = "deathHand_128x128.png",
-    ["confessionHood"] = "insight_icon_45x45.png",
-    ["brightRing"] = "insight_icon_45x45.png",
+    ["confessionHood"] = "magicBox_128x128.png",
+    ["brightRing"] = "magicBox_128x128.png",
 }
 local EQUIPMENT = {
     ["redCrown_s1"] = "redCrown_s1_128x128.png",
@@ -202,13 +202,7 @@ local EQUIPMENT = {
     ["greenArmguard_s3"] = "greenArmguard_s3_128x128.png",
     ["greenArmguard_s4"] = "greenArmguard_s4_128x128.png",
 }
-local STAR_BG = {
-    "star1_118x132.png",
-    "star2_118x132.png",
-    "star3_118x132.png",
-    "star4_118x132.png",
-    "star5_118x132.png",
-}
+
 local EFFECT_ANIMATION_FILES = {
     ranger = {
         "animations/swordsman_effect/Swordsman_effects.ExportJson",
@@ -1075,7 +1069,6 @@ local ALLIANCE_LANGUAGE_FRAME = {
 
 return {
     resource = RESOURCE,
-    soldier_bg = STAR_BG,
     soldier_effect = SOLDIER_EFFECT_ANIMATIONS,
     effect_animation_files = EFFECT_ANIMATION_FILES,
     soldier_animation_files = SOLDIER_ANIMATION_FILES,

@@ -130,7 +130,7 @@ function WidgetManufacture:Manufacture()
         NetManager:getFetchMaterialsPromise(self.toolShop:GetBuildingEvent():Id()):done(function()
             local desc_t = {}
             for i,v in ipairs(content) do
-                table.insert(desc_t, string.format("%sx%d", Localize.materials[v.type], v.count)) 
+                table.insert(desc_t, string.format("%sx%d", Localize.materials[v.type], v.count))
             end
             GameGlobalUI:showTips(_("获取建筑材料"), table.concat(desc_t, ", "))
         end)
@@ -180,7 +180,7 @@ function WidgetManufacture:Manufacture()
         NetManager:getFetchMaterialsPromise(self.toolShop:GetTechnologyEvent():Id()):done(function()
             local desc_t = {}
             for i,v in ipairs(content) do
-                table.insert(desc_t, string.format("%sx%d", Localize.materials[v.type], v.count)) 
+                table.insert(desc_t, string.format("%sx%d", Localize.materials[v.type], v.count))
             end
             GameGlobalUI:showTips(_("获取科技材料"), table.concat(desc_t, ", "))
         end)
@@ -244,7 +244,7 @@ function WidgetManufacture:CreateMaterialItemWithListView(list_view, title, mate
             :align(display.CENTER, origin_x + gap_x * (index - 1), origin_y)
 
         local pos = back_ground:getAnchorPointInPoints()
-        
+
         local icon_bg = cc.ui.UIImage.new("box_118x118.png")
             :align(display.CENTER, pos.x, pos.y+18)
             :addTo(back_ground)
@@ -396,7 +396,7 @@ function WidgetManufacture:CreateMaterialItemWithListView(list_view, title, mate
             :addTo(material, 2):align(display.CENTER, 351 + 120, height)
 
         function material:SetNumber(number)
-            describe:setString(string.format( _("制造材料x%d 完成!", number ) )
+            describe:setString(string.format( _("制造材料x%d 完成!"), number ) )
             return self
         end
         function material:SetClicked(func)
@@ -447,6 +447,7 @@ function WidgetManufacture:CreateMaterialItemWithListView(list_view, title, mate
             self:GetNeedBox():hide()
         elseif event:IsStored(server_time) then
             self:SetGetMaterials(event:Content())
+            printLog("sss","%s",".."..event:TotalCount())
             self:GetMaterial():show():SetNumber(event:TotalCount())
 
             self:GetProgressBox():hide()
@@ -492,6 +493,7 @@ end
 
 
 return WidgetManufacture
+
 
 
 

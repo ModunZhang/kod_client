@@ -124,7 +124,7 @@ function WidgetStockGoods:ctor(item)
     }):addTo(back_ground):align(display.RIGHT_CENTER,dividing:getPositionX()-4,60)
     -- 购买按钮
     local button = WidgetPushButton.new(
-        {normal = "yellow_btn_up_185x65.png",pressed = "yellow_btn_down_185x65.png"}
+        {normal = "yellow_btn_up_186x66.png",pressed = "yellow_btn_down_186x66.png"}
         ,{}
         ,{
             disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }

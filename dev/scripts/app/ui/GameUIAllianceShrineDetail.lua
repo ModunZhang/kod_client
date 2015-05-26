@@ -97,8 +97,8 @@ function GameUIAllianceShrineDetail:BuildUI()
 			color = 0x980101
 		}):align(display.BOTTOM_CENTER,304,20):addTo(background)
 		local event_button = WidgetPushButton.new({
-			normal = "yellow_btn_up_185x65.png",
-			pressed = "yellow_btn_down_185x65.png",
+			normal = "yellow_btn_up_186x66.png",
+			pressed = "yellow_btn_down_186x66.png",
 		},{scale9 = false},{disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}})
 			:align(display.RIGHT_BOTTOM, 570,desc_label:getPositionY() + 50)
 			:addTo(background)

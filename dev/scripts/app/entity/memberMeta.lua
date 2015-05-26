@@ -1,36 +1,3 @@
---                 "id": "X1x8lpX35",
---                 "lastThreeDaysKillData": [],
---                 "loyalty": 0,
---                 "power": 478,
---                 "status": "normal",
---                 "mapId": "XyiX0nnNn5",
---                 "icon": "playerIcon_default.png",
---                 "language": "cn",
---                 "isProtected": false,
---                 "kill": 0,
---                 "wallHp": 124,
---                 "wallLevel": 1,
---                 "name": "player_Xk8g6Xhq",
---                 "lastRewardData": null,
---                 "keepLevel": 3,
---                 "title": "archon",
---                 "helpedByTroopsCount": 0,
---                 "donateStatus": {
---                     "wood": 1,
---                     "gem": 1,
---                     "iron": 1,
---                     "coin": 1,
---                     "stone": 1,
---                     "food": 1
---                 },
---                 "lastLoginTime": 1427768779105,
---                 "allianceExp": {
---                     "woodExp": 0,
---                     "ironExp": 0,
---                     "stoneExp": 0,
---                     "foodExp": 0,
---                     "coinExp": 0
---                 }
 local Enum = import("..utils.Enum")
 local property = import("..utils.property")
 local allianceRight = GameDatas.ClientInitGame.allianceRight

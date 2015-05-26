@@ -1580,7 +1580,8 @@ function GameUIReplayNew:BuildUI()
     ui_map.soldier_morale_defence = newProgress("soldier_bar_morale.png", self):addTo(top)
         :align(display.CENTER, top_size.width - 209, 37):FlipX(true)
 
-    local bottom = display.newSprite("back_ground_replay.png"):addTo(self, 0)
+    local bottom = WidgetUIBackGround.new({width = 608,height = 520},WidgetUIBackGround.STYLE_TYPE.STYLE_1)
+        :addTo(self, 0)
         :align(display.BOTTOM_CENTER, window.cx, window.bottom)
 
     local s1 = bottom:getContentSize()
@@ -1648,6 +1649,7 @@ function GameUIReplayNew:BuildUI()
 end
 
 return GameUIReplayNew
+
 
 
 

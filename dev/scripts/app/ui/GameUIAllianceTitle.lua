@@ -99,7 +99,7 @@ function GameUIAllianceTitle:BuildUI()
         direction = UIScrollView.DIRECTION_VERTICAL,
     }:addTo(listBg)
     local button = WidgetPushButton.new(
-        {normal = "yellow_btn_up_185x65.png",pressed = "yellow_btn_down_185x65.png"})
+        {normal = "yellow_btn_up_186x66.png",pressed = "yellow_btn_down_186x66.png"})
     :addTo(bg):pos(304,listBg:getPositionY() - listBg:getContentSize().height - 40)
     :onButtonClicked(handler(self, self.OnBuyAllianceArchonButtonClicked))
     :setButtonLabel("normal",

@@ -107,7 +107,7 @@ function WidgetSelectDragon:ctor(params)
 
 
     if #params.btns == 1 then
-        WidgetPushButton.new({normal = "yellow_btn_up_185x65.png",pressed = "yellow_btn_down_185x65.png"})
+        WidgetPushButton.new({normal = "yellow_btn_up_186x66.png",pressed = "yellow_btn_down_186x66.png"})
             :setButtonLabel(UIKit:ttfLabel({
                 text = params.btns[1].btn_label,
                 size = 24,
@@ -126,7 +126,7 @@ function WidgetSelectDragon:ctor(params)
                 end
             end):align(display.CENTER,rb_size.width/2,50):addTo(body)
     elseif #params.btns == 2 then
-        WidgetPushButton.new({normal = "yellow_button_146x42.png",pressed = "yellow_button_highlight_146x42.png"})
+        WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
             :setButtonLabel(UIKit:ttfLabel({
                 text = params.btns[1].btn_label,
                 size = 24,
@@ -145,7 +145,7 @@ function WidgetSelectDragon:ctor(params)
                 end
             end):align(display.CENTER,rb_size.width/2+150,50):addTo(body)
 
-        WidgetPushButton.new({normal = "red_button_146x42.png",pressed = "red_button_highlight_146x42.png"})
+        WidgetPushButton.new({normal = "red_btn_up_148x58.png",pressed = "red_btn_down_148x58.png"})
             :setButtonLabel(UIKit:ttfLabel({
                 text = params.btns[2].btn_label,
                 size = 24,

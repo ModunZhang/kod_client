@@ -388,31 +388,13 @@ function UIKit:GetPlayerIconOnly(key,isOnline)
 end
 --TODO:将这个函数替换成CreateBoxPanel9来实现
 function UIKit:CreateBoxPanel(height)
-    local node = display.newNode()
-    local bottom = display.newSprite("alliance_box_bottom_552x12.png")
-        :addTo(node)
-        :align(display.LEFT_BOTTOM,0,0)
-    local top =  display.newSprite("alliance_box_top_552x12.png")
-    local middleHeight = height - bottom:getContentSize().height - top:getContentSize().height
-    local next_y = bottom:getContentSize().height
-    while middleHeight > 0 do
-        local middle = display.newSprite("alliance_box_middle_552x1.png")
-            :addTo(node)
-            :align(display.LEFT_BOTTOM,0, next_y)
-        middleHeight = middleHeight - middle:getContentSize().height
-        next_y = next_y + middle:getContentSize().height
-    end
-    top:addTo(node)
-        :align(display.LEFT_BOTTOM,0,next_y)
+    local node = self:CreateBoxPanel9({height = height})
     return node
-
 end
 
 function UIKit:CreateBoxPanel9(params)
-    local common_bg = display.newScale9Sprite("gray_box_574x102.png")
-    common_bg:setCapInsets(cc.rect(8,8,556,78))
+    local common_bg = WidgetUIBackGround.new({width = params.width and params.width or 552,height = params.height},WidgetUIBackGround.STYLE_TYPE.STYLE_3)
     common_bg:setAnchorPoint(cc.p(0,0))
-    common_bg:size(params.width and params.width or 552,params.height)
     return common_bg
 end
 
@@ -442,20 +424,11 @@ end
 
 function UIKit:commonTitleBox(height)
     local node = display.newNode()
-    local bottom = display.newSprite("title_box_bottom_540x18.png")
-        :addTo(node)
-        :align(display.LEFT_BOTTOM,4,0)
-    local top =  display.newSprite("title_box_top_548x58.png")
-    local middleHeight = height - bottom:getContentSize().height - top:getContentSize().height
-    local next_y = bottom:getContentSize().height
-    while middleHeight > 0 do
-        local middle = display.newSprite("title_box_middle_540x1.png")
-            :addTo(node)
-            :align(display.LEFT_BOTTOM,4, next_y)
-        middleHeight = middleHeight - middle:getContentSize().height
-        next_y = next_y + middle:getContentSize().height
-    end
-    top:addTo(node):align(display.LEFT_BOTTOM,0,next_y)
+
+    local list_bg = display.newScale9Sprite("back_ground_540x64.png", 4, 0,cc.size(540, height - 50),cc.rect(10,10,520,44))
+        :align(display.LEFT_BOTTOM):addTo(node)
+    local title_bg = display.newSprite("alliance_evnets_title_548x50.png"):align(display.LEFT_BOTTOM, 0, height - 50):addTo(node)
+    
     return node
 end
 
@@ -473,7 +446,6 @@ function UIKit:commonButtonWithBG(options)
         "red",
         "purple",
     }
-    -- display.newScale9Sprite("btn_bg_148x58.png",nil,nil,cc.size(options.w, options.h))
     local btn_bg = cc.ui.UIImage.new("btn_bg_148x58.png", {scale9 = true,
         capInsets = cc.rect(0, 0, 144 , 54)
     }):align(display.CENTER):setLayoutSize(options.w, options.h)

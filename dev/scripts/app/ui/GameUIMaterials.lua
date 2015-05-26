@@ -18,11 +18,10 @@ local GameUIMaterials = UIKit:createUIClass("GameUIMaterials", "GameUIWithCommon
 
 
 local STAR_BG = {
-    "box_100x100_1.png",
-    "box_100x100_2.png",
-    "box_100x100_3.png",
-    "box_100x100_4.png",
-    "box_100x100_5.png",
+    "box_104x104_1.png",
+    "box_104x104_2.png",
+    "box_104x104_3.png",
+    "box_104x104_4.png",
 }
 local function return_map_of_list_view_and_ui_map(list_view, ui_map,list_node)
     return { list_view = list_view, ui_map = ui_map,list_node=list_node}
@@ -237,7 +236,6 @@ function GameUIMaterials:CreateItemWithListViewByEquipments(list_view, equipment
     local equip_map = equip_map == nil and {} or equip_map
     -- 背景
     local back_ground = WidgetUIBackGround.new({width=568,height=188},WidgetUIBackGround.STYLE_TYPE.STYLE_2):align(display.CENTER)
-    -- cc.ui.UIImage.new("back_ground_608x227.png"):align(display.CENTER)
 
     -- title blue
     local pos = back_ground:getAnchorPointInPoints()
@@ -254,7 +252,7 @@ function GameUIMaterials:CreateItemWithListViewByEquipments(list_view, equipment
     }):addTo(title_blue)
         :align(display.CENTER, title_blue:getContentSize().width/2, title_blue:getContentSize().height/2)
 
-    local unit_len, origin_y, gap_x = 105, 90, 10
+    local unit_len, origin_y, gap_x = 104, 76, 8
     local len = #equipments
     local total_len = len * unit_len + (len - 1) * gap_x
     local origin_x = pos.x - total_len / 2 + unit_len / 2
@@ -275,24 +273,26 @@ function GameUIMaterials:CreateEquipmentByType(equip_type)
     local info_press_tag = false
     -- 装备按钮
     local equip_clicked = nil
-    local bg = STAR_BG[equip_config.maxStar]
     local equipment_btn = WidgetPushButton.new(
-        {normal = bg, pressed = bg})
+        {normal = "back_ground_104x132.png"})
         :onButtonClicked(function(event)
             if not info_press_tag and type(equip_clicked) == "function" then
                 equip_clicked(event)
             end
             info_press_tag = false
         end)
+    local bg = STAR_BG[equip_config.maxStar]
+    local eq_bg = cc.ui.UIImage.new(bg):addTo(equipment_btn)
+        :align(display.CENTER,0,14)
     -- 装备图标
-    cc.ui.UIImage.new(UILib.equipment[equip_type]):addTo(equipment_btn)
-        :align(display.CENTER):scale(0.5)
+    cc.ui.UIImage.new(UILib.equipment[equip_type]):addTo(eq_bg)
+        :align(display.CENTER,eq_bg:getContentSize().width/2,eq_bg:getContentSize().height/2):scale(0.62)
 
     -- 详细按钮
     local info_clicked = nil
     local info_btn = WidgetPushButton.new(
         {normal = "i_icon_20x20.png", pressed = "i_icon_20x20.png"})
-        :addTo(equipment_btn):align(display.CENTER, 105/2 - 46/2+8, - 104/2 + 45/2-4)
+        :addTo(equipment_btn):align(display.CENTER, -104/2 + 18, - 104/2 +30)
         :onButtonClicked(function(event)
             if type(info_clicked) == "function" then
                 info_clicked(event)
@@ -301,8 +301,8 @@ function GameUIMaterials:CreateEquipmentByType(equip_type)
         end)
 
     -- number bg
-    local number_bg_100x40 = cc.ui.UIImage.new("number_bg_100x40.png"):addTo(equipment_btn)
-        :align(display.CENTER, 0, - 104 / 2 - 12)
+    local number_bg_100x40 = cc.ui.UIImage.new("number_bg_102x30.png"):addTo(equipment_btn)
+        :align(display.CENTER, 0, - 104 / 2 +2)
 
     -- number label
     local pos = number_bg_100x40:getAnchorPointInPoints()
@@ -323,7 +323,7 @@ function GameUIMaterials:CreateEquipmentByType(equip_type)
     end
 
     equip_clicked = function(event)
-        UIKit:newWidgetUI("WidgetMakeEquip", equip_type, self.blackSmith, self.blackSmith:BelongCity()):AddToCurrentScene()
+        UIKit:newWidgetUI("WidgetMakeEquip", equip_type, self.black_smith, self.black_smith_city):AddToCurrentScene()
     end
     info_clicked = function(event)
         print("info_clicked", equip_type)

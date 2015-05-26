@@ -762,8 +762,8 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
         return self.overviewNode end
     self.ui_overview = {}
     local overviewNode = display.newNode():addTo(self.main_content)
-
-    local events_bg = display.newSprite("alliance_events_bg_540x356.png")
+ 
+    local events_bg = display.newScale9Sprite("back_ground_540x64.png",0 , 0,cc.size(540,356),cc.rect(15,10,510,44))
         :addTo(overviewNode):align(display.CENTER_BOTTOM, window.width/2,10)
 
     local eventListView = UIListView.new {
