@@ -109,7 +109,7 @@ end
 
 function GameUITips:GetItem(index,image,title,text,scale)
     local item = self.city_list:newItem()
-    local content = display.newScale9Sprite(string.format("resource_item_bg%d.png",index % 2)):size(548,122)
+    local content = display.newScale9Sprite(string.format("back_ground_548x40_%d.png", index % 2 == 0 and 1 or 2)):size(548,122)
     local image = display.newSprite(image):align(display.LEFT_CENTER, 10, 61):addTo(content):scale(scale)
     local title_label = UIKit:ttfLabel({
         text = title,

@@ -89,7 +89,7 @@ end
 
 function GameUIStorePackage:GetItem(index,reward)
 	local item = self.info_list:newItem()
-	local content = display.newScale9Sprite(string.format("resource_item_bg%d.png",index % 2)):size(524,48)
+	local content = display.newScale9Sprite(string.format("back_ground_548x40_%d.png", index % 2 == 0 and 1 or 2)):size(524,48)
 	local bg = display.newSprite("box_118x118.png"):align(display.LEFT_CENTER, 14, 24):addTo(content)
 	local icon = display.newSprite(UILib.item[reward.key]):align(display.CENTER, 59, 58):addTo(bg)
 	icon:scale(100/math.max(icon:getContentSize().width,icon:getContentSize().height))
