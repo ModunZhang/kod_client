@@ -1113,7 +1113,7 @@ function GameUIMail:ShowMailDetails(mail)
     local content_item = content_listview:newItem()
     local content_label = UIKit:ttfLabel(
         {
-            text = mail.fromName == "__system" and _(mail.content) or mail.content,
+            text = mail.content,
             size = 20,
             dimensions = cc.size(550,0),
             color = 0x403c2f

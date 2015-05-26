@@ -281,8 +281,6 @@ function GameUIMoonGate:InitWonderDetails()
                 :align(display.LEFT_CENTER, 20,title_bg:getContentSize().height/2)
             local box = display.newSprite("box_136x136.png"):align(display.CENTER,80,item_height/2)
                 :addTo(content)
-            display.newSprite("i_icon_20x20.png"):align(display.CENTER,100,30)
-                :addTo(box)
             UIKit:ttfLabel({
                 text = Localize.wonder_title_buff[v],
                 size = 20,

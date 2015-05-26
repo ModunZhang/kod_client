@@ -400,6 +400,7 @@ end
 
 
 function UIKit:CreateBoxWithoutContent(params)
+    local params = params or {}
     return WidgetUIBackGround.new({width = params.width or 558,height = params.height or 66},WidgetUIBackGround.STYLE_TYPE.STYLE_4)
 end
 function UIKit:CreateBoxPanelWithBorder(params)

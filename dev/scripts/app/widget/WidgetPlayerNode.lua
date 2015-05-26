@@ -243,8 +243,8 @@ function WidgetPlayerNode:BuildDataItemNode(data_list_data)
 	}):align(display.CENTER_TOP,270,box_height - 12):addTo(data_panel)
 	local x,y = 14,10
 	for i,v in ipairs(data_list_data) do
-		local image_name = string.format("box_bg_item_520x48_%d.png",i % 2)
-		local bg = display.newSprite(image_name):align(display.LEFT_BOTTOM, x, y + (i - 1) * 48):addTo(data_panel)
+		local image_name = string.format("back_ground_548x40_%d.png",i % 2 == 0 and 1 or 2)
+		local bg = display.newScale9Sprite(image_name):align(display.LEFT_BOTTOM, x, y + (i - 1) * 48):addTo(data_panel):size(520,48)
 		UIKit:ttfLabel({
 			text = data_list_data[i][1],
 			color= 0x615b44,

@@ -248,11 +248,15 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
             content:addWidget(filp_bg)
 
             local building_cp = building_config_map[unlock_building:GetType()]
-
-            local build_png = SpriteConfig[unlock_building:GetType()]:GetConfigByLevel(unlock_building:GetLevel()==0 and 1 or unlock_building:GetLevel()).png
+            local config = SpriteConfig[unlock_building:GetType()]
+            local build_png = config:GetConfigByLevel(unlock_building:GetLevel()==0 and 1 or unlock_building:GetLevel()).png
             local building_image = display.newSprite(build_png, building_cp.offset.x, building_cp.offset.y,{class=cc.FilteredSpriteWithOne})
                 :scale(building_cp.scale)
                 :addTo(filp_bg)
+            local p = building_image:getAnchorPointInPoints()
+            for _,v in ipairs(config:GetStaticImagesByLevel()) do
+                display.newSprite(v):addTo(building_image):pos(p.x, p.y)
+            end
             if not isUnlocked then
                 local my_filter = filter
                 local filters = my_filter.newFilter("GRAY", {0.2, 0.3, 0.5, 0.1})
@@ -498,6 +502,7 @@ end
 
 
 return GameUIKeep
+
 
 
 

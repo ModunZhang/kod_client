@@ -185,7 +185,7 @@ function GameUIPVESendTroop:SelectDragonPart()
         :addTo(dragon_frame)
     -- 龙，等级
     self.dragon_name = UIKit:ttfLabel({
-        text = _(dragon:Type()).."（LV ".. dragon:Level()..")",
+        text = Localize.dragon[dragon:Type()].."（LV ".. dragon:Level()..")",
         size = 22,
         color = 0x514d3e,
     }):align(display.LEFT_CENTER,20,80)
