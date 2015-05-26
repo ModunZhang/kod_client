@@ -2,7 +2,6 @@
 -- Author: Kenny Dai
 -- Date: 2015-01-23 09:34:06
 --
-local WidgetDropList = import("..widget.WidgetDropList")
 local WidgetRoundTabButtons = import("..widget.WidgetRoundTabButtons")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")

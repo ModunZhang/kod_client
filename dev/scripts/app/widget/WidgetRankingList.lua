@@ -7,7 +7,7 @@ local WidgetPushButton = import(".WidgetPushButton")
 local WidgetUIBackGround = import(".WidgetUIBackGround")
 local WidgetPopDialog = import(".WidgetPopDialog")
 local WidgetAllianceHelper = import(".WidgetAllianceHelper")
-local WidgetDropList = import("..widget.WidgetDropList")
+local WidgetRoundTabButtons = import("..widget.WidgetRoundTabButtons")
 local WidgetRankingList = class("WidgetRankingList", WidgetPopDialog)
 
 local ui_helper = WidgetAllianceHelper.new()
@@ -86,7 +86,7 @@ function WidgetRankingList:OnMoveInStage()
     self.listview:setRedundancyViewVal(self.listview:getViewRect().height + 76 * 2)
     self.listview:setDelegate(handler(self, self.sourceDelegate))
 
-    self.drop_list = WidgetDropList.new(
+    self.drop_list = WidgetRoundTabButtons.new(
         {
             {tag = "power",label = _("战斗力排行榜"),default = true},
             {tag = "kill",label = _("击杀排行榜")},
@@ -136,7 +136,7 @@ function WidgetRankingList:LoadMore()
     if not self.drop_list then return end
     if self.is_loading or #self.current_rank.datas >= 100 then return end
     self.is_loading = true
-    local tag = self.drop_list:GetSelectdTag()
+    local tag = self.drop_list:GetSelectedButtonTag()
     if self.type_ == "player" then
         local cur_datas = self.rank_map[tag].datas
         NetManager:getPlayerRankPromise(tag, #cur_datas):done(function(response)
@@ -159,9 +159,9 @@ function WidgetRankingList:ReloadRank(rank)
     else
         local str 
         if self.type_ == "player" then
-            str = self.drop_list:GetSelectdTag() == "power" and _("我的战斗力排行") or _("我的击杀排行")
+            str = self.drop_list:GetSelectedButtonTag() == "power" and _("我的战斗力排行") or _("我的击杀排行")
         else
-            str = self.drop_list:GetSelectdTag() == "power" and _("我的联盟战斗力排行") or _("我的联盟击杀排行")
+            str = self.drop_list:GetSelectedButtonTag() == "power" and _("我的联盟战斗力排行") or _("我的联盟击杀排行")
         end
         self.my_ranking:setString(string.format("%s : %d", str, rank.myData.rank))
     end
