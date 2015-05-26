@@ -655,16 +655,6 @@ end
 -- 创建 宽度为258的 UI框
 function GameUIWarReport:CreateSmallBackGround(params)
     local r_bg = display.newScale9Sprite("back_ground_258x90.png",0,0,cc.size(params.width or 258,params.height),cc.rect(10,10,238,70))
-    -- title bg
-    if title then
-        local t_bg = display.newSprite("report_title_252X30.png"):align(display.CENTER_TOP, 129, height-3):addTo(r_bg,2)
-        UIKit:ttfLabel({
-            text = title ,
-            size = 20,
-            color = 0xffedae
-        }):align(display.CENTER,t_bg:getContentSize().width/2, 15):addTo(t_bg)
-    end
-
     return r_bg
 end
 

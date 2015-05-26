@@ -373,7 +373,7 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
             resource_type = _("工程图纸"),
             isVisible = cost.blueprints>0,
             isSatisfy = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["blueprints"]>=cost.blueprints,
-            icon="blueprints_112x112.png",
+            icon="blueprints_128x128.png",
             description= City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["blueprints"] .."/"..  cost.blueprints
         })
     table.insert(requirements,
@@ -381,7 +381,7 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
             resource_type = _("建造工具"),
             isVisible = cost.tools>0,
             isSatisfy = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tools"]>=cost.tools,
-            icon="tools_112x112.png",
+            icon="tools_128x128.png",
             description= City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tools"] .."/".. cost.tools
         })
     table.insert(requirements,
@@ -389,7 +389,7 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
             resource_type = _("砖石瓦片"),
             isVisible = cost.tiles>0,
             isSatisfy = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tiles"]>=cost.tiles,
-            icon="tiles_112x112.png",
+            icon="tiles_128x128.png",
             description= City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tiles"] .. "/" .. cost.tiles
         })
     table.insert(requirements,
@@ -397,7 +397,7 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
             resource_type = _("滑轮组"),
             isVisible = cost.pulley>0,
             isSatisfy = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["pulley"]>=cost.pulley,
-            icon="pulley_112x112.png",
+            icon="pulley_128x128.png",
             description = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["pulley"] .. "/" .. cost.pulley
         })  
    

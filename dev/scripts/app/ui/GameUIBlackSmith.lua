@@ -223,7 +223,6 @@ function GameUIBlackSmith:CreateItemWithListViewByEquipments(list_view, equipmen
     local equip_map = equip_map == nil and {} or equip_map
     -- 背景
     local back_ground = WidgetUIBackGround.new({width=568,height=188},WidgetUIBackGround.STYLE_TYPE.STYLE_2):align(display.CENTER)
-    -- cc.ui.UIImage.new("back_ground_608x227.png"):align(display.CENTER)
 
     -- title blue
     local pos = back_ground:getAnchorPointInPoints()

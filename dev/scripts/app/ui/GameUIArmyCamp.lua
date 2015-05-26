@@ -1,5 +1,4 @@
 
-local TabButtons = import('.TabButtons')
 local UIListView = import('.UIListView')
 local window = import('..utils.window')
 local WidgetSoldierDetails = import('..widget.WidgetSoldierDetails')

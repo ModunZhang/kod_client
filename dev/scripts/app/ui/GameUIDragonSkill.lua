@@ -89,9 +89,9 @@ function GameUIDragonSkill:onEnter()
   self.descLabel = descLabel
   if not self:SkillIsMaxLevel() then
     	local upgradeButton = WidgetPushButton.new({
-        normal = "yellow_btn_up_185x65.png",
-        pressed = "yellow_btn_down_185x65.png",
-        disabled = "yellow_disable_185x65.png"
+        normal = "yellow_btn_up_186x66.png",
+        pressed = "yellow_btn_down_186x66.png",
+        disabled = "grey_btn_186x66"
       })
           :setButtonLabel("normal", UIKit:commonButtonLable({
               text = _("学习"),
@@ -153,7 +153,7 @@ end
 
 function GameUIDragonSkill:GetListItem(index,key,val)
 	local bg = display.newSprite(string.format("box_bg_item_520x48_%d.png",index%2))
-	local imageIcon = "dragon_energy_45x38.png"
+	local imageIcon = ""
 	local title = ""
 	if key == "blood" then
 		title = _("英雄之血")

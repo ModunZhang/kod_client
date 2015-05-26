@@ -186,9 +186,7 @@ function GameUIItems:CreateShopContentByIndex( idx )
         dimensions = cc.size(380,0)
     }):align(display.LEFT_CENTER, 19 , 38)
         :addTo(desc_bg)
-    -- local icon_bg = display.newSprite("box_120x154.png"):addTo(content):align(display.CENTER, 70, item_height/2)
     local item_bg = display.newSprite("box_118x118.png"):addTo(content):align(display.TOP_CENTER,  70, item_height-10)
-    -- local item_icon_color_bg = display.newSprite("box_item_100x100.png"):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
     local parent = self
     function content:SetOwnCount( new_item )
         own_num:setString(_("拥有")..":"..string.formatnumberthousands(new_item:Count()))
@@ -216,7 +214,7 @@ function GameUIItems:CreateShopContentByIndex( idx )
         if self.button then
             self:removeChild(self.button, true)
         end
-        self.button = cc.ui.UIPushButton.new({normal = "green_btn_up_148x70.png",pressed = "green_btn_down_148x70.png"})
+        self.button = cc.ui.UIPushButton.new({normal = "green_btn_up_148x76.png",pressed = "green_btn_down_148x76.png"})
             :setButtonLabel(UIKit:ttfLabel({
                 text = _("购买"),
                 size = 20,
@@ -411,7 +409,6 @@ function GameUIItems:CreateMyItemContentByIndex( idx )
     local icon_bg = display.newSprite("box_120x154.png"):addTo(content):align(display.CENTER, 70, item_height/2)
     local num_bg = display.newSprite("back_ground_118x36.png"):addTo(icon_bg):align(display.CENTER, icon_bg:getContentSize().width/2, 20)
     local item_bg = display.newSprite("box_118x118.png"):addTo(icon_bg):align(display.CENTER, icon_bg:getContentSize().width/2, icon_bg:getContentSize().height-60)
-    -- local item_icon_color_bg = display.newSprite("box_item_100x100.png"):addTo(item_bg):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
 
 
     local own_num = UIKit:ttfLabel({

@@ -78,8 +78,8 @@ function GameUISettingAccount:CreateGameCenterPanel()
 			self:ChangeAccountForceButtonClicked(self.gamecenter_force_change_button)
 		end)
 	self.gamecenter_change_account_button = WidgetPushButton.new({
-			normal = "yellow_btn_up_185x65.png",
-			pressed="yellow_btn_down_185x65.png"
+			normal = "yellow_btn_up_186x66.png",
+			pressed="yellow_btn_down_186x66.png"
 		})
 		:align(display.BOTTOM_CENTER, 276, 10)
 		:addTo(self.gamecenter_panel)
@@ -90,8 +90,8 @@ function GameUISettingAccount:CreateGameCenterPanel()
 			self:CreateOrChangeAccountButtonClicked(self.gamecenter_change_account_button)
 		end)
 	self.gamecenter_login_button = WidgetPushButton.new({
-			normal = "yellow_btn_up_185x65.png",
-			pressed="yellow_btn_down_185x65.png"
+			normal = "yellow_btn_up_186x66.png",
+			pressed="yellow_btn_down_186x66.png"
 		})
 		:align(display.BOTTOM_CENTER, 276, 10)
 		:addTo(self.gamecenter_panel)

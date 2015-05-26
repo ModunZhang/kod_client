@@ -98,8 +98,8 @@ function GameUIAttackPlayerCity:BuildUI()
 	self.pre_tip:align(display.RIGHT_CENTER, box:getPositionX()+10,self.next_tip:getPositionY())
 	self.pre_tip:addTo(self.bg_node)
 	local button = WidgetPushButton.new({
-		normal = "yellow_btn_up_185x65.png",
-		pressed = "yellow_btn_down_185x65.png",
+		normal = "yellow_btn_up_186x66.png",
+		pressed = "yellow_btn_down_186x66.png",
 	}):align(display.RIGHT_TOP, right_top_x, left_bottom_y - 20):addTo(bg_node)
 	:setButtonLabel("normal", UIKit:commonButtonLable({text = _("进攻"),}))
 	:onButtonClicked(handler(self, self.OnAttackButtonClicked))

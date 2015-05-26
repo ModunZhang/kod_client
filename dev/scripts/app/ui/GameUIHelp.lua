@@ -1,8 +1,6 @@
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local UIListView = import(".UIListView")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
-local WidgetUIBackGround2= import("..widget.WidgetUIBackGround2")
-local WidgetBackGroudWhite = import("..widget.WidgetBackGroudWhite")
 local Alliance = import("..entity.Alliance")
 local Localize = import("..utils.Localize")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")

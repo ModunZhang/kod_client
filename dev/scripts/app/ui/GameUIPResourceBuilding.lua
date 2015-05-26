@@ -1,9 +1,7 @@
 local window = import('..utils.window')
-local TabButtons = import('.TabButtons')
 local UIListView = import('.UIListView')
 local WidgetSoldierDetails = import('..widget.WidgetSoldierDetails')
 local WidgetUIBackGround = import('..widget.WidgetUIBackGround')
-local WidgetUIBackGround2 = import('..widget.WidgetUIBackGround2')
 local WidgetSoldierBox = import('..widget.WidgetSoldierBox')
 local WidgetInfoWithTitle = import('..widget.WidgetInfoWithTitle')
 local SpriteConfig = import("..sprites.SpriteConfig")
@@ -186,7 +184,6 @@ function GameUIPResourceBuilding:RebuildPart()
         :addTo(bg)
     group:getButtonAtIndex(1):setButtonSelected(true)
 
-    -- local bg2 = WidgetUIBackGround2.new(78):align(display.CENTER, bg_size.width/2, 220):addTo(bg)
     cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -220,7 +217,7 @@ function GameUIPResourceBuilding:RebuildPart()
     }):align(display.CENTER, bg_size.width/2, 140):addTo(bg)
 
 
-    cc.ui.UIPushButton.new({normal = "green_btn_up_250x65.png",pressed = "green_btn_down_250x65.png"})
+    cc.ui.UIPushButton.new({normal = "green_btn_up_250x66.png",pressed = "green_btn_down_250x66.png"})
         :setButtonLabel(UIKit:ttfLabel({text = _("立即转换"), size = 22, color = 0xffedae,shadow = true}))
         :onButtonClicked(function(event)
             if self:CheckSwitch(self.selected_rebuild_to_building) then

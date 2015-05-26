@@ -54,7 +54,7 @@ function WidgetPVEGetTaskRewards:onEnter()
     }):addTo(bg):align(display.LEFT_TOP, 150, s1.height-60)
 
 
-    self.get_btn = cc.ui.UIPushButton.new({normal = "yellow_btn_up_185x65.png",pressed = "yellow_btn_down_185x65.png", disabled = "yellow_disable_185x65.png"})
+    self.get_btn = cc.ui.UIPushButton.new({normal = "yellow_btn_up_186x66.png",pressed = "yellow_btn_down_186x66.png", disabled = "grey_btn_186x66"})
         :addTo(self:GetBody()):pos(s.width/2, 60)
         :setButtonLabel(UIKit:ttfLabel({text = _("领取"), size = 24, color = 0xffedae}))
         :onButtonClicked(function()

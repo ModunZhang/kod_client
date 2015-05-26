@@ -3,7 +3,6 @@ local promise = import("..utils.promise")
 local window = import("..utils.window")
 local BuildingRegister = import("..entity.BuildingRegister")
 local MaterialManager = import("..entity.MaterialManager")
-local WidgetBuyBuildingQueue = import("..widget.WidgetBuyBuildingQueue")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local SpriteConfig = import("..sprites.SpriteConfig")
@@ -79,7 +78,7 @@ function GameUIBuild:LoadBuildingQueue()
         -- :setButtonEnabled(false)
         :onButtonClicked(function ( event )
             if event.name == "CLICKED_EVENT" then
-                UIKit:newWidgetUI("WidgetBuyBuildingQueue"):AddToCurrentScene()
+                UIKit:newGameUI("GameUIActivityRewardNew",4):AddToCurrentScene(true)
             end
         end)
 

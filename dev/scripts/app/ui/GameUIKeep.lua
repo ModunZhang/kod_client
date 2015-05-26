@@ -1,6 +1,5 @@
 local cocos_promise = import('..utils.cocos_promise')
 local promise = import('..utils.promise')
-local TabButtons = import('.TabButtons')
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPopDialog= import("..widget.WidgetPopDialog")

@@ -79,7 +79,7 @@ function GameUISettingServer:BuildServersUI()
  		color= 0x403c2f
  	}):align(display.LEFT_BOTTOM, 30, 76):addTo(self.bg)
  	local honour_bg = display.newSprite("back_ground_130x30.png"):addTo(self.bg):align(display.LEFT_CENTER, 42, 56)
- 	local honour_icon = display.newSprite("icon_honour_67x84.png"):align(display.LEFT_CENTER, -12, 15):scale(0.48):addTo(honour_bg)
+ 	local honour_icon = display.newSprite("honour_128x128.png"):align(display.LEFT_CENTER, -12, 15):scale(0.48):addTo(honour_bg):scale(0.5)
 
  	local gems_bg = display.newSprite("back_ground_130x30.png"):addTo(self.bg):align(display.LEFT_CENTER, honour_bg:getPositionX()+130+26, 56)
  	local gems_icon = display.newSprite("gem_icon_62x61.png"):align(display.LEFT_CENTER, -12, 15):addTo(gems_bg):scale(0.7)

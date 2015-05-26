@@ -55,7 +55,7 @@ function GameUIAllianceContribute:ctor()
     }):align(display.LEFT_CENTER, 20,40)
         :addTo(self.body)
 
-    local contribute_btn = WidgetPushButton.new({normal = "yellow_btn_up_185x65.png",pressed = "yellow_btn_down_185x65.png"})
+    local contribute_btn = WidgetPushButton.new({normal = "yellow_btn_up_186x66.png",pressed = "yellow_btn_down_186x66.png"})
         :align(display.CENTER,500,60)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then

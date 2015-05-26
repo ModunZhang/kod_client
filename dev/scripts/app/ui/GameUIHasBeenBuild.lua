@@ -5,7 +5,6 @@ local window = import("..utils.window")
 local WidgetTimeBar = import("..widget.WidgetTimeBar")
 local WidgetBuildingIntroduce = import("..widget.WidgetBuildingIntroduce")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
-local WidgetBuyBuildingQueue = import("..widget.WidgetBuyBuildingQueue")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local GameUIBuildingSpeedUp = import("..ui.GameUIBuildingSpeedUp")
 local GameUIHasBeenBuild = UIKit:createUIClass('GameUIHasBeenBuild', "GameUIWithCommonHeader")
@@ -477,7 +476,7 @@ function GameUIHasBeenBuild:LoadBuildingQueue()
         :align(display.CENTER, back_ground:getContentSize().width - 25, back_ground:getContentSize().height/2)
         :onButtonClicked(function ( event )
             if event.name == "CLICKED_EVENT" then
-                UIKit:newWidgetUI("WidgetBuyBuildingQueue"):AddToCurrentScene()
+                UIKit:newGameUI("GameUIActivityRewardNew",4):AddToCurrentScene(true)
             end
         end)
 

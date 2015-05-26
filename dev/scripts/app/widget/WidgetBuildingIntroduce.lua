@@ -46,28 +46,28 @@ function WidgetBuildingIntroduce:SetUpgradeRequirementListview()
             resource_type = _("工程图纸"),
             isVisible = self.building:GetLevelUpBlueprints()>0,
             isSatisfy = materials["blueprints"]>self.building:GetLevelUpBlueprints() ,
-            icon="blueprints_112x112.png",
+            icon="blueprints_128x128.png",
             description=self.building:GetLevelUpBlueprints().."/"..materials["blueprints"]
         },
         {
             resource_type = _("建造工具"),
             isVisible = self.building:GetLevelUpTools()>0,
             isSatisfy = materials["tools"]>self.building:GetLevelUpTools() ,
-            icon="tools_112x112.png",
+            icon="tools_128x128.png",
             description=self.building:GetLevelUpTools().."/"..materials["tools"]
         },
         {
             resource_type =_("砖石瓦片"),
             isVisible = self.building:GetLevelUpTiles()>0,
             isSatisfy = materials["tiles"]>self.building:GetLevelUpTiles() ,
-            icon="tiles_112x112.png",
+            icon="tiles_128x128.png",
             description=self.building:GetLevelUpTiles().."/"..materials["tiles"]
         },
         {
             resource_type = _("滑轮组"),
             isVisible = self.building:GetLevelUpPulley()>0,
             isSatisfy = materials["pulley"]>self.building:GetLevelUpPulley() ,
-            icon="pulley_112x112.png",
+            icon="pulley_128x128.png",
             description=self.building:GetLevelUpPulley().."/"..materials["pulley"]
         },
     }

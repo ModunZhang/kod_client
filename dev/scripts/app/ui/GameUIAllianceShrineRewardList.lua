@@ -31,8 +31,8 @@ function GameUIAllianceShrineRewardList:BuildUI()
 	self.rewards_listView = list
 	list_node:addTo(background):align(display.CENTER_BOTTOM, background:getContentSize().width/2, 118)
 	WidgetPushButton.new({
-		normal = "yellow_btn_up_185x65.png",
-		pressed = "yellow_btn_down_185x65.png"
+		normal = "yellow_btn_up_186x66.png",
+		pressed = "yellow_btn_down_186x66.png"
 	}):align(display.CENTER_BOTTOM,background:getContentSize().width/2,30):addTo(background)
 	:setButtonLabel("normal",UIKit:commonButtonLable({
 		text = _("确定")

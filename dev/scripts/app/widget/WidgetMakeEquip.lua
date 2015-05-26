@@ -3,7 +3,6 @@ local Localize = import("..utils.Localize")
 local MaterialManager = import("..entity.MaterialManager")
 local WidgetPushButton = import(".WidgetPushButton")
 local WidgetUIBackGround = import(".WidgetUIBackGround")
-local WidgetUIBackGround2 = import(".WidgetUIBackGround2")
 local WidgetPopDialog = import(".WidgetPopDialog")
 local UILib = import("..ui.UILib")
 
@@ -128,8 +127,8 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
 
     -- 立即建造
     local size = back_ground:getContentSize()
-    local instant_button = cc.ui.UIPushButton.new({normal = "green_btn_up_250x65.png",
-        pressed = "green_btn_down_250x65.png"}):addTo(back_ground)
+    local instant_button = cc.ui.UIPushButton.new({normal = "green_btn_up_250x66.png",
+        pressed = "green_btn_down_250x66.png"}):addTo(back_ground)
         :align(display.CENTER, 150, 100)
         :setButtonLabel(UIKit:ttfLabel({
             text = _("立即制造"),
@@ -161,8 +160,8 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
 
     local size = back_ground:getContentSize()
     local button = WidgetPushButton.new({
-        normal = "yellow_btn_up_185x65.png",
-        pressed = "yellow_btn_down_185x65.png"
+        normal = "yellow_btn_up_186x66.png",
+        pressed = "yellow_btn_down_186x66.png"
     }
     ,{}
     ,{
