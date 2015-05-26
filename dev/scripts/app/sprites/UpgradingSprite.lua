@@ -53,6 +53,9 @@ function UpgradingSprite:OnBuildingUpgradeFinished(building)
         home_page:ShowPowerAni(tp)
         if building:IsHouse() then
             home_page:ShowResourceAni(res_map[building:GetUpdateResourceType()], tp)
+            if building:GetType() == "dwelling" then
+                home_page:ShowResourceAni("coin", tp)
+            end
         end
     end
 end

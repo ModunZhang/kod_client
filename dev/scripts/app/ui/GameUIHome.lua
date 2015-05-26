@@ -120,7 +120,7 @@ function GameUIHome:onEnter()
     self.visible_count = 1
     local city = self.city
     -- 上背景
-    self:CreateTop()
+    self.top = self:CreateTop()
     self.bottom = self:CreateBottom()
 
     local ratio = self.bottom:getScale()
@@ -539,12 +539,14 @@ function GameUIHome:RefreshVIP()
 end
 local POWER_ANI_TAG = 1001
 function GameUIHome:ShowPowerAni(wp)
-    self:removeChildByTag(POWER_ANI_TAG)
-    local tp = self:convertToNodeSpace(self.power_label:convertToWorldSpace(cc.p(0,0)))
-    local lp = self:convertToNodeSpace(wp)
+    local pnt = self.top
+
+    pnt:removeChildByTag(POWER_ANI_TAG)
+    local tp = pnt:convertToNodeSpace(self.power_label:convertToWorldSpace(cc.p(0,0)))
+    local lp = pnt:convertToNodeSpace(wp)
     local time, delay_time = 1, 0.25
     local emitter = cc.ParticleFlower:createWithTotalParticles(200)
-        :addTo(self, 100, POWER_ANI_TAG):pos(lp.x, lp.y)
+        :addTo(pnt, 100, POWER_ANI_TAG):pos(lp.x, lp.y)
     emitter:setDuration(time + delay_time)
     emitter:setLife(1)
     emitter:setLifeVar(1)
@@ -554,15 +556,9 @@ function GameUIHome:ShowPowerAni(wp)
     emitter:runAction(transition.sequence{
         cc.MoveTo:create(time, cc.p(tp.x, tp.y)),
         cc.CallFunc:create(function()
-            self:ScalePowerLabel()
+            self:ScaleIcon(self.power_label)
         end),
         cc.DelayTime:create(delay_time),
-    })
-end
-function GameUIHome:ScalePowerLabel()
-    self.power_label:runAction(transition.sequence{
-        cc.ScaleTo:create(0.2, 1.1),
-        cc.ScaleTo:create(0.2, 1),
     })
 end
 local RES_ICON_TAG = {
@@ -582,14 +578,16 @@ local icon_map = {
     citizen = "res_citizen_88x82.png",
 }
 function GameUIHome:ShowResourceAni(resource, wp)
-    self:removeChildByTag(RES_ICON_TAG[resource])
+    local pnt = self.top
+    pnt:removeChildByTag(RES_ICON_TAG[resource])
 
-    local tp = self:convertToNodeSpace(self.res_icon_map[resource]:convertToWorldSpace(cc.p(0,0)))
-    local lp = self:convertToNodeSpace(wp)
+    local s1 = self.res_icon_map[resource]:getContentSize()
+    local tp = pnt:convertToNodeSpace(self.res_icon_map[resource]:convertToWorldSpace(cc.p(s1.width/2,s1.height/2)))
+    local lp = pnt:convertToNodeSpace(wp)
 
     local x,y,tx,ty = lp.x,lp.y,tp.x, tp.y
     local icon = display.newSprite(icon_map[resource])
-        :addTo(self):pos(x,y):scale(0.8)
+        :addTo(pnt):pos(x,y):scale(0.8)
 
     local size = icon:getContentSize()
     local emitter = cc.ParticleFlower:createWithTotalParticles(200)
@@ -613,13 +611,26 @@ function GameUIHome:ShowResourceAni(resource, wp)
     }
     icon:runAction(
         cc.Spawn:create({
-            cc.ScaleTo:create(time, 0.5),
+            cc.ScaleTo:create(time, 0.3),
             transition.sequence{
                 cc.BezierTo:create(time, bezier2),
-                -- cc.RemoveSelf:create(),
+                cc.CallFunc:create(function()
+                    icon:opacity(0)
+                    self:ScaleIcon(self.res_icon_map[resource], 0.3, 0.5)
+                end),
+                cc.DelayTime:create(1),
+                cc.RemoveSelf:create(),
             }
         })
     )
+end
+function GameUIHome:ScaleIcon(ccnode, s, ds)
+    local s = s or 1
+    local ds = ds or 0.1
+    ccnode:runAction(transition.sequence{
+        cc.ScaleTo:create(0.2, s * (1 + ds)),
+        cc.ScaleTo:create(0.2, s),
+    })
 end
 
 -- fte
