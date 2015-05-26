@@ -59,7 +59,7 @@ function GameUIDragonEquipmentMake:BuildUI()
 	local node = self.ui_node_main
 	local mainEquipment = self:GetEquipmentItem()
           :addTo(node):align(display.LEFT_TOP,15,self.titleBar:getPositionY() - 10)
-    local name_bar = display.newScale9Sprite("alliance_event_type_darkblue_222x30.png",0,0, cc.size(468,30), cc.rect(7,7,190,16))  
+    local name_bar = display.newScale9Sprite("title_blue_430x30.png",0,0, cc.size(468,30), cc.rect(10,10,410,10))  
       :addTo(node):align(display.LEFT_TOP,mainEquipment:getPositionX() + mainEquipment:getContentSize().width + 5,mainEquipment:getPositionY() - 2)
     UIKit:ttfLabel({
         text = Localize.equip[self:GetEquipment():GetCanLoadConfig().name],

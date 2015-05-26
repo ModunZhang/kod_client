@@ -133,12 +133,8 @@ function GameUITownHall:CreateQuestItem(quest,index)
 
     local body = WidgetUIBackGround.new({width=item_width,height=item_height},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
     local b_size = body:getContentSize()
-    local title_bg = display.newSprite("title_blue_558x34.png"):addTo(body):align(display.CENTER,b_size.width/2 , b_size.height-24)
-    -- local quest_name = UIKit:ttfLabel({
-    --     text = Localize.daily_quests_name[quest.index],
-    --     size = 22,
-    --     color = 0xffedae,
-    -- }):align(display.LEFT_CENTER, 15, title_bg:getContentSize().height/2):addTo(title_bg)
+    local title_bg = display.newSprite("title_blue_554x34.png"):addTo(body):align(display.CENTER,b_size.width/2 , b_size.height-24)
+
     local star_bar = StarBar.new({
         max = 5,
         bg = "Stars_bar_bg.png",
@@ -149,7 +145,7 @@ function GameUITownHall:CreateQuestItem(quest,index)
     }):addTo(title_bg):align(display.LEFT_CENTER,10, title_bg:getContentSize().height/2)
 
     -- 任务icon
-    local icon_bg = display.newSprite("box_100x100.png"):addTo(body):pos(55,120)
+    local icon_bg = display.newSprite("box_136x136.png"):addTo(body):pos(58,120):scale(110/136)
     display.newSprite(UILib.daily_quests_icon[quest.index])
         :addTo(icon_bg):pos(icon_bg:getContentSize().width/2,icon_bg:getContentSize().height/2)
         :scale(0.55)
@@ -201,7 +197,7 @@ function GameUITownHall:CreateQuestItem(quest,index)
         :align(display.RIGHT_CENTER,item_width-10,108)
         :addTo(body)
 
-    local reward_bg = display.newSprite("back_ground_548x52.png"):pos(item_width/2,34):addTo(body)
+    local reward_bg = display.newScale9Sprite("back_ground_166x84.png", item_width/2,34,cc.size(548,52),cc.rect(15,10,136,64)):addTo(body)
 
     local TownHallUI = self
     function item:SetStar(quest)

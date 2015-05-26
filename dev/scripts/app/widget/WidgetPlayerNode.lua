@@ -105,13 +105,13 @@ function WidgetPlayerNode:GetMedalItemNode(basic_data)
 	local content = self:GetBoxNodeWithTitle(_("勋章")):addTo(node):align(display.LEFT_BOTTOM,(self:GetSize().width - 556)/2,0)
 	local x,y,margin = 15,5,145
 	for i=1,4 do
-		local button = WidgetPushButton.new({normal = "player_medel_bg_92x108.png"})
+		local button = WidgetPushButton.new({normal = "box_buff_1.png"})
 			:align(display.LEFT_BOTTOM, x + (i -1) * margin, 5):addTo(content)
 			:onButtonClicked(function()
 				if self:CallDelegate_(DELEGATE_METHODS.PlayerCanClickedButton,{"Medal",i}) then 
 					self:CallDelegate_(DELEGATE_METHODS.OnMedalButtonClicked,{i})
 				end
-			end)
+			end):scale(108/160)
 		if data_source[i] then
 			display.newSprite(data_source[i], 46, 54):addTo(button)
 		end
@@ -134,7 +134,7 @@ function WidgetPlayerNode:GetBasicInfoItemNode(basic_data)
 		:addTo(node,-1)
 	UIKit:GetPlayerIconOnly(data_source.playerIcon):addTo(icon_bg):pos(60,70):scale(0.8)
 	if self:CallDelegate_(DELEGATE_METHODS.PlayerCanClickedButton,{"PlayerIcon"}) then
-		display.newSprite("draong_eq_i_25x25.png"):align(display.LEFT_BOTTOM, icon_bg:getPositionX()+8, icon_bg:getPositionY()+14):addTo(node)
+		display.newSprite("goods_26x26.png"):align(display.LEFT_BOTTOM, icon_bg:getPositionX()+8, icon_bg:getPositionY()+14):addTo(node)
 		WidgetPushTransparentButton.new(cc.rect(0,0,120,175))
         :align(display.LEFT_BOTTOM,0,0)
         :addTo(vip_bg)

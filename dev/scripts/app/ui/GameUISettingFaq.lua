@@ -34,7 +34,7 @@ function GameUISettingFaq:BuildUI()
     end
     local editbox = cc.ui.UIInput.new({
         UIInputType = 1,
-        image = "chat_Input_box.png",
+        image = "input_box.png",
         size = cc.size(548,57),
         listener = onEdit,
     })

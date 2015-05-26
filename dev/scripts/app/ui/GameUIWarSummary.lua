@@ -107,9 +107,9 @@ function GameUIWarSummary:onEnter()
         local function createItem(info,meetFlag)
             local content
             if meetFlag then
-                content = display.newSprite("upgrade_resources_background_3.png")
+                content = display.newScale9Sprite("back_ground_548x40_1.png"):size(520,46)
             else
-                content = display.newSprite("upgrade_resources_background_2.png")
+                content = display.newScale9Sprite("back_ground_548x40_2.png"):size(520,46)
             end
             UIKit:ttfLabel({
                 text = info[1],

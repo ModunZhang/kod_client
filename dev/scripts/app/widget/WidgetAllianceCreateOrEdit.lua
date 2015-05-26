@@ -274,7 +274,7 @@ function WidgetAllianceCreateOrEdit:createTextfieldPanel()
 
 	local editbox_tag = cc.ui.UIInput.new({
     	UIInputType = 1,
-        image = "alliance_editbox_575x48.png",
+        image = "input_box.png",
         size = cc.size(552,48),
     })
     editbox_tag:setPlaceHolder(string.format(_("最多可输入%d字符"),3))
@@ -301,7 +301,7 @@ function WidgetAllianceCreateOrEdit:createTextfieldPanel()
 
 	local editbox_name = cc.ui.UIInput.new({
     	UIInputType = 1,
-        image = "alliance_editbox_575x48.png",
+        image = "input_box.png",
         size = cc.size(510,48),
     })
     editbox_name:setPlaceHolder(string.format(_("最多可输入%d字符"),20))

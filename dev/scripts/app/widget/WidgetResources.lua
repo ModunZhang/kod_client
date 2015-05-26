@@ -147,7 +147,7 @@ function WidgetResources:AddResourceItem(parms)
     local content = WidgetUIBackGround.new({width = 568,height = 156},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
     local c_size = content:getContentSize()
     -- resource icon bg
-    local icon_bg = display.newSprite("box_134x134.png",80,c_size.height/2):addTo(content)
+    local icon_bg = display.newSprite("alliance_item_flag_box_126X126.png",80,c_size.height/2):addTo(content):scale(134/126)
     local icon_bg_1 = display.newSprite("box_118x118.png",icon_bg:getContentSize().width/2,icon_bg:getContentSize().height/2):addTo(icon_bg)
 
     -- resou icon

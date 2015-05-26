@@ -238,9 +238,9 @@ function GameUIHelp:CreateHelpItem(event)
     local item_width, item_height = 547,114
     item:setItemSize(item_width, item_height)
 
-    local body_image = self.which_bg and "upgrade_resources_background_2.png" or "upgrade_resources_background_3.png"
+    local body_image = self.which_bg and "back_ground_548x40_1.png" or "back_ground_548x40_2.png"
     self.which_bg = not self.which_bg
-    local bg = display.newScale9Sprite(body_image,0,0,cc.size(item_width, item_height),cc.rect(10,10,500,26))
+    local bg = display.newScale9Sprite(body_image,0,0,cc.size(item_width, item_height),cc.rect(10,10,528,20))
 
     local bg_size = bg:getContentSize()
     display.newSprite("people.png"):addTo(bg):pos(28, bg_size.height-20)

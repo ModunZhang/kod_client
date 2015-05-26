@@ -406,8 +406,9 @@ function GameUIItems:CreateMyItemContentByIndex( idx )
     }):align(display.LEFT_TOP, 152 , item_height-60)
         :addTo(content)
 
-    local icon_bg = display.newSprite("box_120x154.png"):addTo(content):align(display.CENTER, 70, item_height/2)
-    local num_bg = display.newSprite("back_ground_118x36.png"):addTo(icon_bg):align(display.CENTER, icon_bg:getContentSize().width/2, 20)
+    local icon_bg = WidgetUIBackGround.new({width = 120,height = 154},WidgetUIBackGround.STYLE_TYPE.STYLE_4)
+        :addTo(content):align(display.CENTER, 70, item_height/2)
+    local num_bg = display.newScale9Sprite("back_ground_166x84.png",0 , 0,cc.size(118,36),cc.rect(15,10,136,64)):addTo(icon_bg):align(display.CENTER, icon_bg:getContentSize().width/2, 20)
     local item_bg = display.newSprite("box_118x118.png"):addTo(icon_bg):align(display.CENTER, icon_bg:getContentSize().width/2, icon_bg:getContentSize().height-60)
 
 
@@ -550,6 +551,7 @@ function GameUIItems:OnItemsChanged( changed_map )
     end
 end
 return GameUIItems
+
 
 
 

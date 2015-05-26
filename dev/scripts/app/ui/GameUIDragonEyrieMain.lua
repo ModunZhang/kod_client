@@ -304,7 +304,7 @@ function GameUIDragonEyrieMain:CreateDragonContentNodeIf()
             size = 20,
             align = cc.TEXT_ALIGNMENT_CENTER,
         }):align(display.CENTER_BOTTOM, 145, 20):addTo(info_bg)
-        local expIcon = display.newSprite("dragonskill_xp_51x63.png")
+        local expIcon = display.newSprite("upgrade_experience_icon.png")
             :addTo(info_bg)
             :scale(0.7)
             :align(display.BOTTOM_RIGHT, self.draong_info_xp_label:getPositionX() - self.draong_info_xp_label:getContentSize().width/2 - 10,10)

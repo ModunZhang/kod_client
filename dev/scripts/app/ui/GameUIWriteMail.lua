@@ -53,7 +53,7 @@ function GameUIWriteMail:ctor(send_type,contacts)
     editbox_subject:align(display.LEFT_TOP,150, r_size.height-100):addTo(write_mail)
 
     -- 分割线
-    display.newScale9Sprite("dividing_line_584x1.png", r_size.width/2, r_size.height-160,cc.size(594,1)):addTo(write_mail)
+    display.newScale9Sprite("dividing_line.png",r_size.width/2, r_size.height-160,cc.size(594,2),cc.rect(10,2,382,2)):addTo(write_mail)
     -- 内容
     cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -65,7 +65,7 @@ function GameUIWriteMail:ctor(send_type,contacts)
         }):align(display.LEFT_CENTER,58,r_size.height-180)
         :addTo(write_mail)
     -- 回复的邮件内容
-    self.textView = ccui.UITextView:create(cc.size(580,472),display.newScale9Sprite("background_580X472.png"))
+    self.textView = ccui.UITextView:create(cc.size(580,472),display.newScale9Sprite("background_88x42.png"))
     local textView = self.textView
     textView:addTo(write_mail):align(display.CENTER_BOTTOM,r_size.width/2,76)
     textView:setReturnType(cc.KEYBOARD_RETURNTYPE_DEFAULT)

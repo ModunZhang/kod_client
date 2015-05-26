@@ -240,7 +240,7 @@ function WidgetManufacture:CreateMaterialItemWithListView(list_view, title, mate
         local describe = MATERIALS_MAP[type][2]
         local index = MATERIALS_MAP[type][3]
 
-        local back_ground = cc.ui.UIImage.new("box_120x154.png")
+        local back_ground = WidgetUIBackGround.new({width = 120,height = 154},WidgetUIBackGround.STYLE_TYPE.STYLE_4)
             :align(display.CENTER, origin_x + gap_x * (index - 1), origin_y)
 
         local pos = back_ground:getAnchorPointInPoints()
@@ -253,7 +253,7 @@ function WidgetManufacture:CreateMaterialItemWithListView(list_view, title, mate
             :align(display.CENTER, icon_bg:getContentSize().width/2,icon_bg:getContentSize().height/2)
             :scale(100/128)
 
-        local num_bg = cc.ui.UIImage.new("back_ground_118x36.png")
+        local num_bg = display.newScale9Sprite("back_ground_166x84.png",0 , 0,cc.size(118,36),cc.rect(15,10,136,64))
             :addTo(back_ground):align(display.CENTER,pos.x, 20)
 
         local store_label = UIKit:ttfLabel({

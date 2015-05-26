@@ -239,7 +239,7 @@ function GameUIMaterials:CreateItemWithListViewByEquipments(list_view, equipment
 
     -- title blue
     local pos = back_ground:getAnchorPointInPoints()
-    local title_blue = cc.ui.UIImage.new("title_blue_558x34.png"):addTo(back_ground)
+    local title_blue = cc.ui.UIImage.new("title_blue_554x34.png"):addTo(back_ground)
     title_blue:align(display.CENTER, pos.x, back_ground:getContentSize().height - title_blue:getContentSize().height/2-6)
 
     -- title label
@@ -301,7 +301,7 @@ function GameUIMaterials:CreateEquipmentByType(equip_type)
         end)
 
     -- number bg
-    local number_bg_100x40 = cc.ui.UIImage.new("number_bg_102x30.png"):addTo(equipment_btn)
+    local number_bg_100x40 = display.newScale9Sprite("back_ground_166x84.png", 0,0,cc.size(102,30),cc.rect(15,10,136,64)):addTo(equipment_btn)
         :align(display.CENTER, 0, - 104 / 2 +2)
 
     -- number label

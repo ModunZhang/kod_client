@@ -15,7 +15,7 @@ local SoldierManager = import("..entity.SoldierManager")
 local WidgetUpgradeMilitaryTech = class("WidgetUpgradeMilitaryTech", WidgetPopDialog)
 
 local function create_line_item(icon,text_1,text_2)
-    local line = display.newSprite("dividing_line_546x2.png")
+    local line = display.newScale9Sprite("dividing_line.png",0,0,cc.size(546,2),cc.rect(10,2,382,2))
     local icon = display.newSprite(icon):addTo(line,2):align(display.LEFT_BOTTOM, 0, 0)
     icon:scale(40/icon:getContentSize().width)
     local text1 = UIKit:ttfLabel({
@@ -61,7 +61,7 @@ end
 function WidgetUpgradeMilitaryTech:CurrentInfo()
     local body = self.body
     local size = body:getContentSize()
-    local bg = display.newScale9Sprite("back_ground_548x52.png", 0, 0,cc.size(548,46),cc.rect(10,10,528,26))
+    local bg = display.newScale9Sprite("back_ground_166x84.png", 0,0,cc.size(548,46),cc.rect(15,10,136,64))
         :align(display.CENTER, size.width/2, size.height-50)
         :addTo(body)
 

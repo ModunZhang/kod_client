@@ -390,7 +390,7 @@ function GameUIMail:CreateInboxContent()
     local title_bg = display.newSprite("title_blue_482x30.png",item_width-482/2-2, item_height-24)
         :addTo(content,2)
     -- 不变的模板部分
-    local content_title_bg = display.newScale9Sprite("back_ground_516x60.png",item_width-4,10,cc.size(482,60),cc.rect(15,10,486,40))
+    local content_title_bg = display.newScale9Sprite("back_ground_166x84.png",item_width-4,10,cc.size(482,60),cc.rect(15,10,136,64))
         :align(display.RIGHT_BOTTOM)
         :addTo(content,2)
 
@@ -543,7 +543,7 @@ function GameUIMail:CreateSavedMailContent()
     local title_bg = display.newSprite("title_blue_482x30.png",item_width-482/2-2, item_height-24)
         :addTo(content,2)
     -- 不变的模板部分
-    local content_title_bg = display.newScale9Sprite("back_ground_516x60.png",item_width-4,10,cc.size(482,60),cc.rect(15,10,486,40))
+    local content_title_bg = display.newScale9Sprite("back_ground_166x84.png",item_width-4,10,cc.size(482,60),cc.rect(15,10,136,64))
         :align(display.RIGHT_BOTTOM)
         :addTo(content,2)
 
@@ -692,7 +692,7 @@ function GameUIMail:CreateSendMailContent()
     local title_bg = display.newScale9Sprite("title_grey_482x30.png",item_width/2, item_height-24,cc.size(552,30),cc.rect(10,5,462,20))
         :addTo(content,2)
     -- 不变的模板部分
-    local content_title_bg = display.newScale9Sprite("back_ground_516x60.png",item_width-8,10,cc.size(552,60),cc.rect(15,10,486,40))
+    local content_title_bg = display.newScale9Sprite("back_ground_166x84.png",item_width-8,10,cc.size(552,60),cc.rect(15,10,136,64))
         :align(display.RIGHT_BOTTOM)
         :addTo(content,2)
 
@@ -1280,7 +1280,7 @@ function GameUIMail:CreateReportContent()
             if report:IsWin() then
                 title_bg_image = "title_green_558x34.png"
             else
-                title_bg_image = "title_red_558x34.png"
+                title_bg_image = "title_red_556x34.png"
             end
         end
         local title_bg = display.newSprite(title_bg_image, item_width/2, 52+item_height/2):addTo(self)
@@ -1298,7 +1298,9 @@ function GameUIMail:CreateReportContent()
                 color = 0xffedae
             }):align(display.RIGHT_CENTER, 540, 17)
             :addTo(title_bg)
-        local report_content_bg = display.newSprite("back_ground_484X98.png", 35+item_width/2, -18+item_height/2):addTo(self)
+        local report_content_bg = WidgetUIBackGround.new({width = 484,height = 98},WidgetUIBackGround.STYLE_TYPE.STYLE_4)
+            :align(display.CENTER, 35+item_width/2, -18+item_height/2):addTo(self)
+
         local report_big_type = report:IsAttackOrStrike()
         if report_big_type == "strike" then
             display.newSprite("icon_strike_69x50.png"):align(display.LEFT_BOTTOM, 0, 0):addTo(report_content_bg):scale(0.8)
@@ -1538,7 +1540,7 @@ function GameUIMail:CreateSavedReportContent()
             if report:IsWin() then
                 title_bg_image = "title_green_558x34.png"
             else
-                title_bg_image = "title_red_558x34.png"
+                title_bg_image = "title_red_556x34.png"
             end
         end
         print("saved reports title image=",title_bg_image)
@@ -1557,7 +1559,8 @@ function GameUIMail:CreateSavedReportContent()
                 color = 0xffedae
             }):align(display.RIGHT_CENTER, 540, 17)
             :addTo(title_bg)
-        local report_content_bg = display.newSprite("back_ground_484X98.png", 35+item_width/2, -18+item_height/2):addTo(self)
+        local report_content_bg = WidgetUIBackGround.new({width = 484,height = 98},WidgetUIBackGround.STYLE_TYPE.STYLE_4)
+            :align(display.CENTER,35+item_width/2, -18+item_height/2):addTo(self)
         local report_big_type = report:IsAttackOrStrike()
         if report_big_type == "strike" then
             display.newSprite("icon_strike_69x50.png"):align(display.LEFT_BOTTOM, 0, 0):addTo(report_content_bg):scale(0.8)
@@ -1721,7 +1724,7 @@ function GameUIMail:OpenReplyMail(mail)
         }):align(display.LEFT_CENTER,10,18)
         :addTo(subject_input_box_image)
     -- 分割线
-    display.newScale9Sprite("dividing_line_584x1.png", r_size.width/2, r_size.height-160,cc.size(594,1)):addTo(reply_mail)
+    display.newScale9Sprite("dividing_line.png",r_size.width/2, r_size.height-160,cc.size(594,2),cc.rect(10,2,382,2)):addTo(reply_mail)
     -- 内容
     cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -1735,8 +1738,7 @@ function GameUIMail:OpenReplyMail(mail)
     -- 回复的邮件内容
     local lucid_bg = WidgetUIBackGround.new({width = 580,height=472},WidgetUIBackGround.STYLE_TYPE.STYLE_4):addTo(reply_mail)
     lucid_bg:pos((r_size.width-lucid_bg:getContentSize().width)/2, 82)
-    display.newScale9Sprite("dividing_line_584x1.png", lucid_bg:getContentSize().width/2, lucid_bg:getContentSize().height-288,cc.size(580,1)):addTo(lucid_bg)
-
+    display.newScale9Sprite("dividing_line.png",lucid_bg:getContentSize().width/2, lucid_bg:getContentSize().height-288,cc.size(580,2),cc.rect(10,2,382,2)):addTo(lucid_bg)
 
 
     local textView = ccui.UITextView:create(cc.size(578,278),display.newScale9Sprite("background_578X278.png"))
@@ -2004,6 +2006,8 @@ function GameUIMail:GetEnemyAllianceTag(report)
 end
 
 return GameUIMail
+
+
 
 
 

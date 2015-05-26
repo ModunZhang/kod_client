@@ -127,7 +127,7 @@ function WidgetCitizen:ctor(city)
 
         local res_info_bg = cc.ui.UIImage.new("res_info_bg_392x106.png"):addTo(self):pos(window.left + 215, cur_pos)
 
-        cc.ui.UIImage.new("dividing_line_352x2.png"):addTo(res_info_bg):pos(0, 53)
+        display.newScale9Sprite("dividing_line.png",4,53,cc.size(350,2),cc.rect(10,2,382,2)):addTo(res_info_bg):align(display.LEFT_CENTER)
 
         cc.ui.UILabel.new({
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
@@ -176,13 +176,13 @@ function WidgetCitizen:ctor(city)
 
         if i == CITIZEN then
             local add_btn = cc.ui.UIPushButton.new(
-                {normal = "add_btn_up_30x88.png",pressed = "add_btn_down_30x88.png"})
+                {normal = "button_wareHouseUI_normal.png",pressed = "button_wareHouseUI_pressed.png"})
                 :addTo(res_info_bg):pos(375, 53)
                 :onButtonClicked(function(event)
                     WidgetUseItems.new():Create({item_type = WidgetUseItems.USE_TYPE.BUFF,item_name="citizenBonus_1"})
                         :AddToCurrentScene()
-                end)
-            cc.ui.UIImage.new("add_18x19.png"):addTo(add_btn):align(display.CENTER, 0, 0)
+                end):scale(30/49)
+            cc.ui.UIImage.new("+.png"):addTo(add_btn):align(display.CENTER, 0, 0)
         end
 
         self.citizen_number[i] = {production, productionPerHour}

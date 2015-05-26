@@ -10,7 +10,7 @@ local SoldierManager = import("..entity.SoldierManager")
 local Localize = import("..utils.Localize")
 
 local function create_line_item(icon,text_1,text_2,text_3)
-    local line = display.newSprite("dividing_line_384x2.png")
+    local line = display.newScale9Sprite("dividing_line.png",0,0,cc.size(384,2),cc.rect(10,2,382,2))
     local icon = display.newSprite(icon):addTo(line,2):align(display.LEFT_BOTTOM, 0, 2)
     icon:scale(32/icon:getContentSize().width)
     local text1 = UIKit:ttfLabel({

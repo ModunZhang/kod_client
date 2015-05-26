@@ -30,7 +30,8 @@ function GameUIAllianceContribute:ctor()
     self.group = self:CreateContributeGroup()
 
     -- 捐赠能获得荣耀点
-    local honour_bg = display.newSprite("back_ground_138x34.png"):align(display.LEFT_CENTER, 30, 75):addTo(self.body)
+    local honour_bg = display.newScale9Sprite("back_ground_166x84.png",0 , 0,cc.size(138,34),cc.rect(15,10,136,64))
+        :align(display.LEFT_CENTER, 30, 75):addTo(self.body)
     display.newSprite("honour_128x128.png"):align(display.CENTER, 30, 75):addTo(self.body):scale(42/128)
     self.donate_honour = UIKit:ttfLabel({
         text = "+0",
@@ -39,7 +40,8 @@ function GameUIAllianceContribute:ctor()
     }):align(display.CENTER, honour_bg:getContentSize().width/2,honour_bg:getContentSize().height/2)
         :addTo(honour_bg)
     -- 捐赠能获得忠诚
-    local loyalty_bg = display.newSprite("back_ground_138x34.png"):align(display.LEFT_CENTER, 200, 75):addTo(self.body)
+    local loyalty_bg = display.newScale9Sprite("back_ground_166x84.png",0 , 0,cc.size(138,34),cc.rect(15,10,136,64))
+    :align(display.LEFT_CENTER, 200, 75):addTo(self.body)
     display.newSprite("loyalty_128x128.png"):align(display.CENTER, 205, 75):addTo(self.body):scale(46/128)
     self.donate_loyalty = UIKit:ttfLabel({
         text = "+0",
@@ -237,9 +239,9 @@ function GameUIAllianceContribute:CreateContributeGroup()
 end
 function GameUIAllianceContribute:CreateContributeItem(params)
     -- 背景框
-    local body_image = self.which_bg and "upgrade_resources_background_2.png" or "upgrade_resources_background_3.png"
+    local body_image = self.which_bg and "back_ground_548x40_1.png" or "back_ground_548x40_2.png"
     self.which_bg = not self.which_bg
-    local item = display.newScale9Sprite(body_image,0,0,cc.size(548,78),cc.rect(10,10,500,26))
+    local item = display.newScale9Sprite(body_image,0,0,cc.size(548,78),cc.rect(10,10,528,20))
 
     local size = item:getContentSize()
     local icon_bg = display.newSprite("box_118x118.png"):align(display.CENTER, 40, size.height/2)
@@ -360,6 +362,7 @@ function GameUIAllianceContribute:OnAllianceDonateChanged()
     self:RefreashEff()
 end
 return GameUIAllianceContribute
+
 
 
 

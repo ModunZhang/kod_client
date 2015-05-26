@@ -63,7 +63,7 @@ function WidgetRankingList:OnMoveInStage()
     local body = self:GetBody()
     local size = body:getContentSize()
 
-    local bg = display.newSprite("background_548x52.png"):addTo(body)
+    local bg = display.newScale9Sprite("back_ground_166x84.png", 0,0,cc.size(548,52),cc.rect(15,10,136,64)):addTo(body)
         :align(display.TOP_CENTER, size.width / 2, size.height - 110)
 
     self.my_ranking = UIKit:ttfLabel({
