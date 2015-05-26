@@ -296,6 +296,7 @@ function WidgetAllianceCreateOrEdit:createTextfieldPanel()
     editbox_tag:setReturnType(cc.KEYBOARD_RETURNTYPE_DONE)
     editbox_tag:setInputMode(cc.EDITBOX_INPUT_MODE_ASCII_CAPABLE)
     editbox_tag:align(display.LEFT_BOTTOM,0,limitLabel:getContentSize().height+10):addTo(node)
+    editbox_tag:setMaxLength(3)
     self.editbox_tag = editbox_tag
     if not self:IsCreate() then
     	editbox_tag:setText(Alliance_Manager:GetMyAlliance():Tag())

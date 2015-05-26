@@ -569,7 +569,6 @@ local ALLIANCE_EVENTS = {
     request = _("一个玩家申请加入我们的联盟"),
     notice = _("一个新的联盟公告发布"),
     desc = _("一个新的联盟宣言发布"),
-    diplomacy = _("将%s与我盟的外交关系改变为%s"),
     handover = _("晋升为联盟新的盟主"),
     tools = _("向联盟商店补充了一批新的高级道具"),
     upgrade = _("%s 升级到 %s"),
