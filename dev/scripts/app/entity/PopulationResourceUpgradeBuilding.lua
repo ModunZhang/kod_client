@@ -13,7 +13,7 @@ function PopulationResourceUpgradeBuilding:GetProductionLimit()
     return 0
 end
 function PopulationResourceUpgradeBuilding:GetUpdateResourceType()
-    return ResourceManager.RESOURCE_TYPE.POPULATION
+    return ResourceManager.RESOURCE_TYPE.CITIZEN
 end
 function PopulationResourceUpgradeBuilding:GetNextLevelCitizen()
     return config_dwelling[self:GetNextLevel()].citizen

@@ -23,9 +23,9 @@ local timer = app.timer
 local WOOD          = ResourceManager.RESOURCE_TYPE.WOOD
 local FOOD          = ResourceManager.RESOURCE_TYPE.FOOD
 local IRON          = ResourceManager.RESOURCE_TYPE.IRON
-local STONE         = ResourceManager.RESOURCE_TYPE.STONE
-local POPULATION    = ResourceManager.RESOURCE_TYPE.POPULATION
 local COIN          = ResourceManager.RESOURCE_TYPE.COIN
+local STONE         = ResourceManager.RESOURCE_TYPE.STONE
+local CITIZEN       = ResourceManager.RESOURCE_TYPE.CITIZEN
 
 local red_color = UIKit:hex2c4b(0xff3c00)
 local normal_color = UIKit:hex2c4b(0xf3f0b6)
@@ -37,7 +37,7 @@ function GameUIHome:OnResourceChanged(resource_manager)
     local food_resource = allresources[FOOD]
     local iron_resource = allresources[IRON]
     local stone_resource = allresources[STONE]
-    local citizen_resource = allresources[POPULATION]
+    local citizen_resource = allresources[CITIZEN]
     local coin_resource = allresources[COIN]
     local wood_number = wood_resource:GetResourceValueByCurrentTime(server_time)
     local food_number = food_resource:GetResourceValueByCurrentTime(server_time)
@@ -272,23 +272,24 @@ function GameUIHome:CreateTop()
     end):addTo(top_bg):align(display.LEFT_CENTER, top_bg:getContentSize().width/2+2, top_bg:getContentSize().height/2+10)
 
     -- 资源图片和文字
+    self.res_icon_map = {}
     local first_row = 18
     local first_col = 18
     local label_padding = 15
     local padding_width = 100
     local padding_height = 35
     for i, v in ipairs({
-        {"res_wood_82x73.png", "wood_label"},
-        {"res_stone_88x82.png", "stone_label"},
-        {"res_citizen_88x82.png", "citizen_label"},
-        {"res_food_91x74.png", "food_label"},
-        {"res_iron_91x63.png", "iron_label"},
-        {"res_coin_81x68.png", "coin_label"},
+        {"res_wood_82x73.png", "wood_label", "wood"},
+        {"res_stone_88x82.png", "stone_label", "stone"},
+        {"res_citizen_88x82.png", "citizen_label", "citizen"},
+        {"res_food_91x74.png", "food_label", "food"},
+        {"res_iron_91x63.png", "iron_label", "iron"},
+        {"res_coin_81x68.png", "coin_label", "coin"},
     }) do
         local row = i > 3 and 1 or 0
         local col = (i - 1) % 3
         local x, y = first_col + col * padding_width, first_row - (row * padding_height)
-        display.newSprite(v[1]):addTo(button):pos(x, y):scale(0.3)
+        self.res_icon_map[v[3]] = display.newSprite(v[1]):addTo(button):pos(x, y):scale(0.3)
 
         self[v[2]] = UIKit:ttfLabel({text = "",
             size = 18,
@@ -507,7 +508,7 @@ function GameUIHome:CreateBottom()
 
     self.chat = WidgetChat.new():addTo(bottom_bg)
         :align(display.CENTER, bottom_bg:getContentSize().width/2, bottom_bg:getContentSize().height-11)
-        
+
     self.change_map = WidgetChangeMap.new(WidgetChangeMap.MAP_TYPE.OUR_CITY):addTo(self, 1)
 
     return bottom_bg
@@ -535,6 +536,90 @@ function GameUIHome:RefreshVIP()
         local filters = my_filter.newFilter("GRAY", {0.2, 0.3, 0.5, 0.1})
         level_img:setFilter(filters)
     end
+end
+local POWER_ANI_TAG = 1001
+function GameUIHome:ShowPowerAni(wp)
+    self:removeChildByTag(POWER_ANI_TAG)
+    local tp = self:convertToNodeSpace(self.power_label:convertToWorldSpace(cc.p(0,0)))
+    local lp = self:convertToNodeSpace(wp)
+    local time, delay_time = 1, 0.25
+    local emitter = cc.ParticleFlower:createWithTotalParticles(200)
+        :addTo(self, 100, POWER_ANI_TAG):pos(lp.x, lp.y)
+    emitter:setDuration(time + delay_time)
+    emitter:setLife(1)
+    emitter:setLifeVar(1)
+    emitter:setStartColor(cc.c4f(1.0,0.84,0.48,1.0))
+    emitter:setStartColorVar(cc.c4f(0.0))
+    emitter:setTexture(cc.Director:getInstance():getTextureCache():addImage("stars.png"))
+    emitter:runAction(transition.sequence{
+        cc.MoveTo:create(time, cc.p(tp.x, tp.y)),
+        cc.CallFunc:create(function()
+            self:ScalePowerLabel()
+        end),
+        cc.DelayTime:create(delay_time),
+    })
+end
+function GameUIHome:ScalePowerLabel()
+    self.power_label:runAction(transition.sequence{
+        cc.ScaleTo:create(0.2, 1.1),
+        cc.ScaleTo:create(0.2, 1),
+    })
+end
+local RES_ICON_TAG = {
+    food = 1010,
+    wood = 1011,
+    iron = 1012,
+    coin = 1013,
+    stone = 1014,
+    citizen = 1015,
+}
+local icon_map = {
+    food = "res_food_91x74.png",
+    wood = "res_wood_82x73.png",
+    iron = "res_iron_91x63.png",
+    coin = "res_coin_81x68.png",
+    stone = "res_stone_88x82.png",
+    citizen = "res_citizen_88x82.png",
+}
+function GameUIHome:ShowResourceAni(resource, wp)
+    self:removeChildByTag(RES_ICON_TAG[resource])
+
+    local tp = self:convertToNodeSpace(self.res_icon_map[resource]:convertToWorldSpace(cc.p(0,0)))
+    local lp = self:convertToNodeSpace(wp)
+
+    local x,y,tx,ty = lp.x,lp.y,tp.x, tp.y
+    local icon = display.newSprite(icon_map[resource])
+        :addTo(self):pos(x,y):scale(0.8)
+
+    local size = icon:getContentSize()
+    local emitter = cc.ParticleFlower:createWithTotalParticles(200)
+    :addTo(icon):pos(size.width/2, size.height/2)
+
+    local time = 1
+    emitter:setPosVar(cc.p(10,10))
+    emitter:setDuration(time)
+    emitter:setCascadeOpacityEnabled(true)
+    emitter:setLife(1)
+    emitter:setLifeVar(1)
+    emitter:setStartColor(cc.c4f(1.0))
+    emitter:setStartColorVar(cc.c4f(0.0))
+    emitter:setTexture(cc.Director:getInstance():getTextureCache():addImage("stars.png"))
+
+
+    local bezier2 ={
+        cc.p(x,y),
+        cc.p((x + tx) * 0.5 + math.random(200) - 100, (y + ty) * 0.5),
+        cc.p(tx, ty)
+    }
+    icon:runAction(
+        cc.Spawn:create({
+            cc.ScaleTo:create(time, 0.5),
+            transition.sequence{
+                cc.BezierTo:create(time, bezier2),
+                -- cc.RemoveSelf:create(),
+            }
+        })
+    )
 end
 
 -- fte
@@ -590,7 +675,7 @@ function GameUIHome:PromiseOfFteFreeSpeedUp()
 
             local r = self:Find():getCascadeBoundingBox()
             WidgetFteArrow.new(_("5分钟以下免费加速")):addTo(self:GetFteLayer())
-            :TurnDown(true):align(display.RIGHT_BOTTOM, r.x + r.width/2 + 30, r.y + 50)
+                :TurnDown(true):align(display.RIGHT_BOTTOM, r.x + r.width/2 + 30, r.y + 50)
         end)
 
         return self.city:PromiseOfFinishUpgradingByLevel(nil, nil):next(function()
@@ -673,13 +758,14 @@ function GameUIHome:PromiseOfFteAllianceMap()
 
     WidgetFteArrow.new(_("查看联盟地图")):addTo(btn, 10, 102)
         :TurnDown(false):align(display.LEFT_BOTTOM, 0, 50)
-        
+
     btn:stopAllActions()
     btn:performWithDelay(function() btn:removeChildByTag(102) end, 10)
 end
 
 
 return GameUIHome
+
 
 
 
