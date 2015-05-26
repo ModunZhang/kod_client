@@ -710,9 +710,9 @@ function WidgetRecruitSoldier:PromiseOfFteSpecial()
         self:Close()
     end)
 
-    local r = self:Find():getBoundingBox()
+    local r = self:Find():getCascadeBoundingBox()
     WidgetFteArrow.new(_("点击招募")):addTo(fte_layer)
-        :TurnRight():align(display.RIGHT_CENTER, r.x - 20, r.y + r.height/2)
+        :TurnLeft():align(display.LEFT_CENTER, r.x + r.width + 20, r.y + r.height/2 + 20)
 
     return self.city:PromiseOfRecruitSoldier("skeletonWarrior"):next(function()
         fte_layer:removeFromParent()

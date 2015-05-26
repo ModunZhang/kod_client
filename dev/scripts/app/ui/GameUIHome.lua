@@ -704,7 +704,10 @@ function GameUIHome:PromiseOfFteFreeSpeedUp()
         end)
 
         return self.city:PromiseOfFinishUpgradingByLevel(nil, nil)
-        :next(function()self:GetFteLayer():Reset()end)
+        :next(function()
+            self:GetFteLayer():removeFromParent()
+            self:GetFteLayer()
+        end)
         :next(cocos_promise.delay(1))
         :next(function()self:GetFteLayer():removeFromParent()end)
     end
@@ -742,7 +745,10 @@ function GameUIHome:PromiseOfFteInstantSpeedUp()
         end)
 
         return self.city:PromiseOfFinishUpgradingByLevel()
-        :next(function()self:GetFteLayer():Reset()end)
+        :next(function()
+            self:GetFteLayer():removeFromParent()
+            self:GetFteLayer()
+        end)
         :next(cocos_promise.delay(1))
         :next(function()self:GetFteLayer():removeFromParent()end)
     end

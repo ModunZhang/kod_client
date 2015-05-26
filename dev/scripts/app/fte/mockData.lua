@@ -61,7 +61,9 @@ end
 
 local function FinishBuildHouseAt(building_location_id, level)
     remove_global_shceduler()
+
     local modify = {
+        {"basicInfo.power", DataManager:getFteData().basicInfo.power + 50},
         {"houseEvents.0", json.null},
         {string.format("buildings.location_%d.houses.1.level", building_location_id), level}
     }
@@ -164,12 +166,9 @@ local function FinishUpgradingBuilding(type, level)
     end
     assert(location_id)
     local modify = {
-        {
-            "buildingEvents.0", json.null
-        },
-        {
-            string.format("buildings.location_%d.level", location_id), level
-        }
+        {"basicInfo.power", DataManager:getFteData().basicInfo.power + 100},
+        {"buildingEvents.0", json.null},
+        {string.format("buildings.location_%d.level", location_id), level}
     }
     if type == "keep" and level > 1 then
         local newindex = #DataManager:getFteData().growUpTasks.cityBuild
