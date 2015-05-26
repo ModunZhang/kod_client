@@ -14,6 +14,7 @@ function GameUIWarSummary:ctor()
     GameUIWarSummary.super.ctor(self,605,_("战斗结算"))
 end
 function GameUIWarSummary:onEnter()
+    app:GetAudioManager():PlayeEffectSoundWithKey('BATTLE_DRAGON')
     GameUIWarSummary.super.onEnter(self)
     self:DisableCloseBtn()
     self:DisableAutoClose()

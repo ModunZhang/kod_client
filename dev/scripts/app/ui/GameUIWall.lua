@@ -273,7 +273,7 @@ end
 
 function GameUIWall:GetListItem(index,data)
 	local item = self.info_list:newItem()
-	local imageName = string.format("box_bg_item_520x48_%d.png",index%2)
+	local imageName = string.format("box_bg_item_520x48_%d.png",index%2==0 and 1 or 2)
 	local content = display.newScale9Sprite(imageName):size(546,42)
 	UIKit:ttfLabel({
 		text = data.title,

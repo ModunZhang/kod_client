@@ -2,7 +2,7 @@
 -- Author: Danny He
 -- Date: 2015-02-24 15:14:22
 --
-local GameUISettingServer = UIKit:createUIClass("GameUISettingServer")
+local GameUISettingServer = UIKit:createUIClass("GameUISettingServer","UIAutoClose")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local window = import("..utils.window")
 local WidgetPushButton = import("..widget.WidgetPushButton")
@@ -22,8 +22,8 @@ function GameUISettingServer:onEnter()
 end
 
 function GameUISettingServer:BuildUI()
-	local shadowLayer = UIKit:shadowLayer():addTo(self)
-	local bg = WidgetUIBackGround.new({height=762}):addTo(shadowLayer)
+	local bg = WidgetUIBackGround.new({height=762})
+	self:addTouchAbleChild(bg)
 	self.bg = bg
 	bg:pos(((display.width - bg:getContentSize().width)/2),window.bottom_top)
 	local titleBar = display.newSprite("title_blue_600x56.png"):align(display.LEFT_BOTTOM,3,747):addTo(bg)
@@ -88,8 +88,8 @@ function GameUISettingServer:BuildServersUI()
  		text = "",
  		size = 22,
  		color= 0x288400,
- 		align = cc.TEXT_ALIGNMENT_CENTER,
- 	}):align(display.LEFT_CENTER, 25, 15):addTo(honour_bg)
+ 		align = cc.TEXT_ALIGNMENT_RIGHT,
+ 	}):align(display.RIGHT_CENTER, 120, 15):addTo(honour_bg)
 
  	local gem_label = UIKit:ttfLabel({
  		text = "",

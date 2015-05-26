@@ -1111,9 +1111,15 @@ function GameUIMail:ShowMailDetails(mail)
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(content_bg):pos(10, 0)
     local content_item = content_listview:newItem()
+    local mail_content = mail.content
+    if mail.fromName == "__system" then
+        for k,v in pairs(Localize.mails) do
+           mail_content = string.gsub(mail_content, k, v)
+        end
+    end
     local content_label = UIKit:ttfLabel(
         {
-            text = mail.content,
+            text = mail_content,
             size = 20,
             dimensions = cc.size(550,0),
             color = 0x403c2f

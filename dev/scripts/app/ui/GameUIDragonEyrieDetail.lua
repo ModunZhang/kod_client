@@ -704,7 +704,7 @@ function GameUIDragonEyrieDetail:GetInfomationData()
 end
 
 function GameUIDragonEyrieDetail:GetInfoListItem(index,title,val)
-    local bg = display.newSprite(string.format("box_bg_item_520x48_%d.png",index%2))
+    local bg = display.newSprite(string.format("box_bg_item_520x48_%d.png",index%2 == 0 and 1 or 2))
     UIKit:ttfLabel({
         text = title,
         color = 0x615b44,
