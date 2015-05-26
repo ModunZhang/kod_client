@@ -105,7 +105,7 @@ function GameUIChatChannel:CreateTextFieldBody()
 
     local editbox = cc.ui.UIInput.new({
     	UIInputType = 1,
-        image = "chat_Input_box_417x51.png",
+        image = "input_box.png",
         size = cc.size(417,51),
         listener = onEdit,
     })
@@ -185,10 +185,9 @@ end
 
 
 function GameUIChatChannel:GetChatIcon(icon)
-    local bg = display.newSprite("chat_hero_background_66x66.png")
+    local bg = display.newSprite("dragon_bg_114x114.png"):scale(66/114)
     local icon = UIKit:GetPlayerIconOnly(icon):addTo(bg):align(display.LEFT_BOTTOM,-5, 1)
     bg.icon = icon
-    icon:scale(0.6)
     return bg
 end
 

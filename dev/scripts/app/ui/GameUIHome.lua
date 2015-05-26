@@ -243,7 +243,7 @@ function GameUIHome:CreateTop()
     }):addTo(name_bg):align(display.LEFT_CENTER, 14, name_bg:getContentSize().height/2 + 3)
 
     -- 玩家战斗值图片
-    display.newSprite("power_16x19.png"):addTo(top_bg):pos(ox + 20, 65)
+    display.newSprite("dragon_strength_27x31.png"):addTo(top_bg):pos(ox + 20, 65):scale(16/27)
 
     -- 玩家战斗值文字
     UIKit:ttfLabel({
@@ -298,11 +298,11 @@ function GameUIHome:CreateTop()
     end
 
     -- 玩家信息背景
-    local player_bg = display.newSprite("player_bg_110x106.png")
+    local player_bg = display.newSprite("player_info_bg_120x120.png")
         :align(display.LEFT_BOTTOM, display.width>640 and 58 or 60, 10)
-        :addTo(top_bg, 2):setCascadeOpacityEnabled(true)
+        :addTo(top_bg, 2):scale(110/120):setCascadeOpacityEnabled(true)
     self.player_icon = UIKit:GetPlayerIconOnly(User:Icon())
-        :addTo(player_bg):pos(55, 64):scale(0.72)
+        :addTo(player_bg):pos(60, 68):scale(0.78)
     self.exp = display.newProgressTimer("player_exp_bar_110x106.png",
         display.PROGRESS_TIMER_RADIAL):addTo(player_bg):pos(55, 53)
     self.exp:setRotationSkewY(180)

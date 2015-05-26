@@ -404,8 +404,7 @@ local function newSoldierInBattle(list_view, is_left)
     }):addTo(title):align(display.CENTER, s1.width/2, 13)
 
     local soldier = WidgetSoldier.new("ranger", 1, false):addTo(content):pos(50, 50):scale(88/128)
-
-    display.newSprite("back_ground_178x90.png"):addTo(content):pos(190, 50)
+    display.newScale9Sprite("back_ground_166x84.png",190 , 50,cc.size(178,90),cc.rect(15,10,136,64)):addTo(content)
 
     local type_ = UIKit:ttfLabel({
         color = 0x403c2f,
@@ -1649,6 +1648,7 @@ function GameUIReplayNew:BuildUI()
 end
 
 return GameUIReplayNew
+
 
 
 

@@ -53,7 +53,8 @@ function GameUIBuild:onExit()
     GameUIBuild.super.onExit(self)
 end
 function GameUIBuild:LoadBuildingQueue()
-    local back_ground = cc.ui.UIImage.new("back_ground_534x46.png"):align(display.CENTER, window.cx, window.top - 120)
+    local back_ground = display.newScale9Sprite("back_ground_166x84.png", 0,0,cc.size(534,46),cc.rect(15,10,136,64))
+        :align(display.CENTER, window.cx, window.top - 120)
     local check = cc.ui.UICheckBoxButton.new({on = "yes_40x40.png", off = "wow_40x40.png" })
         :addTo(back_ground)
         :align(display.CENTER, 30, back_ground:getContentSize().height/2)
@@ -235,7 +236,7 @@ function GameUIBuild:CreateItemWithListView(list_view)
 
 
     local left_x, right_x = 5, 150
-    local frame = display.newSprite("bg_134x134.png"):addTo(back_ground):pos((left_x + right_x) / 2, h/2)
+    local frame = display.newSprite("alliance_item_flag_box_126X126.png"):addTo(back_ground):pos((left_x + right_x) / 2, h/2):scale(134/126)
     local info_btn = WidgetPushButton.new(
         {normal = "info_26x26.png",pressed = "info_26x26.png"})
         :addTo(frame)
@@ -333,5 +334,7 @@ function GameUIBuild:CreateItemWithListView(list_view)
 end
 
 return GameUIBuild
+
+
 
 

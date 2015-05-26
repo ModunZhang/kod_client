@@ -488,8 +488,6 @@ local DECORATOR_IMAGE = {
         decorate_tree_2 =  "tree_2_grassLand.png",
         decorate_tree_3 =  "tree_3_grassLand.png",
         decorate_tree_4 =  "tree_4_grassLand.png",
-        stone_mountain  = "grass_stone_mountain_80x58.png",
-        farmland        = "grass_farmland_80x55.png"
     },
     iceField = {
         decorate_lake_1 = "lake_1_iceField.png",
@@ -500,8 +498,6 @@ local DECORATOR_IMAGE = {
         decorate_tree_2 =  "tree_2_iceField.png",
         decorate_tree_3 =  "tree_3_iceField.png",
         decorate_tree_4 =  "tree_4_iceField.png",
-        stone_mountain  = "ice_stone_mountain_80x58.png",
-        farmland        = "ice_farmland_80x55.png"
     },
     desert = {
         decorate_lake_1 = "lake_1_desert.png",
@@ -512,14 +508,12 @@ local DECORATOR_IMAGE = {
         decorate_tree_2 =  "tree_2_desert.png",
         decorate_tree_3 =  "tree_3_desert.png",
         decorate_tree_4 =  "tree_4_desert.png",
-        stone_mountain  = "desert_stone_mountain_80x58.png",
-        farmland        = "desert_farmland_80x55.png"
     },
 }
 local DRAGON_HEAD = {
     blueDragon = "Dragon_blue_113x128.png",
-    redDragon = "Dragon_red_113x128.png",
-    greenDragon = "Dragon_green_113x128.png"
+    redDragon = "redDragon.png",
+    greenDragon = "greenDragon.png"
 }
 local BUFF = {
     masterOfDefender = "masterOfDefender_128x128.png",

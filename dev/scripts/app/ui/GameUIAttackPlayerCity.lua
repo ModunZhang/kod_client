@@ -50,7 +50,7 @@ function GameUIAttackPlayerCity:BuildUI()
    		self:LeftButtonClicked()
    	end)
    	local box = display.newSprite("alliance_item_flag_box_126X126.png"):align(display.LEFT_TOP,30,titleBar:getPositionY()-10):addTo(bg_node):scale(0.7)
-   	local head_bg = display.newSprite("chat_hero_background.png", 63, 63):addTo(box)
+   	local head_bg = display.newSprite("dragon_bg_114x114.png", 63, 63):addTo(box)
 	display.newSprite(UILib.dragon_head[self:GetMyTroop().dragon.type], 56, 60):addTo(head_bg)
 
 	local line_2 = display.newScale9Sprite("dividing_line.png")

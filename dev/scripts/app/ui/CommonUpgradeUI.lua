@@ -87,7 +87,7 @@ end
 
 function CommonUpgradeUI:InitCommonPart()
     -- building level
-    local level_bg = display.newSprite("upgrade_level_bg.png", display.cx+80, display.top-125):addTo(self)
+    local level_bg = display.newScale9Sprite("title_blue_430x30.png",display.cx+80, display.top-125, cc.size(390,30), cc.rect(10,10,410,10)):addTo(self)
     self.builging_level = UIKit:ttfLabel({
         font = UIKit:getFontFilePath(),
         size = 26,
@@ -96,9 +96,6 @@ function CommonUpgradeUI:InitCommonPart()
     }):align(display.LEFT_CENTER, 20, level_bg:getContentSize().height/2)
         :addTo(level_bg)
     -- 建筑功能介绍
-    -- 建筑图片 放置区域左右边框
-    -- cc.ui.UIImage.new("building_frame_36x136.png"):align(display.CENTER, display.cx-250, display.top-175)
-    --     :addTo(self):setFlippedX(true)
     WidgetPushButton.new({normal = "alliance_item_flag_box_126X126.png"})
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then

@@ -154,8 +154,8 @@ function GameUIShrineReport:GetFightItemContent()
     title_part.title_label = title_label
     --内容
     local content_part = display.newNode()
-    local bg0 = display.newScale9Sprite("resource_item_bg0.png"):size(548,92):align(display.LEFT_BOTTOM,0,0):addTo(content_part)
-    local bg1 = display.newScale9Sprite("resource_item_bg1.png"):size(548,92):align(display.LEFT_BOTTOM,0,0):addTo(content_part)
+    local bg0 = display.newScale9Sprite("back_ground_548x40_1.png"):size(548,92):align(display.LEFT_BOTTOM,0,0):addTo(content_part)
+    local bg1 = display.newScale9Sprite("back_ground_548x40_2.png"):size(548,92):align(display.LEFT_BOTTOM,0,0):addTo(content_part)
     content_part.bg0 = bg0
     content_part.bg1 = bg1
     content_part:addTo(content)
@@ -188,7 +188,7 @@ end
 
 
 function GameUIShrineReport:GetChatIcon(icon)
-    local bg = display.newSprite("chat_hero_background.png")
+    local bg = display.newSprite("dragon_bg_114x114.png")
     local icon = UIKit:GetPlayerIconOnly(icon):addTo(bg):align(display.LEFT_BOTTOM,-5, 1)
     bg.icon = icon
     return bg
@@ -322,8 +322,8 @@ end
 
 function GameUIShrineReport:GetPlayerDataItemContent()
     local content = display.newNode() -- 548 x 80
-    local bg0 = display.newScale9Sprite("resource_item_bg0.png"):size(548,80):align(display.LEFT_BOTTOM,0,0):addTo(content)
-    local bg1 = display.newScale9Sprite("resource_item_bg1.png"):size(548,80):align(display.LEFT_BOTTOM,0,0):addTo(content)
+    local bg0 = display.newScale9Sprite("back_ground_548x40_1.png"):size(548,80):align(display.LEFT_BOTTOM,0,0):addTo(content)
+    local bg1 = display.newScale9Sprite("back_ground_548x40_2.png"):size(548,80):align(display.LEFT_BOTTOM,0,0):addTo(content)
     local bg2 = display.newScale9Sprite("shire_rank_bg_548x66.png"):size(548,80):align(display.LEFT_BOTTOM,0,0):addTo(content)
     local reward3 = display.newSprite("goldKill_icon_76x84.png"):align(display.LEFT_CENTER,12, 40):addTo(content):scale(0.8)
     local reward2 = display.newSprite("silverKill_icon_76x84.png"):align(display.LEFT_CENTER,20, 40):addTo(content):scale(0.8)

@@ -371,7 +371,7 @@ function WidgetUseItems:OpenOneDragonItemExpDialog( item ,dragon)
     }):align(display.RIGHT_CENTER,blood_bg:getContentSize().width-20,blood_bg:getContentSize().height/2)
         :addTo(blood_bg)
 
-    local exp_icon = display.newSprite("dragonskill_xp_51x63.png")
+    local exp_icon = display.newSprite("upgrade_experience_icon.png")
         :align(display.CENTER,dragon_value:getPositionX() - dragon_value:getContentSize().width - 20,blood_bg:getContentSize().height/2)
         :addTo(blood_bg)
         :scale(0.6)
@@ -559,7 +559,7 @@ function WidgetUseItems:OpenIncreaseDragonExpOrHp( item )
         local dragon_frame = display.newSprite("alliance_item_flag_box_126X126.png")
 
 
-        local dragon_bg = display.newSprite("chat_hero_background.png")
+        local dragon_bg = display.newSprite("dragon_bg_114x114.png")
             :align(display.LEFT_CENTER, 7,dragon_frame:getContentSize().height/2)
             :addTo(dragon_frame)
         local dragon_img = display.newSprite(dragon:Type()..".png")
@@ -1146,11 +1146,9 @@ function WidgetUseItems:OpenRetreatTroopDialog( item,event )
 end
 
 function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc,buyAndUseFunc,which_bg)
-    local body_image = which_bg and "upgrade_resources_background_2.png" or "upgrade_resources_background_3.png"
-    local body = display.newScale9Sprite(body_image,0,0,cc.size(548,130),cc.rect(10,10,500,26))
+    local body_image = which_bg and "back_ground_548x40_1.png" or "back_ground_548x40_2.png"
+    local body = display.newScale9Sprite(body_image,0,0,cc.size(548,130),cc.rect(10,10,528,20))
     body:setNodeEventEnabled(true)
-
-
 
     function body:onExit()
         ItemManager:RemoveListenerOnType(self,ItemManager.LISTEN_TYPE.ITEM_CHANGED)
@@ -1200,7 +1198,7 @@ function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc,buyAndUseFun
                 end
             end
             if item:IsSell() then
-                local price_bg = display.newSprite("back_ground_118x36.png"):addTo(body):align(display.CENTER,470,94)
+                local price_bg = display.newScale9Sprite("back_ground_166x84.png",0 , 0,cc.size(118,36),cc.rect(15,10,136,64)):addTo(body):align(display.CENTER,470,94)
                 -- gem icon
                 local gem_icon = display.newSprite("gem_icon_62x61.png"):addTo(price_bg):align(display.CENTER, 20, price_bg:getContentSize().height/2):scale(0.6)
                 UIKit:ttfLabel({
@@ -1211,7 +1209,7 @@ function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc,buyAndUseFun
                     :addTo(price_bg)
             end
         else
-            local num_bg = display.newSprite("back_ground_118x36.png"):addTo(body):align(display.CENTER,470,94)
+            local num_bg = display.newScale9Sprite("back_ground_166x84.png",0 , 0,cc.size(118,36),cc.rect(15,10,136,64)):addTo(body):align(display.CENTER,470,94)
 
             local own_label = UIKit:ttfLabel({
                 text = string.format(_("拥有:%d"), item:Count()),

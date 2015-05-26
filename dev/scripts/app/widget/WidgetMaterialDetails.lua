@@ -139,8 +139,8 @@ function WidgetMaterialDetails:CreateOriginItem(listView,label,callback)
     local item = listView:newItem()
     local item_width,item_height = 547,57
     item:setItemSize(item_width,item_height)
-    local image = self.flag and "upgrade_resources_background_3.png" or "upgrade_resources_background_2.png"
-    local bg = display.newScale9Sprite(image,0,0,cc.size(item_width, item_height),cc.rect(10,10,500,26))
+    local image = self.flag and "back_ground_548x40_1.png" or "back_ground_548x40_2.png"
+    local bg = display.newScale9Sprite(image,0,0,cc.size(item_width, item_height),cc.rect(10,10,528,20))
     -- star icon
     display.newSprite("star_23X23.png"):align(display.LEFT_CENTER, 10, item_height/2):addTo(bg)
     -- 来源 label

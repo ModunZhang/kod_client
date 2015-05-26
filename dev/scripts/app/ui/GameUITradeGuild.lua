@@ -225,7 +225,7 @@ function GameUITradeGuild:CreateSellItemForListView(listView,goods)
     item:addContent(content)
     listView:addItem(item)
     -- 商品icon
-    local icon_bg = display.newSprite("back_ground_58x54.png")
+    local icon_bg =  display.newScale9Sprite("back_ground_166x84.png",0 , 0,cc.size(58,54),cc.rect(15,10,136,64))
         :align(display.LEFT_CENTER, 6, content:getContentSize().height/2)
         :addTo(content)
     local icon_image = display.newSprite(self:GetGoodsIcon(listView,goods.itemData.name))
@@ -456,8 +456,9 @@ function GameUITradeGuild:LoadMyGoodsPage()
         :align(display.BOTTOM_LEFT, -car_btn:getCascadeBoundingBox().size.width/2+6, -car_btn:getCascadeBoundingBox().size.height/2+6)
 
     --title bg
-    local title_bg = display.newSprite("title_blue_408x30.png"):addTo(layer)
+    local title_bg = display.newScale9Sprite("title_blue_430x30.png",0,0, cc.size(408,30), cc.rect(10,10,410,10))
         :align(display.CENTER, window.cx +70 , window.top- 108)
+        :addTo(layer)
     --title label
     UIKit:ttfLabel(
         {
@@ -1113,6 +1114,7 @@ function GameUITradeGuild:GetMaterialIndexByName(material_type)
     return build_temp[material_type] or teach_temp[material_type]
 end
 return GameUITradeGuild
+
 
 
 

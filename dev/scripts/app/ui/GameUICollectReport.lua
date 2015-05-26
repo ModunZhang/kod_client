@@ -109,8 +109,8 @@ function GameUICollectReport:CreateBootyPart()
         local booty_item_bg_color_flag = true
         local added_booty_item_count = 0
         for k,booty_parms in pairs(self:GetBooty()) do
-            local booty_item_bg_image = booty_item_bg_color_flag and "upgrade_resources_background_3.png" or "upgrade_resources_background_2.png"
-            local booty_item_bg = display.newSprite(booty_item_bg_image)
+            local booty_item_bg_image = booty_item_bg_color_flag and "back_ground_548x40_1.png" or "back_ground_548x40_2.png"
+            local booty_item_bg = display.newScale9Sprite(booty_item_bg_image,0,0,cc.size(520,46),cc.rect(10,10,528,20))
                 :align(display.TOP_CENTER, booty_list_bg_size.width/2, booty_list_bg_size.height-item_height*added_booty_item_count-6)
                 :addTo(booty_list_bg,2)
             local booty_icon = display.newSprite(booty_parms.icon, 30, 23):addTo(booty_item_bg)

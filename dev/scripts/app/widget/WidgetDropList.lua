@@ -61,7 +61,7 @@ function WidgetDropList:onEnter()
 	local button = cc.ui.UIPushButton.new({normal = "drop_down_box_button_normal_52x44.png",pressed = "drop_down_box_button_light_52x44.png"})
 		:align(display.RIGHT_BOTTOM, 554,7):addTo(header)
 		:onButtonClicked(handler(self, self.OnBoxButtonClicked))
-	display.newSprite("drop_down_box_icon_3128.png"):addTo(button):pos(-26,22)
+	display.newSprite("shrine_page_control_26x34.png"):addTo(button):pos(-26,22):setRotation(90)
 	self.title_label = UIKit:ttfLabel({
 		text = "",
 		size = 20,

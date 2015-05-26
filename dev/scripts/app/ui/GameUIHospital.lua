@@ -1,6 +1,7 @@
 local WidgetWithBlueTitle = import("..widget.WidgetWithBlueTitle")
 local UIListView = import('.UIListView')
 local WidgetPushButton = import("..widget.WidgetPushButton")
+local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetSoldierBox = import("..widget.WidgetSoldierBox")
 local WidgetTimerProgressStyleTwo = import("..widget.WidgetTimerProgressStyleTwo")
 local WidgetTreatSoldier = import("..widget.WidgetTreatSoldier")
@@ -146,7 +147,8 @@ function GameUIHospital:CreateHealAllSoldierItem()
         [COIN]  = {total_coin,"res_coin_81x68.png"},
     }
     -- 资源背景框
-    local resource_bg = display.newSprite("back_ground_556x56.png"):addTo(self.treate_all_soldiers_item):pos(self.treate_all_soldiers_item:getContentSize().width/2,180)
+    local resource_bg = WidgetUIBackGround.new({width = 556,height = 56},WidgetUIBackGround.STYLE_TYPE.STYLE_5)
+        :addTo(self.treate_all_soldiers_item):pos(self.treate_all_soldiers_item:getContentSize().width/2,180)
     for k,v in pairs(resource_icons) do
         self.heal_resource_item_table[k] = createResourceItem(v[2],v[1]):addTo(self.treate_all_soldiers_item):pos(bg_size.width/2-40, 165)
     end

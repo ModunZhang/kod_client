@@ -175,7 +175,7 @@ end
 function UIKit:getRegistry()
     return self.Registry
 end
---[[ 
+--[[
 不会关闭的界面:答题界面  联盟结算界面 网络相关的信息弹出框 联盟对战相关的弹出框
 --]]
 function UIKit:closeAllUI(force)
@@ -369,7 +369,7 @@ end
 
 function UIKit:GetPlayerCommonIcon(key,isOnline)
     isOnline = type(isOnline) ~= 'boolean' and true or isOnline
-    local heroBg = isOnline and display.newSprite("chat_hero_background.png") or self:getDiscolorrationSprite("chat_hero_background.png")
+    local heroBg = isOnline and display.newSprite("dragon_bg_114x114.png") or self:getDiscolorrationSprite("dragon_bg_114x114.png")
     self:GetPlayerIconOnly(key,isOnline):addTo(heroBg)
         :align(display.CENTER,56,65)
     return heroBg
@@ -400,17 +400,11 @@ end
 
 
 function UIKit:CreateBoxWithoutContent(params)
-    if not params then
-        return display.newSprite("mission_box_558x66.png")
-    else
-        local sp = display.newScale9Sprite("mission_box_558x66.png")
-        sp:size(params.width or 558,params.height or 66)
-    end
+    return WidgetUIBackGround.new({width = params.width or 558,height = params.height or 66},WidgetUIBackGround.STYLE_TYPE.STYLE_4)
 end
 function UIKit:CreateBoxPanelWithBorder(params)
-    local node = display.newScale9Sprite("panel_556x120.png")
+    local node = WidgetUIBackGround.new({width = params.width or 556,height = params.height or 120},WidgetUIBackGround.STYLE_TYPE.STYLE_5)
     node:setAnchorPoint(cc.p(0,0))
-    node:size(params.width or 556,params.height or 120)
     return node
 end
 
@@ -428,7 +422,7 @@ function UIKit:commonTitleBox(height)
     local list_bg = display.newScale9Sprite("back_ground_540x64.png", 4, 0,cc.size(540, height - 50),cc.rect(10,10,520,44))
         :align(display.LEFT_BOTTOM):addTo(node)
     local title_bg = display.newSprite("alliance_evnets_title_548x50.png"):align(display.LEFT_BOTTOM, 0, height - 50):addTo(node)
-    
+
     return node
 end
 
@@ -860,6 +854,7 @@ function UIKit:GetItemImage(reward_type,item_key)
         end
     end
 end
+
 
 
 

@@ -199,8 +199,8 @@ function GameUIStrikeReport:CreateBootyPart()
         local booty_item_bg_color_flag = true
         local added_booty_item_count = 0
         for k,booty_parms in pairs(self:GetBooty()) do
-            local booty_item_bg_image = booty_item_bg_color_flag and "upgrade_resources_background_3.png" or "upgrade_resources_background_2.png"
-            local booty_item_bg = display.newSprite(booty_item_bg_image)
+            local booty_item_bg_image = booty_item_bg_color_flag and "back_ground_548x40_1.png" or "back_ground_548x40_2.png"
+            local booty_item_bg = display.newScale9Sprite(booty_item_bg_image):size(520,46)
                 :align(display.TOP_CENTER, booty_list_bg_size.width/2, booty_list_bg_size.height-item_height*added_booty_item_count-6)
                 :addTo(booty_list_bg,2)
             local booty_icon = display.newSprite(booty_parms.icon, 30, 23):addTo(booty_item_bg)
@@ -352,7 +352,7 @@ function GameUIStrikeReport:CreateArmyItem(dragon,isSelf)
     local army_item = self:CreateSmallBackGround({height=h,title=Localize.dragon[dragon.type],isSelf=isSelf})
 
     local function createInfoItem(params)
-        local item  = display.newSprite(params.bg_image)
+        local item  = display.newScale9Sprite(params.bg_image,0,0,cc.size(254,28),cc.rect(10,10,528,20))
         local title = UIKit:ttfLabel({
             text = params.title ,
             size = 18,
@@ -375,13 +375,13 @@ function GameUIStrikeReport:CreateArmyItem(dragon,isSelf)
 
     local army_info = {
         {
-            bg_image = "back_ground_254x28_2.png",
+            bg_image = "back_ground_548x40_1.png",
             title = "Level",
             value = dragon.level,
         },
 
         {
-            bg_image = "back_ground_254x28_1.png",
+            bg_image = "back_ground_548x40_2.png",
             title = "HP",
             value = dragon.hp.."/-"..dragon.hpDecreased,
         },
@@ -450,8 +450,8 @@ function GameUIStrikeReport:CreateEnemyResource()
     local added_r_item_count = 0
 
     for k,r_parms in pairs(unpack_resources) do
-        local r_item_bg_image = r_item_bg_color_flag and "back_ground_546X36_1.png" or "back_ground_546X36_2.png"
-        local r_item_bg = display.newSprite(r_item_bg_image)
+        local r_item_bg_image = r_item_bg_color_flag and "back_ground_548x40_1.png" or "back_ground_548x40_2.png"
+        local r_item_bg = display.newScale9Sprite(r_item_bg_image,0,0,cc.size(546,36),cc.rect(10,10,528,20))
             :align(display.TOP_CENTER, group_width/2, r_list_height-r_tip_height*added_r_item_count)
             :addTo(group)
         local r_icon = display.newSprite(r_parms.icon, 30, 18):addTo(r_item_bg)
@@ -515,8 +515,8 @@ function GameUIStrikeReport:CreateEnemyTechnology()
     local added_r_item_count = 0
     for i = #militaryTechs,1,-1 do
         local r_parms = militaryTechs[i]
-        local r_item_bg_image = r_item_bg_color_flag and "back_ground_546X36_1.png" or "back_ground_546X36_2.png"
-        local r_item_bg = display.newSprite(r_item_bg_image)
+        local r_item_bg_image = r_item_bg_color_flag and "back_ground_548x40_1.png" or "back_ground_548x40_2.png"
+        local r_item_bg = display.newScale9Sprite(r_item_bg_image,0,0,cc.size(546,36),cc.rect(10,10,528,20))
             :align(display.TOP_CENTER, group_width/2, r_list_height-r_tip_height*added_r_item_count+4)
             :addTo(group)
         local soldiers = string.split(r_parms.name, "_")
@@ -592,8 +592,8 @@ function GameUIStrikeReport:CreateDragonSkills()
         local r_item_bg_color_flag = true
         local added_r_item_count = 0
         for k,r_parms in pairs(skills) do
-            local r_item_bg_image = r_item_bg_color_flag and "back_ground_546X36_1.png" or "back_ground_546X36_2.png"
-            local r_item_bg = display.newSprite(r_item_bg_image)
+            local r_item_bg_image = r_item_bg_color_flag and "back_ground_548x40_1.png" or "back_ground_548x40_2.png"
+            local r_item_bg = display.newScale9Sprite(r_item_bg_image,0,0,cc.size(546,36),cc.rect(10,10,528,20))
                 :align(display.TOP_CENTER, group_width/2, r_list_height-r_tip_height*added_r_item_count)
                 :addTo(group)
             cc.ui.UILabel.new({
@@ -643,8 +643,8 @@ function GameUIStrikeReport:CreateGarrison()
         local r_item_bg_color_flag = true
         local added_r_item_count = 0
         for k,r_parms in pairs(soldiers) do
-            local r_item_bg_image = r_item_bg_color_flag and "back_ground_546X36_1.png" or "back_ground_546X36_2.png"
-            local r_item_bg = display.newSprite(r_item_bg_image)
+            local r_item_bg_image = r_item_bg_color_flag and "back_ground_548x40_1.png" or "back_ground_548x40_2.png"
+            local r_item_bg = display.newScale9Sprite(r_item_bg_image,0,0,cc.size(546,36),cc.rect(10,10,528,20))
                 :align(display.TOP_CENTER, group_width/2, r_list_height-r_tip_height*added_r_item_count)
                 :addTo(group)
             cc.ui.UILabel.new({
@@ -706,8 +706,8 @@ function GameUIStrikeReport:CreateDragonEquipments()
         local r_item_bg_color_flag = true
         local added_r_item_count = 0
         for k,r_parms in pairs(equipments) do
-            local r_item_bg_image = r_item_bg_color_flag and "back_ground_546X36_1.png" or "back_ground_546X36_2.png"
-            local r_item_bg = display.newSprite(r_item_bg_image)
+            local r_item_bg_image = r_item_bg_color_flag and "back_ground_548x40_1.png" or "back_ground_548x40_2.png"
+            local r_item_bg = display.newScale9Sprite(r_item_bg_image,0,0,cc.size(546,36),cc.rect(10,10,528,20))
                 :align(display.TOP_CENTER, group_width/2, r_list_height-r_tip_height*added_r_item_count)
                 :addTo(group)
             cc.ui.UILabel.new({

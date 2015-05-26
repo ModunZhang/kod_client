@@ -43,10 +43,9 @@ function WidgetPVEDialog:Refresh()
     local size = self:GetBody():getContentSize()
     local w,h = size.width, size.height
     local dialog = self.dialog
-    -- 建筑图片 放置区域左右边框
-    cc.ui.UIImage.new("building_frame_36x136.png"):align(display.LEFT_CENTER, 50, h*0.5 + 20)
-        :addTo(dialog):flipX(true)
-    cc.ui.UIImage.new("building_frame_36x136.png"):align(display.RIGHT_CENTER, 50 + 133, h*0.5 + 20)
+    display.newSprite("alliance_item_flag_box_126X126.png")
+        :align(display.LEFT_CENTER, 50, h*0.5 + 20)
+        :scale(136/126)
         :addTo(dialog)
     local type_,image,s = self:GetIcon()
     if type_ == "image" then
@@ -56,7 +55,7 @@ function WidgetPVEDialog:Refresh()
     end
 
     --
-    local level_bg = display.newSprite("back_ground_138x34.png")
+    local level_bg = display.newScale9Sprite("back_ground_166x84.png",0 , 0,cc.size(138,34),cc.rect(15,10,136,64))
         :addTo(dialog):pos(50 + 133 * 0.5, h*0.5 - 80)
     local size = level_bg:getContentSize()
     UIKit:ttfLabel({
