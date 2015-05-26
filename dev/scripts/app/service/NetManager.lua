@@ -1149,7 +1149,7 @@ end
 function NetManager:getUpgradeAllianceBuildingPromise(buildingName)
     return get_blocking_request_promise("logic.allianceHandler.upgradeAllianceBuilding", {
         buildingName = buildingName
-    }, "升级联盟建筑失败!"):done(get_player_response_msg)
+    }, "升级联盟建筑失败!"):done(get_player_response_msg):done(get_alliance_response_msg)
 end
 -- 升级联盟村落
 function NetManager:getUpgradeAllianceVillagePromise(villageType)
