@@ -1605,6 +1605,10 @@ end
 function NetManager:getFirstJoinAllianceRewardPromise()
     return get_blocking_request_promise("logic.playerHandler.getFirstJoinAllianceReward",nil,"领取首次加入联盟奖励失败!"):done(get_player_response_msg)
 end
+--获取玩家城墙血量
+function NetManager:getPlayerWallInfoPromise(memberId)
+    return get_blocking_request_promise("logic.playerHandler.getPlayerWallInfo",{memberId = memberId},"领取首次加入联盟奖励失败!",false,0)
+end
 ----------------------------------------------------------------------------------------------------------------
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"

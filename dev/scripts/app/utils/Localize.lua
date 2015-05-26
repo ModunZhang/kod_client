@@ -878,8 +878,8 @@ end
 
 local GAME_LANGUAGE = {
     en_US = _("英文"),
-    zh_Hans = _("简体中文"),
-    zh_Hant = _("繁体中文"),
+    zh_CN = _("简体中文"),
+    zh_TW = _("繁体中文"),
 
 }
 
