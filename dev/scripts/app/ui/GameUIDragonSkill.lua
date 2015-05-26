@@ -91,7 +91,7 @@ function GameUIDragonSkill:onEnter()
     	local upgradeButton = WidgetPushButton.new({
         normal = "yellow_btn_up_186x66.png",
         pressed = "yellow_btn_down_186x66.png",
-        disabled = "grey_btn_186x66"
+        disabled = "grey_btn_186x66.png"
       })
           :setButtonLabel("normal", UIKit:commonButtonLable({
               text = _("学习"),
@@ -152,7 +152,7 @@ function GameUIDragonSkill:UpgradeButtonClicked()
 end
 
 function GameUIDragonSkill:GetListItem(index,key,val)
-	local bg = display.newSprite(string.format("box_bg_item_520x48_%d.png",index%2))
+	local bg = display.newSprite(string.format("box_bg_item_520x48_%d.png",index%2 == 0 and 1 or 2))
 	local imageIcon = ""
 	local title = ""
 	if key == "blood" then

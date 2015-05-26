@@ -190,7 +190,7 @@ function GameUIAllianceShrineDetail:GetInfoData()
 end
 
 function GameUIAllianceShrineDetail:GetInfoListItem(index,image,title,val)
-    local bg = display.newScale9Sprite(string.format("box_bg_item_520x48_%d.png",index%2)):size(544,40)
+    local bg = display.newScale9Sprite(string.format("box_bg_item_520x48_%d.png",index%2==0 and 1 or 2)):size(544,40)
     local icon = display.newSprite(image):align(display.LEFT_CENTER,5,20):addTo(bg,2)
     if index == 2 then
         icon:scale(0.4)
