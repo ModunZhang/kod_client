@@ -1,7 +1,7 @@
 local window = import("..utils.window")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushButton = import("..widget.WidgetPushButton")
-local WidgetDropList = import("..widget.WidgetDropList")
+local WidgetRoundTabButtons = import("..widget.WidgetRoundTabButtons")
 local SpriteConfig = import("..sprites.SpriteConfig")
 local UIListView = import(".UIListView")
 local UILib = import(".UILib")
@@ -228,12 +228,12 @@ function GameUIOrderHall:InitProficiencyPart()
         color = 0x403c2f,
     }):align(display.CENTER, my_ranking_bg:getContentSize().width/2 , my_ranking_bg:getContentSize().height/2)
         :addTo(my_ranking_bg)
-    self.proficiency_drop_list =  WidgetDropList.new(
+    self.proficiency_drop_list =  WidgetRoundTabButtons.new(
         {
-            {tag = "1",label = _("木材熟练度排名"),default = true},
-            {tag = "2",label = _("石料熟练度排名")},
-            {tag = "3",label = _("铁矿熟练度排名")},
-            {tag = "4",label = _("粮食熟练度排名")},
+            {tag = "1",label = _("木材"),default = true},
+            {tag = "2",label = _("石料")},
+            {tag = "3",label = _("铁矿")},
+            {tag = "4",label = _("粮食")},
         },
         function(tag)
             self:ChangeProficiencyOption(tonumber(tag))
@@ -243,7 +243,7 @@ function GameUIOrderHall:InitProficiencyPart()
 
 
 
-    local desc_bg = display.newScale9Sprite("back_ground_398x97.png", window.cx, window.top_bottom - 110,cc.size(556,110),cc.rect(15,10,368,77))
+    local desc_bg = display.newScale9Sprite("back_ground_398x97.png", window.cx, window.top_bottom - 120,cc.size(556,110),cc.rect(15,10,368,77))
         :addTo(layer)
 
     UIKit:ttfLabel({

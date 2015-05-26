@@ -9,7 +9,7 @@ local WidgetTimerProgressStyleThree = class("WidgetTimerProgressStyleThree", Wid
 function WidgetTimerProgressStyleThree:ctor(height,title)
     local width = width == nil and 549 or width
     local height = height == nil and 100 or height
-    local back_ground_556x56 = WidgetUIBackGround.new({width = 556,height = 56},WidgetUIBackGround.STYLE_TYPE.STYLE_5)
+    local back_ground_556x56 = WidgetUIBackGround.new({width = 556,height = 56},WidgetUIBackGround.STYLE_TYPE.STYLE_5):align(display.CENTER)
     self.describe = cc.ui.UILabel.new({
         size = 22,
         font = UIKit:getFontFilePath(),

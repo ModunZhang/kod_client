@@ -246,7 +246,7 @@ end
 
 
 function GameUIResource:GetListItem(index,title,val)
-    local bgImage = string.format("resource_item_bg%d.png",tonumber(index-1)%2)
+    local bgImage = string.format("back_ground_548x40_%d.png", tonumber(index-1) % 2 == 0 and 1 or 2)
     local item = self.listView:newItem()
     local bg = display.newSprite(bgImage)
     local titleLabel = cc.ui.UILabel.new({

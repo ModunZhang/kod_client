@@ -70,7 +70,7 @@ end
 
 function GameUISettingShield:GetBlackListItem(index,chat)
     local item = self.list_view:newItem()
-    local content = display.newScale9Sprite(string.format("resource_item_bg%d.png",index % 2)):size(546,96)
+    local content = display.newScale9Sprite(string.format("back_ground_548x40_%d.png", index % 2 == 0 and 1 or 2)):size(546,96)
     local iconBg = UIKit:GetPlayerCommonIcon(chat.icon):scale(0.7):addTo(content):pos(50,48)
     local name_lable = UIKit:ttfLabel({
         text = chat.name or "player",

@@ -254,7 +254,7 @@ end
 
 --type 为活力 力量 buffer 1 2 3
 function GameUIDragonEquipment:GetListItem(index,title,value)
-	local bg = display.newScale9Sprite(string.format("resource_item_bg%d.png",index%2)):size(LISTVIEW_WIDTH,40)
+	local bg = display.newScale9Sprite(string.format("back_ground_548x40_%d.png", index % 2 == 0 and 1 or 2)):size(LISTVIEW_WIDTH,40)
     UIKit:ttfLabel({
         text = title,
         size = 20,
@@ -518,7 +518,7 @@ end
 
 function GameUIDragonEquipment:GetIntensifyListItem(index,title,value)
   local item = self.intensify_list:newItem()
-  local bg = display.newScale9Sprite(string.format("resource_item_bg%d.png",index%2)):size(LISTVIEW_WIDTH ,40)
+  local bg = display.newScale9Sprite(string.format("back_ground_548x40_%d.png", index % 2 == 0 and 1 or 2)):size(LISTVIEW_WIDTH ,40)
   UIKit:ttfLabel({
       text = title,
       size = 20,
