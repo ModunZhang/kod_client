@@ -1607,7 +1607,7 @@ function NetManager:getFirstJoinAllianceRewardPromise()
 end
 --获取玩家城墙血量
 function NetManager:getPlayerWallInfoPromise(memberId)
-    return get_blocking_request_promise("logic.playerHandler.getPlayerWallInfo",{memberId = memberId},"领取首次加入联盟奖励失败!",false,0)
+    return get_blocking_request_promise("logic.playerHandler.getPlayerWallInfo",{memberId = memberId},"领取首次加入联盟奖励失败!")
 end
 ----------------------------------------------------------------------------------------------------------------
 function NetManager:getUpdateFileList(cb)

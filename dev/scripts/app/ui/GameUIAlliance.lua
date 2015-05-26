@@ -216,6 +216,7 @@ function GameUIAlliance:NoAllianceTabEvent_joinIf()
     editbox_tag_search:setFont(UIKit:getEditBoxFont(),18)
     editbox_tag_search:setFontColor(cc.c3b(0,0,0))
     editbox_tag_search:setReturnType(cc.KEYBOARD_RETURNTYPE_SEARCH)
+    editbox_tag_search:setInputMode(cc.EDITBOX_INPUT_MODE_ASCII_CAPABLE)
     editbox_tag_search:align(display.LEFT_TOP,searchIcon:getPositionX()+searchIcon:getContentSize().width+10,self.main_content:getCascadeBoundingBox().height - 10):addTo(joinNode)
     self.editbox_tag_search = editbox_tag_search
     local list,list_node = UIKit:commonListView({
@@ -762,6 +763,7 @@ end
 function GameUIAlliance:HaveAlliaceUI_overviewIf()
     if self.overviewNode then
         self:RefreshEventListView()
+        self:RefreshOverViewUI()
         return self.overviewNode end
     self.ui_overview = {}
     local overviewNode = display.newNode():addTo(self.main_content)

@@ -84,19 +84,31 @@ function WidgetAllianceCreateOrEdit:CreateAllianceButtonClicked()
 	if string.utf8len(data.tag) < 1 or string.utf8len(data.tag) > 3 or not string.match(data.tag,"^%w%w?%w?$") then
 		errMsg = _("联盟标签不合法只允许字母、数字需要1~3个字符")
 	end
+	local goStore = false
 	if self:IsCreate() then
 		if config_intInit.createAllianceGem.value > User:GetGemResource():GetValue() then
 			errMsg = _("金龙币不足")
-			return 
+			goStore = true
 		end
 	else
 		if config_intInit.editAllianceBasicInfoGem.value > User:GetGemResource():GetValue() then
 			errMsg = _("金龙币不足")
-			return 
+			goStore = true
 		end
 	end
 	if errMsg ~= "" then
-  		UIKit:showMessageDialog(_("错误"),errMsg)
+		if goStore then
+			UIKit:showMessageDialogWithParams({
+				title = _("提示"),
+				content = errMsg,
+				ok_callback = function()
+					UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+				end,
+				ok_string = _("前往商店")
+			})
+		else
+  			UIKit:showMessageDialog(_("错误"),errMsg)
+		end
 		return 
 	end
 	if self:IsCreate() then
@@ -282,6 +294,7 @@ function WidgetAllianceCreateOrEdit:createTextfieldPanel()
     editbox_tag:setFontColor(cc.c3b(0,0,0))
     editbox_tag:setPlaceholderFontColor(UIKit:hex2c3b(0xccc49e))
     editbox_tag:setReturnType(cc.KEYBOARD_RETURNTYPE_DONE)
+    editbox_tag:setInputMode(cc.EDITBOX_INPUT_MODE_ASCII_CAPABLE)
     editbox_tag:align(display.LEFT_BOTTOM,0,limitLabel:getContentSize().height+10):addTo(node)
     self.editbox_tag = editbox_tag
     if not self:IsCreate() then

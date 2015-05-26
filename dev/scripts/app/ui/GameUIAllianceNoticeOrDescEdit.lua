@@ -80,11 +80,13 @@ function GameUIAllianceNoticeOrDescEdit:onOkButtonClicked()
 		NetManager:getEditAllianceNoticePromise(content)
         	:done(function()
         		self:LeftButtonClicked()
+        		GameGlobalUI:showTips(_("提示"),_("修改联盟公告成功"))
         	end)
 	else
 		NetManager:getEditAllianceDescriptionPromise(content)
 			:done(function()
         		self:LeftButtonClicked()
+        		GameGlobalUI:showTips(_("提示"),_("修改联盟描述成功"))
         	end)
 	end
 end
