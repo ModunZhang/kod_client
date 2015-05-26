@@ -272,6 +272,18 @@ local function RecruitSoldier(type_, count)
     end
 end
 
+local function InstantRecruitSoldier(name, count)
+    mock{
+        {string.format("soldiers.%s", name), count},
+    }
+
+    local key = string.format("InstantRecruitSoldier")
+    if not check(key) then
+        mark(key)
+        ext.market_sdk.onPlayerEvent("获得士兵", key)
+    end
+end
+
 
 
 local function GetSoldier()
@@ -463,6 +475,7 @@ return {
     FinishBuildHouseAt = FinishBuildHouseAt,
     UpgradeBuildingTo = UpgradeBuildingTo,
     FinishUpgradingBuilding = FinishUpgradingBuilding,
+    InstantRecruitSoldier = InstantRecruitSoldier,
     RecruitSoldier = RecruitSoldier,
     FinishRecruitSoldier = FinishRecruitSoldier,
     TreatSoldier = TreatSoldier,

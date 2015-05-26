@@ -669,28 +669,30 @@ function WidgetRecruitSoldier:PormiseOfOpen()
     return p
 end
 function WidgetRecruitSoldier:Find()
-    return self.normal_button
+    return self.instant_button
 end
 function WidgetRecruitSoldier:PormiseOfFte()
     local fte_layer = self:getParent():GetFteLayer()
     fte_layer:Enable():SetTouchObject(self:Find())
 
+
+    local p = promise.new()
     self:Find():removeEventListenersByEvent("CLICKED_EVENT")
     self:Find():onButtonClicked(function()
         self:Find():setButtonEnabled(false)
 
-        mockData.RecruitSoldier(self.soldier_name, self.count)
+        mockData.InstantRecruitSoldier(self.soldier_name, self.count)
 
-        self:Close()
+        self:getParent():LeftButtonClicked()
+
+        p:resolve()
     end)
 
-    local r = self:Find():getBoundingBox()
+    local r = self:Find():getCascadeBoundingBox()
     WidgetFteArrow.new(_("立即开始招募，招募士兵会消耗城民")):addTo(fte_layer)
-        :TurnRight():align(display.RIGHT_CENTER, r.x - 20, r.y + r.height/2)
+        :TurnLeft():align(display.LEFT_CENTER, r.x + r.width + 20, r.y + r.height/2 + 20)
 
-    return self.city:PromiseOfRecruitSoldier("swordsman"):next(function()
-        fte_layer:removeFromParent()
-    end)
+    return p
 end
 
 function WidgetRecruitSoldier:PromiseOfFteSpecial()
@@ -724,6 +726,7 @@ end
 
 
 return WidgetRecruitSoldier
+
 
 
 

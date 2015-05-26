@@ -134,6 +134,8 @@ function GameUIHome:onEnter()
     self:RefreshData()
     self:OnTaskChanged(User)
     self:RefreshHelpButtonVisible()
+
+    self.shadow_power_label:setString(self.power_label:getString())
 end
 function GameUIHome:onExit()
     self:AddOrRemoveListener(false)
@@ -260,6 +262,13 @@ function GameUIHome:CreateTop()
         color = 0xf3f0b6,
         shadow = true
     }):addTo(top_bg):align(display.LEFT_CENTER, ox + 14, 42)
+
+    self.shadow_power_label = UIKit:ttfLabel({
+        text = "",
+        size = 20,
+        color = 0xf3f0b6,
+        shadow = true
+    }):addTo(top_bg):align(display.LEFT_CENTER, ox + 14, 42):hide()
 
     -- 资源按钮
     local button = cc.ui.UIPushButton.new(
@@ -540,6 +549,8 @@ end
 local POWER_ANI_TAG = 1001
 function GameUIHome:ShowPowerAni(wp)
     local pnt = self.top
+    self.power_label:hide()
+    self.shadow_power_label:show()
 
     pnt:removeChildByTag(POWER_ANI_TAG)
     local tp = pnt:convertToNodeSpace(self.power_label:convertToWorldSpace(cc.p(0,0)))
@@ -556,7 +567,9 @@ function GameUIHome:ShowPowerAni(wp)
     emitter:runAction(transition.sequence{
         cc.MoveTo:create(time, cc.p(tp.x, tp.y)),
         cc.CallFunc:create(function()
-            self:ScaleIcon(self.power_label)
+            self.shadow_power_label:hide()
+            self:ScaleIcon(self.power_label:show())
+            self.shadow_power_label:setString(self.power_label:getString())
         end),
         cc.DelayTime:create(delay_time),
     })
@@ -656,9 +669,10 @@ function GameUIHome:PromiseOfFteWaitFinish()
             self.event_tab:EventChangeOn("build", true)
         end
         self:GetFteLayer()
-        return self.city:PromiseOfFinishUpgradingByLevel(nil, nil):next(function()
-            self:GetFteLayer():removeFromParent()
-        end)
+        return self.city:PromiseOfFinishUpgradingByLevel(nil, nil)
+        :next(function()self:GetFteLayer():Reset()end)
+        :next(cocos_promise.delay(1))
+        :next(function()self:GetFteLayer():removeFromParent()end)
     end
     return cocos_promise.defer()
 end
@@ -689,9 +703,10 @@ function GameUIHome:PromiseOfFteFreeSpeedUp()
                 :TurnDown(true):align(display.RIGHT_BOTTOM, r.x + r.width/2 + 30, r.y + 50)
         end)
 
-        return self.city:PromiseOfFinishUpgradingByLevel(nil, nil):next(function()
-            self:GetFteLayer():removeFromParent()
-        end)
+        return self.city:PromiseOfFinishUpgradingByLevel(nil, nil)
+        :next(function()self:GetFteLayer():Reset()end)
+        :next(cocos_promise.delay(1))
+        :next(function()self:GetFteLayer():removeFromParent()end)
     end
     return cocos_promise.defer()
 end
@@ -726,9 +741,10 @@ function GameUIHome:PromiseOfFteInstantSpeedUp()
 
         end)
 
-        return self.city:PromiseOfFinishUpgradingByLevel():next(function()
-            self:GetFteLayer():removeFromParent()
-        end)
+        return self.city:PromiseOfFinishUpgradingByLevel()
+        :next(function()self:GetFteLayer():Reset()end)
+        :next(cocos_promise.delay(1))
+        :next(function()self:GetFteLayer():removeFromParent()end)
     end
     return cocos_promise.defer()
 end
