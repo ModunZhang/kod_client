@@ -1074,8 +1074,8 @@ function NetManager:getSendChatPromise(channel,text)
     }, "发送聊天信息失败!")
 end
 --获取所有聊天信息
-function NetManager:getFetchChatPromise()
-    return get_none_blocking_request_promise("chat.chatHandler.getAll",nil, "获取聊天信息失败!")
+function NetManager:getFetchChatPromise(channel)
+    return get_none_blocking_request_promise("chat.chatHandler.getAll",{channel = channel}, "获取聊天信息失败!")
 end
 -- 获取所有请求加入联盟的申请
 function NetManager:getJoinRequestEventsPromise(allianceId)

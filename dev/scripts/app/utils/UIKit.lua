@@ -680,19 +680,31 @@ function UIKit:__addMessageDialogToCurrentScene(dialog)
 end
 
 function UIKit:getMessageDialogWillShow()
-    printLog("info", "getMessageDialogWillShow--->%s",self.willShowMessage_ or "nil")
+    -- printLog("info", "getMessageDialogWillShow--->%s",self.willShowMessage_ or "nil")
     return self.willShowMessage_
 end
 function UIKit:clearMessageDialogWillShow()
+    if self.willShowMessage_ then
+        local func = tolua.getcfunction(self.willShowMessage_, "release")
+        if func then
+            func(self)
+        end
+    end
     self.willShowMessage_ = nil
 end
 --如果是__key__dialog强制替换
 function UIKit:addMessageDialogWillShow(messageDialog)
+    local func = tolua.getcfunction(messageDialog, "retain")
+    if func then
+        func(self)
+    end
     if self.willShowMessage_ then
+        print("addMessageDialogWillShow----->1",tolua.type(messageDialog))
         if messageDialog:GetUserData() == '__key__dialog' then
             self.willShowMessage_ = messageDialog
         end
     else
+        print("addMessageDialogWillShow----->2",tolua.type(messageDialog),messageDialog.__cname,type(messageDialog.AddToScene))
         self.willShowMessage_ = messageDialog
     end
 end

@@ -45,7 +45,11 @@ function GameUIChatChannel:onCleanup()
     GameUIChatChannel.super.onCleanup(self)    
 end
 
-function GameUIChatChannel:TO_TOP(data)
+function GameUIChatChannel:TO_TOP(chat_data)
+    -- local data = LuaUtils:table_filteri(chat_data,function(__,chat)
+    --     if chat.channel == self:
+    -- end
+    local data = chat_data
     local isLastMessageInViewRect = false
     local count = #data
     if count > 0 then
@@ -53,7 +57,7 @@ function GameUIChatChannel:TO_TOP(data)
     end
     if #self:GetDataSource() == 0 then
         self:RefreshListView()
-    elseif isLastMessageInViewRect and not self.isModeVoew then
+    elseif isLastMessageInViewRect and not self.isModeView then
         self:RefreshListView()
     else
         LuaUtils:table_insert_top(self.dataSource_,data)
@@ -165,7 +169,12 @@ function GameUIChatChannel:CreateTabButtons()
             label = _("联盟"),
             tag = "alliance",
             default = self.default_tag == "alliance",
-        }
+        },
+        {
+            label = _("对战"),
+            tag = "fight",
+            default = self.default_tag == "fight",
+        },
     },
     function(tag)
         self._channelType = tag == 'global' and ChatManager.CHANNNEL_TYPE.GLOBAL or ChatManager.CHANNNEL_TYPE.ALLIANCE
@@ -499,7 +508,7 @@ function GameUIChatChannel:CreatePlayerMenu(event,chat)
     end
     local callback = function(msg,data)
         if msg == 'in' then
-            self.isModeVoew = true
+            self.isModeView = true
             local layer = data
             if distance > 0 then
                 listView:scrollBy(0,distance)
@@ -563,7 +572,7 @@ function GameUIChatChannel:CreatePlayerMenu(event,chat)
                     end
                 end
             end
-            self.isModeVoew = false
+            self.isModeView = false
         end
     end
     UIKit:newGameUI("GameUIAllianceInfoMenu",callback,alliance_string,enbale_alliance_info):AddToCurrentScene(true)

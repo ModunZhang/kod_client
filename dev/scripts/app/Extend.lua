@@ -256,12 +256,13 @@ function display.newScene(name)
     end
 
     function scene:onEnterTransitionFinish()
-        printLog("Info", "Check MessageDialog :%s",self.__cname)
-        local message = UIKit:getMessageDialogWillShow()
-        if message then
-            message:AddToScene(self,true)
-            UIKit:clearMessageDialogWillShow()
-        end
+        -- local message = UIKit:getMessageDialogWillShow()
+        -- printLog("Info", "Check MessageDialog :%s %s",self.__cname,tolua.type(message))
+        -- if message then
+        --     print("add MessageDialog---->",self.__cname)
+        --     message:AddToScene(self,true)
+        --     UIKit:clearMessageDialogWillShow()
+        -- end
     end
     return scene
 end

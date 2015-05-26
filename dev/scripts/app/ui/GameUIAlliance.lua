@@ -908,9 +908,14 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
 end
 
 function GameUIAlliance:RefreshNoticeView()
+    local notice_str = Alliance_Manager:GetMyAlliance():Notice() 
+    if notice_str == json.null or string.len(notice_str) == 0 then
+        notice_str = _("未设置联盟公告")
+    end
+
     local textLabel = UIKit:ttfLabel({
         dimensions = cc.size(530, 0),
-        text = string.len(Alliance_Manager:GetMyAlliance():Notice())>0 and Alliance_Manager:GetMyAlliance():Notice() or _("未设置联盟公告"),
+        text = notice_str,
         size = 20,
         color = 0x615b44,
         align=cc.TEXT_ALIGNMENT_CENTER
@@ -1546,9 +1551,13 @@ function GameUIAlliance:SelectJoinType()
 end
 
 function GameUIAlliance:RefreshDescView()
+    local describe_str = Alliance_Manager:GetMyAlliance():Describe()
+    if describe_str == json.null or string.len(describe_str) == 0 then
+        describe_str = _("未设置联盟描述")
+    end
     local textLabel = UIKit:ttfLabel({
         dimensions = cc.size(530, 0),
-        text = string.len(Alliance_Manager:GetMyAlliance():Describe())>0 and Alliance_Manager:GetMyAlliance():Describe() or _("未设置联盟描述"),
+        text = describe_str,
         size = 20,
         color = 0x615b44,
         align=cc.TEXT_ALIGNMENT_CENTER
