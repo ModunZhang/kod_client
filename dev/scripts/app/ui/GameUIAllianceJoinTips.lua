@@ -118,7 +118,7 @@ function GameUIAllianceJoinTips:GetItem(str)  -- 48
 	local item = self.list_view:newItem()
 	local content = display.newNode():size(572,50)
 	item:addContent(content)
-	local star = display.newSprite("alliance_star_23x23.png"):addTo(content):align(display.LEFT_CENTER, 14, 25)
+	local star = display.newSprite("star_23X23.png"):addTo(content):align(display.LEFT_CENTER, 14, 25)
 	UIKit:ttfLabel({
 		text = str,
 		size = 20,

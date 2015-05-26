@@ -74,7 +74,7 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
         :align(display.CENTER, pos.x, pos.y):scale(0.62)
 
     -- 装备的数量背景
-    local back_ground_97x20 = cc.ui.UIImage.new("back_ground_138x34.png"):addTo(star_bg, 2)
+    local back_ground_97x20 = display.newScale9Sprite("back_ground_166x84.png",0 , 0,cc.size(138,34),cc.rect(15,10,136,64)):addTo(star_bg, 2)
         :align(display.CENTER, pos.x, pos.y - 10 - 128/2+6):scale(0.7)
 
     -- 装备数量label
@@ -485,4 +485,5 @@ function WidgetMakeEquip:IsAbleToMakeEqui(isFinishNow)
 end
 
 return WidgetMakeEquip
+
 

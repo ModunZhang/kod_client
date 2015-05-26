@@ -259,7 +259,7 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name, soldier_star)
         self:AddButtons()
     else
         -- 招募时间限制
-        local time_bg = display.newSprite("back_ground_548X34.png")
+        local time_bg = display.newScale9Sprite("back_ground_166x84.png", 0,0,cc.size(548,34),cc.rect(15,10,136,64))
             :align(display.BOTTOM_CENTER, back_ground:getContentSize().width/2, 50)
             :addTo(back_ground)
         local ok,time = self:GetRecruitSpecialTime()

@@ -67,8 +67,7 @@ function GameUIStorePackage:CreateItemLogo()
 end
 
 function GameUIStorePackage:CreateListView()
-	local list_bg = display.newScale9Sprite("box_bg_546x214.png")
-		:size(546,402)
+	local list_bg = display.newScale9Sprite("background_568x120.png", 0,0,cc.size(546,402),cc.rect(15,10,538,100))
 		:addTo(self:GetBody())
 		:align(display.BOTTOM_CENTER, 304, 118)
 	self.info_list = UIListView.new({

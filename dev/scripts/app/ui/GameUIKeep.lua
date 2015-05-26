@@ -11,27 +11,27 @@ local intInit = GameDatas.PlayerInitData.intInit
 local GameUIKeep = UIKit:createUIClass('GameUIKeep',"GameUIUpgradeBuilding")
 
 local building_config_map = {
-    ["keep"] = {scale = 0.3, offset = {x = 80, y = 74}},
+    ["keep"] = {scale = 0.25, offset = {x = 75, y = 74}},
     ["watchTower"] = {scale = 0.4, offset = {x = 80, y = 70}},
-    ["warehouse"] = {scale = 0.5, offset = {x = 70, y = 70}},
-    ["dragonEyrie"] = {scale = 0.35, offset = {x = 70, y = 70}},
-    ["toolShop"] = {scale = 0.5, offset = {x = 80, y = 70}},
-    ["materialDepot"] = {scale = 0.5, offset = {x = 70, y = 70}},
-    ["barracks"] = {scale = 0.5, offset = {x = 80, y = 70}},
-    ["blackSmith"] = {scale = 0.5, offset = {x = 75, y = 70}},
-    ["foundry"] = {scale = 0.47, offset = {x = 75, y = 74}},
-    ["stoneMason"] = {scale = 0.47, offset = {x = 76, y = 75}},
-    ["lumbermill"] = {scale = 0.45, offset = {x = 80, y = 74}},
-    ["mill"] = {scale = 0.45, offset = {x = 76, y = 74}},
-    ["hospital"] = {scale = 0.5, offset = {x = 80, y = 75}},
-    ["townHall"] = {scale = 0.45, offset = {x = 76, y = 74}},
-    ["tradeGuild"] = {scale = 0.5, offset = {x = 74, y = 74}},
-    ["academy"] = {scale = 0.5, offset = {x = 80, y = 74}},
-    ["prison"] = {scale = 0.4, offset = {x = 80, y = 80}},
-    ["hunterHall"] = {scale = 0.5, offset = {x = 74, y = 74}},
-    ["trainingGround"] = {scale = 0.5, offset = {x = 76, y = 74}},
-    ["stable"] = {scale = 0.46, offset = {x = 74, y = 74}},
-    ["workshop"] = {scale = 0.46, offset = {x = 74, y = 74}},
+    ["warehouse"] = {scale = 0.5, offset = {x = 65, y = 70}},
+    ["dragonEyrie"] = {scale = 0.35, offset = {x = 65, y = 70}},
+    ["toolShop"] = {scale = 0.5, offset = {x = 75, y = 70}},
+    ["materialDepot"] = {scale = 0.5, offset = {x = 65, y = 70}},
+    ["barracks"] = {scale = 0.5, offset = {x = 75, y = 70}},
+    ["blackSmith"] = {scale = 0.5, offset = {x = 70, y = 70}},
+    ["foundry"] = {scale = 0.47, offset = {x = 70, y = 74}},
+    ["stoneMason"] = {scale = 0.47, offset = {x = 70, y = 75}},
+    ["lumbermill"] = {scale = 0.45, offset = {x = 75, y = 74}},
+    ["mill"] = {scale = 0.45, offset = {x = 70, y = 74}},
+    ["hospital"] = {scale = 0.5, offset = {x = 75, y = 75}},
+    ["townHall"] = {scale = 0.45, offset = {x = 70, y = 74}},
+    ["tradeGuild"] = {scale = 0.5, offset = {x = 70, y = 74}},
+    ["academy"] = {scale = 0.5, offset = {x = 75, y = 74}},
+    ["prison"] = {scale = 0.4, offset = {x = 75, y = 80}},
+    ["hunterHall"] = {scale = 0.5, offset = {x = 70, y = 74}},
+    ["trainingGround"] = {scale = 0.5, offset = {x = 70, y = 74}},
+    ["stable"] = {scale = 0.46, offset = {x = 70, y = 74}},
+    ["workshop"] = {scale = 0.46, offset = {x = 70, y = 74}},
 }
 
 function GameUIKeep:ctor(city,building,default_tab)
@@ -69,13 +69,11 @@ function GameUIKeep:onExit()
 end
 
 function GameUIKeep:CreateCityBasicInfo()
-
     -- 建筑图片 放置区域左右边框
-    local left_frame = cc.ui.UIImage.new("building_frame_36x136.png"):align(display.CENTER, display.cx-250, display.top-175)
+    local left_frame = display.newSprite("alliance_item_flag_box_126X126.png")
+        :align(display.LEFT_CENTER, display.cx-268,display.top-175)
         :addTo(self.info_layer)
-    left_frame:setFlippedX(true)
-    cc.ui.UIImage.new("building_frame_36x136.png"):align(display.CENTER, display.cx-145, display.top-175)
-        :addTo(self.info_layer)
+        :scale(136/126)
 
     local building_cp = building_config_map[self.building:GetType()]
     local build_png = SpriteConfig[self.building:GetType()]:GetConfigByLevel(self.building:GetLevel()).png
@@ -216,9 +214,7 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
             else
                 content:addWidget(display.newSprite("back_ground_568X142.png"))
             end
-
-            local title_bg = display.newSprite("title_blue_412x30.png"):pos(70,46)
-            content:addWidget(title_bg)
+            local title_bg = display.newScale9Sprite("title_blue_430x30.png",70,46, cc.size(412,30), cc.rect(10,10,410,10))
             -- building name
             UIKit:ttfLabel({
                 text = _(Localize.building_name[unlock_building:GetType()]),
@@ -246,10 +242,10 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
             content:addWidget(building_tip)
 
             -- 建筑图片 放置区域左右边框
-            local filp_bg = cc.ui.UIImage.new("building_frame_36x136.png"):align(display.CENTER, -item_width/2+30, 0):scale(0.9)
-            filp_bg:setFlippedX(true)
+            local filp_bg = display.newSprite("alliance_item_flag_box_126X126.png")
+                :align(display.LEFT_CENTER, -item_width/2+12, 0)
+                :scale(122/126)
             content:addWidget(filp_bg)
-            content:addWidget(cc.ui.UIImage.new("building_frame_36x136.png"):align(display.CENTER, -item_width/2+125, 0):scale(0.9))
 
             local building_cp = building_config_map[unlock_building:GetType()]
 
@@ -366,7 +362,7 @@ function GameUIKeep:CreateChangeTerrainWindow()
         :align(display.LEFT_CENTER, 10, 70):addTo(bg2)
     display.newSprite("change_city_name.png")
         :align(display.CENTER, 59, 59):addTo(prop_bg):scale(100/128)
-    local num_bg = display.newSprite("back_ground_118x36.png")
+    local num_bg = display.newScale9Sprite("back_ground_166x84.png",0 , 0,cc.size(118,36),cc.rect(15,10,136,64))
         :align(display.CENTER, 480, 100):addTo(bg2)
     local gem_img = display.newSprite("gem_icon_62x61.png")
         :align(display.LEFT_CENTER, -4, 16):addTo(num_bg):scale(0.7)
@@ -464,7 +460,7 @@ function GameUIKeep:PlayCloudAnimation()
             cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
             cc.CallFunc:create(function() self:LeftButtonClicked() end),
             cc.FadeOut:create(0.75),
-            cc.CallFunc:create(function() 
+            cc.CallFunc:create(function()
                 armature:removeFromParent()
             end),
         }
@@ -502,6 +498,9 @@ end
 
 
 return GameUIKeep
+
+
+
 
 
 

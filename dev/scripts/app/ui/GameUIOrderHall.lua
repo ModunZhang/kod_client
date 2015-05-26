@@ -107,9 +107,9 @@ function GameUIOrderHall:CreateVillageItem(village_type,village_level)
     local content = WidgetUIBackGround.new({width=item_width,height=item_height},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
 
     -- 建筑图片 放置区域左右边框
-    cc.ui.UIImage.new("building_frame_36x136.png"):align(display.LEFT_BOTTOM, 10, 16)
-        :addTo(content):flipX(true)
-    cc.ui.UIImage.new("building_frame_36x136.png"):align(display.RIGHT_BOTTOM, 143, 16)
+    display.newSprite("alliance_item_flag_box_126X126.png")
+        :align(display.LEFT_BOTTOM, 10, 16)
+        :scale(136/126)
         :addTo(content)
 
     local build_png = SpriteConfig[village_type]:GetConfigByLevel(village_level).png
@@ -120,7 +120,7 @@ function GameUIOrderHall:CreateVillageItem(village_type,village_level)
     building_image:setScale(113/math.max(building_image:getContentSize().width,building_image:getContentSize().height))
     -- 村落名字
     local title_bg = display.newScale9Sprite("title_blue_430x30.png", item_width/2, 175,cc.size(550,30),cc.rect(15,10,400,10))
-           :align(display.CENTER):addTo(content)
+        :align(display.CENTER):addTo(content)
     UIKit:ttfLabel({
         text = Localize.village_name[village_type],
         size = 22,
@@ -221,7 +221,7 @@ function GameUIOrderHall:InitProficiencyPart()
     list:setDelegate(handler(self, self.DelegateProficiency))
     list_node:addTo(layer):align(display.BOTTOM_CENTER, window.cx, window.bottom_top+20)
     self.proficiency_listview = list
-    local my_ranking_bg = display.newScale9Sprite("back_ground_516x60.png", window.cx, window.top_bottom - 210,cc.size(548,52),cc.rect(15,10,486,40))
+    local my_ranking_bg = display.newScale9Sprite("back_ground_166x84.png", window.cx, window.top_bottom - 210,cc.size(548,52),cc.rect(15,10,136,64))
         :addTo(layer)
     self.my_ranking_label = UIKit:ttfLabel({
         size = 22,
@@ -391,6 +391,7 @@ function GameUIOrderHall:OnBuildingInfoChange(building)
 
 end
 return GameUIOrderHall
+
 
 
 

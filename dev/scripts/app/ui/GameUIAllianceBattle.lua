@@ -389,7 +389,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
 
             local text_1 = fight_result and "WIN" or "LOSE"
             local color_1 = fight_result and 0x007c23 or 0x7e0000
-            local result_own_bg = display.newSprite("back_ground_130x30.png")
+            local result_own_bg = display.newScale9Sprite("back_ground_166x84.png",0 , 0,cc.size(130,30),cc.rect(15,10,136,64))
                 :align(display.LEFT_CENTER,window.left+60,window.top-240)
                 :addTo(layer)
             local result_own = UIKit:ttfLabel({
@@ -400,7 +400,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
                 :addTo(result_own_bg)
             local text_1 = not fight_result and "WIN" or "LOSE"
             local color_1 = not fight_result and 0x007c23 or 0x7e0000
-            local result_enemy_bg = display.newSprite("back_ground_130x30.png")
+            local result_enemy_bg = display.newScale9Sprite("back_ground_166x84.png",0 , 0,cc.size(130,30),cc.rect(15,10,136,64))
                 :align(display.RIGHT_CENTER,window.right-60,window.top-240)
                 :addTo(layer)
             local result_enemy = UIKit:ttfLabel({
@@ -446,7 +446,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
             }):addTo(layer)
                 :align(display.TOP_CENTER,window.cx,window.top-240)
             -- 荣耀值奖励
-            local honour_bg = display.newScale9Sprite("back_ground_138x34.png",window.left+70,window.top-350,cc.size(188,34))
+            local honour_bg = display.newScale9Sprite("back_ground_166x84.png",0 , 0,cc.size(184,34),cc.rect(15,10,136,64))
                 :align(display.LEFT_CENTER)
                 :addTo(layer)
             display.newSprite("honour_128x128.png"):align(display.CENTER,0,honour_bg:getContentSize().height/2)
@@ -459,7 +459,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
             }):addTo(honour_bg,2)
                 :align(display.CENTER,honour_bg:getContentSize().width/2,honour_bg:getContentSize().height/2)
             -- 金龙币奖励
-            local gem_bg = display.newScale9Sprite("back_ground_138x34.png",window.right-60,window.top-350,cc.size(188,34))
+            local gem_bg = display.newScale9Sprite("back_ground_166x84.png",0 , 0,cc.size(184,34),cc.rect(15,10,136,64))
                 :align(display.RIGHT_CENTER)
                 :addTo(layer)
             display.newSprite("gem_icon_62x61.png"):align(display.CENTER,0,gem_bg:getContentSize().height/2)
@@ -552,9 +552,9 @@ function GameUIAllianceBattle:CreateInfoItem(listview,info_message)
         item:setItemSize(item_width, item_height)
         local content
         if meetFlag then
-            content = display.newSprite("upgrade_resources_background_3.png"):scale(item_width/520)
+            content = display.newScale9Sprite("back_ground_548x40_1.png"):size(item_width,item_height)
         else
-            content = display.newSprite("upgrade_resources_background_2.png"):scale(item_width/520)
+            content = display.newScale9Sprite("back_ground_548x40_2.png"):size(item_width,item_height)
         end
         UIKit:ttfLabel({
             text = v[1],
@@ -732,7 +732,7 @@ function GameUIAllianceBattle:GetFightRequestsInfo()
     for _,id in pairs(fight_requests) do
         -- 玩家
         local menber = alliance:GetMemeberById(id)
-        table.insert(info, {menber:Name(),string.formatnumberthousands(menber:Power()) ,"power_24x29.png",true})
+        table.insert(info, {menber:Name(),string.formatnumberthousands(menber:Power()) ,"dragon_strength_27x31.png",true})
     end
     return info
 end
@@ -838,9 +838,9 @@ function GameUIAllianceBattle:CreateHistoryContent()
     local function createItem(info,meetFlag)
         local content
         if meetFlag then
-            content = display.newSprite("upgrade_resources_background_3.png")
+            content = display.newScale9Sprite("back_ground_548x40_1.png"):size(520,46)
         else
-            content = display.newSprite("upgrade_resources_background_2.png")
+            content = display.newScale9Sprite("back_ground_548x40_2.png"):size(520,46)
         end
         UIKit:ttfLabel({
             text = info[1],
@@ -1037,7 +1037,7 @@ function GameUIAllianceBattle:InitOtherAlliance()
 
     local editbox_tag_search = cc.ui.UIInput.new({
         UIInputType = 1,
-        image = "alliance_editbox_575x48.png",
+        image = "input_box.png",
         size = cc.size(510,48),
         listener = onEdit,
     })
@@ -1092,7 +1092,7 @@ function GameUIAllianceBattle:CreateAllianceItem(alliance,index)
         :addTo(flag_bg)
 
 
-    local title_bg = display.newSprite("title_blue_412x30.png", w-10, h-30)
+    local title_bg = display.newScale9Sprite("title_blue_430x30.png",w-10, h-30, cc.size(412,30), cc.rect(10,10,410,10))
         :align(display.RIGHT_CENTER)
         :addTo(content)
     -- 搜索出的条目index

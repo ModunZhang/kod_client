@@ -91,7 +91,7 @@ function GameUIAllianceTitle:BuildUI()
     			self:CreateEditTitleUI()
     		end)
     end
-    local listBg = display.newSprite("alliance_title_list_572x436.png")
+    local listBg = display.newScale9Sprite("background_568x120.png", 0,0,cc.size(572,436),cc.rect(15,10,538,100))
 		:addTo(bg)
 		:align(display.CENTER_TOP,304,widget_page:getPositionY() - widget_page:getCascadeBoundingBox().height)
 	self.authority_list = UIListView.new {

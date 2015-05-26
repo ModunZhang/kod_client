@@ -33,9 +33,9 @@ return function(userData)
     timer:Start()
 
 
-    if not GLOBAL_FTE then
-        app:GetChatManager():FetchAllChatMessageFromServer()
-    end
+    -- if not GLOBAL_FTE then
+    --     app:GetChatManager():FetchAllChatMessageFromServer()
+    -- end
 
     if ext.gamecenter.isGameCenterEnabled() and not ext.gamecenter.isAuthenticated() then
          ext.gamecenter.authenticate(false)

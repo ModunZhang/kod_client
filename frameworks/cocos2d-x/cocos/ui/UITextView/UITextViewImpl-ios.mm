@@ -378,6 +378,9 @@ void UITextViewImplIOS::setInputMode(EditBox::InputMode inputMode)
         case EditBox::InputMode::SINGLE_LINE:
             _systemControl.textView.keyboardType = UIKeyboardTypeDefault;
             break;
+         case EditBox::InputMode::ASCII_CAPABLE:
+            _systemControl.textView.keyboardType = UIKeyboardTypeASCIICapable;
+            break;
         default:
             _systemControl.textView.keyboardType = UIKeyboardTypeDefault;
             break;

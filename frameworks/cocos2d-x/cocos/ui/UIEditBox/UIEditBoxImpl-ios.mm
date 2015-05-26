@@ -472,6 +472,9 @@ void EditBoxImplIOS::setInputMode(EditBox::InputMode inputMode)
         case EditBox::InputMode::SINGLE_LINE:
             _systemControl.textField.keyboardType = UIKeyboardTypeDefault;
             break;
+        case EditBox::InputMode::ASCII_CAPABLE:
+            _systemControl.textField.keyboardType = UIKeyboardTypeASCIICapable;
+            break;
         default:
             _systemControl.textField.keyboardType = UIKeyboardTypeDefault;
             break;

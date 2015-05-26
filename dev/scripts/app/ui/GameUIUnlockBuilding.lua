@@ -36,9 +36,9 @@ function GameUIUnlockBuilding:Init()
     -- bg
     local bg = self.body
     -- 建筑功能介绍
-    cc.ui.UIImage.new("building_frame_36x136.png"):align(display.CENTER, display.cx-250, display.top-265)
-        :addTo(self):setFlippedX(true)
-    cc.ui.UIImage.new("building_frame_36x136.png"):align(display.CENTER, display.cx-145, display.top-265)
+    display.newSprite("alliance_item_flag_box_126X126.png")
+        :align(display.LEFT_CENTER, display.cx-268, display.top-265)
+        :scale(136/126)
         :addTo(self)
 
     local build_png = SpriteConfig[self.building:GetType()]:GetConfigByLevel(1).png

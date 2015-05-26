@@ -94,7 +94,7 @@ function GameUIDragonEyrieDetail:CreateProgressTimer()
     local iconbg = display.newSprite("drgon_process_icon_bg.png")
         :addTo(bg)
         :align(display.LEFT_BOTTOM, -13,-2)
-    display.newSprite("dragonskill_xp_51x63.png")
+    display.newSprite("upgrade_experience_icon.png")
         :addTo(iconbg)
         :pos(iconbg:getContentSize().width/2,iconbg:getContentSize().height/2)
         :scale(0.9)
@@ -618,18 +618,16 @@ function GameUIDragonEyrieDetail:CreateNodeIf_info()
     if self.info_node then return self.info_node end
     local dragon = self:GetDragon()
     local info_node = display.newNode():addTo(self:GetView())
-    local list_bg = display.newScale9Sprite("box_bg_546x214.png")
+    local list_bg = display.newScale9Sprite("background_568x120.png", 0,0,cc.size(546,212),cc.rect(15,10,538,100))
         :addTo(info_node)
         :align(display.LEFT_BOTTOM, window.left+45,window.bottom + 30)
-        :size(546, 212)
     self.info_list = UIListView.new({
         viewRect = cc.rect(13,10, 520, 192),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
         alignment = cc.ui.UIListView.ALIGNMENT_LEFT
     })
         :addTo(list_bg,2)
-    local strenth_bg = display.newScale9Sprite("activity_online_bg_104x34.png")
-        :size(150,78)
+    local strenth_bg = display.newScale9Sprite("back_ground_166x84.png",0 , 0,cc.size(150,78),cc.rect(15,10,136,64))
         :align(display.LEFT_BOTTOM,window.left + 45,list_bg:getPositionY() + 232)
         :addTo(info_node)
     UIKit:ttfLabel({
@@ -642,8 +640,7 @@ function GameUIDragonEyrieDetail:CreateNodeIf_info()
         size = 24,
         color=0x117a00
     }):align(display.CENTER_BOTTOM,75, 10):addTo(strenth_bg)
-    local vitality_bg = display.newScale9Sprite("activity_online_bg_104x34.png")
-        :size(150,78)
+    local vitality_bg = display.newScale9Sprite("back_ground_166x84.png",0 , 0,cc.size(150,78),cc.rect(15,10,136,64))
         :align(display.LEFT_BOTTOM,window.left + 242,list_bg:getPositionY() + 232)
         :addTo(info_node)
     UIKit:ttfLabel({
@@ -657,8 +654,7 @@ function GameUIDragonEyrieDetail:CreateNodeIf_info()
         color=0x117a00
     }):align(display.CENTER_BOTTOM,75, 10):addTo(vitality_bg)
 
-    local leadership_bg = display.newScale9Sprite("activity_online_bg_104x34.png")
-        :size(150,78)
+    local leadership_bg = display.newScale9Sprite("back_ground_166x84.png",0 , 0,cc.size(150,78),cc.rect(15,10,136,64))
         :align(display.RIGHT_BOTTOM,window.left + 45+546,list_bg:getPositionY() + 232)
         :addTo(info_node)
 

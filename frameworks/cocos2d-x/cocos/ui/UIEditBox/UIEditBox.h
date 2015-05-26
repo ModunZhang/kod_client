@@ -146,6 +146,10 @@ namespace ui {
                  * The user is allowed to enter any text, except for line breaks.
                  */
                 SINGLE_LINE,
+                /**
+                 * 支持ASCII的默认键盘 dannyhe
+                 */
+                ASCII_CAPABLE,
             };
             
             /**

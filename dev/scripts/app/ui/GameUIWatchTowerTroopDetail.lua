@@ -100,8 +100,7 @@ function GameUIWatchTowerTroopDetail:onEnter()
 	}):align(display.CENTER,title_bar:getContentSize().width/2, title_bar:getContentSize().height/2)
 		:addTo(title_bar)
 
-	local listBg = display.newScale9Sprite("alliance_title_list_572x436.png")
-		:size(568,754)
+	local listBg = display.newScale9Sprite("background_568x120.png", 0,0,cc.size(568,754),cc.rect(15,10,538,100))
 		:align(display.CENTER_BOTTOM, self.backgroundImage:getContentSize().width/2, 30)
 		:addTo(self.backgroundImage)
 

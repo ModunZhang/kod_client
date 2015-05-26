@@ -63,12 +63,11 @@ function Item:ctor(parent_ui)
     local w, h = back_ground:getContentSize().width, back_ground:getContentSize().height
     local left_x, right_x = 5, 150
 
-    display.newSprite("bg_134x134.png"):addTo(back_ground):pos((left_x + right_x) / 2, h/2)
+    display.newSprite("alliance_item_flag_box_126X126.png"):addTo(back_ground):pos((left_x + right_x) / 2, h/2):scale(134/126)
 
     self.building_icon = cc.ui.UIImage.new("info_26x26.png")
         :addTo(back_ground):align(display.CENTER, (left_x + right_x) / 2, h/2)
-
-    local title_blue = cc.ui.UIImage.new("title_blue_412x30.png", {scale9 = true})
+    local title_blue = display.newScale9Sprite("title_blue_430x30.png",0,0, cc.size(412,30), cc.rect(10,10,410,10))
         :addTo(back_ground):align(display.LEFT_CENTER, right_x, h - 23)
 
     local size = title_blue:getContentSize()
@@ -99,7 +98,7 @@ function Item:ctor(parent_ui)
     }):addTo(back_ground, 2)
         :align(display.LEFT_CENTER, 170 - 5, 35)
 
-    self.gem_bg = display.newSprite("back_ground_97x20.png")
+    self.gem_bg =  display.newScale9Sprite("back_ground_166x84.png",0 , 0,cc.size(97,20),cc.rect(15,10,136,64))
         :addTo(back_ground, 2)
         :align(display.CENTER, w - 90, h/2+10)
 
@@ -115,7 +114,7 @@ function Item:ctor(parent_ui)
         color = UIKit:hex2c3b(0xfff3c7)
     }):addTo(self.gem_bg, 2):align(display.LEFT_CENTER, 40, 20/2)
 
-    self.progress = WidgetTimeBar.new(nil, "back_ground_138x34.png"):addTo(back_ground, 2)
+    self.progress = WidgetTimeBar.new(nil, "back_ground_166x84.png"):addTo(back_ground, 2)
         :align(display.LEFT_CENTER, 185, h/2)
 
     self.speed_up = WidgetPushButton.new(
@@ -452,7 +451,8 @@ function GameUIHasBeenBuild:RefreshAllItems()
     end
 end
 function GameUIHasBeenBuild:LoadBuildingQueue()
-    local back_ground = cc.ui.UIImage.new("back_ground_534x46.png"):align(display.CENTER, window.cx, window.top - 120)
+    local back_ground = display.newScale9Sprite("back_ground_166x84.png", 0,0,cc.size(534,46),cc.rect(15,10,136,64))
+        :align(display.CENTER, window.cx, window.top - 120)
     local check = cc.ui.UICheckBoxButton.new({on = "yes_40x40.png", off = "wow_40x40.png" })
         :addTo(back_ground)
         :align(display.CENTER, 30, back_ground:getContentSize().height/2)
@@ -600,6 +600,10 @@ function GameUIHasBeenBuild:UpdateContent(content, idx)
     content:UpdateByBuilding(self.buildings[idx], timer:GetServerTime())
 end
 return GameUIHasBeenBuild
+
+
+
+
 
 
 

@@ -325,7 +325,7 @@ function GameUIAllianceHome:CreateTop()
     self_flag:align(display.CENTER, self_name_bg:getContentSize().width-100, -30):addTo(self_name_bg)
     self.self_flag = self_flag
     -- 敌方联盟名字
-    local enemy_name_bg = display.newSprite("title_red_292X32.png")
+    local enemy_name_bg =  display.newSprite("title_red_292X32.png")
         :align(display.RIGHT_CENTER, 147,-26)
         :addTo(top_enemy_bg)
     local enemy_name_label = UIKit:ttfLabel(
@@ -368,7 +368,7 @@ function GameUIAllianceHome:CreateTop()
     -- 己方战力
     local self_power_bg = display.newSprite("power_background_146x26.png")
         :align(display.LEFT_CENTER, -107, -65):addTo(top_self_bg)
-    local our_num_icon = cc.ui.UIImage.new("power_24x29.png"):align(display.CENTER, -107, -65):addTo(top_self_bg)
+    local our_num_icon = cc.ui.UIImage.new("dragon_strength_27x31.png"):align(display.CENTER, -107, -65):addTo(top_self_bg)
     local self_power_label = UIKit:ttfLabel(
         {
             text = string.formatnumberthousands(alliance:Power()),
@@ -379,7 +379,7 @@ function GameUIAllianceHome:CreateTop()
     -- 敌方战力
     local enemy_power_bg = display.newSprite("power_background_146x26.png")
         :align(display.LEFT_CENTER, -20, -65):addTo(top_enemy_bg)
-    local enemy_num_icon = cc.ui.UIImage.new("power_24x29.png")
+    local enemy_num_icon = cc.ui.UIImage.new("dragon_strength_27x31.png")
         :align(display.CENTER, 0, enemy_power_bg:getContentSize().height/2)
         :addTo(enemy_power_bg)
     local enemy_power_label = UIKit:ttfLabel(
@@ -442,7 +442,7 @@ function GameUIAllianceHome:CreateTop()
             self:SetEnemyPowerOrKill(enemy_reprot_data_kill)
         else
             if status~="peace" then
-                enemy_num_icon:setTexture("power_24x29.png")
+                enemy_num_icon:setTexture("dragon_strength_27x31.png")
                 self:SetEnemyPowerOrKill(enemyAlliance:Power())
                 enemy_num_icon:scale(1.0)
             else
@@ -450,7 +450,7 @@ function GameUIAllianceHome:CreateTop()
                 enemy_num_icon:scale(0.4)
                 self:SetEnemyPowerOrKill(alliance:GetFightRequestPlayerNum())
             end
-            our_num_icon:setTexture("power_24x29.png")
+            our_num_icon:setTexture("dragon_strength_27x31.png")
             self:SetOurPowerOrKill(alliance:Power())
         end
     end

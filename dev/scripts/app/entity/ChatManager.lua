@@ -179,13 +179,13 @@ function ChatManager:HandleNetMessage(eventName,msg)
 		if self:insertNormalMessage_(msg) then
 			self:pushMsgToQueue_(msg)
 		end
-	elseif eventName == 'onAllChat' then
-		self:emptyPushQueue_()
-		self:emptyChannel_()
-		for _,v in ipairs(msg) do
-			self:insertNormalMessage_(v)
-		end
-		self:callEventsChangedListeners_(self.LISTEN_TYPE.TO_REFRESH,{})
+	-- elseif eventName == 'onAllChat' then
+	-- 	self:emptyPushQueue_()
+	-- 	self:emptyChannel_()
+	-- 	for _,v in ipairs(msg) do
+	-- 		self:insertNormalMessage_(v)
+	-- 	end
+	-- 	self:callEventsChangedListeners_(self.LISTEN_TYPE.TO_REFRESH,{})
 	end
 end
 

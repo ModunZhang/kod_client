@@ -31,7 +31,7 @@ function GameUIAllianceNoticeOrDescEdit:OnMoveInStage()
 	}):align(display.CENTER,300,26):addTo(titleBar)
 	
 
-	local textView = ccui.UITextView:create(cc.size(555,238),display.newScale9Sprite("alliance_edit_bg_555x238.png"))
+	local textView = ccui.UITextView:create(cc.size(555,238),display.newScale9Sprite("background_88x42.png"))
     textView:addTo(bg_node):align(display.CENTER_TOP,bg_node:getContentSize().width/2, titleBar:getPositionY() - 10)
     textView:setReturnType(cc.KEYBOARD_RETURNTYPE_DEFAULT)    
     textView:setFont(UIKit:getEditBoxFont(), 24)
@@ -80,11 +80,13 @@ function GameUIAllianceNoticeOrDescEdit:onOkButtonClicked()
 		NetManager:getEditAllianceNoticePromise(content)
         	:done(function()
         		self:LeftButtonClicked()
+        		GameGlobalUI:showTips(_("提示"),_("修改联盟公告成功"))
         	end)
 	else
 		NetManager:getEditAllianceDescriptionPromise(content)
 			:done(function()
         		self:LeftButtonClicked()
+        		GameGlobalUI:showTips(_("提示"),_("修改联盟描述成功"))
         	end)
 	end
 end
