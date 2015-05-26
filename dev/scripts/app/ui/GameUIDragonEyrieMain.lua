@@ -212,7 +212,11 @@ function GameUIDragonEyrieMain:RefreshUI()
             self.dragon_hp_label:setString(dragon:Hp() .. "/" .. dragon:GetMaxHP())
             self.progress_hated:setPercentage(dragon:Hp()/dragon:GetMaxHP()*100)
             self.state_label:setString(Localize.dragon_status[dragon:Status()])
-            self.state_label:setColor(dragon:IsDefenced() and UIKit:hex2c3b(0x7e0000) or UIKit:hex2c3b(0x07862b))
+            if dragon:IsDefenced() or dragon:IsFree() then
+                self.state_label:setColor(UIKit:hex2c3b(0x07862b))
+            else
+                self.state_label:setColor(UIKit:hex2c3b(0x7e0000))
+            end
             self.death_speed_button:hide()
             self.progress_content_death:hide()
         end

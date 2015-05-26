@@ -55,7 +55,7 @@ local function decode_battle_from_report(report)
         attacker.soldierName = attacker.soldierName or "wall"
         defender.soldierName = defender.soldierName or "wall"
         local defeatAll
-        if attacker.soldierName ~= "wall" and defender.soldierName ~= "wall" then
+        if attacker.soldierName ~= "wall" and defender.soldierName ~= "wall" and #attacks ~= i then
             defeatAll = (((attacker.morale - attacker.moraleDecreased) <= 20
                 or (attacker.soldierCount - attacker.soldierDamagedCount) <= 0) or not attacker.isWin)
                 and (((defender.morale - defender.moraleDecreased) <= 20
@@ -842,7 +842,7 @@ function GameUIReplayNew:ctor(report, callback)
 end
 function GameUIReplayNew:OnMoveInStage()
     GameUIReplayNew.super.OnMoveInStage(self)
-    app:GetAudioManager():PlayGameMusic("AllianceBattleScene",true)
+    app:GetAudioManager():PlayGameMusic("AllianceBattleScene",true,true)
     self.ui_map = self:BuildUI()
     self.ui_map.battle_background1:setTexture(string.format("back_ground_%s.png", self.report:GetAttackTargetTerrain()))
     self.ui_map.attackName:setString(self.report:GetFightAttackName())

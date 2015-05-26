@@ -283,7 +283,7 @@ function AllianceMap:CanMoveBuilding(allianceBuilding, x, y)
         end
         for _,mapObj in pairs(self.mapObjects) do
             local x2,y2 = mapObj:GetLogicPosition()
-            if (ox ~= x2 or y1 ~= y2) and mapObj:IsContainPoint(lx, ly) then
+            if (ox ~= x2 or oy ~= y2) and mapObj:IsContainPoint(lx, ly) then
                 v[3] = false  
                 break
             end

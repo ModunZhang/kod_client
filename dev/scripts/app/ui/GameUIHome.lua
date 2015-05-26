@@ -16,6 +16,7 @@ local ResourceManager = import("..entity.ResourceManager")
 local GrowUpTaskManager = import("..entity.GrowUpTaskManager")
 local GameUIHome = UIKit:createUIClass('GameUIHome')
 local WidgetAutoOrderAwardButton = import("..widget.WidgetAutoOrderAwardButton")
+local Alliance_Manager = Alliance_Manager
 
 local app = app
 local timer = app.timer
@@ -28,6 +29,7 @@ local COIN          = ResourceManager.RESOURCE_TYPE.COIN
 
 local red_color = UIKit:hex2c4b(0xff3c00)
 local normal_color = UIKit:hex2c4b(0xf3f0b6)
+
 function GameUIHome:OnResourceChanged(resource_manager)
     local server_time = timer:GetServerTime()
     local allresources = resource_manager:GetAllResources()
@@ -139,34 +141,40 @@ end
 function GameUIHome:AddOrRemoveListener(isAdd)
     local city = self.city
     local user = self.city:GetUser()
+    local my_allaince = Alliance_Manager:GetMyAlliance()
+    local alliance_belvedere = my_allaince:GetAllianceBelvedere()
     if isAdd then
         city:AddListenOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
         city:AddListenOnType(self, city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
         city:GetResourceManager():AddObserver(self)
         city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
         city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
-        Alliance_Manager:GetMyAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
-        Alliance_Manager:GetMyAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.HELP_EVENTS)
-        Alliance_Manager:GetMyAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.ALL_HELP_EVENTS)
+        my_allaince:AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
+        my_allaince:AddListenOnType(self, Alliance.LISTEN_TYPE.HELP_EVENTS)
+        my_allaince:AddListenOnType(self, Alliance.LISTEN_TYPE.ALL_HELP_EVENTS)
         user:AddListenOnType(self, user.LISTEN_TYPE.BASIC)
         user:AddListenOnType(self, user.LISTEN_TYPE.TASK)
         user:AddListenOnType(self, user.LISTEN_TYPE.VIP_EVENT_ACTIVE)
         user:AddListenOnType(self, user.LISTEN_TYPE.VIP_EVENT_OVER)
         user:AddListenOnType(self, user.LISTEN_TYPE.COUNT_INFO)
+        alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
+        alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
     else
-        city:RemoveListenerOnType(self, self.city.LISTEN_TYPE.UPGRADE_BUILDING)
+        city:RemoveListenerOnType(self,city.LISTEN_TYPE.UPGRADE_BUILDING)
         city:RemoveListenerOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
         city:GetResourceManager():RemoveObserver(self)
         city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
         city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
-        Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
-        Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.HELP_EVENTS)
-        Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.ALL_HELP_EVENTS)
+        my_allaince:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
+        my_allaince:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.HELP_EVENTS)
+        my_allaince:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.ALL_HELP_EVENTS)
         user:RemoveListenerOnType(self, user.LISTEN_TYPE.BASIC)
         user:RemoveListenerOnType(self, user.LISTEN_TYPE.TASK)
         user:RemoveListenerOnType(self, user.LISTEN_TYPE.VIP_EVENT_ACTIVE)
         user:RemoveListenerOnType(self, user.LISTEN_TYPE.VIP_EVENT_OVER)
         user:RemoveListenerOnType(self, user.LISTEN_TYPE.COUNT_INFO)
+        alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
+        alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
     end
 end
 function GameUIHome:OnAllianceBasicChanged(fromEntity,changed_map)
@@ -388,16 +396,6 @@ function GameUIHome:CreateTop()
     --在线活动
     local activity_button = WidgetAutoOrderAwardButton.new(self)
 
-
-
-    -- function activity_button:CheckVisible()
-    --     return true
-    -- end
-
-    -- function activity_button:GetElementSize()
-    --     return activity_button:getCascadeBoundingBox().size
-    -- end
-
     left_order:AddElement(activity_button)
     left_order:RefreshOrder()
     local order = WidgetAutoOrder.new(WidgetAutoOrder.ORIENTATION.TOP_TO_BOTTOM,20):addTo(self):pos(display.right-50, display.top-200)
@@ -446,7 +444,61 @@ function GameUIHome:CreateTop()
     order:RefreshOrder()
     self.top_order_group = order
     self.left_order_group = left_order
+
+    --联盟提示按钮
+    self.join_alliance_tips_button = cc.ui.UIPushButton.new({normal = 'alliance_join_tips_79x83.png'}):pos(display.left+40, display.top-600):addTo(self)
+        :onButtonClicked(function()
+            UIKit:newGameUI("GameUIAllianceJoinTips"):AddToCurrentScene(true)
+        end)
+    self.join_alliance_tips_button:setVisible(not User:GetCountInfo().firstJoinAllianceRewardGeted)
+    --瞭望塔事件按钮
+    local alliance_belvedere_button = cc.ui.UIPushButton.new({normal = 'fight_62x70.png'}):pos(display.right-50, display.top-600):addTo(self)
+    alliance_belvedere_button.alliance_belvedere_events_count = WidgetNumberTips.new():addTo(alliance_belvedere_button):pos(20,-20)
+    self.alliance_belvedere_button = alliance_belvedere_button
+    alliance_belvedere_button:onButtonClicked(function()
+        local default_tab = 'march'
+        local alliance = Alliance_Manager:GetMyAlliance()
+        local alliance_belvedere = alliance:GetAllianceBelvedere()
+        local hasMarch,__ = alliance_belvedere:HasMyEvents()
+        if not hasMarch then
+            local hasComming,__ = alliance_belvedere:HasOtherEvents()
+            if hasComming then
+                default_tab = 'comming'
+            end
+        end
+        UIKit:newGameUI('GameUIWathTowerRegion',self.city,default_tab):AddToCurrentScene(true)
+    end)
+    local alliance = Alliance_Manager:GetMyAlliance()
+    local alliance_belvedere = alliance:GetAllianceBelvedere()
+    local hasEvent,count = alliance_belvedere:HasEvents()
+    alliance_belvedere_button.alliance_belvedere_events_count:SetNumber(count)
+    if hasEvent then
+        alliance_belvedere_button:show()
+    else
+        alliance_belvedere_button:hide()
+    end
+
     return top_bg
+end
+
+function GameUIHome:OnMarchDataChanged()
+    self:RefreshAllianceBelvedereButton()
+end
+function GameUIHome:OnCommingDataChanged()
+    self:RefreshAllianceBelvedereButton()
+end
+
+function GameUIHome:RefreshAllianceBelvedereButton()
+    if not self.alliance_belvedere_button then return end
+    local alliance = Alliance_Manager:GetMyAlliance()
+    local alliance_belvedere = alliance:GetAllianceBelvedere()
+    local hasEvent,count = alliance_belvedere:HasEvents()
+    if hasEvent then
+        self.alliance_belvedere_button.alliance_belvedere_events_count:SetNumber(count)
+        self.alliance_belvedere_button:show()
+    else
+        self.alliance_belvedere_button:hide()
+    end
 end
 
 function GameUIHome:CreateBottom()
@@ -609,11 +661,23 @@ function GameUIHome:PromiseOfActivePromise()
     end)
 end
 function GameUIHome:OnCountInfoChanged()
+    self.join_alliance_tips_button:setVisible(not User:GetCountInfo().firstJoinAllianceRewardGeted)
     self.left_order_group:RefreshOrder()
 end
 function GameUIHome:PromiseOfFteAlliance()
     self.bottom:TipsOnAlliance()
 end
+function GameUIHome:PromiseOfFteAllianceMap()
+    local btn = self.change_map.btn
+    btn:removeChildByTag(102)
+
+    WidgetFteArrow.new(_("查看联盟地图")):addTo(btn, 10, 102)
+        :TurnDown(false):align(display.LEFT_BOTTOM, 0, 50)
+        
+    btn:stopAllActions()
+    btn:performWithDelay(function() btn:removeChildByTag(102) end, 10)
+end
+
 
 return GameUIHome
 

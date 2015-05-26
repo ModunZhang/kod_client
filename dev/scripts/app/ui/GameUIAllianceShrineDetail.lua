@@ -26,7 +26,7 @@ function GameUIAllianceShrineDetail:ctor(shrineStage,allianceShrine,isActivate)
 	else
 		HEIGHT = 600 -- 修改背景高度
 	end
-	GameUIAllianceShrineDetail.super.ctor(self,HEIGHT,self:GetShrineStage():GetStageDesc(),window.top - 82,"title_red_600x56.png")
+	GameUIAllianceShrineDetail.super.ctor(self,HEIGHT,self:GetShrineStage():GetDescStageName(),window.top - 82,"title_red_600x56.png")
 end
 
 function GameUIAllianceShrineDetail:GetAllianceShrine()

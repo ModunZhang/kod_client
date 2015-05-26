@@ -8,6 +8,12 @@ function AllianceManager:ctor()
     self.enemy_alliance:SetIsMyAlliance(false)
 end
 
+
+function AllianceManager:HasBeenJoinedAlliance()
+    return DataManager:getUserData().countInfo.firstJoinAllianceRewardGeted or 
+        not self:GetMyAlliance():IsDefault()
+end
+
 function AllianceManager:GetMyAlliance()
     return self.my_alliance
 end
@@ -86,7 +92,6 @@ function AllianceManager:RefreshAllianceSceneIf(old_alliance_status)
             self:GetEnemyAlliance():Reset()
         end
         if old_alliance_status == "" then return end
-        app:GetAudioManager():PlayGameMusic()
         if scene_name == 'AllianceBattleScene' or scene_name == 'AllianceScene' or scene_name == 'MyCityScene' then
             if not UIKit:GetUIInstance('GameUIWarSummary') then
                 UIKit:newGameUI("GameUIWarSummary"):AddToCurrentScene(true)
@@ -94,7 +99,6 @@ function AllianceManager:RefreshAllianceSceneIf(old_alliance_status)
         end
     end
     if (my_alliance_status == 'prepare' or my_alliance_status == 'fight') then
-        app:GetAudioManager():PlayGameMusic()
         if scene_name == 'AllianceScene' then
             if not UIKit:isMessageDialogShowWithUserData("__alliance_war_tips__") then
                 UIKit:showMessageDialog(nil,_("联盟对战已开始，您将进入自己联盟对战地图。"),function()

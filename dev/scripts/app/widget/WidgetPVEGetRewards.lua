@@ -21,7 +21,7 @@ function WidgetPVEGetRewards:onEnter()
         :align(display.LEFT_CENTER, 130, s.height - 60)
 
     local pbg = display.newSprite("progress_bar_458x40_1.png"):addTo(self:GetBody())
-        :align(display.LEFT_CENTER, 130, s.height - 110)
+        :align(display.LEFT_CENTER, 130, s.height - 120)
     local s2 = pbg:getContentSize()
     UIKit:commonProgressTimer("progress_bar_458x40_2.png"):addTo(pbg)
         :align(display.LEFT_CENTER, 0, s2.height/2):setPercentage(self.percent)
@@ -33,12 +33,14 @@ function WidgetPVEGetRewards:onEnter()
         :pos(s.width/2, s.height - 230)
     local s3 = bg:getContentSize()
 
-    display.newSprite("blue_bg_128x128.png"):addTo(bg):pos(75, s3.height/2)
-    display.newSprite(UILib.item[self.gemClass]):addTo(bg):pos(75, s3.height/2)
-    display.newSprite("box_soldier_128x128.png"):addTo(bg):pos(75, s3.height/2)
+    display.newSprite("box_118x118.png"):addTo(bg):pos(75, s3.height/2)
+    display.newSprite(UILib.item[self.gemClass]):addTo(bg):pos(75, s3.height/2):scale(0.8)
 
-
-    UIKit:ttfLabel({text = _("金龙币"), size = 22, color = 0x403c2f})
+    UIKit:ttfLabel({
+        text = Localize_item.item_name[self.gemClass].." x"..self.count, 
+        size = 22, 
+        color = 0x403c2f
+        })
         :addTo(bg):align(display.LEFT_CENTER, 150, s3.height-35)
 
     UIKit:ttfLabel({
@@ -66,7 +68,9 @@ function WidgetPVEGetRewards:onEnter()
             local data = User:EncodePveDataAndResetFightRewardsData()
             data.pveData.rewardedFloor = User:GetCurrentPVEMap():GetIndex()
             NetManager:getSetPveDataPromise(data):done(function()
-                self:getParent():GetHomePage():RefreshRewards()
+                if display.getRunningScene().__cname == "PVEScene" then
+                    display.getRunningScene():GetHomePage():RefreshRewards()
+                end
                 self:RefreshStatus()
                 GameGlobalUI:showTips(_("获得奖励"), Localize_item.item_name[self.gemClass].."x"..self.count)
             end)

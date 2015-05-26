@@ -223,7 +223,7 @@ function GameUIActivityNew:GetActivityItem(item_type)
 		}):align(display.LEFT_BOTTOM,298,90):addTo(bg)
 
 		local day_label = UIKit:ttfLabel({
-			text = string.format(_("%d/%d"),countInfo.day14,#config_day14),
+			text = string.format("%d/%d",countInfo.day14,#config_day14),
 			size = 20,
 			color= 0xa2ff00,
 			shadow= true,

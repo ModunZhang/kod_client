@@ -240,10 +240,10 @@ function WidgetPVEDialog:Fight()
 end
 
 function WidgetPVEDialog:CheckPveTask(report)
-    local name,count,target_count,ok = self.user:GetPVEDatabase():GetTarget()
-    if ok and target_count > count then
+    local target,ok = self.user:GetPVEDatabase():GetTarget()
+    if ok and target.target > target.count then
         for i,v in ipairs(report:GetDefenceKDA().soldiers) do
-            if v.name == name then
+            if v.name == target.name then
                 self.user:GetPVEDatabase():IncKillCount(v.damagedCount)
                 break
             end

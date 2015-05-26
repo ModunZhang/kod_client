@@ -31,7 +31,24 @@ function MyCityScene:onEnter()
     local alliance = Alliance_Manager:GetMyAlliance()
     local alliance_map = alliance:GetAllianceMap()
     local allianceShirine = alliance:GetAllianceShrine()
+    alliance:AddListenOnType(self, alliance.LISTEN_TYPE.OPERATION)
     alliance_map:AddListenOnType(allianceShirine, alliance_map.LISTEN_TYPE.BUILDING_INFO)
+
+
+    self.firstJoinAllianceRewardGeted = DataManager:getUserData().countInfo.firstJoinAllianceRewardGeted
+    -- cc.ui.UIPushButton.new({normal = "lock_btn.png",pressed = "lock_btn.png"})
+    -- :addTo(self, 1000000):align(display.RIGHT_TOP, display.width, display.height)
+    -- :onButtonClicked(function(event)
+    --     event.target:setButtonEnabled(false)
+    --     app:ReloadGame()
+    -- end):setOpacity(0)
+    -- UIKit:ttfLabel({
+    --     text = _("reload"),
+    --     size = 30,
+    --     color = 0xffedae,
+    --     align = cc.TEXT_ALIGNMENT_CENTER,
+    -- }):addTo(self, 1000000)
+    -- :align(display.RIGHT_TOP, display.width, display.height)
 end
 function MyCityScene:onExit()
     MyCityScene.super.onExit(self)
@@ -144,6 +161,14 @@ end
 function MyCityScene:GetHomePage()
     return self.home_page
 end
+function MyCityScene:OnOperation(alliance, op)
+    if op == "join" and
+        Alliance_Manager:HasBeenJoinedAlliance() and
+        not self.firstJoinAllianceRewardGeted
+    then
+        self:GetHomePage():PromiseOfFteAllianceMap()
+    end
+end
 function MyCityScene:onEnterTransitionFinish()
     MyCityScene.super.onEnterTransitionFinish(self)
     if ext.registereForRemoteNotifications then
@@ -151,21 +176,28 @@ function MyCityScene:onEnterTransitionFinish()
     end
     app:sendApnIdIf()
 
-    if not cc.UserDefault:getInstance():getBoolForKey("first_in_city_scene") and 
+    if Alliance_Manager:HasBeenJoinedAlliance() then
+        return
+    end
+    local userdefault = cc.UserDefault:getInstance()
+    if not userdefault:getBoolForKey("first_in_city_scene") and
         Alliance_Manager:GetMyAlliance():IsDefault() then
-        -- cc.UserDefault:getInstance():setBoolForKey("first_in_city_scene", true)
-        -- cc.UserDefault:flush()
+
+        userdefault:setBoolForKey("first_in_city_scene", true)
+        userdefault:flush()
+
         app:lockInput(true)
-        cocos_promise.defer(function()
-            app:lockInput(false)
-        end):next(function()
-            return GameUINpc:PromiseOfSay(
-                {words = _("领主大人，这个世界上的觉醒者并不只有你一人。介入他们或者创建联盟邀请他们加入，会让我们发展得更顺利")}
-            )
-        end):next(function()
+        cocos_promise.defer(function()app:lockInput(false);end)
+            :next(function()
+                return GameUINpc:PromiseOfSay(
+                    {words = _("领主大人，这个世界上的觉醒者并不只有你一人。介入他们或者创建联盟邀请他们加入，会让我们发展得更顺利")}
+                )
+            end):next(function()
             self:GetHomePage():PromiseOfFteAlliance()
             return GameUINpc:PromiseOfLeave()
-        end)
+            end)
+    else
+        self:GetHomePage():PromiseOfFteAlliance()
     end
 end
 function MyCityScene:CreateHomePage()
@@ -334,6 +366,10 @@ function MyCityScene:OpenUI(building, default_tab)
 end
 
 return MyCityScene
+
+
+
+
 
 
 

@@ -604,7 +604,7 @@ function GameUIAllianceShrine:fillReportItemContent(content,report,idx)
 	box.power_label:setString(report.playerAvgPower)
 	content.date_label:setString(os.date("%Y-%m-%d",report:Time()))
 	content.time_label:setString(os.date("%H:%M:%S",report:Time()))
-	content.title_label:setString(report:Stage():GetStageDesc())
+	content.title_label:setString(report:Stage():GetDescStageName())
 	if content.button then
 		content.button:removeSelf()
 	end

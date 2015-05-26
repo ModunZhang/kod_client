@@ -9,7 +9,7 @@ local SpriteConfig = import("..sprites.SpriteConfig")
 local UILib = import("..ui.UILib")
 local MapLayer = import(".MapLayer")
 local PVELayer = class("PVELayer", MapLayer)
-local ZORDER = Enum("BACKGROUND", "BUILDING", "OBJECT", "FOG", "FTE")
+local ZORDER = Enum("BACKGROUND", "BUILDING", "OBJECT", "FOG", "TOP", "FTE")
 PVELayer.ZORDER = ZORDER
 
 local pve_color = {
@@ -63,6 +63,7 @@ function PVELayer:ctor(scene, user)
     self.building_layer = display.newNode():addTo(self.scene_node, ZORDER.BUILDING)
     self.object_layer = display.newNode():addTo(self.scene_node, ZORDER.OBJECT)
     self.fte_layer = display.newNode():addTo(self.scene_node, ZORDER.FTE)
+    self.top_layer = display.newNode():addTo(self.scene_node, ZORDER.TOP)
 
     self.normal_map = NormalMapAnchorBottomLeftReverseY.new({
         tile_w = 80,
@@ -193,14 +194,19 @@ function PVELayer:GetFteLayer()
     return self.fte_layer
 end
 function PVELayer:PromiseOfTrap()
-    local p = promise.new()
+    local size = self.char:getContentSize()
+    local wp = self.char:convertToWorldSpace(cc.p(size.width*0.3, size.height*0.3))
+    local lp = self.top_layer:convertToNodeSpace(wp)
+    self.top_layer:removeAllChildren()
+
     local t = 0.025
     local r = 5
     local exclamation_time = 0.5
     local exclamation_scale = 1
-    local size = self.char:getContentSize()
     local s = display.newSprite("exclamation.png")
-        :addTo(self.char):pos(size.width*0.3, size.height*0.3):scale(0)
+        :addTo(self.top_layer):pos(lp.x, lp.y):scale(0)
+        
+    local p = promise.new()        
     self.char:runAction(transition.sequence({
         cc.RotateBy:create(t, r),
         cc.RotateBy:create(t, -r),
@@ -223,7 +229,7 @@ function PVELayer:PromiseOfTrap()
         end),
         cc.DelayTime:create(exclamation_time),
         cc.CallFunc:create(function()
-            s:removeFromParent()
+            self.top_layer:removeAllChildren()
             p:resolve()
         end),
     }))

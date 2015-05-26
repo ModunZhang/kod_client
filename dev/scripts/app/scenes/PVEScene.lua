@@ -46,9 +46,10 @@ function PVEScene:onEnter()
     self.user:GetPVEDatabase():SetLocationHandle(self)
 end
 function PVEScene:onEnterTransitionFinish()
-    if not cc.UserDefault:getInstance():getBoolForKey("first_in_pve") then
-        -- cc.UserDefault:getInstance():setBoolForKey("first_in_pve", true)
-        -- cc.UserDefault:flush()
+    local userdefault = cc.UserDefault:getInstance()
+    if not userdefault:getBoolForKey("first_in_pve") then
+        userdefault:setBoolForKey("first_in_pve", true)
+        userdefault:flush()
         UIKit:newGameUI("GameUITips", "pve", _("玩法介绍"), true):AddToScene(self, true)
     end
 end
@@ -297,10 +298,10 @@ function PVEScene:CheckTrap()
     end
 end
 function PVEScene:CheckPveTask(report)
-    local name,count,target_count,ok = self.user:GetPVEDatabase():GetTarget()
-    if ok and target_count > count then
+    local target,ok = self.user:GetPVEDatabase():GetTarget()
+    if ok and target.target > target.count then
         for i,v in ipairs(report:GetDefenceKDA().soldiers) do
-            if v.name == name then
+            if v.name == target.name then
                 self.user:GetPVEDatabase():IncKillCount(v.damagedCount)
                 break
             end

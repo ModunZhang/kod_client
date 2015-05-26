@@ -21,7 +21,8 @@ function MyCityFteScene:ctor(...)
 
     cc.ui.UIPushButton.new({normal = "lock_btn.png",pressed = "lock_btn.png"})
     :addTo(self, 1000000):align(display.RIGHT_TOP, display.width, display.height)
-    :onButtonClicked(function()
+    :onButtonClicked(function(event)
+        event.target:setButtonEnabled(false)
         self:Skip()
     end):setOpacity(0)
     UIKit:ttfLabel({
@@ -70,10 +71,10 @@ function MyCityFteScene:PromiseOfClickBuilding(x, y, for_build, msg, arrow_param
                 local rect
                 if info_layer:getChildByTag(119) then
                     local rect1 = info_layer:getChildByTag(119):getCascadeBoundingBox()
-                    local rect2 = building:getCascadeBoundingBox()
+                    local rect2 = building:GetSprite():getCascadeBoundingBox()
                     rect = cc.rectUnion(rect1, rect2)
                 else
-                    rect = building:getCascadeBoundingBox()
+                    rect = building:GetSprite():getCascadeBoundingBox()
                 end
                 self:GetFteLayer():FocusOnRect(rect)
             end)
@@ -590,6 +591,7 @@ function MyCityFteScene:Skip()
     self:EnterMyCity()
 end
 function MyCityFteScene:EnterMyCity()
+    NetManager:getFinishFTE()
     app:GetPushManager():CancelAll()
     UIKit:closeAllUI(true)
     app:EnterUserMode()
