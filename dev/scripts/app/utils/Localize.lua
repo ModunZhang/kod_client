@@ -836,7 +836,12 @@ local WONDER_TITLE_BUFF = {
 
 local MAILS = {
     __system = _("系统邮件"),
+    __member = _("成员"),
+    __supervisor = _("监视"),
+    __quartermaster = _("军需官"),
+    __general = _("将军"),
     __archon = _("盟主"),
+    __elite = _("精英"),
     __allianceMembers = _("联盟所有成员"),
 }
 

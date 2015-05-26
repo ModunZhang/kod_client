@@ -372,7 +372,7 @@ function WidgetEventTabButtons:CreateProgressItem()
     node.progress:setMidpoint(cc.p(0,0))
     node.desc = UIKit:ttfLabel({
         text = "Building",
-        size = 16,
+        size = 18,
         color = 0xd1ca95,
     }):addTo(node):align(display.LEFT_CENTER, 10, half_height)
 

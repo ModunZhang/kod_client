@@ -229,7 +229,7 @@ function GameUITownHall:CreateQuestItem(quest,index)
                     NetManager:getDailyQeustRewardPromise(quest.id):done(function ()
                         local re_desc = ""
                         for i,v in ipairs(total_rewards) do
-                            re_desc = re_desc .. Localize.fight_reward[v.resource_type].."X"..v.count.." "
+                            re_desc = re_desc .. Localize.fight_reward[v.resource_type].."X".. string.formatnumberthousands(v.count) .." "
                         end
                         GameGlobalUI:showTips(_("每日任务完成"),_("获得")..re_desc)
 

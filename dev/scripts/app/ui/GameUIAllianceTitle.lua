@@ -91,7 +91,7 @@ function GameUIAllianceTitle:BuildUI()
     			self:CreateEditTitleUI()
     		end)
     end
-    local listBg = display.newScale9Sprite("background_568x120.png", 0,0,cc.size(572,436),cc.rect(15,10,538,100))
+    local listBg = display.newScale9Sprite("background_568x120.png", 0,0,cc.size(572,346),cc.rect(15,10,538,100))
 		:addTo(bg)
 		:align(display.CENTER_TOP,304,widget_page:getPositionY() - widget_page:getCascadeBoundingBox().height)
 	self.authority_list = UIListView.new {
@@ -152,7 +152,7 @@ function GameUIAllianceTitle:RefreshListView(index)
 	local data = self:GetListData(index)
 	for i,v in ipairs(data) do
   			local item = self.authority_list:newItem()
-    		local bg = display.newSprite(string.format("resource_item_bg%d.png",i%2))
+    		local bg = display.newScale9Sprite(string.format("back_ground_548x40_%d.png",i%2 == 0 and 2 or 1)):size(547,46)
     		UIKit:ttfLabel({
 				text = v[1],
 				size = 20,

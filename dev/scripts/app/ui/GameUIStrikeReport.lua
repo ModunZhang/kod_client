@@ -89,7 +89,7 @@ function GameUIStrikeReport:onEnter()
     shadow_layer:align(display.CENTER, 0, 0)
         :addTo(strike_result_image)
 
-    local strike_result_label = cc.ui.UILabel.new(
+    cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = self:GetReportLevel(),
@@ -98,7 +98,7 @@ function GameUIStrikeReport:onEnter()
             color = UIKit:hex2c3b(0xffedae)
         }):align(display.CENTER, strike_result_image:getContentSize().width/2, 15)
         :addTo(strike_result_image)
-    local strike_result_label = cc.ui.UILabel.new(
+    cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = self:GetBattleCityName(),
@@ -107,23 +107,30 @@ function GameUIStrikeReport:onEnter()
             color = UIKit:hex2c3b(0x615b44)
         }):align(display.LEFT_CENTER, 20, rb_size.height-170)
         :addTo(report_body)
-    local strike_result_label = cc.ui.UILabel.new(
+    cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
             text = GameUtils:formatTimeStyle2(math.floor(report:CreateTime()/1000)),
             font = UIKit:getFontFilePath(),
             size = 18,
             color = UIKit:hex2c3b(0x615b44)
-        }):align(display.LEFT_CENTER, 20, rb_size.height-200)
+        }):align(display.RIGHT_CENTER, rb_size.width-20, rb_size.height-170)
         :addTo(report_body)
     -- 突袭战报详细内容展示
     self.details_view = UIListView.new{
         viewRect = cc.rect(0, 70, 588, 505),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(report_body):pos(10, 5)
-
+    local terrain = report:GetStrikeTarget().terrain
+    local war_result_label = UIKit:ttfLabel(
+        {
+            text = string.format(_("战斗地形:%s(派出%s获得额外力量)"),Localize.terrain[terrain],terrain=="grassLand" and _("绿龙") or terrain=="desert" and _("红龙") or terrain=="iceField" and _("蓝龙")),
+            size = 18,
+            color = 0x615b44
+        }):align(display.LEFT_CENTER, 20, rb_size.height-195)
+        :addTo(report_body)
     -- 战利品部分
-    self:CreateBootyPart()
+    -- self:CreateBootyPart()
     -- 战斗统计部分
     self:CreateWarStatisticsPart()
     if (report:Type() == "strikeCity" or report:Type() == "strikeVillage") and report:GetStrikeLevel()>1 then

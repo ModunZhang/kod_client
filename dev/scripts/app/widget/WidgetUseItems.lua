@@ -346,7 +346,6 @@ end
 
 function WidgetUseItems:OpenOneDragonItemExpDialog( item ,dragon)
     local same_items = ItemManager:GetSameTypeItems(item)
-    local increase_type = string.split(item:Name(),"_")[1]
     local dialog = UIKit:newWidgetUI("WidgetPopDialog",#same_items*130+200, _("增加龙的经验"),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
@@ -413,11 +412,9 @@ function WidgetUseItems:OpenOneDragonItemExpDialog( item ,dragon)
     end)
 
     function dialog:OnBasicChanged()
-        if increase_type == "dragonExp" then
-            dragon_value:setString(dragon:Exp().."/"..dragon:GetMaxExp())
-            exp_icon:setPositionX(dragon_value:getPositionX() - dragon_value:getContentSize().width - 20)
-            dragon_level:setString("LV"..dragon:Level().."/"..dragon:GetMaxLevel())
-        end
+        dragon_value:setString(dragon:Exp().."/"..dragon:GetMaxExp())
+        exp_icon:setPositionX(dragon_value:getPositionX() - dragon_value:getContentSize().width - 20)
+        dragon_level:setString("LV"..dragon:Level().."/"..dragon:GetMaxLevel())
     end
     return dialog
 end
@@ -1329,6 +1326,7 @@ end
 
 
 return WidgetUseItems
+
 
 
 

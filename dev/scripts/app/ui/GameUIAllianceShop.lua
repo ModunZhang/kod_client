@@ -132,7 +132,7 @@ function GameUIAllianceShop:HonourAndLoyalty()
     display.newSprite("honour_128x128.png"):addTo(bg):align(display.LEFT_CENTER, -10, bg:getContentSize().height/2):scale(0.3)
     -- 荣耀值
     local honour_label = UIKit:ttfLabel({
-        text = string.formatnumberthousands(self.alliance:Honour()),
+        text = GameUtils:formatNumber(self.alliance:Honour()),
         size = 20,
         color = 0x615b44
     }):addTo(bg):align(display.CENTER, bg:getContentSize().width/2 , bg:getContentSize().height/2)
@@ -148,7 +148,7 @@ function GameUIAllianceShop:HonourAndLoyalty()
     }):addTo(node):align(display.RIGHT_CENTER, bg:getPositionX() - bg:getContentSize().width - 20 , 17)
     -- 荣耀值
     local loyalty_label = UIKit:ttfLabel({
-        text = string.formatnumberthousands(User:Loyalty()),
+        text = GameUtils:formatNumber(User:Loyalty()),
         size = 20,
         color = 0x615b44
     }):addTo(bg):align(display.CENTER, bg:getContentSize().width/2 , bg:getContentSize().height/2)

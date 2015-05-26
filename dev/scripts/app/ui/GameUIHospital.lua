@@ -148,7 +148,7 @@ function GameUIHospital:CreateHealAllSoldierItem()
     }
     -- 资源背景框
     local resource_bg = WidgetUIBackGround.new({width = 556,height = 56},WidgetUIBackGround.STYLE_TYPE.STYLE_5)
-        :addTo(self.treate_all_soldiers_item):pos(self.treate_all_soldiers_item:getContentSize().width/2,180)
+        :addTo(self.treate_all_soldiers_item):align(display.CENTER,self.treate_all_soldiers_item:getContentSize().width/2,180)
     for k,v in pairs(resource_icons) do
         self.heal_resource_item_table[k] = createResourceItem(v[2],v[1]):addTo(self.treate_all_soldiers_item):pos(bg_size.width/2-40, 165)
     end
