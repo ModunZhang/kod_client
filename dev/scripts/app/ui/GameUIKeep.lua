@@ -222,7 +222,7 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
                 color = 0xffedae}):align(display.CENTER_LEFT, 14, title_bg:getContentSize().height/2)
                 :addTo(title_bg)
             if canUnlock then
-                display.newSprite("activity_next_32x37.png"):align(display.CENTER, 260, 0):addTo(content, 10)
+                display.newSprite("next_32x38.png"):align(display.CENTER, 260, 0):addTo(content, 10)
             end
 
             UIKit:ttfLabel({

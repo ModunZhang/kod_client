@@ -26,6 +26,8 @@ function MyCityScene:onEnter()
     self:GetCity():AddListenOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
     self:GetCity():GetUser():AddListenOnType(self, User.LISTEN_TYPE.BASIC)
     self:GetCity():GetSoldierManager():AddListenOnType(self, SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
+    self:GetCity():GetFirstBuildingByType("barracks"):AddBarracksListener(self)
+    
 
 
     local alliance = Alliance_Manager:GetMyAlliance()
@@ -256,6 +258,15 @@ function MyCityScene:OnUpgradingFinished(building)
     self:IteratorLockButtons(function(v)
         v:setVisible(can_unlock)
     end)
+end
+
+function MyCityScene:OnBeginRecruit()
+end
+function MyCityScene:OnRecruiting()
+end
+function MyCityScene:OnEndRecruit(barracks, event, soldier_type)
+    local star = self:GetCity():GetSoldierManager():GetStarBySoldierType(soldier_type)
+    self:GetSceneLayer():MoveSoldiers({name = soldier_type, star = star})
 end
 function MyCityScene:OnTilesChanged(tiles)
     self:GetTopLayer():removeAllChildren()

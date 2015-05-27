@@ -13,6 +13,7 @@ local SingleTreeSprite = import("..sprites.SingleTreeSprite")
 local BirdSprite = import("..sprites.BirdSprite")
 local CitizenSprite = import("..sprites.CitizenSprite")
 local SoldierSprite = import("..sprites.SoldierSprite")
+local MoveSoldierSprite = import("..sprites.MoveSoldierSprite")
 local HelpedTroopsSprite = import("..sprites.HelpedTroopsSprite")
 local SoldierManager = import("..entity.SoldierManager")
 local cocos_promise = import("..utils.cocos_promise")
@@ -443,8 +444,27 @@ function CityLayer:InitWithCity(city)
     end)
     self:scheduleUpdate()
 
+    --
     for i = 1,1 do
         self:CreateBird(0, 0):scale(0.8):addTo(self.sky_layer)
+    end
+
+
+    -- self:MoveSoldiers({name = "ranger", star = 1}, {name = "swordsman", star = 1})
+    --
+end
+function CityLayer:MoveSoldiers(...)
+    local soldiers = {...}
+    if #soldiers > 0 then
+        self:CreateMoveSoldier(soldiers[1].name, soldiers[1].star or 1):addTo(self:GetCityNode())
+        table.remove(soldiers, 1)
+        display.newNode():addTo(self):runAction(transition.sequence{
+            cc.DelayTime:create(1),
+            cc.CallFunc:create(function()
+                self:MoveSoldiers(unpack(soldiers))
+            end),
+            cc.RemoveSelf:create()
+        })
     end
 end
 ---
@@ -639,7 +659,7 @@ function CityLayer:UpdateCitizen(city)
             count = count + 1
         end
     end)
-    for i = #self.citizens + 1, count do
+    for i = #self.citizens + 1, 1 do
         table.insert(self.citizens, self:CreateCitizen(city, 0, 0):addTo(self:GetCityNode()))
     end
 end
@@ -829,6 +849,9 @@ end
 function CityLayer:CreateCitizen(city, logic_x, logic_y)
     return CitizenSprite.new(self, city, logic_x, logic_y)
 end
+function CityLayer:CreateMoveSoldier(soldier_type, star)
+    return MoveSoldierSprite.new(self, soldier_type, star)
+end
 function CityLayer:CreateSoldier(soldier_type, star, logic_x, logic_y)
     return SoldierSprite.new(self, soldier_type, star, logic_x, logic_y)
 end
@@ -863,6 +886,8 @@ function CityLayer:ShowLevelUpNode()
 end
 
 return CityLayer
+
+
 
 
 

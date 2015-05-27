@@ -201,7 +201,7 @@ function GameUIMission:GetAchievementListItem(isFinished,data)
         color= 0x403c2f
     }):align(display.LEFT_CENTER, 5, 33):addTo(content)
     if not isFinished then
-        display.newSprite("activity_next_32x37.png"):align(display.RIGHT_CENTER, 548, 33):addTo(content)
+        display.newSprite("next_32x38.png"):align(display.RIGHT_CENTER, 548, 33):addTo(content)
     else
         content.button = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
             :align(display.RIGHT_CENTER, 552, 33)
@@ -402,7 +402,7 @@ function GameUIMission:GetDailyItem(data)
         progress:setPercentage(100 * data.percent)
     end
 
-    display.newSprite("activity_next_32x37.png"):align(display.LEFT_CENTER, 530, 77):addTo(content)
+    display.newSprite("next_32x38.png"):align(display.LEFT_CENTER, 530, 77):addTo(content)
 
 
     item:addContent(content)

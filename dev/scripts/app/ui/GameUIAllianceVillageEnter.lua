@@ -94,27 +94,9 @@ function GameUIAllianceVillageEnter:GetBuildImageInfomation(sprite)
 end
 
 function GameUIAllianceVillageEnter:GetBuildingImage()
-    if not self:IsRuins() then
-        local village_info = self:GetVillageInfo()
-        local build_png = SpriteConfig[village_info.name]:GetConfigByLevel(village_info.level).png
-        return build_png
-    else
-        local terrain = self:IsMyAlliance() and self:GetMyAlliance():Terrain() or self:GetEnemyAlliance():Terrain()
-        local village_name = self:GetBuilding():GetName()
-
-        if village_name == 'woodVillage' then
-            local decorate_tree = UILib.decorator_image[terrain].decorate_tree_1
-            return decorate_tree
-        elseif village_name == 'ironVillage' then
-            return "iron_ruins_276x200.png"
-        elseif village_name == 'stoneVillage' then
-            local stone_mountain = UILib.decorator_image[terrain].stone_mountain
-            return stone_mountain
-        elseif village_name == 'foodVillage' then
-            local farmland = UILib.decorator_image[terrain].farmland
-            return farmland
-        end
-    end
+    local village_info = self:GetVillageInfo()
+    local build_png = SpriteConfig[village_info.name]:GetConfigByLevel(village_info.level).png
+    return build_png
 end
 
 function GameUIAllianceVillageEnter:GetBuildingType()
