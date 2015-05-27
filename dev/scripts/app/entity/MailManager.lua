@@ -255,6 +255,7 @@ function MailManager:GetSavedReportByServerIndex(serverIndex)
     end
 end
 function MailManager:FetchMailsFromServer(fromIndex)
+    if fromIndex % 10 ~= 0 then return end
     return NetManager:getFetchMailsPromise(fromIndex):done(function(response)
         if response.msg.mails then
             local user_data = DataManager:getUserData()
@@ -276,6 +277,7 @@ function MailManager:GetSavedMails()
     return self.savedMails
 end
 function MailManager:FetchSavedMailsFromServer(fromIndex)
+    if fromIndex % 10 ~= 0 then return end
     return NetManager:getFetchSavedMailsPromise(fromIndex):done(function (response)
         if response.msg.mails then
             local user_data = DataManager:getUserData()
@@ -301,6 +303,7 @@ function MailManager:GetSendMails()
     return self.sendMails
 end
 function MailManager:FetchSendMailsFromServer(fromIndex)
+    if fromIndex % 10 ~= 0 then return end
     return NetManager:getFetchSendMailsPromise(fromIndex):done(function(response)
         if response.msg.mails then
             local user_data = DataManager:getUserData()
@@ -616,6 +619,7 @@ function MailManager:GetReports()
     return self.reports
 end
 function MailManager:FetchReportsFromServer(fromIndex)
+    if fromIndex % 10 ~= 0 then return end
     return NetManager:getReportsPromise(fromIndex)
         :done(function (response)
             if response.msg.reports then
@@ -638,6 +642,7 @@ function MailManager:GetSavedReports()
     return self.savedReports
 end
 function MailManager:FetchSavedReportsFromServer(fromIndex)
+    if fromIndex % 10 ~= 0 then return end
     return NetManager:getSavedReportsPromise(fromIndex):done(function (response)
         if response.msg.reports then
             local user_data = DataManager:getUserData()
