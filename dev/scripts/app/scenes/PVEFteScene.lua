@@ -76,7 +76,7 @@ function PVEFteScene:OnTouchClicked(pre_x, pre_y, x, y)
         :ShowEnableDirection(offset_x < 0, offset_x > 0, offset_y < 0, offset_y > 0)
         :performWithDelay(function()
             self:CheckDirection()
-        end, 1)
+        end, 0.5)
 
 
         app:GetAudioManager():PlayeEffectSoundWithKey(string.format("PVE_MOVE%d", self.move_step))
