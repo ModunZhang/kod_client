@@ -364,7 +364,7 @@ function GameUIMail:DelegateInbox( listView, tag, idx )
         local size = content:getContentSize()
         item:setItemSize(size.width, size.height)
         -- 当取到客户端本地最后一封收件箱邮件后，请求服务器获得更多以前的邮件
-        if idx == #self.manager:GetMails() then
+        if idx == #self.manager:GetMails() and #self.manager:GetMails()%10 == 0 then
             if not self.is_deleting then
                 print("当取到客户端本地最后一封收件箱邮件后，请求服务器获得更多以前的邮件",#self.manager:GetMails())
                 self.manager:FetchMailsFromServer(#self.manager:GetMails())
@@ -517,7 +517,7 @@ function GameUIMail:DelegateSavedMails( listView, tag, idx )
         local size = content:getContentSize()
         item:setItemSize(size.width, size.height)
         -- 当取到客户端本地最后一封收藏邮件后，请求服务器获得更多以前的邮件
-        if idx == #self.manager:GetSavedMails() then
+        if idx == #self.manager:GetSavedMails() and #self.manager:GetSavedMails() % 10 == 0 then
             if not self.is_deleting then
                 print("当取到客户端本地最后一封收藏邮件后，请求服务器获得更多以前的邮件",#self.manager:GetSavedMails())
                 self.manager:FetchSavedMailsFromServer(#self.manager:GetSavedMails())
@@ -668,7 +668,7 @@ function GameUIMail:DelegateSendMails( listView, tag, idx )
         local size = content:getContentSize()
         item:setItemSize(size.width, size.height)
         -- 当取到客户端本地最后一封发件箱邮件后，请求服务器获得更多以前的邮件
-        if idx == #self.manager:GetSendMails() then
+        if idx == #self.manager:GetSendMails() and #self.manager:GetSendMails() % 10 == 0 then
             print("当取到客户端本地最后一封发件箱邮件后，请求服务器获得更多以前的邮件",#self.manager:GetSendMails())
             self.manager:FetchSendMailsFromServer(#self.manager:GetSendMails())
         end
@@ -1226,7 +1226,7 @@ function GameUIMail:DelegateReport( listView, tag, idx )
         local size = content:getContentSize()
         item:setItemSize(size.width, size.height)
         -- 当取到客户端本地最后一封战报后，请求服务器获得更多以前的战报
-        if idx == #self.manager:GetReports() then
+        if idx == #self.manager:GetReports() and #self.manager:GetReports()%10 == 0 then
             if not self.is_deleting then
                 print("当取到客户端本地最后一封战报后，请求服务器获得更多以前的战报",#self.manager:GetReports())
                 self.manager:FetchReportsFromServer(#self.manager:GetReports())
@@ -1487,7 +1487,7 @@ function GameUIMail:DelegateSavedReport( listView, tag, idx )
         local size = content:getContentSize()
         item:setItemSize(size.width, size.height)
         -- 当取到客户端本地最后一封战报后，请求服务器获得更多以前的战报
-        if idx == #self.manager:GetSavedReports() then
+        if idx == #self.manager:GetSavedReports() and #self.manager:GetSavedReports()%10 == 0 then
             if not self.is_deleting then
                 print("当取到客户端本地最后一封战报后，请求服务器获得更多以前的战报",#self.manager:GetSavedReports())
                 self.manager:FetchSavedReportsFromServer(#self.manager:GetSavedReports())
