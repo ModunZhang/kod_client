@@ -181,11 +181,11 @@ function MultiAllianceLayer:AddOrRemoveAllianceEvent(isAdd)
     end
 end
 function MultiAllianceLayer:OnVillageEventsDataChanged(changed_map)
-    for k,v in pairs(changed_map.added or {}) do
-        self:RefreshVillageEvent(v, true)
-    end
     for k,v in pairs(changed_map.removed or {}) do
         self:RefreshVillageEvent(v, false)
+    end
+    for k,v in pairs(changed_map.added or {}) do
+        self:RefreshVillageEvent(v, true)
     end
 end
 function MultiAllianceLayer:RefreshAllVillageEvents()
@@ -690,7 +690,7 @@ function MultiAllianceLayer:CreateLine(id, march_info, ally)
         })
     ))
     sprite:setScaleY(scale)
-    sprite.is_enemy = is_enemy
+    sprite.is_enemy = ally == ENEMY
     self.lines_map[id] = sprite
     return sprite
 end
