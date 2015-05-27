@@ -500,9 +500,9 @@ function WidgetRecruitSoldier:OnResourceChanged(resource_manager)
         res_map.food = resource_manager:GetFoodResource():GetResourceValueByCurrentTime(server_time)
         res_map.iron = resource_manager:GetIronResource():GetResourceValueByCurrentTime(server_time)
         res_map.stone = resource_manager:GetStoneResource():GetResourceValueByCurrentTime(server_time)
-        res_map.citizen = resource_manager:GetPopulationResource():GetNoneAllocatedByTime(server_time)
+        res_map.citizen = resource_manager:GetCitizenResource():GetNoneAllocatedByTime(server_time)
     else
-        res_map.citizen = resource_manager:GetPopulationResource():GetNoneAllocatedByTime(server_time)
+        res_map.citizen = resource_manager:GetCitizenResource():GetNoneAllocatedByTime(server_time)
     end
     self.res_total_map = res_map
     self:CheckNeedResource(res_map, self.count)

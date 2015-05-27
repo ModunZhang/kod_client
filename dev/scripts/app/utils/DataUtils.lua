@@ -44,7 +44,7 @@ function DataUtils:buyResource(need, has)
         if config and required > 0 then
             local currentBuy = 0
             if key == "citizen" then
-                local freeCitizenLimit = City:GetResourceManager():GetPopulationResource():GetValueLimit()
+                local freeCitizenLimit = City:GetResourceManager():GetCitizenResource():GetValueLimit()
                 while required > 0 do
                     local requiredPercent = required / freeCitizenLimit
                     for i=#config,1,-1 do

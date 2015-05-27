@@ -193,12 +193,12 @@ function WidgetCitizen:UpdateData()
     local city = self.city
     citizen_array = {}
     local resource_manager = city:GetResourceManager()
-    citizen_array[CITIZEN] = resource_manager:GetPopulationResource():GetNoneAllocatedByTime(app.timer:GetServerTime())
+    citizen_array[CITIZEN] = resource_manager:GetCitizenResource():GetNoneAllocatedByTime(app.timer:GetServerTime())
     citizen_array[FOOD] = city:GetCitizenByType("farmer")
     citizen_array[WOOD] = city:GetCitizenByType("woodcutter")
     citizen_array[IRON] = city:GetCitizenByType("miner")
     citizen_array[STONE] = city:GetCitizenByType("quarrier")
-    self:SetMaxCitizen(resource_manager:GetPopulationResource():GetTotalLimit())
+    self:SetMaxCitizen(resource_manager:GetCitizenResource():GetTotalLimit())
     self:OnCitizenChanged(citizen_array)
 end
 function WidgetCitizen:OnCitizenChanged(citizen_array)
@@ -223,7 +223,7 @@ function WidgetCitizen:OnCitizenChanged(citizen_array)
         local production = string.format("%d", citizen_array[k])
         local productionPerHour
         if k == CITIZEN then
-            local population = resource_manager:GetPopulationResource()
+            local population = resource_manager:GetCitizenResource()
             productionPerHour = population:GetProductionPerHour()
             production = string.format("%d/%d", production, population:GetValueLimit())
         elseif k == FOOD then
