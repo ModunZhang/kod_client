@@ -682,7 +682,7 @@ function MultiAllianceLayer:CreateLine(id, march_info, ally)
     sprite:setFilter(filter.newFilter("CUSTOM",
         json.encode({
             frag = "shaders/multi_tex.fs",
-            shaderName = "lineShader"..unit_count,
+            shaderName = "lineShader_"..id,
             unit_count = unit_count,
             unit_len = 1 / unit_count,
             percent = 0,
