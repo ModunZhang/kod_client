@@ -17,14 +17,6 @@ local MyCityFteScene = class("MyCityFteScene", MyCityScene)
 function MyCityFteScene:ctor(...)
     MyCityFteScene.super.ctor(self, ...)
     self.clicked_callbacks = {}
-
-
-    cc.ui.UIPushButton.new({normal = "skip.png",pressed = "skip.png"})
-    :addTo(self, 1000000):align(display.RIGHT_TOP, display.width, display.height)
-    :onButtonClicked(function(event)
-        event.target:setButtonEnabled(false)
-        self:Skip()
-    end)
 end
 function MyCityFteScene:onEnterTransitionFinish()
     self:RunFte()
@@ -60,17 +52,17 @@ function MyCityFteScene:PromiseOfClickBuilding(x, y, for_build, msg, arrow_param
 
             local mx, my = building:GetEntity():GetMidLogicPosition()
             self:GotoLogicPoint(mx, my, 5)
-            :next(function()
-                local rect
-                if info_layer:getChildByTag(119) then
-                    local rect1 = info_layer:getChildByTag(119):getCascadeBoundingBox()
-                    local rect2 = building:GetSprite():getCascadeBoundingBox()
-                    rect = cc.rectUnion(rect1, rect2)
-                else
-                    rect = building:GetSprite():getCascadeBoundingBox()
-                end
-                self:GetFteLayer():FocusOnRect(rect)
-            end)
+                :next(function()
+                    local rect
+                    if info_layer:getChildByTag(119) then
+                        local rect1 = info_layer:getChildByTag(119):getCascadeBoundingBox()
+                        local rect2 = building:GetSprite():getCascadeBoundingBox()
+                        rect = cc.rectUnion(rect1, rect2)
+                    else
+                        rect = building:GetSprite():getCascadeBoundingBox()
+                    end
+                    self:GetFteLayer():FocusOnRect(rect)
+                end)
 
         end)
 
@@ -109,8 +101,8 @@ function MyCityFteScene:CheckClickPromise(building, func)
 end
 function MyCityFteScene:OnTouchClicked(pre_x, pre_y, x, y)
     if self.event_manager:TouchCounts() ~= 0 or
-        self.util_node:getNumberOfRunningActions() > 0 then 
-        return 
+        self.util_node:getNumberOfRunningActions() > 0 then
+        return
     end
 
     local building = self:GetSceneLayer():GetClickedObject(x, y)
@@ -243,7 +235,7 @@ function MyCityFteScene:RunFte()
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
-        if not check("InstantRecruitSoldier") then
+        if not check("InstantRecruitSoldier_swordsman") then
             self:GetFteLayer():UnlockAll()
             return self:PromiseOfRecruitSoldier("swordsman")
         end
@@ -263,10 +255,18 @@ function MyCityFteScene:RunFte()
             return self:PromiseOfExplorePve()
         end
     end):next(function()
-        if not check("UpgradeBuildingTo_keep_3") then
-            self:GetFteLayer():UnlockAll()
-            return self:PromiseOfUpgradeKeepForHospital()
-        end
+
+            cc.ui.UIPushButton.new({normal = "skip.png",pressed = "skip.png"})
+                :addTo(self, 1000000):align(display.RIGHT_TOP, display.width, display.height)
+                :onButtonClicked(function(event)
+                    event.target:setButtonEnabled(false)
+                    self:Skip()
+                end)
+
+            if not check("UpgradeBuildingTo_keep_3") then
+                self:GetFteLayer():UnlockAll()
+                return self:PromiseOfUpgradeKeepForHospital()
+            end
     end):next(function()
         if not check("FinishUpgradingBuilding_keep_3") then
             self:GetFteLayer():UnlockAll()
@@ -348,7 +348,7 @@ function MyCityFteScene:RunFte()
             return self:PromiseOfCheckMaterials()
         end
     end):next(function()
-        if not check("RecruitSoldier_skeletonWarrior") then
+        if not check("InstantRecruitSoldier_skeletonWarrior") then
             self:GetFteLayer():UnlockAll()
             return self:PromiseOfRecruitSpecial()
         end
@@ -418,8 +418,8 @@ function MyCityFteScene:PromiseOfUnlockBuilding(building_type)
     local tutorial = TutorialLayer.new():addTo(self, 2001)
     return cocos_promise.defer(function()
         WidgetFteArrow.new(string.format(_("点击解锁%s"), Localize.building_name[building_type]))
-        :TurnUp():align(display.TOP_CENTER, 0, -50)
-        :addTo(self:GetLockButtonsByBuildingType(building_type), 1, 123)
+            :TurnUp():align(display.TOP_CENTER, 0, -50)
+            :addTo(self:GetLockButtonsByBuildingType(building_type), 1, 123)
 
         return self:GotoLogicPoint(x, y, 5):next(function()
             tutorial:SetTouchObject(self:GetLockButtonsByBuildingType(building_type))
@@ -445,6 +445,19 @@ function MyCityFteScene:PromiseOfRecruitSoldier()
         return UIKit:PromiseOfOpen("GameUIFteBarracks")
     end):next(function(ui)
         return ui:PromiseOfFte()
+    end):next(function()
+        local tutorial = TutorialLayer.new():addTo(self, 2001)
+        return self:GotoLogicPoint(9, 15, 0.5):next(function()
+            local p = promise.new()
+            self:schedule(function()
+                if not self:GetSceneLayer():IsBarracksMoving() then
+                    self:stopAllActions()
+                    tutorial:removeFromParent()
+                    p:resolve()
+                end
+            end, 1)
+            return p
+        end)
     end)
 end
 function MyCityFteScene:PromiseOfExplorePve()
@@ -526,36 +539,36 @@ function MyCityFteScene:PromiseOfBuildWoodcutter()
 end
 function MyCityFteScene:PromiseOfHeal()
     return self:PromiseOfClickBuilding(16, 29)
-    :next(function()
-        return UIKit:PromiseOfOpen("GameUIFteHospital")
-    end):next(function(ui)
+        :next(function()
+            return UIKit:PromiseOfOpen("GameUIFteHospital")
+        end):next(function(ui)
         return ui:PromiseOfFte()
-    end)
+        end)
 end
 function MyCityFteScene:PromiseOfResearch()
     return self:PromiseOfClickBuilding(26, 29)
-    :next(function()
-        return UIKit:PromiseOfOpen("GameUIFteAcademy")
-    end):next(function(ui)
+        :next(function()
+            return UIKit:PromiseOfOpen("GameUIFteAcademy")
+        end):next(function(ui)
         return ui:PromiseOfFte()
-    end)
+        end)
 end
 function MyCityFteScene:PromiseOfCheckMaterials()
     return self:PromiseOfClickBuilding(26, 19)
-    :next(function()
-        return UIKit:PromiseOfOpen("GameUIFteMaterialDepot")
-    end):next(function(ui)
+        :next(function()
+            return UIKit:PromiseOfOpen("GameUIFteMaterialDepot")
+        end):next(function(ui)
         return ui:PromiseOfFte()
-    end)
+        end)
 end
 function MyCityFteScene:PromiseOfRecruitSpecial()
     ui_map.barracks[2] = "specialRecruit"
     return self:PromiseOfClickBuilding(6, 29)
-    :next(function()
-        return UIKit:PromiseOfOpen("GameUIFteBarracks")
-    end):next(function(ui)
+        :next(function()
+            return UIKit:PromiseOfOpen("GameUIFteBarracks")
+        end):next(function(ui)
         return ui:PromiseOfFteSpecial()
-    end)
+        end)
 end
 function MyCityFteScene:PromiseOfBuildQuarrier()
     return GameUINpc:PromiseOfSay(
@@ -594,6 +607,7 @@ end
 
 
 return MyCityFteScene
+
 
 
 

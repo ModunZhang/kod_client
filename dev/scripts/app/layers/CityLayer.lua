@@ -188,8 +188,11 @@ function CityLayer:OnSoliderStarCountChanged(soldier_manager, soldier_star_chang
     self:UpdateSoldiersStar(soldier_manager, soldier_star_changed)
 end
 function CityLayer:OnSoliderCountChanged(soldier_manager, changed)
-    if self:GetCityNode():getChildByTag(BARRACKS_SOLDIER_TAG) then return end
+    if self:IsBarracksMoving() then return end
     self:UpdateSoldiersVisibleWithSoldierManager(soldier_manager)
+end
+function CityLayer:IsBarracksMoving()
+    return self:GetCityNode():getChildByTag(BARRACKS_SOLDIER_TAG)
 end
 function CityLayer:OnHelpedTroopsChanged(city)
     self:UpdateHelpedByTroopsVisible(city:GetHelpedByTroops())
