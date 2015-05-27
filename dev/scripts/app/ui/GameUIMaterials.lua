@@ -323,7 +323,7 @@ function GameUIMaterials:CreateEquipmentByType(equip_type)
     end
 
     equip_clicked = function(event)
-        UIKit:newWidgetUI("WidgetMakeEquip", equip_type, self.black_smith, self.black_smith_city):AddToCurrentScene()
+        UIKit:newWidgetUI("WidgetMakeEquip", equip_type, self.blackSmith, self.blackSmith:BelongCity()):AddToCurrentScene()
     end
     info_clicked = function(event)
         print("info_clicked", equip_type)

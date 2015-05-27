@@ -7,7 +7,7 @@ local AllianceView = import(".AllianceView")
 local MapLayer = import(".MapLayer")
 local MultiAllianceLayer = class("MultiAllianceLayer", MapLayer)
 local intInit = GameDatas.AllianceInitData.intInit
-local ZORDER = Enum("BACKGROUND", "BUILDING", "INFO", "LINE", "CORPS")
+local ZORDER = Enum("BACKGROUND", "BUILDING", "LINE", "CORPS", "INFO")
 local fmod = math.fmod
 local ceil = math.ceil
 local floor = math.floor
@@ -206,20 +206,24 @@ function MultiAllianceLayer:RefreshVillageEvent(village_event, is_add)
             local player_data = village_event:PlayerData()
             local aid = player_data.alliance.id
             local pid = player_data.id
+            local flag = obj:getChildByTag(VILLAGE_TAG)
             if is_add then
                 local ally = pid == self.mine_player_id and MINE or
                     (self.my_allinace_id == aid and FRIEND or ENEMY)
-                local flag = obj:getChildByTag(VILLAGE_TAG)
                 if flag then
+                    flag.rcount = flag.rcount + 1
                     flag:SetAlly(ally)
                 else
                     local x,y = obj:GetSpriteTopPosition()
                     self:CreateVillageFlag(ally)
                         :addTo(obj, 1, VILLAGE_TAG)
-                        :pos(x,y+50):scale(1.5)
+                        :pos(x,y+50):scale(1.5).rcount = 1
                 end
             else
-                obj:removeChildByTag(VILLAGE_TAG)
+                flag.rcount = flag.rcount - 1
+                if flag.rcount <= 0 then
+                    obj:removeChildByTag(VILLAGE_TAG)
+                end
             end
         end
     end
