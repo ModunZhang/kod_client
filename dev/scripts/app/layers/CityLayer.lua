@@ -425,7 +425,7 @@ function CityLayer:InitWithCity(city)
     -- 协防的部队
     local helpedByTroops = {}
     for i, v in ipairs({
-        {x = 15, y = 55},
+        {x = 25, y = 55},
         {x = 35, y = 55},
     }) do
         table.insert(helpedByTroops, HelpedTroopsSprite.new(self, i, v.x, v.y):addTo(city_node))
@@ -434,7 +434,7 @@ function CityLayer:InitWithCity(city)
 
     -- pve 入口
     self.pve_airship = self:CreateAirship(-9, 4):addTo(city_node)
-    self.fair_ground = self:CreateFairGround(60, 45):addTo(city_node)
+    self.fair_ground = self:CreateFairGround(60, 25):addTo(city_node)
 
 
     -- 更新其他需要动态生成的建筑
