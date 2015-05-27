@@ -436,7 +436,7 @@ local logic_event_map = {
         if success then
             local running_scene = display.getRunningScene().__cname
             if running_scene ~= "MainScene" and running_scene ~= "LogoScene" then
-                UIKit:newGameUI("GameUISystemNotice",response.type,response.content):AddToCurrentScene()
+                GameGlobalUI:showNotice(response.type,response.content)
             end
         end
     end,
@@ -502,6 +502,7 @@ function NetManager:getConnectGateServerPromise()
 end
 -- 获取服务器列表
 function NetManager:getLogicServerInfoPromise()
+    -- local device_id = "aj2"
     local device_id = device.getOpenUDID()
     return get_none_blocking_request_promise("gate.gateHandler.queryEntry", {deviceId = device_id}, "获取逻辑服务器失败",true)
         :done(function(result)
@@ -527,6 +528,7 @@ function NetManager:getConnectLogicServerPromise()
 end
 -- 登录
 function NetManager:getLoginPromise(deviceId)
+    -- local device_id = "aj2"
     local device_id = device.getOpenUDID()
     return get_none_blocking_request_promise("logic.entryHandler.login", {deviceId = deviceId or device_id}, nil, true):next(function(response)
         if response.success then
