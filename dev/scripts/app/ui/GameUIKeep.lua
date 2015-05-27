@@ -222,7 +222,7 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
                 color = 0xffedae}):align(display.CENTER_LEFT, 14, title_bg:getContentSize().height/2)
                 :addTo(title_bg)
             if canUnlock then
-                display.newSprite("activity_next_32x37.png"):align(display.CENTER, 260, 0):addTo(content, 10)
+                display.newSprite("next_32x38.png"):align(display.CENTER, 260, 0):addTo(content, 10)
             end
 
             UIKit:ttfLabel({
@@ -254,13 +254,17 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
                 :scale(building_cp.scale)
                 :addTo(filp_bg)
             local p = building_image:getAnchorPointInPoints()
+            local building_image_1
             for _,v in ipairs(config:GetStaticImagesByLevel()) do
-                display.newSprite(v):addTo(building_image):pos(p.x, p.y)
+                building_image_1 = display.newSprite(v,p.x, p.y,{class=cc.FilteredSpriteWithOne}):addTo(building_image)
             end
             if not isUnlocked then
                 local my_filter = filter
                 local filters = my_filter.newFilter("GRAY", {0.2, 0.3, 0.5, 0.1})
                 building_image:setFilter(filters)
+                if building_image_1 then
+                    building_image_1:setFilter(filters)
+                end
             end
             item:addContent(content)
 

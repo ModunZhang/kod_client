@@ -105,7 +105,7 @@ function GameUISettingFaq:GetItem(data)
         size = 20,
         color= 0x403c2f
     }):align(display.LEFT_CENTER,22,36):addTo(box)
-    display.newSprite("activity_next_32x37.png"):align(display.RIGHT_CENTER, 524, 36):addTo(box)
+    display.newSprite("next_32x38.png"):align(display.RIGHT_CENTER, 524, 36):addTo(box)
     item:addContent(content)
     item:setItemSize(562,84)
     return item

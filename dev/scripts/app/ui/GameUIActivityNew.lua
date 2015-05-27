@@ -183,7 +183,7 @@ function GameUIActivityNew:GetActivityItem(item_type)
 	if item_type ~= self.ITEMS_TYPE.EVERY_DAY_LOGIN then
 		display.newSprite("activity_layer_blue_586x114.png"):align(display.RIGHT_CENTER, size.width,size.height/2+2):addTo(content)
 	end
-	display.newSprite("activity_next_32x37.png"):align(display.LEFT_CENTER, 566, 80):addTo(bg)
+	display.newSprite("next_32x38.png"):align(display.LEFT_CENTER, 566, 80):addTo(bg)
 
 	if item_type == self.ITEMS_TYPE.EVERY_DAY_LOGIN then
 		local title_label = UIKit:ttfLabel({

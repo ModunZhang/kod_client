@@ -86,10 +86,10 @@ function AllianceView:RandomSeed()
 end
 local terrain_map = {
     grassLand = {
-        "012.png",
-        "013.png",
-        "014.png",
-        "015.png",
+        "unlock_tile_surface_3_grassLand.png",
+        "unlock_tile_surface_4_grassLand.png",
+        "unlock_tile_surface_5_grassLand.png",
+        "unlock_tile_surface_6_grassLand.png",
     },
     desert = {
         "005.png",
@@ -98,10 +98,10 @@ local terrain_map = {
         "008.png",
     },
     iceField = {
-        "024.png",
-        "025.png",
-        "026.png",
-        "027.png",
+        "unlock_tile_surface_4_iceField.png",
+        "unlock_tile_surface_5_iceField.png",
+        "unlock_tile_surface_6_iceField.png",
+        "unlock_tile_surface_7_iceField.png",
     }
 }
 local Alliance_Manager = Alliance_Manager
