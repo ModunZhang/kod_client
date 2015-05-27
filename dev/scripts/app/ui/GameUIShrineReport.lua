@@ -69,7 +69,7 @@ function GameUIShrineReport:BuildUI()
         {tag = "fight_detail",label = _("战斗详情")},
     }, function(tag)
         self:OnTabButtonClicked(tag)
-    end,2):align(display.BOTTOM_CENTER,background:getContentSize().width/2,16):addTo(background)
+    end,1):align(display.BOTTOM_CENTER,background:getContentSize().width/2,16):addTo(background)
 end
 
 function GameUIShrineReport:OnTabButtonClicked(tag)

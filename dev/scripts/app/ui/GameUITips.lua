@@ -50,7 +50,7 @@ function GameUITips:BuildUI()
         {tag = "pve",label = _("探险地图"),default = self.default_tab == "pve"},
     }, function(tag)
         self:OnTabButtonClicked(tag)
-    end,2):align(display.CENTER_BOTTOM,304,15):addTo(bg)
+    end,1):align(display.CENTER_BOTTOM,304,15):addTo(bg)
     if self.is_hide_tab then
         self.tab_buttons:hide()
     end

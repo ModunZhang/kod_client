@@ -105,7 +105,7 @@ function GameUIAllianceInfo:BuildUI()
         {tag = "Members",label = _("成员列表"),default = self.default_tab == "Members"},
     }, function(tag)
         self:OnTabButtonClicked(tag)
-    end,2):align(display.BOTTOM_CENTER,304,10):addTo(self:GetBody()):zorder(200)
+    end,1):align(display.BOTTOM_CENTER,304,10):addTo(self:GetBody()):zorder(200)
 end
 
 function GameUIAllianceInfo:OnTabButtonClicked( tag )
