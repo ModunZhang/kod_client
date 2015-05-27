@@ -266,7 +266,7 @@ function MyCityScene:OnRecruiting()
 end
 function MyCityScene:OnEndRecruit(barracks, event, soldier_type)
     local star = self:GetCity():GetSoldierManager():GetStarBySoldierType(soldier_type)
-    self:GetSceneLayer():MoveSoldiers({name = soldier_type, star = star})
+    self:GetSceneLayer():MoveBarracksSoldiers(soldier_type)
 end
 function MyCityScene:OnTilesChanged(tiles)
     self:GetTopLayer():removeAllChildren()

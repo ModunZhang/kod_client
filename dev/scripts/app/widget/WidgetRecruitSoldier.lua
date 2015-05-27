@@ -325,6 +325,13 @@ function WidgetRecruitSoldier:AddButtons()
             if type(self.instant_button_clicked) == "function" then
                 self:instant_button_clicked()
             end
+
+
+            if iskindof(display.getRunningScene(), "CityScene") then
+                display.getRunningScene():GetSceneLayer()
+                :MoveBarracksSoldiers(self.soldier_name)
+            end
+
             self:Close()
         end)
     self.instant_button = instant_button
@@ -682,6 +689,12 @@ function WidgetRecruitSoldier:PormiseOfFte()
         self:Find():setButtonEnabled(false)
 
         mockData.InstantRecruitSoldier(self.soldier_name, self.count)
+
+        if iskindof(display.getRunningScene(), "CityScene") then
+            display.getRunningScene():GetSceneLayer()
+            :MoveBarracksSoldiers(self.soldier_name)
+        end
+        
 
         self:getParent():LeftButtonClicked()
 

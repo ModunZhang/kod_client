@@ -1,5 +1,5 @@
 local Sprite = import(".Sprite")
-local MoveSoldierSprite = class("MoveSoldierSprite", Sprite)
+local BarracksSoldierSprite = class("BarracksSoldierSprite", Sprite)
 
 local min = math.min
 local soldier_config = {
@@ -70,7 +70,7 @@ local soldier_config = {
 }
 
 
-function MoveSoldierSprite:ctor(city_layer, soldier_type, star)
+function BarracksSoldierSprite:ctor(city_layer, soldier_type, star)
     self.soldier_type = soldier_type
     self.soldier_star = star
     self.path = {
@@ -81,7 +81,7 @@ function MoveSoldierSprite:ctor(city_layer, soldier_type, star)
         {x = 4, y = 10},
     }
     local start_point = table.remove(self.path, 1)
-    MoveSoldierSprite.super.ctor(self, city_layer, nil, city_layer:GetLogicMap():ConvertToMapPosition(start_point.x, start_point.y))
+    BarracksSoldierSprite.super.ctor(self, city_layer, nil, city_layer:GetLogicMap():ConvertToMapPosition(start_point.x, start_point.y))
     self:setPosition(self:GetLogicMap():ConvertToMapPosition(start_point.x, start_point.y))
     self:UpdateVelocityByPoints(start_point, self.path[1])
 
@@ -94,39 +94,39 @@ function MoveSoldierSprite:ctor(city_layer, soldier_type, star)
 
     -- self:CreateBase()
 end
-function MoveSoldierSprite:PlayAnimation(animation)
+function BarracksSoldierSprite:PlayAnimation(animation)
     self.sprite:getAnimation():play(animation)
 end
-function MoveSoldierSprite:CreateSprite()
+function BarracksSoldierSprite:CreateSprite()
     local ani_name,_,_,s = unpack(soldier_config[self.soldier_type][self.soldier_star])
     local armature = ccs.Armature:create(ani_name):scale(s)
     armature:setAnchorPoint(display.ANCHOR_POINTS[display.CENTER])
     return armature
 end
-function MoveSoldierSprite:TurnEast()
+function BarracksSoldierSprite:TurnEast()
     self:GetSprite():setScaleX(self:GetSprite():getScaleY())
     self:PlayAnimation("move_45")
 end
-function MoveSoldierSprite:TurnWest()
+function BarracksSoldierSprite:TurnWest()
     self:GetSprite():setScaleX(-self:GetSprite():getScaleY())
     self:PlayAnimation("move_-45")
 end
-function MoveSoldierSprite:TurnNorth()
+function BarracksSoldierSprite:TurnNorth()
     self:GetSprite():setScaleX(-self:GetSprite():getScaleY())
     self:PlayAnimation("move_45")
 end
-function MoveSoldierSprite:TurnSouth()
+function BarracksSoldierSprite:TurnSouth()
     self:GetSprite():setScaleX(self:GetSprite():getScaleY())
     self:PlayAnimation("move_-45")
 end
-function MoveSoldierSprite:GetSpriteOffset()
+function BarracksSoldierSprite:GetSpriteOffset()
     local _,x,y = unpack(soldier_config[self.soldier_type][self.soldier_star])
     return x,y
 end
-function MoveSoldierSprite:GetMidLogicPosition()
+function BarracksSoldierSprite:GetMidLogicPosition()
     return self:GetLogicMap():ConvertToLogicPosition(self:getPosition())
 end
-function MoveSoldierSprite:CreateBase()
+function BarracksSoldierSprite:CreateBase()
     self:GenerateBaseTiles(1, 1)
 end
 local function wrap_point_in_table(...)
@@ -134,7 +134,7 @@ local function wrap_point_in_table(...)
     return {x = arg[1], y = arg[2]}
 end
 local cc = cc
-function MoveSoldierSprite:UpdateVelocityByPoints(start_point, end_point)
+function BarracksSoldierSprite:UpdateVelocityByPoints(start_point, end_point)
     local speed = 60
     local logic_map = self:GetLogicMap()
     local spt = wrap_point_in_table(logic_map:ConvertToMapPosition(start_point.x, start_point.y))
@@ -153,10 +153,10 @@ function MoveSoldierSprite:UpdateVelocityByPoints(start_point, end_point)
         self:TurnWest()
     end
 end
-function MoveSoldierSprite:Speed()
+function BarracksSoldierSprite:Speed()
     return self.speed
 end
-function MoveSoldierSprite:Update(dt)
+function BarracksSoldierSprite:Update(dt)
     if #self.path == 0 then return end
 
     local x, y = self:getPosition()
@@ -173,6 +173,9 @@ function MoveSoldierSprite:Update(dt)
             self:runAction(
                 transition.sequence{
                     cc.FadeOut:create(0.5),
+                    cc.CallFunc:create(function()
+                        self:GetMapLayer():RefreshMyCitySoldierCount()
+                    end),
                     cc.RemoveSelf:create(),
                 }
             )
@@ -186,7 +189,7 @@ function MoveSoldierSprite:Update(dt)
     self:setPosition(nx, ny)
 end
 
-return MoveSoldierSprite
+return BarracksSoldierSprite
 
 
 
