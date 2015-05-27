@@ -695,24 +695,27 @@ function WidgetRecruitSoldier:PormiseOfFte()
     return p
 end
 
+function WidgetRecruitSoldier:FindNormal()
+    return self.normal_button
+end
 function WidgetRecruitSoldier:PromiseOfFteSpecial()
     self:AddButtons()
     self:OnCountChanged(self.count)
     local fte_layer = self:getParent():GetFteLayer()
-    fte_layer:Enable():SetTouchObject(self:Find())
+    fte_layer:Enable():SetTouchObject(self:FindNormal())
 
-    self:Find():removeEventListenersByEvent("CLICKED_EVENT")
-    self:Find():onButtonClicked(function()
-        self:Find():setButtonEnabled(false)
+    self:FindNormal():removeEventListenersByEvent("CLICKED_EVENT")
+    self:FindNormal():onButtonClicked(function()
+        self:FindNormal():setButtonEnabled(false)
 
         mockData.RecruitSoldier(self.soldier_name, self.count)
 
         self:Close()
     end)
 
-    local r = self:Find():getCascadeBoundingBox()
+    local r = self:FindNormal():getCascadeBoundingBox()
     WidgetFteArrow.new(_("点击招募")):addTo(fte_layer)
-        :TurnLeft():align(display.LEFT_CENTER, r.x + r.width + 20, r.y + r.height/2 + 20)
+        :TurnLeft():align(display.RIGHT_CENTER, r.x - 20, r.y + r.height/2 + 20)
 
     return self.city:PromiseOfRecruitSoldier("skeletonWarrior"):next(function()
         fte_layer:removeFromParent()

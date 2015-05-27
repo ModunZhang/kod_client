@@ -128,9 +128,7 @@ function GameUINpc:OnMoveInStage()
     GameUINpc.super.OnMoveInStage(self)
     self:setLocalZOrder(3001)
     self.ui_map = self:BuildUI()
-    if self.is_should_start then
-        self:StartDialog()
-    end
+    self:StartDialog()
     self:RefreshNpc(self:CurrentDialog())
     self.btn:onButtonClicked(function()
         self:OnClick()
@@ -258,7 +256,6 @@ function GameUINpc:PromiseOfSay(...)
         instance:StartDialog()
     else
         instance = UIKit:newGameUI('GameUINpc', ...):AddToCurrentScene(true)
-        instance.is_should_start = true
     end
     return instance:PromiseOfDialogEndWithClicked(#{...})
 end

@@ -71,6 +71,14 @@ function PVEFteScene:OnTouchClicked(pre_x, pre_y, x, y)
         self.user:UseStrength(1)
         self:GetSceneLayer():MoveCharTo(tx, ty)
 
+
+        self:GetDirectionArrow()
+        :ShowEnableDirection(offset_x < 0, offset_x > 0, offset_y < 0, offset_y > 0)
+        :performWithDelay(function()
+            self:CheckDirection()
+        end, 1)
+
+
         app:GetAudioManager():PlayeEffectSoundWithKey(string.format("PVE_MOVE%d", self.move_step))
         self.move_step = self.move_step + 1
         if self.move_step > 3 then
