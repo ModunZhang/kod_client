@@ -34,10 +34,14 @@ function UIKit:CheckOpenUI(ui, isopen)
     local callbacks = self.open_ui_callbacks
     if #callbacks > 0 then
         if isopen then
-            ui.__type  = UIKit.UITYPE.BACKGROUND
-            ui:GetFteLayer()
+            local ui_name,callback = unpack(callbacks[1])
+            if ui_name == ui.__cname then
+                ui.__type = UIKit.UITYPE.BACKGROUND
+                ui:GetFteLayer()
+            end
         else
-            if callbacks[1](ui) then
+            local ui_name,callback = unpack(callbacks[1])
+            if callback(ui) then
                 table.remove(callbacks, 1)
             end
         end
@@ -49,12 +53,12 @@ function UIKit:PromiseOfOpen(ui_name)
     end
     self.open_ui_callbacks = {}
     local p = promise.new()
-    table.insert(self.open_ui_callbacks, function(ui)
+    table.insert(self.open_ui_callbacks, {ui_name, function(ui)
         if ui_name == ui.__cname then
             p:resolve(ui)
             return true
         end
-    end)
+    end})
     return p
 end
 function UIKit:CheckCloseUI(ui_name)
@@ -612,7 +616,7 @@ function UIKit:showMessageDialog(title,tips,ok_callback,cancel_callback,visible_
         dialog:DisableAutoClose()
     end
     self:__addMessageDialogToCurrentScene(dialog)
-    dialog:zorder(3001)
+    dialog:zorder(4001)
     return dialog
 end
 
