@@ -69,6 +69,21 @@ function PVEScene:onExit()
         end)
     end
 end
+function PVEScene:CreateDirectionArrow()
+    if not self:getChildByTag(DIRECTION_TAG) then
+        return WidgetDirectionSelect.new():pos(display.cx, display.cy)
+            :addTo(self, 10, DIRECTION_TAG):EnableDirection():hide():scale(1.5)
+    end
+end
+function PVEScene:GetDirectionArrow()
+    if not self:getChildByTag(DIRECTION_TAG) then
+        return self:CreateDirectionArrow()
+    end
+    return self:getChildByTag(DIRECTION_TAG)
+end
+function PVEScene:DestroyDirectionArrow()
+    self:removeChildByTag(DIRECTION_TAG)
+end
 function PVEScene:LoadAnimation()
     UILib.loadSolidersAnimation()
     UILib.loadPveAnimation()
@@ -88,7 +103,7 @@ end
 function PVEScene:CreateDirectionArrow()
     if not self:getChildByTag(DIRECTION_TAG) then
         return WidgetDirectionSelect.new():pos(display.cx, display.cy)
-            :addTo(self, 10, DIRECTION_TAG):EnableDirection():hide():scale(1.5)
+            :addTo(self, 9, DIRECTION_TAG):EnableDirection():hide():scale(1.5)
     end
 end
 function PVEScene:GetDirectionArrow()
@@ -181,6 +196,10 @@ function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
 
         self.user:UseStrength(1)
         self:GetSceneLayer():MoveCharTo(tx, ty)
+
+        self:GetDirectionArrow()
+        :ShowDirection(offset_x < 0, offset_x > 0, offset_y < 0, offset_y > 0)
+        :show():runAction(transition.sequence{cc.FadeIn:create(0.25), cc.FadeOut:create(0.25)})
 
         app:GetAudioManager():PlayeEffectSoundWithKey(string.format("PVE_MOVE%d", self.move_step))
         self.move_step = self.move_step + 1
