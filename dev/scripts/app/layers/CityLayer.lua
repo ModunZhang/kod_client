@@ -41,6 +41,8 @@ end})
 
 
 
+
+local BARRACKS_SOLDIER_TAG = 123456
 local floor = math.floor
 local min = math.min
 local random = math.random
@@ -186,7 +188,8 @@ function CityLayer:OnSoliderStarCountChanged(soldier_manager, soldier_star_chang
     self:UpdateSoldiersStar(soldier_manager, soldier_star_changed)
 end
 function CityLayer:OnSoliderCountChanged(soldier_manager, changed)
-    -- self:UpdateSoldiersVisibleWithSoldierManager(soldier_manager)
+    if self:GetCityNode():getChildByTag(BARRACKS_SOLDIER_TAG) then return end
+    self:UpdateSoldiersVisibleWithSoldierManager(soldier_manager)
 end
 function CityLayer:OnHelpedTroopsChanged(city)
     self:UpdateHelpedByTroopsVisible(city:GetHelpedByTroops())
@@ -453,7 +456,7 @@ function CityLayer:MoveBarracksSoldiers(...)
     local soldiers = {...}
     if #soldiers > 0 then
         local star = City:GetSoldierManager():GetStarBySoldierType(soldiers[1])
-        self:CreateBarracksSoldier(soldiers[1], star):addTo(self:GetCityNode())
+        self:CreateBarracksSoldier(soldiers[1], star):addTo(self:GetCityNode(), 0, BARRACKS_SOLDIER_TAG)
     end
 end
 ---
