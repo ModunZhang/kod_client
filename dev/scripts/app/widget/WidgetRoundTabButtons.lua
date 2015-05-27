@@ -23,10 +23,6 @@ local STYLE_IMAGES =
 
 local STYLE_LABEL_PARAMS = {
     {
-        enable = 0x403c2f,
-        unable = 0x00c0ff
-    },
-    {
         enable = 0xffedae,
         unable = 0x00c0ff
     }
