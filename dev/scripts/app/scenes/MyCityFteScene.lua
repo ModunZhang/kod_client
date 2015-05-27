@@ -260,7 +260,12 @@ function MyCityFteScene:RunFte()
                 :addTo(self, 1000000):align(display.RIGHT_TOP, display.width, display.height)
                 :onButtonClicked(function(event)
                     event.target:setButtonEnabled(false)
-                    self:Skip()
+
+                    UIKit:showMessageDialog(_("提示"),_("是否跳过新手引导？"),function()
+                        self:Skip()
+                    end, function()
+                        event.target:setButtonEnabled(true)
+                    end, false)
                 end)
 
             if not check("UpgradeBuildingTo_keep_3") then

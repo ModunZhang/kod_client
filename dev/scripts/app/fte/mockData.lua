@@ -332,6 +332,15 @@ local function FightWithNpc(floor)
         {"pve.location.x", 9}
     }
 
+    if floor > 2 then
+        mock{
+            {"soldierMaterials.magicBox", 1},
+            {"soldierMaterials.deathHand", 1},
+            {"soldierMaterials.soulStone", 1},
+            {"soldierMaterials.heroBones", 1},
+        }
+    end
+
     local key = string.format("FightWithNpc%d", floor)
     if not check(key) then
         mark(key)
@@ -485,6 +494,7 @@ return {
     CheckMaterials = CheckMaterials,
     Skip = Skip,
 }
+
 
 
 
