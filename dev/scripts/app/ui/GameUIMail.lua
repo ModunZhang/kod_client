@@ -957,19 +957,23 @@ function GameUIMail:MailUnreadChanged(unreads)
     local mail_label = self.mail_unread_num_label
     local report_bg = self.report_unread_num_bg
     local report_label = self.report_unread_num_label
-    if unreads.mail and  unreads.mail>0 then
-        mail_bg:setVisible(true)
-        mail_label:setString(unreads.mail > 99 and "99+" or unreads.mail)
-    else
-        mail_bg:setVisible(false)
-        mail_label:setString("")
+    if unreads.mail then
+        if unreads.mail > 0  then
+            mail_bg:setVisible(true)
+            mail_label:setString(unreads.mail > 99 and "99+" or unreads.mail)
+        else
+            mail_bg:setVisible(false)
+            mail_label:setString("")
+        end
     end
-    if unreads.report and  unreads.report>0 then
-        report_bg:setVisible(true)
-        report_label:setString(unreads.report > 99 and "99+" or unreads.report)
-    else
-        report_bg:setVisible(false)
-        report_label:setString("")
+    if unreads.report then
+        if unreads.report > 0 then
+            report_bg:setVisible(true)
+            report_label:setString(unreads.report > 99 and "99+" or unreads.report)
+        else
+            report_bg:setVisible(false)
+            report_label:setString("")
+        end
     end
 end
 
@@ -2044,6 +2048,8 @@ function GameUIMail:GetEnemyAllianceTag(report)
 end
 
 return GameUIMail
+
+
 
 
 
