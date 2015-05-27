@@ -843,12 +843,12 @@ function GameUIMail:SelectAllMailsOrReports(isSelect)
         end
         self.report_listview:asyncLoadWithCurrentPosition_()
     elseif self.saved_layer:isVisible() then
-        if self.save_mails_listview:isVisible() then
+        if self.save_mails_listview and self.save_mails_listview:isVisible() then
             for i,v in ipairs(self.manager:GetSavedMails()) do
                 self:SelectItems(v,isSelect)
             end
             self.save_mails_listview:asyncLoadWithCurrentPosition_()
-        elseif self.saved_reports_listview:isVisible() then
+        elseif self.saved_reports_listview and self.saved_reports_listview:isVisible() then
             for i,v in ipairs(self.manager:GetSavedReports()) do
                 self:SelectItems(v,isSelect)
             end
