@@ -434,9 +434,10 @@ local logic_event_map = {
     end,
     onNotice = function(success, response)
         if success then
-            LuaUtils:outputTable("onNotice", response)
-
-            UIKit:newGameUI("GameUISystemNotice",response.type,response.content):AddToCurrentScene()
+            local running_scene = display.getRunningScene().__cname
+            if running_scene ~= "MainScene" and running_scene ~= "LogoScene" then
+                UIKit:newGameUI("GameUISystemNotice",response.type,response.content):AddToCurrentScene()
+            end
         end
     end,
 }

@@ -148,13 +148,12 @@ function GameUITownHall:CreateQuestItem(quest,index)
     local icon_bg = display.newSprite("box_136x136.png"):addTo(body):pos(58,120):scale(110/136)
     display.newSprite(UILib.daily_quests_icon[quest.index])
         :addTo(icon_bg):pos(icon_bg:getContentSize().width/2,icon_bg:getContentSize().height/2)
-        :scale(0.55)
+        :scale(0.77)
 
     local status_label = UIKit:ttfLabel({
-        text = "111",
         size = 20,
         color = 0x403c2f,
-    }):align(display.LEFT_CENTER,icon_bg:getPositionX()+ icon_bg:getContentSize().width -20, icon_bg:getPositionY()+20):addTo(body)
+    }):align(display.LEFT_CENTER,icon_bg:getPositionX()+ icon_bg:getContentSize().width - 50 , icon_bg:getPositionY()+20):addTo(body)
     local add_star_btn = WidgetPushButton.new(
         {normal = "add_btn_up_50x50.png", pressed = "add_btn_down_50x50.png"},
         {scale9 = false}
@@ -177,7 +176,7 @@ function GameUITownHall:CreateQuestItem(quest,index)
         :addTo(title_bg)
 
     local glass_icon = display.newSprite("hourglass_30x38.png")
-        :align(display.RIGHT_CENTER,icon_bg:getPositionX()+ icon_bg:getContentSize().width, icon_bg:getPositionY()-20)
+        :align(display.RIGHT_CENTER,icon_bg:getPositionX()+ icon_bg:getContentSize().width - 40, icon_bg:getPositionY()-20)
         :addTo(body)
         :scale(0.8)
 
@@ -185,13 +184,13 @@ function GameUITownHall:CreateQuestItem(quest,index)
         text = "222",
         size = 20,
         color = 0x403c2f,
-    }):align(display.LEFT_CENTER,icon_bg:getPositionX()+ icon_bg:getContentSize().width, icon_bg:getPositionY()-20):addTo(body)
+    }):align(display.LEFT_CENTER,icon_bg:getPositionX()+ icon_bg:getContentSize().width - 40, icon_bg:getPositionY()-20):addTo(body)
 
     local progress = WidgetProgress.new(UIKit:hex2c3b(0xffedae), "progress_bar_272x40_1.png", "progress_bar_272x40_2.png", {
         icon_bg = "back_ground_43x43.png",
         icon = "hourglass_30x38.png",
         bar_pos = {x = 0,y = 0}
-    }):addTo(body):align(display.LEFT_CENTER, icon_bg:getPositionX()+ icon_bg:getContentSize().width-25, icon_bg:getPositionY()-20)
+    }):addTo(body):align(display.LEFT_CENTER, icon_bg:getPositionX()+ icon_bg:getContentSize().width-60, icon_bg:getPositionY()-20)
 
     local control_btn = WidgetPushButton.new()
         :align(display.RIGHT_CENTER,item_width-10,108)
