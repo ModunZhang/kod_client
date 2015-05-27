@@ -435,7 +435,7 @@ local logic_event_map = {
     onNotice = function(success, response)
         if success then
             local running_scene = display.getRunningScene().__cname
-            if running_scene ~= "MainScene" and running_scene ~= "LogoScene" and not GLOBAL_FTE then
+            if running_scene ~= "MainScene" and running_scene ~= "LogoScene" then
                 GameGlobalUI:showNotice(response.type,response.content)
             end
         end
