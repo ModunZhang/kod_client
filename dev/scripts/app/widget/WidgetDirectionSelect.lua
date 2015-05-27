@@ -20,6 +20,12 @@ function WidgetDirectionSelect:ctor()
 end
 function WidgetDirectionSelect:EnableDirection(left, right, up, down)
 	self:RefreshTexture(left, right, up, down)
+	
+	self.left:show()
+	self.right:show()
+	self.up:show()
+	self.down:show()
+
 	self.left_area:hide()
 	self.right_area:hide()
 	self.up_area:hide()
