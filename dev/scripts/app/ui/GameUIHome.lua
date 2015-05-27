@@ -310,11 +310,11 @@ function GameUIHome:CreateTop()
     -- 玩家信息背景
     local player_bg = display.newSprite("player_info_bg_120x120.png")
         :align(display.LEFT_BOTTOM, display.width>640 and 58 or 60, 10)
-        :addTo(top_bg, 2):scale(110/120):setCascadeOpacityEnabled(true)
+        :addTo(top_bg, 2):scale(106/120):setCascadeOpacityEnabled(true)
     self.player_icon = UIKit:GetPlayerIconOnly(User:Icon())
         :addTo(player_bg):pos(60, 68):scale(0.78)
     self.exp = display.newProgressTimer("player_exp_bar_110x106.png",
-        display.PROGRESS_TIMER_RADIAL):addTo(player_bg):pos(55, 53)
+        display.PROGRESS_TIMER_RADIAL):addTo(player_bg):pos(60, 58):scale(1.15)
     self.exp:setRotationSkewY(180)
     self:RefreshExp()
 
