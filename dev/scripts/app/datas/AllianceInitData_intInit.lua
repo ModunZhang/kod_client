@@ -22,7 +22,7 @@ intInit["editAllianceTerrianHonour"] = {
 }
 intInit["activeShrineStageEventMinutes"] = {
 	["type"] = "activeShrineStageEventMinutes",
-	["value"] = 10,
+	["value"] = 5,
 	["desc"] = "圣地战激活后持续时间"
 }
 intInit["allianceFightPrepareMinutes"] = {
@@ -32,7 +32,7 @@ intInit["allianceFightPrepareMinutes"] = {
 }
 intInit["allianceFightTotalFightMinutes"] = {
 	["type"] = "allianceFightTotalFightMinutes",
-	["value"] = 20,
+	["value"] = 5,
 	["desc"] = "联盟战战争期时间"
 }
 intInit["allianceHelpDefenceTroopsMaxCount"] = {
@@ -47,12 +47,12 @@ intInit["allianceRevengeMaxMinutes"] = {
 }
 intInit["allianceRegionMapWidth"] = {
 	["type"] = "allianceRegionMapWidth",
-	["value"] = 21,
+	["value"] = 25,
 	["desc"] = "联盟地图宽度"
 }
 intInit["allianceRegionMapHeight"] = {
 	["type"] = "allianceRegionMapHeight",
-	["value"] = 21,
+	["value"] = 25,
 	["desc"] = "联盟地图高度"
 }
 intInit["citizenPerLeadership"] = {
