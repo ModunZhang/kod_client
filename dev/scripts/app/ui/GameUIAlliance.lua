@@ -980,12 +980,31 @@ function GameUIAlliance:RefreshEventsListItem(content,data,idx)
     content.content_label:setString( self:GetEventContent(data))
 end
 
+function GameUIAlliance:GetAllianceDiyTitle(title)
+    local titles = Alliance_Manager:GetMyAlliance():GetTitles()
+    return titles[title] or Localize.alliance_title[title]
+end
+
 function GameUIAlliance:GetEventContent(event)
     local event_type = event.type
     local params_,params = event.params,{}
     for _,v in ipairs(params_) do
-        if Localize.alliance_title[v] then
-            v = Localize.alliance_title[v]
+        if 'promotionDown' == event_type or 'promotionUp' == event_type then
+            if Localize.alliance_title[v] then
+                v = self:GetAllianceDiyTitle(v)
+            end
+        elseif 'language' == event_type then
+            if Localize.alliance_language[v] then
+                v = Localize.alliance_language[v]
+            end
+        elseif 'terrain' == event_type then
+            if Localize.terrain[v] then
+                v = Localize.terrain[v] 
+            end
+        elseif 'upgrade' == event_type then
+            if Localize.building_name[v] then
+                v = Localize.building_name[v]
+            end
         end
         table.insert(params, v)
     end
@@ -1021,7 +1040,10 @@ function GameUIAlliance:RefreshOverViewUI()
 end
 
 function GameUIAlliance:RefreshEventListView()
-    self.event_list_data_source = Alliance_Manager:GetMyAlliance():Events()
+    self.event_list_data_source = clone(Alliance_Manager:GetMyAlliance():Events())
+    table.sort( self.event_list_data_source, function(a,b)
+        return a.time > b.time
+    end)
     self.eventListView:reload()
 end
 

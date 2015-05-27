@@ -36,19 +36,22 @@ function GameUIChatChannel:OnMoveInStage()
     self:CreateListView()
     self:CreateTabButtons()
     self:GetChatManager():AddListenOnType(self,ChatManager.LISTEN_TYPE.TO_TOP)
+    self:GetChatManager():AddListenOnType(self,ChatManager.LISTEN_TYPE.TO_REFRESH)
 end
 
 
 
 function GameUIChatChannel:onCleanup()
     self:GetChatManager():RemoveListenerOnType(self,ChatManager.LISTEN_TYPE.TO_TOP)
+    self:GetChatManager():RemoveListenerOnType(self,ChatManager.LISTEN_TYPE.TO_REFRESH)
     GameUIChatChannel.super.onCleanup(self)    
 end
 
+function GameUIChatChannel:TO_REFRESH()
+    self:RefreshListView()
+end
+
 function GameUIChatChannel:TO_TOP(chat_data)
-    -- local data = LuaUtils:table_filteri(chat_data,function(__,chat)
-    --     if chat.channel == self:
-    -- end
     local data = chat_data
     local isLastMessageInViewRect = false
     local count = #data
@@ -70,7 +73,6 @@ function GameUIChatChannel:GetDataSource()
 end
 
 function GameUIChatChannel:CreateTextFieldBody()
-
     local emojiButton = WidgetPushButton.new({
         normal = "chat_button_n_68x50.png",
         pressed= "chat_button_h_68x50.png",
@@ -85,10 +87,17 @@ function GameUIChatChannel:CreateTextFieldBody()
                 GameGlobalUI:showTips(_("提示"),_("对不起你的聊天频率太频繁"))
                 return
             end
-            if self._channelType == ChatManager.CHANNNEL_TYPE.ALLIANCE then
-                if Alliance_Manager:GetMyAlliance():IsDefault() then
-                    GameGlobalUI:showTips(_("错误"),_("未加入联盟"))
+            if self._channelType ~= 'global' then
+                local my_alliance = Alliance_Manager:GetMyAlliance()
+                if my_alliance:IsDefault() then
+                    UIKit:showMessageDialog(_("提示"),_("加入联盟后开放此功能!"),function()end)
                     return
+                elseif self._channelType == 'allianceFight' then
+                    local status = my_alliance:Status()
+                    if status ~= 'prepare' and status ~= 'fight' then
+                        UIKit:showMessageDialog(_("提示"),_("联盟未处于战争状态，不能使用此聊天频道!"),function()end)
+                        return
+                    end
                 end
             end
             local msg = editbox:getText()
@@ -120,10 +129,17 @@ function GameUIChatChannel:CreateTextFieldBody()
 
     local sendChatButton = WidgetChatSendPushButton.new():align(display.LEFT_TOP, editbox:getPositionX() + 422, window.top - 100):addTo(self:GetView())
     sendChatButton:onButtonClicked(function()
-       if self._channelType == ChatManager.CHANNNEL_TYPE.ALLIANCE then
-            if Alliance_Manager:GetMyAlliance():IsDefault() then 
-                GameGlobalUI:showTips(_("错误"),_("未加入联盟"))
+        if self._channelType ~= 'global' then
+            local my_alliance = Alliance_Manager:GetMyAlliance()
+            if my_alliance:IsDefault() then
+                UIKit:showMessageDialog(_("提示"),_("加入联盟后开放此功能!"),function()end)
                 return
+            elseif self._channelType == 'allianceFight' then
+                local status = my_alliance:Status()
+                if status ~= 'prepare' and status ~= 'fight' then
+                    UIKit:showMessageDialog(_("提示"),_("联盟未处于战争状态，不能使用此聊天频道!"),function()end)
+                    return
+                end
             end
         end
         local msg = editbox:getText()
@@ -154,7 +170,6 @@ function GameUIChatChannel:CreateShopButton()
 end
 
 function GameUIChatChannel:FetchCurrentChannelMessages()
-    dump(self:GetChatManager():FetchChannelMessage(self._channelType),"self:GetChatManager():FetchChannelMessage(self._channelType)--->")
     return self:GetChatManager():FetchChannelMessage(self._channelType)
 end
 
@@ -172,12 +187,13 @@ function GameUIChatChannel:CreateTabButtons()
         },
         {
             label = _("对战"),
-            tag = "fight",
-            default = self.default_tag == "fight",
+            tag = "allianceFight",
+            default = self.default_tag == "allianceFight",
         },
     },
     function(tag)
-        self._channelType = tag == 'global' and ChatManager.CHANNNEL_TYPE.GLOBAL or ChatManager.CHANNNEL_TYPE.ALLIANCE
+        self._channelType = tag
+       
         self:RefreshListView()
     end):addTo(self:GetView()):pos(window.cx, window.bottom + 34)
 end
@@ -304,11 +320,28 @@ end
 
 function GameUIChatChannel:RefreshListView()
     if not  self._channelType then 
-        self._channelType = ChatManager.CHANNNEL_TYPE.GLOBAL
+        self._channelType = 'global'
     end
-    self.dataSource_ = clone(self:FetchCurrentChannelMessages())
+    if self._channelType ~= 'global' then
+        local my_alliance = Alliance_Manager:GetMyAlliance()
+        if my_alliance:IsDefault() then
+            UIKit:showMessageDialog(_("提示"),_("加入联盟后开放此功能!"),function()end)
+            self.dataSource_ = {}
+        elseif self._channelType == 'allianceFight' then
+            local status = my_alliance:Status()
+            if status ~= 'prepare' and status ~= 'fight' then
+                UIKit:showMessageDialog(_("提示"),_("联盟未处于战争状态，不能使用此聊天频道!"),function()end)
+                self.dataSource_ = {}
+            else
+                self.dataSource_ = clone(self:FetchCurrentChannelMessages())
+            end
+        else
+            self.dataSource_ = clone(self:FetchCurrentChannelMessages())
+        end
+    else
+        self.dataSource_ = clone(self:FetchCurrentChannelMessages())
+    end
     self.listView:reload()
-    return item
 end
 
 function GameUIChatChannel:sourceDelegate(listView, tag, idx)
@@ -349,7 +382,6 @@ function GameUIChatChannel:HandleCellUIData(mainContent,chat,update_time)
       currentContent = mainContent.other_content
     end
     currentContent:show()
-
 
     local bottom = currentContent.bottom
     local middle = currentContent.middle
@@ -421,6 +453,7 @@ function GameUIChatChannel:listviewListener(event)
         local item = event.item
         if not item then return end
         local chat = self.dataSource_[item.idx_]
+        if not chat then return end
         local isSelf = User:Id() == chat.id
         if isSelf or not chat then return end
         local content = item:getContent().other_content
@@ -563,7 +596,7 @@ function GameUIChatChannel:CreatePlayerMenu(event,chat)
         elseif msg == 'out' then
             local tag = data.tag
             if tag ~= 'blockChat' then
-                if listView:getItemWithLogicIndex(#self:GetDataSource() - 7) then
+                if #self:GetDataSource() - 7 <= 0 or listView:getItemWithLogicIndex(#self:GetDataSource() - 7) then
                     listView:scrollAuto()
                 else
                     if distance > 0 then

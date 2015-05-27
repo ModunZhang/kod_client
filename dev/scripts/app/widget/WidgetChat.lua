@@ -33,6 +33,7 @@ function WidgetChat:ctor()
     local size = self:getContentSize()
     local index_1 = display.newSprite("chat_page_index_1.png"):addTo(self):pos(size.width/2-10,size.height-5)
     local index_2 = display.newSprite("chat_page_index_2.png"):addTo(self):pos(size.width/2+10,size.height-5)
+    local index_3 = display.newSprite("chat_page_index_2.png"):addTo(self):pos(size.width/2+30,size.height-5)
     local pv = UIPageView.new {
         viewRect = cc.rect(15, 4, size.width-80, size.height),
         row = 2,
@@ -45,15 +46,23 @@ function WidgetChat:ctor()
             if 1 == event.pageIdx then
                 index_1:setPositionX(size.width/2-10)
                 index_2:setPositionX(size.width/2+10)
+                index_3:setPositionX(size.width/2+30)
             elseif 2 == event.pageIdx then
                 index_1:setPositionX(size.width/2+10)
                 index_2:setPositionX(size.width/2-10)
+                index_3:setPositionX(size.width/2+30)
+            elseif 3 == event.pageIdx then
+                index_3:setPositionX(size.width/2-10)
+                index_1:setPositionX(size.width/2+30)
+                index_2:setPositionX(size.width/2+10)
             end
         elseif event.name == "clicked" then
             if event.pageIdx == 1 then
                 UIKit:newGameUI('GameUIChatChannel',"global"):AddToCurrentScene(true)
             elseif event.pageIdx == 2 then
                 UIKit:newGameUI('GameUIChatChannel',"alliance"):AddToCurrentScene(true)
+            elseif event.pageIdx == 3 then
+                UIKit:newGameUI('GameUIChatChannel',"allianceFight"):AddToCurrentScene(true)
             end
         end
     end):addTo(self)
@@ -63,7 +72,7 @@ function WidgetChat:ctor()
     self.chat_labels = {}
     local last_chat_messages = self.chatManager:FetchLastChannelMessage()
     -- add items
-    for i=1,4 do
+    for i=1,6 do
         local item = pv:newItem()
         local content
 

@@ -38,11 +38,17 @@ function GameUIAllianceNoticeOrDescEdit:OnMoveInStage()
     textView:setPlaceHolder(_("最多输入600个字符"))
     textView:setMaxLength(600)
     textView:setFontColor(UIKit:hex2c3b(0x000000))
+
+    local text = ""
     if self.isNotice_ then
-    	textView:setText(Alliance_Manager:GetMyAlliance():Notice() or "")
+    	text = Alliance_Manager:GetMyAlliance():Notice()
     else
-    	textView:setText(Alliance_Manager:GetMyAlliance():Describe() or "")
+    	text = Alliance_Manager:GetMyAlliance():Describe()
     end
+    if text == json.null or string.len(text) == 0 then
+    	text = ""
+    end
+	textView:setText(text)
     self.textView = textView
 
 

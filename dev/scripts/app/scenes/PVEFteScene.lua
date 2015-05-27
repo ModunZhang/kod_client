@@ -23,28 +23,11 @@ local GameUINpc = import("..ui.GameUINpc")
 local UILib = import("..ui.UILib")
 local PVEScene = import(".PVEScene")
 local PVEFteScene = class("PVEFteScene", PVEScene)
-local DIRECTION_TAG = 911
-
 function PVEFteScene:ctor(...)
     PVEFteScene.super.ctor(self, ...)
 end
 function PVEFteScene:onExit()
     self.touch_judgment:destructor()
-end
-function PVEFteScene:CreateDirectionArrow()
-    if not self:getChildByTag(DIRECTION_TAG) then
-        return WidgetDirectionSelect.new():pos(display.cx, display.cy)
-            :addTo(self, 10, DIRECTION_TAG):EnableDirection():hide():scale(1.5)
-    end
-end
-function PVEFteScene:GetDirectionArrow()
-    if not self:getChildByTag(DIRECTION_TAG) then
-        return self:CreateDirectionArrow()
-    end
-    return self:getChildByTag(DIRECTION_TAG)
-end
-function PVEFteScene:DestroyDirectionArrow()
-    self:removeChildByTag(DIRECTION_TAG)
 end
 function PVEFteScene:OnTouchClicked(pre_x, pre_y, x, y)
     -- 有动画就什么都不处理

@@ -198,7 +198,7 @@ function MyApp:retryConnectServer(need_disconnect)
                 end
             end):done(function()
                 print("MyApp:debug--->fetchChats")
-                app:GetChatManager():FetchAllChatMessageFromServer()
+                app:GetChatManager():FetchChatWhenReLogined()
             end):always(function()
                 print("MyApp:debug--->7")
                 UIKit:NoWaitForNet()
@@ -369,7 +369,7 @@ function MyApp:getSupportMailFormat(category,logMsg)
     if logMsg then
         result_str = string.format("%s\n---------------Log---------------\n%s",result_str,logMsg)
     end
-    return "[KoD]" .. category ,result_str
+    return "[Dragonfall]" .. category ,result_str
 end
 
 function MyApp:EnterViewModelAllianceScene(alliance_id)

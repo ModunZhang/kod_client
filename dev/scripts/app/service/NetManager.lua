@@ -392,12 +392,6 @@ local logic_event_map = {
             app:GetChatManager():HandleNetMessage("onChat", response)
         end
     end,
-    onAllChat = function(success, response)
-        if not NetManager.m_was_inited_game then return end
-        if success then
-            app:GetChatManager():HandleNetMessage("onAllChat", response)
-        end
-    end,
     -- alliance
     onAllianceDataChanged = function(success, response)
         if not NetManager.m_was_inited_game then return end
