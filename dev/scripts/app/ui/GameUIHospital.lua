@@ -424,10 +424,23 @@ end
 function GameUIHospital:CreateSpeedUpHeal()
     self.timer = WidgetTimerProgressStyleTwo.new(nil, _("治愈伤兵")):addTo(self.heal_layer)
         :align(display.CENTER, window.cx, window.top-740)
-        :hide()
         :OnButtonClicked(function(event)
             UIKit:newGameUI("GameUITreatSoldierSpeedUp", self.building):AddToCurrentScene(true)
         end)
+    local treat_event = self.building:GetTreatEvent()
+    if treat_event:IsTreating() then
+        self.timer:show()
+        local treat_count = 0
+        local soldiers = treat_event:GetTreatInfo()
+        for k,v in pairs(soldiers) do
+            treat_count = treat_count + v.count
+        end
+        self:SetTreatingSoldierNum(treat_count)
+        self.timer:SetProgressInfo(GameUtils:formatTimeStyle1(treat_event:LeftTime(app.timer:GetServerTime())),treat_event:Percent(app.timer:GetServerTime()))
+    else
+        self.timer:hide()
+    end
+
 end
 --设置正在治愈的伤兵数量label
 function GameUIHospital:SetTreatingSoldierNum( treat_soldier_num )
@@ -502,6 +515,8 @@ function GameUIHospital:OnSoliderStarCountChanged(soldier_manager,star_changed_m
     end
 end
 return GameUIHospital
+
+
 
 
 

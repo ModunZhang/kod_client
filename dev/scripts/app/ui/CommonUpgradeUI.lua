@@ -499,7 +499,7 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
     local wood = city.resource_manager:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     local iron = city.resource_manager:GetIronResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     local stone = city.resource_manager:GetStoneResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    local population = city.resource_manager:GetPopulationResource():GetNoneAllocatedByTime(app.timer:GetServerTime())
+    local population = city.resource_manager:GetCitizenResource():GetNoneAllocatedByTime(app.timer:GetServerTime())
 
     local materials = city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
     local building = self.building

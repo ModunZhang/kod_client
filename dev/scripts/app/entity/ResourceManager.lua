@@ -1,7 +1,7 @@
 local Enum = import("..utils.Enum")
 local Resource = import(".Resource")
 local AutomaticUpdateResource = import(".AutomaticUpdateResource")
-local PopulationAutomaticUpdateResource = import(".PopulationAutomaticUpdateResource")
+local CitizenAutomaticUpdateResource = import(".CitizenAutomaticUpdateResource")
 local Observer = import(".Observer")
 local ResourceManager = class("ResourceManager", Observer)
 
@@ -58,7 +58,7 @@ function ResourceManager:ctor(city)
         [IRON] = AutomaticUpdateResource.new(),
         [STONE] = AutomaticUpdateResource.new(),
         [CART] = AutomaticUpdateResource.new(),
-        [CITIZEN] = PopulationAutomaticUpdateResource.new(),
+        [CITIZEN] = CitizenAutomaticUpdateResource.new(),
         [COIN] = AutomaticUpdateResource.new(),
         [BLOOD] = Resource.new(),
         [WALLHP] = AutomaticUpdateResource.new(),
@@ -99,7 +99,7 @@ end
 function ResourceManager:GetCartResource()
     return self.resources[CART]
 end
-function ResourceManager:GetPopulationResource()
+function ResourceManager:GetCitizenResource()
     return self.resources[CITIZEN]
 end
 function ResourceManager:GetCoinResource()
@@ -192,7 +192,7 @@ function ResourceManager:UpdateByCity(city, current_time)
     local buff_production_map,buff_limt_map
     buff_production_map,buff_limt_map = self:GetTotalBuffData(city)
     self.resource_citizen = citizen_map
-    self:GetPopulationResource():SetLowLimitResource(total_citizen)
+    self:GetCitizenResource():SetLowLimitResource(total_citizen)
     for resource_type, production in pairs(total_production_map) do
         local buff_limit = 1 + buff_limt_map[resource_type]
         local resource_limit = math.floor(total_limit_map[resource_type] * buff_limit)

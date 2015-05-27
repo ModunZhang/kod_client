@@ -100,21 +100,6 @@ end
 function PVEScene:GetHomePage()
     return self.home_page
 end
-function PVEScene:CreateDirectionArrow()
-    if not self:getChildByTag(DIRECTION_TAG) then
-        return WidgetDirectionSelect.new():pos(display.cx, display.cy)
-            :addTo(self, 9, DIRECTION_TAG):EnableDirection():hide():scale(1.5)
-    end
-end
-function PVEScene:GetDirectionArrow()
-    if not self:getChildByTag(DIRECTION_TAG) then
-        return self:CreateDirectionArrow()
-    end
-    return self:getChildByTag(DIRECTION_TAG)
-end
-function PVEScene:DestroyDirectionArrow()
-    self:removeChildByTag(DIRECTION_TAG)
-end
 function PVEScene:OnLocationChanged(is_pos_changed, is_switch_floor)
     local location = DataManager:getUserData().pve.location
     if is_switch_floor then

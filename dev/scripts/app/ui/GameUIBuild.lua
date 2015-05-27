@@ -108,7 +108,7 @@ function GameUIBuild:OnUpgradingFinished(building)
     self:OnCityChanged()
 end
 function GameUIBuild:OnCityChanged()
-    local citizen = self.build_city:GetResourceManager():GetPopulationResource():GetValueLimit()
+    local citizen = self.build_city:GetResourceManager():GetCitizenResource():GetValueLimit()
     table.foreachi(self.base_resource_building_items or {}, function(i, v)
         local building_type = base_items[i].building_type
         local number = #self.build_city:GetDecoratorsByType(building_type)
@@ -143,7 +143,7 @@ function GameUIBuild:OnBuildOnItem(item)
     local wood = city.resource_manager:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     local iron = city.resource_manager:GetIronResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     local stone = city.resource_manager:GetStoneResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    local citizen = city.resource_manager:GetPopulationResource():GetNoneAllocatedByTime(app.timer:GetServerTime())
+    local citizen = city.resource_manager:GetCitizenResource():GetNoneAllocatedByTime(app.timer:GetServerTime())
     local is_resource_enough = wood<config[1].wood
         or stone<config[1].stone
         or iron<config[1].iron

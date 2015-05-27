@@ -178,7 +178,7 @@ function GameUIUnlockBuilding:SetUpgradeRequirementListview()
     local wood = City.resource_manager:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     local iron = City.resource_manager:GetIronResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     local stone = City.resource_manager:GetStoneResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    local population = City.resource_manager:GetPopulationResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+    local population = City.resource_manager:GetCitizenResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     local building = self.building
 
     local has_materials =City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)

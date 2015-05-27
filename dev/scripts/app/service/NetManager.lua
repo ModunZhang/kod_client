@@ -431,7 +431,15 @@ local logic_event_map = {
             local edit = decodeInUserDataFromDeltaData(user_alliance_data, response.allianceData)
             DataManager:setUserAllianceData(user_alliance_data, edit)
         end
-    end
+    end,
+    onNotice = function(success, response)
+        if success then
+            local running_scene = display.getRunningScene().__cname
+            if running_scene ~= "MainScene" and running_scene ~= "LogoScene" then
+                UIKit:newGameUI("GameUISystemNotice",response.type,response.content):AddToCurrentScene()
+            end
+        end
+    end,
 }
 ---
 function NetManager:InitEventsMap(...)

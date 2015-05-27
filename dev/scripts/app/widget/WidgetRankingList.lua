@@ -157,7 +157,7 @@ function WidgetRankingList:ReloadRank(rank)
     if rank.myData.rank == json.null then
         self.my_ranking:setString(_("暂无排名"))
     else
-        local str 
+        local str
         if self.type_ == "player" then
             str = self.drop_list:GetSelectedButtonTag() == "power" and _("我的战斗力排行") or _("我的击杀排行")
         else
@@ -221,7 +221,14 @@ function WidgetRankingList:CreatePlayerContentByIndex(idx)
         :pos(size.width/2, size.height/2)
     display.newSprite("background_57x57.png"):addTo(item):pos(120, 40)
     local player_head_icon = UIKit:GetPlayerIconOnly():addTo(item,1):pos(120, 40):scale(0.5)
-    display.newSprite("dragon_strength_27x31.png"):addTo(item):pos(400, 40)
+
+
+    local tag = self.drop_list:GetSelectedButtonTag()        
+    local png = tag == "power" and "dragon_strength_27x31.png" or "fight_62x70.png"
+    local s = tag == "power" and 1 or 0.5
+    display.newSprite(png):addTo(item):pos(400, 40):scale(s)
+    
+
     item.player_icon = player_head_icon
     item.rank = UIKit:ttfLabel({
         text = "",
@@ -255,7 +262,7 @@ function WidgetRankingList:CreatePlayerContentByIndex(idx)
         self.bg2:setVisible(index % 2 == 0 and not is_mine)
         self.bg3:setVisible(is_mine)
 
-        local c = is_mine and MINE_COLOR or NORMAL_COLOR 
+        local c = is_mine and MINE_COLOR or NORMAL_COLOR
         self.rank:setColor(c)
         self.name:setColor(c)
         self.value:setColor(c)
@@ -282,9 +289,10 @@ function WidgetRankingList:CreateAllianceContentByIndex(idx)
     item.bg3 = display.newSprite("background3_548x76.png"):addTo(item)
         :pos(size.width/2, size.height/2)
 
-
-
-    display.newSprite("dragon_strength_27x31.png"):addTo(item):pos(400, 40)
+    local tag = self.drop_list:GetSelectedButtonTag()        
+    local png = tag == "power" and "dragon_strength_27x31.png" or "fight_62x70.png"
+    local s = tag == "power" and 1 or 0.5
+    display.newSprite(png):addTo(item):pos(400, 40):scale(s)
 
     item.rank = UIKit:ttfLabel({
         text = "",
@@ -329,9 +337,10 @@ function WidgetRankingList:CreateAllianceContentByIndex(idx)
         self.bg2:setVisible(index % 2 == 0 and not is_mine)
         self.bg3:setVisible(is_mine)
 
-        local c = is_mine and MINE_COLOR or NORMAL_COLOR 
+        local c = is_mine and MINE_COLOR or NORMAL_COLOR
         self.rank:setColor(c)
         self.name:setColor(c)
+        self.tag:setColor(c)
         self.value:setColor(c)
 
         if index <= 3 then
@@ -350,6 +359,7 @@ end
 
 
 return WidgetRankingList
+
 
 
 

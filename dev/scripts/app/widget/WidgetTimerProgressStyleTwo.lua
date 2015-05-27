@@ -10,7 +10,7 @@ function WidgetTimerProgressStyleTwo:ctor(height,title)
     local height = height == nil and 272 or height
     local back_ground_351x96 =WidgetWithBlueTitle.new(height,title)
     local describe_bg = WidgetUIBackGround.new({width = 556,height = 56},WidgetUIBackGround.STYLE_TYPE.STYLE_5)
-        :addTo(back_ground_351x96):pos(304,160)
+        :addTo(back_ground_351x96):align(display.CENTER,304,160)
     self.describe = cc.ui.UILabel.new({
         size = 22,
         font = UIKit:getFontFilePath(),

@@ -194,7 +194,7 @@ end
 function GameUIWatchTowerMyTroopsDetail:GetSubItem(ITEM_TYPE,index,item_data)
 	local height = ITEM_TYPE == self.ITEM_TYPE.DRAGON_INFO and 38 or 36
 	local width  = ITEM_TYPE == self.ITEM_TYPE.DRAGON_INFO and 420 or 546
-	local item = display.newScale9Sprite(string.format("back_ground_548x40_%d.png", (index - 1) % 2 == 0 and 1 or 2):size(width,height)
+	local item = display.newScale9Sprite(string.format("back_ground_548x40_%d.png", (index - 1) % 2 == 0 and 1 or 2)):size(width,height)
 	local title_label = UIKit:ttfLabel({
 		text = item_data[1],
 		size = 20,

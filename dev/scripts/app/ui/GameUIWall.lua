@@ -69,7 +69,7 @@ function GameUIWall:CreateMilitaryUIIf()
 			:addTo(top_bg)
 			:align(display.LEFT_BOTTOM,22,80)
 	self.info_list = UIListView.new({
-			bgColor = UIKit:hex2c4b(0x7a000000),
+			-- bgColor = UIKit:hex2c4b(0x7a000000),
 	        viewRect = cc.rect(11,10, 546, 80),
 	        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
 		}):addTo(list_bg)
@@ -273,7 +273,7 @@ end
 
 function GameUIWall:GetListItem(index,data)
 	local item = self.info_list:newItem()
-	local imageName = string.format("box_bg_item_520x48_%d.png",index%2==0 and 1 or 2)
+	local imageName = string.format("back_ground_548x40_%d.png",index%2==0 and 1 or 2)
 	local content = display.newScale9Sprite(imageName):size(546,42)
 	UIKit:ttfLabel({
 		text = data.title,

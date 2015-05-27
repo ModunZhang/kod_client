@@ -26,7 +26,7 @@ function test_build_dwelling()
     Game.new():OnUpdate(function(time)
         City:OnTimer(time)
         if time == 1 then
-            local population_resource = City:GetResourceManager():GetPopulationResource()
+            local population_resource = City:GetResourceManager():GetCitizenResource()
             population_resource:UpdateResource(time, 0)
             population_resource:SetValueLimit(10000)
 

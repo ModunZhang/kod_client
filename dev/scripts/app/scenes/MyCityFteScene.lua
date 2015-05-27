@@ -19,19 +19,12 @@ function MyCityFteScene:ctor(...)
     self.clicked_callbacks = {}
 
 
-    cc.ui.UIPushButton.new({normal = "lock_btn.png",pressed = "lock_btn.png"})
+    cc.ui.UIPushButton.new({normal = "skip.png",pressed = "skip.png"})
     :addTo(self, 1000000):align(display.RIGHT_TOP, display.width, display.height)
     :onButtonClicked(function(event)
         event.target:setButtonEnabled(false)
         self:Skip()
-    end):setOpacity(0)
-    UIKit:ttfLabel({
-        text = _("跳过"),
-        size = 30,
-        color = 0xffedae,
-        align = cc.TEXT_ALIGNMENT_CENTER,
-    }):addTo(self, 1000000)
-    :align(display.RIGHT_TOP, display.width, display.height)
+    end)
 end
 function MyCityFteScene:onEnterTransitionFinish()
     self:RunFte()

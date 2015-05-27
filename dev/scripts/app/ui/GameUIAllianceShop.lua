@@ -534,7 +534,7 @@ function GameUIAllianceShop:OnAllianceInfoChanged()
     self.honourAndLoyalty:SetLoyalty(User:Loyalty())
 end
 function GameUIAllianceShop:OnAllianceBasicChanged(alliance,changed_map)
-    if changed_map.honour then
+    if changed_map.honour and self.honourAndLoyalty then
         self.honourAndLoyalty:SetHonour(alliance:Honour())
     end
 end

@@ -41,7 +41,7 @@ function GameUIAllianceContribute:ctor()
         :addTo(honour_bg)
     -- 捐赠能获得忠诚
     local loyalty_bg = display.newScale9Sprite("back_ground_166x84.png",0 , 0,cc.size(138,34),cc.rect(15,10,136,64))
-    :align(display.LEFT_CENTER, 200, 75):addTo(self.body)
+        :align(display.LEFT_CENTER, 200, 75):addTo(self.body)
     display.newSprite("loyalty_128x128.png"):align(display.CENTER, 205, 75):addTo(self.body):scale(46/128)
     self.donate_loyalty = UIKit:ttfLabel({
         text = "+0",
@@ -66,7 +66,7 @@ function GameUIAllianceContribute:ctor()
                     NetManager:getDonateToAlliancePromise(self.group:GetSelectedType()):done(function ( response )
                         for i,v in ipairs(response.msg.playerData) do
                             if v[1] == "allianceInfo.loyalty" then
-                                GameGlobalUI:showTips(_("捐赠成功"),string.format(_("获得%d点忠诚值"),v[2]-current_loyalty))
+                                GameGlobalUI:showTips(_("捐赠成功"),string.format(_("获得%s点忠诚值"),string.formatnumberthousands(v[2]-current_loyalty)))
                             end
                         end
                     end)
@@ -362,6 +362,7 @@ function GameUIAllianceContribute:OnAllianceDonateChanged()
     self:RefreashEff()
 end
 return GameUIAllianceContribute
+
 
 
 
