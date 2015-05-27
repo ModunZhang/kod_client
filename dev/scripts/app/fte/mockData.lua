@@ -276,7 +276,7 @@ local function InstantRecruitSoldier(name, count)
         {string.format("soldiers.%s", name), count},
     }
 
-    local key = string.format("InstantRecruitSoldier")
+    local key = string.format("InstantRecruitSoldier_%s", name)
     if not check(key) then
         mark(key)
         ext.market_sdk.onPlayerEvent("获得士兵", key)
@@ -418,7 +418,7 @@ end
 
 local function Research()
     local start_time = NetManager:getServerTime()
-    local researchTime = 1 * 60
+    local researchTime = 6 * 60
     mock{
         {
             "productionTechEvents.0",

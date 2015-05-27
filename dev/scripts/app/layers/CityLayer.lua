@@ -188,8 +188,11 @@ function CityLayer:OnSoliderStarCountChanged(soldier_manager, soldier_star_chang
     self:UpdateSoldiersStar(soldier_manager, soldier_star_changed)
 end
 function CityLayer:OnSoliderCountChanged(soldier_manager, changed)
-    if self:GetCityNode():getChildByTag(BARRACKS_SOLDIER_TAG) then return end
+    if self:IsBarracksMoving() then return end
     self:UpdateSoldiersVisibleWithSoldierManager(soldier_manager)
+end
+function CityLayer:IsBarracksMoving()
+    return self:GetCityNode():getChildByTag(BARRACKS_SOLDIER_TAG)
 end
 function CityLayer:OnHelpedTroopsChanged(city)
     self:UpdateHelpedByTroopsVisible(city:GetHelpedByTroops())
@@ -425,7 +428,7 @@ function CityLayer:InitWithCity(city)
     -- 协防的部队
     local helpedByTroops = {}
     for i, v in ipairs({
-        {x = 15, y = 55},
+        {x = 25, y = 55},
         {x = 35, y = 55},
     }) do
         table.insert(helpedByTroops, HelpedTroopsSprite.new(self, i, v.x, v.y):addTo(city_node))
@@ -434,7 +437,7 @@ function CityLayer:InitWithCity(city)
 
     -- pve 入口
     self.pve_airship = self:CreateAirship(-9, 4):addTo(city_node)
-    self.fair_ground = self:CreateFairGround(60, 45):addTo(city_node)
+    self.fair_ground = self:CreateFairGround(60, 25):addTo(city_node)
 
 
     -- 更新其他需要动态生成的建筑
