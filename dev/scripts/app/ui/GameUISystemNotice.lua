@@ -7,6 +7,7 @@ local GameUISystemNotice = class("GameUISystemNotice", GameUIBase)
 
 function GameUISystemNotice:ctor(notice_type,notice_content)
     GameUISystemNotice.super.ctor(self,{type = UIKit.UITYPE.WIDGET})
+    self:setTouchEnabled(false)
     self.notice_type = notice_type
     self.notice_content = notice_content
 end
