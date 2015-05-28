@@ -367,7 +367,7 @@ end
 function WidgetMakeEquip:UpdateBuildLabel(queue)
     local is_enough = queue == 0
     -- self.normal_build_btn:setButtonEnabled(is_enough)
-    local label = string.format(_("制造队列 %d/%d"), 1,queue)
+    local label = string.format(_("制造队列 %d/%d"), 1 - queue,1)
     if label ~= self.build_label:getString() then
         self.build_label:setString(label)
     end
