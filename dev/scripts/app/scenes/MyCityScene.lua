@@ -246,6 +246,9 @@ function MyCityScene:OnUserBasicChanged(user, changed)
     if changed.terrain then
         self:ChangeTerrain(changed.terrain.new)
     end
+    if changed.power then
+        self:GetHomePage():ShowPowerAni(cc.p(display.cx, display.cy), changed.power.old)
+    end
 end
 function MyCityScene:OnUpgradingBegin()
     app:GetAudioManager():PlayeEffectSoundWithKey("UI_BUILDING_UPGRADE_START")

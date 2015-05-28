@@ -28,9 +28,11 @@ function AllianceScene:onEnter()
     self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.OPERATION)
     local alliance_map = self:GetAlliance():GetAllianceMap()
 
-    if not app:GetGameDefautlt():getBasicInfoValueForKey("SHOW_REGION_TIPS") then
+    local alliance_key = DataManager:getUserData()._id.."_SHOW_REGION_TIPS"
+    if not app:GetGameDefautlt():getBasicInfoValueForKey(alliance_key) then
+        app:GetGameDefautlt():getBasicInfoValueForKey(alliance_key,true)
+
         UIKit:newGameUI("GameUITips","region"):AddToScene(self, true)
-        app:GetGameDefautlt():getBasicInfoValueForKey("SHOW_REGION_TIPS",true)
     end
     if self.location then
         self:GotoPosition(self.location.x, self.location.y)
