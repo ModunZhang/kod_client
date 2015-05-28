@@ -174,6 +174,13 @@ function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
     local offset_y = is_offset_x and 0 or (new_y - old_y) / math.abs(new_y - old_y)
     local tx, ty = old_x + offset_x, old_y + offset_y
 
+
+
+    self:GetDirectionArrow()
+        :ShowDirection(offset_x < 0, offset_x > 0, offset_y < 0, offset_y > 0)
+        :show():runAction(transition.sequence{cc.FadeIn:create(0.25), cc.FadeOut:create(0.25)})
+
+
     if self:GetSceneLayer():CanMove(tx, ty) and
         self.user:HasAnyStength() then
 
@@ -183,10 +190,6 @@ function PVEScene:OnTouchClicked(pre_x, pre_y, x, y)
 
         self.user:UseStrength(1)
         self:GetSceneLayer():MoveCharTo(tx, ty)
-
-        self:GetDirectionArrow()
-        :ShowDirection(offset_x < 0, offset_x > 0, offset_y < 0, offset_y > 0)
-        :show():runAction(transition.sequence{cc.FadeIn:create(0.25), cc.FadeOut:create(0.25)})
 
         app:GetAudioManager():PlayeEffectSoundWithKey(string.format("PVE_MOVE%d", self.move_step))
         self.move_step = self.move_step + 1
@@ -319,6 +322,7 @@ end
 
 
 return PVEScene
+
 
 
 
