@@ -73,7 +73,7 @@ function PVEFteScene:OnTouchClicked(pre_x, pre_y, x, y)
 
 
         self:GetDirectionArrow()
-        :ShowEnableDirection(offset_x < 0, offset_x > 0, offset_y < 0, offset_y > 0)
+        :EnableDirection(offset_x < 0, offset_x > 0, offset_y < 0, offset_y > 0)
         :performWithDelay(function()
             self:CheckDirection()
         end, 0.5)

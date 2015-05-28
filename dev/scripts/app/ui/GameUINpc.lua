@@ -167,7 +167,9 @@ function GameUINpc:ShowWords(dialog, ani)
         self.label:removeFromParent()
         self.label = nil
     end
-    self.ui_map.background:FocusOnRect(dialog.rect)
+    self.ui_map.background:performWithDelay(function() 
+        self.ui_map.background:FocusOnRect(dialog.rect)
+    end, 1)
     if self.npc_brow ~= dialog.brow then
         self.npc_brow = dialog.brow
         if self.npc_brow then
