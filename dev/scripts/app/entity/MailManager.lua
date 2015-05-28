@@ -255,11 +255,17 @@ function MailManager:GetSavedReportByServerIndex(serverIndex)
     end
 end
 function MailManager:FetchMailsFromServer(fromIndex)
-    if fromIndex % 10 ~= 0 then return end
+    if self.fetch_last_mail then
+        return
+    end
     return NetManager:getFetchMailsPromise(fromIndex):done(function(response)
         if response.msg.mails then
             local user_data = DataManager:getUserData()
-            for i,v in ipairs(response.msg.mails) do
+            local fetch_mails = response.msg.mails
+            if #fetch_mails < 10 then
+                self.fetch_last_mail = true
+            end
+            for i,v in ipairs(fetch_mails) do
                 if not user_data.mails then
                     user_data.mails = {}
                 end
@@ -277,11 +283,17 @@ function MailManager:GetSavedMails()
     return self.savedMails
 end
 function MailManager:FetchSavedMailsFromServer(fromIndex)
-    if fromIndex % 10 ~= 0 then return end
+    if self.fetch_last_savedmail then
+        return
+    end
     return NetManager:getFetchSavedMailsPromise(fromIndex):done(function (response)
         if response.msg.mails then
+            local fetch_mails = response.msg.mails
+            if #fetch_mails < 10 then
+                self.fetch_last_savedmail = true
+            end
             local user_data = DataManager:getUserData()
-            for i,v in ipairs(response.msg.mails) do
+            for i,v in ipairs(fetch_mails) do
                 if not user_data.savedMails then
                     user_data.savedMails = {}
                 end
@@ -303,7 +315,6 @@ function MailManager:GetSendMails()
     return self.sendMails
 end
 function MailManager:FetchSendMailsFromServer(fromIndex)
-    if fromIndex % 10 ~= 0 then return end
     return NetManager:getFetchSendMailsPromise(fromIndex):done(function(response)
         if response.msg.mails then
             local user_data = DataManager:getUserData()
@@ -473,7 +484,6 @@ function MailManager:OnUserDataChanged(userData,timer,deltaData)
     end
     local is_delta_update = not is_fully_update and deltaData.reports ~= nil
     if is_delta_update then
-        LuaUtils:outputTable("deltaData.reports", deltaData.reports)
         self:OnNewReportsChanged(deltaData.reports)
     end
 
@@ -499,7 +509,6 @@ function MailManager:OnNewReportsChanged( __reports )
     local add_reports = {}
     local remove_reports = {}
     local edit_reports = {}
-    LuaUtils:outputTable("OnNewReportsChanged", __reports)
     for type,rp in pairs(__reports) do
         if type == "add" then
             for k,data in pairs(rp) do
@@ -590,10 +599,8 @@ function MailManager:DeleteReport( report )
         if v.index > delete_report_server_index then
             local old = clone(v.index)
             v.index = old - 1
-            print("更新DataManager reports index old=",old," new=",v.index)
         end
     end
-    LuaUtils:outputTable("更新DataManager reports", DataManager:getUserData().reports)
     for k,v in pairs(self.reports) do
         if v:Index() > delete_report_server_index then
             v:SetIndex(v:Index() - 1)
@@ -628,13 +635,18 @@ function MailManager:GetReports()
     return self.reports
 end
 function MailManager:FetchReportsFromServer(fromIndex)
-    if fromIndex % 10 ~= 0 then return end
+    if self.fetch_last_report then
+        return
+    end
     return NetManager:getReportsPromise(fromIndex)
         :done(function (response)
             if response.msg.reports then
+                local fetch_reports = response.msg.reports
+                if #fetch_reports < 10 then
+                    self.fetch_last_report = true
+                end
                 local user_data = DataManager:getUserData()
-                dump(response.msg.reports,"response.msg.reports")
-                for i,v in ipairs(response.msg.reports) do
+                for i,v in ipairs(fetch_reports) do
                     if not user_data.reports then
                         user_data.reports = {}
                     end
@@ -651,11 +663,17 @@ function MailManager:GetSavedReports()
     return self.savedReports
 end
 function MailManager:FetchSavedReportsFromServer(fromIndex)
-    if fromIndex % 10 ~= 0 then return end
+    if self.fetch_last_savedreport then
+        return
+    end
     return NetManager:getSavedReportsPromise(fromIndex):done(function (response)
         if response.msg.reports then
+            local fetch_reports = response.msg.reports
+                if #fetch_reports < 10 then
+                    self.fetch_last_savedreport = true
+                end
             local user_data = DataManager:getUserData()
-            for i,v in ipairs(response.msg.reports) do
+            for i,v in ipairs(fetch_reports) do
                 if not user_data.savedReports then
                     user_data.savedReports = {}
                 end
@@ -669,6 +687,7 @@ function MailManager:FetchSavedReportsFromServer(fromIndex)
     end)
 end
 return MailManager
+
 
 
 

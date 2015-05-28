@@ -65,13 +65,13 @@ function MyCityFteScene:PromiseOfClickBuilding(x, y, for_build, msg, arrow_param
                             arrow:TurnUp():pos(tp.x + 0, tp.y - 300)
                         end
                     end
-                    -- local rect = building:GetSprite():getBoundingBox()
-                    -- rect.x
-                    -- rect.y
+                    local rect = building:GetSprite():getBoundingBox()
+                    local x,y,x1,y1 = rect.x,rect.y,rect.x + rect.width,rect.y + rect.height
 
+                    local lp = building:GetSprite():getParent():convertToWorldSpace(cc.p(x,y))
+                    local rp = building:GetSprite():getParent():convertToWorldSpace(cc.p(x1,y1))
 
-
-                    self:GetFteLayer():FocusOnRect()
+                    self:GetFteLayer():FocusOnRect(cc.rect(lp.x, lp.y, rp.x - lp.x, rp.y - lp.y))
                 end)
 
         end)
@@ -161,7 +161,6 @@ local ui_map = setmetatable({
     square         = {},
 }, {__index = function() assert(false) end})
 function MyCityFteScene:OpenUI(building, default_tab)
-    if #UIKit.open_ui_callbacks == 0 then return end
     local city = self:GetCity()
     if iskindof(building, "HelpedTroopsSprite") then
         local helped = city:GetHelpedByTroops()[building:GetIndex()]
@@ -181,6 +180,7 @@ function MyCityFteScene:OpenUI(building, default_tab)
     local type_ = entity:GetType()
     local uiarrays = ui_map[type_]
     if type_ == "ruins" and not self:IsEditMode() then
+        if #UIKit.open_ui_callbacks == 0 then return end
         UIKit:newGameUI(uiarrays[1], city, entity, uiarrays[2], uiarrays[3]):AddToScene(self, true)
     elseif type_ == "airship" then
         local dragon_manger = city:GetDragonEyrie():GetDragonManager()
@@ -197,6 +197,7 @@ function MyCityFteScene:OpenUI(building, default_tab)
     elseif type_ == "square" then
         UIKit:newGameUI("GameUISquare", self.city):AddToScene(self, true)
     else
+        if #UIKit.open_ui_callbacks == 0 then return end
         UIKit:newGameUI(uiarrays[1], city, entity, default_tab or uiarrays[2], uiarrays[3]):AddToScene(self, true)
     end
 end

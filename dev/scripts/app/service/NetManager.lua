@@ -371,14 +371,14 @@ local logic_event_map = {
             -- 在客户端没有 mails 或者 reports key时，收到邮件或者战报需要增加未读字段数值
             if not user_data.reports then
                 for i,v in ipairs(response) do
-                    if string.find(v[1],"reports") then
+                    if v[1] and string.find(v[1],"reports") then
                         MailManager:IncreaseUnReadReportNum(1)
                     end
                 end
             end
             if not user_data.mails then
                 for i,v in ipairs(response) do
-                    if string.find(v[1],"mails") then
+                    if v[1] and string.find(v[1],"mails") then
                         MailManager:IncreaseUnReadMailsNum(1)
                     end
                 end

@@ -30,6 +30,9 @@ function PVEFteScene:onExit()
     self.touch_judgment:destructor()
 end
 function PVEFteScene:OnTouchClicked(pre_x, pre_y, x, y)
+
+    if not self.move_data then return end
+
     -- 有动画就什么都不处理
     if self.event_manager:TouchCounts() ~= 0 or 
         self:GetSceneLayer():GetChar():getNumberOfRunningActions() > 0 then 
