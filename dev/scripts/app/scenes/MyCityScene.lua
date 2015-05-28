@@ -27,7 +27,7 @@ function MyCityScene:onEnter()
     self:GetCity():GetUser():AddListenOnType(self, User.LISTEN_TYPE.BASIC)
     self:GetCity():GetSoldierManager():AddListenOnType(self, SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
     self:GetCity():GetFirstBuildingByType("barracks"):AddBarracksListener(self)
-    
+
 
 
     local alliance = Alliance_Manager:GetMyAlliance()
@@ -56,11 +56,21 @@ end
 function MyCityScene:EnterEditMode()
     self:GetTopLayer():hide()
     self:GetHomePage():DisplayOff()
+    local label = UIKit:ttfLabel(
+        {
+            text = _("选择一个空地,将小屋移动到这里"),
+            size = 22,
+            color = 0xffedae,
+        })
+    self.move_house_tip = display.newScale9Sprite("fte_label_background.png",display.cx,display.top-100,cc.size(label:getContentSize().width+60,label:getContentSize().height+20),cc.rect(20,20,330,28))
+        :addTo(self)
+    label:align(display.CENTER, self.move_house_tip:getContentSize().width/2, self.move_house_tip:getContentSize().height/2):addTo(self.move_house_tip)
     MyCityScene.super.EnterEditMode(self)
 end
 function MyCityScene:LeaveEditMode()
     self:GetTopLayer():show()
     self:GetHomePage():DisplayOn()
+    self.move_house_tip:removeFromParent(true)
     MyCityScene.super.LeaveEditMode(self)
     self:GetSceneUILayer():removeChildByTag(WidgetMoveHouse.ADD_TAG, true)
 end
@@ -376,6 +386,7 @@ function MyCityScene:OpenUI(building, default_tab)
 end
 
 return MyCityScene
+
 
 
 
