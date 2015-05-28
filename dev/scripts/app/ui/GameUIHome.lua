@@ -134,8 +134,6 @@ function GameUIHome:onEnter()
     self:RefreshData()
     self:OnTaskChanged(User)
     self:RefreshHelpButtonVisible()
-
-    self.shadow_power_label:setString(self.power_label:getString())
 end
 function GameUIHome:onExit()
     self:AddOrRemoveListener(false)
@@ -547,10 +545,10 @@ function GameUIHome:RefreshVIP()
     end
 end
 local POWER_ANI_TAG = 1001
-function GameUIHome:ShowPowerAni(wp)
+function GameUIHome:ShowPowerAni(wp, old_power)
     local pnt = self.top
     self.power_label:hide()
-    self.shadow_power_label:show()
+    self.shadow_power_label:show():setString(string.formatnumberthousands(old_power))
 
     pnt:removeChildByTag(POWER_ANI_TAG)
     local tp = pnt:convertToNodeSpace(self.power_label:convertToWorldSpace(cc.p(0,0)))
@@ -568,7 +566,7 @@ function GameUIHome:ShowPowerAni(wp)
         cc.MoveTo:create(time, cc.p(tp.x, tp.y)),
         cc.CallFunc:create(function()
             self:ScaleIcon(self.power_label:show())
-            self.shadow_power_label:hide():setString(self.power_label:getString())
+            self.shadow_power_label:hide()
         end),
         cc.DelayTime:create(delay_time),
     })

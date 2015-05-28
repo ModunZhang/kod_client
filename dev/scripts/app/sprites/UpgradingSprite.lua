@@ -47,17 +47,12 @@ function UpgradingSprite:OnBuildingUpgradeFinished(building)
     -- animation
     self:StopBuildingAnimation()
 
-    if display.getRunningScene().__cname == "MyCityScene" or
-        display.getRunningScene().__cname == "MyCityFteScene" 
-        then
-        local home_page = display.getRunningScene():GetHomePage()
+    local running_scene = display.getRunningScene()
+    if iskindof(running_scene, "MyCityScene") and building:IsHouse() then
         local _,tp = self:GetWorldPosition()
-        home_page:ShowPowerAni(tp)
-        if building:IsHouse() then
-            home_page:ShowResourceAni(res_map[building:GetUpdateResourceType()], tp)
-            if building:GetType() == "dwelling" then
-                home_page:ShowResourceAni("coin", tp)
-            end
+        running_scene:GetHomePage():ShowResourceAni(res_map[building:GetUpdateResourceType()], tp)
+        if building:GetType() == "dwelling" then
+            running_scene:GetHomePage():ShowResourceAni("coin", tp)
         end
     end
 end
@@ -230,6 +225,7 @@ function UpgradingSprite:HideLevelUpNode()
     self.level_bg:fadeTo(0.5, 0)
 end
 return UpgradingSprite
+
 
 
 
