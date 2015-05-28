@@ -745,7 +745,6 @@ static void ResgisterGlobalExtFunctions(lua_State* tolua_S)
     tolua_function(tolua_S, "copyText", tolua_ext_copyText);
     tolua_function(tolua_S, "disableIdleTimer", tolua_ext_disableIdleTimer);
     tolua_function(tolua_S, "closeKeyboard", tolua_ext_close_keyboard);
-    tolua_function(tolua_S, "userVoice", tolua_ext_open_user_voice);
     tolua_function(tolua_S, "getOSVersion", tolua_ext_get_os_version);
     tolua_function(tolua_S, "getDeviceModel", tolua_ext_get_device_model);
     tolua_function(tolua_S, "getAppVersion", tolua_ext_get_app_version);

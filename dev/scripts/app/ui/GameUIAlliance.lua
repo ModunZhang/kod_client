@@ -300,7 +300,7 @@ end
 function GameUIAlliance:RefreshJoinListContent(alliance,content,idx)
     content.nameLabel:setString(string.format("[%s] %s",alliance.tag,alliance.name))
     content.memberValLabel:setString(string.format("%s/%s",alliance.members,alliance.membersMax))
-    content.fightingValLabel:setString(alliance.power)
+    content.fightingValLabel:setString(string.formatnumberthousands(alliance.power))
     content.languageValLabel:setString(alliance.language)
     content.killValLabel:setString(alliance.kill)
     content.leaderLabel:setString(alliance.archon)
