@@ -438,7 +438,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
 
         else
             UIKit:ttfLabel({
-                text = _("本次联盟会战结束后奖励,总击杀越高奖励越高.获胜方获得70%的总奖励,失败方获得剩下的,获胜联盟击杀第1名的玩家还将平分奖励的金龙币"),
+                text = _("本次联盟会战结束后奖励,总击杀越高奖励越高.获胜方获得70%的总奖励,失败方获得剩下的,获胜联盟击杀第1名的玩家还将获得金龙币奖励"),
                 size = 20,
                 color = 0x615b44,
                 -- align = cc.ui.TEXT_ALIGN_CENTER,
