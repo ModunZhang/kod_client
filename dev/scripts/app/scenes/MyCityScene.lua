@@ -190,10 +190,11 @@ function MyCityScene:onEnterTransitionFinish()
         return
     end
     local userdefault = cc.UserDefault:getInstance()
-    if not userdefault:getBoolForKey("first_in_city_scene") and
+    local city_key = DataManager:getUserData()._id.."_first_in_city_scene"
+    if not userdefault:getBoolForKey(city_key) and
         Alliance_Manager:GetMyAlliance():IsDefault() then
 
-        userdefault:setBoolForKey("first_in_city_scene", true)
+        userdefault:setBoolForKey(city_key, true)
         userdefault:flush()
 
         app:lockInput(true)
