@@ -42,7 +42,6 @@ end
 ---------------------------
 --Observer Methods
 function WidgetMarchEvents:OnHelpToTroopsChanged(changed_map)
-    dump(changed_map)
     self:PromiseOfSwitch()
 end
 
@@ -411,15 +410,19 @@ function WidgetMarchEvents:CreateDefenceItem(entity)
     end):addTo(node):align(display.LEFT_CENTER, 4, half_height)
     local display_text = ""
     node.prefix = entity:GetEventPrefix()
+    local time_str = ""
     if type_str == 'COLLECT' then
         node.progress:setPercentage(event:CollectPercent())
         display_text = string.format(" %s %d%%", node.prefix,event:CollectPercent())
+        time_str = GameUtils:formatTimeStyle1(event:GetTime())
     elseif type_str == 'SHIRNE' then
        node.progress:setPercentage(100)
        display_text = node.prefix
+       time_str = ""
     elseif type_str == 'HELPTO' then
         node.progress:setPercentage(100)
        display_text = node.prefix
+       time_str = ""
     end
     node.desc = UIKit:ttfLabel({
         text = display_text,
@@ -428,7 +431,7 @@ function WidgetMarchEvents:CreateDefenceItem(entity)
     }):addTo(node):align(display.LEFT_CENTER, 10, half_height)
 
     node.time = UIKit:ttfLabel({
-        text = GameUtils:formatTimeStyle1(event:GetTime()),
+        text = time_str,
         size = 16,
         color = 0xd1ca95,
         align = cc.TEXT_ALIGNMENT_RIGHT,
