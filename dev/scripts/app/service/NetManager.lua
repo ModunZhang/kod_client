@@ -166,6 +166,7 @@ local function get_response_delete_report_msg(response)
                 clone_response.msg.playerData = {}
                 table.insert(clone_response.msg.playerData, v)
                 local edit = decodeInUserDataFromDeltaData(user_data, clone_response.msg.playerData)
+                LuaUtils:outputTable("删除战报 edit", edit)
                 DataManager:setUserData(user_data, edit)
             end
         end

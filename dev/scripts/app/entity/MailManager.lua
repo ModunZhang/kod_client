@@ -499,6 +499,7 @@ function MailManager:OnNewReportsChanged( __reports )
     local add_reports = {}
     local remove_reports = {}
     local edit_reports = {}
+    LuaUtils:outputTable("OnNewReportsChanged", __reports)
     for type,rp in pairs(__reports) do
         if type == "add" then
             for k,data in pairs(rp) do
@@ -585,6 +586,14 @@ function MailManager:DeleteReport( report )
             end
         end
     end
+    for k,v in pairs(DataManager:getUserData().reports) do
+        if v.index > delete_report_server_index then
+            local old = clone(v.index)
+            v.index = old - 1
+            print("更新DataManager reports index old=",old," new=",v.index)
+        end
+    end
+    LuaUtils:outputTable("更新DataManager reports", DataManager:getUserData().reports)
     for k,v in pairs(self.reports) do
         if v:Index() > delete_report_server_index then
             v:SetIndex(v:Index() - 1)

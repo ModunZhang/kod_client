@@ -217,7 +217,7 @@ function GameUIMail:CreateMailControlBox()
                                         if self.saved_layer:isVisible() then
                                             -- 批量删除结束后获取
                                             if #self.manager:GetSavedReports()<10 then
-                                                self.manager:FetchReportsFromServer(#self.manager:GetSavedReports()):done(function ( response )
+                                                self.manager:FetchSavedReportsFromServer(#self.manager:GetSavedReports()):done(function ( response )
                                                     self.saved_reports_listview:asyncLoadWithCurrentPosition_()
                                                     self.is_deleting = false
                                                     return response
@@ -1202,6 +1202,7 @@ function GameUIMail:InitReport()
     self.report_listview:setRedundancyViewVal(200)
     self.report_listview:setDelegate(handler(self, self.DelegateReport))
     if not self.manager:GetReports() then
+        
         self.manager:FetchReportsFromServer(0):done(function ( response )
             self.report_listview:reload()
             return response
