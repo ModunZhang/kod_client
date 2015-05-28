@@ -53,6 +53,18 @@ function GameUITips:BuildUI()
     end,1):align(display.CENTER_BOTTOM,304,15):addTo(bg)
     if self.is_hide_tab then
         self.tab_buttons:hide()
+
+        cc.ui.UIPushButton.new({normal = "yellow_btn_up_186x66.png",pressed = "yellow_btn_down_186x66.png"})
+            :addTo(bg, 2)
+            :setButtonLabel(UIKit:ttfLabel({
+                text = _("明白了"),
+                size = 22,
+                shadow = true,
+                color = 0xffedae
+            }))
+            :align(display.CENTER, bg:getContentSize().width/2, 60):onButtonClicked(function()
+            self:LeftButtonClicked()
+            end)
     end
 end
 
@@ -202,11 +214,11 @@ local pve_tips = {
     _("地图探索度达到100%之后,即可获得珍贵的金龙币奖励!"),
     _('找到每层"异界之门",击败凶残的BOSS,即可进击下一层!'),
     _("探索只神秘的终极关卡,就能获得巨额的奖励以及异常稀有的个人专属头像!"),
-    _("联盟会战胜利后，联盟获得大量的荣誉点数"),
 }
 function GameUITips:PveTips()
     return pve_tips
 end
 
 return GameUITips
+
 

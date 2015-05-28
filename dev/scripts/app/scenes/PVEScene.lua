@@ -49,10 +49,9 @@ function PVEScene:onEnterTransitionFinish()
     local userdefault = cc.UserDefault:getInstance()
     local pve_key = DataManager:getUserData()._id.."_first_in_pve"
     if not userdefault:getBoolForKey(pve_key) then
-
         userdefault:setBoolForKey(pve_key, true)
         userdefault:flush()
-        
+
         UIKit:newGameUI("GameUITips", "pve", _("玩法介绍"), true):AddToScene(self, true)
     end
 end
