@@ -786,8 +786,8 @@ function GameUIHome:PromiseOfFteAllianceMap()
     local btn = self.change_map.btn
     btn:removeChildByTag(102)
 
-    WidgetFteArrow.new(_("查看联盟地图")):addTo(btn, 10, 102)
-        :TurnDown(false):align(display.LEFT_BOTTOM, 0, 50)
+    WidgetFteArrow.new(_("进入联盟地图\n体验更多玩法")):addTo(btn, 10, 102)
+        :TurnDown(false):align(display.LEFT_BOTTOM, 20, 55)
 
     btn:stopAllActions()
     btn:performWithDelay(function() btn:removeChildByTag(102) end, 10)
