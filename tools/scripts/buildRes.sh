@@ -57,7 +57,7 @@ exportImagesRes()
 			if test "$file" -nt "$outfile"; then
 				echo "---- ${file##*/}"
 				#compress image
-				$PVRTOOL -f $IMAGEFORMAT -i $file -o ${file%.*}.pvr
+				$PVRTOOL -p -f $IMAGEFORMAT -i $file -o ${file%.*}.pvr
 				mv ${file%.*}.pvr ${file%.*}_PVR_PNG.png
 				if $NEED_ENCRYPT_RES;then
 					$RES_COMPILE_TOOL -i ${file%.*}_PVR_PNG.png -o $finalDir -ek $XXTEAKey -es $XXTEASign -q

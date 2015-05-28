@@ -126,13 +126,13 @@ function PVEDatabase:NewTarget(name, count)
     user_default:flush()
 end
 function PVEDatabase:IncKillCount(count)
-    local name_key, count_key, target_key, coin_key = self:GetPveTaskKeys()
+    local name_key, count_key, target_key = self:GetPveTaskKeys()
     local user_default = cc.UserDefault:getInstance()
     if #user_default:getStringForKey(name_key) > 0 then
         local kill_count = user_default:getIntegerForKey(count_key)
         local kill_target = user_default:getIntegerForKey(target_key)
         kill_count = kill_count + count > kill_target and kill_target or (kill_count + count)
-        user_default:setIntegerForKey(coin_key, kill_count)
+        user_default:setIntegerForKey(count_key, kill_count)
         user_default:flush()
     end
 end

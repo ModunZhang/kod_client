@@ -21,14 +21,14 @@ end
 function MyCityFteScene:onEnterTransitionFinish()
     self:RunFte()
 end
+local ARROW_TAG = 11901
 function MyCityFteScene:PromiseOfClickBuilding(x, y, for_build, msg, arrow_param)
     self:BeginClickFte()
     self:GetSceneLayer()
         :FindBuildingBy(x, y)
         :next(function(building)
-            local mid,top = building:GetWorldPosition()
+            local __,top = building:GetWorldPosition()
             local info_layer = self:GetSceneLayer():GetInfoLayer()
-            local middle_point = info_layer:convertToNodeSpace(mid)
             local top_point = info_layer:convertToNodeSpace(top)
 
             local str
@@ -42,7 +42,7 @@ function MyCityFteScene:PromiseOfClickBuilding(x, y, for_build, msg, arrow_param
 
             info_layer:removeAllChildren()
             local arrow = WidgetFteArrow.new(msg or str)
-                :addTo(info_layer, 1, 119):TurnDown():pos(top_point.x, top_point.y + 50)
+                :addTo(info_layer, 1, ARROW_TAG):TurnDown():pos(top_point.x, top_point.y + 50)
             if arrow_param then
                 if arrow_param.direction == "up" then
                     arrow:TurnUp():pos(top_point.x + 0, top_point.y - 300)
@@ -53,15 +53,25 @@ function MyCityFteScene:PromiseOfClickBuilding(x, y, for_build, msg, arrow_param
             local mx, my = building:GetEntity():GetMidLogicPosition()
             self:GotoLogicPoint(mx, my, 5)
                 :next(function()
-                    local rect
-                    if info_layer:getChildByTag(119) then
-                        local rect1 = info_layer:getChildByTag(119):getCascadeBoundingBox()
-                        local rect2 = building:GetSprite():getCascadeBoundingBox()
-                        rect = cc.rectUnion(rect1, rect2)
-                    else
-                        rect = building:GetSprite():getCascadeBoundingBox()
+                    info_layer:removeAllChildren()
+
+                    local __,top = building:GetWorldPosition()
+                    local tp = self:GetFteLayer():convertToNodeSpace(top)
+                    local arrow = WidgetFteArrow.new(msg or str)
+                    :addTo(self:GetFteLayer(), 1, ARROW_TAG)
+                    :TurnDown():pos(tp.x, tp.y + 50)
+                    if arrow_param then
+                        if arrow_param.direction == "up" then
+                            arrow:TurnUp():pos(tp.x + 0, tp.y - 300)
+                        end
                     end
-                    self:GetFteLayer():FocusOnRect(rect)
+                    -- local rect = building:GetSprite():getBoundingBox()
+                    -- rect.x
+                    -- rect.y
+
+
+
+                    self:GetFteLayer():FocusOnRect()
                 end)
 
         end)
@@ -78,12 +88,14 @@ function MyCityFteScene:PromiseOfClickBuilding(x, y, for_build, msg, arrow_param
 end
 function MyCityFteScene:BeginClickFte()
     self.clicked_callbacks = {}
+    self:GetFteLayer():removeChildByTag(ARROW_TAG, true)
     self:GetFteLayer():FocusOnRect()
     self:GetFteLayer():Enable()
     self:GetSceneLayer():GetInfoLayer():removeAllChildren()
 end
 function MyCityFteScene:EndClickFte()
     self.clicked_callbacks = {}
+    self:GetFteLayer():removeChildByTag(ARROW_TAG, true)
     self:GetFteLayer():FocusOnRect()
     self:GetFteLayer():Disable()
     self:GetSceneLayer():GetInfoLayer():removeAllChildren()
@@ -149,6 +161,7 @@ local ui_map = setmetatable({
     square         = {},
 }, {__index = function() assert(false) end})
 function MyCityFteScene:OpenUI(building, default_tab)
+    if #UIKit.open_ui_callbacks == 0 then return end
     local city = self:GetCity()
     if iskindof(building, "HelpedTroopsSprite") then
         local helped = city:GetHelpedByTroops()[building:GetIndex()]
