@@ -314,9 +314,9 @@ function display.newSprite(...)
         if not frame then
             local plistName = string.sub(found_data_in_plist,1,string.find(found_data_in_plist,"%.") - 1)
             plistName = string.format("%s.plist",plistName)
-            printInfo("newSprite:load plist texture:%s",found_data_in_plist)
             display.addSpriteFrames(plistName,found_data_in_plist)
         end
+        printInfo("newSprite: %s load plist texture:%s",name,found_data_in_plist)
         args[1] = string.format("#%s",name)
     end
     local sp = display.__newSprite(unpack(args))

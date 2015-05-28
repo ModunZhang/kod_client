@@ -156,7 +156,7 @@ function GameUITips:CreateUIIf_region()
         return self.region_node
     end
     local node = display.newNode():size(608,747):addTo(self.bg)
-    display.newSprite("region_tips_556x344.png")
+    display.newSprite("region_tips_556x344.jpg")
         :align(display.CENTER_TOP, 304, self.bg:getContentSize().height - 30)
         :addTo(node)
 
@@ -186,7 +186,7 @@ function GameUITips:CreateUIIf_pve()
         return self.pve_node
     end
     local node = display.newNode():size(608,747):addTo(self.bg)
-    display.newSprite("pve_tips_554x340.png")
+    display.newSprite("pve_tips_554x340.jpg")
         :align(display.CENTER_TOP, 305, self.bg:getContentSize().height - 30)
         :addTo(node)
 
