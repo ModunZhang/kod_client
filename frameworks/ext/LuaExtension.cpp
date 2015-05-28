@@ -27,7 +27,6 @@
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_IOS
 #include "GameCenter/GameCenter.h"
-#include "ext_uservoice.h"
 #define KODLOG(format, ...)      CCLOG(format, ##__VA_ARGS__);Kodlog__(format, ##__VA_ARGS__);
 #endif
 #include "MarketSDKTool.h"
@@ -674,33 +673,6 @@ static int tolua_ext_close_keyboard(lua_State* tolua_S)
     CloseKeyboard();
 #endif
     return 0;
-}
-extern void OpenUserVoice(const char* site,int forumId,const char* email,const char* user_name,const char* guid);
-static int tolua_ext_open_user_voice(lua_State* tolua_S)
-{
-#ifndef TOLUA_RELEASE
-    tolua_Error tolua_err;
-    if (
-        !tolua_isstring(tolua_S, 1,0,&tolua_err)   ||
-        !tolua_isnumber(tolua_S, 2, 0, &tolua_err) ||
-        !tolua_isstring(tolua_S, 3, 0, &tolua_err) ||
-        !tolua_isstring(tolua_S, 4, 0, &tolua_err) ||
-        !tolua_isstring(tolua_S, 5, 0, &tolua_err)
-        )
-        goto tolua_lerror;
-    else
-#endif
-    {
-#if CC_TARGET_PLATFORM == CC_PLATFORM_IOS
-    OpenUserVoice(tolua_tostring(tolua_S,1,""),tolua_tonumber(tolua_S, 2, 0), tolua_tostring(tolua_S,3,""), tolua_tostring(tolua_S,4,""), tolua_tostring(tolua_S,5,""));
-#endif
-    }
-    return 0;
-#ifndef TOLUA_RELEASE
-tolua_lerror:
-    tolua_error(tolua_S,"#ferror in function 'ext_open_user_voice'.",&tolua_err);
-    return 0;
-#endif
 }
 
 static int tolua_ext_get_os_version(lua_State* tolua_S)

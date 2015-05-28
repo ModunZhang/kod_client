@@ -176,7 +176,7 @@
             <key>arrow_blue-hd.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1656,459},{14,16}}</string>
+                <string>{{1656,357},{14,16}}</string>
                 <key>offset</key>
                 <string>{0,1}</string>
                 <key>rotated</key>
@@ -185,37 +185,11 @@
                 <string>{{3,1},{14,16}}</string>
                 <key>sourceSize</key>
                 <string>{20,20}</string>
-            </dict>
-            <key>arrow_blue_22x32.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{1656,409},{22,32}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{22,32}}</string>
-                <key>sourceSize</key>
-                <string>{22,32}</string>
-            </dict>
-            <key>arrow_green_22x32.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{1656,375},{22,32}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{22,32}}</string>
-                <key>sourceSize</key>
-                <string>{22,32}</string>
             </dict>
             <key>arrow_red-hd.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1656,443},{14,16}}</string>
+                <string>{{1656,341},{14,16}}</string>
                 <key>offset</key>
                 <string>{0,1}</string>
                 <key>rotated</key>
@@ -224,19 +198,6 @@
                 <string>{{3,1},{14,16}}</string>
                 <key>sourceSize</key>
                 <string>{20,20}</string>
-            </dict>
-            <key>arrow_red_22x32.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{1656,341},{22,32}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{22,32}}</string>
-                <key>sourceSize</key>
-                <string>{22,32}</string>
             </dict>
             <key>attack_58x56.png</key>
             <dict>
@@ -1132,7 +1093,7 @@
             <key>size</key>
             <string>{2048,2048}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:71e537576e79187f3ce6e9bee1aef91a:1/1$</string>
+            <string>$TexturePacker:SmartUpdate:aa2b6d3458a8fd6e1c5d31c747a6533f:1/1$</string>
             <key>textureFileName</key>
             <string>region.png</string>
         </dict>
