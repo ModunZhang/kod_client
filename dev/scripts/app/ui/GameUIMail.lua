@@ -178,26 +178,30 @@ function GameUIMail:CreateMailControlBox()
 
                                         if self.inbox_layer:isVisible() then
                                             -- 批量删除结束后获取
-                                            if #self.manager:GetMails()<10 then
-                                                self.manager:FetchMailsFromServer(#self.manager:GetMails()):done(function ( response )
-                                                    self.inbox_listview:asyncLoadWithCurrentPosition_()
-                                                    self.is_deleting = false
-                                                    return response
-                                                end)
+                                            if #self.manager:GetMails() < 10 then
+                                                local response = self.manager:FetchMailsFromServer(#self.manager:GetMails())
+                                                if response then
+                                                    response:done(function ( response )
+                                                        self.inbox_listview:asyncLoadWithCurrentPosition_()
+                                                        self.is_deleting = false
+                                                        return response
+                                                    end)
+                                                end
                                             end
                                         end
                                         if self.saved_layer:isVisible() then
                                             -- 批量删除结束后获取
-                                            if #self.manager:GetSavedMails()<10 then
-                                                self.manager:FetchSavedMailsFromServer(#self.manager:GetSavedMails()):done(function ( response )
-                                                    self.save_mails_listview:asyncLoadWithCurrentPosition_()
-                                                    self.is_deleting = false
-                                                    return response
-                                                end)
+                                            if #self.manager:GetSavedMails() < 10 then
+                                                local response = self.manager:FetchSavedMailsFromServer(#self.manager:GetSavedMails())
+                                                if response then
+                                                    response:done(function ( response )
+                                                        self.save_mails_listview:asyncLoadWithCurrentPosition_()
+                                                        self.is_deleting = false
+                                                        return response
+                                                    end)
+                                                end
                                             end
                                         end
-
-
                                     end)
                                 elseif control_type == "report" then
                                     MailManager:DecreaseUnReadReportsNumByIds(ids)
@@ -207,21 +211,27 @@ function GameUIMail:CreateMailControlBox()
                                         if self.report_layer:isVisible() then
                                             -- 批量删除结束后获取
                                             if #self.manager:GetReports()<10 then
-                                                self.manager:FetchReportsFromServer(#self.manager:GetReports()):done(function ( response )
-                                                    self.report_listview:asyncLoadWithCurrentPosition_()
-                                                    self.is_deleting = false
-                                                    return response
-                                                end)
+                                                local response = self.manager:FetchReportsFromServer(#self.manager:GetReports())
+                                                if response then
+                                                    response:done(function ( response )
+                                                        self.report_listview:asyncLoadWithCurrentPosition_()
+                                                        self.is_deleting = false
+                                                        return response
+                                                    end)
+                                                end
                                             end
                                         end
                                         if self.saved_layer:isVisible() then
                                             -- 批量删除结束后获取
                                             if #self.manager:GetSavedReports()<10 then
-                                                self.manager:FetchSavedReportsFromServer(#self.manager:GetSavedReports()):done(function ( response )
-                                                    self.saved_reports_listview:asyncLoadWithCurrentPosition_()
-                                                    self.is_deleting = false
-                                                    return response
-                                                end)
+                                                local response self.manager:FetchSavedReportsFromServer(#self.manager:GetSavedReports())
+                                                if response then
+                                                    response:done(function ( response )
+                                                        self.saved_reports_listview:asyncLoadWithCurrentPosition_()
+                                                        self.is_deleting = false
+                                                        return response
+                                                    end)
+                                                end
                                             end
                                         end
                                     end)
@@ -337,10 +347,13 @@ function GameUIMail:InitInbox(mails)
     self.inbox_listview:setRedundancyViewVal(200)
     self.inbox_listview:setDelegate(handler(self, self.DelegateInbox))
     if not mails then
-        self.manager:FetchMailsFromServer(0):done(function ( response )
-            self.inbox_listview:reload()
-            return response
-        end)
+        local promise = self.manager:FetchMailsFromServer(0)
+        if promise then
+            promise:done(function ( response )
+                self.inbox_listview:reload()
+                return response
+            end)
+        end
     end
     self.inbox_listview:reload()
 end
@@ -364,7 +377,7 @@ function GameUIMail:DelegateInbox( listView, tag, idx )
         local size = content:getContentSize()
         item:setItemSize(size.width, size.height)
         -- 当取到客户端本地最后一封收件箱邮件后，请求服务器获得更多以前的邮件
-        if idx == #self.manager:GetMails() and #self.manager:GetMails()%10 == 0 then
+        if idx == #self.manager:GetMails() then
             if not self.is_deleting then
                 print("当取到客户端本地最后一封收件箱邮件后，请求服务器获得更多以前的邮件",#self.manager:GetMails())
                 self.manager:FetchMailsFromServer(#self.manager:GetMails())
@@ -490,10 +503,13 @@ function GameUIMail:InitSaveMails(mails)
     self.save_mails_listview:setRedundancyViewVal(200)
     self.save_mails_listview:setDelegate(handler(self, self.DelegateSavedMails))
     if not self.manager:GetSavedMails() then
-        self.manager:FetchSavedMailsFromServer(0):done(function ( response )
-            self.save_mails_listview:reload()
-            return response
-        end)
+        local promise =self.manager:FetchSavedMailsFromServer(0)
+        if promise then
+            promise:done(function ( response )
+                self.save_mails_listview:reload()
+                return response
+            end)
+        end
     end
     self.save_mails_listview:reload()
 end
@@ -517,7 +533,7 @@ function GameUIMail:DelegateSavedMails( listView, tag, idx )
         local size = content:getContentSize()
         item:setItemSize(size.width, size.height)
         -- 当取到客户端本地最后一封收藏邮件后，请求服务器获得更多以前的邮件
-        if idx == #self.manager:GetSavedMails() and #self.manager:GetSavedMails() % 10 == 0 then
+        if idx == #self.manager:GetSavedMails() then
             if not self.is_deleting then
                 print("当取到客户端本地最后一封收藏邮件后，请求服务器获得更多以前的邮件",#self.manager:GetSavedMails())
                 self.manager:FetchSavedMailsFromServer(#self.manager:GetSavedMails())
@@ -641,10 +657,13 @@ function GameUIMail:InitSendMails(mails)
     self.send_mail_listview:setRedundancyViewVal(200)
     self.send_mail_listview:setDelegate(handler(self, self.DelegateSendMails))
     if not mails then
-        self.manager:FetchSendMailsFromServer(0):done(function ( response )
-            self.send_mail_listview:reload()
-            return response
-        end)
+        local promise = self.manager:FetchSendMailsFromServer(0)
+        if promise then
+            promise:done(function ( response )
+                self.send_mail_listview:reload()
+                return response
+            end)
+        end
     end
     self.send_mail_listview:reload()
 end
@@ -668,7 +687,7 @@ function GameUIMail:DelegateSendMails( listView, tag, idx )
         local size = content:getContentSize()
         item:setItemSize(size.width, size.height)
         -- 当取到客户端本地最后一封发件箱邮件后，请求服务器获得更多以前的邮件
-        if idx == #self.manager:GetSendMails() and #self.manager:GetSendMails() % 10 == 0 then
+        if idx == #self.manager:GetSendMails() then
             print("当取到客户端本地最后一封发件箱邮件后，请求服务器获得更多以前的邮件",#self.manager:GetSendMails())
             self.manager:FetchSendMailsFromServer(#self.manager:GetSendMails())
         end
@@ -1202,11 +1221,13 @@ function GameUIMail:InitReport()
     self.report_listview:setRedundancyViewVal(200)
     self.report_listview:setDelegate(handler(self, self.DelegateReport))
     if not self.manager:GetReports() then
-        
-        self.manager:FetchReportsFromServer(0):done(function ( response )
-            self.report_listview:reload()
-            return response
-        end)
+        local promise = self.manager:FetchReportsFromServer(0)
+        if promise then
+            promise:done(function ( response )
+                self.report_listview:reload()
+                return response
+            end)
+        end
     end
     self.report_listview:reload()
 end
@@ -1231,7 +1252,7 @@ function GameUIMail:DelegateReport( listView, tag, idx )
         local size = content:getContentSize()
         item:setItemSize(size.width, size.height)
         -- 当取到客户端本地最后一封战报后，请求服务器获得更多以前的战报
-        if idx == #self.manager:GetReports() and #self.manager:GetReports()%10 == 0 then
+        if idx == #self.manager:GetReports() then
             if not self.is_deleting then
                 print("当取到客户端本地最后一封战报后，请求服务器获得更多以前的战报",#self.manager:GetReports())
                 self.manager:FetchReportsFromServer(#self.manager:GetReports())
@@ -1457,10 +1478,13 @@ function GameUIMail:InitSavedReports()
                 self.saved_reports_listview:setRedundancyViewVal(200)
                 self.saved_reports_listview:setDelegate(handler(self, self.DelegateSavedReport))
                 if not self.manager:GetSavedReports() then
-                    self.manager:FetchSavedReportsFromServer(0):done(function ( response )
-                        self.saved_reports_listview:reload()
-                        return response
-                    end)
+                    local promise = self.manager:FetchSavedReportsFromServer(0)
+                    if promise then
+                        promise:done(function ( response )
+                            self.saved_reports_listview:reload()
+                            return response
+                        end)
+                    end
                 end
                 self.saved_reports_listview:reload()
 
@@ -1492,7 +1516,7 @@ function GameUIMail:DelegateSavedReport( listView, tag, idx )
         local size = content:getContentSize()
         item:setItemSize(size.width, size.height)
         -- 当取到客户端本地最后一封战报后，请求服务器获得更多以前的战报
-        if idx == #self.manager:GetSavedReports() and #self.manager:GetSavedReports()%10 == 0 then
+        if idx == #self.manager:GetSavedReports() then
             if not self.is_deleting then
                 print("当取到客户端本地最后一封战报后，请求服务器获得更多以前的战报",#self.manager:GetSavedReports())
                 self.manager:FetchSavedReportsFromServer(#self.manager:GetSavedReports())
@@ -2049,6 +2073,12 @@ function GameUIMail:GetEnemyAllianceTag(report)
 end
 
 return GameUIMail
+
+
+
+
+
+
 
 
 
