@@ -15,17 +15,28 @@ local timer = app.timer
 
 
 function GameUIPVEHome:DisplayOn()
-
+    self.visible_count = self.visible_count + 1
+    self:FadeToSelf(self.visible_count > 0)
 end
 function GameUIPVEHome:DisplayOff()
-
+    self.visible_count = self.visible_count - 1
+    self:FadeToSelf(self.visible_count > 0)
 end
+function GameUIPVEHome:FadeToSelf(isFullDisplay)
+    self:setCascadeOpacityEnabled(true)
+    local opacity = isFullDisplay == true and 255 or 0
+    self:stopAllActions()
+    transition.fadeTo(self, {opacity = opacity, time = 0.2})
+end
+
+
 function GameUIPVEHome:ctor(user, scene)
     self.user = user
     self.layer = scene:GetSceneLayer()
     GameUIPVEHome.super.ctor(self, {type = UIKit.UITYPE.BACKGROUND})
 end
 function GameUIPVEHome:onEnter()
+    self.visible_count = 1
     self:CreateTop()
     self.bottom = self:CreateBottom()
 

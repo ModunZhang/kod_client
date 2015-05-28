@@ -88,6 +88,7 @@ function GameUIWithCommonHeader:GetHomeButton()
     return self.home_button
 end
 function GameUIWithCommonHeader:OnMoveOutStage()
+    self:ResetRenderSceneState()
     GameUIWithCommonHeader.super.OnMoveOutStage(self)
 end
 
@@ -96,12 +97,12 @@ function GameUIWithCommonHeader:OnMoveInStage()
     if self.__gem_label then
         self.city:GetResourceManager():AddObserver(self)
     end
+    self:BlurRenderScene()
 end
 
 function GameUIWithCommonHeader:UIAnimationMoveIn()
     self:GetView():pos(0,display.top + 200)
     -- self:GetTitleBar():opacity(0)
-    self:BlurRenderScene()
     transition.fadeIn(self:GetTitleBar(),{
         time = 0.05,
         onComplete = function()
@@ -118,7 +119,6 @@ function GameUIWithCommonHeader:UIAnimationMoveIn()
 end
 
 function GameUIWithCommonHeader:UIAnimationMoveOut()
-    self:ResetRenderSceneState()
     transition.moveTo(self:GetView(),{
         x = 0,
         y = display.top + 200,

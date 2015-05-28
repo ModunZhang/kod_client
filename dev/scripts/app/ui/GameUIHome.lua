@@ -91,25 +91,20 @@ function GameUIHome:RefreshHelpButtonVisible()
         self.top_order_group:RefreshOrder()
     end
 end
+
 function GameUIHome:DisplayOn()
     self.visible_count = self.visible_count + 1
-    -- self:setVisible(self.visible_count > 0)
     self:FadeToSelf(self.visible_count > 0)
 end
 function GameUIHome:DisplayOff()
     self.visible_count = self.visible_count - 1
-    -- self:setVisible(self.visible_count > 0)
     self:FadeToSelf(self.visible_count > 0)
 end
 function GameUIHome:FadeToSelf(isFullDisplay)
     self:setCascadeOpacityEnabled(true)
     local opacity = isFullDisplay == true and 255 or 0
-    local p = isFullDisplay and 0 or 0
-    transition.fadeTo(self, {opacity = opacity, time = 0.2,
-        onComplete = function()
-            self:pos(p, p)
-        end
-    })
+    self:stopAllActions()
+    transition.fadeTo(self, {opacity = opacity, time = 0.2})
 end
 
 function GameUIHome:ctor(city)
