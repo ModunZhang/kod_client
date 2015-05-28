@@ -18,7 +18,7 @@ function GameUISystemNotice:onEnter()
 	back:opacity(0)
 	self.back = back
     local back_width,back_height = back:getContentSize().width, back:getContentSize().height
-    local clipNode = display.newClippingRegionNode(cc.rect(15,0,back_width-30,back_height)):addTo(back)
+    local clipNode = display.newClippingRegionNode(cc.rect(40,0,back_width-80,back_height)):addTo(back)
     local notice_label = UIKit:ttfLabel({
         size = 24,
     }):align(display.LEFT_CENTER, back_width,back_height/2)
@@ -32,7 +32,6 @@ function GameUISystemNotice:showNotice(notice_type,notice_content)
 	self.notice_label:setString(notice_content)
 	self.notice_label:setColor(UIKit:hex2c4b(notice_type == "warning" and 0xff5400 or 0xffedae))
 	local back = self.back
-	print("showNotice>>>>")
     transition.fadeTo(back, {opacity = 255, time = 2,
         onComplete = function()
             transition.moveTo(self.notice_label, {x = -self.notice_label:getContentSize().width, y = back:getContentSize().height/2, time = 8,
