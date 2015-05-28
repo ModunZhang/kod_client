@@ -1354,7 +1354,7 @@ function GameUIMail:CreateReportContent()
             display.newSprite(UILib.resource[rewards.name], 190, 30):addTo(report_content_bg):scale(0.5)
             UIKit:ttfLabel(
                 {
-                    text = "+"..rewards.count,
+                    text = "+"..string.formatnumberthousands(rewards.count),
                     size = 20,
                     color = 0x403c2f
                 }):align(display.LEFT_CENTER, report_content_bg:getContentSize().width/2-20, 30)
