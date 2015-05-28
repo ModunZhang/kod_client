@@ -2,7 +2,9 @@ local DiffFunction = import("..utils.DiffFunction")
 local check = import(".check")
 local mark = import(".mark")
 local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
+local BuildingFunction = GameDatas.BuildingFunction
 local BuildingLevelUp = GameDatas.BuildingLevelUp
+local HouseFunction = GameDatas.HouseFunction
 local HouseLevelUp = GameDatas.HouseLevelUp
 local locations = GameDatas.ClientInitGame.locations
 local normal = GameDatas.Soldiers.normal
@@ -62,10 +64,14 @@ end
 local function FinishBuildHouseAt(building_location_id, level)
     remove_global_shceduler()
 
+    local house = DataManager:getFteData().buildings[string.format("location_%d", building_location_id)].houses[1]
+    local config = HouseFunction[house.type]
+    local before_power = level > 1 and config[level - 1].power or 0
+
     local modify = {
-        {"basicInfo.power", DataManager:getFteData().basicInfo.power + 50},
+        {"basicInfo.power", DataManager:getFteData().basicInfo.power + config[level].power - before_power},
         {"houseEvents.0", json.null},
-        {string.format("buildings.location_%d.houses.1.level", building_location_id), level}
+        {string.format("buildings.location_%d.houses.0.level", building_location_id), level}
     }
     if building_location_id == 5 and level > 1 then
         local newindex = #DataManager:getFteData().growUpTasks.cityBuild
@@ -102,7 +108,7 @@ local function BuildHouseAt(building_location_id, house_location_id, house_type)
             }
         },
         {
-            string.format("buildings.location_%d.houses.1", building_location_id),
+            string.format("buildings.location_%d.houses.0", building_location_id),
             {
                 type = house_type,
                 level = 0,
@@ -164,9 +170,12 @@ local function FinishUpgradingBuilding(type, level)
             break
         end
     end
+    local config = BuildingFunction[type]
+    local before_power = level > 1 and config[level - 1].power or 0
+    
     assert(location_id)
     local modify = {
-        {"basicInfo.power", DataManager:getFteData().basicInfo.power + 100},
+        {"basicInfo.power", DataManager:getFteData().basicInfo.power + config[level].power - before_power},
         {"buildingEvents.0", json.null},
         {string.format("buildings.location_%d.level", location_id), level}
     }
@@ -276,7 +285,7 @@ local function InstantRecruitSoldier(name, count)
         {string.format("soldiers.%s", name), count},
     }
 
-    local key = string.format("InstantRecruitSoldier")
+    local key = string.format("InstantRecruitSoldier_%s", name)
     if not check(key) then
         mark(key)
         ext.market_sdk.onPlayerEvent("获得士兵", key)
@@ -331,6 +340,15 @@ local function FightWithNpc(floor)
         },
         {"pve.location.x", 9}
     }
+
+    if floor > 2 then
+        mock{
+            {"soldierMaterials.magicBox", 1},
+            {"soldierMaterials.deathHand", 1},
+            {"soldierMaterials.soulStone", 1},
+            {"soldierMaterials.heroBones", 1},
+        }
+    end
 
     local key = string.format("FightWithNpc%d", floor)
     if not check(key) then
@@ -418,7 +436,7 @@ end
 
 local function Research()
     local start_time = NetManager:getServerTime()
-    local researchTime = 1 * 60
+    local researchTime = 6 * 60
     mock{
         {
             "productionTechEvents.0",
@@ -485,6 +503,7 @@ return {
     CheckMaterials = CheckMaterials,
     Skip = Skip,
 }
+
 
 
 

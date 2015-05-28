@@ -217,7 +217,7 @@ function GameUIMail:CreateMailControlBox()
                                         if self.saved_layer:isVisible() then
                                             -- 批量删除结束后获取
                                             if #self.manager:GetSavedReports()<10 then
-                                                self.manager:FetchReportsFromServer(#self.manager:GetSavedReports()):done(function ( response )
+                                                self.manager:FetchSavedReportsFromServer(#self.manager:GetSavedReports()):done(function ( response )
                                                     self.saved_reports_listview:asyncLoadWithCurrentPosition_()
                                                     self.is_deleting = false
                                                     return response
@@ -364,7 +364,7 @@ function GameUIMail:DelegateInbox( listView, tag, idx )
         local size = content:getContentSize()
         item:setItemSize(size.width, size.height)
         -- 当取到客户端本地最后一封收件箱邮件后，请求服务器获得更多以前的邮件
-        if idx == #self.manager:GetMails() then
+        if idx == #self.manager:GetMails() and #self.manager:GetMails()%10 == 0 then
             if not self.is_deleting then
                 print("当取到客户端本地最后一封收件箱邮件后，请求服务器获得更多以前的邮件",#self.manager:GetMails())
                 self.manager:FetchMailsFromServer(#self.manager:GetMails())
@@ -517,7 +517,7 @@ function GameUIMail:DelegateSavedMails( listView, tag, idx )
         local size = content:getContentSize()
         item:setItemSize(size.width, size.height)
         -- 当取到客户端本地最后一封收藏邮件后，请求服务器获得更多以前的邮件
-        if idx == #self.manager:GetSavedMails() then
+        if idx == #self.manager:GetSavedMails() and #self.manager:GetSavedMails() % 10 == 0 then
             if not self.is_deleting then
                 print("当取到客户端本地最后一封收藏邮件后，请求服务器获得更多以前的邮件",#self.manager:GetSavedMails())
                 self.manager:FetchSavedMailsFromServer(#self.manager:GetSavedMails())
@@ -668,7 +668,7 @@ function GameUIMail:DelegateSendMails( listView, tag, idx )
         local size = content:getContentSize()
         item:setItemSize(size.width, size.height)
         -- 当取到客户端本地最后一封发件箱邮件后，请求服务器获得更多以前的邮件
-        if idx == #self.manager:GetSendMails() then
+        if idx == #self.manager:GetSendMails() and #self.manager:GetSendMails() % 10 == 0 then
             print("当取到客户端本地最后一封发件箱邮件后，请求服务器获得更多以前的邮件",#self.manager:GetSendMails())
             self.manager:FetchSendMailsFromServer(#self.manager:GetSendMails())
         end
@@ -843,12 +843,12 @@ function GameUIMail:SelectAllMailsOrReports(isSelect)
         end
         self.report_listview:asyncLoadWithCurrentPosition_()
     elseif self.saved_layer:isVisible() then
-        if self.save_mails_listview:isVisible() then
+        if self.save_mails_listview and self.save_mails_listview:isVisible() then
             for i,v in ipairs(self.manager:GetSavedMails()) do
                 self:SelectItems(v,isSelect)
             end
             self.save_mails_listview:asyncLoadWithCurrentPosition_()
-        elseif self.saved_reports_listview:isVisible() then
+        elseif self.saved_reports_listview and self.saved_reports_listview:isVisible() then
             for i,v in ipairs(self.manager:GetSavedReports()) do
                 self:SelectItems(v,isSelect)
             end
@@ -957,19 +957,23 @@ function GameUIMail:MailUnreadChanged(unreads)
     local mail_label = self.mail_unread_num_label
     local report_bg = self.report_unread_num_bg
     local report_label = self.report_unread_num_label
-    if unreads.mail and  unreads.mail>0 then
-        mail_bg:setVisible(true)
-        mail_label:setString(unreads.mail > 99 and "99+" or unreads.mail)
-    else
-        mail_bg:setVisible(false)
-        mail_label:setString("")
+    if unreads.mail then
+        if unreads.mail > 0  then
+            mail_bg:setVisible(true)
+            mail_label:setString(unreads.mail > 99 and "99+" or unreads.mail)
+        else
+            mail_bg:setVisible(false)
+            mail_label:setString("")
+        end
     end
-    if unreads.report and  unreads.report>0 then
-        report_bg:setVisible(true)
-        report_label:setString(unreads.report > 99 and "99+" or unreads.report)
-    else
-        report_bg:setVisible(false)
-        report_label:setString("")
+    if unreads.report then
+        if unreads.report > 0 then
+            report_bg:setVisible(true)
+            report_label:setString(unreads.report > 99 and "99+" or unreads.report)
+        else
+            report_bg:setVisible(false)
+            report_label:setString("")
+        end
     end
 end
 
@@ -1114,7 +1118,7 @@ function GameUIMail:ShowMailDetails(mail)
     local mail_content = mail.content
     if mail.fromName == "__system" then
         for k,v in pairs(Localize.mails) do
-           mail_content = string.gsub(mail_content, k, v)
+            mail_content = string.gsub(mail_content, k, v)
         end
     end
     local content_label = UIKit:ttfLabel(
@@ -1198,6 +1202,7 @@ function GameUIMail:InitReport()
     self.report_listview:setRedundancyViewVal(200)
     self.report_listview:setDelegate(handler(self, self.DelegateReport))
     if not self.manager:GetReports() then
+        
         self.manager:FetchReportsFromServer(0):done(function ( response )
             self.report_listview:reload()
             return response
@@ -1226,7 +1231,7 @@ function GameUIMail:DelegateReport( listView, tag, idx )
         local size = content:getContentSize()
         item:setItemSize(size.width, size.height)
         -- 当取到客户端本地最后一封战报后，请求服务器获得更多以前的战报
-        if idx == #self.manager:GetReports() then
+        if idx == #self.manager:GetReports() and #self.manager:GetReports()%10 == 0 then
             if not self.is_deleting then
                 print("当取到客户端本地最后一封战报后，请求服务器获得更多以前的战报",#self.manager:GetReports())
                 self.manager:FetchReportsFromServer(#self.manager:GetReports())
@@ -1487,7 +1492,7 @@ function GameUIMail:DelegateSavedReport( listView, tag, idx )
         local size = content:getContentSize()
         item:setItemSize(size.width, size.height)
         -- 当取到客户端本地最后一封战报后，请求服务器获得更多以前的战报
-        if idx == #self.manager:GetSavedReports() then
+        if idx == #self.manager:GetSavedReports() and #self.manager:GetSavedReports()%10 == 0 then
             if not self.is_deleting then
                 print("当取到客户端本地最后一封战报后，请求服务器获得更多以前的战报",#self.manager:GetSavedReports())
                 self.manager:FetchSavedReportsFromServer(#self.manager:GetSavedReports())
@@ -1899,8 +1904,8 @@ end
 
 
 function GameUIMail:GetMyName(report)
+    local data = report:GetData()
     if report:Type() == "strikeCity" or report:Type()== "cityBeStriked" then
-        local data = report:GetData()
         if data.attackPlayerData.id == DataManager:getUserData()._id then
             return data.attackPlayerData.name
         elseif data.helpDefencePlayerData and data.helpDefencePlayerData.id == DataManager:getUserData()._id then
@@ -1922,13 +1927,23 @@ function GameUIMail:GetMyName(report)
         elseif report:GetData().helpDefencePlayerData and report:GetData().helpDefencePlayerData.id == DataManager:getUserData()._id then
             return report:GetData().helpDefencePlayerData.name
         end
+    elseif report:Type() == "strikeVillage" then
+        return data.attackPlayerData.name
+    elseif report:Type() == "villageBeStriked" then
+        return data.defencePlayerData.name
+    elseif report:Type() == "attackVillage" then
+        if data.attackPlayerData.id == DataManager:getUserData()._id then
+            return data.attackPlayerData.name
+        elseif data.defencePlayerData and data.defencePlayerData.id == DataManager:getUserData()._id then
+            return data.defencePlayerData.name
+        end
     else
         return "xxxxx"
     end
 end
 function GameUIMail:GetMyAllianceTag(report)
+    local data = report:GetData()
     if report:Type() == "strikeCity" or report:Type()== "cityBeStriked" then
-        local data = report:GetData()
         if data.attackPlayerData.id == DataManager:getUserData()._id then
             return data.attackPlayerData.alliance.tag
         elseif data.helpDefencePlayerData and data.helpDefencePlayerData.id == DataManager:getUserData()._id then
@@ -1950,13 +1965,23 @@ function GameUIMail:GetMyAllianceTag(report)
         elseif report:GetData().helpDefencePlayerData and report:GetData().helpDefencePlayerData.id == DataManager:getUserData()._id then
             return report:GetData().helpDefencePlayerData.alliance.tag
         end
+    elseif report:Type() == "strikeVillage" then
+        return data.attackPlayerData.alliance.tag
+    elseif report:Type() == "villageBeStriked" then
+        return data.defencePlayerData.alliance.tag
+    elseif report:Type() == "attackVillage" then
+        if data.attackPlayerData.id == DataManager:getUserData()._id then
+            return data.attackPlayerData.alliance.tag
+        elseif data.defencePlayerData and data.defencePlayerData.id == DataManager:getUserData()._id then
+            return data.defencePlayerData.alliance.tag
+        end
     else
         return "xxxxx"
     end
 end
 function GameUIMail:GetEnemyName(report)
+    local data = report:GetData()
     if report:Type() == "strikeCity" or report:Type()== "cityBeStriked" then
-        local data = report:GetData()
         if data.attackPlayerData.id == DataManager:getUserData()._id then
             return (data.defencePlayerData and data.defencePlayerData.name) or (data.helpDefencePlayerData and data.helpDefencePlayerData.name)
         elseif data.helpDefencePlayerData and data.helpDefencePlayerData.id == DataManager:getUserData()._id then
@@ -1978,13 +2003,19 @@ function GameUIMail:GetEnemyName(report)
         then
             return report:GetData().attackPlayerData.name
         end
+    elseif report:Type() == "strikeVillage" then
+        return data.defencePlayerData.name
+    elseif report:Type() == "villageBeStriked" then
+        return data.attackPlayerData.name
+    elseif report:Type() == "attackVillage" then
+        return data.defencePlayerData.name
     else
         return "xxxxx"
     end
 end
 function GameUIMail:GetEnemyAllianceTag(report)
+    local data = report:GetData()
     if report:Type() == "strikeCity" or report:Type()== "cityBeStriked" then
-        local data = report:GetData()
         if data.attackPlayerData.id == DataManager:getUserData()._id then
             return data.strikeTarget.alliance.tag
         elseif data.helpDefencePlayerData and data.helpDefencePlayerData.id == DataManager:getUserData()._id then
@@ -2006,12 +2037,23 @@ function GameUIMail:GetEnemyAllianceTag(report)
         then
             return report:GetData().attackPlayerData.alliance.tag
         end
+    elseif report:Type() == "strikeVillage" then
+        return data.defencePlayerData.alliance.tag
+    elseif report:Type() == "villageBeStriked" then
+        return data.attackPlayerData.alliance.tag
+    elseif report:Type() == "attackVillage" then
+        return data.defencePlayerData.alliance.tag
     else
         return "xxxxx"
     end
 end
 
 return GameUIMail
+
+
+
+
+
 
 
 

@@ -688,12 +688,13 @@ function WidgetRecruitSoldier:PormiseOfFte()
     self:Find():onButtonClicked(function()
         self:Find():setButtonEnabled(false)
 
-        mockData.InstantRecruitSoldier(self.soldier_name, self.count)
-
         if iskindof(display.getRunningScene(), "CityScene") then
             display.getRunningScene():GetSceneLayer()
             :MoveBarracksSoldiers(self.soldier_name)
         end
+        
+        mockData.InstantRecruitSoldier(self.soldier_name, self.count)
+
         
 
         self:getParent():LeftButtonClicked()
@@ -715,24 +716,34 @@ function WidgetRecruitSoldier:PromiseOfFteSpecial()
     self:AddButtons()
     self:OnCountChanged(self.count)
     local fte_layer = self:getParent():GetFteLayer()
-    fte_layer:Enable():SetTouchObject(self:FindNormal())
+    fte_layer:Enable():SetTouchObject(self:Find())
 
-    self:FindNormal():removeEventListenersByEvent("CLICKED_EVENT")
-    self:FindNormal():onButtonClicked(function()
-        self:FindNormal():setButtonEnabled(false)
 
-        mockData.RecruitSoldier(self.soldier_name, self.count)
+    local p = promise.new()
+    self:Find():removeEventListenersByEvent("CLICKED_EVENT")
+    self:Find():onButtonClicked(function()
+        self:Find():setButtonEnabled(false)
 
-        self:Close()
+        if iskindof(display.getRunningScene(), "CityScene") then
+            display.getRunningScene():GetSceneLayer()
+            :MoveBarracksSoldiers(self.soldier_name)
+        end
+
+        
+        mockData.InstantRecruitSoldier(self.soldier_name, self.count)
+
+        
+
+        self:getParent():LeftButtonClicked()
+        
+        p:resolve()
     end)
 
-    local r = self:FindNormal():getCascadeBoundingBox()
+    local r = self:Find():getCascadeBoundingBox()
     WidgetFteArrow.new(_("点击招募")):addTo(fte_layer)
-        :TurnRight():align(display.RIGHT_CENTER, r.x - 20, r.y + r.height/2 + 20)
+        :TurnLeft():align(display.LEFT_CENTER, r.x + r.width + 20, r.y + r.height/2 + 20)
 
-    return self.city:PromiseOfRecruitSoldier("skeletonWarrior"):next(function()
-        fte_layer:removeFromParent()
-    end)
+    return p
 end
 
 function WidgetRecruitSoldier:GetRecruitSpecialTime()

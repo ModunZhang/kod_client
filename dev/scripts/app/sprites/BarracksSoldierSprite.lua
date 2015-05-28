@@ -135,7 +135,7 @@ local function wrap_point_in_table(...)
 end
 local cc = cc
 function BarracksSoldierSprite:UpdateVelocityByPoints(start_point, end_point)
-    local speed = 60
+    local speed = 150
     local logic_map = self:GetLogicMap()
     local spt = wrap_point_in_table(logic_map:ConvertToMapPosition(start_point.x, start_point.y))
     local ept = wrap_point_in_table(logic_map:ConvertToMapPosition(end_point.x, end_point.y))

@@ -590,11 +590,11 @@ function User:OnBasicInfoChanged(userData, deltaData)
     local is_delta_update = not is_fully_update and deltaData.basicInfo
     if is_fully_update or is_delta_update then
         local basicInfo = userData.basicInfo
-        self:SetTerrain(DataManager:getUserData().basicInfo.terrain)
+        self:SetTerrain(basicInfo.terrain)
         self:SetLevelExp(basicInfo.levelExp)
         self:SetLevel(self:GetPlayerLevelByExp(self:LevelExp()))
         self:SetPower(basicInfo.power)
-        self:SetName(DataManager:getUserData().basicInfo.name)
+        self:SetName(basicInfo.name)
         self:SetVipExp(basicInfo.vipExp)
         self:SetIcon(basicInfo.icon)
         self:SetMarchQueue(basicInfo.marchQueue)

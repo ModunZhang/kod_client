@@ -166,6 +166,7 @@ local function get_response_delete_report_msg(response)
                 clone_response.msg.playerData = {}
                 table.insert(clone_response.msg.playerData, v)
                 local edit = decodeInUserDataFromDeltaData(user_data, clone_response.msg.playerData)
+                LuaUtils:outputTable("删除战报 edit", edit)
                 DataManager:setUserData(user_data, edit)
             end
         end
@@ -436,7 +437,7 @@ local logic_event_map = {
         if success then
             local running_scene = display.getRunningScene().__cname
             if running_scene ~= "MainScene" and running_scene ~= "LogoScene" then
-                UIKit:newGameUI("GameUISystemNotice",response.type,response.content):AddToCurrentScene()
+                GameGlobalUI:showNotice(response.type,response.content)
             end
         end
     end,
