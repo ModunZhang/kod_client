@@ -184,13 +184,13 @@ function UpgradingSprite:GetCurrentConfig()
         return nil
     end
 end
-function UpgradingSprite:GetBeforeConfig()
-    if self.config then
-        return self.config:GetConfigByLevel(self:GetEntity():GetRealEntity():GetBeforeLevel())
-    else
-        return nil
-    end
-end
+-- function UpgradingSprite:GetBeforeConfig()
+--     if self.config then
+--         return self.config:GetConfigByLevel(self:GetEntity():GetRealEntity():GetBeforeLevel())
+--     else
+--         return nil
+--     end
+-- end
 function UpgradingSprite:GetLogicZorder()
     if self:GetEntity():GetType() == "keep" then
         return 1

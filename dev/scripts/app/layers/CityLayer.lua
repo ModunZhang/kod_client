@@ -17,8 +17,10 @@ local BarracksSoldierSprite = import("..sprites.BarracksSoldierSprite")
 local HelpedTroopsSprite = import("..sprites.HelpedTroopsSprite")
 local SoldierManager = import("..entity.SoldierManager")
 local cocos_promise = import("..utils.cocos_promise")
+local Enum = import("..utils.Enum")
 local promise = import("..utils.promise")
 local Observer = import("..entity.Observer")
+local WidgetMaskFilter = import("..widget.WidgetMaskFilter")
 local MapLayer = import(".MapLayer")
 local CityLayer = class("CityLayer", MapLayer)
 
@@ -198,15 +200,8 @@ function CityLayer:OnHelpedTroopsChanged(city)
     self:UpdateHelpedByTroopsVisible(city:GetHelpedByTroops())
 end
 -----
-local SCENE_BACKGROUND = 1
-local BACK_NODE = 2
-local CITY_LAYER = 3
-local SKY_LAYER = 4
-local INFO_LAYER = 5
-local CITY_BACKGROUND = 1
-local ROAD_NODE = 2
-local BUILDING_NODE = 3
-local WEATHER_NODE = 4
+local SCENE_ZORDER = Enum("SCENE_BACKGROUND", "CITY_LAYER", "SKY_LAYER", "INFO_LAYER")
+local CITY_ZORDER = Enum("BUILDING_NODE")
 function CityLayer:ctor(city_scene)
     Observer.extend(self)
     CityLayer.super.ctor(self, city_scene, 0.6, 1.5)
@@ -243,11 +238,11 @@ function CityLayer:InitBackground()
     self:ReloadSceneBackground()
 end
 function CityLayer:InitCity()
-    self.city_layer = display.newLayer():addTo(self, CITY_LAYER):align(display.BOTTOM_LEFT, 47, 158 + 250)
-    self.sky_layer = display.newLayer():addTo(self, SKY_LAYER):align(display.BOTTOM_LEFT)
-    self.info_layer = display.newLayer():addTo(self, INFO_LAYER):align(display.BOTTOM_LEFT)
+    self.city_layer = display.newLayer():addTo(self, SCENE_ZORDER.CITY_LAYER):align(display.BOTTOM_LEFT, 47, 158 + 250)
+    self.sky_layer = display.newLayer():addTo(self, SCENE_ZORDER.SKY_LAYER):align(display.BOTTOM_LEFT)
+    self.info_layer = display.newLayer():addTo(self, SCENE_ZORDER.INFO_LAYER):align(display.BOTTOM_LEFT)
     self.position_node = cc.TMXTiledMap:create("tmxmaps/city_road2.tmx"):addTo(self.city_layer):hide()
-    self.city_node = display.newLayer():addTo(self.city_layer, BUILDING_NODE):align(display.BOTTOM_LEFT)
+    self.city_node = display.newLayer():addTo(self.city_layer, CITY_ZORDER.BUILDING_NODE):align(display.BOTTOM_LEFT)
     local origin_point = self:GetPositionIndex(0, 0)
     self.iso_map = IsoMapAnchorBottomLeft.new({
         tile_w = 51,
@@ -308,7 +303,7 @@ function CityLayer:ReloadSceneBackground()
     if self.background then
         self.background:removeFromParent()
     end
-    self.background = display.newNode():addTo(self, SCENE_BACKGROUND)
+    self.background = display.newNode():addTo(self, SCENE_ZORDER.SCENE_BACKGROUND)
     local terrain = self:Terrain()
     local left_1 = string.format("left_background_1_%s.jpg", terrain)
     local left_2 = string.format("left_background_2_%s.jpg", terrain)
