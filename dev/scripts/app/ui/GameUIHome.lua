@@ -567,9 +567,8 @@ function GameUIHome:ShowPowerAni(wp)
     emitter:runAction(transition.sequence{
         cc.MoveTo:create(time, cc.p(tp.x, tp.y)),
         cc.CallFunc:create(function()
-            self.shadow_power_label:hide()
             self:ScaleIcon(self.power_label:show())
-            self.shadow_power_label:setString(self.power_label:getString())
+            self.shadow_power_label:hide():setString(self.power_label:getString())
         end),
         cc.DelayTime:create(delay_time),
     })
