@@ -47,6 +47,8 @@ function WidgetAllianceEnterButtonProgress:OnTimer()
         if percent<=0 then
             self:removeFromParent()
         end
+    else
+        self:removeFromParent()
     end
 end
 function WidgetAllianceEnterButtonProgress:onEnter()
