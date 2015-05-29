@@ -25,16 +25,16 @@ CLOUD_TAG = 1987
 local function transition_(scene, status)
     if status == "onEnter" then
         local armature = ccs.Armature:create("Cloud_Animation")
-        :addTo(scene,0,CLOUD_TAG):pos(display.cx, display.cy)
+            :addTo(scene,0,CLOUD_TAG):pos(display.cx, display.cy)
 
         cc.LayerColor:create(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
             transition.sequence{
-                cc.CallFunc:create(function() 
+                cc.CallFunc:create(function()
                     armature:getAnimation():stop()
-                    armature:getAnimation():play("Animation1", -1, 0) 
+                    armature:getAnimation():play("Animation1", -1, 0)
                 end),
                 cc.FadeIn:create(0.75),
-                cc.CallFunc:create(function() 
+                cc.CallFunc:create(function()
                     if scene.hideOutEnterShow then
                         scene:hideOutEnterShow()
                     else
@@ -42,15 +42,15 @@ local function transition_(scene, status)
                     end
                 end),
                 cc.DelayTime:create(0.5),
-                cc.CallFunc:create(function() 
+                cc.CallFunc:create(function()
                     armature:getAnimation():stop()
-                    armature:getAnimation():play("Animation4", -1, 0) 
+                    armature:getAnimation():play("Animation4", -1, 0)
                 end),
                 cc.FadeOut:create(0.75),
-                cc.CallFunc:create(function() 
+                cc.CallFunc:create(function()
                     scene:removeChildByTag(CLOUD_TAG)
                     scene:finish()
-                 end),
+                end),
             }
         )
     elseif status == "onExit" then
@@ -154,6 +154,9 @@ end
 function MyApp:retryConnectServer(need_disconnect)
     print(debug.traceback("", 2),"retryConnectServer---->0")
     if need_disconnect or type(need_disconnect) == "nil" or not NetManager:isConnected() then
+        if MailManager then
+            MailManager:Reset()
+        end
         NetManager:disconnect()
         print("MyApp:debug--->1")
     end
@@ -166,43 +169,43 @@ function MyApp:retryConnectServer(need_disconnect)
     end
     if NetManager.m_logicServer.host and NetManager.m_logicServer.port then
         UIKit:WaitForNet(2)
-            NetManager:getConnectLogicServerPromise():next(function()
-                print("MyApp:debug--->2")
-                return NetManager:getLoginPromise()
-            end):catch(function(err)
-                dump(err)
-                NetManager:disconnect()
-                print("MyApp:debug--->3")
-                local content, title = err:reason()
-                if title == 'timeout' then
-                    print("MyApp:debug--->4")
+        NetManager:getConnectLogicServerPromise():next(function()
+            print("MyApp:debug--->2")
+            return NetManager:getLoginPromise()
+        end):catch(function(err)
+            dump(err)
+            NetManager:disconnect()
+            print("MyApp:debug--->3")
+            local content, title = err:reason()
+            if title == 'timeout' then
+                print("MyApp:debug--->4")
+                UIKit:showKeyMessageDialog(_("错误"), _("服务器连接断开,请检测你的网络环境后重试!"), function()
+                    app:retryConnectServer(false)
+                end)
+            elseif title == 'syntaxError' then
+                UIKit:showMessageDialog(_("错误"), content,function()
+                    app:restart(false)
+                end,nil,false)
+            else
+                if UIKit:getErrorCodeKey(content.code) == 'playerAlreadyLogin' then
+                    print("MyApp:debug--->5")
+                    UIKit:showKeyMessageDialog(_("错误"), _("玩家已经登录"), function()
+                        app:restart(false)
+                    end)
+                else
+                    print("MyApp:debug--->6")
                     UIKit:showKeyMessageDialog(_("错误"), _("服务器连接断开,请检测你的网络环境后重试!"), function()
                         app:retryConnectServer(false)
                     end)
-                elseif title == 'syntaxError' then
-                    UIKit:showMessageDialog(_("错误"), content,function()
-                        app:restart(false)
-                    end,nil,false)
-                else
-                    if UIKit:getErrorCodeKey(content.code) == 'playerAlreadyLogin' then
-                        print("MyApp:debug--->5")
-                        UIKit:showKeyMessageDialog(_("错误"), _("玩家已经登录"), function()
-                            app:restart(false)
-                        end)
-                    else
-                        print("MyApp:debug--->6")
-                        UIKit:showKeyMessageDialog(_("错误"), _("服务器连接断开,请检测你的网络环境后重试!"), function()
-                            app:retryConnectServer(false)
-                        end)
-                    end
                 end
-            end):done(function()
-                print("MyApp:debug--->fetchChats")
-                app:GetChatManager():FetchChatWhenReLogined()
-            end):always(function()
-                print("MyApp:debug--->7")
-                UIKit:NoWaitForNet()
-            end)
+            end
+        end):done(function()
+            print("MyApp:debug--->fetchChats")
+            app:GetChatManager():FetchChatWhenReLogined()
+        end):always(function()
+            print("MyApp:debug--->7")
+            UIKit:NoWaitForNet()
+        end)
     end
 end
 function MyApp:ReloadGame()
@@ -229,7 +232,7 @@ function MyApp:onEnterForeground()
     UIKit:closeAllUI()
     dump("onEnterForeground------>")
     local scene = display.getRunningScene()
-    if scene.__cname == "MyCityScene" then 
+    if scene.__cname == "MyCityScene" then
         if not Alliance_Manager:HasBeenJoinedAlliance() then
             scene:GetHomePage():PromiseOfFteAlliance()
         end
@@ -253,7 +256,7 @@ function MyApp:lockInput(b)
     -- if lockInputCount > 0 then
     cc.Director:getInstance():getEventDispatcher():setEnabled(not b)
     -- elseif lockInputCount == 0 then
-        -- cc.Director:getInstance():getEventDispatcher():setEnabled(not b)
+    -- cc.Director:getInstance():getEventDispatcher():setEnabled(not b)
     -- end
 end
 function MyApp:EnterFriendCityScene(id, location)
@@ -267,8 +270,8 @@ function MyApp:EnterCitySceneByPlayerAndAlliance(id, is_my_alliance, location)
         local user_data = response.msg.playerViewData
         local user = User_.new(user_data):OnBasicInfoChanged(user_data)
         local city = City.new(user)
-        :InitWithJsonData(user_data)
-        :OnUserDataChanged(user_data, app.timer:GetServerTime())
+            :InitWithJsonData(user_data)
+            :OnUserDataChanged(user_data, app.timer:GetServerTime())
         if is_my_alliance then
             app:enterScene("FriendCityScene", {user, city, location}, "custom", -1, transition_)
         else
@@ -303,7 +306,7 @@ function MyApp:EnterMyAllianceSceneOrMyCityScene(location)
         local my_status = Alliance_Manager:GetMyAlliance():Status()
         local alliance_name = "AllianceScene"
         if my_status == "prepare" or  my_status == "fight" then
-            alliance_name = "AllianceBattleScene"   
+            alliance_name = "AllianceBattleScene"
         end
         app:enterScene(alliance_name, {location}, "custom", -1, transition_)
     else
@@ -352,7 +355,7 @@ function MyApp:EnterUserMode()
 end
 
 function MyApp:getSupportMailFormat(category,logMsg)
-    
+
     local UTCTime    = "UTC Time:" .. os.date('!%Y-%m-%d %H:%M:%S', self.timer:GetServerTime())
     local GameName   = "Game:" .. "Kod"
     local Version    = "Version:" .. ext.getAppVersion()
@@ -381,7 +384,7 @@ end
 
 function MyApp:sendApnIdIf()
     local token = ext.getDeviceToken() or ""
-    if string.len(token) > 0 then 
+    if string.len(token) > 0 then
         token = string.sub(token,2,string.len(token)-1)
         token = string.gsub(token," ","")
     end
@@ -453,17 +456,17 @@ end
 
 function MyApp:__checkGameCenter()
     if ext.gamecenter.isAuthenticated() then
-        local __,gcId = ext.gamecenter.getPlayerNameAndId() 
+        local __,gcId = ext.gamecenter.getPlayerNameAndId()
         if string.len(gcId) > 0 and NetManager:isConnected() and User and not User:IsBindGameCenter() then
             NetManager:getGcBindStatusPromise(gcId):done(function(response)
-            if not response.msg.isBind then
-                NetManager:getBindGcIdPromise(gcId):done(function()
-                    app:EndCheckGameCenterIf()
-                end)
-            end
-            ext.gamecenter.gc_bind = response.msg.isBind
-        end)
-        end 
+                if not response.msg.isBind then
+                    NetManager:getBindGcIdPromise(gcId):done(function()
+                        app:EndCheckGameCenterIf()
+                    end)
+                end
+                ext.gamecenter.gc_bind = response.msg.isBind
+            end)
+        end
     end
 end
 
@@ -489,5 +492,6 @@ my_print = function(...)
 end
 
 return MyApp
+
 
 
