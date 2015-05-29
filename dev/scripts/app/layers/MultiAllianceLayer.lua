@@ -16,6 +16,7 @@ local max = math.max
 local timer = app.timer
 local ipairs = ipairs
 local pairs = pairs
+local cc = cc
 local MINE,FRIEND,ENEMY,VILLAGE_TAG = 1,2,3,4
 MultiAllianceLayer.ARRANGE = Enum("H", "V")
 
@@ -299,16 +300,17 @@ function MultiAllianceLayer:StartCorpsTimer()
                 local total_time = march_info.finish_time - march_info.start_time
                 local elapse_time = time - march_info.start_time
                 if elapse_time <= total_time then
-                    local cur_vec = cc.pAdd(cc.pMul(march_info.normal, march_info.speed * elapse_time), march_info.start_info.real)
+                    local len = march_info.speed * elapse_time
+                    local cur_vec = cc.pAdd(cc.pMul(march_info.normal, len), march_info.start_info.real)
                     corps:pos(cur_vec.x, cur_vec.y)
-                else
-                    self:DeleteCorpsById(id)
-                end
-                local line = self.lines_map[id]
-                if line then
+
+                    -- 更新线
+                    local line = self.lines_map[id]
                     local program = line:getFilter():getGLProgramState()
                     program:setUniformFloat("percent", fmod(time - floor(time), 1.0))
-                    program:setUniformFloat("elapse", line.is_enemy and elapse_time / total_time or 0)
+                    program:setUniformFloat("elapse", line.is_enemy and (cc.pGetLength(cc.pSub(cur_vec, march_info.origin_start)) / march_info.origin_length) or 0)
+                else
+                    self:DeleteCorpsById(id)
                 end
             end
         end
@@ -616,6 +618,9 @@ function MultiAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, fini
     march_info.finish_time = finish_time
     march_info.speed = (march_info.length / (finish_time - start_time))
     if not self.corps_map[id] then
+        print_("CreateCorps", dragonType, soldiers)
+        LuaUtils:outputTable(march_info)
+
         local index = math.floor(march_info.degree / 45) + 4
         if index < 0 or index > 8 then index = 1 end
         local corps = display.newNode():addTo(self:GetCorpsNode())
@@ -694,7 +699,8 @@ function MultiAllianceLayer:CreateLine(id, march_info, ally)
         })
     ))
     sprite:setScaleY(scale)
-    sprite.is_enemy = ally == ENEMY
+    sprite.is_enemy = true
+     -- ally == ENEMY
     self.lines_map[id] = sprite
     return sprite
 end
@@ -705,8 +711,9 @@ function MultiAllianceLayer:GetMarchInfoWith(id, logic_start_point, logic_end_po
     local vector = cc.pSub(ept, spt)
     local degree = math.deg(cc.pGetAngle(vector, {x = 0, y = 1}))
     local length = cc.pGetLength(vector)
-    local scale = length / 22
     return {
+        origin_start = spt,
+        origin_length = length,
         start_info = {real = spt, logic = logic_start_point},
         end_info = {real = ept, logic = logic_end_point},
         degree = degree,
