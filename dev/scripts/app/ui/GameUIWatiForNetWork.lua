@@ -40,8 +40,9 @@ function GameUIWatiForNetWork:onEnter()
 
     self.loading = display.newNode():addTo(self)
 
-    math.randomseed(math.floor(app.timer:GetServerTime() * 1000))
-    local bg,circle,icon = unpack(loading_map[math.random(#loading_map)])
+    local seed = math.floor(app.timer:GetServerTime() * 1000)
+    local index = seed % 3 + 1
+    local bg,circle,icon = unpack(loading_map[index])
     display.newSprite(bg):addTo(self.loading)
     :pos(display.cx, display.cy):scale(0.8)
     

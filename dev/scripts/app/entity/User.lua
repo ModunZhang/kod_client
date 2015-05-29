@@ -659,7 +659,7 @@ function User:OnDailyQuestsChanged(userData, deltaData)
         local edit = {}
         local remove = {}
         if deltaData.dailyQuests.refreshTime then
-            self:SetDailyQuestsRefreshTime(userData.dailyQuests.refreshTime)
+            self:SetDailyQuestsRefreshTime(deltaData.dailyQuests.refreshTime)
             if deltaData.dailyQuests.quests then
                 self.dailyQuests = {}
                 for k,v in pairs(deltaData.dailyQuests.quests) do
@@ -769,7 +769,7 @@ function User:IsOnDailyQuestEvents()
 end
 function User:OnDailyQuestsRefresh()
     self:NotifyListeneOnType(User.LISTEN_TYPE.DALIY_QUEST_REFRESH, function(listener)
-        listener:OnDailyQuestsRefresh(self:GetDailyQuests())
+        listener:OnDailyQuestsRefresh()
     end)
 end
 function User:OnNewDailyQuests(changed_map)

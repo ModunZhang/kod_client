@@ -62,6 +62,8 @@ property(Alliance, "maxMembers", 0)
 property(Alliance, "describe", "")
 property(Alliance, "notice", "")
 property(Alliance, "archon", "")
+-- 成员信息
+property(Alliance, "members", {})
 property(Alliance, "memberCount", 0)
 property(Alliance, "status", "")
 property(Alliance, "statusStartTime", 0)
@@ -75,22 +77,20 @@ property(Alliance, "villages", {})
 property(Alliance, "villageLevels", {})
 property(Alliance, "allianceFight", {})
 property(Alliance, "allianceFightReports", nil)
+--行军事件
+property(Alliance, "attackMarchEvents", {})
+property(Alliance, "attackMarchReturnEvents", {})
+property(Alliance, "strikeMarchEvents", {})
+property(Alliance, "strikeMarchReturnEvents", {})
+-- 村落事件
+property(Alliance, "villageEvents", {})
 function Alliance:ctor()
     Alliance.super.ctor(self)
     self.flag = Flag:RandomFlag()
-    self.members = {}
-    self.help_events = {}
     self.alliance_map = AllianceMap.new(self)
     self.alliance_shrine = AllianceShrine.new(self)
-    --行军事件
-    self.attackMarchEvents = {}
-    self.attackMarchReturnEvents = {}
-    self.strikeMarchEvents = {}
-    self.strikeMarchReturnEvents = {}
-    --村落采集
-    self.villageEvents = {}
-    self.alliance_belvedere = AllianceBelvedere.new(self)
-    -- self:SetNeedUpdateEnemyAlliance(false)
+    self.alliance_belvedere = AllianceBelvedere.new(self) -- 村落采集
+    self.help_events = {}
     -- 联盟道具管理
     self.items_manager = AllianceItemsManager.new()
 end
@@ -455,8 +455,8 @@ function Alliance:OnAllianceDataChanged(alliance_data,refresh_time,deltaData)
     end
     self:UpdateMaxMemberCount(alliance_data)
     self:OnAllianceFightChanged(alliance_data, deltaData)
-    self:OnAllianceBasicInfoChangedFirst(alliance_data,deltaData)
     self:OnAllianceFightReportsChanged(alliance_data, deltaData)
+    self:OnAllianceBasicInfoChangedFirst(alliance_data,deltaData)
 
     self:OnAllianceMemberDataChanged(alliance_data,deltaData)
 

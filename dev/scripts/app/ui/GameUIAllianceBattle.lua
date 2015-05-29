@@ -506,7 +506,7 @@ function GameUIAllianceBattle:RefreshFightInfoList()
             local ourKills = alliance:GetMyAllianceFightPlayerKills()
             local enemyKills = alliance:GetEnemyAllianceFightPlayerKills()
 
-            local temp_name,temp_kills = "",0
+            local temp_name,temp_kills = _("无"),0
             for i,v in ipairs(ourKills or {}) do
                 if v.kill > temp_kills then
                     temp_kills = v.kill
@@ -533,8 +533,8 @@ function GameUIAllianceBattle:RefreshFightInfoList()
                 {string.formatnumberthousands(our.kill),_("击杀积分"),string.formatnumberthousands(enemy.kill)},
                 {our.routCount,_("击溃城市"),enemy.routCount},
                 {our.attackCount,_("进攻次数"),enemy.attackCount},
+                {our.attackSuccessCount,_("进攻获胜"),enemy.attackSuccessCount},
                 {our.strikeCount,_("突袭次数"),enemy.strikeCount},
-                {our.attackSuccessCount,_("获胜进攻"),enemy.attackSuccessCount},
                 {our.strikeSuccessCount,_("突袭成功"),enemy.strikeSuccessCount},
                 {ourKillMaxName,_("头号杀手"),enemyKillMaxName},
             }

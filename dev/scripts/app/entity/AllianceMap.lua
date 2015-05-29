@@ -157,6 +157,7 @@ function AllianceMap:ctor(alliance)
     self.decoratorMapObjects = {}
 end
 function AllianceMap:Reset()
+    self:ClearAllListener()
     self.mapObjects = {}
     self.buildings = {}
     self.buildingMapObjects = {}
