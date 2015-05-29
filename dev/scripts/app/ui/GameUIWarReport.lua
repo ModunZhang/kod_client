@@ -98,7 +98,7 @@ function GameUIWarReport:onEnter()
 
     -- 回放按钮
     local r_data = report:GetData()
-    if r_data.fightWithHelpDefenceTroop or r_data.fightWithHelpDefenceTroop or r_data.fightWithDefenceWall then
+    if r_data.fightWithHelpDefencePlayerReports or r_data.fightWithDefencePlayerReports then
         local replay_label = UIKit:ttfLabel({
             text = _("回放"),
             size = 20,
