@@ -45,7 +45,7 @@ function WidgetPVEFteMiner:PormiseOfFte()
                     dragonType = dragonType,
                     currentHp = dragon:Hp(),
                     hpMax = dragon:GetMaxHP(),
-                    strength = dragon:TotalStrength(),
+                    strength = dragon:TotalStrength(self:GetObject():GetMap():Terrain()),
                     vitality = dragon:TotalVitality(),
                     dragon = dragon
                 }
