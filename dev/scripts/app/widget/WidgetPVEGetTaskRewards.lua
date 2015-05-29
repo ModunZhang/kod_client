@@ -69,8 +69,9 @@ function WidgetPVEGetTaskRewards:onEnter()
                     },
                 }, nil)
                 local data = User:EncodePveDataAndResetFightRewardsData()
+                local count = self.count
                 NetManager:getSetPveDataPromise(data):done(function()
-                    GameGlobalUI:showTips(_("获得奖励"), Localize.fight_reward.coin.."x"..GameUtils:formatNumber(self.count))
+                    GameGlobalUI:showTips(_("获得奖励"), Localize.fight_reward.coin.."x"..GameUtils:formatNumber(count))
                 end)
                 User:GetPVEDatabase():NewTarget()
                 self:getParent():GetHomePage().event_tab:PromiseOfSwitch()

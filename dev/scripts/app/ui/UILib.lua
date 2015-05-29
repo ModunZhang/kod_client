@@ -57,9 +57,6 @@ local BUILDING_ANIMATIONS_FILES = {
     warehouse = {
         "animations/ziyuancangku.ExportJson",
     },
-    smoke = {
-        "animations/yan.ExportJson",
-    },
     hammer = {
         "animations/chuizi.ExportJson",
     },
