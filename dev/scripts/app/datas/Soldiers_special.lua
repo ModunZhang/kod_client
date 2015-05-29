@@ -106,7 +106,7 @@ special["priest"] = {
 	["killScore"] = 5,
 	["citizen"] = 1,
 	["recruitTime"] = 40,
-	["treatCoin"] = 420,
+	["treatCoin"] = 350,
 	["treatTime"] = 10,
 	["techBuildingName"] = "trainingGround"
 }
@@ -128,7 +128,7 @@ special["demonHunter"] = {
 	["killScore"] = 5,
 	["citizen"] = 1,
 	["recruitTime"] = 40,
-	["treatCoin"] = 420,
+	["treatCoin"] = 350,
 	["treatTime"] = 10,
 	["techBuildingName"] = "hunterHall"
 }
@@ -150,7 +150,7 @@ special["paladin"] = {
 	["killScore"] = 10,
 	["citizen"] = 2,
 	["recruitTime"] = 80,
-	["treatCoin"] = 780,
+	["treatCoin"] = 650,
 	["treatTime"] = 20,
 	["techBuildingName"] = "stable"
 }
@@ -172,7 +172,7 @@ special["steamTank"] = {
 	["killScore"] = 20,
 	["citizen"] = 4,
 	["recruitTime"] = 160,
-	["treatCoin"] = 1500,
+	["treatCoin"] = 1250,
 	["treatTime"] = 40,
 	["techBuildingName"] = "siege"
 }
