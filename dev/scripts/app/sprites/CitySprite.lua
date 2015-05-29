@@ -66,7 +66,6 @@ function CitySprite:RefreshInfo()
 end
 function CitySprite:CheckProtected()
     local is_protected = self:GetEntity():GetAllianceMemberInfo():IsProtected()
-    print_("CheckProtected", is_protected, self:getChildByTag(FIRE_TAG))
     if is_protected then
         if not self:getChildByTag(FIRE_TAG) then
             fire():addTo(self, 2, FIRE_TAG):pos(0, -50)
