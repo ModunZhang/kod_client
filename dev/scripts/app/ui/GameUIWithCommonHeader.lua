@@ -7,6 +7,9 @@ function GameUIWithCommonHeader:ctor(city, title)
     GameUIWithCommonHeader.super.ctor(self,{type = UIKit.UITYPE.WIDGET})
     self.title = title
     self.city = city
+
+
+    self:BlurRenderScene()
 end
 
 function GameUIWithCommonHeader:onEnter()
@@ -67,6 +70,7 @@ function GameUIWithCommonHeader:DisableAutoClose()
     return self
 end
 function GameUIWithCommonHeader:onExit()
+    self:ResetRenderSceneState()
     if self.__gem_label then
         self.city:GetResourceManager():RemoveObserver(self)
     end
@@ -88,7 +92,6 @@ function GameUIWithCommonHeader:GetHomeButton()
     return self.home_button
 end
 function GameUIWithCommonHeader:OnMoveOutStage()
-    self:ResetRenderSceneState()
     GameUIWithCommonHeader.super.OnMoveOutStage(self)
 end
 
@@ -97,12 +100,10 @@ function GameUIWithCommonHeader:OnMoveInStage()
     if self.__gem_label then
         self.city:GetResourceManager():AddObserver(self)
     end
-    self:BlurRenderScene()
 end
 
 function GameUIWithCommonHeader:UIAnimationMoveIn()
     self:GetView():pos(0,display.top + 200)
-    -- self:GetTitleBar():opacity(0)
     transition.fadeIn(self:GetTitleBar(),{
         time = 0.05,
         onComplete = function()

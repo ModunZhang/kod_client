@@ -23,10 +23,20 @@ function GameUIPVEHome:DisplayOff()
     self:FadeToSelf(self.visible_count > 0)
 end
 function GameUIPVEHome:FadeToSelf(isFullDisplay)
-    self:setCascadeOpacityEnabled(true)
-    local opacity = isFullDisplay == true and 255 or 0
     self:stopAllActions()
-    transition.fadeTo(self, {opacity = opacity, time = 0.2})
+    if isFullDisplay then
+        self:show()
+        transition.fadeIn(self, {
+            time = 0.2,
+        })
+    else
+        transition.fadeOut(self, {
+            time = 0.2,
+            onComplete = function()
+                self:hide()
+            end,
+        })
+    end
 end
 
 
@@ -233,6 +243,7 @@ end
 
 
 return GameUIPVEHome
+
 
 
 
