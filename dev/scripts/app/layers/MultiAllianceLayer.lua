@@ -618,7 +618,7 @@ function MultiAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, fini
     march_info.finish_time = finish_time
     march_info.speed = (march_info.length / (finish_time - start_time))
     if not self.corps_map[id] then
-        print_("CreateCorps", dragonType, soldiers)
+        LuaUtils:outputTable({"CreateCorps", dragonType, soldiers})
         LuaUtils:outputTable(march_info)
 
         local index = math.floor(march_info.degree / 45) + 4
@@ -699,8 +699,7 @@ function MultiAllianceLayer:CreateLine(id, march_info, ally)
         })
     ))
     sprite:setScaleY(scale)
-    sprite.is_enemy = true
-     -- ally == ENEMY
+    sprite.is_enemy = ally == ENEMY
     self.lines_map[id] = sprite
     return sprite
 end
