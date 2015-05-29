@@ -429,6 +429,17 @@ function GameUIHome:CreateTop()
     left_order:AddElement(button)
 
     left_order:RefreshOrder()
+    local sequence = transition.sequence({
+        cc.MoveTo:create(0.1, cc.p(button:getPositionX(), button:getPositionY()+5)),
+        cc.MoveTo:create(0.1, cc.p(button:getPositionX(), button:getPositionY())),
+        cc.MoveTo:create(0.1, cc.p(button:getPositionX(), button:getPositionY()+5)),
+        cc.MoveTo:create(0.1, cc.p(button:getPositionX(), button:getPositionY())),
+        cc.MoveTo:create(0.1, cc.p(button:getPositionX(), button:getPositionY()+5)),
+        cc.MoveTo:create(0.1, cc.p(button:getPositionX(), button:getPositionY())),
+        cc.MoveTo:create(1, cc.p(button:getPositionX(), button:getPositionY())),
+    })
+    button:runAction(cc.RepeatForever:create(sequence))
+
     local order = WidgetAutoOrder.new(WidgetAutoOrder.ORIENTATION.TOP_TO_BOTTOM,20):addTo(self):pos(display.right-50, display.top-200)
     -- BUFF按钮
     local buff_button = cc.ui.UIPushButton.new(
