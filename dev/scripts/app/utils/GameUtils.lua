@@ -570,15 +570,24 @@ local function createPlayerSoldiersForFight(soldiers, dragon, terrain, is_dragon
         }
     end)
 end
-local function createDragonForFight(dragon)
+local function getPlayerDragonExpAdd(dragon)
+    local itemBuff = 0
+    local vipBuff = User:GetVIPDragonExpAdd()
+    if ItemManager:IsBuffActived("dragonExpBonus") then
+        local effect1 = ItemManager:GetBuffEffect("dragonExpBonus")
+        itemBuff = effect1
+    end
+    return itemBuff + vipBuff
+end
+local function createDragonForFight(dragon, terrain)
     return {
-        level = dragon.level,
-        dragonType = dragon.dragonType,
-        currentHp = dragon.currentHp,
-        totalHp = dragon.currentHp,
-        hpMax = dragon.hpMax,
-        strength = dragon.strength,
-        vitality = dragon.vitality,
+        level = dragon:Level(),
+        dragonType = dragon:Type(),
+        currentHp = dragon:Hp(),
+        totalHp = dragon:Hp(),
+        hpMax = dragon:GetMaxHP(),
+        strength = dragon:TotalStrength(terrain),
+        vitality = dragon:TotalVitality(),
     }
 end
 local DAMAGE_FACTOR = 0.3
@@ -683,21 +692,26 @@ function GameUtils:DragonDragonBattle(attackDragon, defenceDragon, effect)
     assert(defenceDragon.vitality)
     assert(defenceDragon.totalHp)
     assert(defenceDragon.currentHp)
+
     local attackDragonStrength = attackDragon.strength
+    local attackDragonStrengthFixed = nil
     local defenceDragonStrength = defenceDragon.strength
+    local defenceDragonStrengthFixed = nil
     if effect >= 0 then
-        defenceDragonStrength = defenceDragonStrength * (1 - effect)
+        defenceDragonStrengthFixed = defenceDragonStrength * ( 1 - effect )
+        attackDragonStrengthFixed = attackDragonStrength
     else
-        attackDragonStrength = attackDragonStrength * (1 + effect)
+        attackDragonStrengthFixed = attackDragonStrength * ( 1 - (-effect) )
+        defenceDragonStrengthFixed = defenceDragonStrength
     end
     local attackDragonHpDecreased
     local defenceDragonHpDecreased
     if attackDragonStrength >= defenceDragonStrength then
-        attackDragonHpDecreased = floor(defenceDragonStrength * 0.5)
-        defenceDragonHpDecreased = floor(sqrt(attackDragonStrength * defenceDragonStrength) * 0.5)
+        attackDragonHpDecreased = floor(defenceDragonStrengthFixed * 0.5)
+        defenceDragonHpDecreased = floor(sqrt(attackDragonStrengthFixed * defenceDragonStrengthFixed) * 0.5)
     else
-        attackDragonHpDecreased = floor(sqrt(attackDragonStrength * defenceDragonStrength) * 0.5)
-        defenceDragonHpDecreased = floor(attackDragonStrength * 0.5)
+        attackDragonHpDecreased = floor(sqrt(attackDragonStrengthFixed * defenceDragonStrengthFixed) * 0.5)
+        defenceDragonHpDecreased = floor(attackDragonStrengthFixed * 0.5)
     end
 
     attackDragon.currentHp = attackDragonHpDecreased > attackDragon.currentHp and 0 or attackDragon.currentHp - attackDragonHpDecreased
@@ -790,18 +804,18 @@ function GameUtils:DoBattle(attacker, defencer, terrain, enemy_name)
     local clone_attacker_soldiers = clone(attacker.soldiers)
     local clone_defencer_soldiers = clone(defencer.soldiers)
 
-    local attacker_dragon = createDragonForFight(attacker.dragon)
-    local defencer_dragon = createDragonForFight(defencer.dragon)
+    local attacker_dragon = createDragonForFight(attacker.dragon, terrain)
+    local defencer_dragon = defencer.dragon
 
-    local attacker_soldiers = createPlayerSoldiersForFight(attacker.soldiers, attacker.dragon.dragon, terrain, attacker_dragon.strength > defencer_dragon.strength)
+    local attacker_soldiers = createPlayerSoldiersForFight(attacker.soldiers, attacker.dragon, terrain, attacker_dragon.strength > defencer_dragon.strength)
     local defencer_soldiers = createPlayerSoldiersForFight(defencer.soldiers)
 
     local dragonFightFixedEffect = getDragonFightFixedEffect(attacker_soldiers, defencer_soldiers)
     local attack_dragon, defence_dragon = GameUtils:DragonDragonBattle(attacker_dragon, defencer_dragon, dragonFightFixedEffect)
 
-    local attackWoundedSoldierPercent = getPlayerTreatSoldierPercent(attacker.dragon.dragon)
-    local attackSoldierMoraleDecreasedPercent = getPlayerSoldierMoraleDecreasedPercent(attacker.dragon.dragon)
-    local attackToEnemySoldierMoralDecreasedAddPercent = getEnemySoldierMoraleAddedPercent(attacker.dragon.dragon)
+    local attackWoundedSoldierPercent = getPlayerTreatSoldierPercent(attacker.dragon)
+    local attackSoldierMoraleDecreasedPercent = getPlayerSoldierMoraleDecreasedPercent(attacker.dragon)
+    local attackToEnemySoldierMoralDecreasedAddPercent = getEnemySoldierMoraleAddedPercent(attacker.dragon)
     local attack_soldier, defence_soldier, is_attack_win =
         GameUtils:SoldierSoldierBattle(
             attacker_soldiers, attackWoundedSoldierPercent, attackSoldierMoraleDecreasedPercent,
@@ -826,10 +840,12 @@ function GameUtils:DoBattle(attacker, defencer, terrain, enemy_name)
             assert(config, "查无此类兵种。")
             killScore = killScore + v * config.killScore
         end
+        assert(attacker.dragon:Type())
+        local buff = getPlayerDragonExpAdd(attacker.dragon)
         local dragon = {
-            type = attacker.dragon.dragonType,
+            type = attacker.dragon:Type(),
             hpDecreased = attack_dragon.hpDecreased,
-            expAdd = floor(killScore * intInit.KilledCitizenPerDragonExp.value)
+            expAdd = floor(killScore / intInit.KilledCitizenPerDragonExp.value * ( 1 + buff ) )
         }
         -- 兵种战损
         local r = {}

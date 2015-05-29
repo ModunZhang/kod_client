@@ -283,12 +283,7 @@ end
 function WidgetRecruitSoldier:AddButtons()
     local back_ground = self.back_ground
     local size = back_ground:getContentSize()
-    local instant_button = WidgetPushButton.new(
-        {normal = "green_btn_up_250x66.png",pressed = "green_btn_down_250x66.png"}
-        ,{}
-        ,{
-            disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
-        })
+    local instant_button = cc.ui.UIPushButton.new({normal = "green_btn_up_250x66.png",pressed = "green_btn_down_250x66.png"})
         :addTo(back_ground, 2)
         :align(display.CENTER, 160, 110)
         :setButtonLabel(UIKit:ttfLabel({
