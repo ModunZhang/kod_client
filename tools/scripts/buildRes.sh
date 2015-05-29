@@ -60,7 +60,7 @@ exportImagesRes()
 				if test $fileExt == "plist" || test $fileExt == "ExportJson";then
 					test -d $finalDir || mkdir -p $finalDir && cp "$file" $finalDir
 				else
-					TexturePacker --format cocos2d --no-trim --disable-rotation --texture-format png --opt RGBA4444 --png-opt-level 7  --allow-free-size --padding 0 "$file" --sheet "$outfile"
+					TexturePacker --format cocos2d --no-trim --disable-rotation --texture-format png --opt RGBA4444 --png-opt-level 7  --allow-free-size --padding 0 "$file" --sheet "$outfile" --data /tmp/tmp.plist
 					# if $NEED_ENCRYPT_RES;then
 					# 	test -d $finalDir || mkdir -p $finalDir && $RES_COMPILE_TOOL -i "$file" -o $finalDir -ek $XXTEAKey -es $XXTEASign -q
 					# else
@@ -79,6 +79,7 @@ exportImagesRes()
 			if test "$file" -nt "$outfile"; then
 				echo "---- ${file##*/}"
 				#compress image
+				#TODO:换成TexturePacker
 				$PVRTOOL -p -f $IMAGEFORMAT -i $file -o ${file%.*}.pvr
 				mv ${file%.*}.pvr ${file%.*}_PVR_PNG.png
 				if $NEED_ENCRYPT_RES;then

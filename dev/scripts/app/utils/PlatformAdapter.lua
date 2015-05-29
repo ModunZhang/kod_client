@@ -58,6 +58,8 @@ function PlatformAdapter:mac()
     fileutils:addSearchPath("dev/res/fonts/")
     fileutils:addSearchPath("dev/res/images/")
     fileutils:addSearchPath("dev/res/fonts/")
+    --player 特殊处理
+    fileutils:addSearchPath("dev/res/images/rgba444_single/")
     fileutils:addSearchPath("dev/res/images/_Compressed_mac/")
     fileutils:addSearchPath("dev/res/images/_CanCompress/")
     ext.getDeviceToken = function ()end
