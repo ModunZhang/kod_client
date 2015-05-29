@@ -170,6 +170,27 @@ local EQUIP_LOCALIZE = {
     ["greenArmguard_s4"] = _("虚灵护臂"),
 }
 
+local EQUIP_SUIT = {
+    redDragon = {
+        _("巨人套装"),
+        _("熔岩套装"),
+        _("狂怒套装"),
+        _("撒旦套装"),
+    },
+    blueDragon = {
+        _("原力套装"),
+        _("奥术套装"),
+        _("飓风套装"),
+        _("风暴套装"),
+    },
+    greenDragon = {
+        _("欢欣套装"),
+        _("洞察套装"),
+        _("神秘套装"),
+        _("虚灵套装"),
+    }
+}
+
 local EQUIP_LOCALIZE_MAKE = {
     ["redCrown_s1"] = _("已在制造巨人头冠"),
     ["redCrown_s2"] = _("已在制造熔岩头冠"),
@@ -1018,6 +1039,7 @@ local SERVER_NAME = {
 return {
     equip_material = EQUIP_MATERIAL_LOCALIZE,
     equip = EQUIP_LOCALIZE,
+    equip_suit = EQUIP_SUIT,
     equip_make = EQUIP_LOCALIZE_MAKE,
     dragon = DRAGON_LOCALIZE,
     dragon_only = DRAGON_ONLY,
