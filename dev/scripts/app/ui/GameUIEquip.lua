@@ -199,11 +199,12 @@ function GameUIEquip:GetDragonEquipmentsByType(dragon_type)
     return dragon_equipments
 end
 local color_map = {
-    0xffedae,
-    0xffffae,
-    0xffedfe,
-    0xffedff,
-    0xffedae,
+    0xededed,
+    0x27d400,
+    0x00a8ff,
+    0xe400ff,
+    0xe400ff,
+    0xe400ff,
 }
 local unlock_str = {
     string.format(_("铁匠铺升级到%d级解锁"), 1),
@@ -244,7 +245,8 @@ function GameUIEquip:CreateItemWithListViewByEquipments(list_view, equipments, t
     item.equip_node = equip_node
     item.unlock_label = UIKit:ttfLabel({
         text = unlock_str[level],
-        size = 24,
+        size = 22,
+        color = 0x603c2f,
     }):addTo(back_ground):align(display.CENTER, pos.x, pos.y)
     item:addContent(back_ground)
     item:setItemSize(back_ground:getContentSize().width, back_ground:getContentSize().height + 10)

@@ -269,7 +269,7 @@ function GameUIBuild:CreateItemWithListView(list_view)
         :align(display.LEFT_CENTER, 175, 80)
 
     local number_label = cc.ui.UILabel.new({
-        text = _("建筑数量 5/5")..,
+        text = _("建筑数量 5/5"),
         size = 20,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_LEFT,
@@ -329,6 +329,7 @@ function GameUIBuild:CreateItemWithListView(list_view)
 end
 
 return GameUIBuild
+
 
 
 
