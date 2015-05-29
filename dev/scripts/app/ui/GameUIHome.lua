@@ -410,6 +410,24 @@ function GameUIHome:CreateTop()
     local activity_button = WidgetAutoOrderAwardButton.new(self)
 
     left_order:AddElement(activity_button)
+
+    -- gacha button
+    local button = cc.ui.UIPushButton.new(
+        {normal = "casinoTokenClass_2_128x128.png", pressed = "casinoTokenClass_2_128x128.png"}
+    )
+    button:onButtonClicked(function(event)
+        if event.name == "CLICKED_EVENT" then
+            UIKit:newGameUI("GameUIGacha",self.city):AddToCurrentScene(true)
+        end
+    end):scale(80/128)
+    function button:CheckVisible()
+        return  User:GetOddFreeNormalGachaCount() > 0
+    end
+    function button:GetElementSize()
+        return {width = 40,height = 40}
+    end
+    left_order:AddElement(button)
+
     left_order:RefreshOrder()
     local order = WidgetAutoOrder.new(WidgetAutoOrder.ORIENTATION.TOP_TO_BOTTOM,20):addTo(self):pos(display.right-50, display.top-200)
     -- BUFF按钮
