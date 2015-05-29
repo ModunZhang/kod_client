@@ -25,7 +25,7 @@ function GameUIStrikeReport:GetReportLevel()
         "A",
         "S",
     }
-    return  level == 0 and (report:Type() == "cityBeStriked" and "" or _("敌方")).._("使用了诡计之雾,没有获得任何情报") or (report:Type() == "cityBeStriked" and _("敌方") or "")..string.format(report_level,level_map[level])
+    return  level == 0 and (string.format(_("由于诡计之雾的效果,%s没有获得任何情报"),report:Type() == "cityBeStriked" and  _("敌方") or "")) or (report:Type() == "cityBeStriked" and _("敌方") or "")..string.format(report_level,level_map[level])
 end
 function GameUIStrikeReport:GetBattleCityName()
     local battleAt = self.report:GetBattleAt()
@@ -808,6 +808,7 @@ function GameUIStrikeReport:GetProbableNum(num)
 end
 
 return GameUIStrikeReport
+
 
 
 
