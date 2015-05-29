@@ -435,7 +435,7 @@ function GameUIVip:CreateVipExpBar()
             ExpBar:AddLevelBar(i,light)
             light:setFlippedX(true)
         end
-        local level_image = display.newSprite(i..".png"):addTo(lv_bg,1,i*100)
+        local level_image = display.newSprite(string.format("vip_%d.png",i)):addTo(lv_bg,1,i*100)
             :align(display.CENTER, lv_bg:getContentSize().width/2, lv_bg:getContentSize().height/2)
             :scale(0.5)
         ExpBar:AddLevelImage(i,level_image)
