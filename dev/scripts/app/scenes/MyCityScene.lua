@@ -75,6 +75,7 @@ function MyCityScene:LeaveEditMode()
     self:GetSceneUILayer():removeChildByTag(WidgetMoveHouse.ADD_TAG, true)
 end
 function MyCityScene:CreateSceneUILayer()
+    local scene_node = self
     local city = self.city
     local scene_layer = self:GetSceneLayer()
     local scene_ui_layer = display.newLayer()
@@ -113,17 +114,33 @@ function MyCityScene:CreateSceneUILayer()
     function scene_ui_layer:Schedule()
         display.newNode():addTo(self):schedule(function()
             if scene_layer:getScale() < (scene_layer:GetScaleRange()) * 1.3 then
-                if self.is_show == nil or  self.is_show == true then
+                if self.is_show == nil or self.is_show == true then
                     scene_layer:HideLevelUpNode()
+                    scene_node:GetTopLayer():stopAllActions()
+                    transition.fadeTo(scene_node:GetTopLayer(), {
+                        opacity = 0,
+                        time = 0.5,
+                        onComplete = function()
+                            scene_node:GetTopLayer():hide()
+                        end,
+                    })
                     self.is_show = false
                 end
             else
-                if self.is_show == nil or  self.is_show == false then
+                if self.is_show == nil or self.is_show == false then
                     scene_layer:ShowLevelUpNode()
+                    scene_node:GetTopLayer():stopAllActions()
+                    transition.fadeTo(scene_node:GetTopLayer(), {
+                        opacity = 255,
+                        time = 0.5,
+                        onComplete = function()
+                            scene_node:GetTopLayer():show()
+                        end,
+                    })
                     self.is_show = true
                 end
             end
-        end, 0.5)
+        end, 1)
         display.newNode():addTo(self):schedule(function()
             -- local building = self.building__
             -- if self.indicator and building then
@@ -157,6 +174,20 @@ function MyCityScene:NewLockButtonFromBuildingSprite(building_sprite)
         :onButtonClicked(function()
             if self.city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint(self.city) > 0 then
                 UIKit:newGameUI("GameUIUnlockBuilding", self.city, building_sprite:GetEntity()):AddToCurrentScene(true)
+            else
+                UIKit:showMessageDialog(_("提示"), _("升级城堡解锁此建筑"))
+                    :CreateOKButton(
+                        {
+                            listener = function()
+                                local building_sprite = self:GetSceneLayer():FindBuildingSpriteByBuilding(self.city:GetFirstBuildingByType("keep"), self.city)
+                                local x,y = self.city:GetFirstBuildingByType("keep"):GetMidLogicPosition()
+                                self:GotoLogicPoint(x,y,40):next(function()
+                                    self:AddIndicateForBuilding(building_sprite)
+                                end)
+                            end,
+                            btn_name= _("前往")
+                        }
+                    )
             end
         end)
     button.sprite = building_sprite
@@ -253,10 +284,10 @@ end
 function MyCityScene:OnUpgradingBegin()
     app:GetAudioManager():PlayeEffectSoundWithKey("UI_BUILDING_UPGRADE_START")
     self:GetSceneLayer():CheckCanUpgrade()
-    local can_unlock = self.city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint(self.city) > 0
-    self:IteratorLockButtons(function(v)
-        v:setVisible(can_unlock)
-    end)
+    -- local can_unlock = self.city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint(self.city) > 0
+    -- self:IteratorLockButtons(function(v)
+    --     -- v:setVisible(can_unlock)
+    -- end)
 end
 function MyCityScene:OnUpgrading()
 
@@ -268,10 +299,10 @@ function MyCityScene:OnUpgradingFinished(building)
     self:GetSceneLayer():CheckCanUpgrade()
     app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
 
-    local can_unlock = self.city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint(self.city) > 0
-    self:IteratorLockButtons(function(v)
-        v:setVisible(can_unlock)
-    end)
+    -- local can_unlock = self.city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint(self.city) > 0
+    -- self:IteratorLockButtons(function(v)
+    --     v:setVisible(can_unlock)
+    -- end)
 end
 
 function MyCityScene:OnBeginRecruit()
@@ -284,14 +315,15 @@ function MyCityScene:OnEndRecruit(barracks, event, soldier_type)
 end
 function MyCityScene:OnTilesChanged(tiles)
     self:GetTopLayer():removeAllChildren()
-    local can_unlock = self.city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint(self.city) > 0
+    -- local can_unlock = self.city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint(self.city) > 0
     local city = self:GetCity()
     table.foreach(tiles, function(_, tile)
         local tile_entity = tile:GetEntity()
         if (city:IsTileCanbeUnlockAt(tile_entity.x, tile_entity.y)) then
             local building = city:GetBuildingByLocationId(tile_entity.location_id)
             if building and not building:IsUpgrading() then
-                self:NewLockButtonFromBuildingSprite(tile):setVisible(can_unlock)
+                self:NewLockButtonFromBuildingSprite(tile)
+                -- :setVisible(can_unlock)
             end
         end
     end)
@@ -389,6 +421,10 @@ function MyCityScene:OpenUI(building, default_tab)
 end
 
 return MyCityScene
+
+
+
+
 
 
 
