@@ -635,6 +635,7 @@ function MultiAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, fini
         corps:setScaleX(scalex)
         corps:setScaleY(math.abs(scalex))
         corps.march_info = march_info
+        corps:pos(march_info.start_info.real.x, march_info.start_info.real.y)
         self.corps_map[id] = corps
         self:CreateLine(id, march_info, ally)
     else
