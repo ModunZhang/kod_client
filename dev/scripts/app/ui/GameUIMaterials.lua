@@ -4,6 +4,7 @@
 --
 local window = import("..utils.window")
 local GameUIEquip = import(".GameUIEquip")
+local WidgetManufacture = import("..widget.WidgetManufacture")
 local GameUIMaterials = UIKit:createUIClass("GameUIMaterials", "GameUIWithCommonHeader")
 
 function GameUIMaterials:ctor(toolShop, blackSmith)
