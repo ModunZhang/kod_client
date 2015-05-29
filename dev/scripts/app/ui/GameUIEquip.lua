@@ -143,41 +143,49 @@ function GameUIEquip:CreateDragonEquipmentsByType(dragon_type)
     })
     listnode:addTo(self.gameui:GetView()):align(display.BOTTOM_CENTER,window.cx,window.bottom_top + 20)
 
-    for i, v in ipairs(dragon_equipments) do
-        local item = self:CreateItemWithListViewByEquipments(list_view, v.equipments, v.title, equip_map)
+    for i,v in ipairs(dragon_equipments) do
+        local item = self:CreateItemWithListViewByEquipments(list_view, v.equipments, v.title, equip_map, i)
         list_view:addItem(item)
     end
     list_view:reload()
     return list_view, equip_map,listnode
 end
+local sort_map = {
+    ["crown"] = 1,
+    ["chest"] = 2,
+    ["sting"] = 3,
+    ["orb"] = 4,
+    ["armguardLeft,armguardRight"] = 5
+}
 function GameUIEquip:GetDragonEquipmentsByType(dragon_type)
-    local sort_map = {
-        ["crown"] = 1,
-        ["chest"] = 2,
-        ["sting"] = 3,
-        ["orb"] = 4,
-        ["armguardLeft,armguardRight"] = 5
-    }
-    local dragon_equipments = {
-        [1] = { title = _("灰色套装"), equipments = {}},
-        [2] = { title = _("绿色套装"), equipments = {}},
-        [3] = { title = _("蓝色套装"), equipments = {}},
-        [4] = { title = _("紫色套装"), equipments = {}},
-    -- [5] = { title = _("橙色套装"), equipments = {}},
-    }
-    for name, v in pairs(EQUIPMENTS) do
+    local dragon_equipments = {}
+    local MAX_SUIT = 4
+    for i = 1, MAX_SUIT do
+        table.insert(dragon_equipments, {
+            title = Localize.equip_suit[dragon_type][i],
+            equipments = {}
+        })
+    end
+    for _,v in pairs(EQUIPMENTS) do
         if v.usedFor == dragon_type and dragon_equipments[v.maxStar] then
             table.insert(dragon_equipments[v.maxStar].equipments, v)
         end
     end
-    for _, v in pairs(dragon_equipments) do
+    for _,v in pairs(dragon_equipments) do
         table.sort(v.equipments, function(a, b)
             return sort_map[a.category] < sort_map[b.category]
         end)
     end
     return dragon_equipments
 end
-function GameUIEquip:CreateItemWithListViewByEquipments(list_view, equipments, title, equip_map)
+local color_map = {
+    0xffedae,
+    0xffffae,
+    0xffedfe,
+    0xffedff,
+    0xffedae,
+}
+function GameUIEquip:CreateItemWithListViewByEquipments(list_view, equipments, title, equip_map, level)
     local equip_map = equip_map == nil and {} or equip_map
     -- 背景
     local back_ground = WidgetUIBackGround.new({width=568,height=188},WidgetUIBackGround.STYLE_TYPE.STYLE_2):align(display.CENTER)
@@ -188,14 +196,11 @@ function GameUIEquip:CreateItemWithListViewByEquipments(list_view, equipments, t
     title_blue:align(display.CENTER, pos.x, back_ground:getContentSize().height - title_blue:getContentSize().height/2-6)
 
     -- title label
-    local title_label = cc.ui.UILabel.new({
+    UIKit:ttfLabel({
         text = title,
         size = 24,
-        font = UIKit:getFontFilePath(),
-        align = cc.ui.TEXT_ALIGN_LEFT,
-        color = UIKit:hex2c3b(0xffedae)
-    }):addTo(title_blue)
-        :align(display.CENTER, title_blue:getContentSize().width/2, title_blue:getContentSize().height/2)
+        color = color_map[level],
+    }):addTo(title_blue):align(display.CENTER, title_blue:getContentSize().width/2, title_blue:getContentSize().height/2)
 
     local unit_len, origin_y, gap_x = 104, 76, 8
     local len = #equipments
@@ -264,6 +269,10 @@ function GameUIEquip:CreateEquipmentByType(equip_type)
 end
 
 return GameUIEquip
+
+
+
+
 
 
 
