@@ -259,11 +259,6 @@ function GameUIBuild:CreateItemWithListView(list_view)
         :align(display.LEFT_CENTER, 30, size.height/2)
 
 
-    -- local btn_info = WidgetPushButton.new(
-    --     {normal = "info_26x26.png",pressed = "info_26x26.png"})
-    --     :addTo(back_ground)
-    --     :align(display.LEFT_BOTTOM, 10, 10)
-
     local condition_label = cc.ui.UILabel.new({
         text = _("已达到最大建筑数量"),
         size = 20,

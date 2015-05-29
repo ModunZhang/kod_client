@@ -118,6 +118,26 @@ function GameUIEquip:SwitchToDragon(dragon_type)
         if k == dragon_type then
             v.list_view:setVisible(true)
             v.list_node:setVisible(true)
+
+            for i,item in ipairs(v.list_view.items_) do
+                if i == 1 then
+                    local enable = self.black_smith:GetLevel() >= 1
+                    item.equip_node:setVisible(enable)
+                    item.unlock_label:setVisible(not enable)
+                elseif i == 2 then
+                    local enable = self.black_smith:GetLevel() >= 10
+                    item.equip_node:setVisible(enable)
+                    item.unlock_label:setVisible(not enable)
+                elseif i == 3 then
+                    local enable = self.black_smith:GetLevel() >= 20
+                    item.equip_node:setVisible(enable)
+                    item.unlock_label:setVisible(not enable)
+                elseif i == 4 then
+                    local enable = self.black_smith:GetLevel() >= 30
+                    item.equip_node:setVisible(enable)
+                    item.unlock_label:setVisible(not enable)
+                end
+            end
         else
             v.list_view:setVisible(false)
             v.list_node:setVisible(false)
@@ -185,6 +205,13 @@ local color_map = {
     0xffedff,
     0xffedae,
 }
+local unlock_str = {
+    string.format(_("铁匠铺升级到%d级解锁"), 1),
+    string.format(_("铁匠铺升级到%d级解锁"), 10),
+    string.format(_("铁匠铺升级到%d级解锁"), 20),
+    string.format(_("铁匠铺升级到%d级解锁"), 30),
+    string.format(_("铁匠铺升级到%d级解锁"), 40),
+}
 function GameUIEquip:CreateItemWithListViewByEquipments(list_view, equipments, title, equip_map, level)
     local equip_map = equip_map == nil and {} or equip_map
     -- 背景
@@ -206,13 +233,19 @@ function GameUIEquip:CreateItemWithListViewByEquipments(list_view, equipments, t
     local len = #equipments
     local total_len = len * unit_len + (len - 1) * gap_x
     local origin_x = pos.x - total_len / 2 + unit_len / 2
+    local equip_node = display.newNode():addTo(back_ground)
     for i, v in ipairs(equipments) do
-        equip_map[v.name] = self:CreateEquipmentByType(v.name):addTo(back_ground)
+        equip_map[v.name] = self:CreateEquipmentByType(v.name):addTo(equip_node)
             :align(display.CENTER, origin_x + (unit_len + gap_x) * (i - 1), origin_y)
             :SetNumber(0)
     end
 
     local item = list_view:newItem()
+    item.equip_node = equip_node
+    item.unlock_label = UIKit:ttfLabel({
+        text = unlock_str[level],
+        size = 24,
+    }):addTo(back_ground):align(display.CENTER, pos.x, pos.y)
     item:addContent(back_ground)
     item:setItemSize(back_ground:getContentSize().width, back_ground:getContentSize().height + 10)
     return item
