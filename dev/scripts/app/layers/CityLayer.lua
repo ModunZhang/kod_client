@@ -628,6 +628,7 @@ function CityLayer:RefreshSoldiers(soldier_manager)
         {x = 2, y = 13, soldier_type = "ballista", scale = 0.8},
     }) do
         local star = soldier_manager:GetStarBySoldierType(v.soldier_type)
+        assert(star < 4)
         local soldier = self:CreateSoldier(v.soldier_type, star, v.x, v.y):addTo(self:GetCityNode())
         local x, y = soldier:getPosition()
         soldier:pos(x, y + 25):scale(v.scale)
