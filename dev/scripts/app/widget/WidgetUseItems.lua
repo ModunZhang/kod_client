@@ -819,12 +819,12 @@ function WidgetUseItems:OpenMoveTheCityDialog( item ,params)
     return dialog
 end
 function WidgetUseItems:OpenVipPointDialog(item)
-    return self:OpenNormalDialog(item,_("增加VIP点数"))
+    return self:OpenNormalDialog(item,_("增加VIP点数"),window.top-340)
 end
 
-function WidgetUseItems:OpenNormalDialog( item ,title)
+function WidgetUseItems:OpenNormalDialog( item ,title ,y)
     local same_items = ItemManager:GetSameTypeItems(item)
-    local dialog = UIKit:newWidgetUI("WidgetPopDialog",#same_items * 130 +100,title or item:GetLocalizeName(),window.top-230)
+    local dialog = UIKit:newWidgetUI("WidgetPopDialog",#same_items * 130 +100,title or item:GetLocalizeName(),y and y or window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
 
