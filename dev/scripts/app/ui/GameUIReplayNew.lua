@@ -841,7 +841,6 @@ function GameUIReplayNew:ctor(report, callback)
     self.round = 1
 end
 function GameUIReplayNew:OnMoveInStage()
-    GameUIReplayNew.super.OnMoveInStage(self)
     app:GetAudioManager():PlayGameMusic("AllianceBattleScene",true,true)
     self.ui_map = self:BuildUI()
     self.ui_map.battle_background1:setTexture(string.format("back_ground_%s.png", self.report:GetAttackTargetTerrain()))
@@ -882,6 +881,8 @@ function GameUIReplayNew:OnMoveInStage()
         self:ShowResult()
     end)
     self:Replay()
+
+    GameUIReplayNew.super.OnMoveInStage(self)
 end
 function GameUIReplayNew:onExit()
     GameUIReplayNew.super.onExit(self)
@@ -933,6 +934,7 @@ function GameUIReplayNew:ShowResult()
     self:Stop()
     self.ui_map.speedup:setButtonLabelString(_("回放"))
     self.ui_map.pass:hide()
+    self.ui_map.close:show()
 end
 function GameUIReplayNew:ShowStrongOrWeak()
     local vs = GameUtils:GetVSFromSoldierName(self:TopSoldierLeft().name, self:TopSoldierRight().name)
@@ -1340,6 +1342,7 @@ function GameUIReplayNew:Reset()
     self.ui_map.speedup.speed = nil
     self.ui_map.speedup:setButtonLabelString(_("x1"))
     self.ui_map.pass:show()
+    self.ui_map.close:hide()
 
     self.ui_map.soldier_inbattle_attack:hide()
     self.ui_map.soldier_count_attack:hide()
@@ -1646,6 +1649,14 @@ function GameUIReplayNew:BuildUI()
         })
     ):addTo(bottom):align(display.CENTER, s1.width - 110, 50)
     return ui_map
+end
+
+
+local WidgetFteArrow = import("..widget.WidgetFteArrow")
+function GameUIReplayNew:DoFte()
+    local r = self.ui_map.close:getCascadeBoundingBox()
+    WidgetFteArrow.new(_("点击关闭")):addTo(self.ui_map.close)
+    :TurnDown():align(display.CENTER_BOTTOM, 0, r.height - 20)
 end
 
 return GameUIReplayNew

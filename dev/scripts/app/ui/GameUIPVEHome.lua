@@ -15,17 +15,38 @@ local timer = app.timer
 
 
 function GameUIPVEHome:DisplayOn()
-
+    self.visible_count = self.visible_count + 1
+    self:FadeToSelf(self.visible_count > 0)
 end
 function GameUIPVEHome:DisplayOff()
-
+    self.visible_count = self.visible_count - 1
+    self:FadeToSelf(self.visible_count > 0)
 end
+function GameUIPVEHome:FadeToSelf(isFullDisplay)
+    self:stopAllActions()
+    if isFullDisplay then
+        self:show()
+        transition.fadeIn(self, {
+            time = 0.2,
+        })
+    else
+        transition.fadeOut(self, {
+            time = 0.2,
+            onComplete = function()
+                self:hide()
+            end,
+        })
+    end
+end
+
+
 function GameUIPVEHome:ctor(user, scene)
     self.user = user
     self.layer = scene:GetSceneLayer()
     GameUIPVEHome.super.ctor(self, {type = UIKit.UITYPE.BACKGROUND})
 end
 function GameUIPVEHome:onEnter()
+    self.visible_count = 1
     self:CreateTop()
     self.bottom = self:CreateBottom()
 
@@ -222,6 +243,7 @@ end
 
 
 return GameUIPVEHome
+
 
 
 

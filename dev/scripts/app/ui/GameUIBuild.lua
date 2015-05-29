@@ -259,11 +259,6 @@ function GameUIBuild:CreateItemWithListView(list_view)
         :align(display.LEFT_CENTER, 30, size.height/2)
 
 
-    -- local btn_info = WidgetPushButton.new(
-    --     {normal = "info_26x26.png",pressed = "info_26x26.png"})
-    --     :addTo(back_ground)
-    --     :align(display.LEFT_BOTTOM, 10, 10)
-
     local condition_label = cc.ui.UILabel.new({
         text = _("已达到最大建筑数量"),
         size = 20,
@@ -274,7 +269,7 @@ function GameUIBuild:CreateItemWithListView(list_view)
         :align(display.LEFT_CENTER, 175, 80)
 
     local number_label = cc.ui.UILabel.new({
-        text = _("建筑数量").."5 / 5",
+        text = _("建筑数量 5/5"),
         size = 20,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_LEFT,
@@ -334,6 +329,7 @@ function GameUIBuild:CreateItemWithListView(list_view)
 end
 
 return GameUIBuild
+
 
 
 

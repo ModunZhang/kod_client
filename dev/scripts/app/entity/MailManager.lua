@@ -12,13 +12,6 @@ function MailManager:ctor()
     self.sendMails = nil
     self.reports = nil
     self.savedReports = nil
-
-    local user_data = DataManager:getUserData()
-    print("DataManager>>> mails",user_data.mails)
-    print("DataManager>>> savedMails",user_data.savedMails)
-    print("DataManager>>> sendMails",user_data.sendMails)
-    print("DataManager>>> reports",user_data.reports)
-    print("DataManager>>> savedReports",user_data.savedReports)
 end
 function MailManager:Reset()
     self.mails = nil
@@ -26,6 +19,11 @@ function MailManager:Reset()
     self.sendMails = nil
     self.reports = nil
     self.savedReports = nil
+    self.fetch_last_mail = false
+    self.fetch_last_savedmail = false
+    self.fetch_last_sendmails = false
+    self.fetch_last_report = false
+    self.fetch_last_savedreport = false
 end
 function MailManager:IncreaseUnReadMailsNum(num)
     self.unread_mail = self.unread_mail + num
@@ -315,9 +313,16 @@ function MailManager:GetSendMails()
     return self.sendMails
 end
 function MailManager:FetchSendMailsFromServer(fromIndex)
+    if self.fetch_last_sendmails then
+        return
+    end
     return NetManager:getFetchSendMailsPromise(fromIndex):done(function(response)
         if response.msg.mails then
             local user_data = DataManager:getUserData()
+            local mails = response.msg.mails
+            if #mails < 10 then
+                self.fetch_last_sendmails = true
+            end
             for i,v in ipairs(response.msg.mails) do
                 if not user_data.sendMails then
                     user_data.sendMails = {}
@@ -669,9 +674,9 @@ function MailManager:FetchSavedReportsFromServer(fromIndex)
     return NetManager:getSavedReportsPromise(fromIndex):done(function (response)
         if response.msg.reports then
             local fetch_reports = response.msg.reports
-                if #fetch_reports < 10 then
-                    self.fetch_last_savedreport = true
-                end
+            if #fetch_reports < 10 then
+                self.fetch_last_savedreport = true
+            end
             local user_data = DataManager:getUserData()
             for i,v in ipairs(fetch_reports) do
                 if not user_data.savedReports then
@@ -687,6 +692,8 @@ function MailManager:FetchSavedReportsFromServer(fromIndex)
     end)
 end
 return MailManager
+
+
 
 
 

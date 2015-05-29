@@ -346,7 +346,7 @@ function GameUIAllianceSendTroops:SelectDragonPart()
 
 end
 function GameUIAllianceSendTroops:RefreashDragon(dragon)
-    self.dragon_img:setTexture(dragon:Type()..".png")
+    self.dragon_img:setTexture(UILib.dragon_head[dragon:Type()])
     self.dragon_name:setString(_(dragon:Type()).."（LV "..dragon:Level().."）")
     self.dragon_vitality:setString(_("生命值")..dragon:Hp().."/"..dragon:GetMaxHP())
     self.dragon = dragon

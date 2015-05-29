@@ -456,8 +456,6 @@ function GameUILoginBeta:checkFte()
     end
     if check("BuildHouseAt_3_3") then
         mockData.BuildHouseAt(3,3,"dwelling")
-    end
-    if check("FinishBuildHouseAt_3_1") then
         mockData.FinishBuildHouseAt(3,1)
     end
     if check("UpgradeBuildingTo_keep_2") then
@@ -477,8 +475,6 @@ function GameUILoginBeta:checkFte()
     end
     if check("BuildHouseAt_5_3") then
         mockData.BuildHouseAt(5,3,"farmer")
-    end
-    if check("FinishBuildHouseAt_5_1") then
         mockData.FinishBuildHouseAt(5,1)
     end
     if check("GetSoldier") then
@@ -504,8 +500,6 @@ function GameUILoginBeta:checkFte()
     end
     if check("BuildHouseAt_6_3") then
         mockData.BuildHouseAt(6,3,"woodcutter")
-    end
-    if check("FinishBuildHouseAt_6_3") then
         mockData.FinishBuildHouseAt(6,1)
     end
     if check("UpgradeBuildingTo_keep_4") then
@@ -547,8 +541,6 @@ function GameUILoginBeta:checkFte()
     end
     if check("BuildHouseAt_7_3") then
         mockData.BuildHouseAt(7,3,"quarrier")
-    end
-    if check("FinishBuildHouseAt_7_3") then
         mockData.FinishBuildHouseAt(7,1)
     end
     if check("BuildHouseAt_8_3") then
