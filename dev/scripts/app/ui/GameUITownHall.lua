@@ -404,7 +404,7 @@ end
 
 function GameUITownHall:OnTimer(current_time)
     if self.refresh_time then
-        if User:GetNextDailyQuestsRefreshTime()-current_time<=0 then
+        if (User:GetNextDailyQuestsRefreshTime()-current_time) <= 0 then
             self:ResetQuest()
         else
             self.refresh_time:setString(GameUtils:formatTimeStyle1(User:GetNextDailyQuestsRefreshTime()-current_time))
