@@ -618,9 +618,6 @@ function MultiAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, fini
     march_info.finish_time = finish_time
     march_info.speed = (march_info.length / (finish_time - start_time))
     if not self.corps_map[id] then
-        LuaUtils:outputTable({"CreateCorps", dragonType, soldiers})
-        LuaUtils:outputTable(march_info)
-
         local index = math.floor(march_info.degree / 45) + 4
         if index < 0 or index > 8 then index = 1 end
         local corps = display.newNode():addTo(self:GetCorpsNode())
