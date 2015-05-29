@@ -618,7 +618,9 @@ function GameUIChatChannel:CreateEmojiPanel()
 end
 
 function GameUIChatChannel:LeftButtonClicked()
-    self.listView:removeAllItems()
+    if self.listView then
+        self.listView:removeAllItems()
+    end
     GameUIChatChannel.super.LeftButtonClicked(self)
 end
 

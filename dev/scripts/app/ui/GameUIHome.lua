@@ -91,25 +91,30 @@ function GameUIHome:RefreshHelpButtonVisible()
         self.top_order_group:RefreshOrder()
     end
 end
+
 function GameUIHome:DisplayOn()
     self.visible_count = self.visible_count + 1
-    -- self:setVisible(self.visible_count > 0)
     self:FadeToSelf(self.visible_count > 0)
 end
 function GameUIHome:DisplayOff()
     self.visible_count = self.visible_count - 1
-    -- self:setVisible(self.visible_count > 0)
     self:FadeToSelf(self.visible_count > 0)
 end
 function GameUIHome:FadeToSelf(isFullDisplay)
-    self:setCascadeOpacityEnabled(true)
-    local opacity = isFullDisplay == true and 255 or 0
-    local p = isFullDisplay and 0 or 0
-    transition.fadeTo(self, {opacity = opacity, time = 0.2,
-        onComplete = function()
-            self:pos(p, p)
-        end
-    })
+    self:stopAllActions()
+    if isFullDisplay then
+        self:show()
+        transition.fadeIn(self, {
+            time = 0.2,
+        })
+    else
+        transition.fadeOut(self, {
+            time = 0.2,
+            onComplete = function()
+                self:hide()
+            end,
+        })
+    end
 end
 
 function GameUIHome:ctor(city)
@@ -601,7 +606,7 @@ function GameUIHome:ShowResourceAni(resource, wp)
 
     local size = icon:getContentSize()
     local emitter = cc.ParticleFlower:createWithTotalParticles(200)
-    :addTo(icon):pos(size.width/2, size.height/2)
+        :addTo(icon):pos(size.width/2, size.height/2)
 
     local time = 1
     emitter:setPosVar(cc.p(10,10))
@@ -667,9 +672,9 @@ function GameUIHome:PromiseOfFteWaitFinish()
         end
         self:GetFteLayer()
         return self.city:PromiseOfFinishUpgradingByLevel(nil, nil)
-        :next(function()self:GetFteLayer():Reset()end)
-        :next(cocos_promise.delay(1))
-        :next(function()self:GetFteLayer():removeFromParent()end)
+            :next(function()self:GetFteLayer():Reset()end)
+            :next(cocos_promise.delay(1))
+            :next(function()self:GetFteLayer():removeFromParent()end)
     end
     return cocos_promise.defer()
 end
@@ -701,12 +706,12 @@ function GameUIHome:PromiseOfFteFreeSpeedUp()
         end)
 
         return self.city:PromiseOfFinishUpgradingByLevel(nil, nil)
-        :next(function()
-            self:GetFteLayer():removeFromParent()
-            self:GetFteLayer()
-        end)
-        :next(cocos_promise.delay(1))
-        :next(function()self:GetFteLayer():removeFromParent()end)
+            :next(function()
+                self:GetFteLayer():removeFromParent()
+                self:GetFteLayer()
+            end)
+            :next(cocos_promise.delay(1))
+            :next(function()self:GetFteLayer():removeFromParent()end)
     end
     return cocos_promise.defer()
 end
@@ -742,12 +747,12 @@ function GameUIHome:PromiseOfFteInstantSpeedUp()
         end)
 
         return self.city:PromiseOfFinishUpgradingByLevel()
-        :next(function()
-            self:GetFteLayer():removeFromParent()
-            self:GetFteLayer()
-        end)
-        :next(cocos_promise.delay(1))
-        :next(function()self:GetFteLayer():removeFromParent()end)
+            :next(function()
+                self:GetFteLayer():removeFromParent()
+                self:GetFteLayer()
+            end)
+            :next(cocos_promise.delay(1))
+            :next(function()self:GetFteLayer():removeFromParent()end)
     end
     return cocos_promise.defer()
 end
@@ -786,8 +791,8 @@ function GameUIHome:PromiseOfFteAllianceMap()
     local btn = self.change_map.btn
     btn:removeChildByTag(102)
 
-    WidgetFteArrow.new(_("查看联盟地图")):addTo(btn, 10, 102)
-        :TurnDown(false):align(display.LEFT_BOTTOM, 0, 50)
+    WidgetFteArrow.new(_("进入联盟地图\n体验更多玩法")):addTo(btn, 10, 102)
+        :TurnDown(false):align(display.LEFT_BOTTOM, 20, 55)
 
     btn:stopAllActions()
     btn:performWithDelay(function() btn:removeChildByTag(102) end, 10)
@@ -795,6 +800,10 @@ end
 
 
 return GameUIHome
+
+
+
+
 
 
 

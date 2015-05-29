@@ -167,9 +167,6 @@ function GameUINpc:ShowWords(dialog, ani)
         self.label:removeFromParent()
         self.label = nil
     end
-    self.ui_map.background:performWithDelay(function() 
-        self.ui_map.background:FocusOnRect(dialog.rect)
-    end, 1)
     if self.npc_brow ~= dialog.brow then
         self.npc_brow = dialog.brow
         if self.npc_brow then
@@ -220,8 +217,7 @@ end
 function GameUINpc:OnDialogClicked(index)
     local callbacks = self.dialog_clicked_callbacks[index]
     if callbacks and #callbacks > 0 then
-        callbacks[1]()
-        table.remove(callbacks, 1)
+        table.remove(callbacks, 1)()
     end
 end
 function GameUINpc:PromiseOfDialogEndWithClicked(index)
@@ -234,10 +230,12 @@ function GameUINpc:PromiseOfDialogEndWithClicked(index)
     return p
 end
 function GameUINpc:OnDialogEnded(index)
+    if type(self.dialog[index].callback) == "function" then
+        self.dialog[index].callback(self)
+    end
     local callbacks = self.dialog_index_callbacks[index]
     if callbacks and #callbacks > 0 then
-        callbacks[1]()
-        table.remove(callbacks, 1)
+        table.remove(callbacks, 1)()
     end
 end
 function GameUINpc:PromiseOfDialogEnded(index)

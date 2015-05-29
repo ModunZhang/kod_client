@@ -20,11 +20,9 @@ local GameUIAllianceHome = UIKit:createUIClass('GameUIAllianceHome')
 local buildingName = GameDatas.AllianceInitData.buildingName
 local Alliance_Manager = Alliance_Manager
 local cc = cc
-function GameUIAllianceHome:ctor(alliance, multialliancelayer)
-    GameUIAllianceHome.super.ctor(self)
-    self.alliance = alliance
-    self.multialliancelayer = multialliancelayer
-end
+
+
+
 function GameUIAllianceHome:DisplayOn()
     self.visible_count = self.visible_count + 1
     self:FadeToSelf(self.visible_count > 0)
@@ -33,21 +31,32 @@ function GameUIAllianceHome:DisplayOff()
     self.visible_count = self.visible_count - 1
     self:FadeToSelf(self.visible_count > 0)
 end
+function GameUIAllianceHome:FadeToSelf(isFullDisplay)
+    self:stopAllActions()
+    if isFullDisplay then
+        self:show()
+        transition.fadeIn(self, {
+            time = 0.2,
+        })
+    else
+        transition.fadeOut(self, {
+            time = 0.2,
+            onComplete = function()
+                self:hide()
+            end,
+        })
+    end
+end
 function GameUIAllianceHome:IsDisplayOn()
     return self.visible_count > 0
 end
-function GameUIAllianceHome:FadeToSelf(isFullDisplay)
-    self:setCascadeOpacityEnabled(true)
-    local opacity = isFullDisplay == true and 255 or 0
-    local p = isFullDisplay and 0 or 99999999
-    transition.fadeTo(self, {opacity = opacity, time = 0.2,
-        onComplete = function()
-            self:pos(p, p)
-        end
-    })
+
+
+function GameUIAllianceHome:ctor(alliance, multialliancelayer)
+    GameUIAllianceHome.super.ctor(self)
+    self.alliance = alliance
+    self.multialliancelayer = multialliancelayer
 end
-
-
 function GameUIAllianceHome:onEnter()
     GameUIAllianceHome.super.onEnter(self)
     -- 获取历史记录
@@ -730,6 +739,7 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
+
 
 
 
