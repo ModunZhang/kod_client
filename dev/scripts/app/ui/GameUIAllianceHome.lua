@@ -354,11 +354,13 @@ function GameUIAllianceHome:CreateTop()
         :addTo(enemy_name_bg)
     local enemy_peace_label = UIKit:ttfLabel(
         {
-            text = alliance:GetMemeberById(User:Id()):IsTitleEqualOrGreaterThan("general") and _("开战") or _("请求开战"),
-            size = 18,
+            text = alliance:GetMemeberById(User:Id()):IsTitleEqualOrGreaterThan("general") and _("开始战斗") or _("请求开战"),
+            size = 20,
             color = 0xffedae
         }):align(display.LEFT_CENTER, -20,-26)
         :addTo(top_enemy_bg)
+    local alliance_flag_box = display.newSprite("alliance_flag_box_119x139.png"):scale(59/119):addTo(top_enemy_bg):align(display.LEFT_CENTER, -108,-37)
+    display.newSprite("question_59x67.png"):addTo(alliance_flag_box):scale(106/59):align(display.CENTER, alliance_flag_box:getContentSize().width/2,alliance_flag_box:getContentSize().height/2)
 
     -- 和平期,战争期,准备期背景
     local period_bg = display.newSprite("box_104x104.png")
@@ -417,8 +419,10 @@ function GameUIAllianceHome:CreateTop()
         if status=="peace" then
             enemy_name_bg:setVisible(false)
             enemy_peace_label:setVisible(true)
+            alliance_flag_box:setVisible(true)
         else
             enemy_name_bg:setVisible(true)
+            alliance_flag_box:setVisible(false)
             enemy_peace_label:setVisible(false)
 
             -- 敌方联盟旗帜
