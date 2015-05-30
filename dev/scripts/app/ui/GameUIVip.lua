@@ -507,7 +507,7 @@ function GameUIVip:CreateVIPStatus()
         {
             info={
                 {_("当前VIP等级"),_("等级").." "..User:GetVipLevel()},
-                {_("下一次登录"),"+"..loginDays[User:GetCountInfo().vipLoginDaysCount].expAdd},
+                {_("下一次登录"),"+"..loginDays[User:GetCountInfo().vipLoginDaysCount > #loginDays and #loginDays or User:GetCountInfo().vipLoginDaysCount].expAdd},
                 {_("连续登录"),User:GetCountInfo().vipLoginDaysCount},
             }
         }
