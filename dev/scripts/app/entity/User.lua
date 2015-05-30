@@ -521,17 +521,21 @@ function User:OnVipEventDataChange(userData, deltaData)
         if userData.vipEvents then
             if not LuaUtils:table_empty(userData.vipEvents) then
                 self.vip_event:UpdateData(userData.vipEvents[1])
+            else
+                self.vip_event:Reset()
+                self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT_OVER, function(listener)
+                    listener:OnVipEventOver(self.vip_event)
+                end)
             end
-            self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT, function(listener)
-                listener:OnVipEventTimer(self.vip_event)
-            end)
         else
             self.vip_event:Reset()
             self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT_OVER, function(listener)
                 listener:OnVipEventOver(self.vip_event)
             end)
         end
-
+        self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT, function(listener)
+            listener:OnVipEventTimer(self.vip_event)
+        end)
     end
     if is_delta_update then
         local add = deltaData.vipEvents.add
@@ -819,6 +823,8 @@ function User:GetBestDragon()
 end
 
 return User
+
+
 
 
 
