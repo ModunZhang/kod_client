@@ -752,6 +752,10 @@ local function move_soldiers(corps, ani, dir_index, first_soldier)
 end
 function MultiAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, finish_time, dragonType, soldiers, ally)
     local march_info = self:GetMarchInfoWith(id, start_pos, end_pos)
+    if start_time == march_info.start_time and 
+        finish_time == march_info.finish_time then 
+        return 
+    end
     march_info.start_time = start_time
     march_info.finish_time = finish_time
     march_info.speed = (march_info.length / (finish_time - start_time))

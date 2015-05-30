@@ -354,7 +354,7 @@ function GameUIAllianceHome:CreateTop()
         :addTo(enemy_name_bg)
     local enemy_peace_label = UIKit:ttfLabel(
         {
-            text = _("请求开战玩家"),
+            text = alliance:GetMemeberById(User:Id()):IsTitleEqualOrGreaterThan("general") and _("开战") or _("请求开战"),
             size = 18,
             color = 0xffedae
         }):align(display.LEFT_CENTER, -20,-26)
@@ -519,8 +519,13 @@ function GameUIAllianceHome:OnAllianceBasicChanged(alliance,changed_map)
     if changed_map.honour then
         self.page_top:SetHonour(GameUtils:formatNumber(changed_map.honour.new))
     elseif changed_map.status then
-        LuaUtils:outputTable("OnAllianceBasicChanged changed_map", changed_map)
-        self.top:Refresh()
+        if not alliance:AllianceFightReports() then
+            NetManager:getAllianceFightReportsPromise(self.alliance:Id()):done(function ( ... )
+                self.top:Refresh()
+            end)
+        else
+            self.top:Refresh()
+        end
     elseif changed_map.name then
         self.self_name_label:setString("["..alliance:Tag().."] "..changed_map.name.new)
     elseif changed_map.tag then
@@ -757,6 +762,8 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
+
+
 
 
 

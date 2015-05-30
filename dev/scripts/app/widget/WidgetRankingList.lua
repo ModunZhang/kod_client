@@ -166,6 +166,7 @@ function WidgetRankingList:ReloadRank(rank)
         self.my_ranking:setString(string.format("%s : %d", str, rank.myData.rank))
     end
     self.current_rank = rank
+    self.listview:releaseAllFreeItems_()
     self.listview:reload()
 end
 function WidgetRankingList:touchListener(event)
@@ -223,9 +224,9 @@ function WidgetRankingList:CreatePlayerContentByIndex(idx)
     local player_head_icon = UIKit:GetPlayerIconOnly():addTo(item,1):pos(120, 40):scale(0.5)
 
 
-    local tag = self.drop_list:GetSelectedButtonTag()        
+    local tag = self.drop_list:GetSelectedButtonTag()  
     local png = tag == "power" and "dragon_strength_27x31.png" or "fight_62x70.png"
-    local s = tag == "power" and 1 or 0.5
+    local s = tag == "power" and 1 or 0.5  
     display.newSprite(png):addTo(item):pos(400, 40):scale(s)
     
 

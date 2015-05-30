@@ -1,7 +1,7 @@
 
 
-local offset = function(x, y)
-    return {x = x, y = y}
+local offset = function(x, y, ax, ay)
+    return {x = x, y = y, anchorPoint = cc.p(ax or 0.5, ay or 0.5)}
 end
 local function create_flip_none()
     return {x = false, y = false}
@@ -86,15 +86,15 @@ end
 
 create_building_config(
     {"other_keep"}
-    ,create_config(MIN_LEVEL, level(5), "other_keep_1.png", offset(60, 225), scale(1))
-    ,create_config(level(6), level(15), "other_keep_2.png", offset(60, 245), scale(1))
-    ,create_config(level(16), MAX_LEVEL, "other_keep_3.png", offset(60, 285), scale(1))
+    ,create_config(MIN_LEVEL, level(5), "other_keep_1.png", offset(60, 225, 0.3, 0.4), scale(1))
+    ,create_config(level(6), level(15), "other_keep_2.png", offset(60, 245, 0.3, 0.4), scale(1))
+    ,create_config(level(16), MAX_LEVEL, "other_keep_3.png", offset(60, 285, 0.3, 0.35), scale(1))
 )
 create_building_config(
     {"my_keep"}
-    ,create_config(MIN_LEVEL, level(5), "my_keep_1.png", offset(60, 225), scale(1))
-    ,create_config(level(6), level(15), "my_keep_2.png", offset(60, 245), scale(1))
-    ,create_config(level(16), MAX_LEVEL, "my_keep_3.png", offset(60, 285), scale(1))
+    ,create_config(MIN_LEVEL, level(5), "my_keep_1.png", offset(60, 225, 0.3, 0.4), scale(1))
+    ,create_config(level(6), level(15), "my_keep_2.png", offset(60, 245, 0.3, 0.4), scale(1))
+    ,create_config(level(16), MAX_LEVEL, "my_keep_3.png", offset(60, 285, 0.3, 0.35), scale(1))
 )
 
 create_building_config(
