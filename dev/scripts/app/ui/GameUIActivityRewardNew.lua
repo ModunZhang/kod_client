@@ -73,8 +73,8 @@ end
 function GameUIActivityRewardNew:RefreshUI()
     if self:GetRewardType() == self.REWARD_TYPE.EVERY_DAY_LOGIN then
         local countInfo = User:GetCountInfo()
-        local flag = countInfo.day60 % 30
-        local geted = countInfo.day60RewardsCount % 30 -- <= geted
+        local flag = countInfo.day60 % 30 == 0 and 30 or countInfo.day60 % 30
+        local geted = countInfo.day60RewardsCount % 30 == 0 and 30 or countInfo.day60RewardsCount % 30 -- <= geted
         for i,button in ipairs(self.rewards_buttons) do
             if i > flag then -- other day
                 button.check_bg:hide()
@@ -181,6 +181,7 @@ function GameUIActivityRewardNew:GetDay60Reward()
     if self:GetPageOfDay60() == 2 then
         config_data = LuaUtils:table_slice(config_day60,30,60)
     else
+        print("GetDay60Reward---->1")
         config_data =  LuaUtils:table_slice(config_day60,1,30)
     end
     local final_data = LuaUtils:table_map(config_data,function(k,v)
@@ -193,8 +194,8 @@ end
 function GameUIActivityRewardNew:ui_EVERY_DAY_LOGIN()
     self.rewards_buttons = {}
     local rewards = self:GetDay60Reward()
-    local flag = User:GetCountInfo().day60 % 30
-    local geted = User:GetCountInfo().day60RewardsCount % 30 -- <= geted
+    local flag = User:GetCountInfo().day60 % 30 == 0 and 30 or User:GetCountInfo().day60 % 30
+    local geted = User:GetCountInfo().day60RewardsCount % 30 == 0 and 30 or User:GetCountInfo().day60RewardsCount % 30  -- <= geted
     UIKit:ttfLabel({
         text = _("领取30日奖励后，刷新奖励列表"),
         size = 20,
@@ -226,8 +227,9 @@ function GameUIActivityRewardNew:ui_EVERY_DAY_LOGIN()
             check_bg:hide()
             enable:clearFilter()
         else
+
             if flag == i then
-                if flag > geted then -- can
+                if flag > geted or (geted == 30 and flag == 1) then -- can
                     check_bg:hide()
                     enable:clearFilter()
                 else
@@ -260,8 +262,8 @@ end
 
 function GameUIActivityRewardNew:On_EVERY_DAY_LOGIN_GetReward(index,reward)
     local countInfo = User:GetCountInfo()
-    local real_index = countInfo.day60 % 30
-    if countInfo.day60 > countInfo.day60RewardsCount and real_index == index then
+    local real_index = countInfo.day60 % 30 == 0 and 30 or countInfo.day60 % 30
+    if (countInfo.day60 > countInfo.day60RewardsCount and real_index == index) or (countInfo.day60RewardsCount > countInfo.day60 and real_index == index) then
         NetManager:getDay60RewardPromise():done(function()
             GameGlobalUI:showTips(_("提示"),string.format(_("恭喜您获得 %s x %d"),Localize_item.item_name[reward.reward],reward.count))
             app:GetAudioManager():PlayeEffectSoundWithKey("BUY_ITEM")
@@ -480,7 +482,7 @@ function GameUIActivityRewardNew:ui_FIRST_IN_PURGURE()
     local bar = display.newSprite("activity_first_purgure_587x176.jpg"):align(display.TOP_CENTER, 304,self.height - 15):addTo(self.bg)
     local bg = display.newSprite("selenaquestion_bg_580x536.png"):addTo(self.bg):align(display.TOP_CENTER, 304, self.height - 15 - 176):scale(587/580)
     display.newSprite("Npc.png"):align(display.RIGHT_BOTTOM, 315, -10):addTo(self.bg):scale(552/423)
-    local reward_bg = display.newScale9Sprite("activity_day_bg_104x34.png",0,0,cc.size(290,560),cc.rect(10,10,84,14)):align(display.LEFT_BOTTOM, 260, 14):addTo(bg)
+    local reward_bg = display.newScale9Sprite("activity_day_bg_104x34.png",0,0,cc.size(290,510),cc.rect(10,10,84,14)):align(display.LEFT_BOTTOM, 260, 14):addTo(bg)
     local countInfo = User:GetCountInfo()
     local rewards = self:GetFirstPurgureRewards()
     local x,y = 20,500
