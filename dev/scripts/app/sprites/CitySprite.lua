@@ -87,8 +87,10 @@ function CitySprite:CheckStatus()
     else
         self:removeChildByTag(FIRE_TAG)
         local is_smoke = (timer:GetServerTime() - memberInfo:LastBeAttackedTime()) < 10 * 60
-        if is_smoke and not self:getChildByTag(SMOKE_TAG) then
-            smoke_city():addTo(self, 2, SMOKE_TAG):pos(self:GetSpriteOffset())
+        if is_smoke then
+            if not self:getChildByTag(SMOKE_TAG) then
+                smoke_city():addTo(self, 2, SMOKE_TAG):pos(self:GetSpriteOffset())
+            end
         else
             self:removeChildByTag(SMOKE_TAG)
         end
