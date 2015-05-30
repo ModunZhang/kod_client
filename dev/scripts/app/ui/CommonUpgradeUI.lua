@@ -141,7 +141,20 @@ end
 function CommonUpgradeUI:SetBuildingLevel()
     self.builging_level:setString(_("等级 ")..self.building:GetLevel())
     if self.building:GetNextLevel() == self.building:GetLevel() then
-        self.next_level:setString(_("等级已满 "))
+        self.next_level:getParent():setVisible(false)
+        local bg = display.newSprite("back_ground_608x350.png"):align(display.CENTER_BOTTOM, window.cx, window.bottom_top + 10):addTo(self)
+        -- npc image
+        display.newSprite("Npc.png"):align(display.LEFT_BOTTOM, -50, -14):addTo(bg)
+        -- 对话框 bg
+        local tip_bg = display.newSprite("back_ground_342x228.png", 406,210):addTo(bg)
+        -- 称谓label
+        cc.ui.UILabel.new({
+            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+            text = _("当前建筑已达最大等级"),
+            font = UIKit:getFontFilePath(),
+            size = 24,
+            color = UIKit:hex2c3b(0x403c2f)
+        }):align(display.LEFT_TOP,14,210):addTo(tip_bg)
     else
         self.next_level:setString(_("等级 ")..self.building:GetNextLevel())
     end
@@ -171,6 +184,7 @@ function CommonUpgradeUI:InitNextLevelEfficiency()
     }):align(display.CENTER,bg_size.width/2,bg_size.height/2):addTo(bg)
 
     local efficiency_bg = display.newSprite("back_ground_398x97.png", window.cx+74, window.top-310):addTo(self)
+
     local efficiency_bg_size = efficiency_bg:getContentSize()
     self.efficiency = UIKit:ttfLabel({
         size = 20,
@@ -355,6 +369,9 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
     -- 增加power,每个建筑都有的属性
     efficiency = efficiency ..string.format("%s+%d",bd.power,building:GetNextLevelPower()-building:GetPower())
     self.efficiency:setString(efficiency)
+    if self.building:GetNextLevel() == self.building:GetLevel() then
+        self.efficiency:getParent():setVisible(false)
+    end
 end
 
 function CommonUpgradeUI:InitUpgradePart()
@@ -834,6 +851,8 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
+
 
 
 
