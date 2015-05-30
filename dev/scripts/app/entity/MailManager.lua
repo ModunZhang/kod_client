@@ -19,11 +19,6 @@ function MailManager:Reset()
     self.sendMails = nil
     self.reports = nil
     self.savedReports = nil
-    self.fetch_last_mail = false
-    self.fetch_last_savedmail = false
-    self.fetch_last_sendmails = false
-    self.fetch_last_report = false
-    self.fetch_last_savedreport = false
 end
 function MailManager:IncreaseUnReadMailsNum(num)
     self.unread_mail = self.unread_mail + num
@@ -253,16 +248,10 @@ function MailManager:GetSavedReportByServerIndex(serverIndex)
     end
 end
 function MailManager:FetchMailsFromServer(fromIndex)
-    if self.fetch_last_mail then
-        return
-    end
     return NetManager:getFetchMailsPromise(fromIndex):done(function(response)
         if response.msg.mails then
             local user_data = DataManager:getUserData()
             local fetch_mails = response.msg.mails
-            if #fetch_mails < 10 then
-                self.fetch_last_mail = true
-            end
             for i,v in ipairs(fetch_mails) do
                 if not user_data.mails then
                     user_data.mails = {}
@@ -281,15 +270,9 @@ function MailManager:GetSavedMails()
     return self.savedMails
 end
 function MailManager:FetchSavedMailsFromServer(fromIndex)
-    if self.fetch_last_savedmail then
-        return
-    end
     return NetManager:getFetchSavedMailsPromise(fromIndex):done(function (response)
         if response.msg.mails then
             local fetch_mails = response.msg.mails
-            if #fetch_mails < 10 then
-                self.fetch_last_savedmail = true
-            end
             local user_data = DataManager:getUserData()
             for i,v in ipairs(fetch_mails) do
                 if not user_data.savedMails then
@@ -313,16 +296,10 @@ function MailManager:GetSendMails()
     return self.sendMails
 end
 function MailManager:FetchSendMailsFromServer(fromIndex)
-    if self.fetch_last_sendmails then
-        return
-    end
     return NetManager:getFetchSendMailsPromise(fromIndex):done(function(response)
         if response.msg.mails then
             local user_data = DataManager:getUserData()
             local mails = response.msg.mails
-            if #mails < 10 then
-                self.fetch_last_sendmails = true
-            end
             for i,v in ipairs(response.msg.mails) do
                 if not user_data.sendMails then
                     user_data.sendMails = {}
@@ -532,8 +509,9 @@ function MailManager:OnNewReportsChanged( __reports )
                 for k,v in pairs(u_reports) do
                     max_index = math.max(k,max_index)
                 end
-                table.insert(u_reports, 1 ,u_reports[max_index])
+                local first = clone(u_reports[max_index])
                 u_reports[max_index] = nil
+                table.insert(u_reports, 1 ,first)
             end
         elseif type == "remove" then
             for k,data in pairs(rp) do
@@ -640,16 +618,10 @@ function MailManager:GetReports()
     return self.reports
 end
 function MailManager:FetchReportsFromServer(fromIndex)
-    if self.fetch_last_report then
-        return
-    end
     return NetManager:getReportsPromise(fromIndex)
         :done(function (response)
             if response.msg.reports then
                 local fetch_reports = response.msg.reports
-                if #fetch_reports < 10 then
-                    self.fetch_last_report = true
-                end
                 local user_data = DataManager:getUserData()
                 for i,v in ipairs(fetch_reports) do
                     if not user_data.reports then
@@ -668,15 +640,9 @@ function MailManager:GetSavedReports()
     return self.savedReports
 end
 function MailManager:FetchSavedReportsFromServer(fromIndex)
-    if self.fetch_last_savedreport then
-        return
-    end
     return NetManager:getSavedReportsPromise(fromIndex):done(function (response)
         if response.msg.reports then
             local fetch_reports = response.msg.reports
-            if #fetch_reports < 10 then
-                self.fetch_last_savedreport = true
-            end
             local user_data = DataManager:getUserData()
             for i,v in ipairs(fetch_reports) do
                 if not user_data.savedReports then
