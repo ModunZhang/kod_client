@@ -532,8 +532,8 @@ function MailManager:OnNewReportsChanged( __reports )
                 for k,v in pairs(u_reports) do
                     max_index = math.max(k,max_index)
                 end
-                local temp_report = table.remove(u_reports,max_index)
-                table.insert(u_reports, 1 ,temp_report)
+                table.insert(u_reports, 1 ,u_reports[max_index])
+                u_reports[max_index] = nil
             end
         elseif type == "remove" then
             for k,data in pairs(rp) do

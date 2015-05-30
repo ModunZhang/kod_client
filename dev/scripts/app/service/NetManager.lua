@@ -16,7 +16,7 @@ local function get_player_response_msg(response)
     if response.msg.playerData then
         local user_data = DataManager:getUserData()
         local edit = decodeInUserDataFromDeltaData(user_data, response.msg.playerData)
-        LuaUtils:outputTable("edit",edit)
+        LuaUtils:outputTable("get_player_response_msg edit",edit)
         DataManager:setUserData(user_data, edit)
         return response
     end
@@ -166,7 +166,6 @@ local function get_response_delete_report_msg(response)
                 clone_response.msg.playerData = {}
                 table.insert(clone_response.msg.playerData, v)
                 local edit = decodeInUserDataFromDeltaData(user_data, clone_response.msg.playerData)
-                LuaUtils:outputTable("删除战报 edit", edit)
                 DataManager:setUserData(user_data, edit)
             end
         end
