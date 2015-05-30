@@ -535,7 +535,6 @@ function GameUIWarReport:CreateSoldierInfo(soldiers)
     local bg = self:CreateSmallBackGround({width=554,height=172})
 
     local content = WidgetClickPageView.new({bg=bg})
-
     for i=1,#soldiers,4 do
 
         local page_item = content:newItem()
@@ -646,10 +645,12 @@ function GameUIWarReport:CreateWallPart()
 
     item:addContent(bg)
     self.details_view:addItem(item)
-    if self.report:IsAttackCamp() then
-        self:OurLose(wall_data.soldiers)
-    else
-        self:KillEnemy(wall_data.soldiers)
+    if #wall_data.soldiers > 0 then
+        if self.report:IsAttackCamp() then
+            self:OurLose(wall_data.soldiers)
+        else
+            self:KillEnemy(wall_data.soldiers)
+        end
     end
 end
 
@@ -689,6 +690,7 @@ function GameUIWarReport:GetRewards()
     return  self.report:GetMyRewards()
 end
 return GameUIWarReport
+
 
 
 
