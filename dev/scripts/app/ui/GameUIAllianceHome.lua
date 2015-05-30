@@ -359,8 +359,8 @@ function GameUIAllianceHome:CreateTop()
             color = 0xffedae
         }):align(display.LEFT_CENTER, -20,-26)
         :addTo(top_enemy_bg)
-    local alliance_flag_box = display.newSprite("alliance_flag_box_119x139.png"):scale(59/119):addTo(top_enemy_bg):align(display.LEFT_CENTER, -108,-37)
-    display.newSprite("question_59x67.png"):addTo(alliance_flag_box):scale(106/59):align(display.CENTER, alliance_flag_box:getContentSize().width/2,alliance_flag_box:getContentSize().height/2)
+    local question_59x67 = display.newSprite("question_59x67.png"):addTo(top_enemy_bg):align(display.LEFT_CENTER, -108,-37)
+    display.newSprite("alliance_flag_box_119x139.png"):scale(62/119):addTo(question_59x67):align(display.CENTER,question_59x67:getContentSize().width/2-1,question_59x67:getContentSize().height/2+1)
 
     -- 和平期,战争期,准备期背景
     local period_bg = display.newSprite("box_104x104.png")
@@ -419,10 +419,10 @@ function GameUIAllianceHome:CreateTop()
         if status=="peace" then
             enemy_name_bg:setVisible(false)
             enemy_peace_label:setVisible(true)
-            alliance_flag_box:setVisible(true)
+            question_59x67:setVisible(true)
         else
             enemy_name_bg:setVisible(true)
-            alliance_flag_box:setVisible(false)
+            question_59x67:setVisible(false)
             enemy_peace_label:setVisible(false)
 
             -- 敌方联盟旗帜
