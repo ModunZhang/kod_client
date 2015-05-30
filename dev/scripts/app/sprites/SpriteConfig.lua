@@ -83,13 +83,6 @@ end
 
 
 
-local function smoke(x, y, s)
-    s = s or 0.8
-    smoke_offset_x = 276*0.5*s
-    smoke_offset_y = 274*0.5*s
-    return decorator("animation", "yan", offset(x + smoke_offset_x, y + smoke_offset_y), scale(s))
-end
-
 
 create_building_config(
     {"other_keep"}
@@ -125,7 +118,7 @@ create_building_config(
 create_building_config(
     {"toolShop"}
     ,create_config(MIN_LEVEL, 0, "locked_tile.png", offset(20, 120), scale(1))
-    ,create_config(1, MAX_LEVEL, "toolShop.png", offset(20, 100), scale(1), smoke(100, 147))
+    ,create_config(1, MAX_LEVEL, "toolShop.png", offset(20, 100), scale(1))
 )
 create_building_config(
     {"materialDepot"}
@@ -144,12 +137,12 @@ create_building_config(
 create_building_config(
     {"blackSmith"}
     ,create_config(MIN_LEVEL, 0, "locked_tile.png", offset(20, 120), scale(1))
-    ,create_config(1, MAX_LEVEL, "blackSmith.png", offset(20, 100), scale(1), smoke(17, 181), smoke(28, 196))
+    ,create_config(1, MAX_LEVEL, "blackSmith.png", offset(20, 100), scale(1))
 )
 create_building_config(
     {"foundry"}
     ,create_config(MIN_LEVEL, 0, "locked_tile.png", offset(20, 120), scale(1))
-    ,create_config(1, MAX_LEVEL, "foundry.png", offset(20, 120), scale(1), smoke(45, 203), smoke(69, 170))
+    ,create_config(1, MAX_LEVEL, "foundry.png", offset(20, 120), scale(1))
 )
 create_building_config(
     {"stoneMason"}
@@ -189,7 +182,7 @@ create_building_config(
 create_building_config(
     {"workshop"}
     ,create_config(MIN_LEVEL, 0, "locked_tile.png", offset(20, 120), scale(1))
-    ,create_config(1, MAX_LEVEL, "workShop.png", offset(20, 130), scale(1), smoke(19, 181))
+    ,create_config(1, MAX_LEVEL, "workShop.png", offset(20, 130), scale(1))
 )
 create_building_config(
     {"trainingGround"}

@@ -260,15 +260,7 @@ function PVEScene:CheckTrap()
                 enemy.soldiers,-- pve 怪数据
                 function(dragonType, soldiers)
                     local dragon = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon(dragonType)
-                    local attack_dragon = {
-                        level = dragon:Level(),
-                        dragonType = dragonType,
-                        currentHp = dragon:Hp(),
-                        hpMax = dragon:GetMaxHP(),
-                        strength = dragon:TotalStrength(trap_obj:GetMap():Terrain()),
-                        vitality = dragon:TotalVitality(),
-                        dragon = dragon
-                    }
+                    
                     local attack_soldier = LuaUtils:table_map(soldiers, function(k, v)
                         return k, {
                             name = v.name,
@@ -278,7 +270,7 @@ function PVEScene:CheckTrap()
                     end)
 
                     local report = GameUtils:DoBattle(
-                        {dragon = attack_dragon, soldiers = attack_soldier},
+                        {dragon = dragon, soldiers = attack_soldier},
                         {dragon = enemy.dragon, soldiers = enemy.soldiers},
                         trap_obj:GetMap():Terrain(), _("散兵游勇")
                     )
