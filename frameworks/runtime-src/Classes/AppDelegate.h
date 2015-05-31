@@ -51,10 +51,11 @@ public:
     void restartGame(float dt);
     static void initLuaEngine();
     static void loadConfigFile();
-    static void checkPath();
+    static bool checkPath();
     static const char* getAppVersion();
     static bool isDebug();
     static void extendApplication();
+    static const char  *getGameZipcrc32(const char *filePath);
 };
 
 

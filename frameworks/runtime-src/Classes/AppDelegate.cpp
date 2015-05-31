@@ -28,11 +28,15 @@
 #endif
 #include "LuaExtension.h"
 #include "FileOperation.h"
+//json
+#include "../cocos2d-x/external/json/document.h"
+#include "../cocos2d-x/external/json/rapidjson.h"
+
 using namespace CocosDenshion;
 
 USING_NS_CC;
 using namespace std;
-
+static  std::vector<std::string> default_file_util_search_pahts;
 static void quick_module_register(lua_State *L)
 {
     luaopen_lua_extensions_more(L);
@@ -93,7 +97,9 @@ bool AppDelegate::applicationDidFinishLaunching()
         glview = cocos2d::GLViewImpl::createWithRect(title.c_str(), Rect(0, 0, viewSize.width, viewSize.height));
         director->setOpenGLView(glview);
 #endif
-        director->startAnimation();
+        default_file_util_search_pahts = FileUtils::getInstance()->getSearchPaths();
+        FileUtils::getInstance()->setPopupNotify(true);
+//        director->startAnimation();
     }
    
     AppDelegateExtern::initLuaEngine();
@@ -149,6 +155,7 @@ void AppDelegateExtern::initLuaEngine()
 {
     Director::getInstance()->stopAnimation();
     Director::getInstance()->pause();
+    FileUtils::getInstance()->setSearchPaths(default_file_util_search_pahts); //还原搜索路径
     
     ScriptEngineManager::getInstance()->removeScriptEngine();
     auto engine = LuaEngine::getInstance();
@@ -158,6 +165,7 @@ void AppDelegateExtern::initLuaEngine()
     
     // use Quick-Cocos2d-X
     quick_module_register(L);
+    extendApplication();
     
     LuaStack* stack = engine->getLuaStack();
 #if ANYSDK_DEFINE > 0
@@ -168,38 +176,32 @@ void AppDelegateExtern::initLuaEngine()
 #endif
     
     stack->setXXTEAKeyAndSign("Cbcm78HuH60MCfA7", strlen("Cbcm78HuH60MCfA7"),"XXTEA", strlen("XXTEA"));
+    string path = FileUtils::getInstance()->fullPathForFilename("scripts/game.zip");//in bundle
+    bool use_bundle_zip = true;
     loadConfigFile();
-    checkPath();
-    extendApplication();
-    string path = FileUtils::getInstance()->fullPathForFilename(ConfigParser::getInstance()->getEntryFile().c_str());
-    size_t pos;
-    while ((pos = path.find_first_of("\\")) != std::string::npos)
-    {
-        path.replace(pos, 1, "/");
-    }
-    size_t p = path.find_last_of("/\\");
-    if (p != path.npos)
-    {
-        const string dir = path.substr(0, p);
-        stack->addSearchPath(dir.c_str());
-        
-        p = dir.find_last_of("/\\");
-        if (p != dir.npos)
-        {
-            stack->addSearchPath(dir.substr(0, p).c_str());
-        }
-    }
-    FileUtils::getInstance()->setPopupNotify(false);
+    use_bundle_zip = checkPath();
+    stack->reload("config");
     Director::getInstance()->resume();
     Director::getInstance()->startAnimation();
-    engine->executeScriptFile(path.c_str());
+    if (use_bundle_zip)
+    {
+        stack->loadChunksFromZIP(path.c_str());
+    }
+    else
+    {
+        //in document
+        path = FileUtils::getInstance()->fullPathForFilename("scripts/game.zip");
+        stack->loadChunksFromZIP(path.c_str());
+    }
+    CCLOG("use zip path:%s",path.c_str());
+    stack->executeString("require 'main'");
 }
 
 void AppDelegateExtern::loadConfigFile()
 {
-    LuaEngine *pEngine = LuaEngine::getInstance();
-    string path = FileUtils::getInstance()->fullPathForFilename("scripts/config.lua");
-    pEngine->executeScriptFile("scripts/config.lua");
+    LuaStack* stack = LuaEngine::getInstance()->getLuaStack();
+    stack->executeChunkFromZip("scripts/game.zip", "config");
+//    stack->executeString("require 'config'");
 }
 
 const char* AppDelegateExtern::getAppVersion()
@@ -224,9 +226,52 @@ bool AppDelegateExtern::isDebug()
     return isDebug;
 }
 
-
-void AppDelegateExtern::checkPath()
+const char* AppDelegateExtern::getGameZipcrc32(const char *filePath)
 {
+    FileUtils *fileUtils = FileUtils::getInstance();
+    if (fileUtils->isFileExist(filePath))
+    {
+        string json_contents = fileUtils->getStringFromFile(filePath);
+        if (json_contents.length()>0)
+        {
+            rapidjson::Document d;
+            d.Parse<0>(json_contents.c_str());
+            if (d.HasParseError())
+            {
+                CCLOG("GetParseError %s %s\n",filePath,d.GetParseError());
+            }
+            else
+            {
+                if(d.HasMember("files"))
+                {
+                    const rapidjson::Value &files=d["files"];
+                    rapidjson::Value::ConstMemberIterator it = files.MemberonBegin();
+                    
+                    for (; it !=files.MemberonEnd(); ++it)
+                    {
+                        string name = it->name.GetString();
+                        size_t pos = name.rfind("game.zip");
+                        if (pos != std::string::npos)
+                        {
+                            const rapidjson::Value & tagData = it->value;
+                            if(tagData.HasMember("crc32"))
+                            {
+                                return tagData["crc32"].GetString();
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+        
+    }
+    return filePath;
+}
+
+bool AppDelegateExtern::checkPath()
+{
+    bool need_Load_zip_from_bundle = false;
     FileUtils* fileUtils = FileUtils::getInstance();
     const char* appVersion = getAppVersion();
     string writePath = fileUtils->getWritablePath();
@@ -253,6 +298,37 @@ void AppDelegateExtern::checkPath()
         FileOperation::copyFile(from.c_str(), to.c_str());
     }
     
+    string doucument_zip_path = scriptsPath + "game.zip";
+    if (!fileUtils->isFileExist(doucument_zip_path))
+    {
+        need_Load_zip_from_bundle = true;
+        //还原版本信息重新执行自动更新
+        if (FileUtils::getInstance()->isFileExist(from)) {
+            FileOperation::copyFile(from.c_str(), to.c_str());
+        }
+    }
+    else
+    {
+        //验证zip完整性
+        //获取game.zip crc32 fileList
+        unsigned long crc32 = getFileCrc32(doucument_zip_path.c_str());
+        const char* crc32_in_config = getGameZipcrc32(to.c_str());
+        char crc32_val[32];
+        sprintf(crc32_val, "%08lx", crc32);
+        if (strcmp(crc32_val, crc32_in_config) != 0)
+        {
+            need_Load_zip_from_bundle = true;
+            //还原版本信息重新执行自动更新
+            if (FileUtils::getInstance()->isFileExist(from)) {
+                FileOperation::copyFile(from.c_str(), to.c_str());
+            }
+        }
+        else
+        {
+            need_Load_zip_from_bundle = false;
+        }
+        
+    }
     std::vector<std::string> paths = fileUtils->getSearchPaths();
     if (isDebug())
     {
@@ -292,4 +368,5 @@ void AppDelegateExtern::checkPath()
             pStack->addSearchPath(dir.substr(0, p).c_str());
         }
     }
+    return need_Load_zip_from_bundle;
 }
