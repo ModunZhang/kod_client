@@ -26,7 +26,8 @@ fi
 cd $DOCROOT/../../tools/scripts
 
 if test "${CONFIGURATION}" = "Debug"; then
-	sh buildGame.sh iOS false false
+	# sh buildGame.sh iOS false false
+	# 暂时注释掉 Debug模式测试自动更新
 else
 	# sh buildGame.sh iOS true true
 	echo Release模式必须手动执行buildUpdate.sh|或者调试执行buildGame.sh
