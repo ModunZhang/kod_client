@@ -8,7 +8,7 @@ ProjDir=`./functions.sh getProjDir`
 
 echo "> 开始清理项目"
 echo "------------------------------------"
-echo -- scripts加密中间文件
+echo -- 中间文件
 sh ./cleanTempFile.sh
 echo -- update目录
 cd $ProjDir

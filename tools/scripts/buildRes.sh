@@ -6,8 +6,9 @@ RES_SRC_DIR=`./functions.sh getResourceDir`
 RES_DEST_DIR=`./functions.sh getExportResourcesDir $Platform`
 XXTEAKey=`./functions.sh getXXTEAKey`
 XXTEASign=`./functions.sh getXXTEASign`
-PVRTOOL=`./functions.sh getPVRTexTool`
-IMAGEFORMAT="PVRTC1_4"
+# PVRTOOL=`./functions.sh getPVRTexTool`
+# IMAGEFORMAT="PVRTC1_4"
+TEMP_RES_DIR=`./functions.sh getTempDir`
 
 exportImagesRes()
 {
@@ -54,18 +55,20 @@ exportImagesRes()
 		if test -f "$file";then
 			finalDir=$outdir/${images_dir##*/res/}
 			outfile=$finalDir/${file##*/}
+			tempfile="$TEMP_RES_DIR/${file##*/}"
 			fileExt=${file##*.}
 			if test "$file" -nt "$outfile"; then
 				echo "---- ${file##*/}"
 				if test $fileExt == "plist" || test $fileExt == "ExportJson";then
 					test -d $finalDir || mkdir -p $finalDir && cp "$file" $finalDir
 				else
-					TexturePacker --format cocos2d --no-trim --disable-rotation --texture-format png --opt RGBA4444 --png-opt-level 7  --allow-free-size --padding 0 "$file" --sheet "$outfile" --data /tmp/tmp.plist
-					# if $NEED_ENCRYPT_RES;then
-					# 	test -d $finalDir || mkdir -p $finalDir && $RES_COMPILE_TOOL -i "$file" -o $finalDir -ek $XXTEAKey -es $XXTEASign -q
-					# else
-					# 	test -d $finalDir || mkdir -p $finalDir && cp "$file" $finalDir
-					# fi
+					#是否考虑 pvr ccz + premultiply-alpha?
+					TexturePacker --format cocos2d --no-trim --disable-rotation --texture-format png --opt RGBA4444 --png-opt-level 7  --allow-free-size --padding 0 "$file" --sheet "$tempfile" --data "$TEMP_RES_DIR/tmp.plist"
+					if $NEED_ENCRYPT_RES;then
+						test -d $finalDir || mkdir -p $finalDir && $RES_COMPILE_TOOL -i "$tempfile" -o $finalDir -ek $XXTEAKey -es $XXTEASign -q
+					else
+						test -d $finalDir || mkdir -p $finalDir && cp "$tempfile" $finalDir
+					fi
 				fi
 			fi
 		fi
@@ -76,18 +79,20 @@ exportImagesRes()
 		if test -f "$file";then
 			finalDir=$outdir/${images_dir##*/res/}
 			outfile=$finalDir/${file##*/}
+			tempfileName="${file%.*}"
+			tempfileName="${tempfileName##*/}"
+			tempfile="${TEMP_RES_DIR}/${tempfileName}.pvr"
 			if test "$file" -nt "$outfile"; then
 				echo "---- ${file##*/}"
-				#compress image
-				#TODO:换成TexturePacker
-				$PVRTOOL -p -f $IMAGEFORMAT -i $file -o ${file%.*}.pvr
-				mv ${file%.*}.pvr ${file%.*}_PVR_PNG.png
+				#$PVRTOOL -p -f $IMAGEFORMAT -i $file -o ${file%.*}.pvr
+				TexturePacker --format cocos2d --no-trim --disable-rotation --texture-format pvr2 --premultiply-alpha --opt PVRTC4 --padding 0 "$file" --sheet "$tempfile" --data "$TEMP_RES_DIR/tmp.plist"
+				cp -f $tempfile "${tempfileName}_PVR_PNG.png"
 				if $NEED_ENCRYPT_RES;then
-					$RES_COMPILE_TOOL -i ${file%.*}_PVR_PNG.png -o $finalDir -ek $XXTEAKey -es $XXTEASign -q
-					mv -f ${outfile%.*}_PVR_PNG.png $outfile
-					rm ${file%.*}_PVR_PNG.png
+					$RES_COMPILE_TOOL -i "${tempfileName}_PVR_PNG.png" -o $finalDir -ek $XXTEAKey -es $XXTEASign -q
+					mv -f "$finalDir/${tempfileName}_PVR_PNG.png" $outfile
+					rm -f "${tempfileName}_PVR_PNG.png"
 				else
-					mv ${file%.*}_PVR_PNG.png $outfile
+					mv -f "${tempfileName}_PVR_PNG.png" $outfile
 				fi
 			fi
 		fi
@@ -151,5 +156,4 @@ exportRes()
 #清除临时文件
 find "$RES_SRC_DIR" -name "*.tmp" -exec rm -r {} \;
 exportRes "$RES_SRC_DIR"
-echo "> 资源处理完成"
-echo "------------------------------------"
+echo ">资源处理完成"
