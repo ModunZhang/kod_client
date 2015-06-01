@@ -87,7 +87,7 @@ intInit["soldierMaxStar"] = {
 }
 intInit["playerCitizenRecoverFullNeedHours"] = {
 	["type"] = "playerCitizenRecoverFullNeedHours",
-	["value"] = 6,
+	["value"] = 4,
 	["desc"] = "城民恢复满需要的小时数"
 }
 intInit["freeNormalGachaCountPerDay"] = {
@@ -102,7 +102,7 @@ intInit["dailyQuestsRefreshMinites"] = {
 }
 intInit["playerHatchDragonNeedMinutes"] = {
 	["type"] = "playerHatchDragonNeedMinutes",
-	["value"] = 120,
+	["value"] = 1440,
 	["desc"] = "孵化龙所需的时间"
 }
 intInit["changeTerrainNeedGemCount"] = {
