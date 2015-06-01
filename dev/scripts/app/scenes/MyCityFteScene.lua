@@ -642,7 +642,7 @@ function MyCityFteScene:EnterMyCity()
     app:GetPushManager():CancelAll()
     UIKit:closeAllUI(true)
     app:EnterUserMode()
-    app:EnterMyCityScene()
+    app:EnterMyCityScene(true)
 end
 
 
