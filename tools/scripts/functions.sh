@@ -130,7 +130,7 @@ getAppVersion()
 }
 getTempDir()
 {
-	result="/tmp/DragonFall"
-	test -d $result || mkdir -p $result && echo $result
+	result="~/DragonFall"
+	test -d $result || mkdir -p $result && chmod 777 $result && echo $result
 }
 $@

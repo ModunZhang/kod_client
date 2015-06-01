@@ -357,7 +357,7 @@ end
 function MyApp:getSupportMailFormat(category,logMsg)
 
     local UTCTime    = "UTC Time:" .. os.date('!%Y-%m-%d %H:%M:%S', self.timer:GetServerTime())
-    local GameName   = "Game:" .. "Kod"
+    local GameName   = "Game:" .. "Dragonfall"
     local Version    = "Version:" .. ext.getAppVersion()
     local Username   = "User ID:" .. DataManager:getUserData()._id
     local Server     = "Server:" .. "World"
