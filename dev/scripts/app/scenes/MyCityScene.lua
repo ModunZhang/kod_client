@@ -139,11 +139,11 @@ function MyCityScene:CreateSceneUILayer()
             end
 
             -------- 检查warning
-            -- if [此处填入正确判断函数] then
-            --     self:Warning()
-            -- else
-            --     self:DisableWaring()
-            -- end
+            if --[[此处填入正确判断函数]] true then
+                scene_node:Warning()
+            else
+                scene_node:DisableWaring()
+            end
         end, 0.5)
         display.newNode():addTo(self):schedule(function()
             -- local building = self.building__

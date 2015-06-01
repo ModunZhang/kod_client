@@ -90,6 +90,9 @@ function MapScene:DisableWaring()
     self:getChildByTag(WARNING_TAG):hide():unscheduleUpdate()
 end
 function MapScene:Warning()
+    if not self:getChildByTag(WARNING_TAG) then
+        self:CreateWaring()
+    end
     self:getChildByTag(WARNING_TAG):show():scheduleUpdate()
 end
 function MapScene:CreateWaring()
