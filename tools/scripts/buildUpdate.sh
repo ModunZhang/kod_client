@@ -13,7 +13,7 @@ sh buildGame.sh $Platform true true
 echo ---------------- 提交代码
 cd $PROJ_DIR
 git add -A
-git commit -m "commit any uncommitted files"
+git commit -m "commit any uncommitted files $Platform $APP_VERSION"
 cd $DOCROOT
 
 echo ---------------- 检查更新
