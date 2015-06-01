@@ -1,6 +1,7 @@
 local GameUIBase = import('.GameUIBase')
 local GameUIWithCommonHeader = class('GameUIWithCommonHeader', GameUIBase)
 local window = import("..utils.window")
+local light_gem = import("..particles.light_gem")
 local WidgetBackGroundTabButtons = import('..widget.WidgetBackGroundTabButtons')
 
 function GameUIWithCommonHeader:ctor(city, title)
@@ -189,9 +190,11 @@ function GameUIWithCommonHeader:CreateShopButton(on_clicked)
         end
     end)
     gem_button:align(display.RIGHT_TOP, 670, 86)
-    cc.ui.UIImage.new("gem_icon_62x61.png")
+    local gem_icon = cc.ui.UIImage.new("gem_icon_62x61.png")
         :addTo(gem_button)
         :pos(-60, -62)
+
+    light_gem():addTo(gem_icon, 1022):pos(62/2, 61/2)
 
     local gem_label = UIKit:ttfLabel({
         text = ""..string.formatnumberthousands(City:GetUser():GetGemResource():GetValue()),

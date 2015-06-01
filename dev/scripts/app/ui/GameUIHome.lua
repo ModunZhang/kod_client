@@ -19,6 +19,7 @@ local GameUIHome = UIKit:createUIClass('GameUIHome')
 local WidgetAutoOrderAwardButton = import("..widget.WidgetAutoOrderAwardButton")
 local WidgetAutoOrderGachaButton = import("..widget.WidgetAutoOrderGachaButton")
 local WidgetAutoOrderBuffButton = import("..widget.WidgetAutoOrderBuffButton")
+local light_gem = import("..particles.light_gem")
 
 
 
@@ -354,13 +355,16 @@ function GameUIHome:CreateTop()
 
 
     -- 金龙币按钮
+
     local button = cc.ui.UIPushButton.new(
         {normal = "gem_btn_up_196x68.png", pressed = "gem_btn_down_196x68.png"},
         {scale9 = false}
     ):onButtonClicked(function(event)
         UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
     end):addTo(top_bg):pos(top_bg:getContentSize().width - 155, -16)
-    display.newSprite("gem_icon_62x61.png"):addTo(button):pos(60, 3)
+    local gem_icon = display.newSprite("gem_icon_62x61.png"):addTo(button):pos(60, 3)
+    light_gem():addTo(gem_icon, 1022):pos(62/2, 61/2)
+
     self.gem_label = UIKit:ttfLabel({
         size = 20,
         color = 0xffd200,
