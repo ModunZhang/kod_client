@@ -239,6 +239,7 @@ const char* AppDelegateExtern::getGameZipcrc32(const char *filePath)
             if (d.HasParseError())
             {
                 CCLOG("GetParseError %s %s\n",filePath,d.GetParseError());
+                return filePath;
             }
             else
             {
