@@ -130,7 +130,7 @@ getAppVersion()
 }
 getTempDir()
 {
-	result="~/DragonFall"
+	result="/Users/`whoami`/.DragonFall"
 	test -d $result || mkdir -p $result && chmod 777 $result && echo $result
 }
 $@
