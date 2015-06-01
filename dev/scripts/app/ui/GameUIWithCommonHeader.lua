@@ -70,11 +70,14 @@ function GameUIWithCommonHeader:DisableAutoClose()
     return self
 end
 function GameUIWithCommonHeader:onExit()
-    self:ResetRenderSceneState()
     if self.__gem_label then
         self.city:GetResourceManager():RemoveObserver(self)
     end
     GameUIWithCommonHeader.super.onExit(self)
+end
+function GameUIWithCommonHeader:onCleanup()
+    self:ResetRenderSceneState()
+    GameUIWithCommonHeader.super.onCleanup(self)
 end
 
 function GameUIWithCommonHeader:GetView()
