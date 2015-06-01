@@ -357,7 +357,7 @@ function MultiAllianceLayer:RefreshVillageEvent(village_event, is_add)
                         :addTo(obj, 1, VILLAGE_TAG)
                         :pos(x,y+50):scale(1.5).rcount = 1
                 end
-            else
+            elseif flag then
                 flag.rcount = flag.rcount - 1
                 if flag.rcount <= 0 then
                     obj:removeChildByTag(VILLAGE_TAG)
