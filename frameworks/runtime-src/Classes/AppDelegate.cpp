@@ -201,7 +201,7 @@ void AppDelegateExtern::loadConfigFile()
 {
     LuaStack* stack = LuaEngine::getInstance()->getLuaStack();
     stack->executeChunkFromZip("scripts/game.zip", "config");
-//    stack->executeString("require 'config'");
+    stack->executeString("require 'config'");
 }
 
 const char* AppDelegateExtern::getAppVersion()
