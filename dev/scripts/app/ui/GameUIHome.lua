@@ -254,7 +254,7 @@ function GameUIHome:CreateTop()
 
     -- 玩家战斗值文字
     UIKit:ttfLabel({
-        text = _("战斗值："),
+        text = _("战斗力："),
         size = 14,
         color = 0x9a946b,
         shadow = true
