@@ -140,6 +140,7 @@ function GameUILoginBeta:showVersion()
     if  CONFIG_IS_DEBUG or device.platform == 'mac' then
         local __debugVer = require("debug_version")
         self.verLabel:setString(string.format(_("版本%s(%s)"), ext.getAppVersion(), __debugVer))
+        app.client_tag = __debugVer
     else
         local jsonPath = cc.FileUtils:getInstance():fullPathForFilename("fileList.json")
         local file = io.open(jsonPath)
@@ -149,6 +150,7 @@ function GameUILoginBeta:showVersion()
         local tag = json.decode(jsonString).tag
         local version = string.format(_("版本%s(%s)"), ext.getAppVersion(), tag)
         self.verLabel:setString(version)
+        app.client_tag = tag
     end
 end
 

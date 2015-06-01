@@ -410,7 +410,7 @@ function GameUIHome:CreateTop()
         return true
     end
     function button:GetElementSize()
-        return button:getCascadeBoundingBox().size
+        return {width = 66,height = 64}
     end
     left_order:AddElement(button)
     --在线活动

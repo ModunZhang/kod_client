@@ -37,7 +37,7 @@ end
 
 -- For WidgetAutoOrder
 function WidgetAutoOrderGachaButton:CheckVisible()
-	return  User:GetOddFreeNormalGachaCount() > 0
+	return User:GetOddFreeNormalGachaCount() > 0
 end
 
 function WidgetAutoOrderGachaButton:GetElementSize()
