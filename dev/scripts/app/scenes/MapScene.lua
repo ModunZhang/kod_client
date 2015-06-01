@@ -94,13 +94,14 @@ function MapScene:ResetRenderState()
 end
 local WARNING_TAG = 99999
 function MapScene:DisableWaring()
-    self:getChildByTag(WARNING_TAG):hide():unscheduleUpdate()
+    if self:getChildByTag(WARNING_TAG) then
+        self:removeChildByTag(WARNING_TAG)
+    end
 end
 function MapScene:Warning()
     if not self:getChildByTag(WARNING_TAG) then
         self:CreateWaring()
     end
-    self:getChildByTag(WARNING_TAG):show():scheduleUpdate()
 end
 function MapScene:CreateWaring()
     local sprite = display.newSprite(
@@ -124,6 +125,7 @@ function MapScene:CreateWaring()
         time = time + dt * 0.5
         sprite:getFilter():getGLProgramState():setUniformFloat("ratio", abs(fmod(time, lastTime) - 0.5) / lastTime)
     end)
+    sprite:scheduleUpdate()
 end
 function MapScene:GetSceneNode()
     return self.scene_node
