@@ -5,7 +5,7 @@ DOCROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PROJ_DIR=$DOCROOT/../../
 
 echo ---------------- 清理文件
-rm -rf $PROJ_DIR/update
+sh cleanGame.sh $Platform
 echo ---------------- 编译代码
 #正式环境一定改成 true true
 sh buildGame.sh $Platform true true
