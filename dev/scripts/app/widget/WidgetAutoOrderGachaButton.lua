@@ -19,7 +19,10 @@ end
 
 function WidgetAutoOrderGachaButton:refrshCallback()
 	self:stopAllActions()
-	self:runAction(self:GetShakeAction())
+	local result = User:GetOddFreeNormalGachaCount() > 0
+	if result then
+		self:runAction(self:GetShakeAction())
+	end
 end
 
 function WidgetAutoOrderGachaButton:GetShakeAction()

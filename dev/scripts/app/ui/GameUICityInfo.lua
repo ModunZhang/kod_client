@@ -5,7 +5,39 @@ local WidgetChangeMap = import("..widget.WidgetChangeMap")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local GameUICityInfo = UIKit:createUIClass('GameUICityInfo')
 
+
+
+
+function GameUICityInfo:DisplayOn()
+    self.visible_count = self.visible_count + 1
+    self:FadeToSelf(self.visible_count > 0)
+end
+function GameUICityInfo:DisplayOff()
+    self.visible_count = self.visible_count - 1
+    self:FadeToSelf(self.visible_count > 0)
+end
+function GameUICityInfo:FadeToSelf(isFullDisplay)
+    self:stopAllActions()
+    if isFullDisplay then
+        self:show()
+        transition.fadeIn(self, {
+            time = 0.2,
+        })
+    else
+        transition.fadeOut(self, {
+            time = 0.2,
+            onComplete = function()
+                self:hide()
+            end,
+        })
+    end
+end
+
+
+
+
 function GameUICityInfo:ctor(user, location)
+    self.visible_count = 1
     GameUICityInfo.super.ctor(self, {type = UIKit.UITYPE.BACKGROUND})
     self.user = user
     self.location = location

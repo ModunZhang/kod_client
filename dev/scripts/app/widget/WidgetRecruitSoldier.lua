@@ -685,7 +685,7 @@ function WidgetRecruitSoldier:PormiseOfFte()
 
         if iskindof(display.getRunningScene(), "CityScene") then
             display.getRunningScene():GetSceneLayer()
-            :MoveBarracksSoldiers(self.soldier_name)
+            :MoveBarracksSoldiers(self.soldier_name, true)
         end
         
         mockData.InstantRecruitSoldier(self.soldier_name, self.count)
@@ -721,7 +721,7 @@ function WidgetRecruitSoldier:PromiseOfFteSpecial()
 
         if iskindof(display.getRunningScene(), "CityScene") then
             display.getRunningScene():GetSceneLayer()
-            :MoveBarracksSoldiers(self.soldier_name)
+            :MoveBarracksSoldiers(self.soldier_name, true)
         end
 
         
