@@ -28,7 +28,7 @@ CONFIG_LOCAL_SERVER = {
 }
 CONFIG_REMOTE_SERVER = {
     update = {
-        host = "127.0.0.1",
+        host = "192.168.0.12",
         port = 80,
         name = "update-server-1"
     },
