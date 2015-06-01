@@ -40,7 +40,7 @@ CONFIG_REMOTE_SERVER = {
 }
 -- app store url
 CONFIG_APP_URL = {
-    ios = "https://batcat.sinaapp.com/ad_hoc/build-index.html",
+    ios = "https://itunes.apple.com/us/app/dragonfall-the-1st-moba-slg/id993631614?l=zh&ls=1&mt=8",
     android = "https://batcat.sinaapp.com/ad_hoc/build-index.html"
 }
 
