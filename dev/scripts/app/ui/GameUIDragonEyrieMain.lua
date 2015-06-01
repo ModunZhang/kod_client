@@ -119,7 +119,8 @@ end
 
 function GameUIDragonEyrieMain:OnUpgradingFinished(building)
     if building:GetType() == self:GetBuilding():GetType() and self.dragon_hp_recovery_count_label then
-        self.dragon_hp_recovery_count_label:setString(string.format("+%s/h",self:GetBuilding():GetHPRecoveryPerHour()))
+        local dragon_hp_recovery = self:GetBuilding():GetTotalHPRecoveryPerHour(self:GetCurrentDragon():Type())
+        self.dragon_hp_recovery_count_label:setString(string.format("+%s/h",dragon_hp_recovery))
     end
 end
 
@@ -209,6 +210,8 @@ function GameUIDragonEyrieMain:RefreshUI()
         else
             self.dragon_info:show()
             self.progress_content_hated:show()
+            local dragon_hp_recovery = self:GetBuilding():GetTotalHPRecoveryPerHour(dragon:Type())
+            self.dragon_hp_recovery_count_label:setString(string.format("+%s/h",dragon_hp_recovery))
             self.dragon_hp_label:setString(dragon:Hp() .. "/" .. dragon:GetMaxHP())
             self.progress_hated:setPercentage(dragon:Hp()/dragon:GetMaxHP()*100)
             self.state_label:setString(Localize.dragon_status[dragon:Status()])
@@ -240,14 +243,14 @@ function GameUIDragonEyrieMain:CreateProgressTimer()
         :addTo(iconbg)
         :pos(iconbg:getContentSize().width/2,iconbg:getContentSize().height/2)
     self.dragon_hp_label = UIKit:ttfLabel({
-        text = "120/360",
+        text = "",
         color = 0xfff3c7,
         shadow = true,
         size = 20
     }):addTo(bg):align(display.LEFT_CENTER, 40, 20)
 
     self.dragon_hp_recovery_count_label = UIKit:ttfLabel({
-        text = string.format("+%s/h",self.building:GetHPRecoveryPerHour()),
+        text =  "",
         color = 0xfff3c7,
         shadow = true,
         size = 20
