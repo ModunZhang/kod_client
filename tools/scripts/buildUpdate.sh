@@ -28,6 +28,7 @@ echo ---------------- 提交代码
 cd $PROJ_DIR
 git add --all .
 git commit -m "update new version $Platform $APP_VERSION" #todo 加入小版本号到日志
-git push
+#push?
+# git push
 cd $DOCROOT
 
