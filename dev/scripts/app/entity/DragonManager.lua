@@ -351,7 +351,8 @@ function DragonManager:checkHPRecoveryIf_(dragon,resource_refresh_time,hp_recove
     if dragon:Ishated() and not dragon:IsDead() and dragon:Status() ~= 'march' then
         local hp_resource = self:AddHPResource(dragon:Type())
         hp_resource:UpdateResource(resource_refresh_time,dragon:Hp())
-        hp_resource:SetProductionPerHour(resource_refresh_time,hp_recovery_perHour)
+        local val_of_hp_recovery_perHour = hp_recovery_perHour[dragon:Type()]
+        hp_resource:SetProductionPerHour(resource_refresh_time,val_of_hp_recovery_perHour)
         hp_resource:SetValueLimit(dragon:GetMaxHP())
     end
 end
