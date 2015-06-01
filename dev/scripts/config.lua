@@ -28,7 +28,7 @@ CONFIG_LOCAL_SERVER = {
 }
 CONFIG_REMOTE_SERVER = {
     update = {
-        host = "127.0.0.1",
+        host = "192.168.0.12",
         port = 80,
         name = "update-server-1"
     },
@@ -40,7 +40,7 @@ CONFIG_REMOTE_SERVER = {
 }
 -- app store url
 CONFIG_APP_URL = {
-    ios = "https://batcat.sinaapp.com/ad_hoc/build-index.html",
+    ios = "https://itunes.apple.com/us/app/dragonfall-the-1st-moba-slg/id993631614?l=zh&ls=1&mt=8",
     android = "https://batcat.sinaapp.com/ad_hoc/build-index.html"
 }
 
