@@ -121,7 +121,7 @@ function MapScene:CreateWaring()
         })
     ))
     sprite:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt)
-        time = time + dt
+        time = time + dt * 0.5
         sprite:getFilter():getGLProgramState():setUniformFloat("ratio", abs(fmod(time, lastTime) - 0.5) / lastTime)
     end)
 end
