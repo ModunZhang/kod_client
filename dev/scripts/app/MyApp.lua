@@ -23,6 +23,7 @@ local MyApp = class("MyApp", cc.mvc.AppBase)
 local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
 CLOUD_TAG = 1987
 local function transition_(scene, status)
+    local speed = 1.5
     if status == "onEnter" then
         local armature = ccs.Armature:create("Cloud_Animation")
             :addTo(scene,0,CLOUD_TAG):pos(display.cx, display.cy)
@@ -31,9 +32,10 @@ local function transition_(scene, status)
             transition.sequence{
                 cc.CallFunc:create(function()
                     armature:getAnimation():stop()
+                    armature:getAnimation():setSpeedScale(speed)
                     armature:getAnimation():play("Animation1", -1, 0)
                 end),
-                cc.FadeIn:create(0.75),
+                cc.FadeIn:create(0.75/speed),
                 cc.CallFunc:create(function()
                     if scene.hideOutEnterShow then
                         scene:hideOutEnterShow()
@@ -41,12 +43,13 @@ local function transition_(scene, status)
                         scene:hideOutShowIn()
                     end
                 end),
-                cc.DelayTime:create(0.5),
+                cc.DelayTime:create(0.5/speed),
                 cc.CallFunc:create(function()
                     armature:getAnimation():stop()
+                    armature:getAnimation():setSpeedScale(speed)
                     armature:getAnimation():play("Animation4", -1, 0)
                 end),
-                cc.FadeOut:create(0.75),
+                cc.FadeOut:create(0.75/speed),
                 cc.CallFunc:create(function()
                     scene:removeChildByTag(CLOUD_TAG)
                     scene:finish()
