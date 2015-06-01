@@ -113,6 +113,7 @@ function MyCityScene:CreateSceneUILayer()
     -- end
     function scene_ui_layer:Schedule()
         display.newNode():addTo(self):schedule(function()
+            -- 检查缩放比
             if scene_layer:getScale() < (scene_layer:GetScaleRange()) * 1.3 then
                 if self.is_show == nil or self.is_show == true then
                     scene_layer:HideLevelUpNode()
@@ -129,15 +130,20 @@ function MyCityScene:CreateSceneUILayer()
                 if self.is_show == nil or self.is_show == false then
                     scene_layer:ShowLevelUpNode()
                     scene_node:GetTopLayer():stopAllActions()
+                    scene_node:GetTopLayer():show()
                     transition.fadeIn(scene_node:GetTopLayer(), {
                         time = 0.5,
-                        onComplete = function()
-                            scene_node:GetTopLayer():show()
-                        end,
                     })
                     self.is_show = true
                 end
             end
+
+            -------- 检查warning
+            -- if [此处填入正确判断函数] then
+            --     self:Warning()
+            -- else
+            --     self:DisableWaring()
+            -- end
         end, 0.5)
         display.newNode():addTo(self):schedule(function()
             -- local building = self.building__

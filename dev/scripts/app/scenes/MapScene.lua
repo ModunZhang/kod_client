@@ -8,6 +8,7 @@ end)
 local sqrt = math.sqrt
 local floor = math.floor
 local abs = math.abs
+local fmod = math.fmod
 local elastic = 200
 function MapScene:ctor()
     User:ResetAllListeners()
@@ -83,6 +84,36 @@ function MapScene:ResetRenderState()
     end
     -- self.render_scene:hide()
     -- self:GetSceneNode():show()
+end
+local WARNING_TAG = 99999
+function MapScene:DisableWaring()
+    self:getChildByTag(WARNING_TAG):hide():unscheduleUpdate()
+end
+function MapScene:Warning()
+    self:getChildByTag(WARNING_TAG):show():scheduleUpdate()
+end
+function MapScene:CreateWaring()
+    local sprite = display.newSprite(
+        "click_empty.png", 
+        display.cx, 
+        display.cy, 
+        {class=cc.FilteredSpriteWithOne}
+    ):addTo(self, 2999, WARNING_TAG)
+    local size = sprite:getContentSize()
+    sprite:setScaleX(display.width / size.width)
+    sprite:setScaleY(display.height / size.height)
+    local time, lastTime = 0, 1
+    sprite:setFilter(filter.newFilter("CUSTOM",
+        json.encode({
+            frag = "shaders/warning.fs",
+            shaderName = "warning",
+            iResolution = {display.widthInPixels, display.heightInPixels}
+        })
+    ))
+    sprite:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt)
+        time = time + dt
+        sprite:getFilter():getGLProgramState():setUniformFloat("ratio", abs(fmod(time, lastTime) - 0.5) / lastTime)
+    end)
 end
 function MapScene:GetSceneNode()
     return self.scene_node

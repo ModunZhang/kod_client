@@ -1,6 +1,7 @@
 local cocos_promise = import("..utils.cocos_promise")
 local promise = import("..utils.promise")
 local window = import("..utils.window")
+local WidgetLight = import("..widget.WidgetLight")
 local WidgetChat = import("..widget.WidgetChat")
 local WidgetNumberTips = import("..widget.WidgetNumberTips")
 local WidgetHomeBottom = import("..widget.WidgetHomeBottom")
@@ -396,6 +397,7 @@ function GameUIHome:CreateTop()
         {normal = "tips_66x64.png", pressed = "tips_66x64.png"},
         {scale9 = false}
     )
+    WidgetLight.new():addTo(button, -1001):scale(0.6)
     button:onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
             UIKit:newGameUI("GameUIActivityNew",self.city):AddToCurrentScene(true)
