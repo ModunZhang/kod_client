@@ -117,8 +117,7 @@ function MyCityScene:CreateSceneUILayer()
                 if self.is_show == nil or self.is_show == true then
                     scene_layer:HideLevelUpNode()
                     scene_node:GetTopLayer():stopAllActions()
-                    transition.fadeTo(scene_node:GetTopLayer(), {
-                        opacity = 0,
+                    transition.fadeOut(scene_node:GetTopLayer(), {
                         time = 0.5,
                         onComplete = function()
                             scene_node:GetTopLayer():hide()
@@ -130,8 +129,7 @@ function MyCityScene:CreateSceneUILayer()
                 if self.is_show == nil or self.is_show == false then
                     scene_layer:ShowLevelUpNode()
                     scene_node:GetTopLayer():stopAllActions()
-                    transition.fadeTo(scene_node:GetTopLayer(), {
-                        opacity = 255,
+                    transition.fadeIn(scene_node:GetTopLayer(), {
                         time = 0.5,
                         onComplete = function()
                             scene_node:GetTopLayer():show()
@@ -140,7 +138,7 @@ function MyCityScene:CreateSceneUILayer()
                     self.is_show = true
                 end
             end
-        end, 1)
+        end, 0.5)
         display.newNode():addTo(self):schedule(function()
             -- local building = self.building__
             -- if self.indicator and building then
@@ -421,6 +419,7 @@ function MyCityScene:OpenUI(building, default_tab)
 end
 
 return MyCityScene
+
 
 
 
