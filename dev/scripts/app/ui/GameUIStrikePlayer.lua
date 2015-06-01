@@ -256,6 +256,8 @@ function GameUIStrikePlayer:SendDataToServer()
 		 UIKit:showMessageDialog(_("提示"),str,function()
 		 	self:SendDataToServerRealy()
 		 end)
+	else
+		self:SendDataToServerRealy()
     end
 end
 

@@ -16,13 +16,13 @@ local MyCityScene = class("MyCityScene", CityScene)
 local GameUIActivityRewardNew = import("..ui.GameUIActivityRewardNew")
 local ipairs = ipairs
 
-function MyCityScene:ctor(city,isFromFte)
+function MyCityScene:ctor(city,isFromLogin)
     self.util_node = display.newNode():addTo(self)
     MyCityScene.super.ctor(self,city)
-    if type(isFromFte) == 'boolean' then
-        self.isFromFte = isFromFte
+    if type(isFromLogin) == 'boolean' then
+        self.isFromLogin = isFromLogin
     else
-        self.isFromFte = false
+        self.isFromLogin = false
     end
 end
 function MyCityScene:onEnter()
@@ -219,7 +219,7 @@ function MyCityScene:onEnterTransitionFinish()
         ext.registereForRemoteNotifications()
     end 
     app:sendApnIdIf()
-    if not self.isFromFte then
+    if self.isFromLogin then
         local isFinished_fte = DataManager:getUserData().countInfo.isFTEFinished
         local not_buy_any_gems = DataManager:getUserData().countInfo.iapCount == 0 
         if isFinished_fte and not_buy_any_gems then
