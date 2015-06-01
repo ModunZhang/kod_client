@@ -41,6 +41,13 @@ function MapScene:onEnter()
     end
     self.top_layer = display.newNode():addTo(self, 3)
     self.screen_layer = display.newNode():addTo(self:GetSceneNode(), 4)
+    display.newNode():addTo(self):schedule(function()
+        if --[[]] true then
+            self:Warning()
+        else
+            self:DisableWaring()
+        end
+    end, 1)
 end
 function MapScene:onExit()
     self.touch_judgment:destructor()
@@ -128,7 +135,7 @@ function MapScene:GetSceneLayer()
     return self.scene_layer
 end
 function MapScene:CreateSceneLayer()
-    assert(false, "必须在子类实现生成场景的方法")
+    assert(false)
 end
 function MapScene:CreateMultiTouchLayer()
     local touch_layer = display.newLayer()
@@ -232,7 +239,6 @@ function MapScene:OnTwoTouch(x1, y1, x2, y2, event_type)
     elseif event_type == "ended" then
         scene:ZoomEnd()
         self.distance = nil
-        -- 皮筋效果
         self:MakeElastic()
     end
 end
