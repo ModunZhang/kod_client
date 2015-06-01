@@ -166,6 +166,8 @@ function GameUIPVEHome:CreateTop()
 
     self.reward = display.newSprite(UILib.item[self:GetRewardItemName()],nil,nil,{class=cc.FilteredSpriteWithOne})
         :addTo(reward_btn):scale(0.6)
+    local s = self.reward:getContentSize()
+    light_gem():addTo(self.reward, 10):pos(s.width/2, s.height/2)
     self:RefreshRewards()
 
 
@@ -233,6 +235,7 @@ function GameUIPVEHome:RefreshRewards()
     self.reward:setTexture(UILib.item[self:GetRewardItemName()])
     if self.layer:CurrentPVEMap():IsRewarded() then
         self.reward:setFilter(filter.newFilter("GRAY", {0.2, 0.3, 0.5, 0.1}))
+        self.reward:removeAllChildren()
     else
         self.reward:clearFilter()
     end

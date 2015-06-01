@@ -33,6 +33,18 @@ function AllianceBattleScene:onEnter()
     else
         self:GotoCurrentPosition()
     end
+
+    -- cc.ui.UIPushButton.new({normal = "lock_btn.png",pressed = "lock_btn.png"})
+    -- :addTo(self, 1000000):align(display.RIGHT_TOP, display.width, display.height)
+    -- :onButtonClicked(function(event)
+    --     app:onEnterBackground()
+    -- end)
+
+    -- cc.ui.UIPushButton.new({normal = "lock_btn.png",pressed = "lock_btn.png"})
+    -- :addTo(self, 1000000):align(display.RIGHT_TOP, display.width, display.height - 100)
+    -- :onButtonClicked(function(event)
+    --     app:onEnterForeground()
+    -- end)
 end
 function AllianceBattleScene:GotoCurrentPosition()
     local mapObject = self:GetAlliance():GetAllianceMap():FindMapObjectById(self:GetAlliance():GetSelf():MapId())
