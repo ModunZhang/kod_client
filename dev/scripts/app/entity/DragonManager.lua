@@ -347,6 +347,10 @@ function DragonManager:checkHPRecoveryIf_(dragon,resource_refresh_time,hp_recove
     if dragon:Ishated() and dragon:IsDead() and self:GetHPResource(dragon:Type())  then
         self:RemoveHPResource(dragon:Type())
     end
+    local tmp_resource = self:GetHPResource(dragon:Type())
+    if resource_refresh_time and tmp_resource then
+        tmp_resource:UpdateResource(resource_refresh_time,dragon:Hp())
+    end
     --判断是否可以执行血量恢复 如果队列中没有这条龙会添加
     if dragon:Ishated() and not dragon:IsDead() and dragon:Status() ~= 'march' then
         local hp_resource = self:AddHPResource(dragon:Type())
