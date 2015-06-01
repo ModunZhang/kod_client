@@ -43,6 +43,9 @@ function WidgetAutoOrder:RefreshOrder()
                 gap = gap - v:GetElementSize().width - self.default_gap
             end
             v:show()
+            if v.refrshCallback then
+                v:refrshCallback()
+            end
         else
             v:hide()
         end
