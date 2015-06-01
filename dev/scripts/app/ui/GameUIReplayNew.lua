@@ -56,7 +56,7 @@ local function decode_battle_from_report(report)
         attacker.soldierName = attacker.soldierName or "wall"
         defender.soldierName = defender.soldierName or "wall"
         local defeatAll
-        if attacker.soldierName ~= "wall" and defender.soldierName ~= "wall" and #attacks ~= i then
+        if attacker.soldierName ~= "wall" and defender.soldierName ~= "wall" --[[and #attacks ~= i]] then
             defeatAll = (((attacker.morale - attacker.moraleDecreased) <= 20
                 or (attacker.soldierCount - attacker.soldierDamagedCount) <= 0) or not attacker.isWin)
                 and (((defender.morale - defender.moraleDecreased) <= 20
