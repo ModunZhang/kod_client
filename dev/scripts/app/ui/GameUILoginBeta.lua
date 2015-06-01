@@ -376,6 +376,7 @@ function GameUILoginBeta:getUpdateFileList()
         for _, v in ipairs(updateFileList) do
             self.m_totalSize = self.m_totalSize + v.size
         end
+        dump(updateFileList,"updateFileList------>")
         self:downloadFiles(updateFileList)
     else
     	self:setProgressPercent(100)
