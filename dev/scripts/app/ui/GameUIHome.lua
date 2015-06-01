@@ -17,6 +17,8 @@ local GrowUpTaskManager = import("..entity.GrowUpTaskManager")
 local GameUIHome = UIKit:createUIClass('GameUIHome')
 local WidgetAutoOrderAwardButton = import("..widget.WidgetAutoOrderAwardButton")
 local WidgetAutoOrderGachaButton = import("..widget.WidgetAutoOrderGachaButton")
+local WidgetAutoOrderBuffButton = import("..widget.WidgetAutoOrderBuffButton")
+
 
 
 local app = app
@@ -421,19 +423,7 @@ function GameUIHome:CreateTop()
 
     local order = WidgetAutoOrder.new(WidgetAutoOrder.ORIENTATION.TOP_TO_BOTTOM,20):addTo(self):pos(display.right-50, display.top-200)
     -- BUFF按钮
-    local buff_button = cc.ui.UIPushButton.new(
-        {normal = "buff_68x68.png", pressed = "buff_68x68.png"}
-    ):onButtonClicked(function(event)
-        if event.name == "CLICKED_EVENT" then
-            UIKit:newGameUI("GameUIBuff",self.city):AddToCurrentScene(true)
-        end
-    end)
-    function buff_button:CheckVisible()
-        return true
-    end
-    function buff_button:GetElementSize()
-        return buff_button:getCascadeBoundingBox().size
-    end
+    local buff_button = WidgetAutoOrderBuffButton.new(self)
     order:AddElement(buff_button)
 
     -- 协助加速按钮

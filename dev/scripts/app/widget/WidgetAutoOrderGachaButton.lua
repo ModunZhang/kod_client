@@ -1,6 +1,6 @@
 --
 -- Author: Kenny Dai
--- Date: 2015-06-01 09:51:28
+-- Date: 2015-06-01 11:05:26
 --
 local WidgetAutoOrderGachaButton = class("WidgetAutoOrderGachaButton",cc.ui.UIPushButton)
 local User = User
@@ -13,7 +13,7 @@ end
 
 
 function WidgetAutoOrderGachaButton:OnGachaButtonClicked(event)
-    UIKit:newGameUI("GameUIGacha",City):AddToCurrentScene(true)
+    UIKit:newGameUI("GameUIGacha",City):AddToCurrentScene(true):DisableAutoClose()
 end
 
 
@@ -45,3 +45,4 @@ function WidgetAutoOrderGachaButton:GetElementSize()
 end
 
 return WidgetAutoOrderGachaButton
+
