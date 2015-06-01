@@ -116,8 +116,8 @@ function GameUIHospital:OnEndTreat(hospital, event, soldiers, current_time)
 end
 
 function GameUIHospital:CreateHealAllSoldierItem()
-    self.treate_all_soldiers_item = WidgetWithBlueTitle.new(272, _("治愈所有伤兵")):addTo(self.heal_layer)
-        :pos(window.cx,window.top-740)
+    self.treate_all_soldiers_item = WidgetWithBlueTitle.new(250, _("治愈所有伤兵")):addTo(self.heal_layer)
+        :pos(window.cx,window.top-750)
     local bg_size = self.treate_all_soldiers_item:getContentSize()
     -- 治愈伤病需要使用的4种资源和数量（矿，石头，木材，食物）
     local function createResourceItem(resource_icon,num)
@@ -148,9 +148,9 @@ function GameUIHospital:CreateHealAllSoldierItem()
     }
     -- 资源背景框
     local resource_bg = WidgetUIBackGround.new({width = 556,height = 56},WidgetUIBackGround.STYLE_TYPE.STYLE_5)
-        :addTo(self.treate_all_soldiers_item):align(display.CENTER,self.treate_all_soldiers_item:getContentSize().width/2,180)
+        :addTo(self.treate_all_soldiers_item):align(display.CENTER,self.treate_all_soldiers_item:getContentSize().width/2,160)
     for k,v in pairs(resource_icons) do
-        self.heal_resource_item_table[k] = createResourceItem(v[2],v[1]):addTo(self.treate_all_soldiers_item):pos(bg_size.width/2-40, 165)
+        self.heal_resource_item_table[k] = createResourceItem(v[2],v[1]):addTo(self.treate_all_soldiers_item):pos(bg_size.width/2-40, 145)
     end
 
     -- 立即治愈和治愈按钮
@@ -165,7 +165,7 @@ function GameUIHospital:CreateHealAllSoldierItem()
                 app:GetAudioManager():PlayeEffectSoundWithKey("INSTANT_TREATE_SOLDIER")
             end,
         }
-    ):pos(bg_size.width/2-150, 110)
+    ):pos(bg_size.width/2-150, 95)
         :addTo(self.treate_all_soldiers_item)
 
     self.treat_all_now_button = btn_bg.button
@@ -181,29 +181,29 @@ function GameUIHospital:CreateHealAllSoldierItem()
                 app:GetAudioManager():PlayeEffectSoundWithKey("TREATE_SOLDIER")
             end,
         }
-    ):pos(bg_size.width/2+180, 110)
+    ):pos(bg_size.width/2+180, 95)
         :addTo(self.treate_all_soldiers_item)
     self.treat_all_button = btn_bg.button
 
     self.treat_all_now_button:setButtonEnabled(self.city:GetSoldierManager():GetTotalTreatSoldierCount()>0)
     self.treat_all_button:setButtonEnabled(self.city:GetSoldierManager():GetTotalTreatSoldierCount()>0)
     -- 立即治愈所需金龙币
-    display.newSprite("gem_icon_62x61.png", bg_size.width/2 - 260, 50):addTo(self.treate_all_soldiers_item):setScale(0.5)
+    display.newSprite("gem_icon_62x61.png", bg_size.width/2 - 260, 40):addTo(self.treate_all_soldiers_item):setScale(0.5)
     self.heal_now_need_gems_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         font = UIKit:getFontFilePath(),
         size = 20,
         color = UIKit:hex2c3b(0x403c2f)
-    }):align(display.LEFT_CENTER,bg_size.width/2 - 240,50):addTo(self.treate_all_soldiers_item)
+    }):align(display.LEFT_CENTER,bg_size.width/2 - 240,40):addTo(self.treate_all_soldiers_item)
     self:SetTreatAllSoldiersNowNeedGems()
     --治愈所需时间
-    display.newSprite("hourglass_30x38.png", bg_size.width/2+100, 50):addTo(self.treate_all_soldiers_item):setScale(0.6)
+    display.newSprite("hourglass_30x38.png", bg_size.width/2+100, 40):addTo(self.treate_all_soldiers_item):setScale(0.6)
     self.heal_time = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         font = UIKit:getFontFilePath(),
         size = 18,
         color = UIKit:hex2c3b(0x403c2f)
-    }):align(display.LEFT_CENTER,bg_size.width/2+125,60):addTo(self.treate_all_soldiers_item)
+    }):align(display.LEFT_CENTER,bg_size.width/2+125,50):addTo(self.treate_all_soldiers_item)
     self:SetTreatAllSoldiersTime()
 
     -- 科技减少治愈时间
@@ -213,7 +213,7 @@ function GameUIHospital:CreateHealAllSoldierItem()
         font = UIKit:getFontFilePath(),
         size = 18,
         color = UIKit:hex2c3b(0x068329)
-    }):align(display.LEFT_CENTER,bg_size.width/2+120,40):addTo(self.treate_all_soldiers_item)
+    }):align(display.LEFT_CENTER,bg_size.width/2+120,30):addTo(self.treate_all_soldiers_item)
 end
 
 function GameUIHospital:TreatListener()
@@ -360,7 +360,7 @@ function GameUIHospital:CresteCasualtySoldiersListView()
     self.soldiers_listview = UIListView.new{
         -- bgColor = cc.c4b(200, 200, 0, 170),
         bgScale9 = true,
-        viewRect = cc.rect(window.cx-274, window.top-600, 547, 465),
+        viewRect = cc.rect(window.cx-274, window.top-625, 547, 490),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL}
         :addTo(self.heal_layer)
     self:CreateItemWithListView(self.soldiers_listview)
@@ -422,8 +422,8 @@ function GameUIHospital:CreateItemWithListView(list_view)
 end
 
 function GameUIHospital:CreateSpeedUpHeal()
-    self.timer = WidgetTimerProgressStyleTwo.new(nil, _("治愈伤兵")):addTo(self.heal_layer)
-        :align(display.CENTER, window.cx, window.top-740)
+    self.timer = WidgetTimerProgressStyleTwo.new(250, _("治愈伤兵")):addTo(self.heal_layer)
+        :align(display.CENTER, window.cx, window.top-750)
         :OnButtonClicked(function(event)
             UIKit:newGameUI("GameUITreatSoldierSpeedUp", self.building):AddToCurrentScene(true)
         end)

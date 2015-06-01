@@ -167,7 +167,7 @@ local building_details_map = {
     ["shrine"] = {
         {90,		100,		200,			130},
         {_("等级"), _("战斗力"),_("感知力上限"),_("感知力恢复每小时")},
-        {_("level"), _("power"),_("perception"),_("pRecoveryPerHour")},
+        {"level","power","perception","pRecoveryPerHour"},
     },
 }
 

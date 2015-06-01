@@ -357,10 +357,9 @@ function GameUIAllianceHome:CreateTop()
             text = alliance:GetMemeberById(User:Id()):IsTitleEqualOrGreaterThan("general") and _("开始战斗") or _("请求开战"),
             size = 20,
             color = 0xffedae
-        }):align(display.LEFT_CENTER, -20,-26)
+        }):align(display.LEFT_CENTER, -20,-24)
         :addTo(top_enemy_bg)
-    local question_59x67 = display.newSprite("question_59x67.png"):addTo(top_enemy_bg):align(display.LEFT_CENTER, -108,-37)
-    display.newSprite("alliance_flag_box_119x139.png"):scale(62/119):addTo(question_59x67):align(display.CENTER,question_59x67:getContentSize().width/2-1,question_59x67:getContentSize().height/2+1)
+    local fight_icon_66x66 = display.newSprite("fight_icon_66x66.png"):addTo(top_enemy_bg):align(display.LEFT_CENTER, -108,-37)
 
     -- 和平期,战争期,准备期背景
     local period_bg = display.newSprite("box_104x104.png")
@@ -417,12 +416,10 @@ function GameUIAllianceHome:CreateTop()
         period_label:setString(home:GetAlliancePeriod())
         -- 和平期
         if status=="peace" then
-            enemy_name_bg:setVisible(false)
             enemy_peace_label:setVisible(true)
-            question_59x67:setVisible(true)
+            fight_icon_66x66:setVisible(true)
         else
-            enemy_name_bg:setVisible(true)
-            question_59x67:setVisible(false)
+            fight_icon_66x66:setVisible(false)
             enemy_peace_label:setVisible(false)
 
             -- 敌方联盟旗帜
