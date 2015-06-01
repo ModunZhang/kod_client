@@ -11,3 +11,5 @@ echo "------------------------------------"
 echo "> 开始处理资源"
 echo "------------------------------------"
 ./buildRes.sh $Platform $NEED_ENCRYPT_RES
+
+./cleanTempFile.sh
