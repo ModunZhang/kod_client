@@ -459,53 +459,9 @@ function Report:IsWin()
             return false
         end
     elseif report_type=="attackCity" then
-        if data.attackPlayerData.id == self.player_id then
-            if data.fightWithHelpDefencePlayerReports then
-                local round = data.fightWithHelpDefencePlayerReports.attackPlayerSoldierRoundDatas
-                if not round then
-                    return true
-                end
-                return round[#round].isWin
-            elseif data.fightWithDefencePlayerReports then
-                local round = data.fightWithDefencePlayerReports.attackPlayerSoldierRoundDatas
-                if not round then
-                    return true
-                end
-                return round[#round].isWin
-            end
-        elseif data.defencePlayerData and data.defencePlayerData.id == self.player_id then
-            local round = data.fightWithDefencePlayerReports.defencePlayerSoldierRoundDatas
-            if not round then
-                return false
-            end
-            return round[#round].isWin
-        elseif data.helpDefencePlayerData and
-            data.helpDefencePlayerData.id == self.player_id then
-            local round = data.fightWithHelpDefencePlayerReports.defencePlayerSoldierRoundDatas
-            return round[#round].isWin
-        end
+        return self:GetReportResult()
     elseif report_type=="attackVillage" then
-        if data.attackPlayerData.id == self.player_id then
-            if data.fightWithDefencePlayerReports then
-                local round = data.fightWithDefencePlayerReports.attackPlayerSoldierRoundDatas
-                if not round then
-                    return true
-                end
-                return round[#round].isWin
-            elseif data.fightWithDefenceVillageReports then
-                local round = data.fightWithDefenceVillageReports.attackPlayerSoldierRoundDatas
-                if not round then
-                    return true
-                end
-                return round[#round].isWin
-            end
-        elseif data.defencePlayerData and data.defencePlayerData.id == self.player_id then
-            local round = data.fightWithDefencePlayerReports.defencePlayerSoldierRoundDatas
-            if not round then
-                return false
-            end
-            return round[#round].isWin
-        end
+        return self:GetReportResult()
     elseif report_type=="collectResource" then
         return true
     end
