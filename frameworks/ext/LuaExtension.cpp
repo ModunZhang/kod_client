@@ -628,6 +628,15 @@ tolua_lerror:
 #endif
 }
 
+unsigned long getFileCrc32(const char* filePath)
+{
+    FILE *file = fopen(filePath, "rb");
+    unsigned long crc32;
+    Crc32_ComputeFile(file, &crc32);
+    fclose(file);
+    return crc32;
+}
+
 static int tolua_ext_crc32(lua_State* tolua_S)
 {
 #ifndef TOLUA_RELEASE
@@ -657,6 +666,7 @@ static int tolua_ext_crc32(lua_State* tolua_S)
             Crc32_ComputeFile(file, &crc32);
             sprintf(crc32S, "%08lx", crc32);
             tolua_pushstring(tolua_S, crc32S);
+            fclose(file);
         }
     }
     return 1;

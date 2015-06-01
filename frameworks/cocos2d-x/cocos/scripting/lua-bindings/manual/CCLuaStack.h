@@ -140,7 +140,8 @@ public:
     int luaLoadBuffer(lua_State *L, const char *chunk, int chunkSize, const char *chunkName);
     int loadChunksFromZIP(const char *zipFilePath);
     int luaLoadChunksFromZIP(lua_State *L);
-    
+    int executeChunkFromZip(const char *zipFilePath,const char *chunkName);
+    int luaExecuteChunkFromZip(lua_State *L);
 protected:
     LuaStack(void)
     : _state(nullptr)

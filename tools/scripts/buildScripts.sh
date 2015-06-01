@@ -7,6 +7,7 @@ SCRIPTS_SRC_DIR=`./functions.sh getScriptsDir`
 SCRIPTS_DEST_DIR=`./functions.sh getExportScriptsDir $Platform`
 XXTEAKey=`./functions.sh getXXTEAKey`
 XXTEASign=`./functions.sh getXXTEASign`
+TEMP_RES_DIR=`./functions.sh getTempDir`
 
 test -d "$SCRIPTS_DEST_DIR" && rm -rf "$SCRIPTS_DEST_DIR/*"
 exportScripts()
@@ -31,12 +32,20 @@ exportScripts()
 exportScriptsEncrypt()
 {
 	outdir=$SCRIPTS_DEST_DIR
-	$SCRIPT_COMPILE_TOOL -i $SCRIPTS_SRC_DIR -o $outdir -m files -e xxtea_chunk -ex lua -ek $XXTEAKey -es $XXTEASign
+	outfile="$outdir/game.zip"
+	tempfile="$TEMP_RES_DIR/game.zip"
+	if $NEED_ENCRYPT_SCRIPTS; then
+		$SCRIPT_COMPILE_TOOL -i $SCRIPTS_SRC_DIR -o "$tempfile" -e xxtea_zip -ex lua -ek $XXTEAKey -es $XXTEASign -q
+	else
+		$SCRIPT_COMPILE_TOOL -i $SCRIPTS_SRC_DIR -o "$tempfile" -ex lua -q
+	fi
+	if test "$tempfile" -nt "$outfile"; then
+		echo 拷贝game.zip
+		cp -f "$tempfile" "$outfile"
+	else
+		echo 忽略game.zip
+		cp -f "$tempfile"
+	fi
 }
-
-if $NEED_ENCRYPT_SCRIPTS; then
-	exportScriptsEncrypt 
-else
-	exportScripts $SCRIPTS_SRC_DIR
-fi
-find $SCRIPTS_DEST_DIR -name "*.bytes" -exec rm -r {} \;
+exportScriptsEncrypt 
+find $SCRIPTS_SRC_DIR -name "*.bytes" -exec rm -rv {} \;
