@@ -195,13 +195,14 @@ function GameUIAllianceCityEnter:GetEnterButtons()
             buttons = {help_button,enter_button,mail_button,info_button}
         end
     else -- 敌方玩家
+        local isProtected = self:CheckMeIsProtectedWarinng()
         local attack_button = self:BuildOneButton("attack_58x56.png",_("进攻")):onButtonClicked(function()
             UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers,total_march_time,gameuialliancesendtroops)
                 if member:IsProtected() then
                     UIKit:showMessageDialog(_("提示"),_("玩家处于保护状态,不能进攻或突袭"), function()end)
                     return
                 end
-                if self:CheckMeIsProtectedWarinng() then
+                if isProtected then
                     UIKit:showMessageDialog(_("提示"),_("进攻玩家城市将失去保护状态，确定继续派兵?"),function()
                         NetManager:getAttackPlayerCityPromise(dragonType, soldiers, member:Id()):done(function()
                             app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_SENDOUT")

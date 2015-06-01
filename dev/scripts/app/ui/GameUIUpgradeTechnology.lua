@@ -35,13 +35,13 @@ function GameUIUpgradeTechnology:onEnter()
 end
 
 function GameUIUpgradeTechnology:OnMoveOutStage()
-    GameUIUpgradeTechnology.super.OnMoveOutStage(self)
     City:RemoveListenerOnType(self,City.LISTEN_TYPE.PRODUCTION_DATA_CHANGED)
+    GameUIUpgradeTechnology.super.OnMoveOutStage(self)
 end
 
 function GameUIUpgradeTechnology:OnProductionTechsDataChanged(changed_map)
     for _,tech in ipairs(changed_map.edited or {}) do
-        if self:GetProductionTechnology():Index() == tech:Index() then
+        if type(self.GetProductionTechnology) == 'function' and self:GetProductionTechnology():Index() == tech:Index() then
             if self:CheckMeIsReachLimitLevel() then
                 self:LeftButtonClicked()
             else

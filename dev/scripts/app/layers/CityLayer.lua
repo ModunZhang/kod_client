@@ -450,11 +450,14 @@ function CityLayer:InitWithCity(city)
         self:CreateBird(0, 0):scale(0.8):addTo(self.sky_layer)
     end
 end
-function CityLayer:MoveBarracksSoldiers(...)
-    local soldiers = {...}
-    if #soldiers > 0 then
-        local star = City:GetSoldierManager():GetStarBySoldierType(soldiers[1])
-        self:CreateBarracksSoldier(soldiers[1], star):addTo(self:GetCityNode(), 0, BARRACKS_SOLDIER_TAG)
+function CityLayer:MoveBarracksSoldiers(soldier, is_mark)
+    if soldier then
+        local star = City:GetSoldierManager():GetStarBySoldierType(soldier)
+        local soldier = self:CreateBarracksSoldier(soldier, star)
+            :addTo(self:GetCityNode(), 0, BARRACKS_SOLDIER_TAG)
+        if is_mark then
+            display.newSprite("fte_icon_arrow.png"):addTo(soldier):align(display.BOTTOM_CENTER, 0, 40):scale(0.5)
+        end
     end
 end
 ---
@@ -880,6 +883,7 @@ function CityLayer:ShowLevelUpNode()
 end
 
 return CityLayer
+
 
 
 
