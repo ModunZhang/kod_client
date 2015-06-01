@@ -20,7 +20,11 @@ function AllianceBattleScene:onEnter()
     self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
     app:GetAudioManager():PlayGameMusic()
     self:GetSceneLayer():ZoomTo(0.8)
-
+    local alliance_key = DataManager:getUserData()._id.."_SHOW_REGION_TIPS"
+    if not app:GetGameDefautlt():getBasicInfoValueForKey(alliance_key) then
+        app:GetGameDefautlt():getBasicInfoValueForKey(alliance_key,true)
+        UIKit:newGameUI("GameUITips","region"):AddToScene(self, true)
+    end
     if self.location then
         self:GotoPosition(self.location.x, self.location.y,self.location.id)
         if self.location.callback then
