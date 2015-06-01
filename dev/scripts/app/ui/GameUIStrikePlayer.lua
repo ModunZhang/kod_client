@@ -235,7 +235,7 @@ function GameUIStrikePlayer:GetSelectDragonType()
 	return self.select_dragon_type
 end
 
-function GameUIStrikePlayer:SendDataToServer()
+function GameUIStrikePlayer:SendDataToServerRealy()
 	if self.strike_type == self.STRIKE_TYPE.CITY then
 		NetManager:getStrikePlayerCityPromise(self:GetSelectDragonType(),self.params.memberId):done(function()
 			app:GetAudioManager():PlayeEffectSoundWithKey("DRAGON_STRIKE")
@@ -247,6 +247,16 @@ function GameUIStrikePlayer:SendDataToServer()
 			self:LeftButtonClicked()
 		end)
 	end
+end
+function GameUIStrikePlayer:SendDataToServer()
+	local alliance = Alliance_Manager:GetMyAlliance()
+	local me = alliance:GetSelf()
+    if me:IsProtected() then
+    	local str = self.strike_type == self.STRIKE_TYPE.CITY and _("突袭玩家城市将失去保护状态，确定继续派兵?") or _("突袭村落将失去保护状态，确定继续派兵?")
+		 UIKit:showMessageDialog(_("提示"),str,function()
+		 	self:SendDataToServerRealy()
+		 end)
+    end
 end
 
 function GameUIStrikePlayer:OnStrikeButtonClicked()

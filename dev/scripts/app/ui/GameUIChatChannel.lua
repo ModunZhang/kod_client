@@ -193,12 +193,24 @@ function GameUIChatChannel:CreateTabButtons()
     },
     function(tag)
         self._channelType = tag
-       
+        self:ShowTipsIf()
         self:RefreshListView()
     end):addTo(self:GetView()):pos(window.cx, window.bottom + 34)
 end
 
-
+function GameUIChatChannel:ShowTipsIf()
+    local my_alliance = Alliance_Manager:GetMyAlliance()
+    if my_alliance:IsDefault() then
+        if self._channelType == 'alliance' then
+            UIKit:showMessageDialog(_("提示"),_("加入联盟后开放此功能!"),function()end)
+        end
+    elseif self._channelType == 'allianceFight' then
+        local status = my_alliance:Status()
+        if status ~= 'prepare' and status ~= 'fight' then
+            UIKit:showMessageDialog(_("提示"),_("联盟未处于战争状态，不能使用此聊天频道!"),function()end)
+        end
+    end
+end
 
 function GameUIChatChannel:GetChatIcon(icon)
     local bg = display.newSprite("dragon_bg_114x114.png"):scale(66/114)
@@ -325,13 +337,13 @@ function GameUIChatChannel:RefreshListView()
     if self._channelType ~= 'global' then
         local my_alliance = Alliance_Manager:GetMyAlliance()
         if my_alliance:IsDefault() then
-            UIKit:showMessageDialog(_("提示"),_("加入联盟后开放此功能!"),function()end)
+            -- UIKit:showMessageDialog(_("提示"),_("加入联盟后开放此功能!"),function()end)
             self.dataSource_ = {}
         elseif self._channelType == 'allianceFight' then
             local status = my_alliance:Status()
             if status ~= 'prepare' and status ~= 'fight' then
-                UIKit:showMessageDialog(_("提示"),_("联盟未处于战争状态，不能使用此聊天频道!"),function()end)
                 self.dataSource_ = {}
+                -- UIKit:showMessageDialog(_("提示"),_("联盟未处于战争状态，不能使用此聊天频道!"),function()end)
             else
                 self.dataSource_ = clone(self:FetchCurrentChannelMessages())
             end

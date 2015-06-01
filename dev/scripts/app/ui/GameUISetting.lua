@@ -93,7 +93,7 @@ function GameUISetting:BuildUI()
 		color = 0x403c2f,
 	    size = 18,
 	    align = cc.TEXT_ALIGNMENT_CENTER
-	}):addTo(self:GetView()):align(display.CENTER,window.cx,50)
+	}):addTo(self:GetView()):align(display.CENTER,window.cx,window.bottom + 50)
 end
 
 function GameUISetting:OnButtonClicked(button)
