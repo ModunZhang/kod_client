@@ -88,6 +88,12 @@ function GameUISetting:BuildUI()
 	    end
 		x = x + 30 + 112
 	end
+	UIKit:ttfLabel({
+		text = string.format("Dragonfall %s(%s)", ext.getAppVersion(), app.client_tag or "0"),
+		color = 0x403c2f,
+	    size = 18,
+	    align = cc.TEXT_ALIGNMENT_CENTER
+	}):addTo(self:GetView()):align(display.CENTER,window.cx,50)
 end
 
 function GameUISetting:OnButtonClicked(button)
