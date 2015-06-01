@@ -393,8 +393,13 @@ function GameUIChatChannel:HandleCellUIData(mainContent,chat,update_time)
     local vipLabel = currentContent.vip_label
     local name_title = chat.allianceTag == "" and chat.name or string.format("[ %s ] %s",chat.allianceTag,chat.name)
     titleLabel:setString(name_title)
-    vipLabel:setString('VIP ' .. DataUtils:getPlayerVIPLevel(chat.vip))
-    vipLabel:setPositionX(titleLabel:getPositionX() + titleLabel:getContentSize().width + 15)
+    if chat.vipActive then
+        vipLabel:setString('VIP ' .. DataUtils:getPlayerVIPLevel(chat.vip))
+        vipLabel:setPositionX(titleLabel:getPositionX() + titleLabel:getContentSize().width + 15)
+        vipLabel:show()
+    else
+        vipLabel:hide()
+    end
     if update_time or not chat.timeStr then
         chat.timeStr = NetService:formatTimeAsTimeAgoStyleByServerTime(chat.time)
     end
