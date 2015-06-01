@@ -294,6 +294,10 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
         if house_add>0 then
             efficiency = string.format("%s+%d," ,bd.townHall_dwelling,house_add)
         end
+        local award_add = (building:GetNextLevelEfficiency() - building:GetEfficiency()) * 100
+        if award_add > 0 then
+            efficiency = efficiency .. string.format("%s+%d%%," ,_("提升任务奖励"),award_add)
+        end
     elseif self.building:GetType()=="dwelling" then
         local addtion = building:GetNextLevelCitizen()-building:GetProductionLimit()
         if addtion>0 then

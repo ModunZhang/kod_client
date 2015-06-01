@@ -256,7 +256,8 @@ const char* AppDelegateExtern::getGameZipcrc32(const char *filePath)
                             const rapidjson::Value & tagData = it->value;
                             if(tagData.HasMember("crc32"))
                             {
-                                return tagData["crc32"].GetString();
+                                string crc32 = tagData["crc32"].GetString();
+                                return crc32.c_str();
                             }
                         }
 
@@ -313,6 +314,7 @@ bool AppDelegateExtern::checkPath()
         //获取game.zip crc32 fileList
         unsigned long crc32 = getFileCrc32(doucument_zip_path.c_str());
         const char* crc32_in_config = getGameZipcrc32(to.c_str());
+        CCLOG("crc32_in_config---->%s",crc32_in_config);
         char crc32_val[32];
         sprintf(crc32_val, "%08lx", crc32);
         if (strcmp(crc32_val, crc32_in_config) != 0)

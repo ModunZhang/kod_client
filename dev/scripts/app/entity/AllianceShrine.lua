@@ -79,7 +79,7 @@ function AllianceShrine:GetMaxStageFromServer(alliance_data,deltaData)
 		if alliance_data.shrineDatas then
 			local large_key = ""
 			for _,v in ipairs(alliance_data.shrineDatas) do
-				if v.stageName > large_key then
+				if v.stageName > large_key and v.maxStar > 0 then
 					large_key = v.stageName
 				end
 				self:GetStatgeByName(v.stageName):SetIsLocked(false)

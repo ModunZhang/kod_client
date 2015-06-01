@@ -17,6 +17,9 @@ def getFileGitPath( fullPath ):
 	process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
 	output = process.communicate()[0].rstrip()
 	output = output[7:]
+	if not output.strip():
+		print "获取文件错误-->" + fullPath
+		sys.exit(1)
 	return output
 
 def getFileSize( fullPath ):

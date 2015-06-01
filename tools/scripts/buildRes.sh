@@ -86,13 +86,13 @@ exportImagesRes()
 				echo "---- ${file##*/}"
 				#$PVRTOOL -p -f $IMAGEFORMAT -i $file -o ${file%.*}.pvr
 				TexturePacker --format cocos2d --no-trim --disable-rotation --texture-format pvr2 --premultiply-alpha --opt PVRTC4 --padding 0 "$file" --sheet "$tempfile" --data "$TEMP_RES_DIR/tmp.plist"
-				cp -f $tempfile "${tempfileName}_PVR_PNG.png"
+				cp -f $tempfile "${TEMP_RES_DIR}/${tempfileName}_PVR_PNG.png"
 				if $NEED_ENCRYPT_RES;then
-					$RES_COMPILE_TOOL -i "${tempfileName}_PVR_PNG.png" -o $finalDir -ek $XXTEAKey -es $XXTEASign -q
+					$RES_COMPILE_TOOL -i "${TEMP_RES_DIR}/${tempfileName}_PVR_PNG.png" -o $finalDir -ek $XXTEAKey -es $XXTEASign -q
 					mv -f "$finalDir/${tempfileName}_PVR_PNG.png" $outfile
-					rm -f "${tempfileName}_PVR_PNG.png"
+					rm -f "${TEMP_RES_DIR}/${tempfileName}_PVR_PNG.png"
 				else
-					mv -f "${tempfileName}_PVR_PNG.png" $outfile
+					mv -f "${TEMP_RES_DIR}/${tempfileName}_PVR_PNG.png" $outfile
 				fi
 			fi
 		fi
