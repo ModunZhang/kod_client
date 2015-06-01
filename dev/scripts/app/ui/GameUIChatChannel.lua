@@ -201,7 +201,9 @@ end
 function GameUIChatChannel:ShowTipsIf()
     local my_alliance = Alliance_Manager:GetMyAlliance()
     if my_alliance:IsDefault() then
-        UIKit:showMessageDialog(_("提示"),_("加入联盟后开放此功能!"),function()end)
+        if self._channelType == 'alliance' then
+            UIKit:showMessageDialog(_("提示"),_("加入联盟后开放此功能!"),function()end)
+        end
     elseif self._channelType == 'allianceFight' then
         local status = my_alliance:Status()
         if status ~= 'prepare' and status ~= 'fight' then
