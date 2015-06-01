@@ -13,11 +13,17 @@ local User = import("..entity.User")
 local NotifyItem = import("..entity.NotifyItem")
 local CityScene = import(".CityScene")
 local MyCityScene = class("MyCityScene", CityScene)
+local GameUIActivityRewardNew = import("..ui.GameUIActivityRewardNew")
 local ipairs = ipairs
 
-function MyCityScene:ctor(...)
+function MyCityScene:ctor(city,isFromLogin)
     self.util_node = display.newNode():addTo(self)
-    MyCityScene.super.ctor(self, ...)
+    MyCityScene.super.ctor(self,city)
+    if type(isFromLogin) == 'boolean' then
+        self.isFromLogin = isFromLogin
+    else
+        self.isFromLogin = false
+    end
 end
 function MyCityScene:onEnter()
     MyCityScene.super.onEnter(self)
@@ -211,9 +217,15 @@ function MyCityScene:onEnterTransitionFinish()
     MyCityScene.super.onEnterTransitionFinish(self)
     if ext.registereForRemoteNotifications then
         ext.registereForRemoteNotifications()
-    end
+    end 
     app:sendApnIdIf()
-
+    if self.isFromLogin then
+        local isFinished_fte = DataManager:getUserData().countInfo.isFTEFinished
+        local not_buy_any_gems = DataManager:getUserData().countInfo.iapCount == 0 
+        if isFinished_fte and not_buy_any_gems then
+            UIKit:newGameUI("GameUIActivityRewardNew",GameUIActivityRewardNew.REWARD_TYPE.FIRST_IN_PURGURE):AddToScene(self, true)
+        end
+    end
     if Alliance_Manager:HasBeenJoinedAlliance() then
         return
     end

@@ -100,10 +100,13 @@ function AllianceManager:RefreshAllianceSceneIf(old_alliance_status)
     end
     if (my_alliance_status == 'prepare' or my_alliance_status == 'fight') then
         if scene_name == 'AllianceScene' then
-            if not UIKit:isMessageDialogShowWithUserData("__alliance_war_tips__") then
-                UIKit:showMessageDialog(nil,_("联盟对战已开始，您将进入自己联盟对战地图。"),function()
-                    app:EnterMyAllianceScene()
-                end,nil,false,nil,"__alliance_war_tips__")
+            if not self.tipUserWar then
+                self.tipUserWar = true
+                if not UIKit:isMessageDialogShowWithUserData("__alliance_war_tips__") then
+                    UIKit:showMessageDialog(nil,_("联盟对战已开始，您将进入自己联盟对战地图。"),function()
+                        app:EnterMyAllianceScene()
+                    end,nil,false,nil,"__alliance_war_tips__")
+                end
             end
         elseif scene_name == 'MyCityScene' then
             if not self.tipUserWar then
