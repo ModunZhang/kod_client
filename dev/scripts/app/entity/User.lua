@@ -209,7 +209,7 @@ function User:EncodePveDataAndResetFightRewardsData()
         },
         fightData = fightData,
         rewards = rewards,
-        -- rewardedFloor = nil,
+    -- rewardedFloor = nil,
     }
 end
 function User:ResetAllListeners()
@@ -521,7 +521,17 @@ function User:OnVipEventDataChange(userData, deltaData)
         if userData.vipEvents then
             if not LuaUtils:table_empty(userData.vipEvents) then
                 self.vip_event:UpdateData(userData.vipEvents[1])
+            else
+                self.vip_event:Reset()
+                self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT_OVER, function(listener)
+                    listener:OnVipEventOver(self.vip_event)
+                end)
             end
+        else
+            self.vip_event:Reset()
+            self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT_OVER, function(listener)
+                listener:OnVipEventOver(self.vip_event)
+            end)
         end
         self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT, function(listener)
             listener:OnVipEventTimer(self.vip_event)
@@ -612,7 +622,7 @@ function User:OnAllianceInfoChanged( userData, deltaData )
     local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.allianceInfo
     if is_fully_update then
-       self.allianceInfo = clone(userData.allianceInfo)
+        self.allianceInfo = clone(userData.allianceInfo)
     end
     if is_delta_update then
         for i,v in pairs(deltaData.allianceInfo) do
@@ -627,7 +637,7 @@ function User:OnAllianceDonateChanged( userData, deltaData )
     local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.allianceDonate
     if is_fully_update then
-       self.allianceDonate = clone(userData.allianceDonate)
+        self.allianceDonate = clone(userData.allianceDonate)
     end
     if is_delta_update then
         for i,v in pairs(deltaData.allianceDonate) do
@@ -813,6 +823,9 @@ function User:GetBestDragon()
 end
 
 return User
+
+
+
 
 
 

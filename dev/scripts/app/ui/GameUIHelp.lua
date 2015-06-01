@@ -68,7 +68,9 @@ function GameUIHelp:onEnter()
     ):setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("全部帮助"), size = 22, color = UIKit:hex2c3b(0xfff3c7)}))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                NetManager:getHelpAllAllianceMemberSpeedUpPromise()
+                NetManager:getHelpAllAllianceMemberSpeedUpPromise():done(function ()
+                        GameGlobalUI:showTips(_("提示"),_("协助加速成功"))
+                end)
             end
         end):addTo(body):pos(rb_size.width/2, 50)
     help_all_button:setVisible(self:IsAbleToHelpAll())
@@ -285,7 +287,9 @@ function GameUIHelp:CreateHelpItem(event)
         ):setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("帮助"), size = 22, color = UIKit:hex2c3b(0xfff3c7)}))
             :onButtonClicked(function(e)
                 if e.name == "CLICKED_EVENT" then
-                    NetManager:getHelpAllianceMemberSpeedUpPromise(event:Id())
+                    NetManager:getHelpAllianceMemberSpeedUpPromise(event:Id()):done(function ( )
+                        GameGlobalUI:showTips(_("提示"),_("协助加速成功"))
+                    end)
                 end
             end):addTo(bg):pos(470, 34)
     end

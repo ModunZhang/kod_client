@@ -419,7 +419,7 @@ function GameUIWarReport:CreateArmyItem(title,troop,dragon,enemy_troop,round_dat
             },
             {
                 bg_image = "back_ground_548x40_2.png",
-                title = _("Level"),
+                title = _("等级"),
                 value = dragon.level,
             },
             {
@@ -487,7 +487,7 @@ function GameUIWarReport:CreateBelligerentsItem(player,isSelf)
         :addTo(player_item)
 
     UIKit:ttfLabel({
-        text =  player.type and _("Level").." "..player.level or "["..player.alliance.tag.."]",
+        text =  player.type and string.format(_("等级%d"),player.level) or "["..player.alliance.tag.."]",
         size = 22,
         color = 0xffedae
     }):align(display.CENTER,170,  height-75)

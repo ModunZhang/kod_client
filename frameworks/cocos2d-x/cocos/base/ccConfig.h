@@ -266,7 +266,7 @@ To enable set it to a value different than 0. Disabled by default.
 
 /** Use physics integration API */
 #ifndef CC_USE_PHYSICS
-#define CC_USE_PHYSICS 1
+#define CC_USE_PHYSICS 0 //dannyhe
 #endif
 
 /** Support JPEG or not. If your application don't use jpeg format picture, you can undefine this macro to save package size.
@@ -302,7 +302,7 @@ To enable set it to a value different than 0. Disabled by default.
 /** Use cocosBuilder or not. If your application don't use ccb, you can undefine this macro to save package size.
  */
 #ifndef CC_USE_CCBUILDER
-#define CC_USE_CCBUILDER  1
+#define CC_USE_CCBUILDER  0 //dannyhe
 #endif // CC_USE_CCBUILDER
 
 /** Use spine or not. If your application don't use spine, you can undefine this macro to save package size.
@@ -314,7 +314,7 @@ To enable set it to a value different than 0. Disabled by default.
 /** Use 3d sprites or not. If your application don't use 3d, you can undefine this macro to save package size.
  */
 #ifndef CC_USE_3D
-#define CC_USE_3D  1
+#define CC_USE_3D  0 //dannyhe
 #endif // CC_USE_3D
 
 /** Enable Script binding */

@@ -12,7 +12,7 @@
 
 TOLUA_API int tolua_cc_pomelo_open(lua_State* tolua_S);
 TOLUA_API int tolua_cc_lua_extension(lua_State* tolua_S);
-
+unsigned long getFileCrc32(const char* filePath);
 
 
 #include "2d/CCTransition.h"

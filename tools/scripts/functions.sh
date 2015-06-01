@@ -111,6 +111,7 @@ getXXTEASign()
 {
 	echo "XXTEA"
 }
+#暂时弃用PVRTexToolCLI
 getPVRTexTool()
 {
 	DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -126,5 +127,10 @@ getAppVersion()
 		plist=${root_dir}/frameworks/runtime-src/proj.ios_mac/ios/Info.plist
 		echo `/usr/libexec/PlistBuddy -c "print CFBundleVersion" $plist`
 	fi
+}
+getTempDir()
+{
+	result="/tmp/DragonFall"
+	test -d $result || mkdir -p $result && echo $result
 }
 $@

@@ -28,8 +28,8 @@ CONFIG_LOCAL_SERVER = {
 }
 CONFIG_REMOTE_SERVER = {
     update = {
-        host = "54.223.166.65",
-        port = 3000,
+        host = "127.0.0.1",
+        port = 80,
         name = "update-server-1"
     },
     gate = {
@@ -45,7 +45,7 @@ CONFIG_APP_URL = {
 }
 
 CONFIG_IS_LOCAL = false
-CONFIG_IS_DEBUG = true
+CONFIG_IS_DEBUG = false
 CONFIG_LOG_DEBUG_FILE = true -- 记录日志文件
 GLOBAL_FTE = true
 GLOBAL_FTE_DEBUG = false

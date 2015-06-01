@@ -177,7 +177,7 @@ function GameUIPVESendTroop:SelectDragonPart()
     local dragon_bg = display.newSprite("dragon_bg_114x114.png")
         :align(display.LEFT_CENTER, 7,dragon_frame:getContentSize().height/2)
         :addTo(dragon_frame)
-    self.dragon_img = cc.ui.UIImage.new(dragon:Type()..".png")
+    self.dragon_img = cc.ui.UIImage.new(UILib.dragon_head[dragon:Type()])
         :align(display.CENTER, dragon_bg:getContentSize().width/2, dragon_bg:getContentSize().height/2+5)
         :addTo(dragon_bg)
     local box_bg = display.newSprite("box_426X126.png")
@@ -213,7 +213,7 @@ function GameUIPVESendTroop:SelectDragonPart()
 
 end
 function GameUIPVESendTroop:RefreashDragon(dragon)
-    self.dragon_img:setTexture(dragon:Type()..".png")
+    self.dragon_img:setTexture(UILib.dragon_head[dragon:Type()])
     self.dragon_name:setString(_(dragon:Type()).."（LV "..dragon:Level().."）")
     self.dragon_vitality:setString(_("生命值")..dragon:Hp().."/"..dragon:GetMaxHP())
     self.dragon = dragon

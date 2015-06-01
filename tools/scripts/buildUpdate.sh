@@ -7,6 +7,7 @@ PROJ_DIR=$DOCROOT/../../
 echo ---------------- 清理文件
 rm -rf $PROJ_DIR/update
 echo ---------------- 编译代码
+#正式环境一定改成 true true
 sh buildGame.sh $Platform false false
 
 echo ---------------- 提交代码
@@ -21,8 +22,7 @@ python buildUpdate.py $APP_VERSION
 cd $DOCROOT
 
 echo ---------------- 同步代码
-rsync -rave "ssh " --exclude=.DS_Store*  ../../update ec2-user@ec2-54-223-172-65.cn-north-1.compute.amazonaws.com.cn:~/server/update-server/public/
-
+# rsync -rave "ssh " --exclude=.DS_Store*  ../../update ec2-user@ec2-54-223-172-65.cn-north-1.compute.amazonaws.com.cn:~/server/update-server/public/
 
 echo ---------------- 提交代码
 cd $PROJ_DIR
