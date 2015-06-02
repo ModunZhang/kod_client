@@ -24,6 +24,8 @@ function WidgetAutoOrderBuffButton:ctor()
     local filters = my_filter.newFilter("GRAY", {0.2, 0.3, 0.5, 0.1})
     grey_image:setFilter(filters)
     grey_image:setVisible(not ItemManager:IsAnyItmeEventActive())
+    buff_button:opacity(ItemManager:IsAnyItmeEventActive() and 255 or 0)
+
     self.grey_image = grey_image
     self:setContentSize(buff_button:getCascadeBoundingBox().size)
     self:setAnchorPoint(cc.p(0.5,0.5))
@@ -38,6 +40,7 @@ function WidgetAutoOrderBuffButton:onCleanup()
 end
 function WidgetAutoOrderBuffButton:OnItemEventChanged()
     self.grey_image:setVisible(not ItemManager:IsAnyItmeEventActive())
+    self.buff_button:opacity(ItemManager:IsAnyItmeEventActive() and 255 or 0)
 end
 -- For WidgetAutoOrder
 function WidgetAutoOrderBuffButton:CheckVisible()

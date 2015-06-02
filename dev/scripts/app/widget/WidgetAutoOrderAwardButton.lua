@@ -108,7 +108,7 @@ function WidgetAutoOrderAwardButton:CheckVisible()
 end
 
 function WidgetAutoOrderAwardButton:GetElementSize()
-	return self:getCascadeBoundingBox().size
+	return {width = 68, height = 78}
 end
 -- For Data
 function WidgetAutoOrderAwardButton:GetNextTimePoint()

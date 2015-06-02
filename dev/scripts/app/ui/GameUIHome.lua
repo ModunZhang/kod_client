@@ -418,10 +418,10 @@ function GameUIHome:CreateTop()
     -- gacha button
     local gacha_button = WidgetAutoOrderGachaButton.new(self)
     left_order:AddElement(gacha_button)
-    left_order:RefreshOrder()
     --在线活动
     local activity_button = WidgetAutoOrderAwardButton.new(self)
     left_order:AddElement(activity_button)
+    left_order:RefreshOrder()
 
 
     local order = WidgetAutoOrder.new(WidgetAutoOrder.ORIENTATION.TOP_TO_BOTTOM,20):addTo(self):pos(display.right-50, display.top-200)

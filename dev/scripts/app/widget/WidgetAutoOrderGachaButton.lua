@@ -48,7 +48,7 @@ function WidgetAutoOrderGachaButton:CheckVisible()
 end
 
 function WidgetAutoOrderGachaButton:GetElementSize()
-	return {width = 40,height = 40}
+	return {width = 80,height = 80}
 end
 
 return WidgetAutoOrderGachaButton
