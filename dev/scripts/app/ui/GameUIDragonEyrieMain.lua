@@ -522,6 +522,10 @@ end
 
 
 function GameUIDragonEyrieMain:OnEnergyButtonClicked()
+    if self.dragon_manager:HaveDragonHateEvent() then
+        UIKit:showMessageDialog(nil, _("你同一时间只能孵化一条巨龙"), function()end)
+        return
+    end
     return NetManager:getHatchDragonPromise(self:GetCurrentDragon():Type())
 end
 

@@ -192,9 +192,13 @@ function UIKit:closeAllUI(force)
             v:LeftButtonClicked()
         end
     end
-    for __,v in pairs(self.messageDialogs) do
-        if v:GetUserData() ~= '__key__dialog' and '__alliance_war_tips__' ~= v:GetUserData() then
-            v:LeftButtonClicked()
+    for key,v in pairs(self.messageDialogs) do
+        if type(v.GetUserData) == 'function' then
+            if v:GetUserData() ~= '__key__dialog' and '__alliance_war_tips__' ~= v:GetUserData() then
+                v:LeftButtonClicked()
+            end
+        else
+            self.messageDialogs[key] = nil
         end
     end
 end

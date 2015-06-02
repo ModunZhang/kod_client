@@ -146,6 +146,10 @@ function DragonManager:OnUserDataChanged(user_data, current_time, deltaData,hp_r
     self:RefreshDragonDeathEvents(user_data,deltaData)
 end
 
+function DragonManager:HaveDragonHateEvent()
+    return not LuaUtils:table_empty(self.dragon_events)
+end
+
 function DragonManager:GetDragonEventByDragonType(dragon_type)
     return self.dragon_events[dragon_type]
 end
@@ -346,6 +350,10 @@ function DragonManager:checkHPRecoveryIf_(dragon,resource_refresh_time,hp_recove
     --龙死了 并且 龙还在血量恢复队列中 从队列中移除这条龙
     if dragon:Ishated() and dragon:IsDead() and self:GetHPResource(dragon:Type())  then
         self:RemoveHPResource(dragon:Type())
+    end
+    local tmp_resource = self:GetHPResource(dragon:Type())
+    if resource_refresh_time and tmp_resource then
+        tmp_resource:UpdateResource(resource_refresh_time,dragon:Hp())
     end
     --判断是否可以执行血量恢复 如果队列中没有这条龙会添加
     if dragon:Ishated() and not dragon:IsDead() and dragon:Status() ~= 'march' then
