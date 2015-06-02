@@ -466,6 +466,8 @@ function MyApp:__checkGameCenter()
                     NetManager:getBindGcIdPromise(gcId):done(function()
                         app:EndCheckGameCenterIf()
                     end)
+                else
+                    app:EndCheckGameCenterIf()
                 end
                 ext.gamecenter.gc_bind = response.msg.isBind
             end)
@@ -479,10 +481,14 @@ function __G__GAME_CENTER_CALLBACK(gc_name,gc_id)
     --如果玩家当前未绑定gc并且当前的gc未绑定任何账号 执行自动绑定
     if gc_name and gc_id and NetManager:isConnected() then
         NetManager:getGcBindStatusPromise(gc_id):done(function(response)
-            if User and not User:IsBindGameCenter() and not response.msg.isBind then
-                NetManager:getBindGcIdPromise(gc_id):done(function()
+            if User and not User:IsBindGameCenter() then
+                if not response.msg.isBind then
+                    NetManager:getBindGcIdPromise(gc_id):done(function()
+                        app:EndCheckGameCenterIf()
+                    end)
+                else
                     app:EndCheckGameCenterIf()
-                end)
+                end
             end
             ext.gamecenter.gc_bind = response.msg.isBind
         end)
