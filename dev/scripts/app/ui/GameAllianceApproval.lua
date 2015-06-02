@@ -26,16 +26,11 @@ function GameAllianceApproval:onEnter()
     list:setDelegate(handler(self, self.sourceDelegate))
     list_node:addTo(self:GetBody()):pos(20,30)
     self.listView = list
-
-    if Alliance_Manager:GetMyAlliance():JoinRequestEvents() == nil then
-        NetManager:getJoinRequestEventsPromise(
-            Alliance_Manager:GetMyAlliance():Id()
-        ):done(function()
-            self:RefreshListView()
-        end)
-    else
+    NetManager:getJoinRequestEventsPromise(
+        Alliance_Manager:GetMyAlliance():Id()
+    ):done(function()
         self:RefreshListView()
-    end
+    end)
 end
 
 function GameAllianceApproval:RefreshListView()
@@ -158,7 +153,7 @@ function GameAllianceApproval:OnAgreeButtonClicked(idx)
             local code = msg.errcode and msg.errcode[1].code or nil
             if code then
                 if UIKit:getErrorCodeKey(code) == 'playerCancelTheJoinRequestToTheAlliance' then
-                    self:OnRefuseButtonClicked(player.id)
+                    self:OnRefuseButtonClicked(idx)
                 end
             end
         end)

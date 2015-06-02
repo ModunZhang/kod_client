@@ -1,4 +1,23 @@
 
+--初始本地化文件
+function __init_localize_file__()
+    local default_language = cc.UserDefault:getInstance():getStringForKey("GAME_LANGUAGE")
+    local init_language = default_language
+    if default_language and string.len(default_language) > 0 then
+        init_language = default_language
+    else
+        init_language = GAME_DEFAULT_LANGUAGE or GameUtils:getCurrentLanguage()
+        cc.UserDefault:getInstance():setStringForKey("GAME_LANGUAGE", init_language)
+    end
+
+    local currentLanFile = string.format("i18n/%s.mo", init_language)
+    local currentLanFilePath = cc.FileUtils:getInstance():fullPathForFilename(currentLanFile)
+    printLog("I18N","i18n file name:%s",currentLanFilePath)
+    if cc.FileUtils:getInstance():isFileExist(currentLanFilePath) then
+        _ = require("app.utils.Gettext").gettextFromFile(currentLanFilePath)
+    end
+end
+
 require("config")
 require("framework.init")
 require("app.Extend")
@@ -6,12 +25,12 @@ require("app.utils.PlatformAdapter")
 require("app.datas.GameDatas")
 require("app.utils.LuaUtils")
 require("app.utils.GameUtils")
+__init_localize_file__()
 require("app.utils.DataUtils")
 require("app.utils.UIKit")
 require("app.utils.window")
 require("app.service.NetManager")
 require("app.service.DataManager")
-
 local Store = import(".utils.Store")
 local GameDefautlt = import("app.utils.GameDefautlt")
 local AudioManager = import("app.utils.AudioManager")
@@ -66,7 +85,6 @@ end
 function MyApp:ctor()
     MyApp.super.ctor(self)
     self:InitGameBase()
-    self:InitI18N()
     NetManager:init()
     self.timer = Timer.new()
     local manager = ccs.ArmatureDataManager:getInstance()
@@ -105,22 +123,13 @@ function MyApp:restart(needDisconnect)
     end
 end
 
-function MyApp:InitI18N()
-    local currentLanFile = string.format("i18n/%s.mo", self:GetGameLanguage())
-    local currentLanFilePath = cc.FileUtils:getInstance():fullPathForFilename(currentLanFile)
-    printLog("I18N","i18n file name:%s",currentLanFilePath)
-    if cc.FileUtils:getInstance():isFileExist(currentLanFilePath) then
-        _ = require("app.utils.Gettext").gettextFromFile(currentLanFilePath)
-    end
-end
-
 function MyApp:GetGameLanguage()
     return self.gameLanguage_
 end
 
 function MyApp:SetGameLanguage(lang)
-    self:GetGameDefautlt():setBasicInfoValueForKey("GAME_LANGUAGE",lang)
-    self:GetGameDefautlt():flush()
+    cc.UserDefault:getInstance():setStringForKey("GAME_LANGUAGE", lang)
+    cc.UserDefault:getInstance():flush()
     self:restart()
 end
 
@@ -128,8 +137,7 @@ function MyApp:InitGameBase()
     self.GameDefautlt_ = GameDefautlt.new()
     self.AudioManager_ = AudioManager.new(self:GetGameDefautlt())
     self.LocalPushManager_ = LocalPushManager.new(self:GetGameDefautlt())
-    local language_code = GAME_DEFAULT_LANGUAGE or GameUtils:getCurrentLanguage()
-    self.gameLanguage_ = self:GetGameDefautlt():getBasicInfoValueForKey("GAME_LANGUAGE",language_code)
+    self.gameLanguage_ = cc.UserDefault:getInstance():getStringForKey("GAME_LANGUAGE")
     self.ChatManager_  = ChatManager.new(self:GetGameDefautlt())
 end
 

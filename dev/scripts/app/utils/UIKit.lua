@@ -11,9 +11,12 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local UILib = import("..ui.UILib")
 local UIListView = import("..ui.UIListView")
+local CURRENT_MODULE_NAME = ...
+local Localize = import(".Localize", CURRENT_MODULE_NAME)
 
 local error_code = {}
 for k,v in pairs(GameDatas.Errors.errors) do
+    v.message = Localize.server_errors[v.code]
     error_code[v.code] = v
 end
 
@@ -23,8 +26,6 @@ UIKit =
         GameUIBase = import('..ui.GameUIBase'),
         messageDialogs = {}
     }
-local CURRENT_MODULE_NAME = ...
-
 UIKit.BTN_COLOR = Enum("YELLOW","BLUE","GREEN","RED","PURPLE")
 UIKit.UITYPE = Enum("BACKGROUND","WIDGET","MESSAGEDIALOG")
 UIKit.open_ui_callbacks = {}
@@ -726,6 +727,7 @@ function UIKit:NoWaitForNet()
     end
 end
 
+
 function UIKit:getErrorCodeData(code)
     return error_code[code] or {}
 end
@@ -797,7 +799,6 @@ end
 
 
 function UIKit:getIapPackageName(productId)
-    local Localize = import(".Localize", CURRENT_MODULE_NAME)
     return Localize.iap_package_name[productId]
 end
 
