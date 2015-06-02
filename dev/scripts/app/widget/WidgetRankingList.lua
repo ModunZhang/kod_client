@@ -225,9 +225,8 @@ function WidgetRankingList:CreatePlayerContentByIndex(idx)
 
 
     local tag = self.drop_list:GetSelectedButtonTag()  
-    local png = tag == "power" and "dragon_strength_27x31.png" or "fight_62x70.png"
-    local s = tag == "power" and 1 or 0.5  
-    display.newSprite(png):addTo(item):pos(400, 40):scale(s)
+    local png = tag == "power" and "dragon_strength_27x31.png" or "battle_33x33.png"
+    display.newSprite(png):addTo(item):pos(400, 40)
     
 
     item.player_icon = player_head_icon
@@ -291,9 +290,9 @@ function WidgetRankingList:CreateAllianceContentByIndex(idx)
         :pos(size.width/2, size.height/2)
 
     local tag = self.drop_list:GetSelectedButtonTag()        
-    local png = tag == "power" and "dragon_strength_27x31.png" or "fight_62x70.png"
-    local s = tag == "power" and 1 or 0.5
-    display.newSprite(png):addTo(item):pos(400, 40):scale(s)
+    local png = tag == "power" and "dragon_strength_27x31.png" or "battle_33x33.png"
+    -- local s = tag == "power" and 1 or
+    display.newSprite(png):addTo(item):pos(400, 40)
 
     item.rank = UIKit:ttfLabel({
         text = "",

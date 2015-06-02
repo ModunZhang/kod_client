@@ -7,6 +7,8 @@ local AllianceView = import(".AllianceView")
 local MapLayer = import(".MapLayer")
 local MultiAllianceLayer = class("MultiAllianceLayer", MapLayer)
 local intInit = GameDatas.AllianceInitData.intInit
+local NORMAL = GameDatas.Soldiers.normal
+local SPECIAL = GameDatas.Soldiers.special
 local ZORDER = Enum("BACKGROUND", "BUILDING", "LINE", "CORPS", "INFO")
 local fmod = math.fmod
 local ceil = math.ceil
@@ -740,8 +742,9 @@ local location_map = {
     },
 }
 local function move_soldiers(corps, ani, dir_index, first_soldier)
+    local is_special = SPECIAL[first_soldier.name]
     local config = soldier_config[first_soldier.name]
-    local star = first_soldier.star or 1
+    local star = is_special and 3 or (first_soldier.star or 1)
     local ani_name, ox, oy = unpack(config[star])
     local _,_,s = unpack(soldier_dir_map[dir_index])
     for i,v in ipairs(location_map[config.count]) do
