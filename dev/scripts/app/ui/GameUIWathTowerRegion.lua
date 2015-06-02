@@ -237,7 +237,12 @@ function GameUIWathTowerRegion:GetMyEventItemWithIndex(index,isOpen,entity)
                 )
                 :align(display.RIGHT_BOTTOM,555,10)
                 :onButtonClicked(function(event)
-                    self:LeftButtonClicked()
+                    local current_scene = display.getRunningScene().__cname
+                    if current_scene == 'AllianceScene' or current_scene == 'AllianceBattleScene' then
+                        self:LeftButtonClicked()
+                    else
+                        app:EnterMyAllianceScene()
+                    end
                 end)
                 :addTo(bg)
             UIKit:ttfLabel({

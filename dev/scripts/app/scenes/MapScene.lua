@@ -14,7 +14,7 @@ function MapScene:ctor()
     User:ResetAllListeners()
     City:ResetAllListeners()
     Alliance_Manager:GetMyAlliance():ResetAllListeners()
-
+    self.my_alliance = Alliance_Manager:GetMyAlliance()
     self.blur_count = 1
     self.event_manager = EventManager.new(self)
     self.touch_judgment = TouchJudgment.new(self)
@@ -42,7 +42,13 @@ function MapScene:onEnter()
     self.top_layer = display.newNode():addTo(self, 3)
     self.screen_layer = display.newNode():addTo(self:GetSceneNode(), 4)
     display.newNode():addTo(self):schedule(function()
-        if --[[]] true then
+        local flag = false
+        if self.my_alliance:IsDefault() then
+            flag = false 
+        else
+            flag = self.my_alliance:GetAllianceBelvedere():IsMeBeAttacked() 
+        end
+        if flag then
             self:Warning()
         else
             self:DisableWaring()
@@ -299,14 +305,11 @@ function MapScene:OnSceneScale()
 end
 
 function MapScene:onEnterTransitionFinish()
-    -- printLog("Info", "Check MessageDialog :%s",self.__cname)
-    -- local message = UIKit:getMessageDialogWillShow()
-    -- if message then
-
-    --     print("add MessageDialog---->",self.__cname,message.AddToCurrentScene,tolua.type(message))
-    --     -- message:addTo(self,3001,1000)
-    --     -- UIKit:clearMessageDialogWillShow()
-    -- end
+    local message = UIKit:getMessageDialogWillShow()
+    if message then
+        message:AddToScene(self, false)
+        UIKit:clearMessageDialogWillShow()
+    end
 end
 return MapScene
 
