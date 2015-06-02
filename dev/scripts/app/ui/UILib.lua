@@ -848,6 +848,7 @@ local IAP_PACKAGE_IMAGE = {
         npc  = "store_npc_1_109x130.png",
         more = {normal = "store_more_red_button_n_584x34.png",pressed = "store_more_red_button_l_584x34.png"},
         small_content = "store_item_content_red_s_588x186.png",
+        light_position = {x = 200 ,y= 70}
     },
     product_2 = {
         content = "store_item_black_610x514.png",
@@ -855,6 +856,7 @@ local IAP_PACKAGE_IMAGE = {
         desc = "store_desc_red_282x92.png",
         more = {normal = "store_more_black_button_n_584x34.png",pressed = "store_more_black_button_l_584x34.png"},
         small_content = "store_item_content_black_s_588x186.png",
+        light_position = {x = 320 ,y= 70}
     },
     product_3 = {
         content = "store_item_black_610x514.png",
@@ -862,6 +864,7 @@ local IAP_PACKAGE_IMAGE = {
         desc = "store_desc_red_282x92.png",
         more = {normal = "store_more_black_button_n_584x34.png",pressed = "store_more_black_button_l_584x34.png"},
         small_content = "store_item_content_black_s_588x186.png",
+        light_position = {x = 320 ,y= 70}
     },
     product_4 = {
         content = "store_item_black_610x514.png",
@@ -869,6 +872,7 @@ local IAP_PACKAGE_IMAGE = {
         desc = "store_desc_red_282x92.png",
         more = {normal = "store_more_black_button_n_584x34.png",pressed = "store_more_black_button_l_584x34.png"},
         small_content = "store_item_content_black_s_588x186.png",
+        light_position = {x = 320 ,y= 70}
     },
     product_5 = {
         content = "store_item_red_610x514.png",
@@ -877,6 +881,7 @@ local IAP_PACKAGE_IMAGE = {
         npc  = "store_npc_2_171x130.png",
         more = {normal = "store_more_red_button_n_584x34.png",pressed = "store_more_red_button_l_584x34.png"},
         small_content = "store_item_content_red_s_588x186.png",
+        light_position = {x = 200 ,y= 70}
     },
 }
 

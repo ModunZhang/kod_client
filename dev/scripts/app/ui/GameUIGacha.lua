@@ -404,7 +404,7 @@ function GameUIGacha:InitOrdinary()
     local line_1 = self:GetLightLine(false):align(display.TOP_CENTER, window.left+32, window.top-200):addTo(layer)
     local line_2 = self:GetLightLine(false):align(display.TOP_CENTER, window.right-31, window.top-200):addTo(layer)
 
-    local button = WidgetPushButton.new({normal = "green_btn_up_252x78.png",pressed = "green_btn_down_252x78.png"}
+    local button = WidgetPushButton.new({normal = "yellow_btn_up_252x78.png",pressed = "yellow_btn_down_252x78.png"}
         ,{}
         ,{
             disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
@@ -453,8 +453,8 @@ function GameUIGacha:InitOrdinary()
         }))
             :setButtonLabelOffset(0,0)
 
-        local btn_images = {normal = "green_btn_up_252x77.png",
-            pressed = "green_btn_down_252x77.png"
+        local btn_images = {normal = "purple_btn_up_252x78.png",
+            pressed = "purple_btn_down_252x78.png"
         }
         button:setButtonImage(cc.ui.UIPushButton.NORMAL, btn_images["normal"], true)
         button:setButtonImage(cc.ui.UIPushButton.PRESSED, btn_images["pressed"], true)
@@ -574,9 +574,8 @@ function GameUIGacha:OnCountInfoChanged()
             size = 24
         })):setButtonLabelOffset(0,0)
 
-        local btn_images = {normal = "green_btn_up_252x77.png",
-            pressed = "green_btn_down_252x77.png",
-            disabled = "grey_btn_252x77.png",
+        local btn_images = {normal = "purple_btn_up_252x78.png",
+            pressed = "purple_btn_down_252x78.png",
         }
         button:setButtonImage(cc.ui.UIPushButton.NORMAL, btn_images["normal"], true)
         button:setButtonImage(cc.ui.UIPushButton.PRESSED, btn_images["pressed"], true)
@@ -588,8 +587,8 @@ function GameUIGacha:OnCountInfoChanged()
             size = 20
         })):setButtonLabelOffset(0,20)
 
-        local btn_images = {normal = "green_btn_up_252x78.png",
-            pressed = "green_btn_down_252x78.png",
+        local btn_images = {normal = "yellow_btn_up_252x78.png",
+            pressed = "yellow_btn_down_252x78.png",
             disabled = "grey_btn_252x78.png",
         }
         button:setButtonImage(cc.ui.UIPushButton.NORMAL, btn_images["normal"], true)

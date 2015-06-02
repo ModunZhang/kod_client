@@ -177,7 +177,7 @@ function WidgetCitizen:ctor(city)
         if i == CITIZEN then
             local add_btn = cc.ui.UIPushButton.new(
                 {normal = "button_wareHouseUI_normal.png",pressed = "button_wareHouseUI_pressed.png"})
-                :addTo(res_info_bg):pos(375, 53)
+                :addTo(res_info_bg):pos(373, 53)
                 :onButtonClicked(function(event)
                     WidgetUseItems.new():Create({item_type = WidgetUseItems.USE_TYPE.BUFF,item_name="citizenBonus_1"})
                         :AddToCurrentScene()

@@ -166,7 +166,6 @@ function GameUIHome:AddOrRemoveListener(isAdd)
         user:AddListenOnType(self, user.LISTEN_TYPE.TASK)
         user:AddListenOnType(self, user.LISTEN_TYPE.VIP_EVENT_ACTIVE)
         user:AddListenOnType(self, user.LISTEN_TYPE.VIP_EVENT_OVER)
-        user:AddListenOnType(self, user.LISTEN_TYPE.VIP_EVENT)
         user:AddListenOnType(self, user.LISTEN_TYPE.COUNT_INFO)
         alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
         alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
@@ -183,7 +182,6 @@ function GameUIHome:AddOrRemoveListener(isAdd)
         user:RemoveListenerOnType(self, user.LISTEN_TYPE.TASK)
         user:RemoveListenerOnType(self, user.LISTEN_TYPE.VIP_EVENT_ACTIVE)
         user:RemoveListenerOnType(self, user.LISTEN_TYPE.VIP_EVENT_OVER)
-        user:RemoveListenerOnType(self, user.LISTEN_TYPE.VIP_EVENT)
         user:RemoveListenerOnType(self, user.LISTEN_TYPE.COUNT_INFO)
         alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
         alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
@@ -420,10 +418,10 @@ function GameUIHome:CreateTop()
     -- gacha button
     local gacha_button = WidgetAutoOrderGachaButton.new(self)
     left_order:AddElement(gacha_button)
-    left_order:RefreshOrder()
     --在线活动
     local activity_button = WidgetAutoOrderAwardButton.new(self)
     left_order:AddElement(activity_button)
+    left_order:RefreshOrder()
 
 
     local order = WidgetAutoOrder.new(WidgetAutoOrder.ORIENTATION.TOP_TO_BOTTOM,20):addTo(self):pos(display.right-50, display.top-200)
@@ -534,9 +532,6 @@ end
 function GameUIHome:OnVipEventOver( vip_event )
     self:RefreshVIP()
 end
-function GameUIHome:OnVipEventTimer()
-    self:RefreshVIP()
-end
 function GameUIHome:RefreshExp()
     local current_level = User:GetPlayerLevelByExp(User:LevelExp())
     self.exp:setPercentage( (User:LevelExp() - User:GetCurrentLevelExp(current_level))/(User:GetCurrentLevelMaxExp(current_level) - User:GetCurrentLevelExp(current_level)) * 100)
@@ -548,7 +543,7 @@ function GameUIHome:RefreshVIP()
     vip_btn:setButtonImage(cc.ui.UIPushButton.PRESSED, vip_btn_img, true)
     local vip_level = self.vip_level
     vip_level:removeAllChildren()
-    local level_img = display.newSprite(string.format("VIP_%d_46x32.png", User:GetVipLevel()),0,0,{class=cc.FilteredSpriteWithOne}):addTo(vip_level)
+    local level_img = display.newSprite(string.format("VIP_%d_46x32.png", User:GetVipLevel()),5,0,{class=cc.FilteredSpriteWithOne}):addTo(vip_level)
     if not User:IsVIPActived() then
         local my_filter = filter
         local filters = my_filter.newFilter("GRAY", {0.2, 0.3, 0.5, 0.1})
