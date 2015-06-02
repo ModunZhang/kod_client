@@ -44,11 +44,11 @@ function WidgetAutoOrderGachaButton:CheckVisible()
 	if not result then
 		self:stopAllActions()
 	end
-	return true
+	return result
 end
 
 function WidgetAutoOrderGachaButton:GetElementSize()
-	return {width = 80,height = 80}
+	return {width = 80,height = 70}
 end
 
 return WidgetAutoOrderGachaButton

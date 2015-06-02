@@ -46,6 +46,7 @@ end
 
 function LocalPushManager:CancelNotificationByIdentity(identity)
 	if not self:IsSupport() then return end
+	print("CancelNotificationByIdentity------>",identity)
 	localPush.cancelNotification(identity)
 end
 -- key is string
@@ -92,6 +93,7 @@ function LocalPushManager:AddLocalPush(push_key,finishTime,msg,identity)
 		return 
 	end
 	self:CancelNotificationByIdentity(identity)
+	print("AddLocalPush---->",push_key,finishTime,msg,identity)
 	localPush.addNotification(push_key, finishTime,msg,identity)
 	local target_queue = self["push_queue_" .. push_key]
 	target_queue[identity] = {finishTime = finishTime,msg = msg,identity = identity}

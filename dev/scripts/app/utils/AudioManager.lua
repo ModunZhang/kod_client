@@ -6,20 +6,18 @@ local AudioManager = class("AudioManager")
 local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
 
 local bg_music_map = {
-	MainScene               = "music_begin.mp3",
-	MyCityScene             = "sfx_city.mp3",
-	AllianceScene           = "bgm_peace.mp3",
-	PVEScene                = "bgm_battle.mp3",
-	AllianceBattleScene     = "bgm_battle.mp3",
-	AllianceBattleScene_sfx = "sfx_battle.mp3",
-	grassLand               = "sfx_grassland.mp3",
-	iceField                = "sfx_icefield.mp3",
-	desert                  = "sfx_desert.mp3",
+	MainScene               = "music_begin.mp3", -- mainscene
+	MyCityScene             = "sfx_city.mp3", -- city
+	AllianceScene           = "bgm_peace.mp3", -- city alliancescene
+	PVEScene                = "bgm_battle.mp3", -- pve
+	AllianceBattleScene     = "bgm_battle.mp3", -- city alliancebattle 
+	AllianceBattleScene_sfx = "sfx_battle.mp3", -- alliancebattle
+	grassLand               = "sfx_grassland.mp3",--  alliancescene
+	iceField                = "sfx_icefield.mp3",--  alliancescene
+	desert                  = "sfx_desert.mp3", --  alliancescene
 }
-
 local effect_sound_map = {
 	NORMAL_DOWN = "sfx_tap_button.mp3",
-	-- NORMAL_UP = "ui_button_down.mp3",
 	HOME_PAGE = "sfx_tap_homePage.mp3",
 	OPEN_MAIL = "sfx_open_mail.mp3",
 	USE_ITEM = "sfx_use_item.mp3",
@@ -122,9 +120,11 @@ function AudioManager:PlayeBgMusic(filename,isLoop)
 		if file_key ~= self.last_music_filename then
 			audio.playMusic("audios/" .. filename,isLoop)
 			self.last_music_filename = file_key 
+			self.last_music_loop = isLoop
 		elseif not audio.isMusicPlaying() then
 			audio.playMusic("audios/" .. filename,isLoop)
 			self.last_music_filename = file_key 
+			self.last_music_loop = isLoop
 		end
 	end
 end
@@ -194,15 +194,6 @@ function AudioManager:PlayGameMusic(scene_name,isLoop,forcePlay)
 			end
 		end
 		self:PlayGameMusicWithMapKey(file_key,isLoop)
-		-- if bg_music_map[file_key] then
-		-- 	if string.find(bg_music_map[file_key],"sfx_") then
-		-- 		self:SetBgMusicVolume(0)
-		-- 		self:PlayeBgMusic(bg_music_map[file_key],isLoop)
-		-- 		self:FadeInBgMusicVolume()
-		-- 	else
-		-- 		self:PlayeBgMusic(bg_music_map[file_key],isLoop)
-		-- 	end
-		-- end
 	else
 		local file_key = scene_name or display.getRunningScene().__cname
 		self:PlayGameMusicWithMapKey(file_key,isLoop)
@@ -304,13 +295,17 @@ end
 
 -- for global call
 function AudioManager:OnBackgroundMusicCompletion()
-	printLog("AudioManager","OnBackgroundMusicCompletion---->%s", self:GetLastPlayedFileName())
+	printLog("AudioManager","OnBackgroundMusicCompletion---->%s,%s", self:GetLastPlayedFileName(),tostring(self.last_music_loop))
+	if self.last_music_loop then return end -- 如果上次是循环的背景音乐 忽略
 	local current_scene = display.getRunningScene()
 	local scene_name    = current_scene.__cname
 	local lastFileKey   = self:GetLastPlayedFileName()
 	local alliance      = Alliance_Manager:GetMyAlliance()
 	local terrain       = alliance:Terrain()
 	local status        = alliance:Status()
+	if not scene_name or string.len(scene_name) == 0 then
+		assert(false,"没有获取到当前的scene信息!")
+	end
 
 	if scene_name == 'MyCityScene' then
 		if status == 'prepare' or status == 'fight' then

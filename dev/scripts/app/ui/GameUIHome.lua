@@ -396,7 +396,7 @@ function GameUIHome:CreateTop()
         color = UIKit:hex2c3b(0xfffeb3)})
         :addTo(quest_bar_bg):align(display.LEFT_CENTER, -120, 0)
 
-    local left_order =  WidgetAutoOrder.new(WidgetAutoOrder.ORIENTATION.TOP_TO_BOTTOM,20):addTo(self):pos(display.left+40, display.top-200)
+    local left_order =  WidgetAutoOrder.new(WidgetAutoOrder.ORIENTATION.TOP_TO_BOTTOM,50):addTo(self):pos(display.left+40, display.top-200)
     -- 活动按钮
     local button = cc.ui.UIPushButton.new(
         {normal = "tips_66x64.png", pressed = "tips_66x64.png"},
@@ -415,16 +415,13 @@ function GameUIHome:CreateTop()
         return {width = 66,height = 64}
     end
     left_order:AddElement(button)
-    -- gacha button
-    local gacha_button = WidgetAutoOrderGachaButton.new(self)
-    left_order:AddElement(gacha_button)
     --在线活动
     local activity_button = WidgetAutoOrderAwardButton.new(self)
     left_order:AddElement(activity_button)
     left_order:RefreshOrder()
 
 
-    local order = WidgetAutoOrder.new(WidgetAutoOrder.ORIENTATION.TOP_TO_BOTTOM,20):addTo(self):pos(display.right-50, display.top-200)
+    local order = WidgetAutoOrder.new(WidgetAutoOrder.ORIENTATION.TOP_TO_BOTTOM,50):addTo(self):pos(display.right-50, display.top-200)
     -- BUFF按钮
     local buff_button = WidgetAutoOrderBuffButton.new(self)
     order:AddElement(buff_button)
@@ -454,6 +451,10 @@ function GameUIHome:CreateTop()
         return help_button:getCascadeBoundingBox().size
     end
     order:AddElement(help_button)
+
+    -- gacha button
+    local gacha_button = WidgetAutoOrderGachaButton.new(self)
+    order:AddElement(gacha_button)
 
     order:RefreshOrder()
     self.top_order_group = order
@@ -784,6 +785,7 @@ end
 function GameUIHome:OnCountInfoChanged()
     self.join_alliance_tips_button:setVisible(not User:GetCountInfo().firstJoinAllianceRewardGeted)
     self.left_order_group:RefreshOrder()
+    self.top_order_group:RefreshOrder()
 end
 function GameUIHome:PromiseOfFteAlliance()
     self.bottom:TipsOnAlliance()
