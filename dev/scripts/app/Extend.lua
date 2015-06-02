@@ -10,6 +10,26 @@ local rgba4444 = import(".rgba4444")
 for k,v in pairs(rgba4444) do
     display.setTexturePixelFormat(k, v)
 end
+-- 
+local jpg_rgb888 = import(".jpg_rgb888")
+for k,v in pairs(jpg_rgb888) do
+   display.setTexturePixelFormat(k, v) 
+end
+-- 4444
+for i,v in ipairs{
+    "emoji.png"
+    } do
+    display.setTexturePixelFormat(v, cc.TEXTURE2_D_PIXEL_FORMAT_RGB_A4444)
+end
+
+
+-- rgb888
+-- for i,v in ipairs{
+--     "emoji.png"
+--     } do
+--     display.setTexturePixelFormat(v, cc.TEXTURE2_D_PIXEL_FORMAT_RG_B888)
+-- end
+
 
 
 
