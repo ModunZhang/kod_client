@@ -28,8 +28,8 @@ CONFIG_LOCAL_SERVER = {
 }
 CONFIG_REMOTE_SERVER = {
     update = {
-        host = "192.168.0.12",
-        port = 80,
+        host = "54.223.166.65",
+        port = 3000,
         name = "update-server-1"
     },
     gate = {
