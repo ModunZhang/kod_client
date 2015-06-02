@@ -10,6 +10,8 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local Localize = import("..utils.Localize")
 local UILib = import(".UILib")
 local Localize_item = import("..utils.Localize_item")
+local light_gem = import("..particles.light_gem")
+
 
 function GameUIStore:ctor()
 	GameUIStore.super.ctor(self,City,_("获得金龙币"))
@@ -104,6 +106,8 @@ end
 
 function GameUIStore:GetItemLogo(data)
 	local logo = display.newSprite(data.config.logo)
+	-- 金龙币上的粒子特效
+	light_gem():addTo(logo, 1022):pos(data.config.light_position.x , data.config.light_position.y):scale(1.2)
 	local logo_box = display.newSprite("store_logo_box_592x141.png",296,69):addTo(logo):zorder(5)
 	local bg = display.newSprite(data.config.desc)
 	if data.config.npc then

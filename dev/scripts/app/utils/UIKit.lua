@@ -750,7 +750,7 @@ function UIKit:GotoPreconditionBuilding(jump_building)
     end)
 end
 -- 暂时只有宝箱
-function UIKit:PlayUseItemAni(items)
+function UIKit:PlayUseItemAni(items,awards,message)
     if string.find(items:Name(),"dragonChest") then
         local ani = ""
         local item_name = items:Name()
@@ -760,18 +760,18 @@ function UIKit:PlayUseItemAni(items)
             ani = "lvse_box"
         elseif item_name == "dragonChest_3" then
             ani = "zise_box"
+        elseif item_name == "chest_1" then
+            ani = "mu_box"
+        elseif item_name == "chest_2" then
+            ani = "tong_box"
+        elseif item_name == "chest_3" then
+            ani = "yin_box"
+        elseif item_name == "chest_4" then
+            ani = "jin_box"
         end
-        local box = ccs.Armature:create(ani):addTo(display.getRunningScene(),10000):align(display.CENTER, display.cx-50, display.cy)
-            :scale(0.5)
-        box:getAnimation():setMovementEventCallFunc(function (armatureBack, movementType, movementID)
-            if movementType == ccs.MovementEventType.start then
-            elseif movementType == ccs.MovementEventType.complete then
-                box:removeFromParent()
-            elseif movementType == ccs.MovementEventType.loopComplete then
-            end
-        end)
-
-        box:getAnimation():play("Animation1", -1, 0)
+        if ani then
+            self:newGameUI("GameUIChest", items,awards,message,ani):AddToCurrentScene():setLocalZOrder(10000)
+        end
     end
 end
 
