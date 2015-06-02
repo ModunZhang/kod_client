@@ -114,6 +114,9 @@ function GameUIAlliance:CreateBetweenBgAndTitle()
 end
 
 function GameUIAlliance:OnMoveOutStage()
+    if self.need_refresh then
+        UIKit:NoWaitForNet()
+    end
     local myAlliance = Alliance_Manager:GetMyAlliance()
     myAlliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
     -- join or quit

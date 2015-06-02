@@ -154,10 +154,10 @@ function GameUIAllianceShop:HonourAndLoyalty()
     }):addTo(bg):align(display.CENTER, bg:getContentSize().width/2 , bg:getContentSize().height/2)
 
     function node:SetHonour( honour )
-        honour_label:setString(string.formatnumberthousands(honour))
+        honour_label:setString(GameUtils:formatNumber(honour))
     end
     function node:SetLoyalty( loyalty )
-        loyalty_label:setString(string.formatnumberthousands(loyalty))
+        loyalty_label:setString(GameUtils:formatNumber(loyalty))
     end
     return node
 end

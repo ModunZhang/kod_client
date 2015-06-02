@@ -543,7 +543,7 @@ function GameUIAllianceShrine:reportsSouceDelegate(listView, tag, idx)
     end
 end
 function GameUIAllianceShrine:RefreshEventsListView()
-	self.events_list:removeAllItems()
+	-- self.events_list:removeAllItems()
 	local data = clone(self:GetAllianceShrine():GetShrineReports())
 	table.sort( data,function(a,b)
 		return a:Time() > b:Time()
