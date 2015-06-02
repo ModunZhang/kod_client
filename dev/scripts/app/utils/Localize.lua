@@ -1208,18 +1208,6 @@ local ALLIANCE_DECORATE_NAME = {
     decorate_mountain = _("山"),
     decorate_tree = _("树")
 }
-local LOGIN_TIPS = {
-    _("提示：预留一定的空闲城民，兵营将他们训练成士兵"),
-    _("登录提示帮助2"),
-    _("登录提示帮助3"),
-    _("登录提示帮助4"),
-    _("登录提示帮助5"),
-    _("登录提示帮助6"),
-    _("登录提示帮助7"),
-    _("登录提示帮助8"),
-    _("登录提示帮助9"),
-    _("登录提示帮助10"),
-}
 
 local SERVER_NAME = {
     bronze = _("青铜级"),
@@ -1286,7 +1274,6 @@ return {
     alliance_language = ALLIANCE_LANGUAGE,
     alliance_decorate_name = ALLIANCE_DECORATE_NAME,
     shrine_desc = SHRINE_DESC,
-    login_tips = LOGIN_TIPS,
     server_name = SERVER_NAME,
     equip_material_desc_localize = EQUIP_MATERIAL_DESC_LOCALIZE,
     materials_desc_map = MATERIALS_DESC_MAP,
