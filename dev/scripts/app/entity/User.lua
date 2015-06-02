@@ -102,7 +102,7 @@ function User:ctor(p)
         [STRENGTH] = AutomaticUpdateResource.new(),
     }
     self:GetGemResource():SetValueLimit(math.huge) -- 会有人充值这么多的金龙币吗？
-    self:GetStrengthResource():SetValueLimit(100)
+    self:GetStrengthResource():SetValueLimit(intInit.staminaMax.value)
 
     self.staminaUsed = 0
     self.gemUsed = nil
@@ -591,7 +591,7 @@ function User:OnResourcesChangedByTime(userData, current_time, deltaData)
     if is_fully_update or is_delta_update then
         local strength = self:GetStrengthResource()
         strength:UpdateResource(current_time, resources.stamina)
-        strength:SetProductionPerHour(current_time, 4)
+        strength:SetProductionPerHour(current_time, intInit.staminaRecoverPerHour.value)
     end
     self:GetGemResource():SetValue(resources.gem)
 end

@@ -507,8 +507,11 @@ function WidgetUseItems:OpenStrengthDialog( item )
         color = 0x615b44,
     }):align(display.LEFT_CENTER,80,blood_bg:getContentSize().height/2)
         :addTo(blood_bg)
+
+    local value = User:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+    local prodperhour = User:GetStrengthResource():GetProductionPerHour()
     UIKit:ttfLabel({
-        text = User:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()),
+        text = string.format(_("%s(+%d/每小时)"), string.formatnumberthousands(value), prodperhour),
         size = 22,
         color = 0x28251d,
     }):align(display.RIGHT_CENTER,blood_bg:getContentSize().width-40,blood_bg:getContentSize().height/2)
