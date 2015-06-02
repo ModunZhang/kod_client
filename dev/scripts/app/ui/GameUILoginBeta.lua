@@ -5,7 +5,6 @@
 local GameUILoginBeta = UIKit:createUIClass('GameUILoginBeta','GameUISplashBeta')
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local LOCAL_RESOURCES_PERCENT = 60
-local Localize = import("..utils.Localize")
 local WidgetPushTransparentButton = import("..widget.WidgetPushTransparentButton")
 
 function GameUILoginBeta:ctor()
@@ -83,11 +82,23 @@ function GameUILoginBeta:createProgressBar()
 end
 
 function GameUILoginBeta:createTips()
+    local LOGIN_TIPS = {
+        _("提示：预留一定的空闲城民，兵营将他们训练成士兵"),
+        _("登录提示帮助2"),
+        _("登录提示帮助3"),
+        _("登录提示帮助4"),
+        _("登录提示帮助5"),
+        _("登录提示帮助6"),
+        _("登录提示帮助7"),
+        _("登录提示帮助8"),
+        _("登录提示帮助9"),
+        _("登录提示帮助10"),
+    }
     math.randomseed(tostring(os.time()):reverse():sub(1, 6))
-    local random = math.random(1,#Localize.login_tips)
+    local random = math.random(1,#LOGIN_TIPS)
     local label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = Localize.login_tips[random],
+        text = LOGIN_TIPS[random],
         font = UIKit:getFontFilePath(),
         size = 18,
         align = cc.TEXT_ALIGNMENT_CENTER,

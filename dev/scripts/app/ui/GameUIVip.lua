@@ -13,6 +13,7 @@ local UILib = import(".UILib")
 local window = import("..utils.window")
 local Localize = import("..utils.Localize")
 local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
+local light_gem = import("..particles.light_gem")
 local loginDays = GameDatas.Vip.loginDays
 local VIP_LEVEL = GameDatas.Vip.level
 local config_store = GameDatas.StoreItems.items
@@ -243,7 +244,8 @@ function GameUIVip:CreateAD(index)
                 self:LeftButtonClicked()
             end
         end)
-
+    -- 金龙币上的粒子特效
+    light_gem():addTo(ad, 1022):pos(data.config.light_position.x , data.config.light_position.y):scale(1.2)
     local info_bg = display.newSprite(data.config.desc):addTo(ad)
     display.newSprite("store_gem_260x116.png"):addTo(info_bg):align(display.CENTER, 0, info_bg:getContentSize().height/2)
     if data.config.npc then

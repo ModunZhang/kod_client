@@ -11,9 +11,12 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local UILib = import("..ui.UILib")
 local UIListView = import("..ui.UIListView")
+local CURRENT_MODULE_NAME = ...
+local Localize = import(".Localize", CURRENT_MODULE_NAME)
 
 local error_code = {}
 for k,v in pairs(GameDatas.Errors.errors) do
+    v.message = Localize.server_errors[v.code]
     error_code[v.code] = v
 end
 
@@ -23,8 +26,6 @@ UIKit =
         GameUIBase = import('..ui.GameUIBase'),
         messageDialogs = {}
     }
-local CURRENT_MODULE_NAME = ...
-
 UIKit.BTN_COLOR = Enum("YELLOW","BLUE","GREEN","RED","PURPLE")
 UIKit.UITYPE = Enum("BACKGROUND","WIDGET","MESSAGEDIALOG")
 UIKit.open_ui_callbacks = {}
@@ -726,6 +727,7 @@ function UIKit:NoWaitForNet()
     end
 end
 
+
 function UIKit:getErrorCodeData(code)
     return error_code[code] or {}
 end
@@ -750,7 +752,7 @@ function UIKit:GotoPreconditionBuilding(jump_building)
     end)
 end
 -- 暂时只有宝箱
-function UIKit:PlayUseItemAni(items)
+function UIKit:PlayUseItemAni(items,awards,message)
     if string.find(items:Name(),"dragonChest") then
         local ani = ""
         local item_name = items:Name()
@@ -760,18 +762,18 @@ function UIKit:PlayUseItemAni(items)
             ani = "lvse_box"
         elseif item_name == "dragonChest_3" then
             ani = "zise_box"
+        elseif item_name == "chest_1" then
+            ani = "mu_box"
+        elseif item_name == "chest_2" then
+            ani = "tong_box"
+        elseif item_name == "chest_3" then
+            ani = "yin_box"
+        elseif item_name == "chest_4" then
+            ani = "jin_box"
         end
-        local box = ccs.Armature:create(ani):addTo(display.getRunningScene(),10000):align(display.CENTER, display.cx-50, display.cy)
-            :scale(0.5)
-        box:getAnimation():setMovementEventCallFunc(function (armatureBack, movementType, movementID)
-            if movementType == ccs.MovementEventType.start then
-            elseif movementType == ccs.MovementEventType.complete then
-                box:removeFromParent()
-            elseif movementType == ccs.MovementEventType.loopComplete then
-            end
-        end)
-
-        box:getAnimation():play("Animation1", -1, 0)
+        if ani then
+            self:newGameUI("GameUIChest", items,awards,message,ani):AddToCurrentScene():setLocalZOrder(10000)
+        end
     end
 end
 
@@ -797,7 +799,6 @@ end
 
 
 function UIKit:getIapPackageName(productId)
-    local Localize = import(".Localize", CURRENT_MODULE_NAME)
     return Localize.iap_package_name[productId]
 end
 
