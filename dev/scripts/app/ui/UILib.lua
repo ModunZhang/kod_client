@@ -82,6 +82,7 @@ local BUILDING_ANIMATIONS_FILES = {
         "animations/tong_box.ExportJson",
         "animations/yin_box.ExportJson",
         "animations/jin_box.ExportJson",
+        "animations/Box_guang.ExportJson",
     }
 }
 local BUILDING_ANIMATIONS = getAniNameFromAnimationFiles(BUILDING_ANIMATIONS_FILES)

@@ -252,13 +252,13 @@ function WidgetUseItems:OpenBuffDialog( item )
 end
 function WidgetUseItems:OpenResourceDialog( item )
     local same_items = ItemManager:GetSameTypeItems(item)
-    local dialog = UIKit:newWidgetUI("WidgetPopDialog",#same_items * 130 +24 + 70,_("增益道具"),window.top-230)
+    local dialog = UIKit:newWidgetUI("WidgetPopDialog",(#same_items >4 and 4 or #same_items) * 130 +24 + 70,_("增益道具"),window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
 
     local list,list_node = UIKit:commonListView_1({
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
-        viewRect = cc.rect(0, 0,546,#same_items * 130),
+        viewRect = cc.rect(0, 0,546,(#same_items >4 and 4 or #same_items) * 130),
     })
     list_node:addTo(body):align(display.BOTTOM_CENTER, size.width/2,20)
     local which_bg = true

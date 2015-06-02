@@ -1008,7 +1008,7 @@ function WidgetEventTabButtons:ProductionTechnologyEventUpgradeOrSpeedup(event)
 end
 
 function WidgetEventTabButtons:GetProductionTechnologyEventProgressInfo(event)
-    return _("研发") .. event:Entity():GetLocalizedName() .. " " .. GameUtils:formatTimeStyle1(event:GetTime()),event:GetPercent()
+    return _("研发") .. event:Entity():GetLocalizedName() ,event:GetPercent(),GameUtils:formatTimeStyle1(event:GetTime())
 end
 
 function WidgetEventTabButtons:PromiseOfPopUp()
