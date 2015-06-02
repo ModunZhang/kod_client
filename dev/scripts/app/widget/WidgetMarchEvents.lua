@@ -426,15 +426,17 @@ function WidgetMarchEvents:CreateDefenceItem(entity)
     end
     node.desc = UIKit:ttfLabel({
         text = display_text,
-        size = 16,
+        size = 18,
         color = 0xd1ca95,
+        shadow = true,
     }):addTo(node):align(display.LEFT_CENTER, 10, half_height)
 
     node.time = UIKit:ttfLabel({
         text = time_str,
-        size = 16,
+        size = 18,
         color = 0xd1ca95,
         align = cc.TEXT_ALIGNMENT_RIGHT,
+        shadow = true,
     }):addTo(node):align(display.RIGHT_CENTER, WIDGET_WIDTH - 170, half_height)
 
     node.speed_btn = WidgetPushButton.new({

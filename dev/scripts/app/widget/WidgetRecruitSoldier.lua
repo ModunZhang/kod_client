@@ -310,6 +310,7 @@ function WidgetRecruitSoldier:AddButtons()
                 local not_enough_material = self:CheckMaterials(self.count)
                 if not_enough_material then
                     UIKit:showMessageDialog(_("招募材料不足"),_("您当前没有足够材料"))
+                    return
                 else
                     NetManager:getInstantRecruitSpecialSoldierPromise(self.soldier_name, self.count)
                 end
