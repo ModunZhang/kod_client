@@ -1,8 +1,17 @@
+require("cocos.cocos2d.Cocos2dConstants")
 print("加载玩家自定义函数!")
 NOT_HANDLE = function(...) print("net message not handel, please check !") end
 local texture_data_file = device.platform == 'ios' and ".texture_data_iOS" or ".texture_data"
 local plist_texture_data     = import(texture_data_file)
 local sharedSpriteFrameCache = cc.SpriteFrameCache:getInstance()
+
+-- 设置图片格式
+local rgba4444 = import(".rgba4444")
+for k,v in pairs(rgba4444) do
+    display.setTexturePixelFormat(k, v)
+end
+
+
 
 local c = cc
 local Sprite = c.Sprite

@@ -20,6 +20,10 @@ function MyCityFteScene:ctor(...)
     MyCityFteScene.super.ctor(self, ...)
     self.clicked_callbacks = {}
 end
+function MyCityFteScene:onEnter()
+    MyCityFteScene.super.onEnter(self)
+    self.home_page.left_order_group:hide()
+end
 function MyCityFteScene:onEnterTransitionFinish()
     self:RunFte()
 end
