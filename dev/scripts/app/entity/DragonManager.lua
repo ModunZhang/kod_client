@@ -146,6 +146,10 @@ function DragonManager:OnUserDataChanged(user_data, current_time, deltaData,hp_r
     self:RefreshDragonDeathEvents(user_data,deltaData)
 end
 
+function DragonManager:HaveDragonHateEvent()
+    return not LuaUtils:table_empty(self.dragon_events)
+end
+
 function DragonManager:GetDragonEventByDragonType(dragon_type)
     return self.dragon_events[dragon_type]
 end
