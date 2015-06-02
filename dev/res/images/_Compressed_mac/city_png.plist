@@ -20,7 +20,7 @@
             <key>VIP_1_46x32.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{222,686},{20,32}}</string>
+                <string>{{575,118},{20,32}}</string>
                 <key>offset</key>
                 <string>{-1,0}</string>
                 <key>rotated</key>
@@ -33,11 +33,11 @@
             <key>VIP_2_46x32.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{190,985},{26,32}}</string>
+                <string>{{592,630},{26,32}}</string>
                 <key>offset</key>
                 <string>{-1,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{9,0},{26,32}}</string>
                 <key>sourceSize</key>
@@ -46,11 +46,11 @@
             <key>VIP_3_46x32.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{605,983},{26,32}}</string>
+                <string>{{592,596},{26,32}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{10,0},{26,32}}</string>
                 <key>sourceSize</key>
@@ -72,11 +72,11 @@
             <key>VIP_5_46x32.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{571,985},{26,32}}</string>
+                <string>{{595,562},{26,32}}</string>
                 <key>offset</key>
                 <string>{-1,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{9,0},{26,32}}</string>
                 <key>sourceSize</key>
@@ -85,7 +85,7 @@
             <key>VIP_6_46x32.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{537,985},{26,32}}</string>
+                <string>{{190,985},{26,32}}</string>
                 <key>offset</key>
                 <string>{-1,0}</string>
                 <key>rotated</key>
@@ -98,11 +98,11 @@
             <key>VIP_7_46x32.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{600,955},{26,32}}</string>
+                <string>{{595,528},{26,32}}</string>
                 <key>offset</key>
                 <string>{-1,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{9,0},{26,32}}</string>
                 <key>sourceSize</key>
@@ -241,11 +241,11 @@
             <key>can_level_up.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{600,931},{22,42}}</string>
+                <string>{{608,865},{22,42}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{22,42}}</string>
                 <key>sourceSize</key>
@@ -319,7 +319,7 @@
             <key>dragon_star_40x40.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{595,530},{36,36}}</string>
+                <string>{{595,490},{36,36}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -436,11 +436,11 @@
             <key>gacha_num_bg.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{575,118},{36,19}}</string>
+                <string>{{623,528},{36,19}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{36,19}}</string>
                 <key>sourceSize</key>
@@ -745,88 +745,10 @@
                 <key>sourceSize</key>
                 <string>{96,120}</string>
             </dict>
-            <key>vip_lv_bar_1.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{595,490},{35,38}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{35,38}}</string>
-                <key>sourceSize</key>
-                <string>{35,38}</string>
-            </dict>
-            <key>vip_lv_bar_2.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{608,865},{34,38}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{34,38}}</string>
-                <key>sourceSize</key>
-                <string>{34,38}</string>
-            </dict>
-            <key>vip_lv_bar_3.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{503,989},{32,24}}</string>
-                <key>offset</key>
-                <string>{3,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{6,7},{32,24}}</string>
-                <key>sourceSize</key>
-                <string>{38,38}</string>
-            </dict>
-            <key>vip_lv_bar_4.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{608,905},{34,24}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{34,24}}</string>
-                <key>sourceSize</key>
-                <string>{34,24}</string>
-            </dict>
-            <key>vip_lv_bar_5.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{504,303},{26,20}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{26,20}}</string>
-                <key>sourceSize</key>
-                <string>{26,20}</string>
-            </dict>
-            <key>vip_lv_bar_6.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{222,578},{26,2}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <true/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{26,2}}</string>
-                <key>sourceSize</key>
-                <string>{26,2}</string>
-            </dict>
             <key>vip_point.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{516,325},{14,18}}</string>
+                <string>{{504,303},{14,18}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -872,7 +794,7 @@
             <key>size</key>
             <string>{644,1016}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:6a275f147cef73eb257471256c09df1b:1/1$</string>
+            <string>$TexturePacker:SmartUpdate:3c93e11da6038dff0b89fede6e4dc6c8:1/1$</string>
             <key>textureFileName</key>
             <string>city_png.png</string>
         </dict>

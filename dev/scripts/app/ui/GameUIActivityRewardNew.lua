@@ -479,7 +479,7 @@ function GameUIActivityRewardNew:GetRewardName(reward_type,reward_key)
 end
 -----------------------
 function GameUIActivityRewardNew:ui_FIRST_IN_PURGURE()
-    local bar = display.newSprite("activity_first_purgure_587x176.jpg"):align(display.TOP_CENTER, 304,self.height - 15):addTo(self.bg)
+    local bar = display.newSprite("activity_first_purgure_588x176.jpg"):align(display.TOP_CENTER, 304,self.height - 15):addTo(self.bg)
     local bg = display.newSprite("selenaquestion_bg_580x536.png"):addTo(self.bg):align(display.TOP_CENTER, 304, self.height - 15 - 176):scale(587/580)
     display.newSprite("Npc.png"):align(display.RIGHT_BOTTOM, 315, -10):addTo(self.bg):scale(552/423)
     local reward_bg = display.newScale9Sprite("activity_day_bg_104x34.png",0,0,cc.size(290,510),cc.rect(10,10,84,14)):align(display.LEFT_BOTTOM, 260, 14):addTo(bg)
