@@ -310,15 +310,15 @@ function Item:UpdateDesc(building)
             self.desc_label:setString(building:IsHouse() and _("正在建造") or _("正在解锁"))
             self.desc_label:setPositionY(35)
         else
-            self.desc_label:setString(string.format("%s%d", _("正在升级到 等级"), building:GetNextLevel()))
+            self.desc_label:setString(string.format(_("正在升级到等级%d"), building:GetNextLevel()))
             self.desc_label:setPositionY(35)
         end
     else
         if building:IsMaxLevel() then
-            self.desc_label:setString(string.format("%s", _("已经到最大等级了")))
+            self.desc_label:setString(_("已经到最大等级了"))
             self.desc_label:setPositionY(70)
         else
-            self.desc_label:setString(string.format("%s%d%s%d", _("从等级"), building:GetLevel(), _("升级到等级"), building:GetNextLevel()))
+            self.desc_label:setString(string.format(_("从等级%d升级到等级%d"), building:GetLevel(), building:GetNextLevel()))
             self.desc_label:setPositionY(35)
         end
     end
