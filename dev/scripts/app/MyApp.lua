@@ -1,4 +1,23 @@
 
+--初始本地化文件
+function __init_localize_file__()
+    local default_language = cc.UserDefault:getInstance():getStringForKey("GAME_LANGUAGE")
+    local init_language = default_language
+    if default_language and string.len(default_language) > 0 then
+        init_language = default_language
+    else
+        init_language = GAME_DEFAULT_LANGUAGE or GameUtils:getCurrentLanguage()
+        cc.UserDefault:getInstance():setStringForKey("GAME_LANGUAGE", init_language)
+    end
+
+    local currentLanFile = string.format("i18n/%s.mo", init_language)
+    local currentLanFilePath = cc.FileUtils:getInstance():fullPathForFilename(currentLanFile)
+    printLog("I18N","i18n file name:%s",currentLanFilePath)
+    if cc.FileUtils:getInstance():isFileExist(currentLanFilePath) then
+        _ = require("app.utils.Gettext").gettextFromFile(currentLanFilePath)
+    end
+end
+
 require("config")
 require("framework.init")
 require("app.Extend")
@@ -6,12 +25,12 @@ require("app.utils.PlatformAdapter")
 require("app.datas.GameDatas")
 require("app.utils.LuaUtils")
 require("app.utils.GameUtils")
+__init_localize_file__()
 require("app.utils.DataUtils")
 require("app.utils.UIKit")
 require("app.utils.window")
 require("app.service.NetManager")
 require("app.service.DataManager")
-
 local Store = import(".utils.Store")
 local GameDefautlt = import("app.utils.GameDefautlt")
 local AudioManager = import("app.utils.AudioManager")
@@ -66,7 +85,6 @@ end
 function MyApp:ctor()
     MyApp.super.ctor(self)
     self:InitGameBase()
-    self:InitI18N()
     NetManager:init()
     self.timer = Timer.new()
     local manager = ccs.ArmatureDataManager:getInstance()
@@ -105,22 +123,13 @@ function MyApp:restart(needDisconnect)
     end
 end
 
-function MyApp:InitI18N()
-    local currentLanFile = string.format("i18n/%s.mo", self:GetGameLanguage())
-    local currentLanFilePath = cc.FileUtils:getInstance():fullPathForFilename(currentLanFile)
-    printLog("I18N","i18n file name:%s",currentLanFilePath)
-    if cc.FileUtils:getInstance():isFileExist(currentLanFilePath) then
-        _ = require("app.utils.Gettext").gettextFromFile(currentLanFilePath)
-    end
-end
-
 function MyApp:GetGameLanguage()
     return self.gameLanguage_
 end
 
 function MyApp:SetGameLanguage(lang)
-    self:GetGameDefautlt():setBasicInfoValueForKey("GAME_LANGUAGE",lang)
-    self:GetGameDefautlt():flush()
+    cc.UserDefault:getInstance():setStringForKey("GAME_LANGUAGE", lang)
+    cc.UserDefault:getInstance():flush()
     self:restart()
 end
 
@@ -128,8 +137,7 @@ function MyApp:InitGameBase()
     self.GameDefautlt_ = GameDefautlt.new()
     self.AudioManager_ = AudioManager.new(self:GetGameDefautlt())
     self.LocalPushManager_ = LocalPushManager.new(self:GetGameDefautlt())
-    local language_code = GAME_DEFAULT_LANGUAGE or GameUtils:getCurrentLanguage()
-    self.gameLanguage_ = self:GetGameDefautlt():getBasicInfoValueForKey("GAME_LANGUAGE",language_code)
+    self.gameLanguage_ = cc.UserDefault:getInstance():getStringForKey("GAME_LANGUAGE")
     self.ChatManager_  = ChatManager.new(self:GetGameDefautlt())
 end
 
@@ -466,6 +474,8 @@ function MyApp:__checkGameCenter()
                     NetManager:getBindGcIdPromise(gcId):done(function()
                         app:EndCheckGameCenterIf()
                     end)
+                else
+                    app:EndCheckGameCenterIf()
                 end
                 ext.gamecenter.gc_bind = response.msg.isBind
             end)
@@ -479,10 +489,14 @@ function __G__GAME_CENTER_CALLBACK(gc_name,gc_id)
     --如果玩家当前未绑定gc并且当前的gc未绑定任何账号 执行自动绑定
     if gc_name and gc_id and NetManager:isConnected() then
         NetManager:getGcBindStatusPromise(gc_id):done(function(response)
-            if User and not User:IsBindGameCenter() and not response.msg.isBind then
-                NetManager:getBindGcIdPromise(gc_id):done(function()
+            if User and not User:IsBindGameCenter() then
+                if not response.msg.isBind then
+                    NetManager:getBindGcIdPromise(gc_id):done(function()
+                        app:EndCheckGameCenterIf()
+                    end)
+                else
                     app:EndCheckGameCenterIf()
-                end)
+                end
             end
             ext.gamecenter.gc_bind = response.msg.isBind
         end)
