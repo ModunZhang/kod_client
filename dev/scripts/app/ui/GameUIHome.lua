@@ -594,13 +594,13 @@ local icon_map = {
     stone = "res_stone_88x82.png",
     citizen = "res_citizen_88x82.png",
 }
-function GameUIHome:ShowResourceAni(resource, wp)
+function GameUIHome:ShowResourceAni(resource)
     local pnt = self.top
     pnt:removeChildByTag(RES_ICON_TAG[resource])
 
     local s1 = self.res_icon_map[resource]:getContentSize()
     local tp = pnt:convertToNodeSpace(self.res_icon_map[resource]:convertToWorldSpace(cc.p(s1.width/2,s1.height/2)))
-    local lp = pnt:convertToNodeSpace(wp)
+    local lp = pnt:convertToNodeSpace(cc.p(display.cx, display.cy))
 
     local x,y,tx,ty = lp.x,lp.y,tp.x, tp.y
     local icon = display.newSprite(icon_map[resource])
