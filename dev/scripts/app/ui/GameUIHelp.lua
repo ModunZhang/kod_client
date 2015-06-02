@@ -93,6 +93,8 @@ end
 function GameUIHelp:InitHelpEvents()
     local help_events = self.alliance:GetCouldShowHelpEvents()
     if help_events then
+        self.help_listview:removeAllItems()
+        self.help_events_items = {}
         for k,event in pairs(help_events) do
             self:InsertItemToList(event)
         end
@@ -102,7 +104,6 @@ end
 function GameUIHelp:InsertItemToList(help_event)
     -- 当前玩家的求助事件需要置顶
     local item = self:CreateHelpItem(help_event)
-    -- 检查自己请求帮助的事件是否已经结束了
     if User:Id() == help_event:GetPlayerData():Id() then
         self.help_listview:addItem(item,1)
     else
@@ -310,40 +311,41 @@ function GameUIHelp:CreateHelpItem(event)
     return item
 end
 function GameUIHelp:OnHelpEventChanged(changed_help_event)
-    if changed_help_event.added then
-        local added = changed_help_event.added
-        for _,event in pairs(added) do
-            if not self:IsHelpedByMe(event:GetEventData():HelpedMembers()) or not self:IsHelpedToMaxNum(event) then
-                self:InsertItemToList(event)
-            end
-        end
-        self.help_listview:reload()
-    end
-    if changed_help_event.removed then
-        local removed = changed_help_event.removed
-        for _,event in pairs(removed) do
-            self:DeleteHelpItem(event:Id())
-        end
-        self:performWithDelay(function ()
-            self.help_listview:reload()
-        end, 0.3)
-    end
-    if changed_help_event.edit then
-        local edit = changed_help_event.edit
-        for _,event in pairs(edit) do
-            local item = self.help_events_items[event:Id()]
-            if item then
-                if self:IsHelpedByMe(event:GetEventData():HelpedMembers()) or self:IsHelpedToMaxNum(event) then
-                    self:DeleteHelpItem(event:Id())
-                else
-                    item:SetHelp(event)
-                end
-            end
-        end
-        self:performWithDelay(function ()
-            self.help_listview:reload()
-        end, 0.3)
-    end
+    -- if changed_help_event.added then
+    --     local added = changed_help_event.added
+    --     for _,event in pairs(added) do
+    --         if not self:IsHelpedByMe(event:GetEventData():HelpedMembers()) or not self:IsHelpedToMaxNum(event) then
+    --             self:InsertItemToList(event)
+    --         end
+    --     end
+    --     self.help_listview:reload()
+    -- end
+    -- if changed_help_event.removed then
+    --     local removed = changed_help_event.removed
+    --     for _,event in pairs(removed) do
+    --         self:DeleteHelpItem(event:Id())
+    --     end
+    --     self:performWithDelay(function ()
+    --         self.help_listview:reload()
+    --     end, 0.3)
+    -- end
+    -- if changed_help_event.edit then
+    --     local edit = changed_help_event.edit
+    --     for _,event in pairs(edit) do
+    --         local item = self.help_events_items[event:Id()]
+    --         if item then
+    --             if self:IsHelpedByMe(event:GetEventData():HelpedMembers()) or self:IsHelpedToMaxNum(event) then
+    --                 self:DeleteHelpItem(event:Id())
+    --             else
+    --                 item:SetHelp(event)
+    --             end
+    --         end
+    --     end
+    --     self:performWithDelay(function ()
+    --         self.help_listview:reload()
+    --     end, 0.3)
+    -- end
+    self:InitHelpEvents()
     self.help_all_button:setVisible(self:IsAbleToHelpAll())
 end
 function GameUIHelp:OnCountInfoChanged()
