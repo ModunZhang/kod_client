@@ -13,7 +13,7 @@ function GameUITechnologySpeedUp:ctor()
 		self.technologyEvent = City:GetProductionTechEventsArray()[1]
 	end
 	if not self.technologyEvent then
-		self:removeFromParent()
+		self:LeftButtonClicked()
 	else
 		local event = self.technologyEvent
 		self:SetAccBtnsGroup("productionTechEvents",event:Id())
@@ -28,7 +28,7 @@ end
 
 function GameUITechnologySpeedUp:FreeSpeedUpAction()
 	NetManager:getFreeSpeedUpPromise("productionTechEvents",self:GetEvent():Id()):done(function()
-		self:removeFromParent()
+		self:LeftButtonClicked()
 	end)
 end
 
@@ -39,11 +39,6 @@ function GameUITechnologySpeedUp:onCleanup()
 end
 
 function GameUITechnologySpeedUp:OnProductionTechnologyEventDataChanged(changed_map)
-	for __,v in ipairs(changed_map.removed or {}) do
-		if v:Id() == self:GetEvent():Id() then
-			self:LeftButtonClicked()
-		end
-	end
 end
 
 function GameUITechnologySpeedUp:OnProductionTechnologyEventTimer(event)
