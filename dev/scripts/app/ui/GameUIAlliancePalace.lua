@@ -292,7 +292,9 @@ function GameUIAlliancePalace:OpenAwardDialog(member)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 if self.alliance:GetSelf():IsArchon() then
-                    NetManager:getGiveLoyaltyToAllianceMemberPromise(member:Id(),slider:GetValue())
+                    NetManager:getGiveLoyaltyToAllianceMemberPromise(member:Id(),slider:GetValue()):done(function ()
+                        GameGlobalUI:showTips(_("提示"),_("发放成功"))
+                    end)
                     dialog:LeftButtonClicked()
                 else
                     UIKit:showMessageDialog(_("提示"),_("只有盟主拥有权限"))
