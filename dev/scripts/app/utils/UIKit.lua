@@ -753,7 +753,7 @@ function UIKit:GotoPreconditionBuilding(jump_building)
 end
 -- 暂时只有宝箱
 function UIKit:PlayUseItemAni(items,awards,message)
-    if string.find(items:Name(),"dragonChest") then
+    if string.find(items:Name(),"dragonChest") or string.find(items:Name(),"chest") then
         local ani = ""
         local item_name = items:Name()
         if item_name == "dragonChest_1" then

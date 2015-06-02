@@ -350,7 +350,9 @@ function GameUIMail:InitInbox(mails)
         local promise = self.manager:FetchMailsFromServer(0)
         if promise then
             promise:done(function ( response )
-                self.inbox_listview:reload()
+                if self.inbox_listview then
+                    self.inbox_listview:reload()
+                end
                 return response
             end)
         end
@@ -506,7 +508,9 @@ function GameUIMail:InitSaveMails(mails)
         local promise =self.manager:FetchSavedMailsFromServer(0)
         if promise then
             promise:done(function ( response )
-                self.save_mails_listview:reload()
+                if self.save_mails_listview then
+                    self.save_mails_listview:reload()
+                end
                 return response
             end)
         end
@@ -660,7 +664,9 @@ function GameUIMail:InitSendMails(mails)
         local promise = self.manager:FetchSendMailsFromServer(0)
         if promise then
             promise:done(function ( response )
-                self.send_mail_listview:reload()
+                if self.send_mail_listview then
+                    self.send_mail_listview:reload()
+                end
                 return response
             end)
         end
@@ -1224,7 +1230,9 @@ function GameUIMail:InitReport()
         local promise = self.manager:FetchReportsFromServer(0)
         if promise then
             promise:done(function ( response )
-                self.report_listview:reload()
+                if self.report_listview then
+                    self.report_listview:reload()
+                end
                 return response
             end)
         end
@@ -1481,7 +1489,9 @@ function GameUIMail:InitSavedReports()
                     local promise = self.manager:FetchSavedReportsFromServer(0)
                     if promise then
                         promise:done(function ( response )
-                            self.saved_reports_listview:reload()
+                            if self.saved_reports_listview then
+                                self.saved_reports_listview:reload()
+                            end
                             return response
                         end)
                     end
