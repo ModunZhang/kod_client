@@ -31,6 +31,9 @@ function MapScene:OnUserBasicChanged(user, changed)
     end
 end
 function MapScene:onEnter()
+    if self.PreLoadImages then
+        self:PreLoadImages()
+    end
     -- self.scene_node = display.newClippingRegionNode(cc.rect(0, 0, display.width, display.height)):addTo(self)
     -- self.scene_node:setContentSize(cc.size(display.width, display.height))
     self.scene_node = display.newNode():addTo(self)
@@ -56,7 +59,23 @@ function MapScene:onEnter()
     end, 1)
 end
 function MapScene:onExit()
+    if self.UnloadImages then
+        self:UnloadImages()
+    end
     self.touch_judgment:destructor()
+end
+function MapScene:PreLoadImages()
+    for _,v in ipairs(self:GetPreloadImages()) do
+        display.addSpriteFrames(DEBUG_GET_ANIMATION_PATH(v.list),DEBUG_GET_ANIMATION_PATH(v.image))
+    end
+end
+function MapScene:UnloadImages()
+    for _,v in ipairs(self:GetPreloadImages()) do
+        display.removeSpriteFramesWithFile(DEBUG_GET_ANIMATION_PATH(v.list),DEBUG_GET_ANIMATION_PATH(v.image))
+    end
+end
+function MapScene:GetPreloadImages()
+    return {}
 end
 function MapScene:GetScreenLayer()
     return self.screen_layer

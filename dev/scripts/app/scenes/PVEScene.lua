@@ -30,7 +30,6 @@ local DIRECTION_TAG = 911
 
 local timer = app.timer
 function PVEScene:ctor(user)
-    self:LoadAnimation()
     PVEScene.super.ctor(self)
     self.user = user
     self.move_step = 1
@@ -71,6 +70,15 @@ function PVEScene:onExit()
         end)
     end
 end
+function PVEScene:GetPreloadImages()
+    return {
+        {image = "animations/heihua_animation_0.pvr.ccz",list = "animations/heihua_animation_0.plist"},
+        {image = "animations/heihua_animation_1.pvr.ccz",list = "animations/heihua_animation_1.plist"},
+        {image = "animations/heihua_animation_2.pvr.ccz",list = "animations/heihua_animation_2.plist"},
+        {image = "animations/region_animation_0.pvr.ccz",list = "animations/region_animation_0.plist"},
+        {image = "pve_png_rgba5555.pvr.ccz",list = "pve_png_rgba5555.plist"},
+    }
+end
 function PVEScene:CreateDirectionArrow()
     if not self:getChildByTag(DIRECTION_TAG) then
         return WidgetDirectionSelect.new():pos(display.cx, display.cy)
@@ -85,10 +93,6 @@ function PVEScene:GetDirectionArrow()
 end
 function PVEScene:DestroyDirectionArrow()
     self:removeChildByTag(DIRECTION_TAG)
-end
-function PVEScene:LoadAnimation()
-    UILib.loadSolidersAnimation()
-    UILib.loadPveAnimation()
 end
 function PVEScene:CreateSceneLayer()
     return PVELayer.new(self, self.user)
@@ -260,7 +264,7 @@ function PVEScene:CheckTrap()
                 enemy.soldiers,-- pve 怪数据
                 function(dragonType, soldiers)
                     local dragon = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon(dragonType)
-                    
+
                     local attack_soldier = LuaUtils:table_map(soldiers, function(k, v)
                         return k, {
                             name = v.name,
@@ -314,6 +318,7 @@ end
 
 
 return PVEScene
+
 
 
 

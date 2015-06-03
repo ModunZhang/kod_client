@@ -4,14 +4,14 @@ NOT_HANDLE = function(...) print("net message not handel, please check !") end
 local texture_data_file = device.platform == 'ios' and ".texture_data_iOS" or ".texture_data"
 local plist_texture_data     = import(texture_data_file)
 local sharedSpriteFrameCache = cc.SpriteFrameCache:getInstance()
-
--- 设置图片格式
 local rgba4444 = import(".rgba4444")
+local jpg_rgb888 = import(".jpg_rgb888")
+
+-- -- 设置图片格式
 for k,v in pairs(rgba4444) do
     display.setTexturePixelFormat(k, v)
 end
 -- 
-local jpg_rgb888 = import(".jpg_rgb888")
 for k,v in pairs(jpg_rgb888) do
    display.setTexturePixelFormat(k, v) 
 end
@@ -23,14 +23,14 @@ for i,v in ipairs{
 end
 
 
--- rgb888
--- for i,v in ipairs{
---     "emoji.png"
---     } do
---     display.setTexturePixelFormat(v, cc.TEXTURE2_D_PIXEL_FORMAT_RG_B888)
--- end
-
-
+local _Armature = ccs.Armature
+local ccs_Armature_create = _Armature.create
+local manager = ccs.ArmatureDataManager:getInstance()
+function _Armature:create(ani)
+    local path = DEBUG_GET_ANIMATION_PATH(string.format("animations/%s.ExportJson", ani))
+    manager:addArmatureFileInfo(path)
+    return ccs_Armature_create(self, ani)
+end
 
 
 local c = cc
@@ -296,6 +296,9 @@ local newScene = display.newScene
 function display.newScene(name)
     local WAI_TAG = 1234
     local scene = newScene(name)
+    for k,_ in pairs(jpg_rgb888) do
+        scene:markAutoCleanupImage(k)
+    end
     function scene:WaitForNet(delay)
         local child = self:getChildByTag(WAI_TAG)
         if not child then

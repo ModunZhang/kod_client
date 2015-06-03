@@ -7,7 +7,7 @@ local FteScene = class("FteScene", function()
 end)
 
 function FteScene:ctor()
-
+    display.newSprite("fte_background.jpg"):addTo(self):pos(display.cx, display.cy)
 end
 function FteScene:onEnter()
     app:GetAudioManager():PlayGameMusic("MyCityScene")
@@ -49,18 +49,14 @@ function FteScene:onEnterTransitionFinish()
     end)
     self.npc:StartDialog()
 end
-function FteScene:onExit()
-    cc.Director:getInstance():getTextureCache():removeTextureForKey("fte_select_dragon_desert.jpg")
-    cc.Director:getInstance():getTextureCache():removeTextureForKey("fte_select_dragon_grassLand.jpg")
-    cc.Director:getInstance():getTextureCache():removeTextureForKey("fte_select_dragon_iceField.jpg")
-end
 function FteScene:PormiseOfSchedule(time, func)
     return function()
-    	return cocos_promise.promiseOfSchedule(self, time, 0.1, func)
+        return cocos_promise.promiseOfSchedule(self, time, 0.1, func)
     end
 end
 
 
 return FteScene
+
 
 

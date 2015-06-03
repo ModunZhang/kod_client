@@ -237,14 +237,14 @@ function GameUIBuild:CreateItemWithListView(list_view)
 
     local left_x, right_x = 5, 150
     local frame = display.newSprite("alliance_item_flag_box_126X126.png"):addTo(back_ground):pos((left_x + right_x) / 2, h/2):scale(134/126)
-    local info_btn = WidgetPushButton.new(
-        {normal = "info_26x26.png",pressed = "info_26x26.png"})
-        :addTo(frame)
-        :align(display.CENTER, 16, 16)
+    -- local info_btn = WidgetPushButton.new(
+    --     {normal = "info_26x26.png",pressed = "info_26x26.png"})
+    --     :addTo(frame)
+    --     :align(display.CENTER, 16, 16)
 
 
     local building_icon = display.newSprite(SpriteConfig["dwelling"]:GetConfigByLevel(1).png)
-        :addTo(back_ground):align(display.BOTTOM_CENTER, (left_x + right_x) / 2, 30)
+        :addTo(back_ground):align(display.BOTTOM_CENTER, (left_x + right_x) / 2, 15)
 
     local title_blue = display.newScale9Sprite("title_blue_430x30.png",0, 0,cc.size(410,30),cc.rect(15,10,400,10))
         :addTo(back_ground):align(display.LEFT_CENTER, right_x, h - 23)
