@@ -19,7 +19,6 @@ function AllianceScene:ctor(location)
     AllianceScene.super.ctor(self)
 end
 function AllianceScene:onEnter()
-    self:LoadAnimation()
     AllianceScene.super.onEnter(self)
     self:CreateAllianceUI()
     app:GetAudioManager():PlayGameMusic("AllianceScene")
@@ -56,9 +55,12 @@ function AllianceScene:onEnter()
     --     app:onEnterForeground()
     -- end)
 end
-function AllianceScene:LoadAnimation()
-    UILib.loadSolidersAnimation()
-    UILib.loadDragonAnimation()
+function AllianceScene:GetPreloadImages()
+    return {
+        {image = "animations/region_animation_0.pvr.ccz",list = "animations/region_animation_0.plist"},
+        {image = "region_png.pvr.ccz",list = "region_png.plist"},
+        {image = "region_pvr.pvr.ccz",list = "region_pvr.plist"},
+    }
 end
 function AllianceScene:GotoCurrentPosition()
     local mapObject = self:GetAlliance():GetAllianceMap():FindMapObjectById(self:GetAlliance():GetSelf():MapId())

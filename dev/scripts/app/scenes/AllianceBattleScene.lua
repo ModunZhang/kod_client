@@ -14,7 +14,6 @@ function AllianceBattleScene:ctor(location)
     AllianceBattleScene.super.ctor(self)
 end
 function AllianceBattleScene:onEnter()
-    self:LoadAnimation()
     AllianceBattleScene.super.onEnter(self)
     self:CreateAllianceUI()
     self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
@@ -55,9 +54,12 @@ function AllianceBattleScene:GotoPosition(x,y,aid)
     local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(x,y,aid)
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
 end
-function AllianceBattleScene:LoadAnimation()
-    UILib.loadSolidersAnimation()
-    UILib.loadDragonAnimation()
+function AllianceBattleScene:GetPreloadImages()
+    return {
+        {image = "animations/region_animation_0.pvr.ccz",list = "animations/region_animation_0.plist"},
+        {image = "region_png.pvr.ccz",list = "region_png.plist"},
+        {image = "region_pvr.pvr.ccz",list = "region_pvr.plist"},
+    }
 end
 function AllianceBattleScene:CreateAllianceUI()
     local home_page = GameUIAllianceHome.new(self:GetAlliance(), self:GetSceneLayer()):addTo(self)

@@ -202,8 +202,22 @@ function GameUIStore:AddRewardsForItem(content,data)
 	end
 end
 
+function GameUIStore:CreateShopButton(on_clicked)
+    local gem_button = cc.ui.UIImage.new("gem_btn_up.png"):align(display.RIGHT_TOP, 670, 86)
+    local gem_icon = cc.ui.UIImage.new("gem_icon_62x61.png")
+        :addTo(gem_button)
+        :pos(106,0)
 
-function GameUIStore:RightButtonClicked()
+    light_gem():addTo(gem_icon, 1022):pos(62/2, 61/2)
+
+    local gem_label = UIKit:ttfLabel({
+        text = ""..string.formatnumberthousands(City:GetUser():GetGemResource():GetValue()),
+        size = 20,
+        color = 0xffd200,
+        shadow = true
+    }):addTo(gem_button):align(display.CENTER,64,32)
+
+    return gem_button,gem_label
 end
 
 return GameUIStore

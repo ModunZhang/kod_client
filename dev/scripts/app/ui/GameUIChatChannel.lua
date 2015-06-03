@@ -613,7 +613,8 @@ function GameUIChatChannel:CreatePlayerMenu(event,chat)
         elseif msg == 'out' then
             local tag = data.tag
             if tag ~= 'blockChat' then
-                if #self:GetDataSource() - 7 <= 0 or listView:getItemWithLogicIndex(#self:GetDataSource() - 7) then
+                local __,offset_y = listView:getSlideDistance()
+                if offset_y  < 0 then
                     listView:scrollAuto()
                 else
                     if distance > 0 then

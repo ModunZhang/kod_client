@@ -12,7 +12,6 @@ function CityScene:ctor(city)
     CityScene.super.ctor(self)
 end
 function CityScene:onEnter()
-    self:LoadAnimation()
     CityScene.super.onEnter(self)
     self:GetSceneLayer():AddObserver(self)
     self:GetSceneLayer():InitWithCity(self:GetCity())
@@ -28,17 +27,19 @@ function CityScene:onEnter()
     -- end)
 end
 function CityScene:onExit()
-    UILib.unLoadBuildingAnimation()
     self:stopAllActions()
     --TODO:注意：这里因为主城现在播放两个音乐文件 所以这里要关掉鸟叫的sound音效
     audio.stopAllSounds()
     CityScene.super.onExit(self)
 end
--- init ui
-function CityScene:LoadAnimation()
-    UILib.loadSolidersAnimation()
-    UILib.loadBuildingAnimation()
-    UILib.loadDragonAnimation()
+function CityScene:GetPreloadImages()
+    return {
+        {image = "animations/building_animation.pvr.ccz",list = "animations/building_animation.plist"},
+        {image = "city_png.pvr.ccz",list = "city_png.plist"},
+        {image = "city_prv_0.pvr.ccz",list = "city_prv_0.plist"},
+        {image = "city_prv_1.pvr.ccz",list = "city_prv_1.plist"},
+        {image = "city_prv_2.pvr.ccz",list = "city_prv_2.plist"},
+    }
 end
 function CityScene:GetCity()
     return self.city
