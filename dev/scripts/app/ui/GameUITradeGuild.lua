@@ -94,7 +94,7 @@ function GameUITradeGuild:onExit()
     self.city:GetMaterialManager():RemoveObserver(self)
     GameUITradeGuild.super.onExit(self)
 end
-    
+
 function GameUITradeGuild:LoadBuyPage()
     local layer = self.buy_layer
     self.resource_drop_list =  WidgetRoundTabButtons.new(
@@ -117,26 +117,32 @@ function GameUITradeGuild:LoadBuyPage()
 
             if self.resource_layer then
                 self.resource_layer:setVisible(tag == 'resource')
-                if self.resource_options:getSelectedIndex() then
-                    self:RefreshSellListView(RESOURCE_TYPE,self.resource_options:getSelectedIndex())
-                else
-                    self.resource_options:getButtonAtIndex(1):setButtonSelected(true)
+                if tag == 'resource' then
+                    if self.resource_options:getSelectedIndex() then
+                        self:RefreshSellListView(RESOURCE_TYPE,self.resource_options:getSelectedIndex())
+                    else
+                        self.resource_options:getButtonAtIndex(1):setButtonSelected(true)
+                    end
                 end
             end
             if self.build_material_layer then
                 self.build_material_layer:setVisible(tag == 'build_material')
-                if self.build_material_options:getSelectedIndex() then
-                    self:RefreshSellListView(BUILD_MATERIAL_TYPE,self.build_material_options:getSelectedIndex())
-                else
-                    self.build_material_options:getButtonAtIndex(1):setButtonSelected(true)
+                if tag == 'build_material' then
+                    if self.build_material_options:getSelectedIndex() then
+                        self:RefreshSellListView(BUILD_MATERIAL_TYPE,self.build_material_options:getSelectedIndex())
+                    else
+                        self.build_material_options:getButtonAtIndex(1):setButtonSelected(true)
+                    end
                 end
             end
             if self.martial_material_layer then
                 self.martial_material_layer:setVisible(tag == 'martial_material')
-                if self.martial_material_options:getSelectedIndex() then
-                    self:RefreshSellListView(BUILD_MATERIAL_TYPE,self.martial_material_options:getSelectedIndex())
-                else
-                    self.martial_material_options:getButtonAtIndex(1):setButtonSelected(true)
+                if tag == 'martial_material' then
+                    if self.martial_material_options:getSelectedIndex() then
+                        self:RefreshSellListView(BUILD_MATERIAL_TYPE,self.martial_material_options:getSelectedIndex())
+                    else
+                        self.martial_material_options:getButtonAtIndex(1):setButtonSelected(true)
+                    end
                 end
             end
         end
@@ -1101,6 +1107,7 @@ function GameUITradeGuild:GetMaterialIndexByName(material_type)
     return build_temp[material_type] or teach_temp[material_type]
 end
 return GameUITradeGuild
+
 
 
 
