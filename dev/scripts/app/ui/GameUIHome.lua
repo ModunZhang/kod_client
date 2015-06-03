@@ -163,6 +163,7 @@ function GameUIHome:AddOrRemoveListener(isAdd)
         my_allaince:AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
         my_allaince:AddListenOnType(self, Alliance.LISTEN_TYPE.HELP_EVENTS)
         my_allaince:AddListenOnType(self, Alliance.LISTEN_TYPE.ALL_HELP_EVENTS)
+        my_allaince:AddListenOnType(self, Alliance.LISTEN_TYPE.OPERATION)
         user:AddListenOnType(self, user.LISTEN_TYPE.BASIC)
         user:AddListenOnType(self, user.LISTEN_TYPE.TASK)
         user:AddListenOnType(self, user.LISTEN_TYPE.VIP_EVENT_ACTIVE)
@@ -179,6 +180,7 @@ function GameUIHome:AddOrRemoveListener(isAdd)
         my_allaince:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
         my_allaince:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.HELP_EVENTS)
         my_allaince:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.ALL_HELP_EVENTS)
+        my_allaince:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.OPERATION)
         user:RemoveListenerOnType(self, user.LISTEN_TYPE.BASIC)
         user:RemoveListenerOnType(self, user.LISTEN_TYPE.TASK)
         user:RemoveListenerOnType(self, user.LISTEN_TYPE.VIP_EVENT_ACTIVE)
@@ -540,6 +542,11 @@ end
 function GameUIHome:OnVipEventOver( vip_event )
     self.top_order_group:RefreshOrder()
     self:RefreshVIP()
+end
+function GameUIHome:OnOperation(alliance,operation_type)
+    if operation_type == "quit" then
+        self.top_order_group:RefreshOrder()
+    end
 end
 function GameUIHome:RefreshExp()
     local current_level = User:GetPlayerLevelByExp(User:LevelExp())
