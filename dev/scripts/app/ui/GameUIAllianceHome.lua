@@ -419,6 +419,9 @@ function GameUIAllianceHome:CreateTop()
         if status=="peace" then
             enemy_peace_label:setVisible(true)
             fight_icon_66x66:setVisible(true)
+            if enemy_name_bg:getChildByTag(201) then
+                enemy_name_bg:removeChildByTag(201, true)
+            end
         else
             fight_icon_66x66:setVisible(false)
             enemy_peace_label:setVisible(false)
