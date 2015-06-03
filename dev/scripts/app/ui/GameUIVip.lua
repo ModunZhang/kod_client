@@ -801,7 +801,6 @@ function GameUIVip:OnUserBasicChanged(from,changed_map)
         self.vip_layer:removeChildByTag(999, true)
         local exp_bar = self:CreateVipExpBar():addTo(self.vip_layer,1,999):pos(display.cx-287, display.top-300)
         exp_bar:LightLevelBar(vip_level,percent,exp)
-        self.active_button:setButtonEnabled(vip_level~=0)
         if self.player_node then
             self.player_node:RefreshUI()
         end
