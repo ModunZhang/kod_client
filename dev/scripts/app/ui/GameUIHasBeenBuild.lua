@@ -333,18 +333,21 @@ function Item:ChangeStatus(status)
         self:HideProgress()
 
         self:ShowInstantButton()
+        self.condition_label:show()
     elseif status == "free" then
         self:HideNormalButton()
         self:HideInstantButton()
 
         self:ShowProgress()
         self:ShowFreeSpeedUp()
+        self.condition_label:hide()
     elseif status == "normal" then
         self:HideFreeSpeedUp()
         self:HideInstantButton()
         self:HideProgress()
 
         self:ShowNormalButton()
+        self.condition_label:show()
     elseif status == "building" then
         self:HideFreeSpeedUp()
         self:HideInstantButton()
@@ -352,17 +355,21 @@ function Item:ChangeStatus(status)
 
         self:ShowProgress()
         self.speed_up:setVisible(true)
+        self.condition_label:hide()
     elseif status == "disable" then
         self:HideFreeSpeedUp()
         self:HideInstantButton()
         self:HideProgress()
         self:ShowNormalButton()
+
+        self.condition_label:show()
     elseif status == "max" then
         self:HideFreeSpeedUp()
         self:HideInstantButton()
         self:HideNormalButton()
         self:HideProgress()
         self.speed_up:hide()
+
         self.condition_label:hide()
     end
     self.status = status
