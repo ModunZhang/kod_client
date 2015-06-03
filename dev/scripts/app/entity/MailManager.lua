@@ -145,6 +145,7 @@ function MailManager:DeleteMail(mail)
 end
 function MailManager:ModifyMail(mail)
     for k,v in pairs(self.mails) do
+        print("ModifyMail ",v.id, mail.id)
         if v.id == mail.id then
             if mail.isSaved ~= v.isSaved then
                 self:OnNewSavedMailsChanged(mail)
@@ -360,8 +361,9 @@ function MailManager:OnNewMailsChanged( mails )
                 for k,v in pairs(u_mails) do
                     max_index = math.max(k,max_index)
                 end
-                local temp_mail = table.remove(u_mails,max_index)
-                table.insert(u_mails, 1 ,temp_mail)
+                local first = clone(u_mails[max_index])
+                u_mails[max_index] = nil
+                table.insert(u_mails, 1 ,first)
             end
         elseif type == "remove" then
             for i,data in ipairs(mail) do
@@ -370,6 +372,7 @@ function MailManager:OnNewMailsChanged( mails )
             end
         elseif type == "edit" then
             for i,data in ipairs(mail) do
+                LuaUtils:outputTable("edit mail", data)
                 table.insert(edit_mails, self:ModifyMail(clone(data)))
             end
         end
