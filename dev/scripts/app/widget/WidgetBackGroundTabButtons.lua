@@ -112,6 +112,16 @@ function WidgetBackGroundTabButtons:SetButtonTipNumber(tab_tag,number)
     end
     tab.tip_numbers:SetNumber(number)
 end
+
+function WidgetBackGroundTabButtons:GetNumberTipNode(tab_tag)
+    local tab = self:GetTabByTag(tab_tag)
+    if not tab then return end
+     if not tab.tip_numbers then
+        tab.tip_numbers = WidgetNumberTips.new():addTo(tab):align(display.RIGHT_CENTER, 300,25)
+    end
+    return tab.tip_numbers
+end
+
 return WidgetBackGroundTabButtons
 
 
