@@ -257,6 +257,11 @@ function GameUIGacha:CreateGachaPool(layer)
                             self.continuous_draw_items = nil
                             -- 恢复ui退出home_button
                             main:GetHomeButton():setButtonEnabled(true)
+
+                            -- 弹出评价
+                            if self.appraise then
+                                
+                            end
                         end
                         award:setLocalZOrder(1)
                     end})
@@ -280,6 +285,10 @@ function GameUIGacha:CreateGachaPool(layer)
         local item_name = item[1]
         self.current_gacha_item_count = item[2]
         self.current_gacha_item_name = item_name
+        -- 是否弹出评价
+        if not app:GetGameDefautlt():getStringForKey("APPRAISE:"..User:Id()) and string.find(item_name,"gemClass") then
+            self.appraise = true
+        end
         layer:EnAbleButton(false)
         local terminal_point
         for i,item in ipairs(items) do
