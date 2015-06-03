@@ -167,6 +167,8 @@ function GameUIHome:AddOrRemoveListener(isAdd)
         user:AddListenOnType(self, user.LISTEN_TYPE.VIP_EVENT_ACTIVE)
         user:AddListenOnType(self, user.LISTEN_TYPE.VIP_EVENT_OVER)
         user:AddListenOnType(self, user.LISTEN_TYPE.COUNT_INFO)
+        user:AddListenOnType(self, user.LISTEN_TYPE.IAP_GIFTS_REFRESH)
+        user:AddListenOnType(self, user.LISTEN_TYPE.IAP_GIFTS_CHANGE)
         alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
         alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
     else
@@ -183,6 +185,8 @@ function GameUIHome:AddOrRemoveListener(isAdd)
         user:RemoveListenerOnType(self, user.LISTEN_TYPE.VIP_EVENT_ACTIVE)
         user:RemoveListenerOnType(self, user.LISTEN_TYPE.VIP_EVENT_OVER)
         user:RemoveListenerOnType(self, user.LISTEN_TYPE.COUNT_INFO)
+        user:RemoveListenerOnType(self, user.LISTEN_TYPE.IAP_GIFTS_REFRESH)
+        user:RemoveListenerOnType(self, user.LISTEN_TYPE.IAP_GIFTS_CHANGE)
         alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
         alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
     end
@@ -415,6 +419,9 @@ function GameUIHome:CreateTop()
         return {width = 66,height = 64}
     end
     left_order:AddElement(button)
+    button.tips_button_count = WidgetNumberTips.new():addTo(button):pos(20,-20)
+    button.tips_button_count:SetNumber(LuaUtils:table_size(User:GetIapGifts()))
+    self.tips_button = button
     --在线活动
     local activity_button = WidgetAutoOrderAwardButton.new(self)
     left_order:AddElement(activity_button)
@@ -494,6 +501,26 @@ function GameUIHome:CreateTop()
     end
 
     return top_bg
+end
+
+function GameUIHome:CheckFinishAllActivity()
+
+end
+
+function GameUIHome:CheckAllianceRewardCount()
+    if not self.tips_button then return end
+    local count = LuaUtils:table_size(User:GetIapGifts())
+    print("CheckAllianceRewardCount----->",count)
+    self.tips_button.tips_button_count:SetNumber(count)
+end
+
+
+function GameUIHome:OnIapGiftsRefresh()
+    self:CheckAllianceRewardCount()
+end
+
+function GameUIHome:OnIapGiftsChanged(changed_map)
+   self:CheckAllianceRewardCount()
 end
 
 function GameUIHome:OnMarchDataChanged()

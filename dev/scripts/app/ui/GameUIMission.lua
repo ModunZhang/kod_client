@@ -427,11 +427,11 @@ function GameUIMission:RefreshDisplayGreenPoint()
         local tmp_data = self.city:GetUser():GetDailyTasksInfo(key_of_daily)
         local percent = #tmp_data/4
         if percent < 1 then
-            self.tab_buttons:GetNumberTipNode("daily"):DisplayBlank(true)
+            self.tab_buttons:SetGreenTipsShow("daily",true)
             return
         end
     end
-    self.tab_buttons:GetNumberTipNode("daily"):DisplayBlank(false)
+    self.tab_buttons:SetGreenTipsShow("daily",false)
 end
 
 function GameUIMission:OnDailyTasksChanged(user,changed_task_types)

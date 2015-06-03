@@ -62,6 +62,7 @@ function GameUIActivityNew:OnMoveInStage()
         	self:OnTabButtonClicked(tag)
         end
     ):pos(window.cx, window.bottom + 34)
+    self:RefreshAwardCountTips()
 end
 
 
@@ -331,21 +332,36 @@ end
 function GameUIActivityNew:RefreshAwardListDataSource()
 	self.award_dataSource = {}
 	self.award_logic_index_map = {}
-	local index = 1
-	for key,v in pairs(User:GetIapGifts()) do
-		self.award_logic_index_map[key] = index
+	local data = {}
+	for __,v in pairs(User:GetIapGifts()) do
+		table.insert(data,v)
+	end
+
+	table.sort( data,function(a,b)
+		return a:Time() > b:Time()
+	end)
+	for index,v in ipairs(data) do
+		self.award_logic_index_map[v:Id()] = index
 		table.insert(self.award_dataSource,v)
-		index = index + 1
+	end
+end
+
+function GameUIActivityNew:RefreshAwardCountTips()
+	if self.tab_buttons then
+		local count = LuaUtils:table_size(User:GetIapGifts())
+		self.tab_buttons:SetButtonTipNumber('award',count)
 	end
 end
 
 function GameUIActivityNew:OnIapGiftsRefresh()
+	self:RefreshAwardCountTips()
 	if self.award_list and self.tab_buttons:GetSelectedButtonTag() == 'award' then
 		self:RefreshAwardList()
 	end
 end
 
 function GameUIActivityNew:OnIapGiftsChanged(changed_map)
+	self:RefreshAwardCountTips()
 	if self.award_list and self.tab_buttons:GetSelectedButtonTag() == 'award' then
 		self:RefreshAwardList()
 	end
