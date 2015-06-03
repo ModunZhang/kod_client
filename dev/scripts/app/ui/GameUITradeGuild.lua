@@ -526,7 +526,7 @@ function GameUITradeGuild:CreateSellItem(list,index)
         local goods_icon = display.newSprite(UILib.resource[goods.goods_type] or UILib.materials[goods.goods_type])
             :align(display.CENTER, goods_bg:getContentSize().width/2, goods_bg:getContentSize().height/2)
             :addTo(goods_bg)
-        goods_icon:scale(84/math.max(goods_icon:getContentSize().width,goods_icon:getContentSize().height))
+        goods_icon:scale(100/math.max(goods_icon:getContentSize().width,goods_icon:getContentSize().height))
         -- 商品数量背景框
         local goods_num_bg = UIKit:shadowLayer()
         goods_num_bg:setContentSize(cc.size(102,26))
