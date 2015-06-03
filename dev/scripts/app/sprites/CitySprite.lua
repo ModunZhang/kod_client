@@ -79,20 +79,27 @@ end
 function CitySprite:CheckStatus()
     local memberInfo = self:GetEntity():GetAllianceMemberInfo()
     if memberInfo:IsProtected() then
-        self:removeChildByTag(SMOKE_TAG)
+        if self:getChildByTag(SMOKE_TAG) then
+            self:removeChildByTag(SMOKE_TAG)
+        end
         if not self:getChildByTag(FIRE_TAG) then
             local x,y = self:GetSpriteOffset()
             fire():addTo(self, 2, FIRE_TAG):pos(x + 20, y)
         end
     else
-        self:removeChildByTag(FIRE_TAG)
+        if self:getChildByTag(FIRE_TAG) then
+            self:removeChildByTag(FIRE_TAG)
+        end
+
         local is_smoke = (timer:GetServerTime() - memberInfo:LastBeAttackedTime()) < 10 * 60
         if is_smoke then
             if not self:getChildByTag(SMOKE_TAG) then
                 smoke_city():addTo(self, 2, SMOKE_TAG):pos(self:GetSpriteOffset())
             end
         else
-            self:removeChildByTag(SMOKE_TAG)
+            if self:getChildByTag(SMOKE_TAG) then
+                self:removeChildByTag(SMOKE_TAG)
+            end
         end
     end
 end
