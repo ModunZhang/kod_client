@@ -7,12 +7,12 @@ local FteScene = class("FteScene", function()
 end)
 
 function FteScene:ctor()
-    display.newSprite("fte_background.jpg"):addTo(self):pos(display.cx, display.cy)
 end
 function FteScene:onEnter()
     app:GetAudioManager():PlayGameMusic("MyCityScene")
 end
 function FteScene:onEnterTransitionFinish()
+    display.newSprite("fte_background.jpg"):addTo(self):pos(display.cx, display.cy)
     printLog("Info", "Check MessageDialog :%s",self.__cname)
     local message = UIKit:getMessageDialogWillShow()
     if message then
