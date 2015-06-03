@@ -665,7 +665,7 @@ function UIKit:showEvaluateDialog(ok_callback)
                 if ok_callback then
                     ok_callback()
                 end
-            end,btn_name = _("前去评价")
+            end,btn_name = _("前去评价"),btn_images = {normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"}
         })
         :CreateCancelButton({
             listener = function ()
