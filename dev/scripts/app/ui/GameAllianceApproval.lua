@@ -152,7 +152,7 @@ function GameAllianceApproval:OnAgreeButtonClicked(idx)
         end):fail(function(msg)
             local code = msg.errcode and msg.errcode[1].code or nil
             if code then
-                if UIKit:getErrorCodeKey(code) == 'playerCancelTheJoinRequestToTheAlliance' then
+                if UIKit:getErrorCodeKey(code) == 'playerCancelTheJoinRequestToTheAlliance' or 'playerAlreadyJoinAlliance' == UIKit:getErrorCodeKey(code) then
                     self:OnRefuseButtonClicked(idx)
                 end
             end
