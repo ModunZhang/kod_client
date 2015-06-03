@@ -1641,7 +1641,7 @@ function GameUIAlliance:OnInfoButtonClicked(tag)
         local mail = GameUIWriteMail.new(GameUIWriteMail.SEND_TYPE.ALLIANCE_MAIL)
         mail:SetTitle(_("联盟邮件"))
         mail:SetAddressee(_("发送联盟所有成员"))
-        mail:addTo(self)
+        mail:AddToCurrentScene(true)
     end
 end
 
