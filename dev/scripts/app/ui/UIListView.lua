@@ -971,6 +971,10 @@ function UIListView:asyncLoadWithCurrentPosition_()
         current_min_index = math.min(current_min_index,v.idx_)
         current_max_index = math.max(current_max_index,v.idx_)
     end
+    if self:IsTipsStringShow() then
+        self:reload()
+        return
+    end
     for i = current_min_index, current_max_index do
         if i > count then
             self:unloadOneItem_(i)
@@ -1391,7 +1395,7 @@ function UIListView:isItemFullyInViewRect(pos)
     return self:rectWholeInRect(self.viewRect_,bound)
 end
 
-function UIListView:isTipsStringShow()
+function UIListView:IsTipsStringShow()
     return self.isTipsStringShow
 end
 
