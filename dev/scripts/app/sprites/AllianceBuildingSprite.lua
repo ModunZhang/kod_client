@@ -63,10 +63,12 @@ function AllianceBuildingSprite:GetSpriteFile()
     end
 end
 function AllianceBuildingSprite:GetSpriteOffset()
-    return self:GetLogicMap():ConvertToLocalPosition(0, 0)
+    -- return self:GetLogicMap():ConvertToLocalPosition(0, 0)
+    return 0, -60
 end
 function AllianceBuildingSprite:RefreshSprite()
     AllianceBuildingSprite.super.RefreshSprite(self)
+    self:GetSprite():align(display.BOTTOM_CENTER)
     if self.info then
         self.info:removeFromParent()
         self.info = nil
