@@ -329,6 +329,7 @@ function User:OnUserDataChanged(userData, current_time, deltaData)
     self:OnVipEventDataChange(userData, deltaData)
     -- 日常任务
     self:OnDailyTasksChanged(userData.dailyTasks)
+
     return self
 end
 

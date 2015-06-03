@@ -1,4 +1,5 @@
 local SERVER_ERRORS = {
+    [500] = _("请求出错"),
     [501] = _("设备不存在"),
     [502] = _("用户不存在"),
     [503] = _("玩家不存在"),
@@ -1063,9 +1064,9 @@ local getLocaliedKeyByType = function(type)
 end
 
 local GAME_LANGUAGE = {
-    en_US = _("英文"),
-    zh_CN = _("简体中文"),
-    zh_TW = _("繁体中文"),
+    en = _("英文"),
+    cn = _("简体中文"),
+    tw = _("繁体中文"),
 
 }
 

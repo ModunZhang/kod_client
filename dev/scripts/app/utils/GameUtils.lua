@@ -185,13 +185,13 @@ end
 -- https://sites.google.com/site/tomihasa/google-language-codes
 function GameUtils:ConvertLocaleToGoogleCode()
     local locale = self:getCurrentLanguage()
-    if  locale == 'en_US' then
+    if  locale == 'en' then
         return "en"
-    elseif locale == 'zh_Hans' then
+    elseif locale == 'cn' then
         return "zh-CN"
     elseif locale == 'pt' then
         return "pt-BR"
-    elseif locale == 'zh_Hant' then
+    elseif locale == 'tw' then
         return "zh-TW"
     else
         return locale
@@ -255,9 +255,9 @@ function GameUtils:ConvertLocaleToBaiduCode()
     ]]--
 
     local localCode  = self:getCurrentLanguage()
-    if localCode == 'en_US'  or localCode == 'zh_Hant' then
+    if localCode == 'en' then
         localCode = 'en'
-    elseif localCode == 'zh_Hans' then
+    elseif localCode == 'cn' or localCode == 'tw' then
         localCode = 'zh'
     elseif localCode == 'fr' then
         localCode = 'fra'
@@ -281,7 +281,7 @@ function GameUtils:Translate(text,cb)
         return
     end
     local language = self:getCurrentLanguage()
-    if language == 'zh_Hant' or language == 'zh_Hans' then
+    if language == 'en' or language == 'tw' then
         self:Baidu_Translate(text,cb)
     else
         if type(self.reachableGoogle)  == nil then
@@ -305,8 +305,8 @@ end
 --TODO:return po文件对应的语言代码！
 function GameUtils:getCurrentLanguage()
     local mapping = {
-        "en_US",
-        "zh_CN",
+        "en",
+        "cn",
         "fr",
         "it",
         "de",
@@ -318,9 +318,20 @@ function GameUtils:getCurrentLanguage()
         "hu",
         "pt",
         "ar",
-        "zh_TW"
+        "tw"
     }
     return mapping[cc.Application:getInstance():getCurrentLanguage() + 1]
+end
+
+function GameUtils:GetPoFileLanguageCode(language_code)
+    local currentLanguage = language_code or self:getCurrentLanguage()
+    if language_code == 'cn' then
+        return "zh_CN",'cn'
+    elseif language_code == 'tw' then
+        return "zh_TW",'tw'
+    else
+        return "zh_TW",'tw'
+    end
 end
 
 function GameUtils:Event_Handler_Func(events,add_func,edit_func,remove_func)
