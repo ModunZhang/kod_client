@@ -681,7 +681,7 @@ function CommonUpgradeUI:InitAccelerationPart()
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         font = UIKit:getFontFilePath(),
         size = 20,
-        dimensions = cc.size(530, 80),
+        dimensions = cc.size(530, 0),
         color = UIKit:hex2c3b(0x403c2f)
     }):align(display.LEFT_CENTER, display.cx - 270, display.top - 540)
         :addTo(self.acc_layer)
