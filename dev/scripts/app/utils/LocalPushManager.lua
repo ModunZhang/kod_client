@@ -123,7 +123,7 @@ end
 --TODO:push相关函数的调用
 function LocalPushManager:AddOneDayGameTipsPush()
 	if not self:IsSupport() then return end
-	self:AddLocalPush("GAME_GLOBAL_TIPS",ext.now() + 24*60*60,_("尊敬的领主，您的城民真诚的恳求您归来，并为您准备了丰厚的礼品"),"GAME_GLOBAL_TIPS")
+	self:AddLocalPush("GAME_GLOBAL_TIPS",ext.now()/1000 + 24*60*60,_("尊敬的领主，您的城民真诚的恳求您归来，并为您准备了丰厚的礼品"),"GAME_GLOBAL_TIPS")
 end
 -- api
 function LocalPushManager:GetBuildPushState()
