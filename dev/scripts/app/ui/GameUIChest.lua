@@ -52,21 +52,21 @@ function GameUIChest:ShowAwards()
     local award_count = #awards
     local total_width = 400
     local gap_x = 50
-    local icon_width = 118 * 0.6
-    local origin_x = display.cx - ((award_count > 1 and award_count or 0) * icon_width + gap_x * (award_count > 1 and award_count -1 or 0)) / 2 +  (award_count > 1 and icon_width/2)
+    local icon_width = 118 * 0.8
+    local origin_x = display.cx - ((award_count > 1 and award_count or 0) * icon_width + gap_x * (award_count > 1 and award_count -1 or 0)) / 2 +  (award_count > 1 and icon_width/2 or 0)
     for i,v in ipairs(self.awards) do
-        local icon_bg = display.newSprite("box_118x118.png"):align(display.CENTER, origin_x + (i -1) * (icon_width + gap_x), display.cy + 80):addTo(self):scale(3)
+        local icon_bg = display.newSprite("box_118x118.png"):align(display.CENTER, origin_x + (i -1) * (icon_width + gap_x), display.cy + 60):addTo(self):scale(3)
         local icon = display.newSprite(UILib.item[v.name] or UILib.dragon_material_pic_map[v.name]):align(display.CENTER,icon_bg:getContentSize().width/2,icon_bg:getContentSize().height/2):addTo(icon_bg)
         icon:scale(100/math.max(icon:getContentSize().width,icon:getContentSize().height))
         transition.scaleTo(icon_bg, {scale =2.5,time =0.05,onComplete = function ()
             transition.scaleTo(icon_bg, {scale =1.8,time =0.05,onComplete = function ()
-                transition.scaleTo(icon_bg, {scale =0.3,time =0.02,onComplete = function ()
-                    transition.scaleTo(icon_bg, {scale =0.6,time =0.1,onComplete = function ()
+                transition.scaleTo(icon_bg, {scale =0.4,time =0.02,onComplete = function ()
+                    transition.scaleTo(icon_bg, {scale =0.8,time =0.1,onComplete = function ()
                         UIKit:ttfLabel({
                             text = string.format(_(" X %d"),v.count),
                             size = 24,
                             color = 0xffedae
-                        }):align(display.CENTER,  origin_x + (i -1) * (icon_width + gap_x), display.cy+10)
+                        }):align(display.CENTER,  origin_x + (i -1) * (icon_width + gap_x), display.cy)
                             :addTo(self)
                         if i == award_count then
                             GameGlobalUI:showTips(_("提示"),self.tips)

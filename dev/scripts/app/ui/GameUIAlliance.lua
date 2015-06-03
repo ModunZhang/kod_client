@@ -795,7 +795,7 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
         :pos(16,events_title:getPositionY()+events_title:getContentSize().height+10)
     local titileBar = display.newScale9Sprite("title_blue_430x30.png",0,0, cc.size(438,30), cc.rect(10,10,410,10))
         :addTo(headerBg):align(display.TOP_RIGHT, headerBg:getContentSize().width - 10, headerBg:getContentSize().height - 20)
-    local language_sprite = display.newSprite(string.format("#%s",UILib.alliance_language_frame[Alliance_Manager:GetMyAlliance():DefaultLanguage()]))
+    local language_sprite = display.newSprite(string.format("%s",UILib.alliance_language_frame[Alliance_Manager:GetMyAlliance():DefaultLanguage()]))
         :align(display.RIGHT_CENTER, 410,15)
         :addTo(titileBar)
         :scale(0.5)
@@ -1037,7 +1037,7 @@ function GameUIAlliance:RefreshOverViewUI()
         self.ui_overview.memberCountLabel:setString(string.format("%s/%s",m_count,m_maxCount))
         self.ui_overview.online_count_label:setString(m_online)
         self.ui_overview.powerLabel:setString(string.formatnumberthousands(alliance_data:Power()))
-        self.ui_overview.language_sprite:setSpriteFrame(UILib.alliance_language_frame[alliance_data:DefaultLanguage()])
+        self.ui_overview.language_sprite:setTexture(UILib.alliance_language_frame[alliance_data:DefaultLanguage()])
         self:RefreshNoticeView()
     end
 end
@@ -1641,7 +1641,7 @@ function GameUIAlliance:OnInfoButtonClicked(tag)
         local mail = GameUIWriteMail.new(GameUIWriteMail.SEND_TYPE.ALLIANCE_MAIL)
         mail:SetTitle(_("联盟邮件"))
         mail:SetAddressee(_("发送联盟所有成员"))
-        mail:addTo(self)
+        mail:AddToCurrentScene(true)
     end
 end
 

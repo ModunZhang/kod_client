@@ -6,15 +6,15 @@ function __init_localize_file__()
     if default_language and string.len(default_language) > 0 then
         init_language = default_language
     else
-        init_language = GAME_DEFAULT_LANGUAGE or GameUtils:getCurrentLanguage()
-        cc.UserDefault:getInstance():setStringForKey("GAME_LANGUAGE", init_language)
+        init_language = GameUtils:getCurrentLanguage()
     end
-
-    local currentLanFile = string.format("i18n/%s.mo", init_language)
+    local poName,real_language_code = GameUtils:GetPoFileLanguageCode(init_language)
+    local currentLanFile = string.format("i18n/%s.mo", poName)
     local currentLanFilePath = cc.FileUtils:getInstance():fullPathForFilename(currentLanFile)
     printLog("I18N","i18n file name:%s",currentLanFilePath)
     if cc.FileUtils:getInstance():isFileExist(currentLanFilePath) then
         _ = require("app.utils.Gettext").gettextFromFile(currentLanFilePath)
+        cc.UserDefault:getInstance():setStringForKey("GAME_LANGUAGE", real_language_code)
     end
 end
 
@@ -127,7 +127,14 @@ function MyApp:GetGameLanguage()
     return self.gameLanguage_
 end
 
+function MyApp:sendPlayerLanguageCodeIf()
+    if self:GetGameLanguage() ~= User:Language() then
+        NetManager:getSetPlayerLanguagePromise(self:GetGameLanguage())
+    end
+end
+
 function MyApp:SetGameLanguage(lang)
+    print("SetGameLanguage----->",lang)
     cc.UserDefault:getInstance():setStringForKey("GAME_LANGUAGE", lang)
     cc.UserDefault:getInstance():flush()
     self:restart()

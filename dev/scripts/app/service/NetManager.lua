@@ -1625,6 +1625,10 @@ end
 function NetManager:getPlayerWallInfoPromise(memberId)
     return get_blocking_request_promise("logic.playerHandler.getPlayerWallInfo",{memberId = memberId},"领取首次加入联盟奖励失败!")
 end
+--设置玩家语言
+function NetManager:getSetPlayerLanguagePromise(language_code)
+    return get_blocking_request_promise("logic.playerHandler.setPlayerLanguage",{language = language_code},"设置玩家语言失败!")
+end
 ----------------------------------------------------------------------------------------------------------------
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"

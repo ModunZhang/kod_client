@@ -35,7 +35,7 @@ function GameUILoginBeta:ctor()
         {image = "ui_png.pvr.ccz",list = "ui_png.plist"},
         {image = "ui_pvr_0.pvr.ccz",list = "ui_pvr_0.plist"},
         {image = "ui_pvr_1.pvr.ccz",list = "ui_pvr_1.plist"},
-		{image = "emoji.png",list = "emoji.plist"},
+		-- {image = "emoji.png",list = "emoji.plist"},
 
         
         -- {image = "animations/heihua_animation_0.pvr.ccz",list = "animations/heihua_animation_0.plist"},

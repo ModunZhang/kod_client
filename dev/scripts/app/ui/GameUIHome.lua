@@ -528,9 +528,11 @@ function GameUIHome:CreateBottom()
     return bottom_bg
 end
 function GameUIHome:OnVipEventActive( vip_event )
+    self.top_order_group:RefreshOrder()
     self:RefreshVIP()
 end
 function GameUIHome:OnVipEventOver( vip_event )
+    self.top_order_group:RefreshOrder()
     self:RefreshVIP()
 end
 function GameUIHome:RefreshExp()
