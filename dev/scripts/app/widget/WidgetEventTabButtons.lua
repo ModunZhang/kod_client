@@ -669,9 +669,10 @@ function WidgetEventTabButtons:IsAbleToFreeSpeedup(building)
 end
 function WidgetEventTabButtons:UpgradeBuildingHelpOrSpeedup(building)
     local eventType = building:EventType()
-    if self:IsAbleToFreeSpeedup(building) and 
-        building:GetUpgradingLeftTimeByCurrentTime(app.timer:GetServerTime()) then
-        NetManager:getFreeSpeedUpPromise(eventType,building:UniqueUpgradingKey())
+    if self:IsAbleToFreeSpeedup(building) then
+        if building:GetUpgradingLeftTimeByCurrentTime(app.timer:GetServerTime()) > 2 then
+            NetManager:getFreeSpeedUpPromise(eventType,building:UniqueUpgradingKey())
+        end
     else
         if not Alliance_Manager:GetMyAlliance():IsDefault() then
             -- 是否已经申请过联盟加速

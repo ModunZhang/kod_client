@@ -19,6 +19,7 @@ local Localize_item = import("..utils.Localize_item")
 local Localize = import("..utils.Localize")
 local UILib = import(".UILib")
 local Localize_item = import("..utils.Localize_item")
+local fire_wall = import("..particles.fire_wall")
 
 local height_config = {
     EVERY_DAY_LOGIN = 762,
@@ -497,7 +498,7 @@ function GameUIActivityRewardNew:ui_FIRST_IN_PURGURE()
         }))
         :addTo(reward_bg)
         :pos(145,58)
-    self.go_store_button = WidgetPushButton.new({normal = 'green_btn_up_186x66.png',pressed = 'green_btn_down_186x66.png'})
+    self.go_store_button = WidgetPushButton.new({normal = 'yellow_btn_up_186x66.png',pressed = 'yellow_btn_down_186x66.png'})
         :setButtonLabel("normal", UIKit:commonButtonLable({
             text = _("前往充值")
         }))
@@ -506,6 +507,9 @@ function GameUIActivityRewardNew:ui_FIRST_IN_PURGURE()
         :onButtonClicked(function()
             UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
         end)
+
+    fire_wall(self.go_store_button:getCascadeBoundingBox()):addTo(self.go_store_button, -1000)
+
     local tips_list = {}
     for index,reward in ipairs(rewards) do
         if index <= 6 then
