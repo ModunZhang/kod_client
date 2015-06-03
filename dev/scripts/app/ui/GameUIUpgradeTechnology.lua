@@ -427,6 +427,10 @@ function GameUIUpgradeTechnology:OnUpgradButtonClicked()
             if acdemy then
                 acdemy:LeftButtonClicked()
             end
+            local quick = UIKit:GetUIInstance("GameUIQuickTechnology")
+            if quick then
+                quick:LeftButtonClicked()
+            end
         end)
     else
         UIKit:showMessageDialog(_("提示"),msg, function ()
