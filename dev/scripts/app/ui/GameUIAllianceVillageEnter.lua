@@ -117,6 +117,9 @@ function GameUIAllianceVillageEnter:GetBuildingInfo()
             {self:GetLocation(),0x403c2f},
         }}
     end
+
+    self:GetMyAlliance():RemoveListenerOnType(self,self:GetMyAlliance().LISTEN_TYPE.BASIC)
+    self:GetMyAlliance():AddListenOnType(self,self:GetMyAlliance().LISTEN_TYPE.BASIC)
     self:GetMyAlliance():RemoveListenerOnType(self,self:GetMyAlliance().LISTEN_TYPE.OnVillageEventsDataChanged)
     self:GetMyAlliance():AddListenOnType(self,self:GetMyAlliance().LISTEN_TYPE.OnVillageEventsDataChanged)
     local alliance_map = self:GetMyAlliance():GetAllianceMap()
@@ -288,6 +291,7 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
     local villageEvent = self:GetMyAlliance():FindVillageEventByVillageId(village_id)
     local alliance_id = self:IsMyAlliance() and self:GetMyAlliance():Id() or self:GetEnemyAlliance():Id()
     local checkMeIsProtectedWarinng = self:CheckMeIsProtectedWarinng()
+
     if villageEvent then --我方占领
         if villageEvent:GetPlayerRole() == villageEvent.EVENT_PLAYER_ROLE.Me then --自己占领
             local che_button = self:BuildOneButton("capture_38x56.png",_("撤军")):onButtonClicked(function()
@@ -370,6 +374,8 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
                     local progress_1 = WidgetAllianceEnterButtonProgress.new()
                         :pos(-68, -54)
                         :addTo(attack_button)
+                    local my_allaince_status = Alliance_Manager:GetMyAlliance():Status()
+                    attack_button:setButtonEnabled(my_allaince_status == "fight")
                 end
                 buttons = {attack_button}
             end
@@ -396,11 +402,22 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
                 local progress_1 = WidgetAllianceEnterButtonProgress.new()
                     :pos(-68, -54)
                     :addTo(attack_button)
+                local my_allaince_status = Alliance_Manager:GetMyAlliance():Status()
+                attack_button:setButtonEnabled(my_allaince_status == "fight")
             end
             buttons = {attack_button}
         end
     end
     return buttons
+end
+
+function GameUIAllianceVillageEnter:OnAllianceBasicChanged( alliance,changed_map )
+    if changed_map.status and not self:IsMyAlliance() then
+        self:GetEnterButtonByIndex(1):setButtonEnabled(changed_map.status.new == "fight")
+        if self:GetEnterButtonByIndex(2) then
+            self:GetEnterButtonByIndex(2):setButtonEnabled(changed_map.status.new == "fight")
+        end
+    end
 end
 
 function GameUIAllianceVillageEnter:FindTroopShowInfoFromAllianceBelvedere()
@@ -416,6 +433,7 @@ function GameUIAllianceVillageEnter:FindTroopShowInfoFromAllianceBelvedere()
 end
 
 function GameUIAllianceVillageEnter:OnMoveOutStage()
+    self:GetMyAlliance():RemoveListenerOnType(self,self:GetMyAlliance().LISTEN_TYPE.BASIC)
     self:GetMyAlliance():RemoveListenerOnType(self,self:GetMyAlliance().LISTEN_TYPE.OnVillageEventTimer)
     self:GetMyAlliance():RemoveListenerOnType(self,self:GetMyAlliance().LISTEN_TYPE.OnVillageEventsDataChanged)
     local alliance_map = self:GetMyAlliance():GetAllianceMap()
