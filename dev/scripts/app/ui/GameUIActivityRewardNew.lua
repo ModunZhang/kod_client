@@ -196,6 +196,7 @@ function GameUIActivityRewardNew:ui_EVERY_DAY_LOGIN()
     local rewards = self:GetDay60Reward()
     local flag = User:GetCountInfo().day60 % 30 == 0 and 30 or User:GetCountInfo().day60 % 30
     local geted = User:GetCountInfo().day60RewardsCount % 30 == 0 and 30 or User:GetCountInfo().day60RewardsCount % 30  -- <= geted
+    local auto_get_reward = 0
     UIKit:ttfLabel({
         text = _("领取30日奖励后，刷新奖励列表"),
         size = 20,
@@ -232,6 +233,7 @@ function GameUIActivityRewardNew:ui_EVERY_DAY_LOGIN()
                 if flag > geted or (geted == 30 and flag == 1) then -- can
                     check_bg:hide()
                     enable:clearFilter()
+                    auto_get_reward = i
                 else
                     check_bg:show()
                     if not enable:getFilter() then
@@ -256,6 +258,9 @@ function GameUIActivityRewardNew:ui_EVERY_DAY_LOGIN()
             x = 3
             y = y - 108
         end
+    end
+    if auto_get_reward ~= 0 then
+        self:On_EVERY_DAY_LOGIN_GetReward(auto_get_reward,rewards[auto_get_reward])
     end
 end
 
