@@ -267,7 +267,7 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name, soldier_star)
         if ok then
             re_string = _("招募开启中")
         else
-            re_string = string.format( _("下一次开启招募:%s"), GameUtils:formatTimeStyle1(time-app.timer:GetServerTime()) )
+            re_string = string.format( _("下一次开启招募:%s"), GameUtils:formatTimeStyle1(time))
         end
         self.re_status = UIKit:ttfLabel({
             text = re_string,
@@ -456,7 +456,7 @@ function WidgetRecruitSoldier:OnTimer(current_time)
         if ok then
             self.re_status:setString(_("招募开启中"))
         else
-            self.re_status:setString(_("下一次开启招募:")..GameUtils:formatTimeStyle1(time-current_time))
+            self.re_status:setString(_("下一次开启招募:")..GameUtils:formatTimeStyle1(time))
         end
     end
 end

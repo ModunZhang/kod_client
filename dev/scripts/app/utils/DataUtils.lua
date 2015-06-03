@@ -553,9 +553,8 @@ function DataUtils:GetNextRecruitTime()
     for i=1,string.len(can_re_time) do
         table.insert(days, tonumber(string.sub(can_re_time,i,i)))
     end
-
     -- local current_day = 3
-    local current_day = tonumber(os.date("%w", os.time()))
+    local current_day = tonumber(os.date("!%w", app.timer:GetServerTime()))
     local next_day = 7
     for i,v in ipairs(days) do
         v = v == 7 and 0 or v
@@ -568,11 +567,16 @@ function DataUtils:GetNextRecruitTime()
         end
     end
 
-    local dt1 = os.time{year=os.date("%Y", os.time()), month=os.date("%m", os.time()), day=os.date("%d", os.time())+next_day-current_day, hour=0,min=0,sec=0}
+    local year = os.date('!%Y', app.timer:GetServerTime())
+    local month = os.date('!%m', app.timer:GetServerTime())
+    local day = os.date('!%d', app.timer:GetServerTime())
+    local hour = os.date('!%H', app.timer:GetServerTime())
+    local min = os.date('!%M', app.timer:GetServerTime())
+    local sec = os.date('!%S', app.timer:GetServerTime())
 
-    return dt1
+    local next_time = (next_day-current_day) * 24 * 60 * 60 - hour * 60 * 60 - min * 60 - sec
+    return next_time
 end
-
 function DataUtils:GetDragonSkillUnLockStar(skillName)
     for __,v in ipairs(config_dragonStar) do
         local unlockSkills = string.split(v.skillsUnlocked,',')
