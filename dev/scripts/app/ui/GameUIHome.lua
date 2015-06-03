@@ -20,6 +20,7 @@ local WidgetAutoOrderAwardButton = import("..widget.WidgetAutoOrderAwardButton")
 local WidgetAutoOrderGachaButton = import("..widget.WidgetAutoOrderGachaButton")
 local WidgetAutoOrderBuffButton = import("..widget.WidgetAutoOrderBuffButton")
 local light_gem = import("..particles.light_gem")
+local fire_var = import("app.particles.fire_var")
 
 
 
@@ -460,12 +461,17 @@ function GameUIHome:CreateTop()
     self.top_order_group = order
     self.left_order_group = left_order
 
+
+
     --联盟提示按钮
     self.join_alliance_tips_button = cc.ui.UIPushButton.new({normal = 'alliance_join_tips_79x83.png'}):pos(display.left+40, display.top-600):addTo(self)
         :onButtonClicked(function()
             UIKit:newGameUI("GameUIAllianceJoinTips"):AddToCurrentScene(true)
         end)
     self.join_alliance_tips_button:setVisible(not User:GetCountInfo().firstJoinAllianceRewardGeted)
+    if self.join_alliance_tips_button:isVisible() then
+        fire_var():addTo(self.join_alliance_tips_button, -1000)
+    end
     --瞭望塔事件按钮
     local alliance_belvedere_button = cc.ui.UIPushButton.new({normal = 'fight_62x70.png'}):pos(display.right-50, display.top-600):addTo(self)
     alliance_belvedere_button.alliance_belvedere_events_count = WidgetNumberTips.new():addTo(alliance_belvedere_button):pos(20,-20)
