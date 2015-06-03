@@ -3,6 +3,7 @@
 -- Author: Kenny Dai
 -- Date: 2015-06-01 09:51:28
 --
+local fire_circle = import("..particles.fire_circle")
 local WidgetAutoOrderBuffButton = class("WidgetAutoOrderBuffButton",function ( )
     return display.newNode()
 end)
@@ -18,6 +19,7 @@ function WidgetAutoOrderBuffButton:ctor()
         end
     end):addTo(self):pos(34,34)
     self.buff_button = buff_button
+    self.effect = fire_circle():addTo(buff_button, -1000)
 
     local grey_image = display.newSprite("buff_68x68.png",34, 34,{class=cc.FilteredSpriteWithOne}):addTo(self)
     local my_filter = filter
@@ -29,6 +31,8 @@ function WidgetAutoOrderBuffButton:ctor()
     self.grey_image = grey_image
     self:setContentSize(buff_button:getCascadeBoundingBox().size)
     self:setAnchorPoint(cc.p(0.5,0.5))
+
+    self:OnItemEventChanged()
 end
 
 function WidgetAutoOrderBuffButton:onEnter()
@@ -39,6 +43,7 @@ function WidgetAutoOrderBuffButton:onCleanup()
     ItemManager:RemoveListenerOnType(self,ItemManager.LISTEN_TYPE.ITEM_EVENT_CHANGED)
 end
 function WidgetAutoOrderBuffButton:OnItemEventChanged()
+    self.effect:setVisible(ItemManager:IsAnyItmeEventActive())
     self.grey_image:setVisible(not ItemManager:IsAnyItmeEventActive())
     self.buff_button:opacity(ItemManager:IsAnyItmeEventActive() and 255 or 0)
 end

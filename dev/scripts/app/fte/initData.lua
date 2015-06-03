@@ -796,7 +796,7 @@ return {
         stone = 25000,
         coin = 50000,
         iron = 25000,
-        gem = 2000,
+        gem = 1000,
         citizen = 100,
         refreshTime = 1431067835010
     },

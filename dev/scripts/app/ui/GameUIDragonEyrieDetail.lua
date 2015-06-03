@@ -409,7 +409,7 @@ function GameUIDragonEyrieDetail:GetEquipmentItem(equipment_obj,dragon_star,need
             local icon = UIKit:getDiscolorrationSprite(equipmentImage)
                 :addTo(equipment_node)
                 :pos(equipment_node:getContentSize().width/2,equipment_node:getContentSize().height/2):scale(0.6)
-            icon:setOpacity(178)
+            icon:setOpacity(80)
             if needInfoIcon then
                 if can_load then
                     display.newSprite("dragon_load_eq_37x38.png"):align(display.RIGHT_BOTTOM,104, 5):addTo(equipment_node)
