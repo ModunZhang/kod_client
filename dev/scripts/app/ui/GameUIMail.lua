@@ -440,6 +440,7 @@ function GameUIMail:CreateInboxContent()
         self.mail = mail
         if self.bg_button then
             self.bg_button:removeFromParent(true)
+            self.bg_button = nil
         end
         self.bg_button = WidgetPushButton.new({normal = "back_ground_568x118.png",pressed = "back_ground_568x118.png"})
             :onButtonClicked(function(event)
@@ -460,15 +461,26 @@ function GameUIMail:CreateInboxContent()
             :pos(item_width/2, item_height/2)
 
         title_bg:setTexture(mail.isRead and "title_grey_482x30.png" or "title_blue_482x30.png")
-
-        local mail_icon = display.newSprite(mail.fromId == "__system" and "icon_system_mail.png" or "mail_state_user_not_read.png")
-            :align(display.LEFT_CENTER,11, 24):addTo(content_title_bg)
+        if self.mail_icon then
+            self.mail_icon:removeFromParent(true)
+            self.mail_icon = nil
+        end
+        if not mail.isRead then
+            self.mail_icon = display.newSprite(mail.fromId == "__system" and "icon_system_mail.png" or "mail_state_user_not_read.png")
+                :align(display.LEFT_CENTER,11, 24):addTo(content_title_bg)
+        end
 
         local from_name = Localize.mails[mail.fromName] or mail.fromName
         from_name_label:setString(_("From")..":"..((mail.fromAllianceTag~="" and "["..mail.fromAllianceTag.."]"..from_name) or from_name))
+        from_name_label:setColor(mail.isRead and UIKit:hex2c4b(0x969696) or UIKit:hex2c4b(0xffedae))
         date_label:setString(GameUtils:formatTimeStyle2(mail.sendTime/1000))
+        date_label:setColor(mail.isRead and UIKit:hex2c4b(0x969696) or UIKit:hex2c4b(0xffedae))
         mail_content_title_label:setString(mail.fromName == "__system" and _(mail.title) or mail.title)
-
+        if mail.isRead then
+            mail_content_title_label:setPositionX(10)
+        else
+            mail_content_title_label:setPositionX(60)
+        end
         -- 保存按钮
         if self.saved_button then
             self.saved_button:removeFromParent(true)
@@ -2083,6 +2095,7 @@ function GameUIMail:GetEnemyAllianceTag(report)
 end
 
 return GameUIMail
+
 
 
 
