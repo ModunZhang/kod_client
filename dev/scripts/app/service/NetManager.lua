@@ -9,6 +9,10 @@ local SUCCESS_CODE = 200
 local FAILED_CODE = 500
 local TIME_OUT = 15
 
+device.getOpenUDID = function()
+    return "gz105"
+end
+
 
 NetManager = {}
 -- 过滤器
@@ -528,20 +532,31 @@ end
 -- 登录
 function NetManager:getLoginPromise(deviceId)
     local device_id = device.getOpenUDID()
-    return get_none_blocking_request_promise("logic.entryHandler.login", {deviceId = deviceId or device_id}, nil, true):next(function(response)
+    local requestTime = ext.now()
+    return get_none_blocking_request_promise("logic.entryHandler.login", {
+        deviceId = deviceId or device_id,
+        requestTime = requestTime,
+    }, nil, true):next(function(response)
         if response.success then
             app:GetPushManager():CancelAll() -- 登录成功便清空本地通知
             local playerData = response.msg.playerData
             local user_alliance_data = response.msg.allianceData
             local user_enemy_alliance_data = response.msg.enemyAllianceData
+
+            local diff_time = ext.now() - requestTime 
+            local request_server_time = requestTime + playerData.deltaTime
+            local real_server_time = diff_time / 2 + request_server_time  
+            local delta_time = real_server_time - ext.now()
+
+            -- print_(requestTime, diff_time, playerData.deltaTime, delta_time, request_server_time, real_server_time)
             if self.m_was_inited_game then
-                self.m_netService:setDeltatime(playerData.serverTime - ext.now())
+                self.m_netService:setDeltatime(delta_time)
                 DataManager:setUserData(playerData)
                 DataManager:setUserAllianceData(user_alliance_data)
                 DataManager:setEnemyAllianceData(user_enemy_alliance_data)
             else
                 -- LuaUtils:outputTable("logic.entryHandler.login", response)
-                self.m_netService:setDeltatime(playerData.serverTime - ext.now())
+                self.m_netService:setDeltatime(delta_time)
                 local InitGame = import("app.service.InitGame")
                 InitGame(playerData) -- inner DataManager:setUserData ...
                 DataManager:setUserAllianceData(user_alliance_data)
@@ -553,7 +568,7 @@ function NetManager:getLoginPromise(deviceId)
     end)
 end
 -- 初始化玩家数据
-function NetManager:initPlayerData(terrain)
+function NetManager:initPlayerData(terrain, language)
     if DataManager:getUserData().basicInfo.terrain ~= "__NONE__" then
         assert(false)
     end
@@ -561,7 +576,8 @@ function NetManager:initPlayerData(terrain)
         terrain == "desert" or
         terrain == "iceField" )
     return get_blocking_request_promise("logic.playerHandler.initPlayerData", {
-        terrain = terrain
+        terrain = terrain,
+        language = language or app:GetGameLanguage(),
     }, "初始化玩家数据失败!"):done(get_player_response_msg)
 end
 -- 个人修改地形
@@ -1666,6 +1682,7 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
 
 
 
