@@ -218,6 +218,7 @@ function MyCityScene:onEnterTransitionFinish()
     if ext.registereForRemoteNotifications then
         ext.registereForRemoteNotifications()
     end 
+    app:sendPlayerLanguageCodeIf()
     app:sendApnIdIf()
     if self.isFromLogin then
         local isFinished_fte = DataManager:getUserData().countInfo.isFTEFinished

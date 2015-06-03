@@ -191,7 +191,7 @@ function GameUIDragonEyrieDetail:RefreshUI()
     -- end
     if button_tag == 'equipment' then
         self.lv_label:show()
-        self.dragon_hp_label:setString(dragon:Exp() .. "/" .. dragon:GetMaxExp())
+        self.dragon_hp_label:setString(string.formatnumberthousands(dragon:Exp()) .. "/" .. string.formatnumberthousands(dragon:GetMaxExp()))
         self.hp_process_timer:setPercentage(dragon:Exp()/dragon:GetMaxExp()*100)
         self.hp_process_bg:show()
         self.equipment_ui.promotionLevel_label:setString(self:GetUpgradDragonStarTips(dragon))
@@ -201,11 +201,11 @@ function GameUIDragonEyrieDetail:RefreshUI()
     elseif button_tag == 'skill' then
         self.hp_process_bg:hide()
         self:RefreshSkillList()
-        self.skill_ui.blood_label:setString(City:GetResourceManager():GetBloodResource():GetValue())
+        self.skill_ui.blood_label:setString(string.formatnumberthousands(City:GetResourceManager():GetBloodResource():GetValue()))
         self.lv_label:hide()
     else
         self.lv_label:show()
-        self.dragon_hp_label:setString(dragon:Exp() .. "/" .. dragon:GetMaxExp())
+        self.dragon_hp_label:setString(string.formatnumberthousands(dragon:Exp()) .. "/" .. string.formatnumberthousands(dragon:GetMaxExp()))
         self.hp_process_timer:setPercentage(dragon:Exp() / dragon:GetMaxExp()*100)
         self.hp_process_bg:show()
         self:RefreshInfoListView()
@@ -712,7 +712,7 @@ function GameUIDragonEyrieDetail:GetInfoListItem(index,title,val)
     }):align(display.LEFT_CENTER, 10, 24):addTo(bg)
 
     UIKit:ttfLabel({
-        text = val,
+        text = string.formatnumberthousands(tonumber(val)),
         color = 0x403c2f,
         size = 20,
         align = cc.TEXT_ALIGNMENT_RIGHT,

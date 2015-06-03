@@ -40,7 +40,7 @@ function GameUIDragonEyrieMain:OnHPChanged()
     local dragon = self:GetCurrentDragon()
     if not dragon:Ishated() then return end
     if self.dragon_hp_label and self.dragon_hp_label:isVisible() then
-        self.dragon_hp_label:setString(dragon:Hp() .. "/" .. dragon:GetMaxHP())
+        self.dragon_hp_label:setString(string.formatnumberthousands(dragon:Hp()) .. "/" .. string.formatnumberthousands(dragon:GetMaxHP()))
         self.progress_hated:setPercentage(dragon:Hp()/dragon:GetMaxHP()*100)
     end
 end
@@ -120,7 +120,7 @@ end
 function GameUIDragonEyrieMain:OnUpgradingFinished(building)
     if building:GetType() == self:GetBuilding():GetType() and self.dragon_hp_recovery_count_label then
         local dragon_hp_recovery = self:GetBuilding():GetTotalHPRecoveryPerHour(self:GetCurrentDragon():Type())
-        self.dragon_hp_recovery_count_label:setString(string.format("+%s/h",dragon_hp_recovery))
+        self.dragon_hp_recovery_count_label:setString(string.format("+%s/h",string.formatnumberthousands(dragon_hp_recovery)))
     end
 end
 
@@ -211,8 +211,8 @@ function GameUIDragonEyrieMain:RefreshUI()
             self.dragon_info:show()
             self.progress_content_hated:show()
             local dragon_hp_recovery = self:GetBuilding():GetTotalHPRecoveryPerHour(dragon:Type())
-            self.dragon_hp_recovery_count_label:setString(string.format("+%s/h",dragon_hp_recovery))
-            self.dragon_hp_label:setString(dragon:Hp() .. "/" .. dragon:GetMaxHP())
+            self.dragon_hp_recovery_count_label:setString(string.format("+%s/h",string.formatnumberthousands(dragon_hp_recovery)))
+            self.dragon_hp_label:setString(string.formatnumberthousands(dragon:Hp()) .. "/" .. string.formatnumberthousands(dragon:GetMaxHP()))
             self.progress_hated:setPercentage(dragon:Hp()/dragon:GetMaxHP()*100)
             self.state_label:setString(Localize.dragon_status[dragon:Status()])
             if dragon:IsDefenced() or dragon:IsFree() then
@@ -224,7 +224,7 @@ function GameUIDragonEyrieMain:RefreshUI()
             self.progress_content_death:hide()
         end
         self.draong_info_lv_label:setString("LV " .. dragon:Level() .. "/" .. dragon:GetMaxLevel())
-        self.draong_info_xp_label:setString(dragon:Exp() .. "/" .. dragon:GetMaxExp())
+        self.draong_info_xp_label:setString(string.formatnumberthousands(dragon:Exp()) .. "/" .. string.formatnumberthousands(dragon:GetMaxExp()))
         self.expIcon:setPositionX(self.draong_info_xp_label:getPositionX() - self.draong_info_xp_label:getContentSize().width/2 - 10)
         self.exp_add_button:setPositionX(self.draong_info_xp_label:getPositionX() + self.draong_info_xp_label:getContentSize().width/2 + 10)
     end
