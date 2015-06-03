@@ -203,7 +203,7 @@ function GameUIAllianceShop:InitGoodsPart()
         if self:CheckSell(noraml_item:Name()) then
             table.insert(row_items,noraml_item)
         end
-        if LuaUtils:table_size(row_items) == 4 or i == #normal_items then
+        if LuaUtils:table_size(row_items) == 4 or (i == #normal_items and LuaUtils:table_size(row_items)>0) then
             local goods_item = __createListItem(list_width,goods_item_height)
             local node = display.newNode()
             node:setContentSize(cc.size(list_width,goods_item_height))
@@ -236,7 +236,7 @@ function GameUIAllianceShop:InitGoodsPart()
         if self:CheckSell(super_item:Name()) then
             table.insert(row_items,super_item)
         end
-        if LuaUtils:table_size(row_items) == 4 or i == #super_items then
+        if LuaUtils:table_size(row_items) == 4 or (i == #super_items and LuaUtils:table_size(row_items) > 0 ) then
             local goods_item = __createListItem(list_width,goods_item_height)
             local node = display.newNode()
             node:setContentSize(cc.size(list_width,goods_item_height))
@@ -385,7 +385,7 @@ function GameUIAllianceShop:InitStockPart()
         if self:CheckSell(super_item:Name()) then
             table.insert(row_items,super_item)
         end
-        if LuaUtils:table_size(row_items) == 4 or i == #super_items then
+        if LuaUtils:table_size(row_items) == 4 or (i == #super_items and LuaUtils:table_size(row_items)>0)then
             local goods_item = __createListItem(list_width,goods_item_height)
             local node = display.newNode()
             node:setContentSize(cc.size(list_width,goods_item_height))
