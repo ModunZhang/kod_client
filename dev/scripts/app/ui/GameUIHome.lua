@@ -20,6 +20,7 @@ local WidgetAutoOrderAwardButton = import("..widget.WidgetAutoOrderAwardButton")
 local WidgetAutoOrderGachaButton = import("..widget.WidgetAutoOrderGachaButton")
 local WidgetAutoOrderBuffButton = import("..widget.WidgetAutoOrderBuffButton")
 local light_gem = import("..particles.light_gem")
+local fire_var = import("app.particles.fire_var")
 
 
 
@@ -162,6 +163,7 @@ function GameUIHome:AddOrRemoveListener(isAdd)
         my_allaince:AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
         my_allaince:AddListenOnType(self, Alliance.LISTEN_TYPE.HELP_EVENTS)
         my_allaince:AddListenOnType(self, Alliance.LISTEN_TYPE.ALL_HELP_EVENTS)
+        my_allaince:AddListenOnType(self, Alliance.LISTEN_TYPE.OPERATION)
         user:AddListenOnType(self, user.LISTEN_TYPE.BASIC)
         user:AddListenOnType(self, user.LISTEN_TYPE.TASK)
         user:AddListenOnType(self, user.LISTEN_TYPE.VIP_EVENT_ACTIVE)
@@ -180,6 +182,7 @@ function GameUIHome:AddOrRemoveListener(isAdd)
         my_allaince:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
         my_allaince:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.HELP_EVENTS)
         my_allaince:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.ALL_HELP_EVENTS)
+        my_allaince:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.OPERATION)
         user:RemoveListenerOnType(self, user.LISTEN_TYPE.BASIC)
         user:RemoveListenerOnType(self, user.LISTEN_TYPE.TASK)
         user:RemoveListenerOnType(self, user.LISTEN_TYPE.VIP_EVENT_ACTIVE)
@@ -467,12 +470,17 @@ function GameUIHome:CreateTop()
     self.top_order_group = order
     self.left_order_group = left_order
 
+
+
     --联盟提示按钮
     self.join_alliance_tips_button = cc.ui.UIPushButton.new({normal = 'alliance_join_tips_79x83.png'}):pos(display.left+40, display.top-600):addTo(self)
         :onButtonClicked(function()
             UIKit:newGameUI("GameUIAllianceJoinTips"):AddToCurrentScene(true)
         end)
     self.join_alliance_tips_button:setVisible(not User:GetCountInfo().firstJoinAllianceRewardGeted)
+    if self.join_alliance_tips_button:isVisible() then
+        fire_var():addTo(self.join_alliance_tips_button, -1000)
+    end
     --瞭望塔事件按钮
     local alliance_belvedere_button = cc.ui.UIPushButton.new({normal = 'fight_62x70.png'}):pos(display.right-50, display.top-600):addTo(self)
     alliance_belvedere_button.alliance_belvedere_events_count = WidgetNumberTips.new():addTo(alliance_belvedere_button):pos(20,-20)
@@ -561,6 +569,11 @@ end
 function GameUIHome:OnVipEventOver( vip_event )
     self.top_order_group:RefreshOrder()
     self:RefreshVIP()
+end
+function GameUIHome:OnOperation(alliance,operation_type)
+    if operation_type == "quit" then
+        self.top_order_group:RefreshOrder()
+    end
 end
 function GameUIHome:RefreshExp()
     local current_level = User:GetPlayerLevelByExp(User:LevelExp())

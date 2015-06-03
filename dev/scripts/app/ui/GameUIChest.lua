@@ -18,7 +18,7 @@ end
 
 function GameUIChest:onEnter()
     GameUIChest.super.onEnter(self)
-    local box = ccs.Armature:create(self.ani):addTo(self):align(display.CENTER, display.cx-50, display.cy)
+    local box = ccs.Armature:create(self.ani):addTo(self):align(display.CENTER, display.cx-50, display.cy+35)
         :scale(0.65)
     box:getAnimation():setMovementEventCallFunc(function (armatureBack, movementType, movementID)
         if movementType == ccs.MovementEventType.start then
