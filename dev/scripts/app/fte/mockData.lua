@@ -69,7 +69,7 @@ local function FinishBuildHouseAt(building_location_id, level)
     local before_power = level > 1 and config[level - 1].power or 0
 
     local modify = {
-        {"basicInfo.power", DataManager:getFteData().basicInfo.power + 100},
+        {"basicInfo.power", DataManager:getFteData().basicInfo.power + config[level].power - before_power},
         {"houseEvents.0", json.null},
         {string.format("buildings.location_%d.houses.0.level", building_location_id), level}
     }
@@ -281,8 +281,9 @@ local function RecruitSoldier(type_, count)
 end
 
 local function InstantRecruitSoldier(name, count)
+    local config = special[name] or normal[name.."_1"]
     mock{
-        {"basicInfo.power", DataManager:getFteData().basicInfo.power + config[level].power - before_power},
+        {"basicInfo.power", DataManager:getFteData().basicInfo.power + config.power * count},
         {string.format("soldiers.%s", name), count},
     }
 
