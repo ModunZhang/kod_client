@@ -60,27 +60,31 @@ end
 function GameUIAllianceHome:onEnter()
     GameUIAllianceHome.super.onEnter(self)
     -- 获取历史记录
-    NetManager:getAllianceFightReportsPromise(self.alliance:Id()):done(function ()
-        self.city = City
-        self.visible_count = 1
-        self.top = self:CreateTop()
-        self.bottom = self:CreateBottom()
+    self.city = City
+    self.visible_count = 1
+    self.top = self:CreateTop()
+    self.bottom = self:CreateBottom()
 
 
-        local ratio = self.bottom:getScale()
-        local rect1 = self.chat:getCascadeBoundingBox()
-        local x, y = rect1.x, rect1.y + rect1.height - 2
-        local march = WidgetMarchEvents.new(self.alliance, ratio):addTo(self):pos(x, y)
-        self:AddMapChangeButton()
-        self:InitArrow()
-        if self.top then
+    local ratio = self.bottom:getScale()
+    local rect1 = self.chat:getCascadeBoundingBox()
+    local x, y = rect1.x, rect1.y + rect1.height - 2
+    local march = WidgetMarchEvents.new(self.alliance, ratio):addTo(self):pos(x, y)
+    self:AddMapChangeButton()
+    self:InitArrow()
+    if self.top then
+        if not self.alliance:AllianceFightReports() then
+            NetManager:getAllianceFightReportsPromise(self.alliance:Id()):done(function ()
+                self.top:Refresh()
+            end)
+        else
             self.top:Refresh()
         end
-        -- 中间按钮
-        self:CreateOperationButton()
-        self:AddOrRemoveListener(true)
-        self:Schedule()
-    end)
+    end
+    -- 中间按钮
+    self:CreateOperationButton()
+    self:AddOrRemoveListener(true)
+    self:Schedule()
 end
 function GameUIAllianceHome:onExit()
     self:AddOrRemoveListener(false)
@@ -767,6 +771,7 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
+
 
 
 

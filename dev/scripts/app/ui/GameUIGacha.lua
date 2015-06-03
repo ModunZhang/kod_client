@@ -278,8 +278,6 @@ function GameUIGacha:CreateGachaPool(layer)
         main:GetHomeButton():setButtonEnabled(false)
         self.award =self.award or {} -- 抽到物品的图标和名字node,开启下次抽奖需移除
         local item_name = item[1]
-        print("item_name==",item_name)
-        dump(item,"StartLotteryDraw")
         self.current_gacha_item_count = item[2]
         self.current_gacha_item_name = item_name
         layer:EnAbleButton(false)
@@ -404,7 +402,7 @@ function GameUIGacha:InitOrdinary()
     local line_1 = self:GetLightLine(false):align(display.TOP_CENTER, window.left+32, window.top-200):addTo(layer)
     local line_2 = self:GetLightLine(false):align(display.TOP_CENTER, window.right-31, window.top-200):addTo(layer)
 
-    local button = WidgetPushButton.new({normal = "yellow_btn_up_252x78.png",pressed = "yellow_btn_down_252x78.png"}
+    local button = WidgetPushButton.new({}
         ,{}
         ,{
             disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
@@ -443,8 +441,7 @@ function GameUIGacha:InitOrdinary()
                 end
             end
         end)
-        :align(display.CENTER, window.cx+5, window.bottom+150)
-        :addTo(layer)
+        
     -- 是否有免费抽奖次数
     if User:GetOddFreeNormalGachaCount()>0 then
         button:setButtonLabel(UIKit:commonButtonLable({
@@ -459,6 +456,11 @@ function GameUIGacha:InitOrdinary()
         button:setButtonImage(cc.ui.UIPushButton.NORMAL, btn_images["normal"], true)
         button:setButtonImage(cc.ui.UIPushButton.PRESSED, btn_images["pressed"], true)
     else
+        local btn_images = {normal = "yellow_btn_up_252x78.png",
+            pressed = "yellow_btn_down_252x78.png"
+        }
+        button:setButtonImage(cc.ui.UIPushButton.NORMAL, btn_images["normal"], true)
+        button:setButtonImage(cc.ui.UIPushButton.PRESSED, btn_images["pressed"], true)
         button:setButtonLabel(UIKit:commonButtonLable({
             text = _("开始抽奖")
         }))
@@ -472,7 +474,8 @@ function GameUIGacha:InitOrdinary()
             color = 0xffd200,
         }):addTo(button,1,112):align(display.CENTER,0,-12)
     end
-
+    button:align(display.CENTER, window.cx+5, window.bottom+150)
+        :addTo(layer)
     self.normal_gacha_button = button
     function layer:EnAbleButton(enabled)
         button:setButtonEnabled(enabled)

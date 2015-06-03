@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Dragonfall\n"
-"POT-Creation-Date: 2015-06-02 14:49+0800\n"
-"PO-Revision-Date: 2015-06-02 14:49+0800\n"
+"POT-Creation-Date: 2015-06-03 11:04+0800\n"
+"PO-Revision-Date: 2015-06-03 11:05+0800\n"
 "Last-Translator: dannyhe <dannyjiajia@gamil.com>\n"
 "Language-Team: \n"
 "Language: zh_TW\n"
@@ -27,8 +27,8 @@ msgstr ""
 #: ui/GameUILoginBeta.lua:350 ui/GameUILoginBeta.lua:369
 #: ui/GameUISettingContactUs.lua:96 ui/GameUISettingServer.lua:50
 #: ui/GameUIWall.lua:345 ui/GameUIWatchTower.lua:446
-#: ui/GameUIWatchTower.lua:458 ui/GameUIWathTowerRegion.lua:449
-#: ui/GameUIWathTowerRegion.lua:461 utils/cocos_promise.lua:52
+#: ui/GameUIWatchTower.lua:458 ui/GameUIWathTowerRegion.lua:454
+#: ui/GameUIWathTowerRegion.lua:466 utils/cocos_promise.lua:52
 #: utils/cocos_promise.lua:57 widget/WidgetAllianceCreateOrEdit.lua:110
 #: widget/WidgetSelectWallDragon.lua:132
 msgid "错误"
@@ -36,7 +36,7 @@ msgstr "錯誤"
 
 #: MyApp.lua:193 MyApp.lua:208
 msgid "服务器连接断开,请检测你的网络环境后重试!"
-msgstr "服務器連接斷開，請檢測你的網絡環境後重試！"
+msgstr "伺服器連接斷開，請檢測你的網路環境後重試！"
 
 #: MyApp.lua:203 ui/GameUILoginBeta.lua:316 utils/Localize.lua:7
 msgid "玩家已经登录"
@@ -44,39 +44,39 @@ msgstr "玩家已經登錄"
 
 #: MyApp.lua:304 MyApp.lua:449 entity/AllianceMap.lua:335
 #: entity/DragonManager.lua:196 entity/DragonManager.lua:268
-#: entity/HelpEvent.lua:86 entity/MailManager.lua:25
+#: entity/HelpEvent.lua:87 entity/MailManager.lua:25
 #: entity/MailManager.lua:33 entity/UpgradeBuilding.lua:195
 #: entity/User.lua:743 scenes/AllianceScene.lua:189
-#: scenes/MyCityFteScene.lua:290 scenes/MyCityScene.lua:181
+#: scenes/MyCityFteScene.lua:294 scenes/MyCityScene.lua:181
 #: service/NetManager.lua:355 service/NetManager.lua:826
 #: service/NetManager.lua:883 service/NetManager.lua:1404
-#: service/NetManager.lua:1415 service/NetManager.lua:1430
-#: ui/CommonUpgradeUI.lua:809 ui/CommonUpgradeUI.lua:840
-#: ui/CommonUpgradeUI.lua:852 ui/GameUIActivityNew.lua:513
+#: service/NetManager.lua:1416 service/NetManager.lua:1432
+#: ui/CommonUpgradeUI.lua:824 ui/CommonUpgradeUI.lua:855
+#: ui/CommonUpgradeUI.lua:867 ui/GameUIActivityNew.lua:513
 #: ui/GameUIActivityRewardNew.lua:268 ui/GameUIActivityRewardNew.lua:274
 #: ui/GameUIActivityRewardNew.lua:386 ui/GameUIActivityRewardNew.lua:524
 #: ui/GameUIActivityRewardNew.lua:713 ui/GameUIActivityRewardNew.lua:807
-#: ui/GameUIAlliance.lua:355 ui/GameUIAlliance.lua:715
-#: ui/GameUIAlliance.lua:839 ui/GameUIAlliance.lua:1076
-#: ui/GameUIAlliance.lua:1081 ui/GameUIAlliance.lua:1486
-#: ui/GameUIAlliance.lua:1522 ui/GameUIAlliance.lua:1530
-#: ui/GameUIAlliance.lua:1617 ui/GameUIAlliance.lua:1622
-#: ui/GameUIAlliance.lua:1688 ui/GameUIAlliance.lua:1693
+#: ui/GameUIAlliance.lua:358 ui/GameUIAlliance.lua:718
+#: ui/GameUIAlliance.lua:842 ui/GameUIAlliance.lua:1079
+#: ui/GameUIAlliance.lua:1084 ui/GameUIAlliance.lua:1489
+#: ui/GameUIAlliance.lua:1525 ui/GameUIAlliance.lua:1533
+#: ui/GameUIAlliance.lua:1620 ui/GameUIAlliance.lua:1625
+#: ui/GameUIAlliance.lua:1691 ui/GameUIAlliance.lua:1696
 #: ui/GameUIAllianceBattle.lua:214 ui/GameUIAllianceBattle.lua:294
 #: ui/GameUIAllianceBattle.lua:975 ui/GameUIAllianceCityEnter.lua:202
 #: ui/GameUIAllianceCityEnter.lua:206 ui/GameUIAllianceCityEnter.lua:225
 #: ui/GameUIAllianceContribute.lua:318 ui/GameUIAllianceContribute.lua:329
-#: ui/GameUIAllianceInfo.lua:255 ui/GameUIAllianceJoinTips.lua:144
+#: ui/GameUIAllianceInfo.lua:259 ui/GameUIAllianceJoinTips.lua:144
 #: ui/GameUIAllianceMemberInfo.lua:165 ui/GameUIAllianceMemberInfo.lua:174
 #: ui/GameUIAllianceMemberInfo.lua:340 ui/GameUIAllianceMemberInfo.lua:345
 #: ui/GameUIAllianceNoticeOrDescEdit.lua:89
-#: ui/GameUIAllianceNoticeOrDescEdit.lua:95 ui/GameUIAlliancePalace.lua:298
-#: ui/GameUIAlliancePalace.lua:454 ui/GameUIAlliancePalace.lua:456
-#: ui/GameUIAlliancePalace.lua:461 ui/GameUIAlliancePosition.lua:133
-#: ui/GameUIAllianceSendTroops.lua:186 ui/GameUIAllianceSendTroops.lua:193
-#: ui/GameUIAllianceSendTroops.lua:196 ui/GameUIAllianceSendTroops.lua:199
-#: ui/GameUIAllianceSendTroops.lua:202 ui/GameUIAllianceSendTroops.lua:205
-#: ui/GameUIAllianceShrineDetail.lua:299
+#: ui/GameUIAllianceNoticeOrDescEdit.lua:95 ui/GameUIAlliancePalace.lua:296
+#: ui/GameUIAlliancePalace.lua:300 ui/GameUIAlliancePalace.lua:456
+#: ui/GameUIAlliancePalace.lua:458 ui/GameUIAlliancePalace.lua:463
+#: ui/GameUIAlliancePosition.lua:133 ui/GameUIAllianceSendTroops.lua:186
+#: ui/GameUIAllianceSendTroops.lua:193 ui/GameUIAllianceSendTroops.lua:196
+#: ui/GameUIAllianceSendTroops.lua:199 ui/GameUIAllianceSendTroops.lua:202
+#: ui/GameUIAllianceSendTroops.lua:205 ui/GameUIAllianceShrineDetail.lua:299
 #: ui/GameUIAllianceVillageEnter.lua:306
 #: ui/GameUIAllianceVillageEnter.lua:330
 #: ui/GameUIAllianceVillageEnter.lua:354
@@ -87,19 +87,20 @@ msgstr "玩家已經登錄"
 #: ui/GameUIChatChannel.lua:210 ui/GameUIChatChannel.lua:340
 #: ui/GameUIChatChannel.lua:346 ui/GameUIChatChannel.lua:593
 #: ui/GameUIChatChannel.lua:597 ui/GameUIChatChannel.lua:606
-#: ui/GameUIChatChannel.lua:609 ui/GameUIDailyMissionInfo.lua:134
-#: ui/GameUIDailyMissionInfo.lua:144 ui/GameUIDragonEquipment.lua:312
-#: ui/GameUIDragonEyrieDetail.lua:363 ui/GameUIDragonEyrieDetail.lua:368
-#: ui/GameUIDragonEyrieDetail.lua:373 ui/GameUIDragonEyrieMain.lua:375
-#: ui/GameUIDragonEyrieMain.lua:384 ui/GameUIDragonSkill.lua:141
-#: ui/GameUIDragonSkill.lua:145 ui/GameUIGacha.lua:252
-#: ui/GameUIHasBeenBuild.lua:238 ui/GameUIHelp.lua:72 ui/GameUIHelp.lua:291
-#: ui/GameUIHome.lua:441 ui/GameUIHospital.lua:232 ui/GameUIHospital.lua:234
+#: ui/GameUIChatChannel.lua:609 ui/GameUIChest.lua:72
+#: ui/GameUIDailyMissionInfo.lua:134 ui/GameUIDailyMissionInfo.lua:144
+#: ui/GameUIDragonEquipment.lua:312 ui/GameUIDragonEyrieDetail.lua:363
+#: ui/GameUIDragonEyrieDetail.lua:368 ui/GameUIDragonEyrieDetail.lua:373
+#: ui/GameUIDragonEyrieMain.lua:375 ui/GameUIDragonEyrieMain.lua:384
+#: ui/GameUIDragonSkill.lua:141 ui/GameUIDragonSkill.lua:145
+#: ui/GameUIGacha.lua:252 ui/GameUIHasBeenBuild.lua:173
+#: ui/GameUIHasBeenBuild.lua:228 ui/GameUIHelp.lua:72 ui/GameUIHelp.lua:292
+#: ui/GameUIHome.lua:438 ui/GameUIHospital.lua:232 ui/GameUIHospital.lua:234
 #: ui/GameUIHospital.lua:244 ui/GameUIHospital.lua:252
 #: ui/GameUIHospital.lua:258 ui/GameUIHospital.lua:279
 #: ui/GameUIHospital.lua:281 ui/GameUIItems.lua:227 ui/GameUIKeep.lua:422
-#: ui/GameUIKeep.lua:442 ui/GameUILoginBeta.lua:331 ui/GameUIMail.lua:1845
-#: ui/GameUIMail.lua:1848 ui/GameUIMail.lua:1851 ui/GameUIMail.lua:1854
+#: ui/GameUIKeep.lua:442 ui/GameUILoginBeta.lua:331 ui/GameUIMail.lua:1855
+#: ui/GameUIMail.lua:1858 ui/GameUIMail.lua:1861 ui/GameUIMail.lua:1864
 #: ui/GameUIOrderHall.lua:173 ui/GameUIPResourceBuilding.lua:235
 #: ui/GameUIPResourceBuilding.lua:247 ui/GameUIPResourceBuilding.lua:250
 #: ui/GameUIPResourceBuilding.lua:282 ui/GameUIResource.lua:342
@@ -107,7 +108,7 @@ msgstr "玩家已經登錄"
 #: ui/GameUIResource.lua:377 ui/GameUISelenaQuestion.lua:255
 #: ui/GameUISettingAccount.lua:218 ui/GameUISettingAccount.lua:230
 #: ui/GameUISettingAccount.lua:242 ui/GameUISettingLanguage.lua:59
-#: ui/GameUIShireFightEvent.lua:271 ui/GameUIStrikePlayer.lua:128
+#: ui/GameUIShireFightEvent.lua:272 ui/GameUIStrikePlayer.lua:128
 #: ui/GameUIStrikePlayer.lua:219 ui/GameUIStrikePlayer.lua:222
 #: ui/GameUIStrikePlayer.lua:256 ui/GameUITradeGuild.lua:288
 #: ui/GameUITradeGuild.lua:861 ui/GameUITradeGuild.lua:866
@@ -117,9 +118,9 @@ msgstr "玩家已經登錄"
 #: ui/GameUIUpgradeTechnology.lua:440 ui/GameUIWatchTower.lua:190
 #: ui/GameUIWatchTower.lua:201 ui/GameUIWatchTower.lua:591
 #: ui/GameUIWatchTower.lua:601 ui/GameUIWathTowerRegion.lua:194
-#: ui/GameUIWathTowerRegion.lua:205 ui/GameUIWathTowerRegion.lua:598
-#: ui/GameUIWathTowerRegion.lua:608 utils/UIKit.lua:535 utils/UIKit.lua:599
-#: utils/UIKit.lua:629 utils/UIKit.lua:742
+#: ui/GameUIWathTowerRegion.lua:205 ui/GameUIWathTowerRegion.lua:603
+#: ui/GameUIWathTowerRegion.lua:613 utils/UIKit.lua:535 utils/UIKit.lua:599
+#: utils/UIKit.lua:629 utils/UIKit.lua:738
 #: widget/WidgetAllianceCreateOrEdit.lua:102
 #: widget/WidgetAllianceCreateOrEdit.lua:116
 #: widget/WidgetAllianceCreateOrEdit.lua:125
@@ -127,9 +128,9 @@ msgstr "玩家已經登錄"
 #: widget/WidgetMakeEquip.lua:181 widget/WidgetMakeEquip.lua:429
 #: widget/WidgetMakeEquip.lua:442 widget/WidgetMakeEquip.lua:477
 #: widget/WidgetManufacture.lua:121 widget/WidgetManufacture.lua:171
-#: widget/WidgetMarchEvents.lua:488 widget/WidgetMarchEvents.lua:498
+#: widget/WidgetMarchEvents.lua:490 widget/WidgetMarchEvents.lua:500
 #: widget/WidgetPlayerNode.lua:222 widget/WidgetStockGoods.lua:143
-#: widget/WidgetUseItems.lua:543 widget/WidgetUseItems.lua:689
+#: widget/WidgetUseItems.lua:546 widget/WidgetUseItems.lua:692
 msgid "提示"
 msgstr "提示"
 
@@ -215,7 +216,7 @@ msgstr "想要提升龍的技能等級，你需要下面哪一種資源？"
 
 #: datas/ClientInitGame_selena_question.lua:27
 #: ui/GameUIDragonEyrieDetail.lua:533 ui/GameUIDragonSkill.lua:159
-#: ui/GameUIDragonSkill.lua:187 utils/Localize.lua:852
+#: ui/GameUIDragonSkill.lua:187 utils/Localize.lua:820
 #: widget/WidgetUseItems.lua:294 widget/WidgetUseItems.lua:301
 msgid "英雄之血"
 msgstr "英雄之血"
@@ -323,7 +324,7 @@ msgstr "給聯盟盟主點贊"
 msgid "参加联盟匹配战"
 msgstr "參加聯盟匹配戰"
 
-#: datas/ClientInitGame_selena_question.lua:71 utils/Localize.lua:882
+#: datas/ClientInitGame_selena_question.lua:71 utils/Localize.lua:850
 msgid "向联盟捐赠资源"
 msgstr "向聯盟捐贈資源"
 
@@ -430,7 +431,7 @@ msgstr "升級農夫小屋的等級"
 
 #: datas/ClientInitGame_selena_question.lua:124
 msgid "如何将住宅，木材小屋，石料小屋，矿工小屋，农夫小屋在城市中移动位置？"
-msgstr "如何将住宅，木材小屋，石料小屋，矿工小屋，农夫小屋在城市中移动位置？"
+msgstr "如何將住宅，木材小屋，石料小屋，礦工小屋，農夫小屋在城市中移動位置？"
 
 #: datas/ClientInitGame_selena_question.lua:125
 msgid "在小屋-信息中使用建筑移动按钮"
@@ -619,8 +620,8 @@ msgid ""
 "在探险时可能会获得一些特殊材料，可以招募特殊的亡灵兵种，那么亡灵兵种有什么特"
 "殊属性？"
 msgstr ""
-"在探险时可能会获得一些特殊材料，可以招募特殊的亡灵兵种，那么亡灵兵种有什么特"
-"殊属性？"
+"在探險時可能會獲得一些特殊材料，可以招募特殊的亡靈兵種，那麼亡靈兵種有什麼特"
+"殊屬性？"
 
 #: datas/ClientInitGame_selena_question.lua:209
 msgid "不会持续消耗粮食"
@@ -639,8 +640,8 @@ msgid ""
 "想要招募更高级的兵种，你需要在训练营地，猎手大厅，马厩，车间中对兵种晋级。那"
 "么晋级需要的条件是什么？"
 msgstr ""
-"想要招募更高级的兵种，你需要在训练营地，猎手大厅，马厩，车间中对兵种晋级。那"
-"么晋级需要的条件是什么？"
+"想要招募更高級的兵種，你需要在訓練營地，獵手大廳，馬厩，車間中對兵種晉級。那"
+"麼晉級需要的條件是什麼？"
 
 #: datas/ClientInitGame_selena_question.lua:216
 msgid "升级军事科技，提升兵种的军事科技水平"
@@ -658,7 +659,7 @@ msgstr "收集一套兵種的卡牌"
 msgid ""
 "在城市中的城堡中，可以变更城市的地形，那么变更城市的地形有什么具体的好处？"
 msgstr ""
-"在城市中的城堡中，可以变更城市的地形，那么变更城市的地形有什么具体的好处？"
+"在城市中的城堡中，可以變更城市的地形，那麼變更城市的地形有什麼具體的好處？"
 
 #: datas/ClientInitGame_selena_question.lua:223
 msgid "提升对应龙的生命恢复速度"
@@ -678,8 +679,8 @@ msgid ""
 "在进攻敌方城市的时候，可以观察其地形，并派出相应的龙带领部队战斗，这么做的好"
 "处是？"
 msgstr ""
-"在进攻敌方城市的时候，可以观察其地形，并派出相应的龙带领部队战斗，这么做的好"
-"处是？"
+"在進攻敵方城市的時候，可以觀察其地形，並派出相應的龍帶領部隊戰鬥，這麼做的好"
+"處是？"
 
 #: datas/ClientInitGame_selena_question.lua:230
 msgid "提升龙的力量，并获得额外的兵种加成"
@@ -825,13 +826,13 @@ msgid "正在参加圣地战 %s(%s)"
 msgstr "正在參加聖地戰 %s(%s)"
 
 #: entity/BelvedereEntity.lua:130 entity/BelvedereEntity.lua:137
-#: ui/GameUIAllianceShrineEnter.lua:58 utils/Localize.lua:754
-#: utils/Localize.lua:1139
+#: ui/GameUIAllianceShrineEnter.lua:58 utils/Localize.lua:722
+#: utils/Localize.lua:1107
 msgid "圣地"
 msgstr "聖地"
 
 #: entity/BlackSmithUpgradeBuilding.lua:78
-#: widget/WidgetEventTabButtons.lua:951
+#: widget/WidgetEventTabButtons.lua:954
 #, c-format
 msgid "正在制作 %s"
 msgstr "正在製作 %s"
@@ -950,24 +951,24 @@ msgstr "戰鬥值到達%s"
 msgid "power值到达%s描述"
 msgstr "戰鬥值到達%s的描述"
 
-#: entity/HelpEvent.lua:76 entity/MilitaryTechnology.lua:58
-#: ui/GameUIStrikeReport.lua:532 utils/Localize.lua:1249
+#: entity/HelpEvent.lua:77 entity/MilitaryTechnology.lua:58
+#: ui/GameUIStrikeReport.lua:532 utils/Localize.lua:1217
 #, c-format
 msgid "%s血量增加"
 msgstr "%s血量增加"
 
-#: entity/HelpEvent.lua:78 entity/MilitaryTechnology.lua:60
-#: utils/Localize.lua:1247
+#: entity/HelpEvent.lua:79 entity/MilitaryTechnology.lua:60
+#: utils/Localize.lua:1215
 #, c-format
 msgid "%s对%s的攻击"
 msgstr "%s對%s的攻擊"
 
-#: entity/HelpEvent.lua:81
+#: entity/HelpEvent.lua:82
 #, c-format
 msgid "晋升%s的星级"
 msgstr "晉升%s的星級"
 
-#: entity/HelpEvent.lua:86
+#: entity/HelpEvent.lua:87
 #, c-format
 msgid "%s帮助升级%s成功"
 msgstr "%s幫助升級%s的成功"
@@ -1163,7 +1164,7 @@ msgstr "晉級%s至%d星完成"
 msgid "军事科技升级完成"
 msgstr "軍事科技升級完成"
 
-#: entity/SoldierStarEvents.lua:55 ui/GameUIHelp.lua:217
+#: entity/SoldierStarEvents.lua:55 ui/GameUIHelp.lua:218
 #: widget/WidgetMilitaryTechnologyStatus.lua:143
 #, c-format
 msgid "晋升%s的星级 star %d"
@@ -1190,8 +1191,8 @@ msgstr "建造數量已達建造上限"
 msgid "请首先提升城堡等级"
 msgstr "請首先提升城堡等級"
 
-#: entity/UpgradeBuilding.lua:19 widget/WidgetRecruitSoldier.lua:375
-#: widget/WidgetRecruitSoldier.lua:389
+#: entity/UpgradeBuilding.lua:19 widget/WidgetRecruitSoldier.lua:376
+#: widget/WidgetRecruitSoldier.lua:390
 msgid "资源不足"
 msgstr "資源不足"
 
@@ -1212,7 +1213,7 @@ msgstr "資源不足。建造隊列不足"
 #: widget/WidgetAllianceCreateOrEdit.lua:95 widget/WidgetMakeEquip.lua:429
 #: widget/WidgetPromoteSoldier.lua:284 widget/WidgetTreatSoldier.lua:263
 #: widget/WidgetUpgradeMilitaryTech.lua:94
-#: widget/WidgetUpgradeMilitaryTech.lua:241 widget/WidgetUseItems.lua:1184
+#: widget/WidgetUpgradeMilitaryTech.lua:241 widget/WidgetUseItems.lua:1187
 msgid "金龙币不足"
 msgstr "金龍幣不足"
 
@@ -1244,9 +1245,9 @@ msgid "需要%s达到%d级"
 msgstr "需要%s達到%d級"
 
 #: entity/User.lua:743
-#, fuzzy, c-format
+#, c-format
 msgid "每日任务%s完成"
-msgstr "每日任務％s的完成"
+msgstr "每日任務%s的完成"
 
 #: scenes/AllianceScene.lua:179
 msgid "联盟地形已经改变"
@@ -1267,40 +1268,40 @@ msgstr "無法移動到目標位置"
 
 #: scenes/FteScene.lua:23
 msgid "数周之后…"
-msgstr "數週之後..."
+msgstr "數週之後…"
 
 #: scenes/FteScene.lua:30
 msgid ""
 "太好了，你终于醒过来了，觉醒者。。。我的名字叫赛琳娜，我们寻找那你这样的觉醒"
 "者已经很长时间了。。。"
 msgstr ""
-"太好了，你终于醒过来了，觉醒者...我的名字叫赛琳娜，我们寻找那你这样的觉醒者"
-"已经很长时间了"
+"太好了，你終於醒過來了，覺醒者…我的名字叫賽琳娜，我們尋找那你這樣的覺醒者已"
+"經很長時間了"
 
 #: scenes/FteScene.lua:31
 msgid ""
 "我建议你最好别乱动，你刚刚在同黑龙作战的过程中受了伤，伤口还没复原。。。"
 msgstr ""
-"我建议你最好别乱动，你刚刚在同黑龙作战的过程中受了重伤，伤口还没有复原…"
+"我建議你最好別亂動，你剛剛在同黑龍作戰的過程中受了重傷，傷口還沒有復原…"
 
 #: scenes/FteScene.lua:32
 msgid "我知道你好友很多疑问，不过首先，我们需要前往寻找一个安全的地方？"
 msgstr "我知道你還有很多疑問，不過首先，我們需要尋找一個安全的地方落腳"
 
-#: scenes/MyCityFteScene.lua:39
+#: scenes/MyCityFteScene.lua:43
 #, c-format
 msgid "点击空地：建造%s"
 msgstr "點擊空地：建造%s"
 
-#: scenes/MyCityFteScene.lua:41
+#: scenes/MyCityFteScene.lua:45
 #, c-format
 msgid "点击建筑：%s"
 msgstr "點擊建築：%s"
 
-#: scenes/MyCityFteScene.lua:210 scenes/MyCityScene.lua:420
-#: ui/FullScreenPopDialogUI.lua:35 ui/GameUIAllianceInfo.lua:351
-#: ui/GameUIAllianceInfo.lua:354 ui/GameUIAllianceInfo.lua:358
-#: ui/GameUIAllianceInfo.lua:362 ui/GameUIAllianceTitle.lua:238
+#: scenes/MyCityFteScene.lua:214 scenes/MyCityScene.lua:420
+#: ui/FullScreenPopDialogUI.lua:35 ui/GameUIAllianceInfo.lua:355
+#: ui/GameUIAllianceInfo.lua:358 ui/GameUIAllianceInfo.lua:362
+#: ui/GameUIAllianceInfo.lua:366 ui/GameUIAllianceTitle.lua:238
 #: ui/GameUIItems.lua:478 ui/GameUIItems.lua:483 ui/GameUIItems.lua:488
 #: ui/GameUIPVESendTroop.lua:114 ui/GameUIPVESendTroop.lua:120
 #: ui/GameUIPVESendTroop.lua:123 ui/GameUIPVESendTroop.lua:126
@@ -1320,66 +1321,65 @@ msgstr "點擊建築：%s"
 #: widget/WidgetTreatSoldier.lua:349 widget/WidgetUpgradeMilitaryTech.lua:94
 #: widget/WidgetUpgradeMilitaryTech.lua:238
 #: widget/WidgetUpgradeMilitaryTech.lua:241 widget/WidgetUseItems.lua:157
-#: widget/WidgetUseItems.lua:765 widget/WidgetUseItems.lua:1184
+#: widget/WidgetUseItems.lua:768 widget/WidgetUseItems.lua:1187
 msgid "主人"
 msgstr "主人"
 
-#: scenes/MyCityFteScene.lua:210 scenes/MyCityScene.lua:420
+#: scenes/MyCityFteScene.lua:214 scenes/MyCityScene.lua:420
 #: ui/GameUIDailyMissionInfo.lua:291 widget/WidgetMaterialDetails.lua:129
 msgid "需要一条空闲状态的魔龙才能探险"
 msgstr "需要一條空閒狀態的魔龍才能探險"
 
-#: scenes/MyCityFteScene.lua:290
+#: scenes/MyCityFteScene.lua:294
 msgid "是否跳过新手引导？"
 msgstr "是否跳過新手引導？"
 
-#: scenes/MyCityFteScene.lua:393
+#: scenes/MyCityFteScene.lua:397
 msgid "建造矿工小屋"
 msgstr "建造礦工小屋"
 
-#: scenes/MyCityFteScene.lua:406
+#: scenes/MyCityFteScene.lua:410
 msgid ""
 "我们到了。。。现在你的伤也恢复的差不多了，让我们来测试一下你觉醒者的能力"
 "吧。。。"
-msgstr ""
-"我们到了...现在你的伤也恢复的差不多了，让我们来测试一下你觉醒者的能力吧"
+msgstr "我們到了…現在你的傷也恢復的差不多了，讓我們來測試一下你覺醒者的能力吧"
 
-#: scenes/MyCityFteScene.lua:419
+#: scenes/MyCityFteScene.lua:423
 msgid "拥有了驾驭龙族的力量，一定能击败邪恶的黑龙，重建帝国的荣耀！"
 msgstr "擁有了駕馭龍族的力量，一定能擊敗邪惡的黑龍，重建帝國的榮耀！"
 
-#: scenes/MyCityFteScene.lua:420
+#: scenes/MyCityFteScene.lua:424
 msgid ""
 "不过可惜这座城市太弱小了，我们得重头开始发展。建造住宅为城市提供空闲城民，用"
 "于生产资源和招募部队。。。"
 msgstr ""
-"不过可惜这座城市太弱小了，我们必须重头开始发展。建造住宅为城市提供空闲城民，"
-"并用于生产资源和招募部队"
+"不過可惜這座城市太弱小了，我們必須重頭開始發展。建造住宅為城市提供空閒城民，"
+"並用於生產資源和招募部隊"
 
-#: scenes/MyCityFteScene.lua:437
+#: scenes/MyCityFteScene.lua:441
 msgid "非常好，现在我们来升级城堡！城堡等级越高，可以解锁更多建筑…"
-msgstr "非常好，現在我們來升級城堡！城堡等級越高，可以解鎖更多建築..."
+msgstr "非常好，現在我們來升級城堡！城堡等級越高，可以解鎖更多建築…"
 
-#: scenes/MyCityFteScene.lua:449
+#: scenes/MyCityFteScene.lua:453
 #, c-format
 msgid "点击解锁%s"
 msgstr "點擊解鎖%s"
 
-#: scenes/MyCityFteScene.lua:468
+#: scenes/MyCityFteScene.lua:472
 msgid ""
 "年轻人，带兵打仗可不是过家家，如果你信得过我这把老骨头，就让我来教教你。。。"
 msgstr ""
-"年轻人，带兵打仗可不是过家家，如果你信得过我这把老骨头，就让我来教教你…"
+"年輕人，帶兵打仗可不是過家家，如果你信得過我這把老骨頭，就讓我來教教你…"
 
-#: scenes/MyCityFteScene.lua:494
+#: scenes/MyCityFteScene.lua:498
 msgid ""
 "很好，我没有看错你！从今天起，我，皇家骑士克里冈，愿带领我的手下追随大人征战"
 "四方。。。"
 msgstr ""
-"很好，我没有看错你！从今天起，我，皇家骑士克里冈，愿带领我的手下追随大人征战"
+"很好，我沒有看錯你！從今天起，我，皇家騎士克里岡，願帶領我的手下追隨大人征戰"
 "四方…"
 
-#: scenes/MyCityFteScene.lua:498 scenes/PVEScene.lua:289
+#: scenes/MyCityFteScene.lua:502 scenes/PVEScene.lua:289
 #: ui/GameUIMission.lua:277 ui/GameUIPVEHome.lua:230
 #: widget/WidgetPVEDialog.lua:189 widget/WidgetPVEDialog.lua:227
 #: widget/WidgetPVEFteMiner.lua:63 widget/WidgetPVEGetRewards.lua:75
@@ -1387,71 +1387,71 @@ msgstr ""
 msgid "获得奖励"
 msgstr "獲得獎勵"
 
-#: scenes/MyCityFteScene.lua:504
+#: scenes/MyCityFteScene.lua:508
 msgid "领主大人，光靠城市基本的资源产出，无法满足我们的发展需求…"
 msgstr "領主大人，光靠城市基本的資源產出，無法滿足我們的建立帝國的需求…"
 
-#: scenes/MyCityFteScene.lua:505
+#: scenes/MyCityFteScene.lua:509
 msgid ""
 "我倒是知道一个地方，有些危险，但有着丰富的物资，也许我们尝试着探索。。。"
 msgstr ""
 "我倒是知道一个地方，虽然有些危险，但有着丰富的物资，也许我们尝试着进行探索"
 
-#: scenes/MyCityFteScene.lua:510
+#: scenes/MyCityFteScene.lua:514
 msgid "点击飞艇进入探险地图"
 msgstr "點擊飛艇進入探險地圖"
 
-#: scenes/MyCityFteScene.lua:521
+#: scenes/MyCityFteScene.lua:525
 msgid ""
 "领主大人，你跑到哪里去了，人家可是找了你半天了。。。我们得抓紧时间解锁更多建"
 "筑！"
 msgstr ""
 "领主大人，你跑到哪里去了，人家可是找了你半天了…我们得抓紧时间解锁更多建筑！"
 
-#: scenes/MyCityFteScene.lua:530
+#: scenes/MyCityFteScene.lua:534
 msgid "领主大人, 你跑到那里去了...有士兵受伤了?我们需要解锁医院来治愈他们"
 msgstr "領主大人，你跑到那裡去了…有士兵受傷了？我們需要立即解鎖醫院來治愈他們"
 
-#: scenes/MyCityFteScene.lua:534
+#: scenes/MyCityFteScene.lua:538
 msgid "升级城堡来解锁医院"
 msgstr "升級城堡來解鎖醫院"
 
-#: scenes/MyCityFteScene.lua:539
+#: scenes/MyCityFteScene.lua:543
 msgid "领主大人, 解锁学院可以研发科技, 获得额外木材产出加成..."
 msgstr "領主大人，解鎖學院可以研發科技，獲得額外木材產出加成…"
 
-#: scenes/MyCityFteScene.lua:543
+#: scenes/MyCityFteScene.lua:547
 msgid "升级城堡来解锁学院"
 msgstr "升級城堡來解鎖學院"
 
-#: scenes/MyCityFteScene.lua:548
+#: scenes/MyCityFteScene.lua:552
 msgid ""
 "领主大人, 你听过灵魂石吗?那是用来召唤亡灵战士的...不过我不确定我们有这玩意儿"
 msgstr ""
 "領主大人，你听过灵魂石吗？那是用来召唤亡灵战士的重要材料…不过我不确定我们有"
 "这玩意儿"
 
-#: scenes/MyCityFteScene.lua:552
+#: scenes/MyCityFteScene.lua:556
 msgid "升级城堡来解锁材料库房"
 msgstr "升級城堡來解鎖材料庫房"
 
-#: scenes/MyCityFteScene.lua:566
+#: scenes/MyCityFteScene.lua:570
 msgid "领主大人, 建造和升级建筑需要大量的木材. 建造木工小屋能不停产出木材"
 msgstr "領主大人，建造和升級建築需要大量的木材。建造木工小屋能不停產出木材"
 
-#: scenes/MyCityFteScene.lua:570
+#: scenes/MyCityFteScene.lua:574
 msgid "建造木工小屋"
 msgstr "建造木工小屋"
 
-#: scenes/MyCityFteScene.lua:611
+#: scenes/MyCityFteScene.lua:615
 msgid "建造石匠小屋和矿工小屋,就算领主大人不在,工人们也会不停生产资源"
 msgstr "建造石匠小屋和礦工小屋，就算領主大人不在，工人們也會不停的生產資源"
 
-#: scenes/MyCityFteScene.lua:615
+#: scenes/MyCityFteScene.lua:619
 msgid "建造石匠小屋"
 msgstr "建造石匠小屋"
 
-#: scenes/MyCityFteScene.lua:622
+#: scenes/MyCityFteScene.lua:626
 msgid ""
 "看来大人你已经能够顺利接管这座城市了。。。如果不知道该干什么可以点击左上角的"
 "推荐任务"
@@ -1471,8 +1471,8 @@ msgstr "選擇一處空地，將小屋移動到那裡"
 msgid "升级城堡解锁此建筑"
 msgstr "升級城堡來解鎖此建築"
 
-#: scenes/MyCityScene.lua:191 ui/CommonUpgradeUI.lua:806
-#: ui/CommonUpgradeUI.lua:835 ui/GameUIAllianceLoyalty.lua:22
+#: scenes/MyCityScene.lua:191 ui/CommonUpgradeUI.lua:821
+#: ui/CommonUpgradeUI.lua:850 ui/GameUIAllianceLoyalty.lua:22
 #: ui/GameUIDailyMissionInfo.lua:190 ui/GameUIPResourceBuilding.lua:288
 #: ui/GameUIWatchTower.lua:232 ui/GameUIWathTowerRegion.lua:235
 msgid "前往"
@@ -1520,11 +1520,11 @@ msgstr "未知錯誤！"
 
 #: service/NetManager.lua:345
 msgid "与服务器的链接中断，请检查你的网络环境后重试!"
-msgstr "與服務器的連接中斷，請檢查你的網絡環境後重試！"
+msgstr "與伺服器的連接中斷，請檢查你的網路環境後重試！"
 
 #: service/NetManager.lua:355
 msgid "服务器连接断开!"
-msgstr "服務器連接斷開！"
+msgstr "伺服器連接斷開！"
 
 #: service/NetManager.lua:826 service/NetManager.lua:883
 msgid "发送邮件成功"
@@ -1535,14 +1535,14 @@ msgstr "發送郵件成功"
 msgid "购买%s道具成功"
 msgstr "購買%s的道具成功"
 
-#: service/NetManager.lua:1415 service/NetManager.lua:1430
+#: service/NetManager.lua:1416 service/NetManager.lua:1432
 #, c-format
 msgid "使用%s道具成功"
 msgstr "使用%s道具成功"
 
 #: service/NetService.lua:53 service/NetService.lua:73
 msgid "连接服务器失败,请检测你的网络环境!"
-msgstr "連接服務器失敗，請檢測你的網絡環境！"
+msgstr "連接伺服器失敗，請檢測你的網路環境！"
 
 #: ui/CommonUpgradeUI.lua:142 ui/CommonUpgradeUI.lua:159
 msgid "等级 "
@@ -1589,134 +1589,149 @@ msgstr "資源小車上限+%d，"
 #: ui/CommonUpgradeUI.lua:359
 #, c-format
 msgid "资源小车回复速度+%d/小时,"
-msgstr "资源小车回复速度+%d/小时,"
+msgstr "資源小車回复速度+%d/小時,"
 
-#: ui/CommonUpgradeUI.lua:368
+#: ui/CommonUpgradeUI.lua:365
 #, c-format
-msgid "科技升级速度+%d%%,"
-msgstr "科技升级速度+%d%%,"
+msgid "步兵招募速度+%d%%,"
+msgstr ""
 
-#: ui/CommonUpgradeUI.lua:395 widget/WidgetAllianceBuildingUpgrade.lua:69
+#: ui/CommonUpgradeUI.lua:371
+#, c-format
+msgid "骑兵招募速度+%d%%,"
+msgstr ""
+
+#: ui/CommonUpgradeUI.lua:377
+#, c-format
+msgid "弓手招募速度+%d%%,"
+msgstr ""
+
+#: ui/CommonUpgradeUI.lua:383
+#, c-format
+msgid "攻城系招募速度+%d%%,"
+msgstr ""
+
+#: ui/CommonUpgradeUI.lua:410 widget/WidgetAllianceBuildingUpgrade.lua:69
 msgid "立即升级"
-msgstr "立即升级"
+msgstr "立即升級"
 
-#: ui/CommonUpgradeUI.lua:432 ui/GameUIAllianceBuilding.lua:14
+#: ui/CommonUpgradeUI.lua:447 ui/GameUIAllianceBuilding.lua:14
 #: ui/GameUIAllianceOrderHallEnter.lua:66 ui/GameUIAlliancePalaceEnter.lua:67
 #: ui/GameUIAllianceShopEnter.lua:75 ui/GameUIAllianceShrineEnter.lua:166
-#: ui/GameUIHasBeenBuild.lua:194 ui/GameUIHasBeenBuild.lua:226
+#: ui/GameUIHasBeenBuild.lua:163 ui/GameUIHasBeenBuild.lua:216
 #: ui/GameUIOrderHall.lua:165 ui/GameUIUpgradeBuilding.lua:18
 msgid "升级"
-msgstr "升级"
+msgstr "升級"
 
-#: ui/CommonUpgradeUI.lua:530 ui/GameUIUnlockBuilding.lua:188
+#: ui/CommonUpgradeUI.lua:545 ui/GameUIUnlockBuilding.lua:188
 msgid "前置条件"
-msgstr "前置条件"
+msgstr "前置條件"
 
-#: ui/CommonUpgradeUI.lua:541
+#: ui/CommonUpgradeUI.lua:556
 msgid "建造队列已满"
-msgstr "建造队列已满"
+msgstr "建造隊列已滿"
 
-#: ui/CommonUpgradeUI.lua:544 ui/GameUIOrderHall.lua:13
+#: ui/CommonUpgradeUI.lua:559 ui/GameUIOrderHall.lua:13
 #: ui/GameUIOrderHall.lua:233 ui/GameUIUnlockBuilding.lua:203
-#: utils/Localize.lua:854 utils/Localize.lua:864
+#: utils/Localize.lua:822 utils/Localize.lua:832
 #: widget/WidgetBuildingIntroduce.lua:35
 msgid "木材"
 msgstr "木材"
 
-#: ui/CommonUpgradeUI.lua:551 ui/GameUIOrderHall.lua:14
+#: ui/CommonUpgradeUI.lua:566 ui/GameUIOrderHall.lua:14
 #: ui/GameUIOrderHall.lua:234 ui/GameUIUnlockBuilding.lua:211
-#: utils/Localize.lua:855 utils/Localize.lua:865
+#: utils/Localize.lua:823 utils/Localize.lua:833
 #: widget/WidgetBuildingIntroduce.lua:38
 msgid "石料"
 msgstr "石料"
 
-#: ui/CommonUpgradeUI.lua:559 ui/GameUIOrderHall.lua:15
+#: ui/CommonUpgradeUI.lua:574 ui/GameUIOrderHall.lua:15
 #: ui/GameUIOrderHall.lua:235 ui/GameUIUnlockBuilding.lua:219
-#: utils/Localize.lua:856 utils/Localize.lua:866
+#: utils/Localize.lua:824 utils/Localize.lua:834
 #: widget/WidgetBuildingIntroduce.lua:41
 msgid "铁矿"
-msgstr "铁矿"
+msgstr "鐵礦"
 
-#: ui/CommonUpgradeUI.lua:567 widget/WidgetCitizen.lua:22
+#: ui/CommonUpgradeUI.lua:582 widget/WidgetCitizen.lua:22
 msgid "空闲城民"
-msgstr "空闲城民"
+msgstr "空閒城民"
 
-#: ui/CommonUpgradeUI.lua:575 ui/GameUIUnlockBuilding.lua:227
+#: ui/CommonUpgradeUI.lua:590 ui/GameUIUnlockBuilding.lua:227
 #: ui/GameUIUpgradeTechnology.lua:373 widget/WidgetBuildingIntroduce.lua:46
 msgid "工程图纸"
-msgstr "工程图纸"
+msgstr "工程圖紙"
 
-#: ui/CommonUpgradeUI.lua:582 ui/GameUIUnlockBuilding.lua:234
+#: ui/CommonUpgradeUI.lua:597 ui/GameUIUnlockBuilding.lua:234
 #: ui/GameUIUpgradeTechnology.lua:381 widget/WidgetBuildingIntroduce.lua:53
 msgid "建造工具"
 msgstr "建造工具"
 
-#: ui/CommonUpgradeUI.lua:589 ui/GameUIUnlockBuilding.lua:241
-#: ui/GameUIUpgradeTechnology.lua:389 utils/Localize.lua:444
-#: utils/Localize.lua:870 widget/WidgetBuildingIntroduce.lua:60
+#: ui/CommonUpgradeUI.lua:604 ui/GameUIUnlockBuilding.lua:241
+#: ui/GameUIUpgradeTechnology.lua:389 utils/Localize.lua:412
+#: utils/Localize.lua:838 widget/WidgetBuildingIntroduce.lua:60
 #: widget/WidgetManufacture.lua:49
 msgid "砖石瓦片"
-msgstr "砖石瓦片"
+msgstr "磚石瓦片"
 
-#: ui/CommonUpgradeUI.lua:596 ui/GameUIUnlockBuilding.lua:248
-#: ui/GameUIUpgradeTechnology.lua:397 utils/Localize.lua:445
-#: utils/Localize.lua:871 widget/WidgetBuildingIntroduce.lua:67
+#: ui/CommonUpgradeUI.lua:611 ui/GameUIUnlockBuilding.lua:248
+#: ui/GameUIUpgradeTechnology.lua:397 utils/Localize.lua:413
+#: utils/Localize.lua:839 widget/WidgetBuildingIntroduce.lua:67
 #: widget/WidgetManufacture.lua:50
 msgid "滑轮组"
-msgstr "滑轮组"
+msgstr "滑輪組"
 
-#: ui/CommonUpgradeUI.lua:606 widget/WidgetAllianceBuildingUpgrade.lua:190
+#: ui/CommonUpgradeUI.lua:621 widget/WidgetAllianceBuildingUpgrade.lua:190
 #: widget/WidgetPromoteSoldier.lua:212
 #: widget/WidgetUpgradeMilitaryTech.lua:216
 msgid "升级需求"
-msgstr "升级需求"
+msgstr "升級需求"
 
-#: ui/CommonUpgradeUI.lua:625 ui/GameUIBuildingSpeedUp.lua:17
+#: ui/CommonUpgradeUI.lua:640 ui/GameUIBuildingSpeedUp.lua:17
 #, c-format
 msgid "正在升级 %s 到等级 %d"
-msgstr "正在升级 %s 到等级 %d"
+msgstr "正在升級 %s 到等級 %d"
 
-#: ui/CommonUpgradeUI.lua:690 ui/GameUIAcademy.lua:211
-#: ui/GameUIHasBeenBuild.lua:177 widget/WidgetEventTabButtons.lua:717
+#: ui/CommonUpgradeUI.lua:705 ui/GameUIAcademy.lua:211
+#: ui/GameUIHasBeenBuild.lua:147 widget/WidgetEventTabButtons.lua:720
 #: widget/WidgetMilitaryTechnologyStatus.lua:96 widget/WidgetSpeedUp.lua:39
 msgid "免费加速"
-msgstr "免费加速"
+msgstr "免費加速"
 
-#: ui/CommonUpgradeUI.lua:711
+#: ui/CommonUpgradeUI.lua:726
 msgid "小于5分钟时，可使用免费加速.激活VIP X后，小于5分钟时可使用免费加速"
-msgstr "小于5分钟时，可使用免费加速"
+msgstr "小於5分鐘時，可使用免費加速"
 
-#: ui/CommonUpgradeUI.lua:749 ui/GameUIUnlockBuilding.lua:282
+#: ui/CommonUpgradeUI.lua:764 ui/GameUIUnlockBuilding.lua:282
 msgid "补充资源"
-msgstr "补充资源"
+msgstr "補充資源"
 
-#: ui/CommonUpgradeUI.lua:750 ui/GameUIUnlockBuilding.lua:283
+#: ui/CommonUpgradeUI.lua:765 ui/GameUIUnlockBuilding.lua:283
 msgid "您当前没有足够的资源,是否花费魔法石立即补充"
-msgstr "您当前没有足够的资源,是否花费金龙币立即补充"
+msgstr "您當前沒有足夠的資源,是否花費金龍幣立即補充"
 
-#: ui/CommonUpgradeUI.lua:781 ui/CommonUpgradeUI.lua:793
+#: ui/CommonUpgradeUI.lua:796 ui/CommonUpgradeUI.lua:808
 #: ui/GameUIUnlockBuilding.lua:294
 msgid "立即开始"
 msgstr "立即開始"
 
-#: ui/CommonUpgradeUI.lua:782 ui/GameUIUnlockBuilding.lua:295
+#: ui/CommonUpgradeUI.lua:797 ui/GameUIUnlockBuilding.lua:295
 msgid "您当前没有空闲的建筑,是否花费魔法石立即完成上一个队列"
 msgstr "您當前沒有空閒的建築隊列，是否花費金龍幣立即完成上一個隊列"
 
-#: ui/CommonUpgradeUI.lua:800 utils/UIKit.lua:742
+#: ui/CommonUpgradeUI.lua:815 utils/UIKit.lua:738
 #, c-format
 msgid "请首先建造%s"
 msgstr "請首先建造%s"
 
-#: ui/CommonUpgradeUI.lua:848 ui/GameUIBuild.lua:195
-#: ui/GameUIHospital.lua:241 ui/GameUIHospital.lua:287 ui/GameUIItems.lua:233
-#: ui/GameUIKeep.lua:429 ui/GameUIPResourceBuilding.lua:242
-#: ui/GameUIWatchTower.lua:196 ui/GameUIWathTowerRegion.lua:200
-#: widget/WidgetAccelerateGroup.lua:117
+#: ui/CommonUpgradeUI.lua:863 ui/GameUIBuild.lua:195
+#: ui/GameUIHasBeenBuild.lua:181 ui/GameUIHospital.lua:241
+#: ui/GameUIHospital.lua:287 ui/GameUIItems.lua:233 ui/GameUIKeep.lua:429
+#: ui/GameUIPResourceBuilding.lua:242 ui/GameUIWatchTower.lua:196
+#: ui/GameUIWathTowerRegion.lua:200 widget/WidgetAccelerateGroup.lua:117
 #: widget/WidgetAllianceCreateOrEdit.lua:107
 #: widget/WidgetPromoteSoldier.lua:143 widget/WidgetRecruitSoldier.lua:303
 #: widget/WidgetTreatSoldier.lua:271 widget/WidgetTreatSoldier.lua:331
-#: widget/WidgetUpgradeMilitaryTech.lua:247 widget/WidgetUseItems.lua:1190
+#: widget/WidgetUpgradeMilitaryTech.lua:247 widget/WidgetUseItems.lua:1193
 msgid "前往商店"
 msgstr "前往商店"
 
@@ -1730,11 +1745,11 @@ msgstr "取消"
 msgid "申请审批"
 msgstr "申請審批"
 
-#: ui/GameAllianceApproval.lua:82 ui/GameUIAlliance.lua:657
+#: ui/GameAllianceApproval.lua:82 ui/GameUIAlliance.lua:660
 msgid "拒绝"
 msgstr "拒絕"
 
-#: ui/GameAllianceApproval.lua:87 ui/GameUIAlliance.lua:643
+#: ui/GameAllianceApproval.lua:87 ui/GameUIAlliance.lua:646
 msgid "同意"
 msgstr "同意"
 
@@ -1746,7 +1761,7 @@ msgstr "建築升級完成"
 msgid "小屋升级完成"
 msgstr "小屋升級完成"
 
-#: ui/GameUIAcademy.lua:45 utils/Localize.lua:724
+#: ui/GameUIAcademy.lua:45 utils/Localize.lua:692
 msgid "学院"
 msgstr "學院"
 
@@ -1764,11 +1779,11 @@ msgid "选择一个技能进行研发"
 msgstr "選擇一個技能進行研發"
 
 #: ui/GameUIAcademy.lua:203 ui/GameUIDragonEyrieMain.lua:402
-#: ui/GameUIDragonEyrieMain.lua:501 ui/GameUIHasBeenBuild.lua:128
-#: ui/GameUIHasBeenBuild.lua:275 ui/GameUIQuickTechnology.lua:173
+#: ui/GameUIDragonEyrieMain.lua:501 ui/GameUIHasBeenBuild.lua:99
+#: ui/GameUIHasBeenBuild.lua:261 ui/GameUIQuickTechnology.lua:173
 #: ui/GameUIReplayNew.lua:1621 ui/GameUITownHall.lua:245
-#: ui/GameUIWatchTower.lua:335 ui/GameUIWathTowerRegion.lua:338
-#: widget/WidgetEventTabButtons.lua:393 widget/WidgetEventTabButtons.lua:727
+#: ui/GameUIWatchTower.lua:335 ui/GameUIWathTowerRegion.lua:343
+#: widget/WidgetEventTabButtons.lua:395 widget/WidgetEventTabButtons.lua:730
 #: widget/WidgetMarchEvents.lua:315 widget/WidgetMarchEvents.lua:373
 #: widget/WidgetMilitaryTechnologyStatus.lua:84 widget/WidgetSpeedUp.lua:13
 #: widget/WidgetTimerProgress.lua:30
@@ -1777,7 +1792,7 @@ msgstr "選擇一個技能進行研發"
 msgid "加速"
 msgstr "加速"
 
-#: ui/GameUIAcademy.lua:256 ui/GameUIHelp.lua:231
+#: ui/GameUIAcademy.lua:256 ui/GameUIHelp.lua:232
 #: ui/GameUIQuickTechnology.lua:207 ui/GameUITechnologySpeedUp.lua:22
 #: widget/WidgetMilitrayTechSpeedUp.lua:22
 #, c-format
@@ -1897,7 +1912,7 @@ msgstr "放棄"
 #: ui/GameUIActivityNew.lua:498 ui/GameUIActivityRewardNew.lua:380
 #: ui/GameUIActivityRewardNew.lua:491 ui/GameUIActivityRewardNew.lua:707
 #: ui/GameUIActivityRewardNew.lua:799 ui/GameUIAllianceJoinTips.lua:51
-#: ui/GameUIMission.lua:210 widget/WidgetPVEEvent.lua:195
+#: ui/GameUIMission.lua:210 widget/WidgetPVEEvent.lua:196
 #: widget/WidgetPVEGetRewards.lua:58 widget/WidgetPVEGetRewards.lua:84
 #: widget/WidgetPVEGetTaskRewards.lua:60
 #: widget/WidgetPVEGetTaskRewards.lua:88
@@ -1944,8 +1959,8 @@ msgid "行军队列"
 msgstr "行軍隊列"
 
 #: ui/GameUIActivityRewardNew.lua:475 ui/GameUIBuild.lua:63
-#: ui/GameUIBuild.lua:90 ui/GameUIHasBeenBuild.lua:461
-#: ui/GameUIHasBeenBuild.lua:487
+#: ui/GameUIBuild.lua:90 ui/GameUIHasBeenBuild.lua:460
+#: ui/GameUIHasBeenBuild.lua:477
 msgid "建筑队列"
 msgstr "建築隊列"
 
@@ -1989,54 +2004,54 @@ msgstr "在線%s分鐘"
 msgid "联盟"
 msgstr "聯盟"
 
-#: ui/GameUIAlliance.lua:135 widget/WidgetAllianceCreateOrEdit.lua:42
+#: ui/GameUIAlliance.lua:138 widget/WidgetAllianceCreateOrEdit.lua:42
 msgid "创建"
 msgstr "創建"
 
-#: ui/GameUIAlliance.lua:140 ui/GameUIAlliance.lua:326
+#: ui/GameUIAlliance.lua:143 ui/GameUIAlliance.lua:329
 #: ui/GameUIAllianceInfo.lua:211
 msgid "加入"
 msgstr "加入"
 
-#: ui/GameUIAlliance.lua:145
+#: ui/GameUIAlliance.lua:148
 msgid "邀请"
 msgstr "邀請"
 
-#: ui/GameUIAlliance.lua:150 ui/GameUIAlliance.lua:336
+#: ui/GameUIAlliance.lua:153 ui/GameUIAlliance.lua:339
 #: ui/GameUIAllianceInfo.lua:216
 msgid "申请"
 msgstr "申請"
 
-#: ui/GameUIAlliance.lua:213 ui/GameUIAllianceBattle.lua:1045
+#: ui/GameUIAlliance.lua:216 ui/GameUIAllianceBattle.lua:1045
 msgid "搜索联盟标签"
 msgstr "搜索聯盟標籤"
 
-#: ui/GameUIAlliance.lua:355 ui/GameUIAlliance.lua:715
-#: ui/GameUIAllianceInfo.lua:255
+#: ui/GameUIAlliance.lua:358 ui/GameUIAlliance.lua:718
+#: ui/GameUIAllianceInfo.lua:259
 #, c-format
 msgid "加入%s联盟成功!"
 msgstr "加入%s的聯盟成功！"
 
-#: ui/GameUIAlliance.lua:359 ui/GameUIAllianceInfo.lua:260
+#: ui/GameUIAlliance.lua:362 ui/GameUIAllianceInfo.lua:264
 msgid "申请成功"
 msgstr "申請成功"
 
-#: ui/GameUIAlliance.lua:360 ui/GameUIAllianceInfo.lua:261
+#: ui/GameUIAlliance.lua:363 ui/GameUIAllianceInfo.lua:265
 #, c-format
 msgid ""
 "您的申请已发送至%s,如果被接受将加入该联盟,如果被拒绝,将收到一封通知邮件."
 msgstr ""
-"您的申请已发送至%s,如果被接受将加入该联盟,如果被拒绝,将收到一封通知邮件"
+"您的申請已發送至%s,如果被接受將加入該聯盟,如果被拒絕,將收到一封通知郵件"
 
-#: ui/GameUIAlliance.lua:395 ui/GameUIAlliance.lua:588
-#: ui/GameUIAlliance.lua:742 ui/GameUIAllianceBattle.lua:647
+#: ui/GameUIAlliance.lua:398 ui/GameUIAlliance.lua:591
+#: ui/GameUIAlliance.lua:745 ui/GameUIAllianceBattle.lua:647
 #: ui/GameUIAllianceBattle.lua:1230 ui/GameUIAllianceInfo.lua:148
-#: ui/GameUIAlliancePalaceEnter.lua:47 utils/Localize.lua:763
-#: utils/Localize.lua:1052
+#: ui/GameUIAlliancePalaceEnter.lua:47 utils/Localize.lua:731
+#: utils/Localize.lua:1020
 msgid "成员"
 msgstr "成員"
 
-#: ui/GameUIAlliance.lua:408 ui/GameUIAlliance.lua:601
+#: ui/GameUIAlliance.lua:411 ui/GameUIAlliance.lua:604
 #: ui/GameUIAllianceBattle.lua:649 ui/GameUIAllianceBattle.lua:1232
 #: ui/GameUIAllianceInfo.lua:161 ui/GameUIAllianceMemberInfo.lua:212
 #: ui/GameUIAllianceSendTroops.lua:686 ui/GameUICityBuildingInfo.lua:18
@@ -2055,44 +2070,44 @@ msgstr "成員"
 #: ui/GameUICityBuildingInfo.lua:143 ui/GameUICityBuildingInfo.lua:148
 #: ui/GameUICityBuildingInfo.lua:154 ui/GameUICityBuildingInfo.lua:159
 #: ui/GameUICityBuildingInfo.lua:164 ui/GameUICityBuildingInfo.lua:169
-#: ui/GameUIHelpDefence.lua:202 ui/GameUIHelpDefence.lua:356
+#: ui/GameUIHelpDefence.lua:202 ui/GameUIHelpDefence.lua:360
 #: ui/GameUIPVESendTroop.lua:482 ui/GameUIUpgradeTechnology.lua:226
-#: utils/Localize.lua:537 widget/WidgetPlayerNode.lua:204
+#: utils/Localize.lua:505 widget/WidgetPlayerNode.lua:204
 msgid "战斗力"
 msgstr "戰鬥力"
 
-#: ui/GameUIAlliance.lua:421 ui/GameUIAlliance.lua:614
+#: ui/GameUIAlliance.lua:424 ui/GameUIAlliance.lua:617
 #: ui/GameUIAllianceBattle.lua:648 ui/GameUIAllianceBattle.lua:1231
 #: ui/GameUIAllianceInfo.lua:174 ui/GameUISetting.lua:36
 msgid "语言"
 msgstr "語言"
 
-#: ui/GameUIAlliance.lua:434 ui/GameUIAlliance.lua:627
+#: ui/GameUIAlliance.lua:437 ui/GameUIAlliance.lua:630
 #: ui/GameUIAllianceBattle.lua:650 ui/GameUIAllianceBattle.lua:1233
 #: ui/GameUIAllianceInfo.lua:187 ui/GameUIAllianceMemberInfo.lua:213
 #: ui/GameUIVip.lua:91
 msgid "击杀"
 msgstr "擊殺"
 
-#: ui/GameUIAlliance.lua:486
+#: ui/GameUIAlliance.lua:489
 msgid "下列联盟邀请你加入"
 msgstr "下列聯盟邀請你加入"
 
-#: ui/GameUIAlliance.lua:520
+#: ui/GameUIAlliance.lua:523
 msgid "下列等待联盟审批"
 msgstr "下列等待聯盟審批"
 
-#: ui/GameUIAlliance.lua:682
+#: ui/GameUIAlliance.lua:685
 msgid "撤销"
 msgstr "撤銷"
 
-#: ui/GameUIAlliance.lua:737
+#: ui/GameUIAlliance.lua:740
 msgid "总览"
 msgstr "總覽"
 
-#: ui/GameUIAlliance.lua:746 ui/GameUIAllianceCityEnter.lua:191
+#: ui/GameUIAlliance.lua:749 ui/GameUIAllianceCityEnter.lua:191
 #: ui/GameUIAllianceCityEnter.lua:243 ui/GameUIAllianceInfo.lua:103
-#: ui/GameUIAlliancePalace.lua:33 ui/GameUIAlliancePalace.lua:479
+#: ui/GameUIAlliancePalace.lua:33 ui/GameUIAlliancePalace.lua:481
 #: ui/GameUIAlliancePalaceEnter.lua:59 ui/GameUIDragonEquipment.lua:72
 #: ui/GameUIDwelling.lua:32 ui/GameUIKeep.lua:44
 #: ui/GameUIMaterialDepot.lua:14 ui/GameUIPResourceBuilding.lua:48
@@ -2102,139 +2117,139 @@ msgstr "總覽"
 msgid "信息"
 msgstr "信息"
 
-#: ui/GameUIAlliance.lua:786 ui/GameUIAllianceShrine.lua:115
+#: ui/GameUIAlliance.lua:789 ui/GameUIAllianceShrine.lua:115
 #: ui/GameUIAllianceShrineEnter.lua:154
 msgid "事件记录"
 msgstr "事件記錄"
 
-#: ui/GameUIAlliance.lua:832 ui/GameUIAllianceNoticeOrDescEdit.lua:26
+#: ui/GameUIAlliance.lua:835 ui/GameUIAllianceNoticeOrDescEdit.lua:26
 msgid "联盟公告"
 msgstr "聯盟公告"
 
-#: ui/GameUIAlliance.lua:839 ui/GameUIAlliance.lua:1081
-#: ui/GameUIAlliance.lua:1486 ui/GameUIAlliance.lua:1522
-#: ui/GameUIAlliance.lua:1617 ui/GameUIAllianceDecorateEnter.lua:94
+#: ui/GameUIAlliance.lua:842 ui/GameUIAlliance.lua:1084
+#: ui/GameUIAlliance.lua:1489 ui/GameUIAlliance.lua:1525
+#: ui/GameUIAlliance.lua:1620 ui/GameUIAllianceDecorateEnter.lua:94
 #: ui/GameUIAllianceShrineDetail.lua:299 ui/GameUIAllianceShrineEnter.lua:144
 #: ui/GameUIChatChannel.lua:609
 msgid "您没有此操作权限"
 msgstr "您沒有此操作權限"
 
-#: ui/GameUIAlliance.lua:855
+#: ui/GameUIAlliance.lua:858
 msgid "在线人数"
 msgstr "在線人數"
 
-#: ui/GameUIAlliance.lua:874
+#: ui/GameUIAlliance.lua:877
 msgid "联盟人数"
 msgstr "聯盟人數"
 
-#: ui/GameUIAlliance.lua:893
+#: ui/GameUIAlliance.lua:896
 msgid "联盟战斗力"
 msgstr "聯盟戰鬥力"
 
-#: ui/GameUIAlliance.lua:913
+#: ui/GameUIAlliance.lua:916
 msgid "未设置联盟公告"
 msgstr "未設置聯盟公告"
 
-#: ui/GameUIAlliance.lua:1076
+#: ui/GameUIAlliance.lua:1079
 msgid "联盟对战期不能修改联盟信息"
 msgstr "聯盟對戰期不能修改聯盟信息"
 
-#: ui/GameUIAlliance.lua:1139
+#: ui/GameUIAlliance.lua:1142
 msgid "下拉刷新"
 msgstr "下拉刷新"
 
-#: ui/GameUIAlliance.lua:1243 ui/GameUIAllianceInfo.lua:484
+#: ui/GameUIAlliance.lua:1246 ui/GameUIAllianceInfo.lua:488
 msgid "<空>"
 msgstr "<空>"
 
-#: ui/GameUIAlliance.lua:1429 ui/GameUIAllianceInfo.lua:417
+#: ui/GameUIAlliance.lua:1432 ui/GameUIAllianceInfo.lua:421
 #: ui/GameUIAllianceMemberInfo.lua:208
 msgid "在线"
 msgstr "在線"
 
-#: ui/GameUIAlliance.lua:1431 ui/GameUIAllianceInfo.lua:420
+#: ui/GameUIAlliance.lua:1434 ui/GameUIAllianceInfo.lua:424
 msgid "最后登录:"
 msgstr "最後登錄："
 
-#: ui/GameUIAlliance.lua:1479 ui/GameUIAllianceNoticeOrDescEdit.lua:26
+#: ui/GameUIAlliance.lua:1482 ui/GameUIAllianceNoticeOrDescEdit.lua:26
 msgid "联盟描述"
 msgstr "聯盟描述"
 
-#: ui/GameUIAlliance.lua:1506 ui/GameUIAlliance.lua:1526
+#: ui/GameUIAlliance.lua:1509 ui/GameUIAlliance.lua:1529
 msgid "允许玩家立即加入联盟"
 msgstr "允許玩家立即加入聯盟"
 
-#: ui/GameUIAlliance.lua:1511 ui/GameUIAlliance.lua:1528
+#: ui/GameUIAlliance.lua:1514 ui/GameUIAlliance.lua:1531
 msgid "玩家仅能通过申请或者邀请的方式加入"
 msgstr "玩家僅能通過申請或者邀請的方式加入"
 
-#: ui/GameUIAlliance.lua:1531
+#: ui/GameUIAlliance.lua:1534
 msgid "你将设置联盟加入方式为"
 msgstr "你將設置聯盟加入方式為"
 
-#: ui/GameUIAlliance.lua:1542 ui/GameUIAlliance.lua:1625
-#: utils/Localize.lua:782
+#: ui/GameUIAlliance.lua:1545 ui/GameUIAlliance.lua:1628
+#: utils/Localize.lua:750
 msgid "退出联盟"
 msgstr "退出聯盟"
 
-#: ui/GameUIAlliance.lua:1542 ui/GameUIChatChannel.lua:552
+#: ui/GameUIAlliance.lua:1545 ui/GameUIChatChannel.lua:552
 msgid "邀请加入"
 msgstr "邀請加入"
 
-#: ui/GameUIAlliance.lua:1542
+#: ui/GameUIAlliance.lua:1545
 msgid "审批申请"
 msgstr "審批申請"
 
-#: ui/GameUIAlliance.lua:1542
+#: ui/GameUIAlliance.lua:1545
 msgid "群邮件"
 msgstr "群郵件"
 
-#: ui/GameUIAlliance.lua:1581
+#: ui/GameUIAlliance.lua:1584
 msgid "未设置联盟描述"
 msgstr "未設置聯盟描述"
 
-#: ui/GameUIAlliance.lua:1622
+#: ui/GameUIAlliance.lua:1625
 msgid "仅当联盟成员为空时,盟主才能退出联盟"
 msgstr "僅當所有聯盟成員都退出時，盟主才能退出聯盟"
 
-#: ui/GameUIAlliance.lua:1626
+#: ui/GameUIAlliance.lua:1629
 msgid ""
 "您必须在没有部队在外行军的情况下，才可以退出联盟。退出联盟会损失当前未打开的"
 "联盟礼物。"
 msgstr ""
-"您必须在没有部队在外行军的情况下，才可以退出联盟。退出联盟会损失当前未打开的"
-"联盟礼物"
+"你无法在联盟匹配战的战争期退出联盟。退出联盟会让你的发展处于劣势，你确定要这"
+"么做吗？。"
 
-#: ui/GameUIAlliance.lua:1636
+#: ui/GameUIAlliance.lua:1639
 msgid "联盟邮件"
 msgstr "聯盟郵件"
 
-#: ui/GameUIAlliance.lua:1637
+#: ui/GameUIAlliance.lua:1640
 msgid "发送联盟所有成员"
 msgstr "發送聯盟所有成員"
 
-#: ui/GameUIAlliance.lua:1656
+#: ui/GameUIAlliance.lua:1659
 msgid "邀请加入联盟"
 msgstr "邀請加入聯盟"
 
-#: ui/GameUIAlliance.lua:1662
+#: ui/GameUIAlliance.lua:1665
 msgid "邀请玩家加入"
 msgstr "邀請玩家加入"
 
-#: ui/GameUIAlliance.lua:1675
+#: ui/GameUIAlliance.lua:1678
 msgid "输入邀请的玩家ID"
 msgstr "輸入邀請的玩家ID"
 
-#: ui/GameUIAlliance.lua:1681 ui/GameUIAllianceInfo.lua:331
-#: ui/GameUIMail.lua:1809 ui/GameUIWriteMail.lua:80
+#: ui/GameUIAlliance.lua:1684 ui/GameUIAllianceInfo.lua:335
+#: ui/GameUIMail.lua:1819 ui/GameUIWriteMail.lua:80
 msgid "发送"
 msgstr "發送"
 
-#: ui/GameUIAlliance.lua:1688
+#: ui/GameUIAlliance.lua:1691
 msgid "非法的玩家ID"
 msgstr "非法的玩家ID"
 
-#: ui/GameUIAlliance.lua:1693 ui/GameUIChatChannel.lua:606
+#: ui/GameUIAlliance.lua:1696 ui/GameUIChatChannel.lua:606
 msgid "邀请发送成功"
 msgstr "邀請發送成功"
 
@@ -2327,8 +2342,8 @@ msgid ""
 "本次联盟会战结束后奖励,总击杀越高奖励越高.获胜方获得70%的总奖励,失败方获得剩"
 "下的,获胜联盟击杀第1名的玩家还将获得金龙币奖励"
 msgstr ""
-"本次联盟会战结束后奖励,总击杀越高奖励越高.获胜方获得70%的总奖励,失败方获得剩"
-"下的,获胜联盟击杀第1名的玩家还将获得金龙币奖励"
+"本次聯盟會戰結束後獎勵,總擊殺越高獎勵越高.獲勝方獲得70%的總獎勵,失敗方獲得剩"
+"下的,獲勝聯盟擊殺第1名的玩家還將獲得金龍幣獎勵"
 
 #: ui/GameUIAllianceBattle.lua:500 ui/GameUIAllianceBattle.lua:501
 #: ui/GameUIAllianceBattle.lua:509 ui/GameUIAllianceBattle.lua:524
@@ -2346,7 +2361,7 @@ msgid "击杀积分"
 msgstr "擊殺積分"
 
 #: ui/GameUIAllianceBattle.lua:534 ui/GameUIAllianceBattle.lua:936
-#: ui/GameUIAllianceBattle.lua:1255 ui/GameUIAlliancePalace.lua:472
+#: ui/GameUIAllianceBattle.lua:1255 ui/GameUIAlliancePalace.lua:474
 #: ui/GameUIWarSummary.lua:135
 msgid "击溃城市"
 msgstr "擊潰城市"
@@ -2383,24 +2398,24 @@ msgid ""
 "系统匹配两个战斗力相近的联盟，将彼此的领地拼接到一起。每场联盟匹配战，根据所"
 "在天梯服务器的等级，只要进行匹配就会有奖励。需要将军和盟主才能开战。"
 msgstr ""
-"系统匹配两个战斗力相近的联盟，将彼此的领地拼接到一起。每场联盟匹配战，根据所"
-"在天梯服务器的等级，只要进行匹配就会有奖励。需要将军和盟主才能开战"
+"系統匹配兩個戰鬥力相近的聯盟，將彼此的領地拼接到一起。每場聯盟匹配戰，根據所"
+"在天梯服務器的等級，只要進行匹配就會有獎勵。需要將軍和盟主才能開戰"
 
 #: ui/GameUIAllianceBattle.lua:673
 msgid ""
 "成功匹配到对手后，会有一个准备时间。此时无法对敌方进攻或者突袭，也无法移动城"
 "市的位置。请召唤你的盟友，让他们做好战斗准备。"
 msgstr ""
-"成功匹配到对手后，会有一个准备时间。此时无法对敌方进攻或者突袭，也无法移动城"
-"市的位置。请召唤你的盟友，让他们做好战斗准备"
+"成功匹配到對手後，會有一個準備時間。此時無法對敵方進攻或者突襲，也無法移動城"
+"市的位置。請召喚你的盟友，讓他們做好戰鬥準備"
 
 #: ui/GameUIAllianceBattle.lua:674
 msgid ""
 "进入战争期后，双方可以派兵攻打对方城市，抢占对方的村落。击杀敌方单位可以增加"
 "本场匹配战的总奖励。若击溃敌方玩家城市，还可以获得额外的荣耀值奖励加成。"
 msgstr ""
-"进入战争期后，双方可以派兵攻打对方城市，抢占对方的村落。击杀敌方单位可以增加"
-"本场匹配战的总奖励。若击溃敌方玩家城市，还可以获得额外的荣耀值奖励加成"
+"進入戰爭期後，雙方可以派兵攻打對方城市，搶占對方的村落。擊殺敵方單位可以增加"
+"本場匹配戰的總獎勵。若擊潰敵方玩家城市，還可以獲得額外的榮耀值獎勵加成"
 
 #: ui/GameUIAllianceBattle.lua:675
 msgid "联盟匹配战结束后，参战双方都会进入保护期，此时不会被其他联盟攻打。"
@@ -2411,17 +2426,17 @@ msgid "概述"
 msgstr "概述"
 
 #: ui/GameUIAllianceBattle.lua:694 ui/GameUIAllianceBattle.lua:1281
-#: ui/GameUIAllianceHome.lua:757
+#: ui/GameUIAllianceHome.lua:760
 msgid "准备期"
 msgstr "準備期"
 
 #: ui/GameUIAllianceBattle.lua:695 ui/GameUIAllianceBattle.lua:1283
-#: ui/GameUIAllianceHome.lua:759
+#: ui/GameUIAllianceHome.lua:762
 msgid "战争期"
 msgstr "戰爭期"
 
 #: ui/GameUIAllianceBattle.lua:696 ui/GameUIAllianceBattle.lua:1285
-#: ui/GameUIAllianceHome.lua:761
+#: ui/GameUIAllianceHome.lua:764
 msgid "保护期"
 msgstr "保護期"
 
@@ -2478,28 +2493,28 @@ msgstr "查看"
 msgid "联盟信息"
 msgstr "聯盟信息"
 
-#: ui/GameUIAllianceBattle.lua:1253 ui/GameUIAlliancePalace.lua:470
+#: ui/GameUIAllianceBattle.lua:1253 ui/GameUIAlliancePalace.lua:472
 msgid "击杀部队人口"
 msgstr "擊殺部隊人口"
 
-#: ui/GameUIAllianceBattle.lua:1254 ui/GameUIAlliancePalace.lua:471
+#: ui/GameUIAllianceBattle.lua:1254 ui/GameUIAlliancePalace.lua:473
 msgid "阵亡部队人口"
 msgstr "陣亡部隊人口"
 
-#: ui/GameUIAllianceBattle.lua:1256 ui/GameUIAlliancePalace.lua:473
+#: ui/GameUIAllianceBattle.lua:1256 ui/GameUIAlliancePalace.lua:475
 msgid "联盟战胜利"
 msgstr "聯盟戰勝利"
 
-#: ui/GameUIAllianceBattle.lua:1257 ui/GameUIAlliancePalace.lua:474
+#: ui/GameUIAllianceBattle.lua:1257 ui/GameUIAlliancePalace.lua:476
 msgid "联盟战失败"
 msgstr "聯盟戰失敗"
 
-#: ui/GameUIAllianceBattle.lua:1258 ui/GameUIAlliancePalace.lua:475
+#: ui/GameUIAllianceBattle.lua:1258 ui/GameUIAlliancePalace.lua:477
 #: ui/GameUIVip.lua:90
 msgid "胜率"
 msgstr "勝率"
 
-#: ui/GameUIAllianceBattle.lua:1279 ui/GameUIAllianceHome.lua:755
+#: ui/GameUIAllianceBattle.lua:1279 ui/GameUIAllianceHome.lua:758
 msgid "和平期"
 msgstr "和平期"
 
@@ -2520,8 +2535,8 @@ msgstr "和平期"
 #: ui/GameUICityBuildingInfo.lua:143 ui/GameUICityBuildingInfo.lua:148
 #: ui/GameUICityBuildingInfo.lua:154 ui/GameUICityBuildingInfo.lua:159
 #: ui/GameUICityBuildingInfo.lua:164 ui/GameUICityBuildingInfo.lua:169
-#: ui/GameUIDragonEyrieDetail.lua:556 ui/GameUIHelp.lua:209
-#: ui/GameUIHelpDefence.lua:364 ui/GameUIOrderHall.lua:145
+#: ui/GameUIDragonEyrieDetail.lua:556 ui/GameUIHelp.lua:210
+#: ui/GameUIHelpDefence.lua:368 ui/GameUIOrderHall.lua:145
 #: ui/GameUIOrderHall.lua:187 ui/GameUIOrderHall.lua:365
 #: ui/GameUIUpgradeTechnology.lua:56 ui/GameUIUpgradeTechnology.lua:58
 #: ui/GameUIVip.lua:511 ui/GameUIWall.lua:146 ui/GameUIWall.lua:355
@@ -2532,20 +2547,20 @@ msgid "等级"
 msgstr "等級"
 
 #: ui/GameUIAllianceCityEnter.lua:122 ui/GameUIAllianceDecorateEnter.lua:60
-#: ui/GameUIAllianceEnterBase.lua:70 ui/GameUIAllianceHome.lua:577
+#: ui/GameUIAllianceEnterBase.lua:70 ui/GameUIAllianceHome.lua:580
 #: ui/GameUIAllianceMoonGateEnter.lua:32
 #: ui/GameUIAllianceOrderHallEnter.lua:36 ui/GameUIAlliancePalaceEnter.lua:37
 #: ui/GameUIAllianceShopEnter.lua:33 ui/GameUIAllianceShopEnter.lua:51
 #: ui/GameUIAllianceShrineEnter.lua:98 ui/GameUIAllianceVillageEnter.lua:116
 #: ui/GameUIAllianceVillageEnter.lua:133 ui/GameUIOtherAllianceHome.lua:19
 #: ui/GameUIOtherAllianceHome.lua:66 ui/GameUIShireFightEvent.lua:218
-#: ui/GameUIWatchTower.lua:259 ui/GameUIWathTowerRegion.lua:262
+#: ui/GameUIWatchTower.lua:259 ui/GameUIWathTowerRegion.lua:267
 #: widget/WidgetAllianceTop.lua:184
 msgid "坐标"
 msgstr "坐標"
 
 #: ui/GameUIAllianceCityEnter.lua:126 ui/GameUIWatchTower.lua:388
-#: ui/GameUIWathTowerRegion.lua:391
+#: ui/GameUIWathTowerRegion.lua:396
 msgid "玩家"
 msgstr "玩家"
 
@@ -2573,13 +2588,13 @@ msgstr "已有協防部隊正在行軍"
 #: ui/GameUIAllianceCityEnter.lua:179 ui/GameUIAllianceMemberInfo.lua:59
 #: ui/GameUIAllianceMemberInfo.lua:71 ui/GameUIAllianceMemberInfo.lua:92
 #: ui/GameUIMail.lua:25 ui/GameUIMail.lua:162 widget/WidgetHomeBottom.lua:33
-#: widget/WidgetMailContacts.lua:104
+#: widget/WidgetMailContacts.lua:106
 msgid "邮件"
 msgstr "郵件"
 
 #: ui/GameUIAllianceCityEnter.lua:186 ui/GameUIAllianceMemberInfo.lua:106
 #: ui/GameUIAllianceMemberInfo.lua:187 ui/GameUIChatChannel.lua:585
-#: widget/WidgetMailContacts.lua:112
+#: widget/WidgetMailContacts.lua:114
 msgid "个人邮件"
 msgstr "個人郵件"
 
@@ -2658,7 +2673,7 @@ msgstr "移動"
 msgid "战争期不能移动"
 msgstr "戰爭期不能移動"
 
-#: ui/GameUIAllianceDecorateEnter.lua:85 ui/GameUIAlliancePalace.lua:454
+#: ui/GameUIAllianceDecorateEnter.lua:85 ui/GameUIAlliancePalace.lua:456
 #: ui/GameUIAllianceShrineEnter.lua:135 utils/Localize.lua:117
 msgid "联盟荣耀值不足"
 msgstr "聯盟榮耀值不足"
@@ -2676,8 +2691,8 @@ msgid ""
 "联盟将军可将联盟建筑移动到空地,玩家可将自己的城市移动到空地处,空地定期刷新放"
 "逐者的村落,树木,山脉和湖泊"
 msgstr ""
-"联盟将军可将联盟建筑移动到空地,玩家可将自己的城市移动到空地处,空地定期刷新放"
-"逐者的村落,树木,山脉和湖泊"
+"聯盟將軍可將聯盟建築移動到空地,玩家可將自己的城市移動到空地處,空地定期刷新放"
+"逐者的村落,樹木,山脈和湖泊"
 
 #: ui/GameUIAllianceHome.lua:231 ui/GameUIOtherAllianceHome.lua:87
 #: ui/GameUIWathTowerRegion.lua:22
@@ -2692,11 +2707,11 @@ msgstr "開始戰鬥"
 msgid "请求开战"
 msgstr "請求開戰"
 
-#: ui/GameUIAllianceHome.lua:575
+#: ui/GameUIAllianceHome.lua:578
 msgid "我方"
 msgstr "我方"
 
-#: ui/GameUIAllianceHome.lua:575 ui/GameUIStrikeReport.lua:28
+#: ui/GameUIAllianceHome.lua:578 ui/GameUIStrikeReport.lua:28
 msgid "敌方"
 msgstr "敵方"
 
@@ -2708,46 +2723,46 @@ msgstr "聯繫盟主"
 msgid "成员列表"
 msgstr "成員列表"
 
-#: ui/GameUIAllianceInfo.lua:240
+#: ui/GameUIAllianceInfo.lua:241
 msgid "联盟未设置联盟描述"
 msgstr "聯盟未設置聯盟描述"
 
-#: ui/GameUIAllianceInfo.lua:276 ui/GameUIMail.lua:1015
+#: ui/GameUIAllianceInfo.lua:280 ui/GameUIMail.lua:1021
 #: ui/GameUIWriteMail.lua:25 ui/GameUIWriteMail.lua:126
 msgid "收件人"
 msgstr "收件人"
 
-#: ui/GameUIAllianceInfo.lua:290 ui/GameUIMail.lua:1033
+#: ui/GameUIAllianceInfo.lua:294 ui/GameUIMail.lua:1039
 msgid "主题"
 msgstr "主題"
 
-#: ui/GameUIAllianceInfo.lua:301 ui/GameUIChatChannel.lua:121
+#: ui/GameUIAllianceInfo.lua:305 ui/GameUIChatChannel.lua:121
 #: ui/GameUIWriteMail.lua:47 widget/WidgetAllianceCreateOrEdit.lua:292
 #: widget/WidgetAllianceCreateOrEdit.lua:321
 #, c-format
 msgid "最多可输入%d字符"
 msgstr "最多可輸入%d字符"
 
-#: ui/GameUIAllianceInfo.lua:315
+#: ui/GameUIAllianceInfo.lua:319
 msgid "内容"
 msgstr "內容"
 
-#: ui/GameUIAllianceInfo.lua:351 ui/GameUIMail.lua:1851
+#: ui/GameUIAllianceInfo.lua:355 ui/GameUIMail.lua:1861
 #: ui/GameUIWriteMail.lua:101
 msgid "请填写邮件主题"
 msgstr "請填寫郵件主題"
 
-#: ui/GameUIAllianceInfo.lua:354 ui/GameUIMail.lua:1854
+#: ui/GameUIAllianceInfo.lua:358 ui/GameUIMail.lua:1864
 #: ui/GameUIWriteMail.lua:104
 msgid "请填写邮件内容"
 msgstr "請填寫郵件內容"
 
-#: ui/GameUIAllianceInfo.lua:358 ui/GameUIMail.lua:1845
+#: ui/GameUIAllianceInfo.lua:362 ui/GameUIMail.lua:1855
 #: ui/GameUIWriteMail.lua:109
 msgid "请填写正确的收件人ID"
 msgstr "請填寫正確的收件人ID"
 
-#: ui/GameUIAllianceInfo.lua:362
+#: ui/GameUIAllianceInfo.lua:366
 msgid "不能给自己发送邮件"
 msgstr "不能給自己發送郵件"
 
@@ -2811,8 +2826,8 @@ msgstr "解鎖刺激的聯盟GVG對戰"
 msgid "忠诚值"
 msgstr "忠誠值"
 
-#: ui/GameUIAllianceLoyalty.lua:22 utils/Localize.lua:751
-#: utils/Localize.lua:1137
+#: ui/GameUIAllianceLoyalty.lua:22 utils/Localize.lua:719
+#: utils/Localize.lua:1105
 msgid "联盟商店"
 msgstr "聯盟商店"
 
@@ -2904,8 +2919,8 @@ msgstr "該成員已經是最低等級"
 msgid "该成员已经是最高等级"
 msgstr "該成員已經是最高等級"
 
-#: ui/GameUIAllianceMoonGateEnter.lua:14 utils/Localize.lua:753
-#: utils/Localize.lua:1138
+#: ui/GameUIAllianceMoonGateEnter.lua:14 utils/Localize.lua:721
+#: utils/Localize.lua:1106
 msgid "月门"
 msgstr "月門"
 
@@ -2955,7 +2970,7 @@ msgid "修改联盟描述成功"
 msgstr "修改聯盟描述成功"
 
 #: ui/GameUIAllianceOrderHallEnter.lua:14 ui/GameUIOrderHall.lua:20
-#: utils/Localize.lua:752 utils/Localize.lua:1140
+#: utils/Localize.lua:720 utils/Localize.lua:1108
 msgid "秩序大厅"
 msgstr "秩序大廳"
 
@@ -2981,7 +2996,7 @@ msgid "村落管理"
 msgstr "村落管理"
 
 #: ui/GameUIAlliancePalace.lua:18 ui/GameUIAlliancePalaceEnter.lua:14
-#: utils/Localize.lua:755 utils/Localize.lua:1141
+#: utils/Localize.lua:723 utils/Localize.lua:1109
 msgid "联盟宫殿"
 msgstr "聯盟宮殿"
 
@@ -3005,19 +3020,23 @@ msgstr "獎賞"
 msgid "增加忠诚值"
 msgstr "增加忠誠值"
 
-#: ui/GameUIAlliancePalace.lua:298
+#: ui/GameUIAlliancePalace.lua:296
+msgid "发放成功"
+msgstr ""
+
+#: ui/GameUIAlliancePalace.lua:300
 msgid "只有盟主拥有权限"
 msgstr "只有盟主擁有權限"
 
-#: ui/GameUIAlliancePalace.lua:365
+#: ui/GameUIAlliancePalace.lua:367
 msgid "地形定义"
 msgstr "地形定義"
 
-#: ui/GameUIAlliancePalace.lua:370
+#: ui/GameUIAlliancePalace.lua:372
 msgid "需要职位是联盟盟主"
 msgstr "需要職位是聯盟盟主"
 
-#: ui/GameUIAlliancePalace.lua:394
+#: ui/GameUIAlliancePalace.lua:396
 msgid ""
 "草地地形能产出绿龙装备材料，每当在自己的领土上完成任务，或者击杀一点战斗力的"
 "敌方单位，就由一定几率获得装备材料。"
@@ -3025,43 +3044,43 @@ msgstr ""
 "草地地形能产出绿龙装备材料，每当在自己的领土上完成任务，或者击杀一定战斗力的"
 "敌方单位，就由一定几率获得装备材料。"
 
-#: ui/GameUIAlliancePalace.lua:419 ui/GameUIKeep.lua:336
+#: ui/GameUIAlliancePalace.lua:421 ui/GameUIKeep.lua:336
 #: ui/GameUISelectTerrain.lua:58 ui/GameUISelectTerrain.lua:119
-#: utils/Localize.lua:925 widget/WidgetAllianceCreateOrEdit.lua:253
+#: utils/Localize.lua:893 widget/WidgetAllianceCreateOrEdit.lua:253
 msgid "草地"
 msgstr "草地"
 
-#: ui/GameUIAlliancePalace.lua:420 ui/GameUIKeep.lua:337
+#: ui/GameUIAlliancePalace.lua:422 ui/GameUIKeep.lua:337
 #: ui/GameUIStrikeReport.lua:127 ui/GameUIWarReport.lua:75
-#: utils/Localize.lua:454
+#: utils/Localize.lua:422
 msgid "绿龙"
 msgstr "綠龍"
 
-#: ui/GameUIAlliancePalace.lua:423 ui/GameUIKeep.lua:340
+#: ui/GameUIAlliancePalace.lua:425 ui/GameUIKeep.lua:340
 #: ui/GameUISelectTerrain.lua:70 ui/GameUISelectTerrain.lua:128
-#: utils/Localize.lua:927 widget/WidgetAllianceCreateOrEdit.lua:261
+#: utils/Localize.lua:895 widget/WidgetAllianceCreateOrEdit.lua:261
 msgid "雪地"
 msgstr "雪地"
 
-#: ui/GameUIAlliancePalace.lua:424 ui/GameUIKeep.lua:341
+#: ui/GameUIAlliancePalace.lua:426 ui/GameUIKeep.lua:341
 #: ui/GameUIStrikeReport.lua:127 ui/GameUIWarReport.lua:75
-#: utils/Localize.lua:453
+#: utils/Localize.lua:421
 msgid "蓝龙"
 msgstr "藍龍"
 
-#: ui/GameUIAlliancePalace.lua:427 ui/GameUIKeep.lua:344
+#: ui/GameUIAlliancePalace.lua:429 ui/GameUIKeep.lua:344
 #: ui/GameUISelectTerrain.lua:64 ui/GameUISelectTerrain.lua:124
-#: utils/Localize.lua:926 widget/WidgetAllianceCreateOrEdit.lua:257
+#: utils/Localize.lua:894 widget/WidgetAllianceCreateOrEdit.lua:257
 msgid "沙漠"
 msgstr "沙漠"
 
-#: ui/GameUIAlliancePalace.lua:428 ui/GameUIKeep.lua:345
+#: ui/GameUIAlliancePalace.lua:430 ui/GameUIKeep.lua:345
 #: ui/GameUIStrikeReport.lua:127 ui/GameUIWarReport.lua:75
-#: utils/Localize.lua:452
+#: utils/Localize.lua:420
 msgid "红龙"
 msgstr "紅龍"
 
-#: ui/GameUIAlliancePalace.lua:431
+#: ui/GameUIAlliancePalace.lua:433
 #, c-format
 msgid ""
 "%s地形能产出%s装备材料，每当在自己的领土上完成任务，或者击杀一点战斗力的敌方"
@@ -3070,16 +3089,16 @@ msgstr ""
 "%s地形能产出%s装备材料，每当在自己的领土上完成任务，或者击杀一定战斗力的敌方"
 "单位，就由一定几率获得装备材料。"
 
-#: ui/GameUIAlliancePalace.lua:446 ui/GameUIKeep.lua:100
+#: ui/GameUIAlliancePalace.lua:448 ui/GameUIKeep.lua:100
 #: widget/WidgetAllianceCreateOrEdit.lua:42
 msgid "修改"
 msgstr "修改"
 
-#: ui/GameUIAlliancePalace.lua:456
+#: ui/GameUIAlliancePalace.lua:458
 msgid "战争期不能修改联盟地形"
 msgstr "戰爭期不能修改聯盟地形"
 
-#: ui/GameUIAlliancePalace.lua:461
+#: ui/GameUIAlliancePalace.lua:463
 #: widget/WidgetAllianceBuildingUpgrade.lua:15
 msgid "权限不足"
 msgstr "權限不足"
@@ -3290,8 +3309,8 @@ msgid "人均战斗力"
 msgstr "人均戰鬥力"
 
 #: ui/GameUIAllianceShrine.lua:617 ui/GameUIDragonEyrieMain.lua:454
-#: ui/GameUIWatchTower.lua:418 ui/GameUIWathTowerRegion.lua:421
-#: widget/WidgetPVEEvent.lua:180
+#: ui/GameUIWatchTower.lua:418 ui/GameUIWathTowerRegion.lua:426
+#: widget/WidgetPVEEvent.lua:181
 msgid "详情"
 msgstr "詳情"
 
@@ -3394,12 +3413,12 @@ msgstr "完成時間"
 msgid "已完成"
 msgstr "已完成"
 
-#: ui/GameUIAllianceVillageEnter.lua:293 widget/WidgetMarchEvents.lua:446
+#: ui/GameUIAllianceVillageEnter.lua:293 widget/WidgetMarchEvents.lua:448
 msgid "撤军"
 msgstr "撤軍"
 
 #: ui/GameUIAllianceVillageEnter.lua:297 ui/GameUIWarReport.lua:395
-#: widget/WidgetMarchEvents.lua:330 widget/WidgetMarchEvents.lua:461
+#: widget/WidgetMarchEvents.lua:330 widget/WidgetMarchEvents.lua:463
 msgid "部队"
 msgstr "部隊"
 
@@ -3426,17 +3445,17 @@ msgid "出发地"
 msgstr "出發地"
 
 #: ui/GameUIAttackPlayerCity.lua:76 ui/GameUIWatchTower.lua:248
-#: ui/GameUIWathTowerRegion.lua:251
+#: ui/GameUIWathTowerRegion.lua:256
 msgid "目的地"
 msgstr "目的地"
 
-#: ui/GameUIBarracks.lua:16 utils/Localize.lua:735
+#: ui/GameUIBarracks.lua:16 utils/Localize.lua:703
 msgid "兵营"
 msgstr "兵營"
 
 #: ui/GameUIBarracks.lua:71 ui/GameUIBarracks.lua:172
 #: ui/GameUIBarracks.lua:192 ui/GameUIBarracksSpeedUp.lua:18
-#: widget/WidgetRecruitSoldier.lua:358
+#: widget/WidgetRecruitSoldier.lua:359
 msgid "招募"
 msgstr "招募"
 
@@ -3461,12 +3480,12 @@ msgid "召唤"
 msgstr "召喚"
 
 #: ui/GameUIBarracks.lua:271 ui/GameUIBarracks.lua:324
-#: widget/WidgetRecruitSoldier.lua:268 widget/WidgetRecruitSoldier.lua:456
+#: widget/WidgetRecruitSoldier.lua:268 widget/WidgetRecruitSoldier.lua:457
 msgid "招募开启中"
 msgstr "招募開啟中"
 
 #: ui/GameUIBarracks.lua:273 ui/GameUIBarracks.lua:326
-#: widget/WidgetRecruitSoldier.lua:458
+#: widget/WidgetRecruitSoldier.lua:459
 msgid "下一次开启招募:"
 msgstr "下一次開啟招募："
 
@@ -3479,7 +3498,7 @@ msgstr "兵營%d級解鎖"
 msgid "招募士兵不能免费加速"
 msgstr "招募士兵不能免費加速"
 
-#: ui/GameUIBlackSmith.lua:10 utils/Localize.lua:737
+#: ui/GameUIBlackSmith.lua:10 utils/Localize.lua:705
 msgid "铁匠铺"
 msgstr "鐵匠鋪"
 
@@ -3515,23 +3534,23 @@ msgstr "城市增益效果"
 msgid "战争增益效果"
 msgstr "戰爭增益效果"
 
-#: ui/GameUIBuild.lua:14 ui/GameUIResource.lua:329 utils/Localize.lua:746
+#: ui/GameUIBuild.lua:14 ui/GameUIResource.lua:329 utils/Localize.lua:714
 msgid "住宅"
 msgstr "住宅"
 
-#: ui/GameUIBuild.lua:15 ui/GameUIResource.lua:327 utils/Localize.lua:748
+#: ui/GameUIBuild.lua:15 ui/GameUIResource.lua:327 utils/Localize.lua:716
 msgid "农夫小屋"
 msgstr "農夫小屋"
 
-#: ui/GameUIBuild.lua:16 ui/GameUIResource.lua:321 utils/Localize.lua:747
+#: ui/GameUIBuild.lua:16 ui/GameUIResource.lua:321 utils/Localize.lua:715
 msgid "木工小屋"
 msgstr "木工小屋"
 
-#: ui/GameUIBuild.lua:17 ui/GameUIResource.lua:325 utils/Localize.lua:749
+#: ui/GameUIBuild.lua:17 ui/GameUIResource.lua:325 utils/Localize.lua:717
 msgid "石匠小屋"
 msgstr "石匠小屋"
 
-#: ui/GameUIBuild.lua:18 ui/GameUIResource.lua:323 utils/Localize.lua:750
+#: ui/GameUIBuild.lua:18 ui/GameUIResource.lua:323 utils/Localize.lua:718
 msgid "矿工小屋"
 msgstr "礦工小屋"
 
@@ -3548,7 +3567,7 @@ msgid "已达到最大建筑数量"
 msgstr "已達到最大建築數量"
 
 #: ui/GameUIBuild.lua:127 ui/GameUIBuild.lua:313
-#: ui/GameUIHasBeenBuild.lua:309
+#: ui/GameUIHasBeenBuild.lua:294
 msgid "满足条件"
 msgstr "滿足條件"
 
@@ -3564,7 +3583,7 @@ msgstr "您當前沒有空閒的建築隊列，是否花費魔法石立即完成
 msgid "建筑数量 5/5"
 msgstr "建築數量5/5"
 
-#: ui/GameUIBuild.lua:288 widget/WidgetEventTabButtons.lua:927
+#: ui/GameUIBuild.lua:288 widget/WidgetEventTabButtons.lua:930
 msgid "建造"
 msgstr "建造"
 
@@ -3615,11 +3634,10 @@ msgstr "複製成功"
 msgid "屏蔽成功"
 msgstr "屏蔽成功"
 
-#: ui/GameUIChest.lua:22 ui/GameUIItems.lua:506 ui/GameUIItems.lua:517
-#: ui/GameUITownHall.lua:233 ui/GameUITradeGuild.lua:586
-#: widget/WidgetManufacture.lua:392
-msgid "获得"
-msgstr "獲得"
+#: ui/GameUIChest.lua:66
+#, c-format
+msgid " X %d"
+msgstr ""
 
 #: ui/GameUICityBuildingInfo.lua:18
 msgid "可解锁地块"
@@ -3633,7 +3651,7 @@ msgstr "可協助加速"
 msgid "瞭望塔效果"
 msgstr "瞭望塔效果"
 
-#: ui/GameUICityBuildingInfo.lua:28 utils/Localize.lua:652
+#: ui/GameUICityBuildingInfo.lua:28 utils/Localize.lua:620
 msgid "资源存储上限"
 msgstr "資源存儲上限"
 
@@ -3649,7 +3667,7 @@ msgstr "巨龍生命值恢復每小時"
 msgid "制造工具数量"
 msgstr "製造工具數量"
 
-#: ui/GameUICityBuildingInfo.lua:43 utils/Localize.lua:655
+#: ui/GameUICityBuildingInfo.lua:43 utils/Localize.lua:623
 msgid "材料存储上限"
 msgstr "材料存儲上限"
 
@@ -3697,7 +3715,7 @@ msgstr "增加農夫小屋"
 msgid "增加粮食保护"
 msgstr "增加糧食保護"
 
-#: ui/GameUICityBuildingInfo.lua:78 utils/Localize.lua:611
+#: ui/GameUICityBuildingInfo.lua:78 utils/Localize.lua:579
 msgid "容纳伤兵上限"
 msgstr "容納傷兵上限"
 
@@ -3797,11 +3815,15 @@ msgstr "感知力恢復每小時"
 msgid "战斗值："
 msgstr "戰鬥值："
 
+#: ui/GameUICityInfo.lua:190
+msgid "您正在访问其他玩家的城市, 无法使用其他功能, 点击左下角返回城市"
+msgstr "您正在訪問其他玩家的城市，無法使用其他功能，點擊左下角返回聯盟領地"
+
 #: ui/GameUICollectReport.lua:15
 msgid "采集战报"
 msgstr "採集戰報"
 
-#: ui/GameUICollectReport.lua:47 ui/GameUIMail.lua:154 ui/GameUIMail.lua:1159
+#: ui/GameUICollectReport.lua:47 ui/GameUIMail.lua:154 ui/GameUIMail.lua:1165
 #: ui/GameUIStrikeReport.lua:146 ui/GameUIWarReport.lua:120
 msgid "删除"
 msgstr "刪除"
@@ -3828,7 +3850,7 @@ msgstr "無戰利品"
 #: ui/GameUIWarReport.lua:687
 #, c-format
 msgid "Battle at %s (%d,%d)"
-msgstr "Battle at %s (%d,%d)"
+msgstr "戰鬥發生在 %s (%d,%d)"
 
 #: ui/GameUIDailyMissionInfo.lua:73
 msgid "完成下列任务,领取奖励"
@@ -3986,7 +4008,7 @@ msgstr "裝備強化成功"
 msgid "装备已达到最大星级"
 msgstr "裝備已達到最大星級"
 
-#: ui/GameUIDragonEquipment.lua:436
+#: ui/GameUIDragonEquipment.lua:436 widget/WidgetResources.lua:239
 msgid "当前数量"
 msgstr "當前數量"
 
@@ -4000,7 +4022,7 @@ msgstr "活力"
 #: ui/GameUIDragonEquipment.lua:479 ui/GameUIDragonEquipment.lua:510
 #: ui/GameUIDragonEquipment.lua:576 ui/GameUIDragonEquipmentMake.lua:174
 #: ui/GameUIDragonEyrieDetail.lua:634 ui/GameUIDragonEyrieMain.lua:412
-#: ui/GameUIHelpDefence.lua:319 ui/GameUIShowDragonUpStarAnimation.lua:52
+#: ui/GameUIHelpDefence.lua:323 ui/GameUIShowDragonUpStarAnimation.lua:52
 #: ui/GameUIWatchTowerMyTroopsDetail.lua:163
 #: ui/GameUIWatchTowerTroopDetail.lua:205
 msgid "力量"
@@ -4030,7 +4052,7 @@ msgid "附加随机属性数量"
 msgstr "附加隨機屬性數量"
 
 #: ui/GameUIDragonEyrieDetail.lua:26 ui/GameUIDragonEyrieMain.lua:23
-#: utils/Localize.lua:731
+#: utils/Localize.lua:699
 msgid "龙巢"
 msgstr "龍巢"
 
@@ -4177,7 +4199,7 @@ msgstr "點擊建造"
 #: ui/GameUIFteDragonEyrieMain.lua:41
 msgid "不可思议，传说是真的？！觉醒者过让能够号令龙族。。。大人您真是厉害！"
 msgstr ""
-"不可思议，传说竟然是真的？！觉醒者果然能够号令龙族…主人您真是太厉害了！"
+"不可思議，傳說竟然是真的？ ！覺醒者果然能夠號令龍族…主人您真是太厲害了！"
 
 #: ui/GameUIFteDragonEyrieMain.lua:56
 msgid "点击按钮：孵化"
@@ -4201,7 +4223,7 @@ msgid "开始研发"
 msgstr "開始研發"
 
 #: ui/GameUIFteVip.lua:22 ui/GameUIVip.lua:488 ui/GameUIVip.lua:746
-#: ui/GameUIVip.lua:829 widget/WidgetUseItems.lua:863
+#: ui/GameUIVip.lua:829 widget/WidgetUseItems.lua:866
 msgid "激活VIP"
 msgstr "激活VIP"
 
@@ -4240,43 +4262,41 @@ msgid ""
 msgstr ""
 "购买任意金额的金龙币可以解锁高级抽奖,高级抽奖一次可以获得三种不同的道具"
 
-#: ui/GameUIHasBeenBuild.lua:238
+#: ui/GameUIHasBeenBuild.lua:228
 msgid "前置建筑条件不满足, 请前往。"
 msgstr "前置建築條件不滿足，請前往"
 
-#: ui/GameUIHasBeenBuild.lua:325
+#: ui/GameUIHasBeenBuild.lua:310
 msgid "正在建造"
 msgstr "正在建造"
 
-#: ui/GameUIHasBeenBuild.lua:325
+#: ui/GameUIHasBeenBuild.lua:310
 msgid "正在解锁"
 msgstr "正在解鎖"
 
-#: ui/GameUIHasBeenBuild.lua:327
-msgid "正在升级到 等级"
-msgstr "正在升級到等級"
+#: ui/GameUIHasBeenBuild.lua:313
+#, c-format
+msgid "正在升级到等级%d"
+msgstr ""
 
-#: ui/GameUIHasBeenBuild.lua:331
+#: ui/GameUIHasBeenBuild.lua:318
 msgid "已经到最大等级了"
 msgstr "已經到最大等級了"
 
-#: ui/GameUIHasBeenBuild.lua:333
-msgid "从等级"
-msgstr "從等級"
+#: ui/GameUIHasBeenBuild.lua:321
+#, c-format
+msgid "从等级%d升级到等级%d"
+msgstr ""
 
-#: ui/GameUIHasBeenBuild.lua:333
-msgid "升级到等级"
-msgstr "升級到等級"
-
-#: ui/GameUIHasBeenBuild.lua:416
+#: ui/GameUIHasBeenBuild.lua:403
 msgid "建筑列表"
 msgstr "建築列表"
 
-#: ui/GameUIHasBeenBuild.lua:501
+#: ui/GameUIHasBeenBuild.lua:488
 msgid "功能建筑"
 msgstr "功能建築"
 
-#: ui/GameUIHasBeenBuild.lua:506
+#: ui/GameUIHasBeenBuild.lua:493
 msgid "资源建筑"
 msgstr "資源建築"
 
@@ -4292,7 +4312,7 @@ msgstr "幫助聯盟成員加速並獲得聯盟忠誠值，激活VIP後能夠提
 msgid "全部帮助"
 msgstr "全部幫助"
 
-#: ui/GameUIHelp.lua:72 ui/GameUIHelp.lua:291
+#: ui/GameUIHelp.lua:72 ui/GameUIHelp.lua:292
 msgid "协助加速成功"
 msgstr "協助加速成功"
 
@@ -4300,27 +4320,27 @@ msgstr "協助加速成功"
 msgid "每日获得最大忠诚度："
 msgstr "每日獲得最大忠誠度："
 
-#: ui/GameUIHelp.lua:209
+#: ui/GameUIHelp.lua:210
 msgid "正在升级"
 msgstr "正在升級"
 
-#: ui/GameUIHelp.lua:213
+#: ui/GameUIHelp.lua:214
 #, c-format
 msgid "研发%s血量增加 等级 %d"
 msgstr "研發%s的血量增加 等級 %d"
 
-#: ui/GameUIHelp.lua:215
+#: ui/GameUIHelp.lua:216
 #, c-format
 msgid "研发%s对%s的攻击到 等级 %d"
 msgstr "研發%s對%s的攻擊到 等級 %d"
 
-#: ui/GameUIHelp.lua:219 ui/GameUIHelp.lua:221 ui/GameUIHelp.lua:223
-#: ui/GameUIHelp.lua:225 ui/GameUIHelp.lua:227 ui/GameUIHelp.lua:229
+#: ui/GameUIHelp.lua:220 ui/GameUIHelp.lua:222 ui/GameUIHelp.lua:224
+#: ui/GameUIHelp.lua:226 ui/GameUIHelp.lua:228 ui/GameUIHelp.lua:230
 msgid "未处理"
 msgstr "未處理"
 
-#: ui/GameUIHelp.lua:278 ui/GameUIHelp.lua:287 ui/GameUIHelp.lua:301
-#: ui/GameUIOtherAllianceHome.lua:86 widget/WidgetEventTabButtons.lua:733
+#: ui/GameUIHelp.lua:279 ui/GameUIHelp.lua:288 ui/GameUIHelp.lua:302
+#: ui/GameUIOtherAllianceHome.lua:86 widget/WidgetEventTabButtons.lua:736
 msgid "帮助"
 msgstr "幫助"
 
@@ -4336,29 +4356,29 @@ msgstr "當前沒有推薦任務！"
 msgid "战斗力："
 msgstr "戰鬥力："
 
-#: ui/GameUIHome.lua:441
+#: ui/GameUIHome.lua:438
 msgid "加入联盟才能激活帮助功能"
 msgstr "加入聯盟才能激活幫助功能"
 
-#: ui/GameUIHome.lua:705
+#: ui/GameUIHome.lua:706
 msgid "5分钟以下免费加速"
 msgstr "5分鐘以下免費加速"
 
-#: ui/GameUIHome.lua:744
+#: ui/GameUIHome.lua:745
 msgid "立即完成升级"
 msgstr "立即完成升級"
 
-#: ui/GameUIHome.lua:776
+#: ui/GameUIHome.lua:777
 msgid "点击VIP，免费激活VIP"
 msgstr "點擊VIP，免費激活VIP"
 
-#: ui/GameUIHome.lua:795
+#: ui/GameUIHome.lua:797
 msgid ""
 "进入联盟地图\n"
 "体验更多玩法"
 msgstr "進入聯盟地圖 體驗更多玩法"
 
-#: ui/GameUIHospital.lua:40 utils/Localize.lua:732
+#: ui/GameUIHospital.lua:40 utils/Localize.lua:700
 msgid "医院"
 msgstr "醫院"
 
@@ -4417,7 +4437,7 @@ msgid "我的道具"
 msgstr "我的道具"
 
 #: ui/GameUIItems.lua:260 ui/GameUIItems.lua:448
-#: widget/WidgetUseItems.lua:1218
+#: widget/WidgetUseItems.lua:1221
 msgid "使用"
 msgstr "使用"
 
@@ -4433,7 +4453,12 @@ msgstr "開啟銀寶箱需要銀鑰匙"
 msgid "开启金宝箱需要金钥匙"
 msgstr "開啟金寶箱需要金鑰匙"
 
-#: ui/GameUIKeep.lua:38 utils/Localize.lua:722
+#: ui/GameUIItems.lua:506 ui/GameUIItems.lua:517 ui/GameUITownHall.lua:233
+#: ui/GameUITradeGuild.lua:586 widget/WidgetManufacture.lua:392
+msgid "获得"
+msgstr "獲得"
+
+#: ui/GameUIKeep.lua:38 utils/Localize.lua:690
 msgid "城堡"
 msgstr "城堡"
 
@@ -4472,7 +4497,7 @@ msgstr "城市地形修改"
 #: ui/GameUIKeep.lua:348
 #, c-format
 msgid "%s地形能提升50%% %s的活力回复速度"
-msgstr "%s的地形能提升50%% %s的活力回复速度"
+msgstr "%s地形能提升20%% %s的生命回复速度和額外的力量"
 
 #: ui/GameUIKeep.lua:388
 msgid "变换地形"
@@ -4520,7 +4545,7 @@ msgstr "提示：加入聯盟後，在聯盟領地的聯盟商店花費忠誠值
 
 #: ui/GameUILoginBeta.lua:90
 msgid "登录提示帮助5"
-msgstr "提示：加入联盟后，在联盟领地可参加圣地战，胜利后可以获得龙装备的材料"
+msgstr "提示：加入聯盟後，在聯盟領地可參加聖地戰，勝利後可以獲得龍裝備的材料"
 
 #: ui/GameUILoginBeta.lua:91
 msgid "登录提示帮助6"
@@ -4529,7 +4554,7 @@ msgstr "提示：你只有在加入聯盟後才能通過聯盟匹配戰的方式
 #: ui/GameUILoginBeta.lua:92
 msgid "登录提示帮助7"
 msgstr ""
-"提示：每天登陆都能获得VIP点数，连续登陆天数越多，每日获得的VIP点数也越多"
+"提示：每天登陸都能獲得VIP點數，連續登陸天數越多，每日獲得的VIP點數也越多"
 
 #: ui/GameUILoginBeta.lua:93
 msgid "登录提示帮助8"
@@ -4554,11 +4579,11 @@ msgstr "正在加載遊戲資源…"
 
 #: ui/GameUILoginBeta.lua:226
 msgid "连接网关服务器...."
-msgstr "連接網關服務器…"
+msgstr "連接網關伺服器…"
 
 #: ui/GameUILoginBeta.lua:235
 msgid "连接网关服务器失败!"
-msgstr "連接網關服務器失敗！"
+msgstr "連接網關伺服器失敗！"
 
 #: ui/GameUILoginBeta.lua:254 ui/GameUILoginBeta.lua:312
 #: utils/cocos_promise.lua:51
@@ -4567,23 +4592,23 @@ msgstr "請求超時"
 
 #: ui/GameUILoginBeta.lua:258 utils/Localize.lua:9
 msgid "服务器维护中"
-msgstr "服務器維護中"
+msgstr "伺服器維護中"
 
 #: ui/GameUILoginBeta.lua:260
 msgid "获取游戏服务器信息失败!"
-msgstr "獲取遊戲服務器信息失敗！"
+msgstr "獲取遊戲伺服器信息失敗！"
 
 #: ui/GameUILoginBeta.lua:276
 msgid "连接游戏服务器失败!"
-msgstr "連接遊戲服務器失敗！"
+msgstr "連接遊戲伺服器失敗！"
 
 #: ui/GameUILoginBeta.lua:346
 msgid "检查游戏更新...."
-msgstr "檢查遊戲更新…"
+msgstr "檢查遊戲版本…"
 
 #: ui/GameUILoginBeta.lua:350
 msgid "检查游戏更新失败!"
-msgstr "檢查遊戲更新失敗！"
+msgstr "檢查遊戲版本失敗！"
 
 #: ui/GameUILoginBeta.lua:369
 msgid "游戏版本过低,请更新!"
@@ -4600,7 +4625,7 @@ msgstr "更新進度:%d%%"
 
 #: ui/GameUIMail.lua:38
 msgid "收件箱"
-msgstr "收件箱"
+msgstr "信箱"
 
 #: ui/GameUIMail.lua:43 ui/GameUIMail.lua:162
 msgid "战报"
@@ -4632,60 +4657,60 @@ msgstr "您即將刪除所選%s，刪除的%s將無法恢復，您確定要這�
 msgid "标记已读"
 msgstr "標記已讀"
 
-#: ui/GameUIMail.lua:466 ui/GameUIMail.lua:620 ui/GameUIMail.lua:770
-#: ui/GameUIMail.lua:1380 ui/GameUIMail.lua:1643
+#: ui/GameUIMail.lua:468 ui/GameUIMail.lua:624 ui/GameUIMail.lua:776
+#: ui/GameUIMail.lua:1388 ui/GameUIMail.lua:1653
 msgid "From"
-msgstr "從"
+msgstr "From"
 
-#: ui/GameUIMail.lua:1051
+#: ui/GameUIMail.lua:1057
 msgid "日期"
 msgstr "日期"
 
-#: ui/GameUIMail.lua:1100
+#: ui/GameUIMail.lua:1106
 msgid "主题: "
 msgstr "主題："
 
-#: ui/GameUIMail.lua:1118
+#: ui/GameUIMail.lua:1124
 msgid "日期: "
 msgstr "日期："
 
-#: ui/GameUIMail.lua:1181
+#: ui/GameUIMail.lua:1187
 msgid "回复"
 msgstr "回复"
 
-#: ui/GameUIMail.lua:1349 ui/GameUIMail.lua:1612
+#: ui/GameUIMail.lua:1357 ui/GameUIMail.lua:1622
 msgid "资源采集报告"
 msgstr "資源採集報告"
 
-#: ui/GameUIMail.lua:1409 ui/GameUIMail.lua:1672
+#: ui/GameUIMail.lua:1417 ui/GameUIMail.lua:1682
 msgid "To"
-msgstr "至"
+msgstr "To"
 
-#: ui/GameUIMail.lua:1717
+#: ui/GameUIMail.lua:1727
 msgid "回复邮件"
 msgstr "回复郵件"
 
-#: ui/GameUIMail.lua:1725
+#: ui/GameUIMail.lua:1735
 msgid "收件人："
 msgstr "收件人:"
 
-#: ui/GameUIMail.lua:1745 ui/GameUIWriteMail.lua:33
+#: ui/GameUIMail.lua:1755 ui/GameUIWriteMail.lua:33
 msgid "主题："
 msgstr "主題:"
 
-#: ui/GameUIMail.lua:1754 ui/GameUIMail.lua:1822 ui/GameUIMail.lua:1857
+#: ui/GameUIMail.lua:1764 ui/GameUIMail.lua:1832 ui/GameUIMail.lua:1867
 msgid "RE:"
 msgstr "RE:"
 
-#: ui/GameUIMail.lua:1766 ui/GameUIWriteMail.lua:60
+#: ui/GameUIMail.lua:1776 ui/GameUIWriteMail.lua:60
 msgid "内容："
 msgstr "內容:"
 
-#: ui/GameUIMail.lua:1848
+#: ui/GameUIMail.lua:1858
 msgid "不能向自己发送邮件"
 msgstr "不能向自己發送郵件"
 
-#: ui/GameUIMaterialDepot.lua:8 utils/Localize.lua:744
+#: ui/GameUIMaterialDepot.lua:8 utils/Localize.lua:712
 msgid "材料库房"
 msgstr "材料庫房"
 
@@ -4775,7 +4800,7 @@ msgid "少量联盟荣耀值"
 msgstr "少量聯盟榮耀值"
 
 #: ui/GameUIOrderHall.lua:16 ui/GameUIOrderHall.lua:236
-#: utils/Localize.lua:853 utils/Localize.lua:863
+#: utils/Localize.lua:821 utils/Localize.lua:831
 msgid "粮食"
 msgstr "糧食"
 
@@ -4804,8 +4829,8 @@ msgid ""
 "显示联盟成员的村落采集资源熟练度,每采集一定的村落资源,就会增加一定的熟练度,"
 "熟练度越高,采集相应村落资源的速度就会越快"
 msgstr ""
-"显示联盟成员的村落采集资源熟练度,每采集一定的村落资源,就会增加一定的熟练度,"
-"熟练度越高,采集相应村落资源的速度就会越快"
+"顯示聯盟成員的村落採集資源熟練度,每採集一定的村落資源,就會增加一定的熟練度,"
+"熟練度越高,採集相應村落資源的速度就會越快"
 
 #: ui/GameUIOrderHall.lua:272
 #, c-format
@@ -4820,7 +4845,7 @@ msgstr "採集速度"
 msgid "锻造工坊"
 msgstr "鍛造工坊"
 
-#: ui/GameUIPResourceBuilding.lua:21 utils/Localize.lua:740
+#: ui/GameUIPResourceBuilding.lua:21 utils/Localize.lua:708
 msgid "石匠工坊"
 msgstr "石匠工坊"
 
@@ -4828,7 +4853,7 @@ msgstr "石匠工坊"
 msgid "锯木工房"
 msgstr "鋸木工房"
 
-#: ui/GameUIPResourceBuilding.lua:23 utils/Localize.lua:739
+#: ui/GameUIPResourceBuilding.lua:23 utils/Localize.lua:707
 msgid "磨坊"
 msgstr "磨坊"
 
@@ -4884,7 +4909,7 @@ msgstr "%s的數量"
 msgid "≤%d"
 msgstr "≤%d"
 
-#: ui/GameUIPResourceBuilding.lua:208 utils/Localize.lua:860
+#: ui/GameUIPResourceBuilding.lua:208 utils/Localize.lua:828
 msgid "金龙币"
 msgstr "金龍幣"
 
@@ -5073,11 +5098,11 @@ msgstr "綠龍的聚集地"
 
 #: ui/GameUISelectTerrain.lua:60
 msgid "绿龙生命恢复速度+10%"
-msgstr "綠龍生命恢復速度+10%"
+msgstr "綠龍生命恢復速度+20%"
 
 #: ui/GameUISelectTerrain.lua:61
 msgid "战斗中, 绿龙力量+10%"
-msgstr "戰鬥中，綠龍力量+10%"
+msgstr "戰鬥中，綠龍力量+20%"
 
 #: ui/GameUISelectTerrain.lua:65
 msgid "红龙的聚集地"
@@ -5085,11 +5110,11 @@ msgstr "紅龍的聚集地"
 
 #: ui/GameUISelectTerrain.lua:66
 msgid "红龙生命恢复速度+10%"
-msgstr "紅龍生命恢復速度+10%"
+msgstr "紅龍生命恢復速度+20%"
 
 #: ui/GameUISelectTerrain.lua:67
 msgid "战斗中, 红龙力量+10%"
-msgstr "戰鬥中，紅龍力量+10%"
+msgstr "戰鬥中，紅龍力量+20%"
 
 #: ui/GameUISelectTerrain.lua:71
 msgid "蓝龙的聚集地"
@@ -5097,11 +5122,11 @@ msgstr "藍龍的聚集地"
 
 #: ui/GameUISelectTerrain.lua:72
 msgid "蓝龙生命恢复速度+10%"
-msgstr "藍龍生命恢復速度+10%"
+msgstr "藍龍生命恢復速度+20%"
 
 #: ui/GameUISelectTerrain.lua:73
 msgid "战斗中, 蓝龙力量+10%"
-msgstr "戰鬥中，藍龍力量+10%"
+msgstr "戰鬥中，藍龍力量+20%"
 
 #: ui/GameUISelenaQuestion.lua:45
 msgid "塞琳娜的考验"
@@ -5122,7 +5147,7 @@ msgstr "抱歉"
 #: ui/GameUISelenaQuestion.lua:116
 msgid "大人，我准备了一些小小测试，如果你每日能连续答对10道题，我会奖赏你哦！"
 msgstr ""
-"大人，我准备了一些小小测试，如果你每日能连续答对10道题，我会奖赏你哦！"
+"大人，我準備了一些小小測試，如果你每日能連續答對10道題，我會獎賞你哦！"
 
 #: ui/GameUISelenaQuestion.lua:116
 msgid "开始吧"
@@ -5133,7 +5158,7 @@ msgid ""
 "大人，恭喜你已经答对所有问题！你可以在每日任务中领取我为你准备的一份小礼物"
 "哦！"
 msgstr ""
-"大人，恭喜你已经答对所有问题！你可以在每日任务中领取我为你准备的一份小礼物"
+"大人，恭喜你已經答對所有問題！你可以在每日任務中領取我為你準備的一份小禮物"
 "哦！"
 
 #: ui/GameUISelenaQuestion.lua:121
@@ -5159,7 +5184,7 @@ msgid ""
 "你正在回答问题,如果关闭此界面，之前回答正确的题目数将被清零,是否继续关闭该界"
 "面"
 msgstr ""
-"你正在回答问题,如果关闭此界面，之前回答正确的题目数将被清零,是否继续关闭该界"
+"你正在回答問題,如果關閉此界面，之前回答正確的題目數將被清零,是否繼續關閉該界"
 "面"
 
 #: ui/GameUISetting.lua:11 ui/GameUIStore.lua:172
@@ -5177,7 +5202,7 @@ msgstr "賬號綁定"
 
 #: ui/GameUISetting.lua:35 ui/GameUISettingServer.lua:37
 msgid "选择服务器"
-msgstr "選擇服務器"
+msgstr "選擇伺服器"
 
 #: ui/GameUISetting.lua:37 ui/GameUITips.lua:41
 msgid "游戏说明"
@@ -5239,9 +5264,9 @@ msgid ""
 "号来创建新的账号，也可以在其他ios设备上用当前GameCenter账号登录，在其他ios设"
 "备上进行游戏"
 msgstr ""
-"当前账号已经和一个GameCenter账号之间绑定。你可以在设置中切换你的GameCenter账"
-"号来创建新的账号，也可以在其他ios设备上用当前GameCenter账号登录，在其他ios设"
-"备上进行游戏"
+"當前賬號已經和一個GameCenter賬號之間綁定。你可以在設置中切換你的GameCenter賬"
+"號來創建新的賬號，也可以在其他IOS設備上用當前GameCenter賬號登錄，在其他IOS設"
+"備上進行遊戲"
 
 #: ui/GameUISettingAccount.lua:143 ui/GameUISettingAccount.lua:187
 msgid "当前GameCenter:已登录"
@@ -5260,8 +5285,8 @@ msgid ""
 "当前GameCenter下存在其他游戏账号，点击切换按钮，会立即登录另一个GameCenter游"
 "戏账号"
 msgstr ""
-"当前GameCenter下存在其他游戏账号，点击切换按钮，会立即登录另一个GameCenter游"
-"戏账号"
+"當前的GameCenter下存在其他遊戲賬號，點擊切換按鈕，會立即登錄另一個GameCenter"
+"的遊戲賬號"
 
 #: ui/GameUISettingAccount.lua:163 ui/GameUISettingAccount.lua:199
 msgid "当前状态:未绑定"
@@ -5272,8 +5297,8 @@ msgid ""
 "当前GameCenter下没有绑定的账号，你可以在此创建一个全新的游戏账号。点击下方的"
 "按钮后，会登出当前账号，使用新的GameCenter账号进行游戏"
 msgstr ""
-"当前GameCenter下没有绑定的账号，你可以在此创建一个全新的游戏账号。点击下方的"
-"按钮后，会登出当前账号，使用新的GameCenter账号进行游戏"
+"當前的GameCenter下沒有綁定的賬號，你可以在此創建一個全新的遊戲賬號。點擊下方"
+"的按鈕後，會登出當前賬號，使用新的GameCenter賬號進行遊戲"
 
 #: ui/GameUISettingAccount.lua:167
 msgid "创建新账号"
@@ -5304,8 +5329,8 @@ msgid ""
 "请在系统设置中，登陆GameCenter 会自动绑定游戏账号。绑定后的游戏账号会更加安"
 "全，同时可以在其他IOS设备登陆此账号"
 msgstr ""
-"請在系統設置中，登陸GameCenter的会自动绑定游戏账号。绑定后的游戏账号会更加安"
-"全，同时可以在其他IOS设备登陆此账号"
+"請在系統設置中，登陸GameCenter的會自動綁定遊戲賬號，綁定後的遊戲賬號會更加安"
+"全，同時可以在其他的IOS設備登陸此賬號"
 
 #: ui/GameUISettingAccount.lua:190 ui/GameUISettingAccount.lua:193
 msgid ""
@@ -5355,7 +5380,7 @@ msgstr "寫郵件"
 msgid ""
 "您尚未设置邮件：请前往IOS系统“设置”-“邮件、通讯录、日历”-“添加账户”处设置"
 msgstr ""
-"您尚未设置邮件：请前往IOS系统“设置”-“邮件、通讯录、日历”-“添加账户”处设置"
+"您尚未設置郵件：請前往IOS系統“設置”-“郵件，通訊錄，日曆”-“添加賬戶”處設置"
 
 #: ui/GameUISettingFaq.lua:41
 msgid "描述你的问题"
@@ -5394,11 +5419,11 @@ msgstr "瞭望塔預警提醒"
 
 #: ui/GameUISettingServer.lua:46
 msgid "切换服务器"
-msgstr "切換服務器"
+msgstr "切換伺服器"
 
 #: ui/GameUISettingServer.lua:50
 msgid "你已加入联盟不能切换服务器，退出联盟后重试。"
-msgstr "你已加入聯盟不能切換服務器，退出聯盟後重試"
+msgstr "你已加入聯盟不能切換伺服器，退出聯盟後重試"
 
 #: ui/GameUISettingServer.lua:65
 msgid ""
@@ -5426,7 +5451,7 @@ msgstr "屏蔽用戶"
 msgid ""
 "你无法收到屏蔽用户发送的邮件。同时在聊天界面也看不到这个用户的任何发言。"
 msgstr ""
-"你无法收到屏蔽用户发送的邮件。同时在聊天界面也看不到这个用户的任何发言。"
+"你無法收到屏蔽用戶發送的郵件。同時在聊天界面也看不到這個用戶的任何發言。"
 
 #: ui/GameUISettingShield.lua:91
 msgid "取消屏蔽"
@@ -5446,15 +5471,15 @@ msgid ""
 "参与联盟GVE活动获得的奖励，击杀数量越高奖励越丰富，派出的部队会在战斗结束后"
 "返回。根据到达的先后顺序进行战斗排序"
 msgstr ""
-"参与联盟GVE活动获得的奖励，击杀数量越高奖励越丰富，派出的部队会在战斗结束后"
-"返回。根据到达的先后顺序进行战斗排序"
+"參與聯盟GVE活動獲得的獎勵，擊殺數量越高獎勵越豐富，派出的部隊會在戰鬥結束後"
+"返回。根據到達的先後順序進行戰鬥排序"
 
 #: ui/GameUIShireFightEvent.lua:203
 msgid "驻扎中"
 msgstr "駐紮中"
 
 #: ui/GameUIShireFightEvent.lua:238 ui/GameUIWatchTower.lua:377
-#: ui/GameUIWathTowerRegion.lua:380
+#: ui/GameUIWathTowerRegion.lua:385
 msgid "来自"
 msgstr "來自"
 
@@ -5462,7 +5487,7 @@ msgstr "來自"
 msgid "你已经向圣地派遣了部队"
 msgstr "你已經向聖地派遣了部隊"
 
-#: ui/GameUIShireFightEvent.lua:272
+#: ui/GameUIShireFightEvent.lua:273
 msgid ""
 "检测到你的行军时间大于圣地事件时间,可能部队未达到之前，圣地事件已结束。是否"
 "继续派兵?"
@@ -5732,7 +5757,7 @@ msgstr "地圖探索度達到100％之後，即可獲得珍貴的金龍幣獎勵
 msgid "探索只神秘的终极关卡,就能获得巨额的奖励以及异常稀有的个人专属头像!"
 msgstr "探索只神秘的終極關卡，就能獲得巨額的獎勵以及異常稀有的個人專屬頭像！"
 
-#: ui/GameUIToolShop.lua:10 utils/Localize.lua:734
+#: ui/GameUIToolShop.lua:10 utils/Localize.lua:702
 msgid "工具作坊"
 msgstr "工具作坊"
 
@@ -5764,7 +5789,7 @@ msgstr "對投石車攻擊"
 msgid "防御力"
 msgstr "防禦力"
 
-#: ui/GameUITownHall.lua:19 utils/Localize.lua:742
+#: ui/GameUITownHall.lua:19 utils/Localize.lua:710
 msgid "市政厅"
 msgstr "市政廳"
 
@@ -5884,8 +5909,8 @@ msgid ""
 "出售商品需要马车来运输，马车不足则无法出售。在学院提升马车的科技，能够提高每"
 "个马车容纳资源和材料的数量"
 msgstr ""
-"出售商品需要马车来运输，马车不足则无法出售。在学院提升马车的科技，能够提高每"
-"个马车容纳资源和材料的数量"
+"出售商品需要馬車來運輸，馬車不足則無法出售。在學院提升馬車的科技，能夠提高每"
+"個馬車容納資源和材料的數量"
 
 #: ui/GameUITradeGuild.lua:686
 msgid "容纳资源"
@@ -5929,7 +5954,7 @@ msgstr "解鎖建築"
 msgid "立即解锁"
 msgstr "立即解鎖"
 
-#: ui/GameUIUnlockBuilding.lua:98 widget/WidgetEventTabButtons.lua:929
+#: ui/GameUIUnlockBuilding.lua:98 widget/WidgetEventTabButtons.lua:932
 msgid "解锁"
 msgstr "解鎖"
 
@@ -5955,7 +5980,7 @@ msgstr "點擊升級"
 msgid "立即研发"
 msgstr "立即研發"
 
-#: ui/GameUIUpgradeTechnology.lua:265 widget/WidgetEventTabButtons.lua:1011
+#: ui/GameUIUpgradeTechnology.lua:265 widget/WidgetEventTabButtons.lua:1014
 #: widget/WidgetMilitaryTechnology.lua:101
 #: widget/WidgetPromoteSoliderList.lua:109
 #: widget/WidgetPromoteSoliderList.lua:165
@@ -5979,7 +6004,7 @@ msgstr "等級達到"
 msgid "学院等级"
 msgstr "學院等級"
 
-#: ui/GameUIUpgradeTechnology.lua:365 utils/Localize.lua:857
+#: ui/GameUIUpgradeTechnology.lua:365 utils/Localize.lua:825
 #: widget/WidgetMakeEquip.lua:284 widget/WidgetPVEGetTaskRewards.lua:43
 msgid "银币"
 msgstr "銀幣"
@@ -6096,7 +6121,7 @@ msgstr "已激活，剩餘時間:"
 msgid "未激活VIP"
 msgstr "未激活的VIP"
 
-#: ui/GameUIVip.lua:470 ui/GameUIVip.lua:711 widget/WidgetUseItems.lua:822
+#: ui/GameUIVip.lua:470 ui/GameUIVip.lua:711 widget/WidgetUseItems.lua:825
 msgid "增加VIP点数"
 msgstr "增加VIP點數"
 
@@ -6222,12 +6247,12 @@ msgstr "擊殺敵方"
 msgid "我方损失"
 msgstr "我方損失"
 
-#: ui/GameUIWarReport.lua:600 utils/Localize.lua:729 utils/Localize.lua:804
-#: utils/Localize.lua:825 widget/WidgetTreatSoldier.lua:69
+#: ui/GameUIWarReport.lua:600 utils/Localize.lua:697 utils/Localize.lua:772
+#: utils/Localize.lua:793 widget/WidgetTreatSoldier.lua:69
 msgid "城墙"
 msgstr "城牆"
 
-#: ui/GameUIWarReport.lua:622 utils/Localize.lua:601
+#: ui/GameUIWarReport.lua:622 utils/Localize.lua:569
 msgid "城墙生命值"
 msgstr "城牆生命值"
 
@@ -6268,19 +6293,19 @@ msgstr "累計簽到%s天，永久+1進攻隊列"
 msgid "待命中"
 msgstr "待命中"
 
-#: ui/GameUIWatchTower.lua:241 ui/GameUIWathTowerRegion.lua:244
+#: ui/GameUIWatchTower.lua:241 ui/GameUIWathTowerRegion.lua:249
 msgid "去联盟领地搜索目标"
 msgstr "去聯盟領地搜索目標"
 
 #: ui/GameUIWatchTower.lua:446 ui/GameUIWatchTower.lua:458
-#: ui/GameUIWathTowerRegion.lua:449 ui/GameUIWathTowerRegion.lua:461
+#: ui/GameUIWathTowerRegion.lua:454 ui/GameUIWathTowerRegion.lua:466
 #: utils/Localize.lua:156
 msgid "联盟未处于战争期"
 msgstr "聯盟未處於戰爭期"
 
 #: ui/GameUIWatchTower.lua:591 ui/GameUIWatchTower.lua:601
-#: ui/GameUIWathTowerRegion.lua:598 ui/GameUIWathTowerRegion.lua:608
-#: widget/WidgetMarchEvents.lua:488 widget/WidgetMarchEvents.lua:498
+#: ui/GameUIWathTowerRegion.lua:603 ui/GameUIWathTowerRegion.lua:613
+#: widget/WidgetMarchEvents.lua:490 widget/WidgetMarchEvents.lua:500
 msgid "确定撤军?"
 msgstr "確定撤軍？"
 
@@ -6353,9 +6378,9 @@ msgstr "hello"
 msgid "world"
 msgstr "world"
 
-#: utils/LocalPushManager.lua:124
+#: utils/LocalPushManager.lua:126
 msgid "尊敬的领主，您的城民真诚的恳求您归来，并为您准备了丰厚的礼品"
-msgstr ""
+msgstr "尊敬的領主，您的城民真誠的懇求您歸來，並為您準備了豐厚的禮品"
 
 #: utils/Localize.lua:2
 msgid "设备不存在"
@@ -6767,11 +6792,11 @@ msgstr "訂單驗證失敗"
 
 #: utils/Localize.lua:111
 msgid "IAP服务器通讯出错"
-msgstr "IAP服務器通訊出錯"
+msgstr "IAP伺服器通訊出錯"
 
 #: utils/Localize.lua:112
 msgid "IAP服务器关闭"
-msgstr "IAP服務器關閉"
+msgstr "IAP伺服器關閉"
 
 #: utils/Localize.lua:113
 msgid "玩家已加入了联盟"
@@ -7019,15 +7044,15 @@ msgstr "禮品不存在"
 
 #: utils/Localize.lua:179
 msgid "服务器不存在"
-msgstr "服務器不存在"
+msgstr "伺服器不存在"
 
 #: utils/Localize.lua:180
 msgid "不能切换到相同的服务器"
-msgstr "不能切換到相同的服務器"
+msgstr "不能切換到相同的伺服器"
 
 #: utils/Localize.lua:181
 msgid "玩家未在当前服务器"
-msgstr "玩家未在當前服務器"
+msgstr "玩家未在當前伺服器"
 
 #: utils/Localize.lua:182
 msgid "没有事件需要协助加速"
@@ -7039,7 +7064,7 @@ msgstr "聯盟人數已達最大"
 
 #: utils/Localize.lua:184
 msgid "服务器繁忙"
-msgstr "服務器繁忙"
+msgstr "伺服器繁忙"
 
 #: utils/Localize.lua:185
 msgid "玩家第二条队列已经解锁"
@@ -7069,970 +7094,957 @@ msgstr "首次加入聯盟獎勵已經領取"
 msgid "新手引导已经完成"
 msgstr "新手引導已經完成"
 
-#: utils/Localize.lua:195 utils/Localize.lua:220 utils/Localize.lua:238
-#: utils/Localize.lua:263
-msgid "打造红龙，蓝龙和绿龙1星装备所必须的材料"
-msgstr "打造紅龍，藍龍和綠龍1星裝備所必須的材料"
-
-#: utils/Localize.lua:196 utils/Localize.lua:221 utils/Localize.lua:239
-#: utils/Localize.lua:264
-msgid "打造红龙，蓝龙和绿龙2星装备所必须的材料"
-msgstr "打造紅龍，藍龍和綠龍2星裝備所必須的材料"
-
-#: utils/Localize.lua:197 utils/Localize.lua:222 utils/Localize.lua:240
-#: utils/Localize.lua:265
-msgid "打造红龙，蓝龙和绿龙3星装备所必须的材料"
-msgstr "打造紅龍，藍龍和綠龍3星裝備所必須的材料"
-
-#: utils/Localize.lua:198 utils/Localize.lua:223 utils/Localize.lua:241
-#: utils/Localize.lua:266
-msgid "打造红龙，蓝龙和绿龙4星装备所必须的材料"
-msgstr "打造紅龍，藍龍和綠龍4星裝備所必須的材料"
-
-#: utils/Localize.lua:199 utils/Localize.lua:209 utils/Localize.lua:242
-#: utils/Localize.lua:252
-msgid "打造红龙2星装备所必须的材料"
-msgstr "打造紅龍2星裝備所必須的材料"
-
-#: utils/Localize.lua:200 utils/Localize.lua:210 utils/Localize.lua:243
-#: utils/Localize.lua:253
-msgid "打造红龙3星装备所必须的材料"
-msgstr "打造紅龍3星裝備所必須的材料"
-
-#: utils/Localize.lua:201 utils/Localize.lua:211 utils/Localize.lua:244
-#: utils/Localize.lua:254
-msgid "打造红龙4星装备所必须的材料"
-msgstr "打造紅龍4星裝備所必須的材料"
-
-#: utils/Localize.lua:202 utils/Localize.lua:213 utils/Localize.lua:245
-#: utils/Localize.lua:256
-msgid "打造蓝龙2星装备所必须的材料"
-msgstr "打造藍龍2星裝備所必須的材料"
-
-#: utils/Localize.lua:203 utils/Localize.lua:214 utils/Localize.lua:246
-#: utils/Localize.lua:257
-msgid "打造蓝龙3星装备所必须的材料"
-msgstr "打造藍龍3星裝備所必須的材料"
-
-#: utils/Localize.lua:204 utils/Localize.lua:215 utils/Localize.lua:247
-#: utils/Localize.lua:258
-msgid "打造蓝龙4星装备所必须的材料"
-msgstr "打造藍龍4星裝備所必須的材料"
-
-#: utils/Localize.lua:205 utils/Localize.lua:217 utils/Localize.lua:248
-#: utils/Localize.lua:260
-msgid "打造绿龙2星装备所必须的材料"
-msgstr "打造綠龍2星裝備所必須的材料"
-
-#: utils/Localize.lua:206 utils/Localize.lua:218 utils/Localize.lua:249
-#: utils/Localize.lua:261
-msgid "打造绿龙3星装备所必须的材料"
-msgstr "打造綠龍3星裝備所必須的材料"
-
-#: utils/Localize.lua:207 utils/Localize.lua:219 utils/Localize.lua:250
-#: utils/Localize.lua:262
-msgid "打造绿龙4星装备所必须的材料"
-msgstr "打造綠龍4星裝備所必須的材料"
-
-#: utils/Localize.lua:208 utils/Localize.lua:251
-msgid "打造红龙1星装备所必须的材料"
-msgstr "打造紅龍1星裝備所必須的材料"
-
-#: utils/Localize.lua:212 utils/Localize.lua:255
-msgid "打造蓝龙1星装备所必须的材料"
-msgstr "打造藍龍1星裝備所必須的材料"
-
-#: utils/Localize.lua:216 utils/Localize.lua:259
-msgid "打造绿龙1星装备所必须的材料"
-msgstr "打造綠龍1星裝備所必須的材料"
-
-#: utils/Localize.lua:227 utils/Localize.lua:228 utils/Localize.lua:229
-#: utils/Localize.lua:230
+#: utils/Localize.lua:195 utils/Localize.lua:196 utils/Localize.lua:197
+#: utils/Localize.lua:198
 msgid "用于建造高等级建筑和研发高级科技"
 msgstr "用於建造高等級建築和研發高級科技"
 
-#: utils/Localize.lua:231
+#: utils/Localize.lua:199
 msgid "用于在训练营地提升步兵的属性"
 msgstr "用於在訓練營地提升步兵的屬性"
 
-#: utils/Localize.lua:232
+#: utils/Localize.lua:200
 msgid "用于在猎手大厅提升弓手的属性"
 msgstr "用於在獵手大廳提升弓手的屬性"
 
-#: utils/Localize.lua:233 utils/Localize.lua:234
+#: utils/Localize.lua:201 utils/Localize.lua:202
 msgid "用于在马厩提升骑兵的属性"
 msgstr "用於在馬厩提升騎兵的屬性"
 
-#: utils/Localize.lua:270 utils/Localize.lua:271 utils/Localize.lua:272
-#: utils/Localize.lua:273
+#: utils/Localize.lua:206 utils/Localize.lua:231
+msgid "打造红龙，蓝龙和绿龙1星装备所必须的材料"
+msgstr "打造紅龍，藍龍和綠龍1星裝備所必須的材料"
+
+#: utils/Localize.lua:207 utils/Localize.lua:232
+msgid "打造红龙，蓝龙和绿龙2星装备所必须的材料"
+msgstr "打造紅龍，藍龍和綠龍2星裝備所必須的材料"
+
+#: utils/Localize.lua:208 utils/Localize.lua:233
+msgid "打造红龙，蓝龙和绿龙3星装备所必须的材料"
+msgstr "打造紅龍，藍龍和綠龍3星裝備所必須的材料"
+
+#: utils/Localize.lua:209 utils/Localize.lua:234
+msgid "打造红龙，蓝龙和绿龙4星装备所必须的材料"
+msgstr "打造紅龍，藍龍和綠龍4星裝備所必須的材料"
+
+#: utils/Localize.lua:210 utils/Localize.lua:220
+msgid "打造红龙2星装备所必须的材料"
+msgstr "打造紅龍2星裝備所必須的材料"
+
+#: utils/Localize.lua:211 utils/Localize.lua:221
+msgid "打造红龙3星装备所必须的材料"
+msgstr "打造紅龍3星裝備所必須的材料"
+
+#: utils/Localize.lua:212 utils/Localize.lua:222
+msgid "打造红龙4星装备所必须的材料"
+msgstr "打造紅龍4星裝備所必須的材料"
+
+#: utils/Localize.lua:213 utils/Localize.lua:224
+msgid "打造蓝龙2星装备所必须的材料"
+msgstr "打造藍龍2星裝備所必須的材料"
+
+#: utils/Localize.lua:214 utils/Localize.lua:225
+msgid "打造蓝龙3星装备所必须的材料"
+msgstr "打造藍龍3星裝備所必須的材料"
+
+#: utils/Localize.lua:215 utils/Localize.lua:226
+msgid "打造蓝龙4星装备所必须的材料"
+msgstr "打造藍龍4星裝備所必須的材料"
+
+#: utils/Localize.lua:216 utils/Localize.lua:228
+msgid "打造绿龙2星装备所必须的材料"
+msgstr "打造綠龍2星裝備所必須的材料"
+
+#: utils/Localize.lua:217 utils/Localize.lua:229
+msgid "打造绿龙3星装备所必须的材料"
+msgstr "打造綠龍3星裝備所必須的材料"
+
+#: utils/Localize.lua:218 utils/Localize.lua:230
+msgid "打造绿龙4星装备所必须的材料"
+msgstr "打造綠龍4星裝備所必須的材料"
+
+#: utils/Localize.lua:219
+msgid "打造红龙1星装备所必须的材料"
+msgstr "打造紅龍1星裝備所必須的材料"
+
+#: utils/Localize.lua:223
+msgid "打造蓝龙1星装备所必须的材料"
+msgstr "打造藍龍1星裝備所必須的材料"
+
+#: utils/Localize.lua:227
+msgid "打造绿龙1星装备所必须的材料"
+msgstr "打造綠龍1星裝備所必須的材料"
+
+#: utils/Localize.lua:238 utils/Localize.lua:239 utils/Localize.lua:240
+#: utils/Localize.lua:241
 msgid ""
 "用于招募亡灵兵种的材料。在探险过程中有一定几率会遭遇亡灵部队，击败他们后获得"
 msgstr ""
-"用于招募亡灵兵种的材料。在探险过程中有一定几率会遭遇亡灵部队，击败他们后获得"
+"用於招募亡靈兵種的材料。在探險過程中有一定機率會遭遇亡靈部隊，擊敗他們後獲得"
 
-#: utils/Localize.lua:274 utils/Localize.lua:275 utils/Localize.lua:276
-#: utils/Localize.lua:277 utils/Localize.lua:839 utils/Localize.lua:840
-#: utils/Localize.lua:841 utils/Localize.lua:842
+#: utils/Localize.lua:242 utils/Localize.lua:243 utils/Localize.lua:244
+#: utils/Localize.lua:245 utils/Localize.lua:807 utils/Localize.lua:808
+#: utils/Localize.lua:809 utils/Localize.lua:810
 msgid "士兵材料"
 msgstr "士兵材料"
 
-#: utils/Localize.lua:282
+#: utils/Localize.lua:250
 msgid "铁锭"
 msgstr "鐵錠"
 
-#: utils/Localize.lua:283
+#: utils/Localize.lua:251
 msgid "钢锭"
 msgstr "鋼錠"
 
-#: utils/Localize.lua:284
+#: utils/Localize.lua:252
 msgid "秘银锭"
 msgstr "秘銀錠"
 
-#: utils/Localize.lua:285
+#: utils/Localize.lua:253
 msgid "黑铁锭"
 msgstr "黑鐵錠"
 
-#: utils/Localize.lua:286
+#: utils/Localize.lua:254
 msgid "炽热之魂1阶"
 msgstr "熾熱之魂1階"
 
-#: utils/Localize.lua:287
+#: utils/Localize.lua:255
 msgid "炽热之魂2阶"
 msgstr "熾熱之魂2階"
 
-#: utils/Localize.lua:288
+#: utils/Localize.lua:256
 msgid "炽热之魂3阶"
 msgstr "熾熱之魂3階"
 
-#: utils/Localize.lua:289
+#: utils/Localize.lua:257
 msgid "冰霜之魂1阶"
 msgstr "冰霜之魂1階"
 
-#: utils/Localize.lua:290
+#: utils/Localize.lua:258
 msgid "冰霜之魂2阶"
 msgstr "冰霜之魂2階"
 
-#: utils/Localize.lua:291
+#: utils/Localize.lua:259
 msgid "冰霜之魂3阶"
 msgstr "冰霜之魂3階"
 
-#: utils/Localize.lua:292
+#: utils/Localize.lua:260
 msgid "森林之魂1阶"
 msgstr "森林之魂1階"
 
-#: utils/Localize.lua:293
+#: utils/Localize.lua:261
 msgid "森林之魂2阶"
 msgstr "森林之魂2階"
 
-#: utils/Localize.lua:294
+#: utils/Localize.lua:262
 msgid "森林之魂3阶"
 msgstr "森林之魂3階"
 
-#: utils/Localize.lua:295
+#: utils/Localize.lua:263
 msgid "瑕疵红水晶"
 msgstr "瑕疵紅水晶"
 
-#: utils/Localize.lua:296
+#: utils/Localize.lua:264
 msgid "红水晶"
 msgstr "紅水晶"
 
-#: utils/Localize.lua:297
+#: utils/Localize.lua:265
 msgid "无暇的红水晶"
 msgstr "無暇的紅水晶"
 
-#: utils/Localize.lua:298
+#: utils/Localize.lua:266
 msgid "完美的红水晶"
 msgstr "完美的紅水晶"
 
-#: utils/Localize.lua:299
+#: utils/Localize.lua:267
 msgid "瑕疵蓝水晶"
 msgstr "瑕疵藍水晶"
 
-#: utils/Localize.lua:300
+#: utils/Localize.lua:268
 msgid "蓝水晶"
 msgstr "藍水晶"
 
-#: utils/Localize.lua:301
+#: utils/Localize.lua:269
 msgid "无暇的蓝水晶"
 msgstr "無暇的藍水晶"
 
-#: utils/Localize.lua:302
+#: utils/Localize.lua:270
 msgid "完美的蓝水晶"
 msgstr "完美的藍水晶"
 
-#: utils/Localize.lua:303
+#: utils/Localize.lua:271
 msgid "瑕疵绿水晶"
 msgstr "瑕疵綠水晶"
 
-#: utils/Localize.lua:304
+#: utils/Localize.lua:272
 msgid "绿水晶"
 msgstr "綠水晶"
 
-#: utils/Localize.lua:305
+#: utils/Localize.lua:273
 msgid "无暇的绿水晶"
 msgstr "無暇的綠水晶"
 
-#: utils/Localize.lua:306
+#: utils/Localize.lua:274
 msgid "完美的绿水晶"
 msgstr "完美的綠水晶"
 
-#: utils/Localize.lua:307
+#: utils/Localize.lua:275
 msgid "远古符文"
 msgstr "遠古符文"
 
-#: utils/Localize.lua:308
+#: utils/Localize.lua:276
 msgid "元素符文"
 msgstr "元素符文"
 
-#: utils/Localize.lua:309
+#: utils/Localize.lua:277
 msgid "纯粹符文"
 msgstr "純粹符文"
 
-#: utils/Localize.lua:310
+#: utils/Localize.lua:278
 msgid "泰坦符文"
 msgstr "泰坦符文"
 
-#: utils/Localize.lua:313
+#: utils/Localize.lua:281
 msgid "巨人头冠"
 msgstr "巨人頭冠"
 
-#: utils/Localize.lua:314
+#: utils/Localize.lua:282
 msgid "熔岩头冠"
 msgstr "熔岩頭冠"
 
-#: utils/Localize.lua:315
+#: utils/Localize.lua:283
 msgid "狂怒头冠"
 msgstr "狂怒頭冠"
 
-#: utils/Localize.lua:316
+#: utils/Localize.lua:284
 msgid "撒旦头冠"
 msgstr "撒旦頭冠"
 
-#: utils/Localize.lua:317
+#: utils/Localize.lua:285
 msgid "原力头冠"
 msgstr "原力頭冠"
 
-#: utils/Localize.lua:318
+#: utils/Localize.lua:286
 msgid "奥术头冠"
 msgstr "奧術頭冠"
 
-#: utils/Localize.lua:319
+#: utils/Localize.lua:287
 msgid "飓风头冠"
 msgstr "颶風頭冠"
 
-#: utils/Localize.lua:320
+#: utils/Localize.lua:288
 msgid "风暴头冠"
 msgstr "風暴頭冠"
 
-#: utils/Localize.lua:321
+#: utils/Localize.lua:289
 msgid "欢欣头冠"
 msgstr "歡欣頭冠"
 
-#: utils/Localize.lua:322
+#: utils/Localize.lua:290
 msgid "洞察头冠"
 msgstr "洞察頭冠"
 
-#: utils/Localize.lua:323
+#: utils/Localize.lua:291
 msgid "神秘头冠"
 msgstr "神秘頭冠"
 
-#: utils/Localize.lua:324
+#: utils/Localize.lua:292
 msgid "虚灵头冠"
 msgstr "虛靈頭冠"
 
-#: utils/Localize.lua:325
+#: utils/Localize.lua:293
 msgid "熔岩胸甲"
 msgstr "熔岩胸甲"
 
-#: utils/Localize.lua:326
+#: utils/Localize.lua:294
 msgid "狂怒胸甲"
 msgstr "狂怒胸甲"
 
-#: utils/Localize.lua:327
+#: utils/Localize.lua:295
 msgid "撒旦胸甲"
 msgstr "撒旦胸甲"
 
-#: utils/Localize.lua:328
+#: utils/Localize.lua:296
 msgid "奥术胸甲"
 msgstr "奧術胸甲"
 
-#: utils/Localize.lua:329
+#: utils/Localize.lua:297
 msgid "飓风胸甲"
 msgstr "颶風胸甲"
 
-#: utils/Localize.lua:330
+#: utils/Localize.lua:298
 msgid "风暴胸甲"
 msgstr "風暴胸甲"
 
-#: utils/Localize.lua:331
+#: utils/Localize.lua:299
 msgid "洞察胸甲"
 msgstr "洞察胸甲"
 
-#: utils/Localize.lua:332
+#: utils/Localize.lua:300
 msgid "神秘胸甲"
 msgstr "神秘胸甲"
 
-#: utils/Localize.lua:333
+#: utils/Localize.lua:301
 msgid "虚灵胸甲"
 msgstr "虛靈胸甲"
 
-#: utils/Localize.lua:334
+#: utils/Localize.lua:302
 msgid "熔岩尾刺"
 msgstr "熔岩尾刺"
 
-#: utils/Localize.lua:335
+#: utils/Localize.lua:303
 msgid "狂怒尾刺"
 msgstr "狂怒尾刺"
 
-#: utils/Localize.lua:336
+#: utils/Localize.lua:304
 msgid "撒旦尾刺"
 msgstr "撒旦尾刺"
 
-#: utils/Localize.lua:337
+#: utils/Localize.lua:305
 msgid "奥术尾刺"
 msgstr "奧術尾刺"
 
-#: utils/Localize.lua:338
+#: utils/Localize.lua:306
 msgid "飓风尾刺"
 msgstr "颶風尾刺"
 
-#: utils/Localize.lua:339
+#: utils/Localize.lua:307
 msgid "风暴尾刺"
 msgstr "風暴尾刺"
 
-#: utils/Localize.lua:340
+#: utils/Localize.lua:308
 msgid "洞察尾刺"
 msgstr "洞察尾刺"
 
-#: utils/Localize.lua:341
+#: utils/Localize.lua:309
 msgid "神秘尾刺"
 msgstr "神秘尾刺"
 
-#: utils/Localize.lua:342
+#: utils/Localize.lua:310
 msgid "虚灵尾刺"
 msgstr "虛靈尾刺"
 
-#: utils/Localize.lua:343
+#: utils/Localize.lua:311
 msgid "熔岩法球"
 msgstr "熔岩法球"
 
-#: utils/Localize.lua:344
+#: utils/Localize.lua:312
 msgid "狂怒法球"
 msgstr "狂怒法球"
 
-#: utils/Localize.lua:345
+#: utils/Localize.lua:313
 msgid "撒旦法球"
 msgstr "撒旦法球"
 
-#: utils/Localize.lua:346
+#: utils/Localize.lua:314
 msgid "奥术法球"
 msgstr "奧術法球"
 
-#: utils/Localize.lua:347
+#: utils/Localize.lua:315
 msgid "飓风法球"
 msgstr "颶風法球"
 
-#: utils/Localize.lua:348
+#: utils/Localize.lua:316
 msgid "风暴法球"
 msgstr "風暴法球"
 
-#: utils/Localize.lua:349
+#: utils/Localize.lua:317
 msgid "洞察法球"
 msgstr "洞察法球"
 
-#: utils/Localize.lua:350
+#: utils/Localize.lua:318
 msgid "神秘法球"
 msgstr "神秘法球"
 
-#: utils/Localize.lua:351
+#: utils/Localize.lua:319
 msgid "虚灵法球"
 msgstr "虛靈法球"
 
-#: utils/Localize.lua:352
+#: utils/Localize.lua:320
 msgid "巨人护臂"
 msgstr "巨人護臂"
 
-#: utils/Localize.lua:353
+#: utils/Localize.lua:321
 msgid "熔岩护臂"
 msgstr "熔岩護臂"
 
-#: utils/Localize.lua:354
+#: utils/Localize.lua:322
 msgid "狂怒护臂"
 msgstr "狂怒護臂"
 
-#: utils/Localize.lua:355
+#: utils/Localize.lua:323
 msgid "撒旦护臂"
 msgstr "撒旦護臂"
 
-#: utils/Localize.lua:356
+#: utils/Localize.lua:324
 msgid "原力护臂"
 msgstr "原力護臂"
 
-#: utils/Localize.lua:357
+#: utils/Localize.lua:325
 msgid "奥术护臂"
 msgstr "奧術護臂"
 
-#: utils/Localize.lua:358
+#: utils/Localize.lua:326
 msgid "飓风护臂"
 msgstr "颶風護臂"
 
-#: utils/Localize.lua:359
+#: utils/Localize.lua:327
 msgid "风暴护臂"
 msgstr "風暴護臂"
 
-#: utils/Localize.lua:360
+#: utils/Localize.lua:328
 msgid "欢欣护臂"
 msgstr "歡欣護臂"
 
-#: utils/Localize.lua:361
+#: utils/Localize.lua:329
 msgid "洞察护臂"
 msgstr "洞察護臂"
 
-#: utils/Localize.lua:362
+#: utils/Localize.lua:330
 msgid "神秘护臂"
 msgstr "神秘護臂"
 
-#: utils/Localize.lua:363
+#: utils/Localize.lua:331
 msgid "虚灵护臂"
 msgstr "虛靈護臂"
 
-#: utils/Localize.lua:368
+#: utils/Localize.lua:336
 msgid "巨人套装"
 msgstr "巨人套裝"
 
-#: utils/Localize.lua:369
+#: utils/Localize.lua:337
 msgid "熔岩套装"
 msgstr "熔岩套裝"
 
-#: utils/Localize.lua:370
+#: utils/Localize.lua:338
 msgid "狂怒套装"
 msgstr "狂怒套裝"
 
-#: utils/Localize.lua:371
+#: utils/Localize.lua:339
 msgid "撒旦套装"
 msgstr "撒旦套裝"
 
-#: utils/Localize.lua:374
+#: utils/Localize.lua:342
 msgid "原力套装"
 msgstr "原力套裝"
 
-#: utils/Localize.lua:375
+#: utils/Localize.lua:343
 msgid "奥术套装"
 msgstr "奧術套裝"
 
-#: utils/Localize.lua:376
+#: utils/Localize.lua:344
 msgid "飓风套装"
 msgstr "颶風套裝"
 
-#: utils/Localize.lua:377
+#: utils/Localize.lua:345
 msgid "风暴套装"
 msgstr "風暴套裝"
 
-#: utils/Localize.lua:380
+#: utils/Localize.lua:348
 msgid "欢欣套装"
 msgstr "歡欣套裝"
 
-#: utils/Localize.lua:381
+#: utils/Localize.lua:349
 msgid "洞察套装"
 msgstr "洞察套裝"
 
-#: utils/Localize.lua:382
+#: utils/Localize.lua:350
 msgid "神秘套装"
 msgstr "神秘套裝"
 
-#: utils/Localize.lua:383
+#: utils/Localize.lua:351
 msgid "虚灵套装"
 msgstr "虛靈套裝"
 
-#: utils/Localize.lua:388
+#: utils/Localize.lua:356
 msgid "已在制造巨人头冠"
 msgstr "已在製造巨人頭冠"
 
-#: utils/Localize.lua:389
+#: utils/Localize.lua:357
 msgid "已在制造熔岩头冠"
 msgstr "已在製造熔岩頭冠"
 
-#: utils/Localize.lua:390
+#: utils/Localize.lua:358
 msgid "已在制造狂怒头冠"
 msgstr "已在製造狂怒頭冠"
 
-#: utils/Localize.lua:391
+#: utils/Localize.lua:359
 msgid "已在制造撒旦头冠"
 msgstr "已在製造撒旦頭冠"
 
-#: utils/Localize.lua:392
+#: utils/Localize.lua:360
 msgid "已在制造原力头冠"
 msgstr "已在製造原力頭冠"
 
-#: utils/Localize.lua:393
+#: utils/Localize.lua:361
 msgid "已在制造奥术头冠"
 msgstr "已在製造奧術頭冠"
 
-#: utils/Localize.lua:394
+#: utils/Localize.lua:362
 msgid "已在制造飓风头冠"
 msgstr "已在製造颶風頭冠"
 
-#: utils/Localize.lua:395
+#: utils/Localize.lua:363
 msgid "已在制造风暴头冠"
 msgstr "已在製造風暴頭冠"
 
-#: utils/Localize.lua:396
+#: utils/Localize.lua:364
 msgid "已在制造欢欣头冠"
 msgstr "已在製造歡欣頭冠"
 
-#: utils/Localize.lua:397
+#: utils/Localize.lua:365
 msgid "已在制造洞察头冠"
 msgstr "已在製造洞察頭冠"
 
-#: utils/Localize.lua:398
+#: utils/Localize.lua:366
 msgid "已在制造神秘头冠"
 msgstr "已在製造神秘頭冠"
 
-#: utils/Localize.lua:399
+#: utils/Localize.lua:367
 msgid "已在制造虚灵头冠"
 msgstr "已在製造虛靈頭冠"
 
-#: utils/Localize.lua:400
+#: utils/Localize.lua:368
 msgid "已在制造熔岩胸甲"
 msgstr "已在製造熔岩胸甲"
 
-#: utils/Localize.lua:401
+#: utils/Localize.lua:369
 msgid "已在制造狂怒胸甲"
 msgstr "已在製造狂怒胸甲"
 
-#: utils/Localize.lua:402
+#: utils/Localize.lua:370
 msgid "已在制造撒旦胸甲"
 msgstr "已在製造撒旦胸甲"
 
-#: utils/Localize.lua:403
+#: utils/Localize.lua:371
 msgid "已在制造奥术胸甲"
 msgstr "已在製造奧術胸甲"
 
-#: utils/Localize.lua:404
+#: utils/Localize.lua:372
 msgid "已在制造飓风胸甲"
 msgstr "已在製造颶風胸甲"
 
-#: utils/Localize.lua:405
+#: utils/Localize.lua:373
 msgid "已在制造风暴胸甲"
 msgstr "已在製造風暴胸甲"
 
-#: utils/Localize.lua:406
+#: utils/Localize.lua:374
 msgid "已在制造洞察胸甲"
 msgstr "已在製造洞察胸甲"
 
-#: utils/Localize.lua:407
+#: utils/Localize.lua:375
 msgid "已在制造神秘胸甲"
 msgstr "已在製造神秘胸甲"
 
-#: utils/Localize.lua:408
+#: utils/Localize.lua:376
 msgid "已在制造虚灵胸甲"
 msgstr "已在製造虛靈胸甲"
 
-#: utils/Localize.lua:409
+#: utils/Localize.lua:377
 msgid "已在制造熔岩尾刺"
 msgstr "已在製造熔岩尾刺"
 
-#: utils/Localize.lua:410
+#: utils/Localize.lua:378
 msgid "已在制造狂怒尾刺"
 msgstr "已在製造狂怒尾刺"
 
-#: utils/Localize.lua:411
+#: utils/Localize.lua:379
 msgid "已在制造撒旦尾刺"
 msgstr "已在製造撒旦尾刺"
 
-#: utils/Localize.lua:412
+#: utils/Localize.lua:380
 msgid "已在制造奥术尾刺"
 msgstr "已在製造奧術尾刺"
 
-#: utils/Localize.lua:413
+#: utils/Localize.lua:381
 msgid "已在制造飓风尾刺"
 msgstr "已在製造颶風尾刺"
 
-#: utils/Localize.lua:414
+#: utils/Localize.lua:382
 msgid "已在制造风暴尾刺"
 msgstr "已在製造風暴尾刺"
 
-#: utils/Localize.lua:415
+#: utils/Localize.lua:383
 msgid "已在制造洞察尾刺"
 msgstr "已在製造洞察尾刺"
 
-#: utils/Localize.lua:416
+#: utils/Localize.lua:384
 msgid "已在制造神秘尾刺"
 msgstr "已在製造神秘尾刺"
 
-#: utils/Localize.lua:417
+#: utils/Localize.lua:385
 msgid "已在制造虚灵尾刺"
 msgstr "已在製造虛靈尾刺"
 
-#: utils/Localize.lua:418
+#: utils/Localize.lua:386
 msgid "已在制造熔岩法球"
 msgstr "已在製造熔岩法球"
 
-#: utils/Localize.lua:419
+#: utils/Localize.lua:387
 msgid "已在制造狂怒法球"
 msgstr "已在製造狂怒法球"
 
-#: utils/Localize.lua:420
+#: utils/Localize.lua:388
 msgid "已在制造撒旦法球"
 msgstr "已在製造撒旦法球"
 
-#: utils/Localize.lua:421
+#: utils/Localize.lua:389
 msgid "已在制造奥术法球"
 msgstr "已在製造奧術法球"
 
-#: utils/Localize.lua:422
+#: utils/Localize.lua:390
 msgid "已在制造飓风法球"
 msgstr "已在製造颶風法球"
 
-#: utils/Localize.lua:423
+#: utils/Localize.lua:391
 msgid "已在制造风暴法球"
 msgstr "已在製造風暴法球"
 
-#: utils/Localize.lua:424
+#: utils/Localize.lua:392
 msgid "已在制造洞察法球"
 msgstr "已在製造洞察法球"
 
-#: utils/Localize.lua:425
+#: utils/Localize.lua:393
 msgid "已在制造神秘法球"
 msgstr "已在製造神秘法球"
 
-#: utils/Localize.lua:426
+#: utils/Localize.lua:394
 msgid "已在制造虚灵法球"
 msgstr "已在製造虛靈法球"
 
-#: utils/Localize.lua:427
+#: utils/Localize.lua:395
 msgid "已在制造巨人护臂"
 msgstr "已在製造巨人護臂"
 
-#: utils/Localize.lua:428
+#: utils/Localize.lua:396
 msgid "已在制造熔岩护臂"
 msgstr "已在製造熔岩護臂"
 
-#: utils/Localize.lua:429
+#: utils/Localize.lua:397
 msgid "已在制造狂怒护臂"
 msgstr "已在製造狂怒護臂"
 
-#: utils/Localize.lua:430
+#: utils/Localize.lua:398
 msgid "已在制造撒旦护臂"
 msgstr "已在製造撒旦護臂"
 
-#: utils/Localize.lua:431
+#: utils/Localize.lua:399
 msgid "已在制造原力护臂"
 msgstr "已在製造原力護臂"
 
-#: utils/Localize.lua:432
+#: utils/Localize.lua:400
 msgid "已在制造奥术护臂"
 msgstr "已在製造奧術護臂"
 
-#: utils/Localize.lua:433
+#: utils/Localize.lua:401
 msgid "已在制造飓风护臂"
 msgstr "已在製造颶風護臂"
 
-#: utils/Localize.lua:434
+#: utils/Localize.lua:402
 msgid "已在制造风暴护臂"
 msgstr "已在製造風暴護臂"
 
-#: utils/Localize.lua:435
+#: utils/Localize.lua:403
 msgid "已在制造欢欣护臂"
 msgstr "已在製造歡欣護臂"
 
-#: utils/Localize.lua:436
+#: utils/Localize.lua:404
 msgid "已在制造洞察护臂"
 msgstr "已在製造洞察護臂"
 
-#: utils/Localize.lua:437
+#: utils/Localize.lua:405
 msgid "已在制造神秘护臂"
 msgstr "已在製造神秘護臂"
 
-#: utils/Localize.lua:438
+#: utils/Localize.lua:406
 msgid "已在制造虚灵护臂"
 msgstr "已在製造虛靈護臂"
 
-#: utils/Localize.lua:442 utils/Localize.lua:868
+#: utils/Localize.lua:410 utils/Localize.lua:836
 #: widget/WidgetManufacture.lua:47
 msgid "建筑图纸"
 msgstr "建築圖紙"
 
-#: utils/Localize.lua:443 utils/Localize.lua:869
+#: utils/Localize.lua:411 utils/Localize.lua:837
 #: widget/WidgetManufacture.lua:48
 msgid "建筑工具"
 msgstr "建築工具"
 
-#: utils/Localize.lua:446 utils/Localize.lua:873
+#: utils/Localize.lua:414 utils/Localize.lua:841
 #: widget/WidgetManufacture.lua:51
 msgid "木人桩"
 msgstr "木人樁"
 
-#: utils/Localize.lua:447 utils/Localize.lua:874
+#: utils/Localize.lua:415 utils/Localize.lua:842
 #: widget/WidgetManufacture.lua:52
 msgid "箭靶"
 msgstr "箭靶"
 
-#: utils/Localize.lua:448 utils/Localize.lua:875
+#: utils/Localize.lua:416 utils/Localize.lua:843
 #: widget/WidgetManufacture.lua:53
 msgid "马鞍"
 msgstr "馬鞍"
 
-#: utils/Localize.lua:449 utils/Localize.lua:876
+#: utils/Localize.lua:417 utils/Localize.lua:844
 #: widget/WidgetManufacture.lua:54
 msgid "精铁零件"
 msgstr "精鐵零件"
 
-#: utils/Localize.lua:455
+#: utils/Localize.lua:423
 msgid "黑龙"
 msgstr "黑龍"
 
-#: utils/Localize.lua:458
+#: utils/Localize.lua:426
 msgid "仅供红龙装备"
 msgstr "僅供紅龍裝備"
 
-#: utils/Localize.lua:459
+#: utils/Localize.lua:427
 msgid "仅供蓝龙装备"
 msgstr "僅供藍龍裝備"
 
-#: utils/Localize.lua:460
+#: utils/Localize.lua:428
 msgid "仅供绿龙装备"
 msgstr "僅供綠龍裝備"
 
-#: utils/Localize.lua:461
+#: utils/Localize.lua:429
 msgid "仅供黑龙装备"
 msgstr "僅供黑龍裝備"
 
-#: utils/Localize.lua:464
+#: utils/Localize.lua:432
 msgid "头部"
 msgstr "頭部"
 
-#: utils/Localize.lua:465
+#: utils/Localize.lua:433
 msgid "胸部"
 msgstr "胸部"
 
-#: utils/Localize.lua:466
+#: utils/Localize.lua:434
 msgid "尾部"
 msgstr "尾部"
 
-#: utils/Localize.lua:467
+#: utils/Localize.lua:435
 msgid "法球"
 msgstr "法球"
 
-#: utils/Localize.lua:468
+#: utils/Localize.lua:436
 msgid "护臂"
 msgstr "護臂"
 
-#: utils/Localize.lua:469
+#: utils/Localize.lua:437
 msgid "右护臂"
 msgstr "右護臂"
 
-#: utils/Localize.lua:470
+#: utils/Localize.lua:438
 msgid "左护臂"
 msgstr "左護臂"
 
-#: utils/Localize.lua:474
+#: utils/Localize.lua:442
 msgid "提升龙的生命值上限"
 msgstr "提升龍的生命值上限"
 
-#: utils/Localize.lua:475
+#: utils/Localize.lua:443
 msgid "提升步兵的攻击和生命"
 msgstr "提升步兵的攻擊和生命"
 
-#: utils/Localize.lua:476
+#: utils/Localize.lua:444
 msgid "提升龙的总攻击"
 msgstr "提升龍的總攻擊"
 
-#: utils/Localize.lua:477
+#: utils/Localize.lua:445
 msgid "提升攻城攻击和生命"
 msgstr "提升攻城攻擊和生命"
 
-#: utils/Localize.lua:478
+#: utils/Localize.lua:446
 msgid "提升骑兵攻击和生命"
 msgstr "提升騎兵攻擊和生命"
 
-#: utils/Localize.lua:479
+#: utils/Localize.lua:447
 msgid "提升弓手攻击和生命"
 msgstr "提升弓手攻擊和生命"
 
-#: utils/Localize.lua:480
+#: utils/Localize.lua:448
 msgid "增加行军速度"
 msgstr "增加行軍速度"
 
-#: utils/Localize.lua:481
+#: utils/Localize.lua:449
 msgid "增加敌方士气损失"
 msgstr "增加敵方士氣損失"
 
-#: utils/Localize.lua:482
+#: utils/Localize.lua:450
 msgid "减少己方士气损失"
 msgstr "減少己方士氣損失"
 
-#: utils/Localize.lua:483
+#: utils/Localize.lua:451
 msgid "增加带兵量"
 msgstr "增加帶兵量"
 
-#: utils/Localize.lua:484
+#: utils/Localize.lua:452
 msgid "增加对城墙的伤害"
 msgstr "增加對城牆的傷害"
 
-#: utils/Localize.lua:485
+#: utils/Localize.lua:453
 msgid "减少敌方的暗仓保护比例"
 msgstr "減少敵方的暗倉保護比例"
 
-#: utils/Localize.lua:486
+#: utils/Localize.lua:454
 msgid "增加捕获敌军几率"
 msgstr "增加捕獲敵軍機率"
 
-#: utils/Localize.lua:487
+#: utils/Localize.lua:455
 msgid "提升阵亡士兵的治愈率"
 msgstr "提升陣亡士兵的治愈率"
 
-#: utils/Localize.lua:488
+#: utils/Localize.lua:456
 msgid "提升一定比例的英雄之血获得量"
 msgstr "提升一定比例的英雄之血獲得量"
 
-#: utils/Localize.lua:492
+#: utils/Localize.lua:460
 msgid "龙之血脉"
 msgstr "龍之血脈"
 
-#: utils/Localize.lua:493
+#: utils/Localize.lua:461
 msgid "步兵强化"
 msgstr "步兵強化"
 
-#: utils/Localize.lua:494
+#: utils/Localize.lua:462
 msgid "龙之吐息"
 msgstr "龍之吐息"
 
-#: utils/Localize.lua:495
+#: utils/Localize.lua:463
 msgid "攻城强化"
 msgstr "攻城強化"
 
-#: utils/Localize.lua:496
+#: utils/Localize.lua:464
 msgid "骑兵强化"
 msgstr "騎兵強化"
 
-#: utils/Localize.lua:497
+#: utils/Localize.lua:465
 msgid "弓手强化"
 msgstr "弓手強化"
 
-#: utils/Localize.lua:498
+#: utils/Localize.lua:466
 msgid "迅捷之力"
 msgstr "迅捷之力"
 
-#: utils/Localize.lua:499
+#: utils/Localize.lua:467
 msgid "狂乱"
 msgstr "狂亂"
 
-#: utils/Localize.lua:500
+#: utils/Localize.lua:468
 msgid "忘却痛苦"
 msgstr "忘卻痛苦"
 
-#: utils/Localize.lua:501
+#: utils/Localize.lua:469
 msgid "统帅之力"
 msgstr "統帥之力"
 
-#: utils/Localize.lua:502
+#: utils/Localize.lua:470
 msgid "山崩地裂"
 msgstr "山崩地裂"
 
-#: utils/Localize.lua:503
+#: utils/Localize.lua:471
 msgid "贪婪"
 msgstr "貪婪"
 
-#: utils/Localize.lua:504
+#: utils/Localize.lua:472
 msgid "暗算"
 msgstr "暗算"
 
-#: utils/Localize.lua:505
+#: utils/Localize.lua:473
 msgid "恢复"
 msgstr "恢復"
 
-#: utils/Localize.lua:506
+#: utils/Localize.lua:474
 msgid "饥渴"
 msgstr "飢渴"
 
-#: utils/Localize.lua:510 utils/Localize_item.lua:40
+#: utils/Localize.lua:478 utils/Localize_item.lua:40
 msgid "步兵攻击加成"
 msgstr "步兵攻擊加成"
 
-#: utils/Localize.lua:511
+#: utils/Localize.lua:479
 msgid "步兵生命值加成"
 msgstr "步兵生命值加成"
 
-#: utils/Localize.lua:512
+#: utils/Localize.lua:480
 msgid "提升步兵负重加成"
 msgstr "提升步兵負重加成"
 
-#: utils/Localize.lua:513
+#: utils/Localize.lua:481
 msgid "步兵行军速度加成"
 msgstr "步兵行軍速度加成"
 
-#: utils/Localize.lua:515 utils/Localize_item.lua:41
+#: utils/Localize.lua:483 utils/Localize_item.lua:41
 msgid "弓手攻击加成"
 msgstr "弓手攻擊加成"
 
-#: utils/Localize.lua:516
+#: utils/Localize.lua:484
 msgid "弓手生命值加成"
 msgstr "弓手生命值加成"
 
-#: utils/Localize.lua:517
+#: utils/Localize.lua:485
 msgid "弓手负重加成"
 msgstr "弓手負重加成"
 
-#: utils/Localize.lua:518
+#: utils/Localize.lua:486
 msgid "弓手行军速度加成"
 msgstr "弓手行軍速度加成"
 
-#: utils/Localize.lua:520 utils/Localize_item.lua:42
+#: utils/Localize.lua:488 utils/Localize_item.lua:42
 msgid "骑兵攻击加成"
 msgstr "騎兵攻擊加成"
 
-#: utils/Localize.lua:521
+#: utils/Localize.lua:489
 msgid "骑兵生命值加成"
 msgstr "騎兵生命值加成"
 
-#: utils/Localize.lua:522
+#: utils/Localize.lua:490
 msgid "骑兵负重加成"
 msgstr "騎兵負重加成"
 
-#: utils/Localize.lua:523
+#: utils/Localize.lua:491
 msgid "骑兵行军速度加成"
 msgstr "騎兵行軍速度加成"
 
-#: utils/Localize.lua:525
+#: utils/Localize.lua:493
 msgid "攻城系攻击加成"
 msgstr "攻城系攻擊加成"
 
-#: utils/Localize.lua:526
+#: utils/Localize.lua:494
 msgid "攻城系生命值加成"
 msgstr "攻城系生命值加成"
 
-#: utils/Localize.lua:527
+#: utils/Localize.lua:495
 msgid "攻城系负重加成"
 msgstr "攻城系負重加成"
 
-#: utils/Localize.lua:528
+#: utils/Localize.lua:496
 msgid "攻城系行军速度加成"
 msgstr "攻城系行軍速度加成"
 
-#: utils/Localize.lua:530
+#: utils/Localize.lua:498
 msgid "带兵上限加成"
 msgstr "帶兵上限加成"
 
-#: utils/Localize.lua:531
+#: utils/Localize.lua:499
 msgid "可治愈伤兵几率加成"
 msgstr "可治愈傷兵機率加成"
 
-#: utils/Localize.lua:534
+#: utils/Localize.lua:502
 msgid ""
 "城堡是权力的象征，城市的核心建筑，升级能够解锁更多地块，提供更高的建筑等级"
 msgstr ""
 "城堡是权力的象征，城市的核心建筑，升级能够解锁更多地块，提供更高的建筑等级"
 
-#: utils/Localize.lua:535
+#: utils/Localize.lua:503
 msgid "可解锁的地块"
 msgstr "可解鎖的地塊"
 
-#: utils/Localize.lua:536
+#: utils/Localize.lua:504
 msgid "被协助加速次数"
 msgstr "被協助加速次數"
 
-#: utils/Localize.lua:539
+#: utils/Localize.lua:507
 msgid ""
 "瞭望塔显示部队在联盟领地上的行军情况，同时也能预警敌方部队来袭，并提供相关信"
 "息"
@@ -8040,38 +8052,38 @@ msgstr ""
 "瞭望塔显示部队在联盟领地上的行军情况，同时也能预警敌方部队来袭，并提供相关信"
 "息"
 
-#: utils/Localize.lua:540
+#: utils/Localize.lua:508
 #, fuzzy, c-format
 msgid "显示己方领地上的行军事件及其路线，预警%.1f分钟内的敌方行军事件"
 msgstr "顯示己方領地上的行軍事件及其路線，預警％.1f分鐘內的敵方行軍事件"
 
-#: utils/Localize.lua:541
+#: utils/Localize.lua:509
 #, fuzzy, c-format
 msgid "提供来袭部队的玩家名称，预警%.1f分钟内的敌方行军事件"
 msgstr "提供來襲部隊的玩家名稱，預警％.1f分鐘內的敵方行軍事件"
 
-#: utils/Localize.lua:542 utils/Localize.lua:544 utils/Localize.lua:546
-#: utils/Localize.lua:548 utils/Localize.lua:550 utils/Localize.lua:552
-#: utils/Localize.lua:554 utils/Localize.lua:556 utils/Localize.lua:558
-#: utils/Localize.lua:560 utils/Localize.lua:562 utils/Localize.lua:564
-#: utils/Localize.lua:566 utils/Localize.lua:568 utils/Localize.lua:570
-#: utils/Localize.lua:572 utils/Localize.lua:574 utils/Localize.lua:576
-#: utils/Localize.lua:578
+#: utils/Localize.lua:510 utils/Localize.lua:512 utils/Localize.lua:514
+#: utils/Localize.lua:516 utils/Localize.lua:518 utils/Localize.lua:520
+#: utils/Localize.lua:522 utils/Localize.lua:524 utils/Localize.lua:526
+#: utils/Localize.lua:528 utils/Localize.lua:530 utils/Localize.lua:532
+#: utils/Localize.lua:534 utils/Localize.lua:536 utils/Localize.lua:538
+#: utils/Localize.lua:540 utils/Localize.lua:542 utils/Localize.lua:544
+#: utils/Localize.lua:546
 #, fuzzy, c-format
 msgid "预警%.1f分钟内的敌方行军事件"
 msgstr "預警％.1f分鐘內的敵方行軍事件"
 
-#: utils/Localize.lua:543
+#: utils/Localize.lua:511
 #, fuzzy, c-format
 msgid "显示敌方的所有行军事件及其路线，预警%.1f分钟内的敌方行军事件"
 msgstr "顯示敵方的所有行軍事件及其路線，預警％.1f分鐘內的敵方行軍事件"
 
-#: utils/Localize.lua:545
+#: utils/Localize.lua:513
 #, fuzzy, c-format
 msgid "提供来袭部队的龙的类型，预警%.1f分钟内的敌方行军事件"
 msgstr "提供來襲部隊的龍的類型，預警％.1f分鐘內的敵方行軍事件"
 
-#: utils/Localize.lua:547
+#: utils/Localize.lua:515
 #, c-format
 msgid ""
 "可以在敌方领地，查看敌方玩家的城市布局(不能点击建筑)，预警%.1f分钟内的敌方行"
@@ -8080,7 +8092,7 @@ msgstr ""
 "可以在敌方领地，查看敌方玩家的城市布局(不能点击建筑)，预警%.1f分钟内的敌方行"
 "军事件"
 
-#: utils/Localize.lua:549
+#: utils/Localize.lua:517
 #, c-format
 msgid ""
 "提供详情按钮，可以查看敌军的详细信息：龙的等级和星级，预警%.1f分钟内的敌方行"
@@ -8089,26 +8101,26 @@ msgstr ""
 "提供详情按钮，可以查看敌军的详细信息：龙的等级和星级，预警%.1f分钟内的敌方行"
 "军事件"
 
-#: utils/Localize.lua:551
+#: utils/Localize.lua:519
 #, c-format
 msgid ""
 "可以查看敌军的详细信息：显示龙的当前HP和HP上限，预警%.1f分钟内的敌方行军事件"
 msgstr ""
 "可以查看敌军的详细信息：显示龙的当前HP和HP上限，预警%.1f分钟内的敌方行军事件"
 
-#: utils/Localize.lua:553
+#: utils/Localize.lua:521
 #, c-format
 msgid ""
 "可以查看敌军的详细信息：显示敌方部队的兵种名称，预警%.1f分钟内的敌方行军事件"
 msgstr ""
 "可以查看敌军的详细信息：显示敌方部队的兵种名称，预警%.1f分钟内的敌方行军事件"
 
-#: utils/Localize.lua:555
+#: utils/Localize.lua:523
 #, fuzzy, c-format
 msgid "可以查看敌军的详细信息：显示龙的力量，预警%.1f分钟内的敌方行军事件"
 msgstr "可以查看敵軍的詳細信息：顯示龍的力量，預警％.1f分鐘內的敵方行軍事件"
 
-#: utils/Localize.lua:557
+#: utils/Localize.lua:525
 #, fuzzy, c-format
 msgid ""
 "可以查看敌军的详细信息: 显示敌方部队的兵种名称，预警%.1f分钟内的敌方行军事件"
@@ -8116,7 +8128,7 @@ msgstr ""
 "可以查看敵軍的詳細信息：顯示敵方部隊的兵種名稱，預警％.1f分鐘內的敵方行軍事"
 "件"
 
-#: utils/Localize.lua:559
+#: utils/Localize.lua:527
 #, c-format
 msgid ""
 "可以查看敌军的详细信息：显示龙的已装备的装备及其星级，预警%.1f分钟内的敌方行"
@@ -8125,7 +8137,7 @@ msgstr ""
 "可以查看敌军的详细信息：显示龙的已装备的装备及其星级，预警%.1f分钟内的敌方行"
 "军事件"
 
-#: utils/Localize.lua:561 utils/Localize.lua:577
+#: utils/Localize.lua:529 utils/Localize.lua:545
 #, c-format
 msgid ""
 "可以查看敌军的详细信息：显示敌方部队的星级和模糊数量，预警%.1f分钟内的敌方行"
@@ -8134,7 +8146,7 @@ msgstr ""
 "可以查看敌军的详细信息：显示敌方部队的星级和模糊数量，预警%.1f分钟内的敌方行"
 "军事件"
 
-#: utils/Localize.lua:563
+#: utils/Localize.lua:531
 #, c-format
 msgid ""
 "可以在敌方领地，查看其他联盟领地的玩家的城市建筑具体等级，预警%.1f分钟内的敌"
@@ -8143,25 +8155,25 @@ msgstr ""
 "可以在敌方领地，查看其他联盟领地的玩家的城市建筑具体等级，预警%.1f分钟内的敌"
 "方行军事件"
 
-#: utils/Localize.lua:565
+#: utils/Localize.lua:533
 #, fuzzy, c-format
 msgid "显示敌方激活的战争增益，预警%.1f分钟内的敌方行军事件"
 msgstr "顯示敵方激活的戰爭增益，預警％.1f分鐘內的敵方行軍事件"
 
-#: utils/Localize.lua:567 utils/Localize.lua:579
+#: utils/Localize.lua:535 utils/Localize.lua:547
 #, c-format
 msgid "可以查看敌军的详细信息：显示龙的技能等级，预警%.1f分钟内的敌方行军事件"
 msgstr ""
 "可以查看敌军的详细信息：显示龙的技能等级，预警%.1f分钟内的敌方行军事件"
 
-#: utils/Localize.lua:569
+#: utils/Localize.lua:537
 #, c-format
 msgid ""
 "可以查看敌军的详细信息：显示敌方部队的具体数量，预警%.1f分钟内的敌方行军事件"
 msgstr ""
 "可以查看敌军的详细信息：显示敌方部队的具体数量，预警%.1f分钟内的敌方行军事件"
 
-#: utils/Localize.lua:571
+#: utils/Localize.lua:539
 #, c-format
 msgid ""
 "可以查看敌方城市中得协防部队的详细信息：龙的详细信息，预警%.1f分钟内的敌方行"
@@ -8170,7 +8182,7 @@ msgstr ""
 "可以查看敌方城市中得协防部队的详细信息：龙的详细信息，预警%.1f分钟内的敌方行"
 "军事件"
 
-#: utils/Localize.lua:573
+#: utils/Localize.lua:541
 #, c-format
 msgid ""
 "可以查看敌方城市中得协防部队的详细信息：显示敌方部队的兵种名称，预警%.1f分钟"
@@ -8179,7 +8191,7 @@ msgstr ""
 "可以查看敌方城市中得协防部队的详细信息：显示敌方部队的兵种名称，预警%.1f分钟"
 "内的敌方行军事件"
 
-#: utils/Localize.lua:575
+#: utils/Localize.lua:543
 #, c-format
 msgid ""
 "可以查看敌方城市中得协防部队的详细信息：龙的装备情况和龙的力量，预警%.1f分钟"
@@ -8188,7 +8200,7 @@ msgstr ""
 "可以查看敌方城市中得协防部队的详细信息：龙的装备情况和龙的力量，预警%.1f分钟"
 "内的敌方行军事件"
 
-#: utils/Localize.lua:582
+#: utils/Localize.lua:550
 msgid ""
 "学院提供的众多科技。研发科技能够提升城市的资源产出效率和防御能力，学院等级越"
 "高研发速度越快"
@@ -8196,11 +8208,11 @@ msgstr ""
 "学院提供的众多科技。研发科技能够提升城市的资源产出效率和防御能力，学院等级越"
 "高研发速度越快"
 
-#: utils/Localize.lua:583
+#: utils/Localize.lua:551
 msgid "研发速度"
 msgstr "研發速度"
 
-#: utils/Localize.lua:586
+#: utils/Localize.lua:554
 msgid ""
 "训练营地提供步兵的相关科技，增强步兵的各方面属性，建筑等级越高招募步兵的速度"
 "越快"
@@ -8208,11 +8220,11 @@ msgstr ""
 "训练营地提供步兵的相关科技，增强步兵的各方面属性，建筑等级越高招募步兵的速度"
 "越快"
 
-#: utils/Localize.lua:587
+#: utils/Localize.lua:555
 msgid "步兵招募速度"
 msgstr "步兵招募速度"
 
-#: utils/Localize.lua:590
+#: utils/Localize.lua:558
 msgid ""
 "猎手大厅提供弓手的相关科技，增强弓手的各方面属性，建筑等级越高招募弓手的速度"
 "越快"
@@ -8220,21 +8232,21 @@ msgstr ""
 "猎手大厅提供弓手的相关科技，增强弓手的各方面属性，建筑等级越高招募弓手的速度"
 "越快"
 
-#: utils/Localize.lua:591
+#: utils/Localize.lua:559
 msgid "弓手招募速度"
 msgstr "弓手招募速度"
 
-#: utils/Localize.lua:593
+#: utils/Localize.lua:561
 msgid ""
 "马厩提供骑兵的相关科技，增强骑兵的各方面属性，建筑等级越高招募骑兵的速度越快"
 msgstr ""
 "马厩提供骑兵的相关科技，增强骑兵的各方面属性，建筑等级越高招募骑兵的速度越快"
 
-#: utils/Localize.lua:594
+#: utils/Localize.lua:562
 msgid "骑兵招募速度"
 msgstr "騎兵招募速度"
 
-#: utils/Localize.lua:597
+#: utils/Localize.lua:565
 msgid ""
 "车间提供攻城器械的相关科技，增强攻城器械的各方面属性，建筑等级越高招募攻城器"
 "械的速度越快"
@@ -8242,11 +8254,11 @@ msgstr ""
 "车间提供攻城器械的相关科技，增强攻城器械的各方面属性，建筑等级越高招募攻城器"
 "械的速度越快"
 
-#: utils/Localize.lua:598
+#: utils/Localize.lua:566
 msgid "攻城器械招募速度"
 msgstr "攻城器械招募速度"
 
-#: utils/Localize.lua:600
+#: utils/Localize.lua:568
 msgid ""
 "城墙能够有效抵御敌方的进攻，当敌方部队来袭时会自动将城内的部队驻防，升级建筑"
 "能够提升城墙的耐久度"
@@ -8254,11 +8266,11 @@ msgstr ""
 "城墙能够有效抵御敌方的进攻，当敌方部队来袭时会自动将城内的部队驻防，升级建筑"
 "能够提升城墙的耐久度"
 
-#: utils/Localize.lua:602
+#: utils/Localize.lua:570
 msgid "城墙恢复"
 msgstr "城牆恢復"
 
-#: utils/Localize.lua:604
+#: utils/Localize.lua:572
 msgid ""
 "塔楼提升城墙攻击和防御的能力，塔楼等级越高，城墙每耐久度的攻击力和生命值就越"
 "高"
@@ -8266,11 +8278,11 @@ msgstr ""
 "塔楼提升城墙攻击和防御的能力，塔楼等级越高，城墙每耐久度的攻击力和生命值就越"
 "高"
 
-#: utils/Localize.lua:605
+#: utils/Localize.lua:573
 msgid "提供城墙攻击力"
 msgstr "提供城牆攻擊力"
 
-#: utils/Localize.lua:607
+#: utils/Localize.lua:575
 msgid ""
 "龙巢可以查看龙的信息并强化巨龙，升级龙巢能够提升在城市中的巨龙生命值的恢复速"
 "度"
@@ -8278,11 +8290,11 @@ msgstr ""
 "龙巢可以查看龙的信息并强化巨龙，升级龙巢能够提升在城市中的巨龙生命值的恢复速"
 "度"
 
-#: utils/Localize.lua:608
+#: utils/Localize.lua:576
 msgid "每小时恢复龙的生命值"
 msgstr "每小時恢復龍的生命值"
 
-#: utils/Localize.lua:610
+#: utils/Localize.lua:578
 msgid ""
 "医院提供治愈伤兵的功能，每次进攻或防守都能将一部分阵亡的士兵转化为伤兵并治"
 "愈，升级建筑能够提升伤兵的最大容量上限"
@@ -8290,7 +8302,7 @@ msgstr ""
 "医院提供治愈伤兵的功能，每次进攻或防守都能将一部分阵亡的士兵转化为伤兵并治"
 "愈，升级建筑能够提升伤兵的最大容量上限"
 
-#: utils/Localize.lua:613
+#: utils/Localize.lua:581
 msgid ""
 "监狱有一定的几率捕获来袭的敌军，并能够使用特殊的道具折磨敌军，升级建筑能够获"
 "得更多的敌军关押时间"
@@ -8298,15 +8310,15 @@ msgstr ""
 "监狱有一定的几率捕获来袭的敌军，并能够使用特殊的道具折磨敌军，升级建筑能够获"
 "得更多的敌军关押时间"
 
-#: utils/Localize.lua:614
+#: utils/Localize.lua:582
 msgid "抓获几率"
 msgstr "抓獲機率"
 
-#: utils/Localize.lua:615
+#: utils/Localize.lua:583
 msgid "囚禁时间"
 msgstr "囚禁時間"
 
-#: utils/Localize.lua:617
+#: utils/Localize.lua:585
 msgid ""
 "工具作坊提供建筑材料和科技材料的制作，每次制作都能随机获得一些材料，升级建筑"
 "能够提升每次制作材料的数量"
@@ -8314,15 +8326,15 @@ msgstr ""
 "工具作坊提供建筑材料和科技材料的制作，每次制作都能随机获得一些材料，升级建筑"
 "能够提升每次制作材料的数量"
 
-#: utils/Localize.lua:618
+#: utils/Localize.lua:586
 msgid "一次随机生产道具"
 msgstr "一次隨機生產道具"
 
-#: utils/Localize.lua:619
+#: utils/Localize.lua:587
 msgid "个"
 msgstr "個"
 
-#: utils/Localize.lua:621
+#: utils/Localize.lua:589
 msgid ""
 "兵营提供军事单位的招募。招募的部队可用于进攻敌方城市，村落采集资源，防御城"
 "市。升级建筑能够提升每次招募的最大数量"
@@ -8330,25 +8342,25 @@ msgstr ""
 "兵营提供军事单位的招募。招募的部队可用于进攻敌方城市，村落采集资源，防御城"
 "市。升级建筑能够提升每次招募的最大数量"
 
-#: utils/Localize.lua:622
+#: utils/Localize.lua:590
 msgid "最大招募人口数量"
 msgstr "最大招募人口數量"
 
-#: utils/Localize.lua:624
+#: utils/Localize.lua:592
 msgid ""
 "贸易行会提供玩家之间资源和材料的交易，升级建筑能够提升运输车的总量和生产速度"
 msgstr ""
 "贸易行会提供玩家之间资源和材料的交易，升级建筑能够提升运输车的总量和生产速度"
 
-#: utils/Localize.lua:625
+#: utils/Localize.lua:593
 msgid "最大运输小车数量"
 msgstr "最大運輸小車數量"
 
-#: utils/Localize.lua:626
+#: utils/Localize.lua:594
 msgid "每小时运输小车"
 msgstr "每小時運輸小車"
 
-#: utils/Localize.lua:628
+#: utils/Localize.lua:596
 msgid ""
 "铁匠铺能够将平时收集到的特殊材料打造成龙的装备，升级建筑能够提升装备打造的速"
 "度"
@@ -8356,11 +8368,11 @@ msgstr ""
 "铁匠铺能够将平时收集到的特殊材料打造成龙的装备，升级建筑能够提升装备打造的速"
 "度"
 
-#: utils/Localize.lua:629
+#: utils/Localize.lua:597
 msgid "打造装备速度"
 msgstr "打造裝備速度"
 
-#: utils/Localize.lua:631
+#: utils/Localize.lua:599
 msgid ""
 "锯木工坊能够提升可建造的木工小屋数，并防止木材被敌方掠夺。周围建造木材小屋还"
 "可提升木材生产效率"
@@ -8368,15 +8380,15 @@ msgstr ""
 "锯木工坊能够提升可建造的木工小屋数，并防止木材被敌方掠夺。周围建造木材小屋还"
 "可提升木材生产效率"
 
-#: utils/Localize.lua:632
+#: utils/Localize.lua:600
 msgid "木工小屋数量"
 msgstr "木工小屋數量"
 
-#: utils/Localize.lua:633
+#: utils/Localize.lua:601
 msgid "木材保护"
 msgstr "木材保護"
 
-#: utils/Localize.lua:635
+#: utils/Localize.lua:603
 msgid ""
 "磨坊能够提升可建造的农夫小屋数，并防止粮食被敌方掠夺。周围建造农夫小屋还可提"
 "升粮食生产效率"
@@ -8384,15 +8396,15 @@ msgstr ""
 "磨坊能够提升可建造的农夫小屋数，并防止粮食被敌方掠夺。周围建造农夫小屋还可提"
 "升粮食生产效率"
 
-#: utils/Localize.lua:636
+#: utils/Localize.lua:604
 msgid "农夫小屋数量"
 msgstr "農夫小屋數量"
 
-#: utils/Localize.lua:637
+#: utils/Localize.lua:605
 msgid "粮食保护"
 msgstr "糧食保護"
 
-#: utils/Localize.lua:639
+#: utils/Localize.lua:607
 msgid ""
 "石匠工坊能够提升可建造的石料小屋数，并防止石料被敌方掠夺。周围建造石匠小屋还"
 "可提升石料生产效率"
@@ -8400,15 +8412,15 @@ msgstr ""
 "石匠工坊能够提升可建造的石料小屋数，并防止石料被敌方掠夺。周围建造石匠小屋还"
 "可提升石料生产效率"
 
-#: utils/Localize.lua:640
+#: utils/Localize.lua:608
 msgid "石匠小屋数量"
 msgstr "石匠小屋數量"
 
-#: utils/Localize.lua:641
+#: utils/Localize.lua:609
 msgid "石料保护"
 msgstr "石料保護"
 
-#: utils/Localize.lua:643
+#: utils/Localize.lua:611
 msgid ""
 "铸造工坊能够提升可建造的矿工小屋数，并防止铁矿被敌方掠夺。周围建造矿工小屋还"
 "可提升铁矿生产效率"
@@ -8416,15 +8428,15 @@ msgstr ""
 "铸造工坊能够提升可建造的矿工小屋数，并防止铁矿被敌方掠夺。周围建造矿工小屋还"
 "可提升铁矿生产效率"
 
-#: utils/Localize.lua:644
+#: utils/Localize.lua:612
 msgid "矿工小屋数量"
 msgstr "礦工小屋數量"
 
-#: utils/Localize.lua:645
+#: utils/Localize.lua:613
 msgid "铁矿保护"
 msgstr "鐵礦保護"
 
-#: utils/Localize.lua:647
+#: utils/Localize.lua:615
 msgid ""
 "市政厅能够提升可建造的住宅数量。在市政厅完成政务可以获得额外的资源奖励。市政"
 "厅等级越高，奖励越高。"
@@ -8432,25 +8444,25 @@ msgstr ""
 "市政厅能够提升可建造的住宅数量。在市政厅完成政务可以获得额外的资源奖励。市政"
 "厅等级越高，奖励越高。"
 
-#: utils/Localize.lua:648
+#: utils/Localize.lua:616
 msgid "住宅数量"
 msgstr "住宅數量"
 
-#: utils/Localize.lua:649
+#: utils/Localize.lua:617
 msgid "每次征收银币"
 msgstr "每次徵收銀幣"
 
-#: utils/Localize.lua:651
+#: utils/Localize.lua:619
 msgid ""
 "资源仓库存放木材，石料，铁矿，粮食。建筑等级越高，每种资源存放的上限越大"
 msgstr ""
-"资源仓库存放木材，石料，铁矿，粮食。建筑等级越高，每种资源存放的上限越大"
+"資源倉庫存放木材，石料，鐵礦，糧食。建築等級越高，每種資源存放的上限越大"
 
-#: utils/Localize.lua:654
+#: utils/Localize.lua:622
 msgid "材料库房能够存储各种材料。建筑等级越高，每种材料的存放上限越高。"
 msgstr "材料庫房能夠存儲各種材料。建築等級越高，每種材料的存放上限越高。"
 
-#: utils/Localize.lua:657
+#: utils/Localize.lua:625
 msgid ""
 "军帐提供出兵时的带兵上限，建筑等级越高，每次出兵和防御时可派出的部队人口上限"
 "越大。"
@@ -8458,268 +8470,268 @@ msgstr ""
 "军帐提供出兵时的带兵上限，建筑等级越高，每次出兵和防御时可派出的部队人口上限"
 "越大。"
 
-#: utils/Localize.lua:658
+#: utils/Localize.lua:626
 msgid "部队人口上限"
 msgstr "部隊人口上限"
 
-#: utils/Localize.lua:661
+#: utils/Localize.lua:629
 msgid "住宅能够容纳城民并产出银币。升级建筑提升城民的最大上限和银币增长速度"
-msgstr "住宅能够容纳城民并产出银币。升级建筑提升城民的最大上限和银币增长速度"
+msgstr "住宅能夠容納城民並產出銀幣。升級建築提升城民的最大上限和銀幣增長速度"
 
-#: utils/Localize.lua:662
+#: utils/Localize.lua:630
 msgid "提供城民上限"
 msgstr "提供城民上限"
 
-#: utils/Localize.lua:663
+#: utils/Localize.lua:631
 msgid "每小时城民恢复速度"
 msgstr "每小時城民恢復速度"
 
-#: utils/Localize.lua:665
+#: utils/Localize.lua:633
 msgid ""
 "将城民派往木工小屋获得持续的木材产出。建筑等级越高需要更多的城民，木材产出也"
 "会更高。"
 msgstr ""
-"将城民派往木工小屋获得持续的木材产出。建筑等级越高需要更多的城民，木材产出也"
-"会更高。"
+"將城民派往木工小屋獲得持續的木材產出。建築等級越高需要更多的城民，木材產出也"
+"會更高。"
 
-#: utils/Localize.lua:666
+#: utils/Localize.lua:634
 msgid "每小时木材产量"
 msgstr "每小時木材產量"
 
-#: utils/Localize.lua:668
+#: utils/Localize.lua:636
 msgid ""
 "将城民派往农夫小屋获得持续的粮食产出。建筑等级越高需要更多的城民，粮食产出也"
 "会更高。"
 msgstr ""
-"将城民派往农夫小屋获得持续的粮食产出。建筑等级越高需要更多的城民，粮食产出也"
-"会更高。"
+"將城民派往農夫小屋獲得持續的糧食產出。建築等級越高需要更多的城民，糧食產出也"
+"會更高。"
 
-#: utils/Localize.lua:669
+#: utils/Localize.lua:637
 msgid "每小时粮食产量"
 msgstr "每小時糧食產量"
 
-#: utils/Localize.lua:671
+#: utils/Localize.lua:639
 msgid ""
 "将城民派往石匠小屋获得持续的石料产出。建筑等级越高需要更多的城民，石料产出也"
 "会更高。"
 msgstr ""
-"将城民派往石匠小屋获得持续的石料产出。建筑等级越高需要更多的城民，石料产出也"
-"会更高。"
+"將城民派往石匠小屋獲得持續的石料產出。建築等級越高需要更多的城民，石料產出也"
+"會更高。"
 
-#: utils/Localize.lua:672
+#: utils/Localize.lua:640
 msgid "每小时石料产量"
 msgstr "每小時石料產量"
 
-#: utils/Localize.lua:674
+#: utils/Localize.lua:642
 msgid ""
 "将城民派往矿工小屋获得持续的铁矿产出。建筑等级越高需要更多的城民，铁矿产出也"
 "会更高。"
 msgstr ""
-"将城民派往矿工小屋获得持续的铁矿产出。建筑等级越高需要更多的城民，铁矿产出也"
-"会更高。"
+"將城民派往礦工小屋獲得持續的鐵礦產出。建築等級越高需要更多的城民，鐵礦產出也"
+"會更高。"
 
-#: utils/Localize.lua:675
+#: utils/Localize.lua:643
 msgid "每小时铁矿产量"
 msgstr "每小時鐵礦產量"
 
-#: utils/Localize.lua:679
+#: utils/Localize.lua:647
 msgid ""
 "联盟商店能够提供部分商城售卖的道具，联盟成员可以通过忠诚值来兑换。部分高级道"
 "具需要花费荣耀值购买后，才能兑换。提升建筑等级能解锁更多高级道具。"
 msgstr ""
-"联盟商店能够提供部分商城售卖的道具，联盟成员可以通过忠诚值来兑换。部分高级道"
-"具需要花费荣耀值购买后，才能兑换。提升建筑等级能解锁更多高级道具。"
+"聯盟商店能夠提供部分商城售賣的道具，聯盟成員可以通過忠誠值來兌換。部分高級道"
+"具需要花費榮耀值購買後，才能兌換。提升建築等級能解鎖更多高級道具。"
 
-#: utils/Localize.lua:680
+#: utils/Localize.lua:648
 msgid ""
 "秩序大厅管理着联盟领地上的村落，并可以消耗荣耀值提升村落的等级。建筑等级越"
 "高，定期刷新的村落越多。"
 msgstr ""
-"秩序大厅管理着联盟领地上的村落，并可以消耗荣耀值提升村落的等级。建筑等级越"
+"秩序大廳管理著聯盟領地上的村落，並可以消耗榮耀值提昇村落的等級。建築等級越"
 "高，定期刷新的村落越多。"
 
-#: utils/Localize.lua:681
+#: utils/Localize.lua:649
 msgid ""
 "月门是通往王城的传送门，占领王城后，联盟每天可以获得大量的荣耀值。升级月门可"
 "以提升参加王城争夺战的部队数量。"
 msgstr ""
-"月门是通往王城的传送门，占领王城后，联盟每天可以获得大量的荣耀值。升级月门可"
-"以提升参加王城争夺战的部队数量。"
+"月門是通往王城的傳送門，佔領王城後，聯盟每天可以獲得大量的榮耀值。升級月門可"
+"以提升參加王城爭奪戰的部隊數量。"
 
-#: utils/Localize.lua:682
+#: utils/Localize.lua:650
 msgid ""
 "圣地消耗感知力预知联盟将要发生的危机，解决这些危机能够获得丰厚奖励。提升圣地"
 "等级能够提升感知力上限和恢复速度。"
 msgstr ""
-"圣地消耗感知力预知联盟将要发生的危机，解决这些危机能够获得丰厚奖励。提升圣地"
-"等级能够提升感知力上限和恢复速度。"
+"聖地消耗感知力預知聯盟將要發生的危機，解決這些危機能夠獲得豐厚獎勵。提升聖地"
+"等級能夠提升感知力上限和恢復速度。"
 
-#: utils/Localize.lua:683
+#: utils/Localize.lua:651
 msgid ""
 "联盟宫殿是联盟的核心建筑,联盟盟主可以在这里给忠诚的拥护者颁发奖励.建筑等级越"
 "高,联盟的成员就越多。"
 msgstr ""
-"联盟宫殿是联盟的核心建筑,联盟盟主可以在这里给忠诚的拥护者颁发奖励.建筑等级越"
-"高,联盟的成员就越多。"
+"聯盟宮殿是聯盟的核心建築,聯盟盟主可以在這裡給忠誠的擁護者頒發獎勵.建築等級越"
+"高,聯盟的成員就越多。"
 
-#: utils/Localize.lua:687
+#: utils/Localize.lua:655
 msgid "分裂的王国"
 msgstr "分裂的王國"
 
-#: utils/Localize.lua:688
+#: utils/Localize.lua:656
 msgid "叛军的愤怒"
 msgstr "叛軍的憤怒"
 
-#: utils/Localize.lua:689
+#: utils/Localize.lua:657
 msgid "黑暗契约"
 msgstr "黑暗契約"
 
-#: utils/Localize.lua:690
+#: utils/Localize.lua:658
 msgid "荣耀的火焰"
 msgstr "榮耀的火焰"
 
-#: utils/Localize.lua:692
+#: utils/Localize.lua:660
 msgid "邪恶苏醒"
 msgstr "邪惡甦醒"
 
-#: utils/Localize.lua:692
+#: utils/Localize.lua:660
 msgid "黑龙带来的灾难还没有结束，一批强盗又在四处作乱，我们需要控制局势"
 msgstr "黑龍帶來的災難還沒有結束，一批強盜又在四處作亂，我們需要控制局勢"
 
-#: utils/Localize.lua:693
+#: utils/Localize.lua:661
 msgid "寻找线索"
 msgstr "尋找線索"
 
-#: utils/Localize.lua:693
+#: utils/Localize.lua:661
 msgid "这批强盗一定是有备而来，我们必须找到他们的老巢才能一举消灭他们"
 msgstr "這批強盜一定是有備而來，我們必須找到他們的老巢才能一舉消滅他們"
 
-#: utils/Localize.lua:694
+#: utils/Localize.lua:662
 msgid "抓活口"
 msgstr "抓活口"
 
-#: utils/Localize.lua:694
+#: utils/Localize.lua:662
 msgid "我们抓到活口来为我们带路，设下圈套等他们自投罗网"
 msgstr "我們抓到活口來為我們帶路，設下圈套等他們自投羅網"
 
-#: utils/Localize.lua:695
+#: utils/Localize.lua:663
 msgid "搜索边境"
 msgstr "搜索邊境"
 
-#: utils/Localize.lua:695
+#: utils/Localize.lua:663
 msgid "被捕的强盗已经招认他们的老巢就在边境附近的一处洞穴，我们必须尽快行动"
-msgstr "被捕的强盗已经招认他们的老巢就在边境附近的一处洞穴，我们必须尽快行动"
+msgstr "被捕的強盜已經招認他們的老巢就在邊境附近的一處洞穴，我們必須盡快行動"
 
-#: utils/Localize.lua:696
+#: utils/Localize.lua:664
 msgid "地底深处"
 msgstr "地底深處"
 
-#: utils/Localize.lua:696
+#: utils/Localize.lua:664
 msgid "这个洞穴居然还通往别处，紧跟着这些恶徒，找出他们的幕后主使"
 msgstr "這個洞穴居然還通往別處，緊跟著這些惡徒，找出他們的幕後主使"
 
-#: utils/Localize.lua:697
+#: utils/Localize.lua:665
 msgid "背叛者的秘密"
 msgstr "背叛者的秘密"
 
-#: utils/Localize.lua:697
+#: utils/Localize.lua:665
 msgid "原来这一切都是叛军搞的鬼，为了联盟的安定，我们必须粉碎这个阴谋"
 msgstr "原來這一切都是叛軍搞的鬼，為了聯盟的安定，我們必須粉碎這個陰謀"
 
-#: utils/Localize.lua:699
+#: utils/Localize.lua:667
 msgid "强敌来袭"
 msgstr "強敵來襲"
 
-#: utils/Localize.lua:699
+#: utils/Localize.lua:667
 msgid "我们的行动惹怒了叛军的首领，一支叛军的先锋正在赶往这里，做好战斗准备"
 msgstr "我们的行动惹怒了叛军的首领，一支叛军的先锋正在赶往这里，做好战斗准备"
 
-#: utils/Localize.lua:700
+#: utils/Localize.lua:668
 msgid "坚守"
 msgstr "堅守"
 
-#: utils/Localize.lua:700
+#: utils/Localize.lua:668
 msgid "敌人进攻虽然猛烈，但他们长途奔袭不可能持续进攻，坚守过这波进攻就有希望"
 msgstr ""
 "敌人进攻虽然猛烈，但他们长途奔袭不可能持续进攻，坚守过这波进攻就有希望"
 
-#: utils/Localize.lua:701
+#: utils/Localize.lua:669
 msgid "毫无防备"
 msgstr "毫無防備"
 
-#: utils/Localize.lua:701
+#: utils/Localize.lua:669
 msgid "正面战场敌方无法占到优势，一定会趁乱偷袭，我们得防着他们的小伎俩"
 msgstr "正面戰場敵方無法占到優勢，一定會趁亂偷襲，我們得防著他們的小伎倆"
 
-#: utils/Localize.lua:702
+#: utils/Localize.lua:670
 msgid "主动出击"
 msgstr "主動出擊"
 
-#: utils/Localize.lua:702
+#: utils/Localize.lua:670
 msgid "叛军的主力依然疲惫，我们主动出击一定能打他们一个措手不及"
 msgstr "叛軍的主力依然疲憊，我們主動出擊一定能打他們一個措手不及"
 
-#: utils/Localize.lua:703
+#: utils/Localize.lua:671
 msgid "前后夹击"
 msgstr "前後夾擊"
 
-#: utils/Localize.lua:703
+#: utils/Localize.lua:671
 msgid "如果我们能分出一股部队从侧面猛攻敌方，那么击败叛军就是迟早的事"
 msgstr "如果我們能分出一股部隊從側面猛攻敵方，那麼擊敗叛軍就是遲早的事"
 
-#: utils/Localize.lua:704
+#: utils/Localize.lua:672
 msgid "暗黑之心"
 msgstr "暗黑之心"
 
-#: utils/Localize.lua:704
+#: utils/Localize.lua:672
 msgid "虽然隐隐中不安，但叛军已然溃逃，我们还是尽可能的消弱叛军的力量"
 msgstr "雖然隱隱中不安，但叛軍已然潰逃，我們還是盡可能的消弱叛軍的力量"
 
-#: utils/Localize.lua:706
+#: utils/Localize.lua:674
 msgid "黑龙军团"
 msgstr "黑龍軍團"
 
-#: utils/Localize.lua:706
+#: utils/Localize.lua:674
 msgid "叛军的头目尽然已经向黑龙效忠，我们不是他们的对手必须尽快撤离"
 msgstr "叛軍的頭目盡然已經向黑龍效忠，我們不是他們的對手必須盡快撤離"
 
-#: utils/Localize.lua:707
+#: utils/Localize.lua:675
 msgid "生死搏斗"
 msgstr "生死搏鬥"
 
-#: utils/Localize.lua:707
+#: utils/Localize.lua:675
 msgid "已经没有别的选择，必须全力一搏，或许才有一线生机"
 msgstr "已經沒有別的選擇，必須全力一搏，或許才有一線生機"
 
-#: utils/Localize.lua:708
+#: utils/Localize.lua:676
 msgid "逃出生天"
 msgstr "逃出生天"
 
-#: utils/Localize.lua:708
+#: utils/Localize.lua:676
 msgid "穿过这片峡谷并守住谷口，任由敌方有千军万马也无法发挥作用，冲啊"
 msgstr "穿過這片峽谷並守住谷口，任由敵方有千軍萬馬也無法發揮作用，衝啊"
 
-#: utils/Localize.lua:709
+#: utils/Localize.lua:677
 msgid "地狱之门"
 msgstr "地獄之門"
 
-#: utils/Localize.lua:709
+#: utils/Localize.lua:677
 msgid "我们需要更多援军，这将是一场血腥的厮杀。英勇的领主们，胜败在此一举"
 msgstr "我們需要更多援軍，這將是一場血腥的廝殺。英勇的領主們，勝敗在此一舉"
 
-#: utils/Localize.lua:710
+#: utils/Localize.lua:678
 msgid "扭住局势"
 msgstr "扭住局勢"
 
-#: utils/Localize.lua:710
+#: utils/Localize.lua:678
 msgid "敌方所有主力都派出了，如果能够击杀这支部队，那么局势将被我们扭转啊"
 msgstr "敵方所有主力都派出了，如果能夠擊殺這支部隊，那麼局勢將被我們扭轉啊"
 
-#: utils/Localize.lua:711
+#: utils/Localize.lua:679
 msgid "贪婪者"
 msgstr "貪婪者"
 
-#: utils/Localize.lua:711
+#: utils/Localize.lua:679
 msgid ""
 "我们赢得了暂时的胜利，但黑龙军团留下的战利品却成为了其他领主争夺的目标，我们"
 "必须防止事态恶化"
@@ -8727,11 +8739,11 @@ msgstr ""
 "我们赢得了暂时的胜利，但黑龙军团留下的战利品却成为了其他领主争夺的目标，我们"
 "必须防止事态恶化"
 
-#: utils/Localize.lua:713
+#: utils/Localize.lua:681
 msgid "纷争又起"
 msgstr "紛爭又起"
 
-#: utils/Localize.lua:713
+#: utils/Localize.lua:681
 msgid ""
 "大战刚刚结束，这些贪婪的领主就不顾联盟之约，公然抢夺战利品，这样的行为必须受"
 "到惩罚"
@@ -8739,11 +8751,11 @@ msgstr ""
 "大战刚刚结束，这些贪婪的领主就不顾联盟之约，公然抢夺战利品，这样的行为必须受"
 "到惩罚"
 
-#: utils/Localize.lua:714
+#: utils/Localize.lua:682
 msgid "旧仇恨"
 msgstr "舊仇恨"
 
-#: utils/Localize.lua:714
+#: utils/Localize.lua:682
 msgid ""
 "原来我们的强大早就遭来其他领主的不满，既然他们不顾联盟之约，我们也无需手下留"
 "情"
@@ -8751,11 +8763,11 @@ msgstr ""
 "原来我们的强大早就遭来其他领主的不满，既然他们不顾联盟之约，我们也无需手下留"
 "情"
 
-#: utils/Localize.lua:715
+#: utils/Localize.lua:683
 msgid "抉择"
 msgstr "抉擇"
 
-#: utils/Localize.lua:715
+#: utils/Localize.lua:683
 msgid ""
 "公正终将得到伸张，如果他们放弃那些抢夺的财宝，那么我们就主动出击，给他们点教"
 "训"
@@ -8763,11 +8775,11 @@ msgstr ""
 "公正终将得到伸张，如果他们放弃那些抢夺的财宝，那么我们就主动出击，给他们点教"
 "训"
 
-#: utils/Localize.lua:716
+#: utils/Localize.lua:684
 msgid "大敌当前"
 msgstr "大敵當前"
 
-#: utils/Localize.lua:716
+#: utils/Localize.lua:684
 msgid ""
 "这些叛徒知道单打独斗不是我们的对手，竟然联合起来对抗我们。若想要得到联盟的统"
 "治权，必须要付出惨痛的代价"
@@ -8775,1120 +8787,1120 @@ msgstr ""
 "这些叛徒知道单打独斗不是我们的对手，竟然联合起来对抗我们。若想要得到联盟的统"
 "治权，必须要付出惨痛的代价"
 
-#: utils/Localize.lua:717
+#: utils/Localize.lua:685
 msgid "命运的火与悲"
 msgstr "命運的火與悲"
 
-#: utils/Localize.lua:717
+#: utils/Localize.lua:685
 msgid "曾经的战友竟然也会倒戈相向，胜者即是正义，拿起手中的武器准备出击"
 msgstr "曾經的戰友竟然也會倒戈相向，勝者即是正義，拿起手中的武器準備出擊"
 
-#: utils/Localize.lua:718
+#: utils/Localize.lua:686
 msgid "混乱之王"
 msgstr "混亂之王"
 
-#: utils/Localize.lua:718
+#: utils/Localize.lua:686
 msgid "混乱的联盟需要新的王者，如果这是命运的安排，那我们只有接受这个挑战"
 msgstr "混亂的聯盟需要新的王者，如果這是命運的安排，那我們只有接受這個挑戰"
 
-#: utils/Localize.lua:723
+#: utils/Localize.lua:691
 msgid "瞭望塔"
 msgstr "瞭望塔"
 
-#: utils/Localize.lua:725
+#: utils/Localize.lua:693
 msgid "训练营地"
 msgstr "訓練營地"
 
-#: utils/Localize.lua:726
+#: utils/Localize.lua:694
 msgid "猎手大厅"
 msgstr "獵手大廳"
 
-#: utils/Localize.lua:727
+#: utils/Localize.lua:695
 msgid "马厩"
 msgstr "馬厩"
 
-#: utils/Localize.lua:728
+#: utils/Localize.lua:696
 msgid "车间"
 msgstr "車間"
 
-#: utils/Localize.lua:730
+#: utils/Localize.lua:698
 msgid "防御塔"
 msgstr "防禦塔"
 
-#: utils/Localize.lua:733
+#: utils/Localize.lua:701
 msgid "监狱"
 msgstr "監獄"
 
-#: utils/Localize.lua:736
+#: utils/Localize.lua:704
 msgid "贸易行会"
 msgstr "貿易行會"
 
-#: utils/Localize.lua:738
+#: utils/Localize.lua:706
 msgid "锯木坊"
 msgstr "鋸木坊"
 
-#: utils/Localize.lua:741
+#: utils/Localize.lua:709
 msgid "铸造坊"
 msgstr "鑄造坊"
 
-#: utils/Localize.lua:743
+#: utils/Localize.lua:711
 msgid "资源仓库"
 msgstr "資源倉庫"
 
-#: utils/Localize.lua:745
+#: utils/Localize.lua:713
 msgid "军帐"
 msgstr "軍帳"
 
-#: utils/Localize.lua:758
+#: utils/Localize.lua:726
 msgid "联盟盟主"
 msgstr "聯盟盟主"
 
-#: utils/Localize.lua:759 utils/Localize.lua:1055 utils/Localize.lua:1172
+#: utils/Localize.lua:727 utils/Localize.lua:1023 utils/Localize.lua:1140
 msgid "将军"
 msgstr "將軍"
 
-#: utils/Localize.lua:760 utils/Localize.lua:1054 utils/Localize_item.lua:27
+#: utils/Localize.lua:728 utils/Localize.lua:1022 utils/Localize_item.lua:27
 msgid "军需官"
 msgstr "軍需官"
 
-#: utils/Localize.lua:761 utils/Localize.lua:1053
+#: utils/Localize.lua:729 utils/Localize.lua:1021
 msgid "监事"
 msgstr "監事"
 
-#: utils/Localize.lua:762 utils/Localize.lua:1057
+#: utils/Localize.lua:730 utils/Localize.lua:1025
 msgid "精英"
 msgstr "精英"
 
-#: utils/Localize.lua:778
+#: utils/Localize.lua:746
 #, c-format
 msgid "向联盟慷慨捐赠，提升荣耀值%s"
 msgstr "向聯盟慷慨捐贈，提升榮耀值%s"
 
-#: utils/Localize.lua:779
+#: utils/Localize.lua:747
 #, c-format
 msgid "在联盟中的职位被降级到%s"
 msgstr "在聯盟中的職位被降級到%s"
 
-#: utils/Localize.lua:780
+#: utils/Localize.lua:748
 msgid "一个新成员加入联盟"
 msgstr "一個新成員加入聯盟"
 
-#: utils/Localize.lua:781
+#: utils/Localize.lua:749
 msgid "一个玩家被逐出联盟"
 msgstr "一個玩家被逐出聯盟"
 
-#: utils/Localize.lua:783
+#: utils/Localize.lua:751
 msgid "一个玩家申请加入我们的联盟"
 msgstr "一個玩家申請加入我們的聯盟"
 
-#: utils/Localize.lua:784
+#: utils/Localize.lua:752
 msgid "一个新的联盟公告发布"
 msgstr "一個新的聯盟公告發布"
 
-#: utils/Localize.lua:785
+#: utils/Localize.lua:753
 msgid "一个新的联盟宣言发布"
 msgstr "一個新的聯盟宣言發布"
 
-#: utils/Localize.lua:786
+#: utils/Localize.lua:754
 msgid "晋升为联盟新的盟主"
 msgstr "晉升為聯盟新的盟主"
 
-#: utils/Localize.lua:787
+#: utils/Localize.lua:755
 msgid "向联盟商店补充了一批新的高级道具"
 msgstr "向聯盟商店補充了一批新的高級道具"
 
-#: utils/Localize.lua:788
+#: utils/Localize.lua:756
 #, c-format
 msgid "%s 升级到 %s"
 msgstr "%s 升級到 %s"
 
-#: utils/Localize.lua:789
+#: utils/Localize.lua:757
 #, c-format
 msgid "最近更改联盟的名称为%s"
 msgstr "最近更改聯盟的名稱為%s"
 
-#: utils/Localize.lua:790
+#: utils/Localize.lua:758
 msgid "最近更改联盟的标签"
 msgstr "最近更改聯盟的標籤"
 
-#: utils/Localize.lua:791
+#: utils/Localize.lua:759
 msgid "修改联盟旗帜"
 msgstr "修改聯盟旗幟"
 
-#: utils/Localize.lua:792
+#: utils/Localize.lua:760
 #, c-format
 msgid "修改联盟地形为%s"
 msgstr "修改聯盟地形為%s"
 
-#: utils/Localize.lua:793
+#: utils/Localize.lua:761
 #, c-format
 msgid "修改联盟语言更改为%s"
 msgstr "修改聯盟語言更改為%s"
 
-#: utils/Localize.lua:794
+#: utils/Localize.lua:762
 msgid "激活了圣地的神秘事件"
 msgstr "激活了聖地的神秘事件"
 
-#: utils/Localize.lua:795
+#: utils/Localize.lua:763
 #, c-format
 msgid "在联盟中的职位被晋级到%s"
 msgstr "在聯盟中的職位被晉級到%s"
 
-#: utils/Localize.lua:799 widget/WidgetTreatSoldier.lua:65
+#: utils/Localize.lua:767 widget/WidgetTreatSoldier.lua:65
 msgid "步兵"
 msgstr "步兵"
 
-#: utils/Localize.lua:800 widget/WidgetTreatSoldier.lua:66
+#: utils/Localize.lua:768 widget/WidgetTreatSoldier.lua:66
 msgid "弓手"
 msgstr "弓手"
 
-#: utils/Localize.lua:801 widget/WidgetTreatSoldier.lua:67
+#: utils/Localize.lua:769 widget/WidgetTreatSoldier.lua:67
 msgid "骑兵"
 msgstr "騎兵"
 
-#: utils/Localize.lua:802 utils/Localize.lua:803
+#: utils/Localize.lua:770 utils/Localize.lua:771
 #: widget/WidgetTreatSoldier.lua:68
 msgid "攻城"
 msgstr "攻城"
 
-#: utils/Localize.lua:807
+#: utils/Localize.lua:775
 msgid "剑士"
 msgstr "劍士"
 
-#: utils/Localize.lua:808
+#: utils/Localize.lua:776
 msgid "哨兵"
 msgstr "哨兵"
 
-#: utils/Localize.lua:809
+#: utils/Localize.lua:777
 msgid "弓箭手"
 msgstr "弓箭手"
 
-#: utils/Localize.lua:810
+#: utils/Localize.lua:778
 msgid "弩弓手"
 msgstr "弩弓手"
 
-#: utils/Localize.lua:811
+#: utils/Localize.lua:779
 msgid "枪骑兵"
 msgstr "槍騎兵"
 
-#: utils/Localize.lua:812
+#: utils/Localize.lua:780
 msgid "弓骑兵"
 msgstr "弓騎兵"
 
-#: utils/Localize.lua:813
+#: utils/Localize.lua:781
 msgid "投石车"
 msgstr "投石車"
 
-#: utils/Localize.lua:814
+#: utils/Localize.lua:782
 msgid "弩车"
 msgstr "弩車"
 
-#: utils/Localize.lua:816
+#: utils/Localize.lua:784
 msgid "骷髅勇士"
 msgstr "骷髏勇士"
 
-#: utils/Localize.lua:817
+#: utils/Localize.lua:785
 msgid "骷髅射手"
 msgstr "骷髏射手"
 
-#: utils/Localize.lua:818
+#: utils/Localize.lua:786
 msgid "死亡骑士"
 msgstr "死亡騎士"
 
-#: utils/Localize.lua:819
+#: utils/Localize.lua:787
 msgid "绞肉机"
 msgstr "絞肉機"
 
-#: utils/Localize.lua:820
+#: utils/Localize.lua:788
 msgid "牧师"
 msgstr "牧師"
 
-#: utils/Localize.lua:821
+#: utils/Localize.lua:789
 msgid "猎魔人"
 msgstr "獵魔人"
 
-#: utils/Localize.lua:822
+#: utils/Localize.lua:790
 msgid "圣骑士"
 msgstr "聖騎士"
 
-#: utils/Localize.lua:823
+#: utils/Localize.lua:791
 msgid "蒸汽坦克"
 msgstr "蒸汽坦克"
 
-#: utils/Localize.lua:828
+#: utils/Localize.lua:796
 msgid "等待"
 msgstr "等待"
 
-#: utils/Localize.lua:829
+#: utils/Localize.lua:797
 msgid "战斗中"
 msgstr "戰鬥中"
 
-#: utils/Localize.lua:830
+#: utils/Localize.lua:798
 msgid "击溃!"
 msgstr "擊潰！"
 
-#: utils/Localize.lua:835
+#: utils/Localize.lua:803
 msgid "死亡之手"
 msgstr "死亡之手"
 
-#: utils/Localize.lua:836
+#: utils/Localize.lua:804
 msgid "英雄枯骨"
 msgstr "英雄枯骨"
 
-#: utils/Localize.lua:837
+#: utils/Localize.lua:805
 msgid "灵魂石"
 msgstr "靈魂石"
 
-#: utils/Localize.lua:838
+#: utils/Localize.lua:806
 msgid "魔能之盒"
 msgstr "魔能之盒"
 
-#: utils/Localize.lua:846
+#: utils/Localize.lua:814
 msgid "空闲中"
 msgstr "空閒中"
 
-#: utils/Localize.lua:847
+#: utils/Localize.lua:815
 msgid "出征中"
 msgstr "出征中"
 
-#: utils/Localize.lua:848
+#: utils/Localize.lua:816
 msgid "驻防中"
 msgstr "駐防中"
 
-#: utils/Localize.lua:849
+#: utils/Localize.lua:817
 msgid "已阵亡"
 msgstr "已陣亡"
 
-#: utils/Localize.lua:858
+#: utils/Localize.lua:826
 msgid "城墙血量"
 msgstr "城牆血量"
 
-#: utils/Localize.lua:859
+#: utils/Localize.lua:827
 msgid "经验值"
 msgstr "經驗值"
 
-#: utils/Localize.lua:880
+#: utils/Localize.lua:848
 msgid "购买联盟商店内的低级道具"
 msgstr "購買聯盟商店內的低級道具"
 
-#: utils/Localize.lua:881
+#: utils/Localize.lua:849
 msgid "接受联盟礼物"
 msgstr "接受聯盟禮物"
 
-#: utils/Localize.lua:885
+#: utils/Localize.lua:853
 msgid "购买联盟商店内的高级道具"
 msgstr "購買聯盟商店內的高級道具"
 
-#: utils/Localize.lua:888
+#: utils/Localize.lua:856
 msgid "发送联盟邀请"
 msgstr "發送聯盟邀請"
 
-#: utils/Localize.lua:889
+#: utils/Localize.lua:857
 msgid "管理联盟申请"
 msgstr "管理聯盟申請"
 
-#: utils/Localize.lua:890
+#: utils/Localize.lua:858
 msgid "踢出成员"
 msgstr "踢出成員"
 
-#: utils/Localize.lua:891
+#: utils/Localize.lua:859
 msgid "提升成员职位"
 msgstr "提升成員職位"
 
-#: utils/Localize.lua:892
+#: utils/Localize.lua:860
 msgid "降职成员职位"
 msgstr "降職成員職位"
 
-#: utils/Localize.lua:893
+#: utils/Localize.lua:861
 msgid "修改联盟描述"
 msgstr "修改聯盟描述"
 
-#: utils/Localize.lua:894
+#: utils/Localize.lua:862
 msgid "修改联盟加入方式"
 msgstr "修改聯盟加入方式"
 
-#: utils/Localize.lua:897
+#: utils/Localize.lua:865
 msgid "补充联盟商店内的高级道具"
 msgstr "補充聯盟商店內的高級道具"
 
-#: utils/Localize.lua:898
+#: utils/Localize.lua:866
 msgid "修改联盟公告"
 msgstr "修改聯盟公告"
 
-#: utils/Localize.lua:899
+#: utils/Localize.lua:867
 msgid "发送联盟群邮件"
 msgstr "發送聯盟群郵件"
 
-#: utils/Localize.lua:900
+#: utils/Localize.lua:868
 msgid "升级联盟建筑"
 msgstr "升級聯盟建築"
 
-#: utils/Localize.lua:903
+#: utils/Localize.lua:871
 msgid "移动联盟中的树林/山脉/湖泊"
 msgstr "移動聯盟中的樹林/山脈/湖泊"
 
-#: utils/Localize.lua:904
+#: utils/Localize.lua:872
 msgid "激活圣地联盟危机"
 msgstr "激活聖地聯盟危機"
 
-#: utils/Localize.lua:905
+#: utils/Localize.lua:873
 msgid "激活联盟会战"
 msgstr "激活聯盟會戰"
 
-#: utils/Localize.lua:908
+#: utils/Localize.lua:876
 msgid "更改联盟名称/联盟标签"
 msgstr "更改聯盟名稱/聯盟標籤"
 
-#: utils/Localize.lua:909
+#: utils/Localize.lua:877
 msgid "更改联盟旗帜"
 msgstr "更改聯盟旗幟"
 
-#: utils/Localize.lua:910
+#: utils/Localize.lua:878
 msgid "更改联盟地形"
 msgstr "更改聯盟地形"
 
-#: utils/Localize.lua:911
+#: utils/Localize.lua:879
 msgid "设置联盟语言"
 msgstr "設置聯盟語言"
 
-#: utils/Localize.lua:912
+#: utils/Localize.lua:880
 msgid "移交盟主职位"
 msgstr "移交盟主職位"
 
-#: utils/Localize.lua:913
+#: utils/Localize.lua:881
 msgid "更改职位名称"
 msgstr "更改職位名稱"
 
-#: utils/Localize.lua:918
+#: utils/Localize.lua:886
 msgid "木材村落"
 msgstr "木材村落"
 
-#: utils/Localize.lua:919
+#: utils/Localize.lua:887
 msgid "矿石村落"
 msgstr "礦石村落"
 
-#: utils/Localize.lua:920
+#: utils/Localize.lua:888
 msgid "铁矿村落"
 msgstr "鐵礦村落"
 
-#: utils/Localize.lua:921
+#: utils/Localize.lua:889
 msgid "粮食村落"
 msgstr "糧食村落"
 
-#: utils/Localize.lua:922
+#: utils/Localize.lua:890
 msgid "硬币村落"
 msgstr "硬幣村落"
 
-#: utils/Localize.lua:930
+#: utils/Localize.lua:898
 msgid "孵化红龙"
 msgstr "孵化紅龍"
 
-#: utils/Localize.lua:931
+#: utils/Localize.lua:899
 msgid "孵化蓝龙"
 msgstr "孵化藍龍"
 
-#: utils/Localize.lua:932
+#: utils/Localize.lua:900
 msgid "孵化绿龙"
 msgstr "孵化綠龍"
 
-#: utils/Localize.lua:935
+#: utils/Localize.lua:903
 msgid "红龙能提升部队在草地上的作战能力。"
 msgstr "紅龍能提升部隊在草地上的作戰能力"
 
-#: utils/Localize.lua:936
+#: utils/Localize.lua:904
 msgid "蓝龙能提升部队在草地上的作战能力。"
 msgstr "藍龍能提升部隊在草地上的作戰能力"
 
-#: utils/Localize.lua:937
+#: utils/Localize.lua:905
 msgid "绿龙能提升部队在草地上的作战能力。"
 msgstr "綠龍能提升部隊在草地上的作戰能力"
 
-#: utils/Localize.lua:940
+#: utils/Localize.lua:908
 msgid "起重机"
 msgstr "起重機"
 
-#: utils/Localize.lua:941
+#: utils/Localize.lua:909
 msgid "快速维修"
 msgstr "快速維修"
 
-#: utils/Localize.lua:942
+#: utils/Localize.lua:910
 msgid "钢筋加固"
 msgstr "鋼筋加固"
 
-#: utils/Localize.lua:943
+#: utils/Localize.lua:911
 msgid "急救帐篷"
 msgstr "急救帳篷"
 
-#: utils/Localize.lua:944
+#: utils/Localize.lua:912
 msgid "殖民地"
 msgstr "殖民地"
 
-#: utils/Localize.lua:945
+#: utils/Localize.lua:913
 msgid "谈判技巧"
 msgstr "談判技巧"
 
-#: utils/Localize.lua:946
+#: utils/Localize.lua:914
 msgid "石雕技巧"
 msgstr "石雕技巧"
 
-#: utils/Localize.lua:947
+#: utils/Localize.lua:915
 msgid "冶炼技巧"
 msgstr "冶煉技巧"
 
-#: utils/Localize.lua:948
+#: utils/Localize.lua:916
 msgid "高级箭塔"
 msgstr "高級箭塔"
 
-#: utils/Localize.lua:949
+#: utils/Localize.lua:917
 msgid "陷阱"
 msgstr "陷阱"
 
-#: utils/Localize.lua:950
+#: utils/Localize.lua:918
 msgid "暗仓建设"
 msgstr "暗倉建設"
 
-#: utils/Localize.lua:951
+#: utils/Localize.lua:919
 msgid "后勤学"
 msgstr "後勤學"
 
-#: utils/Localize.lua:952
+#: utils/Localize.lua:920
 msgid "造林技巧"
 msgstr "造林技巧"
 
-#: utils/Localize.lua:953
+#: utils/Localize.lua:921
 msgid "种植技巧"
 msgstr "種植技巧"
 
-#: utils/Localize.lua:954
+#: utils/Localize.lua:922
 msgid "啤酒供应"
 msgstr "啤酒供應"
 
-#: utils/Localize.lua:955
+#: utils/Localize.lua:923
 msgid "再生药剂"
 msgstr "再生藥劑"
 
-#: utils/Localize.lua:956
+#: utils/Localize.lua:924
 msgid "工程绘图"
 msgstr "工程繪圖"
 
-#: utils/Localize.lua:957
+#: utils/Localize.lua:925
 msgid "铸造钱币"
 msgstr "鑄造錢幣"
 
-#: utils/Localize.lua:961
+#: utils/Localize.lua:929
 msgid "增加建筑速度"
 msgstr "增加建築速度"
 
-#: utils/Localize.lua:962
+#: utils/Localize.lua:930
 msgid "增加城墙维修速度"
 msgstr "增加城牆維修速度"
 
-#: utils/Localize.lua:963
+#: utils/Localize.lua:931
 msgid "增加城墙的单位血量防御值"
 msgstr "增加城牆的單位血量防禦值"
 
-#: utils/Localize.lua:964
+#: utils/Localize.lua:932
 msgid "增加医院的伤兵容量"
 msgstr "增加醫院的傷兵容量"
 
-#: utils/Localize.lua:965
+#: utils/Localize.lua:933
 msgid "增加占领村落时采集资源的速度"
 msgstr "增加佔領村落時採集資源的速度"
 
-#: utils/Localize.lua:966
+#: utils/Localize.lua:934
 msgid "增加劝降敌军的几率"
 msgstr "增加勸降敵軍的機率"
 
-#: utils/Localize.lua:967
+#: utils/Localize.lua:935
 msgid "增加石料产量"
 msgstr "增加石料產量"
 
-#: utils/Localize.lua:968
+#: utils/Localize.lua:936
 msgid "增加铁矿产量"
 msgstr "增加鐵礦產量"
 
-#: utils/Localize.lua:969
+#: utils/Localize.lua:937
 msgid "增加防御箭塔的攻击力"
 msgstr "增加防禦箭塔的攻擊力"
 
-#: utils/Localize.lua:970
+#: utils/Localize.lua:938
 msgid "增加监狱的抓捕士兵的上限"
 msgstr "增加監獄的抓捕士兵的上限"
 
-#: utils/Localize.lua:971
+#: utils/Localize.lua:939
 msgid "增加资源保护比例"
 msgstr "增加資源保護比例"
 
-#: utils/Localize.lua:972
+#: utils/Localize.lua:940
 msgid "增加马车的资源和材料容量的上限"
 msgstr "增加馬車的資源和材料容量的上限"
 
-#: utils/Localize.lua:973
+#: utils/Localize.lua:941
 msgid "增加木材产量"
 msgstr "增加木材產量"
 
-#: utils/Localize.lua:974
+#: utils/Localize.lua:942
 msgid "增加粮食产量"
 msgstr "增加糧食產量"
 
-#: utils/Localize.lua:975
+#: utils/Localize.lua:943
 msgid "住宅城民上限加成"
 msgstr "住宅城民上限加成"
 
-#: utils/Localize.lua:976
+#: utils/Localize.lua:944
 msgid "增加治愈伤兵速度"
 msgstr "增加治愈傷兵速度"
 
-#: utils/Localize.lua:977
+#: utils/Localize.lua:945
 msgid "增加生产材料速度"
 msgstr "增加生產材料速度"
 
-#: utils/Localize.lua:978
+#: utils/Localize.lua:946
 msgid "提升市政厅获得银币产量"
 msgstr "提升市政廳獲得銀幣產量"
 
-#: utils/Localize.lua:981
+#: utils/Localize.lua:949
 msgid "增加建筑速度完成"
 msgstr "增加建築速度完成"
 
-#: utils/Localize.lua:982
+#: utils/Localize.lua:950
 msgid "增加城墙维修速度完成"
 msgstr "增加城牆維修速度完成"
 
-#: utils/Localize.lua:983
+#: utils/Localize.lua:951
 msgid "增加城墙的单位血量防御值完成"
 msgstr "增加城牆的單位血量防禦值完成"
 
-#: utils/Localize.lua:984
+#: utils/Localize.lua:952
 msgid "增加医院的伤兵容量完成"
 msgstr "增加醫院的傷兵容量完成"
 
-#: utils/Localize.lua:985
+#: utils/Localize.lua:953
 msgid "增加占领村落时采集资源的速度完成"
 msgstr "增加佔領村落時採集資源的速度完成"
 
-#: utils/Localize.lua:986
+#: utils/Localize.lua:954
 msgid "增加劝降敌军的几率完成"
 msgstr "增加勸降敵軍的機率完成"
 
-#: utils/Localize.lua:987
+#: utils/Localize.lua:955
 msgid "增加石料产量完成"
 msgstr "增加石料產量完成"
 
-#: utils/Localize.lua:988
+#: utils/Localize.lua:956
 msgid "增加铁矿产量完成"
 msgstr "增加鐵礦產量完成"
 
-#: utils/Localize.lua:989
+#: utils/Localize.lua:957
 msgid "增加防御箭塔的攻击力完成"
 msgstr "增加防禦箭塔的攻擊力完成"
 
-#: utils/Localize.lua:990
+#: utils/Localize.lua:958
 msgid "增加监狱的抓捕士兵的上限完成"
 msgstr "增加監獄的抓捕士兵的上限完成"
 
-#: utils/Localize.lua:991
+#: utils/Localize.lua:959
 msgid "增加资源保护比例完成"
 msgstr "增加資源保護比例完成"
 
-#: utils/Localize.lua:992
+#: utils/Localize.lua:960
 msgid "增加马车的资源和材料容量的上限完成"
 msgstr "增加馬車的資源和材料容量的上限完成"
 
-#: utils/Localize.lua:993
+#: utils/Localize.lua:961
 msgid "增加木材产量完成"
 msgstr "增加木材產量完成"
 
-#: utils/Localize.lua:994
+#: utils/Localize.lua:962
 msgid "增加粮食产量完成"
 msgstr "增加糧食產量完成"
 
-#: utils/Localize.lua:995
+#: utils/Localize.lua:963
 msgid "住宅城民上限加成完成"
 msgstr "住宅城民上限加成完成"
 
-#: utils/Localize.lua:996
+#: utils/Localize.lua:964
 msgid "增加治愈伤兵速度完成"
 msgstr "增加治愈傷兵速度完成"
 
-#: utils/Localize.lua:997
+#: utils/Localize.lua:965
 msgid "增加生产材料速度完成"
 msgstr "增加生產材料速度完成"
 
-#: utils/Localize.lua:998
+#: utils/Localize.lua:966
 msgid "提升市政厅获得银币产量完成"
 msgstr "提升市政廳獲得銀幣產量完成"
 
-#: utils/Localize.lua:1001
+#: utils/Localize.lua:969
 msgid "高庭"
 msgstr "高庭"
 
-#: utils/Localize.lua:1002
+#: utils/Localize.lua:970
 msgid "圣冠堡"
 msgstr "聖冠堡"
 
-#: utils/Localize.lua:1003
+#: utils/Localize.lua:971
 msgid "诺兰德"
 msgstr "諾蘭德"
 
-#: utils/Localize.lua:1004
+#: utils/Localize.lua:972
 msgid "雨城"
 msgstr "雨城"
 
-#: utils/Localize.lua:1005
+#: utils/Localize.lua:973
 msgid "顿沃城"
 msgstr "頓沃城"
 
-#: utils/Localize.lua:1006
+#: utils/Localize.lua:974
 msgid "洛克瓦伦"
 msgstr "洛克瓦倫"
 
-#: utils/Localize.lua:1007
+#: utils/Localize.lua:975
 msgid "卡纳"
 msgstr "卡納"
 
-#: utils/Localize.lua:1008
+#: utils/Localize.lua:976
 msgid "黑铁堡"
 msgstr "黑鐵堡"
 
-#: utils/Localize.lua:1009
+#: utils/Localize.lua:977
 msgid "洛斯摩尔"
 msgstr "洛斯摩爾"
 
-#: utils/Localize.lua:1010
+#: utils/Localize.lua:978
 msgid "边关城"
 msgstr "邊關城"
 
-#: utils/Localize.lua:1011
+#: utils/Localize.lua:979
 msgid "明月城"
 msgstr "明月城"
 
-#: utils/Localize.lua:1012
+#: utils/Localize.lua:980
 msgid "寒冰城"
 msgstr "寒冰城"
 
-#: utils/Localize.lua:1013
+#: utils/Localize.lua:981
 msgid "银登城"
 msgstr "銀登城"
 
-#: utils/Localize.lua:1014
+#: utils/Localize.lua:982
 msgid "灰格里芬"
 msgstr "灰格里芬"
 
-#: utils/Localize.lua:1015
+#: utils/Localize.lua:983
 msgid "孤崖"
 msgstr "孤崖"
 
-#: utils/Localize.lua:1018
+#: utils/Localize.lua:986
 msgid "帝王之师"
 msgstr "帝王之師"
 
-#: utils/Localize.lua:1019
+#: utils/Localize.lua:987
 msgid "暗天使"
 msgstr "暗天使"
 
-#: utils/Localize.lua:1020
+#: utils/Localize.lua:988
 msgid "战争修士"
 msgstr "戰爭修士"
 
-#: utils/Localize.lua:1021
+#: utils/Localize.lua:989
 msgid "灰骑士"
 msgstr "灰騎士"
 
-#: utils/Localize.lua:1022
+#: utils/Localize.lua:990
 msgid "钢铁之手"
 msgstr "鋼鐵之手"
 
-#: utils/Localize.lua:1023
+#: utils/Localize.lua:991
 msgid "极限战士"
 msgstr "極限戰士"
 
-#: utils/Localize.lua:1024
+#: utils/Localize.lua:992
 msgid "守望者"
 msgstr "守望者"
 
-#: utils/Localize.lua:1025
+#: utils/Localize.lua:993
 msgid "恐惧折磨"
 msgstr "恐懼折磨"
 
-#: utils/Localize.lua:1026
+#: utils/Localize.lua:994
 msgid "瘟疫之源"
 msgstr "瘟疫之源"
 
-#: utils/Localize.lua:1027
+#: utils/Localize.lua:995
 msgid "腐化之种"
 msgstr "腐化之種"
 
-#: utils/Localize.lua:1028
+#: utils/Localize.lua:996
 msgid "暗影魔咒"
 msgstr "暗影魔咒"
 
-#: utils/Localize.lua:1029
+#: utils/Localize.lua:997
 msgid "血之祭祀"
 msgstr "血之祭祀"
 
-#: utils/Localize.lua:1030
+#: utils/Localize.lua:998
 msgid "丧失神智"
 msgstr "喪失神智"
 
-#: utils/Localize.lua:1031
+#: utils/Localize.lua:999
 msgid "寒霜之触"
 msgstr "寒霜之觸"
 
-#: utils/Localize.lua:1034
+#: utils/Localize.lua:1002
 msgid "部队攻击+10%，部队防御+10%，带兵上限+10%"
 msgstr "部隊攻擊+10％，部隊防禦+10％，帶兵上限+10％"
 
-#: utils/Localize.lua:1035
+#: utils/Localize.lua:1003
 msgid "木材/石料/铁矿/粮食产量+10%，暗仓保护+10%"
 msgstr "木材/石料/鐵礦/糧食產量+10％，暗倉保護+10％"
 
-#: utils/Localize.lua:1036
+#: utils/Localize.lua:1004
 msgid "建造速度+10%，研发速度+10%，城墙恢复速度+20%"
 msgstr "建造速度+10％，研發速度+10％，城牆恢復速度+20％"
 
-#: utils/Localize.lua:1037
+#: utils/Localize.lua:1005
 msgid "招募速度+10%，维护费用-10%，带兵上限+10%"
 msgstr "招募速度+10％，維護費用-10％，帶兵上限+10％"
 
-#: utils/Localize.lua:1038
+#: utils/Localize.lua:1006
 msgid "部队防御+10%，铁矿产量+10%，粮食产量+10%"
 msgstr "部隊防禦+10％，鐵礦產量+10％，糧食產量+10％"
 
-#: utils/Localize.lua:1039
+#: utils/Localize.lua:1007
 msgid "部队攻击+5%，龙的生命恢复+10%"
 msgstr "部隊攻擊+5％，龍的生命恢復+10％"
 
-#: utils/Localize.lua:1040
+#: utils/Localize.lua:1008
 msgid "木材产量+10%，石料产量+10%，建造速度+5%"
 msgstr "木材產量+10％，石料產量+10％，建造速度+5％"
 
-#: utils/Localize.lua:1041
+#: utils/Localize.lua:1009
 msgid "部队攻击-10%，部队防御-10%，带兵上限-10%"
 msgstr "部隊攻擊-10％，部隊防禦-10％，帶兵上限-10％"
 
-#: utils/Localize.lua:1042
+#: utils/Localize.lua:1010
 msgid "暗仓保护-10%，行军速度-10%，治疗伤兵速度-20%"
 msgstr "暗倉保護-10％，行軍速度-10％，治療傷兵速度-20％"
 
-#: utils/Localize.lua:1043
+#: utils/Localize.lua:1011
 msgid "木材/石料/铁矿/粮食产量-10%，招募速度-10%"
 msgstr "木材/石料/鐵礦/糧食產量-10％，招募速度-10％"
 
-#: utils/Localize.lua:1044
+#: utils/Localize.lua:1012
 msgid "城墙恢复速度-10%，龙的生命恢复-10%"
 msgstr "城牆恢復速度-10％，龍的生命恢復-10％"
 
-#: utils/Localize.lua:1045
+#: utils/Localize.lua:1013
 msgid "铁矿产量-10%，粮食产量-10%，招募速度-5%"
 msgstr "鐵礦產量-10％，糧食產量10％，招募速度-5％"
 
-#: utils/Localize.lua:1046
+#: utils/Localize.lua:1014
 msgid "维护费用增加+10%，研发速度-10%"
 msgstr "維護費用增加+10％，研發速度-10％"
 
-#: utils/Localize.lua:1047
+#: utils/Localize.lua:1015
 msgid "木材产量-10%，石料产量-10%，建造速度-5%"
 msgstr "木材產量-10％，石料產量-10％，建造速度-5％"
 
-#: utils/Localize.lua:1051
+#: utils/Localize.lua:1019
 msgid "系统邮件"
 msgstr "系統郵件"
 
-#: utils/Localize.lua:1056
+#: utils/Localize.lua:1024
 msgid "盟主"
 msgstr "盟主"
 
-#: utils/Localize.lua:1058
+#: utils/Localize.lua:1026
 msgid "联盟所有成员"
 msgstr "聯盟所有成員"
 
-#: utils/Localize.lua:1098
+#: utils/Localize.lua:1066
 msgid "英文"
 msgstr "英文"
 
-#: utils/Localize.lua:1099 utils/Localize.lua:1195
+#: utils/Localize.lua:1067 utils/Localize.lua:1163
 msgid "简体中文"
 msgstr "簡體中文"
 
-#: utils/Localize.lua:1100 utils/Localize.lua:1196
+#: utils/Localize.lua:1068 utils/Localize.lua:1164
 msgid "繁体中文"
 msgstr "繁體中文"
 
-#: utils/Localize.lua:1106
+#: utils/Localize.lua:1074
 msgid "帝国崛起"
 msgstr "帝國崛起"
 
-#: utils/Localize.lua:1107
+#: utils/Localize.lua:1075
 msgid "处理城市中的政务,获得奖励"
 msgstr "處理城市中的政務，獲得獎勵"
 
-#: utils/Localize.lua:1110
+#: utils/Localize.lua:1078
 msgid "征服者"
 msgstr "征服者"
 
-#: utils/Localize.lua:1111
+#: utils/Localize.lua:1079
 msgid "用武力赢取荣耀和奖励"
 msgstr "用武力贏取榮耀和獎勵"
 
-#: utils/Localize.lua:1114
+#: utils/Localize.lua:1082
 msgid "兄弟会"
 msgstr "兄弟會"
 
-#: utils/Localize.lua:1115
+#: utils/Localize.lua:1083
 msgid "为了联盟兄弟两肋插刀"
 msgstr "為了聯盟兄弟兩肋插刀"
 
-#: utils/Localize.lua:1118
+#: utils/Localize.lua:1086
 msgid "超凡之路"
 msgstr "超凡之路"
 
-#: utils/Localize.lua:1119
+#: utils/Localize.lua:1087
 msgid "使用特殊能力提升成长速度"
 msgstr "使用特殊能力提升成長速度"
 
-#: utils/Localize.lua:1124
+#: utils/Localize.lua:1092
 msgid "回答正确"
 msgstr "回答正確"
 
-#: utils/Localize.lua:1125
+#: utils/Localize.lua:1093
 msgid "答的好"
 msgstr "答的好"
 
-#: utils/Localize.lua:1126
+#: utils/Localize.lua:1094
 msgid "大答特答"
 msgstr "大答特答"
 
-#: utils/Localize.lua:1127
+#: utils/Localize.lua:1095
 msgid "主宰考场"
 msgstr "主宰考場"
 
-#: utils/Localize.lua:1128
+#: utils/Localize.lua:1096
 msgid "答题如麻"
 msgstr "答題如麻"
 
-#: utils/Localize.lua:1129
+#: utils/Localize.lua:1097
 msgid "无题能挡"
 msgstr "無題能擋"
 
-#: utils/Localize.lua:1130
+#: utils/Localize.lua:1098
 msgid "变态答题"
 msgstr "變態答題"
 
-#: utils/Localize.lua:1131
+#: utils/Localize.lua:1099
 msgid "妖怪般的答题"
 msgstr "妖怪般的答題"
 
-#: utils/Localize.lua:1132
+#: utils/Localize.lua:1100
 msgid "如出题人一般"
 msgstr "如出題人一般"
 
-#: utils/Localize.lua:1133
+#: utils/Localize.lua:1101
 msgid "超越出题的人全对"
 msgstr "超越出題的人全對"
 
-#: utils/Localize.lua:1145
+#: utils/Localize.lua:1113
 msgid "新手大礼包"
 msgstr "新手大禮包"
 
-#: utils/Localize.lua:1146
+#: utils/Localize.lua:1114
 msgid "探险家礼包"
 msgstr "探險家禮包"
 
-#: utils/Localize.lua:1147
+#: utils/Localize.lua:1115
 msgid "铁血军团礼包"
 msgstr "鐵血軍團禮包"
 
-#: utils/Localize.lua:1148
+#: utils/Localize.lua:1116
 msgid "帝国荣耀礼包"
 msgstr "帝國榮耀禮包"
 
-#: utils/Localize.lua:1149
+#: utils/Localize.lua:1117
 msgid "龙族王朝礼包"
 msgstr "龍族王朝禮包"
 
-#: utils/Localize.lua:1153
+#: utils/Localize.lua:1121
 msgid "修复起重机"
 msgstr "修復起重機"
 
-#: utils/Localize.lua:1154
+#: utils/Localize.lua:1122
 msgid "酿造啤酒"
 msgstr "釀造啤酒"
 
-#: utils/Localize.lua:1155
+#: utils/Localize.lua:1123
 msgid "植木造林"
 msgstr "植木造林"
 
-#: utils/Localize.lua:1156
+#: utils/Localize.lua:1124
 msgid "石料开采"
 msgstr "石料開採"
 
-#: utils/Localize.lua:1157
+#: utils/Localize.lua:1125
 msgid "炼制钢铁"
 msgstr "煉製鋼鐵"
 
-#: utils/Localize.lua:1158
+#: utils/Localize.lua:1126
 msgid "收割麦子"
 msgstr "收割麥子"
 
-#: utils/Localize.lua:1159
+#: utils/Localize.lua:1127
 msgid "绘制草图"
 msgstr "繪製草圖"
 
-#: utils/Localize.lua:1160
+#: utils/Localize.lua:1128
 msgid "鼓舞士气"
 msgstr "鼓舞士氣"
 
-#: utils/Localize.lua:1161
+#: utils/Localize.lua:1129
 msgid "开拓土地"
 msgstr "開拓土地"
 
-#: utils/Localize.lua:1162
+#: utils/Localize.lua:1130
 msgid "加强戒备"
 msgstr "加強戒備"
 
-#: utils/Localize.lua:1165
+#: utils/Localize.lua:1133
 msgid "初始头像男-1"
 msgstr "初始頭像男-1"
 
-#: utils/Localize.lua:1166
+#: utils/Localize.lua:1134
 msgid "初始头像男-2"
 msgstr "初始頭像男-2"
 
-#: utils/Localize.lua:1167
+#: utils/Localize.lua:1135
 msgid "初始头像男-3"
 msgstr "初始頭像男-3"
 
-#: utils/Localize.lua:1168
+#: utils/Localize.lua:1136
 msgid "初始头像女-1"
 msgstr "初始頭像女-1"
 
-#: utils/Localize.lua:1169
+#: utils/Localize.lua:1137
 msgid "初始头像女-2"
 msgstr "初始頭像女-2"
 
-#: utils/Localize.lua:1170
+#: utils/Localize.lua:1138
 msgid "初始头像女-3"
 msgstr "初始頭像女-3"
 
-#: utils/Localize.lua:1171
+#: utils/Localize.lua:1139
 msgid "刺客"
 msgstr "刺客"
 
-#: utils/Localize.lua:1173
+#: utils/Localize.lua:1141
 msgid "术士"
 msgstr "術士"
 
-#: utils/Localize.lua:1174
+#: utils/Localize.lua:1142
 msgid "贵妇"
 msgstr "貴婦"
 
-#: utils/Localize.lua:1175
+#: utils/Localize.lua:1143
 msgid "旧神"
 msgstr "舊神"
 
-#: utils/Localize.lua:1178 utils/Localize.lua:1179 utils/Localize.lua:1180
-#: utils/Localize.lua:1181 utils/Localize.lua:1182 utils/Localize.lua:1183
+#: utils/Localize.lua:1146 utils/Localize.lua:1147 utils/Localize.lua:1148
+#: utils/Localize.lua:1149 utils/Localize.lua:1150 utils/Localize.lua:1151
 msgid "默认解锁"
 msgstr "默認解鎖"
 
-#: utils/Localize.lua:1184
+#: utils/Localize.lua:1152
 msgid "击杀累计到达1,000,000后解锁"
 msgstr "擊殺累計到達百萬後解鎖"
 
-#: utils/Localize.lua:1185
+#: utils/Localize.lua:1153
 msgid "战斗力到达1,000,000后解锁"
 msgstr "戰鬥力到達百萬後解鎖"
 
-#: utils/Localize.lua:1186
+#: utils/Localize.lua:1154
 msgid "成为VIP10后解锁"
 msgstr "成為VIP10後解鎖"
 
-#: utils/Localize.lua:1187
+#: utils/Localize.lua:1155
 msgid "城堡提升到40级后解锁"
 msgstr "城堡提升到40級後解鎖"
 
-#: utils/Localize.lua:1188
+#: utils/Localize.lua:1156
 msgid "飞艇探险通关暮光高地第三层后解锁"
 msgstr "飛艇探險通關暮光高地第三層後解鎖"
 
-#: utils/Localize.lua:1192
+#: utils/Localize.lua:1160
 msgid "所有语言"
 msgstr "所有語言"
 
-#: utils/Localize.lua:1193
+#: utils/Localize.lua:1161
 msgid "英语"
 msgstr "英語"
 
-#: utils/Localize.lua:1194
+#: utils/Localize.lua:1162
 msgid "法语"
 msgstr "法語"
 
-#: utils/Localize.lua:1197
+#: utils/Localize.lua:1165
 msgid "德语"
 msgstr "德語"
 
-#: utils/Localize.lua:1198
+#: utils/Localize.lua:1166
 msgid "韩语"
 msgstr "韓語"
 
-#: utils/Localize.lua:1199
+#: utils/Localize.lua:1167
 msgid "日语"
 msgstr "日語"
 
-#: utils/Localize.lua:1200
+#: utils/Localize.lua:1168
 msgid "俄语"
 msgstr "俄語"
 
-#: utils/Localize.lua:1201
+#: utils/Localize.lua:1169
 msgid "西班牙语"
 msgstr "西班牙語"
 
-#: utils/Localize.lua:1202
+#: utils/Localize.lua:1170
 msgid "葡萄牙语"
 msgstr "葡萄牙語"
 
-#: utils/Localize.lua:1203
+#: utils/Localize.lua:1171
 msgid "意大利语"
 msgstr "意大利語"
 
-#: utils/Localize.lua:1207
+#: utils/Localize.lua:1175
 msgid "湖"
 msgstr "湖"
 
-#: utils/Localize.lua:1208
+#: utils/Localize.lua:1176
 msgid "山"
 msgstr "山"
 
-#: utils/Localize.lua:1209
+#: utils/Localize.lua:1177
 msgid "树"
 msgstr "樹"
 
-#: utils/Localize.lua:1213
+#: utils/Localize.lua:1181
 msgid "青铜级"
 msgstr "青銅級"
 
-#: utils/Localize.lua:1214
+#: utils/Localize.lua:1182
 msgid "白银级"
 msgstr "白銀級"
 
-#: utils/Localize.lua:1215
+#: utils/Localize.lua:1183
 msgid "黄金级"
 msgstr "黃金級"
 
-#: utils/Localize.lua:1216
+#: utils/Localize.lua:1184
 msgid "铂金级"
 msgstr "鉑金級"
 
-#: utils/Localize.lua:1217
+#: utils/Localize.lua:1185
 msgid "钻石级"
 msgstr "鑽石級"
 
-#: utils/Localize.lua:1218
+#: utils/Localize.lua:1186
 msgid "大师级"
 msgstr "大師級"
 
-#: utils/Localize_item.lua:19 widget/WidgetRecruitSoldier.lua:544
+#: utils/Localize_item.lua:19 widget/WidgetRecruitSoldier.lua:545
 #: widget/WidgetTreatSoldier.lua:479
 msgid "小时"
 msgstr "小時"
@@ -10116,8 +10128,8 @@ msgstr "%s銀幣"
 #: utils/Localize_item.lua:140 utils/Localize_item.lua:298
 #: utils/Localize_item.lua:299 utils/Localize_item.lua:300
 #, c-format
-msgid "%d金龙币"
-msgstr "%d金龍幣"
+msgid "%s金龙币"
+msgstr ""
 
 #: utils/Localize_item.lua:141 utils/Localize_item.lua:142
 #: utils/Localize_item.lua:143 utils/Localize_item.lua:301
@@ -10162,20 +10174,20 @@ msgstr "城市移動"
 #: utils/Localize_item.lua:157 utils/Localize_item.lua:158
 #: utils/Localize_item.lua:159
 #, c-format
-msgid "%d龙经验值"
-msgstr "%d龍經驗值"
+msgid "%s龙经验值"
+msgstr ""
 
 #: utils/Localize_item.lua:160 utils/Localize_item.lua:161
 #: utils/Localize_item.lua:162
 #, c-format
-msgid "%d点龙的生命值"
-msgstr "%d點龍的生命值"
+msgid "%s点龙的生命值"
+msgstr ""
 
 #: utils/Localize_item.lua:163 utils/Localize_item.lua:164
 #: utils/Localize_item.lua:165
 #, c-format
-msgid "%d英雄之血"
-msgstr "%d英雄之血"
+msgid "%s英雄之血"
+msgstr ""
 
 #: utils/Localize_item.lua:166
 msgid "体力药剂(小)"
@@ -10192,8 +10204,8 @@ msgstr "體力藥劑（大）"
 #: utils/Localize_item.lua:169 utils/Localize_item.lua:170
 #: utils/Localize_item.lua:171
 #, c-format
-msgid "%d点城墙的生命值"
-msgstr "%d點城牆的生命值"
+msgid "%s点城墙的生命值"
+msgstr ""
 
 #: utils/Localize_item.lua:172
 msgid "初级巨龙宝箱"
@@ -10245,8 +10257,8 @@ msgstr "VIP激活%s"
 #: utils/Localize_item.lua:187 utils/Localize_item.lua:188
 #: utils/Localize_item.lua:189 utils/Localize_item.lua:190
 #, c-format
-msgid "%dVIP点数"
-msgstr "%dVIP點數"
+msgid "%sVIP点数"
+msgstr ""
 
 #: utils/Localize_item.lua:193 utils/Localize_item.lua:194
 #: utils/Localize_item.lua:195 utils/Localize_item.lua:196
@@ -10280,13 +10292,11 @@ msgstr "減少25%%的維護費用，持續%d小時"
 
 #: utils/Localize_item.lua:213 utils/Localize_item.lua:214
 #: utils/Localize_item.lua:215
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "敌方突袭成功后无法获得侦查情报，也无法抢到银币（仅对玩家本人有效，对协防玩家"
 "无效）持续%d小时"
-msgstr ""
-"敌方突袭成功后无法获得侦查情报，也无法抢到银币（仅对玩家本人有效，对协防玩家"
-"无效）持续%d小时"
+msgstr "敵方突襲成功後無法獲得偵查情報，也無法搶到銀幣持續％D小時"
 
 #: utils/Localize_item.lua:216 utils/Localize_item.lua:217
 #: utils/Localize_item.lua:218
@@ -10405,20 +10415,20 @@ msgstr "允許玩家將自己的城市移動到聯盟領地的指定坐標"
 #: utils/Localize_item.lua:317 utils/Localize_item.lua:318
 #: utils/Localize_item.lua:319
 #, c-format
-msgid "立即增加龙的经验值%d"
-msgstr "立即增加龍的經驗值%d"
+msgid "立即增加龙的经验值%s"
+msgstr ""
 
 #: utils/Localize_item.lua:320 utils/Localize_item.lua:321
 #: utils/Localize_item.lua:322
 #, c-format
-msgid "选择一条空闲或驻防的龙，立即恢复%d点龙的生命值"
-msgstr "選擇一條空閒或駐防的龍，立即恢復%d點龍的生命值"
+msgid "选择一条空闲或驻防的龙，立即恢复%s点龙的生命值"
+msgstr ""
 
 #: utils/Localize_item.lua:323 utils/Localize_item.lua:324
 #: utils/Localize_item.lua:325
 #, c-format
-msgid "升级龙技能必须的材料，使用后里获得获得%d英雄之血"
-msgstr "升級龍技能必須的材料，使用後獲得%d個英雄之血"
+msgid "升级龙技能必须的材料，使用后里获得获得%s英雄之血"
+msgstr ""
 
 #: utils/Localize_item.lua:326 utils/Localize_item.lua:327
 #: utils/Localize_item.lua:328
@@ -10428,8 +10438,8 @@ msgstr "補足玩家探索地圖所需的體力藥劑"
 #: utils/Localize_item.lua:329 utils/Localize_item.lua:330
 #: utils/Localize_item.lua:331
 #, c-format
-msgid "使用后，立即为城墙恢复%d点生命值"
-msgstr "使用後，立即為城牆恢復%d點生命值"
+msgid "使用后，立即为城墙恢复%s点生命值"
+msgstr ""
 
 #: utils/Localize_item.lua:332
 msgid "1~2星龙的装备所需材料，打开后按照奖励列表抽取3次"
@@ -10481,8 +10491,8 @@ msgstr "激活你當前的VIP等級特權，效果持續%s"
 #: utils/Localize_item.lua:347 utils/Localize_item.lua:348
 #: utils/Localize_item.lua:349 utils/Localize_item.lua:350
 #, c-format
-msgid "增加%dVIP点数，以提高你的VIP等级"
-msgstr "增加%dVIP點數，以提高你的VIP等級"
+msgid "增加%sVIP点数，以提高你的VIP等级"
+msgstr ""
 
 #: utils/Localize_item.lua:353 utils/Localize_item.lua:354
 #: utils/Localize_item.lua:355 utils/Localize_item.lua:356
@@ -10650,7 +10660,7 @@ msgstr "聯盟語言"
 
 #: widget/WidgetBuffBox.lua:66 widget/WidgetUseItems.lua:196
 #: widget/WidgetUseItems.lua:232 widget/WidgetUseItems.lua:240
-#: widget/WidgetUseItems.lua:876 widget/WidgetUseItems.lua:889
+#: widget/WidgetUseItems.lua:879 widget/WidgetUseItems.lua:892
 msgid "未激活"
 msgstr "未激活"
 
@@ -10710,53 +10720,53 @@ msgstr "技能"
 msgid "任务奖励"
 msgstr "任務獎勵"
 
-#: widget/WidgetEventTabButtons.lua:453
+#: widget/WidgetEventTabButtons.lua:456
 msgid "打开"
 msgstr "打開"
 
-#: widget/WidgetEventTabButtons.lua:748
+#: widget/WidgetEventTabButtons.lua:751
 msgid "查看已拥有的建筑"
 msgstr "查看已擁有的建築"
 
-#: widget/WidgetEventTabButtons.lua:769
+#: widget/WidgetEventTabButtons.lua:772
 msgid "查看现有的士兵"
 msgstr "查看現有的士兵"
 
-#: widget/WidgetEventTabButtons.lua:792
+#: widget/WidgetEventTabButtons.lua:795
 msgid "查看材料"
 msgstr "查看材料"
 
-#: widget/WidgetEventTabButtons.lua:836
+#: widget/WidgetEventTabButtons.lua:839
 msgid "训练营地空闲"
 msgstr "訓練營地空閒"
 
-#: widget/WidgetEventTabButtons.lua:837
+#: widget/WidgetEventTabButtons.lua:840
 msgid "猎手大厅空闲"
 msgstr "獵手大廳空閒"
 
-#: widget/WidgetEventTabButtons.lua:838
+#: widget/WidgetEventTabButtons.lua:841
 msgid "马厩空闲"
 msgstr "馬厩空閒"
 
-#: widget/WidgetEventTabButtons.lua:839
+#: widget/WidgetEventTabButtons.lua:842
 msgid "车间空闲"
 msgstr "車間空閒"
 
-#: widget/WidgetEventTabButtons.lua:840
+#: widget/WidgetEventTabButtons.lua:843
 msgid "查看学院科技"
 msgstr "查看學院科技"
 
-#: widget/WidgetEventTabButtons.lua:931
+#: widget/WidgetEventTabButtons.lua:934
 #, c-format
 msgid "升级到 等级%d"
 msgstr "升級到 等級%d"
 
-#: widget/WidgetEventTabButtons.lua:947
+#: widget/WidgetEventTabButtons.lua:950
 #, c-format
 msgid "招募%s x%d"
 msgstr "招募%s x%d"
 
-#: widget/WidgetEventTabButtons.lua:955 widget/WidgetManufacture.lua:443
+#: widget/WidgetEventTabButtons.lua:958 widget/WidgetManufacture.lua:443
 #, c-format
 msgid "制造材料 x%d"
 msgstr "製造材料 x%d"
@@ -10782,8 +10792,8 @@ msgstr "最近聯繫人"
 #: widget/WidgetMailContacts.lua:17
 msgid "向其他玩家发送邮件,会自动添加到最近联系人列表"
 msgstr ""
-"在聊天界面或在联盟-成员列表点击其他玩家可以发送邮件，已联系过的玩家会记录在"
-"这里"
+"在聊天界面或在聯盟-成員列表點擊其他玩家可以發送郵件，已聯繫過的玩家會記錄在"
+"這裡"
 
 #: widget/WidgetMakeEquip.lua:134
 msgid "立即制造"
@@ -10810,50 +10820,50 @@ msgstr "材料不足"
 #: widget/WidgetMakeEquip.lua:461
 #, c-format
 msgid "完成当前制造队列,需要%d"
-msgstr "完成当前制造队列,需要%d"
+msgstr "完成當前製造隊列,需要%d"
 
 #: widget/WidgetMakeEquip.lua:468
 #, c-format
 msgid "银币不足,需要%d"
-msgstr "银币不足,需要%d"
+msgstr "銀幣不足,需要%d"
 
 #: widget/WidgetManufacture.lua:85
 msgid "生产建筑所需材料"
-msgstr "生产建筑所需材料"
+msgstr "生產建築所需材料"
 
 #: widget/WidgetManufacture.lua:135
 msgid "获取建筑材料"
-msgstr "获取建筑材料"
+msgstr "獲取建築材料"
 
 #: widget/WidgetManufacture.lua:146
 msgid "军事科技所需材料"
-msgstr "军事科技所需材料"
+msgstr "軍事科技所需材料"
 
 #: widget/WidgetManufacture.lua:185
 msgid "获取科技材料"
-msgstr "获取科技材料"
+msgstr "獲取科技材料"
 
 #: widget/WidgetManufacture.lua:328
 msgid "随机制造10个材料"
-msgstr "随机制造10个材料"
+msgstr "隨機製造10個材料"
 
 #: widget/WidgetManufacture.lua:346
 msgid "生产"
-msgstr "生产"
+msgstr "生產"
 
 #: widget/WidgetManufacture.lua:359
 #, c-format
 msgid "随机制造%d个材料"
-msgstr "随机制造%d个材料"
+msgstr "隨機製造%d個材料"
 
 #: widget/WidgetManufacture.lua:380
 msgid "制造材料完成"
-msgstr "制造材料完成"
+msgstr "製造材料完成"
 
 #: widget/WidgetManufacture.lua:399
 #, c-format
 msgid "制造材料x%d 完成!"
-msgstr "制造材料x%d 完成!"
+msgstr "製造材料x%d 完成!"
 
 #: widget/WidgetMarchEvents.lua:388
 msgid "撤退"
@@ -11097,12 +11107,12 @@ msgstr ""
 "的生命？”"
 
 #: widget/WidgetPVEKeel.lua:21
-msgid "知识"
-msgstr "知識"
-
-#: widget/WidgetPVEKeel.lua:32
 msgid "生命"
 msgstr "生命"
+
+#: widget/WidgetPVEKeel.lua:32
+msgid "知识"
+msgstr "知識"
 
 #: widget/WidgetPVEMiner.lua:10
 #, c-format
@@ -11279,47 +11289,47 @@ msgstr "立即招募"
 msgid "您当前没有足够金龙币"
 msgstr "您當前沒有足夠金龍幣"
 
-#: widget/WidgetRecruitSoldier.lua:312 widget/WidgetRecruitSoldier.lua:373
+#: widget/WidgetRecruitSoldier.lua:312 widget/WidgetRecruitSoldier.lua:374
 msgid "招募材料不足"
 msgstr "招募材料不足"
 
-#: widget/WidgetRecruitSoldier.lua:312 widget/WidgetRecruitSoldier.lua:373
+#: widget/WidgetRecruitSoldier.lua:312 widget/WidgetRecruitSoldier.lua:374
 msgid "您当前没有足够材料"
 msgstr "您當前沒有足夠材料"
 
-#: widget/WidgetRecruitSoldier.lua:375 widget/WidgetRecruitSoldier.lua:389
+#: widget/WidgetRecruitSoldier.lua:376 widget/WidgetRecruitSoldier.lua:390
 msgid "队列不足"
 msgstr "隊列不足"
 
-#: widget/WidgetRecruitSoldier.lua:376 widget/WidgetRecruitSoldier.lua:390
+#: widget/WidgetRecruitSoldier.lua:377 widget/WidgetRecruitSoldier.lua:391
 msgid "您当前没有足够的队列"
 msgstr "您當前沒有足夠的隊列"
 
-#: widget/WidgetRecruitSoldier.lua:376 widget/WidgetRecruitSoldier.lua:390
+#: widget/WidgetRecruitSoldier.lua:377 widget/WidgetRecruitSoldier.lua:391
 msgid "您当前没有足够的资源"
 msgstr "您當前沒有足夠的資源"
 
-#: widget/WidgetRecruitSoldier.lua:376 widget/WidgetRecruitSoldier.lua:390
+#: widget/WidgetRecruitSoldier.lua:377 widget/WidgetRecruitSoldier.lua:391
 msgid "是否花费魔法石立即补充"
 msgstr "是否花費魔法石立即補充"
 
-#: widget/WidgetRecruitSoldier.lua:701
+#: widget/WidgetRecruitSoldier.lua:702
 msgid "立即开始招募，招募士兵会消耗城民"
 msgstr "立即開始招募，招募士兵會消耗城民"
 
-#: widget/WidgetRecruitSoldier.lua:738
+#: widget/WidgetRecruitSoldier.lua:739
 msgid "点击招募"
 msgstr "點擊招募"
 
-#: widget/WidgetResources.lua:67 widget/WidgetResources.lua:260
+#: widget/WidgetResources.lua:67
 msgid "正在征税"
 msgstr "正在徵稅"
 
-#: widget/WidgetResources.lua:67 widget/WidgetResources.lua:260
+#: widget/WidgetResources.lua:67
 msgid "当前没有进行征税"
 msgstr "當前沒有進行徵稅"
 
-#: widget/WidgetResources.lua:203 widget/WidgetResources.lua:248
+#: widget/WidgetResources.lua:203 widget/WidgetResources.lua:249
 msgid "单位产能"
 msgstr "單位產能"
 
@@ -11330,10 +11340,6 @@ msgstr "佔用人口"
 #: widget/WidgetResources.lua:224
 msgid "维护费用"
 msgstr "維護費用"
-
-#: widget/WidgetResources.lua:273
-msgid "空闲人口"
-msgstr "空閒人口"
 
 #: widget/WidgetSelectDragon.lua:38 widget/WidgetSelectWallDragon.lua:39
 msgid "总力量"
@@ -11460,7 +11466,7 @@ msgid "激活增益道具"
 msgstr "激活增益道具"
 
 #: widget/WidgetUseItems.lua:194 widget/WidgetUseItems.lua:229
-#: widget/WidgetUseItems.lua:874 widget/WidgetUseItems.lua:886
+#: widget/WidgetUseItems.lua:877 widget/WidgetUseItems.lua:889
 #, c-format
 msgid "已激活,剩余时间:%s"
 msgstr "已激活，剩餘時間:%s"
@@ -11469,11 +11475,11 @@ msgstr "已激活，剩餘時間:%s"
 msgid "增益道具"
 msgstr "增益道具"
 
-#: widget/WidgetUseItems.lua:349 widget/WidgetUseItems.lua:631
+#: widget/WidgetUseItems.lua:349 widget/WidgetUseItems.lua:634
 msgid "增加龙的经验"
 msgstr "增加龍的經驗"
 
-#: widget/WidgetUseItems.lua:424 widget/WidgetUseItems.lua:631
+#: widget/WidgetUseItems.lua:424 widget/WidgetUseItems.lua:634
 msgid "增加龙的生命值"
 msgstr "增加龍的生命值"
 
@@ -11481,83 +11487,112 @@ msgstr "增加龍的生命值"
 msgid "探索体力值"
 msgstr "探索體力值"
 
-#: widget/WidgetUseItems.lua:543
+#: widget/WidgetUseItems.lua:514
+#, c-format
+msgid "%s(+%d/每小时)"
+msgstr ""
+
+#: widget/WidgetUseItems.lua:546
 msgid "您还没孵化巨龙,快去龙巢孵化一只吧!"
 msgstr "您還沒孵化巨龍，快去龍巢孵化一隻吧！"
 
-#: widget/WidgetUseItems.lua:577 widget/WidgetUseItems.lua:733
+#: widget/WidgetUseItems.lua:580 widget/WidgetUseItems.lua:736
 #, c-format
 msgid "生命值 %d/%d"
 msgstr "生命值%d/%d"
 
-#: widget/WidgetUseItems.lua:577 widget/WidgetUseItems.lua:741
+#: widget/WidgetUseItems.lua:580 widget/WidgetUseItems.lua:744
 #, c-format
 msgid "经验值 %d/%d"
 msgstr "經驗值%d/%d"
 
-#: widget/WidgetUseItems.lua:689
+#: widget/WidgetUseItems.lua:692
 msgid "请选择巨龙"
 msgstr "請選擇巨龍"
 
-#: widget/WidgetUseItems.lua:765
+#: widget/WidgetUseItems.lua:768
 msgid "没有钥匙"
 msgstr "沒有鑰匙"
 
-#: widget/WidgetUseItems.lua:936
+#: widget/WidgetUseItems.lua:939
 msgid "战争沙漏"
 msgstr "戰爭沙漏"
 
-#: widget/WidgetUseItems.lua:952 widget/WidgetUseItems.lua:1085
+#: widget/WidgetUseItems.lua:955 widget/WidgetUseItems.lua:1088
 msgid "拥有:"
 msgstr "擁有:"
 
-#: widget/WidgetUseItems.lua:958
+#: widget/WidgetUseItems.lua:961
 #, c-format
 msgid "剩余时间: %s"
 msgstr "剩餘時間: %s"
 
-#: widget/WidgetUseItems.lua:1002
+#: widget/WidgetUseItems.lua:1005
 #, c-format
 msgid "剩余时间:%s"
 msgstr "剩餘時間: %s"
 
-#: widget/WidgetUseItems.lua:1180
+#: widget/WidgetUseItems.lua:1183
 msgid "购买&使用"
 msgstr "購買&使用"
 
-#: widget/WidgetUseItems.lua:1212
+#: widget/WidgetUseItems.lua:1215
 #, fuzzy, c-format
 msgid "拥有:%d"
 msgstr "擁有:％d"
 
-#: widget/WidgetUseItems.lua:1277
+#: widget/WidgetUseItems.lua:1280
 msgid "使用VIP激活1天"
 msgstr "使用VIP激活1天"
 
-#: widget/WidgetUseItems.lua:1290
+#: widget/WidgetUseItems.lua:1293
 msgid "已经激活VIP，关闭窗口"
 msgstr "已經激活VIP，關閉窗口"
 
-#~ msgid "等级已满 "
-#~ msgstr "等級已滿"
+#~ msgid "科技升级速度+%d%%,"
+#~ msgstr "科技升級速度+%d%%,"
 
-#~ msgid "level"
-#~ msgstr "level"
+#~ msgid "正在升级到 等级"
+#~ msgstr "正在升級到等級"
 
-#~ msgid "power"
-#~ msgstr "power"
+#~ msgid "从等级"
+#~ msgstr "從等級"
 
-#~ msgid "perception"
-#~ msgstr "perception"
+#~ msgid "升级到等级"
+#~ msgstr "升級到等級"
 
-#~ msgid "pRecoveryPerHour"
-#~ msgstr "pRecoveryPerHour"
+#~ msgid "%d金龙币"
+#~ msgstr "%d金龍幣"
 
-#~ msgid "Level"
-#~ msgstr "Level"
+#~ msgid "%d龙经验值"
+#~ msgstr "%d龍經驗值"
 
-#~ msgid "监视"
-#~ msgstr "監視"
+#~ msgid "%d点龙的生命值"
+#~ msgstr "%d點龍的生命值"
 
-#~ msgid "游戏出现了bug,点击确定按钮发邮件给我们"
-#~ msgstr "遊戲出現了bug，點擊確定按鈕發郵件給我們"
+#~ msgid "%d英雄之血"
+#~ msgstr "%d英雄之血"
+
+#~ msgid "%d点城墙的生命值"
+#~ msgstr "%d點城牆的生命值"
+
+#~ msgid "%dVIP点数"
+#~ msgstr "%dVIP點數"
+
+#~ msgid "立即增加龙的经验值%d"
+#~ msgstr "立即增加龍的經驗值%d"
+
+#~ msgid "选择一条空闲或驻防的龙，立即恢复%d点龙的生命值"
+#~ msgstr "選擇一條空閒或駐防的龍，立即恢復%d點龍的生命值"
+
+#~ msgid "升级龙技能必须的材料，使用后里获得获得%d英雄之血"
+#~ msgstr "升級龍技能必須的材料，使用後獲得%d個英雄之血"
+
+#~ msgid "使用后，立即为城墙恢复%d点生命值"
+#~ msgstr "使用後，立即為城牆恢復%d點生命值"
+
+#~ msgid "增加%dVIP点数，以提高你的VIP等级"
+#~ msgstr "增加%dVIP點數，以提高你的VIP等級"
+
+#~ msgid "空闲人口"
+#~ msgstr "空閒人口"

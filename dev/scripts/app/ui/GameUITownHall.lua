@@ -38,8 +38,8 @@ end
 
 function GameUITownHall:UpdateDwellingCondition()
     local cur = #self.town_hall_city:GetHousesAroundFunctionBuildingByType(self.town_hall, "dwelling", 2)
-    self.dwelling:GetLineByIndex(1):SetCondition(cur, 3)
-    self.dwelling:GetLineByIndex(2):SetCondition(cur, 6)
+    self.dwelling:GetLineByIndex(1):SetCondition(cur, 6)
+    self.dwelling:GetLineByIndex(2):SetCondition(cur, 3)
 end
 
 function GameUITownHall:TabButtons()
