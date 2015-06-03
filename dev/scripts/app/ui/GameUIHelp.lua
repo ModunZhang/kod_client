@@ -41,7 +41,7 @@ function GameUIHelp:onEnter()
     pro:setType(display.PROGRESS_TIMER_BAR)
     pro:setBarChangeRate(cc.p(1,0))
     pro:setMidpoint(cc.p(0,0))
-    pro:align(display.LEFT_BOTTOM, 0, 2):addTo(bar)
+    pro:align(display.LEFT_BOTTOM, 0, 0):addTo(bar)
     self.loyalty_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         font = UIKit:getFontFilePath(),

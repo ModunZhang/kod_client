@@ -129,12 +129,12 @@ function GameUIHelpDefence:CreateSoldierNode()
             local num_1 = tonumber(split_str[1])
             local num_2 = tonumber(split_str[2])
             local value_label_1 = UIKit:ttfLabel({
-                text = num_1,
+                text = string.formatnumberthousands(num_1),
                 size = 18,
                 color = num_1 > num_2 and 0x7e0000 or 0xffedae,
             })
             local value_label_2 = UIKit:ttfLabel({
-                text = "/"..num_2,
+                text = "/"..string.formatnumberthousands(num_2),
                 size = 18,
                 color = 0xffedae,
             })
@@ -146,7 +146,7 @@ function GameUIHelpDefence:CreateSoldierNode()
             info:setContentSize(total_width, 45)
         else
             local value_label = UIKit:ttfLabel({
-                text = value,
+                text = string.formatnumberthousands(value),
                 size = 18,
                 color = 0xffedae,
             })
@@ -199,7 +199,7 @@ function GameUIHelpDefence:CreateSoldierNode()
         return rc
     end
     function TroopShow:SetPower(power)
-        local power_item = createInfoItem(_("战斗力"),string.formatnumberthousands(power))
+        local power_item = createInfoItem(_("战斗力"),power)
             :align(display.CENTER,200,0)
             :addTo(info_bg)
         return self
@@ -219,7 +219,7 @@ function GameUIHelpDefence:CreateSoldierNode()
         display.newSprite("dragon_strength_27x31.png"):pos(10,label:getContentSize().height/2)
             :addTo(label)
         UIKit:ttfLabel({
-            text = soldier_power,
+            text = string.formatnumberthousands(soldier_power),
             size = 18,
             color = 0xffedae,
         }):align(display.CENTER,label:getContentSize().width/2,label:getContentSize().height/2)
@@ -308,7 +308,7 @@ function GameUIHelpDefence:DragonPart()
     }):align(display.LEFT_CENTER,10,60)
         :addTo(box_bg)
     local dragon_vitality = UIKit:ttfLabel({
-        text = dragon.hp,
+        text = string.formatnumberthousands(dragon.hp),
         size = 20,
         color = 0x514d3e,
     }):align(display.RIGHT_CENTER,416,60)
@@ -326,7 +326,7 @@ function GameUIHelpDefence:DragonPart()
     }):align(display.LEFT_CENTER,10,30)
         :addTo(box_bg)
     local dragon_power = UIKit:ttfLabel({
-        text = DataUtils:getDragonTotalStrengthFromJson(dragon.star,dragon.level,dragon.skills,equi),
+        text = string.formatnumberthousands(DataUtils:getDragonTotalStrengthFromJson(dragon.star,dragon.level,dragon.skills,equi)),
         size = 20,
         color = 0x514d3e,
     }):align(display.RIGHT_CENTER,416,30)

@@ -260,7 +260,9 @@ function GameUIGacha:CreateGachaPool(layer)
 
                             -- 弹出评价
                             if self.appraise then
-                                
+                                UIKit:showEvaluateDialog(function ()
+                                    app:GetGameDefautlt():setStringForKey("APPRAISE:"..User:Id(),"Evaluated")
+                                end)
                             end
                         end
                         award:setLocalZOrder(1)
@@ -286,7 +288,7 @@ function GameUIGacha:CreateGachaPool(layer)
         self.current_gacha_item_count = item[2]
         self.current_gacha_item_name = item_name
         -- 是否弹出评价
-        if not app:GetGameDefautlt():getStringForKey("APPRAISE:"..User:Id()) and string.find(item_name,"gemClass") then
+        if app:GetGameDefautlt():getStringForKey("APPRAISE:"..User:Id()) ~= "Evaluated" and string.find(item_name,"gemClass") then
             self.appraise = true
         end
         layer:EnAbleButton(false)

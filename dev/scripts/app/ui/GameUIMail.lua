@@ -186,7 +186,11 @@ function GameUIMail:CreateMailControlBox()
                                                         self.is_deleting = false
                                                         return response
                                                     end)
+                                                else
+                                                    self.is_deleting = false
                                                 end
+                                            else
+                                                self.is_deleting = false
                                             end
                                         end
                                         if self.saved_layer:isVisible() then
@@ -199,7 +203,11 @@ function GameUIMail:CreateMailControlBox()
                                                         self.is_deleting = false
                                                         return response
                                                     end)
+                                                else
+                                                    self.is_deleting = false
                                                 end
+                                            else
+                                                self.is_deleting = false
                                             end
                                         end
                                     end)
@@ -218,7 +226,11 @@ function GameUIMail:CreateMailControlBox()
                                                         self.is_deleting = false
                                                         return response
                                                     end)
+                                                else
+                                                    self.is_deleting = false
                                                 end
+                                            else
+                                                self.is_deleting = false
                                             end
                                         end
                                         if self.saved_layer:isVisible() then
@@ -231,7 +243,11 @@ function GameUIMail:CreateMailControlBox()
                                                         self.is_deleting = false
                                                         return response
                                                     end)
+                                                else
+                                                    self.is_deleting = false
                                                 end
+                                            else
+                                                self.is_deleting = false
                                             end
                                         end
                                     end)
@@ -379,9 +395,8 @@ function GameUIMail:DelegateInbox( listView, tag, idx )
         local size = content:getContentSize()
         item:setItemSize(size.width, size.height)
         -- 当取到客户端本地最后一封收件箱邮件后，请求服务器获得更多以前的邮件
-        if idx == #self.manager:GetMails() and #self.manager:GetMails() > 9 then
+        if idx == #self.manager:GetMails() then
             if not self.is_deleting then
-                print("当取到客户端本地最后一封收件箱邮件后，请求服务器获得更多以前的邮件",#self.manager:GetMails())
                 self.manager:FetchMailsFromServer(#self.manager:GetMails())
             end
         end
@@ -393,6 +408,11 @@ function GameUIMail:DelegateInbox( listView, tag, idx )
                 content:SetData(idx)
                 local size = content:getContentSize()
                 v:setItemSize(size.width, size.height)
+                if idx == #self.manager:GetMails() then
+                    if not self.is_deleting then
+                        self.manager:FetchMailsFromServer(#self.manager:GetMails())
+                    end
+                end
             end
         end
     end
@@ -445,6 +465,7 @@ function GameUIMail:CreateInboxContent()
         self.bg_button = WidgetPushButton.new({normal = "back_ground_568x118.png",pressed = "back_ground_568x118.png"})
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
+                    parent:SelectAllMailsOrReports(false)
                     if tolua.type(mail.isRead)=="boolean" and not mail.isRead then
                         parent:ReadMailOrReports({mail.id},function ()
                             parent.manager:DecreaseUnReadMailsNum(1)
@@ -549,9 +570,8 @@ function GameUIMail:DelegateSavedMails( listView, tag, idx )
         local size = content:getContentSize()
         item:setItemSize(size.width, size.height)
         -- 当取到客户端本地最后一封收藏邮件后，请求服务器获得更多以前的邮件
-        if idx == #self.manager:GetSavedMails() and #self.manager:GetSavedMails() > 9 then
+        if idx == #self.manager:GetSavedMails() then
             if not self.is_deleting then
-                print("当取到客户端本地最后一封收藏邮件后，请求服务器获得更多以前的邮件",#self.manager:GetSavedMails())
                 self.manager:FetchSavedMailsFromServer(#self.manager:GetSavedMails())
             end
         end
@@ -563,6 +583,12 @@ function GameUIMail:DelegateSavedMails( listView, tag, idx )
                 content:SetData(idx)
                 local size = content:getContentSize()
                 v:setItemSize(size.width, size.height)
+                -- 当取到客户端本地最后一封收藏邮件后，请求服务器获得更多以前的邮件
+                if idx == #self.manager:GetSavedMails() then
+                    if not self.is_deleting then
+                        self.manager:FetchSavedMailsFromServer(#self.manager:GetSavedMails())
+                    end
+                end
             end
         end
     end
@@ -613,6 +639,7 @@ function GameUIMail:CreateSavedMailContent()
         self.bg_button = WidgetPushButton.new({normal = "back_ground_568x118.png",pressed = "back_ground_568x118.png"})
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
+                    parent:SelectAllMailsOrReports(false)
                     if tolua.type(mail.isRead)=="boolean" and not mail.isRead then
                         parent:ReadMailOrReports({mail.id},function ()
                             parent.manager:DecreaseUnReadMailsNum(1)
@@ -705,8 +732,7 @@ function GameUIMail:DelegateSendMails( listView, tag, idx )
         local size = content:getContentSize()
         item:setItemSize(size.width, size.height)
         -- 当取到客户端本地最后一封发件箱邮件后，请求服务器获得更多以前的邮件
-        if idx == #self.manager:GetSendMails() and #self.manager:GetSendMails() > 9  then
-            print("当取到客户端本地最后一封发件箱邮件后，请求服务器获得更多以前的邮件",#self.manager:GetSendMails())
+        if idx == #self.manager:GetSendMails() then
             self.manager:FetchSendMailsFromServer(#self.manager:GetSendMails())
         end
         return item
@@ -717,6 +743,10 @@ function GameUIMail:DelegateSendMails( listView, tag, idx )
                 content:SetData(idx)
                 local size = content:getContentSize()
                 v:setItemSize(size.width, size.height)
+                -- 当取到客户端本地最后一封发件箱邮件后，请求服务器获得更多以前的邮件
+                if idx == #self.manager:GetSendMails() then
+                    self.manager:FetchSendMailsFromServer(#self.manager:GetSendMails())
+                end
             end
         end
     end
@@ -767,6 +797,7 @@ function GameUIMail:CreateSendMailContent()
         self.bg_button = WidgetPushButton.new({normal = "back_ground_568x118.png",pressed = "back_ground_568x118.png"})
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
+                    parent:SelectAllMailsOrReports(false)
                     if tolua.type(mail.isRead)=="boolean" and not mail.isRead then
                         parent:ReadMailOrReports({mail.id},function ()
                             parent.manager:DecreaseUnReadMailsNum(1)
@@ -1272,9 +1303,8 @@ function GameUIMail:DelegateReport( listView, tag, idx )
         local size = content:getContentSize()
         item:setItemSize(size.width, size.height)
         -- 当取到客户端本地最后一封战报后，请求服务器获得更多以前的战报
-        if idx == #self.manager:GetReports() and #self.manager:GetReports() > 9 then
+        if idx == #self.manager:GetReports() then
             if not self.is_deleting then
-                print("当取到客户端本地最后一封战报后，请求服务器获得更多以前的战报",#self.manager:GetReports())
                 self.manager:FetchReportsFromServer(#self.manager:GetReports())
             end
         end
@@ -1287,6 +1317,12 @@ function GameUIMail:DelegateReport( listView, tag, idx )
                 content:SetData(idx)
                 local size = content:getContentSize()
                 v:setItemSize(size.width, size.height)
+                -- 当取到客户端本地最后一封战报后，请求服务器获得更多以前的战报
+                if idx == #self.manager:GetReports() then
+                    if not self.is_deleting then
+                        self.manager:FetchReportsFromServer(#self.manager:GetReports())
+                    end
+                end
             end
         end
     end
@@ -1307,6 +1343,7 @@ function GameUIMail:CreateReportContent()
         WidgetPushButton.new({normal = "back_ground_568x150.png"})
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
+                    parent:SelectAllMailsOrReports(false)
                     if not report:IsRead() then
                         parent:ReadMailOrReports({report:Id()}, function ()
                             parent.manager:DecreaseUnReadReportsNum(1)
@@ -1538,9 +1575,8 @@ function GameUIMail:DelegateSavedReport( listView, tag, idx )
         local size = content:getContentSize()
         item:setItemSize(size.width, size.height)
         -- 当取到客户端本地最后一封战报后，请求服务器获得更多以前的战报
-        if idx == #self.manager:GetSavedReports() and #self.manager:GetSavedReports() > 9 then
+        if idx == #self.manager:GetSavedReports() then
             if not self.is_deleting then
-                print("当取到客户端本地最后一封战报后，请求服务器获得更多以前的战报",#self.manager:GetSavedReports())
                 self.manager:FetchSavedReportsFromServer(#self.manager:GetSavedReports())
             end
         end
@@ -1552,6 +1588,12 @@ function GameUIMail:DelegateSavedReport( listView, tag, idx )
                 content:SetData(idx)
                 local size = content:getContentSize()
                 v:setItemSize(size.width, size.height)
+                -- 当取到客户端本地最后一封战报后，请求服务器获得更多以前的战报
+                if idx == #self.manager:GetSavedReports() then
+                    if not self.is_deleting then
+                        self.manager:FetchSavedReportsFromServer(#self.manager:GetSavedReports())
+                    end
+                end
             end
         end
     end
@@ -1572,6 +1614,7 @@ function GameUIMail:CreateSavedReportContent()
         WidgetPushButton.new({normal = "back_ground_568x150.png"})
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
+                    parent:SelectAllMailsOrReports(false)
                     if not report:IsRead() then
                         parent:ReadMailOrReports({report:Id()}, function ()
                             parent.manager:DecreaseUnReadReportsNum(1)
@@ -2095,6 +2138,14 @@ function GameUIMail:GetEnemyAllianceTag(report)
 end
 
 return GameUIMail
+
+
+
+
+
+
+
+
 
 
 
