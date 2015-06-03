@@ -9,10 +9,6 @@ local SUCCESS_CODE = 200
 local FAILED_CODE = 500
 local TIME_OUT = 15
 
-device.getOpenUDID = function()
-    return "gz105"
-end
-
 
 NetManager = {}
 -- 过滤器
