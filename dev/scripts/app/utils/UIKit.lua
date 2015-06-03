@@ -657,12 +657,15 @@ function UIKit:showMessageDialogWithParams(params)
     return dialog
 end
 
-function UIKit:showEvaluateDialog()
-    local dialog = UIKit:newGameUI("FullScreenPopDialogUI"):SetTitle("亲"):SetPopMessage("是否去app store评价我们?")
+function UIKit:showEvaluateDialog(ok_callback)
+    local dialog = UIKit:newGameUI("FullScreenPopDialogUI"):SetTitle(_("评价我们")):SetPopMessage(_("喜欢我们的游戏吗？"))
         :CreateOKButton({
             listener =  function ()
-                device.openURL("http://www.baidu.com")
-            end,btn_name = _("支持一个")
+                device.openURL(CONFIG_APP_URL[device.platform])
+                if ok_callback then
+                    ok_callback()
+                end
+            end,btn_name = _("前去评价"),btn_images = {normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"}
         })
         :CreateCancelButton({
             listener = function ()

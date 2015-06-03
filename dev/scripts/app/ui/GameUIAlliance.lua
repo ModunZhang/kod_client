@@ -305,7 +305,7 @@ function GameUIAlliance:RefreshJoinListContent(alliance,content,idx)
     content.memberValLabel:setString(string.format("%s/%s",alliance.members,alliance.membersMax))
     content.fightingValLabel:setString(string.formatnumberthousands(alliance.power))
     content.languageValLabel:setString(alliance.language)
-    content.killValLabel:setString(alliance.kill)
+    content.killValLabel:setString(string.formatnumberthousands(alliance.kill))
     content.leaderLabel:setString(alliance.archon)
     local terrain = alliance.terrain
     local flag_info = alliance.flag
@@ -634,7 +634,7 @@ function GameUIAlliance:getCommonListItem_(listType,alliance)
     }):addTo(info_bg):align(display.LEFT_BOTTOM, fightingTitleLabel:getPositionX(),10)
 
     local killValLabel = UIKit:ttfLabel({
-        text = alliance.kill,
+        text = string.formatnumberthousands(alliance.kill),
         size = 20,
         color = 0x403c2f
     }):addTo(info_bg):align(display.LEFT_BOTTOM, fightingValLabel:getPositionX(), 10)
@@ -696,7 +696,7 @@ function GameUIAlliance:getCommonListItem_(listType,alliance)
         memberValLabel:setString(string.format("%s/%s",alliance.members,alliance.membersMax))
         fightingValLabel:setString(alliance.power)
         languageValLabel:setString(alliance.language)
-        killValLabel:setString(alliance.kill)
+        killValLabel:setString(string.formatnumberthousands(alliance.kill))
     end
     item:addContent(bg)
     item:setItemSize(bg:getContentSize().width,bg:getContentSize().height)
