@@ -48,6 +48,7 @@ function FteScene:onEnterTransitionFinish()
         end
     end)
     self.npc:StartDialog()
+    self.npc.ui_map.background:hide()
 end
 function FteScene:PormiseOfSchedule(time, func)
     return function()
