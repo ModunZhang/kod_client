@@ -1370,15 +1370,6 @@ function GameUIAlliance:MembersListsourceDelegate(listView, tag, idx)
 end
 function GameUIAlliance:RefreshMembersListDataSource()
     self.data_members = clone(Alliance_Manager:GetMyAlliance():GetAllMembers())
-    table.sort(self.data_members, function(a,b)
-        local isOnline_a = (type(a.online) == 'boolean' and a.online) and true or false
-        local isOnline_b = (type(b.online) == 'boolean' and b.online) and true or false
-        if isOnline_a == isOnline_b then
-            return a.power > b.power
-        else
-            return isOnline_a
-        end
-    end)
     local data = self:filterMemberList("general")
     local next_data = self:filterMemberList("quartermaster")
     table.insertto(data,next_data)
@@ -1398,12 +1389,24 @@ function GameUIAlliance:filterMemberList(title)
     end)
 
     local result = {{data_type = 1 , data = title}}
+    local need_sort = true
     if LuaUtils:table_size(filter_data) == 0 then
         table.insert(result,{data_type = 2 , data = "__empty"})
+        need_sort = false
     else
         --player
         table.foreach(filter_data,function(k,v)
             table.insert(result,{data_type = 2 , data = v})
+        end)
+        need_sort = true
+    end
+    if need_sort  then
+        table.sort( result, function(a,b)
+            if a.data_type == b.data_type then 
+                return a.data.power > b.data.power 
+            else
+                return a.data_type < b.data_type
+            end
         end)
     end
     return result
