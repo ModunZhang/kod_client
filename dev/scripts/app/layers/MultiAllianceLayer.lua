@@ -544,7 +544,9 @@ function MultiAllianceLayer:ManagerCorpsFromChangedMap(changed_map,is_strkie,all
                         if is_strkie then
                             app:GetAudioManager():PlayeEffectSoundWithKey("STRIKE_PLAYER_ARRIVE")
                         else
-                            app:GetAudioManager():PlayeEffectSoundWithKey("ATTACK_PLAYER_ARRIVE")
+                            if not marchEvent:IsReturnEvent() then
+                                app:GetAudioManager():PlayeEffectSoundWithKey("ATTACK_PLAYER_ARRIVE")
+                            end
                         end
                     end
                 end

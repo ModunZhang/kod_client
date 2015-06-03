@@ -109,6 +109,7 @@ function UIListView:ctor(params)
     else
         self.needTips = true
     end
+     self.isTipsStringShow = false
 end
 
 function UIListView:onCleanup()
@@ -1390,15 +1391,22 @@ function UIListView:isItemFullyInViewRect(pos)
     return self:rectWholeInRect(self.viewRect_,bound)
 end
 
+function UIListView:isTipsStringShow()
+    return self.isTipsStringShow
+end
+
 function UIListView:callAsyncLoadDelegate_(...)
     if self.tipsString then
         local args = {...}
         if self.delegate_[UIListView.DELEGATE](self, UIListView.COUNT_TAG) > 0 then
+            self.isTipsStringShow = false
             return self.delegate_[UIListView.DELEGATE](unpack(args))
         else
+            self.isTipsStringShow = true
             return self:self_sourceDelegate(unpack(args))
         end
     else
+        self.isTipsStringShow = false
         return self.delegate_[UIListView.DELEGATE](unpack(args))
     end
 end
