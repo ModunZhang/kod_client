@@ -13,10 +13,51 @@
 
 static std::map<std::string, bool> m_localNotificationState;
 
+NSMutableDictionary *m_localNotification_dictionary = NULL;
+
+
+static void _cancelAllLocalDic()
+{
+    if (m_localNotification_dictionary == NULL)
+    {
+         m_localNotification_dictionary = [[NSMutableDictionary alloc]init];
+    }
+    if (m_localNotification_dictionary != NULL)
+    {
+        [m_localNotification_dictionary removeAllObjects];
+    }
+}
+
+static  bool _cancelNotificationWithIdentity(NSString *identity)
+{
+    if (m_localNotification_dictionary != NULL)
+    {
+        UILocalNotification *exist_notification = [m_localNotification_dictionary objectForKey:identity];
+        if (exist_notification)
+        {
+            [[UIApplication sharedApplication] cancelLocalNotification:exist_notification];
+            [m_localNotification_dictionary removeObjectForKey:identity];
+            NSLog(@"cancelNotificationWithIdentity------>%@",identity);
+            return true;
+        }
+    }
+    return false;
+}
+
+static void _addLocalDic(NSString *identity,UILocalNotification *localNotification)
+{    
+    _cancelNotificationWithIdentity(identity);
+    [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+    NSLog(@"scheduleLocalNotification--->%@",identity);
+    [m_localNotification_dictionary setObject:localNotification forKey:identity];
+}
+
+
 
 void cancelAll()
 {
     NSLog(@"cancelAll------>");
+    _cancelAllLocalDic();
     [[UIApplication sharedApplication] cancelAllLocalNotifications];
 }
 
@@ -47,46 +88,34 @@ bool addNotification(const char *type, long finishTime, const char *body, const 
     localNotification.fireDate = [[[NSDate alloc] initWithTimeIntervalSince1970:finishTime] autorelease];
     localNotification.timeZone = [NSTimeZone defaultTimeZone];
     localNotification.applicationIconBadgeNumber = 1;
-        localNotification.userInfo = [NSDictionary dictionaryWithObjectsAndKeys: [NSString stringWithUTF8String:identity], @"identity",
+    localNotification.userInfo = [NSDictionary dictionaryWithObjectsAndKeys: [NSString stringWithUTF8String:identity], @"identity",
                                       nil];
     
-    [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
-    NSLog(@"scheduleLocalNotification--->[%s]%@::%s,%@",identity,[[NSDate alloc] initWithTimeIntervalSince1970:finishTime],type,[NSString stringWithUTF8String:body]);
+    _addLocalDic([NSString stringWithUTF8String:identity],localNotification);
+    [localNotification release];
     return  true;
 }
 
 bool cancelNotificationWithIdentity(const char* identity)
 {
-    
+    if (_cancelNotificationWithIdentity([NSString stringWithUTF8String:identity]))
+    {
+        return true;
+    }
     NSArray *notifications = [[UIApplication sharedApplication] scheduledLocalNotifications];
-    NSLog(@"cancelNotificationWithIdentity------>%s",identity);
+    NSString *identity_ns = [NSString stringWithUTF8String:identity];
     for (UILocalNotification *notification in notifications)
     {
-        BOOL shouldCancel = NO;
         
         NSString* identityObject = (NSString*)[notification.userInfo objectForKey:@"identity"];
-        if (identityObject)
+        if (identityObject && [identityObject isEqualToString:identity_ns])
         {
-            const char * userinfostring = [identityObject UTF8String];
-            if (strlen(userinfostring) == 0)
-            {
-                shouldCancel = YES;
-            }
-            else
-            {
-                shouldCancel = strcmp(identity, userinfostring) == 0;
-            }
-        }
-        if (shouldCancel)
-        {
+            NSLog(@"cancelNotificationWithIdentity------>%@",identity_ns);
             [[UIApplication sharedApplication] cancelLocalNotification:notification];
-        }
-        else
-        {
-            return false;
+            return  true;
         }
     }
-    return  true;
+    return  false;
 }
 
 static int tolua_localpush_cancelAll(lua_State* tolua_S)
