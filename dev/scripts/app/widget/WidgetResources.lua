@@ -31,7 +31,7 @@ function WidgetResources:onExit()
     self.city:GetResourceManager():RemoveObserver(self)
 end
 function WidgetResources:OnSoliderCountChanged(...)
-    self.maintenance_cost.value:setString("-"..GameUtils:formatNumber(self.city:GetSoldierManager():GetTotalUpkeep()))
+    self.maintenance_cost.value:setString("-"..GameUtils:formatNumber(self.city:GetSoldierManager():GetTotalUpkeep()).."/h")
 end
 -- 资源刷新
 function WidgetResources:OnResourceChanged(resource_manager)
@@ -90,7 +90,7 @@ function WidgetResources:InitAllResources()
             resource_current_value=crm:GetFoodResource():GetResourceValueByCurrentTime(current_time),
             total_income=GameUtils:formatNumber(crm:GetFoodProductionPerHour()).."/h",
             occupy_citizen=GameUtils:formatNumber(City:GetCitizenByType("farmer")),
-            maintenance_cost="-"..GameUtils:formatNumber(self.city:GetSoldierManager():GetTotalUpkeep()),
+            maintenance_cost="-"..GameUtils:formatNumber(self.city:GetSoldierManager():GetTotalUpkeep()).."/h",
             type = "food"
         },
         wood = {

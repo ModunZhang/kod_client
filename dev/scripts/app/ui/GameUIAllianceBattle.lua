@@ -978,7 +978,7 @@ function GameUIAllianceBattle:CreateHistoryContent()
                 }))
             revenge_button:onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
-                    if alliance:Status()~="peace" then
+                    if alliance:Status() ~= "peace" and alliance:Status() ~= "protect" then
                         UIKit:showMessageDialog(_("提示"),_("已经处于联盟战期间"))
                         return
                     end

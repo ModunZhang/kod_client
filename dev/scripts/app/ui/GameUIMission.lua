@@ -57,6 +57,8 @@ function GameUIMission:CreateTabButtons()
     function(tag)
         self:OnTabButtonClicked(tag)
     end):addTo(self:GetView()):pos(window.cx, window.bottom + 34)
+    self.tab_buttons = tab_buttons
+    self:RefreshDisplayGreenPoint()
 end
 
 function GameUIMission:OnTabButtonClicked(tag)
@@ -419,7 +421,21 @@ function GameUIMission:GetProgressBar()
     return bg,progress
 end
 
+function GameUIMission:RefreshDisplayGreenPoint()
+    if not self.tab_buttons then return end
+    for __,key_of_daily in ipairs(KEYS_OF_DAILY) do
+        local tmp_data = self.city:GetUser():GetDailyTasksInfo(key_of_daily)
+        local percent = #tmp_data/4
+        if percent < 1 then
+            self.tab_buttons:GetNumberTipNode("daily"):DisplayBlank(true)
+            return
+        end
+    end
+    self.tab_buttons:GetNumberTipNode("daily"):DisplayBlank(false)
+end
+
 function GameUIMission:OnDailyTasksChanged(user,changed_task_types)
+    self:RefreshDisplayGreenPoint()
     if not self:CurrentIsDailyMission() then return end
     for __,v in ipairs(changed_task_types) do
         self:RefreshDailyList(v)
@@ -432,6 +448,7 @@ function GameUIMission:dailyListviewListener(event)
     if "clicked" == event.name then
         local pos = event.itemPos
         local keys_of_daily = KEYS_OF_DAILY[pos]
+        if not keys_of_daily then return end
         app:GetAudioManager():PlayeEffectSoundWithKey("NORMAL_DOWN")
         UIKit:newGameUI("GameUIDailyMissionInfo",keys_of_daily):AddToCurrentScene(true)
     end
