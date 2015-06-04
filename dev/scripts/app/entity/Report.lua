@@ -504,7 +504,7 @@ function Report:GetFightDefenceSoldierRoundData()
 end
 function Report:IsFightWall()
     local data = self:GetFightReports()
-    return  #data.attackPlayerWallRoundDatas > 0
+    return  data.attackPlayerWallRoundDatas and #data.attackPlayerWallRoundDatas > 0
 end
 function Report:GetFightAttackWallRoundData()
     local data = self:GetFightReports()
