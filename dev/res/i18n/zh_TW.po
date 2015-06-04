@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Dragonfall\n"
-"POT-Creation-Date: 2015-06-04 04:07+0800\n"
-"PO-Revision-Date: 2015-06-04 04:07+0800\n"
+"POT-Creation-Date: 2015-06-04 09:18+0800\n"
+"PO-Revision-Date: 2015-06-04 09:18+0800\n"
 "Last-Translator: dannyhe <dannyjiajia@gamil.com>\n"
 "Language-Team: \n"
 "Language: zh_TW\n"
@@ -110,9 +110,9 @@ msgstr "玩家已經登錄"
 #: ui/GameUISettingAccount.lua:242 ui/GameUISettingLanguage.lua:60
 #: ui/GameUIShireFightEvent.lua:272 ui/GameUIStrikePlayer.lua:128
 #: ui/GameUIStrikePlayer.lua:219 ui/GameUIStrikePlayer.lua:222
-#: ui/GameUIStrikePlayer.lua:256 ui/GameUITradeGuild.lua:275
-#: ui/GameUITradeGuild.lua:848 ui/GameUITradeGuild.lua:853
-#: ui/GameUITradeGuild.lua:857 ui/GameUIUnlockBuilding.lua:272
+#: ui/GameUIStrikePlayer.lua:256 ui/GameUITradeGuild.lua:281
+#: ui/GameUITradeGuild.lua:854 ui/GameUITradeGuild.lua:859
+#: ui/GameUITradeGuild.lua:863 ui/GameUIUnlockBuilding.lua:272
 #: ui/GameUIUnlockBuilding.lua:298 ui/GameUIUnlockBuilding.lua:307
 #: ui/GameUIUpgradeTechnology.lua:415 ui/GameUIUpgradeTechnology.lua:436
 #: ui/GameUIUpgradeTechnology.lua:444 ui/GameUIWatchTower.lua:190
@@ -152,7 +152,7 @@ msgstr "不能刪除"
 #: ui/GameUIPVESendTroop.lua:228 ui/GameUISelenaQuestion.lua:119
 #: ui/GameUIShop.lua:65 ui/GameUIShop.lua:893 ui/GameUIShop.lua:911
 #: ui/GameUIShop.lua:962 ui/GameUIShop.lua:980
-#: ui/GameUIShowDragonUpStarAnimation.lua:44 ui/GameUITradeGuild.lua:685
+#: ui/GameUIShowDragonUpStarAnimation.lua:44 ui/GameUITradeGuild.lua:691
 #: ui/GameUIWarSummary.lua:157 utils/UIKit.lua:632 widget/WidgetInput.lua:92
 msgid "确定"
 msgstr "確定"
@@ -1310,7 +1310,7 @@ msgstr "點擊建築：%s"
 #: ui/GameUIPVESendTroop.lua:114 ui/GameUIPVESendTroop.lua:120
 #: ui/GameUIPVESendTroop.lua:123 ui/GameUIPVESendTroop.lua:126
 #: ui/GameUIPVESendTroop.lua:130 ui/GameUITownHall.lua:267
-#: ui/GameUITownHall.lua:271 ui/GameUITradeGuild.lua:280
+#: ui/GameUITownHall.lua:271 ui/GameUITradeGuild.lua:286
 #: ui/GameUIWriteMail.lua:101 ui/GameUIWriteMail.lua:104
 #: ui/GameUIWriteMail.lua:109 widget/WidgetAccelerateGroup.lua:111
 #: widget/WidgetAllianceBuildingUpgrade.lua:73 widget/WidgetBuyGoods.lua:130
@@ -3239,7 +3239,7 @@ msgstr "補充"
 
 #: ui/GameUIAllianceShop.lua:449 ui/GameUIItems.lua:218
 #: ui/GameUIStore.lua:146 ui/GameUIStorePackage.lua:129
-#: ui/GameUITradeGuild.lua:66 ui/GameUITradeGuild.lua:258
+#: ui/GameUITradeGuild.lua:66 ui/GameUITradeGuild.lua:264
 #: widget/WidgetBuyGoods.lua:127 widget/WidgetStockGoods.lua:132
 msgid "购买"
 msgstr "購買"
@@ -3593,7 +3593,7 @@ msgid "建造"
 msgstr "建造"
 
 #: ui/GameUIBuild.lua:308 ui/GameUIStrikeReport.lua:670
-#: ui/GameUITradeGuild.lua:168 ui/GameUITradeGuild.lua:461
+#: ui/GameUITradeGuild.lua:174 ui/GameUITradeGuild.lua:467
 #: widget/WidgetSoldierDetails.lua:63
 msgid "数量"
 msgstr "數量"
@@ -4456,7 +4456,7 @@ msgid "开启金宝箱需要金钥匙"
 msgstr "開啟金寶箱需要金鑰匙"
 
 #: ui/GameUIItems.lua:506 ui/GameUIItems.lua:517 ui/GameUITownHall.lua:233
-#: ui/GameUITradeGuild.lua:573 widget/WidgetManufacture.lua:392
+#: ui/GameUITradeGuild.lua:579 widget/WidgetManufacture.lua:392
 msgid "获得"
 msgstr "獲得"
 
@@ -4485,7 +4485,7 @@ msgstr "提示:升級城堡獲得解鎖建築機會！"
 msgid "已解锁"
 msgstr "已解鎖"
 
-#: ui/GameUIKeep.lua:229 ui/GameUITradeGuild.lua:611
+#: ui/GameUIKeep.lua:229 ui/GameUITradeGuild.lua:617
 #: ui/GameUIWatchTower.lua:163 ui/GameUIWathTowerRegion.lua:169
 #: widget/WidgetPromoteSoliderList.lua:98
 #: widget/WidgetPromoteSoliderList.lua:146
@@ -4498,16 +4498,16 @@ msgstr "城市地形修改"
 
 #: ui/GameUIKeep.lua:348
 #, c-format
-msgid "%s地形能提升50%% %s的活力回复速度"
-msgstr "%s地形能提升20%% %s的生命回复速度和額外的力量"
+msgid "%s地形能提升%d%% %s的生命回复速度和额外的力量"
+msgstr "%s地形能提升%d%% %s的生命回復速度和額外的力量"
 
 #: ui/GameUIKeep.lua:388
 msgid "变换地形"
 msgstr "變換地形"
 
 #: ui/GameUIKeep.lua:398
-msgid "提供兵种招募，升级增加每次招募的最大数量"
-msgstr "提供兵種招募，升級增加每次招募的最大數量"
+msgid "花费金龙币改变城市的地形，每种地形对应增益一种巨龙"
+msgstr "花費金龍幣改變城市的地形，每種地形對應增益一種巨龍"
 
 #: ui/GameUIKeep.lua:408
 msgid "购买使用"
@@ -5088,7 +5088,7 @@ msgstr "是否確認拆除？"
 msgid "资源总览"
 msgstr "資源總覽"
 
-#: ui/GameUIResourceOverview.lua:19 ui/GameUITradeGuild.lua:161
+#: ui/GameUIResourceOverview.lua:19 ui/GameUITradeGuild.lua:167
 #: ui/GameUIWarehouse.lua:12
 msgid "资源"
 msgstr "資源"
@@ -5858,62 +5858,62 @@ msgstr "增加"
 msgid "我的商品"
 msgstr "我的商品"
 
-#: ui/GameUITradeGuild.lua:175 ui/GameUITradeGuild.lua:746
+#: ui/GameUITradeGuild.lua:181 ui/GameUITradeGuild.lua:752
 msgid "单价"
 msgstr "單價"
 
-#: ui/GameUITradeGuild.lua:182 ui/GameUITradeGuild.lua:765
+#: ui/GameUITradeGuild.lua:188 ui/GameUITradeGuild.lua:771
 msgid "总价"
 msgstr "總價"
 
-#: ui/GameUITradeGuild.lua:275
+#: ui/GameUITradeGuild.lua:281
 #, c-format
 msgid "购买%s成功"
 msgstr "購買%s的成功"
 
-#: ui/GameUITradeGuild.lua:280
+#: ui/GameUITradeGuild.lua:286
 msgid "银币不足,是否使用金龙币补充"
 msgstr "銀幣不足，是否使用金龍幣補充"
 
-#: ui/GameUITradeGuild.lua:452 ui/GameUITradeGuild.lua:649
-#: ui/GameUITradeGuild.lua:786
+#: ui/GameUITradeGuild.lua:458 ui/GameUITradeGuild.lua:655
+#: ui/GameUITradeGuild.lua:792
 msgid "资源小车"
 msgstr "資源小車"
 
-#: ui/GameUITradeGuild.lua:469
+#: ui/GameUITradeGuild.lua:475
 msgid "每小时制造"
 msgstr "每小時製造"
 
-#: ui/GameUITradeGuild.lua:524 ui/GameUITradeGuild.lua:602
-#: ui/GameUITradeGuild.lua:732 ui/GameUITradeGuild.lua:823
+#: ui/GameUITradeGuild.lua:530 ui/GameUITradeGuild.lua:608
+#: ui/GameUITradeGuild.lua:738 ui/GameUITradeGuild.lua:829
 msgid "出售"
 msgstr "出售"
 
-#: ui/GameUITradeGuild.lua:546
+#: ui/GameUITradeGuild.lua:552
 msgid "交易成功"
 msgstr "交易成功"
 
-#: ui/GameUITradeGuild.lua:546
+#: ui/GameUITradeGuild.lua:552
 msgid "等待交易"
 msgstr "等待交易"
 
-#: ui/GameUITradeGuild.lua:573
+#: ui/GameUITradeGuild.lua:579
 msgid "下架"
 msgstr "下架"
 
-#: ui/GameUITradeGuild.lua:587
+#: ui/GameUITradeGuild.lua:593
 msgid "空闲"
 msgstr "空閒"
 
-#: ui/GameUITradeGuild.lua:590
+#: ui/GameUITradeGuild.lua:596
 msgid "选择你多余的资源或者材料进行出售"
 msgstr "選擇你多餘的資源或者材料進行出售"
 
-#: ui/GameUITradeGuild.lua:614
+#: ui/GameUITradeGuild.lua:620
 msgid "需要贸易行会"
 msgstr "需要貿易行會"
 
-#: ui/GameUITradeGuild.lua:664
+#: ui/GameUITradeGuild.lua:670
 msgid ""
 "出售商品需要马车来运输，马车不足则无法出售。在学院提升马车的科技，能够提高每"
 "个马车容纳资源和材料的数量"
@@ -5921,31 +5921,31 @@ msgstr ""
 "出售商品需要馬車來運輸，馬車不足則無法出售。在學院提升馬車的科技，能夠提高每"
 "個馬車容納資源和材料的數量"
 
-#: ui/GameUITradeGuild.lua:673
+#: ui/GameUITradeGuild.lua:679
 msgid "容纳资源"
 msgstr "容納資源"
 
-#: ui/GameUITradeGuild.lua:674
+#: ui/GameUITradeGuild.lua:680
 msgid "容纳材料"
 msgstr "容納材料"
 
-#: ui/GameUITradeGuild.lua:696
+#: ui/GameUITradeGuild.lua:702
 msgid "出售资源"
 msgstr "出售資源"
 
-#: ui/GameUITradeGuild.lua:746
+#: ui/GameUITradeGuild.lua:752
 msgid "每1K售价"
 msgstr "每1K售價"
 
-#: ui/GameUITradeGuild.lua:848
+#: ui/GameUITradeGuild.lua:854
 msgid "出售数量不能为零"
 msgstr "出售數量不能為零"
 
-#: ui/GameUITradeGuild.lua:853
+#: ui/GameUITradeGuild.lua:859
 msgid "资源小车数量不足"
 msgstr "資源小車數量不足"
 
-#: ui/GameUITradeGuild.lua:857
+#: ui/GameUITradeGuild.lua:863
 #, c-format
 msgid "出售%s成功"
 msgstr "出售%s成功"
@@ -11569,6 +11569,12 @@ msgstr "使用VIP激活1天"
 #: widget/WidgetUseItems.lua:1293
 msgid "已经激活VIP，关闭窗口"
 msgstr "已經激活VIP，關閉窗口"
+
+#~ msgid "%s地形能提升50%% %s的活力回复速度"
+#~ msgstr "%s地形能提升20%% %s的生命回复速度和額外的力量"
+
+#~ msgid "提供兵种招募，升级增加每次招募的最大数量"
+#~ msgstr "提供兵種招募，升級增加每次招募的最大數量"
 
 #~ msgid "删除战报"
 #~ msgstr "刪除戰報"
