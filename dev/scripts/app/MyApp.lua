@@ -357,7 +357,7 @@ function MyApp:EnterCitySceneByPlayerAndAlliance(id, is_my_alliance, location)
             :OnUserDataChanged(user_data, app.timer:GetServerTime())
         if is_my_alliance then
             -- app:enterScene("FriendCityScene", {user, city, location}, "custom", -1, transition_)
-            enter_next_scene("MyCityFteScene", user, city, location)
+            enter_next_scene("FriendCityScene", user, city, location)
         else
             -- app:enterScene("OtherCityScene", {user, city, location}, "custom", -1, transition_)
             enter_next_scene("OtherCityScene", user, city, location)
@@ -369,8 +369,8 @@ function MyApp:EnterMyCityFteScene()
     enter_next_scene("MyCityFteScene", City)
 end
 function MyApp:EnterMyCityScene(isFromFte)
-    enter_next_scene("MyCityScene", City, isFromFte)
     -- app:enterScene("MyCityScene", {City,isFromFte}, "custom", -1, transition_)
+    enter_next_scene("MyCityScene", City, isFromFte)
 end
 function MyApp:EnterFteScene()
     -- app:enterScene("FteScene", nil, "custom", -1, transition_)
