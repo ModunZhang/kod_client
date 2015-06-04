@@ -219,7 +219,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
                     end
                 end):align(display.RIGHT_CENTER,window.right-50,window.top-280):addTo(layer)
 
-            fire_wall(button:getCascadeBoundingBox()):addTo(button, -1000)
+            fire_wall(button:getCascadeBoundingBox()):addTo(button, -1000):pos(-186/2, 0)
         end
 
 

@@ -163,7 +163,7 @@ function GameUIAllianceHome:Schedule()
         -- local x,y = alliance_map:FindMapObjectById(myself:MapId()):GetMidLogicPosition()
         -- self:UpdateMyAllianceBuildingArrows(screen_rect, alliance, layer)
         if not Alliance_Manager:GetMyAlliance():IsDefault() then
-            self:UpdateFriendArrows(screen_rect, Alliance_Manager:GetMyAlliance(), layer, lx, ly)
+            self:UpdateFriendArrows(screen_rect, Alliance_Manager:GetMyAlliance(), layer, lx, ly, myself)
         end
         if Alliance_Manager:HaveEnemyAlliance() then
             self:UpdateEnemyArrows(screen_rect, Alliance_Manager:GetEnemyAlliance(), layer, lx, ly)
@@ -635,14 +635,14 @@ end
 -- end
 local min = math.min
 local MAX_ARROW_COUNT = 5
-function GameUIAllianceHome:UpdateFriendArrows(screen_rect, alliance, layer, logic_x, logic_y)
+function GameUIAllianceHome:UpdateFriendArrows(screen_rect, alliance, layer, logic_x, logic_y, myself)
     local count = self:UpdateAllianceArrow(screen_rect, alliance, layer, logic_x, logic_y, self.friends_arrow_index, function(index)
         if not self.friends_arrows[index] then
             self.friends_arrows[index] = display.newSprite("arrow_blue-hd.png")
                 :addTo(self, -2):align(display.TOP_CENTER):hide()
         end
         return self.friends_arrows[index]
-    end)
+    end, myself:MapId())
     local friends_arrows = self.friends_arrows
     for i = count, #friends_arrows do
         friends_arrows[i]:hide()
@@ -670,12 +670,12 @@ function GameUIAllianceHome:UpdateEnemyArrows(screen_rect, alliance, layer, logi
     end
 end
 --
-function GameUIAllianceHome:UpdateAllianceArrow(screen_rect, alliance, layer, logic_x, logic_y, cur_index, func)
+function GameUIAllianceHome:UpdateAllianceArrow(screen_rect, alliance, layer, logic_x, logic_y, cur_index, func, except_map_id)
     local id = alliance:Id()
     local count = 1
     alliance:GetAllianceMap():IteratorCities(function(_, v)
         if count > MAX_ARROW_COUNT then return true end
-        if count == cur_index then
+        if count == cur_index and except_map_id ~= v.id then
             local x,y = v:GetMidLogicPosition()
             local dx, dy = (logic_x - x), (logic_y - y)
             if dx^2 + dy^2 > 1 then
