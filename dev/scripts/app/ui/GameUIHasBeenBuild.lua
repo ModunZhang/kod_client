@@ -134,11 +134,12 @@ function Item:RebindEventListener()
     end
     self.info_btn = WidgetPushButton.new({normal = "info_26x26.png",pressed = "info_26x26.png"})
         :addTo(self)
-        :align(display.CENTER, 32, 32)
+        :align(display.LEFT_BOTTOM, 15, 15)
         :onButtonClicked(function(event)
             local building = self.building
             UIKit:newWidgetUI("WidgetBuildingIntroduce", self.building):AddToCurrentScene(true)
         end)
+    self.info_btn:setContentSize(cc.size(150, 120))
 
     if self.free_speedUp then
         self.free_speedUp:removeFromParent()

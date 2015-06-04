@@ -769,7 +769,7 @@ function WidgetEventTabButtons:LoadBuildingEvents()
 end
 function WidgetEventTabButtons:LoadSoldierEvents()
     self:InsertItem(self:CreateBottom():OnOpenClicked(function(event)
-        UIKit:newGameUI('GameUIBarracks', self.city, self.barracks):AddToCurrentScene(true)
+        UIKit:newGameUI('GameUIBarracks', self.city, self.barracks, "recruit"):AddToCurrentScene(true)
     end):SetLabel(_("查看现有的士兵")))
     local event = self.barracks:GetRecruitEvent()
     if event:IsRecruting() then
