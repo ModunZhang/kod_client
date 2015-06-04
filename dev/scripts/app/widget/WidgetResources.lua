@@ -49,14 +49,13 @@ function WidgetResources:OnResourceChanged(resource_manager)
     end
 end
 
-local city = City
 local FOOD = ResourceManager.RESOURCE_TYPE.FOOD
 function WidgetResources:RefreshSpecifyResource(resource,item,maxvalue,occupy_citizen, type_)
     if maxvalue then
         item.ProgressTimer:setPercentage(resource:GetResourceValueByCurrentTime(app.timer:GetServerTime())/maxvalue*100)
         item.resource_label:setString(GameUtils:formatNumber(resource:GetResourceValueByCurrentTime(app.timer:GetServerTime())).."/"..GameUtils:formatNumber(maxvalue))
         if type_ == FOOD then
-            item.produce_capacity.value:setString(GameUtils:formatNumber(city:GetResourceManager():GetFoodProductionPerHour()) .."/h")
+            item.produce_capacity.value:setString(GameUtils:formatNumber(self.city:GetResourceManager():GetFoodProductionPerHour()) .."/h")
         else
             item.produce_capacity.value:setString(GameUtils:formatNumber(resource:GetProductionPerHour()).."/h")
         end
