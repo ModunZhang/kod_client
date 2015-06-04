@@ -744,6 +744,13 @@ static int tolua_ext_get_device_token(lua_State* tolua_S)
     return 1;
 }
 
+static int tolua_ext_get_language_code(lua_State* tolua_S)
+{
+    const char * token =  GetDeviceLanguage();
+    lua_pushstring(tolua_S, token);
+    return 1;
+}
+
 static void ResgisterGlobalExtFunctions(lua_State* tolua_S)
 {
     tolua_function(tolua_S, "now", tolua_ext_now);
@@ -764,6 +771,7 @@ static void ResgisterGlobalExtFunctions(lua_State* tolua_S)
     tolua_function(tolua_S, "getOpenUDID",tolua_ext_getOpenUdid);
     tolua_function(tolua_S, "registereForRemoteNotifications",tolua_ext_registereForRemoteNotifications);
     tolua_function(tolua_S, "clearOpenUdid",tolua_ext_clearOpenUdid);
+    tolua_function(tolua_S, "getDeviceLanguage",tolua_ext_get_language_code);
 }
 
 

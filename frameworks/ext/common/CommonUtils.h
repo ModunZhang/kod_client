@@ -16,4 +16,5 @@ extern "C" long long getOSTime();
 extern "C" const char* GetOpenUdid();
 extern "C" void registereForRemoteNotifications();
 extern "C" void ClearOpenUdidData(); // 注意！这个方法绝对不能在发布环境里调用
+extern "C" const char* GetDeviceLanguage();
 #endif
