@@ -337,6 +337,7 @@ return {
         todayLoyaltyGet = 0,
         todayOnLineTime = 0,
         isFirstIAPRewardsGeted = false,
+        firstJoinAllianceRewardGeted = true,
         vipLoginDaysCount = 1,
         todayFreeNormalGachaCount = 0,
         levelupRewards = { },
@@ -346,7 +347,7 @@ return {
         day14 = 1,
         day60RewardsCount = 0,
         lastLoginTime = 1431067838640,
-        registerTime = 1431067835010
+        registerTime = 1431067835010,
     },
     buildings = {
         location_19 = {

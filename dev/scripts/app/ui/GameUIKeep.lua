@@ -9,7 +9,7 @@ local SpriteConfig = import("..sprites.SpriteConfig")
 local window = import('..utils.window')
 local intInit = GameDatas.PlayerInitData.intInit
 local GameUIKeep = UIKit:createUIClass('GameUIKeep',"GameUIUpgradeBuilding")
-
+local sharedSpriteFrameCache = cc.SpriteFrameCache:getInstance()
 local building_config_map = {
     ["keep"] = {scale = 0.25, offset = {x = 75, y = 74}},
     ["watchTower"] = {scale = 0.4, offset = {x = 80, y = 70}},
@@ -256,7 +256,10 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
             local p = building_image:getAnchorPointInPoints()
             local building_image_1
             for _,v in ipairs(config:GetStaticImagesByLevel()) do
-                building_image_1 = display.newSprite("#"..v,p.x, p.y,{class=cc.FilteredSpriteWithOne}):addTo(building_image)
+                local frame = sharedSpriteFrameCache:getSpriteFrame(v)
+                if frame then
+                    building_image_1 = display.newSprite("#"..v,p.x, p.y,{class=cc.FilteredSpriteWithOne}):addTo(building_image)
+                end
             end
             if not isUnlocked then
                 local my_filter = filter

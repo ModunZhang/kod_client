@@ -81,7 +81,7 @@ local function transition_(scene, status)
 end
 
 local MAX_ZORDER = 999999999
-function enter_next_scene(scene)
+function enter_scene(scene)
     local color_layer = cc.LayerColor:create(cc.c4b(255,255,255,255))
     :addTo(scene,MAX_ZORDER,CLOUD_TAG)
     
@@ -117,7 +117,7 @@ function enter_scene_transition(scene_name, ...)
         time = 0.75/speed,
         onComplete = function()
             local next_scene = app:enterScene(scene_name, args)
-            enter_next_scene(next_scene)
+            enter_scene(next_scene)
         end
     })
 end

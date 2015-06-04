@@ -479,7 +479,7 @@ function GameUIHome:CreateTop()
         end)
     self.join_alliance_tips_button:setVisible(not User:GetCountInfo().firstJoinAllianceRewardGeted)
     if self.join_alliance_tips_button:isVisible() then
-        fire_var():addTo(self.join_alliance_tips_button, -1000)
+        fire_var():addTo(self.join_alliance_tips_button, -1000, 321)
     end
     --瞭望塔事件按钮
     local alliance_belvedere_button = cc.ui.UIPushButton.new({normal = 'fight_62x70.png'}):pos(display.right-50, display.top-600):addTo(self)
@@ -528,7 +528,7 @@ function GameUIHome:OnIapGiftsRefresh()
 end
 
 function GameUIHome:OnIapGiftsChanged(changed_map)
-   self:CheckAllianceRewardCount()
+    self:CheckAllianceRewardCount()
 end
 
 function GameUIHome:OnMarchDataChanged()
@@ -826,6 +826,10 @@ function GameUIHome:PromiseOfActivePromise()
 end
 function GameUIHome:OnCountInfoChanged()
     self.join_alliance_tips_button:setVisible(not User:GetCountInfo().firstJoinAllianceRewardGeted)
+    if self.join_alliance_tips_button:getChildByTag(321) and
+        User:GetCountInfo().firstJoinAllianceRewardGeted then
+        self.join_alliance_tips_button:removeChildByTag(321)
+    end
     self.left_order_group:RefreshOrder()
     self.top_order_group:RefreshOrder()
 end
@@ -845,6 +849,7 @@ end
 
 
 return GameUIHome
+
 
 
 
