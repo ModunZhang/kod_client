@@ -473,14 +473,16 @@ function GameUIHasBeenBuild:LoadBuildingQueue()
         color = 0x615b44,
     }):addTo(back_ground, 2):align(display.LEFT_CENTER, 60, back_ground:getContentSize().height/2)
 
-    WidgetPushButton.new({normal = "add_btn_up_50x50.png",pressed = "add_btn_down_50x50.png"})
-        :addTo(back_ground)
-        :align(display.CENTER, back_ground:getContentSize().width - 25, back_ground:getContentSize().height/2)
-        :onButtonClicked(function ( event )
-            if event.name == "CLICKED_EVENT" then
-                UIKit:newGameUI("GameUIActivityRewardNew",4):AddToCurrentScene(true)
-            end
-        end)
+    if City:BuildQueueCounts() < 2 then
+        WidgetPushButton.new({normal = "add_btn_up_50x50.png",pressed = "add_btn_down_50x50.png"})
+            :addTo(back_ground)
+            :align(display.CENTER, back_ground:getContentSize().width - 25, back_ground:getContentSize().height/2)
+            :onButtonClicked(function ( event )
+                if event.name == "CLICKED_EVENT" then
+                    UIKit:newGameUI("GameUIActivityRewardNew",4):AddToCurrentScene(true)
+                end
+            end)
+    end
 
     function back_ground:SetBuildingQueue(current, max)
         local enable = current > 0
@@ -596,6 +598,7 @@ function GameUIHasBeenBuild:sourceDelegateHouse(listView, tag, idx)
 end
 
 return GameUIHasBeenBuild
+
 
 
 
