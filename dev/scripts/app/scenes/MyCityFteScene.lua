@@ -22,6 +22,8 @@ function MyCityFteScene:ctor(...)
 end
 function MyCityFteScene:onEnter()
     MyCityFteScene.super.onEnter(self)
+    self:GetSceneLayer():ZoomTo(1)
+    self.home_page.top_order_group:hide()
     self.home_page.left_order_group:hide()
 end
 function MyCityFteScene:onEnterTransitionFinish()
