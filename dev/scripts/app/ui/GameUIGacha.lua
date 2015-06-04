@@ -114,7 +114,7 @@ function GameUIGacha:CreateGachaPool(layer)
         text = string.formatnumberthousands(city:GetResourceManager():GetCasinoTokenResource():GetValue()),
         size = 18,
         color = 0xffd200,
-    }):addTo(draw_thing_bg):align(display.CENTER,170,118)
+    }):addTo(draw_thing_bg):align(display.LEFT_CENTER,140,118)
 
     local gacha_boxes = {}
     if isSenior then
