@@ -496,20 +496,17 @@ function GameUIActivityRewardNew:ui_FIRST_IN_PURGURE()
         :setButtonLabel("normal", UIKit:commonButtonLable({
             text = _("领取")
         }))
-        :addTo(reward_bg)
+        :addTo(reward_bg,1)
         :pos(145,58)
     self.go_store_button = WidgetPushButton.new({normal = 'yellow_btn_up_186x66.png',pressed = 'yellow_btn_down_186x66.png'})
         :setButtonLabel("normal", UIKit:commonButtonLable({
             text = _("前往充值")
         }))
-        :addTo(reward_bg)
+        :addTo(reward_bg,1)
         :pos(145,58)
         :onButtonClicked(function()
             UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
         end)
-
-    fire_wall(self.go_store_button:getCascadeBoundingBox()):addTo(self.go_store_button, -1000)
-
     local tips_list = {}
     for index,reward in ipairs(rewards) do
         if index <= 6 then
