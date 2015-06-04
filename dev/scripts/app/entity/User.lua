@@ -448,7 +448,7 @@ end
 -- 获取当天剩余普通免费gacha次数
 function User:GetOddFreeNormalGachaCount()
     local vip_add = self:GetVipEvent():IsActived() and self:GetVIPNormalGachaAdd() or 0
-    return intInit.freeNormalGachaCountPerDay.value + vip_add - self.countInfo.todayFreeNormalGachaCount
+    return intInit.freeNormalGachaCountPerDay.value + vip_add - self:GetCountInfo().todayFreeNormalGachaCount
 end
 function User:GetVipEvent()
     return self.vip_event
