@@ -9,7 +9,7 @@ local SpriteConfig = import("..sprites.SpriteConfig")
 local window = import('..utils.window')
 local intInit = GameDatas.PlayerInitData.intInit
 local GameUIKeep = UIKit:createUIClass('GameUIKeep',"GameUIUpgradeBuilding")
-
+local sharedSpriteFrameCache = cc.SpriteFrameCache:getInstance()
 local building_config_map = {
     ["keep"] = {scale = 0.25, offset = {x = 75, y = 74}},
     ["watchTower"] = {scale = 0.4, offset = {x = 80, y = 70}},
@@ -256,7 +256,10 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
             local p = building_image:getAnchorPointInPoints()
             local building_image_1
             for _,v in ipairs(config:GetStaticImagesByLevel()) do
-                building_image_1 = display.newSprite("#"..v,p.x, p.y,{class=cc.FilteredSpriteWithOne}):addTo(building_image)
+                local frame = sharedSpriteFrameCache:getSpriteFrame(v)
+                if frame then
+                    building_image_1 = display.newSprite("#"..v,p.x, p.y,{class=cc.FilteredSpriteWithOne}):addTo(building_image)
+                end
             end
             if not isUnlocked then
                 local my_filter = filter
@@ -459,20 +462,21 @@ function GameUIKeep:CreateChangeTerrainWindow()
         end)
 end
 function GameUIKeep:PlayCloudAnimation()
-    local armature = ccs.Armature:create("Cloud_Animation"):addTo(display.getRunningScene(),5000):pos(display.cx, display.cy)
-    cc.LayerColor:create(UIKit:hex2c4b(0x00ffffff)):addTo(display.getRunningScene(),5000):runAction(
-        transition.sequence{
-            cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
-            cc.FadeIn:create(0.75),
-            cc.DelayTime:create(0.5),
-            cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
-            cc.CallFunc:create(function() self:LeftButtonClicked() end),
-            cc.FadeOut:create(0.75),
-            cc.CallFunc:create(function()
-                armature:removeFromParent()
-            end),
-        }
-    )
+    app:EnterMyCityScene()
+    -- local armature = ccs.Armature:create("Cloud_Animation"):addTo(display.getRunningScene(),5000):pos(display.cx, display.cy)
+    -- cc.LayerColor:create(UIKit:hex2c4b(0x00ffffff)):addTo(display.getRunningScene(),5000):runAction(
+    --     transition.sequence{
+    --         cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
+    --         cc.FadeIn:create(0.75),
+    --         cc.DelayTime:create(0.5),
+    --         cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
+    --         cc.CallFunc:create(function() self:LeftButtonClicked() end),
+    --         cc.FadeOut:create(0.75),
+    --         cc.CallFunc:create(function()
+    --             armature:removeFromParent()
+    --         end),
+    --     }
+    -- )
 end
 function GameUIKeep:CreateBackGroundWithTitle(title_string)
     local leyer = display.newColorLayer(cc.c4b(0,0,0,127))

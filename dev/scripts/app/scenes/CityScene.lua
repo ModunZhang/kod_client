@@ -18,7 +18,6 @@ function CityScene:onEnter()
     self:PlayBackgroundMusic()
     self:GotoLogicPointInstant(5, 4)
     self:GetSceneLayer():ZoomTo(0.8)
-    self:PlayEffectIf()
 
     --  cc.ui.UIPushButton.new({normal = "lock_btn.png",pressed = "lock_btn.png"})
     -- :addTo(self, 1000000):pos(display.cx, display.cy + 300)
@@ -67,8 +66,8 @@ function CityScene:PlayBackgroundMusic()
     -- end, 113 + 30)
 end
 function CityScene:ChangeTerrain()
-    self:GetSceneLayer():ChangeTerrain()
-    self:PlayEffectIf()
+    -- self:GetSceneLayer():ChangeTerrain()
+    -- self:PlayEffectIf()
 end
 function CityScene:EnterEditMode()
     self:GetSceneLayer():EnterEditMode()
@@ -152,6 +151,9 @@ end
 
 function CityScene:onEnterTransitionFinish()
     CityScene.super.onEnterTransitionFinish(self)
+    self:GetScreenLayer():performWithDelay(function()
+        self:PlayEffectIf()
+    end, math.random(10))
 end
 
 
@@ -161,7 +163,7 @@ function CityScene:PlayEffectIf()
     self:GetScreenLayer():removeAllChildren()
     local terrain = self:GetCity():GetUser():Terrain()
     if terrain == "iceField" then
-        local emitter = cc.ParticleRain:createWithTotalParticles(100)
+        local emitter = cc.ParticleRain:createWithTotalParticles(50)
             :addTo(self:GetScreenLayer(), 1, EFFECT_TAG):pos(display.cx-80, display.height)
         emitter:setLife(7)
         emitter:setStartSize(10)
@@ -176,6 +178,7 @@ function CityScene:PlayEffectIf()
         emitter:setEndColor(cc.c4f(1,1,1,0))
         emitter:setEmissionRate(emitter:getTotalParticles() / emitter:getLife())
         emitter:setTexture(cc.Director:getInstance():getTextureCache():addImage("snow.png"))
+        emitter:updateWithNoTime()
     elseif terrain == "grassLand" then
         local emitter = cc.ParticleRain:createWithTotalParticles(50)
             :addTo(self:GetScreenLayer(), 1, EFFECT_TAG):pos(display.cx + 80, display.height)
@@ -202,6 +205,7 @@ function CityScene:PlayEffectIf()
         emitter:setEndColor(cc.c4f(1,1,1,0.5))
         emitter:setEmissionRate(emitter:getTotalParticles() / emitter:getLife())
         emitter:setTexture(cc.Director:getInstance():getTextureCache():addImage("rain.png"))
+        emitter:updateWithNoTime()
     end
 end
 

@@ -457,7 +457,7 @@ function CityLayer:MoveBarracksSoldiers(soldier, is_mark)
             :addTo(self:GetCityNode(), 0, BARRACKS_SOLDIER_TAG)
         if is_mark then
             display.newSprite("fte_icon_arrow.png"):addTo(soldier)
-            :align(display.BOTTOM_CENTER, 5, 50):scale(0.5)
+            :align(display.BOTTOM_CENTER, 5, 50):scale(0.6)
         end
     end
 end
