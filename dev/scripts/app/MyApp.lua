@@ -86,7 +86,7 @@ function enter_next_scene(scene)
     :addTo(scene,MAX_ZORDER,CLOUD_TAG)
     
     local animation = ccs.Armature:create("Cloud_Animation")
-    :addTo(color_layer,MAX_ZORDER)
+    :addTo(color_layer,-1)
     :pos(display.cx, display.cy):getAnimation()
 
     animation:play("Animation4", -1, 0)
@@ -106,7 +106,7 @@ function enter_scene_transition(scene_name, ...)
     :addTo(display.getRunningScene(), MAX_ZORDER)
 
     local animation = ccs.Armature:create("Cloud_Animation")
-    :addTo(color_layer,MAX_ZORDER)
+    :addTo(color_layer,-1)
     :pos(display.cx, display.cy):getAnimation()
 
     animation:play("Animation1", -1, 0)

@@ -18,7 +18,6 @@ function CityScene:onEnter()
     self:PlayBackgroundMusic()
     self:GotoLogicPointInstant(5, 4)
     self:GetSceneLayer():ZoomTo(0.8)
-    self:PlayEffectIf()
 
     --  cc.ui.UIPushButton.new({normal = "lock_btn.png",pressed = "lock_btn.png"})
     -- :addTo(self, 1000000):pos(display.cx, display.cy + 300)
@@ -152,6 +151,7 @@ end
 
 function CityScene:onEnterTransitionFinish()
     CityScene.super.onEnterTransitionFinish(self)
+    self:PlayEffectIf()
 end
 
 
