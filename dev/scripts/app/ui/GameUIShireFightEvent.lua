@@ -93,10 +93,10 @@ function GameUIShireFightEvent:BuildUI()
         self:InfomationButtonClicked()
     end)
     local dispath_button = WidgetPushButton.new({
-        normal = "yellow_btn_up_148x58.png",
-        pressed = "yellow_btn_down_148x58.png",
+        normal = "blue_btn_up_148x58.png",
+        pressed = "blue_btn_down_148x58.png",
         disabled= "grey_btn_148x58.png",
-    }):align(display.RIGHT_BOTTOM,580,22):addTo(background):setButtonLabel("normal",UIKit:commonButtonLable({text = _("派兵")})):onButtonClicked(function()
+    }):align(display.RIGHT_BOTTOM,580,22):addTo(background):setButtonLabel("normal",UIKit:commonButtonLable({text = _("参战")})):onButtonClicked(function()
         self:DispathSoliderButtonClicked()
     end)
     self.dispath_button = dispath_button

@@ -453,7 +453,6 @@ function MyApp:transactionObserver(event)
         --不作任何处理
         device.hideActivityIndicator()
     else
-        device.showAlert(_("提示"),transaction.errorString,{_("确定")})
         Store.finishTransaction(transaction)
         device.hideActivityIndicator()
     end

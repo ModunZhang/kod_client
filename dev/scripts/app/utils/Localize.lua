@@ -1186,6 +1186,13 @@ local SERVER_NAME = {
     diamond = _("钻石级"),
     master = _("大师级"),
 }
+
+local TERRAIN_FUNCTION = {
+    grassLand = _("草地产出绿龙材料，更容易培养绿龙"),
+    desert= _("沙漠产出红龙材料,更容易培养红龙"),
+    iceField = _("雪地产出蓝龙材料，更容易培养蓝龙"),
+}
+
 return {
     equip_material = EQUIP_MATERIAL_LOCALIZE,
     equip = EQUIP_LOCALIZE,
@@ -1250,6 +1257,7 @@ return {
     soldier_desc_material = SOLDIER_DESC_MATERIAL,
     mails = MAILS,
     server_errors = SERVER_ERRORS,
+    terrain_function = TERRAIN_FUNCTION,
 }
 
 
