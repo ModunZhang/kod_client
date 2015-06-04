@@ -323,6 +323,17 @@ function GameUtils:getCurrentLanguage()
     return mapping[cc.Application:getInstance():getCurrentLanguage() + 1]
 end
 
+function GameUtils:GetAppleLanguageCode()
+    local code = ext.getDeviceLanguage()
+    if 'zh-Hans' == code then
+        return 'cn'
+    elseif 'zh-Hant' == code then
+        return 'tw'
+    else
+        return 'tw'
+    end
+end
+
 function GameUtils:GetPoFileLanguageCode(language_code)
     local currentLanguage = language_code or self:getCurrentLanguage()
     if language_code == 'cn' then

@@ -110,6 +110,16 @@ extern "C" const char* GetDeviceToken()
     AppController * appController = (AppController *)[[UIApplication sharedApplication]delegate];
     return [[appController remoteDeviceToken] UTF8String];
 }
+
+
+extern "C" const char* GetDeviceLanguage()
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSArray *languages = [defaults objectForKey:@"AppleLanguages"];
+    NSString *currentLanguage = [languages objectAtIndex:0];
+    return [currentLanguage UTF8String];
+}
+
 extern "C" long long getOSTime()
 {
     double currentTime = CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970;
