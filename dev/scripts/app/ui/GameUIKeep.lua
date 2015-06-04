@@ -256,7 +256,7 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
             local p = building_image:getAnchorPointInPoints()
             local building_image_1
             for _,v in ipairs(config:GetStaticImagesByLevel()) do
-                building_image_1 = display.newSprite(v,p.x, p.y,{class=cc.FilteredSpriteWithOne}):addTo(building_image)
+                building_image_1 = display.newSprite("#"..v,p.x, p.y,{class=cc.FilteredSpriteWithOne}):addTo(building_image)
             end
             if not isUnlocked then
                 local my_filter = filter

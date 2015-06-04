@@ -126,22 +126,9 @@ function GameUIPVESendTroop:OnMoveInStage()
                     UIKit:showMessageDialog(_("主人"),_("请选择要派遣的部队"))
                     return
                 end
-                if self.dragon:IsHpLow() then
-                    UIKit:showMessageDialog(_("主人"),_("您的龙的HP低于20%,有很大几率阵亡,确定要派出吗?"))
-                        :CreateOKButton(
-                            {
-                                listener =  function ()
-                                    self.march_callback(dragonType,soldiers)
-                                    -- 确认派兵后关闭界面
-                                    self:LeftButtonClicked()
-                                end
-                            }
-                        )
-                else
-                    self.march_callback(dragonType,soldiers)
-                    -- 确认派兵后关闭界面
-                    self:LeftButtonClicked()
-                end
+                self.march_callback(dragonType,soldiers)
+                -- 确认派兵后关闭界面
+                self:LeftButtonClicked()
             end
 
         end):align(display.RIGHT_CENTER,window.right-50,window.top-910):addTo(self:GetView())
@@ -671,13 +658,14 @@ function GameUIPVESendTroop:PromiseOfAttack()
     self:GetFteLayer():SetTouchObject(self.march_btn)
 
     WidgetFteArrow.new(_("点击进攻")):addTo(self:GetFteLayer()):TurnRight()
-    :align(display.RIGHT_CENTER, r.x - 20, r.y + r.height/2)
+        :align(display.RIGHT_CENTER, r.x - 20, r.y + r.height/2)
 
     return UIKit:PromiseOfOpen("GameUIReplayNew")
 end
 
 
 return GameUIPVESendTroop
+
 
 
 

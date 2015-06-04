@@ -263,6 +263,8 @@ function GameUIGacha:CreateGachaPool(layer)
                                 UIKit:showEvaluateDialog(function ()
                                     app:GetGameDefautlt():setStringForKey("APPRAISE:"..User:Id(),"Evaluated")
                                 end)
+                            else
+                                self.appraise = false
                             end
                         end
                         award:setLocalZOrder(1)

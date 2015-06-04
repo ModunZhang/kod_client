@@ -769,7 +769,7 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
             dialog:CreateOKButton(
                 {
                     listener = function()
-                        UIKit:newGameUI('GameUIShop', City):AddToCurrentScene(true)
+                        UIKit:newGameUI('GameUIStore'):AddToCurrentScene(true)
                         self:getParent():getParent():LeftButtonClicked()
                     end
                 }

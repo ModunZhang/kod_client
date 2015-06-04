@@ -282,9 +282,6 @@ function AllianceScene:CheckCanMoveAllianceObject(x, y, out_x, out_y)
     end
 end
 
-function AllianceScene:ReEnterScene()
-    app:enterScene("AllianceScene")
-end
 return AllianceScene
 
 

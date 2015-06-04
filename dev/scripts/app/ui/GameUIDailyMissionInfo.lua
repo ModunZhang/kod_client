@@ -181,8 +181,8 @@ function GameUIDailyMissionInfo:GetItem(index,item_data,isFinish)
                 :onButtonClicked(function()
                     if item_data.func then
                         if item_data.func() then
-                            self:CloseUIIf("GameUIDailyMissionInfo")
                             self:CloseUIIf("GameUIMission")
+                            self:CloseUIIf("GameUIDailyMissionInfo")
                         end
                     end
                 end)

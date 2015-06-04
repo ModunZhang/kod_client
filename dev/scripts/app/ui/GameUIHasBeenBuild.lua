@@ -8,6 +8,7 @@ local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local GameUIBuildingSpeedUp = import("..ui.GameUIBuildingSpeedUp")
 local GameUIHasBeenBuild = UIKit:createUIClass('GameUIHasBeenBuild', "GameUIWithCommonHeader")
+local sharedSpriteFrameCache = cc.SpriteFrameCache:getInstance()
 local NOT_ABLE_TO_UPGRADE = UpgradeBuilding.NOT_ABLE_TO_UPGRADE
 local timer = app.timer
 local UIKit = UIKit
@@ -111,7 +112,10 @@ function Item:SetBuildingType(building_type, level)
     self.building_icon:removeAllChildren()
     local p = self.building_icon:getAnchorPointInPoints()
     for _,v in ipairs(config:GetStaticImagesByLevel()) do
-        display.newSprite(v):addTo(self.building_icon):pos(p.x, p.y)
+        local frame = sharedSpriteFrameCache:getSpriteFrame(v)
+        if frame then
+            display.newSprite("#"..v):addTo(self.building_icon):pos(p.x, p.y)
+        end
     end
     return self
 end
@@ -130,11 +134,12 @@ function Item:RebindEventListener()
     end
     self.info_btn = WidgetPushButton.new({normal = "info_26x26.png",pressed = "info_26x26.png"})
         :addTo(self)
-        :align(display.CENTER, 32, 32)
+        :align(display.LEFT_BOTTOM, 15, 15)
         :onButtonClicked(function(event)
             local building = self.building
             UIKit:newWidgetUI("WidgetBuildingIntroduce", self.building):AddToCurrentScene(true)
         end)
+    self.info_btn:setContentSize(cc.size(150, 120))
 
     if self.free_speedUp then
         self.free_speedUp:removeFromParent()
@@ -267,7 +272,6 @@ function Item:RebindEventListener()
 end
 function Item:UpdateByBuilding(building, current_time)
     self.building = building
-    self:SetBuildingType(building:GetType(), building:GetLevel())
     repeat
         if building:IsUpgrading() then
             -- assert(current_time ~= 0)
@@ -558,7 +562,9 @@ function GameUIHasBeenBuild:sourceDelegateFunction(listView, tag, idx)
             content.status = nil
         end
         content:RebindEventListener()
-        content:UpdateByBuilding(self.buildings[idx], timer:GetServerTime())
+        local building = self.buildings[idx]
+        content:SetBuildingType(building:GetType(), building:GetLevel())
+        content:UpdateByBuilding(building, timer:GetServerTime())
         local size = content:getContentSize()
         item:setItemSize(size.width, size.height)
         return item
@@ -580,7 +586,9 @@ function GameUIHasBeenBuild:sourceDelegateHouse(listView, tag, idx)
             content.status = nil
         end
         content:RebindEventListener()
-        content:UpdateByBuilding(self.houses[idx], timer:GetServerTime())
+        local building = self.houses[idx]
+        content:SetBuildingType(building:GetType(), building:GetLevel())
+        content:UpdateByBuilding(building, timer:GetServerTime())
         local size = content:getContentSize()
         item:setItemSize(size.width, size.height)
         return item
