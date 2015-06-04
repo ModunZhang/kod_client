@@ -42,56 +42,63 @@ local MyApp = class("MyApp", cc.mvc.AppBase)
 local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
 CLOUD_TAG = 1987
 local speed = 2
-local function transition_(scene, status)
-    if status == "onEnter" then
-        local armature = ccs.Armature:create("Cloud_Animation")
-            :addTo(scene,0,CLOUD_TAG):pos(display.cx, display.cy)
+-- local function transition_(scene, status)
+--     if status == "onEnter" then
+--         local armature = ccs.Armature:create("Cloud_Animation")
+--             :addTo(scene,0,CLOUD_TAG):pos(display.cx, display.cy)
 
-        cc.LayerColor:create(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
-            transition.sequence{
-                cc.CallFunc:create(function()
-                    armature:getAnimation():stop()
-                    armature:getAnimation():play("Animation1", -1, 0)
-                    armature:getAnimation():setSpeedScale(speed)
-                end),
-                cc.FadeIn:create(0.75/speed),
-                cc.DelayTime:create(0.5/speed),
-                cc.CallFunc:create(function()
-                    armature:getAnimation():stop()
-                    armature:getAnimation():play("Animation4", -1, 0)
-                    armature:getAnimation():setSpeedScale(speed)
-                end),
-                cc.CallFunc:create(function()
-                    if scene.hideOutEnterShow then
-                        scene:hideOutEnterShow()
-                    else
-                        scene:hideOutShowIn()
-                    end
-                end),
-                cc.FadeOut:create(0.75/speed),
-                cc.CallFunc:create(function()
-                    scene:removeChildByTag(CLOUD_TAG)
-                    scene:finish()
-                end),
-            }
-        )
-    elseif status == "onExit" then
-        scene:removeChildByTag(CLOUD_TAG)
-    end
-end
+--         cc.LayerColor:create(UIKit:hex2c4b(0x00ffffff)):addTo(scene):runAction(
+--             transition.sequence{
+--                 cc.CallFunc:create(function()
+--                     armature:getAnimation():stop()
+--                     armature:getAnimation():play("Animation1", -1, 0)
+--                     armature:getAnimation():setSpeedScale(speed)
+--                 end),
+--                 cc.FadeIn:create(0.75/speed),
+--                 cc.DelayTime:create(0.5/speed),
+--                 cc.CallFunc:create(function()
+--                     armature:getAnimation():stop()
+--                     armature:getAnimation():play("Animation4", -1, 0)
+--                     armature:getAnimation():setSpeedScale(speed)
+--                 end),
+--                 cc.CallFunc:create(function()
+--                     if scene.hideOutEnterShow then
+--                         scene:hideOutEnterShow()
+--                     else
+--                         scene:hideOutShowIn()
+--                     end
+--                 end),
+--                 cc.FadeOut:create(0.75/speed),
+--                 cc.CallFunc:create(function()
+--                     scene:removeChildByTag(CLOUD_TAG)
+--                     scene:finish()
+--                 end),
+--             }
+--         )
+--     elseif status == "onExit" then
+--         scene:removeChildByTag(CLOUD_TAG)
+--     end
+-- end
 
 local MAX_ZORDER = 999999999
 function enter_scene(scene)
     local color_layer = cc.LayerColor:create(cc.c4b(255,255,255,255))
     :addTo(scene,MAX_ZORDER,CLOUD_TAG)
-    
-    local animation = ccs.Armature:create("Cloud_Animation")
-    :addTo(color_layer,-1)
-    :pos(display.cx, display.cy):getAnimation()
-
-    animation:play("Animation4", -1, 0)
-    animation:setSpeedScale(speed)
-
+    local onEnterTransitionFinish__ = scene.onEnterTransitionFinish
+    if onEnterTransitionFinish__ then
+        scene.onEnterTransitionFinish = function(self)
+            onEnterTransitionFinish__(self)
+            self:performWithDelay(function()
+                local armature = ccs.Armature:create("Cloud_Animation")
+                    :pos(display.cx, display.cy)
+                    :addTo(color_layer,-1)
+                local animation = armature:getAnimation()
+                animation:play("Animation4", -1, 0)
+                animation:setSpeedScale(speed)
+            end, 0.01)
+            self.onEnterTransitionFinish = onEnterTransitionFinish__
+        end
+    end
     transition.fadeOut(color_layer, {
         time = 0.75/speed,
         onComplete = function()
@@ -103,16 +110,16 @@ end
 function enter_scene_transition(scene_name, ...)
     app:lockInput(true)
     local color_layer = cc.LayerColor:create(cc.c4b(255,255,255,0))
-    :addTo(display.getRunningScene(), MAX_ZORDER)
+        :addTo(display.getRunningScene(), MAX_ZORDER)
 
     local animation = ccs.Armature:create("Cloud_Animation")
-    :addTo(color_layer,-1)
-    :pos(display.cx, display.cy):getAnimation()
+        :addTo(color_layer,-1)
+        :pos(display.cx, display.cy):getAnimation()
 
     animation:play("Animation1", -1, 0)
     animation:setSpeedScale(speed)
 
-    local args = {...}   
+    local args = {...}
     transition.fadeIn(color_layer, {
         time = 0.75/speed,
         onComplete = function()
@@ -584,6 +591,9 @@ my_print = function(...)
 end
 
 return MyApp
+
+
+
 
 
 
