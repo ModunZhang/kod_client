@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2015-06-04 22:19+0800\n"
-"PO-Revision-Date: 2015-06-04 22:19+0800\n"
+"POT-Creation-Date: 2015-06-05 03:39+0800\n"
+"PO-Revision-Date: 2015-06-05 03:39+0800\n"
 "Last-Translator: dannyhe <dannyjiajia@gamil.com>\n"
 "Language-Team: \n"
 "Language: zh_CN\n"
@@ -17,7 +17,7 @@ msgstr ""
 "X-Poedit-Basepath: ../../scripts/app/\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: MyApp.lua:258 MyApp.lua:262 MyApp.lua:268 MyApp.lua:273
+#: MyApp.lua:265 MyApp.lua:269 MyApp.lua:275 MyApp.lua:280
 #: service/NetManager.lua:345 ui/GameUIAllianceCityEnter.lua:167
 #: ui/GameUIChatChannel.lua:105 ui/GameUIChatChannel.lua:147
 #: ui/GameUIDailyMissionInfo.lua:225 ui/GameUIDailyMissionInfo.lua:249
@@ -34,15 +34,15 @@ msgstr ""
 msgid "错误"
 msgstr "错误"
 
-#: MyApp.lua:258 MyApp.lua:273
+#: MyApp.lua:265 MyApp.lua:280
 msgid "服务器连接断开,请检测你的网络环境后重试!"
 msgstr "服务器连接断开,请检测你的网络环境后重试!"
 
-#: MyApp.lua:268 ui/GameUILoginBeta.lua:324 utils/Localize.lua:8
+#: MyApp.lua:275 ui/GameUILoginBeta.lua:324 utils/Localize.lua:8
 msgid "玩家已经登录"
 msgstr "玩家已经登录"
 
-#: MyApp.lua:374 entity/AllianceMap.lua:335 entity/DragonManager.lua:196
+#: MyApp.lua:381 entity/AllianceMap.lua:335 entity/DragonManager.lua:196
 #: entity/DragonManager.lua:268 entity/HelpEvent.lua:87
 #: entity/MailManager.lua:35 entity/MailManager.lua:43
 #: entity/UpgradeBuilding.lua:195 entity/User.lua:744
@@ -54,8 +54,8 @@ msgstr "玩家已经登录"
 #: ui/CommonUpgradeUI.lua:855 ui/CommonUpgradeUI.lua:867
 #: ui/GameUIActivityNew.lua:532 ui/GameUIActivityRewardNew.lua:274
 #: ui/GameUIActivityRewardNew.lua:280 ui/GameUIActivityRewardNew.lua:392
-#: ui/GameUIActivityRewardNew.lua:530 ui/GameUIActivityRewardNew.lua:722
-#: ui/GameUIActivityRewardNew.lua:816 ui/GameUIAlliance.lua:358
+#: ui/GameUIActivityRewardNew.lua:534 ui/GameUIActivityRewardNew.lua:723
+#: ui/GameUIActivityRewardNew.lua:817 ui/GameUIAlliance.lua:358
 #: ui/GameUIAlliance.lua:718 ui/GameUIAlliance.lua:842
 #: ui/GameUIAlliance.lua:1079 ui/GameUIAlliance.lua:1084
 #: ui/GameUIAlliance.lua:1492 ui/GameUIAlliance.lua:1528
@@ -134,17 +134,17 @@ msgstr "玩家已经登录"
 msgid "提示"
 msgstr "提示"
 
-#: MyApp.lua:374 ui/GameUIChatChannel.lua:93 ui/GameUIChatChannel.lua:135
+#: MyApp.lua:381 ui/GameUIChatChannel.lua:93 ui/GameUIChatChannel.lua:135
 #: ui/GameUIChatChannel.lua:205 ui/GameUIChatChannel.lua:340
 #: widget/WidgetChangeMap.lua:30
 msgid "加入联盟后开放此功能!"
 msgstr "加入联盟后开放此功能!"
 
-#: MyApp.lua:457
+#: MyApp.lua:464
 msgid "不能删除"
 msgstr "不能删除"
 
-#: MyApp.lua:496 ui/FullScreenPopDialogUI.lua:93
+#: MyApp.lua:503 ui/FullScreenPopDialogUI.lua:93
 #: ui/GameUIAllianceNoticeOrDescEdit.lua:72
 #: ui/GameUIAllianceSendTroops.lua:363
 #: ui/GameUIAllianceShrineRewardList.lua:38 ui/GameUIAllianceTitle.lua:244
@@ -158,7 +158,7 @@ msgstr "不能删除"
 msgid "确定"
 msgstr "确定"
 
-#: MyApp.lua:506 ui/GameUIDailyMissionInfo.lua:141
+#: MyApp.lua:513 ui/GameUIDailyMissionInfo.lua:141
 msgid "恭喜"
 msgstr "恭喜"
 
@@ -715,8 +715,8 @@ msgstr "你的城市正被敌军突袭"
 msgid "你的城市正被敌军攻击"
 msgstr "你的城市正被敌军攻击"
 
-#: entity/AllianceManager.lua:112 entity/AllianceManager.lua:122
-#: entity/AllianceManager.lua:136
+#: entity/AllianceManager.lua:114 entity/AllianceManager.lua:124
+#: entity/AllianceManager.lua:138
 msgid "联盟对战已开始，您将进入自己联盟对战地图。"
 msgstr "联盟对战已开始，您将进入自己联盟对战地图。"
 
@@ -1281,8 +1281,8 @@ msgid ""
 "太好了，你终于醒过来了，觉醒者。。。我的名字叫赛琳娜，我们寻找那你这样的觉醒"
 "者已经很长时间了。。。"
 msgstr ""
-"太好了，你终于醒过来了，觉醒者…我的名字叫赛琳娜，我们寻找那你这样的觉醒者已"
-"经很长时间了。"
+"太好了，你终于醒过来了，觉醒者…我的名字叫赛琳娜，我们寻找你这样的觉醒者已经"
+"很长时间了。"
 
 #: scenes/FteScene.lua:31
 msgid ""
@@ -1360,7 +1360,7 @@ msgid ""
 "不过可惜这座城市太弱小了，我们得重头开始发展。建造住宅为城市提供空闲城民，用"
 "于生产资源和招募部队。。。"
 msgstr ""
-"不过可惜这座城市太弱小了，我们必须重头开始发展。建造住宅为城市提供空闲城民，"
+"不过可惜这座城市太弱小了，我们必须从头开始发展。建造住宅为城市提供空闲城民，"
 "并用于生产资源和招募部队"
 
 #: scenes/MyCityFteScene.lua:441
@@ -1384,7 +1384,7 @@ msgid ""
 "四方。。。"
 msgstr ""
 "很好，我没有看错你！从今天起，我，皇家骑士克里冈，愿带领我的手下追随大人征战"
-"四方…"
+"四方！"
 
 #: scenes/MyCityFteScene.lua:502 scenes/PVEScene.lua:293
 #: ui/GameUIMission.lua:278 ui/GameUIPVEHome.lua:230
@@ -1870,8 +1870,8 @@ msgid "天"
 msgstr "天"
 
 #: ui/GameUIActivityNew.lua:252 ui/GameUIActivityRewardNew.lua:323
-#: ui/GameUIActivityRewardNew.lua:380 ui/GameUIActivityRewardNew.lua:705
-#: ui/GameUIActivityRewardNew.lua:802 widget/WidgetPVEGetRewards.lua:84
+#: ui/GameUIActivityRewardNew.lua:380 ui/GameUIActivityRewardNew.lua:709
+#: ui/GameUIActivityRewardNew.lua:803 widget/WidgetPVEGetRewards.lua:84
 msgid "已领取"
 msgstr "已领取"
 
@@ -1887,7 +1887,7 @@ msgstr "永久获得第二条建筑队列"
 msgid "活动时间类，升级智慧中心，获得丰厚奖励"
 msgstr "活动时间类，升级主城堡，获得丰厚奖励"
 
-#: ui/GameUIActivityNew.lua:287 ui/GameUIActivityRewardNew.lua:569
+#: ui/GameUIActivityNew.lua:287 ui/GameUIActivityRewardNew.lua:573
 msgid "倒计时:"
 msgstr "倒计时:"
 
@@ -1917,8 +1917,8 @@ msgid "放弃"
 msgstr "放弃"
 
 #: ui/GameUIActivityNew.lua:516 ui/GameUIActivityRewardNew.lua:386
-#: ui/GameUIActivityRewardNew.lua:497 ui/GameUIActivityRewardNew.lua:713
-#: ui/GameUIActivityRewardNew.lua:808 ui/GameUIAllianceJoinTips.lua:51
+#: ui/GameUIActivityRewardNew.lua:497 ui/GameUIActivityRewardNew.lua:717
+#: ui/GameUIActivityRewardNew.lua:809 ui/GameUIAllianceJoinTips.lua:51
 #: ui/GameUIMission.lua:211 widget/WidgetPVEEvent.lua:196
 #: widget/WidgetPVEGetRewards.lua:58 widget/WidgetPVEGetRewards.lua:84
 #: widget/WidgetPVEGetTaskRewards.lua:60
@@ -1967,7 +1967,7 @@ msgstr "行军队列"
 
 #: ui/GameUIActivityRewardNew.lua:481 ui/GameUIBuild.lua:63
 #: ui/GameUIBuild.lua:90 ui/GameUIHasBeenBuild.lua:471
-#: ui/GameUIHasBeenBuild.lua:488
+#: ui/GameUIHasBeenBuild.lua:490
 msgid "建筑队列"
 msgstr "建筑队列"
 
@@ -1975,32 +1975,32 @@ msgstr "建筑队列"
 msgid "前往充值"
 msgstr "前往充值"
 
-#: ui/GameUIActivityRewardNew.lua:580
+#: ui/GameUIActivityRewardNew.lua:584
 msgid "已失效"
 msgstr "已失效"
 
-#: ui/GameUIActivityRewardNew.lua:594
+#: ui/GameUIActivityRewardNew.lua:598
 msgid "活动期间，升级城堡获得丰厚奖励"
 msgstr "活动期间，升级城堡获得丰厚奖励"
 
-#: ui/GameUIActivityRewardNew.lua:658
+#: ui/GameUIActivityRewardNew.lua:662
 #, c-format
 msgid "等级%s"
 msgstr "等级%s"
 
-#: ui/GameUIActivityRewardNew.lua:749
+#: ui/GameUIActivityRewardNew.lua:750
 msgid "每日在线时间到达，即可领取珍贵的道具和金龙币"
 msgstr "每日在线时间到达，即可领取珍贵的道具和金龙币"
 
-#: ui/GameUIActivityRewardNew.lua:754
+#: ui/GameUIActivityRewardNew.lua:755
 msgid "今日已在线："
 msgstr "今日已在线："
 
-#: ui/GameUIActivityRewardNew.lua:847 ui/GameUIActivityRewardNew.lua:909
+#: ui/GameUIActivityRewardNew.lua:848 ui/GameUIActivityRewardNew.lua:910
 msgid "还不能领取"
 msgstr "还不能领取"
 
-#: ui/GameUIActivityRewardNew.lua:932
+#: ui/GameUIActivityRewardNew.lua:933
 #, c-format
 msgid "在线%s分钟"
 msgstr "在线%s分钟"
@@ -4250,19 +4250,19 @@ msgstr "高级抽奖"
 msgid "获得%s x%d"
 msgstr "获得%s x%d"
 
-#: ui/GameUIGacha.lua:405
+#: ui/GameUIGacha.lua:404
 msgid "每日获得免费抽奖机会，激活VIP5 以上，每日可获得额外的免费抽奖机会"
 msgstr "每日获得免费抽奖机会，激活VIP5 以上，每日可获得额外的免费抽奖机会"
 
-#: ui/GameUIGacha.lua:461 ui/GameUIGacha.lua:589
+#: ui/GameUIGacha.lua:460 ui/GameUIGacha.lua:588
 msgid "免费抽奖"
 msgstr "免费抽奖"
 
-#: ui/GameUIGacha.lua:478 ui/GameUIGacha.lua:523 ui/GameUIGacha.lua:602
+#: ui/GameUIGacha.lua:477 ui/GameUIGacha.lua:522 ui/GameUIGacha.lua:601
 msgid "开始抽奖"
 msgstr "开始抽奖"
 
-#: ui/GameUIGacha.lua:505
+#: ui/GameUIGacha.lua:504
 msgid ""
 "购买任意金额的金龙币可以解锁高级抽奖,高级抽奖一次可以获得三种不同的道具"
 msgstr ""
@@ -4298,11 +4298,11 @@ msgstr "从等级%d升级到等级%d"
 msgid "建筑列表"
 msgstr "建筑列表"
 
-#: ui/GameUIHasBeenBuild.lua:499
+#: ui/GameUIHasBeenBuild.lua:501
 msgid "功能建筑"
 msgstr "功能建筑"
 
-#: ui/GameUIHasBeenBuild.lua:504
+#: ui/GameUIHasBeenBuild.lua:506
 msgid "资源建筑"
 msgstr "资源建筑"
 
@@ -4622,11 +4622,11 @@ msgstr "检查游戏版本失败!"
 msgid "游戏版本过低,请更新!"
 msgstr "游戏版本过低,请更新!"
 
-#: ui/GameUILoginBeta.lua:420 ui/GameUILoginBeta.lua:448
+#: ui/GameUILoginBeta.lua:421 ui/GameUILoginBeta.lua:449
 msgid "文件下载失败!"
 msgstr "文件下载失败!"
 
-#: ui/GameUILoginBeta.lua:434
+#: ui/GameUILoginBeta.lua:435
 #, c-format
 msgid "更新进度:%d%%"
 msgstr "更新进度:%d%%"
@@ -6389,7 +6389,7 @@ msgstr "%d小时前"
 msgid "%d天前"
 msgstr "%d天前"
 
-#: utils/GameUtils.lua:451
+#: utils/GameUtils.lua:462
 #, c-format
 msgid "%d天%d小时"
 msgstr "%d天%d小时"
@@ -11590,6 +11590,3 @@ msgstr "使用VIP激活1天"
 #: widget/WidgetUseItems.lua:1293
 msgid "已经激活VIP，关闭窗口"
 msgstr "已经激活VIP，关闭窗口"
-
-#~ msgid "玩家处于保护状态,不能进攻或突袭"
-#~ msgstr "玩家处于保护状态,不能进攻或突袭"
