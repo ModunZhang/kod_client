@@ -137,7 +137,9 @@ end
 
 function GameUIActivityNew:OnTimer(current_time)
 	if self.activity_list_view and self.tab_buttons:GetSelectedButtonTag() == 'activity' then
-		local item = self.activity_list_view:getItems()[4]
+		local count = #self.activity_list_view:getItems()
+		local item = self.activity_list_view:getItems()[count]
+		if item.item_type ~= self.ITEMS_TYPE.PLAYER_LEVEL_UP then return end
 		if current_time <= self.player_level_up_time and item then
 			if not item.time_label then return end
 			self.player_level_up_time_residue = self.player_level_up_time - current_time
