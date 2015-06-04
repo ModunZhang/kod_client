@@ -136,6 +136,7 @@ function CommonUpgradeUI:ReloadBuildingImage()
     else
         self.building_image:setScale(124/self.building_image:getContentSize().width)
     end
+    display.newSprite("info_26x26.png"):addTo(self):align(display.LEFT_BOTTOM, display.cx-196, display.top-158)
 end
 
 function CommonUpgradeUI:SetBuildingLevel()
