@@ -345,7 +345,7 @@ function GameUIKeep:CreateChangeTerrainWindow()
                     _("红龙"),
                 },
             }
-            self.terrain_eff_label:setString(string.format(_("%s地形能提升50%% %s的活力回复速度"),t_name[event.selected][1],t_name[event.selected][2]))
+            self.terrain_eff_label:setString(string.format(_("%s地形能提升%d%% %s的生命回复速度和额外的力量"),t_name[event.selected][1],intInit.dragonStrengthTerrainAddPercent.value,t_name[event.selected][2]))
 
         end)
         :align(display.CENTER, 80 , 50)
@@ -395,7 +395,7 @@ function GameUIKeep:CreateChangeTerrainWindow()
     local label_2 = cc.ui.UILabel.new(
         {
             UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("提供兵种招募，升级增加每次招募的最大数量"),
+            text = _("花费金龙币改变城市的地形，每种地形对应增益一种巨龙"),
             font = UIKit:getFontFilePath(),
             size = 20,
             dimensions = cc.size(260,100),
