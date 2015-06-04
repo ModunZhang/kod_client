@@ -214,10 +214,10 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
             else
                 content:addWidget(display.newSprite("back_ground_568X142.png"))
             end
-            local title_bg = display.newScale9Sprite("title_blue_430x30.png",70,46, cc.size(412,30), cc.rect(10,10,410,10))
+            local title_bg = display.newScale9Sprite("title_blue_430x30.png",70,46, cc.size(412,30), cc.rect(10,10,410,10)):addTo(content)
             -- building name
             UIKit:ttfLabel({
-                text = _(Localize.building_name[unlock_building:GetType()]),
+                text = Localize.building_name[unlock_building:GetType()],
                 size = 22,
                 color = 0xffedae}):align(display.CENTER_LEFT, 14, title_bg:getContentSize().height/2)
                 :addTo(title_bg)
@@ -234,7 +234,7 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
             -- building introduce
             local building_tip = UIKit:ttfLabel({
                 text = building_introduces[unlock_building:GetType()],
-                size = 20,
+                size = 18,
                 aglin = ui.TEXT_ALIGN_LEFT,
                 valign = ui.TEXT_VALIGN_CENTER,
                 dimensions = cc.size(374, 0),
