@@ -3,7 +3,6 @@
 -- Date: 2015-06-01 11:05:26
 --
 local WidgetAutoOrderGachaButton = class("WidgetAutoOrderGachaButton",cc.ui.UIPushButton)
-local User = User
 
 function WidgetAutoOrderGachaButton:ctor()
 	WidgetAutoOrderGachaButton.super.ctor(self,{normal = "casinoTokenClass_2_128x128.png"})
