@@ -1234,7 +1234,7 @@ function GameUIAllianceBattle:OpenOtherAllianceDetails(alliance)
         }):align(display.LEFT_CENTER,x + attr_title:getContentSize().width+20,y)
             :addTo(attr_bg)
     end
-    addAttr(_("成员"),"30/50",10,60)
+    addAttr(_("成员"),alliance.members.."/"..alliance.membersMax,10,60)
     addAttr(_("语言"),basic.language,10,20)
     addAttr(_("战斗力"),basic.power,350,60)
     addAttr(_("击杀"),basic.kill,350,20)
