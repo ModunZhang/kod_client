@@ -457,7 +457,7 @@ function GameUIGacha:InitOrdinary()
     if User:GetOddFreeNormalGachaCount()>0 then
         button:setButtonLabel(UIKit:commonButtonLable({
             text = _("免费抽奖"),
-            size = 24
+            size = 22
         }))
             :setButtonLabelOffset(0,0)
 
@@ -585,7 +585,7 @@ function GameUIGacha:OnCountInfoChanged()
         local button = self.normal_gacha_button
         button:setButtonLabel(UIKit:commonButtonLable({
             text = _("免费抽奖"),
-            size = 24
+            size = 22
         })):setButtonLabelOffset(0,0)
 
         local btn_images = {normal = "purple_btn_up_252x78.png",
@@ -598,7 +598,7 @@ function GameUIGacha:OnCountInfoChanged()
         local button = self.normal_gacha_button
         button:setButtonLabel(UIKit:commonButtonLable({
             text = _("开始抽奖"),
-            size = 20
+            size = 22
         })):setButtonLabelOffset(0,20)
 
         local btn_images = {normal = "yellow_btn_up_252x78.png",
