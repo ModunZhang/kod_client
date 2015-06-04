@@ -351,6 +351,17 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
                     self:LeftButtonClicked()
                 end)
                 buttons = {attack_button,strike_button}
+                if not self:IsMyAlliance() and self:GetMyAlliance():Status() == "prepare" then
+                    local progress_1 = WidgetAllianceEnterButtonProgress.new()
+                        :pos(-68, -54)
+                        :addTo(attack_button)
+                    local my_allaince_status = Alliance_Manager:GetMyAlliance():Status()
+                    attack_button:setButtonEnabled(my_allaince_status == "fight")
+                    local progress_2 = WidgetAllianceEnterButtonProgress.new()
+                        :pos(-68, -54)
+                        :addTo(strike_button)
+                    strike_button:setButtonEnabled(my_allaince_status == "fight")
+                end
             else -- 无人占领
                 local attack_button = self:BuildOneButton("capture_38x56.png",_("占领")):onButtonClicked(function()
                 UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers,total_march_time,gameuialliancesendtroops)

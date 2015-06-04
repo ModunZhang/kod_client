@@ -178,6 +178,14 @@ function GameUICityBuildingInfo:ctor(building)
         building_name = building:GetType()
         config = building:GetFunctionConfig()[building_name]
         building_level = building:GetLevel()
+    elseif building.__cname == "GateEntity" then
+        building_name = building:GetType()
+        config = building:GetConfig()
+        building_level = building:GetLevel()
+    elseif building.__cname == "TowerEntity" then
+        building_name = building:GetType()
+        config = building:GetConfig()
+        building_level = building:GetLevel()
     else
         building_name = building.name
         config = AllianceBuilding[building_name]

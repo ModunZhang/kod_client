@@ -380,6 +380,7 @@ function GameUILoginBeta:getUpdateFileList()
             else
                 device.openURL(CONFIG_APP_URL[device.platform])
             end
+            self:loadServerJson()
         end)
         return
     end

@@ -40,6 +40,7 @@ void MarketSDKTool::initSDK()
 {
 #ifdef USE_TAKING_DATA
     [TalkingDataGA onStart:TD_APP_ID withChannelId:TD_CHANNEL_ID];
+    [TalkingDataGA setVerboseLogDisabled];
 #endif
 }
 

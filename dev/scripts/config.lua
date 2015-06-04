@@ -1,5 +1,5 @@
 -- 0 - disable debug info, 1 - less debug info, 2 - verbose debug info
-DEBUG = 2
+DEBUG = 0
 DEBUG_FPS = false
 DEBUG_MEM = false
 
@@ -46,10 +46,9 @@ CONFIG_APP_URL = {
 
 CONFIG_IS_LOCAL = false
 CONFIG_IS_DEBUG = false
-CONFIG_LOG_DEBUG_FILE = true -- 记录日志文件
+CONFIG_LOG_DEBUG_FILE = false -- 记录日志文件
 GLOBAL_FTE = true
 GLOBAL_FTE_DEBUG = false
-GAME_DEFAULT_LANGUAGE = 'zh_TW' -- 游戏首次安装启动的默认语言 如果为nil则根据设备的语言为首次启动语言
 
 CONFIG_SCREEN_AUTOSCALE_CALLBACK = function(w, h, deviceModel)
     if w/h > 640/960 then
