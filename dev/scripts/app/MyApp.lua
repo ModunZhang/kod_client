@@ -41,8 +41,8 @@ local User_ = import('.entity.User')
 local MyApp = class("MyApp", cc.mvc.AppBase)
 local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
 CLOUD_TAG = 1987
+local speed = 2
 local function transition_(scene, status)
-    local speed = 1.5
     if status == "onEnter" then
         local armature = ccs.Armature:create("Cloud_Animation")
             :addTo(scene,0,CLOUD_TAG):pos(display.cx, display.cy)
@@ -51,22 +51,22 @@ local function transition_(scene, status)
             transition.sequence{
                 cc.CallFunc:create(function()
                     armature:getAnimation():stop()
-                    armature:getAnimation():setSpeedScale(speed)
                     armature:getAnimation():play("Animation1", -1, 0)
+                    armature:getAnimation():setSpeedScale(speed)
                 end),
                 cc.FadeIn:create(0.75/speed),
+                cc.DelayTime:create(0.5/speed),
+                cc.CallFunc:create(function()
+                    armature:getAnimation():stop()
+                    armature:getAnimation():play("Animation4", -1, 0)
+                    armature:getAnimation():setSpeedScale(speed)
+                end),
                 cc.CallFunc:create(function()
                     if scene.hideOutEnterShow then
                         scene:hideOutEnterShow()
                     else
                         scene:hideOutShowIn()
                     end
-                end),
-                cc.DelayTime:create(0.5/speed),
-                cc.CallFunc:create(function()
-                    armature:getAnimation():stop()
-                    armature:getAnimation():setSpeedScale(speed)
-                    armature:getAnimation():play("Animation4", -1, 0)
                 end),
                 cc.FadeOut:create(0.75/speed),
                 cc.CallFunc:create(function()
@@ -80,7 +80,65 @@ local function transition_(scene, status)
     end
 end
 
+local MAX_ZORDER = 999999999
+function enter_next_scene(scene)
+    local color_layer = cc.LayerColor:create(cc.c4b(255,255,255,255))
+    :addTo(scene,MAX_ZORDER,CLOUD_TAG)
+    
+    local animation = ccs.Armature:create("Cloud_Animation")
+    :addTo(color_layer,MAX_ZORDER)
+    :pos(display.cx, display.cy):getAnimation()
 
+    animation:play("Animation4", -1, 0)
+    animation:setSpeedScale(speed)
+
+    transition.fadeOut(color_layer, {
+        time = 0.75/speed,
+        onComplete = function()
+            scene:removeChildByTag(CLOUD_TAG)
+            app:lockInput(false)
+        end
+    })
+end
+function enter_scene_transition(scene_name, ...)
+    app:lockInput(true)
+    local color_layer = cc.LayerColor:create(cc.c4b(255,255,255,0))
+    :addTo(display.getRunningScene(), MAX_ZORDER)
+
+    local animation = ccs.Armature:create("Cloud_Animation")
+    :addTo(color_layer,MAX_ZORDER)
+    :pos(display.cx, display.cy):getAnimation()
+
+    animation:play("Animation1", -1, 0)
+    animation:setSpeedScale(speed)
+
+    local args = {...}   
+    transition.fadeIn(color_layer, {
+        time = 0.75/speed,
+        onComplete = function()
+            local next_scene = app:enterScene(scene_name, args)
+            enter_next_scene(next_scene)
+        end
+    })
+end
+
+local is_debug_cloud = true
+
+local enter_next_scene = function(new_scene_name, ...)
+    if is_debug_cloud then
+        enter_scene_transition(new_scene_name, ...)
+    else
+        app:enterScene(new_scene_name, {...}, "custom", -1, transition_)
+    end
+end
+
+function MyApp:enterScene(sceneName, args, transitionType, time, more)
+    local scenePackageName = self.packageRoot .. ".scenes." .. sceneName
+    local sceneClass = require(scenePackageName)
+    local scene = sceneClass.new(unpack(checktable(args)))
+    display.replaceScene(scene, transitionType, time, more)
+    return scene
+end
 
 function MyApp:ctor()
     MyApp.super.ctor(self)
@@ -291,20 +349,25 @@ function MyApp:EnterCitySceneByPlayerAndAlliance(id, is_my_alliance, location)
             :InitWithJsonData(user_data)
             :OnUserDataChanged(user_data, app.timer:GetServerTime())
         if is_my_alliance then
-            app:enterScene("FriendCityScene", {user, city, location}, "custom", -1, transition_)
+            -- app:enterScene("FriendCityScene", {user, city, location}, "custom", -1, transition_)
+            enter_next_scene("MyCityFteScene", user, city, location)
         else
-            app:enterScene("OtherCityScene", {user, city, location}, "custom", -1, transition_)
+            -- app:enterScene("OtherCityScene", {user, city, location}, "custom", -1, transition_)
+            enter_next_scene("OtherCityScene", user, city, location)
         end
     end)
 end
 function MyApp:EnterMyCityFteScene()
-    app:enterScene("MyCityFteScene", {City}, "custom", -1, transition_)
+    -- app:enterScene("MyCityFteScene", {City}, "custom", -1, transition_)
+    enter_next_scene("MyCityFteScene", City)
 end
 function MyApp:EnterMyCityScene(isFromFte)
-    app:enterScene("MyCityScene", {City,isFromFte}, "custom", -1, transition_)
+    enter_next_scene("MyCityScene", City, isFromFte)
+    -- app:enterScene("MyCityScene", {City,isFromFte}, "custom", -1, transition_)
 end
 function MyApp:EnterFteScene()
-    app:enterScene("FteScene", nil, "custom", -1, transition_)
+    -- app:enterScene("FteScene", nil, "custom", -1, transition_)
+    enter_next_scene("FteScene")
 end
 function MyApp:EnterMyAllianceScene(location)
     if Alliance_Manager:GetMyAlliance():IsDefault() then
@@ -317,7 +380,8 @@ function MyApp:EnterMyAllianceScene(location)
     if my_status == "prepare" or  my_status == "fight" then
         alliance_name = "AllianceBattleScene"
     end
-    app:enterScene(alliance_name, {location}, "custom", -1, transition_)
+    -- app:enterScene(alliance_name, {location}, "custom", -1, transition_)
+    enter_next_scene(alliance_name, location)
 end
 function MyApp:EnterMyAllianceSceneOrMyCityScene(location)
     if not Alliance_Manager:GetMyAlliance():IsDefault() then
@@ -326,18 +390,22 @@ function MyApp:EnterMyAllianceSceneOrMyCityScene(location)
         if my_status == "prepare" or  my_status == "fight" then
             alliance_name = "AllianceBattleScene"
         end
-        app:enterScene(alliance_name, {location}, "custom", -1, transition_)
+        -- app:enterScene(alliance_name, {location}, "custom", -1, transition_)
+        enter_next_scene(alliance_name, location)
     else
-        app:enterScene("MyCityScene", {City}, "custom", -1, transition_)
+        -- app:enterScene("MyCityScene", {City}, "custom", -1, transition_)
+        enter_next_scene("MyCityScene", City)
     end
 end
 function MyApp:EnterPVEScene(level)
     User:GotoPVEMapByLevel(level)
-    app:enterScene("PVEScene", {User}, "custom", -1, transition_)
+    -- app:enterScene("PVEScene", {User}, "custom", -1, transition_)
+    enter_next_scene("PVEScene", User)
 end
 function MyApp:EnterPVEFteScene(level)
     User:GotoPVEMapByLevel(level)
-    app:enterScene("PVEFteScene", {User}, "custom", -1, transition_)
+    -- app:enterScene("PVEFteScene", {User}, "custom", -1, transition_)
+    enter_next_scene("PVEFteScene", User)
 end
 
 function MyApp:pushScene(sceneName, args, transitionType, time, more)
@@ -396,7 +464,8 @@ end
 function MyApp:EnterViewModelAllianceScene(alliance_id)
     NetManager:getFtechAllianceViewDataPromose(alliance_id):done(function(response)
         local alliance = Alliance_Manager:DecodeAllianceFromJson(response.msg.allianceViewData)
-        app:enterScene("OtherAllianceScene", {alliance}, "custom", -1, transition_)
+        -- app:enterScene("OtherAllianceScene", {alliance}, "custom", -1, transition_)
+        enter_next_scene("OtherAllianceScene", alliance)
     end)
 end
 
