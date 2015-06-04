@@ -237,10 +237,20 @@ end
 
 function GameUIStrikePlayer:SendDataToServerRealy()
 	if self.strike_type == self.STRIKE_TYPE.CITY then
-		NetManager:getStrikePlayerCityPromise(self:GetSelectDragonType(),self.params.memberId):done(function()
-			app:GetAudioManager():PlayeEffectSoundWithKey("DRAGON_STRIKE")
-			self:LeftButtonClicked()
-		end)
+		if self.params.targetIsProtected then
+			UIKit:showMessageDialog(_("提示"),_("目标城市已被击溃并进入保护期，可能无法发生战斗，你是否继续突袭?"), function()
+                NetManager:getStrikePlayerCityPromise(self:GetSelectDragonType(),self.params.memberId):done(function()
+					app:GetAudioManager():PlayeEffectSoundWithKey("DRAGON_STRIKE")
+					self:LeftButtonClicked()
+				end)
+            end,function()end)
+        else
+        	NetManager:getStrikePlayerCityPromise(self:GetSelectDragonType(),self.params.memberId):done(function()
+				app:GetAudioManager():PlayeEffectSoundWithKey("DRAGON_STRIKE")
+				self:LeftButtonClicked()
+			end)
+		end
+		
 	else
 		NetManager:getStrikeVillagePromise(self:GetSelectDragonType(),self.params.defenceAllianceId,self.params.defenceVillageId):done(function()
 			app:GetAudioManager():PlayeEffectSoundWithKey("DRAGON_STRIKE")

@@ -28,7 +28,7 @@
  If enabled code useful for debugging such as parameter check assertions will be performed.
  If you experience any problems you should enable this and test your code with a debug build.
  */
-#define CD_DEBUG 2 //dannyhe 打开日志
+#define CD_DEBUG 0 //dannyhe 打开日志
 
 /**
  The total number of sounds/buffers that can be loaded assuming memory is sufficient

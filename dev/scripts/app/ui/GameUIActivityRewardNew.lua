@@ -527,6 +527,10 @@ function GameUIActivityRewardNew:ui_FIRST_IN_PURGURE()
     local tips_str = table.concat(tips_list, ",")
     self.purgure_get_button:onButtonClicked(function()
         NetManager:getFirstIAPRewardsPromise():done(function()
+            if iskindof(display.getRunningScene(), "MyCityScene") then
+                display.getRunningScene():GetHomePage().event_tab:RefreshBuildQueueByType("build")
+            end
+
             GameGlobalUI:showTips(_("提示"),tips_str)
             app:GetAudioManager():PlayeEffectSoundWithKey("BUY_ITEM")
             self:LeftButtonClicked()
@@ -716,9 +720,6 @@ function GameUIActivityRewardNew:GetRewardLevelUpItem(index,title,rewards,flag)
         :pos(450,54)
         :onButtonClicked(function()
             NetManager:getLevelupRewardPromise(index):done(function()
-                if iskindof(display.getRunningScene(), "MyCityScene") then
-                    display.getRunningScene():GetHomePage().event_tab:RefreshBuildQueueByType("build")
-                end
                 GameGlobalUI:showTips(_("提示"),tips_str)
                 app:GetAudioManager():PlayeEffectSoundWithKey("BUY_ITEM")
             end)
