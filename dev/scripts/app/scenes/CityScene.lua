@@ -153,7 +153,7 @@ function CityScene:onEnterTransitionFinish()
     CityScene.super.onEnterTransitionFinish(self)
     self:GetScreenLayer():performWithDelay(function()
         self:PlayEffectIf()
-    end, math.random(10))
+    end, math.random(3))
 end
 
 
@@ -163,7 +163,7 @@ function CityScene:PlayEffectIf()
     self:GetScreenLayer():removeAllChildren()
     local terrain = self:GetCity():GetUser():Terrain()
     if terrain == "iceField" then
-        local emitter = cc.ParticleRain:createWithTotalParticles(50)
+        local emitter = cc.ParticleRain:createWithTotalParticles(100)
             :addTo(self:GetScreenLayer(), 1, EFFECT_TAG):pos(display.cx-80, display.height)
         emitter:setLife(7)
         emitter:setStartSize(10)
@@ -180,7 +180,7 @@ function CityScene:PlayEffectIf()
         emitter:setTexture(cc.Director:getInstance():getTextureCache():addImage("snow.png"))
         emitter:updateWithNoTime()
     elseif terrain == "grassLand" then
-        local emitter = cc.ParticleRain:createWithTotalParticles(50)
+        local emitter = cc.ParticleRain:createWithTotalParticles(100)
             :addTo(self:GetScreenLayer(), 1, EFFECT_TAG):pos(display.cx + 80, display.height)
         emitter:setPosVar(cc.p(display.cx,0))
         emitter:setGravity(cc.p(-10,-10))

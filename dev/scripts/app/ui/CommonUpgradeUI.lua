@@ -103,7 +103,7 @@ function CommonUpgradeUI:InitCommonPart()
             end
         end):align(display.CENTER, display.cx-200, display.top-175)
         :addTo(self):scale(136/126)
-
+    display.newSprite("info_26x26.png"):addTo(self,2):align(display.LEFT_BOTTOM, display.cx-264, display.top-240)
     self:ReloadBuildingImage()
     self:InitBuildingIntroduces()
     self:InitNextLevelEfficiency()
@@ -116,7 +116,7 @@ function CommonUpgradeUI:ReloadBuildingImage()
     local config = SpriteConfig[self.building:GetType()]:GetConfigByLevel(self.building:GetLevel())
     local configs = SpriteConfig[self.building:GetType()]:GetAnimationConfigsByLevel(self.building:GetLevel())
     self.building_image = display.newSprite(config.png, 0, 0)
-        :addTo(self):pos(display.cx-196, display.top-158)
+        :addTo(self):pos(display.cx-196, display.top-164)
     local p = self.building_image:getAnchorPointInPoints()
     for _,v in ipairs(configs) do
         if v.deco_type == "image" then
