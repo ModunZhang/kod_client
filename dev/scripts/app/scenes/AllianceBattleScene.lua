@@ -22,7 +22,7 @@ function AllianceBattleScene:onEnter()
     local alliance_key = DataManager:getUserData()._id.."_SHOW_REGION_TIPS"
     if not app:GetGameDefautlt():getBasicInfoValueForKey(alliance_key) then
         app:GetGameDefautlt():getBasicInfoValueForKey(alliance_key,true)
-        UIKit:newGameUI("GameUITips","region"):AddToScene(self, true)
+        UIKit:newGameUI("GameUITips","region",_("玩法介绍"), true):AddToScene(self, true)
     end
     if self.location then
         self:GotoPosition(self.location.x, self.location.y,self.location.id)
