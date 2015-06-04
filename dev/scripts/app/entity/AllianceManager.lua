@@ -42,7 +42,13 @@ end
 function AllianceManager:OnAllianceDataChanged(alliance_data,refresh_time,deltaData)
     local my_alliance_status = self:GetMyAlliance():Status() 
     self:GetMyAlliance():OnAllianceDataChanged(alliance_data,refresh_time,deltaData)
-    self:RefreshAllianceSceneIf(my_alliance_status)
+    local isRelogin_action = deltaData == nil and alliance_data 
+    local scene_name = display.getRunningScene().__cname
+    if (scene_name == 'AllianceBattleScene' or scene_name == 'AllianceScene') and isRelogin_action  then
+        app:EnterMyAllianceScene()
+    else
+        self:RefreshAllianceSceneIf(my_alliance_status)
+    end
 end
 
 function AllianceManager:OnEnemyAllianceDataChanged(enemyAllianceData,refresh_time,deltaData)
