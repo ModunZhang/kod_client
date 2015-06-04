@@ -1,9 +1,9 @@
 # This file was generated from i18n.xlsx
 msgid ""
 msgstr ""
-"Project-Id-Version: Dragonfall\n"
-"POT-Creation-Date: 2015-06-04 15:59+0800\n"
-"PO-Revision-Date: 2015-06-04 16:00+0800\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2015-06-04 16:37+0800\n"
+"PO-Revision-Date: 2015-06-04 16:37+0800\n"
 "Last-Translator: dannyhe <dannyjiajia@gamil.com>\n"
 "Language-Team: \n"
 "Language: zh_TW\n"
@@ -98,8 +98,8 @@ msgstr "玩家已經登錄"
 #: ui/GameUIHome.lua:448 ui/GameUIHospital.lua:232 ui/GameUIHospital.lua:234
 #: ui/GameUIHospital.lua:244 ui/GameUIHospital.lua:252
 #: ui/GameUIHospital.lua:258 ui/GameUIHospital.lua:279
-#: ui/GameUIHospital.lua:281 ui/GameUIItems.lua:227 ui/GameUIKeep.lua:422
-#: ui/GameUIKeep.lua:442 ui/GameUILoginBeta.lua:339 ui/GameUIMail.lua:1910
+#: ui/GameUIHospital.lua:281 ui/GameUIItems.lua:227 ui/GameUIKeep.lua:425
+#: ui/GameUIKeep.lua:445 ui/GameUILoginBeta.lua:339 ui/GameUIMail.lua:1910
 #: ui/GameUIMail.lua:1913 ui/GameUIMail.lua:1916 ui/GameUIMail.lua:1919
 #: ui/GameUIOrderHall.lua:173 ui/GameUIPResourceBuilding.lua:235
 #: ui/GameUIPResourceBuilding.lua:247 ui/GameUIPResourceBuilding.lua:250
@@ -1205,7 +1205,7 @@ msgid "资源不足.建造队列不足"
 msgstr "資源不足。建造隊列不足"
 
 #: entity/UpgradeBuilding.lua:22 ui/GameUIAllianceTitle.lua:142
-#: ui/GameUIHospital.lua:281 ui/GameUIItems.lua:227 ui/GameUIKeep.lua:422
+#: ui/GameUIHospital.lua:281 ui/GameUIItems.lua:227 ui/GameUIKeep.lua:425
 #: ui/GameUIPResourceBuilding.lua:235 ui/GameUIUpgradeTechnology.lua:444
 #: ui/GameUIUpgradeTechnology.lua:489 ui/GameUIWatchTower.lua:190
 #: ui/GameUIWathTowerRegion.lua:194 widget/WidgetAccelerateGroup.lua:111
@@ -1630,55 +1630,56 @@ msgstr "升級"
 msgid "前置条件"
 msgstr "前置條件"
 
-#: ui/CommonUpgradeUI.lua:556
+#: ui/CommonUpgradeUI.lua:556 widget/WidgetBuildingIntroduce.lua:40
 msgid "建造队列已满"
 msgstr "建造隊列已滿"
 
 #: ui/CommonUpgradeUI.lua:559 ui/GameUIOrderHall.lua:13
 #: ui/GameUIOrderHall.lua:233 ui/GameUIUnlockBuilding.lua:203
 #: utils/Localize.lua:823 utils/Localize.lua:833
-#: widget/WidgetBuildingIntroduce.lua:35
+#: widget/WidgetBuildingIntroduce.lua:43
 msgid "木材"
 msgstr "木材"
 
 #: ui/CommonUpgradeUI.lua:566 ui/GameUIOrderHall.lua:14
 #: ui/GameUIOrderHall.lua:234 ui/GameUIUnlockBuilding.lua:211
 #: utils/Localize.lua:824 utils/Localize.lua:834
-#: widget/WidgetBuildingIntroduce.lua:38
+#: widget/WidgetBuildingIntroduce.lua:46
 msgid "石料"
 msgstr "石料"
 
 #: ui/CommonUpgradeUI.lua:574 ui/GameUIOrderHall.lua:15
 #: ui/GameUIOrderHall.lua:235 ui/GameUIUnlockBuilding.lua:219
 #: utils/Localize.lua:825 utils/Localize.lua:835
-#: widget/WidgetBuildingIntroduce.lua:41
+#: widget/WidgetBuildingIntroduce.lua:49
 msgid "铁矿"
 msgstr "鐵礦"
 
-#: ui/CommonUpgradeUI.lua:582 widget/WidgetCitizen.lua:22
+#: ui/CommonUpgradeUI.lua:582 widget/WidgetBuildingIntroduce.lua:53
+#: widget/WidgetCitizen.lua:22
 msgid "空闲城民"
 msgstr "空閒城民"
 
 #: ui/CommonUpgradeUI.lua:590 ui/GameUIUnlockBuilding.lua:227
-#: ui/GameUIUpgradeTechnology.lua:373 widget/WidgetBuildingIntroduce.lua:46
+#: ui/GameUIUpgradeTechnology.lua:373 widget/WidgetBuildingIntroduce.lua:60
 msgid "工程图纸"
 msgstr "工程圖紙"
 
 #: ui/CommonUpgradeUI.lua:597 ui/GameUIUnlockBuilding.lua:234
-#: ui/GameUIUpgradeTechnology.lua:381 widget/WidgetBuildingIntroduce.lua:53
+#: ui/GameUIUpgradeTechnology.lua:381 widget/WidgetBuildingIntroduce.lua:67
 msgid "建造工具"
 msgstr "建造工具"
 
 #: ui/CommonUpgradeUI.lua:604 ui/GameUIUnlockBuilding.lua:241
 #: ui/GameUIUpgradeTechnology.lua:389 utils/Localize.lua:413
-#: utils/Localize.lua:839 widget/WidgetBuildingIntroduce.lua:60
+#: utils/Localize.lua:839 widget/WidgetBuildingIntroduce.lua:74
 #: widget/WidgetManufacture.lua:49
 msgid "砖石瓦片"
 msgstr "磚石瓦片"
 
 #: ui/CommonUpgradeUI.lua:611 ui/GameUIUnlockBuilding.lua:248
 #: ui/GameUIUpgradeTechnology.lua:397 utils/Localize.lua:414
-#: utils/Localize.lua:840 widget/WidgetBuildingIntroduce.lua:67
+#: utils/Localize.lua:840 widget/WidgetBuildingIntroduce.lua:81
 #: widget/WidgetManufacture.lua:50
 msgid "滑轮组"
 msgstr "滑輪組"
@@ -1729,7 +1730,7 @@ msgstr "請首先建造%s"
 
 #: ui/CommonUpgradeUI.lua:863 ui/GameUIBuild.lua:195
 #: ui/GameUIHasBeenBuild.lua:186 ui/GameUIHospital.lua:241
-#: ui/GameUIHospital.lua:287 ui/GameUIItems.lua:233 ui/GameUIKeep.lua:429
+#: ui/GameUIHospital.lua:287 ui/GameUIItems.lua:233 ui/GameUIKeep.lua:432
 #: ui/GameUIPResourceBuilding.lua:242 ui/GameUIWatchTower.lua:196
 #: ui/GameUIWathTowerRegion.lua:200 widget/WidgetAccelerateGroup.lua:117
 #: widget/WidgetAllianceCreateOrEdit.lua:108
@@ -3046,37 +3047,37 @@ msgstr ""
 "草地地形能产出绿龙装备材料，每当在自己的领土上完成任务，或者击杀一定战斗力的"
 "敌方单位，就由一定几率获得装备材料。"
 
-#: ui/GameUIAlliancePalace.lua:421 ui/GameUIKeep.lua:336
+#: ui/GameUIAlliancePalace.lua:421 ui/GameUIKeep.lua:339
 #: ui/GameUISelectTerrain.lua:58 ui/GameUISelectTerrain.lua:119
 #: utils/Localize.lua:894 widget/WidgetAllianceCreateOrEdit.lua:258
 msgid "草地"
 msgstr "草地"
 
-#: ui/GameUIAlliancePalace.lua:422 ui/GameUIKeep.lua:337
+#: ui/GameUIAlliancePalace.lua:422 ui/GameUIKeep.lua:340
 #: ui/GameUIStrikeReport.lua:127 ui/GameUIWarReport.lua:75
 #: utils/Localize.lua:423
 msgid "绿龙"
 msgstr "綠龍"
 
-#: ui/GameUIAlliancePalace.lua:425 ui/GameUIKeep.lua:340
+#: ui/GameUIAlliancePalace.lua:425 ui/GameUIKeep.lua:343
 #: ui/GameUISelectTerrain.lua:70 ui/GameUISelectTerrain.lua:128
 #: utils/Localize.lua:896 widget/WidgetAllianceCreateOrEdit.lua:266
 msgid "雪地"
 msgstr "雪地"
 
-#: ui/GameUIAlliancePalace.lua:426 ui/GameUIKeep.lua:341
+#: ui/GameUIAlliancePalace.lua:426 ui/GameUIKeep.lua:344
 #: ui/GameUIStrikeReport.lua:127 ui/GameUIWarReport.lua:75
 #: utils/Localize.lua:422
 msgid "蓝龙"
 msgstr "藍龍"
 
-#: ui/GameUIAlliancePalace.lua:429 ui/GameUIKeep.lua:344
+#: ui/GameUIAlliancePalace.lua:429 ui/GameUIKeep.lua:347
 #: ui/GameUISelectTerrain.lua:64 ui/GameUISelectTerrain.lua:124
 #: utils/Localize.lua:895 widget/WidgetAllianceCreateOrEdit.lua:262
 msgid "沙漠"
 msgstr "沙漠"
 
-#: ui/GameUIAlliancePalace.lua:430 ui/GameUIKeep.lua:345
+#: ui/GameUIAlliancePalace.lua:430 ui/GameUIKeep.lua:348
 #: ui/GameUIStrikeReport.lua:127 ui/GameUIWarReport.lua:75
 #: utils/Localize.lua:421
 msgid "红龙"
@@ -3892,7 +3893,7 @@ msgstr "你還未建造工具作坊"
 
 #: ui/GameUIDailyMissionInfo.lua:260
 msgid "参加一次联盟会战"
-msgstr "參加一次聯盟會戰"
+msgstr "參加一次聖地戰"
 
 #: ui/GameUIDailyMissionInfo.lua:267
 msgid "对地方玩家城市进行一次进攻"
@@ -4375,7 +4376,7 @@ msgstr "立即完成升級"
 msgid "点击VIP，免费激活VIP"
 msgstr "點擊VIP，免費激活VIP"
 
-#: ui/GameUIHome.lua:839
+#: ui/GameUIHome.lua:843
 msgid ""
 "进入联盟地图\n"
 "体验更多玩法"
@@ -4493,28 +4494,28 @@ msgstr "已解鎖"
 msgid "未解锁"
 msgstr "未解鎖"
 
-#: ui/GameUIKeep.lua:285
+#: ui/GameUIKeep.lua:288
 msgid "城市地形修改"
 msgstr "城市地形修改"
 
-#: ui/GameUIKeep.lua:348
+#: ui/GameUIKeep.lua:351
 #, c-format
 msgid "%s地形能提升%d%% %s的生命回复速度和额外的力量"
 msgstr "%s地形能提升%d%% %s的生命回復速度和額外的力量"
 
-#: ui/GameUIKeep.lua:388
+#: ui/GameUIKeep.lua:391
 msgid "变换地形"
 msgstr "變換地形"
 
-#: ui/GameUIKeep.lua:398
+#: ui/GameUIKeep.lua:401
 msgid "花费金龙币改变城市的地形，每种地形对应增益一种巨龙"
 msgstr "花費金龍幣改變城市的地形，每種地形對應增益一種巨龍"
 
-#: ui/GameUIKeep.lua:408
+#: ui/GameUIKeep.lua:411
 msgid "购买使用"
 msgstr "購買使用"
 
-#: ui/GameUIKeep.lua:442
+#: ui/GameUIKeep.lua:445
 msgid "请选择不同的地形"
 msgstr "請選擇不同的地形"
 
@@ -5973,7 +5974,6 @@ msgid "解锁"
 msgstr "解鎖"
 
 #: ui/GameUIUnlockBuilding.lua:196 ui/GameUIUnlockBuilding.lua:200
-#: widget/WidgetBuildingIntroduce.lua:33
 msgid "建造队列"
 msgstr "建造隊列"
 
@@ -10699,7 +10699,7 @@ msgstr "未激活"
 msgid "升级条件"
 msgstr "升級條件"
 
-#: widget/WidgetBuildingIntroduce.lua:77
+#: widget/WidgetBuildingIntroduce.lua:91
 msgid "建筑描述"
 msgstr "建築描述"
 
@@ -11579,13 +11579,3 @@ msgstr "使用VIP激活1天"
 #: widget/WidgetUseItems.lua:1293
 msgid "已经激活VIP，关闭窗口"
 msgstr "已經激活VIP，關閉窗口"
-
-#~ msgid "补足玩家探索地图所需的体力药剂"
-#~ msgstr "補足玩家探索地圖所需的體力藥劑"
-
-#~ msgid ""
-#~ "草地——产出强化绿龙的材料，更容易培养绿龙，更容易培养绿龙，草地产出绿金龙"
-#~ "币，建造资源加成类的铺筑建筑"
-#~ msgstr ""
-#~ "草地——产出强化绿龙的材料，更容易培养绿龙，更容易培养绿龙，草地产出绿金龙"
-#~ "币，建造资源加成类的铺筑建筑"
