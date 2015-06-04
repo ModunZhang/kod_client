@@ -17,7 +17,7 @@ function CityScene:onEnter()
     self:GetSceneLayer():InitWithCity(self:GetCity())
     self:PlayBackgroundMusic()
     self:GotoLogicPointInstant(5, 4)
-    self:GetSceneLayer():ZoomTo(0.74)
+    self:GetSceneLayer():ZoomTo(0.8)
     self:PlayEffectIf()
 
     --  cc.ui.UIPushButton.new({normal = "lock_btn.png",pressed = "lock_btn.png"})
