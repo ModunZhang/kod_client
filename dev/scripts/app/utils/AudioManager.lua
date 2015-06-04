@@ -295,7 +295,6 @@ end
 
 -- for global call
 function AudioManager:OnBackgroundMusicCompletion()
-	printLog("AudioManager","OnBackgroundMusicCompletion---->%s,%s", self:GetLastPlayedFileName(),tostring(self.last_music_loop))
 	if self.last_music_loop then return end -- 如果上次是循环的背景音乐 忽略
 	local current_scene = display.getRunningScene()
 	local scene_name    = current_scene.__cname
@@ -303,8 +302,9 @@ function AudioManager:OnBackgroundMusicCompletion()
 	local alliance      = Alliance_Manager:GetMyAlliance()
 	local terrain       = alliance:Terrain()
 	local status        = alliance:Status()
-	if not scene_name or string.len(scene_name) == 0 then
-		assert(false,"没有获取到当前的scene信息!")
+
+	if "FteScene" == scene_name or scene_name == 'MyCityFteScene' then
+		scene_name = 'MyCityScene'
 	end
 
 	if scene_name == 'MyCityScene' then

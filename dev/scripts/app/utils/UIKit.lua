@@ -657,6 +657,37 @@ function UIKit:showMessageDialogWithParams(params)
     return dialog
 end
 
+function UIKit:getMessageDialogWithParams(params)
+    local title = params.title or _("提示")
+    local content = params.content or ""
+    local ok_callback = params.ok_callback or function()end
+    local ok_string = params.ok_string or _("确定")
+    local cancel_string = params.cancel_string or _("取消")
+    local visible_x_button = true
+    if  type(params.visible_x_button) == 'boolean' then
+        visible_x_button = params.visible_x_button
+    end
+    local x_button_callback = params.x_button_callback or function()end
+    local user_data = params.user_data or nil
+    local zorder = params.zorder or  3001
+
+    local dialog = UIKit:newGameUI("FullScreenPopDialogUI",x_button_callback,user_data):SetTitle(title):SetPopMessage(content):zorder(zorder)
+
+    dialog:CreateOKButton({listener = ok_callback,btn_name = ok_string})
+    if params.cancel_callback then
+        dialog:CreateCancelButton({listener = cancel_callback,btn_name = _("取消")})
+    end
+    dialog:VisibleXButton(visible_x_button)
+    if type(params.auto_close) ~= "boolean" then
+        if not visible_x_button then dialog:DisableAutoClose() end
+    else
+        if not params.auto_close then
+            dialog:DisableAutoClose()
+        end
+    end
+    return dialog
+end
+
 function UIKit:showEvaluateDialog(ok_callback)
     local dialog = UIKit:newGameUI("FullScreenPopDialogUI"):SetTitle(_("评价我们")):SetPopMessage(_("喜欢我们的游戏吗？"))
         :CreateOKButton({
