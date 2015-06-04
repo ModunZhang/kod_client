@@ -6,7 +6,7 @@ function __init_localize_file__()
     if default_language and string.len(default_language) > 0 then
         init_language = default_language
     else
-        init_language = GameUtils:getCurrentLanguage()
+        init_language = 'tw'
     end
     local poName,real_language_code = GameUtils:GetPoFileLanguageCode(init_language)
     local currentLanFile = string.format("i18n/%s.mo", poName)
