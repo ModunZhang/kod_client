@@ -1855,7 +1855,7 @@
 					"$(LIBPOMELO_ROOT)/deps/uv/include",
 				);
 				INFOPLIST_FILE = ios/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBPOMELO_ROOT = "$(PROJECT_SDK_ROOT)/libpomelo";
 				LIBRARY_SEARCH_PATHS = "";
 				"OTHER_LDFLAGS[sdk=iphoneos*]" = (
@@ -1902,7 +1902,7 @@
 					"$(LIBPOMELO_ROOT)/deps/uv/include",
 				);
 				INFOPLIST_FILE = ios/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBPOMELO_ROOT = "$(PROJECT_SDK_ROOT)/libpomelo";
 				LIBRARY_SEARCH_PATHS = "";
 				OTHER_LDFLAGS = "";
