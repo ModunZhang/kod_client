@@ -116,7 +116,7 @@ function AllianceBuildingSprite:PlayAni()
         local bone = armature:getBone("Layer1")
         bone:addDisplay(display.newNode(), 0)
         bone:changeDisplayWithIndex(0, true)
-        armature:setAnchorPoint(cc.p(0.5, 0.33))
+        armature:setAnchorPoint(cc.p(0.5, 0.1))
         armature:getAnimation():playWithIndex(0, -1, -1)
     end
 end

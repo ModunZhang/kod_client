@@ -108,11 +108,11 @@ create_building_config(
     ,create_config(MIN_LEVEL, MAX_LEVEL, "dragonEyrie.png", offset(45, 158), scale(1))
 )
 create_building_config(
-    {"watchTower", "#root/liaowangta/00000.png"}
+    {"watchTower", "root/liaowangta/00000.png"}
     ,create_config(MIN_LEVEL, MAX_LEVEL, "watchTower.png", offset(50, 180), scale(1), decorator("animation", "liaowangta", nil, nil, true))
 )
 create_building_config(
-    {"warehouse", "#root/ziyuancangku/00000.png"}
+    {"warehouse", "root/ziyuancangku/00000.png"}
     ,create_config(MIN_LEVEL, MAX_LEVEL, "warehouse.png", offset(-5, 105), scale(1), decorator("animation", "ziyuancangku", nil, nil, true))
 )
 create_building_config(
@@ -130,7 +130,7 @@ create_building_config(
     ,create_config(MIN_LEVEL, MAX_LEVEL, "armyCamp.png", offset(20, 100), scale(1))
 )
 create_building_config(
-    {"barracks", "#root/bingying/qizi/00000.png"}
+    {"barracks", "root/bingying/qizi/00000.png"}
     ,create_config(MIN_LEVEL, 0, "locked_tile.png", offset(20, 120), scale(1))
     ,create_config(1, MAX_LEVEL, "barracks.png", offset(20, 120), scale(1), decorator("animation", "bingyin_1"), decorator("animation", "bingyin", nil, nil, true))
 )
@@ -155,7 +155,7 @@ create_building_config(
     ,create_config(1, MAX_LEVEL, "lumbermill.png", offset(20, 100), scale(1))
 )
 create_building_config(
-    {"mill", "#root/mofang/00000.png"}
+    {"mill", "root/mofang/00000.png"}
     ,create_config(MIN_LEVEL, 0, "locked_tile.png", offset(20, 120), scale(1))
     ,create_config(1, MAX_LEVEL, "mill.png", offset(20, 100), scale(1), decorator("animation", "mofang", nil, nil, true))
 )
@@ -170,7 +170,7 @@ create_building_config(
     ,create_config(1, MAX_LEVEL, "townHall.png", offset(20, 140), scale(1), decorator("animation", "shizhenting"))
 )
 create_building_config(
-    {"tradeGuild", "#root/maoyihanghui/000.png"}
+    {"tradeGuild", "root/maoyihanghui/000.png"}
     ,create_config(MIN_LEVEL, 0, "locked_tile.png", offset(20, 120), scale(1))
     ,create_config(1, MAX_LEVEL, "tradeGuild.png", offset(20, 100), scale(1), decorator("animation", "maoyihanghui", nil, nil, true))
 )
