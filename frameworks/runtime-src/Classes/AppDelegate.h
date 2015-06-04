@@ -55,7 +55,7 @@ public:
     static const char* getAppVersion();
     static bool isDebug();
     static void extendApplication();
-    static const char  *getGameZipcrc32(const char *filePath);
+    static std::string getGameZipcrc32(const char *filePath);
 };
 
 

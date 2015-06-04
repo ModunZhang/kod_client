@@ -154,7 +154,7 @@ extern "C" const char* GetOpenUdid()
         }
     }
     NSLog(@"GetOpenUdid:%@",_openUDID);
-    shared_openUDID = [[NSString alloc]initWithString:_openUDID];
+    shared_openUDID = [[[NSString alloc]initWithString:_openUDID]autorelease];
     return [shared_openUDID UTF8String];
 }
 

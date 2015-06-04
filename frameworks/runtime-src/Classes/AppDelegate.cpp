@@ -211,10 +211,6 @@ const char* AppDelegateExtern::getAppVersion()
     {
         return ipaVersion;
     }
-    lua_State *tolua_S = LuaEngine::getInstance()->getLuaStack()->getLuaState();
-    lua_getglobal(tolua_S, "CONFIG_APP_VERSION");
-    const char* path = tolua_tostring(tolua_S, -1, 0);
-    return path;
 }
 
 
@@ -226,7 +222,7 @@ bool AppDelegateExtern::isDebug()
     return isDebug;
 }
 
-const char* AppDelegateExtern::getGameZipcrc32(const char *filePath)
+string AppDelegateExtern::getGameZipcrc32(const char *filePath)
 {
     FileUtils *fileUtils = FileUtils::getInstance();
     if (fileUtils->isFileExist(filePath))
@@ -258,7 +254,7 @@ const char* AppDelegateExtern::getGameZipcrc32(const char *filePath)
                             if(tagData.HasMember("crc32"))
                             {
                                 string crc32 = tagData["crc32"].GetString();
-                                return crc32.c_str();
+                                return crc32;
                             }
                         }
 
@@ -277,8 +273,10 @@ bool AppDelegateExtern::checkPath()
     FileUtils* fileUtils = FileUtils::getInstance();
     const char* appVersion = getAppVersion();
     string writePath = fileUtils->getWritablePath();
+    
     string updatePath = writePath + "update/";
     string appPath = updatePath + appVersion + "/";
+    
     if(!fileUtils->isDirectoryExist(appPath)){
         if(fileUtils->isDirectoryExist(updatePath)){
             FileOperation::removeDirectory(updatePath.c_str());
@@ -314,11 +312,10 @@ bool AppDelegateExtern::checkPath()
         //验证zip完整性
         //获取game.zip crc32 fileList
         unsigned long crc32 = getFileCrc32(doucument_zip_path.c_str());
-        const char* crc32_in_config = getGameZipcrc32(to.c_str());
-        CCLOG("crc32_in_config---->%s",crc32_in_config);
+        string crc32_in_config = getGameZipcrc32(to.c_str());
         char crc32_val[32];
         sprintf(crc32_val, "%08lx", crc32);
-        if (strcmp(crc32_val, crc32_in_config) != 0)
+        if (strcmp(crc32_val, crc32_in_config.c_str()) != 0)
         {
             need_Load_zip_from_bundle = true;
             //还原版本信息重新执行自动更新
