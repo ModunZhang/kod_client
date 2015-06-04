@@ -462,20 +462,21 @@ function GameUIKeep:CreateChangeTerrainWindow()
         end)
 end
 function GameUIKeep:PlayCloudAnimation()
-    local armature = ccs.Armature:create("Cloud_Animation"):addTo(display.getRunningScene(),5000):pos(display.cx, display.cy)
-    cc.LayerColor:create(UIKit:hex2c4b(0x00ffffff)):addTo(display.getRunningScene(),5000):runAction(
-        transition.sequence{
-            cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
-            cc.FadeIn:create(0.75),
-            cc.DelayTime:create(0.5),
-            cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
-            cc.CallFunc:create(function() self:LeftButtonClicked() end),
-            cc.FadeOut:create(0.75),
-            cc.CallFunc:create(function()
-                armature:removeFromParent()
-            end),
-        }
-    )
+    app:EnterMyCityScene()
+    -- local armature = ccs.Armature:create("Cloud_Animation"):addTo(display.getRunningScene(),5000):pos(display.cx, display.cy)
+    -- cc.LayerColor:create(UIKit:hex2c4b(0x00ffffff)):addTo(display.getRunningScene(),5000):runAction(
+    --     transition.sequence{
+    --         cc.CallFunc:create(function() armature:getAnimation():play("Animation1", -1, 0) end),
+    --         cc.FadeIn:create(0.75),
+    --         cc.DelayTime:create(0.5),
+    --         cc.CallFunc:create(function() armature:getAnimation():play("Animation4", -1, 0) end),
+    --         cc.CallFunc:create(function() self:LeftButtonClicked() end),
+    --         cc.FadeOut:create(0.75),
+    --         cc.CallFunc:create(function()
+    --             armature:removeFromParent()
+    --         end),
+    --     }
+    -- )
 end
 function GameUIKeep:CreateBackGroundWithTitle(title_string)
     local leyer = display.newColorLayer(cc.c4b(0,0,0,127))

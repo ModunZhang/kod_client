@@ -66,8 +66,8 @@ function CityScene:PlayBackgroundMusic()
     -- end, 113 + 30)
 end
 function CityScene:ChangeTerrain()
-    self:GetSceneLayer():ChangeTerrain()
-    self:PlayEffectIf()
+    -- self:GetSceneLayer():ChangeTerrain()
+    -- self:PlayEffectIf()
 end
 function CityScene:EnterEditMode()
     self:GetSceneLayer():EnterEditMode()
@@ -151,7 +151,9 @@ end
 
 function CityScene:onEnterTransitionFinish()
     CityScene.super.onEnterTransitionFinish(self)
-    self:PlayEffectIf()
+    self:GetScreenLayer():performWithDelay(function()
+        self:PlayEffectIf()
+    end, math.random(10))
 end
 
 
