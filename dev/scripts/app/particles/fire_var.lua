@@ -1,5 +1,6 @@
 return function()
-	local emitter = cc.ParticleSystemQuad:createWithTotalParticles(100)
+	local emitter = cc.ParticleSystemQuad:createWithTotalParticles(50)
+    emitter:setCascadeOpacityEnabled(true)
     emitter:setDuration(-1)
     emitter:setPositionType(2)
     emitter:setPosVar(cc.p(0, 0))

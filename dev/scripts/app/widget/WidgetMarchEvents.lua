@@ -296,14 +296,14 @@ function WidgetMarchEvents:CreateReturnItem(entity)
     node.prefix = entity:GetEventPrefix()
     node.desc = UIKit:ttfLabel({
         text = node.prefix,
-        size = 16,
+        size = 18,
         color = 0xd1ca95,
         shadow = true,
     }):addTo(node):align(display.LEFT_CENTER, 10, half_height)
 
     node.time = UIKit:ttfLabel({
         text = GameUtils:formatTimeStyle1(event:GetTime()),
-        size = 16,
+        size = 18,
         color = 0xd1ca95,
         align = cc.TEXT_ALIGNMENT_RIGHT,
         shadow = true,
