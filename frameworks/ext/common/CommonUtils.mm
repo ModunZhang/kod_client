@@ -68,33 +68,9 @@ extern "C" const char* GetDeviceModel()
                                encoding:NSUTF8StringEncoding]UTF8String];
 }
 //log
-#ifdef DEBUG
-static NSFileHandle *outFile = NULL;
-static NSString *logFilePath = NULL;
-static dispatch_queue_t aDQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
-#endif
 extern "C" void WriteLog_(const char *str)
 {
-#ifndef DEBUG
-    NSAssert(false, @"WriteLog_这个方法绝对不能在发布环境里调用");
-#else
-    if (logFilePath == NULL)
-    {
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"MM_dd-HH_mm"];
-        logFilePath = [[NSString stringWithFormat:@"%@/Documents/%@.log",NSHomeDirectory(),[dateFormatter stringFromDate:[NSDate date]]]retain];
-    }
-    if(outFile == NULL)
-    {
-        [[NSFileManager defaultManager] createFileAtPath:logFilePath contents:nil attributes:nil] ;
-        outFile = [[NSFileHandle fileHandleForWritingAtPath:logFilePath]retain];
-    }
-    dispatch_sync(aDQueue, ^{
-        NSData * data = [[NSString stringWithCString:str  encoding:NSUTF8StringEncoding] dataUsingEncoding:NSUTF8StringEncoding];
-        [outFile writeData:data];
-        //outFile close
-    });
-#endif
+    NSLog(@"%@",[NSString stringWithUTF8String:str]);
 }
 
 extern "C" const char* GetAppVersion()
@@ -186,9 +162,7 @@ extern "C" void registereForRemoteNotifications()
 
 extern "C" void ClearOpenUdidData()
 {
-#ifndef DEBUG
-    NSAssert(false, @"ClearOpenUdidData这个方法绝对不能在发布环境里调用");
-#else
+#ifdef DEBUG
     UICKeyChainStore *store = [UICKeyChainStore keyChainStoreWithService:kKeychainBatcatStudioKeyChainService];
     [store removeItemForKey:kKeychainBatcatStudioIdentifier];
 #endif

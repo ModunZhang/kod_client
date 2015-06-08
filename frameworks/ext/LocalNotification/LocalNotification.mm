@@ -48,8 +48,14 @@ static void _addLocalDic(NSString *identity,UILocalNotification *localNotificati
 {    
     _cancelNotificationWithIdentity(identity);
     [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
-    NSLog(@"scheduleLocalNotification--->%@",identity);
     [m_localNotification_dictionary setObject:localNotification forKey:identity];
+#ifdef DEBUG
+    NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
+    [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    NSString *notifDate = [formatter stringFromDate:localNotification.fireDate];
+    NSLog(@"scheduleLocalNotification--->%@:@%@",identity,notifDate);
+#endif
+
 }
 
 
@@ -82,18 +88,16 @@ bool addNotification(const char *type, long finishTime, const char *body, const 
             return false;
         }
     }
-    
     UILocalNotification *localNotification = [[UILocalNotification alloc] init];
-    localNotification.alertBody = [NSString stringWithCString:body encoding:NSUTF8StringEncoding];
     localNotification.fireDate = [[[NSDate alloc] initWithTimeIntervalSince1970:finishTime] autorelease];
     localNotification.timeZone = [NSTimeZone defaultTimeZone];
+    localNotification.userInfo = [NSDictionary dictionaryWithObjectsAndKeys: [NSString stringWithUTF8String:identity], @"identity",nil];
+    localNotification.alertBody = [NSString stringWithCString:body encoding:NSUTF8StringEncoding];
     localNotification.applicationIconBadgeNumber = 1;
-    localNotification.userInfo = [NSDictionary dictionaryWithObjectsAndKeys: [NSString stringWithUTF8String:identity], @"identity",
-                                      nil];
-    
+    localNotification.soundName = UILocalNotificationDefaultSoundName;
     _addLocalDic([NSString stringWithUTF8String:identity],localNotification);
     [localNotification release];
-    return  true;
+    return true;
 }
 
 bool cancelNotificationWithIdentity(const char* identity)
