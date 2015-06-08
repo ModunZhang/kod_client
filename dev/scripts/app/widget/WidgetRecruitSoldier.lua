@@ -28,7 +28,7 @@ local soldier_vs = GameDatas.ClientInitGame.soldier_vs
 local function return_vs_soldiers_map(soldier_name)
     local strong_vs = {}
     local weak_vs = {}
-    for k, v in pairs(soldier_vs[GameUtils:GetSoldierTypeByName(soldier_name)]) do
+    for k, v in pairs(soldier_vs[DataUtils:GetSoldierTypeByName(soldier_name)]) do
         if v == "strong" then
             table.insert(strong_vs, k)
         elseif v == "weak" then

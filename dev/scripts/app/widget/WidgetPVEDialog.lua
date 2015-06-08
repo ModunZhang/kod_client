@@ -204,11 +204,12 @@ function WidgetPVEDialog:Fight()
                 }
             end)
 
-            local report = GameUtils:DoBattle(
+            local report = DataUtils:DoBattle(
                 {dragon = dragon, soldiers = attack_soldier},
                 {dragon = enemy.dragon, soldiers = enemy.soldiers},
                 self:GetObject():GetMap():Terrain(), self:GetTitle()
             )
+
 
             if report:IsAttackWin() then
                 local rollback = self:Search()

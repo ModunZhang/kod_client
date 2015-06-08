@@ -273,7 +273,7 @@ function PVEScene:CheckTrap()
                         }
                     end)
 
-                    local report = GameUtils:DoBattle(
+                    local report = DataUtils:DoBattle(
                         {dragon = dragon, soldiers = attack_soldier},
                         {dragon = enemy.dragon, soldiers = enemy.soldiers},
                         trap_obj:GetMap():Terrain(), _("散兵游勇")
