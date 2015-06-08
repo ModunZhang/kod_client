@@ -505,12 +505,13 @@ function GameUIVip:CreateVIPStatus()
         end)
 
     self.active_button = active_button
+    local vipLoginDaysCount = User:GetCountInfo().vipLoginDaysCount
     local widget_info = WidgetInfoNotListView.new(
         {
             info={
                 {_("当前VIP等级"),_("等级").." "..User:GetVipLevel()},
-                {_("下一次登录"),"+"..loginDays[User:GetCountInfo().vipLoginDaysCount > #loginDays and #loginDays or User:GetCountInfo().vipLoginDaysCount].expAdd},
-                {_("连续登录"),User:GetCountInfo().vipLoginDaysCount},
+                {_("下一次登录"),"+"..loginDays[ (vipLoginDaysCount + 1 ) > #loginDays and #loginDays or (vipLoginDaysCount + 1 )].expAdd},
+                {_("连续登录"),vipLoginDaysCount},
             }
         }
     ):align(display.CENTER, bg_size.width/2, 90)
