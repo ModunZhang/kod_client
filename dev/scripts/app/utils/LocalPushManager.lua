@@ -47,6 +47,9 @@ end
 function LocalPushManager:CancelNotificationByIdentity(identity)
 	if not self:IsSupport() then return end
 	print("CancelNotificationByIdentity------>",identity)
+	if not identity or identity == json.null then
+		return
+	end
 	localPush.cancelNotification(identity)
 end
 -- key is string
@@ -91,6 +94,9 @@ function LocalPushManager:AddLocalPush(push_key,finishTime,msg,identity)
 		or not self["flag_" .. push_key ] 
 	then 
 		return 
+	end
+	if not identity or identity == json.null then
+		return
 	end
 	self:CancelNotificationByIdentity(identity)
 	print("AddLocalPush---->",push_key,finishTime,msg,identity)

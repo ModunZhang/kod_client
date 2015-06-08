@@ -39,9 +39,26 @@
 // cocos2d application instance
 static AppDelegate s_sharedApplication;
 
+#ifdef DEBUG
+- (void) redirectConsoleLogToDocumentFolder {
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *logPath = [documentsDirectory stringByAppendingPathComponent:@"iOS.log"];
+    freopen([logPath cStringUsingEncoding:NSUTF8StringEncoding],"a+",stderr);
+    NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
+    [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    NSString *time = [formatter stringFromDate:[NSDate date]];
+    NSLog("-------------- Start Game [%@] --------------",time);
+    [formatter release];
+}
+#endif
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-
+#ifdef DEBUG
+    [self redirectConsoleLogToDocumentFolder];
+#endif
     cocos2d::Application *app = cocos2d::Application::getInstance();
     app->initGLContextAttrs();
     cocos2d::GLViewImpl::convertAttrs();

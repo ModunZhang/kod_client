@@ -192,10 +192,15 @@ function AudioManager:PlayGameMusic(scene_name,isLoop,forcePlay)
 					file_key = "AllianceScene"
 				end
 			end
+		else
+			self:PlayGameMusic()
 		end
 		self:PlayGameMusicWithMapKey(file_key,isLoop)
 	else
 		local file_key = scene_name or display.getRunningScene().__cname
+		if not file_key then
+			self:PlayGameMusic()
+		end
 		self:PlayGameMusicWithMapKey(file_key,isLoop)
 	end
 end
