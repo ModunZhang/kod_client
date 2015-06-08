@@ -1816,7 +1816,7 @@ function GameUIMail:OpenReplyMail(mail)
     local subject_input_box_image = display.newSprite("input_box.png",350, r_size.height-120):addTo(reply_mail)
     local subject_label = cc.ui.UILabel.new(
         {cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("RE:")..mail.title,
+            text = string.find(mail.title,_("RE:")) and mail.title or _("RE:")..mail.title,
             font = UIKit:getFontFilePath(),
             size = 18,
             dimensions = cc.size(410,24),
@@ -1884,7 +1884,7 @@ function GameUIMail:OpenReplyMail(mail)
         :addTo(reply_mail):align(display.CENTER, reply_mail:getContentSize().width-92, 46)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                self:ReplyMail(mail, _("RE:")..mail.title, textView:getText())
+                self:ReplyMail(mail,string.find(mail.title,_("RE:")) and mail.title or _("RE:")..mail.title, textView:getText())
                 dialog:LeftButtonClicked()
             end
         end)
@@ -1919,7 +1919,7 @@ function GameUIMail:ReplyMail(mail,title,content)
         UIKit:showMessageDialog(_("提示"),_("请填写邮件内容"))
         return
     end
-    NetManager:getSendPersonalMailPromise(addressee, _("RE:")..title, content,{
+    NetManager:getSendPersonalMailPromise(addressee, title, content,{
         id = mail.fromId,
         name = mail.fromName,
         icon = mail.fromIcon,
