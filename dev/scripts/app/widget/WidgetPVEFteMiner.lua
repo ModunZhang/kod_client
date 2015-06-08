@@ -49,7 +49,7 @@ function WidgetPVEFteMiner:PormiseOfFte()
                     }
                 end)
 
-                local report = GameUtils:DoBattle(
+                local report = DataUtils:DoBattle(
                     {dragon = dragon, soldiers = attack_soldier},
                     {dragon = enemy.dragon, soldiers = enemy.soldiers},
                     self:GetObject():GetMap():Terrain(), self:GetTitle()

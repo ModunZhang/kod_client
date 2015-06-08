@@ -937,7 +937,7 @@ function GameUIReplayNew:ShowResult()
     self.ui_map.close:show()
 end
 function GameUIReplayNew:ShowStrongOrWeak()
-    local vs = GameUtils:GetVSFromSoldierName(self:TopSoldierLeft().name, self:TopSoldierRight().name)
+    local vs = DataUtils:GetVSFromSoldierName(self:TopSoldierLeft().name, self:TopSoldierRight().name)
     if vs == "strong" then
         self.ui_map.arrow_green:show():flipX(false)
     elseif vs == "weak" then
