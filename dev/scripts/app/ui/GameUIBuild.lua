@@ -68,29 +68,28 @@ function GameUIBuild:LoadBuildingQueue()
     }):addTo(back_ground, 2)
         :align(display.LEFT_CENTER, 60, back_ground:getContentSize().height/2)
 
-    WidgetPushButton.new(
-        {normal = "add_btn_up_50x50.png",pressed = "add_btn_down_50x50.png"}
-        ,{}
-        ,{
-            disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
-        })
-        :addTo(back_ground)
-        :align(display.CENTER, back_ground:getContentSize().width - 25, back_ground:getContentSize().height/2)
-        -- :setButtonEnabled(false)
-        :onButtonClicked(function ( event )
-            if event.name == "CLICKED_EVENT" then
-                UIKit:newGameUI("GameUIActivityRewardNew",4):AddToCurrentScene(true)
-            end
-        end)
 
+    if self.build_city:BuildQueueCounts() < 2 then
+        WidgetPushButton.new(
+            {normal = "add_btn_up_50x50.png",pressed = "add_btn_down_50x50.png"}
+            ,{}
+            ,{
+                disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
+            })
+            :addTo(back_ground)
+            :align(display.CENTER, back_ground:getContentSize().width - 25, back_ground:getContentSize().height/2)
+            -- :setButtonEnabled(false)
+            :onButtonClicked(function ( event )
+                if event.name == "CLICKED_EVENT" then
+                    UIKit:newGameUI("GameUIActivityRewardNew",4):AddToCurrentScene(true)
+                end
+            end)
+    end
 
     function back_ground:SetBuildingQueue(current, max)
         local enable = current > 0
         check:setButtonSelected(enable)
-        local str = string.format("%s %d/%d", _("建筑队列"), current, max)
-        if building_label:getString() ~= str then
-            building_label:setString(str)
-        end
+        building_label:setString(string.format(_("建筑队列 %d/%d"), current, max))
     end
 
     return back_ground
@@ -297,9 +296,7 @@ function GameUIBuild:CreateItemWithListView(list_view)
     function item:SetType(item_info, on_build)
         building_icon:setTexture(item_info.png)
         building_icon:scale(item_info.scale)
-        if title_label:getString() ~= item_info.label then
-            title_label:setString(item_info.label)
-        end
+        title_label:setString(item_info.label)
         build_btn:onButtonClicked(function(event)
             on_build(self)
         end)
@@ -329,6 +326,7 @@ function GameUIBuild:CreateItemWithListView(list_view)
 end
 
 return GameUIBuild
+
 
 
 

@@ -414,9 +414,7 @@ function GameUITradeGuild:CreateOptions(params)
         -- 封装一下各个选项，以便之后刷新选项最新数值
         function checkBoxButton:SetValue(num)
             local new_value = GameUtils:formatNumber(num)
-            if new_value ~= num_value:getString() then
-                num_value:setString(new_value)
-            end
+            num_value:setString(new_value)
         end
     end
     group:setButtonsLayoutMargin(0, 4, 0, 0)

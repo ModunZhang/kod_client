@@ -290,9 +290,7 @@ function GameUIEquip:CreateEquipmentByType(equip_type)
 
 
     function equipment_btn:SetNumber(number)
-        if number_label:getString() ~= tostring(number) then
-            number_label:setString(number)
-        end
+        number_label:setString(number)
         return self
     end
 
