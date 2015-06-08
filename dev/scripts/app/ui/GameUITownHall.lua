@@ -392,10 +392,8 @@ function GameUITownHall:CreateDwellingLineItem(width,flag)
         assert("you should not use this function for any purpose!")
     end
     function node:SetCondition(current, max)
-        local str = string.format("%s %d/%d", _("达到"), current > max and max or current, max)
-        if condition:getString() ~= str then
-            condition:setString(str)
-        end
+        local str = string.format(_("达到 %d/%d"), current > max and max or current, max)
+        condition:setString(str)
         check:setButtonSelected(max <= current)
         return self
     end

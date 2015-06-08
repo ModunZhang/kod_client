@@ -657,7 +657,7 @@ function CityLayer:UpdateCitizen(city)
             count = count + 1
         end
     end)
-    for i = #self.citizens + 1, 1 do
+    for i = #self.citizens + 1, count do
         table.insert(self.citizens, self:CreateCitizen(city, 0, 0):addTo(self:GetCityNode()))
     end
 end

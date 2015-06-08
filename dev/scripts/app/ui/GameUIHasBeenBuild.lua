@@ -487,7 +487,7 @@ function GameUIHasBeenBuild:LoadBuildingQueue()
     function back_ground:SetBuildingQueue(current, max)
         local enable = current > 0
         check:setButtonSelected(enable)
-        building_label:setString(string.format("%s %d/%d", _("建筑队列"), current, max))
+        building_label:setString(string.format(_("建筑队列 %d/%d"), current, max))
     end
 
     return back_ground
