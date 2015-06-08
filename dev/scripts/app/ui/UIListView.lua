@@ -84,6 +84,7 @@ function UIListView:ctor(params)
     self.direction = params.direction or UIScrollView.DIRECTION_VERTICAL
     self.alignment = params.alignment or UIListView.ALIGNMENT_VCENTER
     self.bAsyncLoad = params.async or false
+    self.iscleanup = params.iscleanup == nil and true or params.iscleanup
     self.container = display.newNode()
     -- self.padding_ = params.padding or {left = 0, right = 0, top = 0, bottom = 0}
 
@@ -1146,7 +1147,7 @@ function UIListView:unloadOneItem_(idx)
     table.remove(self.items_, unloadIdx)
     self:addFreeItem_(item)
     -- item:removeFromParentAndCleanup(false)
-    self.container:removeChild(item)
+    self.container:removeChild(item, iscleanup)
 
     self:callAsyncLoadDelegate_(self, UIListView.UNLOAD_CELL_TAG, idx)
 end
