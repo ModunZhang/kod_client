@@ -590,9 +590,10 @@ function User:OnResourcesChangedByTime(userData, current_time, deltaData)
     local is_delta_update = not is_fully_update and deltaData.resources and deltaData.resources.stamina
     local resources = userData.resources
     if is_fully_update or is_delta_update then
+        local refreshTime = userData.resources.refreshTime / 1000
         local strength = self:GetStrengthResource()
-        strength:UpdateResource(current_time, resources.stamina)
-        strength:SetProductionPerHour(current_time, intInit.staminaRecoverPerHour.value)
+        strength:UpdateResource(refreshTime, resources.stamina)
+        strength:SetProductionPerHour(refreshTime, intInit.staminaRecoverPerHour.value)
     end
     self:GetGemResource():SetValue(resources.gem)
 end
