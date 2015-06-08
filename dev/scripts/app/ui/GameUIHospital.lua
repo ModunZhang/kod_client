@@ -489,6 +489,7 @@ function GameUIHospital:OnTreatSoliderCountChanged(soldier_manager, treat_soldie
         self:SetTreatAllSoldiersTime()
     end
     self:SetProgressCasualtyRateLabel()
+    self:SetProgressCasualtyRate()
     self.treat_all_now_button:removeAllEventListeners()
     self.treat_all_button:removeAllEventListeners()
     self.treat_all_now_button:onButtonClicked(function (event)

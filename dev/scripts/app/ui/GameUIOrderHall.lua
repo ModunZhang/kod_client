@@ -261,7 +261,7 @@ function GameUIOrderHall:ChangeProficiencyOption(option)
         table.insert(sortByProficiencyMember, member)
     end)
     table.sort( sortByProficiencyMember, function ( a,b )
-        return a:GetCollectLevelByType(option)>b:GetCollectLevelByType(option)
+        return a:GetCollectExpsByType(option)>b:GetCollectExpsByType(option)
     end)
     self.sortByProficiencyMember = sortByProficiencyMember
     self.proficiency_listview:reload()

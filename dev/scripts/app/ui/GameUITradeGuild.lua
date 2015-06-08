@@ -80,7 +80,7 @@ function GameUITradeGuild:OnMoveInStage()
             self:LoadMyGoodsPage()
         end
     end):pos(window.cx, window.bottom + 34)
-    self.tab_buttons:SetGreenTipsShow("myGoods",self.trade_manager:IsSomeDealsSold())
+    self.tab_buttons:SetButtonTipNumber("myGoods",self.trade_manager:GetSoldDealsCount())
     self.building:AddUpgradeListener(self)
     self.trade_manager:AddListenOnType(self, TradeManager.LISTEN_TYPE.DEAL_CHANGED)
     self.trade_manager:AddListenOnType(self, TradeManager.LISTEN_TYPE.MY_DEAL_REFRESH)
@@ -1048,11 +1048,11 @@ end
 function GameUITradeGuild:OnBuildingUpgrading()
 end
 function GameUITradeGuild:OnDealChanged(changed_map)
-    self.tab_buttons:SetGreenTipsShow("myGoods",self.trade_manager:IsSomeDealsSold())
+    self.tab_buttons:SetButtonTipNumber("myGoods",self.trade_manager:GetSoldDealsCount())
     self:LoadMyGoodsList()
 end
 function GameUITradeGuild:OnMyDealsRefresh(changed_map)
-    self.tab_buttons:SetGreenTipsShow("myGoods",self.trade_manager:IsSomeDealsSold())
+    self.tab_buttons:SetButtonTipNumber("myGoods",self.trade_manager:GetSoldDealsCount())
 end
 function GameUITradeGuild:OnResourceChanged(resource_manager)
     GameUITradeGuild.super.OnResourceChanged(self,resource_manager)
