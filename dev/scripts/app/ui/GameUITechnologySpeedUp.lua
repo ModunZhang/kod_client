@@ -39,6 +39,10 @@ function GameUITechnologySpeedUp:onCleanup()
 end
 
 function GameUITechnologySpeedUp:OnProductionTechnologyEventDataChanged(changed_map)
+	local upgrading_event = City:GetProductionTechEventsArray()[1]
+	if not upgrading_event or not self:GetEvent() or upgrading_event:Id() ~= self:GetEvent():Id() then
+		self:LeftButtonClicked()
+	end
 end
 
 function GameUITechnologySpeedUp:OnProductionTechnologyEventTimer(event)
