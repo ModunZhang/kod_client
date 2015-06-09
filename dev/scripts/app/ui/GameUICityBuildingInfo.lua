@@ -152,7 +152,7 @@ local building_details_map = {
     ["orderHall"] = {
         {90,			130,		300},
         {_("等级"), _("战斗力"),_("村落定期生成数量")},
-        {"level",  	"power"    ,"woodVillageCount" },
+        {"level",  	"power"    ,"villageCount" },
     },
     ["palace"] = {
         {90,			130,		300},
