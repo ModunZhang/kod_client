@@ -23,15 +23,6 @@ if test "${CONFIGURATION}" = "Debug"; then
 	gitDebugVersion
 fi
 
-cd $DOCROOT/../../tools/scripts
+echo "Xcode不再执行任何影响项目文件的操作,打包或运行项目前手动执行buildGame.sh脚本!"
 
-if test "${CONFIGURATION}" = "Debug"; then
-	# sh buildGame.sh iOS false false
-	echo 暂时注释掉 Debug模式测试自动更新
-else
-	# sh buildGame.sh iOS true true
-	echo Release模式必须手动执行buildUpdate.sh|或者调试执行buildGame.sh
-fi
-
-cd $DOCROOT
 find $DESTROOT/* -exec touch {} \;

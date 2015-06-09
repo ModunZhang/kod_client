@@ -22,14 +22,13 @@ cd $DOCROOT/../buildUpdate
 python buildUpdate.py $APP_VERSION
 cd $DOCROOT
 
-echo ---------------- 同步代码
+# echo ---------------- 同步代码
 # rsync -rave "ssh " --exclude=.DS_Store*  ../../update ec2-user@ec2-54-223-172-65.cn-north-1.compute.amazonaws.com.cn:~/server/update-server/public/
 
 echo ---------------- 提交代码
 cd $PROJ_DIR
 git add --all .
 git commit -m "update new version $Platform $APP_VERSION" #todo 加入小版本号到日志
-#push?
-# git push
 cd $DOCROOT
+echo 提交成功 手动push到远程!
 
