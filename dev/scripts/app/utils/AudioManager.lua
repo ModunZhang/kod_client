@@ -167,53 +167,53 @@ function AudioManager:PlaySoldierStepEffectByType(type_)
 	end
 end
 -- isLoop 默认为false
-function AudioManager:PlayGameMusic(scene_name,isLoop,forcePlay)
-	printLog("AudioManager","PlayGameMusic----->%s",scene_name or "nil")
-	if self.music_handle then
-		cc.Director:getInstance():getScheduler():unscheduleScriptEntry(self.music_handle)
-		self:SetBgMusicVolume(1.0)
-	end
-	if type(isLoop) ~= 'boolean' then isLoop = false end
-	if forcePlay then
-		self:PlayGameMusicWithMapKey(scene_name,isLoop)
-		return
-	end
-	if Alliance_Manager then
-		local alliance = Alliance_Manager:GetMyAlliance()
-		local status = alliance:Status()
-		local file_key = scene_name or display.getRunningScene().__cname
-		if file_key == 'MyCityScene' or file_key == 'AllianceScene' or file_key == 'AllianceBattleScene' then
-			if alliance:IsDefault() then
-				file_key = 'AllianceScene'
-			else
-				if status == 'prepare' or status == 'fight' then
-					file_key = 'AllianceBattleScene'
-				else
-					file_key = "AllianceScene"
-				end
-			end
-		end
-		self:PlayGameMusicWithMapKey(file_key,isLoop)
-	else
-		local file_key = scene_name or display.getRunningScene().__cname
-		-- if not file_key then
-		-- 	self:PlayGameMusic()
-		-- end
-		self:PlayGameMusicWithMapKey(file_key,isLoop)
-	end
-end
+-- function AudioManager:PlayGameMusic(scene_name,isLoop,forcePlay)
+-- 	printLog("AudioManager","PlayGameMusic----->%s",scene_name or "nil")
+-- 	if self.music_handle then
+-- 		cc.Director:getInstance():getScheduler():unscheduleScriptEntry(self.music_handle)
+-- 		self:SetBgMusicVolume(1.0)
+-- 	end
+-- 	if type(isLoop) ~= 'boolean' then isLoop = false end
+-- 	if forcePlay then
+-- 		self:PlayGameMusicWithMapKey(scene_name,isLoop)
+-- 		return
+-- 	end
+-- 	if Alliance_Manager then
+-- 		local alliance = Alliance_Manager:GetMyAlliance()
+-- 		local status = alliance:Status()
+-- 		local file_key = scene_name or display.getRunningScene().__cname
+-- 		if file_key == 'MyCityScene' or file_key == 'AllianceScene' or file_key == 'AllianceBattleScene' then
+-- 			if alliance:IsDefault() then
+-- 				file_key = 'AllianceScene'
+-- 			else
+-- 				if status == 'prepare' or status == 'fight' then
+-- 					file_key = 'AllianceBattleScene'
+-- 				else
+-- 					file_key = "AllianceScene"
+-- 				end
+-- 			end
+-- 		end
+-- 		self:PlayGameMusicWithMapKey(file_key,isLoop)
+-- 	else
+-- 		local file_key = scene_name or display.getRunningScene().__cname
+-- 		-- if not file_key then
+-- 		-- 	self:PlayGameMusic()
+-- 		-- end
+-- 		self:PlayGameMusicWithMapKey(file_key,isLoop)
+-- 	end
+-- end
 
-function AudioManager:PlayGameMusicWithMapKey(file_key,loop)
-	if bg_music_map[file_key] then
-		if string.find(bg_music_map[file_key],"sfx_") then
-			self:SetBgMusicVolume(0)
-			self:PlayeBgMusic(bg_music_map[file_key],loop)
-			self:FadeInBgMusicVolume()
-		else
-			self:PlayeBgMusic(bg_music_map[file_key],loop)
-		end
-	end
-end
+-- function AudioManager:PlayGameMusicWithMapKey(file_key,loop)
+-- 	if bg_music_map[file_key] then
+-- 		if string.find(bg_music_map[file_key],"sfx_") then
+-- 			self:SetBgMusicVolume(0)
+-- 			self:PlayeBgMusic(bg_music_map[file_key],loop)
+-- 			self:FadeInBgMusicVolume()
+-- 		else
+-- 			self:PlayeBgMusic(bg_music_map[file_key],loop)
+-- 		end
+-- 	end
+-- end
 
 
 function AudioManager:PlayeEffectSoundWithKey(key)
@@ -239,13 +239,12 @@ function AudioManager:SwitchBackgroundMusicState(isOn)
 	self.last_music_filename = ""
 	self.is_bg_auido_on = isOn 
 	if isOn then
-		self:PlayGameMusic()
+		-- self:PlayGameMusic()
 	else
 		self:StopMusic()
 	end
 	self:GetGameDefault():setBasicInfoBoolValueForKey(BACKGROUND_MUSIC_KEY,isOn)
 	self:GetGameDefault():flush()
-	-- if not isOn then audio.stopAllSounds() end --关闭主城的两重音乐
 end
 
 function AudioManager:GetBackgroundMusicState()
@@ -297,50 +296,50 @@ function AudioManager:FadeInBgMusicVolume()
 end
 
 -- for global call
-function AudioManager:OnBackgroundMusicCompletion()
-	if self.last_music_loop then return end -- 如果上次是循环的背景音乐 忽略
-	local current_scene = display.getRunningScene()
-	local scene_name    = current_scene.__cname
-	local lastFileKey   = self:GetLastPlayedFileName()
-	local alliance      = Alliance_Manager:GetMyAlliance()
-	local terrain       = alliance:Terrain()
-	local status        = alliance:Status()
+-- function AudioManager:OnBackgroundMusicCompletion()
+-- 	if self.last_music_loop then return end -- 如果上次是循环的背景音乐 忽略
+-- 	local current_scene = display.getRunningScene()
+-- 	local scene_name    = current_scene.__cname
+-- 	local lastFileKey   = self:GetLastPlayedFileName()
+-- 	local alliance      = Alliance_Manager:GetMyAlliance()
+-- 	local terrain       = alliance:Terrain()
+-- 	local status        = alliance:Status()
 
-	if "FteScene" == scene_name or scene_name == 'MyCityFteScene' then
-		scene_name = 'MyCityScene'
-	end
+-- 	if "FteScene" == scene_name or scene_name == 'MyCityFteScene' then
+-- 		scene_name = 'MyCityScene'
+-- 	end
 
-	if scene_name == 'MyCityScene' then
-		if status == 'prepare' or status == 'fight' then
-			if lastFileKey == 'sfx_city' then
-				self:PlayGameMusicWithMapKey('AllianceBattleScene',false)
-			elseif lastFileKey == 'bgm_battle' then
-				self:PlayGameMusicWithMapKey('MyCityScene',false)
-			end
-		else
-			if lastFileKey == 'bgm_peace' then
-				self:PlayGameMusicWithMapKey('MyCityScene',false)
-			elseif lastFileKey == 'sfx_city' then
-				self:PlayGameMusicWithMapKey('AllianceScene',false)
-			end
-		end
-	elseif scene_name == 'AllianceScene' or scene_name == 'AllianceBattleScene' then
-		if status == 'prepare' or status == 'fight' then
-			if lastFileKey == 'bgm_battle' then
-				self:PlayGameMusicWithMapKey('AllianceBattleScene_sfx',false)
-			elseif lastFileKey == 'sfx_battle' then
-				self:PlayGameMusicWithMapKey('AllianceBattleScene',false)
-			end
-		else
-			if lastFileKey == 'bgm_peace' then
-				self:PlayGameMusicWithMapKey(terrain,false)
-			else
-				self:PlayGameMusicWithMapKey("AllianceScene",false)
-			end
-		end
-	-- else
-	-- 	self:PlayGameMusic()
-	end
-end
+-- 	if scene_name == 'MyCityScene' then
+-- 		if status == 'prepare' or status == 'fight' then
+-- 			if lastFileKey == 'sfx_city' then
+-- 				self:PlayGameMusicWithMapKey('AllianceBattleScene',false)
+-- 			elseif lastFileKey == 'bgm_battle' then
+-- 				self:PlayGameMusicWithMapKey('MyCityScene',false)
+-- 			end
+-- 		else
+-- 			if lastFileKey == 'bgm_peace' then
+-- 				self:PlayGameMusicWithMapKey('MyCityScene',false)
+-- 			elseif lastFileKey == 'sfx_city' then
+-- 				self:PlayGameMusicWithMapKey('AllianceScene',false)
+-- 			end
+-- 		end
+-- 	elseif scene_name == 'AllianceScene' or scene_name == 'AllianceBattleScene' then
+-- 		if status == 'prepare' or status == 'fight' then
+-- 			if lastFileKey == 'bgm_battle' then
+-- 				self:PlayGameMusicWithMapKey('AllianceBattleScene_sfx',false)
+-- 			elseif lastFileKey == 'sfx_battle' then
+-- 				self:PlayGameMusicWithMapKey('AllianceBattleScene',false)
+-- 			end
+-- 		else
+-- 			if lastFileKey == 'bgm_peace' then
+-- 				self:PlayGameMusicWithMapKey(terrain,false)
+-- 			else
+-- 				self:PlayGameMusicWithMapKey("AllianceScene",false)
+-- 			end
+-- 		end
+-- 	-- else
+-- 	-- 	self:PlayGameMusic()
+-- 	end
+-- end
 
 return AudioManager

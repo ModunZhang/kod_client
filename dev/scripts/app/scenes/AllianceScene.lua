@@ -21,7 +21,7 @@ end
 function AllianceScene:onEnter()
     AllianceScene.super.onEnter(self)
     self:CreateAllianceUI()
-    app:GetAudioManager():PlayGameMusic("AllianceScene")
+    -- app:GetAudioManager():PlayGameMusic("AllianceScene")
     self:GetSceneLayer():ZoomTo(0.82)
     self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
     self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.OPERATION)
