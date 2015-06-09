@@ -316,6 +316,7 @@ function GameUIDragonEquipment:IntensifyButtonClicked()
   NetManager:getEnhanceDragonEquipmentPromise(self.dragon:Type(),equipment:Body(),equipments):done(function()
       if string.len(self.intensify_tips) > 0 then
         GameGlobalUI:showTips(_("装备强化成功"),self.intensify_tips)
+        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
       end
   end)
 end
