@@ -42,6 +42,9 @@ if __name__=="__main__":
 			if not arg:
 				sys.exit(-1)
 			m_out_path = arg
+	print "------开始通过plist文件生成包含大图信息的lua文件------"
+	print "---资源路径:" + m_plist_dir
+	print "---导出路径:" + m_out_path
 	plistFiles = []
 	for root, dirs, files in os.walk(m_plist_dir):
 		for fileName in files:
@@ -52,9 +55,9 @@ if __name__=="__main__":
 	for plistFile in plistFiles:
 		dic = readPlistFile(plistFile)
 		texture_name  = getFileTextureName(dic)
-		print "开始处理%s" % (texture_name)
+		print "--处理%s" % (texture_name)
 		pngs = dic.frames.keys()
 		for png in pngs:
 			file.write("texture_data[\"%s\"] = \"%s\"\n" % (png,texture_name))
 	file.write("return texture_data\n")
-	print "生成成功"
+	print "------生成成功------"
