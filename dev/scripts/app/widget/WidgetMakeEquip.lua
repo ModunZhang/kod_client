@@ -430,7 +430,7 @@ function WidgetMakeEquip:IsAbleToMakeEqui(isFinishNow)
         if not is_material_enough then
             break
         end
-        material_manager:IteratorDragonMaterialsByType(function (m_name,m_count)
+        material_manager:IteratorDragonMaterials(function (m_name,m_count)
             if m_name == v[1] then
                 if tonumber(v[2]) > m_count then
                     UIKit:showMessageDialog(_("提示"),_("材料不足"),function()end)
