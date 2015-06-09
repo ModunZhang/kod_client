@@ -9,7 +9,7 @@ end)
 function FteScene:ctor()
 end
 function FteScene:onEnter()
-    -- app:GetAudioManager():PlayGameMusic("MyCityScene")
+    app:GetAudioManager():PlayGameMusicOnSceneEnter("MyCityScene",false)
 end
 function FteScene:onEnterTransitionFinish()
     display.newSprite("fte_background.jpg"):addTo(self):pos(display.cx, display.cy)

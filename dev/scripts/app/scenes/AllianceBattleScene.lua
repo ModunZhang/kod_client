@@ -17,7 +17,7 @@ function AllianceBattleScene:onEnter()
     AllianceBattleScene.super.onEnter(self)
     self:CreateAllianceUI()
     self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
-    -- app:GetAudioManager():PlayGameMusic("AllianceBattleScene")
+    app:GetAudioManager():PlayGameMusicOnSceneEnter("AllianceBattleScene",false)
     self:GetSceneLayer():ZoomTo(0.82)
     local alliance_key = DataManager:getUserData()._id.."_SHOW_REGION_TIPS"
     if not app:GetGameDefautlt():getBasicInfoValueForKey(alliance_key) then
