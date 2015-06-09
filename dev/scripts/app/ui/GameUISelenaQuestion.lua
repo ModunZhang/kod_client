@@ -160,7 +160,7 @@ function GameUISelenaQuestion:GetListItem(index,question)
 	local item = self.question_layer_list:newItem()
 	local label = UIKit:ttfLabel({
 		text = question,
-		size = 22,
+		size = 18,
 		color= 0x403c2f,
 		dimensions = cc.size(494,0),
 	})
