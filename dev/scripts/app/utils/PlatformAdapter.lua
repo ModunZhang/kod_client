@@ -42,6 +42,17 @@ function PlatformAdapter:ios()
     DEBUG_GET_ANIMATION_PATH = function(filePath)
         return filePath
     end
+
+    if CONFIG_IS_DEBUG then -- debug 关闭sdk统计
+        ext.market_sdk = {}
+        setmetatable(ext.market_sdk,{
+            __index= function(t,key)
+                return function ( ... )
+                    print("\nfunction: ext.market_sdk." .. key .. "\n","args: ",...)
+                end
+            end
+        })
+    end
 end
 
 
