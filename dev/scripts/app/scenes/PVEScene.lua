@@ -41,7 +41,7 @@ function PVEScene:onEnter()
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
     self:GetSceneLayer():ZoomTo(0.8)
     self:GetSceneLayer():MoveCharTo(self.user:GetPVEDatabase():GetCharPosition())
-    app:GetAudioManager():PlayGameMusic("PVEScene",true)
+    app:GetAudioManager():PlayGameMusicOnSceneEnter("PVEScene",true)
     self.user:GetPVEDatabase():SetLocationHandle(self)
 end
 function PVEScene:onEnterTransitionFinish()
@@ -76,6 +76,7 @@ function PVEScene:GetPreloadImages()
         {image = "animations/heihua_animation_1.pvr.ccz",list = "animations/heihua_animation_1.plist"},
         {image = "animations/heihua_animation_2.pvr.ccz",list = "animations/heihua_animation_2.plist"},
         {image = "animations/region_animation_0.pvr.ccz",list = "animations/region_animation_0.plist"},
+        {image = "animations/building_animation.pvr.ccz",list = "animations/building_animation.plist"},
         {image = "pve_png_rgba5555.pvr.ccz",list = "pve_png_rgba5555.plist"},
     }
 end

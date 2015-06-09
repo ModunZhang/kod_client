@@ -4,6 +4,7 @@ set -e
 #todo android
 PLATFORMS="iOS"
 EncryptTypes="true false"
+XCODE_CONFIGURATIONS="Debug Release"
 
 getPlatform()
 {
@@ -132,5 +133,34 @@ getTempDir()
 {
 	result="/Users/`whoami`/.DragonFall"
 	test -d $result || mkdir -p $result && chmod 777 $result && echo $result
+}
+
+getConfiguration()
+{
+	Configuration=$1
+	if [[ -z $Configuration ]]
+	then
+	    echo "Configuration :" >&2
+	    select Configuration in $XCODE_CONFIGURATIONS
+	    do
+	        if [[ -n $Configuration ]]
+	        then
+	            break
+	        fi
+	    done
+	fi
+	echo $Configuration
+}
+#需要定义全局变量$DEBUG_GIT_AUTO_UPDATE和$RELEASE_GIT_AUTO_UPDATE
+getGitPushOfAutoUpdate()
+{
+	Configuration=$1
+	python -c "exit(0) if \"$Configuration\" in \"$XCODE_CONFIGURATIONS\".split() else exit(1)"
+	if [[ $Configuration = "Debug" ]]
+	then
+		echo "$DEBUG_GIT_AUTO_UPDATE"
+	else
+		echo "$RELEASE_GIT_AUTO_UPDATE"
+	fi
 }
 $@

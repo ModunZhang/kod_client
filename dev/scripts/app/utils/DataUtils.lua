@@ -978,19 +978,15 @@ end
 function DataUtils:DoBattle(attacker, defencer, terrain, enemy_name)
     assert(terrain)
     assert(enemy_name)
-    print_("adf=====1")
     local clone_attacker_soldiers = clone(attacker.soldiers)
     local clone_defencer_soldiers = clone(defencer.soldiers)
 
-    print_("adf=====2")
     local attacker_dragon = createDragonForFight(attacker.dragon, terrain)
     local defencer_dragon = defencer.dragon
 
-    print_("adf=====3")
     local attacker_soldiers = createPlayerSoldiersForFight(attacker.soldiers, attacker.dragon, terrain, attacker_dragon.strength > defencer_dragon.strength)
     local defencer_soldiers = createPlayerSoldiersForFight(defencer.soldiers)
 
-    print_("adf=====4")
     local dragonFightFixedEffect = getDragonFightFixedEffect(attacker_soldiers, defencer_soldiers)
     local attack_dragon, defence_dragon = self:DragonDragonBattle(attacker_dragon, defencer_dragon, dragonFightFixedEffect)
 

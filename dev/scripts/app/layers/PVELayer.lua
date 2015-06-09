@@ -250,7 +250,9 @@ function PVELayer:MoveCharTo(x, y)
     local old_x, old_y = self.user:GetPVEDatabase():GetCharPosition()
     self:LightOn(x, y)
     self.char:pos(self:GetLogicMap():ConvertToMapPosition(x, y))
-    self.char:setScaleX((x - old_x) > 0 and -1 or 1)
+    if (x - old_x) ~= 0 then
+        self.char:setScaleX((x - old_x) > 0 and -1 or 1)
+    end
     self:GotoLogicPoint(x, y, 10)
     self.user:GetPVEDatabase():SetCharPosition(x, y)
     self:NotifyExploring()
