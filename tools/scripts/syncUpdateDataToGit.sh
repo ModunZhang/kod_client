@@ -7,15 +7,25 @@ XCODE_CONFIGURATION=`./functions.sh getConfiguration $2`
 PATH_OF_GIT_AUTOUPDATE=`./functions.sh  getGitPushOfAutoUpdate $XCODE_CONFIGURATION`
 TARGET_PATH="$PATH_OF_GIT_AUTOUPDATE/public"
 
-echo "> $Platform $XCODE_CONFIGURATION 同步文件夹 $UPDATE_SOURCE_DIR --> $TARGET_PATH"
-rsync -ravc --exclude=.DS_Store* "$UPDATE_SOURCE_DIR" $TARGET_PATH --delete-after
-
-pushDataToGit()
+pullGitData()
 {
 	cd "$PATH_OF_GIT_AUTOUPDATE"
 	git reset --hard HEAD
 	git clean -df
-	git fetch
+	git pull
+	cd "$DOCROOT"
+}
+echo "> 更新仓库内容"
+pullGitData
+
+echo "> $Platform $XCODE_CONFIGURATION 同步文件夹 $UPDATE_SOURCE_DIR --> $TARGET_PATH"
+
+rsync -ravc --exclude=.DS_Store* "$UPDATE_SOURCE_DIR" $TARGET_PATH --delete-after
+
+pushDataToGit()
+{
+	
+	cd "$PATH_OF_GIT_AUTOUPDATE"
 	git add --all
 	git ci -m "发布新的自动更新"
 	git push
