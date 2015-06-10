@@ -1,8 +1,7 @@
 # 2dx版本3.3final升级
----- 
----- 
+
 - 修改editbox iOS支持编辑时清除内容
-	> textField_.clearButtonMode = UITextFieldViewModeWhileEditing;
+	 textField_.clearButtonMode = UITextFieldViewModeWhileEditing;
 - 修改ios单行输入框的行为 修改editbox ended事件
 - 修改ios下背景音乐的播放规则
 - 键盘弹出事件修改
@@ -21,3 +20,116 @@
 - `输入框使用项目自定义的字体(放弃修改)`
 - Label加粗功能
 
+******
+
+####脚本文件说明
+1. buildGame.sh
+	执行lua和资源的导出
+	参数:1.平台 2.是否加密lua 3.是否加密资源(执行选择相应参数即可)
+	
+2. buildLuaConfig.sh
+	把excel配置表导出为lua文件
+	
+3. buildRes.sh
+	导出项目的资源
+	参数:1.平台 2.是否加密
+	
+4. buildScripts.sh
+	导出项目的lua文件
+	参数:1.平台 2.是否加密
+	
+5. buildUpdate.sh
+	发布自动更新脚本,执行选择相应参数即可
+	
+6. build_format_map.py
+	
+7. cleanGame.sh
+	清除生成项目的中间文件和update目录
+	
+8. cleanMacPlayer.sh
+	清除保存在player中的userdefault中的信息,不会重置openudid
+	
+9. cleanTempFile.sh
+	清除生成项目的中间文件,但是不会清除update目录
+	
+10. exportPO2Xlsx.sh
+	将项目的本地化po文件导出为excel文件
+	参数:1.将要导出的excel文件的路径(xlsx后缀名)
+	
+11. exportXlsx2po.sh
+	将10命令导出的excel导回项目中
+	参数:1.将要导入的excel文件路径(xlsx后缀名)
+	
+12. export_plist_texture_data.sh
+	将合成的大图信息导出到项目中(执行选择相应参数即可)
+	
+13. functions.sh
+	为其他脚本提供基础函数的脚本，如果要改变加密资源和lua的XXTEA信息就修改这个文件中的值
+	
+14. install.sh
+	为所有的脚本添加执行权限
+	
+15. plist_texture_data_to_lua.py
+	12脚本的python实现
+16. syncUpdateDataToGit.sh
+
+	**将生成的update目录上传到相应的git仓库,这个脚本不会自动部署服务器，需要手动ssh到服务器pull版本号使用这个脚本前必须确认**
+	
+        包含两个全局shell变量: 
+        1.DEBUG_GIT_AUTO_UPDATE
+          测试用的git仓库路径 git@github.com:ModunZhang/kod_test_update.git
+        2.RELEASE_GIT_AUTO_UPDATE
+          正式的git仓库路径 git@github.com:ModunZhang/kod_auto_update.git
+          
+******
+
+#### 本地化说明
+
+1. 安装poxls-1.1.0.tar.gz和poedit_osx.zip
+
+2. 用poedit更新所有po文件的本地化信息
+
+3. 执行脚本**10**将po文件导出为excel
+
+4. excel修改完成后执行脚本**11**将excel导出为最新的po文件
+
+5. 用poedit设置所有po文件的属性(搜索路径为app目录,代码编码为utf8,搜索关键词为下划线
+
+******
+
+#### 自动更新说明
+    Xcode设置的全局变量中必须包含Qucik的环境变量 QUICK_V3_ROOT
+    config.lua文件不能被更新(cpp写死的)
+    大版本号由Xcode中设置的大版本号生成json文件
+###### 自动更新部署步骤
+----
+* 上传所有的修改文件到develop分支
+* 检查自动更新逻辑部分是否被修改，自动更新可以更新自动更新的逻辑
+* 检查Xcode中的大版本号设置
+* 合并develop分支到master分支
+* 在master分支上执行脚本7清空update目录
+* 在master分支上执行脚本5生成自动更新文件
+* 成功后执行脚本16上传文件到github
+* 部署自动更新的服务器(测试服务器或者正式服务器)
+* 如果是测试自动更新，最好测试完毕后还原master分支到线上版本的tag位置
+******
+
+#### Xcode一般调试步骤
+* 修改项目 关闭Lua中的自动更新逻辑
+* 如果只修改了Lua,执行脚本4 `buildScripts.sh iOS false`
+* 如果只修改了资源,执行脚本3 `buildRes.sh iOS false`
+* 如果都有修改执行,执行脚本1 `buildGame.sh iOS false false`
+* Xcode执行
+******
+
+#### 贴图说明
+images下文件夹说明
+
+	_CanCompress:将被直接压缩为pvrtc4的散图
+	_Compressed:iOS已经被合成最终大图的图
+	_Compressed_mac:Player已经被合成最终大图的图
+	rgba444_single:将被压缩为rgba4444格式的散图
+贴图操作说明:
+
+1. 所有的大图项目在PackImages文件夹下,TextPacker的项目文件也在里面
+2. 所有新加的图需要用ImageOptim.app执行一次无损压缩再放入项目中
