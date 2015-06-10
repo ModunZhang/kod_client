@@ -15,7 +15,7 @@ done
 
 for language_code in ${PO_LANGUAGES[@]};
 do
-	echo "> 导出${I18N_DIR%/*}/${language_code}.po"
+	echo "> 导出${I18N_DIR}/${language_code}.po"
 	xls-to-po $language_code $EXCEL_FILE "${I18N_DIR}/${language_code}.po"
 done
 

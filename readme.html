@@ -261,37 +261,50 @@ sup {
 <li><p>用poedit更新所有po文件的本地化信息</p></li>
 <li><p>执行脚本<strong>10</strong>将po文件导出为excel</p></li>
 <li><p>excel修改完成后执行脚本<strong>11</strong>将excel导出为最新的po文件</p></li>
-<li><p>用poedit设置所有po文件的属性(搜索路径为app目录,代码编码为utf8,搜索关键词为下划线</p></li>
+<li><p>用poedit设置所有po文件(每个po文件都需要设置)的属性(代码编码为utf8,搜索路径为app目录,搜索关键词为下划线，poedit的首选项只需设置一次 <a href="http://zengrong.net/post/1986.htm">http://zengrong.net/post/1986.htm</a></p></li>
+<li><p>更新本地化文件</p>
+
+<pre><code> 如果第6步执行不了，原因就是第5步没有设置好!
+</code></pre></li>
 </ol>
 
 
+<h6>5-6 图解</h6>
+
+<p><img src="./document_images/1.png" alt="poedit-&gt;首选项" /></p>
+
+<p><img src="./document_images/2.png" alt="lua项目的设置" /></p>
+
+<p><img src="./document_images/3.png" alt="po文件Catalog" /></p>
+
+<p><img src="./document_images/4.png" alt="代码编码为utf8" /></p>
+
+<p><img src="./document_images/5.png" alt="搜索路径为app目录" /></p>
+
+<p><img src="./document_images/6.png" alt="搜索路径为app目录" /></p>
+
+<p><img src="./document_images/7.png" alt="搜索关键词为下划线" /></p>
+
+<p><img src="./document_images/8.png" alt="搜索关键词为下划线" /></p>
+
 <hr />
 
-<h4>自动更新说明</h4>
+<h4>贴图说明</h4>
 
-<pre><code>Xcode中必须设置Qucik的环境变量 QUICK_V3_ROOT
-config.lua文件不能被更新(cpp写死的)
-大版本号由Xcode中设置的大版本号生成json文件
+<h6>images下文件夹说明</h6>
+
+<pre><code>_CanCompress:将被直接压缩为pvrtc4的散图
+_Compressed:iOS已经被合成最终大图的图
+_Compressed_mac:Player已经被合成最终大图的图
+rgba444_single:将被压缩为rgba4444格式的散图
 </code></pre>
 
-<h6>自动更新部署步骤</h6>
+<h6>贴图操作说明:</h6>
 
-<hr />
-
-<p><strong>自动更新生成的脚本和资源加密参数必须为true</strong></p>
-
-<ul>
-<li>上传所有的修改文件到develop分支,保证本地develop分支为最新</li>
-<li>确保config.lua中的服务器为正式服务器</li>
-<li>检查自动更新逻辑部分是否被修改，自动更新可以更新自动更新的逻辑</li>
-<li>检查Xcode中的大版本号设置</li>
-<li>合并develop分支到master分支</li>
-<li>在master分支上执行脚本7清空update目录</li>
-<li>在master分支上执行脚本5生成自动更新文件</li>
-<li>成功后执行脚本16上传文件到github</li>
-<li>部署自动更新的服务器(测试服务器或者正式服务器)</li>
-<li>如果是测试自动更新，最好测试完毕后还原master分支到线上版本的tag位置</li>
-</ul>
+<ol>
+<li>所有的大图项目在<code>PackImages</code>文件夹下,TextPacker的项目文件也在里面</li>
+<li>所有新加的图需要用<code>ImageOptim.app</code>执行一次无损压缩再放入项目中</li>
+</ol>
 
 
 <hr />
@@ -309,23 +322,55 @@ config.lua文件不能被更新(cpp写死的)
 
 <hr />
 
-<h4>贴图说明</h4>
+<h4>自动更新说明</h4>
 
-<p>images下文件夹说明</p>
-
-<pre><code>_CanCompress:将被直接压缩为pvrtc4的散图
-_Compressed:iOS已经被合成最终大图的图
-_Compressed_mac:Player已经被合成最终大图的图
-rgba444_single:将被压缩为rgba4444格式的散图
+<pre><code>Xcode中必须设置Qucik的环境变量 QUICK_V3_ROOT
+config.lua文件不能被更新(cpp写死的)
+大版本号由Xcode中设置的大版本号生成json文件
 </code></pre>
 
-<p>贴图操作说明:</p>
+<h6>自动更新发布步骤</h6>
 
-<ol>
-<li>所有的大图项目在<code>PackImages</code>文件夹下,TextPacker的项目文件也在里面</li>
-<li>所有新加的图需要用<code>ImageOptim.app</code>执行一次无损压缩再放入项目中</li>
-</ol>
+<hr />
 
+<p><strong>自动更新生成的脚本和资源加密参数必须为true</strong></p>
+
+<ul>
+<li>上传所有的修改文件到develop分支,更新本地develop仓库，确保本地develop分支为最新</li>
+<li>确保config.lua中的服务器为正式服务器</li>
+<li>检查自动更新逻辑部分是否被修改(GameUILoginBeta.lua、GameUISplashBeta.lua)，自动更新可以更新自动更新的逻辑</li>
+<li>切换到master分支</li>
+<li>检查Xcode中的大版本号设置</li>
+<li>合并develop分支到master分支</li>
+<li>在master分支上执行脚本7清空update目录</li>
+<li>在master分支上执行脚本5生成自动更新文件</li>
+<li>成功后执行脚本16上传自动更新文件到github</li>
+<li>部署自动更新的服务器(测试服务器或者正式服务器)</li>
+<li>如果是测试自动更新，最好测试完毕后还原master分支到线上版本的tag位置，如果没问题手动push项目master分支</li>
+</ul>
+
+
+<hr />
+
+<h4>发布新版本说明</h4>
+
+<blockquote><p>执行自动更新发布的所有步骤，注意修改Xcode大版本号，完成自动更新发布的所有步骤后Xcode打包即可。</p></blockquote>
+
+<hr />
+
+<h3>自动更新相关注意点</h3>
+
+<p><strong>每次发布新包，大版本号必须比线上的高</strong></p>
+
+<p>  举例:手机上此时装的1.0(ABC)</p>
+
+<ul>
+<li><p>我们发布新包<code>1.0(DEF)</code>,并部署<code>1.0(DEF)</code>到更新服务器。<code>把1.0(DEF)</code>的包覆盖安装到手机上，启动游戏仍然版本会是<code>1.0(ABC),</code>手机依然会走自动更新流程。</p></li>
+<li><p>我们发布新包<code>1.1(DEF)</code>,并部署到更新服务器,如果覆盖安装到手机上,启动游戏版本会是<code>1.1(DEF)</code>不会走自动更新。如果我们不覆盖安装，直接启动<code>1.0(ABC)</code>,会走强制更新流程。</p></li>
+</ul>
+
+
+<p><strong>发布自动更新的时候一定检查git仓库版本号,不要轻易部署</strong></p>
 
 <hr />
 
