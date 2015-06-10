@@ -510,7 +510,19 @@ function MyApp:transactionObserver(event)
             device.hideActivityIndicator()
             local msg = response.msg
             if msg.transactionId then
-                UIKit:showMessageDialog(_("恭喜"), string.format("您已获得%s,到物品里面查看",UIKit:getIapPackageName(transaction.productIdentifier)))
+                local openRewardIf = function()
+                    local GameUIActivityRewardNew_instance = UIKit:GetUIInstance("GameUIActivityRewardNew")
+                    if User and not GameUIActivityRewardNew_instance then
+                        local countInfo = User:GetCountInfo()
+                        if countInfo.iapCount > 0 and not countInfo.isFirstIAPRewardsGeted then
+                            UIKit:newGameUI("GameUIActivityRewardNew",4):AddToCurrentScene(true) -- 如果首充 弹出奖励界面
+                        end
+                    end
+                end
+                UIKit:showMessageDialog(_("恭喜"), 
+                    string.format("您已获得%s,到物品里面查看",
+                    UIKit:getIapPackageName(transaction.productIdentifier)),
+                    openRewardIf)
                 Store.finishTransaction(transaction)
                 ext.market_sdk.onPlayerChargeSuccess(transaction.transactionIdentifier)
             end
