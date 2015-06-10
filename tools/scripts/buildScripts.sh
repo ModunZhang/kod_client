@@ -8,8 +8,26 @@ SCRIPTS_DEST_DIR=`./functions.sh getExportScriptsDir $Platform`
 XXTEAKey=`./functions.sh getXXTEAKey`
 XXTEASign=`./functions.sh getXXTEASign`
 TEMP_RES_DIR=`./functions.sh getTempDir`
-
+DOCROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ProjDir=`./functions.sh getProjDir`
+VERSION_FILE="$ProjDir/dev/scripts/debug_version.lua"
 test -d "$SCRIPTS_DEST_DIR" && rm -rf "$SCRIPTS_DEST_DIR/*"
+
+gitDebugVersion()
+{
+	cd "$ProjDir"
+	#获取内部版本
+	TIME_VERSION=`git rev-list HEAD | wc -l | tr -d "  " | awk '{print $0}'`
+	echo "------------------------------------"
+	echo "> Debug Version:  $TIME_VERSION"
+	echo "local __debugVer = ${TIME_VERSION}
+		return __debugVer
+	" > $VERSION_FILE
+	echo "------------------------------------"
+	cd "$DOCROOT"
+}
+
+
 exportScripts()
 {
 	currentDir=$1
@@ -47,5 +65,6 @@ exportScriptsEncrypt()
 		cp -f "$tempfile"
 	fi
 }
+gitDebugVersion
 exportScriptsEncrypt 
 find $SCRIPTS_SRC_DIR -name "*.bytes" -exec rm -rv {} \;
