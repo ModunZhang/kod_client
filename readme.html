@@ -1,0 +1,333 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<style>
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote {
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", Arial, sans-serif;
+    font-size: 13px;
+    line-height: 18px;
+    color: #737373;
+    background-color: white;
+    margin: 10px 13px 10px 13px;
+}
+table {
+	margin: 10px 0 15px 0;
+	border-collapse: collapse;
+}
+td,th {	
+	border: 1px solid #ddd;
+	padding: 3px 10px;
+}
+th {
+	padding: 5px 10px;	
+}
+
+a {
+    color: #0069d6;
+}
+a:hover {
+    color: #0050a3;
+    text-decoration: none;
+}
+a img {
+    border: none;
+}
+p {
+    margin-bottom: 9px;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #404040;
+    line-height: 36px;
+}
+h1 {
+    margin-bottom: 18px;
+    font-size: 30px;
+}
+h2 {
+    font-size: 24px;
+}
+h3 {
+    font-size: 18px;
+}
+h4 {
+    font-size: 16px;
+}
+h5 {
+    font-size: 14px;
+}
+h6 {
+    font-size: 13px;
+}
+hr {
+    margin: 0 0 19px;
+    border: 0;
+    border-bottom: 1px solid #ccc;
+}
+blockquote {
+    padding: 13px 13px 21px 15px;
+    margin-bottom: 18px;
+    font-family:georgia,serif;
+    font-style: italic;
+}
+blockquote:before {
+    content:"\201C";
+    font-size:40px;
+    margin-left:-10px;
+    font-family:georgia,serif;
+    color:#eee;
+}
+blockquote p {
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 18px;
+    margin-bottom: 0;
+    font-style: italic;
+}
+code, pre {
+    font-family: Monaco, Andale Mono, Courier New, monospace;
+}
+code {
+    background-color: #fee9cc;
+    color: rgba(0, 0, 0, 0.75);
+    padding: 1px 3px;
+    font-size: 12px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+pre {
+    display: block;
+    padding: 14px;
+    margin: 0 0 18px;
+    line-height: 16px;
+    font-size: 11px;
+    border: 1px solid #d9d9d9;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+pre code {
+    background-color: #fff;
+    color:#737373;
+    font-size: 11px;
+    padding: 0;
+}
+sup {
+    font-size: 0.83em;
+    vertical-align: super;
+    line-height: 0;
+}
+* {
+	-webkit-print-color-adjust: exact;
+}
+@media screen and (min-width: 914px) {
+    body {
+        width: 854px;
+        margin:10px auto;
+    }
+}
+@media print {
+	body,code,pre code,h1,h2,h3,h4,h5,h6 {
+		color: black;
+	}
+	table, pre {
+		page-break-inside: avoid;
+	}
+}
+</style>
+<title>说明文档</title>
+
+</head>
+<body>
+<h2>说明文档</h2>
+
+<h4>开发环境配置</h4>
+
+<ul>
+<li>安装<code>TexturePacker</code>及其命令行工具</li>
+<li>环境变量<code>QUICK_V3_ROOT</code> bash和Xcode</li>
+<li>安装<code>poedit_osx.zip</code> 和 <code>poxls-1.1.0.tar.gz</code></li>
+<li>设置环境变量<code>DEBUG_GIT_AUTO_UPDATE</code>和<code>RELEASE_GIT_AUTO_UPDATE</code></li>
+<li>确保tools/scripts下的所有脚本均有执行权限(执行脚本14修改权限)</li>
+</ul>
+
+
+<hr />
+
+<h4>2dx版本3.3final升级</h4>
+
+<ul>
+<li>修改editbox iOS支持编辑时清除内容
+   textField_.clearButtonMode = UITextFieldViewModeWhileEditing;</li>
+<li>修改ios单行输入框的行为 修改editbox ended事件</li>
+<li>修改ios下背景音乐的播放规则</li>
+<li>键盘弹出事件修改</li>
+<li>文本框和quick事件冲突修复(CCNode)</li>
+<li>修改文本框占位文字的格式bug
+  ''<em>labelPlaceHolder->setSystemFontName(pFontName);
+  ''</em>labelPlaceHolder->setSystemFontSize(fontSize);</li>
+<li>添加多行输入框</li>
+<li>GameCenter</li>
+<li>iap添加接口</li>
+<li>资源加密脚本修改(quick) 修改图片读取函数(CCImage)用以支持资源加密</li>
+<li>开启quick项目的luac加密模式，未加密的原配置备份文件为
+
+<ol>
+<li> v3.3/external/lua/lua/lopcodes.def_bak_20150304-111302</li>
+<li> v3.3/external/lua/lua/lopmodes.def_bak_20150304-111302</li>
+</ol>
+</li>
+<li>添加图片处理命令行工具</li>
+<li><code>输入框使用项目自定义的字体(放弃修改)</code></li>
+<li>Label加粗功能</li>
+</ul>
+
+
+<hr />
+
+<h4>脚本文件说明</h4>
+
+<ol>
+<li><p>buildGame.sh
+ 执行lua和资源的导出
+ 参数:1.平台 2.是否加密lua 3.是否加密资源(执行选择相应参数即可)</p></li>
+<li><p>buildLuaConfig.sh
+ 把excel配置表导出为lua文件</p></li>
+<li><p>buildRes.sh
+ 导出项目的资源
+ 参数:1.平台 2.是否加密</p></li>
+<li><p>buildScripts.sh
+ 导出项目的lua文件
+ 参数:1.平台 2.是否加密</p></li>
+<li><p>buildUpdate.sh
+ 发布自动更新脚本,执行选择相应参数即可</p></li>
+<li><p>build_format_map.py</p></li>
+<li><p>cleanGame.sh
+ 清除生成项目的中间文件和update目录</p></li>
+<li><p>cleanMacPlayer.sh
+ 清除保存在player中的userdefault中的信息,不会重置openudid</p></li>
+<li><p>cleanTempFile.sh
+ 清除生成项目的中间文件,但是不会清除update目录</p></li>
+<li><p>exportPO2Xlsx.sh
+将项目的本地化po文件导出为excel文件
+参数:1.将要导出的excel文件的路径(xlsx后缀名)</p></li>
+<li><p>exportXlsx2po.sh
+将脚本10导出的excel导回项目中
+参数:1.将要导入的excel文件路径(xlsx后缀名)</p></li>
+<li><p>export_plist_texture_data.sh
+将合成的大图信息导出到项目中(执行选择相应参数即可)</p></li>
+<li><p>functions.sh
+为其他脚本提供基础函数的脚本，如果要改变加密资源和lua的XXTEA信息就修改这个文件中的值</p></li>
+<li><p>install.sh
+为所有的脚本添加执行权限</p></li>
+<li><p>plist_texture_data_to_lua.py
+脚本12的python实现</p></li>
+<li><p>syncUpdateDataToGit.sh</p>
+
+<p><strong>将生成的update目录上传到相应的git仓库,这个脚本不会自动部署服务器，需要手动ssh到服务器pull版本号使用这个脚本前必须确认</strong></p>
+
+<pre><code>包含两个全局shell变量: 
+1.DEBUG_GIT_AUTO_UPDATE
+  测试用的git仓库路径 git@github.com:ModunZhang/kod_test_update.git
+2.RELEASE_GIT_AUTO_UPDATE
+  正式的git仓库路径 git@github.com:ModunZhang/kod_auto_update.git
+</code></pre></li>
+</ol>
+
+
+<hr />
+
+<h4>本地化说明</h4>
+
+<ol>
+<li><p>安装poxls-1.1.0.tar.gz和poedit_osx.zip</p></li>
+<li><p>用poedit更新所有po文件的本地化信息</p></li>
+<li><p>执行脚本<strong>10</strong>将po文件导出为excel</p></li>
+<li><p>excel修改完成后执行脚本<strong>11</strong>将excel导出为最新的po文件</p></li>
+<li><p>用poedit设置所有po文件的属性(搜索路径为app目录,代码编码为utf8,搜索关键词为下划线</p></li>
+</ol>
+
+
+<hr />
+
+<h4>自动更新说明</h4>
+
+<pre><code>Xcode中必须设置Qucik的环境变量 QUICK_V3_ROOT
+config.lua文件不能被更新(cpp写死的)
+大版本号由Xcode中设置的大版本号生成json文件
+</code></pre>
+
+<h6>自动更新部署步骤</h6>
+
+<hr />
+
+<p><strong>自动更新生成的脚本和资源加密参数必须为true</strong></p>
+
+<ul>
+<li>上传所有的修改文件到develop分支,保证本地develop分支为最新</li>
+<li>检查自动更新逻辑部分是否被修改，自动更新可以更新自动更新的逻辑</li>
+<li>检查Xcode中的大版本号设置</li>
+<li>合并develop分支到master分支</li>
+<li>在master分支上执行脚本7清空update目录</li>
+<li>在master分支上执行脚本5生成自动更新文件</li>
+<li>成功后执行脚本16上传文件到github</li>
+<li>部署自动更新的服务器(测试服务器或者正式服务器)</li>
+<li>如果是测试自动更新，最好测试完毕后还原master分支到线上版本的tag位置</li>
+</ul>
+
+
+<hr />
+
+<h4>Xcode一般调试步骤</h4>
+
+<ul>
+<li>修改项目 关闭Lua中的自动更新逻辑</li>
+<li>如果只修改了Lua,执行脚本4 <code>buildScripts.sh iOS false</code></li>
+<li>如果只修改了资源,执行脚本3 <code>buildRes.sh iOS false</code></li>
+<li>如果都有修改执行,执行脚本1 <code>buildGame.sh iOS false false</code></li>
+<li>Xcode执行</li>
+</ul>
+
+
+<hr />
+
+<h4>贴图说明</h4>
+
+<p>images下文件夹说明</p>
+
+<pre><code>_CanCompress:将被直接压缩为pvrtc4的散图
+_Compressed:iOS已经被合成最终大图的图
+_Compressed_mac:Player已经被合成最终大图的图
+rgba444_single:将被压缩为rgba4444格式的散图
+</code></pre>
+
+<p>贴图操作说明:</p>
+
+<ol>
+<li>所有的大图项目在<code>PackImages</code>文件夹下,TextPacker的项目文件也在里面</li>
+<li>所有新加的图需要用<code>ImageOptim.app</code>执行一次无损压缩再放入项目中</li>
+</ol>
+
+
+<hr />
+
+<p>June 10, 2015</p>
+</body>
+</html>

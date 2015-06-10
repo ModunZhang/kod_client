@@ -1,4 +1,16 @@
-# 2dx版本3.3final升级
+##说明文档
+
+#### 开发环境配置
+
+* 安装`TexturePacker`及其命令行工具
+* 环境变量`QUICK_V3_ROOT` bash和Xcode
+* 安装`poedit_osx.zip` 和 `poxls-1.1.0.tar.gz`
+* 设置环境变量`DEBUG_GIT_AUTO_UPDATE`和`RELEASE_GIT_AUTO_UPDATE`
+* 确保tools/scripts下的所有脚本均有执行权限(执行脚本14修改权限)
+
+******
+
+####2dx版本3.3final升级
 
 - 修改editbox iOS支持编辑时清除内容
 	 textField_.clearButtonMode = UITextFieldViewModeWhileEditing;
@@ -57,7 +69,7 @@
 	参数:1.将要导出的excel文件的路径(xlsx后缀名)
 	
 11. exportXlsx2po.sh
-	将10命令导出的excel导回项目中
+	将脚本10导出的excel导回项目中
 	参数:1.将要导入的excel文件路径(xlsx后缀名)
 	
 12. export_plist_texture_data.sh
@@ -70,7 +82,7 @@
 	为所有的脚本添加执行权限
 	
 15. plist_texture_data_to_lua.py
-	12脚本的python实现
+	脚本12的python实现
 16. syncUpdateDataToGit.sh
 
 	**将生成的update目录上传到相应的git仓库,这个脚本不会自动部署服务器，需要手动ssh到服务器pull版本号使用这个脚本前必须确认**
@@ -98,11 +110,13 @@
 ******
 
 #### 自动更新说明
-    Xcode设置的全局变量中必须包含Qucik的环境变量 QUICK_V3_ROOT
+    Xcode中必须设置Qucik的环境变量 QUICK_V3_ROOT
     config.lua文件不能被更新(cpp写死的)
     大版本号由Xcode中设置的大版本号生成json文件
 ###### 自动更新部署步骤
 ----
+**自动更新生成的脚本和资源加密参数必须为true**
+
 * 上传所有的修改文件到develop分支,保证本地develop分支为最新
 * 检查自动更新逻辑部分是否被修改，自动更新可以更新自动更新的逻辑
 * 检查Xcode中的大版本号设置
@@ -131,5 +145,8 @@ images下文件夹说明
 	rgba444_single:将被压缩为rgba4444格式的散图
 贴图操作说明:
 
-1. 所有的大图项目在PackImages文件夹下,TextPacker的项目文件也在里面
-2. 所有新加的图需要用ImageOptim.app执行一次无损压缩再放入项目中
+1. 所有的大图项目在`PackImages`文件夹下,TextPacker的项目文件也在里面
+2. 所有新加的图需要用`ImageOptim.app`执行一次无损压缩再放入项目中
+
+====
+June 10, 2015
