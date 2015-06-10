@@ -1454,7 +1454,7 @@ end
 
 --联盟商店补充道具
 function NetManager:getAddAllianceItemPromise(itemName,count)
-    return get_blocking_request_promise("logic.allianceHandler.addItem",
+    return get_blocking_request_promise("logic.allianceHandler.addShopItem",
         {
             itemName = itemName,
             count = count,
@@ -1463,7 +1463,7 @@ function NetManager:getAddAllianceItemPromise(itemName,count)
 end
 --购买联盟商店的道具
 function NetManager:getBuyAllianceItemPromise(itemName,count)
-    return get_blocking_request_promise("logic.allianceHandler.buyItem",
+    return get_blocking_request_promise("logic.allianceHandler.buyShopItem",
         {
             itemName = itemName,
             count = count,
@@ -1623,7 +1623,7 @@ function NetManager:getFirstJoinAllianceRewardPromise()
 end
 --获取玩家城墙血量
 function NetManager:getPlayerWallInfoPromise(memberId)
-    return get_blocking_request_promise("logic.playerHandler.getPlayerWallInfo",{memberId = memberId},"领取首次加入联盟奖励失败!")
+    return get_blocking_request_promise("logic.playerHandler.getPlayerWallInfo",{memberId = memberId},"获取玩家城墙血量失败!")
 end
 --设置玩家语言
 function NetManager:getSetPlayerLanguagePromise(language_code)
