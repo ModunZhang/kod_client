@@ -234,6 +234,76 @@ function MyApp:flushIf()
     end
 end
 
+function MyApp:retryConnectGateServer()
+    NetManager:getConnectGateServerPromise():catch(function(err)
+         UIKit:showKeyMessageDialog(_("错误"), _("服务器连接断开,请检测你的网络环境后重试!"), function()
+            app:retryConnectServer(false)
+        end)
+    end):done(function()
+        NetManager:getLogicServerInfoPromise():done(function()
+            self:retryLoginGame()
+        end):catch(function(err)
+            local content, title = err:reason()
+            if title == 'timeout' then
+                UIKit:showKeyMessageDialog(_("错误"), _("服务器连接断开,请检测你的网络环境后重试!"), function()
+                    app:retryConnectServer(true)
+                end)
+            else
+                local code = content.code 
+                if code > 0 then
+                    UIKit:showKeyMessageDialog(_("错误"), _("服务器连接断开,请检测你的网络环境后重试!"), function()
+                        app:restart(true)
+                    end)
+                end
+            end
+        end)
+    end)
+end
+
+
+function MyApp:retryLoginGame()
+    if NetManager.m_logicServer.host and NetManager.m_logicServer.port then
+        UIKit:WaitForNet(2)
+        NetManager:getConnectLogicServerPromise():next(function()
+            print("MyApp:debug--->2")
+            return NetManager:getLoginPromise()
+        end):catch(function(err)
+            dump(err)
+            NetManager:disconnect()
+            print("MyApp:debug--->3")
+            local content, title = err:reason()
+            if title == 'timeout' then
+                print("MyApp:debug--->4")
+                UIKit:showKeyMessageDialog(_("错误"), _("服务器连接断开,请检测你的网络环境后重试!"), function()
+                    app:retryLoginGame(false)
+                end)
+            elseif title == 'syntaxError' then
+                UIKit:showMessageDialog(_("错误"), content,function()
+                    app:restart(false)
+                end,nil,false)
+            else
+                if UIKit:getErrorCodeKey(content.code) == 'playerAlreadyLogin' then
+                    print("MyApp:debug--->5")
+                    UIKit:showKeyMessageDialog(_("错误"), _("玩家已经登录"), function()
+                        app:restart(false)
+                    end)
+                else
+                    print("MyApp:debug--->6")
+                    UIKit:showKeyMessageDialog(_("错误"), _("服务器连接断开,请检测你的网络环境后重试!"), function()
+                        app:retryLoginGame(false)
+                    end)
+                end
+            end
+        end):done(function()
+            print("MyApp:debug--->fetchChats")
+            app:GetChatManager():FetchChatWhenReLogined()
+        end):always(function()
+            print("MyApp:debug--->7")
+            UIKit:NoWaitForNet()
+        end)
+    end
+end
+
 function MyApp:retryConnectServer(need_disconnect)
     print(debug.traceback("", 2),"retryConnectServer---->0")
     if need_disconnect or type(need_disconnect) == "nil" or not NetManager:isConnected() then
@@ -250,46 +320,7 @@ function MyApp:retryConnectServer(need_disconnect)
             return
         end
     end
-    if NetManager.m_logicServer.host and NetManager.m_logicServer.port then
-        UIKit:WaitForNet(2)
-        NetManager:getConnectLogicServerPromise():next(function()
-            print("MyApp:debug--->2")
-            return NetManager:getLoginPromise()
-        end):catch(function(err)
-            dump(err)
-            NetManager:disconnect()
-            print("MyApp:debug--->3")
-            local content, title = err:reason()
-            if title == 'timeout' then
-                print("MyApp:debug--->4")
-                UIKit:showKeyMessageDialog(_("错误"), _("服务器连接断开,请检测你的网络环境后重试!"), function()
-                    app:retryConnectServer(false)
-                end)
-            elseif title == 'syntaxError' then
-                UIKit:showMessageDialog(_("错误"), content,function()
-                    app:restart(false)
-                end,nil,false)
-            else
-                if UIKit:getErrorCodeKey(content.code) == 'playerAlreadyLogin' then
-                    print("MyApp:debug--->5")
-                    UIKit:showKeyMessageDialog(_("错误"), _("玩家已经登录"), function()
-                        app:restart(false)
-                    end)
-                else
-                    print("MyApp:debug--->6")
-                    UIKit:showKeyMessageDialog(_("错误"), _("服务器连接断开,请检测你的网络环境后重试!"), function()
-                        app:retryConnectServer(false)
-                    end)
-                end
-            end
-        end):done(function()
-            print("MyApp:debug--->fetchChats")
-            app:GetChatManager():FetchChatWhenReLogined()
-        end):always(function()
-            print("MyApp:debug--->7")
-            UIKit:NoWaitForNet()
-        end)
-    end
+    self:retryConnectGateServer()
 end
 function MyApp:ReloadGame()
     self:onEnterBackground()
