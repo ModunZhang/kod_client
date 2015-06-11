@@ -88,8 +88,13 @@ function GameUISetting:BuildUI()
 	    end
 		x = x + 30 + 112
 	end
+	local version_info = string.format("Dragonfall %s (%s)", ext.getAppVersion(), app.client_tag or "0")
+	if  CONFIG_IS_DEBUG or device.platform == 'mac' then
+		local __debugVer = require("debug_version")
+		version_info = string.format("Dragonfall %s (%s)", ext.getAppVersion(), __debugVer)
+	end
 	UIKit:ttfLabel({
-		text = string.format("Dragonfall %s(%s)", ext.getAppVersion(), app.client_tag or "0"),
+		text = version_info,
 		color = 0x403c2f,
 	    size = 18,
 	    align = cc.TEXT_ALIGNMENT_CENTER

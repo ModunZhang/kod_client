@@ -188,6 +188,7 @@
     自动更新生成的脚本和资源加密参数必须为true
 
 * 上传所有的修改文件到develop分支,更新本地develop仓库，确保本地develop分支为最新
+* 检查lua代码是否调用了新的底层函数[^检查frameworks目录]
 * 确保config.lua中的服务器为正式服务器
 * 检查自动更新逻辑部分是否被修改(GameUILoginBeta.lua、GameUISplashBeta.lua)，自动更新可以更新自动更新的逻辑
 * 检查Xcode中的大版本号设置(`如果仅仅是发布自动更新,版本号保持和线上版本号一致即可`)
@@ -212,6 +213,9 @@
 1. Xcode大版本号保持和线上app一样。
 2. 执行自动更新的所有步骤。
 3. 最后Xcode打包ipa的时候将大版本改为比线上app高即可。
+
+
+[^检查frameworks目录]:使用`git diff`查看`frameworks`目录(底层)是否变动
 
 ---
 End June 11, 2015

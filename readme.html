@@ -356,6 +356,7 @@ rgba444_single:将被压缩为rgba4444格式的散图
 
 <ul>
 <li>上传所有的修改文件到develop分支,更新本地develop仓库，确保本地develop分支为最新</li>
+<li>检查lua代码是否调用了新的底层函数<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup></li>
 <li>确保config.lua中的服务器为正式服务器</li>
 <li>检查自动更新逻辑部分是否被修改(GameUILoginBeta.lua、GameUISplashBeta.lua)，自动更新可以更新自动更新的逻辑</li>
 <li>检查Xcode中的大版本号设置(<code>如果仅仅是发布自动更新,版本号保持和线上版本号一致即可</code>)</li>
@@ -390,5 +391,13 @@ rgba444_single:将被压缩为rgba4444格式的散图
 <hr />
 
 <p>End June 11, 2015</p>
+<div class="footnotes">
+<hr/>
+<ol>
+<li id="fn:1">
+<p>使用<code>git diff</code>查看<code>frameworks</code>目录(底层)是否变动<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
+</ol>
+</div>
+
 </body>
 </html>
