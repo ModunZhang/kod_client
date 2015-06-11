@@ -691,8 +691,10 @@ function UIPageView:scrollAuto()
                         self:disablePage()
                         self:notifyListener_{name = "pageChange"}
                     end})
-            transition.moveTo(pageL,
-                {x = self.viewRect_.x, y = posY, time = 0.3})
+            if pageL then
+                transition.moveTo(pageL,
+                    {x = self.viewRect_.x, y = posY, time = 0.3})
+            end
         else
             transition.moveTo(page,
                 {x = self.viewRect_.x, y = posY, time = 0.3,
@@ -818,6 +820,7 @@ end
 
 
 return UIPageView
+
 
 
 
