@@ -171,19 +171,20 @@
 * 上传所有的修改文件到develop分支,更新本地develop仓库，确保本地develop分支为最新
 * 确保config.lua中的服务器为正式服务器
 * 检查自动更新逻辑部分是否被修改(GameUILoginBeta.lua、GameUISplashBeta.lua)，自动更新可以更新自动更新的逻辑
-* 切换到master分支
 * 检查Xcode中的大版本号设置
-* 合并develop分支到master分支
+* 切换到master分支
+* 合并develop分支到master分支,提交master并推送到远端仓库
 * 在master分支上执行脚本7清空update目录
 * 在master分支上执行脚本5生成自动更新文件
 * 成功后执行脚本16上传自动更新文件到github
 * 部署自动更新的服务器(测试服务器或者正式服务器)
-* 如果是测试自动更新，最好测试完毕后还原master分支到线上版本的tag位置，如果没问题手动push项目master分支
+* 如果是测试自动更新，最好测试完毕后还原master分支到线上版本的tag位置，如果没问题手动push项目master分支,把生成的自动更新文件推送到远端仓库
+* 为master打tag
 
 ******
 
 #### 发布新版本说明
-> 执行自动更新发布的所有步骤，注意修改Xcode大版本号，完成自动更新发布的所有步骤后Xcode打包即可。
+> 执行自动更新发布的所有步骤，注意Xcode大版本号必须比线上高，完成自动更新发布的所有步骤后Xcode打包即可。
 
 ******
 
