@@ -257,6 +257,7 @@ function GameUIGacha:CreateGachaPool(layer)
                             self.continuous_draw_items = nil
                             -- 恢复ui退出home_button
                             main:GetHomeButton():setButtonEnabled(true)
+                            main:DisableAutoClose(false)
 
                             -- 弹出评价
                             if main.appraise then
@@ -284,6 +285,7 @@ function GameUIGacha:CreateGachaPool(layer)
     function GachaPool:StartLotteryDraw(item)
         -- 禁用ui退出home_button
         main:GetHomeButton():setButtonEnabled(false)
+        main:DisableAutoClose(true)
         self.award =self.award or {} -- 抽到物品的图标和名字node,开启下次抽奖需移除
         local item_name = item[1]
         self.current_gacha_item_count = item[2]

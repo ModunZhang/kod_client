@@ -950,12 +950,16 @@ end
 function NetManager:getHelpAllianceMemberSpeedUpPromise(eventId)
     return get_none_blocking_request_promise("logic.allianceHandler.helpAllianceMemberSpeedUp", {
         eventId = eventId,
-    }, "协助玩家加速失败!"):done(get_player_response_msg)
+    }, "协助玩家加速失败!"):done(get_player_response_msg):done(function()
+        app:GetAudioManager():PlayeEffectSoundWithKey("USE_ITEM")
+    end)
 end
 -- 协助所有玩家加速
 function NetManager:getHelpAllAllianceMemberSpeedUpPromise()
     return get_none_blocking_request_promise("logic.allianceHandler.helpAllAllianceMemberSpeedUp", {}
-        , "协助所有玩家加速失败!"):done(get_player_response_msg)
+        , "协助所有玩家加速失败!"):done(get_player_response_msg):done(function()
+        app:GetAudioManager():PlayeEffectSoundWithKey("USE_ITEM")
+    end)
 end
 -- 解锁玩家第二条行军队列
 function NetManager:getUnlockPlayerSecondMarchQueuePromise()
