@@ -27,8 +27,8 @@ pushDataToGit()
 	
 	cd "$PATH_OF_GIT_AUTOUPDATE"
 	git add --all
-	git ci -m "发布新的自动更新"
-	git push
+	git commit -m "发布新的自动更新"
+	git push origin master
 	cd "$DOCROOT"
 }
 
