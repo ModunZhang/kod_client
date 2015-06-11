@@ -6,7 +6,7 @@
 * 环境变量`QUICK_V3_ROOT` bash和Xcode
 * 安装`poedit_osx.zip` 和 `poxls-1.1.0.tar.gz`
 * 设置环境变量`DEBUG_GIT_AUTO_UPDATE`和`RELEASE_GIT_AUTO_UPDATE`
-* 确保tools/scripts下的所有脚本均有执行权限(执行脚本14修改权限)
+* 确保`tools/scripts`下的所有脚本均有执行权限(执行脚本14修改权限)
 
 ******
 
@@ -34,7 +34,7 @@
 
 ******
 
-####脚本文件说明
+#### 脚本文件说明
 1. buildGame.sh
 	执行lua和资源的导出
 	参数:1.平台 2.是否加密lua 3.是否加密资源(执行选择相应参数即可)
@@ -76,7 +76,7 @@
 	将合成的大图信息导出到项目中(执行选择相应参数即可)
 	
 13. functions.sh
-	为其他脚本提供基础函数的脚本，如果要改变加密资源和lua的XXTEA信息就修改这个文件中的值
+	为其他脚本提供基础函数的脚本，`如果要改变加密资源和lua的XXTEA信息就修改这个文件中的值`
 	
 14. install.sh
 	为所有的脚本添加执行权限
@@ -92,26 +92,30 @@
           测试用的git仓库路径 git@github.com:ModunZhang/kod_test_update.git
         2.RELEASE_GIT_AUTO_UPDATE
           正式的git仓库路径 git@github.com:ModunZhang/kod_auto_update.git
+17. buildTexture.sh
+    导出游戏的大图到images下，分为player和iOS
           
 ******
 
 #### 本地化说明
 
-1. 安装poxls-1.1.0.tar.gz和poedit_osx.zip
+1. 安装`poxls-1.1.0.tar.gz`和`poedit_osx.zip`
 
 2. 用poedit更新所有po文件的本地化信息
 
-3. 执行脚本**10**将po文件导出为excel
+3. 执行脚本`exportPO2Xlsx.sh`将po文件导出为excel
 
-4. excel修改完成后执行脚本**11**将excel导出为最新的po文件
+4. excel修改完成后执行脚本`exportXlsx2po.sh`将excel导出为最新的po文件
 
-5. 用poedit设置所有po文件(每个po文件都需要设置)的属性(代码编码为utf8,搜索路径为app目录,搜索关键词为下划线，poedit的首选项只需设置一次 [http://zengrong.net/post/1986.htm](http://zengrong.net/post/1986.htm)
+5. 用poedit设置所有po文件(每个po文件都需要设置)的属性(代码编码为utf8,搜索路径为app目录,搜索关键词为下划线，poedit的首选项只需设置一次 [参考文章](http://zengrong.net/post/1986.htm "详细说明")
 
 6. 更新本地化文件
 
         如果第6步执行不了，原因就是第5步没有设置好!
 
-###### 5-6 图解
+**5-6 图解**
+
+******
 
 ![poedit->首选项](./document_images/1.png)
 
@@ -143,7 +147,7 @@
 	
 ######贴图操作说明:
 
-1. 所有的大图项目在`PackImages`文件夹下,TextPacker的项目文件也在里面
+1. 所有的大图项目在`PackImages`文件夹下,TextPacker的项目文件也在里面,使用用脚本`buildTexture.sh`导出
 2. 所有新加的图需要用`ImageOptim.app`执行一次无损压缩再放入项目中
 
 ******
@@ -158,49 +162,56 @@
 
 ******
 
-#### 自动更新说明
-    Xcode中必须设置Qucik的环境变量 QUICK_V3_ROOT
-    config.lua文件不能被更新(cpp写死的)
-    大版本号由Xcode中设置的大版本号生成json文件
-###### 自动更新发布步骤
+#### [自动更新说明](id:normal)
+###### 自动更新相关注意点
+    1.Xcode中必须设置Qucik的环境变量QUICK_V3_ROOT
+    2.config.lua文件不能被更新(cpp写死的)
+    3.大版本号由Xcode中设置的大版本号生成json文件
+    4.每次发布新ipa包，大版本号必须比线上的高
 
-----
+  举例:手机上此时装的`1.0(ABC)`
+  
+  - 我们发布自动更新`1.0(DEF)`,并部署`1.0(DEF)`到更新服务器,手机直接启动游戏，会走自动更新。[自动更新发布步骤](#ipa0)
+ 
+  - 我们发布新包`1.0(DEF)`,并部署`1.0(DEF)`到更新服务器。`把1.0(DEF)`的包覆盖安装到手机上，启动游戏仍然版本会是`1.0(ABC)`,手机依然会走自动更新流程。
+  
+  - 我们发布新包`1.0(DEF)`,并部署`1.0(DEF)`到更新服务器。手机上删除`1.0(ABC)`这个包，把`1.0(DEF)`的包安装新手机上，启动游戏不会走自动更新流程。
+    
+  - 我们发布新包`1.1(DEF)`,并部署到更新服务器,如果覆盖安装到手机上,启动游戏版本会是`1.1(DEF)`不会走自动更新。如果我们不覆盖安装，直接启动`1.0(ABC)`,会走强制更新流程。[发布新版本说明](#ipa1)
+  
+  - 我们发布新包`1.1(ABC)`,ipa大版本为`1.1`,fileList.json中为`1.0`,`也就是说更新服务器上仍然是1.0(ABC)`,覆盖安装到手机。不会走自动更新,这个包就是兼容包。[兼容包发布说明](#ipa2)
 
-**自动更新生成的脚本和资源加密参数必须为true**
+**发布自动更新的时候一定检查git仓库版本号,不要轻易部署**
+
+###### [自动更新发布步骤](id:ipa0)
+
+    自动更新生成的脚本和资源加密参数必须为true
 
 * 上传所有的修改文件到develop分支,更新本地develop仓库，确保本地develop分支为最新
 * 确保config.lua中的服务器为正式服务器
 * 检查自动更新逻辑部分是否被修改(GameUILoginBeta.lua、GameUISplashBeta.lua)，自动更新可以更新自动更新的逻辑
-* 检查Xcode中的大版本号设置
+* 检查Xcode中的大版本号设置(`如果仅仅是发布自动更新,版本号保持和线上版本号一致即可`)
 * 切换到master分支
 * 合并develop分支到master分支,提交master并推送到远端仓库
-* 在master分支上执行脚本7清空update目录
-* 在master分支上执行脚本5生成自动更新文件
-* 成功后执行脚本16上传自动更新文件到github
+* 在master分支上执行脚本`cleanGame.sh`清空update目录
+* 在master分支上执行脚本`buildUpdate.sh`生成自动更新文件
+* 成功后执行脚本`syncUpdateDataToGit.sh`上传自动更新文件到github
 * 部署自动更新的服务器(测试服务器或者正式服务器)
 * 如果是测试自动更新，最好测试完毕后还原master分支到线上版本的tag位置，如果没问题手动push项目master分支,把生成的自动更新文件推送到远端仓库
 * 为master打tag
 
 ******
 
-#### 发布新版本说明
-> 执行自动更新发布的所有步骤，注意Xcode大版本号必须比线上高，完成自动更新发布的所有步骤后Xcode打包即可。
+#### [发布新版本说明](id:ipa1)
+> Xcode大版本号高于线上app的版本号,执行自动更新的所有步骤,最后使用Xcode打包ipa即可。
 
 ******
 
-### 自动更新相关注意点
+#### [兼容包发布说明](id:ipa2)
 
+1. Xcode大版本号保持和线上app一样。
+2. 执行自动更新的所有步骤。
+3. 最后Xcode打包ipa的时候将大版本改为比线上app高即可。
 
-**每次发布新包，大版本号必须比线上的高**
-
-  举例:手机上此时装的1.0(ABC)
-    
-  - 我们发布新包`1.0(DEF)`,并部署`1.0(DEF)`到更新服务器。`把1.0(DEF)`的包覆盖安装到手机上，启动游戏仍然版本会是`1.0(ABC),`手机依然会走自动更新流程。
-    
-  - 我们发布新包`1.1(DEF)`,并部署到更新服务器,如果覆盖安装到手机上,启动游戏版本会是`1.1(DEF)`不会走自动更新。如果我们不覆盖安装，直接启动`1.0(ABC)`,会走强制更新流程。
-
-**发布自动更新的时候一定检查git仓库版本号,不要轻易部署**
-
-
-===
-June 10, 2015
+---
+End June 11, 2015
