@@ -165,7 +165,7 @@ sup {
 <li>环境变量<code>QUICK_V3_ROOT</code> bash和Xcode</li>
 <li>安装<code>poedit_osx.zip</code> 和 <code>poxls-1.1.0.tar.gz</code></li>
 <li>设置环境变量<code>DEBUG_GIT_AUTO_UPDATE</code>和<code>RELEASE_GIT_AUTO_UPDATE</code></li>
-<li>确保tools/scripts下的所有脚本均有执行权限(执行脚本14修改权限)</li>
+<li>确保<code>tools/scripts</code>下的所有脚本均有执行权限(执行脚本14修改权限)</li>
 </ul>
 
 
@@ -234,7 +234,7 @@ sup {
 <li><p>export_plist_texture_data.sh
 将合成的大图信息导出到项目中(执行选择相应参数即可)</p></li>
 <li><p>functions.sh
-为其他脚本提供基础函数的脚本，如果要改变加密资源和lua的XXTEA信息就修改这个文件中的值</p></li>
+为其他脚本提供基础函数的脚本，<code>如果要改变加密资源和lua的XXTEA信息就修改这个文件中的值</code></p></li>
 <li><p>install.sh
 为所有的脚本添加执行权限</p></li>
 <li><p>plist_texture_data_to_lua.py
@@ -249,6 +249,8 @@ sup {
 2.RELEASE_GIT_AUTO_UPDATE
   正式的git仓库路径 git@github.com:ModunZhang/kod_auto_update.git
 </code></pre></li>
+<li>buildTexture.sh
+导出游戏的大图到images下，分为player和iOS</li>
 </ol>
 
 
@@ -257,11 +259,11 @@ sup {
 <h4>本地化说明</h4>
 
 <ol>
-<li><p>安装poxls-1.1.0.tar.gz和poedit_osx.zip</p></li>
+<li><p>安装<code>poxls-1.1.0.tar.gz</code>和<code>poedit_osx.zip</code></p></li>
 <li><p>用poedit更新所有po文件的本地化信息</p></li>
-<li><p>执行脚本<strong>10</strong>将po文件导出为excel</p></li>
-<li><p>excel修改完成后执行脚本<strong>11</strong>将excel导出为最新的po文件</p></li>
-<li><p>用poedit设置所有po文件(每个po文件都需要设置)的属性(代码编码为utf8,搜索路径为app目录,搜索关键词为下划线，poedit的首选项只需设置一次 <a href="http://zengrong.net/post/1986.htm">http://zengrong.net/post/1986.htm</a></p></li>
+<li><p>执行脚本<code>exportPO2Xlsx.sh</code>将po文件导出为excel</p></li>
+<li><p>excel修改完成后执行脚本<code>exportXlsx2po.sh</code>将excel导出为最新的po文件</p></li>
+<li><p>用poedit设置所有po文件(每个po文件都需要设置)的属性(代码编码为utf8,搜索路径为app目录,搜索关键词为下划线，poedit的首选项只需设置一次 <a href="http://zengrong.net/post/1986.htm" title="详细说明">参考文章</a></p></li>
 <li><p>更新本地化文件</p>
 
 <pre><code> 如果第6步执行不了，原因就是第5步没有设置好!
@@ -269,7 +271,9 @@ sup {
 </ol>
 
 
-<h6>5-6 图解</h6>
+<p><strong>5-6 图解</strong></p>
+
+<hr />
 
 <p><img src="./document_images/1.png" alt="poedit-&gt;首选项" /></p>
 
@@ -302,7 +306,7 @@ rgba444_single:将被压缩为rgba4444格式的散图
 <h6>贴图操作说明:</h6>
 
 <ol>
-<li>所有的大图项目在<code>PackImages</code>文件夹下,TextPacker的项目文件也在里面</li>
+<li>所有的大图项目在<code>PackImages</code>文件夹下,TextPacker的项目文件也在里面,使用用脚本<code>buildTexture.sh</code>导出</li>
 <li>所有新加的图需要用<code>ImageOptim.app</code>执行一次无损压缩再放入项目中</li>
 </ol>
 
@@ -322,29 +326,44 @@ rgba444_single:将被压缩为rgba4444格式的散图
 
 <hr />
 
-<h4>自动更新说明</h4>
+<h4><span id="normal">自动更新说明</span></h4>
 
-<pre><code>Xcode中必须设置Qucik的环境变量 QUICK_V3_ROOT
-config.lua文件不能被更新(cpp写死的)
-大版本号由Xcode中设置的大版本号生成json文件
+<h6>自动更新相关注意点</h6>
+
+<pre><code>1.Xcode中必须设置Qucik的环境变量QUICK_V3_ROOT
+2.config.lua文件不能被更新(cpp写死的)
+3.大版本号由Xcode中设置的大版本号生成json文件
+4.每次发布新ipa包，大版本号必须比线上的高
 </code></pre>
 
-<h6>自动更新发布步骤</h6>
+<p>  举例:手机上此时装的<code>1.0(ABC)</code></p>
 
-<hr />
+<ul>
+<li><p>我们发布自动更新<code>1.0(DEF)</code>,并部署<code>1.0(DEF)</code>到更新服务器,手机直接启动游戏，会走自动更新。<a href="#ipa0">自动更新发布步骤</a></p></li>
+<li><p>我们发布新包<code>1.0(DEF)</code>,并部署<code>1.0(DEF)</code>到更新服务器。<code>把1.0(DEF)</code>的包覆盖安装到手机上，启动游戏仍然版本会是<code>1.0(ABC)</code>,手机依然会走自动更新流程。</p></li>
+<li><p>我们发布新包<code>1.0(DEF)</code>,并部署<code>1.0(DEF)</code>到更新服务器。手机上删除<code>1.0(ABC)</code>这个包，把<code>1.0(DEF)</code>的包安装新手机上，启动游戏不会走自动更新流程。</p></li>
+<li><p>我们发布新包<code>1.1(DEF)</code>,并部署到更新服务器,如果覆盖安装到手机上,启动游戏版本会是<code>1.1(DEF)</code>不会走自动更新。如果我们不覆盖安装，直接启动<code>1.0(ABC)</code>,会走强制更新流程。<a href="#ipa1">发布新版本说明</a></p></li>
+<li><p>我们发布新包<code>1.1(ABC)</code>,ipa大版本为<code>1.1</code>,fileList.json中为<code>1.0</code>,<code>也就是说更新服务器上仍然是1.0(ABC)</code>,覆盖安装到手机。不会走自动更新,这个包就是兼容包。<a href="#ipa2">兼容包发布说明</a></p></li>
+</ul>
 
-<p><strong>自动更新生成的脚本和资源加密参数必须为true</strong></p>
+
+<p><strong>发布自动更新的时候一定检查git仓库版本号,不要轻易部署</strong></p>
+
+<h6><span id="ipa0">自动更新发布步骤</span></h6>
+
+<pre><code>自动更新生成的脚本和资源加密参数必须为true
+</code></pre>
 
 <ul>
 <li>上传所有的修改文件到develop分支,更新本地develop仓库，确保本地develop分支为最新</li>
 <li>确保config.lua中的服务器为正式服务器</li>
 <li>检查自动更新逻辑部分是否被修改(GameUILoginBeta.lua、GameUISplashBeta.lua)，自动更新可以更新自动更新的逻辑</li>
-<li>检查Xcode中的大版本号设置</li>
+<li>检查Xcode中的大版本号设置(<code>如果仅仅是发布自动更新,版本号保持和线上版本号一致即可</code>)</li>
 <li>切换到master分支</li>
 <li>合并develop分支到master分支,提交master并推送到远端仓库</li>
-<li>在master分支上执行脚本7清空update目录</li>
-<li>在master分支上执行脚本5生成自动更新文件</li>
-<li>成功后执行脚本16上传自动更新文件到github</li>
+<li>在master分支上执行脚本<code>cleanGame.sh</code>清空update目录</li>
+<li>在master分支上执行脚本<code>buildUpdate.sh</code>生成自动更新文件</li>
+<li>成功后执行脚本<code>syncUpdateDataToGit.sh</code>上传自动更新文件到github</li>
 <li>部署自动更新的服务器(测试服务器或者正式服务器)</li>
 <li>如果是测试自动更新，最好测试完毕后还原master分支到线上版本的tag位置，如果没问题手动push项目master分支,把生成的自动更新文件推送到远端仓库</li>
 <li>为master打tag</li>
@@ -353,28 +372,23 @@ config.lua文件不能被更新(cpp写死的)
 
 <hr />
 
-<h4>发布新版本说明</h4>
+<h4><span id="ipa1">发布新版本说明</span></h4>
 
-<blockquote><p>执行自动更新发布的所有步骤，注意Xcode大版本号必须比线上高，完成自动更新发布的所有步骤后Xcode打包即可。</p></blockquote>
-
-<hr />
-
-<h3>自动更新相关注意点</h3>
-
-<p><strong>每次发布新包，大版本号必须比线上的高</strong></p>
-
-<p>  举例:手机上此时装的1.0(ABC)</p>
-
-<ul>
-<li><p>我们发布新包<code>1.0(DEF)</code>,并部署<code>1.0(DEF)</code>到更新服务器。<code>把1.0(DEF)</code>的包覆盖安装到手机上，启动游戏仍然版本会是<code>1.0(ABC),</code>手机依然会走自动更新流程。</p></li>
-<li><p>我们发布新包<code>1.1(DEF)</code>,并部署到更新服务器,如果覆盖安装到手机上,启动游戏版本会是<code>1.1(DEF)</code>不会走自动更新。如果我们不覆盖安装，直接启动<code>1.0(ABC)</code>,会走强制更新流程。</p></li>
-</ul>
-
-
-<p><strong>发布自动更新的时候一定检查git仓库版本号,不要轻易部署</strong></p>
+<blockquote><p>Xcode大版本号高于线上app的版本号,执行自动更新的所有步骤,最后使用Xcode打包ipa即可。</p></blockquote>
 
 <hr />
 
-<p>June 10, 2015</p>
+<h4><span id="ipa2">兼容包发布说明</span></h4>
+
+<ol>
+<li>Xcode大版本号保持和线上app一样。</li>
+<li>执行自动更新的所有步骤。</li>
+<li>最后Xcode打包ipa的时候将大版本改为比线上app高即可。</li>
+</ol>
+
+
+<hr />
+
+<p>End June 11, 2015</p>
 </body>
 </html>
