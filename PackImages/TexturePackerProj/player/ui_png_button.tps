@@ -22,7 +22,7 @@
         <key>dataFormat</key>
         <string>cocos2d</string>
         <key>textureFileName</key>
-        <filename>../export_player/ui_png_button.png</filename>
+        <filename>../../../dev/res/images/_Compressed_mac/ui_png_button.png</filename>
         <key>flipPVR</key>
         <false/>
         <key>ditherType</key>
@@ -111,7 +111,7 @@
             <enum type="AndEngine::MagFilter">MagLinear</enum>
         </struct>
         <key>dataFileName</key>
-        <filename>../export_player/ui_png_button.plist</filename>
+        <filename>../../../dev/res/images/_Compressed_mac/ui_png_button.plist</filename>
         <key>multiPack</key>
         <false/>
         <key>mainExtension</key>
