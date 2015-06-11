@@ -301,6 +301,8 @@ function MyApp:retryLoginGame()
             print("MyApp:debug--->7")
             UIKit:NoWaitForNet()
         end)
+    else
+        app:retryConnectServer(false)
     end
 end
 
@@ -320,6 +322,8 @@ function MyApp:retryConnectServer(need_disconnect)
             return
         end
     end
+    NetManager.m_logicServer.host = nil 
+    NetManager.m_logicServer.port = nil
     self:retryConnectGateServer()
 end
 function MyApp:ReloadGame()
