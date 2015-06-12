@@ -3,6 +3,8 @@ Platform=`./functions.sh getPlatform $1`
 APP_VERSION=`./functions.sh getAppVersion $Platform`
 DOCROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PROJ_DIR=$DOCROOT/../../
+APP_MIN_VERSION=`./functions.sh getAppMinVersion $Platform`
+
 
 echo ---------------- 清理文件
 sh cleanGame.sh $Platform
@@ -17,9 +19,11 @@ git commit -m "commit any uncommitted files $Platform $APP_VERSION"
 git push
 cd $DOCROOT
 
+APP_BUILD_TAG=`./functions.sh getAppBuildTag $Platform`
+
 echo ---------------- 检查更新
 cd $DOCROOT/../buildUpdate
-python buildUpdate.py $APP_VERSION
+python buildUpdate.py $APP_VERSION $APP_MIN_VERSION $APP_BUILD_TAG
 cd $DOCROOT
 
 # echo ---------------- 同步代码
@@ -28,7 +32,7 @@ cd $DOCROOT
 echo ---------------- 提交代码
 cd $PROJ_DIR
 git add --all .
-git commit -m "update new version $Platform $APP_VERSION" #todo 加入小版本号到日志
+git commit -m "update new version $Platform $APP_VERSION min:$APP_MIN_VERSION tag:$APP_BUILD_TAG" 
 cd $DOCROOT
 echo 提交成功 手动push到远程!
 

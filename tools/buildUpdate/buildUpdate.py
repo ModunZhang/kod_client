@@ -34,7 +34,7 @@ def getFileCrc32( fullPath ):
 def browseFolder( fullPath, fileList ):
 	for root, dirs, files in os.walk(fullPath):
 		for fileName in files:
-			if fileName != ".DS_Store" and fileName != "fileList.json":
+			if fileName != ".DS_Store" and fileName != "fileList.json" and fileName != "version.json":
 				path = root + "/" + fileName
 				svnPath = getFileGitPath(path)
 				tag = getFileTag(path)
@@ -62,18 +62,33 @@ def getAppVersion():
 	configFile.close()
 	return appVersion
 
+def writeTagJsonFile(jsonList):
+	jsonFormat = json.dumps(jsonList)
+	jsonFile = open("../../update/res/version.json", 'w')
+	jsonFile.write(jsonFormat)
+	jsonFile.close()
+
 if __name__=="__main__":
-	if len(sys.argv) < 2:
-		print "错误必须传入版本号"
+	if len(sys.argv) < 3:
+		print "错误必须传入版本号和最小版本号"
 		sys.exit(1)
 	app_version = sys.argv[1]
+	app_min_version = sys.argv[2]
+	app_build_tag = int(sys.argv[3])
 	m_currentDir = os.path.dirname(os.path.realpath(__file__))
 	fileList = {
 		"appVersion":app_version,
-		"tag":getFileTag("../../update/"),
+		"tag":app_build_tag,
+		"appMinVersion":app_min_version,
 		"files":{},
 	}
 	browseFolder("../../update/res", fileList)
 	browseFolder("../../update/scripts", fileList)
-	fileJson = json.dumps(fileList)
 	writeJsonFile(fileList)
+
+	versionList= {
+		"appVersion":app_version,
+		"tag":app_build_tag,
+		"appMinVersion":app_min_version,
+	}
+	writeTagJsonFile(versionList)

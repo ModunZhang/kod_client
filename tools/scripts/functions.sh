@@ -129,6 +129,29 @@ getAppVersion()
 		echo `/usr/libexec/PlistBuddy -c "print CFBundleVersion" $plist`
 	fi
 }
+getAppMinVersion()
+{
+	Platform=$1
+	python -c "exit(0) if \"$Platform\" in \"$PLATFORMS\".split() else exit(1)"
+	root_dir=`getProjDir`
+	if [[ $Platform = "iOS" ]]
+	then
+		plist=${root_dir}/frameworks/runtime-src/proj.ios_mac/ios/Info.plist
+		echo `/usr/libexec/PlistBuddy -c "print AppMinVersion" $plist`
+	fi
+}
+
+getAppBuildTag()
+{
+	Platform=$1
+	python -c "exit(0) if \"$Platform\" in \"$PLATFORMS\".split() else exit(1)"
+	root_dir=`getProjDir`
+	if [[ $Platform = "iOS" ]]
+	then
+		TAG_BUILD=`git rev-list HEAD | wc -l | tr -d "  " | awk '{print $0}'`
+		echo $TAG_BUILD
+	fi
+}
 getTempDir()
 {
 	result="/Users/`whoami`/.DragonFall"
