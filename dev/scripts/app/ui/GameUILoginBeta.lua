@@ -274,19 +274,32 @@ function GameUILoginBeta:getLogicServerInfo()
         end, 0.5) 
     end):catch(function(err)
         local content, title = err:reason()
+        local need_restart = false
         if title == 'timeout' then
             content = _("请求超时")
         else
             local code = content.code 
-            if UIKit:getErrorCodeKey(code) == "serverUnderMaintain" then
+            if code == 508 then
                 content = _("服务器维护中")
+                need_restart = false
+            elseif code == 691 then
+                content = _("游戏版本验证失败")
+                need_restart = true
+            elseif code == 692 then
+                content = _("游戏版本不匹配")
+                need_restart = true
             else
                 content = _("获取游戏服务器信息失败!")
+                need_restart = false
             end
         end
         dump(err:reason())
         self:showError(content,function()
-        	self:connectGateServer()
+            if need_restart then
+                app:restart(false)
+            else
+        	   self:connectGateServer()
+            end
         end)
     end)
 end
