@@ -387,9 +387,10 @@ function GameUILoginBeta:getUpdateFileList()
     self.m_currentSize = 0
     local localFileList = json.decode(self.m_localJson)
     local serverFileList = json.decode(self.m_serverJson)
-    local localAppVersion = ext.getAppVersion() 
-    local serverAppVersion = serverFileList.appVersion
-    if localAppVersion < serverAppVersion then
+    local localAppVersion = tonumber(ext.getAppVersion())
+    local serverMinAppVersion = tonumber(serverFileList.appMinVersion)
+    local serverAppVersion = tonumber(serverFileList.appVersion)
+    if localAppVersion < serverMinAppVersion then
         device.showAlert(_("错误"), _("游戏版本过低,请更新!"), { _("确定") }, function(event)
             if CONFIG_IS_DEBUG then
                 device.openURL("https://batcat.sinaapp.com/ad_hoc/build-index.html")
@@ -400,6 +401,14 @@ function GameUILoginBeta:getUpdateFileList()
         end)
         return
     end
+
+    if localAppVersion > serverAppVersion then
+        device.showAlert(_("错误"), _("服务器正在部署,请稍候!"), { _("确定") }, function(event)
+            self:loadServerJson()
+        end)
+        return
+    end
+
 
     local updateFileList = {}
     for k, v in pairs(serverFileList.files) do
