@@ -1,7 +1,7 @@
 --
 -- Author: Danny He
 -- Date: 2015-02-10 09:54:53
---
+-- 
 local GameUISetting = UIKit:createUIClass("GameUISetting","GameUIWithCommonHeader")
 local window = import("..utils.window")
 local WidgetRankingList = import("..widget.WidgetRankingList")
