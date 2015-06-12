@@ -250,11 +250,16 @@ function MyApp:retryConnectGateServer()
                 end)
             else
                 local code = content.code 
-                if code > 0 then
-                    UIKit:showKeyMessageDialog(_("错误"), _("服务器连接断开,请检测你的网络环境后重试!"), function()
-                        app:restart(true)
-                    end)
+                if code == 508 then
+                    content = _("服务器维护中")
+                elseif code == 691 then
+                    content = _("游戏版本验证失败")
+                elseif code == 692 then
+                    content = _("游戏版本不匹配")
                 end
+                UIKit:showKeyMessageDialog(_("错误"), content, function()
+                    app:restart(true)
+                end)
             end
         end)
     end)
