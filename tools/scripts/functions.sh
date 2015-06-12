@@ -126,7 +126,7 @@ getAppVersion()
 	if [[ $Platform = "iOS" ]]
 	then
 		plist=${root_dir}/frameworks/runtime-src/proj.ios_mac/ios/Info.plist
-		echo `/usr/libexec/PlistBuddy -c "print CFBundleVersion" $plist`
+		echo `/usr/libexec/PlistBuddy -c "print CFBundleShortVersionString" $plist`
 	fi
 }
 getAppMinVersion()

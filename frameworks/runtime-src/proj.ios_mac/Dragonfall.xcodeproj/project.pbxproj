@@ -1871,7 +1871,7 @@
 					"$(PROJECT_SDK_ROOT)/TalkingData/libTalkingDataGA_iphonesimulator_x86.a",
 				);
 				PROJECT_SDK_ROOT = "$(SRCROOT)/../../sdk";
-				PROVISIONING_PROFILE = "176cd12d-1ac7-4ca2-975b-fe5c87daa4e7";
+				PROVISIONING_PROFILE = "d6295027-e6eb-4a9a-99e9-e27048e735c2";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "$(inherited) $(SRCROOT)/../../cocos2d-x/cocos/platform/ios $(SRCROOT)/../../cocos2d-x/external/curl/include/ios";
@@ -1919,7 +1919,7 @@
 					"$(PROJECT_SDK_ROOT)/TalkingData/libTalkingDataGA_iphonesimulator_x86.a",
 				);
 				PROJECT_SDK_ROOT = "$(SRCROOT)/../../sdk";
-				PROVISIONING_PROFILE = "7f884fc4-abc7-4efd-bba6-c9297bf4fd3a";
+				PROVISIONING_PROFILE = "0bed58fb-1068-4d04-b1b4-959212c36644";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "$(inherited) $(SRCROOT)/../../cocos2d-x/cocos/platform/ios";
