@@ -29,7 +29,7 @@ end
 
 function GameUIGacha:OnMoveInStage()
     GameUIGacha.super.OnMoveInStage(self)
-    self:CreateTabButtons({
+    self.tab_buttons = self:CreateTabButtons({
         {
             label = _("普通抽奖"),
             tag = "ordinary",
@@ -258,7 +258,8 @@ function GameUIGacha:CreateGachaPool(layer)
                             -- 恢复ui退出home_button
                             main:GetHomeButton():setButtonEnabled(true)
                             main:DisableAutoClose(false)
-
+                            main.tab_buttons:GetTabByTag("ordinary"):Enable(true)
+                            main.tab_buttons:GetTabByTag("deluxe"):Enable(true)
                             -- 弹出评价
                             if main.appraise then
                                 UIKit:showEvaluateDialog(function ()
@@ -285,6 +286,8 @@ function GameUIGacha:CreateGachaPool(layer)
     function GachaPool:StartLotteryDraw(item)
         -- 禁用ui退出home_button
         main:GetHomeButton():setButtonEnabled(false)
+        main.tab_buttons:GetTabByTag("ordinary"):Enable(false)
+        main.tab_buttons:GetTabByTag("deluxe"):Enable(false)
         main:DisableAutoClose(true)
         self.award =self.award or {} -- 抽到物品的图标和名字node,开启下次抽奖需移除
         local item_name = item[1]
