@@ -187,7 +187,9 @@ function GameUIStore:AddRewardsForItem(content,data)
 			icon:scale(100/math.max(icon:getContentSize().width,icon:getContentSize().height))
 			bg:scale(0.3)
 			UIKit:ttfLabel({
-				text = Localize_item.item_name[reward.key],
+				text = reward.isToAlliance and
+                string.format(_("赠送给联盟成员的%s"),Localize_item.item_name[reward.key]) or
+                Localize_item.item_name[reward.key],
 				size = 20,
 				color= 0xffedae
 			}):align(display.LEFT_CENTER, x_2, y):addTo(content)
