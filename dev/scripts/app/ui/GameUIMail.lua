@@ -159,7 +159,7 @@ function GameUIMail:CreateMailControlBox()
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 local control_type = self:GetCurrentSelectType()
-                local replace_text = (control_type == "mail" and _("邮件")) or (control_type == "report" and _("战报"))
+                local replace_text = (control_type == "mail" and _("邮件")) or (control_type == "report" and _("战报")) or (control_type == "send_mails" and _("邮件"))
                 UIKit:showMessageDialog(string.format(_("删除%s"),replace_text),string.format(_("您即将删除所选%s,删除的%s将无法恢复,您确定要这么做吗?"),replace_text,replace_text))
                     :CreateOKButton(
                         {
@@ -251,6 +251,29 @@ function GameUIMail:CreateMailControlBox()
                                             end
                                         end
                                     end)
+                                elseif control_type == "send_mails" then
+                                    NetManager:getDeleteSendMailsPromise(ids):done(function ()
+                                        self:SelectAllMailsOrReports(false)
+                                        self.mail_control_box:hide()
+
+                                        if self.sent_layer:isVisible() then
+                                            -- 批量删除结束后获取
+                                            if #self.manager:GetSendMails() < 10 then
+                                                local response = self.manager:FetchSendMailsFromServer(#self.manager:GetSendMails())
+                                                if response then
+                                                    response:done(function ( response )
+                                                        self.send_mail_listview:asyncLoadWithCurrentPosition_()
+                                                        self.is_deleting = false
+                                                        return response
+                                                    end)
+                                                else
+                                                    self.is_deleting = false
+                                                end
+                                            else
+                                                self.is_deleting = false
+                                            end
+                                        end
+                                    end)
                                 end
                             end
                         }
@@ -266,6 +289,9 @@ function GameUIMail:CreateMailControlBox()
         }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
+                if self.sent_layer:isVisible() then
+                    return
+                end
                 local select_map,select_type = self:GetSelectMailsOrReports()
                 local ids = {}
                 for k,v in pairs(select_map) do
@@ -756,10 +782,10 @@ function GameUIMail:CreateSendMailContent()
     local content = display.newNode()
     content:setContentSize(cc.size(item_width, item_height))
     -- 标题背景框
-    local title_bg = display.newScale9Sprite("title_grey_482x30.png",item_width/2, item_height-24,cc.size(552,30),cc.rect(10,5,462,20))
+    local title_bg = display.newScale9Sprite("title_grey_482x30.png",item_width/2 + 39, item_height-24,cc.size(482,30),cc.rect(10,5,462,20))
         :addTo(content,2)
     -- 不变的模板部分
-    local content_title_bg = display.newScale9Sprite("back_ground_166x84.png",item_width-8,10,cc.size(552,60),cc.rect(15,10,136,64))
+    local content_title_bg = display.newScale9Sprite("back_ground_166x84.png",item_width-4,10,cc.size(482,60),cc.rect(15,10,136,64))
         :align(display.RIGHT_BOTTOM)
         :addTo(content,2)
 
@@ -803,12 +829,7 @@ function GameUIMail:CreateSendMailContent()
                             parent.manager:DecreaseUnReadMailsNum(1)
                         end)
                     end
-                    --如果是发送邮件
-                    if mail.toId then
-                        parent:ShowSendMailDetails(mail)
-                    else
-                        parent:ShowMailDetails(mail)
-                    end
+                    parent:ShowSendMailDetails(mail)
                 end
             end):addTo(self)
             :pos(item_width/2, item_height/2)
@@ -819,6 +840,11 @@ function GameUIMail:CreateSendMailContent()
         from_name_label:setString(_("From")..":"..((mail.fromAllianceTag~="" and "["..mail.fromAllianceTag.."]".. name or name)))
         date_label:setString(GameUtils:formatTimeStyle2(mail.sendTime/1000))
         mail_content_title_label:setString(mail.title)
+        if self.check_box then
+            self.check_box:removeFromParent(true)
+        end
+        self.check_box = parent:CreateCheckBox(self):align(display.LEFT_CENTER,14,item_height/2)
+            :addTo(self)
     end
 
     function content:GetContentData()
@@ -860,6 +886,8 @@ function GameUIMail:GetCurrentSelectType()
         or (self.saved_layer:isVisible() and self.saved_reports_listview:isVisible())
     then
         return "report"
+    elseif self.sent_layer:isVisible() then
+        return "send_mails"
     end
 end
 -- @parms source_data : mail(map) or report对象
@@ -891,6 +919,8 @@ function GameUIMail:GetSelectMailsOrReports()
         select_type = "report"
     elseif self.saved_layer:isVisible() and self.save_mails_listview:isVisible() then
         select_type = "mail"
+    elseif self.sent_layer:isVisible() then
+        select_type = "send_mails"
     end
     return self.selected_items,select_type
 end
@@ -923,7 +953,10 @@ function GameUIMail:SelectAllMailsOrReports(isSelect)
             self.saved_reports_listview:asyncLoadWithCurrentPosition_()
         end
     elseif self.sent_layer:isVisible() then
-
+        for i,v in ipairs(self.manager:GetSendMails()) do
+            self:SelectItems(v,isSelect)
+        end
+        self.send_mail_listview:asyncLoadWithCurrentPosition_()
     end
 end
 function GameUIMail:SaveOrUnsaveMail(mail,target)
@@ -1053,8 +1086,8 @@ function GameUIMail:ShowSendMailDetails(mail)
     local size = bg:getContentSize()
 
     -- mail content bg
-    local content_bg = WidgetUIBackGround.new({width=568,height = 544},WidgetUIBackGround.STYLE_TYPE.STYLE_5):addTo(bg)
-    content_bg:align(display.LEFT_BOTTOM,(bg:getContentSize().width-content_bg:getContentSize().width)/2,30)
+    local content_bg = WidgetUIBackGround.new({width=568,height = 494},WidgetUIBackGround.STYLE_TYPE.STYLE_5):addTo(bg)
+    content_bg:align(display.LEFT_BOTTOM,(bg:getContentSize().width-content_bg:getContentSize().width)/2,80)
 
     -- player head icon
     UIKit:GetPlayerCommonIcon(mail.fromIcon):align(display.CENTER, 76, bg:getContentSize().height - 90):addTo(bg)
@@ -1111,9 +1144,30 @@ function GameUIMail:ShowSendMailDetails(mail)
             color = UIKit:hex2c3b(0x403c2f)
         }):align(display.LEFT_CENTER, 155 + date_title_label:getContentSize().width+20, bg:getContentSize().height-140)
         :addTo(bg)
+    -- 删除按钮
+    local delete_label = cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = _("删除"),
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)})
+    delete_label:enableShadow()
+
+    local del_btn = WidgetPushButton.new(
+        {normal = "red_btn_up_148x58.png", pressed = "red_btn_down_148x58.png"},
+        {scale9 = false}
+    ):setButtonLabel(delete_label)
+        :addTo(bg):align(display.CENTER, size.width/2, 42)
+        :onButtonClicked(function(event)
+            if event.name == "CLICKED_EVENT" then
+                NetManager:getDeleteSendMailsPromise({mail.id}):done(function ()
+                    dialog:LeftButtonClicked()
+                end)
+            end
+        end)
     -- 内容
     local content_listview = UIListView.new{
-        viewRect = cc.rect(0, 10, 550, 520),
+        viewRect = cc.rect(0, 10, 550, 470),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(content_bg):pos(10, 0)
     local content_item = content_listview:newItem()
@@ -2138,6 +2192,9 @@ function GameUIMail:GetEnemyAllianceTag(report)
 end
 
 return GameUIMail
+
+
+
 
 
 
