@@ -321,8 +321,10 @@ function GameUILoginBeta:connectLogicServer()
 end
 function GameUILoginBeta:login()
     NetManager:getLoginPromise():done(function(response)
-        ext.market_sdk.onPlayerLogin(User:Id(),User:Name(),User:ServerName())
-        ext.market_sdk.onPlayerLevelUp(User:Level())
+        local userData = DataManager:getUserData()
+        ext.market_sdk.onPlayerLogin(userData._id, userData.basicInfo.name, userData.logicServerId)
+        ext.market_sdk.onPlayerLevelUp(User:GetPlayerLevelByExp(userData.basicInfo.levelExp))
+
         self:performWithDelay(function()
             if DataManager:getUserData().basicInfo.terrain == "__NONE__" then
   		        app:EnterFteScene()
