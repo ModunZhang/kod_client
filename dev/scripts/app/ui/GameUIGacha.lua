@@ -300,7 +300,7 @@ function GameUIGacha:CreateGachaPool(layer)
         layer:EnAbleButton(false)
         local terminal_point
         for i,item in ipairs(items) do
-            if item:GetGachaItemName() == item_name then
+            if item:GetGachaItemName() == item_name and item:GetGachaItemCount()== self.current_gacha_item_count then
                 terminal_point = i
                 -- 存在抽到的道具box对象，以便之后获取其位置做抽到奖品动画效果
                 self.draw_item_box = item
