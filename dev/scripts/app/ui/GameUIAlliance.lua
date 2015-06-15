@@ -352,6 +352,11 @@ function GameUIAlliance:OnJoinListActionButtonClicked(idx)
     local alliance = self.join_list_data_source[idx]
     if not alliance then return end
     if  alliance.joinType == 'all' then --如果是直接加入
+        if alliance.members == alliance.membersMax then
+            UIKit:showMessageDialog(_("提示"),
+                _("联盟人数已达最大"))
+            return
+        end
         NetManager:getJoinAllianceDirectlyPromise(alliance.id):fail(function()
             self:SearchAllianAction(self.editbox_tag_search:getText())
         end):done(function()
