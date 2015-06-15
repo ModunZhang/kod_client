@@ -98,6 +98,37 @@ local function get_response_delete_mail_msg(response)
 
     return response
 end
+local function get_response_delete_send_mail_msg(response)
+    if response.msg.playerData then
+        local user_data = DataManager:getUserData()
+        local mail_response = response.msg.playerData
+        for i,v in ipairs(mail_response) do
+            if type(v) == "table" then
+                local keys = string.split(v[1], ".")
+                local newKey = ""
+                local len = #keys
+                for i=1,len do
+                    local k = tonumber(keys[i]) or keys[i]
+                    if type(k) == "number" then
+                        local client_index = MailManager:GetSendMailIndexByServerIndex(k) - 1
+                        newKey = newKey..client_index..(i~=len and "." or "")
+                    else
+                        newKey = newKey..keys[i]..(i~=len and "." or "")
+                    end
+                end
+
+                v[1] = newKey
+                local clone_response = clone(response)
+                clone_response.msg.playerData = {}
+                table.insert(clone_response.msg.playerData, v)
+                local edit = decodeInUserDataFromDeltaData(user_data, clone_response.msg.playerData)
+                DataManager:setUserData(user_data, edit)
+            end
+        end
+    end
+
+    return response
+end
 
 local function get_response_report_msg(response)
     if response.msg.playerData then
@@ -879,6 +910,12 @@ function NetManager:getFetchSendMailsPromise(fromIndex)
     return get_blocking_request_promise("logic.playerHandler.getSendMails", {
         fromIndex = fromIndex
     }, "获取已发送邮件失败!")
+end
+-- 删除已发邮件
+function NetManager:getDeleteSendMailsPromise(mailIds)
+    return get_blocking_request_promise("logic.playerHandler.deleteSendMails", {
+        mailIds = mailIds
+    }, "删除已发邮件失败!"):done(get_response_delete_send_mail_msg)
 end
 -- 删除邮件
 function NetManager:getDeleteMailsPromise(mailIds)

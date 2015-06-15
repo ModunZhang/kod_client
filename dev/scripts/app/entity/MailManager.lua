@@ -189,9 +189,23 @@ function MailManager:ModifyMail(mail)
 end
 
 function MailManager:DeleteSendMail(mail)
+    local delete_mail_server_index
     for k,v in pairs(self.sendMails) do
         if v.id == mail.id then
+            delete_mail_server_index = v.index
             table.remove(self.sendMails,k)
+        end
+    end
+    for k,v in pairs(DataManager:getUserData().sendMails) do
+        if v.index > delete_mail_server_index then
+            local old = clone(v.index)
+            v.index = old - 1
+        end
+    end
+    for k,v in pairs(self.sendMails) do
+        if v.index > delete_mail_server_index then
+            local old = clone(v.index)
+            v.index = old - 1
         end
     end
 end
@@ -220,6 +234,17 @@ function MailManager:GetMailByServerIndex(serverIndex)
         print(".....v.index == index",v.title,v.index,serverIndex,v.index == serverIndex)
     end
     for i,v in ipairs(mails) do
+        if v.index == serverIndex then
+            return i
+        end
+    end
+end
+function MailManager:GetSendMailIndexByServerIndex(serverIndex)
+    local sendMails = self.sendMails
+    for i,v in ipairs(sendMails) do
+        print(".....v.index == index",v.title,v.index,serverIndex,v.index == serverIndex)
+    end
+    for i,v in ipairs(sendMails) do
         if v.index == serverIndex then
             return i
         end
@@ -448,13 +473,13 @@ function MailManager:OnNewSendMailsChanged( sendMails )
     for type,mail in pairs(sendMails) do
         if type == "add" then
             for i,data in ipairs(mail) do
-                table.insert(add_mails, data)
-                table.insert(self.sendMails, data)
+                table.insert(add_mails, clone(data))
+                table.insert(self.sendMails, clone(data))
             end
         elseif type == "remove" then
             for i,data in ipairs(mail) do
-                table.insert(remove_mails, data)
-                self:DeleteSendMail(data)
+                table.insert(remove_mails, clone(data))
+                self:DeleteSendMail(clone(data))
             end
         end
     end
