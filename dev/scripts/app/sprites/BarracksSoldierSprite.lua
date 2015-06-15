@@ -110,6 +110,8 @@ end
 function BarracksSoldierSprite:TurnWest()
     self:GetSprite():setScaleX(-self:GetSprite():getScaleY())
     self:PlayAnimation("move_-45")
+    local x,y = self:GetSprite():getPosition()
+    self:GetSprite():pos(x+10, y)
 end
 function BarracksSoldierSprite:TurnNorth()
     self:GetSprite():setScaleX(-self:GetSprite():getScaleY())
