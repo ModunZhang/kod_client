@@ -45,11 +45,7 @@ function GameUIAllianceBattle:OnMoveInStage()
             tag = "other_alliance",
         },
     }, function(tag)
-        if tag == 'statistics' then
-            self.statistics_layer:setVisible(true)
-        else
-            self.statistics_layer:setVisible(false)
-        end
+        self.statistics_layer:setVisible(tag == 'statistics')
         if tag == 'history' then
             self.history_layer:setVisible(true)
             if not self.history_listview then
@@ -138,26 +134,40 @@ function GameUIAllianceBattle:InitBattleStatistics()
     layer:removeAllChildren()
     self.info_listview = nil
     self.request_num_label = nil
-    local period_label = UIKit:ttfLabel({
-        text = self:GetAlliancePeriod(),
-        size = 22,
-        color = 0x403c2f,
-    }):addTo(layer):align(display.LEFT_CENTER,window.cx-50,window.top-110)
 
-    self.time_label = UIKit:ttfLabel({
-        text = "",
-        size = 22,
-        color = 0x7e0000,
-    }):addTo(layer)
-        :align(display.LEFT_CENTER,period_label:getPositionX()+period_label:getContentSize().width+20,window.top-110)
+    display.newSprite("alliance_battle_bg_612x886.jpg"):addTo(layer):align(display.TOP_CENTER,window.cx,window.top_bottom+18)
 
-    WidgetPushButton.new({normal = "info_26x26.png",
-        pressed = "info_26x26.png"})
+    -- time bg
+    local time_bg = display.newSprite("background_624x62.png"):addTo(layer):align(display.TOP_CENTER,window.cx,window.top_bottom+18)
+
+    WidgetPushButton.new({normal = "battle_btn_up_296x40.png",
+        pressed = "battle_btn_down_296x40.png"})
         :onButtonClicked(function()
             self:OpenWarDetails()
         end)
-        :align(display.CENTER,period_label:getPositionX()-30, window.top-110)
-        :addTo(layer)
+        :align(display.CENTER,time_bg:getContentSize().width/2, time_bg:getContentSize().height/2)
+        :addTo(time_bg)
+    
+    local period_label = UIKit:ttfLabel({
+        text = self:GetAlliancePeriod(),
+        size = 24,
+        color = 0xffedae,
+    }):addTo(time_bg):align(display.LEFT_CENTER,time_bg:getContentSize().width/2 - 90, time_bg:getContentSize().height/2)
+
+    self.time_label = UIKit:ttfLabel({
+        text = "",
+        size = 24,
+        color = 0xe63600,
+    }):addTo(time_bg)
+        :align(display.LEFT_CENTER,period_label:getPositionX()+period_label:getContentSize().width+20,time_bg:getContentSize().height/2)
+
+    -- WidgetPushButton.new({normal = "info_26x26.png",
+    --     pressed = "info_26x26.png"})
+    --     :onButtonClicked(function()
+    --         self:OpenWarDetails()
+    --     end)
+    --     :align(display.CENTER,period_label:getPositionX()-30, window.top-110)
+    --     :addTo(layer)
     if self.alliance:Status() == "peace" then
         -- 请求开战玩家数量
         local request_fight_bg = WidgetUIBackGround.new({width = 556,height = 58},WidgetUIBackGround.STYLE_TYPE.STYLE_6)
@@ -310,7 +320,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
         local top_bg = display.newSprite("back_ground_540x70.png")
             :align(display.TOP_CENTER, window.cx, window.top-140)
             :addTo(layer)
-        -- :scale(0.85)
+            :scale(1.1)
         local t_size = top_bg:getContentSize()
 
         local self_alliance_bg = WidgetPushButton.new({normal = "button_blue_normal_232x64.png",
@@ -453,7 +463,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
             }):addTo(layer)
                 :align(display.TOP_CENTER,window.cx,window.top-240)
             -- 荣耀值奖励
-            local honour_bg = display.newScale9Sprite("back_ground_166x84.png",0 , 0,cc.size(184,34),cc.rect(15,10,136,64))
+            local honour_bg = display.newScale9Sprite("back_ground_166x84.png",window.right-240,window.top-350,cc.size(184,34),cc.rect(15,10,136,64))
                 :align(display.LEFT_CENTER)
                 :addTo(layer)
             display.newSprite("honour_128x128.png"):align(display.CENTER,0,honour_bg:getContentSize().height/2)
@@ -466,7 +476,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
             }):addTo(honour_bg,2)
                 :align(display.CENTER,honour_bg:getContentSize().width/2,honour_bg:getContentSize().height/2)
             -- 金龙币奖励
-            local gem_bg = display.newScale9Sprite("back_ground_166x84.png",0 , 0,cc.size(184,34),cc.rect(15,10,136,64))
+            local gem_bg = display.newScale9Sprite("back_ground_166x84.png",window.left+250,window.top-350,cc.size(184,34),cc.rect(15,10,136,64))
                 :align(display.RIGHT_CENTER)
                 :addTo(layer)
             display.newSprite("gem_icon_62x61.png"):align(display.CENTER,0,gem_bg:getContentSize().height/2)
