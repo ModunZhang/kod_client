@@ -108,8 +108,9 @@ end
 function FullScreenPopDialogUI:CreateCancelButton(params)
     local params = params or {}
     local listener,btn_name = params.listener,params.btn_name
+    local btn_images = params.btn_images
     local name = btn_name or _("取消")
-    local ok_button = cc.ui.UIPushButton.new({normal = "red_btn_up_148x58.png",pressed = "red_btn_down_148x58.png"})
+    local ok_button = cc.ui.UIPushButton.new(btn_images or {normal = "red_btn_up_148x58.png",pressed = "red_btn_down_148x58.png"})
         :setButtonLabel(UIKit:ttfLabel({text =name, size = 24, color = 0xffedae,shadow=true}))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
