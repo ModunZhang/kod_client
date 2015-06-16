@@ -236,7 +236,7 @@ function GameUIAllianceInfo:LoadInfo()
         :align(display.CENTER_TOP, l_size.width/2,l_size.height - 220)
         :addTo(layer)
 
-    local desc = alliance_data.desc 
+    local desc = alliance_data.desc
     if not desc or desc == json.null then
         desc = _("联盟未设置联盟描述")
     end
@@ -253,11 +253,17 @@ end
 
 function GameUIAllianceInfo:OnJoinActionClicked(joinType,sender)
     if  joinType == 'all' then --如果是直接加入
+        local alliance = self:GetAllianceData()
+        if alliance.members == alliance.membersMax then
+            UIKit:showMessageDialog(_("提示"),
+                _("联盟人数已达最大"))
+            return
+        end
         NetManager:getJoinAllianceDirectlyPromise(self:GetAllianceData().id):fail(function()
 
             end):done(function()
-        GameGlobalUI:showTips(_("提示"),string.format(_("加入%s联盟成功!"),self:GetAllianceData().name))
-        self:LeftButtonClicked()
+            GameGlobalUI:showTips(_("提示"),string.format(_("加入%s联盟成功!"),self:GetAllianceData().name))
+            self:LeftButtonClicked()
             end)
     else
         NetManager:getRequestToJoinAlliancePromise(self:GetAllianceData().id):done(function()
@@ -627,6 +633,7 @@ function GameUIAllianceInfo:listviewListener(event)
     end
 end
 return GameUIAllianceInfo
+
 
 
 
