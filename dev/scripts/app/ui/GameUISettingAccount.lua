@@ -4,7 +4,6 @@
 --
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local GameUISettingAccount = class("GameUISettingAccount", WidgetPopDialog)
-local WidgetPushButton = import("..widget.WidgetPushButton")
 
 
 function GameUISettingAccount:ctor()
@@ -65,7 +64,7 @@ function GameUISettingAccount:CreateGameCenterPanel()
 		color= 0x7e0000,
 		dimensions = cc.size(525, 85)
 	}):align(display.TOP_CENTER, 276, 180):addTo(self.gamecenter_panel)
-	self.gamecenter_force_change_button = WidgetPushButton.new({
+	self.gamecenter_force_change_button = cc.ui.UIPushButton.new({
 			normal = "setting_account_red_btn_n_186x64.png",
 			pressed="setting_account_red_btn_l_186x64.png"
 		})
@@ -77,7 +76,7 @@ function GameUISettingAccount:CreateGameCenterPanel()
 	self.gamecenter_force_change_button:onButtonClicked(function()
 			self:ChangeAccountForceButtonClicked(self.gamecenter_force_change_button)
 		end)
-	self.gamecenter_change_account_button = WidgetPushButton.new({
+	self.gamecenter_change_account_button = cc.ui.UIPushButton.new({
 			normal = "yellow_btn_up_186x66.png",
 			pressed="yellow_btn_down_186x66.png"
 		})
@@ -89,7 +88,7 @@ function GameUISettingAccount:CreateGameCenterPanel()
 	self.gamecenter_change_account_button:onButtonClicked(function()
 			self:CreateOrChangeAccountButtonClicked(self.gamecenter_change_account_button)
 		end)
-	self.gamecenter_login_button = WidgetPushButton.new({
+	self.gamecenter_login_button = cc.ui.UIPushButton.new({
 			normal = "yellow_btn_up_186x66.png",
 			pressed="yellow_btn_down_186x66.png"
 		})
