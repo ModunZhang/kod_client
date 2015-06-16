@@ -393,11 +393,11 @@ function GameUILoginBeta:loadServerJson()
         end
 
         self.m_serverJson = msg
-        self:getUpdateFileList()
+        self:donwLoadFilesWithFileList()
     end)
 end
 
-function GameUILoginBeta:getUpdateFileList()
+function GameUILoginBeta:donwLoadFilesWithFileList()
     self.m_totalSize = 0
     self.m_currentSize = 0
     local localFileList = json.decode(self.m_localJson)
