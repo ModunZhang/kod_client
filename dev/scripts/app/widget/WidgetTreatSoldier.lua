@@ -383,8 +383,15 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
         :align(display.CENTER, center, -70)
 
     self.back_ground = back_ground
-
+    local res_map = {}
+    res_map.treatCoin = City:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+    for k, v in pairs(self.res_map) do
+        local total = res_map[k]
+        v.total:setString(GameUtils:formatNumber(total))
+    end
+    self.res_total_map = res_map
     self:SetSoldier(soldier_type, star)
+    self:OnCountChanged(self:GetMaxTreatNum())
 end
 function WidgetTreatSoldier:onEnter()
     City:GetResourceManager():AddObserver(self)
@@ -496,6 +503,7 @@ function WidgetTreatSoldier:OnCountChanged(count)
     self.gem_label:setString(self.treat_now_gems)
 end
 return WidgetTreatSoldier
+
 
 
 
