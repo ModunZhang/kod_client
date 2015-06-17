@@ -17,6 +17,19 @@ for language_code in ${PO_LANGUAGES[@]};
 do
 	echo "> 导出${I18N_DIR}/${language_code}.po"
 	xls-to-po $language_code $EXCEL_FILE "${I18N_DIR}/${language_code}.po"
+	cur_dir=$(cd "$(dirname "$0")"; pwd)
+	cd ${I18N_DIR}
+	pwd
+	sed -i "" "3a\\
+\"Project-Id-Version: dragonfall\\\n\"\\
+\"Language-Team: \\\n\"\\
+\"Language: ${language_code}\\\n\"\\
+\"X-Poedit-SourceCharset: UTF-8\\\\n\"\\
+\"X-Poedit-KeywordsList: _\\\\n\"\\
+\"X-Poedit-Basepath: ../../scripts/app/\\\\n\"\\
+\"X-Poedit-SearchPath-0: .\\\\n\"
+			" ${language_code}.po
+	cd $cur_dir
 done
 
 if [ $? == 0 ]; then
