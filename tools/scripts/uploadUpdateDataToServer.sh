@@ -16,7 +16,7 @@ pushDataToGit()
 {
 	cd "$GIT_OF_UPDATE"
 	git add --all
-	git ci -m "发布新的自动更新"
+	git commit -m "发布新的自动更新"
 	git push
 	cd "$DOCROOT"
 }
