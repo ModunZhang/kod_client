@@ -40,7 +40,7 @@ function WidgetAllianceHelper:ctor()
 	--旗帜的所有图案
 	self.images_of_graphics = {}
 	table.insert(self.images_of_graphics,{name = 1,image = "transparent_1x1.png"})
-	for i=1,19 do
+	for i=1,30 do
 	    local imageName = string.format("alliance_graphic_88x88_%d",i)
 	    table.insert(self.images_of_graphics,{name = i + 1,image = imageName .. ".png"})
 	end
