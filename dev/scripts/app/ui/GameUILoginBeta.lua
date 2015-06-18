@@ -179,7 +179,7 @@ end
 function GameUILoginBeta:createUserAgreement()
     local user_agreement_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = _("[用户协议]").."hello",
+        text = _("[用户协议]"),
         font = UIKit:getFontFilePath(),
         size = 18,
         align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
