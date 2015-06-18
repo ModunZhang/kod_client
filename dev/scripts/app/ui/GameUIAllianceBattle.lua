@@ -461,61 +461,63 @@ end
 
 function GameUIAllianceBattle:RefreshFightInfoList(info_bg_y)
     local fight_list_node = self.fight_list_node
-    fight_list_node:removeAllChildren()
+    if fight_list_node then
+        fight_list_node:removeAllChildren()
 
-    local alliance = self.alliance
-    local our, enemy
-    local ourKillMaxName,enemyKillMaxName
-    if alliance:Status() == "protect" then
-        local report = alliance:GetLastAllianceFightReports()
-        our = alliance:Id() == report.attackAllianceId and report.attackAlliance or report.defenceAlliance
-        enemy = alliance:Id() == report.attackAllianceId and report.defenceAlliance or report.attackAlliance
-        local killMax = report.killMax
+        local alliance = self.alliance
+        local our, enemy
+        local ourKillMaxName,enemyKillMaxName
+        if alliance:Status() == "protect" then
+            local report = alliance:GetLastAllianceFightReports()
+            our = alliance:Id() == report.attackAllianceId and report.attackAlliance or report.defenceAlliance
+            enemy = alliance:Id() == report.attackAllianceId and report.defenceAlliance or report.attackAlliance
+            local killMax = report.killMax
 
-        ourKillMaxName = killMax.allianceId == alliance:Id() and killMax.playerName ~= json.null and killMax.playerName or _("无")
-        enemyKillMaxName = killMax.allianceId ~= alliance:Id() and killMax.playerName  ~= json.null and killMax.playerName or _("无")
+            ourKillMaxName = killMax.allianceId == alliance:Id() and killMax.playerName ~= json.null and killMax.playerName or _("无")
+            enemyKillMaxName = killMax.allianceId ~= alliance:Id() and killMax.playerName  ~= json.null and killMax.playerName or _("无")
 
-    else
-        our = alliance:GetMyAllianceFightCountData()
-        enemy = alliance:GetEnemyAllianceFightCountData()
-        local ourKills = alliance:GetMyAllianceFightPlayerKills()
-        local enemyKills = alliance:GetEnemyAllianceFightPlayerKills()
-
-        local temp_name,temp_kills = _("无"),0
-        for i,v in ipairs(ourKills or {}) do
-            if v.kill > temp_kills then
-                temp_kills = v.kill
-                temp_name = v.name
-            end
-        end
-        local enemy_temp_name,enemy_temp_kills = "",0
-        for i,v in ipairs(enemyKills or {}) do
-            if v.kill > enemy_temp_kills then
-                enemy_temp_kills = v.kill
-                enemy_temp_name = v.name
-            end
-        end
-        if temp_kills < enemy_temp_kills then
-            ourKillMaxName = _("无")
-            enemyKillMaxName = enemy_temp_name
         else
-            ourKillMaxName = temp_name
-            enemyKillMaxName = _("无")
+            our = alliance:GetMyAllianceFightCountData()
+            enemy = alliance:GetEnemyAllianceFightCountData()
+            local ourKills = alliance:GetMyAllianceFightPlayerKills()
+            local enemyKills = alliance:GetEnemyAllianceFightPlayerKills()
+
+            local temp_name,temp_kills = _("无"),0
+            for i,v in ipairs(ourKills or {}) do
+                if v.kill > temp_kills then
+                    temp_kills = v.kill
+                    temp_name = v.name
+                end
+            end
+            local enemy_temp_name,enemy_temp_kills = "",0
+            for i,v in ipairs(enemyKills or {}) do
+                if v.kill > enemy_temp_kills then
+                    enemy_temp_kills = v.kill
+                    enemy_temp_name = v.name
+                end
+            end
+            if temp_kills < enemy_temp_kills then
+                ourKillMaxName = _("无")
+                enemyKillMaxName = enemy_temp_name
+            else
+                ourKillMaxName = temp_name
+                enemyKillMaxName = _("无")
+            end
         end
-    end
-    if our then
-        local info_message = {
-            {string.formatnumberthousands(our.kill),_("击杀积分"),string.formatnumberthousands(enemy.kill)},
-            {our.routCount,_("击溃城市"),enemy.routCount},
-            {our.attackCount,_("进攻次数"),enemy.attackCount},
-            {our.attackSuccessCount,_("进攻获胜"),enemy.attackSuccessCount},
-            {our.strikeCount,_("突袭次数"),enemy.strikeCount},
-            {our.strikeSuccessCount,_("突袭成功"),enemy.strikeSuccessCount},
-            {ourKillMaxName,_("头号杀手"),enemyKillMaxName},
-        }
-        local origin_y = fight_list_node:getContentSize().height
-        for i,v in ipairs(info_message) do
-            self:CreateInfoItem(v):addTo(fight_list_node):align(display.TOP_CENTER, fight_list_node:getContentSize().width/2, origin_y - (i-1) * 60)
+        if our then
+            local info_message = {
+                {string.formatnumberthousands(our.kill),_("击杀积分"),string.formatnumberthousands(enemy.kill)},
+                {our.routCount,_("击溃城市"),enemy.routCount},
+                {our.attackCount,_("进攻次数"),enemy.attackCount},
+                {our.attackSuccessCount,_("进攻获胜"),enemy.attackSuccessCount},
+                {our.strikeCount,_("突袭次数"),enemy.strikeCount},
+                {our.strikeSuccessCount,_("突袭成功"),enemy.strikeSuccessCount},
+                {ourKillMaxName,_("头号杀手"),enemyKillMaxName},
+            }
+            local origin_y = fight_list_node:getContentSize().height
+            for i,v in ipairs(info_message) do
+                self:CreateInfoItem(v):addTo(fight_list_node):align(display.TOP_CENTER, fight_list_node:getContentSize().width/2, origin_y - (i-1) * 60)
+            end
         end
     end
 end
@@ -1263,6 +1265,7 @@ function GameUIAllianceBattle:OnAllianceFightReportsChanged(changed_map)
 end
 
 return GameUIAllianceBattle
+
 
 
 
