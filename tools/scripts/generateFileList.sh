@@ -7,5 +7,5 @@ APP_BUILD_TAG=`./functions.sh getAppBuildTag $Platform`
 echo ---------------- 检查更新
 cd $DOCROOT/../buildUpdate
 echo "buildUpdate.py" $APP_VERSION $APP_MIN_VERSION $APP_BUILD_TAG
-#python buildUpdate.py $APP_VERSION $APP_MIN_VERSION $APP_BUILD_TAG
+python buildUpdate.py $APP_VERSION $APP_MIN_VERSION $APP_BUILD_TAG
 cd $DOCROOT
