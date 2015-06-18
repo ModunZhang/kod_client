@@ -12,7 +12,6 @@ def usage():
     会在../../dev/scripts/app/中生成对应文件
         '''
 
-
 if __name__=="__main__":
 	images_dir = '../../dev/res/images/'
 	resource_dir = '../../dev/res/images/rgba444_single'
@@ -25,6 +24,9 @@ if __name__=="__main__":
 		usage()
 		sys.exit(2)
 
+	if len(opts) == 0:
+		usage()
+		sys.exit(2)		
 
 	jpg = False
 	rgba444 = False
