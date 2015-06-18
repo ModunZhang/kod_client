@@ -11,6 +11,8 @@ local WidgetFteArrow = import("..widget.WidgetFteArrow")
 local StarBar = import(".StarBar")
 local DragonManager = import("..entity.DragonManager")
 local WidgetDragons = import("..widget.WidgetDragons")
+local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
+local WidgetProgress = import("..widget.WidgetProgress")
 local DragonSprite = import("..sprites.DragonSprite")
 local Localize = import("..utils.Localize")
 local WidgetPushButton = import("..widget.WidgetPushButton")
@@ -87,8 +89,9 @@ function GameUIDragonEyrieMain:OnDragonDeathEventTimer(dragonDeathEvent)
 end
 
 function GameUIDragonEyrieMain:OnDragonEventTimer(dragonEvent)
-    if self:GetCurrentDragon():Type() == dragonEvent:DragonType() and self.hate_timer_label and self.hate_timer_label:isVisible() then
-        self.hate_timer_label:setString(string.format("需要时间: %s",GameUtils:formatTimeStyleDayHour(dragonEvent:GetTime())))
+    if self:GetCurrentDragon():Type() == dragonEvent:DragonType() and self.hate_event_node then
+        local timer_text = GameUtils:formatTimeStyleDayHour(dragonEvent:GetTime())
+        self.hate_event_node:SetProgressInfo(timer_text,dragonEvent:GetPercent())
     end
 end
 
@@ -177,12 +180,13 @@ function GameUIDragonEyrieMain:RefreshUI()
         self.star_bar:hide()
         if dragonEvent then
             local timer_text = GameUtils:formatTimeStyleDayHour(dragonEvent:GetTime())
-            self.hate_timer_label:setString(string.format(_("需要时间: %s"),timer_text))
+            self.hate_timer_label:hide()
             self.hate_button:hide()
-            self.hate_speed_button:show()
+            self.hate_event_node:SetProgressInfo(timer_text,dragonEvent:GetPercent())
+            self.hate_event_node:show()
         else
             self.hate_button:show()
-            self.hate_speed_button:hide()
+            self.hate_event_node:hide()
             local timer_text = GameUtils:formatTimeStyleDayHour(self.dragon_manager:GetHateNeedMinutes(self:GetCurrentDragon():Type()) * 60)
             self.hate_timer_label:setString(string.format(_("需要时间: %s"),timer_text))
         end
@@ -468,6 +472,7 @@ function GameUIDragonEyrieMain:CreateDragonHateNodeIf()
     if not self.draogn_hate_node then
         local node = display.newNode():size(window.width,210):addTo(self.dragonNode):pos(0,window.bottom_top)
         self.draogn_hate_node = node
+        WidgetUIBackGround.new({width = 554, height = 80},WidgetUIBackGround.STYLE_TYPE.STYLE_3):addTo(node):align(display.CENTER_TOP, window.cx, 210)
         local tip_label = UIKit:ttfLabel({
             text = Localize.dragon_buffer[self:GetCurrentDragon():Type()],
             size = 20,
@@ -492,18 +497,34 @@ function GameUIDragonEyrieMain:CreateDragonHateNodeIf()
                 self:OnEnergyButtonClicked()
             end)
         self.hate_button = hate_button
+
+        local event_node = display.newNode():size(window.width,76):addTo(node):pos(0,0)
         local dragonEvent = self.dragon_manager:GetDragonEventByDragonType(self:GetCurrentDragon():Type())
-        local hate_speed_button = UIKit:commonButtonWithBG(
-            {
-                w=250,
-                h=65,
-                style = UIKit.BTN_COLOR.GREEN,
-                labelParams = {text = _("加速"),size = 24,color = 0xffedae},
-                listener = function ()
-                    self:OnHateSpeedUpClicked()
-                end,
-            }):addTo(node):align(display.CENTER_BOTTOM,window.cx,55)
-        self.hate_speed_button = hate_speed_button
+        local hate_speed_button = WidgetPushButton.new({ normal = "green_btn_up_148x76.png",pressed = "green_btn_down_148x76.png"})
+            :setButtonLabel("normal",UIKit:commonButtonLable({
+                text = _("加速"),
+                size = 24,
+                color = 0xffedae,
+            }))
+            :addTo(event_node):align(display.CENTER_BOTTOM,window.right - 120,34)
+            :onButtonClicked(function()
+                self:OnHateSpeedUpClicked()
+            end)
+        local hate_label = UIKit:ttfLabel({
+            text = _("正在孵化巨龙"),
+            size = 20,
+            color= 0x403c2f,
+            align= cc.TEXT_ALIGNMENT_CENTER
+        }):addTo(event_node):align(display.LEFT_CENTER, window.left + 60, 95)
+        local progress = WidgetProgress.new(UIKit:hex2c3b(0xffedae), "progress_bar_364x40_1.png", "progress_bar_364x40_2.png", {
+            icon_bg = "back_ground_43x43.png",
+            icon = "hourglass_30x38.png",
+            bar_pos = {x = 0,y = 0}
+        }):addTo(event_node):align(display.LEFT_CENTER, window.left + 60, 55)
+        function event_node:SetProgressInfo(time_label, percent)
+            progress:SetProgressInfo(time_label, percent)
+        end
+        self.hate_event_node = event_node
 
         local hate_timer_label = UIKit:ttfLabel({
             text = "",
@@ -643,6 +664,8 @@ end
 
 
 return GameUIDragonEyrieMain
+
+
 
 
 
