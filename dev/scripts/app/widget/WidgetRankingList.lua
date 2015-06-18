@@ -172,7 +172,7 @@ end
 function WidgetRankingList:touchListener(event)
     local listView = event.listView
     if "clicked" == event.name then
-        print("async list view clicked idx:" .. event.itemPos)
+        -- print("async list view clicked idx:" .. event.itemPos)
     end
 end
 function WidgetRankingList:sourceDelegate(listView, tag, idx)
