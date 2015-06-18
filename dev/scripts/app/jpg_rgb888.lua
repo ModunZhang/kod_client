@@ -1,5 +1,6 @@
 local jpg_rgb888 = {}
 jpg_rgb888["activity_first_purgure_588x176.jpg"] = cc.TEXTURE2_D_PIXEL_FORMAT_RG_B888
+jpg_rgb888["alliance_battle_bg_612x886.jpg"] = cc.TEXTURE2_D_PIXEL_FORMAT_RG_B888
 jpg_rgb888["background_gacha_1.jpg"] = cc.TEXTURE2_D_PIXEL_FORMAT_RG_B888
 jpg_rgb888["background_gacha_2.jpg"] = cc.TEXTURE2_D_PIXEL_FORMAT_RG_B888
 jpg_rgb888["fte_background.jpg"] = cc.TEXTURE2_D_PIXEL_FORMAT_RG_B888
