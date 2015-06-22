@@ -28,13 +28,11 @@ CONFIG_LOCAL_SERVER = {
 }
 CONFIG_REMOTE_SERVER = {
     update = {
-        -- host = "54.223.166.65", -- 正式服务器地址 54.223.166.65
         host = "54.223.172.65", -- 正式服务器地址 54.223.166.65
         port = 3000,
         name = "update-server-1"
     },
     gate = {
-        -- host = "54.223.166.65", -- 正式服务器地址 54.223.166.65
         host = "54.223.172.65", -- 正式服务器地址 54.223.166.65
         port = 3011,
         name = "gate-server-1"
