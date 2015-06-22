@@ -5,67 +5,67 @@ local min = math.min
 local soldier_config = {
     ----
     ["swordsman"] = {
-        {"bubing_1", 0, 10, 0.8},
-        {"bubing_2", -10, 5, 0.8},
-        {"bubing_3", 0, 0, 0.8},
+        {"bubing_1", 10, 0, 0.8},
+        {"bubing_2", 10, 0, 0.8},
+        {"bubing_3", 10, 0, 0.8},
     },
     ["ranger"] = {
-        {"gongjianshou_1", 0, 10, 0.8},
-        {"gongjianshou_2", 0, 10, 0.8},
-        {"gongjianshou_3", 0, 10, 0.8},
+        {"gongjianshou_1", 10, 0, 0.8},
+        {"gongjianshou_2", 10, 0, 0.8},
+        {"gongjianshou_3", 10, 0, 0.8},
     },
     ["lancer"] = {
-        {"qibing_1", 0, 10, 0.8},
-        {"qibing_2", 0, 10, 0.8},
-        {"qibing_3", 0, 10, 0.8},
+        {"qibing_1", 10, 0, 0.8},
+        {"qibing_2", 10, 0, 0.8},
+        {"qibing_3", 10, 0, 0.8},
     },
     ["catapult"] = {
-        {  "toushiche", 50, 10, 0.8},
-        {"toushiche_2", 0, 10, 0.8},
-        {"toushiche_3", 0, 10, 0.8},
+        {  "toushiche", 10, 0, 0.8},
+        {"toushiche_2", 10, 0, 0.8},
+        {"toushiche_3", 10, 0, 0.8},
     },
 
     -----
     ["sentinel"] = {
-        {"shaobing_1", 0, 10, 0.8},
-        {"shaobing_2", 0, 10, 0.8},
-        {"shaobing_3", 0, 10, 0.8},
+        {"shaobing_1", 10, 0, 0.8},
+        {"shaobing_2", 10, 0, 0.8},
+        {"shaobing_3", 10, 0, 0.8},
     },
     ["crossbowman"] = {
-        {"nugongshou_1", 0, 10, 0.8},
-        {"nugongshou_2", 0, 10, 0.8},
-        {"nugongshou_3", 10, 10, 0.8},
+        {"nugongshou_1", 10, 0, 0.8},
+        {"nugongshou_2", 10, 0, 0.8},
+        {"nugongshou_3", 10, 0, 0.8},
     },
     ["horseArcher"] = {
-        {"youqibing_1", 0, 10, 0.8},
-        {"youqibing_2", 0, 10, 0.8},
-        {"youqibing_3", 0, 10, 0.8},
+        {"youqibing_1", 10, 0, 0.8},
+        {"youqibing_2", 10, 0, 0.8},
+        {"youqibing_3", 10, 0, 0.8},
     },
     ["ballista"] = {
-        {"nuche_1", 0, 10, 0.8},
-        {"nuche_2", 0, 10, 0.8},
-        {"nuche_3", 0, 10, 0.8},
+        {"nuche_1", 10, 0, 0.8},
+        {"nuche_2", 10, 0, 0.8},
+        {"nuche_3", 10, 0, 0.8},
     },
     ----
     ["skeletonWarrior"] = {
-        {"kulouyongshi", 0, 10, 0.8},
-        {"kulouyongshi", 0, 10, 0.8},
-        {"kulouyongshi", 0, 10, 0.8},
+        {"kulouyongshi", 0, 0, 0.8},
+        {"kulouyongshi", 0, 0, 0.8},
+        {"kulouyongshi", 0, 0, 0.8},
     },
     ["skeletonArcher"] = {
-        {"kulousheshou", 30, 5, 0.8},
-        {"kulousheshou", 30, 5, 0.8},
-        {"kulousheshou", 30, 5, 0.8},
+        {"kulousheshou", 0, 0, 0.8},
+        {"kulousheshou", 0, 0, 0.8},
+        {"kulousheshou", 0, 0, 0.8},
     },
     ["deathKnight"] = {
-        {"siwangqishi", 0, 5, 0.8},
-        {"siwangqishi", 0, 5, 0.8},
-        {"siwangqishi", 0, 5, 0.8},
+        {"siwangqishi", 0, 0, 0.8},
+        {"siwangqishi", 0, 0, 0.8},
+        {"siwangqishi", 0, 0, 0.8},
     },
     ["meatWagon"] = {
-        {"jiaorouche", 0, 10, 0.8},
-        {"jiaorouche", 0, 10, 0.8},
-        {"jiaorouche", 0, 10, 0.8},
+        {"jiaorouche", 0, 0, 0.8},
+        {"jiaorouche", 0, 0, 0.8},
+        {"jiaorouche", 0, 0, 0.8},
     },
 }
 
@@ -111,7 +111,8 @@ function BarracksSoldierSprite:TurnWest()
     self:GetSprite():setScaleX(-self:GetSprite():getScaleY())
     self:PlayAnimation("move_-45")
     local x,y = self:GetSprite():getPosition()
-    self:GetSprite():pos(x+10, y)
+    local _,ox,oy = unpack(soldier_config[self.soldier_type][self.soldier_star])
+    self:GetSprite():pos(x+ox,y+oy)
 end
 function BarracksSoldierSprite:TurnNorth()
     self:GetSprite():setScaleX(-self:GetSprite():getScaleY())
