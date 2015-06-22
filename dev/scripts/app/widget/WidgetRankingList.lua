@@ -21,7 +21,7 @@ local rank_data = WidgetRankingList.rank_data
 local EXPIRE_TIME = 60
 function WidgetRankingList:ctor(type_)
     local str = type_ == "player" and _("个人排行榜") or _("联盟排行榜")
-    WidgetRankingList.super.ctor(self, 762, str, display.cy + 350)
+    WidgetRankingList.super.ctor(self, 762, str, display.top-120)
     self.type_ = type_
     self.rank_map = rank_data[type_]
     WidgetRankingList.rank_data.player = {}
