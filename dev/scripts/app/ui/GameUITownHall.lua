@@ -248,7 +248,7 @@ function GameUITownHall:CreateQuestItem(quest,index)
                     UIKit:newGameUI("GameUIDailyQuestSpeedUp", quest):AddToCurrentScene()
                 end)
                 progress:setVisible(true)
-                status = _("正在")..Localize.daily_quests_name[quest.index]
+                status = _("正在").." "..Localize.daily_quests_name[quest.index]
             end
             need_time_label:setVisible(false)
             add_star_btn:hide()
