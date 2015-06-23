@@ -594,7 +594,10 @@ function GameUIDragonEyrieMain:OnEnterIndexEvent(index)
         self.draong_index = index + 1
         self:RefreshUI()
         local eyrie = self.draongContentNode:GetItemByIndex(index)
-        if not self:GetCurrentDragon():Ishated() then return end
+        if not self:GetCurrentDragon():Ishated() then 
+            self.dragon_hate_tips_label:setString(Localize.dragon_buffer[self:GetCurrentDragon():Type()])
+            return 
+        end
         eyrie.dragon_image:hide()
         eyrie.armature:show()
         eyrie.armature:PlayAnimation("idle")

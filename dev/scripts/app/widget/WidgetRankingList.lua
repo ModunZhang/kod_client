@@ -220,8 +220,10 @@ function WidgetRankingList:CreatePlayerContentByIndex(idx)
         :pos(size.width/2, size.height/2)
     item.bg3 = display.newSprite("background3_548x76.png"):addTo(item)
         :pos(size.width/2, size.height/2)
-    display.newSprite("background_57x57.png"):addTo(item):pos(120, 40)
-    local player_head_icon = UIKit:GetPlayerIconOnly():addTo(item,1):pos(120, 40):scale(0.5)
+    local bg = display.newSprite("background_57x57.png"):addTo(item):pos(120, 40)
+    local point = bg:getAnchorPointInPoints()
+    local player_head_icon = UIKit:GetPlayerIconOnly():addTo(bg)
+                            :scale(0.5):pos(point.x, point.y+5)
 
 
     local tag = self.drop_list:GetSelectedButtonTag()  
