@@ -704,8 +704,7 @@ function GameUILoginBeta:checkFte()
         mockData.FightWithNpc(3)
     end
     if check("InstantRecruitSoldier_skeletonWarrior") then
-        mockData.RecruitSoldier("skeletonWarrior", 1)
-        mockData.FinishRecruitSoldier()
+        mockData.InstantRecruitSoldier("skeletonWarrior", 1)
     end
     if check("BuildHouseAt_7_3") then
         mockData.BuildHouseAt(7,3,"quarrier")

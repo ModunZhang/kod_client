@@ -6,7 +6,7 @@ import traceback
 
 def usage():
     print '''使用方式:
-    ./build_format_map.py -d dest_file_name
+    ./build_format_map.py -r dest_file_name
     或
     ./build_format_map.py -j dest_file_name
     会在../../dev/scripts/app/中生成对应文件
@@ -18,7 +18,7 @@ if __name__=="__main__":
 	dest_dir = '../../dev/scripts/app/'
 
 	try:
-		opts,args = getopt.getopt(sys.argv[1:], 'j:d:')
+		opts,args = getopt.getopt(sys.argv[1:], 'j:r:')
 	except getopt.GetoptError, err:
 		# print str(err) # will print something like "option -a not recognized"
 		usage()
@@ -34,7 +34,7 @@ if __name__=="__main__":
 	for opt, arg in opts:
 		if not arg:
 			sys.exit(-1)
-		if opt == '-d':
+		if opt == '-r':
 			dest_file = arg
 			rgba444 = True
 		elif opt == '-j':

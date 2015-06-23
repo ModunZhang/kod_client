@@ -291,24 +291,29 @@ function GameUtils:getCurrentLanguage()
     }
     return mapping[cc.Application:getInstance():getCurrentLanguage() + 1]
 end
-
+local apple_lang_map = {
+    ['zh-Hans'] = 'cn',
+    ['zh-Hant'] = 'tw',
+    ['en'] = 'en',
+}
 function GameUtils:GetAppleLanguageCode()
     local code = ext.getDeviceLanguage()
-    if 'zh-Hans' == code then
-        return 'cn'
-    elseif 'zh-Hant' == code then
-        return 'tw'
+    if apple_lang_map[code] then
+        return apple_lang_map[code]
     else
         return 'tw'
     end
 end
-
+local lang_map = {
+    cn = { po = 'zh_CN', code = 'cn' },
+    tw = { po = 'zh_TW', code = 'tw' },
+    en = { po = 'en', code = 'en' },
+}
 function GameUtils:GetPoFileLanguageCode(language_code)
     local currentLanguage = language_code or self:getCurrentLanguage()
-    if language_code == 'cn' then
-        return "zh_CN",'cn'
-    elseif language_code == 'tw' then
-        return "zh_TW",'tw'
+    if lang_map[language_code] then
+        local t = lang_map[language_code]
+        return t.po, t.code
     else
         return "zh_TW",'tw'
     end
