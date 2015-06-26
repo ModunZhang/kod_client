@@ -1115,8 +1115,10 @@ function City:OnHouseChanged(userData, current_time, deltaData)
                 local house_info = find_building_info_by_location(location.houses, house_location_id)
                 
                 -- 没有找到，就是已经被拆除了
-                -- 如果类型不对，也认为是拆除
-                if not house_info or (house_info.type ~= building:GetType()) then
+                -- 如果类型和等级不对，也认为是拆除
+                if not house_info or 
+                    (house_info.type ~= building:GetType() or 
+                        house_info.level ~= building:GetLevel()) then
                     self:DestoryDecorator(current_time, building)
                 end
 
