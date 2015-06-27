@@ -193,6 +193,7 @@ function CommonUpgradeUI:InitNextLevelEfficiency()
         align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
         color = 0x403c2f
     }):addTo(efficiency_bg):align(display.LEFT_CENTER)
+    self.efficiency:setLineBreakWithoutSpace(true)
     self.efficiency:pos(14,efficiency_bg_size.height/2)
     self:SetUpgradeEfficiency()
 end
