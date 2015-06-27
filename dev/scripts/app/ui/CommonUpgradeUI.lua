@@ -163,9 +163,9 @@ end
 function CommonUpgradeUI:InitBuildingIntroduces()
     self.building_introduces = UIKit:ttfLabel({
         size = 18,
-        dimensions = cc.size(380, 90),
+        dimensions = cc.size(380, 0),
         color = 0x615b44
-    }):align(display.LEFT_CENTER,display.cx-110, display.top-190):addTo(self)
+    }):align(display.LEFT_TOP,display.cx-110, display.top-150):addTo(self)
     self:SetBuildingIntroduces()
 end
 function CommonUpgradeUI:SetBuildingIntroduces()
