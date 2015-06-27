@@ -433,7 +433,7 @@ function GameUIAllianceSendTroops:SelectSoldiers()
                     }
                     UIKit:newWidgetUI("WidgetInput", p):AddToCurrentScene()
                 end
-            end):align(display.CENTER,  340,90):addTo(content)
+            end):align(display.CENTER,  420,90):addTo(content)
         local btn_text = UIKit:ttfLabel({
             text = 0,
             size = 22,
@@ -471,7 +471,7 @@ function GameUIAllianceSendTroops:SelectSoldiers()
             size = 20,
             color = 0x403c2f
         }):addTo(content)
-            :align(display.LEFT_CENTER, 400,90)
+            :align(display.LEFT_CENTER, 480,90)
 
         -- 士兵头像
         local soldier_ui_config = UILib.soldier_image[name][star]
