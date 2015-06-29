@@ -187,8 +187,8 @@ function CommonUpgradeUI:InitNextLevelEfficiency()
     local efficiency_bg = display.newSprite("back_ground_398x97.png", window.cx+74, window.top-310):addTo(self)
     self.intro_list = UIListView.new({
             direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
-            viewRect = cc.rect(display.cx-115, display.top-350,380,80),
-        }):addTo(self)
+            viewRect = cc.rect(10,8,380,80),
+        }):addTo(efficiency_bg)
     
     self:SetUpgradeEfficiency()
 end
@@ -403,7 +403,7 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
     list:addItem(item)
     list:reload()
     if self.building:GetNextLevel() == self.building:GetLevel() then
-        self.efficiency:getParent():setVisible(false)
+        list:getParent():setVisible(false)
     end
 end
 
