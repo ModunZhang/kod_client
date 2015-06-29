@@ -294,7 +294,7 @@ end
 local apple_lang_map = {
     ['zh-Hans'] = 'cn',
     ['zh-Hant'] = 'tw',
-    ['en'] = 'en',
+    -- ['en'] = 'en',
 }
 function GameUtils:GetAppleLanguageCode()
     local code = ext.getDeviceLanguage()
@@ -307,7 +307,7 @@ end
 local lang_map = {
     cn = { po = 'zh_CN', code = 'cn' },
     tw = { po = 'zh_TW', code = 'tw' },
-    en = { po = 'en', code = 'en' },
+    -- en = { po = 'en', code = 'en' },
 }
 function GameUtils:GetPoFileLanguageCode(language_code)
     local currentLanguage = language_code or self:getCurrentLanguage()
