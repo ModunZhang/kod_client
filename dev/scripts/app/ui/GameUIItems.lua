@@ -85,10 +85,10 @@ function GameUIItems:InitShop()
     self.shop_listview = list
 
     self.shop_dropList = WidgetRoundTabButtons.new({
-        {tag = "menu_1",label = "特殊" , default = self.default_tab == "shop"},
-        {tag = "menu_2",label = "持续增益"},
-        {tag = "menu_3",label = "资源"},
-        {tag = "menu_4",label = "时间加速"},
+        {tag = "menu_1",label = _("特殊") , default = self.default_tab == "shop"},
+        {tag = "menu_2",label = _("持续增益")},
+        {tag = "menu_3",label = _("资源")},
+        {tag = "menu_4",label = _("时间加速")},
     }, function(tag)
         self.top_tab = tag
         self:ReloadShopList(tag)
@@ -315,10 +315,10 @@ function GameUIItems:InitMyItems()
     self.myItems_listview = list
 
     self.myItems_dropList = WidgetRoundTabButtons.new({
-        {tag = "menu_1",label = "特殊",default = self.default_tab == "myItems"},
-        {tag = "menu_2",label = "持续增益"},
-        {tag = "menu_3",label = "资源"},
-        {tag = "menu_4",label = "时间加速"},
+        {tag = "menu_1",label = _("特殊"),default = self.default_tab == "myItems"},
+        {tag = "menu_2",label = _("持续增益")},
+        {tag = "menu_3",label = _("资源")},
+        {tag = "menu_4",label = _("时间加速")},
     }, function(tag)
         self.top_tab = tag
         self:ReloadMyItemsList(tag)
