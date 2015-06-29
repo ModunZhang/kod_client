@@ -796,6 +796,9 @@ function City:IteratorCanUpgradeBuildingsByUserData(user_data, current_time, del
                     for _,v in ipairs(houses.edit or {}) do
                         need_delta_update_houses[location_id * 100 + v.location] = v
                     end
+                    for _,v in ipairs(houses.add or {}) do
+                        need_delta_update_houses[location_id * 100 + v.location] = v
+                    end
                 end
             end
         end
@@ -1115,13 +1118,11 @@ function City:OnHouseChanged(userData, current_time, deltaData)
                 local house_info = find_building_info_by_location(location.houses, house_location_id)
                 
                 -- 没有找到，就是已经被拆除了
-                -- 如果类型和等级不对，也认为是拆除
+                -- 如果类型不对也认为是删除
                 if not house_info or 
-                    (house_info.type ~= building:GetType() or 
-                        house_info.level ~= building:GetLevel()) then
+                    (house_info.type ~= building:GetType()) then
                     self:DestoryDecorator(current_time, building)
                 end
-
             end)
 
             -- 新建的
