@@ -380,11 +380,11 @@ function GameUIAllianceBattle:InitBattleStatistics()
             enemy_alliance_tag:setString("["..enemy_reprot_data.tag.."]")
 
 
-            local win = ccs.Armature:create("win"):align(display.LEFT_CENTER,fight_result and window.left+50 or window.right-50,window.top-270)
+            local win = ccs.Armature:create("win"):align(fight_result and display.RIGHT_CENTER or display.LEFT_CENTER,fight_result and window.left+250 or window.right-250,window.top-270)
                 :addTo(layer)
                 :scale(0.5)
             win:getAnimation():play("Victory", -1, 0)
-            local defeat = ccs.Armature:create("win"):align(display.RIGHT_CENTER,not fight_result and window.left+50 or window.right-50,window.top-270)
+            local defeat = ccs.Armature:create("win"):align(fight_result and display.LEFT_CENTER or display.RIGHT_CENTER,not fight_result and window.left+250 or window.right-250,window.top-270)
                 :addTo(layer)
                 :scale(0.5)
             defeat:getAnimation():play("Defeat", -1, 0)
@@ -1265,6 +1265,8 @@ function GameUIAllianceBattle:OnAllianceFightReportsChanged(changed_map)
 end
 
 return GameUIAllianceBattle
+
+
 
 
 
