@@ -45,8 +45,8 @@ CONFIG_APP_URL = {
 }
 
 CONFIG_IS_LOCAL = false
-CONFIG_IS_DEBUG = true
-CONFIG_LOG_DEBUG_FILE = true -- 记录日志文件
+CONFIG_IS_DEBUG = false
+CONFIG_LOG_DEBUG_FILE = false -- 记录日志文件
 GLOBAL_FTE = true
 GLOBAL_FTE_DEBUG = false
 
