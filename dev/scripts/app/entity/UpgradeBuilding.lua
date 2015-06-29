@@ -102,12 +102,13 @@ function UpgradeBuilding:InstantUpgradeBy(level)
     self:InstantUpgradeTo(self.level + level)
 end
 function UpgradeBuilding:InstantUpgradeTo(level)
+    local is_upgrading = self.upgrade_to_next_level_time ~= 0
     self.level = level
     self.upgrade_to_next_level_time = 0
 
     self:CancelLocalPush()
     self.upgrade_building_observer:NotifyObservers(function(listener)
-        listener:OnBuildingUpgradeFinished(self)
+        listener:OnBuildingUpgradeFinished(self, is_upgrading)
     end)
 end
 function UpgradeBuilding:UpgradeByCurrentTime(current_time)
@@ -470,6 +471,7 @@ function UpgradeBuilding:getUpgradeRequiredGems()
 end
 
 return UpgradeBuilding
+
 
 
 
