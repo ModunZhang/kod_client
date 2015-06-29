@@ -16,7 +16,6 @@ echo ---------------- 提交代码
 cd $PROJ_DIR
 git add -A
 git commit -m "commit any uncommitted files $Platform $APP_VERSION"
-git push
 cd $DOCROOT
 
 APP_BUILD_TAG=`./functions.sh getAppBuildTag $Platform`
