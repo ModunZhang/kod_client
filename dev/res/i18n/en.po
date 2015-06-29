@@ -7,7 +7,7 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _\n"
 "X-Poedit-Basepath: ../../scripts/app/\n"
-"PO-Revision-Date: 2015-06-27 16:10+0800\n"
+"PO-Revision-Date: 2015-06-29 18:11+0800\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: xls-to-po 1.0\n"
@@ -1406,44 +1406,32 @@ msgstr "Other Alliance"
 msgid "请求开战玩家"
 msgstr "Petition Player"
 
-msgid "向盟主和将军请求联盟会战"
-msgstr "***"
+msgid "开始战斗!"
+msgstr "To Battle!"
 
 msgid "请求开战!"
 msgstr "Ask for Battle!"
+
+msgid "联盟正在战争准备期或战争期"
+msgstr "Alliance is at the Preparation or Battle Period"
 
 msgid "已经发送过开战请求"
 msgstr "You've already sent the petition."
 
 msgid "参加联盟会战,赢得荣誉,金龙币和丰厚战利品,联盟处在和平期可以主动匹配或被其他联盟匹配进行联盟会战"
-msgstr "***"
+msgstr "Join the Alliance Battle to earn Honor Points, Dragon Coins and other rare trophies. Alliance can match or be matched in the Peace Period"
 
 msgid "联盟处在和平期可以主动匹配或被其他联盟匹配进行联盟会战"
-msgstr "***"
+msgstr "Alliance can match or be matched in the Peace Period"
 
-msgid "联盟会战会根据联盟战斗力匹配,你可以通过以下方式提升联盟战斗力"
-msgstr "***"
+msgid "联盟荣耀"
+msgstr "Honor"
 
-msgid "1，招募更多的玩家加入联盟"
-msgstr "***"
+msgid "金龙币"
+msgstr "Dragon Coins"
 
-msgid "2，在城市中招募更多的部队"
-msgstr "***"
-
-msgid "3，努力提升城市建筑等级"
-msgstr "***"
-
-msgid "4，提升龙的等级,技能和装备"
-msgstr "***"
-
-msgid "准备好了,那就开战吧"
-msgstr "***"
-
-msgid "开始战斗!"
-msgstr "To Battle!"
-
-msgid "联盟正在战争准备期或战争期"
-msgstr "Alliance is at the Preparation or Battle Period"
+msgid "击杀敌方单位获得龙的材料"
+msgstr "Earn rare materials by defeating enemy city"
 
 msgid "不需要保护,立即开战!"
 msgstr "We don't need any protection!"
@@ -1838,14 +1826,8 @@ msgstr "Modified Alliance Profile Successfully"
 msgid "秩序大厅"
 msgstr "Order Hall"
 
-msgid "暂无"
-msgstr "None"
-
 msgid "当前村落数量"
 msgstr "Current village"
-
-msgid "当前采集村落"
-msgstr "Current occupied"
 
 msgid "熟练度"
 msgstr "Proficiency"
@@ -1855,9 +1837,6 @@ msgstr "Manage"
 
 msgid "联盟宫殿"
 msgstr "Alliance Palace"
-
-msgid "联盟荣耀"
-msgstr "Honor"
 
 msgid "最近三日击杀"
 msgstr "Killed last 3 days"
@@ -2077,6 +2056,9 @@ msgstr "Enemy Squad"
 
 msgid "敌方总战斗力"
 msgstr "Enemy Power"
+
+msgid "暂无"
+msgstr "None"
 
 msgid "正在进行的事件"
 msgstr "Ongoing Events"
@@ -2624,6 +2606,9 @@ msgstr "You can only incubate one Dragon at the same time"
 msgid "开始孵化"
 msgstr "Incubate"
 
+msgid "正在孵化巨龙"
+msgstr "Incubating"
+
 msgid "你同一时间只能孵化一条巨龙"
 msgstr "You can only incubate one Dragon at the same time"
 
@@ -2853,6 +2838,18 @@ msgstr "Store"
 
 msgid "我的道具"
 msgstr "My Items"
+
+msgid "特殊"
+msgstr "Special"
+
+msgid "持续增益"
+msgstr "Buff"
+
+msgid "资源"
+msgstr "Resource"
+
+msgid "时间加速"
+msgstr "Speedup"
 
 msgid "使用"
 msgstr "Use"
@@ -3199,9 +3196,6 @@ msgstr "%s Amount"
 msgid "≤%d"
 msgstr "≤%d"
 
-msgid "金龙币"
-msgstr "Dragon Coins"
-
 msgid "立即转换"
 msgstr "Transform"
 
@@ -3327,9 +3321,6 @@ msgstr "Are you sure to destroy it ?"
 
 msgid "资源总览"
 msgstr "Resource Overview"
-
-msgid "资源"
-msgstr "Resource"
 
 msgid "材料"
 msgstr "Material"
@@ -7239,8 +7230,8 @@ msgstr "Alliance Perception Recovery Speed+%d"
 msgid "道具个数+%d"
 msgstr "Item kind+%d"
 
-msgid "各类型的村落个数+1"
-msgstr "Resource Village+1"
+msgid "各类型的村落个数+%d"
+msgstr "Village+%d"
 
 msgid "荣耀点"
 msgstr "Honor"

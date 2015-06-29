@@ -7,7 +7,7 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _\n"
 "X-Poedit-Basepath: ../../scripts/app/\n"
-"PO-Revision-Date: 2015-06-27 16:11+0800\n"
+"PO-Revision-Date: 2015-06-29 18:12+0800\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: xls-to-po 1.0\n"
@@ -1403,11 +1403,14 @@ msgstr "其他聯盟"
 msgid "请求开战玩家"
 msgstr "請求開戰玩家"
 
-msgid "向盟主和将军请求联盟会战"
-msgstr "向盟主和將軍請求聯盟會戰"
+msgid "开始战斗!"
+msgstr "開始戰鬥！"
 
 msgid "请求开战!"
 msgstr "請求開戰！"
+
+msgid "联盟正在战争准备期或战争期"
+msgstr "聯盟正在戰爭準備期或戰爭期"
 
 msgid "已经发送过开战请求"
 msgstr "已經發送過開戰請求"
@@ -1418,29 +1421,14 @@ msgstr "参加联盟会战,赢得荣誉,金龙币和丰厚战利品,联盟处在
 msgid "联盟处在和平期可以主动匹配或被其他联盟匹配进行联盟会战"
 msgstr "聯盟處在和平期可以主動匹配或被其他聯盟匹配進行聯盟會戰"
 
-msgid "联盟会战会根据联盟战斗力匹配,你可以通过以下方式提升联盟战斗力"
-msgstr "聯盟會戰會根據聯盟戰鬥力匹配，你可以通過以下方式提升聯盟戰鬥力"
+msgid "联盟荣耀"
+msgstr "聯盟榮耀"
 
-msgid "1，招募更多的玩家加入联盟"
-msgstr "1.招募更多的玩家加入聯盟"
+msgid "金龙币"
+msgstr "金龍幣"
 
-msgid "2，在城市中招募更多的部队"
-msgstr "2.在城市中招募更多的部隊"
-
-msgid "3，努力提升城市建筑等级"
-msgstr "3，努力提升城市建築等級"
-
-msgid "4，提升龙的等级,技能和装备"
-msgstr "4.提升龍的等級，技能和裝備"
-
-msgid "准备好了,那就开战吧"
-msgstr "準備好了，那就開戰吧"
-
-msgid "开始战斗!"
-msgstr "開始戰鬥！"
-
-msgid "联盟正在战争准备期或战争期"
-msgstr "聯盟正在戰爭準備期或戰爭期"
+msgid "击杀敌方单位获得龙的材料"
+msgstr "擊殺敵方單位獲得龍材料"
 
 msgid "不需要保护,立即开战!"
 msgstr "不需要保護，立即開戰！"
@@ -1829,14 +1817,8 @@ msgstr "修改聯盟描述成功"
 msgid "秩序大厅"
 msgstr "秩序大廳"
 
-msgid "暂无"
-msgstr "暫無"
-
 msgid "当前村落数量"
 msgstr "當前村落數量"
-
-msgid "当前采集村落"
-msgstr "當前採集村落"
 
 msgid "熟练度"
 msgstr "熟練度"
@@ -1846,9 +1828,6 @@ msgstr "村落管理"
 
 msgid "联盟宫殿"
 msgstr "聯盟宮殿"
-
-msgid "联盟荣耀"
-msgstr "聯盟榮耀"
 
 msgid "最近三日击杀"
 msgstr "最近三日擊殺"
@@ -2068,6 +2047,9 @@ msgstr "敵方部隊陣容"
 
 msgid "敌方总战斗力"
 msgstr "敵方總戰鬥力"
+
+msgid "暂无"
+msgstr "暫無"
 
 msgid "正在进行的事件"
 msgstr "正在進行的事件"
@@ -2615,6 +2597,9 @@ msgstr "龍巢同一時間只能孵化一隻巨龍"
 msgid "开始孵化"
 msgstr "開始孵化"
 
+msgid "正在孵化巨龙"
+msgstr "正在孵化巨龍"
+
 msgid "你同一时间只能孵化一条巨龙"
 msgstr "你同一時間只能孵化一條巨龍"
 
@@ -2844,6 +2829,18 @@ msgstr "商城"
 
 msgid "我的道具"
 msgstr "我的道具"
+
+msgid "特殊"
+msgstr "特殊"
+
+msgid "持续增益"
+msgstr "持續增益"
+
+msgid "资源"
+msgstr "資源"
+
+msgid "时间加速"
+msgstr "時間加速"
 
 msgid "使用"
 msgstr "使用"
@@ -3190,9 +3187,6 @@ msgstr "%s數量"
 msgid "≤%d"
 msgstr "≤%d"
 
-msgid "金龙币"
-msgstr "金龍幣"
-
 msgid "立即转换"
 msgstr "立即轉換"
 
@@ -3318,9 +3312,6 @@ msgstr "是否確認拆除？"
 
 msgid "资源总览"
 msgstr "資源總覽"
-
-msgid "资源"
-msgstr "資源"
 
 msgid "材料"
 msgstr "材料"
@@ -7166,8 +7157,8 @@ msgstr "聯盟感知力恢復速度+%d"
 msgid "道具个数+%d"
 msgstr "道具個數+%d"
 
-msgid "各类型的村落个数+1"
-msgstr "隨機生成村落個數+1"
+msgid "各类型的村落个数+%d"
+msgstr "村落個數+%d"
 
 msgid "荣耀点"
 msgstr "榮耀點"
