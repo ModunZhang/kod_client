@@ -41,7 +41,7 @@ function WidgetAllianceHelper:ctor()
 	self.images_of_graphics = {}
 	table.insert(self.images_of_graphics,{name = 1,image = "transparent_1x1.png"})
 	for i=1,30 do
-	    local imageName = string.format("tmp_images/alliance_graphic_88x88_%d",i)
+	    local imageName = string.format("tmp_alliance_graphic_88x88_%d",i)
 	    table.insert(self.images_of_graphics,{name = i + 1,image = imageName .. ".png"})
 	end
 	--旗帜背景布局样式

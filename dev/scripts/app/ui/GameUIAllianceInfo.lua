@@ -353,6 +353,7 @@ function GameUIAllianceInfo:LoadContact()
                 self:SendMail(self:GetAllianceArchonData().id, editbox_subject:getText(), textView:getText())
             end
         end)
+
     textView:setRectTrackedNode(send_button)
     return self.mail_layer
 end
@@ -372,7 +373,13 @@ function GameUIAllianceInfo:SendMail(addressee,title,content)
         UIKit:showMessageDialog(_("主人"),_("不能给自己发送邮件"))
         return
     end
-    NetManager:getSendPersonalMailPromise(addressee, title, content,self.contacts):done(function(result)
+    local ar_data = self:GetAllianceArchonData()
+    NetManager:getSendPersonalMailPromise(addressee, title, content,{
+                    id = ar_data.id,
+                    name = ar_data.name,
+                    icon = ar_data.icon,
+                    allianceTag = self:GetAllianceData().tag,
+                }):done(function(result)
         self:removeFromParent()
         return result
     end)
