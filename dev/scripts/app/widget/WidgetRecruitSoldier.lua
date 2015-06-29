@@ -514,7 +514,7 @@ function WidgetRecruitSoldier:OnCountChanged(count)
     self.count = count
     local soldier_config = self.soldier_config
     local total_time = soldier_config.recruitTime * count
-    self.upkeep:setString(string.format("%s%d/%s", count > 0 and "-" or "", soldier_config.consumeFoodPerHour * count, _("小时")))
+    self.upkeep:setString(string.format("%s%d/%s", count > 0 and "-" or "", math.ceil(soldier_config.consumeFoodPerHour * count), _("小时")))
     local ok = self:GetRecruitSpecialTime()
     if ok or not soldier_config.specialMaterials then
         -- 按钮

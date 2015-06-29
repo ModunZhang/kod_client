@@ -397,6 +397,7 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
     })
     efficiency_content:setLineBreakWithoutSpace(true)
     local list = self.intro_list
+    list:removeAllItems()
     local item = list:newItem()
     item:setItemSize(370, efficiency_content:getContentSize().height)
     item:addContent(efficiency_content)
