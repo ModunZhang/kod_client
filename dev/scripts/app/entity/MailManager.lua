@@ -473,6 +473,10 @@ function MailManager:OnNewSendMailsChanged( sendMails )
     for type,mail in pairs(sendMails) do
         if type == "add" then
             for i,data in ipairs(mail) do
+                -- 收到
+                if not data.index then
+                    data.index = self.sendMails[1] and (self.sendMails[1].index + 1) or 0
+                end
                 table.insert(add_mails, clone(data))
                 table.insert(self.sendMails, clone(data))
             end
