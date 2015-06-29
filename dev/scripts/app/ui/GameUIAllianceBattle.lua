@@ -141,10 +141,10 @@ function GameUIAllianceBattle:InitBattleStatistics()
     end
 
     -- time bg
-    local time_bg = display.newSprite("background_624x62.png"):addTo(layer):align(display.TOP_CENTER,window.cx,window.top_bottom+18)
+    local time_bg = display.newSprite("tmp_images/background_624x62.png"):addTo(layer):align(display.TOP_CENTER,window.cx,window.top_bottom+18)
 
-    WidgetPushButton.new({normal = "battle_btn_up_296x40.png",
-        pressed = "battle_btn_down_296x40.png"})
+    WidgetPushButton.new({normal = "tmp_images/battle_btn_up_296x40.png",
+        pressed = "tmp_images/battle_btn_down_296x40.png"})
         :onButtonClicked(function()
             self:OpenWarDetails()
         end)
@@ -166,7 +166,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
 
     if self.alliance:Status() == "peace" then
         -- 请求开战玩家数量
-        local request_fight_bg = display.newSprite("background_red_130x30.png"):align(display.LEFT_CENTER, window.left + 40, window.bottom_top + 55)
+        local request_fight_bg = display.newSprite("tmp_images/background_red_130x30.png"):align(display.LEFT_CENTER, window.left + 40, window.bottom_top + 55)
             :addTo(layer)
         WidgetPushButton.new()
             :onButtonClicked(function()
@@ -200,7 +200,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
             :IsTitleEqualOrGreaterThan("general")
 
 
-        local button = WidgetPushButton.new({normal = "button_battle_up_328x96.png",pressed = "button_battle_down_328x96.png"})
+        local button = WidgetPushButton.new({normal = "tmp_images/button_battle_up_328x96.png",pressed = "tmp_images/button_battle_down_328x96.png"})
             :setButtonLabel(UIKit:ttfLabel({
                 text = isEqualOrGreater and _("开始战斗!") or _("请求开战!"),
                 size = 24,
@@ -240,11 +240,11 @@ function GameUIAllianceBattle:InitBattleStatistics()
             :align(display.TOP_CENTER,window.cx, window.top-420)
 
         -- 奖励介绍
-        local award_bg1 = display.newSprite("background_red_612x58.png"):addTo(layer)
+        local award_bg1 = display.newSprite("tmp_images/background_red_612x58.png"):addTo(layer)
             :align(display.CENTER,window.cx, window.top-570)
-        local award_bg2 = display.newSprite("background_red_612x58.png"):addTo(layer)
+        local award_bg2 = display.newSprite("tmp_images/background_red_612x58.png"):addTo(layer)
             :align(display.CENTER,window.cx, window.top-630)
-        local award_bg3 = display.newSprite("background_red_612x58.png"):addTo(layer)
+        local award_bg3 = display.newSprite("tmp_images/background_red_612x58.png"):addTo(layer)
             :align(display.CENTER,window.cx, window.top-690)
         display.newSprite("Stars_bar_highlight.png"):addTo(award_bg1)
             :align(display.CENTER,30, 29):scale(1.2)
@@ -399,7 +399,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
                 }):addTo(layer)
                     :align(display.LEFT_CENTER,window.left+50,window.bottom_top + 70)
 
-                local button = WidgetPushButton.new({normal = "button_battle_up_328x96.png",pressed = "button_battle_down_328x96.png"})
+                local button = WidgetPushButton.new({normal = "tmp_images/button_battle_up_328x96.png",pressed = "tmp_images/button_battle_down_328x96.png"})
                     :setButtonLabel(UIKit:ttfLabel({
                         text = _("开始战斗!"),
                         size = 24,
@@ -424,7 +424,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
             }):addTo(layer)
                 :align(display.TOP_CENTER,window.cx,window.top-270)
             -- 荣耀值奖励
-            local honour_bg = display.newScale9Sprite("background_red_130x30.png",window.right-240,window.top-390,cc.size(166,32),cc.rect(15,10,100,10))
+            local honour_bg = display.newScale9Sprite("tmp_images/background_red_130x30.png",window.right-240,window.top-390,cc.size(166,32),cc.rect(15,10,100,10))
                 :align(display.LEFT_CENTER)
                 :addTo(layer)
             display.newSprite("honour_128x128.png"):align(display.CENTER,0,honour_bg:getContentSize().height/2)
@@ -437,7 +437,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
             }):addTo(honour_bg,2)
                 :align(display.CENTER,honour_bg:getContentSize().width/2,honour_bg:getContentSize().height/2)
             -- 金龙币奖励
-            local gem_bg = display.newScale9Sprite("background_red_130x30.png",window.left+250,window.top-390,cc.size(166,32),cc.rect(15,10,100,10))
+            local gem_bg = display.newScale9Sprite("tmp_images/background_red_130x30.png",window.left+250,window.top-390,cc.size(166,32),cc.rect(15,10,100,10))
                 :align(display.RIGHT_CENTER)
                 :addTo(layer)
             display.newSprite("gem_icon_62x61.png"):align(display.CENTER,0,gem_bg:getContentSize().height/2)
@@ -523,7 +523,7 @@ function GameUIAllianceBattle:RefreshFightInfoList(info_bg_y)
 end
 
 function GameUIAllianceBattle:CreateInfoItem(info_message)
-    local content =display.newScale9Sprite("background_red_612x58.png")
+    local content =display.newScale9Sprite("tmp_images/background_red_612x58.png")
     UIKit:ttfLabel({
         text = info_message[1],
         size = 22,
