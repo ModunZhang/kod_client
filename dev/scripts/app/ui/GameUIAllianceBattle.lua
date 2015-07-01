@@ -136,7 +136,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
     self.request_num_label = nil
 
     display.newSprite("alliance_battle_bg_612x886.jpg"):addTo(layer):align(display.TOP_CENTER,window.cx,window.top_bottom+28)
-    if self.alliance:Status() == "peace" then
+    if self.alliance:Status() ~= "peace" then
         display.newColorLayer(UIKit:hex2c4b(0xcc1a1e26)):addTo(layer):align(display.CENTER,window.left + 14,window.bottom):setContentSize(cc.size(612,886))
     end
 
