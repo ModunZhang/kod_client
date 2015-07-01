@@ -612,13 +612,13 @@ function GameUIAllianceBattle:OpenAllianceDetails(isOur)
     addAttr(_("战斗力"),string.formatnumberthousands(alliance_power),350,rb_size.height-100)
     addAttr(_("击杀"),string.formatnumberthousands(alliance_kill),350,rb_size.height-140)
 
-
-    table.sort( player_kill, function (a,b)
+    local clone_player_kill = clone(player_kill)
+    table.sort( clone_player_kill, function (a,b)
         return a.kill>b.kill
     end )
     local bg_color = true
     local infos = {}
-    for i,v in ipairs(player_kill) do
+    for i,v in ipairs(clone_player_kill) do
         table.insert(infos, {name = v.name, kill = v.kill})
     end
     WidgetInfoAllianceKills.new({h=492,info = infos}):addTo(body)
