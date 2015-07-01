@@ -269,7 +269,7 @@ function WidgetMarchEvents:Load()
 end
 
 function WidgetMarchEvents:Length(array_len)
-    return array_len * ITEM_HEIGHT + 2
+    return array_len * ITEM_HEIGHT
 end
 
 function WidgetMarchEvents:ResizeBelowHorizon(new_height)
