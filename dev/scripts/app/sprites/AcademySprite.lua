@@ -30,6 +30,7 @@ function AcademySprite:CheckEvent()
         if self:GetEntity():BelongCity():HaveProductionTechEvent() then
             self:PlayWorkingAnimation()
         else
+            self:StopAni()
             self:PlayEmptyAnimation()
         end
     end
@@ -44,7 +45,6 @@ function AcademySprite:PlayEmptyAnimation()
     if not self:getChildByTag(EMPTY_TAG) then
         local x,y = self:GetSprite():getPosition()
         zz():addTo(self,1,EMPTY_TAG):pos(x + 50,y + 50)
-        self:StopAni()
     end
 end
 function AcademySprite:PlayAni()
@@ -54,7 +54,9 @@ function AcademySprite:PlayAni()
     animation:playWithIndex(0)
 end
 function AcademySprite:StopAni()
-    self:GetAniArray()[1]:hide():getAnimation():stop()
+    if self:GetAniArray()[1]:isVisible() then
+        self:GetAniArray()[1]:hide():getAnimation():stop()
+    end
 end
 
 return AcademySprite
