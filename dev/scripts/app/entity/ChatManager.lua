@@ -20,7 +20,8 @@ function EmojiUtil:ConvertEmojiToRichText(chatmsg,func_handler_dest)
     if string.len(chatmsg) == 0 then return "" end
     chatmsg = string.gsub(chatmsg,"\n","\\n")
     chatmsg = string.gsub(chatmsg,"'","\'")
-    chatmsg = string.gsub(chatmsg,'"','\\"')
+    chatmsg = string.gsub(chatmsg,'"',"''")
+    chatmsg = string.gsub(chatmsg,'\\','\\\\')
     local dest = {}
     local s,e = string.find(chatmsg,"%[[%P]+%]")
     if not s and string.len(chatmsg) > 0 then
@@ -42,7 +43,12 @@ function EmojiUtil:ConvertEmojiToRichText(chatmsg,func_handler_dest)
         if count == 0 or string.len(string.trim(result)) == 0 then
             dest[i] = string.format('{\"type\":\"text\", \"value\":\"%s\"}', v)
         else
-            dest[i] = string.format('{\"type\":\"image\", \"value\":\"%s\"}',string.format('%s.png', string.upper(result)))
+        	local key = string.format('%s.png', string.upper(result))
+        	if plist_texture_data[key] then
+            	dest[i] = string.format('{\"type\":\"image\", \"value\":\"%s\"}', key)
+            else
+            	dest[i] = string.format('{\"type\":\"text\", \"value\":\"%s\"}', v)
+        	end
         end
     end
     if func_handler_dest and type(func_handler_dest) == 'function' then
