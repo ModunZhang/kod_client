@@ -1633,7 +1633,7 @@ function GameUIAlliance:OnInfoButtonClicked(tag)
             UIKit:showMessageDialog(_("提示"),_("仅当联盟成员为空时,盟主才能退出联盟"), function()end)
             return
         end
-        if Alliance_Manager:GetMyAlliance():GetSelf():Status() ~= "fight" and Alliance_Manager:GetMyAlliance():GetSelf():Status() ~= "prepare" then
+        if Alliance_Manager:GetMyAlliance():GetSelf():Status() == "fight" or Alliance_Manager:GetMyAlliance():GetSelf():Status() == "prepare" then
             UIKit:showMessageDialog(_("提示"),_("联盟正在战争准备期或战争期,不能退出联盟"), function()end)
             return
         end
