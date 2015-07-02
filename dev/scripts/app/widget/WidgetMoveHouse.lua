@@ -23,7 +23,7 @@ function WidgetMoveHouse:ctor(house)
             :addTo(self):pos(224,108)
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
-                    if self.move_to_ruins:GetEntity():IsUpgrading() then
+                    if self.move_to_ruins:GetEntity().IsUpgrading and self.move_to_ruins:GetEntity():IsUpgrading() then
                         UIKit:showMessageDialog(_("提示"),_("小屋当前不能被移动"),function()end)
                         return
                     end

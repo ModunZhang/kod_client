@@ -499,6 +499,9 @@ function GameUIAllianceHome:CreateBottom()
         :align(display.CENTER, bottom_bg:getContentSize().width/2, bottom_bg:getContentSize().height-11)
     return bottom_bg
 end
+function GameUIAllianceHome:ChangeChatChannel(channel_index)
+    self.chat:ChangeChannel(channel_index)
+end
 function GameUIAllianceHome:OnTopButtonClicked(event)
     print("OnTopButtonClicked=",event.name)
     if event.name == "CLICKED_EVENT" then

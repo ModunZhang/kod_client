@@ -562,6 +562,9 @@ function GameUIHome:CreateBottom()
 
     return bottom_bg
 end
+function GameUIHome:ChangeChatChannel(channel_index)
+    self.chat:ChangeChannel(channel_index)
+end
 function GameUIHome:OnVipEventActive( vip_event )
     self.top_order_group:RefreshOrder()
     self:RefreshVIP()
