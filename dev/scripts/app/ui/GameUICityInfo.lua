@@ -198,7 +198,9 @@ function GameUICityInfo:CreateBottom()
 
     local map_node = WidgetChangeMap.new(WidgetChangeMap.MAP_TYPE.OTHER_CITY, self.location):addTo(self)
 end
-
+function GameUICityInfo:ChangeChatChannel(channel_index)
+    self.chat:ChangeChannel(channel_index)
+end
 return GameUICityInfo
 
 
