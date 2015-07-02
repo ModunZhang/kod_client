@@ -212,9 +212,16 @@ function GameUIChatChannel:CreateTabButtons()
         else
             pageIdx = 3
         end
+        app:GetChatManager():setChannelReadStatus(tag,false)
         app:GetGameDefautlt():setStringForKey("LAST_CHAT_CHANNEL",""..pageIdx)
         display.getRunningScene():GetHomePage():ChangeChatChannel(pageIdx)
     end):addTo(self:GetView()):pos(window.cx, window.bottom + 34)
+    local channelReadStatus = app:GetChatManager():getAllChannelReadStatus()
+    for k,v in pairs(channelReadStatus) do
+        if k ~= self.default_tag then
+            tab_buttons:SetGreenTipsShow(k,v)
+        end
+    end
     self.tab_buttons = tab_buttons
 end
 
@@ -248,14 +255,14 @@ function GameUIChatChannel:GetChatItemCell()
     local chat_icon = self:GetChatIcon():addTo(other_content):align(display.LEFT_TOP, 3, 72)
     local from_label = UIKit:ttfLabel({
         text = "[ P/L ] SkinnMart",
-        size = 16,
+        size = 18,
         color= 0x005e6c,
         align = cc.TEXT_ALIGNMENT_LEFT,
     }):align(display.LEFT_BOTTOM, 7, 15):addTo(header)
 
     local vip_label =  UIKit:ttfLabel({
         text = "VIP 99",
-        size = 12,
+        size = 14,
         color= 0xdd7f00,
         align = cc.TEXT_ALIGNMENT_LEFT,
     }):align(display.LEFT_BOTTOM, 22 + from_label:getContentSize().width, 17):addTo(header)
@@ -269,7 +276,7 @@ function GameUIChatChannel:GetChatItemCell()
 
     local translation_sp = display.newSprite("chat_translation_45x43.png"):align(display.RIGHT_BOTTOM, 478,12):addTo(header):scale(25/45)
 
-    local content_label = RichText.new({width = 430,size = 18,color = 0x403c2f})
+    local content_label = RichText.new({width = 430,size = 20,color = 0x403c2f})
     content_label:Text("")
     content_label:align(display.LEFT_BOTTOM, 10, 0):addTo(middle)
 
