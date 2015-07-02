@@ -33,7 +33,15 @@ end
 
 function WidgetChat:ctor()
     self.chatManager = app:GetChatManager()
-
+    -- 上次所在的聊天频道
+    local last_chat_channel = tonumber(app:GetGameDefautlt():getStringForKey("LAST_CHAT_CHANNEL"))
+    local current_page_index 
+    if not last_chat_channel then
+        app:GetGameDefautlt():setStringForKey("LAST_CHAT_CHANNEL","1")
+        current_page_index = 1
+    else
+        current_page_index = last_chat_channel
+    end
     local size = self:getContentSize()
     local index_1 = display.newSprite("chat_page_index_1.png"):addTo(self):pos(size.width/2-21,size.height-5)
     local index_2 = display.newSprite("chat_page_index_2.png"):addTo(self):pos(size.width/2,size.height-5)
@@ -61,6 +69,7 @@ function WidgetChat:ctor()
                 index_1:setPositionX(size.width/2+21)
                 index_2:setPositionX(size.width/2)
             end
+            app:GetGameDefautlt():setStringForKey("LAST_CHAT_CHANNEL",""..event.pageIdx)
         elseif event.name == "clicked" then
             if event.pageIdx == 1 then
                 UIKit:newGameUI('GameUIChatChannel',"global"):AddToCurrentScene(true)
@@ -104,6 +113,8 @@ function WidgetChat:ctor()
         pv:addItem(item)
     end
     pv:reload()
+    pv:gotoPage(current_page_index)
+    self.page_view = pv
     cc.ui.UIPushButton.new({normal = "chat_btn_up_60x48.png",
         pressed = "chat_btn_down_60x48.png"}):addTo(self)
         :pos(self:getContentSize().width-36, size.height/2 - 4)
@@ -115,7 +126,9 @@ function WidgetChat:ctor()
             end
         end)
 end
-
+function WidgetChat:ChangeChannel(channel_index)
+    self.page_view:gotoPage(channel_index)
+end
 function WidgetChat:onEnter()
     self.chatManager:AddListenOnType(self,ChatManager.LISTEN_TYPE.TO_REFRESH)
     self.chatManager:AddListenOnType(self,ChatManager.LISTEN_TYPE.TO_TOP)
