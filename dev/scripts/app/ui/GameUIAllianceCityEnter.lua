@@ -48,7 +48,8 @@ function GameUIAllianceCityEnter:onEnter()
         if response.msg.wallInfo then
             local current_wall_hp = response.msg.wallInfo.wallHp
             local maxWallHp = config_wall[response.msg.wallInfo.wallLevel].wallHp
-            self:GetProgressTimer():setPercentage(current_wall_hp/maxWallHp*100)
+            self:GetProgressTimer():setPercentage(0)
+            self:GetProgressTimer():runAction(cc.ProgressTo:create(0.5, current_wall_hp/maxWallHp*100))
             self:GetProcessLabel():setString(string.format("%d/%d",current_wall_hp,maxWallHp))
         end
     end)
