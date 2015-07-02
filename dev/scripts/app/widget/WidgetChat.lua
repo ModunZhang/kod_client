@@ -12,28 +12,9 @@ end)
 function WidgetChat:TO_TOP()
     self:RefreshChatMessage()
     local page_index = self.page_view:getCurPageIdx()
-    local channel
-    if page_index == 1 then
-        channel = "global"
-    elseif page_index == 2 then
-        channel = "alliance"
-    else
-        channel = "allianceFight"
-    end
+    local channel = self:GetCurrentChannel()
     app:GetChatManager():setChannelReadStatus(channel,false)
-    -- 新消息动画提示
-    local size = self:getContentSize()
-    local pos_ani = {
-        global = {x = size.width/2-21, y = size.height-5},
-        alliance = {x = size.width/2 , y = size.height-5},
-        allianceFight = {x = size.width/2+21, y = size.height-5}
-    }
-    local channelReadStatus = app:GetChatManager():getAllChannelReadStatus()
-    for k,v in pairs(channelReadStatus) do
-        if k ~= channel and not self[k.."Ani"] and v then
-            self[k.."Ani"] = self:CreateChatAni():addTo(self):pos(pos_ani[k].x,pos_ani[k].y)
-        end
-    end
+    self:RefreshNewChatAni()
 end
 
 function WidgetChat:TO_REFRESH()
@@ -162,18 +143,45 @@ function WidgetChat:ctor()
                 UIKit:newGameUI('GameUIChatChannel',"alliance"):AddToCurrentScene(true)
             end
         end)
+    self:RefreshNewChatAni()
 end
 -- 新消息提示动画
 function WidgetChat:CreateChatAni()
     local ani_node = display.newSprite("chat_page_index_1.png")
     ani_node:setOpacity(0)
     ani_node:runAction(cc.RepeatForever:create(transition.sequence{
-        transition.fadeIn(ani_node, {
-            time = 1.5}),
-        transition.fadeOut(ani_node, {
-            time = 1.5})
+        cc.FadeTo:create(1.5, 255),
+        cc.FadeTo:create(1.5, 0),
     }))
     return ani_node
+end
+function WidgetChat:RefreshNewChatAni()
+    -- 新消息动画提示
+    local size = self:getContentSize()
+    local pos_ani = {
+        global = {x = size.width/2-21, y = size.height-5},
+        alliance = {x = size.width/2 , y = size.height-5},
+        allianceFight = {x = size.width/2+21, y = size.height-5}
+    }
+    local channel = self:GetCurrentChannel()
+    local channelReadStatus = app:GetChatManager():getAllChannelReadStatus()
+    for k,v in pairs(channelReadStatus) do
+        if k ~= channel and not self[k.."Ani"] and v then
+            self[k.."Ani"] = self:CreateChatAni():addTo(self):pos(pos_ani[k].x,pos_ani[k].y)
+        end
+    end
+end
+function WidgetChat:GetCurrentChannel()
+    local page_index = self.page_view:getCurPageIdx()
+    local channel
+    if page_index == 1 then
+        channel = "global"
+    elseif page_index == 2 then
+        channel = "alliance"
+    else
+        channel = "allianceFight"
+    end
+    return channel
 end
 function WidgetChat:ChangeChannel(channel_index)
     self.page_view:gotoPage(channel_index)
@@ -188,6 +196,8 @@ function WidgetChat:onExit()
 end
 
 return WidgetChat
+
+
 
 
 
