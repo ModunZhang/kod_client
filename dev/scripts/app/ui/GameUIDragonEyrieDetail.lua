@@ -713,7 +713,7 @@ function GameUIDragonEyrieDetail:GetInfoListItem(index,title,val)
     }):align(display.LEFT_CENTER, 10, 24):addTo(bg)
 
     UIKit:ttfLabel({
-        text = string.formatnumberthousands(tonumber(val)),
+        text = val,
         color = 0x403c2f,
         size = 20,
         align = cc.TEXT_ALIGNMENT_RIGHT,
