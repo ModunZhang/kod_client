@@ -303,12 +303,20 @@ function GameUIActivityRewardNew:RefreshContinutyList(needClean)
     if needClean then
         self.list_view:removeAllItems()
         local data = self:GetContinutyListData()
-        for __,v in ipairs(data) do
+        -- 定位到第一个可以领取的位置
+        local item_pos
+        for i,v in ipairs(data) do
             local reward_type,item_key,time_str,rewards_str,flag = unpack(v)
             local item = self:GetContinutyListItem(reward_type,item_key,time_str,rewards_str,flag)
+            if not item_pos and flag ~= 1 then
+                item_pos = i
+            end
             self.list_view:addItem(item)
         end
         self.list_view:reload()
+        if item_pos then
+            self.list_view:showItemWithPos(item_pos)
+        end
     else
         local items = self.list_view:getItems()
         if #items == 0 then return end
@@ -612,13 +620,21 @@ end
 function GameUIActivityRewardNew:RefreshLevelUpListView(needClean)
     if needClean then
         self.list_view:removeAllItems()
+        -- 定位到第一个可以领取的位置
+        local item_pos
         local data = self:GetLevelUpData()
         for index,v in ipairs(data) do
             local title,rewards,flag = unpack(v)
             local item = self:GetRewardLevelUpItem(index,title,rewards,flag)
+            if not item_pos and flag ~= 1 then
+                item_pos = index
+            end
             self.list_view:addItem(item)
         end
         self.list_view:reload()
+        if item_pos then
+            self.list_view:showItemWithPos(item_pos)
+        end
     else
         local items = self.list_view:getItems()
         if #items == 0 then return end
@@ -862,12 +878,20 @@ function GameUIActivityRewardNew:RefreshOnLineList(needClean)
         self.online_list_view:removeAllItems()
         local data = self:GetOnLineTimePointData()
         local next_point = self:GetNextOnlineTimePoint()
-        for __,v in ipairs(data) do
+        -- 自动滑动到可领取的第一个奖励位置
+        local item_pos
+        for i,v in ipairs(data) do
             local reward_type,item_key,time_str,rewards,flag,timePoint = unpack(v)
             local item = self:GetOnLineItem(reward_type,item_key,time_str,rewards,flag,timePoint,next_point)
+            if not item_pos and flag ~= 1 then
+                item_pos = i
+            end
             self.online_list_view:addItem(item)
         end
         self.online_list_view:reload()
+        if item_pos then
+            self.online_list_view:showItemWithPos(item_pos)
+        end
     else
         local items = self.online_list_view:getItems()
         if #items <= 0 then return end

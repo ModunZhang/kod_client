@@ -220,7 +220,10 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
     for i, v in ipairs(self.matrials) do
         local material_type = v[1]
         -- 材料背景根据龙的颜色来
-        local material = cc.ui.UIImage.new(DRAGON_BG[equip_config.usedFor]):addTo(back_ground, 2)
+        local material = WidgetPushButton.new({normal = DRAGON_BG[equip_config.usedFor]})
+            :onButtonClicked(function(event)
+                UIKit:newWidgetUI("WidgetMaterialDetails",MaterialManager.MATERIAL_TYPE.DRAGON,material_type):AddToCurrentScene()
+            end):addTo(back_ground, 2)
             :align(display.CENTER, origin_x + (unit_len + gap_x) * (i - 1), origin_y)
 
         -- 材料icon
@@ -231,7 +234,7 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
         image:scale(100/math.max(image:getContentSize().width,image:getContentSize().height))
         -- 数量背景框
         local materials_bg =  cc.ui.UIImage.new("back_ground_96x30.png"):addTo(material, 2)
-            :align(display.CENTER, pos.x, pos.y - material:getContentSize().height / 2 - 18)
+            :align(display.CENTER, pos.x, pos.y - material:getContentSize().height / 2 -78)
         -- 材料数量
         materials_map[i] = UIKit:ttfLabel({
             text ="",
@@ -479,5 +482,6 @@ function WidgetMakeEquip:IsAbleToMakeEqui(isFinishNow)
 end
 
 return WidgetMakeEquip
+
 
 

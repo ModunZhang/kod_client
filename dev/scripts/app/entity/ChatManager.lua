@@ -172,7 +172,6 @@ function ChatManager:getAllChannelReadStatus()
             allianceFight = false,
         }
     end
-    dump(self.channelReadStatus,"self.channelReadStatus")
     return self.channelReadStatus
 end
 function ChatManager:setChannelReadStatus(channel,status)
@@ -183,12 +182,9 @@ function ChatManager:setChannelReadStatus(channel,status)
             allianceFight = false,
         }
     end
-      print(debug.traceback("", 2))
-    print("setChannelReadStatus=",channel,status)
     self.channelReadStatus[channel] = status
 end
 function ChatManager:pushMsgToQueue_(msg)
-	dump(msg,"pushMsgToQueue_")
 	self:setChannelReadStatus(msg.channel,true)
     table.insert(self.push_buff_queue,1,msg)
     if #self.push_buff_queue >= SIZE_MUST_PUSH then

@@ -235,14 +235,18 @@ function MyApp:flushIf()
 end
 
 function MyApp:retryConnectGateServer()
+    UIKit:WaitForNet(0)
     NetManager:getConnectGateServerPromise():catch(function(err)
-         UIKit:showKeyMessageDialog(_("错误"), _("服务器连接断开,请检测你的网络环境后重试!"), function()
+        UIKit:NoWaitForNet()
+        UIKit:showKeyMessageDialog(_("错误"), _("服务器连接断开,请检测你的网络环境后重试!"), function()
             app:retryConnectServer(false)
         end)
     end):done(function()
         NetManager:getLogicServerInfoPromise():done(function()
+            UIKit:NoWaitForNet()
             self:retryLoginGame()
         end):catch(function(err)
+            UIKit:NoWaitForNet()
             local content, title = err:reason()
             if title == 'timeout' then
                 UIKit:showKeyMessageDialog(_("错误"), _("服务器连接断开,请检测你的网络环境后重试!"), function()
@@ -268,7 +272,7 @@ end
 
 function MyApp:retryLoginGame()
     if NetManager.m_logicServer.host and NetManager.m_logicServer.port then
-        UIKit:WaitForNet(2)
+        UIKit:WaitForNet(0)
         NetManager:getConnectLogicServerPromise():next(function()
             print("MyApp:debug--->2")
             return NetManager:getLoginPromise()

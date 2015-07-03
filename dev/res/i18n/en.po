@@ -7,7 +7,7 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _\n"
 "X-Poedit-Basepath: ../../scripts/app/\n"
-"PO-Revision-Date: 2015-07-01 20:20+0800\n"
+"PO-Revision-Date: 2015-07-03 19:54+0800\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: xls-to-po 1.0\n"
@@ -992,17 +992,17 @@ msgstr "Upper limit of Cart number+%d,"
 msgid "资源小车回复速度+%d/小时,"
 msgstr "Cart recovery speed+%d/hour,"
 
-msgid "步兵招募速度+%d%%,"
-msgstr "Infantry recruit speed+%d%%,"
+msgid "步兵招募速度+%.0f%%,"
+msgstr "Infantry recruiting speed+%.0f%%,"
 
-msgid "骑兵招募速度+%d%%,"
-msgstr "Cavalry recruit speed+%d%%,"
+msgid "骑兵招募速度+%.0f%%,"
+msgstr "Cavalry recruiting speed+%.0f%%,"
 
-msgid "弓手招募速度+%d%%,"
-msgstr "Ranger recruit speed+%d%%,"
+msgid "弓手招募速度+%.0f%%,"
+msgstr "Archer recruiting speed+%.0f%%,"
 
-msgid "攻城系招募速度+%d%%,"
-msgstr "Siege recruit speed+%d%%,"
+msgid "攻城系招募速度+%.0f%%,"
+msgstr "Siege recruiting speed+%.0f%%,"
 
 msgid "立即升级"
 msgstr "Upgrade Now"
@@ -1057,6 +1057,15 @@ msgstr "Supply resources"
 
 msgid "您当前没有足够的资源,是否花费魔法石立即补充"
 msgstr "You have not enough resources,do you want to supply with Dragon coins ?"
+
+msgid "立即完成"
+msgstr "Finish Now"
+
+msgid "开启"
+msgstr "Active"
+
+msgid "第2队列"
+msgstr "The 2nd Queue"
 
 msgid "立即开始"
 msgstr "Start now"
@@ -1360,6 +1369,9 @@ msgstr "No Profile"
 
 msgid "仅当联盟成员为空时,盟主才能退出联盟"
 msgstr "You can leave only when your Alliance has no member."
+
+msgid "联盟正在战争准备期或战争期,不能退出联盟"
+msgstr "You can't leave Alliance when your Alliance is at the Preparation or Battle Period"
 
 msgid "您必须在没有部队在外行军的情况下，才可以退出联盟。退出联盟会损失当前未打开的联盟礼物。"
 msgstr "Leave the Alliance will make you weaker than before,are you sure to leave?"
@@ -4578,9 +4590,6 @@ msgstr "Come on, you are not the Chief"
 
 msgid "别逗了,仅当联盟成员为空时,盟主才能退出联盟"
 msgstr "Come on, you can only leave the Alliance when there is no member"
-
-msgid "联盟正在战争准备期或战争期,不能退出联盟"
-msgstr "You can't leave Alliance when your Alliance is at the Preparation or Battle Period"
 
 msgid "联盟不允许直接加入"
 msgstr "The Alliance is not allowed to join directly"

@@ -7,7 +7,7 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _\n"
 "X-Poedit-Basepath: ../../scripts/app/\n"
-"PO-Revision-Date: 2015-07-01 20:20+0800\n"
+"PO-Revision-Date: 2015-07-03 19:54+0800\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: xls-to-po 1.0\n"
@@ -989,17 +989,17 @@ msgstr "资源小车上限+%d,"
 msgid "资源小车回复速度+%d/小时,"
 msgstr "资源小车回复速度+%d/小时,"
 
-msgid "步兵招募速度+%d%%,"
-msgstr "步兵招募速度+%d%%,"
+msgid "步兵招募速度+%.0f%%,"
+msgstr "步兵招募速度+%.0f%%,"
 
-msgid "骑兵招募速度+%d%%,"
-msgstr "骑兵招募速度+%d%%,"
+msgid "骑兵招募速度+%.0f%%,"
+msgstr "骑兵招募速度+%.0f%%,"
 
-msgid "弓手招募速度+%d%%,"
-msgstr "弓手招募速度+%d%%,"
+msgid "弓手招募速度+%.0f%%,"
+msgstr "弓手招募速度+%.0f%%,"
 
-msgid "攻城系招募速度+%d%%,"
-msgstr "攻城系招募速度+%d%%,"
+msgid "攻城系招募速度+%.0f%%,"
+msgstr "攻城系招募速度+%.0f%%,"
 
 msgid "立即升级"
 msgstr "立即升级"
@@ -1054,6 +1054,15 @@ msgstr "补充资源"
 
 msgid "您当前没有足够的资源,是否花费魔法石立即补充"
 msgstr "您当前没有足够的资源,是否花费金龙币立即补充"
+
+msgid "立即完成"
+msgstr "立即完成"
+
+msgid "开启"
+msgstr "开启"
+
+msgid "第2队列"
+msgstr "第2队列"
 
 msgid "立即开始"
 msgstr "立即开始"
@@ -1357,6 +1366,9 @@ msgstr "未设置联盟描述"
 
 msgid "仅当联盟成员为空时,盟主才能退出联盟"
 msgstr "仅当所有联盟成员都退出时,盟主才能退出联盟"
+
+msgid "联盟正在战争准备期或战争期,不能退出联盟"
+msgstr "联盟正在战争准备期或战争期,不能退出联盟"
 
 msgid "您必须在没有部队在外行军的情况下，才可以退出联盟。退出联盟会损失当前未打开的联盟礼物。"
 msgstr "退出联盟会让你的发展处于劣势，你确定要这么做吗？"
@@ -4563,9 +4575,6 @@ msgstr "别逗了,你不是盟主好么"
 
 msgid "别逗了,仅当联盟成员为空时,盟主才能退出联盟"
 msgstr "别逗了,仅当联盟成员为空时,盟主才能退出联盟"
-
-msgid "联盟正在战争准备期或战争期,不能退出联盟"
-msgstr "联盟正在战争准备期或战争期,不能退出联盟"
 
 msgid "联盟不允许直接加入"
 msgstr "联盟不允许直接加入"

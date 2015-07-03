@@ -706,8 +706,12 @@ function GameUITradeGuild:OpenSellDialog()
             max = 1000
         },
         material = {
-            min = 1000,
-            max = 5000
+            min = 3000,
+            max = 12000
+        },
+        martial_material = {
+            min = 6000,
+            max = 24000
         }
     }
     -- body 方法
@@ -895,14 +899,20 @@ function GameUITradeGuild:OpenSellDialog()
 
             max_num = goods_details[2]
             min_num = max_num>1 and 1 or 0
-        else
+        elseif goods_type == BUILD_MATERIAL_TYPE then
             min_unit_price = PRICE_SCOPE.material.min
             max_unit_price = PRICE_SCOPE.material.max
 
             max_num = goods_details[2]
             min_num = max_num>1 and 1 or 0
             unit = 1
+        elseif goods_type == MARTIAL_MATERIAL_TYPE then
+            min_unit_price = PRICE_SCOPE.martial_material.min
+            max_unit_price = PRICE_SCOPE.martial_material.max
 
+            max_num = goods_details[2]
+            min_num = max_num>1 and 1 or 0
+            unit = 1
         end
         return max_num,min_num,min_unit_price,max_unit_price,unit
     end

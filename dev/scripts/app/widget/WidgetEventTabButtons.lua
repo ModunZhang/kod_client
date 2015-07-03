@@ -50,7 +50,7 @@ function WidgetEventTabButtons:OnUpgrading(building, current_time, city)
     self:GetTabByKey("build"):SetOrResetProgress(self:BuildingPercent(building))
     if self:IsShow() and self:GetCurrentTab() == "build" then
         self:IteratorAllItem(function(i, v)
-            if i ~= 1 and v:GetEventKey() == building:UniqueKey() then
+            if i ~= 1 and v.GetEventKey and v:GetEventKey() == building:UniqueKey() then
                 v:SetProgressInfo(self:BuildingDescribe(building))
                 self:SetProgressItemBtnLabel(self:IsAbleToFreeSpeedup(building),building:UniqueUpgradingKey(),v)
             end
