@@ -104,14 +104,44 @@ function FullScreenPopDialogUI:CreateOKButton(params)
     self.ok_button = ok_button
     return self
 end
-
+function FullScreenPopDialogUI:CreateOKButtonWithPrice(params)
+    if self.ok_button then
+        self.ok_button:removeFromParent(true)
+    end
+    local params = params or {}
+    local listener,btn_name = params.listener,params.btn_name
+    local btn_images = params.btn_images
+    local name = btn_name or _("确定")
+    local ok_button = cc.ui.UIPushButton.new(btn_images or {normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"})
+        :setButtonLabel(UIKit:ttfLabel({text =name, size = 20, color = 0xffedae,shadow=true}))
+        :setButtonLabelOffset(0, 16)
+        :onButtonClicked(function(event)
+            if event.name == "CLICKED_EVENT" then
+                self:removeFromParent()
+                if listener then
+                    listener()
+                end
+            end
+        end):align(display.CENTER, display.cx+200, display.top-610):addTo(self)
+    -- gem icon
+    local num_bg = display.newSprite("back_ground_124x28.png"):addTo(ok_button):align(display.CENTER, 0, -10):scale(0.8)
+    local gem_icon = display.newSprite("gem_icon_62x61.png"):addTo(num_bg):align(display.CENTER, 20, num_bg:getContentSize().height/2):scale(0.6)
+    local price = UIKit:ttfLabel({
+        text = string.formatnumberthousands(params.price),
+        size = 18,
+        color = 0xffd200,
+    }):align(display.LEFT_CENTER, 50 , num_bg:getContentSize().height/2)
+        :addTo(num_bg)
+    self.ok_button = ok_button
+    return self
+end
 function FullScreenPopDialogUI:CreateCancelButton(params)
     local params = params or {}
     local listener,btn_name = params.listener,params.btn_name
     local btn_images = params.btn_images
+    local label_size = params.label_size
     local name = btn_name or _("取消")
-    local ok_button = cc.ui.UIPushButton.new(btn_images or {normal = "red_btn_up_148x58.png",pressed = "red_btn_down_148x58.png"})
-        :setButtonLabel(UIKit:ttfLabel({text =name, size = 24, color = 0xffedae,shadow=true}))
+    local cancel_button = cc.ui.UIPushButton.new(btn_images or {normal = "red_btn_up_148x58.png",pressed = "red_btn_down_148x58.png"})
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 self:removeFromParent()
@@ -120,6 +150,15 @@ function FullScreenPopDialogUI:CreateCancelButton(params)
                 end
             end
         end):align(display.CENTER, display.cx+6, display.top-610):addTo(self)
+
+        if tolua.type(name) == "table" then
+            -- 只支持2行
+            for i,v in ipairs(name) do
+                UIKit:ttfLabel({text = v, size = label_size or 24, color = 0xffedae,shadow=true}):addTo(cancel_button):align(display.CENTER, 0, i == 1 and 10 or -10)
+            end
+        else
+            cancel_button:setButtonLabel(UIKit:ttfLabel({text = name, size = label_size or 24, color = 0xffedae,shadow=true}))
+        end
     return self
 end
 
@@ -156,10 +195,11 @@ end
 function FullScreenPopDialogUI:onCleanup()
     print("onCleanup->",self.__cname)
     if UIKit:isMessageDialogShow(self) then
-         UIKit:removeMesssageDialog(self)
+        UIKit:removeMesssageDialog(self)
     end
 end
 return FullScreenPopDialogUI
+
 
 
 
