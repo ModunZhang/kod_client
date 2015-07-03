@@ -89,7 +89,13 @@ function CityLayer:GetClickedObject(world_x, world_y)
         return a:getLocalZOrder() > b:getLocalZOrder()
     end)
     table.sort(clicked_list.sprite_clicked, function(a, b)
-        return a:getLocalZOrder() > b:getLocalZOrder()
+        if a:GetEntity():IsHouse() and b:GetEntity():IsHouse() then
+            return a:getLocalZOrder() > b:getLocalZOrder()
+        elseif a:GetEntity():IsHouse() and not b:GetEntity():IsHouse() then
+            return true
+        else
+            return false
+        end
     end)
     if clicked_list.logic_clicked[1] then
         if clicked_list.logic_clicked[1]:GetEntity():GetType() == "wall" then
