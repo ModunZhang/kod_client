@@ -308,7 +308,7 @@ function GameUIActivityRewardNew:RefreshContinutyList(needClean)
         for i,v in ipairs(data) do
             local reward_type,item_key,time_str,rewards_str,flag = unpack(v)
             local item = self:GetContinutyListItem(reward_type,item_key,time_str,rewards_str,flag)
-            if not item_pos and flag == 2 then
+            if not item_pos and flag ~= 1 then
                 item_pos = i
             end
             self.list_view:addItem(item)
@@ -626,7 +626,7 @@ function GameUIActivityRewardNew:RefreshLevelUpListView(needClean)
         for index,v in ipairs(data) do
             local title,rewards,flag = unpack(v)
             local item = self:GetRewardLevelUpItem(index,title,rewards,flag)
-            if not item_pos and flag== 2 then
+            if not item_pos and flag ~= 1 then
                 item_pos = index
             end
             self.list_view:addItem(item)
@@ -883,7 +883,7 @@ function GameUIActivityRewardNew:RefreshOnLineList(needClean)
         for i,v in ipairs(data) do
             local reward_type,item_key,time_str,rewards,flag,timePoint = unpack(v)
             local item = self:GetOnLineItem(reward_type,item_key,time_str,rewards,flag,timePoint,next_point)
-            if not item_pos and flag == 2 then
+            if not item_pos and flag ~= 1 then
                 item_pos = i
             end
             self.online_list_view:addItem(item)
