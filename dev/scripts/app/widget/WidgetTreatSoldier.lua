@@ -5,6 +5,7 @@ local WidgetSoldierDetails = import("..widget.WidgetSoldierDetails")
 local HospitalUpgradeBuilding = import("..entity.HospitalUpgradeBuilding")
 local SoldierManager = import("..entity.SoldierManager")
 local UILib = import("..ui.UILib")
+local StarBar = import("..ui.StarBar")
 local WidgetSlider = import("..widget.WidgetSlider")
 local Localize = import("..utils.Localize")
 local WidgetPushButton = import("..widget.WidgetPushButton")
@@ -415,6 +416,16 @@ function WidgetTreatSoldier:SetSoldier(soldier_type, star)
         :onButtonClicked(function(event)
             WidgetSoldierDetails.new(self.soldier_type, self.star):addTo(self)
         end)
+    local soldier_star_bg = display.newSprite("tmp_back_ground_102x22.png"):addTo(self.soldier):align(display.BOTTOM_CENTER,-10, -60)
+    self.soldier_star = StarBar.new({
+            max = 3,
+            bg = "Stars_bar_bg.png",
+            fill = "Stars_bar_highlight.png",
+            num = star,
+            margin = 5,
+            direction = StarBar.DIRECTION_HORIZONTAL,
+            scale = 0.8,
+        }):addTo(soldier_star_bg):align(display.CENTER,58, 11)
 
     local rect = self.soldier:getCascadeBoundingBox()
     display.newSprite("box_soldier_128x128.png"):addTo(self.soldier):align(display.CENTER, 0,0)
@@ -436,6 +447,7 @@ function WidgetTreatSoldier:OnSoliderStarCountChanged(soldier_manager,star_chang
             local soldier_config, soldier_ui_config = self:GetConfigBySoldierTypeAndStar(v, self.star)
             self.soldier:setButtonImage(cc.ui.UIPushButton.NORMAL, soldier_ui_config, true)
             self.soldier:setButtonImage(cc.ui.UIPushButton.PRESSED, soldier_ui_config, true)
+            self.soldier_star:setNum(self.star)
             self.soldier_config = soldier_config
             self.soldier_ui_config = soldier_ui_config
         end

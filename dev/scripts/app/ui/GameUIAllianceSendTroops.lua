@@ -1,6 +1,7 @@
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local UIScrollView = import(".UIScrollView")
+local StarBar = import(".StarBar")
 local Localize = import("..utils.Localize")
 local UIListView = import(".UIListView")
 local WidgetSlider = import("..widget.WidgetSlider")
@@ -479,6 +480,16 @@ function GameUIAllianceSendTroops:SelectSoldiers()
             :align(display.CENTER,60,64):scale(104/128)
         local soldier_head_icon = display.newSprite(soldier_ui_config):align(display.CENTER,60,64):addTo(content):scale(104/128)
         local soldier_head_bg  = display.newSprite("box_soldier_128x128.png"):addTo(soldier_head_icon):pos(soldier_head_icon:getContentSize().width/2,soldier_head_icon:getContentSize().height/2)
+        local soldier_star_bg = display.newSprite("tmp_back_ground_102x22.png"):addTo(soldier_head_icon):align(display.BOTTOM_CENTER,soldier_head_icon:getContentSize().width/2 - 10, 4)
+        local soldier_star = StarBar.new({
+            max = 3,
+            bg = "Stars_bar_bg.png",
+            fill = "Stars_bar_highlight.png",
+            num = star,
+            margin = 5,
+            direction = StarBar.DIRECTION_HORIZONTAL,
+            scale = 0.8,
+        }):addTo(soldier_star_bg):align(display.CENTER,58, 11)
 
         item:addContent(content)
         list:addItem(item)

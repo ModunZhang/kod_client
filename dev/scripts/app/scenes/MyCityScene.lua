@@ -175,23 +175,7 @@ function MyCityScene:NewLockButtonFromBuildingSprite(building_sprite)
     local button = cc.ui.UIPushButton.new({normal = "lock_btn.png",pressed = "lock_btn.png"})
         :addTo(self:GetTopLayer()):pos(lp.x,lp.y)
         :onButtonClicked(function()
-            if self.city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint(self.city) > 0 then
-                UIKit:newGameUI("GameUIUnlockBuilding", self.city, building_sprite:GetEntity()):AddToCurrentScene(true)
-            else
-                UIKit:showMessageDialog(_("提示"), _("升级城堡解锁此建筑"))
-                    :CreateOKButton(
-                        {
-                            listener = function()
-                                local building_sprite = self:GetSceneLayer():FindBuildingSpriteByBuilding(self.city:GetFirstBuildingByType("keep"), self.city)
-                                local x,y = self.city:GetFirstBuildingByType("keep"):GetMidLogicPosition()
-                                self:GotoLogicPoint(x,y,40):next(function()
-                                    self:AddIndicateForBuilding(building_sprite)
-                                end)
-                            end,
-                            btn_name= _("前往")
-                        }
-                    )
-            end
+            UIKit:newGameUI("GameUIUnlockBuilding", self.city, building_sprite:GetEntity()):AddToCurrentScene(true)
         end)
     button.sprite = building_sprite
     return button
@@ -217,12 +201,12 @@ function MyCityScene:onEnterTransitionFinish()
     MyCityScene.super.onEnterTransitionFinish(self)
     if ext.registereForRemoteNotifications then
         ext.registereForRemoteNotifications()
-    end 
+    end
     app:sendPlayerLanguageCodeIf()
     app:sendApnIdIf()
     if self.isFromLogin then
         local isFinished_fte = DataManager:getUserData().countInfo.isFTEFinished
-        local not_buy_any_gems = DataManager:getUserData().countInfo.iapCount == 0 
+        local not_buy_any_gems = DataManager:getUserData().countInfo.iapCount == 0
         if isFinished_fte and not_buy_any_gems then
             UIKit:newGameUI("GameUIActivityRewardNew",GameUIActivityRewardNew.REWARD_TYPE.FIRST_IN_PURGURE):AddToScene(self, true)
         end
@@ -431,6 +415,7 @@ function MyCityScene:OpenUI(building, default_tab)
 end
 
 return MyCityScene
+
 
 
 

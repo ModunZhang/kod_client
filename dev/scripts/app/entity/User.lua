@@ -445,6 +445,60 @@ end
 function User:GetCountInfo()
     return self.countInfo
 end
+-- 每日登陆奖励是否领取
+function User:HaveEveryDayLoginReward()
+    local countInfo = self:GetCountInfo()
+    local flag = countInfo.day60 % 30 == 0 and 30 or countInfo.day60 % 30
+    local geted = countInfo.day60RewardsCount % 30 == 0 and 30 or countInfo.day60RewardsCount % 30 -- <= geted
+    return flag > geted or (geted == 30 and flag == 1)
+end
+-- 连续登陆奖励是否领取
+function User:HaveContinutyReward()
+    local countInfo = self:GetCountInfo()
+    local config_day14 = GameDatas.Activities.day14
+    for i,v in ipairs(config_day14) do
+        local config_rewards = string.split(v.rewards,",")
+        if #config_rewards == 1 then
+            local reward_type,item_key,count = unpack(string.split(v.rewards,":"))
+            if v.day == countInfo.day14 and countInfo.day14 > countInfo.day14RewardsCount then
+                return true
+            end
+        else
+
+            for __,one_reward in ipairs(config_rewards) do
+                local reward_type,item_key,count = unpack(string.split(one_reward,":"))
+                if reward_type == 'soldiers' then
+                    if v.day == countInfo.day14 and countInfo.day14 > countInfo.day14RewardsCount then
+                        return true
+                    end
+                end
+            end
+        end
+    end
+end
+-- 城堡冲级奖励是否领取
+function User:HavePlayerLevelUpReward()
+    local countInfo = self:GetCountInfo()
+    local current_level = City:GetFirstBuildingByType('keep'):GetLevel()
+    local config_levelup = GameDatas.Activities.levelup
+    local config_intInit = GameDatas.PlayerInitData.intInit
+    for __,v in ipairs(config_levelup) do
+        if not (app.timer:GetServerTime() > countInfo.registerTime/1000 + config_intInit.playerLevelupRewardsHours.value * 60 * 60) then
+            if  v.level <= current_level then
+                local max_level = 0
+                local l_flag = true
+                for __,l in ipairs(countInfo.levelupRewards) do
+                    if l == v.index then
+                        l_flag = false
+                    end
+                end
+                if l_flag then
+                    return true
+                end
+            end
+        end
+    end
+end
 -- 获取当天剩余普通免费gacha次数
 function User:GetOddFreeNormalGachaCount()
     local vip_add = self:GetVipEvent():IsActived() and self:GetVIPNormalGachaAdd() or 0
@@ -825,6 +879,9 @@ function User:GetBestDragon()
 end
 
 return User
+
+
+
 
 
 

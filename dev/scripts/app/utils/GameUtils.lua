@@ -91,12 +91,12 @@ function GameUtils:formatTimeAsTimeAgoStyle( time )
     elseif(time == 3600) then
         timeText = string.format(_("%d小时前"), 1)
     elseif(time < 86400) then
-        time = math.ceil(time / 3600)
+        time = math.floor(time / 3600)
         timeText = string.format(_("%d小时前"), time)
     elseif(time == 86400) then
         timeText = string.format(_("%d天前"), 1)
     else
-        time = math.ceil(time / 86400)
+        time = math.floor(time / 86400)
         timeText = string.format(_("%d天前"), time)
     end
 
