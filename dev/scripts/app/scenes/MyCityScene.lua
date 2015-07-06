@@ -123,23 +123,23 @@ function MyCityScene:CreateSceneUILayer()
             if scene_layer:getScale() < (scene_layer:GetScaleRange()) * 1.3 then
                 if self.is_show == nil or self.is_show == true then
                     scene_layer:HideLevelUpNode()
-                    scene_node:GetTopLayer():stopAllActions()
-                    transition.fadeOut(scene_node:GetTopLayer(), {
-                        time = 0.5,
-                        onComplete = function()
-                            scene_node:GetTopLayer():hide()
-                        end,
-                    })
+                    -- scene_node:GetTopLayer():stopAllActions()
+                    -- transition.fadeOut(scene_node:GetTopLayer(), {
+                    --     time = 0.5,
+                    --     onComplete = function()
+                    --         scene_node:GetTopLayer():hide()
+                    --     end,
+                    -- })
                     self.is_show = false
                 end
             else
                 if self.is_show == nil or self.is_show == false then
                     scene_layer:ShowLevelUpNode()
-                    scene_node:GetTopLayer():stopAllActions()
-                    scene_node:GetTopLayer():show()
-                    transition.fadeIn(scene_node:GetTopLayer(), {
-                        time = 0.5,
-                    })
+                    -- scene_node:GetTopLayer():stopAllActions()
+                    -- scene_node:GetTopLayer():show()
+                    -- transition.fadeIn(scene_node:GetTopLayer(), {
+                    --     time = 0.5,
+                    -- })
                     self.is_show = true
                 end
             end
