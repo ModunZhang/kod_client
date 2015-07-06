@@ -312,7 +312,6 @@ local function get_blocking_request_promise(request_route, data, m,need_catch,lo
 end
 local function get_none_blocking_request_promise(request_route, data, m, need_catch)
     need_catch = need_catch or false
-    -- return cocos_promise.promiseWithTimeOut(get_request_promise(request_route, data, m), TIME_OUT)
     return cocos_promise.promiseFilterNetError(get_request_promise(request_route, data, m), need_catch)
 end
 local function get_callback_promise(callbacks, m)
@@ -524,7 +523,7 @@ local function get_connectGateServer_promise()
     NetManager.m_netService:connect(NetManager.m_gateServer.host, NetManager.m_gateServer.port, function(success)
         p:resolve({success = success, msg = {code = SUCCESS_CODE}})
     end)
-    return cocos_promise.promiseWithTimeOut(p, TIME_OUT)
+    return p
 end
 function NetManager:getConnectGateServerPromise()
     return get_connectGateServer_promise():next(function(result)
@@ -549,7 +548,7 @@ local function get_connectLogicServer_promise()
     NetManager.m_netService:connect(NetManager.m_logicServer.host, NetManager.m_logicServer.port, function(success)
         p:resolve({success = success, msg = {code = SUCCESS_CODE}})
     end)
-    return cocos_promise.promiseWithTimeOut(p, TIME_OUT)
+    return p
 end
 function NetManager:getConnectLogicServerPromise()
     return get_connectLogicServer_promise():next(function(result)
