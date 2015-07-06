@@ -193,7 +193,7 @@ function Item:ctor(parent_ui)
 end
 function Item:SetBuildingType(building_type, level)
     local config = SpriteConfig[building_type]
-    local png = SpriteConfig[building_type]:GetConfigByLevel(level).png
+    local png = SpriteConfig[building_type]:GetConfigByLevel(level > 0 and level or 1).png
     self.title_label:setString(Localize.building_name[building_type])
     self.building_icon:setTexture(png)
     self.building_icon:setPosition(building_config_map[building_type].offset.x,building_config_map[building_type].offset.y)
@@ -264,6 +264,9 @@ function Item:UpdateDesc(building)
         if building:IsMaxLevel() then
             self.desc_label:setString(_("已经到最大等级了"))
             self.desc_label:setPositionY(70)
+        elseif building:GetLevel() == 0 then
+            self.desc_label:setString(_("可解锁建筑"))
+            self.desc_label:setPositionY(35)
         else
             self.desc_label:setString(string.format(_("从等级%d升级到等级%d"), building:GetLevel(), building:GetNextLevel()))
             self.desc_label:setPositionY(35)
@@ -320,12 +323,7 @@ function Item:ChangeStatus(status)
         self.condition_label:hide()
     end
     self.status = status
-    local is_building = is_building_map[status]
-    if is_building then
-        self.progress:show()
-    else
-        self.progress:hide()
-    end
+    self.progress:setVisible(is_building_map[status])
     self:UpdateDesc(self.building)
     return self
 end
@@ -425,7 +423,7 @@ end
 function GameUIHasBeenBuild:RefreshCurrentList(tag)
     self.building_list_view:removeAllItems()
     if tag == "function" then
-        self.buildings = self.build_city:GetBuildingsIsUnlocked()
+        self.buildings = self.build_city:GetFunctionBuildingsWithOrder()
     else
         self.buildings = self.build_city:GetHousesWhichIsBuilded()
     end

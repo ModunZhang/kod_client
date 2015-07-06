@@ -14,7 +14,7 @@ local format = string.format
 UpgradeBuilding.NOT_ABLE_TO_UPGRADE = {
     TILE_NOT_UNLOCKED = _("地块未解锁"),
     IS_MAX_LEVEL = _("建筑已经达到最高等级"),
-    IS_MAX_UNLOCK = _("建造数量已达建造上限"),
+    IS_MAX_UNLOCK = _("升级城堡解锁此建筑"),
     LEVEL_CAN_NOT_HIGHER_THAN_KEEP_LEVEL = _("请首先提升城堡等级"),
     RESOURCE_NOT_ENOUGH = _("资源不足"),
     BUILDINGLIST_NOT_ENOUGH = _("建造队列不足"),
@@ -315,6 +315,11 @@ function UpgradeBuilding:IsBuildingUpgradeLegal()
 
     if #level_up_config == level then
         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.IS_MAX_LEVEL
+    end
+    -- 是否已经解锁内圈
+    local tile = city:GetTileWhichBuildingBelongs(self)
+    if not city:IsUnlockedInAroundNumber(math.max(tile.x,tile.y) - 1) then
+        return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.TILE_NOT_UNLOCKED
     end
     -- 是否达到建造上限
     if city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint(city) < 1 and self.level==0 then
