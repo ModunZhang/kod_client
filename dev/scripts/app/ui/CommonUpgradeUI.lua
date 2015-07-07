@@ -723,8 +723,10 @@ function CommonUpgradeUI:CreateFreeSpeedUpBuildingUpgradeButton()
         }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                local eventType = self.building:EventType()
-                NetManager:getFreeSpeedUpPromise(eventType,self.building:UniqueUpgradingKey())
+                if self.building:GetUpgradingLeftTimeByCurrentTime(app.timer:GetServerTime()) > 2 then
+                    local eventType = self.building:EventType()
+                    NetManager:getFreeSpeedUpPromise(eventType,self.building:UniqueUpgradingKey())
+                end
             end
         end):align(display.CENTER, display.cx+194, display.top - 435):addTo(self.acc_layer)
     local building = self.building

@@ -117,7 +117,9 @@ function Item:ctor(parent_ui)
         :onButtonClicked(function(event)
             local building = self.building
             if self.status == "free" then
-                NetManager:getFreeSpeedUpPromise(building:EventType(), building:UniqueUpgradingKey())
+                if building:GetUpgradingLeftTimeByCurrentTime(app.timer:GetServerTime()) > 2 then
+                    NetManager:getFreeSpeedUpPromise(building:EventType(), building:UniqueUpgradingKey())
+                end
             elseif self.status == "instant" then
                 local city = building:BelongCity()
                 if building:getUpgradeNowNeedGems() > city:GetUser():GetGemResource():GetValue() then
