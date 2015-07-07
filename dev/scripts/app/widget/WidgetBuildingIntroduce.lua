@@ -7,7 +7,7 @@ local SpriteConfig = import("..sprites.SpriteConfig")
 local WidgetBuildingIntroduce = class("WidgetBuildingIntroduce", WidgetPopDialog)
 
 function WidgetBuildingIntroduce:ctor(building)
-    WidgetBuildingIntroduce.super.ctor(self,500,_("升级条件"),display.top - 300)
+    WidgetBuildingIntroduce.super.ctor(self,500,_("升级条件"),display.top - 280)
     self.building = building
     self.city = City
     local body = self.body
@@ -41,8 +41,8 @@ function WidgetBuildingIntroduce:ctor(building)
         end
     end
 
-    local title_bg = display.newScale9Sprite("title_blue_430x30.png", width/2 - 110, height - 40,cc.size(380,30),cc.rect(15,10,400,10))
-        :align(display.LEFT_CENTER)
+    local title_bg = display.newScale9Sprite("title_blue_430x30.png", width/2 - 116, height - 30,cc.size(380,30),cc.rect(15,10,400,10))
+        :align(display.LEFT_TOP)
         :addTo(body)
     local bd = Localize.building_name
     local building_name = UIKit:ttfLabel({
@@ -56,7 +56,7 @@ function WidgetBuildingIntroduce:ctor(building)
         size = 20,
         dimensions = cc.size(380, 0),
         color = 0x615b44
-    }):align(display.LEFT_TOP,width/2 - 110, height - 70):addTo(body)
+    }):align(display.LEFT_TOP,width/2 - 116, height - 70):addTo(body)
     self:SetUpgradeRequirementListview()
 end
 
