@@ -458,6 +458,11 @@ local logic_event_map = {
         if not NetManager.m_was_inited_game then return end
         if success and DataManager:hasUserData() then
             LuaUtils:outputTable("onAllianceFight", response)
+            for i,data in ipairs(response.allianceData) do
+                if string.find(data[1],"allianceFightReports") then
+                     Alliance_Manager:GetMyAlliance():SetLastAllianceFightReport(data[2])
+                end
+            end
             local user_enemy_alliance_data = response.enemyAllianceData
             DataManager:setEnemyAllianceData(user_enemy_alliance_data)
             local user_alliance_data = DataManager:getUserAllianceData()

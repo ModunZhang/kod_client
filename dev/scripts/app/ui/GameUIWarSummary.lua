@@ -19,13 +19,13 @@ function GameUIWarSummary:onEnter()
     self:DisableCloseBtn()
     self:DisableAutoClose()
     local alliance = Alliance_Manager:GetMyAlliance()
-    if alliance:LastAllianceFightReport() then
-        self:InitWarSummary()
-    end
+    self:InitWarSummary(alliance:LastAllianceFightReport())
 end
-function GameUIWarSummary:InitWarSummary()
+function GameUIWarSummary:InitWarSummary(report)
+    if not report then
+        return
+    end
     local alliance = Alliance_Manager:GetMyAlliance()
-    local report = alliance:LastAllianceFightReport()
     -- 各项数据
     local win
     if report.attackAllianceId == alliance:Id() then
@@ -174,6 +174,7 @@ function GameUIWarSummary:InitWarSummary()
         end)
 end
 return GameUIWarSummary
+
 
 
 
