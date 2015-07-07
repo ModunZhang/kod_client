@@ -1,6 +1,7 @@
 local UIListView = import('..ui.UIListView')
 local WidgetSlider = import('.WidgetSlider')
 local UILib = import("..ui.UILib")
+local StarBar = import("..ui.StarBar")
 local Localize = import("..utils.Localize")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
@@ -56,6 +57,17 @@ function WidgetSoldierDetails:InitSoldierDetails()
     soldier_head_icon:scale(130/soldier_head_icon:getContentSize().height)
     display.newSprite("box_soldier_128x128.png"):addTo(soldier_head_icon):align(display.CENTER, soldier_head_icon:getContentSize().width/2, soldier_head_icon:getContentSize().height-64)
     bg:addChild(soldier_head_icon)
+    local soldier_star_bg = display.newSprite("tmp_back_ground_102x22.png"):addTo(soldier_head_icon):align(display.BOTTOM_CENTER,soldier_head_icon:getContentSize().width/2 - 10, 4)
+    self.soldier_star = StarBar.new({
+            max = 3,
+            bg = "Stars_bar_bg.png",
+            fill = "Stars_bar_highlight.png",
+            num = self.soldier_level,
+            margin = 5,
+            direction = StarBar.DIRECTION_HORIZONTAL,
+            scale = 0.8,
+        }):addTo(soldier_star_bg):align(display.CENTER,58, 11)
+
 
 
     local num_title_label = cc.ui.UILabel.new({

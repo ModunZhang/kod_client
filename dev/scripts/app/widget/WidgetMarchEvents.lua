@@ -277,7 +277,7 @@ function WidgetMarchEvents:ResizeBelowHorizon(new_height)
     local size = self.back_ground:getContentSize()
     self.back_ground:setContentSize(cc.size(size.width, height))
     self.node:setPositionY(- height)
-    self.hide_btn:setPositionY(height)
+    self.hide_btn:setPositionY(height - 1)
 end
 -- 只有加速按钮和部队
 function WidgetMarchEvents:CreateReturnItem(entity)

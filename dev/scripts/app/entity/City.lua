@@ -518,20 +518,26 @@ function City:GetMaxHouseCanBeBuilt(house_type)
     end
     return max
 end
-function City:GetBuildingsIsUnlocked()
+function City:GetFunctionBuildingsWithOrder()
     local r = {}
     for k,v in pairs(self.building_location_map) do
-        if v:IsUnlocked() or v:IsUnlocking() then
-            insert(r, v)
-        end
+        insert(r, v)
     end
     table.sort(r, function(a, b)
-        if a:GetLevel() < b:GetLevel() then
-            return true
-        elseif a:GetLevel() > b:GetLevel() then
+        if a:IsUnlocked() and b:IsUnlocked() then
+            if a:GetLevel() < b:GetLevel() then
+                return true
+            elseif a:GetLevel() > b:GetLevel() then
+                return false
+            end
+            return a:IsImportantThanBuilding(b)
+        elseif not a:IsUnlocked() and b:IsUnlocked() then
             return false
+        elseif a:IsUnlocked() and not b:IsUnlocked() then
+            return true
+        elseif not a:IsUnlocked() and not b:IsUnlocked() then
+            return a:IsImportantThanBuilding(b)
         end
-        return a:IsImportantThanBuilding(b)
     end)
     return r
 end
@@ -1016,7 +1022,7 @@ end
 function City:OnUserDataChanged(userData, current_time, deltaData)
     local need_update_resouce_buildings, is_unlock_any_tiles, unlock_table = self:OnHouseChanged(userData, current_time, deltaData)
     -- 更新建筑信息
-        self:IteratorCanUpgradeBuildingsByUserData(userData, current_time, deltaData)
+    self:IteratorCanUpgradeBuildingsByUserData(userData, current_time, deltaData)
     -- 更新地块信息
     if is_unlock_any_tiles then
         LuaUtils:outputTable("unlock_table", unlock_table)
@@ -1113,16 +1119,16 @@ function City:OnHouseChanged(userData, current_time, deltaData)
             local decorators = self:GetDecoratorsByLocationId(location_id)
             table.foreach(decorators, function(_, building)
 
-                -- 当前位置有小建筑并且推送的数据里面没有就认为是拆除
-                local house_location_id = tile:GetBuildingLocation(building)
-                local house_info = find_building_info_by_location(location.houses, house_location_id)
-                
-                -- 没有找到，就是已经被拆除了
-                -- 如果类型不对也认为是删除
-                if not house_info or 
-                    (house_info.type ~= building:GetType()) then
-                    self:DestoryDecorator(current_time, building)
-                end
+                    -- 当前位置有小建筑并且推送的数据里面没有就认为是拆除
+                    local house_location_id = tile:GetBuildingLocation(building)
+                    local house_info = find_building_info_by_location(location.houses, house_location_id)
+
+                    -- 没有找到，就是已经被拆除了
+                    -- 如果类型不对也认为是删除
+                    if not house_info or
+                        (house_info.type ~= building:GetType()) then
+                        self:DestoryDecorator(current_time, building)
+                    end
             end)
 
             -- 新建的
@@ -1702,6 +1708,7 @@ function City:FindProductionTechEventById(_id)
 end
 
 return City
+
 
 
 

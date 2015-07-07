@@ -46,28 +46,40 @@ function GameUIAllianceInfo:filterMemberList(title)
         return v.title == title
     end)
 
-    local result = {{data_type = 1 , data = title}}
-    if #filter_data == 0 then
+    local result = {}
+    if LuaUtils:table_empty(filter_data) then
         table.insert(result,{data_type = 2 , data = "__empty"})
     else
         --player
         table.foreach(filter_data,function(k,v)
             table.insert(result,{data_type = 2 , data = v})
         end)
+        table.sort(result, function(a,b)
+            local a_data,b_data = a.data, b.data
+            local isOnline_a = type(a_data.online) == 'boolean' and a_data.online
+            local isOnline_b = type(b_data.online) == 'boolean' and b_data.online
+            if isOnline_a == isOnline_b then
+                return a_data.power > b_data.power
+            else
+                return isOnline_a
+            end
+        end)
     end
+    table.insert(result, 1, {data_type = 1 , data = title})
     return result
 end
 
 function GameUIAllianceInfo:RefreshListDataSource()
     local data = self:filterMemberList("general")
     local next_data = self:filterMemberList("quartermaster")
-    table.insertto(data,next_data)
+    table.insertto(data, next_data, #data + 1)
     next_data = self:filterMemberList("supervisor")
-    table.insertto(data,next_data)
+    table.insertto(data, next_data, #data + 1)
     next_data = self:filterMemberList("elite")
-    table.insertto(data,next_data)
+    table.insertto(data, next_data, #data + 1)
     next_data = self:filterMemberList("member")
-    table.insertto(data,next_data)
+    table.insertto(data, next_data, #data + 1)
+    dump(data)
     self.list_dataSource = data
 end
 

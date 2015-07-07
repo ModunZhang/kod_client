@@ -312,7 +312,6 @@ local function get_blocking_request_promise(request_route, data, m,need_catch,lo
 end
 local function get_none_blocking_request_promise(request_route, data, m, need_catch)
     need_catch = need_catch or false
-    -- return cocos_promise.promiseWithTimeOut(get_request_promise(request_route, data, m), TIME_OUT)
     return cocos_promise.promiseFilterNetError(get_request_promise(request_route, data, m), need_catch)
 end
 local function get_callback_promise(callbacks, m)
@@ -345,12 +344,15 @@ function NetManager:init()
         port = nil,
     }
 end
-
+function NetManager:IsLogin()
+    return self.is_login
+end
 function NetManager:getServerTime()
     return self.m_netService:getServerTime()
 end
 
 function NetManager:disconnect()
+    self.is_login = false
     self:removeEventListener("disconnect")
     self.m_netService:disconnect()
 end
@@ -456,6 +458,11 @@ local logic_event_map = {
         if not NetManager.m_was_inited_game then return end
         if success and DataManager:hasUserData() then
             LuaUtils:outputTable("onAllianceFight", response)
+            for i,data in ipairs(response.allianceData) do
+                if string.find(data[1],"allianceFightReports") then
+                     Alliance_Manager:GetMyAlliance():SetLastAllianceFightReport(data[2])
+                end
+            end
             local user_enemy_alliance_data = response.enemyAllianceData
             DataManager:setEnemyAllianceData(user_enemy_alliance_data)
             local user_alliance_data = DataManager:getUserAllianceData()
@@ -524,7 +531,7 @@ local function get_connectGateServer_promise()
     NetManager.m_netService:connect(NetManager.m_gateServer.host, NetManager.m_gateServer.port, function(success)
         p:resolve({success = success, msg = {code = SUCCESS_CODE}})
     end)
-    return cocos_promise.promiseWithTimeOut(p, TIME_OUT)
+    return p
 end
 function NetManager:getConnectGateServerPromise()
     return get_connectGateServer_promise():next(function(result)
@@ -549,7 +556,7 @@ local function get_connectLogicServer_promise()
     NetManager.m_netService:connect(NetManager.m_logicServer.host, NetManager.m_logicServer.port, function(success)
         p:resolve({success = success, msg = {code = SUCCESS_CODE}})
     end)
-    return cocos_promise.promiseWithTimeOut(p, TIME_OUT)
+    return p
 end
 function NetManager:getConnectLogicServerPromise()
     return get_connectLogicServer_promise():next(function(result)
@@ -560,6 +567,7 @@ end
 function NetManager:getLoginPromise(deviceId)
     local device_id = device.getOpenUDID()
     local requestTime = ext.now()
+    self.is_login = false
     return get_none_blocking_request_promise("logic.entryHandler.login", {
         deviceId = deviceId or device_id,
         requestTime = requestTime,
@@ -590,6 +598,7 @@ function NetManager:getLoginPromise(deviceId)
                 DataManager:setEnemyAllianceData(user_enemy_alliance_data)
                 self.m_was_inited_game = true
             end
+            self.is_login = true
         end
         return response
     end)
@@ -974,7 +983,10 @@ function NetManager:getRequestAllianceToSpeedUpPromise(eventType, eventId)
     return get_blocking_request_promise("logic.allianceHandler.requestAllianceToSpeedUp", {
         eventType = eventType,
         eventId = eventId,
-    }, "请求加速失败!"):done(get_player_response_msg)
+    }, "请求加速失败!"):done(get_player_response_msg):done(function(result)
+            GameGlobalUI:showTips(_("提示"),_("已向全体盟友发出帮助请求"))
+            return result
+        end)
 end
 -- 免费加速建筑升级
 function NetManager:getFreeSpeedUpPromise(eventType, eventId)

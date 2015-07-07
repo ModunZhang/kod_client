@@ -423,7 +423,18 @@ function GameUIHome:CreateTop()
     end
     left_order:AddElement(button)
     button.tips_button_count = WidgetNumberTips.new():addTo(button):pos(20,-20)
-    button.tips_button_count:SetNumber(LuaUtils:table_size(User:GetIapGifts()))
+    local award_num = 0
+
+    if User:HaveEveryDayLoginReward() then
+        award_num = award_num + 1
+    end
+    if User:HaveContinutyReward() then
+        award_num = award_num + 1
+    end
+    if User:HavePlayerLevelUpReward() then
+        award_num = award_num + 1
+    end
+    button.tips_button_count:SetNumber(LuaUtils:table_size(User:GetIapGifts()) + award_num)
     self.tips_button = button
     --在线活动
     local activity_button = WidgetAutoOrderAwardButton.new(self)
@@ -519,7 +530,18 @@ function GameUIHome:CheckAllianceRewardCount()
     if not self.tips_button then return end
     local count = LuaUtils:table_size(User:GetIapGifts())
     print("CheckAllianceRewardCount----->",count)
-    self.tips_button.tips_button_count:SetNumber(count)
+    local award_num = 0
+
+    if User:HaveEveryDayLoginReward() then
+        award_num = award_num + 1
+    end
+    if User:HaveContinutyReward() then
+        award_num = award_num + 1
+    end
+    if User:HavePlayerLevelUpReward() then
+        award_num = award_num + 1
+    end
+    self.tips_button.tips_button_count:SetNumber(count + award_num)
 end
 
 
@@ -835,6 +857,7 @@ function GameUIHome:OnCountInfoChanged()
     end
     self.left_order_group:RefreshOrder()
     self.top_order_group:RefreshOrder()
+    self:CheckAllianceRewardCount()
 end
 function GameUIHome:PromiseOfFteAlliance()
     self.bottom:TipsOnAlliance()
@@ -852,6 +875,8 @@ end
 
 
 return GameUIHome
+
+
 
 
 

@@ -7,7 +7,7 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _\n"
 "X-Poedit-Basepath: ../../scripts/app/\n"
-"PO-Revision-Date: 2015-07-03 19:54+0800\n"
+"PO-Revision-Date: 2015-07-07 22:48+0800\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: xls-to-po 1.0\n"
@@ -33,7 +33,7 @@ msgid "游戏版本不匹配"
 msgstr "Wrong version"
 
 msgid "玩家已经登录"
-msgstr "You have already logined"
+msgstr "You have already logged in"
 
 msgid "提示"
 msgstr "Tips"
@@ -42,7 +42,7 @@ msgid "加入联盟后开放此功能!"
 msgstr "You need to join an Alliance at first"
 
 msgid "不能删除"
-msgstr "Can not delete"
+msgstr "Can not be deleted"
 
 msgid "确定"
 msgstr "OK"
@@ -57,7 +57,7 @@ msgid "优先升级住宅"
 msgstr "Upgrade the dewelling first"
 
 msgid "鼓励城民生育"
-msgstr "Encourage the civilians to have children"
+msgstr "Encourage the civilians to increase  population"
 
 msgid "进攻其他玩家，抢些人回来！"
 msgstr "Attack the other players and loot them!"
@@ -111,19 +111,19 @@ msgid "你自己的战斗力"
 msgstr "Your power"
 
 msgid "升级联盟宫殿可以获得什么好处？"
-msgstr "What's the benefit to upgrade the Alliance palace ?"
+msgstr "What's the benefit from upgrading the Alliance palace ?"
 
 msgid "提升联盟的成员上限"
-msgstr "Raise the ceiling of Alliance member count"
+msgstr "Increase the max amount of your Alliance member"
 
 msgid "能够扩大联盟领地"
 msgstr "Expand the Alliance territory"
 
 msgid "能够建一个私人泳池"
-msgstr "You'll have a personal pool"
+msgstr "You'll have a private pool"
 
 msgid "如果不驻防龙城市将不会主动防御敌方的进攻，那么在哪里设置驻防在城市的龙呢？"
-msgstr "We know that troops won't defend the enemy attack when our Dragon isn't garrisoned in city,so,where can we garrison the Dragon ?"
+msgstr "The city won't be defended without a dragon stationed in it. So how can we get the dragon stationed?"
 
 msgid "在城市的城墙"
 msgstr "At the Wall"
@@ -255,10 +255,10 @@ msgid "用你的意念进行移动"
 msgstr "Move it with your thought"
 
 msgid "当城墙的耐久度完全降低到0时会产生什么后果？"
-msgstr "What will happen when the durability of your city wall down to 0 ?"
+msgstr "What will happen when the durability of your city wall decline to 0 ?"
 
 msgid "敌方联盟会获得额外的联盟积分"
-msgstr "The enemy earns extra Kill Score"
+msgstr "The enemy will earn extra Kill Score"
 
 msgid "你将无法派遣部队"
 msgstr "You can't dispatch any troop"
@@ -270,22 +270,22 @@ msgid "通过探险可以获得大量的资源，稀有材料和道具，那么�
 msgstr "We can earn a large number of resources,rare materials and items by exploring the myst, where can we enter the myst ?"
 
 msgid "城堡旁边的飞艇"
-msgstr "The Airship around Castle"
+msgstr "The Airship around the Castle"
 
 msgid "联盟领地的月门"
-msgstr "The Moon Gate in Alliance Territory"
+msgstr "The Moon Gate of the Alliance Territory"
 
 msgid "城市中的龙巢"
-msgstr "The Dragon Nest in city"
+msgstr "The Dragon Nest in the city"
 
 msgid "以下哪一个条件是控制龙装备的材料掉落的数量和品质？"
-msgstr "Which one is the key to get the more and the better quality materials of Dragon equipment ? "
+msgstr "Which one is the key to get more and better materials of Dragon equipment ? "
 
 msgid "在一场战斗中获得更多的击杀积分"
 msgstr "Earn more Kill Score in an Alliance Battle"
 
 msgid "和赛琳娜搞好关系"
-msgstr "Good relationship with Selina"
+msgstr "Keep good relationship with Selina"
 
 msgid "击杀掉敌方的龙"
 msgstr "Killed the enemy Dragon"
@@ -327,19 +327,19 @@ msgid "在联盟的秩序大厅中升级科技"
 msgstr "Upgrade the village level in the Order hall"
 
 msgid "给村落提供帮助"
-msgstr "Assist the village"
+msgstr "\"Assist\" the village"
 
 msgid "向联盟盟主发邮件"
-msgstr "Send mail to the Alliance Chief"
+msgstr "Send a mail to the Alliance Chief"
 
 msgid "如何提升自己在联盟领地上采集村落中资源的效率?"
 msgstr "How to improve your village gathering speed ?"
 
 msgid "尽量采集同一种资源，从而提升该资源的采集熟练度"
-msgstr "Gather one kind of resources specially"
+msgstr "Gather only one kind of resources each time"
 
 msgid "赶快充值吧！"
-msgstr "Go to purchase"
+msgstr "Buy! Buy! Buy!"
 
 msgid "提升联盟宫殿的等级"
 msgstr "Upgrade the Alliance Palace"
@@ -363,10 +363,10 @@ msgid "选中盟友城市并派出部队协防"
 msgstr "Select the city of your ally and \"Assist\""
 
 msgid "给盟友要送一封邮件并支持他"
-msgstr "Support your ally by sending a Mail"
+msgstr "Support your ally by sending a mail to him"
 
 msgid "在聊天频道强烈谴责这种行为"
-msgstr "Blame the enemy in the Chat channel"
+msgstr "Blame the enemy in the Chat channel on his attack"
 
 msgid "已经招募的部队会持续消耗粮食，当粮食为0时，你的部队会发生什么？"
 msgstr "Your troops will consume foods at all times, what will happen when there's no food ?"
@@ -405,19 +405,19 @@ msgid "收集一套兵种的卡牌"
 msgstr "Collect a set of soldier's card"
 
 msgid "在城市中的城堡中，可以变更城市的地形，那么变更城市的地形有什么具体的好处？"
-msgstr "You can change city Terrain in your Castle, what's good to change it ?"
+msgstr "You can change city Terrain in your Castle, what's the benefit from doing so?"
 
 msgid "提升对应龙的生命恢复速度"
-msgstr "Increase the recovery speed of Dragon"
+msgstr "Increase the recovery speed of the Dragon"
 
 msgid "换个口味，没什么作用"
 msgstr "Nothing,just for a change"
 
 msgid "获得不同的资源产量加成"
-msgstr "Increase the output of resource"
+msgstr "Increase the resources output"
 
 msgid "在进攻敌方城市的时候，可以观察其地形，并派出相应的龙带领部队战斗，这么做的好处是？"
-msgstr "What's good to send a Red Dragon to a Desert enemy city ?"
+msgstr "What's the benifit from sending a Red Dragon to a Desert enemy city ?"
 
 msgid "提升龙的力量，并获得额外的兵种加成"
 msgstr "Increase the strength of the Red Dragon"
@@ -429,13 +429,13 @@ msgid "派出相应的兵种可以获得加成"
 msgstr "Increase the power of your troops"
 
 msgid "在联盟宫殿，可以变更联盟的地形，那么变更联盟的地形有什么特殊的用途？"
-msgstr "You can change Alliance Terrain in the Palace, what's the special use of changing it ?"
+msgstr "You can change Alliance Terrain in the Palace, what's the change for ?"
 
 msgid "击杀敌方单位时，会掉落对应龙的装备材料"
-msgstr "You will get the relevant materials when you killed the enemy troops"
+msgstr "You will get the relevant materials when you kill the enemy troops"
 
 msgid "用来区分敌我双方的领土不一样"
-msgstr "Just for making difference between the two Alliances"
+msgstr "Just to make difference between the two Alliances"
 
 msgid "你的城市正被敌军突袭"
 msgstr "Your city is under scout !"
@@ -528,7 +528,7 @@ msgid "制造%s装备完成"
 msgstr "%s has been produced"
 
 msgid "生产科技升级完成"
-msgstr "Science has been upgraded"
+msgstr "Science upgraded"
 
 msgid "孵化%s完成"
 msgstr "Incubating %s completed"
@@ -618,7 +618,7 @@ msgid "你有一封新的邮件"
 msgstr "You've got a new mail"
 
 msgid "制造装备完成"
-msgstr "Equipment has been produced"
+msgstr "Equipment produced"
 
 msgid "获得材料"
 msgstr "You got materials"
@@ -645,19 +645,19 @@ msgid "升级军事科技队列被占用"
 msgstr "Upgrade queue is busy"
 
 msgid "银币不足 需要补充 %d"
-msgstr "Coin isn't enough,need %d more"
+msgstr "Need %d more Coin"
 
 msgid "木人桩 需要补充 %d"
-msgstr "Spiling isn't enough,need %d more"
+msgstr "Need %d more Spiling"
 
 msgid "箭靶 需要补充 %d"
-msgstr "Arrow target isn't enough,need %d more"
+msgstr "Need %d more Arrow target"
 
 msgid "马鞍 需要补充 %d"
-msgstr "Saddle isn't enough,need %d more"
+msgstr "Need %d more Saddle"
 
 msgid "精铁零件 需要补充 %d"
-msgstr "Iron component isn't enough,need %d more"
+msgstr "Need %d more Iron component"
 
 msgid "突袭成功"
 msgstr "Scout Successfully"
@@ -750,22 +750,22 @@ msgid "地块未解锁"
 msgstr "locked"
 
 msgid "建筑已经达到最高等级"
-msgstr "Building Level max"
+msgstr "Max Building Level"
 
-msgid "建造数量已达建造上限"
-msgstr "Building amount max"
+msgid "升级城堡解锁此建筑"
+msgstr "Upgrade Castle to unlock this building"
 
 msgid "请首先提升城堡等级"
-msgstr "Upgrade Castle at first"
+msgstr "Upgrade Castle first"
 
 msgid "资源不足"
-msgstr "Resources aren't enough"
+msgstr "Need more Resources"
 
 msgid "建造队列不足"
 msgstr "No idle build queue"
 
 msgid "资源不足.建造队列不足"
-msgstr "Resources aren't enough.\\nNo idle build queue"
+msgstr "Need more Resources and build queue"
 
 msgid "金龙币不足"
 msgstr "Need more Dragon coins"
@@ -774,10 +774,10 @@ msgid "等级小于0级"
 msgstr "The level is less than 0"
 
 msgid "建筑正在升级"
-msgstr "The building is upgrading now"
+msgstr "The building is being upgraded"
 
 msgid "城民上限不足,无法升级小屋,请升级或建造住宅"
-msgstr "Not enough civilians\\nbuild or upgrade a dwelling first"
+msgstr "Need more civilians,build or upgrade a dwelling first"
 
 msgid "前置建筑等级未满足"
 msgstr "The Precondition isn't met"
@@ -810,10 +810,10 @@ msgid "数周之后…"
 msgstr "Several weeks later…"
 
 msgid "太好了，你终于醒过来了，觉醒者。。。我的名字叫赛琳娜，我们寻找那你这样的觉醒者已经很长时间了。。。"
-msgstr "Thank lord,you woke up finally…My name's Selina,we've sought \"The Arisen\" just like you for a long time. "
+msgstr "Thank lord, you wake up finally…My name's Selina,we've being looking for\"Arisen\" like you for a long time. "
 
 msgid "我建议你最好别乱动，你刚刚在同黑龙作战的过程中受了伤，伤口还没复原。。。"
-msgstr "You've seriously injured during the Dragon raid,so,please just take a good rest."
+msgstr "You're seriously injured during the Dragon raid,so,please just take a good rest."
 
 msgid "我知道你好友很多疑问，不过首先，我们需要前往寻找一个安全的地方？"
 msgstr "You must have lots of doubts,but firstly,we need to find a safe place to settle."
@@ -844,8 +844,7 @@ msgstr "Since you have the amazing power to lead Dragons,we definitely will defe
 
 msgid "不过可惜这座城市太弱小了，我们得重头开始发展。建造住宅为城市提供空闲城民，用于生产资源和招募部队。。。"
 msgstr ""
-"But we are too weak now,so we need to construct the city from the beginning…Build a dwelling for civillians,the civillians will be used to the resource "
-"building and recruit troops."
+"But we are too weak now,so we need to construct the city from the beginning…Build a dwelling for civillians, who can produce resources and recruit troops."
 
 msgid "非常好，现在我们来升级城堡！城堡等级越高，可以解锁更多建筑…"
 msgstr "Wow,great!Now let's upgrade the Castle,you can unlock more new buildings with higher Castle level"
@@ -854,19 +853,19 @@ msgid "点击解锁%s"
 msgstr "Tap to unlock %s"
 
 msgid "年轻人，带兵打仗可不是过家家，如果你信得过我这把老骨头，就让我来教教你。。。"
-msgstr "Young man,it's not joking to make wars,if you trust me,I can teach you some skills."
+msgstr "Young man, never make a joke of war. If you trust me,I can teach you some skills."
 
 msgid "很好，我没有看错你！从今天起，我，皇家骑士克里冈，愿带领我的手下追随大人征战四方。。。"
-msgstr "Good,You abusolutely a great leader! I,Clegane,will follow you with my all troops!"
+msgstr "Good,You're abusolutely a great leader! I,Clegane,will follow you with my all troops!"
 
 msgid "获得奖励"
 msgstr "Got rewards"
 
 msgid "领主大人，光靠城市基本的资源产出，无法满足我们的发展需求…"
-msgstr "My lord,only depends on resource buildings is far from enough for the empire…"
+msgstr "My lord, the resources produced in the city is far from enough for the empire…"
 
 msgid "我倒是知道一个地方，有些危险，但有着丰富的物资，也许我们尝试着探索。。。"
-msgstr "I know a place,though a little dangerous,it's extremely rich in various resources and special items,maybe we should explore it now. "
+msgstr "I know a place, which, though a little dangerous,is extremely rich in various resources and special items. Maybe we should explore it now. "
 
 msgid "点击飞艇进入探险地图"
 msgstr "Tap the Airship to enter myst"
@@ -899,7 +898,7 @@ msgid "建造木工小屋"
 msgstr "Build a Woodcutter Cabin"
 
 msgid "建造石匠小屋和矿工小屋,就算领主大人不在,工人们也会不停生产资源"
-msgstr "To build a quarrier cabin and miner cabin,even though you are not here,the worker will produce resources for you automatically."
+msgstr "Build a quarrier cabin and miner cabin, and the workers there will produce resources for you automatically, even though you're not around."
 
 msgid "建造石匠小屋"
 msgstr "Build a Quarrier Cabin"
@@ -912,28 +911,22 @@ msgid "reload"
 msgstr "reload"
 
 msgid "选择一个空地,将小屋移动到这里"
-msgstr "Choose a open ground and move the cabin there"
-
-msgid "升级城堡解锁此建筑"
-msgstr "Upgrade Castle to unlock this building"
-
-msgid "前往"
-msgstr "Go to"
+msgstr "Choose an open ground and move the cabin there"
 
 msgid "领主大人，这个世界上的觉醒者并不只有你一人。介入他们或者创建联盟邀请他们加入，会让我们发展得更顺利"
-msgstr "You're not the one and only \"Arisen\",join or create an Alliance,will make you much more stronger,and for sure,get more friends!"
+msgstr "You're not the only one \"Arisen\",join or create an Alliance, which will help you to get much stronger and meet more friends, for sure!"
 
 msgid "请点击目标"
 msgstr "Tap the target"
 
 msgid "这里是我们的目的地，点击屏幕左侧向左移动"
-msgstr "Here is our destination,tap the left arrow to move to the left"
+msgstr "This is our destination,tap the left arrow to move to the left"
 
 msgid "领主大人，探索会消耗体力值，但击败敌军可以获得资源和材料…"
-msgstr "My lord,explore will consume your energy,but you can get resources and materials by defeating the enemy in the myst."
+msgstr "My lord, exploring the land will consume your energy, but you can get resources and materials by defeating the enemy in the myst."
 
 msgid "亡灵兵种属性极高而且没有维护费用,有了特殊材料,我们就可以招募他们了."
-msgstr "The undead army has outstanding attributions and even take no upkeep cost. With these special materials,now we can summon them !"
+msgstr "The undead army has outstanding attributions and consumes nothing. With these special materials,now we can summon them !"
 
 msgid "返回城市"
 msgstr "Back to city"
@@ -952,6 +945,9 @@ msgstr "Sever disconnected!"
 
 msgid "发送邮件成功"
 msgstr "Mail sent Successfully"
+
+msgid "已向全体盟友发出帮助请求"
+msgstr "Help request has been sent to all allies"
 
 msgid "购买%s道具成功"
 msgstr "%s purchased Successfully"
@@ -987,25 +983,28 @@ msgid "学院科技研发速度+%d%%,"
 msgstr "Research speed of academy science+%d%%,"
 
 msgid "资源小车上限+%d,"
-msgstr "Upper limit of Cart number+%d,"
+msgstr "Cart Max Amount+%d,"
 
 msgid "资源小车回复速度+%d/小时,"
 msgstr "Cart recovery speed+%d/hour,"
 
 msgid "步兵招募速度+%.0f%%,"
-msgstr "Infantry recruiting speed+%.0f%%,"
+msgstr "Infantry recruiting speed+%d%%,"
 
 msgid "骑兵招募速度+%.0f%%,"
-msgstr "Cavalry recruiting speed+%.0f%%,"
+msgstr "Cavalry recruiting speed+%d%%,"
 
 msgid "弓手招募速度+%.0f%%,"
-msgstr "Archer recruiting speed+%.0f%%,"
+msgstr "Ranger recruiting speed+%d%%,"
 
 msgid "攻城系招募速度+%.0f%%,"
-msgstr "Siege recruiting speed+%.0f%%,"
+msgstr "Siege recruiting speed+%d%%,"
 
 msgid "立即升级"
 msgstr "Upgrade Now"
+
+msgid "是否消费%s金龙币"
+msgstr "Are you sure to spend %s Dragon Coins ?"
 
 msgid "升级"
 msgstr "Upgrade"
@@ -1014,7 +1013,7 @@ msgid "前置条件"
 msgstr "Precondition"
 
 msgid "建造队列已满"
-msgstr "No idle build queue"
+msgstr "No available building queue"
 
 msgid "木材"
 msgstr "Wood"
@@ -1056,7 +1055,7 @@ msgid "补充资源"
 msgstr "Supply resources"
 
 msgid "您当前没有足够的资源,是否花费魔法石立即补充"
-msgstr "You have not enough resources,do you want to supply with Dragon coins ?"
+msgstr "You need more resources,do you want to supply with Dragon coins ?"
 
 msgid "立即完成"
 msgstr "Finish Now"
@@ -1071,10 +1070,13 @@ msgid "立即开始"
 msgstr "Start now"
 
 msgid "您当前没有空闲的建筑,是否花费魔法石立即完成上一个队列"
-msgstr "You have not enough idle build queues,do you want to finish the last queue instantly by Dragon coin"
+msgstr "You have no available building queues, do you want to finish the last queue instantly by using Dragon coin"
 
 msgid "请首先建造%s"
 msgstr "Build %s first"
+
+msgid "前往"
+msgstr "Go to"
 
 msgid "前往商店"
 msgstr "Store"
@@ -1209,7 +1211,7 @@ msgid "你已领取%s"
 msgstr "You've already got %s"
 
 msgid "在未来的14天连续登陆，每天都会有来自王城的援军前来投奔你，连续登陆14天免费解锁第二条行军队列！"
-msgstr "Get reinforcements by logging in for 14 days. And you will unlock the 2nd March Queue at the 7th day !"
+msgstr "Get reinforcements by logging in for 14 days. And you will unlock the 2nd Marching Queue at the 7th day !"
 
 msgid "明天领取"
 msgstr "Get tommorrow"
@@ -1218,10 +1220,10 @@ msgid "第%s天"
 msgstr "Day %s"
 
 msgid "行军队列"
-msgstr "March queue"
+msgstr "Marching queue"
 
 msgid "建筑队列"
-msgstr "Build queue"
+msgstr "Building queue"
 
 msgid "前往充值"
 msgstr "Go to purchase"
@@ -1450,8 +1452,8 @@ msgstr "We don't need any protection!"
 
 msgid "本次联盟会战结束后奖励,总击杀越高奖励越高.获胜方获得70%的总奖励,失败方获得剩下的,获胜联盟击杀第1名的玩家还将获得金龙币奖励"
 msgstr ""
-"Rewards for the battle.The higher kill numbers,the better rewards.Winner Alliance will get the 70% of the total prizes,30% for the defeated Alliance,And the "
-"NO.1 Killer will get the extra Dragon Coins!"
+"Rewards for the battle. The more you kill, the better the rewards. Winner Alliance will get the 70% of the total prizes, and 30% for the defeated Alliance. The "
+"NO.1 Killer will get extra Dragon Coins!"
 
 msgid "无"
 msgstr "None"
@@ -1481,20 +1483,18 @@ msgid "联盟对战"
 msgstr "Alliance Battle"
 
 msgid "系统匹配两个战斗力相近的联盟，将彼此的领地拼接到一起。每场联盟匹配战，根据所在天梯服务器的等级，只要进行匹配就会有奖励。需要将军和盟主才能开战。"
-msgstr "When the Chief or General start the Alliance Battle,system will choose an Alliance which power is the most close to yours(or your opponent) to fight."
+msgstr "When the Chief or General initiates the Alliance Battle, the system will  automatically choose two alliances with similar powers and connect their lands."
 
 msgid "成功匹配到对手后，会有一个准备时间。此时无法对敌方进攻或者突袭，也无法移动城市的位置。请召唤你的盟友，让他们做好战斗准备。"
-msgstr ""
-"There will be a preparation time for your Alliance and your opponent's,you can call your allies and do some strategy works at this period.You can't scout or "
-"attack enemy at this period."
+msgstr "There will be a preparation time to summon your allies and get them prepared. You can't scout or attack your enemy during this period."
 
 msgid "进入战争期后，双方可以派兵攻打对方城市，抢占对方的村落。击杀敌方单位可以增加本场匹配战的总奖励。若击溃敌方玩家城市，还可以获得额外的荣耀值奖励加成。"
 msgstr ""
-"When in the Battle Period,you can scout and attack enemy's city,occupy their resource villages（Your enemy also can do this）.Kill enemy's troops to raise the "
-"prize of the Alliance Battle,if you smash down one enemy city,there will be a additional Honor prize for your Alliance!"
+"During the Battle Period, belligerents can attack and occupy each other. The more you kill, the more you get from the battle, and if you smash down your "
+"enemy's city,you will get an extra honor prize for your alliance!"
 
 msgid "联盟匹配战结束后，参战双方都会进入保护期，此时不会被其他联盟攻打。"
-msgstr "You and your Alliance will be abusolutely safe at this period,no one can hurt your Alliance."
+msgstr "Belligerents will not be attacked by other alliances after the battle for a certain peroid."
 
 msgid "概述"
 msgstr "Summary"
@@ -1596,10 +1596,10 @@ msgid "进攻"
 msgstr "Attack"
 
 msgid "进攻玩家城市将失去保护状态，确定继续派兵?"
-msgstr "You'll lose your protection if you attack enemy city,continue?"
+msgstr "You'll lose your protection if you attack others' city,continue?"
 
 msgid "目标城市已被击溃并进入保护期，可能无法发生战斗，你是否继续派兵?"
-msgstr "Maybe you won't hit the enemy city which is under protection,continue?"
+msgstr "The targeted city is under protection，you may not be able to start your attack, continue? "
 
 msgid "突袭"
 msgstr "Scout"
@@ -1623,13 +1623,13 @@ msgid "拥有"
 msgstr "Own"
 
 msgid "请选择一种资源"
-msgstr "Please choose one option"
+msgstr "Please choose one "
 
 msgid "选择捐赠的物资不足"
 msgstr "Not enough resources"
 
 msgid "可拆除,需要职位在将军以上的玩家,并且花费一定的荣誉值"
-msgstr "Ornaments on the Alliance Territory,spend Honor points to move it(Need General or above)"
+msgstr "General (and above) of an alliance can spend Honor points on moving Ornaments on the Alliance Territory."
 
 msgid "占地"
 msgstr "Area"
@@ -1683,7 +1683,7 @@ msgid "主题"
 msgstr "Subject"
 
 msgid "最多可输入%d字符"
-msgstr "%dcharacters at most"
+msgstr "%d characters at most"
 
 msgid "内容"
 msgstr "Content"
@@ -1716,7 +1716,7 @@ msgid "加入联盟"
 msgstr "Join Alliance"
 
 msgid "联盟强大功能!"
-msgstr "The Benefits of Joining an Alliance!"
+msgstr "The Benefits from Joining an Alliance!"
 
 msgid "立即加入联盟送金龙币"
 msgstr "Join Alliance and Get coins"
@@ -1746,7 +1746,7 @@ msgid "联盟商店"
 msgstr "Alliance Shop"
 
 msgid "忠诚值是玩家自己的属性，退出联盟后依然保留"
-msgstr "When leave Alliance,you won't lose your own loyalty points"
+msgstr "You won't lose your own loyalty points even if you quit the Alliance."
 
 msgid "忠诚值可以在联盟商店中购买道具"
 msgstr "You can buy special items in the Alliance shop with your Loyalty points"
@@ -1755,7 +1755,7 @@ msgid "向联盟捐赠资源可以增加忠诚值"
 msgstr "You can get Loyalty points by donating to your Alliance"
 
 msgid "帮助盟友加速科技研发和建筑升级的时间"
-msgstr "You can get Loyalty points by helping your allies to speed up their research or build time event"
+msgstr "You can earn Loyalty points by helping your allies to speed up their research or upgrading events."
 
 msgid "玩家信息"
 msgstr "Player Info"
@@ -1875,7 +1875,7 @@ msgid "需要职位是联盟盟主"
 msgstr "You're not the Chief"
 
 msgid "草地地形能产出绿龙装备材料，每当在自己的领土上完成任务，或者击杀一点战斗力的敌方单位，就由一定几率获得装备材料。"
-msgstr "Grassland can drop Green Dragon equipment materials when you finished the Shrine Event."
+msgstr "Grassland can produce Green Dragon equipment materials when you finish the Shrine Event."
 
 msgid "草地"
 msgstr "GrassLand"
@@ -1896,7 +1896,7 @@ msgid "红龙"
 msgstr "Red Dragon"
 
 msgid "%s地形能产出%s装备材料，每当在自己的领土上完成任务，或者击杀一点战斗力的敌方单位，就由一定几率获得装备材料。"
-msgstr "%s can drop %s equipment materials when you finished the Shrine Event."
+msgstr "%s can produce %s equipment materials when you finish the Shrine Event."
 
 msgid "修改"
 msgstr "Modify"
@@ -1929,31 +1929,31 @@ msgid "行军"
 msgstr "March"
 
 msgid "您还没有龙,快去孵化一只巨龙吧"
-msgstr "You have no Dragon now,go to incubate one!"
+msgstr "You have no Dragon yet. Get one!"
 
 msgid "龙未处于空闲状态"
-msgstr "The Dragon is busy now"
+msgstr "The Dragon is unavailable."
 
 msgid "选择的龙已经死亡"
 msgstr "The Dragon is dead now"
 
 msgid "派出的部队超过了所选龙的带兵上限"
-msgstr "The unit amounts are over the units capacity of this Dragon"
+msgstr "The unit amounts exceed the capacity of this Dragon."
 
 msgid "请选择要派遣的部队"
 msgstr "Please choose the troops which you want to send out"
 
 msgid "没有空闲的行军队列"
-msgstr "No free march queue"
+msgstr "No available marching queue"
 
 msgid "前往解锁"
 msgstr "Go to unlock"
 
 msgid "您的龙的HP低于20%,有很大几率阵亡,确定要派出吗?"
-msgstr "Your Dragon HP is below 20% and wound be dead in this battle,continue?"
+msgstr "Your Dragon HP is below 20％, which indicates it could be killed in this battle, continue?"
 
 msgid "最小"
-msgstr "Min"
+msgstr "Minimum"
 
 msgid "生命值"
 msgstr "HP"
@@ -2151,7 +2151,7 @@ msgid "招募"
 msgstr "Recruit"
 
 msgid "招募队列空闲"
-msgstr "Recruit queue is idle now"
+msgstr "Recruiting queue is available now"
 
 msgid "请选择一个兵种进行招募"
 msgstr "Choose one to recruit"
@@ -2175,7 +2175,7 @@ msgid "兵营%d级解锁"
 msgstr "Barrack Lv%d"
 
 msgid "招募士兵不能免费加速"
-msgstr "Can't free speed up for recruiting"
+msgstr "Can't speed up recruiting for free "
 
 msgid "铁匠铺"
 msgstr "Blacksmith"
@@ -2190,7 +2190,7 @@ msgid "绿龙装备"
 msgstr "Green"
 
 msgid "制造装备不能免费加速"
-msgstr "Can't free speed up for forging equipment"
+msgstr "Can't speed up forging equipment for free "
 
 msgid "制造装备"
 msgstr "Forge Equipment"
@@ -2223,13 +2223,13 @@ msgid "待建地基"
 msgstr "Foundation"
 
 msgid "建筑队列 %d/%d"
-msgstr "Build queue %d/%d"
+msgstr "Building queue %d/%d"
 
 msgid "城民上限不足,请首先升级或建造小屋"
 msgstr "Not enough civilians\\nbuild or upgrade a dwelling first"
 
 msgid "已达到最大建筑数量"
-msgstr "Building amount max"
+msgstr "Max building amount"
 
 msgid "满足条件"
 msgstr "Available"
@@ -2238,7 +2238,7 @@ msgid "您当前资源不足，补足需要金龙币"
 msgstr "Not enough resources"
 
 msgid "您当前没有空闲的建筑队列,是否花费魔法石立即完成上一个队列"
-msgstr "No idle build queue,do you want to spend Dragon Coins to finish the last queue immediately?"
+msgstr "No available building queue. Do you want to spend Dragon Coins to finish the last queue immediately?"
 
 msgid "建筑数量 5/5"
 msgstr "Building amount"
@@ -2259,7 +2259,7 @@ msgid "联盟未处于战争状态，不能使用此聊天频道!"
 msgstr "You can only use this chat channel during the Preparation and Battle Period."
 
 msgid "聊天内容不能为空"
-msgstr "Chat can't be empty"
+msgstr "No content"
 
 msgid "世界"
 msgstr "World"
@@ -2355,16 +2355,16 @@ msgid "提升科技研发速度"
 msgstr "Increase Science Research Speed"
 
 msgid "提升弓手招募速度"
-msgstr "Increase Archer Recruit Speed"
+msgstr "Increase Archer Recruiting Speed"
 
 msgid "提升步兵招募速度"
-msgstr "Increase Infantry Recruit Speed"
+msgstr "Increase Infantry Recruiting Speed"
 
 msgid "提升骑兵招募速度"
-msgstr "Increase Cavalry Recruit Speed"
+msgstr "Increase Cavalry Recruiting Speed"
 
 msgid "提升攻城机械招募速度"
-msgstr "Increase Siege Recruit Speed"
+msgstr "Increase Siege Recruiting Speed"
 
 msgid "城墙攻击"
 msgstr "Wall Attack"
@@ -2481,7 +2481,7 @@ msgid "你还未加入联盟"
 msgstr "You need to join an Alliance first"
 
 msgid "在联盟商店购买一次道具"
-msgstr "Buy a item in the Alliance shop"
+msgstr "Buy an item in the Alliance shop"
 
 msgid "协助一次盟友建造加速"
 msgstr "Help a ally to speed up"
@@ -2490,10 +2490,10 @@ msgid "对盟友进行一次协防"
 msgstr "Assist a ally city"
 
 msgid "加速一次正在升级的建筑"
-msgstr "Speed up a build queue"
+msgstr "Speed up a building queue"
 
 msgid "加速一支正在招募的兵种"
-msgstr "Speed up a Recruit queue"
+msgstr "Speed up a Recruiting queue"
 
 msgid "打造一件龙的装备"
 msgstr "Forge a equipment"
@@ -2502,7 +2502,7 @@ msgid "你还未建造铁匠铺"
 msgstr "You have no Blacksmith"
 
 msgid "在商店购买任意一个道具"
-msgstr "Buy a item in the Store"
+msgstr "Buy an item in the Store"
 
 msgid "每日任务不能免费加速"
 msgstr "You can't speed up the Daily Task"
@@ -2531,9 +2531,6 @@ msgstr "Equipment"
 msgid "消耗相同一个装备，重新随机装备的加成属性"
 msgstr "Consume one same equipment to random the attributions"
 
-msgid "巨龙%d星装备"
-msgstr "Star %s equipment"
-
 msgid "选择多余的装备进行强化"
 msgstr "Choose equipment to enhance"
 
@@ -2544,7 +2541,10 @@ msgid "装备强化成功"
 msgstr "Enhanced Successfully"
 
 msgid "装备已达到最大星级"
-msgstr "Star Level Max!"
+msgstr "Max Star Level!"
+
+msgid "可强化等级:%d/%d"
+msgstr "Level:%d/%d"
 
 msgid "当前数量"
 msgstr "Current Amount"
@@ -2557,6 +2557,9 @@ msgstr "Strength"
 
 msgid "领导力"
 msgstr "Leadership"
+
+msgid "巨龙%d星装备"
+msgstr "Star %s equipment"
 
 msgid "制造"
 msgstr "Forge"
@@ -2613,7 +2616,7 @@ msgid "还没有龙驻防"
 msgstr "No Garrison"
 
 msgid "龙巢同一时间只能孵化一只巨龙"
-msgstr "You can only incubate one Dragon at the same time"
+msgstr "You can incubate only one Dragon each time"
 
 msgid "开始孵化"
 msgstr "Incubate"
@@ -2622,7 +2625,7 @@ msgid "正在孵化巨龙"
 msgstr "Incubating"
 
 msgid "你同一时间只能孵化一条巨龙"
-msgstr "You can only incubate one Dragon at the same time"
+msgstr "You can incubate only one Dragon each time"
 
 msgid "龙的孵化没有免费加速"
 msgstr "You can't speed up the incubation"
@@ -2640,7 +2643,7 @@ msgid "学习条件"
 msgstr "Require"
 
 msgid "技能已经达到最大等级"
-msgstr "Skill Level Max"
+msgstr "Max Skill Level "
 
 msgid "技能学习成功!"
 msgstr "Learned Skill Successfully"
@@ -2655,7 +2658,7 @@ msgid "正在制作装备 %s"
 msgstr "Forging %s"
 
 msgid "建造队列空闲"
-msgstr "Forge queue is idle now"
+msgstr "The forge queue is available now"
 
 msgid "请选择一个装备进行制造"
 msgstr "Choose one to forge"
@@ -2679,7 +2682,7 @@ msgid "点击建造"
 msgstr "Tap to Build"
 
 msgid "不可思议，传说是真的？！觉醒者过让能够号令龙族。。。大人您真是厉害！"
-msgstr "Incredible!The rumour was true?! \"The Arisen\" can really order the Dragons! Marvelous,My lord!"
+msgstr "Incredible!The rumour is true?! \"The Arisen\" can really control the Dragons! Marvelous,My lord!"
 
 msgid "点击按钮：孵化"
 msgstr "Tap to Incubate"
@@ -2712,7 +2715,7 @@ msgid "获得%s x%d"
 msgstr "Got %s X%d"
 
 msgid "每日获得免费抽奖机会，激活VIP5 以上，每日可获得额外的免费抽奖机会"
-msgstr "You have free lottery chance everyday\\nThe higher VIP level you are,the more free chances"
+msgstr "You have one free lottery chance everyday.The higher VIP level you are,the more free chances you get."
 
 msgid "免费抽奖"
 msgstr "Free"
@@ -2721,7 +2724,7 @@ msgid "开始抽奖"
 msgstr "Start"
 
 msgid "购买任意金额的金龙币可以解锁高级抽奖,高级抽奖一次可以获得三种不同的道具"
-msgstr "You can get three kinds of item in one time"
+msgstr "You can get three kinds of items each time."
 
 msgid "前置建筑条件不满足, 请前往。"
 msgstr "You didn't meet the precondition"
@@ -2736,7 +2739,10 @@ msgid "正在升级到等级%d"
 msgstr "Upgrading to Lv%d"
 
 msgid "已经到最大等级了"
-msgstr "Level Max"
+msgstr "Max Level "
+
+msgid "可解锁建筑"
+msgstr "Buildings"
 
 msgid "从等级%d升级到等级%d"
 msgstr "Upgrading from Lv%d to Lv%d"
@@ -2757,7 +2763,7 @@ msgid "协助加速"
 msgstr "Help"
 
 msgid "帮助联盟成员加速并获得联盟忠诚值，激活VIP后能够提升为盟友加速效果"
-msgstr "Help allies to earn Loyalty points(VIP has a better effect on help speeding up)"
+msgstr "Help allies to earn Loyalty points(VIP has a better effect on helping allies to speed up events)"
 
 msgid "全部帮助"
 msgstr "Help All"
@@ -2796,7 +2802,7 @@ msgid "加入联盟才能激活帮助功能"
 msgstr "You can only use the help function when you in an Alliance"
 
 msgid "5分钟以下免费加速"
-msgstr "Free speed up when under 5 minutes"
+msgstr "Free speedup under 5 minutes"
 
 msgid "立即完成升级"
 msgstr "Finish Upgrading"
@@ -2807,7 +2813,7 @@ msgstr "Tap the VIP,Activate it for free"
 msgid ""
 "进入联盟地图\n"
 "体验更多玩法"
-msgstr "Enter the Alliance Territory,Have more funs!"
+msgstr "Enter the Alliance Territory, try more!"
 
 msgid "医院"
 msgstr "Hospital"
@@ -2887,9 +2893,6 @@ msgstr "City Coordinate"
 msgid "城市地形"
 msgstr "City Terrain"
 
-msgid "可解锁建筑"
-msgstr "Buildings"
-
 msgid "提示:升级城堡获得解锁建筑机会!"
 msgstr "Tips:Upgrade Castle to unlock new buildings"
 
@@ -2924,13 +2927,13 @@ msgid "等级 %d"
 msgstr "Level %d"
 
 msgid "提示：预留一定的空闲城民，兵营将他们训练成士兵"
-msgstr "Tips:Leave some civilians,and train them as your soldiers in the barrack"
+msgstr "Tips:Leave some civilians,and train them to be soldiers in the barrack."
 
 msgid "登录提示帮助2"
-msgstr "Tips:Hero's Blood can be used for upgrading Dragon skills,You can earn it in the Alliance Battle"
+msgstr "Tips:Hero's Blood can be used for upgrading Dragon skills. You can earn it in the Alliance Battle."
 
 msgid "登录提示帮助3"
-msgstr "Tips:You can get materials of Dragon equipment when you killed enough enemies in the Alliance Battle"
+msgstr "Tips:You can get materials of Dragon equipment when you kill enough enemies in the Alliance Battle"
 
 msgid "登录提示帮助4"
 msgstr "Tips:You can buy rare items with Loyalty Points in the Alliance Shop"
@@ -2939,19 +2942,19 @@ msgid "登录提示帮助5"
 msgstr "Tips:You can earn materials of Dragon equipment in the Alliance Shrine"
 
 msgid "登录提示帮助6"
-msgstr "Tips:You can only attack enemy players after you attending an Alliance Battle"
+msgstr "Tips:You can only attack enemy players after joining an Alliance Battle"
 
 msgid "登录提示帮助7"
-msgstr "Tips:You can get free VIP points when you logined everyday.Consecutive log in to get more VIP Points"
+msgstr "Tips:You can get free VIP points when you login everyday. Consecutive log in to get more VIP Points"
 
 msgid "登录提示帮助8"
-msgstr "Tips:The higher leadership of your Dragon,the more units you can dispatch for the battle"
+msgstr "Tips:The higher leadership your Dragon gets,the more units you can dispatch for the battle."
 
 msgid "登录提示帮助9"
 msgstr "Tips:Players will earn more materials of Dragon equipment in a Desert Alliance Terrain"
 
 msgid "登录提示帮助10"
-msgstr "Tips:The Green Dragon will much more stronger when attack a Grassland city of enemy"
+msgstr "Tips:The Green Dragon will get much stronger when it attacks enemies in a Grassland city."
 
 msgid "我已阅读并同意[用户协议]"
 msgstr "I have read and agreed [User Agreement]"
@@ -3152,7 +3155,7 @@ msgid "升级成功"
 msgstr "Level up Successfully"
 
 msgid "新的村落将会在下次系统刷新时出现"
-msgstr "The new village will be appeared in the next refresh time"
+msgstr "The new village will appear after the system being refreshed."
 
 msgid "显示联盟成员的村落采集资源熟练度,每采集一定的村落资源,就会增加一定的熟练度,熟练度越高,采集相应村落资源的速度就会越快"
 msgstr "All members' gathering proficiency will be displayed here.The more resources you gather,the higher proficiency and speed you'll have"
@@ -3227,10 +3230,10 @@ msgid "探索度 %.2f%%"
 msgstr "Exploration Process %.2f%%"
 
 msgid "返回起点"
-msgstr "Back to origin"
+msgstr "Return to the origin"
 
 msgid "返回当前关卡的起点需要消耗您10个金龙币,您是否同意?"
-msgstr "Back to origin will cost you 10 Dragon Coins,do you want to do this ?"
+msgstr "Returning to the origin will cost you 10 Dragon Coins,do you want to do this ?"
 
 msgid "快去孵化一只巨龙吧"
 msgstr "Go to incubate a Dragon"
@@ -3326,7 +3329,7 @@ msgid "当前城民增长"
 msgstr "Civilian Growth"
 
 msgid "正在建造或者升级小屋,不能拆除!"
-msgstr "You can't destroy it when the building is upgrading"
+msgstr "You can't destroy it when the building is being upgraded."
 
 msgid "是否确认拆除?"
 msgstr "Are you sure to destroy it ?"
@@ -3380,7 +3383,7 @@ msgid "抱歉"
 msgstr "Sorry"
 
 msgid "大人，我准备了一些小小测试，如果你每日能连续答对10道题，我会奖赏你哦！"
-msgstr "My Lord,there are some little test for you,if you can answer 10 question with right answers continuously,I'll prize you !"
+msgstr "My Lord,if you answer 10 questions with right answers continuously, you'll get some prize !"
 
 msgid "开始吧"
 msgstr "Let's begin"
@@ -3401,7 +3404,7 @@ msgid "塞琳娜:"
 msgstr "Selina:"
 
 msgid "你正在回答问题,如果关闭此界面，之前回答正确的题目数将被清零,是否继续关闭该界面"
-msgstr "If you closed the board,you'll lose all your process of this test,continue?"
+msgstr "If you close the board, you'll lose all your process of this test,continue?"
 
 msgid "更多"
 msgstr "More"
@@ -3431,7 +3434,7 @@ msgid "音效"
 msgstr "Sound"
 
 msgid "推送通知"
-msgstr "Push Notification"
+msgstr "Notice"
 
 msgid "已屏蔽用户"
 msgstr "Blocked"
@@ -3441,6 +3444,9 @@ msgstr "Suggestion"
 
 msgid "遇到问题"
 msgstr "Contact US"
+
+msgid "城堡等级达到8级解锁"
+msgstr "Require Castle Lv8"
 
 msgid "切换账号"
 msgstr "Switch Account"
@@ -3478,8 +3484,8 @@ msgstr "Status:Unbound"
 
 msgid "当前GameCenter下没有绑定的账号，你可以在此创建一个全新的游戏账号。点击下方的按钮后，会登出当前账号，使用新的GameCenter账号进行游戏"
 msgstr ""
-"There is no Dragonfall account in this Game Center ID,you can Create a new account by clicking \"New Game\" button below,you'll log out this account and play a "
-"new game which associated with your current Game Center"
+"There is no Dragonfall account in this Game Center ID,you can create a new account by clicking \"New Game\" button below,you'll log out this account and play "
+"Dragonfall with a new account."
 
 msgid "创建新账号"
 msgstr "New Game"
@@ -3497,15 +3503,15 @@ msgid "当前账号状态:未绑定"
 msgstr "Status:Unbound"
 
 msgid "你的账号尚未进行绑定，存在丢失风险"
-msgstr "Your account is unbound with Game Center,It's very dangerous for your game datas"
+msgstr "Your account is unbound with Game Center. You may lose the game data."
 
 msgid "请在系统设置中，登陆GameCenter 会自动绑定游戏账号。绑定后的游戏账号会更加安全，同时可以在其他IOS设备登陆此账号"
 msgstr ""
 "Please login your Game Center at iOS-Settings-Game Center,and click the \"Bind\" button below to bind your account.It'll be much safer,and you can play the "
-"game on other devices with the Game Center ID"
+"game on other devices with the Game Center ID."
 
 msgid "注意:如果当前账号状态是未绑定，切换Game Center的其他账号会导致当前账号的丢失，并无法找回，请慎重操作。"
-msgstr "Warning:If the current account is unbound,switch to another Game Center ID will lost your current Game data,and can't get it back, please be careful !"
+msgstr "Caution:If the current account is unbound, you will lose your current Game data by switching to another Game Center ID,and it can't be retreated !"
 
 msgid "确定绑定GameCenter账号?"
 msgstr "Are you sure to bind with this Game Center ID ?"
@@ -3526,7 +3532,7 @@ msgid "致命性Bug上报"
 msgstr "Critical Bugs"
 
 msgid "查实后我们将提供奖励"
-msgstr "We'll reward you after verified "
+msgstr "We'll reward you after verification."
 
 msgid "其他问题"
 msgstr "Other Issues"
@@ -3548,6 +3554,12 @@ msgid ""
 "确认后游戏将重新启动"
 msgstr "Change language to %s ?"
 
+msgid "通知"
+msgstr "Push"
+
+msgid "提醒"
+msgstr "Notice"
+
 msgid "建筑队列完成提醒"
 msgstr "Build and Upgrade"
 
@@ -3562,6 +3574,9 @@ msgstr "Tools and Equipments"
 
 msgid "瞭望塔预警提醒"
 msgstr "Watchtower"
+
+msgid "金龙币消费提醒"
+msgstr "Consumption Notice"
 
 msgid "切换服务器"
 msgstr "Transfer"
@@ -3579,7 +3594,7 @@ msgid "人口"
 msgstr "Population"
 
 msgid "你在这儿"
-msgstr "You're here"
+msgstr "Your current location"
 
 msgid "屏蔽用户"
 msgstr "Blocked"
@@ -3601,8 +3616,8 @@ msgstr "Attend"
 
 msgid "参与联盟GVE活动获得的奖励，击杀数量越高奖励越丰富，派出的部队会在战斗结束后返回。根据到达的先后顺序进行战斗排序"
 msgstr ""
-"The higher you killed in the Shrine,the better rewards you'll earn.\\nThe battle sequence is depend on the order of player's arrival,and the troops will return "
-"after the Shrine event is finished"
+"The more you kill in the Shrine,the better rewards you'll earn.The battle sequence is decided by the order of player's arrival, and the troops will return "
+"after the Shrine event is finished."
 
 msgid "驻扎中"
 msgstr "Stationed"
@@ -3611,10 +3626,10 @@ msgid "来自"
 msgstr "From"
 
 msgid "你已经向圣地派遣了部队"
-msgstr "You've already sent troops to the Shrine"
+msgstr "You can only send one troop to the Shrine each time."
 
 msgid "检测到你的行军时间大于圣地事件时间,可能部队未达到之前，圣地事件已结束。是否继续派兵?"
-msgstr "Your marching time is more than the Shrine ending time,maybe you won't reach there,continue?"
+msgstr "Your troop may not reach before the shrine event ends. Continue?"
 
 msgid "晋级成功"
 msgstr "Promoted"
@@ -3629,7 +3644,7 @@ msgid "回合%s"
 msgstr "Round %s"
 
 msgid "联盟获得"
-msgstr "Alliance Earned"
+msgstr "Alliance Prize"
 
 msgid "广场"
 msgstr "Square"
@@ -3662,7 +3677,7 @@ msgid "您派出的龙可能会因血量过低而死亡，您确定还要派出�
 msgstr "Your Dragon may die since its low HP,continue ?"
 
 msgid "目标城市已被击溃并进入保护期，可能无法发生战斗，你是否继续突袭?"
-msgstr "Maybe you won't scout the enemy city which is under protection,continue?"
+msgstr "You may not be able to scout the enemy city which is under protection,continue?"
 
 msgid "突袭玩家城市将失去保护状态，确定继续派兵?"
 msgstr "You'll lose your protection if you scout enemy city,continue?"
@@ -3809,7 +3824,7 @@ msgid "制作"
 msgstr "Produce"
 
 msgid "生产材料不能免费加速"
-msgstr "Can't free speed up for producing materials"
+msgstr "Can't speed up producing materials for free "
 
 msgid "对步兵攻击"
 msgstr "Attack against Infantry"
@@ -3848,7 +3863,7 @@ msgid "获取奖励"
 msgstr "Get"
 
 msgid "每日任务完成"
-msgstr "Daily Task has been finished"
+msgstr "Daily Task finished"
 
 msgid "正在"
 msgstr "In process of"
@@ -3863,7 +3878,7 @@ msgid "已经有一个任务正在进行中"
 msgstr "There's a task in progress"
 
 msgid "周围2格范围的住宅数量"
-msgstr "The amount of dwelling nearby 2 grids"
+msgstr "The amount of dwelling within 2 grids"
 
 msgid "增加"
 msgstr "Increase"
@@ -3908,13 +3923,13 @@ msgid "空闲"
 msgstr "Waiting for sale"
 
 msgid "选择你多余的资源或者材料进行出售"
-msgstr "Sell your excess resource and material"
+msgstr "Sell your unnecessary resources or materials"
 
 msgid "需要贸易行会"
 msgstr "Trade Guild is required"
 
 msgid "出售商品需要马车来运输，马车不足则无法出售。在学院提升马车的科技，能够提高每个马车容纳资源和材料的数量"
-msgstr "You need carts to transport the resource and material.\\nYou can increase the capacity of each cart by upgrading it in the Academy"
+msgstr "You need carts to transport the resources and materials.\\nYou can increase the capacity of each cart by upgrading it in the Academy."
 
 msgid "容纳资源"
 msgstr "Resource Capacity"
@@ -3938,7 +3953,7 @@ msgid "出售%s成功"
 msgstr "%s on sale now"
 
 msgid "治疗伤兵不能免费加速"
-msgstr "Can't free speed up for healing"
+msgstr "Can't speed up healing for free"
 
 msgid "解锁建筑"
 msgstr "Unlock"
@@ -3950,7 +3965,7 @@ msgid "解锁"
 msgstr "Unlock"
 
 msgid "建造队列"
-msgstr "Build queue"
+msgstr "Building queue"
 
 msgid "解锁需求"
 msgstr "Require"
@@ -4075,8 +4090,8 @@ msgstr "Current VIP Level"
 msgid "下一次登录"
 msgstr "Next Login"
 
-msgid "连续登录"
-msgstr "Login continuously"
+msgid "连续登录(天)"
+msgstr "Login continuously (day)"
 
 msgid "分钟"
 msgstr "minutes"
@@ -4094,10 +4109,10 @@ msgid "・不驻防巨龙，所有城市中的部队将不会进行防御。"
 msgstr "·Your troops won't defend if your Dragon is not garrisoned"
 
 msgid "・驻防巨龙能在敌方进攻时，自动带兵参战。"
-msgstr "·Dragon which is garrisoned will defend with your troops in city when the enemy attack you"
+msgstr "·Dragon garrisoned will defend with your troops in your city when the enemy attacks you."
 
 msgid "・驻防巨龙能防御敌方进行的突袭，获得城市的信息"
-msgstr "·Dragon which is garrisoned will defend with your troops in city when the enemy Scout you"
+msgstr "·Dragon garrisoned will defend with your troops in your city when the enemy scouts you."
 
 msgid "请选择一个巨龙驻防"
 msgstr "Choose a Dragon to Garrison"
@@ -4109,10 +4124,10 @@ msgid "城墙耐久度"
 msgstr "Wall Durability"
 
 msgid "・防御敌方进攻时，可能会损失城墙的生命值。"
-msgstr "·You may lose Wall Durability when enemy attack you"
+msgstr "·You may lose Wall Durability when the enemy attacks you."
 
 msgid "・当生命值为0时，地方联盟将击溃你的城市，获得额外的联盟积分。"
-msgstr "·The enemy will earn extra kill score when the durability of your city wall down to 0"
+msgstr "·The enemy will earn extra kill score if the durability of your city wall falls down to 0."
 
 msgid "选择%s会获得战斗力加成"
 msgstr "Choose %s to get extra power"
@@ -4154,10 +4169,10 @@ msgid "无部队"
 msgstr "No Troop"
 
 msgid "击杀敌方"
-msgstr "Enemy Lost"
+msgstr "Enemy Loss"
 
 msgid "我方损失"
-msgstr "You Lost"
+msgstr "Your Loss"
 
 msgid "城墙"
 msgstr "Wall"
@@ -4184,10 +4199,10 @@ msgid "签到"
 msgstr "Sign"
 
 msgid "永久行军队列+1"
-msgstr "March Queue +1"
+msgstr "Marching Queue +1"
 
 msgid "累计签到%s天，永久+1进攻队列"
-msgstr "Signed %s days,Get a bonus March Queue"
+msgstr "Signed %s days,Get a bonus Marching Queue"
 
 msgid "待命中"
 msgstr "Standby"
@@ -4247,19 +4262,19 @@ msgid "world"
 msgstr "world"
 
 msgid "尊敬的领主，您的城民真诚的恳求您归来，并为您准备了丰厚的礼品"
-msgstr "My Lord, civilians need you, and they have prepared some gifts for you"
+msgstr "My Lord, your civilians need you, and they have prepared some gifts for you."
 
 msgid "请求出错"
 msgstr "Request Error"
 
 msgid "设备不存在"
-msgstr "The Device is not exist"
+msgstr "The Device does not exist"
 
 msgid "用户不存在"
-msgstr "The User is not exist"
+msgstr "The User does not exist"
 
 msgid "玩家不存在"
-msgstr "The Player is not exist"
+msgstr "The Player does not exist"
 
 msgid "对象被锁定"
 msgstr "The object is locked"
@@ -4268,19 +4283,22 @@ msgid "需要重新登录"
 msgstr "You need to relog in"
 
 msgid "联盟不存在"
-msgstr "The Alliance is not exist"
+msgstr "The Alliance does not exist"
 
 msgid "建筑不存在"
-msgstr "The Building is not exist"
+msgstr "The Building does not exist"
 
 msgid "建筑坑位不合法"
 msgstr "Building Error"
 
+msgid "建造数量已达建造上限"
+msgstr "Max Building amount "
+
 msgid "建筑已达到最高等级"
-msgstr "Building Level Max"
+msgstr "Max Building Level "
 
 msgid "建筑升级前置条件未满足"
-msgstr "The Precondition isn't met"
+msgstr "The Precondition unfulfilled"
 
 msgid "宝石不足"
 msgstr "Not enough Dragon Coins"
@@ -4289,43 +4307,43 @@ msgid "只有生产建筑才能转换"
 msgstr "You can only transfer Lumbermill,Mill,Stonemason and Foundry"
 
 msgid "主体建筑必须大于等于1级"
-msgstr "The major building must more than Lv1"
+msgstr "The major building must be more than Lv1."
 
 msgid "小屋类型不存在"
-msgstr "The Cabin type is not exist"
+msgstr "The Cabin type does not exist."
 
 msgid "小屋数量超过限制"
 msgstr "Too many Cabins"
 
 msgid "建筑周围不允许建造小屋"
-msgstr "It's not allowed to build cabins around this Building"
+msgstr "It's not allowed to build cabins around this building."
 
 msgid "小屋坑位不合法"
 msgstr "Cabin Error"
 
 msgid "建造小屋会造成可用城民小于0"
-msgstr "It will make your civilians not enough if you build this cabin"
+msgstr "Your available civilians will drop down to 0 if you build this cabin."
 
 msgid "小屋升级前置条件未满足"
-msgstr "The Precondition isn't met"
+msgstr "The Precondition unfulfilled"
 
 msgid "小屋不存在"
-msgstr "The Cabin is not exist"
+msgstr "The Cabin does not exist."
 
 msgid "小屋正在升级"
 msgstr "The Cabin is upgrading"
 
 msgid "小屋已达到最高等级"
-msgstr "Cabin Level Max"
+msgstr "Max Cabin Level "
 
 msgid "升级小屋会造成可用城民小于0"
-msgstr "It will make your civilians not enough if you build this cabin"
+msgstr "Your available civilians will drop down to 0 if you upgrade this cabin."
 
 msgid "玩家事件不存在"
-msgstr "The Player event is not exist"
+msgstr "The Player event does not exist."
 
 msgid "还不能进行免费加速"
-msgstr "You can't free speed up yet"
+msgstr "You can't  speed up for free yet."
 
 msgid "建筑还未建造"
 msgstr "This building is not built yet"
@@ -4340,7 +4358,7 @@ msgid "不同类型的材料正在制造"
 msgstr "You are producing other materials now"
 
 msgid "材料事件不存在或者正在制作"
-msgstr "The material event is not exist or is producing now"
+msgstr "The material event does not exist or is proceeding now."
 
 msgid "此士兵还处于锁定状态"
 msgstr "The soldier is still locked"
@@ -4352,22 +4370,22 @@ msgid "士兵招募材料不足"
 msgstr "Not enough materials to recruit troops"
 
 msgid "龙装备制造事件已存在"
-msgstr "The Equipment forging event is not exist"
+msgstr "The Equipment forging event does not exist."
 
 msgid "制作龙装备材料不足"
 msgstr "Not enough materials to forge equipment"
 
 msgid "士兵不存在或士兵数量不合法"
-msgstr "The soldier is not exist or soldier amount error"
+msgstr "The soldier does not exist or soldier amount error"
 
 msgid "龙蛋早已成功孵化"
 msgstr "The Dragon egg has already been incubated"
 
 msgid "龙蛋孵化事件已存在"
-msgstr "The Dragon egg event is already existed"
+msgstr "The Dragon egg event already exists."
 
 msgid "装备与龙的星级不匹配"
-msgstr "The equipment is not matching the Star Level"
+msgstr "The equipment does not match the Star Level."
 
 msgid "龙装备数量不足"
 msgstr "Not enough equipments"
@@ -4379,25 +4397,25 @@ msgid "此分类还没有配置装备"
 msgstr "You need to put on an equipment"
 
 msgid "装备已到最高星级"
-msgstr "Equipment Star Level Max"
+msgstr "Max Equipment Star Level "
 
 msgid "被牺牲的装备不存在或数量不足"
-msgstr "The equipment which you sacrificed was not exist or not enough of it"
+msgstr "The equipment which you sacrificed did not exist or not enough of it"
 
 msgid "龙技能不存在"
-msgstr "The Dragon skill is not exist"
+msgstr "The Dragon skill does not exist"
 
 msgid "此龙技能还未解锁"
 msgstr "The Dragon skill is not unlocked yet"
 
 msgid "龙技能已达最高等级"
-msgstr "Dragon skill Level Max"
+msgstr "Max Dragon skill Level "
 
 msgid "英雄之血不足"
 msgstr "Not enough Hero's Blood"
 
 msgid "龙的星级已达最高"
-msgstr "Dragon Star Level Max"
+msgstr "Max Dragon Star Level "
 
 msgid "龙的等级未达到晋级要求"
 msgstr "You've not reached the Dragon level for Promotion"
@@ -4406,28 +4424,28 @@ msgid "龙的装备未达到晋级要求"
 msgstr "You've not raised all equipments to the max star level"
 
 msgid "每日任务不存在"
-msgstr "This Daily Task is not exist"
+msgstr "This Daily Task does not exist"
 
 msgid "每日任务已达最高星级"
 msgstr "This Task is already reached the max star level"
 
 msgid "每日任务事件已存在"
-msgstr "This Daily Task is already existed"
+msgstr "This Daily Task already existed"
 
 msgid "每日任务事件不存在"
-msgstr "This Daily Task is not exist"
+msgstr "This Daily Task does not exist"
 
 msgid "每日任务事件还未完成"
 msgstr "This Daily Task is not finished yet"
 
 msgid "邮件不存在"
-msgstr "The mail is not exist"
+msgstr "The mail does not exist"
 
 msgid "战报不存在"
-msgstr "The Report is not exist"
+msgstr "The Report does not exist"
 
 msgid "所选择的龙已经阵亡"
-msgstr "The Dragon you selected is dead"
+msgstr "The Dragon you select is already dead"
 
 msgid "没有龙驻防在城墙"
 msgstr "No Dragon is garrisoned"
@@ -4442,7 +4460,7 @@ msgid "马车数量不足"
 msgstr "Not enough carts"
 
 msgid "商品不存在"
-msgstr "The goods are not exist"
+msgstr "The goods do not exist"
 
 msgid "商品还未卖出"
 msgstr "The goods are not sold out"
@@ -4454,16 +4472,16 @@ msgid "商品已经售出"
 msgstr "The goods are sold out"
 
 msgid "科技已达最高等级"
-msgstr "Science Level Max"
+msgstr "Max Science Level"
 
 msgid "前置科技条件不满足"
-msgstr "The Precondition isn't met"
+msgstr "The Precondition unfulfilled"
 
 msgid "所选择的科技正在升级"
-msgstr "The science you selected is upgrading now"
+msgstr "The science you select is being upgraded now."
 
 msgid "士兵已达最高星级"
-msgstr "Soldier Star Level Max"
+msgstr "Max Soldier Star Level "
 
 msgid "科技点不足"
 msgstr "Not enough Science Points"
@@ -4481,16 +4499,16 @@ msgid "小屋当前不能被移动"
 msgstr "You can't move this cabin now"
 
 msgid "不能修改为相同的玩家名称"
-msgstr "This name is already exist"
+msgstr "This name already exist"
 
 msgid "玩家名称已被其他玩家占用"
-msgstr "This name is already exist"
+msgstr "This name already exist"
 
 msgid "玩家未加入联盟"
 msgstr "You've not joined any Alliance"
 
 msgid "行军事件不存在"
-msgstr "The march event is not exist"
+msgstr "The march event does not exist"
 
 msgid "联盟正处于战争期"
 msgstr "Your Alliance is at the Battle Period"
@@ -4511,7 +4529,7 @@ msgid "今日登陆奖励已领取"
 msgstr "You've already got the rewards"
 
 msgid "在线时间不足,不能领取"
-msgstr "You need to online more to get this reward"
+msgstr "You need to stay online more to get this reward."
 
 msgid "此时间节点的在线奖励已经领取"
 msgstr "You've already got the rewards"
@@ -4541,7 +4559,7 @@ msgid "日常任务还未完成"
 msgstr "You've not finished the task"
 
 msgid "成长任务不存在"
-msgstr "The task is not exist"
+msgstr "The task does not exist"
 
 msgid "成长任务奖励已经领取"
 msgstr "You've already got the rewards"
@@ -4553,7 +4571,7 @@ msgid "重复的订单号"
 msgstr "Order number is repeated"
 
 msgid "订单商品不存在"
-msgstr "The order is not exist"
+msgstr "The order does not exist"
 
 msgid "订单验证失败"
 msgstr "Order validate failed"
@@ -4568,22 +4586,22 @@ msgid "玩家已加入了联盟"
 msgstr "You've already joined an Alliance"
 
 msgid "联盟名称已经存在"
-msgstr "The Alliance name is already exist"
+msgstr "The Alliance name already exists."
 
 msgid "联盟标签已经存在"
-msgstr "The Alliance tag is already exist"
+msgstr "The Alliance tag already exist"
 
 msgid "联盟操作权限不足"
 msgstr "You have no authority"
 
 msgid "联盟没有此玩家"
-msgstr "No this player in the Alliance"
+msgstr "This player is not in the Alliance."
 
 msgid "联盟正在战争准备期或战争期,不能将玩家踢出联盟"
 msgstr "You can't kick player when your Alliance is at the Preparation or Battle Period"
 
 msgid "不能将职级高于或等于自己的玩家踢出联盟"
-msgstr "You can't kick player whose Position is same or higher than you"
+msgstr "You can't kick players with the same or a higher rank than you."
 
 msgid "别逗了,你是不盟主好么"
 msgstr "Come on, you are not the Chief"
@@ -4592,7 +4610,7 @@ msgid "别逗了,仅当联盟成员为空时,盟主才能退出联盟"
 msgstr "Come on, you can only leave the Alliance when there is no member"
 
 msgid "联盟不允许直接加入"
-msgstr "The Alliance is not allowed to join directly"
+msgstr "You can't join the Alliance  directly."
 
 msgid "联盟申请已满,请撤消部分申请后再来申请"
 msgstr "The applications are full"
@@ -4604,7 +4622,7 @@ msgid "此联盟的申请信息已满,请等候其处理后再进行申请"
 msgstr "The applications are full"
 
 msgid "联盟申请事件不存在"
-msgstr "The application event is exist"
+msgstr "The application event does not exist"
 
 msgid "玩家已经取消对此联盟的申请"
 msgstr "The player has already cancelled this application"
@@ -4613,19 +4631,19 @@ msgid "此玩家的邀请信息已满,请等候其处理后再进行邀请"
 msgstr "The applications are full"
 
 msgid "联盟邀请事件不存在"
-msgstr "Invite event is exist"
+msgstr "Invite event does not exist"
 
 msgid "玩家已经是盟主了"
 msgstr "You are already the Chief"
 
 msgid "盟主连续7天不登陆时才能购买盟主职位"
-msgstr "You can only run for the Chief only if the Chief has been left over 7 days"
+msgstr "You can only run for the Chief when the Chief has been left over 7 days"
 
 msgid "此事件已经发送了加速请求"
 msgstr "You've already request the speed up event"
 
 msgid "帮助事件不存在"
-msgstr "The help event is not exist"
+msgstr "The help event does not exist"
 
 msgid "不能帮助自己加速建造"
 msgstr "You can not help yourself to speed up"
@@ -4634,7 +4652,7 @@ msgid "您已经帮助过此事件了"
 msgstr "You've already speed up the event"
 
 msgid "联盟建筑已达到最高等级"
-msgstr "Building Level Max"
+msgstr "Max Building Level "
 
 msgid "此联盟事件已经激活"
 msgstr "The Alliance event is already activated"
@@ -4646,7 +4664,7 @@ msgid "所选择的龙领导力不足"
 msgstr "Not enough leadership"
 
 msgid "关卡激活事件不存在"
-msgstr "The Event is not exist"
+msgstr "The Event does not exist"
 
 msgid "此联盟圣地关卡还未解锁"
 msgstr "The stage is not unlocked"
@@ -4661,7 +4679,7 @@ msgid "未能找到战力相匹配的联盟"
 msgstr "No matched Enemy Alliance was found"
 
 msgid "联盟战报不存在"
-msgstr "The Alliance report is not exist"
+msgstr "The Alliance report does not exist"
 
 msgid "联盟战胜利方不能发起复仇"
 msgstr "You can't revenge when you are the winner"
@@ -4691,10 +4709,10 @@ msgid "目标联盟非当前匹配的敌对联盟"
 msgstr "The Alliance is not the matched enemy Alliance"
 
 msgid "村落不存在"
-msgstr "The village is not exist"
+msgstr "The village does not exist"
 
 msgid "村落采集事件不存在"
-msgstr "The gather event is not exist"
+msgstr "The gather event does not exist"
 
 msgid "没有此玩家的协防部队"
 msgstr "No assist troop"
@@ -4715,7 +4733,7 @@ msgid "玩家忠诚值不足"
 msgstr "Not enough Loyalty points"
 
 msgid "联盟事件不存在"
-msgstr "The Alliance event is not exist"
+msgstr "The Alliance event does not exist"
 
 msgid "非法的联盟状态"
 msgstr "Alliance status error"
@@ -4742,10 +4760,10 @@ msgid "此联盟建筑不允许移动"
 msgstr "You can't move this Alliance Building"
 
 msgid "礼品不存在"
-msgstr "The gift is not exist"
+msgstr "The gift does not exist"
 
 msgid "服务器不存在"
-msgstr "The Server is not exist"
+msgstr "The Server does not exist"
 
 msgid "不能切换到相同的服务器"
 msgstr "You can't transfer to the same server"
@@ -4781,7 +4799,7 @@ msgid "新手引导已经完成"
 msgstr "You've finished the guide"
 
 msgid "用于建造高等级建筑和研发高级科技"
-msgstr "Used to build high level buildings and research high level sciences"
+msgstr "Used for higher level buildings or sciences"
 
 msgid "用于在训练营地提升步兵的属性"
 msgstr "Used to increase the attributions of infantry in the Training Ground"
@@ -4793,55 +4811,55 @@ msgid "用于在马厩提升骑兵的属性"
 msgstr "Used to increase the attributions of cavalry in the Stable"
 
 msgid "打造红龙，蓝龙和绿龙1星装备所必须的材料"
-msgstr "The materials that used to forge Star Lv1 equipment of the Red,Blue and Green Dragon"
+msgstr "The materials used to forge Star Lv1 equipment of the Red,Blue and Green Dragon"
 
 msgid "打造红龙，蓝龙和绿龙2星装备所必须的材料"
-msgstr "The materials that used to forge Star Lv2 equipment of the Red,Blue and Green Dragon"
+msgstr "The materials used to forge Star Lv2 equipment of the Red,Blue and Green Dragon"
 
 msgid "打造红龙，蓝龙和绿龙3星装备所必须的材料"
-msgstr "The materials that used to forge Star Lv3 equipment of the Red,Blue and Green Dragon"
+msgstr "The materials used to forge Star Lv3 equipment of the Red,Blue and Green Dragon"
 
 msgid "打造红龙，蓝龙和绿龙4星装备所必须的材料"
-msgstr "The materials that used to forge Star Lv4 equipment of the Red,Blue and Green Dragon"
+msgstr "The materials used to forge Star Lv4 equipment of the Red,Blue and Green Dragon"
 
 msgid "打造红龙2星装备所必须的材料"
-msgstr "The materials that used to forge Star Lv2 equipment of the Red Dragon"
+msgstr "The materials used to forge Star Lv2 equipment of the Red Dragon"
 
 msgid "打造红龙3星装备所必须的材料"
-msgstr "The materials that used to forge Star Lv3 equipment of the Red Dragon"
+msgstr "The materials used to forge Star Lv3 equipment of the Red Dragon"
 
 msgid "打造红龙4星装备所必须的材料"
-msgstr "The materials that used to forge Star Lv4 equipment of the Red Dragon"
+msgstr "The materials used to forge Star Lv4 equipment of the Red Dragon"
 
 msgid "打造蓝龙2星装备所必须的材料"
-msgstr "The materials that used to forge Star Lv2 equipment of the Blue Dragon"
+msgstr "The materials used to forge Star Lv2 equipment of the Blue Dragon"
 
 msgid "打造蓝龙3星装备所必须的材料"
-msgstr "The materials that used to forge Star Lv3 equipment of the Blue Dragon"
+msgstr "The materials used to forge Star Lv3 equipment of the Blue Dragon"
 
 msgid "打造蓝龙4星装备所必须的材料"
-msgstr "The materials that used to forge Star Lv4 equipment of the Blue Dragon"
+msgstr "The materials used to forge Star Lv4 equipment of the Blue Dragon"
 
 msgid "打造绿龙2星装备所必须的材料"
-msgstr "The materials that used to forge Star Lv2 equipment of the Green Dragon"
+msgstr "The materials used to forge Star Lv2 equipment of the Green Dragon"
 
 msgid "打造绿龙3星装备所必须的材料"
-msgstr "The materials that used to forge Star Lv3 equipment of the Green Dragon"
+msgstr "The materials used to forge Star Lv3 equipment of the Green Dragon"
 
 msgid "打造绿龙4星装备所必须的材料"
-msgstr "The materials that used to forge Star Lv4 equipment of the Green Dragon"
+msgstr "The materials used to forge Star Lv4 equipment of the Green Dragon"
 
 msgid "打造红龙1星装备所必须的材料"
-msgstr "The materials that used to forge Star Lv1 equipment of the Red Dragon"
+msgstr "The materials used to forge Star Lv1 equipment of the Red Dragon"
 
 msgid "打造蓝龙1星装备所必须的材料"
-msgstr "The materials that used to forge Star Lv1 equipment of the Blue Dragon"
+msgstr "The materials used to forge Star Lv1 equipment of the Blue Dragon"
 
 msgid "打造绿龙1星装备所必须的材料"
-msgstr "The materials that used to forge Star Lv1 equipment of the Green Dragon"
+msgstr "The materials used to forge Star Lv1 equipment of the Green Dragon"
 
 msgid "用于招募亡灵兵种的材料。在探险过程中有一定几率会遭遇亡灵部队，击败他们后获得"
-msgstr "Materials that used to summon the undead army. You can get them by defeating the undead in the myst"
+msgstr "Materials used to summon the undead army. You can get them by defeating the undead in the myst."
 
 msgid "士兵材料"
 msgstr "Soldier Material"
@@ -5297,16 +5315,16 @@ msgid "黑龙"
 msgstr "Dark Dragon"
 
 msgid "仅供红龙装备"
-msgstr "Only for Red Dragon"
+msgstr "Only for the Red Dragon"
 
 msgid "仅供蓝龙装备"
-msgstr "Only for Blue Dragon"
+msgstr "Only for the Blue Dragon"
 
 msgid "仅供绿龙装备"
-msgstr "Only for Green Dragon"
+msgstr "Only for the Green Dragon"
 
 msgid "仅供黑龙装备"
-msgstr "Only for Dark Dragon"
+msgstr "Only for the Dark Dragon"
 
 msgid "头部"
 msgstr "Head"
@@ -5330,7 +5348,7 @@ msgid "左护臂"
 msgstr "Right Arm"
 
 msgid "提升龙的生命值上限"
-msgstr "Increase Dragon Max HP"
+msgstr "Increase Max Dragon  HP"
 
 msgid "提升步兵的攻击和生命"
 msgstr "Increase Infantry attack & HP"
@@ -5351,10 +5369,10 @@ msgid "增加行军速度"
 msgstr "Increase March Speed"
 
 msgid "增加敌方士气损失"
-msgstr "Increase the lost of enemy morale"
+msgstr "Increase the loss of enemy morale"
 
 msgid "减少己方士气损失"
-msgstr "Decrease the lost of your morale"
+msgstr "Decrease the loss of your morale"
 
 msgid "增加带兵量"
 msgstr "Increase Dragon leadership"
@@ -5761,7 +5779,7 @@ msgid "秩序大厅管理着联盟领地上的村落，并可以消耗荣耀值�
 msgstr "The Order Hall is the place to manage all the villages that on your Alliance Territory. Upgrade it to increase the amount of village."
 
 msgid "月门是通往王城的传送门，占领王城后，联盟每天可以获得大量的荣耀值。升级月门可以提升参加王城争夺战的部队数量。"
-msgstr "The Moongate is the gate to the Wonders, Alliance will earn a huge number of Honor Points when occupied one of the Wonders."
+msgstr "The Moongate is the gate to the Wonders, Alliance will earn a huge number of Honor Points when it occupies one of the Wonders."
 
 msgid "圣地消耗感知力预知联盟将要发生的危机，解决这些危机能够获得丰厚奖励。提升圣地等级能够提升感知力上限和恢复速度。"
 msgstr "The Shrine is the place to join an Alliance Event which provides you huge rewards. Upgrade it to increase the Perception Amount and its recovery Speed."
@@ -5784,10 +5802,10 @@ msgid "荣耀的火焰"
 msgstr "The Flame of Honor"
 
 msgid "邪恶苏醒"
-msgstr "Evil Awakening"
+msgstr "Evil Awoken"
 
 msgid "黑龙带来的灾难还没有结束，一批强盗又在四处作乱，我们需要控制局势"
-msgstr "The situation gets even worse when the bandits expand the influence caused by the Dark Dragon. We must to get it under control."
+msgstr "The situation gets even worse when the bandits expand the influence caused by the Dark Dragon. We must get it under control."
 
 msgid "寻找线索"
 msgstr "Search for clues"
@@ -5861,7 +5879,7 @@ msgid "黑龙军团"
 msgstr "The Dark Dragon"
 
 msgid "叛军的头目尽然已经向黑龙效忠，我们不是他们的对手必须尽快撤离"
-msgstr "We must retreat our troops as soon as possible since the head of rebel has show his loyalty to the Dark Dragon."
+msgstr "We must retreat our troops as soon as possible since the head of rebel has shown his loyalty to the Dark Dragon."
 
 msgid "生死搏斗"
 msgstr "Struggle"
@@ -5891,19 +5909,19 @@ msgid "贪婪者"
 msgstr "Greed"
 
 msgid "我们赢得了暂时的胜利，但黑龙军团留下的战利品却成为了其他领主争夺的目标，我们必须防止事态恶化"
-msgstr "We have a provisional victory, but the trophies left by the Dark Dragon were becoming the new target of  other lords, we must stop it."
+msgstr "We have a provisional victory, but the trophies left by the Dark Dragon attract attentions from other landlords. We must get the situation under control."
 
 msgid "纷争又起"
 msgstr "Clash"
 
 msgid "大战刚刚结束，这些贪婪的领主就不顾联盟之约，公然抢夺战利品，这样的行为必须受到惩罚"
-msgstr "The war is just over, greedy lords who have ignored the Alliance protocol start to rob the trophies, they must be punished."
+msgstr "The war is just over, greedy lords who ignore the Alliance protocol start to rob the trophies, they must be punished."
 
 msgid "旧仇恨"
 msgstr "The Feud"
 
 msgid "原来我们的强大早就遭来其他领主的不满，既然他们不顾联盟之约，我们也无需手下留情"
-msgstr "We are envied of our great power, as they have ignored our protocol,we need to show no mercy to them."
+msgstr "We are envied of our great power. Since they ignore our protocol, we need to show no mercy to them."
 
 msgid "抉择"
 msgstr "The Choice"
@@ -5927,7 +5945,7 @@ msgid "混乱之王"
 msgstr "Chaos"
 
 msgid "混乱的联盟需要新的王者，如果这是命运的安排，那我们只有接受这个挑战"
-msgstr "The chaos Alliance needs a new king, we will take the challenge if it’s the fate."
+msgstr "The chaos calls for a new king, we will take the challenge if it’s the fate."
 
 msgid "瞭望塔"
 msgstr "Watchtower"
@@ -6224,13 +6242,13 @@ msgid "孵化绿龙"
 msgstr "Incubate Green Dragon"
 
 msgid "红龙能提升部队在草地上的作战能力。"
-msgstr "Red Dragon will enhance your ability when fight at the Desert"
+msgstr "Red Dragon will enhance your ability  at the Desert."
 
 msgid "蓝龙能提升部队在草地上的作战能力。"
-msgstr "Blue Dragon will enhance your ability when fight at the Icefield"
+msgstr "Blue Dragon will enhance your ability at the Icefield."
 
 msgid "绿龙能提升部队在草地上的作战能力。"
-msgstr "Green Dragon will enhance your ability when fight at the Grassland"
+msgstr "Green Dragon will enhance your ability at the Grassland."
 
 msgid "起重机"
 msgstr "Crane"
@@ -7159,13 +7177,13 @@ msgid "装有其他道具的箱子，随机获得一种道具（可多个），�
 msgstr "Open it to get items,need Golden Key"
 
 msgid "用来打开铜宝箱的钥匙"
-msgstr "The key used to open the Coppery Case"
+msgstr "Used to open the Coppery Case"
 
 msgid "用来打开银宝箱的钥匙"
-msgstr "The key used to open the Silver Case"
+msgstr "Used to open the Silver Case"
 
 msgid "用来打开金宝箱的钥匙"
-msgstr "The key used to open the Golden Case"
+msgstr "Used to open the Golden Case"
 
 msgid "激活你当前的VIP等级特权，效果持续%s"
 msgstr "Activates VIP privileges for %s"
@@ -7205,6 +7223,9 @@ msgstr "Twilight  Highlands"
 
 msgid "幽魂谷"
 msgstr "Ghostlands"
+
+msgid "不再提醒"
+msgstr "Don't prompt again"
 
 msgid "评价我们"
 msgstr "Rate us"
@@ -7321,7 +7342,7 @@ msgid "上限"
 msgstr "Amount"
 
 msgid "提示：预留一定的空闲城民，兵营将这些空闲城民训练成士兵"
-msgstr "Tips:Leave some civilians,and train them as your soldiers in the barrack"
+msgstr "Tips:Leave some civilians,and train them to be your soldiers in the barrack"
 
 msgid "技能"
 msgstr "Skill"
@@ -7333,10 +7354,10 @@ msgid "打开"
 msgstr "Open"
 
 msgid "查看已拥有的建筑"
-msgstr "Check buildings you owned"
+msgstr "Check your buildings"
 
 msgid "查看现有的士兵"
-msgstr "Check Troops you owned"
+msgstr "Check your troops "
 
 msgid "查看材料"
 msgstr "Check Materials"
@@ -7388,10 +7409,10 @@ msgid "立即制造"
 msgstr "Build Now"
 
 msgid "制造队列"
-msgstr "Build Queue"
+msgstr "Building Queue"
 
 msgid "制造队列 %d/%d"
-msgstr "Build Queue %d/%d"
+msgstr "Building Queue %d/%d"
 
 msgid "需要银币 %s/%s"
 msgstr "Need Coin %s/%s"
@@ -7400,7 +7421,7 @@ msgid "材料不足"
 msgstr "Not enough Materials"
 
 msgid "完成当前制造队列,需要%d"
-msgstr "Need %d Dragon Coins to finish the last build event"
+msgstr "Need %d Dragon Coins to finish the last building event"
 
 msgid "银币不足,需要%d"
 msgstr "Not enough Coins,need %d Dragon Coins to supply"
@@ -7472,10 +7493,10 @@ msgid "上古遗迹 等级%d"
 msgstr "Ancient Relics Lv%d"
 
 msgid "你还想进入上古遗迹, 一名僧侣却拦住了你说道, \"我们正在祈福, 无关人等还是赶紧离开!\""
-msgstr "You want to enter the Ancient Relics, but a monk stopped you and said:\"We're praying now,please leave!\""
+msgstr "You want to enter the Ancient Relics, but a monk stops you,\"We're praying now, please leave!\""
 
 msgid "一群僧侣正在上古遗迹中进行仪式。见你走近, 其中一名僧侣小声告诉你, 只要你捐献20个金龙币, 他们便赐予你一件宝物。"
-msgstr "Some monks are holding a ceremony there, a little monk tell you, if you donate 20 Dragon Coins, they will give you a treasure"
+msgstr "Some monks take a ceremony there. One of them tells you that they will give you a treasure if you donate 20 Dragon Coins."
 
 msgid "离开"
 msgstr "Leave"
@@ -7487,22 +7508,22 @@ msgid "野外营地等级%d"
 msgstr "Camp Lv%d"
 
 msgid "你看到营地有火光, 走到近前却是空空荡荡。你感觉纳闷, 这里怎么如此眼熟。"
-msgstr "You saw a firelight,but there was nothing when you closed. You were confused since it's so familiar here."
+msgstr "You saw a firelight, but there's nothing when you gets there. You feel confused since it looks familiar there."
 
 msgid "你击败了部队的主力, 但部队剩下的士兵向你发起了冲锋。"
-msgstr "You've defeat the main force of enemy but the rest of them "
+msgstr "You've defeat the main force of enemy, but the rest of them attack you."
 
 msgid "你大胆地闯入了一支不明身份部队的营地, 一场战斗一触即发。"
-msgstr "You entered an camp with unknown troops, a battle was coming"
+msgstr "You enter a camp taken by unknown troops. A battle is coming."
 
 msgid "建筑废墟 等级%d"
 msgstr "Ruins Lv%d"
 
 msgid "你又花费了数小时搜索建筑废墟, 却一无所获。"
-msgstr "You've spent several hours to search the ruins and exhausted, but unfortunately, you've found nothing"
+msgstr "You search in vain for hours over the ruins. Nothing found."
 
 msgid "废弃的建筑残骸, 不知道是否能找到一些有价值的东西, 是否愿意花费3点体力搜索这里?"
-msgstr "A place of ruins, maybe you can find something valuable, do you want to spend 3 energy to explore here ?"
+msgstr "A place of ruins. Maybe you can find something valuable, do you want to spend 3 energy points to explore here ?"
 
 msgid "搜索"
 msgstr "Explore"
@@ -7511,13 +7532,13 @@ msgid "坠毁的飞艇 等级%d"
 msgstr "Crashed Airship"
 
 msgid "一艘飞艇的残骸, 可惜里面的物资早已被人洗劫一空。"
-msgstr "A wreck of airship,but there was nothing in it"
+msgstr "A wreck of airship. There is nothing in it."
 
 msgid "强盗眼看不是你的对手, 想要烧毁这里的物资, 如果不阻拦他们那就得不到任何东西。"
-msgstr "The bandit are gonna destroy of all these supplies,stop them !"
+msgstr "The bandit are gonna destroy all these supplies, stop them !"
 
 msgid "你发现了一艘坠毁的飞艇, 其中的有大量的物资, 但当你走近时却发现那里已经被强盗占领。"
-msgstr "You found a wreck of airship that full with supplies but occupied by the bandit"
+msgstr "You find a wreck of airship full of supplies, but it's occupied by the bandit."
 
 msgid "未探索"
 msgstr "Unexplored"
@@ -7535,7 +7556,7 @@ msgid "在没有什么能阻挡你前进了, 你可以直接前往下一个关�
 msgstr "Nothing can stop you now,you can go to the next stage"
 
 msgid "你能感觉到一个一场强大的生物驻守在这里, 阻挡着你继续前进, 但想要前往下一关卡必须击败它。"
-msgstr "You can feel a terrible creature was around here to stop you forward, if you want to go the next stage, you must defeat it "
+msgstr "You can feel a terrible creature is around here to stop you move forward. If you want to go the next stage, you must defeat it."
 
 msgid "传送"
 msgstr "Teleport"
@@ -7556,7 +7577,7 @@ msgid "完成奖励"
 msgstr "Rewards"
 
 msgid "关卡探索进度"
-msgstr "Explore progress"
+msgstr "Exploring progress"
 
 msgid "探索进度达到100%可以领取，我看好你哟。"
 msgstr "You will earn Dragon Coins after exploring this floor to 100% progress"
@@ -7565,16 +7586,16 @@ msgid "击杀进度:"
 msgstr "Progress:"
 
 msgid "击杀完成之后可获得大量银币，加油哦。"
-msgstr "Wanted:You will earn a great quantity of coins by killing troop as the wanted"
+msgstr "Wanted:You will earn a great quantity of coins by killing certain type of troops."
 
 msgid "龙骨 等级%d"
 msgstr "Dragon Bones"
 
 msgid "\"我已经把一切都给了你, \"虚空中灵魂道, \"你还是快走吧!\""
-msgstr "\"I gave you all I had\", the soul said,\"you better go now!\""
+msgstr "\"I've already gave you all I have\", the soul says,\"you'd better go now!\""
 
 msgid "你发现了一具阵亡的巨龙骸骨, 恍惚间, 有声音在低语, \"你想获得我的知识, 还是我的生命?\""
-msgstr "You found a huge pile of Dragon bones,suddenly, you heard a whisper said that,\"what do you want from me, my knowledge, or my life ?\""
+msgstr "You find a huge pile of Dragon bones. Suddenly, there's a whisper coming from nowhere,\"What do you want from me, my knowledge, or my life ?\""
 
 msgid "生命"
 msgstr "Life"
@@ -7589,9 +7610,7 @@ msgid "方尖碑 等级%d"
 msgstr "Obelisk Lv%d"
 
 msgid "你发现一座用你从未见过的石头雕刻的石碑。你上前仔细观察一番, 石碑上突然闪现一个神秘的符文没入你的身体, 让你感觉身体中充满了力量。"
-msgstr ""
-"You found an obelisk that was made of unknown stones. Suddenly,  a mystic rune got into your body when you was looking over it, it made you feel much more "
-"stronger than before"
+msgstr "You find an obelisk made of unknown stones. Suddenly,  a mystic rune gets into your body when you looks over it. You feel much stronger than before."
 
 msgid "探索"
 msgstr "Explore"
@@ -7600,16 +7619,16 @@ msgid "废弃的石匠小屋 等级%d"
 msgstr "Abandoned Quarrier Cabin Lv%d"
 
 msgid "你已经除掉了这里的叛军, 这里的居民都向你表示感激!"
-msgstr "You have already defeated the rebel,civilians here was so appriciated"
+msgstr "You have already defeated the rebel, the civilians there are so appriciated to you."
 
 msgid "你已经突破了叛军第一层的防御, 你感觉到前方有更强大的敌人..."
 msgstr "You have already broken through the first line of defense, but there are more powerful enemies forward…"
 
 msgid "胜利就在眼前, 前方就是叛军的将领, 将击败你便能永久占领此地!"
-msgstr "Here is the general of rebel, defeat him !"
+msgstr "Here comes the General of the rebel. Defeat him !"
 
 msgid "这里被叛军占领, 居民希望你能将他们赶走并愿意向你提供一些报酬。"
-msgstr "This place was occupied by the rebel, civilians here hope you to drive them away and then give you a great deal of rewards"
+msgstr "This place is occupied by the rebel, civilians here hope you could drive them away and they will give you a great deal of rewards."
 
 msgid "选择关卡"
 msgstr "Stage"
@@ -7618,7 +7637,7 @@ msgid "飞艇"
 msgstr "Airship"
 
 msgid "手下向你汇报, 飞艇一切准备就绪, \"长官希望前往何处?\""
-msgstr "Airship check complete, nothing unusual, where we to go, my lord ?"
+msgstr "Airship check completes, nothing unusual, where we to go, my lord ?"
 
 msgid "起点"
 msgstr "Origin"
@@ -7627,10 +7646,10 @@ msgid "勇士之墓 等级%d"
 msgstr "Tomb of Warriors"
 
 msgid "陵墓之中仿佛有几个人形虚影正在向你招手, 你不禁背心一凉, 还是赶紧离开吧"
-msgstr "As if there are a few shadows is waving to you, better go"
+msgstr "It seems that there are a few shadows waving to you. You'd better leave."
 
 msgid "你发现一些未被安葬的战士的遗骸, 是否花费10个金龙币将他们安葬?"
-msgstr "You found some warriors' bones, do you want to spend 10 Dragon Coins to bury them ?"
+msgstr "You find some warriors' bones, do you want to spend 10 Dragon Coins to bury them ?"
 
 msgid "安葬"
 msgstr "Bury"
@@ -7720,19 +7739,13 @@ msgid "您当前没有足够的资源"
 msgstr "Not enough resources"
 
 msgid "是否花费魔法石立即补充"
-msgstr "Do you want to supply by Dragon Coins"
+msgstr "Do you want to get supplied by Dragon Coins?"
 
 msgid "立即开始招募，招募士兵会消耗城民"
 msgstr "Recruit now (Recruit will cost civilians)"
 
 msgid "点击招募"
 msgstr "Tap to recruit"
-
-msgid "正在征税"
-msgstr "Levying"
-
-msgid "当前没有进行征税"
-msgstr "There is no levy event"
 
 msgid "单位产能"
 msgstr "Output"
@@ -7798,7 +7811,7 @@ msgid "联盟拥有"
 msgstr "Alliance Own"
 
 msgid "需要军需官或以上权限"
-msgstr "You need a Elite level or a higher level"
+msgstr "You need a Elite or a higher level"
 
 msgid "请输入正确的进货数量"
 msgstr "Please enter a correct stock number"

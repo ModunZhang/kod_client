@@ -688,7 +688,7 @@ function WidgetEventTabButtons:UpgradeBuildingHelpOrSpeedup(building)
     end
 end
 function WidgetEventTabButtons:MiliTaryTechUpgradeOrSpeedup(event)
-    if DataUtils:getFreeSpeedUpLimitTime()>event:GetTime() then
+    if DataUtils:getFreeSpeedUpLimitTime() > event:GetTime() and event:GetTime() > 2 then
         NetManager:getFreeSpeedUpPromise(event:GetEventType(),event:Id())
     else
         if not Alliance_Manager:GetMyAlliance():IsDefault() then
@@ -993,7 +993,7 @@ function WidgetEventTabButtons:OnProductionTechnologyEventDataRefresh()
 end
 
 function WidgetEventTabButtons:ProductionTechnologyEventUpgradeOrSpeedup(event)
-    if DataUtils:getFreeSpeedUpLimitTime() > event:GetTime() then
+    if DataUtils:getFreeSpeedUpLimitTime() > event:GetTime() and event:GetTime() > 2 then
         NetManager:getFreeSpeedUpPromise("productionTechEvents",event:Id())
     else
         if not Alliance_Manager:GetMyAlliance():IsDefault() then

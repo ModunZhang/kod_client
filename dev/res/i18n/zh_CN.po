@@ -7,7 +7,7 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _\n"
 "X-Poedit-Basepath: ../../scripts/app/\n"
-"PO-Revision-Date: 2015-07-03 19:54+0800\n"
+"PO-Revision-Date: 2015-07-07 22:48+0800\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: xls-to-po 1.0\n"
@@ -752,8 +752,8 @@ msgstr "地块未解锁"
 msgid "建筑已经达到最高等级"
 msgstr "建筑已经达到最高等级"
 
-msgid "建造数量已达建造上限"
-msgstr "建造数量已达建造上限"
+msgid "升级城堡解锁此建筑"
+msgstr "升级城堡来解锁此建筑"
 
 msgid "请首先提升城堡等级"
 msgstr "请首先提升城堡等级"
@@ -911,12 +911,6 @@ msgstr "reload"
 msgid "选择一个空地,将小屋移动到这里"
 msgstr "选择一处空地,将小屋移动到那里"
 
-msgid "升级城堡解锁此建筑"
-msgstr "升级城堡来解锁此建筑"
-
-msgid "前往"
-msgstr "前往"
-
 msgid "领主大人，这个世界上的觉醒者并不只有你一人。介入他们或者创建联盟邀请他们加入，会让我们发展得更顺利"
 msgstr "领主大人，这个世界上的觉醒者并不只有你一人。加入其他觉醒者的联盟或创建自己的联盟，会让我们发展得更迅速。"
 
@@ -949,6 +943,9 @@ msgstr "服务器连接断开!"
 
 msgid "发送邮件成功"
 msgstr "发送邮件成功"
+
+msgid "已向全体盟友发出帮助请求"
+msgstr "已向全体盟友发出帮助请求"
 
 msgid "购买%s道具成功"
 msgstr "购买%s道具成功"
@@ -1003,6 +1000,9 @@ msgstr "攻城系招募速度+%.0f%%,"
 
 msgid "立即升级"
 msgstr "立即升级"
+
+msgid "是否消费%s金龙币"
+msgstr "是否确认消费%s金龙币？"
 
 msgid "升级"
 msgstr "升级"
@@ -1072,6 +1072,9 @@ msgstr "您当前没有空闲的建筑队列,是否花费金龙币立即完成�
 
 msgid "请首先建造%s"
 msgstr "请首先建造%s"
+
+msgid "前往"
+msgstr "前往"
 
 msgid "前往商店"
 msgstr "前往商店"
@@ -2522,9 +2525,6 @@ msgstr "装备"
 msgid "消耗相同一个装备，重新随机装备的加成属性"
 msgstr "消耗相同一个装备，重新随机装备的加成属性"
 
-msgid "巨龙%d星装备"
-msgstr "巨龙%d星装备"
-
 msgid "选择多余的装备进行强化"
 msgstr "选择多余的装备进行强化"
 
@@ -2537,6 +2537,9 @@ msgstr "装备强化成功"
 msgid "装备已达到最大星级"
 msgstr "装备已达到最大星级"
 
+msgid "可强化等级:%d/%d"
+msgstr "可强化等级:%d/%d"
+
 msgid "当前数量"
 msgstr "当前数量"
 
@@ -2548,6 +2551,9 @@ msgstr "力量"
 
 msgid "领导力"
 msgstr "领导力"
+
+msgid "巨龙%d星装备"
+msgstr "巨龙%d星装备"
 
 msgid "制造"
 msgstr "制造"
@@ -2729,6 +2735,9 @@ msgstr "正在升级到等级%d"
 msgid "已经到最大等级了"
 msgstr "已经到最大等级了"
 
+msgid "可解锁建筑"
+msgstr "可解锁建筑"
+
 msgid "从等级%d升级到等级%d"
 msgstr "从等级%d升级到等级%d"
 
@@ -2879,9 +2888,6 @@ msgstr "城市坐标"
 
 msgid "城市地形"
 msgstr "城市地形"
-
-msgid "可解锁建筑"
-msgstr "可解锁建筑"
 
 msgid "提示:升级城堡获得解锁建筑机会!"
 msgstr "提示:升级城堡获得解锁建筑机会!"
@@ -3424,7 +3430,7 @@ msgid "音效"
 msgstr "音效"
 
 msgid "推送通知"
-msgstr "推送通知"
+msgstr "通知"
 
 msgid "已屏蔽用户"
 msgstr "已屏蔽用户"
@@ -3434,6 +3440,9 @@ msgstr "我有建议"
 
 msgid "遇到问题"
 msgstr "遇到问题"
+
+msgid "城堡等级达到8级解锁"
+msgstr "城堡等级达到8级后解锁"
 
 msgid "切换账号"
 msgstr "切换账号"
@@ -3535,6 +3544,12 @@ msgstr ""
 "修改游戏语言为%s?\n"
 "确认后游戏将重新启动"
 
+msgid "通知"
+msgstr "通知"
+
+msgid "提醒"
+msgstr "提醒"
+
 msgid "建筑队列完成提醒"
 msgstr "建筑队列完成提醒"
 
@@ -3549,6 +3564,9 @@ msgstr "工具&装备制造完成提醒"
 
 msgid "瞭望塔预警提醒"
 msgstr "瞭望塔预警提醒"
+
+msgid "金龙币消费提醒"
+msgstr "金龙币消费提醒"
 
 msgid "切换服务器"
 msgstr "切换服务器"
@@ -3596,7 +3614,7 @@ msgid "来自"
 msgstr "来自"
 
 msgid "你已经向圣地派遣了部队"
-msgstr "你已经向圣地派遣了部队"
+msgstr "你同一时间只能向圣地派遣一支部队"
 
 msgid "检测到你的行军时间大于圣地事件时间,可能部队未达到之前，圣地事件已结束。是否继续派兵?"
 msgstr "你的行军时间大于圣地事件时间,可能部队未达到之前，圣地事件已结束。是否继续派兵?"
@@ -4060,8 +4078,8 @@ msgstr "当前VIP等级"
 msgid "下一次登录"
 msgstr "下一次登录"
 
-msgid "连续登录"
-msgstr "连续登录"
+msgid "连续登录(天)"
+msgstr "连续登录(天)"
 
 msgid "分钟"
 msgstr "分钟"
@@ -4260,6 +4278,9 @@ msgstr "建筑不存在"
 
 msgid "建筑坑位不合法"
 msgstr "建筑坑位不合法"
+
+msgid "建造数量已达建造上限"
+msgstr "建造数量已达建造上限"
 
 msgid "建筑已达到最高等级"
 msgstr "建筑已达到最高等级"
@@ -5537,25 +5558,25 @@ msgid "研发速度"
 msgstr "研发速度"
 
 msgid "训练营地提供步兵的相关科技，增强步兵的各方面属性，建筑等级越高招募步兵的速度越快"
-msgstr "训练营地提供步兵的相关科技，增强步兵的各方面属性，建筑等级越高招募步兵的速度越快"
+msgstr "训练营地提供步兵的相关科技，增强步兵的各方面属性，更能提升星级，改变兵种造型。建筑等级越高招募步兵的速度越快"
 
 msgid "步兵招募速度"
 msgstr "步兵招募速度"
 
 msgid "猎手大厅提供弓手的相关科技，增强弓手的各方面属性，建筑等级越高招募弓手的速度越快"
-msgstr "猎手大厅提供弓手的相关科技，增强弓手的各方面属性，建筑等级越高招募弓手的速度越快"
+msgstr "猎手大厅提供弓手的相关科技，增强弓手的各方面属性，更能提升星级，改变兵种造型。建筑等级越高招募弓手的速度越快"
 
 msgid "弓手招募速度"
 msgstr "弓手招募速度"
 
 msgid "马厩提供骑兵的相关科技，增强骑兵的各方面属性，建筑等级越高招募骑兵的速度越快"
-msgstr "马厩提供骑兵的相关科技，增强骑兵的各方面属性，建筑等级越高招募骑兵的速度越快"
+msgstr "马厩提供骑兵的相关科技，增强骑兵的各方面属性，更能提升星级，改变兵种造型。建筑等级越高招募骑兵的速度越快"
 
 msgid "骑兵招募速度"
 msgstr "骑兵招募速度"
 
 msgid "车间提供攻城器械的相关科技，增强攻城器械的各方面属性，建筑等级越高招募攻城器械的速度越快"
-msgstr "车间提供攻城器械的相关科技，增强攻城器械的各方面属性，建筑等级越高招募攻城器械的速度越快"
+msgstr "车间提供攻城器械的相关科技，增强攻城器械的各方面属性，更能提升星级，改变兵种造型。建筑等级越高招募攻城器械的速度越快"
 
 msgid "攻城器械招募速度"
 msgstr "攻城器械招募速度"
@@ -7137,6 +7158,9 @@ msgstr "暮光高地"
 msgid "幽魂谷"
 msgstr "幽魂谷"
 
+msgid "不再提醒"
+msgstr "不再提醒"
+
 msgid "评价我们"
 msgstr "评价我们"
 
@@ -7656,12 +7680,6 @@ msgstr "立即开始招募，招募士兵会消耗城民"
 
 msgid "点击招募"
 msgstr "点击招募"
-
-msgid "正在征税"
-msgstr "正在征税"
-
-msgid "当前没有进行征税"
-msgstr "当前没有进行征税"
 
 msgid "单位产能"
 msgstr "单位产能"
