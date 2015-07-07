@@ -181,7 +181,7 @@ function DataUtils:getDragonBaseStrengthAndVitality(star,level)
     star = checkint(star)
     level = checkint(level)
     return config_dragonLevel[level].strength + config_dragonStar[star].initStrength,
-    config_dragonLevel[level].vitality + config_dragonStar[star].initVitality
+        config_dragonLevel[level].vitality + config_dragonStar[star].initVitality
 end
 
 function DataUtils:getDragonEquipmentAttribute(body,max_star,star)
@@ -214,7 +214,7 @@ function DataUtils:getDragonMaxHp(star,level,skills,equipments)
     local vitality = self:getTotalVitalityFromJson(star,level,skills,equipments)
     return vitality * 2
 end
--- 通过buff名获得士兵属性字段 
+-- 通过buff名获得士兵属性字段
 function DataUtils:getSoldierBuffFieldFromKey(key)
     if key == 'hpAdd' then
         return 'hp'
@@ -1112,9 +1112,48 @@ function DataUtils:DoBattle(attacker, defencer, terrain, enemy_name)
     end
     return report
 end
-
-
+-- 获取资源保护百分比
+local function getBuildingBuffForResourceProtectPercent(resourceName)
+    local resourceBuildingMap = {
+        wood = "lumbermill",
+        stone = "stoneMason",
+        iron = "foundry",
+        food = "mill"
+    }
+    local buildingName = resourceBuildingMap[resourceName]
+    local buildings = City:GetFirstBuildingByType("buildingName")
+    local protectPercent = 0
+    if buildings:GetLevel() > 0 then
+        protectPercent = protectPercent + buildings:GetProtection()
+    end
+    return protectPercent
+end
+local function getPlayerItemBuffForResourceLootPercentSubtract()
+    local itemBuff = 0
+    local eventType = "masterOfDefender"
+    if ItemManager:IsBuffActived( eventType ) then
+        itemBuff = items.buffTypes.masterOfDefender.effect2
+    end
+    return itemBuff
+end
+local function getPlayerVipForResourceLootPercentSubtract()
+    local vipBuffAddPercent = 0
+    if User:IsVIPActived() then
+        vipBuffAddPercent = VipLevel[User:GetVipLevel()].storageProtectAdd
+    end
+    return vipBuffAddPercent
+end
+function DataUtils:GetResourceProtectPercent( resource_name )
+    local basePercent = PlayerInitData.intInit.playerResourceProtectPercent.value / 100
+    local buildingBuffAddPercent = getBuildingBuffForResourceProtectPercent(resource_name)
+    local itemBuffAddPercent = getPlayerItemBuffForResourceLootPercentSubtract(defencePlayerDoc)
+    local vipBuffAddPercent = getPlayerVipForResourceLootPercentSubtract()
+    local finalPercent = basePercent + buildingBuffAddPercent + itemBuffAddPercent + vipBuffAddPercent
+    finalPercent = finalPercent > 0.9 and 0.9 or finalPercent < 0.1 and 0.1 or finalPercent
+    return finalPercent
+end
 
 return DataUtils
+
 
 
