@@ -273,7 +273,9 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
                         })
             else
                 if app:GetGameDefautlt():IsOpenGemRemind() then
-                    UIKit:showConfirmUseGemMessageDialog(_("提示"),string.format(_("是否消费%d金龙币"),self.treat_now_gems), function()
+                    UIKit:showConfirmUseGemMessageDialog(_("提示"),string.format(_("是否消费%s金龙币"),
+                        string.formatnumberthousands(self.treat_now_gems)
+                    ), function()
                         treat_fun()
                     end,true,true)
                 else
@@ -521,6 +523,7 @@ function WidgetTreatSoldier:OnCountChanged(count)
     self.gem_label:setString(self.treat_now_gems)
 end
 return WidgetTreatSoldier
+
 
 
 
