@@ -149,7 +149,7 @@ function WidgetMaterials:GetMateriasl( m_type )
     end
 end
 function WidgetMaterials:OpenMaterialDetails(material_type,material_name,num)
-    UIKit:newWidgetUI("WidgetMaterialDetails",material_type,material_name,num):AddToCurrentScene()
+UIKit:newWidgetUI("WidgetMaterialDetails",material_type,material_name,num):AddToCurrentScene()
 end
 function WidgetMaterials:CreateSelectButton()
     self.dropList = WidgetRoundTabButtons.new(

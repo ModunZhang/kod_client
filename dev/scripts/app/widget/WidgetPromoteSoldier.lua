@@ -99,7 +99,13 @@ function WidgetPromoteSoldier:UpgradeButtons()
 
                 local results = self:IsAbleToUpgradeNow()
                 if LuaUtils:table_empty(results) then
-                    upgrade_listener()
+                    if app:GetGameDefautlt():IsOpenGemRemind() then
+                        UIKit:showConfirmUseGemMessageDialog(_("提示"),string.format(_("是否消费%d金龙币"),self:GetInstantUpgradeGems()), function()
+                            upgrade_listener()
+                        end,true,true)
+                    else
+                        upgrade_listener()
+                    end
                 else
                     self:PopNotSatisfyDialog(function ()end,results)
                 end
@@ -312,6 +318,7 @@ function WidgetPromoteSoldier:GetNextLevelConfig()
     return NORMAL[self.soldier_type.."_"..(City:GetSoldierManager():GetStarBySoldierType(self.soldier_type)+1)]
 end
 return WidgetPromoteSoldier
+
 
 
 

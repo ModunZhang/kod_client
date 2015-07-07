@@ -978,7 +978,10 @@ function NetManager:getRequestAllianceToSpeedUpPromise(eventType, eventId)
     return get_blocking_request_promise("logic.allianceHandler.requestAllianceToSpeedUp", {
         eventType = eventType,
         eventId = eventId,
-    }, "请求加速失败!"):done(get_player_response_msg)
+    }, "请求加速失败!"):done(get_player_response_msg):done(function(result)
+            GameGlobalUI:showTips(_("提示"),_("已向全体盟友发出帮助请求"))
+            return result
+        end)
 end
 -- 免费加速建筑升级
 function NetManager:getFreeSpeedUpPromise(eventType, eventId)

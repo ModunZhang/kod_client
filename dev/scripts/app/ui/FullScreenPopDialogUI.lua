@@ -27,10 +27,10 @@ function FullScreenPopDialogUI:Init(listener)
     -- npc image
     display.newSprite("Npc.png"):align(display.LEFT_BOTTOM, -50, -14):addTo(bg)
     -- 对话框 bg
-    local tip_bg = display.newSprite("back_ground_342x228.png", 406,210):addTo(bg)
+    local tip_bg = display.newScale9Sprite("back_ground_342x228.png", 406,324,cc.size(342,228),cc.rect(40,40,262,148)):addTo(bg):align(display.TOP_CENTER)
     self.tip_bg= tip_bg
     -- 称谓label
-    cc.ui.UILabel.new({
+    self.m_title_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         text = _("主人").."!",
         font = UIKit:getFontFilePath(),
@@ -54,7 +54,11 @@ function FullScreenPopDialogUI:Init(listener)
     -- 默认加入ok button
     self:CreateOKButton()
 end
-
+function FullScreenPopDialogUI:SetMessageBgSize(width,height)
+    self.tip_bg:size(width,height)
+    self.m_title_label:setPositionY(self.tip_bg:getContentSize().height - 10)
+    return self
+end
 function FullScreenPopDialogUI:SetTitle(title)
     self.title:setString(title)
     return self
@@ -72,7 +76,7 @@ function FullScreenPopDialogUI:SetPopMessage(message)
     -- 提示内容
     local  listview = UIListView.new{
         -- bgColor = UIKit:hex2c4b(0x7a100000),
-        viewRect = cc.rect(14,10, w, 170),
+        viewRect = cc.rect(14,10, w, self.tip_bg:getContentSize().height - 60),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(self.tip_bg)
     local item = listview:newItem()
@@ -100,7 +104,7 @@ function FullScreenPopDialogUI:CreateOKButton(params)
                     listener()
                 end
             end
-        end):align(display.CENTER, display.cx+200, display.top-610):addTo(self)
+        end):align(display.CENTER, params.x or display.cx+200, params.y or display.top-610):addTo(self)
     self.ok_button = ok_button
     return self
 end
@@ -149,7 +153,7 @@ function FullScreenPopDialogUI:CreateCancelButton(params)
                     listener()
                 end
             end
-        end):align(display.CENTER, display.cx+6, display.top-610):addTo(self)
+        end):align(display.CENTER, params.x or display.cx+6,params.y or display.top-610):addTo(self)
 
         if tolua.type(name) == "table" then
             -- 只支持2行

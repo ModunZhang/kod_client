@@ -209,8 +209,8 @@ function GameUIAllianceMemberInfo:AdapterPlayerList()
     else
         table.insert(r,{_("最后登陆"),NetService:formatTimeAsTimeAgoStyleByServerTime(player.lastLoginTime)})
     end
-    table.insert(r,{_("战斗力"),player.power})
-    table.insert(r,{_("击杀"),player.kill})
+    table.insert(r,{_("战斗力"),string.formatnumberthousands(player.power)})
+    table.insert(r,{_("击杀"),string.formatnumberthousands(player.kill)})
 
     return r
 end

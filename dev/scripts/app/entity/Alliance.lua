@@ -77,6 +77,7 @@ property(Alliance, "villages", {})
 property(Alliance, "villageLevels", {})
 property(Alliance, "allianceFight", {})
 property(Alliance, "allianceFightReports", nil)
+property(Alliance, "lastAllianceFightReport", nil)
 --行军事件
 property(Alliance, "attackMarchEvents", {})
 property(Alliance, "attackMarchReturnEvents", {})

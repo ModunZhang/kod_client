@@ -204,6 +204,7 @@ function GameUIBarracks:TabButtons()
             self:RefershUnlockInfo()
         end
     end):pos(window.cx, window.bottom + 34)
+    self.tab_buttons:SetGreenTipsShow("specialRecruit",self:GetRecruitSpecialTime())
 end
 function GameUIBarracks:CreateItemWithListView(list_view, soldiers)
     local rect = list_view:getViewRect()

@@ -625,6 +625,55 @@ function UIKit:showMessageDialog(title,tips,ok_callback,cancel_callback,visible_
     return dialog
 end
 
+function UIKit:showConfirmUseGemMessageDialog(title,tips,ok_callback,cancel_callback,visible_x_button,x_button_callback,user_data)
+    title = title or _("提示")
+    tips = tips or ""
+    if type(visible_x_button) ~= 'boolean' then visible_x_button = true end
+    local dialog = UIKit:newGameUI("FullScreenPopDialogUI",x_button_callback,user_data):SetTitle(title):SetMessageBgSize(342,190):SetPopMessage(tips)
+    if ok_callback then
+        dialog:CreateOKButton({
+            listener =  function ()
+                if ok_callback then
+                    ok_callback()
+                end
+            end,
+            y = display.top-560
+        })
+    end
+
+    dialog:CreateCancelButton({
+        listener = function ()
+        end,btn_name = _("取消"),y = display.top-560})
+    dialog:VisibleXButton(visible_x_button)
+    if not visible_x_button then
+        dialog:DisableAutoClose()
+    end
+    -- 取消提醒按钮
+    self:ttfLabel({
+        text = _("不再提醒"),
+        size = 18,
+        color = 0x615b44
+    }):addTo(dialog):align(display.RIGHT_CENTER,display.cx+200,display.top-620)
+    local tmp_bg = display.newSprite("activity_check_bg_55x51.png"):addTo(dialog):pos(display.cx+240,display.top-620)
+    tmp_bg:hide()
+    local saved_button = cc.ui.UICheckBoxButton.new({
+        off = "activity_check_bg_55x51.png",
+        on = "activity_check_body_55x51.png",
+    }):onButtonStateChanged(function(event)
+        dump(event)
+        if event.state == "on" then
+            tmp_bg:show()
+            app:GetGameDefautlt():CloseGemRemind()
+        else
+            app:GetGameDefautlt():OpenGemRemind()
+            tmp_bg:hide()
+        end
+    end):addTo(dialog):pos(display.cx+240,display.top-620)
+    self:__addMessageDialogToCurrentScene(dialog)
+    dialog:zorder(4001)
+    return dialog
+end
+
 function UIKit:showMessageDialogWithParams(params)
     local title = params.title or _("提示")
     local content = params.content or ""
@@ -894,6 +943,10 @@ function UIKit:GetItemImage(reward_type,item_key)
         end
     end
 end
+
+
+
+
 
 
 
