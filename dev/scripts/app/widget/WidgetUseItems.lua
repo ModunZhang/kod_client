@@ -1237,14 +1237,7 @@ function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc,buyAndUseFun
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
                     if checkUseFunc(item) then
-                        if app:GetGameDefautlt():IsOpenGemRemind() then
-                            UIKit:showConfirmUseGemMessageDialog(_("提示"),string.format(_("是否消费%s金龙币"),string.formatnumberthousands(item:Price())), function()
-                                btn_call_back(item)
-                            end,true,true)
-                        else
-                            btn_call_back(item)
-                        end
-
+                        btn_call_back(item)
                     end
                 end
             end)
