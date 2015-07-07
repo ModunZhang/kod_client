@@ -480,6 +480,10 @@ function WidgetMakeEquip:IsAbleToMakeEqui(isFinishNow)
                 message = message .. v .. "\n"
             end
             UIKit:showMessageDialog(_("提示"),message,function()
+                if need_gems > User:GetGemResource():GetValue() then
+                    UIKit:showMessageDialog(_("提示"),_("金龙币不足"),function()  UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)  end)
+                    return false
+                end
                 NetManager:getMakeDragonEquipmentPromise(self.equip_type)
                 self:Close()
             end):CreateNeeds({value = need_gems})
@@ -490,6 +494,7 @@ function WidgetMakeEquip:IsAbleToMakeEqui(isFinishNow)
 end
 
 return WidgetMakeEquip
+
 
 
 

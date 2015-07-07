@@ -833,6 +833,20 @@ function User:IsOnDailyQuestEvents()
         return true
     end
 end
+-- 判定是否能领取每日任务奖励
+function User:CouldGotDailyQuestReward()
+    local dailyQuestEvents = self.dailyQuestEvents
+    if LuaUtils:table_empty(dailyQuestEvents) then
+        return false
+    else
+        for k,v in pairs(dailyQuestEvents) do
+            if v.finishTime == 0 then
+                return true
+            end
+        end
+        return false
+    end
+end
 function User:OnDailyQuestsRefresh()
     self:NotifyListeneOnType(User.LISTEN_TYPE.DALIY_QUEST_REFRESH, function(listener)
         listener:OnDailyQuestsRefresh()

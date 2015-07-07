@@ -673,7 +673,7 @@ function GameUIStrikeReport:CreateGarrison()
                     color = UIKit:hex2c3b(0x403c2f)
                 }):align(display.RIGHT_CENTER,group_width-30,18):addTo(r_item_bg)
                 StarBar.new({
-                    max = 5,
+                    max = 3,
                     bg = "Stars_bar_bg.png",
                     fill = "Stars_bar_highlight.png",
                     num = r_parms.star,
