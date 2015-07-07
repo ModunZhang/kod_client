@@ -67,7 +67,7 @@ function GameUISettingPush:BuildUI()
                 self.push_node:hide()
             end
         end
-    end):addTo(bg):pos(window.cx-15,34)
+    end):addTo(bg):pos(bg:getContentSize().width/2,34)
 end
 function GameUISettingPush:CreatePushNode()
     local push_node = display.newNode()

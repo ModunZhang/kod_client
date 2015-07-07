@@ -653,8 +653,8 @@ function UIKit:showConfirmUseGemMessageDialog(title,tips,ok_callback,cancel_call
         text = _("不再提醒"),
         size = 18,
         color = 0x615b44
-    }):addTo(dialog):align(display.RIGHT_CENTER,display.cx+200,display.top-620)
-    local tmp_bg = display.newSprite("activity_check_bg_55x51.png"):addTo(dialog):pos(display.cx+240,display.top-620)
+    }):addTo(dialog):align(display.RIGHT_CENTER,display.cx+240,display.top-620)
+    local tmp_bg = display.newSprite("activity_check_bg_55x51.png"):addTo(dialog):pos(display.cx+256,display.top-620):scale(0.6)
     tmp_bg:hide()
     local saved_button = cc.ui.UICheckBoxButton.new({
         off = "activity_check_bg_55x51.png",
@@ -668,7 +668,7 @@ function UIKit:showConfirmUseGemMessageDialog(title,tips,ok_callback,cancel_call
             app:GetGameDefautlt():OpenGemRemind()
             tmp_bg:hide()
         end
-    end):addTo(dialog):pos(display.cx+240,display.top-620)
+    end):addTo(dialog):pos(display.cx+256,display.top-620):scale(0.6)
     self:__addMessageDialogToCurrentScene(dialog)
     dialog:zorder(4001)
     return dialog
