@@ -119,13 +119,13 @@ function GameUISetting:OnButtonClicked(button)
 		if self.city:GetFirstBuildingByType("keep"):GetLevel() >= 8 then
 			UIKit:newWidgetUI("WidgetRankingList", "player"):AddToCurrentScene(true)
 		else
-			GameGlobalUI:showTips("提示", "城堡等级达到8级解锁")
+			GameGlobalUI:showTips("提示", _("城堡等级达到8级解锁"))
 		end
 	elseif tag == 6 then
 		if self.city:GetFirstBuildingByType("keep"):GetLevel() >= 8 then
 			UIKit:newWidgetUI("WidgetRankingList","alliance"):AddToCurrentScene(true)
 		else
-			GameGlobalUI:showTips("提示", "城堡等级达到8级解锁")
+			GameGlobalUI:showTips("提示", _("城堡等级达到8级解锁"))
 		end
 	elseif tag == 7 then
 		local is_open = app:GetAudioManager():GetBackgroundMusicState()
