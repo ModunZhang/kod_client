@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: dragonfall\n"
-"POT-Creation-Date: 2015-07-07 21:17+0800\n"
-"PO-Revision-Date: 2015-07-07 21:17+0800\n"
+"POT-Creation-Date: 2015-07-07 22:06+0800\n"
+"PO-Revision-Date: 2015-07-07 22:06+0800\n"
 "Last-Translator: gaozhou <gaozhou.f@qq.com>\n"
 "Language-Team: \n"
 "Language: zh_TW\n"
@@ -2021,7 +2021,7 @@ msgid "行军队列"
 msgstr "行軍隊列"
 
 #: ui/GameUIActivityRewardNew.lua:489 ui/GameUIBuild.lua:63
-#: ui/GameUIHasBeenBuild.lua:391
+#: ui/GameUIHasBeenBuild.lua:394
 msgid "建筑队列"
 msgstr "建築隊列"
 
@@ -3604,7 +3604,7 @@ msgstr "礦工小屋"
 msgid "待建地基"
 msgstr "待建地基"
 
-#: ui/GameUIBuild.lua:92 ui/GameUIHasBeenBuild.lua:410
+#: ui/GameUIBuild.lua:92 ui/GameUIHasBeenBuild.lua:413
 #, c-format
 msgid "建筑队列 %d/%d"
 msgstr "建築隊列%d/%d"
@@ -4354,15 +4354,15 @@ msgstr "從等級%d升級到等級%d"
 msgid "立即建造"
 msgstr "立即建造"
 
-#: ui/GameUIHasBeenBuild.lua:344
+#: ui/GameUIHasBeenBuild.lua:347
 msgid "建筑列表"
 msgstr "建築列表"
 
-#: ui/GameUIHasBeenBuild.lua:421
+#: ui/GameUIHasBeenBuild.lua:424
 msgid "功能建筑"
 msgstr "功能建築"
 
-#: ui/GameUIHasBeenBuild.lua:426
+#: ui/GameUIHasBeenBuild.lua:429
 msgid "资源建筑"
 msgstr "資源建築"
 
@@ -8337,8 +8337,8 @@ msgid ""
 "训练营地提供步兵的相关科技，增强步兵的各方面属性，建筑等级越高招募步兵的速度"
 "越快"
 msgstr ""
-"訓練營地提供步兵的相關科技，增強步兵的各方面屬性，建築等級越高招募步兵的速度"
-"越快"
+"訓練營地提供步兵的相關科技，增強步兵的各方面屬性，更能提升星級，改變兵種造"
+"型。建築等級越高招募步兵的速度越快"
 
 #: utils/Localize.lua:556
 msgid "步兵招募速度"
@@ -8349,8 +8349,8 @@ msgid ""
 "猎手大厅提供弓手的相关科技，增强弓手的各方面属性，建筑等级越高招募弓手的速度"
 "越快"
 msgstr ""
-"獵手大廳提供弓手的相關科技，增強弓手的各方面屬性，建築等級越高招募弓手的速度"
-"越快"
+"獵手大廳提供弓手的相關科技，增強弓手的各方面屬性，更能提升星級，改變兵種造"
+"型。建築等級越高招募弓手的速度越快"
 
 #: utils/Localize.lua:560
 msgid "弓手招募速度"
@@ -8360,7 +8360,8 @@ msgstr "弓手招募速度"
 msgid ""
 "马厩提供骑兵的相关科技，增强骑兵的各方面属性，建筑等级越高招募骑兵的速度越快"
 msgstr ""
-"馬廄提供騎兵的相關科技，增強騎兵的各方面屬性，建築等級越高招募騎兵的速度越快"
+"馬廄提供騎兵的相關科技，增強騎兵的各方面屬性，更能提升星級，改變兵種造型。建"
+"築等級越高招募騎兵的速度越快"
 
 #: utils/Localize.lua:563
 msgid "骑兵招募速度"
@@ -8371,8 +8372,8 @@ msgid ""
 "车间提供攻城器械的相关科技，增强攻城器械的各方面属性，建筑等级越高招募攻城器"
 "械的速度越快"
 msgstr ""
-"車間提供攻城器械的相關科技，增強攻城器械的各方面屬性，建築等級越高招募攻城器"
-"械的速度越快"
+"車間提供攻城器械的相關科技，增強攻城器械的各方面屬性，更能提升星級，改變兵種"
+"造型。建築等級越高招募攻城器械的速度越快"
 
 #: utils/Localize.lua:567
 msgid "攻城器械招募速度"

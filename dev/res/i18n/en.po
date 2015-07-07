@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: dragonfall\n"
-"POT-Creation-Date: 2015-07-07 21:16+0800\n"
-"PO-Revision-Date: 2015-07-07 21:16+0800\n"
+"POT-Creation-Date: 2015-07-07 22:05+0800\n"
+"PO-Revision-Date: 2015-07-07 22:05+0800\n"
 "Last-Translator: gaozhou <gaozhou.f@qq.com>\n"
 "Language-Team: \n"
 "Language: en\n"
@@ -2067,7 +2067,7 @@ msgid "行军队列"
 msgstr "Marching queue"
 
 #: ui/GameUIActivityRewardNew.lua:489 ui/GameUIBuild.lua:63
-#: ui/GameUIHasBeenBuild.lua:391
+#: ui/GameUIHasBeenBuild.lua:394
 msgid "建筑队列"
 msgstr "Building queue"
 
@@ -3653,7 +3653,7 @@ msgstr "Miner Cabin"
 msgid "待建地基"
 msgstr "Foundation"
 
-#: ui/GameUIBuild.lua:92 ui/GameUIHasBeenBuild.lua:410
+#: ui/GameUIBuild.lua:92 ui/GameUIHasBeenBuild.lua:413
 #, c-format
 msgid "建筑队列 %d/%d"
 msgstr "Building queue %d/%d"
@@ -4410,15 +4410,15 @@ msgstr "Upgrading from Lv%d to Lv%d"
 msgid "立即建造"
 msgstr "Build Now"
 
-#: ui/GameUIHasBeenBuild.lua:344
+#: ui/GameUIHasBeenBuild.lua:347
 msgid "建筑列表"
 msgstr "Building List"
 
-#: ui/GameUIHasBeenBuild.lua:421
+#: ui/GameUIHasBeenBuild.lua:424
 msgid "功能建筑"
 msgstr "Functional"
 
-#: ui/GameUIHasBeenBuild.lua:426
+#: ui/GameUIHasBeenBuild.lua:429
 msgid "资源建筑"
 msgstr "Resource"
 
