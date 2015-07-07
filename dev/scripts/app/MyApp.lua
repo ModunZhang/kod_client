@@ -604,6 +604,7 @@ function MyApp:EndCheckGameCenterIf()
 end
 
 function MyApp:__checkGameCenter()
+    if not NetManager:IsLogin() then return end
     if ext.gamecenter.isAuthenticated() then
         local __,gcId = ext.gamecenter.getPlayerNameAndId()
         if string.len(gcId) > 0 and NetManager:isConnected() and User and not User:IsBindGameCenter() then
@@ -625,7 +626,7 @@ end
 function __G__GAME_CENTER_CALLBACK(gc_name,gc_id)
     app:StarCheckGameCenterIf()
     --如果玩家当前未绑定gc并且当前的gc未绑定任何账号 执行自动绑定
-    if gc_name and gc_id and NetManager:isConnected() then
+    if gc_name and gc_id and NetManager:isConnected() and NetManager:IsLogin() then
         NetManager:getGcBindStatusPromise(gc_id):done(function(response)
             if User and not User:IsBindGameCenter() then
                 if not response.msg.isBind then

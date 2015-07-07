@@ -344,12 +344,15 @@ function NetManager:init()
         port = nil,
     }
 end
-
+function NetManager:IsLogin()
+    return self.is_login
+end
 function NetManager:getServerTime()
     return self.m_netService:getServerTime()
 end
 
 function NetManager:disconnect()
+    self.is_login = false
     self:removeEventListener("disconnect")
     self.m_netService:disconnect()
 end
@@ -559,6 +562,7 @@ end
 function NetManager:getLoginPromise(deviceId)
     local device_id = device.getOpenUDID()
     local requestTime = ext.now()
+    self.is_login = false
     return get_none_blocking_request_promise("logic.entryHandler.login", {
         deviceId = deviceId or device_id,
         requestTime = requestTime,
@@ -589,6 +593,7 @@ function NetManager:getLoginPromise(deviceId)
                 DataManager:setEnemyAllianceData(user_enemy_alliance_data)
                 self.m_was_inited_game = true
             end
+            self.is_login = true
         end
         return response
     end)
