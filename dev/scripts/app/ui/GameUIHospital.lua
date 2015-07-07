@@ -169,7 +169,9 @@ function GameUIHospital:CreateHealAllSoldierItem()
             labelParams = {text = _("立即治愈")},
             listener = function ()
                 if app:GetGameDefautlt():IsOpenGemRemind() then
-                    UIKit:showConfirmUseGemMessageDialog(_("提示"),string.format(_("是否消费%d金龙币"),self.treat_all_now_need_gems), function()
+                    UIKit:showConfirmUseGemMessageDialog(_("提示"),string.format(_("是否消费%s金龙币"),
+                        string.formatnumberthousands(self.treat_all_now_need_gems)
+                    ), function()
                         self:TreatNowListener()
                         app:GetAudioManager():PlayeEffectSoundWithKey("INSTANT_TREATE_SOLDIER")
                     end,true,true)
@@ -551,6 +553,7 @@ function GameUIHospital:OnResourceChanged(resource_manager)
     })
 end
 return GameUIHospital
+
 
 
 

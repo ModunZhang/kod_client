@@ -944,6 +944,34 @@ function UIKit:GetItemImage(reward_type,item_key)
     end
 end
 
+function UIKit:ShakeAction(is_forever, delay)
+    is_forever = is_forever or true
+    delay = delay or 0
+    local t = 0.025
+    local r = 5
+    local shake_list = {
+        cc.RotateBy:create(t, r),
+        cc.RotateBy:create(t, -r),
+        cc.RotateBy:create(t, -r),
+        cc.RotateBy:create(t, r),
+        cc.RotateBy:create(t, r),
+        cc.RotateBy:create(t, -r),
+        cc.RotateBy:create(t, -r),
+        cc.RotateBy:create(t, r),
+        cc.RotateBy:create(t, r),
+        cc.RotateBy:create(t, -r),
+        cc.RotateBy:create(t, -r),
+        cc.RotateBy:create(t, r),
+    }
+    if delay > 0 then
+        table.insert(shake_list, cca.delay(delay))
+    end
+    if is_forever then
+        return cc.RepeatForever:create(transition.sequence(shake_list))
+    end
+    return transition.sequence(shake_list)
+end
+
 
 
 

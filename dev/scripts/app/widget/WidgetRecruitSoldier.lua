@@ -305,7 +305,9 @@ function WidgetRecruitSoldier:AddButtons()
             end
 
             if app:GetGameDefautlt():IsOpenGemRemind() then
-                UIKit:showConfirmUseGemMessageDialog(_("提示"),string.format(_("是否消费%d金龙币"),self:GetNeedGemWithInstantRecruit(self.count)), function()
+                UIKit:showConfirmUseGemMessageDialog(_("提示"),string.format(_("是否消费%s金龙币"),
+                    string.formatnumberthousands(self:GetNeedGemWithInstantRecruit(self.count))
+                ), function()
                     if type(self.instant_button_clicked) == "function" then
                         self:instant_button_clicked()
                     end
@@ -759,6 +761,7 @@ end
 
 
 return WidgetRecruitSoldier
+
 
 
 

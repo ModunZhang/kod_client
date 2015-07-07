@@ -100,7 +100,9 @@ function WidgetUpgradeMilitaryTech:UpgradeButtons()
                         })
                 else
                     if app:GetGameDefautlt():IsOpenGemRemind() then
-                        UIKit:showConfirmUseGemMessageDialog(_("提示"),string.format(_("是否消费%d金龙币"),self.tech:GetInstantUpgradeGems()), function()
+                        UIKit:showConfirmUseGemMessageDialog(_("提示"),string.format(_("是否消费%s金龙币"),
+                            string.formatnumberthousands(self.tech:GetInstantUpgradeGems())
+                        ), function()
                             upgrade_listener()
                         end,true,true)
                     else
@@ -276,6 +278,7 @@ function WidgetUpgradeMilitaryTech:OnMilitaryTechsDataChanged(city,changed_map)
     end
 end
 return WidgetUpgradeMilitaryTech
+
 
 
 
