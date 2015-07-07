@@ -381,12 +381,13 @@ function GameUIResource:MoveButtonAction( event )
     local house_location = tile:GetBuildingLocation(self.building)
     local movingConstruction = ItemManager:GetItemByName("movingConstruction")
     local torch_count = movingConstruction:Count()
+    local building = self.building
 
     if torch_count<1 then
         if app:GetGameDefautlt():IsOpenGemRemind() then
             UIKit:showConfirmUseGemMessageDialog(_("提示"),string.format(_("是否消费%s金龙币"),string.formatnumberthousands(movingConstruction:Price())), function()
                 NetManager:getBuyItemPromise("movingConstruction",1)
-                WidgetMoveHouse.new(self.building)
+                WidgetMoveHouse.new(building)
             end,true,true)
         else
             NetManager:getBuyItemPromise("movingConstruction",1)
