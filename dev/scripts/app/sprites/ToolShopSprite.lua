@@ -14,17 +14,16 @@ function ToolShopSprite:OnEndMakeMaterialsWithEvent()
     app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
 end
 function ToolShopSprite:OnGetMaterialsWithEvent()
-    self:DoAni()
 end
 
 
 
 local WORK_TAG = 11201
-local TIP_TAG = 11202
 local EMPTY_TAG = 11400
 function ToolShopSprite:ctor(city_layer, entity, city)
     ToolShopSprite.super.ctor(self, city_layer, entity, city)
     entity:AddToolShopListener(self)
+    self:DoAni()
 end
 function ToolShopSprite:RefreshSprite()
     ToolShopSprite.super.RefreshSprite(self)
@@ -38,18 +37,6 @@ function ToolShopSprite:DoAni()
         else
             self:PlayEmptyAnimation()
             self:removeChildByTag(WORK_TAG)
-        end
-        if self:GetEntity():IsStoredAny(app.timer:GetServerTime()) then
-            if not self:getChildByTag(TIP_TAG) then
-                local x,y = self:GetSpriteTopPosition()
-                x = x - 20
-                y = y - 100
-                display.newSprite("tmp_tips_74x80.png")
-                :addTo(self,1,TIP_TAG):align(display.BOTTOM_CENTER,x,y)
-                :runAction(UIKit:ShakeAction(true, 2))
-            end
-        else
-            self:removeChildByTag(TIP_TAG)
         end
     end
 end

@@ -113,14 +113,6 @@ end
 function ToolShopUpgradeBuilding:GetMakeMaterialsEvents()
     return self.category
 end
-function ToolShopUpgradeBuilding:IsStoredAny(current_time)
-    for _,v in pairs(self.category) do
-        if v:IsStored(current_time) then
-            return true
-        end
-    end
-    return false
-end
 function ToolShopUpgradeBuilding:IsMakingAny(current_time)
     for _,v in pairs(self.category) do
         if v:IsMaking(current_time) then

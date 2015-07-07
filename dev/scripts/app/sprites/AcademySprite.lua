@@ -19,6 +19,7 @@ function AcademySprite:ctor(city_layer, entity, city)
     display.newNode():addTo(self):schedule(function()
         self:CheckEvent()
     end, 1)
+    self:CheckEvent()
 end
 function AcademySprite:RefreshSprite()
     AcademySprite.super.RefreshSprite(self)
