@@ -336,6 +336,9 @@ function Item:ChangeStatus(status)
     self.status = status
     self.progress:setVisible(is_building_map[status])
     self:UpdateDesc(self.building)
+    if self.building:GetLevel() <= 0 then
+        button:hide()
+    end
     return self
 end
 
