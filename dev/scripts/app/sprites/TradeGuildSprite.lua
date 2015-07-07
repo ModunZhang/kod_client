@@ -1,10 +1,15 @@
 local FunctionUpgradingSprite = import(".FunctionUpgradingSprite")
 local TradeGuildSprite = class("TradeGuildSprite", FunctionUpgradingSprite)
 
+
+local TIP_TAG = 112001
+
 function TradeGuildSprite:ctor(city_layer, entity, city)
     self.action_node = display.newNode():addTo(self)
     TradeGuildSprite.super.ctor(self, city_layer, entity, city)
-    self:DoAni()
+    display.newNode():addTo(self):schedule(function()
+        self:CheckTips()
+    end, 1)
 end
 function TradeGuildSprite:RefreshSprite()
     TradeGuildSprite.super.RefreshSprite(self)
@@ -13,6 +18,21 @@ end
 function TradeGuildSprite:DoAni()
     if self:GetEntity():IsUnlocked() then
         self:PlayAni()
+        self:CheckTips()
+    end
+end
+function TradeGuildSprite:CheckTips()
+    if self:GetEntity():BelongCity():GetUser():GetTradeManager():IsSoldOut() then
+        if not self:getChildByTag(TIP_TAG) then
+            local x,y = self:GetSpriteTopPosition()
+            x = x - 20
+            y = y - 50
+            display.newSprite("tmp_tips_74x80.png")
+                :addTo(self,1,TIP_TAG):align(display.BOTTOM_CENTER,x,y)
+                :runAction(UIKit:ShakeAction(true,2))
+        end
+    else
+        self:removeChildByTag(TIP_TAG)
     end
 end
 function TradeGuildSprite:PlayAni()
@@ -28,6 +48,7 @@ end
 
 
 return TradeGuildSprite
+
 
 
 
