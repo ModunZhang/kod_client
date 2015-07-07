@@ -175,23 +175,7 @@ function MyCityScene:NewLockButtonFromBuildingSprite(building_sprite)
     local button = cc.ui.UIPushButton.new({normal = btn_png, pressed = btn_png})
         :addTo(self:GetTopLayer()):pos(lp.x,lp.y)
         :onButtonClicked(function()
-            if self.city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint(self.city) > 0 then
-                UIKit:newGameUI("GameUIUnlockBuilding", self.city, building_sprite:GetEntity()):AddToCurrentScene(true)
-            else
-                UIKit:showMessageDialog(_("提示"), _("升级城堡解锁此建筑"))
-                    :CreateOKButton(
-                        {
-                            listener = function()
-                                local building_sprite = self:GetSceneLayer():FindBuildingSpriteByBuilding(self.city:GetFirstBuildingByType("keep"), self.city)
-                                local x,y = self.city:GetFirstBuildingByType("keep"):GetMidLogicPosition()
-                                self:GotoLogicPoint(x,y,40):next(function()
-                                    self:AddIndicateForBuilding(building_sprite)
-                                end)
-                            end,
-                            btn_name= _("前往")
-                        }
-                    )
-            end
+            UIKit:newGameUI("GameUIUnlockBuilding", self.city, building_sprite:GetEntity()):AddToCurrentScene(true)
         end):onButtonPressed(function(event)
             event.target:runAction(cc.ScaleTo:create(0.1, 1.2))
         end):onButtonRelease(function(event)

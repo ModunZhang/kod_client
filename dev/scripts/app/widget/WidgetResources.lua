@@ -62,12 +62,6 @@ function WidgetResources:RefreshSpecifyResource(resource,item,maxvalue,occupy_ci
         item.occupy_citizen.value:setString(GameUtils:formatNumber(occupy_citizen).."")
     else
         item.resource_label.value:setString(GameUtils:formatNumber(resource:GetResourceValueByCurrentTime(app.timer:GetServerTime())))
-        --  local townHall = self.city:GetFirstBuildingByType("townHall")
-        -- local title_value = townHall:IsInImposing() and _("正在征税") or _("当前没有进行征税")
-        -- item.tax.title:setString(title_value)
-        -- local tax_time = townHall:IsInImposing() and GameUtils:formatTimeStyle1(townHall:GetTaxEvent():LeftTime(app.timer:GetServerTime())) or ""
-        -- item.tax.value:setString(tax_time)
-        -- item.free_citizen.value:setString(self.city:GetResourceManager():GetCitizenResource():GetNoneAllocatedByTime(app.timer:GetServerTime()))
     end
 end
 function WidgetResources:CreateResourceListView()

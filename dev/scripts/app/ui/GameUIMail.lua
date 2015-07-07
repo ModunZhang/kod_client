@@ -1213,7 +1213,7 @@ function GameUIMail:ShowMailDetails(mail)
             color = 0x403c2f,
             ellipsis = true,
             dimensions = cc.size(300,20)
-        }):align(display.LEFT_CENTER,155 + subject_label:getContentSize().width+20, size.height-60)
+        }):align(display.LEFT_CENTER,155 + subject_label:getContentSize().width+20, size.height-56)
         :addTo(body)
     -- 日期
     local date_title_label = cc.ui.UILabel.new(
