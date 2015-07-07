@@ -1125,7 +1125,7 @@ function GameUIMail:ShowSendMailDetails(mail)
             color = 0x403c2f,
             ellipsis = true,
             dimensions = cc.size(300,20)
-        }):align(display.LEFT_CENTER,155 + subject_label:getContentSize().width+20, bg:getContentSize().height-100)
+        }):align(display.LEFT_CENTER,155 + subject_label:getContentSize().width+20, bg:getContentSize().height-96)
         :addTo(bg)
     -- 日期
     local date_title_label = cc.ui.UILabel.new(

@@ -160,7 +160,24 @@ function GameUITownHall:CreateQuestItem(quest,index)
     )
         :addTo(title_bg):align(display.RIGHT_CENTER, title_bg:getContentSize().width-10, title_bg:getContentSize().height/2)
         :onButtonClicked(function(event)
-            NetManager:getAddDailyQuestStarPromise(quest.id)
+            if intInit.dailyQuestAddStarNeedGemCount.value > User:GetGemResource():GetValue() then
+                UIKit:showMessageDialog(_("提示"),_("金龙币不足")):CreateOKButton(
+                    {
+                        listener = function ()
+                            UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                            self:LeftButtonClicked()
+                        end,
+                        btn_name= _("前往商店")
+                    })
+            else
+                if app:GetGameDefautlt():IsOpenGemRemind() then
+                    UIKit:showConfirmUseGemMessageDialog(_("提示"),string.format(_("是否消费%s金龙币"),string.formatnumberthousands(intInit.dailyQuestAddStarNeedGemCount.value)), function()
+                        NetManager:getAddDailyQuestStarPromise(quest.id)
+                    end,true,true)
+                else
+                    NetManager:getAddDailyQuestStarPromise(quest.id)
+                end
+            end
         end):scale(0.6)
 
     -- gem icon
@@ -494,6 +511,9 @@ function GameUITownHall:OnBuildingUpgrading()
 end
 
 return GameUITownHall
+
+
+
 
 
 

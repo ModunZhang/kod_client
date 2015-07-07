@@ -234,7 +234,13 @@ function GameUIItems:CreateShopContentByIndex( idx )
                                 }
                             )
                     else
-                        NetManager:getBuyItemPromise(items:Name(),1)
+                        if app:GetGameDefautlt():IsOpenGemRemind() then
+                            UIKit:showConfirmUseGemMessageDialog(_("提示"),string.format(_("是否消费%s金龙币"),string.formatnumberthousands(items:Price())), function()
+                                NetManager:getBuyItemPromise(items:Name(),1)
+                            end,true,true)
+                        else
+                            NetManager:getBuyItemPromise(items:Name(),1)
+                        end
                     end
                 end
             end)
@@ -555,6 +561,7 @@ function GameUIItems:OnItemsChanged( changed_map )
     end
 end
 return GameUIItems
+
 
 
 

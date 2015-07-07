@@ -104,9 +104,9 @@ function Item:ctor(parent_ui)
 
     self.button = WidgetPushButton.new(
         {
-        normal = "purple_btn_up_148x58.png",
-        pressed = "purple_btn_down_148x58.png",
-        disabled = "gray_btn_148x58.png",
+            normal = "purple_btn_up_148x58.png",
+            pressed = "purple_btn_down_148x58.png",
+            disabled = "gray_btn_148x58.png",
         })
         :addTo(self):align(display.CENTER, w - 90, 40)
         :setButtonLabel(UIKit:ttfLabel({
@@ -135,17 +135,26 @@ function Item:ctor(parent_ui)
                     )
                     return
                 end
-                if city:IsFunctionBuilding(building) then
-                    local location_id = city:GetLocationIdByBuilding(building)
-                    NetManager:getInstantUpgradeBuildingByLocationPromise(location_id)
-                elseif city:IsHouse(building) then
-                    local tile = city:GetTileWhichBuildingBelongs(building)
-                    local house_location = tile:GetBuildingLocation(building)
-                    NetManager:getInstantUpgradeHouseByLocationPromise(tile.location_id, house_location)
-                elseif city:IsGate(building) then
-                    NetManager:getInstantUpgradeWallByLocationPromise()
-                elseif city:IsTower(building) then
-                    NetManager:getInstantUpgradeTowerPromise()
+                local instant_build = function ()
+                    if city:IsFunctionBuilding(building) then
+                        local location_id = city:GetLocationIdByBuilding(building)
+                        NetManager:getInstantUpgradeBuildingByLocationPromise(location_id)
+                    elseif city:IsHouse(building) then
+                        local tile = city:GetTileWhichBuildingBelongs(building)
+                        local house_location = tile:GetBuildingLocation(building)
+                        NetManager:getInstantUpgradeHouseByLocationPromise(tile.location_id, house_location)
+                    elseif city:IsGate(building) then
+                        NetManager:getInstantUpgradeWallByLocationPromise()
+                    elseif city:IsTower(building) then
+                        NetManager:getInstantUpgradeTowerPromise()
+                    end
+                end
+                if app:GetGameDefautlt():IsOpenGemRemind() then
+                    UIKit:showConfirmUseGemMessageDialog(_("提示"),string.format(_("是否消费%s金龙币"),string.formatnumberthousands(building:getUpgradeNowNeedGems())), function()
+                        instant_build()
+                    end,true,true)
+                else
+                    instant_build()
                 end
             elseif self.status == "normal" then
                 local illegal, is_pre_condition = building:IsAbleToUpgrade(false)
@@ -468,6 +477,7 @@ end
 
 
 return GameUIHasBeenBuild
+
 
 
 
