@@ -119,6 +119,9 @@ function MyCityScene:CreateSceneUILayer()
     -- end
     function scene_ui_layer:Schedule()
         display.newNode():addTo(self):schedule(function()
+            scene_node:RefreshLockBtnStatus()
+        end, 1)
+        display.newNode():addTo(self):schedule(function()
             -- 检查缩放比
             if scene_layer:getScale() < (scene_layer:GetScaleRange()) * 1.3 then
                 if self.is_show == nil or self.is_show == true then
@@ -162,17 +165,14 @@ function MyCityScene:CreateSceneUILayer()
     scene_ui_layer:Schedule()
     return scene_ui_layer
 end
-function MyCityScene:IteratorLockButtons(func)
-    for i,v in ipairs(self:GetTopLayer():getChildren()) do
-        if func(v) then
-            return
-        end
-    end
-end
 function MyCityScene:NewLockButtonFromBuildingSprite(building_sprite)
     local wp = building_sprite:GetWorldPosition()
     local lp = self:GetTopLayer():convertToNodeSpace(wp)
-    local button = cc.ui.UIPushButton.new({normal = "lock_btn.png",pressed = "lock_btn.png"})
+    local btn_png = "tmp_lock_btn.png"
+    if self.city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint(self.city) > 0 then
+        btn_png = "tmp_unlock_btn.png"
+    end
+    local button = cc.ui.UIPushButton.new({normal = btn_png, pressed = btn_png})
         :addTo(self:GetTopLayer()):pos(lp.x,lp.y)
         :onButtonClicked(function()
             if self.city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint(self.city) > 0 then
@@ -192,9 +192,31 @@ function MyCityScene:NewLockButtonFromBuildingSprite(building_sprite)
                         }
                     )
             end
+        end):onButtonPressed(function(event)
+            event.target:runAction(cc.ScaleTo:create(0.1, 1.2))
+        end):onButtonRelease(function(event)
+            event.target:runAction(cc.ScaleTo:create(0.1, 1))
         end)
+
     button.sprite = building_sprite
     return button
+end
+function MyCityScene:RefreshLockBtnStatus()
+    local btn_png = "tmp_lock_btn.png"
+    if self.city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint(self.city) > 0 then
+        btn_png = "tmp_unlock_btn.png"
+    end
+    self:IteratorLockButtons(function(btn)
+        btn:setButtonImage(cc.ui.UIPushButton.NORMAL, btn_png, true)
+        btn:setButtonImage(cc.ui.UIPushButton.PRESSED, btn_png, true)
+    end)
+end
+function MyCityScene:IteratorLockButtons(func)
+    for i,v in ipairs(self:GetTopLayer():getChildren()) do
+        if func(v) then
+            return
+        end
+    end
 end
 -- 给对应建筑添加指示动画
 function MyCityScene:AddIndicateForBuilding(building_sprite)
@@ -217,12 +239,12 @@ function MyCityScene:onEnterTransitionFinish()
     MyCityScene.super.onEnterTransitionFinish(self)
     if ext.registereForRemoteNotifications then
         ext.registereForRemoteNotifications()
-    end 
+    end
     app:sendPlayerLanguageCodeIf()
     app:sendApnIdIf()
     if self.isFromLogin then
         local isFinished_fte = DataManager:getUserData().countInfo.isFTEFinished
-        local not_buy_any_gems = DataManager:getUserData().countInfo.iapCount == 0 
+        local not_buy_any_gems = DataManager:getUserData().countInfo.iapCount == 0
         if isFinished_fte and not_buy_any_gems then
             UIKit:newGameUI("GameUIActivityRewardNew",GameUIActivityRewardNew.REWARD_TYPE.FIRST_IN_PURGURE):AddToScene(self, true)
         end
@@ -431,6 +453,7 @@ function MyCityScene:OpenUI(building, default_tab)
 end
 
 return MyCityScene
+
 
 
 
