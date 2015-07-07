@@ -424,29 +424,39 @@ function CommonUpgradeUI:InitUpgradePart()
             style = UIKit.BTN_COLOR.GREEN,
             labelParams = {text = _("立即升级")},
             listener = function ()
-                local upgrade_listener = function()
-                    if self.building:GetType()=="tower" then
-                        NetManager:getInstantUpgradeTowerPromise()
-                    elseif self.building:GetType()=="wall" then
-                        NetManager:getInstantUpgradeWallByLocationPromise()
-                    else
-                        if City:IsFunctionBuilding(self.building) then
-
-                            local location_id = City:GetLocationIdByBuilding(self.building)
-                            NetManager:getInstantUpgradeBuildingByLocationPromise(location_id)
+                local commend = function ()
+                    local upgrade_listener = function()
+                        if self.building:GetType()=="tower" then
+                            NetManager:getInstantUpgradeTowerPromise()
+                        elseif self.building:GetType()=="wall" then
+                            NetManager:getInstantUpgradeWallByLocationPromise()
                         else
-                            local tile = City:GetTileWhichBuildingBelongs(self.building)
-                            local house_location = tile:GetBuildingLocation(self.building)
-                            NetManager:getInstantUpgradeHouseByLocationPromise(tile.location_id, house_location)
+                            if City:IsFunctionBuilding(self.building) then
+
+                                local location_id = City:GetLocationIdByBuilding(self.building)
+                                NetManager:getInstantUpgradeBuildingByLocationPromise(location_id)
+                            else
+                                local tile = City:GetTileWhichBuildingBelongs(self.building)
+                                local house_location = tile:GetBuildingLocation(self.building)
+                                NetManager:getInstantUpgradeHouseByLocationPromise(tile.location_id, house_location)
+                            end
                         end
+                    end
+
+                    local can_not_update_type = self.building:IsAbleToUpgrade(true)
+                    if can_not_update_type then
+                        self:PopNotSatisfyDialog(upgrade_listener,can_not_update_type)
+                    else
+                        upgrade_listener()
                     end
                 end
 
-                local can_not_update_type = self.building:IsAbleToUpgrade(true)
-                if can_not_update_type then
-                    self:PopNotSatisfyDialog(upgrade_listener,can_not_update_type)
+                if app:GetGameDefautlt():IsOpenGemRemind() then
+                    UIKit:showConfirmUseGemMessageDialog(_("提示"),string.format(_("是否消费%d金龙币"),self.building:getUpgradeNowNeedGems()), function()
+                        commend()
+                    end,true,true)
                 else
-                    upgrade_listener()
+                    commend()
                 end
             end,
         }
@@ -926,6 +936,9 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
+
+
 
 
 

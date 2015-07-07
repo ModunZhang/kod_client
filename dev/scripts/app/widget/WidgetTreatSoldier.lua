@@ -272,7 +272,13 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
                             btn_name= _("前往商店")
                         })
             else
-                treat_fun()
+                if app:GetGameDefautlt():IsOpenGemRemind() then
+                    UIKit:showConfirmUseGemMessageDialog(_("提示"),string.format(_("是否消费%d金龙币"),self.treat_now_gems), function()
+                        treat_fun()
+                    end,true,true)
+                else
+                    treat_fun()
+                end
             end
         end):SetFilter({
         disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
@@ -418,14 +424,14 @@ function WidgetTreatSoldier:SetSoldier(soldier_type, star)
         end)
     local soldier_star_bg = display.newSprite("tmp_back_ground_102x22.png"):addTo(self.soldier):align(display.BOTTOM_CENTER,-10, -60)
     self.soldier_star = StarBar.new({
-            max = 3,
-            bg = "Stars_bar_bg.png",
-            fill = "Stars_bar_highlight.png",
-            num = star,
-            margin = 5,
-            direction = StarBar.DIRECTION_HORIZONTAL,
-            scale = 0.8,
-        }):addTo(soldier_star_bg):align(display.CENTER,58, 11)
+        max = 3,
+        bg = "Stars_bar_bg.png",
+        fill = "Stars_bar_highlight.png",
+        num = star,
+        margin = 5,
+        direction = StarBar.DIRECTION_HORIZONTAL,
+        scale = 0.8,
+    }):addTo(soldier_star_bg):align(display.CENTER,58, 11)
 
     local rect = self.soldier:getCascadeBoundingBox()
     display.newSprite("box_soldier_128x128.png"):addTo(self.soldier):align(display.CENTER, 0,0)
@@ -515,6 +521,7 @@ function WidgetTreatSoldier:OnCountChanged(count)
     self.gem_label:setString(self.treat_now_gems)
 end
 return WidgetTreatSoldier
+
 
 
 

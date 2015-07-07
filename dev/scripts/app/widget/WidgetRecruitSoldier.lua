@@ -304,17 +304,33 @@ function WidgetRecruitSoldier:AddButtons()
                 NetManager:getInstantRecruitNormalSoldierPromise(self.soldier_name, self.count)
             end
 
-            if type(self.instant_button_clicked) == "function" then
-                self:instant_button_clicked()
+            if app:GetGameDefautlt():IsOpenGemRemind() then
+                UIKit:showConfirmUseGemMessageDialog(_("提示"),string.format(_("是否消费%d金龙币"),self:GetNeedGemWithInstantRecruit(self.count)), function()
+                    if type(self.instant_button_clicked) == "function" then
+                        self:instant_button_clicked()
+                    end
+
+
+                    if iskindof(display.getRunningScene(), "CityScene") then
+                        display.getRunningScene():GetSceneLayer()
+                            :MoveBarracksSoldiers(self.soldier_name)
+                    end
+
+                    self:Close()
+                end,true,true)
+            else
+                if type(self.instant_button_clicked) == "function" then
+                    self:instant_button_clicked()
+                end
+
+
+                if iskindof(display.getRunningScene(), "CityScene") then
+                    display.getRunningScene():GetSceneLayer()
+                        :MoveBarracksSoldiers(self.soldier_name)
+                end
+
+                self:Close()
             end
-
-
-            if iskindof(display.getRunningScene(), "CityScene") then
-                display.getRunningScene():GetSceneLayer()
-                    :MoveBarracksSoldiers(self.soldier_name)
-            end
-
-            self:Close()
         end)
     self.instant_button = instant_button
 
@@ -449,17 +465,17 @@ function WidgetRecruitSoldier:SetSoldier(soldier_name, star)
         :onButtonClicked(function(event)
             WidgetSoldierDetails.new(soldier_name, self.star):addTo(self)
         end)
-    
+
     local soldier_star_bg = display.newSprite("tmp_back_ground_102x22.png"):addTo(self.soldier):align(display.BOTTOM_CENTER,-10, -60)
     self.soldier_star = StarBar.new({
-            max = 3,
-            bg = "Stars_bar_bg.png",
-            fill = "Stars_bar_highlight.png",
-            num = star,
-            margin = 5,
-            direction = StarBar.DIRECTION_HORIZONTAL,
-            scale = 0.8,
-        }):addTo(soldier_star_bg):align(display.CENTER,58, 11)
+        max = 3,
+        bg = "Stars_bar_bg.png",
+        fill = "Stars_bar_highlight.png",
+        num = star,
+        margin = 5,
+        direction = StarBar.DIRECTION_HORIZONTAL,
+        scale = 0.8,
+    }):addTo(soldier_star_bg):align(display.CENTER,58, 11)
 
     local rect = self.soldier:getCascadeBoundingBox()
     display.newSprite("box_soldier_128x128.png"):addTo(self.soldier):align(display.CENTER, 0,0)
@@ -702,7 +718,7 @@ function WidgetRecruitSoldier:PromiseOfFteSpecial()
     if not self.instant_button then
         self:AddButtons()
         self:OnCountChanged(self.count)
-    end    
+    end
     self.gem_label:setString(0)
 
     local fte_layer = self:getParent():GetFteLayer()
@@ -743,6 +759,7 @@ end
 
 
 return WidgetRecruitSoldier
+
 
 
 
