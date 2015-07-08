@@ -404,14 +404,18 @@ local logic_event_map = {
             if not user_data.reports then
                 for i,v in ipairs(response) do
                     if v[1] and string.find(v[1],"reports") then
-                        MailManager:IncreaseUnReadReportNum(1)
+                        if v[2] ~= json.null then
+                            MailManager:IncreaseUnReadReportNum(1)
+                        end
                     end
                 end
             end
             if not user_data.mails then
                 for i,v in ipairs(response) do
                     if v[1] and string.find(v[1],"mails") then
-                        MailManager:IncreaseUnReadMailsNum(1)
+                        if v[2] ~= json.null then
+                            MailManager:IncreaseUnReadMailsNum(1)
+                        end
                     end
                 end
             end
