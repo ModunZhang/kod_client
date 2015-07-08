@@ -1121,7 +1121,7 @@ local function getBuildingBuffForResourceProtectPercent(resourceName)
         food = "mill"
     }
     local buildingName = resourceBuildingMap[resourceName]
-    local buildings = City:GetFirstBuildingByType("buildingName")
+    local buildings = City:GetFirstBuildingByType(buildingName)
     local protectPercent = 0
     if buildings:GetLevel() > 0 then
         protectPercent = protectPercent + buildings:GetProtection()
