@@ -373,7 +373,6 @@ function GameUIHome:CreateTop()
     self.gem_label = UIKit:ttfLabel({
         size = 20,
         color = 0xffd200,
-        shadow = true
     }):addTo(button):align(display.CENTER, -30, 8)
 
     -- 任务条
@@ -396,12 +395,10 @@ function GameUIHome:CreateTop()
     end)
     self.quest_bar_bg = quest_bar_bg
     display.newSprite("quest_icon_27x42.png"):addTo(quest_bar_bg):pos(-162, 0)
-    self.quest_label = cc.ui.UILabel.new({
+    self.quest_label = UIKit:ttfLabel({
         size = 20,
-        font = UIKit:getFontFilePath(),
-        align = cc.ui.TEXT_ALIGN_CENTER,
-        color = UIKit:hex2c3b(0xfffeb3)})
-        :addTo(quest_bar_bg):align(display.LEFT_CENTER, -120, 0)
+        color = 0xfffeb3,
+    }):addTo(quest_bar_bg):align(display.LEFT_CENTER, -120, 0)
 
     local left_order =  WidgetAutoOrder.new(WidgetAutoOrder.ORIENTATION.TOP_TO_BOTTOM,50):addTo(self):pos(display.left+40, display.top-200)
     -- 活动按钮
@@ -875,6 +872,7 @@ end
 
 
 return GameUIHome
+
 
 
 
