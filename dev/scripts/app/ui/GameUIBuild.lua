@@ -245,6 +245,15 @@ function GameUIBuild:CreateItemWithListView(list_view)
     local building_icon = display.newSprite(SpriteConfig["dwelling"]:GetConfigByLevel(1).png)
         :addTo(back_ground):align(display.BOTTOM_CENTER, (left_x + right_x) / 2, 15)
 
+    WidgetPushButton.new({normal = "info_26x26.png",pressed = "info_26x26.png"})
+        :addTo(back_ground)
+        :align(display.LEFT_BOTTOM, 15, 15)
+        :onButtonClicked(function(event)
+            local building_type = item.building.building_type
+            local building = BuildingRegister[building_type].new({building_type = building_type, level = 1, finishTime = 0})
+            UIKit:newWidgetUI("WidgetBuildingIntroduce", building):AddToCurrentScene(true)
+        end):setContentSize(cc.size(150, 120))
+
     local title_blue = display.newScale9Sprite("title_blue_430x30.png",0, 0,cc.size(410,30),cc.rect(15,10,400,10))
         :addTo(back_ground):align(display.LEFT_CENTER, right_x, h - 23)
 
