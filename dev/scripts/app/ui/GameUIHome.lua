@@ -173,6 +173,7 @@ function GameUIHome:AddOrRemoveListener(isAdd)
         user:AddListenOnType(self, user.LISTEN_TYPE.IAP_GIFTS_CHANGE)
         alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
         alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
+        my_allaince:GetAllianceShrine():AddListenOnType(self,my_allaince:GetAllianceShrine().LISTEN_TYPE.OnShrineEventsChanged)
     else
         city:RemoveListenerOnType(self,city.LISTEN_TYPE.UPGRADE_BUILDING)
         city:RemoveListenerOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
@@ -192,7 +193,11 @@ function GameUIHome:AddOrRemoveListener(isAdd)
         user:RemoveListenerOnType(self, user.LISTEN_TYPE.IAP_GIFTS_CHANGE)
         alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
         alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
+        my_allaince:GetAllianceShrine():RemoveListenerOnType(self,my_allaince:GetAllianceShrine().LISTEN_TYPE.OnShrineEventsChanged)
     end
+end
+function GameUIHome:OnShrineEventsChanged(changed_map)
+    self.right_bottom_order:RefreshOrder()
 end
 function GameUIHome:OnAllianceBasicChanged(fromEntity,changed_map)
     self:RefreshHelpButtonVisible()
@@ -489,10 +494,11 @@ function GameUIHome:CreateTop()
     if self.join_alliance_tips_button:isVisible() then
         fire_var():addTo(self.join_alliance_tips_button, -1000, 321)
     end
+
+    local right_bottom_order = WidgetAutoOrder.new(WidgetAutoOrder.ORIENTATION.BOTTOM_TO_TOP,50):addTo(self):pos(display.right-50, display.top-600)
     --瞭望塔事件按钮
-    local alliance_belvedere_button = cc.ui.UIPushButton.new({normal = 'fight_62x70.png'}):pos(display.right-50, display.top-600):addTo(self)
+    local alliance_belvedere_button = cc.ui.UIPushButton.new({normal = 'fight_62x70.png'})
     alliance_belvedere_button.alliance_belvedere_events_count = WidgetNumberTips.new():addTo(alliance_belvedere_button):pos(20,-20)
-    self.alliance_belvedere_button = alliance_belvedere_button
     alliance_belvedere_button:onButtonClicked(function()
         local default_tab = 'march'
         local alliance = Alliance_Manager:GetMyAlliance()
@@ -506,16 +512,43 @@ function GameUIHome:CreateTop()
         end
         UIKit:newGameUI('GameUIWathTowerRegion',self.city,default_tab):AddToCurrentScene(true)
     end)
-    local alliance = Alliance_Manager:GetMyAlliance()
-    local alliance_belvedere = alliance:GetAllianceBelvedere()
-    local hasEvent,count = alliance_belvedere:HasEvents()
-    alliance_belvedere_button.alliance_belvedere_events_count:SetNumber(count)
-    if hasEvent then
-        alliance_belvedere_button:show()
-    else
-        alliance_belvedere_button:hide()
+    function alliance_belvedere_button:CheckVisible()
+        local alliance = Alliance_Manager:GetMyAlliance()
+        local alliance_belvedere = alliance:GetAllianceBelvedere()
+        local hasEvent,count = alliance_belvedere:HasEvents()
+        alliance_belvedere_button.alliance_belvedere_events_count:SetNumber(count)
+        return hasEvent
     end
+    function alliance_belvedere_button:GetElementSize()
+        return alliance_belvedere_button:getCascadeBoundingBox().size
+    end
+    right_bottom_order:AddElement(alliance_belvedere_button)
 
+    -- 圣地时间按钮
+    local shrine_event_button = cc.ui.UIPushButton.new({normal = 'tmp_btn_shrine_72x72.png'})
+    shrine_event_button:onButtonClicked(function()
+        local buildings = Alliance_Manager:GetMyAlliance():GetAllianceMap():GetMapObjectsByType("building")
+        local shrine_info
+        for k,v in pairs(buildings) do
+            if v.name == "shrine" then
+                shrine_info = v
+            end
+        end
+        UIKit:newGameUI("GameUIAllianceShrine",self.city,"fight_event",shrine_info:GetAllianceBuildingInfo()):AddToCurrentScene(true)
+    end)
+    function shrine_event_button:CheckVisible()
+        local alliance = Alliance_Manager:GetMyAlliance()
+        print("shrine_event_button:CheckVisible()",alliance:GetAllianceShrine():HaveEvent())
+        return alliance:GetAllianceShrine():HaveEvent()
+    end
+    function shrine_event_button:GetElementSize()
+        return shrine_event_button:getCascadeBoundingBox().size
+    end
+    right_bottom_order:AddElement(shrine_event_button)
+
+
+    right_bottom_order:RefreshOrder()
+    self.right_bottom_order = right_bottom_order
     return top_bg
 end
 
@@ -558,16 +591,7 @@ function GameUIHome:OnCommingDataChanged()
 end
 
 function GameUIHome:RefreshAllianceBelvedereButton()
-    if not self.alliance_belvedere_button then return end
-    local alliance = Alliance_Manager:GetMyAlliance()
-    local alliance_belvedere = alliance:GetAllianceBelvedere()
-    local hasEvent,count = alliance_belvedere:HasEvents()
-    if hasEvent then
-        self.alliance_belvedere_button.alliance_belvedere_events_count:SetNumber(count)
-        self.alliance_belvedere_button:show()
-    else
-        self.alliance_belvedere_button:hide()
-    end
+    self.right_bottom_order:RefreshOrder()
 end
 
 function GameUIHome:CreateBottom()
@@ -595,6 +619,8 @@ end
 function GameUIHome:OnOperation(alliance,operation_type)
     if operation_type == "quit" then
         self.top_order_group:RefreshOrder()
+        self.right_bottom_order:RefreshOrder()
+        print("GameUIHome:OnOperation quit")
     end
 end
 function GameUIHome:RefreshExp()
@@ -872,19 +898,3 @@ end
 
 
 return GameUIHome
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
