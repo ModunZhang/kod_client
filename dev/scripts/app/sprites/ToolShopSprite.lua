@@ -42,9 +42,9 @@ function ToolShopSprite:DoAni()
         if self:GetEntity():IsStoredAny(app.timer:GetServerTime()) then
             if not self:getChildByTag(TIP_TAG) then
                 local x,y = self:GetSpriteTopPosition()
-                x = x - 20
-                y = y - 100
-                display.newSprite("tmp_tips_74x80.png")
+                x = x - 30
+                y = y - 40
+                display.newSprite("tmp_tips_56x60.png")
                 :addTo(self,1,TIP_TAG):align(display.BOTTOM_CENTER,x,y)
                 :runAction(UIKit:ShakeAction(true, 2))
             end

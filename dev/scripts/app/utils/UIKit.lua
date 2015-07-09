@@ -971,6 +971,15 @@ function UIKit:ShakeAction(is_forever, delay)
     end
     return transition.sequence(shake_list)
 end
+function UIKit:ButtonAddScaleAction(button)
+    button:onButtonPressed(function(event)
+        event.target:runAction(cc.ScaleTo:create(0.1, 1.2))
+    end):onButtonRelease(function(event)
+        event.target:runAction(cc.ScaleTo:create(0.1, 1))
+    end)
+    return button
+end
+
 
 
 

@@ -22,16 +22,16 @@ function TradeGuildSprite:DoAni()
     end
 end
 function TradeGuildSprite:CheckTips()
+    if not self:GetEntity():IsUnlocked() then return end
     if self:GetEntity():BelongCity():GetUser():GetTradeManager():IsSoldOut() then
         if not self:getChildByTag(TIP_TAG) then
             local x,y = self:GetSpriteTopPosition()
             x = x - 20
-            y = y - 50
-            display.newSprite("tmp_tips_74x80.png")
+            display.newSprite("tmp_tips_56x60.png")
                 :addTo(self,1,TIP_TAG):align(display.BOTTOM_CENTER,x,y)
                 :runAction(UIKit:ShakeAction(true,2))
         end
-    else
+    elseif self:getChildByTag(TIP_TAG) then
         self:removeChildByTag(TIP_TAG)
     end
 end
