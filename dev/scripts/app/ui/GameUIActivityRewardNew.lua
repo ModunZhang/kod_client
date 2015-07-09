@@ -384,7 +384,7 @@ function GameUIActivityRewardNew:GetContinutyListItem(reward_type,item_key,time_
         color= 0x615b44
     }):align(display.LEFT_CENTER, 120, 38):addTo(content)
 
-    local title_label =	UIKit:ttfLabel({
+    local title_label = UIKit:ttfLabel({
         text = flag == 1 and _("已领取") or _("明天领取"),
         size = 22,
         color= 0x514d3e
@@ -448,8 +448,10 @@ function GameUIActivityRewardNew:GetContinutyListData()
             local final_rewards = {}
             for __,one_reward in ipairs(config_rewards) do
                 local reward_type,item_key,count = unpack(string.split(one_reward,":"))
-                local str = string.format("%s x%d",self:GetRewardName(reward_type, item_key),count)
-                table.insert(final_rewards, str)
+                if not (item_key == "marchQueue" and User:MarchQueue() == 2) then
+                    local str = string.format("%s x%d",self:GetRewardName(reward_type, item_key),count)
+                    table.insert(final_rewards, str)
+                end
             end
             local final_rewards_str = table.concat(final_rewards, ",")
 
@@ -668,7 +670,7 @@ function GameUIActivityRewardNew:GetLevelUpData()
         if app.timer:GetServerTime() > countInfo.registerTime/1000 + config_intInit.playerLevelupRewardsHours.value * 60 * 60 then
             flag = 3
         else
-            if 	v.level <= current_level then
+            if  v.level <= current_level then
                 flag = self:CheckCanGetLevelUpReward(v.index) and 2 or 1
             else
                 flag = 3
@@ -920,7 +922,7 @@ function GameUIActivityRewardNew:RefreshOnLineList(needClean)
                     end
                 else
                     -- if not item.sp:getFilter() then
-                    -- 	item.sp:setFilter(filter.newFilter("CUSTOM", json.encode({frag = "shaders/ps_discoloration.fs",shaderName = "ps_discoloration"})))
+                    --  item.sp:setFilter(filter.newFilter("CUSTOM", json.encode({frag = "shaders/ps_discoloration.fs",shaderName = "ps_discoloration"})))
                     -- end
                     item.button:hide()
                     item.time_label:show()
@@ -980,4 +982,5 @@ function GameUIActivityRewardNew:GetNextOnlineTimePoint()
 end
 
 return GameUIActivityRewardNew
+
 
