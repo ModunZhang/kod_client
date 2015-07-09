@@ -143,7 +143,7 @@ function GameUIHome:onEnter()
     self:AddOrRemoveListener(true)
     self:OnResourceChanged(city:GetResourceManager())
     self:RefreshData()
-    self:OnTaskChanged(User)
+    self:OnTaskChanged()
     self:RefreshHelpButtonVisible()
 end
 function GameUIHome:onExit()
@@ -441,6 +441,40 @@ function GameUIHome:CreateTop()
     --在线活动
     local activity_button = WidgetAutoOrderAwardButton.new(self)
     left_order:AddElement(activity_button)
+
+
+
+    if not self.city:GetDragonEyrie():GetDragonManager():IsAllHated() then
+        local this = self
+        local dragon_egg_btn = UIKit:ButtonAddScaleAction(cc.ui.UIPushButton.new(
+            {normal = "dragon_eggs_68x80.png", pressed = "dragon_eggs_68x80.png"}
+        ):onButtonClicked(function(event)
+            if not event.target:CheckVisible() then
+                event.target:hide()
+            else
+                local dragon = this.city:GetDragonEyrie():GetDragonManager():GetEnableHatedDragon()
+                if dragon then
+                    UIKit:newGameUI("GameUIDragonEyrieMain", self.city, self.city:GetFirstBuildingByType("dragonEyrie"), "dragon", false, dragon:Type()):AddToCurrentScene(true)
+                end
+            end
+        end))
+        function dragon_egg_btn:CheckVisible()
+            return this.city:GetDragonEyrie():GetDragonManager():IsHateEnable()
+        end
+        function dragon_egg_btn:GetElementSize()
+            return {width = 68,height = 80}
+        end
+        dragon_egg_btn:schedule(function()
+            local old_visible = dragon_egg_btn:isVisible()
+            local cur_visible = dragon_egg_btn:CheckVisible()
+            if old_visible ~= cur_visible then
+                dragon_egg_btn:setVisible(cur_visible)
+                left_order:RefreshOrder()
+            end
+        end, 1)
+        self.dragon_egg_btn = dragon_egg_btn
+        left_order:AddElement(dragon_egg_btn)
+    end
     left_order:RefreshOrder()
 
 
@@ -448,6 +482,7 @@ function GameUIHome:CreateTop()
     -- BUFF按钮
     local buff_button = WidgetAutoOrderBuffButton.new(self)
     order:AddElement(buff_button)
+
 
     -- 协助加速按钮
     self.help_button = cc.ui.UIPushButton.new(
@@ -898,3 +933,4 @@ end
 
 
 return GameUIHome
+
