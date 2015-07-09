@@ -78,27 +78,31 @@ function WidgetChangeMap:onExit()
     my_allaince:GetAllianceShrine():RemoveListenerOnType(self,my_allaince:GetAllianceShrine().LISTEN_TYPE.OnShrineEventsChanged)
 end
 function WidgetChangeMap:OnShrineEventsChanged(changed_map)
-    local alliance = Alliance_Manager:GetMyAlliance()
-    if alliance:GetAllianceShrine():HaveEvent() then
-        self:AddShrineOpenedIcon()
-    else
-        self.shrine_icon:removeFromParent(true)
-    end
+    self:AddShrineOpenedIcon()
 end
 function WidgetChangeMap:AddShrineOpenedIcon()
-    if not self.shrine_icon then
-        local icon = display.newSprite("tmp_shrine_open_icon_96x96.png"):addTo(self)
-            :align(display.LEFT_CENTER,window.cx-320 * self.scale_x, 50 * self.scale_x)
-            :scale(self.scale_x)
-        icon:setOpacity(122)
-        icon:runAction(cc.RepeatForever:create(transition.sequence{
-            cc.FadeTo:create(1.5, 255),
-            cc.FadeTo:create(1.5, 122),
-        }))
-        self.shrine_icon = icon
+    local alliance = Alliance_Manager:GetMyAlliance()
+    if alliance:GetAllianceShrine():HaveEvent() then
+        if not self.shrine_icon then
+            local icon = display.newSprite("tmp_shrine_open_icon_96x96.png"):addTo(self)
+                :align(display.LEFT_CENTER,window.cx-320 * self.scale_x, 50 * self.scale_x)
+                :scale(self.scale_x)
+            icon:setOpacity(122)
+            icon:runAction(cc.RepeatForever:create(transition.sequence{
+                cc.FadeTo:create(1.5, 255),
+                cc.FadeTo:create(1.5, 122),
+            }))
+            self.shrine_icon = icon
+        end
+    else
+        if self.shrine_icon then
+            self.shrine_icon:removeFromParent(true)
+        end
     end
 end
 return WidgetChangeMap
+
+
 
 
 
