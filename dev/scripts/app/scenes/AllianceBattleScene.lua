@@ -175,6 +175,8 @@ function AllianceBattleScene:EnterNotAllianceBuilding(entity,isMyAlliance)
         if not entity:GetAllianceVillageInfo() then -- 废墟
             class_name = "GameUIAllianceRuinsEnter"
         end
+    elseif type_ == 'monster' then
+        return 
     end
     UIKit:newGameUI(class_name,entity,isMyAlliance,self:GetAlliance(),self:GetEnemyAlliance()):AddToCurrentScene(true)
 end

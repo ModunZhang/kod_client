@@ -74,6 +74,7 @@ property(Alliance, "countInfo", {})
 property(Alliance, "events", {})
 property(Alliance, "joinRequestEvents", nil)
 property(Alliance, "villages", {})
+property(Alliance, "monsters", {})
 property(Alliance, "villageLevels", {})
 property(Alliance, "allianceFight", {})
 property(Alliance, "allianceFightReports", nil)
@@ -474,6 +475,7 @@ function Alliance:OnAllianceDataChanged(alliance_data,refresh_time,deltaData)
 
     self:OnVillageLevelsChanged(alliance_data, deltaData)
     self:OnVillagesChanged(alliance_data,deltaData)
+    self:OnMonstersChanged(alliance_data,deltaData)
     self.alliance_shrine:OnAllianceDataChanged(alliance_data,deltaData,refresh_time)
     self.alliance_map:OnAllianceDataChanged(alliance_data, deltaData)
 
@@ -1235,7 +1237,35 @@ function Alliance:OnVillagesChanged(alliance_data,deltaData)
         )
     end
 end
-
+function Alliance:OnMonstersChanged(alliance_data,deltaData)
+    if not alliance_data.monsters then return end
+    local is_fully_update = deltaData == nil
+    local is_delta_update = not is_fully_update and deltaData.monsters ~= nil
+    if is_fully_update then
+        self.monsters = {}
+        for _,v in ipairs(alliance_data.monsters) do
+            self.monsters[v.id] = v
+        end
+    end
+    if is_delta_update then
+        local changed_map = GameUtils:Handler_DeltaData_Func(
+            deltaData.monsters
+            ,function(event_data)
+                self.monsters[event_data.id] = event_data
+            end
+            ,function(event_data)
+                if self.monsters[event_data.id] then
+                    self.monsters[event_data.id] = event_data
+                end
+            end
+            ,function(event_data)
+                if self.monsters[event_data.id] then
+                    self.monsters[event_data.id] = nil
+                end
+            end
+        )
+    end
+end
 function Alliance:IteratorAllianceVillageInfo(func)
     for _,v in pairs(self.villages) do
         func(v)
@@ -1244,6 +1274,10 @@ end
 
 function Alliance:GetAllianceVillageInfos()
     return self.villages
+end
+
+function Alliance:GetAllianceMonsterInfos()
+    return self.monsters
 end
 
 function Alliance:SetIsMyAlliance(isMyAlliance)

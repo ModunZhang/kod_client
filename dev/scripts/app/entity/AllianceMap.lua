@@ -29,6 +29,9 @@ end
 function mapObject_meta:GetAllianceVillageInfo()
     return self.alliance_map:FindAllianceVillagesInfoByObject(self)
 end
+function mapObject_meta:GetAllianceMonsterInfo()
+   return self.alliance_map:FindAllianceMonsterInfoByObject(self) 
+end
 function mapObject_meta:GetAllianceMemberInfo()
     return self.alliance_map:GetAllianceMemberInfo(self)
 end
@@ -143,6 +146,9 @@ end
 local function is_village(object)
     return buildingName[object.name].type == "village"
 end
+local function is_monster(object)
+   return buildingName[object.name].type == "monster" 
+end
 local function is_decorator(object)
     return buildingName[object.name].type == "decorate"
 end
@@ -154,6 +160,7 @@ function AllianceMap:ctor(alliance)
     self.buildingMapObjects = {}
     self.memberMapObjects = {}
     self.villageMapObjects = {}
+    self.monsterMapObjects = {}
     self.decoratorMapObjects = {}
 end
 function AllianceMap:Reset()
@@ -164,6 +171,7 @@ function AllianceMap:Reset()
     self.memberMapObjects = {}
     self.villageMapObjects = {}
     self.decoratorMapObjects = {}
+    self.monsterMapObjects = {}
 end
 function AllianceMap:GetMapObjectsByType(type_)
     if type_ == "building" then
@@ -174,6 +182,8 @@ function AllianceMap:GetMapObjectsByType(type_)
         return self.villageMapObjects
     elseif type_ == "decorate" then
         return self.decoratorMapObjects
+    elseif type_== "monster" then
+        return self.monsterMapObjects
     end
     return {}
 end
@@ -315,6 +325,14 @@ function AllianceMap:FindAllianceVillagesInfoByObject(object)
         end
     end
 end
+function AllianceMap:FindAllianceMonsterInfoByObject(object)
+    if is_monster(object) then 
+        local monster_info = self:GetAlliance():GetAllianceMonsterInfos()[object:Id()]
+        if monster_info then
+            return monster_info
+        end
+    end
+end
 function AllianceMap:OnAllianceBuildingInfoChange(allianceData, deltaData)
     local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.buildings ~= nil
@@ -348,6 +366,7 @@ function AllianceMap:OnMapObjectsChanged(allianceData, deltaData)
             member = {},
             village = {},
             decorate = {},
+            monster = {}
         }
         for k,v in pairs(self.mapObjects) do
             local type_ = buildingName[v.name].type
@@ -357,6 +376,7 @@ function AllianceMap:OnMapObjectsChanged(allianceData, deltaData)
         self.memberMapObjects = objects_map.member
         self.villageMapObjects = objects_map.village
         self.decoratorMapObjects = objects_map.decorate
+        self.monsterMapObjects = objects_map.monster
         if is_fully_update then
             self:NotifyListeneOnType(AllianceMap.LISTEN_TYPE.BUILDING, function(listener)
                 if listener.OnBuildingFullUpdate then

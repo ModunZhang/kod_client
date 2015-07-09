@@ -1,5 +1,6 @@
 local CitySprite = import("..sprites.CitySprite")
 local VillageSprite = import("..sprites.VillageSprite")
+local MonsterSprite = import("..sprites.MonsterSprite")
 local AllianceDecoratorSprite = import("..sprites.AllianceDecoratorSprite")
 local AllianceBuildingSprite = import("..sprites.AllianceBuildingSprite")
 local memberMeta = import("..entity.memberMeta")
@@ -196,7 +197,9 @@ function AllianceView:OnBuildingDeltaUpdate(allianceMap, deltaMapObjects)
     self.layer:RefreshAllVillageEvents()
 end
 function AllianceView:RefreshEntity(entity)
-    self.objects[entity:Id()]:removeFromParent()
+    if self.objects[entity:Id()] then
+        self.objects[entity:Id()]:removeFromParent()
+    end
     self.objects[entity:Id()] = self:CreateObject(entity)
 end
 function AllianceView:CreateObject(entity)
@@ -208,6 +211,8 @@ function AllianceView:CreateObject(entity)
         object = CitySprite.new(self, entity, self.is_my_alliance):addTo(self:GetBuildingNode())
     elseif type_ == "village" then
         object = VillageSprite.new(self, entity, self.is_my_alliance):addTo(self:GetBuildingNode())
+    elseif type_ == "monster" then
+        object = MonsterSprite.new(self, entity, self.is_my_alliance):addTo(self:GetBuildingNode())
     elseif type_ == "decorate" then
         object = AllianceDecoratorSprite.new(self, entity, self.is_my_alliance):addTo(self:GetBuildingNode())
     end
