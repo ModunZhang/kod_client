@@ -110,6 +110,11 @@ end
 function ToolShopUpgradeBuilding:RemoveToolShopListener(listener)
     self.toolShop_building_observer:RemoveObserver(listener)
 end
+function ToolShopUpgradeBuilding:IteratorEvents(func)
+    for k,v in pairs(self.category) do
+        func(k,v)
+    end
+end
 function ToolShopUpgradeBuilding:GetMakeMaterialsEvents()
     return self.category
 end
