@@ -49,7 +49,7 @@ function GameUIAllianceMosterEnter:onEnter()
     }):addTo(header_bg):align(display.CENTER, header_bg:getContentSize().width/2, header_bg:getContentSize().height/2)
     -- 怪物士兵头像
     local soldier_ui_config = UILib.black_soldier_image[soldier_type][soldier_star]
-    display.newSprite("red_bg_128x128.png"):addTo(body)
+    display.newSprite(UILib.black_soldier_color_bg_images[soldier_type]):addTo(body)
         :align(display.CENTER_TOP,100, b_height-100):scale(130/128)
 
     local soldier_head_icon = display.newSprite(soldier_ui_config):align(display.CENTER_TOP,100, b_height-100)
