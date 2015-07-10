@@ -272,8 +272,9 @@ function WidgetUseItems:OpenResourceDialog( item )
                     return true
                 end,
                 function ()
-                    local item_name = v:Name()
-                    NetManager:getUseItemPromise(item_name,{})
+                    -- local item_name = v:Name()
+                    -- NetManager:getUseItemPromise(item_name,{})
+                    UIKit:newWidgetUI("WidgetUseMutiItems", v):AddToCurrentScene()
                 end,
                 function ()
                     local item_name = v:Name()

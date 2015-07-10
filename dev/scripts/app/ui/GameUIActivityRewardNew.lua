@@ -430,6 +430,7 @@ end
 function GameUIActivityRewardNew:GetContinutyListData()
     local r = {}
     local countInfo = User:GetCountInfo()
+    dump(countInfo,"countInfo")
     for i,v in ipairs(config_day14) do
         local config_rewards = string.split(v.rewards,",")
         if #config_rewards == 1 then
