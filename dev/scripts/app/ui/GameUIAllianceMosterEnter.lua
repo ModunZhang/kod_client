@@ -16,7 +16,6 @@ local GameUIAllianceMosterEnter = class("GameUIAllianceMosterEnter", WidgetPopDi
 function GameUIAllianceMosterEnter:ctor(entity,isMyAlliance,alliance)
     local moster = entity:GetAllianceMonsterInfo()
     self.entity = entity
-    print("self.entity = ",self.entity.id)
     self.moster_config = monsterConfig[moster.level]
     self.isMyAlliance = isMyAlliance
     self.alliance = alliance
