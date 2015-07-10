@@ -44,7 +44,11 @@ function WidgetUseMutiItems:ctor(item)
         }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-
+                NetManager:getUseItemPromise(item:Name(),{
+                    [item:Name()] = {count = slider:GetValue()}
+                }):done(function ()
+                    self:LeftButtonClicked()
+                end)
             end
         end):align(display.BOTTOM_CENTER, body_size.width/2,30):addTo(body)
     button:setButtonEnabled(slider:GetValue() ~= 0)
@@ -52,4 +56,5 @@ function WidgetUseMutiItems:ctor(item)
 end
 
 return WidgetUseMutiItems
+
 
