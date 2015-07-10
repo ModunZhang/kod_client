@@ -41,7 +41,7 @@ function GameUIAllianceMosterEnter:onEnter()
     local b_size = body:getContentSize()
     local b_width , b_height = b_size.width , b_size.height
     -- 下次刷新野怪时间
-    local header_bg = UIKit:CreateBoxPanelWithBorder({height = 58}):align(display.TOP_CENTER, b_width/2, b_height - 30):addTo(body)
+    local header_bg = UIKit:CreateBoxPanelWithBorder({height = 58}):align(display.TOP_CENTER, b_width/2, b_height - 24):addTo(body)
     self.time_label = UIKit:ttfLabel({
         text = string.format(_("即将消失:%s"),GameUtils:formatTimeStyle1(alliance:MonsterRefreshTime()/1000 - app.timer:GetServerTime())),
         color = 0x6a1f10,
@@ -50,15 +50,15 @@ function GameUIAllianceMosterEnter:onEnter()
     -- 怪物士兵头像
     local soldier_ui_config = UILib.black_soldier_image[soldier_type][soldier_star]
     display.newSprite(UILib.black_soldier_color_bg_images[soldier_type]):addTo(body)
-        :align(display.CENTER_TOP,100, b_height-100):scale(130/128)
+        :align(display.CENTER_TOP,94, b_height-94):scale(130/128)
 
-    local soldier_head_icon = display.newSprite(soldier_ui_config):align(display.CENTER_TOP,100, b_height-100)
+    local soldier_head_icon = display.newSprite(soldier_ui_config):align(display.CENTER_TOP,94, b_height-94)
     soldier_head_icon:scale(130/soldier_head_icon:getContentSize().height)
     display.newSprite("box_soldier_128x128.png"):addTo(soldier_head_icon):align(display.CENTER, soldier_head_icon:getContentSize().width/2, soldier_head_icon:getContentSize().height-64)
     body:addChild(soldier_head_icon)
     -- 等级
     local level_bg = WidgetUIBackGround.new({width = 130 , height = 36},WidgetUIBackGround.STYLE_TYPE.STYLE_3)
-        :align(display.CENTER, soldier_head_icon:getPositionX(), soldier_head_icon:getPositionY() - 154):addTo(body)
+        :align(display.CENTER, soldier_head_icon:getPositionX(), soldier_head_icon:getPositionY() - 150):addTo(body)
     UIKit:ttfLabel({
         text = string.format(_("等级%d"),level),
         color = 0x514d3e,
@@ -67,7 +67,7 @@ function GameUIAllianceMosterEnter:onEnter()
 
     -- 奖励背景框
     local reward_bg = display.newScale9Sprite("back_ground_258x90.png",0,0,cc.size(398,172),cc.rect(10,10,238,70))
-        :align(display.RIGHT_BOTTOM, b_width - 25, 15)
+        :align(display.RIGHT_BOTTOM, b_width - 25, 21)
         :addTo(body)
     self.reward_bg = reward_bg
 
