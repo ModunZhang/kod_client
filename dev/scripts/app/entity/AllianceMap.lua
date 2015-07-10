@@ -402,6 +402,7 @@ function AllianceMap:OnMapObjectsChanged(allianceData, deltaData)
             for k,_ in pairs(old_monsters) do
                 if new_monsters[k] then
                     refresh_monsters = false
+                    break
                 end
             end
 

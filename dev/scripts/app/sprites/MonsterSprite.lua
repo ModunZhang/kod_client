@@ -87,12 +87,11 @@ function MonsterSprite:CreateSprite()
     return sprite
 end
 function MonsterSprite:GetInfo()
-    local soldier_type, star = unpack(string.split(self:GetConfig().icon, '_'))
-    return 1, Localize.soldier_name[soldier_type]
+    local level = self:GetEntity():GetAllianceMonsterInfo().level
+    local soldier_type, star = unpack(string.split(monsterConfig[level].icon, '_'))
+    return level, Localize.soldier_name[soldier_type]
 end
 function MonsterSprite:GetConfig()
-    print(self:GetEntity())
-    print(self:GetEntity():GetAllianceMonsterInfo())
     return monsterConfig[self:GetEntity():GetAllianceMonsterInfo().level]
 end
 function MonsterSprite:Flash(time)

@@ -1250,22 +1250,29 @@ function Alliance:OnMonstersChanged(alliance_data,deltaData)
         end
     end
     if is_delta_update then
-        local changed_map = GameUtils:Handler_DeltaData_Func(
-            deltaData.monsters
-            ,function(event_data)
-                self.monsters[event_data.id] = event_data
+        if #deltaData.monsters > 0 then
+            self.monsters = {}
+            for _,v in ipairs(alliance_data.monsters) do
+                self.monsters[v.id] = v
             end
-            ,function(event_data)
-                if self.monsters[event_data.id] then
+        else
+            local changed_map = GameUtils:Handler_DeltaData_Func(
+                deltaData.monsters
+                ,function(event_data)
                     self.monsters[event_data.id] = event_data
                 end
-            end
-            ,function(event_data)
-                if self.monsters[event_data.id] then
-                    self.monsters[event_data.id] = nil
+                ,function(event_data)
+                    if self.monsters[event_data.id] then
+                        self.monsters[event_data.id] = event_data
+                    end
                 end
-            end
-        )
+                ,function(event_data)
+                    if self.monsters[event_data.id] then
+                        self.monsters[event_data.id] = nil
+                    end
+                end
+            )
+        end
     end
 end
 function Alliance:IteratorAllianceVillageInfo(func)
@@ -1292,8 +1299,8 @@ end
 
 function Alliance:updateWatchTowerLocalPushIf(marchEvent)
     if marchEvent:GetPlayerRole() == marchEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER then
-        if not marchEvent:IsReturnEvent() then 
-            local marchType = marchEvent:MarchType() 
+        if not marchEvent:IsReturnEvent() then
+            local marchType = marchEvent:MarchType()
             local msg = marchEvent:IsStrikeEvent() and _("你的城市正被敌军突袭") or _("你的城市正被敌军攻击")
             local warningTime = self:GetAllianceBelvedere():GetWarningTime()
             if marchType == 'city' then
@@ -1305,7 +1312,7 @@ end
 --因为这里添加了音效效果 so 所有的事件删除都要调用此方法
 function Alliance:cancelLocalMarchEventPushIf(marchEvent)
     if marchEvent:GetPlayerRole() == marchEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER then
-        if marchEvent:IsReturnEvent() then 
+        if marchEvent:IsReturnEvent() then
             if not marchEvent:IsStrikeEvent() then --我的一般进攻部队返回城市
                 audioManager_:PlayeEffectSoundWithKey("TROOP_BACK")
             end
@@ -1315,6 +1322,7 @@ function Alliance:cancelLocalMarchEventPushIf(marchEvent)
     end
 end
 return Alliance
+
 
 
 
