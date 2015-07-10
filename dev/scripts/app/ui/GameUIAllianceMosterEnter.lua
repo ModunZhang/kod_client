@@ -22,6 +22,15 @@ function GameUIAllianceMosterEnter:ctor(entity,isMyAlliance,alliance)
     self.alliance = alliance
     GameUIAllianceMosterEnter.super.ctor(self,286,_("野怪"),window.top - 200,"title_red_600x56.png")
 end
+function GameUIAllianceMosterEnter:onCleanup()
+    local scene_name = display.getRunningScene().__cname
+    if (scene_name == 'AllianceBattleScene' or scene_name == 'AllianceScene') then
+        for k,v in pairs(display.getRunningScene():GetSceneLayer():GetAllianceViews()) do
+            v:GetMapObjectById(self.entity.id):Unlock()
+        end
+    end
+    GameUIAllianceMosterEnter.super.onCleanup(self)
+end
 function GameUIAllianceMosterEnter:onExit()
     scheduler.unscheduleGlobal(self.handle)
     GameUIAllianceMosterEnter.super.onExit(self)

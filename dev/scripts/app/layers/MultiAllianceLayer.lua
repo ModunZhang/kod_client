@@ -277,6 +277,9 @@ end
 function MultiAllianceLayer:GetLineNode()
     return self.lines
 end
+function MultiAllianceLayer:GetAllianceViews()
+    return self.alliance_views
+end
 function MultiAllianceLayer:InitAllianceView()
     local alliance_view1, alliance_view2
     if #self.alliances == 1 then

@@ -148,6 +148,9 @@ function AllianceView:GetZOrderBy(sprite, x, y)
     local width, _ = self:GetLogicMap():GetSize()
     return x + y * width + 100
 end
+function AllianceView:GetMapObjectById(id)
+    return self.objects[id]
+end
 function AllianceView:GetMapObjects()
     return self.objects
 end

@@ -979,6 +979,84 @@ function UIKit:ButtonAddScaleAction(button)
     end)
     return button
 end
+local soldier_animap = {
+    -- 普通兵种
+    --
+    bubing_1 = {cc.p(0.55, 0.38), false, 1},
+    bubing_2 = {cc.p(0.61, 0.45), false, 1},
+    bubing_3 = {cc.p(0.59, 0.48), false, 1},
+    --
+    gongjianshou_1 = {cc.p(0.52, 0.37), false, 1},
+    gongjianshou_2 = {cc.p(0.52, 0.37), false, 1},
+    gongjianshou_3 = {cc.p(0.52, 0.37), false, 1},
+    --
+    qibing_1 = {cc.p(0.5, 0.45), false, 1},
+    qibing_2 = {cc.p(0.5, 0.45), false, 1},
+    qibing_3 = {cc.p(0.5, 0.45), false, 1},
+    --
+    toushiche = {cc.p(0.39, 0.4), false, 1},
+    toushiche_2 = {cc.p(0.39, 0.4), false, 1},
+    toushiche_3 = {cc.p(0.37, 0.4), false, 1},
+    -- 
+    shaobing_1 = {cc.p(0.5, 0.36), false, 1},
+    shaobing_2 = {cc.p(0.5, 0.36), false, 1},
+    shaobing_3 = {cc.p(0.5, 0.36), false, 1},
+    -- 
+    nugongshou_1 = {cc.p(0.5, 0.38), false, 1},
+    nugongshou_2 = {cc.p(0.5, 0.38), false, 1},
+    nugongshou_3 = {cc.p(0.34, 0.38), false, 1},
+    -- 
+    youqibing_1 = {cc.p(0.5, 0.38), false, 1},
+    youqibing_2 = {cc.p(0.5, 0.38), false, 1},
+    youqibing_3 = {cc.p(0.5, 0.38), false, 1},
+    -- 
+    nuche_1 = {cc.p(0.5, 0.45), false, 1},
+    nuche_2 = {cc.p(0.5, 0.45), false, 1},
+    nuche_3 = {cc.p(0.5, 0.45), false, 1},
+
+    -- 特殊兵种
+    kulouyongshi = {cc.p(0.5, 0.45), false, 1.2},
+    kulousheshou = {cc.p(0.28, 0.45), false, 1.2},
+    siwangqishi = {cc.p(0.5, 0.45), false, 1.2},
+    jiaorouche = {cc.p(0.37, 0.45), false, 1.5},
+    -- 黑化兵
+    heihua_bubing_2 = {cc.p(0.5, 0.3), false, 1},
+    heihua_bubing_3 = {cc.p(0.45, 0.33), true, 1},
+    --
+    heihua_gongjianshou_2 = {cc.p(0.1, 0.09), true, 1, true},
+    heihua_gongjianshou_3 = {cc.p(0.47, 0.22), true, 1},
+    --
+    heihua_qibing_2 = {cc.p(0.5, 0.4), true, 1},
+    heihua_qibing_3 = {cc.p(0.55, 0.4), true, 1},
+    --
+    heihua_toushiche_2 = {cc.p(0.4, 0.4), true, 0.8},
+    heihua_toushiche_3 = {cc.p(0.4, 0.4), true, 0.8},
+    --
+    heihua_shaobing_2 = {cc.p(0.5, 0.22), true, 0.8},
+    heihua_shaobing_3 = {cc.p(0.5, 0.3), true, 0.8},
+    --
+    heihua_nugongshou_2 = {cc.p(0.48, 0.35), true, 1},
+    heihua_nugongshou_3 = {cc.p(0.48, 0.3), true, 1},
+    --
+    heihua_youqibing_2 = {cc.p(0.48, 0.3), true, 1},
+    heihua_youqibing_3 = {cc.p(0.48, 0.3), true, 1},
+    --
+    heihua_nuche_2 = {cc.p(0.5, 0.4), true, 1},
+    heihua_nuche_3 = {cc.p(0.5, 0.4), true, 1},
+}
+function UIKit:CreateIdle45Ani(ani)
+    local ap,flip,s,shadow = unpack(soldier_animap[ani])
+    local sprite = ccs.Armature:create(ani)
+    sprite:setScaleX(flip and -s or s)
+    sprite:setScaleY(s)
+    sprite:setAnchorPoint(ap)
+    sprite:getAnimation():play("idle_45")
+    if shadow then
+        display.newSprite("tmp_soldier_shadow.png")
+        :addTo(sprite):setAnchorPoint(cc.p(0.25,0.45))
+    end
+    return sprite
+end
 
 
 

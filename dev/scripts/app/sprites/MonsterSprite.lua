@@ -7,99 +7,127 @@ local MonsterSprite = class("MonsterSprite", WithInfoSprite)
 local monsterConfig = GameDatas.AllianceInitData.monster
 local soldier_config = {
     ["swordsman"] = {
-        {"heihua_bubing_2"},
-        {"heihua_bubing_2"},
-        {"heihua_bubing_3"},
+        {"heihua_bubing_2", 4},
+        {"heihua_bubing_2", 4},
+        {"heihua_bubing_3", 4},
     },
     ["ranger"] = {
-        {"heihua_gongjianshou_2"},
-        {"heihua_gongjianshou_2"},
-        {"heihua_gongjianshou_3"},
+        {"heihua_gongjianshou_2", 4},
+        {"heihua_gongjianshou_2", 4},
+        {"heihua_gongjianshou_3", 4},
     },
     ["lancer"] = {
-        {"heihua_qibing_2"},
-        {"heihua_qibing_2"},
-        {"heihua_qibing_3"},
+        {"heihua_qibing_2", 2},
+        {"heihua_qibing_2", 2},
+        {"heihua_qibing_3", 2},
     },
     ["catapult"] = {
-        {"heihua_toushiche_2"},
-        {"heihua_toushiche_2"},
-        {"heihua_toushiche_3"},
+        {"heihua_toushiche_2", 1},
+        {"heihua_toushiche_2", 1},
+        {"heihua_toushiche_3", 1},
     },
 
     -----
     ["sentinel"] = {
-        {"heihua_shaobing_2"},
-        {"heihua_shaobing_2"},
-        {"heihua_shaobing_3"},
+        {"heihua_shaobing_2", 4},
+        {"heihua_shaobing_2", 4},
+        {"heihua_shaobing_3", 4},
     },
     ["crossbowman"] = {
-        {"heihua_nugongshou_2"},
-        {"heihua_nugongshou_2"},
-        {"heihua_nugongshou_3"},
+        {"heihua_nugongshou_2", 4},
+        {"heihua_nugongshou_2", 4},
+        {"heihua_nugongshou_3", 4},
     },
     ["horseArcher"] = {
-        {"heihua_youqibing_2"},
-        {"heihua_youqibing_2"},
-        {"heihua_youqibing_3"},
+        {"heihua_youqibing_2", 2},
+        {"heihua_youqibing_2", 2},
+        {"heihua_youqibing_3", 2},
     },
     ["ballista"] = {
-        {"heihua_nuche_2"},
-        {"heihua_nuche_2"},
-        {"heihua_nuche_3"},
+        {"heihua_nuche_2", 1},
+        {"heihua_nuche_2", 1},
+        {"heihua_nuche_3", 1},
     },
 
 
     ["skeletonWarrior"] = {
-        {"kulouyongshi"},
-        {"kulouyongshi"},
-        {"kulouyongshi"},
+        {"kulouyongshi", 4},
+        {"kulouyongshi", 4},
+        {"kulouyongshi", 4},
     },
     ["skeletonArcher"] = {
-        {"kulousheshou"},
-        {"kulousheshou"},
-        {"kulousheshou"},
+        {"kulousheshou", 4},
+        {"kulousheshou", 4},
+        {"kulousheshou", 4},
     },
     ["deathKnight"] = {
-        {"siwangqishi"},
-        {"siwangqishi"},
-        {"siwangqishi"},
+        {"siwangqishi", 2},
+        {"siwangqishi", 2},
+        {"siwangqishi", 2},
     },
     ["meatWagon"] = {
-        {"jiaorouche"},
-        {"jiaorouche"},
-        {"jiaorouche"},
+        {"jiaorouche", 1},
+        {"jiaorouche", 1},
+        {"jiaorouche", 1},
     },
 }
-
-
+local position_map = {
+    [1] = {
+        {x = 0, y = 0}
+    },
+    [2] = {
+        {x = -5, y = -25},
+        {x = 20, y = -40},
+    },
+    [4] = {
+        {x = 0, y = -5},
+        {x = -25, y = -20},
+        {x = 25, y = -20},
+        {x = 0, y = -35},
+    }
+}
 function MonsterSprite:ctor(city_layer, entity, is_my_alliance)
+    -- 不加此行会报错
     self.entity = entity
-    MonsterSprite.super.ctor(self, city_layer, entity, is_my_alliance)
+    MonsterSprite.super.ctor(self, city_layer, entity, false)
 end
 function MonsterSprite:CreateSprite()
     local soldier_type, star = unpack(string.split(self:GetConfig().icon, '_'))
-    local ani = unpack(soldier_config[soldier_type][tonumber(star)])
-    -- ani = "heihua_bubing_2"
-    local sprite = ccs.Armature:create(ani)
-    sprite:getAnimation():play("idle_45")
-    sprite:align(display.CENTER)
-    return sprite
+    local ani,count = unpack(soldier_config[soldier_type][tonumber(star)])
+    local node = display.newNode()
+    for _,v in ipairs(position_map[4]) do
+        UIKit:CreateIdle45Ani(ani):pos(v.x, v.y):addTo(node)
+    end
+    return node
 end
 function MonsterSprite:GetInfo()
     local level = self:GetEntity():GetAllianceMonsterInfo().level
     local soldier_type, star = unpack(string.split(monsterConfig[level].icon, '_'))
-    return level, Localize.soldier_name[soldier_type]
+    return level, string.format("[%s]%s", _("黑龙军团"), Localize.soldier_name[soldier_type])
 end
 function MonsterSprite:GetConfig()
     return monsterConfig[self:GetEntity():GetAllianceMonsterInfo().level]
 end
+local LOCK_TAG = 11201
 function MonsterSprite:Flash(time)
-    self:GetSprite():stopAllActions()
-    self:GetSprite():runAction(transition.sequence{
-        cc.ScaleTo:create(time/2, 1.2),
-        cc.ScaleTo:create(time/2, 1)
-    })
+    self:Lock()
+end
+function MonsterSprite:Lock()
+    if not self:GetSprite():getChildByTag(LOCK_TAG) then
+    display.newSprite("tmp_monster_circle.png")
+        :addTo(self:GetSprite(), -1, LOCK_TAG):pos(0, -10)
+        :runAction(
+            cc.RepeatForever:create(
+                transition.sequence{
+                    cc.ScaleTo:create(1/2, 1.2),
+                    cc.ScaleTo:create(1/2, 1),
+                }
+            )
+        )
+    end
+end
+function MonsterSprite:Unlock()
+    self:GetSprite():removeChildByTag(LOCK_TAG)
 end
 
 
@@ -115,9 +143,11 @@ function MonsterSprite:newBatchNode(w, h)
     local map = self:GetLogicMap()
     for ix = start_x, end_x do
         for iy = start_y, end_y do
-			display.newSprite(base_node:getTexture()):addTo(base_node):pos(map:ConvertToLocalPosition(ix, iy)):scale(2)
+            display.newSprite(base_node:getTexture()):addTo(base_node):pos(map:ConvertToLocalPosition(ix, iy)):scale(2)
         end
     end
     return base_node
 end
 return MonsterSprite
+
+
