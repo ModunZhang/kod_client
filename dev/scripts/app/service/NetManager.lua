@@ -1343,6 +1343,11 @@ function NetManager:getRetreatFromVillagePromise(allianceId,eventId)
     return get_blocking_request_promise("logic.allianceHandler.retreatFromVillage",
         {villageEventId = eventId},"村落撤退失败!"):done(get_player_response_msg)
 end
+--进攻野怪
+function NetManager:getAttackMonsterPromise(dragonType,soldiers,defenceAllianceId,defenceMonsterId)
+    return get_blocking_request_promise("logic.allianceHandler.attackMonster",
+        {defenceMonsterId = defenceMonsterId,defenceAllianceId=defenceAllianceId,dragonType=dragonType,soldiers = soldiers},"进攻野怪失败!"):done(get_player_response_msg)
+end
 --突袭村落
 function NetManager:getStrikeVillagePromise(dragonType,defenceAllianceId,defenceVillageId)
     return get_blocking_request_promise("logic.allianceHandler.strikeVillage",

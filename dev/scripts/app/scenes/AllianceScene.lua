@@ -244,7 +244,7 @@ function AllianceScene:EnterNotAllianceBuilding(entity)
             end
         elseif type_ == 'monster' then
             dump(entity)
-            return
+            class_name = "GameUIAllianceMosterEnter"
         end
         UIKit:newGameUI(class_name,entity,isMyAlliance,self:GetAlliance()):AddToCurrentScene(true)
     else

@@ -62,6 +62,7 @@ property(Alliance, "maxMembers", 0)
 property(Alliance, "describe", "")
 property(Alliance, "notice", "")
 property(Alliance, "archon", "")
+property(Alliance, "monsterRefreshTime", 0)
 -- 成员信息
 property(Alliance, "members", {})
 property(Alliance, "memberCount", 0)
@@ -511,6 +512,7 @@ function Alliance:OnAllianceBasicInfoChangedFirst(alliance_data,deltaData)
     self:SetStatus(basicInfo.status)
     self:SetStatusStartTime(basicInfo.statusStartTime)
     self:SetStatusFinishTime(basicInfo.statusFinishTime)
+    self:SetMonsterRefreshTime(basicInfo.monsterRefreshTime)
 end
 function Alliance:OnAllianceEventsChanged(alliance_data,deltaData)
     local is_fully_update = deltaData == nil
