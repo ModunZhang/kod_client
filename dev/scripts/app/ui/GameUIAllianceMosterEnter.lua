@@ -8,6 +8,7 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetAllianceEnterButtonProgress = import("..widget.WidgetAllianceEnterButtonProgress")
 local UILib = import(".UILib")
 local Localize = import("..utils.Localize")
+local Localize_item = import("..utils.Localize_item")
 local window = import("..utils.window")
 local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
 local monsterConfig = GameDatas.AllianceInitData.monster
@@ -76,88 +77,48 @@ function GameUIAllianceMosterEnter:onEnter()
         size = 22,
     }):addTo(level_bg):align(display.CENTER, level_bg:getContentSize().width/2, level_bg:getContentSize().height/2)
 
-    -- 奖励背景框
-    local reward_bg = display.newScale9Sprite("back_ground_258x90.png",0,0,cc.size(398,172),cc.rect(10,10,238,70))
-        :align(display.RIGHT_BOTTOM, b_width - 25, 21)
+    local title_bg = display.newScale9Sprite("title_blue_430x30.png",soldier_head_icon:getPositionX() + 90, soldier_head_icon:getPositionY(), cc.size(390,30), cc.rect(10,10,410,10))
+        :align(display.LEFT_TOP)
         :addTo(body)
-    self.reward_bg = reward_bg
-
-    local title_bg = display.newScale9Sprite("back_ground_blue_254x42.png", 1, 172,cc.size(395,30),cc.rect(10,10,234,22)):align(display.LEFT_TOP):addTo(reward_bg)
     UIKit:ttfLabel({
         text = _("有几率获得"),
         color = 0xffedae,
         size = 20,
-    }):addTo(title_bg):align(display.CENTER, title_bg:getContentSize().width/2, title_bg:getContentSize().height/2)
+    }):addTo(title_bg):align(display.LEFT_CENTER, 10, title_bg:getContentSize().height/2)
 
-    -- 奖励分为三个类别显示：资源道具，建筑建筑材料，银币道具和金龙币道具
-    -- 资源道具框
-    display.newSprite("box_118x118.png"):addTo(reward_bg):align(display.CENTER, 56, 90):scale(88/118)
-    display.newSprite("box_118x118.png"):addTo(reward_bg):align(display.CENTER, 200, 90):scale(88/118)
-    display.newSprite("box_118x118.png"):addTo(reward_bg):align(display.CENTER, 340, 90):scale(88/118)
-
-    local items_rewards = {}
-    local buildingMaterials_rewards = {}
-    local gem_rewards = {}
-    for i,v in ipairs(rewards) do
-        local unit_reward = string.split(v,":")
-        local reward_data = {name = unit_reward[2],count = unit_reward[3]}
-        if string.find(v,"items") then
-            if string.find(v,"coinClass") or string.find(v,"gemClass") then
-                table.insert(gem_rewards, reward_data)
-            else
-                table.insert(items_rewards, reward_data)
-            end
-        else
-            table.insert(buildingMaterials_rewards, reward_data)
-        end
+    local clipNode = display.newClippingRegionNode(cc.rect(soldier_head_icon:getPositionX() + 90 ,20,380,150)):addTo(body)
+    local rewards_node = display.newNode():addTo(clipNode)
+    rewards_node:setContentSize(cc.size(#rewards * 100,100))
+    rewards_node:align(display.LEFT_CENTER, 0, 50)
+    for i,reward in ipairs(rewards) do
+        local info = string.split(reward,":")
+        display.newSprite("box_118x118.png"):addTo(rewards_node):align(display.CENTER, 44 + (i - 1) * 100, 100):scale(88/118)
+        local material_icon = display.newSprite(UILib.materials[info[2]] or UILib.item[info[2]])
+            :align(display.CENTER, 44 + (i - 1) * 100, 100)
+            :addTo(rewards_node)
+        material_icon:scale(74/math.max(material_icon:getContentSize().width,material_icon:getContentSize().height))
+        local num_bg = display.newSprite("gacha_num_bg.png"):addTo(rewards_node):align(display.CENTER, 64 + (i - 1) * 100,70)
+        UIKit:ttfLabel({
+            text = "X "..info[3],
+            size = 16,
+            color = 0xffedae
+        }):align(display.RIGHT_CENTER, num_bg:getContentSize().width, num_bg:getContentSize().height/2)
+            :addTo(num_bg)
+        UIKit:ttfLabel({
+            text = info[1] == "buildingMaterials" and  Localize.materials[info[2]] or GameUtils:formatNumber(tonumber(ItemManager:GetItemByName(info[2]):Effect()) * (string.find(info[2],"gemClass") and 1 or 1000)),
+            -- text = "X "..info[3],
+            color = 0x615b44,
+            size = 20,
+        }):addTo(rewards_node):align(display.CENTER, 44 + (i - 1) * 100 ,40)
     end
-    self.items_rewards = items_rewards
-    self.buildingMaterials_rewards = buildingMaterials_rewards
-    self.gem_rewards = gem_rewards
 
-    self.item_index = 1
-    local item_index = self.item_index
-    local item_icon = display.newSprite(UILib.item[items_rewards[item_index].name])
-        :align(display.CENTER, 56, 90)
-        :addTo(reward_bg)
-    item_icon:scale(74/math.max(item_icon:getContentSize().width,item_icon:getContentSize().height))
-    self.item_icon = item_icon
-    self.item_count_label = UIKit:ttfLabel({
-        text = "X "..items_rewards[item_index].count,
-        size = 20,
-        color = 0x615b44
-    }):addTo(reward_bg)
-        :align(display.CENTER, 56, 30 )
-
-    self.material_index = 1
-    local material_index = self.material_index
-    local material_icon = display.newSprite(UILib.materials[buildingMaterials_rewards[material_index].name])
-        :align(display.CENTER, 200, 90)
-        :addTo(reward_bg)
-    material_icon:scale(74/math.max(material_icon:getContentSize().width,material_icon:getContentSize().height))
-    self.material_icon = material_icon
-    self.material_count_label = UIKit:ttfLabel({
-        text = "X "..buildingMaterials_rewards[material_index].count,
-        size = 20,
-        color = 0x615b44
-    }):addTo(reward_bg)
-        :align(display.CENTER, 200, 30 )
-
-    self.gem_index = 1
-    local gem_index = self.gem_index
-    local gem_icon = display.newSprite(UILib.item[gem_rewards[gem_index].name])
-        :align(display.CENTER, 340, 90)
-        :addTo(reward_bg)
-    gem_icon:scale(74/math.max(gem_icon:getContentSize().width,gem_icon:getContentSize().height))
-    self.gem_icon = gem_icon
-    self.gem_count_label = UIKit:ttfLabel({
-        text = "X "..gem_rewards[gem_index].count,
-        size = 20,
-        color = 0x615b44
-    }):addTo(reward_bg)
-        :align(display.CENTER, 340, 30 )
-    -- 从第一栏开始变换
-    self.change_index = 1
+    rewards_node:runAction(cc.RepeatForever:create(transition.sequence{
+        cc.MoveTo:create(10, cc.p(soldier_head_icon:getPositionX() + 90 - rewards_node:getContentSize().width, 50)),
+        cc.CallFunc:create(function()
+            rewards_node:setPositionX(soldier_head_icon:getPositionX() + 90 + 380)
+        end)
+    }))
+   
     self.handle = scheduler.scheduleGlobal(handler(self, self.ShowReward), 1, false)
 
 
@@ -204,27 +165,6 @@ function GameUIAllianceMosterEnter:onEnter()
     end
 end
 function GameUIAllianceMosterEnter:ShowReward()
-    local items_rewards = self.items_rewards
-    if self.change_index == 1 then
-        local item_index = self.item_index
-        self.item_index = (item_index + 1) > #items_rewards and 1 or (item_index + 1)
-        self.item_icon:setTexture(UILib.item[items_rewards[self.item_index].name])
-        self.item_count_label:setString("X "..items_rewards[self.item_index].count)
-    elseif self.change_index == 2 then
-        local buildingMaterials_rewards = self.buildingMaterials_rewards
-        local material_index = self.material_index
-        self.material_index = (material_index + 1) > #buildingMaterials_rewards and 1 or (material_index + 1)
-        self.material_icon:setTexture(UILib.materials[buildingMaterials_rewards[self.material_index].name])
-        self.material_count_label:setString("X "..items_rewards[self.material_index].count)
-    else
-        local gem_rewards = self.gem_rewards
-        local gem_index = self.gem_index
-        self.gem_index = (gem_index + 1) > #gem_rewards and 1 or (gem_index + 1)
-        self.gem_icon:setTexture(UILib.item[gem_rewards[self.gem_index].name])
-        self.gem_count_label:setString("X "..items_rewards[self.gem_index].count)
-    end
-    self.change_index = (self.change_index + 1) > 3 and 1 or (self.change_index + 1)
-
     self.time_label:setString(string.format(_("即将消失:%s"),GameUtils:formatTimeStyle1(self.alliance:MonsterRefreshTime()/1000 - app.timer:GetServerTime())))
 
     if not self.isMyAlliance and self.alliance:Status() == "fight" then
@@ -232,6 +172,15 @@ function GameUIAllianceMosterEnter:ShowReward()
     end
 end
 return GameUIAllianceMosterEnter
+
+
+
+
+
+
+
+
+
 
 
 
