@@ -596,7 +596,7 @@ function MultiAllianceLayer:CreateCorpsIf(marchEvent)
         marchEvent:AttackPlayerData().dragon.type,
         marchEvent:AttackPlayerData().soldiers,
         ally,
-        string.format("[%s]%s", player_data.alliance.tag, player_data.name)
+        player_data.name
     )
 end
 local corps_scale = 1.2
