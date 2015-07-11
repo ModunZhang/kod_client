@@ -162,13 +162,14 @@ function GameUIAllianceMosterEnter:onEnter()
 
 
     -- 进攻按钮
+    local entity = self.entity
     local btn = WidgetPushButton.new({normal = "btn_138x110.png",pressed = "btn_pressed_138x110.png"},{}
         ,{
             disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
         }):onButtonClicked(function()
         UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers,total_march_time,gameuialliancesendtroops)
             local scene_name = display.getRunningScene().__cname
-            if not self.entity then
+            if not entity:GetAllianceMonsterInfo() then
                 UIKit:showMessageDialog(_("提示"),_("敌人已经消失了"))
                 return
             end

@@ -103,7 +103,7 @@ end
 function MonsterSprite:GetInfo()
     local level = self:GetEntity():GetAllianceMonsterInfo().level
     local soldier_type, star = unpack(string.split(monsterConfig[level].icon, '_'))
-    return level, string.format("[%s]%s", _("黑龙军团"), Localize.soldier_name[soldier_type])
+    return level, Localize.soldier_name[soldier_type]
 end
 function MonsterSprite:GetConfig()
     return monsterConfig[self:GetEntity():GetAllianceMonsterInfo().level]

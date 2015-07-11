@@ -1043,8 +1043,8 @@ local soldier_animap = {
     heihua_youqibing_2 = {cc.p(0.48, 0.3), true, 1},
     heihua_youqibing_3 = {cc.p(0.48, 0.3), true, 1},
     --
-    heihua_nuche_2 = {cc.p(0.5, 0.4), true, 1},
-    heihua_nuche_3 = {cc.p(0.5, 0.4), true, 1},
+    heihua_nuche_2 = {cc.p(0.5, 0.4), true, 0.8},
+    heihua_nuche_3 = {cc.p(0.5, 0.4), true, 0.8},
 }
 local dragon_fly_45_ani = {
     red_long = {cc.p(0.52, 0.47), false, 1},
