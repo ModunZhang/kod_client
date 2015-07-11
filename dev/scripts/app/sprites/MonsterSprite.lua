@@ -73,7 +73,7 @@ local soldier_config = {
 }
 local position_map = {
     [1] = {
-        {x = 0, y = 0}
+        {x = 0, y = -20}
     },
     [2] = {
         {x = -5, y = -25},
@@ -114,16 +114,17 @@ function MonsterSprite:Flash(time)
 end
 function MonsterSprite:Lock()
     if not self:GetSprite():getChildByTag(LOCK_TAG) then
-    display.newSprite("tmp_monster_circle.png")
-        :addTo(self:GetSprite(), -1, LOCK_TAG):pos(0, -10)
-        :runAction(
+    local sprite = display.newSprite("tmp_monster_circle.png")
+        :addTo(self:GetSprite(), -1, LOCK_TAG):pos(0, -10):scale(1.3)
+        sprite:runAction(
             cc.RepeatForever:create(
                 transition.sequence{
-                    cc.ScaleTo:create(1/2, 1.2),
-                    cc.ScaleTo:create(1/2, 1),
+                    cc.ScaleTo:create(1/2, 1.5),
+                    cc.ScaleTo:create(1/2, 1.3),
                 }
             )
         )
+        sprite:setColor(cc.c3b(255,60,0))
     end
 end
 function MonsterSprite:Unlock()

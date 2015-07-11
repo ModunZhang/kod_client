@@ -142,7 +142,33 @@ function MultiAllianceLayer:ctor(scene, arrange, ...)
     -- end
 end
 function MultiAllianceLayer:TrackCorpsById(id)
+    if self.track_id then
+        self:RemoveCorpsCircle(self.corps_map[self.track_id])
+    end
     self.track_id = id
+    if self.track_id then
+        self:AddToCorpsCircle(self.corps_map[self.track_id])
+    end
+end
+local CIRCLE_TAG = 4356
+function MultiAllianceLayer:AddToCorpsCircle(corps)
+    if corps:getChildByTag(CIRCLE_TAG) then return end
+    local sprite = display.newSprite("tmp_monster_circle.png")
+    :addTo(corps, -1, CIRCLE_TAG)
+    sprite:runAction(
+        cc.RepeatForever:create(
+            transition.sequence{
+                cc.ScaleTo:create(0.5/2, 1.2),
+                cc.ScaleTo:create(0.5/2, 1.1),
+            }
+        )
+    )
+    sprite:setColor(cc.c3b(96,255,0))
+end
+function MultiAllianceLayer:RemoveCorpsCircle(corps)
+    if corps:getChildByTag(CIRCLE_TAG) then 
+        corps:removeChildByTag(CIRCLE_TAG)
+    end
 end
 function MultiAllianceLayer:Schedule()
     self.info_action:schedule(function()
@@ -560,6 +586,7 @@ function MultiAllianceLayer:CreateCorpsIf(marchEvent)
         end
         end
     end
+    local player_data = marchEvent:AttackPlayerData()
     self:CreateCorps(
         marchEvent:Id(),
         from,
@@ -568,7 +595,8 @@ function MultiAllianceLayer:CreateCorpsIf(marchEvent)
         marchEvent:ArriveTime(),
         marchEvent:AttackPlayerData().dragon.type,
         marchEvent:AttackPlayerData().soldiers,
-        ally
+        ally,
+        string.format("[%s]%s", player_data.alliance.tag, player_data.name)
     )
 end
 local corps_scale = 1.2
@@ -713,11 +741,11 @@ local function move_soldiers(corps, ani, dir_index, first_soldier)
         create_function(UIKit, ani_name):addTo(corps):pos(x,y)
     end
 end
-function MultiAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, finish_time, dragonType, soldiers, ally)
+function MultiAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, finish_time, dragonType, soldiers, ally, banner_name)
     local march_info = self:GetMarchInfoWith(id, start_pos, end_pos)
-    if start_time == march_info.start_time and 
-        finish_time == march_info.finish_time then 
-        return 
+    if start_time == march_info.start_time and
+        finish_time == march_info.finish_time then
+        return
     end
     march_info.start_time = start_time
     march_info.finish_time = finish_time
@@ -741,6 +769,18 @@ function MultiAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, fini
         else
             ani,scalex = unpack(soldier_dir_map[index])
             move_soldiers(corps, ani, index, soldiers[1])
+
+            if ally == MINE then
+                if banner_name then
+                    UIKit:CreateNameBanner(banner_name, dragonType):addTo(corps, 1)
+                        :pos(0, 80):setScaleX(scalex > 0 and 1 or -1)
+                end
+            elseif ally == FRIEND then
+                if banner_name then
+                    UIKit:CreateNameBanner(banner_name, dragonType):addTo(corps, 1)
+                        :pos(0, 80):setScaleX(scalex > 0 and 1 or -1)
+                end
+            end
         end
         corps:setScaleX(scalex)
         corps:setScaleY(math.abs(scalex))

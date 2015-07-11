@@ -999,19 +999,19 @@ local soldier_animap = {
     toushiche = {cc.p(0.39, 0.4), false, 1},
     toushiche_2 = {cc.p(0.39, 0.4), false, 1},
     toushiche_3 = {cc.p(0.37, 0.4), false, 1},
-    -- 
+    --
     shaobing_1 = {cc.p(0.5, 0.36), false, 1},
     shaobing_2 = {cc.p(0.5, 0.36), false, 1},
     shaobing_3 = {cc.p(0.5, 0.36), false, 1},
-    -- 
+    --
     nugongshou_1 = {cc.p(0.5, 0.38), false, 1},
     nugongshou_2 = {cc.p(0.5, 0.38), false, 1},
     nugongshou_3 = {cc.p(0.34, 0.38), false, 1},
-    -- 
+    --
     youqibing_1 = {cc.p(0.5, 0.38), false, 1},
     youqibing_2 = {cc.p(0.5, 0.38), false, 1},
     youqibing_3 = {cc.p(0.5, 0.38), false, 1},
-    -- 
+    --
     nuche_1 = {cc.p(0.5, 0.45), false, 1},
     nuche_2 = {cc.p(0.5, 0.45), false, 1},
     nuche_3 = {cc.p(0.5, 0.45), false, 1},
@@ -1074,19 +1074,19 @@ local soldier_move_45_ani = {
     toushiche = {cc.p(0.39, 0.4), false, 1},
     toushiche_2 = {cc.p(0.39, 0.44), false, 1},
     toushiche_3 = {cc.p(0.37, 0.44), false, 1},
-    -- 
+    --
     shaobing_1 = {cc.p(0.47, 0.47), false, 1},
     shaobing_2 = {cc.p(0.47, 0.47), false, 1},
     shaobing_3 = {cc.p(0.5, 0.46), false, 1},
-    -- 
+    --
     nugongshou_1 = {cc.p(0.47, 0.4), false, 1},
     nugongshou_2 = {cc.p(0.47, 0.38), false, 1},
     nugongshou_3 = {cc.p(0.32, 0.4), false, 1},
-    -- 
+    --
     youqibing_1 = {cc.p(0.48, 0.38), false, 1},
     youqibing_2 = {cc.p(0.48, 0.38), false, 1},
     youqibing_3 = {cc.p(0.48, 0.38), false, 1},
-    -- 
+    --
     nuche_1 = {cc.p(0.5, 0.45), false, 1},
     nuche_2 = {cc.p(0.5, 0.45), false, 1},
     nuche_3 = {cc.p(0.49, 0.45), false, 1},
@@ -1115,19 +1115,19 @@ local soldier_move_neg_45_ani = {
     toushiche = {cc.p(0.39, 0.43), false, 1},
     toushiche_2 = {cc.p(0.39, 0.45), false, 1},
     toushiche_3 = {cc.p(0.37, 0.44), false, 1},
-    -- 
+    --
     shaobing_1 = {cc.p(0.45, 0.3), false, 1},
     shaobing_2 = {cc.p(0.45, 0.3), false, 1},
     shaobing_3 = {cc.p(0.47, 0.33), false, 1},
-    -- 
+    --
     nugongshou_1 = {cc.p(0.46, 0.4), false, 1},
     nugongshou_2 = {cc.p(0.46, 0.38), false, 1},
     nugongshou_3 = {cc.p(0.3, 0.4), false, 1},
-    -- 
+    --
     youqibing_1 = {cc.p(0.48, 0.38), false, 1},
     youqibing_2 = {cc.p(0.48, 0.38), false, 1},
     youqibing_3 = {cc.p(0.48, 0.38), false, 1},
-    -- 
+    --
     nuche_1 = {cc.p(0.5, 0.45), false, 1},
     nuche_2 = {cc.p(0.5, 0.45), false, 1},
     nuche_3 = {cc.p(0.49, 0.45), false, 1},
@@ -1148,7 +1148,7 @@ local function createAniWithConfig(ani, config, default_animation)
     sprite:getAnimation():play(default_animation)
     if shadow then
         display.newSprite("tmp_soldier_shadow.png")
-        :addTo(sprite):setAnchorPoint(cc.p(0.25,0.45))
+            :addTo(sprite):setAnchorPoint(cc.p(0.25,0.45))
     end
     return sprite
 end
@@ -1167,7 +1167,30 @@ end
 function UIKit:CreateSoldierMoveNeg45Ani(ani)
     return createAniWithConfig(ani, soldier_move_neg_45_ani[ani], "move_-45")
 end
-
+function UIKit:CreateNameBanner(name, dragon_type)
+    local node = display.newNode()
+    local size = self:ttfLabel({
+        text = name,
+        color = 0xfffab9,
+        size = 18,
+    }):addTo(node, 1):align(display.CENTER):getContentSize()
+    display.newSprite("arrow_green_22x32.png"
+        , nil, nil, {class=cc.FilteredSpriteWithOne})
+    :addTo(node)
+    :setScale(size.width / 22 * 1.3, size.height/32 * 1.01)
+    :setFilter(filter.newFilter("CUSTOM",
+        json.encode({
+            frag = "shaders/banner.fs",
+            shaderName = "banner",
+        })
+    ))
+    local dragon_bg = display.newSprite("dragon_bg_114x114.png")
+    :addTo(node, 2):scale(0.3):pos(-size.width/2-20, 0)
+    display.newSprite(UILib.dragon_head[dragon_type or "redDragon"])
+    :align(display.CENTER, dragon_bg:getContentSize().width/2, dragon_bg:getContentSize().height/2+5)
+    :addTo(dragon_bg)
+    return node
+end
 
 
 
