@@ -5,6 +5,7 @@
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushButton = import("..widget.WidgetPushButton")
+local WidgetAllianceEnterButtonProgress = import("..widget.WidgetAllianceEnterButtonProgress")
 local UILib = import(".UILib")
 local Localize = import("..utils.Localize")
 local window = import("..utils.window")
@@ -36,8 +37,8 @@ function GameUIAllianceMosterEnter:onExit()
 end
 function GameUIAllianceMosterEnter:onEnter()
     GameUIAllianceMosterEnter.super.onEnter(self)
-    local alliance = self.alliance 
-    local entity = self.entity 
+    local alliance = self.alliance
+    local entity = self.entity
     local moster_config = self.moster_config
     local rewards = string.split(moster_config.rewards,",")
     local icon = string.split(moster_config.icon,"_")
@@ -163,20 +164,25 @@ function GameUIAllianceMosterEnter:onEnter()
         ,{
             disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
         }):onButtonClicked(function()
-        	 UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers,total_march_time,gameuialliancesendtroops)
-                    if alliance:GetSelf():IsProtected() then
-                        UIKit:showMessageDialog(_("提示"),_("进攻改目标将失去保护状态，确定继续派兵?"),function()
-                            NetManager:getAttackMonsterPromise(dragonType,soldiers,alliance:Id(),entity.id):done(function()
-                                app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_SENDOUT")
-                            end)
-                        end)
-                    else
-                        NetManager:getAttackMonsterPromise(dragonType,soldiers,alliance:Id(),entity.id):done(function()
-                            app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_SENDOUT")
-                        end)
-                    end
-                end,{}):AddToCurrentScene(true)
-                self:LeftButtonClicked()
+        UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers,total_march_time,gameuialliancesendtroops)
+            local scene_name = display.getRunningScene().__cname
+            if not self.entity then
+                UIKit:showMessageDialog(_("提示"),_("敌人已经消失了"))
+                return
+            end
+            if alliance:GetSelf():IsProtected() then
+                UIKit:showMessageDialog(_("提示"),_("进攻该目标将失去保护状态，确定继续派兵?"),function()
+                    NetManager:getAttackMonsterPromise(dragonType,soldiers,alliance:Id(),entity.id):done(function()
+                        app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_SENDOUT")
+                    end)
+                end)
+            else
+                NetManager:getAttackMonsterPromise(dragonType,soldiers,alliance:Id(),entity.id):done(function()
+                    app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_SENDOUT")
+                end)
+            end
+        end,{}):AddToCurrentScene(true)
+        self:LeftButtonClicked()
         end):addTo(body):align(display.RIGHT_TOP, b_width, 10)
     local s = btn:getCascadeBoundingBox().size
     display.newSprite("attack_58x56.png"):align(display.CENTER, -s.width/2, -s.height/2+12):addTo(btn)
@@ -185,6 +191,14 @@ function GameUIAllianceMosterEnter:onEnter()
         size = 18,
         color = 0xffedae,
     }):align(display.CENTER, -s.width/2 , -s.height+25):addTo(btn)
+    self.attack_btn = btn
+    -- 如果是敌方的野怪，准备期不能攻打
+    if not self.isMyAlliance and alliance:Status() == "prepare" then
+        btn:setButtonEnabled(false)
+        local progress_1 = WidgetAllianceEnterButtonProgress.new()
+            :pos(-68, -54)
+            :addTo(btn)
+    end
 end
 function GameUIAllianceMosterEnter:ShowReward()
     local items_rewards = self.items_rewards
@@ -209,8 +223,14 @@ function GameUIAllianceMosterEnter:ShowReward()
     self.change_index = (self.change_index + 1) > 3 and 1 or (self.change_index + 1)
 
     self.time_label:setString(string.format(_("即将消失:%s"),GameUtils:formatTimeStyle1(self.alliance:MonsterRefreshTime()/1000 - app.timer:GetServerTime())))
+
+    if not self.isMyAlliance and self.alliance:Status() == "fight" then
+        self.attack_btn:setButtonEnabled(true)
+    end
 end
 return GameUIAllianceMosterEnter
+
+
 
 
 
