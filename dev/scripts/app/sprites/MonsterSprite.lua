@@ -95,7 +95,7 @@ function MonsterSprite:CreateSprite()
     local soldier_type, star = unpack(string.split(self:GetConfig().icon, '_'))
     local ani,count = unpack(soldier_config[soldier_type][tonumber(star)])
     local node = display.newNode()
-    for _,v in ipairs(position_map[4]) do
+    for _,v in ipairs(position_map[count]) do
         UIKit:CreateIdle45Ani(ani):pos(v.x, v.y):addTo(node)
     end
     return node

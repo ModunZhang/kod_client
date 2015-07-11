@@ -135,7 +135,7 @@ function WidgetManufacture:Manufacture()
         NetManager:getFetchMaterialsPromise(self.toolShop:GetBuildingEvent():Id()):done(function()
             local desc_t = {}
             for i,v in ipairs(content) do
-                table.insert(desc_t, string.format("%sx%d", Localize.materials[v.type], v.count))
+                table.insert(desc_t, string.format("%sx%d", Localize.materials[v.name], v.count))
             end
             GameGlobalUI:showTips(_("获取建筑材料"), table.concat(desc_t, ", "))
         end)
@@ -185,7 +185,7 @@ function WidgetManufacture:Manufacture()
         NetManager:getFetchMaterialsPromise(self.toolShop:GetTechnologyEvent():Id()):done(function()
             local desc_t = {}
             for i,v in ipairs(content) do
-                table.insert(desc_t, string.format("%sx%d", Localize.materials[v.type], v.count))
+                table.insert(desc_t, string.format("%sx%d", Localize.materials[v.name], v.count))
             end
             GameGlobalUI:showTips(_("获取科技材料"), table.concat(desc_t, ", "))
         end)
@@ -479,7 +479,7 @@ function WidgetManufacture:CreateMaterialItemWithListView(list_view, title, mate
     end
     function item:SetGetMaterials(materials)
         local get_material = LuaUtils:table_map(materials, function(k, v)
-            return v.type, v.count
+            return v.name, v.count
         end)
         for k, v in pairs(materials_map) do
             v:ShowNumber(get_material[k])

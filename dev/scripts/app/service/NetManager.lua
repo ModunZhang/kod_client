@@ -702,9 +702,9 @@ end
 
 
 -- 制造材料
-local function get_makeMaterial_promise(category)
+local function get_makeMaterial_promise(type)
     return get_blocking_request_promise("logic.playerHandler.makeMaterial", {
-        category = category,
+        type = type,
         finishNow = false
     }, "制造材料失败!"):done(get_player_response_msg)
 end

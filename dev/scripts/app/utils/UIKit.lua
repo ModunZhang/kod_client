@@ -979,6 +979,8 @@ function UIKit:ButtonAddScaleAction(button)
     end)
     return button
 end
+
+---
 local soldier_animap = {
     -- 普通兵种
     --
@@ -991,8 +993,8 @@ local soldier_animap = {
     gongjianshou_3 = {cc.p(0.52, 0.37), false, 1},
     --
     qibing_1 = {cc.p(0.5, 0.45), false, 1},
-    qibing_2 = {cc.p(0.5, 0.45), false, 1},
-    qibing_3 = {cc.p(0.5, 0.45), false, 1},
+    qibing_2 = {cc.p(0.5, 0.46), false, 1},
+    qibing_3 = {cc.p(0.5, 0.48), false, 1},
     --
     toushiche = {cc.p(0.39, 0.4), false, 1},
     toushiche_2 = {cc.p(0.39, 0.4), false, 1},
@@ -1044,23 +1046,127 @@ local soldier_animap = {
     heihua_nuche_2 = {cc.p(0.5, 0.4), true, 1},
     heihua_nuche_3 = {cc.p(0.5, 0.4), true, 1},
 }
-function UIKit:CreateIdle45Ani(ani)
-    local ap,flip,s,shadow = unpack(soldier_animap[ani])
+local dragon_fly_45_ani = {
+    red_long = {cc.p(0.52, 0.47), false, 1},
+    blue_long = {cc.p(0.52, 0.47), false, 1},
+    green_long = {cc.p(0.52, 0.47), false, 1},
+}
+local dragon_fly_neg_45_ani = {
+    red_long = {cc.p(0.53, 0.49), false, 1},
+    blue_long = {cc.p(0.53, 0.49), false, 1},
+    green_long = {cc.p(0.53, 0.49), false, 1},
+}
+local soldier_move_45_ani = {
+    -- 普通兵种
+    --
+    bubing_1 = {cc.p(0.54, 0.38), false, 1},
+    bubing_2 = {cc.p(0.57, 0.48), false, 1},
+    bubing_3 = {cc.p(0.54, 0.54), false, 1},
+    --
+    gongjianshou_1 = {cc.p(0.5, 0.31), false, 1},
+    gongjianshou_2 = {cc.p(0.5, 0.35), false, 1},
+    gongjianshou_3 = {cc.p(0.49, 0.35), false, 1},
+    --
+    qibing_1 = {cc.p(0.48, 0.45), false, 1},
+    qibing_2 = {cc.p(0.48, 0.45), false, 1},
+    qibing_3 = {cc.p(0.48, 0.48), false, 1},
+    --
+    toushiche = {cc.p(0.39, 0.4), false, 1},
+    toushiche_2 = {cc.p(0.39, 0.44), false, 1},
+    toushiche_3 = {cc.p(0.37, 0.44), false, 1},
+    -- 
+    shaobing_1 = {cc.p(0.47, 0.47), false, 1},
+    shaobing_2 = {cc.p(0.47, 0.47), false, 1},
+    shaobing_3 = {cc.p(0.5, 0.46), false, 1},
+    -- 
+    nugongshou_1 = {cc.p(0.47, 0.4), false, 1},
+    nugongshou_2 = {cc.p(0.47, 0.38), false, 1},
+    nugongshou_3 = {cc.p(0.32, 0.4), false, 1},
+    -- 
+    youqibing_1 = {cc.p(0.48, 0.38), false, 1},
+    youqibing_2 = {cc.p(0.48, 0.38), false, 1},
+    youqibing_3 = {cc.p(0.48, 0.38), false, 1},
+    -- 
+    nuche_1 = {cc.p(0.5, 0.45), false, 1},
+    nuche_2 = {cc.p(0.5, 0.45), false, 1},
+    nuche_3 = {cc.p(0.49, 0.45), false, 1},
+
+    -- 特殊兵种
+    kulouyongshi = {cc.p(0.47, 0.45), false, 1},
+    kulousheshou = {cc.p(0.24, 0.46), false, 1},
+    siwangqishi = {cc.p(0.5, 0.45), false, 1},
+    jiaorouche = {cc.p(0.338, 0.48), false, 1},
+}
+local soldier_move_neg_45_ani = {
+    -- 普通兵种
+    --
+    bubing_1 = {cc.p(0.51, 0.31), false, 1},
+    bubing_2 = {cc.p(0.57, 0.4), false, 1},
+    bubing_3 = {cc.p(0.52, 0.4), false, 1},
+    --
+    gongjianshou_1 = {cc.p(0.51, 0.37), false, 1},
+    gongjianshou_2 = {cc.p(0.52, 0.37), false, 1},
+    gongjianshou_3 = {cc.p(0.52, 0.38), false, 1},
+    --
+    qibing_1 = {cc.p(0.4, 0.36), false, 1},
+    qibing_2 = {cc.p(0.4, 0.36), false, 1},
+    qibing_3 = {cc.p(0.4, 0.38), false, 1},
+    --
+    toushiche = {cc.p(0.39, 0.43), false, 1},
+    toushiche_2 = {cc.p(0.39, 0.45), false, 1},
+    toushiche_3 = {cc.p(0.37, 0.44), false, 1},
+    -- 
+    shaobing_1 = {cc.p(0.45, 0.3), false, 1},
+    shaobing_2 = {cc.p(0.45, 0.3), false, 1},
+    shaobing_3 = {cc.p(0.47, 0.33), false, 1},
+    -- 
+    nugongshou_1 = {cc.p(0.46, 0.4), false, 1},
+    nugongshou_2 = {cc.p(0.46, 0.38), false, 1},
+    nugongshou_3 = {cc.p(0.3, 0.4), false, 1},
+    -- 
+    youqibing_1 = {cc.p(0.48, 0.38), false, 1},
+    youqibing_2 = {cc.p(0.48, 0.38), false, 1},
+    youqibing_3 = {cc.p(0.48, 0.38), false, 1},
+    -- 
+    nuche_1 = {cc.p(0.5, 0.45), false, 1},
+    nuche_2 = {cc.p(0.5, 0.45), false, 1},
+    nuche_3 = {cc.p(0.49, 0.45), false, 1},
+
+    -- 特殊兵种
+    kulouyongshi = {cc.p(0.46, 0.44), false, 1},
+    kulousheshou = {cc.p(0.26, 0.46), false, 1},
+    siwangqishi = {cc.p(0.4, 0.38), false, 1},
+    jiaorouche = {cc.p(0.345, 0.48), false, 1},
+}
+
+local function createAniWithConfig(ani, config, default_animation)
+    local ap,flip,s,shadow = unpack(config)
     local sprite = ccs.Armature:create(ani)
     sprite:setScaleX(flip and -s or s)
     sprite:setScaleY(s)
     sprite:setAnchorPoint(ap)
-    sprite:getAnimation():play("idle_45")
+    sprite:getAnimation():play(default_animation)
     if shadow then
         display.newSprite("tmp_soldier_shadow.png")
         :addTo(sprite):setAnchorPoint(cc.p(0.25,0.45))
     end
     return sprite
 end
-
-
-
-
+function UIKit:CreateIdle45Ani(ani)
+    return createAniWithConfig(ani, soldier_animap[ani], "idle_45")
+end
+function UIKit:CreateDragonFly45Ani(ani)
+    return createAniWithConfig(ani, dragon_fly_45_ani[ani], "flying_45")
+end
+function UIKit:CreateDragonFlyNeg45Ani(ani)
+    return createAniWithConfig(ani, dragon_fly_neg_45_ani[ani], "flying_-45")
+end
+function UIKit:CreateSoldierMove45Ani(ani)
+    return createAniWithConfig(ani, soldier_move_45_ani[ani], "move_45")
+end
+function UIKit:CreateSoldierMoveNeg45Ani(ani)
+    return createAniWithConfig(ani, soldier_move_neg_45_ani[ani], "move_-45")
+end
 
 
 

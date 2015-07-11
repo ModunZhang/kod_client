@@ -26,7 +26,9 @@ function GameUIAllianceMosterEnter:onCleanup()
     local scene_name = display.getRunningScene().__cname
     if (scene_name == 'AllianceBattleScene' or scene_name == 'AllianceScene') then
         for k,v in pairs(display.getRunningScene():GetSceneLayer():GetAllianceViews()) do
-            v:GetMapObjectById(self.entity.id):Unlock()
+            if v:GetMapObjectById(self.entity.id) then
+                v:GetMapObjectById(self.entity.id):Unlock()
+            end
         end
     end
     GameUIAllianceMosterEnter.super.onCleanup(self)

@@ -249,9 +249,9 @@ function ToolShopUpgradeBuilding:OnFunctionDataChange(userData, deltaData, curre
 
 
     for _,v in pairs(userData.materialEvents) do
-        if v.category == "buildingMaterials" then
+        if v.type == "buildingMaterials" then
             events[BUILDING_EVENT] = v
-        elseif v.category == "technologyMaterials" then
+        elseif v.type == "technologyMaterials" then
             events[TECHNOLOGY_EVENT] = v
         end
     end

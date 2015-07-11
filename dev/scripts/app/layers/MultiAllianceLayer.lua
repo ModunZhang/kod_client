@@ -22,85 +22,6 @@ local cc = cc
 local MINE,FRIEND,ENEMY,VILLAGE_TAG = 1,2,3,4
 MultiAllianceLayer.ARRANGE = Enum("H", "V")
 
--- local soldier_config = {
---     ----
---     ["swordsman"] = {
---         count = 4,
---         {"bubing_1", -10, 45, 0.8},
---         {"bubing_2", -20, 40, 0.8},
---         {"bubing_3", -15, 35, 0.8},
---     },
---     ["ranger"] = {
---         count = 4,
---         {"gongjianshou_1", 0, 45, 0.8},
---         {"gongjianshou_2", 0, 45, 0.8},
---         {"gongjianshou_3", 0, 45, 0.8},
---     },
---     ["lancer"] = {
---         count = 2,
---         {"qibing_1", -10, 50, 0.8},
---         {"qibing_2", -10, 50, 0.8},
---         {"qibing_3", -10, 50, 0.8},
---     },
---     ["catapult"] = {
---         count = 1,
---         {  "toushiche", 0, 35, 1},
---         {"toushiche_2", 0, 35, 1},
---         {"toushiche_3", 0, 35, 1},
---     },
-
---     -----
---     ["sentinel"] = {
---         count = 4,
---         {"shaobing_1", 0, 55, 0.8},
---         {"shaobing_2", 0, 55, 0.8},
---         {"shaobing_3", 0, 55, 0.8},
---     },
---     ["crossbowman"] = {
---         count = 4,
---         {"nugongshou_1", 0, 45, 0.8},
---         {"nugongshou_2", 0, 50, 0.8},
---         {"nugongshou_3", 15, 45, 0.8},
---     },
---     ["horseArcher"] = {
---         count = 2,
---         {"youqibing_1", -15, 55, 0.8},
---         {"youqibing_2", -15, 55, 0.8},
---         {"youqibing_3", -15, 55, 0.8},
---     },
---     ["ballista"] = {
---         count = 1,
---         {"nuche_1", 0, 30, 1},
---         {"nuche_2", 0, 30, 1},
---         {"nuche_3", 0, 30, 1},
---     },
---     ----
---     ["skeletonWarrior"] = {
---         count = 4,
---         {"kulouyongshi", 0, 0, 0.8},
---         {"kulouyongshi", 0, 0, 0.8},
---         {"kulouyongshi", 0, 0, 0.8},
---     },
---     ["skeletonArcher"] = {
---         count = 4,
---         {"kulousheshou", 0, 0, 0.8},
---         {"kulousheshou", 0, 0, 0.8},
---         {"kulousheshou", 0, 0, 0.8},
---     },
---     ["deathKnight"] = {
---         count = 2,
---         {"siwangqishi", 0, 0, 0.8},
---         {"siwangqishi", 0, 0, 0.8},
---         {"siwangqishi", 0, 0, 0.8},
---     },
---     ["meatWagon"] = {
---         count = 1,
---         {"jiaorouche", 0, 30, 0.8},
---         {"jiaorouche", 0, 30, 0.8},
---         {"jiaorouche", 0, 30, 0.8},
---     },
--- }
-
 function MultiAllianceLayer:ctor(scene, arrange, ...)
     self.refresh_village_node = display.newNode():addTo(self)
     self.my_allinace_id = Alliance_Manager:GetMyAlliance():Id()
@@ -144,62 +65,81 @@ function MultiAllianceLayer:ctor(scene, arrange, ...)
     --     count = count + 1
     -- end
 
-    -- local soldier = "ballista"
-    -- local star = 3
-    -- local x, y = 15, 15
-    -- self:CreateCorps(
-    --         1,
-    --         {x = x, y = y, index = 1},
-    --         {x = x, y = y + 10, index = 1},
+    -- local soldier = "meatWagon"
+    -- local count = 1
+    -- local len = 10
+    -- local star = 1
+    -- for i = 12 - len, 12 + len, 3 do
+    --     self:CreateCorps(
+    --         count,
+    --         {x = 12, y = 12, index = 1},
+    --         {x = i, y = 12 + 10, index = 1},
     --         timer:GetServerTime(),
     --         timer:GetServerTime() + 100,
     --         "redDragon",
     --         {
-    --         {name = soldier, star = star}
+    --             {name = soldier, star = star}
     --         },
     --         ENEMY
     --     )
+    --     star = star + 1
+    --     if star > 3 then star = 1 end
+    --     count = count + 1
+    -- end
 
-
-    -- self:CreateCorps(
-    --         2,
-    --         {x = x, y = y, index = 1},
-    --         {x = x + 10, y = y, index = 1},
-    --         timer:GetServerTime(),
-    --         timer:GetServerTime() + 100,
-    --         "greenDragon",
-    --         {
-    --         {name = soldier, star = star}
-    --         },
-    --         ENEMY
-    --     )
-
-
-    -- self:CreateCorps(
-    --         3,
-    --         {x = x, y = y, index = 1},
-    --         {x = x, y = y - 10, index = 1},
-    --         timer:GetServerTime(),
-    --         timer:GetServerTime() + 100,
-    --         "blueDragon",
-    --         {
-    --         {name = soldier, star = star}
-    --         },
-    --         ENEMY
-    --     )
-
-    -- self:CreateCorps(
-    --         4,
-    --         {x = x, y = y, index = 1},
-    --         {x = x - 10, y = y, index = 1},
+    -- for i = 12 - len, 12 + len, 3 do
+    --     self:CreateCorps(
+    --         count,
+    --         {x = 12, y = 12, index = 1},
+    --         {x = 12 + 10, y = i, index = 1},
     --         timer:GetServerTime(),
     --         timer:GetServerTime() + 100,
     --         "redDragon",
     --         {
-    --         {name = soldier, star = star}
+    --             {name = soldier, star = star}
     --         },
     --         ENEMY
     --     )
+    --     star = star + 1
+    --     if star > 3 then star = 1 end
+    --     count = count + 1
+    -- end
+
+    -- for i = 12 - len, 12 + len, 3 do
+    --     self:CreateCorps(
+    --         count,
+    --         {x = 12, y = 12, index = 1},
+    --         {x = 12 - 10, y = i, index = 1},
+    --         timer:GetServerTime(),
+    --         timer:GetServerTime() + 100,
+    --         "redDragon",
+    --         {
+    --             {name = soldier, star = star}
+    --         },
+    --         ENEMY
+    --     )
+    --     star = star + 1
+    --     if star > 3 then star = 1 end
+    --     count = count + 1
+    -- end
+
+    -- for i = 12 - len, 12 + len, 3 do
+    --     self:CreateCorps(
+    --         count,
+    --         {x = 12, y = 12, index = 1},
+    --         {x = i, y = 12 - 10, index = 1},
+    --         timer:GetServerTime(),
+    --         timer:GetServerTime() + 100,
+    --         "redDragon",
+    --         {
+    --             {name = soldier, star = star}
+    --         },
+    --         ENEMY
+    --     )
+    --     star = star + 1
+    --     if star > 3 then star = 1 end
+    --     count = count + 1
+    -- end
 end
 function MultiAllianceLayer:TrackCorpsById(id)
     self.track_id = id
@@ -663,78 +603,78 @@ local soldier_config = {
     ----
     ["swordsman"] = {
         count = 4,
-        {"bubing_1", 0, 0, 0.8},
-        {"bubing_2", 0, 0, 0.8},
-        {"bubing_3", 0, 0, 0.8},
+        {"bubing_1"},
+        {"bubing_2"},
+        {"bubing_3"},
     },
     ["ranger"] = {
         count = 4,
-        {"gongjianshou_1", 0, 0, 0.8},
-        {"gongjianshou_2", 0, 0, 0.8},
-        {"gongjianshou_3", 0, 0, 0.8},
+        {"gongjianshou_1"},
+        {"gongjianshou_2"},
+        {"gongjianshou_3"},
     },
     ["lancer"] = {
         count = 2,
-        {"qibing_1", 20, 20, 0.8},
-        {"qibing_2", 20, 20, 0.8},
-        {"qibing_3", 20, 20, 0.8},
+        {"qibing_1"},
+        {"qibing_2"},
+        {"qibing_3"},
     },
     ["catapult"] = {
         count = 1,
-        {  "toushiche", 80, 20, 1},
-        {"toushiche_2", 50, 20, 1},
-        {"toushiche_3", 80, 20, 1},
+        {  "toushiche"},
+        {"toushiche_2"},
+        {"toushiche_3"},
     },
 
     -----
     ["sentinel"] = {
         count = 4,
-        {"shaobing_1", 0, 0, 0.8},
-        {"shaobing_2", 0, 0, 0.8},
-        {"shaobing_3", 0, 0, 0.8},
+        {"shaobing_1"},
+        {"shaobing_2"},
+        {"shaobing_3"},
     },
     ["crossbowman"] = {
         count = 4,
-        {"nugongshou_1", 0, 0, 0.8},
-        {"nugongshou_2", 0, 0, 0.8},
-        {"nugongshou_3", 20, 0, 0.8},
+        {"nugongshou_1"},
+        {"nugongshou_2"},
+        {"nugongshou_3"},
     },
     ["horseArcher"] = {
         count = 2,
-        {"youqibing_1", 20, 20, 0.8},
-        {"youqibing_2", 20, 20, 0.8},
-        {"youqibing_3", 20, 20, 0.8},
+        {"youqibing_1"},
+        {"youqibing_2"},
+        {"youqibing_3"},
     },
     ["ballista"] = {
         count = 1,
-        {"nuche_1", 0, 30, 1},
-        {"nuche_2", 0, 30, 1},
-        {"nuche_3", 0, 30, 1},
+        {"nuche_1"},
+        {"nuche_2"},
+        {"nuche_3"},
     },
     ----
     ["skeletonWarrior"] = {
         count = 4,
-        {"kulouyongshi", 0, 0, 0.8},
-        {"kulouyongshi", 0, 0, 0.8},
-        {"kulouyongshi", 0, 0, 0.8},
+        {"kulouyongshi"},
+        {"kulouyongshi"},
+        {"kulouyongshi"},
     },
     ["skeletonArcher"] = {
         count = 4,
-        {"kulousheshou", 40, 0, 0.8},
-        {"kulousheshou", 40, 0, 0.8},
-        {"kulousheshou", 40, 0, 0.8},
+        {"kulousheshou"},
+        {"kulousheshou"},
+        {"kulousheshou"},
     },
     ["deathKnight"] = {
         count = 2,
-        {"siwangqishi", 20, 20, 0.8},
-        {"siwangqishi", 20, 20, 0.8},
-        {"siwangqishi", 20, 20, 0.8},
+        {"siwangqishi"},
+        {"siwangqishi"},
+        {"siwangqishi"},
     },
     ["meatWagon"] = {
         count = 1,
-        {"jiaorouche", 80, 10, 0.8},
-        {"jiaorouche", 80, 10, 0.8},
-        {"jiaorouche", 80, 10, 0.8},
+        {"jiaorouche"},
+        {"jiaorouche"},
+        {"jiaorouche"},
     },
 }
 
@@ -744,8 +684,8 @@ local location_map = {
         {0, 0},
     },
     [2] = {
-        {- len * 0.5, len * 0.5},
-        {- len * 0.5, - len * 0.5},
+        {0, len * 0.5},
+        {0, - len * 0.5},
     },
     [4] = {
         {len * 0.5, len * 0.5},
@@ -756,14 +696,21 @@ local location_map = {
 }
 local function move_soldiers(corps, ani, dir_index, first_soldier)
     local is_special = SPECIAL[first_soldier.name]
-    local config = soldier_config[first_soldier.name]
     local star = is_special and 3 or (first_soldier.star or 1)
-    local ani_name, ox, oy = unpack(config[star])
+    local config = soldier_config[first_soldier.name]
+    local ani_name = unpack(config[star])
     local _,_,s = unpack(soldier_dir_map[dir_index])
+    local create_function
+    if ani == "move_45" then
+        create_function = UIKit.CreateSoldierMove45Ani
+    elseif ani == "move_-45" then
+        create_function = UIKit.CreateSoldierMoveNeg45Ani
+    else
+        assert(false)
+    end
     for i,v in ipairs(location_map[config.count]) do
         local x,y = unpack(v)
-        ccs.Armature:create(ani_name):addTo(corps):scale(s)
-            :align(display.CENTER, x + ox, y + oy):getAnimation():play(ani)
+        create_function(UIKit, ani_name):addTo(corps):pos(x,y)
     end
 end
 function MultiAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, finish_time, dragonType, soldiers, ally)
@@ -784,8 +731,13 @@ function MultiAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, fini
         if is_strike then
             ani,scalex = unpack(dragon_dir_map[index])
             local dragon_ani = UILib.dragon_animations[dragonType or "redDragon"][1]
-            ccs.Armature:create(dragon_ani):addTo(corps)
-                :align(display.CENTER, -20, 0):getAnimation():play(ani)
+            if ani == "flying_45" then
+                UIKit:CreateDragonFly45Ani(dragon_ani):addTo(corps)
+            elseif ani == "flying_-45" then
+                UIKit:CreateDragonFlyNeg45Ani(dragon_ani):addTo(corps)
+            else
+                assert(false)
+            end
         else
             ani,scalex = unpack(soldier_dir_map[index])
             move_soldiers(corps, ani, index, soldiers[1])
