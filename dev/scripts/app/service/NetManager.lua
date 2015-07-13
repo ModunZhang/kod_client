@@ -1488,7 +1488,7 @@ function NetManager:getUseItemPromise(itemName,params)
     }, "使用道具失败!"):done(get_player_response_msg):done(function ()
         if not (string.find(itemName,"dragonChest") or string.find(itemName,"chest")) then
             if params[itemName] and params[itemName].count then
-                GameGlobalUI:showTips(_("提示"),string.format(_("使用%s道具X %d个成功"),Localize_item.item_name[itemName],params[itemName].count))
+                GameGlobalUI:showTips(_("提示"),string.format(_("使用%s道具X %d成功"),Localize_item.item_name[itemName],params[itemName].count))
             else
                 GameGlobalUI:showTips(_("提示"),string.format(_("使用%s道具成功"),Localize_item.item_name[itemName]))
             end
@@ -1508,7 +1508,7 @@ function NetManager:getBuyAndUseItemPromise(itemName,params)
         params = params,
     }, "购买并使用道具失败!"):done(get_player_response_msg):done(function()
         if params[itemName] and params[itemName].count then
-            GameGlobalUI:showTips(_("提示"),string.format(_("使用%s道具X %d个成功"),Localize_item.item_name[itemName],params[itemName].count))
+            GameGlobalUI:showTips(_("提示"),string.format(_("使用%s道具X %d成功"),Localize_item.item_name[itemName],params[itemName].count))
         else
             GameGlobalUI:showTips(_("提示"),string.format(_("使用%s道具成功"),Localize_item.item_name[itemName]))
         end
