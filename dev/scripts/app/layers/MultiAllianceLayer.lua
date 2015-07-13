@@ -152,6 +152,7 @@ function MultiAllianceLayer:TrackCorpsById(id)
 end
 local CIRCLE_TAG = 4356
 function MultiAllianceLayer:AddToCorpsCircle(corps)
+    if not corps then return end
     if corps:getChildByTag(CIRCLE_TAG) then return end
     local sprite = display.newSprite("tmp_monster_circle.png")
     :addTo(corps, -1, CIRCLE_TAG)
@@ -166,7 +167,7 @@ function MultiAllianceLayer:AddToCorpsCircle(corps)
     sprite:setColor(cc.c3b(96,255,0))
 end
 function MultiAllianceLayer:RemoveCorpsCircle(corps)
-    if corps:getChildByTag(CIRCLE_TAG) then 
+    if corps and corps:getChildByTag(CIRCLE_TAG) then 
         corps:removeChildByTag(CIRCLE_TAG)
     end
 end

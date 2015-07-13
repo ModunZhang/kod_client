@@ -446,7 +446,7 @@ function GameUIAllianceInfo:LoadMembers()
     local time_str = _("在线")
     local isOnline = (type(archon_data.online) == 'boolean' and archon_data.online) and true or false
     if not isOnline then
-        time_str = _("最后登录:") .. NetService:formatTimeAsTimeAgoStyleByServerTime(archon_data.lastLoginTime)
+        time_str = _("最后登录:") .. NetService:formatTimeAsTimeAgoStyleByServerTime(archon_data.lastLogoutTime)
     end
     UIKit:GetPlayerCommonIcon(archon_data.icon,isOnline):addTo(box):pos(63,67)
     local loginLabel = UIKit:ttfLabel({
