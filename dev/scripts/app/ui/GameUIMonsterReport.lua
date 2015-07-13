@@ -161,8 +161,8 @@ function GameUIMonsterReport:GetBooty()
     local booty = {}
     for k,v in pairs(self:GetRewards()) do
         table.insert(booty, {
-            resource_type = Localize_item.item_name[v.name] or Localize.materials[v.name],
-            icon= UILib.item[v.name] or UILib.materials[v.name],
+            resource_type = Localize_item.item_name[v.name] or Localize.materials[v.name] or Localize.equip_material[v.name],
+            icon= UILib.item[v.name] or UILib.materials[v.name] or UILib.dragon_material_pic_map[v.name],
             value = v.count
         })
     end
@@ -501,7 +501,7 @@ function GameUIMonsterReport:KillEnemy(troop)
     war_s_label_item:addContent(g)
     self.details_view:addItem(war_s_label_item)
 
-    self:CreateSoldierInfo(troop)
+    self:CreateSoldierInfo(troop,false)
 end
 -- 我方损失
 function GameUIMonsterReport:OurLose(troop)
@@ -516,11 +516,11 @@ function GameUIMonsterReport:OurLose(troop)
     war_s_label_item:addContent(g)
     self.details_view:addItem(war_s_label_item)
 
-    self:CreateSoldierInfo(troop)
+    self:CreateSoldierInfo(troop,true)
 
 end
 
-function GameUIMonsterReport:CreateSoldierInfo(soldiers)
+function GameUIMonsterReport:CreateSoldierInfo(soldiers,isSelf)
     local item = self.details_view:newItem()
     item:setItemSize(554,172)
     -- 背景框
@@ -535,7 +535,7 @@ function GameUIMonsterReport:CreateSoldierInfo(soldiers)
         local count = 0
         for j=i,i+3 do
             if soldiers[j] then
-                self:CreateSoldiersInfo(soldiers[j]):align(display.CENTER, origin_x+count*gap_x,25):addTo(page_item)
+                self:CreateSoldiersInfo(soldiers[j],isSelf):align(display.CENTER, origin_x+count*gap_x,25):addTo(page_item)
                 count = count + 1
             end
         end
@@ -549,10 +549,10 @@ function GameUIMonsterReport:CreateSoldierInfo(soldiers)
 
 end
 
-function GameUIMonsterReport:CreateSoldiersInfo(soldier)
+function GameUIMonsterReport:CreateSoldiersInfo(soldier,isSelf)
     local soldier_level = soldier.star
     local soldier_type = soldier.name
-    local soldier_ui_config = UILib.soldier_image[soldier_type][soldier_level]
+    local soldier_ui_config = isSelf and UILib.soldier_image[soldier_type][soldier_level] or UILib.black_soldier_image[soldier_type][soldier_level]
     local color_bg = display.newSprite(UILib.soldier_color_bg_images[soldier_type])
         :scale(104/128)
         :align(display.LEFT_BOTTOM)
