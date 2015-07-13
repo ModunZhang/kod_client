@@ -941,6 +941,10 @@ function UIKit:GetItemImage(reward_type,item_key)
         if item_key == 'loyalty' then
             return "loyalty_128x128.png"
         end
+    elseif reward_type == 'basicInfo' then
+        if item_key == 'marchQueue' then
+            return "tmp_march_queue_128x128.png"
+        end
     end
 end
 
