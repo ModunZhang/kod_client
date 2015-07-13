@@ -143,11 +143,11 @@ function MultiAllianceLayer:ctor(scene, arrange, ...)
 end
 function MultiAllianceLayer:TrackCorpsById(id)
     if self.track_id then
-        self:RemoveCorpsCircle(self.corps_map[self.track_id])
+        self:RemoveCorpsCircle(self.map_corps[self.track_id])
     end
     self.track_id = id
     if self.track_id then
-        self:AddToCorpsCircle(self.corps_map[self.track_id])
+        self:AddToCorpsCircle(self.map_corps[self.track_id])
     end
 end
 local CIRCLE_TAG = 4356
@@ -155,7 +155,7 @@ function MultiAllianceLayer:AddToCorpsCircle(corps)
     if not corps then return end
     if corps:getChildByTag(CIRCLE_TAG) then return end
     local sprite = display.newSprite("tmp_monster_circle.png")
-    :addTo(corps, -1, CIRCLE_TAG)
+        :addTo(corps, -1, CIRCLE_TAG)
     sprite:runAction(
         cc.RepeatForever:create(
             transition.sequence{
@@ -167,7 +167,7 @@ function MultiAllianceLayer:AddToCorpsCircle(corps)
     sprite:setColor(cc.c3b(96,255,0))
 end
 function MultiAllianceLayer:RemoveCorpsCircle(corps)
-    if corps and corps:getChildByTag(CIRCLE_TAG) then 
+    if corps and corps:getChildByTag(CIRCLE_TAG) then
         corps:removeChildByTag(CIRCLE_TAG)
     end
 end
@@ -223,11 +223,12 @@ function MultiAllianceLayer:InitInfoNode()
 end
 function MultiAllianceLayer:InitCorpsNode()
     self.corps = display.newNode():addTo(self, ZORDER.CORPS)
-    self.corps_map = {}
+    self.map_corps = {}
+    self.map_dead = {}
 end
 function MultiAllianceLayer:InitLineNode()
     self.lines = display.newNode():addTo(self, ZORDER.LINE)
-    self.lines_map = {}
+    self.map_lines = {}
 end
 function MultiAllianceLayer:GetBackGround()
     return self.background
@@ -407,7 +408,7 @@ end
 function MultiAllianceLayer:StartCorpsTimer()
     self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt)
         local time = timer:GetServerTime()
-        for id, corps in pairs(self.corps_map) do
+        for id, corps in pairs(self.map_corps) do
             if corps then
                 local march_info = corps.march_info
                 local total_time = march_info.finish_time - march_info.start_time
@@ -418,7 +419,7 @@ function MultiAllianceLayer:StartCorpsTimer()
                     corps:pos(cur_vec.x, cur_vec.y)
 
                     -- 更新线
-                    local line = self.lines_map[id]
+                    local line = self.map_lines[id]
                     local program = line:getFilter():getGLProgramState()
                     program:setUniformFloat("percent", fmod(time - floor(time), 1.0))
                     program:setUniformFloat("elapse", line.is_enemy and (cc.pGetLength(cc.pSub(cur_vec, march_info.origin_start)) / march_info.origin_length) or 0)
@@ -602,6 +603,9 @@ function MultiAllianceLayer:CreateCorpsIf(marchEvent, is_added_event)
     if is_added_event and ally == MINE and not marchEvent:IsReturnEvent() then
         self:TrackCorpsById(marchEvent:Id())
     end
+    if marchEvent:IsReturnEvent() then
+        self:CreateDeadEvent(marchEvent)
+    end
 end
 local corps_scale = 1.2
 local dragon_dir_map = {
@@ -754,7 +758,7 @@ function MultiAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, fini
     march_info.start_time = start_time
     march_info.finish_time = finish_time
     march_info.speed = (march_info.length / (finish_time - start_time))
-    if not self.corps_map[id] then
+    if not self.map_corps[id] then
         local index = math.floor(march_info.degree / 45) + 4
         if index < 0 or index > 8 then index = 1 end
         local corps = display.newNode():addTo(self:GetCorpsNode())
@@ -790,10 +794,10 @@ function MultiAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, fini
         corps:setScaleY(math.abs(scalex))
         corps.march_info = march_info
         corps:pos(march_info.start_info.real.x, march_info.start_info.real.y)
-        self.corps_map[id] = corps
+        self.map_corps[id] = corps
         self:CreateLine(id, march_info, ally)
     else
-        self:UpdateCorpsBy(self.corps_map[id], march_info)
+        self:UpdateCorpsBy(self.map_corps[id], march_info)
     end
     return corps
 end
@@ -807,21 +811,25 @@ function MultiAllianceLayer:UpdateCorpsBy(corps, march_info)
     corps.march_info = march_info
 end
 function MultiAllianceLayer:DeleteCorpsById(id)
-    if self.corps_map[id] == nil then
-        print("部队已经被删除了!", id)
-        return
+    if self.map_dead[id] then
+        self.map_dead[id]:removeFromParent()
+        self.map_dead[id] = nil
     end
-    self.corps_map[id]:removeFromParent()
-    self.corps_map[id] = nil
-    self:DeleteLineById(id)
+    if self.map_corps[id] then
+        self.map_corps[id]:removeFromParent()
+        self.map_corps[id] = nil
+        self:DeleteLineById(id)
+    else
+        print("部队已经被删除了", id)
+    end
 end
 function MultiAllianceLayer:DeleteAllCorps()
-    for id, _ in pairs(self.corps_map) do
+    for id, _ in pairs(self.map_corps) do
         self:DeleteCorpsById(id)
     end
 end
 function MultiAllianceLayer:IsExistCorps(id)
-    return self.corps_map[id] ~= nil
+    return self.map_corps[id] ~= nil
 end
 local line_ally_map = {
     [MINE] = "arrow_green_22x32.png",
@@ -829,8 +837,8 @@ local line_ally_map = {
     [ENEMY] = "arrow_red_22x32.png",
 }
 function MultiAllianceLayer:CreateLine(id, march_info, ally)
-    if self.lines_map[id] then
-        self.lines_map[id]:removeFromParent()
+    if self.map_lines[id] then
+        self.map_lines[id]:removeFromParent()
     end
     local middle = cc.pMidpoint(march_info.start_info.real, march_info.end_info.real)
     local scale = march_info.length / 32
@@ -852,7 +860,7 @@ function MultiAllianceLayer:CreateLine(id, march_info, ally)
     ))
     sprite:setScaleY(scale)
     sprite.is_enemy = ally == ENEMY
-    self.lines_map[id] = sprite
+    self.map_lines[id] = sprite
     return sprite
 end
 function MultiAllianceLayer:GetMarchInfoWith(id, logic_start_point, logic_end_point)
@@ -873,18 +881,46 @@ function MultiAllianceLayer:GetMarchInfoWith(id, logic_start_point, logic_end_po
     }
 end
 function MultiAllianceLayer:DeleteLineById(id)
-    if self.lines_map[id] == nil then
-        print("路线已经被删除了!", id)
-        return
+    if self.map_lines[id] then
+        self.map_lines[id]:removeFromParent()
+        self.map_lines[id] = nil
     end
-    self.lines_map[id]:removeFromParent()
-    self.lines_map[id] = nil
 end
 function MultiAllianceLayer:DeleteAllLines()
-    for id, _ in pairs(self.lines_map) do
+    for id, _ in pairs(self.map_lines) do
         self:DeleteLineById(id)
     end
 end
+local map_dead_image = {
+    monster = "warriors_tomb_80x72.png",
+    village = "ruin_2.png"
+}
+function MultiAllianceLayer:CreateDeadEvent(marchEvent)
+    local id_corps = marchEvent:Id()
+    if not self:IsExistCorps(id_corps) then return end
+    local event_type = marchEvent:MarchType()
+    local dead_image = map_dead_image[event_type]
+    if not dead_image then return end
+    local id_dead
+    if event_type == "monster" then
+        id_dead = marchEvent:DefenceMonsterData().id
+    elseif event_type == "village" then
+        id_dead = marchEvent:DefenceVillageData().id
+    end
+    if not self.map_dead[id_corps] or not id_dead then
+        local point = self.map_corps[id_corps].march_info.start_info.logic
+        local alliance_view = self.alliance_views[point.index]
+        if not alliance_view:GetMapObjectById(id_dead) then
+            local x,y = alliance_view:GetLogicMap():ConvertToMapPosition(point.x, point.y)
+            local z = alliance_view:GetZOrderBy(nil, point.x, point.y)
+            self.map_dead[id_corps] = display.newSprite(dead_image):addTo(self:GetBuildingNode(),z):pos(x,y)
+        end
+    end
+end
+
+
+
+
 function MultiAllianceLayer:GetClickedObject(world_x, world_y)
     local logic_x, logic_y, alliance_view = self:GetAllianceCoordWithPoint(world_x, world_y)
     return alliance_view:GetClickedObject(world_x, world_y), self:GetMyAlliance():Id() == alliance_view:GetAlliance():Id()
@@ -974,6 +1010,7 @@ end
 
 
 return MultiAllianceLayer
+
 
 
 
