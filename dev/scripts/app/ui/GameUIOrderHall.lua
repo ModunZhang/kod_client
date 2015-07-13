@@ -13,7 +13,9 @@ local AllianceVillage = GameDatas.AllianceVillage
 local collect_type  = {_("木材"),
     _("石料"),
     _("铁矿"),
-    _("粮食")}
+    _("粮食"),
+    _("银币"),
+}
 local GameUIOrderHall = UIKit:createUIClass('GameUIOrderHall', "GameUIAllianceBuilding")
 
 function GameUIOrderHall:ctor(city,default_tab,building)
@@ -92,9 +94,9 @@ function GameUIOrderHall:ResetVillageList()
     self.village_listview:removeAllItems()
     self.village_items = {}
     for k,v in pairs(self.alliance:GetVillageLevels()) do
-        if k ~= "coinVillage" then
+        -- if k ~= "coinVillage" then
             self.village_items[k] = self:CreateVillageItem(k,v)
-        end
+        -- end
     end
     self.village_listview:reload()
 end
@@ -234,6 +236,7 @@ function GameUIOrderHall:InitProficiencyPart()
             {tag = "2",label = _("石料")},
             {tag = "3",label = _("铁矿")},
             {tag = "4",label = _("粮食")},
+            {tag = "5",label = _("银币")},
         },
         function(tag)
             self:ChangeProficiencyOption(tonumber(tag))
