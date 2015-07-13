@@ -241,7 +241,9 @@ function GameUIAlliance:GetJoinList(tag)
             if not response.msg or not response.msg.allianceDatas then return end
             if response.msg.allianceDatas  then
                 self.join_list_data_source = response.msg.allianceDatas
-                self:RefreshJoinListView()
+                if self.RefreshJoinListView then
+                    self:RefreshJoinListView()
+                end
             end
         end)
     else
@@ -251,7 +253,9 @@ function GameUIAlliance:GetJoinList(tag)
             if not response.msg or not response.msg.allianceDatas then return end
             if response.msg.allianceDatas then
                 self.join_list_data_source = response.msg.allianceDatas
-                self:RefreshJoinListView()
+                if self.RefreshJoinListView then
+                    self:RefreshJoinListView()
+                end
             end
         end):always(function()
             self.isLoadingJoin = false
