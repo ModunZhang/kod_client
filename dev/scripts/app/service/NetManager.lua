@@ -464,7 +464,7 @@ local logic_event_map = {
             LuaUtils:outputTable("onAllianceFight", response)
             for i,data in ipairs(response.allianceData) do
                 if string.find(data[1],"allianceFightReports") then
-                     Alliance_Manager:GetMyAlliance():SetLastAllianceFightReport(data[2])
+                    Alliance_Manager:GetMyAlliance():SetLastAllianceFightReport(data[2])
                 end
             end
             local user_enemy_alliance_data = response.enemyAllianceData
@@ -582,9 +582,9 @@ function NetManager:getLoginPromise(deviceId)
             local user_alliance_data = response.msg.allianceData
             local user_enemy_alliance_data = response.msg.enemyAllianceData
 
-            local diff_time = ext.now() - requestTime 
+            local diff_time = ext.now() - requestTime
             local request_server_time = requestTime + playerData.deltaTime
-            local real_server_time = diff_time / 2 + request_server_time  
+            local real_server_time = diff_time / 2 + request_server_time
             local delta_time = real_server_time - ext.now()
 
             -- print_(requestTime, diff_time, playerData.deltaTime, delta_time, request_server_time, real_server_time)
@@ -988,9 +988,9 @@ function NetManager:getRequestAllianceToSpeedUpPromise(eventType, eventId)
         eventType = eventType,
         eventId = eventId,
     }, "请求加速失败!"):done(get_player_response_msg):done(function(result)
-            GameGlobalUI:showTips(_("提示"),_("已向全体盟友发出帮助请求"))
-            return result
-        end)
+        GameGlobalUI:showTips(_("提示"),_("已向全体盟友发出帮助请求"))
+        return result
+    end)
 end
 -- 免费加速建筑升级
 function NetManager:getFreeSpeedUpPromise(eventType, eventId)
@@ -1012,7 +1012,7 @@ function NetManager:getHelpAllAllianceMemberSpeedUpPromise()
     return get_none_blocking_request_promise("logic.allianceHandler.helpAllAllianceMemberSpeedUp", {}
         , "协助所有玩家加速失败!"):done(get_player_response_msg):done(function()
         app:GetAudioManager():PlayeEffectSoundWithKey("USE_ITEM")
-    end)
+        end)
 end
 -- 解锁玩家第二条行军队列
 function NetManager:getUnlockPlayerSecondMarchQueuePromise()
@@ -1487,7 +1487,11 @@ function NetManager:getUseItemPromise(itemName,params)
         params = params,
     }, "使用道具失败!"):done(get_player_response_msg):done(function ()
         if not (string.find(itemName,"dragonChest") or string.find(itemName,"chest")) then
-            GameGlobalUI:showTips(_("提示"),string.format(_("使用%s道具成功"),Localize_item.item_name[itemName]))
+            if params[itemName] and params[itemName].count then
+                GameGlobalUI:showTips(_("提示"),string.format(_("使用%s道具X %d个成功"),Localize_item.item_name[itemName],params[itemName].count))
+            else
+                GameGlobalUI:showTips(_("提示"),string.format(_("使用%s道具成功"),Localize_item.item_name[itemName]))
+            end
         end
         if itemName == "torch" then
             app:GetAudioManager():PlayeEffectSoundWithKey("UI_BUILDING_DESTROY")
@@ -1503,7 +1507,11 @@ function NetManager:getBuyAndUseItemPromise(itemName,params)
         itemName = itemName,
         params = params,
     }, "购买并使用道具失败!"):done(get_player_response_msg):done(function()
-        GameGlobalUI:showTips(_("提示"),string.format(_("使用%s道具成功"),Localize_item.item_name[itemName]))
+        if params[itemName] and params[itemName].count then
+            GameGlobalUI:showTips(_("提示"),string.format(_("使用%s道具X %d个成功"),Localize_item.item_name[itemName],params[itemName].count))
+        else
+            GameGlobalUI:showTips(_("提示"),string.format(_("使用%s道具成功"),Localize_item.item_name[itemName]))
+        end
         if itemName == "torch" then
             app:GetAudioManager():PlayeEffectSoundWithKey("UI_BUILDING_DESTROY")
         else
@@ -1744,6 +1752,7 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
 
 
 
