@@ -102,7 +102,7 @@ function GameUIAllianceCityEnter:GetBuildImageSprite()
 end
 
 function GameUIAllianceCityEnter:GetBuildImageInfomation(sprite)
-    return 0.9,97,self:GetUIHeight() - 90 
+    return 0.9,97,self:GetUIHeight() - 90
 end
 
 function GameUIAllianceCityEnter:IsShowBuildingBox()
@@ -145,14 +145,17 @@ function GameUIAllianceCityEnter:GetEnterButtons()
                 app:EnterMyCityScene()
                 self:LeftButtonClicked()
             end)
-            buttons = {enter_button}
+        buttons = {enter_button}
         else --盟友
             local help_button
             local can_not_help_in_city = City:IsHelpedToTroopsWithPlayerId(member:Id())
             if can_not_help_in_city then
-                help_button = self:BuildOneButton("help_defense_44x56.png",_("撤防")):onButtonClicked(function()
-                    NetManager:getRetreatFromHelpedAllianceMemberPromise(member:Id())
-                    self:LeftButtonClicked()
+                help_button = self:BuildOneButton("tmp_retreat_defense_48x58.png",_("撤防")):onButtonClicked(function()
+                    UIKit:showMessageDialog(_("提示"),_("是否确认撤防"),function()
+                        NetManager:getRetreatFromHelpedAllianceMemberPromise(member:Id())
+                    end,
+                    function()
+                    end)
                 end)
             else
                 help_button = self:BuildOneButton("help_defense_44x56.png",_("协防")):onButtonClicked(function()
@@ -224,44 +227,45 @@ function GameUIAllianceCityEnter:GetEnterButtons()
             end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition(),returnCloseAction = true}):AddToCurrentScene(true)
             self:LeftButtonClicked()
         end)
-    local my_allaince = Alliance_Manager:GetMyAlliance()
-    attack_button:setButtonEnabled(my_allaince:Status() == "fight")
-    local strike_button = self:BuildOneButton("strike_66x62.png",_("突袭")):onButtonClicked(function()
-        UIKit:newGameUI("GameUIStrikePlayer",1,{memberId = member:Id(),targetIsMyAlliance = false,toLocation = self:GetLogicPosition(),targetIsProtected = member:IsProtected()}):AddToCurrentScene(true)
-        self:LeftButtonClicked()
-    end)
-    strike_button:setButtonEnabled(my_allaince:Status() == "fight")
-
-    buttons = {attack_button,strike_button}
-    if self:GetMyAlliance():GetAllianceBelvedere():CanEnterEnemyCity() then
-        local enter_button = self:BuildOneButton("alliance_enter_city_56x68.png",_("进入")):onButtonClicked(function()
-            local location = self:GetLogicPosition()
-            location.id = self:GetCurrentAlliance():Id()
-            app:EnterPlayerCityScene(member:Id(), location)
+        local my_allaince = Alliance_Manager:GetMyAlliance()
+        attack_button:setButtonEnabled(my_allaince:Status() == "fight")
+        local strike_button = self:BuildOneButton("strike_66x62.png",_("突袭")):onButtonClicked(function()
+            UIKit:newGameUI("GameUIStrikePlayer",1,{memberId = member:Id(),targetIsMyAlliance = false,toLocation = self:GetLogicPosition(),targetIsProtected = member:IsProtected()}):AddToCurrentScene(true)
             self:LeftButtonClicked()
         end)
-        table.insert(buttons, enter_button)
-    end
-    local info_button = self:BuildOneButton("icon_info_56x56.png",_("信息")):onButtonClicked(function()
-        UIKit:newGameUI("GameUIAllianceMemberInfo",false,member:Id()):AddToCurrentScene(true)
-        self:LeftButtonClicked()
-    end)
-    table.insert(buttons,info_button)
+        strike_button:setButtonEnabled(my_allaince:Status() == "fight")
 
-    -- 准备期做一个progress倒计时按钮可使用时间
-    if my_allaince:Status() == "prepare" then
-        local progress_1 = WidgetAllianceEnterButtonProgress.new()
-            :pos(-68, -54)
-            :addTo(attack_button)
-        local progress_2 = WidgetAllianceEnterButtonProgress.new()
-            :pos(-68, -54)
-            :addTo(strike_button)
-    end
+        buttons = {attack_button,strike_button}
+        if self:GetMyAlliance():GetAllianceBelvedere():CanEnterEnemyCity() then
+            local enter_button = self:BuildOneButton("alliance_enter_city_56x68.png",_("进入")):onButtonClicked(function()
+                local location = self:GetLogicPosition()
+                location.id = self:GetCurrentAlliance():Id()
+                app:EnterPlayerCityScene(member:Id(), location)
+                self:LeftButtonClicked()
+            end)
+            table.insert(buttons, enter_button)
+        end
+        local info_button = self:BuildOneButton("icon_info_56x56.png",_("信息")):onButtonClicked(function()
+            UIKit:newGameUI("GameUIAllianceMemberInfo",false,member:Id()):AddToCurrentScene(true)
+            self:LeftButtonClicked()
+        end)
+        table.insert(buttons,info_button)
+
+        -- 准备期做一个progress倒计时按钮可使用时间
+        if my_allaince:Status() == "prepare" then
+            local progress_1 = WidgetAllianceEnterButtonProgress.new()
+                :pos(-68, -54)
+                :addTo(attack_button)
+            local progress_2 = WidgetAllianceEnterButtonProgress.new()
+                :pos(-68, -54)
+                :addTo(strike_button)
+        end
     end
     return buttons
 end
 
 return GameUIAllianceCityEnter
+
 
 
 

@@ -272,13 +272,13 @@ function WidgetUseItems:OpenResourceDialog( item )
                     return true
                 end,
                 function ()
-                    -- local item_name = v:Name()
-                    -- NetManager:getUseItemPromise(item_name,{})
                     UIKit:newWidgetUI("WidgetUseMutiItems", v):AddToCurrentScene()
                 end,
                 function ()
                     local item_name = v:Name()
-                    NetManager:getBuyAndUseItemPromise(item_name,{})
+                    NetManager:getBuyAndUseItemPromise(item_name,{
+                        [item_name] = {count = 1}
+                    })
                 end,
                 which_bg
             )
@@ -1343,6 +1343,7 @@ end
 
 
 return WidgetUseItems
+
 
 
 
