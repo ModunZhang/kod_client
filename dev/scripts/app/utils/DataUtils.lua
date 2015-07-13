@@ -363,7 +363,7 @@ end
 --获取攻击行军总时间
 function DataUtils:getPlayerSoldiersMarchTime(soldiers,fromAllianceDoc, fromLocation, toAllianceDoc, toLocation)
     local distance = DataUtils:getAllianceLocationDistance(fromAllianceDoc, fromLocation, toAllianceDoc, toLocation)
-    local baseSpeed,totalSpeed,totalCitizen = 1200,0,0
+    local baseSpeed,totalSpeed,totalCitizen = 2000,0,0
     for __,soldier_info in ipairs(soldiers) do
         totalCitizen = totalCitizen + soldier_info.soldier_citizen
         totalSpeed = totalSpeed + baseSpeed / soldier_info.soldier_march * soldier_info.soldier_citizen
@@ -392,7 +392,7 @@ end
 --获得龙的行军时间（突袭）不加入任何buffer
 function DataUtils:getPlayerDragonMarchTime(fromAllianceDoc, fromLocation, toAllianceDoc, toLocation)
     local distance = DataUtils:getAllianceLocationDistance(fromAllianceDoc, fromLocation, toAllianceDoc, toLocation)
-    local baseSpeed = 1200
+    local baseSpeed = 2000
     local marchSpeed = PlayerInitData.intInit.dragonMarchSpeed.value
     local time = math.ceil(baseSpeed / marchSpeed * distance)
     return time
