@@ -536,7 +536,7 @@ function MultiAllianceLayer:ManagerCorpsFromChangedMap(changed_map,is_strkie,all
             end)
         elseif changed_map.added then
             table.foreachi(changed_map.added,function(_,marchEvent)
-                self:CreateCorpsIf(marchEvent)
+                self:CreateCorpsIf(marchEvent, true)
             end)
         end
     else
@@ -560,7 +560,7 @@ function MultiAllianceLayer:ManagerCorpsFromChangedMap(changed_map,is_strkie,all
 end
 
 --适配数据给界面 如果已有路线会更新
-function MultiAllianceLayer:CreateCorpsIf(marchEvent)
+function MultiAllianceLayer:CreateCorpsIf(marchEvent, is_added_event)
     local from,from_alliance_id = marchEvent:FromLocation()
     from.index = self:GetAllianceViewIndexById(from_alliance_id)
     local to,to_alliance_id   = marchEvent:TargetLocation()
@@ -599,6 +599,9 @@ function MultiAllianceLayer:CreateCorpsIf(marchEvent)
         ally,
         player_data.name
     )
+    if is_added_event and ally == MINE and not marchEvent:IsReturnEvent() then
+        self:TrackCorpsById(marchEvent:Id())
+    end
 end
 local corps_scale = 1.2
 local dragon_dir_map = {
