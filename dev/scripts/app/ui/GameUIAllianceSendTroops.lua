@@ -215,44 +215,14 @@ function GameUIAllianceSendTroops:OnMoveInStage()
                             }
                         )
                     end
-                    return
                 end
-                -- if self.dragon:IsHpLow() then
-                --     UIKit:showMessageDialog(_("行军"),_("您的龙的HP低于20%,有很大几率阵亡,确定要派出吗?"))
-                --         :CreateOKButton(
-                --             {
-                --                 listener =  function ()
-                --                     if self.dragon:IsDefenced() then
-                --                         NetManager:getCancelDefenceDragonPromise():done(function()
-                --                             -- self.march_callback(dragonType,soldiers)
-                --                             -- -- 确认派兵后关闭界面
-                --                             -- self:LeftButtonClicked()
-                --                             self:CallFuncMarch_Callback(dragonType,soldiers)
-                --                         end)
-                --                     else
-                --                         -- self.march_callback(dragonType,soldiers)
-                --                         -- -- 确认派兵后关闭界面
-                --                         -- self:LeftButtonClicked()
-                --                         self:CallFuncMarch_Callback(dragonType,soldiers)
-                --                     end
-                --                 end
-                --             }
-                --         )
-                -- else
                 if self.dragon:IsDefenced() then
                     NetManager:getCancelDefenceDragonPromise():done(function()
-                        -- self.march_callback(dragonType,soldiers)
-                        -- -- 确认派兵后关闭界面
-                        -- self:LeftButtonClicked()
                         self:CallFuncMarch_Callback(dragonType,soldiers)
                     end)
                 else
-                    -- self.march_callback(dragonType,soldiers)
-                    -- 确认派兵后关闭界面
-                    -- self:LeftButtonClicked()
                     self:CallFuncMarch_Callback(dragonType,soldiers)
                 end
-                -- end
             end
 
         end):align(display.RIGHT_CENTER,window.right-50,window.top-910):addTo(self:GetView())
@@ -800,6 +770,8 @@ function GameUIAllianceSendTroops:onExit()
 end
 
 return GameUIAllianceSendTroops
+
+
 
 
 

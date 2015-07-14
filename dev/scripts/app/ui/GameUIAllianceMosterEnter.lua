@@ -118,7 +118,7 @@ function GameUIAllianceMosterEnter:onEnter()
             rewards_node:setPositionX(soldier_head_icon:getPositionX() + 90 + 380)
         end)
     }))
-   
+
     self.handle = scheduler.scheduleGlobal(handler(self, self.ShowReward), 1, false)
 
 
@@ -128,25 +128,27 @@ function GameUIAllianceMosterEnter:onEnter()
         ,{
             disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
         }):onButtonClicked(function()
-        UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers,total_march_time,gameuialliancesendtroops)
-            local scene_name = display.getRunningScene().__cname
-            if not entity:GetAllianceMonsterInfo() then
-                UIKit:showMessageDialog(_("提示"),_("敌人已经消失了"))
-                return
-            end
-            if alliance:GetSelf():IsProtected() then
-                UIKit:showMessageDialog(_("提示"),_("进攻该目标将失去保护状态，确定继续派兵?"),function()
+        local attack_monster_func = function ()
+            UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers,total_march_time,gameuialliancesendtroops)
+                local scene_name = display.getRunningScene().__cname
+                if not entity:GetAllianceMonsterInfo() then
+                    UIKit:showMessageDialog(_("提示"),_("敌人已经消失了"))
+                    return
+                end
+                if alliance:GetSelf():IsProtected() then
+                    UIKit:showMessageDialog(_("提示"),_("进攻该目标将失去保护状态，确定继续派兵?"),function()
+                        NetManager:getAttackMonsterPromise(dragonType,soldiers,alliance:Id(),entity.id):done(function()
+                            app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_SENDOUT")
+                        end)
+                    end)
+                else
                     NetManager:getAttackMonsterPromise(dragonType,soldiers,alliance:Id(),entity.id):done(function()
                         app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_SENDOUT")
                     end)
-                end)
-            else
-                NetManager:getAttackMonsterPromise(dragonType,soldiers,alliance:Id(),entity.id):done(function()
-                    app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_SENDOUT")
-                end)
-            end
-        end,{}):AddToCurrentScene(true)
-        self:LeftButtonClicked()
+                end
+            end,{}):AddToCurrentScene(true)
+        end
+            UIKit:showSendTroopMessageDialog(attack_monster_func,City:GetMaterialManager().MATERIAL_TYPE.BUILD,_("建筑"))
         end):addTo(body):align(display.RIGHT_TOP, b_width, 10)
     local s = btn:getCascadeBoundingBox().size
     display.newSprite("attack_58x56.png"):align(display.CENTER, -s.width/2, -s.height/2+12):addTo(btn)
@@ -172,6 +174,8 @@ function GameUIAllianceMosterEnter:ShowReward()
     end
 end
 return GameUIAllianceMosterEnter
+
+
 
 
 

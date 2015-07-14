@@ -679,7 +679,9 @@ function UIKit:showMessageDialogWithParams(params)
     local content = params.content or ""
     local ok_callback = params.ok_callback or function()end
     local ok_string = params.ok_string or _("确定")
+    local ok_btn_images = params.ok_btn_images or {normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"}
     local cancel_string = params.cancel_string or _("取消")
+    local cancel_btn_images = params.cancel_btn_images or {normal = "red_btn_up_148x58.png",pressed = "red_btn_down_148x58.png"}
     local visible_x_button = true
     if  type(params.visible_x_button) == 'boolean' then
         visible_x_button = params.visible_x_button
@@ -690,9 +692,9 @@ function UIKit:showMessageDialogWithParams(params)
 
     local dialog = UIKit:newGameUI("FullScreenPopDialogUI",x_button_callback,user_data):SetTitle(title):SetPopMessage(content):zorder(zorder)
 
-    dialog:CreateOKButton({listener = ok_callback,btn_name = ok_string})
+    dialog:CreateOKButton({listener = ok_callback,btn_name = ok_string, ok_btn_images = ok_btn_images})
     if params.cancel_callback then
-        dialog:CreateCancelButton({listener = cancel_callback,btn_name = _("取消")})
+        dialog:CreateCancelButton({listener = cancel_callback,btn_name = cancel_string,cancel_btn_images = cancel_btn_images})
     end
     dialog:VisibleXButton(visible_x_button)
     if type(params.auto_close) ~= "boolean" then
@@ -704,6 +706,22 @@ function UIKit:showMessageDialogWithParams(params)
     end
     self:__addMessageDialogToCurrentScene(dialog)
     return dialog
+end
+-- 可能得到材料的派兵行为检查
+function UIKit:showSendTroopMessageDialog(attack_func,material_type,effect_str)
+    if City:GetMaterialManager():CheckOutOfRangeByType(material_type) then
+        local dialog = self:showMessageDialogWithParams({
+            title = _("提示"),
+            content = _(string.format(_("当前材料库房中的%s材料已满，你可能无法获得此次战斗所得的材料奖励。是否仍要派兵？"),effect_str)),
+            ok_callback = attack_func,
+            ok_btn_images = {normal = "red_btn_up_148x58.png",pressed = "red_btn_down_148x58.png"},
+            ok_string = _("强行派兵"),
+            cancel_callback = function () end,
+            cancel_btn_images = {normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"}
+        })
+    else
+        attack_func()
+    end
 end
 
 function UIKit:getMessageDialogWithParams(params)
@@ -1180,21 +1198,22 @@ function UIKit:CreateNameBanner(name, dragon_type)
     }):addTo(node, 1):align(display.CENTER):getContentSize()
     display.newSprite("arrow_green_22x32.png"
         , nil, nil, {class=cc.FilteredSpriteWithOne})
-    :addTo(node)
-    :setScale(size.width / 22 * 1.3, size.height/32 * 1.01)
-    :setFilter(filter.newFilter("CUSTOM",
-        json.encode({
-            frag = "shaders/banner.fs",
-            shaderName = "banner",
-        })
-    ))
+        :addTo(node)
+        :setScale(size.width / 22 * 1.3, size.height/32 * 1.01)
+        :setFilter(filter.newFilter("CUSTOM",
+            json.encode({
+                frag = "shaders/banner.fs",
+                shaderName = "banner",
+            })
+        ))
     local dragon_bg = display.newSprite("dragon_bg_114x114.png")
-    :addTo(node, 2):scale(0.3):pos(-size.width/2-20, 0)
+        :addTo(node, 2):scale(0.3):pos(-size.width/2-20, 0)
     display.newSprite(UILib.dragon_head[dragon_type or "redDragon"])
-    :align(display.CENTER, dragon_bg:getContentSize().width/2, dragon_bg:getContentSize().height/2+5)
-    :addTo(dragon_bg)
+        :align(display.CENTER, dragon_bg:getContentSize().width/2, dragon_bg:getContentSize().height/2+5)
+        :addTo(dragon_bg)
     return node
 end
+
 
 
 

@@ -128,11 +128,12 @@ function GameUIPVESendTroop:OnMoveInStage()
                     UIKit:showMessageDialog(_("主人"),_("请选择要派遣的部队"))
                     return
                 end
-                self.march_callback(dragonType,soldiers)
-                -- 确认派兵后关闭界面
-                self:LeftButtonClicked()
+                UIKit:showSendTroopMessageDialog(function ()
+                    self.march_callback(dragonType,soldiers)
+                    -- 确认派兵后关闭界面
+                    self:LeftButtonClicked()
+                end,City:GetMaterialManager().MATERIAL_TYPE.SOLDIER,_("士兵"))
             end
-
         end):align(display.RIGHT_CENTER,window.right-50,window.top-910):addTo(self:GetView())
 
 
@@ -682,6 +683,8 @@ end
 
 
 return GameUIPVESendTroop
+
+
 
 
 
