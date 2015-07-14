@@ -1047,8 +1047,8 @@ local soldier_animap = {
     heihua_bubing_2 = {cc.p(0.5, 0.3), false, 1},
     heihua_bubing_3 = {cc.p(0.45, 0.33), true, 1},
     --
-    heihua_gongjianshou_2 = {cc.p(0.1, 0.09), true, 1, true},
-    heihua_gongjianshou_3 = {cc.p(0.47, 0.22), true, 1},
+    heihua_gongjianshou_2 = {cc.p(0.1, 0.09), true, 0.8, true},
+    heihua_gongjianshou_3 = {cc.p(0.47, 0.22), true, 0.8},
     --
     heihua_qibing_2 = {cc.p(0.5, 0.4), true, 1},
     heihua_qibing_3 = {cc.p(0.55, 0.4), true, 1},
