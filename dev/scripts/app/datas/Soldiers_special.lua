@@ -18,7 +18,7 @@ special["skeletonWarrior"] = {
 	["killScore"] = 5,
 	["citizen"] = 1,
 	["recruitTime"] = 15,
-	["treatCoin"] = 250,
+	["treatCoin"] = 100,
 	["treatTime"] = 4,
 	["techBuildingName"] = "trainingGround"
 }
@@ -40,7 +40,7 @@ special["skeletonArcher"] = {
 	["killScore"] = 5,
 	["citizen"] = 1,
 	["recruitTime"] = 15,
-	["treatCoin"] = 250,
+	["treatCoin"] = 100,
 	["treatTime"] = 4,
 	["techBuildingName"] = "hunterHall"
 }
@@ -62,7 +62,7 @@ special["deathKnight"] = {
 	["killScore"] = 9,
 	["citizen"] = 2,
 	["recruitTime"] = 30,
-	["treatCoin"] = 450,
+	["treatCoin"] = 180,
 	["treatTime"] = 8,
 	["techBuildingName"] = "stable"
 }
@@ -84,7 +84,7 @@ special["meatWagon"] = {
 	["killScore"] = 18,
 	["citizen"] = 4,
 	["recruitTime"] = 60,
-	["treatCoin"] = 900,
+	["treatCoin"] = 360,
 	["treatTime"] = 15,
 	["techBuildingName"] = "workshop"
 }
@@ -106,7 +106,7 @@ special["priest"] = {
 	["killScore"] = 7,
 	["citizen"] = 1,
 	["recruitTime"] = 20,
-	["treatCoin"] = 350,
+	["treatCoin"] = 140,
 	["treatTime"] = 5,
 	["techBuildingName"] = "trainingGround"
 }
@@ -128,7 +128,7 @@ special["demonHunter"] = {
 	["killScore"] = 7,
 	["citizen"] = 1,
 	["recruitTime"] = 20,
-	["treatCoin"] = 350,
+	["treatCoin"] = 140,
 	["treatTime"] = 5,
 	["techBuildingName"] = "hunterHall"
 }
@@ -150,7 +150,7 @@ special["paladin"] = {
 	["killScore"] = 13,
 	["citizen"] = 2,
 	["recruitTime"] = 40,
-	["treatCoin"] = 650,
+	["treatCoin"] = 260,
 	["treatTime"] = 10,
 	["techBuildingName"] = "stable"
 }
@@ -172,7 +172,7 @@ special["steamTank"] = {
 	["killScore"] = 25,
 	["citizen"] = 4,
 	["recruitTime"] = 80,
-	["treatCoin"] = 1250,
+	["treatCoin"] = 500,
 	["treatTime"] = 20,
 	["techBuildingName"] = "workshop"
 }

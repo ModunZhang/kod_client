@@ -377,6 +377,18 @@ function WidgetRecruitSoldier:AddButtons()
                     local content = string.format("%s%s%s", queue_need_gem > 0 and _("您当前没有足够的队列") or "", required_gems > 0 and _("您当前没有足够的资源") or "", _("是否花费魔法石立即补充"))
 
                     UIKit:showMessageDialog(title, content,function()
+                        if User:GetGemResource():GetValue() < (queue_need_gem + required_gems) then
+                            UIKit:showMessageDialog(_("提示"),_("金龙币不足"))
+                                :CreateOKButton(
+                                    {
+                                        listener = function ()
+                                            UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                                        end,
+                                        btn_name= _("前往商店")
+                                    }
+                                )
+                            return
+                        end
                         NetManager:getRecruitSpecialSoldierPromise(self.soldier_name, self.count)
                         self:Close()
                     end):CreateNeeds({value = queue_need_gem + required_gems})
@@ -387,9 +399,22 @@ function WidgetRecruitSoldier:AddButtons()
             else
                 local required_gems = DataUtils:buyResource(self:GetNeedResouce(self.count), {})
                 if queue_need_gem + required_gems > 0 then
+
                     local title = string.format("%s/%s", queue_need_gem > 0 and _("队列不足") or "", required_gems > 0 and _("资源不足") or "")
                     local content = string.format("%s%s%s", queue_need_gem > 0 and _("您当前没有足够的队列") or "", required_gems > 0 and _("您当前没有足够的资源") or "", _("是否花费魔法石立即补充"))
                     UIKit:showMessageDialog(title, content,function()
+                        if User:GetGemResource():GetValue() < (queue_need_gem + required_gems) then
+                            UIKit:showMessageDialog(_("提示"),_("金龙币不足"))
+                                :CreateOKButton(
+                                    {
+                                        listener = function ()
+                                            UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                                        end,
+                                        btn_name= _("前往商店")
+                                    }
+                                )
+                            return
+                        end
                         NetManager:getRecruitNormalSoldierPromise(self.soldier_name, self.count)
                         self:Close()
                     end):CreateNeeds({value = queue_need_gem + required_gems})
@@ -469,6 +494,7 @@ function WidgetRecruitSoldier:SetSoldier(soldier_name, star)
         end)
 
     local soldier_star_bg = display.newSprite("tmp_back_ground_102x22.png"):addTo(self.soldier):align(display.BOTTOM_CENTER,-10, -60)
+    display.newSprite("i_icon_20x20.png"):addTo(soldier_star_bg):align(display.LEFT_CENTER,5, 11)
     self.soldier_star = StarBar.new({
         max = 3,
         bg = "Stars_bar_bg.png",
@@ -761,6 +787,8 @@ end
 
 
 return WidgetRecruitSoldier
+
+
 
 
 

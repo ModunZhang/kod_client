@@ -56,6 +56,9 @@ function AllianceBattleScene:GotoPosition(x,y,aid)
 end
 function AllianceBattleScene:GetPreloadImages()
     return {
+        {image = "animations/heihua_animation_0.pvr.ccz",list = "animations/heihua_animation_0.plist"},
+        {image = "animations/heihua_animation_1.pvr.ccz",list = "animations/heihua_animation_1.plist"},
+        {image = "animations/heihua_animation_2.pvr.ccz",list = "animations/heihua_animation_2.plist"},
         {image = "animations/region_animation_0.pvr.ccz",list = "animations/region_animation_0.plist"},
         {image = "region_png.pvr.ccz",list = "region_png.plist"},
         {image = "region_pvr.pvr.ccz",list = "region_pvr.plist"},
@@ -114,22 +117,23 @@ function AllianceBattleScene:OnTouchClicked(pre_x, pre_y, x, y)
         self.event_manager:RemoveAllTouches()
         
         app:GetAudioManager():PlayeEffectSoundWithKey("HOME_PAGE")
+        local entity = building:GetEntity()
         if iskindof(building, "Sprite") then
             Sprite:PromiseOfFlash(building):next(function()
-                self:OpenUI(building, isMyAlliance)
+                self:OpenUI(entity, isMyAlliance)
             end)
         else
             self:GetSceneLayer():PromiseOfFlashEmptyGround(building, isMyAlliance):next(function()
-                self:OpenUI(building, isMyAlliance)
+                self:OpenUI(entity, isMyAlliance)
             end)
         end
     end
 end
-function AllianceBattleScene:OpenUI(building, isMyAlliance)
-    if building:GetEntity():GetType() ~= "building" then
-        self:EnterNotAllianceBuilding(building:GetEntity(),isMyAlliance)
+function AllianceBattleScene:OpenUI(entity, isMyAlliance)
+    if entity:GetType() ~= "building" then
+        self:EnterNotAllianceBuilding(entity, isMyAlliance)
     else
-        self:EnterAllianceBuilding(building:GetEntity(),isMyAlliance)
+        self:EnterAllianceBuilding(entity, isMyAlliance)
     end
 end
 function AllianceBattleScene:OnAllianceBasicChanged(alliance,changed_map)
@@ -175,6 +179,11 @@ function AllianceBattleScene:EnterNotAllianceBuilding(entity,isMyAlliance)
         if not entity:GetAllianceVillageInfo() then -- 废墟
             class_name = "GameUIAllianceRuinsEnter"
         end
+    elseif type_ == 'monster' then
+        if not entity:GetAllianceMonsterInfo() then
+            return 
+        end
+        class_name = "GameUIAllianceMosterEnter"
     end
     UIKit:newGameUI(class_name,entity,isMyAlliance,self:GetAlliance(),self:GetEnemyAlliance()):AddToCurrentScene(true)
 end

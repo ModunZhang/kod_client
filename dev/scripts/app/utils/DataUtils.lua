@@ -6,6 +6,8 @@ local items = GameDatas.Items
 local normal_soldier = GameDatas.Soldiers.normal
 local special_soldier = GameDatas.Soldiers.special
 local soldier_vs = GameDatas.ClientInitGame.soldier_vs
+local Localize = import("..utils.Localize")
+
 DataUtils = {}
 
 local string = string
@@ -361,7 +363,7 @@ end
 --获取攻击行军总时间
 function DataUtils:getPlayerSoldiersMarchTime(soldiers,fromAllianceDoc, fromLocation, toAllianceDoc, toLocation)
     local distance = DataUtils:getAllianceLocationDistance(fromAllianceDoc, fromLocation, toAllianceDoc, toLocation)
-    local baseSpeed,totalSpeed,totalCitizen = 1200,0,0
+    local baseSpeed,totalSpeed,totalCitizen = 2000,0,0
     for __,soldier_info in ipairs(soldiers) do
         totalCitizen = totalCitizen + soldier_info.soldier_citizen
         totalSpeed = totalSpeed + baseSpeed / soldier_info.soldier_march * soldier_info.soldier_citizen
@@ -390,7 +392,7 @@ end
 --获得龙的行军时间（突袭）不加入任何buffer
 function DataUtils:getPlayerDragonMarchTime(fromAllianceDoc, fromLocation, toAllianceDoc, toLocation)
     local distance = DataUtils:getAllianceLocationDistance(fromAllianceDoc, fromLocation, toAllianceDoc, toLocation)
-    local baseSpeed = 1200
+    local baseSpeed = 2000
     local marchSpeed = PlayerInitData.intInit.dragonMarchSpeed.value
     local time = math.ceil(baseSpeed / marchSpeed * distance)
     return time
@@ -1121,7 +1123,7 @@ local function getBuildingBuffForResourceProtectPercent(resourceName)
         food = "mill"
     }
     local buildingName = resourceBuildingMap[resourceName]
-    local buildings = City:GetFirstBuildingByType("buildingName")
+    local buildings = City:GetFirstBuildingByType(buildingName)
     local protectPercent = 0
     if buildings:GetLevel() > 0 then
         protectPercent = protectPercent + buildings:GetProtection()
@@ -1152,7 +1154,6 @@ function DataUtils:GetResourceProtectPercent( resource_name )
     finalPercent = finalPercent > 0.9 and 0.9 or finalPercent < 0.1 and 0.1 or finalPercent
     return finalPercent
 end
-
 return DataUtils
 
 

@@ -17,10 +17,10 @@ end
 
 
 local EMPTY_TAG = 11400
+local TIP_TAG = 11201
 function TownHallSprite:ctor(city_layer, entity, city)
     TownHallSprite.super.ctor(self, city_layer, entity, city)
     city:GetUser():AddListenOnType(self, city:GetUser().LISTEN_TYPE.NEW_DALIY_QUEST_EVENT)
-    self:DoAni()
 end
 function TownHallSprite:RefreshSprite()
     TownHallSprite.super.RefreshSprite(self)
@@ -28,12 +28,25 @@ function TownHallSprite:RefreshSprite()
 end
 function TownHallSprite:DoAni()
     if self:GetEntity():IsUnlocked() then
-        if self:GetEntity():BelongCity():GetUser():IsOnDailyQuestEvents() then
+        local user = self:GetEntity():BelongCity():GetUser()
+        if user:IsOnDailyQuestEvents() then
             self:PlayAni()
             self:removeChildByTag(EMPTY_TAG)
         else
             self:StopAni()
             self:PlayEmptyAnimation()
+        end
+        if user:CouldGotDailyQuestReward() then
+            if not self:getChildByTag(TIP_TAG) then
+                local x,y = self:GetSpriteTopPosition()
+                x = x - 20
+                y = y - 100
+                display.newSprite("tmp_tips_56x60.png")
+                :addTo(self,1,TIP_TAG):align(display.BOTTOM_CENTER,x,y)
+                :runAction(UIKit:ShakeAction(true,2))
+            end
+        else
+            self:removeChildByTag(TIP_TAG)
         end
     end
 end

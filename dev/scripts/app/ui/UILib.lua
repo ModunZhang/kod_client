@@ -397,6 +397,25 @@ local SOLDIER_COLOR_BG_IMAGES = {
     paladin = "green_bg_128x128.png",
     steamTank = "green_bg_128x128.png",
 }
+local BLACK_SOLDIER_COLOR_BG_IMAGES = {
+    wall = "red_bg_128x128.png",
+    ranger = "red_bg_128x128.png",
+    catapult = "red_bg_128x128.png",
+    lancer = "red_bg_128x128.png",
+    swordsman = "red_bg_128x128.png",
+    sentinel = "red_bg_128x128.png",
+    crossbowman = "red_bg_128x128.png",
+    horseArcher = "red_bg_128x128.png",
+    ballista = "red_bg_128x128.png",
+    skeletonWarrior = "green_bg_128x128.png",
+    skeletonArcher = "green_bg_128x128.png",
+    deathKnight = "green_bg_128x128.png",
+    meatWagon = "green_bg_128x128.png",
+    priest = "green_bg_128x128.png",
+    demonHunter = "green_bg_128x128.png",
+    paladin = "green_bg_128x128.png",
+    steamTank = "green_bg_128x128.png",
+}
 local BLACK_SOLDIER_IMAGES = {
     ranger = {
         "ranger_1.png",
@@ -1072,6 +1091,7 @@ return {
     soldier_animation = SOLDIER_ANIMATIONS,
     soldier_image = SOLDIER_IMAGES,
     soldier_color_bg_images = SOLDIER_COLOR_BG_IMAGES,
+    black_soldier_color_bg_images = BLACK_SOLDIER_COLOR_BG_IMAGES,
     black_soldier_image = BLACK_SOLDIER_IMAGES,
     dragon_head  = DRAGON_HEAD,
     dragon_animations = DRAGON_ANIMATIONS,

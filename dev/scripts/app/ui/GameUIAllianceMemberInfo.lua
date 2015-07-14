@@ -207,7 +207,7 @@ function GameUIAllianceMemberInfo:AdapterPlayerList()
     if type(player.online) == 'boolean' and player.online then
         table.insert(r,{_("最后登陆"),_("在线")})
     else
-        table.insert(r,{_("最后登陆"),NetService:formatTimeAsTimeAgoStyleByServerTime(player.lastLoginTime)})
+        table.insert(r,{_("最后登陆"),NetService:formatTimeAsTimeAgoStyleByServerTime(player.lastLogoutTime)})
     end
     table.insert(r,{_("战斗力"),string.formatnumberthousands(player.power)})
     table.insert(r,{_("击杀"),string.formatnumberthousands(player.kill)})

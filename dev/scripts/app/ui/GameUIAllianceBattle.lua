@@ -214,7 +214,13 @@ function GameUIAllianceBattle:InitBattleStatistics()
                             UIKit:showMessageDialog(_("提示"),_("联盟正在战争准备期或战争期"))
                             return
                         end
-                        NetManager:getFindAllianceToFightPromose()
+                        UIKit:showMessageDialog(_("主人"),_("确定开启联盟会战吗?")):CreateOKButton(
+                            {
+                                listener = function ()
+                                    NetManager:getFindAllianceToFightPromose()
+                                end
+                            }
+                        )
                     else
                         if self.alliance:IsRequested() then
                             UIKit:showMessageDialog(_("提示"),_("已经发送过开战请求"))
@@ -893,7 +899,6 @@ function GameUIAllianceBattle:CreateHistoryContent()
         self.self_flag = self_flag
         self.enemy_flag = enemy_flag
 
-
         local info_message = {
             {string.formatnumberthousands(ourAlliance.kill),_("总击杀"),string.formatnumberthousands(enemyAlliance.kill)},
             {string.formatnumberthousands(ourAlliance.routCount),_("击溃城市"),string.formatnumberthousands(enemyAlliance.routCount)},
@@ -916,10 +921,10 @@ function GameUIAllianceBattle:CreateHistoryContent()
         -- 只有权限大于将军的玩家可以请求复仇
         local isEqualOrGreater = alliance:GetMemeberById(DataManager:getUserData()._id)
             :IsTitleEqualOrGreaterThan("general")
+        if self.revenge_button then
+            self.revenge_button:removeFromParent(true)
+        end
         if not win and isEqualOrGreater then
-            if self.revenge_button then
-                self.revenge_button:removeFromParent(true)
-            end
             -- 复仇按钮
             local revenge_button = WidgetPushButton.new(
                 {normal = "red_btn_up_148x58.png",pressed = "red_btn_down_148x58.png"},
@@ -1265,6 +1270,8 @@ function GameUIAllianceBattle:OnAllianceFightReportsChanged(changed_map)
 end
 
 return GameUIAllianceBattle
+
+
 
 
 

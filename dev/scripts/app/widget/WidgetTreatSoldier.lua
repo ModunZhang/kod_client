@@ -425,6 +425,7 @@ function WidgetTreatSoldier:SetSoldier(soldier_type, star)
             WidgetSoldierDetails.new(self.soldier_type, self.star):addTo(self)
         end)
     local soldier_star_bg = display.newSprite("tmp_back_ground_102x22.png"):addTo(self.soldier):align(display.BOTTOM_CENTER,-10, -60)
+    display.newSprite("i_icon_20x20.png"):addTo(soldier_star_bg):align(display.LEFT_CENTER,5, 11)
     self.soldier_star = StarBar.new({
         max = 3,
         bg = "Stars_bar_bg.png",

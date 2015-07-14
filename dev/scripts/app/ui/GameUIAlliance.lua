@@ -241,7 +241,9 @@ function GameUIAlliance:GetJoinList(tag)
             if not response.msg or not response.msg.allianceDatas then return end
             if response.msg.allianceDatas  then
                 self.join_list_data_source = response.msg.allianceDatas
-                self:RefreshJoinListView()
+                if self.RefreshJoinListView then
+                    self:RefreshJoinListView()
+                end
             end
         end)
     else
@@ -251,7 +253,9 @@ function GameUIAlliance:GetJoinList(tag)
             if not response.msg or not response.msg.allianceDatas then return end
             if response.msg.allianceDatas then
                 self.join_list_data_source = response.msg.allianceDatas
-                self:RefreshJoinListView()
+                if self.RefreshJoinListView then
+                    self:RefreshJoinListView()
+                end
             end
         end):always(function()
             self.isLoadingJoin = false
@@ -1439,7 +1443,7 @@ function GameUIAlliance:RefreshMemberList()
     if archon.online then
         self.member_list_bg.loginLabel:setString(_("在线"))
     else
-        self.member_list_bg.loginLabel:setString(_("最后登录:") .. NetService:formatTimeAsTimeAgoStyleByServerTime(archon.lastLoginTime))
+        self.member_list_bg.loginLabel:setString(_("最后登录:") .. NetService:formatTimeAsTimeAgoStyleByServerTime(archon.lastLogoutTime))
     end
     local display_title,___ = self:GetAllianceTitleAndLevelPng("archon")
     self.member_list_bg.archon_title_label:setString(display_title)

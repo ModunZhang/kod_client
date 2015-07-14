@@ -805,15 +805,15 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
                 }
             )
         else
-            dialog:CreateNeeds({value = required_gems})
-            dialog:CreateOKButton(
+            dialog:CreateOKButtonWithPrice(
                 {
                     listener = function()
                         listener()
                     end,
                     btn_images = {normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"},
+                    price = required_gems
                 }
-            )
+            ):CreateCancelButton()
         end
     elseif can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_NOT_ENOUGH then
         local required_gems = self.building:getUpgradeRequiredGems()
@@ -850,14 +850,15 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
     elseif can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_AND_RESOURCE_NOT_ENOUGH then
         local required_gems = self.building:getUpgradeRequiredGems()
         if City:BuildQueueCounts() == 2 then
-            dialog:CreateOKButton(
+            dialog:CreateOKButtonWithPrice(
                 {
                     listener = function(sender,type)
                         listener()
                     end,
                     btn_images = {normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"},
+                    price = required_gems
                 }
-            ):CreateNeeds({value = required_gems})
+            ):CreateCancelButton()
         else
             dialog:CreateOKButtonWithPrice(
                 {

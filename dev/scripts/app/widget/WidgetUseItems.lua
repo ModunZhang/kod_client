@@ -272,12 +272,13 @@ function WidgetUseItems:OpenResourceDialog( item )
                     return true
                 end,
                 function ()
-                    local item_name = v:Name()
-                    NetManager:getUseItemPromise(item_name,{})
+                    UIKit:newWidgetUI("WidgetUseMutiItems", v):AddToCurrentScene()
                 end,
                 function ()
                     local item_name = v:Name()
-                    NetManager:getBuyAndUseItemPromise(item_name,{})
+                    NetManager:getBuyAndUseItemPromise(item_name,{
+                        [item_name] = {count = 1}
+                    })
                 end,
                 which_bg
             )
@@ -795,28 +796,35 @@ function WidgetUseItems:OpenMoveTheCityDialog( item ,params)
             return true
         end,
         function ()
-            local item_name = item:Name()
-            NetManager:getUseItemPromise(item_name,{
-                [item_name]={
-                    locationX = params.locationX,
-                    locationY = params.locationY
-                }
+            if Alliance_Manager:GetMyAlliance():GetAllianceBelvedere():HasEvents() then
+                UIKit:showMessageDialog(_("提示"),_("当前不能移城"))
+            else
+                local item_name = item:Name()
+                NetManager:getUseItemPromise(item_name,{
+                    [item_name]={
+                        locationX = params.locationX,
+                        locationY = params.locationY
+                    }
 
-            }):done(function ()
-                dialog:LeftButtonClicked()
-            end)
+                }):done(function ()
+                    dialog:LeftButtonClicked()
+                end)
+            end
         end,
         function ()
-            local item_name = item:Name()
-            NetManager:getBuyAndUseItemPromise(item_name,{
-                [item_name]={
-                    locationX = params.locationX,
-                    locationY = params.locationY
-                }
-
-            }):done(function ()
-                dialog:LeftButtonClicked()
-            end)
+            if Alliance_Manager:GetMyAlliance():GetAllianceBelvedere():HaveEvent() then
+                UIKit:showMessageDialog(_("提示"),_("当前不能移城"))
+            else
+                local item_name = item:Name()
+                NetManager:getBuyAndUseItemPromise(item_name,{
+                    [item_name]={
+                        locationX = params.locationX,
+                        locationY = params.locationY
+                    }
+                }):done(function ()
+                    dialog:LeftButtonClicked()
+                end)
+            end
         end
     ):addTo(item_box_bg):align(display.CENTER,item_box_bg:getContentSize().width/2,item_box_bg:getContentSize().height/2)
     return dialog
@@ -1335,6 +1343,8 @@ end
 
 
 return WidgetUseItems
+
+
 
 
 

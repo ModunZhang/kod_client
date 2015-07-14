@@ -10,11 +10,11 @@ stringInit["empireRiseDailyTaskRewards"] = {
 }
 stringInit["conquerorDailyTaskRewards"] = {
 	["type"] = "conquerorDailyTaskRewards",
-	["value"] = "special:stamina_1:1"
+	["value"] = "resource:coinClass_4:1"
 }
 stringInit["brotherClubDailyTaskRewards"] = {
 	["type"] = "brotherClubDailyTaskRewards",
-	["value"] = "speedup:speedup_3:5"
+	["value"] = "resource:coinClass_4:1"
 }
 stringInit["growUpDailyTaskRewards"] = {
 	["type"] = "growUpDailyTaskRewards",

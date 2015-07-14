@@ -24,6 +24,40 @@ function DragonManager:ctor()
     self.dragon_events = {} --孵化事件
     self.dragonDeathEvents = {} --复活事件
 end
+function DragonManager:GetEnableHatedDragon()
+    if self:HaveDragonHateEvent() then
+        return
+    end
+    for _,dragon in pairs(self:GetDragons()) do
+        if not dragon:Ishated() then
+            return dragon
+        end
+    end
+end
+function DragonManager:IsAllHated()
+    local count = 0
+    if self:HaveDragonHateEvent() then
+        count = count + 1
+    end
+    local max = 0
+    for _,dragon in pairs(self:GetDragons()) do
+        max = max + 1
+        if dragon:Ishated() then
+            count = count + 1
+        end
+    end
+    return max == count
+end
+function DragonManager:IsHateEnable()
+    if self:HaveDragonHateEvent() then
+        return false
+    end
+    for _,dragon in pairs(self:GetDragons()) do
+        if not dragon:Ishated() then
+            return true
+        end
+    end
+end
 
 function DragonManager:GetDragonArray()
     local arr = {"redDragon","greenDragon","blueDragon"}
