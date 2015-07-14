@@ -200,7 +200,10 @@ function AllianceView:OnBuildingDeltaUpdate(allianceMap, deltaMapObjects, old_mo
     for _,v in pairs(new_monsters or {}) do
         table.insert(monsters, v)
     end
-    self:GenerateMonsters(monsters)
+    if next(monsters) then
+        self.monster_refresh:stopAllActions()
+        self:GenerateMonsters(monsters)
+    end
 
     -- 修改位置
     for index,_ in pairs(deltaMapObjects) do
