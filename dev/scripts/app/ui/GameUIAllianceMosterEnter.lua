@@ -27,8 +27,6 @@ function GameUIAllianceMosterEnter:ctor(entity,isMyAlliance,alliance,enemyAllian
     self.alliance = alliance
     self.enemyAlliance = enemyAlliance
     GameUIAllianceMosterEnter.super.ctor(self,286,Localize.soldier_name[soldier_type],window.top - 200,"title_red_600x56.png")
-
-    local entity = self.entity
     display.newNode():addTo(self):schedule(function()
         if not entity:GetAllianceMonsterInfo() then
             self:LeftButtonClicked()
