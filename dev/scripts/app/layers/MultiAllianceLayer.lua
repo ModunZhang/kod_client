@@ -904,8 +904,8 @@ function MultiAllianceLayer:CreateDeadEvent(marchEvent)
     local id_dead
     if event_type == "monster" then
         id_dead = marchEvent:DefenceMonsterData().id
-    elseif event_type == "village" then
-        id_dead = marchEvent:DefenceVillageData().id
+    -- elseif event_type == "village" then
+        -- id_dead = marchEvent:DefenceVillageData().id
     else
         return
     end
