@@ -46,6 +46,7 @@ end
 local TILE_WIDTH = 160
 function AllianceView:ctor(layer, alliance, logic_base_x, logic_base_y)
     Observer.extend(self)
+    self.monster_refresh = display.newNode():addTo(self)
     self.layer = layer
     self.alliance = alliance
     self.objects = {}
@@ -191,12 +192,19 @@ function AllianceView:OnBuildingDeltaUpdate(allianceMap, deltaMapObjects, old_mo
     for _,entity in ipairs(deltaMapObjects.remove or {}) do
         self:RemoveEntity(entity)
     end
-    for k,v in pairs(old_monsters or {}) do
+    -- 刷新野怪
+    for _,v in pairs(old_monsters or {}) do
         self:RemoveEntity(v)
     end
-    for k,v in pairs(new_monsters or {}) do
-        self:CreateObject(v)
+    local monsters = {}
+    for _,v in pairs(new_monsters or {}) do
+        table.insert(monsters, v)
     end
+    if next(monsters) then
+        self.monster_refresh:stopAllActions()
+        self:GenerateMonsters(monsters)
+    end
+
     -- 修改位置
     for index,_ in pairs(deltaMapObjects) do
         if type(index) == "number" then
@@ -204,6 +212,16 @@ function AllianceView:OnBuildingDeltaUpdate(allianceMap, deltaMapObjects, old_mo
         end
     end
     self.layer:RefreshAllVillageEvents()
+end
+function AllianceView:GenerateMonsters(t)
+    local entity = table.remove(t, 1)
+    if entity then
+        if not self.objects[entity:Id()] then
+            self.monster_refresh:performWithDelay(function()
+                self:GenerateMonsters(t)
+            end, 0.1)
+        end
+    end
 end
 function AllianceView:RefreshEntity(entity)
     if self.objects[entity:Id()] then
