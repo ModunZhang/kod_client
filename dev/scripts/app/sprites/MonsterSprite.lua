@@ -71,7 +71,7 @@ local soldier_config = {
 }
 local position_map = {
     [1] = {
-        {x = 0, y = -20}
+        {x = 0, y = -10}
     },
     [2] = {
         {x = -10, y = -10},

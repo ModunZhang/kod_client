@@ -41,7 +41,7 @@ function MarchAttackEvent:GetTargetName()
 	elseif self:MarchType() == "shrine" then
 		return _("圣地")
 	elseif self:MarchType() == "monster" then
-		local soldier_type = unpack(string.split(monsterConfig[self:GetDefenceData().level].icon, "_"))
+		local soldier_type = unpack(string.split(self:GetDefenceData().name, "_"))
 		return Localize.soldier_name[soldier_type]
 	end
 end
