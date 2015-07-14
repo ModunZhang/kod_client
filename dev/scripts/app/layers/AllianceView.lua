@@ -196,13 +196,8 @@ function AllianceView:OnBuildingDeltaUpdate(allianceMap, deltaMapObjects, old_mo
     for _,v in pairs(old_monsters or {}) do
         self:RemoveEntity(v)
     end
-    local monsters = {}
     for _,v in pairs(new_monsters or {}) do
-        table.insert(monsters, v)
-    end
-    if next(monsters) then
-        self.monster_refresh:stopAllActions()
-        self:GenerateMonsters(monsters)
+        self:CreateObject(v)
     end
 
     -- 修改位置

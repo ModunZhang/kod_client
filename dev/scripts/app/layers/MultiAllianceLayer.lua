@@ -906,15 +906,15 @@ function MultiAllianceLayer:CreateDeadEvent(marchEvent)
         id_dead = marchEvent:DefenceMonsterData().id
     elseif event_type == "village" then
         id_dead = marchEvent:DefenceVillageData().id
+    else
+        return
     end
-    if not self.map_dead[id_corps] or not id_dead then
+    if not self.map_dead[id_corps] and next(marchEvent:AttackPlayerData().rewards) then
         local point = self.map_corps[id_corps].march_info.start_info.logic
         local alliance_view = self.alliance_views[point.index]
-        if not alliance_view:GetMapObjectById(id_dead) then
-            local x,y = alliance_view:GetLogicMap():ConvertToMapPosition(point.x, point.y)
-            local z = alliance_view:GetZOrderBy(nil, point.x, point.y)
-            self.map_dead[id_corps] = display.newSprite(dead_image):addTo(self:GetBuildingNode(),z):pos(x,y)
-        end
+        local x,y = alliance_view:GetLogicMap():ConvertToMapPosition(point.x, point.y)
+        local z = alliance_view:GetZOrderBy(nil, point.x, point.y)
+        self.map_dead[id_corps] = display.newSprite(dead_image):addTo(self:GetBuildingNode(),z):pos(x,y)
     end
 end
 
@@ -1010,6 +1010,8 @@ end
 
 
 return MultiAllianceLayer
+
+
 
 
 
