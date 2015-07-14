@@ -111,8 +111,8 @@ function GameUIMonsterReport:onEnter()
     ):setButtonLabel(replay_label)
         :addTo(report_body):align(display.CENTER, report_body:getContentSize().width-100, rb_size.height-186)
         :onButtonClicked(function(event)
-        	local c_report = clone(report)
-        	c_report.IsPveBattle = true
+            local c_report = clone(report)
+            c_report.IsPveBattle = true
             UIKit:newGameUI("GameUIReplayNew",c_report):AddToCurrentScene(true)
         end)
 
@@ -467,8 +467,8 @@ function GameUIMonsterReport:CreateMonsterItem(monster)
     local icon = display.newSprite("tmp_black_dragon_113x128.png"):addTo(heroBg)
         :align(display.CENTER,56,65)
 
-    local monster_level = monster.level
-    local monster_type = string.split(monster_config[monster_level].icon,"_")[1]
+    local monster_data = self.report:GetEnemyPlayerData().soldiers[1]
+    local monster_type = monster_data.name
     local battleAt = Localize.soldier_name[monster_type]
     -- 野怪名称
     UIKit:ttfLabel({
@@ -591,8 +591,9 @@ function GameUIMonsterReport:GetReportTitle()
 
 end
 function GameUIMonsterReport:GetFightTarget()
-    local monster_level = self.report:GetBattleAt()
-    local monster_type = string.split(monster_config[monster_level].icon,"_")[1]
+    local monster_data = self.report:GetEnemyPlayerData().soldiers[1]
+    local monster_type = monster_data.name
+
     local battleAt = _("黑龙军团").."-"..Localize.soldier_name[monster_type]
     local location = self.report:GetBattleLocation()
     return string.format(_("Battle at %s (%d,%d)"),battleAt,location.x,location.y)
@@ -601,6 +602,7 @@ function GameUIMonsterReport:GetRewards()
     return  self.report:GetMyRewards()
 end
 return GameUIMonsterReport
+
 
 
 
