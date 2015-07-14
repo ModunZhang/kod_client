@@ -219,7 +219,7 @@ function AllianceView:GenerateMonsters(t)
         if not self.objects[entity:Id()] then
             self.monster_refresh:performWithDelay(function()
                 self:GenerateMonsters(t)
-            end, 0.1)
+            end, 0.5)
         end
     end
 end
