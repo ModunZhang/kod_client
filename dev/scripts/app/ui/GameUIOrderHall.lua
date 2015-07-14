@@ -93,10 +93,16 @@ end
 function GameUIOrderHall:ResetVillageList()
     self.village_listview:removeAllItems()
     self.village_items = {}
-    for k,v in pairs(self.alliance:GetVillageLevels()) do
-        -- if k ~= "coinVillage" then
-            self.village_items[k] = self:CreateVillageItem(k,v)
-        -- end
+    dump(self.alliance:GetVillageLevels(),"self.alliance:GetVillageLevels()")
+    local villageLevels = self.alliance:GetVillageLevels()
+    for k,v in ipairs({
+        "woodVillage",
+        "stoneVillage",
+        "ironVillage",
+        "foodVillage",
+        "coinVillage",
+    }) do
+        self.village_items[v] = self:CreateVillageItem(v,villageLevels[v])
     end
     self.village_listview:reload()
 end
@@ -189,7 +195,7 @@ function GameUIOrderHall:CreateVillageItem(village_type,village_level)
         current_level:SetValue(_("等级")..village_level)
         local build_png = SpriteConfig[village_type]:GetConfigByLevel(village_level).png
         building_image:setTexture(build_png)
-        total_resource:SetValue(config[village_level].production)
+        total_resource:SetValue(string.formatnumberthousands(config[village_level].production))
         if self.honour_label and village_level <#config then
             local need_honour = config[village_level+1].needHonour
             self.honour_label:setString(string.formatnumberthousands(need_honour))
@@ -394,6 +400,7 @@ function GameUIOrderHall:OnBuildingInfoChange(building)
 
 end
 return GameUIOrderHall
+
 
 
 
