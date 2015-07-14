@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: dragonfall\n"
-"POT-Creation-Date: 2015-07-15 00:36+0800\n"
-"PO-Revision-Date: 2015-07-15 00:36+0800\n"
+"POT-Creation-Date: 2015-07-15 00:53+0800\n"
+"PO-Revision-Date: 2015-07-15 00:53+0800\n"
 "Last-Translator: gaozhou <gaozhou.f@qq.com>\n"
 "Language-Team: \n"
 "Language: zh_CN\n"
@@ -2665,7 +2665,7 @@ msgstr "撤防"
 
 #: ui/GameUIAllianceCityEnter.lua:154
 msgid "是否确认撤防"
-msgstr "***"
+msgstr "是否确认撤防？"
 
 #: ui/GameUIAllianceCityEnter.lua:161 ui/GameUIHelpDefence.lua:56
 msgid "协防"
