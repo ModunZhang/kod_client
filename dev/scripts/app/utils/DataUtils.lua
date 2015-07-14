@@ -1154,12 +1154,6 @@ function DataUtils:GetResourceProtectPercent( resource_name )
     finalPercent = finalPercent > 0.9 and 0.9 or finalPercent < 0.1 and 0.1 or finalPercent
     return finalPercent
 end
-local monster_config = GameDatas.AllianceInitData.monster
-function DataUtils:GetMonsterName( monster_level )
-    local monster_type = string.split(monster_config[monster_level].icon,"_")[1]
-    local battleAt = Localize.soldier_name[monster_type]
-    return _("黑龙军团").."-"..battleAt
-end
 return DataUtils
 
 
