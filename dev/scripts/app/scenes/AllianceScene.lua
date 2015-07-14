@@ -57,6 +57,9 @@ function AllianceScene:onEnter()
 end
 function AllianceScene:GetPreloadImages()
     return {
+        {image = "animations/heihua_animation_0.pvr.ccz",list = "animations/heihua_animation_0.plist"},
+        {image = "animations/heihua_animation_1.pvr.ccz",list = "animations/heihua_animation_1.plist"},
+        {image = "animations/heihua_animation_2.pvr.ccz",list = "animations/heihua_animation_2.plist"},
         {image = "animations/region_animation_0.pvr.ccz",list = "animations/region_animation_0.plist"},
         {image = "region_png.pvr.ccz",list = "region_png.plist"},
         {image = "region_pvr.pvr.ccz",list = "region_pvr.plist"},
