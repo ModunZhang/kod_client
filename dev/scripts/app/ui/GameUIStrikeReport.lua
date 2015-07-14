@@ -491,7 +491,7 @@ function GameUIStrikeReport:CreateEnemyResource()
 end
 function GameUIStrikeReport:GetEnemyResource(resources)
     local unpack_resources = {}
-    for k,v in pairs({"wood","stone","food","iron"}) do
+    for k,v in pairs({"wood","stone","food","iron","coin"}) do
         local va = resources[v]
         table.insert(unpack_resources, {
             resource_type = Localize.fight_reward[v],
