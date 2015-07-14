@@ -383,7 +383,6 @@ function WidgetRecruitSoldier:AddButtons()
                                     {
                                         listener = function ()
                                             UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
-                                            self:LeftButtonClicked()
                                         end,
                                         btn_name= _("前往商店")
                                     }
@@ -410,7 +409,6 @@ function WidgetRecruitSoldier:AddButtons()
                                     {
                                         listener = function ()
                                             UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
-                                            self:LeftButtonClicked()
                                         end,
                                         btn_name= _("前往商店")
                                     }
