@@ -41,7 +41,7 @@ local building_details_map = {
     ["materialDepot"] = {
         {90,			130,			300},
         {_("等级"), _("战斗力"),_("材料存储上限")},
-        {"level",  	"power", 	"maxMaterial"},
+        {"level",  	"power", 	"soldierMaterials"},
     },
     ["barracks"] = {
         {90,			100,		200,			130},
