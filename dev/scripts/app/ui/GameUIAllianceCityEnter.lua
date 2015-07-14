@@ -200,6 +200,8 @@ function GameUIAllianceCityEnter:GetEnterButtons()
         end
     else -- 敌方玩家
         local isProtected = self:CheckMeIsProtectedWarinng()
+        local isMyAlliance = self:IsMyAlliance()
+        local toLocation = self:GetLogicPosition()
         local attack_button = self:BuildOneButton("attack_58x56.png",_("进攻")):onButtonClicked(function()
             local attack_func = function ()
                 UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers,total_march_time,gameuialliancesendtroops)
@@ -225,8 +227,7 @@ function GameUIAllianceCityEnter:GetEnterButtons()
                             end)
                         end
                     end
-                end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition(),returnCloseAction = true}):AddToCurrentScene(true)
-                self:LeftButtonClicked()
+                end,{targetIsMyAlliance = isMyAlliance,toLocation = toLocation,returnCloseAction = true}):AddToCurrentScene(true)
             end
             UIKit:showSendTroopMessageDialog(attack_func,City:GetMaterialManager().MATERIAL_TYPE.DRAGON,_("龙"))
         end)

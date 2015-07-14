@@ -128,11 +128,24 @@ function GameUIPVESendTroop:OnMoveInStage()
                     UIKit:showMessageDialog(_("主人"),_("请选择要派遣的部队"))
                     return
                 end
-                UIKit:showSendTroopMessageDialog(function ()
+                local has_special_soldier = false
+                for k,v in pairs(self.pve_soldiers) do
+                    if SPECIAL[v.name] then
+                        has_special_soldier = true
+                        break
+                    end
+                end
+                if has_special_soldier then
+                    UIKit:showSendTroopMessageDialog(function ()
+                        self.march_callback(dragonType,soldiers)
+                        -- 确认派兵后关闭界面
+                        self:LeftButtonClicked()
+                    end,City:GetMaterialManager().MATERIAL_TYPE.SOLDIER,_("士兵"))
+                else
                     self.march_callback(dragonType,soldiers)
                     -- 确认派兵后关闭界面
                     self:LeftButtonClicked()
-                end,City:GetMaterialManager().MATERIAL_TYPE.SOLDIER,_("士兵"))
+                end
             end
         end):align(display.RIGHT_CENTER,window.right-50,window.top-910):addTo(self:GetView())
 
@@ -683,6 +696,7 @@ end
 
 
 return GameUIPVESendTroop
+
 
 
 

@@ -692,9 +692,9 @@ function UIKit:showMessageDialogWithParams(params)
 
     local dialog = UIKit:newGameUI("FullScreenPopDialogUI",x_button_callback,user_data):SetTitle(title):SetPopMessage(content):zorder(zorder)
 
-    dialog:CreateOKButton({listener = ok_callback,btn_name = ok_string, ok_btn_images = ok_btn_images})
+    dialog:CreateOKButton({listener = ok_callback,btn_name = ok_string, btn_images = ok_btn_images})
     if params.cancel_callback then
-        dialog:CreateCancelButton({listener = cancel_callback,btn_name = cancel_string,cancel_btn_images = cancel_btn_images})
+        dialog:CreateCancelButton({listener = cancel_callback,btn_name = cancel_string,btn_images = cancel_btn_images})
     end
     dialog:VisibleXButton(visible_x_button)
     if type(params.auto_close) ~= "boolean" then

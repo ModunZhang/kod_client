@@ -15,13 +15,17 @@ local monsterConfig = GameDatas.AllianceInitData.monster
 
 local GameUIAllianceMosterEnter = class("GameUIAllianceMosterEnter", WidgetPopDialog)
 
-function GameUIAllianceMosterEnter:ctor(entity,isMyAlliance,alliance)
+function GameUIAllianceMosterEnter:ctor(entity,isMyAlliance,alliance,enemyAlliance)
     local moster = entity:GetAllianceMonsterInfo()
     self.entity = entity
     self.moster_config = monsterConfig[moster.level]
+    local moster_config = self.moster_config
+    local icon = string.split(moster_config.icon,"_")
+    local soldier_type = icon[1]
     self.isMyAlliance = isMyAlliance
     self.alliance = alliance
-    GameUIAllianceMosterEnter.super.ctor(self,286,_("野怪"),window.top - 200,"title_red_600x56.png")
+    self.enemyAlliance = enemyAlliance
+    GameUIAllianceMosterEnter.super.ctor(self,286,Localize.soldier_name[soldier_type],window.top - 200,"title_red_600x56.png")
 end
 function GameUIAllianceMosterEnter:onCleanup()
     local scene_name = display.getRunningScene().__cname
@@ -41,6 +45,8 @@ end
 function GameUIAllianceMosterEnter:onEnter()
     GameUIAllianceMosterEnter.super.onEnter(self)
     local alliance = self.alliance
+    local enemyAlliance = self.enemyAlliance
+    local isMyAlliance = self.isMyAlliance
     local entity = self.entity
     local moster_config = self.moster_config
     local rewards = string.split(moster_config.rewards,",")
@@ -124,6 +130,7 @@ function GameUIAllianceMosterEnter:onEnter()
 
     -- 进攻按钮
     local entity = self.entity
+    dump(entity,"entity")
     local btn = WidgetPushButton.new({normal = "btn_138x110.png",pressed = "btn_pressed_138x110.png"},{}
         ,{
             disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
@@ -137,16 +144,16 @@ function GameUIAllianceMosterEnter:onEnter()
                 end
                 if alliance:GetSelf():IsProtected() then
                     UIKit:showMessageDialog(_("提示"),_("进攻该目标将失去保护状态，确定继续派兵?"),function()
-                        NetManager:getAttackMonsterPromise(dragonType,soldiers,alliance:Id(),entity.id):done(function()
+                        NetManager:getAttackMonsterPromise(dragonType,soldiers,isMyAlliance and alliance:Id() or enemyAlliance:Id(),entity.id):done(function()
                             app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_SENDOUT")
                         end)
                     end)
                 else
-                    NetManager:getAttackMonsterPromise(dragonType,soldiers,alliance:Id(),entity.id):done(function()
+                    NetManager:getAttackMonsterPromise(dragonType,soldiers,isMyAlliance and alliance:Id() or enemyAlliance:Id(),entity.id):done(function()
                         app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_SENDOUT")
                     end)
                 end
-            end,{}):AddToCurrentScene(true)
+            end,{targetIsMyAlliance = isMyAlliance,toLocation = entity.location,returnCloseAction = false}):AddToCurrentScene(true)
         end
             UIKit:showSendTroopMessageDialog(attack_monster_func,City:GetMaterialManager().MATERIAL_TYPE.BUILD,_("建筑"))
         end):addTo(body):align(display.RIGHT_TOP, b_width, 10)
