@@ -502,7 +502,7 @@ function Report:GetFightDefenceName()
     return data.helpDefencePlayerData and data.helpDefencePlayerData.name
         or data.defencePlayerData and data.defencePlayerData.name
         or data.defenceVillageData and Localize.village_name[data.defenceVillageData.type].." Lv "..data.defenceVillageData.level
-        or data.defenceMonsterData and DataUtils:GetMonsterName( data.defenceMonsterData.level )
+        or data.defenceMonsterData and Localize.soldier_name[data.defenceMonsterData.soldiers[1].name]
 end
 function Report:IsDragonFight()
     local data = self:GetFightReports()
