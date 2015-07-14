@@ -117,22 +117,23 @@ function AllianceBattleScene:OnTouchClicked(pre_x, pre_y, x, y)
         self.event_manager:RemoveAllTouches()
         
         app:GetAudioManager():PlayeEffectSoundWithKey("HOME_PAGE")
+        local entity = building:GetEntity()
         if iskindof(building, "Sprite") then
             Sprite:PromiseOfFlash(building):next(function()
-                self:OpenUI(building, isMyAlliance)
+                self:OpenUI(entity, isMyAlliance)
             end)
         else
             self:GetSceneLayer():PromiseOfFlashEmptyGround(building, isMyAlliance):next(function()
-                self:OpenUI(building, isMyAlliance)
+                self:OpenUI(entity, isMyAlliance)
             end)
         end
     end
 end
-function AllianceBattleScene:OpenUI(building, isMyAlliance)
-    if building:GetEntity():GetType() ~= "building" then
-        self:EnterNotAllianceBuilding(building:GetEntity(),isMyAlliance)
+function AllianceBattleScene:OpenUI(entity, isMyAlliance)
+    if entity:GetType() ~= "building" then
+        self:EnterNotAllianceBuilding(entity, isMyAlliance)
     else
-        self:EnterAllianceBuilding(building:GetEntity(),isMyAlliance)
+        self:EnterAllianceBuilding(entity, isMyAlliance)
     end
 end
 function AllianceBattleScene:OnAllianceBasicChanged(alliance,changed_map)
