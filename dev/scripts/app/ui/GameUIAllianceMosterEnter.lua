@@ -19,10 +19,13 @@ function GameUIAllianceMosterEnter:ctor(entity,isMyAlliance,alliance,enemyAllian
     local moster = entity:GetAllianceMonsterInfo()
     self.entity = entity
     self.moster_config = monsterConfig[moster.level]
+    local moster_config = self.moster_config
+    local icon = string.split(moster_config.icon,"_")
+    local soldier_type = icon[1]
     self.isMyAlliance = isMyAlliance
     self.alliance = alliance
     self.enemyAlliance = enemyAlliance
-    GameUIAllianceMosterEnter.super.ctor(self,286,_("野怪"),window.top - 200,"title_red_600x56.png")
+    GameUIAllianceMosterEnter.super.ctor(self,286,Localize.soldier_name[soldier_type],window.top - 200,"title_red_600x56.png")
 end
 function GameUIAllianceMosterEnter:onCleanup()
     local scene_name = display.getRunningScene().__cname
