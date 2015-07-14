@@ -11,7 +11,7 @@ local Localize = import("..utils.Localize")
 local Localize_item = import("..utils.Localize_item")
 local window = import("..utils.window")
 local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
-local monsterConfig = GameDatas.AllianceInitData.monster
+local monsterConfig = GameDatas.AllianceInitData.monsters
 
 local GameUIAllianceMosterEnter = class("GameUIAllianceMosterEnter", WidgetPopDialog)
 
@@ -19,8 +19,9 @@ function GameUIAllianceMosterEnter:ctor(entity,isMyAlliance,alliance,enemyAllian
     local moster = entity:GetAllianceMonsterInfo()
     self.entity = entity
     self.moster_config = monsterConfig[moster.level]
+    self.moster = moster
     local moster_config = self.moster_config
-    local icon = string.split(moster_config.icon,"_")
+    local icon = string.split(moster.name,"_")
     local soldier_type = icon[1]
     self.isMyAlliance = isMyAlliance
     self.alliance = alliance
@@ -48,9 +49,10 @@ function GameUIAllianceMosterEnter:onEnter()
     local enemyAlliance = self.enemyAlliance
     local isMyAlliance = self.isMyAlliance
     local entity = self.entity
+    local moster = self.moster
     local moster_config = self.moster_config
     local rewards = string.split(moster_config.rewards,",")
-    local icon = string.split(moster_config.icon,"_")
+    local icon = string.split(moster.name,"_")
     local soldier_type = icon[1]
     local soldier_star = tonumber(icon[2])
     local level = moster_config.level
