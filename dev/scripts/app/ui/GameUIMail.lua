@@ -1472,10 +1472,10 @@ function GameUIMail:CreateReportContent()
                 }):align(display.LEFT_CENTER, report_content_bg:getContentSize().width/2-20, 30)
                 :addTo(report_content_bg)
         elseif isFromMe == "attackMonster" then
-            local monster_config = GameDatas.AllianceInitData.monster
             local monster_level = report:GetAttackTarget().level
-            local soldier_type = string.split(monster_config[monster_level].icon,"_")[1]
-            local soldier_star = string.split(monster_config[monster_level].icon,"_")[2]
+            local monster_data = report:GetEnemyPlayerData().soldiers[1]
+            local soldier_type = monster_data.name
+            local soldier_star = monster_data.star
             local soldier_ui_config = UILib.black_soldier_image[soldier_type][tonumber(soldier_star)]
             
             display.newSprite(UILib.black_soldier_color_bg_images[soldier_type]):addTo(report_content_bg)
@@ -1773,10 +1773,10 @@ function GameUIMail:CreateSavedReportContent()
                 }):align(display.LEFT_CENTER, report_content_bg:getContentSize().width/2-20, 30)
                 :addTo(report_content_bg)
         elseif isFromMe == "attackMonster" then
-            local monster_config = GameDatas.AllianceInitData.monster
             local monster_level = report:GetAttackTarget().level
-            local soldier_type = string.split(monster_config[monster_level].icon,"_")[1]
-            local soldier_star = string.split(monster_config[monster_level].icon,"_")[2]
+            local monster_data = report:GetEnemyPlayerData().soldiers[1]
+            local soldier_type = monster_data.name
+            local soldier_star = monster_data.star
             local soldier_ui_config = UILib.black_soldier_image[soldier_type][tonumber(soldier_star)]
             
             display.newSprite(UILib.black_soldier_color_bg_images[soldier_type]):addTo(report_content_bg)
