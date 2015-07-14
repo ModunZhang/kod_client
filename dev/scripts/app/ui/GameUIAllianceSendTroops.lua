@@ -215,6 +215,7 @@ function GameUIAllianceSendTroops:OnMoveInStage()
                             }
                         )
                     end
+                    return
                 end
                 if self.dragon:IsDefenced() then
                     NetManager:getCancelDefenceDragonPromise():done(function()
