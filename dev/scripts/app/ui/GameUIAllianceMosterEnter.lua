@@ -120,7 +120,7 @@ function GameUIAllianceMosterEnter:onEnter()
         }):align(display.RIGHT_CENTER, num_bg:getContentSize().width, num_bg:getContentSize().height/2)
             :addTo(num_bg)
         UIKit:ttfLabel({
-            text = info[1] == "buildingMaterials" and  Localize.materials[info[2]] or GameUtils:formatNumber(tonumber(ItemManager:GetItemByName(info[2]):Effect()) * (string.find(info[2],"gemClass") and 1 or 1000)),
+            text = info[1] == "buildingMaterials" and  Localize.materials[info[2]] or Localize_item.item_name[info[2]],
             -- text = "X "..info[3],
             color = 0x615b44,
             size = 20,
