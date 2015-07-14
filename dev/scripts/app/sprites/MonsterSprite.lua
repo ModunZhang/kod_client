@@ -3,8 +3,6 @@ local Localize = import("..utils.Localize")
 local SpriteConfig = import(".SpriteConfig")
 local WithInfoSprite = import(".WithInfoSprite")
 local MonsterSprite = class("MonsterSprite", WithInfoSprite)
-
-local monsterConfig = GameDatas.AllianceInitData.monster
 local soldier_config = {
     ["swordsman"] = {
         {"heihua_bubing_2", 4},
@@ -76,14 +74,14 @@ local position_map = {
         {x = 0, y = -20}
     },
     [2] = {
-        {x = -5, y = -25},
-        {x = 20, y = -40},
+        {x = -10, y = -10},
+        {x = 10, y = -30},
     },
     [4] = {
-        {x = 0, y = -5},
-        {x = -25, y = -20},
-        {x = 25, y = -20},
-        {x = 0, y = -35},
+        {x = 0, y = 0},
+        {x = -25, y = -15},
+        {x = 25, y = -15},
+        {x = 0, y = -30},
     }
 }
 function MonsterSprite:ctor(city_layer, entity, is_my_alliance)
@@ -92,7 +90,7 @@ function MonsterSprite:ctor(city_layer, entity, is_my_alliance)
     MonsterSprite.super.ctor(self, city_layer, entity, false)
 end
 function MonsterSprite:CreateSprite()
-    local soldier_type, star = unpack(string.split(self:GetConfig().icon, '_'))
+    local soldier_type, star = unpack(string.split(self:GetEntity():GetAllianceMonsterInfo().name, '_'))
     local ani,count = unpack(soldier_config[soldier_type][tonumber(star)])
     local node = display.newNode()
     for _,v in ipairs(position_map[count]) do
@@ -101,12 +99,10 @@ function MonsterSprite:CreateSprite()
     return node
 end
 function MonsterSprite:GetInfo()
-    local level = self:GetEntity():GetAllianceMonsterInfo().level
-    local soldier_type, star = unpack(string.split(monsterConfig[level].icon, '_'))
+    local info = self:GetEntity():GetAllianceMonsterInfo()
+    local level = info.level
+    local soldier_type = unpack(string.split(info.name, '_'))
     return level, Localize.soldier_name[soldier_type]
-end
-function MonsterSprite:GetConfig()
-    return monsterConfig[self:GetEntity():GetAllianceMonsterInfo().level]
 end
 local LOCK_TAG = 11201
 function MonsterSprite:Flash(time)
