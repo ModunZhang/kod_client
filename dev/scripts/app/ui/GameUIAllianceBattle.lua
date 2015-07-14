@@ -214,7 +214,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
                             UIKit:showMessageDialog(_("提示"),_("联盟正在战争准备期或战争期"))
                             return
                         end
-                        UIKit:showMessageDialog(_("主人"),_("确定要请求开启联盟会战吗?")):CreateOKButton(
+                        UIKit:showMessageDialog(_("主人"),_("确定开启联盟会战吗?")):CreateOKButton(
                             {
                                 listener = function ()
                                     NetManager:getFindAllianceToFightPromose()
