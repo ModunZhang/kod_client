@@ -181,7 +181,8 @@ function GameUIAllianceMosterEnter:onEnter()
     end
 end
 function GameUIAllianceMosterEnter:ShowReward()
-    self.time_label:setString(string.format(_("即将消失:%s"),GameUtils:formatTimeStyle1(self.alliance:MonsterRefreshTime()/1000 - app.timer:GetServerTime())))
+    local time = self.alliance:MonsterRefreshTime()/1000 - app.timer:GetServerTime()
+    self.time_label:setString(time >= 0 and string.format(_("即将消失:%s"),GameUtils:formatTimeStyle1(time)) or _("未知"))
 
     if not self.isMyAlliance and self.alliance:Status() == "fight" then
         self.attack_btn:setButtonEnabled(true)
