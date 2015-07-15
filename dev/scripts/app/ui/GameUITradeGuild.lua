@@ -255,45 +255,48 @@ function GameUITradeGuild:CreateSellItemForListView(listView,goods)
             color = 0x403c2f
         }):align(display.LEFT_CENTER, 330 ,content:getContentSize().height/2)
         :addTo(content)
-    -- 购买
-    WidgetPushButton.new(
-        {normal = "yellow_btn_up_108x48.png",pressed = "yellow_btn_down_108x48.png"})
-        :addTo(content)
-        :align(display.RIGHT_CENTER, content:getContentSize().width - 10, content:getContentSize().height/2)
-        :setButtonLabel(UIKit:ttfLabel({
-            text = _("购买"),
-            size = 24,
-            color = 0xffedae,
-            shadow = true
-        }))
-        :onButtonClicked(function(event)
 
-                local buy_func = function ()
-                    NetManager:getBuySellItemPromise(goods._id):next(function ( response )
-                        -- 商品不存在
-                        if response.errcode then
-                            if response.errcode[1].code==573 then
-                                listView:removeItem(item)
+    if User:Id() ~= goods.playerId then
+        -- 购买
+        WidgetPushButton.new(
+            {normal = "yellow_btn_up_108x48.png",pressed = "yellow_btn_down_108x48.png"})
+            :addTo(content)
+            :align(display.RIGHT_CENTER, content:getContentSize().width - 10, content:getContentSize().height/2)
+            :setButtonLabel(UIKit:ttfLabel({
+                text = _("购买"),
+                size = 24,
+                color = 0xffedae,
+                shadow = true
+            }))
+            :onButtonClicked(function(event)
+
+                    local buy_func = function ()
+                        NetManager:getBuySellItemPromise(goods._id):next(function ( response )
+                            -- 商品不存在
+                            if response.errcode then
+                                if response.errcode[1].code==573 then
+                                    listView:removeItem(item)
+                                end
                             end
-                        end
-                        return response
-                    end):done(function()
-                        GameGlobalUI:showTips(_("提示"),string.format(_("购买%s成功"),Localize.sell_type[goods.itemData.name]))
-                        listView:removeItem(item)
-                    end)
-                end
-                if City:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())<goods.itemData.price*goods.itemData.count then
-                    UIKit:showMessageDialog(_("主人"),_("银币不足,是否使用金龙币补充"))
-                        :CreateOKButton({
-                            listener = function ()
-                                buy_func()
-                            end
-                        })
-                        :CreateNeeds({value = DataUtils:buyResource({coin = goods.itemData.price*goods.itemData.count}, {coin=City:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())})})
-                    return
-                end
-                buy_func()
-        end)
+                            return response
+                        end):done(function()
+                            GameGlobalUI:showTips(_("提示"),string.format(_("购买%s成功"),Localize.sell_type[goods.itemData.name]))
+                            listView:removeItem(item)
+                        end)
+                    end
+                    if City:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())<goods.itemData.price*goods.itemData.count then
+                        UIKit:showMessageDialog(_("主人"),_("银币不足,是否使用金龙币补充"))
+                            :CreateOKButton({
+                                listener = function ()
+                                    buy_func()
+                                end
+                            })
+                            :CreateNeeds({value = DataUtils:buyResource({coin = goods.itemData.price*goods.itemData.count}, {coin=City:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())})})
+                        return
+                    end
+                    buy_func()
+            end)
+    end
 end
 function GameUITradeGuild:GetGoodsIcon(listView,icon)
     if listView == self.resource_listview then
@@ -1115,6 +1118,7 @@ function GameUITradeGuild:GetMaterialIndexByName(material_type)
     return build_temp[material_type] or teach_temp[material_type]
 end
 return GameUITradeGuild
+
 
 
 
