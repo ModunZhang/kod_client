@@ -379,7 +379,9 @@ function GameUIActivityRewardNew:GetContinutyListItem(reward_type,item_key,time_
     sp.check_bg = check_bg
     if flag == 1 then
         sp:setFilter(filter.newFilter("CUSTOM", json.encode({frag = "shaders/ps_discoloration.fs",shaderName = "ps_discoloration"})))
-        corlor_bg:setFilter(filter.newFilter("CUSTOM", json.encode({frag = "shaders/ps_discoloration.fs",shaderName = "ps_discoloration"})))
+        if corlor_bg then
+            corlor_bg:setFilter(filter.newFilter("CUSTOM", json.encode({frag = "shaders/ps_discoloration.fs",shaderName = "ps_discoloration"})))
+        end
     end
     item.sp = sp
     UIKit:addTipsToNode(sp,rewards_str,self)
