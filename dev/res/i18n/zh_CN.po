@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: dragonfall\n"
-"POT-Creation-Date: 2015-07-15 00:36+0800\n"
-"PO-Revision-Date: 2015-07-15 00:36+0800\n"
+"POT-Creation-Date: 2015-07-15 01:11+0800\n"
+"PO-Revision-Date: 2015-07-15 01:11+0800\n"
 "Last-Translator: gaozhou <gaozhou.f@qq.com>\n"
 "Language-Team: \n"
 "Language: zh_CN\n"
@@ -85,8 +85,8 @@ msgstr "玩家已经登录"
 #: ui/GameUIAllianceInfo.lua:270 ui/GameUIAllianceInfo.lua:277
 #: ui/GameUIAllianceJoinTips.lua:144 ui/GameUIAllianceMemberInfo.lua:165
 #: ui/GameUIAllianceMemberInfo.lua:174 ui/GameUIAllianceMemberInfo.lua:340
-#: ui/GameUIAllianceMemberInfo.lua:345 ui/GameUIAllianceMosterEnter.lua:151
-#: ui/GameUIAllianceMosterEnter.lua:155
+#: ui/GameUIAllianceMemberInfo.lua:345 ui/GameUIAllianceMosterEnter.lua:149
+#: ui/GameUIAllianceMosterEnter.lua:153
 #: ui/GameUIAllianceNoticeOrDescEdit.lua:89
 #: ui/GameUIAllianceNoticeOrDescEdit.lua:95 ui/GameUIAlliancePalace.lua:296
 #: ui/GameUIAlliancePalace.lua:300 ui/GameUIAlliancePalace.lua:456
@@ -1315,12 +1315,12 @@ msgstr "联盟地形已经改变"
 msgid "你已经退出联盟"
 msgstr "你已经退出联盟"
 
-#: scenes/AllianceScene.lua:272
+#: scenes/AllianceScene.lua:275
 #, c-format
 msgid "你可以移动%s到%s将消耗荣耀值%s,确认要移动吗?"
 msgstr "你可以移动%s到%s将消耗荣耀值%s,确认要移动吗?"
 
-#: scenes/AllianceScene.lua:283
+#: scenes/AllianceScene.lua:286
 msgid "无法移动到目标位置"
 msgstr "无法移动到目标位置"
 
@@ -2665,7 +2665,7 @@ msgstr "撤防"
 
 #: ui/GameUIAllianceCityEnter.lua:154
 msgid "是否确认撤防"
-msgstr "***"
+msgstr "是否确认撤防？"
 
 #: ui/GameUIAllianceCityEnter.lua:161 ui/GameUIHelpDefence.lua:56
 msgid "协防"
@@ -2688,7 +2688,7 @@ msgstr "邮件"
 msgid "个人邮件"
 msgstr "个人邮件"
 
-#: ui/GameUIAllianceCityEnter.lua:205 ui/GameUIAllianceMosterEnter.lua:172
+#: ui/GameUIAllianceCityEnter.lua:205 ui/GameUIAllianceMosterEnter.lua:170
 #: ui/GameUIAttackPlayerCity.lua:104 ui/GameUIPVESendTroop.lua:107
 #: widget/WidgetPVECamp.lua:22 widget/WidgetPVECrashedAirship.lua:22
 #: widget/WidgetPVEEntranceDoor.lua:24 widget/WidgetPVEEntranceDoor.lua:28
@@ -3047,31 +3047,31 @@ msgstr "未开启"
 msgid "王城"
 msgstr "王城"
 
-#: ui/GameUIAllianceMosterEnter.lua:73 ui/GameUIAllianceMosterEnter.lua:186
+#: ui/GameUIAllianceMosterEnter.lua:71 ui/GameUIAllianceMosterEnter.lua:184
 #, c-format
 msgid "即将消失:%s"
 msgstr "即将消失:%s"
 
-#: ui/GameUIAllianceMosterEnter.lua:90 ui/GameUIMonsterReport.lua:452
+#: ui/GameUIAllianceMosterEnter.lua:88 ui/GameUIMonsterReport.lua:452
 #: ui/GameUIMonsterReport.lua:475 ui/GameUIStrikeReport.lua:322
 #: ui/GameUIStrikeReport.lua:616 ui/GameUIWarReport.lua:490
 #, c-format
 msgid "等级%d"
 msgstr "等级%d"
 
-#: ui/GameUIAllianceMosterEnter.lua:99
+#: ui/GameUIAllianceMosterEnter.lua:97
 msgid "有几率获得"
 msgstr "有几率获得"
 
-#: ui/GameUIAllianceMosterEnter.lua:151
+#: ui/GameUIAllianceMosterEnter.lua:149
 msgid "敌人已经消失了"
 msgstr "敌人已经消失了"
 
-#: ui/GameUIAllianceMosterEnter.lua:155
+#: ui/GameUIAllianceMosterEnter.lua:153
 msgid "进攻该目标将失去保护状态，确定继续派兵?"
 msgstr "进攻该目标将失去保护状态，确定继续派兵?"
 
-#: ui/GameUIAllianceMosterEnter.lua:167
+#: ui/GameUIAllianceMosterEnter.lua:165
 msgid "建筑"
 msgstr "建筑"
 
@@ -9401,7 +9401,7 @@ msgstr "粮食村落"
 
 #: utils/Localize.lua:896
 msgid "硬币村落"
-msgstr "硬币村落"
+msgstr "银币村落"
 
 #: utils/Localize.lua:904
 msgid "孵化红龙"
