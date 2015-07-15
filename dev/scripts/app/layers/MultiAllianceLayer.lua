@@ -299,8 +299,10 @@ function MultiAllianceLayer:OnVillageEventsDataChanged(changed_map)
     for k,v in pairs(changed_map.removed or {}) do
         self:RefreshVillageEvent(v, false)
     end
-    for k,v in pairs(changed_map.added or {}) do
-        self:RefreshVillageEvent(v, true)
+    for _,v in ipairs(self.alliances) do
+        v:IteratorVillageEvents(function(village)
+            self:RefreshVillageEvent(village, true)  
+        end)
     end
 end
 function MultiAllianceLayer:RefreshAllVillageEvents()
@@ -311,8 +313,7 @@ function MultiAllianceLayer:RefreshAllVillageEvents()
                 self:RefreshVillageEvent(event, true)
             end)
         end
-    end, 0.0001)
-
+    end, 0.1)
 end
 function MultiAllianceLayer:RefreshVillageEvent(village_event, is_add)
     for i,v in ipairs(self.alliance_views) do
@@ -323,22 +324,17 @@ function MultiAllianceLayer:RefreshVillageEvent(village_event, is_add)
             local pid = player_data.id
             local flag = obj:getChildByTag(VILLAGE_TAG)
             if is_add then
-                local ally = pid == self.mine_player_id and MINE or
-                    (self.my_allinace_id == aid and FRIEND or ENEMY)
+                local ally = pid == self.mine_player_id and MINE or (self.my_allinace_id == aid and FRIEND or ENEMY)
                 if flag then
-                    flag.rcount = flag.rcount + 1
                     flag:SetAlly(ally)
                 else
                     local x,y = obj:GetSpriteTopPosition()
                     self:CreateVillageFlag(ally)
                         :addTo(obj, 1, VILLAGE_TAG)
-                        :pos(x,y+50):scale(1.5).rcount = 1
+                        :pos(x,y+50):scale(1.5)
                 end
             elseif flag then
-                flag.rcount = flag.rcount - 1
-                if flag.rcount <= 0 then
-                    obj:removeChildByTag(VILLAGE_TAG)
-                end
+                obj:removeChildByTag(VILLAGE_TAG)
             end
         end
     end
@@ -750,6 +746,7 @@ local function move_soldiers(corps, ani, dir_index, first_soldier)
     end
 end
 function MultiAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, finish_time, dragonType, soldiers, ally, banner_name)
+    if finish_time <= timer:GetServerTime() then return end
     local march_info = self:GetMarchInfoWith(id, start_pos, end_pos)
     if start_time == march_info.start_time and
         finish_time == march_info.finish_time then

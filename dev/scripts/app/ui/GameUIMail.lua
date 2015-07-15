@@ -1463,7 +1463,7 @@ function GameUIMail:CreateReportContent()
                     color = 0x403c2f
                 }):align(display.CENTER, report_content_bg:getContentSize().width/2-20, 60)
                 :addTo(report_content_bg)
-            display.newSprite(UILib.resource[rewards.name], 190, 30):addTo(report_content_bg):scale(0.5)
+            display.newSprite(UILib.resource[rewards.name], 190, 30):addTo(report_content_bg):scale(0.4)
             UIKit:ttfLabel(
                 {
                     text = "+"..string.formatnumberthousands(rewards.count),
@@ -1479,9 +1479,9 @@ function GameUIMail:CreateReportContent()
             local soldier_ui_config = UILib.black_soldier_image[soldier_type][tonumber(soldier_star)]
             
             display.newSprite(UILib.black_soldier_color_bg_images[soldier_type]):addTo(report_content_bg)
-                :align(display.CENTER_TOP,120, 86):scale(80/128)
+                :align(display.CENTER_TOP,180, 86):scale(80/128)
 
-            local soldier_head_icon = display.newSprite(soldier_ui_config):align(display.CENTER_TOP,120, 86):addTo(report_content_bg)
+            local soldier_head_icon = display.newSprite(soldier_ui_config):align(display.CENTER_TOP,180, 86):addTo(report_content_bg)
             soldier_head_icon:scale(80/soldier_head_icon:getContentSize().height)
             display.newSprite("box_soldier_128x128.png")
                 :align(display.CENTER, soldier_head_icon:getContentSize().width/2, soldier_head_icon:getContentSize().height-64)
@@ -1492,14 +1492,14 @@ function GameUIMail:CreateReportContent()
                     text = _("黑龙军团"),
                     size = 18,
                     color = 0x615b44
-                }):align(display.LEFT_CENTER, report_content_bg:getContentSize().width/2-70, 70)
+                }):align(display.LEFT_CENTER, report_content_bg:getContentSize().width/2-10, 70)
                 :addTo(report_content_bg)
             UIKit:ttfLabel(
                 {
                     text = Localize.soldier_name[soldier_type] .. " " ..string.format(_("等级%s"),monster_level),
                     size = 20,
                     color = 0x403c2f
-                }):align(display.LEFT_CENTER, report_content_bg:getContentSize().width/2-70, 25)
+                }):align(display.LEFT_CENTER, report_content_bg:getContentSize().width/2-10, 25)
                 :addTo(report_content_bg)
         else
             -- 战报发出方信息
