@@ -352,7 +352,7 @@ function WidgetMarchEvents:CreateAttackItem(entity)
     node.progress:setMidpoint(cc.p(0,0))
     node.progress:setPercentage(event:GetPercent())
     WidgetPushTransparentButton.new(cc.rect(0,0,469,41)):onButtonClicked(function()
-       display.getRunningScene():GetSceneLayer():TrackCorpsById(event:Id())
+        display.getRunningScene():GetSceneLayer():TrackCorpsById(event:Id())
     end):addTo(node):align(display.LEFT_CENTER, 4, half_height)
     node.prefix = entity:GetEventPrefix()
     node.desc = UIKit:ttfLabel({
@@ -534,6 +534,7 @@ function WidgetMarchEvents:MoveToTargetAction(entity)
         location,alliance_id = entity:GetDestinationLocationNotString()
     end
     local map_layer = display.getRunningScene():GetSceneLayer()
+    map_layer:TrackCorpsById(nil)
     local point = map_layer:ConvertLogicPositionToMapPosition(location.x,location.y,alliance_id)
     map_layer:GotoMapPositionInMiddle(point.x,point.y)
 end

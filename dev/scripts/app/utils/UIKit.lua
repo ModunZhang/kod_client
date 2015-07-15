@@ -1039,34 +1039,34 @@ local soldier_animap = {
     nuche_3 = {cc.p(0.5, 0.45), false, 1},
 
     -- 特殊兵种
-    kulouyongshi = {cc.p(0.5, 0.45), false, 1.2},
-    kulousheshou = {cc.p(0.28, 0.45), false, 1.2},
-    siwangqishi = {cc.p(0.5, 0.45), false, 1.2},
-    jiaorouche = {cc.p(0.37, 0.45), false, 1.5},
+    kulouyongshi = {cc.p(0.5, 0.45), false, 1.6},
+    kulousheshou = {cc.p(0.28, 0.45), false, 1.6},
+    siwangqishi = {cc.p(0.5, 0.45), false, 1.5},
+    jiaorouche = {cc.p(0.37, 0.45), false, 1.4},
     -- 黑化兵
     heihua_bubing_2 = {cc.p(0.5, 0.3), false, 1},
-    heihua_bubing_3 = {cc.p(0.45, 0.33), true, 1},
+    heihua_bubing_3 = {cc.p(0.45, 0.33), true, 0.9},
     --
-    heihua_gongjianshou_2 = {cc.p(0.1, 0.09), true, 0.8, true},
-    heihua_gongjianshou_3 = {cc.p(0.47, 0.22), true, 0.8},
+    heihua_gongjianshou_2 = {cc.p(0.1, 0.09), true, 1, true},
+    heihua_gongjianshou_3 = {cc.p(0.47, 0.22), true, 1},
     --
-    heihua_qibing_2 = {cc.p(0.5, 0.4), true, 1},
-    heihua_qibing_3 = {cc.p(0.55, 0.4), true, 1},
+    heihua_qibing_2 = {cc.p(0.5, 0.4), true, 0.9},
+    heihua_qibing_3 = {cc.p(0.55, 0.45), true, 0.9},
     --
-    heihua_toushiche_2 = {cc.p(0.4, 0.4), true, 0.8},
-    heihua_toushiche_3 = {cc.p(0.4, 0.4), true, 0.8},
+    heihua_toushiche_2 = {cc.p(0.4, 0.4), true, 0.7},
+    heihua_toushiche_3 = {cc.p(0.4, 0.45), true, 0.7},
     --
-    heihua_shaobing_2 = {cc.p(0.5, 0.22), true, 0.8},
-    heihua_shaobing_3 = {cc.p(0.5, 0.3), true, 0.8},
+    heihua_shaobing_2 = {cc.p(0.5, 0.22), true, 0.9},
+    heihua_shaobing_3 = {cc.p(0.5, 0.3), true, 0.9},
     --
-    heihua_nugongshou_2 = {cc.p(0.48, 0.35), true, 1},
-    heihua_nugongshou_3 = {cc.p(0.48, 0.3), true, 1},
+    heihua_nugongshou_2 = {cc.p(0.48, 0.35), true, 0.9},
+    heihua_nugongshou_3 = {cc.p(0.48, 0.3), true, 0.9},
     --
-    heihua_youqibing_2 = {cc.p(0.48, 0.3), true, 1},
-    heihua_youqibing_3 = {cc.p(0.48, 0.3), true, 1},
+    heihua_youqibing_2 = {cc.p(0.48, 0.3), true, 0.9},
+    heihua_youqibing_3 = {cc.p(0.48, 0.35), true, 0.9},
     --
-    heihua_nuche_2 = {cc.p(0.5, 0.4), true, 0.8},
-    heihua_nuche_3 = {cc.p(0.5, 0.4), true, 0.8},
+    heihua_nuche_2 = {cc.p(0.5, 0.4), true, 0.7},
+    heihua_nuche_3 = {cc.p(0.5, 0.45), true, 0.7},
 }
 local dragon_fly_45_ani = {
     red_long = {cc.p(0.52, 0.47), false, 1},
