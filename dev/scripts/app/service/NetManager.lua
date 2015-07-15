@@ -1002,7 +1002,7 @@ function NetManager:getFreeSpeedUpPromise(eventType, eventId)
 end
 -- 协助玩家加速
 function NetManager:getHelpAllianceMemberSpeedUpPromise(eventId)
-    return get_none_blocking_request_promise("logic.allianceHandler.helpAllianceMemberSpeedUp", {
+    return get_blocking_request_promise("logic.allianceHandler.helpAllianceMemberSpeedUp", {
         eventId = eventId,
     }, "协助玩家加速失败!"):done(get_player_response_msg):done(get_alliance_response_msg):done(function()
         app:GetAudioManager():PlayeEffectSoundWithKey("USE_ITEM")
@@ -1010,7 +1010,7 @@ function NetManager:getHelpAllianceMemberSpeedUpPromise(eventId)
 end
 -- 协助所有玩家加速
 function NetManager:getHelpAllAllianceMemberSpeedUpPromise()
-    return get_none_blocking_request_promise("logic.allianceHandler.helpAllAllianceMemberSpeedUp", {}
+    return get_blocking_request_promise("logic.allianceHandler.helpAllAllianceMemberSpeedUp", {}
         , "协助所有玩家加速失败!"):done(get_player_response_msg):done(get_alliance_response_msg):done(function()
         app:GetAudioManager():PlayeEffectSoundWithKey("USE_ITEM")
         end)
