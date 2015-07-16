@@ -28,9 +28,8 @@ function WidgetPromoteSoliderList:ctor(building)
     local soldiers_star = City:GetSoldierManager():FindSoldierStarByBuildingType(self.building:GetType())
     self.items_list = {}
     self.boxes = {}
-    for k,v in pairs(soldiers_star) do
-        print("WidgetPromoteSoliderList",k,v)
-        self.items_list[k] =  self:CreateItem(k,v)
+    for k,v in ipairs(soldiers_star) do
+        self.items_list[v[1]] =  self:CreateItem(v[1],v[2])
     end
     self.listview:reload()
 end
