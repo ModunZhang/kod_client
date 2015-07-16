@@ -8,8 +8,8 @@ function VillageSprite:ctor(city_layer, entity, is_my_alliance)
 end
 function VillageSprite:GetSpriteFile()
     local village_info = self:GetEntity():GetAllianceVillageInfo()
-    local build_png = SpriteConfig[village_info.name]:GetConfigByLevel(village_info.level).png
-	return build_png
+    local config = SpriteConfig[village_info.name]:GetConfigByLevel(village_info.level)
+	return config.png, config.scale
 end
 function VillageSprite:GetSpriteOffset()
 	return self:GetLogicMap():ConvertToLocalPosition(0, 0)
