@@ -99,9 +99,9 @@ function GameUITradeGuild:LoadBuyPage()
     local layer = self.buy_layer
     self.resource_drop_list =  WidgetRoundTabButtons.new(
         {
-            {tag = "resource",label = "基本资源",default = true},
-            {tag = "build_material",label = "建筑材料"},
-            {tag = "martial_material",label = "军事材料"},
+            {tag = "resource",label = _("基本资源"),default = true},
+            {tag = "build_material",label = _("建筑材料")},
+            {tag = "martial_material",label = _("军事材料")},
         },
         function(tag)
             if tag == 'resource' and not self.resource_layer then
@@ -1017,9 +1017,9 @@ function GameUITradeGuild:OpenSellDialog()
     local body_width,body_height = 608,654
     body.drop_list =  WidgetRoundTabButtons.new(
         {
-            {tag = "resource",label = "基本资源",default = true},
-            {tag = "build_material",label = "建筑材料"},
-            {tag = "martial_material",label = "军事材料"},
+            {tag = "resource",label = _("基本资源"),default = true},
+            {tag = "build_material",label = _("建筑材料")},
+            {tag = "martial_material",label = _("军事材料")},
         },
         function(tag)
             if body.layer then

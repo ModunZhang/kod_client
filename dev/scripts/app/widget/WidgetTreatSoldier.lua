@@ -115,7 +115,7 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
 
     local size = back_ground:getContentSize()
     local label = cc.ui.UILabel.new({
-        text = "强势对抗",
+        text = _("强势对抗"),
         size = 22,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_RIGHT,
@@ -138,7 +138,7 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
         :align(display.LEFT_BOTTOM, label_origin_x + label:getContentSize().width -12, size.height - 85 - 11)
 
     local label = cc.ui.UILabel.new({
-        text = "弱势对抗",
+        text = _("弱势对抗"),
         size = 22,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_RIGHT,
