@@ -52,7 +52,7 @@ if __name__=="__main__":
 					for fileName in files:
 						sufix = os.path.splitext(fileName)[1][1:]
 						if sufix == "jpg":
-							f.write('%s["%s"] = cc.TEXTURE2_D_PIXEL_FORMAT_RG_B888\n' % (basename, fileName) )
+							f.write('%s["%s"] = cc.TEXTURE2_D_PIXEL_FORMAT_RG_B565\n' % (basename, fileName) )
 					f.write('return %s' % basename)
 	elif rgba444:
 		try:

@@ -247,7 +247,10 @@ function CityLayer:InitCity()
     self.city_layer = display.newLayer():addTo(self, SCENE_ZORDER.CITY_LAYER):align(display.BOTTOM_LEFT, 47, 158 + 250)
     self.sky_layer = display.newLayer():addTo(self, SCENE_ZORDER.SKY_LAYER):align(display.BOTTOM_LEFT)
     self.info_layer = display.newLayer():addTo(self, SCENE_ZORDER.INFO_LAYER):align(display.BOTTOM_LEFT)
-    self.position_node = cc.TMXTiledMap:create("tmxmaps/city_road2.tmx"):addTo(self.city_layer):hide()
+    GameUtils:LoadImagesWithFormat(function()
+        self.position_node = cc.TMXTiledMap:create("tmxmaps/city_road2.tmx"):addTo(self.city_layer):hide()
+    end, cc.TEXTURE2_D_PIXEL_FORMAT_A8)
+
     self.city_node = display.newLayer():addTo(self.city_layer, CITY_ZORDER.BUILDING_NODE):align(display.BOTTOM_LEFT)
     local origin_point = self:GetPositionIndex(0, 0)
     self.iso_map = IsoMapAnchorBottomLeft.new({
