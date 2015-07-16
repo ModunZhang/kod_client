@@ -190,9 +190,9 @@ end
 
 function MailManager:DeleteSendMail(mail)
     local delete_mail_server_index
-    LuaUtils:outputTable("self.sendMails", self.sendMails)
     for k,v in pairs(self.sendMails) do
         if v.id == mail.id then
+            dump(v,"DeleteSendMail mail")
             delete_mail_server_index = v.index
             table.remove(self.sendMails,k)
         end
@@ -442,7 +442,6 @@ function MailManager:OnNewMailsChanged( mails )
             end
         elseif type == "edit" then
             for i,data in ipairs(mail) do
-                LuaUtils:outputTable("edit mail", data)
                 table.insert(edit_mails, self:ModifyMail(clone(data)))
             end
         end
