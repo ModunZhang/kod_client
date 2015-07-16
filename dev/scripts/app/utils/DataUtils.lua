@@ -1125,7 +1125,7 @@ local function getBuildingBuffForResourceProtectPercent(resourceName)
     local buildingName = resourceBuildingMap[resourceName]
     local buildings = City:GetFirstBuildingByType(buildingName)
     local protectPercent = 0
-    if buildings:GetLevel() > 0 then
+    if buildings and buildings:GetLevel() > 0 then
         protectPercent = protectPercent + buildings:GetProtection()
     end
     return protectPercent

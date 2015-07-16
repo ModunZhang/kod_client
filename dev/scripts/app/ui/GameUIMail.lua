@@ -1604,8 +1604,8 @@ end
 function GameUIMail:InitSavedReports()
     local dropList = WidgetRoundTabButtons.new(
         {
-            {tag = "menu_1",label = "战报",default = true},
-            {tag = "menu_2",label = "邮件"},
+            {tag = "menu_1",label = _("战报"),default = true},
+            {tag = "menu_2",label = _("邮件")},
         },
         function(tag)
             if tag == 'menu_2' then
