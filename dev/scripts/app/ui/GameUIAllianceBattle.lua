@@ -879,25 +879,25 @@ function GameUIAllianceBattle:CreateHistoryContent()
         enemy_alliance_name:setString(enemyAlliance.name)
         enemy_alliance_tag:setString("["..enemyAlliance.tag.."]")
 
+        local ui_helper = WidgetAllianceHelper.new()
         if self.self_flag then
-            self.self_flag:removeFromParent(true)
-            self.self_flag = nil
+            self.self_flag:SetFlag(Flag:DecodeFromJson(ourAlliance.flag))
+        else
+            -- 己方联盟旗帜
+            local self_flag = ui_helper:CreateFlagContentSprite(Flag:DecodeFromJson(ourAlliance.flag)):scale(0.5)
+            self_flag:align(display.CENTER, VS:getPositionX()-80, 10)
+                :addTo(fight_bg)
+            self.self_flag = self_flag
         end
         if self.enemy_flag then
-            self.enemy_flag:removeFromParent(true)
-            self.enemy_flag = nil
+            self.enemy_flag:SetFlag(Flag:DecodeFromJson(enemyAlliance.flag))
+        else
+            -- 敌方联盟旗帜
+            local enemy_flag = ui_helper:CreateFlagContentSprite(Flag:DecodeFromJson(enemyAlliance.flag)):scale(0.5)
+            enemy_flag:align(display.CENTER, VS:getPositionX()+20, 10)
+                :addTo(fight_bg)
+            self.enemy_flag = enemy_flag
         end
-        -- 己方联盟旗帜
-        local ui_helper = WidgetAllianceHelper.new()
-        local self_flag = ui_helper:CreateFlagContentSprite(Flag.new():DecodeFromJson(ourAlliance.flag)):scale(0.5)
-        self_flag:align(display.CENTER, VS:getPositionX()-80, 10)
-            :addTo(fight_bg)
-        -- 敌方联盟旗帜
-        local enemy_flag = ui_helper:CreateFlagContentSprite(Flag.new():DecodeFromJson(enemyAlliance.flag)):scale(0.5)
-        enemy_flag:align(display.CENTER, VS:getPositionX()+20, 10)
-            :addTo(fight_bg)
-        self.self_flag = self_flag
-        self.enemy_flag = enemy_flag
 
         local info_message = {
             {string.formatnumberthousands(ourAlliance.kill),_("总击杀"),string.formatnumberthousands(enemyAlliance.kill)},
@@ -1278,6 +1278,7 @@ function GameUIAllianceBattle:OnAllianceFightReportsChanged(changed_map)
 end
 
 return GameUIAllianceBattle
+
 
 
 
