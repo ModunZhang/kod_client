@@ -943,9 +943,17 @@ function GameUIAllianceBattle:CreateHistoryContent()
                         UIKit:showMessageDialog(_("提示"),_("已经处于联盟战期间"))
                         return
                     end
-                    NetManager:getRevengeAlliancePromise(report.id):done(function ()
-                        revenge_button:setButtonEnabled(false)
-                    end)
+                    UIKit:showMessageDialog(_("主人"),_("确定是否复仇?")):CreateOKButton({
+                        listener = function ()
+                            NetManager:getRevengeAlliancePromise(report.id):done(function ()
+                                revenge_button:setButtonEnabled(false)
+                            end)
+                        end,
+                        btn_images = {normal = "red_btn_up_148x58.png",pressed = "red_btn_down_148x58.png"},
+                        btn_name = _("复仇")
+                    }):CreateCancelButton({
+                        btn_images = {normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"},
+                    })
                 end
             end)
             self.revenge_button = revenge_button
@@ -1270,6 +1278,7 @@ function GameUIAllianceBattle:OnAllianceFightReportsChanged(changed_map)
 end
 
 return GameUIAllianceBattle
+
 
 
 

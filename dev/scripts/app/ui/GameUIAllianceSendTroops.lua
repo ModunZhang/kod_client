@@ -84,7 +84,7 @@ function GameUIAllianceSendTroops:ctor(march_callback,params)
     self.isPVE = type(params.isPVE) == 'boolean' and params.isPVE or false
     self.returnCloseAction = type(params.returnCloseAction) == 'boolean' and params.returnCloseAction or false
     self.toLocation = params.toLocation or cc.p(0,0)
-    self.targetIsMyAlliance = type(params.targetIsMyAlliance) == 'boolean' and params.targetIsMyAlliance or true
+    self.targetIsMyAlliance = params.targetIsMyAlliance
     self.terrain = User:Terrain()
     GameUIAllianceSendTroops.super.ctor(self,City,_("准备进攻"))
     local manager = ccs.ArmatureDataManager:getInstance()
