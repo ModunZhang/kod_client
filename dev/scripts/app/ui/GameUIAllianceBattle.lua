@@ -89,8 +89,11 @@ function GameUIAllianceBattle:onExit()
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.FIGHT_REPORTS)
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.ALLIANCE_FIGHT)
-    cc.Director:getInstance():getTextureCache():removeTextureForKey("alliance_battle_bg_612x886.jpg")
     GameUIAllianceBattle.super.onExit(self)
+end
+function GameUIAllianceBattle:onCleanup()
+    GameUIAllianceBattle.super.onCleanup(self)
+    cc.Director:getInstance():getTextureCache():removeTextureForKey("alliance_battle_bg_612x886.jpg")
 end
 
 function GameUIAllianceBattle:OnTimer(current_time)
