@@ -982,7 +982,7 @@ function GameUIAllianceBattle:CreateHistoryContent()
     end
 
     function content:RefreshRevengeTime(current_time)
-        if self.is_expire or not self.revenge_button then
+        if self.is_expire then
             return
         end
         local fightTime = self.report.fightTime
