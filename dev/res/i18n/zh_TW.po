@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: dragonfall\n"
-"POT-Creation-Date: 2015-07-17 12:15+0800\n"
-"PO-Revision-Date: 2015-07-17 12:15+0800\n"
+"POT-Creation-Date: 2015-07-17 15:48+0800\n"
+"PO-Revision-Date: 2015-07-17 15:48+0800\n"
 "Last-Translator: gaozhou <gaozhou.f@qq.com>\n"
 "Language-Team: \n"
 "Language: zh_TW\n"
@@ -68,9 +68,9 @@ msgstr "玩家已經登錄"
 #: service/NetManager.lua:1640 ui/CommonUpgradeUI.lua:455
 #: ui/CommonUpgradeUI.lua:895 ui/CommonUpgradeUI.lua:926
 #: ui/CommonUpgradeUI.lua:938 ui/GameUIActivityNew.lua:532
-#: ui/GameUIActivityRewardNew.lua:274 ui/GameUIActivityRewardNew.lua:280
-#: ui/GameUIActivityRewardNew.lua:418 ui/GameUIActivityRewardNew.lua:574
-#: ui/GameUIActivityRewardNew.lua:771 ui/GameUIActivityRewardNew.lua:865
+#: ui/GameUIActivityRewardNew.lua:279 ui/GameUIActivityRewardNew.lua:285
+#: ui/GameUIActivityRewardNew.lua:423 ui/GameUIActivityRewardNew.lua:579
+#: ui/GameUIActivityRewardNew.lua:776 ui/GameUIActivityRewardNew.lua:870
 #: ui/GameUIAlliance.lua:360 ui/GameUIAlliance.lua:367
 #: ui/GameUIAlliance.lua:727 ui/GameUIAlliance.lua:851
 #: ui/GameUIAlliance.lua:1088 ui/GameUIAlliance.lua:1093
@@ -78,8 +78,8 @@ msgstr "玩家已經登錄"
 #: ui/GameUIAlliance.lua:1545 ui/GameUIAlliance.lua:1632
 #: ui/GameUIAlliance.lua:1637 ui/GameUIAlliance.lua:1641
 #: ui/GameUIAlliance.lua:1707 ui/GameUIAlliance.lua:1712
-#: ui/GameUIAllianceBattle.lua:214 ui/GameUIAllianceBattle.lua:226
-#: ui/GameUIAllianceBattle.lua:857 ui/GameUIAllianceCityEnter.lua:155
+#: ui/GameUIAllianceBattle.lua:217 ui/GameUIAllianceBattle.lua:229
+#: ui/GameUIAllianceBattle.lua:860 ui/GameUIAllianceCityEnter.lua:155
 #: ui/GameUIAllianceCityEnter.lua:210 ui/GameUIAllianceCityEnter.lua:218
 #: ui/GameUIAllianceContribute.lua:318 ui/GameUIAllianceContribute.lua:329
 #: ui/GameUIAllianceInfo.lua:270 ui/GameUIAllianceInfo.lua:277
@@ -1099,8 +1099,8 @@ msgstr "馬鞍需要補充 %d"
 msgid "精铁零件 需要补充 %d"
 msgstr "精鐵零件需要補充 %d"
 
-#: entity/Report.lua:366 ui/GameUIAllianceBattle.lua:520
-#: ui/GameUIAllianceBattle.lua:938 ui/GameUIWarSummary.lua:141
+#: entity/Report.lua:366 ui/GameUIAllianceBattle.lua:523
+#: ui/GameUIAllianceBattle.lua:941 ui/GameUIWarSummary.lua:141
 msgid "突袭成功"
 msgstr "突襲成功"
 
@@ -1221,9 +1221,9 @@ msgstr "軍事科技升級完成"
 
 #: entity/SoldierStarEvents.lua:55 ui/GameUIHelp.lua:218
 #: widget/WidgetMilitaryTechnologyStatus.lua:145
-#, fuzzy, c-format
+#, c-format
 msgid "晋升%s的星级 star %d"
-msgstr " "
+msgstr " 晉升%s到星級 %d"
 
 #: entity/ToolShopUpgradeBuilding.lua:288
 #, c-format
@@ -1361,8 +1361,8 @@ msgid "点击建筑：%s"
 msgstr "點擊建築：%s"
 
 #: scenes/MyCityFteScene.lua:216 scenes/MyCityScene.lua:424
-#: ui/FullScreenPopDialogUI.lua:35 ui/GameUIAllianceBattle.lua:217
-#: ui/GameUIAllianceBattle.lua:860 ui/GameUIAllianceInfo.lua:374
+#: ui/FullScreenPopDialogUI.lua:35 ui/GameUIAllianceBattle.lua:220
+#: ui/GameUIAllianceBattle.lua:863 ui/GameUIAllianceInfo.lua:374
 #: ui/GameUIAllianceInfo.lua:377 ui/GameUIAllianceInfo.lua:381
 #: ui/GameUIAllianceInfo.lua:385 ui/GameUIAllianceTitle.lua:251
 #: ui/GameUIItems.lua:484 ui/GameUIItems.lua:489 ui/GameUIItems.lua:494
@@ -1956,9 +1956,9 @@ msgstr "連續登陸，获得王城的援軍"
 msgid "天"
 msgstr "天"
 
-#: ui/GameUIActivityNew.lua:252 ui/GameUIActivityRewardNew.lua:331
-#: ui/GameUIActivityRewardNew.lua:406 ui/GameUIActivityRewardNew.lua:757
-#: ui/GameUIActivityRewardNew.lua:851 widget/WidgetPVEGetRewards.lua:84
+#: ui/GameUIActivityNew.lua:252 ui/GameUIActivityRewardNew.lua:336
+#: ui/GameUIActivityRewardNew.lua:411 ui/GameUIActivityRewardNew.lua:762
+#: ui/GameUIActivityRewardNew.lua:856 widget/WidgetPVEGetRewards.lua:84
 msgid "已领取"
 msgstr "已領取"
 
@@ -1974,7 +1974,7 @@ msgstr "永久獲得第二條建築隊列"
 msgid "活动时间类，升级智慧中心，获得丰厚奖励"
 msgstr "升級主城堡，獲得豐厚獎勵"
 
-#: ui/GameUIActivityNew.lua:287 ui/GameUIActivityRewardNew.lua:613
+#: ui/GameUIActivityNew.lua:287 ui/GameUIActivityRewardNew.lua:618
 msgid "倒计时:"
 msgstr "倒計時："
 
@@ -2003,9 +2003,9 @@ msgstr "獲得%s"
 msgid "放弃"
 msgstr "放棄"
 
-#: ui/GameUIActivityNew.lua:516 ui/GameUIActivityRewardNew.lua:412
-#: ui/GameUIActivityRewardNew.lua:537 ui/GameUIActivityRewardNew.lua:765
-#: ui/GameUIActivityRewardNew.lua:857 ui/GameUIAllianceJoinTips.lua:51
+#: ui/GameUIActivityNew.lua:516 ui/GameUIActivityRewardNew.lua:417
+#: ui/GameUIActivityRewardNew.lua:542 ui/GameUIActivityRewardNew.lua:770
+#: ui/GameUIActivityRewardNew.lua:862 ui/GameUIAllianceJoinTips.lua:51
 #: ui/GameUIMission.lua:211 widget/WidgetPVEEvent.lua:196
 #: widget/WidgetPVEGetRewards.lua:58 widget/WidgetPVEGetRewards.lua:84
 #: widget/WidgetPVEGetTaskRewards.lua:60
@@ -2017,21 +2017,21 @@ msgstr "領取"
 msgid "在线奖励"
 msgstr "在線獎勵"
 
-#: ui/GameUIActivityRewardNew.lua:202
+#: ui/GameUIActivityRewardNew.lua:207
 msgid "领取30日奖励后，刷新奖励列表"
 msgstr "領取30日獎勵後，刷新獎勵列表"
 
-#: ui/GameUIActivityRewardNew.lua:274
+#: ui/GameUIActivityRewardNew.lua:279
 #, c-format
 msgid "恭喜您获得 %s x %d"
 msgstr "恭喜您獲得%s X %d"
 
-#: ui/GameUIActivityRewardNew.lua:280
+#: ui/GameUIActivityRewardNew.lua:285
 #, c-format
 msgid "你已领取%s"
 msgstr "你已領取%s"
 
-#: ui/GameUIActivityRewardNew.lua:288
+#: ui/GameUIActivityRewardNew.lua:293
 msgid ""
 "在未来的14天连续登陆，每天都会有来自王城的援军前来投奔你，连续登陆14天免费解"
 "锁第二条行军队列！"
@@ -2039,56 +2039,56 @@ msgstr ""
 "在未來的14天連續登陸，每天都會有來自王城的援軍前來投奔你，連續登陸7天免費解"
 "鎖第二條行軍隊列！"
 
-#: ui/GameUIActivityRewardNew.lua:339 ui/GameUIActivityRewardNew.lua:406
+#: ui/GameUIActivityRewardNew.lua:344 ui/GameUIActivityRewardNew.lua:411
 msgid "明天领取"
 msgstr "明天領取"
 
-#: ui/GameUIActivityRewardNew.lua:465 ui/GameUIActivityRewardNew.lua:493
-#: ui/GameUIActivityRewardNew.lua:498
+#: ui/GameUIActivityRewardNew.lua:470 ui/GameUIActivityRewardNew.lua:498
+#: ui/GameUIActivityRewardNew.lua:503
 #, c-format
 msgid "第%s天"
 msgstr "第%s天"
 
-#: ui/GameUIActivityRewardNew.lua:520
+#: ui/GameUIActivityRewardNew.lua:525
 msgid "行军队列"
 msgstr "行軍隊列"
 
-#: ui/GameUIActivityRewardNew.lua:521 ui/GameUIBuild.lua:63
+#: ui/GameUIActivityRewardNew.lua:526 ui/GameUIBuild.lua:63
 #: ui/GameUIHasBeenBuild.lua:394
 msgid "建筑队列"
 msgstr "建築隊列"
 
-#: ui/GameUIActivityRewardNew.lua:543
+#: ui/GameUIActivityRewardNew.lua:548
 msgid "前往充值"
 msgstr "前往儲值"
 
-#: ui/GameUIActivityRewardNew.lua:624
+#: ui/GameUIActivityRewardNew.lua:629
 msgid "已失效"
 msgstr "已失效"
 
-#: ui/GameUIActivityRewardNew.lua:638
+#: ui/GameUIActivityRewardNew.lua:643
 msgid "活动期间，升级城堡获得丰厚奖励"
 msgstr "活動期間，升級城堡獲得豐厚獎勵"
 
-#: ui/GameUIActivityRewardNew.lua:710 ui/GameUIMail.lua:1507
+#: ui/GameUIActivityRewardNew.lua:715 ui/GameUIMail.lua:1507
 #: ui/GameUIMail.lua:1807
 #, c-format
 msgid "等级%s"
 msgstr "等級%s"
 
-#: ui/GameUIActivityRewardNew.lua:798
+#: ui/GameUIActivityRewardNew.lua:803
 msgid "每日在线时间到达，即可领取珍贵的道具和金龙币"
 msgstr "每日在線時間到達，即可領取珍貴的道具和金龍幣"
 
-#: ui/GameUIActivityRewardNew.lua:803
+#: ui/GameUIActivityRewardNew.lua:808
 msgid "今日已在线："
 msgstr "今日已在線："
 
-#: ui/GameUIActivityRewardNew.lua:896 ui/GameUIActivityRewardNew.lua:966
+#: ui/GameUIActivityRewardNew.lua:901 ui/GameUIActivityRewardNew.lua:971
 msgid "还不能领取"
 msgstr "還不能領取"
 
-#: ui/GameUIActivityRewardNew.lua:989
+#: ui/GameUIActivityRewardNew.lua:994
 #, c-format
 msgid "在线%s分钟"
 msgstr "在線%s分鐘"
@@ -2117,7 +2117,7 @@ msgstr "邀請"
 msgid "申请"
 msgstr "申請"
 
-#: ui/GameUIAlliance.lua:216 ui/GameUIAllianceBattle.lua:1021
+#: ui/GameUIAlliance.lua:216 ui/GameUIAllianceBattle.lua:1024
 msgid "搜索联盟标签"
 msgstr "搜索聯盟標籤"
 
@@ -2144,15 +2144,15 @@ msgstr ""
 "您的申請已發送至%s,如果被接受將加入該聯盟,如果被拒絕,將收到一封通知郵件"
 
 #: ui/GameUIAlliance.lua:407 ui/GameUIAlliance.lua:600
-#: ui/GameUIAlliance.lua:754 ui/GameUIAllianceBattle.lua:616
-#: ui/GameUIAllianceBattle.lua:1206 ui/GameUIAllianceInfo.lua:160
+#: ui/GameUIAlliance.lua:754 ui/GameUIAllianceBattle.lua:619
+#: ui/GameUIAllianceBattle.lua:1209 ui/GameUIAllianceInfo.lua:160
 #: ui/GameUIAlliancePalaceEnter.lua:47 utils/Localize.lua:738
 #: utils/Localize.lua:1027
 msgid "成员"
 msgstr "成員"
 
 #: ui/GameUIAlliance.lua:420 ui/GameUIAlliance.lua:613
-#: ui/GameUIAllianceBattle.lua:618 ui/GameUIAllianceBattle.lua:1208
+#: ui/GameUIAllianceBattle.lua:621 ui/GameUIAllianceBattle.lua:1211
 #: ui/GameUIAllianceInfo.lua:173 ui/GameUIAllianceMemberInfo.lua:212
 #: ui/GameUIAllianceSendTroops.lua:676 ui/GameUICityBuildingInfo.lua:18
 #: ui/GameUICityBuildingInfo.lua:23 ui/GameUICityBuildingInfo.lua:28
@@ -2177,13 +2177,13 @@ msgid "战斗力"
 msgstr "戰鬥力"
 
 #: ui/GameUIAlliance.lua:433 ui/GameUIAlliance.lua:626
-#: ui/GameUIAllianceBattle.lua:617 ui/GameUIAllianceBattle.lua:1207
+#: ui/GameUIAllianceBattle.lua:620 ui/GameUIAllianceBattle.lua:1210
 #: ui/GameUIAllianceInfo.lua:186 ui/GameUISetting.lua:36
 msgid "语言"
 msgstr "語言"
 
 #: ui/GameUIAlliance.lua:446 ui/GameUIAlliance.lua:639
-#: ui/GameUIAllianceBattle.lua:619 ui/GameUIAllianceBattle.lua:1209
+#: ui/GameUIAllianceBattle.lua:622 ui/GameUIAllianceBattle.lua:1212
 #: ui/GameUIAllianceInfo.lua:199 ui/GameUIAllianceMemberInfo.lua:213
 #: ui/GameUIVip.lua:91
 msgid "击杀"
@@ -2374,31 +2374,31 @@ msgstr "歷史記錄"
 msgid "其他联盟"
 msgstr "其他聯盟"
 
-#: ui/GameUIAllianceBattle.lua:182 ui/GameUIAllianceBattle.lua:687
+#: ui/GameUIAllianceBattle.lua:185 ui/GameUIAllianceBattle.lua:690
 msgid "请求开战玩家"
 msgstr "請求開戰玩家"
 
-#: ui/GameUIAllianceBattle.lua:205 ui/GameUIAllianceBattle.lua:410
+#: ui/GameUIAllianceBattle.lua:208 ui/GameUIAllianceBattle.lua:413
 msgid "开始战斗!"
 msgstr "開始戰鬥！"
 
-#: ui/GameUIAllianceBattle.lua:205
+#: ui/GameUIAllianceBattle.lua:208
 msgid "请求开战!"
 msgstr "請求開戰！"
 
-#: ui/GameUIAllianceBattle.lua:214
+#: ui/GameUIAllianceBattle.lua:217
 msgid "联盟正在战争准备期或战争期"
 msgstr "聯盟正在戰爭準備期或戰爭期"
 
-#: ui/GameUIAllianceBattle.lua:217
+#: ui/GameUIAllianceBattle.lua:220
 msgid "确定开启联盟会战吗?"
 msgstr "確定開啟聯盟會戰嗎?"
 
-#: ui/GameUIAllianceBattle.lua:226 utils/Localize.lua:148
+#: ui/GameUIAllianceBattle.lua:229 utils/Localize.lua:148
 msgid "已经发送过开战请求"
 msgstr "已經發送過開戰請求"
 
-#: ui/GameUIAllianceBattle.lua:238
+#: ui/GameUIAllianceBattle.lua:241
 msgid ""
 "参加联盟会战,赢得荣誉,金龙币和丰厚战利品,联盟处在和平期可以主动匹配或被其他"
 "联盟匹配进行联盟会战"
@@ -2406,28 +2406,28 @@ msgstr ""
 "参加联盟会战,赢得荣誉,金龙币和丰厚战利品,联盟处在和平期可以主动匹配或被其他"
 "联盟匹配进行联盟会战"
 
-#: ui/GameUIAllianceBattle.lua:239
+#: ui/GameUIAllianceBattle.lua:242
 msgid "联盟处在和平期可以主动匹配或被其他联盟匹配进行联盟会战"
 msgstr "聯盟處在和平期可以主動匹配或被其他聯盟匹配進行聯盟會戰"
 
-#: ui/GameUIAllianceBattle.lua:262 ui/GameUIAlliancePalace.lua:87
+#: ui/GameUIAllianceBattle.lua:265 ui/GameUIAlliancePalace.lua:87
 msgid "联盟荣耀"
 msgstr "聯盟榮耀"
 
-#: ui/GameUIAllianceBattle.lua:268 ui/GameUIPResourceBuilding.lua:208
+#: ui/GameUIAllianceBattle.lua:271 ui/GameUIPResourceBuilding.lua:208
 #: utils/Localize.lua:835
 msgid "金龙币"
 msgstr "金龍幣"
 
-#: ui/GameUIAllianceBattle.lua:274
+#: ui/GameUIAllianceBattle.lua:277
 msgid "击杀敌方单位获得龙的材料"
 msgstr "擊殺敵方單位獲得龍材料"
 
-#: ui/GameUIAllianceBattle.lua:402
+#: ui/GameUIAllianceBattle.lua:405
 msgid "不需要保护,立即开战!"
 msgstr "不需要保護，立即開戰！"
 
-#: ui/GameUIAllianceBattle.lua:426
+#: ui/GameUIAllianceBattle.lua:429
 msgid ""
 "本次联盟会战结束后奖励,总击杀越高奖励越高.获胜方获得70%的总奖励,失败方获得剩"
 "下的,获胜联盟击杀第1名的玩家还将获得金龙币奖励"
@@ -2435,9 +2435,9 @@ msgstr ""
 "本次聯盟會戰結束後獎勵,總擊殺越高獎勵越高.獲勝方獲得70%的總獎勵,失敗方獲得剩"
 "下的,獲勝聯盟擊殺第1名的玩家還將獲得金龍幣獎勵"
 
-#: ui/GameUIAllianceBattle.lua:482 ui/GameUIAllianceBattle.lua:483
-#: ui/GameUIAllianceBattle.lua:491 ui/GameUIAllianceBattle.lua:506
-#: ui/GameUIAllianceBattle.lua:510 ui/GameUIAllianceBattle.lua:941
+#: ui/GameUIAllianceBattle.lua:485 ui/GameUIAllianceBattle.lua:486
+#: ui/GameUIAllianceBattle.lua:494 ui/GameUIAllianceBattle.lua:509
+#: ui/GameUIAllianceBattle.lua:513 ui/GameUIAllianceBattle.lua:944
 #: ui/GameUIAllianceMemberInfo.lua:204 ui/GameUIAllianceMemberInfo.lua:205
 #: ui/GameUIAlliancePalace.lua:186 ui/GameUIAlliancePalace.lua:187
 #: ui/GameUIAllianceVillageEnter.lua:171
@@ -2446,44 +2446,44 @@ msgstr ""
 msgid "无"
 msgstr "無"
 
-#: ui/GameUIAllianceBattle.lua:515
+#: ui/GameUIAllianceBattle.lua:518
 msgid "击杀积分"
 msgstr "擊殺積分"
 
-#: ui/GameUIAllianceBattle.lua:516 ui/GameUIAllianceBattle.lua:936
-#: ui/GameUIAllianceBattle.lua:1231 ui/GameUIAlliancePalace.lua:474
+#: ui/GameUIAllianceBattle.lua:519 ui/GameUIAllianceBattle.lua:939
+#: ui/GameUIAllianceBattle.lua:1234 ui/GameUIAlliancePalace.lua:474
 #: ui/GameUIWarSummary.lua:139
 msgid "击溃城市"
 msgstr "擊潰城市"
 
-#: ui/GameUIAllianceBattle.lua:517 ui/GameUIAllianceBattle.lua:939
+#: ui/GameUIAllianceBattle.lua:520 ui/GameUIAllianceBattle.lua:942
 #: ui/GameUIWarSummary.lua:142
 msgid "进攻次数"
 msgstr "進攻次數"
 
-#: ui/GameUIAllianceBattle.lua:518
+#: ui/GameUIAllianceBattle.lua:521
 msgid "进攻获胜"
 msgstr "進攻獲勝"
 
-#: ui/GameUIAllianceBattle.lua:519 ui/GameUIAllianceBattle.lua:937
+#: ui/GameUIAllianceBattle.lua:522 ui/GameUIAllianceBattle.lua:940
 #: ui/GameUIWarSummary.lua:140
 msgid "突袭次数"
 msgstr "突襲次數"
 
-#: ui/GameUIAllianceBattle.lua:521 ui/GameUIAllianceBattle.lua:941
+#: ui/GameUIAllianceBattle.lua:524 ui/GameUIAllianceBattle.lua:944
 #: ui/GameUIWarSummary.lua:144
 msgid "头号杀手"
 msgstr "頭號殺手"
 
-#: ui/GameUIAllianceBattle.lua:579
+#: ui/GameUIAllianceBattle.lua:582
 msgid "联盟详情"
 msgstr "聯盟詳情"
 
-#: ui/GameUIAllianceBattle.lua:636
+#: ui/GameUIAllianceBattle.lua:639
 msgid "联盟对战"
 msgstr "聯盟對戰"
 
-#: ui/GameUIAllianceBattle.lua:641
+#: ui/GameUIAllianceBattle.lua:644
 msgid ""
 "系统匹配两个战斗力相近的联盟，将彼此的领地拼接到一起。每场联盟匹配战，根据所"
 "在天梯服务器的等级，只要进行匹配就会有奖励。需要将军和盟主才能开战。"
@@ -2491,7 +2491,7 @@ msgstr ""
 "系統匹配兩個戰鬥力相近的聯盟，將彼此的領地拼接到一起。每場聯盟匹配戰，根據所"
 "在天梯服務器的等級，只要進行匹配就會有獎勵。需要將軍和盟主才能開戰"
 
-#: ui/GameUIAllianceBattle.lua:642
+#: ui/GameUIAllianceBattle.lua:645
 msgid ""
 "成功匹配到对手后，会有一个准备时间。此时无法对敌方进攻或者突袭，也无法移动城"
 "市的位置。请召唤你的盟友，让他们做好战斗准备。"
@@ -2499,7 +2499,7 @@ msgstr ""
 "成功匹配到對手後，會有一個準備時間，請召喚你的盟友，讓他們做好戰鬥準備。此時"
 "無法對敵方進攻或者突襲。"
 
-#: ui/GameUIAllianceBattle.lua:643
+#: ui/GameUIAllianceBattle.lua:646
 msgid ""
 "进入战争期后，双方可以派兵攻打对方城市，抢占对方的村落。击杀敌方单位可以增加"
 "本场匹配战的总奖励。若击溃敌方玩家城市，还可以获得额外的荣耀值奖励加成。"
@@ -2507,108 +2507,108 @@ msgstr ""
 "進入戰爭期後，雙方可以派兵攻打對方城市，搶占對方的村落。擊殺敵方單位可以增加"
 "本場匹配戰的總獎勵。若擊潰敵方玩家城市，還可以獲得額外的榮耀值獎勵加成"
 
-#: ui/GameUIAllianceBattle.lua:644
+#: ui/GameUIAllianceBattle.lua:647
 msgid "联盟匹配战结束后，参战双方都会进入保护期，此时不会被其他联盟攻打。"
 msgstr "聯盟匹配戰結束後，參戰雙方都會進入保護期，此時不會被其他聯盟攻打。"
 
-#: ui/GameUIAllianceBattle.lua:662
+#: ui/GameUIAllianceBattle.lua:665
 msgid "概述"
 msgstr "概述"
 
-#: ui/GameUIAllianceBattle.lua:663 ui/GameUIAllianceBattle.lua:1257
+#: ui/GameUIAllianceBattle.lua:666 ui/GameUIAllianceBattle.lua:1260
 #: ui/GameUIAllianceHome.lua:777
 msgid "准备期"
 msgstr "準備期"
 
-#: ui/GameUIAllianceBattle.lua:664 ui/GameUIAllianceBattle.lua:1259
+#: ui/GameUIAllianceBattle.lua:667 ui/GameUIAllianceBattle.lua:1262
 #: ui/GameUIAllianceHome.lua:779
 msgid "战争期"
 msgstr "戰爭期"
 
-#: ui/GameUIAllianceBattle.lua:665 ui/GameUIAllianceBattle.lua:1261
+#: ui/GameUIAllianceBattle.lua:668 ui/GameUIAllianceBattle.lua:1264
 #: ui/GameUIAllianceHome.lua:781
 msgid "保护期"
 msgstr "保護期"
 
-#: ui/GameUIAllianceBattle.lua:677
+#: ui/GameUIAllianceBattle.lua:680
 msgid "明白"
 msgstr "明白"
 
-#: ui/GameUIAllianceBattle.lua:849 ui/GameUIAllianceBattle.lua:867
+#: ui/GameUIAllianceBattle.lua:852 ui/GameUIAllianceBattle.lua:870
 msgid "复仇"
 msgstr "復仇"
 
-#: ui/GameUIAllianceBattle.lua:857
+#: ui/GameUIAllianceBattle.lua:860
 msgid "已经处于联盟战期间"
 msgstr "已經處於聯盟戰期間"
 
-#: ui/GameUIAllianceBattle.lua:860
+#: ui/GameUIAllianceBattle.lua:863
 msgid "确定是否复仇?"
 msgstr "確定是否復仇?"
 
-#: ui/GameUIAllianceBattle.lua:898 ui/GameUIAllianceBattle.lua:906
+#: ui/GameUIAllianceBattle.lua:901 ui/GameUIAllianceBattle.lua:909
 #: ui/GameUIShrineReport.lua:215 ui/GameUIWarSummary.lua:49
 #: ui/GameUIWarSummary.lua:71
 msgid "胜利"
 msgstr "勝利"
 
-#: ui/GameUIAllianceBattle.lua:898 ui/GameUIAllianceBattle.lua:906
+#: ui/GameUIAllianceBattle.lua:901 ui/GameUIAllianceBattle.lua:909
 #: ui/GameUIAllianceShrine.lua:641 ui/GameUIReplayNew.lua:286
 #: ui/GameUIShrineReport.lua:215 ui/GameUIWarSummary.lua:49
 #: ui/GameUIWarSummary.lua:71
 msgid "失败"
 msgstr "失敗"
 
-#: ui/GameUIAllianceBattle.lua:935 ui/GameUIWarSummary.lua:138
+#: ui/GameUIAllianceBattle.lua:938 ui/GameUIWarSummary.lua:138
 msgid "总击杀"
 msgstr "總擊殺"
 
-#: ui/GameUIAllianceBattle.lua:940 ui/GameUIWarSummary.lua:143
+#: ui/GameUIAllianceBattle.lua:943 ui/GameUIWarSummary.lua:143
 msgid "进攻成功"
 msgstr "進攻獲勝"
 
-#: ui/GameUIAllianceBattle.lua:942 ui/GameUIWarSummary.lua:145
+#: ui/GameUIAllianceBattle.lua:945 ui/GameUIWarSummary.lua:145
 msgid "荣耀值奖励"
 msgstr "榮耀值獎勵"
 
-#: ui/GameUIAllianceBattle.lua:964 ui/GameUIAllianceBattle.lua:989
+#: ui/GameUIAllianceBattle.lua:967 ui/GameUIAllianceBattle.lua:992
 msgid "已过期"
 msgstr "已過期"
 
-#: ui/GameUIAllianceBattle.lua:968
+#: ui/GameUIAllianceBattle.lua:971
 msgid "剩余复仇时间:"
 msgstr "剩餘復仇時間："
 
-#: ui/GameUIAllianceBattle.lua:1112 ui/GameUIAllianceBattle.lua:1215
+#: ui/GameUIAllianceBattle.lua:1115 ui/GameUIAllianceBattle.lua:1218
 msgid "查看"
 msgstr "查看"
 
-#: ui/GameUIAllianceBattle.lua:1152 ui/GameUIAllianceInfo.lua:20
+#: ui/GameUIAllianceBattle.lua:1155 ui/GameUIAllianceInfo.lua:20
 msgid "联盟信息"
 msgstr "聯盟信息"
 
-#: ui/GameUIAllianceBattle.lua:1229 ui/GameUIAlliancePalace.lua:472
+#: ui/GameUIAllianceBattle.lua:1232 ui/GameUIAlliancePalace.lua:472
 msgid "击杀部队人口"
 msgstr "擊殺部隊人口"
 
-#: ui/GameUIAllianceBattle.lua:1230 ui/GameUIAlliancePalace.lua:473
+#: ui/GameUIAllianceBattle.lua:1233 ui/GameUIAlliancePalace.lua:473
 msgid "阵亡部队人口"
 msgstr "陣亡部隊人口"
 
-#: ui/GameUIAllianceBattle.lua:1232 ui/GameUIAlliancePalace.lua:475
+#: ui/GameUIAllianceBattle.lua:1235 ui/GameUIAlliancePalace.lua:475
 msgid "联盟战胜利"
 msgstr "聯盟戰勝利"
 
-#: ui/GameUIAllianceBattle.lua:1233 ui/GameUIAlliancePalace.lua:476
+#: ui/GameUIAllianceBattle.lua:1236 ui/GameUIAlliancePalace.lua:476
 msgid "联盟战失败"
 msgstr "聯盟戰失敗"
 
-#: ui/GameUIAllianceBattle.lua:1234 ui/GameUIAlliancePalace.lua:477
+#: ui/GameUIAllianceBattle.lua:1237 ui/GameUIAlliancePalace.lua:477
 #: ui/GameUIVip.lua:90
 msgid "胜率"
 msgstr "勝率"
 
-#: ui/GameUIAllianceBattle.lua:1255 ui/GameUIAllianceHome.lua:775
+#: ui/GameUIAllianceBattle.lua:1258 ui/GameUIAllianceHome.lua:775
 msgid "和平期"
 msgstr "和平期"
 
@@ -4917,7 +4917,7 @@ msgstr "已完成任務"
 msgid "今日的任务已经全部完成！"
 msgstr "今日的任務已經全部完成！"
 
-#: ui/GameUIMission.lua:467
+#: ui/GameUIMission.lua:473
 msgid "点击领取奖励"
 msgstr "點擊領取獎勵"
 
@@ -5431,7 +5431,7 @@ msgstr "賬號"
 msgid "选择服务器"
 msgstr "選擇伺服器"
 
-#: ui/GameUISetting.lua:37 ui/GameUITips.lua:41
+#: ui/GameUISetting.lua:37 ui/GameUITips.lua:46
 msgid "游戏说明"
 msgstr "遊戲說明"
 
@@ -5891,105 +5891,105 @@ msgstr "敵方龍沒有裝備"
 msgid "龙的装备"
 msgstr "龍的裝備"
 
-#: ui/GameUITips.lua:48
+#: ui/GameUITips.lua:53
 msgid "城市"
 msgstr "城市"
 
-#: ui/GameUITips.lua:49
+#: ui/GameUITips.lua:54
 msgid "区域地图"
 msgstr "區域地圖"
 
-#: ui/GameUITips.lua:50
+#: ui/GameUITips.lua:55
 msgid "探险地图"
 msgstr "探險地圖"
 
-#: ui/GameUITips.lua:60
+#: ui/GameUITips.lua:65
 msgid "明白了"
 msgstr "明白了"
 
-#: ui/GameUITips.lua:102
+#: ui/GameUITips.lua:107
 msgid "1.建造住宅"
 msgstr "1.建造住宅"
 
-#: ui/GameUITips.lua:102
+#: ui/GameUITips.lua:107
 msgid "建造和升级住宅能提升城民数量，生产资源的小屋需要占用城民"
 msgstr "建造和升級住宅能提升城民數量，生產資源的小屋需要佔用城民"
 
-#: ui/GameUITips.lua:103
+#: ui/GameUITips.lua:108
 msgid "2.获取资源"
 msgstr "2.獲取資源"
 
-#: ui/GameUITips.lua:103
+#: ui/GameUITips.lua:108
 msgid "建造和升级木工小屋，石匠小屋，旷工小屋，农夫小屋获得更多资源"
 msgstr "建造和升級木工小屋，石匠小屋，曠工小屋，農夫小屋獲得更多資源"
 
-#: ui/GameUITips.lua:104
+#: ui/GameUITips.lua:109
 msgid "3.升级主城堡"
 msgstr "3.升級主城堡"
 
-#: ui/GameUITips.lua:104
+#: ui/GameUITips.lua:109
 msgid "升级城堡能够提升建筑的等级上限，解锁更多的地块和新的建筑"
 msgstr "升級城堡能夠提升建築的等級上限，解鎖更多的地塊和新的建築"
 
-#: ui/GameUITips.lua:105
+#: ui/GameUITips.lua:110
 msgid "4.招募部队"
 msgstr "4.招募部隊"
 
-#: ui/GameUITips.lua:105
+#: ui/GameUITips.lua:110
 msgid ""
 "在兵营招募部队，招募出的部队会持续消耗粮食，请务必保证自己的粮食产量充足"
 msgstr ""
 "在兵营招募部队，招募出的部队会持续消耗粮食，请务必保证自己的粮食产量充足"
 
-#: ui/GameUITips.lua:106
+#: ui/GameUITips.lua:111
 msgid "5.飞艇探索"
 msgstr "5.飛艇探索"
 
-#: ui/GameUITips.lua:106
+#: ui/GameUITips.lua:111
 msgid "使用飞艇，带领部队探索外域，获得资源还能增长巨龙等级，提升带兵总量"
 msgstr "使用飛艇，帶領部隊探索外域，獲得資源還能增長巨龍等級，提升帶兵總量"
 
-#: ui/GameUITips.lua:107
+#: ui/GameUITips.lua:112
 msgid "6.加入联盟"
 msgstr "6.加入聯盟"
 
-#: ui/GameUITips.lua:107
+#: ui/GameUITips.lua:112
 msgid "解锁联盟领地，参加联盟会战，并解锁更多新奇的玩法"
 msgstr "解鎖聯盟領地，參加聯盟會戰，並解鎖更多新奇的玩法"
 
-#: ui/GameUITips.lua:145
+#: ui/GameUITips.lua:150
 msgid "选择木材、石料、铁矿、粮食村落采集资源，满足发展城市和联盟的需求"
 msgstr "選擇木材，石料，鐵礦，糧食村落採集資源，滿足發展城市和聯盟的需求"
 
-#: ui/GameUITips.lua:146
+#: ui/GameUITips.lua:151
 msgid "激活并参与圣地战，和盟友并肩作战，赢取丰厚的稀缺材料"
 msgstr "激活並參與聖地戰，和盟友並肩作戰，贏取豐厚的稀缺材料"
 
-#: ui/GameUITips.lua:147
+#: ui/GameUITips.lua:152
 msgid ""
 "参加联盟会战，来一场争锋相对的较量，进攻敌方联盟的城市获得大量积分和资源"
 msgstr ""
 "参加联盟会战，来一场争锋相对的较量，进攻敌方联盟的城市获得大量积分和资源"
 
-#: ui/GameUITips.lua:148
+#: ui/GameUITips.lua:153
 msgid "如果你的盟友不幸成为敌方攻击的目标，协助盟友击退外敌"
 msgstr "如果你的盟友不幸成為敵方攻擊的目標，​​協助盟友擊退外敵"
 
-#: ui/GameUITips.lua:149
+#: ui/GameUITips.lua:154
 msgid "联盟会战胜利后，联盟获得大量的荣誉点数"
 msgstr "聯盟會戰勝利後，聯盟獲得大量的榮譽點數"
 
-#: ui/GameUITips.lua:213
+#: ui/GameUITips.lua:218
 msgid ""
 "探索未知的领域,经历种种艰难险阻和奇闻异事,更可藉此获得大量的资源及特殊道具!"
 msgstr ""
 "探索未知的领域,经历种种艰难险阻和奇闻异事,更可藉此获得大量的资源及特殊道具!"
 
-#: ui/GameUITips.lua:214
+#: ui/GameUITips.lua:219
 msgid "地图探索度达到100%之后,即可获得珍贵的金龙币奖励!"
 msgstr "地圖探索度達到100%之後，即可獲得珍貴的金龍幣獎勵！"
 
-#: ui/GameUITips.lua:216
+#: ui/GameUITips.lua:221
 msgid "探索只神秘的终极关卡,就能获得巨额的奖励以及异常稀有的个人专属头像!"
 msgstr "探索至神秘的終極關卡，就能獲得巨額的獎勵以及異常稀有的個人專屬頭像！"
 
