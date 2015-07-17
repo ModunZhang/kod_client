@@ -12,6 +12,7 @@ local UILib = import(".UILib")
 
 function GameUIAllianceCityEnter:ctor(building,isMyAlliance,my_alliance,enemy_alliance)
     GameUIAllianceCityEnter.super.ctor(self,building,isMyAlliance,my_alliance)
+    print("isMyAlliance==",isMyAlliance)
     self.enemy_alliance = enemy_alliance
 
     local id = self:GetBuilding():Id()

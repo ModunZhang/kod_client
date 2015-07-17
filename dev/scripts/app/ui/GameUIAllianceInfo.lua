@@ -166,7 +166,7 @@ function GameUIAllianceInfo:LoadInfo()
         text = string.format("%d/%d",alliance_data.members,alliance_data.membersMax), --count of members
         size = 20,
         color = 0x403c2f
-    }):addTo(info_bg):align(display.LEFT_TOP,70, memberTitleLabel:getPositionY())
+    }):addTo(info_bg):align(display.LEFT_TOP,memberTitleLabel:getPositionX() + memberTitleLabel:getContentSize().width + 10, memberTitleLabel:getPositionY())
 
 
     local fightingTitleLabel = UIKit:ttfLabel({
@@ -179,7 +179,7 @@ function GameUIAllianceInfo:LoadInfo()
         text = string.formatnumberthousands(alliance_data.power),
         size = 20,
         color = 0x403c2f
-    }):addTo(info_bg):align(display.LEFT_TOP, 400, fightingTitleLabel:getPositionY())
+    }):addTo(info_bg):align(display.LEFT_TOP, fightingTitleLabel:getPositionX() + fightingTitleLabel:getContentSize().width + 10, fightingTitleLabel:getPositionY())
 
 
     local languageTitleLabel = UIKit:ttfLabel({
@@ -192,7 +192,7 @@ function GameUIAllianceInfo:LoadInfo()
         text = Localize.alliance_language[alliance_data.language], -- language
         size = 20,
         color = 0x403c2f
-    }):addTo(info_bg):align(display.LEFT_BOTTOM,memberValLabel:getPositionX(),10)
+    }):addTo(info_bg):align(display.LEFT_BOTTOM,languageTitleLabel:getPositionX() + languageTitleLabel:getContentSize().width + 10,10)
 
 
     local killTitleLabel = UIKit:ttfLabel({
@@ -206,7 +206,7 @@ function GameUIAllianceInfo:LoadInfo()
         text = string.formatnumberthousands(alliance_data.kill),
         size = 20,
         color = 0x403c2f
-    }):addTo(info_bg):align(display.LEFT_BOTTOM, fightingValLabel:getPositionX(), 10)
+    }):addTo(info_bg):align(display.LEFT_BOTTOM, killTitleLabel:getPositionX() + killTitleLabel:getContentSize().width + 10, 10)
 
     local leaderIcon = display.newSprite("alliance_item_leader_39x39.png")
         :addTo(layer)

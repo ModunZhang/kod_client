@@ -392,7 +392,7 @@ function GameUITownHall:CreateDwellingLineItem(width,flag)
     }):addTo(node, 2):align(display.LEFT_CENTER, left + 10, 20)
 
     cc.ui.UILabel.new({
-        text = string.format("%s5%%%s", _("增加"), _("城民增长")),
+        text = string.format("%s 5%% %s", _("增加"), _("城民增长")),
         size = 20,
         font = UIKit:getFontFilePath(),
         align = cc.ui.TEXT_ALIGN_RIGHT,

@@ -453,6 +453,12 @@ function GameUIMission:dailyListviewListener(event)
 end
 
 
+function GameUIMission:onCleanup()
+    GameUIMission.super.onCleanup(self)
+    cc.Director:getInstance():getTextureCache():removeTextureForKey("mission_header_bg_616x184.jpg")
+end
+
+
 -- fte
 local promise = import("..utils.promise")
 local WidgetFteArrow = import("..widget.WidgetFteArrow")

@@ -9,7 +9,7 @@ local Localize_item = import("..utils.Localize_item")
 local WidgetUseMutiItems = class("WidgetUseMutiItems", WidgetPopDialog)
 
 function WidgetUseMutiItems:ctor(item)
-    WidgetUseMutiItems.super.ctor(self,282,Localize_item.item_name[item:Name()])
+    WidgetUseMutiItems.super.ctor(self,282,Localize_item.item_name[item:Name()],display.top-298)
 
     local body = self:GetBody()
     local body_size = body:getContentSize()

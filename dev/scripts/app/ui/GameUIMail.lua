@@ -754,24 +754,32 @@ function GameUIMail:DelegateSendMails( listView, tag, idx )
         else
             content = item:getContent()
         end
-        content:SetData(idx)
-        local size = content:getContentSize()
-        item:setItemSize(size.width, size.height)
-        -- 当取到客户端本地最后一封发件箱邮件后，请求服务器获得更多以前的邮件
-        if idx == #self.manager:GetSendMails() then
-            self.manager:FetchSendMailsFromServer(#self.manager:GetSendMails())
+        if content.SetData then
+            content:SetData(idx)
+            local size = content:getContentSize()
+            item:setItemSize(size.width, size.height)
+            -- 当取到客户端本地最后一封发件箱邮件后，请求服务器获得更多以前的邮件
+            if idx == #self.manager:GetSendMails() then
+                self.manager:FetchSendMailsFromServer(#self.manager:GetSendMails())
+            end
+        else
+            listView:unloadOneItem_(idx)
         end
         return item
     elseif UIListView.ASY_REFRESH == tag then
         for i,v in ipairs(listView:getItems()) do
             if v.idx_ == idx then
                 local content = v:getContent()
-                content:SetData(idx)
-                local size = content:getContentSize()
-                v:setItemSize(size.width, size.height)
-                -- 当取到客户端本地最后一封发件箱邮件后，请求服务器获得更多以前的邮件
-                if idx == #self.manager:GetSendMails() then
-                    self.manager:FetchSendMailsFromServer(#self.manager:GetSendMails())
+                if not content.SetData then
+                    listView:unloadOneItem_(idx)
+                else
+                    content:SetData(idx)
+                    local size = content:getContentSize()
+                    v:setItemSize(size.width, size.height)
+                    -- 当取到客户端本地最后一封发件箱邮件后，请求服务器获得更多以前的邮件
+                    if idx == #self.manager:GetSendMails() then
+                        self.manager:FetchSendMailsFromServer(#self.manager:GetSendMails())
+                    end
                 end
             end
         end
@@ -1477,7 +1485,7 @@ function GameUIMail:CreateReportContent()
             local soldier_type = monster_data.name
             local soldier_star = monster_data.star
             local soldier_ui_config = UILib.black_soldier_image[soldier_type][tonumber(soldier_star)]
-            
+
             display.newSprite(UILib.black_soldier_color_bg_images[soldier_type]):addTo(report_content_bg)
                 :align(display.CENTER_TOP,180, 86):scale(80/128)
 
@@ -1596,8 +1604,8 @@ end
 function GameUIMail:InitSavedReports()
     local dropList = WidgetRoundTabButtons.new(
         {
-            {tag = "menu_1",label = "战报",default = true},
-            {tag = "menu_2",label = "邮件"},
+            {tag = "menu_1",label = _("战报"),default = true},
+            {tag = "menu_2",label = _("邮件")},
         },
         function(tag)
             if tag == 'menu_2' then
@@ -1728,7 +1736,6 @@ function GameUIMail:CreateSavedReportContent()
                 title_bg_image = "title_red_556x34.png"
             end
         end
-        print("saved reports title image=",title_bg_image)
         local title_bg = display.newSprite(title_bg_image, item_width/2, 52+item_height/2):addTo(self)
         local report_title =  UIKit:ttfLabel(
             {
@@ -1778,7 +1785,7 @@ function GameUIMail:CreateSavedReportContent()
             local soldier_type = monster_data.name
             local soldier_star = monster_data.star
             local soldier_ui_config = UILib.black_soldier_image[soldier_type][tonumber(soldier_star)]
-            
+
             display.newSprite(UILib.black_soldier_color_bg_images[soldier_type]):addTo(report_content_bg)
                 :align(display.CENTER_TOP,120, 86):scale(80/128)
 
@@ -2253,6 +2260,8 @@ function GameUIMail:GetEnemyAllianceTag(report)
 end
 
 return GameUIMail
+
+
 
 
 

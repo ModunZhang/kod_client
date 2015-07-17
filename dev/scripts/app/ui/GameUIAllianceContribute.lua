@@ -266,13 +266,13 @@ function GameUIAllianceContribute:CreateContributeItem(params)
         text = GameUtils:formatNumber(params.own),
         size = 20,
         color = params.own < params.donate and 0x7e0000 or 0x288400,
-    }):align(display.LEFT_CENTER, own_title_label:getPositionX()+own_title_label:getContentSize().width,60)
+    }):align(display.LEFT_CENTER, own_title_label:getPositionX()+own_title_label:getContentSize().width + 10,60)
         :addTo(item)
     local donate_label = UIKit:ttfLabel({
         text = GameUtils:formatNumber(params.donate),
         size = 20,
         color = 0x288400,
-    }):align(display.LEFT_CENTER, donate_title_label:getPositionX()+donate_title_label:getContentSize().width,20)
+    }):align(display.LEFT_CENTER, donate_title_label:getPositionX()+donate_title_label:getContentSize().width + 10,20)
         :addTo(item)
     item.donate = params.donate
     local checkbox_image = {

@@ -625,6 +625,14 @@ function GameUIGacha:OnCountInfoChanged()
         }):addTo(button,1,112):align(display.CENTER,0,-12)
     end
 end
+
+
+function GameUIGacha:onCleanup()
+    GameUIGacha.super.onCleanup(self)
+    cc.Director:getInstance():getTextureCache():removeTextureForKey("background_gacha_1.jpg")
+    cc.Director:getInstance():getTextureCache():removeTextureForKey("background_gacha_2.jpg")
+end
+
 return GameUIGacha
 
 

@@ -89,8 +89,11 @@ function GameUIAllianceBattle:onExit()
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.FIGHT_REPORTS)
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.ALLIANCE_FIGHT)
-    cc.Director:getInstance():getTextureCache():removeTextureForKey("alliance_battle_bg_612x886.jpg")
     GameUIAllianceBattle.super.onExit(self)
+end
+function GameUIAllianceBattle:onCleanup()
+    GameUIAllianceBattle.super.onCleanup(self)
+    cc.Director:getInstance():getTextureCache():removeTextureForKey("alliance_battle_bg_612x886.jpg")
 end
 
 function GameUIAllianceBattle:OnTimer(current_time)
@@ -839,6 +842,38 @@ function GameUIAllianceBattle:CreateHistoryContent()
     }):align(display.LEFT_CENTER, 20, 30)
         :addTo(content)
 
+    -- 复仇按钮
+    local revenge_button = WidgetPushButton.new(
+        {normal = "red_btn_up_148x58.png",pressed = "red_btn_down_148x58.png"},
+        {scale9 = false},
+        {disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}}
+    ):addTo(content):align(display.RIGHT_CENTER,560,40)
+        :setButtonLabel(UIKit:ttfLabel({
+            text = _("复仇"),
+            size = 24,
+            color = 0xffedae,
+            shadow= true
+        }))
+    revenge_button:onButtonClicked(function(event)
+        if event.name == "CLICKED_EVENT" then
+            if self.alliance:Status() ~= "peace" and self.alliance:Status() ~= "protect" then
+                UIKit:showMessageDialog(_("提示"),_("已经处于联盟战期间"))
+                return
+            end
+            UIKit:showMessageDialog(_("主人"),_("确定是否复仇?")):CreateOKButton({
+                listener = function ()
+                    NetManager:getRevengeAlliancePromise(content.report.id):done(function ()
+                        revenge_button:setButtonEnabled(false)
+                    end)
+                end,
+                btn_images = {normal = "red_btn_up_148x58.png",pressed = "red_btn_down_148x58.png"},
+                btn_name = _("复仇")
+            }):CreateCancelButton({
+                btn_images = {normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"},
+            })
+        end
+    end)
+
     local parent = self
     function content:SetData( idx )
         local alliance = parent.alliance
@@ -879,25 +914,25 @@ function GameUIAllianceBattle:CreateHistoryContent()
         enemy_alliance_name:setString(enemyAlliance.name)
         enemy_alliance_tag:setString("["..enemyAlliance.tag.."]")
 
+        local ui_helper = WidgetAllianceHelper.new()
         if self.self_flag then
-            self.self_flag:removeFromParent(true)
-            self.self_flag = nil
+            self.self_flag:SetFlag(Flag:DecodeFromJson(ourAlliance.flag))
+        else
+            -- 己方联盟旗帜
+            local self_flag = ui_helper:CreateFlagContentSprite(Flag:DecodeFromJson(ourAlliance.flag)):scale(0.5)
+            self_flag:align(display.CENTER, VS:getPositionX()-80, 10)
+                :addTo(fight_bg)
+            self.self_flag = self_flag
         end
         if self.enemy_flag then
-            self.enemy_flag:removeFromParent(true)
-            self.enemy_flag = nil
+            self.enemy_flag:SetFlag(Flag:DecodeFromJson(enemyAlliance.flag))
+        else
+            -- 敌方联盟旗帜
+            local enemy_flag = ui_helper:CreateFlagContentSprite(Flag:DecodeFromJson(enemyAlliance.flag)):scale(0.5)
+            enemy_flag:align(display.CENTER, VS:getPositionX()+20, 10)
+                :addTo(fight_bg)
+            self.enemy_flag = enemy_flag
         end
-        -- 己方联盟旗帜
-        local ui_helper = WidgetAllianceHelper.new()
-        local self_flag = ui_helper:CreateFlagContentSprite(Flag.new():DecodeFromJson(ourAlliance.flag)):scale(0.5)
-        self_flag:align(display.CENTER, VS:getPositionX()-80, 10)
-            :addTo(fight_bg)
-        -- 敌方联盟旗帜
-        local enemy_flag = ui_helper:CreateFlagContentSprite(Flag.new():DecodeFromJson(enemyAlliance.flag)):scale(0.5)
-        enemy_flag:align(display.CENTER, VS:getPositionX()+20, 10)
-            :addTo(fight_bg)
-        self.self_flag = self_flag
-        self.enemy_flag = enemy_flag
 
         local info_message = {
             {string.formatnumberthousands(ourAlliance.kill),_("总击杀"),string.formatnumberthousands(enemyAlliance.kill)},
@@ -921,39 +956,14 @@ function GameUIAllianceBattle:CreateHistoryContent()
         -- 只有权限大于将军的玩家可以请求复仇
         local isEqualOrGreater = alliance:GetMemeberById(DataManager:getUserData()._id)
             :IsTitleEqualOrGreaterThan("general")
-        if self.revenge_button then
-            self.revenge_button:removeFromParent(true)
-        end
-        if not win and isEqualOrGreater then
-            -- 复仇按钮
-            local revenge_button = WidgetPushButton.new(
-                {normal = "red_btn_up_148x58.png",pressed = "red_btn_down_148x58.png"},
-                {scale9 = false},
-                {disabled = {name = "GRAY", params = {0.2, 0.3, 0.5, 0.1}}}
-            ):addTo(content):align(display.RIGHT_CENTER,560,40)
-                :setButtonLabel(UIKit:ttfLabel({
-                    text = _("复仇"),
-                    size = 24,
-                    color = 0xffedae,
-                    shadow= true
-                }))
-            revenge_button:onButtonClicked(function(event)
-                if event.name == "CLICKED_EVENT" then
-                    if alliance:Status() ~= "peace" and alliance:Status() ~= "protect" then
-                        UIKit:showMessageDialog(_("提示"),_("已经处于联盟战期间"))
-                        return
-                    end
-                    NetManager:getRevengeAlliancePromise(report.id):done(function ()
-                        revenge_button:setButtonEnabled(false)
-                    end)
-                end
-            end)
-            self.revenge_button = revenge_button
 
+        if not win and isEqualOrGreater then
+            revenge_button:show()
             local revenge_time_limit = revenge_limit * 60 + math.floor(fightTime/1000)
             if app.timer:GetServerTime()>revenge_time_limit then
                 revenge_button:setButtonEnabled(false)
                 title_label:setString("")
+                revenge_time_label:setPositionX(30)
                 revenge_time_label:setString(_("已过期"))
                 revenge_time_label:setColor(UIKit:hex2c4b(0x7e0000))
                 self.is_expire = true
@@ -965,6 +975,7 @@ function GameUIAllianceBattle:CreateHistoryContent()
                 revenge_button:setButtonEnabled(true)
             end
         else
+            revenge_button:hide()
             title_label:setString("")
             revenge_time_label:setString("")
         end
@@ -1270,6 +1281,9 @@ function GameUIAllianceBattle:OnAllianceFightReportsChanged(changed_map)
 end
 
 return GameUIAllianceBattle
+
+
+
 
 
 

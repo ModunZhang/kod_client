@@ -57,6 +57,8 @@ function MyCityScene:onEnter()
     -- :align(display.RIGHT_TOP, display.width, display.height)
 end
 function MyCityScene:onExit()
+    self:GetCity():GetUser():RemoveListenerOnType(self, User.LISTEN_TYPE.BASIC)
+    self.home_page = nil
     MyCityScene.super.onExit(self)
 end
 function MyCityScene:EnterEditMode()
@@ -266,11 +268,6 @@ function MyCityScene:CreateHomePage()
     home:setLocalZOrder(10)
     home:setTouchSwallowEnabled(false)
     return home
-end
-function MyCityScene:onExit()
-    self:GetCity():GetUser():RemoveListenerOnType(self, User.LISTEN_TYPE.BASIC)
-    self.home_page = nil
-    MyCityScene.super.onExit(self)
 end
 function MyCityScene:GetLockButtonsByBuildingType(building_type)
     local lock_button

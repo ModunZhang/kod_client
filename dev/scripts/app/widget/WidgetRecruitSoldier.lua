@@ -103,7 +103,7 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name, soldier_star)
         align = cc.ui.TEXT_ALIGN_RIGHT,
         color = 0x403c2f
     }):addTo(back_ground, 2)
-        :align(display.LEFT_BOTTOM, label_origin_x + label:getContentSize().width - 12, size.height - 85 - 11)
+        :align(display.LEFT_BOTTOM, label_origin_x + label:getContentSize().width , size.height - 85 - 11)
 
     local label = UIKit:ttfLabel({
         text = _("弱势对抗"),
@@ -123,7 +123,7 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name, soldier_star)
         align = cc.ui.TEXT_ALIGN_RIGHT,
         color = 0x403c2f
     }):addTo(back_ground, 2)
-        :align(display.LEFT_BOTTOM, label_origin_x + label:getContentSize().width - 12, size.height - 120 - 11)
+        :align(display.LEFT_BOTTOM, label_origin_x + label:getContentSize().width, size.height - 120 - 11)
 
 
     -- food icon

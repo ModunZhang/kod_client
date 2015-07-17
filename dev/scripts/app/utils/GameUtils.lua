@@ -296,6 +296,11 @@ local apple_lang_map = {
     ['zh-Hant'] = 'tw',
     -- ['en'] = 'en',
 }
+local lang_map = {
+    cn = { po = 'zh_CN', code = 'cn' },
+    tw = { po = 'zh_TW', code = 'tw' },
+    -- en = { po = 'en', code = 'en' },
+}
 function GameUtils:GetAppleLanguageCode()
     local code = ext.getDeviceLanguage()
     if apple_lang_map[code] then
@@ -304,11 +309,6 @@ function GameUtils:GetAppleLanguageCode()
         return 'tw'
     end
 end
-local lang_map = {
-    cn = { po = 'zh_CN', code = 'cn' },
-    tw = { po = 'zh_TW', code = 'tw' },
-    -- en = { po = 'en', code = 'en' },
-}
 function GameUtils:GetPoFileLanguageCode(language_code)
     local currentLanguage = language_code or self:getCurrentLanguage()
     if lang_map[language_code] then
@@ -437,6 +437,12 @@ function GameUtils:formatTimeStyleDayHour(time,min_day)
     else
         return GameUtils:formatTimeStyle1(time)
     end
+end
+
+function GameUtils:LoadImagesWithFormat(func, format)
+    cc.Texture2D:setDefaultAlphaPixelFormat(format or cc.TEXTURE2D_PIXEL_FORMAT_RGBA8888)
+    func()
+    cc.Texture2D:setDefaultAlphaPixelFormat(cc.TEXTURE2D_PIXEL_FORMAT_RGBA8888)
 end
 
 

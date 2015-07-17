@@ -73,7 +73,7 @@ function GameUIAllianceHome:onEnter()
     self:AddMapChangeButton()
     self:InitArrow()
     if self.top then
-        if not self.alliance:AllianceFightReports() then
+        if not self.alliance:AllianceFightReports() and self.alliance:Status() == "protect" then
             NetManager:getAllianceFightReportsPromise(self.alliance:Id()):done(function ()
                 self.top:Refresh()
             end)

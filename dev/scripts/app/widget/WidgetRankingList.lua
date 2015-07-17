@@ -327,10 +327,11 @@ function WidgetRankingList:CreateAllianceContentByIndex(idx)
         self.tag:setString(string.format("(%s)", data.tag))
         self.value:setString(string.formatnumberthousands(data.value))
         if self.flag then
-            self.flag:removeFromParent()
+            self.flag:SetFlag(Flag:DecodeFromJson(data.flag))
+        else
+            self.flag = ui_helper:CreateFlagContentSprite(Flag:DecodeFromJson(data.flag))
+                :addTo(self):align(display.CENTER, 80, 5):scale(0.5)
         end
-        self.flag = ui_helper:CreateFlagContentSprite(Flag:DecodeFromJson(data.flag))
-            :addTo(self):align(display.CENTER, 80, 5):scale(0.5)
         return self
     end
     local ranklist = self

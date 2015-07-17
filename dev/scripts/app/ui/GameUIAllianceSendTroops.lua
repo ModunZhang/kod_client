@@ -84,7 +84,7 @@ function GameUIAllianceSendTroops:ctor(march_callback,params)
     self.isPVE = type(params.isPVE) == 'boolean' and params.isPVE or false
     self.returnCloseAction = type(params.returnCloseAction) == 'boolean' and params.returnCloseAction or false
     self.toLocation = params.toLocation or cc.p(0,0)
-    self.targetIsMyAlliance = type(params.targetIsMyAlliance) == 'boolean' and params.targetIsMyAlliance or true
+    self.targetIsMyAlliance = params.targetIsMyAlliance
     self.terrain = User:Terrain()
     GameUIAllianceSendTroops.super.ctor(self,City,_("准备进攻"))
     local manager = ccs.ArmatureDataManager:getInstance()
@@ -446,8 +446,16 @@ function GameUIAllianceSendTroops:SelectSoldiers()
 
         -- 士兵头像
         local soldier_ui_config = UILib.soldier_image[name][star]
-        display.newSprite(UILib.soldier_color_bg_images[name]):addTo(content)
+        WidgetPushButton.new({normal = UILib.soldier_color_bg_images[name],pressed = UILib.soldier_color_bg_images[name]})
+        :onButtonClicked(function(event)
+            if event.name == "CLICKED_EVENT" then
+                UIKit:newWidgetUI("WidgetSoldierDetails", name, star):AddToCurrentScene()
+            end
+        end):addTo(content)
             :align(display.CENTER,60,64):scale(104/128)
+
+        -- display.newSprite(UILib.soldier_color_bg_images[name]):addTo(content)
+        --     :align(display.CENTER,60,64):scale(104/128)
         local soldier_head_icon = display.newSprite(soldier_ui_config):align(display.CENTER,60,64):addTo(content):scale(104/128)
         local soldier_head_bg  = display.newSprite("box_soldier_128x128.png"):addTo(soldier_head_icon):pos(soldier_head_icon:getContentSize().width/2,soldier_head_icon:getContentSize().height/2)
         local soldier_star_bg = display.newSprite("tmp_back_ground_102x22.png"):addTo(soldier_head_icon):align(display.BOTTOM_CENTER,soldier_head_icon:getContentSize().width/2 - 10, 4)
@@ -460,6 +468,7 @@ function GameUIAllianceSendTroops:SelectSoldiers()
             direction = StarBar.DIRECTION_HORIZONTAL,
             scale = 0.8,
         }):addTo(soldier_star_bg):align(display.CENTER,58, 11)
+        display.newSprite("i_icon_20x20.png"):addTo(soldier_star_bg):align(display.LEFT_CENTER,5, 11)
 
         item:addContent(content)
         list:addItem(item)

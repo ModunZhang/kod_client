@@ -397,6 +397,132 @@ local logic_event_map = {
     onPlayerDataChanged = function(success, response)
         if not NetManager.m_was_inited_game then return end
         if success then
+            -- 特殊处理战报移除
+            for i,v in ipairs(response) do
+                if string.find(v[1],"reports") then
+                    if v[2] == json.null then
+                        local report_remove_data = table.remove(response,i)
+                        local tmp_table = {}
+                        table.insert(tmp_table, report_remove_data)
+                        local need_deal = true
+                        for i,v in ipairs(tmp_table) do
+                            if type(v) == "table" then
+                                local keys = string.split(v[1], ".")
+                                local newKey = ""
+                                local len = #keys
+                                for i=1,len do
+                                    local k = tonumber(keys[i]) or keys[i]
+                                    if type(k) == "number" then
+                                        if not MailManager:GetReportByServerIndex(k) then
+                                            need_deal = false
+                                            break
+                                        end
+                                        local client_index = MailManager:GetReportByServerIndex(k) - 1
+                                        newKey = newKey..client_index..(i~=len and "." or "")
+                                    else
+                                        newKey = newKey..keys[i]..(i~=len and "." or "")
+                                    end
+                                end
+                                v[1] = newKey
+                            end
+                        end
+                        if need_deal then
+                            local user_data = DataManager:getUserData()
+                            local edit = decodeInUserDataFromDeltaData(user_data, tmp_table)
+                            DataManager:setUserData(user_data, edit)
+                        else
+                            -- 将邮件管理器中的所有存在的战报index - 1
+                            MailManager:DecreaseReportsIndex()
+                        end
+                    end
+                end
+            end
+            -- 特殊处理邮件移除
+            for i,v in ipairs(response) do
+                if string.find(v[1],"mails") then
+                    if v[2] == json.null then
+                        local report_remove_data = table.remove(response,i)
+                        local tmp_table = {}
+                        table.insert(tmp_table, report_remove_data)
+                        local need_deal = true
+                        for i,v in ipairs(tmp_table) do
+                            if type(v) == "table" then
+                                local keys = string.split(v[1], ".")
+                                local newKey = ""
+                                local len = #keys
+                                for i=1,len do
+                                    local k = tonumber(keys[i]) or keys[i]
+                                    if type(k) == "number" then
+                                        if not MailManager:GetSendMailIndexByServerIndex(k) then
+                                            need_deal = false
+                                            break
+                                        end
+                                        local client_index = MailManager:GetSendMailIndexByServerIndex(k) - 1
+                                        newKey = newKey..client_index..(i~=len and "." or "")
+                                    else
+                                        newKey = newKey..keys[i]..(i~=len and "." or "")
+                                    end
+                                end
+                                v[1] = newKey
+                            end
+                        end
+                        if need_deal then
+                            local user_data = DataManager:getUserData()
+                            local edit = decodeInUserDataFromDeltaData(user_data, tmp_table)
+                            DataManager:setUserData(user_data, edit)
+                        else
+                            -- 将邮件管理器中的所有存在的战报index - 1
+                            MailManager:DecreaseMailsIndex()
+                        end
+                    end
+                end
+            end
+            -- 特殊已发邮件移除
+            for i,v in ipairs(response) do
+                if string.find(v[1],"sendMails") then
+                    if v[2] == json.null then
+                        local report_remove_data = table.remove(response,i)
+                        local tmp_table = {}
+                        table.insert(tmp_table, report_remove_data)
+                        local need_deal = true
+                        for i,v in ipairs(tmp_table) do
+                            if type(v) == "table" then
+                                local keys = string.split(v[1], ".")
+                                local newKey = ""
+                                local len = #keys
+                                for i=1,len do
+                                    local k = tonumber(keys[i]) or keys[i]
+                                    if type(k) == "number" then
+                                        local send_index = MailManager:GetSendMailIndexByServerIndex(k)
+                                        if not send_index then
+                                            need_deal = false
+                                            break
+                                        end
+                                        local client_index = send_index - 1
+                                        newKey = newKey..client_index..(i~=len and "." or "")
+                                    else
+                                        newKey = newKey..keys[i]..(i~=len and "." or "")
+                                    end
+                                end
+                                v[1] = newKey
+                            end
+                        end
+                        if need_deal then
+                            LuaUtils:outputTable("self.sendMails", MailManager:GetSendMails())
+
+                            local user_data = DataManager:getUserData()
+                            dump(tmp_table,"tmp_table")
+                            dump(user_data.sendMails,"user_data.sendMails")
+                            local edit = decodeInUserDataFromDeltaData(user_data, tmp_table)
+                            LuaUtils:outputTable("send mails edit", edit)
+                            DataManager:setUserData(user_data, edit)
+                        else
+                            -- 将邮件管理器中的所有存在的战报index - 1
+                            MailManager:DecreaseSendMailsIndex()
+                        end
+                    end
+                end
+            end
             local user_data = DataManager:getUserData()
             local edit = decodeInUserDataFromDeltaData(user_data, response)
             LuaUtils:outputTable("edit", edit)
@@ -1753,6 +1879,10 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
+
+
+
 
 
 
