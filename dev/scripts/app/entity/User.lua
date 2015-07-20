@@ -606,7 +606,7 @@ function User:OnVipEventDataChange(userData, deltaData)
         if remove and #remove >0 then
             -- vip 激活结束，刷新资源
             -- 通知出去
-            self.vip_event:UpdateData(remove[1])
+            self.vip_event:Reset()
             City:GetResourceManager():UpdateByCity(City, app.timer:GetServerTime())
             self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT_OVER, function(listener)
                 listener:OnVipEventOver(self.vip_event)

@@ -655,7 +655,6 @@ function GameUIHome:OnOperation(alliance,operation_type)
     if operation_type == "quit" then
         self.top_order_group:RefreshOrder()
         self.right_bottom_order:RefreshOrder()
-        print("GameUIHome:OnOperation quit")
     end
 end
 function GameUIHome:RefreshExp()
