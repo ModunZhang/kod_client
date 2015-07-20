@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: dragonfall\n"
-"POT-Creation-Date: 2015-07-20 22:51+0800\n"
-"PO-Revision-Date: 2015-07-20 22:51+0800\n"
+"POT-Creation-Date: 2015-07-20 23:01+0800\n"
+"PO-Revision-Date: 2015-07-20 23:01+0800\n"
 "Last-Translator: gaozhou <gaozhou.f@qq.com>\n"
 "Language-Team: \n"
 "Language: zh_TW\n"
@@ -1615,7 +1615,7 @@ msgstr "當前建築已達最大等級"
 #: ui/CommonUpgradeUI.lua:229
 #, c-format
 msgid "一次随机制造种类+%d,"
-msgstr ""
+msgstr "一次最大隨機制造種類+%d,"
 
 #: ui/CommonUpgradeUI.lua:299 ui/GameUICityBuildingInfo.lua:83
 msgid "提升任务奖励"
@@ -3790,7 +3790,7 @@ msgstr "製造工具數量"
 
 #: ui/GameUICityBuildingInfo.lua:38
 msgid "随机制造种类"
-msgstr ""
+msgstr "最大隨機制造種類"
 
 #: ui/GameUICityBuildingInfo.lua:43 utils/Localize.lua:629
 msgid "材料存储上限"
@@ -4686,7 +4686,7 @@ msgstr ""
 
 #: ui/GameUILoginBeta.lua:100
 msgid "登录提示帮助3"
-msgstr "提示：進行聯盟匹配戰，擊殺敵方單位並到達壹定的數量會掉落龍裝備的材料"
+msgstr "提示：進行聯盟匹配戰，擊殺敵方單位並到達一定的數量會掉落龍裝備的材料"
 
 #: ui/GameUILoginBeta.lua:101
 msgid "登录提示帮助4"
@@ -5741,7 +5741,7 @@ msgstr "來自"
 
 #: ui/GameUIShireFightEvent.lua:266
 msgid "你已经向圣地派遣了部队"
-msgstr "你同壹時間只能向聖地派遣壹支部隊"
+msgstr "你同一時間只能向聖地派遣一支部隊"
 
 #: ui/GameUIShireFightEvent.lua:274
 msgid ""
@@ -8534,7 +8534,7 @@ msgid ""
 "医院提供治愈伤兵的功能，每次进攻或防守都能将一部分阵亡的士兵转化为伤兵并治"
 "愈，升级建筑能够提升伤兵的最大容量上限"
 msgstr ""
-"醫院提供治愈傷兵的功能，每次進攻或防守都能將壹部分陣亡的士兵轉化為傷兵並治"
+"醫院提供治愈傷兵的功能，每次進攻或防守都能將一部分陣亡的士兵轉化為傷兵並治"
 "愈，升級建築能夠提升傷兵的最大容量上限"
 
 #: utils/Localize.lua:587
@@ -8542,7 +8542,7 @@ msgid ""
 "监狱有一定的几率捕获来袭的敌军，并能够使用特殊的道具折磨敌军，升级建筑能够获"
 "得更多的敌军关押时间"
 msgstr ""
-"監獄有壹定的幾率捕獲來襲的敵軍，並能夠使用特殊的道具折磨敵軍，升級建築能夠獲"
+"監獄有一定的幾率捕獲來襲的敵軍，並能夠使用特殊的道具折磨敵軍，升級建築能夠獲"
 "得更多的敵軍關押時間"
 
 #: utils/Localize.lua:588
@@ -8558,12 +8558,12 @@ msgid ""
 "工具作坊提供建筑材料和科技材料的制作，每次制作都能随机获得一些材料，升级建筑"
 "能够提升每次制作材料的数量"
 msgstr ""
-"工具作坊提供建築材料和科技材料的制作，每次制作都能隨機獲得壹些材料，升級建築"
+"工具作坊提供建築材料和科技材料的制作，每次制作都能隨機獲得一些材料，升級建築"
 "能夠提升每次制作材料的數量"
 
 #: utils/Localize.lua:592
 msgid "一次随机生产道具"
-msgstr "壹次隨機生產道具"
+msgstr "一次隨機生產道具"
 
 #: utils/Localize.lua:593
 msgid "个"

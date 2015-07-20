@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: dragonfall\n"
-"POT-Creation-Date: 2015-07-20 22:50+0800\n"
-"PO-Revision-Date: 2015-07-20 22:50+0800\n"
+"POT-Creation-Date: 2015-07-20 23:00+0800\n"
+"PO-Revision-Date: 2015-07-20 23:01+0800\n"
 "Last-Translator: gaozhou <gaozhou.f@qq.com>\n"
 "Language-Team: \n"
 "Language: en\n"
@@ -1660,7 +1660,7 @@ msgstr "Level max"
 #: ui/CommonUpgradeUI.lua:229
 #, c-format
 msgid "一次随机制造种类+%d,"
-msgstr ""
+msgstr "Random+%d,"
 
 #: ui/CommonUpgradeUI.lua:299 ui/GameUICityBuildingInfo.lua:83
 msgid "提升任务奖励"
@@ -3836,7 +3836,7 @@ msgstr "Produce amount"
 
 #: ui/GameUICityBuildingInfo.lua:38
 msgid "随机制造种类"
-msgstr ""
+msgstr "Random"
 
 #: ui/GameUICityBuildingInfo.lua:43 utils/Localize.lua:629
 msgid "材料存储上限"
