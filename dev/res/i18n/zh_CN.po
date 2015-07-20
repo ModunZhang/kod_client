@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: dragonfall\n"
-"POT-Creation-Date: 2015-07-17 15:48+0800\n"
-"PO-Revision-Date: 2015-07-17 15:48+0800\n"
+"POT-Creation-Date: 2015-07-20 22:51+0800\n"
+"PO-Revision-Date: 2015-07-20 22:51+0800\n"
 "Last-Translator: gaozhou <gaozhou.f@qq.com>\n"
 "Language-Team: \n"
 "Language: zh_CN\n"
@@ -65,9 +65,9 @@ msgstr "玩家已经登录"
 #: service/NetManager.lua:1071 service/NetManager.lua:1117
 #: service/NetManager.lua:1605 service/NetManager.lua:1618
 #: service/NetManager.lua:1620 service/NetManager.lua:1638
-#: service/NetManager.lua:1640 ui/CommonUpgradeUI.lua:455
-#: ui/CommonUpgradeUI.lua:895 ui/CommonUpgradeUI.lua:926
-#: ui/CommonUpgradeUI.lua:938 ui/GameUIActivityNew.lua:532
+#: service/NetManager.lua:1640 ui/CommonUpgradeUI.lua:459
+#: ui/CommonUpgradeUI.lua:899 ui/CommonUpgradeUI.lua:930
+#: ui/CommonUpgradeUI.lua:942 ui/GameUIActivityNew.lua:532
 #: ui/GameUIActivityRewardNew.lua:279 ui/GameUIActivityRewardNew.lua:285
 #: ui/GameUIActivityRewardNew.lua:423 ui/GameUIActivityRewardNew.lua:579
 #: ui/GameUIActivityRewardNew.lua:776 ui/GameUIActivityRewardNew.lua:870
@@ -1225,7 +1225,7 @@ msgstr "军事科技升级完成"
 msgid "晋升%s的星级 star %d"
 msgstr "晋升%s到星级 %d"
 
-#: entity/ToolShopUpgradeBuilding.lua:288
+#: entity/ToolShopUpgradeBuilding.lua:296
 #, c-format
 msgid "制造%d个材料完成"
 msgstr "制造%d个材料完成"
@@ -1611,70 +1611,75 @@ msgstr "等级 "
 msgid "当前建筑已达最大等级"
 msgstr "当前建筑已达最大等级"
 
-#: ui/CommonUpgradeUI.lua:295 ui/GameUICityBuildingInfo.lua:83
+#: ui/CommonUpgradeUI.lua:229
+#, c-format
+msgid "一次随机制造种类+%d,"
+msgstr ""
+
+#: ui/CommonUpgradeUI.lua:299 ui/GameUICityBuildingInfo.lua:83
 msgid "提升任务奖励"
 msgstr "提升任务奖励"
 
-#: ui/CommonUpgradeUI.lua:330
+#: ui/CommonUpgradeUI.lua:334
 #, c-format
 msgid "城墙血量+%d,"
 msgstr "城墙耐久度+%d,"
 
-#: ui/CommonUpgradeUI.lua:333
+#: ui/CommonUpgradeUI.lua:337
 #, c-format
 msgid "城墙血量回复+%d/小时,"
 msgstr "城墙耐久度回复+%d/小时,"
 
-#: ui/CommonUpgradeUI.lua:339
+#: ui/CommonUpgradeUI.lua:343
 #, c-format
 msgid "攻击+%d,"
 msgstr "攻击+%d,"
 
-#: ui/CommonUpgradeUI.lua:342
+#: ui/CommonUpgradeUI.lua:346
 #, c-format
 msgid "防御力+%d,"
 msgstr "防御力+%d,"
 
-#: ui/CommonUpgradeUI.lua:348
+#: ui/CommonUpgradeUI.lua:352
 #, c-format
 msgid "学院科技研发速度+%d%%,"
 msgstr "学院科技研发速度+%d%%,"
 
-#: ui/CommonUpgradeUI.lua:356
+#: ui/CommonUpgradeUI.lua:360
 #, c-format
 msgid "资源小车上限+%d,"
 msgstr "资源小车上限+%d,"
 
-#: ui/CommonUpgradeUI.lua:359
+#: ui/CommonUpgradeUI.lua:363
 #, c-format
 msgid "资源小车回复速度+%d/小时,"
 msgstr "资源小车回复速度+%d/小时,"
 
-#: ui/CommonUpgradeUI.lua:365
+#: ui/CommonUpgradeUI.lua:369
 #, c-format
 msgid "步兵招募速度+%.0f%%,"
 msgstr "步兵招募速度+%.0f%%,"
 
-#: ui/CommonUpgradeUI.lua:371
+#: ui/CommonUpgradeUI.lua:375
 #, c-format
 msgid "骑兵招募速度+%.0f%%,"
 msgstr "骑兵招募速度+%.0f%%,"
 
-#: ui/CommonUpgradeUI.lua:377
+#: ui/CommonUpgradeUI.lua:381
 #, c-format
 msgid "弓手招募速度+%.0f%%,"
 msgstr "弓手招募速度+%.0f%%,"
 
-#: ui/CommonUpgradeUI.lua:383
+#: ui/CommonUpgradeUI.lua:387
 #, c-format
 msgid "攻城系招募速度+%.0f%%,"
 msgstr "攻城系招募速度+%.0f%%,"
 
-#: ui/CommonUpgradeUI.lua:425 widget/WidgetAllianceBuildingUpgrade.lua:69
+#: ui/CommonUpgradeUI.lua:429 widget/WidgetAllianceBuildingUpgrade.lua:69
 msgid "立即升级"
 msgstr "立即升级"
 
-#: ui/CommonUpgradeUI.lua:455 ui/GameUIHasBeenBuild.lua:155
+#: ui/CommonUpgradeUI.lua:459 ui/GameUIHasBeenBuild.lua:155
 #: ui/GameUIHospital.lua:172 ui/GameUIItems.lua:238
 #: ui/GameUIPResourceBuilding.lua:225 ui/GameUIResource.lua:388
 #: ui/GameUITownHall.lua:174 ui/GameUIUpgradeTechnology.lua:414
@@ -1685,135 +1690,135 @@ msgstr "立即升级"
 msgid "是否消费%s金龙币"
 msgstr "是否确认消费%s金龙币？"
 
-#: ui/CommonUpgradeUI.lua:474 ui/GameUIAllianceBuilding.lua:14
+#: ui/CommonUpgradeUI.lua:478 ui/GameUIAllianceBuilding.lua:14
 #: ui/GameUIAllianceOrderHallEnter.lua:60 ui/GameUIAlliancePalaceEnter.lua:67
 #: ui/GameUIAllianceShopEnter.lua:75 ui/GameUIAllianceShrineEnter.lua:179
 #: ui/GameUIOrderHall.lua:172 ui/GameUIUpgradeBuilding.lua:18
 msgid "升级"
 msgstr "升级"
 
-#: ui/CommonUpgradeUI.lua:572 ui/GameUIUnlockBuilding.lua:188
+#: ui/CommonUpgradeUI.lua:576 ui/GameUIUnlockBuilding.lua:188
 msgid "前置条件"
 msgstr "前置条件"
 
-#: ui/CommonUpgradeUI.lua:583 widget/WidgetBuildingIntroduce.lua:79
+#: ui/CommonUpgradeUI.lua:587 widget/WidgetBuildingIntroduce.lua:79
 msgid "建造队列已满"
 msgstr "建造队列已满"
 
-#: ui/CommonUpgradeUI.lua:586 ui/GameUIOrderHall.lua:13
+#: ui/CommonUpgradeUI.lua:590 ui/GameUIOrderHall.lua:13
 #: ui/GameUIOrderHall.lua:240 ui/GameUIUnlockBuilding.lua:203
 #: utils/Localize.lua:829 utils/Localize.lua:839
 #: widget/WidgetBuildingIntroduce.lua:82
 msgid "木材"
 msgstr "木材"
 
-#: ui/CommonUpgradeUI.lua:593 ui/GameUIOrderHall.lua:14
+#: ui/CommonUpgradeUI.lua:597 ui/GameUIOrderHall.lua:14
 #: ui/GameUIOrderHall.lua:241 ui/GameUIUnlockBuilding.lua:211
 #: utils/Localize.lua:830 utils/Localize.lua:840
 #: widget/WidgetBuildingIntroduce.lua:85
 msgid "石料"
 msgstr "石料"
 
-#: ui/CommonUpgradeUI.lua:601 ui/GameUIOrderHall.lua:15
+#: ui/CommonUpgradeUI.lua:605 ui/GameUIOrderHall.lua:15
 #: ui/GameUIOrderHall.lua:242 ui/GameUIUnlockBuilding.lua:219
 #: utils/Localize.lua:831 utils/Localize.lua:841
 #: widget/WidgetBuildingIntroduce.lua:88
 msgid "铁矿"
 msgstr "铁矿"
 
-#: ui/CommonUpgradeUI.lua:609 widget/WidgetBuildingIntroduce.lua:92
+#: ui/CommonUpgradeUI.lua:613 widget/WidgetBuildingIntroduce.lua:92
 #: widget/WidgetCitizen.lua:22
 msgid "空闲城民"
 msgstr "空闲城民"
 
-#: ui/CommonUpgradeUI.lua:617 ui/GameUIUnlockBuilding.lua:227
+#: ui/CommonUpgradeUI.lua:621 ui/GameUIUnlockBuilding.lua:227
 #: ui/GameUIUpgradeTechnology.lua:373 widget/WidgetBuildingIntroduce.lua:99
 msgid "工程图纸"
 msgstr "工程图纸"
 
-#: ui/CommonUpgradeUI.lua:624 ui/GameUIUnlockBuilding.lua:234
+#: ui/CommonUpgradeUI.lua:628 ui/GameUIUnlockBuilding.lua:234
 #: ui/GameUIUpgradeTechnology.lua:381 widget/WidgetBuildingIntroduce.lua:106
 msgid "建造工具"
 msgstr "建造工具"
 
-#: ui/CommonUpgradeUI.lua:631 ui/GameUIUnlockBuilding.lua:241
+#: ui/CommonUpgradeUI.lua:635 ui/GameUIUnlockBuilding.lua:241
 #: ui/GameUIUpgradeTechnology.lua:389 utils/Localize.lua:418
 #: utils/Localize.lua:845 widget/WidgetBuildingIntroduce.lua:113
 #: widget/WidgetManufacture.lua:54
 msgid "砖石瓦片"
 msgstr "砖石瓦片"
 
-#: ui/CommonUpgradeUI.lua:638 ui/GameUIUnlockBuilding.lua:248
+#: ui/CommonUpgradeUI.lua:642 ui/GameUIUnlockBuilding.lua:248
 #: ui/GameUIUpgradeTechnology.lua:397 utils/Localize.lua:419
 #: utils/Localize.lua:846 widget/WidgetBuildingIntroduce.lua:120
 #: widget/WidgetManufacture.lua:55
 msgid "滑轮组"
 msgstr "滑轮组"
 
-#: ui/CommonUpgradeUI.lua:648 widget/WidgetAllianceBuildingUpgrade.lua:190
+#: ui/CommonUpgradeUI.lua:652 widget/WidgetAllianceBuildingUpgrade.lua:190
 #: widget/WidgetPromoteSoldier.lua:220
 #: widget/WidgetUpgradeMilitaryTech.lua:224
 msgid "升级需求"
 msgstr "升级需求"
 
-#: ui/CommonUpgradeUI.lua:667 ui/GameUIBuildingSpeedUp.lua:17
+#: ui/CommonUpgradeUI.lua:671 ui/GameUIBuildingSpeedUp.lua:17
 #, c-format
 msgid "正在升级 %s 到等级 %d"
 msgstr "正在升级 %s 到等级 %d"
 
-#: ui/CommonUpgradeUI.lua:732 ui/GameUIAcademy.lua:211
+#: ui/CommonUpgradeUI.lua:736 ui/GameUIAcademy.lua:211
 #: ui/GameUIHasBeenBuild.lua:308 ui/GameUIQuickTechnology.lua:189
 #: widget/WidgetEventTabButtons.lua:721
 #: widget/WidgetMilitaryTechnologyStatus.lua:96 widget/WidgetSpeedUp.lua:39
 msgid "免费加速"
 msgstr "免费加速"
 
-#: ui/CommonUpgradeUI.lua:755
+#: ui/CommonUpgradeUI.lua:759
 msgid "小于5分钟时，可使用免费加速.激活VIP X后，小于5分钟时可使用免费加速"
 msgstr "小于5分钟时，可使用免费加速"
 
-#: ui/CommonUpgradeUI.lua:793 ui/GameUIUnlockBuilding.lua:282
+#: ui/CommonUpgradeUI.lua:797 ui/GameUIUnlockBuilding.lua:282
 msgid "补充资源"
 msgstr "补充资源"
 
-#: ui/CommonUpgradeUI.lua:794 ui/GameUIUnlockBuilding.lua:283
+#: ui/CommonUpgradeUI.lua:798 ui/GameUIUnlockBuilding.lua:283
 msgid "您当前没有足够的资源,是否花费魔法石立即补充"
 msgstr "您当前没有足够的资源,是否花费金龙币立即补充"
 
-#: ui/CommonUpgradeUI.lua:836 ui/CommonUpgradeUI.lua:869
+#: ui/CommonUpgradeUI.lua:840 ui/CommonUpgradeUI.lua:873
 msgid "立即完成"
 msgstr "立即完成"
 
-#: ui/CommonUpgradeUI.lua:842 ui/CommonUpgradeUI.lua:875
+#: ui/CommonUpgradeUI.lua:846 ui/CommonUpgradeUI.lua:879
 msgid "开启"
 msgstr "开启"
 
-#: ui/CommonUpgradeUI.lua:842 ui/CommonUpgradeUI.lua:875
+#: ui/CommonUpgradeUI.lua:846 ui/CommonUpgradeUI.lua:879
 msgid "第2队列"
 msgstr "第2队列"
 
-#: ui/CommonUpgradeUI.lua:848 ui/CommonUpgradeUI.lua:880
+#: ui/CommonUpgradeUI.lua:852 ui/CommonUpgradeUI.lua:884
 #: ui/GameUIUnlockBuilding.lua:294
 msgid "立即开始"
 msgstr "立即开始"
 
-#: ui/CommonUpgradeUI.lua:849 ui/GameUIUnlockBuilding.lua:295
+#: ui/CommonUpgradeUI.lua:853 ui/GameUIUnlockBuilding.lua:295
 msgid "您当前没有空闲的建筑,是否花费魔法石立即完成上一个队列"
 msgstr "您当前没有空闲的建筑队列,是否花费金龙币立即完成上一个队列？"
 
-#: ui/CommonUpgradeUI.lua:886 utils/UIKit.lua:839
+#: ui/CommonUpgradeUI.lua:890 utils/UIKit.lua:839
 #, c-format
 msgid "请首先建造%s"
 msgstr "请首先建造%s"
 
-#: ui/CommonUpgradeUI.lua:892 ui/CommonUpgradeUI.lua:921
+#: ui/CommonUpgradeUI.lua:896 ui/CommonUpgradeUI.lua:925
 #: ui/GameUIAllianceLoyalty.lua:22 ui/GameUIDailyMissionInfo.lua:190
 #: ui/GameUIPResourceBuilding.lua:297 ui/GameUIUnlockBuilding.lua:319
 #: ui/GameUIWatchTower.lua:238 ui/GameUIWathTowerRegion.lua:242
 msgid "前往"
 msgstr "前往"
 
-#: ui/CommonUpgradeUI.lua:934 ui/GameUIBuild.lua:194
+#: ui/CommonUpgradeUI.lua:938 ui/GameUIBuild.lua:194
 #: ui/GameUIHasBeenBuild.lua:135 ui/GameUIHospital.lua:257
 #: ui/GameUIHospital.lua:303 ui/GameUIItems.lua:233 ui/GameUIKeep.lua:432
 #: ui/GameUIPResourceBuilding.lua:251 ui/GameUITownHall.lua:170
@@ -3782,6 +3787,10 @@ msgstr "巨龙生命值恢复每小时"
 msgid "制造工具数量"
 msgstr "制造工具数量"
 
+#: ui/GameUICityBuildingInfo.lua:38
+msgid "随机制造种类"
+msgstr ""
+
 #: ui/GameUICityBuildingInfo.lua:43 utils/Localize.lua:629
 msgid "材料存储上限"
 msgstr "材料存储上限"
@@ -4485,19 +4494,19 @@ msgstr "战斗力："
 msgid "加入联盟才能激活帮助功能"
 msgstr "加入联盟才能激活帮助功能"
 
-#: ui/GameUIHome.lua:831
+#: ui/GameUIHome.lua:830
 msgid "5分钟以下免费加速"
 msgstr "5分钟以下免费加速"
 
-#: ui/GameUIHome.lua:870
+#: ui/GameUIHome.lua:869
 msgid "立即完成升级"
 msgstr "立即完成升级"
 
-#: ui/GameUIHome.lua:902
+#: ui/GameUIHome.lua:901
 msgid "点击VIP，免费激活VIP"
 msgstr "点击VIP，免费激活VIP"
 
-#: ui/GameUIHome.lua:927
+#: ui/GameUIHome.lua:926
 msgid ""
 "进入联盟地图\n"
 "体验更多玩法"
