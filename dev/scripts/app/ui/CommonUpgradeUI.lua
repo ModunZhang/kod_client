@@ -224,6 +224,10 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
         if additon>0 then
             efficiency = string.format("%s+%d%s,",bd.poduction,additon,bd.poduction_1)
         end
+        local additon = building:GetNextLevelProductionType()-building:GetProductionType()
+        if additon>0 then
+            efficiency = efficiency..string.format(_("一次随机制造种类+%d,"),additon)
+        end
     elseif self.building:GetType()=="materialDepot" then
         local additon = building:GetNextLevelMaxMaterial()-building:GetMaxMaterial()
         if additon>0 then

@@ -34,9 +34,9 @@ local building_details_map = {
         {"level",  	"power", 	"hpRecoveryPerHour"},
     },
     ["toolShop"] = {
-        {90,			130,			300},
-        {_("等级"), _("战斗力"),_("制造工具数量")},
-        {"level",  	"power", 	"production"},
+        {90,        100,        180,            150      },
+        {_("等级"), _("战斗力"),_("制造工具数量"),_("随机制造种类")},
+        {"level",  	"power", "production","productionType"},
     },
     ["materialDepot"] = {
         {90,			130,			300},

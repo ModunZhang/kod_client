@@ -199,6 +199,14 @@ function ToolShopUpgradeBuilding:GetNextLevelProduction()
     local config = config_function[self:GetNextLevel()]
     return config["production"]
 end
+function ToolShopUpgradeBuilding:GetProductionType()
+    local config = config_function[self:GetEfficiencyLevel()]
+    return config["productionType"]
+end
+function ToolShopUpgradeBuilding:GetNextLevelProductionType()
+    local config = config_function[self:GetNextLevel()]
+    return config["productionType"]
+end
 function ToolShopUpgradeBuilding:IsNeedToUpdate()
     if self.upgrade_to_next_level_time ~= 0 then
         return true
