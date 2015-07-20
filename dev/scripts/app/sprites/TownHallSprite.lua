@@ -10,10 +10,8 @@ function TownHallSprite:OnNewDailyQuestsEvent(changed_map)
             break
         end
     end
-    self:DoAni()
+    self:CheckEvent()
 end
-
-
 
 
 local EMPTY_TAG = 11400
@@ -21,21 +19,27 @@ local TIP_TAG = 11201
 function TownHallSprite:ctor(city_layer, entity, city)
     TownHallSprite.super.ctor(self, city_layer, entity, city)
     city:GetUser():AddListenOnType(self, city:GetUser().LISTEN_TYPE.NEW_DALIY_QUEST_EVENT)
+    display.newNode():addTo(self):schedule(function()
+        self:CheckEvent()
+    end,1)
 end
 function TownHallSprite:RefreshSprite()
     TownHallSprite.super.RefreshSprite(self)
-    self:DoAni()
+    self:CheckEvent()
 end
-function TownHallSprite:DoAni()
+function TownHallSprite:CheckEvent()
     if self:GetEntity():IsUnlocked() then
         local user = self:GetEntity():BelongCity():GetUser()
         if user:IsOnDailyQuestEvents() then
-            self:PlayAni()
-            self:removeChildByTag(EMPTY_TAG)
+            self:GetAniArray()[1]:show()
+            if self:getChildByTag(EMPTY_TAG) then
+                self:removeChildByTag(EMPTY_TAG)
+            end
         else
-            self:StopAni()
+            self:GetAniArray()[1]:hide()
             self:PlayEmptyAnimation()
         end
+
         if user:CouldGotDailyQuestReward() then
             if not self:getChildByTag(TIP_TAG) then
                 local x,y = self:GetSpriteTopPosition()
@@ -45,19 +49,10 @@ function TownHallSprite:DoAni()
                 :addTo(self,1,TIP_TAG):align(display.BOTTOM_CENTER,x,y)
                 :runAction(UIKit:ShakeAction(true,2))
             end
-        else
+        elseif self:getChildByTag(TIP_TAG) then
             self:removeChildByTag(TIP_TAG)
         end
     end
-end
-function TownHallSprite:PlayAni()
-    local animation = self:GetAniArray()[1]:show():getAnimation()
-    animation:stop()
-    animation:setSpeedScale(2)
-    animation:playWithIndex(0)
-end
-function TownHallSprite:StopAni()
-    self:GetAniArray()[1]:hide():getAnimation():stop()
 end
 function TownHallSprite:PlayEmptyAnimation()
     if not self:getChildByTag(EMPTY_TAG) then
