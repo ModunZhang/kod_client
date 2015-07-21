@@ -867,6 +867,12 @@ function NetManager:getInstantMakeDragonEquipmentPromise(equipment_name)
 end
 -- 招募士兵
 local function get_recruitNormalSoldier_promise(soldierName, count, finish_now)
+    local task = City:GetRecommendTask()
+    if task then
+        if task:TaskType() == "recruit" and task.name == soldierName then
+            City:SetBeginnersTaskFlag(task:Index())
+        end
+    end
     return get_blocking_request_promise("logic.playerHandler.recruitNormalSoldier", {
         soldierName = soldierName,
         count = count,
@@ -1730,6 +1736,12 @@ function NetManager:getPassSelinasTestPromise()
 end
 -- 获取成就任务奖励
 function NetManager:getGrowUpTaskRewardsPromise(taskType, taskId)
+    local task = City:GetRecommendTask()
+    if task then
+        if task:TaskType() == "reward" then
+            City:SetBeginnersTaskFlag(task:Index())
+        end
+    end
     return get_blocking_request_promise("logic.playerHandler.getGrowUpTaskRewards",{
         taskType = taskType,
         taskId = taskId

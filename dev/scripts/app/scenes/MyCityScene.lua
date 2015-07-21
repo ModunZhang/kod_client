@@ -319,6 +319,7 @@ function MyCityScene:OnUpgradingFinished(building)
 end
 
 function MyCityScene:OnBeginRecruit()
+    self:GetHomePage():OnTaskChanged()
 end
 function MyCityScene:OnRecruiting()
 end
@@ -429,7 +430,11 @@ function MyCityScene:OpenUI(building, default_tab)
     elseif type_ == "square" then
         UIKit:newGameUI("GameUISquare", self.city):AddToScene(self, true)
     else
-        UIKit:newGameUI(uiarrays[1], city, entity, default_tab or uiarrays[2], uiarrays[3]):AddToScene(self, true)
+        if entity:IsUnlocked() then
+            UIKit:newGameUI(uiarrays[1], city, entity, default_tab or uiarrays[2], uiarrays[3]):AddToScene(self, true)
+        else
+            UIKit:newGameUI("GameUIUnlockBuilding", city, city:GetTileWhichBuildingBelongs(entity)):AddToScene(self, true)
+        end
     end
 end
 

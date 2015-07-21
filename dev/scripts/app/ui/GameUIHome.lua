@@ -91,6 +91,7 @@ function GameUIHome:OnSoldierStarEventsChanged()
 end
 function GameUIHome:OnProductionTechnologyEventDataChanged()
     self:RefreshHelpButtonVisible()
+    self:OnTaskChanged()
 end
 function GameUIHome:RefreshHelpButtonVisible()
     if self.help_button then
@@ -386,15 +387,28 @@ function GameUIHome:CreateTop()
         {scale9 = false}
     ):addTo(top_bg):pos(255, -10):onButtonClicked(function(event)
         if self.task then
-            local building_type = self.task:BuildingType()
-            local building = self.city:PreconditionByBuildingType(building_type)
-            if building then
-                local current_scene = display.getRunningScene()
-                local building_sprite = current_scene:GetSceneLayer():FindBuildingSpriteByBuilding(building, self.city)
-                local x,y = building:GetMidLogicPosition()
-                current_scene:GotoLogicPoint(x,y,40):next(function()
-                    current_scene:AddIndicateForBuilding(building_sprite)
-                end)
+            if self.task:TaskType() == "cityBuild" then
+                self:GotoOpenBuildingUI(self.city:PreconditionByBuildingType(self.task:BuildingType()))
+            elseif self.task:TaskType() == "reward" then
+                UIKit:newGameUI("GameUIMission", self.city):AddToCurrentScene(true)
+            elseif self.task:TaskType() == "productionTech" then
+                UIKit:newGameUI("GameUIQuickTechnology", self.city):AddToCurrentScene(true)
+            elseif self.task:TaskType() == "recruit" then
+                UIKit:newGameUI('GameUIBarracks', self.city, self.city:GetFirstBuildingByType("barracks"), "recruit"):AddToCurrentScene(true)
+            elseif self.task:TaskType() == "explore" then
+                self:GotoExplore()
+            elseif self.task:TaskType() == "build" then
+                for i,v in ipairs(self.city:GetDecoratorsByType(self.task.name)) do
+                    local location_id = self.city:GetLocationIdByBuilding(v)
+                    local houses = self.city:GetDecoratorsByLocationId(location_id)
+                    for i = 3, 1, -1 do
+                        if not houses[i] then
+                            self:GotoOpenBuildingUI(self.city:GetRuinByLocationIdAndHouseLocationId(location_id, i))
+                            return
+                        end
+                    end
+                end
+                self:GotoOpenBuildingUI(self.city:GetRuinsNotBeenOccupied()[1])
             end
         end
     end)
@@ -585,6 +599,22 @@ function GameUIHome:CreateTop()
     right_bottom_order:RefreshOrder()
     self.right_bottom_order = right_bottom_order
     return top_bg
+end
+function GameUIHome:GotoOpenBuildingUI(building)
+    if not building then return end
+    local current_scene = display.getRunningScene()
+    local building_sprite = current_scene:GetSceneLayer():FindBuildingSpriteByBuilding(building, self.city)
+    local x,y = building:GetMidLogicPosition()
+    current_scene:GotoLogicPoint(x,y,40):next(function()
+        current_scene:AddIndicateForBuilding(building_sprite)
+    end)
+end
+function GameUIHome:GotoExplore()
+    local current_scene = display.getRunningScene()
+    local building_sprite = current_scene:GetSceneLayer():GetAirship()
+    current_scene:GotoLogicPoint(-2,10,40):next(function()
+        current_scene:AddIndicateForBuilding(building_sprite)
+    end)
 end
 
 function GameUIHome:CheckFinishAllActivity()
@@ -932,4 +962,8 @@ end
 
 
 return GameUIHome
+
+
+
+
 
