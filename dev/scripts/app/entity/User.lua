@@ -830,8 +830,15 @@ function User:IsOnDailyQuestEvents()
                 return false
             end
         end
+        if LuaUtils:table_empty(self.dailyQuests) then
+            return false
+        end
         return true
     end
+end
+-- 判定是否完成所有任务
+function User:IsFinishedAllDailyQuests()
+     return LuaUtils:table_empty(self.dailyQuests)
 end
 -- 判定是否能领取每日任务奖励
 function User:CouldGotDailyQuestReward()
@@ -893,6 +900,7 @@ function User:GetBestDragon()
 end
 
 return User
+
 
 
 
