@@ -15,6 +15,7 @@ local GameUIHelp = import(".GameUIHelp")
 local Alliance = import("..entity.Alliance")
 local ResourceManager = import("..entity.ResourceManager")
 local GrowUpTaskManager = import("..entity.GrowUpTaskManager")
+local GameUIActivityRewardNew = import(".GameUIActivityRewardNew")
 local GameUIHome = UIKit:createUIClass('GameUIHome')
 local WidgetAutoOrderAwardButton = import("..widget.WidgetAutoOrderAwardButton")
 local WidgetAutoOrderGachaButton = import("..widget.WidgetAutoOrderGachaButton")
@@ -92,6 +93,16 @@ end
 function GameUIHome:OnProductionTechnologyEventDataChanged()
     self:RefreshHelpButtonVisible()
     self:OnTaskChanged()
+end
+function GameUIHome:OnCountInfoChanged()
+    self.join_alliance_tips_button:setVisible(not User:GetCountInfo().firstJoinAllianceRewardGeted)
+    if self.join_alliance_tips_button:getChildByTag(321) and
+        User:GetCountInfo().firstJoinAllianceRewardGeted then
+        self.join_alliance_tips_button:removeChildByTag(321)
+    end
+    self.left_order_group:RefreshOrder()
+    self.top_order_group:RefreshOrder()
+    self:CheckAllianceRewardCount()
 end
 function GameUIHome:RefreshHelpButtonVisible()
     if self.help_button then
@@ -409,6 +420,8 @@ function GameUIHome:CreateTop()
                     end
                 end
                 self:GotoOpenBuildingUI(self.city:GetRuinsNotBeenOccupied()[1])
+            elseif self.task:TaskType() == "encourage" then
+                UIKit:newGameUI("GameUIActivityRewardNew", GameUIActivityRewardNew.REWARD_TYPE.PLAYER_LEVEL_UP):AddToCurrentScene(true)
             end
         end
     end)
@@ -637,6 +650,7 @@ function GameUIHome:CheckAllianceRewardCount()
         award_num = award_num + 1
     end
     self.tips_button.tips_button_count:SetNumber(count + award_num)
+    self:OnTaskChanged()
 end
 
 
@@ -935,16 +949,6 @@ function GameUIHome:PromiseOfActivePromise()
         self:GetFteLayer():removeFromParent()
         return ui:PromiseOfFte()
     end)
-end
-function GameUIHome:OnCountInfoChanged()
-    self.join_alliance_tips_button:setVisible(not User:GetCountInfo().firstJoinAllianceRewardGeted)
-    if self.join_alliance_tips_button:getChildByTag(321) and
-        User:GetCountInfo().firstJoinAllianceRewardGeted then
-        self.join_alliance_tips_button:removeChildByTag(321)
-    end
-    self.left_order_group:RefreshOrder()
-    self.top_order_group:RefreshOrder()
-    self:CheckAllianceRewardCount()
 end
 function GameUIHome:PromiseOfFteAlliance()
     self.bottom:TipsOnAlliance()

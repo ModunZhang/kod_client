@@ -247,7 +247,10 @@ function City:GetBeginnersTask()
             if level < v.min then
                 return setmetatable({ name = v.name, level = level + 1 }, tech_meta)
             end
-        elseif v.type == "recruit" and not flag[i] then
+        elseif v.type == "recruit" and 
+            not flag[i] and 
+            self:GetSoldierManager():GetCountBySoldierType(v.name) == 0 and 
+            self:GetSoldierManager():GetTreatCountBySoldierType(v.name) == 0 then
             return setmetatable({ name = v.name, index = i }, recruit_meta)
         elseif v.type == "explore" and not flag[i] then
             return setmetatable({ index = i }, explore_meta)
@@ -255,8 +258,8 @@ function City:GetBeginnersTask()
             if #self:GetDecoratorsByType(v.name) < v.min and self:GetLeftBuildingCountsByType(v.name) > 0 then
                 return setmetatable({ name = v.name }, build_meta)
             end
-        -- elseif v.type == "encourage" then
-        --     return setmetatable({}, encourage_meta)
+        elseif v.type == "encourage" and self:GetUser():HavePlayerLevelUpReward() then
+            return setmetatable({}, encourage_meta)
         end
     end
 end
@@ -1852,6 +1855,7 @@ function City:FindProductionTechEventById(_id)
 end
 
 return City
+
 
 
 

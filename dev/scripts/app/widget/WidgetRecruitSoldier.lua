@@ -301,25 +301,42 @@ function WidgetRecruitSoldier:AddButtons()
                     NetManager:getInstantRecruitSpecialSoldierPromise(self.soldier_name, self.count)
                 end
             else
-                local soldier_name = self.soldier_name
-                local count = self.count
+                NetManager:getInstantRecruitNormalSoldierPromise(self.soldier_name, self.count):always(function()
+                    if iskindof(display.getRunningScene(), "MyCityScene") then
+                        display.getRunningScene():GetHomePage():OnTaskChanged()
+                    end
+                end)
+            end
+
+            if app:GetGameDefautlt():IsOpenGemRemind() then
                 UIKit:showConfirmUseGemMessageDialog(_("提示"),string.format(_("是否消费%s金龙币"),
                     string.formatnumberthousands(self:GetNeedGemWithInstantRecruit(self.count))
                 ), function()
-                    NetManager:getInstantRecruitNormalSoldierPromise(soldier_name, count)
+                    if type(self.instant_button_clicked) == "function" then
+                        self:instant_button_clicked()
+                    end
+
+
+                    if iskindof(display.getRunningScene(), "CityScene") then
+                        display.getRunningScene():GetSceneLayer()
+                            :MoveBarracksSoldiers(self.soldier_name)
+                    end
+
+                    self:Close()
                 end,true,true)
-            end
+            else
+                if type(self.instant_button_clicked) == "function" then
+                    self:instant_button_clicked()
+                end
 
-            if type(self.instant_button_clicked) == "function" then
-                self:instant_button_clicked()
-            end
 
-            if iskindof(display.getRunningScene(), "CityScene") then
-                display.getRunningScene():GetSceneLayer()
-                    :MoveBarracksSoldiers(self.soldier_name)
-            end
+                if iskindof(display.getRunningScene(), "CityScene") then
+                    display.getRunningScene():GetSceneLayer()
+                        :MoveBarracksSoldiers(self.soldier_name)
+                end
 
-            self:Close()
+                self:Close()
+            end
         end)
     self.instant_button = instant_button
 
@@ -774,7 +791,6 @@ end
 
 
 return WidgetRecruitSoldier
-
 
 
 
