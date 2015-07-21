@@ -538,7 +538,7 @@ function Report:GetFightDefenceWallRoundData()
 end
 function Report:GetOrderedAttackSoldiers()
     local attackPlayerData = self:GetData().attackPlayerData
-    local troop = attackPlayerData.fightWithHelpDefenceTroop or attackPlayerData.fightWithDefenceTroop
+    local troop = attackPlayerData.fightWithHelpDefenceTroop or attackPlayerData.fightWithDefenceTroop or attackPlayerData.fightWithDefenceWall
     local soldiers = troop and  troop.soldiers or attackPlayerData.soldiers or {}
     return soldiers
 end
