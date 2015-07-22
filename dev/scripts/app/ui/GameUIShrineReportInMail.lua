@@ -667,6 +667,8 @@ function GameUIShrineReportInMail:GetFightReportObjectWithJson(json_data)
     local shrinePlayFightReport = ShrinePlayFightReport.new(
         json_data.attackPlayerData.name,
         Localize.shrine_desc[self.report:GetAttackTarget().stageName][1],
+        json_data.attackPlayerData,
+        json_data.defenceTroopData,
         json_data.fightWithDefenceTroopReports.attackPlayerDragonFightData,
         json_data.fightWithDefenceTroopReports.defenceTroopDragonFightData,
         json_data.fightWithDefenceTroopReports.attackPlayerSoldierRoundDatas,
@@ -677,9 +679,11 @@ function GameUIShrineReportInMail:GetFightReportObjectWithJson(json_data)
 end
 
 -- 战斗回放相关获取数据方法
-function ShrinePlayFightReport:ctor(attackName,defenceName,attackDragonRoundData,defenceDragonRoundData,fightAttackSoldierRoundData,fightDefenceSoldierRoundData,isWin)
+function ShrinePlayFightReport:ctor(attackName,defenceName,attackPlayerData,defenceTroopData,attackDragonRoundData,defenceDragonRoundData,fightAttackSoldierRoundData,fightDefenceSoldierRoundData,isWin)
     self.attackName = attackName
     self.defenceName = defenceName
+    self.attackPlayerData = attackPlayerData
+    self.defenceTroopData = defenceTroopData
     self.attackDragonRoundData = attackDragonRoundData
     self.defenceDragonRoundData = defenceDragonRoundData
     self.fightAttackSoldierRoundData = fightAttackSoldierRoundData
@@ -706,6 +710,11 @@ function ShrinePlayFightReport:formatOrderedAttackSoldiers()
             result[v.soldierName] = {name = v.soldierName,star = v.soldierStar,count = v.soldierCount or 0,index = index}
         end
     end
+    for index,v in ipairs(self.attackPlayerData.soldiers) do
+    	if not result[v.soldierName] then
+            result[v.soldierName] = {name = v.name,star = v.star,count = v.count or 0,index = index}
+        end
+    end
     for ___,v in pairs(result) do
         table.insert(self.orderedAttackSoldiers,v)
     end
@@ -718,6 +727,11 @@ function ShrinePlayFightReport:formatOrderedAttackSoldiers()
     for index,v in ipairs(self.fightDefenceSoldierRoundData) do
         if not result[v.soldierName] then
             result[v.soldierName] = {name = v.soldierName,star = v.soldierStar,count = v.soldierCount or 0,index = index}
+        end
+    end
+    for index,v in ipairs(self.defenceTroopData.soldiers) do
+    	if not result[v.soldierName] then
+            result[v.soldierName] = {name = v.name,star = v.star,count = v.count or 0,index = index}
         end
     end
     for ___,v in pairs(result) do
@@ -768,7 +782,7 @@ function ShrinePlayFightReport:GetReportResult()
     return self.isWin
 end
 function ShrinePlayFightReport:GetAttackDragonLevel()
-    return self.attackDragonRoundData.level
+    return self.attackPlayerData.dragon.level
 end
 
 function ShrinePlayFightReport:GetAttackTargetTerrain()
@@ -779,7 +793,7 @@ function ShrinePlayFightReport:IsAttackCamp()
     return true
 end
 function ShrinePlayFightReport:GetDefenceDragonLevel()
-    return self.defenceDragonRoundData.level
+    return self.defenceTroopData.dragon.level
 end
 
 return GameUIShrineReportInMail
