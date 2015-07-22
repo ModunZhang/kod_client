@@ -45,7 +45,7 @@ function WidgetAutoOrderAwardButton:onEnter()
 	local countInfo = User:GetCountInfo()
     local onlineTime = (countInfo.todayOnLineTime - countInfo.lastLoginTime)/1000
 	self.online_time = onlineTime
-	self.can_receive_num = WidgetNumberTips.new():addTo(self):pos(24,-24)
+	self.can_receive_num = WidgetNumberTips.new():addTo(self):pos(24,-24):hide()
 	app.timer:AddListener(self)
 end
 
