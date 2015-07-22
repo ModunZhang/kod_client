@@ -334,7 +334,16 @@ function GameUIWall:OnDragonSelected(dragon)
     if dragon then
         if self:GetDragon() and self:GetDragon():Type() == dragon:Type() then return end
         if dragon:IsDead() then
-            UIKit:showMessageDialog(nil,_("选择的龙已经死亡"))
+            UIKit:showMessageDialog(nil,_("选择的龙已经死亡")):CreateCancelButton(
+                {
+                    listener = function ()
+                        UIKit:newGameUI("GameUIDragonEyrieMain", self.city, self.city:GetFirstBuildingByType("dragonEyrie"), "dragon", false, dragon:Type()):AddToCurrentScene(true)
+                        self:LeftButtonClicked()
+                    end,
+                    btn_name= _("查看"),
+                    btn_images = {normal = "blue_btn_up_148x58.png",pressed = "blue_btn_down_148x58.png"}
+                }
+            )
             return
         end
         NetManager:getSetDefenceDragonPromise(dragon:Type()):done(function()
@@ -391,4 +400,5 @@ function GameUIWall:OnHPChanged()
     end
 end
 return GameUIWall
+
 
