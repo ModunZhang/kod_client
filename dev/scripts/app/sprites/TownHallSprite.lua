@@ -30,28 +30,33 @@ end
 function TownHallSprite:CheckEvent()
     if self:GetEntity():IsUnlocked() then
         local user = self:GetEntity():BelongCity():GetUser()
-        if user:IsOnDailyQuestEvents() then
+        if user:IsFinishedAllDailyQuests() then
+            self:GetAniArray()[1]:hide()
+            self:RemoveEmptyanimation()
+        elseif user:IsOnDailyQuestEvents() then
             self:GetAniArray()[1]:show()
-            if self:getChildByTag(EMPTY_TAG) then
-                self:removeChildByTag(EMPTY_TAG)
-            end
+            self:RemoveEmptyanimation()
         else
             self:GetAniArray()[1]:hide()
             self:PlayEmptyAnimation()
         end
-
         if user:CouldGotDailyQuestReward() then
             if not self:getChildByTag(TIP_TAG) then
                 local x,y = self:GetSpriteTopPosition()
                 x = x - 20
                 y = y - 100
                 display.newSprite("tmp_tips_56x60.png")
-                :addTo(self,1,TIP_TAG):align(display.BOTTOM_CENTER,x,y)
-                :runAction(UIKit:ShakeAction(true,2))
+                    :addTo(self,1,TIP_TAG):align(display.BOTTOM_CENTER,x,y)
+                    :runAction(UIKit:ShakeAction(true,2))
             end
         elseif self:getChildByTag(TIP_TAG) then
             self:removeChildByTag(TIP_TAG)
         end
+    end
+end
+function TownHallSprite:RemoveEmptyanimation()
+    if self:getChildByTag(EMPTY_TAG) then
+        self:removeChildByTag(EMPTY_TAG)
     end
 end
 function TownHallSprite:PlayEmptyAnimation()
@@ -62,6 +67,7 @@ function TownHallSprite:PlayEmptyAnimation()
 end
 
 return TownHallSprite
+
 
 
 
