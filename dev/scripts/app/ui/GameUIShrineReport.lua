@@ -38,7 +38,6 @@ end
 function GameUIShrineReport:ctor(shrineReport)
     GameUIShrineReport.super.ctor(self,750,_("事件详情"),window.top - 82)
     self.shrineReport_ = shrineReport
-    dump(shrineReport)
     self:adapterFightDataToListView()
     self.stageConfig = config_shrineStage[self:GetShrineReport():StageName()]
 end
@@ -229,43 +228,22 @@ function GameUIShrineReport:fillFightItemContent(item_content,list_data,item,ite
         if content.button then
             content.button:removeSelf()
         end
-        -- local button = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
-        -- :addTo(content):setButtonLabel("normal", UIKit:commonButtonLable({text = _("回放")})):align(display.RIGHT_BOTTOM,538, 8):onButtonClicked(function()
-        --     self:OnRePlayClicked(content.idx)
-        -- end)
         content.button = button
         item_content:size(548,92)
         item:setItemSize(548,92)
     end
 end
 function GameUIShrineReport:adapterFightDataToListView()
-    -- local player_map = LuaUtils:table_map(self:GetShrineReport():PlayerDatas(),function(k,v)
-    --     return v.id,v
-    -- end)
     local data_source = {}
     for i,rounds in ipairs(self:GetShrineReport():FightDatas()) do
         table.insert(data_source,{type = 1,data = i,index = i})
-        dump(rounds,"rounds")
-        for j,r_data in ipairs(rounds) do
+        for j,r_data in ipairs(rounds.roundDatas) do
             local data = r_data
             data.killScore = r_data.playerKill
             data.playerIcon = r_data.playerIcon
             local normal_data = {type = 2,data = data,index = j}
             table.insert(data_source,normal_data)
         end
-        -- for j=#rounds.roundDatas,1,-1 do
-        --     local data = rounds.roundDatas[j]
-        --     local killScore = 0
-        --     for __,v in ipairs(data.defenceSoldierRoundDatas) do
-        --         killScore = killScore +  self:GetSoldierKillScore(v.soldierName,v.soldierStar,v.soldierDamagedCount)
-        --     end
-        --     data.killScore = killScore
-        --     local palyer_data = player_map[data.playerId]
-        --     if palyer_data then
-        --         data.playerIcon = palyer_data.icon
-        --     end
-        --     local normal_data = {type = 2,data = data,index = j}
-        -- end
     end
     self.data_source = data_source
     self.player_data_source = clone(self:GetShrineReport():PlayerDatas())
