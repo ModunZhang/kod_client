@@ -374,6 +374,11 @@ function GameUIDragonEyrieMain:CreateDragonContentNodeIf()
                         self.garrison_button:setButtonSelected(not target,false)
                         return
                     end
+                    if dragon:IsDead() then
+                        UIKit:showMessageDialog(nil,_("选择的龙已经死亡"))
+                        self.garrison_button:setButtonSelected(not target,false)
+                        return
+                    end
                     if dragon:IsFree() then
                         NetManager:getSetDefenceDragonPromise(dragon:Type()):done(function()
                             GameGlobalUI:showTips(_("提示"),_("设置龙驻防成功"))

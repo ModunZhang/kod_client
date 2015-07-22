@@ -1826,6 +1826,10 @@ end
 function NetManager:getSetPlayerLanguagePromise(language_code)
     return get_blocking_request_promise("logic.playerHandler.setPlayerLanguage",{language = language_code},"设置玩家语言失败!")
 end
+--设置远程推送状态
+function NetManager:getSetApnStatusPromise(type,status)
+    return get_blocking_request_promise("logic.playerHandler.setApnStatus",{type = type,status = status},"设置远程推送状态失败!"):done(get_player_response_msg)
+end
 ----------------------------------------------------------------------------------------------------------------
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"

@@ -313,6 +313,11 @@ function GameUIAllianceContribute:CreateContributeItem(params)
     return item
 end
 function GameUIAllianceContribute:IsAbleToContribute()
+    local status = self.alliance:Status()
+    if status == "prepare" or status == "fight" then
+        UIKit:showMessageDialog(_("提示"),_("联盟战期间不能进行捐赠"))
+        return false
+    end
     local r_type = self.group:GetSelectedType()
     if not r_type then
         UIKit:showMessageDialog(_("提示"),_("请选择一种资源"))

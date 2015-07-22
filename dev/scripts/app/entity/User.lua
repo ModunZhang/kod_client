@@ -78,6 +78,12 @@ property(User, "serverId", "")
 property(User, "serverLevel", "")
 property(User, "requestToAllianceEvents", {})
 property(User, "inviteToAllianceEvents", {})
+property(User, "apnStatus", {
+    onCityBeAttacked = true,
+    onAllianceFightStart = true,
+    onAllianceShrineEventStart = true,
+    onAllianceFightPrepare = true
+    })
 property(User, "allianceInfo", {
     loyalty = 0,
     woodExp = 0,
@@ -314,6 +320,7 @@ function User:OnUserDataChanged(userData, current_time, deltaData)
     self:GetPVEDatabase():OnUserDataChanged(userData, deltaData)
     self:OnAllianceDonateChanged(userData, deltaData)
     self:OnAllianceInfoChanged(userData, deltaData)
+    self:OnApnStatusChanged(userData, deltaData)
     if self.growUpTaskManger:OnUserDataChanged(userData, deltaData) then
         self:OnTaskChanged()
     end
@@ -689,6 +696,20 @@ function User:OnAllianceInfoChanged( userData, deltaData )
         listener:OnAllianceInfoChanged()
     end)
 end
+function User:OnApnStatusChanged( userData, deltaData )
+    local is_fully_update = deltaData == nil
+    local is_delta_update = not is_fully_update and deltaData.apnStatus
+    if is_fully_update then
+        dump(userData.apnStatus,"userData.apnStatus")
+        self.apnStatus = clone(userData.apnStatus)
+    end
+    if is_delta_update then
+        dump(deltaData.apnStatus,"deltaData.apnStatus")
+        for i,v in pairs(deltaData.apnStatus) do
+            self.apnStatus[i] = v
+        end
+    end
+end
 function User:OnAllianceDonateChanged( userData, deltaData )
     local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.allianceDonate
@@ -830,8 +851,15 @@ function User:IsOnDailyQuestEvents()
                 return false
             end
         end
+        if LuaUtils:table_empty(self.dailyQuests) then
+            return false
+        end
         return true
     end
+end
+-- 判定是否完成所有任务
+function User:IsFinishedAllDailyQuests()
+     return LuaUtils:table_empty(self.dailyQuests)
 end
 -- 判定是否能领取每日任务奖励
 function User:CouldGotDailyQuestReward()
@@ -893,6 +921,7 @@ function User:GetBestDragon()
 end
 
 return User
+
 
 
 

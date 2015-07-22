@@ -301,38 +301,25 @@ function WidgetRecruitSoldier:AddButtons()
                     NetManager:getInstantRecruitSpecialSoldierPromise(self.soldier_name, self.count)
                 end
             else
-                NetManager:getInstantRecruitNormalSoldierPromise(self.soldier_name, self.count)
-            end
-
-            if app:GetGameDefautlt():IsOpenGemRemind() then
+                local soldier_name = self.soldier_name
+                local count = self.count
                 UIKit:showConfirmUseGemMessageDialog(_("提示"),string.format(_("是否消费%s金龙币"),
                     string.formatnumberthousands(self:GetNeedGemWithInstantRecruit(self.count))
                 ), function()
-                    if type(self.instant_button_clicked) == "function" then
-                        self:instant_button_clicked()
-                    end
-
-
-                    if iskindof(display.getRunningScene(), "CityScene") then
-                        display.getRunningScene():GetSceneLayer()
-                            :MoveBarracksSoldiers(self.soldier_name)
-                    end
-
-                    self:Close()
+                    NetManager:getInstantRecruitNormalSoldierPromise(soldier_name, count)
                 end,true,true)
-            else
-                if type(self.instant_button_clicked) == "function" then
-                    self:instant_button_clicked()
-                end
-
-
-                if iskindof(display.getRunningScene(), "CityScene") then
-                    display.getRunningScene():GetSceneLayer()
-                        :MoveBarracksSoldiers(self.soldier_name)
-                end
-
-                self:Close()
             end
+
+            if type(self.instant_button_clicked) == "function" then
+                self:instant_button_clicked()
+            end
+
+            if iskindof(display.getRunningScene(), "CityScene") then
+                display.getRunningScene():GetSceneLayer()
+                    :MoveBarracksSoldiers(self.soldier_name)
+            end
+
+            self:Close()
         end)
     self.instant_button = instant_button
 
@@ -787,6 +774,7 @@ end
 
 
 return WidgetRecruitSoldier
+
 
 
 

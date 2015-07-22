@@ -449,7 +449,7 @@ function GameUIStrikeReport:CreateEnemyResource()
     local r_list_height = r_count * r_tip_height
 
     -- 敌方资源列表
-    local group = self:CreateSmallBackGround({width=548,height=r_list_height+34,title=_("资源产量"),isSelf=false})
+    local group = self:CreateSmallBackGround({width=548,height=r_list_height+34,title=_("最大可掠夺量"),isSelf=false})
     local group_width , group_height = 546,r_list_height+50
 
     -- 构建所有资源标签项

@@ -124,7 +124,19 @@ function WidgetManufacture:Manufacture()
         dump(total_buy)
         if need_gems > 0 then
             UIKit:showMessageDialog(_("提示"), "资源不足!",function()
-                NetManager:getMakeBuildingMaterialPromise()
+                if need_gems > User:GetGemResource():GetValue() then
+                    UIKit:showMessageDialog(_("主人"),_("金龙币不足"))
+                        :CreateOKButton(
+                            {
+                                listener = function ()
+                                    UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                                end,
+                                btn_name= _("前往商店")
+                            }
+                        )
+                else
+                    NetManager:getMakeBuildingMaterialPromise()
+                end
             end):CreateNeeds({value = need_gems})
         else
             NetManager:getMakeBuildingMaterialPromise()
@@ -174,7 +186,19 @@ function WidgetManufacture:Manufacture()
         })
         if need_gems > 0 then
             UIKit:showMessageDialog(_("提示"), "资源不足!",function()
-                NetManager:getMakeTechnologyMaterialPromise()
+                if need_gems > User:GetGemResource():GetValue() then
+                    UIKit:showMessageDialog(_("主人"),_("金龙币不足"))
+                        :CreateOKButton(
+                            {
+                                listener = function ()
+                                    UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                                end,
+                                btn_name= _("前往商店")
+                            }
+                        )
+                else
+                    NetManager:getMakeTechnologyMaterialPromise()
+                end
             end):CreateNeeds({value = need_gems})
         else
             NetManager:getMakeTechnologyMaterialPromise()
@@ -518,7 +542,7 @@ function WidgetManufacture:CheckOverFlow(content)
     local mm = City:GetMaterialManager():GetMaterialsByType(City:GetMaterialManager().MATERIAL_TYPE.TECHNOLOGY)
     for k,v in pairs(City:GetMaterialManager():GetMaterialsByType(City:GetMaterialManager().MATERIAL_TYPE.BUILD)) do
         mm[k] = v
-    end      
+    end
     local overflows = {}
     for _,v in ipairs(content) do
         if mm[v.name] + v.count > limit then
@@ -541,6 +565,8 @@ end
 
 
 return WidgetManufacture
+
+
 
 
 

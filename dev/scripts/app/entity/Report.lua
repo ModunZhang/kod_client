@@ -10,8 +10,8 @@ property(Report, "createTime", 0)
 property(Report, "isRead", false)
 property(Report, "isSaved", false)
 property(Report, "index", 0)
-Report.REPORT_TYPE = Enum("strikeCity","cityBeStriked","strikeVillage","villageBeStriked","attackCity","attackVillage","collectResource","attackMonster")
-local STRIKECITY,CITYBESTRIKED,STRIKEVILLAGE,VILLAGEBESTRIKED,ATTACKCITY,ATTACKVILLAGE,COLLECTRESOURCE,ATTACKMONSTER = 1,2,3,4,5,6,7,8
+Report.REPORT_TYPE = Enum("strikeCity","cityBeStriked","strikeVillage","villageBeStriked","attackCity","attackVillage","collectResource","attackMonster","attackShrine")
+local STRIKECITY,CITYBESTRIKED,STRIKEVILLAGE,VILLAGEBESTRIKED,ATTACKCITY,ATTACKVILLAGE,COLLECTRESOURCE,ATTACKMONSTER,ATTACKSHRINE = 1,2,3,4,5,6,7,8,9
 function Report:ctor(id,type,createTime,isRead,isSaved,index)
     self:SetId(id)
     self:SetType(type)
@@ -74,7 +74,10 @@ function Report:GetEnemyPlayerData()
         return data.attackPlayerData
     end
 end
-
+function Report:GetShrineRoundDatas()
+    local data = self:GetData()
+    return data.roundDatas
+end
 function Report:GetMyHelpFightTroop()
     local data = self:GetData()
     if self.player_id == data.attackPlayerData.id then
@@ -149,22 +152,6 @@ function Report:GetEnemyHelpFightDragon()
                 return data.attackPlayerData.dragon
             end
         end
-    end
-end
-function Report:GetMyDefenceFightPlayerData()
-    local data = self:GetData()
-    if self.player_id == data.attackPlayerData.id then
-        return data.attackPlayerData
-    else
-        return data.defencePlayerData or data.defenceVillageData
-    end
-end
-function Report:GetEnemyDefenceFightPlayerData()
-    local data = self:GetData()
-    if self.player_id == data.attackPlayerData.id then
-        return data.defencePlayerData or data.defenceVillageData
-    else
-        return data.attackPlayerData
     end
 end
 function Report:GetMyDefenceFightTroop()
@@ -277,7 +264,7 @@ function Report:GetMyRewards()
         return data.helpDefencePlayerData.rewards
     elseif data.defencePlayerData and data.defencePlayerData.id == self.player_id then
         return data.defencePlayerData.rewards
-    elseif self.type == Report.REPORT_TYPE[COLLECTRESOURCE] then
+    elseif self.type == Report.REPORT_TYPE[COLLECTRESOURCE] or self.type == Report.REPORT_TYPE[ATTACKSHRINE] then
         return data.rewards
     end
 end
@@ -351,6 +338,7 @@ function Report:GetBattleLocation()
     elseif self.type == Report.REPORT_TYPE[ATTACKCITY]
         or self.type == Report.REPORT_TYPE[ATTACKVILLAGE]
         or self.type == Report.REPORT_TYPE[ATTACKMONSTER]
+        or self.type == Report.REPORT_TYPE[ATTACKSHRINE]
     then
         return data.attackTarget.location
     elseif self.type == Report.REPORT_TYPE[COLLECTRESOURCE] then
@@ -413,6 +401,8 @@ function Report:GetReportTitle()
     elseif report_type=="attackMonster" then
         local result = self:GetReportResult()
         return result and _("进攻黑龙军团成功") or _("进攻黑龙军团失败")
+    elseif report_type=="attackShrine" then
+        return self:GetAttackTarget().isWin and _("攻打联盟圣地成功") or _("攻打联盟圣地失败")
     end
 end
 function Report:IsFromMe()
@@ -431,6 +421,8 @@ function Report:IsFromMe()
         return "collectResource"
     elseif report_type=="attackMonster" then
         return "attackMonster"
+    elseif report_type=="attackShrine" then
+        return "attackShrine"
     end
 end
 function Report:IsAttackOrStrike()
@@ -447,6 +439,8 @@ function Report:IsAttackOrStrike()
     elseif report_type=="collectResource" then
         return "collect"
     elseif report_type=="attackMonster" then
+        return "strike"
+    elseif report_type=="attackShrine" then
         return "strike"
     end
 end
@@ -485,6 +479,8 @@ function Report:IsWin()
         return true
     elseif report_type=="attackMonster" then
         return self:GetReportResult()
+    elseif report_type=="attackShrine" then
+        return self:GetAttackTarget().isWin
     end
 end
 function Report:IsHasHelpDefencePlayer()
