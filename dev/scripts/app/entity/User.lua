@@ -78,6 +78,12 @@ property(User, "serverId", "")
 property(User, "serverLevel", "")
 property(User, "requestToAllianceEvents", {})
 property(User, "inviteToAllianceEvents", {})
+property(User, "apnStatus", {
+    onCityBeAttacked = true,
+    onAllianceFightStart = true,
+    onAllianceShrineEventStart = true,
+    onAllianceFightPrepare = true
+    })
 property(User, "allianceInfo", {
     loyalty = 0,
     woodExp = 0,
@@ -314,6 +320,7 @@ function User:OnUserDataChanged(userData, current_time, deltaData)
     self:GetPVEDatabase():OnUserDataChanged(userData, deltaData)
     self:OnAllianceDonateChanged(userData, deltaData)
     self:OnAllianceInfoChanged(userData, deltaData)
+    self:OnApnStatusChanged(userData, deltaData)
     if self.growUpTaskManger:OnUserDataChanged(userData, deltaData) then
         self:OnTaskChanged()
     end
@@ -688,6 +695,20 @@ function User:OnAllianceInfoChanged( userData, deltaData )
     self:NotifyListeneOnType(User.LISTEN_TYPE.ALLIANCE_INFO, function(listener)
         listener:OnAllianceInfoChanged()
     end)
+end
+function User:OnApnStatusChanged( userData, deltaData )
+    local is_fully_update = deltaData == nil
+    local is_delta_update = not is_fully_update and deltaData.apnStatus
+    if is_fully_update then
+        dump(userData.apnStatus,"userData.apnStatus")
+        self.apnStatus = clone(userData.apnStatus)
+    end
+    if is_delta_update then
+        dump(deltaData.apnStatus,"deltaData.apnStatus")
+        for i,v in pairs(deltaData.apnStatus) do
+            self.apnStatus[i] = v
+        end
+    end
 end
 function User:OnAllianceDonateChanged( userData, deltaData )
     local is_fully_update = deltaData == nil
