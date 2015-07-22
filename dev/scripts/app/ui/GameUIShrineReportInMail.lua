@@ -673,7 +673,7 @@ function GameUIShrineReportInMail:GetFightReportObjectWithJson(json_data)
         json_data.fightWithDefenceTroopReports.defenceTroopDragonFightData,
         json_data.fightWithDefenceTroopReports.attackPlayerSoldierRoundDatas,
         json_data.fightWithDefenceTroopReports.defenceTroopSoldierRoundDatas,
-        json_data.fightResult == self:IsRoundWin(json_data) and "attackWin" or "defenceWin"
+        self:IsRoundWin(json_data)
     )
     return shrinePlayFightReport
 end
