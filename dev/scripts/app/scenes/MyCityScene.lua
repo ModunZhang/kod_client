@@ -319,6 +319,7 @@ function MyCityScene:OnUpgradingFinished(building)
 end
 
 function MyCityScene:OnBeginRecruit()
+    self:GetHomePage():OnTaskChanged()
 end
 function MyCityScene:OnRecruiting()
 end

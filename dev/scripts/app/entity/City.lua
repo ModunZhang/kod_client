@@ -239,13 +239,33 @@ function City:GetBeginnersTask()
             return setmetatable({ index = i }, reward_meta)
         elseif v.type == "upgrade" then
             local building = self:GetHighestBuildingByType(v.name)
-            if building and building:GetLevel() < v.min then
-                return setmetatable({ name = v.name, level = building:GetLevel() + 1 }, upgrade_meta)
+            if building then
+                if building:GetLevel() < v.min then
+                    if building:IsUpgrading() then
+                        if building:GetNextLevel() < v.min then
+                            return setmetatable({ name = v.name, level = building:GetNextLevel() + 1 }, upgrade_meta)
+                        end
+                    else
+                        return setmetatable({ name = v.name, level = building:GetLevel() + 1 }, upgrade_meta)
+                    end
+                end
             end
         elseif v.type == "technology" then
+            local event
+            self:IteratorProductionTechEvents(function(t)
+                if v.name == t:Name() then
+                    event = t
+                end
+            end)
             local level = self:FindTechByName(v.name):Level()
             if level < v.min then
-                return setmetatable({ name = v.name, level = level + 1 }, tech_meta)
+                if event then
+                    if level + 1 < v.min then
+                        return setmetatable({ name = v.name, level = level + 2 }, tech_meta)
+                    end
+                else
+                    return setmetatable({ name = v.name, level = level + 1 }, tech_meta)
+                end
             end
         elseif v.type == "recruit" and 
             not flag[i] and 
