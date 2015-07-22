@@ -158,6 +158,21 @@ end
 function reward_meta:TaskType()
     return "reward"
 end
+-- 解锁建筑
+local unlock_meta = {}
+unlock_meta.__index = unlock_meta
+function unlock_meta:Title()
+    return string.format(_("解锁建筑%s"), Localize.building_name[self.name])
+end
+function unlock_meta:Location()
+    return self.location_id
+end
+function unlock_meta:TaskType()
+    return "unlock"
+end
+function unlock_meta:BuildingType()
+    return self.name
+end
 -- 城市建设
 local upgrade_meta = {}
 upgrade_meta.__index = upgrade_meta
@@ -237,6 +252,16 @@ function City:GetBeginnersTask()
     for i,v in ipairs(RecommendedMission) do
         if v.type == "reward" and not flag[i] and count > 0 then
             return setmetatable({ index = i }, reward_meta)
+        elseif v.type == "unlock" then
+            if self:GetFirstBuildingByType("keep"):GetFreeUnlockPoint() > 0 then
+                for i,lstr in ipairs(string.split(v.name, ",")) do
+                    local location_id = tonumber(lstr)
+                    local building = self:GetBuildingByLocationId(location_id)
+                    if not building:IsUnlocked() and not building:IsUnlocking() then
+                        return setmetatable({ name = building:GetType(), location_id = location_id }, unlock_meta)
+                    end
+                end
+            end
         elseif v.type == "upgrade" then
             local building = self:GetHighestBuildingByType(v.name)
             if building then

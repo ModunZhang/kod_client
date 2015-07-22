@@ -400,6 +400,8 @@ function GameUIHome:CreateTop()
         if self.task then
             if self.task:TaskType() == "cityBuild" then
                 self:GotoOpenBuildingUI(self.city:PreconditionByBuildingType(self.task:BuildingType()))
+            elseif self.task:TaskType() == "unlock" then
+                self:GotoUnlockBuilding(self.task:Location())
             elseif self.task:TaskType() == "reward" then
                 UIKit:newGameUI("GameUIMission", self.city):AddToCurrentScene(true)
             elseif self.task:TaskType() == "productionTech" then
@@ -409,17 +411,7 @@ function GameUIHome:CreateTop()
             elseif self.task:TaskType() == "explore" then
                 self:GotoExplore()
             elseif self.task:TaskType() == "build" then
-                for i,v in ipairs(self.city:GetDecoratorsByType(self.task.name)) do
-                    local location_id = self.city:GetLocationIdByBuilding(v)
-                    local houses = self.city:GetDecoratorsByLocationId(location_id)
-                    for i = 3, 1, -1 do
-                        if not houses[i] then
-                            self:GotoOpenBuildingUI(self.city:GetRuinByLocationIdAndHouseLocationId(location_id, i))
-                            return
-                        end
-                    end
-                end
-                self:GotoOpenBuildingUI(self.city:GetRuinsNotBeenOccupied()[1])
+                self:GotoOpenBuildUI(self.task)
             elseif self.task:TaskType() == "encourage" then
                 UIKit:newGameUI("GameUIActivityRewardNew", GameUIActivityRewardNew.REWARD_TYPE.PLAYER_LEVEL_UP):AddToCurrentScene(true)
             end
@@ -612,6 +604,22 @@ function GameUIHome:CreateTop()
     right_bottom_order:RefreshOrder()
     self.right_bottom_order = right_bottom_order
     return top_bg
+end
+function GameUIHome:GotoUnlockBuilding(location_id)
+    self:GotoOpenBuildingUI(self.city:GetBuildingByLocationId(location_id))
+end
+function GameUIHome:GotoOpenBuildUI(task)
+    for i,v in ipairs(self.city:GetDecoratorsByType(task.name)) do
+        local location_id = self.city:GetLocationIdByBuilding(v)
+        local houses = self.city:GetDecoratorsByLocationId(location_id)
+        for i = 3, 1, -1 do
+            if not houses[i] then
+                self:GotoOpenBuildingUI(self.city:GetRuinByLocationIdAndHouseLocationId(location_id, i))
+                return
+            end
+        end
+    end
+    self:GotoOpenBuildingUI(self.city:GetRuinsNotBeenOccupied()[1])
 end
 function GameUIHome:GotoOpenBuildingUI(building)
     if not building then return end

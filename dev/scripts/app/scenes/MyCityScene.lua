@@ -171,7 +171,7 @@ function MyCityScene:NewLockButtonFromBuildingSprite(building_sprite)
     local wp = building_sprite:GetWorldPosition()
     local lp = self:GetTopLayer():convertToNodeSpace(wp)
     local btn_png = "tmp_lock_btn.png"
-    if self.city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint(self.city) > 0 then
+    if self.city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint() > 0 then
         btn_png = "tmp_unlock_btn.png"
     end
     local button = cc.ui.UIPushButton.new({normal = btn_png, pressed = btn_png})
@@ -189,7 +189,7 @@ function MyCityScene:NewLockButtonFromBuildingSprite(building_sprite)
 end
 function MyCityScene:RefreshLockBtnStatus()
     local btn_png = "tmp_lock_btn.png"
-    if self.city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint(self.city) > 0 then
+    if self.city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint() > 0 then
         btn_png = "tmp_unlock_btn.png"
     end
     self:IteratorLockButtons(function(btn)
@@ -297,10 +297,6 @@ end
 function MyCityScene:OnUpgradingBegin()
     app:GetAudioManager():PlayeEffectSoundWithKey("UI_BUILDING_UPGRADE_START")
     self:GetSceneLayer():CheckCanUpgrade()
-    -- local can_unlock = self.city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint(self.city) > 0
-    -- self:IteratorLockButtons(function(v)
-    --     -- v:setVisible(can_unlock)
-    -- end)
 end
 function MyCityScene:OnUpgrading()
 
@@ -311,11 +307,6 @@ function MyCityScene:OnUpgradingFinished(building)
     end
     self:GetSceneLayer():CheckCanUpgrade()
     app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
-
-    -- local can_unlock = self.city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint(self.city) > 0
-    -- self:IteratorLockButtons(function(v)
-    --     v:setVisible(can_unlock)
-    -- end)
 end
 
 function MyCityScene:OnBeginRecruit()
@@ -330,7 +321,6 @@ function MyCityScene:OnEndRecruit(barracks, event, soldier_type)
 end
 function MyCityScene:OnTilesChanged(tiles)
     self:GetTopLayer():removeAllChildren()
-    -- local can_unlock = self.city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint(self.city) > 0
     local city = self:GetCity()
     table.foreach(tiles, function(_, tile)
         local tile_entity = tile:GetEntity()
@@ -338,7 +328,6 @@ function MyCityScene:OnTilesChanged(tiles)
             local building = city:GetBuildingByLocationId(tile_entity.location_id)
             if building and not building:IsUpgrading() then
                 self:NewLockButtonFromBuildingSprite(tile)
-                -- :setVisible(can_unlock)
             end
         end
     end)
