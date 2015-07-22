@@ -230,7 +230,7 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
         end
         if self.building:GetLevel() == 39 then
             efficiency = efficiency .. string.format(_("制造材料资源消耗降低%.1f%%,"),1.0)
-        elseif self.building:GetLevel() > 1 then
+        else
             efficiency = efficiency .. string.format(_("制造材料资源消耗降低%.1f%%,"),0.5)
         end
     elseif self.building:GetType()=="materialDepot" then
