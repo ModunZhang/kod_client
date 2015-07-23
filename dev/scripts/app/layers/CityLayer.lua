@@ -820,6 +820,9 @@ end
 function CityLayer:GetTowers()
     return self.towers
 end
+function CityLayer:GetAirship()
+    return self.pve_airship
+end
 function CityLayer:CreateRoadWithTile(tile)
     local x, y = self.iso_map:ConvertToMapPosition(tile:GetMidLogicPosition())
     return RoadSprite.new(self, tile, x, y)

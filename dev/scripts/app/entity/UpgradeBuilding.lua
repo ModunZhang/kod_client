@@ -322,7 +322,7 @@ function UpgradeBuilding:IsBuildingUpgradeLegal()
         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.TILE_NOT_UNLOCKED
     end
     -- 是否达到建造上限
-    if city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint(city) < 1 and self.level==0 then
+    if city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint() < 1 and self.level==0 then
         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.IS_MAX_UNLOCK
     end
     local config

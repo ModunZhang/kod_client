@@ -285,6 +285,7 @@ function GameUIMission:OnGetAchievementRewardButtonClicked(data)
             end, 1.5)
         end
     end)
+    self:RefreshRecommendMissionDesc()
 end
 
 function GameUIMission:OnTodoAchievementMissionClicked(data)
