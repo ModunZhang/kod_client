@@ -973,11 +973,13 @@ function GameUIAllianceBattle:CreateHistoryContent()
                 revenge_time_label:setColor(UIKit:hex2c4b(0x248a00))
                 revenge_time_label:setPositionX(title_label:getPositionX()+title_label:getContentSize().width+10)
                 revenge_button:setButtonEnabled(true)
+                self.can_revenge = true
             end
         else
             revenge_button:hide()
             title_label:setString("")
             revenge_time_label:setString("")
+            self.can_revenge = false
         end
     end
 
@@ -995,7 +997,9 @@ function GameUIAllianceBattle:CreateHistoryContent()
             self.revenge_button:setButtonEnabled(false)
             self.is_expire = true
         else
-            revenge_time_label:setString(GameUtils:formatTimeStyle1(revenge_time_limit-current_time))
+            if self.can_revenge then
+                revenge_time_label:setString(GameUtils:formatTimeStyle1(revenge_time_limit-current_time))
+            end
         end
     end
 
