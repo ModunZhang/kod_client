@@ -796,9 +796,9 @@ end
 
 function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
     local dialog = UIKit:showMessageDialog()
+    local required_gems =self.building:getUpgradeRequiredGems()
+    local owen_gem = City:GetUser():GetGemResource():GetValue()
     if can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.RESOURCE_NOT_ENOUGH then
-        local required_gems =self.building:getUpgradeRequiredGems()
-        local owen_gem = City:GetUser():GetGemResource():GetValue()
         dialog:SetTitle(_("补充资源"))
         dialog:SetPopMessage(_("您当前没有足够的资源,是否花费魔法石立即补充"))
 
@@ -825,66 +825,89 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
             ):CreateCancelButton()
         end
     elseif can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_NOT_ENOUGH then
-        local required_gems = self.building:getUpgradeRequiredGems()
-        if City:BuildQueueCounts() == 2 then
+        if owen_gem<required_gems then
+            dialog:CreateNeeds({value = required_gems,color =0x7e0000})
             dialog:CreateOKButton(
                 {
-                    listener = function(sender,type)
-                        listener()
+                    listener = function()
+                        UIKit:newGameUI('GameUIStore'):AddToCurrentScene(true)
+                        self:getParent():getParent():LeftButtonClicked()
                     end,
                     btn_images = {normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"},
                 }
-            ):CreateNeeds({value = required_gems})
+            )
         else
-            dialog:CreateOKButtonWithPrice(
-                {
+            if City:BuildQueueCounts() == 2 then
+                dialog:CreateOKButton(
+                    {
+                        listener = function(sender,type)
+                            listener()
+                        end,
+                        btn_images = {normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"},
+                    }
+                ):CreateNeeds({value = required_gems})
+            else
+                dialog:CreateOKButtonWithPrice(
+                    {
+                        listener = function()
+                            listener()
+                        end,
+                        price = required_gems,
+                        btn_name = _("立即完成")
+                    }
+                ):CreateCancelButton({
                     listener = function()
-                        listener()
+                        UIKit:newGameUI("GameUIActivityRewardNew",4):AddToCurrentScene(true)
                     end,
-                    price = required_gems,
-                    btn_name = _("立即完成")
-                }
-            ):CreateCancelButton({
-                listener = function()
-                    UIKit:newGameUI("GameUIActivityRewardNew",4):AddToCurrentScene(true)
-                end,
-                btn_name = {_("开启"),_("第2队列")},
-                btn_images = {normal = "blue_btn_up_148x58.png",pressed = "blue_btn_down_148x58.png"},
-                label_size = 20
-            })
+                    btn_name = {_("开启"),_("第2队列")},
+                    btn_images = {normal = "blue_btn_up_148x58.png",pressed = "blue_btn_down_148x58.png"},
+                    label_size = 20
+                })
+            end
         end
-
         dialog:SetTitle(_("立即开始"))
         dialog:SetPopMessage(_("您当前没有空闲的建筑,是否花费魔法石立即完成上一个队列"))
     elseif can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_AND_RESOURCE_NOT_ENOUGH then
-        local required_gems = self.building:getUpgradeRequiredGems()
-        if City:BuildQueueCounts() == 2 then
-            dialog:CreateOKButtonWithPrice(
-                {
-                    listener = function(sender,type)
-                        listener()
-                    end,
-                    btn_images = {normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"},
-                    price = required_gems
-                }
-            ):CreateCancelButton()
-        else
-            dialog:CreateOKButtonWithPrice(
+        if owen_gem < required_gems then
+            dialog:CreateNeeds({value = required_gems,color =0x7e0000})
+            dialog:CreateOKButton(
                 {
                     listener = function()
-                        listener()
+                        UIKit:newGameUI('GameUIStore'):AddToCurrentScene(true)
+                        self:getParent():getParent():LeftButtonClicked()
                     end,
-                    price = required_gems,
-                    btn_name = _("立即完成")
+                    btn_images = {normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"},
                 }
-            ):CreateCancelButton({
-                listener = function()
-                    UIKit:newGameUI("GameUIActivityRewardNew",4):AddToCurrentScene(true)
-                end,
-                btn_name = {_("开启"),_("第2队列")},
-                btn_images = {normal = "blue_btn_up_148x58.png",pressed = "blue_btn_down_148x58.png"},
-                label_size = 20
-            })
+            )
+        else
+            if City:BuildQueueCounts() == 2 then
+                dialog:CreateOKButtonWithPrice(
+                    {
+                        listener = function(sender,type)
+                            listener()
+                        end,
+                        btn_images = {normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"},
+                        price = required_gems
+                    }
+                ):CreateCancelButton()
+            else
+                dialog:CreateOKButtonWithPrice(
+                    {
+                        listener = function()
+                            listener()
+                        end,
+                        price = required_gems,
+                        btn_name = _("立即完成")
+                    }
+                ):CreateCancelButton({
+                    listener = function()
+                        UIKit:newGameUI("GameUIActivityRewardNew",4):AddToCurrentScene(true)
+                    end,
+                    btn_name = {_("开启"),_("第2队列")},
+                    btn_images = {normal = "blue_btn_up_148x58.png",pressed = "blue_btn_down_148x58.png"},
+                    label_size = 20
+                })
+            end
         end
         dialog:SetTitle(_("立即开始"))
         dialog:SetPopMessage(can_not_update_type)
@@ -931,7 +954,7 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
                 }
             )
         end
-    elseif can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.GEM_NOT_ENOUGH then
+    elseif can_not_update_type == UpgradeBuilding.NOT_ABLE_TO_UPGRADE.GEM_NOT_ENOUGH then
         dialog:SetTitle(_("提示"))
         dialog:SetPopMessage(can_not_update_type)
         dialog:CreateOKButton(
@@ -950,6 +973,8 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
+
 
 
 

@@ -141,7 +141,7 @@ function WidgetPromoteSoldier:UpgradeButtons()
                     local dialog =  self:PopNotSatisfyDialog(upgrade_listener,results)
                     local need_gem = self:GetUpgradeGems()
                     if need_gem~=0 then
-                        dialog:CreateNeeds({value = self:GetUpgradeGems()})
+                        dialog:CreateNeeds({value = need_gem})
                     end
                     if need_gem > User:GetGemResource():GetValue() then
                         dialog:CreateOKButton({
@@ -151,9 +151,10 @@ function WidgetPromoteSoldier:UpgradeButtons()
                             btn_name = _("前往商店")
                         })
                     else
-                        dialog:CreateOKButton({
-                            listener =  upgrade_listener
-                        })
+                        dialog:CreateOKButtonWithPrice({
+                            listener =  upgrade_listener,
+                            price = need_gem
+                        }):CreateCancelButton()
                     end
                 end
             end,

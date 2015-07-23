@@ -286,12 +286,13 @@ function GameUITradeGuild:CreateSellItemForListView(listView,goods)
                     end
                     if City:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())<goods.itemData.price*goods.itemData.count then
                         UIKit:showMessageDialog(_("主人"),_("银币不足,是否使用金龙币补充"))
-                            :CreateOKButton({
+                            :CreateOKButtonWithPrice({
                                 listener = function ()
                                     buy_func()
-                                end
+                                end,
+                                price = DataUtils:buyResource({coin = goods.itemData.price*goods.itemData.count}, {coin=City:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())})
                             })
-                            :CreateNeeds({value = DataUtils:buyResource({coin = goods.itemData.price*goods.itemData.count}, {coin=City:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())})})
+                            :CreateCancelButton()
                         return
                     end
                     buy_func()
