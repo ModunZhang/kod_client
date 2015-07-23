@@ -546,9 +546,9 @@ function GameUIDragonEyrieMain:CreateDragonHateNodeIf()
 end
 
 
-function GameUIDragonEyrieMain:OnHateSpeedUpClicked()
-    UIKit:newGameUI("GameUIDragonHateSpeedUp", self.dragon_manager,self:GetCurrentDragon():Type()):AddToCurrentScene(true)
-end
+-- function GameUIDragonEyrieMain:OnHateSpeedUpClicked()
+--     UIKit:newGameUI("GameUIDragonHateSpeedUp", self.dragon_manager,self:GetCurrentDragon():Type()):AddToCurrentScene(true)
+-- end
 
 
 function GameUIDragonEyrieMain:OnEnergyButtonClicked()

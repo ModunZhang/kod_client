@@ -16,7 +16,6 @@ local UIListView = import(".UIListView")
 local Localize = import("..utils.Localize")
 local config_intInit = GameDatas.PlayerInitData.intInit
 local WidgetUseItems = import("..widget.WidgetUseItems")
-local GameUIDragonHateSpeedUp = import(".GameUIDragonHateSpeedUp")
 local UILib = import(".UILib")
 local MaterialManager = import("..entity.MaterialManager")
 local WidgetPushTransparentButton = import("..widget.WidgetPushTransparentButton")
