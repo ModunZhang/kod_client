@@ -273,14 +273,22 @@ local SOLDIER_ANIMATION_FILES = {
     },
     skeletonWarrior = {
         "animations/kulouyongshi.ExportJson",
+        "animations/kulouyongshi.ExportJson",
+        "animations/kulouyongshi.ExportJson",
     },
     skeletonArcher = {
+        "animations/kulousheshou.ExportJson",
+        "animations/kulousheshou.ExportJson",
         "animations/kulousheshou.ExportJson",
     },
     deathKnight = {
         "animations/siwangqishi.ExportJson",
+        "animations/siwangqishi.ExportJson",
+        "animations/siwangqishi.ExportJson",
     },
     meatWagon = {
+        "animations/jiaorouche.ExportJson",
+        "animations/jiaorouche.ExportJson",
         "animations/jiaorouche.ExportJson",
     },
     wall = {

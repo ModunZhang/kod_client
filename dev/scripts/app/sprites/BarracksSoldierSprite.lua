@@ -24,7 +24,7 @@ function BarracksSoldierSprite:ctor(city_layer, soldier_type, star)
     end)
     self:scheduleUpdate()
 
-    self:CreateBase()
+    -- self:CreateBase()
 end
 function BarracksSoldierSprite:CreateSprite()
     return ccs.Armature:create(self:GetAniName())
