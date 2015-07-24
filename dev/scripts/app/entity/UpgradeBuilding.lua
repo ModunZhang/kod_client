@@ -465,10 +465,8 @@ function UpgradeBuilding:getUpgradeRequiredGems()
             local left_time = v:GetUpgradingLeftTimeByCurrentTime(app.timer:GetServerTime())
             if left_time<min_time then
                 min_time=left_time
-                print("完成上个升级的建筑",v:GetType())
             end
         end
-        print("完成上个升级事件的时间",min_time)
         required_gems = required_gems + DataUtils:getGemByTimeInterval(min_time)
     end
 
