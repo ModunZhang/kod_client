@@ -182,27 +182,27 @@ function GameUIBuild:OnBuildOnItem(item)
             message = message .. _("您当前没有空闲的建筑队列,是否花费魔法石立即完成上一个队列").. "\n"
         end
         local need_gem = required_gems+resource_gems
-        dialog:SetPopMessage(message)
-        dialog:CreateNeeds({value = need_gem})
-        if need_gem > User:GetGemResource():GetValue() then
-            dialog:CreateOKButton(
-                {
-                    llistener =  function ()
-                        UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
-                        self:LeftButtonClicked()
-                    end,
-                    btn_name = _("前往商店")
-                }
-            )
-        else
-            dialog:CreateOKButton(
-                {
-                    listener =  function()
+        dialog:SetPopMessage(message):CreateOKButtonWithPrice(
+            {
+                listener =  function()
+                    if need_gem > User:GetGemResource():GetValue() then
+                        dialog:CreateOKButton(
+                            {
+                                llistener =  function ()
+                                    UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                                    self:LeftButtonClicked()
+                                end,
+                                btn_name = _("前往商店")
+                            }
+                        )
+                    else
                         self:BuildWithRuins(self.select_ruins, item.building.building_type)
                     end
-                }
-            )
-        end
+                end,
+                btn_images = {normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"},
+                price = need_gem
+            }
+        )
     end
 end
 function GameUIBuild:BuildWithRuins(select_ruins, building_type)
@@ -335,6 +335,8 @@ function GameUIBuild:CreateItemWithListView(list_view)
 end
 
 return GameUIBuild
+
+
 
 
 
