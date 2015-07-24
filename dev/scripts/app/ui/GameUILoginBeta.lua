@@ -438,7 +438,8 @@ function GameUILoginBeta:login()
                 if GLOBAL_FTE then
                     app:EnterMyCityFteScene()
                 else
-                    app:EnterMyCityScene(true)
+                    -- app:EnterMyCityScene(true)
+                    app:enterScene("PVESceneNew")
                 end
             end
         end, 0.3)
