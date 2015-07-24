@@ -558,7 +558,7 @@ function GameUIDragonEyrieMain:OnEnergyButtonClicked()
         return
     end
     return NetManager:getHatchDragonPromise(self:GetCurrentDragon():Type()):done(function ()
-        self.hate_label:setString(string.format(_("龙巢%d级时可孵化新的巨龙"),self.building:GetNextHateLevel()))
+        self.hate_label:setString(self.building:GetNextHateLevel() and string.format(_("龙巢%d级时可孵化新的巨龙"),self.building:GetNextHateLevel()) or "")
         self.hate_button:setButtonEnabled(self.building:CheckIfHateDragon())
     end)
 end
