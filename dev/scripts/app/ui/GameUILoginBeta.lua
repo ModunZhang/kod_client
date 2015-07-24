@@ -361,11 +361,12 @@ function GameUILoginBeta:connectGateServer()
         self:setProgressPercent(80)
         self:getLogicServerInfo()
     end):catch(function(err)
-        self:showError(_("连接网关服务器失败!"),function()
-            self:performWithDelay(function()
-                self:loginAction()
-            end, 1)
-
+        GameUtils:PingBaidu(function(success)
+            self:showError(success and _("服务器维护中") or _("连接网关服务器失败!"),function()
+                self:performWithDelay(function()
+                    self:loginAction()
+                end, 1)
+            end)
         end)
     end)
 end
@@ -718,6 +719,8 @@ end
 
 
 return GameUILoginBeta
+
+
 
 
 
