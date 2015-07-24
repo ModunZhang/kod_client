@@ -253,15 +253,7 @@ function MyApp:retryConnectGateServer()
                     app:retryConnectServer(true)
                 end)
             else
-                local code = content.code 
-                if code == 508 then
-                    content = _("服务器维护中")
-                elseif code == 691 then
-                    content = _("游戏版本验证失败")
-                elseif code == 692 then
-                    content = _("游戏版本不匹配")
-                end
-                UIKit:showKeyMessageDialog(_("错误"), content, function()
+                UIKit:showKeyMessageDialog(_("错误"), UIKit:getErrorCodeData(content.code).message, function()
                     app:restart(true)
                 end)
             end
@@ -293,12 +285,12 @@ function MyApp:retryLoginGame()
             else
                 if UIKit:getErrorCodeKey(content.code) == 'playerAlreadyLogin' then
                     print("MyApp:debug--->5")
-                    UIKit:showKeyMessageDialog(_("错误"), _("玩家已经登录"), function()
+                    UIKit:showKeyMessageDialog(_("错误"), UIKit:getErrorCodeData(content.code).message, function()
                         app:restart(false)
                     end)
                 else
                     print("MyApp:debug--->6")
-                    UIKit:showKeyMessageDialog(_("错误"), _("服务器连接断开,请检测你的网络环境后重试!"), function()
+                    UIKit:showKeyMessageDialog(_("错误"), UIKit:getErrorCodeData(content.code).message, function()
                         app:retryLoginGame(false)
                     end)
                 end

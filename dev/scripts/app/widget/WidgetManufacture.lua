@@ -123,21 +123,28 @@ function WidgetManufacture:Manufacture()
         })
         dump(total_buy)
         if need_gems > 0 then
-            UIKit:showMessageDialog(_("提示"), "资源不足!",function()
-                if need_gems > User:GetGemResource():GetValue() then
-                    UIKit:showMessageDialog(_("主人"),_("金龙币不足"))
-                        :CreateOKButton(
-                            {
-                                listener = function ()
-                                    UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
-                                end,
-                                btn_name= _("前往商店")
-                            }
-                        )
-                else
-                    NetManager:getMakeBuildingMaterialPromise()
-                end
-            end):CreateNeeds({value = need_gems})
+            UIKit:showMessageDialog(_("提示"), "资源不足!")
+                :CreateOKButtonWithPrice(
+                    {
+                        listener = function()
+                            if need_gems > User:GetGemResource():GetValue() then
+                                UIKit:showMessageDialog(_("主人"),_("金龙币不足"))
+                                    :CreateOKButton(
+                                        {
+                                            listener = function ()
+                                                UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                                            end,
+                                            btn_name= _("前往商店")
+                                        }
+                                    )
+                            else
+                                NetManager:getMakeBuildingMaterialPromise()
+                            end
+                        end,
+                        btn_images = {normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"},
+                        price = need_gems
+                    }
+                ):CreateCancelButton()
         else
             NetManager:getMakeBuildingMaterialPromise()
         end
@@ -185,21 +192,28 @@ function WidgetManufacture:Manufacture()
             iron = iron_cur,
         })
         if need_gems > 0 then
-            UIKit:showMessageDialog(_("提示"), "资源不足!",function()
-                if need_gems > User:GetGemResource():GetValue() then
-                    UIKit:showMessageDialog(_("主人"),_("金龙币不足"))
-                        :CreateOKButton(
-                            {
-                                listener = function ()
-                                    UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
-                                end,
-                                btn_name= _("前往商店")
-                            }
-                        )
-                else
-                    NetManager:getMakeTechnologyMaterialPromise()
-                end
-            end):CreateNeeds({value = need_gems})
+            UIKit:showMessageDialog(_("提示"), "资源不足!")
+                :CreateOKButtonWithPrice(
+                    {
+                        listener = function()
+                            if need_gems > User:GetGemResource():GetValue() then
+                                UIKit:showMessageDialog(_("主人"),_("金龙币不足"))
+                                    :CreateOKButton(
+                                        {
+                                            listener = function ()
+                                                UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                                            end,
+                                            btn_name= _("前往商店")
+                                        }
+                                    )
+                            else
+                                NetManager:getMakeTechnologyMaterialPromise()
+                            end
+                        end,
+                        btn_images = {normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"},
+                        price = need_gems
+                    }
+                ):CreateCancelButton()
         else
             NetManager:getMakeTechnologyMaterialPromise()
         end
@@ -565,6 +579,8 @@ end
 
 
 return WidgetManufacture
+
+
 
 
 

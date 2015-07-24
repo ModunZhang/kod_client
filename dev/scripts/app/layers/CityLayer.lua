@@ -466,7 +466,7 @@ function CityLayer:MoveBarracksSoldiers(soldier, is_mark)
             :addTo(self:GetCityNode(), 0, BARRACKS_SOLDIER_TAG)
         if is_mark then
             display.newSprite("fte_icon_arrow.png"):addTo(soldier)
-            :align(display.BOTTOM_CENTER, 5, 50):scale(0.6)
+            :align(display.BOTTOM_CENTER, 0, 50):scale(0.6)
         end
     end
 end
@@ -819,6 +819,9 @@ function CityLayer:GetWalls()
 end
 function CityLayer:GetTowers()
     return self.towers
+end
+function CityLayer:GetAirship()
+    return self.pve_airship
 end
 function CityLayer:CreateRoadWithTile(tile)
     local x, y = self.iso_map:ConvertToMapPosition(tile:GetMidLogicPosition())

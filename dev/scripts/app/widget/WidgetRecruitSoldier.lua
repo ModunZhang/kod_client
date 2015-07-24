@@ -301,25 +301,42 @@ function WidgetRecruitSoldier:AddButtons()
                     NetManager:getInstantRecruitSpecialSoldierPromise(self.soldier_name, self.count)
                 end
             else
-                local soldier_name = self.soldier_name
-                local count = self.count
+                NetManager:getInstantRecruitNormalSoldierPromise(self.soldier_name, self.count):always(function()
+                    if iskindof(display.getRunningScene(), "MyCityScene") then
+                        display.getRunningScene():GetHomePage():OnTaskChanged()
+                    end
+                end)
+            end
+
+            if app:GetGameDefautlt():IsOpenGemRemind() then
                 UIKit:showConfirmUseGemMessageDialog(_("提示"),string.format(_("是否消费%s金龙币"),
                     string.formatnumberthousands(self:GetNeedGemWithInstantRecruit(self.count))
                 ), function()
-                    NetManager:getInstantRecruitNormalSoldierPromise(soldier_name, count)
+                    if type(self.instant_button_clicked) == "function" then
+                        self:instant_button_clicked()
+                    end
+
+
+                    if iskindof(display.getRunningScene(), "CityScene") then
+                        display.getRunningScene():GetSceneLayer()
+                            :MoveBarracksSoldiers(self.soldier_name)
+                    end
+
+                    self:Close()
                 end,true,true)
-            end
+            else
+                if type(self.instant_button_clicked) == "function" then
+                    self:instant_button_clicked()
+                end
 
-            if type(self.instant_button_clicked) == "function" then
-                self:instant_button_clicked()
-            end
 
-            if iskindof(display.getRunningScene(), "CityScene") then
-                display.getRunningScene():GetSceneLayer()
-                    :MoveBarracksSoldiers(self.soldier_name)
-            end
+                if iskindof(display.getRunningScene(), "CityScene") then
+                    display.getRunningScene():GetSceneLayer()
+                        :MoveBarracksSoldiers(self.soldier_name)
+                end
 
-            self:Close()
+                self:Close()
+            end
         end)
     self.instant_button = instant_button
 
@@ -364,24 +381,32 @@ function WidgetRecruitSoldier:AddButtons()
                     local content = string.format("%s%s%s", queue_need_gem > 0 and _("您当前没有足够的队列") or "", required_gems > 0 and _("您当前没有足够的资源") or "", _("是否花费魔法石立即补充"))
 
                     UIKit:showMessageDialog(title, content,function()
-                        if User:GetGemResource():GetValue() < (queue_need_gem + required_gems) then
-                            UIKit:showMessageDialog(_("提示"),_("金龙币不足"))
-                                :CreateOKButton(
-                                    {
-                                        listener = function ()
-                                            UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
-                                        end,
-                                        btn_name= _("前往商店")
-                                    }
-                                )
-                            return
-                        end
-                        NetManager:getRecruitSpecialSoldierPromise(self.soldier_name, self.count)
-                        self:Close()
-                    end):CreateNeeds({value = queue_need_gem + required_gems})
+                        end):CreateOKButtonWithPrice({
+                        listener = function ()
+                            if User:GetGemResource():GetValue() < (queue_need_gem + required_gems) then
+                                UIKit:showMessageDialog(_("提示"),_("金龙币不足"))
+                                    :CreateOKButton(
+                                        {
+                                            listener = function ()
+                                                UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                                            end,
+                                            btn_name= _("前往商店")
+                                        }
+                                    )
+                                return
+                            end
+                            NetManager:getRecruitSpecialSoldierPromise(self.soldier_name, self.count)
+                            local parent = self:getParent()
+                            self:Close()
+                            parent:LeftButtonClicked()
+                        end,
+                        price = queue_need_gem + required_gems
+                        }):CreateCancelButton()
                 else
                     NetManager:getRecruitSpecialSoldierPromise(self.soldier_name, self.count)
+                    local parent = self:getParent()
                     self:Close()
+                    parent:LeftButtonClicked()
                 end
             else
                 local required_gems = DataUtils:buyResource(self:GetNeedResouce(self.count), {})
@@ -390,24 +415,32 @@ function WidgetRecruitSoldier:AddButtons()
                     local title = string.format("%s/%s", queue_need_gem > 0 and _("队列不足") or "", required_gems > 0 and _("资源不足") or "")
                     local content = string.format("%s%s%s", queue_need_gem > 0 and _("您当前没有足够的队列") or "", required_gems > 0 and _("您当前没有足够的资源") or "", _("是否花费魔法石立即补充"))
                     UIKit:showMessageDialog(title, content,function()
-                        if User:GetGemResource():GetValue() < (queue_need_gem + required_gems) then
-                            UIKit:showMessageDialog(_("提示"),_("金龙币不足"))
-                                :CreateOKButton(
-                                    {
-                                        listener = function ()
-                                            UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
-                                        end,
-                                        btn_name= _("前往商店")
-                                    }
-                                )
-                            return
-                        end
-                        NetManager:getRecruitNormalSoldierPromise(self.soldier_name, self.count)
-                        self:Close()
-                    end):CreateNeeds({value = queue_need_gem + required_gems})
+                        end):CreateOKButtonWithPrice({
+                        listener = function ()
+                            if User:GetGemResource():GetValue() < (queue_need_gem + required_gems) then
+                                UIKit:showMessageDialog(_("提示"),_("金龙币不足"))
+                                    :CreateOKButton(
+                                        {
+                                            listener = function ()
+                                                UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                                            end,
+                                            btn_name= _("前往商店")
+                                        }
+                                    )
+                                return
+                            end
+                            NetManager:getRecruitNormalSoldierPromise(self.soldier_name, self.count)
+                            local parent = self:getParent()
+                            self:Close()
+                            parent:LeftButtonClicked()
+                        end,
+                        price = queue_need_gem + required_gems
+                        }):CreateCancelButton()
                 else
                     NetManager:getRecruitNormalSoldierPromise(self.soldier_name, self.count)
+                    local parent = self:getParent()
                     self:Close()
+                    parent:LeftButtonClicked()
                 end
             end
         end)
@@ -774,6 +807,8 @@ end
 
 
 return WidgetRecruitSoldier
+
+
 
 
 

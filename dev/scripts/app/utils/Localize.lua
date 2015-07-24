@@ -195,6 +195,7 @@ local SERVER_ERRORS = {
     [693] = _("此联盟不需要申请加入"),
     [694] = _("野怪不存在"),
     [695] = _("不能购买自己出售的商品"),
+    [696] = _("孵化条件不满足"),
 }
 
 local MATERIALS_DESC_MAP = {
@@ -751,14 +752,14 @@ end
 
 local ALLIANCE_EVENTS = {
     donate = _("向联盟慷慨捐赠，提升荣耀值%s"),
-    promotionDown = _("在联盟中的职位被降级到%s"),
+    promotionDown = _("的联盟职位被%s降级为%s"),
     join = _("一个新成员加入联盟"),
-    kick = _("一个玩家被逐出联盟"),
+    kick = _("被%s踢出了联盟"),
     quit = _("退出联盟"),
     request = _("一个玩家申请加入我们的联盟"),
     notice = _("一个新的联盟公告发布"),
     desc = _("一个新的联盟宣言发布"),
-    handover = _("晋升为联盟新的盟主"),
+    handover = _("成为了新的盟主！（原盟主：%s）"),
     tools = _("向联盟商店补充了一批新的高级道具"),
     upgrade = _("%s 升级到 %s"),
     name = _("最近更改联盟的名称为%s"),
@@ -767,7 +768,11 @@ local ALLIANCE_EVENTS = {
     terrain = _("修改联盟地形为%s"),
     language = _("修改联盟语言更改为%s"),
     gve = _("激活了圣地的神秘事件"),
-    promotionUp = _("在联盟中的职位被晋级到%s"),
+    promotionUp = _("的联盟职位被%s晋级为%s"),
+    shrine = _("开启了联盟圣地%s关卡"),
+    fight = _("开启了联盟战"),
+    buildingUpgrade = _("升级了%s"),
+    villageUpgrade = _("升级了%s"),
 }
 
 local SOLDIER_CATEGORY = {

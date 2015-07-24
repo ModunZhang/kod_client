@@ -167,7 +167,7 @@ function GameUICityInfo:CreateTop()
     vip_btn:setButtonImage(cc.ui.UIPushButton.NORMAL, vip_btn_img, true)
     vip_btn:setButtonImage(cc.ui.UIPushButton.PRESSED, vip_btn_img, true)
     self.vip_level = display.newNode():addTo(vip_btn):pos(-3, 0):scale(0.8)
-    display.newSprite(string.format("VIP_%d_46x32.png", 1))
+    display.newSprite(string.format("VIP_%d_46x32.png", self.user:GetVipLevel()))
     :addTo(self.vip_level)
 
     return top_bg

@@ -57,16 +57,16 @@ function GameUIDragonEyrieMain:OnDragonHatched(dragon)
     self:RefreshUI()
 end
 
-function GameUIDragonEyrieMain:OnBasicChanged()
+function GameUIDragonEyrieMain:OnBasicChanged(dragon)
     self:RefreshUI()
 end
 
-function GameUIDragonEyrieMain:OnDragonEventChanged()
-    local dragonEvent = self.dragon_manager:GetDragonEventByDragonType(self:GetCurrentDragon():Type())
-    if dragonEvent then
-        self:RefreshUI()
-    end
-end
+-- function GameUIDragonEyrieMain:OnDragonEventChanged()
+--     local dragonEvent = self.dragon_manager:GetDragonEventByDragonType(self:GetCurrentDragon():Type())
+--     if dragonEvent then
+--         self:RefreshUI()
+--     end
+-- end
 function GameUIDragonEyrieMain:OnDragonDeathEventChanged()
     local dragonDeathEvent = self.dragon_manager:GetDragonDeathEventByType(self:GetCurrentDragon():Type())
     if dragonDeathEvent then
@@ -88,12 +88,12 @@ function GameUIDragonEyrieMain:OnDragonDeathEventTimer(dragonDeathEvent)
     end
 end
 
-function GameUIDragonEyrieMain:OnDragonEventTimer(dragonEvent)
-    if self:GetCurrentDragon():Type() == dragonEvent:DragonType() and self.hate_event_node then
-        local timer_text = GameUtils:formatTimeStyleDayHour(dragonEvent:GetTime())
-        self.hate_event_node:SetProgressInfo(timer_text,dragonEvent:GetPercent())
-    end
-end
+-- function GameUIDragonEyrieMain:OnDragonEventTimer(dragonEvent)
+--     if self:GetCurrentDragon():Type() == dragonEvent:DragonType() and self.hate_event_node then
+--         local timer_text = GameUtils:formatTimeStyleDayHour(dragonEvent:GetTime())
+--         self.hate_event_node:SetProgressInfo(timer_text,dragonEvent:GetPercent())
+--     end
+-- end
 
 ------------------------------------------------------------------
 
@@ -108,8 +108,8 @@ function GameUIDragonEyrieMain:OnMoveInStage()
     self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnHPChanged)
     self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
     self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonHatched)
-    self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonEventTimer)
-    self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonEventChanged)
+    -- self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonEventTimer)
+    -- self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonEventChanged)
     self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventChanged)
     self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventRefresh)
     self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventTimer)
@@ -121,9 +121,12 @@ function GameUIDragonEyrieMain:OnUpgradingBegin()
 end
 
 function GameUIDragonEyrieMain:OnUpgradingFinished(building)
-    if building:GetType() == self:GetBuilding():GetType() and self.dragon_hp_recovery_count_label then
-        local dragon_hp_recovery = self:GetBuilding():GetTotalHPRecoveryPerHour(self:GetCurrentDragon():Type())
-        self.dragon_hp_recovery_count_label:setString(string.format("+%s/h",string.formatnumberthousands(dragon_hp_recovery)))
+    if building:GetType() == self:GetBuilding():GetType() then
+        if self.dragon_hp_recovery_count_label then
+            local dragon_hp_recovery = self:GetBuilding():GetTotalHPRecoveryPerHour(self:GetCurrentDragon():Type())
+            self.dragon_hp_recovery_count_label:setString(string.format("+%s/h",string.formatnumberthousands(dragon_hp_recovery)))
+        end
+        self.hate_button:setButtonEnabled(self.building:CheckIfHateDragon())
     end
 end
 
@@ -134,8 +137,8 @@ function GameUIDragonEyrieMain:OnMoveOutStage()
     self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnHPChanged)
     self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
     self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonHatched)
-    self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonEventTimer)
-    self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonEventChanged)
+    -- self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonEventTimer)
+    -- self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonEventChanged)
     self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventChanged)
     self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventRefresh)
     self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventTimer)
@@ -173,23 +176,23 @@ function GameUIDragonEyrieMain:RefreshUI()
         self.dragon_info:hide()
         self.death_speed_button:hide()
         self.progress_content_death:hide()
-        local dragonEvent = self.dragon_manager:GetDragonEventByDragonType(self:GetCurrentDragon():Type())
+        -- local dragonEvent = self.dragon_manager:GetDragonEventByDragonType(self:GetCurrentDragon():Type())
         self.progress_content_hated:hide()
         self.info_panel:hide()
         self.draogn_hate_node:show()
         self.star_bar:hide()
-        if dragonEvent then
-            local timer_text = GameUtils:formatTimeStyleDayHour(dragonEvent:GetTime())
-            self.hate_timer_label:hide()
-            self.hate_button:hide()
-            self.hate_event_node:show()
-            self.hate_event_node:SetProgressInfo(timer_text,dragonEvent:GetPercent())
-        else
-            self.hate_button:show()
-            self.hate_event_node:hide()
-            local timer_text = GameUtils:formatTimeStyleDayHour(self.dragon_manager:GetHateNeedMinutes(self:GetCurrentDragon():Type()) * 60)
-            self.hate_timer_label:setString(string.format(_("需要时间: %s"),timer_text))
-        end
+        -- if dragonEvent then
+        -- local timer_text = GameUtils:formatTimeStyleDayHour(dragonEvent:GetTime())
+        -- self.hate_timer_label:hide()
+        -- self.hate_button:hide()
+        -- self.hate_event_node:show()
+        -- self.hate_event_node:SetProgressInfo(timer_text,dragonEvent:GetPercent())
+        -- else
+        self.hate_button:show()
+        -- self.hate_event_node:hide()
+        -- local timer_text = GameUtils:formatTimeStyleDayHour(self.dragon_manager:GetHateNeedMinutes(self:GetCurrentDragon():Type()) * 60)
+        -- self.hate_timer_label:setString(string.format(_("需要时间: %s"),timer_text))
+        -- end
     else
         self.star_bar:setNum(dragon:Star())
         self.star_bar:show()
@@ -486,12 +489,13 @@ function GameUIDragonEyrieMain:CreateDragonHateNodeIf()
         }):addTo(node):align(display.CENTER_TOP, window.cx, 200)
         self.dragon_hate_tips_label = tip_label
         local hate_label = UIKit:ttfLabel({
-            text = _("龙巢同一时间只能孵化一只巨龙"),
+            text = self.building:GetNextHateLevel() and string.format(_("龙巢%d级时可孵化新的巨龙"),self.building:GetNextHateLevel()) or "",
             size = 20,
             color= 0x403c2f,
             align= cc.TEXT_ALIGNMENT_CENTER
         }):addTo(node):align(display.CENTER_TOP, window.cx, 170)
-        local hate_button = WidgetPushButton.new({ normal = "yellow_btn_up_186x66.png",pressed = "yellow_btn_down_186x66.png"})
+        self.hate_label = hate_label
+        local hate_button = WidgetPushButton.new({ normal = "yellow_btn_up_186x66.png",pressed = "yellow_btn_down_186x66.png", disabled = "grey_btn_186x66.png"})
             :setButtonLabel("normal",UIKit:commonButtonLable({
                 text = _("开始孵化"),
                 size = 24,
@@ -501,58 +505,62 @@ function GameUIDragonEyrieMain:CreateDragonHateNodeIf()
             :onButtonClicked(function()
                 self:OnEnergyButtonClicked()
             end)
+        hate_button:setButtonEnabled(self.building:CheckIfHateDragon())
         self.hate_button = hate_button
 
-        local event_node = display.newNode():size(window.width,76):addTo(node):pos(0,0)
-        local dragonEvent = self.dragon_manager:GetDragonEventByDragonType(self:GetCurrentDragon():Type())
-        local hate_speed_button = WidgetPushButton.new({ normal = "green_btn_up_148x76.png",pressed = "green_btn_down_148x76.png"})
-            :setButtonLabel("normal",UIKit:commonButtonLable({
-                text = _("加速"),
-                size = 24,
-                color = 0xffedae,
-            }))
-            :addTo(event_node):align(display.CENTER_BOTTOM,window.right - 120,34)
-            :onButtonClicked(function()
-                self:OnHateSpeedUpClicked()
-            end)
-        local hate_label = UIKit:ttfLabel({
-            text = _("正在孵化巨龙"),
-            size = 20,
-            color= 0x403c2f,
-            align= cc.TEXT_ALIGNMENT_CENTER
-        }):addTo(event_node):align(display.LEFT_CENTER, window.left + 60, 95)
-        local progress = WidgetProgress.new(UIKit:hex2c3b(0xffedae), "progress_bar_364x40_1.png", "progress_bar_364x40_2.png", {
-            icon_bg = "back_ground_43x43.png",
-            icon = "hourglass_30x38.png",
-            bar_pos = {x = 0,y = 0}
-        }):addTo(event_node):align(display.LEFT_CENTER, window.left + 60, 55)
-        function event_node:SetProgressInfo(time_label, percent)
-            progress:SetProgressInfo(time_label, percent)
-        end
-        self.hate_event_node = event_node
+        -- local event_node = display.newNode():size(window.width,76):addTo(node):pos(0,0)
+        -- local dragonEvent = self.dragon_manager:GetDragonEventByDragonType(self:GetCurrentDragon():Type())
+        -- local hate_speed_button = WidgetPushButton.new({ normal = "green_btn_up_148x76.png",pressed = "green_btn_down_148x76.png"})
+        --     :setButtonLabel("normal",UIKit:commonButtonLable({
+        --         text = _("加速"),
+        --         size = 24,
+        --         color = 0xffedae,
+        --     }))
+        --     :addTo(event_node):align(display.CENTER_BOTTOM,window.right - 120,34)
+        --     :onButtonClicked(function()
+        --         self:OnHateSpeedUpClicked()
+        --     end)
+        -- local hate_label = UIKit:ttfLabel({
+        --     text = _("正在孵化巨龙"),
+        --     size = 20,
+        --     color= 0x403c2f,
+        --     align= cc.TEXT_ALIGNMENT_CENTER
+        -- }):addTo(event_node):align(display.LEFT_CENTER, window.left + 60, 95)
+        -- local progress = WidgetProgress.new(UIKit:hex2c3b(0xffedae), "progress_bar_364x40_1.png", "progress_bar_364x40_2.png", {
+        --     icon_bg = "back_ground_43x43.png",
+        --     icon = "hourglass_30x38.png",
+        --     bar_pos = {x = 0,y = 0}
+        -- }):addTo(event_node):align(display.LEFT_CENTER, window.left + 60, 55)
+        -- function event_node:SetProgressInfo(time_label, percent)
+        --     progress:SetProgressInfo(time_label, percent)
+        -- end
+        -- self.hate_event_node = event_node
 
-        local hate_timer_label = UIKit:ttfLabel({
-            text = "",
-            size = 20,
-            color= 0x403c2f
-        }):align(display.BOTTOM_CENTER, window.cx, 18):addTo(node)
-        self.hate_timer_label = hate_timer_label
+        -- local hate_timer_label = UIKit:ttfLabel({
+        --     text = "",
+        --     size = 20,
+        --     color= 0x403c2f
+        -- }):align(display.BOTTOM_CENTER, window.cx, 18):addTo(node)
+        -- self.hate_timer_label = hate_timer_label
     end
     return self.draogn_hate_node
 end
 
 
-function GameUIDragonEyrieMain:OnHateSpeedUpClicked()
-    UIKit:newGameUI("GameUIDragonHateSpeedUp", self.dragon_manager,self:GetCurrentDragon():Type()):AddToCurrentScene(true)
-end
+-- function GameUIDragonEyrieMain:OnHateSpeedUpClicked()
+--     UIKit:newGameUI("GameUIDragonHateSpeedUp", self.dragon_manager,self:GetCurrentDragon():Type()):AddToCurrentScene(true)
+-- end
 
 
 function GameUIDragonEyrieMain:OnEnergyButtonClicked()
-    if self.dragon_manager:HaveDragonHateEvent() then
-        UIKit:showMessageDialog(nil, _("你同一时间只能孵化一条巨龙"), function()end)
+    if not self.building:CheckIfHateDragon() then
+        UIKit:showMessageDialog(nil, _("当前龙巢等级不能孵化新的巨龙"), function()end)
         return
     end
-    return NetManager:getHatchDragonPromise(self:GetCurrentDragon():Type())
+    return NetManager:getHatchDragonPromise(self:GetCurrentDragon():Type()):done(function ()
+        self.hate_label:setString(self.building:GetNextHateLevel() and string.format(_("龙巢%d级时可孵化新的巨龙"),self.building:GetNextHateLevel()) or "")
+        self.hate_button:setButtonEnabled(self.building:CheckIfHateDragon())
+    end)
 end
 
 function GameUIDragonEyrieMain:GetCurrentDragon()
@@ -599,9 +607,9 @@ function GameUIDragonEyrieMain:OnEnterIndexEvent(index)
         self.draong_index = index + 1
         self:RefreshUI()
         local eyrie = self.draongContentNode:GetItemByIndex(index)
-        if not self:GetCurrentDragon():Ishated() then 
+        if not self:GetCurrentDragon():Ishated() then
             self.dragon_hate_tips_label:setString(Localize.dragon_buffer[self:GetCurrentDragon():Type()])
-            return 
+            return
         end
         eyrie.dragon_image:hide()
         eyrie.armature:show()
@@ -672,6 +680,7 @@ end
 
 
 return GameUIDragonEyrieMain
+
 
 
 

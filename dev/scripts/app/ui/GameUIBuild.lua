@@ -12,10 +12,10 @@ local GameUIBuild = UIKit:createUIClass('GameUIBuild', "GameUIWithCommonHeader")
 
 local base_items = {
     { label = _("住宅"), building_type = "dwelling", png = SpriteConfig["dwelling"]:GetConfigByLevel(1).png, scale = 1 },
-    { label = _("农夫小屋"), building_type = "farmer", png = SpriteConfig["farmer"]:GetConfigByLevel(1).png, scale = 1 },
     { label = _("木工小屋"), building_type = "woodcutter", png = SpriteConfig["woodcutter"]:GetConfigByLevel(1).png, scale = 1 },
     { label = _("石匠小屋"), building_type = "quarrier", png = SpriteConfig["quarrier"]:GetConfigByLevel(1).png, scale = 1 },
     { label = _("矿工小屋"), building_type = "miner", png = SpriteConfig["miner"]:GetConfigByLevel(1).png, scale = 1 },
+    { label = _("农夫小屋"), building_type = "farmer", png = SpriteConfig["farmer"]:GetConfigByLevel(1).png, scale = 1 },
 }
 function GameUIBuild:ctor(city, building)
     GameUIBuild.super.ctor(self, city, _("待建地基"))
@@ -182,27 +182,27 @@ function GameUIBuild:OnBuildOnItem(item)
             message = message .. _("您当前没有空闲的建筑队列,是否花费魔法石立即完成上一个队列").. "\n"
         end
         local need_gem = required_gems+resource_gems
-        dialog:SetPopMessage(message)
-        dialog:CreateNeeds({value = need_gem})
-        if need_gem > User:GetGemResource():GetValue() then
-            dialog:CreateOKButton(
-                {
-                    llistener =  function ()
-                        UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
-                        self:LeftButtonClicked()
-                    end,
-                    btn_name = _("前往商店")
-                }
-            )
-        else
-            dialog:CreateOKButton(
-                {
-                    listener =  function()
+        dialog:SetPopMessage(message):CreateOKButtonWithPrice(
+            {
+                listener =  function()
+                    if need_gem > User:GetGemResource():GetValue() then
+                        dialog:CreateOKButton(
+                            {
+                                llistener =  function ()
+                                    UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                                    self:LeftButtonClicked()
+                                end,
+                                btn_name = _("前往商店")
+                            }
+                        )
+                    else
                         self:BuildWithRuins(self.select_ruins, item.building.building_type)
                     end
-                }
-            )
-        end
+                end,
+                btn_images = {normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"},
+                price = need_gem
+            }
+        )
     end
 end
 function GameUIBuild:BuildWithRuins(select_ruins, building_type)
@@ -335,6 +335,8 @@ function GameUIBuild:CreateItemWithListView(list_view)
 end
 
 return GameUIBuild
+
+
 
 
 

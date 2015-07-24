@@ -342,24 +342,27 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
                     )
             elseif isAbleToTreat==HospitalUpgradeBuilding.CAN_NOT_TREAT.TREATING_AND_LACK_RESOURCE then
                 UIKit:showMessageDialog(_("主人"),_("正在治愈，资源不足"))
-                    :CreateOKButton(
+                    :CreateOKButtonWithPrice(
                         {
-                            listener = treat_fun
+                            listener = treat_fun,
+                            price = hospital:GetTreatGems(soldiers)
                         }
                     )
-                    :CreateNeeds({value = hospital:GetTreatGems(soldiers)})
+                    :CreateCancelButton()
             elseif isAbleToTreat==HospitalUpgradeBuilding.CAN_NOT_TREAT.LACK_RESOURCE then
                 UIKit:showMessageDialog(_("主人"),_("资源不足，是否花费金龙币补足"))
-                    :CreateOKButton({
-                        listener = treat_fun
+                    :CreateOKButtonWithPrice({
+                        listener = treat_fun,
+                        price = hospital:GetTreatGems(soldiers)
                     })
-                    :CreateNeeds({value = hospital:GetTreatGems(soldiers)})
+                    :CreateCancelButton()
             elseif isAbleToTreat==HospitalUpgradeBuilding.CAN_NOT_TREAT.TREATING then
                 UIKit:showMessageDialog(_("主人"),_("正在治愈，是否花费魔法石立即完成"))
-                    :CreateOKButton({
-                        listener = treat_fun
+                    :CreateOKButtonWithPrice({
+                        listener = treat_fun,
+                        price = hospital:GetTreatGems(soldiers)
                     })
-                    :CreateNeeds({value = hospital:GetTreatGems(soldiers)})
+                    :CreateCancelButton()
             else
                 treat_fun()
             end

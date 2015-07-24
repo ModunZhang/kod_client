@@ -322,7 +322,7 @@ function UpgradeBuilding:IsBuildingUpgradeLegal()
         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.TILE_NOT_UNLOCKED
     end
     -- 是否达到建造上限
-    if city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint(city) < 1 and self.level==0 then
+    if city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint() < 1 and self.level==0 then
         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.IS_MAX_UNLOCK
     end
     local config
@@ -459,16 +459,14 @@ function UpgradeBuilding:getUpgradeRequiredGems()
     required_gems = required_gems + DataUtils:buyResource(resource_config.resources, has_resourcce)
     required_gems = required_gems + DataUtils:buyMaterial(resource_config.materials, has_materials)
     --当升级队列不足时，立即完成正在升级的建筑中所剩升级时间最少的建筑
-    if #city:GetUpgradingBuildings()>0 then
+    if city:GetAvailableBuildQueueCounts() == 0 then
         local min_time = math.huge
         for k,v in pairs(city:GetUpgradingBuildings()) do
             local left_time = v:GetUpgradingLeftTimeByCurrentTime(app.timer:GetServerTime())
             if left_time<min_time then
                 min_time=left_time
-                print("完成上个升级的建筑",v:GetType())
             end
-        end
-        print("完成上个升级事件的时间",min_time)
+        end     
         required_gems = required_gems + DataUtils:getGemByTimeInterval(min_time)
     end
 
