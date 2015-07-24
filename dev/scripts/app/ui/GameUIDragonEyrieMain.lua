@@ -494,6 +494,7 @@ function GameUIDragonEyrieMain:CreateDragonHateNodeIf()
             color= 0x403c2f,
             align= cc.TEXT_ALIGNMENT_CENTER
         }):addTo(node):align(display.CENTER_TOP, window.cx, 170)
+        self.hate_label = hate_label
         local hate_button = WidgetPushButton.new({ normal = "yellow_btn_up_186x66.png",pressed = "yellow_btn_down_186x66.png", disabled = "grey_btn_186x66.png"})
             :setButtonLabel("normal",UIKit:commonButtonLable({
                 text = _("开始孵化"),
@@ -556,7 +557,10 @@ function GameUIDragonEyrieMain:OnEnergyButtonClicked()
         UIKit:showMessageDialog(nil, _("当前龙巢等级不能孵化新的巨龙"), function()end)
         return
     end
-    return NetManager:getHatchDragonPromise(self:GetCurrentDragon():Type())
+    return NetManager:getHatchDragonPromise(self:GetCurrentDragon():Type()):done(function ()
+        self.hate_label:setString(string.format(_("龙巢%d级时可孵化新的巨龙"),self.building:GetNextHateLevel()))
+        self.hate_button:setButtonEnabled(self.building:CheckIfHateDragon())
+    end)
 end
 
 function GameUIDragonEyrieMain:GetCurrentDragon()
