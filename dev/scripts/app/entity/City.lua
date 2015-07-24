@@ -180,7 +180,7 @@ function upgrade_meta:Title()
     if self.level == 1 then
         return string.format(_("解锁建筑%s"), Localize.building_name[self.name])
     end
-    return string.format(_("将%s升级到===等级%d"), Localize.building_name[self.name], self.level)
+    return string.format(_("将%s升级到等级%d"), Localize.building_name[self.name], self.level)
 end
 function upgrade_meta:TaskType()
     return "cityBuild"
@@ -192,7 +192,7 @@ end
 local tech_meta = {}
 tech_meta.__index = tech_meta
 function tech_meta:Title()
-    return string.format(_("研发%s到===等级%d"), Localize.productiontechnology_name[self.name], self.level)
+    return string.format(_("研发%s到等级%d"), Localize.productiontechnology_name[self.name], self.level)
 end
 function tech_meta:TaskType()
     return "productionTech"

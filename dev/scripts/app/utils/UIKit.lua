@@ -1189,6 +1189,15 @@ end
 function UIKit:CreateSoldierMoveNeg45Ani(ani)
     return createAniWithConfig(ani, soldier_move_neg_45_ani[ani], "move_-45")
 end
+function UIKit:GetSoldierMoveAniConfig(ani, act)
+    if act == "move_45" then
+        return soldier_move_45_ani[ani]
+    elseif act == "move_-45" then
+        return soldier_move_neg_45_ani[ani]
+    else
+        assert(false)
+    end
+end
 function UIKit:CreateNameBanner(name, dragon_type)
     local node = display.newNode()
     local size = self:ttfLabel({
