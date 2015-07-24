@@ -964,7 +964,7 @@ function GameUIAlliance:GetEventItemByIndexAndEvent()
         text = "content",
         size = 20,
         color = 0x403c2f,
-        dimensions = cc.size(300, 60)
+        dimensions = cc.size(280, 60)
     }):align(display.LEFT_CENTER,0,0)
     content_label:pos(normal:getPositionX()+normal:getContentSize().width + 10,42):addTo(content)
     content.bg0 = bg0
@@ -1018,6 +1018,8 @@ function GameUIAlliance:GetEventContent(event)
             if Localize.building_name[v] then
                 v = Localize.building_name[v]
             end
+        elseif 'shrine' == event_type then
+            v = string.gsub(v,"_","-")
         elseif 'buildingUpgrade' == event_type then
             if Localize.building_name[v] then
                 v = Localize.building_name[v]
