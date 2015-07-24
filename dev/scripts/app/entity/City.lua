@@ -112,10 +112,10 @@ function City:ctor(user)
 end
 --------------------
 function City:GetRecommendTask()
-    local task = self:GetBeginnersTask()
-    if task then
-        return task
-    end
+    -- local task = self:GetBeginnersTask()
+    -- if task then
+    --     return task
+    -- end
     local building_map = self:GetHighestCanUpgradeBuildingMap()
     local tasks = self:GetUser():GetTaskManager():GetAvailableTasksByCategory(GrowUpTaskManager.TASK_CATEGORY.BUILD)
     local re_task
@@ -308,11 +308,11 @@ function City:GetBeginnersTask()
     end
 end
 function City:SetBeginnersTaskFlag(index)
-    local key = string.format("recommend_tasks_%s", self:GetUser():Id())
-    local flag = app:GetGameDefautlt():getTableForKey(key, default)
-    flag[index] = true
-    app:GetGameDefautlt():setTableForKey(key, flag)
-    app:GetGameDefautlt():flush()
+    -- local key = string.format("recommend_tasks_%s", self:GetUser():Id())
+    -- local flag = app:GetGameDefautlt():getTableForKey(key, default)
+    -- flag[index] = true
+    -- app:GetGameDefautlt():setTableForKey(key, flag)
+    -- app:GetGameDefautlt():flush()
 end
 --------------------
 function City:GetUser()
