@@ -140,9 +140,6 @@ function WidgetPromoteSoldier:UpgradeButtons()
                 else
                     local dialog =  self:PopNotSatisfyDialog(upgrade_listener,results)
                     local need_gem = self:GetUpgradeGems()
-                    if need_gem~=0 then
-                        dialog:CreateNeeds({value = need_gem})
-                    end
                     if need_gem > User:GetGemResource():GetValue() then
                         dialog:CreateOKButton({
                             listener =  function ()
