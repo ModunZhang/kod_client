@@ -299,12 +299,13 @@ function GameUIQuickTechnology:GetItem(tech)
             UIKit:showMessageDialog(nil, _("该技能暂未开放！"))
             return
         end
+        event.target:removeChildByTag(111)
         UIKit:newGameUI("GameUIUpgradeTechnology",tech):AddToCurrentScene(true)
     end)
     item:setTag(tech:Index())
     if self.need_tips_tech_name == tech:Name() then
-        WidgetFteArrow.new(_("点击科技")):addTo(item, 10):TurnRight()
-        :align(display.RIGHT_CENTER, -50, 30)
+        WidgetFteArrow.new(_("点击科技"), 40):addTo(item, 10, 111):TurnUp()
+        :align(display.TOP_CENTER, 0, -100):scale(0.5)
     end
     return item
 end
