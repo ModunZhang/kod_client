@@ -304,8 +304,8 @@ function GameUIQuickTechnology:GetItem(tech)
     end)
     item:setTag(tech:Index())
     if self.need_tips_tech_name == tech:Name() then
-        WidgetFteArrow.new(_("点击科技"), 40):addTo(item, 10, 111):TurnUp()
-        :align(display.TOP_CENTER, 0, -100):scale(0.5)
+        WidgetFteArrow.new(_("点击科技"), 22 * 1.3):addTo(item, 10, 111)
+        :TurnUp():align(display.TOP_CENTER, 0, -80):scale(0.7)
     end
     return item
 end
