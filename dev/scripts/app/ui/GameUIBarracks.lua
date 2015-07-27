@@ -215,6 +215,7 @@ function GameUIBarracks:CreateItemWithListView(list_view, soldiers)
     local unit_width = 130
     local gap_x = (widget_rect.width - unit_width * 4) / 3
     local row_item = display.newNode()
+    local need_up_view = false
     for i, soldier_name in pairs(soldiers) do
         self.soldier_map[soldier_name] =
             WidgetSoldierBox.new(nil, function(event)
@@ -228,14 +229,19 @@ function GameUIBarracks:CreateItemWithListView(list_view, soldiers)
                 :alignByPoint(cc.p(0.5, 0.5), origin_x + (unit_width + gap_x) * (i - 1) + unit_width / 2, 0)
                 :SetSoldier(soldier_name, self.barracks_city:GetSoldierManager():GetStarBySoldierType(soldier_name))
         if self.need_recruit_soldier == soldier_name then
-            WidgetFteArrow.new(_("点击士兵"), 40)
+            WidgetFteArrow.new(_("点击士兵"))
             :addTo(self.soldier_map[soldier_name],1,111)
-            :TurnUp():align(display.TOP_CENTER, 0, -50):scale(0.5)
+            :TurnUp():align(display.TOP_CENTER, 0, -50)
+            self.soldier_map[soldier_name]:zorder(10)
+            need_up_view = true
         end
     end
 
     local item = list_view:newItem()
     item:addContent(row_item)
+    if need_up_view then 
+        item:zorder(100)
+    end
     item:setItemSize(widget_rect.width, 172)
     return item
 end
