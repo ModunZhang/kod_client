@@ -405,7 +405,7 @@ function GameUIHome:CreateTop()
             elseif self.task:TaskType() == "reward" then
                 UIKit:newGameUI("GameUIMission", self.city, nil, true):AddToCurrentScene(true)
             elseif self.task:TaskType() == "productionTech" then
-                UIKit:newGameUI("GameUIQuickTechnology", self.city):AddToCurrentScene(true)
+                UIKit:newGameUI("GameUIQuickTechnology", self.city, self.task.name):AddToCurrentScene(true)
             elseif self.task:TaskType() == "recruit" then
                 UIKit:newGameUI('GameUIBarracks', self.city, self.city:GetFirstBuildingByType("barracks"), "recruit"):AddToCurrentScene(true)
             elseif self.task:TaskType() == "explore" then
