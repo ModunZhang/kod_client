@@ -43,6 +43,7 @@ function BarracksSoldierSprite:TurnNorth()
 end
 function BarracksSoldierSprite:SetupAniConfig(act, isFlip)
     local ap,flip,s,shadow = unpack(UIKit:GetSoldierMoveAniConfig(self:GetAniName(), act))
+    s = s * 0.7
     local sprite = self:GetSprite()
     sprite:setScaleX(((not flip and isFlip) or (flip and not isFlip)) and -s or s)
     sprite:setScaleX(-self:GetSprite():getScaleX())
