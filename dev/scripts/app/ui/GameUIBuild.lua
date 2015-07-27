@@ -48,8 +48,7 @@ function GameUIBuild:OnMoveInStage()
         table.insert(self.base_resource_building_items, item)
         if self.need_tips and self.build_name == v.building_type then
             WidgetFteArrow.new(_("点击建造小屋"))
-            :addTo(item:GetBuildButton())
-            :TurnRight():align(display.RIGHT_CENTER, -80, 0):scale(0.8)
+            :addTo(item, 100):TurnRight():align(display.RIGHT_CENTER, 380, 40)
         end
     end
     self.base_list_view:reload()
