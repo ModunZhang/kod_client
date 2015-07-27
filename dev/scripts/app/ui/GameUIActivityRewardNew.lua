@@ -5,6 +5,7 @@
 local GameUIActivityRewardNew = UIKit:createUIClass("GameUIActivityRewardNew","UIAutoClose")
 local Enum = import("..utils.Enum")
 local window = import("..utils.window")
+local WidgetFteArrow = import("..widget.WidgetFteArrow")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local UIListView = import(".UIListView")
@@ -665,6 +666,8 @@ function GameUIActivityRewardNew:RefreshLevelUpListView(needClean)
             local item = self:GetRewardLevelUpItem(index,title,rewards,flag)
             if not item_pos and flag ~= 1 then
                 item_pos = index
+                WidgetFteArrow.new(_("点击领取奖励")):addTo(item.button)
+                :TurnRight():align(display.RIGHT_CENTER, -50, 0)
             end
             self.list_view:addItem(item)
         end
