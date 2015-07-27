@@ -205,9 +205,9 @@ function MyCityScene:IteratorLockButtons(func)
     end
 end
 -- 给对应建筑添加指示动画
-function MyCityScene:AddIndicateForBuilding(building_sprite)
+function MyCityScene:AddIndicateForBuilding(building_sprite, build_name)
     Sprite:PromiseOfFlash(unpack(self:CollectBuildings(building_sprite))):next(function()
-        self:OpenUI(building_sprite, "upgrade")
+        self:OpenUI(building_sprite, "upgrade", true, build_name)
     end)
 end
 function MyCityScene:GetHomePage()
@@ -384,7 +384,7 @@ local ui_map = setmetatable({
     FairGround     = {},
     square         = {},
 }, {__index = function() assert(false) end})
-function MyCityScene:OpenUI(building, default_tab)
+function MyCityScene:OpenUI(building, default_tab, need_tips, build_name)
     local city = self:GetCity()
     if iskindof(building, "HelpedTroopsSprite") then
         local helped = city:GetHelpedByTroops()[building:GetIndex()]
@@ -404,7 +404,7 @@ function MyCityScene:OpenUI(building, default_tab)
     local type_ = entity:GetType()
     local uiarrays = ui_map[type_]
     if type_ == "ruins" and not self:IsEditMode() then
-        UIKit:newGameUI(uiarrays[1], city, entity, uiarrays[2], uiarrays[3]):AddToScene(self, true)
+        UIKit:newGameUI(uiarrays[1], city, entity, uiarrays[2], uiarrays[3], need_tips, build_name):AddToScene(self, true)
     elseif type_ == "airship" then
         local dragon_manger = city:GetDragonEyrie():GetDragonManager()
         local dragon_type = dragon_manger:GetCanFightPowerfulDragonType()
