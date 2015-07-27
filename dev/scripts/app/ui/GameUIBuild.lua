@@ -3,6 +3,7 @@ local promise = import("..utils.promise")
 local window = import("..utils.window")
 local BuildingRegister = import("..entity.BuildingRegister")
 local MaterialManager = import("..entity.MaterialManager")
+local WidgetFteArrow = import("..widget.WidgetFteArrow")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local SpriteConfig = import("..sprites.SpriteConfig")
@@ -17,10 +18,13 @@ local base_items = {
     { label = _("矿工小屋"), building_type = "miner", png = SpriteConfig["miner"]:GetConfigByLevel(1).png, scale = 1 },
     { label = _("农夫小屋"), building_type = "farmer", png = SpriteConfig["farmer"]:GetConfigByLevel(1).png, scale = 1 },
 }
-function GameUIBuild:ctor(city, building)
+function GameUIBuild:ctor(city, building, p1, p2, need_tips, build_name)
     GameUIBuild.super.ctor(self, city, _("待建地基"))
     self.build_city = city
     self.select_ruins = building
+    self.need_tips = need_tips
+    self.build_name = build_name
+    print(self.need_tips, self.build_name)
     self.select_ruins_list = city:GetNeighbourRuinWithSpecificRuin(building)
     self.build_city:AddListenOnType(self, self.build_city.LISTEN_TYPE.UPGRADE_BUILDING)
     app:GetAudioManager():PlayBuildingEffectByType("woodcutter")
@@ -42,6 +46,11 @@ function GameUIBuild:OnMoveInStage()
         item:SetType(v, handler(self, self.OnBuildOnItem))
         self.base_list_view:addItem(item)
         table.insert(self.base_resource_building_items, item)
+        if self.need_tips and self.build_name == v.building_type then
+            WidgetFteArrow.new(_("点击建造小屋"))
+            :addTo(item:GetBuildButton())
+            :TurnRight():align(display.RIGHT_CENTER, -80, 0):scale(0.8)
+        end
     end
     self.base_list_view:reload()
     self:OnCityChanged()
