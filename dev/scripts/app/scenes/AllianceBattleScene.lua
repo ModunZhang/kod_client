@@ -32,7 +32,9 @@ function AllianceBattleScene:onEnter()
     else
         self:GotoCurrentPosition()
     end
-
+            if not UIKit:GetUIInstance('GameUIWarSummary') and self:GetAlliance():LastAllianceFightReport() then
+                UIKit:newGameUI("GameUIWarSummary"):AddToCurrentScene(true)
+            end
     -- cc.ui.UIPushButton.new({normal = "lock_btn.png",pressed = "lock_btn.png"})
     -- :addTo(self, 1000000):align(display.RIGHT_TOP, display.width, display.height)
     -- :onButtonClicked(function(event)

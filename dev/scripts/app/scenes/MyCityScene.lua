@@ -42,6 +42,10 @@ function MyCityScene:onEnter()
 
 
     self.firstJoinAllianceRewardGeted = DataManager:getUserData().countInfo.firstJoinAllianceRewardGeted
+
+    if not UIKit:GetUIInstance('GameUIWarSummary') and alliance:LastAllianceFightReport() then
+        UIKit:newGameUI("GameUIWarSummary"):AddToCurrentScene(true)
+    end
     -- cc.ui.UIPushButton.new({normal = "lock_btn.png",pressed = "lock_btn.png"})
     -- :addTo(self, 1000000):align(display.RIGHT_TOP, display.width, display.height)
     -- :onButtonClicked(function(event)
