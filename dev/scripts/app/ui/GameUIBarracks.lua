@@ -208,6 +208,16 @@ function GameUIBarracks:TabButtons()
     end):pos(window.cx, window.bottom + 34)
     self.tab_buttons:SetGreenTipsShow("specialRecruit",self:GetRecruitSpecialTime())
 end
+local arrow_left_dir_map = {
+    swordsman = true,
+    sentinel = true,
+    ranger = true,
+    crossbowman = true,
+    lancer = false,
+    horseArcher = false,
+    catapult = false,
+    ballista = false,
+}
 function GameUIBarracks:CreateItemWithListView(list_view, soldiers)
     local rect = list_view:getViewRect()
     local origin_x = - rect.width / 2
@@ -229,9 +239,15 @@ function GameUIBarracks:CreateItemWithListView(list_view, soldiers)
                 :alignByPoint(cc.p(0.5, 0.5), origin_x + (unit_width + gap_x) * (i - 1) + unit_width / 2, 0)
                 :SetSoldier(soldier_name, self.barracks_city:GetSoldierManager():GetStarBySoldierType(soldier_name))
         if self.need_recruit_soldier == soldier_name then
-            WidgetFteArrow.new(_("点击士兵"))
-            :addTo(self.soldier_map[soldier_name],1,111)
-            :TurnUp():align(display.TOP_CENTER, 0, -50)
+            if arrow_left_dir_map[soldier_name] then
+                WidgetFteArrow.new(_("点击士兵"))
+                :addTo(self.soldier_map[soldier_name],1,111)
+                :TurnLeft():align(display.LEFT_CENTER, 50, 20)    
+            else
+                WidgetFteArrow.new(_("点击士兵"))
+                :addTo(self.soldier_map[soldier_name],1,111)
+                :TurnRight():align(display.RIGHT_CENTER, -50, 20)
+            end
             self.soldier_map[soldier_name]:zorder(10)
             need_up_view = true
         end
