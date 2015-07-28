@@ -30,11 +30,11 @@ end
 function TownHallSprite:CheckEvent()
     if self:GetEntity():IsUnlocked() then
         local user = self:GetEntity():BelongCity():GetUser()
-        if user:IsFinishedAllDailyQuests() then
-            self:GetAniArray()[1]:hide()
-            self:RemoveEmptyanimation()
-        elseif user:IsOnDailyQuestEvents() then
+        if user:IsOnDailyQuestEvents() then
             self:GetAniArray()[1]:show()
+            self:RemoveEmptyanimation()
+        elseif user:IsFinishedAllDailyQuests() then
+            self:GetAniArray()[1]:hide()
             self:RemoveEmptyanimation()
         else
             self:GetAniArray()[1]:hide()

@@ -268,50 +268,44 @@ function GameUIUnlockBuilding:PopNotSatisfyDialog(listener,can_not_update_type)
     local required_gems =self.building:getUpgradeRequiredGems()
     local owen_gem = City:GetUser():GetGemResource():GetValue()
     if can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.RESOURCE_NOT_ENOUGH then
-        if owen_gem<required_gems then
-            dialog:CreateNeeds({value = required_gems,color =0x7e0000})
-            dialog:CreateOKButton(
-                {
-                    listener = function()
-                        UIKit:newGameUI('GameUIStore'):AddToCurrentScene(true)
-                        self:LeftButtonClicked()
-                    end,
-                    btn_images = {normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"},
-                }
-            )
-        else
-            dialog:CreateOKButtonWithPrice(
-                {
-                    listener = function()
+        dialog:CreateOKButtonWithPrice(
+            {
+                listener = function()
+                    if owen_gem<required_gems then
+                        UIKit:showMessageDialog(_("提示"),_("金龙币不足")):CreateOKButton(
+                            {
+                                listener = function ()
+                                    UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                                end,
+                                btn_name= _("前往商店")
+                            })
+                    else
                         listener()
-                    end,
-                    price = required_gems
-                }
-            ):CreateCancelButton()
-        end
+                    end
+                end,
+                price = required_gems
+            }
+        ):CreateCancelButton()
         dialog:SetTitle(_("补充资源"))
         dialog:SetPopMessage(_("您当前没有足够的资源,是否花费魔法石立即补充"))
     elseif can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_NOT_ENOUGH then
-        if owen_gem<required_gems then
-            dialog:CreateNeeds({value = required_gems,color =0x7e0000})
-            dialog:CreateOKButton(
-                {
-                    listener = function()
-                        UIKit:newGameUI('GameUIStore'):AddToCurrentScene(true)
-                        self:LeftButtonClicked()
-                    end,
-                    btn_images = {normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"},
-                }
-            )
-        else
-            dialog:CreateOKButtonWithPrice(
-                {
-                    listener = function()
+        dialog:CreateOKButtonWithPrice(
+            {
+                listener = function()
+                    if owen_gem<required_gems then
+                        UIKit:showMessageDialog(_("提示"),_("金龙币不足")):CreateOKButton(
+                            {
+                                listener = function ()
+                                    UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                                end,
+                                btn_name= _("前往商店")
+                            })
+                    else
                         listener()
-                    end,
-                    price = required_gems
-                }):CreateCancelButton()
-        end
+                    end
+                end,
+                price = required_gems
+            }):CreateCancelButton()
         dialog:SetTitle(_("立即开始"))
         dialog:SetPopMessage(_("您当前没有空闲的建筑,是否花费魔法石立即完成上一个队列"))
     elseif can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.GEM_NOT_ENOUGH then
@@ -382,6 +376,8 @@ end
 
 
 return GameUIUnlockBuilding
+
+
 
 
 

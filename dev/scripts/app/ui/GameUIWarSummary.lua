@@ -165,6 +165,7 @@ function GameUIWarSummary:InitWarSummary(report)
         })):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
             local scene_name = display.getRunningScene().__cname
+            alliance:SetLastAllianceFightReport(nil)
             if scene_name == 'AllianceBattleScene' or scene_name == 'AllianceScene' then
                 app:EnterMyAllianceScene()
             elseif scene_name == 'MyCityScene' then

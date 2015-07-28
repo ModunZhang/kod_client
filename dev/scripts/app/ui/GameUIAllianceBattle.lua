@@ -470,7 +470,7 @@ end
 
 function GameUIAllianceBattle:RefreshFightInfoList(info_bg_y)
     local fight_list_node = self.fight_list_node
-    if fight_list_node then
+    if fight_list_node and fight_list_node.removeAllChildren then
         fight_list_node:removeAllChildren()
 
         local alliance = self.alliance
@@ -1252,7 +1252,7 @@ function GameUIAllianceBattle:OnAllianceBasicChanged(alliance,changed_map)
 end
 
 function GameUIAllianceBattle:OnAllianceFightChanged(alliance,alliance_fight)
-    self:RefreshFightInfoList()
+    self:InitBattleStatistics()
 end
 
 function GameUIAllianceBattle:GetAlliancePeriod()
