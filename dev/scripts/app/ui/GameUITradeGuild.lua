@@ -764,6 +764,7 @@ function GameUITradeGuild:OpenSellDialog()
                 end
             }
         ):align(display.TOP_CENTER,w/2,h-286):addTo(layer)
+        self.sell_num_item:SetValue(math.min(City:GetResourceManager():GetCartResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()),math.floor(max_num/unit)))
     end
     function body:LoadSellResource(goods_type)
         local goods_details = tradeGuildUI:GetGoodsDetailsByType(goods_type)
@@ -1002,6 +1003,9 @@ function GameUITradeGuild:OpenSellDialog()
                 local max = math.max(icon:getContentSize().width,icon:getContentSize().height)
                 icon:scale(40/max)
             end
+        end
+        function item:SetValue(value)
+            return slider:SetValue(value)
         end
         function item:GetValue()
             return slider:GetValue()
