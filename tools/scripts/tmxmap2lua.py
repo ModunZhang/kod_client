@@ -146,6 +146,7 @@ if __name__=="__main__":
 			pve_map["layers"][i]["objects"][obj_i]["polyline"] = polyline
 
 	with codecs.open("pve_level.lua", 'w', 'utf-8') as f:
+		f.write("return ")
 		f.write(dic2table(pve_map))
 
 

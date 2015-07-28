@@ -14,6 +14,10 @@
    </properties>
   </tile>
  </tileset>
+ <tileset firstgid="37" name="fogs" tilewidth="80" tileheight="80">
+  <tileoffset x="-160" y="0"/>
+  <image source="fogs.png" width="720" height="480"/>
+ </tileset>
  <layer name="块层 1" width="21" height="21">
   <data encoding="csv">
 7,6,5,8,8,8,7,7,7,5,0,0,0,0,0,0,8,7,8,8,8,
@@ -43,5 +47,7 @@
   <object x="240" y="240">
    <polyline points="0,0 240,80 480,0 720,-80 960,-80 1200,0 1280,240 1200,480 1200,720 1280,960 1280,1200 1040,1280 800,1280 560,1200 320,1200 80,1280 0,1040 80,800 80,560 240,400 480,400 720,480"/>
   </object>
+  <object gid="1" x="1120" y="720"/>
+  <object gid="2" x="480" y="640"/>
  </objectgroup>
 </map>
