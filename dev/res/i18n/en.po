@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: dragonfall\n"
-"POT-Creation-Date: 2015-07-29 16:27+0800\n"
-"PO-Revision-Date: 2015-07-29 16:27+0800\n"
+"POT-Creation-Date: 2015-07-29 17:05+0800\n"
+"PO-Revision-Date: 2015-07-29 17:05+0800\n"
 "Last-Translator: gaozhou <gaozhou.f@qq.com>\n"
 "Language-Team: \n"
 "Language: en\n"
@@ -5339,7 +5339,7 @@ msgstr "Exploration Process %.2f%%"
 
 #: ui/GameUIPVEHome.lua:98 ui/GameUIPVEHome.lua:116
 msgid "返回起点"
-msgstr "Return to the origin"
+msgstr "Origin"
 
 #: ui/GameUIPVEHome.lua:98
 msgid "返回当前关卡的起点需要消耗您10个金龙币,您是否同意?"
@@ -6371,7 +6371,7 @@ msgstr "Sell your unnecessary resources or materials"
 
 #: ui/GameUITradeGuild.lua:622
 msgid "需要贸易行会"
-msgstr "Trade Guild is required"
+msgstr "Require Trade Guild"
 
 #: ui/GameUITradeGuild.lua:672
 msgid ""
@@ -12300,6 +12300,3 @@ msgstr "You've activated the VIP, Tap to close it"
 #: widget/WidgetUseMutiItems.lua:22
 msgid "使用数量"
 msgstr "Use Amount"
-
-#~ msgid "个"
-#~ msgstr "***"

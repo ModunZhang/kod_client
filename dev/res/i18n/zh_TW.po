@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: dragonfall\n"
-"POT-Creation-Date: 2015-07-29 16:27+0800\n"
-"PO-Revision-Date: 2015-07-29 16:27+0800\n"
+"POT-Creation-Date: 2015-07-29 17:06+0800\n"
+"PO-Revision-Date: 2015-07-29 17:06+0800\n"
 "Last-Translator: gaozhou <gaozhou.f@qq.com>\n"
 "Language-Team: \n"
 "Language: zh_TW\n"
@@ -12094,6 +12094,3 @@ msgstr "已經激活VIP，關閉窗口"
 #: widget/WidgetUseMutiItems.lua:22
 msgid "使用数量"
 msgstr "使用數量"
-
-#~ msgid "个"
-#~ msgstr "個"
