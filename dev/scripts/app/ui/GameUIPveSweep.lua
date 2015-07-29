@@ -44,42 +44,29 @@ function GameUIPveSweep:onEnter()
     list:reload()
 
 
-    local s5 = cc.ui.UIPushButton.new(
+    self:CreateSweepButton("-5"):addTo(self:GetBody()):align(display.CENTER, 100,size.height - 580)
+    self:CreateSweepButton("-1"):addTo(self:GetBody()):align(display.CENTER, size.width - 100,size.height - 580)
+end
+function GameUIPveSweep:CreateSweepButton(title)
+    local s = cc.ui.UIPushButton.new(
         {normal = "yellow_btn_up_148x58.png", pressed = "yellow_btn_down_148x58.png"},
         {scale9 = false}
-    ):addTo(self:GetBody())
-        :align(display.LEFT_CENTER, 20,size.height - 580)
-        :setButtonLabel(UIKit:ttfLabel({
-            text = _("扫荡") ,
-            size = 20,
-            color = 0xffedae,
-            shadow = true
-        })):setButtonLabelOffset(0, 16)
-        :onButtonClicked(function(event)
-        end)
+    ):setButtonLabel(UIKit:ttfLabel({
+        text = _("扫荡") ,
+        size = 20,
+        color = 0xffedae,
+        shadow = true
+    })):setButtonLabelOffset(0, 15)
 
-    local num_bg = display.newSprite("back_ground_124x28.png"):addTo(s5):align(display.CENTER, 0, -10):scale(0.8)
-    -- local gem_icon = display.newSprite("gem_icon_62x61.png"):addTo(num_bg):align(display.CENTER, 20, num_bg:getContentSize().height/2):scale(0.6)
-    -- local price = UIKit:ttfLabel({
-    --     text = "-5",
-    --     size = 18,
-    --     color = 0xffd200,
-    -- }):align(display.LEFT_CENTER, 50 , num_bg:getContentSize().height/2)
-    --     :addTo(num_bg)
-
-    cc.ui.UIPushButton.new(
-        {normal = "yellow_btn_up_148x58.png", pressed = "yellow_btn_down_148x58.png"},
-        {scale9 = false}
-    ):addTo(self:GetBody())
-        :align(display.RIGHT_CENTER, size.width - 20,size.height - 580)
-        :setButtonLabel(UIKit:ttfLabel({
-            text = _("扫荡") ,
-            size = 20,
-            color = 0xffedae,
-            shadow = true
-        })):setButtonLabelOffset(0, 16)
-        :onButtonClicked(function(event)
-        end)
+    local num_bg = display.newSprite("alliance_title_gem_bg_154x20.png"):addTo(s):align(display.CENTER, 0, -10):scale(0.8)
+    local size = num_bg:getContentSize()
+    display.newSprite("sweep_128x128.png"):addTo(num_bg):align(display.CENTER, 20, size.height/2):scale(0.4)
+    UIKit:ttfLabel({
+        text = title,
+        size = 18,
+        color = 0xffd200,
+    }):align(display.CENTER, size.width/2, size.height/2):addTo(num_bg)
+    return s
 end
 function GameUIPveSweep:GetListItem(index)
     local bg = display.newScale9Sprite(string.format("back_ground_548x40_%d.png", index % 2 == 0 and 1 or 2)):size(600,80)
@@ -100,6 +87,8 @@ end
 
 
 return GameUIPveSweep
+
+
 
 
 
