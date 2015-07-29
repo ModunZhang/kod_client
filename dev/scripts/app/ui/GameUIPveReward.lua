@@ -5,21 +5,22 @@ local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local GameUIPveReward = class("GameUIPveReward", WidgetPopDialog)
 
 function GameUIPveReward:ctor()
-    GameUIPveReward.super.ctor(self,700,_("获取奖励"),window.top - 150)
+    GameUIPveReward.super.ctor(self,500,_("获取奖励"),window.top - 150)
 end
 function GameUIPveReward:onEnter()
     GameUIPveReward.super.onEnter(self)
     local size = self:GetBody():getContentSize()
 
     local list,list_node = UIKit:commonListView_1({
-        viewRect = cc.rect(0, 0, 550, 600),
+        viewRect = cc.rect(0, 0, 550, 400),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
     })
-    list_node:addTo(self:GetBody()):pos(20, size.height - 660)
+    list.touchNode_:setTouchEnabled(false)
+    list_node:addTo(self:GetBody()):pos(20, size.height - 460)
 
 
 
-    for i = 1, 20 do
+    for i = 1, 4 do
         local item = list:newItem()
         local content = self:GetListItem(i)
         item:addContent(content)
@@ -30,36 +31,24 @@ function GameUIPveReward:onEnter()
 end
 function GameUIPveReward:GetListItem(index)
     local bg = display.newScale9Sprite(string.format("back_ground_548x40_%d.png", index % 2 == 0 and 1 or 2)):size(600,100)
+    
+    display.newSprite("alliance_shire_star_60x58_1.png"):addTo(bg):pos(60,100*3/4):scale(0.7)
+
+
     UIKit:ttfLabel({
-        text = _("北方塔院"),
-        size = 24,
+        text = "14",
+        size = 20,
         color = 0x403c2f,
-    }):addTo(bg):align(display.LEFT_CENTER,60,100*3/4)
-
-    local num_bg = display.newSprite("back_ground_96x30.png"):addTo(bg):align(display.LEFT_CENTER,60,100*1/3)
-    local size = num_bg:getContentSize()
-    UIKit:ttfLabel({
-        text = _("22/60"),
-        size = 20,
-        color = 0xffedae,
-    }):addTo(num_bg):align(display.CENTER, size.width/2, size.height/2)
-    display.newSprite("alliance_shire_star_60x58_1.png"):addTo(bg):pos(60,100*1/3):scale(0.7)
-
-
-    UIKit:ttfLabel({
-        text = _("通关"),
-        size = 20,
-        color = 0x007c23,
-    }):addTo(bg):align(display.CENTER,548 - 60,100*3/4)
+    }):addTo(bg):align(display.CENTER,60,100*1/3)
 
     cc.ui.UIPushButton.new(
         {normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"}
     ):setButtonLabel(UIKit:ttfLabel({
-        text = _("传送") ,
+        text = _("领取") ,
         size = 24,
         color = 0xffedae,
         shadow = true
-    })):addTo(bg):align(display.CENTER,548 - 60,100*1/3)
+    })):addTo(bg):align(display.CENTER,548 - 60,100*1/2)
 
     
 
