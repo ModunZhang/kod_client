@@ -222,7 +222,7 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
     elseif self.building:GetType()=="toolShop" then
         local additon = building:GetNextLevelProduction()-building:GetProduction()
         if additon>0 then
-            efficiency = string.format("%s+%d%s,",bd.poduction,additon,bd.poduction_1)
+            efficiency = string.format("%s+%d,",bd.poduction,additon)
         end
         local additon = building:GetNextLevelProductionType()-building:GetProductionType()
         if additon>0 then
