@@ -123,7 +123,9 @@ function GameUIBuild:OnCityChanged()
         local building = BuildingRegister[building_type].new({building_type = building_type, level = 1, finishTime = 0})
         v:SetNumber(number, max_number)
         if building then
-            if building:GetCitizen() > citizen then
+            if self.build_city:GetAvailableBuildQueueCounts() <= 0 then
+                v:SetCondition(_("建造队列不足"), display.COLOR_RED)
+            elseif building:GetCitizen() > citizen then
                 v:SetBuildEnable(false)
                 v:SetCondition(_("城民上限不足,请首先升级或建造小屋"), display.COLOR_RED)
             elseif number >= max_number then
