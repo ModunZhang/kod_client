@@ -12,7 +12,7 @@ local titles = {
 
 
 function GameUIPveSweep:ctor()
-    GameUIPveSweep.super.ctor(self,654,_("扫荡"),window.top - 200)
+    GameUIPveSweep.super.ctor(self,654,_("扫荡"),window.top - 150)
 end
 function GameUIPveSweep:onEnter()
     GameUIPveSweep.super.onEnter(self)

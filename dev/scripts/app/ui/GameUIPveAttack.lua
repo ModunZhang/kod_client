@@ -12,7 +12,7 @@ local titles = {
 
 
 function GameUIPveAttack:ctor()
-    GameUIPveAttack.super.ctor(self,560,_("关卡"),window.top - 200)
+    GameUIPveAttack.super.ctor(self,560,_("关卡"),window.top - 150)
 end
 function GameUIPveAttack:onEnter()
     GameUIPveAttack.super.onEnter(self)
