@@ -985,3 +985,33 @@ errors["hatchConditionNotMatch"] = {
 	["code"] = 696,
 	["message"] = "孵化条件不满足"
 }
+errors["pveSecionIsLocked"] = {
+	["key"] = "pveSecionIsLocked",
+	["code"] = 697,
+	["message"] = "关卡未解锁"
+}
+errors["canNotGetPvEStarRewardyet"] = {
+	["key"] = "canNotGetPvEStarRewardyet",
+	["code"] = 698,
+	["message"] = "还不能领取PvE星级奖励"
+}
+errors["pveStarRewardAlreadyGet"] = {
+	["key"] = "pveStarRewardAlreadyGet",
+	["code"] = 699,
+	["message"] = "Pve星级奖励已经领取"
+}
+errors["currentSectionReachMaxFightCount"] = {
+	["key"] = "currentSectionReachMaxFightCount",
+	["code"] = 700,
+	["message"] = "当前关卡已达最大战斗次数"
+}
+errors["playerStaminaNotEnough"] = {
+	["key"] = "playerStaminaNotEnough",
+	["code"] = 700,
+	["message"] = "玩家体力值不足"
+}
+errors["currentPvESectionCanNotBeSweepedYet"] = {
+	["key"] = "currentPvESectionCanNotBeSweepedYet",
+	["code"] = 701,
+	["message"] = "当前PvE关卡还不能被扫荡"
+}
