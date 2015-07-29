@@ -183,9 +183,9 @@ function MyCityScene:NewLockButtonFromBuildingSprite(building_sprite)
         :onButtonClicked(function()
             UIKit:newGameUI("GameUIUnlockBuilding", self.city, building_sprite:GetEntity()):AddToCurrentScene(true)
         end):onButtonPressed(function(event)
-            event.target:runAction(cc.ScaleTo:create(0.1, 1.2))
+        event.target:runAction(cc.ScaleTo:create(0.1, 1.2))
         end):onButtonRelease(function(event)
-            event.target:runAction(cc.ScaleTo:create(0.1, 1))
+        event.target:runAction(cc.ScaleTo:create(0.1, 1))
         end)
 
     button.sprite = building_sprite
@@ -413,8 +413,14 @@ function MyCityScene:OpenUI(building, default_tab, need_tips, build_name)
         local dragon_manger = city:GetDragonEyrie():GetDragonManager()
         local dragon_type = dragon_manger:GetCanFightPowerfulDragonType()
         if #dragon_type > 0 or dragon_manger:GetDefenceDragon() then
-            local _,_,index = self.city:GetUser():GetPVEDatabase():GetCharPosition()
-            app:EnterPVEScene(index)
+            -- local _,_,index = self.city:GetUser():GetPVEDatabase():GetCharPosition()
+            -- app:EnterPVEScene(index)
+            NetManager:getAttackPveSectionPromise("1_1", "greenDragon", {
+                {
+                    name = "swordsman",
+                    count = 100
+                }
+            })
         else
             UIKit:showMessageDialog(_("主人"),_("需要一条空闲状态的魔龙才能探险"))
         end
@@ -433,6 +439,7 @@ function MyCityScene:OpenUI(building, default_tab, need_tips, build_name)
 end
 
 return MyCityScene
+
 
 
 

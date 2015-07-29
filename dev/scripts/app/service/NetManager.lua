@@ -1842,6 +1842,17 @@ end
 function NetManager:getSetApnStatusPromise(type,status)
     return get_blocking_request_promise("logic.playerHandler.setApnStatus",{type = type,status = status},"设置远程推送状态失败!"):done(get_player_response_msg)
 end
+
+
+function NetManager:getAttackPveSectionPromise(sectionName, dragonType, soldiers)
+    return get_blocking_request_promise("logic.playerHandler.attackPveSection",{
+        sectionName = sectionName,
+        dragonType = dragonType,
+        soldiers = soldiers,
+    },"攻打npc失败!"):done(get_player_response_msg)
+end
+
+
 ----------------------------------------------------------------------------------------------------------------
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"

@@ -1,4 +1,4 @@
-local PVEDatabase = import(".PVEDatabase")
+-- local PVEDatabase = import(".PVEDatabase")
 local Resource = import(".Resource")
 local VipEvent = import(".VipEvent")
 local Localize = import("..utils.Localize")
@@ -109,12 +109,6 @@ function User:ctor(p)
     }
     self:GetGemResource():SetValueLimit(math.huge) -- 会有人充值这么多的金龙币吗？
     self:GetStrengthResource():SetValueLimit(intInit.staminaMax.value)
-
-    self.staminaUsed = 0
-    self.gemUsed = nil
-    self.pve_database = PVEDatabase.new(self)
-    local _,_, index = self.pve_database:GetCharPosition()
-    self:GotoPVEMapByLevel(index)
     -- 每日任务
     self.dailyQuests = {}
     self.dailyQuestEvents = {}
@@ -136,20 +130,6 @@ function User:ctor(p)
 end
 function User:IsBindGameCenter()
     return self:GcId() ~= "" and self:GcId() ~= json.null
-end
-function User:GotoPVEMapByLevel(level)
-    self.pve_database:ResetAllMapsListener()
-    self.cur_pve_map = self.pve_database:GetMapByIndex(level)
-end
--- return 是否成功使用体力
-function User:UseStrength(num)
-    if self:HasAnyStength(num) then
-        self.staminaUsed = self.staminaUsed + num
-        self:GetStrengthResource():ReduceResourceByCurrentTime(app.timer:GetServerTime(), num or 1)
-        self:OnResourceChanged()
-        return true
-    end
-    return false
 end
 function User:GetCollectLevelByType(collectType)
     local exp = self.allianceInfo[collect_type[collectType]]
@@ -181,52 +161,8 @@ end
 function User:HasAnyStength(num)
     return self:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()) >= (num or 1)
 end
-function User:ResetPveData()
-    self:SetPveData(nil, nil, nil)
-end
-function User:GetStaminaUsed()
-    return self.staminaUsed
-end
-function User:SetPveData(fight_data, rewards_data, gemUsed)
-    self.fight_data = fight_data
-    self.rewards_data = rewards_data
-    self.gemUsed = gemUsed
-end
-function User:EncodePveDataAndResetFightRewardsData()
-    local fightData = self.fight_data
-    local rewards = self.rewards_data
-    self.fight_data = nil
-    self.rewards_data = nil
-
-    for i,v in ipairs(rewards or {}) do
-        v.probability = nil
-    end
-    local staminaUsed = self.staminaUsed
-    self.staminaUsed = 0
-
-    local gemUsed = self.gemUsed
-    self.gemUsed = nil
-    return {
-        pveData = {
-            gemUsed = gemUsed,
-            staminaUsed = staminaUsed,
-            location = self.pve_database:EncodeLocation(),
-            floor = self.cur_pve_map:EncodeMap(),
-        },
-        fightData = fightData,
-        rewards = rewards,
-    -- rewardedFloor = nil,
-    }
-end
 function User:ResetAllListeners()
-    self.pve_database:ResetAllMapsListener()
     self:ClearAllListener()
-end
-function User:GetCurrentPVEMap()
-    return self.cur_pve_map
-end
-function User:GetPVEDatabase()
-    return self.pve_database
 end
 function User:GetGemResource()
     return self.resources[GEM]
@@ -317,7 +253,7 @@ function User:OnUserDataChanged(userData, current_time, deltaData)
     self:OnBasicInfoChanged(userData, deltaData)
     self:OnCountInfoChanged(userData, deltaData)
     self:OnIapGiftsChanged(userData, deltaData)
-    self:GetPVEDatabase():OnUserDataChanged(userData, deltaData)
+    -- self:GetPVEDatabase():OnUserDataChanged(userData, deltaData)
     self:OnAllianceDonateChanged(userData, deltaData)
     self:OnAllianceInfoChanged(userData, deltaData)
     self:OnApnStatusChanged(userData, deltaData)
@@ -918,63 +854,6 @@ function User:GetBestDragon()
 end
 
 return User
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

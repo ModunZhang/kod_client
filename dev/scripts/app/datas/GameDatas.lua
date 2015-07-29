@@ -495,6 +495,13 @@ GameDatas.ProductionTechs = {
 }
 require("app.datas.ProductionTechs_productionTechs")
 
+GameDatas.PvE = {
+	["sections"] = {},
+	["stages"] = {},
+}
+require("app.datas.PvE_sections")
+require("app.datas.PvE_stages")
+
 GameDatas.Soldiers = {
 	["normal"] = {},
 	["special"] = {},
