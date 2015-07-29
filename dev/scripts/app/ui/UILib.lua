@@ -725,6 +725,7 @@ local ITEM = {
     restoreWall_1 = "restoreWall_1_128x128.png",
     restoreWall_2 = "restoreWall_2_128x128.png",
     restoreWall_3 = "restoreWall_3_128x128.png",
+    sweepScroll = "sweep_128x128.png",
 }
 
 local SOLDIER_ANIMATIONS = getAniNameFromAnimationFiles(SOLDIER_ANIMATION_FILES)
