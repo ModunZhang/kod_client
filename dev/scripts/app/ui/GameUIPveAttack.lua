@@ -12,7 +12,7 @@ local titles = {
 
 
 function GameUIPveAttack:ctor()
-    GameUIPveAttack.super.ctor(self,536,_("关卡"),window.top - 200)
+    GameUIPveAttack.super.ctor(self,560,_("关卡"),window.top - 200)
 end
 function GameUIPveAttack:onEnter()
     GameUIPveAttack.super.onEnter(self)
@@ -75,12 +75,19 @@ function GameUIPveAttack:onEnter()
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
     }):addTo(self:GetBody()):align(display.LEFT_CENTER,20 + w + 20,size.height - 410)
 
+    UIKit:ttfLabel({
+        text = _("关卡三星通关后，可使用扫荡"),
+        size = 20,
+        color = 0x403c2f,
+        align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
+    }):addTo(self:GetBody()):align(display.LEFT_CENTER,20,size.height - 450)
+
 
     cc.ui.UIPushButton.new(
         {normal = "blue_btn_up_148x58.png", pressed = "blue_btn_down_148x58.png"},
         {scale9 = false}
     ):addTo(self:GetBody())
-        :align(display.LEFT_CENTER, 20,size.height - 470)
+        :align(display.LEFT_CENTER, 20,size.height - 500)
         :setButtonLabel(UIKit:ttfLabel({
             text = _("扫荡") ,
             size = 22,
@@ -94,7 +101,7 @@ function GameUIPveAttack:onEnter()
         {normal = "red_btn_up_148x58.png", pressed = "red_btn_down_148x58.png"},
         {scale9 = false}
     ):addTo(self:GetBody())
-        :align(display.RIGHT_CENTER, size.width - 20,size.height - 470)
+        :align(display.RIGHT_CENTER, size.width - 20,size.height - 500)
         :setButtonLabel(UIKit:ttfLabel({
             text = _("进攻") ,
             size = 22,
@@ -113,8 +120,8 @@ function GameUIPveAttack:GetListItem(index,title)
     }):addTo(bg):align(display.LEFT_CENTER,30,20)
 
     local ax = bg:getContentSize().width - 50
-    for i = 1, 3 do
-        display.newSprite(index >= i and "alliance_shire_star_60x58_1.png" or "alliance_shire_star_60x58_0.png")
+    for i = 1, 1 do
+        display.newSprite("alliance_shire_star_60x58_0.png")
             :addTo(bg):pos(ax - (i-1) * 35, 20):scale(0.6)
     end
     return bg
