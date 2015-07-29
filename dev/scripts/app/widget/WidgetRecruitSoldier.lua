@@ -691,7 +691,7 @@ function WidgetRecruitSoldier:CheckMaterials(count)
         for k,v in pairs(specialMaterials) do
             local temp = string.split(v, "_")
             local total = self.city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.SOLDIER)[temp[1]]
-            if total< count then
+            if total < (count * tonumber(temp[2])) then
                 return v
             end
         end
