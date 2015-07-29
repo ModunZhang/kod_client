@@ -78,6 +78,10 @@ property(User, "serverId", "")
 property(User, "serverLevel", "")
 property(User, "requestToAllianceEvents", {})
 property(User, "inviteToAllianceEvents", {})
+-- pve
+property(User, "pve", {})
+property(User, "pveFights", {})
+
 property(User, "apnStatus", {
     onCityBeAttacked = true,
     onAllianceFightStart = true,
@@ -244,6 +248,8 @@ function User:OnPropertyChange(property_name, old_value, new_value)
     end
 end
 function User:OnUserDataChanged(userData, current_time, deltaData)
+    self.pve = userData.pve
+    self.pveFights = userData.pveFights
     self:SetServerId(userData.serverId)
     self:SetServerLevel(userData.serverLevel)
     self:SetGcId(userData.gcId)
@@ -253,7 +259,6 @@ function User:OnUserDataChanged(userData, current_time, deltaData)
     self:OnBasicInfoChanged(userData, deltaData)
     self:OnCountInfoChanged(userData, deltaData)
     self:OnIapGiftsChanged(userData, deltaData)
-    -- self:GetPVEDatabase():OnUserDataChanged(userData, deltaData)
     self:OnAllianceDonateChanged(userData, deltaData)
     self:OnAllianceInfoChanged(userData, deltaData)
     self:OnApnStatusChanged(userData, deltaData)
