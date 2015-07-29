@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: dragonfall\n"
-"POT-Creation-Date: 2015-07-29 17:06+0800\n"
-"PO-Revision-Date: 2015-07-29 17:06+0800\n"
+"POT-Creation-Date: 2015-07-29 17:36+0800\n"
+"PO-Revision-Date: 2015-07-29 17:36+0800\n"
 "Last-Translator: gaozhou <gaozhou.f@qq.com>\n"
 "Language-Team: \n"
 "Language: zh_CN\n"
@@ -43,7 +43,7 @@ msgstr "服务器连接断开,请检测你的网络环境后重试!"
 #: MyApp.lua:417 entity/AllianceMap.lua:353 entity/DragonManager.lua:240
 #: entity/DragonManager.lua:312 entity/HelpEvent.lua:87
 #: entity/MailManager.lua:35 entity/MailManager.lua:43
-#: entity/UpgradeBuilding.lua:196 entity/User.lua:820
+#: entity/UpgradeBuilding.lua:196 entity/User.lua:756
 #: scenes/AllianceScene.lua:199 scenes/MyCityFteScene.lua:296
 #: service/NetManager.lua:388 service/NetManager.lua:1014
 #: service/NetManager.lua:1077 service/NetManager.lua:1123
@@ -1334,7 +1334,7 @@ msgstr "修建%s到Lv%d完成"
 msgid "需要%s达到%d级"
 msgstr "需要%s达到%d级"
 
-#: entity/User.lua:820
+#: entity/User.lua:756
 #, c-format
 msgid "每日任务%s完成"
 msgstr "每日任务%s完成"
@@ -1393,7 +1393,7 @@ msgstr "点击空地：建造%s"
 msgid "点击建筑：%s"
 msgstr "点击建筑：%s"
 
-#: scenes/MyCityFteScene.lua:216 scenes/MyCityScene.lua:419
+#: scenes/MyCityFteScene.lua:216 scenes/MyCityScene.lua:425
 #: ui/FullScreenPopDialogUI.lua:35 ui/GameUIAllianceBattle.lua:220
 #: ui/GameUIAllianceBattle.lua:863 ui/GameUIAllianceInfo.lua:374
 #: ui/GameUIAllianceInfo.lua:377 ui/GameUIAllianceInfo.lua:381
@@ -1422,7 +1422,7 @@ msgstr "点击建筑：%s"
 msgid "主人"
 msgstr "主人"
 
-#: scenes/MyCityFteScene.lua:216 scenes/MyCityScene.lua:419
+#: scenes/MyCityFteScene.lua:216 scenes/MyCityScene.lua:425
 #: ui/GameUIDailyMissionInfo.lua:291 widget/WidgetMaterialDetails.lua:129
 msgid "需要一条空闲状态的魔龙才能探险"
 msgstr "需要一条空闲状态的魔龙才能探险"
@@ -2052,9 +2052,9 @@ msgstr "放弃"
 #: ui/GameUIActivityNew.lua:516 ui/GameUIActivityRewardNew.lua:417
 #: ui/GameUIActivityRewardNew.lua:542 ui/GameUIActivityRewardNew.lua:770
 #: ui/GameUIActivityRewardNew.lua:862 ui/GameUIAllianceJoinTips.lua:51
-#: ui/GameUIMission.lua:218 widget/WidgetPVEEvent.lua:196
-#: widget/WidgetPVEGetRewards.lua:58 widget/WidgetPVEGetRewards.lua:84
-#: widget/WidgetPVEGetTaskRewards.lua:60
+#: ui/GameUIMission.lua:218 ui/GameUIPveReward.lua:47
+#: widget/WidgetPVEEvent.lua:196 widget/WidgetPVEGetRewards.lua:58
+#: widget/WidgetPVEGetRewards.lua:84 widget/WidgetPVEGetTaskRewards.lua:60
 #: widget/WidgetPVEGetTaskRewards.lua:88
 msgid "领取"
 msgstr "领取"
@@ -2746,9 +2746,9 @@ msgstr "个人邮件"
 
 #: ui/GameUIAllianceCityEnter.lua:206 ui/GameUIAllianceMosterEnter.lua:170
 #: ui/GameUIAttackPlayerCity.lua:104 ui/GameUIPVESendTroop.lua:107
-#: widget/WidgetPVECamp.lua:22 widget/WidgetPVECrashedAirship.lua:22
-#: widget/WidgetPVEEntranceDoor.lua:24 widget/WidgetPVEEntranceDoor.lua:28
-#: widget/WidgetPVEResource.lua:22
+#: ui/GameUIPveAttack.lua:106 widget/WidgetPVECamp.lua:22
+#: widget/WidgetPVECrashedAirship.lua:22 widget/WidgetPVEEntranceDoor.lua:24
+#: widget/WidgetPVEEntranceDoor.lua:28 widget/WidgetPVEResource.lua:22
 msgid "进攻"
 msgstr "进攻"
 
@@ -4197,7 +4197,8 @@ msgstr "装备已达到最大星级"
 msgid "可强化等级:%d/%d"
 msgstr "可强化等级:%d/%d"
 
-#: ui/GameUIDragonEquipment.lua:440 widget/WidgetResources.lua:301
+#: ui/GameUIDragonEquipment.lua:440 ui/GameUIPveSweep.lua:24
+#: widget/WidgetResources.lua:301
 msgid "当前数量"
 msgstr "当前数量"
 
@@ -5283,6 +5284,61 @@ msgstr "快去孵化一只巨龙吧"
 msgid "士兵"
 msgstr "士兵"
 
+#: ui/GameUIPveAttack.lua:8 ui/GameUIPveSweep.lua:8
+msgid "战斗胜利"
+msgstr ""
+
+#: ui/GameUIPveAttack.lua:9 ui/GameUIPveSweep.lua:9
+msgid "龙在战斗中胜利"
+msgstr ""
+
+#: ui/GameUIPveAttack.lua:10 ui/GameUIPveSweep.lua:10
+msgid "一个兵种击败敌军"
+msgstr ""
+
+#: ui/GameUIPveAttack.lua:15
+msgid "关卡"
+msgstr ""
+
+#: ui/GameUIPveAttack.lua:22
+msgid "几率掉落"
+msgstr ""
+
+#: ui/GameUIPveAttack.lua:56
+#, c-format
+msgid "今日可挑战次数: %d/%d"
+msgstr ""
+
+#: ui/GameUIPveAttack.lua:64
+msgid "每次消耗体力:"
+msgstr ""
+
+#: ui/GameUIPveAttack.lua:79
+msgid "关卡三星通关后，可使用扫荡"
+msgstr ""
+
+#: ui/GameUIPveAttack.lua:92 ui/GameUIPveSweep.lua:15
+#: ui/GameUIPveSweep.lua:55
+msgid "扫荡"
+msgstr ""
+
+#: ui/GameUIPveReward.lua:8 ui/GameUITownHall.lua:242
+msgid "获取奖励"
+msgstr "获取奖励"
+
+#: ui/GameUIPveSelect.lua:8 widget/WidgetPVESelectStage.lua:14
+msgid "选择关卡"
+msgstr "选择关卡"
+
+#: ui/GameUIPveSelect.lua:50
+msgid "通关"
+msgstr ""
+
+#: ui/GameUIPveSelect.lua:58 widget/WidgetPVEEntranceDoor.lua:27
+#: widget/WidgetPVESelectStage.lua:66 widget/WidgetPVEStartAirship.lua:21
+msgid "传送"
+msgstr "传送"
+
 #: ui/GameUIQuickTechnology.lua:47 ui/GameUIUpgradeTechnology.lua:179
 msgid "科技研发"
 msgstr "科技研发"
@@ -6182,10 +6238,6 @@ msgstr "更新中"
 #: ui/GameUITownHall.lua:234
 msgid "任务完成"
 msgstr "任务完成"
-
-#: ui/GameUITownHall.lua:242
-msgid "获取奖励"
-msgstr "获取奖励"
 
 #: ui/GameUITownHall.lua:250
 msgid "每日任务完成"
@@ -11588,11 +11640,6 @@ msgstr ""
 "你能感觉到一个一场强大的生物驻守在这里, 阻挡着你继续前进, 但想要前往下一关卡"
 "必须击败它"
 
-#: widget/WidgetPVEEntranceDoor.lua:27 widget/WidgetPVESelectStage.lua:66
-#: widget/WidgetPVEStartAirship.lua:21
-msgid "传送"
-msgstr "传送"
-
 #: widget/WidgetPVEEvent.lua:127
 #, c-format
 msgid "通缉令 : %s        %d/%d"
@@ -11699,10 +11746,6 @@ msgstr "胜利就在眼前, 前方就是叛军的将领, 击败他便能永久�
 #: widget/WidgetPVEResource.lua:15 widget/WidgetPVEResource.lua:17
 msgid "这里被叛军占领, 居民希望你能将他们赶走并愿意向你提供一些报酬。"
 msgstr "这里被叛军占领, 居民希望你能将他们赶走并愿意向你提供一些报酬"
-
-#: widget/WidgetPVESelectStage.lua:14
-msgid "选择关卡"
-msgstr "选择关卡"
 
 #: widget/WidgetPVEStartAirship.lua:9
 msgid "飞艇"
