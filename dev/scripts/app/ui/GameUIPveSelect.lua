@@ -31,7 +31,7 @@ end
 function GameUIPveSelect:GetListItem(index)
     local bg = display.newScale9Sprite(string.format("back_ground_548x40_%d.png", index % 2 == 0 and 1 or 2)):size(600,100)
     UIKit:ttfLabel({
-        text = _("北方塔院"),
+        text = "北方塔院",
         size = 24,
         color = 0x403c2f,
     }):addTo(bg):align(display.LEFT_CENTER,60,100*3/4)
@@ -39,7 +39,7 @@ function GameUIPveSelect:GetListItem(index)
     local num_bg = display.newSprite("back_ground_96x30.png"):addTo(bg):align(display.LEFT_CENTER,60,100*1/3)
     local size = num_bg:getContentSize()
     UIKit:ttfLabel({
-        text = _("22/60"),
+        text = "22/60",
         size = 20,
         color = 0xffedae,
     }):addTo(num_bg):align(display.CENTER, size.width/2, size.height/2)

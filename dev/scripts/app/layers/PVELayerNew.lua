@@ -1,5 +1,6 @@
 local pvemap = import("..map.pvemap")
 local NormalMapAnchorBottomLeftReverseY = import("..map.NormalMapAnchorBottomLeftReverseY")
+local PveSprite = import("..sprites.PveSprite")
 local MapLayer = import(".MapLayer")
 local PVELayerNew = class("PVELayerNew", MapLayer)
 
@@ -21,7 +22,7 @@ local map = {
     {"image", "keel_189x86.png"           ,1,1,1},
     {"animation", "zhihuishi"             ,1,1,1},
     {"image", "tmp_pve_flag_80x80.png"    ,1,1,1.5},
-    {"image", "alliance_moonGate.png"     ,1,1,1},
+    {"image", "alliance_moonGate.png"     ,1,1,1.5},
 }
 
 
@@ -38,48 +39,31 @@ local function linerat(a,b,t)
 end
 
 
-function PVELayerNew:ctor(scene, user)
+function PVELayerNew:ctor(scene)
     PVELayerNew.super.ctor(self, scene, 0.5, 1.5)
     GameUtils:LoadImagesWithFormat(function()
         self.background = cc.TMXTiledMap:create("tmxmaps/pve_10x42.tmx"):addTo(self)
     end, cc.TEXTURE2_D_PIXEL_FORMAT_RGB5_A1)
 
     self.normal_map = NormalMapAnchorBottomLeftReverseY.new({
-        tile_w = 80,
-        tile_h = 80,
-        map_width = 10,
-        map_height = 42,
+        tile_w = pvemap.tilewidth,
+        tile_h = pvemap.tileheight,
+        map_width = pvemap.width,
+        map_height = pvemap.height,
         base_x = 0,
-        base_y = 42 * 80,
+        base_y = pvemap.height * pvemap.tileheight,
     })
 
 
-    local data = pvemap.layers[1].data
-    for y = 1, 42 do
-        for x = 1, 10 do
-            local gid = data[ (y-1) * 10 + x ]
-            if map[gid] then
-                local type,png,w,h,s = unpack(map[gid])
-                local obj
-                if type == "image" then
-                    obj = display.newSprite(png)
-                elseif type == "animation" then
-                    obj = ccs.Armature:create(png)
-                    obj:getAnimation():playWithIndex(0)
-                end
-                local x,y = self.normal_map:ConvertToMapPosition(x-1, y-1)
-                local ox,oy = self.normal_map:ConvertToLocalPosition((w - 1)/2, (h - 1)/2)
-                obj:addTo(self):pos(x+ox, y+oy):scale(s)
-            end
-        end
-    end
-
-
+    self.seq_npc = {}
+    assert(#pvemap.layers[2].objects == 1)
     for i,v in ipairs(pvemap.layers[2].objects) do
         local lines = {}
         for i,line in ipairs(v.polyline) do
-            local x,y = self.normal_map:ConvertToMapPosition((line.x + v.x)/80 - 1, (line.y + v.y)/80 - 1)
+            local lx,ly = (line.x + v.x)/80 - 1, (line.y + v.y)/80 - 1
+            local x,y = self.normal_map:ConvertToMapPosition(lx,ly)
             table.insert(lines, {x = x, y = y})
+            table.insert(self.seq_npc, {x = lx, y = ly})
         end
         while #lines >= 2 do
             local dx,dy = math.abs(lines[2].x - lines[1].x), math.abs(lines[2].y - lines[1].y)
@@ -107,9 +91,65 @@ function PVELayerNew:ctor(scene, user)
             table.remove(lines, 1)
         end
     end
+    table.remove(self.seq_npc, 1)
+
+
+    self.npcs = {}
+    local data = pvemap.layers[1].data
+    for ly = 1, pvemap.height do
+        for lx = 1, pvemap.width do
+            local index = (ly-1) * pvemap.width + lx
+            local gid = data[index]
+            if map[gid] then
+                local type,png,w,h,s = unpack(map[gid])
+                local obj
+                if gid == 15 or gid == 16 then
+                    obj = PveSprite.new(self, string.format("1_%d", self:GetNpcIndex(lx - 1, ly - 1)), lx - 1, ly - 1, gid)
+                elseif type == "image" then
+                    obj = display.newSprite(png)
+                elseif type == "animation" then
+                    obj = ccs.Armature:create(png)
+                    obj:getAnimation():playWithIndex(0)
+                end
+                local x,y = self.normal_map:ConvertToMapPosition(lx - 1, ly - 1)
+                local ox,oy = self.normal_map:ConvertToLocalPosition((w - 1)/2, (h - 1)/2)
+                obj:addTo(self):pos(x+ox, y+oy):scale(s)
+
+                if gid == 15 or gid == 16 then
+                    self:RegisterNpc(obj, lx - 1, ly - 1)
+                end
+            end
+        end
+    end
 end
 function PVELayerNew:ConvertLogicPositionToMapPosition(lx, ly)
     return self:convertToNodeSpace(self.background:convertToWorldSpace(cc.p(self.normal_map:ConvertToMapPosition(lx, ly))))
+end
+function PVELayerNew:GetZOrderBy(sprite, x, y)
+    return 0
+end
+function PVELayerNew:GetLogicMap()
+    return self.normal_map
+end
+function PVELayerNew:GetClickedObject(world_x, world_y)
+    local point = self.background:convertToNodeSpace(cc.p(world_x, world_y))
+    local logic_x, logic_y = self:GetLogicMap():ConvertToLogicPosition(point.x, point.y)
+    return self:GetNpcBy(logic_x, logic_y)
+end
+function PVELayerNew:RegisterNpc(obj,X,Y)
+    local w,h = self.normal_map:GetSize()
+    self.npcs[string.format("%d_%d", X, Y)] = obj
+end
+function PVELayerNew:GetNpcBy(X, Y)
+    local w,h = self.normal_map:GetSize()
+    return self.npcs[string.format("%d_%d", X, Y)]
+end
+function PVELayerNew:GetNpcIndex(X,Y)
+    for i,v in ipairs(self.seq_npc) do
+        if v.x == X and v.y == Y then
+            return i
+        end
+    end
 end
 ---
 function PVELayerNew:getContentSize()
@@ -121,36 +161,5 @@ function PVELayerNew:getContentSize()
 end
 
 return PVELayerNew
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
