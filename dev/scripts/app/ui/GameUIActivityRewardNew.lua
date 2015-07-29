@@ -610,7 +610,7 @@ function GameUIActivityRewardNew:ui_PLAYER_LEVEL_UP()
     local title_bg = display.newScale9Sprite("title_blue_430x30.png",0,0, cc.size(390,30), cc.rect(10,10,410,10))
         :align(display.LEFT_TOP, 180, self.height - 30):addTo(self.bg)
     UIKit:ttfLabel({
-        text = string.format("当前等级：LV %s",City:GetFirstBuildingByType('keep'):GetLevel()),
+        text = string.format(_("当前等级：LV %s"),City:GetFirstBuildingByType('keep'):GetLevel()),
         size = 22,
         color= 0xffedae
     }):align(display.LEFT_CENTER, 14, 15):addTo(title_bg)
@@ -642,8 +642,9 @@ function GameUIActivityRewardNew:ui_PLAYER_LEVEL_UP()
     local activity_desc_label = UIKit:ttfLabel({
         text = _("活动期间，升级城堡获得丰厚奖励"),
         size = 20,
-        color= 0x403c2f
-    }):align(display.LEFT_TOP, 190, level_up_state_label:getPositionY() - level_up_state_label:getContentSize().height - 20):addTo(self.bg)
+        color= 0x403c2f,
+        dimensions = cc.size(400,0)
+    }):align(display.LEFT_CENTER, 190, level_up_state_label:getPositionY() - level_up_state_label:getContentSize().height - 30):addTo(self.bg)
 
     local list_bg = display.newScale9Sprite("background_568x120.png", 0,0,cc.size(568,544),cc.rect(15,10,538,100))
         :align(display.BOTTOM_CENTER, 304, 30):addTo(self.bg)

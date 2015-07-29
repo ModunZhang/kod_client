@@ -389,8 +389,9 @@ function GameUIMission:GetDailyItem(data)
     UIKit:ttfLabel({
         text = data.desc,
         size = 20,
-        color= 0x403c2f
-    }):align(display.LEFT_BOTTOM, 156, 68):addTo(content)
+        color= 0x403c2f,
+        dimensions = cc.size(400,0)
+    }):align(display.LEFT_CENTER, 156, 78):addTo(content)
     local progress_bg,progress =  self:GetProgressBar()
     local finfish_tip_label = UIKit:ttfLabel({
         text = _("今日的任务已经全部完成！"),

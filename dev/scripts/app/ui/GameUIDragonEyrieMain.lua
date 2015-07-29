@@ -429,7 +429,7 @@ function GameUIDragonEyrieMain:CreateDragonContentNodeIf()
             text = "",
             color = 0x403c2f,
             size  = 20
-        }):addTo(info_panel):align(display.LEFT_BOTTOM, 100, 80) -- 活力
+        }):addTo(info_panel):align(display.LEFT_BOTTOM, 114, 80) -- 活力
 
         local vitality_title_label =  UIKit:ttfLabel({
             text = _("活力"),
@@ -441,7 +441,7 @@ function GameUIDragonEyrieMain:CreateDragonContentNodeIf()
             text = "",
             color = 0x403c2f,
             size  = 20
-        }):addTo(info_panel):align(display.LEFT_BOTTOM, 100, 45)
+        }):addTo(info_panel):align(display.LEFT_BOTTOM, 114, 45)
 
         local leadership_title_label =  UIKit:ttfLabel({
             text = _("领导力"),
@@ -453,7 +453,7 @@ function GameUIDragonEyrieMain:CreateDragonContentNodeIf()
             text = "",
             color = 0x403c2f,
             size  = 20
-        }):addTo(info_panel):align(display.LEFT_BOTTOM, 100, 10)
+        }):addTo(info_panel):align(display.LEFT_BOTTOM, 114, 10)
 
         self.state_label = UIKit:ttfLabel({
             text = "",
@@ -480,7 +480,7 @@ function GameUIDragonEyrieMain:CreateDragonHateNodeIf()
     if not self.draogn_hate_node then
         local node = display.newNode():size(window.width,210):addTo(self.dragonNode):pos(0,window.bottom_top)
         self.draogn_hate_node = node
-        WidgetUIBackGround.new({width = 554, height = 80},WidgetUIBackGround.STYLE_TYPE.STYLE_3):addTo(node):align(display.CENTER_TOP, window.cx, 210)
+        WidgetUIBackGround.new({width = 554, height = 100},WidgetUIBackGround.STYLE_TYPE.STYLE_3):addTo(node):align(display.CENTER_TOP, window.cx, 210)
         local tip_label = UIKit:ttfLabel({
             text = Localize.dragon_buffer[self:GetCurrentDragon():Type()],
             size = 20,
@@ -492,8 +492,9 @@ function GameUIDragonEyrieMain:CreateDragonHateNodeIf()
             text = self.building:GetNextHateLevel() and string.format(_("龙巢%d级时可孵化新的巨龙"),self.building:GetNextHateLevel()) or "",
             size = 20,
             color= 0x403c2f,
-            align= cc.TEXT_ALIGNMENT_CENTER
-        }):addTo(node):align(display.CENTER_TOP, window.cx, 170)
+            align= cc.TEXT_ALIGNMENT_CENTER,
+            dimensions = cc.size(520,0)
+        }):addTo(node):align(display.CENTER, window.cx, 150)
         self.hate_label = hate_label
         local hate_button = WidgetPushButton.new({ normal = "yellow_btn_up_186x66.png",pressed = "yellow_btn_down_186x66.png", disabled = "grey_btn_186x66.png"})
             :setButtonLabel("normal",UIKit:commonButtonLable({
@@ -501,7 +502,7 @@ function GameUIDragonEyrieMain:CreateDragonHateNodeIf()
                 size = 24,
                 color = 0xffedae,
             }))
-            :addTo(node):align(display.CENTER_BOTTOM,window.cx,55)
+            :addTo(node):align(display.CENTER_BOTTOM,window.cx,35)
             :onButtonClicked(function()
                 self:OnEnergyButtonClicked()
             end)

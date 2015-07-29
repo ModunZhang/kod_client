@@ -164,13 +164,6 @@ function GameUITradeGuild:LoadResource(goods_details,goods_type)
     -- 列名
     UIKit:ttfLabel(
         {
-            text = _("资源"),
-            size = 20,
-            color = 0x615b44
-        }):align(display.LEFT_CENTER,50, 570)
-        :addTo(layer)
-    UIKit:ttfLabel(
-        {
             text = _("数量"),
             size = 20,
             color = 0x615b44
@@ -529,7 +522,7 @@ function GameUITradeGuild:CreateSellItem(list,index)
 
     local goods = self:GetOnSellGoods()[index]
     if goods then
-        title_label:setString(_("出售")..Localize.sell_type[goods.goods_type])
+        title_label:setString(_("出售").." "..Localize.sell_type[goods.goods_type])
         -- goods icon
         local goods_icon = display.newSprite(UILib.resource[goods.goods_type] or UILib.materials[goods.goods_type])
             :align(display.CENTER, goods_bg:getContentSize().width/2, goods_bg:getContentSize().height/2)

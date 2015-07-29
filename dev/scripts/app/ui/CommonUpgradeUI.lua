@@ -217,7 +217,7 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
     elseif self.building:GetType()=="warehouse" then
         local additon = building:GetResourceNextLevelValueLimit()-building:GetResourceValueLimit()
         if additon>0 then
-            efficiency = string.format("%s%d,",bd.warehouse_max,additon)
+            efficiency = string.format("%s+%d,",bd.warehouse_max,additon)
         end
     elseif self.building:GetType()=="toolShop" then
         local additon = building:GetNextLevelProduction()-building:GetProduction()

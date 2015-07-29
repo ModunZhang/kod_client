@@ -187,7 +187,7 @@ function GameUISettingServer:GetItemContent()
 		text = "HIGH",
 		size = 20,
 		color= 0x970000
-	}):align(display.LEFT_BOTTOM, 198, 48):addTo(content)
+	}):align(display.LEFT_BOTTOM, desc_label:getContentSize().width + desc_label:getPositionX() + 10, 48):addTo(content)
 	local here_label = UIKit:ttfLabel({
 		text = _("你在这儿"),
 		size = 20,
