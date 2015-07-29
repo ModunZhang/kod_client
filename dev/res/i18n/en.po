@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: dragonfall\n"
-"POT-Creation-Date: 2015-07-24 20:59+0800\n"
-"PO-Revision-Date: 2015-07-24 20:59+0800\n"
+"POT-Creation-Date: 2015-07-29 16:14+0800\n"
+"PO-Revision-Date: 2015-07-29 16:14+0800\n"
 "Last-Translator: gaozhou <gaozhou.f@qq.com>\n"
 "Language-Team: \n"
 "Language: en\n"
@@ -51,26 +51,28 @@ msgstr ""
 #: service/NetManager.lua:1611 service/NetManager.lua:1624
 #: service/NetManager.lua:1626 service/NetManager.lua:1644
 #: service/NetManager.lua:1646 ui/CommonUpgradeUI.lua:464
-#: ui/CommonUpgradeUI.lua:927 ui/CommonUpgradeUI.lua:958
-#: ui/CommonUpgradeUI.lua:970 ui/GameUIActivityNew.lua:532
-#: ui/GameUIActivityRewardNew.lua:279 ui/GameUIActivityRewardNew.lua:285
-#: ui/GameUIActivityRewardNew.lua:423 ui/GameUIActivityRewardNew.lua:579
-#: ui/GameUIActivityRewardNew.lua:776 ui/GameUIActivityRewardNew.lua:870
-#: ui/GameUIAlliance.lua:360 ui/GameUIAlliance.lua:367
-#: ui/GameUIAlliance.lua:727 ui/GameUIAlliance.lua:851
-#: ui/GameUIAlliance.lua:1099 ui/GameUIAlliance.lua:1104
-#: ui/GameUIAlliance.lua:1512 ui/GameUIAlliance.lua:1548
-#: ui/GameUIAlliance.lua:1556 ui/GameUIAlliance.lua:1643
-#: ui/GameUIAlliance.lua:1648 ui/GameUIAlliance.lua:1652
-#: ui/GameUIAlliance.lua:1718 ui/GameUIAlliance.lua:1723
-#: ui/GameUIAllianceBattle.lua:217 ui/GameUIAllianceBattle.lua:229
-#: ui/GameUIAllianceBattle.lua:860 ui/GameUIAllianceCityEnter.lua:155
-#: ui/GameUIAllianceCityEnter.lua:210 ui/GameUIAllianceCityEnter.lua:218
-#: ui/GameUIAllianceContribute.lua:318 ui/GameUIAllianceContribute.lua:323
-#: ui/GameUIAllianceContribute.lua:334 ui/GameUIAllianceInfo.lua:270
-#: ui/GameUIAllianceInfo.lua:277 ui/GameUIAllianceJoinTips.lua:144
-#: ui/GameUIAllianceMemberInfo.lua:165 ui/GameUIAllianceMemberInfo.lua:174
-#: ui/GameUIAllianceMemberInfo.lua:340 ui/GameUIAllianceMemberInfo.lua:345
+#: ui/CommonUpgradeUI.lua:808 ui/CommonUpgradeUI.lua:829
+#: ui/CommonUpgradeUI.lua:870 ui/CommonUpgradeUI.lua:918
+#: ui/CommonUpgradeUI.lua:949 ui/CommonUpgradeUI.lua:961
+#: ui/GameUIActivityNew.lua:532 ui/GameUIActivityRewardNew.lua:279
+#: ui/GameUIActivityRewardNew.lua:285 ui/GameUIActivityRewardNew.lua:423
+#: ui/GameUIActivityRewardNew.lua:579 ui/GameUIActivityRewardNew.lua:776
+#: ui/GameUIActivityRewardNew.lua:870 ui/GameUIAlliance.lua:360
+#: ui/GameUIAlliance.lua:367 ui/GameUIAlliance.lua:727
+#: ui/GameUIAlliance.lua:851 ui/GameUIAlliance.lua:1099
+#: ui/GameUIAlliance.lua:1104 ui/GameUIAlliance.lua:1512
+#: ui/GameUIAlliance.lua:1548 ui/GameUIAlliance.lua:1556
+#: ui/GameUIAlliance.lua:1643 ui/GameUIAlliance.lua:1648
+#: ui/GameUIAlliance.lua:1652 ui/GameUIAlliance.lua:1718
+#: ui/GameUIAlliance.lua:1723 ui/GameUIAllianceBattle.lua:217
+#: ui/GameUIAllianceBattle.lua:229 ui/GameUIAllianceBattle.lua:860
+#: ui/GameUIAllianceCityEnter.lua:155 ui/GameUIAllianceCityEnter.lua:210
+#: ui/GameUIAllianceCityEnter.lua:218 ui/GameUIAllianceContribute.lua:318
+#: ui/GameUIAllianceContribute.lua:323 ui/GameUIAllianceContribute.lua:334
+#: ui/GameUIAllianceInfo.lua:270 ui/GameUIAllianceInfo.lua:277
+#: ui/GameUIAllianceJoinTips.lua:144 ui/GameUIAllianceMemberInfo.lua:126
+#: ui/GameUIAllianceMemberInfo.lua:169 ui/GameUIAllianceMemberInfo.lua:178
+#: ui/GameUIAllianceMemberInfo.lua:344 ui/GameUIAllianceMemberInfo.lua:349
 #: ui/GameUIAllianceMosterEnter.lua:149 ui/GameUIAllianceMosterEnter.lua:153
 #: ui/GameUIAllianceNoticeOrDescEdit.lua:89
 #: ui/GameUIAllianceNoticeOrDescEdit.lua:95 ui/GameUIAlliancePalace.lua:296
@@ -82,7 +84,7 @@ msgstr ""
 #: ui/GameUIAllianceSendTroops.lua:215 ui/GameUIAllianceShrineDetail.lua:257
 #: ui/GameUIAllianceVillageEnter.lua:310 ui/GameUIAllianceVillageEnter.lua:313
 #: ui/GameUIAllianceVillageEnter.lua:338 ui/GameUIAllianceVillageEnter.lua:373
-#: ui/GameUIAllianceVillageEnter.lua:401 ui/GameUIBuild.lua:176
+#: ui/GameUIAllianceVillageEnter.lua:401 ui/GameUIBuild.lua:186
 #: ui/GameUIChatChannel.lua:92 ui/GameUIChatChannel.lua:98
 #: ui/GameUIChatChannel.lua:103 ui/GameUIChatChannel.lua:140
 #: ui/GameUIChatChannel.lua:145 ui/GameUIChatChannel.lua:232
@@ -118,9 +120,10 @@ msgstr ""
 #: ui/GameUIStrikePlayer.lua:222 ui/GameUIStrikePlayer.lua:241
 #: ui/GameUIStrikePlayer.lua:266 ui/GameUITownHall.lua:164
 #: ui/GameUITownHall.lua:174 ui/GameUITradeGuild.lua:283
-#: ui/GameUITradeGuild.lua:860 ui/GameUITradeGuild.lua:865
-#: ui/GameUITradeGuild.lua:869 ui/GameUIUnlockBuilding.lua:318
-#: ui/GameUIUnlockBuilding.lua:327 ui/GameUIUnlockBuilding.lua:343
+#: ui/GameUITradeGuild.lua:861 ui/GameUITradeGuild.lua:866
+#: ui/GameUITradeGuild.lua:870 ui/GameUIUnlockBuilding.lua:275
+#: ui/GameUIUnlockBuilding.lua:296 ui/GameUIUnlockBuilding.lua:312
+#: ui/GameUIUnlockBuilding.lua:321 ui/GameUIUnlockBuilding.lua:337
 #: ui/GameUIUpgradeTechnology.lua:414 ui/GameUIUpgradeTechnology.lua:423
 #: ui/GameUIUpgradeTechnology.lua:444 ui/GameUIUpgradeTechnology.lua:458
 #: ui/GameUIWatchTower.lua:190 ui/GameUIWatchTower.lua:201
@@ -139,7 +142,7 @@ msgstr ""
 #: widget/WidgetManufacture.lua:126 widget/WidgetManufacture.lua:195
 #: widget/WidgetManufacture.lua:570 widget/WidgetMarchEvents.lua:500
 #: widget/WidgetMarchEvents.lua:510 widget/WidgetMoveHouse.lua:27
-#: widget/WidgetPlayerNode.lua:222 widget/WidgetPromoteSoldier.lua:103
+#: widget/WidgetPlayerNode.lua:222 widget/WidgetPromoteSoldier.lua:114
 #: widget/WidgetRecruitSoldier.lua:312 widget/WidgetRecruitSoldier.lua:387
 #: widget/WidgetRecruitSoldier.lua:421 widget/WidgetStockGoods.lua:143
 #: widget/WidgetTreatSoldier.lua:276 widget/WidgetUpgradeMilitaryTech.lua:103
@@ -1109,11 +1112,11 @@ msgstr "Siege science"
 msgid "对%s的攻击"
 msgstr "Attack against %s"
 
-#: entity/MilitaryTechnology.lua:138 widget/WidgetPromoteSoldier.lua:308
+#: entity/MilitaryTechnology.lua:138 widget/WidgetPromoteSoldier.lua:319
 msgid "升级军事科技队列被占用"
 msgstr "Upgrade queue is busy"
 
-#: entity/MilitaryTechnology.lua:141 widget/WidgetPromoteSoldier.lua:311
+#: entity/MilitaryTechnology.lua:141 widget/WidgetPromoteSoldier.lua:322
 #, c-format
 msgid "银币不足 需要补充 %d"
 msgstr "Need %d more Coin"
@@ -1298,7 +1301,7 @@ msgstr "Upgrade Castle first"
 msgid "资源不足"
 msgstr "Need more Resources"
 
-#: entity/UpgradeBuilding.lua:20
+#: entity/UpgradeBuilding.lua:20 ui/GameUIBuild.lua:127
 msgid "建造队列不足"
 msgstr "No idle build queue"
 
@@ -1306,16 +1309,19 @@ msgstr "No idle build queue"
 msgid "资源不足.建造队列不足"
 msgstr "Need more Resources and build queue"
 
-#: entity/UpgradeBuilding.lua:22 ui/GameUIAllianceTitle.lua:142
-#: ui/GameUIHospital.lua:300 ui/GameUIItems.lua:227 ui/GameUIKeep.lua:425
+#: entity/UpgradeBuilding.lua:22 ui/CommonUpgradeUI.lua:808
+#: ui/CommonUpgradeUI.lua:829 ui/CommonUpgradeUI.lua:870
+#: ui/GameUIAllianceTitle.lua:142 ui/GameUIHospital.lua:300
+#: ui/GameUIItems.lua:227 ui/GameUIKeep.lua:425
 #: ui/GameUIPResourceBuilding.lua:244 ui/GameUITownHall.lua:164
+#: ui/GameUIUnlockBuilding.lua:275 ui/GameUIUnlockBuilding.lua:296
 #: ui/GameUIUpgradeTechnology.lua:458 ui/GameUIUpgradeTechnology.lua:503
 #: ui/GameUIWatchTower.lua:190 ui/GameUIWathTowerRegion.lua:194
 #: widget/WidgetAccelerateGroup.lua:111
 #: widget/WidgetAllianceCreateOrEdit.lua:91
 #: widget/WidgetAllianceCreateOrEdit.lua:96 widget/WidgetMakeEquip.lua:434
 #: widget/WidgetMakeEquip.lua:487 widget/WidgetManufacture.lua:131
-#: widget/WidgetManufacture.lua:200 widget/WidgetPromoteSoldier.lua:290
+#: widget/WidgetManufacture.lua:200 widget/WidgetPromoteSoldier.lua:301
 #: widget/WidgetRecruitSoldier.lua:387 widget/WidgetRecruitSoldier.lua:421
 #: widget/WidgetTreatSoldier.lua:264 widget/WidgetUpgradeMilitaryTech.lua:94
 #: widget/WidgetUpgradeMilitaryTech.lua:249 widget/WidgetUseItems.lua:1199
@@ -1337,7 +1343,7 @@ msgstr "Need more civilians,build or upgrade a dwelling first"
 
 #: entity/UpgradeBuilding.lua:26
 msgid "前置建筑等级未满足"
-msgstr "The Precondition isn't met"
+msgstr "The Precondition unfulfilled"
 
 #: entity/UpgradeBuilding.lua:154
 #, c-format
@@ -1411,7 +1417,7 @@ msgstr "Tap to build %s"
 msgid "点击建筑：%s"
 msgstr "Tap building:%s"
 
-#: scenes/MyCityFteScene.lua:216 scenes/MyCityScene.lua:415
+#: scenes/MyCityFteScene.lua:216 scenes/MyCityScene.lua:419
 #: ui/FullScreenPopDialogUI.lua:35 ui/GameUIAllianceBattle.lua:220
 #: ui/GameUIAllianceBattle.lua:863 ui/GameUIAllianceInfo.lua:374
 #: ui/GameUIAllianceInfo.lua:377 ui/GameUIAllianceInfo.lua:381
@@ -1428,7 +1434,7 @@ msgstr "Tap building:%s"
 #: widget/WidgetManufacture.lua:131 widget/WidgetManufacture.lua:200
 #: widget/WidgetMaterialDetails.lua:77 widget/WidgetMaterialDetails.lua:97
 #: widget/WidgetMaterialDetails.lua:116 widget/WidgetMaterialDetails.lua:129
-#: widget/WidgetPromoteSoldier.lua:266 widget/WidgetRecruitSoldier.lua:283
+#: widget/WidgetPromoteSoldier.lua:277 widget/WidgetRecruitSoldier.lua:283
 #: widget/WidgetStockGoods.lua:135 widget/WidgetStockGoods.lua:139
 #: widget/WidgetTreatSoldier.lua:262 widget/WidgetTreatSoldier.lua:264
 #: widget/WidgetTreatSoldier.lua:330 widget/WidgetTreatSoldier.lua:332
@@ -1440,7 +1446,7 @@ msgstr "Tap building:%s"
 msgid "主人"
 msgstr "My Lord"
 
-#: scenes/MyCityFteScene.lua:216 scenes/MyCityScene.lua:415
+#: scenes/MyCityFteScene.lua:216 scenes/MyCityScene.lua:419
 #: ui/GameUIDailyMissionInfo.lua:291 widget/WidgetMaterialDetails.lua:129
 msgid "需要一条空闲状态的魔龙才能探险"
 msgstr "You need an idle Dragon to explore the myst"
@@ -1503,7 +1509,7 @@ msgstr ""
 "all troops!"
 
 #: scenes/MyCityFteScene.lua:504 scenes/PVEScene.lua:300
-#: ui/GameUIMission.lua:278 ui/GameUIPVEHome.lua:232
+#: ui/GameUIMission.lua:286 ui/GameUIPVEHome.lua:232
 #: widget/WidgetPVEDialog.lua:189 widget/WidgetPVEDialog.lua:228
 #: widget/WidgetPVEFteMiner.lua:64 widget/WidgetPVEGetRewards.lua:75
 #: widget/WidgetPVEGetTaskRewards.lua:75
@@ -1594,15 +1600,15 @@ msgstr ""
 "to do next,just tap the recommended task bar at the upper left,see you,my "
 "lord."
 
-#: scenes/MyCityScene.lua:52
+#: scenes/MyCityScene.lua:56
 msgid "reload"
 msgstr "reload"
 
-#: scenes/MyCityScene.lua:69
+#: scenes/MyCityScene.lua:73
 msgid "选择一个空地,将小屋移动到这里"
 msgstr "Choose an open ground and move the cabin there"
 
-#: scenes/MyCityScene.lua:253
+#: scenes/MyCityScene.lua:257
 msgid ""
 "领主大人，这个世界上的觉醒者并不只有你一人。介入他们或者创建联盟邀请他们加"
 "入，会让我们发展得更顺利"
@@ -1762,7 +1768,7 @@ msgstr "Upgrade Now"
 #: ui/GameUIHospital.lua:172 ui/GameUIItems.lua:238
 #: ui/GameUIPResourceBuilding.lua:225 ui/GameUIResource.lua:388
 #: ui/GameUITownHall.lua:174 ui/GameUIUpgradeTechnology.lua:414
-#: widget/WidgetMakeEquip.lua:142 widget/WidgetPromoteSoldier.lua:103
+#: widget/WidgetMakeEquip.lua:142 widget/WidgetPromoteSoldier.lua:114
 #: widget/WidgetRecruitSoldier.lua:312 widget/WidgetTreatSoldier.lua:276
 #: widget/WidgetUpgradeMilitaryTech.lua:103 widget/WidgetUseItems.lua:1210
 #, c-format
@@ -1835,7 +1841,7 @@ msgid "滑轮组"
 msgstr "Tackle-block "
 
 #: ui/CommonUpgradeUI.lua:657 widget/WidgetAllianceBuildingUpgrade.lua:190
-#: widget/WidgetPromoteSoldier.lua:218
+#: widget/WidgetPromoteSoldier.lua:229
 #: widget/WidgetUpgradeMilitaryTech.lua:224
 msgid "升级需求"
 msgstr "Require"
@@ -1846,7 +1852,7 @@ msgid "正在升级 %s 到等级 %d"
 msgstr "Upgrading %s to Lv%d"
 
 #: ui/CommonUpgradeUI.lua:741 ui/GameUIAcademy.lua:211
-#: ui/GameUIHasBeenBuild.lua:308 ui/GameUIQuickTechnology.lua:189
+#: ui/GameUIHasBeenBuild.lua:308 ui/GameUIQuickTechnology.lua:191
 #: widget/WidgetEventTabButtons.lua:721
 #: widget/WidgetMilitaryTechnologyStatus.lua:96 widget/WidgetSpeedUp.lua:39
 msgid "免费加速"
@@ -1856,63 +1862,65 @@ msgstr "Free"
 msgid "小于5分钟时，可使用免费加速.激活VIP X后，小于5分钟时可使用免费加速"
 msgstr "You can speed up for free when the time is less than 5 minutes"
 
-#: ui/CommonUpgradeUI.lua:802 ui/GameUIUnlockBuilding.lua:292
+#: ui/CommonUpgradeUI.lua:802 ui/GameUIUnlockBuilding.lua:289
 msgid "补充资源"
 msgstr "Supply resources"
 
-#: ui/CommonUpgradeUI.lua:803 ui/GameUIUnlockBuilding.lua:293
+#: ui/CommonUpgradeUI.lua:803 ui/GameUIUnlockBuilding.lua:290
 msgid "您当前没有足够的资源,是否花费魔法石立即补充"
 msgstr "You need more resources,do you want to supply with Dragon coins ?"
 
-#: ui/CommonUpgradeUI.lua:856 ui/CommonUpgradeUI.lua:900
-msgid "立即完成"
-msgstr "Finish Now"
-
-#: ui/CommonUpgradeUI.lua:862 ui/CommonUpgradeUI.lua:906
-msgid "开启"
-msgstr "Active"
-
-#: ui/CommonUpgradeUI.lua:862 ui/CommonUpgradeUI.lua:906
-msgid "第2队列"
-msgstr "The 2nd Queue"
-
-#: ui/CommonUpgradeUI.lua:868 ui/CommonUpgradeUI.lua:912
-#: ui/GameUIUnlockBuilding.lua:315
-msgid "立即开始"
-msgstr "Start now"
-
-#: ui/CommonUpgradeUI.lua:869 ui/GameUIUnlockBuilding.lua:316
-msgid "您当前没有空闲的建筑,是否花费魔法石立即完成上一个队列"
-msgstr ""
-"You have no available building queues, do you want to finish the last queue "
-"instantly by using Dragon coin ?"
-
-#: ui/CommonUpgradeUI.lua:918 utils/UIKit.lua:839
-#, c-format
-msgid "请首先建造%s"
-msgstr "Build %s first"
-
-#: ui/CommonUpgradeUI.lua:924 ui/CommonUpgradeUI.lua:953
-#: ui/GameUIAllianceLoyalty.lua:22 ui/GameUIDailyMissionInfo.lua:190
-#: ui/GameUIPResourceBuilding.lua:297 ui/GameUIUnlockBuilding.lua:339
-#: ui/GameUIWatchTower.lua:238 ui/GameUIWathTowerRegion.lua:242
-msgid "前往"
-msgstr "Go to"
-
-#: ui/CommonUpgradeUI.lua:966 ui/GameUIBuild.lua:195
-#: ui/GameUIHasBeenBuild.lua:135 ui/GameUIHospital.lua:257
-#: ui/GameUIHospital.lua:306 ui/GameUIItems.lua:233 ui/GameUIKeep.lua:432
-#: ui/GameUIPResourceBuilding.lua:251 ui/GameUITownHall.lua:170
-#: ui/GameUIWatchTower.lua:196 ui/GameUIWathTowerRegion.lua:200
-#: widget/WidgetAccelerateGroup.lua:117
+#: ui/CommonUpgradeUI.lua:813 ui/CommonUpgradeUI.lua:834
+#: ui/CommonUpgradeUI.lua:875 ui/CommonUpgradeUI.lua:957
+#: ui/GameUIBuild.lua:205 ui/GameUIHasBeenBuild.lua:135
+#: ui/GameUIHospital.lua:257 ui/GameUIHospital.lua:306 ui/GameUIItems.lua:233
+#: ui/GameUIKeep.lua:432 ui/GameUIPResourceBuilding.lua:251
+#: ui/GameUITownHall.lua:170 ui/GameUIUnlockBuilding.lua:280
+#: ui/GameUIUnlockBuilding.lua:301 ui/GameUIWatchTower.lua:196
+#: ui/GameUIWathTowerRegion.lua:200 widget/WidgetAccelerateGroup.lua:117
 #: widget/WidgetAllianceCreateOrEdit.lua:108 widget/WidgetManufacture.lua:137
-#: widget/WidgetManufacture.lua:206 widget/WidgetPromoteSoldier.lua:148
+#: widget/WidgetManufacture.lua:206 widget/WidgetPromoteSoldier.lua:159
 #: widget/WidgetRecruitSoldier.lua:289 widget/WidgetRecruitSoldier.lua:393
 #: widget/WidgetRecruitSoldier.lua:427 widget/WidgetTreatSoldier.lua:272
 #: widget/WidgetTreatSoldier.lua:340 widget/WidgetUpgradeMilitaryTech.lua:255
 #: widget/WidgetUseItems.lua:1205
 msgid "前往商店"
 msgstr "Store"
+
+#: ui/CommonUpgradeUI.lua:851 ui/CommonUpgradeUI.lua:892
+msgid "立即完成"
+msgstr "Finish Now"
+
+#: ui/CommonUpgradeUI.lua:857 ui/CommonUpgradeUI.lua:898
+msgid "开启"
+msgstr "Active"
+
+#: ui/CommonUpgradeUI.lua:857 ui/CommonUpgradeUI.lua:898
+msgid "第2队列"
+msgstr "The 2nd Queue"
+
+#: ui/CommonUpgradeUI.lua:862 ui/CommonUpgradeUI.lua:903
+#: ui/GameUIUnlockBuilding.lua:309
+msgid "立即开始"
+msgstr "Start now"
+
+#: ui/CommonUpgradeUI.lua:863 ui/GameUIUnlockBuilding.lua:310
+msgid "您当前没有空闲的建筑,是否花费魔法石立即完成上一个队列"
+msgstr ""
+"You have no available building queues, do you want to finish the last queue "
+"instantly by using Dragon coin ?"
+
+#: ui/CommonUpgradeUI.lua:909 utils/UIKit.lua:839
+#, c-format
+msgid "请首先建造%s"
+msgstr "Build %s first"
+
+#: ui/CommonUpgradeUI.lua:915 ui/CommonUpgradeUI.lua:944
+#: ui/GameUIAllianceLoyalty.lua:22 ui/GameUIDailyMissionInfo.lua:190
+#: ui/GameUIPResourceBuilding.lua:297 ui/GameUIUnlockBuilding.lua:333
+#: ui/GameUIWatchTower.lua:238 ui/GameUIWathTowerRegion.lua:242
+msgid "前往"
+msgstr "Go to"
 
 #: ui/FullScreenPopDialogUI.lua:147 ui/GameUIAllianceNoticeOrDescEdit.lua:58
 #: ui/GameUIMail.lua:317 utils/UIKit.lua:552 utils/UIKit.lua:617
@@ -1950,18 +1958,18 @@ msgstr "Academy"
 msgid "科技"
 msgstr "Science"
 
-#: ui/GameUIAcademy.lua:168 ui/GameUIQuickTechnology.lua:145
+#: ui/GameUIAcademy.lua:168 ui/GameUIQuickTechnology.lua:147
 #: widget/WidgetMilitaryTechnologyStatus.lua:39
 msgid "研发队列空闲"
 msgstr "Research queue is idle now"
 
-#: ui/GameUIAcademy.lua:174 ui/GameUIQuickTechnology.lua:151
+#: ui/GameUIAcademy.lua:174 ui/GameUIQuickTechnology.lua:153
 msgid "选择一个技能进行研发"
 msgstr "Choose a science to research"
 
 #: ui/GameUIAcademy.lua:203 ui/GameUIDragonEyrieMain.lua:414
 #: ui/GameUIDragonEyrieMain.lua:515 ui/GameUIHasBeenBuild.lua:322
-#: ui/GameUIQuickTechnology.lua:180 ui/GameUIReplayNew.lua:1626
+#: ui/GameUIQuickTechnology.lua:182 ui/GameUIReplayNew.lua:1626
 #: ui/GameUITownHall.lua:262 ui/GameUIWatchTower.lua:341
 #: ui/GameUIWathTowerRegion.lua:350 widget/WidgetEventTabButtons.lua:395
 #: widget/WidgetEventTabButtons.lua:731 widget/WidgetMarchEvents.lua:317
@@ -1974,12 +1982,12 @@ msgid "加速"
 msgstr "Speed up"
 
 #: ui/GameUIAcademy.lua:258 ui/GameUIHelp.lua:232
-#: ui/GameUIQuickTechnology.lua:235 ui/GameUITechnologySpeedUp.lua:22
+#: ui/GameUIQuickTechnology.lua:237 ui/GameUITechnologySpeedUp.lua:22
 #, c-format
 msgid "正在研发%s到 Level %d"
 msgstr "Researching %s to Lv%d"
 
-#: ui/GameUIAcademy.lua:320 ui/GameUIQuickTechnology.lua:297
+#: ui/GameUIAcademy.lua:320 ui/GameUIQuickTechnology.lua:299
 msgid "该技能暂未开放！"
 msgstr "Coming soon!"
 
@@ -2092,7 +2100,7 @@ msgstr "Give up"
 #: ui/GameUIActivityNew.lua:516 ui/GameUIActivityRewardNew.lua:417
 #: ui/GameUIActivityRewardNew.lua:542 ui/GameUIActivityRewardNew.lua:770
 #: ui/GameUIActivityRewardNew.lua:862 ui/GameUIAllianceJoinTips.lua:51
-#: ui/GameUIMission.lua:211 widget/WidgetPVEEvent.lua:196
+#: ui/GameUIMission.lua:218 widget/WidgetPVEEvent.lua:196
 #: widget/WidgetPVEGetRewards.lua:58 widget/WidgetPVEGetRewards.lua:84
 #: widget/WidgetPVEGetTaskRewards.lua:60 widget/WidgetPVEGetTaskRewards.lua:88
 msgid "领取"
@@ -2138,7 +2146,7 @@ msgstr "Day %s"
 msgid "行军队列"
 msgstr "Marching queue"
 
-#: ui/GameUIActivityRewardNew.lua:526 ui/GameUIBuild.lua:63
+#: ui/GameUIActivityRewardNew.lua:526 ui/GameUIBuild.lua:71
 #: ui/GameUIHasBeenBuild.lua:394
 msgid "建筑队列"
 msgstr "Building queue"
@@ -2171,15 +2179,15 @@ msgstr "Online today:"
 
 #: ui/GameUIActivityRewardNew.lua:901 ui/GameUIActivityRewardNew.lua:971
 msgid "还不能领取"
-msgstr "Can't get"
+msgstr "Not yet"
 
 #: ui/GameUIActivityRewardNew.lua:994
 #, c-format
 msgid "在线%s分钟"
 msgstr "Online for %s minutes"
 
-#: ui/GameUIAlliance.lua:34 ui/GameUIAllianceMemberInfo.lua:202
-#: ui/GameUIAllianceMemberInfo.lua:205 ui/GameUIChatChannel.lua:189
+#: ui/GameUIAlliance.lua:34 ui/GameUIAllianceMemberInfo.lua:206
+#: ui/GameUIAllianceMemberInfo.lua:209 ui/GameUIChatChannel.lua:189
 #: ui/GameUIVip.lua:93 widget/WidgetHomeBottom.lua:34
 msgid "联盟"
 msgstr "Alliance"
@@ -2237,7 +2245,7 @@ msgstr "Member"
 
 #: ui/GameUIAlliance.lua:420 ui/GameUIAlliance.lua:613
 #: ui/GameUIAllianceBattle.lua:621 ui/GameUIAllianceBattle.lua:1215
-#: ui/GameUIAllianceInfo.lua:173 ui/GameUIAllianceMemberInfo.lua:212
+#: ui/GameUIAllianceInfo.lua:173 ui/GameUIAllianceMemberInfo.lua:216
 #: ui/GameUIAllianceSendTroops.lua:685 ui/GameUICityBuildingInfo.lua:18
 #: ui/GameUICityBuildingInfo.lua:23 ui/GameUICityBuildingInfo.lua:28
 #: ui/GameUICityBuildingInfo.lua:33 ui/GameUICityBuildingInfo.lua:38
@@ -2268,7 +2276,7 @@ msgstr "Language"
 
 #: ui/GameUIAlliance.lua:446 ui/GameUIAlliance.lua:639
 #: ui/GameUIAllianceBattle.lua:622 ui/GameUIAllianceBattle.lua:1216
-#: ui/GameUIAllianceInfo.lua:199 ui/GameUIAllianceMemberInfo.lua:213
+#: ui/GameUIAllianceInfo.lua:199 ui/GameUIAllianceMemberInfo.lua:217
 #: ui/GameUIVip.lua:91
 msgid "击杀"
 msgstr "Kill"
@@ -2346,7 +2354,7 @@ msgid "<空>"
 msgstr "<empty>"
 
 #: ui/GameUIAlliance.lua:1455 ui/GameUIAllianceInfo.lua:446
-#: ui/GameUIAllianceMemberInfo.lua:208
+#: ui/GameUIAllianceMemberInfo.lua:212
 msgid "在线"
 msgstr "Online"
 
@@ -2526,7 +2534,7 @@ msgstr ""
 #: ui/GameUIAllianceBattle.lua:485 ui/GameUIAllianceBattle.lua:486
 #: ui/GameUIAllianceBattle.lua:494 ui/GameUIAllianceBattle.lua:509
 #: ui/GameUIAllianceBattle.lua:513 ui/GameUIAllianceBattle.lua:944
-#: ui/GameUIAllianceMemberInfo.lua:204 ui/GameUIAllianceMemberInfo.lua:205
+#: ui/GameUIAllianceMemberInfo.lua:208 ui/GameUIAllianceMemberInfo.lua:209
 #: ui/GameUIAlliancePalace.lua:186 ui/GameUIAlliancePalace.lua:187
 #: ui/GameUIAllianceVillageEnter.lua:171 ui/GameUIAllianceVillageEnter.lua:182
 #: ui/GameUIMoonGate.lua:215 ui/GameUIMoonGate.lua:227
@@ -2785,7 +2793,7 @@ msgid "邮件"
 msgstr "Mail"
 
 #: ui/GameUIAllianceCityEnter.lua:191 ui/GameUIAllianceMemberInfo.lua:106
-#: ui/GameUIAllianceMemberInfo.lua:187 ui/GameUIChatChannel.lua:612
+#: ui/GameUIAllianceMemberInfo.lua:191 ui/GameUIChatChannel.lua:612
 #: widget/WidgetMailContacts.lua:114
 msgid "个人邮件"
 msgstr "Mail"
@@ -2916,7 +2924,7 @@ msgstr "Enemy"
 
 #: ui/GameUIAllianceInfo.lua:116
 msgid "联系盟主"
-msgstr "Contact The Chief"
+msgstr "Contact Chief"
 
 #: ui/GameUIAllianceInfo.lua:117
 msgid "成员列表"
@@ -3062,58 +3070,64 @@ msgid "降级"
 msgstr "Degrade"
 
 #: ui/GameUIAllianceMemberInfo.lua:71 ui/GameUIDragonEyrieDetail.lua:240
-#: widget/WidgetPromoteSoldier.lua:125
+#: widget/WidgetPromoteSoldier.lua:136
 msgid "晋级"
 msgstr "Promote"
 
-#: ui/GameUIAllianceMemberInfo.lua:125
+#: ui/GameUIAllianceMemberInfo.lua:126 utils/Localize.lua:120
+msgid "联盟正在战争准备期或战争期,不能将玩家踢出联盟"
+msgstr ""
+"You can't kick player when your Alliance is at the Preparation or Battle "
+"Period"
+
+#: ui/GameUIAllianceMemberInfo.lua:129
 #, c-format
 msgid "您确定逐出玩家:%s?"
 msgstr "Are you sure to kick:%s ?"
 
-#: ui/GameUIAllianceMemberInfo.lua:129
+#: ui/GameUIAllianceMemberInfo.lua:133
 #, c-format
 msgid "您确定移交盟主职位给:%s?"
 msgstr "Are you sure to give \"The Chief\" to %s and be abdicated?"
 
-#: ui/GameUIAllianceMemberInfo.lua:165
+#: ui/GameUIAllianceMemberInfo.lua:169
 #, c-format
 msgid "%s已降级为%s"
 msgstr "%s has been degraded to %s"
 
-#: ui/GameUIAllianceMemberInfo.lua:174
+#: ui/GameUIAllianceMemberInfo.lua:178
 #, c-format
 msgid "%s已晋级为%s"
 msgstr "%s has been promoted to %s"
 
-#: ui/GameUIAllianceMemberInfo.lua:201 ui/GameUIAllianceMemberInfo.lua:204
+#: ui/GameUIAllianceMemberInfo.lua:205 ui/GameUIAllianceMemberInfo.lua:208
 #: ui/GameUIVip.lua:94
 msgid "职位"
 msgstr "Position"
 
-#: ui/GameUIAllianceMemberInfo.lua:208 ui/GameUIAllianceMemberInfo.lua:210
+#: ui/GameUIAllianceMemberInfo.lua:212 ui/GameUIAllianceMemberInfo.lua:214
 msgid "最后登陆"
 msgstr "Last login"
 
-#: ui/GameUIAllianceMemberInfo.lua:300 ui/GameUIAllianceMemberInfo.lua:313
-#: ui/GameUIAllianceMemberInfo.lua:327
+#: ui/GameUIAllianceMemberInfo.lua:304 ui/GameUIAllianceMemberInfo.lua:317
+#: ui/GameUIAllianceMemberInfo.lua:331
 msgid "您不能操作此等级成员"
 msgstr "You can't config this player with present authority"
 
-#: ui/GameUIAllianceMemberInfo.lua:303 ui/GameUIAllianceMemberInfo.lua:319
-#: ui/GameUIAllianceMemberInfo.lua:333
+#: ui/GameUIAllianceMemberInfo.lua:307 ui/GameUIAllianceMemberInfo.lua:323
+#: ui/GameUIAllianceMemberInfo.lua:337
 msgid "您没有此权限"
 msgstr "You have no authority"
 
-#: ui/GameUIAllianceMemberInfo.lua:307
+#: ui/GameUIAllianceMemberInfo.lua:311
 msgid "您不是盟主"
 msgstr "You're not the Chief"
 
-#: ui/GameUIAllianceMemberInfo.lua:316
+#: ui/GameUIAllianceMemberInfo.lua:320
 msgid "该成员已经是最低等级"
 msgstr "Already the lowest position level"
 
-#: ui/GameUIAllianceMemberInfo.lua:330
+#: ui/GameUIAllianceMemberInfo.lua:334
 msgid "该成员已经是最高等级"
 msgstr "Already the highest position level"
 
@@ -3387,7 +3401,7 @@ msgstr "Minimum"
 #: ui/GameUIWatchTowerMyTroopsDetail.lua:160
 #: ui/GameUIWatchTowerTroopDetail.lua:202 widget/WidgetSelectDragon.lua:45
 #: widget/WidgetSelectWallDragon.lua:46 widget/WidgetSoldierDetails.lua:166
-#: widget/WidgetSoldierPromoteDetails.lua:131
+#: widget/WidgetSoldierPromoteDetails.lua:132
 msgid "生命值"
 msgstr "HP"
 
@@ -3407,7 +3421,7 @@ msgstr "Units Capacity"
 
 #: ui/GameUIAllianceSendTroops.lua:701 ui/GameUIPVESendTroop.lua:510
 #: widget/WidgetSoldierDetails.lua:181
-#: widget/WidgetSoldierPromoteDetails.lua:148
+#: widget/WidgetSoldierPromoteDetails.lua:149
 msgid "负重"
 msgstr "Load"
 
@@ -3658,47 +3672,51 @@ msgstr "Origin"
 msgid "目的地"
 msgstr "Destination"
 
-#: ui/GameUIBarracks.lua:16 utils/Localize.lua:711
+#: ui/GameUIBarracks.lua:17 utils/Localize.lua:711
 msgid "兵营"
 msgstr "Barrack"
 
-#: ui/GameUIBarracks.lua:71 ui/GameUIBarracks.lua:172
-#: ui/GameUIBarracks.lua:192 ui/GameUIBarracksSpeedUp.lua:18
+#: ui/GameUIBarracks.lua:73 ui/GameUIBarracks.lua:174
+#: ui/GameUIBarracks.lua:194 ui/GameUIBarracksSpeedUp.lua:18
 #: widget/WidgetRecruitSoldier.lua:363
 msgid "招募"
 msgstr "Recruit"
 
-#: ui/GameUIBarracks.lua:81 ui/GameUIBarracks.lua:96
+#: ui/GameUIBarracks.lua:83 ui/GameUIBarracks.lua:98
 msgid "招募队列空闲"
 msgstr "Recruiting queue is available now"
 
-#: ui/GameUIBarracks.lua:81 ui/GameUIBarracks.lua:96
+#: ui/GameUIBarracks.lua:83 ui/GameUIBarracks.lua:98
 msgid "请选择一个兵种进行招募"
 msgstr "Choose one to recruit"
 
-#: ui/GameUIBarracks.lua:142
+#: ui/GameUIBarracks.lua:144
 msgid "亡灵部队"
 msgstr "Undead Army"
 
-#: ui/GameUIBarracks.lua:146
+#: ui/GameUIBarracks.lua:148
 msgid "精灵部队"
 msgstr "Elf Army"
 
-#: ui/GameUIBarracks.lua:176
+#: ui/GameUIBarracks.lua:178
 msgid "召唤"
 msgstr "Summon"
 
-#: ui/GameUIBarracks.lua:272 ui/GameUIBarracks.lua:325
+#: ui/GameUIBarracks.lua:243 ui/GameUIBarracks.lua:247
+msgid "点击士兵"
+msgstr "***"
+
+#: ui/GameUIBarracks.lua:302 ui/GameUIBarracks.lua:355
 #: widget/WidgetRecruitSoldier.lua:254 widget/WidgetRecruitSoldier.lua:495
 msgid "招募开启中"
 msgstr "Summon opening now"
 
-#: ui/GameUIBarracks.lua:274 ui/GameUIBarracks.lua:327
+#: ui/GameUIBarracks.lua:304 ui/GameUIBarracks.lua:357
 #: widget/WidgetRecruitSoldier.lua:497
 msgid "下一次开启招募:"
 msgstr "Summon will open in:"
 
-#: ui/GameUIBarracks.lua:314
+#: ui/GameUIBarracks.lua:344
 #, c-format
 msgid "兵营%d级解锁"
 msgstr "Barrack Lv%d"
@@ -3743,67 +3761,71 @@ msgstr "City Buff"
 msgid "战争增益效果"
 msgstr "Battle Buff"
 
-#: ui/GameUIBuild.lua:14 ui/GameUIResource.lua:329 utils/Localize.lua:722
+#: ui/GameUIBuild.lua:15 ui/GameUIResource.lua:329 utils/Localize.lua:722
 msgid "住宅"
 msgstr "Dwelling"
 
-#: ui/GameUIBuild.lua:15 ui/GameUIResource.lua:321 utils/Localize.lua:723
+#: ui/GameUIBuild.lua:16 ui/GameUIResource.lua:321 utils/Localize.lua:723
 msgid "木工小屋"
 msgstr "Woodcutter Cabin"
 
-#: ui/GameUIBuild.lua:16 ui/GameUIResource.lua:325 utils/Localize.lua:725
+#: ui/GameUIBuild.lua:17 ui/GameUIResource.lua:325 utils/Localize.lua:725
 msgid "石匠小屋"
 msgstr "Quarrier Cabin"
 
-#: ui/GameUIBuild.lua:17 ui/GameUIResource.lua:323 utils/Localize.lua:726
+#: ui/GameUIBuild.lua:18 ui/GameUIResource.lua:323 utils/Localize.lua:726
 msgid "矿工小屋"
 msgstr "Miner Cabin"
 
-#: ui/GameUIBuild.lua:18 ui/GameUIResource.lua:327 utils/Localize.lua:724
+#: ui/GameUIBuild.lua:19 ui/GameUIResource.lua:327 utils/Localize.lua:724
 msgid "农夫小屋"
 msgstr "Famer Cabin"
 
-#: ui/GameUIBuild.lua:21 ui/GameUIResource.lua:283
+#: ui/GameUIBuild.lua:22 ui/GameUIResource.lua:283
 msgid "待建地基"
 msgstr "Foundation"
 
-#: ui/GameUIBuild.lua:92 ui/GameUIHasBeenBuild.lua:413
+#: ui/GameUIBuild.lua:50
+msgid "点击建造小屋"
+msgstr "***"
+
+#: ui/GameUIBuild.lua:100 ui/GameUIHasBeenBuild.lua:413
 #, c-format
 msgid "建筑队列 %d/%d"
 msgstr "Building queue %d/%d"
 
-#: ui/GameUIBuild.lua:120
+#: ui/GameUIBuild.lua:130
 msgid "城民上限不足,请首先升级或建造小屋"
 msgstr "Not enough civilians\\nbuild or upgrade a dwelling first"
 
-#: ui/GameUIBuild.lua:123 ui/GameUIBuild.lua:271 ui/GameUIBuild.lua:316
+#: ui/GameUIBuild.lua:133 ui/GameUIBuild.lua:281 ui/GameUIBuild.lua:326
 msgid "已达到最大建筑数量"
 msgstr "Max building amount"
 
-#: ui/GameUIBuild.lua:126 ui/GameUIBuild.lua:319 ui/GameUIHasBeenBuild.lua:253
+#: ui/GameUIBuild.lua:136 ui/GameUIBuild.lua:329 ui/GameUIHasBeenBuild.lua:253
 msgid "满足条件"
 msgstr "Available"
 
-#: ui/GameUIBuild.lua:179
+#: ui/GameUIBuild.lua:189
 msgid "您当前资源不足，补足需要金龙币"
 msgstr "Not enough resources"
 
-#: ui/GameUIBuild.lua:182
+#: ui/GameUIBuild.lua:192
 msgid "您当前没有空闲的建筑队列,是否花费魔法石立即完成上一个队列"
 msgstr ""
 "No available building queue. Do you want to spend Dragon Coins to finish the "
 "last queue immediately?"
 
-#: ui/GameUIBuild.lua:280
+#: ui/GameUIBuild.lua:290
 msgid "建筑数量 5/5"
 msgstr "Building amount"
 
-#: ui/GameUIBuild.lua:296 ui/GameUIHasBeenBuild.lua:315
+#: ui/GameUIBuild.lua:306 ui/GameUIHasBeenBuild.lua:315
 #: ui/GameUIHasBeenBuild.lua:329 widget/WidgetEventTabButtons.lua:931
 msgid "建造"
 msgstr "Build"
 
-#: ui/GameUIBuild.lua:314 ui/GameUIStrikeReport.lua:670
+#: ui/GameUIBuild.lua:324 ui/GameUIStrikeReport.lua:670
 #: ui/GameUITradeGuild.lua:174 ui/GameUITradeGuild.lua:469
 msgid "数量"
 msgstr "Amount"
@@ -4488,7 +4510,7 @@ msgstr "You can get three kinds of items each time."
 
 #: ui/GameUIHasBeenBuild.lua:168
 msgid "前置建筑条件不满足, 请前往。"
-msgstr "You didn't meet the precondition"
+msgstr "The Precondition unfulfilled"
 
 #: ui/GameUIHasBeenBuild.lua:268
 msgid "正在建造"
@@ -4514,7 +4536,7 @@ msgstr "Buildings"
 #: ui/GameUIHasBeenBuild.lua:282
 #, c-format
 msgid "从等级%d升级到等级%d"
-msgstr "Upgrading from Lv%d to Lv%d"
+msgstr "Upgrade from Lv%d to Lv%d"
 
 #: ui/GameUIHasBeenBuild.lua:301
 msgid "立即建造"
@@ -4582,7 +4604,7 @@ msgstr "Help"
 msgid "部队人口"
 msgstr "Units Population"
 
-#: ui/GameUIHome.lua:84 ui/GameUIMission.lua:263
+#: ui/GameUIHome.lua:84 ui/GameUIMission.lua:270
 msgid "当前没有推荐任务!"
 msgstr "No Recommended Task"
 
@@ -4726,15 +4748,15 @@ msgstr "City Terrain"
 msgid "提示:升级城堡获得解锁建筑机会!"
 msgstr "Tips:Upgrade Castle to unlock new buildings"
 
-#: ui/GameUIKeep.lua:229 widget/WidgetPromoteSoliderList.lua:95
-#: widget/WidgetPromoteSoliderList.lua:142
+#: ui/GameUIKeep.lua:229 widget/WidgetPromoteSoliderList.lua:96
+#: widget/WidgetPromoteSoliderList.lua:153
 msgid "已解锁"
 msgstr "Unlocked"
 
 #: ui/GameUIKeep.lua:229 ui/GameUITradeGuild.lua:619
 #: ui/GameUIWatchTower.lua:163 ui/GameUIWathTowerRegion.lua:169
-#: widget/WidgetPromoteSoliderList.lua:97
-#: widget/WidgetPromoteSoliderList.lua:145
+#: widget/WidgetPromoteSoliderList.lua:98
+#: widget/WidgetPromoteSoliderList.lua:156
 msgid "未解锁"
 msgstr "Locked"
 
@@ -5027,37 +5049,37 @@ msgstr "Produce Materials"
 msgid "晋升"
 msgstr "Promote"
 
-#: ui/GameUIMission.lua:24 widget/WidgetHomeBottom.lua:31
+#: ui/GameUIMission.lua:25 widget/WidgetHomeBottom.lua:31
 msgid "任务"
 msgstr "Task"
 
-#: ui/GameUIMission.lua:46 ui/GameUIMission.lua:227
+#: ui/GameUIMission.lua:48 ui/GameUIMission.lua:234
 msgid "成就任务"
 msgstr "Achievement"
 
-#: ui/GameUIMission.lua:51
+#: ui/GameUIMission.lua:53
 msgid "日常任务"
 msgstr "Daily"
 
-#: ui/GameUIMission.lua:106
+#: ui/GameUIMission.lua:108
 msgid "赛琳娜:"
 msgstr "Selina:"
 
-#: ui/GameUIMission.lua:111
+#: ui/GameUIMission.lua:113
 msgid "大人,我们现在应该:"
 msgstr "My Lord,we should:"
 
-#: ui/GameUIMission.lua:227
+#: ui/GameUIMission.lua:188 ui/GameUIMission.lua:481
+msgid "点击领取奖励"
+msgstr "Tap to get rewards"
+
+#: ui/GameUIMission.lua:234
 msgid "已完成任务"
 msgstr "Completed"
 
-#: ui/GameUIMission.lua:388
+#: ui/GameUIMission.lua:396
 msgid "今日的任务已经全部完成！"
 msgstr "Daily Tasks all finished"
-
-#: ui/GameUIMission.lua:474
-msgid "点击领取奖励"
-msgstr "Tap to get rewards"
 
 #: ui/GameUIMonsterReport.lua:79 ui/GameUIShrineReportInMail.lua:79
 #: ui/GameUIStrikeReport.lua:127 ui/GameUIWarReport.lua:76
@@ -5333,9 +5355,13 @@ msgstr "Go to incubate a Dragon"
 msgid "士兵"
 msgstr "Soldier"
 
-#: ui/GameUIQuickTechnology.lua:46 ui/GameUIUpgradeTechnology.lua:179
+#: ui/GameUIQuickTechnology.lua:47 ui/GameUIUpgradeTechnology.lua:179
 msgid "科技研发"
 msgstr "Science"
+
+#: ui/GameUIQuickTechnology.lua:307
+msgid "点击科技"
+msgstr "***"
 
 #: ui/GameUIReplayNew.lua:286
 msgid "获胜"
@@ -6280,15 +6306,15 @@ msgstr "Achieve %d/%d"
 msgid "我的商品"
 msgstr "My Goods"
 
-#: ui/GameUITradeGuild.lua:102 ui/GameUITradeGuild.lua:1021
+#: ui/GameUITradeGuild.lua:102 ui/GameUITradeGuild.lua:1025
 msgid "基本资源"
 msgstr "Resource"
 
-#: ui/GameUITradeGuild.lua:103 ui/GameUITradeGuild.lua:1022
+#: ui/GameUITradeGuild.lua:103 ui/GameUITradeGuild.lua:1026
 msgid "建筑材料"
 msgstr "Building Material"
 
-#: ui/GameUITradeGuild.lua:104 ui/GameUITradeGuild.lua:1023
+#: ui/GameUITradeGuild.lua:104 ui/GameUITradeGuild.lua:1027
 msgid "军事材料"
 msgstr "Military Material"
 
@@ -6296,7 +6322,7 @@ msgstr "Military Material"
 msgid "单价"
 msgstr "Unit Price"
 
-#: ui/GameUITradeGuild.lua:188 ui/GameUITradeGuild.lua:777
+#: ui/GameUITradeGuild.lua:188 ui/GameUITradeGuild.lua:778
 msgid "总价"
 msgstr "Total Price"
 
@@ -6310,7 +6336,7 @@ msgid "银币不足,是否使用金龙币补充"
 msgstr "Not enough coins, do you want to supply with Dragon Coins ?"
 
 #: ui/GameUITradeGuild.lua:460 ui/GameUITradeGuild.lua:657
-#: ui/GameUITradeGuild.lua:798
+#: ui/GameUITradeGuild.lua:799
 msgid "资源小车"
 msgstr "Cart"
 
@@ -6319,7 +6345,7 @@ msgid "每小时制造"
 msgstr "Produce(per hour)"
 
 #: ui/GameUITradeGuild.lua:532 ui/GameUITradeGuild.lua:610
-#: ui/GameUITradeGuild.lua:744 ui/GameUITradeGuild.lua:835
+#: ui/GameUITradeGuild.lua:744 ui/GameUITradeGuild.lua:836
 msgid "出售"
 msgstr "Sell"
 
@@ -6371,18 +6397,18 @@ msgstr "Sale"
 msgid "每1K售价"
 msgstr "Price(per thousand)"
 
-#: ui/GameUITradeGuild.lua:860
+#: ui/GameUITradeGuild.lua:861
 msgid "出售数量不能为零"
 msgstr "You need to sell something"
 
-#: ui/GameUITradeGuild.lua:865
+#: ui/GameUITradeGuild.lua:866
 msgid "资源小车数量不足"
 msgstr "Not enough carts"
 
-#: ui/GameUITradeGuild.lua:869
+#: ui/GameUITradeGuild.lua:870
 #, c-format
 msgid "出售%s成功"
-msgstr "%s on sale now"
+msgstr "%s is on sale now"
 
 #: ui/GameUITreatSoldierSpeedUp.lua:15
 msgid "治疗伤兵不能免费加速"
@@ -6409,7 +6435,7 @@ msgstr "Building queue"
 msgid "解锁需求"
 msgstr "Require"
 
-#: ui/GameUIUnlockBuilding.lua:375
+#: ui/GameUIUnlockBuilding.lua:369
 #, c-format
 msgid "点击解锁新建筑：%s"
 msgstr "Tap to unlock:%s"
@@ -6424,8 +6450,8 @@ msgstr "Research Now"
 
 #: ui/GameUIUpgradeTechnology.lua:265 widget/WidgetEventTabButtons.lua:1015
 #: widget/WidgetMilitaryTechnology.lua:101
-#: widget/WidgetPromoteSoliderList.lua:108
-#: widget/WidgetPromoteSoliderList.lua:164
+#: widget/WidgetPromoteSoliderList.lua:109
+#: widget/WidgetPromoteSoliderList.lua:175
 #: widget/WidgetUpgradeMilitaryTech.lua:123
 msgid "研发"
 msgstr "Research"
@@ -7230,12 +7256,6 @@ msgstr "You have no authority"
 #: utils/Localize.lua:119
 msgid "联盟没有此玩家"
 msgstr "This player is not in the Alliance."
-
-#: utils/Localize.lua:120
-msgid "联盟正在战争准备期或战争期,不能将玩家踢出联盟"
-msgstr ""
-"You can't kick player when your Alliance is at the Preparation or Battle "
-"Period"
 
 #: utils/Localize.lua:121
 msgid "不能将职级高于或等于自己的玩家踢出联盟"
@@ -11412,8 +11432,7 @@ msgstr "Amount"
 
 #: widget/WidgetCitizen.lua:101
 msgid "提示：预留一定的空闲城民，兵营将这些空闲城民训练成士兵"
-msgstr ""
-"Tips:Leave some civilians,and train them to be your soldiers in the barrack"
+msgstr "Tips:Leave and train some civilians to be your soldiers in the barrack"
 
 #: widget/WidgetDragonTabButtons.lua:50
 msgid "技能"
@@ -11626,7 +11645,7 @@ msgstr "Special Force"
 
 #: widget/WidgetMaterials.lua:162
 msgid "建筑&科技"
-msgstr "Building & Science"
+msgstr "Building&Science"
 
 #: widget/WidgetMilitaryTechnologyStatus.lua:45
 msgid "请选择一个科技进行研发"
@@ -11939,30 +11958,30 @@ msgstr "Medal"
 msgid "复制玩家ID"
 msgstr "Copy ID"
 
-#: widget/WidgetPromoteSoldier.lua:17
-#: widget/WidgetSoldierPromoteDetails.lua:17
+#: widget/WidgetPromoteSoldier.lua:18
+#: widget/WidgetSoldierPromoteDetails.lua:18
 msgid "兵种晋级"
 msgstr "Promotion"
 
-#: widget/WidgetPromoteSoldier.lua:94
+#: widget/WidgetPromoteSoldier.lua:105
 msgid "立即晋级"
 msgstr "Promote Now"
 
-#: widget/WidgetPromoteSoldier.lua:197
+#: widget/WidgetPromoteSoldier.lua:208
 #: widget/WidgetUpgradeMilitaryTech.lua:184
 #, c-format
 msgid "升级队列已满:%d/1"
 msgstr "NO idle Build Queue:%d/1"
 
-#: widget/WidgetPromoteSoldier.lua:207
+#: widget/WidgetPromoteSoldier.lua:218
 msgid "科技点数"
 msgstr "Science Points"
 
-#: widget/WidgetPromoteSoldier.lua:287 widget/WidgetPromoteSoldier.lua:299
+#: widget/WidgetPromoteSoldier.lua:298 widget/WidgetPromoteSoldier.lua:310
 msgid "科技点未达到要求"
 msgstr "You need higher Science Points"
 
-#: widget/WidgetPromoteSoliderList.lua:100
+#: widget/WidgetPromoteSoliderList.lua:101
 msgid "正在晋级"
 msgstr "Promoting"
 
@@ -12095,39 +12114,39 @@ msgid "对城墙攻击"
 msgstr "Attack against Wall"
 
 #: widget/WidgetSoldierDetails.lua:186
-#: widget/WidgetSoldierPromoteDetails.lua:165
+#: widget/WidgetSoldierPromoteDetails.lua:166
 msgid "行军速度"
 msgstr "March Speed"
 
-#: widget/WidgetSoldierPromoteDetails.lua:46
+#: widget/WidgetSoldierPromoteDetails.lua:47
 msgid "对步兵的攻击"
 msgstr "Attack against Infanrty"
 
-#: widget/WidgetSoldierPromoteDetails.lua:63
+#: widget/WidgetSoldierPromoteDetails.lua:64
 msgid "对弓手的攻击"
 msgstr "Attack against Archer"
 
-#: widget/WidgetSoldierPromoteDetails.lua:80
+#: widget/WidgetSoldierPromoteDetails.lua:81
 msgid "对骑兵的攻击"
 msgstr "Attack against Cavalry"
 
-#: widget/WidgetSoldierPromoteDetails.lua:97
+#: widget/WidgetSoldierPromoteDetails.lua:98
 msgid "对攻城器械的攻击"
 msgstr "Attack against Siege"
 
-#: widget/WidgetSoldierPromoteDetails.lua:114
+#: widget/WidgetSoldierPromoteDetails.lua:115
 msgid "对城墙的攻击"
 msgstr "Attack against Wall"
 
-#: widget/WidgetSoldierPromoteDetails.lua:182
+#: widget/WidgetSoldierPromoteDetails.lua:183
 msgid "需要人口"
 msgstr "Population"
 
-#: widget/WidgetSoldierPromoteDetails.lua:199
+#: widget/WidgetSoldierPromoteDetails.lua:200
 msgid "维护费费用"
 msgstr "Upkeep"
 
-#: widget/WidgetSoldierPromoteDetails.lua:219
+#: widget/WidgetSoldierPromoteDetails.lua:220
 msgid "下一步"
 msgstr "Next"
 
