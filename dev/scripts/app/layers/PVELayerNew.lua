@@ -147,7 +147,7 @@ function PVELayerNew:GetClickedObject(world_x, world_y)
             npc = v
         end
     end
-    if self.user:IsPveNameEnable(npc:GetPveName()) then
+    if npc and self.user:IsPveNameEnable(npc:GetPveName()) then
         return npc
     end
 end
