@@ -151,7 +151,11 @@ function User:IsPveEnable(index, s_index)
             return true
         end
     else
-        return self.pve[index-1] and #self.pve[index-1] == 21 and s_index == 1
+        if self.pve[index-1] then
+            return #self.pve[index-1] == 21 and s_index == 1
+        else
+            return s_index == 1
+        end
     end
 end
 function User:GetPveRewardByIndex(index, s_index)
@@ -169,6 +173,7 @@ function User:GetPveSectionStarByIndex(index, s_index)
     if npcs then
         return npcs.sections[s_index] or 0
     end
+    return 0
 end
 function User:GetLatestPveIndex()
     if #self.pve == 0 then

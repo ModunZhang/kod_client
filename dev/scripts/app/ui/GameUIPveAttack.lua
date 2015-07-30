@@ -108,9 +108,8 @@ function GameUIPveAttack:onEnter()
             color = 0xffedae,
             shadow = true
         })):onButtonClicked(function(event)
-        UIKit:newGameUI('GameUIPveSweep', self.pve_name):AddToCurrentScene(true)
+        UIKit:newGameUI('GameUIPveSweep', self.user, self.pve_name):AddToCurrentScene(true)
         end):setButtonEnabled(star >= 3)
-
 
     cc.ui.UIPushButton.new(
         {normal = "red_btn_up_148x58.png", pressed = "red_btn_down_148x58.png"},
@@ -134,6 +133,13 @@ function GameUIPveAttack:onEnter()
                 NetManager:getAttackPveSectionPromise(self.pve_name, dragonType, soldiers):done(function()
                     self:RefreshUI()
                     display.getRunningScene():GetSceneLayer():RefreshPve()
+                end):done(function(response)
+                    local dragon = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon(dragonType)
+                    UIKit:newGameUI("GameUIReplayNew", self:DecodeReport(response.msg.fightReport, dragon, soldiers), function()
+                        if response.reward_func then
+                            response.reward_func()
+                        end
+                    end):AddToCurrentScene(true)
                 end)
             end):AddToCurrentScene(true)
         end)
@@ -143,7 +149,7 @@ function GameUIPveAttack:RefreshUI()
     for i,v in ipairs(self.list.items_) do
         v:getContent().star:setTexture(i <= star and "alliance_shire_star_60x58_1.png" or "alliance_shire_star_60x58_0.png")
     end
-    self.label:setString(string.format(_("今日可挑战次数: %d/%d"), self.user:GetFightCountByName(self.pve_name), 5))
+    self.label:setString(string.format(_("今日可挑战次数: %d/%d"), self.user:GetFightCountByName(self.pve_name), sections[self.pve_name].maxFightCount))
     self.sweep:setButtonEnabled(star >= 3)
 end
 function GameUIPveAttack:GetListItem(index,title, star)
@@ -154,14 +160,72 @@ function GameUIPveAttack:GetListItem(index,title, star)
         color = 0x403c2f,
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
     }):addTo(bg):align(display.LEFT_CENTER,30,20)
-    
+
     bg.star = display.newSprite(index <= star and "alliance_shire_star_60x58_1.png" or "alliance_shire_star_60x58_0.png")
-    :addTo(bg):pos(bg:getContentSize().width - 50, 20):scale(0.6)
+        :addTo(bg):pos(bg:getContentSize().width - 50, 20):scale(0.6)
     return bg
 end
-
+function GameUIPveAttack:DecodeReport(report, dragon, attack_soldiers)
+    local user = self.user
+    local pve_name = self.pve_name
+    local troops = string.split(sections[pve_name].troops, ",")
+    local _,_,level = unpack(string.split(troops[1], "_"))
+    table.remove(troops, 1)
+    local defence_soldiers = LuaUtils:table_map(troops, function(k,v)
+        local name,star,count = unpack(string.split(v, "_"))
+        return k, {name = name, star = tonumber(star), count = count}
+    end)
+    function report:GetFightAttackName()
+        return user:Name()
+    end
+    function report:GetFightDefenceName()
+        return pve_name
+    end
+    function report:IsDragonFight()
+        return true
+    end
+    function report:GetFightAttackDragonRoundData()
+        return self.playerDragonFightData
+    end
+    function report:GetFightDefenceDragonRoundData()
+        return self.sectionDragonFightData
+    end
+    function report:GetFightAttackSoldierRoundData()
+        return self.playerSoldierRoundDatas
+    end
+    function report:GetFightDefenceSoldierRoundData()
+        return self.sectionSoldierRoundDatas
+    end
+    function report:IsFightWall()
+        return false
+    end
+    function report:GetOrderedAttackSoldiers()
+        return attack_soldiers
+    end
+    function report:GetOrderedDefenceSoldiers()
+        return defence_soldiers
+    end
+    function report:GetReportResult()
+        return self.playerSoldierRoundDatas[#self.playerSoldierRoundDatas].isWin
+    end
+    function report:GetAttackDragonLevel()
+        return dragon:Level()
+    end
+    function report:GetDefenceDragonLevel()
+        return level
+    end
+    function report:GetAttackTargetTerrain()
+        return user:Terrain()
+    end
+    function report:IsAttackCamp()
+        return true
+    end
+    return report
+end
 
 return GameUIPveAttack
+
+
 
 
 

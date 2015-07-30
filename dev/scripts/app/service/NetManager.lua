@@ -1853,7 +1853,8 @@ function NetManager:getAttackPveSectionPromise(sectionName, dragonType, soldiers
         sectionName = sectionName,
         dragonType = dragonType,
         soldiers = soldiers,
-    },"攻打npc失败!"):done(function()
+    },"攻打npc失败!")
+    :done(function(response)
         for i,v in ipairs(rewards) do
             if v.type == "items" then
                 pre_tab[v.type][v.name] = ItemManager:GetItemByName(v.name):Count()
@@ -1861,7 +1862,9 @@ function NetManager:getAttackPveSectionPromise(sectionName, dragonType, soldiers
                 pre_tab[v.type][v.name] = City:GetMaterialManager():GetSoldierMaterias()[v.name]
             end
         end
-    end):done(get_player_response_msg):done(function()
+    end)
+    :done(get_player_response_msg)
+    :done(function(response)
         local cur_tab = {items = {}, soldierMaterials = {}}
         for i,v in ipairs(rewards) do
             if v.type == "items" then
@@ -1884,14 +1887,14 @@ function NetManager:getAttackPveSectionPromise(sectionName, dragonType, soldiers
             for itemName,count in pairs(adds.items) do
                 table.insert(item_str, string.format("%s x%d", Localize_item.item_name[itemName], count))
             end
-            GameGlobalUI:showTips(_("获得道具"), table.concat(item_str, " "))
+            response.reward_func = function() GameGlobalUI:showTips(_("获得道具"), table.concat(item_str, " ")) end
         end
         if next(adds.soldierMaterials) then
             local item_str = {}
             for key,count in pairs(adds.soldierMaterials) do
                 table.insert(item_str, string.format("%s x%d", Localize.soldier_material[key], count))
             end
-            GameGlobalUI:showTips(_("获得材料"), table.concat(item_str, " "))
+            response.reward_func = function() GameGlobalUI:showTips(_("获得材料"), table.concat(item_str, " ")) end
         end
     end)
 end
