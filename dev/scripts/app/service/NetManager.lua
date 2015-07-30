@@ -1851,6 +1851,12 @@ function NetManager:getAttackPveSectionPromise(sectionName, dragonType, soldiers
         soldiers = soldiers,
     },"攻打npc失败!"):done(get_player_response_msg)
 end
+function NetManager:getSweepPveSectionPromise(sectionName, count)
+    return get_blocking_request_promise("logic.playerHandler.sweepPveSection",{
+        sectionName = sectionName,
+        count = count,
+    },"扫荡失败!"):done(get_player_response_msg)
+end
 
 
 ----------------------------------------------------------------------------------------------------------------

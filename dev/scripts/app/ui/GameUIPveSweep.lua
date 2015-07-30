@@ -11,8 +11,9 @@ local titles = {
 }
 
 
-function GameUIPveSweep:ctor()
-    GameUIPveSweep.super.ctor(self,654,_("扫荡"),window.top - 150)
+function GameUIPveSweep:ctor(pve_name)
+    self.pve_name = pve_name
+    GameUIPveSweep.super.ctor(self,654,_("扫荡")..self.pve_name,window.top - 150)
 end
 function GameUIPveSweep:onEnter()
     GameUIPveSweep.super.onEnter(self)
@@ -44,8 +45,18 @@ function GameUIPveSweep:onEnter()
     list:reload()
 
 
-    self:CreateSweepButton("-5"):addTo(self:GetBody()):align(display.CENTER, 100,size.height - 580)
-    self:CreateSweepButton("-1"):addTo(self:GetBody()):align(display.CENTER, size.width - 100,size.height - 580)
+    self:CreateSweepButton("-5")
+    :addTo(self:GetBody())
+    :align(display.CENTER, 100,size.height - 580)
+    :onButtonClicked(function()
+        NetManager:getSweepPveSectionPromise(self.pve_name, 5)
+    end)
+    self:CreateSweepButton("-1")
+    :addTo(self:GetBody())
+    :align(display.CENTER, size.width - 100,size.height - 580)
+    :onButtonClicked(function()
+        NetManager:getSweepPveSectionPromise(self.pve_name, 1)
+    end)
 end
 function GameUIPveSweep:CreateSweepButton(title)
     local s = cc.ui.UIPushButton.new(
@@ -70,12 +81,11 @@ function GameUIPveSweep:CreateSweepButton(title)
 end
 function GameUIPveSweep:GetListItem(index)
     local bg = display.newScale9Sprite(string.format("back_ground_548x40_%d.png", index % 2 == 0 and 1 or 2)):size(600,80)
-    UIKit:ttfLabel({
-        -- text = title,
-        size = 20,
-        color = 0x403c2f,
-        align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
-    }):addTo(bg):align(display.LEFT_CENTER,30,20)
+    -- UIKit:ttfLabel({
+    --     text = string.format(_("第%d战"), index),
+    --     size = 20,
+    --     color = 0x403c2f,
+    -- }):addTo(bg):align(display.LEFT_CENTER,50,40)
 
     -- local ax = bg:getContentSize().width - 50
     -- for i = 1, 3 do

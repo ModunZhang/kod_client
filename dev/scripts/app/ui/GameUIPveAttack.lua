@@ -14,7 +14,7 @@ local titles = {
 function GameUIPveAttack:ctor(user, pve_name)
     self.user = user
     self.pve_name = pve_name
-    GameUIPveAttack.super.ctor(self,560,_("关卡 ")..pve_name,window.top - 150)
+    GameUIPveAttack.super.ctor(self,560,_("关卡")..pve_name,window.top - 150)
 end
 function GameUIPveAttack:onEnter()
     GameUIPveAttack.super.onEnter(self)
@@ -108,7 +108,7 @@ function GameUIPveAttack:onEnter()
             color = 0xffedae,
             shadow = true
         })):onButtonClicked(function(event)
-        -- UIKit:newGameUI('GameUIPVESendTroop',
+        UIKit:newGameUI('GameUIPveSweep', self.pve_name):AddToCurrentScene(true)
         end):setButtonEnabled(star >= 3)
 
 
