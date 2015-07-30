@@ -53,12 +53,12 @@ function GameUIPVEHomeNew:CreateTop()
         pressed = "chat_btn_down_60x48.png"}):addTo(top_bg)
         :pos(88, size.height/2 + 10)
         :onButtonClicked(function()
-
-            end)
+            UIKit:newGameUI("GameUIPveSelect"):AddToCurrentScene(true)
+        end)
 
 
     local star = display.newSprite("alliance_shire_star_60x58_1.png")
-    :addTo(top_bg):pos(size.width - 210, 55):scale(0.8)
+        :addTo(top_bg):pos(size.width - 210, 55):scale(0.8)
 
     self.stars = UIKit:ttfLabel({
         text = "22/66",
@@ -95,7 +95,7 @@ function GameUIPVEHomeNew:CreateTop()
 
 
     local pve_back = display.newSprite("back_ground_pve.png"):addTo(top_bg)
-    :align(display.LEFT_TOP, 40, 16):flipX(true)
+        :align(display.LEFT_TOP, 40, 16):flipX(true)
     local size = pve_back:getContentSize()
     display.newSprite("dragon_lv_icon.png"):addTo(pve_back):pos(size.width - 20, 25)
     local add_btn = cc.ui.UIPushButton.new(
@@ -133,6 +133,7 @@ end
 
 
 return GameUIPVEHomeNew
+
 
 
 
