@@ -823,9 +823,6 @@ function User:IsOnDailyQuestEvents()
                 return false
             end
         end
-        if LuaUtils:table_empty(self.dailyQuests) then
-            return false
-        end
         return true
     end
 end

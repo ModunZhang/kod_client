@@ -403,11 +403,11 @@ function GameUIHome:CreateTop()
             elseif self.task:TaskType() == "unlock" then
                 self:GotoUnlockBuilding(self.task:Location())
             elseif self.task:TaskType() == "reward" then
-                UIKit:newGameUI("GameUIMission", self.city):AddToCurrentScene(true)
+                UIKit:newGameUI("GameUIMission", self.city, nil, true):AddToCurrentScene(true)
             elseif self.task:TaskType() == "productionTech" then
-                UIKit:newGameUI("GameUIQuickTechnology", self.city):AddToCurrentScene(true)
+                UIKit:newGameUI("GameUIQuickTechnology", self.city, self.task.name):AddToCurrentScene(true)
             elseif self.task:TaskType() == "recruit" then
-                UIKit:newGameUI('GameUIBarracks', self.city, self.city:GetFirstBuildingByType("barracks"), "recruit"):AddToCurrentScene(true)
+                UIKit:newGameUI('GameUIBarracks', self.city, self.city:GetFirstBuildingByType("barracks"), "recruit", self.task.name):AddToCurrentScene(true)
             elseif self.task:TaskType() == "explore" then
                 self:GotoExplore()
             elseif self.task:TaskType() == "build" then
@@ -614,20 +614,20 @@ function GameUIHome:GotoOpenBuildUI(task)
         local houses = self.city:GetDecoratorsByLocationId(location_id)
         for i = 3, 1, -1 do
             if not houses[i] then
-                self:GotoOpenBuildingUI(self.city:GetRuinByLocationIdAndHouseLocationId(location_id, i))
+                self:GotoOpenBuildingUI(self.city:GetRuinByLocationIdAndHouseLocationId(location_id, i), task.name)
                 return
             end
         end
     end
-    self:GotoOpenBuildingUI(self.city:GetRuinsNotBeenOccupied()[1])
+    self:GotoOpenBuildingUI(self.city:GetRuinsNotBeenOccupied()[1], task.name)
 end
-function GameUIHome:GotoOpenBuildingUI(building)
+function GameUIHome:GotoOpenBuildingUI(building, build_name)
     if not building then return end
     local current_scene = display.getRunningScene()
     local building_sprite = current_scene:GetSceneLayer():FindBuildingSpriteByBuilding(building, self.city)
     local x,y = building:GetMidLogicPosition()
     current_scene:GotoLogicPoint(x,y,40):next(function()
-        current_scene:AddIndicateForBuilding(building_sprite)
+        current_scene:AddIndicateForBuilding(building_sprite, build_name)
     end)
 end
 function GameUIHome:GotoExplore()

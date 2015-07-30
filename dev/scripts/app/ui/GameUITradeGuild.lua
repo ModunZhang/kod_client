@@ -164,13 +164,6 @@ function GameUITradeGuild:LoadResource(goods_details,goods_type)
     -- 列名
     UIKit:ttfLabel(
         {
-            text = _("资源"),
-            size = 20,
-            color = 0x615b44
-        }):align(display.LEFT_CENTER,50, 570)
-        :addTo(layer)
-    UIKit:ttfLabel(
-        {
             text = _("数量"),
             size = 20,
             color = 0x615b44
@@ -529,7 +522,7 @@ function GameUITradeGuild:CreateSellItem(list,index)
 
     local goods = self:GetOnSellGoods()[index]
     if goods then
-        title_label:setString(_("出售")..Localize.sell_type[goods.goods_type])
+        title_label:setString(_("出售").." "..Localize.sell_type[goods.goods_type])
         -- goods icon
         local goods_icon = display.newSprite(UILib.resource[goods.goods_type] or UILib.materials[goods.goods_type])
             :align(display.CENTER, goods_bg:getContentSize().width/2, goods_bg:getContentSize().height/2)
@@ -764,6 +757,7 @@ function GameUITradeGuild:OpenSellDialog()
                 end
             }
         ):align(display.TOP_CENTER,w/2,h-286):addTo(layer)
+        self.sell_num_item:SetValue(math.min(City:GetResourceManager():GetCartResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()),math.floor(max_num/unit)))
     end
     function body:LoadSellResource(goods_type)
         local goods_details = tradeGuildUI:GetGoodsDetailsByType(goods_type)
@@ -1002,6 +996,9 @@ function GameUITradeGuild:OpenSellDialog()
                 local max = math.max(icon:getContentSize().width,icon:getContentSize().height)
                 icon:scale(40/max)
             end
+        end
+        function item:SetValue(value)
+            return slider:SetValue(value)
         end
         function item:GetValue()
             return slider:GetValue()

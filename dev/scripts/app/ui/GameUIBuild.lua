@@ -3,6 +3,7 @@ local promise = import("..utils.promise")
 local window = import("..utils.window")
 local BuildingRegister = import("..entity.BuildingRegister")
 local MaterialManager = import("..entity.MaterialManager")
+local WidgetFteArrow = import("..widget.WidgetFteArrow")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local SpriteConfig = import("..sprites.SpriteConfig")
@@ -17,10 +18,13 @@ local base_items = {
     { label = _("矿工小屋"), building_type = "miner", png = SpriteConfig["miner"]:GetConfigByLevel(1).png, scale = 1 },
     { label = _("农夫小屋"), building_type = "farmer", png = SpriteConfig["farmer"]:GetConfigByLevel(1).png, scale = 1 },
 }
-function GameUIBuild:ctor(city, building)
+function GameUIBuild:ctor(city, building, p1, p2, need_tips, build_name)
     GameUIBuild.super.ctor(self, city, _("待建地基"))
     self.build_city = city
     self.select_ruins = building
+    self.need_tips = need_tips
+    self.build_name = build_name
+    print(self.need_tips, self.build_name)
     self.select_ruins_list = city:GetNeighbourRuinWithSpecificRuin(building)
     self.build_city:AddListenOnType(self, self.build_city.LISTEN_TYPE.UPGRADE_BUILDING)
     app:GetAudioManager():PlayBuildingEffectByType("woodcutter")
@@ -42,6 +46,10 @@ function GameUIBuild:OnMoveInStage()
         item:SetType(v, handler(self, self.OnBuildOnItem))
         self.base_list_view:addItem(item)
         table.insert(self.base_resource_building_items, item)
+        if self.need_tips and self.build_name == v.building_type then
+            WidgetFteArrow.new(_("点击建造小屋"))
+            :addTo(item, 100):TurnRight():align(display.RIGHT_CENTER, 380, 40)
+        end
     end
     self.base_list_view:reload()
     self:OnCityChanged()
@@ -115,7 +123,9 @@ function GameUIBuild:OnCityChanged()
         local building = BuildingRegister[building_type].new({building_type = building_type, level = 1, finishTime = 0})
         v:SetNumber(number, max_number)
         if building then
-            if building:GetCitizen() > citizen then
+            if self.build_city:GetAvailableBuildQueueCounts() <= 0 then
+                v:SetCondition(_("建造队列不足"), display.COLOR_RED)
+            elseif building:GetCitizen() > citizen then
                 v:SetBuildEnable(false)
                 v:SetCondition(_("城民上限不足,请首先升级或建造小屋"), display.COLOR_RED)
             elseif number >= max_number then
@@ -176,33 +186,33 @@ function GameUIBuild:OnBuildOnItem(item)
         dialog:SetTitle(_("提示"))
         local message  = ""
         if resource_gems>0 then
-            message = message .. _("您当前资源不足，补足需要金龙币").. resource_gems.. "\n"
+            message = message .. _("您当前资源不足，补足需要金龙币").. "\n"
         end
         if current<=0 then
             message = message .. _("您当前没有空闲的建筑队列,是否花费魔法石立即完成上一个队列").. "\n"
         end
         local need_gem = required_gems+resource_gems
-        dialog:SetPopMessage(message)
-        dialog:CreateNeeds({value = need_gem})
-        if need_gem > User:GetGemResource():GetValue() then
-            dialog:CreateOKButton(
-                {
-                    llistener =  function ()
-                        UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
-                        self:LeftButtonClicked()
-                    end,
-                    btn_name = _("前往商店")
-                }
-            )
-        else
-            dialog:CreateOKButton(
-                {
-                    listener =  function()
+        dialog:SetPopMessage(message):CreateOKButtonWithPrice(
+            {
+                listener =  function()
+                    if need_gem > User:GetGemResource():GetValue() then
+                        dialog:CreateOKButton(
+                            {
+                                llistener =  function ()
+                                    UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                                    self:LeftButtonClicked()
+                                end,
+                                btn_name = _("前往商店")
+                            }
+                        )
+                    else
                         self:BuildWithRuins(self.select_ruins, item.building.building_type)
                     end
-                }
-            )
-        end
+                end,
+                btn_images = {normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"},
+                price = need_gem
+            }
+        )
     end
 end
 function GameUIBuild:BuildWithRuins(select_ruins, building_type)
@@ -335,6 +345,8 @@ function GameUIBuild:CreateItemWithListView(list_view)
 end
 
 return GameUIBuild
+
+
 
 
 

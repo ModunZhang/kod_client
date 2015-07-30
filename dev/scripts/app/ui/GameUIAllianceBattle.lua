@@ -166,7 +166,8 @@ function GameUIAllianceBattle:InitBattleStatistics()
         color = 0xe63600,
     }):addTo(time_bg)
         :align(display.LEFT_CENTER,period_label:getPositionX()+period_label:getContentSize().width+20,time_bg:getContentSize().height/2)
-
+    period_label:setPositionX((time_bg:getContentSize().width - (period_label:getContentSize().width + 90 + 20))/2)
+    self.time_label:setPositionX(period_label:getPositionX()+period_label:getContentSize().width+20)
     if self.alliance:Status() == "peace" then
         -- 请求开战玩家数量
         local request_fight_bg = display.newSprite("tmp_background_red_130x30.png"):align(display.LEFT_CENTER, window.left + 40, window.bottom_top + 55)
@@ -431,7 +432,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
                 color = 0xff6023,
                 dimensions = cc.size(560,0),
             }):addTo(layer)
-                :align(display.TOP_CENTER,window.cx,window.top-270)
+                :align(display.TOP_CENTER,window.cx,window.top-250)
             -- 荣耀值奖励
             local honour_bg = display.newScale9Sprite("tmp_background_red_130x30.png",window.right-240,window.top-390,cc.size(166,32),cc.rect(15,10,100,10))
                 :align(display.LEFT_CENTER)
@@ -470,7 +471,7 @@ end
 
 function GameUIAllianceBattle:RefreshFightInfoList(info_bg_y)
     local fight_list_node = self.fight_list_node
-    if fight_list_node then
+    if fight_list_node and fight_list_node.removeAllChildren then
         fight_list_node:removeAllChildren()
 
         local alliance = self.alliance
@@ -1252,7 +1253,7 @@ function GameUIAllianceBattle:OnAllianceBasicChanged(alliance,changed_map)
 end
 
 function GameUIAllianceBattle:OnAllianceFightChanged(alliance,alliance_fight)
-    self:RefreshFightInfoList()
+    self:InitBattleStatistics()
 end
 
 function GameUIAllianceBattle:GetAlliancePeriod()

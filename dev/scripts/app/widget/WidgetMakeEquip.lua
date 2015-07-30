@@ -479,14 +479,21 @@ function WidgetMakeEquip:IsAbleToMakeEqui(isFinishNow)
             for k,v in ipairs(not_suitble) do
                 message = message .. v .. "\n"
             end
-            UIKit:showMessageDialog(_("提示"),message,function()
-                if need_gems > User:GetGemResource():GetValue() then
-                    UIKit:showMessageDialog(_("提示"),_("金龙币不足"),function()  UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)  end)
-                    return false
-                end
-                NetManager:getMakeDragonEquipmentPromise(self.equip_type)
-                self:Close()
-            end):CreateNeeds({value = need_gems})
+            UIKit:showMessageDialog(_("提示"),message)
+                :CreateOKButtonWithPrice(
+                    {
+                        listener = function()
+                            if need_gems > User:GetGemResource():GetValue() then
+                                UIKit:showMessageDialog(_("提示"),_("金龙币不足"),function()  UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)  end)
+                                return false
+                            end
+                            NetManager:getMakeDragonEquipmentPromise(self.equip_type)
+                            self:Close()
+                        end,
+                        btn_images = {normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"},
+                        price = need_gems
+                    }
+                ):CreateCancelButton()
             return false
         end
     end
@@ -494,6 +501,7 @@ function WidgetMakeEquip:IsAbleToMakeEqui(isFinishNow)
 end
 
 return WidgetMakeEquip
+
 
 
 

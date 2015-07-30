@@ -441,9 +441,15 @@ function GameUIUpgradeTechnology:OnUpgradButtonClicked()
             end
         end)
     else
-        UIKit:showMessageDialog(_("提示"),msg, function ()
-            self:ForceUpgrade(gems_cost)
-        end):CreateNeeds({value = gems_cost})
+        UIKit:showMessageDialog(_("提示"),msg):CreateOKButtonWithPrice(
+            {
+                listener = function()
+                    self:ForceUpgrade(gems_cost)
+                end,
+                btn_images = {normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"},
+                price = gems_cost
+            }
+        ):CreateCancelButton()
     end
 end
 
@@ -602,6 +608,7 @@ function GameUIUpgradeTechnology:CheckMeIsReachLimitLevel()
 end
 
 return GameUIUpgradeTechnology
+
 
 
 

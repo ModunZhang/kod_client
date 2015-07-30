@@ -83,6 +83,7 @@ function Item:ctor(parent_ui)
     self.condition_label = UIKit:ttfLabel({
         size = 20,
         color = 0x7e0000,
+        dimensions = cc.size(220,0)
     }):addTo(back_ground, 2):align(display.LEFT_CENTER, 170 - 5, h/2)
 
     self.desc_label = UIKit:ttfLabel({
@@ -279,7 +280,7 @@ function Item:UpdateDesc(building)
             self.desc_label:setString(_("可解锁建筑"))
             self.desc_label:setPositionY(35)
         else
-            self.desc_label:setString(string.format(_("从等级%d升级到等级%d"), building:GetLevel(), building:GetNextLevel()))
+            self.desc_label:setString(string.format(_("升级到等级%d"), building:GetLevel(), building:GetNextLevel()))
             self.desc_label:setPositionY(35)
         end
     end

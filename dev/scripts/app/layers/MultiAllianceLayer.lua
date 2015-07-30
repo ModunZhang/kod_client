@@ -301,7 +301,7 @@ function MultiAllianceLayer:OnVillageEventsDataChanged(changed_map)
     end
     for _,v in ipairs(self.alliances) do
         v:IteratorVillageEvents(function(village)
-            self:RefreshVillageEvent(village, true)  
+            self:RefreshVillageEvent(village, true)
         end)
     end
 end
@@ -774,17 +774,11 @@ function MultiAllianceLayer:CreateCorps(id, start_pos, end_pos, start_time, fini
         else
             ani,scalex = unpack(soldier_dir_map[index])
             move_soldiers(corps, ani, index, soldiers[1])
-
-            if ally == MINE then
-                if banner_name then
-                    UIKit:CreateNameBanner(banner_name, dragonType):addTo(corps, 1)
-                        :pos(0, 80):setScaleX(scalex > 0 and 1 or -1)
-                end
-            elseif ally == FRIEND then
-                if banner_name then
-                    UIKit:CreateNameBanner(banner_name, dragonType):addTo(corps, 1)
-                        :pos(0, 80):setScaleX(scalex > 0 and 1 or -1)
-                end
+        end
+        if ally == MINE or ally == FRIEND then
+            if banner_name then
+                UIKit:CreateNameBanner(banner_name, dragonType)
+                    :addTo(corps, 1):pos(0, 80):setScaleX(scalex > 0 and 1 or -1)
             end
         end
         corps:setScaleX(scalex)
@@ -901,7 +895,7 @@ function MultiAllianceLayer:CreateDeadEvent(marchEvent)
     local id_dead
     if event_type == "monster" then
         id_dead = marchEvent:DefenceMonsterData().id
-    -- elseif event_type == "village" then
+        -- elseif event_type == "village" then
         -- id_dead = marchEvent:DefenceVillageData().id
     else
         return
@@ -1007,6 +1001,9 @@ end
 
 
 return MultiAllianceLayer
+
+
+
 
 
 

@@ -396,13 +396,17 @@ function WidgetRecruitSoldier:AddButtons()
                                 return
                             end
                             NetManager:getRecruitSpecialSoldierPromise(self.soldier_name, self.count)
+                            local parent = self:getParent()
                             self:Close()
+                            parent:LeftButtonClicked()
                         end,
                         price = queue_need_gem + required_gems
                         }):CreateCancelButton()
                 else
                     NetManager:getRecruitSpecialSoldierPromise(self.soldier_name, self.count)
+                    local parent = self:getParent()
                     self:Close()
+                    parent:LeftButtonClicked()
                 end
             else
                 local required_gems = DataUtils:buyResource(self:GetNeedResouce(self.count), {})
@@ -426,13 +430,17 @@ function WidgetRecruitSoldier:AddButtons()
                                 return
                             end
                             NetManager:getRecruitNormalSoldierPromise(self.soldier_name, self.count)
+                            local parent = self:getParent()
                             self:Close()
+                            parent:LeftButtonClicked()
                         end,
                         price = queue_need_gem + required_gems
                         }):CreateCancelButton()
                 else
                     NetManager:getRecruitNormalSoldierPromise(self.soldier_name, self.count)
+                    local parent = self:getParent()
                     self:Close()
+                    parent:LeftButtonClicked()
                 end
             end
         end)
@@ -683,7 +691,7 @@ function WidgetRecruitSoldier:CheckMaterials(count)
         for k,v in pairs(specialMaterials) do
             local temp = string.split(v, "_")
             local total = self.city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.SOLDIER)[temp[1]]
-            if total< count then
+            if total < (count * tonumber(temp[2])) then
                 return v
             end
         end
@@ -799,6 +807,7 @@ end
 
 
 return WidgetRecruitSoldier
+
 
 
 

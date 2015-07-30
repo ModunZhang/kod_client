@@ -947,9 +947,9 @@ function GameUIAlliance:GetEventItemByIndexAndEvent()
     local content = display.newNode():size(520,84)
     local bg0 = display.newScale9Sprite("back_ground_548x40_1.png",0,0,cc.size(520,84),cc.rect(10,10,528,20)):addTo(content):align(display.LEFT_BOTTOM, 0, 0)
     local bg1 = display.newScale9Sprite("back_ground_548x40_2.png",0,0,cc.size(520,84),cc.rect(10,10,528,20)):addTo(content):align(display.LEFT_BOTTOM, 0, 0)
-    local normal = display.newScale9Sprite("title_blue_430x30.png",0,0,cc.size(222,30),cc.rect(10,10,410,10)):addTo(content):align(display.LEFT_TOP, 0,70)
+    local normal = display.newScale9Sprite("title_blue_430x30.png",0,0,cc.size(222,30),cc.rect(20,10,390,10)):addTo(content):align(display.LEFT_TOP, 0,70)
     local important = display.newSprite("alliance_event_type_green_222x30.png"):addTo(content):align(display.LEFT_TOP, 0,70)
-    local war = display.newSprite("title_red_166x30.png",0,0,cc.size(222,30),cc.rect(10,10,146,10)):addTo(content):align(display.LEFT_TOP, 0,70)
+    local war = display.newScale9Sprite("title_red_166x30.png",0,0,cc.size(222,30),cc.rect(20,10,126,10)):addTo(content):align(display.LEFT_TOP, 0,70)
     local title_label = UIKit:ttfLabel({
         text = "title",
         size = 20,
@@ -964,7 +964,7 @@ function GameUIAlliance:GetEventItemByIndexAndEvent()
         text = "content",
         size = 20,
         color = 0x403c2f,
-        dimensions = cc.size(300, 60)
+        dimensions = cc.size(280, 60)
     }):align(display.LEFT_CENTER,0,0)
     content_label:pos(normal:getPositionX()+normal:getContentSize().width + 10,42):addTo(content)
     content.bg0 = bg0
@@ -1000,6 +1000,7 @@ end
 function GameUIAlliance:GetEventContent(event)
     local event_type = event.type
     local params_,params = event.params,{}
+    dump(event)
     for _,v in ipairs(params_) do
         if 'promotionDown' == event_type or 'promotionUp' == event_type then
             if Localize.alliance_title[v] then
@@ -1016,6 +1017,16 @@ function GameUIAlliance:GetEventContent(event)
         elseif 'upgrade' == event_type then
             if Localize.building_name[v] then
                 v = Localize.building_name[v]
+            end
+        elseif 'shrine' == event_type then
+            v = string.gsub(v,"_","-")
+        elseif 'buildingUpgrade' == event_type then
+            if Localize.building_name[v] then
+                v = Localize.building_name[v]
+            end
+        elseif 'villageUpgrade' == event_type then
+            if Localize.village_name[v] then
+                v = Localize.village_name[v]
             end
         end
         table.insert(params, v)

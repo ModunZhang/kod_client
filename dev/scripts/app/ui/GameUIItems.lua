@@ -291,6 +291,7 @@ function GameUIItems:IsItemCouldUseInShop(items)
         and items:Name()~="chestKey_2"
         and items:Name()~="chestKey_3"
         and items:Name()~="chestKey_4"
+        and items:Name()~="sweepScroll"
     then
         return true
     end
@@ -304,6 +305,7 @@ function GameUIItems:IsItemCouldUseNow(items)
         and items:Name()~="dragonHp_1"
         and items:Name()~="dragonHp_2"
         and items:Name()~="dragonHp_3"
+        and items:Name()~="sweepScroll"
     then
         return true
     end

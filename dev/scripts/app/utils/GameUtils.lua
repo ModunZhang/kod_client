@@ -270,6 +270,19 @@ function GameUtils:Translate(text,cb)
 end
 
 
+-- get method
+function GameUtils:PingBaidu(callback)
+    local request = network.createHTTPRequest(function(event)
+        if event.name == "completed" then
+            callback(true)
+        elseif eventName == "failed" then
+            callback(false)
+        end
+    end, "http://www.baidu.com", "GET")
+    request:setTimeout(180)
+    request:start()
+end
+
 --ver 2.2.4
 --TODO:return po文件对应的语言代码！
 function GameUtils:getCurrentLanguage()
@@ -294,12 +307,12 @@ end
 local apple_lang_map = {
     ['zh-Hans'] = 'cn',
     ['zh-Hant'] = 'tw',
-    -- ['en'] = 'en',
+    ['en'] = 'en',
 }
 local lang_map = {
     cn = { po = 'zh_CN', code = 'cn' },
     tw = { po = 'zh_TW', code = 'tw' },
-    -- en = { po = 'en', code = 'en' },
+    en = { po = 'en', code = 'en' },
 }
 function GameUtils:GetAppleLanguageCode()
     local code = ext.getDeviceLanguage()
