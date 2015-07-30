@@ -39,8 +39,11 @@ local function linerat(a,b,t)
 end
 
 
-function PVELayerNew:ctor(scene)
+function PVELayerNew:ctor(scene, user, level)
     PVELayerNew.super.ctor(self, scene, 0.5, 1.5)
+    self.user = user
+    self.level = level
+
     GameUtils:LoadImagesWithFormat(function()
         self.background = cc.TMXTiledMap:create("tmxmaps/pve_10x42.tmx"):addTo(self)
     end, cc.TEXTURE2_D_PIXEL_FORMAT_RGB5_A1)
@@ -94,6 +97,9 @@ function PVELayerNew:ctor(scene)
     table.remove(self.seq_npc, 1)
 
 
+
+
+
     self.npcs = {}
     local data = pvemap.layers[1].data
     for ly = 1, pvemap.height do
@@ -104,7 +110,7 @@ function PVELayerNew:ctor(scene)
                 local type,png,w,h,s = unpack(map[gid])
                 local obj
                 if gid == 15 or gid == 16 then
-                    obj = PveSprite.new(self, string.format("1_%d", self:GetNpcIndex(lx - 1, ly - 1)), lx - 1, ly - 1, gid)
+                    obj = PveSprite.new(self, string.format("%d_%d", level, self:GetNpcIndex(lx - 1, ly - 1)), lx - 1, ly - 1, gid)
                 elseif type == "image" then
                     obj = display.newSprite(png)
                 elseif type == "animation" then
@@ -121,6 +127,10 @@ function PVELayerNew:ctor(scene)
             end
         end
     end
+
+    for i,v in ipairs(self.seq_npc) do
+        self:GetNpcBy(v.x, v.y):SetStars(self.user:GetPveSectionStarByName(self:GetNpcBy(v.x, v.y):GetPveName()))
+    end
 end
 function PVELayerNew:ConvertLogicPositionToMapPosition(lx, ly)
     return self:convertToNodeSpace(self.background:convertToWorldSpace(cc.p(self.normal_map:ConvertToMapPosition(lx, ly))))
@@ -134,7 +144,13 @@ end
 function PVELayerNew:GetClickedObject(world_x, world_y)
     local point = self.background:convertToNodeSpace(cc.p(world_x, world_y))
     local logic_x, logic_y = self:GetLogicMap():ConvertToLogicPosition(point.x, point.y)
-    return self:GetNpcBy(logic_x, logic_y)
+    local npc = self:GetNpcBy(logic_x, logic_y)
+    for _,v in pairs(self.npcs) do
+        if v:IsContainWorldPoint(world_x, world_y) then
+            npc = v
+        end
+    end
+    return npc
 end
 function PVELayerNew:RegisterNpc(obj,X,Y)
     local w,h = self.normal_map:GetSize()

@@ -21,9 +21,10 @@ function PveSprite:RefreshSprite()
             shaderName = "banner",
         })
     ))
-    display.newSprite("alliance_shire_star_60x58_1.png"):addTo(self):scale(0.4):pos(-25,60)
-    display.newSprite("alliance_shire_star_60x58_1.png"):addTo(self):scale(0.4):pos(0,60)
-    display.newSprite("alliance_shire_star_60x58_1.png"):addTo(self):scale(0.4):pos(25,60)
+    self.stars = {}
+    self.stars[1] = display.newSprite("alliance_shire_star_60x58_1.png"):addTo(self):scale(0.4):pos(-25,60)
+    self.stars[2] = display.newSprite("alliance_shire_star_60x58_1.png"):addTo(self):scale(0.4):pos(0,60)
+    self.stars[3] = display.newSprite("alliance_shire_star_60x58_1.png"):addTo(self):scale(0.4):pos(25,60)
 end
 function PveSprite:GetSpriteFile()
     if self.gid == 15 then
@@ -37,6 +38,12 @@ function PveSprite:GetLogicZorder()
 end
 function PveSprite:GetPveName()
     return self.npc_name
+end
+function PveSprite:SetStars(num)
+    for i,v in ipairs(self.stars) do
+        v:setTexture(i <= num and "alliance_shire_star_60x58_1.png" or "alliance_shire_star_60x58_0.png")
+    end
+    return self
 end
 ---
 function PveSprite:CreateBase()

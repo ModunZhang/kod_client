@@ -410,12 +410,6 @@ function MyCityScene:OpenUI(building, default_tab)
         local dragon_type = dragon_manger:GetCanFightPowerfulDragonType()
         if #dragon_type > 0 or dragon_manger:GetDefenceDragon() then
             app:EnterPVEScene(1)
-            -- NetManager:getAttackPveSectionPromise("1_1", "greenDragon", {
-            --     {
-            --         name = "swordsman",
-            --         count = 100
-            --     }
-            -- })
         else
             UIKit:showMessageDialog(_("主人"),_("需要一条空闲状态的魔龙才能探险"))
         end

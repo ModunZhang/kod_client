@@ -3,7 +3,9 @@ local PVELayerNew = import("..layers.PVELayerNew")
 local GameUIPVEHomeNew = import("..ui.GameUIPVEHomeNew")
 local MapScene = import(".MapScene")
 local PVESceneNew = class("PVESceneNew", MapScene)
-function PVESceneNew:ctor()
+function PVESceneNew:ctor(user, level)
+    self.user = user
+    self.level = level
     PVESceneNew.super.ctor(self)
     self.util_node = display.newNode():addTo(self)
 end
@@ -18,7 +20,7 @@ function PVESceneNew:GetHomePage()
     return self.home_page
 end
 function PVESceneNew:CreateSceneLayer()
-    return PVELayerNew.new(self)
+    return PVELayerNew.new(self, self.user, self.level)
 end
 function PVESceneNew:CreateHomePage()
     local home_page = GameUIPVEHomeNew.new():AddToScene(self, true)
@@ -68,10 +70,13 @@ function PVESceneNew:OnTouchClicked(pre_x, pre_y, x, y)
         local entity = building:GetEntity()
         if iskindof(building, "Sprite") then
             Sprite:PromiseOfFlash(building):next(function()
-                print(building:GetPveName())
+                self:OpenUI(building)
             end)
         end
     end
+end
+function PVESceneNew:OpenUI(building)
+    UIKit:newGameUI("GameUIPveAttack", self.user, building:GetPveName()):AddToCurrentScene(true)
 end
 
 

@@ -132,6 +132,37 @@ function User:ctor(p)
     self.growUpTaskManger = GrowUpTaskManager.new()
     self.iapGifts = {}
 end
+function User:GetFightCountByName(pve_name)
+    for i,v in ipairs(self.pveFights) do
+        if v.sectionName == pve_name then
+            return v.count
+        end
+    end
+    return 0
+end
+function User:GetPveRewardByIndex(index, s_index)
+    local npcs = self.pve[index]
+    if npcs then
+        return npcs.rewarded[s_index]
+    end
+end
+function User:GetPveSectionStarByName(pve_name)
+    local index, s_index = unpack(string.split(pve_name, "_"))
+    return self:GetPveSectionStarByIndex(tonumber(index), tonumber(s_index))
+end
+function User:GetPveSectionStarByIndex(index, s_index)
+    local npcs = self.pve[index]
+    if npcs then
+        return npcs.sections[s_index] or 0
+    end
+end
+function User:GetLatestPveIndex()
+    if #self.pve == 0 then
+        return 1
+    else
+        return #self.pve
+    end
+end
 function User:IsBindGameCenter()
     return self:GcId() ~= "" and self:GcId() ~= json.null
 end
