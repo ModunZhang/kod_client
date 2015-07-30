@@ -24,7 +24,6 @@ function GameUIPveAttack:onEnter()
         text = _("几率掉落"),
         size = 20,
         color = 0x403c2f,
-        align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
     }):addTo(self:GetBody()):align(display.CENTER, size.width/2, size.height - 40)
 
 
@@ -64,9 +63,10 @@ function GameUIPveAttack:onEnter()
         list:addItem(item)
     end
     list:reload()
+    self.list = list
 
-    UIKit:ttfLabel({
-        text = string.format(_("今日可挑战次数: %d/%d"), self.user:GetFightCountByName(self.pve_name), 5),
+    self.label = UIKit:ttfLabel({
+        text = string.format(_("今日可挑战次数: %d/%d"), self.user:GetFightCountByName(self.pve_name), sections[self.pve_name].maxFightCount),
         size = 20,
         color = 0x403c2f,
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
@@ -97,7 +97,7 @@ function GameUIPveAttack:onEnter()
     }):addTo(self:GetBody()):align(display.LEFT_CENTER,20,size.height - 450)
 
 
-    cc.ui.UIPushButton.new(
+    self.sweep = cc.ui.UIPushButton.new(
         {normal = "blue_btn_up_148x58.png", pressed = "blue_btn_down_148x58.png", disabled = 'gray_btn_148x58.png'},
         {scale9 = false}
     ):addTo(self:GetBody())
@@ -131,9 +131,20 @@ function GameUIPveAttack:onEnter()
                 return k, {name = name, star = tonumber(star)}
             end),
             function(dragonType, soldiers)
-                NetManager:getAttackPveSectionPromise(self.pve_name, dragonType, soldiers)
+                NetManager:getAttackPveSectionPromise(self.pve_name, dragonType, soldiers):done(function()
+                    self:RefreshUI()
+                    display.getRunningScene():GetSceneLayer():RefreshPve()
+                end)
             end):AddToCurrentScene(true)
         end)
+end
+function GameUIPveAttack:RefreshUI()
+    local star = self.user:GetPveSectionStarByName(self.pve_name)
+    for i,v in ipairs(self.list.items_) do
+        v:getContent().star:setTexture(i <= star and "alliance_shire_star_60x58_1.png" or "alliance_shire_star_60x58_0.png")
+    end
+    self.label:setString(string.format(_("今日可挑战次数: %d/%d"), self.user:GetFightCountByName(self.pve_name), 5))
+    self.sweep:setButtonEnabled(star >= 3)
 end
 function GameUIPveAttack:GetListItem(index,title, star)
     local bg = display.newScale9Sprite(string.format("back_ground_548x40_%d.png", index % 2 == 0 and 1 or 2)):size(600,40)
@@ -143,12 +154,9 @@ function GameUIPveAttack:GetListItem(index,title, star)
         color = 0x403c2f,
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
     }):addTo(bg):align(display.LEFT_CENTER,30,20)
-
-    local ax = bg:getContentSize().width - 50
-    for i = 1, 1 do
-        display.newSprite(i <= star and "alliance_shire_star_60x58_1.png" or "alliance_shire_star_60x58_0.png")
-            :addTo(bg):pos(ax - (i-1) * 35, 20):scale(0.6)
-    end
+    
+    bg.star = display.newSprite(index <= star and "alliance_shire_star_60x58_1.png" or "alliance_shire_star_60x58_0.png")
+    :addTo(bg):pos(bg:getContentSize().width - 50, 20):scale(0.6)
     return bg
 end
 

@@ -1843,19 +1843,57 @@ function NetManager:getSetApnStatusPromise(type,status)
     return get_blocking_request_promise("logic.playerHandler.setApnStatus",{type = type,status = status},"设置远程推送状态失败!"):done(get_player_response_msg)
 end
 
-
 function NetManager:getAttackPveSectionPromise(sectionName, dragonType, soldiers)
+    local rewards = LuaUtils:table_map(string.split(GameDatas.PvE.sections[sectionName].rewards, ","), function(k,v)
+        local type,name = unpack(string.split(v, ":"))
+        return k, {type = type, name = name}
+    end)
+    local pre_tab = {items = {}, soldierMaterials = {}}
     return get_blocking_request_promise("logic.playerHandler.attackPveSection",{
         sectionName = sectionName,
         dragonType = dragonType,
         soldiers = soldiers,
-    },"攻打npc失败!"):done(get_player_response_msg)
-end
-function NetManager:getSweepPveSectionPromise(sectionName, count)
-    return get_blocking_request_promise("logic.playerHandler.sweepPveSection",{
-        sectionName = sectionName,
-        count = count,
-    },"扫荡失败!"):done(get_player_response_msg)
+    },"攻打npc失败!"):done(function()
+        for i,v in ipairs(rewards) do
+            if v.type == "items" then
+                pre_tab[v.type][v.name] = ItemManager:GetItemByName(v.name):Count()
+            elseif v.type == "soldierMaterials" then
+                pre_tab[v.type][v.name] = City:GetMaterialManager():GetSoldierMaterias()[v.name]
+            end
+        end
+    end):done(get_player_response_msg):done(function()
+        local cur_tab = {items = {}, soldierMaterials = {}}
+        for i,v in ipairs(rewards) do
+            if v.type == "items" then
+                cur_tab[v.type][v.name] = ItemManager:GetItemByName(v.name):Count()
+            elseif v.type == "soldierMaterials" then
+                cur_tab[v.type][v.name] = City:GetMaterialManager():GetSoldierMaterias()[v.name]
+            end
+        end
+        local adds = {items = {}, soldierMaterials = {}}
+        for type,category in pairs(cur_tab) do
+            for key,count in pairs(category) do
+                local add = count - (pre_tab[type][key] or 0)
+                if add > 0 then
+                    adds[type][key] = add
+                end
+            end
+        end
+        if next(adds.items) then
+            local item_str = {}
+            for itemName,count in pairs(adds.items) do
+                table.insert(item_str, string.format("%s x%d", Localize_item.item_name[itemName], count))
+            end
+            GameGlobalUI:showTips(_("获得道具"), table.concat(item_str, " "))
+        end
+        if next(adds.soldierMaterials) then
+            local item_str = {}
+            for key,count in pairs(adds.soldierMaterials) do
+                table.insert(item_str, string.format("%s x%d", Localize.soldier_material[key], count))
+            end
+            GameGlobalUI:showTips(_("获得材料"), table.concat(item_str, " "))
+        end
+    end)
 end
 
 
@@ -1912,6 +1950,10 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
+
+
+
 
 
 

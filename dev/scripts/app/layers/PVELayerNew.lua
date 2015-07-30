@@ -89,7 +89,7 @@ function PVELayerNew:ctor(scene, user, level)
             for i = 2, g-2 do
                 local x = bezierat(lines[1].x, ux1, ux2, lines[2].x, i * 1/g)
                 local y = bezierat(lines[1].y, uy1, uy2, lines[2].y, i * 1/g)
-                display.newSprite("road_22x24.png"):addTo(self, 1):pos(x,y)
+                display.newSprite("road_22x24.png"):addTo(self):pos(x,y)
             end
             table.remove(lines, 1)
         end
@@ -127,10 +127,7 @@ function PVELayerNew:ctor(scene, user, level)
             end
         end
     end
-
-    for i,v in ipairs(self.seq_npc) do
-        self:GetNpcBy(v.x, v.y):SetStars(self.user:GetPveSectionStarByName(self:GetNpcBy(v.x, v.y):GetPveName()))
-    end
+    self:RefreshPve()
 end
 function PVELayerNew:ConvertLogicPositionToMapPosition(lx, ly)
     return self:convertToNodeSpace(self.background:convertToWorldSpace(cc.p(self.normal_map:ConvertToMapPosition(lx, ly))))
@@ -150,7 +147,9 @@ function PVELayerNew:GetClickedObject(world_x, world_y)
             npc = v
         end
     end
-    return npc
+    if self.user:IsPveNameEnable(npc:GetPveName()) then
+        return npc
+    end
 end
 function PVELayerNew:RegisterNpc(obj,X,Y)
     local w,h = self.normal_map:GetSize()
@@ -164,6 +163,23 @@ function PVELayerNew:GetNpcIndex(X,Y)
     for i,v in ipairs(self.seq_npc) do
         if v.x == X and v.y == Y then
             return i
+        end
+    end
+end
+function PVELayerNew:RefreshPve()
+    for i = 1, #self.seq_npc do
+        local be = self.seq_npc[i - 1]
+        local v = self.seq_npc[i]
+        self:GetNpcBy(v.x, v.y)
+        :SetStars(self.user:GetPveSectionStarByName(self:GetNpcBy(v.x, v.y):GetPveName()))
+        if be then 
+            if self.user:GetPveSectionStarByName(self:GetNpcBy(be.x, be.y):GetPveName()) > 0 then
+                self:GetNpcBy(v.x, v.y):SetEnable(true)
+            else
+                self:GetNpcBy(v.x, v.y):SetEnable(false)
+            end
+        else
+            self:GetNpcBy(v.x, v.y):SetEnable(true)
         end
     end
 end

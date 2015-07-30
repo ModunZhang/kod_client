@@ -140,6 +140,20 @@ function User:GetFightCountByName(pve_name)
     end
     return 0
 end
+function User:IsPveNameEnable(pve_name)
+    local index, s_index = unpack(string.split(pve_name, "_"))
+    return self:IsPveEnable(tonumber(index), tonumber(s_index))
+end
+function User:IsPveEnable(index, s_index)
+    if self.pve[index] then
+        if s_index == 1 then return true end
+        if self:GetPveSectionStarByIndex(index, s_index - 1) > 0 then
+            return true
+        end
+    else
+        return self.pve[index-1] and #self.pve[index-1] == 21 and s_index == 1
+    end
+end
 function User:GetPveRewardByIndex(index, s_index)
     local npcs = self.pve[index]
     if npcs then

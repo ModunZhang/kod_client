@@ -21,6 +21,7 @@ function PveSprite:RefreshSprite()
             shaderName = "banner",
         })
     ))
+    self.bg = bg
     self.stars = {}
     self.stars[1] = display.newSprite("alliance_shire_star_60x58_1.png"):addTo(self):scale(0.4):pos(-25,60)
     self.stars[2] = display.newSprite("alliance_shire_star_60x58_1.png"):addTo(self):scale(0.4):pos(0,60)
@@ -42,6 +43,18 @@ end
 function PveSprite:SetStars(num)
     for i,v in ipairs(self.stars) do
         v:setTexture(i <= num and "alliance_shire_star_60x58_1.png" or "alliance_shire_star_60x58_0.png")
+    end
+    return self
+end
+function PveSprite:SetEnable(isEnable)
+    for i,v in ipairs(self.stars) do
+        v:setVisible(isEnable)
+    end
+    self.bg:setVisible(isEnable)
+    if isEnable then
+        self:GetSprite():clearFilter()
+    else
+        self:GetSprite():setFilter(filter.newFilter("GRAY", {0.2, 0.3, 0.5, 0.1}))
     end
     return self
 end
