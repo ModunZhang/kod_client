@@ -499,7 +499,7 @@ function GameUIAlliance:NoAllianceTabEvent_inviteIf()
         size = 22,
         color= 0x615b44,
         align = cc.TEXT_ALIGNMENT_CENTER
-    }):align(display.BOTTOM_CENTER,window.cx,760):addTo(invateNode)
+    }):align(display.BOTTOM_CENTER,320,760):addTo(invateNode)
     self.invateListView = list
     self:RefreshInvateListView()
     return invateNode
@@ -533,7 +533,7 @@ function GameUIAlliance:NoAllianceTabEvent_applyIf()
         size = 22,
         color= 0x615b44,
         align = cc.TEXT_ALIGNMENT_CENTER
-    }):align(display.BOTTOM_CENTER,window.cx,760):addTo(applyNode)
+    }):align(display.BOTTOM_CENTER,320,760):addTo(applyNode)
     self:RefreshApplyListView()
     return applyNode
 end
