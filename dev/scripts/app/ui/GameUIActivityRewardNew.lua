@@ -185,7 +185,7 @@ end
 function GameUIActivityRewardNew:GetDay60Reward()
     local config_data
     if self:GetPageOfDay60() == 2 then
-        config_data = LuaUtils:table_slice(config_day60,30,60)
+        config_data = LuaUtils:table_slice(config_day60,31,60)
     else
         print("GetDay60Reward---->1")
         config_data =  LuaUtils:table_slice(config_day60,1,30)
