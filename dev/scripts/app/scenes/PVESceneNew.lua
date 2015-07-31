@@ -13,8 +13,7 @@ function PVESceneNew:onEnter()
 	PVESceneNew.super.onEnter(self)
     self.home_page = self:CreateHomePage()
     self:GetSceneLayer():ZoomTo(1)
-    local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(4.5,0)
-    self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
+    self:GetSceneLayer():GotoPve()
 end
 function PVESceneNew:GetHomePage()
     return self.home_page

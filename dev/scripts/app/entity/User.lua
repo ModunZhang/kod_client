@@ -164,6 +164,13 @@ function User:GetFightCountByName(pve_name)
     end
     return 0
 end
+function User:IsPveBossPassed(pve_name)
+    return self:GetPveSectionStarByName(pve_name) > 0
+end
+function User:IsPveBoss(pve_name)
+    local index, s_index = unpack(string.split(pve_name, "_"))
+    return tonumber(s_index) == pve_length
+end
 function User:IsPveNameEnable(pve_name)
     local index, s_index = unpack(string.split(pve_name, "_"))
     return self:IsPveEnable(tonumber(index), tonumber(s_index))
@@ -176,7 +183,7 @@ function User:IsPveEnable(index, s_index)
         end
     else
         if self.pve[index-1] then
-            return #self.pve[index-1] == 21 and s_index == 1
+            return #self.pve[index-1].sections == 21 and s_index == 1
         else
             return s_index == 1
         end
@@ -204,7 +211,7 @@ function User:GetStageStarByIndex(index)
     for i,v in ipairs(self:GetStageByIndex(index).sections or {}) do
         total_stars = total_stars + v
     end
-    return total_stars
+    return total_stars - ((self:GetStageByIndex(index).sections or {})[pve_length] or 0)
 end
 function User:IsStageEnabled(index)
     if index == 1 then return true end
@@ -212,6 +219,17 @@ function User:IsStageEnabled(index)
 end
 function User:IsStagePassed(index)
     return #(self:GetStageByIndex(index).sections or {}) == pve_length
+end
+function User:GetNextStageByPveName(pve_name)
+    local stage_index,pve_index = unpack(string.split(pve_name, "_"))
+    return tonumber(stage_index) + 1
+end
+function User:HasNextStageByPveName(pve_name)
+    local stage_index,pve_index = unpack(string.split(pve_name, "_"))
+    return tonumber(stage_index) < total_stages
+end
+function User:HasNextStageByIndex(index)
+    return index < total_stages
 end
 function User:GetStageTotalStars()
     return (pve_length-1) * 3

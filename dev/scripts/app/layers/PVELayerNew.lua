@@ -63,7 +63,8 @@ function PVELayerNew:ctor(scene, user, level)
     for i,v in ipairs(pvemap.layers[2].objects) do
         local lines = {}
         for i,line in ipairs(v.polyline) do
-            local lx,ly = math.floor((line.x + v.x)/80) - 1, math.floor((line.y + v.y)/80) - 1
+            local lx,ly = math.floor((line.x + v.x - 1)/80), math.floor((line.y + v.y - 1)/80)
+            print(lx,ly)
             local x,y = self.normal_map:ConvertToMapPosition(lx,ly)
             table.insert(lines, {x = x, y = y})
             table.insert(self.seq_npc, {x = lx, y = ly})
@@ -110,6 +111,7 @@ function PVELayerNew:ctor(scene, user, level)
                 local type,png,w,h,s = unpack(map[gid])
                 local obj
                 if gid == 15 or gid == 16 then
+                    print(level, self:GetNpcIndex(lx - 1, ly - 1))
                     obj = PveSprite.new(self, string.format("%d_%d", level, self:GetNpcIndex(lx - 1, ly - 1)), lx - 1, ly - 1, gid)
                 elseif type == "image" then
                     obj = display.newSprite(png)
@@ -149,6 +151,24 @@ function PVELayerNew:GetClickedObject(world_x, world_y)
     end
     if npc and self.user:IsPveNameEnable(npc:GetPveName()) then
         return npc
+    end
+end
+function PVELayerNew:GotoPve()
+    local find,x,y
+    for i,v in ipairs(self.seq_npc) do
+        local npc = self:GetNpcBy(v.x, v.y)
+        if self.user:IsPveNameEnable(npc:GetPveName()) then
+            find,x,y = npc,v.x,v.y
+        else
+            local point 
+            if find then
+                point = self:ConvertLogicPositionToMapPosition(4.5,y)
+            else
+                point = self:ConvertLogicPositionToMapPosition(4.5,0)
+            end
+            self:GotoMapPositionInMiddle(point.x, point.y)
+            return
+        end
     end
 end
 function PVELayerNew:RegisterNpc(obj,X,Y)

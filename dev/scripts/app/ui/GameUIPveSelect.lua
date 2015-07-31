@@ -47,7 +47,7 @@ function GameUIPveSelect:GetListItem(index)
 
     local txt, color
     if User:IsStageEnabled(index) then
-        if User:IsStagePassed() then
+        if User:IsStagePassed(index) then
             txt = _("通关")
             color = 0x007c23
         else
@@ -73,6 +73,9 @@ function GameUIPveSelect:GetListItem(index)
         color = 0xffedae,
         shadow = true
     })):addTo(bg):align(display.CENTER,548 - 60,100*1/3):setButtonEnabled(User:IsStageEnabled(index))
+    :onButtonClicked(function()
+        app:EnterPVEScene(index)
+    end)
 
     
 

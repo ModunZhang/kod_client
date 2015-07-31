@@ -11,6 +11,7 @@ function PveSprite:ctor(layer, npc_name, lx, ly, gid)
 end
 function PveSprite:RefreshSprite()
     PveSprite.super.RefreshSprite(self)
+    if self.gid == 16 then return end
     local bg = display.newSprite("arrow_green_22x32.png"
         , nil, nil, {class=cc.FilteredSpriteWithOne})
         :addTo(self):setScale(6, 0.8):pos(0, 60)
@@ -41,21 +42,25 @@ function PveSprite:GetPveName()
     return self.npc_name
 end
 function PveSprite:SetStars(num)
+    if self.gid == 16 then return self end
     for i,v in ipairs(self.stars) do
         v:setTexture(i <= num and "alliance_shire_star_60x58_1.png" or "alliance_shire_star_60x58_0.png")
     end
     return self
 end
 function PveSprite:SetEnable(isEnable)
-    for i,v in ipairs(self.stars) do
-        v:setVisible(isEnable)
-    end
-    self.bg:setVisible(isEnable)
     if isEnable then
         self:GetSprite():clearFilter()
     else
         self:GetSprite():setFilter(filter.newFilter("GRAY", {0.2, 0.3, 0.5, 0.1}))
     end
+
+    if self.gid == 16 then return self end
+    for i,v in ipairs(self.stars) do
+        v:setVisible(isEnable)
+    end
+    self.bg:setVisible(isEnable)
+
     return self
 end
 ---
