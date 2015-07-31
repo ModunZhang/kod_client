@@ -22,6 +22,8 @@ def dic2table(dct):
 		if type(k) is types.StringType:
 			if type(v) is types.IntType:
 				dct_str += "%s = %s," % (k,v)
+			elif type(v) is types.FloatType:
+				dct_str += "%s = %s," % (k,v)
 			elif type(v) is types.StringType:
 				dct_str += "%s = \"%s\"," % (k,v)
 			elif type(v) is types.DictType:
@@ -134,15 +136,15 @@ if __name__=="__main__":
 				pve_map["layers"][i]["objects"][obj_i]["shape"] = "polyline"
 			else:
 				assert(False)
-			pve_map["layers"][i]["objects"][obj_i]["x"] = int(item.getAttribute("x"))
-			pve_map["layers"][i]["objects"][obj_i]["y"] = int(item.getAttribute("y"))
+			pve_map["layers"][i]["objects"][obj_i]["x"] = float(item.getAttribute("x"))
+			pve_map["layers"][i]["objects"][obj_i]["y"] = float(item.getAttribute("y"))
 			polyline = []
 			points = item.getElementsByTagName("polyline")[0].getAttribute("points").split(" ")
 			for l_i in range(0, len(points)):
 				polyline.append({})
 				pp = points[l_i].split(",")
-				polyline[l_i]["x"] = int(pp[0])
-				polyline[l_i]["y"] = int(pp[1])
+				polyline[l_i]["x"] = float(pp[0])
+				polyline[l_i]["y"] = float(pp[1])
 			pve_map["layers"][i]["objects"][obj_i]["polyline"] = polyline
 
 	with codecs.open("pve_level.lua", 'w', 'utf-8') as f:

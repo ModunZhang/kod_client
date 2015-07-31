@@ -282,7 +282,7 @@ function GameUIPveAttack:CreateAttackButton()
                         end
                         self:performWithDelay(function()
                             self:LeftButtonClicked()
-                        end, 0.1)
+                        end, 0)
                     end):AddToCurrentScene(true)
                 end)
             end):AddToCurrentScene(true)

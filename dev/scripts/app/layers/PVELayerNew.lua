@@ -21,8 +21,8 @@ local map = {
     {"image", "keel_189x86.png"           ,1,1,1},
     {"image", "keel_189x86.png"           ,1,1,1},
     {"animation", "zhihuishi"             ,1,1,1},
-    {"image", "tmp_pve_flag_80x80.png"    ,1,1,1.5},
-    {"image", "alliance_moonGate.png"     ,1,1,1.5},
+    {"image", "tmp_pve_flag_80x80.png"    ,1,1,1},
+    {"image", "alliance_moonGate.png"     ,1,1,1},
 }
 
 
@@ -64,7 +64,6 @@ function PVELayerNew:ctor(scene, user, level)
         local lines = {}
         for i,line in ipairs(v.polyline) do
             local lx,ly = math.floor((line.x + v.x - 1)/80), math.floor((line.y + v.y - 1)/80)
-            print(lx,ly)
             local x,y = self.normal_map:ConvertToMapPosition(lx,ly)
             table.insert(lines, {x = x, y = y})
             table.insert(self.seq_npc, {x = lx, y = ly})
@@ -87,10 +86,10 @@ function PVELayerNew:ctor(scene, user, level)
                 uy2 = linerat(lines[1].y, lines[2].y, 0.66)
             end
             local g = math.ceil(math.sqrt((lines[2].x - lines[1].x)^2 + (lines[2].y - lines[1].y)^2) / 30)
-            for i = 2, g-2 do
+            for i = 2, g - 2 do
                 local x = bezierat(lines[1].x, ux1, ux2, lines[2].x, i * 1/g)
                 local y = bezierat(lines[1].y, uy1, uy2, lines[2].y, i * 1/g)
-                display.newSprite("road_22x24.png"):addTo(self):pos(x,y)
+                display.newSprite("road_22x24.png"):addTo(self):pos(x,y):scale(0.8)
             end
             table.remove(lines, 1)
         end
@@ -111,7 +110,6 @@ function PVELayerNew:ctor(scene, user, level)
                 local type,png,w,h,s = unpack(map[gid])
                 local obj
                 if gid == 15 or gid == 16 then
-                    print(level, self:GetNpcIndex(lx - 1, ly - 1))
                     obj = PveSprite.new(self, string.format("%d_%d", level, self:GetNpcIndex(lx - 1, ly - 1)), lx - 1, ly - 1, gid)
                 elseif type == "image" then
                     obj = display.newSprite(png)
@@ -160,16 +158,16 @@ function PVELayerNew:GotoPve()
         if self.user:IsPveNameEnable(npc:GetPveName()) then
             find,x,y = npc,v.x,v.y
         else
-            local point 
-            if find then
-                point = self:ConvertLogicPositionToMapPosition(4.5,y)
-            else
-                point = self:ConvertLogicPositionToMapPosition(4.5,0)
-            end
-            self:GotoMapPositionInMiddle(point.x, point.y)
-            return
+            break
         end
     end
+    local point
+    if find then
+        point = self:ConvertLogicPositionToMapPosition(4,y)
+    else
+        point = self:ConvertLogicPositionToMapPosition(4,0)
+    end
+    self:GotoMapPositionInMiddle(point.x, point.y)
 end
 function PVELayerNew:RegisterNpc(obj,X,Y)
     local w,h = self.normal_map:GetSize()
@@ -191,8 +189,8 @@ function PVELayerNew:RefreshPve()
         local be = self.seq_npc[i - 1]
         local v = self.seq_npc[i]
         self:GetNpcBy(v.x, v.y)
-        :SetStars(self.user:GetPveSectionStarByName(self:GetNpcBy(v.x, v.y):GetPveName()))
-        if be then 
+            :SetStars(self.user:GetPveSectionStarByName(self:GetNpcBy(v.x, v.y):GetPveName()))
+        if be then
             if self.user:GetPveSectionStarByName(self:GetNpcBy(be.x, be.y):GetPveName()) > 0 then
                 self:GetNpcBy(v.x, v.y):SetEnable(true)
             else
@@ -213,5 +211,6 @@ function PVELayerNew:getContentSize()
 end
 
 return PVELayerNew
+
 
 

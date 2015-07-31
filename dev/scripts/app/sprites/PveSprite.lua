@@ -1,6 +1,7 @@
 local Sprite = import(".Sprite")
 local PveSprite = class("PveSprite", Sprite)
-
+local sections = GameDatas.PvE.sections
+local special = GameDatas.Soldiers.special
 
 function PveSprite:ctor(layer, npc_name, lx, ly, gid)
     self.npc_name = npc_name
@@ -11,10 +12,20 @@ function PveSprite:ctor(layer, npc_name, lx, ly, gid)
 end
 function PveSprite:RefreshSprite()
     PveSprite.super.RefreshSprite(self)
+    if self:IsBoss() then
+        self:GetSprite():setAnchorPoint(cc.p(0.45, 0.25))
+    elseif self:IsSpecial() then
+        self:GetSprite():setAnchorPoint(cc.p(0.51, 0.16))
+    else
+        self:GetSprite():setAnchorPoint(cc.p(0.51, 0.16))
+    end
     if self.gid == 16 then return end
+
+    local h = 100
+
     local bg = display.newSprite("arrow_green_22x32.png"
         , nil, nil, {class=cc.FilteredSpriteWithOne})
-        :addTo(self):setScale(6, 0.8):pos(0, 60)
+        :addTo(self):setScale(6, 0.8):pos(0, h)
 
     bg:setFilter(filter.newFilter("CUSTOM",
         json.encode({
@@ -24,16 +35,32 @@ function PveSprite:RefreshSprite()
     ))
     self.bg = bg
     self.stars = {}
-    self.stars[1] = display.newSprite("alliance_shire_star_60x58_1.png"):addTo(self):scale(0.4):pos(-25,60)
-    self.stars[2] = display.newSprite("alliance_shire_star_60x58_1.png"):addTo(self):scale(0.4):pos(0,60)
-    self.stars[3] = display.newSprite("alliance_shire_star_60x58_1.png"):addTo(self):scale(0.4):pos(25,60)
+    self.stars[1] = display.newSprite("alliance_shire_star_60x58_1.png"):addTo(self):scale(0.4):pos(-25,h)
+    self.stars[2] = display.newSprite("alliance_shire_star_60x58_1.png"):addTo(self):scale(0.4):pos(0,h)
+    self.stars[3] = display.newSprite("alliance_shire_star_60x58_1.png"):addTo(self):scale(0.4):pos(25,h)
 end
 function PveSprite:GetSpriteFile()
-    if self.gid == 15 then
-        return "tmp_pve_flag_80x80.png"
-    else
-        return "alliance_moonGate.png", 0.5
+    if self:IsBoss() then
+        return "alliance_moonGate.png", 0.8
     end
+    if self:IsSpecial() then
+        return "tmp_pve_flag_special.png"
+    end
+    return "tmp_pve_flag_128x128.png"
+end
+function PveSprite:IsSpecial()
+    if self.gid == 15 then
+        local troops = string.split(sections[self.npc_name].troops, ",")
+        for i,v in ipairs(troops) do
+            local name = unpack(string.split(v, "_"))
+            if special[name] then
+                return true
+            end
+        end
+    end
+end
+function PveSprite:IsBoss()
+    return self.gid ~= 15
 end
 function PveSprite:GetLogicZorder()
     return self:GetMapLayer():GetZOrderBy(self, self.lx, self.ly)
@@ -79,4 +106,8 @@ function PveSprite:newBatchNode(w, h)
     return base_node
 end
 return PveSprite
+
+
+
+
 
