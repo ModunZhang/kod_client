@@ -66,14 +66,27 @@ function GameUIPveSweep:onEnter()
     :addTo(self:GetBody())
     :align(display.CENTER, 100,size.height - 630)
     :onButtonClicked(function()
-        NetManager:getUseItemPromise("sweepScroll", {sweepScroll = {sectionName = self.pve_name, count = 5}})
+        NetManager:getUseItemPromise("sweepScroll", {sweepScroll = {sectionName = self.pve_name, count = 5}}):done(function(response)
+            for i,v in ipairs(response.msg.playerData) do
+                if v[1] == "__rewards" then
+                    dump(v)
+                end
+            end
+        end)
     end)
-    self:CreateSweepButton("-1")
-    :addTo(self:GetBody())
-    :align(display.CENTER, size.width - 100,size.height - 630)
-    :onButtonClicked(function()
-        NetManager:getUseItemPromise("sweepScroll", {sweepScroll = {sectionName = self.pve_name, count = 1}})
-    end)
+
+    -- self:CreateSweepButton("-1")
+    -- :addTo(self:GetBody())
+    -- :align(display.CENTER, size.width - 100,size.height - 630)
+    -- :onButtonClicked(function()
+    --     NetManager:getUseItemPromise("sweepScroll", {sweepScroll = {sectionName = self.pve_name, count = 1}}):done(function(response)
+    --         for i,v in ipairs(response.msg.playerData) do
+    --             if v[1] == "__rewards" then
+    --                 dump(v)
+    --             end
+    --         end
+    --     end)
+    -- end)
 end
 function GameUIPveSweep:CreateSweepButton(title)
     local s = cc.ui.UIPushButton.new(

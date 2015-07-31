@@ -9,6 +9,30 @@ local TradeManager = import("..entity.TradeManager")
 local Enum = import("..utils.Enum")
 local MultiObserver = import(".MultiObserver")
 local User = class("User", MultiObserver)
+
+
+local total_stages = 0
+local tt = 0
+local stages = GameDatas.PvE.stages
+for k,v in pairs(stages) do
+    tt = tt + 1
+end
+for i = 1, tt do
+    if stages[string.format("%d_1", i)] then
+        total_stages = total_stages + 1
+    end
+end
+
+    
+local sections = GameDatas.PvE.sections
+local pve_length = 0
+local index = 1
+while sections[string.format("1_%d", index)] do
+    pve_length = pve_length + 1
+    index = index + 1
+end
+
+
 User.LISTEN_TYPE = Enum(
     "BASIC",
     "RESOURCE",
@@ -174,6 +198,26 @@ function User:GetPveSectionStarByIndex(index, s_index)
         return npcs.sections[s_index] or 0
     end
     return 0
+end
+function User:GetStageStarByIndex(index)
+    local total_stars = 0
+    for i,v in ipairs(self:GetStageByIndex(index).sections or {}) do
+        total_stars = total_stars + v
+    end
+    return total_stars
+end
+function User:IsStageEnabled(index)
+    if index == 1 then return true end
+    return self:IsStagePassed(index - 1)
+end
+function User:IsStagePassed(index)
+    return #(self:GetStageByIndex(index).sections or {}) == pve_length
+end
+function User:GetStageTotalStars()
+    return (pve_length-1) * 3
+end
+function User:GetStageByIndex(index)
+    return self.pve[index] or {}
 end
 function User:GetLatestPveIndex()
     if #self.pve == 0 then

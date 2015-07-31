@@ -23,7 +23,7 @@ function PVESceneNew:CreateSceneLayer()
     return PVELayerNew.new(self, self.user, self.level)
 end
 function PVESceneNew:CreateHomePage()
-    local home_page = GameUIPVEHomeNew.new():AddToScene(self, true)
+    local home_page = GameUIPVEHomeNew.new(self.level):AddToScene(self, true)
     home_page:setLocalZOrder(10)
     home_page:setTouchSwallowEnabled(false)
     return home_page

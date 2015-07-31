@@ -63,7 +63,7 @@ function PVELayerNew:ctor(scene, user, level)
     for i,v in ipairs(pvemap.layers[2].objects) do
         local lines = {}
         for i,line in ipairs(v.polyline) do
-            local lx,ly = (line.x + v.x)/80 - 1, (line.y + v.y)/80 - 1
+            local lx,ly = math.floor((line.x + v.x)/80) - 1, math.floor((line.y + v.y)/80) - 1
             local x,y = self.normal_map:ConvertToMapPosition(lx,ly)
             table.insert(lines, {x = x, y = y})
             table.insert(self.seq_npc, {x = lx, y = ly})

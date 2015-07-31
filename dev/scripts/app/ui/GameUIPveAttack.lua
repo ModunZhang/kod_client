@@ -2,6 +2,7 @@ local UILib = import(".UILib")
 local Localize = import("..utils.Localize")
 local window = import("..utils.window")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
+local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local GameUIPveAttack = class("GameUIPveAttack", WidgetPopDialog)
 local sections = GameDatas.PvE.sections
 local titles = {
@@ -14,18 +15,26 @@ local titles = {
 function GameUIPveAttack:ctor(user, pve_name)
     self.user = user
     self.pve_name = pve_name
-    GameUIPveAttack.super.ctor(self,560,_("关卡")..pve_name,window.top - 150)
+    GameUIPveAttack.super.ctor(self,570,_("关卡")..pve_name,window.top - 150)
+    display.newNode():addTo(self):schedule(function()
+        self:RefreshUI()
+    end, 1)
 end
 function GameUIPveAttack:onEnter()
     GameUIPveAttack.super.onEnter(self)
-
     local size = self:GetBody():getContentSize()
+
+    display.newSprite("tmp_label_line.png"):addTo(self:GetBody()):align(display.RIGHT_CENTER, size.width/2 - 85, size.height - 40):flipX(true)
+    display.newSprite("tmp_label_line.png"):addTo(self:GetBody()):align(display.LEFT_CENTER, size.width/2 + 85, size.height - 40)
     UIKit:ttfLabel({
         text = _("几率掉落"),
         size = 20,
         color = 0x403c2f,
     }):addTo(self:GetBody()):align(display.CENTER, size.width/2, size.height - 40)
 
+    WidgetUIBackGround.new({width = 568,height = 140},
+        WidgetUIBackGround.STYLE_TYPE.STYLE_5)
+    :addTo(self:GetBody()):pos((size.width - 568) / 2, size.height - 200)
 
     local rewards = LuaUtils:table_map(string.split(sections[self.pve_name].rewards, ","), function(k,v)
         local type,name = unpack(string.split(v, ":"))
@@ -44,7 +53,7 @@ function GameUIPveAttack:onEnter()
         display.newSprite(png)
             :addTo(
                 display.newSprite("box_118x118.png"):addTo(self:GetBody())
-                    :pos(size.width*(skipw + (i-1) * w) / count, size.height - 120)
+                    :pos(size.width*(skipw + (i-1) * w) / count, size.height - 130)
             ):pos(118/2, 118/2):scale(100/128)
     end
 
@@ -54,7 +63,7 @@ function GameUIPveAttack:onEnter()
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
     })
     list.touchNode_:setTouchEnabled(false)
-    list_node:addTo(self:GetBody()):pos(20, size.height - 340)
+    list_node:addTo(self:GetBody()):pos(20, size.height - 350)
     for i = 1, 3 do
         local item = list:newItem()
         local content = self:GetListItem(i,titles[i], star)
@@ -70,7 +79,7 @@ function GameUIPveAttack:onEnter()
         size = 20,
         color = 0x403c2f,
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
-    }):addTo(self:GetBody()):align(display.LEFT_CENTER,20,size.height - 370)
+    }):addTo(self:GetBody()):align(display.LEFT_CENTER,20,size.height - 380)
 
 
     local w = UIKit:ttfLabel({
@@ -78,7 +87,7 @@ function GameUIPveAttack:onEnter()
         size = 20,
         color = 0x403c2f,
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
-    }):addTo(self:GetBody()):align(display.LEFT_CENTER,20,size.height - 410):getContentSize().width
+    }):addTo(self:GetBody()):align(display.LEFT_CENTER,20,size.height - 420):getContentSize().width
 
 
 
@@ -87,21 +96,21 @@ function GameUIPveAttack:onEnter()
         size = 20,
         color = 0x7e0000,
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
-    }):addTo(self:GetBody()):align(display.LEFT_CENTER,20 + w + 20,size.height - 410)
+    }):addTo(self:GetBody()):align(display.LEFT_CENTER,20 + w + 20,size.height - 420)
 
     UIKit:ttfLabel({
         text = _("关卡三星通关后，可使用扫荡"),
         size = 20,
         color = 0x403c2f,
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
-    }):addTo(self:GetBody()):align(display.LEFT_CENTER,20,size.height - 450)
+    }):addTo(self:GetBody()):align(display.LEFT_CENTER,20,size.height - 460)
 
 
     self.sweep = cc.ui.UIPushButton.new(
         {normal = "blue_btn_up_148x58.png", pressed = "blue_btn_down_148x58.png", disabled = 'gray_btn_148x58.png'},
         {scale9 = false}
     ):addTo(self:GetBody())
-        :align(display.LEFT_CENTER, 20,size.height - 500)
+        :align(display.LEFT_CENTER, 20,size.height - 510)
         :setButtonLabel(UIKit:ttfLabel({
             text = _("扫荡") ,
             size = 22,
@@ -115,7 +124,7 @@ function GameUIPveAttack:onEnter()
         {normal = "red_btn_up_148x58.png", pressed = "red_btn_down_148x58.png"},
         {scale9 = false}
     ):addTo(self:GetBody())
-        :align(display.RIGHT_CENTER, size.width - 20,size.height - 500)
+        :align(display.RIGHT_CENTER, size.width - 20,size.height - 510)
         :setButtonLabel(UIKit:ttfLabel({
             text = _("进攻") ,
             size = 22,
@@ -131,7 +140,6 @@ function GameUIPveAttack:onEnter()
             end),
             function(dragonType, soldiers)
                 NetManager:getAttackPveSectionPromise(self.pve_name, dragonType, soldiers):done(function()
-                    self:RefreshUI()
                     display.getRunningScene():GetSceneLayer():RefreshPve()
                 end):done(function(response)
                     local dragon = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon(dragonType)
@@ -215,7 +223,7 @@ function GameUIPveAttack:DecodeReport(report, dragon, attack_soldiers)
         return level
     end
     function report:GetAttackTargetTerrain()
-        return user:Terrain()
+        return sections[pve_name].terrain
     end
     function report:IsAttackCamp()
         return true

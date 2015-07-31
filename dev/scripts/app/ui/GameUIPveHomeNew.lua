@@ -1,3 +1,4 @@
+local Localize_pve = import("..utils.Localize_pve")
 local light_gem = import("..particles.light_gem")
 local ChatManager = import("..entity.ChatManager")
 local UILib = import("..ui.UILib")
@@ -7,7 +8,7 @@ local WidgetUseItems = import("..widget.WidgetUseItems")
 local WidgetChangeMap = import("..widget.WidgetChangeMap")
 local WidgetHomeBottom = import("..widget.WidgetHomeBottom")
 local GameUIPVEHomeNew = UIKit:createUIClass('GameUIPVEHomeNew')
-
+local timer = app.timer
 function GameUIPVEHomeNew:DisplayOn()
     self.visible_count = self.visible_count + 1
     self:FadeToSelf(self.visible_count > 0)
@@ -34,13 +35,19 @@ function GameUIPVEHomeNew:FadeToSelf(isFullDisplay)
 end
 
 
-function GameUIPVEHomeNew:ctor()
+function GameUIPVEHomeNew:ctor(level)
     GameUIPVEHomeNew.super.ctor(self, {type = UIKit.UITYPE.BACKGROUND})
+    self.level = level
 end
 function GameUIPVEHomeNew:onEnter()
     self.visible_count = 1
     self:CreateTop()
     self.bottom = self:CreateBottom()
+    display.newNode():addTo(self):schedule(function()
+        self.stars:setString(string.format("%d/%d", User:GetStageStarByIndex(self.level), User:GetStageTotalStars()))
+        self.strenth:setString(string.format("%d/%d", User:GetStrengthResource():GetResourceValueByCurrentTime(timer:GetServerTime()), User:GetStrengthResource():GetValueLimit()))
+        self.gem_label:setString(string.formatnumberthousands(City:GetUser():GetGemResource():GetValue()))
+    end, 1)
 end
 function GameUIPVEHomeNew:CreateTop()
     local top_bg = display.newSprite("head_bg.png")
@@ -55,13 +62,19 @@ function GameUIPVEHomeNew:CreateTop()
         :onButtonClicked(function()
             UIKit:newGameUI("GameUIPveSelect"):AddToCurrentScene(true)
         end)
+     
+    UIKit:ttfLabel({
+        text = string.format("%d.%s", self.level, Localize_pve.stage_name[self.level]),
+        size = 22,
+        color = 0xffedae,
+    }):addTo(top_bg):align(display.LEFT_CENTER, 130, size.height/2 + 10)
 
 
     local star = display.newSprite("alliance_shire_star_60x58_1.png")
         :addTo(top_bg):pos(size.width - 210, 55):scale(0.8)
 
     self.stars = UIKit:ttfLabel({
-        text = "22/66",
+        text = string.format("%d/%d", User:GetStageStarByIndex(self.level), User:GetStageTotalStars()),
         size = 22,
         color = 0xffedae,
         shadow = true,
@@ -76,7 +89,7 @@ function GameUIPVEHomeNew:CreateTop()
         :onButtonClicked(function(event)
             end)
 
-    display.newSprite("bottom_icon_package_66x66.png"):addTo(reward_btn)
+    display.newSprite("bottom_icon_package_66x66.png"):addTo(reward_btn):scale(1.2)
 
     local button = cc.ui.UIPushButton.new(
         {normal = "gem_btn_up_196x68.png", pressed = "gem_btn_down_196x68.png"},
@@ -108,8 +121,9 @@ function GameUIPVEHomeNew:CreateTop()
             }):AddToCurrentScene()
         end)
     display.newSprite("+.png"):addTo(add_btn)
+
     self.strenth = UIKit:ttfLabel({
-        text = "100/100",
+        text = string.format("%d/%d", User:GetStrengthResource():GetResourceValueByCurrentTime(timer:GetServerTime()), User:GetStrengthResource():GetValueLimit()),
         size = 20,
         color = 0xffedae,
         shadow = true,
