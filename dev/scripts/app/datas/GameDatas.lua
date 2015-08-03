@@ -505,9 +505,11 @@ require("app.datas.PvE_stages")
 GameDatas.Soldiers = {
 	["normal"] = {},
 	["special"] = {},
+	["fightFix"] = {},
 }
 require("app.datas.Soldiers_normal")
 require("app.datas.Soldiers_special")
+require("app.datas.Soldiers_fightFix")
 
 GameDatas.StoreItems = {
 	["items"] = {},
