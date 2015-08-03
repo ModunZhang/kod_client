@@ -1,6 +1,7 @@
 local UILib = import(".UILib")
 local Localize = import("..utils.Localize")
 local window = import("..utils.window")
+local WidgetUseItems = import("..widget.WidgetUseItems")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local GameUIPveAttack = class("GameUIPveAttack", WidgetPopDialog)
@@ -269,6 +270,14 @@ function GameUIPveAttack:CreateAttackButton()
             color = 0xffedae,
             shadow = true
         })):onButtonClicked(function(event)
+
+        if not self.user:HasAnyStength(sections[self.pve_name].staminaUsed) then
+            WidgetUseItems.new():Create({
+                item_type = WidgetUseItems.USE_TYPE.STAMINA
+            }):AddToCurrentScene()
+            return 
+        end
+        
         local soldiers = string.split(sections[self.pve_name].troops, ",")
         table.remove(soldiers, 1)
         UIKit:newGameUI('GameUIPVESendTroop',

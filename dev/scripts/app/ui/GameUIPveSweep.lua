@@ -3,7 +3,7 @@ local Localize = import("..utils.Localize")
 local window = import("..utils.window")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local GameUIPveSweep = class("GameUIPveSweep", WidgetPopDialog)
-
+local sections = GameDatas.PvE.sections
 function GameUIPveSweep:ctor(user, pve_name)
     self.user = user
     self.pve_name = pve_name
@@ -66,32 +66,34 @@ function GameUIPveSweep:onEnter()
         :addTo(self:GetBody())
         :align(display.CENTER, 100,size.height - 630)
         :onButtonClicked(function()
-            NetManager:getUseItemPromise("sweepScroll", {sweepScroll = {sectionName = self.pve_name, count = self.user:GetPveLeftCountByName(self.pve_name)}}):done(function(response)
-                for i,v in ipairs(response.msg.playerData) do
-                    if v[1] == "__rewards" then
-                        self:InsertSweepResult(v[2])
-                        return
-                    end
-                end
-            end):done(function()
-                self:RefreshUI()
-            end)
+            if not self.user:HasAnyStength(sections[self.pve_name].staminaUsed * self.user:GetPveLeftCountByName(self.pve_name)) then
+                WidgetUseItems.new():Create({
+                    item_type = WidgetUseItems.USE_TYPE.STAMINA
+                }):AddToCurrentScene()
+                return
+            end
+            if ItemManager:GetItemByName("sweepScroll"):Count() >= self.user:GetPveLeftCountByName(self.pve_name) then
+                self:UseSweepScroll(self.user:GetPveLeftCountByName(self.pve_name))
+            else
+                self:BuyAndUseSweepScroll(self.user:GetPveLeftCountByName(self.pve_name))
+            end
         end)
 
     self.sweep_once = self:CreateSweepButton("-1")
         :addTo(self:GetBody())
         :align(display.CENTER, size.width - 100,size.height - 630)
         :onButtonClicked(function()
-            NetManager:getUseItemPromise("sweepScroll", {sweepScroll = {sectionName = self.pve_name, count = 1}}):done(function(response)
-                for i,v in ipairs(response.msg.playerData) do
-                    if v[1] == "__rewards" then
-                        self:InsertSweepResult(v[2])
-                        return
-                    end
-                end
-            end):done(function()
-                self:RefreshUI()
-            end)
+            if not self.user:HasAnyStength(sections[self.pve_name].staminaUsed) then
+                WidgetUseItems.new():Create({
+                    item_type = WidgetUseItems.USE_TYPE.STAMINA
+                }):AddToCurrentScene()
+                return
+            end
+            if ItemManager:GetItemByName("sweepScroll"):Count() >= 1 then
+                self:UseSweepScroll(1)
+            else
+                self:BuyAndUseSweepScroll(1)
+            end
         end)
 end
 function GameUIPveSweep:RefreshUI()
@@ -100,6 +102,47 @@ function GameUIPveSweep:RefreshUI()
     self.sweep_all.label:setString(string.format("-%d", self.user:GetPveLeftCountByName(self.pve_name)))
     self.sweep_all:setVisible(self.user:GetPveLeftCountByName(self.pve_name) > 0)
     self.sweep_once:setVisible(self.user:GetPveLeftCountByName(self.pve_name) > 0)
+end
+function GameUIPveSweep:BuyAndUseSweepScroll(count)
+    local need_buy = count - ItemManager:GetItemByName("sweepScroll"):Count()
+    assert(need_buy > 0)
+    local required_gems = ItemManager:GetItemByName("sweepScroll"):Price() * need_buy
+    local dialog = UIKit:showMessageDialog()
+    dialog:SetTitle(_("补充道具"))
+    dialog:SetPopMessage(_("您当前没有足够的扫荡劵,是否花费金龙币购买补充并使用"))
+    dialog:CreateOKButtonWithPrice(
+        {
+            listener = function()
+                if self.user:GetGemResource():GetValue() < required_gems then
+                    UIKit:showMessageDialog(_("提示"),_("金龙币不足")):CreateOKButton(
+                        {
+                            listener = function ()
+                                UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                            end,
+                            btn_name= _("前往商店")
+                        })
+                else
+                    NetManager:getBuyItemPromise("sweepScroll", need_buy):done(function()
+                        self:UseSweepScroll(count)
+                    end)
+                end
+            end,
+            btn_images = {normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"},
+            price = required_gems
+        }
+    ):CreateCancelButton()
+end
+function GameUIPveSweep:UseSweepScroll(count)
+    NetManager:getUseItemPromise("sweepScroll", {sweepScroll = {sectionName = self.pve_name, count = count}}):done(function(response)
+        for i,v in ipairs(response.msg.playerData) do
+            if v[1] == "__rewards" then
+                self:InsertSweepResult(v[2])
+                return
+            end
+        end
+    end):done(function()
+        self:RefreshUI()
+    end)
 end
 function GameUIPveSweep:CreateSweepButton(title)
     local s = cc.ui.UIPushButton.new(
@@ -138,6 +181,7 @@ function GameUIPveSweep:GetListItem(index)
     return bg
 end
 function GameUIPveSweep:InsertSweepResult(rewards)
+    local index = 1
     for ii,r in ipairs(rewards) do
         for i,v in ipairs(self.list.items_) do
             if not v.is_rewarded then
@@ -156,11 +200,11 @@ function GameUIPveSweep:InsertSweepResult(rewards)
 
                 local icon = display.newSprite(png):addTo(
                     display.newSprite("box_118x118.png"):addTo(content)
-                        :pos(600 - 80, 40):scale(0.6)    
+                        :pos(600 - 80, 40):scale(0.6)
                 ):pos(118/2, 118/2):scale(100/128)
 
                 display.newColorLayer(cc.c4b(0,0,0,128)):addTo(icon)
-                :setContentSize(128, 40)
+                    :setContentSize(128, 40)
 
                 UIKit:ttfLabel({
                     text = "x"..r.count,
@@ -169,14 +213,27 @@ function GameUIPveSweep:InsertSweepResult(rewards)
                 }):addTo(content):align(display.CENTER,600 - 80, 20)
 
                 v.is_rewarded = true
+                index = i
                 break
             end
         end
+    end
+
+    if 5 * 80 < #self.list.items_ * 80 then
+        local x,y = self.list.scrollNode:getPosition()
+        local ny = (index + 4) * 80 - #self.list.items_ * 80
+        self.list.scrollNode:moveBy(0.5, 0, (ny > 0 and 0 or ny) - y)
     end
 end
 
 
 return GameUIPveSweep
+
+
+
+
+
+
 
 
 
