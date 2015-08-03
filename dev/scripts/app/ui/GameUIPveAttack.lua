@@ -87,8 +87,8 @@ function GameUIPveAttack:BuildNormalUI()
 
     self.label = UIKit:ttfLabel({
         text = string.format(_("今日可挑战次数: %d/%d"), self.user:GetFightCountByName(self.pve_name), sections[self.pve_name].maxFightCount),
-        size = 20,
-        color = 0x403c2f,
+        size = 22,
+        color = 0x615b44,
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
     }):addTo(self:GetBody()):align(display.LEFT_CENTER,20,size.height - 380)
 
@@ -112,7 +112,7 @@ function GameUIPveAttack:BuildNormalUI()
     UIKit:ttfLabel({
         text = _("关卡三星通关后，可使用扫荡"),
         size = 20,
-        color = 0x403c2f,
+        color = 0x615b44,
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
     }):addTo(self:GetBody()):align(display.LEFT_CENTER,20,size.height - 460)
 
@@ -129,9 +129,9 @@ function GameUIPveAttack:BuildNormalUI()
             shadow = true
         })):onButtonClicked(function(event)
         UIKit:newGameUI('GameUIPveSweep', self.user, self.pve_name):AddToCurrentScene(true)
-        end):setButtonEnabled(star >= 3)
+        end):setButtonEnabled(star >= 3 and self.user:GetPveLeftCountByName(self.pve_name) > 0)
 
-    self:CreateAttackButton():align(display.RIGHT_CENTER, size.width - 20,size.height - 510)
+    self.attack = self:CreateAttackButton():align(display.RIGHT_CENTER, size.width - 20,size.height - 510):setButtonEnabled(self.user:GetPveLeftCountByName(self.pve_name) > 0)
 end
 function GameUIPveAttack:BuildBossUI()
     local size = self:GetBody():getContentSize()
@@ -248,13 +248,18 @@ function GameUIPveAttack:RefreshUI()
             v:getContent().star:setTexture(i <= star and "alliance_shire_star_60x58_1.png" or "alliance_shire_star_60x58_0.png")
         end
         self.label:setString(string.format(_("今日可挑战次数: %d/%d"), self.user:GetFightCountByName(self.pve_name), sections[self.pve_name].maxFightCount))
-        self.sweep:setButtonEnabled(star >= 3)
+        self.sweep:setButtonEnabled(star >= 3 and self.user:GetPveLeftCountByName(self.pve_name) > 0)
+        self.attack:setButtonEnabled(self.user:GetPveLeftCountByName(self.pve_name) > 0)
     end
 end
 function GameUIPveAttack:CreateAttackButton()
     local size = self:GetBody():getContentSize()
     return cc.ui.UIPushButton.new(
-        {normal = "red_btn_up_148x58.png", pressed = "red_btn_down_148x58.png"},
+        {
+            normal = "red_btn_up_148x58.png", 
+            pressed = "red_btn_down_148x58.png", 
+            disabled = 'gray_btn_148x58.png'
+        },
         {scale9 = false}
     ):addTo(self:GetBody())
         :align(display.RIGHT_CENTER, size.width - 20,size.height - 510)

@@ -156,6 +156,9 @@ function User:ctor(p)
     self.growUpTaskManger = GrowUpTaskManager.new()
     self.iapGifts = {}
 end
+function User:GetPveLeftCountByName(pve_name)
+    return sections[pve_name].maxFightCount - self:GetFightCountByName(pve_name)
+end
 function User:GetFightCountByName(pve_name)
     for i,v in ipairs(self.pveFights) do
         if v.sectionName == pve_name then

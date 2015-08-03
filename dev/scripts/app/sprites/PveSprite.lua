@@ -12,6 +12,8 @@ function PveSprite:ctor(layer, npc_name, lx, ly, gid)
 end
 function PveSprite:RefreshSprite()
     PveSprite.super.RefreshSprite(self)
+    self.lock = display.newSprite("alliance_stage_lock_icon.png")
+    :addTo(self)
     if self:IsBoss() then
         self:GetSprite():setAnchorPoint(cc.p(0.45, 0.25))
     elseif self:IsSpecial() then
@@ -21,7 +23,7 @@ function PveSprite:RefreshSprite()
     end
     if self.gid == 16 then return end
 
-    local h = 100
+    local h = 120
 
     local bg = display.newSprite("arrow_green_22x32.png"
         , nil, nil, {class=cc.FilteredSpriteWithOne})
@@ -44,9 +46,9 @@ function PveSprite:GetSpriteFile()
         return "alliance_moonGate.png", 0.8
     end
     if self:IsSpecial() then
-        return "tmp_pve_flag_special.png"
+        return "tmp_pve_flag_special.png", 1.2
     end
-    return "tmp_pve_flag_128x128.png"
+    return "tmp_pve_flag_128x128.png", 1.2
 end
 function PveSprite:IsSpecial()
     if self.gid == 15 then
@@ -87,7 +89,7 @@ function PveSprite:SetEnable(isEnable)
         v:setVisible(isEnable)
     end
     self.bg:setVisible(isEnable)
-
+    self.lock:setVisible(not isEnable)
     return self
 end
 ---

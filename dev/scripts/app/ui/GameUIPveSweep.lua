@@ -4,7 +4,6 @@ local window = import("..utils.window")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local GameUIPveSweep = class("GameUIPveSweep", WidgetPopDialog)
 
-
 function GameUIPveSweep:ctor(user, pve_name)
     self.user = user
     self.pve_name = pve_name
@@ -22,8 +21,8 @@ function GameUIPveSweep:onEnter()
         color = 0x615b44,
     }):addTo(bg):align(display.LEFT_CENTER,70,20)
 
-    UIKit:ttfLabel({
-        text = "44",
+    self.sweepscroll = UIKit:ttfLabel({
+        text = ItemManager:GetItemByName("sweepScroll"):Count(),
         size = 22,
         color = 0x615b44,
     }):addTo(bg):align(display.LEFT_CENTER,550 - 30,20)
@@ -37,8 +36,8 @@ function GameUIPveSweep:onEnter()
         color = 0x615b44,
     }):addTo(bg):align(display.LEFT_CENTER,70,20)
 
-    UIKit:ttfLabel({
-        text = "44",
+    self.left_count = UIKit:ttfLabel({
+        text = self.user:GetPveLeftCountByName(self.pve_name),
         size = 22,
         color = 0x615b44,
     }):addTo(bg):align(display.LEFT_CENTER,550 - 30,20)
@@ -50,9 +49,9 @@ function GameUIPveSweep:onEnter()
         viewRect = cc.rect(0, 0, 550, 400),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
     })
-    list.touchNode_:setTouchEnabled(false)
+    -- list.touchNode_:setTouchEnabled(false)
     list_node:addTo(self:GetBody()):pos(20, size.height - 570)
-    for i = 1, 5 do
+    for i = 1, self.user:GetPveLeftCountByName(self.pve_name) do
         local item = list:newItem()
         local content = self:GetListItem(i)
         item:addContent(content)
@@ -60,33 +59,47 @@ function GameUIPveSweep:onEnter()
         list:addItem(item)
     end
     list:reload()
+    self.list = list
 
 
-    self:CreateSweepButton("-5")
-    :addTo(self:GetBody())
-    :align(display.CENTER, 100,size.height - 630)
-    :onButtonClicked(function()
-        NetManager:getUseItemPromise("sweepScroll", {sweepScroll = {sectionName = self.pve_name, count = 5}}):done(function(response)
-            for i,v in ipairs(response.msg.playerData) do
-                if v[1] == "__rewards" then
-                    dump(v)
+    self.sweep_all = self:CreateSweepButton(string.format("-%d", self.user:GetPveLeftCountByName(self.pve_name)))
+        :addTo(self:GetBody())
+        :align(display.CENTER, 100,size.height - 630)
+        :onButtonClicked(function()
+            NetManager:getUseItemPromise("sweepScroll", {sweepScroll = {sectionName = self.pve_name, count = self.user:GetPveLeftCountByName(self.pve_name)}}):done(function(response)
+                for i,v in ipairs(response.msg.playerData) do
+                    if v[1] == "__rewards" then
+                        self:InsertSweepResult(v[2])
+                        return
+                    end
                 end
-            end
+            end):done(function()
+                self:RefreshUI()
+            end)
         end)
-    end)
 
-    self:CreateSweepButton("-1")
-    :addTo(self:GetBody())
-    :align(display.CENTER, size.width - 100,size.height - 630)
-    :onButtonClicked(function()
-        NetManager:getUseItemPromise("sweepScroll", {sweepScroll = {sectionName = self.pve_name, count = 1}}):done(function(response)
-            for i,v in ipairs(response.msg.playerData) do
-                if v[1] == "__rewards" then
-                    dump(v)
+    self.sweep_once = self:CreateSweepButton("-1")
+        :addTo(self:GetBody())
+        :align(display.CENTER, size.width - 100,size.height - 630)
+        :onButtonClicked(function()
+            NetManager:getUseItemPromise("sweepScroll", {sweepScroll = {sectionName = self.pve_name, count = 1}}):done(function(response)
+                for i,v in ipairs(response.msg.playerData) do
+                    if v[1] == "__rewards" then
+                        self:InsertSweepResult(v[2])
+                        return
+                    end
                 end
-            end
+            end):done(function()
+                self:RefreshUI()
+            end)
         end)
-    end)
+end
+function GameUIPveSweep:RefreshUI()
+    self.sweepscroll:setString(ItemManager:GetItemByName("sweepScroll"):Count())
+    self.left_count:setString(self.user:GetPveLeftCountByName(self.pve_name))
+    self.sweep_all.label:setString(string.format("-%d", self.user:GetPveLeftCountByName(self.pve_name)))
+    self.sweep_all:setVisible(self.user:GetPveLeftCountByName(self.pve_name) > 0)
+    self.sweep_once:setVisible(self.user:GetPveLeftCountByName(self.pve_name) > 0)
 end
 function GameUIPveSweep:CreateSweepButton(title)
     local s = cc.ui.UIPushButton.new(
@@ -102,7 +115,7 @@ function GameUIPveSweep:CreateSweepButton(title)
     local num_bg = display.newSprite("alliance_title_gem_bg_154x20.png"):addTo(s):align(display.CENTER, 0, -10):scale(0.8)
     local size = num_bg:getContentSize()
     display.newSprite("sweep_128x128.png"):addTo(num_bg):align(display.CENTER, 20, size.height/2):scale(0.4)
-    UIKit:ttfLabel({
+    s.label = UIKit:ttfLabel({
         text = title,
         size = 18,
         color = 0xffd200,
@@ -124,9 +137,52 @@ function GameUIPveSweep:GetListItem(index)
     -- end
     return bg
 end
+function GameUIPveSweep:InsertSweepResult(rewards)
+    for ii,r in ipairs(rewards) do
+        for i,v in ipairs(self.list.items_) do
+            if not v.is_rewarded then
+                local content = v:getContent()
+                local png
+                if r.type == "items" then
+                    png = UILib.item[r.name]
+                elseif r.type == "soldierMaterials" then
+                    png = UILib.soldier_metarial[r.name]
+                end
+                UIKit:ttfLabel({
+                    text = string.format(_("第%d战"), i),
+                    size = 20,
+                    color = 0x403c2f,
+                }):addTo(content):align(display.LEFT_CENTER,50,40)
+
+                local icon = display.newSprite(png):addTo(
+                    display.newSprite("box_118x118.png"):addTo(content)
+                        :pos(600 - 80, 40):scale(0.6)    
+                ):pos(118/2, 118/2):scale(100/128)
+
+                display.newColorLayer(cc.c4b(0,0,0,128)):addTo(icon)
+                :setContentSize(128, 40)
+
+                UIKit:ttfLabel({
+                    text = "x"..r.count,
+                    size = 18,
+                    color = 0xffedae,
+                }):addTo(content):align(display.CENTER,600 - 80, 20)
+
+                v.is_rewarded = true
+                break
+            end
+        end
+    end
+end
 
 
 return GameUIPveSweep
+
+
+
+
+
+
 
 
 

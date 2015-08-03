@@ -87,7 +87,8 @@ function GameUIPVEHomeNew:CreateTop()
         ,{})
         :addTo(top_bg, 1):align(display.CENTER, size.width - 80, 55):scale(0.8)
         :onButtonClicked(function(event)
-            end)
+            UIKit:newGameUI("GameUIPveReward", self.level):AddToCurrentScene(true)
+        end)
 
     display.newSprite("bottom_icon_package_66x66.png"):addTo(reward_btn):scale(1.2)
 
