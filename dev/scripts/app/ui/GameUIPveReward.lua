@@ -1,5 +1,6 @@
 local UILib = import(".UILib")
 local Localize = import("..utils.Localize")
+local Localize_item = import("..utils.Localize_item")
 local window = import("..utils.window")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local GameUIPveReward = class("GameUIPveReward", WidgetPopDialog)
@@ -85,7 +86,7 @@ function GameUIPveReward:GetListItem(index)
                     if type == "items" then
                         table.insert(str, string.format("%s x%d", Localize_item.item_name[name], count))
                     elseif type == "soldierMaterials" then
-                        table.insert(str, string.format("%s x%d", Localize_item.soldier_material[name], count))
+                        table.insert(str, string.format("%s x%d", Localize.soldier_material[name], count))
                     end
                 end
                 GameGlobalUI:showTips(_("获得奖励"), table.concat(str, " "))

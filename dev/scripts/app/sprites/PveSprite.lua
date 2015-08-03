@@ -13,7 +13,7 @@ end
 function PveSprite:RefreshSprite()
     PveSprite.super.RefreshSprite(self)
     self.lock = display.newSprite("alliance_stage_lock_icon.png")
-    :addTo(self)
+    :addTo(self):pos(0, 50)
     if self:IsBoss() then
         self:GetSprite():setAnchorPoint(cc.p(0.45, 0.25))
     elseif self:IsSpecial() then
