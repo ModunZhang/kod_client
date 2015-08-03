@@ -129,10 +129,14 @@ function GameUIPveAttack:BuildNormalUI()
             color = 0xffedae,
             shadow = true
         })):onButtonClicked(function(event)
+        if self.user:GetPveLeftCountByName(self.pve_name) <= 0 then
+            UIKit:showMessageDialog(_("提示"),_("已达今日最大挑战次数!"))
+            return
+        end
         UIKit:newGameUI('GameUIPveSweep', self.user, self.pve_name):AddToCurrentScene(true)
-        end):setButtonEnabled(star >= 3 and self.user:GetPveLeftCountByName(self.pve_name) > 0)
+        end):setButtonEnabled(star >= 3)
 
-    self.attack = self:CreateAttackButton():align(display.RIGHT_CENTER, size.width - 20,size.height - 510):setButtonEnabled(self.user:GetPveLeftCountByName(self.pve_name) > 0)
+    self.attack = self:CreateAttackButton():align(display.RIGHT_CENTER, size.width - 20,size.height - 510)
 end
 function GameUIPveAttack:BuildBossUI()
     local size = self:GetBody():getContentSize()
@@ -249,16 +253,15 @@ function GameUIPveAttack:RefreshUI()
             v:getContent().star:setTexture(i <= star and "alliance_shire_star_60x58_1.png" or "alliance_shire_star_60x58_0.png")
         end
         self.label:setString(string.format(_("今日可挑战次数: %d/%d"), self.user:GetFightCountByName(self.pve_name), sections[self.pve_name].maxFightCount))
-        self.sweep:setButtonEnabled(star >= 3 and self.user:GetPveLeftCountByName(self.pve_name) > 0)
-        self.attack:setButtonEnabled(self.user:GetPveLeftCountByName(self.pve_name) > 0)
+        self.sweep:setButtonEnabled(star >= 3)
     end
 end
 function GameUIPveAttack:CreateAttackButton()
     local size = self:GetBody():getContentSize()
     return cc.ui.UIPushButton.new(
         {
-            normal = "red_btn_up_148x58.png", 
-            pressed = "red_btn_down_148x58.png", 
+            normal = "red_btn_up_148x58.png",
+            pressed = "red_btn_down_148x58.png",
             disabled = 'gray_btn_148x58.png'
         },
         {scale9 = false}
@@ -270,14 +273,18 @@ function GameUIPveAttack:CreateAttackButton()
             color = 0xffedae,
             shadow = true
         })):onButtonClicked(function(event)
+        if self.user:GetPveLeftCountByName(self.pve_name) <= 0 then
+            UIKit:showMessageDialog(_("提示"),_("已达今日最大挑战次数!"))
+            return
+        end
 
         if not self.user:HasAnyStength(sections[self.pve_name].staminaUsed) then
             WidgetUseItems.new():Create({
                 item_type = WidgetUseItems.USE_TYPE.STAMINA
             }):AddToCurrentScene()
-            return 
+            return
         end
-        
+
         local soldiers = string.split(sections[self.pve_name].troops, ",")
         table.remove(soldiers, 1)
         UIKit:newGameUI('GameUIPVESendTroop',
@@ -374,6 +381,7 @@ function GameUIPveAttack:DecodeReport(report, dragon, attack_soldiers)
 end
 
 return GameUIPveAttack
+
 
 
 

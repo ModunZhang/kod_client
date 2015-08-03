@@ -17,7 +17,7 @@ function GameUIPveSweep:onEnter()
     display.newSprite("sweep_128x128.png"):addTo(bg):scale(0.35):pos(35, 25)
 
     UIKit:ttfLabel({
-        text = _("当前数量"),
+        text = _("扫荡劵"),
         size = 22,
         color = 0x615b44,
     }):addTo(bg):align(display.LEFT_CENTER,70,20)
