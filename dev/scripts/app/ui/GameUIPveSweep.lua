@@ -1,6 +1,7 @@
 local UILib = import(".UILib")
 local Localize = import("..utils.Localize")
 local window = import("..utils.window")
+local WidgetUseItems = import("..widget.WidgetUseItems")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local GameUIPveSweep = class("GameUIPveSweep", WidgetPopDialog)
 local sections = GameDatas.PvE.sections
