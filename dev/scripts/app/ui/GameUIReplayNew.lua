@@ -816,7 +816,7 @@ function GameUIReplayNew:ctor(report, callback)
     assert(report.GetOrderedDefenceSoldiers)
     assert(report.GetReportResult)
     assert(report.GetAttackDragonLevel)
-    assert(report.GetAttackDragonLevel)
+    assert(report.GetDefenceDragonLevel)
     assert(report.GetAttackTargetTerrain)
     if report:IsDragonFight() then
         assert(report.IsAttackCamp)

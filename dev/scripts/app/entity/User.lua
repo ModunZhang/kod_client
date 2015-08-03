@@ -9,6 +9,30 @@ local TradeManager = import("..entity.TradeManager")
 local Enum = import("..utils.Enum")
 local MultiObserver = import(".MultiObserver")
 local User = class("User", MultiObserver)
+
+
+local total_stages = 0
+local tt = 0
+local stages = GameDatas.PvE.stages
+for k,v in pairs(stages) do
+    tt = tt + 1
+end
+for i = 1, tt do
+    if stages[string.format("%d_1", i)] then
+        total_stages = total_stages + 1
+    end
+end
+
+    
+local sections = GameDatas.PvE.sections
+local pve_length = 0
+local index = 1
+while sections[string.format("1_%d", index)] do
+    pve_length = pve_length + 1
+    index = index + 1
+end
+
+
 User.LISTEN_TYPE = Enum(
     "BASIC",
     "RESOURCE",
@@ -78,6 +102,10 @@ property(User, "serverId", "")
 property(User, "serverLevel", "")
 property(User, "requestToAllianceEvents", {})
 property(User, "inviteToAllianceEvents", {})
+-- pve
+property(User, "pve", {})
+property(User, "pveFights", {})
+
 property(User, "apnStatus", {
     onCityBeAttacked = true,
     onAllianceFightStart = true,
@@ -127,6 +155,108 @@ function User:ctor(p)
     self.dailyTasks = {}
     self.growUpTaskManger = GrowUpTaskManager.new()
     self.iapGifts = {}
+end
+function User:GetPveLeftCountByName(pve_name)
+    return sections[pve_name].maxFightCount - self:GetFightCountByName(pve_name)
+end
+function User:GetFightCountByName(pve_name)
+    for i,v in ipairs(self.pveFights) do
+        if v.sectionName == pve_name then
+            return v.count
+        end
+    end
+    return 0
+end
+function User:IsPveBossPassed(pve_name)
+    return self:GetPveSectionStarByName(pve_name) > 0
+end
+function User:IsPveBoss(pve_name)
+    local index, s_index = unpack(string.split(pve_name, "_"))
+    return tonumber(s_index) == pve_length
+end
+function User:IsPveNameEnable(pve_name)
+    local index, s_index = unpack(string.split(pve_name, "_"))
+    return self:IsPveEnable(tonumber(index), tonumber(s_index))
+end
+function User:IsPveEnable(index, s_index)
+    if self.pve[index] then
+        if s_index == 1 then return true end
+        if self:GetPveSectionStarByIndex(index, s_index - 1) > 0 then
+            return true
+        end
+    else
+        if self.pve[index-1] then
+            return #self.pve[index-1].sections == 21 and s_index == 1
+        else
+            return s_index == 1
+        end
+    end
+end
+function User:GetPveRewardByIndex(index, s_index)
+    local npcs = self.pve[index]
+    if npcs then
+        return npcs.rewarded[s_index]
+    end
+end
+function User:GetPveSectionStarByName(pve_name)
+    local index, s_index = unpack(string.split(pve_name, "_"))
+    return self:GetPveSectionStarByIndex(tonumber(index), tonumber(s_index))
+end
+function User:GetPveSectionStarByIndex(index, s_index)
+    local npcs = self.pve[index]
+    if npcs then
+        return npcs.sections[s_index] or 0
+    end
+    return 0
+end
+function User:GetStageStarByIndex(index)
+    local total_stars = 0
+    for i,v in ipairs(self:GetStageByIndex(index).sections or {}) do
+        total_stars = total_stars + v
+    end
+    return total_stars - ((self:GetStageByIndex(index).sections or {})[pve_length] or 0)
+end
+function User:IsStageRewardedByName(stage_name)
+    local stage_index,index = unpack(string.split(stage_name, "_"))
+    return self:IsStageRewarded(tonumber(stage_index), tonumber(index))
+end
+function User:IsStageRewarded(stage_index, index)
+    for i,v in ipairs(self:GetStageByIndex(stage_index).rewarded or {}) do
+        if v == index then
+            return true
+        end
+    end
+end
+function User:IsStageEnabled(index)
+    if index == 1 then return true end
+    return self:IsStagePassed(index - 1)
+end
+function User:IsStagePassed(index)
+    return #(self:GetStageByIndex(index).sections or {}) == pve_length
+end
+function User:GetNextStageByPveName(pve_name)
+    local stage_index,pve_index = unpack(string.split(pve_name, "_"))
+    return tonumber(stage_index) + 1
+end
+function User:HasNextStageByPveName(pve_name)
+    local stage_index,pve_index = unpack(string.split(pve_name, "_"))
+    return tonumber(stage_index) < total_stages
+end
+function User:HasNextStageByIndex(index)
+    return index < total_stages
+end
+function User:GetStageTotalStars()
+    return (pve_length-1) * 3
+end
+function User:GetStageByIndex(index)
+    return self.pve[index] or {}
+end
+function User:GetLatestPveIndex()
+    if #self.pve == 0 then
+        return 1
+    else
+        return #self.pve
+    end
 end
 function User:IsBindGameCenter()
     return self:GcId() ~= "" and self:GcId() ~= json.null
@@ -244,6 +374,8 @@ function User:OnPropertyChange(property_name, old_value, new_value)
     end
 end
 function User:OnUserDataChanged(userData, current_time, deltaData)
+    self.pve = userData.pve
+    self.pveFights = userData.pveFights
     self:SetServerId(userData.serverId)
     self:SetServerLevel(userData.serverLevel)
     self:SetGcId(userData.gcId)
@@ -253,7 +385,6 @@ function User:OnUserDataChanged(userData, current_time, deltaData)
     self:OnBasicInfoChanged(userData, deltaData)
     self:OnCountInfoChanged(userData, deltaData)
     self:OnIapGiftsChanged(userData, deltaData)
-    -- self:GetPVEDatabase():OnUserDataChanged(userData, deltaData)
     self:OnAllianceDonateChanged(userData, deltaData)
     self:OnAllianceInfoChanged(userData, deltaData)
     self:OnApnStatusChanged(userData, deltaData)
