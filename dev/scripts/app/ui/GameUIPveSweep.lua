@@ -1,9 +1,11 @@
 local UILib = import(".UILib")
 local Localize = import("..utils.Localize")
 local window = import("..utils.window")
+local lights = import("..particles.lights")
 local WidgetUseItems = import("..widget.WidgetUseItems")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local GameUIPveSweep = class("GameUIPveSweep", WidgetPopDialog)
+
 local sections = GameDatas.PvE.sections
 function GameUIPveSweep:ctor(user, pve_name)
     self.user = user
@@ -204,6 +206,14 @@ function GameUIPveSweep:InsertSweepResult(rewards)
                         :pos(600 - 80, 40):scale(0.6)
                 ):pos(118/2, 118/2):scale(100/128)
 
+                local light = lights():addTo(icon, 10)
+                :pos(118/2,118/2)
+                light:setDuration(4)
+                light:runAction(transition.sequence{
+                    cc.DelayTime:create(5),
+                    cc.RemoveSelf:create(),
+                })
+
                 display.newColorLayer(cc.c4b(0,0,0,128)):addTo(icon)
                     :setContentSize(128, 40)
 
@@ -229,6 +239,7 @@ end
 
 
 return GameUIPveSweep
+
 
 
 
