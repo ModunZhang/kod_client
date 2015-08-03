@@ -216,6 +216,17 @@ function User:GetStageStarByIndex(index)
     end
     return total_stars - ((self:GetStageByIndex(index).sections or {})[pve_length] or 0)
 end
+function User:IsStageRewardedByName(stage_name)
+    local stage_index,index = unpack(string.split(stage_name, "_"))
+    return self:IsStageRewarded(tonumber(stage_index), tonumber(index))
+end
+function User:IsStageRewarded(stage_index, index)
+    for i,v in ipairs(self:GetStageByIndex(stage_index).rewarded or {}) do
+        if v == index then
+            return true
+        end
+    end
+end
 function User:IsStageEnabled(index)
     if index == 1 then return true end
     return self:IsStagePassed(index - 1)

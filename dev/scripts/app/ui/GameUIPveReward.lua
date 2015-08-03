@@ -30,19 +30,21 @@ function GameUIPveReward:onEnter()
         list:addItem(item)
     end
     list:reload()
+    self.list = list
 end
 function GameUIPveReward:GetListItem(index)
     local bg = display.newScale9Sprite(string.format("back_ground_548x40_%d.png", index % 2 == 0 and 1 or 2)):size(600,100)
 
     display.newSprite("alliance_shire_star_60x58_1.png"):addTo(bg):pos(60,100*3/4):scale(0.7)
 
+    local stage_name = string.format("%d_%d", self.index, index)
+    local stage = stages[stage_name]
     UIKit:ttfLabel({
-        text = "14",
+        text = math.floor(tonumber(stage.needStar)),
         size = 20,
         color = 0x403c2f,
     }):addTo(bg):align(display.CENTER,60,100*1/3)
 
-    local stage = stages[string.format("%d_%d", self.index, index)]
     for i,v in ipairs(string.split(stage.rewards, ",")) do
         local type,name,count = unpack(string.split(v, ":"))
         local png
@@ -56,7 +58,7 @@ function GameUIPveReward:GetListItem(index)
                 :pos(150 + (i-1) * 100, 50):scale(0.7)
         ):pos(118/2, 118/2):scale(100/128)
         display.newColorLayer(cc.c4b(0,0,0,128)):addTo(icon)
-        :setContentSize(128, 40)
+            :setContentSize(128, 40)
         UIKit:ttfLabel({
             text = "x"..count,
             size = 18,
@@ -65,23 +67,44 @@ function GameUIPveReward:GetListItem(index)
     end
 
 
-    cc.ui.UIPushButton.new(
+    bg.button = cc.ui.UIPushButton.new(
         {normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png", disabled = 'gray_btn_148x58.png'}
     ):setButtonLabel(UIKit:ttfLabel({
-        text = _("领取") ,
+        text = User:IsStageRewardedByName(stage_name) and _("已领取") or _("领取") ,
         size = 24,
         color = 0xffedae,
         shadow = true
     })):addTo(bg):align(display.CENTER,548 - 60,100*1/2)
-        :setButtonEnabled(User:GetStageStarByIndex(self.index) >= tonumber(stage.needStar))
-
-
-
+        :setButtonEnabled(User:GetStageStarByIndex(self.index) >= tonumber(stage.needStar) and not User:IsStageRewardedByName(stage_name))
+        :onButtonClicked(function()
+            NetManager:getPveStageRewardPromise(stage_name):done(function()
+                self:RefreshUI()
+                local str = {}
+                for i,v in ipairs(string.split(stage.rewards, ",")) do
+                    local type,name,count = unpack(string.split(v, ":"))
+                    if type == "items" then
+                        table.insert(str, string.format("%s x%d", Localize_item.item_name[name], count))
+                    elseif type == "soldierMaterials" then
+                        table.insert(str, string.format("%s x%d", Localize_item.soldier_material[name], count))
+                    end
+                end
+                GameGlobalUI:showTips(_("获得奖励"), table.concat(str, " "))
+            end)
+        end)
     return bg
+end
+function GameUIPveReward:RefreshUI()
+    for i,v in ipairs(self.list.items_) do
+        local stage_name = string.format("%d_%d", self.index, i)
+        local stage = stages[stage_name]
+        v:getContent().button:setButtonEnabled(User:GetStageStarByIndex(self.index) >= tonumber(stage.needStar) and not User:IsStageRewardedByName(stage_name))
+        v:getContent().button:setButtonLabelString(User:IsStageRewardedByName(stage_name) and _("已领取") or _("领取"))
+    end
 end
 
 
 return GameUIPveReward
+
 
 
 

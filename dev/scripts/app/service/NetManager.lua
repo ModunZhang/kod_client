@@ -1854,49 +1854,54 @@ function NetManager:getAttackPveSectionPromise(sectionName, dragonType, soldiers
         dragonType = dragonType,
         soldiers = soldiers,
     },"攻打npc失败!")
-    :done(function(response)
-        for i,v in ipairs(rewards) do
-            if v.type == "items" then
-                pre_tab[v.type][v.name] = ItemManager:GetItemByName(v.name):Count()
-            elseif v.type == "soldierMaterials" then
-                pre_tab[v.type][v.name] = City:GetMaterialManager():GetSoldierMaterias()[v.name]
-            end
-        end
-    end)
-    :done(get_player_response_msg)
-    :done(function(response)
-        local cur_tab = {items = {}, soldierMaterials = {}}
-        for i,v in ipairs(rewards) do
-            if v.type == "items" then
-                cur_tab[v.type][v.name] = ItemManager:GetItemByName(v.name):Count()
-            elseif v.type == "soldierMaterials" then
-                cur_tab[v.type][v.name] = City:GetMaterialManager():GetSoldierMaterias()[v.name]
-            end
-        end
-        local adds = {items = {}, soldierMaterials = {}}
-        for type,category in pairs(cur_tab) do
-            for key,count in pairs(category) do
-                local add = count - (pre_tab[type][key] or 0)
-                if add > 0 then
-                    adds[type][key] = add
+        :done(function(response)
+            for i,v in ipairs(rewards) do
+                if v.type == "items" then
+                    pre_tab[v.type][v.name] = ItemManager:GetItemByName(v.name):Count()
+                elseif v.type == "soldierMaterials" then
+                    pre_tab[v.type][v.name] = City:GetMaterialManager():GetSoldierMaterias()[v.name]
                 end
             end
-        end
-        if next(adds.items) then
-            local item_str = {}
-            for itemName,count in pairs(adds.items) do
-                table.insert(item_str, string.format("%s x%d", Localize_item.item_name[itemName], count))
+        end)
+        :done(get_player_response_msg)
+        :done(function(response)
+            local cur_tab = {items = {}, soldierMaterials = {}}
+            for i,v in ipairs(rewards) do
+                if v.type == "items" then
+                    cur_tab[v.type][v.name] = ItemManager:GetItemByName(v.name):Count()
+                elseif v.type == "soldierMaterials" then
+                    cur_tab[v.type][v.name] = City:GetMaterialManager():GetSoldierMaterias()[v.name]
+                end
             end
-            response.reward_func = function() GameGlobalUI:showTips(_("获得道具"), table.concat(item_str, " ")) end
-        end
-        if next(adds.soldierMaterials) then
-            local item_str = {}
-            for key,count in pairs(adds.soldierMaterials) do
-                table.insert(item_str, string.format("%s x%d", Localize.soldier_material[key], count))
+            local adds = {items = {}, soldierMaterials = {}}
+            for type,category in pairs(cur_tab) do
+                for key,count in pairs(category) do
+                    local add = count - (pre_tab[type][key] or 0)
+                    if add > 0 then
+                        adds[type][key] = add
+                    end
+                end
             end
-            response.reward_func = function() GameGlobalUI:showTips(_("获得材料"), table.concat(item_str, " ")) end
-        end
-    end)
+            if next(adds.items) then
+                local item_str = {}
+                for itemName,count in pairs(adds.items) do
+                    table.insert(item_str, string.format("%s x%d", Localize_item.item_name[itemName], count))
+                end
+                response.reward_func = function() GameGlobalUI:showTips(_("获得道具"), table.concat(item_str, " ")) end
+            end
+            if next(adds.soldierMaterials) then
+                local item_str = {}
+                for key,count in pairs(adds.soldierMaterials) do
+                    table.insert(item_str, string.format("%s x%d", Localize.soldier_material[key], count))
+                end
+                response.reward_func = function() GameGlobalUI:showTips(_("获得材料"), table.concat(item_str, " ")) end
+            end
+        end)
+end
+function NetManager:getPveStageRewardPromise(stageName)
+    return get_blocking_request_promise("logic.playerHandler.getPveStageReward",{
+        stageName = stageName,
+    },"领取奖励失败!"):done(get_player_response_msg)
 end
 
 
@@ -1953,6 +1958,7 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
 
 
 
