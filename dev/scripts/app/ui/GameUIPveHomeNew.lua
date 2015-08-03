@@ -7,17 +7,17 @@ local WidgetChat = import("..widget.WidgetChat")
 local WidgetUseItems = import("..widget.WidgetUseItems")
 local WidgetChangeMap = import("..widget.WidgetChangeMap")
 local WidgetHomeBottom = import("..widget.WidgetHomeBottom")
-local GameUIPVEHomeNew = UIKit:createUIClass('GameUIPVEHomeNew')
+local GameUIPveHomeNew = UIKit:createUIClass('GameUIPveHomeNew')
 local timer = app.timer
-function GameUIPVEHomeNew:DisplayOn()
+function GameUIPveHomeNew:DisplayOn()
     self.visible_count = self.visible_count + 1
     self:FadeToSelf(self.visible_count > 0)
 end
-function GameUIPVEHomeNew:DisplayOff()
+function GameUIPveHomeNew:DisplayOff()
     self.visible_count = self.visible_count - 1
     self:FadeToSelf(self.visible_count > 0)
 end
-function GameUIPVEHomeNew:FadeToSelf(isFullDisplay)
+function GameUIPveHomeNew:FadeToSelf(isFullDisplay)
     self:stopAllActions()
     if isFullDisplay then
         self:show()
@@ -35,11 +35,11 @@ function GameUIPVEHomeNew:FadeToSelf(isFullDisplay)
 end
 
 
-function GameUIPVEHomeNew:ctor(level)
-    GameUIPVEHomeNew.super.ctor(self, {type = UIKit.UITYPE.BACKGROUND})
+function GameUIPveHomeNew:ctor(level)
+    GameUIPveHomeNew.super.ctor(self, {type = UIKit.UITYPE.BACKGROUND})
     self.level = level
 end
-function GameUIPVEHomeNew:onEnter()
+function GameUIPveHomeNew:onEnter()
     self.visible_count = 1
     self:CreateTop()
     self.bottom = self:CreateBottom()
@@ -49,7 +49,7 @@ function GameUIPVEHomeNew:onEnter()
         self.gem_label:setString(string.formatnumberthousands(City:GetUser():GetGemResource():GetValue()))
     end, 1)
 end
-function GameUIPVEHomeNew:CreateTop()
+function GameUIPveHomeNew:CreateTop()
     local top_bg = display.newSprite("head_bg.png")
         :align(display.TOP_CENTER, window.cx, window.top)
         :addTo(self)
@@ -131,7 +131,7 @@ function GameUIPVEHomeNew:CreateTop()
     }):addTo(pve_back):align(display.CENTER, size.width / 2, 25)
 end
 
-function GameUIPVEHomeNew:CreateBottom()
+function GameUIPveHomeNew:CreateBottom()
     local bottom_bg = WidgetHomeBottom.new(City):addTo(self)
         :align(display.BOTTOM_CENTER, display.cx, display.bottom)
 
@@ -142,12 +142,12 @@ function GameUIPVEHomeNew:CreateBottom()
 
     return bottom_bg
 end
-function GameUIPVEHomeNew:ChangeChatChannel(channel_index)
+function GameUIPveHomeNew:ChangeChatChannel(channel_index)
     self.chat:ChangeChannel(channel_index)
 end
 
 
-return GameUIPVEHomeNew
+return GameUIPveHomeNew
 
 
 

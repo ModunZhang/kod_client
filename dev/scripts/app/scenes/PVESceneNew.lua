@@ -1,6 +1,6 @@
 local Sprite = import("..sprites.Sprite")
 local PVELayerNew = import("..layers.PVELayerNew")
-local GameUIPVEHomeNew = import("..ui.GameUIPVEHomeNew")
+local GameUIPveHomeNew = import("..ui.GameUIPveHomeNew")
 local MapScene = import(".MapScene")
 local PVESceneNew = class("PVESceneNew", MapScene)
 function PVESceneNew:ctor(user, level)
@@ -22,7 +22,7 @@ function PVESceneNew:CreateSceneLayer()
     return PVELayerNew.new(self, self.user, self.level)
 end
 function PVESceneNew:CreateHomePage()
-    local home_page = GameUIPVEHomeNew.new(self.level):AddToScene(self, true)
+    local home_page = GameUIPveHomeNew.new(self.level):AddToScene(self, true)
     home_page:setLocalZOrder(10)
     home_page:setTouchSwallowEnabled(false)
     return home_page
