@@ -196,21 +196,21 @@ function GameUIActivityNew:GetActivityItem(item_type)
 			align = cc.TEXT_ALIGNMENT_LEFT,
 			shadow= true
 		}):align(display.LEFT_BOTTOM,298,92):addTo(bg)
-		local today_label = UIKit:ttfLabel({
-			text = _("今日"),
-			size = 20,
-			color= 0xffedae,
-			align = cc.TEXT_ALIGNMENT_LEFT,
-			shadow= true
-		}):align(display.LEFT_BOTTOM,298,54):addTo(bg)
 		local sign_str,sign_color = _("已签到"),0xa2ff00
 		if countInfo.day60 > countInfo.day60RewardsCount then
 			sign_str = _("未签到")
 			sign_color = 0xff4e00
 		end
 		local sign_bg = display.newSprite("activity_day_bg_104x34.png")
-			:align(display.LEFT_BOTTOM,today_label:getPositionX()+today_label:getContentSize().width + 6,50)
+			:align(display.LEFT_BOTTOM,451,50)
 			:addTo(bg)
+		local today_label = UIKit:ttfLabel({
+			text = _("今日"),
+			size = 20,
+			color= 0xffedae,
+			align = cc.TEXT_ALIGNMENT_LEFT,
+			shadow= true
+		}):align(display.RIGHT_BOTTOM,sign_bg:getPositionX() - 6,54):addTo(bg)
 		local content_label = UIKit:ttfLabel({
 			text = sign_str,
 			size = 20,
@@ -247,7 +247,7 @@ function GameUIActivityNew:GetActivityItem(item_type)
 			shadow= true
 		}):align(display.LEFT_BOTTOM,day_label2:getPositionX()+day_label2:getContentSize().width + 15,46):addTo(bg)
 		local got_bg = display.newSprite("activity_day_bg_104x34.png")
-			:align(display.LEFT_BOTTOM,today_label:getPositionX()+today_label:getContentSize().width+6,42)
+			:align(display.LEFT_BOTTOM,451,42)
 			:addTo(bg)
 		local str,color = _("已领取"),0xa2ff00
 		if countInfo.day14 > countInfo.day14RewardsCount then

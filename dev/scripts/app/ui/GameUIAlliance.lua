@@ -413,7 +413,7 @@ function GameUIAlliance:GetJoinListItemContent()
         text = "14/50", --count of members
         size = 20,
         color = 0x403c2f
-    }):addTo(info_bg):align(display.LEFT_TOP,70, memberTitleLabel:getPositionY())
+    }):addTo(info_bg):align(display.LEFT_TOP,110, memberTitleLabel:getPositionY())
 
 
     local fightingTitleLabel = UIKit:ttfLabel({
