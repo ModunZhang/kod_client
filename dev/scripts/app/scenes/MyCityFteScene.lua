@@ -210,8 +210,7 @@ function MyCityFteScene:OpenUI(building, default_tab)
         local dragon_manger = city:GetDragonEyrie():GetDragonManager()
         local dragon_type = dragon_manger:GetCanFightPowerfulDragonType()
         if #dragon_type > 0 or dragon_manger:GetDefenceDragon() then
-            local _,_,index = self.city:GetUser():GetPVEDatabase():GetCharPosition()
-            app:EnterPVEFteScene(1)
+            app:EnterPVEFteScene(city:GetUser():GetLatestPveIndex())
         else
             UIKit:showMessageDialog(_("主人"),_("需要一条空闲状态的魔龙才能探险"))
         end
@@ -282,7 +281,7 @@ function MyCityFteScene:RunFte()
             end)
         end
     end):next(function()
-        if not check("FightWithNpc1") then
+        if not check("FightWithNpc1_1") then
             self:GetFteLayer():UnlockAll()
             return self:PromiseOfExplorePve()
         end
@@ -377,7 +376,7 @@ function MyCityFteScene:RunFte()
             return self:GetHomePage():PromiseOfFteInstantSpeedUp()
         end
     end):next(function()
-        if not check("FightWithNpc2") or not check("FightWithNpc3") then
+        if not check("FightWithNpc1_2") or not check("FightWithNpc1_3") then
             self:GetFteLayer():UnlockAll()
             return self:PromiseOfCheckMaterials()
         end

@@ -9,7 +9,6 @@ function GameUIPveAttackFte:ctor(...)
     self:DisableAutoClose()
 end
 
-
 local fightReport1 = {
     playerDragonFightData = {
         type = "greenDragon",
@@ -101,6 +100,208 @@ local fightReport1 = {
     }}
 }
 
+
+local fightReport2 = {
+    playerDragonFightData = {
+        type = "greenDragon",
+        hpMax = 116,
+        hp = 116,
+        isWin = true,
+        hpDecreased = 15
+    },
+    sectionDragonFightData = {
+        type = "blueDragon",
+        hpMax = 116,
+        hp = 116,
+        isWin = false,
+        hpDecreased = 22
+    },
+    playerSoldierRoundDatas = {{
+        soldierName = "swordsman",
+        morale = 100,
+        soldierCount = 100,
+        soldierWoundedCount = 3,
+        soldierStar = 1,
+        isWin = true,
+        soldierDamagedCount = 3,
+        moraleDecreased = 3
+    }, {
+        soldierName = "swordsman",
+        morale = 97,
+        soldierCount = 97,
+        soldierWoundedCount = 3,
+        soldierStar = 1,
+        isWin = true,
+        soldierDamagedCount = 3,
+        moraleDecreased = 6
+    }, {
+        soldierName = "swordsman",
+        morale = 91,
+        soldierCount = 94,
+        soldierWoundedCount = 2,
+        soldierStar = 1,
+        isWin = true,
+        soldierDamagedCount = 2,
+        moraleDecreased = 8
+    }, {
+        soldierName = "swordsman",
+        morale = 83,
+        soldierCount = 92,
+        soldierWoundedCount = 1,
+        soldierStar = 1,
+        isWin = true,
+        soldierDamagedCount = 1,
+        moraleDecreased = 8
+    }},
+    sectionSoldierRoundDatas = {{
+        soldierName = "catapult",
+        morale = 100,
+        soldierCount = 6,
+        soldierWoundedCount = 0,
+        soldierStar = 1,
+        isWin = false,
+        soldierDamagedCount = 2,
+        moraleDecreased = 17
+    }, {
+        soldierName = "swordsman",
+        morale = 100,
+        soldierCount = 18,
+        soldierWoundedCount = 0,
+        soldierStar = 1,
+        isWin = false,
+        soldierDamagedCount = 5,
+        moraleDecreased = 14
+    }, {
+        soldierName = "lancer",
+        morale = 100,
+        soldierCount = 6,
+        soldierWoundedCount = 0,
+        soldierStar = 1,
+        isWin = false,
+        soldierDamagedCount = 2,
+        moraleDecreased = 17
+    }, {
+        soldierName = "ranger",
+        morale = 100,
+        soldierCount = 6,
+        soldierWoundedCount = 0,
+        soldierStar = 1,
+        isWin = false,
+        soldierDamagedCount = 3,
+        moraleDecreased = 25
+    }}
+}
+
+
+local fightReport3 = {
+    playerDragonFightData = {
+        type = "greenDragon",
+        hpMax = 276,
+        hp = 213,
+        isWin = true,
+        hpDecreased = 15
+    },
+    sectionDragonFightData = {
+        type = "blueDragon",
+        hpMax = 116,
+        hp = 116,
+        isWin = false,
+        hpDecreased = 22
+    },
+    playerSoldierRoundDatas = {{
+        soldierName = "swordsman",
+        morale = 100,
+        soldierCount = 100,
+        soldierWoundedCount = 7,
+        soldierStar = 1,
+        isWin = false,
+        soldierDamagedCount = 7,
+        moraleDecreased = 8
+    }, {
+        soldierName = "ranger",
+        morale = 100,
+        soldierCount = 100,
+        soldierWoundedCount = 5,
+        soldierStar = 1,
+        isWin = true,
+        soldierDamagedCount = 5,
+        moraleDecreased = 5
+    }, {
+        soldierName = "ranger",
+        morale = 95,
+        soldierCount = 95,
+        soldierWoundedCount = 5,
+        soldierStar = 1,
+        isWin = true,
+        soldierDamagedCount = 5,
+        moraleDecreased = 10
+    }, {
+        soldierName = "ranger",
+        morale = 85,
+        soldierCount = 90,
+        soldierWoundedCount = 2,
+        soldierStar = 1,
+        isWin = true,
+        soldierDamagedCount = 2,
+        moraleDecreased = 8
+    }, {
+        soldierName = "ranger",
+        morale = 77,
+        soldierCount = 88,
+        soldierWoundedCount = 2,
+        soldierStar = 1,
+        isWin = true,
+        soldierDamagedCount = 2,
+        moraleDecreased = 16
+    }},
+    sectionSoldierRoundDatas = {{
+        soldierName = "skeletonArcher",
+        morale = 100,
+        soldierCount = 16,
+        soldierWoundedCount = 0,
+        soldierStar = 2,
+        isWin = true,
+        soldierDamagedCount = 3,
+        moraleDecreased = 10
+    }, {
+        soldierName = "skeletonArcher",
+        morale = 90,
+        soldierCount = 13,
+        soldierWoundedCount = 0,
+        soldierStar = 2,
+        isWin = false,
+        soldierDamagedCount = 4,
+        moraleDecreased = 25
+    }, {
+        soldierName = "meatWagon",
+        morale = 100,
+        soldierCount = 3,
+        soldierWoundedCount = 0,
+        soldierStar = 2,
+        isWin = false,
+        soldierDamagedCount = 1,
+        moraleDecreased = 17
+    }, {
+        soldierName = "skeletonWarrior",
+        morale = 100,
+        soldierCount = 8,
+        soldierWoundedCount = 0,
+        soldierStar = 2,
+        isWin = false,
+        soldierDamagedCount = 2,
+        moraleDecreased = 13
+    }, {
+        soldierName = "deathKnight",
+        morale = 100,
+        soldierCount = 2,
+        soldierWoundedCount = 0,
+        soldierStar = 2,
+        isWin = false,
+        soldierDamagedCount = 1,
+        moraleDecreased = 25
+    }}
+}
+
 --
 function GameUIPveAttackFte:Find()
     return self.attack
@@ -123,8 +324,18 @@ function GameUIPveAttackFte:PormiseOfFte()
             end),
             function(dragonType, soldiers)
                 local dragon = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon(dragonType)
-                fightReport1.playerDragonFightData.type = dragonType
-                UIKit:newGameUI("GameUIReplayNew", self:DecodeReport(fightReport1, dragon, soldiers), function()
+                local report
+                if self.pve_name == "1_1" then
+                    report = fightReport1
+                elseif self.pve_name == "1_2" then
+                    report = fightReport2
+                elseif self.pve_name == "1_3" then
+                    report = fightReport3
+                end
+                mockData.FightWithNpc(self.pve_name)
+                display.getRunningScene():GetSceneLayer():RefreshPve()
+                report.playerDragonFightData.type = dragonType
+                UIKit:newGameUI("GameUIReplayNew", self:DecodeReport(report, dragon, soldiers), function()
                     self:performWithDelay(function()
                         self:LeftButtonClicked()
                     end, 0)
@@ -137,10 +348,12 @@ function GameUIPveAttackFte:PormiseOfFte()
             self:GetFteLayer():removeFromParent()
             return ui:PormiseOfFte()
         end):next(function()
-            return UIKit:PromiseOfClose("GameUIPveAttackFte")
+        return UIKit:PromiseOfClose("GameUIPveAttackFte")
         end)
 end
 return GameUIPveAttackFte
+
+
 
 
 

@@ -19,32 +19,32 @@ local WidgetFteArrow = import("..widget.WidgetFteArrow")
 local WidgetFteMark = import("..widget.WidgetFteMark")
 local GameUINpc = import("..ui.GameUINpc")
 function PVESceneNewFte:onEnterTransitionFinish()
-    -- if GLOBAL_FTE then
+    if GLOBAL_FTE then
     self:RunFte()
-    -- end
+    end
 end
 function PVESceneNewFte:RunFte()
     self.touch_layer:removeFromParent()
     self:GetFteLayer():LockAll()
     local p = cocos_promise.defer()
-    -- if true then
-    --     p:next(function()
-    --         self:GetFteLayer():UnlockAll()
-    --         return self:PromiseOfFindNpc1()
-    --             :next(function(npc_ui)
-    --                 return npc_ui:PormiseOfFte()
-    --             end)
-    --             :next(function()
-    --                 return self:PromiseOfIntroduce()
-    --             end):next(function()
-    --             self:DestoryMark()
-    --             return self:PromiseOfExit()
-    --             end):next(function()
-    --             return promise.new()
-    --             end)
-    --     end)
-    -- end
-    if true then
+    if not check("FightWithNpc1_1") then
+        p:next(function()
+            self:GetFteLayer():UnlockAll()
+            return self:PromiseOfFindNpc1()
+                :next(function(npc_ui)
+                    return npc_ui:PormiseOfFte()
+                end)
+                :next(function()
+                    return self:PromiseOfIntroduce()
+                end):next(function()
+                self:DestoryMark()
+                return self:PromiseOfExit()
+                end):next(function()
+                return promise.new()
+                end)
+        end)
+    end
+    if not check("FightWithNpc1_2") then
         p:next(function()
             self:GetFteLayer():UnlockAll()
             return self:PromiseOfFindNpc2()
@@ -53,12 +53,16 @@ function PVESceneNewFte:RunFte()
                 end)
         end)
     end
-    if true then
+    if not check("FightWithNpc1_3") then
         p:next(function()
             self:GetFteLayer():UnlockAll()
             return self:PromiseOfFindNpc3()
                 :next(function(npc_ui)
                     return npc_ui:PormiseOfFte()
+                end):next(function()
+                    return self:PromiseOfIntroduce1()
+                end):next(function()
+                    return self:PromiseOfExit()
                 end)
         end)
     end
@@ -113,6 +117,14 @@ function PVESceneNewFte:PromiseOfIntroduce()
         }
     ):next(function()
         self:GetFteLayer():Disable()
+        return GameUINpc:PromiseOfLeave()
+    end)
+end
+function PVESceneNewFte:PromiseOfIntroduce1()
+    self:GetFteLayer():Enable()
+    return GameUINpc:PromiseOfSay(
+        {words = _("亡灵兵种属性极高而且没有维护费用,有了特殊材料,我们就可以招募他们了."), npc = "man"}
+    ):next(function()
         return GameUINpc:PromiseOfLeave()
     end)
 end

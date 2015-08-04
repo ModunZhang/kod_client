@@ -649,8 +649,8 @@ function GameUILoginBeta:checkFte()
     if check("GetSoldier") then
         mockData.GetSoldier()
     end
-    if check("FightWithNpc1") then
-        mockData.FightWithNpc(1)
+    if check("FightWithNpc1_1") then
+        mockData.FightWithNpc("1_1")
     end
     if check("UpgradeBuildingTo_keep_3") then
         mockData.UpgradeBuildingTo("keep", 3)
@@ -698,11 +698,11 @@ function GameUILoginBeta:checkFte()
     if check("FinishUpgradingBuilding_materialDepot_1") then
         mockData.FinishUpgradingBuilding("materialDepot",1)
     end
-    if check("FightWithNpc2") then
-        mockData.FightWithNpc(2)
+    if check("FightWithNpc1_2") then
+        mockData.FightWithNpc("1_2")
     end
-    if check("FightWithNpc3") then
-        mockData.FightWithNpc(3)
+    if check("FightWithNpc1_3") then
+        mockData.FightWithNpc("1_3")
     end
     if check("InstantRecruitSoldier_skeletonWarrior") then
         mockData.InstantRecruitSoldier("skeletonWarrior", 1)
