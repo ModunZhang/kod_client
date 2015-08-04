@@ -14,7 +14,7 @@ function GameUIBuildingSpeedUp:ctor(building)
     GameUIBuildingSpeedUp.super.ctor(self)
     self.building = building
     self:SetAccBtnsGroup(building:EventType(),building:UniqueUpgradingKey())
-    self:SetUpgradeTip(string.format(_("正在升级 %s 到等级 %d"),Localize.getBuildingLocalizedKeyByBuildingType(building:GetType()),building:GetLevel()+1))
+    self:SetUpgradeTip(string.format(_("正在升级 %s 到等级 %d"),Localize.building_name[building:GetType()],building:GetLevel()+1))
     self:CheckCanSpeedUpFree()
     self:OnFreeButtonClicked(handler(self, self.FreeSpeedUpAction))
     self:SetProgressInfo(GameUtils:formatTimeStyle1(building:GetUpgradingLeftTimeByCurrentTime(app.timer:GetServerTime())),building:GetUpgradingPercentByCurrentTime(app.timer:GetServerTime()))
