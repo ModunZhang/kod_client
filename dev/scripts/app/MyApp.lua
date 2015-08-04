@@ -444,7 +444,7 @@ function MyApp:EnterPVEScene(level)
     enter_next_scene("PVESceneNew", User, level)
 end
 function MyApp:EnterPVEFteScene(level)
-    enter_next_scene("PVEFteScene", User, level)
+    enter_next_scene("PVESceneNewFte", User, level)
 end
 
 function MyApp:pushScene(sceneName, args, transitionType, time, more)

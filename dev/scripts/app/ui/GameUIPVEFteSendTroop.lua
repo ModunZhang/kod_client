@@ -3,7 +3,7 @@ local GameUIPVEFteSendTroop = UIKit:createUIClass("GameUIPVEFteSendTroop", "Game
 
 
 function GameUIPVEFteSendTroop:ctor(...)
-	GameUIPVEFteSendTroop.super.ctor(self, ...)
+    GameUIPVEFteSendTroop.super.ctor(self, ...)
     self.__type  = UIKit.UITYPE.BACKGROUND
 end
 
@@ -21,7 +21,7 @@ function GameUIPVEFteSendTroop:PromiseOfMax()
     self:GetFteLayer():SetTouchObject(self.max_btn)
 
     WidgetFteArrow.new(_("点击最大")):addTo(self:GetFteLayer())
-    :TurnDown():align(display.CENTER_BOTTOM, r.x + r.width/2, r.y + 70)
+        :TurnDown():align(display.CENTER_BOTTOM, r.x + r.width/2, r.y + 70)
 
     local p = promise.new()
     self.max_btn:onButtonClicked(function()
@@ -35,8 +35,17 @@ function GameUIPVEFteSendTroop:PromiseOfAttack()
     local r = self.march_btn:getCascadeBoundingBox()
     self:GetFteLayer():SetTouchObject(self.march_btn)
 
+    self.march_btn:removeEventListenersByEvent("CLICKED_EVENT")
+    self.march_btn:onButtonClicked(function(event)
+        if event.name == "CLICKED_EVENT" then
+            assert(tolua.type(self.march_callback)=="function")
+            self.march_callback(self.dragon:Type(),self:GetSelectSoldier())
+            self:LeftButtonClicked()
+        end
+    end)
+
     WidgetFteArrow.new(_("点击进攻")):addTo(self:GetFteLayer())
-    :TurnDown():align(display.CENTER_BOTTOM, r.x + r.width/2, r.y + 70)
+        :TurnDown():align(display.CENTER_BOTTOM, r.x + r.width/2, r.y + 70)
 
     return UIKit:PromiseOfOpen("GameUIReplayNew"):next(function(ui)
         ui:DestroyFteLayer()
@@ -46,3 +55,4 @@ function GameUIPVEFteSendTroop:PromiseOfAttack()
 end
 
 return GameUIPVEFteSendTroop
+
