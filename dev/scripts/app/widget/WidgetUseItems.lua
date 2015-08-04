@@ -511,7 +511,7 @@ function WidgetUseItems:OpenStrengthDialog( item )
 
     local value = User:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     local prodperhour = User:GetStrengthResource():GetProductionPerHour()
-    UIKit:ttfLabel({
+    local strength_label = UIKit:ttfLabel({
         text = string.format(_("%s(+%d/每小时)"), string.formatnumberthousands(value), prodperhour),
         size = 22,
         color = 0x28251d,
@@ -534,6 +534,16 @@ function WidgetUseItems:OpenStrengthDialog( item )
                 end
             ):addTo(body):align(display.CENTER,size.width/2,size.height - 160 - (i-1)*138)
         end
+    end
+    local resource_manager = City:GetResourceManager()
+    resource_manager:AddObserver(dialog)
+    dialog:addCloseCleanFunc(function ()
+        resource_manager:RemoveObserver(dialog)
+    end)
+    function dialog:OnResourceChanged()
+        local value = User:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+        local prodperhour = User:GetStrengthResource():GetProductionPerHour()
+        strength_label:setString(string.format(_("%s(+%d/每小时)"), string.formatnumberthousands(value), prodperhour))
     end
     return dialog
 end
