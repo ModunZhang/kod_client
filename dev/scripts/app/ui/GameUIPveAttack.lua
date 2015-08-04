@@ -25,14 +25,14 @@ function GameUIPveAttack:ctor(user, pve_name)
         self:RefreshUI()
     end, 1)
 end
-function GameUIPveAttack:onEnter()
-    GameUIPveAttack.super.onEnter(self)
+function GameUIPveAttack:OnMoveInStage()
     if self.user:IsPveBoss(self.pve_name) then
         self:BuildBossUI()
     else
         self:BuildNormalUI()
     end
     self:RefreshUI()
+    GameUIPveAttack.super.OnMoveInStage(self)
 end
 function GameUIPveAttack:BuildNormalUI()
     local size = self:GetBody():getContentSize()

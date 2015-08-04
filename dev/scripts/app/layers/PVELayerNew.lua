@@ -44,6 +44,8 @@ function PVELayerNew:ctor(scene, user, level)
     self.user = user
     self.level = level
 
+    self.fte_layer = display.newNode():addTo(self, 10)
+
     GameUtils:LoadImagesWithFormat(function()
         self.background = cc.TMXTiledMap:create("tmxmaps/pve_10x42.tmx"):addTo(self)
     end, cc.TEXTURE2_D_PIXEL_FORMAT_RGB5_A1)
@@ -184,6 +186,10 @@ function PVELayerNew:GetNpcIndex(X,Y)
         end
     end
 end
+function PVELayerNew:GetNpcByIndex(index)
+    local v = self.seq_npc[index]
+    return self:GetNpcBy(v.x, v.y)
+end
 function PVELayerNew:RefreshPve()
     for i = 1, #self.seq_npc do
         local be = self.seq_npc[i - 1]
@@ -200,6 +206,9 @@ function PVELayerNew:RefreshPve()
             self:GetNpcBy(v.x, v.y):SetEnable(true)
         end
     end
+end
+function PVELayerNew:GetFteLayer()
+    return self.fte_layer
 end
 ---
 function PVELayerNew:getContentSize()

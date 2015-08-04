@@ -111,6 +111,7 @@ function GameUIPveHomeNew:CreateTop()
     local pve_back = display.newSprite("back_ground_pve.png"):addTo(top_bg)
         :align(display.LEFT_TOP, 40, 16):flipX(true)
     local size = pve_back:getContentSize()
+    self.pve_back = pve_back
     display.newSprite("dragon_lv_icon.png"):addTo(pve_back):pos(size.width - 20, 25)
     local add_btn = cc.ui.UIPushButton.new(
         {normal = "add_btn_up.png",pressed = "add_btn_down.png"}
