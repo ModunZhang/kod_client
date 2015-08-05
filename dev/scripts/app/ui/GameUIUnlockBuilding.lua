@@ -151,28 +151,31 @@ function GameUIUnlockBuilding:InitBuildingIntroduces()
     local title_bg = display.newScale9Sprite("title_blue_430x30.png", display.cx-110, display.top-214,cc.size(380,30),cc.rect(15,10,400,10))
         :align(display.LEFT_CENTER)
         :addTo(self)
-    self.building_name = UIKit:ttfLabel({
+    local bd = Localize.building_name
+    local building_name = UIKit:ttfLabel({
+        text = bd[self.building:GetType()],
         size = 24,
         color = 0xffedae
     }):align(display.LEFT_CENTER,20, 15):addTo(title_bg)
-    self.building_introduces = UIKit:ttfLabel({
-        size = 20,
-        dimensions = cc.size(380, 90),
-        color = 0x615b44
-    }):align(display.LEFT_CENTER,display.cx-110, display.top-280):addTo(self)
-    self:SetBuildingName()
-    self:SetBuildingIntroduces()
-end
-function GameUIUnlockBuilding:SetBuildingName()
-    local bd = Localize.building_name
-    self.building_name:setString(bd[self.building:GetType()])
-end
-function GameUIUnlockBuilding:SetBuildingIntroduces()
+
+    local list = UIListView.new{
+        -- bgColor = UIKit:hex2c4b(0x7a000000),
+        viewRect = cc.rect(26,20,380,104),
+        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
+    }:align(display.LEFT_CENTER,display.cx-116, display.top-354):addTo(self)
     local bd = Localize.building_description
-    self.building_introduces:setString(bd[self.building:GetType()])
+    local building_introduces = UIKit:ttfLabel({
+        text = bd[self.building:GetType()],
+        size = 20,
+        dimensions = cc.size(380, 0),
+        color = 0x615b44
+    })
+    local item = list:newItem()
+    item:setItemSize(building_introduces:getContentSize().width, building_introduces:getContentSize().height)
+    item:addContent(building_introduces)
+    list:addItem(item)
+    list:reload()
 end
-
-
 
 function GameUIUnlockBuilding:SetUpgradeRequirementListview()
     local wood = City.resource_manager:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())

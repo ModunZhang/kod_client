@@ -1140,6 +1140,14 @@ IAP_PACKAGE_NAME["com.dragonfall.12000dragoncoins"] = _("铁血军团礼包")
 IAP_PACKAGE_NAME["com.dragonfall.35000dragoncoins"] = _("帝国荣耀礼包")
 IAP_PACKAGE_NAME["com.dragonfall.80000dragoncoins"] = _("龙族王朝礼包")
 
+local VIP_IAP_PACKAGE_NAME = {}
+VIP_IAP_PACKAGE_NAME["com.dragonfall.2500dragoncoins"] = _("新手")
+VIP_IAP_PACKAGE_NAME["com.dragonfall.5500dragoncoins"] = _("探险家")
+VIP_IAP_PACKAGE_NAME["com.dragonfall.12000dragoncoins"] = _("铁血军团")
+VIP_IAP_PACKAGE_NAME["com.dragonfall.35000dragoncoins"] = _("帝国荣耀")
+VIP_IAP_PACKAGE_NAME["com.dragonfall.80000dragoncoins"] = _("龙族王朝")
+
+
 
 local DAILY_QUESTS_NAME = {
     [0] = _("修复起重机"),
@@ -1270,6 +1278,7 @@ return {
     selenaquestion_tips = SELENAQUESTION_TIPS,
     alliance_buildings = ALLIANCE_BUILDINGS,
     iap_package_name = IAP_PACKAGE_NAME,
+    vip_iap_package_name = VIP_IAP_PACKAGE_NAME,
     daily_quests_name = DAILY_QUESTS_NAME,
     player_icon = PLAYER_ICON,
     player_icon_unlock = PLAYER_ICON_UNLOCK,

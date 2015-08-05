@@ -281,7 +281,7 @@ function GameUIVip:GetStoreData()
     for __,v in ipairs(config_store) do
         local temp_data = {}
         temp_data['gem'] = v.gem
-        temp_data['name'] = Localize.iap_package_name[v.productId]
+        temp_data['name'] = Localize.vip_iap_package_name[v.productId]
         local ___,rewards_price = self:FormatGemRewards(v.rewards)
         temp_data['rewards_price'] = rewards_price
         temp_data['config'] = UILib.iap_package_image[v.name]
