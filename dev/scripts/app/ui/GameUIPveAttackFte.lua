@@ -5,7 +5,6 @@ local WidgetFteArrow = import("..widget.WidgetFteArrow")
 local sections = GameDatas.PvE.sections
 function GameUIPveAttackFte:ctor(...)
     GameUIPveAttackFte.super.ctor(self, ...)
-    self.__type  = UIKit.UITYPE.BACKGROUND
     self:DisableAutoClose()
 end
 
