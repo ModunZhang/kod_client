@@ -779,6 +779,13 @@ local ALLIANCE_EVENTS = {
     buildingUpgrade = _("升级了%s"),
     villageUpgrade = _("升级了%s"),
 }
+local ALLIANCE_NOTICE = {
+    attackVillage = _("%s正在前往采集Lv%d %s"),
+    attackMonster = _("%s正在前往攻打Lv%d %s"),
+    strikePlayer = _("%s向%s发起了侦察"),
+    attackPlayer = _("%s向%s发起了进攻"),
+    helpDefence = _("%s正在前往协防%s"),
+}
 
 local SOLDIER_CATEGORY = {
     ["infantry"] = _("步兵"),
@@ -1227,6 +1234,7 @@ return {
     building_name = BUILDING_NAME,
     alliance_title = ALLIANCE_TITLE,
     alliance_events = ALLIANCE_EVENTS,
+    alliance_notice = ALLIANCE_NOTICE,
     soldier_name = SOLDIER_NAME,
     soldier_material = SOLDIER_MATERIAL,
     soldier_category = SOLDIER_CATEGORY,
