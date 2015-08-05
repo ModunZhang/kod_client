@@ -608,6 +608,15 @@ local logic_event_map = {
             end
         end
     end,
+    onAllianceNotice = function(success, response)
+        if success then
+            local running_scene = display.getRunningScene().__cname
+            if running_scene ~= "MainScene" and running_scene ~= "LogoScene" then
+                LuaUtils:outputTable("onAllianceNotice", response)
+                GameGlobalUI:showAllianceNotice(response.key,response.params)
+            end
+        end
+    end,
 }
 ---
 function NetManager:InitEventsMap(...)

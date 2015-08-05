@@ -53,6 +53,23 @@ function GameGlobalUIUtils:showNotice(notice_type,notice_content)
 	end
 	
 end
+function GameGlobalUIUtils:showAllianceNotice(key,params)
+	local notice_content = Localize.alliance_notice[key]
+	print("notice_content==",notice_content)
+	if key == "attackVillage" then
+		notice_content = string.format(notice_content,params[1],params[2],params[3])
+	elseif key == "attackMonster" then
+		local monster = Localize.soldier_name[string.split(params[3],"_")[1]]
+		notice_content = string.format(notice_content,params[1],params[2],monster)
+	elseif key == "strikePlayer" then
+		notice_content = string.format(notice_content,params[1],params[2])
+	elseif key == "attackPlayer" then
+		notice_content = string.format(notice_content,params[1],params[2])
+	elseif key == "helpDefence" then
+		notice_content = string.format(notice_content,params[1],params[2])
+	end
+	self:showNotice("info",notice_content)
+end
 
 function GameGlobalUIUtils:onTipsMoveOut(tipsUI)
 	if not self.tipsHeap:empty() then
