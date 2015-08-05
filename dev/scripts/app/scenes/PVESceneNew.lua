@@ -8,6 +8,7 @@ function PVESceneNew:ctor(user, level)
     self.level = level
     PVESceneNew.super.ctor(self)
     self.util_node = display.newNode():addTo(self)
+    display.newSprite("pve_background.jpg"):addTo(self):pos(display.cx, display.cy)
 end
 function PVESceneNew:onEnter()
 	PVESceneNew.super.onEnter(self)

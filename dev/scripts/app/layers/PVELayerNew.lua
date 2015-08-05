@@ -7,14 +7,14 @@ local PVELayerNew = class("PVELayerNew", MapLayer)
 
 
 local map = {
-    {"image", "hill_1_grassLand.png"      ,3,3,1},
-    {"image", "hill_2_grassLand.png"      ,3,2,1},
-    {"image", "lake_1_grassLand.png"      ,3,2,1},
-    {"image", "lake_2_grassLand.png"      ,2,2,1},
-    {"image", "tree_1_grassLand.png"      ,1,1,0.7},
-    {"image", "tree_2_grassLand.png"      ,1,1,0.7},
-    {"image", "tree_3_grassLand.png"      ,1,1,0.7},
-    {"image", "tree_4_grassLand.png"      ,1,1,0.7},
+    {"image", "pve_hill_1.png"      ,3,3,0.6},
+    {"image", "pve_hill_2.png"      ,3,2,0.6},
+    {"image", "pve_lake_1.png"      ,3,2,0.6},
+    {"image", "pve_lake_2.png"      ,2,2,0.6},
+    {"image", "pve_tree_1.png"      ,1,1,0.7},
+    {"image", "pve_tree_2.png"      ,1,1,0.7},
+    {"image", "pve_tree_3.png"      ,1,1,0.7},
+    {"image", "pve_tree_4.png"      ,1,1,0.7},
     {"image", "crashed_airship_80x70.png" ,1,1,1},
     {"image", "warriors_tomb_80x72.png"   ,1,1,1},
     {"animation", "yewaiyindi"            ,1,1,1},
@@ -44,12 +44,6 @@ function PVELayerNew:ctor(scene, user, level)
     self.user = user
     self.level = level
 
-    self.fte_layer = display.newNode():addTo(self, 10)
-
-    GameUtils:LoadImagesWithFormat(function()
-        self.background = cc.TMXTiledMap:create("tmxmaps/pve_10x42.tmx"):addTo(self)
-    end, cc.TEXTURE2_D_PIXEL_FORMAT_RGB5_A1)
-
     self.normal_map = NormalMapAnchorBottomLeftReverseY.new({
         tile_w = pvemap.tilewidth,
         tile_h = pvemap.tileheight,
@@ -59,7 +53,23 @@ function PVELayerNew:ctor(scene, user, level)
         base_y = pvemap.height * pvemap.tileheight,
     })
 
+    GameUtils:LoadImagesWithFormat(function()
+        self.background = cc.TMXTiledMap:create("tmxmaps/pve_10x42.tmx"):addTo(self):hide()
+    end, cc.TEXTURE2_D_PIXEL_FORMAT_RGB5_A1)
 
+    self.cloud_layer = display.newNode():addTo(self, 100)
+    local s = display.newSprite("pve_cloud_1.png"):addTo(self.cloud_layer)
+    s:opacity(180)
+    s:runAction(cc.RepeatForever:create(transition.sequence{
+        cc.MoveTo:create(0, cc.p(1000, self:getContentSize().height/2)),
+        cc.MoveTo:create(10, cc.p(-1000, self:getContentSize().height/2)),
+    -- cc.DelayTime:create(math.random(10, 20)),
+    }))
+
+    self.fte_layer = display.newNode():addTo(self, 10)
+
+
+    self.roads = {}
     self.seq_npc = {}
     assert(#pvemap.layers[2].objects == 1)
     for i,v in ipairs(pvemap.layers[2].objects) do
@@ -88,15 +98,21 @@ function PVELayerNew:ctor(scene, user, level)
                 uy2 = linerat(lines[1].y, lines[2].y, 0.66)
             end
             local g = math.ceil(math.sqrt((lines[2].x - lines[1].x)^2 + (lines[2].y - lines[1].y)^2) / 30)
-            for i = 2, g - 2 do
+            local roads = {}
+            for i = 1, g - 1 do
                 local x = bezierat(lines[1].x, ux1, ux2, lines[2].x, i * 1/g)
                 local y = bezierat(lines[1].y, uy1, uy2, lines[2].y, i * 1/g)
-                display.newSprite("road_22x24.png"):addTo(self):pos(x,y):scale(0.8)
+                local nx = bezierat(lines[1].x, ux1, ux2, lines[2].x, i * 1/g + 0.1)
+                local ny = bezierat(lines[1].y, uy1, uy2, lines[2].y, i * 1/g + 0.1)
+                local road = display.newNode():addTo(self):pos(x,y):scale(0.8)
+                    :rotation(-math.deg(cc.pGetAngle({x = 0, y = 1}, {x = nx - x, y = ny - y})))
+                display.newSprite("pve_road_point2.png"):addTo(road)
+                table.insert(roads, display.newSprite("pve_road_point.png"):addTo(road))
             end
+            self.roads[#self.roads + 1] = roads
             table.remove(lines, 1)
         end
     end
-    table.remove(self.seq_npc, 1)
 
 
 
@@ -111,7 +127,7 @@ function PVELayerNew:ctor(scene, user, level)
             if map[gid] then
                 local type,png,w,h,s = unpack(map[gid])
                 local obj
-                if gid == 15 or gid == 16 then
+                if gid == 15 or gid == 16 or gid == 14 then
                     obj = PveSprite.new(self, string.format("%d_%d", level, self:GetNpcIndex(lx - 1, ly - 1)), lx - 1, ly - 1, gid)
                 elseif type == "image" then
                     obj = display.newSprite(png)
@@ -123,7 +139,7 @@ function PVELayerNew:ctor(scene, user, level)
                 local ox,oy = self.normal_map:ConvertToLocalPosition((w - 1)/2, (h - 1)/2)
                 obj:addTo(self):pos(x+ox, y+oy):scale(s)
 
-                if gid == 15 or gid == 16 then
+                if gid == 15 or gid == 16 or gid == 14 then
                     self:RegisterNpc(obj, lx - 1, ly - 1)
                 end
             end
@@ -191,6 +207,27 @@ function PVELayerNew:GetNpcByIndex(index)
     return self:GetNpcBy(v.x, v.y)
 end
 function PVELayerNew:RefreshPve()
+    local index = 0
+    for i,v in ipairs(self.seq_npc) do
+        local v = self.seq_npc[i]
+        if self.user:IsPveNameEnable(self:GetNpcBy(v.x, v.y):GetPveName()) then
+            index = i
+        else
+            break
+        end
+    end
+    for i = 1, index do
+        for _,road in ipairs(self.roads[i] or {}) do
+            road:show()
+        end
+    end
+    for i = index, #self.roads do
+        for _,road in ipairs(self.roads[i] or {}) do
+            road:hide()
+        end
+    end
+
+
     for i = 1, #self.seq_npc do
         local be = self.seq_npc[i - 1]
         local v = self.seq_npc[i]
@@ -220,6 +257,9 @@ function PVELayerNew:getContentSize()
 end
 
 return PVELayerNew
+
+
+
 
 
 

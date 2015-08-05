@@ -48,10 +48,10 @@ function PveSprite:GetSpriteFile()
     if self:IsSpecial() then
         return "tmp_pve_flag_special.png", 1.2
     end
-    return "tmp_pve_flag_128x128.png", 1.2
+    return "tmp_pve_flag_128x128.png"
 end
 function PveSprite:IsSpecial()
-    if self.gid == 15 then
+    if not self:IsBoss() then
         local troops = string.split(sections[self.npc_name].troops, ",")
         for i,v in ipairs(troops) do
             local name = unpack(string.split(v, "_"))
@@ -62,7 +62,7 @@ function PveSprite:IsSpecial()
     end
 end
 function PveSprite:IsBoss()
-    return self.gid ~= 15
+    return self.gid == 16
 end
 function PveSprite:GetLogicZorder()
     return self:GetMapLayer():GetZOrderBy(self, self.lx, self.ly)

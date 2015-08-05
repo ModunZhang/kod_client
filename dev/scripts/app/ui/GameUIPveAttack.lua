@@ -17,10 +17,11 @@ function GameUIPveAttack:ctor(user, pve_name)
     self.user = user
     self.pve_name = pve_name
     if self.user:IsPveBoss(self.pve_name) then
-        GameUIPveAttack.super.ctor(self,480,_("关卡")..pve_name,window.top - 150)
+        GameUIPveAttack.super.ctor(self,480,_("关卡")..pve_name,window.top - 160,nil,{color = UIKit:hex2c4b(0x00000000)})
     else
-        GameUIPveAttack.super.ctor(self,650,_("关卡")..pve_name,window.top - 150)
+        GameUIPveAttack.super.ctor(self,650,_("关卡")..pve_name,window.top - 160,nil,{color = UIKit:hex2c4b(0x00000000)})
     end
+    self.__type  = UIKit.UITYPE.BACKGROUND
     display.newNode():addTo(self):schedule(function()
         self:RefreshUI()
     end, 1)
