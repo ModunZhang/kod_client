@@ -422,7 +422,7 @@ function GameUIHome:CreateTop()
     self.quest_label = UIKit:ttfLabel({
         size = 20,
         color = 0xfffeb3,
-    }):addTo(quest_bar_bg):align(display.LEFT_CENTER, -120, 0)
+    }):addTo(quest_bar_bg):align(display.LEFT_CENTER, -130, 0)
 
     local left_order =  WidgetAutoOrder.new(WidgetAutoOrder.ORIENTATION.TOP_TO_BOTTOM,50):addTo(self):pos(display.left+40, display.top-200)
     -- 活动按钮
