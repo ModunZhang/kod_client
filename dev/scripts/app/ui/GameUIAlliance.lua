@@ -966,8 +966,8 @@ function GameUIAlliance:GetEventItemByIndexAndEvent()
         size = 20,
         color = 0x403c2f,
         dimensions = cc.size(280, 0)
-    }):align(display.LEFT_CENTER,0,0)
-    content_label:pos(normal:getPositionX()+normal:getContentSize().width + 10,42):addTo(content)
+    }):align(display.TOP_LEFT,0,0)
+    content_label:pos(normal:getPositionX()+normal:getContentSize().width + 10,76):addTo(content)
     content.bg0 = bg0
     content.bg1 = bg1
     content.normal = normal
