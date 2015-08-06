@@ -45,7 +45,7 @@ function GameUIPveHomeNew:onEnter()
     self.bottom = self:CreateBottom()
     display.newNode():addTo(self):schedule(function()
         self.stars:setString(string.format("%d/%d", User:GetStageStarByIndex(self.level), User:GetStageTotalStars()))
-        self.strenth:setString(string.format("%d/%d", User:GetStrengthResource():GetResourceValueByCurrentTime(timer:GetServerTime()), User:GetStrengthResource():GetValueLimit()))
+        self.strenth_current:setString(User:GetStrengthResource():GetResourceValueByCurrentTime(timer:GetServerTime()))
         self.gem_label:setString(string.formatnumberthousands(City:GetUser():GetGemResource():GetValue()))
     end, 1)
 end
@@ -56,12 +56,13 @@ function GameUIPveHomeNew:CreateTop()
     local size = top_bg:getContentSize()
     top_bg:setTouchEnabled(true)
 
-    cc.ui.UIPushButton.new({normal = "chat_btn_up_60x48.png",
-        pressed = "chat_btn_down_60x48.png"}):addTo(top_bg)
+    local btn = cc.ui.UIPushButton.new({normal = "pve_btn_up_60x48.png",
+        pressed = "pve_btn_down_60x48.png"}):addTo(top_bg)
         :pos(88, size.height/2 + 10)
         :onButtonClicked(function()
             UIKit:newGameUI("GameUIPveSelect"):AddToCurrentScene(true)
         end)
+    display.newSprite("coordinate_128x128.png"):addTo(btn):scale(0.4)
      
     UIKit:ttfLabel({
         text = string.format("%d.%s", self.level, Localize_pve.stage_name[self.level]),
@@ -112,7 +113,7 @@ function GameUIPveHomeNew:CreateTop()
         :align(display.LEFT_TOP, 40, 16):flipX(true)
     local size = pve_back:getContentSize()
     self.pve_back = pve_back
-    display.newSprite("dragon_lv_icon.png"):addTo(pve_back):pos(size.width - 20, 25)
+    self.strenth_icon = display.newSprite("dragon_lv_icon.png"):addTo(pve_back):pos(size.width - 20, 25)
     local add_btn = cc.ui.UIPushButton.new(
         {normal = "add_btn_up.png",pressed = "add_btn_down.png"}
         ,{})
@@ -124,14 +125,27 @@ function GameUIPveHomeNew:CreateTop()
         end)
     display.newSprite("+.png"):addTo(add_btn)
 
-    self.strenth = UIKit:ttfLabel({
-        text = string.format("%d/%d", User:GetStrengthResource():GetResourceValueByCurrentTime(timer:GetServerTime()), User:GetStrengthResource():GetValueLimit()),
+    self.strenth_current = UIKit:ttfLabel({
+        text = User:GetStrengthResource():GetResourceValueByCurrentTime(timer:GetServerTime()),
         size = 20,
         color = 0xffedae,
         shadow = true,
-    }):addTo(pve_back):align(display.CENTER, size.width / 2, 25)
-end
+    }):addTo(pve_back):align(display.RIGHT_CENTER, size.width / 2, 25)
 
+    self.strenth_use = UIKit:ttfLabel({
+        text = "-3",
+        size = 20,
+        color = 0x7e0000,
+    }):addTo(pve_back):align(display.RIGHT_CENTER, size.width / 2, 25):hide()
+
+
+    self.strenth_max = UIKit:ttfLabel({
+        text = string.format("/%d", User:GetStrengthResource():GetValueLimit()),
+        size = 20,
+        color = 0xffedae,
+        shadow = true,
+    }):addTo(pve_back):align(display.LEFT_CENTER, size.width / 2, 25)
+end
 function GameUIPveHomeNew:CreateBottom()
     local bottom_bg = WidgetHomeBottom.new(City):addTo(self)
         :align(display.BOTTOM_CENTER, display.cx, display.bottom)
@@ -145,6 +159,16 @@ function GameUIPveHomeNew:CreateBottom()
 end
 function GameUIPveHomeNew:ChangeChatChannel(channel_index)
     self.chat:ChangeChannel(channel_index)
+end
+function GameUIPveHomeNew:ShowStrengAni()
+    self.strenth_use:pos(self.strenth_current:getPosition()):show():runAction(transition.sequence{
+        cc.CallFunc:create(function() self.strenth_current:show():setColor(UIKit:hex2c3b(0x7e0000)) end),
+        cc.DelayTime:create(0.5),
+        cc.CallFunc:create(function() self.strenth_use:show():opacity(255) end),
+        cc.Spawn:create(cc.MoveBy:create(0.5, cc.p(0, 50)), cc.FadeOut:create(0.5)),
+        cc.CallFunc:create(function() self.strenth_current:show():setColor(UIKit:hex2c3b(0xffedae)) end),
+    })
+    
 end
 
 

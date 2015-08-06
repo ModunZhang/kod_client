@@ -83,13 +83,13 @@ function PveSprite:SetEnable(isEnable)
     else
         self:GetSprite():setFilter(filter.newFilter("GRAY", {0.2, 0.3, 0.5, 0.1}))
     end
-
+    self.lock:setVisible(not isEnable)
+    
     if self.gid == 16 then return self end
     for i,v in ipairs(self.stars) do
         v:setVisible(isEnable)
     end
     self.bg:setVisible(isEnable)
-    self.lock:setVisible(not isEnable)
     return self
 end
 ---

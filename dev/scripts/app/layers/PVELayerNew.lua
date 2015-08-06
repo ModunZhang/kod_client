@@ -7,22 +7,22 @@ local PVELayerNew = class("PVELayerNew", MapLayer)
 
 
 local map = {
-    {"image", "pve_hill_1.png"      ,3,3,0.6},
-    {"image", "pve_hill_2.png"      ,3,2,0.6},
-    {"image", "pve_lake_1.png"      ,3,2,0.6},
-    {"image", "pve_lake_2.png"      ,2,2,0.6},
-    {"image", "pve_tree_1.png"      ,1,1,0.7},
-    {"image", "pve_tree_2.png"      ,1,1,0.7},
-    {"image", "pve_tree_3.png"      ,1,1,0.7},
-    {"image", "pve_tree_4.png"      ,1,1,0.7},
-    {"image", "crashed_airship_80x70.png" ,1,1,1},
-    {"image", "warriors_tomb_80x72.png"   ,1,1,1},
-    {"animation", "yewaiyindi"            ,1,1,1},
-    {"image", "keel_189x86.png"           ,1,1,1},
-    {"image", "keel_189x86.png"           ,1,1,1},
-    {"animation", "zhihuishi"             ,1,1,1},
-    {"image", "tmp_pve_flag_80x80.png"    ,1,1,1},
-    {"image", "alliance_moonGate.png"     ,1,1,1},
+    {"image", "pve_deco_1.png",3,3,1},
+    {"image", "pve_deco_2.png",3,2,1},
+    {"image", "pve_deco_3.png",3,2,1},
+    {"image", "pve_deco_4.png",2,2,1},
+    {"image", "pve_deco_5.png",1,1,1},
+    {"image", "pve_deco_6.png",1,1,1},
+    {"image", "pve_deco_7.png",1,1,1},
+    {"image", "pve_deco_8.png",1,1,1},
+    {"image", "pve_deco_9.png",1,1,1},
+    {"image", "pve_deco_10.png",1,1,1},
+    {"image", "pve_deco_11.png",1,1,1},
+    {"image", "pve_deco_12.png",1,1,1},
+    {"image", "pve_deco_12.png",1,1,1},
+    {"image", "pve_deco_12.png",1,1,1},
+    {"image", "pve_deco_12.png",1,1,1},
+    {"image", "pve_deco_12.png",1,1,1},
 }
 
 
@@ -54,8 +54,12 @@ function PVELayerNew:ctor(scene, user, level)
     })
 
     GameUtils:LoadImagesWithFormat(function()
-        self.background = cc.TMXTiledMap:create("tmxmaps/pve_10x42.tmx"):addTo(self):hide()
-    end, cc.TEXTURE2_D_PIXEL_FORMAT_RGB5_A1)
+        self.background = display.newNode():addTo(self)
+        display.newSprite("pve_background.jpg"):addTo(self.background):align(display.LEFT_BOTTOM)
+        display.newSprite("pve_background.jpg"):addTo(self.background):align(display.LEFT_BOTTOM, 0, 800)
+        display.newSprite("pve_background.jpg"):addTo(self.background):align(display.LEFT_BOTTOM, 0, 1600)
+        display.newSprite("pve_background.jpg"):addTo(self.background):align(display.LEFT_BOTTOM, 0, 2400)
+    end, cc.TEXTURE2_D_PIXEL_FORMAT_RG_B565)
 
     self.cloud_layer = display.newNode():addTo(self, 100)
     local s = display.newSprite("pve_cloud_1.png"):addTo(self.cloud_layer)
@@ -115,9 +119,6 @@ function PVELayerNew:ctor(scene, user, level)
     end
 
 
-
-
-
     self.npcs = {}
     local data = pvemap.layers[1].data
     for ly = 1, pvemap.height do
@@ -131,9 +132,6 @@ function PVELayerNew:ctor(scene, user, level)
                     obj = PveSprite.new(self, string.format("%d_%d", level, self:GetNpcIndex(lx - 1, ly - 1)), lx - 1, ly - 1, gid)
                 elseif type == "image" then
                     obj = display.newSprite(png)
-                elseif type == "animation" then
-                    obj = ccs.Armature:create(png)
-                    obj:getAnimation():playWithIndex(0)
                 end
                 local x,y = self.normal_map:ConvertToMapPosition(lx - 1, ly - 1)
                 local ox,oy = self.normal_map:ConvertToLocalPosition((w - 1)/2, (h - 1)/2)
@@ -145,6 +143,17 @@ function PVELayerNew:ctor(scene, user, level)
             end
         end
     end
+
+    if not self.user:IsStagePassed(self.level) then
+        local ariship = display.newSprite("airship.png"):addTo(self):scale(0.3)
+        ariship:setAnchorPoint(cc.p(0.4, 0.6))
+        ariship:runAction(cc.RepeatForever:create(transition.sequence{
+            cc.MoveBy:create(2, cc.p(0, 5)),
+            cc.MoveBy:create(2, cc.p(0, -5))
+        }))
+        self.ariship = ariship
+    end
+
     self:RefreshPve()
 end
 function PVELayerNew:ConvertLogicPositionToMapPosition(lx, ly)
@@ -236,11 +245,17 @@ function PVELayerNew:RefreshPve()
         if be then
             if self.user:GetPveSectionStarByName(self:GetNpcBy(be.x, be.y):GetPveName()) > 0 then
                 self:GetNpcBy(v.x, v.y):SetEnable(true)
+                if self.ariship then
+                    self.ariship:pos(self:GetNpcBy(v.x, v.y):getPosition())
+                end
             else
                 self:GetNpcBy(v.x, v.y):SetEnable(false)
             end
         else
             self:GetNpcBy(v.x, v.y):SetEnable(true)
+            if self.ariship then
+                self.ariship:pos(self:GetNpcBy(v.x, v.y):getPosition())
+            end
         end
     end
 end
@@ -250,13 +265,14 @@ end
 ---
 function PVELayerNew:getContentSize()
     if not self.content_size then
-        local layer = self.background:getLayer("layer1")
-        self.content_size = layer:getContentSize()
+        local w,h = self.normal_map:GetSize()
+        self.content_size = {width = self.normal_map.tile_w * w, height = self.normal_map.tile_h * h}
     end
     return self.content_size
 end
 
 return PVELayerNew
+
 
 
 

@@ -286,41 +286,43 @@ function GameUIPveAttack:CreateAttackButton()
             color = 0xffedae,
             shadow = true
         })):onButtonClicked(function(event)
-        if self.user:GetPveLeftCountByName(self.pve_name) <= 0 then
-            UIKit:showMessageDialog(_("提示"),_("已达今日最大挑战次数!"))
-            return
-        end
-
-        if not self.user:HasAnyStength(sections[self.pve_name].staminaUsed) then
-            WidgetUseItems.new():Create({
-                item_type = WidgetUseItems.USE_TYPE.STAMINA
-            }):AddToCurrentScene()
-            return
-        end
-
-        local soldiers = string.split(sections[self.pve_name].troops, ",")
-        table.remove(soldiers, 1)
-        UIKit:newGameUI('GameUIPVESendTroop',
-            LuaUtils:table_map(soldiers, function(k,v)
-                local name,star = unpack(string.split(v, "_"))
-                return k, {name = name, star = tonumber(star)}
-            end),
-            function(dragonType, soldiers)
-                NetManager:getAttackPveSectionPromise(self.pve_name, dragonType, soldiers):done(function()
-                    display.getRunningScene():GetSceneLayer():RefreshPve()
-                end):done(function(response)
-                    local dragon = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon(dragonType)
-                    UIKit:newGameUI("GameUIReplayNew", self:DecodeReport(response.msg.fightReport, dragon, soldiers), function()
-                        if response.reward_func then
-                            response.reward_func()
-                        end
-                        self:performWithDelay(function()
-                            self:LeftButtonClicked()
-                        end, 0)
-                    end):AddToCurrentScene(true)
-                end)
-            end):AddToCurrentScene(true)
+            self:Attack()
         end)
+end
+function GameUIPveAttack:Attack()
+    if self.user:GetPveLeftCountByName(self.pve_name) <= 0 then
+        UIKit:showMessageDialog(_("提示"),_("已达今日最大挑战次数!"))
+        return
+    end
+
+    if not self.user:HasAnyStength(sections[self.pve_name].staminaUsed) then
+        WidgetUseItems.new():Create({
+            item_type = WidgetUseItems.USE_TYPE.STAMINA
+        }):AddToCurrentScene()
+        return
+    end
+    local soldiers = string.split(sections[self.pve_name].troops, ",")
+    table.remove(soldiers, 1)
+    UIKit:newGameUI('GameUIPVESendTroop',
+        LuaUtils:table_map(soldiers, function(k,v)
+            local name,star = unpack(string.split(v, "_"))
+            return k, {name = name, star = tonumber(star)}
+        end),
+        function(dragonType, soldiers)
+            NetManager:getAttackPveSectionPromise(self.pve_name, dragonType, soldiers):done(function()
+                display.getRunningScene():GetSceneLayer():RefreshPve()
+            end):done(function(response)
+                local dragon = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon(dragonType)
+                UIKit:newGameUI("GameUIReplayNew", self:DecodeReport(response.msg.fightReport, dragon, soldiers), function()
+                    if response.reward_func then
+                        response.reward_func()
+                    end
+                    self:performWithDelay(function()
+                        self:LeftButtonClicked()
+                    end, 0)
+                end):AddToCurrentScene(true)
+            end)
+        end):AddToCurrentScene(true)
 end
 function GameUIPveAttack:GetListItem(index,title)
     local bg = display.newScale9Sprite(string.format("back_ground_548x40_%d.png", index % 2 == 0 and 1 or 2)):size(600,40)
@@ -393,6 +395,7 @@ function GameUIPveAttack:DecodeReport(report, dragon, attack_soldiers)
 end
 
 return GameUIPveAttack
+
 
 
 
