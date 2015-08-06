@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: dragonfall\n"
-"POT-Creation-Date: 2015-08-06 16:52+0800\n"
-"PO-Revision-Date: 2015-08-06 16:52+0800\n"
+"POT-Creation-Date: 2015-08-06 17:45+0800\n"
+"PO-Revision-Date: 2015-08-06 17:45+0800\n"
 "Last-Translator: gaozhou <gaozhou.f@qq.com>\n"
 "Language-Team: \n"
 "Language: en\n"
@@ -3375,7 +3375,7 @@ msgstr "Attack"
 #: ui/GameUIAllianceSendTroops.lua:119 ui/GameUIAllianceSendTroops.lua:269
 #: ui/GameUIPVESendTroop.lua:48 ui/GameUIPVESendTroop.lua:158
 msgid "最大"
-msgstr "Max"
+msgstr "Maximum"
 
 #: ui/GameUIAllianceSendTroops.lua:178
 msgid "行军"
@@ -5399,9 +5399,9 @@ msgid "几率掉落"
 msgstr "Chance to drop"
 
 #: ui/GameUIPveAttack.lua:105 ui/GameUIPveAttack.lua:268
-#, fuzzy, c-format
+#, c-format
 msgid "今日可挑战次数: %d/%d"
-msgstr "Challenge today"
+msgstr "Challenge today: %d/%d"
 
 #: ui/GameUIPveAttack.lua:113 ui/GameUIPveAttack.lua:227
 msgid "每次消耗体力:"
@@ -10027,8 +10027,8 @@ msgid "增加防御箭塔的攻击力"
 msgstr "Increase Tower Attack"
 
 #: utils/Localize.lua:962
-msgid "增加监狱的抓捕士兵的上限"
-msgstr "Increase Prison Capacity"
+msgid "增加攻打城市后的返程时间"
+msgstr ""
 
 #: utils/Localize.lua:963
 msgid "增加资源保护比例"
@@ -10099,8 +10099,8 @@ msgid "增加防御箭塔的攻击力完成"
 msgstr "Increase Tower Attack complete"
 
 #: utils/Localize.lua:982
-msgid "增加监狱的抓捕士兵的上限完成"
-msgstr "Increase Prison Capacity complete"
+msgid "增加攻打城市后的返程时间完成"
+msgstr ""
 
 #: utils/Localize.lua:983
 msgid "增加资源保护比例完成"
@@ -12471,3 +12471,9 @@ msgstr "You've activated the VIP, Tap to close it"
 #: widget/WidgetUseMutiItems.lua:22
 msgid "使用数量"
 msgstr "Use Amount"
+
+#~ msgid "增加监狱的抓捕士兵的上限"
+#~ msgstr "Increase Prison Capacity"
+
+#~ msgid "增加监狱的抓捕士兵的上限完成"
+#~ msgstr "Increase Prison Capacity complete"
