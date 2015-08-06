@@ -47,6 +47,17 @@ function AirshipSprite:CreateSprite()
     local p = sprite:getAnchorPointInPoints()
     armature:align(display.CENTER, p.x - 16, p.y + 36):getAnimation():playWithIndex(0)
     armature:getAnimation():setSpeedScale(2)
+
+    self.battery = display.newSprite("battery_bg.png"):addTo(sprite):pos(130, 235)
+    local x,y = 14, 18
+    for i = 1, 5 do
+        display.newSprite("battery_cell.png")
+            :addTo(self.battery,0,i):pos((i-1) * 7 + x, (i-1) * 4 + y)
+            :runAction(cc.RepeatForever:create(transition.sequence{
+                cc.TintTo:create(1, 180, 180, 180),
+                cc.TintTo:create(1, 255, 255, 255)
+            }))
+    end
     return sprite
 end
 function AirshipSprite:GetSpriteOffset()
@@ -58,9 +69,15 @@ end
 function AirshipSprite:CreateBase()
     self:GenerateBaseTiles(4, 6)
 end
+function AirshipSprite:SetBattery(num)
+    for i = 1, 5 do
+        self.battery:getChildByTag(i):setVisible(i <= num)
+    end
+end
 
 
 return AirshipSprite
+
 
 
 
