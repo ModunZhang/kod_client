@@ -122,7 +122,16 @@ function GameUIPVESendTroop:OnMoveInStage()
                     UIKit:showMessageDialog(_("主人"),_("龙未处于空闲状态"))
                     return
                 elseif self.dragon:Hp()<1 then
-                    UIKit:showMessageDialog(_("主人"),_("选择的龙已经死亡"))
+                    UIKit:showMessageDialog(_("提示"),_("选择的龙已经死亡")):CreateCancelButton(
+                        {
+                            listener = function ()
+                                UIKit:newGameUI("GameUIDragonEyrieMain", City, City:GetFirstBuildingByType("dragonEyrie"), "dragon", false, self.dragon:Type()):AddToCurrentScene(true)
+                                self:LeftButtonClicked()
+                            end,
+                            btn_name= _("查看"),
+                            btn_images = {normal = "blue_btn_up_148x58.png",pressed = "blue_btn_down_148x58.png"}
+                        }
+                    )
                     return
                 elseif #soldiers == 0 then
                     UIKit:showMessageDialog(_("主人"),_("请选择要派遣的部队"))
@@ -696,6 +705,7 @@ end
 
 
 return GameUIPVESendTroop
+
 
 
 
