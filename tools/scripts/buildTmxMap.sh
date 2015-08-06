@@ -11,7 +11,7 @@ for file in $GameDataDir/*.tmx
 		echo -i $file -o $ClientDir/${name%.*}.lua
 		./tmxmap2lua.py -i $file -o $ClientDir/${name%.*}.lua
 		echo "import(\".pve_$count\")," >> $ClientDir/pvemap.lua
-		count=count+1
+		count=$(($count+1))
 	done
 
 echo } >> $ClientDir/pvemap.lua
