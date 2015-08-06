@@ -319,6 +319,7 @@ function GameUIPveAttack:Attack()
                     end
                     self:performWithDelay(function()
                         self:LeftButtonClicked()
+                        display.getRunningScene():GetSceneLayer():MoveAirship(true)
                     end, 0)
                 end):AddToCurrentScene(true)
             end)

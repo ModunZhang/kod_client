@@ -156,6 +156,7 @@ function PVELayerNew:ctor(scene, user, level)
     end
 
     self:RefreshPve()
+    self:MoveAirship()
 end
 function PVELayerNew:ConvertLogicPositionToMapPosition(lx, ly)
     return self:convertToNodeSpace(self.background:convertToWorldSpace(cc.p(self.normal_map:ConvertToMapPosition(lx, ly))))
@@ -237,7 +238,6 @@ function PVELayerNew:RefreshPve()
         end
     end
 
-
     for i = 1, #self.seq_npc do
         local be = self.seq_npc[i - 1]
         local v = self.seq_npc[i]
@@ -246,20 +246,30 @@ function PVELayerNew:RefreshPve()
         if be then
             if self.user:GetPveSectionStarByName(self:GetNpcBy(be.x, be.y):GetPveName()) > 0 then
                 self:GetNpcBy(v.x, v.y):SetEnable(true)
-                if self.ariship then
-                    local x,y = self:GetNpcBy(v.x, v.y):getPosition()
-                    self.ariship:pos(x + 50,y + 30)
-                end
             else
                 self:GetNpcBy(v.x, v.y):SetEnable(false)
             end
         else
             self:GetNpcBy(v.x, v.y):SetEnable(true)
-            if self.ariship then
-                local x,y = self:GetNpcBy(v.x, v.y):getPosition()
-                self.ariship:pos(x + 50,y + 30)
-            end
         end
+    end
+end
+function PVELayerNew:MoveAirship(ani)
+    local target
+    for i = 1, #self.seq_npc do
+        local be = self.seq_npc[i - 1]
+        local v = self.seq_npc[i]
+        if be then
+            if self.user:GetPveSectionStarByName(self:GetNpcBy(be.x, be.y):GetPveName()) > 0 then
+                target = self:GetNpcBy(v.x, v.y)
+            end
+        else
+            target = self:GetNpcBy(v.x, v.y)
+        end
+    end
+    if self.ariship then
+        local x,y = target:getPosition()
+        self.ariship:moveTo(ani and 1 or 0, x + 50, y + 30)
     end
 end
 function PVELayerNew:GetFteLayer()
@@ -275,6 +285,7 @@ function PVELayerNew:getContentSize()
 end
 
 return PVELayerNew
+
 
 
 
