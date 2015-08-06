@@ -1150,7 +1150,7 @@ function DataUtils:GetResourceProtectPercent( resource_name )
     local buildingBuffAddPercent = getBuildingBuffForResourceProtectPercent(resource_name)
     local itemBuffAddPercent = getPlayerItemBuffForResourceLootPercentSubtract(defencePlayerDoc)
     local vipBuffAddPercent = getPlayerVipForResourceLootPercentSubtract()
-    local finalPercent = basePercent + buildingBuffAddPercent + itemBuffAddPercent + vipBuffAddPercent
+    local finalPercent = basePercent + buildingBuffAddPercent + itemBuffAddPercent + vipBuffAddPercent + City:FindTechByName("hideout"):GetBuffEffectVal()
     finalPercent = finalPercent > 0.9 and 0.9 or finalPercent < 0.1 and 0.1 or finalPercent
     return finalPercent
 end

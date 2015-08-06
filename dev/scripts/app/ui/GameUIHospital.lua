@@ -220,7 +220,6 @@ function GameUIHospital:CreateHealAllSoldierItem()
         size = 18,
         color = UIKit:hex2c3b(0x403c2f)
     }):align(display.LEFT_CENTER,bg_size.width/2+125,50):addTo(self.treate_all_soldiers_item)
-    self:SetTreatAllSoldiersTime()
 
     -- 科技减少治愈时间
     self.buff_reduce_time = cc.ui.UILabel.new({
@@ -230,6 +229,7 @@ function GameUIHospital:CreateHealAllSoldierItem()
         size = 18,
         color = UIKit:hex2c3b(0x068329)
     }):align(display.LEFT_CENTER,bg_size.width/2+120,30):addTo(self.treate_all_soldiers_item)
+    self:SetTreatAllSoldiersTime()
 end
 
 function GameUIHospital:TreatListener()
@@ -342,7 +342,9 @@ function GameUIHospital:SetTreatAllSoldiersNowNeedGems()
 end
 -- 设置普通治愈需要时间
 function GameUIHospital:SetTreatAllSoldiersTime()
-    self.heal_time:setString(GameUtils:formatTimeStyle1(self.city:GetSoldierManager():GetTreatAllTime()))
+    local treat_time = self.city:GetSoldierManager():GetTreatAllTime()
+    self.heal_time:setString(GameUtils:formatTimeStyle1(treat_time))
+    self.buff_reduce_time:setString("(-"..GameUtils:formatTimeStyle1(self.city:GetSoldierManager():GetTechReduceTreatTime(treat_time))..")")
 end
 
 
@@ -556,6 +558,7 @@ function GameUIHospital:OnResourceChanged(resource_manager)
     })
 end
 return GameUIHospital
+
 
 
 
