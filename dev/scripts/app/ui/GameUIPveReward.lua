@@ -50,11 +50,13 @@ function GameUIPveReward:GetListItem(index)
 
     for i,v in ipairs(string.split(stage.rewards, ",")) do
         local type,name,count = unpack(string.split(v, ":"))
-        local png
+        local png, txt
         if type == "items" then
             png = UILib.item[name]
+            txt = Localize_item.item_name[name]
         elseif type == "soldierMaterials" then
             png = UILib.soldier_metarial[name]
+            txt = Localize.soldier_material[name]
         end
         local icon = display.newSprite(png):addTo(
             display.newSprite("box_118x118.png"):addTo(bg)
@@ -62,6 +64,7 @@ function GameUIPveReward:GetListItem(index)
         ):pos(118/2, 118/2):scale(100/128)
         display.newColorLayer(cc.c4b(0,0,0,128)):addTo(icon)
             :setContentSize(128, 40)
+        UIKit:addTipsToNode(icon, txt,self)
         UIKit:ttfLabel({
             text = "x"..count,
             size = 18,
