@@ -19,10 +19,11 @@ local map = {
     {"image", "pve_deco_10.png",1,1,1},
     {"image", "pve_deco_11.png",1,1,1},
     {"image", "pve_deco_12.png",1,1,1},
-    {"image", "pve_deco_12.png",1,1,1},
-    {"image", "pve_deco_12.png",1,1,1},
-    {"image", "pve_deco_12.png",1,1,1},
-    {"image", "pve_deco_12.png",1,1,1},
+    {"image", "pve_deco_13.png",1,1,1},
+    {"image", "pve_deco_13.png",1,1,1},
+    {"image", "pve_deco_13.png",1,1,1},
+    {"image", "pve_deco_13.png",1,1,1},
+    {"image", "pve_deco_13.png",1,1,1},
 }
 
 
@@ -41,9 +42,9 @@ end
 
 function PVELayerNew:ctor(scene, user, level)
     PVELayerNew.super.ctor(self, scene, 0.5, 1.5)
+    local pvemap = pvemap[level]
     self.user = user
     self.level = level
-
     self.normal_map = NormalMapAnchorBottomLeftReverseY.new({
         tile_w = pvemap.tilewidth,
         tile_h = pvemap.tileheight,
@@ -55,10 +56,10 @@ function PVELayerNew:ctor(scene, user, level)
 
     GameUtils:LoadImagesWithFormat(function()
         self.background = display.newNode():addTo(self)
-        display.newSprite("pve_background.jpg"):addTo(self.background):align(display.LEFT_BOTTOM)
-        display.newSprite("pve_background.jpg"):addTo(self.background):align(display.LEFT_BOTTOM, 0, 800)
-        display.newSprite("pve_background.jpg"):addTo(self.background):align(display.LEFT_BOTTOM, 0, 1600)
-        display.newSprite("pve_background.jpg"):addTo(self.background):align(display.LEFT_BOTTOM, 0, 2400)
+        display.newSprite("pve_background.png"):addTo(self.background):align(display.LEFT_BOTTOM)
+        display.newSprite("pve_background.png"):addTo(self.background):align(display.LEFT_BOTTOM, 0, 800)
+        display.newSprite("pve_background.png"):addTo(self.background):align(display.LEFT_BOTTOM, 0, 1600)
+        display.newSprite("pve_background.png"):addTo(self.background):align(display.LEFT_BOTTOM, 0, 2400)
     end, cc.TEXTURE2_D_PIXEL_FORMAT_RG_B565)
 
     self.cloud_layer = display.newNode():addTo(self, 100)
@@ -145,7 +146,7 @@ function PVELayerNew:ctor(scene, user, level)
     end
 
     if not self.user:IsStagePassed(self.level) then
-        local ariship = display.newSprite("airship.png"):addTo(self):scale(0.3)
+        local ariship = display.newSprite("airship.png"):addTo(self):scale(0.5)
         ariship:setAnchorPoint(cc.p(0.4, 0.6))
         ariship:runAction(cc.RepeatForever:create(transition.sequence{
             cc.MoveBy:create(2, cc.p(0, 5)),
@@ -155,6 +156,7 @@ function PVELayerNew:ctor(scene, user, level)
     end
 
     self:RefreshPve()
+    self:MoveAirship()
 end
 function PVELayerNew:ConvertLogicPositionToMapPosition(lx, ly)
     return self:convertToNodeSpace(self.background:convertToWorldSpace(cc.p(self.normal_map:ConvertToMapPosition(lx, ly))))
@@ -190,9 +192,9 @@ function PVELayerNew:GotoPve()
     end
     local point
     if find then
-        point = self:ConvertLogicPositionToMapPosition(4,y)
+        point = self:ConvertLogicPositionToMapPosition(4.5,y)
     else
-        point = self:ConvertLogicPositionToMapPosition(4,0)
+        point = self:ConvertLogicPositionToMapPosition(4.5,0)
     end
     self:GotoMapPositionInMiddle(point.x, point.y)
 end
@@ -236,7 +238,6 @@ function PVELayerNew:RefreshPve()
         end
     end
 
-
     for i = 1, #self.seq_npc do
         local be = self.seq_npc[i - 1]
         local v = self.seq_npc[i]
@@ -245,18 +246,30 @@ function PVELayerNew:RefreshPve()
         if be then
             if self.user:GetPveSectionStarByName(self:GetNpcBy(be.x, be.y):GetPveName()) > 0 then
                 self:GetNpcBy(v.x, v.y):SetEnable(true)
-                if self.ariship then
-                    self.ariship:pos(self:GetNpcBy(v.x, v.y):getPosition())
-                end
             else
                 self:GetNpcBy(v.x, v.y):SetEnable(false)
             end
         else
             self:GetNpcBy(v.x, v.y):SetEnable(true)
-            if self.ariship then
-                self.ariship:pos(self:GetNpcBy(v.x, v.y):getPosition())
-            end
         end
+    end
+end
+function PVELayerNew:MoveAirship(ani)
+    local target
+    for i = 1, #self.seq_npc do
+        local be = self.seq_npc[i - 1]
+        local v = self.seq_npc[i]
+        if be then
+            if self.user:GetPveSectionStarByName(self:GetNpcBy(be.x, be.y):GetPveName()) > 0 then
+                target = self:GetNpcBy(v.x, v.y)
+            end
+        else
+            target = self:GetNpcBy(v.x, v.y)
+        end
+    end
+    if self.ariship then
+        local x,y = target:getPosition()
+        self.ariship:moveTo(ani and 1 or 0, x + 50, y + 30)
     end
 end
 function PVELayerNew:GetFteLayer()
@@ -272,6 +285,7 @@ function PVELayerNew:getContentSize()
 end
 
 return PVELayerNew
+
 
 
 
