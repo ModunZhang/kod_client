@@ -8,13 +8,19 @@ function PVESceneNew:ctor(user, level)
     self.level = level
     PVESceneNew.super.ctor(self)
     self.util_node = display.newNode():addTo(self)
-    display.newSprite("pve_background.jpg"):addTo(self):pos(display.cx, display.cy)
 end
 function PVESceneNew:onEnter()
 	PVESceneNew.super.onEnter(self)
     self.home_page = self:CreateHomePage()
     self:GetSceneLayer():ZoomTo(1)
     self:GetSceneLayer():GotoPve()
+
+    local task = City:GetRecommendTask()
+    if task then
+        if task:TaskType() == "explore" then
+            City:SetBeginnersTaskFlag(task:Index())
+        end
+    end
 end
 function PVESceneNew:GetHomePage()
     return self.home_page

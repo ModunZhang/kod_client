@@ -252,11 +252,21 @@ function User:GetStageByIndex(index)
     return self.pve[index] or {}
 end
 function User:GetLatestPveIndex()
+    local index = 1
     if #self.pve == 0 then
-        return 1
+        index = 1
     else
-        return #self.pve
+        if #self.pve == total_stages then
+            index = total_stages
+        else
+            if self:IsStagePassed(#self.pve) then
+                index = #self.pve + 1
+            else
+                index = #self.pve
+            end
+        end
     end
+    return index
 end
 function User:IsBindGameCenter()
     return self:GcId() ~= "" and self:GcId() ~= json.null
