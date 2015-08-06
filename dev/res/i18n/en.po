@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: dragonfall\n"
-"POT-Creation-Date: 2015-08-06 17:45+0800\n"
-"PO-Revision-Date: 2015-08-06 17:45+0800\n"
+"POT-Creation-Date: 2015-08-06 18:00+0800\n"
+"PO-Revision-Date: 2015-08-06 18:00+0800\n"
 "Last-Translator: gaozhou <gaozhou.f@qq.com>\n"
 "Language-Team: \n"
 "Language: en\n"
@@ -10028,7 +10028,7 @@ msgstr "Increase Tower Attack"
 
 #: utils/Localize.lua:962
 msgid "增加攻打城市后的返程时间"
-msgstr ""
+msgstr "Increase the back time of enemy"
 
 #: utils/Localize.lua:963
 msgid "增加资源保护比例"
@@ -10100,7 +10100,7 @@ msgstr "Increase Tower Attack complete"
 
 #: utils/Localize.lua:982
 msgid "增加攻打城市后的返程时间完成"
-msgstr ""
+msgstr "Increase the back time of enemy complete"
 
 #: utils/Localize.lua:983
 msgid "增加资源保护比例完成"
@@ -12471,9 +12471,3 @@ msgstr "You've activated the VIP, Tap to close it"
 #: widget/WidgetUseMutiItems.lua:22
 msgid "使用数量"
 msgstr "Use Amount"
-
-#~ msgid "增加监狱的抓捕士兵的上限"
-#~ msgstr "Increase Prison Capacity"
-
-#~ msgid "增加监狱的抓捕士兵的上限完成"
-#~ msgstr "Increase Prison Capacity complete"

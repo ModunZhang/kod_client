@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: dragonfall\n"
-"POT-Creation-Date: 2015-08-06 17:45+0800\n"
-"PO-Revision-Date: 2015-08-06 17:45+0800\n"
+"POT-Creation-Date: 2015-08-06 18:00+0800\n"
+"PO-Revision-Date: 2015-08-06 18:00+0800\n"
 "Last-Translator: gaozhou <gaozhou.f@qq.com>\n"
 "Language-Team: \n"
 "Language: zh_TW\n"
@@ -9854,7 +9854,7 @@ msgstr "增加防禦箭塔的攻擊力"
 
 #: utils/Localize.lua:962
 msgid "增加攻打城市后的返程时间"
-msgstr ""
+msgstr "增加敵軍攻打城市後的返程時間"
 
 #: utils/Localize.lua:963
 msgid "增加资源保护比例"
@@ -9926,7 +9926,7 @@ msgstr "增加防禦箭塔的攻擊力完成"
 
 #: utils/Localize.lua:982
 msgid "增加攻打城市后的返程时间完成"
-msgstr ""
+msgstr "增加敵方攻打城市後的返程時間完成"
 
 #: utils/Localize.lua:983
 msgid "增加资源保护比例完成"
@@ -12267,9 +12267,3 @@ msgstr "已經激活VIP，關閉窗口"
 #: widget/WidgetUseMutiItems.lua:22
 msgid "使用数量"
 msgstr "使用數量"
-
-#~ msgid "增加监狱的抓捕士兵的上限"
-#~ msgstr "增加監獄的抓捕士兵的上限"
-
-#~ msgid "增加监狱的抓捕士兵的上限完成"
-#~ msgstr "增加監獄的抓捕士兵的上限完成"
