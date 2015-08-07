@@ -20,10 +20,10 @@ local map = {
     {"image", "pve_deco_11.png",1,1,1},
     {"image", "pve_deco_12.png",1,1,1},
     {"image", "pve_deco_13.png",1,1,1},
-    {"image", "pve_deco_13.png",1,1,1},
-    {"image", "pve_deco_13.png",1,1,1},
-    {"image", "pve_deco_13.png",1,1,1},
-    {"image", "pve_deco_13.png",1,1,1},
+    {"image", "pve_deco_14.png",1,1,1},
+    {"image", "pve_deco_15.png",1,1,1},
+    {"image", "pve_deco_16.png",1,1,1},
+    {"image", "pve_deco_17.png",1,1,1},
 }
 
 

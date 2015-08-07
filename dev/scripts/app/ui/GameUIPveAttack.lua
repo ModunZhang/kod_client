@@ -19,7 +19,7 @@ function GameUIPveAttack:ctor(user, pve_name)
     if self.user:IsPveBoss(self.pve_name) then
         GameUIPveAttack.super.ctor(self,480,_("关卡")..pve_name,window.top - 160,nil,{color = UIKit:hex2c4b(0x00000000)})
     else
-        GameUIPveAttack.super.ctor(self,650,_("关卡")..pve_name,window.top - 160,nil,{color = UIKit:hex2c4b(0x00000000)})
+        GameUIPveAttack.super.ctor(self,680,_("关卡")..pve_name,window.top - 160,nil,{color = UIKit:hex2c4b(0x00000000)})
     end
     self.__type  = UIKit.UITYPE.BACKGROUND
     display.newNode():addTo(self):schedule(function()
@@ -109,49 +109,79 @@ function GameUIPveAttack:BuildNormalUI()
     }):addTo(self:GetBody()):align(display.LEFT_CENTER,25,size.height - 450)
 
 
-    local w = UIKit:ttfLabel({
-        text = _("每次消耗体力:"),
+    display.newSprite("dragon_lv_icon.png"):addTo(self:GetBody()):align(display.CENTER,40,size.height - 485):scale(0.8)
+
+    self.str_label = UIKit:ttfLabel({
+        text = string.format(_("体力 : %d/%d"), self.user:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()), self.user:GetStrengthResource():GetValueLimit()),
         size = 22,
         color = 0x615b44,
-        align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
-    }):addTo(self:GetBody()):align(display.LEFT_CENTER,25,size.height - 490):getContentSize().width
-
-
+    }):addTo(self:GetBody()):align(display.LEFT_CENTER,70,size.height - 485)
+    local w = self.str_label:getContentSize().width
 
     UIKit:ttfLabel({
         text = string.format("-%d", sections[self.pve_name].staminaUsed),
         size = 20,
         color = 0x7e0000,
-        align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
-    }):addTo(self:GetBody()):align(display.LEFT_CENTER,25 + w + 20,size.height - 490)
+    }):addTo(self:GetBody()):align(display.LEFT_CENTER,70 + w + 20,size.height - 485)
 
+
+    display.newSprite("sweep_128x128.png"):addTo(self:GetBody()):align(display.CENTER,40,size.height - 520):scale(0.25)
+    self.sweep_label = UIKit:ttfLabel({
+        text = _("扫荡劵 : ")..ItemManager:GetItemByName("sweepScroll"):Count(),
+        size = 22,
+        color = 0x615b44,
+    }):addTo(self:GetBody()):align(display.LEFT_CENTER,70,size.height - 520)
+
+    self.sweep_all = self:CreateSweepButton():setButtonLabelString(_("扫荡全部"))
+        :align(display.CENTER, 100, size.height - 580):addTo(self:GetBody())
+        :onButtonClicked(function()
+            if self.user:GetPveLeftCountByName(self.pve_name) <= 0 then
+                UIKit:showMessageDialog(_("提示"),_("已达今日最大挑战次数!"))
+                return
+            end
+            if not self.user:HasAnyStength(sections[self.pve_name].staminaUsed * self.user:GetPveLeftCountByName(self.pve_name)) then
+                WidgetUseItems.new():Create({
+                    item_type = WidgetUseItems.USE_TYPE.STAMINA
+                }):AddToCurrentScene()
+                return
+            end
+            local use_str = self.user:GetPveLeftCountByName(self.pve_name) * sections[self.pve_name].staminaUsed
+            if ItemManager:GetItemByName("sweepScroll"):Count() >= self.user:GetPveLeftCountByName(self.pve_name) then
+                self:UseStrength(function()end,use_str):addTo(self.sweep_all)
+                self:UseSweepScroll(self.user:GetPveLeftCountByName(self.pve_name))
+            else
+                self:UseStrength(function()end,use_str):addTo(self.sweep_all)
+                self:BuyAndUseSweepScroll(self.user:GetPveLeftCountByName(self.pve_name))
+            end
+        end)
+
+    self.sweep_once = self:CreateSweepButton():setButtonLabelString(_("扫荡一次"))
+        :align(display.CENTER, size.width/2, size.height - 580):addTo(self:GetBody())
+        :onButtonClicked(function(event)
+            if self.user:GetPveLeftCountByName(self.pve_name) <= 0 then
+                UIKit:showMessageDialog(_("提示"),_("已达今日最大挑战次数!"))
+                return
+            end
+            if not self.user:HasAnyStength(sections[self.pve_name].staminaUsed) then
+                WidgetUseItems.new():Create({
+                    item_type = WidgetUseItems.USE_TYPE.STAMINA
+                }):AddToCurrentScene()
+                return
+            end
+            if ItemManager:GetItemByName("sweepScroll"):Count() >= 1 then
+                self:UseStrength(function()end,sections[self.pve_name].staminaUsed):addTo(self.sweep_once)
+                self:UseSweepScroll(1)
+            else
+                self:UseStrength(function()end,sections[self.pve_name].staminaUsed):addTo(self.sweep_once)
+                self:BuyAndUseSweepScroll(1)
+            end
+        end)
+    self.attack = self:CreateAttackButton():align(display.CENTER, size.width - 100,size.height - 580)
     UIKit:ttfLabel({
         text = _("关卡三星通关后，可使用扫荡"),
         size = 18,
         color = 0x615b44,
-        align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
-    }):addTo(self:GetBody()):align(display.LEFT_CENTER,25,size.height - 530)
-
-
-    self.sweep = cc.ui.UIPushButton.new(
-        {normal = "blue_btn_up_148x58.png", pressed = "blue_btn_down_148x58.png", disabled = 'gray_btn_148x58.png'},
-        {scale9 = false}
-    ):addTo(self:GetBody())
-        :align(display.LEFT_CENTER, 20,size.height - 580)
-        :setButtonLabel(UIKit:ttfLabel({
-            text = _("扫荡") ,
-            size = 22,
-            color = 0xffedae,
-            shadow = true
-        })):onButtonClicked(function(event)
-        if self.user:GetPveLeftCountByName(self.pve_name) <= 0 then
-            UIKit:showMessageDialog(_("提示"),_("已达今日最大挑战次数!"))
-            return
-        end
-        UIKit:newGameUI('GameUIPveSweep', self.user, self.pve_name):AddToCurrentScene(true)
-        end):setButtonEnabled(star >= 3)
-
-    self.attack = self:CreateAttackButton():align(display.RIGHT_CENTER, size.width - 20,size.height - 580)
+    }):addTo(self:GetBody()):align(display.CENTER,size.width/2,size.height - 640)
 end
 function GameUIPveAttack:BuildBossUI()
     local size = self:GetBody():getContentSize()
@@ -265,9 +295,32 @@ function GameUIPveAttack:RefreshUI()
         for i,v in ipairs(self.items) do
             v:setVisible(i <= star)
         end
+        self.str_label:setString(string.format(_("体力 : %d/%d"), self.user:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()), self.user:GetStrengthResource():GetValueLimit()))
+        self.sweep_label:setString(_("扫荡劵 : ")..ItemManager:GetItemByName("sweepScroll"):Count())
         self.label:setString(string.format(_("今日可挑战次数: %d/%d"), self.user:GetFightCountByName(self.pve_name), sections[self.pve_name].maxFightCount))
-        self.sweep:setButtonEnabled(star >= 3)
+        self.sweep_all:setButtonEnabled(star >= 3)
+        self.sweep_all.label:setString(string.format("-%d", self.user:GetPveLeftCountByName(self.pve_name)))
+        self.sweep_once:setButtonEnabled(star >= 3)
     end
+end
+function GameUIPveAttack:CreateSweepButton()
+    local s = cc.ui.UIPushButton.new(
+        {normal = "yellow_btn_up_148x58.png", pressed = "yellow_btn_down_148x58.png", disabled = "gray_btn_148x58.png"},
+        {scale9 = false}
+    ):setButtonLabel(UIKit:ttfLabel({
+        size = 20,
+        color = 0xffedae,
+        shadow = true
+    })):setButtonLabelOffset(0, 15)
+    local num_bg = display.newSprite("alliance_title_gem_bg_154x20.png"):addTo(s):align(display.CENTER, 0, -10):scale(0.8)
+    local size = num_bg:getContentSize()
+    display.newSprite("sweep_128x128.png"):addTo(num_bg):align(display.CENTER, 20, size.height/2):scale(0.4)
+    s.label = UIKit:ttfLabel({
+        text = "-1",
+        size = 20,
+        color = 0xff0000,
+    }):align(display.CENTER, size.width/2, size.height/2):addTo(num_bg)
+    return s
 end
 function GameUIPveAttack:CreateAttackButton()
     local size = self:GetBody():getContentSize()
@@ -286,21 +339,24 @@ function GameUIPveAttack:CreateAttackButton()
             color = 0xffedae,
             shadow = true
         })):onButtonClicked(function(event)
+        if self.user:GetPveLeftCountByName(self.pve_name) <= 0 then
+            UIKit:showMessageDialog(_("提示"),_("已达今日最大挑战次数!"))
+            return
+        end
+        if not self.user:HasAnyStength(sections[self.pve_name].staminaUsed) then
+            WidgetUseItems.new():Create({
+                item_type = WidgetUseItems.USE_TYPE.STAMINA
+            }):AddToCurrentScene()
+            return
+        end
+        event.target:setTouchEnabled(false)
+        self:UseStrength(function()
             self:Attack()
+            event.target:setTouchEnabled(true)
+        end, sections[self.pve_name].staminaUsed):addTo(self.attack)
         end)
 end
 function GameUIPveAttack:Attack()
-    if self.user:GetPveLeftCountByName(self.pve_name) <= 0 then
-        UIKit:showMessageDialog(_("提示"),_("已达今日最大挑战次数!"))
-        return
-    end
-
-    if not self.user:HasAnyStength(sections[self.pve_name].staminaUsed) then
-        WidgetUseItems.new():Create({
-            item_type = WidgetUseItems.USE_TYPE.STAMINA
-        }):AddToCurrentScene()
-        return
-    end
     local soldiers = string.split(sections[self.pve_name].troops, ",")
     table.remove(soldiers, 1)
     UIKit:newGameUI('GameUIPVESendTroop',
@@ -325,6 +381,63 @@ function GameUIPveAttack:Attack()
             end)
         end):AddToCurrentScene(true)
 end
+function GameUIPveAttack:BuyAndUseSweepScroll(count)
+    local need_buy = count - ItemManager:GetItemByName("sweepScroll"):Count()
+    assert(need_buy > 0)
+    local required_gems = ItemManager:GetItemByName("sweepScroll"):Price() * need_buy
+    local dialog = UIKit:showMessageDialog()
+    dialog:SetTitle(_("补充道具"))
+    dialog:SetPopMessage(_("您当前没有足够的扫荡劵,是否花费金龙币购买补充并使用"))
+    dialog:CreateOKButtonWithPrice(
+        {
+            listener = function()
+                if self.user:GetGemResource():GetValue() < required_gems then
+                    UIKit:showMessageDialog(_("提示"),_("金龙币不足")):CreateOKButton(
+                        {
+                            listener = function ()
+                                UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                            end,
+                            btn_name= _("前往商店")
+                        })
+                else
+                    NetManager:getBuyItemPromise("sweepScroll", need_buy):done(function()
+                        self:UseSweepScroll(count)
+                    end)
+                end
+            end,
+            btn_images = {normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"},
+            price = required_gems
+        }
+    ):CreateCancelButton()
+end
+function GameUIPveAttack:UseSweepScroll(count)
+    NetManager:getUseItemPromise("sweepScroll", {sweepScroll = {sectionName = self.pve_name, count = count}}):done(function(response)
+        for i,v in ipairs(response.msg.playerData) do
+            if v[1] == "__rewards" then
+                UIKit:newGameUI("GameUIPveSweep", v[2]):AddToCurrentScene(true)
+                return
+            end
+        end
+    end):always(function()
+        self:RefreshUI()
+    end)
+end
+function GameUIPveAttack:UseStrength(func, num)
+    local icon = display.newSprite("dragon_lv_icon.png")
+    icon:runAction(transition.sequence{
+        cc.Spawn:create(cc.MoveBy:create(1, cc.p(0, 100)), cc.FadeOut:create(1)),
+        cc.CallFunc:create(func),
+        cc.RemoveSelf:create(),
+    })
+    UIKit:ttfLabel({
+        text = string.format("-%d", num),
+        size = 22,
+        color = 0x7e0000,
+    }):addTo(icon):align(display.LEFT_CENTER,40,30)
+    return icon
+end
+
+
 function GameUIPveAttack:GetListItem(index,title)
     local bg = display.newScale9Sprite(string.format("back_ground_548x40_%d.png", index % 2 == 0 and 1 or 2)):size(600,40)
     UIKit:ttfLabel({
@@ -396,6 +509,16 @@ function GameUIPveAttack:DecodeReport(report, dragon, attack_soldiers)
 end
 
 return GameUIPveAttack
+
+
+
+
+
+
+
+
+
+
 
 
 

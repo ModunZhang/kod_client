@@ -132,14 +132,7 @@ function GameUIPveHomeNew:CreateTop()
         shadow = true,
     }):addTo(pve_back):align(display.RIGHT_CENTER, size.width / 2, 25)
 
-    self.strenth_use = UIKit:ttfLabel({
-        text = "-3",
-        size = 20,
-        color = 0x7e0000,
-    }):addTo(pve_back):align(display.RIGHT_CENTER, size.width / 2, 25):hide()
-
-
-    self.strenth_max = UIKit:ttfLabel({
+    UIKit:ttfLabel({
         text = string.format("/%d", User:GetStrengthResource():GetValueLimit()),
         size = 20,
         color = 0xffedae,
@@ -159,16 +152,6 @@ function GameUIPveHomeNew:CreateBottom()
 end
 function GameUIPveHomeNew:ChangeChatChannel(channel_index)
     self.chat:ChangeChannel(channel_index)
-end
-function GameUIPveHomeNew:ShowStrengAni()
-    self.strenth_use:pos(self.strenth_current:getPosition()):show():runAction(transition.sequence{
-        cc.CallFunc:create(function() self.strenth_current:show():setColor(UIKit:hex2c3b(0x7e0000)) end),
-        cc.DelayTime:create(0.5),
-        cc.CallFunc:create(function() self.strenth_use:show():opacity(255) end),
-        cc.Spawn:create(cc.MoveBy:create(0.5, cc.p(0, 50)), cc.FadeOut:create(0.5)),
-        cc.CallFunc:create(function() self.strenth_current:show():setColor(UIKit:hex2c3b(0xffedae)) end),
-    })
-    
 end
 
 
