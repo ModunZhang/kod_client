@@ -1891,20 +1891,18 @@ function NetManager:getAttackPveSectionPromise(sectionName, dragonType, soldiers
                     end
                 end
             end
+            local reward_items = {}
             if next(adds.items) then
-                local item_str = {}
                 for itemName,count in pairs(adds.items) do
-                    table.insert(item_str, string.format("%s x%d", Localize_item.item_name[itemName], count))
+                    table.insert(reward_items, {type = "items", name = itemName, count = count})
                 end
-                response.reward_func = function() GameGlobalUI:showTips(_("获得道具"), table.concat(item_str, " ")) end
             end
             if next(adds.soldierMaterials) then
-                local item_str = {}
                 for key,count in pairs(adds.soldierMaterials) do
-                    table.insert(item_str, string.format("%s x%d", Localize.soldier_material[key], count))
+                    table.insert(reward_items, {type = "soldierMaterials", name = key, count = count})
                 end
-                response.reward_func = function() GameGlobalUI:showTips(_("获得材料"), table.concat(item_str, " ")) end
             end
+            response.get_func = function() return reward_items end
         end)
 end
 function NetManager:getPveStageRewardPromise(stageName)

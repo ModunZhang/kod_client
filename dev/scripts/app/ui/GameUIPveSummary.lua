@@ -1,12 +1,17 @@
 local UILib = import(".UILib")
 local Localize = import("..utils.Localize")
 local Localize_item = import("..utils.Localize_item")
+local lights = import("..particles.lights")
 local GameUIPveSummary = UIKit:createUIClass("GameUIPveSummary", "UIAutoClose")
 local config_dragonLevel = GameDatas.Dragons.dragonLevel
 
 function GameUIPveSummary:ctor(param)
     GameUIPveSummary.super.ctor(self)
-    self:BuildVictoryUI(param)
+    if param.star > 0 then
+    	self:BuildVictoryUI(param)
+    else
+    	self:BuildDefeatUI(param)
+	end
 end
 function GameUIPveSummary:BuildVictoryUI(param)
     local bg = cc.ui.UIPushButton.new(
@@ -156,9 +161,10 @@ function GameUIPveSummary:BuildVictoryUI(param)
             txt = Localize.soldier_material[reward.name]
         end
 
-        display.newSprite(png):addTo(
+        local icon = display.newSprite(png):addTo(
             display.newSprite("box_118x118.png"):addTo(bg):pos(-50, -80)
         ):pos(118/2, 118/2):scale(100/128)
+        lights():addTo(icon):pos(128/2, 128/2)
 
         UIKit:ttfLabel({
             text = txt,
@@ -171,6 +177,13 @@ function GameUIPveSummary:BuildVictoryUI(param)
             size = 22,
             color = 0xffedae,
         }):addTo(bg):align(display.LEFT_CENTER, 30, -110)
+
+    else
+    	UIKit:ttfLabel({
+            text = _("材料库房已满,丢失所获得材料!"),
+            size = 22,
+            color = 0xffedae,
+        }):addTo(bg):align(display.CENTER, 0 , -80)
     end
 
 
@@ -182,7 +195,83 @@ function GameUIPveSummary:BuildVictoryUI(param)
 
     self:addTouchAbleChild(bg)
 end
+function GameUIPveSummary:BuildDefeatUI(param)
+	local bg = cc.ui.UIPushButton.new(
+        {normal = "pve_reward_bg.png", pressed = "pve_reward_bg.png", disabled = "pve_reward_bg.png"},
+        {scale9 = false},
+        {}
+    ):pos(display.cx, display.cy):onButtonClicked(function()
+        self:LeftButtonClicked()
+    end)
+    display.newSprite("pve_summary_bg1.png"):addTo(bg):align(display.BOTTOM_CENTER, 0, 200)
 
+    self.items = {}
+    local sbg = display.newSprite("tmp_pve_bg.png"):addTo(bg):pos(0, 210)
+    local size = sbg:getContentSize()
+    self.items[1] = display.newSprite("tmp_pve_star_bg.png"):addTo(sbg):pos(size.width/2 - 60, 32):scale(0.8)
+    self.items[2] = display.newSprite("tmp_pve_star_bg.png"):addTo(sbg):pos(size.width/2, 32)
+    self.items[3] = display.newSprite("tmp_pve_star_bg.png"):addTo(sbg):pos(size.width/2 + 60, 32):scale(0.8)
+    ccs.Armature:create("win"):addTo(bg):align(display.CENTER, 0, 300):getAnimation():play("Defeat", -1, 0)
+
+
+
+    display.newScale9Sprite("pve_summary_bg3.png", nil, nil, cc.size(534, 148 * 2)):addTo(bg):pos(0,10)
+	local dragon = cc.ui.UIPushButton.new(
+        {normal = "pve_summary_bg4.png", pressed = "pve_summary_bg4.png", disabled = "pve_summary_bg4.png"},
+        {scale9 = false},
+        {}
+    ):addTo(bg):pos(0, 82):onButtonClicked(function()
+        UIKit:newGameUI("GameUIDragonEyrieMain", City, City:GetFirstBuildingByType("dragonEyrie"), "dragon"):AddToCurrentScene(true)
+        self:LeftButtonClicked()
+    end)
+	display.newSprite("dragonEyrie.png"):addTo(dragon):scale(0.3):pos(-150, 0)
+
+	UIKit:ttfLabel({
+        text = _("龙巢"),
+        size = 22,
+        color = 0xffedae,
+    }):addTo(dragon):align(display.LEFT_CENTER, -80, 30)
+
+    UIKit:ttfLabel({
+        text = _("提升龙的等级"),
+        size = 22,
+        color = 0xffedae,
+    }):addTo(dragon):align(display.LEFT_CENTER, -80, -30)
+
+    display.newSprite("fte_icon_arrow.png"):align(display.CENTER, 200, 0):addTo(dragon):rotation(-90)
+
+
+	local barracks = cc.ui.UIPushButton.new(
+        {normal = "pve_summary_bg4.png", pressed = "pve_summary_bg4.png", disabled = "pve_summary_bg4.png"},
+        {scale9 = false},
+        {}
+    ):addTo(bg):pos(0, -62):onButtonClicked(function()
+        UIKit:newGameUI("GameUIBarracks", City, City:GetFirstBuildingByType("barracks"), "recruit"):AddToCurrentScene(true)
+        self:LeftButtonClicked()
+    end)
+    display.newSprite("barracks.png"):addTo(barracks):scale(0.4):pos(-150, 0)
+    UIKit:ttfLabel({
+        text = _("兵营"),
+        size = 22,
+        color = 0xffedae,
+    }):addTo(barracks):align(display.LEFT_CENTER, -80, 30)
+
+    UIKit:ttfLabel({
+        text = _("招募更多兵种"),
+        size = 22,
+        color = 0xffedae,
+    }):addTo(barracks):align(display.LEFT_CENTER, -80, -30)
+    display.newSprite("fte_icon_arrow.png"):align(display.CENTER, 200, 0):addTo(barracks):rotation(-90)
+
+
+    UIKit:ttfLabel({
+        text = _("确定"),
+        size = 22,
+        color = 0xffedae,
+    }):addTo(bg):align(display.CENTER, 0, -190)
+
+    self:addTouchAbleChild(bg)
+end
 function GameUIPveSummary:Performance(t, func)
     local time = 0
     local dt = 0.01

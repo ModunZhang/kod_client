@@ -1,6 +1,7 @@
 return function()
 	local emitter = cc.ParticleSystemQuad:createWithTotalParticles(10)
     emitter:setPosVar(cc.p(40, 40))
+    emitter:setDuration(-1)
     emitter:setEmitterMode(0)
     emitter:setPositionType(2)
     emitter:setAngleVar(360)
