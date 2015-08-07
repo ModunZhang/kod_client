@@ -8,7 +8,7 @@ local stages = GameDatas.PvE.stages
 
 function GameUIPveReward:ctor(index)
     self.index = index
-    GameUIPveReward.super.ctor(self,500,_("获取奖励"),window.top - 150)
+    GameUIPveReward.super.ctor(self,500,_("领取奖励"),window.top - 150)
 end
 function GameUIPveReward:onEnter()
     GameUIPveReward.super.onEnter(self)
@@ -32,6 +32,8 @@ function GameUIPveReward:onEnter()
     end
     list:reload()
     self.list = list
+
+    self:RefreshUI()
 end
 function GameUIPveReward:GetListItem(index)
     local bg = display.newScale9Sprite(string.format("back_ground_548x40_%d.png", index % 2 == 0 and 1 or 2)):size(600,100)
@@ -48,11 +50,13 @@ function GameUIPveReward:GetListItem(index)
 
     for i,v in ipairs(string.split(stage.rewards, ",")) do
         local type,name,count = unpack(string.split(v, ":"))
-        local png
+        local png, txt
         if type == "items" then
             png = UILib.item[name]
+            txt = Localize_item.item_name[name]
         elseif type == "soldierMaterials" then
             png = UILib.soldier_metarial[name]
+            txt = Localize.soldier_material[name]
         end
         local icon = display.newSprite(png):addTo(
             display.newSprite("box_118x118.png"):addTo(bg)
@@ -60,6 +64,7 @@ function GameUIPveReward:GetListItem(index)
         ):pos(118/2, 118/2):scale(100/128)
         display.newColorLayer(cc.c4b(0,0,0,128)):addTo(icon)
             :setContentSize(128, 40)
+        UIKit:addTipsToNode(icon, txt,self)
         UIKit:ttfLabel({
             text = "x"..count,
             size = 18,
@@ -71,7 +76,7 @@ function GameUIPveReward:GetListItem(index)
     bg.button = cc.ui.UIPushButton.new(
         {normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png", disabled = 'gray_btn_148x58.png'}
     ):setButtonLabel(UIKit:ttfLabel({
-        text = User:IsStageRewardedByName(stage_name) and _("已领取") or _("领取") ,
+        text = _("领取") ,
         size = 24,
         color = 0xffedae,
         shadow = true
@@ -92,14 +97,22 @@ function GameUIPveReward:GetListItem(index)
                 GameGlobalUI:showTips(_("获得奖励"), table.concat(str, " "))
             end)
         end)
+
+    bg.label = UIKit:ttfLabel({
+        text = _("已领取") ,
+        size = 24,
+        color = 0xffedae,
+        shadow = true
+    }):addTo(bg):align(display.CENTER,548 - 60,100*1/2)
     return bg
 end
 function GameUIPveReward:RefreshUI()
     for i,v in ipairs(self.list.items_) do
         local stage_name = string.format("%d_%d", self.index, i)
         local stage = stages[stage_name]
+        v:getContent().button:setVisible(not User:IsStageRewardedByName(stage_name))
         v:getContent().button:setButtonEnabled(User:GetStageStarByIndex(self.index) >= tonumber(stage.needStar) and not User:IsStageRewardedByName(stage_name))
-        v:getContent().button:setButtonLabelString(User:IsStageRewardedByName(stage_name) and _("已领取") or _("领取"))
+        v:getContent().label:setVisible(not not User:IsStageRewardedByName(stage_name))
     end
 end
 

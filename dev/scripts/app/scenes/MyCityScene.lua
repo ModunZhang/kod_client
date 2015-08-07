@@ -46,6 +46,9 @@ function MyCityScene:onEnter()
     if not UIKit:GetUIInstance('GameUIWarSummary') and alliance:LastAllianceFightReport() then
         UIKit:newGameUI("GameUIWarSummary"):AddToCurrentScene(true)
     end
+
+
+    self:RefreshStrenth()
     -- cc.ui.UIPushButton.new({normal = "lock_btn.png",pressed = "lock_btn.png"})
     -- :addTo(self, 1000000):align(display.RIGHT_TOP, display.width, display.height)
     -- :onButtonClicked(function(event)
@@ -126,6 +129,7 @@ function MyCityScene:CreateSceneUILayer()
     function scene_ui_layer:Schedule()
         display.newNode():addTo(self):schedule(function()
             scene_node:RefreshLockBtnStatus()
+            scene_node:RefreshStrenth()
         end, 1)
         display.newNode():addTo(self):schedule(function()
             -- 检查缩放比
@@ -200,6 +204,13 @@ function MyCityScene:RefreshLockBtnStatus()
         btn:setButtonImage(cc.ui.UIPushButton.NORMAL, btn_png, true)
         btn:setButtonImage(cc.ui.UIPushButton.PRESSED, btn_png, true)
     end)
+end
+function MyCityScene:RefreshStrenth()
+    local limit = self.city:GetUser():GetStrengthResource():GetValueLimit()
+    local value = self.city:GetUser():GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+    local ratio = value / limit
+    ratio = ratio > 1 and 1 or ratio
+    self:GetSceneLayer():GetAirship():SetBattery(math.floor(ratio / 0.2))
 end
 function MyCityScene:IteratorLockButtons(func)
     for i,v in ipairs(self:GetTopLayer():getChildren()) do
@@ -432,6 +443,7 @@ function MyCityScene:OpenUI(building, default_tab, need_tips, build_name)
 end
 
 return MyCityScene
+
 
 
 
