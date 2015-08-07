@@ -121,7 +121,7 @@ function GameUIPVESendTroop:OnMoveInStage()
                 if not self.dragon:IsFree() and not self.dragon:IsDefenced() then
                     UIKit:showMessageDialog(_("主人"),_("龙未处于空闲状态"))
                     return
-                elseif self.dragon:Hp()<1 then
+                elseif self.dragon:IsDead() then
                     UIKit:showMessageDialog(_("提示"),_("选择的龙已经死亡")):CreateCancelButton(
                         {
                             listener = function ()
