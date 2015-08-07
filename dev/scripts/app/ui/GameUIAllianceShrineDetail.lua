@@ -123,10 +123,10 @@ function GameUIAllianceShrineDetail:BuildUI()
         }):addTo(insight_icon):align(display.LEFT_TOP,insight_icon:getContentSize().width,45)
 
         local need_insight_val_title = UIKit:ttfLabel({
-            text = string.formatnumberthousands(self:GetShrineStage():NeedPerception()),
-            color = 0x403c2f,
+            text = "-"..string.formatnumberthousands(self:GetShrineStage():NeedPerception()),
+            color = 0x7e0000,
             size  = 24
-        }):addTo(insight_icon):align(display.LEFT_BOTTOM,insight_icon:getContentSize().width, -5)
+        }):addTo(insight_icon):align(display.LEFT_BOTTOM,insight_icon:getContentSize().width + 20, -5)
         self.insight_icon = insight_icon
         self.state_label = UIKit:ttfLabel({
             text = _("正在进行") .. "\n" .. "00:01:55",
