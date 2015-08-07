@@ -431,7 +431,7 @@ function GameUIPveAttack:BuyAndUseSweepScroll(count)
                             btn_name= _("前往商店")
                         })
                 else
-                    NetManager:getBuyItemPromise("sweepScroll", need_buy):done(function()
+                    NetManager:getBuyItemPromise("sweepScroll", need_buy, false):done(function()
                         self:UseSweepScroll(count)
                     end)
                 end

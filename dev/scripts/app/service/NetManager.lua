@@ -1612,12 +1612,15 @@ function NetManager:getGiveLoyaltyToAllianceMemberPromise(memberId,count)
         "为联盟成员添加荣耀值失败!"):done(get_player_response_msg)
 end
 --购买道具
-function NetManager:getBuyItemPromise(itemName,count)
+function NetManager:getBuyItemPromise(itemName,count,need_tips)
+    need_tips = need_tips == nil and true or need_tips
     return get_blocking_request_promise("logic.playerHandler.buyItem", {
         itemName = itemName,
         count = count,
     }, "购买道具失败!"):done(get_player_response_msg):done(function ()
-        GameGlobalUI:showTips(_("提示"),string.format(_("购买%s道具成功"),Localize_item.item_name[itemName]))
+        if need_tips then
+            GameGlobalUI:showTips(_("提示"),string.format(_("购买%s道具成功"),Localize_item.item_name[itemName]))
+        end
         ext.market_sdk.onPlayerBuyGameItems(itemName,count,DataUtils:GetItemPriceByItemName(itemName))
         app:GetAudioManager():PlayeEffectSoundWithKey("BUY_ITEM")
     end)
@@ -1628,7 +1631,7 @@ function NetManager:getUseItemPromise(itemName,params)
         itemName = itemName,
         params = params,
     }, "使用道具失败!"):done(get_player_response_msg):done(function ()
-        if not (string.find(itemName,"dragonChest") or string.find(itemName,"chest")) then
+        if not (string.find(itemName,"dragonChest") or string.find(itemName,"chest")) and itemName ~= "sweepScroll" then
             if params[itemName] and params[itemName].count then
                 GameGlobalUI:showTips(_("提示"),string.format(_("使用%s道具X %d成功"),Localize_item.item_name[itemName],params[itemName].count))
             else
@@ -1638,7 +1641,9 @@ function NetManager:getUseItemPromise(itemName,params)
         if itemName == "torch" then
             app:GetAudioManager():PlayeEffectSoundWithKey("UI_BUILDING_DESTROY")
         else
-            app:GetAudioManager():PlayeEffectSoundWithKey("USE_ITEM")
+            if itemName ~= "sweepScroll" then
+                app:GetAudioManager():PlayeEffectSoundWithKey("USE_ITEM")
+            end
         end
         ext.market_sdk.onPlayerUseGameItems(itemName,1)
     end)
