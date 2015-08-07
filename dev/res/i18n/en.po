@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: dragonfall\n"
-"POT-Creation-Date: 2015-08-06 20:11+0800\n"
-"PO-Revision-Date: 2015-08-06 20:11+0800\n"
+"POT-Creation-Date: 2015-08-07 16:33+0800\n"
+"PO-Revision-Date: 2015-08-07 16:33+0800\n"
 "Last-Translator: gaozhou <gaozhou.f@qq.com>\n"
 "Language-Team: \n"
 "Language: en\n"
@@ -110,8 +110,9 @@ msgstr ""
 #: ui/GameUIMail.lua:2086 ui/GameUIOrderHall.lua:180
 #: ui/GameUIPResourceBuilding.lua:225 ui/GameUIPResourceBuilding.lua:244
 #: ui/GameUIPResourceBuilding.lua:256 ui/GameUIPResourceBuilding.lua:259
-#: ui/GameUIPResourceBuilding.lua:291 ui/GameUIPveAttack.lua:148
-#: ui/GameUIPveAttack.lua:294 ui/GameUIPveSweep.lua:120
+#: ui/GameUIPResourceBuilding.lua:291 ui/GameUIPVESendTroop.lua:125
+#: ui/GameUIPveAttack.lua:139 ui/GameUIPveAttack.lua:162
+#: ui/GameUIPveAttack.lua:343 ui/GameUIPveAttack.lua:395
 #: ui/GameUIResource.lua:342 ui/GameUIResource.lua:349
 #: ui/GameUIResource.lua:361 ui/GameUIResource.lua:377
 #: ui/GameUIResource.lua:388 ui/GameUISelenaQuestion.lua:255
@@ -170,7 +171,7 @@ msgstr "Can not be deleted"
 #: ui/GameUIAllianceSendTroops.lua:343 ui/GameUIAllianceTitle.lua:244
 #: ui/GameUILoginBeta.lua:289 ui/GameUILoginBeta.lua:496
 #: ui/GameUILoginBeta.lua:516 ui/GameUILoginBeta.lua:528
-#: ui/GameUIPVESendTroop.lua:232 ui/GameUISelenaQuestion.lua:119
+#: ui/GameUIPVESendTroop.lua:241 ui/GameUISelenaQuestion.lua:119
 #: ui/GameUIShop.lua:65 ui/GameUIShop.lua:893 ui/GameUIShop.lua:911
 #: ui/GameUIShop.lua:962 ui/GameUIShop.lua:980
 #: ui/GameUIShowDragonUpStarAnimation.lua:44 ui/GameUITradeGuild.lua:686
@@ -1315,7 +1316,7 @@ msgstr "Need more Resources and build queue"
 #: ui/CommonUpgradeUI.lua:829 ui/CommonUpgradeUI.lua:870
 #: ui/GameUIAllianceTitle.lua:142 ui/GameUIHospital.lua:300
 #: ui/GameUIItems.lua:227 ui/GameUIKeep.lua:425
-#: ui/GameUIPResourceBuilding.lua:244 ui/GameUIPveSweep.lua:120
+#: ui/GameUIPResourceBuilding.lua:244 ui/GameUIPveAttack.lua:395
 #: ui/GameUITownHall.lua:164 ui/GameUIUnlockBuilding.lua:278
 #: ui/GameUIUnlockBuilding.lua:299 ui/GameUIUpgradeTechnology.lua:458
 #: ui/GameUIUpgradeTechnology.lua:503 ui/GameUIWatchTower.lua:190
@@ -1419,18 +1420,17 @@ msgstr "Tap to build %s"
 msgid "点击建筑：%s"
 msgstr "Tap building:%s"
 
-#: scenes/MyCityFteScene.lua:215 scenes/MyCityScene.lua:418
+#: scenes/MyCityFteScene.lua:215 scenes/MyCityScene.lua:429
 #: ui/FullScreenPopDialogUI.lua:35 ui/GameUIAllianceBattle.lua:221
 #: ui/GameUIAllianceBattle.lua:864 ui/GameUIAllianceInfo.lua:374
 #: ui/GameUIAllianceInfo.lua:377 ui/GameUIAllianceInfo.lua:381
 #: ui/GameUIAllianceInfo.lua:385 ui/GameUIAllianceTitle.lua:251
 #: ui/GameUIItems.lua:486 ui/GameUIItems.lua:491 ui/GameUIItems.lua:496
 #: ui/GameUIPVESendTroop.lua:116 ui/GameUIPVESendTroop.lua:122
-#: ui/GameUIPVESendTroop.lua:125 ui/GameUIPVESendTroop.lua:128
-#: ui/GameUITownHall.lua:284 ui/GameUITownHall.lua:288
-#: ui/GameUITradeGuild.lua:281 ui/GameUIWriteMail.lua:108
-#: ui/GameUIWriteMail.lua:111 ui/GameUIWriteMail.lua:116
-#: widget/WidgetAccelerateGroup.lua:111
+#: ui/GameUIPVESendTroop.lua:137 ui/GameUITownHall.lua:284
+#: ui/GameUITownHall.lua:288 ui/GameUITradeGuild.lua:281
+#: ui/GameUIWriteMail.lua:108 ui/GameUIWriteMail.lua:111
+#: ui/GameUIWriteMail.lua:116 widget/WidgetAccelerateGroup.lua:111
 #: widget/WidgetAllianceBuildingUpgrade.lua:73 widget/WidgetBuyGoods.lua:130
 #: widget/WidgetBuyGoods.lua:134 widget/WidgetChangeMap.lua:31
 #: widget/WidgetManufacture.lua:131 widget/WidgetManufacture.lua:200
@@ -1448,7 +1448,7 @@ msgstr "Tap building:%s"
 msgid "主人"
 msgstr "My Lord"
 
-#: scenes/MyCityFteScene.lua:215 scenes/MyCityScene.lua:418
+#: scenes/MyCityFteScene.lua:215 scenes/MyCityScene.lua:429
 #: ui/GameUIDailyMissionInfo.lua:291 widget/WidgetMaterialDetails.lua:129
 msgid "需要一条空闲状态的魔龙才能探险"
 msgstr "You need an idle Dragon to explore the myst"
@@ -1511,7 +1511,7 @@ msgstr ""
 "all troops!"
 
 #: scenes/MyCityFteScene.lua:503 scenes/PVEScene.lua:300
-#: ui/GameUIMission.lua:286 ui/GameUIPVEHome.lua:232 ui/GameUIPveReward.lua:92
+#: ui/GameUIMission.lua:286 ui/GameUIPVEHome.lua:232 ui/GameUIPveReward.lua:97
 #: widget/WidgetPVEDialog.lua:189 widget/WidgetPVEDialog.lua:228
 #: widget/WidgetPVEFteMiner.lua:64 widget/WidgetPVEGetRewards.lua:75
 #: widget/WidgetPVEGetTaskRewards.lua:75
@@ -1602,15 +1602,15 @@ msgstr ""
 "to do next,just tap the recommended task bar at the upper left,see you,my "
 "lord."
 
-#: scenes/MyCityScene.lua:56
+#: scenes/MyCityScene.lua:59
 msgid "reload"
 msgstr "reload"
 
-#: scenes/MyCityScene.lua:73
+#: scenes/MyCityScene.lua:76
 msgid "选择一个空地,将小屋移动到这里"
 msgstr "Choose an open ground and move the cabin there"
 
-#: scenes/MyCityScene.lua:257
+#: scenes/MyCityScene.lua:268
 msgid ""
 "领主大人，这个世界上的觉醒者并不只有你一人。介入他们或者创建联盟邀请他们加"
 "入，会让我们发展得更顺利"
@@ -1887,7 +1887,7 @@ msgstr "You need more resources,do you want to supply with Dragon coins ?"
 #: ui/GameUIBuild.lua:205 ui/GameUIHasBeenBuild.lua:136
 #: ui/GameUIHospital.lua:257 ui/GameUIHospital.lua:306 ui/GameUIItems.lua:233
 #: ui/GameUIKeep.lua:432 ui/GameUIPResourceBuilding.lua:251
-#: ui/GameUIPveSweep.lua:125 ui/GameUITownHall.lua:170
+#: ui/GameUIPveAttack.lua:400 ui/GameUITownHall.lua:170
 #: ui/GameUIUnlockBuilding.lua:283 ui/GameUIUnlockBuilding.lua:304
 #: ui/GameUIWatchTower.lua:196 ui/GameUIWathTowerRegion.lua:200
 #: widget/WidgetAccelerateGroup.lua:117
@@ -2065,8 +2065,8 @@ msgstr "day"
 
 #: ui/GameUIActivityNew.lua:252 ui/GameUIActivityRewardNew.lua:335
 #: ui/GameUIActivityRewardNew.lua:410 ui/GameUIActivityRewardNew.lua:762
-#: ui/GameUIActivityRewardNew.lua:856 ui/GameUIPveReward.lua:74
-#: ui/GameUIPveReward.lua:102 widget/WidgetPVEGetRewards.lua:84
+#: ui/GameUIActivityRewardNew.lua:856 ui/GameUIPveReward.lua:102
+#: widget/WidgetPVEGetRewards.lua:84
 msgid "已领取"
 msgstr "Got"
 
@@ -2114,10 +2114,10 @@ msgstr "Give up"
 #: ui/GameUIActivityNew.lua:516 ui/GameUIActivityRewardNew.lua:416
 #: ui/GameUIActivityRewardNew.lua:541 ui/GameUIActivityRewardNew.lua:770
 #: ui/GameUIActivityRewardNew.lua:862 ui/GameUIAllianceJoinTips.lua:51
-#: ui/GameUIMission.lua:218 ui/GameUIPveReward.lua:74
-#: ui/GameUIPveReward.lua:102 widget/WidgetPVEEvent.lua:196
-#: widget/WidgetPVEGetRewards.lua:58 widget/WidgetPVEGetRewards.lua:84
-#: widget/WidgetPVEGetTaskRewards.lua:60 widget/WidgetPVEGetTaskRewards.lua:88
+#: ui/GameUIMission.lua:218 ui/GameUIPveReward.lua:79
+#: widget/WidgetPVEEvent.lua:196 widget/WidgetPVEGetRewards.lua:58
+#: widget/WidgetPVEGetRewards.lua:84 widget/WidgetPVEGetTaskRewards.lua:60
+#: widget/WidgetPVEGetTaskRewards.lua:88
 msgid "领取"
 msgstr "Get"
 
@@ -2283,7 +2283,7 @@ msgstr "Member"
 #: ui/GameUICityBuildingInfo.lua:154 ui/GameUICityBuildingInfo.lua:159
 #: ui/GameUICityBuildingInfo.lua:164 ui/GameUICityBuildingInfo.lua:169
 #: ui/GameUIHelpDefence.lua:202 ui/GameUIHelpDefence.lua:360
-#: ui/GameUIPVESendTroop.lua:496 ui/GameUIUpgradeTechnology.lua:226
+#: ui/GameUIPVESendTroop.lua:505 ui/GameUIUpgradeTechnology.lua:226
 #: utils/Localize.lua:518 widget/WidgetPlayerNode.lua:204
 msgid "战斗力"
 msgstr "Power"
@@ -2673,7 +2673,7 @@ msgid "胜利"
 msgstr "WIN"
 
 #: ui/GameUIAllianceBattle.lua:902 ui/GameUIAllianceBattle.lua:910
-#: ui/GameUIAllianceShrine.lua:641 ui/GameUIReplayNew.lua:286
+#: ui/GameUIAllianceShrine.lua:642 ui/GameUIReplayNew.lua:286
 #: ui/GameUIShrineReport.lua:216 ui/GameUIShrineReportInMail.lua:310
 #: ui/GameUIWarSummary.lua:49 ui/GameUIWarSummary.lua:71
 msgid "失败"
@@ -2700,7 +2700,8 @@ msgid "剩余复仇时间:"
 msgstr "Revenge"
 
 #: ui/GameUIAllianceBattle.lua:1120 ui/GameUIAllianceBattle.lua:1223
-#: ui/GameUIAllianceSendTroops.lua:203 ui/GameUIWall.lua:343
+#: ui/GameUIAllianceSendTroops.lua:203 ui/GameUIPVESendTroop.lua:131
+#: ui/GameUIWall.lua:343
 msgid "查看"
 msgstr "Browse"
 
@@ -2820,7 +2821,7 @@ msgstr "Mail"
 
 #: ui/GameUIAllianceCityEnter.lua:206 ui/GameUIAllianceMosterEnter.lua:172
 #: ui/GameUIAttackPlayerCity.lua:104 ui/GameUIPVESendTroop.lua:107
-#: ui/GameUIPveAttack.lua:284 widget/WidgetPVECamp.lua:22
+#: ui/GameUIPveAttack.lua:337 widget/WidgetPVECamp.lua:22
 #: widget/WidgetPVECrashedAirship.lua:22 widget/WidgetPVEEntranceDoor.lua:24
 #: widget/WidgetPVEEntranceDoor.lua:28 widget/WidgetPVEResource.lua:22
 msgid "进攻"
@@ -3048,7 +3049,7 @@ msgstr "Unlock the Alliance Arena Battle"
 
 #: ui/GameUIAllianceLoyalty.lua:10 ui/GameUIAllianceShop.lua:145
 #: ui/GameUIShrineReportInMail.lua:147 ui/GameUIVip.lua:92
-#: widget/WidgetAllianceTop.lua:154 widget/WidgetShrineRewardsInfo.lua:70
+#: widget/WidgetAllianceTop.lua:154 widget/WidgetShrineRewardsInfo.lua:72
 msgid "忠诚值"
 msgstr "Loyalty"
 
@@ -3373,7 +3374,7 @@ msgid "准备进攻"
 msgstr "Attack"
 
 #: ui/GameUIAllianceSendTroops.lua:119 ui/GameUIAllianceSendTroops.lua:269
-#: ui/GameUIPVESendTroop.lua:48 ui/GameUIPVESendTroop.lua:158
+#: ui/GameUIPVESendTroop.lua:48 ui/GameUIPVESendTroop.lua:167
 msgid "最大"
 msgstr "Maximum"
 
@@ -3401,7 +3402,7 @@ msgstr "The Dragon is dead now"
 msgid "派出的部队超过了所选龙的带兵上限"
 msgstr "The unit amounts exceed the capacity of this Dragon."
 
-#: ui/GameUIAllianceSendTroops.lua:212 ui/GameUIPVESendTroop.lua:128
+#: ui/GameUIAllianceSendTroops.lua:212 ui/GameUIPVESendTroop.lua:137
 msgid "请选择要派遣的部队"
 msgstr "Please choose the troops which you want to send out"
 
@@ -3414,13 +3415,13 @@ msgstr "No available marching queue"
 msgid "前往解锁"
 msgstr "Go to unlock"
 
-#: ui/GameUIAllianceSendTroops.lua:269 ui/GameUIPVESendTroop.lua:158
+#: ui/GameUIAllianceSendTroops.lua:269 ui/GameUIPVESendTroop.lua:167
 msgid "最小"
 msgstr "Minimum"
 
 #: ui/GameUIAllianceSendTroops.lua:309 ui/GameUIAllianceSendTroops.lua:332
-#: ui/GameUIHelpDefence.lua:305 ui/GameUIPVESendTroop.lua:198
-#: ui/GameUIPVESendTroop.lua:221 ui/GameUIStrikePlayer.lua:174
+#: ui/GameUIHelpDefence.lua:305 ui/GameUIPVESendTroop.lua:207
+#: ui/GameUIPVESendTroop.lua:230 ui/GameUIStrikePlayer.lua:174
 #: ui/GameUIWatchTowerMyTroopsDetail.lua:160
 #: ui/GameUIWatchTowerTroopDetail.lua:202 widget/WidgetSelectDragon.lua:45
 #: widget/WidgetSelectWallDragon.lua:46 widget/WidgetSoldierDetails.lua:166
@@ -3428,21 +3429,21 @@ msgstr "Minimum"
 msgid "生命值"
 msgstr "HP"
 
-#: ui/GameUIAllianceSendTroops.lua:317 ui/GameUIPVESendTroop.lua:206
+#: ui/GameUIAllianceSendTroops.lua:317 ui/GameUIPVESendTroop.lua:215
 #: ui/GameUISelectTerrain.lua:162 ui/GameUIWall.lua:64
 #: widget/WidgetSelectPlayerHeadIcon.lua:70
 msgid "选择"
 msgstr "Choose"
 
-#: ui/GameUIAllianceSendTroops.lua:340 ui/GameUIPVESendTroop.lua:229
+#: ui/GameUIAllianceSendTroops.lua:340 ui/GameUIPVESendTroop.lua:238
 msgid "选中出战的巨龙"
 msgstr "Choose to fight"
 
-#: ui/GameUIAllianceSendTroops.lua:691 ui/GameUIPVESendTroop.lua:503
+#: ui/GameUIAllianceSendTroops.lua:691 ui/GameUIPVESendTroop.lua:512
 msgid "部队容量"
 msgstr "Units Capacity"
 
-#: ui/GameUIAllianceSendTroops.lua:701 ui/GameUIPVESendTroop.lua:510
+#: ui/GameUIAllianceSendTroops.lua:701 ui/GameUIPVESendTroop.lua:519
 #: widget/WidgetSoldierDetails.lua:181
 #: widget/WidgetSoldierPromoteDetails.lua:149
 msgid "负重"
@@ -3522,39 +3523,39 @@ msgstr "Crisis"
 msgid "战斗事件"
 msgstr "Event"
 
-#: ui/GameUIAllianceShrine.lua:364 ui/GameUIWatchTowerTroopDetail.lua:251
+#: ui/GameUIAllianceShrine.lua:365 ui/GameUIWatchTowerTroopDetail.lua:251
 msgid "已激活"
 msgstr "Activated"
 
-#: ui/GameUIAllianceShrine.lua:376
+#: ui/GameUIAllianceShrine.lua:377
 msgid "调查"
 msgstr "Survey"
 
-#: ui/GameUIAllianceShrine.lua:428 ui/GameUIAllianceShrineDetail.lua:178
+#: ui/GameUIAllianceShrine.lua:429 ui/GameUIAllianceShrineDetail.lua:178
 msgid "建议玩家数量"
 msgstr "Recommended troops amount"
 
-#: ui/GameUIAllianceShrine.lua:438 ui/GameUIAllianceShrineDetail.lua:179
+#: ui/GameUIAllianceShrine.lua:439 ui/GameUIAllianceShrineDetail.lua:179
 msgid "建议部队战斗力"
 msgstr "Recommended troops power"
 
-#: ui/GameUIAllianceShrine.lua:459
+#: ui/GameUIAllianceShrine.lua:460
 msgid "进行中"
 msgstr "ongoing"
 
-#: ui/GameUIAllianceShrine.lua:473
+#: ui/GameUIAllianceShrine.lua:474
 msgid "派兵"
 msgstr "Dispatch"
 
-#: ui/GameUIAllianceShrine.lua:564
+#: ui/GameUIAllianceShrine.lua:565
 msgid "参与玩家"
 msgstr "Involved Players"
 
-#: ui/GameUIAllianceShrine.lua:574
+#: ui/GameUIAllianceShrine.lua:575
 msgid "人均战斗力"
 msgstr "Average Power"
 
-#: ui/GameUIAllianceShrine.lua:617 ui/GameUIDragonEyrieMain.lua:466
+#: ui/GameUIAllianceShrine.lua:618 ui/GameUIDragonEyrieMain.lua:466
 #: ui/GameUIWatchTower.lua:424 ui/GameUIWathTowerRegion.lua:433
 #: widget/WidgetPVEEvent.lua:181
 msgid "详情"
@@ -3575,7 +3576,7 @@ msgstr "Activate"
 
 #: ui/GameUIAllianceShrineDetail.lua:120
 msgid "需要感知力"
-msgstr "Need Perception"
+msgstr "Perception"
 
 #: ui/GameUIAllianceShrineDetail.lua:148
 msgid "事件完成奖励"
@@ -5346,11 +5347,11 @@ msgstr "Too many this kind of cabins"
 msgid "前置建筑%s等级需要大于等于%d级"
 msgstr "Require %s Lv%d or a higher level"
 
-#: ui/GameUIPVEFteSendTroop.lua:23 ui/GameUIPVESendTroop.lua:677
+#: ui/GameUIPVEFteSendTroop.lua:23 ui/GameUIPVESendTroop.lua:686
 msgid "点击最大"
 msgstr "Tap \"Max\""
 
-#: ui/GameUIPVEFteSendTroop.lua:47 ui/GameUIPVESendTroop.lua:691
+#: ui/GameUIPVEFteSendTroop.lua:47 ui/GameUIPVESendTroop.lua:700
 #: ui/GameUIPveAttackFte.lua:312
 msgid "点击进攻"
 msgstr "Tap \"Attack\""
@@ -5374,7 +5375,7 @@ msgstr ""
 msgid "快去孵化一只巨龙吧"
 msgstr "Go to incubate a Dragon"
 
-#: ui/GameUIPVESendTroop.lua:143
+#: ui/GameUIPVESendTroop.lua:152
 msgid "士兵"
 msgstr "Soldier"
 
@@ -5394,33 +5395,42 @@ msgstr "Won with one kind of soldier"
 msgid "关卡"
 msgstr "Stage"
 
-#: ui/GameUIPveAttack.lua:73 ui/GameUIPveAttack.lua:177
+#: ui/GameUIPveAttack.lua:73 ui/GameUIPveAttack.lua:207
 msgid "几率掉落"
 msgstr "Chance to drop"
 
-#: ui/GameUIPveAttack.lua:105 ui/GameUIPveAttack.lua:268
+#: ui/GameUIPveAttack.lua:105 ui/GameUIPveAttack.lua:300
 #, c-format
 msgid "今日可挑战次数: %d/%d"
 msgstr "Challenge today: %d/%d"
 
-#: ui/GameUIPveAttack.lua:113 ui/GameUIPveAttack.lua:227
-msgid "每次消耗体力:"
-msgstr "Energy:"
+#: ui/GameUIPveAttack.lua:115 ui/GameUIPveAttack.lua:298
+#, c-format
+msgid "体力 : %d/%d"
+msgstr ""
 
-#: ui/GameUIPveAttack.lua:129
-msgid "关卡三星通关后，可使用扫荡"
-msgstr "You can sweep when the stage is 3-Star"
+#: ui/GameUIPveAttack.lua:130 ui/GameUIPveAttack.lua:299
+msgid "扫荡劵 : "
+msgstr ""
 
-#: ui/GameUIPveAttack.lua:142 ui/GameUIPveSweep.lua:13
-#: ui/GameUIPveSweep.lua:155
-msgid "扫荡"
-msgstr "Sweep"
+#: ui/GameUIPveAttack.lua:135
+msgid "扫荡全部"
+msgstr ""
 
-#: ui/GameUIPveAttack.lua:148 ui/GameUIPveAttack.lua:294
+#: ui/GameUIPveAttack.lua:139 ui/GameUIPveAttack.lua:162
+#: ui/GameUIPveAttack.lua:343
 msgid "已达今日最大挑战次数!"
 msgstr "You have no challenge chance of this stage today"
 
-#: ui/GameUIPveAttack.lua:167 widget/WidgetPVEEntranceDoor.lua:14
+#: ui/GameUIPveAttack.lua:158
+msgid "扫荡一次"
+msgstr ""
+
+#: ui/GameUIPveAttack.lua:181
+msgid "关卡三星通关后，可使用扫荡"
+msgstr "You can sweep when the stage is 3-Star"
+
+#: ui/GameUIPveAttack.lua:197 widget/WidgetPVEEntranceDoor.lua:14
 msgid ""
 "你能感觉到一个一场强大的生物驻守在这里, 阻挡着你继续前进, 但想要前往下一关卡"
 "必须击败它。"
@@ -5428,15 +5438,27 @@ msgstr ""
 "You can feel a terrible creature is around here to stop you move forward. If "
 "you want to go the next stage, you must defeat it."
 
-#: ui/GameUIPveAttack.lua:216 ui/GameUIPveSelect.lua:71
+#: ui/GameUIPveAttack.lua:246 ui/GameUIPveSelect.lua:71
 #: widget/WidgetPVEEntranceDoor.lua:27 widget/WidgetPVESelectStage.lua:66
 #: widget/WidgetPVEStartAirship.lua:21
 msgid "传送"
 msgstr "Teleport"
 
-#: ui/GameUIPveReward.lua:11 ui/GameUITownHall.lua:242
-msgid "获取奖励"
-msgstr "Get"
+#: ui/GameUIPveAttack.lua:257
+msgid "每次消耗体力:"
+msgstr "Energy:"
+
+#: ui/GameUIPveAttack.lua:389
+msgid "补充道具"
+msgstr "Get supplied"
+
+#: ui/GameUIPveAttack.lua:390
+msgid "您当前没有足够的扫荡劵,是否花费金龙币购买补充并使用"
+msgstr "Not enough Sweep Tickets, do you want to supply with Dragon Coins ?"
+
+#: ui/GameUIPveReward.lua:11
+msgid "领取奖励"
+msgstr ""
 
 #: ui/GameUIPveSelect.lua:8 widget/WidgetPVESelectStage.lua:14
 msgid "选择关卡"
@@ -5449,27 +5471,6 @@ msgstr "Cleared"
 #: ui/GameUIPveSelect.lua:54
 msgid "未通关"
 msgstr "Uncleared"
-
-#: ui/GameUIPveSweep.lua:22
-msgid "扫荡劵"
-msgstr "Sweep Ticket"
-
-#: ui/GameUIPveSweep.lua:37
-msgid "剩余次数"
-msgstr "Chances remaining"
-
-#: ui/GameUIPveSweep.lua:114
-msgid "补充道具"
-msgstr "Get supplied"
-
-#: ui/GameUIPveSweep.lua:115
-msgid "您当前没有足够的扫荡劵,是否花费金龙币购买补充并使用"
-msgstr "Not enough Sweep Tickets, do you want to supply with Dragon Coins ?"
-
-#: ui/GameUIPveSweep.lua:174 ui/GameUIPveSweep.lua:199
-#, c-format
-msgid "第%d战"
-msgstr "Battle %d"
 
 #: ui/GameUIQuickTechnology.lua:47 ui/GameUIUpgradeTechnology.lua:179
 msgid "科技研发"
@@ -6031,8 +6032,7 @@ msgid ""
 "回。根据到达的先后顺序进行战斗排序"
 msgstr ""
 "The more you kill in the Shrine,the better rewards you'll earn.The battle "
-"sequence is decided by the order of player's arrival, and the troops will "
-"return after the Shrine event is finished."
+"sequence is decided by the order of player's arrival"
 
 #: ui/GameUIShireFightEvent.lua:203
 msgid "驻扎中"
@@ -6381,6 +6381,10 @@ msgstr "Refreshing"
 #: ui/GameUITownHall.lua:234
 msgid "任务完成"
 msgstr "Finished"
+
+#: ui/GameUITownHall.lua:242
+msgid "获取奖励"
+msgstr "Get"
 
 #: ui/GameUITownHall.lua:250
 msgid "每日任务完成"
@@ -12471,3 +12475,15 @@ msgstr "You've activated the VIP, Tap to close it"
 #: widget/WidgetUseMutiItems.lua:22
 msgid "使用数量"
 msgstr "Use Amount"
+
+#~ msgid "扫荡"
+#~ msgstr "Sweep"
+
+#~ msgid "扫荡劵"
+#~ msgstr "Sweep Ticket"
+
+#~ msgid "剩余次数"
+#~ msgstr "Chances remaining"
+
+#~ msgid "第%d战"
+#~ msgstr "Battle %d"

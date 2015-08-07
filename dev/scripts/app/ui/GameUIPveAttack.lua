@@ -414,7 +414,7 @@ function GameUIPveAttack:UseSweepScroll(count)
     NetManager:getUseItemPromise("sweepScroll", {sweepScroll = {sectionName = self.pve_name, count = count}}):done(function(response)
         for i,v in ipairs(response.msg.playerData) do
             if v[1] == "__rewards" then
-                -- self:InsertSweepResult(v[2])
+                UIKit:newGameUI("GameUIPveSweep", v[2]):AddToCurrentScene(true)
                 return
             end
         end
