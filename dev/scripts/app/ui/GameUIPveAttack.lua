@@ -268,7 +268,7 @@ function GameUIPveAttack:BuildBossUI()
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
     }):addTo(self:GetBody()):align(display.LEFT_CENTER,20 + self.txt1:getContentSize().width + 20,size.height - 420)
 
-    self.button = self:CreateAttackButton():align(display.RIGHT_CENTER, size.width - 20,size.height - 420)
+    self.button = self:CreateAttackButton():align(display.CENTER, size.width - 100,size.height - 420)
 end
 local hide = function(obj)
     if obj then obj:hide() end
@@ -353,7 +353,7 @@ function GameUIPveAttack:CreateAttackButton()
         self:UseStrength(function()
             self:Attack()
             event.target:setTouchEnabled(true)
-        end, sections[self.pve_name].staminaUsed):addTo(self.attack)
+        end, sections[self.pve_name].staminaUsed):addTo(event.target)
         end)
 end
 function GameUIPveAttack:Attack()
@@ -365,14 +365,45 @@ function GameUIPveAttack:Attack()
             return k, {name = name, star = tonumber(star)}
         end),
         function(dragonType, soldiers)
+            local dragon = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon(dragonType)
+            local param = {
+                dragonType = dragon:Type(),
+                old_exp = dragon:Exp(),
+                new_exp = dragon:Exp(),
+                old_level = dragon:Level(),
+                new_level = dragon:Level(),
+                reward = {},
+            }
             NetManager:getAttackPveSectionPromise(self.pve_name, dragonType, soldiers):done(function()
                 display.getRunningScene():GetSceneLayer():RefreshPve()
             end):done(function(response)
-                local dragon = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon(dragonType)
-                UIKit:newGameUI("GameUIReplayNew", self:DecodeReport(response.msg.fightReport, dragon, soldiers), function()
-                    if response.reward_func then
-                        response.reward_func()
+                local star = 0
+                if response.msg.fightReport.playerSoldierRoundDatas[#response.msg.fightReport.playerSoldierRoundDatas].isWin then
+                    star = 2
+                    if response.msg.fightReport.playerDragonFightData.isWin then
+                        star = star + 1
                     end
+                    local soldiername
+                    for i,v in ipairs(response.msg.fightReport.playerSoldierRoundDatas) do
+                        if not soldiername then
+                            soldiername = v.soldierName
+                        elseif soldiername ~= v.soldierName then
+                            star = star - 1
+                            break
+                        end
+                    end
+                end
+                
+
+                local dragon = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon(dragonType)
+                param.new_exp = dragon:Exp()
+                param.new_level = dragon:Level()
+                param.star = star
+                if response.get_func then
+                    param.reward = response.get_func()
+                end
+                UIKit:newGameUI("GameUIReplayNew", self:DecodeReport(response.msg.fightReport, dragon, soldiers), function()
+                    UIKit:newGameUI("GameUIPveSummary", param):AddToCurrentScene(true)
                     self:performWithDelay(function()
                         self:LeftButtonClicked()
                         display.getRunningScene():GetSceneLayer():MoveAirship(true)
