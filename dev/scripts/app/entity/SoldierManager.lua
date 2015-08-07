@@ -284,7 +284,7 @@ function SoldierManager:OnUserDataChanged(user_data,current_time, deltaData)
                     local add = v.new-v.old
                     if add>0 then
                         local m_name = Localize.soldier_name[k]
-                        get_list = get_list .. m_name .. "X"..add.." "
+                        get_list = get_list .. m_name .. "X"..add..","
                     end
                 end
                 if get_list ~="" then
