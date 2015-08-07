@@ -21,6 +21,7 @@ function WidgetShrineRewardsInfo:CreateInfoItems(shrineStage)
 
     local item_width, item_height = self.width-8,40
     for index,data in pairs(self:GetListData(shrineStage)) do
+        dump(data,"shrine reward")
         local item = self.info_listview:newItem()
         item:setItemSize(item_width, item_height)
         local content = display.newNode()
@@ -48,10 +49,11 @@ function WidgetShrineRewardsInfo:CreateInfoItems(shrineStage)
         }):addTo(content):align(display.LEFT_CENTER,90,item_height/2)
 
         local x = {
-        item_width - 50,
-        item_width - 130,
-        item_width - 230,
-    }
+            item_width - 50,
+            item_width - 130,
+            item_width - 230,
+            item_width - 330,
+        }
         local y = item_height/2
         for i,v in ipairs(data[2]) do
             local item = display.newScale9Sprite("box_118x118.png"):scale(0.3)
@@ -90,6 +92,7 @@ function WidgetShrineRewardsInfo:GetListData(shrineStage)
     return data
 end
 return WidgetShrineRewardsInfo
+
 
 
 
