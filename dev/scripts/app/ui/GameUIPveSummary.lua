@@ -8,10 +8,10 @@ local config_dragonLevel = GameDatas.Dragons.dragonLevel
 function GameUIPveSummary:ctor(param)
     GameUIPveSummary.super.ctor(self)
     if param.star > 0 then
-    	self:BuildVictoryUI(param)
+        self:BuildVictoryUI(param)
     else
-    	self:BuildDefeatUI(param)
-	end
+        self:BuildDefeatUI(param)
+    end
 end
 function GameUIPveSummary:BuildVictoryUI(param)
     local bg = cc.ui.UIPushButton.new(
@@ -29,25 +29,33 @@ function GameUIPveSummary:BuildVictoryUI(param)
     self.items = {}
     local sbg = display.newSprite("tmp_pve_bg.png"):addTo(bg):pos(0, 210)
     local size = sbg:getContentSize()
-    self.items[1] = display.newSprite("tmp_pve_star_bg.png"):addTo(sbg):pos(size.width/2 - 60, 100)
-    display.newSprite("tmp_pve_star.png"):addTo(self.items[1]):pos(32, 32)
+    display.newSprite("tmp_pve_star_bg.png"):addTo(sbg):pos(size.width/2 - 60, 35):scale(0.8)
+    self.items[1] = display.newSprite("tmp_pve_star.png"):addTo(sbg):pos(size.width/2 - 60, 50):scale(1.8)
 
-    self.items[2] = display.newSprite("tmp_pve_star_bg.png"):addTo(sbg):pos(size.width/2, 100)
-    display.newSprite("tmp_pve_star.png"):addTo(self.items[2]):pos(32, 32)
+    display.newSprite("tmp_pve_star_bg.png"):addTo(sbg):pos(size.width/2, 35)
+    self.items[2] = display.newSprite("tmp_pve_star.png"):addTo(sbg):pos(size.width/2, 50):scale(2)
 
-    self.items[3] = display.newSprite("tmp_pve_star_bg.png"):addTo(sbg):pos(size.width/2 + 60, 100)
-    display.newSprite("tmp_pve_star.png"):addTo(self.items[3]):pos(32, 32)
+    display.newSprite("tmp_pve_star_bg.png"):addTo(sbg):pos(size.width/2 + 60, 35):scale(0.8)
+    self.items[3] = display.newSprite("tmp_pve_star.png"):addTo(sbg):pos(size.width/2 + 60, 50):scale(1.8)
 
     for i = 1, #self.items do
-        self.items[i]:setVisible(i <= param.star)
-        :runAction(transition.sequence{
-        	cc.DelayTime:create((i-1) * 0.3),
-        	cc.EaseBackOut:create(
-        	cc.Spawn:create(
-        		cc.MoveTo:create(0.3, cc.p(size.width/2 - 60 + (i-1) * 60, 35)),
-        		cc.ScaleTo:create(0.3, i == 2 and 1 or 0.8, i == 2 and 1 or 0.8)
-        	))
-		})
+        self.items[i]:setVisible(false)
+            :runAction(transition.sequence{
+                cc.DelayTime:create((i-1) * 0.5 + 0.5),
+                cc.CallFunc:create(function() 
+                	local e = i <= param.star
+                	self.items[i]:setVisible(e) 
+                	if e then
+                		app:GetAudioManager():PlayeEffectSoundWithKey("PVE_STAR"..i)
+                	end
+                end),
+                cc.EaseBackOut:create(
+                    cc.Spawn:create(
+                        cc.MoveTo:create(0.2, cc.p(size.width/2 - 60 + (i-1) * 60, 35)),
+                        cc.ScaleTo:create(0.2, i == 2 and 1 or 0.8, i == 2 and 1 or 0.8)
+                    )
+                ),
+            })
     end
 
     local dragon_bg = display.newSprite("dragon_bg_114x114.png"):addTo(bg):pos(-160, 90)
@@ -118,7 +126,7 @@ function GameUIPveSummary:BuildVictoryUI(param)
                 end))
                 table.insert(acts, cc.CallFunc:create(function() progresstimer_old:hide() end))
             elseif i == param.new_level then
-            	table.insert(acts, cc.CallFunc:create(function()
+                table.insert(acts, cc.CallFunc:create(function()
                     local expNeed = config_dragonLevel[i].expNeed
                     self:Performance(unit_time, function(ratio)
                         exp_label:setString(string.format("%d/%d(+%d)", param.new_exp * ratio, expNeed, upexp))
@@ -126,7 +134,7 @@ function GameUIPveSummary:BuildVictoryUI(param)
                 end))
                 table.insert(acts, cc.ProgressTo:create(unit_time, param.new_exp/config_dragonLevel[param.new_level].expNeed * 100))
             else
-            	table.insert(acts, cc.CallFunc:create(function()
+                table.insert(acts, cc.CallFunc:create(function()
                     local expNeed = config_dragonLevel[i].expNeed
                     self:Performance(unit_time, function(ratio)
                         exp_label:setString(string.format("%d/%d(+%d)", ratio * expNeed, expNeed, upexp))
@@ -179,7 +187,7 @@ function GameUIPveSummary:BuildVictoryUI(param)
         }):addTo(bg):align(display.LEFT_CENTER, 30, -110)
 
     else
-    	UIKit:ttfLabel({
+        UIKit:ttfLabel({
             text = _("材料库房已满,丢失所获得材料!"),
             size = 22,
             color = 0xffedae,
@@ -196,7 +204,7 @@ function GameUIPveSummary:BuildVictoryUI(param)
     self:addTouchAbleChild(bg)
 end
 function GameUIPveSummary:BuildDefeatUI(param)
-	local bg = cc.ui.UIPushButton.new(
+    local bg = cc.ui.UIPushButton.new(
         {normal = "pve_reward_bg.png", pressed = "pve_reward_bg.png", disabled = "pve_reward_bg.png"},
         {scale9 = false},
         {}
@@ -216,7 +224,7 @@ function GameUIPveSummary:BuildDefeatUI(param)
 
 
     display.newScale9Sprite("pve_summary_bg3.png", nil, nil, cc.size(534, 148 * 2)):addTo(bg):pos(0,10)
-	local dragon = cc.ui.UIPushButton.new(
+    local dragon = cc.ui.UIPushButton.new(
         {normal = "pve_summary_bg4.png", pressed = "pve_summary_bg4.png", disabled = "pve_summary_bg4.png"},
         {scale9 = false},
         {}
@@ -224,9 +232,9 @@ function GameUIPveSummary:BuildDefeatUI(param)
         UIKit:newGameUI("GameUIDragonEyrieMain", City, City:GetFirstBuildingByType("dragonEyrie"), "dragon"):AddToCurrentScene(true)
         self:LeftButtonClicked()
     end)
-	display.newSprite("dragonEyrie.png"):addTo(dragon):scale(0.3):pos(-150, 0)
+    display.newSprite("dragonEyrie.png"):addTo(dragon):scale(0.3):pos(-150, 0)
 
-	UIKit:ttfLabel({
+    UIKit:ttfLabel({
         text = _("龙巢"),
         size = 22,
         color = 0xffedae,
@@ -241,7 +249,7 @@ function GameUIPveSummary:BuildDefeatUI(param)
     display.newSprite("fte_icon_arrow.png"):align(display.CENTER, 200, 0):addTo(dragon):rotation(-90)
 
 
-	local barracks = cc.ui.UIPushButton.new(
+    local barracks = cc.ui.UIPushButton.new(
         {normal = "pve_summary_bg4.png", pressed = "pve_summary_bg4.png", disabled = "pve_summary_bg4.png"},
         {scale9 = false},
         {}
@@ -292,6 +300,7 @@ end
 
 
 return GameUIPveSummary
+
 
 
 
