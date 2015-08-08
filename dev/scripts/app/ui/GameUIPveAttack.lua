@@ -126,11 +126,18 @@ function GameUIPveAttack:BuildNormalUI()
 
 
     display.newSprite("sweep_128x128.png"):addTo(self:GetBody()):align(display.CENTER,40,size.height - 520):scale(0.25)
-    self.sweep_label = UIKit:ttfLabel({
-        text = _("扫荡劵 : ")..ItemManager:GetItemByName("sweepScroll"):Count(),
+    local label = UIKit:ttfLabel({
+        text = _("扫荡劵 : "),
         size = 22,
         color = 0x615b44,
     }):addTo(self:GetBody()):align(display.LEFT_CENTER,70,size.height - 520)
+
+    self.sweep_label = UIKit:ttfLabel({
+        text = ItemManager:GetItemByName("sweepScroll"):Count(),
+        size = 22,
+        color = ItemManager:GetItemByName("sweepScroll"):Count() > 0 and 0x615b44 or 0x7e00000,
+    }):addTo(self:GetBody()):align(display.LEFT_CENTER,70 + label:getContentSize().width,size.height - 520)
+
 
     self.sweep_all = self:CreateSweepButton():setButtonLabelString(_("扫荡全部"))
         :align(display.CENTER, 100, size.height - 580):addTo(self:GetBody())
@@ -296,10 +303,13 @@ function GameUIPveAttack:RefreshUI()
             v:setVisible(i <= star)
         end
         self.str_label:setString(string.format(_("体力 : %d/%d"), self.user:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()), self.user:GetStrengthResource():GetValueLimit()))
-        self.sweep_label:setString(_("扫荡劵 : ")..ItemManager:GetItemByName("sweepScroll"):Count())
+        self.sweep_label:setColor(UIKit:hex2c4b(ItemManager:GetItemByName("sweepScroll"):Count() > 0 and 0x615b44 or 0x7e00000))
+        self.sweep_label:setString(ItemManager:GetItemByName("sweepScroll"):Count())
         self.label:setString(string.format(_("今日可挑战次数: %d/%d"), self.user:GetFightCountByName(self.pve_name), sections[self.pve_name].maxFightCount))
         self.sweep_all:setButtonEnabled(star >= 3)
+        self.sweep_all.label:setColor(UIKit:hex2c4b(ItemManager:GetItemByName("sweepScroll"):Count() >= self.user:GetPveLeftCountByName(self.pve_name) and 0xffedae or 0x7e00000))
         self.sweep_all.label:setString(string.format("-%d", self.user:GetPveLeftCountByName(self.pve_name)))
+        self.sweep_once.label:setColor(UIKit:hex2c4b(ItemManager:GetItemByName("sweepScroll"):Count() >= 1 and 0xffedae or 0x7e00000))
         self.sweep_once:setButtonEnabled(star >= 3)
     end
 end
