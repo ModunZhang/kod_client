@@ -2,9 +2,9 @@ local UILib = import(".UILib")
 local Localize = import("..utils.Localize")
 local Localize_item = import("..utils.Localize_item")
 local lights = import("..particles.lights")
+local WidgetSoldier = import("..widget.WidgetSoldier")
 local GameUIPveSummary = UIKit:createUIClass("GameUIPveSummary", "UIAutoClose")
 local config_dragonLevel = GameDatas.Dragons.dragonLevel
-
 function GameUIPveSummary:ctor(param)
     GameUIPveSummary.super.ctor(self)
     if param.star > 0 then
@@ -23,20 +23,21 @@ function GameUIPveSummary:BuildVictoryUI(param)
     end)
 
     display.newSprite("pve_summary_bg1.png"):addTo(bg):align(display.BOTTOM_CENTER, 0, 200)
-    display.newSprite("pve_summary_bg2.png"):addTo(bg):align(display.BOTTOM_CENTER, 0, 200)
+    display.newSprite("pve_summary_bg2.png"):addTo(bg):align(display.BOTTOM_CENTER, 0, 210)
     ccs.Armature:create("win"):addTo(bg):align(display.CENTER, 0, 300):getAnimation():play("Victory", -1, 0)
 
     self.items = {}
-    local sbg = display.newSprite("tmp_pve_bg.png"):addTo(bg):pos(0, 210)
+    local sbg = display.newSprite("pve_summary_bg5.png"):addTo(bg):pos(0, 208)
     local size = sbg:getContentSize()
-    display.newSprite("tmp_pve_star_bg.png"):addTo(sbg):pos(size.width/2 - 60, 35):scale(0.8)
-    self.items[1] = display.newSprite("tmp_pve_star.png"):addTo(sbg):pos(size.width/2 - 60, 50):scale(1.8)
+    local h = 50
+    display.newSprite("tmp_pve_star_bg.png"):addTo(sbg):pos(size.width/2 - 60, h):scale(0.8)
+    self.items[1] = display.newSprite("tmp_pve_star.png"):addTo(sbg):pos(size.width/2 - 60, h + 15):scale(1.8)
 
-    display.newSprite("tmp_pve_star_bg.png"):addTo(sbg):pos(size.width/2, 35)
-    self.items[2] = display.newSprite("tmp_pve_star.png"):addTo(sbg):pos(size.width/2, 50):scale(2)
+    display.newSprite("tmp_pve_star_bg.png"):addTo(sbg):pos(size.width/2, h)
+    self.items[2] = display.newSprite("tmp_pve_star.png"):addTo(sbg):pos(size.width/2, h + 15):scale(2)
 
-    display.newSprite("tmp_pve_star_bg.png"):addTo(sbg):pos(size.width/2 + 60, 35):scale(0.8)
-    self.items[3] = display.newSprite("tmp_pve_star.png"):addTo(sbg):pos(size.width/2 + 60, 50):scale(1.8)
+    display.newSprite("tmp_pve_star_bg.png"):addTo(sbg):pos(size.width/2 + 60, h):scale(0.8)
+    self.items[3] = display.newSprite("tmp_pve_star.png"):addTo(sbg):pos(size.width/2 + 60, h + 15):scale(1.8)
 
     for i = 1, #self.items do
         self.items[i]:setVisible(false)
@@ -51,7 +52,7 @@ function GameUIPveSummary:BuildVictoryUI(param)
                 end),
                 cc.EaseBackOut:create(
                     cc.Spawn:create(
-                        cc.MoveTo:create(0.2, cc.p(size.width/2 - 60 + (i-1) * 60, 35)),
+                        cc.MoveTo:create(0.2, cc.p(size.width/2 - 60 + (i-1) * 60, h)),
                         cc.ScaleTo:create(0.2, i == 2 and 1 or 0.8, i == 2 and 1 or 0.8)
                     )
                 ),
@@ -214,11 +215,11 @@ function GameUIPveSummary:BuildDefeatUI(param)
     display.newSprite("pve_summary_bg1.png"):addTo(bg):align(display.BOTTOM_CENTER, 0, 200)
 
     self.items = {}
-    local sbg = display.newSprite("tmp_pve_bg.png"):addTo(bg):pos(0, 210)
+    local sbg = display.newSprite("pve_summary_bg5.png"):addTo(bg):pos(0, 208)
     local size = sbg:getContentSize()
-    self.items[1] = display.newSprite("tmp_pve_star_bg.png"):addTo(sbg):pos(size.width/2 - 60, 32):scale(0.8)
-    self.items[2] = display.newSprite("tmp_pve_star_bg.png"):addTo(sbg):pos(size.width/2, 32)
-    self.items[3] = display.newSprite("tmp_pve_star_bg.png"):addTo(sbg):pos(size.width/2 + 60, 32):scale(0.8)
+    self.items[1] = display.newSprite("tmp_pve_star_bg.png"):addTo(sbg):pos(size.width/2 - 60, 50):scale(0.8)
+    self.items[2] = display.newSprite("tmp_pve_star_bg.png"):addTo(sbg):pos(size.width/2, 50)
+    self.items[3] = display.newSprite("tmp_pve_star_bg.png"):addTo(sbg):pos(size.width/2 + 60, 50):scale(0.8)
     ccs.Armature:create("win"):addTo(bg):align(display.CENTER, 0, 300):getAnimation():play("Defeat", -1, 0)
 
 
@@ -232,7 +233,10 @@ function GameUIPveSummary:BuildDefeatUI(param)
         UIKit:newGameUI("GameUIDragonEyrieMain", City, City:GetFirstBuildingByType("dragonEyrie"), "dragon"):AddToCurrentScene(true)
         self:LeftButtonClicked()
     end)
-    display.newSprite("dragonEyrie.png"):addTo(dragon):scale(0.3):pos(-150, 0)
+    -- display.newSprite("dragonEyrie.png"):addTo(dragon):scale(0.3):pos(-150, 0)
+    local dragon_bg = display.newSprite("dragon_bg_114x114.png"):addTo(dragon):pos(-180, 0)
+    self.dragon_img = display.newSprite(UILib.dragon_head[param.dragonType])
+        :align(display.CENTER, dragon_bg:getContentSize().width/2, dragon_bg:getContentSize().height/2+5):addTo(dragon_bg)
 
     UIKit:ttfLabel({
         text = _("龙巢"),
@@ -246,7 +250,7 @@ function GameUIPveSummary:BuildDefeatUI(param)
         color = 0xffedae,
     }):addTo(dragon):align(display.LEFT_CENTER, -80, -30)
 
-    display.newSprite("fte_icon_arrow.png"):align(display.CENTER, 200, 0):addTo(dragon):rotation(-90)
+    display.newSprite("fte_icon_arrow.png"):align(display.CENTER, 200, 0):addTo(dragon):rotation(-90):scale(0.5)
 
 
     local barracks = cc.ui.UIPushButton.new(
@@ -257,7 +261,9 @@ function GameUIPveSummary:BuildDefeatUI(param)
         UIKit:newGameUI("GameUIBarracks", City, City:GetFirstBuildingByType("barracks"), "recruit"):AddToCurrentScene(true)
         self:LeftButtonClicked()
     end)
-    display.newSprite("barracks.png"):addTo(barracks):scale(0.4):pos(-150, 0)
+
+    WidgetSoldier.new("swordsman", 1):addTo(barracks):pos(-180, 0):scale(0.8)
+    
     UIKit:ttfLabel({
         text = _("兵营"),
         size = 22,
@@ -269,7 +275,7 @@ function GameUIPveSummary:BuildDefeatUI(param)
         size = 22,
         color = 0xffedae,
     }):addTo(barracks):align(display.LEFT_CENTER, -80, -30)
-    display.newSprite("fte_icon_arrow.png"):align(display.CENTER, 200, 0):addTo(barracks):rotation(-90)
+    display.newSprite("fte_icon_arrow.png"):align(display.CENTER, 200, 0):addTo(barracks):rotation(-90):scale(0.5)
 
 
     UIKit:ttfLabel({
