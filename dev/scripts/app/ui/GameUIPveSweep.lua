@@ -28,13 +28,23 @@ function GameUIPveSweep:ctor(rewards)
     }:addTo(reward_bg)
 
     for i,v in ipairs(rewards) do
-        local item = list:newItem()
-        local content = self:GetListItem(i,v)
-        item:addContent(content)
-        item:setItemSize(528,74)
-        list:addItem(item)
+        self:InsertItem(list, i, rewards[i])
     end
     list:reload()
+    local dt = 0.3
+    local acts = {}
+    for i,v in ipairs(rewards) do
+        table.insert(acts, cc.CallFunc:create(function() list.items_[i]:show() end))
+        table.insert(acts, cc.DelayTime:create(dt))
+        if i >= 5 and i ~= #rewards then
+            table.insert(acts, cc.CallFunc:create(function() list:getScrollNode():moveBy(dt, 0, 74) end))
+            table.insert(acts, cc.DelayTime:create(dt))
+        else
+            table.insert(acts, cc.DelayTime:create(dt))
+        end
+    end
+    self:runAction(transition.sequence(acts))
+    
 
     self:addTouchAbleChild(bg)
     bg:scale(0.5)
@@ -42,6 +52,14 @@ function GameUIPveSweep:ctor(rewards)
         {scaleX = 1, scaleY = 1, time = 0.3,
             easing = "backout",
         })
+end
+function GameUIPveSweep:InsertItem(list, index, reward)
+    local item = list:newItem()
+    local content = self:GetListItem(index,reward)
+    item:addContent(content)
+    item:setItemSize(528,74)
+    item:hide()
+    list:addItem(item)
 end
 function GameUIPveSweep:GetListItem(index,reward)
     local bg = display.newSprite("pve_reward_item.png")
@@ -75,6 +93,7 @@ end
 
 
 return GameUIPveSweep
+
 
 
 
