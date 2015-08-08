@@ -71,8 +71,9 @@ function GameUIPveHomeNew:CreateTop()
     }):addTo(top_bg):align(display.LEFT_CENTER, 130, size.height/2 + 10)
 
 
-    local star = display.newSprite("alliance_shire_star_60x58_1.png")
-        :addTo(top_bg):pos(size.width - 210, 55):scale(0.8)
+
+    local star = display.newSprite("tmp_pve_star_bg.png"):addTo(top_bg):pos(size.width - 210, 55):scale(0.6)
+                 display.newSprite("tmp_pve_star.png"):addTo(star):pos(32,32)
 
     self.stars = UIKit:ttfLabel({
         text = string.format("%d/%d", User:GetStageStarByIndex(self.level), User:GetStageTotalStars()),
