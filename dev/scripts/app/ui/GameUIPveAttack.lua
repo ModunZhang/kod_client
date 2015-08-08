@@ -412,12 +412,26 @@ function GameUIPveAttack:Attack()
                 if response.get_func then
                     param.reward = response.get_func()
                 end
-                UIKit:newGameUI("GameUIReplayNew", self:DecodeReport(response.msg.fightReport, dragon, soldiers), function()
-                    UIKit:newGameUI("GameUIPveSummary", param):AddToCurrentScene(true)
-                    self:performWithDelay(function()
-                        self:LeftButtonClicked()
-                        display.getRunningScene():GetSceneLayer():MoveAirship(true)
-                    end, 0)
+                local is_show = false
+                UIKit:newGameUI("GameUIReplayNew", self:DecodeReport(response.msg.fightReport, dragon, soldiers), function(replayui)
+                    if not is_show then
+                        is_show = true
+                        UIKit:newGameUI("GameUIPveSummary", param):AddToCurrentScene(true)
+                        self:performWithDelay(function()
+                            self:LeftButtonClicked()
+                            display.getRunningScene():GetSceneLayer():MoveAirship(true)
+                        end, 0)
+                    end
+                end, function(replayui)
+                    replayui:LeftButtonClicked()
+                    if not is_show then
+                        is_show = true
+                        UIKit:newGameUI("GameUIPveSummary", param):AddToCurrentScene(true)
+                        self:performWithDelay(function()
+                            self:LeftButtonClicked()
+                            display.getRunningScene():GetSceneLayer():MoveAirship(true)
+                        end, 0)
+                    end
                 end):AddToCurrentScene(true)
             end)
         end):AddToCurrentScene(true)

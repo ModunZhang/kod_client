@@ -801,7 +801,7 @@ local report_ = {
 -- User = {
 --     Id = function() return 1 end
 -- }
-function GameUIReplayNew:ctor(report, callback)
+function GameUIReplayNew:ctor(report, callback, skipcallback)
     -- report = Report:DecodeFromJsonData(report1)
     -- report = report_
     assert(report.GetFightAttackName)
@@ -831,6 +831,7 @@ function GameUIReplayNew:ctor(report, callback)
     self.defence_soldiers = soldiers
 
     self.callback = callback
+    self.skipcallback = skipcallback
 
     for _,v in ipairs(self:GetPreloadImages()) do
         display.addSpriteFrames(DEBUG_GET_ANIMATION_PATH(v.list),DEBUG_GET_ANIMATION_PATH(v.image))
@@ -892,7 +893,7 @@ end
 function GameUIReplayNew:onExit()
     GameUIReplayNew.super.onExit(self)
     if type(self.callback) == "function" then
-        self.callback()
+        self.callback(self)
     end
     app:GetAudioManager():PlayGameMusicAutoCheckScene()
 end
@@ -926,6 +927,10 @@ function GameUIReplayNew:RefreshSoldierListView(list_view, soldiers, is_pve_sold
     end
 end
 function GameUIReplayNew:ShowResult()
+    if self.skipcallback then
+        self.skipcallback(self)
+        return
+    end
     if not self.result then
         self.result = ccs.Armature:create("win"):addTo(self, 10):align(display.CENTER, window.cx, window.cy + 250)
         if self.report:GetReportResult() then
