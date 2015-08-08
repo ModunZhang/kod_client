@@ -3,6 +3,7 @@ local UIListView = import(".UIListView")
 local GameUIPveSweep = UIKit:createUIClass("GameUIPveSweep", "UIAutoClose")
 function GameUIPveSweep:ctor(rewards)
     GameUIPveSweep.super.ctor(self)
+    self:DisableAutoClose(true)
 
     local bg = cc.ui.UIPushButton.new(
         {normal = "pve_reward_bg.png", pressed = "pve_reward_bg.png", disabled = "pve_reward_bg.png"},
@@ -26,7 +27,7 @@ function GameUIPveSweep:ctor(rewards)
         viewRect = cc.rect(0,0,536,h - 4),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
     }:addTo(reward_bg)
-
+    -- list.touchNode_:setTouchEnabled(false)
     for i,v in ipairs(rewards) do
         self:InsertItem(list, i, rewards[i])
     end
@@ -43,6 +44,7 @@ function GameUIPveSweep:ctor(rewards)
             table.insert(acts, cc.DelayTime:create(dt))
         end
     end
+    -- table.insert(acts, cc.CallFunc:create(function() list.touchNode_:setTouchEnabled(true) end))
     self:runAction(transition.sequence(acts))
     
 

@@ -77,10 +77,10 @@ function GameUIPveHomeNew:CreateTop()
 
     self.stars = UIKit:ttfLabel({
         text = string.format("%d/%d", User:GetStageStarByIndex(self.level), User:GetStageTotalStars()),
-        size = 22,
+        size = 20,
         color = 0xffedae,
         shadow = true,
-    }):addTo(star):align(display.LEFT_CENTER, 65, 58/2)
+    }):addTo(top_bg):align(display.LEFT_CENTER, size.width - 210 + 25, 55)
 
 
 
