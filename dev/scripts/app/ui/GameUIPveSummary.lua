@@ -32,6 +32,7 @@ function GameUIPveSummary:BuildVictoryUI(param)
     display.newSprite("pve_summary_bg1.png"):addTo(bg):align(display.BOTTOM_CENTER, 0, 200)
     display.newSprite("pve_summary_bg2.png"):addTo(bg):align(display.BOTTOM_CENTER, 0, 210)
     ccs.Armature:create("win"):addTo(bg):align(display.CENTER, 0, 300):getAnimation():play("Victory", -1, 0)
+    app:GetAudioManager():PlayeEffectSoundWithKey("BATTLE_VICTORY")
 
     self.items = {}
     local sbg = display.newSprite("pve_summary_bg5.png"):addTo(bg):pos(0, 208)
@@ -228,6 +229,7 @@ function GameUIPveSummary:BuildDefeatUI(param)
     self.items[2] = display.newSprite("tmp_pve_star_bg.png"):addTo(sbg):pos(size.width/2, 50)
     self.items[3] = display.newSprite("tmp_pve_star_bg.png"):addTo(sbg):pos(size.width/2 + 60, 50):scale(0.8)
     ccs.Armature:create("win"):addTo(bg):align(display.CENTER, 0, 300):getAnimation():play("Defeat", -1, 0)
+    app:GetAudioManager():PlayeEffectSoundWithKey("BATTLE_DEFEATED")
 
 
 

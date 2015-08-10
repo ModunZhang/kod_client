@@ -8,6 +8,7 @@ local WidgetUseItems = import("..widget.WidgetUseItems")
 local WidgetChangeMap = import("..widget.WidgetChangeMap")
 local WidgetHomeBottom = import("..widget.WidgetHomeBottom")
 local GameUIPveHomeNew = UIKit:createUIClass('GameUIPveHomeNew')
+local stages = GameDatas.PvE.stages
 local timer = app.timer
 function GameUIPveHomeNew:DisplayOn()
     self.visible_count = self.visible_count + 1
@@ -44,9 +45,24 @@ function GameUIPveHomeNew:onEnter()
     self:CreateTop()
     self.bottom = self:CreateBottom()
     display.newNode():addTo(self):schedule(function()
-        self.stars:setString(string.format("%d/%d", User:GetStageStarByIndex(self.level), User:GetStageTotalStars()))
+        local star = User:GetStageStarByIndex(self.level)
+        self.stars:setString(string.format("%d/%d", star, User:GetStageTotalStars()))
         self.strenth_current:setString(User:GetStrengthResource():GetResourceValueByCurrentTime(timer:GetServerTime()))
-        self.gem_label:setString(string.formatnumberthousands(City:GetUser():GetGemResource():GetValue()))
+        self.gem_label:setString(string.formatnumberthousands(User:GetGemResource():GetValue()))
+
+        local index = 1
+        local stage_name = self.level.."_"..index
+        while stages[stage_name] do
+            local stage = stages[stage_name]
+            if star >= tonumber(stage.needStar) and not User:IsStageRewardedByName(stage_name) then
+                print(star, stage.needStar, User:IsStageRewardedByName(stage_name))
+                self:TipsOnReward()
+                return
+            end
+            index = index + 1
+            stage_name = self.level.."_"..index
+        end
+        self:TipsOnReward(false)
     end, 1)
 end
 function GameUIPveHomeNew:CreateTop()
@@ -92,7 +108,7 @@ function GameUIPveHomeNew:CreateTop()
             UIKit:newGameUI("GameUIPveReward", self.level):AddToCurrentScene(true)
         end)
 
-    display.newSprite("bottom_icon_package_66x66.png"):addTo(reward_btn):scale(1.2)
+    self.reward_icon = display.newSprite("bottom_icon_package_66x66.png"):addTo(reward_btn):scale(1.2)
 
     local button = cc.ui.UIPushButton.new(
         {normal = "gem_btn_up_196x68.png", pressed = "gem_btn_down_196x68.png"},
@@ -153,6 +169,11 @@ function GameUIPveHomeNew:CreateBottom()
 end
 function GameUIPveHomeNew:ChangeChatChannel(channel_index)
     self.chat:ChangeChannel(channel_index)
+end
+function GameUIPveHomeNew:TipsOnReward(enable)
+    if enable == false then self.reward_icon:stopAllActions(); return end
+    if self.reward_icon:getNumberOfRunningActions() > 0 then return end
+    self.reward_icon:runAction(UIKit:ShakeAction(true,2))
 end
 
 

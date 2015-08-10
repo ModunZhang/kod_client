@@ -477,7 +477,7 @@ end
 function GameUIPveAttack:UseStrength(func, num)
     local icon = display.newSprite("dragon_lv_icon.png")
     icon:runAction(transition.sequence{
-        cc.Spawn:create(cc.MoveBy:create(0.4, cc.p(0, 100)), cc.FadeOut:create(1)),
+        cc.Spawn:create(cc.MoveBy:create(0.3, cc.p(0, 100)), cc.FadeOut:create(0.4)),
         cc.CallFunc:create(func),
         cc.RemoveSelf:create(),
     })

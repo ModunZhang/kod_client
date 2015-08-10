@@ -14,6 +14,7 @@ function PVESceneNew:onEnter()
     self.home_page = self:CreateHomePage()
     self:GetSceneLayer():ZoomTo(1)
     self:GetSceneLayer():GotoPve()
+    app:GetAudioManager():PlayGameMusicOnSceneEnter("PVEScene",true)
 
     local task = City:GetRecommendTask()
     if task then
