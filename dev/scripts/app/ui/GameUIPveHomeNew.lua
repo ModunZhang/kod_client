@@ -81,12 +81,10 @@ function GameUIPveHomeNew:CreateTop()
     display.newSprite("coordinate_128x128.png"):addTo(btn):scale(0.4)
      
     UIKit:ttfLabel({
-        text = string.format("%d.%s", self.level, Localize_pve.stage_name[self.level]),
+        text = string.format(_("第%d章"), self.level),
         size = 22,
         color = 0xffedae,
     }):addTo(top_bg):align(display.LEFT_CENTER, 130, size.height/2 + 10)
-
-
 
     local star = display.newSprite("tmp_pve_star_bg.png"):addTo(top_bg):pos(size.width - 210, 55):scale(0.6)
                  display.newSprite("tmp_pve_star.png"):addTo(star):pos(32,32)

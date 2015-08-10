@@ -1,5 +1,6 @@
 local UILib = import(".UILib")
 local Localize = import("..utils.Localize")
+local Localize_pve = import("..utils.Localize_pve")
 local window = import("..utils.window")
 local WidgetUseItems = import("..widget.WidgetUseItems")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
@@ -16,10 +17,12 @@ local titles = {
 function GameUIPveAttack:ctor(user, pve_name)
     self.user = user
     self.pve_name = pve_name
+    local level,index = unpack(string.split(pve_name, "_"))
+    self.titlename = string.format(_("第%d章-第%d节"), tonumber(level), tonumber(index))
     if self.user:IsPveBoss(self.pve_name) then
-        GameUIPveAttack.super.ctor(self,480,_("关卡")..pve_name,window.top - 160,nil,{color = UIKit:hex2c4b(0x00000000)})
+        GameUIPveAttack.super.ctor(self,480, self.titlename, window.top - 160,nil,{color = UIKit:hex2c4b(0x00000000)})
     else
-        GameUIPveAttack.super.ctor(self,680,_("关卡")..pve_name,window.top - 160,nil,{color = UIKit:hex2c4b(0x00000000)})
+        GameUIPveAttack.super.ctor(self,680, self.titlename, window.top - 160,nil,{color = UIKit:hex2c4b(0x00000000)})
     end
     self.__type  = UIKit.UITYPE.BACKGROUND
     display.newNode():addTo(self):schedule(function()
@@ -498,6 +501,7 @@ function GameUIPveAttack:GetListItem(index,title)
 end
 function GameUIPveAttack:DecodeReport(report, dragon, attack_soldiers)
     local user = self.user
+    local titlename = self.titlename
     local pve_name = self.pve_name
     local troops = string.split(sections[pve_name].troops, ",")
     local _,_,level = unpack(string.split(troops[1], "_"))
@@ -510,7 +514,7 @@ function GameUIPveAttack:DecodeReport(report, dragon, attack_soldiers)
         return user:Name()
     end
     function report:GetFightDefenceName()
-        return pve_name
+        return titlename
     end
     function report:IsDragonFight()
         return true

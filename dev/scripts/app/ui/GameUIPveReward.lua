@@ -38,7 +38,9 @@ end
 function GameUIPveReward:GetListItem(index)
     local bg = display.newScale9Sprite(string.format("back_ground_548x40_%d.png", index % 2 == 0 and 1 or 2)):size(600,100)
 
-    display.newSprite("alliance_shire_star_60x58_1.png"):addTo(bg):pos(60,100*3/4):scale(0.7)
+    local sbg = display.newSprite("tmp_pve_star_bg.png"):addTo(bg):pos(60,100*3/5):scale(0.7)
+    local size = sbg:getContentSize()
+    display.newSprite("tmp_pve_star.png"):addTo(sbg):pos(size.width/2, size.height/2)
 
     local stage_name = string.format("%d_%d", self.index, index)
     local stage = stages[stage_name]
@@ -46,7 +48,7 @@ function GameUIPveReward:GetListItem(index)
         text = math.floor(tonumber(stage.needStar)),
         size = 20,
         color = 0x403c2f,
-    }):addTo(bg):align(display.CENTER,60,100*1/3)
+    }):addTo(bg):align(display.CENTER,60,100*1/4)
 
     for i,v in ipairs(string.split(stage.rewards, ",")) do
         local type,name,count = unpack(string.split(v, ":"))

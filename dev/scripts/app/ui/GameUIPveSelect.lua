@@ -19,7 +19,7 @@ function GameUIPveSelect:onEnter()
 
 
 
-    for i = 1, 20 do
+    for i = 1, 24 do
         local item = list:newItem()
         local content = self:GetListItem(i)
         item:addContent(content)
@@ -31,7 +31,7 @@ end
 function GameUIPveSelect:GetListItem(index)
     local bg = display.newScale9Sprite(string.format("back_ground_548x40_%d.png", index % 2 == 0 and 1 or 2)):size(600,100)
     UIKit:ttfLabel({
-        text = string.format("%d %s", index, Localize_pve.stage_name[index]),
+        text = string.format(_("第%d章"), index),
         size = 24,
         color = 0x403c2f,
     }):addTo(bg):align(display.LEFT_CENTER,60,100*3/4)
