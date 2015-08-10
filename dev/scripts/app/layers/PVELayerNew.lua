@@ -173,14 +173,6 @@ function PVELayerNew:ctor(scene, user, level)
                 :addTo(airship.battery,0, 5 + i):pos((i-1) * 7 + x, (i-1) * 4 + y)
         end
     end
-
-    self:RefreshPve()
-    self:MoveAirship()
-
-    display.newNode():addTo(self):schedule(function()
-        self:RefreshBattery()
-    end, 1)
-    self:RefreshBattery()
 end
 function PVELayerNew:ConvertLogicPositionToMapPosition(lx, ly)
     return self:convertToNodeSpace(self.background:convertToWorldSpace(cc.p(self.normal_map:ConvertToMapPosition(lx, ly))))
@@ -221,6 +213,13 @@ function PVELayerNew:GotoPve()
         point = self:ConvertLogicPositionToMapPosition(4.5,0)
     end
     self:GotoMapPositionInMiddle(point.x, point.y)
+
+    self:RefreshPve()
+    self:MoveAirship()
+    display.newNode():addTo(self):schedule(function()
+        self:RefreshBattery()
+    end, 1)
+    self:RefreshBattery()
 end
 function PVELayerNew:RegisterNpc(obj,X,Y)
     local w,h = self.normal_map:GetSize()
@@ -279,21 +278,29 @@ function PVELayerNew:RefreshPve()
     end
 end
 function PVELayerNew:MoveAirship(ani)
-    local target
+    local target, map_y
     for i = 1, #self.seq_npc do
         local be = self.seq_npc[i - 1]
         local v = self.seq_npc[i]
         if be then
             if self.user:GetPveSectionStarByName(self:GetNpcBy(be.x, be.y):GetPveName()) > 0 then
                 target = self:GetNpcBy(v.x, v.y)
+                map_y = v.y
             end
         else
             target = self:GetNpcBy(v.x, v.y)
+            map_y = v.y
         end
     end
     if self.airship then
         local x,y = target:getPosition()
         self.airship:moveTo(ani and 1 or 0, x + 50, y + 30)
+        local old_x, old_y = self:getPosition()
+        local point = self:ConvertLogicPositionToMapPosition(4.5, map_y)
+        self:GotoMapPositionInMiddle(point.x, point.y)
+        local new_x, new_y = self:getPosition()
+        self:setPosition(cc.p(old_x, old_y))
+        self:moveTo(1, new_x, new_y)
     end
 end
 function PVELayerNew:RefreshBattery()
@@ -330,6 +337,7 @@ function PVELayerNew:getContentSize()
 end
 
 return PVELayerNew
+
 
 
 

@@ -55,7 +55,6 @@ function GameUIPveHomeNew:onEnter()
         while stages[stage_name] do
             local stage = stages[stage_name]
             if star >= tonumber(stage.needStar) and not User:IsStageRewardedByName(stage_name) then
-                print(star, stage.needStar, User:IsStageRewardedByName(stage_name))
                 self:TipsOnReward()
                 return
             end
@@ -106,7 +105,7 @@ function GameUIPveHomeNew:CreateTop()
             UIKit:newGameUI("GameUIPveReward", self.level):AddToCurrentScene(true)
         end)
 
-    self.reward_icon = display.newSprite("bottom_icon_package_66x66.png"):addTo(reward_btn):scale(1.2)
+    self.reward_icon = display.newSprite("bottom_icon_package_66x66.png"):addTo(reward_btn):scale(1.3)
 
     local button = cc.ui.UIPushButton.new(
         {normal = "gem_btn_up_196x68.png", pressed = "gem_btn_down_196x68.png"},

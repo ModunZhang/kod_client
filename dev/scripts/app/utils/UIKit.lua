@@ -970,7 +970,7 @@ function UIKit:ShakeAction(is_forever, delay)
     is_forever = is_forever or true
     delay = delay or 0
     local t = 0.025
-    local r = 5
+    local r = 8
     local shake_list = {
         cc.RotateBy:create(t, r),
         cc.RotateBy:create(t, -r),
