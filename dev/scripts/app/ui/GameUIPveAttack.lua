@@ -106,37 +106,20 @@ function GameUIPveAttack:BuildNormalUI()
         size = 22,
         color = 0x615b44,
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
-    }):addTo(self:GetBody()):align(display.LEFT_CENTER,25,size.height - 450)
+    }):addTo(self:GetBody()):align(display.LEFT_CENTER,25,size.height - 460)
 
-
-    display.newSprite("dragon_lv_icon.png"):addTo(self:GetBody()):align(display.CENTER,40,size.height - 485):scale(0.8)
-
-    self.str_label = UIKit:ttfLabel({
-        text = string.format(_("体力 : %d/%d"), self.user:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()), self.user:GetStrengthResource():GetValueLimit()),
-        size = 22,
-        color = 0x615b44,
-    }):addTo(self:GetBody()):align(display.LEFT_CENTER,70,size.height - 485)
-    local w = self.str_label:getContentSize().width
-
-    UIKit:ttfLabel({
-        text = string.format("-%d", sections[self.pve_name].staminaUsed),
-        size = 20,
-        color = 0x7e0000,
-    }):addTo(self:GetBody()):align(display.LEFT_CENTER,70 + w + 20,size.height - 485)
-
-
-    display.newSprite("sweep_128x128.png"):addTo(self:GetBody()):align(display.CENTER,40,size.height - 520):scale(0.25)
+    display.newSprite("sweep_128x128.png"):addTo(self:GetBody()):align(display.CENTER,40,size.height - 510):scale(0.25)
     local label = UIKit:ttfLabel({
         text = _("扫荡劵 : "),
         size = 22,
         color = 0x615b44,
-    }):addTo(self:GetBody()):align(display.LEFT_CENTER,70,size.height - 520)
+    }):addTo(self:GetBody()):align(display.LEFT_CENTER,70,size.height - 510)
 
     self.sweep_label = UIKit:ttfLabel({
         text = ItemManager:GetItemByName("sweepScroll"):Count(),
         size = 22,
         color = ItemManager:GetItemByName("sweepScroll"):Count() > 0 and 0x615b44 or 0x7e00000,
-    }):addTo(self:GetBody()):align(display.LEFT_CENTER,70 + label:getContentSize().width,size.height - 520)
+    }):addTo(self:GetBody()):align(display.LEFT_CENTER,70 + label:getContentSize().width,size.height - 510)
 
 
     self.sweep_all = self:CreateSweepButton():setButtonLabelString(_("扫荡全部"))
@@ -302,7 +285,7 @@ function GameUIPveAttack:RefreshUI()
         for i,v in ipairs(self.items) do
             v:setVisible(i <= star)
         end
-        self.str_label:setString(string.format(_("体力 : %d/%d"), self.user:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()), self.user:GetStrengthResource():GetValueLimit()))
+        -- self.str_label:setString(string.format(_("体力 : %d/%d"), self.user:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()), self.user:GetStrengthResource():GetValueLimit()))
         self.sweep_label:setColor(UIKit:hex2c4b(ItemManager:GetItemByName("sweepScroll"):Count() > 0 and 0x615b44 or 0x7e00000))
         self.sweep_label:setString(ItemManager:GetItemByName("sweepScroll"):Count())
         self.label:setString(string.format(_("今日可挑战次数: %d/%d"), self.user:GetFightCountByName(self.pve_name), sections[self.pve_name].maxFightCount))
@@ -334,7 +317,8 @@ function GameUIPveAttack:CreateSweepButton()
 end
 function GameUIPveAttack:CreateAttackButton()
     local size = self:GetBody():getContentSize()
-    return cc.ui.UIPushButton.new(
+
+    local button = cc.ui.UIPushButton.new(
         {
             normal = "red_btn_up_148x58.png",
             pressed = "red_btn_down_148x58.png",
@@ -345,10 +329,11 @@ function GameUIPveAttack:CreateAttackButton()
         :align(display.RIGHT_CENTER, size.width - 20,size.height - 510)
         :setButtonLabel(UIKit:ttfLabel({
             text = _("进攻") ,
-            size = 22,
+            size = 20,
             color = 0xffedae,
             shadow = true
-        })):onButtonClicked(function(event)
+        })):setButtonLabelOffset(0, 15)
+        :onButtonClicked(function(event)
         if self.user:GetPveLeftCountByName(self.pve_name) <= 0 then
             UIKit:showMessageDialog(_("提示"),_("已达今日最大挑战次数!"))
             return
@@ -365,6 +350,15 @@ function GameUIPveAttack:CreateAttackButton()
             event.target:setTouchEnabled(true)
         end, sections[self.pve_name].staminaUsed):addTo(event.target)
         end)
+    local num_bg = display.newSprite("alliance_title_gem_bg_154x20.png"):addTo(button):align(display.CENTER, 0, -10):scale(0.8)
+    local size = num_bg:getContentSize()
+    display.newSprite("dragon_lv_icon.png"):addTo(num_bg):align(display.CENTER, 20, size.height/2)
+    UIKit:ttfLabel({
+        text = "-"..sections[self.pve_name].staminaUsed,
+        size = 20,
+        color = 0xff0000,
+    }):align(display.CENTER, size.width/2, size.height/2):addTo(num_bg)
+    return button
 end
 function GameUIPveAttack:Attack()
     local soldiers = string.split(sections[self.pve_name].troops, ",")

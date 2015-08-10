@@ -35,7 +35,10 @@ function GameUIPveSweep:ctor(rewards)
     local dt = 0.3
     local acts = {}
     for i,v in ipairs(rewards) do
-        table.insert(acts, cc.CallFunc:create(function() list.items_[i]:show() end))
+        table.insert(acts, cc.CallFunc:create(function() 
+            list.items_[i]:show()
+            app:GetAudioManager():PlayeEffectSoundWithKey("UI_BLACKSMITH_FORGE")
+         end))
         table.insert(acts, cc.DelayTime:create(dt))
         if i >= 5 and i ~= #rewards then
             table.insert(acts, cc.CallFunc:create(function() list:getScrollNode():moveBy(dt, 0, 74) end))
