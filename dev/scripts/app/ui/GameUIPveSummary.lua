@@ -8,6 +8,7 @@ local config_dragonLevel = GameDatas.Dragons.dragonLevel
 function GameUIPveSummary:ctor(param)
     GameUIPveSummary.super.ctor(self)
     self.param = param
+    self:DisableAutoClose(true)
     if param.star > 0 then
         self:BuildVictoryUI(param)
     else
@@ -26,7 +27,9 @@ function GameUIPveSummary:BuildVictoryUI(param)
         {scale9 = false},
         {}
     ):pos(display.cx, display.cy):onButtonClicked(function()
-        self:LeftButtonClicked()
+        if self.confirm:isVisible() then
+            self:LeftButtonClicked()
+        end
     end)
 
     display.newSprite("pve_summary_bg1.png"):addTo(bg):align(display.BOTTOM_CENTER, 0, 200)
@@ -48,23 +51,29 @@ function GameUIPveSummary:BuildVictoryUI(param)
     self.items[3] = display.newSprite("tmp_pve_star.png"):addTo(sbg):pos(size.width/2 + 60, h + 15):scale(1.8)
 
     for i = 1, #self.items do
-        self.items[i]:setVisible(false)
-            :runAction(transition.sequence{
-                cc.DelayTime:create((i-1) * 0.5 + 0.5),
-                cc.CallFunc:create(function() 
-                	local e = i <= param.star
-                	self.items[i]:setVisible(e) 
-                	if e then
-                		app:GetAudioManager():PlayeEffectSoundWithKey("PVE_STAR"..i)
-                	end
-                end),
-                cc.EaseBackOut:create(
-                    cc.Spawn:create(
-                        cc.MoveTo:create(0.2, cc.p(size.width/2 - 60 + (i-1) * 60, h)),
-                        cc.ScaleTo:create(0.2, i == 2 and 1 or 0.8, i == 2 and 1 or 0.8)
-                    )
-                ),
-            })
+        local acts ={
+            cc.DelayTime:create((i-1) * 0.5 + 0.5),
+            cc.CallFunc:create(function()
+                local e = i <= param.star
+                self.items[i]:setVisible(e)
+                if e then
+                    app:GetAudioManager():PlayeEffectSoundWithKey("PVE_STAR"..i)
+                end
+            end),
+            cc.EaseBackOut:create(
+                cc.Spawn:create(
+                    cc.MoveTo:create(0.2, cc.p(size.width/2 - 60 + (i-1) * 60, h)),
+                    cc.ScaleTo:create(0.2, i == 2 and 1 or 0.8, i == 2 and 1 or 0.8)
+                )
+            ),
+        }
+        if i == #self.items then
+            table.insert(acts, cc.CallFunc:create(function()
+                self:DisableAutoClose(false)
+                self.confirm:show()
+            end))
+        end
+        self.items[i]:setVisible(false):runAction(transition.sequence(acts))
     end
 
     local dragon_bg = display.newSprite("dragon_bg_114x114.png"):addTo(bg):pos(-160, 90)
@@ -204,11 +213,11 @@ function GameUIPveSummary:BuildVictoryUI(param)
     end
 
 
-    UIKit:ttfLabel({
+    self.confirm = UIKit:ttfLabel({
         text = _("确定"),
         size = 22,
         color = 0xffedae,
-    }):addTo(bg):align(display.CENTER, 0, -190)
+    }):addTo(bg):align(display.CENTER, 0, -190):hide()
 
     self:addTouchAbleChild(bg)
 end
@@ -272,7 +281,7 @@ function GameUIPveSummary:BuildDefeatUI(param)
     end)
 
     WidgetSoldier.new("swordsman", 1):addTo(barracks):pos(-180, 0):scale(0.8)
-    
+
     UIKit:ttfLabel({
         text = _("兵营"),
         size = 22,
@@ -315,6 +324,7 @@ end
 
 
 return GameUIPveSummary
+
 
 
 
