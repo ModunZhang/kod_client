@@ -323,23 +323,60 @@ function GameUIPveAttackFte:PormiseOfFte()
             end),
             function(dragonType, soldiers)
                 local dragon = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon(dragonType)
+                local param = {
+                    dragonType = dragon:Type(),
+                    old_exp = dragon:Exp(),
+                    new_exp = dragon:Exp(),
+                    old_level = dragon:Level(),
+                    new_level = dragon:Level(),
+                    reward = {},
+                }
+
+
                 local report
                 if self.pve_name == "1_1" then
                     report = fightReport1
+                    param.reward = {{type = "items", name = "foodClass_2", count = 1}}
                 elseif self.pve_name == "1_2" then
                     report = fightReport2
+                    param.reward = {{type = "items", name = "foodClass_2", count = 1}}
                 elseif self.pve_name == "1_3" then
                     report = fightReport3
+                    param.reward = {{type = "soldierMaterials", name = "deathHand", count = 2}}
                 end
                 mockData.FightWithNpc(self.pve_name)
                 display.getRunningScene():GetSceneLayer():RefreshPve()
                 report.playerDragonFightData.type = dragonType
+                -- UIKit:newGameUI("GameUIReplayNew", self:DecodeReport(report, dragon, soldiers), function()
+                --     self:performWithDelay(function()
+                --         self:LeftButtonClicked()
+                --         display.getRunningScene():GetSceneLayer():MoveAirship(true)
+                --     end, 0)
+                -- end):AddToCurrentScene(true)
+
+                local dragon = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon(dragonType)
+                param.new_exp = dragon:Exp()
+                param.new_level = dragon:Level()
+                param.star = 3
+                param.callback = function()
+                    display.getRunningScene():GetSceneLayer():MoveAirship(true)
+                end
+                local is_show = false
                 UIKit:newGameUI("GameUIReplayNew", self:DecodeReport(report, dragon, soldiers), function()
-                    self:performWithDelay(function()
-                        self:LeftButtonClicked()
-                        display.getRunningScene():GetSceneLayer():MoveAirship(true)
-                    end, 0)
+                    if not is_show then
+                        is_show = true
+                        UIKit:newGameUI("GameUIPveSummary", param):AddToCurrentScene(true)
+                        self:performWithDelay(function() self:LeftButtonClicked() end, 0)
+                    end
+                end, function(replayui)
+                    replayui:LeftButtonClicked()
+                    if not is_show then
+                        is_show = true
+                        UIKit:newGameUI("GameUIPveSummary", param):AddToCurrentScene(true)
+                        self:performWithDelay(function() self:LeftButtonClicked() end, 0)
+                    end
                 end):AddToCurrentScene(true)
+
             end):AddToCurrentScene(true)
     end)
 
@@ -349,9 +386,13 @@ function GameUIPveAttackFte:PormiseOfFte()
             return ui:PormiseOfFte()
         end):next(function()
         return UIKit:PromiseOfClose("GameUIPveAttackFte")
+        end):next(function()
+            return UIKit:PromiseOfClose("GameUIPveSummary")
         end)
 end
 return GameUIPveAttackFte
+
+
 
 
 
