@@ -14,6 +14,7 @@ function PVESceneNew:onEnter()
     self.home_page = self:CreateHomePage()
     self:GetSceneLayer():ZoomTo(1)
     self:GetSceneLayer():GotoPve()
+    app:GetAudioManager():PlayGameMusicOnSceneEnter("PVEScene",true)
 
     local task = City:GetRecommendTask()
     if task then
@@ -21,6 +22,11 @@ function PVESceneNew:onEnter()
             City:SetBeginnersTaskFlag(task:Index())
         end
     end
+end
+function PVESceneNew:GetPreloadImages()
+    return {
+        {image = "animations/building_animation.pvr.ccz",list = "animations/building_animation.plist"},
+    }
 end
 function PVESceneNew:GetHomePage()
     return self.home_page

@@ -54,9 +54,11 @@ function AirshipSprite:CreateSprite()
         display.newSprite("battery_cell.png")
             :addTo(self.battery,0,i):pos((i-1) * 7 + x, (i-1) * 4 + y)
             :runAction(cc.RepeatForever:create(transition.sequence{
-                cc.TintTo:create(1, 180, 180, 180),
-                cc.TintTo:create(1, 255, 255, 255)
+                cc.TintTo:create(1, 100, 100, 100),
+                cc.TintTo:create(1, 180, 180, 180)
             }))
+        display.newSprite("battery_cell.png")
+            :addTo(self.battery,0, 5 + i):pos((i-1) * 7 + x, (i-1) * 4 + y)
     end
     return sprite
 end
@@ -69,14 +71,25 @@ end
 function AirshipSprite:CreateBase()
     self:GenerateBaseTiles(4, 6)
 end
-function AirshipSprite:SetBattery(num)
-    for i = 1, 5 do
-        self.battery:getChildByTag(i):setVisible(i <= num)
+function AirshipSprite:SetBattery(ratio)
+    if ratio >= 1.0 then
+        for i = 1, 5 do
+            self.battery:getChildByTag(i):hide()
+            self.battery:getChildByTag(i + 5):show()
+        end
+    else
+        local num = math.ceil(ratio / 0.2)
+        for i = 1, 5 do
+            self.battery:getChildByTag(i):setVisible(i == num)
+            self.battery:getChildByTag(i + 5):setVisible(i < num)
+        end
     end
 end
 
 
 return AirshipSprite
+
+
 
 
 

@@ -8,6 +8,7 @@ local WidgetUseItems = import("..widget.WidgetUseItems")
 local WidgetChangeMap = import("..widget.WidgetChangeMap")
 local WidgetHomeBottom = import("..widget.WidgetHomeBottom")
 local GameUIPveHomeNew = UIKit:createUIClass('GameUIPveHomeNew')
+local stages = GameDatas.PvE.stages
 local timer = app.timer
 function GameUIPveHomeNew:DisplayOn()
     self.visible_count = self.visible_count + 1
@@ -44,9 +45,23 @@ function GameUIPveHomeNew:onEnter()
     self:CreateTop()
     self.bottom = self:CreateBottom()
     display.newNode():addTo(self):schedule(function()
-        self.stars:setString(string.format("%d/%d", User:GetStageStarByIndex(self.level), User:GetStageTotalStars()))
+        local star = User:GetStageStarByIndex(self.level)
+        self.stars:setString(string.format("%d/%d", star, User:GetStageTotalStars()))
         self.strenth_current:setString(User:GetStrengthResource():GetResourceValueByCurrentTime(timer:GetServerTime()))
-        self.gem_label:setString(string.formatnumberthousands(City:GetUser():GetGemResource():GetValue()))
+        self.gem_label:setString(string.formatnumberthousands(User:GetGemResource():GetValue()))
+
+        local index = 1
+        local stage_name = self.level.."_"..index
+        while stages[stage_name] do
+            local stage = stages[stage_name]
+            if star >= tonumber(stage.needStar) and not User:IsStageRewardedByName(stage_name) then
+                self:TipsOnReward()
+                return
+            end
+            index = index + 1
+            stage_name = self.level.."_"..index
+        end
+        self:TipsOnReward(false)
     end, 1)
 end
 function GameUIPveHomeNew:CreateTop()
@@ -65,21 +80,20 @@ function GameUIPveHomeNew:CreateTop()
     display.newSprite("coordinate_128x128.png"):addTo(btn):scale(0.4)
      
     UIKit:ttfLabel({
-        text = string.format("%d.%s", self.level, Localize_pve.stage_name[self.level]),
+        text = string.format(_("第%d章"), self.level),
         size = 22,
         color = 0xffedae,
     }):addTo(top_bg):align(display.LEFT_CENTER, 130, size.height/2 + 10)
 
-
-    local star = display.newSprite("alliance_shire_star_60x58_1.png")
-        :addTo(top_bg):pos(size.width - 210, 55):scale(0.8)
+    local star = display.newSprite("tmp_pve_star_bg.png"):addTo(top_bg):pos(size.width - 210, 55):scale(0.6)
+                 display.newSprite("tmp_pve_star.png"):addTo(star):pos(32,32)
 
     self.stars = UIKit:ttfLabel({
         text = string.format("%d/%d", User:GetStageStarByIndex(self.level), User:GetStageTotalStars()),
-        size = 22,
+        size = 20,
         color = 0xffedae,
         shadow = true,
-    }):addTo(star):align(display.LEFT_CENTER, 65, 58/2)
+    }):addTo(top_bg):align(display.LEFT_CENTER, size.width - 210 + 25, 55)
 
 
 
@@ -91,7 +105,7 @@ function GameUIPveHomeNew:CreateTop()
             UIKit:newGameUI("GameUIPveReward", self.level):AddToCurrentScene(true)
         end)
 
-    display.newSprite("bottom_icon_package_66x66.png"):addTo(reward_btn):scale(1.2)
+    self.reward_icon = display.newSprite("bottom_icon_package_66x66.png"):addTo(reward_btn):scale(1.3)
 
     local button = cc.ui.UIPushButton.new(
         {normal = "gem_btn_up_196x68.png", pressed = "gem_btn_down_196x68.png"},
@@ -152,6 +166,11 @@ function GameUIPveHomeNew:CreateBottom()
 end
 function GameUIPveHomeNew:ChangeChatChannel(channel_index)
     self.chat:ChangeChannel(channel_index)
+end
+function GameUIPveHomeNew:TipsOnReward(enable)
+    if enable == false then self.reward_icon:stopAllActions(); return end
+    if self.reward_icon:getNumberOfRunningActions() > 0 then return end
+    self.reward_icon:runAction(UIKit:ShakeAction(true,2))
 end
 
 

@@ -210,7 +210,7 @@ function MyCityScene:RefreshStrenth()
     local value = self.city:GetUser():GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     local ratio = value / limit
     ratio = ratio > 1 and 1 or ratio
-    self:GetSceneLayer():GetAirship():SetBattery(math.ceil(ratio / 0.2))
+    self:GetSceneLayer():GetAirship():SetBattery(ratio)
 end
 function MyCityScene:IteratorLockButtons(func)
     for i,v in ipairs(self:GetTopLayer():getChildren()) do

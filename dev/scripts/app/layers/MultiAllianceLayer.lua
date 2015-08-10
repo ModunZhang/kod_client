@@ -596,9 +596,9 @@ function MultiAllianceLayer:CreateCorpsIf(marchEvent, is_added_event)
         ally,
         player_data.name
     )
-    if is_added_event and ally == MINE and not marchEvent:IsReturnEvent() then
-        self:TrackCorpsById(marchEvent:Id())
-    end
+    -- if is_added_event and ally == MINE and not marchEvent:IsReturnEvent() then
+    --     self:TrackCorpsById(marchEvent:Id())
+    -- end
     if marchEvent:IsReturnEvent() then
         self:CreateDeadEvent(marchEvent)
     end

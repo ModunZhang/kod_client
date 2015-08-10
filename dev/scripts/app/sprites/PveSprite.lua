@@ -12,8 +12,6 @@ function PveSprite:ctor(layer, npc_name, lx, ly, gid)
 end
 function PveSprite:RefreshSprite()
     PveSprite.super.RefreshSprite(self)
-    self.lock = display.newSprite("alliance_stage_lock_icon.png")
-    :addTo(self):pos(0, 50)
     if self:IsBoss() then
         self:GetSprite():setAnchorPoint(cc.p(0.45, 0.25))
     elseif self:IsSpecial() then
@@ -37,9 +35,15 @@ function PveSprite:RefreshSprite()
     ))
     self.bg = bg
     self.stars = {}
-    self.stars[1] = display.newSprite("alliance_shire_star_60x58_1.png"):addTo(self):scale(0.4):pos(-25,h)
-    self.stars[2] = display.newSprite("alliance_shire_star_60x58_1.png"):addTo(self):scale(0.4):pos(0,h)
-    self.stars[3] = display.newSprite("alliance_shire_star_60x58_1.png"):addTo(self):scale(0.4):pos(25,h)
+    local icon1 = display.newSprite("tmp_pve_star_bg.png"):addTo(self):pos(-25,h):scale(0.4)
+    icon1.star = display.newSprite("tmp_pve_star.png"):addTo(icon1):pos(32,32)
+    local icon2 = display.newSprite("tmp_pve_star_bg.png"):addTo(self):pos(0,h):scale(0.4)
+    icon2.star = display.newSprite("tmp_pve_star.png"):addTo(icon2):pos(32,32)
+    local icon3 = display.newSprite("tmp_pve_star_bg.png"):addTo(self):pos(25,h):scale(0.4)
+    icon3.star = display.newSprite("tmp_pve_star.png"):addTo(icon3):pos(32,32)
+    self.stars[1] = icon1
+    self.stars[2] = icon2
+    self.stars[3] = icon3
 end
 function PveSprite:GetSpriteFile()
     if self:IsBoss() then
@@ -73,7 +77,7 @@ end
 function PveSprite:SetStars(num)
     if self.gid == 16 then return self end
     for i,v in ipairs(self.stars) do
-        v:setTexture(i <= num and "alliance_shire_star_60x58_1.png" or "alliance_shire_star_60x58_0.png")
+        v.star:setVisible(i <= num)
     end
     return self
 end
@@ -83,7 +87,6 @@ function PveSprite:SetEnable(isEnable)
     else
         self:GetSprite():setFilter(filter.newFilter("GRAY", {0.2, 0.3, 0.5, 0.1}))
     end
-    self.lock:setVisible(not isEnable)
     
     if self.gid == 16 then return self end
     for i,v in ipairs(self.stars) do

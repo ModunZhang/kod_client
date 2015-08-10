@@ -1,5 +1,6 @@
 local UILib = import(".UILib")
 local Localize = import("..utils.Localize")
+local Localize_pve = import("..utils.Localize_pve")
 local window = import("..utils.window")
 local WidgetUseItems = import("..widget.WidgetUseItems")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
@@ -16,15 +17,18 @@ local titles = {
 function GameUIPveAttack:ctor(user, pve_name)
     self.user = user
     self.pve_name = pve_name
+    local level,index = unpack(string.split(pve_name, "_"))
+    self.titlename = string.format(_("第%d章-第%d节"), tonumber(level), tonumber(index))
     if self.user:IsPveBoss(self.pve_name) then
-        GameUIPveAttack.super.ctor(self,480,_("关卡")..pve_name,window.top - 160,nil,{color = UIKit:hex2c4b(0x00000000)})
+        local h = 480
+        if self.user:IsPveBossPassed(self.pve_name) then
+            h = 300
+        end
+        GameUIPveAttack.super.ctor(self, h, self.titlename, window.top - 160,nil,{color = UIKit:hex2c4b(0x00000000)})
     else
-        GameUIPveAttack.super.ctor(self,680,_("关卡")..pve_name,window.top - 160,nil,{color = UIKit:hex2c4b(0x00000000)})
+        GameUIPveAttack.super.ctor(self,680, self.titlename, window.top - 160,nil,{color = UIKit:hex2c4b(0x00000000)})
     end
     self.__type  = UIKit.UITYPE.BACKGROUND
-    display.newNode():addTo(self):schedule(function()
-        self:RefreshUI()
-    end, 1)
 end
 function GameUIPveAttack:OnMoveInStage()
     if self.user:IsPveBoss(self.pve_name) then
@@ -66,18 +70,19 @@ function GameUIPveAttack:BuildNormalUI()
     list:reload()
     self.list = list
 
+    self.widgets = display.newNode():addTo(self:GetBody())
 
-    display.newSprite("tmp_label_line.png"):addTo(self:GetBody()):align(display.RIGHT_CENTER, size.width/2 - 85, size.height - 270):flipX(true)
-    display.newSprite("tmp_label_line.png"):addTo(self:GetBody()):align(display.LEFT_CENTER, size.width/2 + 85, size.height - 270)
+    display.newSprite("tmp_label_line.png"):addTo(self.widgets):align(display.RIGHT_CENTER, size.width/2 - 85, size.height - 270):flipX(true)
+    display.newSprite("tmp_label_line.png"):addTo(self.widgets):align(display.LEFT_CENTER, size.width/2 + 85, size.height - 270)
     UIKit:ttfLabel({
         text = _("几率掉落"),
         size = 20,
         color = 0x403c2f,
-    }):addTo(self:GetBody()):align(display.CENTER, size.width/2, size.height - 270)
+    }):addTo(self.widgets):align(display.CENTER, size.width/2, size.height - 270)
 
     WidgetUIBackGround.new({width = 568,height = 140},
         WidgetUIBackGround.STYLE_TYPE.STYLE_5)
-        :addTo(self:GetBody()):pos((size.width - 568) / 2, size.height - 430)
+        :addTo(self.widgets):pos((size.width - 568) / 2, size.height - 430)
 
     local rewards = LuaUtils:table_map(string.split(sections[self.pve_name].rewards, ","), function(k,v)
         local type,name = unpack(string.split(v, ":"))
@@ -95,7 +100,7 @@ function GameUIPveAttack:BuildNormalUI()
         end
         display.newSprite(png)
             :addTo(
-                display.newSprite("box_118x118.png"):addTo(self:GetBody())
+                display.newSprite("box_118x118.png"):addTo(self.widgets)
                     :pos(size.width*(skipw + (i-1) * w) / count, size.height - 360)
             ):pos(118/2, 118/2):scale(100/128)
     end
@@ -106,31 +111,21 @@ function GameUIPveAttack:BuildNormalUI()
         size = 22,
         color = 0x615b44,
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
-    }):addTo(self:GetBody()):align(display.LEFT_CENTER,25,size.height - 450)
+    }):addTo(self:GetBody()):align(display.LEFT_CENTER,25,size.height - 460)
 
-
-    display.newSprite("dragon_lv_icon.png"):addTo(self:GetBody()):align(display.CENTER,40,size.height - 485):scale(0.8)
-
-    self.str_label = UIKit:ttfLabel({
-        text = string.format(_("体力 : %d/%d"), self.user:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()), self.user:GetStrengthResource():GetValueLimit()),
+    display.newSprite("sweep_128x128.png"):addTo(self:GetBody()):align(display.CENTER,40,size.height - 510):scale(0.25)
+    local label = UIKit:ttfLabel({
+        text = _("拥有扫荡劵 : "),
         size = 22,
         color = 0x615b44,
-    }):addTo(self:GetBody()):align(display.LEFT_CENTER,70,size.height - 485)
-    local w = self.str_label:getContentSize().width
+    }):addTo(self:GetBody()):align(display.LEFT_CENTER,70,size.height - 510)
 
-    UIKit:ttfLabel({
-        text = string.format("-%d", sections[self.pve_name].staminaUsed),
-        size = 20,
-        color = 0x7e0000,
-    }):addTo(self:GetBody()):align(display.LEFT_CENTER,70 + w + 20,size.height - 485)
-
-
-    display.newSprite("sweep_128x128.png"):addTo(self:GetBody()):align(display.CENTER,40,size.height - 520):scale(0.25)
     self.sweep_label = UIKit:ttfLabel({
-        text = _("扫荡劵 : ")..ItemManager:GetItemByName("sweepScroll"):Count(),
+        text = ItemManager:GetItemByName("sweepScroll"):Count(),
         size = 22,
-        color = 0x615b44,
-    }):addTo(self:GetBody()):align(display.LEFT_CENTER,70,size.height - 520)
+        color = ItemManager:GetItemByName("sweepScroll"):Count() > 0 and 0x615b44 or 0x7e00000,
+    }):addTo(self:GetBody()):align(display.LEFT_CENTER,70 + label:getContentSize().width,size.height - 510)
+
 
     self.sweep_all = self:CreateSweepButton():setButtonLabelString(_("扫荡全部"))
         :align(display.CENTER, 100, size.height - 580):addTo(self:GetBody())
@@ -200,19 +195,20 @@ function GameUIPveAttack:BuildBossUI()
         dimensions = cc.size(350,0)
     }):align(display.LEFT_TOP, 180, h - 40):addTo(self:GetBody())
 
+    self.widgets = display.newNode():addTo(self:GetBody())
 
-    display.newSprite("tmp_label_line.png"):addTo(self:GetBody()):align(display.RIGHT_CENTER, size.width/2 - 85, size.height - 200):flipX(true)
-    display.newSprite("tmp_label_line.png"):addTo(self:GetBody()):align(display.LEFT_CENTER, size.width/2 + 85, size.height - 200)
+    display.newSprite("tmp_label_line.png"):addTo(self.widgets):align(display.RIGHT_CENTER, size.width/2 - 85, size.height - 200):flipX(true)
+    display.newSprite("tmp_label_line.png"):addTo(self.widgets):align(display.LEFT_CENTER, size.width/2 + 85, size.height - 200)
     UIKit:ttfLabel({
         text = _("几率掉落"),
         size = 20,
         color = 0x403c2f,
-    }):addTo(self:GetBody()):align(display.CENTER, size.width/2, size.height - 200)
+    }):addTo(self.widgets):align(display.CENTER, size.width/2, size.height - 200)
 
 
     WidgetUIBackGround.new({width = 568,height = 140},
         WidgetUIBackGround.STYLE_TYPE.STYLE_5)
-        :addTo(self:GetBody()):pos((size.width - 568) / 2, size.height - 370)
+        :addTo(self.widgets):pos((size.width - 568) / 2, size.height - 370)
 
     local rewards = LuaUtils:table_map(string.split(sections[self.pve_name].rewards, ","), function(k,v)
         local type,name = unpack(string.split(v, ":"))
@@ -230,9 +226,18 @@ function GameUIPveAttack:BuildBossUI()
         end
         display.newSprite(png)
             :addTo(
-                display.newSprite("box_118x118.png"):addTo(self:GetBody())
+                display.newSprite("box_118x118.png"):addTo(self.widgets)
                     :pos(size.width*(skipw + (i-1) * w) / count, size.height - 300)
             ):pos(118/2, 118/2):scale(100/128)
+    end
+
+
+    if self.user:IsPveBossPassed(self.pve_name) then
+        UIKit:ttfLabel({
+            text = _("已通关"),
+            size = 22,
+            color = 0x007c23,
+        }):addTo(self:GetBody()):align(display.CENTER, size.width/2, size.height - 200)
     end
 
 
@@ -241,7 +246,9 @@ function GameUIPveAttack:BuildBossUI()
         {normal = "yellow_btn_up_148x58.png", pressed = "yellow_btn_down_148x58.png"},
         {scale9 = false}
     ):addTo(self:GetBody())
-        :align(display.CENTER, size.width/2,size.height - 420)
+        :align(display.CENTER, size.width/2,
+            self.user:IsPveBossPassed(self.pve_name) and
+            size.height - 250 or size.height - 420)
         :setButtonLabel(UIKit:ttfLabel({
             text = _("传送") ,
             size = 22,
@@ -250,7 +257,6 @@ function GameUIPveAttack:BuildBossUI()
         })):onButtonClicked(function(event)
         app:EnterPVEScene(self.user:GetNextStageByPveName(self.pve_name))
         end)
-
 
 
     self.txt1 = UIKit:ttfLabel({
@@ -268,7 +274,7 @@ function GameUIPveAttack:BuildBossUI()
         align = cc.ui.UILabel.TEXT_ALIGN_LEFT,
     }):addTo(self:GetBody()):align(display.LEFT_CENTER,20 + self.txt1:getContentSize().width + 20,size.height - 420)
 
-    self.button = self:CreateAttackButton():align(display.RIGHT_CENTER, size.width - 20,size.height - 420)
+    self.button = self:CreateAttackButton():align(display.CENTER, size.width - 100,size.height - 420)
 end
 local hide = function(obj)
     if obj then obj:hide() end
@@ -278,28 +284,36 @@ local show = function(obj)
 end
 function GameUIPveAttack:RefreshUI()
     if self.user:IsPveBoss(self.pve_name) then
-        if self.user:IsPveBossPassed(self.pve_name) and
-            self.user:HasNextStageByPveName(self.pve_name) then
-            show(self.tp)
+        if self.user:IsPveBossPassed(self.pve_name) then
+            if self.user:HasNextStageByPveName(self.pve_name) then
+                show(self.tp)
+            else
+                hide(self.tp)
+            end
             hide(self.txt1)
             hide(self.txt2)
             hide(self.button)
+            hide(self.widgets)
         else
             hide(self.tp)
             show(self.txt1)
             show(self.txt2)
             show(self.button)
+            show(self.widgets)
         end
     else
         local star = self.user:GetPveSectionStarByName(self.pve_name)
         for i,v in ipairs(self.items) do
             v:setVisible(i <= star)
         end
-        self.str_label:setString(string.format(_("体力 : %d/%d"), self.user:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()), self.user:GetStrengthResource():GetValueLimit()))
-        self.sweep_label:setString(_("扫荡劵 : ")..ItemManager:GetItemByName("sweepScroll"):Count())
+        -- self.str_label:setString(string.format(_("体力 : %d/%d"), self.user:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()), self.user:GetStrengthResource():GetValueLimit()))
+        self.sweep_label:setColor(UIKit:hex2c4b(ItemManager:GetItemByName("sweepScroll"):Count() > 0 and 0x615b44 or 0x7e00000))
+        self.sweep_label:setString(ItemManager:GetItemByName("sweepScroll"):Count())
         self.label:setString(string.format(_("今日可挑战次数: %d/%d"), self.user:GetFightCountByName(self.pve_name), sections[self.pve_name].maxFightCount))
         self.sweep_all:setButtonEnabled(star >= 3)
+        self.sweep_all.label:setColor(UIKit:hex2c4b(ItemManager:GetItemByName("sweepScroll"):Count() >= self.user:GetPveLeftCountByName(self.pve_name) and 0xffedae or 0x7e00000))
         self.sweep_all.label:setString(string.format("-%d", self.user:GetPveLeftCountByName(self.pve_name)))
+        self.sweep_once.label:setColor(UIKit:hex2c4b(ItemManager:GetItemByName("sweepScroll"):Count() >= 1 and 0xffedae or 0x7e00000))
         self.sweep_once:setButtonEnabled(star >= 3)
     end
 end
@@ -324,7 +338,8 @@ function GameUIPveAttack:CreateSweepButton()
 end
 function GameUIPveAttack:CreateAttackButton()
     local size = self:GetBody():getContentSize()
-    return cc.ui.UIPushButton.new(
+
+    local button = cc.ui.UIPushButton.new(
         {
             normal = "red_btn_up_148x58.png",
             pressed = "red_btn_down_148x58.png",
@@ -335,26 +350,36 @@ function GameUIPveAttack:CreateAttackButton()
         :align(display.RIGHT_CENTER, size.width - 20,size.height - 510)
         :setButtonLabel(UIKit:ttfLabel({
             text = _("进攻") ,
-            size = 22,
+            size = 20,
             color = 0xffedae,
             shadow = true
-        })):onButtonClicked(function(event)
-        if self.user:GetPveLeftCountByName(self.pve_name) <= 0 then
-            UIKit:showMessageDialog(_("提示"),_("已达今日最大挑战次数!"))
-            return
-        end
-        if not self.user:HasAnyStength(sections[self.pve_name].staminaUsed) then
-            WidgetUseItems.new():Create({
-                item_type = WidgetUseItems.USE_TYPE.STAMINA
-            }):AddToCurrentScene()
-            return
-        end
-        event.target:setTouchEnabled(false)
-        self:UseStrength(function()
-            self:Attack()
-            event.target:setTouchEnabled(true)
-        end, sections[self.pve_name].staminaUsed):addTo(self.attack)
+        })):setButtonLabelOffset(0, 15)
+        :onButtonClicked(function(event)
+            if self.user:GetPveLeftCountByName(self.pve_name) <= 0 then
+                UIKit:showMessageDialog(_("提示"),_("已达今日最大挑战次数!"))
+                return
+            end
+            if not self.user:HasAnyStength(sections[self.pve_name].staminaUsed) then
+                WidgetUseItems.new():Create({
+                    item_type = WidgetUseItems.USE_TYPE.STAMINA
+                }):AddToCurrentScene()
+                return
+            end
+            event.target:setTouchEnabled(false)
+            self:UseStrength(function()
+                self:Attack()
+                event.target:setTouchEnabled(true)
+            end, sections[self.pve_name].staminaUsed):addTo(event.target)
         end)
+    local num_bg = display.newSprite("alliance_title_gem_bg_154x20.png"):addTo(button):align(display.CENTER, 0, -10):scale(0.8)
+    local size = num_bg:getContentSize()
+    display.newSprite("dragon_lv_icon.png"):addTo(num_bg):align(display.CENTER, 20, size.height/2)
+    UIKit:ttfLabel({
+        text = "-"..sections[self.pve_name].staminaUsed,
+        size = 20,
+        color = self.user:HasAnyStength(sections[self.pve_name].staminaUsed) and 0xffedae or 0xff0000,
+    }):align(display.CENTER, size.width/2, size.height/2):addTo(num_bg)
+    return button
 end
 function GameUIPveAttack:Attack()
     local soldiers = string.split(sections[self.pve_name].troops, ",")
@@ -365,18 +390,60 @@ function GameUIPveAttack:Attack()
             return k, {name = name, star = tonumber(star)}
         end),
         function(dragonType, soldiers)
+            local dragon = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon(dragonType)
+            local param = {
+                dragonType = dragon:Type(),
+                old_exp = dragon:Exp(),
+                new_exp = dragon:Exp(),
+                old_level = dragon:Level(),
+                new_level = dragon:Level(),
+                reward = {},
+            }
             NetManager:getAttackPveSectionPromise(self.pve_name, dragonType, soldiers):done(function()
                 display.getRunningScene():GetSceneLayer():RefreshPve()
             end):done(function(response)
-                local dragon = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon(dragonType)
-                UIKit:newGameUI("GameUIReplayNew", self:DecodeReport(response.msg.fightReport, dragon, soldiers), function()
-                    if response.reward_func then
-                        response.reward_func()
+                local star = 0
+                if response.msg.fightReport.playerSoldierRoundDatas[#response.msg.fightReport.playerSoldierRoundDatas].isWin then
+                    star = 2
+                    if response.msg.fightReport.playerDragonFightData.isWin then
+                        star = star + 1
                     end
-                    self:performWithDelay(function()
-                        self:LeftButtonClicked()
-                        display.getRunningScene():GetSceneLayer():MoveAirship(true)
-                    end, 0)
+                    local soldiername
+                    for i,v in ipairs(response.msg.fightReport.playerSoldierRoundDatas) do
+                        if not soldiername then
+                            soldiername = v.soldierName
+                        elseif soldiername ~= v.soldierName then
+                            star = star - 1
+                            break
+                        end
+                    end
+                end
+
+
+                local dragon = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon(dragonType)
+                param.new_exp = dragon:Exp()
+                param.new_level = dragon:Level()
+                param.star = star
+                if response.get_func then
+                    param.reward = response.get_func()
+                end
+                param.callback = function()
+                    display.getRunningScene():GetSceneLayer():MoveAirship(true)
+                end
+                local is_show = false
+                UIKit:newGameUI("GameUIReplayNew", self:DecodeReport(response.msg.fightReport, dragon, soldiers), function(replayui)
+                    if not is_show then
+                        is_show = true
+                        UIKit:newGameUI("GameUIPveSummary", param):AddToCurrentScene(true)
+                        self:performWithDelay(function() self:LeftButtonClicked() end, 0)
+                    end
+                end, function(replayui)
+                    replayui:LeftButtonClicked()
+                    if not is_show then
+                        is_show = true
+                        UIKit:newGameUI("GameUIPveSummary", param):AddToCurrentScene(true)
+                        self:performWithDelay(function() self:LeftButtonClicked() end, 0)
+                    end
                 end):AddToCurrentScene(true)
             end)
         end):AddToCurrentScene(true)
@@ -400,7 +467,7 @@ function GameUIPveAttack:BuyAndUseSweepScroll(count)
                             btn_name= _("前往商店")
                         })
                 else
-                    NetManager:getBuyItemPromise("sweepScroll", need_buy):done(function()
+                    NetManager:getBuyItemPromise("sweepScroll", need_buy, false):done(function()
                         self:UseSweepScroll(count)
                     end)
                 end
@@ -425,7 +492,7 @@ end
 function GameUIPveAttack:UseStrength(func, num)
     local icon = display.newSprite("dragon_lv_icon.png")
     icon:runAction(transition.sequence{
-        cc.Spawn:create(cc.MoveBy:create(1, cc.p(0, 100)), cc.FadeOut:create(1)),
+        cc.Spawn:create(cc.MoveBy:create(0.3, cc.p(0, 100)), cc.FadeOut:create(0.4)),
         cc.CallFunc:create(func),
         cc.RemoveSelf:create(),
     })
@@ -452,6 +519,7 @@ function GameUIPveAttack:GetListItem(index,title)
 end
 function GameUIPveAttack:DecodeReport(report, dragon, attack_soldiers)
     local user = self.user
+    local titlename = self.titlename
     local pve_name = self.pve_name
     local troops = string.split(sections[pve_name].troops, ",")
     local _,_,level = unpack(string.split(troops[1], "_"))
@@ -464,7 +532,7 @@ function GameUIPveAttack:DecodeReport(report, dragon, attack_soldiers)
         return user:Name()
     end
     function report:GetFightDefenceName()
-        return pve_name
+        return titlename
     end
     function report:IsDragonFight()
         return true
@@ -509,6 +577,7 @@ function GameUIPveAttack:DecodeReport(report, dragon, attack_soldiers)
 end
 
 return GameUIPveAttack
+
 
 
 
