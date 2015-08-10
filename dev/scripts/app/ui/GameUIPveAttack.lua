@@ -377,7 +377,7 @@ function GameUIPveAttack:CreateAttackButton()
     UIKit:ttfLabel({
         text = "-"..sections[self.pve_name].staminaUsed,
         size = 20,
-        color = 0xff0000,
+        color = self.user:HasAnyStength(sections[self.pve_name].staminaUsed) and 0xffedae or 0xff0000,
     }):align(display.CENTER, size.width/2, size.height/2):addTo(num_bg)
     return button
 end

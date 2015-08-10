@@ -146,31 +146,31 @@ function PVELayerNew:ctor(scene, user, level)
     end
 
     if not self.user:IsStagePassed(self.level) then
-        local ariship = display.newSprite("airship.png"):addTo(self):scale(0.5)
-        ariship:setAnchorPoint(cc.p(0.4, 0.6))
-        ariship:runAction(cc.RepeatForever:create(transition.sequence{
+        local airship = display.newSprite("airship.png"):addTo(self):scale(0.5)
+        airship:setAnchorPoint(cc.p(0.4, 0.6))
+        airship:runAction(cc.RepeatForever:create(transition.sequence{
             cc.MoveBy:create(2, cc.p(0, 5)),
             cc.MoveBy:create(2, cc.p(0, -5))
         }))
-        self.ariship = ariship
+        self.airship = airship
 
-        local armature = ccs.Armature:create("feiting"):addTo(ariship)
-        local p = ariship:getAnchorPointInPoints()
+        local armature = ccs.Armature:create("feiting"):addTo(airship)
+        local p = airship:getAnchorPointInPoints()
         armature:align(display.CENTER, p.x + 10, p.y):getAnimation():playWithIndex(0)
         armature:getAnimation():setSpeedScale(2)
 
 
-        ariship.battery = display.newSprite("battery_bg.png"):addTo(ariship):pos(130, 235)
+        airship.battery = display.newSprite("battery_bg.png"):addTo(airship):pos(130, 235)
         local x,y = 14, 18
         for i = 1, 5 do
             display.newSprite("battery_cell.png")
-                :addTo(ariship.battery,0,i):pos((i-1) * 7 + x, (i-1) * 4 + y)
+                :addTo(airship.battery,0,i):pos((i-1) * 7 + x, (i-1) * 4 + y)
                 :runAction(cc.RepeatForever:create(transition.sequence{
                     cc.TintTo:create(1, 100, 100, 100),
                     cc.TintTo:create(1, 180, 180, 180)
                 }))
             display.newSprite("battery_cell.png")
-                :addTo(ariship.battery,0, 5 + i):pos((i-1) * 7 + x, (i-1) * 4 + y)
+                :addTo(airship.battery,0, 5 + i):pos((i-1) * 7 + x, (i-1) * 4 + y)
         end
     end
 
@@ -291,27 +291,29 @@ function PVELayerNew:MoveAirship(ani)
             target = self:GetNpcBy(v.x, v.y)
         end
     end
-    if self.ariship then
+    if self.airship then
         local x,y = target:getPosition()
-        self.ariship:moveTo(ani and 1 or 0, x + 50, y + 30)
+        self.airship:moveTo(ani and 1 or 0, x + 50, y + 30)
     end
 end
 function PVELayerNew:RefreshBattery()
-    local battery = self.ariship.battery
-    local limit = self.user:GetStrengthResource():GetValueLimit()
-    local value = self.user:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    local ratio = value / limit
-    ratio = ratio > 1 and 1 or ratio
-    if ratio >= 1.0 then
-        for i = 1, 5 do
-            battery:getChildByTag(i):hide()
-            battery:getChildByTag(i + 5):show()
-        end
-    else
-        local num = math.ceil(ratio / 0.2)
-        for i = 1, 5 do
-            battery:getChildByTag(i):setVisible(i == num)
-            battery:getChildByTag(i + 5):setVisible(i < num)
+    if self.airship then
+        local battery = self.airship.battery
+        local limit = self.user:GetStrengthResource():GetValueLimit()
+        local value = self.user:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+        local ratio = value / limit
+        ratio = ratio > 1 and 1 or ratio
+        if ratio >= 1.0 then
+            for i = 1, 5 do
+                battery:getChildByTag(i):hide()
+                battery:getChildByTag(i + 5):show()
+            end
+        else
+            local num = math.ceil(ratio / 0.2)
+            for i = 1, 5 do
+                battery:getChildByTag(i):setVisible(i == num)
+                battery:getChildByTag(i + 5):setVisible(i < num)
+            end
         end
     end
 end
@@ -328,6 +330,7 @@ function PVELayerNew:getContentSize()
 end
 
 return PVELayerNew
+
 
 
 
