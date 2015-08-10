@@ -153,10 +153,34 @@ function PVELayerNew:ctor(scene, user, level)
             cc.MoveBy:create(2, cc.p(0, -5))
         }))
         self.ariship = ariship
+
+        local armature = ccs.Armature:create("feiting"):addTo(ariship)
+        local p = ariship:getAnchorPointInPoints()
+        armature:align(display.CENTER, p.x + 10, p.y):getAnimation():playWithIndex(0)
+        armature:getAnimation():setSpeedScale(2)
+
+
+        ariship.battery = display.newSprite("battery_bg.png"):addTo(ariship):pos(130, 235)
+        local x,y = 14, 18
+        for i = 1, 5 do
+            display.newSprite("battery_cell.png")
+                :addTo(ariship.battery,0,i):pos((i-1) * 7 + x, (i-1) * 4 + y)
+                :runAction(cc.RepeatForever:create(transition.sequence{
+                    cc.TintTo:create(1, 100, 100, 100),
+                    cc.TintTo:create(1, 180, 180, 180)
+                }))
+            display.newSprite("battery_cell.png")
+                :addTo(ariship.battery,0, 5 + i):pos((i-1) * 7 + x, (i-1) * 4 + y)
+        end
     end
 
     self:RefreshPve()
     self:MoveAirship()
+
+    display.newNode():addTo(self):schedule(function()
+        self:RefreshBattery()
+    end, 1)
+    self:RefreshBattery()
 end
 function PVELayerNew:ConvertLogicPositionToMapPosition(lx, ly)
     return self:convertToNodeSpace(self.background:convertToWorldSpace(cc.p(self.normal_map:ConvertToMapPosition(lx, ly))))
@@ -270,6 +294,25 @@ function PVELayerNew:MoveAirship(ani)
     if self.ariship then
         local x,y = target:getPosition()
         self.ariship:moveTo(ani and 1 or 0, x + 50, y + 30)
+    end
+end
+function PVELayerNew:RefreshBattery()
+    local battery = self.ariship.battery
+    local limit = self.user:GetStrengthResource():GetValueLimit()
+    local value = self.user:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+    local ratio = value / limit
+    ratio = ratio > 1 and 1 or ratio
+    if ratio >= 1.0 then
+        for i = 1, 5 do
+            battery:getChildByTag(i):hide()
+            battery:getChildByTag(i + 5):show()
+        end
+    else
+        local num = math.ceil(ratio / 0.2)
+        for i = 1, 5 do
+            battery:getChildByTag(i):setVisible(i == num)
+            battery:getChildByTag(i + 5):setVisible(i < num)
+        end
     end
 end
 function PVELayerNew:GetFteLayer()

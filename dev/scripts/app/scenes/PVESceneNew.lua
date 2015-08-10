@@ -23,6 +23,11 @@ function PVESceneNew:onEnter()
         end
     end
 end
+function PVESceneNew:GetPreloadImages()
+    return {
+        {image = "animations/building_animation.pvr.ccz",list = "animations/building_animation.plist"},
+    }
+end
 function PVESceneNew:GetHomePage()
     return self.home_page
 end

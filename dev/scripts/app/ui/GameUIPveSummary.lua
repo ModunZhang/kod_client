@@ -71,6 +71,8 @@ function GameUIPveSummary:BuildVictoryUI(param)
             table.insert(acts, cc.CallFunc:create(function()
                 self:DisableAutoClose(false)
                 self.confirm:show()
+                self.confirm:opacity(0)
+                self.confirm:fadeIn(0.5)
             end))
         end
         self.items[i]:setVisible(false):runAction(transition.sequence(acts))
