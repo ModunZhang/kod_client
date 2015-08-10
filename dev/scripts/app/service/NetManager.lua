@@ -1123,6 +1123,13 @@ function NetManager:getDeleteReportsPromise(reportIds)
         reportIds = reportIds
     }, "删除战报失败!"):done(get_response_delete_report_msg)
 end
+-- 获取战报详情
+function NetManager:getReportDetailPromise(memberId,reportId)
+    return get_blocking_request_promise("logic.playerHandler.getReportDetail", {
+        memberId = memberId,
+        reportId = reportId,
+    }, "获取战报详情失败!")
+end
 -- 请求加速
 function NetManager:getRequestAllianceToSpeedUpPromise(eventType, eventId)
     return get_blocking_request_promise("logic.allianceHandler.requestAllianceToSpeedUp", {

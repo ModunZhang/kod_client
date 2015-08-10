@@ -13,6 +13,8 @@ local GameUIWriteMail            = import('.GameUIWriteMail')
 local WidgetUIBackGround         = import("..widget.WidgetUIBackGround")
 local WidgetPushButton           = import("..widget.WidgetPushButton")
 local WidgetChatSendPushButton   = import("..widget.WidgetChatSendPushButton")
+local Report                     = import("..entity.Report")
+
 
 local LISTVIEW_WIDTH    = 556
 local PLAYERMENU_ZORDER = 201
@@ -452,7 +454,28 @@ function GameUIChatChannel:HandleCellUIData(mainContent,chat,update_time)
         labelText = chat._translate_
     end
     labelText = self:GetChatManager():GetEmojiUtil():ConvertEmojiToRichText(labelText)
-    content_label:Text(labelText) -- 聊天信息
+    if string.find(labelText,"\"url\":\"report:") then
+        content_label:Text(labelText,nil,function ( url )
+            local info = string.split(url,":")
+            NetManager:getReportDetailPromise(info[2],info[3]):done(function ( response )
+                local report = Report:DecodeFromJsonData(clone(response.msg.report))
+                if report:Type() == "strikeCity" or report:Type()== "cityBeStriked"
+                    or report:Type() == "villageBeStriked" or report:Type()== "strikeVillage" then
+                    UIKit:newGameUI("GameUIStrikeReport", report):AddToCurrentScene(true)
+                elseif report:Type() == "attackCity" or report:Type() == "attackVillage" then
+                    UIKit:newGameUI("GameUIWarReport", report):AddToCurrentScene(true)
+                elseif report:Type() == "collectResource" then
+                    UIKit:newGameUI("GameUICollectReport", report):AddToCurrentScene(true)
+                elseif report:Type() == "attackMonster" then
+                    UIKit:newGameUI("GameUIMonsterReport", report):AddToCurrentScene(true)
+                elseif report:Type() == "attackShrine" then
+                    UIKit:newGameUI("GameUIShrineReportInMail", report):AddToCurrentScene(true)
+                end
+            end)
+        end)
+    else
+        content_label:Text(labelText) -- 聊天信息
+    end
     content_label:align(display.LEFT_BOTTOM, 10, 0)
     if not isSelf then
         --重新布局
@@ -670,4 +693,5 @@ function GameUIChatChannel:LeftButtonClicked()
 end
 
 return GameUIChatChannel
+
 
