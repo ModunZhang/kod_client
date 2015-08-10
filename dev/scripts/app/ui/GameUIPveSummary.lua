@@ -7,10 +7,17 @@ local GameUIPveSummary = UIKit:createUIClass("GameUIPveSummary", "UIAutoClose")
 local config_dragonLevel = GameDatas.Dragons.dragonLevel
 function GameUIPveSummary:ctor(param)
     GameUIPveSummary.super.ctor(self)
+    self.param = param
     if param.star > 0 then
         self:BuildVictoryUI(param)
     else
         self:BuildDefeatUI(param)
+    end
+end
+function GameUIPveSummary:onExit()
+    GameUIPveSummary.super.onExit(self)
+    if self.param.callback then
+        self.param.callback()
     end
 end
 function GameUIPveSummary:BuildVictoryUI(param)
