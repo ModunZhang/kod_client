@@ -205,12 +205,12 @@ function GameUIPveSummary:BuildVictoryUI(param)
             size = 22,
             color = 0xffedae,
         }):addTo(bg):align(display.LEFT_CENTER, 30, -110)
-
     else
         UIKit:ttfLabel({
-            text = _("材料库房已满,丢失所获得材料!"),
+            text = _("材料库房已满，未能获得战利品，请升级材料库房或使用已有材料。"),
             size = 22,
             color = 0xffedae,
+            dimensions = cc.size(300, 0),
         }):addTo(bg):align(display.CENTER, 0 , -80)
     end
 
