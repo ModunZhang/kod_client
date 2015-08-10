@@ -20,11 +20,11 @@ function GameUIPveAttack:ctor(user, pve_name)
     local level,index = unpack(string.split(pve_name, "_"))
     self.titlename = string.format(_("第%d章-第%d节"), tonumber(level), tonumber(index))
     if self.user:IsPveBoss(self.pve_name) then
-        local h = 480
         if self.user:IsPveBossPassed(self.pve_name) then
-            h = 300
+            GameUIPveAttack.super.ctor(self, 300, self.titlename, window.top - 300,nil,{color = UIKit:hex2c4b(0x00000000)})
+        else
+            GameUIPveAttack.super.ctor(self, 480, self.titlename, window.top - 160,nil,{color = UIKit:hex2c4b(0x00000000)})
         end
-        GameUIPveAttack.super.ctor(self, h, self.titlename, window.top - 160,nil,{color = UIKit:hex2c4b(0x00000000)})
     else
         GameUIPveAttack.super.ctor(self,680, self.titlename, window.top - 160,nil,{color = UIKit:hex2c4b(0x00000000)})
     end
@@ -427,8 +427,14 @@ function GameUIPveAttack:Attack()
                 if response.get_func then
                     param.reward = response.get_func()
                 end
+
+                local pve_name = self.pve_name
+                local user = self.user
                 param.callback = function()
                     display.getRunningScene():GetSceneLayer():MoveAirship(true)
+                    if user:IsPveBoss(pve_name) and user:GetPveSectionStarByName(pve_name) > 0 then
+                        UIKit:newGameUI("GameUIPveAttack", user, pve_name):AddToCurrentScene(true)
+                    end
                 end
                 local is_show = false
                 UIKit:newGameUI("GameUIReplayNew", self:DecodeReport(response.msg.fightReport, dragon, soldiers), function(replayui)
