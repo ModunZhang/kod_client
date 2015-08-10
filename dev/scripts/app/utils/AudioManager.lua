@@ -53,6 +53,7 @@ local effect_sound_map = {
 	PVE_STAR1 = "sfx_pve_star1.mp3",
 	PVE_STAR2 = "sfx_pve_star2.mp3",
 	PVE_STAR3 = "sfx_pve_star3.mp3",
+	PVE_SWEEP = "sfx_get.mp3",
 }
 
 local soldier_step_sfx_map = {

@@ -32,12 +32,12 @@ function GameUIPveSweep:ctor(rewards)
         self:InsertItem(list, i, rewards[i])
     end
     list:reload()
-    local dt = 0.3
+    local dt = 0.5
     local acts = {}
     for i,v in ipairs(rewards) do
         table.insert(acts, cc.CallFunc:create(function() 
             list.items_[i]:show()
-            app:GetAudioManager():PlayeEffectSoundWithKey("UI_BLACKSMITH_FORGE")
+            app:GetAudioManager():PlayeEffectSoundWithKey("PVE_SWEEP")
          end))
         table.insert(acts, cc.DelayTime:create(dt))
         if i >= 5 and i ~= #rewards then
