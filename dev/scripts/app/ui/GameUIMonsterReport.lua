@@ -18,12 +18,13 @@ local monster_config = GameDatas.AllianceInitData.monster
 local GameUIMonsterReport = UIKit:createUIClass("GameUIMonsterReport", "UIAutoClose")
 
 
-function GameUIMonsterReport:ctor(report)
+function GameUIMonsterReport:ctor(report,can_share)
     GameUIMonsterReport.super.ctor(self)
-    self.body = WidgetUIBackGround.new({height=800}):align(display.TOP_CENTER,display.cx,display.top-100)
+    self.body = WidgetUIBackGround.new({height= can_share and 800 or 750}):align(display.TOP_CENTER,display.cx,display.top-100)
     self:addTouchAbleChild(self.body)
     self:setNodeEventEnabled(true)
     self.report = report
+    self.can_share = can_share
 end
 
 function GameUIMonsterReport:onEnter()
@@ -84,7 +85,7 @@ function GameUIMonsterReport:onEnter()
 
     -- 战争战报详细内容展示
     self.details_view = UIListView.new{
-        viewRect = cc.rect(0, 70, 588, 505),
+        viewRect = cc.rect(0, self.can_share and 70 or 10, 588, 505),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(report_body):pos(10, 5)
 
@@ -116,45 +117,58 @@ function GameUIMonsterReport:onEnter()
             c_report.IsPveBattle = true
             UIKit:newGameUI("GameUIReplayNew",c_report):AddToCurrentScene(true)
         end)
+    -- 分享战报按钮
+    if self.can_share then
+        local share_button = WidgetPushButton.new(
+            {normal = "tmp_blue_btn_up_64x56.png", pressed = "tmp_blue_btn_down_64x56.png"},
+            {scale9 = false}
+        ):addTo(report_body):align(display.CENTER,  report_body:getContentSize().width-210, rb_size.height-186)
+            :onButtonClicked(function(event)
+                -- local monster_data = report:GetEnemyPlayerData().soldiers[1]
+                -- local monster_type = monster_data.name
+                -- self:GetChatManager():SendChat("global",string.format("<report>reportName:%s,userId:%s,reportId:%s<report>",User:Name().."VS"..Localize.soldier_name[monster_type],User:Id(),report:Id()))
+                UIKit:newGameUI("GameUIShareReport", report):AddToCurrentScene()
+            end)
+        display.newSprite("tmp_icon_share_24x34.png"):addTo(share_button)
+        -- 删除按钮
+        local delete_label = UIKit:ttfLabel({
+            text = _("删除"),
+            size = 20,
+            color = 0xfff3c7})
+        delete_label:enableShadow()
 
-    -- 删除按钮
-    local delete_label = UIKit:ttfLabel({
-        text = _("删除"),
-        size = 20,
-        color = 0xfff3c7})
-    delete_label:enableShadow()
-
-    WidgetPushButton.new(
-        {normal = "red_btn_up_148x58.png", pressed = "red_btn_down_148x58.png"},
-        {scale9 = false}
-    ):setButtonLabel(delete_label)
-        :addTo(report_body):align(display.CENTER, 110, 40)
-        :onButtonClicked(function(event)
-            NetManager:getDeleteReportsPromise({report.id}):done(function ()
-                self:removeFromParent()
+        WidgetPushButton.new(
+            {normal = "red_btn_up_148x58.png", pressed = "red_btn_down_148x58.png"},
+            {scale9 = false}
+        ):setButtonLabel(delete_label)
+            :addTo(report_body):align(display.CENTER, 110, 40)
+            :onButtonClicked(function(event)
+                NetManager:getDeleteReportsPromise({report.id}):done(function ()
+                    self:removeFromParent()
+                end)
             end)
-        end)
-    -- 收藏按钮
-    local saved_button = UICheckBoxButton.new({
-        off = "mail_saved_button_normal.png",
-        off_pressed = "mail_saved_button_normal.png",
-        off_disabled = "mail_saved_button_normal.png",
-        on = "mail_saved_button_pressed.png",
-        on_pressed = "mail_saved_button_pressed.png",
-        on_disabled = "mail_saved_button_pressed.png",
-    }):onButtonStateChanged(function(event)
-        local target = event.target
-        if target:isButtonSelected() then
-            NetManager:getSaveReportPromise(report.id):fail(function(err)
-                target:setButtonSelected(false,true)
-            end)
-        else
-            NetManager:getUnSaveReportPromise(report.id):fail(function(err)
-                target:setButtonSelected(true,true)
-            end)
-        end
-    end):addTo(report_body):pos(rb_size.width-48, 37)
-        :setButtonSelected(report:IsSaved(),true)
+        -- 收藏按钮
+        local saved_button = UICheckBoxButton.new({
+            off = "mail_saved_button_normal.png",
+            off_pressed = "mail_saved_button_normal.png",
+            off_disabled = "mail_saved_button_normal.png",
+            on = "mail_saved_button_pressed.png",
+            on_pressed = "mail_saved_button_pressed.png",
+            on_disabled = "mail_saved_button_pressed.png",
+        }):onButtonStateChanged(function(event)
+            local target = event.target
+            if target:isButtonSelected() then
+                NetManager:getSaveReportPromise(report.id):fail(function(err)
+                    target:setButtonSelected(false,true)
+                end)
+            else
+                NetManager:getUnSaveReportPromise(report.id):fail(function(err)
+                    target:setButtonSelected(true,true)
+                end)
+            end
+        end):addTo(report_body):pos(rb_size.width-48, 37)
+            :setButtonSelected(report:IsSaved(),true)
+    end
 
 end
 
@@ -613,6 +627,10 @@ function GameUIMonsterReport:GetRewards()
     return  self.report:GetMyRewards()
 end
 return GameUIMonsterReport
+
+
+
+
 
 
 

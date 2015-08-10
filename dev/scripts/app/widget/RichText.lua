@@ -46,7 +46,10 @@ function RichText:ctor(params)
     self.ellipsis_width = label:getContentSize().width
     label:removeFromParent()
 end
-function RichText:Text(str, line)
+function RichText:Text(str, line , url_handle)
+    if url_handle then
+        self.url_handle = url_handle
+    end
     -- assert(not self.lines, "富文本不可变!")
     if not str or string.len(str) == 0 then str = "[]" end
     line = line or math.huge
@@ -156,7 +159,7 @@ end
 function RichText:AddUrlTo(item, url)
     if not url then return end
     item:setTouchEnabled(true)
-    item:setTouchSwallowEnabled(false)
+    item:setTouchSwallowEnabled(true)
     item:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
         local name, x, y = event.name, event.x, event.y
         local box = item:getCascadeBoundingBox()

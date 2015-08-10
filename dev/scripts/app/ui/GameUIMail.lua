@@ -1414,15 +1414,15 @@ function GameUIMail:CreateReportContent()
                     end
                     if report:Type() == "strikeCity" or report:Type()== "cityBeStriked"
                         or report:Type() == "villageBeStriked" or report:Type()== "strikeVillage" then
-                        UIKit:newGameUI("GameUIStrikeReport", report):AddToCurrentScene(true)
+                        UIKit:newGameUI("GameUIStrikeReport", report,true):AddToCurrentScene(true)
                     elseif report:Type() == "attackCity" or report:Type() == "attackVillage" then
-                        UIKit:newGameUI("GameUIWarReport", report):AddToCurrentScene(true)
+                        UIKit:newGameUI("GameUIWarReport", report,true):AddToCurrentScene(true)
                     elseif report:Type() == "collectResource" then
                         UIKit:newGameUI("GameUICollectReport", report):AddToCurrentScene(true)
                     elseif report:Type() == "attackMonster" then
-                        UIKit:newGameUI("GameUIMonsterReport", report):AddToCurrentScene(true)
+                        UIKit:newGameUI("GameUIMonsterReport", report,true):AddToCurrentScene(true)
                     elseif report:Type() == "attackShrine" then
-                        UIKit:newGameUI("GameUIShrineReportInMail", report):AddToCurrentScene(true)
+                        UIKit:newGameUI("GameUIShrineReportInMail", report,true):AddToCurrentScene(true)
                     end
                 end
             end):addTo(self):pos(item_width/2, item_height/2)

@@ -7,13 +7,14 @@
 local EmojiUtil = class("EmojiUtil")
 
 --[[
-	将表情化标签转换成富文本语法
-	chatmsg : "[1FED]hello world..."
-	
-	-- dest: {'{\"type\":\"text\", \"value\":\"%s\"}','{\"type\":\"text\", \"value\":\"%s\"}','{\"type\":\"text\", \"value\":\"%s\"}'}
-	local func_handler_dest = function(dest)
-		table.insert(dest,1,'{\"type\":\"text\", \"value\":\"first\"}')
-	end
+    将表情化标签转换成富文本语法
+    将战报分享转化为富文本语法
+    chatmsg : "[1FED]hello world..."
+    
+    -- dest: {'{\"type\":\"text\", \"value\":\"%s\"}','{\"type\":\"text\", \"value\":\"%s\"}','{\"type\":\"text\", \"value\":\"%s\"}'}
+    local func_handler_dest = function(dest)
+        table.insert(dest,1,'{\"type\":\"text\", \"value\":\"first\"}')
+    end
 --]]
 function EmojiUtil:ConvertEmojiToRichText(chatmsg,func_handler_dest)
     chatmsg = chatmsg or ""
@@ -41,14 +42,33 @@ function EmojiUtil:ConvertEmojiToRichText(chatmsg,func_handler_dest)
     for i,v in ipairs(dest) do
         local result,count = string.gsub(v,"%[([%P]+)%]", "%1")
         if count == 0 or string.len(string.trim(result)) == 0 then
-            dest[i] = string.format('{\"type\":\"text\", \"value\":\"%s\"}', v)
-        else
-        	local key = string.format('%s.png', string.upper(result))
-        	if plist_texture_data[key] then
-            	dest[i] = string.format('{\"type\":\"image\", \"value\":\"%s\"}', key)
+            -- 处理战报分享
+            local r_s ,r_e = string.find(result,"<report>.+<report>")
+            if r_s and r_e then
+                local report = string.sub(result,r_s+8,r_e-8)
+                local r_msg = string.split(report,",")
+                local msg_value , reportId ,userId = ""
+                local added = i
+                for __,r in ipairs(r_msg) do
+                    if string.find(r,"reportName") then
+                        msg_value =  "[" ..string.split(r,":")[2] .. "]"
+                    elseif string.find(r,"userId") then
+                        userId = string.split(r,":")[2]
+                    elseif string.find(r,"reportId") then
+                        reportId = string.split(r,":")[2]
+                    end
+                end
+                dest[i] = string.format('{\"type\":\"text\", \"value\":\"%s\"},{\"type\":\"text\", \"value\":\"%s\",\"color\":0x006290,\"url\":\"%s\"},{\"type\":\"text\", \"value\":\"%s\"}',string.sub(result,1,r_s - 1), msg_value,"report:"..userId..":"..reportId,string.sub(result,r_e+1))
             else
-            	dest[i] = string.format('{\"type\":\"text\", \"value\":\"%s\"}', v)
-        	end
+                dest[i] = string.format('{\"type\":\"text\", \"value\":\"%s\"}', v)
+            end
+        else
+            local key = string.format('%s.png', string.upper(result))
+            if plist_texture_data[key] then
+                dest[i] = string.format('{\"type\":\"image\", \"value\":\"%s\"}', key)
+            else
+                dest[i] = string.format('{\"type\":\"text\", \"value\":\"%s\"}', v)
+            end
         end
     end
     if func_handler_dest and type(func_handler_dest) == 'function' then
@@ -185,7 +205,7 @@ function ChatManager:setChannelReadStatus(channel,status)
     self.channelReadStatus[channel] = status
 end
 function ChatManager:pushMsgToQueue_(msg)
-	self:setChannelReadStatus(msg.channel,true)
+    self:setChannelReadStatus(msg.channel,true)
     table.insert(self.push_buff_queue,1,msg)
     if #self.push_buff_queue >= SIZE_MUST_PUSH then
         self:__checkNotifyIf()
@@ -361,4 +381,6 @@ function ChatManager:__flush()
 end
 
 return ChatManager
+
+
 

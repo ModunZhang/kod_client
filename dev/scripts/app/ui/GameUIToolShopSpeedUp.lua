@@ -18,7 +18,7 @@ function GameUIToolShopSpeedUp:ctor(building)
     local event = (technology_event:IsMaking(app.timer:GetServerTime()) and technology_event) or (building_event:IsMaking(app.timer:GetServerTime()) and building_event)
     self:SetAccBtnsGroup(self:GetEventType(),event:Id())
     self:SetAccTips(_("生产材料不能免费加速"))
-    self:SetUpgradeTip(_("制造材料").."X 1")
+    self:SetUpgradeTip(_("制造材料").."X "..building:GetProduction())
     self:SetProgressInfo(GameUtils:formatTimeStyle1(event:LeftTime(app.timer:GetServerTime())),event:Percent(app.timer:GetServerTime()))
     building:AddToolShopListener(self)
 end

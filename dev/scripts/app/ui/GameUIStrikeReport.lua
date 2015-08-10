@@ -8,10 +8,11 @@ local UILib = import(".UILib")
 
 local GameUIStrikeReport = UIKit:createUIClass("GameUIStrikeReport", "UIAutoClose")
 
-function GameUIStrikeReport:ctor(report)
+function GameUIStrikeReport:ctor(report,can_share)
     GameUIStrikeReport.super.ctor(self)
     self:setNodeEventEnabled(true)
     self.report = report
+    self.can_share = can_share
 end
 
 function GameUIStrikeReport:GetReportLevel()
@@ -140,46 +141,58 @@ function GameUIStrikeReport:onEnter()
 
     self.details_view:reload()
 
-    -- 删除按钮
-    local delete_label = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        text = _("删除"),
-        size = 20,
-        font = UIKit:getFontFilePath(),
-        color = UIKit:hex2c3b(0xfff3c7)})
-    delete_label:enableShadow()
 
-    WidgetPushButton.new(
-        {normal = "red_btn_up_148x58.png", pressed = "red_btn_down_148x58.png"},
-        {scale9 = false}
-    ):setButtonLabel(delete_label)
-        :addTo(report_body):align(display.CENTER, 106, 40)
-        :onButtonClicked(function(event)
-            NetManager:getDeleteReportsPromise({report:Id()}):done(function ()
-                self:removeFromParent()
+    if self.can_share then
+        -- 删除按钮
+        local delete_label = cc.ui.UILabel.new({
+            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+            text = _("删除"),
+            size = 20,
+            font = UIKit:getFontFilePath(),
+            color = UIKit:hex2c3b(0xfff3c7)})
+        delete_label:enableShadow()
+
+        WidgetPushButton.new(
+            {normal = "red_btn_up_148x58.png", pressed = "red_btn_down_148x58.png"},
+            {scale9 = false}
+        ):setButtonLabel(delete_label)
+            :addTo(report_body):align(display.CENTER, 106, 40)
+            :onButtonClicked(function(event)
+                NetManager:getDeleteReportsPromise({report:Id()}):done(function ()
+                    self:removeFromParent()
+                end)
             end)
-        end)
-    -- 收藏按钮
-    local saved_button = UICheckBoxButton.new({
-        off = "mail_saved_button_normal.png",
-        off_pressed = "mail_saved_button_normal.png",
-        off_disabled = "mail_saved_button_normal.png",
-        on = "mail_saved_button_pressed.png",
-        on_pressed = "mail_saved_button_pressed.png",
-        on_disabled = "mail_saved_button_pressed.png",
-    }):onButtonStateChanged(function(event)
-        local target = event.target
-        if target:isButtonSelected() then
-            NetManager:getSaveReportPromise(report:Id()):fail(function(err)
-                target:setButtonSelected(false,true)
+        -- 收藏按钮
+        local saved_button = UICheckBoxButton.new({
+            off = "mail_saved_button_normal.png",
+            off_pressed = "mail_saved_button_normal.png",
+            off_disabled = "mail_saved_button_normal.png",
+            on = "mail_saved_button_pressed.png",
+            on_pressed = "mail_saved_button_pressed.png",
+            on_disabled = "mail_saved_button_pressed.png",
+        }):onButtonStateChanged(function(event)
+            local target = event.target
+            if target:isButtonSelected() then
+                NetManager:getSaveReportPromise(report:Id()):fail(function(err)
+                    target:setButtonSelected(false,true)
+                end)
+            else
+                NetManager:getUnSaveReportPromise(report:Id()):fail(function(err)
+                    target:setButtonSelected(true,true)
+                end)
+            end
+        end):addTo(report_body):pos(rb_size.width-47, 37)
+            :setButtonSelected(report:IsSaved(),true)
+        -- 分享战报按钮
+        local share_button = WidgetPushButton.new(
+            {normal = "tmp_blue_btn_up_64x56.png", pressed = "tmp_blue_btn_down_64x56.png"},
+            {scale9 = false}
+        ):addTo(report_body):align(display.CENTER, report_body:getContentSize().width-220, rb_size.height-186)
+            :onButtonClicked(function(event)
+                UIKit:newGameUI("GameUIShareReport", report):AddToCurrentScene()
             end)
-        else
-            NetManager:getUnSaveReportPromise(report:Id()):fail(function(err)
-                target:setButtonSelected(true,true)
-            end)
-        end
-    end):addTo(report_body):pos(rb_size.width-47, 37)
-        :setButtonSelected(report:IsSaved(),true)
+        display.newSprite("tmp_icon_share_24x34.png"):addTo(share_button)
+    end
 end
 
 
@@ -808,6 +821,8 @@ function GameUIStrikeReport:GetProbableNum(num)
 end
 
 return GameUIStrikeReport
+
+
 
 
 
