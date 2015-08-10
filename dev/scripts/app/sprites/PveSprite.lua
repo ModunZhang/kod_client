@@ -12,8 +12,6 @@ function PveSprite:ctor(layer, npc_name, lx, ly, gid)
 end
 function PveSprite:RefreshSprite()
     PveSprite.super.RefreshSprite(self)
-    self.lock = display.newSprite("alliance_stage_lock_icon.png")
-    :addTo(self):pos(0, 50)
     if self:IsBoss() then
         self:GetSprite():setAnchorPoint(cc.p(0.45, 0.25))
     elseif self:IsSpecial() then
@@ -89,7 +87,6 @@ function PveSprite:SetEnable(isEnable)
     else
         self:GetSprite():setFilter(filter.newFilter("GRAY", {0.2, 0.3, 0.5, 0.1}))
     end
-    self.lock:setVisible(not isEnable)
     
     if self.gid == 16 then return self end
     for i,v in ipairs(self.stars) do
