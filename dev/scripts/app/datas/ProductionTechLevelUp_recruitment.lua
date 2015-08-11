@@ -1,6 +1,6 @@
-local negotiation = GameDatas.ProductionTechLevelUp.negotiation
+local recruitment = GameDatas.ProductionTechLevelUp.recruitment
 
-negotiation[1] = {
+recruitment[1] = {
 	["level"] = 1,
 	["coin"] = 5650,
 	["blueprints"] = 1,
@@ -10,7 +10,7 @@ negotiation[1] = {
 	["buildTime"] = 3950,
 	["power"] = 120
 }
-negotiation[2] = {
+recruitment[2] = {
 	["level"] = 2,
 	["coin"] = 6120,
 	["blueprints"] = 2,
@@ -20,7 +20,7 @@ negotiation[2] = {
 	["buildTime"] = 4325,
 	["power"] = 130
 }
-negotiation[3] = {
+recruitment[3] = {
 	["level"] = 3,
 	["coin"] = 6680,
 	["blueprints"] = 5,
@@ -30,7 +30,7 @@ negotiation[3] = {
 	["buildTime"] = 4700,
 	["power"] = 140
 }
-negotiation[4] = {
+recruitment[4] = {
 	["level"] = 4,
 	["coin"] = 7840,
 	["blueprints"] = 10,
@@ -40,7 +40,7 @@ negotiation[4] = {
 	["buildTime"] = 5450,
 	["power"] = 160
 }
-negotiation[5] = {
+recruitment[5] = {
 	["level"] = 5,
 	["coin"] = 9230,
 	["blueprints"] = 20,
@@ -50,7 +50,7 @@ negotiation[5] = {
 	["buildTime"] = 6200,
 	["power"] = 190
 }
-negotiation[6] = {
+recruitment[6] = {
 	["level"] = 6,
 	["coin"] = 10880,
 	["blueprints"] = 40,
@@ -60,7 +60,7 @@ negotiation[6] = {
 	["buildTime"] = 6950,
 	["power"] = 220
 }
-negotiation[7] = {
+recruitment[7] = {
 	["level"] = 7,
 	["coin"] = 12800,
 	["blueprints"] = 80,
@@ -70,7 +70,7 @@ negotiation[7] = {
 	["buildTime"] = 7700,
 	["power"] = 260
 }
-negotiation[8] = {
+recruitment[8] = {
 	["level"] = 8,
 	["coin"] = 22180,
 	["blueprints"] = 120,
@@ -80,7 +80,7 @@ negotiation[8] = {
 	["buildTime"] = 12200,
 	["power"] = 450
 }
-negotiation[9] = {
+recruitment[9] = {
 	["level"] = 9,
 	["coin"] = 33240,
 	["blueprints"] = 160,
@@ -90,7 +90,7 @@ negotiation[9] = {
 	["buildTime"] = 16700,
 	["power"] = 670
 }
-negotiation[10] = {
+recruitment[10] = {
 	["level"] = 10,
 	["coin"] = 59800,
 	["blueprints"] = 200,
@@ -100,7 +100,7 @@ negotiation[10] = {
 	["buildTime"] = 21200,
 	["power"] = 1200
 }
-negotiation[11] = {
+recruitment[11] = {
 	["level"] = 11,
 	["coin"] = 79500,
 	["blueprints"] = 240,
@@ -110,7 +110,7 @@ negotiation[11] = {
 	["buildTime"] = 25700,
 	["power"] = 1590
 }
-negotiation[12] = {
+recruitment[12] = {
 	["level"] = 12,
 	["coin"] = 101900,
 	["blueprints"] = 320,
@@ -120,7 +120,7 @@ negotiation[12] = {
 	["buildTime"] = 30200,
 	["power"] = 2040
 }
-negotiation[13] = {
+recruitment[13] = {
 	["level"] = 13,
 	["coin"] = 127150,
 	["blueprints"] = 400,
@@ -130,7 +130,7 @@ negotiation[13] = {
 	["buildTime"] = 34700,
 	["power"] = 2550
 }
-negotiation[14] = {
+recruitment[14] = {
 	["level"] = 14,
 	["coin"] = 193000,
 	["blueprints"] = 480,
@@ -140,7 +140,7 @@ negotiation[14] = {
 	["buildTime"] = 39200,
 	["power"] = 3860
 }
-negotiation[15] = {
+recruitment[15] = {
 	["level"] = 15,
 	["coin"] = 257500,
 	["blueprints"] = 560,
@@ -150,7 +150,7 @@ negotiation[15] = {
 	["buildTime"] = 48200,
 	["power"] = 5150
 }
-negotiation[16] = {
+recruitment[16] = {
 	["level"] = 16,
 	["coin"] = 329750,
 	["blueprints"] = 640,
@@ -160,7 +160,7 @@ negotiation[16] = {
 	["buildTime"] = 57200,
 	["power"] = 6600
 }
-negotiation[17] = {
+recruitment[17] = {
 	["level"] = 17,
 	["coin"] = 410130,
 	["blueprints"] = 720,
@@ -170,7 +170,7 @@ negotiation[17] = {
 	["buildTime"] = 66200,
 	["power"] = 8210
 }
-negotiation[18] = {
+recruitment[18] = {
 	["level"] = 18,
 	["coin"] = 597800,
 	["blueprints"] = 880,
@@ -180,7 +180,7 @@ negotiation[18] = {
 	["buildTime"] = 75200,
 	["power"] = 11960
 }
-negotiation[19] = {
+recruitment[19] = {
 	["level"] = 19,
 	["coin"] = 715100,
 	["blueprints"] = 1040,
@@ -190,7 +190,7 @@ negotiation[19] = {
 	["buildTime"] = 84200,
 	["power"] = 14310
 }
-negotiation[20] = {
+recruitment[20] = {
 	["level"] = 20,
 	["coin"] = 843500,
 	["blueprints"] = 1200,
@@ -200,7 +200,7 @@ negotiation[20] = {
 	["buildTime"] = 93200,
 	["power"] = 16870
 }
-negotiation[21] = {
+recruitment[21] = {
 	["level"] = 21,
 	["coin"] = 985100,
 	["blueprints"] = 1360,
@@ -210,7 +210,7 @@ negotiation[21] = {
 	["buildTime"] = 102200,
 	["power"] = 19710
 }
-negotiation[22] = {
+recruitment[22] = {
 	["level"] = 22,
 	["coin"] = 1330100,
 	["blueprints"] = 1520,
@@ -220,7 +220,7 @@ negotiation[22] = {
 	["buildTime"] = 111200,
 	["power"] = 26610
 }
-negotiation[23] = {
+recruitment[23] = {
 	["level"] = 23,
 	["coin"] = 1529250,
 	["blueprints"] = 1680,
@@ -230,7 +230,7 @@ negotiation[23] = {
 	["buildTime"] = 120200,
 	["power"] = 30590
 }
-negotiation[24] = {
+recruitment[24] = {
 	["level"] = 24,
 	["coin"] = 1746950,
 	["blueprints"] = 1840,
@@ -240,7 +240,7 @@ negotiation[24] = {
 	["buildTime"] = 129200,
 	["power"] = 34940
 }
-negotiation[25] = {
+recruitment[25] = {
 	["level"] = 25,
 	["coin"] = 1984250,
 	["blueprints"] = 2000,
@@ -250,7 +250,7 @@ negotiation[25] = {
 	["buildTime"] = 138200,
 	["power"] = 39690
 }
-negotiation[26] = {
+recruitment[26] = {
 	["level"] = 26,
 	["coin"] = 2561800,
 	["blueprints"] = 2160,
@@ -260,7 +260,7 @@ negotiation[26] = {
 	["buildTime"] = 147200,
 	["power"] = 51240
 }
-negotiation[27] = {
+recruitment[27] = {
 	["level"] = 27,
 	["coin"] = 2881400,
 	["blueprints"] = 2320,
@@ -270,7 +270,7 @@ negotiation[27] = {
 	["buildTime"] = 156200,
 	["power"] = 57630
 }
-negotiation[28] = {
+recruitment[28] = {
 	["level"] = 28,
 	["coin"] = 3227000,
 	["blueprints"] = 2480,
@@ -280,7 +280,7 @@ negotiation[28] = {
 	["buildTime"] = 165200,
 	["power"] = 64540
 }
-negotiation[29] = {
+recruitment[29] = {
 	["level"] = 29,
 	["coin"] = 3599800,
 	["blueprints"] = 2640,
@@ -290,7 +290,7 @@ negotiation[29] = {
 	["buildTime"] = 174200,
 	["power"] = 72000
 }
-negotiation[30] = {
+recruitment[30] = {
 	["level"] = 30,
 	["coin"] = 4505000,
 	["blueprints"] = 2800,

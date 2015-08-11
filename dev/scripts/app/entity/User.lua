@@ -937,6 +937,9 @@ function User:IsFinishedAllDailyQuests()
 end
 -- 判定是否能领取每日任务奖励
 function User:CouldGotDailyQuestReward()
+    if self:GetNextDailyQuestsRefreshTime() <= app.timer:GetServerTime() then
+        return true
+    end
     local dailyQuestEvents = self.dailyQuestEvents
     if LuaUtils:table_empty(dailyQuestEvents) then
         return false

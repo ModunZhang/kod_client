@@ -1872,7 +1872,6 @@ function City:IteratorProductionTechEvents(func)
     end
 end
 
-
 function City:OnProductionTechnologyEventTimer(productionTechnologyEvent)
     self:NotifyListeneOnType(City.LISTEN_TYPE.PRODUCTION_EVENT_TIMER, function(listener)
         listener:OnProductionTechnologyEventTimer(productionTechnologyEvent)

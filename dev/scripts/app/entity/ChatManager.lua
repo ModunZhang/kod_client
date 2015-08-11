@@ -48,7 +48,6 @@ function EmojiUtil:ConvertEmojiToRichText(chatmsg,func_handler_dest)
                 local report = string.sub(result,r_s+8,r_e-8)
                 local r_msg = string.split(report,",")
                 local msg_value , reportId ,userId = ""
-                local added = i
                 for __,r in ipairs(r_msg) do
                     if string.find(r,"reportName") then
                         msg_value =  "[" ..string.split(r,":")[2] .. "]"
@@ -58,7 +57,7 @@ function EmojiUtil:ConvertEmojiToRichText(chatmsg,func_handler_dest)
                         reportId = string.split(r,":")[2]
                     end
                 end
-                dest[i] = string.format('{\"type\":\"text\", \"value\":\"%s\"},{\"type\":\"text\", \"value\":\"%s\",\"color\":0x006290,\"url\":\"%s\"},{\"type\":\"text\", \"value\":\"%s\"}',string.sub(result,1,r_s - 1), msg_value,"report:"..userId..":"..reportId,string.sub(result,r_e+1))
+                dest[i] = string.format('{\"type\":\"text\", \"value\":\"%s\"},{\"type\":\"text\", \"value\":\"%s\",\"color\":0xd64600,\"url\":\"%s\"},{\"type\":\"text\", \"value\":\"%s\"}',string.sub(result,1,r_s - 1), msg_value,"report:"..userId..":"..reportId,string.sub(result,r_e+1))
             else
                 dest[i] = string.format('{\"type\":\"text\", \"value\":\"%s\"}', v)
             end

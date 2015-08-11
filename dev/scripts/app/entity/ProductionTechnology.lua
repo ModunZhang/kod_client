@@ -27,6 +27,7 @@ function ProductionTechnology:UpdateData(name,json_data)
     self:SetName(name or "")
     self:SetIndex(json_data.index or 0)
     self:SetLevel(json_data.level or 0)
+    print("self:Name()=",self:Name())
     local tech = productionTechs[self:Name()]
     self:SetUnlockBy(tech.unlockBy)
     self:SetUnlockLevel(tech.unlockLevel)
