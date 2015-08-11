@@ -1627,9 +1627,9 @@ function NetManager:getBuyItemPromise(itemName,count,need_tips)
     }, "购买道具失败!"):done(get_player_response_msg):done(function ()
         if need_tips then
             GameGlobalUI:showTips(_("提示"),string.format(_("购买%s道具成功"),Localize_item.item_name[itemName]))
+            app:GetAudioManager():PlayeEffectSoundWithKey("BUY_ITEM")
         end
         ext.market_sdk.onPlayerBuyGameItems(itemName,count,DataUtils:GetItemPriceByItemName(itemName))
-        app:GetAudioManager():PlayeEffectSoundWithKey("BUY_ITEM")
     end)
 end
 --使用道具
