@@ -844,12 +844,28 @@ function WidgetUseItems:OpenMoveTheCityDialog( item ,params)
     return dialog
 end
 function WidgetUseItems:OpenVipPointDialog(item)
-    return self:OpenNormalDialog(item,_("增加VIP点数"),window.top-340)
+    local dialog = self:OpenNormalDialog(item,_("增加VIP点数"),window.top-180 , 150)
+    local exp_bar = UIKit:CreateVipExpBar():addTo(dialog,1,999):pos(dialog:getContentSize().width/2-287, dialog:getContentSize().height-230)
+    local vip_level,percent,exp = User:GetVipLevel()
+    exp_bar:LightLevelBar(vip_level,percent,exp, true)
+    User:AddListenOnType(dialog, User.LISTEN_TYPE.BASIC)
+    function dialog:OnUserBasicChanged(from,changed_map)
+        if changed_map.vipExp then
+            local vip_level,percent,exp = User:GetVipLevel()
+            self:removeChildByTag(999, true)
+            local exp_bar = UIKit:CreateVipExpBar():addTo(self,1,999):pos(self:getContentSize().width/2-287, self:getContentSize().height-230)
+            exp_bar:LightLevelBar(vip_level,percent,exp, true)
+        end
+    end
+    dialog:addCloseCleanFunc(function ()
+        User:RemoveListenerOnType(self, User.LISTEN_TYPE.BASIC)
+    end)
+    return dialog
 end
 
-function WidgetUseItems:OpenNormalDialog( item ,title ,y)
+function WidgetUseItems:OpenNormalDialog( item ,title ,y , offset_hight)
     local same_items = ItemManager:GetSameTypeItems(item)
-    local dialog = UIKit:newWidgetUI("WidgetPopDialog",#same_items * 130 +100,title or item:GetLocalizeName(),y and y or window.top-230)
+    local dialog = UIKit:newWidgetUI("WidgetPopDialog",#same_items * 130 + (offset_hight or 100),title or item:GetLocalizeName(),y and y or window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
 
@@ -1357,6 +1373,8 @@ end
 
 
 return WidgetUseItems
+
+
 
 
 
