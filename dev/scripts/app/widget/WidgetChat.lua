@@ -32,6 +32,7 @@ function WidgetChat:RefreshChatMessage()
                 local info = string.split(url,":")
                 NetManager:getReportDetailPromise(info[2],info[3]):done(function ( response )
                     local report = Report:DecodeFromJsonData(clone(response.msg.report))
+                    report:SetPlayerId(info[2])
                     if report:Type() == "strikeCity" or report:Type()== "cityBeStriked"
                         or report:Type() == "villageBeStriked" or report:Type()== "strikeVillage" then
                         UIKit:newGameUI("GameUIStrikeReport", report):AddToCurrentScene(true)
