@@ -1,5 +1,7 @@
 local UILib = import(".UILib")
 local UIListView = import(".UIListView")
+local Localize = import("..utils.Localize")
+local Localize_item = import("..utils.Localize_item")
 local GameUIPveSweep = UIKit:createUIClass("GameUIPveSweep", "UIAutoClose")
 function GameUIPveSweep:ctor(rewards)
     GameUIPveSweep.super.ctor(self)
@@ -69,11 +71,13 @@ end
 function GameUIPveSweep:GetListItem(index,reward)
     local bg = display.newSprite("pve_reward_item.png")
     local size = bg:getContentSize()
-    local png
+    local png, txt
     if reward.type == "items" then
         png = UILib.item[reward.name]
+        txt = Localize_item.item_name[reward.name]
     elseif reward.type == "soldierMaterials" then
         png = UILib.soldier_metarial[reward.name]
+        txt = Localize.soldier_material[reward.name]
     end
 
 
@@ -84,13 +88,19 @@ function GameUIPveSweep:GetListItem(index,reward)
     }):addTo(bg):align(display.LEFT_CENTER, 50, size.height/2)
 
     UIKit:ttfLabel({
+        text = txt,
+        size = 22,
+        color = 0xffedae,
+    }):addTo(bg):align(display.LEFT_CENTER, size.width - 120, size.height*3/4)
+
+    UIKit:ttfLabel({
         text = "X"..reward.count,
         size = 22,
         color = 0xffedae,
-    }):addTo(bg):align(display.LEFT_CENTER, size.width - 50, size.height/2)
+    }):addTo(bg):align(display.LEFT_CENTER, size.width - 120, size.height*2/5)
 
     display.newSprite(png):addTo(
-        display.newSprite("box_118x118.png"):addTo(bg):pos(size.width - 100, size.height/2):scale(0.5)
+        display.newSprite("box_118x118.png"):addTo(bg):pos(size.width - 150, size.height/2):scale(0.5)
     ):pos(118/2, 118/2):scale(100/128)
     return bg
 end
