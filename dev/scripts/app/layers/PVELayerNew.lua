@@ -200,8 +200,8 @@ function PVELayerNew:ctor(scene, user, level)
             display.newSprite("battery_cell.png")
                 :addTo(airship.battery,0,i):pos((i-1) * 7 + x, (i-1) * 4 + y)
                 :runAction(cc.RepeatForever:create(transition.sequence{
-                    cc.TintTo:create(1, 100, 100, 100),
-                    cc.TintTo:create(1, 180, 180, 180)
+                    cc.TintTo:create(0.7, 0, 0, 0),
+                    cc.TintTo:create(0.7, 200, 200, 200)
                 }))
             display.newSprite("battery_cell.png")
                 :addTo(airship.battery,0, 5 + i):pos((i-1) * 7 + x, (i-1) * 4 + y)
