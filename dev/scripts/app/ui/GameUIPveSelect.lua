@@ -28,6 +28,8 @@ function GameUIPveSelect:onEnter()
         list:addItem(item)
     end
     list:reload()
+    local y = 600 - (24 * 100 - (self.level - 1) * 100)
+    list:getScrollNode():setPositionY(y > 0 and 0 or y)
 end
 function GameUIPveSelect:GetListItem(index)
     local bg = display.newScale9Sprite(string.format("back_ground_548x40_%d.png", index % 2 == 0 and 1 or 2)):size(600,100)
