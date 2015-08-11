@@ -431,7 +431,9 @@ function GameUIPveAttack:Attack()
                 local pve_name = self.pve_name
                 local user = self.user
                 param.callback = function()
-                    display.getRunningScene():GetSceneLayer():MoveAirship(true)
+                    if param.star > 0 then
+                        display.getRunningScene():GetSceneLayer():MoveAirship(true)
+                    end
                     if user:IsPveBoss(pve_name) and user:GetPveSectionStarByName(pve_name) > 0 then
                         UIKit:newGameUI("GameUIPveAttack", user, pve_name):AddToCurrentScene(true)
                     end
