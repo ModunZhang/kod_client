@@ -51,8 +51,7 @@ function WidgetShrineRewardsInfo:CreateInfoItems(shrineStage)
         local x = {
             item_width - 50,
             item_width - 130,
-            item_width - 230,
-            item_width - 330,
+            item_width - 260,
         }
         local y = item_height/2
         for i,v in ipairs(data[2]) do
@@ -71,11 +70,15 @@ function WidgetShrineRewardsInfo:CreateInfoItems(shrineStage)
                 end
                 UIKit:addTipsToNode(item,_("忠诚值"),self)
             end
-            UIKit:ttfLabel({
+            local value_label = UIKit:ttfLabel({
                 text = "x" .. GameUtils:formatNumber(v.count),
                 size = 18,
                 color = 0x403c2f
             }):addTo(content):align(display.LEFT_CENTER,x[i] + 10,y)
+            if i == 3 then
+                value_label:setPositionX(x[2] - value_label:getContentSize().width - 50)
+                item:setPositionX(value_label:getPositionX() - 10)
+            end
         end
         meetFlag =  not meetFlag
         item:addContent(content)
