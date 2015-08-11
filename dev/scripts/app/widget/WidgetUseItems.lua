@@ -858,7 +858,7 @@ function WidgetUseItems:OpenVipPointDialog(item)
         end
     end
     dialog:addCloseCleanFunc(function ()
-        User:RemoveListenerOnType(self, User.LISTEN_TYPE.BASIC)
+        User:RemoveListenerOnType(dialog, User.LISTEN_TYPE.BASIC)
     end)
     return dialog
 end
