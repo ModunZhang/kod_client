@@ -23,7 +23,7 @@ for i = 1, tt do
     end
 end
 
-    
+
 local sections = GameDatas.PvE.sections
 local pve_length = 0
 local index = 1
@@ -111,7 +111,7 @@ property(User, "apnStatus", {
     onAllianceFightStart = true,
     onAllianceShrineEventStart = true,
     onAllianceFightPrepare = true
-    })
+})
 property(User, "allianceInfo", {
     loyalty = 0,
     woodExp = 0,
@@ -933,13 +933,13 @@ function User:IsOnDailyQuestEvents()
 end
 -- 判定是否完成所有任务
 function User:IsFinishedAllDailyQuests()
-     return LuaUtils:table_empty(self.dailyQuests)
+    if self:GetNextDailyQuestsRefreshTime() <= app.timer:GetServerTime() then
+        return false
+    end
+    return LuaUtils:table_empty(self.dailyQuests)
 end
 -- 判定是否能领取每日任务奖励
 function User:CouldGotDailyQuestReward()
-    if self:GetNextDailyQuestsRefreshTime() <= app.timer:GetServerTime() then
-        return true
-    end
     local dailyQuestEvents = self.dailyQuestEvents
     if LuaUtils:table_empty(dailyQuestEvents) then
         return false
@@ -998,6 +998,7 @@ function User:GetBestDragon()
 end
 
 return User
+
 
 
 
