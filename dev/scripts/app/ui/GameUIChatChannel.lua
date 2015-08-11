@@ -274,9 +274,14 @@ function GameUIChatChannel:GetChatItemCell()
         size = 14,
         color= 0x403c2f,
         align = cc.TEXT_ALIGNMENT_RIGHT,
-    }):align(display.BOTTOM_RIGHT, 450, 16):addTo(header)
+    }):align(display.BOTTOM_RIGHT, 440, 16):addTo(header)
 
-    local translation_sp = display.newSprite("chat_translation_45x43.png"):align(display.RIGHT_BOTTOM, 478,12):addTo(header):scale(25/45)
+    local translation_sp = WidgetPushButton.new({
+        normal = "tmp_brown_btn_up_36x24.png",
+        pressed= "tmp_brown_btn_down_36x24.png",
+    }):align(display.RIGHT_BOTTOM, 478,12):addTo(header)
+    display.newSprite("tmp_icon_translate_26x20.png"):addTo(translation_sp):pos(-18,12)
+    -- display.newSprite("chat_translation_45x43.png"):align(display.RIGHT_BOTTOM, 478,12):addTo(header):scale(25/45)
 
     local content_label = RichText.new({width = 430,size = 22,color = 0x403c2f})
     content_label:Text("")
@@ -542,6 +547,9 @@ function GameUIChatChannel:listviewListener(event)
                 if string.utf8len(final_chat_msg) == 0 then
                     return
                 end
+                if string.find(chat.text,"<report>.+<report>") then
+                    return
+                end
                 GameUtils:Translate(final_chat_msg,function(result,errText)
                     if result then
                         chat._translate_ = result
@@ -694,5 +702,6 @@ function GameUIChatChannel:LeftButtonClicked()
 end
 
 return GameUIChatChannel
+
 
 
