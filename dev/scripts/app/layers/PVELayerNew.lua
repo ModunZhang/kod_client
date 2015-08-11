@@ -26,6 +26,32 @@ local map = {
     {"image", "pve_deco_17.png",1,1,1},
 }
 
+local pve_color = {
+    cc.c3b(  0,   0,   0), -- "iceField",
+    cc.c3b(192, 207, 186), -- "iceField",
+    cc.c3b(164, 176, 143), -- "grassLand",
+    cc.c3b(  0,   0,   0), -- "grassLand",
+    cc.c3b(  0,   0,   0), -- "desert",
+    cc.c3b(184, 184, 184), -- "desert",
+    cc.c3b(212, 189, 172), -- "iceField",
+    cc.c3b(191, 163, 163), -- "iceField",
+    cc.c3b(158, 125, 126), -- "iceField",
+    cc.c3b(197, 201, 160), -- "desert",
+    cc.c3b(201, 180, 160), -- "desert",
+    cc.c3b(201, 172, 160), -- "desert",
+    cc.c3b(204, 166, 180), -- "grassLand",
+    cc.c3b(230, 156, 170), -- "grassLand",
+    cc.c3b(212, 137, 138), -- "grassLand",
+    cc.c3b(153, 203, 237), -- "desert",
+    cc.c3b(130, 167, 232), -- "desert",
+    cc.c3b(115, 119, 227), -- "desert",
+    cc.c3b(166, 182, 186), -- "iceField",
+    cc.c3b(131, 142, 150), -- "iceField",
+    cc.c3b(136, 125, 148), -- "iceField",
+    cc.c3b(126, 124, 255), -- "grassLand",
+    cc.c3b(114, 111, 255), -- "grassLand",
+    cc.c3b(169,  98, 255), -- "grassLand",
+}
 
 
 local function bezierat(a,b,c,d,t)
@@ -54,12 +80,15 @@ function PVELayerNew:ctor(scene, user, level)
         base_y = pvemap.height * pvemap.tileheight,
     })
 
+    local color = pve_color[self.level]
     GameUtils:LoadImagesWithFormat(function()
         self.background = display.newNode():addTo(self)
-        display.newSprite("pve_background.png"):addTo(self.background):align(display.LEFT_BOTTOM)
-        display.newSprite("pve_background.png"):addTo(self.background):align(display.LEFT_BOTTOM, 0, 800)
-        display.newSprite("pve_background.png"):addTo(self.background):align(display.LEFT_BOTTOM, 0, 1600)
-        display.newSprite("pve_background.png"):addTo(self.background):align(display.LEFT_BOTTOM, 0, 2400)
+        for i = 1, 4 do
+            local bg = display.newSprite("pve_background.png")
+            :addTo(self.background)
+            :align(display.LEFT_BOTTOM, 0, (i-1) * 800)
+            bg:setColor(color + cc.c3b(bg:getColor()))
+        end
     end, cc.TEXTURE2_D_PIXEL_FORMAT_RG_B565)
 
     self.cloud_layer = display.newNode():addTo(self, 100)
@@ -112,8 +141,11 @@ function PVELayerNew:ctor(scene, user, level)
                 local ny = bezierat(lines[1].y, uy1, uy2, lines[2].y, i * 1/g + 0.1)
                 local road = display.newNode():addTo(self):pos(x,y):scale(0.8)
                     :rotation(-math.deg(cc.pGetAngle({x = 0, y = 1}, {x = nx - x, y = ny - y})))
-                display.newSprite("pve_road_point2.png"):addTo(road)
-                table.insert(roads, display.newSprite("pve_road_point.png"):addTo(road))
+                local r = display.newSprite("pve_road_point2.png"):addTo(road)
+                local r1 = display.newSprite("pve_road_point.png"):addTo(road)
+                r:setColor(color + cc.c3b(r:getColor()))
+                r1:setColor(color + cc.c3b(r1:getColor()))
+                table.insert(roads, r1)
             end
             self.roads[#self.roads + 1] = roads
             table.remove(lines, 1)
@@ -134,6 +166,7 @@ function PVELayerNew:ctor(scene, user, level)
                     obj = PveSprite.new(self, string.format("%d_%d", level, self:GetNpcIndex(lx - 1, ly - 1)), lx - 1, ly - 1, gid)
                 elseif type == "image" then
                     obj = display.newSprite(png)
+                    obj:setColor(color + cc.c3b(obj:getColor()))
                 end
                 local x,y = self.normal_map:ConvertToMapPosition(lx - 1, ly - 1)
                 local ox,oy = self.normal_map:ConvertToLocalPosition((w - 1)/2, (h - 1)/2)
