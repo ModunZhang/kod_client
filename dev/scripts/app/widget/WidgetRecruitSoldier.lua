@@ -367,6 +367,15 @@ function WidgetRecruitSoldier:AddButtons()
         }))
         :onButtonClicked(function(event)
             local current_time = app.timer:GetServerTime()
+            -- local min_left_time = math.huge
+            -- for i,v in ipairs(self.barracks:GetSoldierEvents()) do
+            --     if min_left_time > v:LeftTime(current_time) then
+            --         min_left_time = v:LeftTime(current_time)
+            --     end
+            -- end
+            -- if self.barracks:IsFullRecruting() then
+                
+            -- end
             local left_time = self.barracks:GetRecruitEvent():LeftTime(current_time)
             local queue_need_gem = self.barracks:IsRecruting()
                 and DataUtils:getGemByTimeInterval(left_time) or 0
@@ -568,7 +577,6 @@ function WidgetRecruitSoldier:OnRecruiting()
 end
 function WidgetRecruitSoldier:OnEndRecruit()
     local enable = self.count > 0
-    -- self.normal_button:setButtonEnabled(self.barracks:IsRecruitEventEmpty() and enable)
 end
 function WidgetRecruitSoldier:OnInstantButtonClicked(func)
     self.instant_button_clicked = func

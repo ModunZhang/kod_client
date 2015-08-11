@@ -63,14 +63,15 @@ function PVELayerNew:ctor(scene, user, level)
     end, cc.TEXTURE2_D_PIXEL_FORMAT_RG_B565)
 
     self.cloud_layer = display.newNode():addTo(self, 100)
-    local s = display.newSprite("pve_cloud_1.png"):addTo(self.cloud_layer)
-    s:opacity(180)
-    s:runAction(cc.RepeatForever:create(transition.sequence{
-        cc.MoveTo:create(0, cc.p(1000, self:getContentSize().height/2)),
-        cc.MoveTo:create(10, cc.p(-1000, self:getContentSize().height/2)),
-    -- cc.DelayTime:create(math.random(10, 20)),
-    }))
 
+    for i = 1, 3 do
+        display.newSprite(string.format("pve_cloud_%d.png", i % 2 + 1)):addTo(self.cloud_layer)
+        :opacity(180):runAction(cc.RepeatForever:create(transition.sequence{
+            cc.MoveTo:create(0, cc.p(1000, self:getContentSize().height*i/4)),
+            cc.MoveTo:create(10, cc.p(-1000, self:getContentSize().height*i/4)),
+            cc.DelayTime:create(math.random(10, 20)),
+        }))
+    end
     self.fte_layer = display.newNode():addTo(self, 10)
 
 

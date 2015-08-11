@@ -402,6 +402,7 @@ function GameUIPveAttack:Attack()
             NetManager:getAttackPveSectionPromise(self.pve_name, dragonType, soldiers):done(function()
                 display.getRunningScene():GetSceneLayer():RefreshPve()
             end):done(function(response)
+                response.msg.fightReport.playerDragonFightData.hpDecreased = 0
                 local star = 0
                 if response.msg.fightReport.playerSoldierRoundDatas[#response.msg.fightReport.playerSoldierRoundDatas].isWin then
                     star = 2
@@ -431,7 +432,9 @@ function GameUIPveAttack:Attack()
                 local pve_name = self.pve_name
                 local user = self.user
                 param.callback = function()
-                    display.getRunningScene():GetSceneLayer():MoveAirship(true)
+                    if param.star > 0 then
+                        display.getRunningScene():GetSceneLayer():MoveAirship(true)
+                    end
                     if user:IsPveBoss(pve_name) and user:GetPveSectionStarByName(pve_name) > 0 then
                         UIKit:newGameUI("GameUIPveAttack", user, pve_name):AddToCurrentScene(true)
                     end

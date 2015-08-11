@@ -75,7 +75,7 @@ function GameUIPveHomeNew:CreateTop()
         pressed = "pve_btn_down_60x48.png"}):addTo(top_bg)
         :pos(88, size.height/2 + 10)
         :onButtonClicked(function()
-            UIKit:newGameUI("GameUIPveSelect"):AddToCurrentScene(true)
+            UIKit:newGameUI("GameUIPveSelect", self.level):AddToCurrentScene(true)
         end)
     display.newSprite("coordinate_128x128.png"):addTo(btn):scale(0.4)
      

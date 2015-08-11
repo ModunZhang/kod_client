@@ -4,8 +4,9 @@ local window = import("..utils.window")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local GameUIPveSelect = class("GameUIPveSelect", WidgetPopDialog)
 
-function GameUIPveSelect:ctor()
+function GameUIPveSelect:ctor(level)
     GameUIPveSelect.super.ctor(self,700,_("选择关卡"),window.top - 150)
+    self.level = level
 end
 function GameUIPveSelect:onEnter()
     GameUIPveSelect.super.onEnter(self)
@@ -72,7 +73,8 @@ function GameUIPveSelect:GetListItem(index)
         size = 24,
         color = 0xffedae,
         shadow = true
-    })):addTo(bg):align(display.CENTER,548 - 60,100*1/3):setButtonEnabled(User:IsStageEnabled(index))
+    })):addTo(bg):align(display.CENTER,548 - 60,100*1/3)
+    :setButtonEnabled(User:IsStageEnabled(index) and self.level ~= index)
     :onButtonClicked(function()
         app:EnterPVEScene(index)
     end)
