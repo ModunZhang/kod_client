@@ -46,7 +46,7 @@ return {
             index = 13,
             level = 0
         },
-        negotiation = {
+        recruitment = {
             index = 16,
             level = 0
         },

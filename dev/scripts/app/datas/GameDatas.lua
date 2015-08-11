@@ -457,7 +457,7 @@ GameDatas.ProductionTechLevelUp = {
 	["reinforcing"] = {},
 	["rescueTent"] = {},
 	["colonization"] = {},
-	["negotiation"] = {},
+	["recruitment"] = {},
 	["seniorTower"] = {},
 	["trap"] = {},
 	["forestation"] = {},
@@ -476,7 +476,7 @@ require("app.datas.ProductionTechLevelUp_fastFix")
 require("app.datas.ProductionTechLevelUp_reinforcing")
 require("app.datas.ProductionTechLevelUp_rescueTent")
 require("app.datas.ProductionTechLevelUp_colonization")
-require("app.datas.ProductionTechLevelUp_negotiation")
+require("app.datas.ProductionTechLevelUp_recruitment")
 require("app.datas.ProductionTechLevelUp_seniorTower")
 require("app.datas.ProductionTechLevelUp_trap")
 require("app.datas.ProductionTechLevelUp_forestation")
