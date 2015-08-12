@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: dragonfall\n"
-"POT-Creation-Date: 2015-08-12 10:51+0800\n"
-"PO-Revision-Date: 2015-08-12 10:52+0800\n"
+"POT-Creation-Date: 2015-08-12 15:45+0800\n"
+"PO-Revision-Date: 2015-08-12 15:45+0800\n"
 "Last-Translator: gaozhou <gaozhou.f@qq.com>\n"
 "Language-Team: \n"
 "Language: zh_CN\n"
@@ -96,7 +96,7 @@ msgstr "服务器连接断开,请检测你的网络环境后重试!"
 #: ui/GameUIDailyMissionInfo.lua:134 ui/GameUIDailyMissionInfo.lua:144
 #: ui/GameUIDragonEquipment.lua:312 ui/GameUIDragonEyrieDetail.lua:362
 #: ui/GameUIDragonEyrieDetail.lua:367 ui/GameUIDragonEyrieDetail.lua:372
-#: ui/GameUIDragonEyrieMain.lua:387 ui/GameUIDragonEyrieMain.lua:396
+#: ui/GameUIDragonEyrieMain.lua:389 ui/GameUIDragonEyrieMain.lua:398
 #: ui/GameUIDragonSkill.lua:142 ui/GameUIDragonSkill.lua:146
 #: ui/GameUIGacha.lua:252 ui/GameUIHasBeenBuild.lua:128
 #: ui/GameUIHasBeenBuild.lua:156 ui/GameUIHasBeenBuild.lua:169
@@ -1931,8 +1931,8 @@ msgstr "研发队列空闲"
 msgid "选择一个技能进行研发"
 msgstr "选择一个科技进行研发"
 
-#: ui/GameUIAcademy.lua:203 ui/GameUIDragonEyrieMain.lua:414
-#: ui/GameUIDragonEyrieMain.lua:516 ui/GameUIHasBeenBuild.lua:323
+#: ui/GameUIAcademy.lua:203 ui/GameUIDragonEyrieMain.lua:416
+#: ui/GameUIDragonEyrieMain.lua:518 ui/GameUIHasBeenBuild.lua:323
 #: ui/GameUIQuickTechnology.lua:182 ui/GameUIReplayNew.lua:1631
 #: ui/GameUITownHall.lua:262 ui/GameUIWatchTower.lua:341
 #: ui/GameUIWathTowerRegion.lua:350 widget/WidgetEventTabButtons.lua:395
@@ -3331,13 +3331,13 @@ msgstr "行军"
 msgid "您还没有龙,快去孵化一只巨龙吧"
 msgstr "您还没有巨龙,快去孵化一只巨龙吧"
 
-#: ui/GameUIAllianceSendTroops.lua:194 ui/GameUIDragonEyrieMain.lua:390
+#: ui/GameUIAllianceSendTroops.lua:194 ui/GameUIDragonEyrieMain.lua:392
 #: ui/GameUIPVESendTroop.lua:122 ui/GameUIStrikePlayer.lua:219
 #: utils/Localize.lua:67
 msgid "龙未处于空闲状态"
 msgstr "巨龙未处于空闲状态"
 
-#: ui/GameUIAllianceSendTroops.lua:197 ui/GameUIDragonEyrieMain.lua:381
+#: ui/GameUIAllianceSendTroops.lua:197 ui/GameUIDragonEyrieMain.lua:383
 #: ui/GameUIPVESendTroop.lua:125 ui/GameUIStrikePlayer.lua:222
 #: ui/GameUIWall.lua:337
 msgid "选择的龙已经死亡"
@@ -3500,7 +3500,7 @@ msgstr "参与玩家"
 msgid "人均战斗力"
 msgstr "人均战斗力"
 
-#: ui/GameUIAllianceShrine.lua:618 ui/GameUIDragonEyrieMain.lua:466
+#: ui/GameUIAllianceShrine.lua:618 ui/GameUIDragonEyrieMain.lua:468
 #: ui/GameUIWatchTower.lua:424 ui/GameUIWathTowerRegion.lua:433
 #: widget/WidgetPVEEvent.lua:181
 msgid "详情"
@@ -4228,14 +4228,14 @@ msgstr "当前数量"
 
 #: ui/GameUIDragonEquipment.lua:482 ui/GameUIDragonEquipment.lua:512
 #: ui/GameUIDragonEquipment.lua:567 ui/GameUIDragonEquipmentMake.lua:193
-#: ui/GameUIDragonEyrieDetail.lua:647 ui/GameUIDragonEyrieMain.lua:435
+#: ui/GameUIDragonEyrieDetail.lua:647 ui/GameUIDragonEyrieMain.lua:437
 #: ui/GameUIShowDragonUpStarAnimation.lua:64
 msgid "活力"
 msgstr "活力"
 
 #: ui/GameUIDragonEquipment.lua:483 ui/GameUIDragonEquipment.lua:514
 #: ui/GameUIDragonEquipment.lua:580 ui/GameUIDragonEquipmentMake.lua:194
-#: ui/GameUIDragonEyrieDetail.lua:634 ui/GameUIDragonEyrieMain.lua:424
+#: ui/GameUIDragonEyrieDetail.lua:634 ui/GameUIDragonEyrieMain.lua:426
 #: ui/GameUIHelpDefence.lua:323 ui/GameUIShowDragonUpStarAnimation.lua:52
 #: ui/GameUIWatchTowerMyTroopsDetail.lua:163
 #: ui/GameUIWatchTowerTroopDetail.lua:205
@@ -4244,7 +4244,7 @@ msgstr "力量"
 
 #: ui/GameUIDragonEquipment.lua:484 ui/GameUIDragonEquipment.lua:517
 #: ui/GameUIDragonEquipment.lua:592 ui/GameUIDragonEquipmentMake.lua:195
-#: ui/GameUIDragonEyrieDetail.lua:662 ui/GameUIDragonEyrieMain.lua:447
+#: ui/GameUIDragonEyrieDetail.lua:662 ui/GameUIDragonEyrieMain.lua:449
 #: ui/GameUIShowDragonUpStarAnimation.lua:76
 msgid "领导力"
 msgstr "领导力"
@@ -4311,36 +4311,36 @@ msgstr "带兵量"
 msgid "需要时间: %s"
 msgstr "需要时间: %s"
 
-#: ui/GameUIDragonEyrieMain.lua:376 utils/Localize.lua:46
+#: ui/GameUIDragonEyrieMain.lua:378 utils/Localize.lua:46
 msgid "龙还未孵化"
 msgstr "龙还未孵化"
 
-#: ui/GameUIDragonEyrieMain.lua:387
+#: ui/GameUIDragonEyrieMain.lua:389
 msgid "设置龙驻防成功"
 msgstr "设置龙驻防成功"
 
-#: ui/GameUIDragonEyrieMain.lua:396
+#: ui/GameUIDragonEyrieMain.lua:398
 msgid "取消龙驻防成功"
 msgstr "取消龙驻防成功"
 
-#: ui/GameUIDragonEyrieMain.lua:399 ui/GameUIWall.lua:358
+#: ui/GameUIDragonEyrieMain.lua:401 ui/GameUIWall.lua:358
 msgid "还没有龙驻防"
 msgstr "还没有龙驻防"
 
-#: ui/GameUIDragonEyrieMain.lua:492 ui/GameUIDragonEyrieMain.lua:562
+#: ui/GameUIDragonEyrieMain.lua:494 ui/GameUIDragonEyrieMain.lua:564
 #, c-format
 msgid "龙巢%d级时可孵化新的巨龙"
 msgstr "龙巢%d级时可孵化新的巨龙"
 
-#: ui/GameUIDragonEyrieMain.lua:501
+#: ui/GameUIDragonEyrieMain.lua:503
 msgid "开始孵化"
 msgstr "孵化"
 
-#: ui/GameUIDragonEyrieMain.lua:525
+#: ui/GameUIDragonEyrieMain.lua:527
 msgid "正在孵化巨龙"
 msgstr "正在孵化巨龙"
 
-#: ui/GameUIDragonEyrieMain.lua:558
+#: ui/GameUIDragonEyrieMain.lua:560
 msgid "当前龙巢等级不能孵化新的巨龙"
 msgstr "当前龙巢等级不能孵化新的巨龙"
 
@@ -5321,9 +5321,9 @@ msgid "一个兵种击败敌军"
 msgstr "一个兵种击败敌军"
 
 #: ui/GameUIPveAttack.lua:21
-#, fuzzy, c-format
+#, c-format
 msgid "第%d章-第%d节"
-msgstr "***"
+msgstr "第%d章-第%d节"
 
 #: ui/GameUIPveAttack.lua:78 ui/GameUIPveAttack.lua:203
 msgid "几率掉落"
@@ -5336,11 +5336,11 @@ msgstr "今日可挑战次数: %d/%d"
 
 #: ui/GameUIPveAttack.lua:118
 msgid "拥有扫荡劵 : "
-msgstr "***"
+msgstr "拥有："
 
 #: ui/GameUIPveAttack.lua:130
 msgid "扫荡全部"
-msgstr "***"
+msgstr "扫荡全部"
 
 #: ui/GameUIPveAttack.lua:134 ui/GameUIPveAttack.lua:157
 #: ui/GameUIPveAttack.lua:359
@@ -5349,7 +5349,7 @@ msgstr "已达今日最大挑战次数!"
 
 #: ui/GameUIPveAttack.lua:153
 msgid "扫荡一次"
-msgstr "***"
+msgstr "扫荡一次"
 
 #: ui/GameUIPveAttack.lua:176
 msgid "关卡三星通关后，可使用扫荡"
@@ -5365,7 +5365,7 @@ msgstr ""
 
 #: ui/GameUIPveAttack.lua:237
 msgid "已通关"
-msgstr "***"
+msgstr "已通关"
 
 #: ui/GameUIPveAttack.lua:253 ui/GameUIPveSelect.lua:74
 #: widget/WidgetPVEEntranceDoor.lua:27 widget/WidgetPVESelectStage.lua:66
@@ -5378,9 +5378,9 @@ msgid "每次消耗体力:"
 msgstr "每次消耗体力:"
 
 #: ui/GameUIPveAttack.lua:309
-#, fuzzy, c-format
+#, c-format
 msgid "体力 : %d/%d"
-msgstr "***"
+msgstr "体力 : %d/%d"
 
 #: ui/GameUIPveAttack.lua:465
 msgid "补充道具"
@@ -5391,13 +5391,13 @@ msgid "您当前没有足够的扫荡劵,是否花费金龙币购买补充并使
 msgstr "您当前没有足够的扫荡劵,是否花费金龙币购买补充并使用"
 
 #: ui/GameUIPveHomeNew.lua:83 ui/GameUIPveSelect.lua:37
-#, fuzzy, c-format
+#, c-format
 msgid "第%d章"
-msgstr "***"
+msgstr "第%d章"
 
 #: ui/GameUIPveReward.lua:11
 msgid "领取奖励"
-msgstr "***"
+msgstr "领取奖励"
 
 #: ui/GameUIPveSelect.lua:8 widget/WidgetPVESelectStage.lua:14
 msgid "选择关卡"
@@ -5413,26 +5413,26 @@ msgstr "未通关"
 
 #: ui/GameUIPveSummary.lua:86 ui/GameUIPveSummary.lua:145
 #: ui/GameUIPveSummary.lua:165
-#, fuzzy, c-format
+#, c-format
 msgid "(等级 %d)"
-msgstr "***"
+msgstr "(等级 %d)"
 
 #: ui/GameUIPveSummary.lua:204
 msgid "获得数量 : "
-msgstr "***"
+msgstr "获得数量 : "
 
 #: ui/GameUIPveSummary.lua:210
 msgid "材料库房已满，未能获得战利品，请升级材料库房或使用已有材料。"
-msgstr "***"
+msgstr "材料库房已满，未能获得战利品，请升级材料库房或使用已有材料。"
 
 #: ui/GameUIPveSummary.lua:294
 msgid "招募更多兵种"
-msgstr "***"
+msgstr "招募更多兵种"
 
 #: ui/GameUIPveSweep.lua:85
-#, fuzzy, c-format
+#, c-format
 msgid "第%d战"
-msgstr "***"
+msgstr "第%d战"
 
 #: ui/GameUIQuickTechnology.lua:47 ui/GameUIUpgradeTechnology.lua:179
 msgid "科技研发"
@@ -5973,24 +5973,24 @@ msgstr "取消屏蔽"
 
 #: ui/GameUIShareReport.lua:16
 msgid "战报分享"
-msgstr "***"
+msgstr "战报分享"
 
 #: ui/GameUIShareReport.lua:157
 msgid "说点什么"
-msgstr "***"
+msgstr "说点什么"
 
 #: ui/GameUIShareReport.lua:167
 msgid "侦查战报"
-msgstr "***"
+msgstr "侦查战报"
 
 #: ui/GameUIShareReport.lua:176
 msgid "圣地战报"
-msgstr "***"
+msgstr "圣地战报"
 
 #: ui/GameUIShareReport.lua:195 ui/GameUIShareReport.lua:216
 #: ui/GameUIShareReport.lua:238
 msgid "分享成功"
-msgstr ""
+msgstr "分享成功"
 
 #: ui/GameUIShireFightEvent.lua:17 ui/GameUIShrineReport.lua:39
 msgid "事件详情"
@@ -6537,7 +6537,7 @@ msgstr "点击升级"
 
 #: ui/GameUIUpgradeTechnology.lua:208
 msgid "当前效果"
-msgstr ""
+msgstr "效果"
 
 #: ui/GameUIUpgradeTechnology.lua:259 widget/WidgetUpgradeMilitaryTech.lua:87
 msgid "立即研发"
@@ -9901,7 +9901,7 @@ msgstr "增加医院的伤兵容量"
 
 #: utils/Localize.lua:957
 msgid "增加村落的资源采集速度"
-msgstr ""
+msgstr "增加村落的资源采集速度"
 
 #: utils/Localize.lua:958
 msgid "减少招募普通士兵资源消耗"
@@ -9921,7 +9921,7 @@ msgstr "增加防御箭塔的攻击力"
 
 #: utils/Localize.lua:962
 msgid "增加敌方攻城后的返程时间"
-msgstr ""
+msgstr "增加敌方攻城后的返程时间"
 
 #: utils/Localize.lua:963
 msgid "增加资源保护比例"
@@ -9929,7 +9929,7 @@ msgstr "增加资源保护比例"
 
 #: utils/Localize.lua:964
 msgid "提示资源小车数量上限"
-msgstr ""
+msgstr "提示资源小车数量上限"
 
 #: utils/Localize.lua:965
 msgid "增加木材产量"
@@ -9945,7 +9945,7 @@ msgstr "住宅城民上限加成"
 
 #: utils/Localize.lua:968
 msgid "减少治愈伤兵的时间"
-msgstr ""
+msgstr "减少治愈伤兵的时间"
 
 #: utils/Localize.lua:969
 msgid "增加生产材料速度"
@@ -9953,7 +9953,7 @@ msgstr "增加生产材料速度"
 
 #: utils/Localize.lua:970
 msgid "提升银币产量"
-msgstr ""
+msgstr "提升银币产量"
 
 #: utils/Localize.lua:973 utils/Localize.lua:974 utils/Localize.lua:975
 #: utils/Localize.lua:976 utils/Localize.lua:977 utils/Localize.lua:978
@@ -9963,7 +9963,7 @@ msgstr ""
 #: utils/Localize.lua:988 utils/Localize.lua:989 utils/Localize.lua:990
 #, c-format
 msgid "研发%s完成"
-msgstr ""
+msgstr "研发%s完成"
 
 #: utils/Localize.lua:993
 msgid "高庭"
@@ -12272,75 +12272,3 @@ msgstr "已经激活VIP，关闭窗口"
 #: widget/WidgetUseMutiItems.lua:22
 msgid "使用数量"
 msgstr "使用数量"
-
-#~ msgid "分享"
-#~ msgstr "***"
-
-#~ msgid "增加占领村落时采集资源的速度"
-#~ msgstr "增加占领村落时采集资源的速度"
-
-#~ msgid "增加攻打城市后的返程时间"
-#~ msgstr "增加敌方攻打城市后的返程时间"
-
-#~ msgid "增加马车的资源和材料容量的上限"
-#~ msgstr "增加资源小车的容量上限"
-
-#~ msgid "增加治愈伤兵速度"
-#~ msgstr "增加治愈伤兵速度"
-
-#~ msgid "提升市政厅获得银币产量"
-#~ msgstr "提升市政厅获得银币产量"
-
-#~ msgid "增加建筑速度完成"
-#~ msgstr "增加建筑速度完成"
-
-#~ msgid "增加城墙维修速度完成"
-#~ msgstr "增加城墙维修速度完成"
-
-#~ msgid "增加城墙的单位血量防御值完成"
-#~ msgstr "增加城墙的单位血量防御值完成"
-
-#~ msgid "增加医院的伤兵容量完成"
-#~ msgstr "增加医院的伤兵容量完成"
-
-#~ msgid "增加占领村落时采集资源的速度完成"
-#~ msgstr "增加占领村落时采集资源的速度完成"
-
-#~ msgid "升级募兵术完成"
-#~ msgstr "升级募兵术完成"
-
-#~ msgid "增加石料产量完成"
-#~ msgstr "增加石料产量完成"
-
-#~ msgid "增加铁矿产量完成"
-#~ msgstr "增加铁矿产量完成"
-
-#~ msgid "增加防御箭塔的攻击力完成"
-#~ msgstr "增加防御箭塔的攻击力完成"
-
-#~ msgid "增加攻打城市后的返程时间完成"
-#~ msgstr "增加敌军的返程时间完成"
-
-#~ msgid "增加资源保护比例完成"
-#~ msgstr "增加资源保护比例完成"
-
-#~ msgid "增加马车的资源和材料容量的上限完成"
-#~ msgstr "增加资源小车的容量上限完成"
-
-#~ msgid "增加木材产量完成"
-#~ msgstr "增加木材产量完成"
-
-#~ msgid "增加粮食产量完成"
-#~ msgstr "增加粮食产量完成"
-
-#~ msgid "住宅城民上限加成完成"
-#~ msgstr "住宅城民上限加成完成"
-
-#~ msgid "增加治愈伤兵速度完成"
-#~ msgstr "增加治愈伤兵速度完成"
-
-#~ msgid "增加生产材料速度完成"
-#~ msgstr "增加生产材料速度完成"
-
-#~ msgid "提升市政厅获得银币产量完成"
-#~ msgstr "提升市政厅获得银币产量完成"

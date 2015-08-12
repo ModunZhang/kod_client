@@ -339,7 +339,7 @@ function GameUIPveAttackFte:PormiseOfFte()
                     param.reward = {{type = "items", name = "foodClass_2", count = 1}}
                 elseif self.pve_name == "1_2" then
                     report = fightReport2
-                    param.reward = {{type = "items", name = "foodClass_2", count = 1}}
+                    param.reward = {{type = "items", name = "woodClass_2", count = 1}}
                 elseif self.pve_name == "1_3" then
                     report = fightReport3
                     param.reward = {{type = "soldierMaterials", name = "deathHand", count = 2}}

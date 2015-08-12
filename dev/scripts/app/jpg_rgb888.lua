@@ -15,6 +15,7 @@ jpg_rgb888["left_background_2_desert.jpg"] = cc.TEXTURE2_D_PIXEL_FORMAT_RG_B565
 jpg_rgb888["left_background_2_grassLand.jpg"] = cc.TEXTURE2_D_PIXEL_FORMAT_RG_B565
 jpg_rgb888["left_background_2_iceField.jpg"] = cc.TEXTURE2_D_PIXEL_FORMAT_RG_B565
 jpg_rgb888["mission_header_bg_616x184.jpg"] = cc.TEXTURE2_D_PIXEL_FORMAT_RG_B565
+jpg_rgb888["pve_background.jpg"] = cc.TEXTURE2_D_PIXEL_FORMAT_RG_B565
 jpg_rgb888["pve_tips_554x340.jpg"] = cc.TEXTURE2_D_PIXEL_FORMAT_RG_B565
 jpg_rgb888["region_tips_556x344.jpg"] = cc.TEXTURE2_D_PIXEL_FORMAT_RG_B565
 jpg_rgb888["right_background_1_desert.jpg"] = cc.TEXTURE2_D_PIXEL_FORMAT_RG_B565
