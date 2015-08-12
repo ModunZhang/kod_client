@@ -115,7 +115,7 @@ function GameUIStrikeReport:onEnter()
             font = UIKit:getFontFilePath(),
             size = 18,
             color = UIKit:hex2c3b(0x615b44)
-        }):align(display.RIGHT_CENTER, rb_size.width-20, rb_size.height-170)
+        }):align(display.RIGHT_CENTER, rb_size.width-100, rb_size.height-170)
         :addTo(report_body)
     -- 突袭战报详细内容展示
     self.details_view = UIListView.new{
@@ -187,7 +187,7 @@ function GameUIStrikeReport:onEnter()
         local share_button = WidgetPushButton.new(
             {normal = "tmp_blue_btn_up_64x56.png", pressed = "tmp_blue_btn_down_64x56.png"},
             {scale9 = false}
-        ):addTo(report_body):align(display.CENTER, report_body:getContentSize().width-220, rb_size.height-186)
+        ):addTo(report_body):align(display.CENTER, report_body:getContentSize().width-60, rb_size.height-186)
             :onButtonClicked(function(event)
                 UIKit:newGameUI("GameUIShareReport", report):AddToCurrentScene()
             end)
