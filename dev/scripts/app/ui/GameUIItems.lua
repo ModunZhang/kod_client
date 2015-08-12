@@ -434,7 +434,7 @@ function GameUIItems:CreateMyItemContentByIndex( idx )
     end
     function content:SetData( idx )
         local items = parent:GetMyItemByTag(parent.my_item_tag)[idx]
-        self:SetOwnCount(string.formatnumberthousands(items:Count()))
+        self:SetOwnCount(items:Count())
         local item_image =UILib.item[items:Name()]
         if item_image then
             if self.item_icon then
