@@ -501,7 +501,13 @@ function GameUIItems:UseItemFunc( items )
         end
 
         if items:Category() == items.CATEGORY.RESOURCE then
-            UIKit:newWidgetUI("WidgetUseMutiItems", items):AddToCurrentScene()
+            if items:Count() > 1 then
+                UIKit:newWidgetUI("WidgetUseMutiItems", items):AddToCurrentScene()
+            else
+                NetManager:getUseItemPromise(items:Name(),{
+                    [items:Name()] = {count = items:Count()}
+                })
+            end
         else
             NetManager:getUseItemPromise(items:Name(),{}):done(function (response)
                 local message = ""
@@ -569,6 +575,7 @@ function GameUIItems:OnItemsChanged( changed_map )
     end
 end
 return GameUIItems
+
 
 
 
