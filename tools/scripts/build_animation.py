@@ -39,7 +39,7 @@ if __name__=="__main__":
 	with codecs.open('../../dev/scripts/app/' + destfile, 'w', 'utf-8') as f:
 		f.write('local animation = {}\n')
 		for (k,v) in D.items():
-			f.write("animation[\"%s\"] = {%s}\n" % (k, ",".join([ '\"'+item+'\"' for item in v])))
+			f.write("animation[\"%s\"] = {%s}\n" % (k, ",".join([ '\"animations/'+item+'\"' for item in v])))
 		f.write('return animation')
 
 
