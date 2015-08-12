@@ -204,7 +204,7 @@ function GameUIPVESendTroop:SelectDragonPart()
         :addTo(box_bg)
     -- 龙活力
     self.dragon_vitality = UIKit:ttfLabel({
-        text = _("生命值")..dragon:Hp().."/"..dragon:GetMaxHP(),
+        text = _("生命值")..string.formatnumberthousands(dragon:Hp()).."/"..string.formatnumberthousands(dragon:GetMaxHP()),
         size = 20,
         color = 0x615b44,
     }):align(display.LEFT_CENTER,20,30)
@@ -227,7 +227,7 @@ end
 function GameUIPVESendTroop:RefreashDragon(dragon)
     self.dragon_img:setTexture(UILib.dragon_head[dragon:Type()])
     self.dragon_name:setString(Localize.dragon[dragon:Type()].."（LV ".. dragon:Level()..")")
-    self.dragon_vitality:setString(_("生命值")..dragon:Hp().."/"..dragon:GetMaxHP())
+    self.dragon_vitality:setString(_("生命值")..string.formatnumberthousands(dragon:Hp()).."/"..string.formatnumberthousands(dragon:GetMaxHP()))
     self.dragon = dragon
     GameUIPVESendTroop.dragon = self.dragon
 end
