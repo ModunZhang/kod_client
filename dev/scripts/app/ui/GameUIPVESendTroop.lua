@@ -204,7 +204,7 @@ function GameUIPVESendTroop:SelectDragonPart()
         :addTo(box_bg)
     -- 龙活力
     self.dragon_vitality = UIKit:ttfLabel({
-        text = _("生命值")..dragon:Hp().."/"..dragon:GetMaxHP(),
+        text = _("生命值")..string.formatnumberthousands(dragon:Hp()).."/"..string.formatnumberthousands(dragon:GetMaxHP()),
         size = 20,
         color = 0x615b44,
     }):align(display.LEFT_CENTER,20,30)
@@ -227,7 +227,7 @@ end
 function GameUIPVESendTroop:RefreashDragon(dragon)
     self.dragon_img:setTexture(UILib.dragon_head[dragon:Type()])
     self.dragon_name:setString(Localize.dragon[dragon:Type()].."（LV ".. dragon:Level()..")")
-    self.dragon_vitality:setString(_("生命值")..dragon:Hp().."/"..dragon:GetMaxHP())
+    self.dragon_vitality:setString(_("生命值")..string.formatnumberthousands(dragon:Hp()).."/"..string.formatnumberthousands(dragon:GetMaxHP()))
     self.dragon = dragon
     GameUIPVESendTroop.dragon = self.dragon
 end
@@ -316,7 +316,7 @@ function GameUIPVESendTroop:SelectSoldiers()
                     }
                     UIKit:newWidgetUI("WidgetInput", p):AddToCurrentScene()
                 end
-            end):align(display.CENTER,  340,90):addTo(content)
+            end):align(display.CENTER,  380,90):addTo(content)
         local btn_text = UIKit:ttfLabel({
             text = 0,
             size = 22,
@@ -349,11 +349,11 @@ function GameUIPVESendTroop:SelectSoldiers()
 
 
         local soldier_total_count = UIKit:ttfLabel({
-            text = string.format("/ %d", item.max_soldier),
+            text = string.format("/ %s", string.formatnumberthousands(item.max_soldier)),
             size = 20,
             color = 0x403c2f
         }):addTo(content)
-            :align(display.LEFT_CENTER, 400,90)
+            :align(display.LEFT_CENTER, 440,90)
 
         -- 士兵头像
         local soldier_ui_config = UILib.soldier_image[name][star]
@@ -377,7 +377,7 @@ function GameUIPVESendTroop:SelectSoldiers()
         function item:SetMaxSoldier(max_soldier)
             self.max_soldier = max_soldier
             slider:SetMax(max_soldier)
-            soldier_total_count:setString(string.format("/ %d", self.max_soldier))
+            soldier_total_count:setString(string.format("/ %s", string.formatnumberthousands(self.max_soldier)))
         end
 
         function item:GetSoldierInfo()
@@ -509,7 +509,7 @@ function GameUIPVESendTroop:CreateTroopsShow()
     end
     function TroopsShow:SetCitizen(citizen)
         local info_bg =self.info_bg
-        local citizen_item = createInfoItem(_("部队容量"),citizen.."/"..parent.dragon:LeadCitizen())
+        local citizen_item = createInfoItem(_("部队容量"),string.formatnumberthousands(citizen).."/"..string.formatnumberthousands(parent.dragon:LeadCitizen()))
         citizen_item:align(display.CENTER,320,26)
             :addTo(info_bg)
         return self

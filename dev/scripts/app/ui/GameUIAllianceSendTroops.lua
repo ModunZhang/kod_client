@@ -306,7 +306,7 @@ function GameUIAllianceSendTroops:SelectDragonPart()
         :addTo(box_bg)
     -- 龙活力
     self.dragon_vitality = UIKit:ttfLabel({
-        text = _("生命值")..dragon:Hp().."/"..dragon:GetMaxHP(),
+        text = _("生命值")..string.formatnumberthousands(dragon:Hp()).."/"..string.formatnumberthousands(dragon:GetMaxHP()),
         size = 20,
         color = 0x615b44,
     }):align(display.LEFT_CENTER,20,30)
@@ -329,7 +329,7 @@ end
 function GameUIAllianceSendTroops:RefreashDragon(dragon)
     self.dragon_img:setTexture(UILib.dragon_head[dragon:Type()])
     self.dragon_name:setString(Localize.dragon[dragon:Type()].."（LV "..dragon:Level().."）")
-    self.dragon_vitality:setString(_("生命值")..dragon:Hp().."/"..dragon:GetMaxHP())
+    self.dragon_vitality:setString(_("生命值")..string.formatnumberthousands(dragon:Hp()).."/"..string.formatnumberthousands(dragon:GetMaxHP()))
     self.dragon = dragon
     self:RefreashSoldierShow()
 end
@@ -413,7 +413,7 @@ function GameUIAllianceSendTroops:SelectSoldiers()
                     }
                     UIKit:newWidgetUI("WidgetInput", p):AddToCurrentScene()
                 end
-            end):align(display.CENTER,  420,90):addTo(content)
+            end):align(display.CENTER,  380,90):addTo(content)
         local btn_text = UIKit:ttfLabel({
             text = 0,
             size = 22,
@@ -447,11 +447,11 @@ function GameUIAllianceSendTroops:SelectSoldiers()
 
 
         local soldier_total_count = UIKit:ttfLabel({
-            text = string.format("/ %d", item.max_soldier),
+            text = string.format("/ %s", string.formatnumberthousands(item.max_soldier)),
             size = 20,
             color = 0x403c2f
         }):addTo(content)
-            :align(display.LEFT_CENTER, 480,90)
+            :align(display.LEFT_CENTER, 440,90)
 
         -- 士兵头像
         local soldier_ui_config = UILib.soldier_image[name][star]
@@ -484,7 +484,7 @@ function GameUIAllianceSendTroops:SelectSoldiers()
         function item:SetMaxSoldier(max_soldier)
             self.max_soldier = max_soldier
             slider:SetMax(max_soldier)
-            soldier_total_count:setString(string.format("/ %d", self.max_soldier))
+            soldier_total_count:setString(string.format("/ %s", string.formatnumberthousands(self.max_soldier)))
         end
 
         function item:GetSoldierInfo()

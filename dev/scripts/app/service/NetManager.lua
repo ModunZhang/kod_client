@@ -935,7 +935,7 @@ function NetManager:getInstantTreatSoldiersPromise(soldiers)
         local get_list = ""
         for k,v in pairs(soldiers) do
             local m_name = Localize.soldier_name[v.name]
-            get_list = get_list == "" and "" or "," .. get_list .. m_name .. "X"..v.count
+            get_list =  get_list .. (get_list == "" and "" or ",") .. m_name .. "X"..v.count
         end
         GameGlobalUI:showTips(_("治愈士兵完成"),get_list)
     end)
