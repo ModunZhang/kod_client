@@ -48,8 +48,8 @@ function DragonEyrieUpgradeBuilding:CheckIfHateDragon()
 end
 -- 解锁下一条龙的龙巢等级
 function DragonEyrieUpgradeBuilding:GetNextHateLevel()
-    local current_count = config_function[self:GetLevel()].dragonCount
-    for i=self:GetLevel() + 1,#config_function do
+    local current_count = self:GetDragonManager():GetHatedCount()
+    for i = 1,#config_function do
         if config_function[i].dragonCount > current_count then
             return i
         end

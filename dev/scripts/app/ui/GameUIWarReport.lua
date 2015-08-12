@@ -257,7 +257,7 @@ function GameUIWarReport:FightWithHelpDefencePlayerReports()
         war_s_label_item:setItemSize(540,40)
         local g = cc.ui.UIGroup.new()
         g:addWidget(UIKit:ttfLabel({
-            text = _("与协防方战斗统计") ,
+            text = _("战斗统计") ,
             size = 22,
             color = 0x403c2f
         }):align(display.CENTER, 0, 0))
@@ -297,7 +297,7 @@ function GameUIWarReport:FightWithDefencePlayerReports()
     war_s_label_item:setItemSize(540,40)
     local g = cc.ui.UIGroup.new()
     g:addWidget(UIKit:ttfLabel({
-        text = _("防守方战斗统计") ,
+        text = _("战斗统计") ,
         size = 22,
         color = 0x403c2f
     }):align(display.CENTER, 0, 0))
@@ -514,8 +514,9 @@ function GameUIWarReport:KillEnemy(troop)
     local war_s_label_item = self.details_view:newItem()
     war_s_label_item:setItemSize(540,40)
     local g = cc.ui.UIGroup.new()
+
     g:addWidget(UIKit:ttfLabel({
-        text = _("击杀敌方") ,
+        text = string.format(_("%s损失"),self.report:GetEnemyPlayerData().name) ,
         size = 22,
         color = 0x403c2f
     }):align(display.CENTER, 0, 0))
@@ -530,7 +531,7 @@ function GameUIWarReport:OurLose(troop)
     war_s_label_item:setItemSize(540,40)
     local g = cc.ui.UIGroup.new()
     g:addWidget(UIKit:ttfLabel({
-        text = _("我方损失") ,
+        text = string.format(_("%s损失"),self.report:GetMyPlayerData().name) ,
         size = 22,
         color = 0x403c2f
     }):align(display.CENTER, 0, 0))
