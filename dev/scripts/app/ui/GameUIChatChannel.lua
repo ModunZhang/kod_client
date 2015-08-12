@@ -477,6 +477,7 @@ function GameUIChatChannel:HandleCellUIData(mainContent,chat,update_time)
                 elseif report:Type() == "attackShrine" then
                     UIKit:newGameUI("GameUIShrineReportInMail", report):AddToCurrentScene(true)
                 end
+                app:GetAudioManager():PlayeEffectSoundWithKey("OPEN_MAIL")
             end)
         end)
     else

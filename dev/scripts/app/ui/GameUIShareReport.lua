@@ -6,6 +6,7 @@ local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetAllianceHelper = import("..widget.WidgetAllianceHelper")
+local StarBar = import(".StarBar")
 local UILib = import(".UILib")
 local Flag = import("..entity.Flag")
 local Localize = import("..utils.Localize")
@@ -74,7 +75,6 @@ function GameUIShareReport:onEnter()
                 color = 0x403c2f
             }):align(display.LEFT_CENTER, report_content_bg:getContentSize().width/2-20, 60)
             :addTo(report_content_bg)
-        print("attackTarget.fightStar=",attackTarget.fightStar)
         StarBar.new({
             max = 3,
             bg = "alliance_shire_star_60x58_0.png",
@@ -192,6 +192,7 @@ function GameUIShareReport:onEnter()
         :onButtonClicked(function(event)
             local message = string.format("<report>reportName:%s,userId:%s,reportId:%s<report> %s",reportName,User:Id(),report:Id(),textView:getText() or "")
             app:GetChatManager():SendChat("global",message)
+        	GameGlobalUI:showTips(_("提示"),_("分享成功"))
             self:LeftButtonClicked()
         end)
     -- 联盟按钮
@@ -212,6 +213,7 @@ function GameUIShareReport:onEnter()
             else
                 local message = string.format("<report>reportName:%s,userId:%s,reportId:%s<report> %s",reportName,User:Id(),report:Id(),textView:getText() or "")
                 app:GetChatManager():SendChat("alliance",message)
+        		GameGlobalUI:showTips(_("提示"),_("分享成功"))
                 self:LeftButtonClicked()
             end
 
@@ -233,6 +235,7 @@ function GameUIShareReport:onEnter()
             if Alliance_Manager:GetMyAlliance():Status() == "fight" or Alliance_Manager:GetMyAlliance():Status() == "prepare"  then
                 local message = string.format("<report>reportName:%s,userId:%s,reportId:%s<report> %s",reportName,User:Id(),report:Id(),textView:getText() or "")
                 app:GetChatManager():SendChat("allianceFight",message)
+        		GameGlobalUI:showTips(_("提示"),_("分享成功"))
                 self:LeftButtonClicked()
             else
                 UIKit:showMessageDialog(_("提示"), _("联盟未处于战争状态，不能使用此聊天频道!"))

@@ -140,18 +140,15 @@ function GameUIShrineReportInMail:onEnter()
             end
         end):addTo(report_body):pos(rb_size.width-48, 37)
             :setButtonSelected(report:IsSaved(),true)
-        WidgetPushButton.new(
-            {normal = "blue_btn_up_148x58.png", pressed = "blue_btn_down_148x58.png"},
+        -- 分享战报按钮
+        local share_button = WidgetPushButton.new(
+            {normal = "tmp_blue_btn_up_64x56.png", pressed = "tmp_blue_btn_down_64x56.png"},
             {scale9 = false}
-        ):setButtonLabel(UIKit:ttfLabel({
-            text = _("分享"),
-            size = 20,
-            color = 0xfff3c7,
-            shadow = true
-        })):addTo(report_body):align(display.CENTER, 310, 40)
+        ):addTo(report_body):align(display.CENTER, report_body:getContentSize().width-80, rb_size.height-186)
             :onButtonClicked(function(event)
-                self:GetChatManager():SendChat("global",string.format("<report>reportName:%s,userId:%s,reportId:%s<report>",_("圣地战报"),User:Id(),report:Id()))
+                UIKit:newGameUI("GameUIShareReport", report):AddToCurrentScene()
             end)
+        display.newSprite("tmp_icon_share_24x34.png"):addTo(share_button)
     end
 end
 
