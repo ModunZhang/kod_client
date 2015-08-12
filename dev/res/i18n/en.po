@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: dragonfall\n"
-"POT-Creation-Date: 2015-08-12 15:45+0800\n"
-"PO-Revision-Date: 2015-08-12 15:46+0800\n"
+"POT-Creation-Date: 2015-08-12 17:10+0800\n"
+"PO-Revision-Date: 2015-08-12 17:11+0800\n"
 "Last-Translator: gaozhou <gaozhou.f@qq.com>\n"
 "Language-Team: \n"
 "Language: en\n"
@@ -4486,8 +4486,6 @@ msgstr "Tap to Heal"
 #: ui/GameUIFteMaterialDepot.lua:46
 msgid "果然没有...不过也碍事...我的探子已经找到了他们的一处聚集地,请大人随我来"
 msgstr ""
-"Sure enough,there's no gem…But it's fine,my scout has already found the "
-"place of them,follow me,my lord."
 
 #: ui/GameUIFteUpgradeTechnology.lua:16
 msgid "开始研发"
@@ -12474,3 +12472,9 @@ msgstr "You've activated the VIP, Tap to close it"
 #: widget/WidgetUseMutiItems.lua:22
 msgid "使用数量"
 msgstr "Use Amount"
+
+#~ msgid ""
+#~ "果然没有...不过也碍事...我的探子已经找到了他们的一处聚集地,请大人随我来。"
+#~ msgstr ""
+#~ "Sure enough,there's no gem…But it's fine,my scout has already found the "
+#~ "place of them,follow me,my lord."

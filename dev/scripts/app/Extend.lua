@@ -75,6 +75,13 @@ local c3b_m_ = {
             g = a.g + b.g,
             b = a.b + b.b,
         }
+    end,
+    __sub = function(a,b)
+        return {
+            r = a.r - b.r,
+            g = a.g - b.g,
+            b = a.b - b.b,
+        }
     end
 }
 local c3b_ = cc.c3b

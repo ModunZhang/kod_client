@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: dragonfall\n"
-"POT-Creation-Date: 2015-08-12 15:45+0800\n"
-"PO-Revision-Date: 2015-08-12 15:45+0800\n"
+"POT-Creation-Date: 2015-08-12 17:11+0800\n"
+"PO-Revision-Date: 2015-08-12 17:11+0800\n"
 "Last-Translator: gaozhou <gaozhou.f@qq.com>\n"
 "Language-Team: \n"
 "Language: zh_TW\n"
@@ -1457,7 +1457,7 @@ msgid ""
 "于生产资源和招募部队。。。"
 msgstr ""
 "不過可惜這座城市太弱小了，我們必須從頭開始發展。建造住宅為城市提供空閒城民，"
-"並用於生產資源和招募部隊"
+"並用於生產資源和招募部隊。"
 
 #: scenes/MyCityFteScene.lua:442
 msgid "非常好，现在我们来升级城堡！城堡等级越高，可以解锁更多建筑…"
@@ -4434,7 +4434,7 @@ msgstr "點擊治愈"
 #: ui/GameUIFteMaterialDepot.lua:46
 msgid ""
 "果然没有...不过也碍事...我的探子已经找到了他们的一处聚集地,请大人随我来"
-msgstr "果然没有…不过也不碍事…我的探子已经找到了他们的一处聚集地,请大人随我来"
+msgstr ""
 
 #: ui/GameUIFteUpgradeTechnology.lua:16
 msgid "开始研发"
@@ -12269,3 +12269,8 @@ msgstr "已經激活VIP，關閉窗口"
 #: widget/WidgetUseMutiItems.lua:22
 msgid "使用数量"
 msgstr "使用數量"
+
+#~ msgid ""
+#~ "果然没有...不过也碍事...我的探子已经找到了他们的一处聚集地,请大人随我来。"
+#~ msgstr ""
+#~ "果然没有…不过也不碍事…我的探子已经找到了他们的一处聚集地,请大人随我来。"
