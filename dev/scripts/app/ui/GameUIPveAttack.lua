@@ -365,7 +365,7 @@ function GameUIPveAttack:CreateAttackButton()
                 }):AddToCurrentScene()
                 return
             end
-            event.target:setTouchEnabled(false)
+            -- event.target:setTouchEnabled(false)
             self:Attack()
             -- self:UseStrength(function()
                 -- event.target:setTouchEnabled(true)
