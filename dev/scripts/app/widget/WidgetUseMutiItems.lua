@@ -53,6 +53,7 @@ function WidgetUseMutiItems:ctor(item)
         end):align(display.BOTTOM_CENTER, body_size.width/2,30):addTo(body)
     button:setButtonEnabled(slider:GetValue() ~= 0)
     self.button = button
+    slider:SetValue(item:Count())
 end
 
 return WidgetUseMutiItems

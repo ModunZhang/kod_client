@@ -30,12 +30,15 @@ local _Armature = ccs.Armature
 local ccs_Armature_create = _Armature.create
 local manager = ccs.ArmatureDataManager:getInstance()
 function _Armature:create(ani)
-    -- for _,found_data_in_plist in ipairs(animation[ani]) do
-    --     local plistName = string.sub(found_data_in_plist,1,string.find(found_data_in_plist,"%.") - 1)
-    --     plistName = string.format("%s.plist", plistName)
-    --     printInfo("setTexture:load plist texture:%s", found_data_in_plist)
-    --     display.addSpriteFrames(plistName, found_data_in_plist)
-    -- end
+    for _,found_data_in_plist in ipairs(animation[ani]) do
+        local png_path = DEBUG_GET_ANIMATION_PATH(found_data_in_plist)
+        if not sharedSpriteFrameCache:getSpriteFrame(png_path) then
+            local plistName = string.sub(png_path,1,string.find(png_path,"%.") - 1)
+            plistName = string.format("%s.plist", plistName)
+            printInfo("setTexture:load plist texture:%s", png_path)
+            display.addSpriteFrames(DEBUG_GET_ANIMATION_PATH(plistName), png_path)
+        end
+    end
     local path = DEBUG_GET_ANIMATION_PATH(string.format("animations/%s.ExportJson", ani))
     manager:addArmatureFileInfo(path)
     return ccs_Armature_create(self, ani)
@@ -71,6 +74,13 @@ local c3b_m_ = {
             r = a.r + b.r,
             g = a.g + b.g,
             b = a.b + b.b,
+        }
+    end,
+    __sub = function(a,b)
+        return {
+            r = a.r - b.r,
+            g = a.g - b.g,
+            b = a.b - b.b,
         }
     end
 }

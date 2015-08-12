@@ -275,7 +275,7 @@ function GameUtils:PingBaidu(callback)
     local request = network.createHTTPRequest(function(event)
         if event.name == "completed" then
             callback(true)
-        elseif eventName == "failed" then
+        elseif event.name == "failed" then
             callback(false)
         end
     end, "http://www.baidu.com", "GET")

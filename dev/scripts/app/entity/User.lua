@@ -234,6 +234,9 @@ end
 function User:IsStagePassed(index)
     return #(self:GetStageByIndex(index).sections or {}) == pve_length
 end
+function User:IsAllPassed()
+    return self:IsStagePassed(total_stages)
+end
 function User:GetNextStageByPveName(pve_name)
     local stage_index,pve_index = unpack(string.split(pve_name, "_"))
     return tonumber(stage_index) + 1

@@ -126,8 +126,9 @@ function GameUIPveSummary:BuildVictoryUI(param)
         shadow = true,
     }):addTo(bg):align(display.LEFT_CENTER, -70, 60)
 
-    local unit_time = 0.8
+    local unit_time = 1
     local acts = {}
+    local is_show_levelup = false
     if param.new_level - param.old_level > 0 then
         for i = param.old_level, param.new_level do
             table.insert(acts, cc.CallFunc:create(function()
@@ -141,6 +142,23 @@ function GameUIPveSummary:BuildVictoryUI(param)
                     end)
                 end))
                 table.insert(acts, cc.ProgressTo:create(unit_time, 100))
+                if not is_show_levelup then
+                    table.insert(acts, cc.CallFunc:create(function()
+                        local level_label = UIKit:ttfLabel({
+                            text = _("升级!"),
+                            size = 22,
+                            color = 0x00ff00,
+                        }):addTo(bg):align(display.CENTER, 230, 120)
+                        :scale(1.5):runAction(cc.EaseBackOut:create(
+                                cc.Spawn:create(
+                                    cc.MoveTo:create(0.5, cc.p(230, 120)),
+                                    cc.ScaleTo:create(0.5, 1)
+                                )
+                            ))
+                    end))
+
+                    is_show_levelup = true
+                end
                 table.insert(acts, cc.CallFunc:create(function()
                     level_label:setString(Localize.dragon[param.dragonType]..string.format(_("(等级 %d)"), i + 1))
                 end))
@@ -161,6 +179,22 @@ function GameUIPveSummary:BuildVictoryUI(param)
                     end)
                 end))
                 table.insert(acts, cc.ProgressTo:create(unit_time, 100))
+                if not is_show_levelup then
+                    table.insert(acts, cc.CallFunc:create(function()
+                        local level_label = UIKit:ttfLabel({
+                            text = _("升级!"),
+                            size = 22,
+                            color = 0x00ff00,
+                        }):addTo(bg):align(display.CENTER, 230, 120)
+                            :scale(1.5):runAction(cc.EaseBackOut:create(
+                                cc.Spawn:create(
+                                    cc.MoveTo:create(0.5, cc.p(230, 120)),
+                                    cc.ScaleTo:create(0.5, 1)
+                                )
+                            ))
+                    end))
+                    is_show_levelup = true
+                end
                 table.insert(acts, cc.CallFunc:create(function()
                     level_label:setString(Localize.dragon[param.dragonType]..string.format(_("(等级 %d)"), i + 1))
                 end))
@@ -326,6 +360,12 @@ end
 
 
 return GameUIPveSummary
+
+
+
+
+
+
 
 
 
