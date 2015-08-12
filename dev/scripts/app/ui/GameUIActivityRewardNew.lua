@@ -562,7 +562,11 @@ function GameUIActivityRewardNew:ui_FIRST_IN_PURGURE()
             local sp = display.newSprite(UIKit:GetItemImage(reward_type,reward_name),59,59):addTo(item_bg)
             local size = sp:getContentSize()
             sp:scale(90/math.max(size.width,size.height))
-            lights():addTo(sp):pos(size.width/2,size.height/2)
+            local emitter = lights()
+            emitter:setSpeed(3)
+            emitter:setLife(math.random(1) + 1)
+            emitter:setEmissionRate(1)
+            emitter:addTo(sp):pos(size.width/2,size.height/2)
             UIKit:addTipsToNode(sp,Localize_item.item_name[reward_name] .. " x" .. count,self)
             x = x  + 110 + 35
             if index % 2 == 0 then
