@@ -677,10 +677,30 @@ function NetManager:getConnectGateServerPromise()
         self:InitEventsMap(base_event_map)
     end)
 end
+
+function NetManager:tryGetAppTag()
+    local jsonPath = cc.FileUtils:getInstance():fullPathForFilename("fileList.json")
+    local file = io.open(jsonPath)
+    local jsonString = file:read("*a")
+    file:close()
+    local tag = json.decode(jsonString).tag
+    return tag
+end
+
+
 -- 获取服务器列表
 function NetManager:getLogicServerInfoPromise()
     local device_id = device.getOpenUDID()
-    return get_none_blocking_request_promise("gate.gateHandler.queryEntry", {deviceId = device_id,tag = app.client_tag}, "获取逻辑服务器失败",true)
+    local device_tag = app.client_tag
+    if not device_tag then -- fix tag nil
+        device_tag = self:tryGetAppTag()
+        if not device_tag then
+            return cocos_promise.defer(function()
+                promise.reject({code = 0, msg = time}, "timeout")
+            end)
+        end
+    end
+    return get_none_blocking_request_promise("gate.gateHandler.queryEntry", {deviceId = device_id,tag = device_tag}, "获取逻辑服务器失败",true)
         :done(function(result)
             self:CleanAllEventListeners()
             self.m_netService:disconnect()
