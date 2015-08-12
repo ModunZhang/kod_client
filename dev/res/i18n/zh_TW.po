@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: dragonfall\n"
-"POT-Creation-Date: 2015-08-12 17:11+0800\n"
-"PO-Revision-Date: 2015-08-12 17:11+0800\n"
+"POT-Creation-Date: 2015-08-12 17:43+0800\n"
+"PO-Revision-Date: 2015-08-12 17:43+0800\n"
 "Last-Translator: gaozhou <gaozhou.f@qq.com>\n"
 "Language-Team: \n"
 "Language: zh_TW\n"
@@ -174,8 +174,8 @@ msgstr "不能刪除"
 #: ui/GameUIAllianceSendTroops.lua:343 ui/GameUIAllianceTitle.lua:244
 #: ui/GameUILoginBeta.lua:289 ui/GameUILoginBeta.lua:495
 #: ui/GameUILoginBeta.lua:515 ui/GameUILoginBeta.lua:527
-#: ui/GameUIPVESendTroop.lua:241 ui/GameUIPveSummary.lua:219
-#: ui/GameUIPveSummary.lua:302 ui/GameUIPveSweep.lua:23
+#: ui/GameUIPVESendTroop.lua:241 ui/GameUIPveSummary.lua:253
+#: ui/GameUIPveSummary.lua:336 ui/GameUIPveSweep.lua:23
 #: ui/GameUISelenaQuestion.lua:119 ui/GameUIShop.lua:65 ui/GameUIShop.lua:893
 #: ui/GameUIShop.lua:911 ui/GameUIShop.lua:962 ui/GameUIShop.lua:980
 #: ui/GameUIShowDragonUpStarAnimation.lua:44 ui/GameUITradeGuild.lua:686
@@ -229,7 +229,7 @@ msgid "升级龙的技能"
 msgstr "升級龍的技能"
 
 #: datas/ClientInitGame_selena_question.lua:21
-#: datas/ClientInitGame_selena_question.lua:168 ui/GameUIPveSummary.lua:268
+#: datas/ClientInitGame_selena_question.lua:168 ui/GameUIPveSummary.lua:302
 msgid "提升龙的等级"
 msgstr "提升龍的等級"
 
@@ -3648,7 +3648,7 @@ msgstr "出發地"
 msgid "目的地"
 msgstr "目的地"
 
-#: ui/GameUIBarracks.lua:17 ui/GameUIPveSummary.lua:288
+#: ui/GameUIBarracks.lua:17 ui/GameUIPveSummary.lua:322
 #: utils/Localize.lua:716
 msgid "兵营"
 msgstr "兵營"
@@ -4062,7 +4062,7 @@ msgstr "無戰利品"
 
 #: ui/GameUICollectReport.lua:145 ui/GameUIMonsterReport.lua:624
 #: ui/GameUIShrineReportInMail.lua:671 ui/GameUIStrikeReport.lua:34
-#: ui/GameUIWarReport.lua:709
+#: ui/GameUIWarReport.lua:710
 #, c-format
 msgid "Battle at %s (%d,%d)"
 msgstr "戰鬥發生在 %s (%d,%d)"
@@ -4277,7 +4277,7 @@ msgid "附加随机属性数量"
 msgstr "附加隨機屬性數量"
 
 #: ui/GameUIDragonEyrieDetail.lua:25 ui/GameUIDragonEyrieMain.lua:25
-#: ui/GameUIPveSummary.lua:262 utils/Localize.lua:712
+#: ui/GameUIPveSummary.lua:296 utils/Localize.lua:712
 msgid "龙巢"
 msgstr "龍巢"
 
@@ -5048,6 +5048,7 @@ msgid "回放"
 msgstr "回放"
 
 #: ui/GameUIMonsterReport.lua:258 ui/GameUIStrikeReport.lua:273
+#: ui/GameUIWarReport.lua:260 ui/GameUIWarReport.lua:300
 msgid "战斗统计"
 msgstr "戰鬥統計"
 
@@ -5092,12 +5093,10 @@ msgid "无部队"
 msgstr "無部隊"
 
 #: ui/GameUIMonsterReport.lua:512 ui/GameUIShrineReportInMail.lua:573
-#: ui/GameUIWarReport.lua:518
 msgid "击杀敌方"
 msgstr "擊殺敵方"
 
 #: ui/GameUIMonsterReport.lua:527 ui/GameUIShrineReportInMail.lua:588
-#: ui/GameUIWarReport.lua:533
 msgid "我方损失"
 msgstr "我方損失"
 
@@ -5410,21 +5409,25 @@ msgstr "通關"
 msgid "未通关"
 msgstr "未通關"
 
-#: ui/GameUIPveSummary.lua:86 ui/GameUIPveSummary.lua:145
-#: ui/GameUIPveSummary.lua:165
+#: ui/GameUIPveSummary.lua:86 ui/GameUIPveSummary.lua:163
+#: ui/GameUIPveSummary.lua:199
 #, c-format
 msgid "(等级 %d)"
 msgstr "(等級 %d)"
 
-#: ui/GameUIPveSummary.lua:204
+#: ui/GameUIPveSummary.lua:148 ui/GameUIPveSummary.lua:185
+msgid "升级!"
+msgstr ""
+
+#: ui/GameUIPveSummary.lua:238
 msgid "获得数量 : "
 msgstr "獲得數量 : "
 
-#: ui/GameUIPveSummary.lua:210
+#: ui/GameUIPveSummary.lua:244
 msgid "材料库房已满，未能获得战利品，请升级材料库房或使用已有材料。"
 msgstr "材料庫房已滿，未能獲得戰利品，請升級材料庫房或使用已有材料。"
 
-#: ui/GameUIPveSummary.lua:294
+#: ui/GameUIPveSummary.lua:328
 msgid "招募更多兵种"
 msgstr "招募更多兵種"
 
@@ -6754,24 +6757,21 @@ msgstr "龍的力量"
 msgid "最大兵量"
 msgstr "最大兵量"
 
-#: ui/GameUIWarReport.lua:260
-msgid "与协防方战斗统计"
-msgstr "與協防方戰鬥統計"
+#: ui/GameUIWarReport.lua:519 ui/GameUIWarReport.lua:534
+#, c-format
+msgid "%s损失"
+msgstr ""
 
-#: ui/GameUIWarReport.lua:300
-msgid "防守方战斗统计"
-msgstr "防守方戰鬥統計"
-
-#: ui/GameUIWarReport.lua:622 utils/Localize.lua:710 utils/Localize.lua:796
+#: ui/GameUIWarReport.lua:623 utils/Localize.lua:710 utils/Localize.lua:796
 #: utils/Localize.lua:817 widget/WidgetTreatSoldier.lua:70
 msgid "城墙"
 msgstr "城牆"
 
-#: ui/GameUIWarReport.lua:644 utils/Localize.lua:582
+#: ui/GameUIWarReport.lua:645 utils/Localize.lua:582
 msgid "城墙生命值"
 msgstr "城牆生命值"
 
-#: ui/GameUIWarReport.lua:650
+#: ui/GameUIWarReport.lua:651
 msgid "城墙受损"
 msgstr "城牆受損"
 
@@ -12269,6 +12269,12 @@ msgstr "已經激活VIP，關閉窗口"
 #: widget/WidgetUseMutiItems.lua:22
 msgid "使用数量"
 msgstr "使用數量"
+
+#~ msgid "与协防方战斗统计"
+#~ msgstr "與協防方戰鬥統計"
+
+#~ msgid "防守方战斗统计"
+#~ msgstr "防守方戰鬥統計"
 
 #~ msgid ""
 #~ "果然没有...不过也碍事...我的探子已经找到了他们的一处聚集地,请大人随我来。"

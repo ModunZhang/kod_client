@@ -142,10 +142,10 @@ function GameUIPveAttack:BuildNormalUI()
             end
             local use_str = self.user:GetPveLeftCountByName(self.pve_name) * sections[self.pve_name].staminaUsed
             if ItemManager:GetItemByName("sweepScroll"):Count() >= self.user:GetPveLeftCountByName(self.pve_name) then
-                self:UseStrength(function()end,use_str):addTo(self.sweep_all)
+                -- self:UseStrength(function()end,use_str):addTo(self.sweep_all)
                 self:UseSweepScroll(self.user:GetPveLeftCountByName(self.pve_name))
             else
-                self:UseStrength(function()end,use_str):addTo(self.sweep_all)
+                -- self:UseStrength(function()end,use_str):addTo(self.sweep_all)
                 self:BuyAndUseSweepScroll(self.user:GetPveLeftCountByName(self.pve_name))
             end
         end)
@@ -164,10 +164,10 @@ function GameUIPveAttack:BuildNormalUI()
                 return
             end
             if ItemManager:GetItemByName("sweepScroll"):Count() >= 1 then
-                self:UseStrength(function()end,sections[self.pve_name].staminaUsed):addTo(self.sweep_once)
+                -- self:UseStrength(function()end,sections[self.pve_name].staminaUsed):addTo(self.sweep_once)
                 self:UseSweepScroll(1)
             else
-                self:UseStrength(function()end,sections[self.pve_name].staminaUsed):addTo(self.sweep_once)
+                -- self:UseStrength(function()end,sections[self.pve_name].staminaUsed):addTo(self.sweep_once)
                 self:BuyAndUseSweepScroll(1)
             end
         end)
@@ -366,10 +366,10 @@ function GameUIPveAttack:CreateAttackButton()
                 return
             end
             event.target:setTouchEnabled(false)
-            self:UseStrength(function()
-                self:Attack()
-                event.target:setTouchEnabled(true)
-            end, sections[self.pve_name].staminaUsed):addTo(event.target)
+            self:Attack()
+            -- self:UseStrength(function()
+                -- event.target:setTouchEnabled(true)
+            -- end, sections[self.pve_name].staminaUsed):addTo(event.target)
         end)
     local num_bg = display.newSprite("alliance_title_gem_bg_154x20.png"):addTo(button):align(display.CENTER, 0, -10):scale(0.8)
     local size = num_bg:getContentSize()
