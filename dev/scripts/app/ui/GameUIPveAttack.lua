@@ -37,6 +37,9 @@ function GameUIPveAttack:OnMoveInStage()
         self:BuildNormalUI()
     end
     self:RefreshUI()
+    display.newNode():addTo(self):schedule(function() 
+        self:RefreshUI()
+    end, 1)
     GameUIPveAttack.super.OnMoveInStage(self)
 end
 function GameUIPveAttack:BuildNormalUI()
@@ -315,6 +318,8 @@ function GameUIPveAttack:RefreshUI()
         self.sweep_all.label:setString(string.format("-%d", self.user:GetPveLeftCountByName(self.pve_name)))
         self.sweep_once.label:setColor(UIKit:hex2c4b(ItemManager:GetItemByName("sweepScroll"):Count() >= 1 and 0xffedae or 0x7e00000))
         self.sweep_once:setButtonEnabled(star >= 3)
+        local strength = self.user:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+        self.attack.label:setColor(UIKit:hex2c4b(strength >= sections[self.pve_name].staminaUsed and 0xffedae or 0x7e00000))
     end
 end
 function GameUIPveAttack:CreateSweepButton()
@@ -374,7 +379,7 @@ function GameUIPveAttack:CreateAttackButton()
     local num_bg = display.newSprite("alliance_title_gem_bg_154x20.png"):addTo(button):align(display.CENTER, 0, -10):scale(0.8)
     local size = num_bg:getContentSize()
     display.newSprite("dragon_lv_icon.png"):addTo(num_bg):align(display.CENTER, 20, size.height/2)
-    UIKit:ttfLabel({
+    button.label = UIKit:ttfLabel({
         text = "-"..sections[self.pve_name].staminaUsed,
         size = 20,
         color = self.user:HasAnyStength(sections[self.pve_name].staminaUsed) and 0xffedae or 0xff0000,
