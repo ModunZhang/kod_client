@@ -111,10 +111,12 @@ void AppDelegate::applicationDidEnterBackground()
 {
     Director::getInstance()->stopAnimation();
     Director::getInstance()->pause();
-
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    SimpleAudioEngine::getInstance()->resumeAllEffects();
+#else
     SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
     SimpleAudioEngine::getInstance()->pauseAllEffects();
-
+#endif
     Director::getInstance()->getEventDispatcher()->dispatchCustomEvent("APP_ENTER_BACKGROUND_EVENT");
 }
 
@@ -123,10 +125,12 @@ void AppDelegate::applicationWillEnterForeground()
 {
     Director::getInstance()->resume();
     Director::getInstance()->startAnimation();
-
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    SimpleAudioEngine::getInstance()->pauseAllEffects();
+#else
     SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
     SimpleAudioEngine::getInstance()->resumeAllEffects();
-
+#endif
     Director::getInstance()->getEventDispatcher()->dispatchCustomEvent("APP_ENTER_FOREGROUND_EVENT");
 }
 

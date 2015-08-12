@@ -554,6 +554,7 @@ function GameUIActivityRewardNew:ui_FIRST_IN_PURGURE()
             UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
         end)
     local tips_list = {}
+    local acts = {}
     for index,reward in ipairs(rewards) do
         if index <= 6 then
             local reward_type,reward_name,count = unpack(reward)
@@ -562,7 +563,15 @@ function GameUIActivityRewardNew:ui_FIRST_IN_PURGURE()
             local sp = display.newSprite(UIKit:GetItemImage(reward_type,reward_name),59,59):addTo(item_bg)
             local size = sp:getContentSize()
             sp:scale(90/math.max(size.width,size.height))
-            lights():addTo(sp):pos(size.width/2,size.height/2)
+
+            table.insert(acts, cc.CallFunc:create(function()
+                local emitter = lights()
+                emitter:setSpeed(3)
+                emitter:setLife(math.random(1) + 1)
+                emitter:setEmissionRate(1)
+                emitter:addTo(sp):pos(size.width/2,size.height/2)
+            end))
+            table.insert(acts, cc.DelayTime:create(0.3))
             UIKit:addTipsToNode(sp,Localize_item.item_name[reward_name] .. " x" .. count,self)
             x = x  + 110 + 35
             if index % 2 == 0 then
@@ -571,6 +580,7 @@ function GameUIActivityRewardNew:ui_FIRST_IN_PURGURE()
             end
         end
     end
+    self:runAction(transition.sequence(acts))
     local tips_str = table.concat(tips_list, ",")
     self.purgure_get_button:onButtonClicked(function()
         NetManager:getFirstIAPRewardsPromise():done(function()
@@ -1020,6 +1030,7 @@ function GameUIActivityRewardNew:GetNextOnlineTimePoint()
 end
 
 return GameUIActivityRewardNew
+
 
 
 

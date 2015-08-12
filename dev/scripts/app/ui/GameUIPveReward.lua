@@ -96,7 +96,7 @@ function GameUIPveReward:GetListItem(index)
                         table.insert(str, string.format("%s x%d", Localize.soldier_material[name], count))
                     end
                 end
-                GameGlobalUI:showTips(_("获得奖励"), table.concat(str, " "))
+                GameGlobalUI:showTips(_("获得奖励"), table.concat(str, ", "))
             end)
         end)
 

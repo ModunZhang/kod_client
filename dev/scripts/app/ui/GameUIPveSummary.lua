@@ -5,6 +5,11 @@ local lights = import("..particles.lights")
 local WidgetSoldier = import("..widget.WidgetSoldier")
 local GameUIPveSummary = UIKit:createUIClass("GameUIPveSummary", "UIAutoClose")
 local config_dragonLevel = GameDatas.Dragons.dragonLevel
+local function setExpLabelWithFormat(label, num1, num2, num3)
+    label:setString(
+        string.format("%d/%d(+%d)", string.formatnumberthousands(num1), string.formatnumberthousands(num2), string.formatnumberthousands(num3))
+    )
+end
 function GameUIPveSummary:ctor(param)
     GameUIPveSummary.super.ctor(self)
     self.param = param
@@ -120,11 +125,11 @@ function GameUIPveSummary:BuildVictoryUI(param)
     end
 
     local exp_label = UIKit:ttfLabel({
-        text = string.format("%d/%d(+%d)", param.old_exp, config_dragonLevel[param.old_level].expNeed, upexp),
         size = 22,
         color = 0xffedae,
         shadow = true,
     }):addTo(bg):align(display.LEFT_CENTER, -70, 60)
+    setExpLabelWithFormat(exp_label, param.old_exp, config_dragonLevel[param.old_level].expNeed, upexp)
 
     local unit_time = 1
     local acts = {}
@@ -138,7 +143,7 @@ function GameUIPveSummary:BuildVictoryUI(param)
                 table.insert(acts, cc.CallFunc:create(function()
                     local expNeed = config_dragonLevel[i].expNeed
                     self:Performance(unit_time, function(ratio)
-                        exp_label:setString(string.format("%d/%d(+%d)", param.old_exp + ratio * (expNeed-param.old_exp), expNeed, upexp))
+                        setExpLabelWithFormat(exp_label, param.old_exp + ratio * (expNeed-param.old_exp), expNeed, upexp)
                     end)
                 end))
                 table.insert(acts, cc.ProgressTo:create(unit_time, 100))
@@ -167,7 +172,7 @@ function GameUIPveSummary:BuildVictoryUI(param)
                 table.insert(acts, cc.CallFunc:create(function()
                     local expNeed = config_dragonLevel[i].expNeed
                     self:Performance(unit_time, function(ratio)
-                        exp_label:setString(string.format("%d/%d(+%d)", param.new_exp * ratio, expNeed, upexp))
+                        setExpLabelWithFormat(exp_label, param.new_exp * ratio, expNeed, upexp)
                     end)
                 end))
                 table.insert(acts, cc.ProgressTo:create(unit_time, param.new_exp/config_dragonLevel[param.new_level].expNeed * 100))
@@ -175,7 +180,7 @@ function GameUIPveSummary:BuildVictoryUI(param)
                 table.insert(acts, cc.CallFunc:create(function()
                     local expNeed = config_dragonLevel[i].expNeed
                     self:Performance(unit_time, function(ratio)
-                        exp_label:setString(string.format("%d/%d(+%d)", ratio * expNeed, expNeed, upexp))
+                        setExpLabelWithFormat(exp_label, ratio * expNeed, expNeed, upexp)
                     end)
                 end))
                 table.insert(acts, cc.ProgressTo:create(unit_time, 100))
@@ -203,7 +208,7 @@ function GameUIPveSummary:BuildVictoryUI(param)
     else
         table.insert(acts, cc.ProgressTo:create(unit_time, param.new_exp/config_dragonLevel[param.old_level].expNeed * 100))
         self:Performance(unit_time, function(ratio)
-            exp_label:setString(string.format("%d/%d(+%d)", param.old_exp + ratio * upexp, config_dragonLevel[param.old_level].expNeed, upexp))
+            setExpLabelWithFormat(exp_label, param.old_exp + ratio * upexp, config_dragonLevel[param.old_level].expNeed, upexp)
         end)
     end
     progresstimer_new:runAction(transition.sequence(acts))

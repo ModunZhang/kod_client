@@ -7,7 +7,7 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local UIListView = import(".UIListView")
 local Localize = import("..utils.Localize")
-local LOCAL_RESOURCES_PERCENT = 60
+local LOCAL_RESOURCES_PERCENT = 100
 local WidgetPushTransparentButton = import("..widget.WidgetPushTransparentButton")
 
 function GameUILoginBeta:ctor()
@@ -172,7 +172,8 @@ function GameUILoginBeta:startGame()
     display.getRunningScene().startGame = true
     local sp = cc.Spawn:create(cc.ScaleTo:create(1,1.5),cc.FadeOut:create(1))
     local seq = transition.sequence({sp,cc.CallFunc:create(function()
-        self:connectLogicServer()
+        -- self:connectLogicServer()
+        self:loginAction()
     end)})
     self.star_game_sprite:runAction(seq)
 end
@@ -332,7 +333,14 @@ end
 function GameUILoginBeta:__loadToTextureCache(config,shouldLogin)
     display.addSpriteFrames(DEBUG_GET_ANIMATION_PATH(config.list),DEBUG_GET_ANIMATION_PATH(config.image),function()
         self:setProgressPercent(self.progress_num + self.local_resources_percent_per)
-        if shouldLogin then self:loginAction() end
+        if shouldLogin then 
+            -- self:loginAction() 
+            self:performWithDelay(function()
+                self.progress_bar:hide()
+                self.tips_ui:hide()
+                self:showStartState()
+            end, 0.5)
+        end
     end)
 end
 
@@ -352,13 +360,14 @@ function GameUILoginBeta:setProgressPercent(num,animac)
 end
 
 function GameUILoginBeta:loginAction()
-    self:setProgressText(_("连接网关服务器...."))
+    -- self:setProgressText(_("连接网关服务器...."))
+    UIKit:WaitForNet(5)
     self:connectGateServer()
 end
 
 function GameUILoginBeta:connectGateServer()
     NetManager:getConnectGateServerPromise():done(function()
-        self:setProgressPercent(80)
+        -- self:setProgressPercent(80)
         self:getLogicServerInfo()
     end):catch(function(err)
         GameUtils:PingBaidu(function(success)
@@ -372,12 +381,7 @@ function GameUILoginBeta:connectGateServer()
 end
 function GameUILoginBeta:getLogicServerInfo()
     NetManager:getLogicServerInfoPromise():done(function()
-        self:setProgressPercent(100)
-        self:performWithDelay(function()
-            self.progress_bar:hide()
-            self.tips_ui:hide()
-            self:showStartState()
-        end, 0.5)
+        self:connectLogicServer()
     end):catch(function(err)
         local content, title = err:reason()
         local need_restart = false
@@ -412,7 +416,6 @@ end
 
 
 function GameUILoginBeta:connectLogicServer()
-    UIKit:WaitForNet()
     NetManager:getConnectLogicServerPromise():done(function()
         self:login()
     end):catch(function(err)
@@ -421,7 +424,6 @@ function GameUILoginBeta:connectLogicServer()
                 self:connectLogicServer()
             end,1)
         end)
-        UIKit:NoWaitForNet()
     end)
 
 end
@@ -472,6 +474,7 @@ function GameUILoginBeta:login()
 end
 
 function GameUILoginBeta:showError(msg,cb)
+    UIKit:NoWaitForNet()
     msg = msg or ""
     UIKit:showKeyMessageDialog(_("提示"),msg, function()
         if cb then cb() end
