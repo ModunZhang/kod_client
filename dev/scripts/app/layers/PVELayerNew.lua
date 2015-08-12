@@ -84,7 +84,7 @@ function PVELayerNew:ctor(scene, user, level)
     GameUtils:LoadImagesWithFormat(function()
         self.background = display.newNode():addTo(self)
         for i = 1, 4 do
-            local bg = display.newSprite("pve_background.png")
+            local bg = display.newSprite("pve_background.jpg")
             :addTo(self.background)
             :align(display.LEFT_BOTTOM, 0, (i-1) * 800)
             bg:setColor(color + cc.c3b(bg:getColor()))

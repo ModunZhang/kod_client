@@ -294,6 +294,8 @@ function GameUIDragonEyrieMain:CreateDragonContentNodeIf()
         self.draongContentNode = draongContentNode
         self.draongContentNode:SetScrollable(not self:IsDragonLock())
         dragonAnimateNode:addTo(self.dragonNode):pos(window.cx - 310,window.top_bottom - 576)
+        -- 阻挡滑动龙超出的区域
+        display.newLayer():addTo(self.dragonNode):pos(window.cx - 310,window.top_bottom - 676):size(620,100)
         --info
         local info_bg = display.newSprite("dragon_info_bg_290x92.png")
             :align(display.BOTTOM_CENTER, 309, 50)

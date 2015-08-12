@@ -13,6 +13,9 @@ ProjDir=`./functions.sh getProjDir`
 VERSION_FILE="$ProjDir/dev/scripts/debug_version.lua"
 test -d "$SCRIPTS_DEST_DIR" && rm -rf "$SCRIPTS_DEST_DIR/*"
 
+python build_format_map.py -r rgba4444.lua
+python build_format_map.py -j jpg_rgb888.lua
+
 gitDebugVersion()
 {
 	cd "$ProjDir"
