@@ -12,6 +12,8 @@ local WidgetSlider = import("..widget.WidgetSlider")
 local WidgetSelectDragon = import("..widget.WidgetSelectDragon")
 local WidgetInput = import("..widget.WidgetInput")
 local SoldierManager = import("..entity.SoldierManager")
+local DragonManager = import("..entity.DragonManager")
+
 
 local UILib = import(".UILib")
 local window = import("..utils.window")
@@ -160,6 +162,7 @@ function GameUIPVESendTroop:OnMoveInStage()
 
 
     City:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
+    City:GetDragonEyrie():GetDragonManager():AddListenOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
 
     GameUIPVESendTroop.super.OnMoveInStage(self)
 end
@@ -665,8 +668,12 @@ function GameUIPVESendTroop:OnSoliderCountChanged( soldier_manager,changed_map )
         end
     end
 end
+function GameUIPVESendTroop:OnBasicChanged()
+    self:RefreashDragon(self.dragon)
+end
 function GameUIPVESendTroop:onExit()
     City:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
+    City:GetDragonEyrie():GetDragonManager():RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
 
     GameUIPVESendTroop.super.onExit(self)
 end
