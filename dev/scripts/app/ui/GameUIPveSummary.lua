@@ -7,7 +7,7 @@ local GameUIPveSummary = UIKit:createUIClass("GameUIPveSummary", "UIAutoClose")
 local config_dragonLevel = GameDatas.Dragons.dragonLevel
 local function setExpLabelWithFormat(label, num1, num2, num3)
     label:setString(
-        string.format("%s/%s(+%s)", string.formatnumberthousands(num1), string.formatnumberthousands(num2), string.formatnumberthousands(num3))
+        string.format("%s/%s(+%s)", string.formatnumberthousands(math.floor(num1)), string.formatnumberthousands(math.floor(num2)), string.formatnumberthousands(math.floor(num3)))
     )
 end
 function GameUIPveSummary:ctor(param)
