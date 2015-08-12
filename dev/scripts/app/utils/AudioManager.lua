@@ -327,7 +327,7 @@ function AudioManager:PlayGameMusicAutoCheckScene()
 						if lastFileKey == 'sfx_battle' then
 							self:PlayBgMusicWithFileKey('bgm_battle',false)
 						else
-							self:PlayBgMusicWithFileKey('bgm_battle',false)
+							self:PlayBgMusicWithFileKey('sfx_battle',false)
 						end
 					end
 				else
