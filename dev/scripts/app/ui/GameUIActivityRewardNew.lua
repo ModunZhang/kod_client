@@ -19,7 +19,7 @@ local Localize_item = import("..utils.Localize_item")
 local Localize = import("..utils.Localize")
 local UILib = import(".UILib")
 local Localize_item = import("..utils.Localize_item")
-local fire_wall = import("..particles.fire_wall")
+local lights = import("..particles.lights")
 
 local height_config = {
     EVERY_DAY_LOGIN = 762,
@@ -530,6 +530,8 @@ end
 -----------------------
 function GameUIActivityRewardNew:ui_FIRST_IN_PURGURE()
     local bar = display.newSprite("activity_first_purgure_588x176.jpg"):align(display.TOP_CENTER, 304,self.height - 15):addTo(self.bg)
+    lights():addTo(bar):pos(100, 100)
+
     local bg = display.newSprite("selenaquestion_bg_580x536.png"):addTo(self.bg):align(display.TOP_CENTER, 304, self.height - 15 - 176):scale(587/580)
     display.newSprite("Npc.png"):align(display.RIGHT_BOTTOM, 315, -10):addTo(self.bg):scale(552/423)
     local reward_bg = display.newScale9Sprite("activity_day_bg_104x34.png",0,0,cc.size(290,510),cc.rect(10,10,84,14)):align(display.LEFT_BOTTOM, 260, 14):addTo(bg)
@@ -560,6 +562,7 @@ function GameUIActivityRewardNew:ui_FIRST_IN_PURGURE()
             local sp = display.newSprite(UIKit:GetItemImage(reward_type,reward_name),59,59):addTo(item_bg)
             local size = sp:getContentSize()
             sp:scale(90/math.max(size.width,size.height))
+            lights():addTo(sp):pos(size.width/2,size.height/2)
             UIKit:addTipsToNode(sp,Localize_item.item_name[reward_name] .. " x" .. count,self)
             x = x  + 110 + 35
             if index % 2 == 0 then
