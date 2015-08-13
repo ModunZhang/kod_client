@@ -418,7 +418,13 @@ function GameUIAllianceBattle:InitBattleStatistics()
                     }))
                     :onButtonClicked(function(event)
                         if event.name == "CLICKED_EVENT" then
-                            NetManager:getFindAllianceToFightPromose()
+                            UIKit:showMessageDialog(_("主人"),_("确定开启联盟会战吗?")):CreateOKButton(
+                                {
+                                    listener = function ()
+                                        NetManager:getFindAllianceToFightPromose()
+                                    end
+                                }
+                            )
                         end
                     end):align(display.RIGHT_BOTTOM, window.right - 36, window.bottom_top + 26)
                     :addTo(layer)
@@ -1286,6 +1292,7 @@ function GameUIAllianceBattle:OnAllianceFightReportsChanged(changed_map)
 end
 
 return GameUIAllianceBattle
+
 
 
 
