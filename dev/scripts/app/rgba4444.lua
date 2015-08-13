@@ -191,7 +191,6 @@ rgba444_single["redSoul_4_128x128.png"] = cc.TEXTURE2_D_PIXEL_FORMAT_RGB_A4444
 rgba444_single["redSting_s2_128x128.png"] = cc.TEXTURE2_D_PIXEL_FORMAT_RGB_A4444
 rgba444_single["redSting_s3_128x128.png"] = cc.TEXTURE2_D_PIXEL_FORMAT_RGB_A4444
 rgba444_single["redSting_s4_128x128.png"] = cc.TEXTURE2_D_PIXEL_FORMAT_RGB_A4444
-rgba444_single["road_22x24.png"] = cc.TEXTURE2_D_PIXEL_FORMAT_RGB_A4444
 rgba444_single["sentinel_1.png"] = cc.TEXTURE2_D_PIXEL_FORMAT_RGB_A4444
 rgba444_single["sentinel_2.png"] = cc.TEXTURE2_D_PIXEL_FORMAT_RGB_A4444
 rgba444_single["sentinel_3.png"] = cc.TEXTURE2_D_PIXEL_FORMAT_RGB_A4444
