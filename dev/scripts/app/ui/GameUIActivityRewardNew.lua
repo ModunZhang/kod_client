@@ -545,7 +545,7 @@ function GameUIActivityRewardNew:ui_FIRST_IN_PURGURE()
         :addTo(reward_bg,1)
         :pos(145,58)
         :setButtonSize(190,66)
-    self.go_store_button = WidgetPushButton.new({normal = 'store_buy_button_n_332x76.png',pressed = 'store_buy_button_l_332x76.png',scale9 = true})
+    self.go_store_button = WidgetPushButton.new({normal = 'store_buy_button_n_332x76.png',pressed = 'store_buy_button_l_332x76.png'},{scale9 = true})
         :setButtonLabel("normal", UIKit:commonButtonLable({
             text = _("前往充值")
         }))
