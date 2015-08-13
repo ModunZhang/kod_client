@@ -14,11 +14,12 @@ local NORMAL = GameDatas.Soldiers.normal
 local WidgetSoldierPromoteDetails = class("WidgetSoldierPromoteDetails", WidgetPopDialog)
 
 
-function WidgetSoldierPromoteDetails:ctor(soldier_type,star,building)
+function WidgetSoldierPromoteDetails:ctor(soldier_type,star,building,can_not_next)
     WidgetSoldierPromoteDetails.super.ctor(self,720,_("兵种晋级"))
     self.soldier_type = soldier_type
     self.star = star
     self.building = building
+    self.can_not_next = can_not_next
 end
 
 function WidgetSoldierPromoteDetails:onEnter()
@@ -211,20 +212,21 @@ function WidgetSoldierPromoteDetails:onEnter()
 
     WidgetInfoText.new({info = info}):addTo(body):align(display.CENTER_BOTTOM, size.width/2, 100)
 
-
-    WidgetPushButton.new(
-        {normal = "yellow_btn_up_186x66.png",pressed = "yellow_btn_down_186x66.png"})
-        :addTo(body)
-        :align(display.CENTER, size.width/2 , 50)
-        :setButtonLabel(UIKit:ttfLabel({
-            text = _("下一步"),
-            size = 24,
-            color = 0xfff3c7
-        }))
-        :onButtonClicked(function(event)
-            UIKit:newWidgetUI("WidgetPromoteSoldier",soldier_type,self.building:GetType()):AddToCurrentScene()
-            self:LeftButtonClicked()
-        end)
+    if not self.can_not_next then
+        WidgetPushButton.new(
+            {normal = "yellow_btn_up_186x66.png",pressed = "yellow_btn_down_186x66.png"})
+            :addTo(body)
+            :align(display.CENTER, size.width/2 , 50)
+            :setButtonLabel(UIKit:ttfLabel({
+                text = _("下一步"),
+                size = 24,
+                color = 0xfff3c7
+            }))
+            :onButtonClicked(function(event)
+                UIKit:newWidgetUI("WidgetPromoteSoldier",soldier_type,self.building:GetType()):AddToCurrentScene()
+                self:LeftButtonClicked()
+            end)
+    end
 end
 function WidgetSoldierPromoteDetails:CreateSoldierBox(isGray)
     local soldier_type = self.soldier_type
@@ -258,6 +260,7 @@ function WidgetSoldierPromoteDetails:onExit()
 end
 
 return WidgetSoldierPromoteDetails
+
 
 
 
