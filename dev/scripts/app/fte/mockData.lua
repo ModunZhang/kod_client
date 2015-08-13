@@ -330,22 +330,27 @@ end
 
 
 local function FightWithNpc(pve_name)
+    local dragon_str = string.format("dragons.%s", get_dragon_type())
     if pve_name == "1_1" then
         mock{
             {"items.3", {name = "foodClass_2", count = 1}},
             {"pve.0", {sections = {3}, rewarded = {}}},
             {"pveFights.0", {sectionName = pve_name, count = 1}},
+            {dragon_str..".exp", 32},
         }
     elseif pve_name == "1_2" then
         mock{
             {"items.3", {name = "foodClass_2", count = 2}},
             {"pve.0.sections.1", 3},
             {"pveFights.1", {sectionName = pve_name, count = 1}},
+            {dragon_str..".exp", 70},
         }
     elseif pve_name == "1_3" then
         mock{
             {"pve.0.sections.2", 3},
             {"pveFights.2", {sectionName = pve_name, count = 1}},
+            {dragon_str..".exp", 42},
+            {dragon_str..".level", 2},
         }
     else
         assert(false)
