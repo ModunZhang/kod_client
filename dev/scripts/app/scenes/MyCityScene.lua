@@ -288,7 +288,6 @@ function MyCityScene:GetLockButtonsByBuildingType(building_type)
     local lock_button
     local location_id = self:GetCity():GetLocationIdByBuildingType(building_type)
     self:IteratorLockButtons(function(v)
-        print(v.sprite:GetEntity().location_id, location_id)
         if v.sprite:GetEntity().location_id == location_id then
             lock_button = v
             return true
@@ -346,7 +345,6 @@ function MyCityScene:OnTilesChanged(tiles)
             end
         end
     end)
-    print("#self:GetTopLayer():getChildren()", #self:GetTopLayer():getChildren())
 end
 function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
     if self.event_manager:TouchCounts() ~= 0 or

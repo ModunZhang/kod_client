@@ -251,7 +251,6 @@ function WidgetEventTabButtons:RefreshBuildQueueByType(...)
             local count = self.barracks:IsRecruting() and 1 or 0
             local total = self.barracks:IsUnlocked() and 1 or 0
             if item:IsChanged(count, total) then item:SetOrResetProgress() end
-            printInfo(cur_tab, key, self:IsTabEnable(key))
             item:SetActiveNumber(count, total):Enable(able)
         elseif key == "material" then
             local count = 0
