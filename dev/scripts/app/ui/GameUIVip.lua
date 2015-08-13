@@ -200,7 +200,7 @@ function GameUIVip:onExit()
 end
 function GameUIVip:InitVip()
     self:InitAD()
-    local exp_bar = self:CreateVipExpBar():addTo(self.vip_layer,1,999):pos(display.cx-287, display.top-300)
+    local exp_bar = UIKit:CreateVipExpBar():addTo(self.vip_layer,1,999):pos(display.cx-287, display.top-300)
     exp_bar:LightLevelBar(User:GetVipLevel())
     self:CreateVIPStatus()
 end
@@ -281,7 +281,7 @@ function GameUIVip:GetStoreData()
     for __,v in ipairs(config_store) do
         local temp_data = {}
         temp_data['gem'] = v.gem
-        temp_data['name'] = Localize.iap_package_name[v.productId]
+        temp_data['name'] = Localize.vip_iap_package_name[v.productId]
         local ___,rewards_price = self:FormatGemRewards(v.rewards)
         temp_data['rewards_price'] = rewards_price
         temp_data['config'] = UILib.iap_package_image[v.name]
@@ -301,148 +301,6 @@ function GameUIVip:FormatGemRewards(rewards)
         rewards_price[key] = count
     end
     return result_rewards,DataUtils:getItemsPrice(rewards_price)
-end
--- 创建vip等级经验条
-function GameUIVip:CreateVipExpBar()
-    local  head_width = 35 -- 两头经验圈宽度
-    local  mid_width = 34 -- 中间各个经验圈宽度
-    local  level_width = 26 -- 各个等级间的进度条的宽度
-
-    local ExpBar = display.newNode()
-    function ExpBar:AddLevelBar(level,bar)
-        self.level_bar = self.level_bar or {}
-        self.level_bar["level_bar_"..level] = bar
-    end
-
-    function ExpBar:AddLevelExpBar(level,exp_bar)
-        self.exp_bar = self.exp_bar or {}
-        self.exp_bar["exp_bar_"..level] = exp_bar
-    end
-    function ExpBar:AddLevelImage(level,image)
-        self.level_images = self.level_images or {}
-        self.level_images["level_image_"..level] = image
-    end
-    function ExpBar:CreateTip(image,level)
-        local tip = display.newSprite(image)
-        cc.ui.UILabel.new({
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = _("VIP"..level),
-            size = 18,
-            font = UIKit:getFontFilePath(),
-            color = UIKit:hex2c3b(0xffedae)}):addTo(tip):align(display.CENTER, tip:getContentSize().width/2, 50)
-        cc.ui.UILabel.new({
-            UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-            text = User:GetSpecialVipLevelExp(level),
-            size = 16,
-            font = UIKit:getFontFilePath(),
-            color = UIKit:hex2c3b(0xffedae)}):addTo(tip):align(display.CENTER, tip:getContentSize().width/2, 25)
-        return tip
-    end
-    --[[
-        设置经验条等级
-        @param level 达到等级
-        @param per 下一级升级当前百分比
-    ]]
-    function ExpBar:LightLevelBar(level,per,exp)
-        -- if level<1 then
-        --     return
-        -- end
-        for i=1,level do
-            -- self.level_images["level_image_"..i]:setVisible(true)
-            self.level_bar["level_bar_"..i]:setVisible(true)
-            if self.exp_bar["exp_bar_"..i-1] then
-                self.exp_bar["exp_bar_"..i-1]:setPercentage(100)
-            end
-        end
-        if per and level ~=VIP_MAX_LEVEL then
-            self.exp_bar["exp_bar_"..level]:setPercentage(per)
-        end
-        if not self.tip_1 then
-            self.tip_1 = self:CreateTip("vip_level_tip_bg_1.png",level):addTo(self):scale(0.9)
-
-            if level<VIP_MAX_LEVEL then
-                self.tip_2 = self:CreateTip("vip_level_tip_bg_2.png",level+1):addTo(self):scale(0.9)
-            end
-        end
-        local x = self.level_bar["level_bar_"..level]:getParent():getPosition()
-        -- 由于两头的圈使用的图片宽度为单数，所以锚点都设置在了左边中心而不是中间圈那样的锚点在中心，此时需要tip框中心找到其中心位置
-        x = x + ((level == 1 or level == VIP_MAX_LEVEL) and 17 or 0)
-        self.tip_1:align(display.BOTTOM_CENTER, x, 20)
-        if level<VIP_MAX_LEVEL then
-            local x = self.level_bar["level_bar_"..level+1]:getParent():getPosition()
-            x = x + ((level+1) == VIP_MAX_LEVEL and 17 or 0)
-            self.tip_2:align(display.BOTTOM_CENTER, x, 20)
-        else
-            self:removeChild(self.tip_2)
-        end
-        -- 添加vip经验 指针
-        if level<VIP_MAX_LEVEL then
-            x = x + (per and math.floor(level_width*per/100+head_width/2) or 0)
-            if not self.vip_exp_point then
-                self.vip_exp_point = display.newSprite("vip_point.png"):addTo(self)
-                cc.ui.UILabel.new({
-                    UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-                    text = exp,
-                    size = 14,
-                    font = UIKit:getFontFilePath(),
-                    color = UIKit:hex2c3b(0x403c2f)}):addTo(self.vip_exp_point):align(display.LEFT_CENTER, 24, 10)
-            end
-            self.vip_exp_point:align(display.TOP_CENTER, x, -20)
-        else
-            if self.vip_exp_point then
-                self:removeChild(self.vip_exp_point)
-            end
-        end
-
-    end
-
-    local function createProgressTimer()
-        local progressFill = display.newSprite("vip_lv_bar_6.png")
-        local ProgressTimer = cc.ProgressTimer:create(progressFill)
-        ProgressTimer:setType(display.PROGRESS_TIMER_BAR)
-        ProgressTimer:setBarChangeRate(cc.p(1,0))
-        ProgressTimer:setMidpoint(cc.p(0,0))
-        return ProgressTimer
-    end
-    local current_x = 0
-    for i=1,VIP_MAX_LEVEL do
-        local lv_bg
-        if i==1 then
-            lv_bg = display.newSprite("vip_lv_bar_1.png"):addTo(ExpBar):align(display.LEFT_CENTER, 0, 0)
-            ExpBar:AddLevelBar(i,display.newSprite("vip_lv_bar_3.png"):addTo(lv_bg)
-                :align(display.CENTER, lv_bg:getContentSize().width/2+1, lv_bg:getContentSize().height/2))
-            current_x = current_x + head_width
-            local exp = display.newSprite("vip_lv_bar_5.png"):addTo(ExpBar):align(display.CENTER, current_x+level_width/2, 0)
-            local ProgressTimer = createProgressTimer():align(display.LEFT_CENTER, 0, exp:getContentSize().height/2):addTo(exp)
-            ExpBar:AddLevelExpBar(i,ProgressTimer)
-            current_x = current_x + level_width
-        elseif i>1 and i<VIP_MAX_LEVEL then
-            lv_bg = display.newSprite("vip_lv_bar_2.png"):addTo(ExpBar):align(display.CENTER, current_x+mid_width/2, 0)
-            local light = display.newSprite("vip_lv_bar_4.png"):addTo(lv_bg)
-                :align(display.CENTER, lv_bg:getContentSize().width/2, lv_bg:getContentSize().height/2)
-            light:setVisible(false)
-            ExpBar:AddLevelBar(i,light)
-            current_x = current_x + mid_width
-            local exp = display.newSprite("vip_lv_bar_5.png"):addTo(ExpBar):align(display.CENTER, current_x+level_width/2, 0)
-            local ProgressTimer = createProgressTimer():align(display.LEFT_CENTER, 0, exp:getContentSize().height/2):addTo(exp)
-            ExpBar:AddLevelExpBar(i,ProgressTimer)
-
-            current_x = current_x + level_width
-        elseif i==VIP_MAX_LEVEL then
-            lv_bg = display.newSprite("vip_lv_bar_1.png"):addTo(ExpBar):align(display.LEFT_CENTER, current_x, 0)
-            lv_bg:setFlippedX(true)
-            local light = display.newSprite("vip_lv_bar_3.png"):addTo(lv_bg,1,i)
-                :align(display.CENTER, lv_bg:getContentSize().width/2-1, lv_bg:getContentSize().height/2)
-            light:setVisible(false)
-            ExpBar:AddLevelBar(i,light)
-            light:setFlippedX(true)
-        end
-        local level_image = display.newSprite(string.format("vip_%d.png",i)):addTo(lv_bg,1,i*100)
-            :align(display.CENTER, lv_bg:getContentSize().width/2, lv_bg:getContentSize().height/2)
-            :scale(0.5)
-        ExpBar:AddLevelImage(i,level_image)
-    end
-    return ExpBar
 end
 
 function GameUIVip:CreateVIPStatus()
@@ -800,7 +658,7 @@ function GameUIVip:OnUserBasicChanged(from,changed_map)
         local vip_level,percent,exp = User:GetVipLevel()
         self.vip_button_group:Refresh(vip_level)
         self.vip_layer:removeChildByTag(999, true)
-        local exp_bar = self:CreateVipExpBar():addTo(self.vip_layer,1,999):pos(display.cx-287, display.top-300)
+        local exp_bar = UIKit:CreateVipExpBar():addTo(self.vip_layer,1,999):pos(display.cx-287, display.top-300)
         exp_bar:LightLevelBar(vip_level,percent,exp)
         if self.player_node then
             self.player_node:RefreshUI()
@@ -827,11 +685,11 @@ function GameUIVip:PromiseOfFte()
     local r = self:FindActiveBtn():getCascadeBoundingBox()
 
     local arrow = WidgetFteArrow.new(_("激活VIP")):addTo(self:GetFteLayer())
-    :TurnDown():align(display.BOTTOM_CENTER, r.x + r.width/2, r.y + r.height + 10)
+        :TurnDown():align(display.BOTTOM_CENTER, r.x + r.width/2, r.y + r.height + 10)
 
     return WidgetUseItems:PromiseOfOpen("vipActive"):next(function(ui)
         arrow:removeFromParent()
-        
+
         return ui:PromiseOfFte()
     end):next(function()
         return self:PromsieOfExit("GameUIVip")
@@ -839,3 +697,4 @@ function GameUIVip:PromiseOfFte()
 end
 
 return GameUIVip
+

@@ -116,14 +116,15 @@ function GameUISettingAccount:CreateAccountPanel()
 	self.account_warn_label =  UIKit:ttfLabel({
 		text = "",
 		size = 20,
-		color= 0x7e0000
+		color= 0x7e0000,
+		dimensions = cc.size(500, 0)
 	}):align(display.TOP_CENTER, 276, 156):addTo(self.account_panel)
 	self.account_tips_label = UIKit:ttfLabel({
 		text = "请在系统设置中，",
 		size = 18,
 		color= 0x403c2f,
 		dimensions = cc.size(500, 102)
-	}):align(display.BOTTOM_CENTER, 276, 12):addTo(self.account_panel)
+	}):align(display.BOTTOM_CENTER, 276, 6):addTo(self.account_panel)
 	self.account_panel_origin_postion = {
 		account_warn_label = cc.p(276, 156),
 		account_tips_label = cc.p(276, 12)

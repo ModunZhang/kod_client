@@ -1256,10 +1256,10 @@ function GameUIMail:ShowMailDetails(mail)
         {
             text = mail_content,
             size = 20,
-            dimensions = cc.size(550,0),
+            dimensions = cc.size(539,0),
             color = 0x403c2f
         }):align(display.LEFT_TOP)
-    content_item:setItemSize(570,content_label:getContentSize().height)
+    content_item:setItemSize(550,content_label:getContentSize().height)
     content_item:addContent(content_label)
     content_listview:addItem(content_item)
     content_listview:reload()
@@ -1414,15 +1414,15 @@ function GameUIMail:CreateReportContent()
                     end
                     if report:Type() == "strikeCity" or report:Type()== "cityBeStriked"
                         or report:Type() == "villageBeStriked" or report:Type()== "strikeVillage" then
-                        UIKit:newGameUI("GameUIStrikeReport", report):AddToCurrentScene(true)
+                        UIKit:newGameUI("GameUIStrikeReport", report,true):AddToCurrentScene(true)
                     elseif report:Type() == "attackCity" or report:Type() == "attackVillage" then
-                        UIKit:newGameUI("GameUIWarReport", report):AddToCurrentScene(true)
+                        UIKit:newGameUI("GameUIWarReport", report,true):AddToCurrentScene(true)
                     elseif report:Type() == "collectResource" then
                         UIKit:newGameUI("GameUICollectReport", report):AddToCurrentScene(true)
                     elseif report:Type() == "attackMonster" then
-                        UIKit:newGameUI("GameUIMonsterReport", report):AddToCurrentScene(true)
+                        UIKit:newGameUI("GameUIMonsterReport", report,true):AddToCurrentScene(true)
                     elseif report:Type() == "attackShrine" then
-                        UIKit:newGameUI("GameUIShrineReportInMail", report):AddToCurrentScene(true)
+                        UIKit:newGameUI("GameUIShrineReportInMail", report,true):AddToCurrentScene(true)
                     end
                 end
             end):addTo(self):pos(item_width/2, item_height/2)

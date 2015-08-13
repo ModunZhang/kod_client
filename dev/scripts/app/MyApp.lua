@@ -441,14 +441,10 @@ function MyApp:EnterMyAllianceSceneOrMyCityScene(location)
     end
 end
 function MyApp:EnterPVEScene(level)
-    User:GotoPVEMapByLevel(level)
-    -- app:enterScene("PVEScene", {User}, "custom", -1, transition_)
-    enter_next_scene("PVEScene", User)
+    enter_next_scene("PVESceneNew", User, level)
 end
 function MyApp:EnterPVEFteScene(level)
-    User:GotoPVEMapByLevel(level)
-    -- app:enterScene("PVEFteScene", {User}, "custom", -1, transition_)
-    enter_next_scene("PVEFteScene", User)
+    enter_next_scene("PVESceneNewFte", User, level)
 end
 
 function MyApp:pushScene(sceneName, args, transitionType, time, more)

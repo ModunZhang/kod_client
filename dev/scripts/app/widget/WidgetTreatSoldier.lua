@@ -385,7 +385,7 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
     }):addTo(button, 2)
         :align(display.CENTER, center, -50)
 
-    cc.ui.UILabel.new({
+    self.buff_treat_time = cc.ui.UILabel.new({
         text = "(-00:00:00)",
         size = 18,
         font = UIKit:getFontFilePath(),
@@ -509,6 +509,7 @@ function WidgetTreatSoldier:OnCountChanged(count)
     local total_time = soldier_config.treatTime * count
     self.upkeep:setString(string.format("%s%d/".._("小时"), count > 0 and "-" or "", soldier_config.consumeFoodPerHour * count))
     self.treat_time:setString(GameUtils:formatTimeStyle1(total_time))
+    self.buff_treat_time:setString("(-"..GameUtils:formatTimeStyle1(City:GetSoldierManager():GetTechReduceTreatTime(total_time))..")")
 
     local total_map = self.res_total_map == nil and {} or self.res_total_map
     local current_res_map = {}

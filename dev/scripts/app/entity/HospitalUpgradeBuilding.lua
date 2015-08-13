@@ -90,7 +90,7 @@ function HospitalUpgradeBuilding:GeneralSoldierLocalPush(event)
         for k,v in pairs(soldiers) do
             local soldier_type = v.name
             local count = v.count
-            soldiers_desc = soldiers_desc .. string.format(_("%s X %d "),Localize.soldier_name[soldier_type],count)
+            soldiers_desc = soldiers_desc .. (soldiers_desc == "" and "" or ",").. string.format(_("%s X %d "),Localize.soldier_name[soldier_type],count)
         end
         local title = string.format(_("治愈%s完成"),soldiers_desc)
         app:GetPushManager():UpdateSoldierPush(event:FinishTime(),title,pushIdentity)
@@ -243,7 +243,7 @@ end
 --获取伤病最大上限
 function HospitalUpgradeBuilding:GetMaxCasualty()
     if self:GetLevel() > 0 then
-        return config_function[self:GetEfficiencyLevel()].maxCitizen
+        return math.ceil(config_function[self:GetEfficiencyLevel()].maxCitizen * (1 + self:BelongCity():FindTechByName("rescueTent"):GetBuffEffectVal()))
     end
     return 0
 end

@@ -291,6 +291,7 @@ function GameUIItems:IsItemCouldUseInShop(items)
         and items:Name()~="chestKey_2"
         and items:Name()~="chestKey_3"
         and items:Name()~="chestKey_4"
+        and items:Name()~="sweepScroll"
     then
         return true
     end
@@ -304,6 +305,7 @@ function GameUIItems:IsItemCouldUseNow(items)
         and items:Name()~="dragonHp_1"
         and items:Name()~="dragonHp_2"
         and items:Name()~="dragonHp_3"
+        and items:Name()~="sweepScroll"
     then
         return true
     end
@@ -432,7 +434,7 @@ function GameUIItems:CreateMyItemContentByIndex( idx )
     end
     function content:SetData( idx )
         local items = parent:GetMyItemByTag(parent.my_item_tag)[idx]
-        self:SetOwnCount(string.formatnumberthousands(items:Count()))
+        self:SetOwnCount(items:Count())
         local item_image =UILib.item[items:Name()]
         if item_image then
             if self.item_icon then
@@ -499,7 +501,13 @@ function GameUIItems:UseItemFunc( items )
         end
 
         if items:Category() == items.CATEGORY.RESOURCE then
-            UIKit:newWidgetUI("WidgetUseMutiItems", items):AddToCurrentScene()
+            if items:Count() > 1 then
+                UIKit:newWidgetUI("WidgetUseMutiItems", items):AddToCurrentScene()
+            else
+                NetManager:getUseItemPromise(items:Name(),{
+                    [items:Name()] = {count = items:Count()}
+                })
+            end
         else
             NetManager:getUseItemPromise(items:Name(),{}):done(function (response)
                 local message = ""
@@ -567,6 +575,7 @@ function GameUIItems:OnItemsChanged( changed_map )
     end
 end
 return GameUIItems
+
 
 
 

@@ -59,6 +59,21 @@ function MilitaryTechnology:GetTechLocalize()
     end
     return string.format(_("对%s的攻击"),soldier_category[soldiers[2]])
 end
+-- 获取技能图标
+function MilitaryTechnology:GetMiliTechIcon()
+    local soldiers = string.split(self:Name(), "_")
+    if soldiers[2] == "infantry" then
+        return "tech_infantry_128x128.png"
+    elseif soldiers[2] == "archer" then
+        return "tech_archer_128x128.png"
+    elseif soldiers[2] == "cavalry" then
+        return "tech_cavalry_128x128.png"
+    elseif soldiers[2] == "siege" then
+        return "tech_siege_128x128.png"
+    elseif soldiers[2] == "hpAdd" then
+        return "tech_hp_128x128.png"
+    end
+end
 -- 获取技能类别
 function MilitaryTechnology:GetTechCategory()
     return building_map_tech[self:Building()]
@@ -157,5 +172,6 @@ function MilitaryTechnology:IsAbleToUpgrade()
 end
 
 return MilitaryTechnology
+
 
 

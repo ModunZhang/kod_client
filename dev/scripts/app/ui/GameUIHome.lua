@@ -422,7 +422,7 @@ function GameUIHome:CreateTop()
     self.quest_label = UIKit:ttfLabel({
         size = 20,
         color = 0xfffeb3,
-    }):addTo(quest_bar_bg):align(display.LEFT_CENTER, -120, 0)
+    }):addTo(quest_bar_bg):align(display.LEFT_CENTER, -130, 0)
 
     local left_order =  WidgetAutoOrder.new(WidgetAutoOrder.ORIENTATION.TOP_TO_BOTTOM,50):addTo(self):pos(display.left+40, display.top-200)
     -- 活动按钮
@@ -592,7 +592,6 @@ function GameUIHome:CreateTop()
     end)
     function shrine_event_button:CheckVisible()
         local alliance = Alliance_Manager:GetMyAlliance()
-        print("shrine_event_button:CheckVisible()",alliance:GetAllianceShrine():HaveEvent())
         return alliance:GetAllianceShrine():HaveEvent()
     end
     function shrine_event_button:GetElementSize()
@@ -645,7 +644,6 @@ end
 function GameUIHome:CheckAllianceRewardCount()
     if not self.tips_button then return end
     local count = LuaUtils:table_size(User:GetIapGifts())
-    print("CheckAllianceRewardCount----->",count)
     local award_num = 0
 
     if User:HaveEveryDayLoginReward() then

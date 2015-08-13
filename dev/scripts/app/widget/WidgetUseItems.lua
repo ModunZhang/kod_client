@@ -511,7 +511,7 @@ function WidgetUseItems:OpenStrengthDialog( item )
 
     local value = User:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     local prodperhour = User:GetStrengthResource():GetProductionPerHour()
-    UIKit:ttfLabel({
+    local strength_label = UIKit:ttfLabel({
         text = string.format(_("%s(+%d/每小时)"), string.formatnumberthousands(value), prodperhour),
         size = 22,
         color = 0x28251d,
@@ -534,6 +534,16 @@ function WidgetUseItems:OpenStrengthDialog( item )
                 end
             ):addTo(body):align(display.CENTER,size.width/2,size.height - 160 - (i-1)*138)
         end
+    end
+    local resource_manager = City:GetResourceManager()
+    resource_manager:AddObserver(dialog)
+    dialog:addCloseCleanFunc(function ()
+        resource_manager:RemoveObserver(dialog)
+    end)
+    function dialog:OnResourceChanged()
+        local value = User:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+        local prodperhour = User:GetStrengthResource():GetProductionPerHour()
+        strength_label:setString(string.format(_("%s(+%d/每小时)"), string.formatnumberthousands(value), prodperhour))
     end
     return dialog
 end
@@ -834,12 +844,28 @@ function WidgetUseItems:OpenMoveTheCityDialog( item ,params)
     return dialog
 end
 function WidgetUseItems:OpenVipPointDialog(item)
-    return self:OpenNormalDialog(item,_("增加VIP点数"),window.top-340)
+    local dialog = self:OpenNormalDialog(item,_("增加VIP点数"),window.top-180 , 150)
+    local exp_bar = UIKit:CreateVipExpBar():addTo(dialog,1,999):pos(dialog:getContentSize().width/2-287, dialog:getContentSize().height-230)
+    local vip_level,percent,exp = User:GetVipLevel()
+    exp_bar:LightLevelBar(vip_level,percent,exp, true)
+    User:AddListenOnType(dialog, User.LISTEN_TYPE.BASIC)
+    function dialog:OnUserBasicChanged(from,changed_map)
+        if changed_map.vipExp then
+            local vip_level,percent,exp = User:GetVipLevel()
+            self:removeChildByTag(999, true)
+            local exp_bar = UIKit:CreateVipExpBar():addTo(self,1,999):pos(self:getContentSize().width/2-287, self:getContentSize().height-230)
+            exp_bar:LightLevelBar(vip_level,percent,exp, true)
+        end
+    end
+    dialog:addCloseCleanFunc(function ()
+        User:RemoveListenerOnType(dialog, User.LISTEN_TYPE.BASIC)
+    end)
+    return dialog
 end
 
-function WidgetUseItems:OpenNormalDialog( item ,title ,y)
+function WidgetUseItems:OpenNormalDialog( item ,title ,y , offset_hight)
     local same_items = ItemManager:GetSameTypeItems(item)
-    local dialog = UIKit:newWidgetUI("WidgetPopDialog",#same_items * 130 +100,title or item:GetLocalizeName(),y and y or window.top-230)
+    local dialog = UIKit:newWidgetUI("WidgetPopDialog",#same_items * 130 + (offset_hight or 100),title or item:GetLocalizeName(),y and y or window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
 
@@ -1347,6 +1373,8 @@ end
 
 
 return WidgetUseItems
+
+
 
 
 

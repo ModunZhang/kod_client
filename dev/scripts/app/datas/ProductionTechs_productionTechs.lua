@@ -78,14 +78,14 @@ productionTechs["rescueTent"] = {
 	["unlockBy"] = 7,
 	["unlockLevel"] = 2,
 	["academyLevel"] = 16,
-	["effectPerLevel"] = 0.010000
+	["effectPerLevel"] = 0.020000
 }
 productionTechs["trap"] = {
 	["name"] = "trap",
 	["index"] = 11,
 	["unlockBy"] = 8,
 	["unlockLevel"] = 2,
-	["academyLevel"] = 24,
+	["academyLevel"] = 20,
 	["effectPerLevel"] = 0.010000
 }
 productionTechs["healingAgent"] = {
@@ -93,7 +93,7 @@ productionTechs["healingAgent"] = {
 	["index"] = 12,
 	["unlockBy"] = 9,
 	["unlockLevel"] = 2,
-	["academyLevel"] = 30,
+	["academyLevel"] = 18,
 	["effectPerLevel"] = 0.010000
 }
 productionTechs["colonization"] = {
@@ -101,7 +101,7 @@ productionTechs["colonization"] = {
 	["index"] = 13,
 	["unlockBy"] = 10,
 	["unlockLevel"] = 2,
-	["academyLevel"] = 20,
+	["academyLevel"] = 24,
 	["effectPerLevel"] = 0.010000
 }
 productionTechs["hideout"] = {
@@ -117,15 +117,15 @@ productionTechs["sketching"] = {
 	["index"] = 15,
 	["unlockBy"] = 12,
 	["unlockLevel"] = 2,
-	["academyLevel"] = 28,
+	["academyLevel"] = 22,
 	["effectPerLevel"] = 0.010000
 }
-productionTechs["negotiation"] = {
-	["name"] = "negotiation",
+productionTechs["recruitment"] = {
+	["name"] = "recruitment",
 	["index"] = 16,
 	["unlockBy"] = 13,
 	["unlockLevel"] = 2,
-	["academyLevel"] = 18,
+	["academyLevel"] = 30,
 	["effectPerLevel"] = 0.010000
 }
 productionTechs["logistics"] = {
@@ -133,8 +133,8 @@ productionTechs["logistics"] = {
 	["index"] = 17,
 	["unlockBy"] = 14,
 	["unlockLevel"] = 2,
-	["academyLevel"] = 22,
-	["effectPerLevel"] = 0.010000
+	["academyLevel"] = 28,
+	["effectPerLevel"] = 0.020000
 }
 productionTechs["mintedCoin"] = {
 	["name"] = "mintedCoin",

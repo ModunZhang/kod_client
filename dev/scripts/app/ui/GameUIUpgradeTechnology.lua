@@ -5,7 +5,7 @@
 local GameUIUpgradeTechnology = UIKit:createUIClass("GameUIUpgradeTechnology","UIAutoClose")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetRequirementListview = import("..widget.WidgetRequirementListview")
-local HEIGHT = 694
+local HEIGHT = 760
 local window = import("..utils.window")
 local MaterialManager = import("..entity.MaterialManager")
 
@@ -21,12 +21,12 @@ end
 function GameUIUpgradeTechnology:onEnter()
     GameUIUpgradeTechnology.super.onEnter(self)
     if self:CheckIsMeUpgrade() then
-        HEIGHT = 550
+        HEIGHT = 616
     else
         if self:CheckMeIsReachLimitLevel() then
-            HEIGHT = 200
+            HEIGHT = 266
         else
-            HEIGHT = 694
+            HEIGHT = 760
         end
     end
     self:BuildUI()
@@ -167,7 +167,7 @@ end
 
 function GameUIUpgradeTechnology:BuildUI()
     local y = window.top_bottom - 50
-    if HEIGHT == 200 then
+    if HEIGHT == 266 then
         y = window.top_bottom - 200
     end
     local bg_node =  WidgetUIBackGround.new({height = HEIGHT,isFrame = "no"}):align(display.TOP_CENTER, window.cx, y)
@@ -191,15 +191,21 @@ function GameUIUpgradeTechnology:BuildUI()
         size = 22,
         color= 0xffedae
     }):align(display.LEFT_CENTER, 10, 15):addTo(title)
-    local line_2 = display.newScale9Sprite("dividing_line.png",0,0,cc.size(422,2),cc.rect(10,2,382,2))
-        :align(display.LEFT_BOTTOM,box:getPositionX()+box:getContentSize().width + 10, box:getPositionY()-box:getContentSize().height)
+     
+    UIKit:ttfLabel({
+        text = self:GetProductionTechnology():GetBuffLocalizedDesc(),
+        size = 20,
+        color= 0x615b44
+    }):align(display.LEFT_BOTTOM,box:getPositionX() + box:getContentSize().width + 20, box:getPositionY()-box:getContentSize().height/2):addTo(bg_node)
+    local line_2 = display.newScale9Sprite("dividing_line.png",0,0,cc.size(544,2),cc.rect(10,2,382,2))
+        :align(display.LEFT_BOTTOM,box:getPositionX() + 8, box:getPositionY()-box:getContentSize().height - 82)
         :addTo(bg_node)
-    local line_1 =  display.newScale9Sprite("dividing_line.png",0,0,cc.size(422,2),cc.rect(10,2,382,2))
+    local line_1 =  display.newScale9Sprite("dividing_line.png",0,0,cc.size(544,2),cc.rect(10,2,382,2))
         :align(display.LEFT_BOTTOM,line_2:getPositionX(), line_2:getPositionY() + 40)
         :addTo(bg_node)
     self.line_1 = line_1
     local current_effect_desc = UIKit:ttfLabel({
-        text = self:GetProductionTechnology():GetBuffLocalizedDesc(),
+        text = _("当前效果"),
         size = 20,
         color= 0x615b44
     }):align(display.LEFT_BOTTOM,line_1:getPositionX()+6, line_1:getPositionY() + 5):addTo(bg_node)
@@ -208,7 +214,7 @@ function GameUIUpgradeTechnology:BuildUI()
         size = 22,
         color= 0x403c2f,
         align = cc.TEXT_ALIGNMENT_RIGHT,
-    }):align(display.RIGHT_BOTTOM,line_1:getPositionX()+ 422,current_effect_desc:getPositionY()):addTo(bg_node)
+    }):align(display.RIGHT_BOTTOM,line_1:getPositionX()+ 544,current_effect_desc:getPositionY()):addTo(bg_node)
     self.next_effect_val_label = next_effect_val_label
 
     self.upgrade_info_icon = display.newSprite("teach_upgrade_icon_15x17.png"):align(display.RIGHT_BOTTOM, next_effect_val_label:getPositionX() - 70,
@@ -233,7 +239,7 @@ function GameUIUpgradeTechnology:BuildUI()
         size = 22,
         color= 0x403c2f,
         align = cc.TEXT_ALIGNMENT_RIGHT,
-    }):align(display.RIGHT_BOTTOM,line_2:getPositionX()+ 422,current_power_desc:getPositionY()):addTo(bg_node)
+    }):align(display.RIGHT_BOTTOM,line_2:getPositionX()+ 544,current_power_desc:getPositionY()):addTo(bg_node)
     self.next_power_val_label = next_power_val_label
     self.upgrade_power_icon = display.newSprite("teach_upgrade_icon_15x17.png"):align(display.RIGHT_BOTTOM, next_power_val_label:getPositionX() - 70,
         next_power_val_label:getPositionY() + 5):addTo(bg_node)

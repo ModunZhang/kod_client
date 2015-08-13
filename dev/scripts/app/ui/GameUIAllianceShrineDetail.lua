@@ -120,13 +120,13 @@ function GameUIAllianceShrineDetail:BuildUI()
             text = _("需要感知力"),
             size = 18,
             color = 0x6d6651
-        }):addTo(insight_icon):align(display.LEFT_TOP,insight_icon:getContentSize().width,45)
+        }):addTo(insight_icon):align(display.LEFT_TOP,insight_icon:getContentSize().width + 10,45)
 
         local need_insight_val_title = UIKit:ttfLabel({
-            text = string.formatnumberthousands(self:GetShrineStage():NeedPerception()),
-            color = 0x403c2f,
+            text = "-"..string.formatnumberthousands(self:GetShrineStage():NeedPerception()),
+            color = 0x7e0000,
             size  = 24
-        }):addTo(insight_icon):align(display.LEFT_BOTTOM,insight_icon:getContentSize().width, -5)
+        }):addTo(insight_icon):align(display.LEFT_BOTTOM,insight_icon:getContentSize().width + 10, -5)
         self.insight_icon = insight_icon
         self.state_label = UIKit:ttfLabel({
             text = _("正在进行") .. "\n" .. "00:01:55",
@@ -148,7 +148,7 @@ function GameUIAllianceShrineDetail:BuildUI()
         title = _("事件完成奖励"),
         h = 186,
         info = self:GetShrineStage()
-    }):addTo(background)
+    }):addTo(background,2)
         :align(display.BOTTOM_CENTER,items_box_x,items_box_y)
 
     local soldier_x,soldier_y = 14,self:IsActivate() and items_box:getPositionY()+342+10 or 210

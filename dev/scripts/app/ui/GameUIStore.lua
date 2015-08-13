@@ -128,6 +128,7 @@ function GameUIStore:GetItemLogo(data)
 		size = 16,
 		color= 0xfed36c
 	}):align(display.BOTTOM_CENTER, 167,6):addTo(bg)
+	print("............".._("+价值%d的道具"), _("礼包中包含下列所有物品"))
 	UIKit:ttfLabel({
 		text = string.format(_("+价值%d的道具"),data.rewards_price),
 		size = 20,

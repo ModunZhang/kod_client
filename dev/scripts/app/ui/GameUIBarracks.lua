@@ -31,7 +31,7 @@ function GameUIBarracks:OnMoveInStage()
     self.barracks:AddBarracksListener(self)
     self.barracks_city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
     self.barracks_city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
-    app.timer:AddListener(self)
+    -- app.timer:AddListener(self)
     GameUIBarracks.super.OnMoveInStage(self)
 end
 function GameUIBarracks:onExit()
@@ -39,7 +39,7 @@ function GameUIBarracks:onExit()
     self.barracks:RemoveBarracksListener(self)
     self.barracks_city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
     self.barracks_city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
-    app.timer:RemoveListener(self)
+    -- app.timer:RemoveListener(self)
     GameUIBarracks.super.onExit(self)
 end
 function GameUIBarracks:RightButtonClicked()
@@ -206,7 +206,7 @@ function GameUIBarracks:TabButtons()
             self:RefershUnlockInfo()
         end
     end):pos(window.cx, window.bottom + 34)
-    self.tab_buttons:SetGreenTipsShow("specialRecruit",self:GetRecruitSpecialTime())
+    -- self.tab_buttons:SetGreenTipsShow("specialRecruit",self:GetRecruitSpecialTime())
 end
 local arrow_left_dir_map = {
     swordsman = true,
@@ -267,7 +267,7 @@ function GameUIBarracks:CreateSpecialItemWithListView( list_view, soldiers ,titl
     local widget_width = 568
     local unit_width = 120
     local gap_x = (widget_width - unit_width * 4-origin_x*2) / 3
-    local row_item = WidgetUIBackGround.new({height=274,width=widget_width},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
+    local row_item = WidgetUIBackGround.new({height = 230,width = widget_width},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
     for i, soldier_name in pairs(soldiers) do
         self.soldier_map[soldier_name] =
             WidgetSoldierBox.new(nil, function(event)
@@ -275,7 +275,7 @@ function GameUIBarracks:CreateSpecialItemWithListView( list_view, soldiers ,titl
                     :addTo(self,1000, WidgetRecruitSoldier_tag)
                     :align(display.CENTER, window.cx, 500 / 2)
             end):addTo(row_item)
-                :alignByPoint(cc.p(0.5, 0.5), origin_x + (unit_width + gap_x) * (i - 1) + unit_width / 2, 140)
+                :alignByPoint(cc.p(0.5, 0.5), origin_x + (unit_width + gap_x) * (i - 1) + unit_width / 2, 100)
                 :SetSoldier(soldier_name, self.barracks_city:GetSoldierManager():GetStarBySoldierType(soldier_name))
     end
 
@@ -293,29 +293,29 @@ function GameUIBarracks:CreateSpecialItemWithListView( list_view, soldiers ,titl
 
     -- 招募时间限制
 
-    local time_bg = display.newScale9Sprite("back_ground_166x84.png", 0,0,cc.size(548,34),cc.rect(15,10,136,64))
-        :align(display.BOTTOM_CENTER, row_item:getContentSize().width/2, 10)
-        :addTo(row_item)
-    local re_time = DataUtils:GetNextRecruitTime()
-    local re_string = ""
-    if tolua.type(re_time) == "boolean" then
-        re_string = _("招募开启中")
-    else
-        re_string = _("下一次开启招募:")..GameUtils:formatTimeStyle1(re_time)
-    end
-    local re_status = UIKit:ttfLabel({
-        text = re_string,
-        size = 20,
-        color = 0x514d3e
-    }):addTo(time_bg)
-        :align(display.CENTER, time_bg:getContentSize().width/2,time_bg:getContentSize().height/2)
+    -- local time_bg = display.newScale9Sprite("back_ground_166x84.png", 0,0,cc.size(548,34),cc.rect(15,10,136,64))
+    --     :align(display.BOTTOM_CENTER, row_item:getContentSize().width/2, 10)
+    --     :addTo(row_item)
+    -- local re_time = DataUtils:GetNextRecruitTime()
+    -- local re_string = ""
+    -- if tolua.type(re_time) == "boolean" then
+    --     re_string = _("招募开启中")
+    -- else
+    --     re_string = _("下一次开启招募:")..GameUtils:formatTimeStyle1(re_time)
+    -- end
+    -- local re_status = UIKit:ttfLabel({
+    --     text = re_string,
+    --     size = 20,
+    --     color = 0x514d3e
+    -- }):addTo(time_bg)
+    --     :align(display.CENTER, time_bg:getContentSize().width/2,time_bg:getContentSize().height/2)
 
     local item = list_view:newItem()
     item:addContent(row_item)
-    item:setItemSize(widget_width, 284)
-    function item:SetRecruitStatus(string)
-        re_status:setString(string)
-    end
+    item:setItemSize(widget_width, 230)
+    -- function item:SetRecruitStatus(string)
+    --     re_status:setString(string)
+    -- end
     return item
 end
 function GameUIBarracks:OnSoliderCountChanged()
@@ -349,14 +349,14 @@ function GameUIBarracks:RefershUnlockInfo()
 end
 
 function GameUIBarracks:OnTimer(current_time)
-    for i,v in ipairs(self.special_soldier_items) do
-        local ok,time = self:GetRecruitSpecialTime()
-        if ok then
-            v:SetRecruitStatus(_("招募开启中"))
-        else
-            v:SetRecruitStatus(_("下一次开启招募:")..GameUtils:formatTimeStyle1(time))
-        end
-    end
+    -- for i,v in ipairs(self.special_soldier_items) do
+    --     local ok,time = self:GetRecruitSpecialTime()
+    --     if ok then
+    --         v:SetRecruitStatus(_("招募开启中"))
+    --     else
+    --         v:SetRecruitStatus(_("下一次开启招募:")..GameUtils:formatTimeStyle1(time))
+    --     end
+    -- end
 end
 function GameUIBarracks:GetRecruitSpecialTime()
     local re_time = DataUtils:GetNextRecruitTime()

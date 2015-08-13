@@ -383,7 +383,8 @@ static BOOL configured = FALSE;
             } else {
                 CDLOGINFO(@"Denshion::CDAudioManager - Other audio is not playing audio will be exclusive");
                 //_audioSessionCategory = kAudioSessionCategory_SoloAmbientSound;
-                _audioSessionCategory = AVAudioSessionCategorySoloAmbient;
+//                _audioSessionCategory = AVAudioSessionCategorySoloAmbient;
+                _audioSessionCategory = AVAudioSessionCategoryAmbient;//只使用AVAudioSessionCategoryAmbient 防止其他播放器导致音乐停止
                 willPlayBackgroundMusic = YES;
             }    
             

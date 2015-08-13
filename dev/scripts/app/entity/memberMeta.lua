@@ -120,7 +120,7 @@ function memberMeta:GetCollectExpsByType(collectType)
     return exp,self:get_collect_config(collectType).expTo
 end
 function memberMeta:GetCollectEffectByType(collectType)
-    return self:get_collect_config(collectType).percentPerHour
+    return self:get_collect_config(collectType).percentPerHour + City:FindTechByName("colonization"):GetBuffEffectVal()
 end
 function memberMeta:GetWoodCollectLevelUpExp()
     return self:GetCollectLevelUpExpByType(COLLECT_TYPE.WOOD)

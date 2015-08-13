@@ -112,10 +112,13 @@ function City:ctor(user)
 end
 --------------------
 function City:GetRecommendTask()
-    -- local task = self:GetBeginnersTask()
-    -- if task then
-    --     return task
-    -- end
+    -- 2015-8-13之后进入游戏的才有新推荐任务
+    if self:GetUser():GetCountInfo().registerTime > 1439476527805 then
+        local task = self:GetBeginnersTask()
+        if task then
+            return task
+        end
+    end
     local building_map = self:GetHighestCanUpgradeBuildingMap()
     local tasks = self:GetUser():GetTaskManager():GetAvailableTasksByCategory(GrowUpTaskManager.TASK_CATEGORY.BUILD)
     local re_task
@@ -308,11 +311,11 @@ function City:GetBeginnersTask()
     end
 end
 function City:SetBeginnersTaskFlag(index)
-    -- local key = string.format("recommend_tasks_%s", self:GetUser():Id())
-    -- local flag = app:GetGameDefautlt():getTableForKey(key, default)
-    -- flag[index] = true
-    -- app:GetGameDefautlt():setTableForKey(key, flag)
-    -- app:GetGameDefautlt():flush()
+    local key = string.format("recommend_tasks_%s", self:GetUser():Id())
+    local flag = app:GetGameDefautlt():getTableForKey(key, default)
+    flag[index] = true
+    app:GetGameDefautlt():setTableForKey(key, flag)
+    app:GetGameDefautlt():flush()
 end
 --------------------
 function City:GetUser()
@@ -1871,7 +1874,6 @@ function City:IteratorProductionTechEvents(func)
         func(v)
     end
 end
-
 
 function City:OnProductionTechnologyEventTimer(productionTechnologyEvent)
     self:NotifyListeneOnType(City.LISTEN_TYPE.PRODUCTION_EVENT_TIMER, function(listener)

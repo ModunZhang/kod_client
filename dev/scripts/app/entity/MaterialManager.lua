@@ -72,6 +72,9 @@ end
 function MaterialManager:GetEquipmentMaterias()
     return self:GetMaterialsByType(EQUIPMENT)
 end
+function MaterialManager:GetSoldierMaterias()
+    return self:GetMaterialsByType(SOLDIER)
+end
 function MaterialManager:GetMaterialsByType(material_type)
     return self.material_map[material_type]
 end

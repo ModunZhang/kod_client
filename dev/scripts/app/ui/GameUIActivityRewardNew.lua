@@ -19,7 +19,7 @@ local Localize_item = import("..utils.Localize_item")
 local Localize = import("..utils.Localize")
 local UILib = import(".UILib")
 local Localize_item = import("..utils.Localize_item")
-local fire_wall = import("..particles.fire_wall")
+local lights = import("..particles.lights")
 
 local height_config = {
     EVERY_DAY_LOGIN = 762,
@@ -187,7 +187,6 @@ function GameUIActivityRewardNew:GetDay60Reward()
     if self:GetPageOfDay60() == 2 then
         config_data = LuaUtils:table_slice(config_day60,31,60)
     else
-        print("GetDay60Reward---->1")
         config_data =  LuaUtils:table_slice(config_day60,1,30)
     end
     local final_data = LuaUtils:table_map(config_data,function(k,v)
@@ -531,19 +530,22 @@ end
 -----------------------
 function GameUIActivityRewardNew:ui_FIRST_IN_PURGURE()
     local bar = display.newSprite("activity_first_purgure_588x176.jpg"):align(display.TOP_CENTER, 304,self.height - 15):addTo(self.bg)
+    lights():addTo(bar):pos(100, 100)
+
     local bg = display.newSprite("selenaquestion_bg_580x536.png"):addTo(self.bg):align(display.TOP_CENTER, 304, self.height - 15 - 176):scale(587/580)
     display.newSprite("Npc.png"):align(display.RIGHT_BOTTOM, 315, -10):addTo(self.bg):scale(552/423)
     local reward_bg = display.newScale9Sprite("activity_day_bg_104x34.png",0,0,cc.size(290,510),cc.rect(10,10,84,14)):align(display.LEFT_BOTTOM, 260, 14):addTo(bg)
     local countInfo = User:GetCountInfo()
     local rewards = self:GetFirstPurgureRewards()
     local x,y = 20,500
-    self.purgure_get_button = WidgetPushButton.new({normal = 'yellow_btn_up_186x66.png',pressed = 'yellow_btn_down_186x66.png'})
+    self.purgure_get_button = WidgetPushButton.new({normal = 'store_buy_button_n_332x76.png',pressed = 'store_buy_button_l_332x76.png',scale9 = true})
         :setButtonLabel("normal", UIKit:commonButtonLable({
             text = _("领取")
         }))
         :addTo(reward_bg,1)
         :pos(145,58)
-    self.go_store_button = WidgetPushButton.new({normal = 'yellow_btn_up_186x66.png',pressed = 'yellow_btn_down_186x66.png'})
+        :setButtonSize(190,66)
+    self.go_store_button = WidgetPushButton.new({normal = 'store_buy_button_n_332x76.png',pressed = 'store_buy_button_l_332x76.png'},{scale9 = true})
         :setButtonLabel("normal", UIKit:commonButtonLable({
             text = _("前往充值")
         }))
@@ -552,7 +554,9 @@ function GameUIActivityRewardNew:ui_FIRST_IN_PURGURE()
         :onButtonClicked(function()
             UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
         end)
+        :setButtonSize(190,66)
     local tips_list = {}
+    local acts = {}
     for index,reward in ipairs(rewards) do
         if index <= 6 then
             local reward_type,reward_name,count = unpack(reward)
@@ -561,6 +565,15 @@ function GameUIActivityRewardNew:ui_FIRST_IN_PURGURE()
             local sp = display.newSprite(UIKit:GetItemImage(reward_type,reward_name),59,59):addTo(item_bg)
             local size = sp:getContentSize()
             sp:scale(90/math.max(size.width,size.height))
+
+            table.insert(acts, cc.CallFunc:create(function()
+                local emitter = lights()
+                emitter:setSpeed(3)
+                emitter:setLife(math.random(1) + 1)
+                emitter:setEmissionRate(1)
+                emitter:addTo(sp):pos(size.width/2,size.height/2)
+            end))
+            table.insert(acts, cc.DelayTime:create(0.3))
             UIKit:addTipsToNode(sp,Localize_item.item_name[reward_name] .. " x" .. count,self)
             x = x  + 110 + 35
             if index % 2 == 0 then
@@ -569,6 +582,7 @@ function GameUIActivityRewardNew:ui_FIRST_IN_PURGURE()
             end
         end
     end
+    self:runAction(transition.sequence(acts))
     local tips_str = table.concat(tips_list, ",")
     self.purgure_get_button:onButtonClicked(function()
         NetManager:getFirstIAPRewardsPromise():done(function()
@@ -610,7 +624,7 @@ function GameUIActivityRewardNew:ui_PLAYER_LEVEL_UP()
     local title_bg = display.newScale9Sprite("title_blue_430x30.png",0,0, cc.size(390,30), cc.rect(10,10,410,10))
         :align(display.LEFT_TOP, 180, self.height - 30):addTo(self.bg)
     UIKit:ttfLabel({
-        text = string.format("当前等级：LV %s",City:GetFirstBuildingByType('keep'):GetLevel()),
+        text = string.format(_("当前等级：LV %s"),City:GetFirstBuildingByType('keep'):GetLevel()),
         size = 22,
         color= 0xffedae
     }):align(display.LEFT_CENTER, 14, 15):addTo(title_bg)
@@ -642,8 +656,9 @@ function GameUIActivityRewardNew:ui_PLAYER_LEVEL_UP()
     local activity_desc_label = UIKit:ttfLabel({
         text = _("活动期间，升级城堡获得丰厚奖励"),
         size = 20,
-        color= 0x403c2f
-    }):align(display.LEFT_TOP, 190, level_up_state_label:getPositionY() - level_up_state_label:getContentSize().height - 20):addTo(self.bg)
+        color= 0x403c2f,
+        dimensions = cc.size(400,0)
+    }):align(display.LEFT_CENTER, 190, level_up_state_label:getPositionY() - level_up_state_label:getContentSize().height - 30):addTo(self.bg)
 
     local list_bg = display.newScale9Sprite("background_568x120.png", 0,0,cc.size(568,544),cc.rect(15,10,538,100))
         :align(display.BOTTOM_CENTER, 304, 30):addTo(self.bg)
@@ -1017,6 +1032,7 @@ function GameUIActivityRewardNew:GetNextOnlineTimePoint()
 end
 
 return GameUIActivityRewardNew
+
 
 
 

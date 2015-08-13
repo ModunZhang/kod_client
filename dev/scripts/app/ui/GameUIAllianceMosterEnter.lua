@@ -121,7 +121,9 @@ function GameUIAllianceMosterEnter:onEnter()
             text = info[1] == "buildingMaterials" and  Localize.materials[info[2]] or Localize_item.item_name[info[2]],
             -- text = "X "..info[3],
             color = 0x615b44,
-            size = 20,
+            size = 16,
+            -- ellipsis = true,
+            -- dimensions = cc.size(90,20)
         }):addTo(rewards_node):align(display.CENTER, 44 + (i - 1) * 100 ,40)
     end
 

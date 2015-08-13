@@ -50,6 +50,11 @@ local effect_sound_map = {
 	PVE_MOVE1 = "sfx_pve_move1.mp3",
 	PVE_MOVE2 = "sfx_pve_move2.mp3",
 	PVE_MOVE3 = "sfx_pve_move3.mp3",
+	PVE_STAR1 = "sfx_pve_star1.mp3",
+	PVE_STAR2 = "sfx_pve_star2.mp3",
+	PVE_STAR3 = "sfx_pve_star3.mp3",
+	PVE_SWEEP = "sfx_get.mp3",
+	TECHNOLOGY = "sfx_technology.mp3",
 }
 
 local soldier_step_sfx_map = {
@@ -258,7 +263,7 @@ end
 local get_scene_name_in_enter_music_map = function(sceneName)
 	if sceneName == 'FteScene' then
 		return "MyCityScene" 
-	elseif sceneName == 'PVEFteScene' then
+	elseif sceneName == 'PVESceneNewFte' then
 		return "PVEScene"
 	elseif sceneName == 'FteScene' then
 		return "MyCityScene"
@@ -323,7 +328,7 @@ function AudioManager:PlayGameMusicAutoCheckScene()
 						if lastFileKey == 'sfx_battle' then
 							self:PlayBgMusicWithFileKey('bgm_battle',false)
 						else
-							self:PlayBgMusicWithFileKey('bgm_battle',false)
+							self:PlayBgMusicWithFileKey('sfx_battle',false)
 						end
 					end
 				else

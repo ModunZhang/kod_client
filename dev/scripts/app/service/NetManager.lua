@@ -608,6 +608,15 @@ local logic_event_map = {
             end
         end
     end,
+    onAllianceNotice = function(success, response)
+        if success then
+            local running_scene = display.getRunningScene().__cname
+            if running_scene ~= "MainScene" and running_scene ~= "LogoScene" then
+                LuaUtils:outputTable("onAllianceNotice", response)
+                GameGlobalUI:showAllianceNotice(response.key,response.params)
+            end
+        end
+    end,
 }
 ---
 function NetManager:InitEventsMap(...)
@@ -668,10 +677,30 @@ function NetManager:getConnectGateServerPromise()
         self:InitEventsMap(base_event_map)
     end)
 end
+
+function NetManager:tryGetAppTag()
+    local jsonPath = cc.FileUtils:getInstance():fullPathForFilename("fileList.json")
+    local file = io.open(jsonPath)
+    local jsonString = file:read("*a")
+    file:close()
+    local tag = json.decode(jsonString).tag
+    return tag
+end
+
+
 -- 获取服务器列表
 function NetManager:getLogicServerInfoPromise()
     local device_id = device.getOpenUDID()
-    return get_none_blocking_request_promise("gate.gateHandler.queryEntry", {deviceId = device_id,tag = app.client_tag}, "获取逻辑服务器失败",true)
+    local device_tag = app.client_tag
+    if not device_tag then -- fix tag nil
+        device_tag = self:tryGetAppTag()
+        if not device_tag then
+            return cocos_promise.defer(function()
+                promise.reject({code = 0, msg = time}, "timeout")
+            end)
+        end
+    end
+    return get_none_blocking_request_promise("gate.gateHandler.queryEntry", {deviceId = device_id,tag = device_tag}, "获取逻辑服务器失败",true)
         :done(function(result)
             self:CleanAllEventListeners()
             self.m_netService:disconnect()
@@ -926,7 +955,7 @@ function NetManager:getInstantTreatSoldiersPromise(soldiers)
         local get_list = ""
         for k,v in pairs(soldiers) do
             local m_name = Localize.soldier_name[v.name]
-            get_list = get_list .. m_name .. "X"..v.count.." "
+            get_list =  get_list .. (get_list == "" and "" or ",") .. m_name .. "X"..v.count
         end
         GameGlobalUI:showTips(_("治愈士兵完成"),get_list)
     end)
@@ -1113,6 +1142,13 @@ function NetManager:getDeleteReportsPromise(reportIds)
     return get_blocking_request_promise("logic.playerHandler.deleteReports", {
         reportIds = reportIds
     }, "删除战报失败!"):done(get_response_delete_report_msg)
+end
+-- 获取战报详情
+function NetManager:getReportDetailPromise(memberId,reportId)
+    return get_blocking_request_promise("logic.playerHandler.getReportDetail", {
+        memberId = memberId,
+        reportId = reportId,
+    }, "获取战报详情失败!")
 end
 -- 请求加速
 function NetManager:getRequestAllianceToSpeedUpPromise(eventType, eventId)
@@ -1546,9 +1582,7 @@ function NetManager:getUpgradeProductionTechPromise(techName,finishNow)
         techName = techName,
         finishNow = finishNow,
     }, "升级生产科技失败!"):done(get_player_response_msg):done(function()
-        if finishNow then
-            app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
-        end
+        app:GetAudioManager():PlayeEffectSoundWithKey("TECHNOLOGY")
     end)
 end
 -- 升级军事科技
@@ -1603,14 +1637,17 @@ function NetManager:getGiveLoyaltyToAllianceMemberPromise(memberId,count)
         "为联盟成员添加荣耀值失败!"):done(get_player_response_msg)
 end
 --购买道具
-function NetManager:getBuyItemPromise(itemName,count)
+function NetManager:getBuyItemPromise(itemName,count,need_tips)
+    need_tips = need_tips == nil and true or need_tips
     return get_blocking_request_promise("logic.playerHandler.buyItem", {
         itemName = itemName,
         count = count,
     }, "购买道具失败!"):done(get_player_response_msg):done(function ()
-        GameGlobalUI:showTips(_("提示"),string.format(_("购买%s道具成功"),Localize_item.item_name[itemName]))
+        if need_tips then
+            GameGlobalUI:showTips(_("提示"),string.format(_("购买%s道具成功"),Localize_item.item_name[itemName]))
+            app:GetAudioManager():PlayeEffectSoundWithKey("BUY_ITEM")
+        end
         ext.market_sdk.onPlayerBuyGameItems(itemName,count,DataUtils:GetItemPriceByItemName(itemName))
-        app:GetAudioManager():PlayeEffectSoundWithKey("BUY_ITEM")
     end)
 end
 --使用道具
@@ -1619,7 +1656,7 @@ function NetManager:getUseItemPromise(itemName,params)
         itemName = itemName,
         params = params,
     }, "使用道具失败!"):done(get_player_response_msg):done(function ()
-        if not (string.find(itemName,"dragonChest") or string.find(itemName,"chest")) then
+        if not (string.find(itemName,"dragonChest") or string.find(itemName,"chest")) and itemName ~= "sweepScroll" then
             if params[itemName] and params[itemName].count then
                 GameGlobalUI:showTips(_("提示"),string.format(_("使用%s道具X %d成功"),Localize_item.item_name[itemName],params[itemName].count))
             else
@@ -1629,7 +1666,9 @@ function NetManager:getUseItemPromise(itemName,params)
         if itemName == "torch" then
             app:GetAudioManager():PlayeEffectSoundWithKey("UI_BUILDING_DESTROY")
         else
-            app:GetAudioManager():PlayeEffectSoundWithKey("USE_ITEM")
+            if itemName ~= "sweepScroll" then
+                app:GetAudioManager():PlayeEffectSoundWithKey("USE_ITEM")
+            end
         end
         ext.market_sdk.onPlayerUseGameItems(itemName,1)
     end)
@@ -1842,6 +1881,67 @@ end
 function NetManager:getSetApnStatusPromise(type,status)
     return get_blocking_request_promise("logic.playerHandler.setApnStatus",{type = type,status = status},"设置远程推送状态失败!"):done(get_player_response_msg)
 end
+
+function NetManager:getAttackPveSectionPromise(sectionName, dragonType, soldiers)
+    local rewards = LuaUtils:table_map(string.split(GameDatas.PvE.sections[sectionName].rewards, ","), function(k,v)
+        local type,name = unpack(string.split(v, ":"))
+        return k, {type = type, name = name}
+    end)
+    local pre_tab = {items = {}, soldierMaterials = {}}
+    return get_blocking_request_promise("logic.playerHandler.attackPveSection",{
+        sectionName = sectionName,
+        dragonType = dragonType,
+        soldiers = soldiers,
+    },"攻打npc失败!")
+        :done(function(response)
+            for i,v in ipairs(rewards) do
+                if v.type == "items" then
+                    pre_tab[v.type][v.name] = ItemManager:GetItemByName(v.name):Count()
+                elseif v.type == "soldierMaterials" then
+                    pre_tab[v.type][v.name] = City:GetMaterialManager():GetSoldierMaterias()[v.name]
+                end
+            end
+        end)
+        :done(get_player_response_msg)
+        :done(function(response)
+            local cur_tab = {items = {}, soldierMaterials = {}}
+            for i,v in ipairs(rewards) do
+                if v.type == "items" then
+                    cur_tab[v.type][v.name] = ItemManager:GetItemByName(v.name):Count()
+                elseif v.type == "soldierMaterials" then
+                    cur_tab[v.type][v.name] = City:GetMaterialManager():GetSoldierMaterias()[v.name]
+                end
+            end
+            local adds = {items = {}, soldierMaterials = {}}
+            for type,category in pairs(cur_tab) do
+                for key,count in pairs(category) do
+                    local add = count - (pre_tab[type][key] or 0)
+                    if add > 0 then
+                        adds[type][key] = add
+                    end
+                end
+            end
+            local reward_items = {}
+            if next(adds.items) then
+                for itemName,count in pairs(adds.items) do
+                    table.insert(reward_items, {type = "items", name = itemName, count = count})
+                end
+            end
+            if next(adds.soldierMaterials) then
+                for key,count in pairs(adds.soldierMaterials) do
+                    table.insert(reward_items, {type = "soldierMaterials", name = key, count = count})
+                end
+            end
+            response.get_func = function() return reward_items end
+        end)
+end
+function NetManager:getPveStageRewardPromise(stageName)
+    return get_blocking_request_promise("logic.playerHandler.getPveStageReward",{
+        stageName = stageName,
+    },"领取奖励失败!"):done(get_player_response_msg)
+end
+
+
 ----------------------------------------------------------------------------------------------------------------
 function NetManager:getUpdateFileList(cb)
     local updateServer = self.m_updateServer.host .. ":" .. self.m_updateServer.port .. "/update/res/fileList.json"
@@ -1895,6 +1995,11 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
+
+
+
+
 
 
 

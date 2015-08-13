@@ -360,12 +360,12 @@ function GameUIAlliance:OnJoinListActionButtonClicked(idx)
             UIKit:showMessageDialog(_("提示"),
                 _("联盟人数已达最大"))
             return
-        end
-        NetManager:getJoinAllianceDirectlyPromise(alliance.id):fail(function()
-            self:SearchAllianAction(self.editbox_tag_search:getText())
-        end):done(function()
+    end
+    NetManager:getJoinAllianceDirectlyPromise(alliance.id):fail(function()
+        self:SearchAllianAction(self.editbox_tag_search:getText())
+    end):done(function()
         GameGlobalUI:showTips(_("提示"),string.format(_("加入%s联盟成功!"),alliance.name))
-        end)
+    end)
     else
         NetManager:getRequestToJoinAlliancePromise(alliance.id):done(function()
             UIKit:showMessageDialog(_("申请成功"),
@@ -413,7 +413,7 @@ function GameUIAlliance:GetJoinListItemContent()
         text = "14/50", --count of members
         size = 20,
         color = 0x403c2f
-    }):addTo(info_bg):align(display.LEFT_TOP,70, memberTitleLabel:getPositionY())
+    }):addTo(info_bg):align(display.LEFT_TOP,110, memberTitleLabel:getPositionY())
 
 
     local fightingTitleLabel = UIKit:ttfLabel({
@@ -499,7 +499,7 @@ function GameUIAlliance:NoAllianceTabEvent_inviteIf()
         size = 22,
         color= 0x615b44,
         align = cc.TEXT_ALIGNMENT_CENTER
-    }):align(display.BOTTOM_CENTER,window.cx,760):addTo(invateNode)
+    }):align(display.BOTTOM_CENTER,320,760):addTo(invateNode)
     self.invateListView = list
     self:RefreshInvateListView()
     return invateNode
@@ -533,7 +533,7 @@ function GameUIAlliance:NoAllianceTabEvent_applyIf()
         size = 22,
         color= 0x615b44,
         align = cc.TEXT_ALIGNMENT_CENTER
-    }):align(display.BOTTOM_CENTER,window.cx,760):addTo(applyNode)
+    }):align(display.BOTTOM_CENTER,320,760):addTo(applyNode)
     self:RefreshApplyListView()
     return applyNode
 end
@@ -840,12 +840,6 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
     self:RefreshNoticeView()
 
     local notice_button = WidgetPushButton.new({normal = "alliance_notice_button_normal_310x36.png",pressed = "alliance_notice_button_highlight_310x36.png"})
-        :setButtonLabel('normal',UIKit:ttfLabel({
-            text = _("联盟公告"),
-            size = 22,
-            color = 0xffedae,
-        })
-        )
         :onButtonClicked(function(event)
             if not Alliance_Manager:GetMyAlliance():GetSelf():CanEditAllianceNotice() then
                 UIKit:showMessageDialog(_("提示"), _("您没有此操作权限"), function()end)
@@ -857,7 +851,14 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
         :setButtonLabelOffset(0,4)
         :addTo(notice_bg)
         :align(display.TOP_CENTER,292,181)
-    display.newSprite("alliance_notice_icon_26x26.png"):addTo(notice_button):pos(70,-18)
+    local btn_label = UIKit:ttfLabel({
+        text = _("联盟公告"),
+        size = 22,
+        color = 0xffedae,
+    }):addTo(notice_button)
+    btn_label:align(display.LEFT_CENTER, -(btn_label:getContentSize().width + 26)/2,-18)
+
+    display.newSprite("alliance_notice_icon_26x26.png"):addTo(notice_button):align(display.LEFT_CENTER,btn_label:getContentSize().width + btn_label:getPositionX(),-18)
 
 
     local line_2 = display.newSprite("dividing_line.png")
@@ -920,7 +921,7 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
 end
 
 function GameUIAlliance:RefreshNoticeView()
-    local notice_str = Alliance_Manager:GetMyAlliance():Notice() 
+    local notice_str = Alliance_Manager:GetMyAlliance():Notice()
     if notice_str == json.null or string.len(notice_str) == 0 then
         notice_str = _("未设置联盟公告")
     end
@@ -964,9 +965,9 @@ function GameUIAlliance:GetEventItemByIndexAndEvent()
         text = "content",
         size = 20,
         color = 0x403c2f,
-        dimensions = cc.size(280, 60)
-    }):align(display.LEFT_CENTER,0,0)
-    content_label:pos(normal:getPositionX()+normal:getContentSize().width + 10,42):addTo(content)
+        dimensions = cc.size(280, 0)
+    }):align(display.TOP_LEFT,0,0)
+    content_label:pos(normal:getPositionX()+normal:getContentSize().width + 10,76):addTo(content)
     content.bg0 = bg0
     content.bg1 = bg1
     content.normal = normal
@@ -1012,7 +1013,7 @@ function GameUIAlliance:GetEventContent(event)
             end
         elseif 'terrain' == event_type then
             if Localize.terrain[v] then
-                v = Localize.terrain[v] 
+                v = Localize.terrain[v]
             end
         elseif 'upgrade' == event_type then
             if Localize.building_name[v] then
@@ -1422,8 +1423,8 @@ function GameUIAlliance:filterMemberList(title)
     end
     if need_sort  then
         table.sort( result, function(a,b)
-            if a.data_type == b.data_type then 
-                return a.data.power > b.data.power 
+            if a.data_type == b.data_type then
+                return a.data.power > b.data.power
             else
                 return a.data_type < b.data_type
             end
@@ -1730,6 +1731,7 @@ end
 
 
 return GameUIAlliance
+
 
 
 

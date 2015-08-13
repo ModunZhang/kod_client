@@ -13,6 +13,8 @@ local GameUIWriteMail            = import('.GameUIWriteMail')
 local WidgetUIBackGround         = import("..widget.WidgetUIBackGround")
 local WidgetPushButton           = import("..widget.WidgetPushButton")
 local WidgetChatSendPushButton   = import("..widget.WidgetChatSendPushButton")
+local Report                     = import("..entity.Report")
+
 
 local LISTVIEW_WIDTH    = 556
 local PLAYERMENU_ZORDER = 201
@@ -272,9 +274,14 @@ function GameUIChatChannel:GetChatItemCell()
         size = 14,
         color= 0x403c2f,
         align = cc.TEXT_ALIGNMENT_RIGHT,
-    }):align(display.BOTTOM_RIGHT, 450, 16):addTo(header)
+    }):align(display.BOTTOM_RIGHT, 440, 16):addTo(header)
 
-    local translation_sp = display.newSprite("chat_translation_45x43.png"):align(display.RIGHT_BOTTOM, 478,12):addTo(header):scale(25/45)
+    local translation_sp = WidgetPushButton.new({
+        normal = "tmp_brown_btn_up_36x24.png",
+        pressed= "tmp_brown_btn_down_36x24.png",
+    }):align(display.RIGHT_BOTTOM, 478,12):addTo(header)
+    display.newSprite("tmp_icon_translate_26x20.png"):addTo(translation_sp):pos(-18,12)
+    -- display.newSprite("chat_translation_45x43.png"):align(display.RIGHT_BOTTOM, 478,12):addTo(header):scale(25/45)
 
     local content_label = RichText.new({width = 430,size = 22,color = 0x403c2f})
     content_label:Text("")
@@ -452,7 +459,30 @@ function GameUIChatChannel:HandleCellUIData(mainContent,chat,update_time)
         labelText = chat._translate_
     end
     labelText = self:GetChatManager():GetEmojiUtil():ConvertEmojiToRichText(labelText)
-    content_label:Text(labelText) -- 聊天信息
+    if string.find(labelText,"\"url\":\"report:") then
+        content_label:Text(labelText,nil,function ( url )
+            local info = string.split(url,":")
+            NetManager:getReportDetailPromise(info[2],info[3]):done(function ( response )
+                local report = Report:DecodeFromJsonData(clone(response.msg.report))
+                report:SetPlayerId(info[2])
+                if report:Type() == "strikeCity" or report:Type()== "cityBeStriked"
+                    or report:Type() == "villageBeStriked" or report:Type()== "strikeVillage" then
+                    UIKit:newGameUI("GameUIStrikeReport", report):AddToCurrentScene(true)
+                elseif report:Type() == "attackCity" or report:Type() == "attackVillage" then
+                    UIKit:newGameUI("GameUIWarReport", report):AddToCurrentScene(true)
+                elseif report:Type() == "collectResource" then
+                    UIKit:newGameUI("GameUICollectReport", report):AddToCurrentScene(true)
+                elseif report:Type() == "attackMonster" then
+                    UIKit:newGameUI("GameUIMonsterReport", report):AddToCurrentScene(true)
+                elseif report:Type() == "attackShrine" then
+                    UIKit:newGameUI("GameUIShrineReportInMail", report):AddToCurrentScene(true)
+                end
+                app:GetAudioManager():PlayeEffectSoundWithKey("OPEN_MAIL")
+            end)
+        end)
+    else
+        content_label:Text(labelText) -- 聊天信息
+    end
     content_label:align(display.LEFT_BOTTOM, 10, 0)
     if not isSelf then
         --重新布局
@@ -516,6 +546,9 @@ function GameUIChatChannel:listviewListener(event)
             if not chat._translate_ then
                 local final_chat_msg = self:GetChatManager():GetEmojiUtil():RemoveAllEmojiTag(chat.text)
                 if string.utf8len(final_chat_msg) == 0 then
+                    return
+                end
+                if string.find(chat.text,"<report>.+<report>") then
                     return
                 end
                 GameUtils:Translate(final_chat_msg,function(result,errText)
@@ -670,4 +703,6 @@ function GameUIChatChannel:LeftButtonClicked()
 end
 
 return GameUIChatChannel
+
+
 

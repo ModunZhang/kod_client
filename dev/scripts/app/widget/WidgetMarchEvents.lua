@@ -303,7 +303,7 @@ function WidgetMarchEvents:CreateReturnItem(entity)
 
     node.time = UIKit:ttfLabel({
         text = GameUtils:formatTimeStyle1(event:GetTime()),
-        size = 18,
+        size = 16,
         color = 0xd1ca95,
         align = cc.TEXT_ALIGNMENT_RIGHT,
         shadow = true,
@@ -315,7 +315,7 @@ function WidgetMarchEvents:CreateReturnItem(entity)
     }):addTo(node):align(display.RIGHT_CENTER, WIDGET_WIDTH - 6, half_height)
         :setButtonLabel(UIKit:commonButtonLable({
             text = _("加速"),
-            size = 18,
+            size = 16,
             color= 0xfff3c7,
             shadow = true,
         }))
@@ -331,7 +331,7 @@ function WidgetMarchEvents:CreateReturnItem(entity)
     }):addTo(node):align(display.RIGHT_CENTER, WIDGET_WIDTH - 84, half_height)
         :setButtonLabel(UIKit:commonButtonLable({
             text = _("部队"),
-            size = 18,
+            size = 16,
             color= 0xfff3c7,
             shadow = true,
         }))
@@ -377,7 +377,7 @@ function WidgetMarchEvents:CreateAttackItem(entity)
     }):addTo(node):align(display.RIGHT_CENTER, WIDGET_WIDTH - 6, half_height)
         :setButtonLabel(UIKit:commonButtonLable({
             text = _("加速"),
-            size = 18,
+            size = 16,
             color= 0xfff3c7,
             shadow = true,
         }))
@@ -393,7 +393,7 @@ function WidgetMarchEvents:CreateAttackItem(entity)
     }):addTo(node):align(display.RIGHT_CENTER, WIDGET_WIDTH - 84, half_height)
         :setButtonLabel(UIKit:commonButtonLable({
             text = _("撤退"),
-            size = 18,
+            size = 16,
             color= 0xfff3c7,
             shadow = true,
         }))
@@ -454,7 +454,7 @@ function WidgetMarchEvents:CreateDefenceItem(entity)
     }):addTo(node):align(display.RIGHT_CENTER, WIDGET_WIDTH - 6, half_height)
         :setButtonLabel(UIKit:commonButtonLable({
             text = _("撤军"),
-            size = 18,
+            size = 16,
             color= 0xfff3c7,
             shadow = true,
         }))
@@ -470,7 +470,7 @@ function WidgetMarchEvents:CreateDefenceItem(entity)
     }):addTo(node):align(display.RIGHT_CENTER, WIDGET_WIDTH - 84, half_height)
         :setButtonLabel(UIKit:commonButtonLable({
             text = _("部队"),
-            size = 18,
+            size = 16,
             color= 0xfff3c7,
             shadow = true,
         }))

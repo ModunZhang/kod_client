@@ -217,12 +217,12 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
     elseif self.building:GetType()=="warehouse" then
         local additon = building:GetResourceNextLevelValueLimit()-building:GetResourceValueLimit()
         if additon>0 then
-            efficiency = string.format("%s%d,",bd.warehouse_max,additon)
+            efficiency = string.format("%s+%s,",bd.warehouse_max,string.formatnumberthousands(additon))
         end
     elseif self.building:GetType()=="toolShop" then
         local additon = building:GetNextLevelProduction()-building:GetProduction()
         if additon>0 then
-            efficiency = string.format("%s+%d%s,",bd.poduction,additon,bd.poduction_1)
+            efficiency = string.format("%s+%d,",bd.poduction,additon)
         end
         local additon = building:GetNextLevelProductionType()-building:GetProductionType()
         if additon>0 then
@@ -589,7 +589,7 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
             isVisible = #city:GetUpgradingBuildings()>=city:BuildQueueCounts(),
             isSatisfy = #city:GetUpgradingBuildings()<city:BuildQueueCounts(),
             icon="hammer_33x40.png",
-            description=_("建造队列已满")..(city:BuildQueueCounts()-#city:GetUpgradingBuildings()).."/"..1
+            description=_("建造队列已满")..(city:BuildQueueCounts()-#city:GetUpgradingBuildings()).."/"..City:BuildQueueCounts()
         },
         {
             resource_type = _("木材"),

@@ -15,7 +15,7 @@ end
 
 function TradeGuildUpgradeBuilding:GetMaxCart()
 	if self:GetLevel() > 0 then
-		return config_function[self:GetEfficiencyLevel()].maxCart
+       return math.ceil(config_function[self:GetEfficiencyLevel()].maxCart * (1 + self:BelongCity():FindTechByName("logistics"):GetBuffEffectVal()))
     end
     return 0
 end

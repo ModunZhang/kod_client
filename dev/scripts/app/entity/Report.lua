@@ -29,6 +29,9 @@ function Report:DecodeFromJsonData(json_data)
     report:SetData(json_data[json_data.type])
     return report
 end
+function Report:SetPlayerId( player_id )
+    self.player_id = player_id
+end
 function Report:Update( json_data )
     self:SetIsRead(json_data.isRead)
     self:SetIsSaved(json_data.isSaved)

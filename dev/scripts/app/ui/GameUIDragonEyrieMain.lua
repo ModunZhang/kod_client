@@ -218,7 +218,7 @@ function GameUIDragonEyrieMain:RefreshUI()
             self.dragon_info:show()
             self.progress_content_hated:show()
             local dragon_hp_recovery = self:GetBuilding():GetTotalHPRecoveryPerHour(dragon:Type())
-            self.dragon_hp_recovery_count_label:setString(string.format("+%s/h",string.formatnumberthousands(dragon_hp_recovery)))
+            self.dragon_hp_recovery_count_label:setString(string.format("+%s/h", dragon:Status()~= "march" and string.formatnumberthousands(dragon_hp_recovery) or 0))
             self.dragon_hp_label:setString(string.formatnumberthousands(dragon:Hp()) .. "/" .. string.formatnumberthousands(dragon:GetMaxHP()))
             self.progress_hated:setPercentage(dragon:Hp()/dragon:GetMaxHP()*100)
             self.state_label:setString(Localize.dragon_status[dragon:Status()])
@@ -232,8 +232,8 @@ function GameUIDragonEyrieMain:RefreshUI()
         end
         self.draong_info_lv_label:setString("LV " .. dragon:Level() .. "/" .. dragon:GetMaxLevel())
         self.draong_info_xp_label:setString(string.formatnumberthousands(dragon:Exp()) .. "/" .. string.formatnumberthousands(dragon:GetMaxExp()))
-        self.expIcon:setPositionX(self.draong_info_xp_label:getPositionX() - self.draong_info_xp_label:getContentSize().width/2 - 10)
-        self.exp_add_button:setPositionX(self.draong_info_xp_label:getPositionX() + self.draong_info_xp_label:getContentSize().width/2 + 10)
+        -- self.expIcon:setPositionX(self.draong_info_xp_label:getPositionX() - self.draong_info_xp_label:getContentSize().width/2 - 10)
+        -- self.exp_add_button:setPositionX(self.draong_info_xp_label:getPositionX() + self.draong_info_xp_label:getContentSize().width/2 + 10)
     end
     self.nameLabel:setString(dragon:GetLocalizedName())
 end
@@ -294,6 +294,8 @@ function GameUIDragonEyrieMain:CreateDragonContentNodeIf()
         self.draongContentNode = draongContentNode
         self.draongContentNode:SetScrollable(not self:IsDragonLock())
         dragonAnimateNode:addTo(self.dragonNode):pos(window.cx - 310,window.top_bottom - 576)
+        -- 阻挡滑动龙超出的区域
+        display.newLayer():addTo(self.dragonNode):pos(window.cx - 310,window.top_bottom - 676):size(620,100)
         --info
         local info_bg = display.newSprite("dragon_info_bg_290x92.png")
             :align(display.BOTTOM_CENTER, 309, 50)
@@ -317,12 +319,12 @@ function GameUIDragonEyrieMain:CreateDragonContentNodeIf()
         local expIcon = display.newSprite("upgrade_experience_icon.png")
             :addTo(info_bg)
             :scale(0.7)
-            :align(display.BOTTOM_RIGHT, self.draong_info_xp_label:getPositionX() - self.draong_info_xp_label:getContentSize().width/2 - 10,10)
+            :align(display.BOTTOM_LEFT, 10,9)
         self.expIcon = expIcon
         local add_button = WidgetPushButton.new({normal = "add_btn_up_50x50.png",pressed = "add_btn_down_50x50.png"})
             :addTo(info_bg)
             :scale(0.8)
-            :align(display.LEFT_CENTER,self.draong_info_xp_label:getPositionX()+self.draong_info_xp_label:getContentSize().width/2+10,10 + expIcon:getCascadeBoundingBox().height/2)
+            :align(display.RIGHT_CENTER,info_bg:getContentSize().width - 10,9 + expIcon:getCascadeBoundingBox().height/2)
             :onButtonClicked(function()
                 self:OnDragonExpItemUseButtonClicked()
             end)
@@ -429,7 +431,7 @@ function GameUIDragonEyrieMain:CreateDragonContentNodeIf()
             text = "",
             color = 0x403c2f,
             size  = 20
-        }):addTo(info_panel):align(display.LEFT_BOTTOM, 100, 80) -- 活力
+        }):addTo(info_panel):align(display.LEFT_BOTTOM, 114, 80) -- 活力
 
         local vitality_title_label =  UIKit:ttfLabel({
             text = _("活力"),
@@ -441,7 +443,7 @@ function GameUIDragonEyrieMain:CreateDragonContentNodeIf()
             text = "",
             color = 0x403c2f,
             size  = 20
-        }):addTo(info_panel):align(display.LEFT_BOTTOM, 100, 45)
+        }):addTo(info_panel):align(display.LEFT_BOTTOM, 114, 45)
 
         local leadership_title_label =  UIKit:ttfLabel({
             text = _("领导力"),
@@ -453,7 +455,7 @@ function GameUIDragonEyrieMain:CreateDragonContentNodeIf()
             text = "",
             color = 0x403c2f,
             size  = 20
-        }):addTo(info_panel):align(display.LEFT_BOTTOM, 100, 10)
+        }):addTo(info_panel):align(display.LEFT_BOTTOM, 114, 10)
 
         self.state_label = UIKit:ttfLabel({
             text = "",
@@ -480,7 +482,7 @@ function GameUIDragonEyrieMain:CreateDragonHateNodeIf()
     if not self.draogn_hate_node then
         local node = display.newNode():size(window.width,210):addTo(self.dragonNode):pos(0,window.bottom_top)
         self.draogn_hate_node = node
-        WidgetUIBackGround.new({width = 554, height = 80},WidgetUIBackGround.STYLE_TYPE.STYLE_3):addTo(node):align(display.CENTER_TOP, window.cx, 210)
+        WidgetUIBackGround.new({width = 554, height = 100},WidgetUIBackGround.STYLE_TYPE.STYLE_3):addTo(node):align(display.CENTER_TOP, window.cx, 210)
         local tip_label = UIKit:ttfLabel({
             text = Localize.dragon_buffer[self:GetCurrentDragon():Type()],
             size = 20,
@@ -492,8 +494,9 @@ function GameUIDragonEyrieMain:CreateDragonHateNodeIf()
             text = self.building:GetNextHateLevel() and string.format(_("龙巢%d级时可孵化新的巨龙"),self.building:GetNextHateLevel()) or "",
             size = 20,
             color= 0x403c2f,
-            align= cc.TEXT_ALIGNMENT_CENTER
-        }):addTo(node):align(display.CENTER_TOP, window.cx, 170)
+            align= cc.TEXT_ALIGNMENT_CENTER,
+            dimensions = cc.size(520,0)
+        }):addTo(node):align(display.CENTER, window.cx, 150)
         self.hate_label = hate_label
         local hate_button = WidgetPushButton.new({ normal = "yellow_btn_up_186x66.png",pressed = "yellow_btn_down_186x66.png", disabled = "grey_btn_186x66.png"})
             :setButtonLabel("normal",UIKit:commonButtonLable({
@@ -501,7 +504,7 @@ function GameUIDragonEyrieMain:CreateDragonHateNodeIf()
                 size = 24,
                 color = 0xffedae,
             }))
-            :addTo(node):align(display.CENTER_BOTTOM,window.cx,55)
+            :addTo(node):align(display.CENTER_BOTTOM,window.cx,35)
             :onButtonClicked(function()
                 self:OnEnergyButtonClicked()
             end)

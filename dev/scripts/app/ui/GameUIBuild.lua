@@ -123,7 +123,9 @@ function GameUIBuild:OnCityChanged()
         local building = BuildingRegister[building_type].new({building_type = building_type, level = 1, finishTime = 0})
         v:SetNumber(number, max_number)
         if building then
-            if building:GetCitizen() > citizen then
+            if self.build_city:GetAvailableBuildQueueCounts() <= 0 then
+                v:SetCondition(_("建造队列不足"), display.COLOR_RED)
+            elseif building:GetCitizen() > citizen then
                 v:SetBuildEnable(false)
                 v:SetCondition(_("城民上限不足,请首先升级或建造小屋"), display.COLOR_RED)
             elseif number >= max_number then
@@ -184,7 +186,7 @@ function GameUIBuild:OnBuildOnItem(item)
         dialog:SetTitle(_("提示"))
         local message  = ""
         if resource_gems>0 then
-            message = message .. _("您当前资源不足，补足需要金龙币").. resource_gems.. "\n"
+            message = message .. _("您当前资源不足，补足需要金龙币").. "\n"
         end
         if current<=0 then
             message = message .. _("您当前没有空闲的建筑队列,是否花费魔法石立即完成上一个队列").. "\n"

@@ -125,11 +125,6 @@ intInit["loyaltyCountPerHelp"] = {
 	["value"] = 100,
 	["desc"] = "每次帮助获取多少点忠诚值"
 }
-intInit["specialSoldierRecruitAbleDays"] = {
-	["type"] = "specialSoldierRecruitAbleDays",
-	["value"] = 256,
-	["desc"] = "特殊兵种在每周几可招募"
-}
 intInit["unlockPlayerSecondMarchQueue"] = {
 	["type"] = "unlockPlayerSecondMarchQueue",
 	["value"] = 1500,
@@ -149,4 +144,9 @@ intInit["dragonHpRecoverTerrainAddPercent"] = {
 	["type"] = "dragonHpRecoverTerrainAddPercent",
 	["value"] = 20,
 	["desc"] = "龙在相应地形下的hp回复加成比例"
+}
+intInit["activePlayerNeedHouses"] = {
+	["type"] = "activePlayerNeedHouses",
+	["value"] = 72,
+	["desc"] = "定义活跃用户最后登录时间和当前时间的差值"
 }

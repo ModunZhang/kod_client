@@ -301,6 +301,7 @@ function ResourceManager:GetTotalBuffData(city)
             target_map[resource_type] = target_map[resource_type] + buff_value
         end
     end)
+    dump_resources(buff_production_map, "学院科技对资源的影响--->")
 
     --道具buuff
     local item_buff_map = {

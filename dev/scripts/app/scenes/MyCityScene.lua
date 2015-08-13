@@ -46,6 +46,9 @@ function MyCityScene:onEnter()
     if not UIKit:GetUIInstance('GameUIWarSummary') and alliance:LastAllianceFightReport() then
         UIKit:newGameUI("GameUIWarSummary"):AddToCurrentScene(true)
     end
+
+
+    self:RefreshStrenth()
     -- cc.ui.UIPushButton.new({normal = "lock_btn.png",pressed = "lock_btn.png"})
     -- :addTo(self, 1000000):align(display.RIGHT_TOP, display.width, display.height)
     -- :onButtonClicked(function(event)
@@ -126,6 +129,7 @@ function MyCityScene:CreateSceneUILayer()
     function scene_ui_layer:Schedule()
         display.newNode():addTo(self):schedule(function()
             scene_node:RefreshLockBtnStatus()
+            scene_node:RefreshStrenth()
         end, 1)
         display.newNode():addTo(self):schedule(function()
             -- 检查缩放比
@@ -183,9 +187,9 @@ function MyCityScene:NewLockButtonFromBuildingSprite(building_sprite)
         :onButtonClicked(function()
             UIKit:newGameUI("GameUIUnlockBuilding", self.city, building_sprite:GetEntity()):AddToCurrentScene(true)
         end):onButtonPressed(function(event)
-            event.target:runAction(cc.ScaleTo:create(0.1, 1.2))
+        event.target:runAction(cc.ScaleTo:create(0.1, 1.2))
         end):onButtonRelease(function(event)
-            event.target:runAction(cc.ScaleTo:create(0.1, 1))
+        event.target:runAction(cc.ScaleTo:create(0.1, 1))
         end)
 
     button.sprite = building_sprite
@@ -200,6 +204,13 @@ function MyCityScene:RefreshLockBtnStatus()
         btn:setButtonImage(cc.ui.UIPushButton.NORMAL, btn_png, true)
         btn:setButtonImage(cc.ui.UIPushButton.PRESSED, btn_png, true)
     end)
+end
+function MyCityScene:RefreshStrenth()
+    local limit = self.city:GetUser():GetStrengthResource():GetValueLimit()
+    local value = self.city:GetUser():GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+    local ratio = value / limit
+    ratio = ratio > 1 and 1 or ratio
+    self:GetSceneLayer():GetAirship():SetBattery(ratio)
 end
 function MyCityScene:IteratorLockButtons(func)
     for i,v in ipairs(self:GetTopLayer():getChildren()) do
@@ -277,7 +288,6 @@ function MyCityScene:GetLockButtonsByBuildingType(building_type)
     local lock_button
     local location_id = self:GetCity():GetLocationIdByBuildingType(building_type)
     self:IteratorLockButtons(function(v)
-        print(v.sprite:GetEntity().location_id, location_id)
         if v.sprite:GetEntity().location_id == location_id then
             lock_button = v
             return true
@@ -335,7 +345,6 @@ function MyCityScene:OnTilesChanged(tiles)
             end
         end
     end)
-    print("#self:GetTopLayer():getChildren()", #self:GetTopLayer():getChildren())
 end
 function MyCityScene:OnTouchClicked(pre_x, pre_y, x, y)
     if self.event_manager:TouchCounts() ~= 0 or
@@ -413,8 +422,7 @@ function MyCityScene:OpenUI(building, default_tab, need_tips, build_name)
         local dragon_manger = city:GetDragonEyrie():GetDragonManager()
         local dragon_type = dragon_manger:GetCanFightPowerfulDragonType()
         if #dragon_type > 0 or dragon_manger:GetDefenceDragon() then
-            local _,_,index = self.city:GetUser():GetPVEDatabase():GetCharPosition()
-            app:EnterPVEScene(index)
+            app:EnterPVEScene(city:GetUser():GetLatestPveIndex())
         else
             UIKit:showMessageDialog(_("主人"),_("需要一条空闲状态的魔龙才能探险"))
         end
@@ -433,6 +441,8 @@ function MyCityScene:OpenUI(building, default_tab, need_tips, build_name)
 end
 
 return MyCityScene
+
+
 
 
 

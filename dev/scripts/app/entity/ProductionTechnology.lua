@@ -27,6 +27,7 @@ function ProductionTechnology:UpdateData(name,json_data)
     self:SetName(name or "")
     self:SetIndex(json_data.index or 0)
     self:SetLevel(json_data.level or 0)
+    print("self:Name()=",self:Name())
     local tech = productionTechs[self:Name()]
     self:SetUnlockBy(tech.unlockBy)
     self:SetUnlockLevel(tech.unlockLevel)
@@ -106,7 +107,7 @@ function ProductionTechnology:GetNextLevelPower()
 end
 --是否开放
 function ProductionTechnology:IsOpen()
-    return self:Index() < 10
+    return self:Index() < 19
 end
 --如果是资源相关科技返回资源的类型 否则返回nil
 local RESOURCE_TYPE = ResourceManager.RESOURCE_TYPE
@@ -118,6 +119,7 @@ local map_resource = {
     cropResearch = {RESOURCE_TYPE.FOOD,RESOURCE_BUFF_TYPE.PRODUCT},
     fastFix = {RESOURCE_TYPE.WALLHP,RESOURCE_BUFF_TYPE.PRODUCT},
     beerSupply = {RESOURCE_TYPE.CITIZEN,RESOURCE_BUFF_TYPE.LIMIT},
+    mintedCoin = {RESOURCE_TYPE.COIN,RESOURCE_BUFF_TYPE.PRODUCT},
 }
 function ProductionTechnology:GetResourceBuffData()
     if map_resource[self:Name()] then

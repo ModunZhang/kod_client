@@ -6,19 +6,22 @@ plist_texture_data     = import(texture_data_file)
 local sharedSpriteFrameCache = cc.SpriteFrameCache:getInstance()
 local rgba4444 = import(".rgba4444")
 local jpg_rgb888 = import(".jpg_rgb888")
+local animation = import(".animation")
 
+local pairs = pairs
+local ipairs = ipairs
 -- -- 设置图片格式
 for k,v in pairs(rgba4444) do
     display.setTexturePixelFormat(k, v)
 end
--- 
+--
 for k,v in pairs(jpg_rgb888) do
-   display.setTexturePixelFormat(k, v) 
+    display.setTexturePixelFormat(k, v)
 end
 -- 4444
 for i,v in ipairs{
     "emoji.png"
-    } do
+} do
     display.setTexturePixelFormat(v, cc.TEXTURE2_D_PIXEL_FORMAT_RGB_A4444)
 end
 
@@ -27,6 +30,15 @@ local _Armature = ccs.Armature
 local ccs_Armature_create = _Armature.create
 local manager = ccs.ArmatureDataManager:getInstance()
 function _Armature:create(ani)
+    for _,found_data_in_plist in ipairs(animation[ani]) do
+        local png_path = DEBUG_GET_ANIMATION_PATH(found_data_in_plist)
+        if not sharedSpriteFrameCache:getSpriteFrame(png_path) then
+            local plistName = string.sub(png_path,1,string.find(png_path,"%.") - 1)
+            plistName = string.format("%s.plist", plistName)
+            printInfo("setTexture:load plist texture:%s", png_path)
+            display.addSpriteFrames(DEBUG_GET_ANIMATION_PATH(plistName), png_path)
+        end
+    end
     local path = DEBUG_GET_ANIMATION_PATH(string.format("animations/%s.ExportJson", ani))
     manager:addArmatureFileInfo(path)
     return ccs_Armature_create(self, ani)
@@ -49,10 +61,10 @@ function Sprite:setTexture(arg)
             end
             self:setSpriteFrame(arg)
         else
-            old_setTexture(self,arg)  
+            old_setTexture(self,arg)
         end
     else
-       old_setTexture(self,arg)  
+        old_setTexture(self,arg)
     end
 end
 
@@ -62,6 +74,13 @@ local c3b_m_ = {
             r = a.r + b.r,
             g = a.g + b.g,
             b = a.b + b.b,
+        }
+    end,
+    __sub = function(a,b)
+        return {
+            r = a.r - b.r,
+            g = a.g - b.g,
+            b = a.b - b.b,
         }
     end
 }
@@ -375,4 +394,6 @@ end
 local cjson = require("cjson")
 cjson.decode_lua_nil(false)
 ------------------------------------------------
+
+
 

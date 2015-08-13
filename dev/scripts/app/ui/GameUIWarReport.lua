@@ -13,12 +13,13 @@ local Localize = import("..utils.Localize")
 local GameUIWarReport = UIKit:createUIClass("GameUIWarReport", "UIAutoClose")
 
 
-function GameUIWarReport:ctor(report)
+function GameUIWarReport:ctor(report,can_share)
     GameUIWarReport.super.ctor(self)
     self.body = WidgetUIBackGround.new({height=800}):align(display.TOP_CENTER,display.cx,display.top-100)
     self:addTouchAbleChild(self.body)
     self:setNodeEventEnabled(true)
     self.report = report
+    self.can_share = can_share
 end
 
 function GameUIWarReport:onEnter()
@@ -115,45 +116,56 @@ function GameUIWarReport:onEnter()
                 UIKit:newGameUI("GameUIReplayNew",clone(report)):AddToCurrentScene(true)
             end)
     end
+    if self.can_share then
+        -- 分享战报按钮
+        local share_button = WidgetPushButton.new(
+            {normal = "tmp_blue_btn_up_64x56.png", pressed = "tmp_blue_btn_down_64x56.png"},
+            {scale9 = false}
+        ):addTo(report_body):align(display.CENTER, report_body:getContentSize().width-210, rb_size.height-186)
+            :onButtonClicked(function(event)
+                UIKit:newGameUI("GameUIShareReport", report):AddToCurrentScene()
+            end)
+        display.newSprite("tmp_icon_share_24x34.png"):addTo(share_button)
+        -- 删除按钮
+        local delete_label = UIKit:ttfLabel({
+            text = _("删除"),
+            size = 20,
+            color = 0xfff3c7})
+        delete_label:enableShadow()
 
-    -- 删除按钮
-    local delete_label = UIKit:ttfLabel({
-        text = _("删除"),
-        size = 20,
-        color = 0xfff3c7})
-    delete_label:enableShadow()
+        WidgetPushButton.new(
+            {normal = "red_btn_up_148x58.png", pressed = "red_btn_down_148x58.png"},
+            {scale9 = false}
+        ):setButtonLabel(delete_label)
+            :addTo(report_body):align(display.CENTER, 110, 40)
+            :onButtonClicked(function(event)
+                NetManager:getDeleteReportsPromise({report.id}):done(function ()
+                    self:removeFromParent()
+                end)
+            end)
+        -- 收藏按钮
+        local saved_button = UICheckBoxButton.new({
+            off = "mail_saved_button_normal.png",
+            off_pressed = "mail_saved_button_normal.png",
+            off_disabled = "mail_saved_button_normal.png",
+            on = "mail_saved_button_pressed.png",
+            on_pressed = "mail_saved_button_pressed.png",
+            on_disabled = "mail_saved_button_pressed.png",
+        }):onButtonStateChanged(function(event)
+            local target = event.target
+            if target:isButtonSelected() then
+                NetManager:getSaveReportPromise(report.id):fail(function(err)
+                    target:setButtonSelected(false,true)
+                end)
+            else
+                NetManager:getUnSaveReportPromise(report.id):fail(function(err)
+                    target:setButtonSelected(true,true)
+                end)
+            end
+        end):addTo(report_body):pos(rb_size.width-48, 37)
+            :setButtonSelected(report:IsSaved(),true)
+    end
 
-    WidgetPushButton.new(
-        {normal = "red_btn_up_148x58.png", pressed = "red_btn_down_148x58.png"},
-        {scale9 = false}
-    ):setButtonLabel(delete_label)
-        :addTo(report_body):align(display.CENTER, 110, 40)
-        :onButtonClicked(function(event)
-            NetManager:getDeleteReportsPromise({report.id}):done(function ()
-                self:removeFromParent()
-            end)
-        end)
-    -- 收藏按钮
-    local saved_button = UICheckBoxButton.new({
-        off = "mail_saved_button_normal.png",
-        off_pressed = "mail_saved_button_normal.png",
-        off_disabled = "mail_saved_button_normal.png",
-        on = "mail_saved_button_pressed.png",
-        on_pressed = "mail_saved_button_pressed.png",
-        on_disabled = "mail_saved_button_pressed.png",
-    }):onButtonStateChanged(function(event)
-        local target = event.target
-        if target:isButtonSelected() then
-            NetManager:getSaveReportPromise(report.id):fail(function(err)
-                target:setButtonSelected(false,true)
-            end)
-        else
-            NetManager:getUnSaveReportPromise(report.id):fail(function(err)
-                target:setButtonSelected(true,true)
-            end)
-        end
-    end):addTo(report_body):pos(rb_size.width-48, 37)
-        :setButtonSelected(report:IsSaved(),true)
 
 end
 
@@ -245,7 +257,7 @@ function GameUIWarReport:FightWithHelpDefencePlayerReports()
         war_s_label_item:setItemSize(540,40)
         local g = cc.ui.UIGroup.new()
         g:addWidget(UIKit:ttfLabel({
-            text = _("与协防方战斗统计") ,
+            text = _("战斗统计") ,
             size = 22,
             color = 0x403c2f
         }):align(display.CENTER, 0, 0))
@@ -285,7 +297,7 @@ function GameUIWarReport:FightWithDefencePlayerReports()
     war_s_label_item:setItemSize(540,40)
     local g = cc.ui.UIGroup.new()
     g:addWidget(UIKit:ttfLabel({
-        text = _("防守方战斗统计") ,
+        text = _("战斗统计") ,
         size = 22,
         color = 0x403c2f
     }):align(display.CENTER, 0, 0))
@@ -394,22 +406,22 @@ function GameUIWarReport:CreateArmyItem(title,troop,dragon,enemy_troop,round_dat
             {
                 bg_image = "back_ground_548x40_1.png",
                 title = _("部队"),
-                value = troopTotal,
+                value = string.formatnumberthousands(troopTotal),
             },
             {
                 bg_image = "back_ground_548x40_2.png",
                 title = _("存活"),
-                value = troopTotal-totalDamaged,
+                value = string.formatnumberthousands(troopTotal-totalDamaged),
             },
             {
                 bg_image = "back_ground_548x40_1.png",
                 title = _("伤兵"),
-                value = totalWounded,
+                value = string.formatnumberthousands(totalWounded),
             },
             {
                 bg_image = "back_ground_548x40_2.png",
                 title = _("被消灭"),
-                value = totalDamaged - totalWounded,
+                value = string.formatnumberthousands(totalDamaged - totalWounded),
                 color = 0x7e0000,
             },
             {
@@ -426,12 +438,12 @@ function GameUIWarReport:CreateArmyItem(title,troop,dragon,enemy_troop,round_dat
             {
                 bg_image = "back_ground_548x40_1.png",
                 title = _("XP"),
-                value = "+"..dragon.expAdd,
+                value = "+"..string.formatnumberthousands(dragon.expAdd),
             },
             {
                 bg_image = "back_ground_548x40_2.png",
                 title = _("HP"),
-                value = dragon.hp.."/-"..dragon.hpDecreased,
+                value = string.formatnumberthousands(dragon.hp).."/-"..string.formatnumberthousands(dragon.hpDecreased),
             },
         }
     else
@@ -502,8 +514,9 @@ function GameUIWarReport:KillEnemy(troop)
     local war_s_label_item = self.details_view:newItem()
     war_s_label_item:setItemSize(540,40)
     local g = cc.ui.UIGroup.new()
+
     g:addWidget(UIKit:ttfLabel({
-        text = _("击杀敌方") ,
+        text = string.format(_("%s损失"),self.report:GetEnemyPlayerData().name) ,
         size = 22,
         color = 0x403c2f
     }):align(display.CENTER, 0, 0))
@@ -518,7 +531,7 @@ function GameUIWarReport:OurLose(troop)
     war_s_label_item:setItemSize(540,40)
     local g = cc.ui.UIGroup.new()
     g:addWidget(UIKit:ttfLabel({
-        text = _("我方损失") ,
+        text = string.format(_("%s损失"),self.report:GetMyPlayerData().name) ,
         size = 22,
         color = 0x403c2f
     }):align(display.CENTER, 0, 0))
@@ -583,13 +596,13 @@ function GameUIWarReport:CreateSoldiersInfo(soldier)
     }):addTo(soldier_star_bg):align(display.CENTER,58, 11)
 
     UIKit:ttfLabel({
-        text = soldier.count,
+        text = string.formatnumberthousands(soldier.count),
         size = 18,
         color = 0x403c2f
     }):align(display.CENTER,soldier_head_bg:getContentSize().width/2, -14):addTo(soldier_head_bg)
         :scale(soldier_head_icon:getContentSize().height/104)
     UIKit:ttfLabel({
-        text = "-"..soldier.countDecreased ,
+        text = "-"..string.formatnumberthousands(soldier.countDecreased) ,
         size = 18,
         color = 0x980101
     }):align(display.CENTER,soldier_head_bg:getContentSize().width/2, -38):addTo(soldier_head_bg)
@@ -641,13 +654,13 @@ function GameUIWarReport:CreateWallPart()
     }):align(display.LEFT_CENTER, 105, 30)
         :addTo(bg)
     UIKit:ttfLabel({
-        text = wall_data.wall.hp ,
+        text = string.formatnumberthousands(wall_data.wall.hp) ,
         size = 22,
         color = 0x403c2f
     }):align(display.RIGHT_CENTER, 520, 70)
         :addTo(bg)
     UIKit:ttfLabel({
-        text = "-"..wall_data.wall.hpDecreased ,
+        text = "-"..string.formatnumberthousands(wall_data.wall.hpDecreased) ,
         size = 22,
         color = 0x7e0000
     }):align(display.RIGHT_CENTER, 520, 30)
@@ -700,6 +713,9 @@ function GameUIWarReport:GetRewards()
     return  self.report:GetMyRewards()
 end
 return GameUIWarReport
+
+
+
 
 
 

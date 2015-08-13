@@ -77,7 +77,7 @@ intInit["allianceFightSuccessProtectMinutes"] = {
 }
 intInit["KilledCitizenPerDragonExp"] = {
 	["type"] = "KilledCitizenPerDragonExp",
-	["value"] = 1,
+	["value"] = 2,
 	["desc"] = "多少击杀积分获得一点龙经验"
 }
 intInit["KilledCitizenPerBlood"] = {
@@ -109,4 +109,9 @@ intInit["monstersPerPlayer"] = {
 	["type"] = "monstersPerPlayer",
 	["value"] = 4,
 	["desc"] = "每个联盟玩家创建多少个野怪"
+}
+intInit["soldierFightWoundedPercent"] = {
+	["type"] = "soldierFightWoundedPercent",
+	["value"] = 30,
+	["desc"] = "士兵战斗受伤士兵基础百分比"
 }

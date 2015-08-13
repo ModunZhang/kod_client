@@ -196,6 +196,12 @@ local SERVER_ERRORS = {
     [694] = _("野怪不存在"),
     [695] = _("不能购买自己出售的商品"),
     [696] = _("孵化条件不满足"),
+    [697] = _("关卡未解锁"),
+    [698] = _("还不能领取PvE星级奖励"),
+    [699] = _("Pve星级奖励已经领取"),
+    [700] = _("当前关卡已达最大战斗次数"),
+    [701] = _("玩家体力值不足"),
+    [702] = _("当前PvE关卡还不能被扫荡"),
 }
 
 local MATERIALS_DESC_MAP = {
@@ -591,7 +597,6 @@ local BUILDING_DESCRIPTION = {
 
     ["toolShop"] = _("工具作坊提供建筑材料和科技材料的制作，每次制作都能随机获得一些材料，升级建筑能够提升每次制作材料的数量"),
     ["poduction"] = _("一次随机生产道具"),
-    ["poduction_1"] = _("个"),
 
     ["barracks"] = _("兵营提供军事单位的招募。招募的部队可用于进攻敌方城市，村落采集资源，防御城市。升级建筑能够提升每次招募的最大数量"),
     ["maxRecruit"] = _("最大招募人口数量"),
@@ -774,6 +779,13 @@ local ALLIANCE_EVENTS = {
     buildingUpgrade = _("升级了%s"),
     villageUpgrade = _("升级了%s"),
 }
+local ALLIANCE_NOTICE = {
+    attackVillage = _("%s正在前往采集Lv%d %s"),
+    attackMonster = _("%s正在前往攻打Lv%d %s"),
+    strikePlayer = _("%s向%s发起了侦察"),
+    attackPlayer = _("%s向%s发起了进攻"),
+    helpDefence = _("%s正在前往协防%s"),
+}
 
 local SOLDIER_CATEGORY = {
     ["infantry"] = _("步兵"),
@@ -922,7 +934,7 @@ local PRODUCTIONTECHNOLOGY_NAME = {
     reinforcing = _("钢筋加固"),
     rescueTent = _("急救帐篷"),
     colonization = _("殖民地"),
-    negotiation = _("谈判技巧"),
+    recruitment = _("募兵术"),
     stoneCarving = _("石雕技巧"),
     ironSmelting = _("冶炼技巧"),
     seniorTower = _("高级箭塔"),
@@ -942,40 +954,40 @@ local PRODUCTIONTECHNOLOGY_BUFFER = {
     fastFix = _("增加城墙维修速度"),
     reinforcing = _("增加城墙的单位血量防御值"),
     rescueTent = _("增加医院的伤兵容量"),
-    colonization = _("增加占领村落时采集资源的速度"),
-    negotiation = _("增加劝降敌军的几率"),
+    colonization = _("增加村落的资源采集速度"),
+    recruitment = _("减少招募普通士兵资源消耗"),
     stoneCarving = _("增加石料产量"),
     ironSmelting = _("增加铁矿产量"),
     seniorTower = _("增加防御箭塔的攻击力"),
-    trap = _("增加监狱的抓捕士兵的上限"),
+    trap = _("增加敌方攻城后的返程时间"),
     hideout = _("增加资源保护比例"),
-    logistics = _("增加马车的资源和材料容量的上限"),
+    logistics = _("提示资源小车数量上限"),
     forestation = _("增加木材产量"),
     cropResearch = _("增加粮食产量"),
     beerSupply = _("住宅城民上限加成"),
-    healingAgent = _("增加治愈伤兵速度"),
+    healingAgent = _("减少治愈伤兵的时间"),
     sketching = _("增加生产材料速度"),
-    mintedCoin = _("提升市政厅获得银币产量"),
+    mintedCoin = _("提升银币产量"),
 }
 local PRODUCTIONTECHNOLOGY_BUFFER_COMPLETE = {
-    crane = _("增加建筑速度完成"),
-    fastFix = _("增加城墙维修速度完成"),
-    reinforcing = _("增加城墙的单位血量防御值完成"),
-    rescueTent = _("增加医院的伤兵容量完成"),
-    colonization = _("增加占领村落时采集资源的速度完成"),
-    negotiation = _("增加劝降敌军的几率完成"),
-    stoneCarving = _("增加石料产量完成"),
-    ironSmelting = _("增加铁矿产量完成"),
-    seniorTower = _("增加防御箭塔的攻击力完成"),
-    trap = _("增加监狱的抓捕士兵的上限完成"),
-    hideout = _("增加资源保护比例完成"),
-    logistics = _("增加马车的资源和材料容量的上限完成"),
-    forestation = _("增加木材产量完成"),
-    cropResearch = _("增加粮食产量完成"),
-    beerSupply = _("住宅城民上限加成完成"),
-    healingAgent = _("增加治愈伤兵速度完成"),
-    sketching = _("增加生产材料速度完成"),
-    mintedCoin = _("提升市政厅获得银币产量完成"),
+    crane = string.format(_("研发%s完成"),PRODUCTIONTECHNOLOGY_NAME.crane),
+    fastFix = string.format(_("研发%s完成"),PRODUCTIONTECHNOLOGY_NAME.fastFix),
+    reinforcing = string.format(_("研发%s完成"),PRODUCTIONTECHNOLOGY_NAME.reinforcing),
+    rescueTent = string.format(_("研发%s完成"),PRODUCTIONTECHNOLOGY_NAME.rescueTent),
+    colonization = string.format(_("研发%s完成"),PRODUCTIONTECHNOLOGY_NAME.colonization),
+    recruitment = string.format(_("研发%s完成"),PRODUCTIONTECHNOLOGY_NAME.recruitment),
+    stoneCarving = string.format(_("研发%s完成"),PRODUCTIONTECHNOLOGY_NAME.stoneCarving),
+    ironSmelting = string.format(_("研发%s完成"),PRODUCTIONTECHNOLOGY_NAME.ironSmelting),
+    seniorTower = string.format(_("研发%s完成"),PRODUCTIONTECHNOLOGY_NAME.seniorTower),
+    trap = string.format(_("研发%s完成"),PRODUCTIONTECHNOLOGY_NAME.trap),
+    hideout = string.format(_("研发%s完成"),PRODUCTIONTECHNOLOGY_NAME.hideout),
+    logistics = string.format(_("研发%s完成"),PRODUCTIONTECHNOLOGY_NAME.logistics),
+    forestation = string.format(_("研发%s完成"),PRODUCTIONTECHNOLOGY_NAME.forestation),
+    cropResearch = string.format(_("研发%s完成"),PRODUCTIONTECHNOLOGY_NAME.cropResearch),
+    beerSupply = string.format(_("研发%s完成"),PRODUCTIONTECHNOLOGY_NAME.beerSupply),
+    healingAgent = string.format(_("研发%s完成"),PRODUCTIONTECHNOLOGY_NAME.healingAgent),
+    sketching = string.format(_("研发%s完成"),PRODUCTIONTECHNOLOGY_NAME.sketching),
+    mintedCoin = string.format(_("研发%s完成"),PRODUCTIONTECHNOLOGY_NAME.mintedCoin),
 }
 local WONDER_NAME = {
     highcastle = _("高庭"),
@@ -1128,6 +1140,14 @@ IAP_PACKAGE_NAME["com.dragonfall.12000dragoncoins"] = _("铁血军团礼包")
 IAP_PACKAGE_NAME["com.dragonfall.35000dragoncoins"] = _("帝国荣耀礼包")
 IAP_PACKAGE_NAME["com.dragonfall.80000dragoncoins"] = _("龙族王朝礼包")
 
+local VIP_IAP_PACKAGE_NAME = {}
+VIP_IAP_PACKAGE_NAME["com.dragonfall.2500dragoncoins"] = _("新手")
+VIP_IAP_PACKAGE_NAME["com.dragonfall.5500dragoncoins"] = _("探险家")
+VIP_IAP_PACKAGE_NAME["com.dragonfall.12000dragoncoins"] = _("铁血军团")
+VIP_IAP_PACKAGE_NAME["com.dragonfall.35000dragoncoins"] = _("帝国荣耀")
+VIP_IAP_PACKAGE_NAME["com.dragonfall.80000dragoncoins"] = _("龙族王朝")
+
+
 
 local DAILY_QUESTS_NAME = {
     [0] = _("修复起重机"),
@@ -1222,6 +1242,7 @@ return {
     building_name = BUILDING_NAME,
     alliance_title = ALLIANCE_TITLE,
     alliance_events = ALLIANCE_EVENTS,
+    alliance_notice = ALLIANCE_NOTICE,
     soldier_name = SOLDIER_NAME,
     soldier_material = SOLDIER_MATERIAL,
     soldier_category = SOLDIER_CATEGORY,
@@ -1257,6 +1278,7 @@ return {
     selenaquestion_tips = SELENAQUESTION_TIPS,
     alliance_buildings = ALLIANCE_BUILDINGS,
     iap_package_name = IAP_PACKAGE_NAME,
+    vip_iap_package_name = VIP_IAP_PACKAGE_NAME,
     daily_quests_name = DAILY_QUESTS_NAME,
     player_icon = PLAYER_ICON,
     player_icon_unlock = PLAYER_ICON_UNLOCK,

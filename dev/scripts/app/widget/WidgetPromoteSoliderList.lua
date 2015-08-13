@@ -85,7 +85,15 @@ function WidgetPromoteSoliderList:CreateSoliderBox(soldier_type,index,star)
             soldier_box.line = display.newSprite("box_70x32.png"):addTo(soldier_box):align(display.CENTER_RIGHT, 8, soldier_box:getContentSize().height/2)
         end
     end
-
+    -- 打开晋级详情信息
+    WidgetPushButton.new()
+        :addTo(soldier_box)
+        :align(display.CENTER, soldier_box:getContentSize().width/2 ,soldier_box:getContentSize().height/2)
+        :onButtonClicked(function(event)
+            if index > 1 then
+                UIKit:newWidgetUI("WidgetSoldierPromoteDetails",soldier_type,index - 1 ,self.building,true):AddToCurrentScene()
+            end
+        end):setContentSize(soldier_box:getContentSize())
     local label = UIKit:ttfLabel({
         text = "",
         size = 22,
@@ -128,6 +136,8 @@ function WidgetPromoteSoliderList:CreateSoliderBox(soldier_type,index,star)
         direction = StarBar.DIRECTION_HORIZONTAL,
         scale = 0.8,
     }):addTo(soldier_star_bg):align(display.CENTER,58, 11)
+    display.newSprite("i_icon_20x20.png"):addTo(soldier_star_bg):align(display.LEFT_CENTER,5, 11)
+
     if status ~= "unlock" then
         local my_filter = filter
         local filters = my_filter.newFilter("GRAY", {0.2, 0.3, 0.5, 0.1})
@@ -231,6 +241,8 @@ function WidgetPromoteSoliderList:OnSoldierStarEventsChanged(soldier_manager,cha
 end
 
 return WidgetPromoteSoliderList
+
+
 
 
 

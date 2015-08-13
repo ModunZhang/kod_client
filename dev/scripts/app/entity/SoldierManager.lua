@@ -150,6 +150,10 @@ function SoldierManager:GetTreatTime(soldiers)
     end
     return treat_time
 end
+-- 获取科技减少的治疗时间
+function SoldierManager:GetTechReduceTreatTime(treat_time)
+    return math.ceil(self.city:FindTechByName("healingAgent"):GetBuffEffectVal() * treat_time)
+end
 function SoldierManager:GetTreatAllTime()
     local total_time= 0
     for k, v in pairs(self.treatSoldiers_map) do
@@ -280,7 +284,7 @@ function SoldierManager:OnUserDataChanged(user_data,current_time, deltaData)
                     local add = v.new-v.old
                     if add>0 then
                         local m_name = Localize.soldier_name[k]
-                        get_list = get_list .. m_name .. "X"..add.." "
+                        get_list = get_list .. (get_list == "" and "" or ",") .. m_name .. "X"..add
                     end
                 end
                 if get_list ~="" then
