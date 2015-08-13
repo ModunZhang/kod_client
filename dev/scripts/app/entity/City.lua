@@ -113,7 +113,7 @@ end
 --------------------
 function City:GetRecommendTask()
     -- 2015-8-13之后进入游戏的才有新推荐任务
-    if self:GetUser():GetCountInfo().registerTime > 1439366208302 then
+    if self:GetUser():GetCountInfo().registerTime > 1439476527805 then
         local task = self:GetBeginnersTask()
         if task then
             return task
