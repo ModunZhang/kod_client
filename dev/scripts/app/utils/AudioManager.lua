@@ -263,7 +263,7 @@ end
 local get_scene_name_in_enter_music_map = function(sceneName)
 	if sceneName == 'FteScene' then
 		return "MyCityScene" 
-	elseif sceneName == 'PVEFteScene' then
+	elseif sceneName == 'PVESceneNewFte' then
 		return "PVEScene"
 	elseif sceneName == 'FteScene' then
 		return "MyCityScene"
