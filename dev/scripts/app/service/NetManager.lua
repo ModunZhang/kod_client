@@ -1582,9 +1582,7 @@ function NetManager:getUpgradeProductionTechPromise(techName,finishNow)
         techName = techName,
         finishNow = finishNow,
     }, "升级生产科技失败!"):done(get_player_response_msg):done(function()
-        if finishNow then
-            app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
-        end
+        app:GetAudioManager():PlayeEffectSoundWithKey("TECHNOLOGY")
     end)
 end
 -- 升级军事科技
