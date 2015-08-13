@@ -63,15 +63,15 @@ end
 function MilitaryTechnology:GetMiliTechIcon()
     local soldiers = string.split(self:Name(), "_")
     if soldiers[2] == "infantry" then
-        return "tmp_tech_infantry_128x128.png"
+        return "tech_infantry_128x128.png"
     elseif soldiers[2] == "archer" then
-        return "tmp_tech_archer_128x128.png"
+        return "tech_archer_128x128.png"
     elseif soldiers[2] == "cavalry" then
-        return "tmp_tech_cavalry_128x128.png"
+        return "tech_cavalry_128x128.png"
     elseif soldiers[2] == "siege" then
-        return "tmp_tech_siege_128x128.png"
+        return "tech_siege_128x128.png"
     elseif soldiers[2] == "hpAdd" then
-        return "tmp_tech_hp_128x128.png"
+        return "tech_hp_128x128.png"
     end
 end
 -- 获取技能类别

@@ -753,24 +753,6 @@ local DAILY_TASK_ICON = {
 }
 local PVEDefine = import("..entity.PVEDefine")
 local SpriteConfig = import("..sprites.SpriteConfig")
-local PVE = {
-    [PVEDefine.START_AIRSHIP] = {"image", "pve_char.png", 1},
-    [PVEDefine.WOODCUTTER] = {"image", SpriteConfig["woodcutter"]:GetConfigByLevel(1).png},
-    [PVEDefine.QUARRIER] = {"image", SpriteConfig["quarrier"]:GetConfigByLevel(1).png},
-    [PVEDefine.MINER] = {"image", SpriteConfig["miner"]:GetConfigByLevel(1).png},
-    [PVEDefine.FARMER] = {"image", SpriteConfig["farmer"]:GetConfigByLevel(1).png},
-    [PVEDefine.CAMP] = {"animation", "yewaiyindi"},
-    [PVEDefine.CRASHED_AIRSHIP] = {"image", "crashed_airship_80x70.png"},
-    [PVEDefine.CONSTRUCTION_RUINS] = {"image", "ruin_1.png"},
-    [PVEDefine.KEEL] = {"image", "keel_189x86.png"},
-    [PVEDefine.WARRIORS_TOMB] = {"image", "warriors_tomb_80x72.png"},
-    [PVEDefine.OBELISK] = {"animation", "zhihuishi"},
-    [PVEDefine.ANCIENT_RUINS] = {"image", "alliance_shrine.png", 0.8},
-    [PVEDefine.ENTRANCE_DOOR] = {"image", ALLIANCE_BUILDING.moonGate},
-    [PVEDefine.TREE] = {"image", "tree_1_grassLand.png", 0.5, grassLand = "tree_1_grassLand.png", iceField = "tree_1_iceField.png", desert = "tree_1_desert.png"},
-    [PVEDefine.HILL] = {"image", "tree_1_grassLand.png", 0.5, grassLand = "hill_2_grassLand.png", iceField = "hill_2_iceField.png", desert = "hill_2_desert.png"},
-    [PVEDefine.LAKE] = {"image", "tree_1_grassLand.png", 0.5, grassLand = "lake_2_grassLand.png", iceField = "lake_2_iceField.png", desert = "lake_2_desert.png"},
-}
 local PVE_ANIMATION_FILES = {
     "animations/lanse.ExportJson",
     
@@ -1116,7 +1098,6 @@ return {
     daily_task_icon = DAILY_TASK_ICON,
     building_animations = BUILDING_ANIMATIONS,
     building_animations_files = BUILDING_ANIMATIONS_FILES,
-    pve = PVE,
     loadUIAnimation = loadUIAnimation,
     loadBuildingAnimation = loadBuildingAnimation,
     unLoadBuildingAnimation = unLoadBuildingAnimation,
