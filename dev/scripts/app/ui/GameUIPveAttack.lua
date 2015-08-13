@@ -38,7 +38,7 @@ function GameUIPveAttack:OnMoveInStage()
         self:BuildNormalUI()
     end
     self:RefreshUI()
-    display.newNode():addTo(self):schedule(function() 
+    display.newNode():addTo(self):schedule(function()
         self:RefreshUI()
     end, 1)
     GameUIPveAttack.super.OnMoveInStage(self)
@@ -376,6 +376,12 @@ function GameUIPveAttack:Attack()
                 new_level = dragon:Level(),
                 reward = {},
             }
+            local task = City:GetRecommendTask()
+            if task then
+                if task:TaskType() == "explore" then
+                    City:SetBeginnersTaskFlag(task:Index())
+                end
+            end
             NetManager:getAttackPveSectionPromise(self.pve_name, dragonType, soldiers):done(function()
                 display.getRunningScene():GetSceneLayer():RefreshPve()
             end):done(function(response)
@@ -605,6 +611,7 @@ function GameUIPveAttack:DecodeReport(report, dragon, attack_soldiers)
 end
 
 return GameUIPveAttack
+
 
 
 

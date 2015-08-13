@@ -15,13 +15,6 @@ function PVESceneNew:onEnter()
     self:GetSceneLayer():ZoomTo(1)
     self:GetSceneLayer():GotoPve()
     app:GetAudioManager():PlayGameMusicOnSceneEnter("PVEScene",true)
-
-    local task = City:GetRecommendTask()
-    if task then
-        if task:TaskType() == "explore" then
-            City:SetBeginnersTaskFlag(task:Index())
-        end
-    end
 end
 function PVESceneNew:GetPreloadImages()
     return {
