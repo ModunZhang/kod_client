@@ -16,6 +16,7 @@ function GameUIToolShopSpeedUp:ctor(building)
     local building_event = building:GetBuildingEvent()
 
     local event = (technology_event:IsMaking(app.timer:GetServerTime()) and technology_event) or (building_event:IsMaking(app.timer:GetServerTime()) and building_event)
+    self.event = event
     self:SetAccBtnsGroup(self:GetEventType(),event:Id())
     self:SetAccTips(_("生产材料不能免费加速"))
     self:SetUpgradeTip(_("制造材料").."X "..building:GetProduction())
@@ -42,7 +43,9 @@ function GameUIToolShopSpeedUp:OnMakingMaterialsWithEvent(tool_shop, event, curr
 end
 
 function GameUIToolShopSpeedUp:OnEndMakeMaterialsWithEvent(tool_shop, event, current_time)
-    self:LeftButtonClicked()
+    if event:Id() == self.event:Id() then
+        self:LeftButtonClicked()
+    end
 end
 function GameUIToolShopSpeedUp:OnGetMaterialsWithEvent(tool_shop, event)
 end
