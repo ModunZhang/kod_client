@@ -99,7 +99,7 @@ function WidgetNeedBox:SetNeedNumber(wood, stone, iron, time)
     self.stone:SetCurrentAndNeed(unpack(stone))
     self.iron:SetCurrentAndNeed(unpack(iron))
     self.time:setString(GameUtils:formatTimeStyle1(time))
-    self.buff_reduce_time:setString("(-"..GameUtils:formatTimeStyle1(math.floor(time /(1 + City:FindTechByName("sketching"):GetBuffEffectVal())))..")")
+    self.buff_reduce_time:setString("(-"..GameUtils:formatTimeStyle1(math.ceil(time *  City:FindTechByName("sketching"):GetBuffEffectVal()))..")")
     return self
 end
 
