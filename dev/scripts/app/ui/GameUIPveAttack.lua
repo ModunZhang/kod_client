@@ -7,6 +7,7 @@ local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local GameUIPveAttack = class("GameUIPveAttack", WidgetPopDialog)
 local sections = GameDatas.PvE.sections
+local special = GameDatas.Soldiers.special
 local titles = {
     _("战斗胜利"),
     _("龙在战斗中胜利"),
@@ -133,46 +134,17 @@ function GameUIPveAttack:BuildNormalUI()
     self.sweep_all = self:CreateSweepButton():setButtonLabelString(_("扫荡全部"))
         :align(display.CENTER, 100, size.height - 580):addTo(self:GetBody())
         :onButtonClicked(function()
-            if self.user:GetPveLeftCountByName(self.pve_name) <= 0 then
-                UIKit:showMessageDialog(_("提示"),_("已达今日最大挑战次数!"))
-                return
-            end
-            if not self.user:HasAnyStength(sections[self.pve_name].staminaUsed * self.user:GetPveLeftCountByName(self.pve_name)) then
-                WidgetUseItems.new():Create({
-                    item_type = WidgetUseItems.USE_TYPE.STAMINA
-                }):AddToCurrentScene()
-                return
-            end
-            local use_str = self.user:GetPveLeftCountByName(self.pve_name) * sections[self.pve_name].staminaUsed
-            if ItemManager:GetItemByName("sweepScroll"):Count() >= self.user:GetPveLeftCountByName(self.pve_name) then
-                -- self:UseStrength(function()end,use_str):addTo(self.sweep_all)
-                self:UseSweepScroll(self.user:GetPveLeftCountByName(self.pve_name))
-            else
-                -- self:UseStrength(function()end,use_str):addTo(self.sweep_all)
-                self:BuyAndUseSweepScroll(self.user:GetPveLeftCountByName(self.pve_name))
-            end
+            self:CheckMaterials(function()
+                self:Sweep(self.user:GetPveLeftCountByName(self.pve_name))
+            end)
         end)
 
     self.sweep_once = self:CreateSweepButton():setButtonLabelString(_("扫荡一次"))
         :align(display.CENTER, size.width/2, size.height - 580):addTo(self:GetBody())
         :onButtonClicked(function(event)
-            if self.user:GetPveLeftCountByName(self.pve_name) <= 0 then
-                UIKit:showMessageDialog(_("提示"),_("已达今日最大挑战次数!"))
-                return
-            end
-            if not self.user:HasAnyStength(sections[self.pve_name].staminaUsed) then
-                WidgetUseItems.new():Create({
-                    item_type = WidgetUseItems.USE_TYPE.STAMINA
-                }):AddToCurrentScene()
-                return
-            end
-            if ItemManager:GetItemByName("sweepScroll"):Count() >= 1 then
-                -- self:UseStrength(function()end,sections[self.pve_name].staminaUsed):addTo(self.sweep_once)
-                self:UseSweepScroll(1)
-            else
-                -- self:UseStrength(function()end,sections[self.pve_name].staminaUsed):addTo(self.sweep_once)
-                self:BuyAndUseSweepScroll(1)
-            end
+            self:CheckMaterials(function()
+                self:Sweep(1)
+            end)
         end)
     self.attack = self:CreateAttackButton():align(display.CENTER, size.width - 100,size.height - 580)
     UIKit:ttfLabel({
@@ -373,7 +345,7 @@ function GameUIPveAttack:CreateAttackButton()
             -- event.target:setTouchEnabled(false)
             self:Attack()
             -- self:UseStrength(function()
-                -- event.target:setTouchEnabled(true)
+            -- event.target:setTouchEnabled(true)
             -- end, sections[self.pve_name].staminaUsed):addTo(event.target)
         end)
     local num_bg = display.newSprite("alliance_title_gem_bg_154x20.png"):addTo(button):align(display.CENTER, 0, -10):scale(0.8)
@@ -516,6 +488,48 @@ function GameUIPveAttack:UseStrength(func, num)
         color = 0x7e0000,
     }):addTo(icon):align(display.LEFT_CENTER,40,30)
     return icon
+end
+function GameUIPveAttack:Sweep(count)
+    if self.user:GetPveLeftCountByName(self.pve_name) <= 0 then
+        UIKit:showMessageDialog(_("提示"),_("已达今日最大挑战次数!"))
+        return
+    end
+    if not self.user:HasAnyStength(sections[self.pve_name].staminaUsed * count) then
+        WidgetUseItems.new():Create({
+            item_type = WidgetUseItems.USE_TYPE.STAMINA
+        }):AddToCurrentScene()
+        return
+    end
+    if ItemManager:GetItemByName("sweepScroll"):Count() >= count then
+        self:UseSweepScroll(count)
+    else
+        self:BuyAndUseSweepScroll(count)
+    end
+end
+function GameUIPveAttack:CheckMaterials(func)
+    local is_special
+    local troops = string.split(sections[self.pve_name].troops, ",")
+    for i,v in ipairs(troops) do
+        local name = unpack(string.split(v, "_"))
+        if special[name] then
+            is_special = true
+            break
+        end
+    end
+    local material_man = City:GetMaterialManager()
+    if is_special and material_man:CheckOutOfRangeByType(material_man.MATERIAL_TYPE.SOLDIER) then
+        local dialog = UIKit:showMessageDialogWithParams({
+            title = _("提示"),
+            content = string.format(_("当前材料库房中的%s材料已满，你可能无法获得此次扫荡所得的材料奖励。是否仍要扫荡？"), _("士兵")),
+            ok_callback = func,
+            ok_btn_images = {normal = "red_btn_up_148x58.png",pressed = "red_btn_down_148x58.png"},
+            ok_string = _("强行扫荡"),
+            cancel_callback = function () end,
+            cancel_btn_images = {normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"}
+        })
+    else
+        func()
+    end
 end
 
 
