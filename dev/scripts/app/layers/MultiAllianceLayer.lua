@@ -30,7 +30,6 @@ function MultiAllianceLayer:ctor(scene, arrange, ...)
 
     Observer.extend(self)
     MultiAllianceLayer.super.ctor(self, scene, 0.4, 1.2)
-    self.info_action = display.newNode():addTo(self)
     self.track_id = nil
     self.arrange = arrange
     self.alliances = {...}
@@ -172,12 +171,23 @@ function MultiAllianceLayer:RemoveCorpsCircle(corps)
     end
 end
 function MultiAllianceLayer:Schedule()
-    self.info_action:schedule(function()
-        local scale = self:getScale()
-        local l = max(0.5, scale) - 0.5
-        local r = 0.8 - min(0.8, scale)
-        self:GetInfoNode():opacity(l / (l + r) * 255)
-    end, 0.1)
+    display.newNode():addTo(self):schedule(function()
+        -- local scale = self:getScale()
+        -- local l = max(0.5, scale) - 0.5
+        -- local r = 0.8 - min(0.8, scale)
+        -- self:GetInfoNode():opacity(l / (l + r) * 255)
+        if self:getScale() < (self:GetScaleRange()) * 1.5 then
+            if self.is_show == nil or self.is_show == true then
+                self:GetInfoNode():fadeOut(0.5)
+                self.is_show = false
+            end
+        else
+            if self.is_show == nil or self.is_show == false then
+                self:GetInfoNode():fadeIn(0.5)
+                self.is_show = true
+            end
+        end
+    end, 1)
 end
 function MultiAllianceLayer:onCleanup()
     self:AddOrRemoveAllianceEvent(false)
@@ -1001,6 +1011,8 @@ end
 
 
 return MultiAllianceLayer
+
+
 
 
 

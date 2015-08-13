@@ -592,7 +592,6 @@ function GameUIHome:CreateTop()
     end)
     function shrine_event_button:CheckVisible()
         local alliance = Alliance_Manager:GetMyAlliance()
-        print("shrine_event_button:CheckVisible()",alliance:GetAllianceShrine():HaveEvent())
         return alliance:GetAllianceShrine():HaveEvent()
     end
     function shrine_event_button:GetElementSize()
@@ -645,7 +644,6 @@ end
 function GameUIHome:CheckAllianceRewardCount()
     if not self.tips_button then return end
     local count = LuaUtils:table_size(User:GetIapGifts())
-    print("CheckAllianceRewardCount----->",count)
     local award_num = 0
 
     if User:HaveEveryDayLoginReward() then
