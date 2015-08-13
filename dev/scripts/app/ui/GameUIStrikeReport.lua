@@ -680,11 +680,11 @@ function GameUIStrikeReport:CreateGarrison()
                 local soldier_num = report_level<5 and self:GetProbableNum(r_parms.count) or r_parms.count
                 cc.ui.UILabel.new({
                     UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-                    text = _("数量")..soldier_num,
+                    text = string.formatnumberthousands(soldier_num),
                     font = UIKit:getFontFilePath(),
                     size = 20,
                     color = UIKit:hex2c3b(0x403c2f)
-                }):align(display.RIGHT_CENTER,group_width-30,18):addTo(r_item_bg)
+                }):align(display.RIGHT_CENTER,group_width-20,18):addTo(r_item_bg)
                 StarBar.new({
                     max = 3,
                     bg = "Stars_bar_bg.png",
