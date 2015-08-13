@@ -46,7 +46,7 @@ end
 function GameUIPveAttack:BuildNormalUI()
     local size = self:GetBody():getContentSize()
     self.items = {}
-    local sbg = display.newSprite("tmp_pve_bg.png"):addTo(self:GetBody()):pos(size.width/2, size.height - 55)
+    local sbg = display.newSprite("pve_bg.png"):addTo(self:GetBody()):pos(size.width/2, size.height - 55)
     display.newSprite("tmp_pve_star_bg.png"):addTo(sbg):pos(size.width/2 - 60, 35):scale(0.8)
     self.items[1] = display.newSprite("tmp_pve_star.png"):addTo(sbg):pos(size.width/2 - 60, 35):scale(0.8)
 

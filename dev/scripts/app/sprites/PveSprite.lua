@@ -50,9 +50,9 @@ function PveSprite:GetSpriteFile()
         return "alliance_moonGate.png", 0.8
     end
     if self:IsSpecial() then
-        return "tmp_pve_flag_special.png", 1.2
+        return "pve_flag_special.png", 1.2
     end
-    return "tmp_pve_flag_128x128.png"
+    return "pve_flag_128x128.png"
 end
 function PveSprite:IsSpecial()
     if not self:IsBoss() then
