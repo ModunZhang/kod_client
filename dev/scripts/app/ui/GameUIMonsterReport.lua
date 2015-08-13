@@ -124,10 +124,7 @@ function GameUIMonsterReport:onEnter()
             {scale9 = false}
         ):addTo(report_body):align(display.CENTER,  report_body:getContentSize().width-210, rb_size.height-186)
             :onButtonClicked(function(event)
-                -- local monster_data = report:GetEnemyPlayerData().soldiers[1]
-                -- local monster_type = monster_data.name
-                -- self:GetChatManager():SendChat("global",string.format("<report>reportName:%s,userId:%s,reportId:%s<report>",User:Name().."VS"..Localize.soldier_name[monster_type],User:Id(),report:Id()))
-                UIKit:newGameUI("GameUIShareReport", report):AddToCurrentScene()
+               UIKit:newGameUI("GameUIShareReport", report):AddToCurrentScene()
             end)
         display.newSprite("tmp_icon_share_24x34.png"):addTo(share_button)
         -- 删除按钮
@@ -367,22 +364,22 @@ function GameUIMonsterReport:CreateArmyItem(title,troop,dragon,enemy_troop,round
             {
                 bg_image = "back_ground_548x40_1.png",
                 title = _("部队"),
-                value = troopTotal,
+                value = string.formatnumberthousands(troopTotal),
             },
             {
                 bg_image = "back_ground_548x40_2.png",
                 title = _("存活"),
-                value = troopTotal-totalDamaged,
+                value = string.formatnumberthousands(troopTotal-totalDamaged),
             },
             {
                 bg_image = "back_ground_548x40_1.png",
                 title = _("伤兵"),
-                value = totalWounded,
+                value = string.formatnumberthousands(totalWounded),
             },
             {
                 bg_image = "back_ground_548x40_2.png",
                 title = _("被消灭"),
-                value = totalDamaged - totalWounded,
+                value = string.formatnumberthousands(totalDamaged - totalWounded),
                 color = 0x7e0000,
             },
             {
@@ -399,12 +396,12 @@ function GameUIMonsterReport:CreateArmyItem(title,troop,dragon,enemy_troop,round
             dragon.expAdd and {
                 bg_image = "back_ground_548x40_1.png",
                 title = _("XP"),
-                value = "+"..dragon.expAdd ,
+                value = "+"..string.formatnumberthousands(dragon.expAdd) ,
             } or {},
             {
                 bg_image = "back_ground_548x40_2.png",
                 title = _("HP"),
-                value = dragon.hp.."/-"..dragon.hpDecreased,
+                value = string.formatnumberthousands(dragon.hp).."/-"..string.formatnumberthousands(dragon.hpDecreased),
             },
         }
     else
@@ -590,13 +587,13 @@ function GameUIMonsterReport:CreateSoldiersInfo(soldier,isSelf)
 
 
     UIKit:ttfLabel({
-        text = soldier.count,
+        text = string.formatnumberthousands(soldier.count),
         size = 18,
         color = 0x403c2f
     }):align(display.CENTER,soldier_head_bg:getContentSize().width/2, -14):addTo(soldier_head_bg)
         :scale(soldier_head_icon:getContentSize().height/104)
     UIKit:ttfLabel({
-        text = "-"..soldier.countDecreased ,
+        text = "-"..string.formatnumberthousands(soldier.countDecreased) ,
         size = 18,
         color = 0x980101
     }):align(display.CENTER,soldier_head_bg:getContentSize().width/2, -38):addTo(soldier_head_bg)

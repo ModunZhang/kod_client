@@ -403,7 +403,7 @@ function GameUIStrikeReport:CreateArmyItem(dragon,isSelf)
         {
             bg_image = "back_ground_548x40_2.png",
             title = "HP",
-            value = dragon.hp.."/-"..dragon.hpDecreased,
+            value = string.formatnumberthousands(dragon.hp).."/-"..string.formatnumberthousands(dragon.hpDecreased),
         },
     }
 
@@ -570,26 +570,6 @@ function GameUIStrikeReport:CreateEnemyTechnology()
     item:setItemSize(group_width , group_height)
     item:addContent(group)
     self.details_view:addItem(item)
-end
-function GameUIStrikeReport:GetTextEnemyTechnology()
-    return {
-        {
-            tech_type = _("步兵科技"),
-            value = "X "..100,
-        },
-        {
-            tech_type = _("弓箭手科技"),
-            value = "X "..100,
-        },
-        {
-            tech_type = _("骑兵科技"),
-            value = "X "..100,
-        },
-        {
-            tech_type = _("投石车科技"),
-            value = "X "..100,
-        },
-    }
 end
 function GameUIStrikeReport:CreateDragonSkills()
     local dragon = self.report:GetStrikeIntelligence().dragon

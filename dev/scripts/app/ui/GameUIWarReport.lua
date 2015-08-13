@@ -406,22 +406,22 @@ function GameUIWarReport:CreateArmyItem(title,troop,dragon,enemy_troop,round_dat
             {
                 bg_image = "back_ground_548x40_1.png",
                 title = _("部队"),
-                value = troopTotal,
+                value = string.formatnumberthousands(troopTotal),
             },
             {
                 bg_image = "back_ground_548x40_2.png",
                 title = _("存活"),
-                value = troopTotal-totalDamaged,
+                value = string.formatnumberthousands(troopTotal-totalDamaged),
             },
             {
                 bg_image = "back_ground_548x40_1.png",
                 title = _("伤兵"),
-                value = totalWounded,
+                value = string.formatnumberthousands(totalWounded),
             },
             {
                 bg_image = "back_ground_548x40_2.png",
                 title = _("被消灭"),
-                value = totalDamaged - totalWounded,
+                value = string.formatnumberthousands(totalDamaged - totalWounded),
                 color = 0x7e0000,
             },
             {
@@ -438,12 +438,12 @@ function GameUIWarReport:CreateArmyItem(title,troop,dragon,enemy_troop,round_dat
             {
                 bg_image = "back_ground_548x40_1.png",
                 title = _("XP"),
-                value = "+"..dragon.expAdd,
+                value = "+"..string.formatnumberthousands(dragon.expAdd),
             },
             {
                 bg_image = "back_ground_548x40_2.png",
                 title = _("HP"),
-                value = dragon.hp.."/-"..dragon.hpDecreased,
+                value = string.formatnumberthousands(dragon.hp).."/-"..string.formatnumberthousands(dragon.hpDecreased),
             },
         }
     else
@@ -596,13 +596,13 @@ function GameUIWarReport:CreateSoldiersInfo(soldier)
     }):addTo(soldier_star_bg):align(display.CENTER,58, 11)
 
     UIKit:ttfLabel({
-        text = soldier.count,
+        text = string.formatnumberthousands(soldier.count),
         size = 18,
         color = 0x403c2f
     }):align(display.CENTER,soldier_head_bg:getContentSize().width/2, -14):addTo(soldier_head_bg)
         :scale(soldier_head_icon:getContentSize().height/104)
     UIKit:ttfLabel({
-        text = "-"..soldier.countDecreased ,
+        text = "-"..string.formatnumberthousands(soldier.countDecreased) ,
         size = 18,
         color = 0x980101
     }):align(display.CENTER,soldier_head_bg:getContentSize().width/2, -38):addTo(soldier_head_bg)
@@ -654,13 +654,13 @@ function GameUIWarReport:CreateWallPart()
     }):align(display.LEFT_CENTER, 105, 30)
         :addTo(bg)
     UIKit:ttfLabel({
-        text = wall_data.wall.hp ,
+        text = string.formatnumberthousands(wall_data.wall.hp) ,
         size = 22,
         color = 0x403c2f
     }):align(display.RIGHT_CENTER, 520, 70)
         :addTo(bg)
     UIKit:ttfLabel({
-        text = "-"..wall_data.wall.hpDecreased ,
+        text = "-"..string.formatnumberthousands(wall_data.wall.hpDecreased) ,
         size = 22,
         color = 0x7e0000
     }):align(display.RIGHT_CENTER, 520, 30)
