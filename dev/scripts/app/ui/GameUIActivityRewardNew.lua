@@ -538,13 +538,14 @@ function GameUIActivityRewardNew:ui_FIRST_IN_PURGURE()
     local countInfo = User:GetCountInfo()
     local rewards = self:GetFirstPurgureRewards()
     local x,y = 20,500
-    self.purgure_get_button = WidgetPushButton.new({normal = 'yellow_btn_up_186x66.png',pressed = 'yellow_btn_down_186x66.png'})
+    self.purgure_get_button = WidgetPushButton.new({normal = 'store_buy_button_n_332x76.png',pressed = 'store_buy_button_l_332x76.png',scale9 = true})
         :setButtonLabel("normal", UIKit:commonButtonLable({
             text = _("领取")
         }))
         :addTo(reward_bg,1)
         :pos(145,58)
-    self.go_store_button = WidgetPushButton.new({normal = 'yellow_btn_up_186x66.png',pressed = 'yellow_btn_down_186x66.png'})
+        :setButtonSize(190,66)
+    self.go_store_button = WidgetPushButton.new({normal = 'store_buy_button_n_332x76.png',pressed = 'store_buy_button_l_332x76.png',scale9 = true})
         :setButtonLabel("normal", UIKit:commonButtonLable({
             text = _("前往充值")
         }))
@@ -553,6 +554,7 @@ function GameUIActivityRewardNew:ui_FIRST_IN_PURGURE()
         :onButtonClicked(function()
             UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
         end)
+        :setButtonSize(190,66)
     local tips_list = {}
     local acts = {}
     for index,reward in ipairs(rewards) do

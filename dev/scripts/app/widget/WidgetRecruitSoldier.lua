@@ -639,7 +639,7 @@ function WidgetRecruitSoldier:CheckNeedResource(total_resouce, count)
             end
         else
             total = total_map[k] == nil and 0 or total_map[k]
-            current = soldier_config[k] * count * (1 - self.city:FindTechByName("recruitment"):GetBuffEffectVal())
+            current = soldier_config[k] * count * (k == "citizen" and 1 or (1 - self.city:FindTechByName("recruitment"):GetBuffEffectVal()))
             current_res_map[k] = current
         end
         local color = total >= current
