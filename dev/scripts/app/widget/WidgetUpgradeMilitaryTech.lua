@@ -14,25 +14,42 @@ local SoldierManager = import("..entity.SoldierManager")
 
 local WidgetUpgradeMilitaryTech = class("WidgetUpgradeMilitaryTech", WidgetPopDialog)
 
-local function create_line_item(icon,text_1,text_2)
-    local line = display.newScale9Sprite("dividing_line.png",0,0,cc.size(546,2),cc.rect(10,2,382,2))
-    local icon = display.newSprite(icon):addTo(line,2):align(display.LEFT_BOTTOM, 0, 0)
-    icon:scale(40/icon:getContentSize().width)
+local function create_line_item(icon,text_1,text_2,text_3)
+    local line = display.newScale9Sprite("dividing_line.png",0,0,cc.size(412,2),cc.rect(10,2,382,2))
+    local icon = display.newSprite(icon):addTo(line,2):align(display.LEFT_BOTTOM, 0, 2)
+    icon:scale(32/math.max(icon:getContentSize().width,icon:getContentSize().height))
     local text1 = UIKit:ttfLabel({
         text = text_1,
         size = 20,
         color = 0x615b44,
-    }):align(display.LEFT_BOTTOM, 50 , 0)
-        :addTo(line)
-    local text2 = UIKit:ttfLabel({
-        text = text_2,
-        size = 20,
-        color = 0x007c23,
-    }):align(display.RIGHT_BOTTOM, 540 , 0)
+    }):align(display.LEFT_BOTTOM, 40 , 2)
         :addTo(line)
 
-    function line:SetText(text)
-        text2:setString(text)
+    local green_icon = display.newSprite("teach_upgrade_icon_15x17.png"):align(display.BOTTOM_CENTER, 358 , 6):addTo(line)
+    if text_2 == "" then
+        green_icon:hide()
+    end
+    local text2 = UIKit:ttfLabel({
+        text = text_2,
+        size = 22,
+        color = 0x403c2f,
+    }):align(display.RIGHT_BOTTOM, green_icon:getPositionX() - 20 , 2)
+        :addTo(line)
+    local text3 = UIKit:ttfLabel({
+        text = text_3,
+        size = 22,
+        color = 0x403c2f,
+    }):align(display.LEFT_BOTTOM, green_icon:getPositionX() + 16 , 2)
+        :addTo(line)
+
+    function line:SetText(text_2,text_3)
+        text3:setString(text_3)
+        if text_2 then
+            text2:setString(text_2)
+        else
+            text2:setString("")
+            green_icon:hide()
+        end
     end
 
     return line
@@ -61,19 +78,25 @@ end
 function WidgetUpgradeMilitaryTech:CurrentInfo()
     local body = self.body
     local size = body:getContentSize()
-    local bg = display.newScale9Sprite("back_ground_166x84.png", 0,0,cc.size(548,46),cc.rect(15,10,136,64))
-        :align(display.CENTER, size.width/2, size.height-50)
+    local tech = self.tech
+
+    local icon_box = display.newSprite("alliance_item_flag_box_126X126.png"):align(display.LEFT_CENTER, 40, size.height - 100):addTo(body)
+    local icon_bg = display.newSprite("technology_bg_normal_142x142.png"):align(display.CENTER, icon_box:getContentSize().width/2, icon_box:getContentSize().height/2):addTo(icon_box):scale(0.8)
+    display.newSprite(tech:GetMiliTechIcon()):align(display.CENTER, icon_bg:getContentSize().width/2, icon_bg:getContentSize().height/2):addTo(icon_bg)
+
+    local bg = display.newScale9Sprite("title_blue_430x30.png",0,0,cc.size(412,30),cc.rect(15,10,400,10))
+        :align(display.RIGHT_CENTER, size.width - 25, size.height-50)
         :addTo(body)
 
-    local tech = self.tech
     self.upgrade_tip = UIKit:ttfLabel({
-        text = tech:GetTechLocalize()..string.format( _(" (升级到 Lv%d)"), tech:Level()+1 ),
+        text = tech:GetTechLocalize().." Lv" .. tech:Level(),
         size = 22,
-        color = 0x403c2f,
-    }):align(display.CENTER, bg:getContentSize().width/2 , bg:getContentSize().height/2)
+        color = 0xffedae,
+    }):align(display.LEFT_CENTER, 20 , bg:getContentSize().height/2)
         :addTo(bg)
-    self.line1 = create_line_item("battle_33x33.png",tech:GetTechLocalize(),"+"..(tech:GetNextLevlAtkEff()*100).."%"):addTo(body):align(display.CENTER, size.width/2, size.height-120)
-    self.line2 = create_line_item("bottom_icon_package_77x67.png",tech:GetTechCategory(),"+"..tech:GetNextLevlTechPoint()):addTo(body):align(display.CENTER, size.width/2, size.height-170)
+    local soldiers = string.split(tech:Name(), "_")
+    self.line1 = create_line_item(soldiers[2] == "hpAdd" and "tmp_icon_hp_18x28.png" or "battle_33x33.png",tech:GetTechLocalize(),tech:IsMaxLevel() and "" or (tech:GetAtkEff()*100).."%",(tech:GetNextLevlAtkEff()*100).."%"):addTo(body):align(display.LEFT_CENTER, icon_box:getPositionX() + icon_box:getContentSize().width + 5, size.height-120)
+    self.line2 = create_line_item("bottom_icon_package_77x67.png",tech:GetTechCategory(),tech:IsMaxLevel() and "" or tech:GetTechPoint(),tech:GetNextLevlTechPoint()):addTo(body):align(display.LEFT_CENTER, self.line1:getPositionX(), size.height-164)
 end
 function WidgetUpgradeMilitaryTech:UpgradeButtons()
     local body = self.body
@@ -271,14 +294,15 @@ function WidgetUpgradeMilitaryTech:OnMilitaryTechsDataChanged(city,changed_map)
             self.upgrade_time:setString(GameUtils:formatTimeStyle1(v:GetUpgradeTime()))
             self.upgrade_now_need_gems_label:setString(v:GetInstantUpgradeGems())
 
-            self.upgrade_tip:setString(v:GetTechLocalize()..string.format( _(" (升级到 Lv%d)"), (v:Level()+1) ))
-            self.line1:SetText("+"..(v:GetAtkEff()*100).."%")
-            self.line2:SetText("+"..v:GetTechPoint())
+            self.upgrade_tip:setString(v:GetTechLocalize().." Lv" .. v:Level())
+            self.line1:SetText(v:IsMaxLevel() and "" or (v:GetAtkEff()*100).."%",(v:GetNextLevlAtkEff()*100).."%")
+            self.line2:SetText(v:IsMaxLevel() and "" or v:GetTechPoint(),v:GetNextLevlTechPoint())
             self:UpgradeRequirement()
         end
     end
 end
 return WidgetUpgradeMilitaryTech
+
 
 
 
