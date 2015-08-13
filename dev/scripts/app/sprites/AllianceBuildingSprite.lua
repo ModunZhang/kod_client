@@ -5,17 +5,17 @@ local AllianceBuildingSprite = class("AllianceBuildingSprite", WithInfoSprite)
 
 local building_map = {
     palace = {UILib.alliance_building.palace, 1},
-    shrine = {UILib.alliance_building.shrine, 1},
-    shop = {UILib.alliance_building.shop, 1},
-    orderHall = {UILib.alliance_building.orderHall, 1},
-    moonGate = {UILib.alliance_building.moonGate, 1},
+    shrine = {UILib.alliance_building.shrine, 1.2},
+    shop = {UILib.alliance_building.shop, 1.2},
+    orderHall = {UILib.alliance_building.orderHall, 1.2},
+    moonGate = {UILib.alliance_building.moonGate, 1.2},
 }
 local other_building_map = {
     palace = {UILib.other_alliance_building.palace, 1},
-    shrine = {UILib.other_alliance_building.shrine, 1},
-    shop = {UILib.other_alliance_building.shop, 1},
-    orderHall = {UILib.other_alliance_building.orderHall, 1},
-    moonGate = {UILib.other_alliance_building.moonGate, 1},
+    shrine = {UILib.other_alliance_building.shrine, 1.2},
+    shop = {UILib.other_alliance_building.shop, 1.2},
+    orderHall = {UILib.other_alliance_building.orderHall, 1.2},
+    moonGate = {UILib.other_alliance_building.moonGate, 1.2},
 }
 function AllianceBuildingSprite:ctor(city_layer, entity, is_my_alliance)
     AllianceBuildingSprite.super.ctor(self, city_layer, entity, is_my_alliance)   

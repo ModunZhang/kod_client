@@ -27,30 +27,34 @@ local map = {
 }
 
 local pve_color = {
-    cc.c3b(  0,   0,   0), -- "iceField",
-    cc.c3b(192, 207, 186), -- "iceField",
-    cc.c3b(164, 176, 143), -- "grassLand",
-    cc.c3b(  0,   0,   0), -- "grassLand",
-    cc.c3b(  0,   0,   0), -- "desert",
-    cc.c3b(184, 184, 184), -- "desert",
-    cc.c3b(212, 189, 172), -- "iceField",
-    cc.c3b(191, 163, 163), -- "iceField",
-    cc.c3b(158, 125, 126), -- "iceField",
-    cc.c3b(197, 201, 160), -- "desert",
-    cc.c3b(201, 180, 160), -- "desert",
-    cc.c3b(201, 172, 160), -- "desert",
-    cc.c3b(204, 166, 180), -- "grassLand",
-    cc.c3b(230, 156, 170), -- "grassLand",
-    cc.c3b(212, 137, 138), -- "grassLand",
-    cc.c3b(153, 203, 237), -- "desert",
-    cc.c3b(130, 167, 232), -- "desert",
-    cc.c3b(115, 119, 227), -- "desert",
-    cc.c3b(166, 182, 186), -- "iceField",
-    cc.c3b(131, 142, 150), -- "iceField",
-    cc.c3b(136, 125, 148), -- "iceField",
-    cc.c3b(126, 124, 255), -- "grassLand",
-    cc.c3b(114, 111, 255), -- "grassLand",
-    cc.c3b(169,  98, 255), -- "grassLand",
+    cc.c3b(  0,   0,   0),
+    cc.c3b(192, 207, 186),
+    cc.c3b(164, 176, 143),
+    cc.c3b(  0,   0,   0),
+    cc.c3b(  0,   0,   0),
+
+    cc.c3b(184, 184, 184),
+    cc.c3b(212, 189, 172),
+    cc.c3b(191, 163, 163),
+    cc.c3b(158, 125, 126),
+    cc.c3b(197, 201, 160),
+
+    cc.c3b(201, 180, 160),
+    cc.c3b(201, 172, 160),
+    UIKit:hex2c3b(0xd1b7a7),
+    UIKit:hex2c3b(0xd6afa3),
+    UIKit:hex2c3b(0xcfa395),
+
+    UIKit:hex2c3b(0xa6acc7),
+    UIKit:hex2c3b(0x909ac7),
+    UIKit:hex2c3b(0x7583bd),
+    cc.c3b(166, 182, 186),
+    cc.c3b(131, 142, 150),
+
+    UIKit:hex2c3b(0x8c787e),
+    UIKit:hex2c3b(0x937ea3),
+    UIKit:hex2c3b(0x9a83ab),
+    UIKit:hex2c3b(0xaa7db0),
 }
 
 
