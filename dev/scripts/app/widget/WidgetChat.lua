@@ -168,6 +168,7 @@ function WidgetChat:ctor()
             end
         end)
     self:RefreshNewChatAni()
+    self:RefreshChatMessage()
 end
 -- 新消息提示动画
 function WidgetChat:CreateChatAni()
