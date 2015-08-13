@@ -566,34 +566,35 @@ function DataUtils:randomAllianceNameTag()
 end
 -- 获取特殊兵种招募状态，返回true 招募进行中；返回时间，下次招募开始时间
 function DataUtils:GetNextRecruitTime()
-    local can_re_time = PlayerInitData.intInit.specialSoldierRecruitAbleDays.value..""
-    local days = {}
-    for i=1,string.len(can_re_time) do
-        table.insert(days, tonumber(string.sub(can_re_time,i,i)))
-    end
-    -- local current_day = 3
-    local current_day = tonumber(os.date("!%w", app.timer:GetServerTime()))
-    local next_day = 7
-    for i,v in ipairs(days) do
-        v = v == 7 and 0 or v
-        if v==current_day then
-            return true
-        else
-            if current_day<v then
-                next_day = math.min(next_day,v)
-            end
-        end
-    end
+    -- local can_re_time = PlayerInitData.intInit.specialSoldierRecruitAbleDays.value..""
+    -- local days = {}
+    -- for i=1,string.len(can_re_time) do
+    --     table.insert(days, tonumber(string.sub(can_re_time,i,i)))
+    -- end
+    -- -- local current_day = 3
+    -- local current_day = tonumber(os.date("!%w", app.timer:GetServerTime()))
+    -- local next_day = 7
+    -- for i,v in ipairs(days) do
+    --     v = v == 7 and 0 or v
+    --     if v==current_day then
+    --         return true
+    --     else
+    --         if current_day<v then
+    --             next_day = math.min(next_day,v)
+    --         end
+    --     end
+    -- end
 
-    local year = os.date('!%Y', app.timer:GetServerTime())
-    local month = os.date('!%m', app.timer:GetServerTime())
-    local day = os.date('!%d', app.timer:GetServerTime())
-    local hour = os.date('!%H', app.timer:GetServerTime())
-    local min = os.date('!%M', app.timer:GetServerTime())
-    local sec = os.date('!%S', app.timer:GetServerTime())
+    -- local year = os.date('!%Y', app.timer:GetServerTime())
+    -- local month = os.date('!%m', app.timer:GetServerTime())
+    -- local day = os.date('!%d', app.timer:GetServerTime())
+    -- local hour = os.date('!%H', app.timer:GetServerTime())
+    -- local min = os.date('!%M', app.timer:GetServerTime())
+    -- local sec = os.date('!%S', app.timer:GetServerTime())
 
-    local next_time = (next_day-current_day) * 24 * 60 * 60 - hour * 60 * 60 - min * 60 - sec
-    return next_time
+    -- local next_time = (next_day-current_day) * 24 * 60 * 60 - hour * 60 * 60 - min * 60 - sec
+    -- return next_time
+    return true
 end
 function DataUtils:GetDragonSkillUnLockStar(skillName)
     for __,v in ipairs(config_dragonStar) do

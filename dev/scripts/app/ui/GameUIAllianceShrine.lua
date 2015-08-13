@@ -298,8 +298,7 @@ end
 
 function GameUIAllianceShrine:GetStageListItem(index,stage_obj)
 	local item = self.stage_list:newItem()
-	-- local is_locked = stage_obj:IsLocked()
-	local is_locked = false
+	local is_locked = stage_obj:IsLocked()
 	local troop = stage_obj:Troops()[2]
 	local desc_color = 0xffffff
 	local logo_file = "alliance_shire_stage_bg_554x130_black.png" 
