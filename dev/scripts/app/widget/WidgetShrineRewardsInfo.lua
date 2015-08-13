@@ -21,7 +21,6 @@ function WidgetShrineRewardsInfo:CreateInfoItems(shrineStage)
 
     local item_width, item_height = self.width-8,40
     for index,data in pairs(self:GetListData(shrineStage)) do
-        dump(data,"shrine reward")
         local item = self.info_listview:newItem()
         item:setItemSize(item_width, item_height)
         local content = display.newNode()
