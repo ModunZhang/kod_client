@@ -9,39 +9,33 @@ local WidgetPushButton = import(".WidgetPushButton")
 local SoldierManager = import("..entity.SoldierManager")
 local Localize = import("..utils.Localize")
 
-local function create_line_item(icon,text_1,text_2,text_3)
-    local line = display.newScale9Sprite("dividing_line.png",0,0,cc.size(384,2),cc.rect(10,2,382,2))
+local function create_line_item(icon,text_1,text_2)
+    local line = display.newScale9Sprite("dividing_line.png",0,0,cc.size(258,2),cc.rect(10,2,382,2))
     local icon = display.newSprite(icon):addTo(line,2):align(display.LEFT_BOTTOM, 0, 2)
-    icon:scale(32/icon:getContentSize().width)
-    local text1 = UIKit:ttfLabel({
-        text = text_1,
-        size = 20,
-        color = 0x615b44,
-    }):align(display.LEFT_BOTTOM, 40 , 2)
-        :addTo(line)
-    local green_icon = display.newSprite("teach_upgrade_icon_15x17.png"):align(display.BOTTOM_CENTER, 320 , 6):addTo(line)
-    if text_2 == "" then
+    icon:scale(32/math.max(icon:getContentSize().width,icon:getContentSize().height))
+    local green_icon = display.newSprite("teach_upgrade_icon_15x17.png"):align(display.BOTTOM_CENTER, 194 , 6):addTo(line)
+    if text_1 == "" then
         green_icon:hide()
     end
-    local text2 = UIKit:ttfLabel({
-        text = text_2,
+    local text1 = UIKit:ttfLabel({
+        text = text_1,
         size = 22,
         color = 0x403c2f,
     }):align(display.RIGHT_BOTTOM, green_icon:getPositionX() - 20 , 2)
         :addTo(line)
-    local text3 = UIKit:ttfLabel({
-        text = text_3,
+    local text2 = UIKit:ttfLabel({
+        text = text_2,
         size = 22,
         color = 0x403c2f,
     }):align(display.LEFT_BOTTOM, green_icon:getPositionX() + 16 , 2)
         :addTo(line)
 
-    function line:SetText(text_2,text_3)
-        text3:setString(text_3)
-        if text_2 then
-            text2:setString(text_2)
+    function line:SetText(text_1,text_2)
+        text2:setString(text_2)
+        if text_1 then
+            text1:setString(text_1)
         else
-            text2:setString("")
+            text1:setString("")
             green_icon:hide()
         end
     end
@@ -80,9 +74,13 @@ function WidgetMilitaryTechnology:CreateItem(tech)
 
     local content = WidgetUIBackGround.new({width = item_width,height = item_height},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
     item:addContent(content)
+    
+    local icon_box = display.newSprite("alliance_item_flag_box_126X126.png"):align(display.LEFT_CENTER, 10, item_height/2):addTo(content)
+    local icon_bg = display.newSprite("technology_bg_normal_142x142.png"):align(display.CENTER, icon_box:getContentSize().width/2, icon_box:getContentSize().height/2):addTo(icon_box):scale(0.8)
+    display.newSprite(tech:GetMiliTechIcon()):align(display.CENTER, icon_bg:getContentSize().width/2, icon_bg:getContentSize().height/2):addTo(icon_bg)
 
-    local title_bg = display.newScale9Sprite("title_blue_430x30.png",item_width/2,item_height-25,cc.size(550,30),cc.rect(15,10,400,10))
-        :addTo(content)
+    local title_bg = display.newScale9Sprite("title_blue_430x30.png",item_width - 10,item_height-25,cc.size(412,30),cc.rect(15,10,400,10))
+        :addTo(content):align(display.RIGHT_CENTER)
     local temp = UIKit:ttfLabel({
         text = tech:GetTechLocalize() ,
         size = 22,
@@ -109,8 +107,8 @@ function WidgetMilitaryTechnology:CreateItem(tech)
 
     local soldiers = string.split(tech:Name(), "_")
     local soldier_category = Localize.soldier_category
-    local line1 = create_line_item("battle_33x33.png",tech:GetTechLocalize(),tech:IsMaxLevel() and "" or (tech:GetAtkEff()*100).."%",(tech:GetNextLevlAtkEff()*100).."%"):addTo(content):align(display.LEFT_CENTER, 10, 60)
-    local line2 = create_line_item("bottom_icon_package_77x67.png",tech:GetTechCategory(),tech:IsMaxLevel() and "" or tech:GetTechPoint(),tech:GetNextLevlTechPoint()):addTo(content):align(display.LEFT_CENTER, 10, 20)
+    local line1 = create_line_item(soldiers[2] == "hpAdd" and "tmp_icon_hp_18x28.png" or "battle_33x33.png",tech:IsMaxLevel() and "" or (tech:GetAtkEff()*100).."%",(tech:GetNextLevlAtkEff()*100).."%"):addTo(content):align(display.LEFT_CENTER, icon_box:getPositionX() + icon_box:getContentSize().width + 5, 60)
+    local line2 = create_line_item("bottom_icon_package_77x67.png",tech:IsMaxLevel() and "" or tech:GetTechPoint(),tech:GetNextLevlTechPoint()):addTo(content):align(display.LEFT_CENTER, line1:getPositionX(), 20)
 
     function item:LevelUpRefresh(tech)
         tech_level:setString(string.format("Lv%d",tech:Level()))
