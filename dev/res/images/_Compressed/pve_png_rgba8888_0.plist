@@ -7,7 +7,7 @@
             <key>+.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{478,50},{25,25}}</string>
+                <string>{{108,983},{25,25}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -20,7 +20,7 @@
             <key>add_btn_down.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{139,343},{40,40}}</string>
+                <string>{{108,941},{40,40}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -33,7 +33,7 @@
             <key>add_btn_up.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{97,343},{40,40}}</string>
+                <string>{{578,470},{40,40}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -43,27 +43,14 @@
                 <key>sourceSize</key>
                 <string>{40,40}</string>
             </dict>
-            <key>crashed_airship_80x70.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{295,277},{80,70}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <true/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{80,70}}</string>
-                <key>sourceSize</key>
-                <string>{80,70}</string>
-            </dict>
             <key>forbear_down.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{364,2},{110,112}}</string>
+                <string>{{880,392},{110,112}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{110,112}}</string>
                 <key>sourceSize</key>
@@ -72,249 +59,327 @@
             <key>forbear_up.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{185,277},{108,109}}</string>
+                <string>{{880,506},{108,109}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{108,109}}</string>
                 <key>sourceSize</key>
                 <string>{108,109}</string>
             </dict>
-            <key>keel_189x86.png</key>
+            <key>pve_bg.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{97,152},{189,86}}</string>
+                <string>{{808,2},{622,70}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <true/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{189,86}}</string>
+                <string>{{0,0},{622,70}}</string>
                 <key>sourceSize</key>
-                <string>{189,86}</string>
+                <string>{622,70}</string>
             </dict>
-            <key>pve_char.png</key>
+            <key>pve_cloud_1.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,2},{156,148}}</string>
+                <string>{{620,2},{632,186}}</string>
+                <key>offset</key>
+                <string>{-1,1}</string>
+                <key>rotated</key>
+                <true/>
+                <key>sourceColorRect</key>
+                <string>{{5,7},{632,186}}</string>
+                <key>sourceSize</key>
+                <string>{644,202}</string>
+            </dict>
+            <key>pve_cloud_2.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{442,636},{568,150}}</string>
+                <key>offset</key>
+                <string>{3,-1}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{9,16},{568,150}}</string>
+                <key>sourceSize</key>
+                <string>{580,180}</string>
+            </dict>
+            <key>pve_deco_1.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{2,470},{288,245}}</string>
+                <key>offset</key>
+                <string>{0,-12}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,24},{288,245}}</string>
+                <key>sourceSize</key>
+                <string>{288,269}</string>
+            </dict>
+            <key>pve_deco_10.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{442,941},{64,80}}</string>
+                <key>offset</key>
+                <string>{-1,0}</string>
+                <key>rotated</key>
+                <true/>
+                <key>sourceColorRect</key>
+                <string>{{19,10},{64,80}}</string>
+                <key>sourceSize</key>
+                <string>{104,100}</string>
+            </dict>
+            <key>pve_deco_11.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{714,901},{102,80}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{156,148}}</string>
+                <string>{{1,10},{102,80}}</string>
                 <key>sourceSize</key>
-                <string>{156,148}</string>
+                <string>{104,100}</string>
             </dict>
-            <key>pve_icon_airship.png</key>
+            <key>pve_deco_12.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{345,114},{112,112}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{112,112}}</string>
-                <key>sourceSize</key>
-                <string>{112,112}</string>
-            </dict>
-            <key>pve_icon_bury.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{429,302},{42,52}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{5,0},{42,52}}</string>
-                <key>sourceSize</key>
-                <string>{52,52}</string>
-            </dict>
-            <key>pve_icon_contribute.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{473,290},{36,48}}</string>
+                <string>{{818,901},{100,98}}</string>
                 <key>offset</key>
                 <string>{0,1}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
-                <string>{{8,1},{36,48}}</string>
+                <string>{{2,0},{100,98}}</string>
                 <key>sourceSize</key>
-                <string>{52,52}</string>
+                <string>{104,100}</string>
             </dict>
-            <key>pve_icon_fight.png</key>
+            <key>pve_deco_13.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{449,232},{58,56}}</string>
-                <key>offset</key>
-                <string>{0,-2}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{1,5},{58,56}}</string>
-                <key>sourceSize</key>
-                <string>{60,62}</string>
-            </dict>
-            <key>pve_icon_flag.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{295,359},{27,56}}</string>
+                <string>{{918,918},{90,94}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <true/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{27,56}}</string>
+                <string>{{7,3},{90,94}}</string>
                 <key>sourceSize</key>
-                <string>{27,56}</string>
+                <string>{104,100}</string>
             </dict>
-            <key>pve_icon_floor.png</key>
+            <key>pve_deco_14.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{34,356},{30,30}}</string>
+                <string>{{2,941},{104,56}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{30,30}}</string>
+                <string>{{0,22},{104,56}}</string>
                 <key>sourceSize</key>
-                <string>{30,30}</string>
+                <string>{104,100}</string>
             </dict>
-            <key>pve_icon_knowledge.png</key>
+            <key>pve_deco_17.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{459,178},{52,48}}</string>
+                <string>{{2,941},{104,56}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,22},{104,56}}</string>
+                <key>sourceSize</key>
+                <string>{104,100}</string>
+            </dict>
+            <key>pve_deco_2.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{161,717},{210,125}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <true/>
                 <key>sourceColorRect</key>
-                <string>{{0,2},{52,48}}</string>
+                <string>{{0,0},{210,125}}</string>
                 <key>sourceSize</key>
-                <string>{52,52}</string>
+                <string>{210,125}</string>
             </dict>
-            <key>pve_icon_leave.png</key>
+            <key>pve_deco_3.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{367,302},{60,54}}</string>
+                <string>{{714,788},{210,111}}</string>
                 <key>offset</key>
-                <string>{0,0}</string>
+                <string>{0,-3}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,4},{60,54}}</string>
+                <string>{{0,10},{210,111}}</string>
                 <key>sourceSize</key>
-                <string>{60,62}</string>
+                <string>{210,125}</string>
             </dict>
-            <key>pve_icon_life.png</key>
+            <key>pve_deco_4.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{478,2},{32,46}}</string>
+                <string>{{442,788},{270,151}}</string>
                 <key>offset</key>
-                <string>{0,1}</string>
+                <string>{-9,3}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{10,2},{32,46}}</string>
+                <string>{{3,1},{270,151}}</string>
                 <key>sourceSize</key>
-                <string>{52,52}</string>
+                <string>{294,159}</string>
             </dict>
-            <key>pve_icon_searched.png</key>
+            <key>pve_deco_5.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,356},{30,30}}</string>
+                <string>{{2,717},{222,157}}</string>
                 <key>offset</key>
-                <string>{0,0}</string>
+                <string>{3,7}</string>
+                <key>rotated</key>
+                <true/>
+                <key>sourceColorRect</key>
+                <string>{{12,3},{222,157}}</string>
+                <key>sourceSize</key>
+                <string>{240,177}</string>
+            </dict>
+            <key>pve_deco_6.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{880,270},{118,120}}</string>
+                <key>offset</key>
+                <string>{0,3}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{30,30}}</string>
+                <string>{{11,0},{118,120}}</string>
                 <key>sourceSize</key>
-                <string>{30,30}</string>
+                <string>{140,126}</string>
             </dict>
-            <key>pve_icon_through.png</key>
+            <key>pve_deco_7.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{459,114},{48,62}}</string>
+                <string>{{880,2},{136,119}}</string>
                 <key>offset</key>
-                <string>{0,0}</string>
+                <string>{2,0}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
-                <string>{{6,0},{48,62}}</string>
+                <string>{{4,0},{136,119}}</string>
                 <key>sourceSize</key>
-                <string>{60,62}</string>
+                <string>{140,119}</string>
             </dict>
-            <key>pve_move_icon_locked.png</key>
+            <key>pve_deco_8.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{265,97},{178,78}}</string>
+                <string>{{880,140},{128,110}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <true/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{178,78}}</string>
+                <string>{{6,8},{128,110}}</string>
                 <key>sourceSize</key>
-                <string>{178,78}</string>
+                <string>{140,126}</string>
             </dict>
-            <key>pve_move_icon_unlock.png</key>
+            <key>pve_deco_9.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{185,97},{178,78}}</string>
+                <string>{{442,470},{134,125}}</string>
                 <key>offset</key>
-                <string>{0,0}</string>
+                <string>{-1,1}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{2,12},{134,125}}</string>
+                <key>sourceSize</key>
+                <string>{140,151}</string>
+            </dict>
+            <key>pve_flag_128x128.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{161,929},{78,128}}</string>
+                <key>offset</key>
+                <string>{2,0}</string>
                 <key>rotated</key>
                 <true/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{178,78}}</string>
+                <string>{{27,0},{78,128}}</string>
                 <key>sourceSize</key>
-                <string>{178,78}</string>
+                <string>{128,128}</string>
             </dict>
-            <key>return_btn_down_202x93.png</key>
+            <key>pve_flag_special.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{160,2},{202,93}}</string>
+                <string>{{926,788},{86,128}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{202,93}}</string>
+                <string>{{21,0},{86,128}}</string>
                 <key>sourceSize</key>
-                <string>{202,93}</string>
+                <string>{128,128}</string>
             </dict>
-            <key>return_btn_up_202x93.png</key>
+            <key>pve_reward_bg.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,152},{202,93}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <true/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{202,93}}</string>
-                <key>sourceSize</key>
-                <string>{202,93}</string>
-            </dict>
-            <key>warriors_tomb_80x72.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{367,228},{80,72}}</string>
+                <string>{{2,2},{616,466}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{80,72}}</string>
+                <string>{{0,0},{616,466}}</string>
                 <key>sourceSize</key>
-                <string>{80,72}</string>
+                <string>{616,466}</string>
+            </dict>
+            <key>pve_road_point.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{135,983},{14,24}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{14,24}}</string>
+                <key>sourceSize</key>
+                <string>{14,24}</string>
+            </dict>
+            <key>pve_road_point2.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{578,512},{14,24}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{14,24}}</string>
+                <key>sourceSize</key>
+                <string>{14,24}</string>
+            </dict>
+            <key>pve_summary_bg3.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{292,470},{532,148}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <true/>
+                <key>sourceColorRect</key>
+                <string>{{1,0},{532,148}}</string>
+                <key>sourceSize</key>
+                <string>{534,148}</string>
             </dict>
         </dict>
         <key>metadata</key>
@@ -322,13 +387,13 @@
             <key>format</key>
             <integer>2</integer>
             <key>realTextureFileName</key>
-            <string>pve_png_rgba5555.png</string>
+            <string>pve_png_rgba8888_0.png</string>
             <key>size</key>
-            <string>{512,388}</string>
+            <string>{1014,1010}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:71e195f3ab0d53999fa8a6479fd39a9c:1/1$</string>
+            <string>$TexturePacker:SmartUpdate:98e47c12512ff9c11bba703c90c0cb75:1/2$</string>
             <key>textureFileName</key>
-            <string>pve_png_rgba5555.png</string>
+            <string>pve_png_rgba8888_0.png</string>
         </dict>
     </dict>
 </plist>
