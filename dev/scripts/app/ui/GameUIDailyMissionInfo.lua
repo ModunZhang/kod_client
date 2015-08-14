@@ -285,8 +285,7 @@ function GameUIDailyMissionInfo:GetMissionConfig()
                 func = function()
                     local dragon_type = City:GetDragonEyrie():GetDragonManager():GetCanFightPowerfulDragonType()
                     if #dragon_type > 0 then
-                        local _,_,index = City:GetUser():GetPVEDatabase():GetCharPosition()
-                        app:EnterPVEScene(index)
+                        app:EnterPVEScene(City:GetUser():GetLatestPveIndex())
                     else
                         GameGlobalUI:showTips(_("错误"),_("需要一条空闲状态的魔龙才能探险"))
                         return false
