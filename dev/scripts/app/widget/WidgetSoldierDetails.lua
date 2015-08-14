@@ -199,7 +199,7 @@ function WidgetSoldierDetails:GetSoldierFieldWithBuff(field)
     local sf = self.s_buff_field
     if sf[field] then
         if field ~= 'consumeFoodPerHour' then
-            return  " +" .. sf[field]
+            return  " +" .. math.floor(sf[field])
         else
             return " -" .. sf[field]
         end

@@ -30,7 +30,7 @@ function PveSprite:RefreshSprite()
     bg:setFilter(filter.newFilter("CUSTOM",
         json.encode({
             frag = "shaders/bannerpve.fs",
-            shaderName = "banner",
+            shaderName = "bannerpve",
         })
     ))
     self.bg = bg

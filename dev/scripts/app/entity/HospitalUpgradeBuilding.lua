@@ -242,7 +242,7 @@ function HospitalUpgradeBuilding:GetNextLevelMaxCasualty()
 end
 --获取伤病最大上限
 function HospitalUpgradeBuilding:GetMaxCasualty()
-    if self:GetLevel() > 0 then
+    if self:GetLevel() > 0 and self:BelongCity():FindTechByName("rescueTent") then
         return math.ceil(config_function[self:GetEfficiencyLevel()].maxCitizen * (1 + self:BelongCity():FindTechByName("rescueTent"):GetBuffEffectVal()))
     end
     return 0

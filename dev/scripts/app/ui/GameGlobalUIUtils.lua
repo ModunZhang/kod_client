@@ -57,7 +57,7 @@ function GameGlobalUIUtils:showAllianceNotice(key,params)
 	local notice_content = Localize.alliance_notice[key]
 	print("notice_content==",notice_content)
 	if key == "attackVillage" then
-		notice_content = string.format(notice_content,params[1],params[2],params[3])
+		notice_content = string.format(notice_content,params[1],params[2],Localize.village_name[params[3]])
 	elseif key == "attackMonster" then
 		local monster = Localize.soldier_name[string.split(params[3],"_")[1]]
 		notice_content = string.format(notice_content,params[1],params[2],monster)
