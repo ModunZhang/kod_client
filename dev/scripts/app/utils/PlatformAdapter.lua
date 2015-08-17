@@ -88,6 +88,13 @@ function PlatformAdapter:mac()
     ext.getDeviceLanguage = function()
         return "zh-Hans"
     end
+    ext.getInternetConnectionStatus = function()
+        return nil
+    end
+    ext.getBatteryLevel = function()
+        return 1
+    end
+
     DEBUG_GET_ANIMATION_PATH = function(filePath)
         filePath = string.gsub(filePath,".pvr.ccz",".png")
         filePath = string.gsub(filePath,"animations/","animations_mac/")

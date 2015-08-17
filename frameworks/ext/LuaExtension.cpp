@@ -422,7 +422,7 @@ TOLUA_API int tolua_cc_pomelo_open(lua_State* tolua_S)
     tolua_endmodule(tolua_S);
     tolua_endmodule(tolua_S);
     
-	return 1;
+    return 1;
 }
 
 
@@ -457,6 +457,51 @@ static int tolua_ext_now(lua_State* tolua_S){
 #ifndef TOLUA_RELEASE
 tolua_lerror:
     tolua_error(tolua_S,"#ferror in function 'now'.",&tolua_err);
+    return 0;
+#endif
+}
+
+
+static int tolua_ext_getBatteryLevel(lua_State* tolua_S){
+#ifndef TOLUA_RELEASE
+    tolua_Error tolua_err;
+    if (
+        !tolua_isnoobj(tolua_S,1,&tolua_err)
+        )
+        goto tolua_lerror;
+    else
+#endif
+    {
+        
+        float batteryLeve = getBatteryLevel();
+        tolua_pushnumber(tolua_S, batteryLeve);
+    }
+    return 1;
+#ifndef TOLUA_RELEASE
+tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'getBatteryLeve'.",&tolua_err);
+    return 0;
+#endif
+}
+
+static int tolua_ext_getInternetConnectionStatus(lua_State* tolua_S){
+#ifndef TOLUA_RELEASE
+    tolua_Error tolua_err;
+    if (
+        !tolua_isnoobj(tolua_S,1,&tolua_err)
+        )
+        goto tolua_lerror;
+    else
+#endif
+    {
+        
+        const char* internetConnectionStatus = getInternetConnectionStatus();
+        tolua_pushstring(tolua_S, internetConnectionStatus);
+    }
+    return 1;
+#ifndef TOLUA_RELEASE
+tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'getInternetConnectionStatus'.",&tolua_err);
     return 0;
 #endif
 }
@@ -754,6 +799,8 @@ static int tolua_ext_get_language_code(lua_State* tolua_S)
 static void ResgisterGlobalExtFunctions(lua_State* tolua_S)
 {
     tolua_function(tolua_S, "now", tolua_ext_now);
+    tolua_function(tolua_S, "getBatteryLevel", tolua_ext_getBatteryLevel);
+    tolua_function(tolua_S, "getInternetConnectionStatus", tolua_ext_getInternetConnectionStatus);
     tolua_function(tolua_S, "createDirectory", tolua_ext_createDirectory);
     tolua_function(tolua_S, "removeDirectory", tolua_ext_removeDirectory);
     tolua_function(tolua_S, "isDirectoryExist", tolua_ext_isDirectoryExist);
