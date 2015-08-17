@@ -527,10 +527,14 @@ function GameUILoginBeta:donwLoadFilesWithFileList()
     end
 
     if localAppVersion > serverAppVersion then
-        device.showAlert(_("错误"), _("服务器正在部署,请稍候!"), { _("确定") }, function(event)
-            self:loadServerJson()
-        end)
-        return
+        -- device.showAlert(_("错误"), _("服务器正在部署,请稍候!"), { _("确定") }, function(event)
+        --     self:loadServerJson()
+        -- end)
+        -- return
+        CONFIG_REMOTE_SERVER.gate.host = "54.223.202.136"
+        NetManager.m_gateServer.host = CONFIG_IS_LOCAL and CONFIG_LOCAL_SERVER.gate.host or CONFIG_REMOTE_SERVER.gate.host
+        NetManager.m_gateServer.port = CONFIG_IS_LOCAL and CONFIG_LOCAL_SERVER.gate.port or CONFIG_REMOTE_SERVER.gate.port
+        NetManager.m_gateServer.name = CONFIG_IS_LOCAL and CONFIG_LOCAL_SERVER.gate.name or CONFIG_REMOTE_SERVER.gate.name
     end
 
 
