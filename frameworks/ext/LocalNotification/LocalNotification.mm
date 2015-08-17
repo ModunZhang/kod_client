@@ -94,7 +94,7 @@ bool addNotification(const char *type, long finishTime, const char *body, const 
     localNotification.userInfo = [NSDictionary dictionaryWithObjectsAndKeys: [NSString stringWithUTF8String:identity], @"identity",nil];
     localNotification.alertBody = [NSString stringWithCString:body encoding:NSUTF8StringEncoding];
     localNotification.applicationIconBadgeNumber = 1;
-    localNotification.soundName = UILocalNotificationDefaultSoundName;
+    // localNotification.soundName = UILocalNotificationDefaultSoundName;
     _addLocalDic([NSString stringWithUTF8String:identity],localNotification);
     [localNotification release];
     return true;
