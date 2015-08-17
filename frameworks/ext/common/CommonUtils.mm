@@ -101,7 +101,18 @@ extern "C" long long getOSTime()
     double currentTime = CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970;
     return (long long)(currentTime * 1000);
 }
+extern "C" float getBatteryLevel()
+{
+    [[UIDevice currentDevice] setBatteryMonitoringEnabled:YES];  
+    return [[UIDevice currentDevice] batteryLevel];  
+}
 
+extern "C" const char* getInternetConnectionStatus()
+{
+    CTTelephonyNetworkInfo *networkInfo = [[CTTelephonyNetworkInfo alloc] init];
+    // NSLog(@"%@", networkInfo.currentRadioAccessTechnology);
+    return [networkInfo.currentRadioAccessTechnology UTF8String];
+}
 static NSString * shared_openUDID = NULL;
 extern "C" const char* GetOpenUdid()
 {
