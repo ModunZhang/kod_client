@@ -538,8 +538,7 @@ function GameUILoginBeta:donwLoadFilesWithFileList()
         end)
         return
     end
-
-    if localAppVersion > serverAppVersion then
+    if localAppVersion > serverAppVersion or (ext.getAppVersion() == '1.1' and serverFileList.appVersion == '1.01') then
         -- device.showAlert(_("错误"), _("服务器正在部署,请稍候!"), { _("确定") }, function(event)
         --     self:loadServerJson()
         -- end)
