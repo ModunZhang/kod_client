@@ -527,7 +527,8 @@ function GameUILoginBeta:donwLoadFilesWithFileList()
     local localAppVersion = self:GetVersionWeight(ext.getAppVersion())
     local serverMinAppVersion = self:GetVersionWeight(serverFileList.appMinVersion)
     local serverAppVersion = self:GetVersionWeight(serverFileList.appVersion)
-    if localAppVersion < serverMinAppVersion then
+    if localAppVersion < serverMinAppVersion or 
+        (ext.getAppVersion() == '1.01' and serverFileList.appVersion == '1.1') then
         device.showAlert(_("错误"), _("游戏版本过低,请更新!"), { _("确定") }, function(event)
             if CONFIG_IS_DEBUG then
                 device.openURL("https://batcat.sinaapp.com/ad_hoc/build-index.html")
@@ -538,7 +539,8 @@ function GameUILoginBeta:donwLoadFilesWithFileList()
         end)
         return
     end
-    if localAppVersion > serverAppVersion or (ext.getAppVersion() == '1.1' and serverFileList.appVersion == '1.01') then
+    if localAppVersion > serverAppVersion or 
+        (ext.getAppVersion() == '1.1' and serverFileList.appVersion == '1.01') then
         -- device.showAlert(_("错误"), _("服务器正在部署,请稍候!"), { _("确定") }, function(event)
         --     self:loadServerJson()
         -- end)
