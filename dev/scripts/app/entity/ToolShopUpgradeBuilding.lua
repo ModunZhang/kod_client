@@ -90,6 +90,9 @@ function ToolShopUpgradeBuilding:CreateEvent(category)
     event:Init(category)
     return event
 end
+function ToolShopUpgradeBuilding:CanMakeMaterial(current_time)
+    return not self.technology_event:IsMaking(current_time) and not self.building_event:IsMaking(current_time)
+end
 function ToolShopUpgradeBuilding:GetTechnologyEvent()
     return self.technology_event
 end

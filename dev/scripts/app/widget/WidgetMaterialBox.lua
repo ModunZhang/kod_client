@@ -38,6 +38,12 @@ function WidgetMaterialBox:ctor(material_type,material_name,cb,is_has_i_icon)
         color = 0x403c2f
     }):addTo(number_bg):align(display.CENTER, size.width / 2, size.height/2)
 
+
+    self.second_number = UIKit:ttfLabel({
+        size = 22,
+        color = 0x007c23,
+    }):addTo(number_bg):hide()
+    :align(display.LEFT_CENTER, size.width / 2, size.height/2)
 end
 function WidgetMaterialBox:GetButton()
     return self.material_bg
@@ -45,6 +51,16 @@ end
 function WidgetMaterialBox:SetNumber(number)
     self.number_bg:show()
     self.number:setString(number)
+    return self
+end
+function WidgetMaterialBox:SetSecondNumber(number)
+    if number then
+        self.number:align(display.RIGHT_CENTER)
+        self.second_number:show():setString(number)
+    else
+        self.number:align(display.CENTER)
+        self.second_number:hide()
+    end
     return self
 end
 
