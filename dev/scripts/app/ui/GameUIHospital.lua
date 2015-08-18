@@ -246,7 +246,7 @@ function GameUIHospital:TreatListener()
     local isAbleToTreat =self.building:IsAbleToTreat(soldiers)
     if #soldiers<1 then
         UIKit:showMessageDialog(_("提示"),_("没有伤兵需要治愈"))
-    elseif City:GetUser():GetGemResource():GetValue()< self.building:GetTreatGems(soldiers) then
+    elseif City:GetUser():GetGemResource():GetValue() < self.building:GetTreatGems(soldiers) then
         UIKit:showMessageDialog(_("提示"),_("没有足够的金龙币补充资源"))
             :CreateOKButton(
                 {
@@ -296,7 +296,7 @@ function GameUIHospital:TreatNowListener()
     end
     if #soldiers<1 then
         UIKit:showMessageDialog(_("提示"),_("没有伤兵需要治愈"))
-    elseif self.treat_all_now_need_gems>City:GetUser():GetGemResource():GetValue() then
+    elseif self.treat_all_now_need_gems > City:GetUser():GetGemResource():GetValue() then
         UIKit:showMessageDialog(_("提示"),_("金龙币不足")):CreateOKButton(
             {
                 listener = function ()
