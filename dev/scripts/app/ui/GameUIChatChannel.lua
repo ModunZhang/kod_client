@@ -634,14 +634,15 @@ function GameUIChatChannel:CreatePlayerMenu(event,chat)
             if layer.item then layer.item:removeSelf() end
         elseif msg == 'buttonCallback' then
             if data == 'playerInfo' then
-                UIKit:newGameUI("GameUIAllianceMemberInfo",false,chat.id):AddToCurrentScene(true)
+                dump(chat,"chat")
+                UIKit:newGameUI("GameUIAllianceMemberInfo",false,chat.id,nil,chat.serverId):AddToCurrentScene(true)
             elseif data == 'sendMail' then
                 local mail = GameUIWriteMail.new(GameUIWriteMail.SEND_TYPE.PERSONAL_MAIL,{
                     id = chat.id,
                     name = chat.name,
                     icon = chat.icon,
                     allianceTag = chat.allianceTag,
-                })
+                },chat.serverId)
                 mail:SetTitle(_("个人邮件"))
                 mail:addTo(self,201)
             elseif data == 'copyAction' then
@@ -658,7 +659,7 @@ function GameUIChatChannel:CreatePlayerMenu(event,chat)
             elseif data == 'allianceInfo' then
                 if not is_invate_action then
                     if chat.allianceId and string.len(chat.allianceId) > 0 then
-                        UIKit:newGameUI("GameUIAllianceInfo",chat.allianceId):AddToCurrentScene(true)
+                        UIKit:newGameUI("GameUIAllianceInfo",chat.allianceId,nil,chat.serverId):AddToCurrentScene(true)
                     end
                 else
                     if my_alliance:GetSelf():CanInvatePlayer() then
@@ -685,6 +686,7 @@ function GameUIChatChannel:CreatePlayerMenu(event,chat)
             self.isModeView = false
         end
     end
+    dump(chat,"chat")
     UIKit:newGameUI("GameUIAllianceInfoMenu",callback,alliance_string,enbale_alliance_info):AddToCurrentScene(true)
 end
 

@@ -9,11 +9,12 @@ GameUIWriteMail.SEND_TYPE = Enum("PERSONAL_MAIL","ALLIANCE_MAIL")
 local PERSONAL_MAIL = GameUIWriteMail.SEND_TYPE.PERSONAL_MAIL
 local ALLIANCE_MAIL = GameUIWriteMail.SEND_TYPE.ALLIANCE_MAIL
 
-function GameUIWriteMail:ctor(send_type,contacts)
+function GameUIWriteMail:ctor(send_type,contacts,serverId)
     GameUIWriteMail.super.ctor(self,768,_("发邮件"))
     self:DisableAutoClose()
     self.send_type = send_type
     self.contacts = contacts
+    self.serverId = serverId or User:ServerId()
 
     -- bg
     local write_mail = self.body
@@ -97,13 +98,13 @@ function GameUIWriteMail:ctor(send_type,contacts)
         :addTo(write_mail):align(display.CENTER, write_mail:getContentSize().width-120, 40)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                self:SendMail(contacts and contacts.id, self.editbox_subject:getText(), self.textView:getText())
+                self:SendMail(contacts and contacts.id, contacts and contacts.name,self.editbox_subject:getText(), self.textView:getText())
             end
         end)
     textView:setRectTrackedNode(self.send_button)
 
 end
-function GameUIWriteMail:SendMail(addressee,title,content)
+function GameUIWriteMail:SendMail(addressee,name,title,content)
     if not title or string.trim(title)=="" then
         UIKit:showMessageDialog(_("主人"),_("请填写邮件主题"))
         return
@@ -116,7 +117,7 @@ function GameUIWriteMail:SendMail(addressee,title,content)
             UIKit:showMessageDialog(_("主人"),_("请填写正确的收件人ID"))
             return
         end
-        NetManager:getSendPersonalMailPromise(addressee, title, content,self.contacts):done(function(result)
+        NetManager:getSendPersonalMailPromise(addressee, name, title, content,self.contacts,self.serverId):done(function(result)
             self:removeFromParent()
             return result
         end)

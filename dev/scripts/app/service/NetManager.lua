@@ -1033,11 +1033,13 @@ function NetManager:getDailyQeustRewardPromise(questEventId)
         end)
 end
 -- 发送个人邮件
-function NetManager:getSendPersonalMailPromise(memberId, title, content , contacts)
+function NetManager:getSendPersonalMailPromise(memberId, memberName, title, content , contacts,serverId)
     return get_blocking_request_promise("logic.playerHandler.sendMail", {
         memberId = memberId,
+        memberName = memberName,
         title = title,
         content = content,
+        serverId = serverId,
     }, "发送个人邮件失败!"):done(get_response_msg):done(function ( response )
         GameGlobalUI:showTips(_("提示"),_("发送邮件成功"))
         if contacts then
@@ -1255,9 +1257,10 @@ function NetManager:getRequestToJoinAlliancePromise(allianceId)
     }, "请求加入联盟失败!"):done(get_player_response_msg)
 end
 -- 获取玩家信息
-function NetManager:getPlayerInfoPromise(memberId)
+function NetManager:getPlayerInfoPromise(memberId,serverId)
     return get_blocking_request_promise("logic.playerHandler.getPlayerInfo", {
-        memberId = memberId
+        memberId = memberId,
+        serverId = serverId
     }, "获取玩家信息失败!"):done(get_player_response_msg)
 end
 -- 获取玩家城市信息
@@ -1435,8 +1438,8 @@ function NetManager:getRequestAllianceToFightPromose()
 end
 
 --请求联盟数据
-function NetManager:getAllianceInfoPromise(allianceId)
-    return get_blocking_request_promise("logic.allianceHandler.getAllianceInfo",{allianceId = allianceId},
+function NetManager:getAllianceInfoPromise(allianceId,serverId)
+    return get_blocking_request_promise("logic.allianceHandler.getAllianceInfo",{allianceId = allianceId , serverId = serverId},
         "请求联盟数据失败!",false,0)
 end
 --协防

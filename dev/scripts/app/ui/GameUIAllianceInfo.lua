@@ -16,9 +16,10 @@ local UILib = import(".UILib")
 local NetService = import('..service.NetService')
 local WidgetPushTransparentButton = import("..widget.WidgetPushTransparentButton")
 
-function GameUIAllianceInfo:ctor(alliance_id,default_tab)
+function GameUIAllianceInfo:ctor(alliance_id,default_tab,serverId)
     GameUIAllianceInfo.super.ctor(self,710,_("联盟信息"),window.top - 140)
     self.alliance_id = alliance_id
+    self.serverId = serverId or User:ServerId()
     self.default_tab = default_tab or "Info"
     self.alliance_ui_helper = WidgetAllianceHelper.new()
 end
@@ -101,7 +102,7 @@ end
 function GameUIAllianceInfo:onEnter()
     GameUIAllianceInfo.super.onEnter(self)
 
-    NetManager:getAllianceInfoPromise(self.alliance_id):done(function(response)
+    NetManager:getAllianceInfoPromise(self.alliance_id, self.serverId):done(function(response)
         if response.success and response.msg.allianceData then
             self:setAllianceData(response.msg.allianceData)
             self:BuildUI()
@@ -239,7 +240,7 @@ function GameUIAllianceInfo:LoadInfo()
         )
         :align(display.RIGHT_TOP,titleBg:getPositionX(),titleBg:getPositionY() - titleBg:getContentSize().height -10)
         :addTo(layer)
-    button:setButtonEnabled(Alliance_Manager:GetMyAlliance():IsDefault())
+    button:setButtonEnabled(Alliance_Manager:GetMyAlliance():IsDefault() and User:ServerId() ~= self.serverId )
     button:onButtonClicked(function(event)
         self:OnJoinActionClicked(alliance_data.joinType,button)
     end)
@@ -386,12 +387,12 @@ function GameUIAllianceInfo:SendMail(addressee,title,content)
         return
     end
     local ar_data = self:GetAllianceArchonData()
-    NetManager:getSendPersonalMailPromise(addressee, title, content,{
+    NetManager:getSendPersonalMailPromise(addressee,ar_data.name, title, content,{
                     id = ar_data.id,
                     name = ar_data.name,
                     icon = ar_data.icon,
                     allianceTag = self:GetAllianceData().tag,
-                }):done(function(result)
+                },self.serverId):done(function(result)
         self:removeFromParent()
         return result
     end)
@@ -419,7 +420,7 @@ function GameUIAllianceInfo:LoadMembers()
         :addTo(layer)
         :align(display.LEFT_TOP,22,664)
     WidgetPushTransparentButton.new(cc.rect(0,0,560,134)):addTo(layer):align(display.LEFT_TOP,22,664):onButtonClicked(function()
-        UIKit:newGameUI("GameUIAllianceMemberInfo",false,archon_data.id):AddToCurrentScene(true)
+        UIKit:newGameUI("GameUIAllianceMemberInfo",false,archon_data.id,nil,self.serverId):AddToCurrentScene(true)
     end)
     local title_bar =  display.newScale9Sprite("title_blue_430x30.png",0,0, cc.size(428,30), cc.rect(10,10,410,10))
         :addTo(layer)
@@ -647,7 +648,7 @@ function GameUIAllianceInfo:listviewListener(event)
         local list_data = self.list_dataSource[item.idx_]
         if list_data.data_type == 2 and list_data.data ~= '__empty' then
             local data = list_data.data
-            UIKit:newGameUI("GameUIAllianceMemberInfo",false,data.id):AddToCurrentScene(true)
+            UIKit:newGameUI("GameUIAllianceMemberInfo",false,data.id,nil,self.serverId):AddToCurrentScene(true)
         end
     end
 end

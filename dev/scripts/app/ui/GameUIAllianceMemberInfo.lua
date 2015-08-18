@@ -14,10 +14,11 @@ local WidgetPlayerNode = import("..widget.WidgetPlayerNode")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local Localize = import("..utils.Localize")
 local config_playerLevel = GameDatas.PlayerInitData.playerLevel
-function GameUIAllianceMemberInfo:ctor(isMyAlliance,memberId,func_call)
+function GameUIAllianceMemberInfo:ctor(isMyAlliance,memberId,func_call,serverId)
     GameUIAllianceMemberInfo.super.ctor(self)
     self.isMyAlliance = isMyAlliance or false
     self.memberId_ = memberId
+    self.serverId_ = serverId or User:ServerId()
     self.func_call = func_call
 end
 
@@ -43,7 +44,7 @@ function GameUIAllianceMemberInfo:OnMoveInStage()
     self.bg = bg
     self.title_bar = title_bar
 
-    NetManager:getPlayerInfoPromise(self.memberId_):done(function(data)
+    NetManager:getPlayerInfoPromise(self.memberId_,self.serverId_):done(function(data)
         self:OnGetPlayerInfoSuccess(data)
     end):fail(function()
         self:LeftButtonClicked()
@@ -102,7 +103,7 @@ function GameUIAllianceMemberInfo:BuildUI()
                     name = self.player_info.name,
                     icon = self.player_info.icon,
                     allianceTag = self.player_info.alliance.tag,
-                })
+                },self.serverId_)
                 mail:SetTitle(_("个人邮件"))
                 mail:SetAddressee(self.player_info.name)
                 mail:addTo(self)
