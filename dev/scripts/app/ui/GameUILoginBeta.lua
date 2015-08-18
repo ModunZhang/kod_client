@@ -505,15 +505,28 @@ function GameUILoginBeta:loadServerJson()
         self:donwLoadFilesWithFileList()
     end)
 end
+-- 1.0 --> 100 1.01 --> 110 1.0.1 --> 101
+function GameUILoginBeta:GetVersionWeight(ver)
+    ver = tostring(ver)
+    local verInfo = string.split(ver,'.')
+    local ret,flag = 0,1
+    for index=3,1,-1 do
+        local current = verInfo[index] or '0'
+        current = tonumber(current) * flag
+        ret = ret + current
+        flag = flag * 10
+    end
+    return ret
+end
 
 function GameUILoginBeta:donwLoadFilesWithFileList()
     self.m_totalSize = 0
     self.m_currentSize = 0
     local localFileList = json.decode(self.m_localJson)
     local serverFileList = json.decode(self.m_serverJson)
-    local localAppVersion = tonumber(ext.getAppVersion())
-    local serverMinAppVersion = tonumber(serverFileList.appMinVersion)
-    local serverAppVersion = tonumber(serverFileList.appVersion)
+    local localAppVersion = self:GetVersionWeight(ext.getAppVersion())
+    local serverMinAppVersion = self:GetVersionWeight(serverFileList.appMinVersion)
+    local serverAppVersion = self:GetVersionWeight(serverFileList.appVersion)
     if localAppVersion < serverMinAppVersion then
         device.showAlert(_("错误"), _("游戏版本过低,请更新!"), { _("确定") }, function(event)
             if CONFIG_IS_DEBUG then
