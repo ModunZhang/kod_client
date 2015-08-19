@@ -732,12 +732,13 @@ function GameUITradeGuild:OpenSellDialog()
         local w,h = size.width,size.height
 
         -- 出售商品数量拖动条
+        local max_sell_num = math.min(City:GetResourceManager():GetCartResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()),math.floor(max_num/unit))
         self.sell_num_item = self:CreateSliderItem(
             {
                 title = _("出售"),
                 unit = unit == 1000 and "K" or "",
                 max = max_num,
-                min = min_num,
+                min = math.min(min_num,max_sell_num),
                 icon = goods_icon,
                 onSliderValueChanged = function ( value )
                     self:SetTotalPriceAndCartNum(value,self.sell_price_item:GetValue())
@@ -757,7 +758,7 @@ function GameUITradeGuild:OpenSellDialog()
                 end
             }
         ):align(display.TOP_CENTER,w/2,h-286):addTo(layer)
-        self.sell_num_item:SetValue(math.min(City:GetResourceManager():GetCartResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()),math.floor(max_num/unit)))
+        self.sell_num_item:SetValue(max_sell_num)
     end
     function body:LoadSellResource(goods_type)
         local goods_details = tradeGuildUI:GetGoodsDetailsByType(goods_type)
