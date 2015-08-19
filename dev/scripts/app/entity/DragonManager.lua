@@ -374,7 +374,7 @@ function DragonManager:RefreshDragonData( dragons,resource_refresh_time,hp_recov
                     end)
                 end
             end
-            self:checkHPRecoveryIf_(dragon,resource_refresh_time,hp_recovery_perHour)
+            self:checkHPRecoveryIf_(dragon,v.hpRefreshTime/1000,hp_recovery_perHour)
         end
         if need_notify_defence then
             self:NotifyListeneOnType(DragonManager.LISTEN_TYPE.OnDefencedDragonChanged,function(listener)
@@ -392,7 +392,7 @@ end
 
 function DragonManager:checkHPRecoveryIf_(dragon,resource_refresh_time,hp_recovery_perHour)
     --龙死了 并且 龙还在血量恢复队列中 从队列中移除这条龙
-    if dragon:Ishated() and dragon:IsDead() and self:GetHPResource(dragon:Type()) or dragon:Status() == 'march' then
+    if dragon:Ishated() and self:GetHPResource(dragon:Type()) and (dragon:IsDead() or dragon:Status() == 'march') then
         self:RemoveHPResource(dragon:Type())
     end
     local tmp_resource = self:GetHPResource(dragon:Type())
