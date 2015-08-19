@@ -80,19 +80,19 @@ end
 --
 function WidgetManufactureNew:OnBeginMakeMaterialsWithEvent(tool_shop, event)
     app:GetAudioManager():PlayeEffectSoundWithKey("UI_TOOLSHOP_CRAFT_START")
+    self:RefreshRequirements(event:Category())
     self:UpdateCurrentEvent()
-    self:RefreshRequirementList()
 end
 function WidgetManufactureNew:OnMakingMaterialsWithEvent(tool_shop, event, current_time)
     self:UpdateCurrentEvent()
 end
 function WidgetManufactureNew:OnEndMakeMaterialsWithEvent(tool_shop, event, current_time)
+    self:RefreshRequirements(event:Category())
     self:UpdateCurrentEvent()
-    self:RefreshRequirementList()
 end
 function WidgetManufactureNew:OnGetMaterialsWithEvent(tool_shop, event)
+    self:RefreshRequirements(event:Category())
     self:UpdateCurrentEvent()
-    self:RefreshRequirementList()
 end
 function WidgetManufactureNew:OnMaterialsChanged(material_manager, material_type, changed)
     for k,v in pairs(changed) do
@@ -327,6 +327,10 @@ function WidgetManufactureNew:CleanStoreNumbers()
         v:SetSecondNumber()
     end
 end
+function WidgetManufactureNew:RefreshRequirements(category)
+    local _, wood, stone, iron, time = self.toolShop:GetNeedByCategory(category)
+    self:RefreshRequirementList(wood, stone, iron, time)
+end
 function WidgetManufactureNew:RefreshRequirementList(wood, stone, iron, time)
     local server_time = timer:GetServerTime()
     local resource_manager = self.toolShop:BelongCity():GetResourceManager()
@@ -416,6 +420,7 @@ end
 
 
 return WidgetManufactureNew
+
 
 
 
