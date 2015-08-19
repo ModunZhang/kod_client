@@ -13,7 +13,6 @@ function GameUISystemNotice:ctor(delegate,notice_type,notice_content)
     self.delegate = delegate
 end
 function GameUISystemNotice:onEnter()
-    GameUISystemNotice.super.onEnter(self)
     local back = display.newSprite("back_ground_366x66.png"):addTo(self):pos(display.cx,display.top - 200)
 	back:opacity(0)
 	self.back = back
