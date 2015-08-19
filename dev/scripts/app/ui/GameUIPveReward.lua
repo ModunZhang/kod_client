@@ -85,19 +85,21 @@ function GameUIPveReward:GetListItem(index)
     })):addTo(bg):align(display.CENTER,548 - 60,100*1/2)
         :setButtonEnabled(User:GetStageStarByIndex(self.index) >= tonumber(stage.needStar) and not User:IsStageRewardedByName(stage_name))
         :onButtonClicked(function()
-            NetManager:getPveStageRewardPromise(stage_name):done(function()
-                self:RefreshUI()
-                local str = {}
-                for i,v in ipairs(string.split(stage.rewards, ",")) do
-                    local type,name,count = unpack(string.split(v, ":"))
-                    if type == "items" then
-                        table.insert(str, string.format("%s x%d", Localize_item.item_name[name], count))
-                    elseif type == "soldierMaterials" then
-                        table.insert(str, string.format("%s x%d", Localize.soldier_material[name], count))
+            if self:CheckMaterials() then
+                NetManager:getPveStageRewardPromise(stage_name):done(function()
+                    self:RefreshUI()
+                    local str = {}
+                    for i,v in ipairs(string.split(stage.rewards, ",")) do
+                        local type,name,count = unpack(string.split(v, ":"))
+                        if type == "items" then
+                            table.insert(str, string.format("%s x%d", Localize_item.item_name[name], count))
+                        elseif type == "soldierMaterials" then
+                            table.insert(str, string.format("%s x%d", Localize.soldier_material[name], count))
+                        end
                     end
-                end
-                GameGlobalUI:showTips(_("获得奖励"), table.concat(str, ", "))
-            end)
+                    GameGlobalUI:showTips(_("获得奖励"), table.concat(str, ", "))
+                end)
+            end
         end)
 
     bg.label = UIKit:ttfLabel({
@@ -117,9 +119,24 @@ function GameUIPveReward:RefreshUI()
         v:getContent().label:setVisible(not not User:IsStageRewardedByName(stage_name))
     end
 end
+function GameUIPveReward:CheckMaterials()
+    local material_man = City:GetMaterialManager()
+    if material_man:CheckOutOfRangeByType(material_man.MATERIAL_TYPE.SOLDIER) then
+        UIKit:showMessageDialogWithParams({
+            title = _("提示"),
+            content = _("材料库房中该材料已满。"),
+            ok_callback = func,
+            ok_btn_images = {normal = "red_btn_up_148x58.png",pressed = "red_btn_down_148x58.png"},
+            ok_string = _("确定"),
+        })
+        return false
+    end
+    return true
+end
 
 
 return GameUIPveReward
+
 
 
 
