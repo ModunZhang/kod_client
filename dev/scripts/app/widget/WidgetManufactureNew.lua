@@ -120,6 +120,7 @@ function WidgetManufactureNew:Reload(tag)
     else
         assert(false)
     end
+    self:RefreshRequirements(tag)
 end
 function WidgetManufactureNew:ReloadMaterials(materials, materials_map)
     self.view:removeAllChildren()
@@ -137,6 +138,8 @@ function WidgetManufactureNew:ReloadMaterials(materials, materials_map)
 
         self.material_map[v] = WidgetMaterialBox.new(MaterialManager.MATERIAL_TYPE.BUILD, v)
             :addTo(self.view):pos(x, y):SetNumber(materials_map[v])
+        self.material_map[v]:GetButton():removeEventListenersByEvent("PRESSED_EVENT")
+        self.material_map[v]:GetButton():removeEventListenersByEvent("RELEASE_EVENT")
     end
 
 
@@ -145,7 +148,18 @@ function WidgetManufactureNew:ReloadMaterials(materials, materials_map)
     self.build_node.build_label = UIKit:ttfLabel({
         size = 20,
         color = 0x403c2f,
-    }):addTo(self.build_node):align(display.LEFT_CENTER, -275, 0)
+    }):addTo(self.build_node):align(display.LEFT_CENTER, -275, 25)
+    display.newSprite("hourglass_30x38.png"):addTo(self.build_node):pos(-265, -10):scale(0.8)
+    self.build_node.build_time = UIKit:ttfLabel({
+        text = "00:00:00",
+        size = 18,
+        color = 0x403c2f,
+    }):addTo(self.build_node):align(display.LEFT_CENTER, -250, -10)
+    self.build_node.buff_time = UIKit:ttfLabel({
+        text = "(-00:00:00)",
+        size = 18,
+        color = 0x068329,
+    }):addTo(self.build_node):align(display.LEFT_CENTER, -250 + 75, -10)
     self.build_node.build_btn = UIKit:commonButtonWithBG(
         {
             w=185,
@@ -247,7 +261,7 @@ function WidgetManufactureNew:ReloadMaterials(materials, materials_map)
 
     self.require_list = WidgetRequirementListview.new({
         title = _("所需资源"),
-        height = 204,
+        height = 158,
         contents = {
             {
                 resource_type = _("木材"),
@@ -269,16 +283,9 @@ function WidgetManufactureNew:ReloadMaterials(materials, materials_map)
                 isSatisfy = true,
                 icon = "res_iron_91x63.png",
                 description = "1000/1000"
-            },
-            {
-                resource_type = _("时间"),
-                isVisible = true,
-                isSatisfy = true,
-                icon = "hourglass_30x38.png",
-                description = "00:23:00"
-            },
+            }
         },
-    }):addTo(self.view):pos(window.cx-274, window.top - 770)
+    }):addTo(self.view):pos(window.cx-274, window.top - 730)
 
     self:UpdateCurrentEvent()
 end
@@ -299,7 +306,10 @@ function WidgetManufactureNew:UpdateByEvent(event)
         self:CleanStoreNumbers()
         local number, wood, stone, iron, time = self.toolShop:GetNeedByCategory(event:Category())
         self.build_node.build_label:setString(string.format(_("随机制造%d个材料"), number))
-        self:RefreshRequirementList(wood, stone, iron, time)
+        self.build_node.build_time:setString(GameUtils:formatTimeStyle1(time))
+        local size = self.build_node.build_time:getContentSize()
+        self.build_node.buff_time:setString(string.format("(-%s)", GameUtils:formatTimeStyle1(math.ceil(time *  self.toolShop:BelongCity():FindTechByName("sketching"):GetBuffEffectVal()))))
+        self.build_node.buff_time:setPositionX(self.build_node.build_time:getPositionX() + 75)
     elseif event:IsStored(server_time) then
         self.build_node:hide()
         self.progress_node:hide()
@@ -337,7 +347,6 @@ function WidgetManufactureNew:RefreshRequirementList(wood, stone, iron, time)
     local wood_cur = resource_manager:GetWoodResource():GetResourceValueByCurrentTime(server_time)
     local stone_cur = resource_manager:GetStoneResource():GetResourceValueByCurrentTime(server_time)
     local iron_cur = resource_manager:GetIronResource():GetResourceValueByCurrentTime(server_time)
-    local buff = string.format("(-%s)", GameUtils:formatTimeStyle1(math.ceil(time *  self.toolShop:BelongCity():FindTechByName("sketching"):GetBuffEffectVal())))
     self.require_list:RefreshListView({
         {
             resource_type = _("木材"),
@@ -359,14 +368,7 @@ function WidgetManufactureNew:RefreshRequirementList(wood, stone, iron, time)
             isSatisfy = iron_cur >= iron,
             icon = "res_iron_91x63.png",
             description = iron_cur.."/"..iron
-        },
-        {
-            resource_type = _("时间"),
-            isVisible = true,
-            isSatisfy = true,
-            icon = "hourglass_30x38.png",
-            description = GameUtils:formatTimeStyle1(time)..buff
-        },
+        }
     })
 end
 function WidgetManufactureNew:CreateFetchDialog(func,text)

@@ -43,7 +43,9 @@ function ToolShopUpgradeBuilding:CreateEvent(category)
         return self.id
     end
     function event:StartTime()
-        return self.finished_time - tool_shop:GetMakingTimeByCategory(self.category)
+        local time = tool_shop:GetMakingTimeByCategory(self.category)
+        local buff_time = math.ceil(time *  tool_shop:BelongCity():FindTechByName("sketching"):GetBuffEffectVal())
+        return self.finished_time - time + buff_time
     end
     function event:ElapseTime(current_time)
         return current_time - self:StartTime()
