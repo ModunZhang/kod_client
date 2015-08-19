@@ -5,11 +5,11 @@ function WidgetProgress:ctor(label_color, bg, bar, params)
     params = params or { }
     params.has_icon = params.has_icon == nil and true or false
     params.has_bg = params.has_bg == nil and true or false
-    local bar_pos = params.bar_pos or {x = -4, y = 1}
+    local bar_pos = params.bar_pos or {x = 0, y = 0}
     local progress_bg = cc.ui.UIImage.new(bg or "progress_bar_364x40_1.png")
         :addTo(self):align(display.LEFT_BOTTOM)
     self.progress_timer = display.newProgressTimer(bar or "progress_bar_364x40_2.png", display.PROGRESS_TIMER_BAR)
-        :align(display.LEFT_BOTTOM, 0, 0):addTo(progress_bg):pos(bar_pos.x + 4, bar_pos.y - 1)
+        :align(display.LEFT_BOTTOM, 0, 0):addTo(progress_bg):pos(bar_pos.x, bar_pos.y)
     self.progress_timer:setBarChangeRate(cc.p(1,0))
     self.progress_timer:setMidpoint(cc.p(0,0))
 
