@@ -414,9 +414,13 @@ function WidgetManufactureNew:FetchMaterials(event)
 end
 function WidgetManufactureNew:BuildMaterial()
     if self.material_tab:GetSelectedButtonTag() == "building" then
-        NetManager:getMakeBuildingMaterialPromise()
+        NetManager:getMakeBuildingMaterialPromise():done(function()
+            self:RefreshRequirements("building")
+        end)
     else
-        NetManager:getMakeTechnologyMaterialPromise()
+        NetManager:getMakeTechnologyMaterialPromise():done(function()
+            self:RefreshRequirements("technology")
+        end)
     end
 end
 
