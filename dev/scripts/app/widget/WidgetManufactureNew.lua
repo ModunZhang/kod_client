@@ -24,7 +24,7 @@ local function newProgress()
     }):addTo(node):align(display.LEFT_CENTER, -250, 35)
 
     node.progress = WidgetProgress.new():addTo(node)
-        :align(display.LEFT_CENTER, -250, -18)
+        :align(display.LEFT_CENTER, -250, -15)
 
     node.btn = cc.ui.UIPushButton.new({
         normal = "green_btn_up_148x76.png",
