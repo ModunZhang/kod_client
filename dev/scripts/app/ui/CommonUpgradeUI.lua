@@ -66,7 +66,7 @@ function CommonUpgradeUI:OnBuildingUpgradeFinished( buidling )
     self:visibleChildLayers()
     self:SetBuildingLevel()
     self:SetUpgradeNowNeedGems()
-    self:SetBuildingIntroduces()
+    -- self:SetBuildingIntroduces()
     self:SetUpgradeTime()
     self:SetUpgradeEfficiency()
     self:ReloadBuildingImage()
@@ -105,8 +105,8 @@ function CommonUpgradeUI:InitCommonPart()
         :addTo(self):scale(136/126)
     display.newSprite("info_26x26.png"):addTo(self,2):align(display.LEFT_BOTTOM, display.cx-264, display.top-240)
     self:ReloadBuildingImage()
-    self:InitBuildingIntroduces()
-    self:InitNextLevelEfficiency()
+    -- self:InitBuildingIntroduces()
+    self:SetUpgradeEfficiency()
     self:SetBuildingLevel()
 end
 function CommonUpgradeUI:ReloadBuildingImage()
@@ -141,7 +141,7 @@ end
 function CommonUpgradeUI:SetBuildingLevel()
     self.builging_level:setString(_("等级 ")..self.building:GetLevel())
     if self.building:GetNextLevel() == self.building:GetLevel() then
-        self.next_level:getParent():setVisible(false)
+        -- self.next_level:getParent():setVisible(false)
         local bg = display.newSprite("back_ground_608x350.png"):align(display.CENTER_BOTTOM, window.cx, window.bottom_top + 10):addTo(self)
         -- npc image
         display.newSprite("Npc.png"):align(display.LEFT_BOTTOM, -50, -14):addTo(bg)
@@ -155,266 +155,379 @@ function CommonUpgradeUI:SetBuildingLevel()
             size = 24,
             color = UIKit:hex2c3b(0x403c2f)
         }):align(display.LEFT_TOP,14,210):addTo(tip_bg)
-    else
-        self.next_level:setString(_("等级 ")..self.building:GetNextLevel())
+        -- else
+        -- self.next_level:setString(_("等级 ")..self.building:GetNextLevel())
     end
 end
 
-function CommonUpgradeUI:InitBuildingIntroduces()
-    self.building_introduces = UIKit:ttfLabel({
-        size = 18,
-        dimensions = cc.size(380, 0),
-        color = 0x615b44
-    }):align(display.LEFT_TOP,display.cx-110, display.top-150):addTo(self)
+-- function CommonUpgradeUI:InitBuildingIntroduces()
+--     self.building_introduces = UIKit:ttfLabel({
+--         size = 18,
+--         dimensions = cc.size(380, 0),
+--         color = 0x615b44
+--     }):align(display.LEFT_TOP,display.cx-110, display.top-150):addTo(self)
 
-    self:SetBuildingIntroduces()
-end
-function CommonUpgradeUI:SetBuildingIntroduces()
-    local bd = Localize.building_description
-    self.building_introduces:setString(bd[self.building:GetType()])
-end
+--     self:SetBuildingIntroduces()
+-- end
+-- function CommonUpgradeUI:SetBuildingIntroduces()
+--     local bd = Localize.building_description
+--     self.building_introduces:setString(bd[self.building:GetType()])
+-- end
 
 
-function CommonUpgradeUI:InitNextLevelEfficiency()
-    -- 下一级 框
-    local bg  = display.newSprite("upgrade_next_level_bg.png", window.left+114, window.top-310):addTo(self)
-    local bg_size = bg:getContentSize()
-    self.next_level = UIKit:ttfLabel({
-        size = 20,
-        color = 0x403c2f
-    }):align(display.CENTER,bg_size.width/2,bg_size.height/2):addTo(bg)
+-- function CommonUpgradeUI:InitNextLevelEfficiency()
+-- 下一级 框
+-- local bg  = display.newSprite("upgrade_next_level_bg.png", window.left+114, window.top-310):addTo(self)
+-- local bg_size = bg:getContentSize()
+-- self.next_level = UIKit:ttfLabel({
+--     size = 20,
+--     color = 0x403c2f
+-- }):align(display.CENTER,bg_size.width/2,bg_size.height/2):addTo(bg)
 
-    local efficiency_bg = display.newSprite("back_ground_398x97.png", window.cx+74, window.top-310):addTo(self)
-    self.intro_list = UIListView.new({
-        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
-        viewRect = cc.rect(10,8,380,80),
-    }):addTo(efficiency_bg)
+-- local efficiency_bg = display.newSprite("back_ground_398x97.png", window.cx+74, window.top-310):addTo(self)
+-- self.intro_list = UIListView.new({
+--     direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
+--     viewRect = cc.rect(10,8,380,80),
+-- }):addTo(efficiency_bg)
 
-    self:SetUpgradeEfficiency()
-end
+-- self:SetUpgradeEfficiency()
+-- end
 
 function CommonUpgradeUI:SetUpgradeEfficiency()
+    if not self.eff_node then
+        local eff_node = display.newNode():addTo(self)
+        eff_node:setContentSize(cc.size(384,240))
+        eff_node:align(display.LEFT_TOP,display.cx - 110, display.top - 150)
+        local parent = self
+        function eff_node:AddItem( title, current, eff )
+            local line_width = 384
+            local line = display.newScale9Sprite("dividing_line.png",0,0,cc.size(line_width,2),cc.rect(10,2,382,2))
+            local title_label = UIKit:ttfLabel({
+                text = title,
+                size = 20,
+                color = 0x615b44,
+            }):align(display.LEFT_BOTTOM, 10 , 2)
+                :addTo(line)
+
+            local current_label = UIKit:ttfLabel({
+                text = current,
+                size = 22,
+                color = 0x403c2f,
+            }):addTo(line)
+            local eff_text
+
+            if tolua.type(eff) == "string" then
+                eff_text = (eff ~= "" and " + " or "" ).. eff
+            elseif tolua.type(eff) == "number" then
+                if eff == 0 then
+                    eff_text = ""
+                else
+                    eff_text = " + "..eff
+                end
+            end
+            local eff_label = UIKit:ttfLabel({
+                text = eff_text,
+                size = 22,
+                color = 0x068329,
+            }):addTo(line)
+
+            local eff_width = eff_label:getContentSize().width
+            eff_label:align(display.RIGHT_BOTTOM, line_width - 10, 2)
+            current_label:align(display.RIGHT_BOTTOM, eff_label:getPositionX() - eff_width , 2)
+
+
+            local items = self.items or 1
+            line:align(display.LEFT_BOTTOM,0,240 - 30 * items):addTo(self)
+            self.items = items + 1
+        end
+        self.eff_node = eff_node
+    end
+    local eff_node = self.eff_node
+    eff_node:removeAllChildren()
+
     local bd = Localize.building_description
     local building = self.building
     local efficiency = ""
-    if self.building:GetType()=="keep" then
-        local unlock_point = building:GetNextLevelUnlockPoint()-building:GetUnlockPoint()
-        if unlock_point>0 then
-            efficiency = efficiency..string.format("%s+%d,",bd.unlock,unlock_point)
-        end
-        local be_helped_count = building:GetNextLevelBeHelpedCount()-building:GetBeHelpedCount()
-        if be_helped_count>0 then
-            efficiency = efficiency.. string.format("%s+%d,",bd.beHelpCount,be_helped_count)
-        end
+    if building:GetType() == "keep" then
+        eff_node:AddItem( bd.unlock, building:GetNextLevelUnlockPoint(), building:GetNextLevelUnlockPoint() - building:GetUnlockPoint() )
+        eff_node:AddItem( bd.beHelpCount, building:GetNextLevelBeHelpedCount(), building:GetNextLevelBeHelpedCount() - building:GetBeHelpedCount() )
+        -- local unlock_point = building:GetNextLevelUnlockPoint() - building:GetUnlockPoint()
+        -- if unlock_point > 0 then
+        --     efficiency = efficiency..string.format("%s+%d,",bd.unlock,unlock_point)
+        -- end
+        -- local be_helped_count = building:GetNextLevelBeHelpedCount()-building:GetBeHelpedCount()
+        -- if be_helped_count>0 then
+        --     efficiency = efficiency.. string.format("%s+%d,",bd.beHelpCount,be_helped_count)
+        -- end
     elseif self.building:GetType()=="dragonEyrie" then
-        local additon = building:GetNextLevelHPRecoveryPerHour()-building:GetHPRecoveryPerHourWithoutBuff()
-        if additon>0 then
-            efficiency = efficiency .. string.format("%s+%d,",bd.vitalityRecoveryPerHour,additon)
-        end
+        eff_node:AddItem( bd.vitalityRecoveryPerHour, building:GetNextLevelHPRecoveryPerHour(), building:GetNextLevelHPRecoveryPerHour() - building:GetHPRecoveryPerHourWithoutBuff() )
+        -- local additon = building:GetNextLevelHPRecoveryPerHour()-building:GetHPRecoveryPerHourWithoutBuff()
+        -- if additon>0 then
+        --     efficiency = efficiency .. string.format("%s+%d,",bd.vitalityRecoveryPerHour,additon)
+        -- end
     elseif self.building:GetType()=="watchTower" then
         local warning = GameDatas.ClientInitGame.watchTower
-        efficiency = string.format("%s,",string.format(bd["watchTower_"..self.building:GetLevel()],warning[self.building:GetLevel()].waringMinute))
+        efficiency = string.format(bd["watchTower_"..self.building:GetLevel()],warning[self.building:GetLevel()].waringMinute)
+        UIKit:ttfLabel({
+            text = efficiency,
+            size = 18,
+            dimensions = cc.size(380, 0),
+            color = 0x615b44
+        }):align(display.LEFT_TOP,0,240):addTo(eff_node)
     elseif self.building:GetType()=="warehouse" then
-        local additon = building:GetResourceNextLevelValueLimit()-building:GetResourceValueLimit()
-        if additon>0 then
-            efficiency = string.format("%s+%s,",bd.warehouse_max,string.formatnumberthousands(additon))
-        end
+        eff_node:AddItem( bd.warehouse_max, building:GetResourceNextLevelValueLimit(), building:GetResourceNextLevelValueLimit() - building:GetResourceValueLimit() )
+        -- local additon = building:GetResourceNextLevelValueLimit()-building:GetResourceValueLimit()
+        -- if additon>0 then
+        --     efficiency = string.format("%s+%s,",bd.warehouse_max,string.formatnumberthousands(additon))
+        -- end
     elseif self.building:GetType()=="toolShop" then
-        local additon = building:GetNextLevelProduction()-building:GetProduction()
-        if additon>0 then
-            efficiency = string.format("%s+%d,",bd.poduction,additon)
-        end
-        local additon = building:GetNextLevelProductionType()-building:GetProductionType()
-        if additon>0 then
-            efficiency = efficiency..string.format(_("一次随机制造种类+%d,"),additon)
-        end
-        if self.building:GetLevel() == 39 then
-            efficiency = efficiency .. string.format(_("制造材料资源消耗降低%.1f%%,"),1.0)
-        else
-            efficiency = efficiency .. string.format(_("制造材料资源消耗降低%.1f%%,"),0.5)
-        end
+        eff_node:AddItem( bd.poduction, building:GetNextLevelProduction(), building:GetNextLevelProduction() - building:GetProduction() )
+        eff_node:AddItem( _("一次随机制造种类"), building:GetNextLevelProductionType(), building:GetNextLevelProductionType() - building:GetProductionType() )
+        eff_node:AddItem( _("制造材料资源消耗降低"), ((building:GetLevel() - 1) * 0.5 + (building:IsMaxLevel() and 0.5 or 0)).."%", building:IsMaxLevel() and "" or building:GetLevel() == 39 and "1%" or "0.5%" )
+
+        -- local additon = building:GetNextLevelProduction()-building:GetProduction()
+        -- if additon>0 then
+        --     efficiency = string.format("%s+%d,",bd.poduction,additon)
+        -- end
+        -- local additon = building:GetNextLevelProductionType()-building:GetProductionType()
+        -- if additon>0 then
+        --     efficiency = efficiency..string.format(_("一次随机制造种类+%d,"),additon)
+        -- end
+        -- if self.building:GetLevel() == 39 then
+        --     efficiency = efficiency .. string.format(_("制造材料资源消耗降低%.1f%%,"),1.0)
+        -- else
+        --     efficiency = efficiency .. string.format(_("制造材料资源消耗降低%.1f%%,"),0.5)
+        -- end
     elseif self.building:GetType()=="materialDepot" then
-        local additon = building:GetNextLevelMaxMaterial()-building:GetMaxMaterial()
-        if additon>0 then
-            efficiency = string.format("%s+%d,",bd.maxMaterial,additon)
-        end
+        eff_node:AddItem( bd.maxMaterial, building:GetNextLevelMaxMaterial(), building:GetNextLevelMaxMaterial() - building:GetMaxMaterial() )
+        -- local additon = building:GetNextLevelMaxMaterial()-building:GetMaxMaterial()
+        -- if additon>0 then
+        --     efficiency = string.format("%s+%d,",bd.maxMaterial,additon)
+        -- end
     elseif self.building:GetType()=="barracks" then
-        local additon = building:GetNextLevelMaxRecruitSoldierCount()-building:GetMaxRecruitSoldierCount()
-        if additon>0 then
-            efficiency = string.format("%s+%d,",bd.maxRecruit,additon)
-        end
+        eff_node:AddItem( bd.maxRecruit, building:GetNextLevelMaxRecruitSoldierCount(), building:GetNextLevelMaxRecruitSoldierCount() - building:GetMaxRecruitSoldierCount() )
+        -- local additon = building:GetNextLevelMaxRecruitSoldierCount()-building:GetMaxRecruitSoldierCount()
+        -- if additon>0 then
+        --     efficiency = string.format("%s+%d,",bd.maxRecruit,additon)
+        -- end
     elseif self.building:GetType()=="blackSmith" then
-        local additon = (building:GetNextLevelEfficiency()-building:GetEfficiency())*100
-        if additon>0 then
-            efficiency = string.format("%s+%.1f%%,",bd.blackSmith_efficiency,additon)
-        end
+        local added = building:GetNextLevelEfficiency() - building:GetEfficiency()
+        eff_node:AddItem( bd.blackSmith_efficiency, (building:GetNextLevelEfficiency()*100).."%", added > 0 and added * 100 .. "%" or "")
+        -- local additon = (building:GetNextLevelEfficiency()-building:GetEfficiency())*100
+        -- if additon>0 then
+        --     efficiency = string.format("%s+%.1f%%,",bd.blackSmith_efficiency,additon)
+        -- end
     elseif self.building:GetType()=="foundry" then
-        local house_add = building:GetNextLevelMaxHouseNum()-building:GetMaxHouseNum()
-        efficiency = ""
-        if house_add>0 then
-            efficiency = string.format("%s+%d," ,bd.foundry_miner,house_add)
-        end
-        local addtion = (building:GetNextLevelProtection()-building:GetProtection())*100
-        if addtion>0 then
-            efficiency = efficiency..string.format("%s+%.1f%%,",bd.foundry_protection,addtion)
-        end
+        eff_node:AddItem( bd.foundry_miner, building:GetNextLevelMaxHouseNum(), building:GetNextLevelMaxHouseNum() - building:GetMaxHouseNum() )
+        local added = building:GetNextLevelProtection() - building:GetProtection()
+        eff_node:AddItem( bd.foundry_protection, (building:GetNextLevelProtection()*100).."%", added > 0 and added * 100 .. "%" or "" )
+        -- local house_add = building:GetNextLevelMaxHouseNum()-building:GetMaxHouseNum()
+        -- efficiency = ""
+        -- if house_add>0 then
+        --     efficiency = string.format("%s+%d," ,bd.foundry_miner,house_add)
+        -- end
+        -- local addtion = (building:GetNextLevelProtection()-building:GetProtection())*100
+        -- if addtion>0 then
+        --     efficiency = efficiency..string.format("%s+%.1f%%,",bd.foundry_protection,addtion)
+        -- end
     elseif self.building:GetType()=="lumbermill" then
-        local house_add = building:GetNextLevelMaxHouseNum()-building:GetMaxHouseNum()
-        efficiency = ""
-        if house_add>0 then
-            efficiency = string.format("%s+%d," ,bd.lumbermill_woodcutter,house_add)
-        end
-        local addtion = (building:GetNextLevelProtection()-building:GetProtection())*100
-        if addtion>0 then
-            efficiency = efficiency..string.format("%s+%.1f%%,",bd.lumbermill_protection,addtion)
-        end
+        eff_node:AddItem( bd.lumbermill_woodcutter, building:GetNextLevelMaxHouseNum(), building:GetNextLevelMaxHouseNum() - building:GetMaxHouseNum() )
+        local added = building:GetNextLevelProtection() - building:GetProtection()
+        eff_node:AddItem( bd.lumbermill_protection, (building:GetNextLevelProtection()*100).."%",  added > 0 and added * 100 .. "%" or "")
+        -- local house_add = building:GetNextLevelMaxHouseNum()-building:GetMaxHouseNum()
+        -- efficiency = ""
+        -- if house_add>0 then
+        --     efficiency = string.format("%s+%d," ,bd.lumbermill_woodcutter,house_add)
+        -- end
+        -- local addtion = (building:GetNextLevelProtection()-building:GetProtection())*100
+        -- if addtion>0 then
+        --     efficiency = efficiency..string.format("%s+%.1f%%,",bd.lumbermill_protection,addtion)
+        -- end
     elseif self.building:GetType()=="mill" then
-        local house_add = building:GetNextLevelMaxHouseNum()-building:GetMaxHouseNum()
-        efficiency = ""
-        if house_add>0 then
-            efficiency = string.format("%s+%d," ,bd.mill_farmer,house_add)
-        end
-        local addtion = (building:GetNextLevelProtection()-building:GetProtection())*100
-        if addtion>0 then
-            efficiency = efficiency..string.format("%s+%.1f%%,",bd.mill_protection,addtion)
-        end
+        eff_node:AddItem( bd.mill_farmer, building:GetNextLevelMaxHouseNum(), building:GetNextLevelMaxHouseNum() - building:GetMaxHouseNum() )
+        local added = building:GetNextLevelProtection() - building:GetProtection()
+        eff_node:AddItem( bd.mill_protection, (building:GetNextLevelProtection()*100).."%", added > 0 and added * 100 .. "%" or "")
+
+        -- local house_add = building:GetNextLevelMaxHouseNum()-building:GetMaxHouseNum()
+        -- efficiency = ""
+        -- if house_add>0 then
+        --     efficiency = string.format("%s+%d," ,bd.mill_farmer,house_add)
+        -- end
+        -- local addtion = (building:GetNextLevelProtection()-building:GetProtection())*100
+        -- if addtion>0 then
+        --     efficiency = efficiency..string.format("%s+%.1f%%,",bd.mill_protection,addtion)
+        -- end
     elseif self.building:GetType()=="stoneMason" then
-        local house_add = building:GetNextLevelMaxHouseNum()-building:GetMaxHouseNum()
-        efficiency = ""
-        if house_add>0 then
-            efficiency = string.format("%s+%d," ,bd.stoneMason_quarrier,house_add)
-        end
-        local addtion = (building:GetNextLevelProtection()-building:GetProtection())*100
-        if addtion>0 then
-            efficiency = efficiency..string.format("%s+%.1f%%,",bd.stoneMason_protection,addtion)
-        end
+        eff_node:AddItem( bd.stoneMason_quarrier, building:GetNextLevelMaxHouseNum(), building:GetNextLevelMaxHouseNum() - building:GetMaxHouseNum() )
+        local added = building:GetNextLevelProtection() - building:GetProtection()
+        eff_node:AddItem( bd.stoneMason_protection, (building:GetNextLevelProtection()*100).."%", added > 0 and added * 100 .. "%" or "" )
+
+        -- local house_add = building:GetNextLevelMaxHouseNum()-building:GetMaxHouseNum()
+        -- efficiency = ""
+        -- if house_add>0 then
+        --     efficiency = string.format("%s+%d," ,bd.stoneMason_quarrier,house_add)
+        -- end
+        -- local addtion = (building:GetNextLevelProtection()-building:GetProtection())*100
+        -- if addtion>0 then
+        --     efficiency = efficiency..string.format("%s+%.1f%%,",bd.stoneMason_protection,addtion)
+        -- end
     elseif self.building:GetType()=="hospital" then
-        local addtion = building:GetNextLevelMaxCasualty()-building:GetMaxCasualty()
-        if addtion>0 then
-            efficiency = string.format("%s+%d,",bd.maxCasualty,addtion)
-        end
+        eff_node:AddItem( bd.maxCasualty, building:GetNextLevelMaxCasualty(), building:GetNextLevelMaxCasualty() - building:GetMaxCasualty() )
+
+        -- local addtion = building:GetNextLevelMaxCasualty()-building:GetMaxCasualty()
+        -- if addtion>0 then
+        --     efficiency = string.format("%s+%d,",bd.maxCasualty,addtion)
+        -- end
     elseif self.building:GetType()=="townHall" then
-        local house_add = building:GetNextLevelMaxHouseNum()-building:GetMaxHouseNum()
-        efficiency = ""
-        if house_add>0 then
-            efficiency = string.format("%s+%d," ,bd.townHall_dwelling,house_add)
-        end
-        local award_add = (building:GetNextLevelEfficiency() - building:GetEfficiency()) * 100
-        if award_add > 0 then
-            efficiency = efficiency .. string.format("%s+%d%%," ,_("提升任务奖励"),award_add)
-        end
+        eff_node:AddItem( bd.townHall_dwelling, building:GetNextLevelMaxHouseNum(), building:GetNextLevelMaxHouseNum() - building:GetMaxHouseNum() )
+        local added = building:GetNextLevelEfficiency() - building:GetEfficiency()
+        eff_node:AddItem( _("提升任务奖励"), (building:GetNextLevelEfficiency()*100).."%", added > 0 and added * 100 .. "%" or ""  )
+        -- local house_add = building:GetNextLevelMaxHouseNum()-building:GetMaxHouseNum()
+        -- efficiency = ""
+        -- if house_add>0 then
+        --     efficiency = string.format("%s+%d," ,bd.townHall_dwelling,house_add)
+        -- end
+        -- local award_add = (building:GetNextLevelEfficiency() - building:GetEfficiency()) * 100
+        -- if award_add > 0 then
+        --     efficiency = efficiency .. string.format("%s+%d%%," ,_("提升任务奖励"),award_add)
+        -- end
     elseif self.building:GetType()=="dwelling" then
-        local addtion = building:GetNextLevelCitizen()-building:GetProductionLimit()
-        if addtion>0 then
-            efficiency = string.format("%s+%d,",bd.dwelling_citizen,addtion)
-        end
-        local addtion = building:GetNextLevelProductionPerHour()-building:GetProductionPerHour()
-        if addtion>0 then
-            efficiency = efficiency..string.format("%s+%d,",bd.dwelling_poduction,addtion)
-        end
+        eff_node:AddItem( bd.dwelling_citizen, building:GetNextLevelCitizen(), building:GetNextLevelCitizen() - building:GetProductionLimit() )
+        eff_node:AddItem( bd.dwelling_poduction, building:GetNextLevelProductionPerHour(), building:GetNextLevelProductionPerHour() - building:GetProductionPerHour() )
+        -- local addtion = building:GetNextLevelCitizen()-building:GetProductionLimit()
+        -- if addtion>0 then
+        --     efficiency = string.format("%s+%d,",bd.dwelling_citizen,addtion)
+        -- end
+        -- local addtion = building:GetNextLevelProductionPerHour()-building:GetProductionPerHour()
+        -- if addtion>0 then
+        --     efficiency = efficiency..string.format("%s+%d,",bd.dwelling_poduction,addtion)
+        -- end
     elseif self.building:GetType()=="woodcutter" then
-        local addtion = building:GetNextLevelProductionPerHour()-building:GetProductionPerHour()
-        if addtion>0 then
-            efficiency = string.format("%s+%d,",bd.woodcutter_poduction,addtion)
-        end
+        eff_node:AddItem( bd.woodcutter_poduction, building:GetNextLevelProductionPerHour(), building:GetNextLevelProductionPerHour() - building:GetProductionPerHour() )
+        -- local addtion = building:GetNextLevelProductionPerHour()-building:GetProductionPerHour()
+        -- if addtion>0 then
+        --     efficiency = string.format("%s+%d,",bd.woodcutter_poduction,addtion)
+        -- end
     elseif self.building:GetType()=="farmer" then
-        local addtion = building:GetNextLevelProductionPerHour()-building:GetProductionPerHour()
-        if addtion>0 then
-            efficiency = string.format("%s+%d,",bd.farmer_poduction,addtion)
-        end
+        eff_node:AddItem( bd.farmer_poduction, building:GetNextLevelProductionPerHour(), building:GetNextLevelProductionPerHour() - building:GetProductionPerHour() )
+        -- local addtion = building:GetNextLevelProductionPerHour()-building:GetProductionPerHour()
+        -- if addtion>0 then
+        --     efficiency = string.format("%s+%d,",bd.farmer_poduction,addtion)
+        -- end
     elseif self.building:GetType()=="quarrier" then
-        local addtion = building:GetNextLevelProductionPerHour()-building:GetProductionPerHour()
-        if addtion>0 then
-            efficiency = string.format("%s+%d,",bd.quarrier_poduction,addtion)
-        end
+        eff_node:AddItem( bd.quarrier_poduction, building:GetNextLevelProductionPerHour(), building:GetNextLevelProductionPerHour() - building:GetProductionPerHour() )
+        -- local addtion = building:GetNextLevelProductionPerHour()-building:GetProductionPerHour()
+        -- if addtion>0 then
+        --     efficiency = string.format("%s+%d,",bd.quarrier_poduction,addtion)
+        -- end
     elseif self.building:GetType()=="miner" then
-        local addtion = building:GetNextLevelProductionPerHour()-building:GetProductionPerHour()
-        if addtion>0 then
-            efficiency = string.format("%s+%d,",bd.miner_poduction,addtion)
-        end
+        eff_node:AddItem( bd.miner_poduction, building:GetNextLevelProductionPerHour(), building:GetNextLevelProductionPerHour() - building:GetProductionPerHour() )
+        -- local addtion = building:GetNextLevelProductionPerHour()-building:GetProductionPerHour()
+        -- if addtion>0 then
+        --     efficiency = string.format("%s+%d,",bd.miner_poduction,addtion)
+        -- end
     elseif self.building:GetType()=="wall" then
         local current_config = self.building:GetWallConfig()
         local next_config = self.building:GetWallNextLevelConfig()
-        if next_config.wallHp - current_config.wallHp > 0 then
-            efficiency = string.format(_("城墙血量+%d,"),next_config.wallHp - current_config.wallHp)
-        end
-        if next_config.wallRecovery - current_config.wallRecovery > 0 then
-            efficiency = efficiency .. string.format(_("城墙血量回复+%d/小时,"),next_config.wallRecovery - current_config.wallRecovery)
-        end
+        eff_node:AddItem( _("城墙血量"),current_config.wallHp,next_config.wallHp - current_config.wallHp )
+        eff_node:AddItem( _("城墙血量每小时回复"),current_config.wallRecovery,next_config.wallRecovery - current_config.wallRecovery)
+        -- if next_config.wallHp - current_config.wallHp > 0 then
+        --     efficiency = string.format(_("城墙血量+%d,"),next_config.wallHp - current_config.wallHp)
+        -- end
+        -- if next_config.wallRecovery - current_config.wallRecovery > 0 then
+        --     efficiency = efficiency .. string.format(_("城墙血量回复+%d/小时,"),next_config.wallRecovery - current_config.wallRecovery)
+        -- end
     elseif self.building:GetType()=="tower" then
         local current_config = self.building:GetTowerConfig()
         local next_config = self.building:GetTowerNextLevelConfig()
-        if next_config.infantry - current_config.infantry > 0 then
-            efficiency = string.format(_("攻击+%d,"),next_config.infantry - current_config.infantry)
-        end
-        if next_config.defencePower - current_config.defencePower > 0 then
-            efficiency = efficiency .. string.format(_("防御力+%d,"),next_config.defencePower - current_config.defencePower)
-        end
+        eff_node:AddItem( _("攻击"),current_config.infantry,next_config.infantry - current_config.infantry )
+        eff_node:AddItem( _("防御力"),current_config.defencePower,next_config.defencePower - current_config.defencePower )
+        -- if next_config.infantry - current_config.infantry > 0 then
+        --     efficiency = string.format(_("攻击+%d,"),next_config.infantry - current_config.infantry)
+        -- end
+        -- if next_config.defencePower - current_config.defencePower > 0 then
+        --     efficiency = efficiency .. string.format(_("防御力+%d,"),next_config.defencePower - current_config.defencePower)
+        -- end
     elseif self.building:GetType()=="academy" then
         local current_config = self.building:GetAcademyConfig()
         local next_config = self.building:GetAcademyNextLevelConfig()
-        if next_config.efficiency - current_config.efficiency > 0 then
-            efficiency = string.format(_("学院科技研发速度+%d%%,"),(next_config.efficiency - current_config.efficiency)*100)
-        end
+        local added = next_config.efficiency - current_config.efficiency
+        eff_node:AddItem( _("学院科技研发速度"),current_config.efficiency * 100, added > 0 and (added * 100) .. "%" or "" )
+        -- if next_config.efficiency - current_config.efficiency > 0 then
+        --     efficiency = string.format(_("学院科技研发速度+%d%%,"),(next_config.efficiency - current_config.efficiency)*100)
+        -- end
     elseif self.building:GetType()=="tradeGuild" then
         local cart = self.building:GetMaxCart()
         local next_cart = self.building:GetNextLevelMaxCart()
         local recovery = self.building:GetCartRecovery()
         local next_recovery = self.building:GetNextLevelCartRecovery()
-        if next_cart - cart > 0 then
-            efficiency = string.format(_("资源小车上限+%d,"),(next_cart - cart))
-        end
-        if next_recovery - recovery > 0 then
-            efficiency = efficiency .. string.format(_("资源小车回复速度+%d/小时,"),(next_recovery - recovery))
-        end
+        eff_node:AddItem( _("资源小车上限"),cart, next_cart - cart )
+        eff_node:AddItem( _("资源小车每小时回复速度"),recovery, next_recovery - recovery )
+        -- if next_cart - cart > 0 then
+        --     efficiency = string.format(_("资源小车上限+%d,"),(next_cart - cart))
+        -- end
+        -- if next_recovery - recovery > 0 then
+        --     efficiency = efficiency .. string.format(_("资源小车回复速度+%d/小时,"),(next_recovery - recovery))
+        -- end
     elseif self.building:GetType()=="trainingGround" then
         local eff = self.building:GetEfficiency()
         local next_eff = self.building:GetNextLevelEfficiency()
-        if next_eff - eff > 0 then
-            efficiency = string.format(_("步兵招募速度+%.0f%%,"),(next_eff - eff) * 100)
-        end
+        local added = next_eff - eff
+        eff_node:AddItem( _("步兵招募速度"),eff * 100 .. "%", added > 0 and (added * 100) .. "%" or ""  )
+        -- if next_eff - eff > 0 then
+        --     efficiency = string.format(_("步兵招募速度+%.0f%%,"),(next_eff - eff) * 100)
+        -- end
     elseif self.building:GetType()=="stable" then
         local eff = self.building:GetEfficiency()
         local next_eff = self.building:GetNextLevelEfficiency()
-        if next_eff - eff > 0 then
-            efficiency = string.format(_("骑兵招募速度+%.0f%%,"),(next_eff - eff) * 100)
-        end
+        local added = next_eff - eff
+        eff_node:AddItem( _("骑兵招募速度"),eff * 100 .. "%", added > 0 and (added * 100) .. "%" or ""  )
+        -- if next_eff - eff > 0 then
+        --     efficiency = string.format(_("骑兵招募速度+%.0f%%,"),(next_eff - eff) * 100)
+        -- end
     elseif self.building:GetType()=="hunterHall" then
         local eff = self.building:GetEfficiency()
         local next_eff = self.building:GetNextLevelEfficiency()
-        if next_eff - eff > 0 then
-            efficiency = string.format(_("弓手招募速度+%.0f%%,"),(next_eff - eff) * 100)
-        end
+        local added = next_eff - eff
+        eff_node:AddItem( _("弓手招募速度"),eff * 100 .. "%", added > 0 and (added * 100) .. "%" or ""  )
+        -- if next_eff - eff > 0 then
+        --     efficiency = string.format(_("弓手招募速度+%.0f%%,"),(next_eff - eff) * 100)
+        -- end
     elseif self.building:GetType()=="workshop" then
         local eff = self.building:GetEfficiency()
         local next_eff = self.building:GetNextLevelEfficiency()
-        if next_eff - eff > 0 then
-            efficiency = string.format(_("攻城系招募速度+%.0f%%,"),(next_eff - eff) * 100)
-        end
+        local added = next_eff - eff
+        eff_node:AddItem( _("攻城系招募速度"),eff * 100 .. "%", added > 0 and (added * 100) .. "%" or ""  )
+        -- if next_eff - eff > 0 then
+        --     efficiency = string.format(_("攻城系招募速度+%.0f%%,"),(next_eff - eff) * 100)
+        -- end
     else
         assert(false,"本地化丢失")
     end
     -- 增加power,每个建筑都有的属性
-    efficiency = efficiency ..string.format("%s+%d",bd.power,building:GetNextLevelPower()-building:GetPower())
-    local efficiency_content = UIKit:ttfLabel({
-        text = efficiency,
-        size = 20,
-        dimensions = cc.size(370,0),
-        valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
-        align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
-        color = 0x403c2f
-    })
-    efficiency_content:setLineBreakWithoutSpace(true)
-    local list = self.intro_list
-    list:removeAllItems()
-    local item = list:newItem()
-    item:setItemSize(370, efficiency_content:getContentSize().height)
-    item:addContent(efficiency_content)
-    list:addItem(item)
-    list:reload()
-    if self.building:GetNextLevel() == self.building:GetLevel() then
-        list:getParent():setVisible(false)
+    if building:GetType()~="watchTower" then
+        eff_node:AddItem(bd.power,building:GetPower(), building:GetNextLevelPower()-building:GetPower())
     end
+    -- efficiency = efficiency ..string.format("%s+%d",bd.power,building:GetNextLevelPower()-building:GetPower())
+    -- local efficiency_content = UIKit:ttfLabel({
+    --     text = efficiency,
+    --     size = 20,
+    --     dimensions = cc.size(370,0),
+    --     valign = cc.ui.UILabel.TEXT_VALIGN_CENTER,
+    --     align = cc.ui.UILabel.TEXT_ALIGN_CENTER,
+    --     color = 0x403c2f
+    -- })
+    -- efficiency_content:setLineBreakWithoutSpace(true)
+    -- local list = self.intro_list
+    -- list:removeAllItems()
+    -- local item = list:newItem()
+    -- item:setItemSize(370, efficiency_content:getContentSize().height)
+    -- item:addContent(efficiency_content)
+    -- list:addItem(item)
+    -- list:reload()
+    -- if self.building:GetNextLevel() == self.building:GetLevel() then
+    --     list:getParent():setVisible(false)
+    -- end
 end
 
 function CommonUpgradeUI:InitUpgradePart()
@@ -423,7 +536,7 @@ function CommonUpgradeUI:InitUpgradePart()
         return
     end
     self.upgrade_layer = display.newLayer()
-    self.upgrade_layer:setContentSize(cc.size(display.width,575))
+    self.upgrade_layer:setContentSize(cc.size(display.width,710))
     self:addChild(self.upgrade_layer)
     -- upgrade now button
     local btn_bg = UIKit:commonButtonWithBG(
@@ -471,7 +584,7 @@ function CommonUpgradeUI:InitUpgradePart()
                 end
             end,
         }
-    ):pos(display.cx-150, display.top-410)
+    ):pos(display.cx-150, display.top-330)
         :addTo(self.upgrade_layer)
 
     -- upgrade button
@@ -508,28 +621,28 @@ function CommonUpgradeUI:InitUpgradePart()
                 end
             end,
         }
-    ):pos(display.cx+180, display.top-410)
+    ):pos(display.cx+180, display.top-330)
         :addTo(self.upgrade_layer)
 
     self.upgrade_btn = btn_bg.button
 
     -- 立即升级所需金龙币
-    display.newSprite("gem_icon_62x61.png", display.cx - 260, display.top-470):addTo(self.upgrade_layer):setScale(0.5)
+    display.newSprite("gem_icon_62x61.png", display.cx - 260, display.top-390):addTo(self.upgrade_layer):setScale(0.5)
     self.upgrade_now_need_gems_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         font = UIKit:getFontFilePath(),
         size = 20,
         color = UIKit:hex2c3b(0x403c2f)
-    }):align(display.LEFT_CENTER,display.cx - 240,display.top-474):addTo(self.upgrade_layer)
+    }):align(display.LEFT_CENTER,display.cx - 240,display.top-394):addTo(self.upgrade_layer)
     self:SetUpgradeNowNeedGems()
     --升级所需时间
-    display.newSprite("hourglass_30x38.png", display.cx+100, display.top-470):addTo(self.upgrade_layer):setScale(0.6)
+    display.newSprite("hourglass_30x38.png", display.cx+100, display.top-390):addTo(self.upgrade_layer):setScale(0.6)
     self.upgrade_time = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         font = UIKit:getFontFilePath(),
         size = 18,
         color = UIKit:hex2c3b(0x403c2f)
-    }):align(display.LEFT_CENTER,display.cx+125,display.top-460):addTo(self.upgrade_layer)
+    }):align(display.LEFT_CENTER,display.cx+125,display.top-380):addTo(self.upgrade_layer)
 
     -- 科技减少升级时间
     self.buff_reduce_time = cc.ui.UILabel.new({
@@ -538,7 +651,7 @@ function CommonUpgradeUI:InitUpgradePart()
         font = UIKit:getFontFilePath(),
         size = 18,
         color = UIKit:hex2c3b(0x068329)
-    }):align(display.LEFT_CENTER,display.cx+120,display.top-480):addTo(self.upgrade_layer)
+    }):align(display.LEFT_CENTER,display.cx+120,display.top-400):addTo(self.upgrade_layer)
 
     self:SetUpgradeTime()
     --升级需求listview
@@ -655,9 +768,9 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
     if not self.requirement_listview then
         self.requirement_listview = WidgetRequirementListview.new({
             title = _("升级需求"),
-            height = 298,
+            height = 386,
             contents = requirements,
-        }):addTo(self.upgrade_layer):pos(display.cx-272, display.top-846)
+        }):addTo(self.upgrade_layer):pos(display.cx-272, display.top-860)
     end
     self.requirement_listview:RefreshListView(requirements)
 end
@@ -964,6 +1077,11 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
+
+
+
+
 
 
 
