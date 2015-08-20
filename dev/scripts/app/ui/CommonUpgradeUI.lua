@@ -243,6 +243,7 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
         self.eff_node = eff_node
     end
     local eff_node = self.eff_node
+    eff_node.items = nil
     eff_node:removeAllChildren()
 
     local bd = Localize.building_description

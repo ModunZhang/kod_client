@@ -137,6 +137,7 @@ function GameUIKeep:CreateLineItem(params)
                 text = params.button_label,
                 size = 20,
                 color = 0xffedae,
+                shadow = true,
             }))
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
