@@ -15,7 +15,6 @@ local titles = {
     _("一个兵种击败敌军"),
 }
 
-GameUIPveAttack.rewardMap = {}
 
 
 function GameUIPveAttack:ctor(user, pve_name)
@@ -422,14 +421,18 @@ function GameUIPveAttack:Attack()
                         UIKit:newGameUI("GameUIPveAttack", user, pve_name):AddToCurrentScene(true)
                         return
                     end
+
+                    local userdefault = cc.UserDefault:getInstance()
                     local level,index = tonumber((unpack(string.split(pve_name, "_")))), 1
-                    local stage = stages[string.format("%d_%d", level, index)]
+                    local stage,key = stages[string.format("%d_%d", level, index)], "pve_stage_"..string.format("%d_%d", level, index)
                     while stage do
                         if user:GetStageStarByIndex(level) >= tonumber(stage.needStar) and
                             not user:IsStageRewardedByName(stage.stageName) and
-                            not GameUIPveAttack.rewardMap[stage.stageName]
+                            not userdefault:getBoolForKey(key)
                         then
-                            GameUIPveAttack.rewardMap[stage.stageName] = true
+                            userdefault:setBoolForKey(key, true)
+                            userdefault:flush()
+
                             UIKit:newGameUI("GameUIPveReward", level, function()
                                 if param.star > 0 then
                                     display.getRunningScene():GetSceneLayer():MoveAirship(true)
@@ -438,7 +441,7 @@ function GameUIPveAttack:Attack()
                             return
                         end
                         index = index + 1
-                        stage = stages[string.format("%d_%d", level, index)]
+                        stage,key = stages[string.format("%d_%d", level, index)], "pve_stage_"..string.format("%d_%d", level, index)
                     end
                     --
                     if param.star > 0 then

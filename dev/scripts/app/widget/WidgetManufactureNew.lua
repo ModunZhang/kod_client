@@ -221,7 +221,7 @@ function WidgetManufactureNew:ReloadMaterials(materials, materials_map)
 
 
     self.progress_node = display.newNode():addTo(self.view)
-        :pos(window.cx, window.top - 445):hide()
+        :pos(window.cx, window.top - 450):hide()
     self.progress_node.progress = newProgress():addTo(self.progress_node)
     self.progress_node.progress.btn:onButtonClicked(function()
         UIKit:newGameUI("GameUIToolShopSpeedUp", self.toolShop):AddToCurrentScene(true)
