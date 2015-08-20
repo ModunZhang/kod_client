@@ -253,31 +253,9 @@ function MyCityScene:onEnterTransitionFinish()
     if Alliance_Manager:HasBeenJoinedAlliance() then
         return
     end
-    local userdefault = cc.UserDefault:getInstance()
-    local city_key = DataManager:getUserData()._id.."_first_in_city_scene"
-    if not userdefault:getBoolForKey(city_key) and
-        Alliance_Manager:GetMyAlliance():IsDefault() then
-
-        userdefault:setBoolForKey(city_key, true)
-        userdefault:flush()
-
-        app:lockInput(true)
-        cocos_promise.defer(function()app:lockInput(false);end)
-            :next(function()
-                return GameUINpc:PromiseOfSay(
-                    {words = _("领主大人，这个世界上的觉醒者并不只有你一人。介入他们或者创建联盟邀请他们加入，会让我们发展得更顺利")}
-                )
-            end):next(function()
-            self:FteEditName(function()
-                self:GetHomePage():PromiseOfFteAlliance()
-            end)
-            return GameUINpc:PromiseOfLeave()
-            end)
-    else
-        self:FteEditName(function()
-            self:GetHomePage():PromiseOfFteAlliance()
-        end)
-    end
+    self:FteEditName(function()
+        self:FteAlliance()
+    end)
 end
 function MyCityScene:FteEditName(func)
     if DataManager:getUserData().countInfo.isFTEFinished then
@@ -293,6 +271,29 @@ function MyCityScene:FteEditName(func)
         else
             UIKit:newGameUI("GameUIEditName", func):AddToCurrentScene(true)
         end
+    end
+end
+function MyCityScene:FteAlliance()
+    local userdefault = cc.UserDefault:getInstance()
+    local city_key = DataManager:getUserData()._id.."_first_in_city_scene"
+    if not userdefault:getBoolForKey(city_key) and
+        Alliance_Manager:GetMyAlliance():IsDefault() then
+
+        userdefault:setBoolForKey(city_key, true)
+        userdefault:flush()
+
+        app:lockInput(true)
+        cocos_promise.defer(function()app:lockInput(false);end)
+            :next(function()
+                return GameUINpc:PromiseOfSay(
+                    {words = _("领主大人，这个世界上的觉醒者并不只有你一人。介入他们或者创建联盟邀请他们加入，会让我们发展得更顺利")}
+                )
+            end):next(function()
+            self:GetHomePage():PromiseOfFteAlliance()
+            return GameUINpc:PromiseOfLeave()
+            end)
+    else
+        self:GetHomePage():PromiseOfFteAlliance()
     end
 end
 function MyCityScene:CreateHomePage()
@@ -461,6 +462,7 @@ function MyCityScene:OpenUI(building, default_tab, need_tips, build_name)
 end
 
 return MyCityScene
+
 
 
 
