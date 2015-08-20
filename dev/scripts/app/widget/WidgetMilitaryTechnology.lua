@@ -3,7 +3,6 @@
 -- Date: 2015-01-17 10:33:17
 --
 local window = import("..utils.window")
-local WidgetProgress = import(".WidgetProgress")
 local WidgetUIBackGround = import(".WidgetUIBackGround")
 local WidgetPushButton = import(".WidgetPushButton")
 local SoldierManager = import("..entity.SoldierManager")

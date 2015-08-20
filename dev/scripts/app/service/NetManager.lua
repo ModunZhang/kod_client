@@ -1718,7 +1718,7 @@ end
 function NetManager:getVerifyIAPPromise(transactionId,receiptData)
     return get_none_blocking_request_promise("logic.playerHandler.addPlayerBillingData",
         {
-            transactionId=transactionId,receiptData=receiptData
+            receiptData=receiptData
         }
         ,"玩家内购失败", true):next(get_player_response_msg)
 end
