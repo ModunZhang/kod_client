@@ -230,7 +230,7 @@ end
 function GameUIChatChannel:ShowTipsIf()
     local my_alliance = Alliance_Manager:GetMyAlliance()
     if my_alliance:IsDefault() then
-        if self._channelType == 'alliance' then
+        if self._channelType == 'alliance' or self._channelType == 'allianceFight' then
             UIKit:showMessageDialog(_("提示"),_("加入联盟后开放此功能!"),function()end)
         end
     elseif self._channelType == 'allianceFight' then

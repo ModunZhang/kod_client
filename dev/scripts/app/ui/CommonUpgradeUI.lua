@@ -217,7 +217,7 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
             local eff_text
 
             if tolua.type(eff) == "string" then
-                eff_text = (eff ~= "" and " + " or "" ).. eff
+                eff_text = (eff ~= "" and eff ~= "0" and " + " or "" ).. (eff == "0" and "" or eff)
             elseif tolua.type(eff) == "number" then
                 if eff == 0 then
                     eff_text = ""
@@ -251,8 +251,8 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
     local efficiency = ""
     local formatNumber = string.formatnumberthousands
     if building:GetType() == "keep" then
-        eff_node:AddItem( bd.unlock, building:GetNextLevelUnlockPoint(), building:GetNextLevelUnlockPoint() - building:GetUnlockPoint() )
-        eff_node:AddItem( bd.beHelpCount, building:GetNextLevelBeHelpedCount(), building:GetNextLevelBeHelpedCount() - building:GetBeHelpedCount() )
+        eff_node:AddItem( bd.unlock, building:GetUnlockPoint(), building:GetNextLevelUnlockPoint() - building:GetUnlockPoint() )
+        eff_node:AddItem( bd.beHelpCount, building:GetBeHelpedCount(), building:GetNextLevelBeHelpedCount() - building:GetBeHelpedCount() )
         -- local unlock_point = building:GetNextLevelUnlockPoint() - building:GetUnlockPoint()
         -- if unlock_point > 0 then
         --     efficiency = efficiency..string.format("%s+%d,",bd.unlock,unlock_point)
@@ -262,7 +262,7 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
         --     efficiency = efficiency.. string.format("%s+%d,",bd.beHelpCount,be_helped_count)
         -- end
     elseif self.building:GetType()=="dragonEyrie" then
-        eff_node:AddItem( bd.vitalityRecoveryPerHour, formatNumber(building:GetNextLevelHPRecoveryPerHour()), formatNumber(building:GetNextLevelHPRecoveryPerHour() - building:GetHPRecoveryPerHourWithoutBuff()) )
+        eff_node:AddItem( bd.vitalityRecoveryPerHour, formatNumber(building:GetHPRecoveryPerHourWithoutBuff()), formatNumber(building:GetNextLevelHPRecoveryPerHour() - building:GetHPRecoveryPerHourWithoutBuff()) )
         -- local additon = building:GetNextLevelHPRecoveryPerHour()-building:GetHPRecoveryPerHourWithoutBuff()
         -- if additon>0 then
         --     efficiency = efficiency .. string.format("%s+%d,",bd.vitalityRecoveryPerHour,additon)
@@ -277,14 +277,14 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
             color = 0x615b44
         }):align(display.LEFT_TOP,0,240):addTo(eff_node)
     elseif self.building:GetType()=="warehouse" then
-        eff_node:AddItem( bd.warehouse_max, formatNumber(building:GetResourceNextLevelValueLimit()), formatNumber(building:GetResourceNextLevelValueLimit() - building:GetResourceValueLimit()) )
+        eff_node:AddItem( bd.warehouse_max, formatNumber(building:GetResourceValueLimit()), formatNumber(building:GetResourceNextLevelValueLimit() - building:GetResourceValueLimit()) )
         -- local additon = building:GetResourceNextLevelValueLimit()-building:GetResourceValueLimit()
         -- if additon>0 then
         --     efficiency = string.format("%s+%s,",bd.warehouse_max,string.formatnumberthousands(additon))
         -- end
     elseif self.building:GetType()=="toolShop" then
-        eff_node:AddItem( bd.poduction, building:GetNextLevelProduction(), building:GetNextLevelProduction() - building:GetProduction() )
-        eff_node:AddItem( _("一次随机制造种类"), building:GetNextLevelProductionType(), building:GetNextLevelProductionType() - building:GetProductionType() )
+        eff_node:AddItem( bd.poduction, formatNumber(building:GetProduction()), formatNumber(building:GetNextLevelProduction() - building:GetProduction()) )
+        eff_node:AddItem( _("一次随机制造种类"), formatNumber(building:GetProductionType()), formatNumber(building:GetNextLevelProductionType() - building:GetProductionType()) )
         eff_node:AddItem( _("制造材料资源消耗降低"), ((building:GetLevel() - 1) * 0.5 + (building:IsMaxLevel() and 0.5 or 0)).."%", building:IsMaxLevel() and "" or building:GetLevel() == 39 and "1%" or "0.5%" )
 
         -- local additon = building:GetNextLevelProduction()-building:GetProduction()
@@ -301,28 +301,28 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
         --     efficiency = efficiency .. string.format(_("制造材料资源消耗降低%.1f%%,"),0.5)
         -- end
     elseif self.building:GetType()=="materialDepot" then
-        eff_node:AddItem( bd.maxMaterial, formatNumber(building:GetNextLevelMaxMaterial()), formatNumber(building:GetNextLevelMaxMaterial() - building:GetMaxMaterial()) )
+        eff_node:AddItem( bd.maxMaterial, formatNumber(building:GetMaxMaterial()), formatNumber(building:GetNextLevelMaxMaterial() - building:GetMaxMaterial()) )
         -- local additon = building:GetNextLevelMaxMaterial()-building:GetMaxMaterial()
         -- if additon>0 then
         --     efficiency = string.format("%s+%d,",bd.maxMaterial,additon)
         -- end
     elseif self.building:GetType()=="barracks" then
-        eff_node:AddItem( bd.maxRecruit, formatNumber(building:GetNextLevelMaxRecruitSoldierCount()), formatNumber(building:GetNextLevelMaxRecruitSoldierCount() - building:GetMaxRecruitSoldierCount()) )
+        eff_node:AddItem( bd.maxRecruit, formatNumber(building:GetMaxRecruitSoldierCount()), formatNumber(building:GetNextLevelMaxRecruitSoldierCount() - building:GetMaxRecruitSoldierCount()) )
         -- local additon = building:GetNextLevelMaxRecruitSoldierCount()-building:GetMaxRecruitSoldierCount()
         -- if additon>0 then
         --     efficiency = string.format("%s+%d,",bd.maxRecruit,additon)
         -- end
     elseif self.building:GetType()=="blackSmith" then
         local added = building:GetNextLevelEfficiency() - building:GetEfficiency()
-        eff_node:AddItem( bd.blackSmith_efficiency, (building:GetNextLevelEfficiency()*100).."%", added > 0 and added * 100 .. "%" or "")
+        eff_node:AddItem( bd.blackSmith_efficiency, (building:GetEfficiency()*100).."%", added > 0 and added * 100 .. "%" or "")
         -- local additon = (building:GetNextLevelEfficiency()-building:GetEfficiency())*100
         -- if additon>0 then
         --     efficiency = string.format("%s+%.1f%%,",bd.blackSmith_efficiency,additon)
         -- end
     elseif self.building:GetType()=="foundry" then
-        eff_node:AddItem( bd.foundry_miner, building:GetNextLevelMaxHouseNum(), building:GetNextLevelMaxHouseNum() - building:GetMaxHouseNum() )
+        eff_node:AddItem( bd.foundry_miner, formatNumber(building:GetNextLevelMaxHouseNum()), formatNumber(building:GetNextLevelMaxHouseNum() - building:GetMaxHouseNum()) )
         local added = building:GetNextLevelProtection() - building:GetProtection()
-        eff_node:AddItem( bd.foundry_protection, (building:GetNextLevelProtection()*100).."%", added > 0 and added * 100 .. "%" or "" )
+        eff_node:AddItem( bd.foundry_protection, (building:GetProtection()*100).."%", added > 0 and added * 100 .. "%" or "" )
         -- local house_add = building:GetNextLevelMaxHouseNum()-building:GetMaxHouseNum()
         -- efficiency = ""
         -- if house_add>0 then
@@ -333,9 +333,9 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
         --     efficiency = efficiency..string.format("%s+%.1f%%,",bd.foundry_protection,addtion)
         -- end
     elseif self.building:GetType()=="lumbermill" then
-        eff_node:AddItem( bd.lumbermill_woodcutter, building:GetNextLevelMaxHouseNum(), building:GetNextLevelMaxHouseNum() - building:GetMaxHouseNum() )
+        eff_node:AddItem( bd.lumbermill_woodcutter, formatNumber(building:GetMaxHouseNum()), formatNumber(building:GetNextLevelMaxHouseNum() - building:GetMaxHouseNum()) )
         local added = building:GetNextLevelProtection() - building:GetProtection()
-        eff_node:AddItem( bd.lumbermill_protection, (building:GetNextLevelProtection()*100).."%",  added > 0 and added * 100 .. "%" or "")
+        eff_node:AddItem( bd.lumbermill_protection, (building:GetProtection()*100).."%",  added > 0 and added * 100 .. "%" or "")
         -- local house_add = building:GetNextLevelMaxHouseNum()-building:GetMaxHouseNum()
         -- efficiency = ""
         -- if house_add>0 then
@@ -346,9 +346,9 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
         --     efficiency = efficiency..string.format("%s+%.1f%%,",bd.lumbermill_protection,addtion)
         -- end
     elseif self.building:GetType()=="mill" then
-        eff_node:AddItem( bd.mill_farmer, building:GetNextLevelMaxHouseNum(), building:GetNextLevelMaxHouseNum() - building:GetMaxHouseNum() )
+        eff_node:AddItem( bd.mill_farmer, formatNumber(building:GetMaxHouseNum()), formatNumber(building:GetNextLevelMaxHouseNum() - building:GetMaxHouseNum()) )
         local added = building:GetNextLevelProtection() - building:GetProtection()
-        eff_node:AddItem( bd.mill_protection, (building:GetNextLevelProtection()*100).."%", added > 0 and added * 100 .. "%" or "")
+        eff_node:AddItem( bd.mill_protection, (building:GetProtection()*100).."%", added > 0 and added * 100 .. "%" or "")
 
         -- local house_add = building:GetNextLevelMaxHouseNum()-building:GetMaxHouseNum()
         -- efficiency = ""
@@ -360,9 +360,9 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
         --     efficiency = efficiency..string.format("%s+%.1f%%,",bd.mill_protection,addtion)
         -- end
     elseif self.building:GetType()=="stoneMason" then
-        eff_node:AddItem( bd.stoneMason_quarrier, building:GetNextLevelMaxHouseNum(), building:GetNextLevelMaxHouseNum() - building:GetMaxHouseNum() )
+        eff_node:AddItem( bd.stoneMason_quarrier, formatNumber(building:GetMaxHouseNum()), formatNumber(building:GetNextLevelMaxHouseNum() - building:GetMaxHouseNum()) )
         local added = building:GetNextLevelProtection() - building:GetProtection()
-        eff_node:AddItem( bd.stoneMason_protection, (building:GetNextLevelProtection()*100).."%", added > 0 and added * 100 .. "%" or "" )
+        eff_node:AddItem( bd.stoneMason_protection, (building:GetProtection()*100).."%", added > 0 and added * 100 .. "%" or "" )
 
         -- local house_add = building:GetNextLevelMaxHouseNum()-building:GetMaxHouseNum()
         -- efficiency = ""
@@ -374,16 +374,16 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
         --     efficiency = efficiency..string.format("%s+%.1f%%,",bd.stoneMason_protection,addtion)
         -- end
     elseif self.building:GetType()=="hospital" then
-        eff_node:AddItem( bd.maxCasualty, formatNumber(building:GetNextLevelMaxCasualty()), formatNumber(building:GetNextLevelMaxCasualty() - building:GetMaxCasualty()) )
+        eff_node:AddItem( bd.maxCasualty, formatNumber(building:GetMaxCasualty()), formatNumber(building:GetNextLevelMaxCasualty() - building:GetMaxCasualty()) )
 
         -- local addtion = building:GetNextLevelMaxCasualty()-building:GetMaxCasualty()
         -- if addtion>0 then
         --     efficiency = string.format("%s+%d,",bd.maxCasualty,addtion)
         -- end
     elseif self.building:GetType()=="townHall" then
-        eff_node:AddItem( bd.townHall_dwelling, building:GetNextLevelMaxHouseNum(), building:GetNextLevelMaxHouseNum() - building:GetMaxHouseNum() )
+        eff_node:AddItem( bd.townHall_dwelling, formatNumber(building:GetMaxHouseNum()), formatNumber(building:GetNextLevelMaxHouseNum() - building:GetMaxHouseNum()) )
         local added = building:GetNextLevelEfficiency() - building:GetEfficiency()
-        eff_node:AddItem( _("提升任务奖励"), (building:GetNextLevelEfficiency()*100).."%", added > 0 and added * 100 .. "%" or ""  )
+        eff_node:AddItem( _("提升任务奖励"), (building:GetEfficiency()*100).."%", added > 0 and added * 100 .. "%" or ""  )
         -- local house_add = building:GetNextLevelMaxHouseNum()-building:GetMaxHouseNum()
         -- efficiency = ""
         -- if house_add>0 then
@@ -394,8 +394,8 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
         --     efficiency = efficiency .. string.format("%s+%d%%," ,_("提升任务奖励"),award_add)
         -- end
     elseif self.building:GetType()=="dwelling" then
-        eff_node:AddItem( bd.dwelling_citizen, building:GetNextLevelCitizen(), building:GetNextLevelCitizen() - building:GetProductionLimit() )
-        eff_node:AddItem( bd.dwelling_poduction, formatNumber(building:GetNextLevelProductionPerHour()), formatNumber(building:GetNextLevelProductionPerHour() - building:GetProductionPerHour()) )
+        eff_node:AddItem( bd.dwelling_citizen, formatNumber(building:GetProductionLimit()), formatNumber(building:GetNextLevelCitizen() - building:GetProductionLimit()) )
+        eff_node:AddItem( bd.dwelling_poduction, formatNumber(building:GetProductionPerHour()), formatNumber(building:GetNextLevelProductionPerHour() - building:GetProductionPerHour()) )
         -- local addtion = building:GetNextLevelCitizen()-building:GetProductionLimit()
         -- if addtion>0 then
         --     efficiency = string.format("%s+%d,",bd.dwelling_citizen,addtion)
@@ -405,25 +405,25 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
         --     efficiency = efficiency..string.format("%s+%d,",bd.dwelling_poduction,addtion)
         -- end
     elseif self.building:GetType()=="woodcutter" then
-        eff_node:AddItem( bd.woodcutter_poduction, formatNumber(building:GetNextLevelProductionPerHour()), formatNumber(building:GetNextLevelProductionPerHour() - building:GetProductionPerHour()) )
+        eff_node:AddItem( bd.woodcutter_poduction, formatNumber(building:GetProductionPerHour()), formatNumber(building:GetNextLevelProductionPerHour() - building:GetProductionPerHour()) )
         -- local addtion = building:GetNextLevelProductionPerHour()-building:GetProductionPerHour()
         -- if addtion>0 then
         --     efficiency = string.format("%s+%d,",bd.woodcutter_poduction,addtion)
         -- end
     elseif self.building:GetType()=="farmer" then
-        eff_node:AddItem( bd.farmer_poduction, formatNumber(building:GetNextLevelProductionPerHour()), formatNumber(building:GetNextLevelProductionPerHour() - building:GetProductionPerHour()) )
+        eff_node:AddItem( bd.farmer_poduction, formatNumber(building:GetProductionPerHour()), formatNumber(building:GetNextLevelProductionPerHour() - building:GetProductionPerHour()) )
         -- local addtion = building:GetNextLevelProductionPerHour()-building:GetProductionPerHour()
         -- if addtion>0 then
         --     efficiency = string.format("%s+%d,",bd.farmer_poduction,addtion)
         -- end
     elseif self.building:GetType()=="quarrier" then
-        eff_node:AddItem( bd.quarrier_poduction, formatNumber(building:GetNextLevelProductionPerHour()), formatNumber(building:GetNextLevelProductionPerHour() - building:GetProductionPerHour()) )
+        eff_node:AddItem( bd.quarrier_poduction, formatNumber(building:GetProductionPerHour()), formatNumber(building:GetNextLevelProductionPerHour() - building:GetProductionPerHour()) )
         -- local addtion = building:GetNextLevelProductionPerHour()-building:GetProductionPerHour()
         -- if addtion>0 then
         --     efficiency = string.format("%s+%d,",bd.quarrier_poduction,addtion)
         -- end
     elseif self.building:GetType()=="miner" then
-        eff_node:AddItem( bd.miner_poduction, formatNumber(building:GetNextLevelProductionPerHour()), formatNumber(building:GetNextLevelProductionPerHour() - building:GetProductionPerHour()) )
+        eff_node:AddItem( bd.miner_poduction, formatNumber(building:GetProductionPerHour()), formatNumber(building:GetNextLevelProductionPerHour() - building:GetProductionPerHour()) )
         -- local addtion = building:GetNextLevelProductionPerHour()-building:GetProductionPerHour()
         -- if addtion>0 then
         --     efficiency = string.format("%s+%d,",bd.miner_poduction,addtion)
@@ -464,7 +464,7 @@ function CommonUpgradeUI:SetUpgradeEfficiency()
         local recovery = self.building:GetCartRecovery()
         local next_recovery = self.building:GetNextLevelCartRecovery()
         eff_node:AddItem( _("资源小车上限"),formatNumber(cart), formatNumber(next_cart - cart) )
-        eff_node:AddItem( _("资源小车每小时回复速度"),recovery, next_recovery - recovery )
+        eff_node:AddItem( _("资源小车每小时回复速度"),formatNumber(recovery), formatNumber(next_recovery - recovery) )
         -- if next_cart - cart > 0 then
         --     efficiency = string.format(_("资源小车上限+%d,"),(next_cart - cart))
         -- end
