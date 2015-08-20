@@ -280,13 +280,19 @@ function MyCityScene:onEnterTransitionFinish()
     end
 end
 function MyCityScene:FteEditName(func)
-    if DataManager:getUserData().countInfo.isFTEFinished or
-        ItemManager:GetItemByName("changePlayerName"):Count() == 0 then
+    if DataManager:getUserData().countInfo.isFTEFinished then
         if type(func) == "function" then
             func()
         end
     else
-        UIKit:newGameUI("GameUIEditName", func):AddToCurrentScene(true)
+        if ItemManager:GetItemByName("changePlayerName"):Count() == 0 then
+            NetManager:getFinishFTE()
+            if type(func) == "function" then
+                func()
+            end
+        else
+            UIKit:newGameUI("GameUIEditName", func):AddToCurrentScene(true)
+        end
     end
 end
 function MyCityScene:CreateHomePage()
@@ -455,6 +461,7 @@ function MyCityScene:OpenUI(building, default_tab, need_tips, build_name)
 end
 
 return MyCityScene
+
 
 
 
