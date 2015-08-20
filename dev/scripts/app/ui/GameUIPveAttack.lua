@@ -6,6 +6,7 @@ local WidgetUseItems = import("..widget.WidgetUseItems")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local GameUIPveAttack = class("GameUIPveAttack", WidgetPopDialog)
+local stages = GameDatas.PvE.stages
 local sections = GameDatas.PvE.sections
 local special = GameDatas.Soldiers.special
 local titles = {
@@ -13,6 +14,8 @@ local titles = {
     _("龙在战斗中胜利"),
     _("一个兵种击败敌军"),
 }
+
+GameUIPveAttack.rewardMap = {}
 
 
 function GameUIPveAttack:ctor(user, pve_name)
@@ -415,11 +418,31 @@ function GameUIPveAttack:Attack()
                 local pve_name = self.pve_name
                 local user = self.user
                 param.callback = function()
-                    if param.star > 0 then
-                        display.getRunningScene():GetSceneLayer():MoveAirship(true)
-                    end
                     if user:IsPveBoss(pve_name) and user:GetPveSectionStarByName(pve_name) > 0 then
                         UIKit:newGameUI("GameUIPveAttack", user, pve_name):AddToCurrentScene(true)
+                        return
+                    end
+                    local level,index = tonumber((unpack(string.split(pve_name, "_")))), 1
+                    local stage = stages[string.format("%d_%d", level, index)]
+                    while stage do
+                        if user:GetStageStarByIndex(level) >= tonumber(stage.needStar) and
+                            not user:IsStageRewardedByName(stage.stageName) and
+                            not GameUIPveAttack.rewardMap[stage.stageName]
+                        then
+                            GameUIPveAttack.rewardMap[stage.stageName] = true
+                            UIKit:newGameUI("GameUIPveReward", level, function()
+                                if param.star > 0 then
+                                    display.getRunningScene():GetSceneLayer():MoveAirship(true)
+                                end
+                            end):AddToCurrentScene(true)
+                            return
+                        end
+                        index = index + 1
+                        stage = stages[string.format("%d_%d", level, index)]
+                    end
+                    --
+                    if param.star > 0 then
+                        display.getRunningScene():GetSceneLayer():MoveAirship(true)
                     end
                 end
                 local is_show = false
