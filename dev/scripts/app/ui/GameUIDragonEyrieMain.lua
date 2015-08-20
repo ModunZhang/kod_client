@@ -529,7 +529,7 @@ function GameUIDragonEyrieMain:CreateDragonHateNodeIf()
         --     color= 0x403c2f,
         --     align= cc.TEXT_ALIGNMENT_CENTER
         -- }):addTo(event_node):align(display.LEFT_CENTER, window.left + 60, 95)
-        -- local progress = WidgetProgress.new(UIKit:hex2c3b(0xffedae), "progress_bar_364x40_1.png", "progress_bar_364x40_2.png", {
+        -- local progress = WidgetProgress.new(0xffedae, "progress_bar_364x40_1.png", "progress_bar_364x40_2.png", {
         --     icon_bg = "back_ground_43x43.png",
         --     icon = "hourglass_30x38.png",
         --     bar_pos = {x = 0,y = 0}

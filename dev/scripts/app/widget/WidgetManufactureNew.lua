@@ -20,10 +20,10 @@ local function newProgress()
     local node = display.newNode()
     node.describe = UIKit:ttfLabel({
         size = 20,
-        color = 0x403c2f
-    }):addTo(node):align(display.LEFT_CENTER, -250, 35)
+        color = 0x403c2f,
+    }):addTo(node):align(display.LEFT_CENTER, -250, 28)
 
-    node.progress = WidgetProgress.new():addTo(node)
+    node.progress = WidgetProgress.new(nil,nil,nil,{label_size = 20}):addTo(node)
         :align(display.LEFT_CENTER, -250, -15)
 
     node.btn = cc.ui.UIPushButton.new({
@@ -33,6 +33,7 @@ local function newProgress()
         text = _("加速"),
         size = 24,
         color = 0xffedae,
+        shadow = true,
     })):addTo(node):pos(200,0)
 
     return node
@@ -148,18 +149,18 @@ function WidgetManufactureNew:ReloadMaterials(materials, materials_map)
     self.build_node.build_label = UIKit:ttfLabel({
         size = 20,
         color = 0x403c2f,
-    }):addTo(self.build_node):align(display.LEFT_CENTER, -275, 25)
-    display.newSprite("hourglass_30x38.png"):addTo(self.build_node):pos(-265, -10):scale(0.8)
+    }):addTo(self.build_node):align(display.LEFT_CENTER, -275, 22)
+    display.newSprite("hourglass_30x38.png"):addTo(self.build_node):pos(-265, -14):scale(0.8)
     self.build_node.build_time = UIKit:ttfLabel({
         text = "00:00:00",
-        size = 18,
+        size = 20,
         color = 0x403c2f,
-    }):addTo(self.build_node):align(display.LEFT_CENTER, -250, -10)
+    }):addTo(self.build_node):align(display.LEFT_CENTER, -250, -14)
     self.build_node.buff_time = UIKit:ttfLabel({
         text = "(-00:00:00)",
-        size = 18,
+        size = 20,
         color = 0x068329,
-    }):addTo(self.build_node):align(display.LEFT_CENTER, -250 + 75, -10)
+    }):addTo(self.build_node):align(display.LEFT_CENTER, -250 + 75, -14)
     self.build_node.build_btn = UIKit:commonButtonWithBG(
         {
             w=185,

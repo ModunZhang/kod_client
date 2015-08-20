@@ -55,7 +55,7 @@ function WidgetMilitaryTechnologyStatus:CreateUpgradingStatus()
     upgrading_node:setContentSize(cc.size(556,106))
     upgrading_node:addTo(self):align(display.CENTER)
     --进度条
-    local progress = WidgetProgress.new(UIKit:hex2c3b(0xffedae), nil, nil, {
+    local progress = WidgetProgress.new(0xffedae, nil, nil, {
         icon_bg = "back_ground_43x43.png",
         icon = "hourglass_30x38.png",
         bar_pos = {x = 0,y = 0}

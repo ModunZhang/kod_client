@@ -14,12 +14,11 @@ function WidgetProgress:ctor(label_color, bg, bar, params)
     self.progress_timer:setMidpoint(cc.p(0,0))
 
     local size = self.progress_timer:getContentSize()
-    self.progress_label = cc.ui.UILabel.new({
+    self.progress_label = UIKit:ttfLabel({
         text = "",
         size = params.label_size or 18,
-        font = UIKit:getFontFilePath(),
-        align = cc.ui.TEXT_ALIGN_RIGHT,
-        color = label_color or UIKit:hex2c3b(0xfdfac2)
+        color = label_color or 0xfdfac2,
+        shadow = true,
     }):addTo(self.progress_timer):align(display.LEFT_CENTER, 35, size.height / 2)
 
     if params.has_icon then
