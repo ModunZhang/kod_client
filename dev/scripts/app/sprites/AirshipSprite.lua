@@ -79,6 +79,7 @@ function AirshipSprite:SetBattery(ratio)
         end
     else
         local num = math.ceil(ratio / 0.2)
+        num = num <= 0 and 1 or num
         for i = 1, 5 do
             self.battery:getChildByTag(i):setVisible(i == num)
             self.battery:getChildByTag(i + 5):setVisible(i < num)
