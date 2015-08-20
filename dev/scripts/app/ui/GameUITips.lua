@@ -26,7 +26,6 @@ end
 function GameUITips:onCleanup()
     GameUITips.super.onCleanup(self)
     cc.Director:getInstance():getTextureCache():removeTextureForKey("region_tips_556x344.jpg")
-    cc.Director:getInstance():getTextureCache():removeTextureForKey("pve_tips_554x340.jpg")
 end
 
 function GameUITips:BuildUI()
@@ -191,9 +190,6 @@ function GameUITips:CreateUIIf_pve()
         return self.pve_node
     end
     local node = display.newNode():size(608,747):addTo(self.bg)
-    display.newSprite("pve_tips_554x340.jpg")
-        :align(display.CENTER_TOP, 305, self.bg:getContentSize().height - 30)
-        :addTo(node)
 
 
     local tips_bg = UIKit:CreateBoxPanelWithBorder({width = 556,height = 263})
