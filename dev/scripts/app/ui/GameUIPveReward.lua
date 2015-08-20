@@ -6,8 +6,9 @@ local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local GameUIPveReward = class("GameUIPveReward", WidgetPopDialog)
 local stages = GameDatas.PvE.stages
 
-function GameUIPveReward:ctor(index)
+function GameUIPveReward:ctor(index, callback)
     self.index = index
+    self.callback = callback
     GameUIPveReward.super.ctor(self,500,_("领取奖励"),window.top - 150)
 end
 function GameUIPveReward:onEnter()
@@ -34,6 +35,12 @@ function GameUIPveReward:onEnter()
     self.list = list
 
     self:RefreshUI()
+end
+function GameUIPveReward:onExit()
+    GameUIPveReward.super.onExit(self)
+    if type(self.callback) == "function" then
+        self.callback()
+    end
 end
 function GameUIPveReward:GetListItem(index)
     local bg = display.newScale9Sprite(string.format("back_ground_548x40_%d.png", index % 2 == 0 and 1 or 2)):size(600,100)
@@ -98,6 +105,7 @@ function GameUIPveReward:GetListItem(index)
                         end
                     end
                     GameGlobalUI:showTips(_("获得奖励"), table.concat(str, ", "))
+                    app:GetAudioManager():PlayeEffectSoundWithKey("BUY_ITEM")
                 end)
             end
         end)
