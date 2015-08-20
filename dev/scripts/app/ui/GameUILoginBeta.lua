@@ -626,7 +626,7 @@ end
 local check = import("..fte.check")
 local mockData = import("..fte.mockData")
 function GameUILoginBeta:checkFte()
-    if check("ALL") then
+    if check("ALL") or check("BuildHouseAt_8_3") then
         app:EnterUserMode()
         return
     end
