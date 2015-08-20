@@ -675,8 +675,7 @@ function WidgetEventTabButtons:UpgradeBuildingHelpOrSpeedup(building)
     else
         if not Alliance_Manager:GetMyAlliance():IsDefault() then
             -- 是否已经申请过联盟加速
-            local isRequested = Alliance_Manager:GetMyAlliance()
-                :HasBeenRequestedToHelpSpeedup(building:UniqueUpgradingKey())
+            local isRequested = DataUtils:HasBeenRequestedToHelpSpeedup(building:UniqueUpgradingKey())
             if not isRequested then
                 NetManager:getRequestAllianceToSpeedUpPromise(eventType,building:UniqueUpgradingKey())
                 return
@@ -692,8 +691,7 @@ function WidgetEventTabButtons:MiliTaryTechUpgradeOrSpeedup(event)
     else
         if not Alliance_Manager:GetMyAlliance():IsDefault() then
             -- 是否已经申请过联盟加速
-            local isRequested = Alliance_Manager:GetMyAlliance()
-                :HasBeenRequestedToHelpSpeedup(event:Id())
+            local isRequested = DataUtils:HasBeenRequestedToHelpSpeedup(event:Id())
             if not isRequested then
                 NetManager:getRequestAllianceToSpeedUpPromise(event:GetEventType(),event:Id())
                 return
@@ -725,8 +723,7 @@ function WidgetEventTabButtons:SetProgressItemBtnLabel(canFreeSpeedUp,event_key,
     else
         -- 未加入联盟或者已经申请过联盟加速
         if Alliance_Manager:GetMyAlliance():IsDefault() or
-            Alliance_Manager:GetMyAlliance()
-                :HasBeenRequestedToHelpSpeedup(event_key) then
+            DataUtils:HasBeenRequestedToHelpSpeedup(event_key) then
             btn_label = _("加速")
             btn_images = {normal = "green_btn_up_154x39.png",
                 pressed = "green_btn_down_154x39.png",
@@ -997,7 +994,7 @@ function WidgetEventTabButtons:ProductionTechnologyEventUpgradeOrSpeedup(event)
     else
         if not Alliance_Manager:GetMyAlliance():IsDefault() then
             -- 是否已经申请过联盟加速
-            local isRequested = Alliance_Manager:GetMyAlliance():HasBeenRequestedToHelpSpeedup(event:Id())
+            local isRequested = DataUtils:HasBeenRequestedToHelpSpeedup(event:Id())
             if not isRequested then
                 NetManager:getRequestAllianceToSpeedUpPromise("productionTechEvents",event:Id()):done(function()
                     self:OnProductionTechnologyEventDataRefresh()

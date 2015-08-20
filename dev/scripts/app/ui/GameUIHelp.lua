@@ -65,7 +65,7 @@ function GameUIHelp:onEnter()
     -- 全部帮助按钮
     local help_all_button = WidgetPushButton.new(
         {normal = "yellow_btn_up_148x58.png", pressed = "yellow_btn_down_148x58.png"}
-    ):setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("全部帮助"), size = 22, color = UIKit:hex2c3b(0xfff3c7)}))
+    ):setButtonLabel(UIKit:ttfLabel({text = _("全部帮助"), size = 22, color = 0xfff3c7,shadow = true}))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 NetManager:getHelpAllAllianceMemberSpeedUpPromise():done(function ()
@@ -273,19 +273,18 @@ function GameUIHelp:CreateHelpItem(event)
     local helpedMembers = eventData:HelpedMembers()
     local maxHelpCount = eventData:MaxHelpCount()
     pro:setPercentage(math.floor(#helpedMembers/maxHelpCount*100))
-    local help_label = cc.ui.UILabel.new({
-        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
-        font = UIKit:getFontFilePath(),
+    local help_label = UIKit:ttfLabel({
         text = _("帮助").." "..#helpedMembers.."/"..maxHelpCount,
         size = 18,
         align = ui.TEXT_ALIGN_CENTER,
-        color = UIKit:hex2c3b(0xfff3c7),
+        color = 0xfff3c7,
+        shadow = true,
     }):addTo(bar):align(display.LEFT_CENTER, 30, bar:getContentSize().height/2)
     -- 帮助按钮
     if User:Id() ~= playerData:Id() then
         local help_button = WidgetPushButton.new(
             {normal = "yellow_btn_up_148x58.png", pressed = "yellow_btn_down_148x58.png"}
-        ):setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("帮助"), size = 22, color = UIKit:hex2c3b(0xfff3c7)}))
+        ):setButtonLabel(UIKit:ttfLabel({text = _("帮助"), size = 22, color = 0xfff3c7,shadow = true,}))
             :onButtonClicked(function(e)
                 if e.name == "CLICKED_EVENT" then
                     NetManager:getHelpAllianceMemberSpeedUpPromise(event:Id()):done(function ( )

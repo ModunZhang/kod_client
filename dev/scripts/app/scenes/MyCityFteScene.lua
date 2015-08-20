@@ -15,7 +15,6 @@ local MyCityScene = import(".MyCityScene")
 local MyCityFteScene = class("MyCityFteScene", MyCityScene)
 
 
-local is_send = false
 function MyCityFteScene:ctor(...)
     MyCityFteScene.super.ctor(self, ...)
     self.clicked_callbacks = {}
@@ -398,10 +397,6 @@ function MyCityFteScene:RunFte()
             return self:PromiseOfBuildHouse(28, 12, "miner", _("建造矿工小屋"))
         end
     end):next(function()
-        if not is_send then
-            NetManager:getFinishFTE()
-            is_send = true
-        end
         self:GetFteLayer():UnlockAll()
         return self:PromiseOfFteEnd()
     end)
@@ -641,9 +636,6 @@ function MyCityFteScene:Skip()
     self:EnterMyCity()
 end
 function MyCityFteScene:EnterMyCity()
-    if not is_send then
-        NetManager:getFinishFTE()
-    end
     app:GetPushManager():CancelAll()
     UIKit:closeAllUI(true)
     app:EnterUserMode()

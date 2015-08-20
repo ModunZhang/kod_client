@@ -312,7 +312,7 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
         :align(display.CENTER, size.width - 120, 110)
         :setButtonLabel(UIKit:ttfLabel({
             text = _("治愈"),
-            size = 27,
+            size = 24,
             color = 0xfff3c7,
             shadow = true
 

@@ -14,10 +14,11 @@ local WidgetPlayerNode = import("..widget.WidgetPlayerNode")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local Localize = import("..utils.Localize")
 local config_playerLevel = GameDatas.PlayerInitData.playerLevel
-function GameUIAllianceMemberInfo:ctor(isMyAlliance,memberId,func_call)
+function GameUIAllianceMemberInfo:ctor(isMyAlliance,memberId,func_call,serverId)
     GameUIAllianceMemberInfo.super.ctor(self)
     self.isMyAlliance = isMyAlliance or false
     self.memberId_ = memberId
+    self.serverId_ = serverId or User:ServerId()
     self.func_call = func_call
 end
 
@@ -43,7 +44,7 @@ function GameUIAllianceMemberInfo:OnMoveInStage()
     self.bg = bg
     self.title_bar = title_bar
 
-    NetManager:getPlayerInfoPromise(self.memberId_):done(function(data)
+    NetManager:getPlayerInfoPromise(self.memberId_,self.serverId_):done(function(data)
         self:OnGetPlayerInfoSuccess(data)
     end):fail(function()
         self:LeftButtonClicked()
@@ -101,7 +102,7 @@ function GameUIAllianceMemberInfo:BuildUI()
                     id = self.player_info.id,
                     name = self.player_info.name,
                     icon = self.player_info.icon,
-                    allianceTag = self.player_info.alliance.tag,
+                    allianceTag = self.player_info.alliance and self.player_info.alliance.tag,
                 })
                 mail:SetTitle(_("个人邮件"))
                 mail:SetAddressee(self.player_info.name)
@@ -186,7 +187,7 @@ function GameUIAllianceMemberInfo:SendToServerWithTag(tag,member)
                     id = member:Id(),
                     name = member:Name(),
                     icon = member:Icon(),
-                    allianceTag = self.player_info.alliance.tag,
+                    allianceTag = self.player_info.alliance and self.player_info.alliance.tag,
                 })
         mail:SetTitle(_("个人邮件"))
         mail:SetAddressee(self.player_info.name)
@@ -205,7 +206,7 @@ function GameUIAllianceMemberInfo:AdapterPlayerList()
         table.insert(r,{_("职位"),Localize.alliance_title[player.alliance.title]})
         table.insert(r,{_("联盟"),player.alliance.name})
     else
-         table.insert(r,{_("职位"),_("无")})
+        table.insert(r,{_("职位"),_("无")})
         table.insert(r,{_("联盟"),_("无")})
     end
     if type(player.online) == 'boolean' and player.online then
@@ -213,6 +214,8 @@ function GameUIAllianceMemberInfo:AdapterPlayerList()
     else
         table.insert(r,{_("最后登陆"),NetService:formatTimeAsTimeAgoStyleByServerTime(player.lastLogoutTime)})
     end
+    local __,__,indexName = string.find(User:ServerId() or "","-(%d+)")
+    table.insert(r,{_("服务器"),string.format("%s %d",Localize.server_name[User:ServerLevel()],indexName)})
     table.insert(r,{_("战斗力"),string.formatnumberthousands(player.power)})
     table.insert(r,{_("击杀"),string.formatnumberthousands(player.kill)})
 

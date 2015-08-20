@@ -136,9 +136,6 @@ function GameUIPveSummary:BuildVictoryUI(param)
     local is_show_levelup = false
     if param.new_level - param.old_level > 0 then
         for i = param.old_level, param.new_level do
-            table.insert(acts, cc.CallFunc:create(function()
-                progresstimer_new:setPercentage(0)
-            end))
             if i == param.old_level then
                 table.insert(acts, cc.CallFunc:create(function()
                     local expNeed = config_dragonLevel[i].expNeed
@@ -154,11 +151,11 @@ function GameUIPveSummary:BuildVictoryUI(param)
                             size = 22,
                             color = 0x00ff00,
                         }):addTo(bg):align(display.CENTER, 230, 120)
-                        :scale(1.5):runAction(cc.EaseBackOut:create(
-                                cc.Spawn:create(
-                                    cc.MoveTo:create(0.5, cc.p(230, 120)),
-                                    cc.ScaleTo:create(0.5, 1)
-                                )
+                            :scale(1.5):runAction(cc.EaseBackOut:create(
+                            cc.Spawn:create(
+                                cc.MoveTo:create(0.5, cc.p(230, 120)),
+                                cc.ScaleTo:create(0.5, 1)
+                            )
                             ))
                     end))
 
@@ -170,6 +167,9 @@ function GameUIPveSummary:BuildVictoryUI(param)
                 table.insert(acts, cc.CallFunc:create(function() progresstimer_old:hide() end))
             elseif i == param.new_level then
                 table.insert(acts, cc.CallFunc:create(function()
+                    progresstimer_new:setPercentage(0)
+                end))
+                table.insert(acts, cc.CallFunc:create(function()
                     local expNeed = config_dragonLevel[i].expNeed
                     self:Performance(unit_time, function(ratio)
                         setExpLabelWithFormat(exp_label, param.new_exp * ratio, expNeed, upexp)
@@ -177,6 +177,9 @@ function GameUIPveSummary:BuildVictoryUI(param)
                 end))
                 table.insert(acts, cc.ProgressTo:create(unit_time, param.new_exp/config_dragonLevel[param.new_level].expNeed * 100))
             else
+                table.insert(acts, cc.CallFunc:create(function()
+                    progresstimer_new:setPercentage(0)
+                end))
                 table.insert(acts, cc.CallFunc:create(function()
                     local expNeed = config_dragonLevel[i].expNeed
                     self:Performance(unit_time, function(ratio)
@@ -192,10 +195,10 @@ function GameUIPveSummary:BuildVictoryUI(param)
                             color = 0x00ff00,
                         }):addTo(bg):align(display.CENTER, 230, 120)
                             :scale(1.5):runAction(cc.EaseBackOut:create(
-                                cc.Spawn:create(
-                                    cc.MoveTo:create(0.5, cc.p(230, 120)),
-                                    cc.ScaleTo:create(0.5, 1)
-                                )
+                            cc.Spawn:create(
+                                cc.MoveTo:create(0.5, cc.p(230, 120)),
+                                cc.ScaleTo:create(0.5, 1)
+                            )
                             ))
                     end))
                     is_show_levelup = true
@@ -365,6 +368,7 @@ end
 
 
 return GameUIPveSummary
+
 
 
 

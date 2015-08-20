@@ -272,7 +272,13 @@ function WidgetUseItems:OpenResourceDialog( item )
                     return true
                 end,
                 function ()
-                    UIKit:newWidgetUI("WidgetUseMutiItems", v):AddToCurrentScene()
+                    if v:Count() > 1 then
+                        UIKit:newWidgetUI("WidgetUseMutiItems", v):AddToCurrentScene()
+                    else
+                        NetManager:getUseItemPromise(v:Name(),{
+                            [v:Name()] = {count = v:Count()}
+                        })
+                    end
                 end,
                 function ()
                     local item_name = v:Name()
@@ -1373,6 +1379,7 @@ end
 
 
 return WidgetUseItems
+
 
 
 

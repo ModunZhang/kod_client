@@ -4,9 +4,9 @@
 --
 local window = import("..utils.window")
 local GameUIEquip = import(".GameUIEquip")
-local WidgetManufacture = import("..widget.WidgetManufacture")
+local WidgetManufacture = import("..widget.WidgetManufactureNew")
 local GameUIMaterials = UIKit:createUIClass("GameUIMaterials", "GameUIWithCommonHeader")
-
+local timer = app.timer
 function GameUIMaterials:ctor(toolShop, blackSmith)
     GameUIMaterials.super.ctor(self, toolShop:BelongCity(), _("制造材料"), blackSmith)
     self.dragon_map = {}

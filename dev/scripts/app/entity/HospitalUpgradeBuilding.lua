@@ -152,8 +152,9 @@ function HospitalUpgradeBuilding:GetTreatingTimeByTypeWithCount(soldiers)
         local soldier_type = v.name
         local count = v.count
         local soldier_config = self:GetSoldierConfigByType(soldier_type)
-        treat_time = treat_time + soldier_config["treatTime"] * count
+        treat_time = treat_time + soldier_config["treatTime"] * count 
     end
+    treat_time = math.ceil((1 - self:BelongCity():FindTechByName("healingAgent"):GetBuffEffectVal()) * treat_time)
     return treat_time
 end
 function HospitalUpgradeBuilding:GetSoldierConfigByType(soldier_type)
@@ -216,14 +217,14 @@ end
 -- 普通治疗需要的金龙币
 function HospitalUpgradeBuilding:GetTreatGems(soldiers)
     local total_coin = City:GetSoldierManager():GetTreatResource(soldiers)
-    local resource_state =  City:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())<total_coin
+    local resource_state =  City:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()) < total_coin
 
     local need_gems = 0
     if resource_state then
-        need_gems = DataUtils:buyResource({coin=total_coin},{coin=City:GetResourceManager():GetCoinResource()})
+        need_gems = DataUtils:buyResource({coin=total_coin},{coin = City:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())})
     end
     if self:IsTreating() then
-        need_gems = need_gems +DataUtils:getGemByTimeInterval(self:GetTreatEvent():LeftTime(app.timer:GetServerTime()))
+        need_gems = need_gems + DataUtils:getGemByTimeInterval(self:GetTreatEvent():LeftTime(app.timer:GetServerTime()))
     end
     return need_gems
 end

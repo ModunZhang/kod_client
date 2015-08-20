@@ -253,6 +253,27 @@ function MyCityScene:onEnterTransitionFinish()
     if Alliance_Manager:HasBeenJoinedAlliance() then
         return
     end
+    self:FteEditName(function()
+        self:FteAlliance()
+    end)
+end
+function MyCityScene:FteEditName(func)
+    if DataManager:getUserData().countInfo.isFTEFinished then
+        if type(func) == "function" then
+            func()
+        end
+    else
+        if ItemManager:GetItemByName("changePlayerName"):Count() == 0 then
+            NetManager:getFinishFTE()
+            if type(func) == "function" then
+                func()
+            end
+        else
+            UIKit:newGameUI("GameUIEditName", func):AddToCurrentScene(true)
+        end
+    end
+end
+function MyCityScene:FteAlliance()
     local userdefault = cc.UserDefault:getInstance()
     local city_key = DataManager:getUserData()._id.."_first_in_city_scene"
     if not userdefault:getBoolForKey(city_key) and
@@ -441,6 +462,10 @@ function MyCityScene:OpenUI(building, default_tab, need_tips, build_name)
 end
 
 return MyCityScene
+
+
+
+
 
 
 

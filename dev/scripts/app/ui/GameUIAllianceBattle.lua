@@ -1001,7 +1001,7 @@ function GameUIAllianceBattle:CreateHistoryContent()
             revenge_time_label:setString(_("已过期"))
             revenge_time_label:setPositionX(30)
             revenge_time_label:setColor(UIKit:hex2c3b(0x7e0000))
-            self.revenge_button:setButtonEnabled(false)
+            revenge_button:setButtonEnabled(false)
             self.is_expire = true
         else
             if self.can_revenge then

@@ -388,15 +388,6 @@ function Alliance:ReFreashHelpEvent(changed_help_event)
     end)
 
 end
-function Alliance:HasBeenRequestedToHelpSpeedup(eventId)
-    if self.help_events then
-        for _,h_event in pairs(self.help_events) do
-            if h_event:GetPlayerData():Id() == User:Id() and h_event:GetEventData():Id() == eventId then
-                return true
-            end
-        end
-    end
-end
 -- 获取其他所有联盟成员的申请的没有被自己帮助过的事件数量
 function Alliance:GetOtherRequestEventsNum()
     local request_num = 0

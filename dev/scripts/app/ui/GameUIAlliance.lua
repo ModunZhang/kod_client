@@ -948,19 +948,19 @@ function GameUIAlliance:GetEventItemByIndexAndEvent()
     local content = display.newNode():size(520,84)
     local bg0 = display.newScale9Sprite("back_ground_548x40_1.png",0,0,cc.size(520,84),cc.rect(10,10,528,20)):addTo(content):align(display.LEFT_BOTTOM, 0, 0)
     local bg1 = display.newScale9Sprite("back_ground_548x40_2.png",0,0,cc.size(520,84),cc.rect(10,10,528,20)):addTo(content):align(display.LEFT_BOTTOM, 0, 0)
-    local normal = display.newScale9Sprite("title_blue_430x30.png",0,0,cc.size(222,30),cc.rect(20,10,390,10)):addTo(content):align(display.LEFT_TOP, 0,70)
-    local important = display.newSprite("alliance_event_type_green_222x30.png"):addTo(content):align(display.LEFT_TOP, 0,70)
-    local war = display.newScale9Sprite("title_red_166x30.png",0,0,cc.size(222,30),cc.rect(20,10,126,10)):addTo(content):align(display.LEFT_TOP, 0,70)
+    local normal = display.newScale9Sprite("title_blue_430x30.png",0,0,cc.size(222,30),cc.rect(20,10,390,10)):addTo(content):align(display.LEFT_TOP, 0,77)
+    local important = display.newSprite("alliance_event_type_green_222x30.png"):addTo(content):align(display.LEFT_TOP, 0,77)
+    local war = display.newScale9Sprite("title_red_166x30.png",0,0,cc.size(222,30),cc.rect(20,10,126,10)):addTo(content):align(display.LEFT_TOP, 0,77)
     local title_label = UIKit:ttfLabel({
         text = "title",
         size = 20,
         color = 0xffedae
-    }):addTo(content):align(display.LEFT_CENTER,10,55)
+    }):addTo(content):align(display.LEFT_CENTER,10,62)
     local time_label = UIKit:ttfLabel({
         text = "time",
         size = 18,
         color = 0x615b44
-    }):addTo(content):align(display.LEFT_BOTTOM,10, 5)
+    }):addTo(content):align(display.LEFT_BOTTOM,10, 10)
     local content_label = UIKit:ttfLabel({
         text = "content",
         size = 20,

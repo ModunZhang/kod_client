@@ -4,6 +4,7 @@
 #import "AppController.h"
 #import <CoreFoundation/CoreFoundation.h>
 #import "UICKeyChainStore.h"
+#import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #import <CommonCrypto/CommonDigest.h> // Need to import for CC_MD5 access
 extern "C" void CopyText(const char * text)
 {
@@ -101,7 +102,17 @@ extern "C" long long getOSTime()
     double currentTime = CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970;
     return (long long)(currentTime * 1000);
 }
+extern "C" float getBatteryLevel()
+{
+    [[UIDevice currentDevice] setBatteryMonitoringEnabled:YES];  
+    return [[UIDevice currentDevice] batteryLevel];  
+}
 
+extern "C" const char* getInternetConnectionStatus()
+{
+    CTTelephonyNetworkInfo *networkInfo = [[[CTTelephonyNetworkInfo alloc] init]autorelease];
+    return [networkInfo.currentRadioAccessTechnology UTF8String];
+}
 static NSString * shared_openUDID = NULL;
 extern "C" const char* GetOpenUdid()
 {

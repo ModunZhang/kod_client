@@ -303,7 +303,7 @@ function WidgetMarchEvents:CreateReturnItem(entity)
 
     node.time = UIKit:ttfLabel({
         text = GameUtils:formatTimeStyle1(event:GetTime()),
-        size = 16,
+        size = 18,
         color = 0xd1ca95,
         align = cc.TEXT_ALIGNMENT_RIGHT,
         shadow = true,

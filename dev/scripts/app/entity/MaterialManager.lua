@@ -69,6 +69,12 @@ end
 function MaterialManager:GetMaterialMap()
     return self.material_map
 end
+function MaterialManager:GetBuildMaterias()
+    return self:GetMaterialsByType(BUILD)
+end
+function MaterialManager:GetTechnologyMaterias()
+    return self:GetMaterialsByType(TECHNOLOGY)
+end
 function MaterialManager:GetEquipmentMaterias()
     return self:GetMaterialsByType(EQUIPMENT)
 end

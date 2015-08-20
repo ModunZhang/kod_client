@@ -2086,7 +2086,7 @@ function GameUIMail:ReplyMail(mail,title,content)
         UIKit:showMessageDialog(_("提示"),_("请填写邮件内容"))
         return
     end
-    NetManager:getSendPersonalMailPromise(addressee, title, content,{
+    NetManager:getSendPersonalMailPromise(addressee,title, content,{
         id = mail.fromId,
         name = mail.fromName,
         icon = mail.fromIcon,

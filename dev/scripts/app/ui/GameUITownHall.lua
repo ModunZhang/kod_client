@@ -203,7 +203,7 @@ function GameUITownHall:CreateQuestItem(quest,index)
         color = 0x403c2f,
     }):align(display.LEFT_CENTER,icon_bg:getPositionX()+ icon_bg:getContentSize().width - 40, icon_bg:getPositionY()-20):addTo(body)
 
-    local progress = WidgetProgress.new(UIKit:hex2c3b(0xffedae), "progress_bar_272x40_1.png", "progress_bar_272x40_2.png", {
+    local progress = WidgetProgress.new(0xffedae, "progress_bar_272x40_1.png", "progress_bar_272x40_2.png", {
         icon_bg = "back_ground_43x43.png",
         icon = "hourglass_30x38.png",
         bar_pos = {x = 0,y = 0}
@@ -250,7 +250,6 @@ function GameUITownHall:CreateQuestItem(quest,index)
                         GameGlobalUI:showTips(_("每日任务完成"),_("获得")..re_desc)
 
                     end)
-                    TownHallUI.isFinishedQuest = false
                 end)
             else
                 control_btn:setButtonImage(cc.ui.UIPushButton.NORMAL, "green_btn_up_148x58.png", true)
@@ -280,11 +279,11 @@ function GameUITownHall:CreateQuestItem(quest,index)
                     text  = _("开始")
                 })
             ):onButtonClicked(function(event)
-                if TownHallUI.isFinishedQuest then
+                if User:CouldGotDailyQuestReward() then
                     UIKit:showMessageDialog(_("主人"),_("请先领取已经完成的任务的奖励"))
                     return
                 end
-                if TownHallUI.started_quest_item then
+                if User:IsOnDailyQuestEvents() then
                     UIKit:showMessageDialog(_("主人"),_("已经有一个任务正在进行中"))
                     return
                 end
@@ -344,13 +343,6 @@ function GameUITownHall:CreateQuestItem(quest,index)
         self:SetReward(quest)
         self:SetStar(quest)
         need_time_label:setString(GameUtils:formatTimeStyle1(dailyQuestStar_config[quest.star].needMinutes*60))
-        if User:IsQuestStarted(quest) then
-            if User:IsQuestFinished(quest) then
-                TownHallUI.isFinishedQuest = true
-            else
-                TownHallUI.started_quest_item = self
-            end
-        end
     end
     item:Init(quest)
     item:SetStatus(quest)
@@ -426,14 +418,12 @@ function GameUITownHall:OnTimer(current_time)
         end
     end
 
-    if self.started_quest_item and self.started_quest_item.GetQuest then
-        local quest = self.started_quest_item:GetQuest()
-        if User:IsQuestFinished(quest) then
-            self.started_quest_item = nil
-            return
+    for __,item in pairs(self.quest_items) do
+        local quest = item:GetQuest()
+        if quest and User:IsQuestStarted(quest) and not User:IsQuestFinished(quest) then
+            local show_time = quest.finishTime/1000-current_time <0 and 0 or quest.finishTime/1000-current_time
+            item:SetProgress(GameUtils:formatTimeStyle1(show_time), 100-(quest.finishTime-current_time*1000)/(quest.finishTime-quest.startTime)*100 )
         end
-        local show_time = quest.finishTime/1000-current_time <0 and 0 or quest.finishTime/1000-current_time
-        self.started_quest_item:SetProgress(GameUtils:formatTimeStyle1(show_time), 100-(quest.finishTime-current_time*1000)/(quest.finishTime-quest.startTime)*100 )
     end
 end
 function GameUITownHall:GetQuestItemById(questId)

@@ -505,16 +505,30 @@ function GameUILoginBeta:loadServerJson()
         self:donwLoadFilesWithFileList()
     end)
 end
+-- 1.0 --> 100 1.01 --> 110 1.0.1 --> 101
+function GameUILoginBeta:GetVersionWeight(ver)
+    ver = tostring(ver)
+    local verInfo = string.split(ver,'.')
+    local ret,flag = 0,1
+    for index=3,1,-1 do
+        local current = verInfo[index] or '0'
+        current = tonumber(current) * flag
+        ret = ret + current
+        flag = flag * 10
+    end
+    return ret
+end
 
 function GameUILoginBeta:donwLoadFilesWithFileList()
     self.m_totalSize = 0
     self.m_currentSize = 0
     local localFileList = json.decode(self.m_localJson)
     local serverFileList = json.decode(self.m_serverJson)
-    local localAppVersion = tonumber(ext.getAppVersion())
-    local serverMinAppVersion = tonumber(serverFileList.appMinVersion)
-    local serverAppVersion = tonumber(serverFileList.appVersion)
-    if localAppVersion < serverMinAppVersion then
+    local localAppVersion = self:GetVersionWeight(ext.getAppVersion())
+    local serverMinAppVersion = self:GetVersionWeight(serverFileList.appMinVersion)
+    local serverAppVersion = self:GetVersionWeight(serverFileList.appVersion)
+    if localAppVersion < serverMinAppVersion or 
+        (ext.getAppVersion() == '1.01' and serverFileList.appVersion == '1.1') then
         device.showAlert(_("错误"), _("游戏版本过低,请更新!"), { _("确定") }, function(event)
             if CONFIG_IS_DEBUG then
                 device.openURL("https://batcat.sinaapp.com/ad_hoc/build-index.html")
@@ -525,12 +539,16 @@ function GameUILoginBeta:donwLoadFilesWithFileList()
         end)
         return
     end
-
-    if localAppVersion > serverAppVersion then
-        device.showAlert(_("错误"), _("服务器正在部署,请稍候!"), { _("确定") }, function(event)
-            self:loadServerJson()
-        end)
-        return
+    if localAppVersion > serverAppVersion or 
+        (ext.getAppVersion() == '1.1' and serverFileList.appVersion == '1.01') then
+        -- device.showAlert(_("错误"), _("服务器正在部署,请稍候!"), { _("确定") }, function(event)
+        --     self:loadServerJson()
+        -- end)
+        -- return
+        CONFIG_REMOTE_SERVER.gate.host = "54.223.202.136"
+        NetManager.m_gateServer.host = CONFIG_IS_LOCAL and CONFIG_LOCAL_SERVER.gate.host or CONFIG_REMOTE_SERVER.gate.host
+        NetManager.m_gateServer.port = CONFIG_IS_LOCAL and CONFIG_LOCAL_SERVER.gate.port or CONFIG_REMOTE_SERVER.gate.port
+        NetManager.m_gateServer.name = CONFIG_IS_LOCAL and CONFIG_LOCAL_SERVER.gate.name or CONFIG_REMOTE_SERVER.gate.name
     end
 
 
@@ -608,7 +626,7 @@ end
 local check = import("..fte.check")
 local mockData = import("..fte.mockData")
 function GameUILoginBeta:checkFte()
-    if check("ALL") then
+    if check("ALL") or check("BuildHouseAt_8_3") then
         app:EnterUserMode()
         return
     end

@@ -3,7 +3,7 @@
 -- Date: 2014-08-18 14:33:28
 --
 local window = import("..utils.window")
-local WidgetManufacture = import("..widget.WidgetManufacture")
+local WidgetManufacture = import("..widget.WidgetManufactureNew")
 local GameUIToolShop = UIKit:createUIClass("GameUIToolShop", "GameUIUpgradeBuilding")
 
 function GameUIToolShop:ctor(city, toolShop, default_tab)
