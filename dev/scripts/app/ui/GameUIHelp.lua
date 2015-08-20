@@ -65,7 +65,7 @@ function GameUIHelp:onEnter()
     -- 全部帮助按钮
     local help_all_button = WidgetPushButton.new(
         {normal = "yellow_btn_up_148x58.png", pressed = "yellow_btn_down_148x58.png"}
-    ):setButtonLabel(cc.ui.UILabel.new({UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,text = _("全部帮助"), size = 22, color = UIKit:hex2c3b(0xfff3c7)}))
+    ):setButtonLabel(UIKit:ttfLabel({text = _("全部帮助"), size = 22, color = 0xfff3c7,shadow = true}))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 NetManager:getHelpAllAllianceMemberSpeedUpPromise():done(function ()

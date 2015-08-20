@@ -125,6 +125,7 @@ function GameUIResource:CreateInfomation()
             text = _("拆除"),
             size = 22,
             color = 0xffedae,
+            shadow = true
         }))
     else
         chaiButton:setButtonImage(cc.ui.UIPushButton.NORMAL, "green_btn_up_148x58.png", true)
@@ -133,6 +134,7 @@ function GameUIResource:CreateInfomation()
             text = _("购买&拆除"),
             size = 18,
             color = 0xffedae,
+            shadow = true
         }))
             :setButtonLabelOffset(0, 14)
         local num_bg = display.newSprite("back_ground_122x20.png"):addTo(chaiButton):align(display.CENTER, -74, -40)
@@ -193,12 +195,14 @@ function GameUIResource:CreateInfomation()
             text = _("移动"),
             size = 22,
             color = 0xffedae,
+            shadow = true
         }))
     else
         moveButton:setButtonLabel("normal", UIKit:ttfLabel({
             text = _("购买&移动"),
             size = 18,
             color = 0xffedae,
+            shadow = true
         }))
             :setButtonLabelOffset(0, 14)
         local num_bg = display.newSprite("back_ground_122x20.png"):addTo(moveButton):align(display.CENTER, -74, -40)

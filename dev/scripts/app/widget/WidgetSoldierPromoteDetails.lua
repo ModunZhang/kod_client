@@ -220,7 +220,8 @@ function WidgetSoldierPromoteDetails:onEnter()
             :setButtonLabel(UIKit:ttfLabel({
                 text = _("下一步"),
                 size = 24,
-                color = 0xfff3c7
+                color = 0xfff3c7,
+                shadow = true
             }))
             :onButtonClicked(function(event)
                 UIKit:newWidgetUI("WidgetPromoteSoldier",soldier_type,self.building:GetType()):AddToCurrentScene()
