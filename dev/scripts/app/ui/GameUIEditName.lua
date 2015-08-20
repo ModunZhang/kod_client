@@ -41,9 +41,13 @@ function GameUIEditName:ctor(callback)
             style = UIKit.BTN_COLOR.YELLOW,
             labelParams={text = _("确认")},
             listener = function ()
+                if string.len(string.trim(editbox:getText())) == 0 then
+                    UIKit:showMessageDialog(_("主人"), _("请输入新的名称"))
+                    return
+                end
                 NetManager:getUseItemPromise("changePlayerName", {
                     changePlayerName = { playerName = string.trim(editbox:getText()) }
-                }):always(function()
+                }):done(function()
                     if not DataManager:getUserData().countInfo.isFTEFinished then
                         NetManager:getFinishFTE()
                     end
