@@ -963,7 +963,9 @@ end
 function NetManager:getHatchDragonPromise(dragonType)
     return get_blocking_request_promise("logic.playerHandler.hatchDragon", {
         dragonType = dragonType,
-    }, "孵化失败!"):done(get_player_response_msg)
+    }, "孵化失败!"):done(get_player_response_msg):done(function()
+        app:GetAudioManager():PlayeEffectSoundWithKey("HATCH_DRAGON")
+        end)
 end
 -- 装备
 function NetManager:getLoadDragonEquipmentPromise(dragonType, equipmentCategory, equipmentName)
