@@ -1155,7 +1155,29 @@ function DataUtils:GetResourceProtectPercent( resource_name )
     finalPercent = finalPercent > 0.9 and 0.9 or finalPercent < 0.1 and 0.1 or finalPercent
     return finalPercent
 end
+
+-- 事件是否已经申请过协助加速
+function DataUtils:HasBeenRequestedToHelpSpeedup( eventId )
+    local user_data = DataManager:getUserData()
+    local can_helped_events = {
+        user_data.buildingEvents,
+        user_data.houseEvents,
+        user_data.productionTechEvents,
+        user_data.militaryTechEvents,
+        user_data.soldierStarEvents,
+    }
+    for i,events in ipairs(can_helped_events) do
+        for i,event in ipairs(events) do
+            if event.id == eventId and event.helped then
+                return true
+            end
+        end
+    end
+    return false
+end
 return DataUtils
+
+
 
 
 
