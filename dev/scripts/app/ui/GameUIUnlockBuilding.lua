@@ -160,7 +160,7 @@ function GameUIUnlockBuilding:InitBuildingIntroduces()
 
     local list = UIListView.new{
         -- bgColor = UIKit:hex2c4b(0x7a000000),
-        viewRect = cc.rect(26,20,350,104),
+        viewRect = cc.rect(26,20,360,104),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:align(display.LEFT_CENTER,display.cx-116, display.top-354):addTo(self)
     local bd = Localize.building_description
