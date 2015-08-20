@@ -366,10 +366,10 @@ function User:GetDailyQuestEvents()
     return self.dailyQuestEvents
 end
 function User:IsQuestStarted(quest)
-    return quest.finishTime ~= nil
+    return tolua.type(quest.finishTime) ~= "nil"
 end
 function User:IsQuestFinished(quest)
-    return quest.finishTime==0
+    return quest.finishTime == 0
 end
 function User:OnPropertyChange(property_name, old_value, new_value)
     self:NotifyListeneOnType(BASIC, function(listener)
@@ -1001,6 +1001,7 @@ function User:GetBestDragon()
 end
 
 return User
+
 
 
 
