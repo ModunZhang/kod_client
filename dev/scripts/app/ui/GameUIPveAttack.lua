@@ -424,7 +424,7 @@ function GameUIPveAttack:Attack()
 
                     local userdefault = cc.UserDefault:getInstance()
                     local level,index = tonumber((unpack(string.split(pve_name, "_")))), 1
-                    local stage,key = stages[string.format("%d_%d", level, index)], "pve_stage_"..string.format("%d_%d", level, index)
+                    local stage,key = stages[string.format("%d_%d", level, index)], DataManager:getUserData()._id.."_pve_stage_"..string.format("%d_%d", level, index)
                     while stage do
                         if user:GetStageStarByIndex(level) >= tonumber(stage.needStar) and
                             not user:IsStageRewardedByName(stage.stageName) and
@@ -441,7 +441,7 @@ function GameUIPveAttack:Attack()
                             return
                         end
                         index = index + 1
-                        stage,key = stages[string.format("%d_%d", level, index)], "pve_stage_"..string.format("%d_%d", level, index)
+                        stage,key = stages[string.format("%d_%d", level, index)], DataManager:getUserData()._id.."_pve_stage_"..string.format("%d_%d", level, index)
                     end
                     --
                     if param.star > 0 then
