@@ -280,7 +280,8 @@ function MyCityScene:onEnterTransitionFinish()
     end
 end
 function MyCityScene:FteEditName(func)
-    if DataManager:getUserData().countInfo.isFTEFinished then
+    if DataManager:getUserData().countInfo.isFTEFinished or
+        ItemManager:GetItemByName("changePlayerName"):Count() == 0 then
         if type(func) == "function" then
             func()
         end
