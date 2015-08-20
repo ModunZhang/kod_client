@@ -152,8 +152,9 @@ function HospitalUpgradeBuilding:GetTreatingTimeByTypeWithCount(soldiers)
         local soldier_type = v.name
         local count = v.count
         local soldier_config = self:GetSoldierConfigByType(soldier_type)
-        treat_time = treat_time + soldier_config["treatTime"] * count
+        treat_time = treat_time + soldier_config["treatTime"] * count 
     end
+    treat_time = math.ceil((1 - self:BelongCity():FindTechByName("healingAgent"):GetBuffEffectVal()) * treat_time)
     return treat_time
 end
 function HospitalUpgradeBuilding:GetSoldierConfigByType(soldier_type)
