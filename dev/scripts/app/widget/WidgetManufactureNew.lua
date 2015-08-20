@@ -21,10 +21,10 @@ local function newProgress()
     node.describe = UIKit:ttfLabel({
         size = 20,
         color = 0x403c2f,
-    }):addTo(node):align(display.LEFT_CENTER, -270, 28)
+    }):addTo(node):align(display.LEFT_CENTER, -275, 28)
 
     node.progress = WidgetProgress.new(nil,nil,nil,{label_size = 20}):addTo(node)
-        :align(display.LEFT_CENTER, -250, -15)
+        :align(display.LEFT_CENTER, -255, -15)
 
     node.btn = cc.ui.UIPushButton.new({
         normal = "green_btn_up_148x76.png",
@@ -149,18 +149,18 @@ function WidgetManufactureNew:ReloadMaterials(materials, materials_map)
     self.build_node.build_label = UIKit:ttfLabel({
         size = 20,
         color = 0x403c2f,
-    }):addTo(self.build_node):align(display.LEFT_CENTER, -275, 22)
-    display.newSprite("hourglass_30x38.png"):addTo(self.build_node):pos(-265, -14):scale(0.8)
+    }):addTo(self.build_node):align(display.LEFT_CENTER, -275, 20)
+    display.newSprite("hourglass_30x38.png"):addTo(self.build_node):pos(-265, -15):scale(0.8)
     self.build_node.build_time = UIKit:ttfLabel({
         text = "00:00:00",
         size = 20,
         color = 0x403c2f,
-    }):addTo(self.build_node):align(display.LEFT_CENTER, -250, -14)
+    }):addTo(self.build_node):align(display.LEFT_CENTER, -250, -15)
     self.build_node.buff_time = UIKit:ttfLabel({
         text = "(-00:00:00)",
         size = 20,
         color = 0x068329,
-    }):addTo(self.build_node):align(display.LEFT_CENTER, -250 + 75, -14)
+    }):addTo(self.build_node):align(display.LEFT_CENTER, -250 + 75, -15)
     self.build_node.build_btn = UIKit:commonButtonWithBG(
         {
             w=185,
