@@ -268,11 +268,31 @@ function MyCityScene:onEnterTransitionFinish()
                     {words = _("领主大人，这个世界上的觉醒者并不只有你一人。介入他们或者创建联盟邀请他们加入，会让我们发展得更顺利")}
                 )
             end):next(function()
-            self:GetHomePage():PromiseOfFteAlliance()
+            self:FteEditName(function()
+                self:GetHomePage():PromiseOfFteAlliance()
+            end)
             return GameUINpc:PromiseOfLeave()
             end)
     else
-        self:GetHomePage():PromiseOfFteAlliance()
+        self:FteEditName(function()
+            self:GetHomePage():PromiseOfFteAlliance()
+        end)
+    end
+end
+function MyCityScene:FteEditName(func)
+    if DataManager:getUserData().countInfo.isFTEFinished then
+        if type(func) == "function" then
+            func()
+        end
+    else
+        if ItemManager:GetItemByName("changePlayerName"):Count() == 0 then
+            NetManager:getFinishFTE()
+            if type(func) == "function" then
+                func()
+            end
+        else
+            UIKit:newGameUI("GameUIEditName", func):AddToCurrentScene(true)
+        end
     end
 end
 function MyCityScene:CreateHomePage()
@@ -441,6 +461,9 @@ function MyCityScene:OpenUI(building, default_tab, need_tips, build_name)
 end
 
 return MyCityScene
+
+
+
 
 
 
