@@ -265,7 +265,11 @@ function GameUIAllianceInfo:LoadInfo()
 end
 
 function GameUIAllianceInfo:OnJoinActionClicked(joinType,sender)
-    if  joinType == 'all' then --如果是直接加入
+    if joinType == 'all' then --如果是直接加入
+        if User:ServerId() ~= self.serverId then
+            UIKit:showMessageDialog(_("提示"),_("不能加入其他服务器的联盟"))
+            return
+        end
         local alliance = self:GetAllianceData()
         if alliance.members == alliance.membersMax then
             UIKit:showMessageDialog(_("提示"),
@@ -279,6 +283,10 @@ function GameUIAllianceInfo:OnJoinActionClicked(joinType,sender)
             self:LeftButtonClicked()
             end)
     else
+        if User:ServerId() ~= self.serverId then
+            UIKit:showMessageDialog(_("提示"),_("不能申请加入其他服务器的联盟"))
+            return
+        end
         NetManager:getRequestToJoinAlliancePromise(self:GetAllianceData().id):done(function()
             UIKit:showMessageDialog(_("申请成功"),
                 string.format(_("您的申请已发送至%s,如果被接受将加入该联盟,如果被拒绝,将收到一封通知邮件."),self:GetAllianceData().name),
@@ -387,12 +395,12 @@ function GameUIAllianceInfo:SendMail(addressee,title,content)
         return
     end
     local ar_data = self:GetAllianceArchonData()
-    NetManager:getSendPersonalMailPromise(addressee,ar_data.name, title, content,{
+    NetManager:getSendPersonalMailPromise(addressee, title, content,{
                     id = ar_data.id,
                     name = ar_data.name,
                     icon = ar_data.icon,
                     allianceTag = self:GetAllianceData().tag,
-                },self.serverId):done(function(result)
+                }):done(function(result)
         self:removeFromParent()
         return result
     end)
