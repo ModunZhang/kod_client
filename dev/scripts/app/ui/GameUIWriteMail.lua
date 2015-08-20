@@ -9,12 +9,11 @@ GameUIWriteMail.SEND_TYPE = Enum("PERSONAL_MAIL","ALLIANCE_MAIL")
 local PERSONAL_MAIL = GameUIWriteMail.SEND_TYPE.PERSONAL_MAIL
 local ALLIANCE_MAIL = GameUIWriteMail.SEND_TYPE.ALLIANCE_MAIL
 
-function GameUIWriteMail:ctor(send_type,contacts,serverId)
+function GameUIWriteMail:ctor(send_type,contacts)
     GameUIWriteMail.super.ctor(self,768,_("发邮件"))
     self:DisableAutoClose()
     self.send_type = send_type
     self.contacts = contacts
-    self.serverId = serverId or User:ServerId()
 
     -- bg
     local write_mail = self.body
@@ -117,7 +116,7 @@ function GameUIWriteMail:SendMail(addressee,name,title,content)
             UIKit:showMessageDialog(_("主人"),_("请填写正确的收件人ID"))
             return
         end
-        NetManager:getSendPersonalMailPromise(addressee, name, title, content,self.contacts,self.serverId):done(function(result)
+        NetManager:getSendPersonalMailPromise(addressee, title, content,self.contacts):done(function(result)
             self:removeFromParent()
             return result
         end)

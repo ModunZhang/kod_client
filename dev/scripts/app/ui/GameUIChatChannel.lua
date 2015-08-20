@@ -641,7 +641,7 @@ function GameUIChatChannel:CreatePlayerMenu(event,chat)
                     name = chat.name,
                     icon = chat.icon,
                     allianceTag = chat.allianceTag,
-                },chat.serverId)
+                })
                 mail:SetTitle(_("个人邮件"))
                 mail:addTo(self,201)
             elseif data == 'copyAction' then

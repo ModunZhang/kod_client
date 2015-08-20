@@ -395,12 +395,12 @@ function GameUIAllianceInfo:SendMail(addressee,title,content)
         return
     end
     local ar_data = self:GetAllianceArchonData()
-    NetManager:getSendPersonalMailPromise(addressee,ar_data.name, title, content,{
+    NetManager:getSendPersonalMailPromise(addressee, title, content,{
                     id = ar_data.id,
                     name = ar_data.name,
                     icon = ar_data.icon,
                     allianceTag = self:GetAllianceData().tag,
-                },self.serverId):done(function(result)
+                }):done(function(result)
         self:removeFromParent()
         return result
     end)
