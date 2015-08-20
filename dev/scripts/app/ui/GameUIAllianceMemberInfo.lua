@@ -206,7 +206,7 @@ function GameUIAllianceMemberInfo:AdapterPlayerList()
         table.insert(r,{_("职位"),Localize.alliance_title[player.alliance.title]})
         table.insert(r,{_("联盟"),player.alliance.name})
     else
-         table.insert(r,{_("职位"),_("无")})
+        table.insert(r,{_("职位"),_("无")})
         table.insert(r,{_("联盟"),_("无")})
     end
     if type(player.online) == 'boolean' and player.online then
@@ -214,6 +214,8 @@ function GameUIAllianceMemberInfo:AdapterPlayerList()
     else
         table.insert(r,{_("最后登陆"),NetService:formatTimeAsTimeAgoStyleByServerTime(player.lastLogoutTime)})
     end
+    local __,__,indexName = string.find(User:ServerId() or "","-(%d+)")
+    table.insert(r,{_("服务器"),string.format("%s %d",Localize.server_name[User:ServerLevel()],indexName)})
     table.insert(r,{_("战斗力"),string.formatnumberthousands(player.power)})
     table.insert(r,{_("击杀"),string.formatnumberthousands(player.kill)})
 

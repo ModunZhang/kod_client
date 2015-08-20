@@ -165,6 +165,8 @@ function WidgetChat:ctor()
                 UIKit:newGameUI('GameUIChatChannel',"global"):AddToCurrentScene(true)
             elseif 2 == pv:getCurPageIdx() then
                 UIKit:newGameUI('GameUIChatChannel',"alliance"):AddToCurrentScene(true)
+            elseif 3 == pv:getCurPageIdx() then
+                UIKit:newGameUI('GameUIChatChannel',"allianceFight"):AddToCurrentScene(true)
             end
         end)
     self:RefreshNewChatAni()
