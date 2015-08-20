@@ -102,7 +102,7 @@ function GameUIAllianceMemberInfo:BuildUI()
                     id = self.player_info.id,
                     name = self.player_info.name,
                     icon = self.player_info.icon,
-                    allianceTag = self.player_info.alliance.tag,
+                    allianceTag = self.player_info.alliance and self.player_info.alliance.tag,
                 },self.serverId_)
                 mail:SetTitle(_("个人邮件"))
                 mail:SetAddressee(self.player_info.name)

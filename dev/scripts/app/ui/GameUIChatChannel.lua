@@ -634,7 +634,6 @@ function GameUIChatChannel:CreatePlayerMenu(event,chat)
             if layer.item then layer.item:removeSelf() end
         elseif msg == 'buttonCallback' then
             if data == 'playerInfo' then
-                dump(chat,"chat")
                 UIKit:newGameUI("GameUIAllianceMemberInfo",false,chat.id,nil,chat.serverId):AddToCurrentScene(true)
             elseif data == 'sendMail' then
                 local mail = GameUIWriteMail.new(GameUIWriteMail.SEND_TYPE.PERSONAL_MAIL,{
@@ -663,9 +662,13 @@ function GameUIChatChannel:CreatePlayerMenu(event,chat)
                     end
                 else
                     if my_alliance:GetSelf():CanInvatePlayer() then
-                        NetManager:getInviteToJoinAlliancePromise(chat.id):done(function()
-                            UIKit:showMessageDialog(_("提示"), _("邀请发送成功"), function()end)
-                        end)
+                        if User:ServerId() ~= chat.serverId then
+                            UIKit:showMessageDialog(_("提示"), _("不能邀请其他服务器的玩家"), function()end)
+                        else
+                            NetManager:getInviteToJoinAlliancePromise(chat.id):done(function()
+                                UIKit:showMessageDialog(_("提示"), _("邀请发送成功"), function()end)
+                            end)
+                        end
                     else
                         UIKit:showMessageDialog(_("提示"), _("您没有此操作权限"), function()end)
                     end
@@ -686,7 +689,6 @@ function GameUIChatChannel:CreatePlayerMenu(event,chat)
             self.isModeView = false
         end
     end
-    dump(chat,"chat")
     UIKit:newGameUI("GameUIAllianceInfoMenu",callback,alliance_string,enbale_alliance_info):AddToCurrentScene(true)
 end
 
