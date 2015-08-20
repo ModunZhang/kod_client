@@ -21,7 +21,7 @@ local function newProgress()
     node.describe = UIKit:ttfLabel({
         size = 20,
         color = 0x403c2f,
-    }):addTo(node):align(display.LEFT_CENTER, -250, 28)
+    }):addTo(node):align(display.LEFT_CENTER, -270, 28)
 
     node.progress = WidgetProgress.new(nil,nil,nil,{label_size = 20}):addTo(node)
         :align(display.LEFT_CENTER, -250, -15)
@@ -145,7 +145,7 @@ function WidgetManufactureNew:ReloadMaterials(materials, materials_map)
 
 
     self.build_node = display.newNode():addTo(self.view)
-        :pos(window.cx, window.top - 445)
+        :pos(window.cx, window.top - 450)
     self.build_node.build_label = UIKit:ttfLabel({
         size = 20,
         color = 0x403c2f,
@@ -310,7 +310,7 @@ function WidgetManufactureNew:UpdateByEvent(event)
         self.build_node.build_time:setString(GameUtils:formatTimeStyle1(time))
         local size = self.build_node.build_time:getContentSize()
         self.build_node.buff_time:setString(string.format("(-%s)", GameUtils:formatTimeStyle1(math.ceil(time *  self.toolShop:BelongCity():FindTechByName("sketching"):GetBuffEffectVal()))))
-        self.build_node.buff_time:setPositionX(self.build_node.build_time:getPositionX() + 75)
+        self.build_node.buff_time:setPositionX(self.build_node.build_time:getPositionX() + 90)
     elseif event:IsStored(server_time) then
         self.build_node:hide()
         self.progress_node:hide()
