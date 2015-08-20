@@ -1703,7 +1703,9 @@ function NetManager:getAddAllianceItemPromise(itemName,count)
             itemName = itemName,
             count = count,
         },
-        "联盟商店补充道具失败!"):done(get_player_response_msg)
+        "联盟商店补充道具失败!"):done(get_player_response_msg):done(function()
+        app:GetAudioManager():PlayeEffectSoundWithKey("BUY_ITEM")
+        end)
 end
 --购买联盟商店的道具
 function NetManager:getBuyAllianceItemPromise(itemName,count)
@@ -1712,7 +1714,9 @@ function NetManager:getBuyAllianceItemPromise(itemName,count)
             itemName = itemName,
             count = count,
         },
-        "购买联盟商店的道具失败!"):done(get_player_response_msg)
+        "购买联盟商店的道具失败!"):done(get_player_response_msg):done(function()
+        app:GetAudioManager():PlayeEffectSoundWithKey("BUY_ITEM")
+        end)
 end
 --玩家内购
 function NetManager:getVerifyIAPPromise(transactionId,receiptData)
@@ -1997,6 +2001,7 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
 
 
 
