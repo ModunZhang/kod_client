@@ -16,7 +16,7 @@ function GameUIEditName:ctor(callback)
         text = _("请问领主尊姓大名?"),
         color= 0x403c2f,
         size = 22,
-    }):align(display.CENTER, 400, 220):addTo(self:GetBody())
+    }):align(display.LEFT_CENTER, 225, 220):addTo(self:GetBody())
 
 
 
@@ -24,6 +24,9 @@ function GameUIEditName:ctor(callback)
         UIInputType = 1,
         image = "input_box.png",
         size = cc.size(350,48),
+        listener = function()
+            self.confirm:setButtonEnabled(string.len(string.trim(self.editbox:getText())) > 0)
+        end,
         font = UIKit:getFontFilePath(),
     })
     editbox:setPlaceHolder(_("输入新的名字"))
@@ -33,11 +36,12 @@ function GameUIEditName:ctor(callback)
     editbox:setPlaceholderFontColor(cc.c3b(204,196,158))
     editbox:setReturnType(cc.KEYBOARD_RETURNTYPE_DEFAULT)
     editbox:addTo(self:GetBody()):pos(400, 160)
+    self.editbox = editbox
 
-    UIKit:commonButtonWithBG(
+    self.confirm = UIKit:commonButtonWithBG(
         {
-            w=185,
-            h=65,
+            w=148,
+            h=58,
             style = UIKit.BTN_COLOR.YELLOW,
             labelParams={text = _("确认")},
             listener = function ()
@@ -55,7 +59,8 @@ function GameUIEditName:ctor(callback)
                 end)
             end,
         }
-    ):addTo(self:GetBody()):pos(400, 75)
+    ):addTo(self:GetBody()):pos(400, 75).button:setButtonEnabled(false)
+    
 
 
     display.newSprite("Npc.png"):addTo(self:GetBody()):pos(95, 198)
