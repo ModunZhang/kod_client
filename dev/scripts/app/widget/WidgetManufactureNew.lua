@@ -229,7 +229,7 @@ function WidgetManufactureNew:ReloadMaterials(materials, materials_map)
 
 
     self.get_node = display.newNode():addTo(self.view)
-        :pos(window.cx, window.top - 445):hide()
+        :pos(window.cx, window.top - 450):hide()
     UIKit:ttfLabel({
         text = _("制造材料完成!"),
         size = 20,
