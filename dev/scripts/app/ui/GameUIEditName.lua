@@ -51,7 +51,7 @@ function GameUIEditName:ctor(callback)
                 end
                 NetManager:getUseItemPromise("changePlayerName", {
                     changePlayerName = { playerName = string.trim(editbox:getText()) }
-                }):done(function()
+                }, false):done(function()
                     if not DataManager:getUserData().countInfo.isFTEFinished then
                         NetManager:getFinishFTE()
                     end

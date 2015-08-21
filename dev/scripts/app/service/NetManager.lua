@@ -1653,12 +1653,12 @@ function NetManager:getBuyItemPromise(itemName,count,need_tips)
     end)
 end
 --使用道具
-function NetManager:getUseItemPromise(itemName,params)
+function NetManager:getUseItemPromise(itemName,params,need_tips)
     return get_blocking_request_promise("logic.playerHandler.useItem", {
         itemName = itemName,
         params = params,
     }, "使用道具失败!"):done(get_player_response_msg):done(function ()
-        if not (string.find(itemName,"dragonChest") or string.find(itemName,"chest")) and itemName ~= "sweepScroll" then
+        if not (string.find(itemName,"dragonChest") or string.find(itemName,"chest")) and itemName ~= "sweepScroll" and need_tips ~= false then
             if params[itemName] and params[itemName].count then
                 GameGlobalUI:showTips(_("提示"),string.format(_("使用%s道具X %d成功"),Localize_item.item_name[itemName],params[itemName].count))
             else
@@ -1668,7 +1668,7 @@ function NetManager:getUseItemPromise(itemName,params)
         if itemName == "torch" then
             app:GetAudioManager():PlayeEffectSoundWithKey("UI_BUILDING_DESTROY")
         else
-            if itemName ~= "sweepScroll" then
+            if itemName ~= "sweepScroll" and need_tips ~= false then
                 app:GetAudioManager():PlayeEffectSoundWithKey("USE_ITEM")
             end
         end
