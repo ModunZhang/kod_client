@@ -1668,7 +1668,7 @@ function NetManager:getUseItemPromise(itemName,params,need_tips)
         if itemName == "torch" then
             app:GetAudioManager():PlayeEffectSoundWithKey("UI_BUILDING_DESTROY")
         else
-            if itemName ~= "sweepScroll" or need_tips ~= false then
+            if itemName ~= "sweepScroll" and need_tips ~= false then
                 app:GetAudioManager():PlayeEffectSoundWithKey("USE_ITEM")
             end
         end
