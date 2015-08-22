@@ -4,7 +4,7 @@ set -e
 #todo android
 PLATFORMS="iOS"
 EncryptTypes="true false"
-XCODE_CONFIGURATIONS="Debug Release"
+XCODE_CONFIGURATIONS="Debug Release Hotfix"
 
 getPlatform()
 {
@@ -174,16 +174,24 @@ getConfiguration()
 	fi
 	echo $Configuration
 }
-#需要定义全局变量$DEBUG_GIT_AUTO_UPDATE和$RELEASE_GIT_AUTO_UPDATE
+#需要定义全局变量$RELEASE_GIT_AUTO_UPDATE为自动更新仓库
 getGitPushOfAutoUpdate()
+{
+	Configuration=$1
+	python -c "exit(0) if \"$Configuration\" in \"$XCODE_CONFIGURATIONS\".split() else exit(1)"
+	echo "$RELEASE_GIT_AUTO_UPDATE"
+}
+gitBranchNameOfUpdateGit()
 {
 	Configuration=$1
 	python -c "exit(0) if \"$Configuration\" in \"$XCODE_CONFIGURATIONS\".split() else exit(1)"
 	if [[ $Configuration = "Debug" ]]
 	then
-		echo "$DEBUG_GIT_AUTO_UPDATE"
+		echo "develop"
+	elif [[ $Configuration = "Release" ]]; then
+		echo "master"
 	else
-		echo "$RELEASE_GIT_AUTO_UPDATE"
+		echo "hotfix"
 	fi
 }
 $@

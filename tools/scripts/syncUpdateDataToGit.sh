@@ -6,12 +6,14 @@ UPDATE_SOURCE_DIR=`./functions.sh getExportDir $Platform`
 XCODE_CONFIGURATION=`./functions.sh getConfiguration $2`
 PATH_OF_GIT_AUTOUPDATE=`./functions.sh  getGitPushOfAutoUpdate $XCODE_CONFIGURATION`
 TARGET_PATH="$PATH_OF_GIT_AUTOUPDATE/public"
+BRANCH_NAME=`./functions.sh  gitBranchNameOfUpdateGit $XCODE_CONFIGURATION`
 
 pullGitData()
 {
 	cd "$PATH_OF_GIT_AUTOUPDATE"
 	git reset --hard HEAD
 	git clean -df
+	git checkout "$BRANCH_NAME"
 	git pull
 	cd "$DOCROOT"
 }
@@ -34,7 +36,7 @@ pushDataToGit()
 
 if [ $? == 0 ]; then
 	echo "> 本地拷贝文件完成 开始上传到github"
-	pushDataToGit 
+	# pushDataToGit 
 	echo "> 文件夹同步成功 手动ssh到更新服务器部署!"
 else
 	echo "> 错误!"
