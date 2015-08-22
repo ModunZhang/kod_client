@@ -262,7 +262,7 @@ function GameUILoginBeta:createVerLabel()
 end
 
 function GameUILoginBeta:showVersion()
-    if  CONFIG_IS_DEBUG or device.platform == 'mac' then
+    if CONFIG_IS_NOT_UPDATE or device.platform == 'mac' then
         local __debugVer = require("debug_version")
         self.verLabel:setString("测试"..string.format(_("版本%s(%s)"), ext.getAppVersion(), __debugVer))
         -- app.client_tag = __debugVer
@@ -284,7 +284,7 @@ end
 function GameUILoginBeta:OnMoveInStage()
     self:showVersion()
     self:GetServerInfo(function()
-        if CONFIG_IS_DEBUG or device.platform == 'mac' then
+        if CONFIG_IS_NOT_UPDATE or device.platform == 'mac' then
             if not app.client_tag then
                 NetManager:getUpdateFileList(function(success, msg)
                     if not success then
@@ -551,11 +551,7 @@ function GameUILoginBeta:donwLoadFilesWithFileList()
     if localAppVersion < serverMinAppVersion or
         (ext.getAppVersion() == '1.01' and serverFileList.appVersion == '1.1.1') then
         device.showAlert(_("错误"), _("游戏版本过低,请更新!"), { _("确定") }, function(event)
-            if CONFIG_IS_DEBUG then
-                device.openURL("https://batcat.sinaapp.com/ad_hoc/build-index.html")
-            else
-                device.openURL(CONFIG_APP_URL[device.platform])
-            end
+            device.openURL(CONFIG_APP_URL[device.platform])
             self:loadServerJson()
         end)
         return

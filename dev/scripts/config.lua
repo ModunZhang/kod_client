@@ -45,10 +45,12 @@ CONFIG_APP_URL = {
 }
 
 CONFIG_IS_LOCAL = false
-CONFIG_IS_DEBUG = false
+CONFIG_IS_DEBUG = true
 CONFIG_LOG_DEBUG_FILE = false -- 记录日志文件
 GLOBAL_FTE = true
 GLOBAL_FTE_DEBUG = false
+--是否走自动更新
+-- CONFIG_IS_NOT_UPDATE = true
 
 CONFIG_SCREEN_AUTOSCALE_CALLBACK = function(w, h, deviceModel)
     if w/h > 640/960 then
