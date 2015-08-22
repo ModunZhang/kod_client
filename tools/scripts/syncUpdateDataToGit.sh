@@ -30,7 +30,7 @@ pushDataToGit()
 	cd "$PATH_OF_GIT_AUTOUPDATE"
 	git add --all
 	git commit -m "发布新的自动更新"
-	git push origin master
+	git push origin "$BRANCH_NAME"
 	cd "$DOCROOT"
 }
 
