@@ -290,7 +290,8 @@ function GameUtils:GetServerInfo(param, callback)
         elseif event.name == "failed" then
             callback(false)
         end
-    end, string.format("http://gate.batcatstudio.com/dragonfall/query-entry?env=%s&version=%s", param.env, param.version), "GET")
+    end, 
+    string.format("http://gate.batcatstudio.com/dragonfall/query-entry?env=%s&version=%s", string.urlencode(param.env), string.urlencode(param.version)), "GET")
     request:setTimeout(180)
     request:start()
 end
