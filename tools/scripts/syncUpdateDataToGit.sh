@@ -36,7 +36,7 @@ pushDataToGit()
 
 if [ $? == 0 ]; then
 	echo "> 本地拷贝文件完成 开始上传到github"
-	# pushDataToGit 
+	pushDataToGit 
 	echo "> 文件夹同步成功 手动ssh到更新服务器部署!"
 else
 	echo "> 错误!"
