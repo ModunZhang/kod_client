@@ -13,7 +13,7 @@ local function getAniNameFromAnimationFiles(animation_files)
 end
 
 local PLAYER_ICON = {
-    [0] = "Icon_empireRise.png", -- 系统头像
+    [0] = "empireRise.png", -- 系统头像
     "player_icon_1.png",
     "player_icon_2.png",
     "player_icon_3.png",
@@ -751,7 +751,7 @@ local OTHER_ALLIANCE_BUILDING = setmetatable({
 }, {__index = ALLIANCE_BUILDING})
 
 local DAILY_TASK_ICON = {
-    empireRise = "Icon_empireRise.png",
+    empireRise = "empireRise.png",
     conqueror = "Icon_conqueror_104x117.png",
     brotherClub = "Icon_brotherClub_122x124.png",
     growUp = "Icon_growUp_108x115.png"
