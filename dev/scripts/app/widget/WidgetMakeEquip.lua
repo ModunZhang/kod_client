@@ -1,4 +1,5 @@
-local EQUIPMENTS = GameDatas.DragonEquipments.equipments
+local DragonEquipments = GameDatas.DragonEquipments
+local EQUIPMENTS = DragonEquipments.equipments
 local Localize = import("..utils.Localize")
 local MaterialManager = import("..entity.MaterialManager")
 local WidgetPushButton = import(".WidgetPushButton")
@@ -32,6 +33,7 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
     self.black_smith = black_smith
     self.city = city
     local equip_config = EQUIPMENTS[equip_type]
+    local equip_attr = DragonEquipments[string.split(equip_config.category,",")[1]][equip_config.maxStar.."_0"]
     self.matrials = LuaUtils:table_map(string.split(equip_config.materials, ","), function(k, v)
         return k, string.split(v, ":")
     end)
@@ -102,29 +104,36 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
     }):addTo(eq_info_bg)
         :align(display.BOTTOM_CENTER, eq_info_bg:getContentSize().width/2, 70)
 
-
-    -- used for dragon
-    cc.ui.UILabel.new({
-        text = DRAGON_ONLY[equip_config.usedFor],
-        size = 18,
-        font = UIKit:getFontFilePath(),
-        align = cc.ui.TEXT_ALIGN_RIGHT,
-        color = UIKit:hex2c3b(0xffedae)
-    }):addTo(eq_info_bg)
-        :align(display.BOTTOM_CENTER, eq_info_bg:getContentSize().width/2, 42)
-
-
-    -- used for dragon category
-    cc.ui.UILabel.new({
-        text = BODY_LOCALIZE[equip_config.category],
-        size = 18,
-        font = UIKit:getFontFilePath(),
-        align = cc.ui.TEXT_ALIGN_RIGHT,
-        color = UIKit:hex2c3b(0xffedae)
-    }):addTo(eq_info_bg)
-        :align(display.BOTTOM_CENTER, eq_info_bg:getContentSize().width/2, 14)
-
-
+    local added = 1
+    for i = 1,3 do
+        local desc,value
+        if i == 1 and equip_attr.strength > 0 then
+            desc = _("力量")
+            value = equip_attr.strength
+        elseif i == 2 and equip_attr.vitality > 0 then
+            desc = _("活力")
+            value = equip_attr.vitality
+        elseif i == 3 and equip_attr.leadership > 0 then
+            desc = _("领导力")
+            value = equip_attr.leadership
+        end
+        if desc then
+            UIKit:ttfLabel({
+                text = desc,
+                size = 18,
+                color = 0xffedae
+            }):addTo(eq_info_bg)
+                :align(display.BOTTOM_LEFT, 20, added == 1 and 42 or 14)
+            UIKit:ttfLabel({
+                text = "+" .. value,
+                size = 20,
+                color = 0x57ce00
+            }):addTo(eq_info_bg)
+                :align(display.BOTTOM_RIGHT, eq_info_bg:getContentSize().width - 20, added == 1 and 42 or 14)
+            added = added + 1
+        end
+    end
+   
     -- 立即建造
     local size = back_ground:getContentSize()
     local instant_button = cc.ui.UIPushButton.new({normal = "green_btn_up_250x66.png",
@@ -501,6 +510,8 @@ function WidgetMakeEquip:IsAbleToMakeEqui(isFinishNow)
 end
 
 return WidgetMakeEquip
+
+
 
 
 

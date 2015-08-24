@@ -68,9 +68,6 @@ function GameUITownHall:CreateDwelling()
     self.admin_layer = admin_layer
 end
 function GameUITownHall:CreateAdministration()
-    -- 获取任务
-    local daily_quests = User:GetDailyQuests()
-
     self.quest_items = {}
     local admin_layer = self.admin_layer
 
@@ -105,7 +102,8 @@ function GameUITownHall:CreateAdministration()
     })
     listnode:align(display.BOTTOM_CENTER, layer_width/2, 20):addTo(admin_layer)
     self.quest_list_view = list_view
-
+    -- 获取任务
+    local daily_quests = User:GetDailyQuests()
     self:CreateAllQuests(daily_quests)
     -- 添加到全局计时器中
     app.timer:AddListener(self)

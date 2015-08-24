@@ -822,9 +822,6 @@ function User:OnDailyQuestsChanged(userData, deltaData)
     local is_delta_update = not is_fully_update and deltaData.dailyQuests ~= nil
 
     if is_delta_update then
-        local add = {}
-        local edit = {}
-        local remove = {}
         if deltaData.dailyQuests.refreshTime then
             self:SetDailyQuestsRefreshTime(deltaData.dailyQuests.refreshTime)
             if deltaData.dailyQuests.quests then
@@ -833,9 +830,13 @@ function User:OnDailyQuestsChanged(userData, deltaData)
                     self.dailyQuests[v.id] = v
                 end
                 self:OnDailyQuestsRefresh()
+                return
             end
         end
 
+        local add = {}
+        local edit = {}
+        local remove = {}
         for k,v in pairs(deltaData.dailyQuests.quests) do
             if k == "add" then
                 for _,data in ipairs(v) do

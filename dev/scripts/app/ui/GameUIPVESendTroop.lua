@@ -21,7 +21,7 @@ local normal = GameDatas.Soldiers.normal
 local SPECIAL = GameDatas.Soldiers.special
 
 local GameUIPVESendTroop = UIKit:createUIClass("GameUIPVESendTroop","GameUIWithCommonHeader")
-GameUIPVESendTroop.dragon = nil
+GameUIPVESendTroop.dragonType = nil
 
 function GameUIPVESendTroop:ctor(pve_soldiers,march_callback)
     GameUIPVESendTroop.super.ctor(self,City,_("准备进攻"))
@@ -31,8 +31,8 @@ function GameUIPVESendTroop:ctor(pve_soldiers,march_callback)
     self.dragon_manager = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager()
     self.soldiers_table = {}
     -- 默认选中最强的并且可以出战的龙,如果都不能出战，则默认最强龙
-    self.dragon = self.dragon or self.dragon_manager:GetDragon(self.dragon_manager:GetCanFightPowerfulDragonType()) or self.dragon_manager:GetDragon(self.dragon_manager:GetPowerfulDragonType())
-    GameUIPVESendTroop.dragon = self.dragon
+    self.dragon = self.dragon_manager:GetDragon(GameUIPVESendTroop.dragonType or self.dragon_manager:GetCanFightPowerfulDragonType()) or self.dragon_manager:GetDragon(self.dragon_manager:GetPowerfulDragonType())
+    GameUIPVESendTroop.dragonType = self.dragon:Type()
 end
 
 function GameUIPVESendTroop:OnMoveInStage()
@@ -232,7 +232,7 @@ function GameUIPVESendTroop:RefreashDragon(dragon)
     self.dragon_name:setString(Localize.dragon[dragon:Type()].."（LV ".. dragon:Level()..")")
     self.dragon_vitality:setString(_("生命值")..string.formatnumberthousands(dragon:Hp()).."/"..string.formatnumberthousands(dragon:GetMaxHP()))
     self.dragon = dragon
-    GameUIPVESendTroop.dragon = self.dragon
+    GameUIPVESendTroop.dragonType = self.dragon:Type()
 end
 
 function GameUIPVESendTroop:SelectDragon()
