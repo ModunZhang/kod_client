@@ -449,6 +449,7 @@ function GameUILoginBeta:connectLogicServer()
 
 end
 function GameUILoginBeta:login()
+    local debug_info = debug.traceback("", 2)
     NetManager:getLoginPromise():done(function(response)
         local userData = DataManager:getUserData()
         ext.market_sdk.onPlayerLogin(userData._id, userData.basicInfo.name, userData.logicServerId)
@@ -482,6 +483,9 @@ function GameUILoginBeta:login()
             local code = content.code
             if UIKit:getErrorCodeKey(content.code) == 'playerAlreadyLogin' then
                 content = _("玩家已经登录")
+                if checktable(ext.market_sdk) and ext.market_sdk.onPlayerEvent then
+                    ext.market_sdk.onPlayerEvent("LUA_ERROR_LOGIN", debug_info)
+                end
             else
                 content = UIKit:getErrorCodeData(code).message
             end

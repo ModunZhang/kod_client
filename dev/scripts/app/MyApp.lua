@@ -263,6 +263,7 @@ end
 
 
 function MyApp:retryLoginGame()
+    local debug_info = debug.traceback("", 2)
     if NetManager.m_logicServer.host and NetManager.m_logicServer.port then
         UIKit:WaitForNet(0)
         NetManager:getConnectLogicServerPromise():next(function()
@@ -288,6 +289,9 @@ function MyApp:retryLoginGame()
                     UIKit:showKeyMessageDialog(_("错误"), UIKit:getErrorCodeData(content.code).message, function()
                         app:restart(false)
                     end)
+                    if checktable(ext.market_sdk) and ext.market_sdk.onPlayerEvent then
+                        ext.market_sdk.onPlayerEvent("LUA_ERROR_RETRYLOGIN", debug_info)
+                    end
                 else
                     print("MyApp:debug--->6")
                     UIKit:showKeyMessageDialog(_("错误"), UIKit:getErrorCodeData(content.code).message, function()
