@@ -796,6 +796,13 @@ static int tolua_ext_get_language_code(lua_State* tolua_S)
     return 1;
 }
 
+static int tolua_ext_is_app_hoc(lua_State* tolua_S)
+{
+    bool ret = isAppAdHocMode();
+    lua_pushboolean(tolua_S, ret);
+    return 1;
+}
+
 static void ResgisterGlobalExtFunctions(lua_State* tolua_S)
 {
     tolua_function(tolua_S, "now", tolua_ext_now);
@@ -819,6 +826,7 @@ static void ResgisterGlobalExtFunctions(lua_State* tolua_S)
     tolua_function(tolua_S, "registereForRemoteNotifications",tolua_ext_registereForRemoteNotifications);
     tolua_function(tolua_S, "clearOpenUdid",tolua_ext_clearOpenUdid);
     tolua_function(tolua_S, "getDeviceLanguage",tolua_ext_get_language_code);
+    tolua_function(tolua_S, "isAppAdHoc",tolua_ext_is_app_hoc);
 }
 
 
