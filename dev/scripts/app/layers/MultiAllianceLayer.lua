@@ -1,9 +1,11 @@
 local Enum = import("..utils.Enum")
 local promise = import("..utils.promise")
 local UILib = import("..ui.UILib")
+local SpriteConfig = import("..sprites.SpriteConfig")
 local Alliance = import("..entity.Alliance")
 local Observer = import("..entity.Observer")
 local AllianceView = import(".AllianceView")
+local fire = import("..particles.fire")
 local MapLayer = import(".MapLayer")
 local MultiAllianceLayer = class("MultiAllianceLayer", MapLayer)
 local intInit = GameDatas.AllianceInitData.intInit
@@ -609,8 +611,18 @@ function MultiAllianceLayer:CreateCorpsIf(marchEvent, is_added_event)
     -- if is_added_event and ally == MINE and not marchEvent:IsReturnEvent() then
     --     self:TrackCorpsById(marchEvent:Id())
     -- end
+    local myid = self:GetMyAlliance():Id()
     if marchEvent:IsReturnEvent() then
-        self:CreateDeadEvent(marchEvent)
+        if marchEvent:MarchType() == "monster" or
+            (
+            marchEvent:MarchType() == "village" and
+            ((myid ~= from_alliance_id and myid == to_alliance_id)
+            or
+            (myid == from_alliance_id and myid ~= to_alliance_id))
+            )
+        then
+            self:CreateDeadEvent(marchEvent)
+        end
     end
 end
 local corps_scale = 1.2
@@ -892,31 +904,27 @@ function MultiAllianceLayer:DeleteAllLines()
         self:DeleteLineById(id)
     end
 end
-local map_dead_image = {
-    monster = "warriors_tomb_80x72.png",
-    village = "ruin_2.png"
-}
 function MultiAllianceLayer:CreateDeadEvent(marchEvent)
     local id_corps = marchEvent:Id()
     if not self:IsExistCorps(id_corps) then return end
-    local event_type = marchEvent:MarchType()
-    local dead_image = map_dead_image[event_type]
-    if not dead_image then return end
-    local id_dead
-    if event_type == "monster" then
-        id_dead = marchEvent:DefenceMonsterData().id
-        -- elseif event_type == "village" then
-        -- id_dead = marchEvent:DefenceVillageData().id
-    else
-        return
-    end
     if not self.map_dead[id_corps] and next(marchEvent:AttackPlayerData().rewards) then
         local point = self.map_corps[id_corps].march_info.start_info.logic
         local alliance_view = self.alliance_views[point.index]
         local x,y = alliance_view:GetLogicMap():ConvertToMapPosition(point.x, point.y)
         local z = alliance_view:GetZOrderBy(nil, point.x, point.y)
-        self.map_dead[id_corps] = display.newSprite(dead_image):addTo(self:GetBuildingNode(),z):pos(x,y)
+        self.map_dead[id_corps] = self:CreateDeadSpriteByEvent(marchEvent):addTo(self:GetBuildingNode(),z):pos(x,y)
     end
+end
+function MultiAllianceLayer:CreateDeadSpriteByEvent(event)
+    local sprite
+    if event:MarchType() == "village" then
+        sprite = display.newSprite(SpriteConfig[event:DefenceVillageData().name]:GetConfigByLevel(event:DefenceVillageData().level).png)
+        local size = sprite:getContentSize()
+        fire():addTo(sprite):pos(size.width/2, 30)
+    else
+        sprite = display.newSprite("warriors_tomb_80x72.png")
+    end
+    return sprite
 end
 
 
