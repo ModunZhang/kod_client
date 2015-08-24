@@ -220,10 +220,7 @@ const char* AppDelegateExtern::getAppVersion()
 
 bool AppDelegateExtern::isDebug()
 {
-    lua_State* tolua_S = LuaEngine::getInstance()->getLuaStack()->getLuaState();
-    lua_getglobal(tolua_S, "CONFIG_IS_DEBUG");
-    bool isDebug = tolua_toboolean(tolua_S, -1, 0);
-    return isDebug;
+    return isAppAdHocMode();
 }
 
 string AppDelegateExtern::getGameZipcrc32(const char *filePath)

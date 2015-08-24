@@ -172,7 +172,12 @@ end
 function WidgetRankingList:touchListener(event)
     local listView = event.listView
     if "clicked" == event.name then
-        -- print("async list view clicked idx:" .. event.itemPos)
+        local id = self.current_rank.datas[event.itemPos].id
+        if self.type_ == "player" then
+            UIKit:newGameUI("GameUIAllianceMemberInfo",false,id,nil,DataManager:getUserData().serverId):AddToCurrentScene(true)
+        else
+            UIKit:newGameUI("GameUIAllianceInfo", id, nil, DataManager:getUserData().serverId):AddToCurrentScene(true)
+        end
     end
 end
 function WidgetRankingList:sourceDelegate(listView, tag, idx)

@@ -19,7 +19,11 @@
         end)
 ]]--
 local PlatformAdapter = {}
-
+-- 更新CONFIG_IS_DEBUG变量(version:1.1.1)
+if type(ext.isAppAdHoc) == 'function' and type(ext.isAppAdHoc()) == 'boolean' then
+    CONFIG_IS_DEBUG = ext.isAppAdHoc()
+end
+print("- CONFIG_IS_DEBUG :",CONFIG_IS_DEBUG)
 function PlatformAdapter:android()
     device.getOpenUDID = ext.getOpenUDID
 end

@@ -6,12 +6,14 @@ UPDATE_SOURCE_DIR=`./functions.sh getExportDir $Platform`
 XCODE_CONFIGURATION=`./functions.sh getConfiguration $2`
 PATH_OF_GIT_AUTOUPDATE=`./functions.sh  getGitPushOfAutoUpdate $XCODE_CONFIGURATION`
 TARGET_PATH="$PATH_OF_GIT_AUTOUPDATE/public"
+BRANCH_NAME=`./functions.sh  gitBranchNameOfUpdateGit $XCODE_CONFIGURATION`
 
 pullGitData()
 {
 	cd "$PATH_OF_GIT_AUTOUPDATE"
 	git reset --hard HEAD
 	git clean -df
+	git checkout "$BRANCH_NAME"
 	git pull
 	cd "$DOCROOT"
 }
@@ -28,7 +30,7 @@ pushDataToGit()
 	cd "$PATH_OF_GIT_AUTOUPDATE"
 	git add --all
 	git commit -m "发布新的自动更新"
-	git push origin master
+	git push origin "$BRANCH_NAME"
 	cd "$DOCROOT"
 }
 
