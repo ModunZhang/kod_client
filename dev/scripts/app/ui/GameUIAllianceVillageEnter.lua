@@ -116,6 +116,7 @@ function GameUIAllianceVillageEnter:InitBuildingInfo()
         size = 20,
         color = 0x7e0000
     }):align(display.BOTTOM_CENTER, self.body:getContentSize().width/2, 30):addTo(self.body)
+    :setVisible(not self:IsMyAlliance())
 end
 function GameUIAllianceVillageEnter:GetBuildingInfo()
     if self:IsRuins() then
