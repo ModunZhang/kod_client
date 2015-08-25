@@ -918,7 +918,8 @@ end
 function MultiAllianceLayer:CreateDeadSpriteByEvent(event)
     local sprite
     if event:MarchType() == "village" then
-        sprite = display.newSprite(SpriteConfig[event:DefenceVillageData().name]:GetConfigByLevel(event:DefenceVillageData().level).png)
+        local config = SpriteConfig[event:DefenceVillageData().name]:GetConfigByLevel(event:DefenceVillageData().level)
+        sprite = display.newSprite(config.png):scale(config.scale)
         local size = sprite:getContentSize()
         fire():addTo(sprite):pos(size.width/2, 30)
     else
