@@ -1215,7 +1215,7 @@ function UIKit:CreateNameBanner(name, dragon_type)
                 shaderName = "banner",
             })
         ))
-    local dragon_bg = display.newSprite("back_ground_43x43.png")
+    local dragon_bg = display.newSprite("back_ground_43x43_1.png")
         :addTo(node, 2):pos(-size.width/2-25, 0)
     display.newSprite(UILib.small_dragon_head[dragon_type or "redDragon"])
         :align(display.CENTER, dragon_bg:getContentSize().width/2, dragon_bg:getContentSize().height/2)
