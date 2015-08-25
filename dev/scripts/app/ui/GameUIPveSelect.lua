@@ -78,7 +78,7 @@ function GameUIPveSelect:GetListItem(index)
         color = 0xffedae,
         shadow = true
     })):addTo(bg):align(display.CENTER,548 - 60,100*1/3)
-    -- :setButtonEnabled(User:IsStageEnabled(index) and self.level ~= index)
+    :setButtonEnabled(User:IsStageEnabled(index) and self.level ~= index)
     :onButtonClicked(function()
         app:EnterPVEScene(index)
     end)
