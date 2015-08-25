@@ -303,8 +303,7 @@ function GameUIAllianceHome:CreateOperationButton()
             end
             function button:CheckVisible()
                 local status = Alliance_Manager:GetMyAlliance():Status()
-                return true
-                    -- return status == "fight" or status == "prepare"
+                return status == "fight" or status == "prepare"
             end
             button:SetDefenceStatus()
         end
@@ -595,6 +594,7 @@ function GameUIAllianceHome:OnAllianceBasicChanged(alliance,changed_map)
         else
             self.top:Refresh()
         end
+        self.operation_button_order:RefreshOrder()
     elseif changed_map.name then
         self.self_name_label:setString("["..alliance:Tag().."] "..changed_map.name.new)
     elseif changed_map.tag then
