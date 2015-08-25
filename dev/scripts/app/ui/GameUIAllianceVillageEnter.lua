@@ -340,7 +340,7 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
         if self:HasEnemyAlliance() then
             villageEvent = self:GetEnemyAlliance():FindVillageEventByVillageId(village_id)
             if villageEvent then -- 敌方占领
-                local attack_button = self:BuildOneButton(self:IsMyAlliance() and "capture_38x56.png" or "strike_66x62.png",self:IsMyAlliance() and _("占领") or _("摧毁")):onButtonClicked(function()
+                local attack_button = self:BuildOneButton(self:IsMyAlliance() and "capture_38x56.png" or "destory_48x60.png",self:IsMyAlliance() and _("占领") or _("摧毁")):onButtonClicked(function()
                     UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers,total_march_time,gameuialliancesendtroops)
                         if checkMeIsProtectedWarinng then
                             UIKit:showMessageDialog(_("提示"),_("进攻村落将失去保护状态，确定继续派兵?"),function()
@@ -375,7 +375,7 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
                 strike_button:setButtonEnabled(my_allaince_status == "fight")
             end
             else -- 无人占领
-                local attack_button = self:BuildOneButton(self:IsMyAlliance() and "capture_38x56.png" or "strike_66x62.png",self:IsMyAlliance() and _("占领") or _("摧毁")):onButtonClicked(function()
+                local attack_button = self:BuildOneButton(self:IsMyAlliance() and "capture_38x56.png" or "destory_48x60.png",self:IsMyAlliance() and _("占领") or _("摧毁")):onButtonClicked(function()
                     UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers,total_march_time,gameuialliancesendtroops)
                         if checkMeIsProtectedWarinng then
                             UIKit:showMessageDialog(_("提示"),_("进攻村落将失去保护状态，确定继续派兵?"),function()
@@ -403,7 +403,7 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
             buttons = {attack_button}
             end
     else -- 无人占领
-        local attack_button = self:BuildOneButton(self:IsMyAlliance() and "capture_38x56.png" or "strike_66x62.png",self:IsMyAlliance() and _("占领") or _("摧毁")):onButtonClicked(function()
+        local attack_button = self:BuildOneButton(self:IsMyAlliance() and "capture_38x56.png" or "destory_48x60.png",self:IsMyAlliance() and _("占领") or _("摧毁")):onButtonClicked(function()
             UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers,total_march_time,gameuialliancesendtroops)
                 if checkMeIsProtectedWarinng then
                     UIKit:showMessageDialog(_("提示"),_("进攻村落将失去保护状态，确定继续派兵?"),function()

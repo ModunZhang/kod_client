@@ -239,7 +239,7 @@ function GameUIAllianceHome:CreateOperationButton()
     local first_col = 177
     local label_padding = 100
     for i, v in ipairs({
-        {"back_ground_defence_68x84.png"},
+        {"back_ground_defence_58x74.png"},
         {"fight_62x70.png"},
         {"tmp_btn_shrine_72x72.png"},
     }) do
@@ -275,7 +275,7 @@ function GameUIAllianceHome:CreateOperationButton()
             local dragon_img = display.newSprite(UILib.dragon_head.blueDragon)
                 :align(display.CENTER, -3,4)
                 :addTo(button)
-                :scale(0.4)
+                :scale(0.35)
                 :hide()
             local warning_icon = display.newSprite("icon_warning_22x42.png")
                 :align(display.CENTER, -2,0)
