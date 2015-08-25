@@ -3,8 +3,10 @@ local window = import("..utils.window")
 local WidgetEventTabButtons = import("..widget.WidgetEventTabButtons")
 local UIPageView = import("..ui.UIPageView")
 local Flag = import("..entity.Flag")
+local UILib = import("..ui.UILib")
 local Alliance = import("..entity.Alliance")
 local SoldierManager = import("..entity.SoldierManager")
+local DragonManager = import("..entity.DragonManager")
 local WidgetAllianceHelper = import("..widget.WidgetAllianceHelper")
 local WidgetAllianceTop = import("..widget.WidgetAllianceTop")
 local GameUIAllianceContribute = import(".GameUIAllianceContribute")
@@ -107,6 +109,8 @@ function GameUIAllianceHome:AddOrRemoveListener(isAdd)
         alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
         alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
         self.alliance:GetAllianceShrine():AddListenOnType(self,self.alliance:GetAllianceShrine().LISTEN_TYPE.OnShrineEventsChanged)
+        city:GetDragonEyrie():GetDragonManager():AddListenOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
+
         -- 添加到全局计时器中，以便显示各个阶段的时间
         app.timer:AddListener(self)
     else
@@ -125,6 +129,7 @@ function GameUIAllianceHome:AddOrRemoveListener(isAdd)
         alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
         alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
         self.alliance:GetAllianceShrine():RemoveListenerOnType(self,self.alliance:GetAllianceShrine().LISTEN_TYPE.OnShrineEventsChanged)
+        city:GetDragonEyrie():GetDragonManager():RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
     end
 end
 
@@ -236,6 +241,7 @@ function GameUIAllianceHome:CreateOperationButton()
     for i, v in ipairs({
         {"fight_62x70.png"},
         {"tmp_btn_shrine_72x72.png"},
+        {"back_ground_defence_68x84.png"},
     }) do
         local button = WidgetPushButton.new({normal = v[1]})
             :onButtonClicked(handler(self, self.OnMidButtonClicked))
@@ -264,6 +270,31 @@ function GameUIAllianceHome:CreateOperationButton()
             function button:CheckVisible()
                 return alliance:GetAllianceShrine():HaveEvent()
             end
+        elseif i == 3 then
+            local dragon_img = display.newSprite(UILib.dragon_head.blueDragon)
+                :align(display.CENTER, -3,4)
+                :addTo(button)
+                :scale(0.4)
+                :hide()
+            local warning_icon = display.newSprite("icon_warning_22x42.png")
+                :align(display.CENTER, -2,0)
+                :addTo(button)
+                :hide()
+            function button:SetDefenceStatus()
+                local defenceDragon = City:GetDragonEyrie():GetDragonManager():GetDefenceDragon()
+                if defenceDragon then
+                    dragon_img:setTexture(UILib.dragon_head[defenceDragon:Type()])
+                    dragon_img:show()
+                    warning_icon:hide()
+                else
+                    dragon_img:hide()
+                    warning_icon:show()
+                end
+            end
+            function button:CheckVisible()
+                return true
+            end
+            button:SetDefenceStatus()
         end
         order:AddElement(button)
     end
@@ -533,9 +564,13 @@ function GameUIAllianceHome:OnMidButtonClicked(event)
             end
         end
         UIKit:newGameUI("GameUIAllianceShrine",self.city,"fight_event",shrine_info:GetAllianceBuildingInfo()):AddToCurrentScene(true)
+    elseif tag == 3 then
+        UIKit:newGameUI("GameUIDragonEyrieMain", self.city, self.city:GetFirstBuildingByType("dragonEyrie"), "dragon"):AddToCurrentScene(true)
     end
 end
-
+function GameUIAllianceHome:OnBasicChanged()
+    self.operation_button_order:getChildByTag(3):SetDefenceStatus()
+end
 function GameUIAllianceHome:OnAllianceBasicChanged(alliance,changed_map)
     local alliance = self.alliance
     if changed_map.honour then
@@ -784,6 +819,8 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
+
+
 
 
 
