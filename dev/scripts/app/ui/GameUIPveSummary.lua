@@ -283,6 +283,9 @@ function GameUIPveSummary:BuildDefeatUI(param)
     self.items[3] = display.newSprite("tmp_pve_star_bg.png"):addTo(sbg):pos(size.width/2 + 60, 50):scale(0.8)
     ccs.Armature:create("win"):addTo(bg):align(display.CENTER, 0, 300):getAnimation():play("Defeat", -1, 0)
     app:GetAudioManager():PlayeEffectSoundWithKey("BATTLE_DEFEATED")
+    self:performWithDelay(function()
+        self:DisableAutoClose(false)
+    end, 0.8)
 
 
 

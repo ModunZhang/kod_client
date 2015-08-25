@@ -904,12 +904,19 @@ function MultiAllianceLayer:DeleteAllLines()
         self:DeleteLineById(id)
     end
 end
+local resource_map = {
+    food = true,
+    wood = true,
+    iron = true,
+    coin = true,
+    stone = true,
+}
 function MultiAllianceLayer:CreateDeadEvent(marchEvent)
     local id_corps = marchEvent:Id()
     if not self:IsExistCorps(id_corps) then return end
     local has_resourcce = false
     for _,v in ipairs(marchEvent:AttackPlayerData().rewards) do
-        if v.name ~= "blood" then
+        if resource_map[v.name] then
             has_resourcce = true
             break
         end
