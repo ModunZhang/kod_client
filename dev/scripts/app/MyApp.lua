@@ -488,7 +488,8 @@ function MyApp:getSupportMailFormat(category,logMsg)
     local UTCTime    = "UTC Time:" .. os.date('!%Y-%m-%d %H:%M:%S', self.timer:GetServerTime())
     local GameName   = "Game:" .. "Dragonfall"
     local Version    = "Version:" .. ext.getAppVersion()
-    local Username   = "User ID:" .. DataManager:getUserData()._id
+    local UserID   = "User ID:" .. DataManager:getUserData()._id
+    local Username   = "User name:" .. DataManager:getUserData().basicInfo.name
     local Server     = "Server:" .. "World"
     local OpenUDID   = "Open UDID:" .. device.getOpenUDID()
     local Category   = "Category:" .. category or ""
@@ -496,8 +497,8 @@ function MyApp:getSupportMailFormat(category,logMsg)
     local DeviceType = "Device Type:" ..ext.getDeviceModel()
     local OSVersion  = "OS Version:" .. ext.getOSVersion()
 
-    local format_str = "\n\n\n\n\n---------------%s---------------\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s"
-    local result_str = string.format(format_str,_("不能删除"),UTCTime,GameName,Version,Username,Server,OpenUDID,Category,Language,DeviceType,OSVersion)
+    local format_str = "\n\n\n\n\n---------------%s---------------\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s"
+    local result_str = string.format(format_str,_("不能删除"),UTCTime,GameName,Version,Username,UserID,Server,OpenUDID,Category,Language,DeviceType,OSVersion)
     if logMsg then
         result_str = string.format("%s\n---------------Log---------------\n%s",result_str,logMsg)
     end
