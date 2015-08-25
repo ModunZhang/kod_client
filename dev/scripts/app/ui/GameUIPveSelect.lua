@@ -28,7 +28,9 @@ function GameUIPveSelect:onEnter()
         list:addItem(item)
     end
     list:reload()
-    local y = 600 - (24 * 100 - (self.level - 1) * 100)
+    local total_len = 24 * 100
+    local y = 600 - (total_len - (self.level - 3) * 100)
+    y = y < 600 - total_len and 600 - total_len or y
     list:getScrollNode():setPositionY(y > 0 and 0 or y)
 end
 function GameUIPveSelect:GetListItem(index)
@@ -76,7 +78,7 @@ function GameUIPveSelect:GetListItem(index)
         color = 0xffedae,
         shadow = true
     })):addTo(bg):align(display.CENTER,548 - 60,100*1/3)
-    :setButtonEnabled(User:IsStageEnabled(index) and self.level ~= index)
+    -- :setButtonEnabled(User:IsStageEnabled(index) and self.level ~= index)
     :onButtonClicked(function()
         app:EnterPVEScene(index)
     end)

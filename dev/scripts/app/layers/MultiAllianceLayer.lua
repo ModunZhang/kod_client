@@ -907,7 +907,14 @@ end
 function MultiAllianceLayer:CreateDeadEvent(marchEvent)
     local id_corps = marchEvent:Id()
     if not self:IsExistCorps(id_corps) then return end
-    if not self.map_dead[id_corps] and next(marchEvent:AttackPlayerData().rewards) then
+    local has_resourcce = false
+    for _,v in ipairs(marchEvent:AttackPlayerData().rewards) do
+        if v.name ~= "blood" then
+            has_resourcce = true
+            break
+        end
+    end
+    if not self.map_dead[id_corps] and has_resourcce then
         local point = self.map_corps[id_corps].march_info.start_info.logic
         local alliance_view = self.alliance_views[point.index]
         local x,y = alliance_view:GetLogicMap():ConvertToMapPosition(point.x, point.y)
@@ -918,7 +925,7 @@ end
 function MultiAllianceLayer:CreateDeadSpriteByEvent(event)
     local sprite
     if event:MarchType() == "village" then
-        local config = SpriteConfig[event:DefenceVillageData().name]:GetConfigByLevel(event:DefenceVillageData().level)
+        local config = SpriteConfig[event:DefenceVillageData().name]:GetConfigByLevel(tonumber(event:DefenceVillageData().level))
         sprite = display.newSprite(config.png):scale(config.scale)
         local size = sprite:getContentSize()
         fire():addTo(sprite):pos(size.width/2, 30)
