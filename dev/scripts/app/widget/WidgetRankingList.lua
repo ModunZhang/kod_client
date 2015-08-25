@@ -173,6 +173,7 @@ function WidgetRankingList:touchListener(event)
     local listView = event.listView
     if "clicked" == event.name then
         local id = self.current_rank.datas[event.itemPos].id
+        app:GetAudioManager():PlayeEffectSoundWithKey("NORMAL_DOWN")
         if self.type_ == "player" then
             UIKit:newGameUI("GameUIAllianceMemberInfo",false,id,nil,DataManager:getUserData().serverId):AddToCurrentScene(true)
         else
