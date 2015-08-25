@@ -109,7 +109,14 @@ function GameUIAllianceVillageEnter:GetBuildingDesc()
     end
     return ""
 end
-
+function GameUIAllianceVillageEnter:InitBuildingInfo()
+    GameUIAllianceVillageEnter.super.InitBuildingInfo(self)
+    UIKit:ttfLabel({
+        text = _("摧毁敌方村落,直接获得总容量20%的资源"),
+        size = 20,
+        color = 0x7e0000
+    }):align(display.BOTTOM_CENTER, self.body:getContentSize().width/2, 30):addTo(self.body)
+end
 function GameUIAllianceVillageEnter:GetBuildingInfo()
     if self:IsRuins() then
         return {{
@@ -326,13 +333,13 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
             end)
         end, function ()
         end)
-    buttons = {attack_button}
+        buttons = {attack_button}
     end
     else --我方未占领
         if self:HasEnemyAlliance() then
             villageEvent = self:GetEnemyAlliance():FindVillageEventByVillageId(village_id)
             if villageEvent then -- 敌方占领
-                local attack_button = self:BuildOneButton("capture_38x56.png",_("占领")):onButtonClicked(function()
+                local attack_button = self:BuildOneButton(self:IsMyAlliance() and "capture_38x56.png" or "strike_66x62.png",self:IsMyAlliance() and _("占领") or _("摧毁")):onButtonClicked(function()
                     UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers,total_march_time,gameuialliancesendtroops)
                         if checkMeIsProtectedWarinng then
                             UIKit:showMessageDialog(_("提示"),_("进攻村落将失去保护状态，确定继续派兵?"),function()
@@ -367,7 +374,7 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
                 strike_button:setButtonEnabled(my_allaince_status == "fight")
             end
             else -- 无人占领
-                local attack_button = self:BuildOneButton("capture_38x56.png",_("占领")):onButtonClicked(function()
+                local attack_button = self:BuildOneButton(self:IsMyAlliance() and "capture_38x56.png" or "strike_66x62.png",self:IsMyAlliance() and _("占领") or _("摧毁")):onButtonClicked(function()
                     UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers,total_march_time,gameuialliancesendtroops)
                         if checkMeIsProtectedWarinng then
                             UIKit:showMessageDialog(_("提示"),_("进攻村落将失去保护状态，确定继续派兵?"),function()
@@ -395,7 +402,7 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
             buttons = {attack_button}
             end
     else -- 无人占领
-        local attack_button = self:BuildOneButton("capture_38x56.png",_("占领")):onButtonClicked(function()
+        local attack_button = self:BuildOneButton(self:IsMyAlliance() and "capture_38x56.png" or "strike_66x62.png",self:IsMyAlliance() and _("占领") or _("摧毁")):onButtonClicked(function()
             UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers,total_march_time,gameuialliancesendtroops)
                 if checkMeIsProtectedWarinng then
                     UIKit:showMessageDialog(_("提示"),_("进攻村落将失去保护状态，确定继续派兵?"),function()
@@ -462,6 +469,7 @@ function GameUIAllianceVillageEnter:OnMoveOutStage()
     GameUIAllianceVillageEnter.super.OnMoveOutStage(self)
 end
 return GameUIAllianceVillageEnter
+
 
 
 
