@@ -48,7 +48,10 @@ function GameUIPveSelect:GetListItem(index)
         size = 20,
         color = 0xffedae,
     }):addTo(num_bg):align(display.CENTER, size.width/2, size.height/2)
-    display.newSprite("alliance_shire_star_60x58_1.png"):addTo(bg):pos(60,100*1/3):scale(0.7)
+
+    local sbg = display.newSprite("tmp_pve_star_bg.png"):addTo(bg):pos(60,38):scale(0.7)
+    local size = sbg:getContentSize()
+    display.newSprite("tmp_pve_star.png"):addTo(sbg):pos(size.width/2, size.height/2)
 
     local txt, color
     if User:IsStageEnabled(index) then
