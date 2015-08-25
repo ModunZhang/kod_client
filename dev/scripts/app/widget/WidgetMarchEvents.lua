@@ -283,7 +283,7 @@ end
 function WidgetMarchEvents:GetDragonHead(dragon_type)
      -- 龙图标
     local dragon_bg_1 = display.newSprite("back_ground_15x43.png")
-    local dragon_bg = display.newSprite("back_ground_43x43.png")
+    local dragon_bg = display.newSprite("back_ground_43x43_1.png")
         :align(display.LEFT_CENTER,0,dragon_bg_1:getContentSize().height/2)
         :addTo(dragon_bg_1)
     display.newSprite(UILib.small_dragon_head[dragon_type])
