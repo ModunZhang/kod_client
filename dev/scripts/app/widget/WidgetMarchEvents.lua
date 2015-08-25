@@ -287,7 +287,7 @@ function WidgetMarchEvents:GetDragonHead(dragon_type)
         :align(display.LEFT_CENTER,0,dragon_bg_1:getContentSize().height/2)
         :addTo(dragon_bg_1)
     display.newSprite(UILib.small_dragon_head[dragon_type])
-        :align(display.CENTER, dragon_bg:getContentSize().width/2, dragon_bg:getContentSize().height/2+5)
+        :align(display.CENTER, dragon_bg:getContentSize().width/2, dragon_bg:getContentSize().height/2)
         :addTo(dragon_bg)
     return dragon_bg_1
 end
