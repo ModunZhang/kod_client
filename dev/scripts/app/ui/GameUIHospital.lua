@@ -382,7 +382,7 @@ function GameUIHospital:SetProgressCasualtyRate()
 end
 -- 设置伤兵比例条文本框
 function GameUIHospital:SetProgressCasualtyRateLabel()
-    self.heal_layer.casualty_rate_label:setString(self.city:GetSoldierManager():GetTotalTreatSoldierCount().."/"..self.building:GetMaxCasualty())
+    self.heal_layer.casualty_rate_label:setString(string.formatnumberthousands(self.city:GetSoldierManager():GetTotalTreatSoldierCount()).."/"..string.formatnumberthousands(self.building:GetMaxCasualty()))
 end
 
 function GameUIHospital:CresteCasualtySoldiersListView()

@@ -263,6 +263,7 @@ end
 
 
 function MyApp:retryLoginGame()
+    local debug_info = debug.traceback("", 2)
     if NetManager.m_logicServer.host and NetManager.m_logicServer.port then
         UIKit:WaitForNet(0)
         NetManager:getConnectLogicServerPromise():next(function()
@@ -288,6 +289,9 @@ function MyApp:retryLoginGame()
                     UIKit:showKeyMessageDialog(_("错误"), UIKit:getErrorCodeData(content.code).message, function()
                         app:restart(false)
                     end)
+                    if checktable(ext.market_sdk) and ext.market_sdk.onPlayerEvent then
+                        ext.market_sdk.onPlayerEvent("LUA_ERROR_RETRYLOGIN", debug_info)
+                    end
                 else
                     print("MyApp:debug--->6")
                     UIKit:showKeyMessageDialog(_("错误"), UIKit:getErrorCodeData(content.code).message, function()
@@ -484,7 +488,8 @@ function MyApp:getSupportMailFormat(category,logMsg)
     local UTCTime    = "UTC Time:" .. os.date('!%Y-%m-%d %H:%M:%S', self.timer:GetServerTime())
     local GameName   = "Game:" .. "Dragonfall"
     local Version    = "Version:" .. ext.getAppVersion()
-    local Username   = "User ID:" .. DataManager:getUserData()._id
+    local UserID   = "User ID:" .. DataManager:getUserData()._id
+    local Username   = "User name:" .. DataManager:getUserData().basicInfo.name
     local Server     = "Server:" .. "World"
     local OpenUDID   = "Open UDID:" .. device.getOpenUDID()
     local Category   = "Category:" .. category or ""
@@ -492,8 +497,8 @@ function MyApp:getSupportMailFormat(category,logMsg)
     local DeviceType = "Device Type:" ..ext.getDeviceModel()
     local OSVersion  = "OS Version:" .. ext.getOSVersion()
 
-    local format_str = "\n\n\n\n\n---------------%s---------------\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s"
-    local result_str = string.format(format_str,_("不能删除"),UTCTime,GameName,Version,Username,Server,OpenUDID,Category,Language,DeviceType,OSVersion)
+    local format_str = "\n\n\n\n\n---------------%s---------------\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s"
+    local result_str = string.format(format_str,_("不能删除"),UTCTime,GameName,Version,Username,UserID,Server,OpenUDID,Category,Language,DeviceType,OSVersion)
     if logMsg then
         result_str = string.format("%s\n---------------Log---------------\n%s",result_str,logMsg)
     end

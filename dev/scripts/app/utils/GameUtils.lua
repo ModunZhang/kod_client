@@ -283,6 +283,21 @@ function GameUtils:PingBaidu(callback)
     request:start()
 end
 
+function GameUtils:GetServerInfo(param, callback)
+    local request = network.createHTTPRequest(function(event)
+        if event.name == "completed" then
+            callback(true, json.decode(event.request:getResponseData()))
+        elseif event.name == "failed" then
+            callback(false)
+        end
+    end, 
+    string.format("http://gate.batcatstudio.com/dragonfall/query-entry?env=%s&version=%s", string.urlencode(param.env), string.urlencode(param.version)), "GET")
+    request:setTimeout(180)
+    request:start()
+end
+
+
+
 --ver 2.2.4
 --TODO:return po文件对应的语言代码！
 function GameUtils:getCurrentLanguage()

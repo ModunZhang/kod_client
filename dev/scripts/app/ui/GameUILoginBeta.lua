@@ -262,7 +262,7 @@ function GameUILoginBeta:createVerLabel()
 end
 
 function GameUILoginBeta:showVersion()
-    if  CONFIG_IS_DEBUG or device.platform == 'mac' then
+    if CONFIG_IS_NOT_UPDATE or device.platform == 'mac' then
         local __debugVer = require("debug_version")
         self.verLabel:setString("测试"..string.format(_("版本%s(%s)"), ext.getAppVersion(), __debugVer))
         -- app.client_tag = __debugVer
@@ -283,28 +283,49 @@ end
 --------------------------------------------------------------------------------------------------------------
 function GameUILoginBeta:OnMoveInStage()
     self:showVersion()
-    if CONFIG_IS_DEBUG or device.platform == 'mac' then
-        if not app.client_tag then
-            NetManager:getUpdateFileList(function(success, msg)
-                if not success then
-                    device.showAlert(_("错误"), _("检查游戏更新失败!"), { _("确定") },function(event)
-                        app:restart(false)
-                    end)
-                    return
-                end
-                local serverFileList = json.decode(msg)
-                app.client_tag = serverFileList.tag
-                --注意这里debug模式和mac上再次重写了ext.getAppVersion
-                ext.getAppVersion = function()
-                    return serverFileList.appVersion
-                end
-            end)
+    self:GetServerInfo(function()
+        if CONFIG_IS_NOT_UPDATE or device.platform == 'mac' then
+            if not app.client_tag then
+                NetManager:getUpdateFileList(function(success, msg)
+                    if not success then
+                        device.showAlert(_("错误"), _("检查游戏更新失败!"), { _("确定") },function(event)
+                            app:restart(false)
+                        end)
+                        return
+                    end
+                    local serverFileList = json.decode(msg)
+                    app.client_tag = serverFileList.tag
+                end)
+            end
+            self:loadLocalResources()
+        else
+            self:loadLocalJson()
+            self:loadServerJson()
         end
-        self:loadLocalResources()
-    else
-        self:loadLocalJson()
-        self:loadServerJson()
-    end
+    end)
+end
+function GameUILoginBeta:GetServerInfo(callback)
+    self:setProgressText(_("正在获取服务器信息..."))
+    GameUtils:GetServerInfo({env = CONFIG_IS_DEBUG and "development" or "production", version = ext.getAppVersion()}, function(success, content)
+        if success then
+            self:setProgressText(_("获取服务器信息成功"))
+            dump(content)
+            local ip, port = unpack(string.split(content.data.gateServer, ":"))
+            NetManager.m_gateServer.host = ip
+            NetManager.m_gateServer.port = tonumber(port)
+
+            local ip, port = unpack(string.split(content.data.updateServer, ":"))
+            NetManager.m_updateServer.host = ip
+            NetManager.m_updateServer.port = tonumber(port)
+            callback()
+        else
+            self:performWithDelay(function()
+                self:showError(_("获取服务器信息失败!"),function()
+                    self:GetServerInfo()
+                end)
+            end, 3)
+        end
+    end)
 end
 
 function GameUILoginBeta:onCleanup()
@@ -333,8 +354,8 @@ end
 function GameUILoginBeta:__loadToTextureCache(config,shouldLogin)
     display.addSpriteFrames(DEBUG_GET_ANIMATION_PATH(config.list),DEBUG_GET_ANIMATION_PATH(config.image),function()
         self:setProgressPercent(self.progress_num + self.local_resources_percent_per)
-        if shouldLogin then 
-            -- self:loginAction() 
+        if shouldLogin then
+            -- self:loginAction()
             self:performWithDelay(function()
                 self.progress_bar:hide()
                 self.tips_ui:hide()
@@ -428,6 +449,7 @@ function GameUILoginBeta:connectLogicServer()
 
 end
 function GameUILoginBeta:login()
+    local debug_info = debug.traceback("", 2)
     NetManager:getLoginPromise():done(function(response)
         local userData = DataManager:getUserData()
         ext.market_sdk.onPlayerLogin(userData._id, userData.basicInfo.name, userData.logicServerId)
@@ -461,6 +483,9 @@ function GameUILoginBeta:login()
             local code = content.code
             if UIKit:getErrorCodeKey(content.code) == 'playerAlreadyLogin' then
                 content = _("玩家已经登录")
+                if checktable(ext.market_sdk) and ext.market_sdk.onPlayerEvent then
+                    ext.market_sdk.onPlayerEvent("LUA_ERROR_LOGIN", debug_info)
+                end
             else
                 content = UIKit:getErrorCodeData(code).message
             end
@@ -527,30 +552,14 @@ function GameUILoginBeta:donwLoadFilesWithFileList()
     local localAppVersion = self:GetVersionWeight(ext.getAppVersion())
     local serverMinAppVersion = self:GetVersionWeight(serverFileList.appMinVersion)
     local serverAppVersion = self:GetVersionWeight(serverFileList.appVersion)
-    if localAppVersion < serverMinAppVersion or 
+    if localAppVersion < serverMinAppVersion or
         (ext.getAppVersion() == '1.01' and serverFileList.appVersion == '1.1.1') then
         device.showAlert(_("错误"), _("游戏版本过低,请更新!"), { _("确定") }, function(event)
-            if CONFIG_IS_DEBUG then
-                device.openURL("https://batcat.sinaapp.com/ad_hoc/build-index.html")
-            else
-                device.openURL(CONFIG_APP_URL[device.platform])
-            end
+            device.openURL(CONFIG_APP_URL[device.platform])
             self:loadServerJson()
         end)
         return
     end
-    if localAppVersion > serverAppVersion or 
-        (ext.getAppVersion() == '1.1.1' and serverFileList.appVersion == '1.01') then
-        -- device.showAlert(_("错误"), _("服务器正在部署,请稍候!"), { _("确定") }, function(event)
-        --     self:loadServerJson()
-        -- end)
-        -- return
-        CONFIG_REMOTE_SERVER.gate.host = "54.223.202.136"
-        NetManager.m_gateServer.host = CONFIG_IS_LOCAL and CONFIG_LOCAL_SERVER.gate.host or CONFIG_REMOTE_SERVER.gate.host
-        NetManager.m_gateServer.port = CONFIG_IS_LOCAL and CONFIG_LOCAL_SERVER.gate.port or CONFIG_REMOTE_SERVER.gate.port
-        NetManager.m_gateServer.name = CONFIG_IS_LOCAL and CONFIG_LOCAL_SERVER.gate.name or CONFIG_REMOTE_SERVER.gate.name
-    end
-
 
     local updateFileList = {}
     for k, v in pairs(serverFileList.files) do
@@ -740,6 +749,11 @@ end
 
 
 return GameUILoginBeta
+
+
+
+
+
 
 
 

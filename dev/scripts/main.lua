@@ -1,14 +1,19 @@
 function __G__TRACKBACK__(errorMessage)
-  if CONFIG_LOG_DEBUG_FILE then
-      print("----------------------------------------")
-      print("LUA ERROR: " .. tostring(errorMessage) .. "\n")
-      print(debug.traceback("", 2))
-      print("----------------------------------------")
-      local errDesc = tostring(errorMessage) .. "\n" .. debug.traceback("", 2)
-      device.showAlert("☠错误☠",errDesc,"复制！",function()
-          ext.copyText(errDesc)
-      end)
-  end
+    if CONFIG_LOG_DEBUG_FILE then
+        print("----------------------------------------")
+        print("LUA ERROR: " .. tostring(errorMessage) .. "\n")
+        print(debug.traceback("", 2))
+        print("----------------------------------------")
+        local errDesc = tostring(errorMessage) .. "\n" .. debug.traceback("", 2)
+        device.showAlert("☠错误☠",errDesc,"复制！",function()
+            ext.copyText(errDesc)
+        end)
+    else
+        if checktable(ext.market_sdk) and ext.market_sdk.onPlayerEvent then
+          local errDesc = tostring(errorMessage) .. "\n" .. debug.traceback("", 2)
+          ext.market_sdk.onPlayerEvent("LUA_ERROR",errDesc)
+        end
+    end
 	-- UIKit:showMessageDialog(_("提示"),_("游戏出现了bug,点击确定按钮发邮件给我们"),function()
  --        if device.platform == 'mac' then
  --            dump(errDesc)

@@ -13,7 +13,7 @@ local function getAniNameFromAnimationFiles(animation_files)
 end
 
 local PLAYER_ICON = {
-    [0] = "Icon_empireRise_128x128.png", -- 系统头像
+    [0] = "empireRise.png", -- 系统头像
     "player_icon_1.png",
     "player_icon_2.png",
     "player_icon_3.png",
@@ -540,6 +540,11 @@ local DRAGON_HEAD = {
     redDragon = "redDragon.png",
     greenDragon = "greenDragon.png"
 }
+local SMALL_DRAGON_HEAD = {
+    blueDragon = "blueDragon_40x40.png",
+    redDragon = "redDragon_40x40.png",
+    greenDragon = "greenDragon_40x40.png"
+}
 local BUFF = {
     masterOfDefender = "masterOfDefender_128x128.png",
     quarterMaster = "quarterMaster_128x128.png",
@@ -746,7 +751,7 @@ local OTHER_ALLIANCE_BUILDING = setmetatable({
 }, {__index = ALLIANCE_BUILDING})
 
 local DAILY_TASK_ICON = {
-    empireRise = "Icon_empireRise_128x128.png",
+    empireRise = "empireRise.png",
     conqueror = "Icon_conqueror_104x117.png",
     brotherClub = "Icon_brotherClub_122x124.png",
     growUp = "Icon_growUp_108x115.png"
@@ -1085,6 +1090,7 @@ return {
     black_soldier_color_bg_images = BLACK_SOLDIER_COLOR_BG_IMAGES,
     black_soldier_image = BLACK_SOLDIER_IMAGES,
     dragon_head  = DRAGON_HEAD,
+    small_dragon_head  = SMALL_DRAGON_HEAD,
     dragon_animations = DRAGON_ANIMATIONS,
     dragon_animations_files = DRAGON_ANIMATIONS_FILES,
     decorator_image = DECORATOR_IMAGE,

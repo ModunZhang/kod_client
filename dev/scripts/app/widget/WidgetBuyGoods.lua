@@ -130,11 +130,16 @@ function WidgetBuyGoods:ctor(item)
                 UIKit:showMessageDialog(_("主人"),_("购买需要精英或以上权限"))
                 return
             end
-            if slider:GetValue()<1 then
+            local but_count = slider:GetValue()
+            if but_count < 1 then
                 UIKit:showMessageDialog(_("主人"),_("请输入正确的购买数量"))
                 return
             end
-            NetManager:getBuyAllianceItemPromise(item:Name(),slider:GetValue()):done(function ( response )
+            if but_count > item:Count() then
+                UIKit:showMessageDialog(_("主人"),_("道具数量不足"))
+                return
+            end
+            NetManager:getBuyAllianceItemPromise(item:Name(),but_count):done(function ( response )
                 GameGlobalUI:showTips(_("提示"),_("购买成功"))
                 return response
             end)

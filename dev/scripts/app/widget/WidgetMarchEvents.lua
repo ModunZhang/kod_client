@@ -4,6 +4,7 @@ local Alliance = import("..entity.Alliance")
 local cocos_promise = import("..utils.cocos_promise")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUseItems = import("..widget.WidgetUseItems")
+local UILib = import("..ui.UILib")
 local timer = app.timer
 local WIDGET_WIDTH = 640
 local WIDGET_HEIGHT = 600
@@ -71,7 +72,7 @@ end
 function WidgetMarchEvents:OnVillageEventTimer(villageEvent)
     local item = self.items_map[villageEvent:Id()]
     if item then
-        local desc =  string.format(" %s %d%%", item.prefix,villageEvent:CollectPercent())
+        local desc =  string.format("%s %d%%", item.prefix,villageEvent:CollectPercent())
         item.desc:setString(desc)
         item.time:setString(GameUtils:formatTimeStyle1(villageEvent:GetTime()))
         item.progress:setPercentage(villageEvent:CollectPercent())
@@ -279,6 +280,17 @@ function WidgetMarchEvents:ResizeBelowHorizon(new_height)
     self.node:setPositionY(- height)
     self.hide_btn:setPositionY(height - 1)
 end
+function WidgetMarchEvents:GetDragonHead(dragon_type)
+     -- 龙图标
+    local dragon_bg_1 = display.newSprite("back_ground_15x43.png")
+    local dragon_bg = display.newSprite("back_ground_43x43_1.png")
+        :align(display.LEFT_CENTER,0,dragon_bg_1:getContentSize().height/2)
+        :addTo(dragon_bg_1)
+    display.newSprite(UILib.small_dragon_head[dragon_type])
+        :align(display.CENTER, dragon_bg:getContentSize().width/2, dragon_bg:getContentSize().height/2)
+        :addTo(dragon_bg)
+    return dragon_bg_1
+end
 -- 只有加速按钮和部队
 function WidgetMarchEvents:CreateReturnItem(entity)
     local event = entity:WithObject()
@@ -293,13 +305,17 @@ function WidgetMarchEvents:CreateReturnItem(entity)
     WidgetPushTransparentButton.new(cc.rect(0,0,469,41)):onButtonClicked(function()
         display.getRunningScene():GetSceneLayer():TrackCorpsById(event:Id())
     end):addTo(node):align(display.LEFT_CENTER, 4, half_height)
+
+    self:GetDragonHead(event:AttackPlayerData().dragon.type):align(display.LEFT_CENTER, 2, half_height)
+        :addTo(node)
+
     node.prefix = entity:GetEventPrefix()
     node.desc = UIKit:ttfLabel({
         text = node.prefix,
         size = 18,
         color = 0xd1ca95,
         shadow = true,
-    }):addTo(node):align(display.LEFT_CENTER, 10, half_height)
+    }):addTo(node):align(display.LEFT_CENTER, 55, half_height)
 
     node.time = UIKit:ttfLabel({
         text = GameUtils:formatTimeStyle1(event:GetTime()),
@@ -354,13 +370,17 @@ function WidgetMarchEvents:CreateAttackItem(entity)
     WidgetPushTransparentButton.new(cc.rect(0,0,469,41)):onButtonClicked(function()
         display.getRunningScene():GetSceneLayer():TrackCorpsById(event:Id())
     end):addTo(node):align(display.LEFT_CENTER, 4, half_height)
+
+    self:GetDragonHead(event:AttackPlayerData().dragon.type):align(display.LEFT_CENTER, 2, half_height)
+        :addTo(node)
+
     node.prefix = entity:GetEventPrefix()
     node.desc = UIKit:ttfLabel({
         text = node.prefix,
         size = 18,
         color = 0xd1ca95,
         shadow = true,
-    }):addTo(node):align(display.LEFT_CENTER, 10, half_height)
+    }):addTo(node):align(display.LEFT_CENTER, 55, half_height)
 
     node.time = UIKit:ttfLabel({
         text = GameUtils:formatTimeStyle1(event:GetTime()),
@@ -421,23 +441,28 @@ function WidgetMarchEvents:CreateDefenceItem(entity)
     local time_str = ""
     if type_str == 'COLLECT' then
         node.progress:setPercentage(event:CollectPercent())
-        display_text = string.format(" %s %d%%", node.prefix,event:CollectPercent())
+        display_text = string.format("%s %d%%", node.prefix,event:CollectPercent())
         time_str = GameUtils:formatTimeStyle1(event:GetTime())
     elseif type_str == 'SHIRNE' then
-       node.progress:setPercentage(100)
-       display_text = node.prefix
-       time_str = ""
+        node.progress:setPercentage(100)
+        display_text = node.prefix
+        time_str = ""
     elseif type_str == 'HELPTO' then
         node.progress:setPercentage(100)
-       display_text = node.prefix
-       time_str = ""
+        display_text = node.prefix
+        time_str = ""
     end
+if event.__cname == "VillageEvent" then
+    self:GetDragonHead(event:PlayerData().dragon.type):align(display.LEFT_CENTER, 2, half_height)
+        :addTo(node)
+end
+print("display_text=","a"..display_text)
     node.desc = UIKit:ttfLabel({
         text = display_text,
         size = 18,
         color = 0xd1ca95,
         shadow = true,
-    }):addTo(node):align(display.LEFT_CENTER, 10, half_height)
+    }):addTo(node):align(display.LEFT_CENTER, 55, half_height)
 
     node.time = UIKit:ttfLabel({
         text = time_str,
@@ -509,11 +534,11 @@ function WidgetMarchEvents:OnRetreatButtonClicked(entity,cb)
     elseif entity:GetType() == entity.ENTITY_TYPE.COLLECT then
         UIKit:showMessageDialog(_("提示"),_("确定撤军?"),function()
             NetManager:getRetreatFromVillagePromise(entity:WithObject():VillageData().alliance.id,entity:WithObject():Id())
-            :done(function()
-                cb(true)
-            end):fail(function()
+                :done(function()
+                    cb(true)
+                end):fail(function()
                 cb(false)
-            end)
+                end)
         end)
     elseif entity:GetType() == entity.ENTITY_TYPE.MARCH_OUT  or entity:GetType() == entity.ENTITY_TYPE.STRIKE_OUT then
         local widgetUseItems = WidgetUseItems.new():Create({
@@ -528,8 +553,8 @@ function WidgetMarchEvents:MoveToTargetAction(entity)
     local type_str = entity:GetTypeStr()
     local location,alliance_id
     if type_str == 'SHIRNE' or type_str == 'HELPTO' then
-       location = entity:GetDestinationLocationNotString()
-       alliance_id = Alliance_Manager:GetMyAlliance():Id()
+        location = entity:GetDestinationLocationNotString()
+        alliance_id = Alliance_Manager:GetMyAlliance():Id()
     else
         location,alliance_id = entity:GetDestinationLocationNotString()
     end
@@ -543,3 +568,4 @@ function WidgetMarchEvents:OnInfoButtonClicked(entity)
     UIKit:newGameUI("GameUIWatchTowerMyTroopsDetail",entity):AddToCurrentScene(true)
 end
 return WidgetMarchEvents
+

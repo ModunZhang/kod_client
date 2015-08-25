@@ -782,7 +782,7 @@ function CommonUpgradeUI:InitAccelerationPart()
         return
     end
     self.acc_layer = display.newLayer()
-    self.acc_layer:setContentSize(cc.size(display.width,575))
+    self.acc_layer:setContentSize(cc.size(display.width,680))
     self:addChild(self.acc_layer)
 
     -- 正在升级文本说明
@@ -792,11 +792,11 @@ function CommonUpgradeUI:InitAccelerationPart()
         font = UIKit:getFontFilePath(),
         size = 22,
         color = UIKit:hex2c3b(0x403c2f)
-    }):align(display.LEFT_CENTER, display.cx - 260, display.top - 410)
+    }):align(display.LEFT_CENTER, display.cx - 260, display.top - 305)
         :addTo(self.acc_layer)
     -- 升级倒数时间进度条
     --进度条
-    local bar = display.newSprite("progress_bar_364x40_1.png"):addTo(self.acc_layer):pos(display.cx-78, display.top - 450)
+    local bar = display.newSprite("progress_bar_364x40_1.png"):addTo(self.acc_layer):pos(display.cx-78, display.top - 345)
     local progressFill = display.newSprite("progress_bar_364x40_2.png")
     self.acc_layer.ProgressTimer = cc.ProgressTimer:create(progressFill)
     local pro = self.acc_layer.ProgressTimer
@@ -821,20 +821,20 @@ function CommonUpgradeUI:InitAccelerationPart()
     end
 
     -- 进度条头图标
-    display.newSprite("back_ground_43x43.png", display.cx - 250, display.top - 450):addTo(self.acc_layer)
-    display.newSprite("hourglass_30x38.png", display.cx - 250, display.top - 450):addTo(self.acc_layer):setScale(0.8)
+    display.newSprite("back_ground_43x43.png", display.cx - 250, display.top - 345):addTo(self.acc_layer)
+    display.newSprite("hourglass_30x38.png", display.cx - 250, display.top - 345):addTo(self.acc_layer):setScale(0.8)
     -- 免费加速按钮
     self:CreateFreeSpeedUpBuildingUpgradeButton()
     -- 可免费加速提示
     -- 背景框
-    WidgetUIBackGround.new({width = 546,height=90},WidgetUIBackGround.STYLE_TYPE.STYLE_3):align(display.CENTER,  display.cx, display.top - 540):addTo(self.acc_layer)
+    WidgetUIBackGround.new({width = 546,height=90},WidgetUIBackGround.STYLE_TYPE.STYLE_3):align(display.CENTER,  display.cx, display.top - 435):addTo(self.acc_layer)
     self.acc_tip_label = cc.ui.UILabel.new({
         UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
         font = UIKit:getFontFilePath(),
         size = 20,
         dimensions = cc.size(530, 0),
         color = UIKit:hex2c3b(0x403c2f)
-    }):align(display.LEFT_CENTER, display.cx - 270, display.top - 540)
+    }):align(display.LEFT_CENTER, display.cx - 270, display.top - 435)
         :addTo(self.acc_layer)
     self:SetAccTipLabel()
     -- 按时间加速区域
@@ -864,7 +864,7 @@ function CommonUpgradeUI:CreateFreeSpeedUpBuildingUpgradeButton()
                     NetManager:getFreeSpeedUpPromise(eventType,self.building:UniqueUpgradingKey())
                 end
             end
-        end):align(display.CENTER, display.cx+194, display.top - 435):addTo(self.acc_layer)
+        end):align(display.CENTER, display.cx+194, display.top - 335):addTo(self.acc_layer)
     local building = self.building
     if building:IsUpgrading() and building:IsAbleToFreeSpeedUpByTime(app.timer:GetServerTime()) then
         self.acc_layer.acc_button:setButtonEnabled(true)
@@ -883,7 +883,7 @@ function CommonUpgradeUI:GetEventTypeByBuilding()
 end
 function CommonUpgradeUI:CreateAccButtons()
     -- 8个加速按钮单独放置在一个layer上方便处理事件
-    self.acc_button_layer = WidgetAccelerateGroup.new(self:GetEventTypeByBuilding(),self.building:UniqueUpgradingKey()):addTo(self.acc_layer):align(display.BOTTOM_CENTER,window.cx,window.bottom_top+10)
+    self.acc_button_layer = WidgetAccelerateGroup.new(self:GetEventTypeByBuilding(),self.building:UniqueUpgradingKey()):addTo(self.acc_layer):align(display.BOTTOM_CENTER,window.cx,window.bottom_top+115)
     self:visibleChildLayers()
 end
 

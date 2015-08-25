@@ -3,8 +3,10 @@ local window = import("..utils.window")
 local WidgetEventTabButtons = import("..widget.WidgetEventTabButtons")
 local UIPageView = import("..ui.UIPageView")
 local Flag = import("..entity.Flag")
+local UILib = import("..ui.UILib")
 local Alliance = import("..entity.Alliance")
 local SoldierManager = import("..entity.SoldierManager")
+local DragonManager = import("..entity.DragonManager")
 local WidgetAllianceHelper = import("..widget.WidgetAllianceHelper")
 local WidgetAllianceTop = import("..widget.WidgetAllianceTop")
 local GameUIAllianceContribute = import(".GameUIAllianceContribute")
@@ -107,6 +109,8 @@ function GameUIAllianceHome:AddOrRemoveListener(isAdd)
         alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
         alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
         self.alliance:GetAllianceShrine():AddListenOnType(self,self.alliance:GetAllianceShrine().LISTEN_TYPE.OnShrineEventsChanged)
+        city:GetDragonEyrie():GetDragonManager():AddListenOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
+
         -- 添加到全局计时器中，以便显示各个阶段的时间
         app.timer:AddListener(self)
     else
@@ -125,6 +129,7 @@ function GameUIAllianceHome:AddOrRemoveListener(isAdd)
         alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
         alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
         self.alliance:GetAllianceShrine():RemoveListenerOnType(self,self.alliance:GetAllianceShrine().LISTEN_TYPE.OnShrineEventsChanged)
+        city:GetDragonEyrie():GetDragonManager():RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
     end
 end
 
@@ -234,6 +239,7 @@ function GameUIAllianceHome:CreateOperationButton()
     local first_col = 177
     local label_padding = 100
     for i, v in ipairs({
+        {"back_ground_defence_58x74.png"},
         {"fight_62x70.png"},
         {"tmp_btn_shrine_72x72.png"},
     }) do
@@ -242,16 +248,17 @@ function GameUIAllianceHome:CreateOperationButton()
             :setButtonLabelOffset(0, -40)
         button:setTag(i)
         button:setTouchSwallowEnabled(true)
-
         function button:GetElementSize()
             return button:getCascadeBoundingBox().size
         end
-        if i == 1 then
+
+        if i == 2 then
             local alliance = self.alliance
             local alliance_belvedere = alliance:GetAllianceBelvedere()
             local __,count = alliance_belvedere:HasEvents()
             button.alliance_belvedere_events_count = WidgetNumberTips.new():addTo(button):pos(20,-20)
             button.alliance_belvedere_events_count:SetNumber(count)
+
             function button:CheckVisible()
                 local hasEvent,count = alliance_belvedere:HasEvents()
                 if self.alliance_belvedere_events_count then
@@ -259,11 +266,46 @@ function GameUIAllianceHome:CreateOperationButton()
                 end
                 return hasEvent
             end
-        elseif i == 2 then
+        elseif i == 3 then
             local alliance = self.alliance
             function button:CheckVisible()
                 return alliance:GetAllianceShrine():HaveEvent()
             end
+        elseif i == 1 then
+            local dragon_img = display.newSprite(UILib.dragon_head.blueDragon)
+                :align(display.CENTER, -3,4)
+                :addTo(button)
+                :scale(0.35)
+                :hide()
+            local warning_icon = display.newSprite("icon_warning_22x42.png")
+                :align(display.CENTER, -2,0)
+                :addTo(button)
+                :hide()
+            local status_bg = display.newSprite("online_time_bg_96x36.png"):addTo(button):align(display.CENTER,0,-55):scale(0.7)
+            local label = UIKit:ttfLabel({
+                text = os.date("!%H:%M:%S",time),
+                size = 20,
+                align = cc.TEXT_ALIGNMENT_CENTER,
+            }):addTo(status_bg):align(display.CENTER,48,18)
+
+            function button:SetDefenceStatus()
+                local defenceDragon = City:GetDragonEyrie():GetDragonManager():GetDefenceDragon()
+                if defenceDragon then
+                    dragon_img:setTexture(UILib.dragon_head[defenceDragon:Type()])
+                    dragon_img:show()
+                    warning_icon:hide()
+                    label:setString(_("已驻防"))
+                else
+                    dragon_img:hide()
+                    warning_icon:show()
+                    label:setString(_("未驻防"))
+                end
+            end
+            function button:CheckVisible()
+                local status = Alliance_Manager:GetMyAlliance():Status()
+                return status == "fight" or status == "prepare"
+            end
+            button:SetDefenceStatus()
         end
         order:AddElement(button)
     end
@@ -512,7 +554,7 @@ end
 function GameUIAllianceHome:OnMidButtonClicked(event)
     local tag = event.target:getTag()
     if not tag then return end
-    if tag == 1 then -- 战斗
+    if tag == 2 then -- 战斗
         local default_tab = 'march'
         local alliance = self.alliance
         local alliance_belvedere = alliance:GetAllianceBelvedere()
@@ -524,7 +566,7 @@ function GameUIAllianceHome:OnMidButtonClicked(event)
             end
         end
         UIKit:newGameUI('GameUIWathTowerRegion',self.city,default_tab):AddToCurrentScene(true)
-    elseif tag == 2 then
+    elseif tag == 3 then
         local buildings = self.alliance:GetAllianceMap():GetMapObjectsByType("building")
         local shrine_info
         for k,v in pairs(buildings) do
@@ -533,9 +575,13 @@ function GameUIAllianceHome:OnMidButtonClicked(event)
             end
         end
         UIKit:newGameUI("GameUIAllianceShrine",self.city,"fight_event",shrine_info:GetAllianceBuildingInfo()):AddToCurrentScene(true)
+    elseif tag == 1 then
+        UIKit:newGameUI("GameUIDragonEyrieMain", self.city, self.city:GetFirstBuildingByType("dragonEyrie"), "dragon"):AddToCurrentScene(true)
     end
 end
-
+function GameUIAllianceHome:OnBasicChanged()
+    self.operation_button_order:getChildByTag(1):SetDefenceStatus()
+end
 function GameUIAllianceHome:OnAllianceBasicChanged(alliance,changed_map)
     local alliance = self.alliance
     if changed_map.honour then
@@ -548,6 +594,7 @@ function GameUIAllianceHome:OnAllianceBasicChanged(alliance,changed_map)
         else
             self.top:Refresh()
         end
+        self.operation_button_order:RefreshOrder()
     elseif changed_map.name then
         self.self_name_label:setString("["..alliance:Tag().."] "..changed_map.name.new)
     elseif changed_map.tag then
@@ -784,6 +831,12 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
+
+
+
+
+
+
 
 
 

@@ -179,3 +179,8 @@ extern "C" void ClearOpenUdidData()
 #endif
 
 }
+extern "C" const bool isAppAdHocMode()
+{
+    bool isDebug = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"AppHoc"] boolValue];
+    return isDebug;
+}

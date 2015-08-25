@@ -19,4 +19,5 @@ extern "C" void ClearOpenUdidData(); // 注意！这个方法绝对不能在发�
 extern "C" const char* GetDeviceLanguage();
 extern "C" float getBatteryLevel();
 extern "C" const char* getInternetConnectionStatus();
+extern "C" const bool isAppAdHocMode();
 #endif
