@@ -236,7 +236,12 @@ function HospitalUpgradeBuilding:GetTreatNowGems(soldiers)
     need_gems = need_gems + DataUtils:buyResource({coin=total_coin},{})
     return need_gems
 end
-
+-- 医院伤兵是否超过上限
+function HospitalUpgradeBuilding:IsWoundedSoldierOverhead()
+    local max = self:GetMaxCasualty()
+    local current = City:GetSoldierManager():GetTotalTreatSoldierCitizen()
+    return current > max
+end
 --获取下一级伤病最大上限
 function HospitalUpgradeBuilding:GetNextLevelMaxCasualty()
     return config_function[self:GetNextLevel()].maxCitizen
@@ -244,7 +249,7 @@ end
 --获取伤病最大上限
 function HospitalUpgradeBuilding:GetMaxCasualty()
     if self:GetLevel() > 0 and self:BelongCity():FindTechByName("rescueTent") then
-        return math.ceil(config_function[self:GetEfficiencyLevel()].maxCitizen * (1 + self:BelongCity():FindTechByName("rescueTent"):GetBuffEffectVal()))
+        return math.floor(config_function[self:GetEfficiencyLevel()].maxCitizen * (1 + self:BelongCity():FindTechByName("rescueTent"):GetBuffEffectVal()))
     end
     return 0
 end

@@ -176,12 +176,14 @@ function SoldierManager:HasAnyWoundedSoldiers()
         end
     end
 end
-function SoldierManager:GetTotalTreatSoldierCount()
-    local total_count = 0
+-- 获取伤兵人口
+function SoldierManager:GetTotalTreatSoldierCitizen()
+    local total_citizen = 0
     for k, v in pairs(self.treatSoldiers_map) do
-        total_count = total_count + v
+        local config = self:GetSoldierConfig(k)
+        total_citizen = total_citizen + v * config.citizen
     end
-    return total_count
+    return total_citizen
 end
 function SoldierManager:GeneralMilitaryTechLocalPush(event)
     if ext and ext.localpush then
