@@ -1922,7 +1922,7 @@
 					"$(PROJECT_SDK_ROOT)/TalkingData/libTalkingDataGA_iphonesimulator_x86.a",
 				);
 				PROJECT_SDK_ROOT = "$(SRCROOT)/../../sdk";
-				PROVISIONING_PROFILE = "0bed58fb-1068-4d04-b1b4-959212c36644";
+				PROVISIONING_PROFILE = "7f884fc4-abc7-4efd-bba6-c9297bf4fd3a";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "$(inherited) $(SRCROOT)/../../cocos2d-x/cocos/platform/ios";
