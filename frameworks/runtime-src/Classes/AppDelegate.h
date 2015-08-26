@@ -53,7 +53,7 @@ public:
     static void loadConfigFile();
     static bool checkPath();
     static const char* getAppVersion();
-    static bool isDebug();
+    static bool isNotUpdate();
     static void extendApplication();
     static std::string getGameZipcrc32(const char *filePath);
 };
