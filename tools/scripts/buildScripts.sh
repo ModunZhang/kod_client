@@ -15,6 +15,7 @@ test -d "$SCRIPTS_DEST_DIR" && rm -rf "$SCRIPTS_DEST_DIR/*"
 
 python build_format_map.py -r rgba4444.lua
 python build_format_map.py -j jpg_rgb888.lua
+python build_animation.py -o animation.lua
 
 gitDebugVersion()
 {
