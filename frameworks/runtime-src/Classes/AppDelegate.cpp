@@ -215,12 +215,19 @@ const char* AppDelegateExtern::getAppVersion()
     {
         return ipaVersion;
     }
+    return "";
 }
 
 
-bool AppDelegateExtern::isDebug()
+bool AppDelegateExtern::isNotUpdate()
 {
-    return isAppAdHocMode();
+    lua_State* tolua_S = LuaEngine::getInstance()->getLuaStack()->getLuaState();
+    lua_getglobal(tolua_S, "CONFIG_IS_NOT_UPDATE");
+    if(lua_isboolean(tolua_S, -1) && lua_toboolean(tolua_S, -1))
+    {
+        return true;
+    }
+    return false;
 }
 
 string AppDelegateExtern::getGameZipcrc32(const char *filePath)
@@ -331,11 +338,12 @@ bool AppDelegateExtern::checkPath()
         
     }
     std::vector<std::string> paths = fileUtils->getSearchPaths();
-    if (isDebug())
+    if (isNotUpdate())
     {
         paths.insert(paths.begin(), "res/images");
         paths.insert(paths.begin(), "res/");
         fileUtils->setSearchPaths(paths);
+        need_Load_zip_from_bundle = true; //如果关闭自动更新 强制使用bundle里的包
     }
     else
     {
