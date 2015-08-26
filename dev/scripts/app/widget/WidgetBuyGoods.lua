@@ -135,7 +135,7 @@ function WidgetBuyGoods:ctor(item)
                 UIKit:showMessageDialog(_("主人"),_("请输入正确的购买数量"))
                 return
             end
-            if but_count > item:Count() then
+            if item:IsAdvancedItem() and but_count > item:Count() then
                 UIKit:showMessageDialog(_("主人"),_("道具数量不足"))
                 return
             end

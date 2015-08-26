@@ -281,7 +281,7 @@ function WidgetMarchEvents:ResizeBelowHorizon(new_height)
     self.hide_btn:setPositionY(height - 1)
 end
 function WidgetMarchEvents:GetDragonHead(dragon_type)
-     -- 龙图标
+    -- 龙图标
     local dragon_bg_1 = display.newSprite("back_ground_15x43.png")
     local dragon_bg = display.newSprite("back_ground_43x43_1.png")
         :align(display.LEFT_CENTER,0,dragon_bg_1:getContentSize().height/2)
@@ -439,24 +439,25 @@ function WidgetMarchEvents:CreateDefenceItem(entity)
     local display_text = ""
     node.prefix = entity:GetEventPrefix()
     local time_str = ""
+    local dragonType = ""
     if type_str == 'COLLECT' then
         node.progress:setPercentage(event:CollectPercent())
         display_text = string.format("%s %d%%", node.prefix,event:CollectPercent())
         time_str = GameUtils:formatTimeStyle1(event:GetTime())
+        dragonType = event:PlayerData().dragon.type
     elseif type_str == 'SHIRNE' then
         node.progress:setPercentage(100)
         display_text = node.prefix
         time_str = ""
+        dragonType = event:PlayerTroops()[1].dragon.type
     elseif type_str == 'HELPTO' then
         node.progress:setPercentage(100)
         display_text = node.prefix
         time_str = ""
+        dragonType = event.playerDragon
     end
-if event.__cname == "VillageEvent" then
-    self:GetDragonHead(event:PlayerData().dragon.type):align(display.LEFT_CENTER, 2, half_height)
-        :addTo(node)
-end
-print("display_text=","a"..display_text)
+    self:GetDragonHead(dragonType):align(display.LEFT_CENTER, 2, half_height)
+            :addTo(node)
     node.desc = UIKit:ttfLabel({
         text = display_text,
         size = 18,
@@ -568,4 +569,5 @@ function WidgetMarchEvents:OnInfoButtonClicked(entity)
     UIKit:newGameUI("GameUIWatchTowerMyTroopsDetail",entity):AddToCurrentScene(true)
 end
 return WidgetMarchEvents
+
 
