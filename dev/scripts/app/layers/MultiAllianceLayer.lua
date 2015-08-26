@@ -915,10 +915,14 @@ function MultiAllianceLayer:CreateDeadEvent(marchEvent)
     local id_corps = marchEvent:Id()
     if not self:IsExistCorps(id_corps) then return end
     local has_resourcce = false
-    for _,v in ipairs(marchEvent:AttackPlayerData().rewards) do
-        if resource_map[v.name] then
-            has_resourcce = true
-            break
+    if marchEvent:MarchType() == "monster" then
+        has_resourcce = true
+    elseif marchEvent:MarchType() == "village" then
+        for _,v in ipairs(marchEvent:AttackPlayerData().rewards) do
+            if resource_map[v.name] then
+                has_resourcce = true
+                break
+            end
         end
     end
     if not self.map_dead[id_corps] and has_resourcce then
@@ -1034,6 +1038,7 @@ end
 
 
 return MultiAllianceLayer
+
 
 
 
