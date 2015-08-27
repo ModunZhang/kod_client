@@ -21,6 +21,9 @@ local PLAYERMENU_ZORDER = 201
 local BASE_CELL_HEIGHT  = 82
 local CELL_FIX_WIDTH    = 484
 
+local NAME_COLOR_SYSTEM = UIKit:hex2c3b(0x245f00) 
+local NAME_COLOR_NORMAL = UIKit:hex2c3b(0x005e6c) 
+
 function GameUIChatChannel:ctor(default_tag)
     GameUIChatChannel.super.ctor(self,City,_("聊天"))
     self.default_tag = default_tag
@@ -255,6 +258,15 @@ function GameUIChatChannel:GetChatItemCell()
     local middle = display.newScale9Sprite("chat_bubble_middle_484x20.png"):addTo(other_content):align(display.RIGHT_BOTTOM, LISTVIEW_WIDTH, 14)
     local header = display.newScale9Sprite("chat_bubble_header_484x38.png"):addTo(other_content):align(display.RIGHT_BOTTOM, LISTVIEW_WIDTH,34)
     local chat_icon = self:GetChatIcon():addTo(other_content):align(display.LEFT_TOP, 3, 72)
+    local system_label = UIKit:ttfLabel({
+        text = _("官方"),
+        size = 14,
+        color= 0xe2d9b8,
+        align = cc.TEXT_ALIGNMENT_CENTER,
+    })
+    local system_flag = display.newScale9Sprite("chat_system_flag_42x20.png",nil,nil,cc.size(system_label:getContentSize().width + 12,20),cc.rect(6,6,30,8))
+        :align(display.LEFT_BOTTOM, 7, 15):addTo(header)
+    system_label:addTo(system_flag):align(display.CENTER, system_flag:getContentSize().width/2,10)
     local from_label = UIKit:ttfLabel({
         text = "[ P/L ] SkinnMart",
         size = 18,
@@ -288,6 +300,8 @@ function GameUIChatChannel:GetChatItemCell()
     content_label:align(display.LEFT_BOTTOM, 10, 0):addTo(middle)
 
     -- set var
+    other_content.system_flag = system_flag
+    other_content.system_flag_with = system_flag:getContentSize().width
     other_content.content_label = content_label
     other_content.time_label = time_label
     other_content.translation_sp = translation_sp
@@ -439,6 +453,18 @@ function GameUIChatChannel:HandleCellUIData(mainContent,chat,update_time)
     local vipLabel = currentContent.vip_label
     local name_title = chat.allianceTag == "" and chat.name or string.format("[ %s ] %s",chat.allianceTag,chat.name)
     titleLabel:setString(name_title)
+    if not isSelf then 
+        local system_flag = currentContent.system_flag
+        if string.lower(chat.id) == 'system' and system_flag then
+            system_flag:show()
+            titleLabel:pos(17 + currentContent.system_flag_with, 15)
+            titleLabel:setColor(NAME_COLOR_SYSTEM)
+        else
+            system_flag:hide()
+            titleLabel:setColor(NAME_COLOR_NORMAL)
+            titleLabel:pos(7, 15)
+        end
+    end
     if chat.vipActive then
         vipLabel:setString('VIP ' .. DataUtils:getPlayerVIPLevel(chat.vip))
         vipLabel:setPositionX(titleLabel:getPositionX() + titleLabel:getContentSize().width + 15)
@@ -458,30 +484,35 @@ function GameUIChatChannel:HandleCellUIData(mainContent,chat,update_time)
     if chat._translate_ and chat._translateMode_ then
         labelText = chat._translate_
     end
-    labelText = self:GetChatManager():GetEmojiUtil():ConvertEmojiToRichText(labelText)
-    if string.find(labelText,"\"url\":\"report:") then
-        content_label:Text(labelText,nil,function ( url )
-            local info = string.split(url,":")
-            NetManager:getReportDetailPromise(info[2],info[3]):done(function ( response )
-                local report = Report:DecodeFromJsonData(clone(response.msg.report))
-                report:SetPlayerId(info[2])
-                if report:Type() == "strikeCity" or report:Type()== "cityBeStriked"
-                    or report:Type() == "villageBeStriked" or report:Type()== "strikeVillage" then
-                    UIKit:newGameUI("GameUIStrikeReport", report):AddToCurrentScene(true)
-                elseif report:Type() == "attackCity" or report:Type() == "attackVillage" then
-                    UIKit:newGameUI("GameUIWarReport", report):AddToCurrentScene(true)
-                elseif report:Type() == "collectResource" then
-                    UIKit:newGameUI("GameUICollectReport", report):AddToCurrentScene(true)
-                elseif report:Type() == "attackMonster" then
-                    UIKit:newGameUI("GameUIMonsterReport", report):AddToCurrentScene(true)
-                elseif report:Type() == "attackShrine" then
-                    UIKit:newGameUI("GameUIShrineReportInMail", report):AddToCurrentScene(true)
-                end
-                app:GetAudioManager():PlayeEffectSoundWithKey("OPEN_MAIL")
-            end)
-        end)
-    else
+    if string.lower(chat.id) == 'system' then
+        labelText = self:GetChatManager():GetEmojiUtil():FormatSystemChat(labelText)
         content_label:Text(labelText) -- 聊天信息
+    else
+        labelText = self:GetChatManager():GetEmojiUtil():ConvertEmojiToRichText(labelText)
+        if string.find(labelText,"\"url\":\"report:") then
+            content_label:Text(labelText,nil,function ( url )
+                local info = string.split(url,":")
+                NetManager:getReportDetailPromise(info[2],info[3]):done(function ( response )
+                    local report = Report:DecodeFromJsonData(clone(response.msg.report))
+                    report:SetPlayerId(info[2])
+                    if report:Type() == "strikeCity" or report:Type()== "cityBeStriked"
+                        or report:Type() == "villageBeStriked" or report:Type()== "strikeVillage" then
+                        UIKit:newGameUI("GameUIStrikeReport", report):AddToCurrentScene(true)
+                    elseif report:Type() == "attackCity" or report:Type() == "attackVillage" then
+                        UIKit:newGameUI("GameUIWarReport", report):AddToCurrentScene(true)
+                    elseif report:Type() == "collectResource" then
+                        UIKit:newGameUI("GameUICollectReport", report):AddToCurrentScene(true)
+                    elseif report:Type() == "attackMonster" then
+                        UIKit:newGameUI("GameUIMonsterReport", report):AddToCurrentScene(true)
+                    elseif report:Type() == "attackShrine" then
+                        UIKit:newGameUI("GameUIShrineReportInMail", report):AddToCurrentScene(true)
+                    end
+                    app:GetAudioManager():PlayeEffectSoundWithKey("OPEN_MAIL")
+                end)
+            end)
+        else
+            content_label:Text(labelText) -- 聊天信息
+        end
     end
     content_label:align(display.LEFT_BOTTOM, 10, 0)
     if not isSelf then
@@ -555,7 +586,11 @@ function GameUIChatChannel:listviewListener(event)
                     if result then
                         chat._translate_ = result
                         chat._translateMode_ = true
-                        contentLable:Text(self:GetChatManager():GetEmojiUtil():ConvertEmojiToRichText(chat._translate_)) -- 聊天信息
+                        if string.lower(chat.id) == 'system' then
+                            contentLable:Text(self:GetChatManager():GetEmojiUtil():FormatSystemChat(chat._translate_))
+                        else
+                            contentLable:Text(self:GetChatManager():GetEmojiUtil():ConvertEmojiToRichText(chat._translate_)) -- 聊天信息
+                        end
                         contentLable:align(display.LEFT_BOTTOM, 10, 0)
                         local height = item:getContent().adjustFunc()
                         item:setItemSize(LISTVIEW_WIDTH,BASE_CELL_HEIGHT + height)
@@ -566,11 +601,19 @@ function GameUIChatChannel:listviewListener(event)
             else
                 if chat._translateMode_ then
                     chat._translateMode_ = false
-                    contentLable:Text(self:GetChatManager():GetEmojiUtil():ConvertEmojiToRichText(chat.text)) -- 聊天信息
+                    if string.lower(chat.id) == 'system' then
+                        contentLable:Text(self:GetChatManager():GetEmojiUtil():FormatSystemChat(chat.text))
+                    else
+                        contentLable:Text(self:GetChatManager():GetEmojiUtil():ConvertEmojiToRichText(chat.text)) -- 聊天信息
+                    end
                     contentLable:align(display.LEFT_BOTTOM, 10, 0)
                 else
                     chat._translateMode_ = true
-                    contentLable:Text(self:GetChatManager():GetEmojiUtil():ConvertEmojiToRichText(chat._translate_)) -- 聊天信息
+                    if string.lower(chat.id) == 'system' then
+                        contentLable:Text(self:GetChatManager():GetEmojiUtil():FormatSystemChat(chat._translate_))
+                    else
+                        contentLable:Text(self:GetChatManager():GetEmojiUtil():ConvertEmojiToRichText(chat._translate_)) -- 聊天信息
+                    end
                     contentLable:align(display.LEFT_BOTTOM, 10, 0)
                 end
                 local height = item:getContent().adjustFunc()
@@ -579,6 +622,9 @@ function GameUIChatChannel:listviewListener(event)
             return
         end
         if not listView:isItemFullyInViewRect(event.itemPos) then
+            return
+        end
+        if string.lower(chat.id) == 'system' then
             return
         end
         self:CreatePlayerMenu(event,chat)

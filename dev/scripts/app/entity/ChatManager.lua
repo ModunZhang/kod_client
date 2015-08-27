@@ -85,6 +85,22 @@ end
 function EmojiUtil:RemoveAllEmojiTag(str)
     return string.gsub(str, "%[[%P]+%]","")
 end
+--系统消息只支持纯文本
+function EmojiUtil:FormatSystemChat(msg,opt)
+    if msg then
+        msg = string.gsub(msg,"\n","\\n")
+        msg = string.gsub(msg,"'","\'")
+        msg = string.gsub(msg,'"',"''")
+        msg = string.gsub(msg,'\\','\\\\')
+        if opt then
+            return string.format('[{\"type\":\"text\", \"value\":\"%s\",\"color\":0x00b835}]',msg)
+        else
+            return string.format('[{\"type\":\"text\", \"value\":\"%s\",\"color\":0x245f00}]',msg)
+        end
+    end
+    return ""
+end
+
 -- end
 --------------------------------------------------------------------------------------------------
 
@@ -115,10 +131,6 @@ end
 
 function ChatManager:GetGameDefault()
     return self.gameDefault
-end
-
-function ChatManager:sortMessage_(t)
-    return t
 end
 
 function ChatManager:__checkIsBlocked(msg)
@@ -276,11 +288,15 @@ function ChatManager:__formatLastMessage(chat)
     if chat.id == User:Id() then
         chat.name = User:Name()
     end
-    local chat_text = string.format(" : %s",chat.text)
-    local result = self:GetEmojiUtil():ConvertEmojiToRichText(chat_text,function(json_table)
-        table.insert(json_table,1,string.format('{\"type\":\"text\", \"value\":\"%s\",\"color\":0x00b4cf}', chat.name))
-    end)
-    return result
+    if string.lower(chat.id) == 'system' then
+        return self:GetEmojiUtil():FormatSystemChat(string.format("%s : %s",chat.name,chat.text),true)
+    else
+        local chat_text = string.format(" : %s",chat.text)
+        local result = self:GetEmojiUtil():ConvertEmojiToRichText(chat_text,function(json_table)
+            table.insert(json_table,1,string.format('{\"type\":\"text\", \"value\":\"%s\",\"color\":0x00b4cf}', chat.name))
+        end)
+        return result
+    end
 end
 
 function ChatManager:FetchLastChannelMessage()
