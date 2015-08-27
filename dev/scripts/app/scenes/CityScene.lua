@@ -69,8 +69,8 @@ function CityScene:PlayBackgroundMusic()
     -- end, 113 + 30)
 end
 function CityScene:ChangeTerrain()
-    -- self:GetSceneLayer():ChangeTerrain()
-    -- self:PlayEffectIf()
+-- self:GetSceneLayer():ChangeTerrain()
+-- self:PlayEffectIf()
 end
 function CityScene:EnterEditMode()
     self:GetSceneLayer():EnterEditMode()
@@ -154,9 +154,7 @@ end
 
 function CityScene:onEnterTransitionFinish()
     CityScene.super.onEnterTransitionFinish(self)
-    self:GetScreenLayer():performWithDelay(function()
-        self:PlayEffectIf()
-    end, math.random(3))
+    self:PlayEffectIf()
 end
 
 
@@ -182,6 +180,9 @@ function CityScene:PlayEffectIf()
         emitter:setEmissionRate(emitter:getTotalParticles() / emitter:getLife())
         emitter:setTexture(cc.Director:getInstance():getTextureCache():addImage("snow.png"))
         emitter:updateWithNoTime()
+        for i = 1, 1000 do
+            emitter:update(0.01)
+        end
     elseif terrain == "grassLand" then
         local emitter = cc.ParticleRain:createWithTotalParticles(100)
             :addTo(self:GetScreenLayer(), 1, EFFECT_TAG):pos(display.cx + 80, display.height)
@@ -209,10 +210,14 @@ function CityScene:PlayEffectIf()
         emitter:setEmissionRate(emitter:getTotalParticles() / emitter:getLife())
         emitter:setTexture(cc.Director:getInstance():getTextureCache():addImage("rain.png"))
         emitter:updateWithNoTime()
+        for i = 1, 1000 do
+            emitter:update(0.01)
+        end
     end
 end
 
 return CityScene
+
 
 
 
