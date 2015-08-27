@@ -711,7 +711,9 @@ end
 function UIKit:showSendTroopMessageDialog(attack_func,material_type,effect_str)
     -- 特殊提示，医院爆满，特殊兵种材料爆满
     local is_hospital_overhead = City:GetFirstBuildingByType("hospital"):IsWoundedSoldierOverhead()
-    local is_material_overhead = City:GetMaterialManager():CheckOutOfRangeByType(material_type)
+    local is_material_overhead = material_type and City:GetMaterialManager():CheckOutOfRangeByType(material_type)
+    print("is_hospital_overhead=====",is_hospital_overhead)
+    print("is_material_overhead=====",is_material_overhead)
     if is_material_overhead or is_hospital_overhead then
         local dialog = self:showMessageDialogWithParams({
             title = _("提示"),
