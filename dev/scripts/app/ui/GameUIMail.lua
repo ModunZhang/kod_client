@@ -1524,7 +1524,6 @@ function GameUIMail:CreateReportContent()
                     color = 0x403c2f
                 }):align(display.LEFT_CENTER, report_content_bg:getContentSize().width/2-20, 60)
                 :addTo(report_content_bg)
-            print("attackTarget.fightStar=",attackTarget.fightStar)
             StarBar.new({
                 max = 3,
                 bg = "alliance_shire_star_60x58_0.png",
@@ -1847,7 +1846,6 @@ function GameUIMail:CreateSavedReportContent()
                     color = 0x403c2f
                 }):align(display.LEFT_CENTER, report_content_bg:getContentSize().width/2-20, 60)
                 :addTo(report_content_bg)
-            print("attackTarget.fightStar=",attackTarget.fightStar)
             StarBar.new({
                 max = 3,
                 bg = "alliance_shire_star_60x58_0.png",
@@ -2162,11 +2160,11 @@ end
 function GameUIMail:GetMyName(report)
     local data = report:GetData()
     if report:Type() == "strikeCity" or report:Type()== "cityBeStriked" then
-        if data.attackPlayerData.id == DataManager:getUserData()._id then
+        if data.attackPlayerData.id == User:Id() then
             return data.attackPlayerData.name
-        elseif data.helpDefencePlayerData and data.helpDefencePlayerData.id == DataManager:getUserData()._id then
+        elseif data.helpDefencePlayerData and data.helpDefencePlayerData.id == User:Id() then
             return data.helpDefencePlayerData.name
-        elseif data.defencePlayerData and data.defencePlayerData.id == DataManager:getUserData()._id then
+        elseif data.defencePlayerData and data.defencePlayerData.id == User:Id() then
             return data.defencePlayerData.name
         end
         -- 被突袭时只有协防方发生战斗时
@@ -2176,11 +2174,11 @@ function GameUIMail:GetMyName(report)
             end
         end
     elseif report:Type()=="attackCity" then
-        if report:GetData().attackPlayerData.id == DataManager:getUserData()._id then
+        if report:GetData().attackPlayerData.id == User:Id() then
             return report:GetData().attackPlayerData.name
-        elseif report:GetData().defencePlayerData and report:GetData().defencePlayerData.id == DataManager:getUserData()._id then
+        elseif report:GetData().defencePlayerData and report:GetData().defencePlayerData.id == User:Id() then
             return report:GetData().defencePlayerData.name
-        elseif report:GetData().helpDefencePlayerData and report:GetData().helpDefencePlayerData.id == DataManager:getUserData()._id then
+        elseif report:GetData().helpDefencePlayerData and report:GetData().helpDefencePlayerData.id == User:Id() then
             return report:GetData().helpDefencePlayerData.name
         end
     elseif report:Type() == "strikeVillage" then
@@ -2188,9 +2186,9 @@ function GameUIMail:GetMyName(report)
     elseif report:Type() == "villageBeStriked" then
         return data.defencePlayerData.name
     elseif report:Type() == "attackVillage" then
-        if data.attackPlayerData.id == DataManager:getUserData()._id then
+        if data.attackPlayerData.id == User:Id() then
             return data.attackPlayerData.name
-        elseif data.defencePlayerData and data.defencePlayerData.id == DataManager:getUserData()._id then
+        elseif data.defencePlayerData and data.defencePlayerData.id == User:Id() then
             return data.defencePlayerData.name
         end
     else
@@ -2200,11 +2198,11 @@ end
 function GameUIMail:GetMyAllianceTag(report)
     local data = report:GetData()
     if report:Type() == "strikeCity" or report:Type()== "cityBeStriked" then
-        if data.attackPlayerData.id == DataManager:getUserData()._id then
+        if data.attackPlayerData.id == User:Id() then
             return data.attackPlayerData.alliance.tag
-        elseif data.helpDefencePlayerData and data.helpDefencePlayerData.id == DataManager:getUserData()._id then
+        elseif data.helpDefencePlayerData and data.helpDefencePlayerData.id == User:Id() then
             return data.helpDefencePlayerData.alliance.tag
-        elseif data.defencePlayerData and data.defencePlayerData.id == DataManager:getUserData()._id then
+        elseif data.defencePlayerData and data.defencePlayerData.id == User:Id() then
             return data.defencePlayerData.alliance.tag
         end
         -- 被突袭时只有协防方发生战斗时使用协防方数据
@@ -2214,11 +2212,11 @@ function GameUIMail:GetMyAllianceTag(report)
             end
         end
     elseif report:Type()=="attackCity" then
-        if report:GetData().attackPlayerData.id == DataManager:getUserData()._id then
+        if report:GetData().attackPlayerData.id == User:Id() then
             return report:GetData().attackPlayerData.alliance.tag
-        elseif report:GetData().defencePlayerData and report:GetData().defencePlayerData.id == DataManager:getUserData()._id then
+        elseif report:GetData().defencePlayerData and report:GetData().defencePlayerData.id == User:Id() then
             return report:GetData().defencePlayerData.alliance.tag
-        elseif report:GetData().helpDefencePlayerData and report:GetData().helpDefencePlayerData.id == DataManager:getUserData()._id then
+        elseif report:GetData().helpDefencePlayerData and report:GetData().helpDefencePlayerData.id == User:Id() then
             return report:GetData().helpDefencePlayerData.alliance.tag
         end
     elseif report:Type() == "strikeVillage" then
@@ -2226,9 +2224,9 @@ function GameUIMail:GetMyAllianceTag(report)
     elseif report:Type() == "villageBeStriked" then
         return data.defencePlayerData.alliance.tag
     elseif report:Type() == "attackVillage" then
-        if data.attackPlayerData.id == DataManager:getUserData()._id then
+        if data.attackPlayerData.id == User:Id() then
             return data.attackPlayerData.alliance.tag
-        elseif data.defencePlayerData and data.defencePlayerData.id == DataManager:getUserData()._id then
+        elseif data.defencePlayerData and data.defencePlayerData.id == User:Id() then
             return data.defencePlayerData.alliance.tag
         end
     else
@@ -2238,11 +2236,11 @@ end
 function GameUIMail:GetEnemyName(report)
     local data = report:GetData()
     if report:Type() == "strikeCity" or report:Type()== "cityBeStriked" then
-        if data.attackPlayerData.id == DataManager:getUserData()._id then
+        if data.attackPlayerData.id == User:Id() then
             return (data.defencePlayerData and data.defencePlayerData.name) or (data.helpDefencePlayerData and data.helpDefencePlayerData.name)
-        elseif data.helpDefencePlayerData and data.helpDefencePlayerData.id == DataManager:getUserData()._id then
+        elseif data.helpDefencePlayerData and data.helpDefencePlayerData.id == User:Id() then
             return data.attackPlayerData.name
-        elseif data.defencePlayerData and data.defencePlayerData.id == DataManager:getUserData()._id then
+        elseif data.defencePlayerData and data.defencePlayerData.id == User:Id() then
             return data.attackPlayerData.name
         end
         -- 被突袭时只有协防方发生战斗时
@@ -2252,10 +2250,10 @@ function GameUIMail:GetEnemyName(report)
             end
         end
     elseif report:Type()=="attackCity" then
-        if report:GetData().attackPlayerData.id == DataManager:getUserData()._id then
+        if report:GetData().attackPlayerData.id == User:Id() then
             return report:GetData().defencePlayerData and report:GetData().defencePlayerData.name or report:GetData().helpDefencePlayerData and report:GetData().helpDefencePlayerData.name
-        elseif report:GetData().defencePlayerData and report:GetData().defencePlayerData.id == DataManager:getUserData()._id
-            or (report:GetData().helpDefencePlayerData and report:GetData().helpDefencePlayerData.id == DataManager:getUserData()._id)
+        elseif report:GetData().defencePlayerData and report:GetData().defencePlayerData.id == User:Id()
+            or (report:GetData().helpDefencePlayerData and report:GetData().helpDefencePlayerData.id == User:Id())
         then
             return report:GetData().attackPlayerData.name
         end
@@ -2264,7 +2262,11 @@ function GameUIMail:GetEnemyName(report)
     elseif report:Type() == "villageBeStriked" then
         return data.attackPlayerData.name
     elseif report:Type() == "attackVillage" then
-        return data.defencePlayerData.name
+        if data.attackPlayerData.id == User:Id() then
+            return data.defencePlayerData.name
+        elseif data.defencePlayerData and data.defencePlayerData.id == User:Id() then
+            return data.attackPlayerData.name
+        end
     else
         return "xxxxx"
     end
@@ -2272,11 +2274,11 @@ end
 function GameUIMail:GetEnemyAllianceTag(report)
     local data = report:GetData()
     if report:Type() == "strikeCity" or report:Type()== "cityBeStriked" then
-        if data.attackPlayerData.id == DataManager:getUserData()._id then
+        if data.attackPlayerData.id == User:Id() then
             return data.strikeTarget.alliance.tag
-        elseif data.helpDefencePlayerData and data.helpDefencePlayerData.id == DataManager:getUserData()._id then
+        elseif data.helpDefencePlayerData and data.helpDefencePlayerData.id == User:Id() then
             return data.attackPlayerData.alliance.tag
-        elseif data.defencePlayerData and data.defencePlayerData.id == DataManager:getUserData()._id then
+        elseif data.defencePlayerData and data.defencePlayerData.id == User:Id() then
             return data.attackPlayerData.alliance.tag
         end
         -- 被突袭时只有协防方发生战斗时
@@ -2286,10 +2288,10 @@ function GameUIMail:GetEnemyAllianceTag(report)
             end
         end
     elseif report:Type()=="attackCity" then
-        if report:GetData().attackPlayerData.id == DataManager:getUserData()._id then
+        if report:GetData().attackPlayerData.id == User:Id() then
             return report:GetData().defencePlayerData and report:GetData().defencePlayerData.alliance.tag or report:GetData().helpDefencePlayerData and report:GetData().helpDefencePlayerData.alliance.tag
-        elseif report:GetData().defencePlayerData and report:GetData().defencePlayerData.id == DataManager:getUserData()._id
-            or (report:GetData().helpDefencePlayerData and report:GetData().helpDefencePlayerData.id == DataManager:getUserData()._id)
+        elseif report:GetData().defencePlayerData and report:GetData().defencePlayerData.id == User:Id()
+            or (report:GetData().helpDefencePlayerData and report:GetData().helpDefencePlayerData.id == User:Id())
         then
             return report:GetData().attackPlayerData.alliance.tag
         end
@@ -2298,7 +2300,11 @@ function GameUIMail:GetEnemyAllianceTag(report)
     elseif report:Type() == "villageBeStriked" then
         return data.attackPlayerData.alliance.tag
     elseif report:Type() == "attackVillage" then
-        return data.defencePlayerData.alliance.tag
+        if data.attackPlayerData.id == User:Id() then
+            return data.defencePlayerData.alliance.tag
+        elseif data.defencePlayerData and data.defencePlayerData.id == User:Id() then
+            return data.attackPlayerData.alliance.tag
+        end
     else
         return "xxxxx"
     end
