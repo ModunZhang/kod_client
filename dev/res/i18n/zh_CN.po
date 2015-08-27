@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: dragonfall\n"
-"POT-Creation-Date: 2015-08-27 17:31+0800\n"
-"PO-Revision-Date: 2015-08-27 17:45+0800\n"
+"POT-Creation-Date: 2015-08-27 20:33+0800\n"
+"PO-Revision-Date: 2015-08-27 20:33+0800\n"
 "Last-Translator: gaozhou <gaozhou.f@qq.com>\n"
 "Language-Team: \n"
 "Language: zh_CN\n"
@@ -104,11 +104,11 @@ msgstr "服务器连接断开,请检测你的网络环境后重试!"
 #: ui/GameUIHome.lua:515 ui/GameUIHospital.lua:172 ui/GameUIHospital.lua:248
 #: ui/GameUIHospital.lua:250 ui/GameUIHospital.lua:260
 #: ui/GameUIHospital.lua:269 ui/GameUIHospital.lua:276
-#: ui/GameUIHospital.lua:298 ui/GameUIHospital.lua:300
-#: ui/GameUIItems.lua:227 ui/GameUIItems.lua:238 ui/GameUIKeep.lua:426
-#: ui/GameUIKeep.lua:446 ui/GameUILoginBeta.lua:139
-#: ui/GameUILoginBeta.lua:504 ui/GameUIMail.lua:2075 ui/GameUIMail.lua:2078
-#: ui/GameUIMail.lua:2081 ui/GameUIMail.lua:2084 ui/GameUIOrderHall.lua:180
+#: ui/GameUIHospital.lua:298 ui/GameUIHospital.lua:300 ui/GameUIItems.lua:227
+#: ui/GameUIItems.lua:238 ui/GameUIKeep.lua:426 ui/GameUIKeep.lua:446
+#: ui/GameUILoginBeta.lua:139 ui/GameUILoginBeta.lua:504
+#: ui/GameUIMail.lua:2075 ui/GameUIMail.lua:2078 ui/GameUIMail.lua:2081
+#: ui/GameUIMail.lua:2084 ui/GameUIOrderHall.lua:180
 #: ui/GameUIPResourceBuilding.lua:225 ui/GameUIPResourceBuilding.lua:244
 #: ui/GameUIPResourceBuilding.lua:256 ui/GameUIPResourceBuilding.lua:259
 #: ui/GameUIPResourceBuilding.lua:291 ui/GameUIPVESendTroop.lua:127
@@ -153,11 +153,11 @@ msgstr "服务器连接断开,请检测你的网络环境后重试!"
 #: widget/WidgetPlayerNode.lua:222 widget/WidgetPromoteSoldier.lua:114
 #: widget/WidgetRecruitSoldier.lua:312 widget/WidgetRecruitSoldier.lua:396
 #: widget/WidgetRecruitSoldier.lua:430 widget/WidgetStockGoods.lua:143
-#: widget/WidgetTreatSoldier.lua:276
-#: widget/WidgetUpgradeMilitaryTech.lua:126 widget/WidgetUseItems.lua:563
-#: widget/WidgetUseItems.lua:709 widget/WidgetUseItems.lua:816
-#: widget/WidgetUseItems.lua:818 widget/WidgetUseItems.lua:834
-#: widget/WidgetUseItems.lua:836 widget/WidgetUseItems.lua:1242
+#: widget/WidgetTreatSoldier.lua:276 widget/WidgetUpgradeMilitaryTech.lua:126
+#: widget/WidgetUseItems.lua:563 widget/WidgetUseItems.lua:709
+#: widget/WidgetUseItems.lua:816 widget/WidgetUseItems.lua:818
+#: widget/WidgetUseItems.lua:834 widget/WidgetUseItems.lua:836
+#: widget/WidgetUseItems.lua:1242
 msgid "提示"
 msgstr "提示"
 
@@ -325,8 +325,7 @@ msgid "用刚刚炼制出的装备强化"
 msgstr "用刚刚炼制出的装备强化"
 
 #: datas/ClientInitGame_selena_question.lua:61
-msgid ""
-"建筑升级到一定等级后需要特殊的建筑材料，这些建筑材料主要来自哪种渠道？"
+msgid "建筑升级到一定等级后需要特殊的建筑材料，这些建筑材料主要来自哪种渠道？"
 msgstr ""
 "建筑升级到一定等级后需要特殊的建筑材料，这些建筑材料主要来自哪种渠道？"
 
@@ -647,11 +646,11 @@ msgstr "士兵会不停的逃走"
 
 #: datas/ClientInitGame_selena_question.lua:208
 msgid ""
-"在探险时可能会获得一些特殊材料，可以招募特殊的亡灵兵种，那么亡灵兵种有什么"
-"特殊属性？"
+"在探险时可能会获得一些特殊材料，可以招募特殊的亡灵兵种，那么亡灵兵种有什么特"
+"殊属性？"
 msgstr ""
-"在探险时可能会获得一些特殊材料，可以招募特殊的亡灵兵种，那么亡灵兵种有什么"
-"特殊属性？"
+"在探险时可能会获得一些特殊材料，可以招募特殊的亡灵兵种，那么亡灵兵种有什么特"
+"殊属性？"
 
 #: datas/ClientInitGame_selena_question.lua:209
 msgid "不会持续消耗粮食"
@@ -667,11 +666,11 @@ msgstr "没有什么特别"
 
 #: datas/ClientInitGame_selena_question.lua:215
 msgid ""
-"想要招募更高级的兵种，你需要在训练营地，猎手大厅，马厩，车间中对兵种晋级。"
-"那么晋级需要的条件是什么？"
+"想要招募更高级的兵种，你需要在训练营地，猎手大厅，马厩，车间中对兵种晋级。那"
+"么晋级需要的条件是什么？"
 msgstr ""
-"想要招募更高级的兵种，你需要在训练营地，猎手大厅，马厩，车间中对兵种晋级。"
-"那么晋级需要的条件是什么？"
+"想要招募更高级的兵种，你需要在训练营地，猎手大厅，马厩，车间中对兵种晋级。那"
+"么晋级需要的条件是什么？"
 
 #: datas/ClientInitGame_selena_question.lua:216
 msgid "升级军事科技，提升兵种的军事科技水平"
@@ -706,11 +705,11 @@ msgstr "获得不同的资源产量加成"
 
 #: datas/ClientInitGame_selena_question.lua:229
 msgid ""
-"在进攻敌方城市的时候，可以观察其地形，并派出相应的龙带领部队战斗，这么做的"
-"好处是？"
+"在进攻敌方城市的时候，可以观察其地形，并派出相应的龙带领部队战斗，这么做的好"
+"处是？"
 msgstr ""
-"在进攻敌方城市的时候，可以观察其地形，并派出相应的龙带领部队战斗，这么做的"
-"好处是？"
+"在进攻敌方城市的时候，可以观察其地形，并派出相应的龙带领部队战斗，这么做的好"
+"处是？"
 
 #: datas/ClientInitGame_selena_question.lua:230
 msgid "提升龙的力量，并获得额外的兵种加成"
@@ -1369,8 +1368,8 @@ msgstr "数周之后…"
 
 #: scenes/FteScene.lua:40
 msgid ""
-"太好了，你终于醒过来了，觉醒者。。。我的名字叫赛琳娜，我们寻找那你这样的觉"
-"醒者已经很长时间了。。。"
+"太好了，你终于醒过来了，觉醒者。。。我的名字叫赛琳娜，我们寻找那你这样的觉醒"
+"者已经很长时间了。。。"
 msgstr ""
 "太好了，你终于醒过来了，觉醒者…我的名字叫赛琳娜，我们寻找你这样的觉醒者已经"
 "很长时间了。"
@@ -1418,8 +1417,7 @@ msgstr "点击建筑：%s"
 #: widget/WidgetTreatSoldier.lua:262 widget/WidgetTreatSoldier.lua:264
 #: widget/WidgetTreatSoldier.lua:330 widget/WidgetTreatSoldier.lua:332
 #: widget/WidgetTreatSoldier.lua:344 widget/WidgetTreatSoldier.lua:353
-#: widget/WidgetTreatSoldier.lua:360
-#: widget/WidgetUpgradeMilitaryTech.lua:117
+#: widget/WidgetTreatSoldier.lua:360 widget/WidgetUpgradeMilitaryTech.lua:117
 #: widget/WidgetUpgradeMilitaryTech.lua:269
 #: widget/WidgetUpgradeMilitaryTech.lua:272 widget/WidgetUseItems.lua:157
 #: widget/WidgetUseItems.lua:785 widget/WidgetUseItems.lua:1231
@@ -1452,11 +1450,11 @@ msgstr "拥有了驾驭龙族的力量，一定能击败邪恶的黑龙，重建
 
 #: scenes/MyCityFteScene.lua:420
 msgid ""
-"不过可惜这座城市太弱小了，我们得重头开始发展。建造住宅为城市提供空闲城民，"
-"用于生产资源和招募部队。。。"
+"不过可惜这座城市太弱小了，我们得重头开始发展。建造住宅为城市提供空闲城民，用"
+"于生产资源和招募部队。。。"
 msgstr ""
-"不过可惜这座城市太弱小了，我们必须从头开始发展。建造住宅为城市提供空闲城"
-"民，并用于生产资源和招募部队。"
+"不过可惜这座城市太弱小了，我们必须从头开始发展。建造住宅为城市提供空闲城民，"
+"并用于生产资源和招募部队。"
 
 #: scenes/MyCityFteScene.lua:437
 msgid "非常好，现在我们来升级城堡！城堡等级越高，可以解锁更多建筑…"
@@ -1469,18 +1467,17 @@ msgstr "点击解锁%s"
 
 #: scenes/MyCityFteScene.lua:468
 msgid ""
-"年轻人，带兵打仗可不是过家家，如果你信得过我这把老骨头，就让我来教教"
-"你。。。"
+"年轻人，带兵打仗可不是过家家，如果你信得过我这把老骨头，就让我来教教你。。。"
 msgstr ""
 "年轻人，带兵打仗可不是过家家，如果你信得过我这把老骨头，就让我来教教你…"
 
 #: scenes/MyCityFteScene.lua:494
 msgid ""
-"很好，我没有看错你！从今天起，我，皇家骑士克里冈，愿带领我的手下追随大人征"
-"战四方。。。"
+"很好，我没有看错你！从今天起，我，皇家骑士克里冈，愿带领我的手下追随大人征战"
+"四方。。。"
 msgstr ""
-"很好，我没有看错你！从今天起，我，皇家骑士克里冈，愿带领我的手下追随大人征"
-"战四方！"
+"很好，我没有看错你！从今天起，我，皇家骑士克里冈，愿带领我的手下追随大人征战"
+"四方！"
 
 #: scenes/MyCityFteScene.lua:498 ui/GameUIMission.lua:286
 #: ui/GameUIPveReward.lua:107
@@ -1495,8 +1492,7 @@ msgstr "领主大人，光靠城市基本的资源产出，无法满足我们的
 msgid ""
 "我倒是知道一个地方，有些危险，但有着丰富的物资，也许我们尝试着探索。。。"
 msgstr ""
-"我倒是知道一个地方，虽然有些危险，但有着丰富的物资，也许我们尝试着进行探"
-"索。"
+"我倒是知道一个地方，虽然有些危险，但有着丰富的物资，也许我们尝试着进行探索。"
 
 #: scenes/MyCityFteScene.lua:510
 msgid "点击飞艇进入探险地图"
@@ -1504,8 +1500,8 @@ msgstr "点击飞艇进入探险地图"
 
 #: scenes/MyCityFteScene.lua:521
 msgid ""
-"领主大人，你跑到哪里去了，人家可是找了你半天了。。。我们得抓紧时间解锁更多"
-"建筑！"
+"领主大人，你跑到哪里去了，人家可是找了你半天了。。。我们得抓紧时间解锁更多建"
+"筑！"
 msgstr ""
 "领主大人，你跑到哪里去了，人家可是找了你半天了…我们得抓紧时间解锁更多建筑！"
 
@@ -1528,8 +1524,7 @@ msgstr "升级城堡来解锁学院"
 
 #: scenes/MyCityFteScene.lua:548
 msgid ""
-"领主大人, 你听过灵魂石吗?那是用来召唤亡灵战士的...不过我不确定我们有这玩意"
-"儿"
+"领主大人, 你听过灵魂石吗?那是用来召唤亡灵战士的...不过我不确定我们有这玩意儿"
 msgstr ""
 "领主大人, 你听过灵魂石吗？那是用来召唤亡灵战士的重要材料…不过我不确定我们有"
 "这玩意儿。"
@@ -1556,8 +1551,8 @@ msgstr "建造石匠小屋"
 
 #: scenes/MyCityFteScene.lua:622
 msgid ""
-"看来大人你已经能够顺利接管这座城市了。。。如果不知道该干什么可以点击左上角"
-"的推荐任务"
+"看来大人你已经能够顺利接管这座城市了。。。如果不知道该干什么可以点击左上角的"
+"推荐任务"
 msgstr ""
 "看来大人你已经能够顺利接管这座城市了…如果不知道该干什么可以点击左上角的推荐"
 "任务。"
@@ -1575,8 +1570,8 @@ msgid ""
 "领主大人，这个世界上的觉醒者并不只有你一人。介入他们或者创建联盟邀请他们加"
 "入，会让我们发展得更顺利"
 msgstr ""
-"领主大人，这个世界上的觉醒者并不只有你一人。加入其他觉醒者的联盟或创建自己"
-"的联盟，会让我们发展得更迅速。"
+"领主大人，这个世界上的觉醒者并不只有你一人。加入其他觉醒者的联盟或创建自己的"
+"联盟，会让我们发展得更迅速。"
 
 #: scenes/PVESceneNewFte.lua:74 scenes/PVESceneNewFte.lua:86
 #: scenes/PVESceneNewFte.lua:98
@@ -1780,10 +1775,9 @@ msgid "是否消费%s金龙币"
 msgstr "是否确认消费%s金龙币？"
 
 #: ui/CommonUpgradeUI.lua:598 ui/GameUIAllianceBuilding.lua:14
-#: ui/GameUIAllianceOrderHallEnter.lua:60
-#: ui/GameUIAlliancePalaceEnter.lua:67 ui/GameUIAllianceShopEnter.lua:75
-#: ui/GameUIAllianceShrineEnter.lua:179 ui/GameUIOrderHall.lua:172
-#: ui/GameUIUpgradeBuilding.lua:18
+#: ui/GameUIAllianceOrderHallEnter.lua:60 ui/GameUIAlliancePalaceEnter.lua:67
+#: ui/GameUIAllianceShopEnter.lua:75 ui/GameUIAllianceShrineEnter.lua:179
+#: ui/GameUIOrderHall.lua:172 ui/GameUIUpgradeBuilding.lua:18
 msgid "升级"
 msgstr "升级"
 
@@ -1881,18 +1875,17 @@ msgstr "您当前没有足够的资源,是否花费金龙币立即补充"
 #: ui/CommonUpgradeUI.lua:928 ui/CommonUpgradeUI.lua:949
 #: ui/CommonUpgradeUI.lua:990 ui/CommonUpgradeUI.lua:1072
 #: ui/GameUIBuild.lua:205 ui/GameUIHasBeenBuild.lua:136
-#: ui/GameUIHospital.lua:257 ui/GameUIHospital.lua:306
-#: ui/GameUIItems.lua:233 ui/GameUIKeep.lua:433
-#: ui/GameUIPResourceBuilding.lua:251 ui/GameUIPveAttack.lua:485
-#: ui/GameUITownHall.lua:168 ui/GameUIUnlockBuilding.lua:283
-#: ui/GameUIUnlockBuilding.lua:304 ui/GameUIWatchTower.lua:196
-#: ui/GameUIWathTowerRegion.lua:200 widget/WidgetAccelerateGroup.lua:117
-#: widget/WidgetAllianceCreateOrEdit.lua:108
-#: widget/WidgetManufacture.lua:137 widget/WidgetManufacture.lua:206
-#: widget/WidgetManufactureNew.lua:204 widget/WidgetPromoteSoldier.lua:159
-#: widget/WidgetRecruitSoldier.lua:289 widget/WidgetRecruitSoldier.lua:402
-#: widget/WidgetRecruitSoldier.lua:436 widget/WidgetTreatSoldier.lua:272
-#: widget/WidgetTreatSoldier.lua:340
+#: ui/GameUIHospital.lua:257 ui/GameUIHospital.lua:306 ui/GameUIItems.lua:233
+#: ui/GameUIKeep.lua:433 ui/GameUIPResourceBuilding.lua:251
+#: ui/GameUIPveAttack.lua:485 ui/GameUITownHall.lua:168
+#: ui/GameUIUnlockBuilding.lua:283 ui/GameUIUnlockBuilding.lua:304
+#: ui/GameUIWatchTower.lua:196 ui/GameUIWathTowerRegion.lua:200
+#: widget/WidgetAccelerateGroup.lua:117
+#: widget/WidgetAllianceCreateOrEdit.lua:108 widget/WidgetManufacture.lua:137
+#: widget/WidgetManufacture.lua:206 widget/WidgetManufactureNew.lua:204
+#: widget/WidgetPromoteSoldier.lua:159 widget/WidgetRecruitSoldier.lua:289
+#: widget/WidgetRecruitSoldier.lua:402 widget/WidgetRecruitSoldier.lua:436
+#: widget/WidgetTreatSoldier.lua:272 widget/WidgetTreatSoldier.lua:340
 #: widget/WidgetUpgradeMilitaryTech.lua:278 widget/WidgetUseItems.lua:1237
 msgid "前往商店"
 msgstr "前往商店"
@@ -1950,11 +1943,11 @@ msgstr "拒绝"
 msgid "同意"
 msgstr "同意"
 
-#: ui/GameGlobalUIUtils.lua:97 ui/GameGlobalUIUtils.lua:102
+#: ui/GameGlobalUIUtils.lua:102 ui/GameGlobalUIUtils.lua:107
 msgid "建筑升级完成"
 msgstr "建筑升级完成"
 
-#: ui/GameGlobalUIUtils.lua:107
+#: ui/GameGlobalUIUtils.lua:112
 msgid "小屋升级完成"
 msgstr "小屋升级完成"
 
@@ -2132,8 +2125,8 @@ msgstr "你已领取%s"
 
 #: ui/GameUIActivityRewardNew.lua:292
 msgid ""
-"在未来的14天连续登陆，每天都会有来自王城的援军前来投奔你，连续登陆14天免费"
-"解锁第二条行军队列！"
+"在未来的14天连续登陆，每天都会有来自王城的援军前来投奔你，连续登陆14天免费解"
+"锁第二条行军队列！"
 msgstr ""
 "在未来的14天连续登陆，每天都会有来自王城的援军前来投奔你，连续登陆7天免费解"
 "锁第二条行军队列！"
@@ -2316,8 +2309,8 @@ msgstr "总览"
 #: ui/GameUIAlliancePalaceEnter.lua:59 ui/GameUIDwelling.lua:32
 #: ui/GameUIKeep.lua:44 ui/GameUIMaterialDepot.lua:14
 #: ui/GameUIPResourceBuilding.lua:48 ui/GameUIResource.lua:29
-#: ui/GameUIShireFightEvent.lua:92 ui/GameUITower.lua:17
-#: ui/GameUIVip.lua:155 widget/WidgetDragonTabButtons.lua:65
+#: ui/GameUIShireFightEvent.lua:92 ui/GameUITower.lua:17 ui/GameUIVip.lua:155
+#: widget/WidgetDragonTabButtons.lua:65
 msgid "信息"
 msgstr "信息"
 
@@ -2329,8 +2322,8 @@ msgstr "事件记录"
 #: ui/GameUIAlliance.lua:845 ui/GameUIAlliance.lua:1105
 #: ui/GameUIAlliance.lua:1513 ui/GameUIAlliance.lua:1549
 #: ui/GameUIAlliance.lua:1644 ui/GameUIAllianceDecorateEnter.lua:100
-#: ui/GameUIAllianceShrineDetail.lua:257
-#: ui/GameUIAllianceShrineEnter.lua:157 ui/GameUIChatChannel.lua:719
+#: ui/GameUIAllianceShrineDetail.lua:257 ui/GameUIAllianceShrineEnter.lua:157
+#: ui/GameUIChatChannel.lua:719
 msgid "您没有此操作权限"
 msgstr "您没有此操作权限"
 
@@ -2422,8 +2415,8 @@ msgstr "联盟正在战争准备期或战争期,不能退出联盟"
 
 #: ui/GameUIAlliance.lua:1657
 msgid ""
-"您必须在没有部队在外行军的情况下，才可以退出联盟。退出联盟会损失当前未打开"
-"的联盟礼物。"
+"您必须在没有部队在外行军的情况下，才可以退出联盟。退出联盟会损失当前未打开的"
+"联盟礼物。"
 msgstr "退出联盟会让你的发展处于劣势，你确定要这么做吗？"
 
 #: ui/GameUIAlliance.lua:1667
@@ -2534,11 +2527,11 @@ msgstr "不需要保护,立即开战!"
 
 #: ui/GameUIAllianceBattle.lua:436
 msgid ""
-"本次联盟会战结束后奖励,总击杀越高奖励越高.获胜方获得70%的总奖励,失败方获得"
-"剩下的,获胜联盟击杀第1名的玩家还将获得金龙币奖励"
+"本次联盟会战结束后奖励,总击杀越高奖励越高.获胜方获得70%的总奖励,失败方获得剩"
+"下的,获胜联盟击杀第1名的玩家还将获得金龙币奖励"
 msgstr ""
-"本次联盟会战结束后奖励,总击杀越高奖励越高.获胜方获得70%的总奖励,失败方获得"
-"剩下的,获胜联盟击杀第1名的玩家还将获得金龙币奖励"
+"本次联盟会战结束后奖励,总击杀越高奖励越高.获胜方获得70%的总奖励,失败方获得剩"
+"下的,获胜联盟击杀第1名的玩家还将获得金龙币奖励"
 
 #: ui/GameUIAllianceBattle.lua:492 ui/GameUIAllianceBattle.lua:493
 #: ui/GameUIAllianceBattle.lua:501 ui/GameUIAllianceBattle.lua:516
@@ -2590,27 +2583,27 @@ msgstr "联盟对战"
 
 #: ui/GameUIAllianceBattle.lua:651
 msgid ""
-"系统匹配两个战斗力相近的联盟，将彼此的领地拼接到一起。每场联盟匹配战，根据"
-"所在天梯服务器的等级，只要进行匹配就会有奖励。需要将军和盟主才能开战。"
+"系统匹配两个战斗力相近的联盟，将彼此的领地拼接到一起。每场联盟匹配战，根据所"
+"在天梯服务器的等级，只要进行匹配就会有奖励。需要将军和盟主才能开战。"
 msgstr ""
-"系统匹配两个战斗力相近的联盟，将彼此的领地拼接到一起。每场联盟匹配战，根据"
-"所在天梯服务器的等级，只要进行匹配就会有奖励。需要将军和盟主才能开战。"
+"系统匹配两个战斗力相近的联盟，将彼此的领地拼接到一起。每场联盟匹配战，根据所"
+"在天梯服务器的等级，只要进行匹配就会有奖励。需要将军和盟主才能开战。"
 
 #: ui/GameUIAllianceBattle.lua:652
 msgid ""
-"成功匹配到对手后，会有一个准备时间。此时无法对敌方进攻或者突袭，也无法移动"
-"城市的位置。请召唤你的盟友，让他们做好战斗准备。"
+"成功匹配到对手后，会有一个准备时间。此时无法对敌方进攻或者突袭，也无法移动城"
+"市的位置。请召唤你的盟友，让他们做好战斗准备。"
 msgstr ""
-"成功匹配到对手后，会有一个准备时间，请召唤你的盟友，让他们做好战斗准备。此"
-"时无法对敌方进攻或者侦察。"
+"成功匹配到对手后，会有一个准备时间，请召唤你的盟友，让他们做好战斗准备。此时"
+"无法对敌方进攻或者侦察。"
 
 #: ui/GameUIAllianceBattle.lua:653
 msgid ""
-"进入战争期后，双方可以派兵攻打对方城市，抢占对方的村落。击杀敌方单位可以增"
-"加本场匹配战的总奖励。若击溃敌方玩家城市，还可以获得额外的荣耀值奖励加成。"
+"进入战争期后，双方可以派兵攻打对方城市，抢占对方的村落。击杀敌方单位可以增加"
+"本场匹配战的总奖励。若击溃敌方玩家城市，还可以获得额外的荣耀值奖励加成。"
 msgstr ""
-"进入战争期后，双方可以派兵攻打对方城市，抢占对方的村落。击杀敌方单位可以增"
-"加本场匹配战的总奖励。若击溃敌方玩家城市，还可以获得额外的荣耀值奖励加成"
+"进入战争期后，双方可以派兵攻打对方城市，抢占对方的村落。击杀敌方单位可以增加"
+"本场匹配战的总奖励。若击溃敌方玩家城市，还可以获得额外的荣耀值奖励加成"
 
 #: ui/GameUIAllianceBattle.lua:654
 msgid "联盟匹配战结束后，参战双方都会进入保护期，此时不会被其他联盟攻打。"
@@ -2751,10 +2744,9 @@ msgstr "等级"
 #: ui/GameUIAllianceCityEnter.lua:124 ui/GameUIAllianceDecorateEnter.lua:66
 #: ui/GameUIAllianceEnterBase.lua:70 ui/GameUIAllianceHome.lua:644
 #: ui/GameUIAllianceMoonGateEnter.lua:32
-#: ui/GameUIAllianceOrderHallEnter.lua:36
-#: ui/GameUIAlliancePalaceEnter.lua:37 ui/GameUIAllianceShopEnter.lua:33
-#: ui/GameUIAllianceShopEnter.lua:51 ui/GameUIAllianceShrineEnter.lua:111
-#: ui/GameUIAllianceVillageEnter.lua:124
+#: ui/GameUIAllianceOrderHallEnter.lua:36 ui/GameUIAlliancePalaceEnter.lua:37
+#: ui/GameUIAllianceShopEnter.lua:33 ui/GameUIAllianceShopEnter.lua:51
+#: ui/GameUIAllianceShrineEnter.lua:111 ui/GameUIAllianceVillageEnter.lua:124
 #: ui/GameUIAllianceVillageEnter.lua:144 ui/GameUIOtherAllianceHome.lua:19
 #: ui/GameUIOtherAllianceHome.lua:66 ui/GameUIShireFightEvent.lua:218
 #: ui/GameUIWatchTower.lua:265 ui/GameUIWathTowerRegion.lua:274
@@ -2882,8 +2874,8 @@ msgstr ""
 msgid "占地"
 msgstr "占地"
 
-#: ui/GameUIAllianceDecorateEnter.lua:82
-#: ui/GameUIAllianceShrineEnter.lua:139 ui/GameUIResource.lua:195
+#: ui/GameUIAllianceDecorateEnter.lua:82 ui/GameUIAllianceShrineEnter.lua:139
+#: ui/GameUIResource.lua:195
 msgid "移动"
 msgstr "移动"
 
@@ -2907,8 +2899,8 @@ msgstr "迁移城市"
 
 #: ui/GameUIAllianceEnterBase.lua:350
 msgid ""
-"联盟将军可将联盟建筑移动到空地,玩家可将自己的城市移动到空地处,空地定期刷新"
-"放逐者的村落,树木,山脉和湖泊"
+"联盟将军可将联盟建筑移动到空地,玩家可将自己的城市移动到空地处,空地定期刷新放"
+"逐者的村落,树木,山脉和湖泊"
 msgstr "联盟成员可将自己的城市和联盟的装饰物迁移到新的空地上"
 
 #: ui/GameUIAllianceHome.lua:297
@@ -3164,13 +3156,11 @@ msgid "开战的王城"
 msgstr "开战的王城"
 
 #: ui/GameUIAllianceMoonGateEnter.lua:37
-#: ui/GameUIAllianceMoonGateEnter.lua:41
-#: ui/GameUIAllianceMosterEnter.lua:187
-#: ui/GameUIAllianceOrderHallEnter.lua:39
-#: ui/GameUIAlliancePalaceEnter.lua:40 ui/GameUIAllianceShopEnter.lua:56
-#: ui/GameUIAllianceShrineEnter.lua:105 ui/GameUIAllianceShrineEnter.lua:106
-#: ui/GameUIMoonGate.lua:84 ui/GameUIMoonGate.lua:85
-#: ui/GameUIMoonGate.lua:86
+#: ui/GameUIAllianceMoonGateEnter.lua:41 ui/GameUIAllianceMosterEnter.lua:187
+#: ui/GameUIAllianceOrderHallEnter.lua:39 ui/GameUIAlliancePalaceEnter.lua:40
+#: ui/GameUIAllianceShopEnter.lua:56 ui/GameUIAllianceShrineEnter.lua:105
+#: ui/GameUIAllianceShrineEnter.lua:106 ui/GameUIMoonGate.lua:84
+#: ui/GameUIMoonGate.lua:85 ui/GameUIMoonGate.lua:86
 msgid "未知"
 msgstr "未知"
 
@@ -3291,11 +3281,11 @@ msgstr "需要职位是联盟盟主"
 
 #: ui/GameUIAlliancePalace.lua:396
 msgid ""
-"草地地形能产出绿龙装备材料，每当在自己的领土上完成任务，或者击杀一点战斗力"
-"的敌方单位，就由一定几率获得装备材料。"
+"草地地形能产出绿龙装备材料，每当在自己的领土上完成任务，或者击杀一点战斗力的"
+"敌方单位，就由一定几率获得装备材料。"
 msgstr ""
-"草地地形能产出绿龙装备材料，每当在自己的领土上完成圣地事件，就可获得相应颜"
-"色的装备材料。"
+"草地地形能产出绿龙装备材料，每当在自己的领土上完成圣地事件，就可获得相应颜色"
+"的装备材料。"
 
 #: ui/GameUIAlliancePalace.lua:421 ui/GameUIKeep.lua:340
 #: ui/GameUISelectTerrain.lua:58 ui/GameUISelectTerrain.lua:119
@@ -3342,11 +3332,11 @@ msgstr "红龙"
 #: ui/GameUIAlliancePalace.lua:433
 #, c-format
 msgid ""
-"%s地形能产出%s装备材料，每当在自己的领土上完成任务，或者击杀一点战斗力的敌"
-"方单位，就由一定几率获得装备材料。"
+"%s地形能产出%s装备材料，每当在自己的领土上完成任务，或者击杀一点战斗力的敌方"
+"单位，就由一定几率获得装备材料。"
 msgstr ""
-"%s地形能产出%s装备材料，每当在自己的领土上完成圣地事件，就可获得相应颜色的"
-"装备材料。"
+"%s地形能产出%s装备材料，每当在自己的领土上完成圣地事件，就可获得相应颜色的装"
+"备材料。"
 
 #: ui/GameUIAlliancePalace.lua:448 ui/GameUIKeep.lua:100
 #: widget/WidgetAllianceCreateOrEdit.lua:43
@@ -4121,10 +4111,10 @@ msgstr "您正在访问其他玩家的城市，无法使用其他功能，点击
 msgid "采集战报"
 msgstr "采集战报"
 
-#: ui/GameUICollectReport.lua:47 ui/GameUIMail.lua:155
-#: ui/GameUIMail.lua:1159 ui/GameUIMail.lua:1271
-#: ui/GameUIMonsterReport.lua:132 ui/GameUIShrineReportInMail.lua:107
-#: ui/GameUIStrikeReport.lua:149 ui/GameUIWarReport.lua:131
+#: ui/GameUICollectReport.lua:47 ui/GameUIMail.lua:155 ui/GameUIMail.lua:1159
+#: ui/GameUIMail.lua:1271 ui/GameUIMonsterReport.lua:132
+#: ui/GameUIShrineReportInMail.lua:107 ui/GameUIStrikeReport.lua:149
+#: ui/GameUIWarReport.lua:131
 msgid "删除"
 msgstr "删除"
 
@@ -5045,8 +5035,7 @@ msgid "标记已读"
 msgstr "标记已读"
 
 #: ui/GameUIMail.lua:522 ui/GameUIMail.lua:690 ui/GameUIMail.lua:849
-#: ui/GameUIMail.lua:1551 ui/GameUIMail.lua:1873
-#: ui/GameUIShareReport.lua:102
+#: ui/GameUIMail.lua:1551 ui/GameUIMail.lua:1873 ui/GameUIShareReport.lua:102
 msgid "From"
 msgstr "From"
 
@@ -5076,8 +5065,7 @@ msgstr "资源采集报告"
 msgid "黑龙军团"
 msgstr "黑龙军团"
 
-#: ui/GameUIMail.lua:1580 ui/GameUIMail.lua:1902
-#: ui/GameUIShareReport.lua:131
+#: ui/GameUIMail.lua:1580 ui/GameUIMail.lua:1902 ui/GameUIShareReport.lua:131
 msgid "To"
 msgstr "To"
 
@@ -5451,11 +5439,11 @@ msgstr "关卡三星通关后，可使用扫荡"
 
 #: ui/GameUIPveAttack.lua:169
 msgid ""
-"你能感觉到一个一场强大的生物驻守在这里, 阻挡着你继续前进, 但想要前往下一关"
-"卡必须击败它。"
+"你能感觉到一个一场强大的生物驻守在这里, 阻挡着你继续前进, 但想要前往下一关卡"
+"必须击败它。"
 msgstr ""
-"你能感觉到一个一场强大的生物驻守在这里, 阻挡着你继续前进, 但想要前往下一关"
-"卡必须击败它"
+"你能感觉到一个一场强大的生物驻守在这里, 阻挡着你继续前进, 但想要前往下一关卡"
+"必须击败它"
 
 #: ui/GameUIPveAttack.lua:214
 msgid "已通关"
@@ -5489,11 +5477,11 @@ msgstr "您当前没有足够的扫荡劵,是否花费金龙币购买补充并�
 #: ui/GameUIPveAttack.lua:555
 #, c-format
 msgid ""
-"当前材料库房中的%s材料已满，你可能无法获得此次扫荡所得的材料奖励。是否仍要"
-"扫荡？"
+"当前材料库房中的%s材料已满，你可能无法获得此次扫荡所得的材料奖励。是否仍要扫"
+"荡？"
 msgstr ""
-"当前材料库房中的%s材料已满，你可能无法获得此次扫荡所得的材料奖励。是否仍要"
-"扫荡？"
+"当前材料库房中的%s材料已满，你可能无法获得此次扫荡所得的材料奖励。是否仍要扫"
+"荡？"
 
 #: ui/GameUIPveAttack.lua:558
 msgid "强行扫荡"
@@ -5750,8 +5738,7 @@ msgid "抱歉"
 msgstr "抱歉"
 
 #: ui/GameUISelenaQuestion.lua:116
-msgid ""
-"大人，我准备了一些小小测试，如果你每日能连续答对10道题，我会奖赏你哦！"
+msgid "大人，我准备了一些小小测试，如果你每日能连续答对10道题，我会奖赏你哦！"
 msgstr ""
 "大人，我准备了一些小小测试，如果你每日能连续答对10道题，我会奖赏你哦！"
 
@@ -5787,11 +5774,11 @@ msgstr "塞琳娜:"
 
 #: ui/GameUISelenaQuestion.lua:256
 msgid ""
-"你正在回答问题,如果关闭此界面，之前回答正确的题目数将被清零,是否继续关闭该"
-"界面"
+"你正在回答问题,如果关闭此界面，之前回答正确的题目数将被清零,是否继续关闭该界"
+"面"
 msgstr ""
-"你正在回答问题,如果关闭此界面，之前回答正确的题目数将被清零,是否继续关闭该"
-"界面"
+"你正在回答问题,如果关闭此界面，之前回答正确的题目数将被清零,是否继续关闭该界"
+"面"
 
 #: ui/GameUISetting.lua:11 ui/GameUIStore.lua:173
 #: widget/WidgetHomeBottom.lua:35
@@ -5870,13 +5857,13 @@ msgstr "你的账号已经和GameCenter绑定"
 
 #: ui/GameUISettingAccount.lua:140
 msgid ""
-"当前账号已经和一个GameCenter账号之间绑定。你可以在设置中切换你的GameCenter"
-"账号来创建新的账号，也可以在其他ios设备上用当前GameCenter账号登录，在其他"
-"ios设备上进行游戏"
+"当前账号已经和一个GameCenter账号之间绑定。你可以在设置中切换你的GameCenter账"
+"号来创建新的账号，也可以在其他ios设备上用当前GameCenter账号登录，在其他ios设"
+"备上进行游戏"
 msgstr ""
-"当前账号已经和一个GameCenter账号之间绑定。你可以在设置中切换你的GameCenter"
-"账号来创建新的账号，也可以在其他ios设备上用当前GameCenter账号登录，在其他"
-"iOS设备上进行游戏"
+"当前账号已经和一个GameCenter账号之间绑定。你可以在设置中切换你的GameCenter账"
+"号来创建新的账号，也可以在其他ios设备上用当前GameCenter账号登录，在其他iOS设"
+"备上进行游戏"
 
 #: ui/GameUISettingAccount.lua:143 ui/GameUISettingAccount.lua:187
 msgid "当前GameCenter:已登录"
@@ -5892,11 +5879,11 @@ msgstr "当前账号已经和当前GameCenter账号绑定，请保管好你的Ga
 
 #: ui/GameUISettingAccount.lua:154 ui/GameUISettingAccount.lua:159
 msgid ""
-"当前GameCenter下存在其他游戏账号，点击切换按钮，会立即登录另一个GameCenter"
-"游戏账号"
-msgstr ""
-"当前GameCenter下存在其他游戏账号，点击切换按钮，会立即登录至该GameCenter游"
+"当前GameCenter下存在其他游戏账号，点击切换按钮，会立即登录另一个GameCenter游"
 "戏账号"
+msgstr ""
+"当前GameCenter下存在其他游戏账号，点击切换按钮，会立即登录至该GameCenter游戏"
+"账号"
 
 #: ui/GameUISettingAccount.lua:163 ui/GameUISettingAccount.lua:199
 msgid "当前状态:未绑定"
@@ -5904,11 +5891,11 @@ msgstr "当前状态:未绑定"
 
 #: ui/GameUISettingAccount.lua:164 ui/GameUISettingAccount.lua:168
 msgid ""
-"当前GameCenter下没有绑定的账号，你可以在此创建一个全新的游戏账号。点击下方"
-"的按钮后，会登出当前账号，使用新的GameCenter账号进行游戏"
+"当前GameCenter下没有绑定的账号，你可以在此创建一个全新的游戏账号。点击下方的"
+"按钮后，会登出当前账号，使用新的GameCenter账号进行游戏"
 msgstr ""
-"当前GameCenter下没有绑定的账号，你可以在此创建一个全新的游戏账号。点击下方"
-"的按钮后，会登出当前账号，使用新的GameCenter账号进行游戏"
+"当前GameCenter下没有绑定的账号，你可以在此创建一个全新的游戏账号。点击下方的"
+"按钮后，会登出当前账号，使用新的GameCenter账号进行游戏"
 
 #: ui/GameUISettingAccount.lua:167
 msgid "创建新账号"
@@ -6132,8 +6119,8 @@ msgid ""
 "参与联盟GVE活动获得的奖励，击杀数量越高奖励越丰富，派出的部队会在战斗结束后"
 "返回。根据到达的先后顺序进行战斗排序"
 msgstr ""
-"参与联盟圣地活动获得的奖励，击杀数量越高奖励越丰富，根据到达的先后顺序进行"
-"战斗排序"
+"参与联盟圣地活动获得的奖励，击杀数量越高奖励越丰富，根据到达的先后顺序进行战"
+"斗排序"
 
 #: ui/GameUIShireFightEvent.lua:203
 msgid "驻扎中"
@@ -6203,13 +6190,12 @@ msgstr "部队总人口"
 msgid "获得金龙币"
 msgstr "获得金龙币"
 
-#: ui/GameUIStore.lua:127 ui/GameUIStore.lua:131
-#: ui/GameUIStorePackage.lua:57
+#: ui/GameUIStore.lua:127 ui/GameUIStore.lua:131 ui/GameUIStorePackage.lua:57
 msgid "礼包中包含下列所有物品"
 msgstr "礼包中包含下列所有物品"
 
-#: ui/GameUIStore.lua:131 ui/GameUIStore.lua:133
-#: ui/GameUIStorePackage.lua:62 ui/GameUIVip.lua:271
+#: ui/GameUIStore.lua:131 ui/GameUIStore.lua:133 ui/GameUIStorePackage.lua:62
+#: ui/GameUIVip.lua:271
 #, c-format
 msgid "+价值%d的道具"
 msgstr " +价值%d的道具"
@@ -6579,11 +6565,11 @@ msgstr "需要贸易行会"
 
 #: ui/GameUITradeGuild.lua:665
 msgid ""
-"出售商品需要马车来运输，马车不足则无法出售。在学院提升马车的科技，能够提高"
-"每个马车容纳资源和材料的数量"
+"出售商品需要马车来运输，马车不足则无法出售。在学院提升马车的科技，能够提高每"
+"个马车容纳资源和材料的数量"
 msgstr ""
-"出售商品需要马车来运输，马车不足则无法出售。在学院提升马车的科技，能够提高"
-"每个马车容纳资源和材料的数量"
+"出售商品需要马车来运输，马车不足则无法出售。在学院提升马车的科技，能够提高每"
+"个马车容纳资源和材料的数量"
 
 #: ui/GameUITradeGuild.lua:674
 msgid "容纳资源"
@@ -7851,11 +7837,9 @@ msgstr "打造绿龙1星装备所必须的材料"
 #: utils/Localize.lua:251 utils/Localize.lua:252 utils/Localize.lua:253
 #: utils/Localize.lua:254
 msgid ""
-"用于招募亡灵兵种的材料。在探险过程中有一定几率会遭遇亡灵部队，击败他们后获"
-"得"
+"用于招募亡灵兵种的材料。在探险过程中有一定几率会遭遇亡灵部队，击败他们后获得"
 msgstr ""
-"用于招募亡灵兵种的材料。在探险过程中有一定几率会遭遇亡灵部队，击败他们后获"
-"得"
+"用于招募亡灵兵种的材料。在探险过程中有一定几率会遭遇亡灵部队，击败他们后获得"
 
 #: utils/Localize.lua:255 utils/Localize.lua:256 utils/Localize.lua:257
 #: utils/Localize.lua:258 utils/Localize.lua:831 utils/Localize.lua:832
@@ -8721,11 +8705,11 @@ msgstr "被协助加速次数"
 
 #: utils/Localize.lua:520
 msgid ""
-"瞭望塔显示部队在联盟领地上的行军情况，同时也能预警敌方部队来袭，并提供相关"
-"信息"
+"瞭望塔显示部队在联盟领地上的行军情况，同时也能预警敌方部队来袭，并提供相关信"
+"息"
 msgstr ""
-"瞭望塔显示部队在联盟领地上的行军情况，同时也能预警敌方部队来袭，并提供相关"
-"信息"
+"瞭望塔显示部队在联盟领地上的行军情况，同时也能预警敌方部队来袭，并提供相关信"
+"息"
 
 #: utils/Localize.lua:521
 #, c-format
@@ -8761,38 +8745,34 @@ msgstr "提供来袭部队的龙的类型，预警%.1f分钟内的敌方行军�
 #: utils/Localize.lua:528
 #, c-format
 msgid ""
-"可以在敌方领地，查看敌方玩家的城市布局(不能点击建筑)，预警%.1f分钟内的敌方"
-"行军事件"
+"可以在敌方领地，查看敌方玩家的城市布局(不能点击建筑)，预警%.1f分钟内的敌方行"
+"军事件"
 msgstr ""
-"可以在敌方领地，查看敌方玩家的城市布局(不能点击建筑)，预警%.1f分钟内的敌方"
-"行军事件"
+"可以在敌方领地，查看敌方玩家的城市布局(不能点击建筑)，预警%.1f分钟内的敌方行"
+"军事件"
 
 #: utils/Localize.lua:530
 #, c-format
 msgid ""
-"提供详情按钮，可以查看敌军的详细信息：龙的等级和星级，预警%.1f分钟内的敌方"
-"行军事件"
+"提供详情按钮，可以查看敌军的详细信息：龙的等级和星级，预警%.1f分钟内的敌方行"
+"军事件"
 msgstr ""
-"提供详情按钮，可以查看敌军的详细信息：龙的等级和星级，预警%.1f分钟内的敌方"
-"行军事件"
+"提供详情按钮，可以查看敌军的详细信息：龙的等级和星级，预警%.1f分钟内的敌方行"
+"军事件"
 
 #: utils/Localize.lua:532
 #, c-format
 msgid ""
-"可以查看敌军的详细信息：显示龙的当前HP和HP上限，预警%.1f分钟内的敌方行军事"
-"件"
+"可以查看敌军的详细信息：显示龙的当前HP和HP上限，预警%.1f分钟内的敌方行军事件"
 msgstr ""
-"可以查看敌军的详细信息：显示龙的当前HP和HP上限，预警%.1f分钟内的敌方行军事"
-"件"
+"可以查看敌军的详细信息：显示龙的当前HP和HP上限，预警%.1f分钟内的敌方行军事件"
 
 #: utils/Localize.lua:534
 #, c-format
 msgid ""
-"可以查看敌军的详细信息：显示敌方部队的兵种名称，预警%.1f分钟内的敌方行军事"
-"件"
+"可以查看敌军的详细信息：显示敌方部队的兵种名称，预警%.1f分钟内的敌方行军事件"
 msgstr ""
-"可以查看敌军的详细信息：显示敌方部队的兵种名称，预警%.1f分钟内的敌方行军事"
-"件"
+"可以查看敌军的详细信息：显示敌方部队的兵种名称，预警%.1f分钟内的敌方行军事件"
 
 #: utils/Localize.lua:536
 #, c-format
@@ -8802,38 +8782,36 @@ msgstr "可以查看敌军的详细信息：显示龙的力量，预警%.1f分�
 #: utils/Localize.lua:538
 #, c-format
 msgid ""
-"可以查看敌军的详细信息: 显示敌方部队的兵种名称，预警%.1f分钟内的敌方行军事"
-"件"
+"可以查看敌军的详细信息: 显示敌方部队的兵种名称，预警%.1f分钟内的敌方行军事件"
 msgstr ""
-"可以查看敌军的详细信息: 显示敌方部队的兵种名称，预警%.1f分钟内的敌方行军事"
-"件"
+"可以查看敌军的详细信息: 显示敌方部队的兵种名称，预警%.1f分钟内的敌方行军事件"
 
 #: utils/Localize.lua:540
 #, c-format
 msgid ""
-"可以查看敌军的详细信息：显示龙的已装备的装备及其星级，预警%.1f分钟内的敌方"
-"行军事件"
+"可以查看敌军的详细信息：显示龙的已装备的装备及其星级，预警%.1f分钟内的敌方行"
+"军事件"
 msgstr ""
-"可以查看敌军的详细信息：显示龙的已装备的装备及其星级，预警%.1f分钟内的敌方"
-"行军事件"
+"可以查看敌军的详细信息：显示龙的已装备的装备及其星级，预警%.1f分钟内的敌方行"
+"军事件"
 
 #: utils/Localize.lua:542 utils/Localize.lua:558
 #, c-format
 msgid ""
-"可以查看敌军的详细信息：显示敌方部队的星级和模糊数量，预警%.1f分钟内的敌方"
-"行军事件"
+"可以查看敌军的详细信息：显示敌方部队的星级和模糊数量，预警%.1f分钟内的敌方行"
+"军事件"
 msgstr ""
-"可以查看敌军的详细信息：显示敌方部队的星级和模糊数量，预警%.1f分钟内的敌方"
-"行军事件"
+"可以查看敌军的详细信息：显示敌方部队的星级和模糊数量，预警%.1f分钟内的敌方行"
+"军事件"
 
 #: utils/Localize.lua:544
 #, c-format
 msgid ""
-"可以在敌方领地，查看其他联盟领地的玩家的城市建筑具体等级，预警%.1f分钟内的"
-"敌方行军事件"
+"可以在敌方领地，查看其他联盟领地的玩家的城市建筑具体等级，预警%.1f分钟内的敌"
+"方行军事件"
 msgstr ""
-"可以在敌方领地，查看其他联盟领地的玩家的城市建筑具体等级，预警%.1f分钟内的"
-"敌方行军事件"
+"可以在敌方领地，查看其他联盟领地的玩家的城市建筑具体等级，预警%.1f分钟内的敌"
+"方行军事件"
 
 #: utils/Localize.lua:546
 #, c-format
@@ -8842,54 +8820,51 @@ msgstr "显示敌方激活的战争增益，预警%.1f分钟内的敌方行军�
 
 #: utils/Localize.lua:548 utils/Localize.lua:560
 #, c-format
-msgid ""
-"可以查看敌军的详细信息：显示龙的技能等级，预警%.1f分钟内的敌方行军事件"
+msgid "可以查看敌军的详细信息：显示龙的技能等级，预警%.1f分钟内的敌方行军事件"
 msgstr ""
 "可以查看敌军的详细信息：显示龙的技能等级，预警%.1f分钟内的敌方行军事件"
 
 #: utils/Localize.lua:550
 #, c-format
 msgid ""
-"可以查看敌军的详细信息：显示敌方部队的具体数量，预警%.1f分钟内的敌方行军事"
-"件"
+"可以查看敌军的详细信息：显示敌方部队的具体数量，预警%.1f分钟内的敌方行军事件"
 msgstr ""
-"可以查看敌军的详细信息：显示敌方部队的具体数量，预警%.1f分钟内的敌方行军事"
-"件"
+"可以查看敌军的详细信息：显示敌方部队的具体数量，预警%.1f分钟内的敌方行军事件"
 
 #: utils/Localize.lua:552
 #, c-format
 msgid ""
-"可以查看敌方城市中得协防部队的详细信息：龙的详细信息，预警%.1f分钟内的敌方"
-"行军事件"
+"可以查看敌方城市中得协防部队的详细信息：龙的详细信息，预警%.1f分钟内的敌方行"
+"军事件"
 msgstr ""
-"可以查看敌方城市中得协防部队的详细信息：龙的详细信息，预警%.1f分钟内的敌方"
-"行军事件"
+"可以查看敌方城市中得协防部队的详细信息：龙的详细信息，预警%.1f分钟内的敌方行"
+"军事件"
 
 #: utils/Localize.lua:554
 #, c-format
 msgid ""
-"可以查看敌方城市中得协防部队的详细信息：显示敌方部队的兵种名称，预警%.1f分"
-"钟内的敌方行军事件"
+"可以查看敌方城市中得协防部队的详细信息：显示敌方部队的兵种名称，预警%.1f分钟"
+"内的敌方行军事件"
 msgstr ""
-"可以查看敌方城市中得协防部队的详细信息：显示敌方部队的兵种名称，预警%.1f分"
-"钟内的敌方行军事件"
+"可以查看敌方城市中得协防部队的详细信息：显示敌方部队的兵种名称，预警%.1f分钟"
+"内的敌方行军事件"
 
 #: utils/Localize.lua:556
 #, c-format
 msgid ""
-"可以查看敌方城市中得协防部队的详细信息：龙的装备情况和龙的力量，预警%.1f分"
-"钟内的敌方行军事件"
+"可以查看敌方城市中得协防部队的详细信息：龙的装备情况和龙的力量，预警%.1f分钟"
+"内的敌方行军事件"
 msgstr ""
-"可以查看敌方城市中得协防部队的详细信息：龙的装备情况和龙的力量，预警%.1f分"
-"钟内的敌方行军事件"
+"可以查看敌方城市中得协防部队的详细信息：龙的装备情况和龙的力量，预警%.1f分钟"
+"内的敌方行军事件"
 
 #: utils/Localize.lua:563
 msgid ""
-"学院提供的众多科技。研发科技能够提升城市的资源产出效率和防御能力，学院等级"
-"越高研发速度越快"
+"学院提供的众多科技。研发科技能够提升城市的资源产出效率和防御能力，学院等级越"
+"高研发速度越快"
 msgstr ""
-"学院提供的众多科技。研发科技能够提升城市的资源产出效率和防御能力，学院等级"
-"越高研发速度越快"
+"学院提供的众多科技。研发科技能够提升城市的资源产出效率和防御能力，学院等级越"
+"高研发速度越快"
 
 #: utils/Localize.lua:564
 msgid "研发速度"
@@ -8897,35 +8872,34 @@ msgstr "研发速度"
 
 #: utils/Localize.lua:567
 msgid ""
-"训练营地提供步兵的相关科技，增强步兵的各方面属性，建筑等级越高招募步兵的速"
-"度越快"
+"训练营地提供步兵的相关科技，增强步兵的各方面属性，建筑等级越高招募步兵的速度"
+"越快"
 msgstr ""
 "训练营地提供步兵的相关科技，增强步兵的各方面属性，更能提升星级，改变兵种造"
 "型。建筑等级越高招募步兵的速度越快"
 
 #: utils/Localize.lua:571
 msgid ""
-"猎手大厅提供弓手的相关科技，增强弓手的各方面属性，建筑等级越高招募弓手的速"
-"度越快"
+"猎手大厅提供弓手的相关科技，增强弓手的各方面属性，建筑等级越高招募弓手的速度"
+"越快"
 msgstr ""
 "猎手大厅提供弓手的相关科技，增强弓手的各方面属性，更能提升星级，改变兵种造"
 "型。建筑等级越高招募弓手的速度越快"
 
 #: utils/Localize.lua:574
 msgid ""
-"马厩提供骑兵的相关科技，增强骑兵的各方面属性，建筑等级越高招募骑兵的速度越"
-"快"
+"马厩提供骑兵的相关科技，增强骑兵的各方面属性，建筑等级越高招募骑兵的速度越快"
 msgstr ""
-"马厩提供骑兵的相关科技，增强骑兵的各方面属性，更能提升星级，改变兵种造型。"
-"建筑等级越高招募骑兵的速度越快"
+"马厩提供骑兵的相关科技，增强骑兵的各方面属性，更能提升星级，改变兵种造型。建"
+"筑等级越高招募骑兵的速度越快"
 
 #: utils/Localize.lua:578
 msgid ""
-"车间提供攻城器械的相关科技，增强攻城器械的各方面属性，建筑等级越高招募攻城"
-"器械的速度越快"
+"车间提供攻城器械的相关科技，增强攻城器械的各方面属性，建筑等级越高招募攻城器"
+"械的速度越快"
 msgstr ""
-"车间提供攻城器械的相关科技，增强攻城器械的各方面属性，更能提升星级，改变兵"
-"种造型。建筑等级越高招募攻城器械的速度越快"
+"车间提供攻城器械的相关科技，增强攻城器械的各方面属性，更能提升星级，改变兵种"
+"造型。建筑等级越高招募攻城器械的速度越快"
 
 #: utils/Localize.lua:579
 msgid "攻城器械招募速度"
@@ -8933,11 +8907,11 @@ msgstr "攻城器械招募速度"
 
 #: utils/Localize.lua:581
 msgid ""
-"城墙能够有效抵御敌方的进攻，当敌方部队来袭时会自动将城内的部队驻防，升级建"
-"筑能够提升城墙的耐久度"
+"城墙能够有效抵御敌方的进攻，当敌方部队来袭时会自动将城内的部队驻防，升级建筑"
+"能够提升城墙的耐久度"
 msgstr ""
-"城墙能够有效抵御敌方的进攻，当敌方部队来袭时时能组织城内部队进行防御，升级"
-"建筑能够提升城墙的耐久度"
+"城墙能够有效抵御敌方的进攻，当敌方部队来袭时时能组织城内部队进行防御，升级建"
+"筑能够提升城墙的耐久度"
 
 #: utils/Localize.lua:583
 msgid "城墙恢复"
@@ -8945,8 +8919,8 @@ msgstr "城墙恢复"
 
 #: utils/Localize.lua:585
 msgid ""
-"塔楼提升城墙攻击和防御的能力，塔楼等级越高，城墙每耐久度的攻击力和生命值就"
-"越高"
+"塔楼提升城墙攻击和防御的能力，塔楼等级越高，城墙每耐久度的攻击力和生命值就越"
+"高"
 msgstr ""
 "塔楼提升城墙攻击和防御的能力，塔楼等级越高，城墙的攻击力和防御力就越高"
 
@@ -8956,11 +8930,11 @@ msgstr "提供城墙攻击力"
 
 #: utils/Localize.lua:588
 msgid ""
-"龙巢可以查看龙的信息并强化巨龙，升级龙巢能够提升在城市中的巨龙生命值的恢复"
-"速度"
+"龙巢可以查看龙的信息并强化巨龙，升级龙巢能够提升在城市中的巨龙生命值的恢复速"
+"度"
 msgstr ""
-"龙巢可以查看龙的信息并强化巨龙，升级龙巢能够提升在城市中的巨龙生命值的恢复"
-"速度"
+"龙巢可以查看龙的信息并强化巨龙，升级龙巢能够提升在城市中的巨龙生命值的恢复速"
+"度"
 
 #: utils/Localize.lua:589
 msgid "每小时恢复龙的生命值"
@@ -8976,11 +8950,11 @@ msgstr ""
 
 #: utils/Localize.lua:594
 msgid ""
-"监狱有一定的几率捕获来袭的敌军，并能够使用特殊的道具折磨敌军，升级建筑能够"
-"获得更多的敌军关押时间"
+"监狱有一定的几率捕获来袭的敌军，并能够使用特殊的道具折磨敌军，升级建筑能够获"
+"得更多的敌军关押时间"
 msgstr ""
-"监狱有一定的几率捕获来袭的敌军，并能够使用特殊的道具折磨敌军，升级建筑能够"
-"获得更多的敌军关押时间"
+"监狱有一定的几率捕获来袭的敌军，并能够使用特殊的道具折磨敌军，升级建筑能够获"
+"得更多的敌军关押时间"
 
 #: utils/Localize.lua:595
 msgid "抓获几率"
@@ -8992,11 +8966,11 @@ msgstr "囚禁时间"
 
 #: utils/Localize.lua:598
 msgid ""
-"工具作坊提供建筑材料和科技材料的制作，每次制作都能随机获得一些材料，升级建"
-"筑能够提升每次制作材料的数量"
+"工具作坊提供建筑材料和科技材料的制作，每次制作都能随机获得一些材料，升级建筑"
+"能够提升每次制作材料的数量"
 msgstr ""
-"工具作坊提供建筑材料和科技材料的制作，每次制作都能随机获得一些材料，升级建"
-"筑能够提升每次制作材料的数量"
+"工具作坊提供建筑材料和科技材料的制作，每次制作都能随机获得一些材料，升级建筑"
+"能够提升每次制作材料的数量"
 
 #: utils/Localize.lua:599
 msgid "一次随机生产道具"
@@ -9016,11 +8990,9 @@ msgstr "最大招募人口数量"
 
 #: utils/Localize.lua:604
 msgid ""
-"贸易行会提供玩家之间资源和材料的交易，升级建筑能够提升运输车的总量和生产速"
-"度"
+"贸易行会提供玩家之间资源和材料的交易，升级建筑能够提升运输车的总量和生产速度"
 msgstr ""
-"贸易行会提供玩家之间资源和材料的交易，升级建筑能够提升运输车的总量和生产速"
-"度"
+"贸易行会提供玩家之间资源和材料的交易，升级建筑能够提升运输车的总量和生产速度"
 
 #: utils/Localize.lua:605
 msgid "最大运输小车数量"
@@ -9032,11 +9004,11 @@ msgstr "每小时运输小车"
 
 #: utils/Localize.lua:608
 msgid ""
-"铁匠铺能够将平时收集到的特殊材料打造成龙的装备，升级建筑能够提升装备打造的"
-"速度"
+"铁匠铺能够将平时收集到的特殊材料打造成龙的装备，升级建筑能够提升装备打造的速"
+"度"
 msgstr ""
-"铁匠铺能够将平时收集到的特殊材料打造成龙的装备，升级建筑能够提升装备打造的"
-"速度"
+"铁匠铺能够将平时收集到的特殊材料打造成龙的装备，升级建筑能够提升装备打造的速"
+"度"
 
 #: utils/Localize.lua:609
 msgid "打造装备速度"
@@ -9044,11 +9016,11 @@ msgstr "打造装备速度"
 
 #: utils/Localize.lua:611
 msgid ""
-"锯木工坊能够提升可建造的木工小屋数，并防止木材被敌方掠夺。周围建造木材小屋"
-"还可提升木材生产效率"
+"锯木工坊能够提升可建造的木工小屋数，并防止木材被敌方掠夺。周围建造木材小屋还"
+"可提升木材生产效率"
 msgstr ""
-"锯木工坊能够提升可建造的木工小屋数，并防止木材被敌方掠夺。周围建造木材小屋"
-"还可提升木材生产效率"
+"锯木工坊能够提升可建造的木工小屋数，并防止木材被敌方掠夺。周围建造木材小屋还"
+"可提升木材生产效率"
 
 #: utils/Localize.lua:612
 msgid "木工小屋数量"
@@ -9060,11 +9032,11 @@ msgstr "木材保护"
 
 #: utils/Localize.lua:615
 msgid ""
-"磨坊能够提升可建造的农夫小屋数，并防止粮食被敌方掠夺。周围建造农夫小屋还可"
-"提升粮食生产效率"
+"磨坊能够提升可建造的农夫小屋数，并防止粮食被敌方掠夺。周围建造农夫小屋还可提"
+"升粮食生产效率"
 msgstr ""
-"磨坊能够提升可建造的农夫小屋数，并防止粮食被敌方掠夺。周围建造农夫小屋还可"
-"提升粮食生产效率"
+"磨坊能够提升可建造的农夫小屋数，并防止粮食被敌方掠夺。周围建造农夫小屋还可提"
+"升粮食生产效率"
 
 #: utils/Localize.lua:616
 msgid "农夫小屋数量"
@@ -9076,11 +9048,11 @@ msgstr "粮食保护"
 
 #: utils/Localize.lua:619
 msgid ""
-"石匠工坊能够提升可建造的石料小屋数，并防止石料被敌方掠夺。周围建造石匠小屋"
-"还可提升石料生产效率"
+"石匠工坊能够提升可建造的石料小屋数，并防止石料被敌方掠夺。周围建造石匠小屋还"
+"可提升石料生产效率"
 msgstr ""
-"石匠工坊能够提升可建造的石料小屋数，并防止石料被敌方掠夺。周围建造石匠小屋"
-"还可提升石料生产效率"
+"石匠工坊能够提升可建造的石料小屋数，并防止石料被敌方掠夺。周围建造石匠小屋还"
+"可提升石料生产效率"
 
 #: utils/Localize.lua:620
 msgid "石匠小屋数量"
@@ -9092,11 +9064,11 @@ msgstr "石料保护"
 
 #: utils/Localize.lua:623
 msgid ""
-"铸造工坊能够提升可建造的矿工小屋数，并防止铁矿被敌方掠夺。周围建造矿工小屋"
-"还可提升铁矿生产效率"
+"铸造工坊能够提升可建造的矿工小屋数，并防止铁矿被敌方掠夺。周围建造矿工小屋还"
+"可提升铁矿生产效率"
 msgstr ""
-"铸造工坊能够提升可建造的矿工小屋数，并防止铁矿被敌方掠夺。周围建造矿工小屋"
-"还可提升铁矿生产效率"
+"铸造工坊能够提升可建造的矿工小屋数，并防止铁矿被敌方掠夺。周围建造矿工小屋还"
+"可提升铁矿生产效率"
 
 #: utils/Localize.lua:624
 msgid "矿工小屋数量"
@@ -9108,11 +9080,11 @@ msgstr "铁矿保护"
 
 #: utils/Localize.lua:627
 msgid ""
-"市政厅能够提升可建造的住宅数量。在市政厅完成政务可以获得额外的资源奖励。市"
-"政厅等级越高，奖励越高。"
+"市政厅能够提升可建造的住宅数量。在市政厅完成政务可以获得额外的资源奖励。市政"
+"厅等级越高，奖励越高。"
 msgstr ""
-"市政厅能够提升可建造的住宅数量。在市政厅完成政务可以获得额外的资源奖励。市"
-"政厅等级越高，奖励越高。"
+"市政厅能够提升可建造的住宅数量。在市政厅完成政务可以获得额外的资源奖励。市政"
+"厅等级越高，奖励越高。"
 
 #: utils/Localize.lua:628
 msgid "住宅数量"
@@ -9126,8 +9098,7 @@ msgstr "每次征收银币"
 msgid ""
 "资源仓库存放木材，石料，铁矿，粮食。建筑等级越高，每种资源存放的上限越大"
 msgstr ""
-"资源仓库能够存放木材，石料，铁矿，粮食。建筑等级越高，每种资源存放的上限越"
-"大"
+"资源仓库能够存放木材，石料，铁矿，粮食。建筑等级越高，每种资源存放的上限越大"
 
 #: utils/Localize.lua:634
 msgid "材料库房能够存储各种材料。建筑等级越高，每种材料的存放上限越高。"
@@ -9135,11 +9106,11 @@ msgstr "材料库房能够存储各种材料。建筑等级越高，每种材料
 
 #: utils/Localize.lua:637
 msgid ""
-"军帐提供出兵时的带兵上限，建筑等级越高，每次出兵和防御时可派出的部队人口上"
-"限越大。"
+"军帐提供出兵时的带兵上限，建筑等级越高，每次出兵和防御时可派出的部队人口上限"
+"越大。"
 msgstr ""
-"军帐提供出兵时的带兵上限，建筑等级越高，每次出兵和防御时可派出的部队人口上"
-"限越大。"
+"军帐提供出兵时的带兵上限，建筑等级越高，每次出兵和防御时可派出的部队人口上限"
+"越大。"
 
 #: utils/Localize.lua:638
 msgid "部队人口上限"
@@ -9163,11 +9134,11 @@ msgstr "每小时城民恢复速度"
 
 #: utils/Localize.lua:646
 msgid ""
-"将城民派往木工小屋获得持续的木材产出。建筑等级越高需要更多的城民，木材产出"
-"也会更高。"
+"将城民派往木工小屋获得持续的木材产出。建筑等级越高需要更多的城民，木材产出也"
+"会更高。"
 msgstr ""
-"将城民派往木工小屋获得持续的木材产出。建筑等级越高需要更多的城民，木材产出"
-"也会更高。"
+"将城民派往木工小屋获得持续的木材产出。建筑等级越高需要更多的城民，木材产出也"
+"会更高。"
 
 #: utils/Localize.lua:647
 msgid "每小时木材产量"
@@ -9175,11 +9146,11 @@ msgstr "每小时木材产量"
 
 #: utils/Localize.lua:649
 msgid ""
-"将城民派往农夫小屋获得持续的粮食产出。建筑等级越高需要更多的城民，粮食产出"
-"也会更高。"
+"将城民派往农夫小屋获得持续的粮食产出。建筑等级越高需要更多的城民，粮食产出也"
+"会更高。"
 msgstr ""
-"将城民派往农夫小屋获得持续的粮食产出。建筑等级越高需要更多的城民，粮食产出"
-"也会更高。"
+"将城民派往农夫小屋获得持续的粮食产出。建筑等级越高需要更多的城民，粮食产出也"
+"会更高。"
 
 #: utils/Localize.lua:650
 msgid "每小时粮食产量"
@@ -9187,11 +9158,11 @@ msgstr "每小时粮食产量"
 
 #: utils/Localize.lua:652
 msgid ""
-"将城民派往石匠小屋获得持续的石料产出。建筑等级越高需要更多的城民，石料产出"
-"也会更高。"
+"将城民派往石匠小屋获得持续的石料产出。建筑等级越高需要更多的城民，石料产出也"
+"会更高。"
 msgstr ""
-"将城民派往石匠小屋获得持续的石料产出。建筑等级越高需要更多的城民，石料产出"
-"也会更高。"
+"将城民派往石匠小屋获得持续的石料产出。建筑等级越高需要更多的城民，石料产出也"
+"会更高。"
 
 #: utils/Localize.lua:653
 msgid "每小时石料产量"
@@ -9199,11 +9170,11 @@ msgstr "每小时石料产量"
 
 #: utils/Localize.lua:655
 msgid ""
-"将城民派往矿工小屋获得持续的铁矿产出。建筑等级越高需要更多的城民，铁矿产出"
-"也会更高。"
+"将城民派往矿工小屋获得持续的铁矿产出。建筑等级越高需要更多的城民，铁矿产出也"
+"会更高。"
 msgstr ""
-"将城民派往矿工小屋获得持续的铁矿产出。建筑等级越高需要更多的城民，铁矿产出"
-"也会更高。"
+"将城民派往矿工小屋获得持续的铁矿产出。建筑等级越高需要更多的城民，铁矿产出也"
+"会更高。"
 
 #: utils/Localize.lua:656
 msgid "每小时铁矿产量"
@@ -9211,11 +9182,11 @@ msgstr "每小时铁矿产量"
 
 #: utils/Localize.lua:660
 msgid ""
-"联盟商店能够提供部分商城售卖的道具，联盟成员可以通过忠诚值来兑换。部分高级"
-"道具需要花费荣耀值购买后，才能兑换。提升建筑等级能解锁更多高级道具。"
+"联盟商店能够提供部分商城售卖的道具，联盟成员可以通过忠诚值来兑换。部分高级道"
+"具需要花费荣耀值购买后，才能兑换。提升建筑等级能解锁更多高级道具。"
 msgstr ""
-"联盟商店能够提供部分商城售卖的道具，联盟成员可以通过忠诚值来兑换。部分高级"
-"道具需要花费荣耀值购买后，才能兑换。提升建筑等级能解锁更多高级道具。"
+"联盟商店能够提供部分商城售卖的道具，联盟成员可以通过忠诚值来兑换。部分高级道"
+"具需要花费荣耀值购买后，才能兑换。提升建筑等级能解锁更多高级道具。"
 
 #: utils/Localize.lua:661
 msgid ""
@@ -9227,25 +9198,25 @@ msgstr ""
 
 #: utils/Localize.lua:662
 msgid ""
-"月门是通往王城的传送门，占领王城后，联盟每天可以获得大量的荣耀值。升级月门"
-"可以提升参加王城争夺战的部队数量。"
+"月门是通往王城的传送门，占领王城后，联盟每天可以获得大量的荣耀值。升级月门可"
+"以提升参加王城争夺战的部队数量。"
 msgstr "月门是通往王城的传送门，占领王城后，联盟每天可以获得大量的荣耀值。"
 
 #: utils/Localize.lua:663
 msgid ""
-"圣地消耗感知力预知联盟将要发生的危机，解决这些危机能够获得丰厚奖励。提升圣"
-"地等级能够提升感知力上限和恢复速度。"
+"圣地消耗感知力预知联盟将要发生的危机，解决这些危机能够获得丰厚奖励。提升圣地"
+"等级能够提升感知力上限和恢复速度。"
 msgstr ""
-"圣地消耗感知力预知联盟将要发生的危机，解决这些危机能够获得丰厚奖励。提升圣"
-"地等级能够提升感知力上限和恢复速度。"
+"圣地消耗感知力预知联盟将要发生的危机，解决这些危机能够获得丰厚奖励。提升圣地"
+"等级能够提升感知力上限和恢复速度。"
 
 #: utils/Localize.lua:664
 msgid ""
-"联盟宫殿是联盟的核心建筑,联盟盟主可以在这里给忠诚的拥护者颁发奖励.建筑等级"
-"越高,联盟的成员就越多。"
+"联盟宫殿是联盟的核心建筑,联盟盟主可以在这里给忠诚的拥护者颁发奖励.建筑等级越"
+"高,联盟的成员就越多。"
 msgstr ""
-"联盟宫殿是联盟的核心建筑,联盟盟主可以在这里给忠诚的拥护者颁发奖励.建筑等级"
-"越高,联盟的成员就越多。"
+"联盟宫殿是联盟的核心建筑,联盟盟主可以在这里给忠诚的拥护者颁发奖励.建筑等级越"
+"高,联盟的成员就越多。"
 
 #: utils/Localize.lua:668
 msgid "分裂的王国"
@@ -9324,8 +9295,7 @@ msgid "坚守"
 msgstr "坚守"
 
 #: utils/Localize.lua:681
-msgid ""
-"敌人进攻虽然猛烈，但他们长途奔袭不可能持续进攻，坚守过这波进攻就有希望"
+msgid "敌人进攻虽然猛烈，但他们长途奔袭不可能持续进攻，坚守过这波进攻就有希望"
 msgstr ""
 "敌人进攻虽然猛烈，但他们长途奔袭不可能持续进攻，坚守过这波进攻就有希望"
 
@@ -9403,11 +9373,11 @@ msgstr "贪婪者"
 
 #: utils/Localize.lua:692
 msgid ""
-"我们赢得了暂时的胜利，但黑龙军团留下的战利品却成为了其他领主争夺的目标，我"
-"们必须防止事态恶化"
+"我们赢得了暂时的胜利，但黑龙军团留下的战利品却成为了其他领主争夺的目标，我们"
+"必须防止事态恶化"
 msgstr ""
-"我们赢得了暂时的胜利，但黑龙军团留下的战利品却成为了其他领主争夺的目标，我"
-"们必须防止事态恶化"
+"我们赢得了暂时的胜利，但黑龙军团留下的战利品却成为了其他领主争夺的目标，我们"
+"必须防止事态恶化"
 
 #: utils/Localize.lua:694
 msgid "纷争又起"
@@ -9415,11 +9385,11 @@ msgstr "纷争又起"
 
 #: utils/Localize.lua:694
 msgid ""
-"大战刚刚结束，这些贪婪的领主就不顾联盟之约，公然抢夺战利品，这样的行为必须"
-"受到惩罚"
+"大战刚刚结束，这些贪婪的领主就不顾联盟之约，公然抢夺战利品，这样的行为必须受"
+"到惩罚"
 msgstr ""
-"大战刚刚结束，这些贪婪的领主就不顾联盟之约，公然抢夺战利品，这样的行为必须"
-"受到惩罚"
+"大战刚刚结束，这些贪婪的领主就不顾联盟之约，公然抢夺战利品，这样的行为必须受"
+"到惩罚"
 
 #: utils/Localize.lua:695
 msgid "旧仇恨"
@@ -9427,11 +9397,11 @@ msgstr "旧仇恨"
 
 #: utils/Localize.lua:695
 msgid ""
-"原来我们的强大早就遭来其他领主的不满，既然他们不顾联盟之约，我们也无需手下"
-"留情"
+"原来我们的强大早就遭来其他领主的不满，既然他们不顾联盟之约，我们也无需手下留"
+"情"
 msgstr ""
-"原来我们的强大早就遭来其他领主的不满，既然他们不顾联盟之约，我们也无需手下"
-"留情"
+"原来我们的强大早就遭来其他领主的不满，既然他们不顾联盟之约，我们也无需手下留"
+"情"
 
 #: utils/Localize.lua:696
 msgid "抉择"
@@ -9439,11 +9409,11 @@ msgstr "抉择"
 
 #: utils/Localize.lua:696
 msgid ""
-"公正终将得到伸张，如果他们放弃那些抢夺的财宝，那么我们就主动出击，给他们点"
-"教训"
+"公正终将得到伸张，如果他们放弃那些抢夺的财宝，那么我们就主动出击，给他们点教"
+"训"
 msgstr ""
-"公正终将得到伸张，如果他们不放弃那些抢夺的财宝，那么我们就主动出击，给他们"
-"点教训"
+"公正终将得到伸张，如果他们不放弃那些抢夺的财宝，那么我们就主动出击，给他们点"
+"教训"
 
 #: utils/Localize.lua:697
 msgid "大敌当前"
@@ -9451,11 +9421,11 @@ msgstr "大敌当前"
 
 #: utils/Localize.lua:697
 msgid ""
-"这些叛徒知道单打独斗不是我们的对手，竟然联合起来对抗我们。若想要得到联盟的"
-"统治权，必须要付出惨痛的代价"
+"这些叛徒知道单打独斗不是我们的对手，竟然联合起来对抗我们。若想要得到联盟的统"
+"治权，必须要付出惨痛的代价"
 msgstr ""
-"这些叛徒知道单打独斗不是我们的对手，竟然联合起来对抗我们。若想要得到联盟的"
-"统治权，必须要付出惨痛的代价"
+"这些叛徒知道单打独斗不是我们的对手，竟然联合起来对抗我们。若想要得到联盟的统"
+"治权，必须要付出惨痛的代价"
 
 #: utils/Localize.lua:698
 msgid "命运的火与悲"
@@ -9636,6 +9606,11 @@ msgstr "升级了%s"
 #, c-format
 msgid "%s正在前往采集Lv%d %s"
 msgstr "%s正在前往采集Lv%d %s"
+
+#: utils/Localize.lua:783
+#, c-format
+msgid "%s正在前往摧毁Lv%d %s"
+msgstr "%s正在前往摧毁Lv%d %s"
 
 #: utils/Localize.lua:784
 #, c-format
@@ -10582,57 +10557,57 @@ msgid "Batcatstudio游戏用户使用许可协议本地化ID"
 msgstr ""
 "《Batcatstudio游戏用户使用许可协议》\n"
 "\n"
-"1、特别提示当您使用本软件及成都蝠猫科技有限公司(以下简称“蝠猫科技”)的服务"
-"时,即表示您同意遵守本协议及蝠猫科技为提供相应服务制订的相关规范,遵守中国法"
-"律法规的规定。蝠猫科技在为您提供相关客户服务的前提是您能表明您是账号的所有"
-"人,这可能需要您提供相关信息(包括但不限于注册信息、历史密码等),如果用户没有"
-"牢记自己填写的注册资料及相关历史信息或未及时更新 相关注册资料,您的相关问题"
-"(包括但不限于密码找回等)将得不到解决,对此蝠猫科技不承担任何责任。\n"
+"1、特别提示当您使用本软件及成都蝠猫科技有限公司(以下简称“蝠猫科技”)的服务时,"
+"即表示您同意遵守本协议及蝠猫科技为提供相应服务制订的相关规范,遵守中国法律法"
+"规的规定。蝠猫科技在为您提供相关客户服务的前提是您能表明您是账号的所有人,这"
+"可能需要您提供相关信息(包括但不限于注册信息、历史密码等),如果用户没有牢记自"
+"己填写的注册资料及相关历史信息或未及时更新 相关注册资料,您的相关问题(包括但"
+"不限于密码找回等)将得不到解决,对此蝠猫科技不承担任何责任。\n"
 "\n"
 "2、个人信息授权\n"
-"2.1 用户同意访问个人基本信息包括:姓名、个人头像、性别、所属网络、用户 id、"
-"朋友列表以及任何我 与所有网名共享的内容;\n"
-"2.2 用户同意蝠猫科技可以通过电子邮件或其他方式向用户发送的商品促销或其他相"
-"关商业信息。\n"
+"2.1 用户同意访问个人基本信息包括:姓名、个人头像、性别、所属网络、用户 id、朋"
+"友列表以及任何我 与所有网名共享的内容;\n"
+"2.2 用户同意蝠猫科技可以通过电子邮件或其他方式向用户发送的商品促销或其他相关"
+"商业信息。\n"
 "2.3 用户在使用蝠猫科技服务过程中,必须遵循以下原则:\n"
 "2.3.1 遵守中国有关的法律和法规;\n"
 "2.3.2 不得为任何非法目的而使用网络服务系统;\n"
 "2.3.3 遵守所有与网络服务有关的网络协议、规定和程序;\n"
-"2.3.4 不得利用蝠猫科技服务系统进行任何可能对互联网的正常运转造成不利影响的"
-"行为;\n"
-"2.3.5 不得利用蝠猫科技服务系统传输任何骚扰性的、中伤他人的、辱骂性的、恐吓"
-"性的、庸俗淫秽的或其 他任何非法的信息资料;\n"
+"2.3.4 不得利用蝠猫科技服务系统进行任何可能对互联网的正常运转造成不利影响的行"
+"为;\n"
+"2.3.5 不得利用蝠猫科技服务系统传输任何骚扰性的、中伤他人的、辱骂性的、恐吓性"
+"的、庸俗淫秽的或其 他任何非法的信息资料;\n"
 "2.3.6 不得利用蝠猫科技服务系统进行任何不利于蝠猫科技的行为;\n"
-"2.3.7 就蝠猫科技及合作商业伙伴的服务、产品、业务咨询应采取相应机构提供的沟"
-"通渠道,不得在公众场 合发布有关蝠猫科技及相关服务的负面宣传。\n"
+"2.3.7 就蝠猫科技及合作商业伙伴的服务、产品、业务咨询应采取相应机构提供的沟通"
+"渠道,不得在公众场 合发布有关蝠猫科技及相关服务的负面宣传。\n"
 "2.3.8 如发现任何非法使用用户账号或账号出现安全漏洞的情况,应立即通告蝠猫科"
 "技。\n"
-"2.4 用户根据本协议获得的用户账号和密码属于蝠猫科技所有，用户对用户账号及密"
-"码不具有所有关系。当用户使用该用户账号和密码登录蝠猫科技的网站或接受其他蝠"
-"猫科技提供的服务项目时,  应遵守该网站或服务项目的相关服务协议及使用守则, 用"
-"户登录上述网站或接受上述服务项目时即视为对相关服务协议及使用守则的接受。\n"
+"2.4 用户根据本协议获得的用户账号和密码属于蝠猫科技所有，用户对用户账号及密码"
+"不具有所有关系。当用户使用该用户账号和密码登录蝠猫科技的网站或接受其他蝠猫科"
+"技提供的服务项目时,  应遵守该网站或服务项目的相关服务协议及使用守则, 用户登"
+"录上述网站或接受上述服务项目时即视为对相关服务协议及使用守则的接受。\n"
 "2.5 在不透露单个用户隐私资料的前提下,蝠猫科技有权对整个用户数据库进行技术分"
 "析并对已进行分析、 整理后的用户数据库进行商业上的利用。尽管蝠猫科技对用户的"
-"隐私权保护做了极大的努力,但是仍然不 能保证现有的安全技术措施使用户的技术信"
-"息等不受任何形式的损失。\n"
+"隐私权保护做了极大的努力,但是仍然不 能保证现有的安全技术措施使用户的技术信息"
+"等不受任何形式的损失。\n"
 "2.6  连续360天没有使用蝠猫科技所提供的服务（自用户最后一次使用服务之日起计"
-"算），则自第360天当天的24时起,蝠猫科技有权采取措施终止该用户继续使用服务，"
-"删除该用户帐号，包括但不限于注册信息、等级信息、角色信息、物品信息等一切与"
-"注册帐号相关的信息，且勿需对删除该帐号所带来的任何利益损失负责；\n"
+"算），则自第360天当天的24时起,蝠猫科技有权采取措施终止该用户继续使用服务，删"
+"除该用户帐号，包括但不限于注册信息、等级信息、角色信息、物品信息等一切与注册"
+"帐号相关的信息，且勿需对删除该帐号所带来的任何利益损失负责；\n"
 "\n"
 "3、服务变更、中断或终止\n"
-"3.1 发生下列情形之一时,蝠猫科技有权停止或中断线上游戏,并且不向任何人承担因"
-"此产生的任何责任; \n"
+"3.1 发生下列情形之一时,蝠猫科技有权停止或中断线上游戏,并且不向任何人承担因此"
+"产生的任何责任; \n"
 "3.1.1 对于蝠猫科技的网络设备进行必要的保养及施工;\n"
 "3.1.2 发生突发性的网络设备故障时;\n"
 "3.1.3 由于蝠猫科技所用的网络通信设备由于任何原因停止,无法提供服务时;\n"
 "3.1.4 由于不可抗力因素致使蝠猫科技无法提供线上游戏服务;\n"
-"3.1.5 应政府机关的命令终止运营，游戏软件本身的技术问题导致无法继续运营。不"
-"管由于任何原因终止运营,蝠猫科技均会提前一个月通 知用户,用户应采取相应措施自"
-"行处理游戏帐号(包括注销或停止使用该帐号)、游戏内虚拟物品等相关事宜。用户不"
-"得以任何原因要求蝠猫科技不得全面终止运营,也不得因全面终止运营而要求蝠猫科技"
-"承担任 何形式的赔偿或补偿责任(包括但不限于不再能继续使用游戏帐号、游戏内虚"
-"拟物品等)。\n"
+"3.1.5 应政府机关的命令终止运营，游戏软件本身的技术问题导致无法继续运营。不管"
+"由于任何原因终止运营,蝠猫科技均会提前一个月通 知用户,用户应采取相应措施自行"
+"处理游戏帐号(包括注销或停止使用该帐号)、游戏内虚拟物品等相关事宜。用户不得以"
+"任何原因要求蝠猫科技不得全面终止运营,也不得因全面终止运营而要求蝠猫科技承担"
+"任 何形式的赔偿或补偿责任(包括但不限于不再能继续使用游戏帐号、游戏内虚拟物品"
+"等)。\n"
 "3.1.6 除 2.1 条规定之外,蝠猫科技有权停止或更改各项服务内容或终止任一用户账"
 "户,但需做官方通知。无论任何情形, 蝠猫科技就停止或更改或终止用户账户所可能产"
 "生的不便或损害, 蝠猫科技对用户本人或任何第三人均不负任何损害赔偿责任。\n"
@@ -10643,45 +10618,45 @@ msgstr ""
 "\n"
 "5、用户禁止行为或活动\n"
 "5.1 禁止用户发生以下侵害本网络游戏公平性的行为,包括但不限于:\n"
-"5.1.1 使用除AppStore及蝠猫官方支付渠道之外的非官方支付渠道来购买游戏内置虚"
-"拟物品的行为。以及传播，教唆他人使用此类购买渠道的行为。\n"
+"5.1.1 使用除AppStore及蝠猫官方支付渠道之外的非官方支付渠道来购买游戏内置虚拟"
+"物品的行为。以及传播，教唆他人使用此类购买渠道的行为。\n"
 "5.1.2 使用任何外挂程序或游戏修改程序(本协议所称“外挂程序”是指独立于游戏软件"
 "之外的,能够在游戏 运行的同时影响游戏操作的所有程序,包括但不限于模拟键盘鼠标"
 "操作、改变操作环境、修改数据等一切 类型。如国家有关法律、法规及政府主管部门"
-"的规章或规范性文件规定的外挂定义与本协议有冲突,则以 法律、法规、部门规章或"
-"规范性文件规定的为准),对本网络游戏软件进行还原工程、编译、译码或修改, 包括"
-"但不限于修改本软件所使用的任何专有通讯协议、对动态随机存取内存(RAM)中资料进"
-"行修改或锁 定;\n"
-"5.1.3 使用异常的方法登录游戏、使用网络加速器等外挂软件或机器人程式等恶意破"
-"坏服务设施、扰乱正常服务秩序的行为;\n"
-"5.1.4 制作、传播或使用外挂、封包、加速软件,及其它各种作弊程序,或组织、教唆"
-"他人使用此类软件程 序,或销售此类软件程序而为私人或组织谋取经济利益;\n"
+"的规章或规范性文件规定的外挂定义与本协议有冲突,则以 法律、法规、部门规章或规"
+"范性文件规定的为准),对本网络游戏软件进行还原工程、编译、译码或修改, 包括但不"
+"限于修改本软件所使用的任何专有通讯协议、对动态随机存取内存(RAM)中资料进行修"
+"改或锁 定;\n"
+"5.1.3 使用异常的方法登录游戏、使用网络加速器等外挂软件或机器人程式等恶意破坏"
+"服务设施、扰乱正常服务秩序的行为;\n"
+"5.1.4 制作、传播或使用外挂、封包、加速软件,及其它各种作弊程序,或组织、教唆他"
+"人使用此类软件程 序,或销售此类软件程序而为私人或组织谋取经济利益;\n"
 "5.1.5 使用任何方式或方法,试图攻击提供游戏服务的相关服务器、路由器、交换机以"
 "及其他设备,以达到 非法获得或修改未经授权的数据资料、影响正常游戏服务,以及其"
 "他危害性目的的任何行为;\n"
 "5.1.6 利用线上游戏系统可能存在的技术缺陷或漏洞而以各种形式为自己及他人牟利"
 "(包括但不限于复制游 戏中的虚拟物品等)；\n"
-"5.1.7 利用反向工程、编译或反向编译、反汇编等技术手段制作软件对游戏进行分"
-"析、修改、攻击,最终达 到作弊的目的。\n"
+"5.1.7 利用反向工程、编译或反向编译、反汇编等技术手段制作软件对游戏进行分析、"
+"修改、攻击,最终达 到作弊的目的。\n"
 "5.1.8 非法贩卖游戏内置物品，如金龙币，资源等行为，一但发现，将永久封停。\n"
-"5.1.9 每个用户的通行证只限用户自己使用，用户创建的角色不得转让、买卖，禁止"
-"利用论坛、信函、B2B或C2B等网站对俱乐部进行买卖，为此带来的任何损失，官方不"
-"提供任何服务和帮助。\n"
+"5.1.9 每个用户的通行证只限用户自己使用，用户创建的角色不得转让、买卖，禁止利"
+"用论坛、信函、B2B或C2B等网站对俱乐部进行买卖，为此带来的任何损失，官方不提供"
+"任何服务和帮助。\n"
 "5.1.10 禁止使用冒充运营团队的游戏id，例如“游戏、GM、游戏客服”等容易误导和欺"
 "骗玩家的游戏id，一旦发现，将立刻永久封停。\n"
-"5.2 一旦蝠猫科技通过内部的监测程序发现或经其他用户举报而发现您有可能正在从"
-"事上述行为,则蝠猫科技有权采取相应的措施进行弥补,该措施包括但不限于限制您帐"
-"号和游戏中角色的登陆、限制您在游戏 中的活动、删除与复制有关的物品(包括复制"
-"出的虚拟物品和参与复制的虚拟物品)、封停或删除您的游戏 角色、帐号和要求您赔"
-"偿因您从事上述行为而给蝠猫科技造成的损失等。\n"
+"5.2 一旦蝠猫科技通过内部的监测程序发现或经其他用户举报而发现您有可能正在从事"
+"上述行为,则蝠猫科技有权采取相应的措施进行弥补,该措施包括但不限于限制您帐号和"
+"游戏中角色的登陆、限制您在游戏 中的活动、删除与复制有关的物品(包括复制出的虚"
+"拟物品和参与复制的虚拟物品)、封停或删除您的游戏 角色、帐号和要求您赔偿因您从"
+"事上述行为而给蝠猫科技造成的损失等。\n"
 "5.3 对反向工程(Reverse Engineering)、反向编译(Decompilation)、反汇编"
-"(Disassembly)的禁止。您不得对本“软件产品”进行反向工程(Reverse "
-"Engineering)、反向编译(Decompile)或反汇编(Disassemble),您亦同意放弃行 使适"
-"用法律允许上述活动之权利。\n"
+"(Disassembly)的禁止。您不得对本“软件产品”进行反向工程(Reverse Engineering)、"
+"反向编译(Decompile)或反汇编(Disassemble),您亦同意放弃行 使适用法律允许上述活"
+"动之权利。\n"
 "\n"
 "6、风险承担 用户同意使用蝠猫科技线上游戏软件是出于用户个人意愿,并愿自负任何"
-"风险,包括但不限 于其因执行或自行由官方网站下载游戏或资料图片而导致用户或其"
-"所使用相关 系统损害,或发生任何资料的流失等。\n"
+"风险,包括但不限 于其因执行或自行由官方网站下载游戏或资料图片而导致用户或其所"
+"使用相关 系统损害,或发生任何资料的流失等。\n"
 "\n"
 "7、免除责任\n"
 "7.1 蝠猫科技对任何直接、间接、偶然、特殊及继起的损害不负责任,这些损害可能来"
@@ -11089,11 +11064,9 @@ msgstr "强化战争沙漏"
 #: utils/Localize_item.lua:210
 #, c-format
 msgid ""
-"战败时无法被掠夺资源，但城墙会受到攻击。同时防御时的战损下降20%%，持续%d小"
-"时"
+"战败时无法被掠夺资源，但城墙会受到攻击。同时防御时的战损下降20%%，持续%d小时"
 msgstr ""
-"战败时无法被掠夺资源，但城墙会受到攻击。同时防御时的战损下降20%%，持续%d小"
-"时"
+"战败时无法被掠夺资源，但城墙会受到攻击。同时防御时的战损下降20%%，持续%d小时"
 
 #: utils/Localize_item.lua:211 utils/Localize_item.lua:212
 #: utils/Localize_item.lua:213
@@ -11105,8 +11078,8 @@ msgstr "减少25%%的维护费用，持续%d小时"
 #: utils/Localize_item.lua:216
 #, c-format
 msgid ""
-"敌方突袭成功后无法获得侦查情报，也无法抢到银币（仅对玩家本人有效，对协防玩"
-"家无效）持续%d小时"
+"敌方突袭成功后无法获得侦查情报，也无法抢到银币（仅对玩家本人有效，对协防玩家"
+"无效）持续%d小时"
 msgstr "敌方侦察成功后无法获得情报，持续%d小时"
 
 #: utils/Localize_item.lua:217 utils/Localize_item.lua:218
