@@ -150,7 +150,7 @@ function GameUIPVESendTroop:OnMoveInStage()
                     self.march_callback(dragonType,soldiers)
                     -- 确认派兵后关闭界面
                     self:LeftButtonClicked()
-                end,has_special_soldier and City:GetMaterialManager().MATERIAL_TYPE.SOLDIER,_("士兵"))
+                end,City:GetMaterialManager().MATERIAL_TYPE.SOLDIER,_("士兵"),not has_special_soldier)
             end
         end):align(display.RIGHT_CENTER,window.right-50,window.top-910):addTo(self:GetView())
 
