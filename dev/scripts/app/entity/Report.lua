@@ -411,10 +411,10 @@ end
 function Report:IsFromMe()
     local data = self:GetData()
     local report_type = self.type
-    if report_type == "strikeCity"
-        or report_type=="strikeVillage"
-        or report_type=="attackVillage" then
+    if report_type == "strikeCity" then
         return true
+    elseif report_type=="strikeVillage" or report_type=="attackVillage" then
+        return data.attackPlayerData.id == self.player_id
     elseif report_type=="villageBeStriked"
         or report_type=="cityBeStriked" then
         return false

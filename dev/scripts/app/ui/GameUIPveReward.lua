@@ -107,7 +107,7 @@ function GameUIPveReward:GetListItem(index)
                     GameGlobalUI:showTips(_("获得奖励"), table.concat(str, ", "))
                     app:GetAudioManager():PlayeEffectSoundWithKey("BUY_ITEM")
                 end)
-            end)
+            end, stage.rewards)
         end)
 
     bg.label = UIKit:ttfLabel({
@@ -127,9 +127,16 @@ function GameUIPveReward:RefreshUI()
         v:getContent().label:setVisible(not not User:IsStageRewardedByName(stage_name))
     end
 end
-function GameUIPveReward:CheckMaterials(callback)
+function GameUIPveReward:CheckMaterials(callback, rewards)
+    local materials_map = {}
+    for _,item in ipairs(string.split(rewards, ",")) do
+        local type,name,count = unpack(string.split(item, ":"))
+        if type == "soldierMaterials" then
+            materials_map[name] = true
+        end
+    end
     local material_man = City:GetMaterialManager()
-    if material_man:CheckOutOfRangeByType(material_man.MATERIAL_TYPE.SOLDIER) then
+    if material_man:CheckOutOfRangeByType(material_man.MATERIAL_TYPE.SOLDIER, materials_map) then
         UIKit:showMessageDialogWithParams({
             title = _("提示"),
             content = _("当前材料库房中的士兵材料已满，你可能无法获得材料奖励。是否仍要获取？"),

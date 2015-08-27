@@ -708,17 +708,63 @@ function UIKit:showMessageDialogWithParams(params)
     return dialog
 end
 -- 可能得到材料的派兵行为检查
-function UIKit:showSendTroopMessageDialog(attack_func,material_type,effect_str)
-    if City:GetMaterialManager():CheckOutOfRangeByType(material_type) then
+function UIKit:showSendTroopMessageDialog(attack_func,material_type,effect_str,isNotEffection)
+    -- 特殊提示，医院爆满，特殊兵种材料爆满
+    local is_hospital_overhead = City:GetFirstBuildingByType("hospital"):IsWoundedSoldierOverhead()
+    local is_material_overhead = City:GetMaterialManager():CheckOutOfRangeByType(material_type)
+    if is_material_overhead and not isNotEffection or is_hospital_overhead then
         local dialog = self:showMessageDialogWithParams({
             title = _("提示"),
-            content = _(string.format(_("当前材料库房中的%s材料已满，你可能无法获得此次战斗所得的材料奖励。是否仍要派兵？"),effect_str)),
             ok_callback = attack_func,
             ok_btn_images = {normal = "red_btn_up_148x58.png",pressed = "red_btn_down_148x58.png"},
             ok_string = _("强行派兵"),
             cancel_callback = function () end,
             cancel_btn_images = {normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"}
         })
+        dialog:HideTipBg()
+        local body = dialog:GetBody()
+        local hospital_bg = WidgetUIBackGround.new({width = 332 ,height = 96},WidgetUIBackGround.STYLE_TYPE.STYLE_5):addTo(body):pos(236,220)
+        display.newSprite("hospital.png"):addTo(hospital_bg):align(display.LEFT_CENTER, 16, hospital_bg:getContentSize().height/2):scale(0.35)
+        self:ttfLabel({
+            text = _("医院"),
+            size = 20,
+            color = 0x403c2f
+        }):align(display.LEFT_CENTER, 110, 65)
+            :addTo(hospital_bg)
+        local label_1
+        if is_hospital_overhead then
+            display.newSprite("icon_warning_22x42.png"):addTo(hospital_bg):align(display.CENTER, 75, hospital_bg:getContentSize().height/2 + 15)
+            label_1 = _("爆满,将无法接纳伤兵")
+        else
+            label_1 = _("正常")
+        end
+        self:ttfLabel({
+            text = label_1,
+            size = 18,
+            color = is_hospital_overhead and 0x7e0000 or 0x007c23
+        }):align(display.LEFT_CENTER, 110, 30)
+            :addTo(hospital_bg)
+        local materialDepot_bg = WidgetUIBackGround.new({width = 332 ,height = 96},WidgetUIBackGround.STYLE_TYPE.STYLE_5):addTo(body):pos(236,100)
+        display.newSprite("materialDepot.png"):addTo(materialDepot_bg):align(display.LEFT_CENTER, 16, materialDepot_bg:getContentSize().height/2):scale(0.35)
+        self:ttfLabel({
+            text = _("材料库房"),
+            size = 20,
+            color = 0x403c2f
+        }):align(display.LEFT_CENTER, 110, 65)
+            :addTo(materialDepot_bg)
+        local label_1
+        if is_material_overhead then
+            display.newSprite("icon_warning_22x42.png"):addTo(materialDepot_bg):align(display.CENTER, 75, materialDepot_bg:getContentSize().height/2 + 15)
+            label_1 = string.format(_("%s材料已满"),effect_str)
+        else
+            label_1 = _("正常")
+        end
+        self:ttfLabel({
+            text = label_1,
+            size = 18,
+            color = is_material_overhead and 0x7e0000 or 0x007c23
+        }):align(display.LEFT_CENTER, 110, 30)
+            :addTo(materialDepot_bg)
     else
         attack_func()
     end
@@ -1368,6 +1414,8 @@ function UIKit:CreateVipExpBar()
     end
     return ExpBar
 end
+
+
 
 
 

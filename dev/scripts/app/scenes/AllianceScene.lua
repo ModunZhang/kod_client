@@ -295,6 +295,104 @@ function AllianceScene:CheckCanMoveAllianceObject(x, y, out_x, out_y)
     end
 end
 
+
+function AllianceScene:onEnterTransitionFinish()
+    AllianceScene.super.onEnterTransitionFinish(self)
+    self:PlayEffectIf()
+end
+
+local EFFECT_TAG = 12321
+function AllianceScene:PlayEffectIf()
+    if math.floor(app.timer:GetServerTime()) % 2 == 1 then return end
+    self:GetScreenLayer():removeAllChildren()
+    local terrain = self:GetAlliance():Terrain()
+    if terrain == "iceField" then
+        local emitter = cc.ParticleRain:createWithTotalParticles(100)
+            :addTo(self:GetScreenLayer(), 1, EFFECT_TAG):pos(display.cx-80, display.height)
+        emitter:setLife(7)
+        emitter:setStartSize(10)
+        emitter:setStartSizeVar(10)
+        emitter:setRadialAccel(10)
+        emitter:setRadialAccelVar(50)
+        emitter:setRotationIsDir(true)
+        emitter:setStartSpinVar(1000)
+        emitter:setEndSpinVar(1000)
+        emitter:setStartColor(cc.c4f(1,1,1,0.8))
+        emitter:setStartColorVar(cc.c4f(0,0,0,0.2))
+        emitter:setEndColor(cc.c4f(1,1,1,0))
+        emitter:setEmissionRate(emitter:getTotalParticles() / emitter:getLife())
+        emitter:setTexture(cc.Director:getInstance():getTextureCache():addImage("snow.png"))
+        emitter:updateWithNoTime()
+        for i = 1, 500 do
+            emitter:update(0.01)
+        end
+    elseif terrain == "grassLand" then
+        local emitter = cc.ParticleRain:createWithTotalParticles(100)
+            :addTo(self:GetScreenLayer(), 1, EFFECT_TAG):pos(display.cx + 80, display.height)
+        emitter:setPosVar(cc.p(display.cx,0))
+        emitter:setGravity(cc.p(-10,-10))
+        emitter:setStartSize(30)
+        emitter:setStartSizeVar(30)
+        emitter:setEndSize(30)
+        emitter:setEndSizeVar(30)
+        emitter:setLife(0.5)
+        emitter:setSpeed(1800)
+        emitter:setSpeedVar(100)
+        emitter:setAngle(-100)
+        emitter:setAngleVar(0)
+        emitter:setRadialAccel(100)
+        emitter:setRadialAccelVar(0)
+        emitter:setTangentialAccel(0)
+        emitter:setTangentialAccelVar(0)
+        emitter:setRotationIsDir(false)
+        emitter:setStartSpin(10)
+        emitter:setEndSpin(10)
+        emitter:setStartColor(cc.c4f(1,1,1,0.9))
+        emitter:setStartColorVar(cc.c4f(0,0,0,0.1))
+        emitter:setEndColor(cc.c4f(1,1,1,0.5))
+        emitter:setEmissionRate(emitter:getTotalParticles() / emitter:getLife())
+        emitter:setTexture(cc.Director:getInstance():getTextureCache():addImage("rain.png"))
+        emitter:updateWithNoTime()
+        for i = 1, 500 do
+            emitter:update(0.01)
+        end
+    elseif terrain == "desert" then
+        local emitter = cc.ParticleSystemQuad:createWithTotalParticles(50)
+            :addTo(self:GetScreenLayer(), 1, EFFECT_TAG):pos(0, display.cy)
+        emitter:setDuration(-1)
+        emitter:setPositionType(2)
+        emitter:setPosVar(cc.p(0, display.height - 200))
+        emitter:setGravity(cc.p(0, -100))
+        emitter:setRotationIsDir(true)
+        emitter:setEmitterMode(0)
+        emitter:setLife(10)
+        emitter:setLifeVar(5)
+        emitter:setStartSize(450)
+        emitter:setStartSizeVar(150)
+        emitter:setEndSize(450)
+        emitter:setEndSizeVar(150)
+        emitter:setSpeed(1100)
+        emitter:setSpeedVar(100)
+        emitter:setStartSpinVar(90)
+        emitter:setEndSpinVar(-1)
+        emitter:setTangentialAccelVar(200)
+        emitter:setEmissionRate(100)
+        emitter:setStartColor(cc.c4f(1))
+        emitter:setEndColor(cc.c4f(0))
+        emitter:setBlendAdditive(true)
+        emitter:setBlendFunc(gl.ONE, gl.ONE_MINUS_SRC_COLOR)
+        emitter:setTexture(cc.Director:getInstance():getTextureCache():addImage("sand.png"))
+        emitter:schedule(function()
+            emitter:setLife(15)
+            emitter:setEmissionRate(50 + math.random(100))
+        end, 2 + math.random(3))
+        for i = 1, 500 do
+            emitter:update(0.01)
+        end
+    end
+end
+
+
 return AllianceScene
 
 

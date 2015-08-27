@@ -69,8 +69,8 @@ function CityScene:PlayBackgroundMusic()
     -- end, 113 + 30)
 end
 function CityScene:ChangeTerrain()
-    -- self:GetSceneLayer():ChangeTerrain()
-    -- self:PlayEffectIf()
+-- self:GetSceneLayer():ChangeTerrain()
+-- self:PlayEffectIf()
 end
 function CityScene:EnterEditMode()
     self:GetSceneLayer():EnterEditMode()
@@ -154,15 +154,13 @@ end
 
 function CityScene:onEnterTransitionFinish()
     CityScene.super.onEnterTransitionFinish(self)
-    self:GetScreenLayer():performWithDelay(function()
-        self:PlayEffectIf()
-    end, math.random(3))
+    self:PlayEffectIf()
 end
 
 
 local EFFECT_TAG = 12321
 function CityScene:PlayEffectIf()
-    if math.floor(app.timer:GetServerTime()) % 2 == 1 then return end
+    -- if math.floor(app.timer:GetServerTime()) % 2 == 1 then return end
     self:GetScreenLayer():removeAllChildren()
     local terrain = self:GetCity():GetUser():Terrain()
     if terrain == "iceField" then
@@ -182,6 +180,9 @@ function CityScene:PlayEffectIf()
         emitter:setEmissionRate(emitter:getTotalParticles() / emitter:getLife())
         emitter:setTexture(cc.Director:getInstance():getTextureCache():addImage("snow.png"))
         emitter:updateWithNoTime()
+        for i = 1, 500 do
+            emitter:update(0.01)
+        end
     elseif terrain == "grassLand" then
         local emitter = cc.ParticleRain:createWithTotalParticles(100)
             :addTo(self:GetScreenLayer(), 1, EFFECT_TAG):pos(display.cx + 80, display.height)
@@ -209,10 +210,48 @@ function CityScene:PlayEffectIf()
         emitter:setEmissionRate(emitter:getTotalParticles() / emitter:getLife())
         emitter:setTexture(cc.Director:getInstance():getTextureCache():addImage("rain.png"))
         emitter:updateWithNoTime()
+        for i = 1, 500 do
+            emitter:update(0.01)
+        end
+    elseif terrain == "desert" then
+        local emitter = cc.ParticleSystemQuad:createWithTotalParticles(50)
+            :addTo(self:GetScreenLayer(), 1, EFFECT_TAG):pos(0, display.cy)
+        emitter:setDuration(-1)
+        emitter:setPositionType(2)
+        emitter:setPosVar(cc.p(0, display.height - 200))
+        emitter:setGravity(cc.p(0, -100))
+        emitter:setRotationIsDir(true)
+        emitter:setEmitterMode(0)
+        emitter:setLife(10)
+        emitter:setLifeVar(5)
+        emitter:setStartSize(450)
+        emitter:setStartSizeVar(150)
+        emitter:setEndSize(450)
+        emitter:setEndSizeVar(150)
+        emitter:setSpeed(1100)
+        emitter:setSpeedVar(100)
+        emitter:setStartSpinVar(90)
+        emitter:setEndSpinVar(-1)
+        emitter:setTangentialAccelVar(200)
+        emitter:setEmissionRate(100)
+        emitter:setStartColor(cc.c4f(1))
+        emitter:setEndColor(cc.c4f(0))
+        emitter:setBlendAdditive(true)
+        emitter:setBlendFunc(gl.ONE, gl.ONE_MINUS_SRC_COLOR)
+        emitter:setTexture(cc.Director:getInstance():getTextureCache():addImage("sand.png"))
+        emitter:schedule(function()
+            emitter:setLife(15)
+            emitter:setEmissionRate(50 + math.random(100))
+        end, 2 + math.random(3))
+        for i = 1, 500 do
+            emitter:update(0.01)
+        end
     end
 end
 
 return CityScene
+
+
 
 
 
