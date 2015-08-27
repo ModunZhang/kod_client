@@ -572,8 +572,10 @@ function GameUIActivityRewardNew:ui_FIRST_IN_PURGURE()
                 emitter:setLife(math.random(1) + 1)
                 emitter:setEmissionRate(1)
                 emitter:addTo(sp):pos(size.width/2,size.height/2)
+                for i = 1, index * 25 do
+                    emitter:update(0.01)
+                end
             end))
-            table.insert(acts, cc.DelayTime:create(0.3))
             UIKit:addTipsToNode(sp,Localize_item.item_name[reward_name] .. " x" .. count,self)
             x = x  + 110 + 35
             if index % 2 == 0 then
