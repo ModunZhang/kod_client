@@ -16,18 +16,22 @@ function HospitalSprite:ctor(city_layer, entity, city)
     HospitalSprite.super.ctor(self, city_layer, entity, city)
     entity:AddHospitalListener(self)
     display.newNode():addTo(self):schedule(function()
-        if self:GetEntity():IsUnlocked() then
-            if self:GetEntity():BelongCity():GetSoldierManager():HasAnyWoundedSoldiers() then
-                self:PlayWoundedSoldiersAni()
-            elseif self:getChildByTag(WOUNDED_TAG) then
-                self:removeChildByTag(WOUNDED_TAG)
-            end
-        end
+        self:CheckEvent()
     end, 1)
+    self:CheckEvent()
 end
 function HospitalSprite:RefreshSprite()
     HospitalSprite.super.RefreshSprite(self)
     self:DoAni()
+end
+function HospitalSprite:CheckEvent()
+    if self:GetEntity():IsUnlocked() then
+        if self:GetEntity():BelongCity():GetSoldierManager():HasAnyWoundedSoldiers() then
+            self:PlayWoundedSoldiersAni()
+        elseif self:getChildByTag(WOUNDED_TAG) then
+            self:removeChildByTag(WOUNDED_TAG)
+        end
+    end
 end
 function HospitalSprite:DoAni()
     if self:GetEntity():IsUnlocked() then
@@ -50,12 +54,17 @@ end
 function HospitalSprite:PlayWoundedSoldiersAni()
     if not self:getChildByTag(WOUNDED_TAG) then
         local x,y = self:GetSprite():getPosition()
-        heal():addTo(self, 1, WOUNDED_TAG):pos(x-30,y-80)
+        local emitter = heal():addTo(self, 1, WOUNDED_TAG):pos(x-30,y-80)
+        -- for i = 1, 500 do
+        --     emitter:update(0.01)
+        -- end
     end
 end
 
 
 return HospitalSprite
+
+
 
 
 
