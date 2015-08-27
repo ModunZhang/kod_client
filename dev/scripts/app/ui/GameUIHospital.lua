@@ -201,8 +201,8 @@ function GameUIHospital:CreateHealAllSoldierItem()
         :addTo(self.treate_all_soldiers_item)
     self.treat_all_button = btn_bg.button
 
-    self.treat_all_now_button:setButtonEnabled(self.city:GetSoldierManager():GetTotalTreatSoldierCount()>0)
-    self.treat_all_button:setButtonEnabled(self.city:GetSoldierManager():GetTotalTreatSoldierCount()>0)
+    self.treat_all_now_button:setButtonEnabled(self.city:GetSoldierManager():GetTotalTreatSoldierCitizen()>0)
+    self.treat_all_button:setButtonEnabled(self.city:GetSoldierManager():GetTotalTreatSoldierCitizen()>0)
     -- 立即治愈所需金龙币
     display.newSprite("gem_icon_62x61.png", bg_size.width/2 - 260, 40):addTo(self.treate_all_soldiers_item):setScale(0.5)
     self.heal_now_need_gems_label = cc.ui.UILabel.new({
@@ -378,11 +378,11 @@ end
 
 -- 设置伤兵比例条
 function GameUIHospital:SetProgressCasualtyRate()
-    self.heal_layer.ProgressTimer:setPercentage(self.city:GetSoldierManager():GetTotalTreatSoldierCount()/self.building:GetMaxCasualty() * 100)
+    self.heal_layer.ProgressTimer:setPercentage(self.city:GetSoldierManager():GetTotalTreatSoldierCitizen()/self.building:GetMaxCasualty() * 100)
 end
 -- 设置伤兵比例条文本框
 function GameUIHospital:SetProgressCasualtyRateLabel()
-    self.heal_layer.casualty_rate_label:setString(string.formatnumberthousands(self.city:GetSoldierManager():GetTotalTreatSoldierCount()).."/"..string.formatnumberthousands(self.building:GetMaxCasualty()))
+    self.heal_layer.casualty_rate_label:setString(string.formatnumberthousands(self.city:GetSoldierManager():GetTotalTreatSoldierCitizen()).."/"..string.formatnumberthousands(self.building:GetMaxCasualty()))
 end
 
 function GameUIHospital:CresteCasualtySoldiersListView()
@@ -533,8 +533,8 @@ function GameUIHospital:OnTreatSoliderCountChanged(soldier_manager, treat_soldie
         end
     end )
 
-    self.treat_all_now_button:setButtonEnabled(self.city:GetSoldierManager():GetTotalTreatSoldierCount()>0)
-    self.treat_all_button:setButtonEnabled(self.city:GetSoldierManager():GetTotalTreatSoldierCount()>0)
+    self.treat_all_now_button:setButtonEnabled(self.city:GetSoldierManager():GetTotalTreatSoldierCitizen()>0)
+    self.treat_all_button:setButtonEnabled(self.city:GetSoldierManager():GetTotalTreatSoldierCitizen()>0)
 
 
 end
