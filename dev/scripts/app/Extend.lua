@@ -18,6 +18,7 @@ end
 for k,v in pairs(jpg_rgb888) do
     display.setTexturePixelFormat(k, v)
 end
+display.setTexturePixelFormat("fte_background.jpg", cc.TEXTURE2_D_PIXEL_FORMAT_RG_B888)
 -- 4444
 for i,v in ipairs{
     "emoji.png"

@@ -89,7 +89,7 @@ function GameUISetting:BuildUI()
 		x = x + 30 + 112
 	end
 	local version_info = string.format("Dragonfall %s (%s)", ext.getAppVersion(), app.client_tag or "0")
-	if  CONFIG_IS_DEBUG or device.platform == 'mac' then
+	if  CONFIG_IS_NOT_UPDATE or device.platform == 'mac' then
 		local __debugVer = require("debug_version")
 		version_info = string.format("Dragonfall %s (%s)", ext.getAppVersion(), __debugVer)
 	end
@@ -110,7 +110,7 @@ function GameUISetting:OnButtonClicked(button)
 	elseif tag == 3 then
 		UIKit:newGameUI("GameUISettingLanguage"):AddToCurrentScene(true)
 	elseif tag == 4 then
-		if CONFIG_IS_DEBUG then
+		if CONFIG_IS_NOT_UPDATE then
 			UIKit:newGameUI('GameUIShop', City):AddToCurrentScene(true)
 		else
 			UIKit:newGameUI("GameUITips"):AddToCurrentScene(true)
