@@ -180,7 +180,7 @@ function CityScene:PlayEffectIf()
         emitter:setEmissionRate(emitter:getTotalParticles() / emitter:getLife())
         emitter:setTexture(cc.Director:getInstance():getTextureCache():addImage("snow.png"))
         emitter:updateWithNoTime()
-        for i = 1, 500 do
+        for i = 1, 1000 do
             emitter:update(0.01)
         end
     elseif terrain == "grassLand" then
@@ -210,7 +210,7 @@ function CityScene:PlayEffectIf()
         emitter:setEmissionRate(emitter:getTotalParticles() / emitter:getLife())
         emitter:setTexture(cc.Director:getInstance():getTextureCache():addImage("rain.png"))
         emitter:updateWithNoTime()
-        for i = 1, 500 do
+        for i = 1, 1000 do
             emitter:update(0.01)
         end
     elseif terrain == "desert" then
@@ -243,7 +243,7 @@ function CityScene:PlayEffectIf()
             emitter:setLife(15)
             emitter:setEmissionRate(50 + math.random(100))
         end, 2 + math.random(3))
-        for i = 1, 500 do
+        for i = 1, 1000 do
             emitter:update(0.01)
         end
     end
