@@ -362,7 +362,7 @@ function GameUIPveAttackFte:PormiseOfFte()
                     display.getRunningScene():GetSceneLayer():MoveAirship(true)
                 end
                 local is_show = false
-                UIKit:newGameUI("GameUIReplayNew", self:DecodeReport(report, dragon, soldiers), function()
+                UIKit:newGameUI(self.pve_name == "1_1" and "GameUIReplayFte" or "GameUIReplayNew", self:DecodeReport(report, dragon, soldiers), function()
                     if not is_show then
                         is_show = true
                         UIKit:newGameUI("GameUIPveSummary", param):AddToCurrentScene(true)
@@ -383,7 +383,7 @@ function GameUIPveAttackFte:PormiseOfFte()
     return UIKit:PromiseOfOpen("GameUIPVEFteSendTroop")
         :next(function(ui)
             self:GetFteLayer():removeFromParent()
-            return ui:PormiseOfFte()
+            return ui:PormiseOfFte(self.pve_name == "1_1")
         end):next(function()
         return UIKit:PromiseOfClose("GameUIPveAttackFte")
         end):next(function()
