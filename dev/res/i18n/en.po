@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: dragonfall\n"
-"POT-Creation-Date: 2015-08-27 17:31+0800\n"
-"PO-Revision-Date: 2015-08-27 17:45+0800\n"
+"POT-Creation-Date: 2015-08-27 20:33+0800\n"
+"PO-Revision-Date: 2015-08-27 20:33+0800\n"
 "Last-Translator: gaozhou <gaozhou.f@qq.com>\n"
 "Language-Team: \n"
 "Language: en\n"
@@ -1990,11 +1990,11 @@ msgstr "Reject"
 msgid "同意"
 msgstr "Approve"
 
-#: ui/GameGlobalUIUtils.lua:97 ui/GameGlobalUIUtils.lua:102
+#: ui/GameGlobalUIUtils.lua:102 ui/GameGlobalUIUtils.lua:107
 msgid "建筑升级完成"
 msgstr "Upgrade building complete"
 
-#: ui/GameGlobalUIUtils.lua:107
+#: ui/GameGlobalUIUtils.lua:112
 msgid "小屋升级完成"
 msgstr "Upgrade cabin complete"
 
@@ -9773,6 +9773,11 @@ msgstr "has upgraded the %s"
 #, c-format
 msgid "%s正在前往采集Lv%d %s"
 msgstr "%s is going to occupy the Lv%d %s"
+
+#: utils/Localize.lua:783
+#, c-format
+msgid "%s正在前往摧毁Lv%d %s"
+msgstr "%s is going to destroy the Lv%d %s"
 
 #: utils/Localize.lua:784
 #, c-format
