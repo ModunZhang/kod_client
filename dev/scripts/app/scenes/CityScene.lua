@@ -160,7 +160,7 @@ end
 
 local EFFECT_TAG = 12321
 function CityScene:PlayEffectIf()
-    -- if math.floor(app.timer:GetServerTime()) % 2 == 1 then return end
+    if math.floor(app.timer:GetServerTime()) % 2 == 1 then return end
     self:GetScreenLayer():removeAllChildren()
     local terrain = self:GetCity():GetUser():Terrain()
     if terrain == "iceField" then
