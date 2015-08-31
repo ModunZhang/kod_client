@@ -1,4 +1,4 @@
-local HOUSES = GameDatas.PlayerInitData.houses[1]
+local intInit = GameDatas.PlayerInitData.intInit
 local config_productionTechs = GameDatas.ProductionTechs.productionTechs
 local Localize = import("..utils.Localize")
 local RecommendedMission = import(".RecommendedMission")
@@ -696,7 +696,7 @@ local BUILDING_MAP = {
 }
 function City:GetMaxHouseCanBeBuilt(house_type)
     --基础值
-    local max = HOUSES[house_type]
+    local max = intInit.eachHouseInitCount.value
     for _, v in pairs(self:GetBuildingByType(BUILDING_MAP[house_type])) do
         max = max + v:GetMaxHouseNum()
     end
