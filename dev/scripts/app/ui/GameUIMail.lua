@@ -1500,13 +1500,18 @@ function GameUIMail:ShowRewardMailDetails(mail)
             shadow = true
         }))
             :addTo(body):align(display.CENTER, size.width - 92, 42)
-            :onButtonClicked(function(event)
+        get_btn:onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
                     GameGlobalUI:DisableTips()
                     NetManager:getMailRewardsPromise(mail.id):done(function ()
                         GameGlobalUI:EnableTips()
                         GameGlobalUI:showTips(_("提示"),_("领取成功"))
-                        dialog:LeftButtonClicked()
+                        UIKit:ttfLabel({
+                            text = _("已领取"),
+                            size = 22,
+                            color = 0x403c2f,
+                        }):addTo(body):align(display.CENTER, size.width - 92, 42)
+                        get_btn:hide()
                     end):always(function ()
                         GameGlobalUI:EnableTips()
                     end)
@@ -2514,6 +2519,7 @@ function GameUIMail:GetEnemyAllianceTag(report)
 end
 
 return GameUIMail
+
 
 
 
