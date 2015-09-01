@@ -256,9 +256,7 @@ function MyCityScene:onEnterTransitionFinish()
     if ext.gamecenter.isGameCenterEnabled() and not ext.gamecenter.isAuthenticated() then
         ext.gamecenter.authenticate(false)
     end
-    if not app:GetChatManager():isChannelInited('global') then
-        app:GetChatManager():FetchAllChatMessageFromServer('global')
-    end
+    app:GetChatManager():FetMessageFirstStartGame()
     if Alliance_Manager:HasBeenJoinedAlliance() then
         return
     end
