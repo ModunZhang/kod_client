@@ -399,6 +399,7 @@ function ChatManager:FetMessageFirstStartGame()
     if not self:isChannelInited('global') then
         self:FetchAllChatMessageFromServer('global')
     end
+    local alliance = Alliance_Manager:GetMyAlliance()
     if not alliance:IsDefault() then
         if not self:isChannelInited("alliance") then
             self:FetchAllChatMessageFromServer('alliance')
