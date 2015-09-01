@@ -531,7 +531,7 @@ local logic_event_map = {
                 for i,v in ipairs(response) do
                     if v[1] and string.find(v[1],"reports") then
                         if v[2] ~= json.null then
-                            MailManager:IncreaseUnReadReportNum(1)
+                            MailManager:IncreaseUnReadReportNum(1,v[2])
                         end
                     end
                 end
@@ -1097,6 +1097,12 @@ function NetManager:getDeleteMailsPromise(mailIds)
     return get_blocking_request_promise("logic.playerHandler.deleteMails", {
         mailIds = mailIds
     }, "删除邮件失败!"):done(get_response_delete_mail_msg)
+end
+-- 从邮件获取奖励
+function NetManager:getMailRewardsPromise(mailId)
+    return get_blocking_request_promise("logic.playerHandler.getMailRewards", {
+        mailId = mailId
+    }, "NetManager失败!"):done(get_response_mail_msg)
 end
 -- 发送联盟邮件
 function NetManager:getSendAllianceMailPromise(title, content)
