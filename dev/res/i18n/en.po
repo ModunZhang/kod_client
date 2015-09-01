@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: dragonfall\n"
-"POT-Creation-Date: 2015-09-01 22:57+0800\n"
-"PO-Revision-Date: 2015-09-01 22:57+0800\n"
+"POT-Creation-Date: 2015-09-01 23:58+0800\n"
+"PO-Revision-Date: 2015-09-01 23:58+0800\n"
 "Last-Translator: gaozhou <gaozhou.f@qq.com>\n"
 "Language-Team: \n"
 "Language: en\n"
@@ -5657,11 +5657,11 @@ msgid ""
 "在场上,负方则会失去继续作战的机会"
 msgstr "***"
 
-#: ui/GameUIReplayFte.lua:27
+#: ui/GameUIReplayFte.lua:28
 msgid "士气受损"
 msgstr "***"
 
-#: ui/GameUIReplayFte.lua:27
+#: ui/GameUIReplayFte.lua:28
 msgid ""
 "当兵中受到攻击时,会根据损失的单位数量降低士气,当士气低于%20时,无论该兵种胜负"
 "都会下场"

@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: dragonfall\n"
-"POT-Creation-Date: 2015-09-01 22:57+0800\n"
-"PO-Revision-Date: 2015-09-01 22:57+0800\n"
+"POT-Creation-Date: 2015-09-01 23:59+0800\n"
+"PO-Revision-Date: 2015-09-01 23:59+0800\n"
 "Last-Translator: gaozhou <gaozhou.f@qq.com>\n"
 "Language-Team: \n"
 "Language: zh_TW\n"
@@ -4537,7 +4537,7 @@ msgstr "點擊治愈"
 msgid ""
 "果然没有...不过也碍事...我的探子已经找到了他们的一处聚集地,请大人随我来"
 msgstr ""
-"果然沒有...不過也礙事...我的探子已經找到了他們的一處聚集地,請大人隨我來。"
+"果然沒有...不過也不礙事...我的探子已經找到了他們的一處聚集地,請大人隨我來。"
 
 #: ui/GameUIFteUpgradeTechnology.lua:16
 msgid "开始研发"
@@ -5589,11 +5589,11 @@ msgstr ""
 "每回合對比雙方兵種的戰鬥力(兵種戰鬥力 x 數量),戰鬥力高的一方獲勝並繼續留在場"
 "上,負方則會失去繼續作戰的機會"
 
-#: ui/GameUIReplayFte.lua:27
+#: ui/GameUIReplayFte.lua:28
 msgid "士气受损"
 msgstr "士氣受損"
 
-#: ui/GameUIReplayFte.lua:27
+#: ui/GameUIReplayFte.lua:28
 msgid ""
 "当兵中受到攻击时,会根据损失的单位数量降低士气,当士气低于%20时,无论该兵种胜负"
 "都会下场"
