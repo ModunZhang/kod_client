@@ -97,6 +97,7 @@ function AllianceScene:GetAlliance()
 end
 function AllianceScene:onExit()
     self:GetAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
+    self:GetAlliance():RemoveListenerOnType(self, Alliance.LISTEN_TYPE.OPERATION)
     AllianceScene.super.onExit(self)
 end
 function AllianceScene:CreateSceneLayer()
