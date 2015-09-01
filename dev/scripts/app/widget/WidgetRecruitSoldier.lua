@@ -156,9 +156,9 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name, soldier_star)
     local size = need:getContentSize()
     self.res_map = {}
     if soldier_config.specialMaterials then
-        local margin_x = 100
+        local margin_x = 220
         local length = size.width - margin_x * 2
-        local origin_x, origin_y, gap_x = margin_x, 32, length / 3
+        local origin_x, origin_y, gap_x = margin_x, 32, length 
         local specialMaterials = string.split(soldier_config.specialMaterials,",")
         table.insert(specialMaterials, { "citizen", "res_citizen_88x82.png" })
         for k,v in pairs(specialMaterials) do
