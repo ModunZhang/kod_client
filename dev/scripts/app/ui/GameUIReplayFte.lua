@@ -9,7 +9,7 @@ function GameUIReplayFte:ctor(...)
 end
 function GameUIReplayFte:OnMoveInStage()
 	GameUIReplayFte.super.OnMoveInStage(self)
-	self.ui_map.pass:hide()
+	self.ui_map.pass:setButtonEnabled(false)
 end
 function GameUIReplayFte:OnHandle(state)
     if state == "dragonFight" then
@@ -23,6 +23,7 @@ function GameUIReplayFte:OnHandle(state)
             self.count = 1
             return UIKit:newGameUI("GameUIBattleFte", rect, _("部队厮杀"), _("每回合对比攻防兵种的战斗力(单位兵种战斗力 x 数量),战斗力高的一方获胜可继续留在场上,负方则会失去继续作战的机会")):AddToCurrentScene(true):PromiseOfFte()
         elseif self.count == 1 then
+            rect.x, rect.y, rect.width, rect.height = rect.x + 80, rect.y, rect.width - 160, rect.height - 285
             self.count = 2
             return UIKit:newGameUI("GameUIBattleFte", rect, _("士气受损"), _("当兵中受到攻击时,会根据损失的单位数量降低士气,当士气低于%20时,无论该兵种胜负都会下场")):AddToCurrentScene(true):PromiseOfFte()
         end
