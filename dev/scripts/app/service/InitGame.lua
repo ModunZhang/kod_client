@@ -38,13 +38,6 @@ return function(userData)
     timer:AddListener(ItemManager)
     timer:AddListener(Alliance_Manager)
     timer:Start()
-
-    if ext.gamecenter.isGameCenterEnabled() and not ext.gamecenter.isAuthenticated() then
-         ext.gamecenter.authenticate(false)
-    end
-    if device.platform ~= 'mac' then
-        app:getStore():updateTransactionStates()
-    end
 end
 
 
