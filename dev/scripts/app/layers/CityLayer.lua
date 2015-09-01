@@ -663,7 +663,7 @@ function CityLayer:UpdateCitizen(city)
     local count = 0
     city:IteratorTilesByFunc(function(x, y, tile)
         if tile:IsConnected() then
-            count = count + 1
+            count = count + 2
         end
     end)
     for i = #self.citizens + 1, count do
