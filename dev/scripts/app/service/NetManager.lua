@@ -30,34 +30,36 @@ local function get_response_mail_msg(response)
         for i,v in ipairs(mail_response) do
             if type(v) == "table" then
                 local keys = string.split(v[1], ".")
-                local newKey = ""
-                local len = #keys
-                local is_changed_saved_mails = false
-                for i=1,len do
-                    local k = tonumber(keys[i]) or keys[i]
-                    if type(k) == "number" then
-                        local client_index
-                        local mail_index = MailManager:GetMailByServerIndex(k)
-                        if not mail_index then
-                            is_changed_saved_mails = true
-                            client_index = MailManager:GetSavedMailByServerIndex(k) - 1
+                if keys[1] == "mails" then
+                    local newKey = ""
+                    local len = #keys
+                    local is_changed_saved_mails = false
+                    for i=1,len do
+                        local k = tonumber(keys[i]) or keys[i]
+                        if type(k) == "number" then
+                            local client_index
+                            local mail_index = MailManager:GetMailByServerIndex(k)
+                            if not mail_index then
+                                is_changed_saved_mails = true
+                                client_index = MailManager:GetSavedMailByServerIndex(k) - 1
+                            else
+                                client_index = mail_index - 1
+                            end
+                            newKey = newKey..client_index..(i~=len and "." or "")
                         else
-                            client_index = mail_index - 1
+                            newKey = newKey..keys[i]..(i~=len and "." or "")
                         end
-                        newKey = newKey..client_index..(i~=len and "." or "")
+                    end
+                    if is_changed_saved_mails then
+                        local split = string.split(newKey, ".")
+                        local key = "savedMails."
+                        for i=2,#split do
+                            key = key..split[i]..(i~=#split and "." or "")
+                        end
+                        v[1] = key
                     else
-                        newKey = newKey..keys[i]..(i~=len and "." or "")
+                        v[1] = newKey
                     end
-                end
-                if is_changed_saved_mails then
-                    local split = string.split(newKey, ".")
-                    local key = "savedMails."
-                    for i=2,#split do
-                        key = key..split[i]..(i~=#split and "." or "")
-                    end
-                    v[1] = key
-                else
-                    v[1] = newKey
                 end
             end
         end
@@ -965,7 +967,7 @@ function NetManager:getHatchDragonPromise(dragonType)
         dragonType = dragonType,
     }, "孵化失败!"):done(get_player_response_msg):done(function()
         app:GetAudioManager():PlayeEffectSoundWithKey("HATCH_DRAGON")
-        end)
+    end)
 end
 -- 装备
 function NetManager:getLoadDragonEquipmentPromise(dragonType, equipmentCategory, equipmentName)
@@ -1102,7 +1104,7 @@ end
 function NetManager:getMailRewardsPromise(mailId)
     return get_blocking_request_promise("logic.playerHandler.getMailRewards", {
         mailId = mailId
-    }, "NetManager失败!"):done(get_response_mail_msg)
+    }, "从邮件获取奖励失败!"):done(get_response_mail_msg)
 end
 -- 发送联盟邮件
 function NetManager:getSendAllianceMailPromise(title, content)
@@ -2007,6 +2009,7 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
 
 
 

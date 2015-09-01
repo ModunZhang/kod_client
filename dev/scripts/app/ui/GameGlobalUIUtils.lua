@@ -20,7 +20,7 @@ function GameGlobalUIUtils:ctor()
 	self.increase_notic_index = 0
 end
 
-function GameGlobalUIUtils:showTips(title,content)
+function GameGlobalUIUtils:showTips(title,content,autoCloseTime)
 	local instance = cc.Director:getInstance():getRunningScene():getChildByTag(1020)
 	if not instance then
 		self.commonTips = GameUICommonTips.new(self,2)
@@ -28,6 +28,7 @@ function GameGlobalUIUtils:showTips(title,content)
 		cc.Director:getInstance():getRunningScene():addChild(self.commonTips, 1000000, 1020)
 		-- self.commonTips:setVisible(false)
 	end
+	self.commonTips:SetAutoCloseTime(autoCloseTime or 2)
 	if self.commonTips:IsOpen() then
 		self.increase_index = self.increase_index + 1
 		self.tipsHeap:push({title=title,content = content,time = self.increase_index})
