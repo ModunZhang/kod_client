@@ -395,7 +395,7 @@ function Report:GetReportTitle()
     elseif report_type=="attackVillage" then
         local result = self:GetReportResult()
         if data.attackPlayerData.id == self.player_id then
-            return result and _("进攻村落成功") or _("进攻村落失败")
+            return result and _("摧毁村落成功") or _("摧毁村落失败")
         elseif data.defencePlayerData and data.defencePlayerData.id == self.player_id then
             return result and _("防守村落成功") or _("防守村落失败")
         end
