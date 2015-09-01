@@ -1443,7 +1443,7 @@ function GameUIMail:ShowRewardMailDetails(mail)
             color = 0x403c2f
         }):align(display.LEFT_CENTER, item_bg:getPositionX() + 80,item_bg:getPositionY()):addTo(reward_bg)
         UIKit:ttfLabel({
-            text = "X"..reward.count,
+            text = "X"..string.formatnumberthousands(reward.count),
             size = 20,
             color = 0x403c2f
         }):align(display.RIGHT_CENTER, reward_bg_width - 10,item_bg:getPositionY()):addTo(reward_bg)
