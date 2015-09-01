@@ -1502,9 +1502,13 @@ function GameUIMail:ShowRewardMailDetails(mail)
             :addTo(body):align(display.CENTER, size.width - 92, 42)
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
+                    GameGlobalUI:DisableTips()
                     NetManager:getMailRewardsPromise(mail.id):done(function ()
+                        GameGlobalUI:EnableTips()
                         GameGlobalUI:showTips(_("提示"),_("领取成功"))
                         dialog:LeftButtonClicked()
+                    end):always(function ()
+                        GameGlobalUI:EnableTips()
                     end)
                 end
             end)
