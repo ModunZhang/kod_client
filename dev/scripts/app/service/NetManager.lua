@@ -1104,7 +1104,9 @@ end
 function NetManager:getMailRewardsPromise(mailId)
     return get_blocking_request_promise("logic.playerHandler.getMailRewards", {
         mailId = mailId
-    }, "从邮件获取奖励失败!"):done(get_response_mail_msg)
+    }, "从邮件获取奖励失败!"):done(get_response_mail_msg):done(function()
+        app:GetAudioManager():PlayeEffectSoundWithKey("BUY_ITEM")
+    end)
 end
 -- 发送联盟邮件
 function NetManager:getSendAllianceMailPromise(title, content)
@@ -1559,7 +1561,9 @@ function NetManager:getSellItemPromise(type,name,count,price)
         name = name,
         count = count,
         price = price,
-    }, "出售商品失败!"):done(get_player_response_msg)
+    }, "出售商品失败!"):done(get_player_response_msg):done(function()
+        app:GetAudioManager():PlayeEffectSoundWithKey("USE_ITEM")
+    end)
 end
 -- 获取商品列表
 function NetManager:getGetSellItemsPromise(type,name)
@@ -1572,19 +1576,25 @@ end
 function NetManager:getBuySellItemPromise(itemId)
     return get_blocking_request_promise("logic.playerHandler.buySellItem", {
         itemId = itemId
-    }, "购买出售的商品失败!"):done(get_player_response_msg)
+    }, "购买出售的商品失败!"):done(get_player_response_msg):done(function()
+        app:GetAudioManager():PlayeEffectSoundWithKey("BUY_ITEM")
+    end)
 end
 -- 获取出售后赚取的银币
 function NetManager:getGetMyItemSoldMoneyPromise(itemId)
     return get_blocking_request_promise("logic.playerHandler.getMyItemSoldMoney", {
         itemId = itemId
-    }, "获取出售后赚取的银币失败!"):done(get_player_response_msg)
+    }, "获取出售后赚取的银币失败!"):done(get_player_response_msg):done(function()
+        app:GetAudioManager():PlayeEffectSoundWithKey("BUY_ITEM")
+    end)
 end
 -- 下架商品
 function NetManager:getRemoveMySellItemPromise(itemId)
     return get_blocking_request_promise("logic.playerHandler.removeMySellItem", {
         itemId = itemId
-    }, "下架商品失败!"):done(get_player_response_msg)
+    }, "下架商品失败!"):done(get_player_response_msg):done(function()
+        app:GetAudioManager():PlayeEffectSoundWithKey("BUY_ITEM")
+    end)
 end
 --升级生产科技
 function NetManager:getUpgradeProductionTechPromise(techName,finishNow)
