@@ -6,7 +6,7 @@ varying vec4 v_fragmentColor;
 varying vec2 v_texCoord;
 uniform vec4 rect;
 uniform float enable;
-const float EDGE = 0.015;
+const float EDGE = 0.005;
 void main(void) {
 	if ( enable < 1.0 ) {
 		gl_FragColor = vec4(0.0,0.0,0.0,0.6);

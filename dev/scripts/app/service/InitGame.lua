@@ -16,7 +16,7 @@ return function(userData)
     MailManager = MailManager_.new()
     ItemManager = ItemManager_.new()
     Alliance_Manager = AllianceManager_.new()
-    if GLOBAL_FTE then
+    if GLOBAL_FTE or userData.basicInfo.terrain == "__NONE__" then
         DataManager:getFteData()._id                = userData._id
         DataManager:getFteData().serverId           = userData.serverId
         DataManager:getFteData().serverTime         = userData.serverTime
@@ -38,13 +38,6 @@ return function(userData)
     timer:AddListener(ItemManager)
     timer:AddListener(Alliance_Manager)
     timer:Start()
-
-    if ext.gamecenter.isGameCenterEnabled() and not ext.gamecenter.isAuthenticated() then
-         ext.gamecenter.authenticate(false)
-    end
-    if device.platform ~= 'mac' then
-        app:getStore():updateTransactionStates()
-    end
 end
 
 

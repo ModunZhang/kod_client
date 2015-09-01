@@ -11,8 +11,52 @@ local SOLDIER = MATERIAL_TYPE.SOLDIER
 local EQUIPMENT = MATERIAL_TYPE.EQUIPMENT
 
 local dragonEquipments = GameDatas.DragonEquipments.equipments
-local soldierMaterials = GameDatas.PlayerInitData.soldierMaterials
-local dragonMaterials = GameDatas.PlayerInitData.dragonMaterials
+local soldierMaterials = {
+    {
+        ["deathHand"] = 0,
+        ["heroBones"] = 0,
+        ["soulStone"] = 0,
+        ["magicBox"] = 0,
+        ["confessionHood"] = 0,
+        ["brightRing"] = 0,
+        ["holyBook"] = 0,
+        ["brightAlloy"] = 0
+    }
+
+}
+local dragonMaterials = {
+    {
+        ["ingo_1"] = 0,
+        ["ingo_2"] = 0,
+        ["ingo_3"] = 0,
+        ["ingo_4"] = 0,
+        ["redSoul_2"] = 0,
+        ["redSoul_3"] = 0,
+        ["redSoul_4"] = 0,
+        ["blueSoul_2"] = 0,
+        ["blueSoul_3"] = 0,
+        ["blueSoul_4"] = 0,
+        ["greenSoul_2"] = 0,
+        ["greenSoul_3"] = 0,
+        ["greenSoul_4"] = 0,
+        ["redCrystal_1"] = 0,
+        ["redCrystal_2"] = 0,
+        ["redCrystal_3"] = 0,
+        ["redCrystal_4"] = 0,
+        ["blueCrystal_1"] = 0,
+        ["blueCrystal_2"] = 0,
+        ["blueCrystal_3"] = 0,
+        ["blueCrystal_4"] = 0,
+        ["greenCrystal_1"] = 0,
+        ["greenCrystal_2"] = 0,
+        ["greenCrystal_3"] = 0,
+        ["greenCrystal_4"] = 0,
+        ["runes_1"] = 0,
+        ["runes_2"] = 0,
+        ["runes_3"] = 0,
+        ["runes_4"] = 0
+    }
+}
 function MaterialManager:ctor()
     MaterialManager.super.ctor(self)
     self.material_map = {}
@@ -162,6 +206,8 @@ function MaterialManager:OnMaterialsComing(material_type, materials)
 end
 
 return MaterialManager
+
+
 
 
 

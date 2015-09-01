@@ -996,6 +996,8 @@ function GameUIReplayNew:PlayDragonBattle()
         (not self.report:IsAttackCamp() and not attack_dragon.isWin)
     return self:PromiseOfDelay(0.5):next(function()
         return self.dragon_battle:PromsieOfFight():next(function()
+                return self:OnHandle("dragonFight")
+            end):next(function()
             return is_win and
                 self.dragon_battle:PromiseOfVictory() or
                 self.dragon_battle:PromiseOfDefeat()
@@ -1118,6 +1120,8 @@ function GameUIReplayNew:DecodeStateBySide(side, is_left)
             elseif corps == self.right then
                 self.right = nil
                 self:SoldierDefeatRight()
+                corps:removeFromParent()
+                return self:OnHandle("rightDefeat")
             end
             corps:removeFromParent()
             return corps
@@ -1484,6 +1488,7 @@ function GameUIReplayNew:BuildUI()
 
     local top = display.newSprite("back_ground_replay_1.png"):addTo(self, 1)
         :align(display.TOP_CENTER, display.cx, window.top)
+    ui_map.top = top
     local top_size = top:getContentSize()
 
     ui_map.attackName = UIKit:ttfLabel({
@@ -1666,6 +1671,9 @@ function GameUIReplayNew:GetPreloadImages()
         {image = "animations/ui_animation_1.pvr.ccz",list = "animations/ui_animation_1.plist"},
         {image = "animations/ui_animation_2.pvr.ccz",list = "animations/ui_animation_2.plist"},
     }
+end
+function GameUIReplayNew:OnHandle()
+
 end
 
 

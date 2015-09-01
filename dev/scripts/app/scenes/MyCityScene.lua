@@ -249,7 +249,14 @@ function MyCityScene:onEnterTransitionFinish()
         if isFinished_fte and not_buy_any_gems then
             UIKit:newGameUI("GameUIActivityRewardNew",GameUIActivityRewardNew.REWARD_TYPE.FIRST_IN_PURGURE):AddToScene(self, true)
         end
+        if device.platform ~= 'mac' then
+            app:getStore():updateTransactionStates()
+        end
     end
+    if ext.gamecenter.isGameCenterEnabled() and not ext.gamecenter.isAuthenticated() then
+        ext.gamecenter.authenticate(false)
+    end
+    app:GetChatManager():FetMessageFirstStartGame()
     if Alliance_Manager:HasBeenJoinedAlliance() then
         return
     end

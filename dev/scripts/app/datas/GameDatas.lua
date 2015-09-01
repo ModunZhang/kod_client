@@ -421,19 +421,11 @@ GameDatas.PlayerInitData = {
 	["intInit"] = {},
 	["stringInit"] = {},
 	["resources"] = {},
-	["materials"] = {},
-	["soldierMaterials"] = {},
-	["dragonMaterials"] = {},
-	["houses"] = {},
 	["playerLevel"] = {},
 }
 require("app.datas.PlayerInitData_intInit")
 require("app.datas.PlayerInitData_stringInit")
 require("app.datas.PlayerInitData_resources")
-require("app.datas.PlayerInitData_materials")
-require("app.datas.PlayerInitData_soldierMaterials")
-require("app.datas.PlayerInitData_dragonMaterials")
-require("app.datas.PlayerInitData_houses")
 require("app.datas.PlayerInitData_playerLevel")
 
 GameDatas.PlayerVillageExp = {

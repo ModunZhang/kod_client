@@ -11,9 +11,9 @@ end
 -- fte
 local promise = import("..utils.promise")
 local WidgetFteArrow = import("..widget.WidgetFteArrow")
-function GameUIPVEFteSendTroop:PormiseOfFte()
+function GameUIPVEFteSendTroop:PormiseOfFte(need_fte)
     return self:PromiseOfMax():next(function()
-        return self:PromiseOfAttack()
+        return self:PromiseOfAttack(need_fte)
     end)
 end
 function GameUIPVEFteSendTroop:PromiseOfMax()
@@ -31,7 +31,7 @@ function GameUIPVEFteSendTroop:PromiseOfMax()
     end)
     return p
 end
-function GameUIPVEFteSendTroop:PromiseOfAttack()
+function GameUIPVEFteSendTroop:PromiseOfAttack(need_fte)
     local r = self.march_btn:getCascadeBoundingBox()
     self:GetFteLayer():SetTouchObject(self.march_btn)
 
@@ -47,10 +47,10 @@ function GameUIPVEFteSendTroop:PromiseOfAttack()
     WidgetFteArrow.new(_("点击进攻")):addTo(self:GetFteLayer())
         :TurnDown():align(display.CENTER_BOTTOM, r.x + r.width/2, r.y + 70)
 
-    return UIKit:PromiseOfOpen("GameUIReplayNew"):next(function(ui)
+    return UIKit:PromiseOfOpen(need_fte and "GameUIReplayFte" or "GameUIReplayNew"):next(function(ui)
         ui:DestroyFteLayer()
         ui:DoFte()
-        return UIKit:PromiseOfClose("GameUIReplayNew")
+        return UIKit:PromiseOfClose(need_fte and "GameUIReplayFte" or "GameUIReplayNew")
     end)
 end
 

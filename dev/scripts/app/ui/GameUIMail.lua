@@ -12,6 +12,7 @@ local WidgetRoundTabButtons = import("..widget.WidgetRoundTabButtons")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local UILib = import(".UILib")
 local Localize = import("..utils.Localize")
+local Localize_item = import("..utils.Localize_item")
 local GameUICollectReport = import(".GameUICollectReport")
 local Report = import("..entity.Report")
 
@@ -498,9 +499,13 @@ function GameUIMail:CreateInboxContent()
                             parent.manager:DecreaseUnReadMailsNum(1)
                         end)
                     end
+
                     --如果是发送邮件
                     if mail.toId then
                         parent:ShowSendMailDetails(mail)
+                    elseif mail.rewards and not LuaUtils:table_empty(mail.rewards) then
+                        -- 奖励邮件
+                        parent:ShowRewardMailDetails(mail)
                     else
                         parent:ShowMailDetails(mail)
                     end
@@ -513,9 +518,16 @@ function GameUIMail:CreateInboxContent()
             self.mail_icon:removeFromParent(true)
             self.mail_icon = nil
         end
-        if not mail.isRead then
-            self.mail_icon = display.newSprite(mail.fromId == "__system" and "icon_system_mail.png" or "mail_state_user_not_read.png")
-                :align(display.LEFT_CENTER,11, 24):addTo(content_title_bg)
+        if mail.rewards and not LuaUtils:table_empty(mail.rewards) then
+            self.mail_icon = display.newSprite("activity_68x78.png", nil, nil, {class=cc.FilteredSpriteWithOne}):align(display.LEFT_CENTER,11, 28):addTo(content_title_bg):scale(0.6)
+            if mail.rewardGetted then
+                self.mail_icon:setFilter(filter.newFilter("GRAY", {0.2, 0.3, 0.5, 0.1}))
+            end
+        else
+            if not mail.isRead then
+                self.mail_icon = display.newSprite(mail.fromId == "__system" and "icon_system_mail.png" or "mail_state_user_not_read.png")
+                    :align(display.LEFT_CENTER,11, 24):addTo(content_title_bg)
+            end
         end
 
         local from_name = Localize.mails[mail.fromName] or mail.fromName
@@ -524,10 +536,14 @@ function GameUIMail:CreateInboxContent()
         date_label:setString(GameUtils:formatTimeStyle2(mail.sendTime/1000))
         date_label:setColor(mail.isRead and UIKit:hex2c4b(0x969696) or UIKit:hex2c4b(0xffedae))
         mail_content_title_label:setString(mail.fromName == "__system" and _(mail.title) or mail.title)
-        if mail.isRead then
-            mail_content_title_label:setPositionX(10)
-        else
+        if mail.rewards and not LuaUtils:table_empty(mail.rewards) then
             mail_content_title_label:setPositionX(60)
+        else
+            if mail.isRead then
+                mail_content_title_label:setPositionX(10)
+            else
+                mail_content_title_label:setPositionX(60)
+            end
         end
         -- 保存按钮
         if self.saved_button then
@@ -1321,7 +1337,199 @@ function GameUIMail:ShowMailDetails(mail)
         self:SaveOrUnsaveMail(mail,event.target)
     end):addTo(body):pos(size.width-48, size.height-80)
 end
+-- 奖励邮件详情弹出框
+function GameUIMail:ShowRewardMailDetails(mail)
+    dump(mail,"ShowRewardMailDetails")
+    local name = Localize.mails[mail.fromName] or mail.fromName
+    local title_string = (mail.fromAllianceTag~="" and "["..mail.fromAllianceTag.."] "..name) or name
+    local dialog = WidgetPopDialog.new(768,title_string):addTo(self,201)
+    local body = dialog:GetBody()
+    local size = body:getContentSize()
 
+    -- player head icon
+    UIKit:GetPlayerCommonIcon(mail.fromIcon):align(display.CENTER, 76, size.height - 80):addTo(body)
+
+    -- 主题
+    local subject_label = cc.ui.UILabel.new(
+        {cc.ui.UILabel.LABEL_TYPE_TTF,
+            text = _("主题: "),
+            font = UIKit:getFontFilePath(),
+            size = 20,
+            color = UIKit:hex2c3b(0x615b44)
+        }):align(display.LEFT_CENTER, 155, size.height-60)
+        :addTo(body)
+    local subject_content_label = UIKit:ttfLabel(
+        {
+            text = mail.title,
+            size = 20,
+            color = 0x403c2f,
+            ellipsis = true,
+            dimensions = cc.size(300,20)
+        }):align(display.LEFT_CENTER,155 + subject_label:getContentSize().width+20, size.height-56)
+        :addTo(body)
+    -- 日期
+    local date_title_label = cc.ui.UILabel.new(
+        {cc.ui.UILabel.LABEL_TYPE_TTF,
+            text = _("日期: "),
+            font = UIKit:getFontFilePath(),
+            size = 20,
+            color = UIKit:hex2c3b(0x615b44)
+        }):align(display.LEFT_CENTER, 155, size.height-100)
+        :addTo(body)
+    local date_label = UIKit:ttfLabel(
+        {
+            text = GameUtils:formatTimeStyle2(mail.sendTime/1000),
+            size = 20,
+            color = 0x403c2f
+        }):align(display.LEFT_CENTER, 155 + date_title_label:getContentSize().width+20, size.height-100)
+        :addTo(body)
+
+    -- 内容
+    local content_listview = UIListView.new{
+        -- bgColor = UIKit:hex2c4b(0x7a100000),
+        viewRect = cc.rect(0, 10, 584, 540),
+        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
+    }:addTo(body):pos((size.width - 584)/2, 70)
+    local content_item = content_listview:newItem()
+    local mail_content = mail.content
+    local content_label = UIKit:ttfLabel(
+        {
+            text = mail_content,
+            size = 20,
+            dimensions = cc.size(539,0),
+            color = 0x403c2f
+        })
+    local text_size = content_label:getContentSize()
+    local content_bg_width = 584
+    local content_bg_height = math.max(294,text_size.height + 20)
+    local content_bg = WidgetUIBackGround.new({width = content_bg_width,height = content_bg_height},WidgetUIBackGround.STYLE_TYPE.STYLE_5)
+    content_label:align(display.LEFT_TOP,10,content_bg_height - 10):addTo(content_bg)
+    content_item:setItemSize(content_bg_width, content_bg_height)
+    content_item:addContent(content_bg)
+    content_listview:addItem(content_item)
+
+    local reward_count = #mail.rewards
+    local reward_bg_width = 574
+    local reward_bg_height = reward_count * 68 + 10
+    local reward_bg = WidgetUIBackGround.new({width = reward_bg_width,height = reward_bg_height},WidgetUIBackGround.STYLE_TYPE.STYLE_4)
+    -- 添加奖励节点
+    for i,reward in ipairs(mail.rewards) do
+        local item_bg = display.newSprite("box_118x118.png"):align(display.LEFT_CENTER, 10, 34 + (i - 1) * 68 + 5):addTo(reward_bg):scale(60/118)
+        local reward_png,reward_name
+        if reward.type == "items" then
+            reward_png = UILib.item[reward.name]
+            reward_name = Localize_item.item_name[reward.name]
+        elseif reward.type == "technologyMaterials" then
+            reward_png = UILib.materials[reward.name]
+            reward_name = Localize.materials[reward.name]
+        elseif reward.type == "buildingMaterials" then
+            reward_png = UILib.materials[reward.name]
+            reward_name = Localize.materials[reward.name]
+        elseif reward.type == "soldierMaterials" then
+            reward_png = UILib.soldier_metarial[reward.name]
+            reward_name = Localize.soldier_material[reward.name]
+        elseif reward.type == "dragonEquipments" then
+            reward_png = UILib.equipment[reward.name]
+            reward_name = Localize.equip[reward.name]
+        elseif reward.type == "dragonMaterials" then
+            reward_png = UILib.dragon_material_pic_map[reward.name]
+            reward_name = Localize.equip_material[reward.name]
+        end
+        display.newSprite(reward_png):align(display.CENTER, item_bg:getContentSize().width/2,item_bg:getContentSize().height/2):addTo(item_bg):scale(0.8)
+
+        UIKit:ttfLabel({
+            text = reward_name,
+            size = 20,
+            color = 0x403c2f
+        }):align(display.LEFT_CENTER, item_bg:getPositionX() + 80,item_bg:getPositionY()):addTo(reward_bg)
+        UIKit:ttfLabel({
+            text = "X"..string.formatnumberthousands(reward.count),
+            size = 20,
+            color = 0x403c2f
+        }):align(display.RIGHT_CENTER, reward_bg_width - 10,item_bg:getPositionY()):addTo(reward_bg)
+        if mail.rewards[i+1] then
+            display.newScale9Sprite("dividing_line.png",0,0,cc.size(reward_bg_width,2),cc.rect(10,2,382,2)):align(display.LEFT_CENTER, 0, i * 68 + 5):addTo(reward_bg)
+        end
+    end
+    local reward_item = content_listview:newItem()
+    reward_item:setItemSize(content_bg_width, reward_bg_height + 10)
+    reward_item:addContent(reward_bg)
+    content_listview:addItem(reward_item)
+
+    content_listview:reload()
+
+
+
+    -- 删除按钮
+    local delete_label = cc.ui.UILabel.new({
+        UILabelType = cc.ui.UILabel.LABEL_TYPE_TTF,
+        text = _("删除"),
+        size = 20,
+        font = UIKit:getFontFilePath(),
+        color = UIKit:hex2c3b(0xfff3c7)})
+    delete_label:enableShadow()
+
+    local del_btn = WidgetPushButton.new(
+        {normal = "red_btn_up_148x58.png", pressed = "red_btn_down_148x58.png"},
+        {scale9 = false}
+    ):setButtonLabel(delete_label)
+        :addTo(body):align(display.CENTER, 92, 42)
+        :onButtonClicked(function(event)
+            if event.name == "CLICKED_EVENT" then
+                NetManager:getDeleteMailsPromise({mail.id}):done(function ()
+                    dialog:LeftButtonClicked()
+                end)
+            end
+        end)
+
+    if mail.rewardGetted then
+        UIKit:ttfLabel({
+            text = _("已领取"),
+            size = 22,
+            color = 0x403c2f,
+        }):addTo(body):align(display.CENTER, size.width - 92, 42)
+    else
+        -- 领取按钮
+        local get_btn = WidgetPushButton.new(
+            {normal = "yellow_btn_up_148x58.png", pressed = "yellow_btn_down_148x58.png"},
+            {scale9 = false}
+        ):setButtonLabel(UIKit:ttfLabel({
+            text = _("领取"),
+            size = 20,
+            color = 0xfff3c7,
+            shadow = true
+        }))
+            :addTo(body):align(display.CENTER, size.width - 92, 42)
+        get_btn:onButtonClicked(function(event)
+                if event.name == "CLICKED_EVENT" then
+                    GameGlobalUI:DisableTips()
+                    NetManager:getMailRewardsPromise(mail.id):done(function ()
+                        GameGlobalUI:EnableTips()
+                        GameGlobalUI:showTips(_("提示"),_("领取成功"))
+                        UIKit:ttfLabel({
+                            text = _("已领取"),
+                            size = 22,
+                            color = 0x403c2f,
+                        }):addTo(body):align(display.CENTER, size.width - 92, 42)
+                        get_btn:hide()
+                    end):always(function ()
+                        GameGlobalUI:EnableTips()
+                    end)
+                end
+            end)
+    end
+    -- 收藏按钮
+    local saved_button = cc.ui.UICheckBoxButton.new({
+        off = "mail_saved_button_normal.png",
+        off_pressed = "mail_saved_button_normal.png",
+        off_disabled = "mail_saved_button_normal.png",
+        on = "mail_saved_button_pressed.png",
+        on_pressed = "mail_saved_button_pressed.png",
+        on_disabled = "mail_saved_button_pressed.png",
+    }):setButtonSelected(tolua.type(mail.isSaved)=="nil" or mail.isSaved,true):onButtonStateChanged(function(event)
+        self:SaveOrUnsaveMail(mail,event.target)
+    end):addTo(body):pos(size.width-48, size.height-80)
+end
 -- report layer
 function GameUIMail:InitReport()
     local flag = true
@@ -1851,7 +2059,7 @@ function GameUIMail:CreateSavedReportContent()
                 bg = "alliance_shire_star_60x58_0.png",
                 fill = "alliance_shire_star_60x58_1.png",
                 num = attackTarget.fightStar
-            }):addTo(report_content_bg):align(display.LEFT_CENTER,report_content_bg:getContentSize().width/2-20, 30):scale(0.5)        
+            }):addTo(report_content_bg):align(display.LEFT_CENTER,report_content_bg:getContentSize().width/2-20, 30):scale(0.5)
         else
             -- 战报发出方信息
             -- 旗帜
@@ -2311,6 +2519,12 @@ function GameUIMail:GetEnemyAllianceTag(report)
 end
 
 return GameUIMail
+
+
+
+
+
+
 
 
 
