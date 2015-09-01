@@ -16,7 +16,7 @@ return function(userData)
     MailManager = MailManager_.new()
     ItemManager = ItemManager_.new()
     Alliance_Manager = AllianceManager_.new()
-    if GLOBAL_FTE then
+    if GLOBAL_FTE or userData.basicInfo.terrain == "__NONE__" then
         DataManager:getFteData()._id                = userData._id
         DataManager:getFteData().serverId           = userData.serverId
         DataManager:getFteData().serverTime         = userData.serverTime

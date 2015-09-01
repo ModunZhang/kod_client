@@ -54,6 +54,7 @@ function FteScene:onEnterTransitionFinish()
         if GLOBAL_FTE then
             app:EnterMyCityFteScene()
         else
+            app:EnterUserMode()
             app:EnterMyCityScene()
         end
     end)
