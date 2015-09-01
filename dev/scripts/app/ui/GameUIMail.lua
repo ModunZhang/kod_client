@@ -519,8 +519,10 @@ function GameUIMail:CreateInboxContent()
             self.mail_icon = nil
         end
         if mail.rewards and not LuaUtils:table_empty(mail.rewards) then
-            self.mail_icon = display.newSprite("activity_68x78.png")
-                :align(display.LEFT_CENTER,11, 28):addTo(content_title_bg):scale(0.6)
+            self.mail_icon = display.newSprite("activity_68x78.png", nil, nil, {class=cc.FilteredSpriteWithOne}):align(display.LEFT_CENTER,11, 28):addTo(content_title_bg):scale(0.6)
+            if mail.rewardGetted then
+                self.mail_icon:setFilter(filter.newFilter("GRAY", {0.2, 0.3, 0.5, 0.1}))
+            end
         else
             if not mail.isRead then
                 self.mail_icon = display.newSprite(mail.fromId == "__system" and "icon_system_mail.png" or "mail_state_user_not_read.png")
@@ -1413,15 +1415,35 @@ function GameUIMail:ShowRewardMailDetails(mail)
     -- 添加奖励节点
     for i,reward in ipairs(mail.rewards) do
         local item_bg = display.newSprite("box_118x118.png"):align(display.LEFT_CENTER, 10, 34 + (i - 1) * 68 + 5):addTo(reward_bg):scale(60/118)
-        display.newSprite(UILib.item[reward.name]):align(display.CENTER, item_bg:getContentSize().width/2,item_bg:getContentSize().height/2):addTo(item_bg):scale(0.8)
+        local reward_png,reward_name
+        if reward.type == "items" then
+            reward_png = UILib.item[reward.name]
+            reward_name = Localize_item.item_name[reward.name]
+        elseif reward.type == "technologyMaterials" then
+            reward_png = UILib.materials[reward.name]
+            reward_name = Localize.materials[reward.name]
+        elseif reward.type == "buildingMaterials" then
+            reward_png = UILib.materials[reward.name]
+            reward_name = Localize.materials[reward.name]
+        elseif reward.type == "soldierMaterials" then
+            reward_png = UILib.soldier_metarial[reward.name]
+            reward_name = Localize.soldier_material[reward.name]
+        elseif reward.type == "dragonEquipments" then
+            reward_png = UILib.equipment[reward.name]
+            reward_name = Localize.equip[reward.name]
+        elseif reward.type == "dragonMaterials" then
+            reward_png = UILib.dragon_material_pic_map[reward.name]
+            reward_name = Localize.equip_material[reward.name]
+        end
+        display.newSprite(reward_png):align(display.CENTER, item_bg:getContentSize().width/2,item_bg:getContentSize().height/2):addTo(item_bg):scale(0.8)
 
         UIKit:ttfLabel({
-            text = Localize_item.item_name[reward.name],
+            text = reward_name,
             size = 20,
             color = 0x403c2f
         }):align(display.LEFT_CENTER, item_bg:getPositionX() + 80,item_bg:getPositionY()):addTo(reward_bg)
         UIKit:ttfLabel({
-            text = "X"..reward.count,
+            text = "X"..string.formatnumberthousands(reward.count),
             size = 20,
             color = 0x403c2f
         }):align(display.RIGHT_CENTER, reward_bg_width - 10,item_bg:getPositionY()):addTo(reward_bg)
@@ -1478,11 +1500,20 @@ function GameUIMail:ShowRewardMailDetails(mail)
             shadow = true
         }))
             :addTo(body):align(display.CENTER, size.width - 92, 42)
-            :onButtonClicked(function(event)
+        get_btn:onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
+                    GameGlobalUI:DisableTips()
                     NetManager:getMailRewardsPromise(mail.id):done(function ()
+                        GameGlobalUI:EnableTips()
                         GameGlobalUI:showTips(_("提示"),_("领取成功"))
-                        dialog:LeftButtonClicked()
+                        UIKit:ttfLabel({
+                            text = _("已领取"),
+                            size = 22,
+                            color = 0x403c2f,
+                        }):addTo(body):align(display.CENTER, size.width - 92, 42)
+                        get_btn:hide()
+                    end):always(function ()
+                        GameGlobalUI:EnableTips()
                     end)
                 end
             end)
@@ -2488,6 +2519,7 @@ function GameUIMail:GetEnemyAllianceTag(report)
 end
 
 return GameUIMail
+
 
 
 

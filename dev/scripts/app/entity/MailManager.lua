@@ -43,7 +43,7 @@ function MailManager:IncreaseUnReadReportNum(num,report)
     if not report.GetReportTitle then
         report = Report:DecodeFromJsonData(clone(report))
     end
-    GameGlobalUI:showTips(_("提示"),string.format(_("你有一封新的%s的战报"),report:Type() == "collectResource" and _("采集村落") or report:GetReportTitle()))
+    GameGlobalUI:showTips(_("你有一封新的战报"),report:Type() == "collectResource" and _("采集村落") or report:GetReportTitle(),3)
     self:NotifyListeneOnType(MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED,function(listener)
         listener:MailUnreadChanged({report=self.unread_report})
     end)
