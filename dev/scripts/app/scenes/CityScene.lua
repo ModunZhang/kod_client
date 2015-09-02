@@ -170,11 +170,10 @@ function CityScene:PlayEffectIf()
             emitter:update(0.01)
         end
     elseif terrain == "grassLand" then
-        local emitter = UIKit:CreateRain():addTo(self:GetScreenLayer(), 1, EFFECT_TAG)
+        self:performWithDelay(function()
+            local emitter = UIKit:CreateRain():addTo(self:GetScreenLayer(), 1, EFFECT_TAG)
             :pos(display.cx + 80, display.height)
-        for i = 1, 1000 do
-            emitter:update(0.01)
-        end
+        end, 1)
     elseif terrain == "desert" then
         local emitter = UIKit:CreateSand():addTo(self:GetScreenLayer(), 1, EFFECT_TAG)
             :pos(0, display.cy)
