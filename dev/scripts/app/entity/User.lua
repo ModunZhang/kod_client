@@ -655,6 +655,10 @@ function User:GetSpecialVipLevelExp(level)
     local level = #vip_level >= level and level or #vip_level
     return vip_level[level].expFrom
 end
+function User:GetSpecialVipLevelExpTo(level)
+    local level = #vip_level >= level and level or #vip_level
+    return vip_level[level].expTo
+end
 function User:OnVipEventDataChange(userData, deltaData)
     local is_fully_update = deltaData == nil
 
