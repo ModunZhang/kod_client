@@ -244,12 +244,14 @@ function HospitalUpgradeBuilding:IsWoundedSoldierOverhead()
 end
 --获取下一级伤病最大上限
 function HospitalUpgradeBuilding:GetNextLevelMaxCasualty()
-    return config_function[self:GetNextLevel()].maxCitizen
+    local eff = self:BelongCity():FindTechByName("rescueTent") and self:BelongCity():FindTechByName("rescueTent"):GetBuffEffectVal() or 0
+    return  math.floor(config_function[self:GetNextLevel()].maxCitizen * (1 + eff))
 end
 --获取伤病最大上限
 function HospitalUpgradeBuilding:GetMaxCasualty()
-    if self:GetLevel() > 0 and self:BelongCity():FindTechByName("rescueTent") then
-        return math.floor(config_function[self:GetEfficiencyLevel()].maxCitizen * (1 + self:BelongCity():FindTechByName("rescueTent"):GetBuffEffectVal()))
+    if self:GetLevel() > 0 then
+        local eff = self:BelongCity():FindTechByName("rescueTent") and self:BelongCity():FindTechByName("rescueTent"):GetBuffEffectVal() or 0
+        return math.floor(config_function[self:GetEfficiencyLevel()].maxCitizen * (1 + eff))
     end
     return 0
 end

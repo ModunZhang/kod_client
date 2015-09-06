@@ -206,7 +206,7 @@ function GameUIVipNew:InitVipTop()
     local vip_layer = self.vip_layer
     local shadow = display.newColorLayer(UIKit:hex2c4b(0xff000000))
     shadow:setContentSize(cc.size(620,164))
-    shadow:pos((window.width - 620) / 2, window.top_bottom - 146):addTo(vip_layer)
+    shadow:pos((display.width - 620) / 2, window.top_bottom - 146):addTo(vip_layer)
     local top_bg = display.newSprite("back_ground_vip_608x164.jpg"):align(display.TOP_CENTER, window.cx, window.top_bottom + 16):addTo(vip_layer)
     local bg_size = top_bg:getContentSize()
     local line = display.newSprite("line_624x58.png"):align(display.TOP_CENTER, bg_size.width/2, 16):addTo(top_bg)
@@ -234,9 +234,9 @@ function GameUIVipNew:InitVipTop()
     local status_text = User:IsVIPActived() and _("已激活").." "..GameUtils:formatTimeStyle1(User:GetVipEvent():GetTime()) or _("未激活VIP")
     self.vip_status_label = UIKit:ttfLabel({
         text = status_text,
-        size = 22,
+        size = 20,
         color = 0xffd200,
-    }):align(display.LEFT_CENTER, 16, active_button:getPositionY() - 46)
+    }):align(display.LEFT_CENTER, 18, active_button:getPositionY() - 46)
         :addTo(top_bg)
 
     local process_bg = display.newSprite("process_bar_540x40.png")
@@ -246,11 +246,11 @@ function GameUIVipNew:InitVipTop()
     local vip_level,percent,exp = User:GetVipLevel()
     progressTimer_vip_exp:setPercentage(percent)
     self.vip_exp_label = UIKit:ttfLabel({
-            text = string.formatnumberthousands(exp - User:GetSpecialVipLevelExp(vip_level)).."/"..string.formatnumberthousands(User:GetSpecialVipLevelExpTo(vip_level)),
-            size = 20,
-            color = 0xfff3c7,
-            shadow = true
-        }):addTo(process_bg,2):align(display.LEFT_CENTER,10 , process_bg:getContentSize().height/2)
+        text = string.formatnumberthousands(exp - User:GetSpecialVipLevelExp(vip_level)).."/"..string.formatnumberthousands(User:GetSpecialVipLevelExpTo(vip_level)),
+        size = 20,
+        color = 0xfff3c7,
+        shadow = true
+    }):addTo(process_bg,2):align(display.LEFT_CENTER,10 , process_bg:getContentSize().height/2)
 
     self.progressTimer_vip_exp = progressTimer_vip_exp
 
@@ -325,14 +325,23 @@ function GameUIVipNew:CreateVipEff()
         color = 0xffd200,
     }):align(display.CENTER, 160,42)
         :addTo(level_bg)
-    local right_level_label = UIKit:ttfLabel({
-        text = "VIP "..self.right_level,
-        size = 26,
-        color = 0xffd200,
-    }):align(display.CENTER, 400,42)
-        :addTo(level_bg)
+    -- local right_level_label = UIKit:ttfLabel({
+    --     text = "VIP "..self.right_level,
+    --     size = 26,
+    --     color = 0xffd200,
+    -- }):align(display.CENTER, 400,42)
+    --     :addTo(level_bg)
 
-
+    local bottom_vip_level_node = display.newNode()
+    bottom_vip_level_node:setContentSize(cc.size(292,22))
+    bottom_vip_level_node:align(display.CENTER, window.cx, window.bottom_top + 20):addTo(vip_layer)
+    local parent = self
+    function bottom_vip_level_node:InitLevelNode()
+        self:removeAllChildren()
+        for i=1,VIP_MAX_LEVEL do
+            display.newSprite(parent.right_level == i and "vip_icon_22x22_1.png" or "vip_icon_22x22_2.png"):align(display.LEFT_CENTER, (i - 1) * 30, 11):addTo(self)
+        end
+    end
 
     local bg_width, bg_height = 250 , 534
     local left_eff_bg = WidgetUIBackGround.new({width = bg_width,height = bg_height},WidgetUIBackGround.STYLE_TYPE.STYLE_6):addTo(vip_layer):align(display.LEFT_TOP,window.left + 50,window.top - 314)
@@ -343,9 +352,20 @@ function GameUIVipNew:CreateVipEff()
         viewRect = cc.rect(0, 0, 520 , 514),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
     }:addTo(vip_layer):pos(window.left + 60,window.bottom_top + 44)
-	
+
+    local clipeNode = display.newClippingRegionNode(cc.rect(window.left + 60 + 520 - bg_width + 20 - 12, window.top - 310  , bg_width - 20 - 12, 70)):addTo(vip_layer)
+    local pv_right_level = UIPageView.new {
+            viewRect = cc.rect(window.left + 60 + 520 - bg_width + 20, window.bottom_top + 44  , bg_width - 20, bg_height + 56),
+            row = 1,
+            padding = {left = 0, right = 0, top = 10, bottom = 0},
+            nBounce = true
+        }:addTo(clipeNode,2)
+    pv_right_level:setTouchSwallowEnabled(false)
+    local cover_layer = display.newLayer():addTo(vip_layer,3):pos(window.left + 60 + 520 - bg_width + 20 , window.top - 310)
+    cover_layer:setContentSize(cc.size(bg_width - 20, 70))
     local function showNode()
         listview:removeAllItems()
+        pv_right_level:removeAllItems()
         local all_node = display.newNode()
         local max_level = math.max(self.current_vip_level,(self.right_level + 1) <= VIP_MAX_LEVEL and (self.right_level + 1) or self.right_level)
         local available_count = 0
@@ -385,28 +405,29 @@ function GameUIVipNew:CreateVipEff()
                     if self.right_level == (VIP_MAX_LEVEL - 1) or self.right_level == VIP_MAX_LEVEL then
                         if event.pageIdx == 1 then
                             self.right_level = changeIndex(false)
-                			self.last_list_position_y = listview.container:getPositionY()
+                            self.last_list_position_y = listview.container:getPositionY()
                             showNode()
                         end
                     elseif self.right_level == 1 or self.right_level == 2 then
                         if event.pageIdx == 2 then
                             self.right_level = changeIndex(true)
-                			self.last_list_position_y = listview.container:getPositionY()
+                            self.last_list_position_y = listview.container:getPositionY()
                             showNode()
                         end
                     end
                 elseif total_pages == 3 then
                     if event.pageIdx == 1 then
                         self.right_level = changeIndex(false)
-                		self.last_list_position_y = listview.container:getPositionY()
+                        self.last_list_position_y = listview.container:getPositionY()
                         showNode()
                     elseif event.pageIdx == 3 then
                         self.right_level = changeIndex(true)
-                		self.last_list_position_y = listview.container:getPositionY()
+                        self.last_list_position_y = listview.container:getPositionY()
                         showNode()
                     end
                 end
-                right_level_label:setString("VIP "..self.right_level)
+                -- right_level_label:setString("VIP "..self.right_level)
+                bottom_vip_level_node:InitLevelNode()
             end
         end):addTo(all_node)
         pv:setTouchSwallowEnabled(false)
@@ -453,9 +474,33 @@ function GameUIVipNew:CreateVipEff()
         listview:addItem(item)
         listview:reload()
         if self.last_list_position_y then
-	        listview.container:setPositionY(self.last_list_position_y + (self.available_count - available_count) * 86)
+            listview.container:setPositionY(self.last_list_position_y + (self.available_count - available_count) * 86)
         end
         self.available_count = available_count
+
+        
+        local page_index_2 = 0,right_index_2
+        for i= begin_index,end_index do
+            if i ~= self.current_vip_level then
+                page_index_2 = page_index_2 + 1
+                local item = pv_right_level:newItem()
+                -- local content_node = display.newColorLayer(UIKit:hex2c4b(0x7a0aa000))
+                local content_node = display.newNode()
+                content_node:setContentSize(cc.size(bg_width - 20, bg_height + 86))
+                UIKit:ttfLabel({
+                    text = "VIP "..i,
+                    size = 26,
+                    color = 0xffd200,
+                }):align(display.CENTER, (bg_width - 20)/2 - 20, bg_height + 86 - 54):addTo(content_node)
+                item:addChild(content_node)
+                pv_right_level:addItem(item)
+                if self.right_level == i then
+                    right_index_2 = page_index_2
+                end
+            end
+        end
+        pv_right_level:reload()
+        pv_right_level:gotoPage(right_index_2)
     end
     showNode()
 end
@@ -586,12 +631,12 @@ function GameUIVipNew:OnUserBasicChanged(from,changed_map)
 
     end
     if changed_map.vipExp and self.vip_layer then
-    	-- local vip_level,percent,exp = User:GetVipLevel()
-    	-- self.progressTimer_vip_exp:setPercentage(percent)
-    	-- self.vip_exp_label:setString(string.formatnumberthousands(exp - User:GetSpecialVipLevelExp(vip_level)).."/"..string.formatnumberthousands(User:GetSpecialVipLevelExpTo(vip_level)))
-    	-- self.vip_level_pic:setTexture("VIP_"..vip_level.."_46x32.png")
-    	self.vip_layer:removeAllChildren()
-    	self:InitVip()
+        -- local vip_level,percent,exp = User:GetVipLevel()
+        -- self.progressTimer_vip_exp:setPercentage(percent)
+        -- self.vip_exp_label:setString(string.formatnumberthousands(exp - User:GetSpecialVipLevelExp(vip_level)).."/"..string.formatnumberthousands(User:GetSpecialVipLevelExpTo(vip_level)))
+        -- self.vip_level_pic:setTexture("VIP_"..vip_level.."_46x32.png")
+        self.vip_layer:removeAllChildren()
+        self:InitVip()
     end
 end
 function GameUIVipNew:OnVipEventTimer( vip_event_new )
@@ -605,6 +650,7 @@ function GameUIVipNew:OnVipEventTimer( vip_event_new )
     end
 end
 return GameUIVipNew
+
 
 
 
