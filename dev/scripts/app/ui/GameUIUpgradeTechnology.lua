@@ -490,6 +490,7 @@ function GameUIUpgradeTechnology:GetNeedResourceAndMaterialsAndTime(tech)
             blueprints = cost.blueprints,
             tools      = cost.tools,
             pulley      = cost.pulley,
+            tiles      = cost.tiles,
         },
         cost.buildTime
 end
@@ -517,7 +518,8 @@ function GameUIUpgradeTechnology:GetUpgradeGemsIfResourceNotEnough()
     local blueprints = materialManager:GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["blueprints"]
     local tools = materialManager:GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tools"]
     local pulley = materialManager:GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["pulley"]
-    local material_gems = DataUtils:buyMaterial(material,{blueprints = blueprints,tools = tools,pulley = pulley})
+    local tiles = materialManager:GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tiles"]
+    local material_gems = DataUtils:buyMaterial(material,{blueprints = blueprints,tools = tools,pulley = pulley,tiles = tiles})
     return resource_gems + material_gems
 end
 
