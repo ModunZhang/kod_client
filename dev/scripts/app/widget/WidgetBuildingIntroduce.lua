@@ -79,47 +79,47 @@ function WidgetBuildingIntroduce:SetUpgradeRequirementListview()
             description=_("建造队列已满")..(city:BuildQueueCounts()-#city:GetUpgradingBuildings()).."/"..1
         },
         
-        {resource_type = _("木材"),isVisible = self.building:GetLevelUpWood()>0,      isSatisfy = wood>self.building:GetLevelUpWood(),
+        {resource_type = _("木材"),isVisible = self.building:GetLevelUpWood()>0,      isSatisfy = wood >= self.building:GetLevelUpWood(),
             icon="res_wood_82x73.png",description=self.building:GetLevelUpWood().."/"..wood},
 
-        {resource_type = _("石料"),isVisible = self.building:GetLevelUpStone()>0,     isSatisfy = stone>self.building:GetLevelUpStone() ,
+        {resource_type = _("石料"),isVisible = self.building:GetLevelUpStone()>0,     isSatisfy = stone >= self.building:GetLevelUpStone() ,
             icon="res_stone_88x82.png",description=self.building:GetLevelUpStone().."/"..stone},
 
-        {resource_type = _("铁矿"),isVisible = self.building:GetLevelUpIron()>0,      isSatisfy = iron>self.building:GetLevelUpIron() ,
+        {resource_type = _("铁矿"),isVisible = self.building:GetLevelUpIron()>0,      isSatisfy = iron >= self.building:GetLevelUpIron() ,
             icon="res_iron_91x63.png",description=self.building:GetLevelUpIron().."/"..iron},
 
         {
             resource_type = _("空闲城民"),
             isVisible = self.building:GetLevelUpCitizen()>0,
-            isSatisfy = population>= self.building:GetLevelUpCitizen() ,
+            isSatisfy = population >= self.building:GetLevelUpCitizen() ,
             icon="res_citizen_88x82.png",
             description=population.."/"..self.building:GetLevelUpCitizen()
         },
         {
             resource_type = _("工程图纸"),
             isVisible = self.building:GetLevelUpBlueprints()>0,
-            isSatisfy = materials["blueprints"]>self.building:GetLevelUpBlueprints() ,
+            isSatisfy = materials["blueprints"]  >=  self.building:GetLevelUpBlueprints() ,
             icon="blueprints_128x128.png",
             description=self.building:GetLevelUpBlueprints().."/"..materials["blueprints"]
         },
         {
             resource_type = _("建造工具"),
             isVisible = self.building:GetLevelUpTools()>0,
-            isSatisfy = materials["tools"]>self.building:GetLevelUpTools() ,
+            isSatisfy = materials["tools"] >= self.building:GetLevelUpTools() ,
             icon="tools_128x128.png",
             description=self.building:GetLevelUpTools().."/"..materials["tools"]
         },
         {
             resource_type =_("砖石瓦片"),
             isVisible = self.building:GetLevelUpTiles()>0,
-            isSatisfy = materials["tiles"]>self.building:GetLevelUpTiles() ,
+            isSatisfy = materials["tiles"] >= self.building:GetLevelUpTiles() ,
             icon="tiles_128x128.png",
             description=self.building:GetLevelUpTiles().."/"..materials["tiles"]
         },
         {
             resource_type = _("滑轮组"),
             isVisible = self.building:GetLevelUpPulley()>0,
-            isSatisfy = materials["pulley"]>self.building:GetLevelUpPulley() ,
+            isSatisfy = materials["pulley"] >= self.building:GetLevelUpPulley() ,
             icon="pulley_128x128.png",
             description=self.building:GetLevelUpPulley().."/"..materials["pulley"]
         },
