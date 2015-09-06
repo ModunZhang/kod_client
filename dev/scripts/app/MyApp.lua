@@ -355,6 +355,9 @@ function MyApp:onEnterForeground()
     UIKit:closeAllUI()
     dump("onEnterForeground------>")
     local scene = display.getRunningScene()
+    if scene.__cname == "LogoScene" then
+        return
+    end
     if scene.__cname == "MyCityScene" then
         if not Alliance_Manager:HasBeenJoinedAlliance() then
             scene:GetHomePage():PromiseOfFteAlliance()
