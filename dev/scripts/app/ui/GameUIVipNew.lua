@@ -358,7 +358,8 @@ function GameUIVipNew:CreateVipEff()
             viewRect = cc.rect(window.left + 60 + 520 - bg_width + 20, window.bottom_top + 44  , bg_width - 20, bg_height + 56),
             row = 1,
             padding = {left = 0, right = 0, top = 10, bottom = 0},
-            nBounce = true
+            nBounce = true,
+            continuous_touch = true
         }:addTo(clipeNode,2)
     pv_right_level:setTouchSwallowEnabled(false)
     local cover_layer = display.newLayer():addTo(vip_layer,3):pos(window.left + 60 + 520 - bg_width + 20 , window.top - 310)
@@ -396,7 +397,8 @@ function GameUIVipNew:CreateVipEff()
             viewRect = cc.rect(520 - bg_width + 20, 0 , bg_width - 20, available_count * 86),
             row = 1,
             padding = {left = 0, right = 0, top = 10, bottom = 0},
-            nBounce = true
+            nBounce = true,
+            continuous_touch = true
         }
         pv:onTouch(function (event)
             if event.name == "pageChange" then
