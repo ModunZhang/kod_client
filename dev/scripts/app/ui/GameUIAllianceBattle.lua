@@ -204,13 +204,13 @@ function GameUIAllianceBattle:InitBattleStatistics()
             :IsTitleEqualOrGreaterThan("general")
 
 
-        local button = WidgetPushButton.new({normal = "tmp_button_battle_up_328x96.png",pressed = "tmp_button_battle_down_328x96.png"})
+        local button = WidgetPushButton.new({normal = "tmp_button_battle_up_234x82.png",pressed = "tmp_button_battle_down_234x82.png"})
             :setButtonLabel(UIKit:ttfLabel({
                 text = isEqualOrGreater and _("开始战斗!") or _("请求开战!"),
                 size = 24,
                 color = 0xffedae,
                 shadow= true
-            })):setButtonLabelOffset(20, 0)
+            }))
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
                     if isEqualOrGreater then
@@ -236,7 +236,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
             end):align(display.RIGHT_BOTTOM, window.right - 36, window.bottom_top + 26)
             :addTo(layer)
 
-        display.newSprite("fight_icon_66x66.png"):addTo(button):align(display.LEFT_CENTER, -312,48)
+        -- display.newSprite("fight_icon_66x66.png"):addTo(button):align(display.LEFT_CENTER, -312,48)
 
 
         local intro_1_text = isEqualOrGreater and _("参加联盟会战,赢得荣誉,金龙币和丰厚战利品,联盟处在和平期可以主动匹配或被其他联盟匹配进行联盟会战")
@@ -409,7 +409,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
                 }):addTo(layer)
                     :align(display.LEFT_CENTER,window.left+50,window.bottom_top + 70)
 
-                local button = WidgetPushButton.new({normal = "tmp_button_battle_up_328x96.png",pressed = "tmp_button_battle_down_328x96.png"})
+                local button = WidgetPushButton.new({normal = "tmp_button_battle_up_234x82.png",pressed = "tmp_button_battle_down_234x82.png"})
                     :setButtonLabel(UIKit:ttfLabel({
                         text = _("开始战斗!"),
                         size = 24,
@@ -428,7 +428,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
                         end
                     end):align(display.RIGHT_BOTTOM, window.right - 36, window.bottom_top + 26)
                     :addTo(layer)
-                display.newSprite("fight_icon_66x66.png"):addTo(button):align(display.LEFT_CENTER, -312,48)
+                -- display.newSprite("fight_icon_66x66.png"):addTo(button):align(display.LEFT_CENTER, -312,48)
             end
             info_bg_y = window.top-310
         else
