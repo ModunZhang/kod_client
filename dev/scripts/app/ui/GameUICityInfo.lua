@@ -93,7 +93,7 @@ function GameUICityInfo:CreateTop()
 
     -- 玩家战斗值数字
     self.power_label = UIKit:ttfLabel({
-        text = self.user:Power(),
+        text = string.formatnumberthousands(self.user:Power()),
         size = 20,
         color = 0xf3f0b6,
         shadow = true

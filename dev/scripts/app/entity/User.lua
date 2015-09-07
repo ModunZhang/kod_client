@@ -741,6 +741,7 @@ function User:OnResourcesChangedByTime(userData, current_time, deltaData)
         strength:SetProductionPerHour(refreshTime, intInit.staminaRecoverPerHour.value)
     end
     self:GetGemResource():SetValue(resources.gem)
+    return self
 end
 function User:OnBasicInfoChanged(userData, deltaData)
     local is_fully_update = deltaData == nil

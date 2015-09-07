@@ -395,6 +395,7 @@ function MyApp:EnterCitySceneByPlayerAndAlliance(id, is_my_alliance, location)
     NetManager:getPlayerCityInfoPromise(id):done(function(response)
         local user_data = response.msg.playerViewData
         local user = User_.new(user_data):OnBasicInfoChanged(user_data)
+                                         :OnResourcesChangedByTime(user_data)
         local city = City.new(user)
             :InitWithJsonData(user_data)
             :OnUserDataChanged(user_data, app.timer:GetServerTime())
