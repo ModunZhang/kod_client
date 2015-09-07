@@ -120,6 +120,7 @@ function WidgetChat:ctor()
             elseif event.pageIdx == 3 then
                 UIKit:newGameUI('GameUIChatChannel',"allianceFight"):AddToCurrentScene(true)
             end
+            app:GetAudioManager():PlayeEffectSoundWithKey("NORMAL_DOWN")
         end
     end):addTo(self)
     pv:setTouchEnabled(true)
