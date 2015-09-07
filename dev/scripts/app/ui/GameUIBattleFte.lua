@@ -7,25 +7,6 @@ function GameUIBattleFte:ctor(woldRect, title, text)
     self.pp = promise.new()
     self.__type  = UIKit.UITYPE.BACKGROUND
     local w = 640
-    local content = UIKit:ttfLabel({
-        size = 22,
-        color= 0xffedae,
-        dimensions = cc.size(400,100),
-        text = text
-    })
-    local size = content:getContentSize()
-    local header_sp = display.newSprite("tips_bg_header_640x140.png"):align(display.TOP_CENTER, display.cx - 15, display.cy):addTo(self,2)
-    self.clipeNode = display.newClippingRegionNode(cc.rect(0,0,display.width,header_sp:getPositionY()-18)):addTo(self,1)
-    local h = size.height + 150
-    self.content_sp = display.newScale9Sprite("tips_bg_content_1_640x140.png", display.cx, header_sp:getPositionY()-h, cc.size(w, h)):addTo(self.clipeNode):align(display.BOTTOM_CENTER)
-    UIKit:ttfLabel({
-        size = 30,
-        color= 0xffedae,
-        text = title
-    }):align(display.CENTER, w/2, h - 50):addTo(self.content_sp)
-    content:align(display.TOP_CENTER, w/2, h - 80):addTo(self.content_sp)
-
-
 
     self:addTouchAbleChild(display.newNode())
     local mask = WidgetMaskFilter.new():addTo(self):pos(display.cx, display.cy)
@@ -36,9 +17,28 @@ function GameUIBattleFte:ctor(woldRect, title, text)
     display.newScale9Sprite("pve_mark_box.png"):addTo(self):pos(x + w/2,y + h/2):size(w + 34, h + 34)
 
     self:DisableAutoClose(true)
+
+    local content = UIKit:ttfLabel({
+        size = 22,
+        color= 0xffedae,
+        dimensions = cc.size(400,100),
+        text = text
+    })
+    local size = content:getContentSize()
+    local header_sp = display.newSprite("tips_bg_header_640x140.png"):align(display.TOP_CENTER, display.cx - 15, leftp.y - 30):addTo(self,2)
+    self.clipeNode = display.newClippingRegionNode(cc.rect(0,0,display.width,header_sp:getPositionY()-18)):addTo(self,1)
+    local h = size.height + 150
+    self.content_sp = display.newScale9Sprite("tips_bg_content_1_640x140.png", display.cx, header_sp:getPositionY()-h, cc.size(w, h)):addTo(self.clipeNode):align(display.BOTTOM_CENTER)
+    UIKit:ttfLabel({
+        size = 30,
+        color= 0xffedae,
+        text = title
+    }):align(display.CENTER, w/2, h - 50):addTo(self.content_sp)
+    content:align(display.TOP_CENTER, w/2, h - 80):addTo(self.content_sp)
+    
     self:performWithDelay(function()
         display.newSprite("fte_next_arrow.png"):addTo(self.content_sp)
-            :pos(640/2, 40):rotation(90):runAction(cc.RepeatForever:create(
+            :pos(self.content_sp:getContentSize().width/2, 40):rotation(90):runAction(cc.RepeatForever:create(
             transition.sequence{
                 cc.MoveBy:create(0.5, cc.p(0,-10)),
                 cc.MoveBy:create(0.5, cc.p(0,10))
@@ -51,11 +51,12 @@ function GameUIBattleFte:PromiseOfFte()
 end
 function GameUIBattleFte:onExit()
     local pp = self.pp
-	GameUIBattleFte.super.onExit(self)
+    GameUIBattleFte.super.onExit(self)
     pp:resolve()
 end
 
 return GameUIBattleFte
+
 
 
 

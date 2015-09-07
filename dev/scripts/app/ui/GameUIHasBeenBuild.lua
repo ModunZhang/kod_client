@@ -179,16 +179,24 @@ function Item:ctor(parent_ui)
                 local city = building:BelongCity()
                 if city:IsFunctionBuilding(building) then
                     local location_id = city:GetLocationIdByBuilding(building)
-                    NetManager:getUpgradeBuildingByLocationPromise(location_id)
+                    NetManager:getUpgradeBuildingByLocationPromise(location_id):done(function()
+                        self.parent_ui:RefreshAllItems()
+                    end)
                 elseif city:IsHouse(building) then
                     local tile = city:GetTileWhichBuildingBelongs(building)
                     local house_location = tile:GetBuildingLocation(building)
 
-                    NetManager:getUpgradeHouseByLocationPromise(tile.location_id, house_location)
+                    NetManager:getUpgradeHouseByLocationPromise(tile.location_id, house_location):done(function()
+                        self.parent_ui:RefreshAllItems()
+                    end)
                 elseif city:IsGate(building) then
-                    NetManager:getUpgradeWallByLocationPromise()
+                    NetManager:getUpgradeWallByLocationPromise():done(function()
+                        self.parent_ui:RefreshAllItems()
+                    end)
                 elseif city:IsTower(building) then
-                    NetManager:getUpgradeTowerPromise()
+                    NetManager:getUpgradeTowerPromise():done(function()
+                        self.parent_ui:RefreshAllItems()
+                    end)
                 end
             elseif self.status == "building" then
                 UIKit:newGameUI("GameUIBuildingSpeedUp", building):AddToCurrentScene(true)

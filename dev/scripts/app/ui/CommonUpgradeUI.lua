@@ -960,7 +960,17 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
             dialog:CreateOKButtonWithPrice(
                 {
                     listener = function()
-                        listener()
+                        if owen_gem<required_gems then
+                            UIKit:showMessageDialog(_("提示"),_("金龙币不足")):CreateOKButton(
+                                {
+                                    listener = function ()
+                                        UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                                    end,
+                                    btn_name= _("前往商店")
+                                })
+                        else
+                            listener()
+                        end
                     end,
                     price = required_gems,
                     btn_name = _("立即完成")
@@ -1001,7 +1011,17 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
             dialog:CreateOKButtonWithPrice(
                 {
                     listener = function()
-                        listener()
+                        if owen_gem<required_gems then
+                            UIKit:showMessageDialog(_("提示"),_("金龙币不足")):CreateOKButton(
+                                {
+                                    listener = function ()
+                                        UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                                    end,
+                                    btn_name= _("前往商店")
+                                })
+                        else
+                            listener()
+                        end
                     end,
                     price = required_gems,
                     btn_name = _("立即完成")
@@ -1079,6 +1099,7 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
 
 
 

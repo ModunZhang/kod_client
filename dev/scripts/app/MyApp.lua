@@ -355,6 +355,9 @@ function MyApp:onEnterForeground()
     UIKit:closeAllUI()
     dump("onEnterForeground------>")
     local scene = display.getRunningScene()
+    if scene.__cname == "LogoScene" then
+        return
+    end
     if scene.__cname == "MyCityScene" then
         if not Alliance_Manager:HasBeenJoinedAlliance() then
             scene:GetHomePage():PromiseOfFteAlliance()
@@ -392,6 +395,8 @@ function MyApp:EnterCitySceneByPlayerAndAlliance(id, is_my_alliance, location)
     NetManager:getPlayerCityInfoPromise(id):done(function(response)
         local user_data = response.msg.playerViewData
         local user = User_.new(user_data):OnBasicInfoChanged(user_data)
+                                         :OnResourcesChangedByTime(user_data)
+                                         :OnVipEventDataChange(user_data)
         local city = City.new(user)
             :InitWithJsonData(user_data)
             :OnUserDataChanged(user_data, app.timer:GetServerTime())

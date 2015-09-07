@@ -19,7 +19,6 @@ function GameUIBarracks:ctor(city, barracks,default_tab,need_recruit_soldier)
     self.barracks = barracks
     self.need_recruit_soldier = need_recruit_soldier
 
-    self.special_soldier_items={}
 end
 function GameUIBarracks:OnMoveInStage()
     self.soldier_map = {}
@@ -95,27 +94,35 @@ end
 
 function GameUIBarracks:CreateSoldierUI()
     local recruit = display.newNode():addTo(self:GetView())
-    -- self.tips = WidgetTips.new(_("招募队列空闲"), _("请选择一个兵种进行招募")):addTo(recruit)
-    --     :align(display.CENTER, window.cx, window.top - 160)
-    --     :show()
-
-    -- self.timer = WidgetTimerProgress.new(549, 108):addTo(recruit)
-    --     :align(display.CENTER, window.cx, window.top - 160)
-    --     :hide()
-    --     :OnButtonClicked(function(event)
-    --         print("hello")
-    --     end)
-    -- self.timer:GetSpeedUpButton():setButtonEnabled(false)
 
     local rect = self.timer:getCascadeBoundingBox()
-    self.list_view = self:CreateVerticalListViewDetached(rect.x, window.bottom + 70, rect.x + rect.width, rect.y - 20):addTo(recruit)
-
+    local list_view ,listnode=  UIKit:commonListView({
+        -- bgColor = UIKit:hex2c4b(0x7a100000),
+        viewRect = cc.rect(0,0, rect.width, rect.y - 10 - window.bottom - 110),
+        direction = cc.ui.UIScrollView.DIRECTION_VERTICAL
+    })
+    listnode:align(display.BOTTOM_CENTER, window.cx, window.bottom_top+20):addTo(recruit)
+    self.list_view = list_view
+    -- self.list_view = self:CreateVerticalListViewDetached(rect.x, window.bottom + 70, rect.x + rect.width, rect.y - 20):addTo(recruit)
+    local titles ={
+        {
+            title = _("防守型部队"),
+            title_img = "title_blue_554x34.png",
+        },
+        {
+            title = _("攻击型部队"),
+            title_img = "title_red_556x34.png",
+        },
+    }
     for i, v in ipairs({
         {"swordsman", "ranger", "lancer", "catapult"},
         {"sentinel", "crossbowman", "horseArcher", "ballista"}
     }) do
-        self.list_view:addItem(self:CreateItemWithListView(self.list_view, v))
+        local item = self:CreateSpecialItemWithListView(self.list_view, v,titles[i].title, titles[i].title_img,i == 1 and _("此系列单位生命属性较高") or _("此系列单位攻击属性较高"))
+        self.list_view:addItem(item)
     end
+
+   
 
     local soldier_map = self.barracks_city:GetSoldierManager():GetSoldierMap()
     for k, v in pairs(self.soldier_map) do
@@ -123,7 +130,6 @@ function GameUIBarracks:CreateSoldierUI()
     end
 
     self.list_view:reload()
-    -- :resetPosition()
     return recruit
 end
 function GameUIBarracks:CreateSpecialSoldierUI()
@@ -155,7 +161,6 @@ function GameUIBarracks:CreateSpecialSoldierUI()
     -- {"priest", "demonHunter", "paladin", "steamTank"}
     }) do
         local item = self:CreateSpecialItemWithListView(self.special_list_view, v,titles[i].title, titles[i].title_img)
-        table.insert(self.special_soldier_items,item)
         self.special_list_view:addItem(item)
     end
 
@@ -165,7 +170,6 @@ function GameUIBarracks:CreateSpecialSoldierUI()
     end
 
     self.special_list_view:reload()
-    -- :resetPosition()
     return special
 end
 function GameUIBarracks:TabButtons()
@@ -206,7 +210,6 @@ function GameUIBarracks:TabButtons()
             self:RefershUnlockInfo()
         end
     end):pos(window.cx, window.bottom + 34)
-    -- self.tab_buttons:SetGreenTipsShow("specialRecruit",self:GetRecruitSpecialTime())
 end
 local arrow_left_dir_map = {
     swordsman = true,
@@ -261,13 +264,14 @@ function GameUIBarracks:CreateItemWithListView(list_view, soldiers)
     item:setItemSize(widget_rect.width, 172)
     return item
 end
-function GameUIBarracks:CreateSpecialItemWithListView( list_view, soldiers ,title,title_img)
+function GameUIBarracks:CreateSpecialItemWithListView( list_view, soldiers ,title,title_img , desc)
     local rect = list_view:getViewRect()
     local origin_x = 14
     local widget_width = 568
     local unit_width = 120
     local gap_x = (widget_width - unit_width * 4-origin_x*2) / 3
-    local row_item = WidgetUIBackGround.new({height = 230,width = widget_width},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
+    local row_height = desc and 264 or 230
+    local row_item = WidgetUIBackGround.new({height = row_height,width = widget_width},WidgetUIBackGround.STYLE_TYPE.STYLE_2)
     for i, soldier_name in pairs(soldiers) do
         self.soldier_map[soldier_name] =
             WidgetSoldierBox.new(nil, function(event)
@@ -275,7 +279,7 @@ function GameUIBarracks:CreateSpecialItemWithListView( list_view, soldiers ,titl
                     :addTo(self,1000, WidgetRecruitSoldier_tag)
                     :align(display.CENTER, window.cx, 500 / 2)
             end):addTo(row_item)
-                :alignByPoint(cc.p(0.5, 0.5), origin_x + (unit_width + gap_x) * (i - 1) + unit_width / 2, 100)
+                :alignByPoint(cc.p(0.5, 0.5), origin_x + (unit_width + gap_x) * (i - 1) + unit_width / 2, row_height - 130)
                 :SetSoldier(soldier_name, self.barracks_city:GetSoldierManager():GetStarBySoldierType(soldier_name))
     end
 
@@ -291,31 +295,22 @@ function GameUIBarracks:CreateSpecialItemWithListView( list_view, soldiers ,titl
     }):addTo(title_bg)
         :align(display.CENTER, title_bg:getContentSize().width/2,title_bg:getContentSize().height/2)
 
-    -- 招募时间限制
-
-    -- local time_bg = display.newScale9Sprite("back_ground_166x84.png", 0,0,cc.size(548,34),cc.rect(15,10,136,64))
-    --     :align(display.BOTTOM_CENTER, row_item:getContentSize().width/2, 10)
-    --     :addTo(row_item)
-    -- local re_time = DataUtils:GetNextRecruitTime()
-    -- local re_string = ""
-    -- if tolua.type(re_time) == "boolean" then
-    --     re_string = _("招募开启中")
-    -- else
-    --     re_string = _("下一次开启招募:")..GameUtils:formatTimeStyle1(re_time)
-    -- end
-    -- local re_status = UIKit:ttfLabel({
-    --     text = re_string,
-    --     size = 20,
-    --     color = 0x514d3e
-    -- }):addTo(time_bg)
-    --     :align(display.CENTER, time_bg:getContentSize().width/2,time_bg:getContentSize().height/2)
+    -- 介绍
+    if desc then
+        local desc_bg = display.newScale9Sprite("back_ground_166x84.png", 0,0,cc.size(548,34),cc.rect(15,10,136,64))
+            :align(display.BOTTOM_CENTER, row_item:getContentSize().width/2, 10)
+            :addTo(row_item)
+        local re_status = UIKit:ttfLabel({
+            text = desc,
+            size = 20,
+            color = 0x514d3e
+        }):addTo(desc_bg)
+            :align(display.CENTER, desc_bg:getContentSize().width/2,desc_bg:getContentSize().height/2)
+    end
 
     local item = list_view:newItem()
     item:addContent(row_item)
-    item:setItemSize(widget_width, 230)
-    -- function item:SetRecruitStatus(string)
-    --     re_status:setString(string)
-    -- end
+    item:setItemSize(widget_width, row_height)
     return item
 end
 function GameUIBarracks:OnSoliderCountChanged()
@@ -348,16 +343,6 @@ function GameUIBarracks:RefershUnlockInfo()
     self:OnSoliderCountChanged()
 end
 
-function GameUIBarracks:OnTimer(current_time)
-    -- for i,v in ipairs(self.special_soldier_items) do
-    --     local ok,time = self:GetRecruitSpecialTime()
-    --     if ok then
-    --         v:SetRecruitStatus(_("招募开启中"))
-    --     else
-    --         v:SetRecruitStatus(_("下一次开启招募:")..GameUtils:formatTimeStyle1(time))
-    --     end
-    -- end
-end
 function GameUIBarracks:GetRecruitSpecialTime()
     local re_time = DataUtils:GetNextRecruitTime()
     return tolua.type(re_time) == "boolean", re_time

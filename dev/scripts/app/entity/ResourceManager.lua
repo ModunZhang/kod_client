@@ -189,6 +189,7 @@ function ResourceManager:UpdateByCity(city, current_time)
     end)
     dump_resources(total_production_map, "小屋对资源的影响--->")
     -- buff对资源的影响
+    -- 城民的计算是写死的，没有按照通用的规则
     local buff_production_map,buff_limt_map
     buff_production_map,buff_limt_map = self:GetTotalBuffData(city)
     self.resource_citizen = citizen_map
@@ -241,7 +242,7 @@ local resource_building_map = {
     lumbermill = WOOD,
     foundry = IRON,
     stoneMason = STONE,
-    townHall = CITIZEN,
+    townHall = COIN,
 }
 function ResourceManager:GetTotalBuffData(city)
     local buff_production_map =

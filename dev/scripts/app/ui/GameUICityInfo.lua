@@ -93,7 +93,7 @@ function GameUICityInfo:CreateTop()
 
     -- 玩家战斗值数字
     self.power_label = UIKit:ttfLabel({
-        text = self.user:Power(),
+        text = string.formatnumberthousands(self.user:Power()),
         size = 20,
         color = 0xf3f0b6,
         shadow = true
@@ -163,7 +163,7 @@ function GameUICityInfo:CreateTop()
             --     UIKit:newGameUI('GameUIVip', City,"VIP"):AddToCurrentScene(true)
             -- end
         end)
-    local vip_btn_img = User:IsVIPActived() and "vip_bg_110x124.png" or "vip_bg_disable_110x124.png"
+    local vip_btn_img = self.user:IsVIPActived() and "vip_bg_110x124.png" or "vip_bg_disable_110x124.png"
     vip_btn:setButtonImage(cc.ui.UIPushButton.NORMAL, vip_btn_img, true)
     vip_btn:setButtonImage(cc.ui.UIPushButton.PRESSED, vip_btn_img, true)
     self.vip_level = display.newNode():addTo(vip_btn):pos(-3, 0):scale(0.8)

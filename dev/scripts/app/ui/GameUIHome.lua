@@ -260,7 +260,7 @@ function GameUIHome:CreateTop()
         {scale9 = false}
     ):onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
-            UIKit:newGameUI('GameUIVip', self.city,"info"):AddToCurrentScene(true)
+            UIKit:newGameUI('GameUIVipNew', self.city,"info"):AddToCurrentScene(true)
         end
     end):addTo(top_bg):align(display.LEFT_CENTER,top_bg:getContentSize().width/2-2, top_bg:getContentSize().height/2+10)
     button:setRotationSkewY(180)
@@ -365,7 +365,7 @@ function GameUIHome:CreateTop()
     ):addTo(top_bg):align(display.CENTER, ox + 195, 65)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                UIKit:newGameUI('GameUIVip', self.city,"VIP"):AddToCurrentScene(true)
+                UIKit:newGameUI('GameUIVipNew', self.city,"VIP"):AddToCurrentScene(true)
             end
         end)
     local vip_btn_img = User:IsVIPActived() and "vip_bg_110x124.png" or "vip_bg_disable_110x124.png"
@@ -951,7 +951,7 @@ function GameUIHome:PromiseOfActivePromise()
     WidgetFteArrow.new(_("点击VIP，免费激活VIP")):addTo(self:GetFteLayer())
         :TurnUp():align(display.TOP_CENTER, r.x + r.width/2, r.y)
 
-    return UIKit:PromiseOfOpen("GameUIVip"):next(function(ui)
+    return UIKit:PromiseOfOpen("GameUIVipNew"):next(function(ui)
         self:GetFteLayer():removeFromParent()
         return ui:PromiseOfFte()
     end)
