@@ -724,6 +724,7 @@ function User:OnVipEventDataChange(userData, deltaData)
             listener:OnVipEventTimer(self.vip_event)
         end)
     end
+    return self
 end
 function User:OnVipEventTimer( vip_event )
     self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT, function(listener)
