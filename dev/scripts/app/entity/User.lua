@@ -724,6 +724,7 @@ function User:OnVipEventDataChange(userData, deltaData)
             listener:OnVipEventTimer(self.vip_event)
         end)
     end
+    return self
 end
 function User:OnVipEventTimer( vip_event )
     self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT, function(listener)
@@ -741,6 +742,7 @@ function User:OnResourcesChangedByTime(userData, current_time, deltaData)
         strength:SetProductionPerHour(refreshTime, intInit.staminaRecoverPerHour.value)
     end
     self:GetGemResource():SetValue(resources.gem)
+    return self
 end
 function User:OnBasicInfoChanged(userData, deltaData)
     local is_fully_update = deltaData == nil
