@@ -63,6 +63,10 @@ function DataManager:OnUserDataChanged(userData,timer, deltaData)
         print(debug.traceback("", 2))
         assert(false)
     end
+    -- 代国强 ， 收到全数据推送时，关闭所有需要关闭的UI，避免UI表现和真实数据不一致，引起bug
+    if deltaData == nil then
+        UIKit:closeAllUI()
+    end
     LuaUtils:TimeCollect(function()
         User:OnUserDataChanged(userData, timer, deltaData)
     end, "User:OnUserDataChanged")
