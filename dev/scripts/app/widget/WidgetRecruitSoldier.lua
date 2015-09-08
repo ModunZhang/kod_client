@@ -72,12 +72,12 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name, soldier_star)
 
 
     -- info
-    cc.ui.UIPushButton.new({normal = "i_btn_up_26x26.png",
-        pressed = "i_btn_down_26x26.png"}):addTo(title_blue)
-        :align(display.LEFT_CENTER, title_blue:getContentSize().width - 50, size.height/2)
-        :onButtonClicked(function(event)
-            WidgetSoldierDetails.new(soldier_name, self.star):addTo(self)
-        end)
+    -- cc.ui.UIPushButton.new({normal = "i_btn_up_26x26.png",
+    --     pressed = "i_btn_down_26x26.png"}):addTo(title_blue)
+    --     :align(display.LEFT_CENTER, title_blue:getContentSize().width - 50, size.height/2)
+    --     :onButtonClicked(function(event)
+    --         WidgetSoldierDetails.new(soldier_name, self.star):addTo(self)
+    --     end)
 
     -- soldier bg
     local size = back_ground:getContentSize()

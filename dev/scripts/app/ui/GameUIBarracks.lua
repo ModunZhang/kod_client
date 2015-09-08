@@ -160,7 +160,7 @@ function GameUIBarracks:CreateSpecialSoldierUI()
         {"skeletonWarrior", "skeletonArcher", "deathKnight", "meatWagon"}
     -- {"priest", "demonHunter", "paladin", "steamTank"}
     }) do
-        local item = self:CreateSpecialItemWithListView(self.special_list_view, v,titles[i].title, titles[i].title_img)
+        local item = self:CreateSpecialItemWithListView(self.special_list_view, v,titles[i].title, titles[i].title_img,i == 1 and _("此系列单位无维护费") or "")
         self.special_list_view:addItem(item)
     end
 
