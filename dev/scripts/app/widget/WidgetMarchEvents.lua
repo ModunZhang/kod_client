@@ -449,7 +449,11 @@ function WidgetMarchEvents:CreateDefenceItem(entity)
         node.progress:setPercentage(100)
         display_text = node.prefix
         time_str = ""
-        dragonType = event:PlayerTroops()[1].dragon.type
+        for i,v in ipairs(event:PlayerTroops()) do
+            if v.name == User:Name() then
+                dragonType = v.dragon.type
+            end
+        end
     elseif type_str == 'HELPTO' then
         node.progress:setPercentage(100)
         display_text = node.prefix
