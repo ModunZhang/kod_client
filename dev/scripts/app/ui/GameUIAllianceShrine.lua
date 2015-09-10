@@ -298,13 +298,14 @@ end
 
 function GameUIAllianceShrine:GetStageListItem(index,stage_obj)
 	local item = self.stage_list:newItem()
-	local is_locked = stage_obj:IsLocked()
+	-- local is_locked = stage_obj:IsLocked()
+	local is_locked = false
 	local troop = stage_obj:Troops()[2]
 	local desc_color = 0xffffff
 	local logo_file = "alliance_shire_stage_bg_554x130_black.png" 
 	if not is_locked then  
-		if troop.type == 'catapult' or troop.type == 'ballista' then
-	 		logo_file = "alliance_shire_stage_bg_554x130_yellow.png"
+		if troop.type == 'sentinel' or troop.type == 'crossbowman' or troop.type == 'horseArcher' or troop.type == 'ballista' then
+	 		logo_file = "alliance_shire_stage_bg_554x130_red.png"
 	 		desc_color = 0xf6b304
 	 	else
 	 		desc_color = 0x00d2ff
@@ -382,6 +383,9 @@ function GameUIAllianceShrine:GetStageListItem(index,stage_obj)
 				end)
 		end
 		local sp = display.newSprite(troop_image):align(display.RIGHT_BOTTOM, 550, 0):addTo(logo_bg)
+		if troop.type == "catapult" then
+			sp:setFlippedX(true)
+		end
 		display.newSprite("alliance_shire_stage_soldier_shadow_128x107.png"):addTo(sp):align(display.LEFT_BOTTOM, 0, 0)
 	end
 	item:addContent(bg)
