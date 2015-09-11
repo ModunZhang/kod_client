@@ -233,7 +233,7 @@ function WidgetSoldierPromoteDetails:CreateSoldierBox(isGray)
     local soldier_type = self.soldier_type
     local star = isGray and self.star +1 or self.star
     local soldier_box = display.newSprite("box_light_148x148.png")
-    local blue_bg = display.newSprite("back_ground_121x122.png", soldier_box:getContentSize().width/2, soldier_box:getContentSize().height/2, {class=cc.FilteredSpriteWithOne}):addTo(soldier_box)
+    local blue_bg = display.newSprite(UILib.soldier_color_bg_images[soldier_type], soldier_box:getContentSize().width/2, soldier_box:getContentSize().height/2, {class=cc.FilteredSpriteWithOne}):addTo(soldier_box)
 
     local soldier_icon = display.newSprite(UILib.soldier_image[soldier_type][star], soldier_box:getContentSize().width/2, soldier_box:getContentSize().height/2, {class=cc.FilteredSpriteWithOne}):addTo(soldier_box)
     soldier_icon:scale(124/math.max(soldier_icon:getContentSize().width,soldier_icon:getContentSize().height))
@@ -254,6 +254,7 @@ function WidgetSoldierPromoteDetails:CreateSoldierBox(isGray)
         soldier_icon:setFilter(filters)
     end
 
+    display.newSprite("box_soldier_128x128.png"):addTo(soldier_box):align(display.CENTER, soldier_box:getContentSize().width/2, soldier_box:getContentSize().height/2)
     return soldier_box
 end
 function WidgetSoldierPromoteDetails:onExit()

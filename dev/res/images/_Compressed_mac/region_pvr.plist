@@ -108,7 +108,7 @@
                 <key>sourceSize</key>
                 <string>{554,130}</string>
             </dict>
-            <key>alliance_shire_stage_bg_554x130_yellow.png</key>
+            <key>alliance_shire_stage_bg_554x130_red.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,2},{554,130}}</string>
@@ -719,6 +719,19 @@
                 <key>sourceSize</key>
                 <string>{200,180}</string>
             </dict>
+            <key>warriors_tomb_80x72.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{356,900},{80,72}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{80,72}}</string>
+                <key>sourceSize</key>
+                <string>{80,72}</string>
+            </dict>
         </dict>
         <key>metadata</key>
         <dict>
@@ -729,7 +742,7 @@
             <key>size</key>
             <string>{2048,2048}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:ee44c29dd2ec8f1b8d1c3e1c9532f489:1/1$</string>
+            <string>$TexturePacker:SmartUpdate:1ea6bf8ae47f5377ab44061aa9ef5e96:1/1$</string>
             <key>textureFileName</key>
             <string>region_pvr.png</string>
         </dict>

@@ -160,7 +160,7 @@ function GameUIBarracks:CreateSpecialSoldierUI()
         {"skeletonWarrior", "skeletonArcher", "deathKnight", "meatWagon"}
     -- {"priest", "demonHunter", "paladin", "steamTank"}
     }) do
-        local item = self:CreateSpecialItemWithListView(self.special_list_view, v,titles[i].title, titles[i].title_img)
+        local item = self:CreateSpecialItemWithListView(self.special_list_view, v,titles[i].title, titles[i].title_img,i == 1 and _("此系列单位无维护费") or "")
         self.special_list_view:addItem(item)
     end
 
@@ -275,6 +275,9 @@ function GameUIBarracks:CreateSpecialItemWithListView( list_view, soldiers ,titl
     for i, soldier_name in pairs(soldiers) do
         self.soldier_map[soldier_name] =
             WidgetSoldierBox.new(nil, function(event)
+                if self.soldier_map[soldier_name]:IsLocked() then
+                    return
+                end
                 WidgetRecruitSoldier.new(self.barracks, self.barracks_city, soldier_name,self.barracks_city:GetSoldierManager():GetStarBySoldierType(soldier_name))
                     :addTo(self,1000, WidgetRecruitSoldier_tag)
                     :align(display.CENTER, window.cx, 500 / 2)

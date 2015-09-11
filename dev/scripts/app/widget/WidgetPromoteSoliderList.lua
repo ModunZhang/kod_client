@@ -85,6 +85,7 @@ function WidgetPromoteSoliderList:CreateSoliderBox(soldier_type,index,star)
             soldier_box.line = display.newSprite("box_70x32.png"):addTo(soldier_box):align(display.CENTER_RIGHT, 8, soldier_box:getContentSize().height/2)
         end
     end
+
     -- 打开晋级详情信息
     WidgetPushButton.new()
         :addTo(soldier_box)
@@ -116,17 +117,18 @@ function WidgetPromoteSoliderList:CreateSoliderBox(soldier_type,index,star)
                 :setButtonLabel(UIKit:ttfLabel({
                     text = _("研发"),
                     size = 24,
-                    color = 0xfff3c7
+                    color = 0xfff3c7,
+                    shadow = true
                 }))
                 :onButtonClicked(function(event)
                     UIKit:newWidgetUI("WidgetSoldierPromoteDetails",soldier_type,star,self.building):AddToCurrentScene()
                 end)
         end
     end
-    local blue_bg = display.newSprite("back_ground_121x122.png", soldier_box:getContentSize().width/2, soldier_box:getContentSize().height/2, {class=cc.FilteredSpriteWithOne}):addTo(soldier_box)
+    local blue_bg = display.newSprite(UILib.soldier_color_bg_images[soldier_type], soldier_box:getContentSize().width/2, soldier_box:getContentSize().height/2, {class=cc.FilteredSpriteWithOne}):addTo(soldier_box)
     local soldier_icon = display.newSprite(UILib.soldier_image[soldier_type][index], soldier_box:getContentSize().width/2, soldier_box:getContentSize().height/2, {class=cc.FilteredSpriteWithOne}):addTo(soldier_box)
     soldier_icon:scale(124/math.max(soldier_icon:getContentSize().width,soldier_icon:getContentSize().height))
-    local soldier_star_bg = display.newSprite("tmp_back_ground_102x22.png"):addTo(soldier_icon):align(display.BOTTOM_CENTER,soldier_icon:getContentSize().width/2-16, 0)
+    local soldier_star_bg = display.newSprite("tmp_back_ground_102x22.png"):addTo(soldier_icon):align(display.BOTTOM_CENTER,soldier_icon:getContentSize().width/2-10, 3)
     StarBar.new({
         max = 3,
         bg = "Stars_bar_bg.png",
@@ -144,6 +146,8 @@ function WidgetPromoteSoliderList:CreateSoliderBox(soldier_type,index,star)
         blue_bg:setFilter(filters)
         soldier_icon:setFilter(filters)
     end
+    display.newSprite("box_soldier_128x128.png"):addTo(soldier_box):align(display.CENTER, soldier_box:getContentSize().width/2, soldier_box:getContentSize().height/2)
+
     local parent = self
     function soldier_box:Refresh(star)
         local status
@@ -184,7 +188,8 @@ function WidgetPromoteSoliderList:CreateSoliderBox(soldier_type,index,star)
                     :setButtonLabel(UIKit:ttfLabel({
                         text = _("研发"),
                         size = 24,
-                        color = 0xfff3c7
+                        color = 0xfff3c7,
+                        shadow = true
                     }))
                     :onButtonClicked(function(event)
                         UIKit:newWidgetUI("WidgetSoldierPromoteDetails",soldier_type,star,parent.building):AddToCurrentScene()
