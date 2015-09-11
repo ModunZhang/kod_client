@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: dragonfall\n"
-"POT-Creation-Date: 2015-09-11 16:39+0800\n"
-"PO-Revision-Date: 2015-09-11 16:39+0800\n"
+"POT-Creation-Date: 2015-09-11 18:10+0800\n"
+"PO-Revision-Date: 2015-09-11 18:12+0800\n"
 "Last-Translator: gaozhou <gaozhou.f@qq.com>\n"
 "Language-Team: \n"
 "Language: en\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #: MyApp.lua:241 MyApp.lua:252 MyApp.lua:256 MyApp.lua:279 MyApp.lua:283
 #: MyApp.lua:289 MyApp.lua:297 service/NetManager.lua:380
-#: ui/GameUIAllianceCityEnter.lua:183 ui/GameUIChatChannel.lua:115
+#: ui/GameUIAllianceCityEnter.lua:189 ui/GameUIChatChannel.lua:115
 #: ui/GameUIChatChannel.lua:157 ui/GameUIDailyMissionInfo.lua:225
 #: ui/GameUIDailyMissionInfo.lua:249 ui/GameUIDailyMissionInfo.lua:290
 #: ui/GameUIDailyMissionInfo.lua:303 ui/GameUIDailyMissionInfo.lua:316
@@ -65,16 +65,19 @@ msgstr ""
 #: ui/GameUIAlliance.lua:1653 ui/GameUIAlliance.lua:1719
 #: ui/GameUIAlliance.lua:1724 ui/GameUIAllianceBattle.lua:218
 #: ui/GameUIAllianceBattle.lua:230 ui/GameUIAllianceBattle.lua:867
-#: ui/GameUIAllianceCityEnter.lua:155 ui/GameUIAllianceCityEnter.lua:167
-#: ui/GameUIAllianceCityEnter.lua:221 ui/GameUIAllianceCityEnter.lua:229
-#: ui/GameUIAllianceContribute.lua:318 ui/GameUIAllianceContribute.lua:323
-#: ui/GameUIAllianceContribute.lua:334 ui/GameUIAllianceInfo.lua:270
-#: ui/GameUIAllianceInfo.lua:275 ui/GameUIAllianceInfo.lua:282
-#: ui/GameUIAllianceInfo.lua:287 ui/GameUIAllianceJoinTips.lua:144
-#: ui/GameUIAllianceMemberInfo.lua:127 ui/GameUIAllianceMemberInfo.lua:170
-#: ui/GameUIAllianceMemberInfo.lua:179 ui/GameUIAllianceMemberInfo.lua:347
-#: ui/GameUIAllianceMemberInfo.lua:352 ui/GameUIAllianceMosterEnter.lua:151
-#: ui/GameUIAllianceMosterEnter.lua:155
+#: ui/GameUIAllianceCityEnter.lua:155 ui/GameUIAllianceCityEnter.lua:168
+#: ui/GameUIAllianceCityEnter.lua:228 ui/GameUIAllianceCityEnter.lua:246
+#: ui/GameUIAllianceCityEnter.lua:254 ui/GameUIAllianceCityEnter.lua:262
+#: ui/GameUIAllianceCityEnter.lua:284 ui/GameUIAllianceContribute.lua:318
+#: ui/GameUIAllianceContribute.lua:323 ui/GameUIAllianceContribute.lua:334
+#: ui/GameUIAllianceInfo.lua:270 ui/GameUIAllianceInfo.lua:275
+#: ui/GameUIAllianceInfo.lua:282 ui/GameUIAllianceInfo.lua:287
+#: ui/GameUIAllianceJoinTips.lua:144 ui/GameUIAllianceMemberInfo.lua:127
+#: ui/GameUIAllianceMemberInfo.lua:170 ui/GameUIAllianceMemberInfo.lua:179
+#: ui/GameUIAllianceMemberInfo.lua:347 ui/GameUIAllianceMemberInfo.lua:352
+#: ui/GameUIAllianceMosterEnter.lua:152 ui/GameUIAllianceMosterEnter.lua:164
+#: ui/GameUIAllianceMosterEnter.lua:170 ui/GameUIAllianceMosterEnter.lua:174
+#: ui/GameUIAllianceMosterEnter.lua:186
 #: ui/GameUIAllianceNoticeOrDescEdit.lua:89
 #: ui/GameUIAllianceNoticeOrDescEdit.lua:95 ui/GameUIAlliancePalace.lua:296
 #: ui/GameUIAlliancePalace.lua:300 ui/GameUIAlliancePalace.lua:456
@@ -83,9 +86,12 @@ msgstr ""
 #: ui/GameUIAllianceSendTroops.lua:194 ui/GameUIAllianceSendTroops.lua:197
 #: ui/GameUIAllianceSendTroops.lua:209 ui/GameUIAllianceSendTroops.lua:212
 #: ui/GameUIAllianceSendTroops.lua:215 ui/GameUIAllianceShrine.lua:483
-#: ui/GameUIAllianceShrineDetail.lua:257 ui/GameUIAllianceVillageEnter.lua:319
-#: ui/GameUIAllianceVillageEnter.lua:322 ui/GameUIAllianceVillageEnter.lua:352
-#: ui/GameUIAllianceVillageEnter.lua:391 ui/GameUIAllianceVillageEnter.lua:423
+#: ui/GameUIAllianceShrineDetail.lua:257 ui/GameUIAllianceVillageEnter.lua:320
+#: ui/GameUIAllianceVillageEnter.lua:333 ui/GameUIAllianceVillageEnter.lua:339
+#: ui/GameUIAllianceVillageEnter.lua:342 ui/GameUIAllianceVillageEnter.lua:383
+#: ui/GameUIAllianceVillageEnter.lua:391 ui/GameUIAllianceVillageEnter.lua:410
+#: ui/GameUIAllianceVillageEnter.lua:448 ui/GameUIAllianceVillageEnter.lua:456
+#: ui/GameUIAllianceVillageEnter.lua:500 ui/GameUIAllianceVillageEnter.lua:508
 #: ui/GameUIBuild.lua:186 ui/GameUIChatChannel.lua:97
 #: ui/GameUIChatChannel.lua:103 ui/GameUIChatChannel.lua:108
 #: ui/GameUIChatChannel.lua:145 ui/GameUIChatChannel.lua:150
@@ -124,24 +130,24 @@ msgstr ""
 #: ui/GameUISettingLanguage.lua:61 ui/GameUIShareReport.lua:195
 #: ui/GameUIShareReport.lua:212 ui/GameUIShareReport.lua:216
 #: ui/GameUIShareReport.lua:238 ui/GameUIShareReport.lua:241
-#: ui/GameUIShireFightEvent.lua:273 ui/GameUIStrikePlayer.lua:128
-#: ui/GameUIStrikePlayer.lua:219 ui/GameUIStrikePlayer.lua:222
-#: ui/GameUIStrikePlayer.lua:241 ui/GameUIStrikePlayer.lua:266
-#: ui/GameUITownHall.lua:162 ui/GameUITownHall.lua:172
-#: ui/GameUITradeGuild.lua:276 ui/GameUITradeGuild.lua:855
-#: ui/GameUITradeGuild.lua:860 ui/GameUITradeGuild.lua:864
-#: ui/GameUIUnlockBuilding.lua:278 ui/GameUIUnlockBuilding.lua:299
-#: ui/GameUIUnlockBuilding.lua:315 ui/GameUIUnlockBuilding.lua:324
-#: ui/GameUIUnlockBuilding.lua:340 ui/GameUIUpgradeTechnology.lua:420
-#: ui/GameUIUpgradeTechnology.lua:429 ui/GameUIUpgradeTechnology.lua:450
-#: ui/GameUIUpgradeTechnology.lua:464 ui/GameUIWatchTower.lua:190
-#: ui/GameUIWatchTower.lua:201 ui/GameUIWatchTower.lua:597
-#: ui/GameUIWatchTower.lua:607 ui/GameUIWathTowerRegion.lua:194
-#: ui/GameUIWathTowerRegion.lua:205 ui/GameUIWathTowerRegion.lua:610
-#: ui/GameUIWathTowerRegion.lua:620 utils/UIKit.lua:535 utils/UIKit.lua:599
-#: utils/UIKit.lua:629 utils/UIKit.lua:678 utils/UIKit.lua:717
-#: utils/UIKit.lua:774 utils/UIKit.lua:885
-#: widget/WidgetAllianceCreateOrEdit.lua:103
+#: ui/GameUIShireFightEvent.lua:274 ui/GameUIShireFightEvent.lua:295
+#: ui/GameUIStrikePlayer.lua:128 ui/GameUIStrikePlayer.lua:219
+#: ui/GameUIStrikePlayer.lua:222 ui/GameUIStrikePlayer.lua:241
+#: ui/GameUIStrikePlayer.lua:266 ui/GameUITownHall.lua:162
+#: ui/GameUITownHall.lua:172 ui/GameUITradeGuild.lua:276
+#: ui/GameUITradeGuild.lua:855 ui/GameUITradeGuild.lua:860
+#: ui/GameUITradeGuild.lua:864 ui/GameUIUnlockBuilding.lua:278
+#: ui/GameUIUnlockBuilding.lua:299 ui/GameUIUnlockBuilding.lua:315
+#: ui/GameUIUnlockBuilding.lua:324 ui/GameUIUnlockBuilding.lua:340
+#: ui/GameUIUpgradeTechnology.lua:420 ui/GameUIUpgradeTechnology.lua:429
+#: ui/GameUIUpgradeTechnology.lua:450 ui/GameUIUpgradeTechnology.lua:464
+#: ui/GameUIWatchTower.lua:190 ui/GameUIWatchTower.lua:201
+#: ui/GameUIWatchTower.lua:597 ui/GameUIWatchTower.lua:607
+#: ui/GameUIWathTowerRegion.lua:194 ui/GameUIWathTowerRegion.lua:205
+#: ui/GameUIWathTowerRegion.lua:610 ui/GameUIWathTowerRegion.lua:620
+#: utils/UIKit.lua:535 utils/UIKit.lua:599 utils/UIKit.lua:629
+#: utils/UIKit.lua:678 utils/UIKit.lua:717 utils/UIKit.lua:774
+#: utils/UIKit.lua:885 widget/WidgetAllianceCreateOrEdit.lua:103
 #: widget/WidgetAllianceCreateOrEdit.lua:117
 #: widget/WidgetAllianceCreateOrEdit.lua:126
 #: widget/WidgetAllianceCreateOrEdit.lua:129 widget/WidgetBuyGoods.lua:143
@@ -2366,8 +2372,8 @@ msgstr "Cancel"
 msgid "总览"
 msgstr "Overview"
 
-#: ui/GameUIAlliance.lua:758 ui/GameUIAllianceCityEnter.lua:207
-#: ui/GameUIAllianceCityEnter.lua:264 ui/GameUIAllianceInfo.lua:116
+#: ui/GameUIAlliance.lua:758 ui/GameUIAllianceCityEnter.lua:213
+#: ui/GameUIAllianceCityEnter.lua:303 ui/GameUIAllianceInfo.lua:116
 #: ui/GameUIAlliancePalace.lua:33 ui/GameUIAlliancePalace.lua:481
 #: ui/GameUIAlliancePalaceEnter.lua:59 ui/GameUIDwelling.lua:32
 #: ui/GameUIKeep.lua:44 ui/GameUIMaterialDepot.lua:14
@@ -2749,7 +2755,7 @@ msgid "剩余复仇时间:"
 msgstr "Revenge"
 
 #: ui/GameUIAllianceBattle.lua:1126 ui/GameUIAllianceBattle.lua:1229
-#: ui/GameUIAllianceSendTroops.lua:203 ui/GameUIWall.lua:343
+#: ui/GameUIWall.lua:343
 msgid "查看"
 msgstr "Browse"
 
@@ -2833,8 +2839,8 @@ msgstr "Player"
 msgid "协防玩家"
 msgstr "Assistor"
 
-#: ui/GameUIAllianceCityEnter.lua:145 ui/GameUIAllianceCityEnter.lua:189
-#: ui/GameUIAllianceCityEnter.lua:256
+#: ui/GameUIAllianceCityEnter.lua:145 ui/GameUIAllianceCityEnter.lua:195
+#: ui/GameUIAllianceCityEnter.lua:295
 msgid "进入"
 msgstr "Enter"
 
@@ -2850,54 +2856,62 @@ msgstr "Are you sure to retreat ?"
 msgid "协防"
 msgstr "Assist"
 
-#: ui/GameUIAllianceCityEnter.lua:167
+#: ui/GameUIAllianceCityEnter.lua:168
 msgid "协防盟友将失去保护状态，确定继续派兵?"
 msgstr "***"
 
-#: ui/GameUIAllianceCityEnter.lua:183
+#: ui/GameUIAllianceCityEnter.lua:176 ui/GameUIAllianceCityEnter.lua:186
+#: ui/GameUIAllianceCityEnter.lua:242 ui/GameUIAllianceCityEnter.lua:277
+#: ui/GameUIAllianceVillageEnter.lua:330 ui/GameUIAllianceVillageEnter.lua:358
+#: ui/GameUIAllianceVillageEnter.lua:379 ui/GameUIAllianceVillageEnter.lua:405
+#: ui/GameUIAllianceVillageEnter.lua:443 ui/GameUIAllianceVillageEnter.lua:470
+#: ui/GameUIAllianceVillageEnter.lua:495 ui/GameUIAllianceVillageEnter.lua:522
+#: ui/GameUIDragonEyrieMain.lua:152 ui/GameUIShireFightEvent.lua:292
+#: widget/WidgetMaterials.lua:163
+msgid "龙"
+msgstr "Dragon"
+
+#: ui/GameUIAllianceCityEnter.lua:189
 msgid "已有协防部队正在行军"
 msgstr "You've already sent assist troops to this ally"
 
-#: ui/GameUIAllianceCityEnter.lua:195 ui/GameUIAllianceMemberInfo.lua:60
+#: ui/GameUIAllianceCityEnter.lua:201 ui/GameUIAllianceMemberInfo.lua:60
 #: ui/GameUIAllianceMemberInfo.lua:72 ui/GameUIAllianceMemberInfo.lua:93
 #: ui/GameUIMail.lua:27 ui/GameUIMail.lua:164 ui/GameUIMail.lua:1837
 #: widget/WidgetHomeBottom.lua:33 widget/WidgetMailContacts.lua:106
 msgid "邮件"
 msgstr "Mail"
 
-#: ui/GameUIAllianceCityEnter.lua:202 ui/GameUIAllianceMemberInfo.lua:107
+#: ui/GameUIAllianceCityEnter.lua:208 ui/GameUIAllianceMemberInfo.lua:107
 #: ui/GameUIAllianceMemberInfo.lua:192 ui/GameUIChatChannel.lua:691
 #: widget/WidgetMailContacts.lua:114
 msgid "个人邮件"
 msgstr "Mail"
 
-#: ui/GameUIAllianceCityEnter.lua:217 ui/GameUIAllianceMosterEnter.lua:172
+#: ui/GameUIAllianceCityEnter.lua:223 ui/GameUIAllianceMosterEnter.lua:200
 #: ui/GameUIAttackPlayerCity.lua:104 ui/GameUIPVESendTroop.lua:109
 #: ui/GameUIPveAttack.lua:331
 msgid "进攻"
 msgstr "Attack"
 
-#: ui/GameUIAllianceCityEnter.lua:221
-msgid "进攻玩家城市将失去保护状态，确定继续派兵?"
-msgstr "You'll lose your protection if you attack others' city,continue?"
-
-#: ui/GameUIAllianceCityEnter.lua:229
+#: ui/GameUIAllianceCityEnter.lua:228 ui/GameUIAllianceCityEnter.lua:262
 msgid "目标城市已被击溃并进入保护期，可能无法发生战斗，你是否继续派兵?"
 msgstr ""
 "The targeted city is under protection，you may not be able to start your "
 "attack, continue? "
 
-#: ui/GameUIAllianceCityEnter.lua:244 ui/GameUIAllianceVillageEnter.lua:338
-#: ui/GameUIAllianceVillageEnter.lua:366 ui/GameUIAllianceVillageEnter.lua:405
-#: ui/GameUIAllianceVillageEnter.lua:437 ui/GameUIDragonEyrieMain.lua:152
-#: ui/GameUIShireFightEvent.lua:291 widget/WidgetMaterials.lua:163
-msgid "龙"
-msgstr "Dragon"
+#: ui/GameUIAllianceCityEnter.lua:246 ui/GameUIAllianceCityEnter.lua:254
+msgid "进攻玩家城市将失去保护状态，确定继续派兵?"
+msgstr "You'll lose your protection if you attack others' city,continue?"
 
-#: ui/GameUIAllianceCityEnter.lua:248 ui/GameUIAllianceVillageEnter.lua:368
+#: ui/GameUIAllianceCityEnter.lua:281 ui/GameUIAllianceVillageEnter.lua:407
 #: ui/GameUIStrikePlayer.lua:107
 msgid "突袭"
 msgstr "Scout"
+
+#: ui/GameUIAllianceCityEnter.lua:284 ui/GameUIStrikePlayer.lua:265
+msgid "突袭玩家城市将失去保护状态，确定继续派兵?"
+msgstr "You'll lose your protection if you scout enemy city,continue?"
 
 #: ui/GameUIAllianceContribute.lua:24
 msgid "联盟捐献"
@@ -3234,7 +3248,7 @@ msgid "开战的王城"
 msgstr "Wonder in battle"
 
 #: ui/GameUIAllianceMoonGateEnter.lua:37 ui/GameUIAllianceMoonGateEnter.lua:41
-#: ui/GameUIAllianceMosterEnter.lua:187 ui/GameUIAllianceOrderHallEnter.lua:39
+#: ui/GameUIAllianceMosterEnter.lua:215 ui/GameUIAllianceOrderHallEnter.lua:39
 #: ui/GameUIAlliancePalaceEnter.lua:40 ui/GameUIAllianceShopEnter.lua:56
 #: ui/GameUIAllianceShrineEnter.lua:105 ui/GameUIAllianceShrineEnter.lua:106
 #: ui/GameUIMoonGate.lua:84 ui/GameUIMoonGate.lua:85 ui/GameUIMoonGate.lua:86
@@ -3259,7 +3273,7 @@ msgstr "Unavailale"
 msgid "王城"
 msgstr "Wonder"
 
-#: ui/GameUIAllianceMosterEnter.lua:71 ui/GameUIAllianceMosterEnter.lua:187
+#: ui/GameUIAllianceMosterEnter.lua:71 ui/GameUIAllianceMosterEnter.lua:215
 #, c-format
 msgid "即将消失:%s"
 msgstr "Disappear after:%s"
@@ -3276,17 +3290,19 @@ msgstr "Lv%d"
 msgid "有几率获得"
 msgstr "Chance to get"
 
-#: ui/GameUIAllianceMosterEnter.lua:151
+#: ui/GameUIAllianceMosterEnter.lua:152 ui/GameUIAllianceMosterEnter.lua:174
+#: ui/GameUIAllianceMosterEnter.lua:186
 msgid "敌人已经消失了"
 msgstr "The enemy has already disappeared"
 
-#: ui/GameUIAllianceMosterEnter.lua:155 ui/GameUIAllianceShrine.lua:483
-msgid "进攻该目标将失去保护状态，确定继续派兵?"
-msgstr "You'll lose your protection if you attack this enemy,continue?"
-
-#: ui/GameUIAllianceMosterEnter.lua:167
+#: ui/GameUIAllianceMosterEnter.lua:160 ui/GameUIAllianceMosterEnter.lua:195
 msgid "建筑"
 msgstr "Building"
+
+#: ui/GameUIAllianceMosterEnter.lua:164 ui/GameUIAllianceMosterEnter.lua:170
+#: ui/GameUIAllianceShrine.lua:483 ui/GameUIShireFightEvent.lua:295
+msgid "进攻该目标将失去保护状态，确定继续派兵?"
+msgstr "You'll lose your protection if you attack this enemy,continue?"
 
 #: ui/GameUIAllianceNoticeOrDescEdit.lua:38
 msgid "最多输入600个字符"
@@ -3469,6 +3485,10 @@ msgstr "The Dragon is unavailable."
 #: ui/GameUIWall.lua:337
 msgid "选择的龙已经死亡"
 msgstr "The Dragon is dead now"
+
+#: ui/GameUIAllianceSendTroops.lua:203 ui/GameUIPVESendTroop.lua:133
+msgid "复活"
+msgstr "Revive"
 
 #: ui/GameUIAllianceSendTroops.lua:209
 msgid "派出的部队超过了所选龙的带兵上限"
@@ -3744,25 +3764,31 @@ msgstr "Withdraw"
 msgid "部队"
 msgstr "Troop"
 
-#: ui/GameUIAllianceVillageEnter.lua:317 ui/GameUIAllianceVillageEnter.lua:346
-#: ui/GameUIAllianceVillageEnter.lua:385 ui/GameUIAllianceVillageEnter.lua:417
+#: ui/GameUIAllianceVillageEnter.lua:317 ui/GameUIAllianceVillageEnter.lua:366
+#: ui/GameUIAllianceVillageEnter.lua:430 ui/GameUIAllianceVillageEnter.lua:482
 msgid "占领"
 msgstr "Occupy"
 
-#: ui/GameUIAllianceVillageEnter.lua:319
+#: ui/GameUIAllianceVillageEnter.lua:320 ui/GameUIAllianceVillageEnter.lua:339
 msgid "当前资源点已被盟友占领，你可能无法进行采集，仍要派兵吗？"
 msgstr ""
 "This village is occupied by your ally, you may not gather it, continue ?"
 
-#: ui/GameUIAllianceVillageEnter.lua:322 ui/GameUIAllianceVillageEnter.lua:352
-#: ui/GameUIAllianceVillageEnter.lua:391 ui/GameUIAllianceVillageEnter.lua:423
+#: ui/GameUIAllianceVillageEnter.lua:333 ui/GameUIAllianceVillageEnter.lua:342
+#: ui/GameUIAllianceVillageEnter.lua:383 ui/GameUIAllianceVillageEnter.lua:391
+#: ui/GameUIAllianceVillageEnter.lua:448 ui/GameUIAllianceVillageEnter.lua:456
+#: ui/GameUIAllianceVillageEnter.lua:500 ui/GameUIAllianceVillageEnter.lua:508
 msgid "进攻村落将失去保护状态，确定继续派兵?"
 msgstr "You'll lose your protection if you attack this village,continue?"
 
-#: ui/GameUIAllianceVillageEnter.lua:346 ui/GameUIAllianceVillageEnter.lua:385
-#: ui/GameUIAllianceVillageEnter.lua:417
+#: ui/GameUIAllianceVillageEnter.lua:366 ui/GameUIAllianceVillageEnter.lua:430
+#: ui/GameUIAllianceVillageEnter.lua:482
 msgid "摧毁"
 msgstr "Destroy"
+
+#: ui/GameUIAllianceVillageEnter.lua:410 ui/GameUIStrikePlayer.lua:265
+msgid "突袭村落将失去保护状态，确定继续派兵?"
+msgstr "You'll lose your protection if you scout this village,continue?"
 
 #: ui/GameUIAttackPlayerCity.lua:43
 msgid "月门中的部队"
@@ -5492,10 +5518,6 @@ msgstr "Tap \"Attack\""
 msgid "快去孵化一只巨龙吧"
 msgstr "Go to incubate a Dragon"
 
-#: ui/GameUIPVESendTroop.lua:133
-msgid "复活"
-msgstr "Revive"
-
 #: ui/GameUIPVESendTroop.lua:153 ui/GameUIPveAttack.lua:555
 msgid "士兵"
 msgstr "Soldier"
@@ -6277,7 +6299,7 @@ msgstr "From"
 msgid "你已经向圣地派遣了部队"
 msgstr "You can only send one troop to the Shrine each time."
 
-#: ui/GameUIShireFightEvent.lua:274
+#: ui/GameUIShireFightEvent.lua:275
 msgid ""
 "检测到你的行军时间大于圣地事件时间,可能部队未达到之前，圣地事件已结束。是否继"
 "续派兵?"
@@ -6366,14 +6388,6 @@ msgid "目标城市已被击溃并进入保护期，可能无法发生战斗，�
 msgstr ""
 "You may not be able to scout the enemy city which is under protection,"
 "continue?"
-
-#: ui/GameUIStrikePlayer.lua:265
-msgid "突袭玩家城市将失去保护状态，确定继续派兵?"
-msgstr "You'll lose your protection if you scout enemy city,continue?"
-
-#: ui/GameUIStrikePlayer.lua:265
-msgid "突袭村落将失去保护状态，确定继续派兵?"
-msgstr "You'll lose your protection if you scout this village,continue?"
 
 #: ui/GameUIStrikeReport.lua:21
 msgid "没有得到任何情报"
