@@ -281,7 +281,7 @@ function GameUIAllianceCityEnter:GetEnterButtons()
         local strike_button = self:BuildOneButton("strike_66x62.png",_("突袭")):onButtonClicked(function()
             local toLocation = self:GetLogicPosition()
               if isProtected then
-                UIKit:showMessageDialog(_("提示"),_("进攻玩家城市将失去保护状态，确定继续派兵?"),function ()
+                UIKit:showMessageDialog(_("提示"),_("突袭玩家城市将失去保护状态，确定继续派兵?"),function ()
                      UIKit:newGameUI("GameUIStrikePlayer",1,{memberId = member:Id(),targetIsMyAlliance = false,toLocation = toLocation,targetIsProtected = member:IsProtected()}):AddToCurrentScene(true)
                 end)
             else
