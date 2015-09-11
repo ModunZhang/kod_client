@@ -479,13 +479,13 @@ function GameUIAllianceShrine:GetFight_List_Item(event)
             color = 0xfff3c7
         }))
         :onButtonClicked(function()
-            if self.my_alliance:GetSelf():IsProtected() then
-                UIKit:showMessageDialog(_("提示"),_("进攻该目标将失去保护状态，确定继续派兵?"),function()
-                    self:OnDispatchSoliderButtonClicked(event)
-                end)
-            else
+            -- if self.my_alliance:GetSelf():IsProtected() then
+            --     UIKit:showMessageDialog(_("提示"),_("进攻该目标将失去保护状态，确定继续派兵?"),function()
+            --         self:OnDispatchSoliderButtonClicked(event)
+            --     end)
+            -- else
                 self:OnDispatchSoliderButtonClicked(event)
-            end
+            -- end
         end)
     local time_label = UIKit:ttfLabel({
         text = GameUtils:formatTimeStyle1(event:GetTime()),
