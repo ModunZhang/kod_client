@@ -254,6 +254,7 @@ function WidgetSoldierPromoteDetails:CreateSoldierBox(isGray)
         soldier_icon:setFilter(filters)
     end
 
+    display.newSprite("box_soldier_128x128.png"):addTo(soldier_box):align(display.CENTER, soldier_box:getContentSize().width/2, soldier_box:getContentSize().height/2)
     return soldier_box
 end
 function WidgetSoldierPromoteDetails:onExit()
