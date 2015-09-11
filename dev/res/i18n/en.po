@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: dragonfall\n"
-"POT-Creation-Date: 2015-09-11 15:54+0800\n"
-"PO-Revision-Date: 2015-09-11 15:54+0800\n"
+"POT-Creation-Date: 2015-09-11 16:39+0800\n"
+"PO-Revision-Date: 2015-09-11 16:39+0800\n"
 "Last-Translator: gaozhou <gaozhou.f@qq.com>\n"
 "Language-Team: \n"
 "Language: en\n"
@@ -2749,8 +2749,7 @@ msgid "剩余复仇时间:"
 msgstr "Revenge"
 
 #: ui/GameUIAllianceBattle.lua:1126 ui/GameUIAllianceBattle.lua:1229
-#: ui/GameUIAllianceSendTroops.lua:203 ui/GameUIPVESendTroop.lua:133
-#: ui/GameUIWall.lua:343
+#: ui/GameUIAllianceSendTroops.lua:203 ui/GameUIWall.lua:343
 msgid "查看"
 msgstr "Browse"
 
@@ -4893,15 +4892,15 @@ msgstr "City Terrain"
 msgid "提示:升级城堡获得解锁建筑机会!"
 msgstr "Tips:Upgrade Castle to unlock new buildings"
 
-#: ui/GameUIKeep.lua:230 widget/WidgetPromoteSoliderList.lua:104
-#: widget/WidgetPromoteSoliderList.lua:163
+#: ui/GameUIKeep.lua:230 widget/WidgetPromoteSoliderList.lua:105
+#: widget/WidgetPromoteSoliderList.lua:167
 msgid "已解锁"
 msgstr "Unlocked"
 
 #: ui/GameUIKeep.lua:230 ui/GameUIPveSelect.lua:66 ui/GameUITradeGuild.lua:612
 #: ui/GameUIWatchTower.lua:163 ui/GameUIWathTowerRegion.lua:169
-#: widget/WidgetPromoteSoliderList.lua:106
-#: widget/WidgetPromoteSoliderList.lua:166
+#: widget/WidgetPromoteSoliderList.lua:107
+#: widget/WidgetPromoteSoliderList.lua:170
 msgid "未解锁"
 msgstr "Locked"
 
@@ -5492,6 +5491,10 @@ msgstr "Tap \"Attack\""
 #: ui/GameUIPVESendTroop.lua:118
 msgid "快去孵化一只巨龙吧"
 msgstr "Go to incubate a Dragon"
+
+#: ui/GameUIPVESendTroop.lua:133
+msgid "复活"
+msgstr "Revive"
 
 #: ui/GameUIPVESendTroop.lua:153 ui/GameUIPveAttack.lua:555
 msgid "士兵"
@@ -6787,8 +6790,8 @@ msgstr "Research Now"
 
 #: ui/GameUIUpgradeTechnology.lua:271 widget/WidgetEventTabButtons.lua:1011
 #: widget/WidgetMilitaryTechnology.lua:98
-#: widget/WidgetPromoteSoliderList.lua:117
-#: widget/WidgetPromoteSoliderList.lua:185
+#: widget/WidgetPromoteSoliderList.lua:118
+#: widget/WidgetPromoteSoliderList.lua:189
 #: widget/WidgetUpgradeMilitaryTech.lua:146
 msgid "研发"
 msgstr "Research"
@@ -12033,7 +12036,7 @@ msgstr "Science Points"
 msgid "科技点未达到要求"
 msgstr "You need higher Science Points"
 
-#: widget/WidgetPromoteSoliderList.lua:109
+#: widget/WidgetPromoteSoliderList.lua:110
 msgid "正在晋级"
 msgstr "Promoting"
 

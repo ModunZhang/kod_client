@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: dragonfall\n"
-"POT-Creation-Date: 2015-09-11 15:54+0800\n"
-"PO-Revision-Date: 2015-09-11 15:54+0800\n"
+"POT-Creation-Date: 2015-09-11 16:40+0800\n"
+"PO-Revision-Date: 2015-09-11 16:40+0800\n"
 "Last-Translator: gaozhou <gaozhou.f@qq.com>\n"
 "Language-Team: \n"
 "Language: zh_CN\n"
@@ -2694,8 +2694,7 @@ msgid "剩余复仇时间:"
 msgstr "剩余复仇时间:"
 
 #: ui/GameUIAllianceBattle.lua:1126 ui/GameUIAllianceBattle.lua:1229
-#: ui/GameUIAllianceSendTroops.lua:203 ui/GameUIPVESendTroop.lua:133
-#: ui/GameUIWall.lua:343
+#: ui/GameUIAllianceSendTroops.lua:203 ui/GameUIWall.lua:343
 msgid "查看"
 msgstr "查看"
 
@@ -4841,15 +4840,15 @@ msgstr "城市地形"
 msgid "提示:升级城堡获得解锁建筑机会!"
 msgstr "提示:升级城堡获得解锁建筑机会!"
 
-#: ui/GameUIKeep.lua:230 widget/WidgetPromoteSoliderList.lua:104
-#: widget/WidgetPromoteSoliderList.lua:163
+#: ui/GameUIKeep.lua:230 widget/WidgetPromoteSoliderList.lua:105
+#: widget/WidgetPromoteSoliderList.lua:167
 msgid "已解锁"
 msgstr "已解锁"
 
 #: ui/GameUIKeep.lua:230 ui/GameUIPveSelect.lua:66
 #: ui/GameUITradeGuild.lua:612 ui/GameUIWatchTower.lua:163
-#: ui/GameUIWathTowerRegion.lua:169 widget/WidgetPromoteSoliderList.lua:106
-#: widget/WidgetPromoteSoliderList.lua:166
+#: ui/GameUIWathTowerRegion.lua:169 widget/WidgetPromoteSoliderList.lua:107
+#: widget/WidgetPromoteSoliderList.lua:170
 msgid "未解锁"
 msgstr "未解锁"
 
@@ -5425,6 +5424,10 @@ msgstr "点击进攻"
 #: ui/GameUIPVESendTroop.lua:118
 msgid "快去孵化一只巨龙吧"
 msgstr "快去孵化一只巨龙吧"
+
+#: ui/GameUIPVESendTroop.lua:133
+msgid "复活"
+msgstr "复活"
 
 #: ui/GameUIPVESendTroop.lua:153 ui/GameUIPveAttack.lua:555
 msgid "士兵"
@@ -6714,8 +6717,8 @@ msgstr "立即研发"
 
 #: ui/GameUIUpgradeTechnology.lua:271 widget/WidgetEventTabButtons.lua:1011
 #: widget/WidgetMilitaryTechnology.lua:98
-#: widget/WidgetPromoteSoliderList.lua:117
-#: widget/WidgetPromoteSoliderList.lua:185
+#: widget/WidgetPromoteSoliderList.lua:118
+#: widget/WidgetPromoteSoliderList.lua:189
 #: widget/WidgetUpgradeMilitaryTech.lua:146
 msgid "研发"
 msgstr "研发"
@@ -11851,7 +11854,7 @@ msgstr "科技点数"
 msgid "科技点未达到要求"
 msgstr "科技点未达到要求"
 
-#: widget/WidgetPromoteSoliderList.lua:109
+#: widget/WidgetPromoteSoliderList.lua:110
 msgid "正在晋级"
 msgstr "正在晋级"
 
