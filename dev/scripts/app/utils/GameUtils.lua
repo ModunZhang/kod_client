@@ -296,6 +296,44 @@ function GameUtils:GetServerInfo(param, callback)
     request:start()
 end
 
+function GameUtils:UploadErrors(error)
+    local url = "gm.batcatstudio.com/errors/create"
+    local requestGet = network.createHTTPRequest(function(event)
+        local ok = (event.name == "completed")
+        local request = event.request
+
+        if not ok then
+            -- 请求失败，显示错误代码和错误消息
+            -- print(request:getErrorCode(), request:getErrorMessage())
+            return
+        end
+
+        local code = request:getResponseStatusCode()
+        if code ~= 200 then
+            -- 请求结束，但没有返回 200 响应代码
+            -- print(code)
+            return
+        end
+        -- 请求成功，显示服务端返回的内容
+        local requestPost = network.createHTTPRequest(function(event)
+            local ok = (event.name == "completed")
+            local request = event.request
+
+            if not ok then
+                -- 请求失败，显示错误代码和错误消息
+                print(request:getErrorCode(), request:getErrorMessage())
+                return
+            end
+        end, url, "POST")
+        requestPost:setCookieString(network.makeCookieString(network.parseCookie(request:getCookieString())))
+        requestPost:addPOSTValue("_csrf", json.decode(request:getResponseString()).token)
+        requestPost:addPOSTValue("deviceId", device.getOpenUDID())
+        requestPost:addPOSTValue("stack", error)
+        requestPost:start()
+    end, url, "GET")
+    requestGet:start()
+end
+
 
 
 --ver 2.2.4
