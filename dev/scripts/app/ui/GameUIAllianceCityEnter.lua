@@ -162,12 +162,23 @@ function GameUIAllianceCityEnter:GetEnterButtons()
                 help_button = self:BuildOneButton("help_defense_44x56.png",_("协防")):onButtonClicked(function()
                     local playerId = member:Id()
                     if not alliance:CheckHelpDefenceMarchEventsHaveTarget(playerId) then
-                        UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
-                            NetManager:getHelpAllianceMemberDefencePromise(dragonType, soldiers, playerId):done(function()
-                                app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_SENDOUT")
+                        if alliance:GetSelf():IsProtected() then
+                            local toLocation = self:GetLogicPosition()
+                            UIKit:showMessageDialog(_("提示"),_("协防盟友将失去保护状态，确定继续派兵?"),function()
+                                UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
+                                    NetManager:getHelpAllianceMemberDefencePromise(dragonType, soldiers, playerId):done(function()
+                                        app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_SENDOUT")
+                                    end)
+                                end,{targetIsMyAlliance = true,toLocation = toLocation}):AddToCurrentScene(true)
                             end)
-                        end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition()}):AddToCurrentScene(true)
-                        self:LeftButtonClicked()
+                        else
+                            UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers)
+                                NetManager:getHelpAllianceMemberDefencePromise(dragonType, soldiers, playerId):done(function()
+                                    app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_SENDOUT")
+                                end)
+                            end,{targetIsMyAlliance = self:IsMyAlliance(),toLocation = self:GetLogicPosition()}):AddToCurrentScene(true)
+                            self:LeftButtonClicked()
+                        end
                     else
                         UIKit:showMessageDialog(_("错误"), _("已有协防部队正在行军"), function()end)
                         self:LeftButtonClicked()
@@ -270,6 +281,8 @@ function GameUIAllianceCityEnter:GetEnterButtons()
 end
 
 return GameUIAllianceCityEnter
+
+
 
 
 
