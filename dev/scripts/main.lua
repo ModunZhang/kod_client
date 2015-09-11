@@ -1,6 +1,6 @@
 local errorMessages = {}
 local MAX_ERRORS = 10
-local SEND_TIME = 60
+local SEND_TIME = 120
 local sharedScheduler = cc.Director:getInstance():getScheduler()
 sharedScheduler:scheduleScriptFunc(function()
     if #errorMessages > 0 then
@@ -20,7 +20,7 @@ function __G__TRACKBACK__(errorMessage)
         end)
     else
         if checktable(ext.market_sdk) and ext.market_sdk.onPlayerEvent then
-            local errDesc = tostring(errorMessage) .. "\n" .. debug.traceback("", 2)
+            local errDesc = string.format("[%s] %s\n%s", os.date("%Y-%m-%d %H:%M:%S",math.floor(ext.now()/1000)), tostring(errorMessage), debug.traceback("", 2))
             print(errDesc)
             table.insert(errorMessages, errDesc)
             if #errorMessages > MAX_ERRORS then
