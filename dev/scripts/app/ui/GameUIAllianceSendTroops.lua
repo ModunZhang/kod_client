@@ -200,7 +200,7 @@ function GameUIAllianceSendTroops:OnMoveInStage()
                                     UIKit:newGameUI("GameUIDragonEyrieMain", City, City:GetFirstBuildingByType("dragonEyrie"), "dragon", false, self.dragon:Type()):AddToCurrentScene(true)
                                     self:LeftButtonClicked()
                                 end,
-                                btn_name= _("查看"),
+                                btn_name= _("复活"),
                                 btn_images = {normal = "blue_btn_up_148x58.png",pressed = "blue_btn_down_148x58.png"}
                             }
                         )
