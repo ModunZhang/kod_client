@@ -117,7 +117,9 @@ function GameUIChatChannel:CreateTextFieldBody()
             end
             editbox:setText('')
             self:GetChatManager():SendChat(self._channelType,msg,function()
-                self.sendChatButton:StartTimer()
+                if self.sendChatButton then
+                    self.sendChatButton:StartTimer()
+                end
             end)
         end
     end

@@ -589,7 +589,9 @@ function GameUIAllianceHome:OnAllianceBasicChanged(alliance,changed_map)
     elseif changed_map.status then
         if not alliance:AllianceFightReports() then
             NetManager:getAllianceFightReportsPromise(self.alliance:Id()):done(function ( ... )
-                self.top:Refresh()
+                if self.top then
+                    self.top:Refresh()
+                end
             end)
         else
             self.top:Refresh()

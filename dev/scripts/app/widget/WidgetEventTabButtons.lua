@@ -91,7 +91,7 @@ function WidgetEventTabButtons:OnMakingEquipmentWithEvent(black_smith, event, cu
     self:GetTabByKey("material"):SetOrResetProgress(self:EventPercent(event))
     if self:IsShow() and self:GetCurrentTab() == "material" then
         self:IteratorAllItem(function(i, v)
-            if i ~= 1 and v:GetEventKey() == event:UniqueKey() then
+            if i ~= 1 and v.GetEventKey and v:GetEventKey() == event:UniqueKey() then
                 v:SetProgressInfo(self:EquipmentDescribe(event))
             end
         end)
@@ -112,7 +112,7 @@ function WidgetEventTabButtons:OnMakingMaterialsWithEvent(tool_shop, event, curr
     self:GetTabByKey("material"):SetOrResetProgress(self:EventPercent(event))
     if self:IsShow() and self:GetCurrentTab() == "material" then
         self:IteratorAllItem(function(i, v)
-            if i ~= 1 and v:GetEventKey() == event:UniqueKey() then
+            if i ~= 1 and v.GetEventKey and v:GetEventKey() == event:UniqueKey() then
                 v:SetProgressInfo(self:MaterialDescribe(event))
             end
         end)
