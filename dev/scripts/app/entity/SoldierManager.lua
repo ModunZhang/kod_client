@@ -20,6 +20,8 @@ SoldierManager.LISTEN_TYPE = Enum("SOLDIER_CHANGED",
     "OnMilitaryTechEventsTimer",
     "ALL_SOLDIER_STAR_EVENTS_CHANGED")
 
+local militaryTechs_config = GameDatas.MilitaryTechs.militaryTechs
+
 function SoldierManager:ctor(city)
     self.city = city
     self.user = self.city:GetUser()
@@ -483,7 +485,7 @@ end
 -- 对应建筑可以升级对应军事科技和兵种星级
 function SoldierManager:IsUpgradingMilitaryTech(building_type)
     for _,event in pairs(self.militaryTechEvents) do
-        if self.militaryTechs[event:Name()]:Building() == building_type then
+        if militaryTechs_config[event:Name()].building == building_type then
             return true
         end
     end
