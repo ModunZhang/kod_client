@@ -710,8 +710,10 @@ function GameUIAllianceBattle:GetFightRequestsInfo()
 
     for _,id in pairs(fight_requests) do
         -- 玩家
-        local menber = alliance:GetMemeberById(id)
-        table.insert(info, {menber:Name(),string.formatnumberthousands(menber:Power()) ,"dragon_strength_27x31.png",true})
+        local member = alliance:GetMemeberById(id)
+        if member then
+            table.insert(info, {member:Name(),string.formatnumberthousands(member:Power()) ,"dragon_strength_27x31.png",true})
+        end
     end
     return info
 end
