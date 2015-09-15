@@ -195,6 +195,7 @@ function GameUITradeGuild:LoadResource(goods_details,goods_type)
 end
 function GameUITradeGuild:RefreshSellListView(goods_type,selected)
     local list_view = self:GetSellListViewByGoodsType(goods_type)
+    if not list_view then return end
     list_view:removeAllItems()
     NetManager:getGetSellItemsPromise(self:GetGoodsTypeMapToString(goods_type),goods_type[selected]):done(function(response)
         for k,v in pairs(response.msg.itemDocs) do
