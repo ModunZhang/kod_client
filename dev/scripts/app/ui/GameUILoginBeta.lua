@@ -603,7 +603,7 @@ function GameUILoginBeta:downloadFiles(files)
             self:downloadFiles(files)
         end, function(total, current)
             fileTotal = total
-            current = current
+            current = current or 0
             local currentPercent = (self.m_currentSize + current) / self.m_totalSize * 100
             if (percent ~= currentPercent) then
                 percent = currentPercent
