@@ -897,19 +897,19 @@ end
 
 function Alliance:GetMyAllianceFightCountData()
     local allianceFight = self.allianceFight
-    return self.id == allianceFight.attackAllianceId and allianceFight.attackAllianceCountData or allianceFight.defenceAllianceCountData
+    return self.id == allianceFight.attackAllianceId and allianceFight.attacker.allianceCountData or allianceFight.defencer.allianceCountData
 end
 function Alliance:GetEnemyAllianceFightCountData()
     local allianceFight = self.allianceFight
-    return self.id == allianceFight.attackAllianceId and allianceFight.defenceAllianceCountData or allianceFight.attackAllianceCountData
+    return self.id == allianceFight.attackAllianceId and allianceFight.defencer.allianceCountData or allianceFight.attacker.allianceCountData
 end
 function Alliance:GetMyAllianceFightPlayerKills()
     local allianceFight = self.allianceFight
-    return self.id == allianceFight.attackAllianceId and allianceFight.attackPlayerKills or allianceFight.defencePlayerKills
+    return self.id == allianceFight.attackAllianceId and allianceFight.attacker.playerKills or allianceFight.defencer.playerKills
 end
 function Alliance:GetEnemyAllianceFightPlayerKills()
     local allianceFight = self.allianceFight
-    return self.id == allianceFight.attackAllianceId and allianceFight.defencePlayerKills or allianceFight.attackPlayerKills
+    return self.id == allianceFight.attackAllianceId and allianceFight.defencer.playerKills or allianceFight.attacker.playerKills
 end
 
 function Alliance:OnStrikeMarchEventsDataChanged(alliance_data,deltaData,refresh_time)

@@ -786,16 +786,11 @@ function GameUIAllianceHome:GetPointsWithScreenRect(screen_rect)
     }
 end
 function GameUIAllianceHome:OnAllianceFightChanged(alliance,allianceFight)
-    local status = self.alliance:Status()
+    local alliance = self.alliance
+    local status = alliance:Status()
     if status=="fight" then
-        local our , enemy
-        if self.alliance:Id() == allianceFight.attackAllianceId  then
-            our = allianceFight.attackAllianceCountData
-            enemy = allianceFight.defenceAllianceCountData
-        else
-            our = allianceFight.defenceAllianceCountData
-            enemy = allianceFight.attackAllianceCountData
-        end
+        local our = alliance:GetMyAllianceFightCountData()
+        local enemy = alliance:GetEnemyAllianceFightCountData()
         if our and enemy then
             self.top:SetOurPowerOrKill(our.kill)
             self.top:SetEnemyPowerOrKill(enemy.kill)
