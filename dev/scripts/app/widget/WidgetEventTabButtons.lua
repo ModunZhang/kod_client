@@ -70,7 +70,7 @@ function WidgetEventTabButtons:OnRecruiting(barracks, event, current_time)
     self:GetTabByKey("soldier"):SetOrResetProgress(self:EventPercent(event))
     if self:IsShow() and self:GetCurrentTab() == "soldier" then
         self:IteratorAllItem(function(i, v)
-            if i ~= 1 then
+            if i ~= 1 and v and v.SetProgressInfo then
                 v:SetProgressInfo(self:SoldierDescribe(event))
             end
         end)
