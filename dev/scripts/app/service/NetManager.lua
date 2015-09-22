@@ -455,11 +455,11 @@ local logic_event_map = {
                                 for i=1,len do
                                     local k = tonumber(keys[i]) or keys[i]
                                     if type(k) == "number" then
-                                        if not MailManager:GetSendMailIndexByServerIndex(k) then
+                                        if not MailManager:GetMailByServerIndex(k) then
                                             need_deal = false
                                             break
                                         end
-                                        local client_index = MailManager:GetSendMailIndexByServerIndex(k) - 1
+                                        local client_index = MailManager:GetMailByServerIndex(k) - 1
                                         newKey = newKey..client_index..(i~=len and "." or "")
                                     else
                                         newKey = newKey..keys[i]..(i~=len and "." or "")
@@ -510,13 +510,8 @@ local logic_event_map = {
                             end
                         end
                         if need_deal then
-                            LuaUtils:outputTable("self.sendMails", MailManager:GetSendMails())
-
                             local user_data = DataManager:getUserData()
-                            dump(tmp_table,"tmp_table")
-                            dump(user_data.sendMails,"user_data.sendMails")
                             local edit = decodeInUserDataFromDeltaData(user_data, tmp_table)
-                            LuaUtils:outputTable("send mails edit", edit)
                             DataManager:setUserData(user_data, edit)
                         else
                             -- 将邮件管理器中的所有存在的战报index - 1
