@@ -77,17 +77,15 @@ function GameUIAllianceBattle:OnMoveInStage()
 
 
     app.timer:AddListener(self)
-    self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.FIGHT_REQUESTS)
+    -- self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.FIGHT_REQUESTS)
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
-    self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.FIGHT_REPORTS)
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.ALLIANCE_FIGHT)
 end
 
 function GameUIAllianceBattle:onExit()
     app.timer:RemoveListener(self)
-    self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.FIGHT_REQUESTS)
+    -- self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.FIGHT_REQUESTS)
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
-    self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.FIGHT_REPORTS)
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.ALLIANCE_FIGHT)
     GameUIAllianceBattle.super.onExit(self)
 end
@@ -197,6 +195,11 @@ function GameUIAllianceBattle:InitBattleStatistics()
                 color = 0xffedae
             }):align(display.CENTER, request_fight_bg:getContentSize().width-60, request_fight_bg:getContentSize().height/2)
             :addTo(request_fight_bg)
+        self.request_num_label:schedule(function() 
+                if self.request_num_label then
+                    self.request_num_label:setString(self.alliance:GetFightRequestPlayerNum())
+                end
+            end, 1)
 
         -- 介绍
         -- 只有权限大于将军的玩家可以请求开启联盟会战匹配
@@ -1279,11 +1282,11 @@ function GameUIAllianceBattle:GetAlliancePeriod()
     return period
 end
 
-function GameUIAllianceBattle:OnAllianceFightRequestsChanged(request_num)
-    if self.request_num_label then
-        self.request_num_label:setString(request_num)
-    end
-end
+-- function GameUIAllianceBattle:OnAllianceFightRequestsChanged(request_num)
+--     if self.request_num_label then
+--         self.request_num_label:setString(request_num)
+--     end
+-- end
 function GameUIAllianceBattle:OnAllianceFightReportsChanged(changed_map)
     if changed_map.add and #changed_map.add>0 then
         self.history_listview:asyncLoadWithCurrentPosition_()

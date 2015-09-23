@@ -24,8 +24,6 @@ Alliance.LISTEN_TYPE = Enum(
     "EVENTS",
     "JOIN_EVENTS",
     "HELP_EVENTS",
-    "FIGHT_REQUESTS",
-    "FIGHT_REPORTS",
     "OnAttackMarchEventDataChanged",
     "OnAttackMarchEventTimerChanged",
     "OnAttackMarchReturnEventDataChanged",
@@ -499,24 +497,11 @@ function Alliance:OnAllianceMemberDataChanged(alliance_data,deltaData)
         end)
     end
 end
-
-
 function Alliance:OnAllianceFightRequestsChanged(alliance_data, deltaData)
-    local is_fully_update = deltaData == nil
-    local is_delta_update = not is_fully_update and deltaData.fightRequests ~= nil
-    if is_fully_update or is_delta_update then
-        self.fightRequests = alliance_data.fightRequests or {}
-        self:NotifyListeneOnType(Alliance.LISTEN_TYPE.FIGHT_REQUESTS, function(listener)
-            listener:OnAllianceFightRequestsChanged(#self.fightRequests)
-        end)
-    end
+    self.fightRequests = alliance_data.fightRequests
 end
 function Alliance:OnAllianceFightReportsChanged(alliance_data, deltaData)
-    local is_fully_update = deltaData == nil
-    local is_delta_update = not is_fully_update and deltaData.allianceFightReports ~= nil
-    if is_fully_update or is_delta_update then
-        self.allianceFightReports = alliance_data.allianceFightReports
-    end
+    self.allianceFightReports = alliance_data.allianceFightReports
 end
 function Alliance:OnHelpEventsChanged(alliance_data,deltaData)
     self.helpEvents = alliance_data.helpEvents

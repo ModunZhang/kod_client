@@ -98,7 +98,7 @@ function GameUIAllianceHome:AddOrRemoveListener(isAdd)
         self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
         self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.MEMBER)
         self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.ALLIANCE_FIGHT)
-        self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.FIGHT_REQUESTS)
+        -- self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.FIGHT_REQUESTS)
         city:AddListenOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
         city:AddListenOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
         city:AddListenOnType(self,city.LISTEN_TYPE.HELPED_TO_TROOPS)
@@ -118,7 +118,7 @@ function GameUIAllianceHome:AddOrRemoveListener(isAdd)
         self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
         self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.MEMBER)
         self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.ALLIANCE_FIGHT)
-        self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.FIGHT_REQUESTS)
+        -- self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.FIGHT_REQUESTS)
         city:RemoveListenerOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
         city:RemoveListenerOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
         city:RemoveListenerOnType(self,city.LISTEN_TYPE.HELPED_TO_TROOPS)
@@ -528,13 +528,12 @@ function GameUIAllianceHome:CreateTop()
     function Top:SetEnemyPowerOrKill(num)
         enemy_power_label:setString(string.formatnumberthousands(num))
     end
+    top_enemy_bg:schedule(function()
+        if self.alliance:Status() == "peace" then
+            self.top:SetEnemyPowerOrKill(self.alliance:GetFightRequestPlayerNum())
+        end
+    end, 1)
     return Top
-end
-
-function GameUIAllianceHome:OnAllianceFightRequestsChanged(request_num)
-    if self.alliance:Status() == "peace" then
-        self.top:SetEnemyPowerOrKill(request_num)
-    end
 end
 function GameUIAllianceHome:CreateBottom()
     local bottom_bg = WidgetHomeBottom.new(self.city):addTo(self)
