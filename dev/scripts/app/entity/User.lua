@@ -1,4 +1,3 @@
--- local PVEDatabase = import(".PVEDatabase")
 local Resource = import(".Resource")
 local VipEvent = import(".VipEvent")
 local Localize = import("..utils.Localize")
