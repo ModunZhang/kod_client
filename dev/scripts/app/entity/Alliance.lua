@@ -24,7 +24,6 @@ Alliance.LISTEN_TYPE = Enum(
     "EVENTS",
     "JOIN_EVENTS",
     "HELP_EVENTS",
-    "ALL_HELP_EVENTS",
     "FIGHT_REQUESTS",
     "FIGHT_REPORTS",
     "OnAttackMarchEventDataChanged",
@@ -203,8 +202,8 @@ function Alliance:OnBasicChanged(changed_map)
     end)
 end
 function Alliance:IteratorAllMembers(func)
-    for id, v in pairs(self.members) do
-        if func(id, v) then
+    for _,v in pairs(self.members) do
+        if func(v) then
             return
         end
     end
@@ -212,7 +211,7 @@ end
 
 function Alliance:GetAllianceArchon()
     local archon = json.null
-    self:IteratorAllMembers(function(__,member)
+    self:IteratorAllMembers(function(member)
         if member:IsArchon() then
             archon = member
         end
@@ -221,10 +220,18 @@ function Alliance:GetAllianceArchon()
 end
 
 function Alliance:GetMemeberById(id)
-    return self.members[id]
+    for _,v in pairs(self.members) do
+        if v.id == id then
+            return v
+        end
+    end
 end
 function Alliance:GetMemberByMapObjectsId(id)
-    return self.members_mapObjects[id]
+    for _,v in pairs(self.members) do
+        if v.mapId == id then
+            return v
+        end
+    end
 end
 function Alliance:GetAllMembers()
     return self.members
@@ -246,11 +253,6 @@ function Alliance:GetMembersCountInfo()
         end
     end
     return count,online,self:MaxMembers()
-end
-function Alliance:OnMemberChanged(changed_map)
-    self:NotifyListeneOnType(Alliance.LISTEN_TYPE.MEMBER, function(listener)
-        listener:OnMemberChanged(self, changed_map)
-    end)
 end
 function Alliance:GetFightRequestPlayerNum()
     return #self.fightRequests
@@ -390,16 +392,6 @@ function Alliance:OnOperation(operation_type)
         listener:OnOperation(self, operation_type)
     end)
 end
-function Alliance:OnEventsChanged()
-    self:NotifyListeneOnType(Alliance.LISTEN_TYPE.EVENTS, function(listener)
-        listener:OnEventsChanged(self)
-    end)
-end
-function Alliance:OnJoinEventsChanged()
-    self:NotifyListeneOnType(Alliance.LISTEN_TYPE.JOIN_EVENTS, function(listener)
-        listener:OnJoinEventsChanged(self)
-    end)
-end
 --更新联盟的成员人数限制
 function Alliance:UpdateMaxMemberCount(alliacne_data)
     if alliacne_data and alliacne_data.buildings then
@@ -481,62 +473,34 @@ function Alliance:OnAllianceBasicInfoChangedFirst(alliance_data,deltaData)
     self:SetMonsterRefreshTime(basicInfo.monsterRefreshTime)
 end
 function Alliance:OnAllianceEventsChanged(alliance_data,deltaData)
-    local is_fully_update = deltaData == nil
-    local is_delta_update = not is_fully_update and deltaData.events ~= nil
-    if is_fully_update or is_delta_update then
-        self.events = alliance_data.events
-        self:OnEventsChanged()
+    self.events = alliance_data.events
+    if deltaData and deltaData.events then
+        self:NotifyListeneOnType(Alliance.LISTEN_TYPE.EVENTS, function(listener)
+            listener:OnEventsChanged(self)
+        end)
     end
 end
 function Alliance:OnJoinRequestEventsChanged(alliance_data,deltaData)
-    local is_fully_update = deltaData == nil
-    local is_delta_update = not is_fully_update and deltaData.joinRequestEvents ~= nil
-    if is_fully_update or is_delta_update then
-        self.joinRequestEvents = alliance_data.joinRequestEvents
-        self:OnJoinEventsChanged()
+    self.joinRequestEvents = alliance_data.joinRequestEvents
+    if deltaData and deltaData.joinRequestEvents then
+        self:NotifyListeneOnType(Alliance.LISTEN_TYPE.JOIN_EVENTS, function(listener)
+            listener:OnJoinEventsChanged(self)
+        end)
     end
 end
 function Alliance:OnAllianceMemberDataChanged(alliance_data,deltaData)
-    local is_fully_update = deltaData == nil
-    local is_delta_update = not is_fully_update and deltaData.members ~= nil
-    if is_fully_update then
-        self.members_mapObjects = {}
-        self.members = {}
-        for _,v in ipairs(alliance_data.members) do
-            self.members[v.id] = self:DecodeMember(v)
-        end
-        self:OnMemberChanged()
+    self.members = alliance_data.members
+    for _,v in ipairs(self.members) do
+        setmetatable(v, memberMeta)
     end
-    if is_delta_update then
-        local changed_map = GameUtils:Handler_DeltaData_Func(
-            deltaData.members
-            ,function(event_data)
-                if not self.members[event_data.id] then
-                    self.members[event_data.id] = self:DecodeMember(event_data)
-                    return self.members[event_data.id]
-                end
-            end
-            ,function(event_data)
-                if self.members[event_data.id] then
-                    self.members[event_data.id] = self:DecodeMember(event_data)
-                    return self.members[event_data.id]
-                end
-            end
-            ,function(event_data)
-                if self.members[event_data.id] then
-                    self.members[event_data.id] = nil
-                    return event_data
-                end
-            end
-        )
-        self:OnMemberChanged(changed_map)
+    if deltaData and  deltaData.members then
+        self:NotifyListeneOnType(Alliance.LISTEN_TYPE.MEMBER, function(listener)
+            listener:OnMemberChanged(self)
+        end)
     end
 end
-function Alliance:DecodeMember(member_raw)
-    local v = setmetatable(member_raw, memberMeta)
-    self.members_mapObjects[member_raw.mapId] = v
-    return v
-end
+
+
 function Alliance:OnAllianceFightRequestsChanged(alliance_data, deltaData)
     local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.fightRequests ~= nil
@@ -555,16 +519,8 @@ function Alliance:OnAllianceFightReportsChanged(alliance_data, deltaData)
     end
 end
 function Alliance:OnHelpEventsChanged(alliance_data,deltaData)
-    local is_fully_update = deltaData == nil
-    local is_delta_update = not is_fully_update and deltaData.helpEvents ~= nil
-    if is_fully_update then
-        if alliance_data.helpEvents then
-            self.helpEvents = alliance_data.helpEvents
-            self:NotifyListeneOnType(Alliance.LISTEN_TYPE.ALL_HELP_EVENTS, function(listener)
-                listener:OnAllHelpEventChanged()
-            end)
-        end
-    elseif is_delta_update then
+    self.helpEvents = alliance_data.helpEvents
+    if deltaData and deltaData.helpEvents then
         if self:IsMyAlliance() then
             self:NotifyHelpEvents(deltaData)
         end
@@ -574,7 +530,6 @@ function Alliance:OnHelpEventsChanged(alliance_data,deltaData)
     end
 end
 function Alliance:NotifyHelpEvents(deltaData)
-    LuaUtils:outputTable(deltaData)
     if deltaData then
         for k,v in pairs(deltaData.helpEvents or {}) do
             if type(k) == "number" then
@@ -613,12 +568,11 @@ function Alliance:NotifyMemberHelp(id, eventData)
     app:GetAudioManager():PlayeEffectSoundWithKey("BUY_ITEM")
 end
 function Alliance:GetAllianceArchonMember()
-    for k,v in pairs(self.members) do
+    for _,v in pairs(self.members) do
         if v:IsArchon() then
             return v
         end
     end
-    return nil
 end
 
 function Alliance:OnTimer(current_time)

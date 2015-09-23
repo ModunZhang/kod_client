@@ -351,7 +351,7 @@ function GameUIShop:onEnter()
         :align(display.CENTER, window.left + 500, window.top - 700)
         :onButtonClicked(function(event)
             local memberid
-            Alliance_Manager:GetMyAlliance():IteratorAllMembers(function(_, v)
+            Alliance_Manager:GetMyAlliance():IteratorAllMembers(function(v)
                 if v:Id() ~= User:Id() then
                     memberid = v:Id()
                     return true
@@ -376,7 +376,7 @@ function GameUIShop:onEnter()
         :align(display.CENTER, window.left + 140, window.top - 800)
         :onButtonClicked(function(event)
             local member
-            Alliance_Manager:GetMyAlliance():IteratorAllMembers(function(_, v)
+            Alliance_Manager:GetMyAlliance():IteratorAllMembers(function(v)
                 if v:Id() ~= User:Id() then
                     member = v
                     return true
@@ -404,7 +404,7 @@ function GameUIShop:onEnter()
         :align(display.CENTER, window.left + 320, window.top - 800)
         :onButtonClicked(function(event)
             local member
-            Alliance_Manager:GetMyAlliance():IteratorAllMembers(function(_, v)
+            Alliance_Manager:GetMyAlliance():IteratorAllMembers(function(v)
                 if v:Id() ~= User:Id() then
                     member = v
                     return true
@@ -432,7 +432,7 @@ function GameUIShop:onEnter()
         :align(display.CENTER, window.left + 500, window.top - 800)
         :onButtonClicked(function(event)
             local member
-            Alliance_Manager:GetMyAlliance():IteratorAllMembers(function(_, v)
+            Alliance_Manager:GetMyAlliance():IteratorAllMembers(function(v)
                 if v:Id() ~= User:Id() then
                     member = v
                     return true

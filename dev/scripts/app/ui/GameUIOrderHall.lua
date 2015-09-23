@@ -265,7 +265,7 @@ end
 function GameUIOrderHall:ChangeProficiencyOption(option)
     self.option = option
     local sortByProficiencyMember = {}
-    self.alliance:IteratorAllMembers(function ( id,member )
+    self.alliance:IteratorAllMembers(function ( member )
         table.insert(sortByProficiencyMember, member)
     end)
     table.sort( sortByProficiencyMember, function ( a,b )
