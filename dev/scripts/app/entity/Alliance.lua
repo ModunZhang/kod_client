@@ -24,15 +24,14 @@ Alliance.LISTEN_TYPE = Enum(
     "EVENTS",
     "JOIN_EVENTS",
     "HELP_EVENTS",
+    "ALLIANCE_FIGHT",
     "OnAttackMarchEventDataChanged",
     "OnAttackMarchEventTimerChanged",
     "OnAttackMarchReturnEventDataChanged",
-    "ALLIANCE_FIGHT",
     "OnStrikeMarchEventDataChanged",
     "OnStrikeMarchReturnEventDataChanged",
     "OnVillageEventsDataChanged",
     "OnVillageEventTimer",
-    "COUNT_INFO",
     "VILLAGE_LEVELS_CHANGED",
     "OnMarchEventRefreshed")
 local unpack = unpack
@@ -376,6 +375,27 @@ function Alliance:GetOtherRequestEventsNum()
     end
     return request_num
 end
+
+local function GetReversedPosition(p)
+    if p == 'left' then
+        return 'right'
+    elseif p == 'right' then
+        return 'left'
+    elseif p == 'top' then
+        return 'bottom'
+    elseif p == 'bottom' then
+        return 'top'
+    end
+end
+function Alliance:GetFightPosition()
+    if self.allianceFight ~= json.null and next(self.allianceFight) then
+        local mergeStyle = self.allianceFight.mergeStyle
+        local isAttacker = self.id == self.allianceFight.attackAllianceId
+        return isAttacker and mergeStyle or GetReversedPosition(mergeStyle)
+    end
+end
+
+
 function Alliance:Reset()
     property(self, "RESET")
     self.alliance_map:Reset()
@@ -772,34 +792,13 @@ function Alliance:ResetMarchEvent()
 end
 
 function Alliance:OnAllianceCountInfoChanged(alliance_data, deltaData)
-    local is_fully_update = deltaData == nil
-    local is_delta_update = not is_fully_update and deltaData.countInfo ~= nil
-    if is_fully_update or is_delta_update then
-        self.countInfo = alliance_data.countInfo
-        self:NotifyListeneOnType(Alliance.LISTEN_TYPE.COUNT_INFO, function(listener)
-            listener:OnAllianceCountInfoChanged(self, self.countInfo)
-        end)
-    end
+    self.countInfo = alliance_data.countInfo
 end
 function Alliance:OnAllianceFightChanged(alliance_data, deltaData)
-    local is_fully_update = deltaData == nil
-    local is_delta_update = not is_fully_update and deltaData.allianceFight ~= nil
-    if is_fully_update or is_delta_update then
-        self.allianceFight = alliance_data.allianceFight
-        if self.allianceFight ~= json.null and not LuaUtils:table_empty(self.allianceFight or {}) then
-            local mergeStyle = self:GetAllianceFight()['mergeStyle']
-            local isAttacker = self:Id() == self:GetAllianceFight()['attackAllianceId']
-            if isAttacker then
-                self:SetFightPosition(mergeStyle)
-            else
-                self:SetFightPosition(self:GetReversedPosition(mergeStyle))
-            end
-        else
-            self.allianceFight = {}
-            self:SetFightPosition("")
-        end
+    self.allianceFight = alliance_data.allianceFight
+    if deltaData and deltaData.allianceFight then
         self:NotifyListeneOnType(Alliance.LISTEN_TYPE.ALLIANCE_FIGHT, function(listener)
-            listener:OnAllianceFightChanged(self,self.allianceFight)
+            listener:OnAllianceFightChanged(self)
         end)
     end
 end
@@ -811,17 +810,6 @@ function Alliance:OnVillageLevelsChanged(alliance_data, deltaData)
         self:NotifyListeneOnType(Alliance.LISTEN_TYPE.VILLAGE_LEVELS_CHANGED, function(listener)
             listener:OnVillageLevelsChanged(self)
         end)
-    end
-end
-function Alliance:GetReversedPosition(p)
-    if p == 'left' then
-        return 'right'
-    elseif p == 'right' then
-        return 'left'
-    elseif p == 'top' then
-        return 'bottom'
-    elseif p == 'bottom' then
-        return 'top'
     end
 end
 

@@ -1263,7 +1263,7 @@ function GameUIAllianceBattle:OnAllianceBasicChanged(alliance,changed_map)
     end
 end
 
-function GameUIAllianceBattle:OnAllianceFightChanged(alliance,alliance_fight)
+function GameUIAllianceBattle:OnAllianceFightChanged(alliance)
     self:InitBattleStatistics()
 end
 

@@ -784,7 +784,7 @@ function GameUIAllianceHome:GetPointsWithScreenRect(screen_rect)
         point(x, y),
     }
 end
-function GameUIAllianceHome:OnAllianceFightChanged(alliance,allianceFight)
+function GameUIAllianceHome:OnAllianceFightChanged(alliance)
     local alliance = self.alliance
     local status = alliance:Status()
     if status=="fight" then
