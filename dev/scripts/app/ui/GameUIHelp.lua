@@ -104,59 +104,59 @@ end
 function GameUIHelp:InsertItemToList(help_event)
     -- 当前玩家的求助事件需要置顶
     local item = self:CreateHelpItem(help_event)
-    if User:Id() == help_event:GetPlayerData():Id() then
+    if User:Id() == help_event.playerData.id then
         self.help_listview:addItem(item,1)
     else
         self.help_listview:addItem(item)
     end
 end
-function GameUIHelp:CheckEventFinished(help_event)
-    local city = City
-    local eventData = help_event:GetEventData()
-    local type = eventData:Type()
-    local event_id = eventData:Id()
-    local isFinished = true
-    if type == "buildingEvents" then
-        city:IteratorFunctionBuildingsByFunc(function(key, building)
-            if building:UniqueUpgradingKey() == event_id then
-                isFinished = false
-            end
-        end)
-        -- 城墙，箭塔
-        if city:GetGate():UniqueUpgradingKey() == event_id then
-            isFinished = false
-        end
-        if city:GetTower():UniqueUpgradingKey() == event_id then
-            isFinished = false
-        end
-    elseif type == "houseEvents" then
-        city:IteratorDecoratorBuildingsByFunc(function(key, building)
-            if building:UniqueUpgradingKey() == event_id then
-                isFinished = false
-            end
-        end)
-    elseif type == "productionTechEvents" then
-        city:IteratorProductionTechEvents(function(productionTechnologyEvent)
-            if productionTechnologyEvent:Id() == event_id then
-                isFinished = false
-            end
-        end)
-    elseif type == "militaryTechEvents" then
-        city:GetSoldierManager():IteratorMilitaryTechEvents(function(militaryTechEvent)
-            if militaryTechEvent:Id() == event_id then
-                isFinished = false
-            end
-        end)
-    elseif type == "soldierStarEvents" then
-        city:GetSoldierManager():IteratorSoldierStarEvents(function(soldierStarEvent)
-            if soldierStarEvent:Id() == event_id then
-                isFinished = false
-            end
-        end)
-    end
+-- function GameUIHelp:CheckEventFinished(help_event)
+--     local city = City
+--     local eventData = help_event:GetEventData()
+--     local type = eventData:Type()
+--     local event_id = eventData:Id()
+--     local isFinished = true
+--     if type == "buildingEvents" then
+--         city:IteratorFunctionBuildingsByFunc(function(key, building)
+--             if building:UniqueUpgradingKey() == event_id then
+--                 isFinished = false
+--             end
+--         end)
+--         -- 城墙，箭塔
+--         if city:GetGate():UniqueUpgradingKey() == event_id then
+--             isFinished = false
+--         end
+--         if city:GetTower():UniqueUpgradingKey() == event_id then
+--             isFinished = false
+--         end
+--     elseif type == "houseEvents" then
+--         city:IteratorDecoratorBuildingsByFunc(function(key, building)
+--             if building:UniqueUpgradingKey() == event_id then
+--                 isFinished = false
+--             end
+--         end)
+--     elseif type == "productionTechEvents" then
+--         city:IteratorProductionTechEvents(function(productionTechnologyEvent)
+--             if productionTechnologyEvent:Id() == event_id then
+--                 isFinished = false
+--             end
+--         end)
+--     elseif type == "militaryTechEvents" then
+--         city:GetSoldierManager():IteratorMilitaryTechEvents(function(militaryTechEvent)
+--             if militaryTechEvent:Id() == event_id then
+--                 isFinished = false
+--             end
+--         end)
+--     elseif type == "soldierStarEvents" then
+--         city:GetSoldierManager():IteratorSoldierStarEvents(function(soldierStarEvent)
+--             if soldierStarEvent:Id() == event_id then
+--                 isFinished = false
+--             end
+--         end)
+--     end
 
-    return isFinished
-end
+--     return isFinished
+-- end
 function GameUIHelp:IsHelpedByMe(helpedMembers)
     local _id = User:Id()
     for k,id in pairs(helpedMembers) do
@@ -166,7 +166,7 @@ function GameUIHelp:IsHelpedByMe(helpedMembers)
     end
 end
 function GameUIHelp:IsHelpedToMaxNum(event)
-    return #event:GetEventData():HelpedMembers() == event:GetEventData():MaxHelpCount()
+    return #event.eventData.helpedMembers == event.eventData.maxHelpCount
 end
 function GameUIHelp:RefreshUI(help_events)
     for k,item in pairs(self.help_events_items) do
@@ -177,7 +177,7 @@ function GameUIHelp:RefreshUI(help_events)
         for _,v in pairs(help_events) do
             if v:Id()==k then
                 -- 帮助过的需要删除
-                if not self:IsHelpedByMe(v:GetEventData():HelpedMembers()) or not self:IsHelpedToMaxNum(v) then
+                if not self:IsHelpedByMe(v.eventData.helpedMembers) or not self:IsHelpedToMaxNum(v) then
                     flag = false
                 end
             end
@@ -202,20 +202,20 @@ function GameUIHelp:DeleteHelpItem(id)
     end
 end
 function GameUIHelp:GetHelpEventDesc( eventData )
-    local type = eventData:Type()
-    local name = eventData:Name()
+    local type = eventData.type
+    local name = eventData.name
     if type == "buildingEvents"
         or type == "houseEvents"
     then
-        return _("正在升级")..Localize.building_name[name].._("等级")..eventData:Level()
+        return _("正在升级")..Localize.building_name[name].._("等级")..eventData.level
     elseif type == "militaryTechEvents" then
         local names = string.split(name, "_")
         if names[2] == "hpAdd" then
-            return string.format(_("研发%s血量增加 等级 %d"),Localize.soldier_category[names[1]],eventData:Level())
+            return string.format(_("研发%s血量增加 等级 %d"),Localize.soldier_category[names[1]],eventData.level)
         end
-        return string.format(_("研发%s对%s的攻击到 等级 %d"),Localize.soldier_category[names[1]],Localize.soldier_category[names[2]],eventData:Level())
+        return string.format(_("研发%s对%s的攻击到 等级 %d"),Localize.soldier_category[names[1]],Localize.soldier_category[names[2]],eventData.level)
     elseif type == "soldierStarEvents" then
-        return string.format(_("晋升%s的星级 star %d"),Localize.soldier_name[name],eventData:Level())
+        return string.format(_("晋升%s的星级 star %d"),Localize.soldier_name[name],eventData.level)
     elseif type == "materialEvents" then
         return _("未处理")
     elseif type == "soldierEvents" then
@@ -229,15 +229,15 @@ function GameUIHelp:GetHelpEventDesc( eventData )
     elseif type == "dragonDeathEvents" then
         return _("未处理")
     elseif type == "productionTechEvents" then
-        return string.format(_("正在研发%s到 Level %d"),Localize.productiontechnology_name[name],eventData:Level())
+        return string.format(_("正在研发%s到 Level %d"),Localize.productiontechnology_name[name],eventData.level)
     end
 end
 function GameUIHelp:CreateHelpItem(event)
-    local playerData = event:GetPlayerData()
-    local eventData = event:GetEventData()
+    local playerData = event.playerData
+    local eventData = event.eventData
 
     local item = self.help_listview:newItem()
-    item.eventId = event:Id()
+    item.eventId = event.id
     local item_width, item_height = 547,114
     item:setItemSize(item_width, item_height)
 
@@ -249,7 +249,7 @@ function GameUIHelp:CreateHelpItem(event)
     display.newSprite("people.png"):addTo(bg):pos(28, bg_size.height-20)
     -- 玩家名字
     local name_label = UIKit:ttfLabel({
-        text = playerData:Name(),
+        text = playerData.name,
         size = 22,
         color = 0x403c2f,
     }):addTo(bg):align(display.LEFT_CENTER, 50, bg_size.height-20)
@@ -270,8 +270,8 @@ function GameUIHelp:CreateHelpItem(event)
     pro:align(display.LEFT_BOTTOM, 0, 0):addTo(bar)
 
 
-    local helpedMembers = eventData:HelpedMembers()
-    local maxHelpCount = eventData:MaxHelpCount()
+    local helpedMembers = eventData.helpedMembers
+    local maxHelpCount = eventData.maxHelpCount
     pro:setPercentage(math.floor(#helpedMembers/maxHelpCount*100))
     local help_label = UIKit:ttfLabel({
         text = _("帮助").." "..#helpedMembers.."/"..maxHelpCount,
@@ -281,13 +281,13 @@ function GameUIHelp:CreateHelpItem(event)
         shadow = true,
     }):addTo(bar):align(display.LEFT_CENTER, 30, bar:getContentSize().height/2)
     -- 帮助按钮
-    if User:Id() ~= playerData:Id() then
+    if User:Id() ~= playerData.id then
         local help_button = WidgetPushButton.new(
             {normal = "yellow_btn_up_148x58.png", pressed = "yellow_btn_down_148x58.png"}
         ):setButtonLabel(UIKit:ttfLabel({text = _("帮助"), size = 22, color = 0xfff3c7,shadow = true,}))
             :onButtonClicked(function(e)
                 if e.name == "CLICKED_EVENT" then
-                    NetManager:getHelpAllianceMemberSpeedUpPromise(event:Id()):done(function ( )
+                    NetManager:getHelpAllianceMemberSpeedUpPromise(event.id):done(function ( )
                         GameGlobalUI:showTips(_("提示"),_("协助加速成功"))
                     end)
                 end
@@ -295,55 +295,21 @@ function GameUIHelp:CreateHelpItem(event)
     end
     item:addContent(bg)
 
-    self.help_events_items[event:Id()] = item
+    self.help_events_items[event.id] = item
 
     function item:SetHelp(event)
-        help_label:setString(_("帮助").." "..#event:GetEventData():HelpedMembers().."/"..event:GetEventData():MaxHelpCount())
-        ProgressTimer:setPercentage(math.floor(#event:GetEventData():HelpedMembers()/event:GetEventData():MaxHelpCount()*100))
+        help_label:setString(_("帮助").." "..#event.eventData.helpedMembers.."/"..event.eventData.maxHelpCount)
+        ProgressTimer:setPercentage(math.floor(#event.eventData.helpedMembers/event.eventData.maxHelpCount*100))
         return item
     end
 
     function item:IsAbleToHelp()
-        return User:Id() ~= event:GetPlayerData():Id()
+        return User:Id() ~= event.playerData.id
     end
 
     return item
 end
-function GameUIHelp:OnHelpEventChanged(changed_help_event)
-    -- if changed_help_event.added then
-    --     local added = changed_help_event.added
-    --     for _,event in pairs(added) do
-    --         if not self:IsHelpedByMe(event:GetEventData():HelpedMembers()) or not self:IsHelpedToMaxNum(event) then
-    --             self:InsertItemToList(event)
-    --         end
-    --     end
-    --     self.help_listview:reload()
-    -- end
-    -- if changed_help_event.removed then
-    --     local removed = changed_help_event.removed
-    --     for _,event in pairs(removed) do
-    --         self:DeleteHelpItem(event:Id())
-    --     end
-    --     self:performWithDelay(function ()
-    --         self.help_listview:reload()
-    --     end, 0.3)
-    -- end
-    -- if changed_help_event.edit then
-    --     local edit = changed_help_event.edit
-    --     for _,event in pairs(edit) do
-    --         local item = self.help_events_items[event:Id()]
-    --         if item then
-    --             if self:IsHelpedByMe(event:GetEventData():HelpedMembers()) or self:IsHelpedToMaxNum(event) then
-    --                 self:DeleteHelpItem(event:Id())
-    --             else
-    --                 item:SetHelp(event)
-    --             end
-    --         end
-    --     end
-    --     self:performWithDelay(function ()
-    --         self.help_listview:reload()
-    --     end, 0.3)
-    -- end
+function GameUIHelp:OnHelpEventChanged()
     self:InitHelpEvents()
     self.help_all_button:setVisible(self:IsAbleToHelpAll())
 end

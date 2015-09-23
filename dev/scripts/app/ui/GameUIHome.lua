@@ -230,11 +230,11 @@ function GameUIHome:OnUserBasicChanged(fromEntity,changed_map)
     end
     self:RefreshData()
 end
-function GameUIHome:OnHelpEventChanged(changed_map)
+function GameUIHome:OnHelpEventChanged()
     self:RefreshHelpButtonVisible()
     self.request_count:SetNumber(Alliance_Manager:GetMyAlliance():GetOtherRequestEventsNum())
 end
-function GameUIHome:OnAllHelpEventChanged(help_events)
+function GameUIHome:OnAllHelpEventChanged()
     self:RefreshHelpButtonVisible()
     self.request_count:SetNumber(Alliance_Manager:GetMyAlliance():GetOtherRequestEventsNum())
 end

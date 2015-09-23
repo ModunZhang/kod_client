@@ -12,6 +12,6 @@ function AcademyUpgradeBuilding:GetAcademyNextLevelConfig()
 end
 function AcademyUpgradeBuilding:InstantUpgradeTo(level)
 	AcademyUpgradeBuilding.super.InstantUpgradeTo(self,level)
-    City:FastUpdateAllTechsLockState()
+    self:BelongCity():FastUpdateAllTechsLockState()
 end
 return AcademyUpgradeBuilding

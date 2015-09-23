@@ -5,7 +5,6 @@ local Flag = import(".Flag")
 local AllianceShrine = import(".AllianceShrine")
 local AllianceMoonGate = import(".AllianceMoonGate")
 local AllianceMap = import(".AllianceMap")
-local HelpEvent = import(".HelpEvent")
 local memberMeta = import(".memberMeta")
 local MultiObserver = import(".MultiObserver")
 local MarchAttackEvent = import(".MarchAttackEvent")
@@ -73,12 +72,13 @@ property(Alliance, "fightPosition", "")
 property(Alliance, "fightRequests", {})
 property(Alliance, "countInfo", {})
 property(Alliance, "events", {})
-property(Alliance, "joinRequestEvents", nil)
+property(Alliance, "joinRequestEvents", {})
+property(Alliance, "helpEvents", {})
 property(Alliance, "villages", {})
 property(Alliance, "monsters", {})
 property(Alliance, "villageLevels", {})
 property(Alliance, "allianceFight", {})
-property(Alliance, "allianceFightReports", nil)
+property(Alliance, "allianceFightReports", {})
 property(Alliance, "lastAllianceFightReport", nil)
 --行军事件
 property(Alliance, "attackMarchEvents", {})
@@ -93,7 +93,6 @@ function Alliance:ctor()
     self.alliance_map = AllianceMap.new(self)
     self.alliance_shrine = AllianceShrine.new(self)
     self.alliance_belvedere = AllianceBelvedere.new(self) -- 村落采集
-    self.help_events = {}
     -- 联盟道具管理
     self.items_manager = AllianceItemsManager.new()
 end
@@ -288,31 +287,28 @@ function Alliance:GetEnemyLastAllianceFightReportsData()
         return self.id == last.attackAllianceId and last.defenceAlliance or last.attackAlliance
     end
 end
-function Alliance:GetAllHelpEvents()
-    return self.help_events
-end
 function Alliance:GetCouldShowHelpEvents()
     local could_show = {}
-    for k,event in pairs(self.help_events) do
+    for k,event in pairs(self.helpEvents) do
         -- 去掉被自己帮助过的
         local isHelped
         local _id = User:Id()
-        for k,id in pairs(event:GetEventData():HelpedMembers()) do
+        for k,id in pairs(event.eventData.helpedMembers) do
             if id == _id then
                 isHelped = true
             end
         end
         if not isHelped then
             -- 已经帮助到最大次数的去掉
-            if #event:GetEventData():HelpedMembers() < event:GetEventData():MaxHelpCount() then
+            if #event.eventData.helpedMembers < event.eventData.maxHelpCount then
 
                 -- 属于自己的求助事件，已经结束的
                 local isFinished = false
-                if User:Id() == event:GetPlayerData():Id() then
+                if User:Id() == event.playerData.id then
                     local city = City
-                    local eventData = event:GetEventData()
-                    local type = eventData:Type()
-                    local event_id = eventData:Id()
+                    local eventData = event.eventData
+                    local type = eventData.type
+                    local event_id = eventData.id
                     if type == "buildingEvents" then
                         city:IteratorFunctionBuildingsByFunc(function(key, building)
                             if building:UniqueUpgradingKey() == event_id then
@@ -362,47 +358,26 @@ function Alliance:GetCouldShowHelpEvents()
     end
     return could_show
 end
-function Alliance:AddHelpEvent(event)
-    local help_events = self.help_events
-    assert(help_events[event:Id()] == nil)
-    help_events[event:Id()] = event
-    return event
-end
-function Alliance:RemoveHelpEvent(event)
-    return self:RemoveHelpEventById(event:Id())
-end
-function Alliance:RemoveHelpEventById(id)
-    local help_events = self.help_events
-    local old = help_events[id]
-    help_events[id] = nil
-    return old
-end
-function Alliance:EditHelpEvent(help_event)
-    local help_events = self.help_events
-    help_events[help_event.id]:UpdateData(help_event)
-    return help_events[help_event.id]
-end
-function Alliance:ReFreashHelpEvent(changed_help_event)
-    self:NotifyListeneOnType(Alliance.LISTEN_TYPE.HELP_EVENTS, function(listener)
-        listener:OnHelpEventChanged(changed_help_event)
-    end)
 
+local function IsCanbeHelpedByMe(event)
+    local _id = User:Id()
+    for k,id in pairs(event.eventData.helpedMembers) do
+        if id == _id then
+            return false
+        end
+    end
+    return event.playerData.id ~= _id
 end
 -- 获取其他所有联盟成员的申请的没有被自己帮助过的事件数量
 function Alliance:GetOtherRequestEventsNum()
     local request_num = 0
-    if self.help_events then
-        for _,h_event in pairs(self.help_events) do
-            if h_event:GetPlayerData():Id() ~= User:Id() and not h_event:IsHelpedByMe() then
-                request_num = request_num + 1
-            end
-        end
+    for _,v in pairs(self.helpEvents) do
+        request_num = request_num + (IsCanbeHelpedByMe(v) and 1 or 0)
     end
     return request_num
 end
 function Alliance:Reset()
     property(self, "RESET")
-    self.help_events = {}
     self.alliance_map:Reset()
     self.alliance_shrine:Reset()
     self:GetAllianceBelvedere():Reset()
@@ -584,42 +559,58 @@ function Alliance:OnHelpEventsChanged(alliance_data,deltaData)
     local is_delta_update = not is_fully_update and deltaData.helpEvents ~= nil
     if is_fully_update then
         if alliance_data.helpEvents then
-            self.help_events = {}
-            for _,v in pairs(alliance_data.helpEvents) do
-                self.help_events[v.id] = HelpEvent.new():UpdateData(v)
-            end
+            self.helpEvents = alliance_data.helpEvents
             self:NotifyListeneOnType(Alliance.LISTEN_TYPE.ALL_HELP_EVENTS, function(listener)
-                listener:OnAllHelpEventChanged(self.help_events)
+                listener:OnAllHelpEventChanged()
             end)
         end
+    elseif is_delta_update then
+        if self:IsMyAlliance() then
+            self:NotifyHelpEvents(deltaData)
+        end
+        self:NotifyListeneOnType(Alliance.LISTEN_TYPE.HELP_EVENTS, function(listener)
+            listener:OnHelpEventChanged()
+        end)
     end
-    if is_delta_update then
-        local added = {}
-        local removed = {}
-        local edit = {}
-        GameUtils:Handler_DeltaData_Func(
-            deltaData.helpEvents,
-            function(help_event)
-                local helpEvent = HelpEvent.new():UpdateData(help_event)
-                self:AddHelpEvent(helpEvent)
-                table.insert(added, helpEvent)
-            end,
-            function(help_event)
-                local helpEvent = self:EditHelpEvent(help_event)
-                table.insert(edit, helpEvent)
-            end,
-            function(help_event)
-                local helpEvent = HelpEvent.new():UpdateData(help_event)
-                self:RemoveHelpEvent(helpEvent)
-                table.insert(removed, helpEvent)
+end
+function Alliance:NotifyHelpEvents(deltaData)
+    LuaUtils:outputTable(deltaData)
+    if deltaData then
+        for k,v in pairs(deltaData.helpEvents or {}) do
+            if type(k) == "number" then
+                local event = self.helpEvents[k]
+                if event.playerData.id == User:Id() then
+                    local eventData = v.eventData
+                    if eventData and eventData.helpedMembers then
+                        for i,id in ipairs(eventData.helpedMembers.add or {}) do
+                            self:NotifyMemberHelp(id, event.eventData)
+                        end
+                    end
+                end
             end
-        )
-        self:ReFreashHelpEvent{
-            added = added,
-            removed = removed,
-            edit = edit,
-        }
+        end
     end
+end
+function Alliance:NotifyMemberHelp(id, eventData)
+    local event_name
+    if eventData.type == "buildingEvents" or eventData.type == "houseEvents" then
+        event_name = Localize.building_name[eventData.name]
+    elseif eventData.type == "militaryTechEvents" then
+        local soldiers = string.split(eventData.name, "_")
+        local soldier_category = Localize.soldier_category
+        if soldiers[2] == "hpAdd" then
+            event_name = string.format(_("%s血量增加"),soldier_category[soldiers[1]])
+        else
+            event_name = string.format(_("%s对%s的攻击"),soldier_category[soldiers[1]],soldier_category[soldiers[2]])
+        end
+    elseif eventData.type == "soldierStarEvents" then
+        event_name = string.format(_("晋升%s的星级"),Localize.soldier_name[eventData.name])
+    elseif eventData.type == "productionTechEvents" then
+        event_name = Localize.productiontechnology_name[eventData.name]
+    end
+    local name = self:GetMemeberById(id):Name()
+    GameGlobalUI:showTips(_("提示"),string.format(_("%s帮助升级%s成功"),name,event_name))
+    app:GetAudioManager():PlayeEffectSoundWithKey("BUY_ITEM")
 end
 function Alliance:GetAllianceArchonMember()
     for k,v in pairs(self.members) do
@@ -1070,8 +1061,8 @@ function Alliance:GetStrikeMarchReturnEvents(march_type)
 end
 
 function Alliance:CheckHelpDefenceMarchEventsHaveTarget(memeberId)
-    local helpEvents = self:GetAttackMarchEvents("helpDefence")
-    for _,attackEvent in ipairs(helpEvents) do
+    local marchEvents = self:GetAttackMarchEvents("helpDefence")
+    for _,attackEvent in ipairs(marchEvents) do
         if attackEvent:GetPlayerRole() == attackEvent.MARCH_EVENT_PLAYER_ROLE.SENDER
             and attackEvent:GetDefenceData().id == memeberId then
             return true

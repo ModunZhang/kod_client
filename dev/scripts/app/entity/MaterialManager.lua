@@ -57,7 +57,8 @@ local dragonMaterials = {
         ["runes_4"] = 0
     }
 }
-function MaterialManager:ctor()
+function MaterialManager:ctor(city)
+    self.city = city
     MaterialManager.super.ctor(self)
     self.material_map = {}
     self.material_map[BUILD] = {
@@ -137,7 +138,7 @@ end
 -- 检查对应类型的材料是否有超过材料仓库上限
 function MaterialManager:CheckOutOfRangeByType(material_type, materials_map)
     local isOut = false
-    local limit = City:GetFirstBuildingByType("materialDepot"):GetMaxMaterial()
+    local limit = self.city:GetFirstBuildingByType("materialDepot"):GetMaxMaterial()
     self:IteratorMaterialsByType(material_type, function (k,v)
         if v >= limit then
             if not materials_map or materials_map[k] then
