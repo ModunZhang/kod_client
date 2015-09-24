@@ -8,7 +8,6 @@ local WidgetInfoAllianceKills = import("..widget.WidgetInfoAllianceKills")
 local Alliance = import("..entity.Alliance")
 local AllianceMoonGate = import("..entity.AllianceMoonGate")
 local UIListView = import(".UIListView")
-local Flag = import("..entity.Flag")
 local WidgetAllianceHelper = import("..widget.WidgetAllianceHelper")
 -- local fire_wall = import("..particles.fire_wall")
 local revenge_limit = GameDatas.AllianceInitData.intInit.allianceRevengeMaxMinutes.value
@@ -96,14 +95,14 @@ end
 
 function GameUIAllianceBattle:OnTimer(current_time)
     if self.statistics_layer:isVisible() then
-        local status = self.alliance:Status()
+        local status = self.alliance.basicInfo.status
         if status ~= "peace" then
-            local statusFinishTime = self.alliance:StatusFinishTime()
+            local statusFinishTime = self.alliance.basicInfo.statusFinishTime()
             if math.floor(statusFinishTime/1000)>current_time then
                 self.time_label:setString(GameUtils:formatTimeStyle1(math.floor(statusFinishTime/1000)-current_time))
             end
         else
-            local statusStartTime = self.alliance:StatusStartTime()
+            local statusStartTime = self.alliance.basicInfo.statusStartTime
             if current_time>= math.floor(statusStartTime/1000) then
                 self.time_label:setString(GameUtils:formatTimeStyle1(current_time-math.floor(statusStartTime/1000)))
             end
@@ -137,7 +136,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
     self.request_num_label = nil
 
     display.newSprite("alliance_battle_bg_612x886.jpg"):addTo(layer):align(display.TOP_CENTER,window.cx,window.top_bottom+28)
-    if self.alliance:Status() ~= "peace" then
+    if self.alliance.basicInfo.status ~= "peace" then
         display.newColorLayer(UIKit:hex2c4b(0xcc1a1e26)):addTo(layer):align(display.CENTER,window.left + 14,window.bottom):setContentSize(cc.size(612,886))
     end
 
@@ -166,7 +165,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
         :align(display.LEFT_CENTER,period_label:getPositionX()+period_label:getContentSize().width+20,time_bg:getContentSize().height/2)
     period_label:setPositionX((time_bg:getContentSize().width - (period_label:getContentSize().width + 90 + 20))/2)
     self.time_label:setPositionX(period_label:getPositionX()+period_label:getContentSize().width+20)
-    if self.alliance:Status() == "peace" then
+    if self.alliance.basicInfo.status == "peace" then
         -- 请求开战玩家数量
         local request_fight_bg = display.newSprite("tmp_background_red_130x30.png"):align(display.LEFT_CENTER, window.left + 40, window.bottom_top + 55)
             :addTo(layer)
@@ -217,7 +216,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
                     if isEqualOrGreater then
-                        if self.alliance:Status()=="fight" or self.alliance:Status()=="prepare" then
+                        if self.alliance.basicInfo.status=="fight" or self.alliance.basicInfo.status=="prepare" then
                             UIKit:showMessageDialog(_("提示"),_("联盟正在战争准备期或战争期"))
                             return
                         end
@@ -329,13 +328,13 @@ function GameUIAllianceBattle:InitBattleStatistics()
             :addTo(top_bg)
         -- 己方联盟名字
         local our_alliance_tag = UIKit:ttfLabel({
-            text = "["..our_alliance:Tag().."]",
+            text = "["..our_alliance.basicInfo.tag.."]",
             size = 22,
             color = 0xffedae,
         }):addTo(self_alliance_bg)
             :align(display.CENTER,-120,14)
         local our_alliance_name = UIKit:ttfLabel({
-            text = our_alliance:Name(),
+            text = our_alliance.basicInfo.name,
             size = 22,
             color = 0xffedae,
         }):addTo(self_alliance_bg)
@@ -344,10 +343,10 @@ function GameUIAllianceBattle:InitBattleStatistics()
         local a_tag = ""
         local a_name = ""
         if enemy_alliance then
-            if enemy_alliance:Tag()
-                and enemy_alliance:Name() then
-                a_tag = "["..enemy_alliance:Tag().."]"
-                a_name = enemy_alliance:Name()
+            if enemy_alliance.basicInfo.tag
+                and enemy_alliance.basicInfo.name then
+                a_tag = "["..enemy_alliance.basicInfo.tag.."]"
+                a_name = enemy_alliance.basicInfo.name
             end
         end
         local enemy_alliance_tag = UIKit:ttfLabel({
@@ -373,7 +372,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
 
         -- 保护期显示战斗结果
         local info_bg_y
-        if our_alliance:Status() == "protect" then
+        if our_alliance.basicInfo.status == "protect" then
             -- 禁用联盟按钮
             self_alliance_bg:setButtonEnabled(false)
             enemy_alliance_bg:setButtonEnabled(false)
@@ -486,7 +485,7 @@ function GameUIAllianceBattle:RefreshFightInfoList(info_bg_y)
         local alliance = self.alliance
         local our, enemy
         local ourKillMaxName,enemyKillMaxName
-        if alliance:Status() == "protect" then
+        if alliance.basicInfo.status == "protect" then
             local report = alliance:GetLastAllianceFightReports()
             our = alliance:Id() == report.attackAllianceId and report.attackAlliance or report.defenceAlliance
             enemy = alliance:Id() == report.attackAllianceId and report.defenceAlliance or report.attackAlliance
@@ -568,25 +567,25 @@ function GameUIAllianceBattle:OpenAllianceDetails(isOur)
     local count_data = isOur and alliance:GetMyAllianceFightCountData() or alliance:GetEnemyAllianceFightCountData()
     local our_player_kills = alliance:GetMyAllianceFightPlayerKills()
     local enemy_player_kills = alliance:GetEnemyAllianceFightPlayerKills()
-    local alliance_name = isOur and alliance:Name() or enemy_alliance:Name()
-    local alliance_tag = isOur and alliance:Tag() or enemy_alliance:Tag()
+    local alliance_name = isOur and alliance.basicInfo.name or enemy_alliance.basicInfo.name
+    local alliance_tag = isOur and alliance.basicInfo.tag or enemy_alliance.basicInfo.tag
     -- 玩家联盟成员
     local palace_level = alliance:GetAllianceMap():FindAllianceBuildingInfoByName("palace").level
     local memberCount = GameDatas.AllianceBuilding.palace[palace_level].memberCount
     local enemy_memberCount = GameDatas.AllianceBuilding.palace[enemy_alliance:GetAllianceMap():FindAllianceBuildingInfoByName("palace").level].memberCount
     local alliance_members = isOur and alliance:GetMembersCount().."/"..memberCount or enemy_alliance:GetMembersCount().."/"..enemy_memberCount
     -- 联盟语言
-    local  language = isOur and alliance:DefaultLanguage() or enemy_alliance:DefaultLanguage()
+    local  language = isOur and alliance.basicInfo.language or enemy_alliance.basicInfo.language
     -- 联盟战斗力
-    local  alliance_power = isOur and alliance:Power() or enemy_alliance:Power()
+    local  alliance_power = isOur and alliance.basicInfo.power or enemy_alliance.basicInfo.power
     -- 联盟击杀
     local  alliance_kill = isOur and count_data.kill or count_data.kill
     -- 玩家击杀列表
     local  player_kill = isOur and our_player_kills or enemy_player_kills
     -- 联盟旗帜
-    local alliance_flag = isOur and alliance:Flag() or enemy_alliance:Flag()
+    local alliance_flag = isOur and alliance.basicInfo.flag or enemy_alliance.basicInfo.flag
     -- 联盟地形
-    local alliance_terrain = isOur and alliance:Terrain() or enemy_alliance:Terrain()
+    local alliance_terrain = isOur and alliance.basicInfo.terrain or enemy_alliance.basicInfo.terrain
 
 
     local body = UIKit:newWidgetUI("WidgetPopDialog",726,_("联盟详情")):AddToCurrentScene():GetBody()
@@ -868,7 +867,7 @@ function GameUIAllianceBattle:CreateHistoryContent()
         }))
     revenge_button:onButtonClicked(function(event)
         if event.name == "CLICKED_EVENT" then
-            if self.alliance:Status() ~= "peace" and self.alliance:Status() ~= "protect" then
+            if self.alliance.basicInfo.status ~= "peace" and self.alliance.basicInfo.status ~= "protect" then
                 UIKit:showMessageDialog(_("提示"),_("已经处于联盟战期间"))
                 return
             end
@@ -928,19 +927,19 @@ function GameUIAllianceBattle:CreateHistoryContent()
 
         local ui_helper = WidgetAllianceHelper.new()
         if self.self_flag then
-            self.self_flag:SetFlag(Flag:DecodeFromJson(ourAlliance.flag))
+            self.self_flag:SetFlag(ourAlliance.flag)
         else
             -- 己方联盟旗帜
-            local self_flag = ui_helper:CreateFlagContentSprite(Flag:DecodeFromJson(ourAlliance.flag)):scale(0.5)
+            local self_flag = ui_helper:CreateFlagContentSprite(ourAlliance.flag):scale(0.5)
             self_flag:align(display.CENTER, VS:getPositionX()-80, 10)
                 :addTo(fight_bg)
             self.self_flag = self_flag
         end
         if self.enemy_flag then
-            self.enemy_flag:SetFlag(Flag:DecodeFromJson(enemyAlliance.flag))
+            self.enemy_flag:SetFlag(enemyAlliance.flag)
         else
             -- 敌方联盟旗帜
-            local enemy_flag = ui_helper:CreateFlagContentSprite(Flag:DecodeFromJson(enemyAlliance.flag)):scale(0.5)
+            local enemy_flag = ui_helper:CreateFlagContentSprite(enemyAlliance.flag):scale(0.5)
             enemy_flag:align(display.CENTER, VS:getPositionX()+20, 10)
                 :addTo(fight_bg)
             self.enemy_flag = enemy_flag
@@ -1075,8 +1074,7 @@ function GameUIAllianceBattle:CreateAllianceItem(alliance,index)
         :align(display.CENTER,80,h/2)
         :addTo(content)
     local a_helper = WidgetAllianceHelper.new()
-    local flag_sprite = a_helper:CreateFlagWithRhombusTerrain(basic.terrain
-        ,Flag.new():DecodeFromJson(basic.flag))
+    local flag_sprite = a_helper:CreateFlagWithRhombusTerrain(basic.terrain,basic.flag)
     flag_sprite:scale(1.2)
     flag_sprite:align(display.CENTER,0,-20)
         :addTo(flag_bg)
@@ -1177,8 +1175,7 @@ function GameUIAllianceBattle:OpenOtherAllianceDetails(alliance)
         :addTo(body)
         :scale(0.8)
     local a_helper = WidgetAllianceHelper.new()
-    local flag_sprite = a_helper:CreateFlagWithRhombusTerrain(basic.terrain
-        ,Flag.new():DecodeFromJson(basic.flag))
+    local flag_sprite = a_helper:CreateFlagWithRhombusTerrain(basic.terrain,basic.flag)
     flag_sprite:align(display.CENTER, flag_bg:getContentSize().width/2, flag_bg:getContentSize().height/2-20)
         :addTo(flag_bg)
 
@@ -1257,19 +1254,19 @@ function GameUIAllianceBattle:OpenOtherAllianceDetails(alliance)
         :addTo(body)
 end
 
-function GameUIAllianceBattle:OnAllianceBasicChanged(alliance,changed_map)
-    if changed_map.status then
+function GameUIAllianceBattle:OnAllianceBasicChanged(alliance,deltaData)
+    if deltaData("basicInfo.status") then
         self:InitBattleStatistics()
     end
 end
 
-function GameUIAllianceBattle:OnAllianceFightChanged(alliance)
+function GameUIAllianceBattle:OnAllianceFightChanged(alliance, deltaData)
     self:InitBattleStatistics()
 end
 
 function GameUIAllianceBattle:GetAlliancePeriod()
     local period = ""
-    local status = self.alliance:Status()
+    local status = self.alliance.basicInfo.status
     if status == "peace" then
         period = _("和平期")
     elseif status == "prepare" then

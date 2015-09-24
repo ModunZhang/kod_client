@@ -103,7 +103,7 @@ function GameUIChatChannel:CreateTextFieldBody()
                     UIKit:showMessageDialog(_("提示"),_("加入联盟后开放此功能!"),function()end)
                     return
                 elseif self._channelType == 'allianceFight' then
-                    local status = my_alliance:Status()
+                    local status = my_alliance.basicInfo.status
                     if status ~= 'prepare' and status ~= 'fight' then
                         UIKit:showMessageDialog(_("提示"),_("联盟未处于战争状态，不能使用此聊天频道!"),function()end)
                         return
@@ -147,7 +147,7 @@ function GameUIChatChannel:CreateTextFieldBody()
                 UIKit:showMessageDialog(_("提示"),_("加入联盟后开放此功能!"),function()end)
                 return
             elseif self._channelType == 'allianceFight' then
-                local status = my_alliance:Status()
+                local status = my_alliance.basicInfo.status
                 if status ~= 'prepare' and status ~= 'fight' then
                     UIKit:showMessageDialog(_("提示"),_("联盟未处于战争状态，不能使用此聊天频道!"),function()end)
                     return
@@ -239,7 +239,7 @@ function GameUIChatChannel:ShowTipsIf()
             UIKit:showMessageDialog(_("提示"),_("加入联盟后开放此功能!"),function()end)
         end
     elseif self._channelType == 'allianceFight' then
-        local status = my_alliance:Status()
+        local status = my_alliance.basicInfo.status
         if status ~= 'prepare' and status ~= 'fight' then
             UIKit:showMessageDialog(_("提示"),_("联盟未处于战争状态，不能使用此聊天频道!"),function()end)
         end
@@ -390,7 +390,7 @@ function GameUIChatChannel:RefreshListView()
             -- UIKit:showMessageDialog(_("提示"),_("加入联盟后开放此功能!"),function()end)
             self.dataSource_ = {}
         elseif self._channelType == 'allianceFight' then
-            local status = my_alliance:Status()
+            local status = my_alliance.basicInfo.status
             if status ~= 'prepare' and status ~= 'fight' then
                 self.dataSource_ = {}
                 -- UIKit:showMessageDialog(_("提示"),_("联盟未处于战争状态，不能使用此聊天频道!"),function()end)

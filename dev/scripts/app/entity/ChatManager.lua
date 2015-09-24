@@ -139,7 +139,7 @@ function ChatManager:__checkIsBlocked(msg)
         msg.icon = User:Icon()
         local alliacne = Alliance_Manager:GetMyAlliance()
         if not alliacne:IsDefault() then
-            msg.allianceTag = alliacne:Tag()
+            msg.allianceTag = alliacne.basicInfo.tag
         end
     end
     return self._blockedIdList_[msg.id] ~= nil
@@ -328,7 +328,7 @@ function ChatManager:FetchChatWhenReLogined()
     local alliance = Alliance_Manager:GetMyAlliance()
     if not alliance:IsDefault() then
         self:FetchAllChatMessageFromServer('alliance')
-        local status = alliance:Status()
+        local status = alliance.basicInfo.status
         if status ~= 'prepare' and status ~= 'fight' then
             self:emptyChannel_('allianceFight')
         else
@@ -405,7 +405,7 @@ function ChatManager:FetMessageFirstStartGame()
             self:FetchAllChatMessageFromServer('alliance')
         end
         if not self:isChannelInited("allianceFight") then
-            local status = alliance:Status()
+            local status = alliance.basicInfo.status
             if status ~= 'prepare' and status ~= 'fight' then
                 self:emptyChannel_('allianceFight')
             else

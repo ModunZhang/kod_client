@@ -43,7 +43,7 @@ end)
 function WidgetStockGoods:ctor(item)
     self.item = item
 
-    local buy_max = math.floor(Alliance_Manager:GetMyAlliance():Honour()/item:BuyPriceInAlliance())
+    local buy_max = math.floor(Alliance_Manager:GetMyAlliance().basicInfo.honour/item:BuyPriceInAlliance())
 
     local label_origin_x = 190
 
@@ -118,7 +118,7 @@ function WidgetStockGoods:ctor(item)
     local alliance = Alliance_Manager:GetMyAlliance()
 
     self.honour_label = UIKit:ttfLabel({
-        text = GameUtils:formatNumber(alliance:Honour()) ,
+        text = GameUtils:formatNumber(alliance.basicInfo.honour) ,
         size = 20,
         color = 0x403c2f,
     }):addTo(back_ground):align(display.RIGHT_CENTER,dividing:getPositionX()-4,60)

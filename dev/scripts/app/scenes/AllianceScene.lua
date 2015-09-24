@@ -185,8 +185,8 @@ function AllianceScene:OpenUI(entity)
         self:EnterAllianceBuilding(entity)
     end
 end
-function AllianceScene:OnAllianceBasicChanged(alliance,changed_map)
-    if changed_map.terrain then
+function AllianceScene:OnAllianceBasicChanged(alliance,deltaData)
+    if deltaData("basicInfo.terrain") then
         UIKit:showMessageDialog(nil,_("联盟地形已经改变"),function()
             app:EnterMyAllianceScene()
         end,nil,false,nil)
@@ -306,7 +306,7 @@ local EFFECT_TAG = 12321
 function AllianceScene:PlayEffectIf()
     if math.floor(app.timer:GetServerTime()) % 2 == 1 then return end
     self:GetScreenLayer():removeAllChildren()
-    local terrain = self:GetAlliance():Terrain()
+    local terrain = self:GetAlliance().basicInfo.terrain
     if terrain == "iceField" then
         local emitter = UIKit:CreateSnow():addTo(self:GetScreenLayer(), 1, EFFECT_TAG)
             :pos(display.cx-80, display.height)

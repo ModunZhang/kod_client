@@ -176,7 +176,7 @@ function GameUIOrderHall:CreateVillageItem(village_type,village_level)
             }))
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
-                    if alliance:Honour() < need_honour then
+                    if alliance.basicInfo.honour < need_honour then
                         UIKit:showMessageDialog(_("提示"),_("荣耀点不足"))
                     else
                         NetManager:getUpgradeAllianceVillagePromise(village_type):done(function ( response )

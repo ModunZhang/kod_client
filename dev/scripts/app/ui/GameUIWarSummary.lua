@@ -4,7 +4,6 @@
 --
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local WidgetAllianceHelper = import("..widget.WidgetAllianceHelper")
-local Flag = import("..entity.Flag")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 
@@ -96,11 +95,11 @@ function GameUIWarSummary:InitWarSummary(report)
         :addTo(fight_bg)
     -- 己方联盟旗帜
     local ui_helper = WidgetAllianceHelper.new()
-    local self_flag = ui_helper:CreateFlagContentSprite(Flag.new():DecodeFromJson(ourAlliance.flag)):scale(0.5)
+    local self_flag = ui_helper:CreateFlagContentSprite(ourAlliance.flag):scale(0.5)
     self_flag:align(display.CENTER, VS:getPositionX()-80, 10)
         :addTo(fight_bg)
     -- 敌方联盟旗帜
-    local enemy_flag = ui_helper:CreateFlagContentSprite(Flag.new():DecodeFromJson(enemyAlliance.flag)):scale(0.5)
+    local enemy_flag = ui_helper:CreateFlagContentSprite(enemyAlliance.flag):scale(0.5)
     enemy_flag:align(display.CENTER, VS:getPositionX()+20, 10)
         :addTo(fight_bg)
 

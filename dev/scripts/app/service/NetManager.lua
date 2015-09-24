@@ -16,7 +16,7 @@ local function get_player_response_msg(response)
     if response.msg.playerData then
         local user_data = DataManager:getUserData()
         local edit = decodeInUserDataFromDeltaData(user_data, response.msg.playerData)
-        LuaUtils:outputTable("get_player_response_msg edit",edit)
+        -- LuaUtils:outputTable("get_player_response_msg edit",edit)
         DataManager:setUserData(user_data, edit)
         return response
     end
@@ -522,7 +522,7 @@ local logic_event_map = {
             end
             local user_data = DataManager:getUserData()
             local edit = decodeInUserDataFromDeltaData(user_data, response)
-            LuaUtils:outputTable("edit", edit)
+            -- LuaUtils:outputTable("edit", edit)
             -- 在客户端没有 mails 或者 reports key时，收到邮件或者战报需要增加未读字段数值
             if not user_data.reports then
                 for i,v in ipairs(response) do

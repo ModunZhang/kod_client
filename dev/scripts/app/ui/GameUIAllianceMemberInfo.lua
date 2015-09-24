@@ -123,7 +123,7 @@ function GameUIAllianceMemberInfo:OnPlayerButtonClicked( tag )
     end
     local member = Alliance_Manager:GetMyAlliance():GetMemeberById(self.player_info.id)
     if tag == 1 then -- 踢出
-        if Alliance_Manager:GetMyAlliance():Status() == "fight" or Alliance_Manager:GetMyAlliance():Status() == "prepare" then
+        if Alliance_Manager:GetMyAlliance().basicInfo.status == "fight" or Alliance_Manager:GetMyAlliance().basicInfo.status == "prepare" then
             UIKit:showMessageDialog(_("提示"), _("联盟正在战争准备期或战争期,不能将玩家踢出联盟"))
             return
         end

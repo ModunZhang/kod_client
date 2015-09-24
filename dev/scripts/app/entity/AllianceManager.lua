@@ -40,7 +40,7 @@ function AllianceManager:OnUserDataChanged(user_data,time,deltaData)
 end
 
 function AllianceManager:OnAllianceDataChanged(alliance_data,refresh_time,deltaData)
-    local my_alliance_status = self:GetMyAlliance():Status() 
+    local my_alliance_status = self:GetMyAlliance().basicInfo.status
     self:GetMyAlliance():OnAllianceDataChanged(alliance_data,refresh_time,deltaData)
     local isRelogin_action = deltaData == nil and alliance_data 
     local scene_name = display.getRunningScene().__cname
@@ -91,7 +91,7 @@ end
 --判断是否进入对战地图
 function AllianceManager:RefreshAllianceSceneIf(old_alliance_status)
     local my_alliance = self:GetMyAlliance()
-    local my_alliance_status = my_alliance:Status()
+    local my_alliance_status = my_alliance.basicInfo.status
     if old_alliance_status == my_alliance_status then return end
     local scene_name = display.getRunningScene().__cname
     if (my_alliance_status == 'protect') then

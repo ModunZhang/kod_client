@@ -78,14 +78,14 @@ function WidgetChangeMap:onExit()
     local my_allaince = Alliance_Manager:GetMyAlliance()
     my_allaince:RemoveListenerOnType(self, my_allaince.LISTEN_TYPE.BASIC)
 end
-function WidgetChangeMap:OnAllianceBasicChanged(alliance, changed_map)
+function WidgetChangeMap:OnAllianceBasicChanged(alliance, deltaData)
     if Alliance_Manager:GetMyAlliance():IsDefault() then return end
     self:AddShrineOpenedIcon()
 end
 
 function WidgetChangeMap:AddShrineOpenedIcon()
     local alliance = Alliance_Manager:GetMyAlliance()
-    if alliance:Status() == "fight" or alliance:Status() == "prepare"  then
+    if alliance.basicInfo.status == "fight" or alliance.basicInfo.status == "prepare"  then
         if not self.shrine_icon then
             local icon = display.newSprite("tmp_shrine_open_icon_96x96.png"):addTo(self)
                 :align(display.LEFT_CENTER,window.cx-320 * self.scale_x, 50 * self.scale_x)

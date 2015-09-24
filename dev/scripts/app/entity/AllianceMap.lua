@@ -319,7 +319,7 @@ function AllianceMap:OnAllianceDataChanged(allianceData, deltaData)
 end
 function AllianceMap:FindAllianceVillagesInfoByObject(object)
     if is_village(object) then
-        local village_info = self:GetAlliance():GetAllianceVillageInfos()[object:Id()]
+        local village_info = self:GetAlliance():GetAllianceVillageInfosById(object:Id())
         if village_info then
             return village_info
         end
@@ -327,7 +327,7 @@ function AllianceMap:FindAllianceVillagesInfoByObject(object)
 end
 function AllianceMap:FindAllianceMonsterInfoByObject(object)
     if is_monster(object) then
-        local monster_info = self:GetAlliance():GetAllianceMonsterInfos()[object:Id()]
+        local monster_info = self:GetAlliance():GetAllianceMonsterInfosById(object:Id())
         if monster_info then
             return monster_info
         end

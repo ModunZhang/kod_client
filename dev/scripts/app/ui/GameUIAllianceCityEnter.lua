@@ -59,10 +59,11 @@ function GameUIAllianceCityEnter:onExit()
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.BASIC)
     GameUIAllianceCityEnter.super.onExit(self)
 end
-function GameUIAllianceCityEnter:OnAllianceBasicChanged( alliance,changed_map )
-    if changed_map.status and not self:IsMyAlliance() then
-        self:GetEnterButtonByIndex(1):setButtonEnabled(changed_map.status.new == "fight")
-        self:GetEnterButtonByIndex(2):setButtonEnabled(changed_map.status.new == "fight")
+function GameUIAllianceCityEnter:OnAllianceBasicChanged( alliance,deltaData )
+    local ok, value = deltaData("basicInfo.status")
+    if ok and not self:IsMyAlliance() then
+        self:GetEnterButtonByIndex(1):setButtonEnabled(value == "fight")
+        self:GetEnterButtonByIndex(2):setButtonEnabled(value == "fight")
     end
 end
 
@@ -203,7 +204,7 @@ function GameUIAllianceCityEnter:GetEnterButtons()
                     id = member:Id(),
                     name = member:Name(),
                     icon = member:Icon(),
-                    allianceTag = self:GetCurrentAlliance():Tag(),
+                    allianceTag = self:GetCurrentAlliance().basicInfo.tag,
                 })
                 mail:SetTitle(_("个人邮件"))
                 mail:SetAddressee(member:Name())
@@ -277,7 +278,7 @@ function GameUIAllianceCityEnter:GetEnterButtons()
             -- UIKit:showSendTroopMessageDialog(attack_func,City:GetMaterialManager().MATERIAL_TYPE.DRAGON,_("龙"))
         end)
         local my_allaince = Alliance_Manager:GetMyAlliance()
-        attack_button:setButtonEnabled(my_allaince:Status() == "fight")
+        attack_button:setButtonEnabled(my_allaince.basicInfo.status == "fight")
         local strike_button = self:BuildOneButton("strike_66x62.png",_("突袭")):onButtonClicked(function()
             local toLocation = self:GetLogicPosition()
               if isProtected then
@@ -288,7 +289,7 @@ function GameUIAllianceCityEnter:GetEnterButtons()
                 UIKit:newGameUI("GameUIStrikePlayer",1,{memberId = member:Id(),targetIsMyAlliance = false,toLocation = toLocation,targetIsProtected = member:IsProtected()}):AddToCurrentScene(true)
             end
         end)
-        strike_button:setButtonEnabled(my_allaince:Status() == "fight")
+        strike_button:setButtonEnabled(my_allaince.basicInfo.status == "fight")
 
         buttons = {attack_button,strike_button}
         if self:GetMyAlliance():GetAllianceBelvedere():CanEnterEnemyCity() then
@@ -307,7 +308,7 @@ function GameUIAllianceCityEnter:GetEnterButtons()
         table.insert(buttons,info_button)
 
         -- 准备期做一个progress倒计时按钮可使用时间
-        if my_allaince:Status() == "prepare" then
+        if my_allaince.basicInfo.status == "prepare" then
             local progress_1 = WidgetAllianceEnterButtonProgress.new()
                 :pos(-68, -54)
                 :addTo(attack_button)

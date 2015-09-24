@@ -81,7 +81,7 @@ function AllianceView:ChangeTerrain()
     end)
 end
 function AllianceView:Terrain()
-    return self.alliance:Terrain()
+    return self.alliance.basicInfo.terrain
 end
 function AllianceView:RandomSeed()
     return 1985423439857

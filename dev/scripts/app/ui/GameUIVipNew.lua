@@ -93,7 +93,7 @@ function GameUIVipNew:AdapterPlayerList()
     table.insert(infos,{_("胜率"),User:AttackTotal() ~= 0 and string.format("%.2f%%",(User:AttackWin()/User:AttackTotal())*100) or 0})
     table.insert(infos,{_("击杀"),string.formatnumberthousands(User:Kill())})
     table.insert(infos,{_("忠诚值"),GameUtils:formatNumber(User:Loyalty())})
-    table.insert(infos,{_("联盟"),alliance and alliance:Name() or ""})
+    table.insert(infos,{_("联盟"),alliance and alliance.basicInfo.name or ""})
     table.insert(infos,{_("职位"),member and Localize.alliance_title[member:Title()] or ""})
     return infos
 end

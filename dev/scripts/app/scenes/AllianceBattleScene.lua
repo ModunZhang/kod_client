@@ -87,7 +87,7 @@ function AllianceBattleScene:onExit()
     AllianceBattleScene.super.onExit(self)
 end
 function AllianceBattleScene:CreateSceneLayer()
-    local pos = self:GetAlliance():FightPosition()
+    local pos = self:GetAlliance():GetFightPosition()
     local arrange = (pos == "top" or pos == "bottom") and MultiAllianceLayer.ARRANGE.V or MultiAllianceLayer.ARRANGE.H
     if pos == "top" or pos == "left" then
         return MultiAllianceLayer.new(self, arrange, self:GetAlliance(), self:GetEnemyAlliance())
@@ -138,7 +138,7 @@ function AllianceBattleScene:OpenUI(entity, isMyAlliance)
         self:EnterAllianceBuilding(entity, isMyAlliance)
     end
 end
-function AllianceBattleScene:OnAllianceBasicChanged(alliance,changed_map)
+function AllianceBattleScene:OnAllianceBasicChanged(alliance,deltaData)
 end
 function AllianceBattleScene:EnterAllianceBuilding(entity,isMyAlliance)
     local building_info = entity:GetAllianceBuildingInfo()

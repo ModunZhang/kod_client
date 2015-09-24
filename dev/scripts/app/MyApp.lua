@@ -428,7 +428,7 @@ function MyApp:EnterMyAllianceScene(location)
     end
 
     local alliance_name = "AllianceScene"
-    local my_status = Alliance_Manager:GetMyAlliance():Status()
+    local my_status = Alliance_Manager:GetMyAlliance().basicInfo.status
     if my_status == "prepare" or  my_status == "fight" then
         alliance_name = "AllianceBattleScene"
     end
@@ -437,7 +437,7 @@ function MyApp:EnterMyAllianceScene(location)
 end
 function MyApp:EnterMyAllianceSceneOrMyCityScene(location)
     if not Alliance_Manager:GetMyAlliance():IsDefault() then
-        local my_status = Alliance_Manager:GetMyAlliance():Status()
+        local my_status = Alliance_Manager:GetMyAlliance().basicInfo.status
         local alliance_name = "AllianceScene"
         if my_status == "prepare" or  my_status == "fight" then
             alliance_name = "AllianceBattleScene"

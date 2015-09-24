@@ -222,10 +222,10 @@ function MultiAllianceLayer:GetMapFileByArrangeAndTerrain()
 end
 function MultiAllianceLayer:GetTerrains()
     if #self.alliances == 1 then
-        return {self.alliances[1]:Terrain()}
+        return {self.alliances[1].basicInfo.terrain}
     end
     local first, second = unpack(self.alliances)
-    return {first:Terrain(), second:Terrain()}
+    return {first.basicInfo.terrain, second.basicInfo.terrain}
 end
 function MultiAllianceLayer:InitBuildingNode()
     self.building = display.newNode():addTo(self, ZORDER.BUILDING)

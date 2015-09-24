@@ -38,7 +38,7 @@ function CitySprite:GetInfo()
     local entity = self:GetEntity()
     local info = entity:GetAllianceMemberInfo()
     local banners = self.is_my_alliance and UILib.my_city_banner or UILib.enemy_city_banner
-    return info:KeepLevel(), string.format("[%s]%s", entity:GetAlliance():Tag(), info:Name()), banners[info:HelpedByTroopsCount()]
+    return info:KeepLevel(), string.format("[%s]%s", entity:GetAlliance().basicInfo.tag, info:Name()), banners[info:HelpedByTroopsCount()]
 end
 function CitySprite:CheckStatus()
     local memberInfo = self:GetEntity():GetAllianceMemberInfo()

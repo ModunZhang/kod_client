@@ -756,7 +756,6 @@ local DAILY_TASK_ICON = {
     brotherClub = "Icon_brotherClub_122x124.png",
     growUp = "Icon_growUp_108x115.png"
 }
-local PVEDefine = import("..entity.PVEDefine")
 local SpriteConfig = import("..sprites.SpriteConfig")
 local PVE_ANIMATION_FILES = {
     "animations/lanse.ExportJson",

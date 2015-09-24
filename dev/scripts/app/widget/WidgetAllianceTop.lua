@@ -128,7 +128,7 @@ function WidgetAllianceTop:CreateBtnsPageItem()
         :addTo(honour_btn)
     self.honour_label = UIKit:ttfLabel(
         {
-            text = GameUtils:formatNumber(alliance:Honour()),
+            text = GameUtils:formatNumber(alliance.basicInfo.honour),
             size = 18,
             color = 0xf5e8c4
         }):align(display.LEFT_CENTER, 0,-8)

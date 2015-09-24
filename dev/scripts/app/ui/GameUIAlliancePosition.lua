@@ -9,14 +9,14 @@ function GameUIAlliancePosition:ctor()
     -- 根据是否处于联盟战状态构建不同UI
     local my_alliance = Alliance_Manager:GetMyAlliance()
     local enemy_alliance = Alliance_Manager:GetEnemyAlliance()
-    local isFight = my_alliance:Status() == "peace" or my_alliance:Status() == "protect"
+    local isFight = my_alliance.basicInfo.status == "peace" or my_alliance.basicInfo.status == "protect"
     local height = isFight and 258 or 386
     GameUIAlliancePosition.super.ctor(self,height,_("定位坐标"),window.top-200)
     local body = self.body
     if isFight then
         -- 联盟名字
         UIKit:ttfLabel({
-            text = "["..my_alliance:Tag().."]"..my_alliance:Name(),
+            text = "["..my_alliance.basicInfo.tag.."]"..my_alliance.basicInfo.name,
             size = 20,
             color = 0x514d3e,
         }):align(display.CENTER, 304, 225):addTo(body)
@@ -33,7 +33,7 @@ function GameUIAlliancePosition:ctor()
         local group = cc.ui.UICheckBoxButtonGroup.new(display.TOP_TO_BOTTOM)
             :addButton(cc.ui.UICheckBoxButton.new(checkbox_image)
                 :setButtonLabel(UIKit:ttfLabel({
-                    text = "["..my_alliance:Tag().."]"..my_alliance:Name(),
+                    text = "["..my_alliance.basicInfo.tag.."]"..my_alliance.basicInfo.name,
                     size = 20,
                     color = 0x514d3e,
                 }))
@@ -41,7 +41,7 @@ function GameUIAlliancePosition:ctor()
                 :align(display.LEFT_CENTER))
             :addButton(cc.ui.UICheckBoxButton.new(checkbox_image)
                 :setButtonLabel(UIKit:ttfLabel({
-                    text = "["..enemy_alliance:Tag().."]"..enemy_alliance:Name(),
+                    text = "["..enemy_alliance.basicInfo.tag.."]"..enemy_alliance.basicInfo.name,
                     size = 20,
                     color = 0x514d3e,
                 }))

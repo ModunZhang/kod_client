@@ -148,7 +148,7 @@ function ShrinePlayFightReport:GetAttackDragonLevel()
 end
 
 function ShrinePlayFightReport:GetAttackTargetTerrain()
-	return Alliance_Manager:GetMyAlliance():Terrain()
+	return Alliance_Manager:GetMyAlliance().basicInfo.terrain
 end
 
 function ShrinePlayFightReport:IsAttackCamp()

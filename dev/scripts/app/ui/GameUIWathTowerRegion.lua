@@ -450,7 +450,7 @@ function GameUIWathTowerRegion:OnEventDetailButtonClicked(entity)
                     :AddToCurrentScene(true)
             end)
         else
-            local my_status = Alliance_Manager:GetMyAlliance():Status()
+            local my_status = Alliance_Manager:GetMyAlliance().basicInfo.status
             if my_status == "prepare" or  my_status == "fight" then
                 local __,alliance_id = entity:WithObject():FromLocation()
                 NetManager:getAttackMarchEventDetailPromise(entity:WithObject():Id(),alliance_id):done(function(response)
@@ -462,7 +462,7 @@ function GameUIWathTowerRegion:OnEventDetailButtonClicked(entity)
             end
         end
     elseif strEntityType == entity.ENTITY_TYPE.STRIKE_OUT then
-        local my_status = Alliance_Manager:GetMyAlliance():Status()
+        local my_status = Alliance_Manager:GetMyAlliance().basicInfo.status
         if my_status == "prepare" or  my_status == "fight" then
             local __,alliance_id = entity:WithObject():FromLocation()
             NetManager:getStrikeMarchEventDetailPromise(entity:WithObject():Id(),alliance_id):done(function(response)

@@ -68,7 +68,7 @@ function GameUIAllianceMosterEnter:onEnter()
     -- 下次刷新野怪时间
     local header_bg = UIKit:CreateBoxPanelWithBorder({height = 58}):align(display.TOP_CENTER, b_width/2, b_height - 24):addTo(body)
     self.time_label = UIKit:ttfLabel({
-        text = string.format(_("即将消失:%s"),GameUtils:formatTimeStyle1(alliance:MonsterRefreshTime()/1000 - app.timer:GetServerTime())),
+        text = string.format(_("即将消失:%s"),GameUtils:formatTimeStyle1(alliance.basicInfo.monsterRefreshTime/1000 - app.timer:GetServerTime())),
         color = 0x6a1f10,
         size = 22,
     }):addTo(header_bg):align(display.CENTER, header_bg:getContentSize().width/2, header_bg:getContentSize().height/2)
@@ -203,7 +203,7 @@ function GameUIAllianceMosterEnter:onEnter()
     }):align(display.CENTER, -s.width/2 , -s.height+25):addTo(btn)
     self.attack_btn = btn
     -- 如果是敌方的野怪，准备期不能攻打
-    if not self.isMyAlliance and alliance:Status() == "prepare" then
+    if not self.isMyAlliance and alliance.basicInfo.status == "prepare" then
         btn:setButtonEnabled(false)
         local progress_1 = WidgetAllianceEnterButtonProgress.new()
             :pos(-68, -54)
@@ -211,10 +211,10 @@ function GameUIAllianceMosterEnter:onEnter()
     end
 end
 function GameUIAllianceMosterEnter:ShowReward()
-    local time = self.alliance:MonsterRefreshTime()/1000 - app.timer:GetServerTime()
+    local time = self.alliance.basicInfo.monsterRefreshTime/1000 - app.timer:GetServerTime()
     self.time_label:setString(time >= 0 and string.format(_("即将消失:%s"),GameUtils:formatTimeStyle1(time)) or _("未知"))
 
-    if not self.isMyAlliance and self.alliance:Status() == "fight" then
+    if not self.isMyAlliance and self.alliance.basicInfo.status == "fight" then
         self.attack_btn:setButtonEnabled(true)
     end
 end

@@ -297,9 +297,9 @@ function AudioManager:PlayGameMusicAutoCheckScene()
 			end
 		else
 			local alliance    = Alliance_Manager:GetMyAlliance()
-			local status      = alliance:Status()
+			local status      = alliance.basicInfo.status
 			local lastFileKey = self:GetLastPlayedFileName()
-			local terrain     = alliance:Terrain()
+			local terrain     = alliance.basicInfo.terrain
 
 			if alliance:IsDefault() then -- 无联盟
 				if real_scene_name == 'MyCityScene' then
@@ -359,7 +359,7 @@ function AudioManager:PlayGameMusicOnSceneEnter(scene_name,loop)
 	if scene_enter_music_map[scene_name] then
 		if scene_name == 'MyCityScene' then
 			if Alliance_Manager then
-				local status = Alliance_Manager:GetMyAlliance():Status()
+				local status = Alliance_Manager:GetMyAlliance().basicInfo.status
 				if status == 'prepare' or status == 'fight' then
 					scene_name = 'AllianceBattleScene' --battle
 				end

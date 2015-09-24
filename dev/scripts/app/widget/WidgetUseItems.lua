@@ -814,7 +814,7 @@ function WidgetUseItems:OpenMoveTheCityDialog( item ,params)
         function ()
             if Alliance_Manager:GetMyAlliance():GetAllianceBelvedere():HasEvents() then
                 UIKit:showMessageDialog(_("提示"),_("部队在外时不能移城"))
-            elseif Alliance_Manager:GetMyAlliance():Status() == "fight" then
+            elseif Alliance_Manager:GetMyAlliance().basicInfo.status == "fight" then
                 UIKit:showMessageDialog(_("提示"),_("战争期不能移城"))
             else
                 local item_name = item:Name()
@@ -832,7 +832,7 @@ function WidgetUseItems:OpenMoveTheCityDialog( item ,params)
         function ()
             if Alliance_Manager:GetMyAlliance():GetAllianceBelvedere():HasEvents() then
                 UIKit:showMessageDialog(_("提示"),_("部队在外时不能移城"))
-            elseif Alliance_Manager:GetMyAlliance():Status() == "fight" then
+            elseif Alliance_Manager:GetMyAlliance().basicInfo.status == "fight" then
                 UIKit:showMessageDialog(_("提示"),_("战争期不能移城"))
             else
                 local item_name = item:Name()

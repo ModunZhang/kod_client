@@ -209,7 +209,7 @@ end
 function GameUIHome:OnShrineEventsChanged(changed_map)
     self.right_bottom_order:RefreshOrder()
 end
-function GameUIHome:OnAllianceBasicChanged()
+function GameUIHome:OnAllianceBasicChanged(alliance, deltaData)
     self:RefreshHelpButtonVisible()
     self:RefreshData()
 end

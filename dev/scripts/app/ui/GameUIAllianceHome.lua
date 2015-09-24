@@ -2,7 +2,6 @@ local Localize = import("..utils.Localize")
 local window = import("..utils.window")
 local WidgetEventTabButtons = import("..widget.WidgetEventTabButtons")
 local UIPageView = import("..ui.UIPageView")
-local Flag = import("..entity.Flag")
 local UILib = import("..ui.UILib")
 local Alliance = import("..entity.Alliance")
 local SoldierManager = import("..entity.SoldierManager")
@@ -75,7 +74,7 @@ function GameUIAllianceHome:onEnter()
     self:AddMapChangeButton()
     self:InitArrow()
     if self.top then
-        if not self.alliance:AllianceFightReports() and self.alliance:Status() == "protect" then
+        if not self.alliance:AllianceFightReports() and self.alliance.basicInfo.status == "protect" then
             NetManager:getAllianceFightReportsPromise(self.alliance:Id()):done(function ()
                 self.top:Refresh()
             end)
@@ -302,7 +301,7 @@ function GameUIAllianceHome:CreateOperationButton()
                 end
             end
             function button:CheckVisible()
-                local status = Alliance_Manager:GetMyAlliance():Status()
+                local status = Alliance_Manager:GetMyAlliance().basicInfo.status
                 return status == "fight" or status == "prepare"
             end
             button:SetDefenceStatus()
@@ -375,7 +374,7 @@ function GameUIAllianceHome:CreateTop()
     self.self_name_bg = self_name_bg
     self.self_name_label = UIKit:ttfLabel(
         {
-            text = "["..alliance:Tag().."] "..alliance:Name(),
+            text = "["..alliance.basicInfo.tag.."] "..alliance.basicInfo.name,
             size = 18,
             color = 0xffedae,
             dimensions = cc.size(160,18),
@@ -384,7 +383,7 @@ function GameUIAllianceHome:CreateTop()
         :addTo(self_name_bg)
     -- 己方联盟旗帜
     local ui_helper = WidgetAllianceHelper.new()
-    local self_flag = ui_helper:CreateFlagContentSprite(alliance:Flag()):scale(0.5)
+    local self_flag = ui_helper:CreateFlagContentSprite(alliance.basicInfo.flag):scale(0.5)
     self_flag:align(display.CENTER, self_name_bg:getContentSize().width-100, -30):addTo(self_name_bg)
     self.self_flag = self_flag
     -- 敌方联盟名字
@@ -435,7 +434,7 @@ function GameUIAllianceHome:CreateTop()
     local our_num_icon = cc.ui.UIImage.new("dragon_strength_27x31.png"):align(display.CENTER, -107, -65):addTo(top_self_bg)
     local self_power_label = UIKit:ttfLabel(
         {
-            text = string.formatnumberthousands(alliance:Power()),
+            text = string.formatnumberthousands(alliance.basicInfo.power),
             size = 20,
             color = 0xbdb582
         }):align(display.LEFT_CENTER, 20, self_power_bg:getContentSize().height/2)
@@ -459,7 +458,7 @@ function GameUIAllianceHome:CreateTop()
     local home = self
     function Top:Refresh()
         local alliance = home.alliance
-        local status = alliance:Status()
+        local status = alliance.basicInfo.status
         local enemyAlliance = Alliance_Manager:GetEnemyAlliance()
         period_label:setString(home:GetAlliancePeriod())
         enemy_name_label:setVisible(status~="peace")
@@ -479,14 +478,14 @@ function GameUIAllianceHome:CreateTop()
                 enemy_name_bg:removeChildByTag(201, true)
             end
             if status=="fight" or status=="prepare" then
-                local enemy_flag = ui_helper:CreateFlagContentSprite(enemyAlliance:Flag()):scale(0.5)
+                local enemy_flag = ui_helper:CreateFlagContentSprite(enemyAlliance.basicInfo.flag):scale(0.5)
                 enemy_flag:align(display.CENTER,100-enemy_flag:getCascadeBoundingBox().size.width, -30)
                     :addTo(enemy_name_bg)
                 enemy_flag:setTag(201)
-                enemy_name_label:setString("["..enemyAlliance:Tag().."] "..enemyAlliance:Name())
+                enemy_name_label:setString("["..enemyAlliance.basicInfo.tag.."] "..enemyAlliance.basicInfo.name)
             elseif status=="protect" then
                 local enemy_reprot_data = alliance:GetEnemyLastAllianceFightReportsData()
-                local enemy_flag = ui_helper:CreateFlagContentSprite(Flag.new():DecodeFromJson(enemy_reprot_data.flag)):scale(0.5)
+                local enemy_flag = ui_helper:CreateFlagContentSprite(enemy_reprot_data.flag):scale(0.5)
                 enemy_flag:align(display.CENTER,100-enemy_flag:getCascadeBoundingBox().size.width, -30)
                     :addTo(enemy_name_bg)
                 enemy_flag:setTag(201)
@@ -511,7 +510,7 @@ function GameUIAllianceHome:CreateTop()
         else
             if status~="peace" then
                 enemy_num_icon:setTexture("dragon_strength_27x31.png")
-                self:SetEnemyPowerOrKill(enemyAlliance:Power())
+                self:SetEnemyPowerOrKill(enemyAlliance.basicInfo.power)
                 enemy_num_icon:scale(1.0)
             else
                 enemy_num_icon:setTexture("res_citizen_88x82.png")
@@ -519,7 +518,7 @@ function GameUIAllianceHome:CreateTop()
                 self:SetEnemyPowerOrKill(alliance:GetFightRequestPlayerNum())
             end
             our_num_icon:setTexture("dragon_strength_27x31.png")
-            self:SetOurPowerOrKill(alliance:Power())
+            self:SetOurPowerOrKill(alliance.basicInfo.power)
         end
     end
     function Top:SetOurPowerOrKill(num)
@@ -529,7 +528,7 @@ function GameUIAllianceHome:CreateTop()
         enemy_power_label:setString(string.formatnumberthousands(num))
     end
     top_enemy_bg:schedule(function()
-        if self.alliance:Status() == "peace" then
+        if self.alliance.basicInfo.status == "peace" then
             self.top:SetEnemyPowerOrKill(self.alliance:GetFightRequestPlayerNum())
         end
     end, 1)
@@ -581,13 +580,17 @@ end
 function GameUIAllianceHome:OnBasicChanged()
     self.operation_button_order:getChildByTag(1):SetDefenceStatus()
 end
-function GameUIAllianceHome:OnAllianceBasicChanged(alliance,changed_map)
-    local alliance = self.alliance
-    if changed_map.honour then
-        self.page_top:SetHonour(GameUtils:formatNumber(changed_map.honour.new))
-    elseif changed_map.status then
-        if not alliance:AllianceFightReports() then
-            NetManager:getAllianceFightReportsPromise(self.alliance:Id()):done(function ( ... )
+function GameUIAllianceHome:OnAllianceBasicChanged(alliance,deltaData)
+    local ok_honour, new_honour = deltaData("basicInfo.honour")
+    local ok_status, new_status = deltaData("basicInfo.status")
+    local ok_name, new_name = deltaData("basicInfo.name")
+    local ok_tag, new_tag = deltaData("basicInfo.tag")
+    local ok_flag, new_flag = deltaData("basicInfo.flag")
+    if ok_honour then
+        self.page_top:SetHonour(GameUtils:formatNumber(new_honour))
+    elseif ok_status then
+        if alliance.allianceFightReports then
+            NetManager:getAllianceFightReportsPromise(self.alliance.id):done(function ( ... )
                 if self.top then
                     self.top:Refresh()
                 end
@@ -596,15 +599,13 @@ function GameUIAllianceHome:OnAllianceBasicChanged(alliance,changed_map)
             self.top:Refresh()
         end
         self.operation_button_order:RefreshOrder()
-    elseif changed_map.name then
-        self.self_name_label:setString("["..alliance:Tag().."] "..changed_map.name.new)
-    elseif changed_map.tag then
-        self.self_name_label:setString("["..changed_map.tag.new.."] ".. alliance:Name())
-    elseif changed_map.flag then
+    elseif ok_name or ok_tag then
+        self.self_name_label:setString("["..alliance.basicInfo.tag.."] ".. alliance.basicInfo.name)
+    elseif ok_flag then
         self.self_flag:removeFromParent(true)
         -- 己方联盟旗帜
         local ui_helper = WidgetAllianceHelper.new()
-        local self_flag = ui_helper:CreateFlagContentSprite(alliance:Flag()):scale(0.5)
+        local self_flag = ui_helper:CreateFlagContentSprite(alliance.basicInfo.flag):scale(0.5)
         self_flag:align(display.CENTER, self.self_name_bg:getContentSize().width-100, -30):addTo(self.self_name_bg)
         self.self_flag = self_flag
     end
@@ -784,10 +785,8 @@ function GameUIAllianceHome:GetPointsWithScreenRect(screen_rect)
         point(x, y),
     }
 end
-function GameUIAllianceHome:OnAllianceFightChanged(alliance)
-    local alliance = self.alliance
-    local status = alliance:Status()
-    if status=="fight" then
+function GameUIAllianceHome:OnAllianceFightChanged(alliance, deltaData)
+    if deltaData("basicInfo.status", "fight") then
         local our = alliance:GetMyAllianceFightCountData()
         local enemy = alliance:GetEnemyAllianceFightCountData()
         if our and enemy then
@@ -797,14 +796,14 @@ function GameUIAllianceHome:OnAllianceFightChanged(alliance)
     end
 end
 function GameUIAllianceHome:OnTimer(current_time)
-    local status = self.alliance:Status()
-    if status ~= "peace" then
-        local statusFinishTime = self.alliance:StatusFinishTime()
+    local basicInfo = self.alliance.basicInfo
+    if basicInfo.status ~= "peace" then
+        local statusFinishTime = basicInfo.statusFinishTime
         if math.floor(statusFinishTime/1000)>current_time then
             self.time_label:setString(GameUtils:formatTimeStyle1(math.floor(statusFinishTime/1000)-current_time))
         end
     else
-        local statusStartTime = self.alliance:StatusStartTime()
+        local statusStartTime = basicInfo.statusStartTime
         if current_time>= math.floor(statusStartTime/1000) then
             self.time_label:setString(GameUtils:formatTimeStyle1(current_time-math.floor(statusStartTime/1000)))
         end
@@ -813,7 +812,7 @@ end
 
 function GameUIAllianceHome:GetAlliancePeriod()
     local period = ""
-    local status = self.alliance:Status()
+    local status = self.alliance.basicInfo.status
     if status == "peace" then
         period = _("和平期")
     elseif status == "prepare" then

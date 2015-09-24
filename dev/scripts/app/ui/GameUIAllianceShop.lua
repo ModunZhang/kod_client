@@ -6,7 +6,6 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local AllianceMap = import("..entity.AllianceMap")
 local AllianceItemsManager = import("..entity.AllianceItemsManager")
 local GameUIAllianceShop = UIKit:createUIClass('GameUIAllianceShop', "GameUIAllianceBuilding")
-local Flag = import("..entity.Flag")
 local UIListView = import(".UIListView")
 local UILib = import(".UILib")
 local Localize = import("..utils.Localize")
@@ -132,7 +131,7 @@ function GameUIAllianceShop:HonourAndLoyalty()
     display.newSprite("honour_128x128.png"):addTo(bg):align(display.LEFT_CENTER, -18, bg:getContentSize().height/2):scale(0.4)
     -- 荣耀值
     local honour_label = UIKit:ttfLabel({
-        text = GameUtils:formatNumber(self.alliance:Honour()),
+        text = GameUtils:formatNumber(self.alliance.basicInfo.honour),
         size = 20,
         color = 0x615b44
     }):addTo(bg):align(display.CENTER, bg:getContentSize().width/2 + 2, bg:getContentSize().height/2)
@@ -533,9 +532,10 @@ end
 function GameUIAllianceShop:OnAllianceInfoChanged()
     self.honourAndLoyalty:SetLoyalty(User:Loyalty())
 end
-function GameUIAllianceShop:OnAllianceBasicChanged(alliance,changed_map)
-    if changed_map.honour and self.honourAndLoyalty then
-        self.honourAndLoyalty:SetHonour(alliance:Honour())
+function GameUIAllianceShop:OnAllianceBasicChanged(alliance,deltaData)
+    local ok, value = deltaData("basicInfo.honour")
+    if ok and self.honourAndLoyalty then
+        self.honourAndLoyalty:SetHonour(value)
     end
 end
 return GameUIAllianceShop

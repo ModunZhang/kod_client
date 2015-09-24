@@ -64,7 +64,7 @@ end
 function AllianceBuildingSprite:GetInfo()
     local entity = self:GetEntity()
     local info = entity:GetAllianceBuildingInfo()
-    return info.level, string.format("[%s]%s", entity:GetAlliance():Tag(), Localize.alliance_buildings[info.name])
+    return info.level, string.format("[%s]%s", entity:GetAlliance().basicInfo.tag, Localize.alliance_buildings[info.name])
 end
 
 

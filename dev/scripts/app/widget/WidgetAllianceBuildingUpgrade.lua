@@ -175,9 +175,9 @@ function WidgetAllianceBuildingUpgrade:InitRequirement()
     local requirements = {
         {resource_type = _("荣耀点"),
             isVisible = true,
-            isSatisfy = alliance:Honour()>=now_c.needHonour,
+            isSatisfy = alliance.basicInfo.honour>=now_c.needHonour,
             icon="honour_128x128.png",
-            description=alliance:Honour().."/"..now_c.needHonour},
+            description=alliance.basicInfo.honour.."/"..now_c.needHonour},
 
         {resource_type = "title",
             isVisible = true,
@@ -204,7 +204,7 @@ function WidgetAllianceBuildingUpgrade:IsAbleToUpgrade()
     local now_c = self.building_config[self.building.level+1]
     if not alliance:GetSelf():CanUpgradeAllianceBuilding() then
         return UPGRADE_ERR_TYPE.POSITION
-    elseif alliance:Honour()<now_c.needHonour then
+    elseif alliance.basicInfo.honour <now_c.needHonour then
         return UPGRADE_ERR_TYPE.HONOUR
     end
 end

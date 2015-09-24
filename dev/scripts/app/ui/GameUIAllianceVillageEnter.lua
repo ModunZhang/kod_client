@@ -415,11 +415,11 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
                 end
             end)
             buttons = {attack_button,strike_button}
-            if not self:IsMyAlliance() and self:GetMyAlliance():Status() == "prepare" then
+            if not self:IsMyAlliance() and self:GetMyAlliance().basicInfo.status == "prepare" then
                 local progress_1 = WidgetAllianceEnterButtonProgress.new()
                     :pos(-68, -54)
                     :addTo(attack_button)
-                local my_allaince_status = Alliance_Manager:GetMyAlliance():Status()
+                local my_allaince_status = Alliance_Manager:GetMyAlliance().basicInfo.status
                 attack_button:setButtonEnabled(my_allaince_status == "fight")
                 local progress_2 = WidgetAllianceEnterButtonProgress.new()
                     :pos(-68, -54)
@@ -469,11 +469,11 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
                     -- end
                     -- UIKit:showSendTroopMessageDialog(attack_func,City:GetMaterialManager().MATERIAL_TYPE.DRAGON,_("龙"))
                 end)
-            if not self:IsMyAlliance() and self:GetMyAlliance():Status() == "prepare" then
+            if not self:IsMyAlliance() and self:GetMyAlliance().basicInfo.status == "prepare" then
                 local progress_1 = WidgetAllianceEnterButtonProgress.new()
                     :pos(-68, -54)
                     :addTo(attack_button)
-                local my_allaince_status = Alliance_Manager:GetMyAlliance():Status()
+                local my_allaince_status = Alliance_Manager:GetMyAlliance().basicInfo.status
                 attack_button:setButtonEnabled(my_allaince_status == "fight")
             end
             buttons = {attack_button}
@@ -521,11 +521,11 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
             -- end
             -- UIKit:showSendTroopMessageDialog(attack_func,City:GetMaterialManager().MATERIAL_TYPE.DRAGON,_("龙"))
         end)
-    if not self:IsMyAlliance() and self:GetMyAlliance():Status() == "prepare" then
+    if not self:IsMyAlliance() and self:GetMyAlliance().basicInfo.status == "prepare" then
         local progress_1 = WidgetAllianceEnterButtonProgress.new()
             :pos(-68, -54)
             :addTo(attack_button)
-        local my_allaince_status = Alliance_Manager:GetMyAlliance():Status()
+        local my_allaince_status = Alliance_Manager:GetMyAlliance().basicInfo.status
         attack_button:setButtonEnabled(my_allaince_status == "fight")
     end
     buttons = {attack_button}
@@ -534,11 +534,12 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
     return buttons
 end
 
-function GameUIAllianceVillageEnter:OnAllianceBasicChanged( alliance,changed_map )
-    if changed_map.status and not self:IsMyAlliance() then
-        self:GetEnterButtonByIndex(1):setButtonEnabled(changed_map.status.new == "fight")
+function GameUIAllianceVillageEnter:OnAllianceBasicChanged( alliance,deltaData )
+    local ok, value = deltaData("basicInfo.status")
+    if ok and not self:IsMyAlliance() then
+        self:GetEnterButtonByIndex(1):setButtonEnabled(value == "fight")
         if self:GetEnterButtonByIndex(2) then
-            self:GetEnterButtonByIndex(2):setButtonEnabled(changed_map.status.new == "fight")
+            self:GetEnterButtonByIndex(2):setButtonEnabled(value == "fight")
         end
     end
 end
