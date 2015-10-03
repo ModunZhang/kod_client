@@ -19,6 +19,7 @@ return function(object, property_name, initial, property_type)
     object.__proterties__ = object.__proterties__ or {}
     object.__proterties_value__ = object.__proterties_value__ or {}
     local head = string.upper(string.sub(property_name, 1, 1))
+    if head == "_" then return end
     local tail = string.sub(property_name, 2, #property_name)
     local get_name = string.format("%s%s", head, tail)
     local set_name = string.format("Set%s", get_name)

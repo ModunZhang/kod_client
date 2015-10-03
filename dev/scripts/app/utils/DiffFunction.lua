@@ -12,10 +12,10 @@ local deltameta = {
     __call = function(root, indexstr, value)
         if not (find(indexstr, '[^%w_%.]')) then
             for i,key in ipairs(split(indexstr, ".")) do
+                root = root[key]
                 if not root then
                     return false
                 end
-                root = root[key]
             end
             if value then
                 return root == value

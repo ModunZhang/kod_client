@@ -485,7 +485,7 @@ function MyApp:EnterUserMode()
     assert(DataManager:hasUserData())
     InitGame(DataManager:getUserData())
     DataManager:setUserAllianceData(DataManager.allianceData)
-    DataManager:setEnemyAllianceData(DataManager.enemyAllianceData)
+    -- DataManager:setEnemyAllianceData(DataManager.enemyAllianceData)
 end
 
 function MyApp:getSupportMailFormat(category,logMsg)

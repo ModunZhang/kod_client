@@ -311,7 +311,7 @@ function DataUtils:getAllianceLocationDistance(fromAllianceDoc, fromLocation, to
         height =  math.abs(fromLocation.y - toLocation.y)
         return DataUtils:getDistance(width,height)
     end
-    if fromAllianceDoc:GetAllianceFight()['attackAllianceId'] == fromAllianceDoc:Id() then
+    if fromAllianceDoc:GetAllianceFight()['attackAllianceId'] == fromAllianceDoc._id then
         local allianceMergeStyle = fromAllianceDoc:GetAllianceFight()['mergeStyle']
         if allianceMergeStyle == 'left' then
             width = AllianceMapSize.width - fromLocation.x + toLocation.x

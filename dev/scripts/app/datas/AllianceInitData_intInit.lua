@@ -47,12 +47,12 @@ intInit["allianceRevengeMaxMinutes"] = {
 }
 intInit["allianceRegionMapWidth"] = {
 	["type"] = "allianceRegionMapWidth",
-	["value"] = 25,
+	["value"] = 31,
 	["desc"] = "联盟地图宽度"
 }
 intInit["allianceRegionMapHeight"] = {
 	["type"] = "allianceRegionMapHeight",
-	["value"] = 25,
+	["value"] = 31,
 	["desc"] = "联盟地图高度"
 }
 intInit["citizenPerLeadership"] = {
@@ -119,4 +119,9 @@ intInit["LootVillagePercent"] = {
 	["type"] = "LootVillagePercent",
 	["value"] = 20,
 	["desc"] = "掠夺敌方村落资源比例"
+}
+intInit["allianceMoveColdMinutes"] = {
+	["type"] = "allianceMoveColdMinutes",
+	["value"] = 360,
+	["desc"] = "移动联盟冷却时间"
 }

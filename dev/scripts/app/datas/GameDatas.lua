@@ -75,8 +75,6 @@ GameDatas.AllianceInitData = {
 	["right"] = {},
 	["donate"] = {},
 	["shrineStage"] = {},
-	["buildingName"] = {},
-	["buildings"] = {},
 	["fightRewards"] = {},
 	["monsters"] = {},
 }
@@ -85,10 +83,25 @@ require("app.datas.AllianceInitData_stringInit")
 require("app.datas.AllianceInitData_right")
 require("app.datas.AllianceInitData_donate")
 require("app.datas.AllianceInitData_shrineStage")
-require("app.datas.AllianceInitData_buildingName")
-require("app.datas.AllianceInitData_buildings")
 require("app.datas.AllianceInitData_fightRewards")
 require("app.datas.AllianceInitData_monsters")
+
+GameDatas.AllianceMap = {
+	["buildingName"] = {},
+	["allianceMap_1"] = {},
+	["allianceMap_2"] = {},
+	["allianceMap_3"] = {},
+	["allianceMap_4"] = {},
+	["allianceMap_5"] = {},
+	["allianceMap_6"] = {},
+}
+require("app.datas.AllianceMap_buildingName")
+require("app.datas.AllianceMap_allianceMap_1")
+require("app.datas.AllianceMap_allianceMap_2")
+require("app.datas.AllianceMap_allianceMap_3")
+require("app.datas.AllianceMap_allianceMap_4")
+require("app.datas.AllianceMap_allianceMap_5")
+require("app.datas.AllianceMap_allianceMap_6")
 
 GameDatas.AllianceVillage = {
 	["woodVillage"] = {},

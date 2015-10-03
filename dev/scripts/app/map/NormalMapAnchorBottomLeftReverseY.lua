@@ -24,6 +24,9 @@ end
 function NormalMapAnchorBottomLeftReverseY:ConvertToMapPosition(x, y)
     return self.base_x + self.half_w + x * self.tile_w, self.base_y - self.half_h - y * self.tile_h
 end
+function NormalMapAnchorBottomLeftReverseY:ConvertToLeftBottomMapPosition(x, y)
+    return self.base_x + x * self.tile_w, self.base_y - (y+1) * self.tile_h
+end
 function NormalMapAnchorBottomLeftReverseY:ConvertToLogicPosition(x, y)
     return floor((x - self.base_x) / self.tile_w), floor((self.base_y - y) / self.tile_h)
 end
