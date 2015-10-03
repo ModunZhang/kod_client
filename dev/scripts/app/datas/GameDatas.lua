@@ -88,6 +88,7 @@ require("app.datas.AllianceInitData_monsters")
 
 GameDatas.AllianceMap = {
 	["buildingName"] = {},
+	["terrainStyle"] = {},
 	["allianceMap_1"] = {},
 	["allianceMap_2"] = {},
 	["allianceMap_3"] = {},
@@ -96,6 +97,7 @@ GameDatas.AllianceMap = {
 	["allianceMap_6"] = {},
 }
 require("app.datas.AllianceMap_buildingName")
+require("app.datas.AllianceMap_terrainStyle")
 require("app.datas.AllianceMap_allianceMap_1")
 require("app.datas.AllianceMap_allianceMap_2")
 require("app.datas.AllianceMap_allianceMap_3")
