@@ -26,13 +26,15 @@ function BarracksUpgradeBuilding:CreateEvent()
     function event:Reset()
         self.soldier_type = nil
         self.soldier_count = 0
+        self.start_time = 0
         self.finished_time = 0
         self.id = nil
     end
-    function event:SetRecruitInfo(soldier_type, count, finish_time ,id )
+    function event:SetRecruitInfo(soldier_type, count, finish_time ,id ,start_time)
         local old_ = self.id
         self.soldier_type = soldier_type
         self.soldier_count = count
+        self.start_time = start_time
         self.finished_time = finish_time
         self.id = id
         if finish_time == 0 or not soldier_type then
@@ -45,7 +47,7 @@ function BarracksUpgradeBuilding:CreateEvent()
         return self.id
     end
     function event:StartTime()
-        return self.finished_time - self:GetRecruitingTime()
+        return self.start_time
     end
     function event:GetRecruitingTime()
         local config = barracks:GetSoldierConfigByType(self.soldier_type)
@@ -116,7 +118,7 @@ function BarracksUpgradeBuilding:GeneralSoldierLocalPush(event)
         local soldier_type, soldier_count = event:GetRecruitInfo()
         local pushIdentity = event:Id()
         local title = string.format(_("招募%s X%d完成"),Localize.soldier_name[soldier_type],soldier_count)
-        app:GetPushManager():UpdateSoldierPush(event:FinishTime(),title,pushIdentity)
+        app:GetPushManager():UpdateSoldierPush(os.time() + (event:FinishTime() - event:StartTime()),title,pushIdentity)
     end
 end
 function BarracksUpgradeBuilding:CancelSoldierLocalPush(pushIdentity)
@@ -124,9 +126,9 @@ function BarracksUpgradeBuilding:CancelSoldierLocalPush(pushIdentity)
         app:GetPushManager():CancelSoldierPush(pushIdentity)
     end
 end
-function BarracksUpgradeBuilding:RecruitSoldiersWithFinishTime(soldier_type, count, finish_time,id)
+function BarracksUpgradeBuilding:RecruitSoldiersWithFinishTime(soldier_type, count, finish_time,id,start_time)
     local event = self.recruit_event
-    event:SetRecruitInfo(soldier_type, count, finish_time,id)
+    event:SetRecruitInfo(soldier_type, count, finish_time,id,start_time)
     self.barracks_building_observer:NotifyObservers(function(listener)
         listener:OnBeginRecruit(self, event)
     end)
@@ -137,7 +139,7 @@ function BarracksUpgradeBuilding:EndRecruitSoldiersWithCurrentTime(current_time)
     local event = self.recruit_event
     local soldier_type = self.recruit_event.soldier_type
     local soldier_count = self.recruit_event.soldier_count
-    event:SetRecruitInfo(nil, 0, 0,nil)
+    event:SetRecruitInfo(nil, 0, 0,nil,0)
     self.barracks_building_observer:NotifyObservers(function(listener)
         listener:OnEndRecruit(self, event, soldier_type, soldier_count, current_time)
     end)
@@ -196,11 +198,12 @@ function BarracksUpgradeBuilding:OnFunctionDataChange(userData,deltaData,current
     end
     local event = userData.soldierEvents[1]
     if event then
+        local start_time = event.startTime / 1000
         local finished_time = event.finishTime / 1000
         if self.recruit_event:IsEmpty() then
-            self:RecruitSoldiersWithFinishTime(event.name,event.count,finished_time,event.id)
+            self:RecruitSoldiersWithFinishTime(event.name,event.count,finished_time,event.id,start_time)
         else
-            self.recruit_event:SetRecruitInfo(event.name,event.count,finished_time,event.id)
+            self.recruit_event:SetRecruitInfo(event.name,event.count,finished_time,event.id,start_time)
         end
     else
         if self.recruit_event:IsRecruting() then

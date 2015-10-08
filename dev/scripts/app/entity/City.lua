@@ -1794,7 +1794,7 @@ end
 function City:GeneralProductionLocalPush(productionTechnologyEvent)
     if ext and ext.localpush then
         local title = productionTechnologyEvent:GetBuffLocalizedDescComplete()
-        app:GetPushManager():UpdateTechnologyPush(productionTechnologyEvent:FinishTime(),title,productionTechnologyEvent:Id())
+        app:GetPushManager():UpdateTechnologyPush(os.time() + productionTechnologyEvent:FinishTime() - productionTechnologyEvent:StartTime(),title,productionTechnologyEvent:Id())
     end
 end
 function City:CancelProductionLocalPush(Id)

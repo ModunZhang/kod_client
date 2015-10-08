@@ -191,7 +191,7 @@ function SoldierManager:GeneralMilitaryTechLocalPush(event)
     if ext and ext.localpush then
         local pushIdentity = event:Id()..event:Name()
         local title = string.format(_("%s完成"), event:GetLocalizeDesc())
-        app:GetPushManager():UpdateTechnologyPush(event:FinishTime(),title,pushIdentity)
+        app:GetPushManager():UpdateTechnologyPush(os.time() + event:FinishTime() - event:StartTime(),title,pushIdentity)
     end
 end
 function SoldierManager:CancelMilitaryTechLocalPush(event)
@@ -204,7 +204,7 @@ function SoldierManager:GeneralSoldierLocalPush(event)
     if ext and ext.localpush then
         local pushIdentity = event:Id()..event:Name()
         local title = string.format(_("%s完成"), event:GetLocalizeDesc())
-        app:GetPushManager():UpdateSoldierPush(event:FinishTime(),title,pushIdentity)
+        app:GetPushManager():UpdateSoldierPush(os.time() + event:FinishTime() - event:StartTime(),title,pushIdentity)
     end
 end
 function SoldierManager:CancelSoldierLocalPush(event)

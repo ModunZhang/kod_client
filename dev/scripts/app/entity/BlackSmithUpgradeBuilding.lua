@@ -29,6 +29,7 @@ function BlackSmithUpgradeBuilding:CreateEvent()
     end
     function event:Reset()
         self.content = nil
+        self.start_time = 0
         self.finished_time = 0
         self.id = nil
     end
@@ -36,8 +37,7 @@ function BlackSmithUpgradeBuilding:CreateEvent()
         return self:Id()
     end
     function event:StartTime()
-        local total = black_smith:GetMakingTimeByEquipment(self.content)
-        return self.finished_time - total + DataUtils:getBuffEfffectTime(total, black_smith:GetEfficiency())
+        return self.start_time
     end
     function event:ElapseTime(current_time)
         return current_time - self:StartTime()
@@ -60,9 +60,10 @@ function BlackSmithUpgradeBuilding:CreateEvent()
     function event:Content()
         return self.content
     end
-    function event:SetContentWithFinishTime(content, finished_time, id)
+    function event:SetContentWithFinishTime(content, finished_time, id, start_time)
         self.content = content
         self.finished_time = finished_time
+        self.start_time = start_time
         self.id = id
     end
     function event:IsEmpty()
@@ -105,9 +106,9 @@ end
 function BlackSmithUpgradeBuilding:IsMakingEquipment()
     return self.making_event:IsMaking()
 end
-function BlackSmithUpgradeBuilding:MakeEquipmentWithFinishTime(equipment, finished_time, id)
+function BlackSmithUpgradeBuilding:MakeEquipmentWithFinishTime(equipment, finished_time, id , start_time)
     local event = self.making_event
-    event:SetContentWithFinishTime(equipment, finished_time, id)
+    event:SetContentWithFinishTime(equipment, finished_time, id, start_time)
     self.black_smith_building_observer:NotifyObservers(function(listener)
         listener:OnBeginMakeEquipmentWithEvent(self, event)
     end)
@@ -116,7 +117,7 @@ function BlackSmithUpgradeBuilding:EndMakeEquipmentWithCurrentTime()
     local event = self.making_event
     local equipment = event:Content()
     self:CancelToolsLocalPush(event.id)
-    event:SetContentWithFinishTime(nil, 0)
+    event:SetContentWithFinishTime(nil, 0,nil,0)
     self.black_smith_building_observer:NotifyObservers(function(listener)
         listener:OnEndMakeEquipmentWithEvent(self, event, equipment)
     end)
@@ -169,15 +170,16 @@ function BlackSmithUpgradeBuilding:OnFunctionDataChange(userData, deltaData, cur
 
     local event = userData.dragonEquipmentEvents[1]
     if event then
+        local start_time = event.startTime / 1000
         local finished_time = event.finishTime / 1000
         local makingEvent = self:GetMakeEquipmentEvent()
         if makingEvent:IsEmpty() then
-            self:MakeEquipmentWithFinishTime(event.name, finished_time, event.id)
+            self:MakeEquipmentWithFinishTime(event.name, finished_time, event.id,start_time)
             self:GeneralToolsLocalPush(makingEvent)
         else
             if finished_time ~= makingEvent:FinishTime() then
                 self:SpeedUpMakingEquipment()
-                self:GetMakeEquipmentEvent():SetContentWithFinishTime(event.name, finished_time, event.id)
+                self:GetMakeEquipmentEvent():SetContentWithFinishTime(event.name, finished_time, event.id, start_time)
                 self:GeneralToolsLocalPush(makingEvent)
             end
         end
@@ -188,7 +190,7 @@ end
 function BlackSmithUpgradeBuilding:GeneralToolsLocalPush(event)
     if ext and ext.localpush then
         local title = string.format(_("制造%s装备完成"), Localize.equip[event:Content()])
-        app:GetPushManager():UpdateToolEquipmentPush(event:FinishTime(), title, event.id)
+        app:GetPushManager():UpdateToolEquipmentPush(os.time() + event:FinishTime() - event:StartTime(), title, event.id)
     end
 end
 function BlackSmithUpgradeBuilding:CancelToolsLocalPush(event_id)

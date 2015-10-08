@@ -30,6 +30,7 @@ function ToolShopUpgradeBuilding:CreateEvent(category)
     end
     function event:Reset()
         self.content = {}
+        self.start_time = 0
         self.finished_time = 0
         self.id = nil
     end
@@ -43,9 +44,7 @@ function ToolShopUpgradeBuilding:CreateEvent(category)
         return self.id
     end
     function event:StartTime()
-        local time = tool_shop:GetMakingTimeByCategory(self.category)
-        local buff_time = math.ceil(time *  tool_shop:BelongCity():FindTechByName("sketching"):GetBuffEffectVal())
-        return self.finished_time - time + buff_time
+        return self.start_time
     end
     function event:ElapseTime(current_time)
         return current_time - self:StartTime()
@@ -75,8 +74,9 @@ function ToolShopUpgradeBuilding:CreateEvent(category)
     function event:Content()
         return self.content
     end
-    function event:SetContent(content, finished_time,id)
+    function event:SetContent(content, finished_time,id,start_time)
         self.content = content == nil and {} or content
+        self.start_time = start_time
         self.finished_time = finished_time
         self.id = id
     end
@@ -151,10 +151,10 @@ end
 function ToolShopUpgradeBuilding:IsMakingMaterialsByCategory(category, current_time)
     return self.category[category]:IsMaking(current_time)
 end
-function ToolShopUpgradeBuilding:MakeMaterialsByCategoryWithFinishTime(category, materials, current_time, finished_time, id)
+function ToolShopUpgradeBuilding:MakeMaterialsByCategoryWithFinishTime(category, materials, current_time, finished_time, id,start_time)
     if self.category[category]:IsMaking(current_time) then return end
     local event = self.category[category]
-    event:SetContent(materials, finished_time,id)
+    event:SetContent(materials, finished_time,id,start_time)
     self.toolShop_building_observer:NotifyObservers(function(listener)
         listener:OnBeginMakeMaterialsWithEvent(self, event)
     end)
@@ -162,7 +162,7 @@ end
 function ToolShopUpgradeBuilding:EndMakeMaterialsByCategoryWithCurrentTime(category, materials, current_time, id)
     -- if self.category[category]:IsStored(current_time) then return end
     local event = self.category[category]
-    event:SetContent(materials, 0, id)
+    event:SetContent(materials, 0, id,0)
     self.toolShop_building_observer:NotifyObservers(function(listener)
         listener:OnEndMakeMaterialsWithEvent(self, event, current_time)
     end)
@@ -272,20 +272,21 @@ function ToolShopUpgradeBuilding:OnFunctionDataChange(userData, deltaData, curre
     for category_index,category in ipairs(category_map) do
         local event = events[category_index]
         if event then
+            local start_time = event.startTime / 1000
             local finished_time = event.finishTime / 1000
             local is_making_end = finished_time == 0
             if is_making_end then
                 self:EndMakeMaterialsByCategoryWithCurrentTime(category, event.materials, current_time, event.id)
                 self:CancelToolsLocalPush(event.id)
             elseif self:IsMaterialsEmptyByCategory(category) then
-                self:MakeMaterialsByCategoryWithFinishTime(category, event.materials, current_time, finished_time, event.id)
+                self:MakeMaterialsByCategoryWithFinishTime(category, event.materials, current_time, finished_time, event.id,start_time)
                 local makingEvent = self:GetMakeMaterialsEventByCategory(category)
                 self:GeneralToolsLocalPush(makingEvent)
             else
                 local makingEvent = self:GetMakeMaterialsEventByCategory(category)
                 if finished_time ~= makingEvent:FinishTime() then
                     self:SpeedUpMakingMaterial()
-                    self:GetMakeMaterialsEventByCategory(category):SetContent(event.materials, finished_time, event.id)
+                    self:GetMakeMaterialsEventByCategory(category):SetContent(event.materials, finished_time, event.id,start_time)
                     self:GeneralToolsLocalPush(makingEvent)
                 end
             end

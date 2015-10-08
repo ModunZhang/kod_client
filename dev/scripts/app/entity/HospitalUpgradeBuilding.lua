@@ -29,12 +29,14 @@ function HospitalUpgradeBuilding:CreateEvent()
     end
     function event:Reset()
         self.soldiers = nil
+        self.start_time = 0
         self.finished_time = 0
         self.id = nil
     end
-    function event:SetTreatInfo(soldiers, finish_time , id)
+    function event:SetTreatInfo(soldiers, finish_time , id, start_time)
         local old_id = self.id
         self.soldiers = soldiers
+        self.start_time = start_time
         self.finished_time = finish_time
         self.id = id
         if soldiers and finish_time~=0 and id then
@@ -44,7 +46,7 @@ function HospitalUpgradeBuilding:CreateEvent()
         end
     end
     function event:StartTime()
-        return self.finished_time - self:GetTreatingTime()
+        return self.start_time
     end
     function event:Id()
         return self.id
@@ -93,7 +95,7 @@ function HospitalUpgradeBuilding:GeneralSoldierLocalPush(event)
             soldiers_desc = soldiers_desc .. (soldiers_desc == "" and "" or ",").. string.format(_("%s X %d "),Localize.soldier_name[soldier_type],count)
         end
         local title = string.format(_("治愈%s完成"),soldiers_desc)
-        app:GetPushManager():UpdateSoldierPush(event:FinishTime(),title,pushIdentity)
+        app:GetPushManager():UpdateSoldierPush(os.time() + (event:FinishTime() - event:StartTime()),title,pushIdentity)
     end
 end
 function HospitalUpgradeBuilding:CancelSoldierLocalPush(id)
@@ -126,9 +128,9 @@ end
 function HospitalUpgradeBuilding:IsTreating()
     return not self.treat_event:IsEmpty()
 end
-function HospitalUpgradeBuilding:TreatSoldiersWithFinishTime(soldiers, finish_time, id)
+function HospitalUpgradeBuilding:TreatSoldiersWithFinishTime(soldiers, finish_time, id, start_time)
     local event = self.treat_event
-    event:SetTreatInfo(soldiers, finish_time, id)
+    event:SetTreatInfo(soldiers, finish_time, id, start_time)
     self.hospital_building_observer:NotifyObservers(function(listener)
         listener:OnBeginTreat(self, event)
     end)
@@ -138,7 +140,7 @@ end
 function HospitalUpgradeBuilding:EndTreatSoldiersWithCurrentTime(current_time)
     local event = self.treat_event
     local soldiers = self.treat_event.soldiers
-    event:SetTreatInfo(nil, 0,nil)
+    event:SetTreatInfo(nil, 0,nil,0)
     self.hospital_building_observer:NotifyObservers(function(listener)
         listener:OnEndTreat(self, event, soldiers, current_time)
     end)
@@ -189,11 +191,12 @@ function HospitalUpgradeBuilding:OnUserDataChanged(...)
     end
     local soldierEvent = userData.treatSoldierEvents[1]
     if soldierEvent then
+        local start_time = soldierEvent.startTime / 1000
         local finished_time = soldierEvent.finishTime / 1000
         if self.treat_event:IsEmpty() then
-            self:TreatSoldiersWithFinishTime(soldierEvent.soldiers, finished_time,soldierEvent.id)
+            self:TreatSoldiersWithFinishTime(soldierEvent.soldiers, finished_time,soldierEvent.id, start_time)
         else
-            self.treat_event:SetTreatInfo(soldierEvent.soldiers, finished_time ,soldierEvent.id)
+            self.treat_event:SetTreatInfo(soldierEvent.soldiers, finished_time ,soldierEvent.id, start_time)
         end
     else
         if self.treat_event:IsTreating() then
