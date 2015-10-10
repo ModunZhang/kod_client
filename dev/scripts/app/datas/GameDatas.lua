@@ -59,13 +59,13 @@ require("app.datas.Activities_levelup")
 GameDatas.AllianceBuilding = {
 	["palace"] = {},
 	["shop"] = {},
-	["moonGate"] = {},
+	["watchTower"] = {},
 	["orderHall"] = {},
 	["shrine"] = {},
 }
 require("app.datas.AllianceBuilding_palace")
 require("app.datas.AllianceBuilding_shop")
-require("app.datas.AllianceBuilding_moonGate")
+require("app.datas.AllianceBuilding_watchTower")
 require("app.datas.AllianceBuilding_orderHall")
 require("app.datas.AllianceBuilding_shrine")
 
@@ -121,7 +121,6 @@ require("app.datas.AllianceVillage_coinVillage")
 GameDatas.BuildingFunction = {
 	["keep"] = {},
 	["dragonEyrie"] = {},
-	["watchTower"] = {},
 	["wall"] = {},
 	["warehouse"] = {},
 	["tower"] = {},
@@ -144,7 +143,6 @@ GameDatas.BuildingFunction = {
 }
 require("app.datas.BuildingFunction_keep")
 require("app.datas.BuildingFunction_dragonEyrie")
-require("app.datas.BuildingFunction_watchTower")
 require("app.datas.BuildingFunction_wall")
 require("app.datas.BuildingFunction_warehouse")
 require("app.datas.BuildingFunction_tower")
@@ -168,7 +166,6 @@ require("app.datas.BuildingFunction_workshop")
 GameDatas.BuildingLevelUp = {
 	["keep"] = {},
 	["dragonEyrie"] = {},
-	["watchTower"] = {},
 	["wall"] = {},
 	["warehouse"] = {},
 	["tower"] = {},
@@ -191,7 +188,6 @@ GameDatas.BuildingLevelUp = {
 }
 require("app.datas.BuildingLevelUp_keep")
 require("app.datas.BuildingLevelUp_dragonEyrie")
-require("app.datas.BuildingLevelUp_watchTower")
 require("app.datas.BuildingLevelUp_wall")
 require("app.datas.BuildingLevelUp_warehouse")
 require("app.datas.BuildingLevelUp_tower")

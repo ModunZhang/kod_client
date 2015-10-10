@@ -908,7 +908,7 @@ allianceMap_5[150] = {
 }
 allianceMap_5[151] = {
 	["index"] = 151,
-	["name"] = "moonGate",
+	["name"] = "shrine",
 	["x"] = 13,
 	["y"] = 17
 }
@@ -932,7 +932,7 @@ allianceMap_5[154] = {
 }
 allianceMap_5[155] = {
 	["index"] = 155,
-	["name"] = "shrine",
+	["name"] = "watchTower",
 	["x"] = 17,
 	["y"] = 17
 }

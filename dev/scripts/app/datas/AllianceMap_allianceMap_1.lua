@@ -842,7 +842,7 @@ allianceMap_1[139] = {
 }
 allianceMap_1[140] = {
 	["index"] = 140,
-	["name"] = "moonGate",
+	["name"] = "shrine",
 	["x"] = 13,
 	["y"] = 17
 }
@@ -866,7 +866,7 @@ allianceMap_1[143] = {
 }
 allianceMap_1[144] = {
 	["index"] = 144,
-	["name"] = "shrine",
+	["name"] = "watchTower",
 	["x"] = 17,
 	["y"] = 17
 }

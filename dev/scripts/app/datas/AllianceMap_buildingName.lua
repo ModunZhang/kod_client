@@ -84,8 +84,8 @@ buildingName["palace"] = {
 	["height"] = 1,
 	["type"] = "building"
 }
-buildingName["moonGate"] = {
-	["name"] = "moonGate",
+buildingName["watchTower"] = {
+	["name"] = "watchTower",
 	["width"] = 1,
 	["height"] = 1,
 	["type"] = "building"
