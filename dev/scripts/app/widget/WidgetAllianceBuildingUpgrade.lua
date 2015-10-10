@@ -1,6 +1,5 @@
 local Enum = import("..utils.Enum")
 local Localize = import("..utils.Localize")
-local AllianceMap = import("..entity.AllianceMap")
 local window = import("..utils.window")
 local WidgetRequirementListview = import("..widget.WidgetRequirementListview")
 local WidgetPushButton = import("..widget.WidgetPushButton")
@@ -84,7 +83,6 @@ function WidgetAllianceBuildingUpgrade:onEnter()
 
     self:InitRequirement()
 
-    self.alliance:GetAllianceMap():AddListenOnType(self,AllianceMap.LISTEN_TYPE.BUILDING_INFO)
 
 end
 
@@ -196,7 +194,6 @@ function WidgetAllianceBuildingUpgrade:InitRequirement()
 end
 
 function WidgetAllianceBuildingUpgrade:onExit()
-    self.alliance:GetAllianceMap():RemoveListenerOnType(self,AllianceMap.LISTEN_TYPE.BUILDING_INFO)
 end
 
 function WidgetAllianceBuildingUpgrade:IsAbleToUpgrade()

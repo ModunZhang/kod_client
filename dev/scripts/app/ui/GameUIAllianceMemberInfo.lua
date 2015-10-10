@@ -8,6 +8,7 @@ local window = import("..utils.window")
 local UIListView = import(".UIListView")
 local UIScrollView = import(".UIScrollView")
 local NetService = import('..service.NetService')
+local Alliance = import('..entity.Alliance')
 local memberMeta = import('..entity.memberMeta')
 local GameUIWriteMail = import('.GameUIWriteMail')
 local WidgetPlayerNode = import("..widget.WidgetPlayerNode")
@@ -270,8 +271,8 @@ function GameUIAllianceMemberInfo:WidgetPlayerNode_DataSource(name)
         if self.isMyAlliance then
             local alliacne = Alliance_Manager:GetMyAlliance()
             local member = alliacne:GetMemeberById(self.player_info.id)
-            local allianceObj = alliacne:GetAllianceMap():FindMapObjectById(member:MapId())
-            location = string.format("(%d,%d)",allianceObj:GetLogicPosition())
+            local allianceObj = alliacne:FindMapObjectById(member:MapId())
+            location = string.format("(%d,%d)",Alliance:GetLogicPositionWithMapObj(allianceObj))
         end
         local level = User:GetPlayerLevelByExp(self.player_info.levelExp)
         local exp_config = config_playerLevel[level]

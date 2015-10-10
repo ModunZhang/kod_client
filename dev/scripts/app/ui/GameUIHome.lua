@@ -165,7 +165,7 @@ function GameUIHome:AddOrRemoveListener(isAdd)
     local city = self.city
     local user = self.city:GetUser()
     local my_allaince = Alliance_Manager:GetMyAlliance()
-    local alliance_belvedere = my_allaince:GetAllianceBelvedere()
+    -- local alliance_belvedere = my_allaince:GetAllianceBelvedere()
     if isAdd then
         city:AddListenOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
         city:AddListenOnType(self, city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
@@ -182,9 +182,9 @@ function GameUIHome:AddOrRemoveListener(isAdd)
         user:AddListenOnType(self, user.LISTEN_TYPE.COUNT_INFO)
         user:AddListenOnType(self, user.LISTEN_TYPE.IAP_GIFTS_REFRESH)
         user:AddListenOnType(self, user.LISTEN_TYPE.IAP_GIFTS_CHANGE)
-        alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
-        alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
-        my_allaince:GetAllianceShrine():AddListenOnType(self,my_allaince:GetAllianceShrine().LISTEN_TYPE.OnShrineEventsChanged)
+        -- alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
+        -- alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
+        -- my_allaince:GetAllianceShrine():AddListenOnType(self,my_allaince:GetAllianceShrine().LISTEN_TYPE.OnShrineEventsChanged)
     else
         city:RemoveListenerOnType(self,city.LISTEN_TYPE.UPGRADE_BUILDING)
         city:RemoveListenerOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
@@ -201,9 +201,9 @@ function GameUIHome:AddOrRemoveListener(isAdd)
         user:RemoveListenerOnType(self, user.LISTEN_TYPE.COUNT_INFO)
         user:RemoveListenerOnType(self, user.LISTEN_TYPE.IAP_GIFTS_REFRESH)
         user:RemoveListenerOnType(self, user.LISTEN_TYPE.IAP_GIFTS_CHANGE)
-        alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
-        alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
-        my_allaince:GetAllianceShrine():RemoveListenerOnType(self,my_allaince:GetAllianceShrine().LISTEN_TYPE.OnShrineEventsChanged)
+        -- alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
+        -- alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
+        -- my_allaince:GetAllianceShrine():RemoveListenerOnType(self,my_allaince:GetAllianceShrine().LISTEN_TYPE.OnShrineEventsChanged)
     end
 end
 function GameUIHome:OnShrineEventsChanged(changed_map)
@@ -550,21 +550,21 @@ function GameUIHome:CreateTop()
     alliance_belvedere_button:onButtonClicked(function()
         local default_tab = 'march'
         local alliance = Alliance_Manager:GetMyAlliance()
-        local alliance_belvedere = alliance:GetAllianceBelvedere()
-        local hasMarch,__ = alliance_belvedere:HasMyEvents()
-        if not hasMarch then
-            local hasComming,__ = alliance_belvedere:HasOtherEvents()
-            if hasComming then
-                default_tab = 'comming'
-            end
-        end
+        -- local alliance_belvedere = alliance:GetAllianceBelvedere()
+        -- local hasMarch,__ = alliance_belvedere:HasMyEvents()
+        -- if not hasMarch then
+        --     local hasComming,__ = alliance_belvedere:HasOtherEvents()
+        --     if hasComming then
+        --         default_tab = 'comming'
+        --     end
+        -- end
         UIKit:newGameUI('GameUIWathTowerRegion',self.city,default_tab):AddToCurrentScene(true)
     end)
     function alliance_belvedere_button:CheckVisible()
         local alliance = Alliance_Manager:GetMyAlliance()
-        local alliance_belvedere = alliance:GetAllianceBelvedere()
-        local hasEvent,count = alliance_belvedere:HasEvents()
-        alliance_belvedere_button.alliance_belvedere_events_count:SetNumber(count)
+        -- local alliance_belvedere = alliance:GetAllianceBelvedere()
+        -- local hasEvent,count = alliance_belvedere:HasEvents()
+        -- alliance_belvedere_button.alliance_belvedere_events_count:SetNumber(count)
         return hasEvent
     end
     function alliance_belvedere_button:GetElementSize()
@@ -575,18 +575,19 @@ function GameUIHome:CreateTop()
     -- 圣地时间按钮
     local shrine_event_button = cc.ui.UIPushButton.new({normal = 'tmp_btn_shrine_72x72.png'})
     shrine_event_button:onButtonClicked(function()
-        local buildings = Alliance_Manager:GetMyAlliance():GetAllianceMap():GetMapObjectsByType("building")
+        local buildings = Alliance_Manager:GetMyAlliance():GetMapObjectsByType("building")
         local shrine_info
         for k,v in pairs(buildings) do
             if v.name == "shrine" then
                 shrine_info = v
             end
         end
-        UIKit:newGameUI("GameUIAllianceShrine",self.city,"fight_event",shrine_info:GetAllianceBuildingInfo()):AddToCurrentScene(true)
+        UIKit:newGameUI("GameUIAllianceShrine",self.city,"fight_event",Alliance_Manager:GetMyAlliance():FindAllianceBuildingInfoByObjects(shrine_info)):AddToCurrentScene(true)
     end)
     function shrine_event_button:CheckVisible()
-        local alliance = Alliance_Manager:GetMyAlliance()
-        return alliance:GetAllianceShrine():HaveEvent()
+        -- local alliance = Alliance_Manager:GetMyAlliance()
+        -- return alliance:GetAllianceShrine():HaveEvent()
+        return false
     end
     function shrine_event_button:GetElementSize()
         return shrine_event_button:getCascadeBoundingBox().size

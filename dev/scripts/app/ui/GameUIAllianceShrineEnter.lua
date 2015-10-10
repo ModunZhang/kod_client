@@ -9,15 +9,19 @@ local Localize = import("..utils.Localize")
 
 function GameUIAllianceShrineEnter:ctor(building,isMyAlliance,alliance,enemy_alliance)
 	GameUIAllianceShrineEnter.super.ctor(self,building,isMyAlliance,alliance,enemy_alliance)
-	self.building = building:GetAllianceBuildingInfo()
+	if isMyAlliance then
+		self.building = alliance:FindAllianceBuildingInfoByObjects(building)
+	else
+		self.building = enemy_alliance:FindAllianceBuildingInfoByObjects(building)
+	end
 end
 
 function GameUIAllianceShrineEnter:GetLocation()
 	local mapObject
 	if self:IsMyAlliance() then
-		mapObject = self:GetMyAlliance():GetAllianceMap():FindMapObjectById(self:GetBuilding().id)
+		mapObject = self:GetMyAlliance():FindMapObjectById(self:GetBuilding().id)
 	else
-		mapObject = self:GetEnemyAlliance():GetAllianceMap():FindMapObjectById(self:GetBuilding().id)
+		mapObject = self:GetEnemyAlliance():FindMapObjectById(self:GetBuilding().id)
 	end
 	return mapObject.location.x .. "," .. mapObject.location.y
 end
@@ -25,19 +29,19 @@ end
 function GameUIAllianceShrineEnter:GetLogicPosition()
 	local mapObject
 	if self:IsMyAlliance() then
-		mapObject = self:GetMyAlliance():GetAllianceMap():FindMapObjectById(self:GetBuilding().id)
+		mapObject = self:GetMyAlliance():FindMapObjectById(self:GetBuilding().id)
 	else
-		mapObject = self:GetEnemyAlliance():GetAllianceMap():FindMapObjectById(self:GetBuilding().id)
+		mapObject = self:GetEnemyAlliance():FindMapObjectById(self:GetBuilding().id)
 	end
-	return {x = mapObject.location.x,y = mapObject.location.y}
+	return mapObject.location
 end
 
 function GameUIAllianceShrineEnter:GetMapObject()
 	local mapObject
 	if self:IsMyAlliance() then
-		mapObject = self:GetMyAlliance():GetAllianceMap():FindMapObjectById(self:GetBuilding().id)
+		mapObject = self:GetMyAlliance():FindMapObjectById(self:GetBuilding().id)
 	else
-		mapObject = self:GetEnemyAlliance():GetAllianceMap():FindMapObjectById(self:GetBuilding().id)
+		mapObject = self:GetEnemyAlliance():FindMapObjectById(self:GetBuilding().id)
 	end
 	return mapObject
 end
@@ -59,7 +63,7 @@ function GameUIAllianceShrineEnter:GetUITitle()
 end
 
 function GameUIAllianceShrineEnter:GetBuildingImage()
-	return UILib.alliance_building.shrine
+	return self.isMyAlliance and UILib.alliance_building.shrine or UILib.other_alliance_building.shrine
 end
 
 function GameUIAllianceShrineEnter:GetBuildImageSprite()

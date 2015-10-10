@@ -138,9 +138,9 @@ function GameUIAlliancePosition:ctor()
                 if self.check_boxes then
                     local select_index = self.check_boxes:getButtonAtIndex(1):isButtonSelected() and 1 or self.check_boxes:getButtonAtIndex(2):isButtonSelected() and 2
                     if select_index == 1 then
-                        alliance_id = my_alliance:Id()
+                        alliance_id = my_alliance.id
                     else
-                        alliance_id = enemy_alliance:Id()
+                        alliance_id = enemy_alliance.id
                     end
                 end
 

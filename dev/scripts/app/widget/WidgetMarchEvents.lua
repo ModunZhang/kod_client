@@ -80,19 +80,19 @@ function WidgetMarchEvents:OnVillageEventTimer(villageEvent)
 end
 
 function WidgetMarchEvents:AddOrRemoveAllianceEvent(isAdd)
-    local alliance_belvedere = self:GetAllianceBelvedere()
+    -- local alliance_belvedere = self:GetAllianceBelvedere()
     if isAdd then
         City:AddListenOnType(self,City.LISTEN_TYPE.HELPED_TO_TROOPS)
-        alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
-        alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
-        alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnVillageEventTimer)
-        alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnFightEventTimerChanged)
+        -- alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
+        -- alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
+        -- alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnVillageEventTimer)
+        -- alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnFightEventTimerChanged)
     else
         City:RemoveListenerOnType(self,City.LISTEN_TYPE.HELPED_TO_TROOPS)
-        alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
-        alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
-        alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnVillageEventTimer)
-        alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnFightEventTimerChanged)
+        -- alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
+        -- alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
+        -- alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnVillageEventTimer)
+        -- alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnFightEventTimerChanged)
     end
 end
 
@@ -100,7 +100,7 @@ end
 function WidgetMarchEvents:ctor(alliance, ratio)
     self:setNodeEventEnabled(true)
     self.alliance = alliance
-    self.alliance_belvedere = alliance:GetAllianceBelvedere() -- 获取瞭望塔对象
+    -- self.alliance_belvedere = alliance:GetAllianceBelvedere() -- 获取瞭望塔对象
     self.view_rect = cc.rect(0, 0, WIDGET_WIDTH * ratio, (WIDGET_HEIGHT) * ratio)
     self:setClippingRegion(self.view_rect)
 
@@ -112,10 +112,10 @@ function WidgetMarchEvents:ctor(alliance, ratio)
     self:Reset()
 end
 
-function WidgetMarchEvents:GetAllianceBelvedere()
-    assert(self.alliance_belvedere)
-    return self.alliance_belvedere
-end
+-- function WidgetMarchEvents:GetAllianceBelvedere()
+--     assert(self.alliance_belvedere)
+--     return self.alliance_belvedere
+-- end
 
 function WidgetMarchEvents:onEnter()
     self:AddOrRemoveAllianceEvent(true)
@@ -232,14 +232,14 @@ function WidgetMarchEvents:Reset()
     self.node:stopAllActions()
     self.arrow:flipY(true)
     self:Lock(false)
-    local has_events = self:GetAllianceBelvedere():HasMyEvents()
+    -- local has_events = self:GetAllianceBelvedere():HasMyEvents()
     self:setVisible(has_events)
 end
 
 function WidgetMarchEvents:Load()
-    local my_events = self:GetAllianceBelvedere():GetMyEvents()
+    -- local my_events = self:GetAllianceBelvedere():GetMyEvents()
     local items = {}
-    for __,entity in ipairs(my_events) do
+    for __,entity in ipairs({}) do
         local type_str = entity:GetTypeStr()
         local event = entity:WithObject()
         if  type_str == 'MARCH_OUT'  or type_str == 'STRIKE_OUT' then
@@ -511,9 +511,10 @@ function WidgetMarchEvents:CreateDefenceItem(entity)
 end
 
 function WidgetMarchEvents:HasAnyMarchEvent()
-    local alliance_belvedere = self:GetAllianceBelvedere()
-    local hasEvent,__ = alliance_belvedere:HasMyEvents()
-    return hasEvent
+    return false
+    -- local alliance_belvedere = self:GetAllianceBelvedere()
+    -- local hasEvent,__ = alliance_belvedere:HasMyEvents()
+    -- return hasEvent
 end
 
 function WidgetMarchEvents:OnSpeedUpButtonClicked(entity)
@@ -559,7 +560,7 @@ function WidgetMarchEvents:MoveToTargetAction(entity)
     local location,alliance_id
     if type_str == 'SHIRNE' or type_str == 'HELPTO' then
         location = entity:GetDestinationLocationNotString()
-        alliance_id = Alliance_Manager:GetMyAlliance():Id()
+        alliance_id = Alliance_Manager:GetMyAlliance().id
     else
         location,alliance_id = entity:GetDestinationLocationNotString()
     end

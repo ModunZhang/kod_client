@@ -80,15 +80,15 @@ function WidgetMaterialDetails:InitMaterialDetails(material_type,material_name)
     elseif material_type == MaterialManager.MATERIAL_TYPE.DRAGON  then
         self:CreateOriginItem(list,_("参加联盟圣地战"),function ()
             if not Alliance_Manager:GetMyAlliance():IsDefault() then
-                local buildings = Alliance_Manager:GetMyAlliance():GetAllianceMap():GetMapObjectsByType("building")
+                local buildings = Alliance_Manager:GetMyAlliance():GetMapObjectsByType("building")
                 for k,v in pairs(buildings) do
                     if v.name == "shrine" then
                         app:EnterMyAllianceScene({
                             x = v.location.x,
                             y = v.location.y,
-                            id = Alliance_Manager:GetMyAlliance():Id(),
+                            id = Alliance_Manager:GetMyAlliance().id,
                             callback = function (scene)
-                                UIKit:newGameUI("GameUIAllianceShrine",City,"fight_event",v:GetAllianceBuildingInfo()):AddToScene(scene, true)
+                                UIKit:newGameUI("GameUIAllianceShrine",City,"fight_event", Alliance_Manager:GetMyAlliance():FindAllianceBuildingInfoByObjects(v)):AddToScene(scene, true)
                             end
                         })
                     end
@@ -102,12 +102,12 @@ function WidgetMaterialDetails:InitMaterialDetails(material_type,material_name)
         end)
         self:CreateOriginItem(list,_("联盟匹配战中击杀敌军掉落"),function ()
             if not Alliance_Manager:GetMyAlliance():IsDefault() then
-                local mapObject = Alliance_Manager:GetMyAlliance():GetAllianceMap():FindMapObjectById(Alliance_Manager:GetMyAlliance():GetSelf():MapId())
+                local mapObject = Alliance_Manager:GetMyAlliance():FindMapObjectById(Alliance_Manager:GetMyAlliance():GetSelf():MapId())
                 local location = mapObject.location
                 app:EnterMyAllianceScene({
                     x = location.x,
                     y = location.y,
-                    id = Alliance_Manager:GetMyAlliance():Id(),
+                    id = Alliance_Manager:GetMyAlliance().id,
                     callback = function (scene)
                         UIKit:newGameUI("GameUIAllianceBattle", City):AddToScene(scene,true)
                     end

@@ -8,56 +8,19 @@ local format = string.format
 local gsub = string.gsub
 local null = json.null
 
-local deltameta = {
-    __call = function(root, indexstr, value)
-        if not (find(indexstr, '[^%w_%.]')) then
-            for i,key in ipairs(split(indexstr, ".")) do
-                root = root[key]
-                if not root then
-                    return false
-                end
-            end
-            if value then
-                return root == value
-            end
-            return true, root
+local deltameta = {}
+deltameta.__call = function(root, indexstr, value)
+    for i,key in ipairs(split(indexstr, ".")) do
+        root = root[key]
+        if not root then
+            return false
         end
-
-        local indexarray = split(indexstr, ".")
-        local reg = format("^%s", gsub(indexstr or "", "%.", "%%%."))
-        local results = {}
-        for _,v in ipairs(root.__difftable) do
-            if find(v[1], reg) then
-                local base = root
-                local values = {}
-                local count = #indexarray
-                for i,key in ipairs(split(v[1], ".")) do
-                    local nk = tonumber(key)
-                    key = nk == nil and key or nk + 1
-                    base = base[key]
-                    if nk and not tonumber(indexarray[i]) then
-                        insert(values, key)
-                    end
-                    count = count - 1
-                    if count == 0 then 
-                        insert(values, base)
-                        break
-                    end
-                end
-                insert(results, values)
-            end
-        end
-        if #results > 0 then
-            local values = results[1]
-            if #results == 1 and #values == 1 and value then
-                return values[1] == value
-            else
-                assert(not value)
-                return true, results
-            end
-        end
-    end,
-}
+    end
+    if value then
+        return root == value
+    end
+    return true, root
+end
 
 
 return function(base, delta)
@@ -135,9 +98,12 @@ return function(base, delta)
             end
         end
     end
-    edit.__difftable = delta
     return setmetatable(edit, deltameta)
 end
+
+
+
+
 
 
 

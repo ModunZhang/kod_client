@@ -964,7 +964,7 @@ function City:IteratorCanUpgradeBuildingsByUserData(user_data, current_time, del
 
     local buildings = user_data.buildings
     if is_fully_update then
-        for location_id,v in ipairs(self.building_location_map) do
+        for location_id,v in pairs(self.building_location_map) do
             local location_info = buildings["location_"..location_id]
             v:OnUserDataChanged(user_data, current_time, location_info, nil, deltaData, building_events_map[location_id])
             local houses = self:GetDecoratorsByLocationId(location_id)

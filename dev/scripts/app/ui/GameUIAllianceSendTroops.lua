@@ -59,17 +59,18 @@ function GameUIAllianceSendTroops:GetMyAlliance()
     return Alliance_Manager:GetMyAlliance()
 end
 
-function GameUIAllianceSendTroops:GetEnemyAlliance()
-    return Alliance_Manager:GetEnemyAlliance()
-end
+-- function GameUIAllianceSendTroops:GetEnemyAlliance()
+--     return Alliance_Manager:GetEnemyAlliance()
+-- end
 
 function GameUIAllianceSendTroops:GetMarchTime(soldier_show_table)
-    local mapObject = self:GetMyAlliance():GetAllianceMap():FindMapObjectById(self:GetMyAlliance():GetSelf():MapId())
-    local fromLocation = mapObject.location
-    local target_alliance = self.targetIsMyAlliance and self:GetMyAlliance() or self:GetEnemyAlliance()
-    local time = DataUtils:getPlayerSoldiersMarchTime(soldier_show_table,self:GetMyAlliance(),fromLocation,target_alliance,self.toLocation)
-    local buffTime = DataUtils:getPlayerMarchTimeBuffTime(time)
-    return time,buffTime
+    -- local mapObject = self:GetMyAlliance():FindMapObjectById(self:GetMyAlliance():GetSelf():MapId())
+    -- local fromLocation = mapObject.location
+    -- local target_alliance = self.targetIsMyAlliance and self:GetMyAlliance() or self:GetEnemyAlliance()
+    -- local time = DataUtils:getPlayerSoldiersMarchTime(soldier_show_table,self:GetMyAlliance(),fromLocation,target_alliance,self.toLocation)
+    -- local buffTime = DataUtils:getPlayerMarchTimeBuffTime(time)
+    -- return time,buffTime
+    return 0,0
 end
 
 function GameUIAllianceSendTroops:RefreshMarchTimeAndBuff(soldier_show_table)
@@ -211,20 +212,20 @@ function GameUIAllianceSendTroops:OnMoveInStage()
                 elseif #soldiers == 0 then
                     UIKit:showMessageDialog(_("提示"),_("请选择要派遣的部队"))
                     return
-                elseif self.alliance:GetAllianceBelvedere():IsReachEventLimit() then
-                    local dialog = UIKit:showMessageDialog(_("提示"),_("没有空闲的行军队列"))
-                    if self.alliance:GetAllianceBelvedere():GetMarchLimit() < 2 then
-                        dialog:CreateOKButton(
-                            {
-                                listener = function ()
-                                    UIKit:newGameUI('GameUIWathTowerRegion',City,'march'):AddToCurrentScene(true)
-                                    self:LeftButtonClicked()
-                                end,
-                                btn_name= _("前往解锁")
-                            }
-                        )
-                    end
-                    return
+                -- elseif self.alliance:GetAllianceBelvedere():IsReachEventLimit() then
+                --     local dialog = UIKit:showMessageDialog(_("提示"),_("没有空闲的行军队列"))
+                --     if self.alliance:GetAllianceBelvedere():GetMarchLimit() < 2 then
+                --         dialog:CreateOKButton(
+                --             {
+                --                 listener = function ()
+                --                     UIKit:newGameUI('GameUIWathTowerRegion',City,'march'):AddToCurrentScene(true)
+                --                     self:LeftButtonClicked()
+                --                 end,
+                --                 btn_name= _("前往解锁")
+                --             }
+                --         )
+                --     end
+                --     return
                 end
                 if self.dragon:IsDefenced() then
                     NetManager:getCancelDefenceDragonPromise():done(function()

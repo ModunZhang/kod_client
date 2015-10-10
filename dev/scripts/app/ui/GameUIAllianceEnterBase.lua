@@ -2,6 +2,7 @@
 -- Author: Danny He
 -- Date: 2014-12-29 11:34:54
 --
+local Alliance = import("..entity.Alliance")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local GameUIAllianceEnterBase = class("GameUIAllianceEnterBase",WidgetPopDialog)
@@ -74,15 +75,12 @@ function GameUIAllianceEnterBase:GetBuildingInfo()
 end
 
 function GameUIAllianceEnterBase:GetLogicPosition()
-    local building = self:GetBuilding()
-    local x,y = building:GetLogicPosition()
-    return {x = x , y = y}
+    return self:GetBuilding().location
 end
 
 function GameUIAllianceEnterBase:GetLocation()
-    local building = self:GetBuilding()
-    local x,y = building:GetLogicPosition()
-    return x .. "," .. y
+    local location = self:GetBuilding().location
+    return location.x .. "," .. location.y
 end
 
 function GameUIAllianceEnterBase:GetTerrain()

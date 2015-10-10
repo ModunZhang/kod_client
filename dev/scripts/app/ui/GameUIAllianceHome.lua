@@ -74,8 +74,8 @@ function GameUIAllianceHome:onEnter()
     self:AddMapChangeButton()
     self:InitArrow()
     if self.top then
-        if not self.alliance:AllianceFightReports() and self.alliance.basicInfo.status == "protect" then
-            NetManager:getAllianceFightReportsPromise(self.alliance:Id()):done(function ()
+        if not self.alliance.allianceFightReports and self.alliance.basicInfo.status == "protect" then
+            NetManager:getAllianceFightReportsPromise(self.alliance.id):done(function ()
                 self.top:Refresh()
             end)
         else
@@ -96,18 +96,16 @@ function GameUIAllianceHome:AddOrRemoveListener(isAdd)
     if isAdd then
         self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
         self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.MEMBER)
-        self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.ALLIANCE_FIGHT)
-        -- self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.FIGHT_REQUESTS)
         city:AddListenOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
         city:AddListenOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
         city:AddListenOnType(self,city.LISTEN_TYPE.HELPED_TO_TROOPS)
         city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
         city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
         User:AddListenOnType(self, User.LISTEN_TYPE.ALLIANCE_INFO)
-        local alliance_belvedere = self.alliance:GetAllianceBelvedere()
-        alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
-        alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
-        self.alliance:GetAllianceShrine():AddListenOnType(self,self.alliance:GetAllianceShrine().LISTEN_TYPE.OnShrineEventsChanged)
+        -- local alliance_belvedere = self.alliance:GetAllianceBelvedere()
+        -- alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
+        -- alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
+        -- self.alliance:GetAllianceShrine():AddListenOnType(self,self.alliance:GetAllianceShrine().LISTEN_TYPE.OnShrineEventsChanged)
         city:GetDragonEyrie():GetDragonManager():AddListenOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
 
         -- 添加到全局计时器中，以便显示各个阶段的时间
@@ -116,18 +114,16 @@ function GameUIAllianceHome:AddOrRemoveListener(isAdd)
         app.timer:RemoveListener(self)
         self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
         self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.MEMBER)
-        self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.ALLIANCE_FIGHT)
-        -- self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.FIGHT_REQUESTS)
         city:RemoveListenerOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
         city:RemoveListenerOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
         city:RemoveListenerOnType(self,city.LISTEN_TYPE.HELPED_TO_TROOPS)
         city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
         city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
         User:RemoveListenerOnType(self, User.LISTEN_TYPE.ALLIANCE_INFO)
-        local alliance_belvedere = self.alliance:GetAllianceBelvedere()
-        alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
-        alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
-        self.alliance:GetAllianceShrine():RemoveListenerOnType(self,self.alliance:GetAllianceShrine().LISTEN_TYPE.OnShrineEventsChanged)
+        -- local alliance_belvedere = self.alliance:GetAllianceBelvedere()
+        -- alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
+        -- alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
+        -- self.alliance:GetAllianceShrine():RemoveListenerOnType(self,self.alliance:GetAllianceShrine().LISTEN_TYPE.OnShrineEventsChanged)
         city:GetDragonEyrie():GetDragonManager():RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
     end
 end
@@ -147,7 +143,6 @@ function GameUIAllianceHome:OnHelpToTroopsChanged()
 end
 function GameUIAllianceHome:Schedule()
     local alliance = self.alliance
-    local alliance_map = alliance:GetAllianceMap()
     local myself = alliance:GetSelf()
     local screen_rect = self.screen_rect
     display.newNode():addTo(self):schedule(function()
@@ -159,14 +154,14 @@ function GameUIAllianceHome:Schedule()
         if alliance:IsDefault() then return end
         local lx,ly,view = self.multialliancelayer:GetAllianceCoordWithPoint(display.cx, display.cy)
         local layer = view:GetLayer()
-        local x,y = alliance_map:FindMapObjectById(myself:MapId()):GetMidLogicPosition()
+        local x,y = Alliance:GetMidLogicPositionWithMapObj(alliance:FindMapObjectById(myself:MapId()))
         self:UpdateMyCityArrows(screen_rect, alliance, layer, x,y)
     end, 0)
     display.newNode():addTo(self):schedule(function()
         if alliance:IsDefault() then return end
         local lx,ly,view = self.multialliancelayer:GetAllianceCoordWithPoint(display.cx, display.cy)
         local layer = view:GetLayer()
-        -- local x,y = alliance_map:FindMapObjectById(myself:MapId()):GetMidLogicPosition()
+        -- local x,y = alliance:FindMapObjectById(myself:MapId()):GetMidLogicPosition()
         -- self:UpdateMyAllianceBuildingArrows(screen_rect, alliance, layer)
         if not Alliance_Manager:GetMyAlliance():IsDefault() then
             self:UpdateFriendArrows(screen_rect, Alliance_Manager:GetMyAlliance(), layer, lx, ly, myself)
@@ -209,9 +204,10 @@ function GameUIAllianceHome:InitArrow()
                 foodVillage = 0,
                 coinVillage = 0,
             }
-            self.alliance:GetAllianceMap():IteratorAllObjects(function(_, entity)
-                if entity:GetType() == "village" then
-                    map[entity:GetName()] = map[entity:GetName()] + 1
+            self.alliance:IteratorAllObjects(function(_, entity)
+                
+                if Alliance:GetMapObjectType(entity) == "village" then
+                    map[entity.name] = map[entity.name] + 1
                 end
             end)
             for k,v in pairs(map) do
@@ -227,9 +223,9 @@ end
 function GameUIAllianceHome:ReturnMyCity()
     local scene = display.getRunningScene()
     local alliance = scene:GetAlliance()
-    local mapObject = alliance:GetAllianceMap():FindMapObjectById(alliance:GetSelf():MapId())
+    local mapObject = alliance:FindMapObjectById(alliance:GetSelf():MapId())
     local location = mapObject.location
-    scene:GotoLogicPosition(location.x, location.y, alliance:Id())
+    scene:GotoLogicPosition(location.x, location.y, alliance.id)
 end
 function GameUIAllianceHome:CreateOperationButton()
     local order = WidgetAutoOrder.new(WidgetAutoOrder.ORIENTATION.BOTTOM_TO_TOP,50):addTo(self):pos(display.right-50,420)
@@ -253,22 +249,22 @@ function GameUIAllianceHome:CreateOperationButton()
 
         if i == 2 then
             local alliance = self.alliance
-            local alliance_belvedere = alliance:GetAllianceBelvedere()
-            local __,count = alliance_belvedere:HasEvents()
-            button.alliance_belvedere_events_count = WidgetNumberTips.new():addTo(button):pos(20,-20)
-            button.alliance_belvedere_events_count:SetNumber(count)
+            -- local alliance_belvedere = alliance:GetAllianceBelvedere()
+            -- local __,count = alliance_belvedere:HasEvents()
+            -- button.alliance_belvedere_events_count = WidgetNumberTips.new():addTo(button):pos(20,-20)
+            -- button.alliance_belvedere_events_count:SetNumber(count)
 
             function button:CheckVisible()
-                local hasEvent,count = alliance_belvedere:HasEvents()
-                if self.alliance_belvedere_events_count then
-                    self.alliance_belvedere_events_count:SetNumber(count)
-                end
-                return hasEvent
+                -- local hasEvent,count = alliance_belvedere:HasEvents()
+                -- if self.alliance_belvedere_events_count then
+                --     self.alliance_belvedere_events_count:SetNumber(count)
+                -- end
+                -- return hasEvent
             end
         elseif i == 3 then
             local alliance = self.alliance
             function button:CheckVisible()
-                return alliance:GetAllianceShrine():HaveEvent()
+                -- return alliance:GetAllianceShrine():HaveEvent()
             end
         elseif i == 1 then
             local dragon_img = display.newSprite(UILib.dragon_head.blueDragon)
@@ -497,8 +493,8 @@ function GameUIAllianceHome:CreateTop()
             enemy_num_icon:setTexture("battle_33x33.png")
             enemy_num_icon:scale(1.0)
 
-            self:SetOurPowerOrKill(alliance:GetMyAllianceFightCountData().kill)
-            self:SetEnemyPowerOrKill(alliance:GetEnemyAllianceFightCountData().kill)
+            self:SetOurPowerOrKill(0)
+            self:SetEnemyPowerOrKill(0)
         elseif status=="protect" then
             our_num_icon:setTexture("battle_33x33.png")
             enemy_num_icon:setTexture("battle_33x33.png")
@@ -515,7 +511,7 @@ function GameUIAllianceHome:CreateTop()
             else
                 enemy_num_icon:setTexture("res_citizen_88x82.png")
                 enemy_num_icon:scale(0.4)
-                self:SetEnemyPowerOrKill(alliance:GetFightRequestPlayerNum())
+                self:SetEnemyPowerOrKill(0)
             end
             our_num_icon:setTexture("dragon_strength_27x31.png")
             self:SetOurPowerOrKill(alliance.basicInfo.power)
@@ -529,7 +525,7 @@ function GameUIAllianceHome:CreateTop()
     end
     top_enemy_bg:schedule(function()
         if self.alliance.basicInfo.status == "peace" then
-            self.top:SetEnemyPowerOrKill(self.alliance:GetFightRequestPlayerNum())
+            self.top:SetEnemyPowerOrKill(0)
         end
     end, 1)
     return Top
@@ -555,24 +551,25 @@ function GameUIAllianceHome:OnMidButtonClicked(event)
     if tag == 2 then -- 战斗
         local default_tab = 'march'
         local alliance = self.alliance
-        local alliance_belvedere = alliance:GetAllianceBelvedere()
-        local hasMarch,__ = alliance_belvedere:HasMyEvents()
-        if not hasMarch then
-            local hasComming,__ = alliance_belvedere:HasOtherEvents()
-            if hasComming then
-                default_tab = 'comming'
-            end
-        end
+        -- local alliance_belvedere = alliance:GetAllianceBelvedere()
+        -- local hasMarch,__ = alliance_belvedere:HasMyEvents()
+        -- if not hasMarch then
+        --     local hasComming,__ = alliance_belvedere:HasOtherEvents()
+        --     if hasComming then
+        --         default_tab = 'comming'
+        --     end
+        -- end
         UIKit:newGameUI('GameUIWathTowerRegion',self.city,default_tab):AddToCurrentScene(true)
     elseif tag == 3 then
-        local buildings = self.alliance:GetAllianceMap():GetMapObjectsByType("building")
+        local buildings = self.alliance:GetMapObjectsByType("building")
         local shrine_info
         for k,v in pairs(buildings) do
             if v.name == "shrine" then
                 shrine_info = v
             end
         end
-        UIKit:newGameUI("GameUIAllianceShrine",self.city,"fight_event",shrine_info:GetAllianceBuildingInfo()):AddToCurrentScene(true)
+        
+        UIKit:newGameUI("GameUIAllianceShrine",self.city,"fight_event",self.alliance:FindAllianceBuildingInfoByObjects(shrine_info)):AddToCurrentScene(true)
     elseif tag == 1 then
         UIKit:newGameUI("GameUIDragonEyrieMain", self.city, self.city:GetFirstBuildingByType("dragonEyrie"), "dragon"):AddToCurrentScene(true)
     end
@@ -641,7 +638,7 @@ function GameUIAllianceHome:UpdateCoordinate(logic_x, logic_y, alliance_view)
     local coordinate_str = string.format("%d, %d", logic_x, logic_y)
     local is_mine
     if alliance_view then
-        is_mine = alliance_view:GetAlliance():Id() == self.alliance:Id() and _("我方") or _("敌方")
+        is_mine = alliance_view:GetAlliance().id == self.alliance.id and _("我方") or _("敌方")
     else
         is_mine = _("坐标")
     end
@@ -649,7 +646,7 @@ function GameUIAllianceHome:UpdateCoordinate(logic_x, logic_y, alliance_view)
     self.page_top:SetCoordinate(coordinate_str)
 end
 function GameUIAllianceHome:UpdateMyCityArrows(screen_rect, alliance, layer, x, y)
-    local map_point = layer:ConvertLogicPositionToMapPosition(x, y, alliance:Id())
+    local map_point = layer:ConvertLogicPositionToMapPosition(x, y, alliance.id)
     local world_point = layer:convertToWorldSpace(map_point)
     if not rectContainsPoint(screen_rect, world_point) then
         local p,degree = self:GetIntersectPoint(screen_rect, MID_POINT, world_point)
@@ -667,9 +664,9 @@ function GameUIAllianceHome:UpdateMyCityArrows(screen_rect, alliance, layer, x, 
     end
 end
 -- function GameUIAllianceHome:UpdateMyAllianceBuildingArrows(screen_rect, alliance, layer)
---     local id = alliance:Id()
+--     local id = alliance.id
 --     local count = 1
---     alliance:GetAllianceMap():IteratorAllianceBuildings(function(_, v)
+--     alliance:IteratorAllianceBuildings(function(_, v)
 --         if count == self.allince_arrow_index then
 --             local arrow = self:GetMyAllianceArrow(count)
 --             local x,y = v:GetMidLogicPosition()
@@ -733,9 +730,9 @@ function GameUIAllianceHome:UpdateEnemyArrows(screen_rect, alliance, layer, logi
 end
 --
 function GameUIAllianceHome:UpdateAllianceArrow(screen_rect, alliance, layer, logic_x, logic_y, cur_index, func, except_map_id)
-    local id = alliance:Id()
+    local id = alliance.id
     local count = 1
-    alliance:GetAllianceMap():IteratorCities(function(_, v)
+    alliance:IteratorCities(function(_, v)
         if count > MAX_ARROW_COUNT then return true end
         if count == cur_index and except_map_id ~= v.id then
             local x,y = v:GetMidLogicPosition()
@@ -787,25 +784,25 @@ function GameUIAllianceHome:GetPointsWithScreenRect(screen_rect)
 end
 function GameUIAllianceHome:OnAllianceFightChanged(alliance, deltaData)
     if deltaData("basicInfo.status", "fight") then
-        local our = alliance:GetMyAllianceFightCountData()
-        local enemy = alliance:GetEnemyAllianceFightCountData()
-        if our and enemy then
-            self.top:SetOurPowerOrKill(our.kill)
-            self.top:SetEnemyPowerOrKill(enemy.kill)
-        end
+        -- if our and enemy then
+            self.top:SetOurPowerOrKill(0)
+            self.top:SetEnemyPowerOrKill(0)
+        -- end
     end
 end
 function GameUIAllianceHome:OnTimer(current_time)
     local basicInfo = self.alliance.basicInfo
-    if basicInfo.status ~= "peace" then
-        local statusFinishTime = basicInfo.statusFinishTime
-        if math.floor(statusFinishTime/1000)>current_time then
-            self.time_label:setString(GameUtils:formatTimeStyle1(math.floor(statusFinishTime/1000)-current_time))
-        end
-    else
-        local statusStartTime = basicInfo.statusStartTime
-        if current_time>= math.floor(statusStartTime/1000) then
-            self.time_label:setString(GameUtils:formatTimeStyle1(current_time-math.floor(statusStartTime/1000)))
+    if basicInfo.status then
+        if basicInfo.status ~= "peace" then
+            local statusFinishTime = basicInfo.statusFinishTime
+            if math.floor(statusFinishTime/1000)>current_time then
+                self.time_label:setString(GameUtils:formatTimeStyle1(math.floor(statusFinishTime/1000)-current_time))
+            end
+        else
+            local statusStartTime = basicInfo.statusStartTime
+            if current_time>= math.floor(statusStartTime/1000) then
+                self.time_label:setString(GameUtils:formatTimeStyle1(current_time-math.floor(statusStartTime/1000)))
+            end
         end
     end
 end

@@ -5,7 +5,6 @@ local WidgetRoundTabButtons = import("..widget.WidgetRoundTabButtons")
 local SpriteConfig = import("..sprites.SpriteConfig")
 local UIListView = import(".UIListView")
 local UILib = import(".UILib")
-local AllianceMap = import("..entity.AllianceMap")
 local Alliance = import("..entity.Alliance")
 local Localize = import("..utils.Localize")
 local AllianceVillage = GameDatas.AllianceVillage
@@ -57,7 +56,6 @@ function GameUIOrderHall:OnMoveInStage()
 
 
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.VILLAGE_LEVELS_CHANGED)
-    self.alliance:GetAllianceMap():AddListenOnType(self,AllianceMap.LISTEN_TYPE.BUILDING_INFO)
 end
 function GameUIOrderHall:CreateBetweenBgAndTitle()
     GameUIOrderHall.super.CreateBetweenBgAndTitle(self)
@@ -392,12 +390,9 @@ end
 
 function GameUIOrderHall:onExit()
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.VILLAGE_LEVELS_CHANGED)
-    self.alliance:GetAllianceMap():RemoveListenerOnType(self,AllianceMap.LISTEN_TYPE.BUILDING_INFO)
     GameUIOrderHall.super.onExit(self)
 end
-function GameUIOrderHall:OnBuildingInfoChange(building)
 
-end
 return GameUIOrderHall
 
 

@@ -3,7 +3,6 @@ local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetBuyGoods = import("..widget.WidgetBuyGoods")
 local WidgetStockGoods = import("..widget.WidgetStockGoods")
 local WidgetPushButton = import("..widget.WidgetPushButton")
-local AllianceMap = import("..entity.AllianceMap")
 local AllianceItemsManager = import("..entity.AllianceItemsManager")
 local GameUIAllianceShop = UIKit:createUIClass('GameUIAllianceShop', "GameUIAllianceBuilding")
 local UIListView = import(".UIListView")
@@ -94,7 +93,6 @@ function GameUIAllianceShop:OnMoveInStage()
     end):pos(window.cx, window.bottom + 34)
     self.alliance:GetItemsManager():AddListenOnType(self,AllianceItemsManager.LISTEN_TYPE.ITEM_CHANGED)
     self.alliance:GetItemsManager():AddListenOnType(self,AllianceItemsManager.LISTEN_TYPE.ITEM_LOGS_CHANGED)
-    self.alliance:GetAllianceMap():AddListenOnType(self,AllianceMap.LISTEN_TYPE.BUILDING_INFO)
     self.alliance:AddListenOnType(self, self.alliance.LISTEN_TYPE.BASIC)
     User:AddListenOnType(self,User.LISTEN_TYPE.ALLIANCE_INFO)
 end
@@ -111,7 +109,6 @@ end
 function GameUIAllianceShop:onExit()
     self.alliance:GetItemsManager():RemoveListenerOnType(self,AllianceItemsManager.LISTEN_TYPE.ITEM_CHANGED)
     self.alliance:GetItemsManager():RemoveListenerOnType(self,AllianceItemsManager.LISTEN_TYPE.ITEM_LOGS_CHANGED)
-    self.alliance:GetAllianceMap():RemoveListenerOnType(self,AllianceMap.LISTEN_TYPE.BUILDING_INFO)
     User:RemoveListenerOnType(self,User.LISTEN_TYPE.ALLIANCE_INFO)
     self.alliance:RemoveListenerOnType(self, self.alliance.LISTEN_TYPE.BASIC)
     GameUIAllianceShop.super.onExit(self)
@@ -410,7 +407,7 @@ function GameUIAllianceShop:InitRecordPart()
 
     local item_logs = self.alliance:GetItemsManager():GetItemLogs()
     if not item_logs then
-        NetManager:getItemLogsPromise(self.alliance:Id()):done(function ( response )
+        NetManager:getItemLogsPromise(self.alliance.id):done(function ( response )
             local item_logs = self.alliance:GetItemsManager():GetItemLogs()
             if item_logs then
                 self.record_logs_items = {}

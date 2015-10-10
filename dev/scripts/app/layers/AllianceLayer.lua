@@ -1,12 +1,13 @@
 local Enum = import("..utils.Enum")
 local UILib = import("..ui.UILib")
 local Alliance = import("..entity.Alliance")
-local allianceMap = import(".allianceMap")
 local WidgetAllianceHelper = import("..widget.WidgetAllianceHelper")
 local NormalMapAnchorBottomLeftReverseY = import("..map.NormalMapAnchorBottomLeftReverseY")
 local MapLayer = import(".MapLayer")
 local AllianceLayer = class("AllianceLayer", MapLayer)
 local ZORDER = Enum("BACKGROUND", "OBJECT")
+local AllianceMap = GameDatas.AllianceMap
+local buildingName = AllianceMap.buildingName
 local ui_helper = WidgetAllianceHelper.new()
 local intInit = GameDatas.AllianceInitData.intInit
 local decorator_image = UILib.decorator_image
@@ -14,10 +15,10 @@ local alliance_building = UILib.alliance_building
 local MAP_LEGNTH_WIDTH = 41
 local MAP_LEGNTH_HEIGHT = 41
 local TILE_WIDTH = 160
-local ALLINACE_WIDTH, ALLIANCE_HEIGHT = intInit.allianceRegionMapWidth.value, intInit.allianceRegionMapHeight.value
-local worldsize = {width = ALLINACE_WIDTH * 160 * MAP_LEGNTH_WIDTH, height = ALLIANCE_HEIGHT * 160 * MAP_LEGNTH_HEIGHT}
+local ALLIANCE_WIDTH, ALLIANCE_HEIGHT = intInit.allianceRegionMapWidth.value, intInit.allianceRegionMapHeight.value
+local worldsize = {width = ALLIANCE_WIDTH * 160 * MAP_LEGNTH_WIDTH, height = ALLIANCE_HEIGHT * 160 * MAP_LEGNTH_HEIGHT}
 local function getZorderByXY(x, y)
-    return x + ALLINACE_WIDTH * y
+    return x + ALLIANCE_WIDTH * y
 end
 function AllianceLayer:ctor(scene)
     AllianceLayer.super.ctor(self, scene, 0.4, 1.2)
@@ -31,9 +32,12 @@ end
 function AllianceLayer:InitAllianceMap()
     self.alliance_objects = {}
     self.alliance_objects_free = {
-        desert = {},
-        grassLand = {},
-        iceField = {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
     }
 
     self.alliance_bg = {}
@@ -49,9 +53,12 @@ function AllianceLayer:InitAllianceMap()
         end
 
         print("alliance_objects:", count)
-        print("alliance_objects_free.desert:", #self.alliance_objects_free.desert)
-        print("alliance_objects_free.grassLand:", #self.alliance_objects_free.grassLand)
-        print("alliance_objects_free.iceField:", #self.alliance_objects_free.iceField)
+        print("alliance_objects_free.1:", #self.alliance_objects_free[1])
+        print("alliance_objects_free.2:", #self.alliance_objects_free[2])
+        print("alliance_objects_free.3:", #self.alliance_objects_free[3])
+        print("alliance_objects_free.4:", #self.alliance_objects_free[4])
+        print("alliance_objects_free.5:", #self.alliance_objects_free[5])
+        print("alliance_objects_free.6:", #self.alliance_objects_free[6])
         print("alliance_bg:", count)
         print("alliance_bg_free.desert:", #self.alliance_bg_free.desert)
         print("alliance_bg_free.grassLand:", #self.alliance_bg_free.grassLand)
@@ -65,14 +72,14 @@ function AllianceLayer:CreateMap()
     self.normal_map = NormalMapAnchorBottomLeftReverseY.new{
         tile_w = TILE_WIDTH,
         tile_h = TILE_WIDTH,
-        map_width = ALLINACE_WIDTH * MAP_LEGNTH_WIDTH,
+        map_width = ALLIANCE_WIDTH * MAP_LEGNTH_WIDTH,
         map_height = ALLIANCE_HEIGHT * MAP_LEGNTH_HEIGHT,
         base_x = 0,
         base_y = ALLIANCE_HEIGHT * MAP_LEGNTH_HEIGHT * TILE_WIDTH,
     }
 
     self.alliance_logic_map = NormalMapAnchorBottomLeftReverseY.new{
-        tile_w = TILE_WIDTH * ALLINACE_WIDTH,
+        tile_w = TILE_WIDTH * ALLIANCE_WIDTH,
         tile_h = TILE_WIDTH * ALLIANCE_HEIGHT,
         map_width = MAP_LEGNTH_WIDTH,
         map_height = MAP_LEGNTH_HEIGHT,
@@ -83,7 +90,7 @@ function AllianceLayer:CreateMap()
     self.inner_alliance_logic_map = NormalMapAnchorBottomLeftReverseY.new{
         tile_w = TILE_WIDTH,
         tile_h = TILE_WIDTH,
-        map_width = ALLINACE_WIDTH,
+        map_width = ALLIANCE_WIDTH,
         map_height = ALLIANCE_HEIGHT,
         base_x = 0,
         base_y = intInit.allianceRegionMapHeight.value * TILE_WIDTH
@@ -133,8 +140,17 @@ function AllianceLayer:ConvertLogicPositionToMapPosition(lx, ly)
 end
 function AllianceLayer:GetClickedObject(world_x, world_y)
     local point = self.map:convertToNodeSpace(cc.p(world_x, world_y))
-    local logic_x, logic_y = self:GetAllianceLogicMap():ConvertToLogicPosition(point.x, point.y)
-    print(point.x, point.y, logic_x, logic_y)
+    local logic_x, logic_y = self:GetLogicMap():ConvertToLogicPosition(point.x, point.y)
+    local index = self:LogicToIndex(self:GetAllianceLogicMap():ConvertToLogicPosition(point.x, point.y))
+    print(index, logic_x % ALLIANCE_WIDTH, logic_y % ALLIANCE_HEIGHT)
+    local x,y = logic_x % ALLIANCE_WIDTH, logic_y % ALLIANCE_HEIGHT
+    if self.alliance_objects[index] then
+        for k,v in pairs(self.alliance_objects[index].mapObjects) do
+            if v.x == x and v.y == y then
+                return v
+            end
+        end
+    end
 end
 local maps = {
     "tmxmaps/alliance_desert1.tmx",
@@ -147,19 +163,39 @@ function AllianceLayer:LoadAllianceByIndex(index, alliance)
     self:LoadObjects(index, alliance, function(objects_node)
         if alliance and alliance ~= json.null then
             for _,mapObj in pairs(alliance.mapObjects) do
-                if mapObj.name == "member" then
+                if not objects_node.mapObjects[mapObj.id] then
                     local x,y = mapObj.location.x, mapObj.location.y
-                    print("LoadAllianceByIndex", x,y)
-                    self:GetInnerMapPosition(x,y)
-                    table.insert(objects_node.members,
-                        display.newSprite("my_keep_1.png"):addTo(
-                            objects_node,getZorderByXY(x, y)
-                        ):pos(self:GetInnerMapPosition(x, y))
-                    )
+                    local sprite
+                    if mapObj.name == "member" then
+                        sprite = display.newSprite("my_keep_1.png")
+                    elseif mapObj.name == "woodVillage" then
+                        sprite = display.newSprite("woodcutter_1.png")
+                    elseif mapObj.name == "stoneVillage" then
+                        sprite = display.newSprite("quarrier_1.png")
+                    elseif mapObj.name == "ironVillage" then
+                        sprite = display.newSprite("miner_1.png")
+                    elseif mapObj.name == "foodVillage" then
+                        sprite = display.newSprite("farmer_1.png")
+                    elseif mapObj.name == "coinVillage" then
+                        sprite = display.newSprite("dwelling_1.png")
+                    elseif mapObj.name == "monster" then
+                        sprite = UIKit:CreateIdle45Ani("heihua_bubing_2")
+                    else
+                        assert(false)
+                    end
+                    sprite.x = x
+                    sprite.y = y
+                    sprite.mapIndex = index
+                    sprite.alliance_id = alliance._id
+                    sprite.id = mapObj.id
+                    sprite.name = mapObj.name
+                    sprite:addTo(objects_node,getZorderByXY(x, y))
+                        :pos(self:GetInnerMapPosition(x, y))
+                    objects_node.mapObjects[mapObj.id] = sprite
                 end
             end
         end
-        end)
+    end)
 end
 function AllianceLayer:FreeInvisible()
     local background = self.background
@@ -187,11 +223,10 @@ local terrains = {
     "iceField",
 }
 function AllianceLayer:LoadObjects(index, alliance, func)
-    local terrain = (alliance == nil or alliance == json.null) and
-        terrains[index % 3] or alliance.basicInfo.terrain
-    if not self.alliance_objects[index] then
-        local new_obj = self:GetFreeObjects(terrain)
-        self:FreeObjects(self.alliance_objects[index])
+    local terrain, style = self:GetMapInfoByIndex(index, alliance)
+    local alliance_obj = self.alliance_objects[index]
+    if not alliance_obj then
+        local new_obj = self:GetFreeObjects(terrain, style)
         self.alliance_objects[index] = new_obj:addTo(self.objects, index)
             :pos(
                 self:GetAllianceLogicMap()
@@ -201,89 +236,81 @@ function AllianceLayer:LoadObjects(index, alliance, func)
         if type(func) == "function" then
             func(new_obj)
         end
-    elseif self.alliance_objects[index].terrain ~= terrain then
-        self:FreeObjects(self.alliance_objects[index])
-        self.alliance_objects[index] = nil
-        self:LoadObjects(index, alliance)
+    else
+        if alliance_obj.style ~= style then
+            self:FreeObjects(alliance_obj)
+            self.alliance_objects[index] = nil
+            self:LoadObjects(index, alliance)
+        elseif alliance_obj.terrain ~= terrain then
+            self:ReloadObjectsByTerrain(alliance_obj, terrain)
+        end
+        if type(func) == "function" then
+            func(alliance_obj)
+        end
     end
 end
 function AllianceLayer:FreeObjects(obj)
     if not obj then return end
-    for k,v in pairs(obj.members) do
+    for k,v in pairs(obj.mapObjects) do
         v:removeFromParent()
     end
-    obj.members = {}
+    obj.mapObjects = {}
     if obj:getParent() then
         obj:retain()
-        table.insert(self.alliance_objects_free[obj.terrain], obj)
+        table.insert(self.alliance_objects_free[obj.style], obj)
         obj:getParent():removeChild(obj, false)
     else
-        table.insert(self.alliance_objects_free[obj.terrain], obj)
+        table.insert(self.alliance_objects_free[obj.style], obj)
     end
 end
-function AllianceLayer:GetFreeObjects(terrain)
-    local obj = table.remove(self.alliance_objects_free[terrain], 1)
+function AllianceLayer:GetFreeObjects(terrain, style)
+    local obj = table.remove(self.alliance_objects_free[style], 1)
     if obj then
+        if obj.terrain ~= terrain then
+            self:ReloadObjectsByTerrain(obj, terrain)
+        end
         return obj
     else
         local obj = display.newNode()
-        self:CreateAllianceObjects(obj)
-        -- obj.decorators = {}
-        -- obj.buildings = {}
-        obj.members = {}
+        self:CreateAllianceObjects(obj, terrain, style)
+        obj.mapObjects = {}
         obj.terrain = terrain
+        obj.style = style
         obj:retain()
         return obj
     end
 end
-local buildings_map = {
-    "palace",
-    "orderHall",
-    "shrine",
-    "shop",
-    "moonGate",
-    "decorate_mountain_1",
-    "decorate_mountain_2",
-    "decorate_lake_1",
-    "decorate_lake_2",
-    "decorate_tree_1",
-    "decorate_tree_2",
-    "decorate_tree_3",
-    "decorate_tree_4",
-}
-local buildings_size = {
-    palace = {w = 1, h = 1},
-    orderHall = {w = 1, h = 1},
-    shrine = {w = 1, h = 1},
-    shop = {w = 1, h = 1},
-    moonGate = {w = 1, h = 1},
-    decorate_mountain_1 = {w = 3, h = 3},
-    decorate_mountain_2 = {w = 3, h = 3},
-    decorate_lake_1 = {w = 3, h = 3},
-    decorate_lake_2 = {w = 3, h = 3},
-    decorate_tree_1 = {w = 1, h = 1},
-    decorate_tree_2 = {w = 1, h = 1},
-    decorate_tree_3 = {w = 1, h = 1},
-    decorate_tree_4 = {w = 1, h = 1},
-}
+function AllianceLayer:ReloadObjectsByTerrain(obj_node, terrain)
+    obj_node.terrain = terrain
+    for k,v in pairs(obj_node.decorators) do
+        v:setTexture(decorator_image[terrain][v.name])
+    end
+end
 function AllianceLayer:CreateAllianceObjects(obj_node, terrain, style)
-    for i,v in ipairs(allianceMap.layers[1].data) do
-        local name = buildings_map[v]
-        if name then
-            local size = buildings_size[name]
-            local x,y = i % ALLINACE_WIDTH, math.floor(i / ALLINACE_WIDTH)
-            x,y = (2 * x - size.w + 1) / 2, (2 * y - size.h + 1) / 2
-            local deco = decorator_image.grassLand[name]
-            local building = alliance_building[name]
-            if deco then
-                display.newSprite(deco):addTo(obj_node, getZorderByXY(x, y))
+    local decorators = {}
+    local buildings = {}
+    for _,v in ipairs(AllianceMap[string.format("allianceMap_%d", style)]) do
+        local name = v.name
+        local size = buildingName[name]
+        local x,y = (2 * v.x - size.width + 1) / 2, (2 * v.y - size.height + 1) / 2
+        local deco_png = decorator_image[terrain][name]
+        local building_png = alliance_building[name]
+        if deco_png then
+            local decorator = display.newSprite(deco_png)
+                :addTo(obj_node, getZorderByXY(x, y))
                 :pos(self:GetInnerMapPosition(x,y))
-            elseif building then
-                display.newSprite(building):addTo(obj_node, getZorderByXY(x, y))
+            decorator.name = name
+            table.insert(decorators, decorator)
+        elseif building_png then
+            local building = display.newSprite(building_png)
+                :addTo(obj_node, getZorderByXY(x, y))
                 :pos(self:GetInnerMapPosition(x,y))
-            end
+            building.name = name
+            table.insert(buildings, building)
         end
     end
+    obj_node.decorators = decorators
+    obj_node.buildings = buildings
 end
 function AllianceLayer:GetInnerMapPosition(xOrPosition, y)
     if type(xOrPosition) == "table" then
@@ -292,8 +319,7 @@ function AllianceLayer:GetInnerMapPosition(xOrPosition, y)
     return self:GetInnerAllianceLogicMap():ConvertToMapPosition(xOrPosition, y)
 end
 function AllianceLayer:LoadBackground(index, alliance)
-    local terrain = (alliance == nil or alliance == json.null) and
-        terrains[index % 3] or alliance.basicInfo.terrain
+    local terrain = self:GetMapInfoByIndex(index, alliance)
     if not self.alliance_bg[index] then
         local new_bg = self:GetFreeBackground(terrain)
         self:FreeBackground(self.alliance_bg[index])
@@ -330,12 +356,31 @@ function AllianceLayer:GetFreeBackground(terrain)
         return map
     end
 end
+function AllianceLayer:GetMapInfoByIndex(index, alliance)
+    local terrain, style
+    if (alliance == nil or alliance == json.null) then
+        terrain, style = DataManager:getMapDataByIndex(index)
+    else
+        terrain, style = alliance.basicInfo.terrain, alliance.basicInfo.terrainStyle
+    end
+    terrain = terrain == nil and terrains[index % 3] or terrain
+    style = style == nil and math.random(6) or style
+    return terrain, style
+end
+--
 function AllianceLayer:getContentSize()
     return worldsize
 end
 
 
 return AllianceLayer
+
+
+
+
+
+
+
 
 
 

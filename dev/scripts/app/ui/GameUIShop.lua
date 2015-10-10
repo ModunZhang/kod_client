@@ -747,7 +747,7 @@ function GameUIShop:onEnter()
         :onButtonClicked(function(event)
             local alliance = Alliance_Manager:GetMyAlliance()
             if not alliance:IsDefault() then 
-                device.showAlert("提示",alliance:Id(),{_("确定")})
+                device.showAlert("提示",alliance.id,{_("确定")})
             end
         end)
 

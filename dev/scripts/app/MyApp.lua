@@ -427,10 +427,10 @@ function MyApp:EnterMyAllianceScene(location)
         return
     end
 
-    local alliance_name = "AllianceScene"
+    local alliance_name = "AllianceDetailScene"
     local my_status = Alliance_Manager:GetMyAlliance().basicInfo.status
     if my_status == "prepare" or  my_status == "fight" then
-        alliance_name = "AllianceBattleScene"
+        alliance_name = "AllianceDetailScene"
     end
     -- app:enterScene(alliance_name, {location}, "custom", -1, transition_)
     enter_next_scene(alliance_name, location)

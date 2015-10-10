@@ -316,7 +316,7 @@ function GameUIDailyMissionInfo:GetMissionConfig()
                         GameGlobalUI:showTips(_("错误"),_("你还未加入联盟"))
                         return false
                     end
-                    local building = Alliance_Manager:GetMyAlliance():GetAllianceMap():FindAllianceBuildingInfoByName("shop")
+                    local building = Alliance_Manager:GetMyAlliance():FindAllianceBuildingInfoByName("shop")
                     UIKit:newGameUI("GameUIAllianceShop",City,"goods",building):AddToCurrentScene(true)
                     return false
                 end

@@ -26,8 +26,8 @@ end
 function GameUIAllianceBattle:OnMoveInStage()
     GameUIAllianceBattle.super.OnMoveInStage(self)
     -- 获取历史记录
-    if self.alliance:AllianceFightReports() == nil then
-        NetManager:getAllianceFightReportsPromise(self.alliance:Id())
+    if self.alliance.allianceFightReports == nil then
+        NetManager:getAllianceFightReportsPromise(self.alliance.id)
     end
     self:CreateTabButtons({
         {
@@ -76,16 +76,12 @@ function GameUIAllianceBattle:OnMoveInStage()
 
 
     app.timer:AddListener(self)
-    -- self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.FIGHT_REQUESTS)
     self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
-    self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.ALLIANCE_FIGHT)
 end
 
 function GameUIAllianceBattle:onExit()
     app.timer:RemoveListener(self)
-    -- self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.FIGHT_REQUESTS)
     self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
-    self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.ALLIANCE_FIGHT)
     GameUIAllianceBattle.super.onExit(self)
 end
 function GameUIAllianceBattle:onCleanup()
@@ -97,7 +93,7 @@ function GameUIAllianceBattle:OnTimer(current_time)
     if self.statistics_layer:isVisible() then
         local status = self.alliance.basicInfo.status
         if status ~= "peace" then
-            local statusFinishTime = self.alliance.basicInfo.statusFinishTime()
+            local statusFinishTime = self.alliance.basicInfo.statusFinishTime
             if math.floor(statusFinishTime/1000)>current_time then
                 self.time_label:setString(GameUtils:formatTimeStyle1(math.floor(statusFinishTime/1000)-current_time))
             end
@@ -189,14 +185,14 @@ function GameUIAllianceBattle:InitBattleStatistics()
             :addTo(layer)
         self.request_num_label = UIKit:ttfLabel(
             {
-                text = self.alliance:GetFightRequestPlayerNum(),
+                text = 0,
                 size = 22,
                 color = 0xffedae
             }):align(display.CENTER, request_fight_bg:getContentSize().width-60, request_fight_bg:getContentSize().height/2)
             :addTo(request_fight_bg)
         self.request_num_label:schedule(function() 
                 if self.request_num_label then
-                    self.request_num_label:setString(self.alliance:GetFightRequestPlayerNum())
+                    self.request_num_label:setString(0)
                 end
             end, 1)
 
@@ -227,12 +223,6 @@ function GameUIAllianceBattle:InitBattleStatistics()
                                 end
                             }
                         )
-                    else
-                        if self.alliance:IsRequested() then
-                            UIKit:showMessageDialog(_("提示"),_("已经发送过开战请求"))
-                            return
-                        end
-                        NetManager:getRequestAllianceToFightPromose()
                     end
                 end
             end):align(display.RIGHT_BOTTOM, window.right - 36, window.bottom_top + 26)
@@ -378,7 +368,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
             enemy_alliance_bg:setButtonEnabled(false)
             local last_fight_reports = our_alliance:GetLastAllianceFightReports()
             local fight_result
-            if our_alliance:Id() == last_fight_reports.attackAllianceId then
+            if our_alliance.id == last_fight_reports.attackAllianceId then
                 fight_result = last_fight_reports.fightResult == "attackWin"
             else
                 fight_result = last_fight_reports.fightResult == "defenceWin"
@@ -487,18 +477,14 @@ function GameUIAllianceBattle:RefreshFightInfoList(info_bg_y)
         local ourKillMaxName,enemyKillMaxName
         if alliance.basicInfo.status == "protect" then
             local report = alliance:GetLastAllianceFightReports()
-            our = alliance:Id() == report.attackAllianceId and report.attackAlliance or report.defenceAlliance
-            enemy = alliance:Id() == report.attackAllianceId and report.defenceAlliance or report.attackAlliance
+            our = alliance.id == report.attackAllianceId and report.attackAlliance or report.defenceAlliance
+            enemy = alliance.id == report.attackAllianceId and report.defenceAlliance or report.attackAlliance
             local killMax = report.killMax
 
-            ourKillMaxName = killMax.allianceId == alliance:Id() and killMax.playerName ~= json.null and killMax.playerName or _("无")
-            enemyKillMaxName = killMax.allianceId ~= alliance:Id() and killMax.playerName  ~= json.null and killMax.playerName or _("无")
+            ourKillMaxName = killMax.allianceId == alliance.id and killMax.playerName ~= json.null and killMax.playerName or _("无")
+            enemyKillMaxName = killMax.allianceId ~= alliance.id and killMax.playerName  ~= json.null and killMax.playerName or _("无")
 
         else
-            our = alliance:GetMyAllianceFightCountData()
-            enemy = alliance:GetEnemyAllianceFightCountData()
-            local ourKills = alliance:GetMyAllianceFightPlayerKills()
-            local enemyKills = alliance:GetEnemyAllianceFightPlayerKills()
 
             local temp_name,temp_kills = _("无"),0
             for i,v in ipairs(ourKills or {}) do
@@ -564,15 +550,12 @@ function GameUIAllianceBattle:OpenAllianceDetails(isOur)
     local alliance = self.alliance
 
     local enemy_alliance = Alliance_Manager:GetEnemyAlliance()
-    local count_data = isOur and alliance:GetMyAllianceFightCountData() or alliance:GetEnemyAllianceFightCountData()
-    local our_player_kills = alliance:GetMyAllianceFightPlayerKills()
-    local enemy_player_kills = alliance:GetEnemyAllianceFightPlayerKills()
     local alliance_name = isOur and alliance.basicInfo.name or enemy_alliance.basicInfo.name
     local alliance_tag = isOur and alliance.basicInfo.tag or enemy_alliance.basicInfo.tag
     -- 玩家联盟成员
-    local palace_level = alliance:GetAllianceMap():FindAllianceBuildingInfoByName("palace").level
+    local palace_level = alliance:FindAllianceBuildingInfoByName("palace").level
     local memberCount = GameDatas.AllianceBuilding.palace[palace_level].memberCount
-    local enemy_memberCount = GameDatas.AllianceBuilding.palace[enemy_alliance:GetAllianceMap():FindAllianceBuildingInfoByName("palace").level].memberCount
+    local enemy_memberCount = GameDatas.AllianceBuilding.palace[enemy_alliance:FindAllianceBuildingInfoByName("palace").level].memberCount
     local alliance_members = isOur and alliance:GetMembersCount().."/"..memberCount or enemy_alliance:GetMembersCount().."/"..enemy_memberCount
     -- 联盟语言
     local  language = isOur and alliance.basicInfo.language or enemy_alliance.basicInfo.language
@@ -707,7 +690,6 @@ function GameUIAllianceBattle:OpenRequestFightList()
 end
 function GameUIAllianceBattle:GetFightRequestsInfo()
     local alliance = self.alliance
-    local fight_requests = alliance:FightRequests()
     local info = {}
 
     for _,id in pairs(fight_requests) do
@@ -734,7 +716,7 @@ function GameUIAllianceBattle:InitHistoryRecord()
 end
 function GameUIAllianceBattle:HistoryDelegate(listView, tag, idx)
     if cc.ui.UIListView.COUNT_TAG == tag then
-        return #(self.alliance:AllianceFightReports() or {})
+        return #(self.alliance.allianceFightReports or {})
     elseif cc.ui.UIListView.CELL_TAG == tag then
         local item
         local content
@@ -888,7 +870,7 @@ function GameUIAllianceBattle:CreateHistoryContent()
     local parent = self
     function content:SetData( idx )
         local alliance = parent.alliance
-        local cloneReports = clone(alliance:AllianceFightReports())
+        local cloneReports = clone(alliance.allianceFightReports)
         table.sort(cloneReports,function ( a , b )
             return a.fightTime > b.fightTime
         end)
@@ -896,14 +878,14 @@ function GameUIAllianceBattle:CreateHistoryContent()
         self.report = report
         -- 各项数据
         local win
-        if report.attackAllianceId == alliance:Id() then
+        if report.attackAllianceId == alliance.id then
             win = report.fightResult == "attackWin"
-        elseif report.defenceAllianceId == alliance:Id() then
+        elseif report.defenceAllianceId == alliance.id then
             win = report.fightResult == "defenceWin"
         end
         local fightTime = report.fightTime
-        local ourAlliance = report.attackAllianceId == alliance:Id() and report.attackAlliance or report.defenceAlliance
-        local enemyAlliance = report.attackAllianceId == alliance:Id() and report.defenceAlliance or report.attackAlliance
+        local ourAlliance = report.attackAllianceId == alliance.id and report.attackAlliance or report.defenceAlliance
+        local enemyAlliance = report.attackAllianceId == alliance.id and report.defenceAlliance or report.attackAlliance
         local killMax = report.killMax
         LuaUtils:outputTable("killMax", killMax)
         LuaUtils:outputTable("report", report)
@@ -952,7 +934,7 @@ function GameUIAllianceBattle:CreateHistoryContent()
             {string.formatnumberthousands(ourAlliance.strikeSuccessCount),_("突袭成功"),string.formatnumberthousands(enemyAlliance.strikeSuccessCount)},
             {string.formatnumberthousands(ourAlliance.attackCount),_("进攻次数"),string.formatnumberthousands(enemyAlliance.attackCount)},
             {string.formatnumberthousands(ourAlliance.attackSuccessCount),_("进攻成功"),string.formatnumberthousands(enemyAlliance.attackSuccessCount)},
-            {killMax.allianceId == alliance:Id() and killMax.playerName ~= json.null and killMax.playerName or _("无"),_("头号杀手"),killMax.allianceId ~= alliance:Id() and killMax.playerName  ~= json.null and killMax.playerName or _("无")},
+            {killMax.allianceId == alliance.id and killMax.playerName ~= json.null and killMax.playerName or _("无"),_("头号杀手"),killMax.allianceId ~= alliance.id and killMax.playerName  ~= json.null and killMax.playerName or _("无")},
             {string.formatnumberthousands(ourAlliance.honour),_("荣耀值奖励"),string.formatnumberthousands(enemyAlliance.honour)},
         }
         local b_flag = true
@@ -1122,7 +1104,7 @@ function GameUIAllianceBattle:CreateAllianceItem(alliance,index)
         color = 0x403c2f,
     }):align(display.LEFT_CENTER,188,38)
         :addTo(content)
-    if alliance._id ~= self.alliance:Id() then
+    if alliance._id ~= self.alliance.id then
         -- 进入按钮
         local enter_btn = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
             :setButtonLabel(UIKit:ttfLabel({
@@ -1224,7 +1206,7 @@ function GameUIAllianceBattle:OpenOtherAllianceDetails(alliance)
     addAttr(_("战斗力"),basic.power,350,60)
     addAttr(_("击杀"),basic.kill,350,20)
 
-    if alliance._id ~= self.alliance:Id() then
+    if alliance._id ~= self.alliance.id then
         -- 进入按钮
         local enter_btn = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
             :setButtonLabel(UIKit:ttfLabel({
@@ -1279,19 +1261,6 @@ function GameUIAllianceBattle:GetAlliancePeriod()
     return period
 end
 
--- function GameUIAllianceBattle:OnAllianceFightRequestsChanged(request_num)
---     if self.request_num_label then
---         self.request_num_label:setString(request_num)
---     end
--- end
-function GameUIAllianceBattle:OnAllianceFightReportsChanged(changed_map)
-    if changed_map.add and #changed_map.add>0 then
-        self.history_listview:asyncLoadWithCurrentPosition_()
-    end
-    if changed_map.remove and #changed_map.remove>0 then
-        self.history_listview:asyncLoadWithCurrentPosition_()
-    end
-end
 
 return GameUIAllianceBattle
 

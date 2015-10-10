@@ -450,7 +450,7 @@ function AllianceMoonGate:UpdateCountData(alliance_data)
 end
 
 function AllianceMoonGate:GetMoonGateObjectFromMap()
-    return self:GetAlliance():GetAllianceMap():FindAllianceBuildingInfoByName("moonGate")
+    return self:GetAlliance():FindAllianceBuildingInfoByName("moonGate")
 end
 function AllianceMoonGate:GetPlayerLocation(playerId)
     return self:GetAlliance():GetMemeberById(playerId).location

@@ -1,3 +1,4 @@
+local GameUIAllianceHomeNew = import("..ui.GameUIAllianceHomeNew")
 local AllianceLayer = import("..layers.AllianceLayer")
 local MapScene = import(".MapScene")
 local AllianceDetailScene = class("AllianceDetailScene", MapScene)
@@ -5,32 +6,52 @@ local AllianceDetailScene = class("AllianceDetailScene", MapScene)
 function AllianceDetailScene:ctor()
     AllianceDetailScene.super.ctor(self)
     self.fetchtimer = display.newNode():addTo(self)
+    self.amintimer = display.newNode():addTo(self)
     self.visible_alliances = {}
     self.alliance_caches = {}
     self:UpdateAllianceBy(Alliance_Manager:GetMyAlliance().mapIndex, Alliance_Manager:GetMyAlliance())
 end
 function AllianceDetailScene:onEnter()
     AllianceDetailScene.super.onEnter(self)
+    self.home_page = self:CreateHomePage()
     self:GotoAllianceByIndex(Alliance_Manager:GetMyAlliance().mapIndex)
+    self:GetSceneLayer():ZoomTo(0.82)
 end
 function AllianceDetailScene:FetchAllianceDatasByIndex(index, func)
-    self.fetchtimer:stopAllActions()
-    self.fetchtimer:performWithDelay(function()
-        if Alliance_Manager:GetMyAlliance().mapIndex ~= index then
-            NetManager:getEnterMapIndexPromise(index):done(function(response)
-            	self.current_allinace_index = index
-                self:UpdateAllianceBy(index, response.msg.allianceData)
-                if type(func) == "function" then
-                	func(response.msg)
-                end
-            end)
-        else
-            -- assert(false, "不能获取自己的联盟数据!")
-        end
-    end, 0.5)
+    if self.current_allinace_index and self.current_allinace_index ~= index then
+        NetManager:getLeaveMapIndexPromise(self.current_allinace_index)
+        self.current_allinace_index = nil
+    end
+    if Alliance_Manager:GetMyAlliance().mapIndex == index then
+        self.fetchtimer:stopAllActions()
+        self.amintimer:stopAllActions()
+        self.current_allinace_index = nil
+    elseif self.current_allinace_index ~= index then
+        self.fetchtimer:stopAllActions()
+        self.amintimer:stopAllActions()
+        self.fetchtimer:performWithDelay(function()
+            NetManager:getEnterMapIndexPromise(index)
+                :done(function(response)
+                    self.current_allinace_index = index
+                    self:UpdateAllianceBy(index, response.msg.allianceData)
+                    if type(func) == "function" then
+                        func(response.msg)
+                    end
+                    self.amintimer:stopAllActions()
+                    self.amintimer:schedule(function()
+                        NetManager:getAmInMapIndexPromise(self.current_allinace_index)
+                    end, 10)
+                end)
+        end, 0.5)
+    end
+end
+function AllianceDetailScene:CreateHomePage()
+    local home_page = GameUIAllianceHomeNew.new(City):addTo(self)
+    home_page:setTouchSwallowEnabled(false)
+    return home_page
 end
 function AllianceDetailScene:GetHomePage()
-
+    return self.home_page
 end
 function AllianceDetailScene:CreateSceneLayer()
     return AllianceLayer.new(self)
@@ -38,7 +59,7 @@ end
 function AllianceDetailScene:GotoAllianceByIndex(index)
     self:GotoAllianceByXY(self:GetSceneLayer():IndexToLogic(index))
     self:FetchAllianceDatasByIndex(index, function(data)
-    	self:GetSceneLayer():LoadAllianceByIndex(index, data.allianceData)
+        self:GetSceneLayer():LoadAllianceByIndex(index, data.allianceData)
     end)
 end
 function AllianceDetailScene:GotoAllianceByXY(x, y)
@@ -69,7 +90,11 @@ function AllianceDetailScene:OnTouchClicked(pre_x, pre_y, x, y)
     if self:IsFingerOn() then
         return
     end
-    self:GetSceneLayer():GetClickedObject(x, y)
+    local mapObj = self:GetSceneLayer():GetClickedObject(x, y)
+    if mapObj then
+        print(mapObj.id, mapObj.name, mapObj.mapIndex, mapObj.alliance_id)
+        UIKit:newGameUI("GameUIAllianceBase",self:GetAllianceByCache(mapObj.alliance_id), mapObj.id):AddToCurrentScene(true)
+    end
 end
 function AllianceDetailScene:OnSceneMove()
     AllianceDetailScene.super.OnSceneMove(self)
@@ -89,12 +114,10 @@ function AllianceDetailScene:UpdateVisibleAllianceBg()
     self.visible_alliances = new_visibles
 end
 function AllianceDetailScene:UpdateCurrrentAlliance()
-	local index = self:GetSceneLayer():GetMiddleAllianceIndex()
-	if index ~= self.current_allinace_index then
-		self:FetchAllianceDatasByIndex(index, function(data)
-	    	self:GetSceneLayer():LoadAllianceByIndex(index, data.allianceData)
-	    end)
-	end
+    local index = self:GetSceneLayer():GetMiddleAllianceIndex()
+    self:FetchAllianceDatasByIndex(index, function(data)
+        self:GetSceneLayer():LoadAllianceByIndex(index, data.allianceData)
+    end)
 end
 function AllianceDetailScene:GetAllianceByCache(key)
     return self.alliance_caches[key]
@@ -103,16 +126,22 @@ function AllianceDetailScene:RemoveAllianceCache(key)
     self.alliance_caches[key] = nil
 end
 function AllianceDetailScene:UpdateAllianceBy(key, alliance)
-	if alliance == json.null then
-		self.alliance_caches[key] = nil
-	else
-    	self.alliance_caches[key] = alliance
-    	self.alliance_caches[alliance._id] = alliance
-	end
+    if alliance == json.null then
+        self.alliance_caches[key] = nil
+    else
+        self.alliance_caches[key] = alliance
+        self.alliance_caches[alliance._id] = alliance
+    end
 end
 
 
 
 return AllianceDetailScene
+
+
+
+
+
+
 
 

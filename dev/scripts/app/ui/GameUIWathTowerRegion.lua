@@ -79,20 +79,20 @@ end
 function GameUIWathTowerRegion:AddOrRemoveListener(isAdd)
     if isAdd then
         City:AddListenOnType(self,City.LISTEN_TYPE.HELPED_TO_TROOPS)
-        self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.CheckNotHaveTheEventIf)
-        self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.OnCommingDataChanged)
-        self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.OnMarchDataChanged)
-        self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
-        self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.OnVillageEventTimer)
-        self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.OnFightEventTimerChanged)
+        -- self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.CheckNotHaveTheEventIf)
+        -- self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.OnCommingDataChanged)
+        -- self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.OnMarchDataChanged)
+        -- self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
+        -- self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.OnVillageEventTimer)
+        -- self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.OnFightEventTimerChanged)
     else
         City:RemoveListenerOnType(self,City.LISTEN_TYPE.HELPED_TO_TROOPS)
-        self:GetAllianceBelvedere():RemoveListenerOnType(self, AllianceBelvedere.LISTEN_TYPE.CheckNotHaveTheEventIf)
-        self:GetAllianceBelvedere():RemoveListenerOnType(self, AllianceBelvedere.LISTEN_TYPE.OnCommingDataChanged)
-        self:GetAllianceBelvedere():RemoveListenerOnType(self, AllianceBelvedere.LISTEN_TYPE.OnMarchDataChanged)
-        self:GetAllianceBelvedere():RemoveListenerOnType(self, AllianceBelvedere.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
-        self:GetAllianceBelvedere():RemoveListenerOnType(self, AllianceBelvedere.LISTEN_TYPE.OnVillageEventTimer)
-        self:GetAllianceBelvedere():RemoveListenerOnType(self, AllianceBelvedere.LISTEN_TYPE.OnFightEventTimerChanged)
+        -- self:GetAllianceBelvedere():RemoveListenerOnType(self, AllianceBelvedere.LISTEN_TYPE.CheckNotHaveTheEventIf)
+        -- self:GetAllianceBelvedere():RemoveListenerOnType(self, AllianceBelvedere.LISTEN_TYPE.OnCommingDataChanged)
+        -- self:GetAllianceBelvedere():RemoveListenerOnType(self, AllianceBelvedere.LISTEN_TYPE.OnMarchDataChanged)
+        -- self:GetAllianceBelvedere():RemoveListenerOnType(self, AllianceBelvedere.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
+        -- self:GetAllianceBelvedere():RemoveListenerOnType(self, AllianceBelvedere.LISTEN_TYPE.OnVillageEventTimer)
+        -- self:GetAllianceBelvedere():RemoveListenerOnType(self, AllianceBelvedere.LISTEN_TYPE.OnFightEventTimerChanged)
     end
 end
 
@@ -117,7 +117,7 @@ end
 
 
 function GameUIWathTowerRegion:RefreshMyEvents()
-    local my_events = self:GetAllianceBelvedere():GetMyEvents()
+    local my_events = {}
     for index = 1,2 do
         local item
         if index == 1 then

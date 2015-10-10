@@ -84,7 +84,7 @@ function GameUIKeep:CreateCityBasicInfo()
     local city_postion = "0,0"
     if not Alliance_Manager:GetMyAlliance():IsDefault() then
         local alliance = Alliance_Manager:GetMyAlliance()
-        local mapObject = alliance:GetAllianceMap():FindMapObjectById(alliance:GetSelf():MapId())
+        local mapObject = alliance:FindMapObjectById(alliance:GetSelf():MapId())
         local x, y = mapObject:GetLogicPosition()
         city_postion = x..","..y
     end

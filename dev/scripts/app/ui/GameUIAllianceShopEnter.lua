@@ -15,7 +15,7 @@ function GameUIAllianceShopEnter:GetUITitle()
 end
 
 function GameUIAllianceShopEnter:GetBuildingImage()
-    return UILib.alliance_building.shop
+    return self.isMyAlliance and UILib.alliance_building.shop or UILib.other_alliance_building.shop
 end
 
 function GameUIAllianceShopEnter:GetBuildingType()

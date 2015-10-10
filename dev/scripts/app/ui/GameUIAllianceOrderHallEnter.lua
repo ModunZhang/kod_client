@@ -15,7 +15,7 @@ function GameUIAllianceOrderHallEnter:GetUITitle()
 end
 
 function GameUIAllianceOrderHallEnter:GetBuildingImage()
-	return UILib.alliance_building.orderHall
+    return self.isMyAlliance and UILib.alliance_building.orderHall or UILib.other_alliance_building.orderHall
 end
 
 function GameUIAllianceOrderHallEnter:GetBuildingType()

@@ -61,7 +61,7 @@ end
 
 function GameUIStrikePlayer:GetMarchTime()
 	local from_alliance = Alliance_Manager:GetMyAlliance()
-	local mapObject = from_alliance:GetAllianceMap():FindMapObjectById(from_alliance:GetSelf():MapId())
+	local mapObject = from_alliance:FindMapObjectById(from_alliance:GetSelf():MapId())
     local fromLocation = mapObject.location
 	local target_alliance
 	if self.params.targetIsMyAlliance then

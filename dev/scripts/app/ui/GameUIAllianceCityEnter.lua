@@ -15,7 +15,7 @@ function GameUIAllianceCityEnter:ctor(building,isMyAlliance,my_alliance,enemy_al
     print("isMyAlliance==",isMyAlliance)
     self.enemy_alliance = enemy_alliance
 
-    local id = self:GetBuilding():Id()
+    local id = self:GetBuilding().id
     for k,v in pairs(self:GetCurrentAlliance():GetAllMembers()) do
         if v:MapId() == id then
             self.member = v
@@ -195,7 +195,7 @@ function GameUIAllianceCityEnter:GetEnterButtons()
             end
             local enter_button = self:BuildOneButton("alliance_enter_city_56x68.png",_("进入")):onButtonClicked(function()
                 local location = self:GetLogicPosition()
-                location.id = self:GetCurrentAlliance():Id()
+                location.id = self:GetCurrentAlliance().id
                 app:EnterFriendCityScene(member:Id(), location)
                 self:LeftButtonClicked()
             end)
@@ -295,7 +295,7 @@ function GameUIAllianceCityEnter:GetEnterButtons()
         if self:GetMyAlliance():GetAllianceBelvedere():CanEnterEnemyCity() then
             local enter_button = self:BuildOneButton("alliance_enter_city_56x68.png",_("进入")):onButtonClicked(function()
                 local location = self:GetLogicPosition()
-                location.id = self:GetCurrentAlliance():Id()
+                location.id = self:GetCurrentAlliance().id
                 app:EnterPlayerCityScene(member:Id(), location)
                 self:LeftButtonClicked()
             end)

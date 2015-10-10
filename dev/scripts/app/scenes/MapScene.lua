@@ -11,15 +11,20 @@ local abs = math.abs
 local fmod = math.fmod
 local elastic = 200
 function MapScene:ctor()
-    User:ResetAllListeners()
-    City:ResetAllListeners()
-    Alliance_Manager:GetMyAlliance():ResetAllListeners()
-    self.my_alliance = Alliance_Manager:GetMyAlliance()
+    if User then
+        User:ResetAllListeners()
+        User:AddListenOnType(self, User.LISTEN_TYPE.BASIC)
+    end
+    if City then
+        City:ResetAllListeners()
+    end
+    if Alliance_Manager then
+        Alliance_Manager:GetMyAlliance():ResetAllListeners()
+        self.my_alliance = Alliance_Manager:GetMyAlliance()
+    end
     self.blur_count = 1
     self.event_manager = EventManager.new(self)
     self.touch_judgment = TouchJudgment.new(self)
-
-    User:AddListenOnType(self, User.LISTEN_TYPE.BASIC)
 end
 function MapScene:OnUserBasicChanged(user, changed)
     if changed.level then
@@ -45,17 +50,17 @@ function MapScene:onEnter()
     self.top_layer = display.newNode():addTo(self, 3)
     self.screen_layer = display.newNode():addTo(self:GetSceneNode(), 4)
     display.newNode():addTo(self):schedule(function()
-        local flag = false
-        if self.my_alliance:IsDefault() then
-            flag = false 
-        else
-            flag = self.my_alliance:GetAllianceBelvedere():IsMeBeAttacked() 
-        end
-        if flag then
-            self:Warning()
-        else
-            self:DisableWaring()
-        end
+        -- local flag = false
+        -- if self.my_alliance and self.my_alliance:IsDefault() then
+        --     flag = false 
+        -- else
+        --     -- flag = self.my_alliance:GetAllianceBelvedere():IsMeBeAttacked() 
+        -- end
+        -- if flag then
+        --     self:Warning()
+        -- else
+        --     self:DisableWaring()
+        -- end
     end, 1)
 end
 function MapScene:onExit()
@@ -313,6 +318,9 @@ function MapScene:OnTouchExtend(old_speed_x, old_speed_y, new_speed_x, new_speed
     speed.x = speed.x > max_speed and max_speed or speed.x
     speed.y = speed.y > max_speed and max_speed or speed.y
     self.scene_layer:setPosition(cc.p(x + sp.x, y + sp.y))
+end
+function MapScene:IsFingerOn()
+    return self.event_manager:TouchCounts() ~= 0
 end
 function MapScene:OnSceneMove()
     self.top_layer:pos(self.scene_layer:getPosition())

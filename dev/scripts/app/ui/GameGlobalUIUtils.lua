@@ -66,7 +66,7 @@ function GameGlobalUIUtils:showAllianceNotice(key,params)
     local notice_content = Localize.alliance_notice[key]
     if key == "attackVillage" then
         dump(params,"showAllianceNotice attackVillage")
-        if Alliance_Manager:GetMyAlliance():Id() == params[2] then
+        if Alliance_Manager:GetMyAlliance().id == params[2] then
             notice_content = notice_content[1]
         else
             notice_content = notice_content[2]

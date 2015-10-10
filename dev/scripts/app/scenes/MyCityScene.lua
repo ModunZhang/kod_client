@@ -37,7 +37,6 @@ function MyCityScene:onEnter()
 
 
     local alliance = Alliance_Manager:GetMyAlliance()
-    local alliance_map = alliance:GetAllianceMap()
     alliance:AddListenOnType(self, alliance.LISTEN_TYPE.OPERATION)
 
 

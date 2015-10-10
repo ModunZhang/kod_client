@@ -317,7 +317,7 @@ end
 
 function AllianceShrine:GetShireObjectFromMap()
     local object
-    self:GetAlliance():GetAllianceMap():IteratorAllianceBuildings(function(__,map_obj)
+    self:GetAlliance():IteratorAllianceBuildings(function(__,map_obj)
         if map_obj.name == 'shrine' then
             object = map_obj
             return true

@@ -25,7 +25,6 @@ function AllianceScene:onEnter()
     self:GetSceneLayer():ZoomTo(0.82)
     self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
     self:GetAlliance():AddListenOnType(self, Alliance.LISTEN_TYPE.OPERATION)
-    local alliance_map = self:GetAlliance():GetAllianceMap()
 
     local alliance_key = DataManager:getUserData()._id.."_SHOW_REGION_TIPS"
     if not app:GetGameDefautlt():getBasicInfoValueForKey(alliance_key) then
@@ -66,7 +65,7 @@ function AllianceScene:GetPreloadImages()
     }
 end
 function AllianceScene:GotoCurrentPosition()
-    local mapObject = self:GetAlliance():GetAllianceMap():FindMapObjectById(self:GetAlliance():GetSelf():MapId())
+    local mapObject = self:GetAlliance():FindMapObjectById(self:GetAlliance():GetSelf():MapId())
     local location = mapObject.location
     self:GotoPosition(location.x, location.y)
 end
@@ -135,8 +134,7 @@ function AllianceScene:OnTouchClicked(pre_x, pre_y, x, y)
                 local x,y = building:GetEntity():GetLogicPosition()
                 local mapObj = self.alliance_obj_to_move.obj
 
-                local can_move,squares,out_x,out_y = self:GetAlliance()
-                    :GetAllianceMap()
+                local can_move,squares,out_x,out_y = self:GetAlliance():GetAllianceMap()
                     :CanMoveBuilding(mapObj, x, y)
 
                 self:PromiseOfShowPlaceInfo(squares, x, y):next(function()
@@ -179,7 +177,7 @@ function AllianceScene:PromiseOfShowPlaceInfo(squares, lx, ly)
     return p
 end
 function AllianceScene:OpenUI(entity)
-    if entity:GetType() ~= "building" then
+    if Alliance:GetMapObjectType(entity) ~= "building" then
         self:EnterNotAllianceBuilding(entity)
     else
         self:EnterAllianceBuilding(entity)
@@ -208,7 +206,7 @@ function AllianceScene:EnterAllianceBuilding(entity)
         self:LeaveEditMode()
     else
         local isMyAlliance = true
-        local building_info = entity:GetAllianceBuildingInfo()
+        local building_info = self:GetAlliance():FindAllianceBuildingInfoByObjects(entity)
         local building_name = building_info.name
         local class_name = ""
         if building_name == 'shrine' then
@@ -231,7 +229,7 @@ end
 
 function AllianceScene:EnterNotAllianceBuilding(entity)
     local isMyAlliance = true
-    local type_ = entity:GetType()
+    local type_ = Alliance:GetMapObjectType(entity)
     local class_name = ""
     if not self:IsEditMode() then
         if type_ == 'none' then
@@ -244,11 +242,11 @@ function AllianceScene:EnterNotAllianceBuilding(entity)
         elseif type_ == 'village' then
             app:GetAudioManager():PlayBuildingEffectByType("warehouse")
             class_name = "GameUIAllianceVillageEnter"
-            if not entity:GetAllianceVillageInfo() then -- 废墟
+            if not self:GetAlliance():FindAllianceVillagesInfoByObject(entity) then -- 废墟
                 class_name = "GameUIAllianceRuinsEnter"
             end
         elseif type_ == 'monster' then
-            if not entity:GetAllianceMonsterInfo() then
+            if not self:GetAlliance():FindAllianceMonsterInfoByObject(entity) then
                 return
             end
             class_name = "GameUIAllianceMosterEnter"
@@ -256,7 +254,7 @@ function AllianceScene:EnterNotAllianceBuilding(entity)
         UIKit:newGameUI(class_name,entity,isMyAlliance,self:GetAlliance()):AddToCurrentScene(true)
     else
         if type_ == 'none' then
-            local x,y = entity:GetLogicPosition()
+            local x,y = Alliance:GetLogicPositionWithMapObj(entity)
             self:CheckCanMoveAllianceObject(x,y)
         else
             self:LeaveEditMode()

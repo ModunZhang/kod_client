@@ -101,6 +101,8 @@ end
 function GameUIAlliance:RefreshMainUI()
     self:Reset()
     self.main_content:removeAllChildren()
+    print("========>", Alliance_Manager:GetMyAlliance()._id)
+    print("Alliance_Manager:GetMyAlliance()._id", Alliance_Manager:GetMyAlliance()._id)
     if Alliance_Manager:GetMyAlliance():IsDefault() then
         self:CreateNoAllianceUI()
     else
@@ -799,7 +801,6 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
         size = 22,
         color = 0xffedae,
     }):addTo(events_title):align(display.CENTER,events_title:getContentSize().width/2,events_title:getContentSize().height/2)
-
     local headerBg  = WidgetUIBackGround.new({height=376,isFrame="yes"}):addTo(overviewNode,-1)
         :pos(16,events_title:getPositionY()+events_title:getContentSize().height+10)
     local titileBar = display.newScale9Sprite("title_blue_430x30.png",0,0, cc.size(438,30), cc.rect(10,10,410,10))
@@ -812,6 +813,7 @@ function GameUIAlliance:HaveAlliaceUI_overviewIf()
     local flag_box = display.newScale9Sprite("alliance_item_flag_box_126X126.png"):size(134,134)
         :align(display.TOP_LEFT,20, headerBg:getContentSize().height - 20):addTo(headerBg)
     self.flag_box = flag_box
+
     self.ui_overview.nameLabel = UIKit:ttfLabel({
         text = string.format("[%s] %s",Alliance_Manager:GetMyAlliance().basicInfo.tag,Alliance_Manager:GetMyAlliance().basicInfo.name),
         size = 24,
