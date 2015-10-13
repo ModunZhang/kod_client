@@ -94,7 +94,6 @@ function GameUIAllianceShop:OnMoveInStage()
     self.alliance:GetItemsManager():AddListenOnType(self,AllianceItemsManager.LISTEN_TYPE.ITEM_CHANGED)
     self.alliance:GetItemsManager():AddListenOnType(self,AllianceItemsManager.LISTEN_TYPE.ITEM_LOGS_CHANGED)
     self.alliance:AddListenOnType(self, "basicInfo")
-    User:AddListenOnType(self,User.LISTEN_TYPE.ALLIANCE_INFO)
 end
 function GameUIAllianceShop:CreateBetweenBgAndTitle()
     GameUIAllianceShop.super.CreateBetweenBgAndTitle(self)
@@ -108,7 +107,6 @@ function GameUIAllianceShop:CreateBetweenBgAndTitle()
 end
 function GameUIAllianceShop:onExit()
     self.alliance:RemoveListenerOnType(self, "basicInfo")
-    User:RemoveListenerOnType(self,User.LISTEN_TYPE.ALLIANCE_INFO)
     self.alliance:GetItemsManager():RemoveListenerOnType(self,AllianceItemsManager.LISTEN_TYPE.ITEM_CHANGED)
     self.alliance:GetItemsManager():RemoveListenerOnType(self,AllianceItemsManager.LISTEN_TYPE.ITEM_LOGS_CHANGED)
     GameUIAllianceShop.super.onExit(self)
@@ -525,9 +523,6 @@ function GameUIAllianceShop:OnBuildingInfoChange(building)
             self:InitStockPart()
         end
     end
-end
-function GameUIAllianceShop:OnAllianceInfoChanged()
-    self.honourAndLoyalty:SetLoyalty(User:Loyalty())
 end
 function GameUIAllianceShop:OnAllianceDataChanged_basicInfo(alliance,deltaData)
     local ok, value = deltaData("basicInfo.honour")

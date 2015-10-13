@@ -90,7 +90,7 @@ function GameUIAllianceContribute:RemoveIsOpenObserver( listener )
 end
 function GameUIAllianceContribute:onEnter()
     City:GetResourceManager():AddObserver(self)
-    User:AddListenOnType(self, User.LISTEN_TYPE.ALLIANCE_DONATE)
+    User:AddListenOnType(self, "allianceDonate")
 end
 
 function GameUIAllianceContribute:onExit()
@@ -99,7 +99,7 @@ function GameUIAllianceContribute:onExit()
         listener:UIAllianceContributeClose()
     end)
     City:GetResourceManager():RemoveObserver(self)
-    User:RemoveListenerOnType(self, User.LISTEN_TYPE.ALLIANCE_DONATE)
+    User:RemoveListenerOnType(self, "allianceDonate")
 end
 function GameUIAllianceContribute:GetDonateValueByType(donate_type)
     if not donate_type then return end
@@ -354,7 +354,7 @@ function GameUIAllianceContribute:OnResourceChanged(resource_manager)
     }
     self.group:RefreashAllOwn(owns)
 end
-function GameUIAllianceContribute:OnAllianceDonateChanged()
+function GameUIAllianceContribute:OnUserDataChanged_allianceDonate()
     local donate = {
         self:GetDonateValueByType("wood").count,
         self:GetDonateValueByType("stone").count,

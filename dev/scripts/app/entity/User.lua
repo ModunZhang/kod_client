@@ -13,14 +13,13 @@ User.LISTEN_TYPE = Enum(
     "vipEvents",
     "iapGifts",
     "growUpTasks",
+    "allianceDonate",
     "BASIC",
     "RESOURCE",
     "DALIY_QUEST_REFRESH",
     "NEW_DALIY_QUEST",
     "NEW_DALIY_QUEST_EVENT",
-    "DAILY_TASKS",
-    "ALLIANCE_DONATE",
-    "ALLIANCE_INFO")
+    "DAILY_TASKS")
 
 local BASIC = User.LISTEN_TYPE.BASIC
 local RESOURCE = User.LISTEN_TYPE.RESOURCE
@@ -37,6 +36,7 @@ property(User, "pveFights", {})
 property(User, "vipEvents", {})
 property(User, "buildings", {})
 property(User, "growUpTasks", {})
+property(User, "allianceDonate", {})
 property(User, "requestToAllianceEvents", {})
 property(User, "inviteToAllianceEvents", {})
 
@@ -77,14 +77,6 @@ property(User, "allianceInfo", {
     ironExp = 0,
     foodExp = 0,
     coinExp = 0,
-})
-property(User, "allianceDonate", {
-    wood = 1,
-    stone = 1,
-    food = 1,
-    iron = 1,
-    coin = 1,
-    gem = 1,
 })
 
 local intInit = GameDatas.PlayerInitData.intInit
@@ -392,11 +384,11 @@ function User:GetCollectLevelByType(collectType)
         end
     end
 end
-
-
 function User:Loyalty()
     return self.allianceInfo.loyalty
 end
+
+
 function User:HasAnyStength(num)
     return self:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()) >= (num or 1)
 end
@@ -472,6 +464,7 @@ local before_map = {
     countInfo = function()end,
     iapGifts = function()end,
     growUpTasks = function()end,
+    allianceDonate = function()end,
     vipEvents = function()
         City:GetResourceManager():UpdateByCity(City, app.timer:GetServerTime())
     end,
@@ -498,13 +491,13 @@ function User:OnUserDataChanged(userData, current_time, deltaData)
     self.vipEvents              = userData.vipEvents
     self.buildings              = userData.buildings
     self.growUpTasks            = userData.growUpTasks
+    self.allianceInfo           = userData.allianceInfo
+    self.allianceDonate         = userData.allianceDonate
     self.requestToAllianceEvents= userData.requestToAllianceEvents
     self.inviteToAllianceEvents = userData.inviteToAllianceEvents
 
     self:OnResourcesChangedByTime(userData, current_time, deltaData)
     self:OnBasicInfoChanged(userData, deltaData)
-    self:OnAllianceDonateChanged(userData, deltaData)
-    self:OnAllianceInfoChanged(userData, deltaData)
     self:OnApnStatusChanged(userData, deltaData)
     -- 每日任务
     self:OnDailyQuestsChanged(userData,deltaData)
@@ -674,21 +667,6 @@ function User:OnBasicInfoChanged(userData, deltaData)
     end
     return self
 end
-function User:OnAllianceInfoChanged( userData, deltaData )
-    local is_fully_update = deltaData == nil
-    local is_delta_update = not is_fully_update and deltaData.allianceInfo
-    if is_fully_update then
-        self.allianceInfo = clone(userData.allianceInfo)
-    end
-    if is_delta_update then
-        for i,v in pairs(deltaData.allianceInfo) do
-            self.allianceInfo[i] = v
-        end
-    end
-    self:NotifyListeneOnType(User.LISTEN_TYPE.ALLIANCE_INFO, function(listener)
-        listener:OnAllianceInfoChanged()
-    end)
-end
 function User:OnApnStatusChanged( userData, deltaData )
     local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.apnStatus
@@ -702,21 +680,6 @@ function User:OnApnStatusChanged( userData, deltaData )
             self.apnStatus[i] = v
         end
     end
-end
-function User:OnAllianceDonateChanged( userData, deltaData )
-    local is_fully_update = deltaData == nil
-    local is_delta_update = not is_fully_update and deltaData.allianceDonate
-    if is_fully_update then
-        self.allianceDonate = clone(userData.allianceDonate)
-    end
-    if is_delta_update then
-        for i,v in pairs(deltaData.allianceDonate) do
-            self.allianceDonate[i] = v
-        end
-    end
-    self:NotifyListeneOnType(User.LISTEN_TYPE.ALLIANCE_DONATE, function(listener)
-        listener:OnAllianceDonateChanged()
-    end)
 end
 function User:OnDailyQuestsChanged(userData, deltaData)
     local is_fully_update = deltaData == nil
