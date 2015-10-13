@@ -71,14 +71,13 @@ function WidgetChangeMap:GetWorldRect()
 end
 function WidgetChangeMap:onEnter()
     local my_allaince = Alliance_Manager:GetMyAlliance()
-    my_allaince:AddListenOnType(self, my_allaince.LISTEN_TYPE.BASIC)
-
+    my_allaince:AddListenOnType(self, "basicInfo")
 end
 function WidgetChangeMap:onExit()
     local my_allaince = Alliance_Manager:GetMyAlliance()
-    my_allaince:RemoveListenerOnType(self, my_allaince.LISTEN_TYPE.BASIC)
+    my_allaince:RemoveListenerOnType(self, "basicInfo")
 end
-function WidgetChangeMap:OnAllianceBasicChanged(alliance, deltaData)
+function WidgetChangeMap:OnAllianceDataChanged_basicInfo(alliance, deltaData)
     if Alliance_Manager:GetMyAlliance():IsDefault() then return end
     self:AddShrineOpenedIcon()
 end

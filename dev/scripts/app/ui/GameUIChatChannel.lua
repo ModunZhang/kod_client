@@ -710,7 +710,7 @@ function GameUIChatChannel:CreatePlayerMenu(event,chat)
                     end
                 else
                     if my_alliance:GetSelf():CanInvatePlayer() then
-                        if User:ServerId() ~= chat.serverId then
+                        if User.serverId ~= chat.serverId then
                             UIKit:showMessageDialog(_("提示"), _("不能邀请其他服务器的玩家"), function()end)
                         else
                             NetManager:getInviteToJoinAlliancePromise(chat.id):done(function()

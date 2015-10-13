@@ -93,7 +93,7 @@ function GameUIAllianceShop:OnMoveInStage()
     end):pos(window.cx, window.bottom + 34)
     self.alliance:GetItemsManager():AddListenOnType(self,AllianceItemsManager.LISTEN_TYPE.ITEM_CHANGED)
     self.alliance:GetItemsManager():AddListenOnType(self,AllianceItemsManager.LISTEN_TYPE.ITEM_LOGS_CHANGED)
-    self.alliance:AddListenOnType(self, self.alliance.LISTEN_TYPE.BASIC)
+    self.alliance:AddListenOnType(self, "basicInfo")
     User:AddListenOnType(self,User.LISTEN_TYPE.ALLIANCE_INFO)
 end
 function GameUIAllianceShop:CreateBetweenBgAndTitle()
@@ -107,10 +107,10 @@ function GameUIAllianceShop:CreateBetweenBgAndTitle()
     self.goods_record_layer = display.newLayer():addTo(self:GetView())
 end
 function GameUIAllianceShop:onExit()
+    self.alliance:RemoveListenerOnType(self, "basicInfo")
+    User:RemoveListenerOnType(self,User.LISTEN_TYPE.ALLIANCE_INFO)
     self.alliance:GetItemsManager():RemoveListenerOnType(self,AllianceItemsManager.LISTEN_TYPE.ITEM_CHANGED)
     self.alliance:GetItemsManager():RemoveListenerOnType(self,AllianceItemsManager.LISTEN_TYPE.ITEM_LOGS_CHANGED)
-    User:RemoveListenerOnType(self,User.LISTEN_TYPE.ALLIANCE_INFO)
-    self.alliance:RemoveListenerOnType(self, self.alliance.LISTEN_TYPE.BASIC)
     GameUIAllianceShop.super.onExit(self)
 end
 -- 荣耀值和忠诚值
@@ -529,7 +529,7 @@ end
 function GameUIAllianceShop:OnAllianceInfoChanged()
     self.honourAndLoyalty:SetLoyalty(User:Loyalty())
 end
-function GameUIAllianceShop:OnAllianceBasicChanged(alliance,deltaData)
+function GameUIAllianceShop:OnAllianceDataChanged_basicInfo(alliance,deltaData)
     local ok, value = deltaData("basicInfo.honour")
     if ok and self.honourAndLoyalty then
         self.honourAndLoyalty:SetHonour(value)

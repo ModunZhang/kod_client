@@ -27,6 +27,7 @@ require("app.utils.GameUtils")
 __init_localize_file__()
 require("app.datas.GameDatas")
 require("app.utils.DataUtils")
+require("app.utils.TaskUtils")
 require("app.utils.UIKit")
 require("app.utils.window")
 require("app.service.NetManager")
@@ -524,7 +525,7 @@ function MyApp:sendApnIdIf()
         token = string.sub(token,2,string.len(token)-1)
         token = string.gsub(token," ","")
     end
-    if token ~= User:ApnId() and string.len(token) > 0 then
+    if token ~= User.apnId and string.len(token) > 0 then
         NetManager:getSetApnIdPromise(token)
     end
 end
@@ -555,7 +556,7 @@ function MyApp:transactionObserver(event)
                 local openRewardIf = function()
                     local GameUIActivityRewardNew_instance = UIKit:GetUIInstance("GameUIActivityRewardNew")
                     if User and not GameUIActivityRewardNew_instance then
-                        local countInfo = User:GetCountInfo()
+                        local countInfo = User.countInfo
                         if countInfo.iapCount > 0 and not countInfo.isFirstIAPRewardsGeted then
                             UIKit:newGameUI("GameUIActivityRewardNew",4):AddToCurrentScene(true) -- 如果首充 弹出奖励界面
                         end

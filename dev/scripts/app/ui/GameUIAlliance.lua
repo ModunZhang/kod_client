@@ -35,7 +35,7 @@ function GameUIAlliance:ctor(default_tab)
     self.default_tab = default_tab or "join"
 end
 
-function GameUIAlliance:OnAllianceBasicChanged(alliance, deltaData)
+function GameUIAlliance:OnAllianceDataChanged_basicInfo(alliance, deltaData)
     if Alliance_Manager:GetMyAlliance():IsDefault() then return end
     if self.tab_buttons:GetSelectedButtonTag() == 'overview' then
         if deltaData("basicInfo.flag") then
@@ -49,35 +49,35 @@ function GameUIAlliance:OnAllianceBasicChanged(alliance, deltaData)
     end
 end
 
-function GameUIAlliance:OnJoinEventsChanged(alliance)
+function GameUIAlliance:OnAllianceDataChanged_joinRequestEvents(alliance)
 
 end
 
-function GameUIAlliance:OnEventsChanged(alliance)
+function GameUIAlliance:OnAllianceDataChanged_events(alliance)
     if self.tab_buttons:GetSelectedButtonTag() == 'overview' then
         print("OnEventsChanged======", "alliance")
         self:RefreshEventListView()
     end
 end
 
-function GameUIAlliance:OnMemberChanged(alliance)
+function GameUIAlliance:OnAllianceDataChanged_members(alliance)
     if self.tab_buttons:GetSelectedButtonTag() == 'overview' then
         self:RefreshOverViewUI()
     end
 end
 
-function GameUIAlliance:OnOperation(alliance,operation_type)
+function GameUIAlliance:OnAllianceDataChanged_operation(alliance,operation_type)
     self:RefreshMainUI()
 end
 
 function GameUIAlliance:AddListenerOfMyAlliance()
     local myAlliance = Alliance_Manager:GetMyAlliance()
-    myAlliance:AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
     -- join or quit
-    myAlliance:AddListenOnType(self, Alliance.LISTEN_TYPE.OPERATION)
-    myAlliance:AddListenOnType(self, Alliance.LISTEN_TYPE.MEMBER)
-    myAlliance:AddListenOnType(self, Alliance.LISTEN_TYPE.EVENTS)
-    myAlliance:AddListenOnType(self, Alliance.LISTEN_TYPE.JOIN_EVENTS)
+    myAlliance:AddListenOnType(self, "operation")
+    myAlliance:AddListenOnType(self, "basicInfo")
+    myAlliance:AddListenOnType(self, "members")
+    myAlliance:AddListenOnType(self, "events")
+    myAlliance:AddListenOnType(self, "joinRequestEvents")
 end
 
 function GameUIAlliance:Reset()
@@ -120,12 +120,11 @@ function GameUIAlliance:OnMoveOutStage()
         UIKit:NoWaitForNet()
     end
     local myAlliance = Alliance_Manager:GetMyAlliance()
-    myAlliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
-    -- join or quit
-    myAlliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.OPERATION)
-    myAlliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.MEMBER)
-    myAlliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.EVENTS)
-    myAlliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.JOIN_EVENTS)
+    myAlliance:RemoveListenerOnType(self, "operation")
+    myAlliance:RemoveListenerOnType(self, "basicInfo")
+    myAlliance:RemoveListenerOnType(self, "members")
+    myAlliance:RemoveListenerOnType(self, "events")
+    myAlliance:RemoveListenerOnType(self, "joinRequestEvents")
     GameUIAlliance.super.OnMoveOutStage(self)
 end
 
@@ -508,7 +507,7 @@ function GameUIAlliance:NoAllianceTabEvent_inviteIf()
 end
 
 function GameUIAlliance:RefreshInvateListView()
-    local list = User:InviteToAllianceEvents()
+    local list = User.inviteToAllianceEvents
     self.invateListView:removeAllItems()
     for i,v in ipairs(list) do
         local item = self:getCommonListItem_(self.COMMON_LIST_ITEM_TYPE.INVATE,v)
@@ -541,7 +540,7 @@ function GameUIAlliance:NoAllianceTabEvent_applyIf()
 end
 
 function GameUIAlliance:RefreshApplyListView()
-    local list = User:RequestToAllianceEvents()
+    local list = User.requestToAllianceEvents
     self.applyListView:removeAllItems()
     for i,v in ipairs(list) do
         local item = self:getCommonListItem_(self.COMMON_LIST_ITEM_TYPE.APPLY,v)

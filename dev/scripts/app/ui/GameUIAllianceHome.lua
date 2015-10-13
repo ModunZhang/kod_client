@@ -577,7 +577,7 @@ end
 function GameUIAllianceHome:OnBasicChanged()
     self.operation_button_order:getChildByTag(1):SetDefenceStatus()
 end
-function GameUIAllianceHome:OnAllianceBasicChanged(alliance,deltaData)
+function GameUIAllianceHome:OnAllianceDataChanged_basicInfo(alliance,deltaData)
     local ok_honour, new_honour = deltaData("basicInfo.honour")
     local ok_status, new_status = deltaData("basicInfo.status")
     local ok_name, new_name = deltaData("basicInfo.name")
@@ -607,7 +607,7 @@ function GameUIAllianceHome:OnAllianceBasicChanged(alliance,deltaData)
         self.self_flag = self_flag
     end
 end
-function GameUIAllianceHome:OnMemberChanged(alliance)
+function GameUIAllianceHome:OnAllianceDataChanged_members(alliance)
 -- local self_member = alliance:GetMemeberById(DataManager:getUserData()._id)
 -- self.page_top:SetLoyalty(GameUtils:formatNumber(self_member.loyalty))
 end

@@ -10,7 +10,7 @@ local WidgetFteMark = import("..widget.WidgetFteMark")
 local Sprite = import("..sprites.Sprite")
 local SoldierManager = import("..entity.SoldierManager")
 local User = import("..entity.User")
-local NotifyItem = import("..entity.NotifyItem")
+local NotifyItem = import("..utils.NotifyItem")
 local CityScene = import(".CityScene")
 local MyCityScene = class("MyCityScene", CityScene)
 local GameUIActivityRewardNew = import("..ui.GameUIActivityRewardNew")
@@ -29,24 +29,11 @@ function MyCityScene:onEnter()
     MyCityScene.super.onEnter(self)
     self.home_page = self:CreateHomePage()
 
-    self:GetCity():AddListenOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
-    self:GetCity():GetUser():AddListenOnType(self, User.LISTEN_TYPE.BASIC)
-    self:GetCity():GetSoldierManager():AddListenOnType(self, SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
-    self:GetCity():GetFirstBuildingByType("barracks"):AddBarracksListener(self)
-
-
-
     local alliance = Alliance_Manager:GetMyAlliance()
-    alliance:AddListenOnType(self, alliance.LISTEN_TYPE.OPERATION)
-
-
     self.firstJoinAllianceRewardGeted = DataManager:getUserData().countInfo.firstJoinAllianceRewardGeted
-
     if not UIKit:GetUIInstance('GameUIWarSummary') and alliance:LastAllianceFightReport() then
         UIKit:newGameUI("GameUIWarSummary"):AddToCurrentScene(true)
     end
-
-
     self:RefreshStrenth()
     -- cc.ui.UIPushButton.new({normal = "lock_btn.png",pressed = "lock_btn.png"})
     -- :addTo(self, 1000000):align(display.RIGHT_TOP, display.width, display.height)
@@ -61,9 +48,14 @@ function MyCityScene:onEnter()
     --     align = cc.TEXT_ALIGNMENT_CENTER,
     -- }):addTo(self, 1000000)
     -- :align(display.RIGHT_TOP, display.width, display.height)
+
+    self:GetCity():AddListenOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
+    self:GetCity():GetUser():AddListenOnType(self, User.LISTEN_TYPE.BASIC)
+    self:GetCity():GetSoldierManager():AddListenOnType(self, SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
+    self:GetCity():GetFirstBuildingByType("barracks"):AddBarracksListener(self)
+    alliance:AddListenOnType(self, "operation")
 end
 function MyCityScene:onExit()
-    self:GetCity():GetUser():RemoveListenerOnType(self, User.LISTEN_TYPE.BASIC)
     self.home_page = nil
     MyCityScene.super.onExit(self)
 end
@@ -227,7 +219,7 @@ end
 function MyCityScene:GetHomePage()
     return self.home_page
 end
-function MyCityScene:OnOperation(alliance, op)
+function MyCityScene:OnAllianceDataChanged_operation(alliance, op)
     if op == "join" and
         Alliance_Manager:HasBeenJoinedAlliance() and
         not self.firstJoinAllianceRewardGeted

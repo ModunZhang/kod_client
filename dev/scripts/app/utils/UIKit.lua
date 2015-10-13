@@ -325,8 +325,8 @@ function UIKit:getImageByBuildingType( building_type ,level)
         else
             return "miner_3_326x307.png"
         end
-    elseif building_type=="moonGate" then
-        return UILib.alliance_building.moonGate
+    elseif building_type=="watchTower" then
+        return UILib.alliance_building.watchTower
     elseif building_type=="orderHall" then
         return UILib.alliance_building.orderHall
     elseif building_type=="palace" then
@@ -1230,9 +1230,11 @@ function UIKit:CreateDragonFlyNeg45Ani(ani)
     return createAniWithConfig(ani, dragon_fly_neg_45_ani[ani], "flying_-45")
 end
 function UIKit:CreateSoldierMove45Ani(ani)
+    print(ani, soldier_move_45_ani[ani])
     return createAniWithConfig(ani, soldier_move_45_ani[ani], "move_45")
 end
 function UIKit:CreateSoldierMoveNeg45Ani(ani)
+    print(ani, soldier_move_neg_45_ani[ani])
     return createAniWithConfig(ani, soldier_move_neg_45_ani[ani], "move_-45")
 end
 function UIKit:GetSoldierMoveAniConfig(ani, act)
@@ -1243,6 +1245,162 @@ function UIKit:GetSoldierMoveAniConfig(ani, act)
     else
         assert(false)
     end
+end
+local function GetDirIndexByDegree(degree)
+    local index = math.floor(degree / 45) + 4
+    if index < 0 or index > 8 then return 1 end
+    return index
+end
+local dragon_dir_map = {
+    [0] = {"flying_45", -1}, -- x-,y+
+    {"flying_45", -1}, -- x-,y+
+    {"flying_-45", -1}, -- x-
+
+    {"flying_-45", -1}, -- x-,y-
+    {"flying_-45", 1}, -- y+
+    {"flying_-45", 1}, -- x+,y+
+
+    {"flying_45", 1}, -- x+
+    {"flying_45", 1}, -- x+,y-
+    {"flying_45", 1}, -- y-
+}
+function UIKit:CreateDragonByDegree(degree, s)
+    local node = display.newNode():scale(s or 1)
+    local ani_name, scalex = unpack(dragon_dir_map[GetDirIndexByDegree(degree)])
+    local dragon_ani = UILib.dragon_animations[dragonType or "redDragon"][1]
+    if ani_name == "flying_45" then
+        UIKit:CreateDragonFly45Ani(dragon_ani):addTo(node):setScaleX(scalex)
+    elseif ani_name == "flying_-45" then
+        UIKit:CreateDragonFlyNeg45Ani(dragon_ani):addTo(node):setScaleX(scalex)
+    end
+    return node
+end
+local soldier_dir_map = {
+    [0] = {"move_45", - 1}, -- x-,y+
+    {"move_45", - 1}, -- x-,y+
+    {"move_-45", - 1}, -- x-
+
+    {"move_-45", - 1}, -- x-,y-
+    {"move_-45", 1}, -- y+
+    {"move_-45", 1}, -- x+,y+
+
+    {"move_45", 1}, -- x+
+    {"move_45", 1}, -- x+,y-
+    {"move_45", 1}, -- y-
+}
+local soldier_config = {
+    ----
+    ["swordsman"] = {
+        count = 4,
+        {"bubing_1"},
+        {"bubing_2"},
+        {"bubing_3"},
+    },
+    ["ranger"] = {
+        count = 4,
+        {"gongjianshou_1"},
+        {"gongjianshou_2"},
+        {"gongjianshou_3"},
+    },
+    ["lancer"] = {
+        count = 2,
+        {"qibing_1"},
+        {"qibing_2"},
+        {"qibing_3"},
+    },
+    ["catapult"] = {
+        count = 1,
+        {  "toushiche"},
+        {"toushiche_2"},
+        {"toushiche_3"},
+    },
+
+    -----
+    ["sentinel"] = {
+        count = 4,
+        {"shaobing_1"},
+        {"shaobing_2"},
+        {"shaobing_3"},
+    },
+    ["crossbowman"] = {
+        count = 4,
+        {"nugongshou_1"},
+        {"nugongshou_2"},
+        {"nugongshou_3"},
+    },
+    ["horseArcher"] = {
+        count = 2,
+        {"youqibing_1"},
+        {"youqibing_2"},
+        {"youqibing_3"},
+    },
+    ["ballista"] = {
+        count = 1,
+        {"nuche_1"},
+        {"nuche_2"},
+        {"nuche_3"},
+    },
+    ----
+    ["skeletonWarrior"] = {
+        count = 4,
+        {"kulouyongshi"},
+        {"kulouyongshi"},
+        {"kulouyongshi"},
+    },
+    ["skeletonArcher"] = {
+        count = 4,
+        {"kulousheshou"},
+        {"kulousheshou"},
+        {"kulousheshou"},
+    },
+    ["deathKnight"] = {
+        count = 2,
+        {"siwangqishi"},
+        {"siwangqishi"},
+        {"siwangqishi"},
+    },
+    ["meatWagon"] = {
+        count = 1,
+        {"jiaorouche"},
+        {"jiaorouche"},
+        {"jiaorouche"},
+    },
+}
+local len = 30
+local location_map = {
+    [1] = {
+        {0, 0},
+    },
+    [2] = {
+        {0, len * 0.5},
+        {0, - len * 0.5},
+    },
+    [4] = {
+        {len * 0.5, len * 0.5},
+        {- len * 0.5, len * 0.5},
+        {len * 0.5, - len * 0.5},
+        {- len * 0.5, - len * 0.5},
+    },
+}
+local normal = GameDatas.Soldiers.normal
+local special = GameDatas.Soldiers.special
+function UIKit:CreateMoveSoldiers(degree, soldier, s)
+    local star = special[soldier.name] and 1 or (soldier.star or 1)
+    local config = soldier_config[soldier.name]
+    local soldier_ani_name = unpack(config[star])
+    local action_name, scalex = unpack(soldier_dir_map[GetDirIndexByDegree(degree)])
+    local create_function
+    if action_name == "move_45" then
+        create_function = UIKit.CreateSoldierMove45Ani
+    elseif action_name == "move_-45" then
+        create_function = UIKit.CreateSoldierMoveNeg45Ani
+    end
+    local node = display.newNode():scale(s or 1)
+    for _,v in ipairs(location_map[config.count]) do
+        create_function(UIKit, soldier_ani_name):addTo(node)
+        :pos(unpack(v)):setScaleX(scalex)
+    end
+    return node
 end
 function UIKit:CreateNameBanner(name, dragon_type)
     local node = display.newNode()
@@ -1497,6 +1655,7 @@ function UIKit:CreateSand()
     end, 2 + math.random(3))
     return emitter
 end
+
 
 
 

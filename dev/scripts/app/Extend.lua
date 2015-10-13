@@ -342,6 +342,11 @@ function display.newScene(name)
     end
     return scene
 end
+local Node = cc.Node
+function Node:scheduleAt(callback, interval)
+    callback()
+    return self:schedule(callback, interval)
+end
 
 display.__newLayer = display.newLayer
 

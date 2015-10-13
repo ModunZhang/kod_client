@@ -29,7 +29,7 @@ local titles = {
 
 function GameUIActivityNew:ctor(city)
 	GameUIActivityNew.super.ctor(self,city, _("活动"))
-	local countInfo = User:GetCountInfo()
+	local countInfo = User.countInfo
 	self.player_level_up_time = countInfo.registerTime/1000 + config_intInit.playerLevelupRewardsHours.value * 60 * 60 -- 单位秒
 	app.timer:AddListener(self)
 end
@@ -37,10 +37,8 @@ end
 
 function GameUIActivityNew:onCleanup()
 	app.timer:RemoveListener(self)
-	User:RemoveListenerOnType(self,User.LISTEN_TYPE.COUNT_INFO)
-	User:RemoveListenerOnType(self,User.LISTEN_TYPE.IAP_GIFTS_REFRESH)
-    User:RemoveListenerOnType(self,User.LISTEN_TYPE.IAP_GIFTS_CHANGE)
-    User:RemoveListenerOnType(self,User.LISTEN_TYPE.IAP_GIFTS_TIMER)
+	User:RemoveListenerOnType(self, "countInfo")
+	User:RemoveListenerOnType(self, "iapGifts")
 	GameUIActivityNew.super.onCleanup(self)
 end
 
@@ -85,7 +83,7 @@ function GameUIActivityNew:CreateTabIf_activity()
 	    list:onTouch(handler(self, self.OnActivityListViewTouch))
 	    self.activity_list_view = list
 	    self:RefreshActivityListView()
-	    User:AddListenOnType(self,User.LISTEN_TYPE.COUNT_INFO)
+	    User:AddListenOnType(self, "countInfo")
 	end
 	self:RefreshActivityListView()
 	return self.activity_list_view
@@ -93,7 +91,7 @@ end
 
 function GameUIActivityNew:RefreshActivityListView()
 	self.activity_list_view:removeAllItems()
-	local countInfo = User:GetCountInfo()
+	local countInfo = User.countInfo
 	local item = self:GetActivityItem(self.ITEMS_TYPE.EVERY_DAY_LOGIN)
 	self.activity_list_view:addItem(item)
 	--
@@ -114,7 +112,7 @@ end
 
 function GameUIActivityNew:CheckFinishAllLevelUpActiIf()
 	local checkLevelInUserCountInfoRewards = function(level)
-		local countInfo = User:GetCountInfo()
+		local countInfo = User.countInfo
 		for __,v in ipairs(countInfo.levelupRewards) do
 			if v == level then
 				return true
@@ -130,8 +128,13 @@ function GameUIActivityNew:CheckFinishAllLevelUpActiIf()
 	end
 	return true
 end
-
-function GameUIActivityNew:OnCountInfoChanged()
+function GameUIActivityNew:OnUserDataChanged_iapGifts(changed_map)
+	self:RefreshAwardCountTips()
+	if self.award_list and self.tab_buttons:GetSelectedButtonTag() == 'award' then
+		self:RefreshAwardList()
+	end
+end
+function GameUIActivityNew:OnUserDataChanged_countInfo()
 	self:RefreshActivityListView()
 end
 
@@ -171,7 +174,7 @@ function GameUIActivityNew:GetFirstPurgureTips()
 end
 
 function GameUIActivityNew:GetActivityItem(item_type)
-	local countInfo = User:GetCountInfo()
+	local countInfo = User.countInfo
 	local item = self.activity_list_view:newItem()
 	item.item_type = item_type
 	local bg = display.newSprite("activity_bg_612x198.png")
@@ -318,9 +321,7 @@ function GameUIActivityNew:CreateTabIf_award()
 	    self.award_list = list
 	    self.award_list_view = list_node
 	    self.award_list:setDelegate(handler(self, self.sourceDelegateAwardList))
-	    User:AddListenOnType(self,User.LISTEN_TYPE.IAP_GIFTS_REFRESH)
-	    User:AddListenOnType(self,User.LISTEN_TYPE.IAP_GIFTS_CHANGE)
-	    User:AddListenOnType(self,User.LISTEN_TYPE.IAP_GIFTS_TIMER)
+	    User:AddListenOnType(self, "iapGifts")
 	end
 	self:RefreshAwardList()
 	return self.award_list_view
@@ -329,59 +330,50 @@ end
 function GameUIActivityNew:RefreshAwardList()
 	self:RefreshAwardListDataSource()
 	self.award_list:reload()
+	self.award_list:stopAllActions()
+	self.award_list:scheduleAt(function()
+		for k,v in pairs(User.iapGifts) do
+			self:OnIapGiftTimer(v)
+		end
+	end, 1)
 end
 
 function GameUIActivityNew:RefreshAwardListDataSource()
 	self.award_dataSource = {}
 	self.award_logic_index_map = {}
 	local data = {}
-	for __,v in pairs(User:GetIapGifts()) do
+	for __,v in pairs(User.iapGifts) do
 		table.insert(data,v)
 	end
 
 	table.sort( data,function(a,b)
-		return a:Time() > b:Time()
+		return User:GetIapGiftTime(a) > User:GetIapGiftTime(b)
 	end)
 	for index,v in ipairs(data) do
-		self.award_logic_index_map[v:Id()] = index
+		self.award_logic_index_map[v.id] = index
 		table.insert(self.award_dataSource,v)
 	end
 end
 
 function GameUIActivityNew:RefreshAwardCountTips()
 	if self.tab_buttons then
-		local count = LuaUtils:table_size(User:GetIapGifts())
-		self.tab_buttons:SetButtonTipNumber('award',count)
+		self.tab_buttons:SetButtonTipNumber('award', #User.iapGifts)
 	end
 end
-
-function GameUIActivityNew:OnIapGiftsRefresh()
-	self:RefreshAwardCountTips()
-	if self.award_list and self.tab_buttons:GetSelectedButtonTag() == 'award' then
-		self:RefreshAwardList()
-	end
-end
-
-function GameUIActivityNew:OnIapGiftsChanged(changed_map)
-	self:RefreshAwardCountTips()
-	if self.award_list and self.tab_buttons:GetSelectedButtonTag() == 'award' then
-		self:RefreshAwardList()
-	end
-end
-
 
 function GameUIActivityNew:OnIapGiftTimer(iapGift)
 	if not self.award_logic_index_map then return end
-	local index = self.award_logic_index_map[iapGift:Id()]
+	local index = self.award_logic_index_map[iapGift.id]
 	local item = self.award_list:getItemWithLogicIndex(index)
 	if not item then return end
 	local content = item:getContent()
-	if iapGift:GetTime() >= 0 then
+	local time = User:GetIapGiftTime(iapGift)
+	if time >= 0 then
 		content.time_out_label:hide()
 		if content.red_btn then
 			content.red_btn:hide()
 		end
-		content.time_label:setString(GameUtils:formatTimeStyle1(iapGift:GetTime()))
+		content.time_label:setString(GameUtils:formatTimeStyle1(time))
 		content.time_label:show()
 		content.time_desc_label:show()
 		if content.yellow_btn then
@@ -478,14 +470,15 @@ function GameUIActivityNew:FillAwardItemContent(content,data,idx)
 	local str = "[{\"type\":\"text\", \"value\":\"%s\"},{\"type\":\"text\",\"color\":0x076886,\"value\":\"%s\"},{\"type\":\"text\", \"value\":\"%s\"}]"
 	str = string.format(str,_("盟友"),data.from,_("赠送!"))
 	content.contenet_label:Text(str):align(display.LEFT_BOTTOM,115,67)
-	content.time_label:setString(GameUtils:formatTimeStyle1(data:GetTime()))
+	local time = User:GetIapGiftTime(data)
+	content.time_label:setString(GameUtils:formatTimeStyle1(time))
 	if content.yellow_btn then
 		content.yellow_btn:removeSelf()
 	end
 	if content.red_btn then
 		content.red_btn:removeSelf()
 	end
-	if data:GetTime() < 0 then
+	if time < 0 then
 		content.time_label:hide()
 		content.time_desc_label:hide()
 		content.time_out_label:show()
@@ -527,8 +520,8 @@ end
 function GameUIActivityNew:OnAwardButtonClicked(idx)
 	local data = self.award_dataSource[idx]
 	if data then
-		NetManager:getIapGiftPromise(data:Id()):done(function()
-			if data:GetTime() > 0 then
+		NetManager:getIapGiftPromise(data.id):done(function()
+			if User:GetIapGiftTime(data) > 0 then
 				GameGlobalUI:showTips(_("提示"),Localize_item.item_name[data:Name()] .. " x" .. data:Count())
 				app:GetAudioManager():PlayeEffectSoundWithKey("BUY_ITEM")
 			end

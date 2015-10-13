@@ -278,7 +278,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
             :addTo(award_bg1)
             :scale(45/128)
         UIKit:ttfLabel({
-            text = "+"..string.formatnumberthousands(GameDatas.AllianceInitData.fightRewards[User:ServerLevel()].honour),
+            text = "+"..string.formatnumberthousands(GameDatas.AllianceInitData.fightRewards[User.serverLevel].honour),
             size = 22,
             color = 0x90e300,
         }):addTo(award_bg1,2)
@@ -288,7 +288,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
             :addTo(award_bg2)
             :scale(0.7)
         UIKit:ttfLabel({
-            text = "+"..string.formatnumberthousands(GameDatas.AllianceInitData.fightRewards[User:ServerLevel()].gem),
+            text = "+"..string.formatnumberthousands(GameDatas.AllianceInitData.fightRewards[User.serverLevel].gem),
             size = 22,
             color = 0x90e300,
         }):addTo(award_bg2)
@@ -439,7 +439,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
                 :addTo(honour_bg,2)
                 :scale(50/128)
             UIKit:ttfLabel({
-                text = "+"..string.formatnumberthousands(GameDatas.AllianceInitData.fightRewards[User:ServerLevel()].honour),
+                text = "+"..string.formatnumberthousands(GameDatas.AllianceInitData.fightRewards[User.serverLevel].honour),
                 size = 22,
                 color = 0x90e300,
             }):addTo(honour_bg,2)
@@ -452,7 +452,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
                 :addTo(gem_bg,2)
                 :scale(0.7)
             UIKit:ttfLabel({
-                text = "+"..string.formatnumberthousands(GameDatas.AllianceInitData.fightRewards[User:ServerLevel()].gem),
+                text = "+"..string.formatnumberthousands(GameDatas.AllianceInitData.fightRewards[User.serverLevel].gem),
                 size = 22,
                 color = 0x90e300,
             }):addTo(gem_bg,2)

@@ -75,8 +75,8 @@ function GameUIHelp:onEnter()
         end):addTo(body):pos(rb_size.width/2, 50)
     help_all_button:setVisible(self:IsAbleToHelpAll())
     self.help_all_button = help_all_button
-    self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.HELP_EVENTS)
-    User:AddListenOnType(self, User.LISTEN_TYPE.COUNT_INFO)
+    self.alliance:AddListenOnType(self, "helpEvents")
+    User:AddListenOnType(self, "countInfo")
 end
 function GameUIHelp:IsAbleToHelpAll()
     for k,item in pairs(self.help_events_items) do
@@ -87,8 +87,8 @@ function GameUIHelp:IsAbleToHelpAll()
     return false
 end
 function GameUIHelp:SetLoyalty()
-    self.loyalty_label:setString(_("每日获得最大忠诚度：")..User:GetCountInfo().todayLoyaltyGet.."/"..intInit.maxLoyaltyGetPerDay.value)
-    self.ProgressTimer:setPercentage(math.floor(User:GetCountInfo().todayLoyaltyGet/10000*100))
+    self.loyalty_label:setString(_("每日获得最大忠诚度：")..User.countInfo.todayLoyaltyGet.."/"..intInit.maxLoyaltyGetPerDay.value)
+    self.ProgressTimer:setPercentage(math.floor(User.countInfo.todayLoyaltyGet/10000*100))
 end
 function GameUIHelp:InitHelpEvents()
     local help_events = self.alliance:GetCouldShowHelpEvents()
@@ -309,16 +309,16 @@ function GameUIHelp:CreateHelpItem(event)
 
     return item
 end
-function GameUIHelp:OnHelpEventChanged()
+function GameUIHelp:OnAllianceDataChanged_helpEvents()
     self:InitHelpEvents()
     self.help_all_button:setVisible(self:IsAbleToHelpAll())
 end
-function GameUIHelp:OnCountInfoChanged()
+function GameUIHelp:OnUserDataChanged_countInfo()
     self:SetLoyalty()
 end
 function GameUIHelp:onExit()
-    self.alliance:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.HELP_EVENTS)
-    User:RemoveListenerOnType(self, User.LISTEN_TYPE.COUNT_INFO)
+    self.alliance:RemoveListenerOnType(self, "helpEvents")
+    User:RemoveListenerOnType(self, "countInfo")
 end
 
 return GameUIHelp

@@ -559,11 +559,24 @@ local logic_event_map = {
         if DataManager:hasUserData() then
             local user_alliance_data = DataManager:getUserAllianceData()
             if response.targetAllianceId == user_alliance_data._id then
-                LuaUtils:outputTable("onAllianceDataChanged", response.data)
                 local edit = decodeInUserDataFromDeltaData(user_alliance_data, response.data)
                 DataManager:setUserAllianceData(user_alliance_data, edit)
+                LuaUtils:outputTable("onAllianceDataChanged", edit)
+                return
             end
         end
+
+        local allianceData = Alliance_Manager:GetAllianceByCache(response.targetAllianceId)
+        if allianceData then
+            local edit = decodeInUserDataFromDeltaData(allianceData, response.data)
+            Alliance_Manager:OnAllianceMapChanged(allianceData, edit)
+            LuaUtils:outputTable("OnAllianceMapChanged", edit)
+        end
+    end,
+    onMapDataChanged = function(success, response)
+        local edit = decodeInUserDataFromDeltaData(Alliance_Manager:GetMapData(), response)
+        Alliance_Manager:OnMapDataChanged(edit)
+        LuaUtils:outputTable("onMapDataChanged", edit)
     end,
     onJoinAllianceSuccess = function(success, response)
         if not NetManager.m_was_inited_game then return end
@@ -1503,7 +1516,7 @@ function NetManager:getStrikePlayerCityPromise(dragonType,defencePlayerId)
         "突袭玩家城市失败!"):done(get_player_response_msg)
 end
 --攻打玩家城市
-function NetManager:getAttackPlayerCityPromise(dragonType, soldiers, defencePlayerId, defenceAllianceId)
+function NetManager:getAttackPlayerCityPromise(dragonType, soldiers, defenceAllianceId, defencePlayerId)
     return get_blocking_request_promise("logic.allianceHandler.attackPlayerCity",
         {
             defenceAllianceId = defenceAllianceId,
@@ -1531,9 +1544,9 @@ function NetManager:getAttackVillagePromise(dragonType,soldiers,defenceAllianceI
         {defenceVillageId = defenceVillageId,defenceAllianceId=defenceAllianceId,dragonType=dragonType,soldiers = soldiers},"攻打村落失败!"):done(get_player_response_msg)
 end
 --从村落撤退
-function NetManager:getRetreatFromVillagePromise(allianceId,eventId)
+function NetManager:getRetreatFromVillagePromise(villageEventId)
     return get_blocking_request_promise("logic.allianceHandler.retreatFromVillage",
-        {villageEventId = eventId},"村落撤退失败!"):done(get_player_response_msg)
+        {villageEventId = villageEventId},"村落撤退失败!"):done(get_player_response_msg)
 end
 --进攻野怪
 function NetManager:getAttackMonsterPromise(dragonType,soldiers,defenceAllianceId,defenceMonsterId)

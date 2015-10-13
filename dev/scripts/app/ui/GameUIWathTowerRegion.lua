@@ -165,7 +165,7 @@ function GameUIWathTowerRegion:GetMyEventItemWithIndex(index,isOpen,entity)
         :addTo(bg)
         :align(display.LEFT_BOTTOM, 10, 19)
     if not isOpen then
-        local countInfo = User:GetCountInfo()
+        local countInfo = User.countInfo
         tile_label:setString(_("未解锁"))
         WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
             :setButtonLabel(

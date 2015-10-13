@@ -8,7 +8,6 @@ local WidgetFteArrow = import("..widget.WidgetFteArrow")
 local WidgetGrowUpTask = import('..widget.WidgetGrowUpTask')
 local WidgetBackGroundTabButtons = import('..widget.WidgetBackGroundTabButtons')
 local window = import("..utils.window")
-local GrowUpTaskManager = import("..entity.GrowUpTaskManager")
 local Enum = import("..utils.Enum")
 local scheduler = import(cc.PACKAGE_NAME .. ".scheduler")
 local UIScrollView = import(".UIScrollView")
@@ -30,16 +29,16 @@ function GameUIMission:ctor(city,mission_type, need_tips)
 end
 function GameUIMission:OnMoveInStage()
     self:CreateTabButtons()
-    self.city:GetUser():AddListenOnType(self, self.city:GetUser().LISTEN_TYPE.TASK)
+    self.city:GetUser():AddListenOnType(self, "growUpTasks")
     self.city:GetUser():AddListenOnType(self, self.city:GetUser().LISTEN_TYPE.DAILY_TASKS)
     GameUIMission.super.OnMoveInStage(self)
 end
 function GameUIMission:OnMoveOutStage()
-    self.city:GetUser():RemoveListenerOnType(self, self.city:GetUser().LISTEN_TYPE.TASK)
+    self.city:GetUser():RemoveListenerOnType(self, "growUpTasks")
     self.city:GetUser():RemoveListenerOnType(self, self.city:GetUser().LISTEN_TYPE.DAILY_TASKS)
     GameUIMission.super.OnMoveOutStage(self)
 end
-function GameUIMission:OnTaskChanged(user)
+function GameUIMission:OnUserDataChanged_growUpTasks()
     self:RefreshAchievementList()
 end
 function GameUIMission:CreateTabButtons()
@@ -273,11 +272,11 @@ end
 function GameUIMission:GetAchievementMissionData(isFinish)
     isFinish = type(isFinish) == 'boolean' and isFinish or false
     if isFinish then
-        local tasks = self.city:GetUser():GetTaskManager():GetFirstCompleteTasks()
+        local tasks = TaskUtils:GetFirstCompleteTasks(self.city:GetUser().growUpTasks)
         local i1, i2, i3 = unpack(tasks)
         return {i1, i2, i3}
     else
-        return self.city:GetUser():GetTaskManager():GetAvailableTasksGroup()
+        return TaskUtils:GetAvailableTasksGroup(self.city:GetUser().growUpTasks)
     end
 end
 function GameUIMission:OnGetAchievementRewardButtonClicked(data)
@@ -483,7 +482,7 @@ function GameUIMission:PromiseOfFte()
         :addTo(self:GetFteLayer())
         :TurnRight():align(display.RIGHT_CENTER, r.x - 10, r.y + r.height/2)
 
-    return self.city:GetUser():GetTaskManager():PromiseOfGetCityBuildRewards():next(function()
+    return self.city:GetUser():PromiseOfGetCityBuildRewards():next(function()
         return self:PromsieOfExit("GameUIMission")
     end)
 end

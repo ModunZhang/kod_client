@@ -18,7 +18,7 @@ local WidgetPushTransparentButton = import("..widget.WidgetPushTransparentButton
 function GameUIAllianceInfo:ctor(alliance_id,default_tab,serverId)
     GameUIAllianceInfo.super.ctor(self,710,_("联盟信息"),window.top - 140)
     self.alliance_id = alliance_id
-    self.serverId = serverId or User:ServerId()
+    self.serverId = serverId or User.serverId
     self.default_tab = default_tab or "Info"
     self.alliance_ui_helper = WidgetAllianceHelper.new()
 end
@@ -239,7 +239,7 @@ function GameUIAllianceInfo:LoadInfo()
         )
         :align(display.RIGHT_TOP,titleBg:getPositionX(),titleBg:getPositionY() - titleBg:getContentSize().height -10)
         :addTo(layer)
-    button:setButtonEnabled(Alliance_Manager:GetMyAlliance():IsDefault() and User:ServerId() ~= self.serverId )
+    button:setButtonEnabled(Alliance_Manager:GetMyAlliance():IsDefault() and User.serverId ~= self.serverId )
     button:onButtonClicked(function(event)
         self:OnJoinActionClicked(alliance_data.joinType,button)
     end)
@@ -265,7 +265,7 @@ end
 
 function GameUIAllianceInfo:OnJoinActionClicked(joinType,sender)
     if joinType == 'all' then --如果是直接加入
-        if User:ServerId() ~= self.serverId then
+        if User.serverId ~= self.serverId then
             UIKit:showMessageDialog(_("提示"),_("不能加入其他服务器的联盟"))
             return
         end
@@ -282,7 +282,7 @@ function GameUIAllianceInfo:OnJoinActionClicked(joinType,sender)
             self:LeftButtonClicked()
             end)
     else
-        if User:ServerId() ~= self.serverId then
+        if User.serverId ~= self.serverId then
             UIKit:showMessageDialog(_("提示"),_("不能申请加入其他服务器的联盟"))
             return
         end

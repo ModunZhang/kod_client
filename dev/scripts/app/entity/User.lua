@@ -1,81 +1,44 @@
 local Resource = import(".Resource")
-local VipEvent = import(".VipEvent")
 local Localize = import("..utils.Localize")
-local GrowUpTaskManager = import(".GrowUpTaskManager")
 local AutomaticUpdateResource = import(".AutomaticUpdateResource")
 local property = import("..utils.property")
-local TradeManager = import("..entity.TradeManager")
 local Enum = import("..utils.Enum")
 local MultiObserver = import(".MultiObserver")
 local User = class("User", MultiObserver)
 
 
-local total_stages = 0
-local tt = 0
-local stages = GameDatas.PvE.stages
-for k,v in pairs(stages) do
-    tt = tt + 1
-end
-for i = 1, tt do
-    if stages[string.format("%d_1", i)] then
-        total_stages = total_stages + 1
-    end
-end
-
-
-local sections = GameDatas.PvE.sections
-local pve_length = 0
-local index = 1
-while sections[string.format("1_%d", index)] do
-    pve_length = pve_length + 1
-    index = index + 1
-end
-
-
 User.LISTEN_TYPE = Enum(
+    "deals",
+    "countInfo",
+    "vipEvents",
+    "iapGifts",
+    "growUpTasks",
     "BASIC",
     "RESOURCE",
     "DALIY_QUEST_REFRESH",
     "NEW_DALIY_QUEST",
     "NEW_DALIY_QUEST_EVENT",
-    "VIP_EVENT",
-    "COUNT_INFO",
     "DAILY_TASKS",
-    "VIP_EVENT_OVER",
-    "VIP_EVENT_ACTIVE",
-    "IAP_GIFTS_REFRESH",
-    "IAP_GIFTS_CHANGE",
-    "IAP_GIFTS_TIMER",
-    "TASK",
     "ALLIANCE_DONATE",
     "ALLIANCE_INFO")
-local collect_type  = {"woodExp",
-    "stoneExp",
-    "ironExp",
-    "foodExp",
-    "coinExp"}
-local collect_exp_config  = {"wood",
-    "stone",
-    "iron",
-    "food",
-    "coin"}
-local COLLECT_TYPE = Enum("WOOD",
-    "STONE",
-    "IRON",
-    "FOOD",
-    "COIN")
-local TASK = User.LISTEN_TYPE.TASK
+
 local BASIC = User.LISTEN_TYPE.BASIC
 local RESOURCE = User.LISTEN_TYPE.RESOURCE
-local COUNT_INFO = User.LISTEN_TYPE.COUNT_INFO
 local config_playerLevel = GameDatas.PlayerInitData.playerLevel
 User.RESOURCE_TYPE = Enum("BLOOD", "COIN", "STRENGTH", "GEM", "RUBY", "BERYL", "SAPPHIRE", "TOPAZ")
 local GEM = User.RESOURCE_TYPE.GEM
 local STRENGTH = User.RESOURCE_TYPE.STRENGTH
-
-local intInit = GameDatas.PlayerInitData.intInit
-local vip_level = GameDatas.Vip.level
-local IapGift = import("..entity.IapGift")
+property(User, "basicInfo", {})
+property(User, "countInfo", {})
+property(User, "iapGifts", {})
+property(User, "deals", {})
+property(User, "pve", {})
+property(User, "pveFights", {})
+property(User, "vipEvents", {})
+property(User, "buildings", {})
+property(User, "growUpTasks", {})
+property(User, "requestToAllianceEvents", {})
+property(User, "inviteToAllianceEvents", {})
 
 property(User, "level", 1)
 property(User, "levelExp", 0)
@@ -99,11 +62,7 @@ property(User, "apnId", "")
 property(User, "gcId", "")
 property(User, "serverId", "")
 property(User, "serverLevel", "")
-property(User, "requestToAllianceEvents", {})
-property(User, "inviteToAllianceEvents", {})
--- pve
-property(User, "pve", {})
-property(User, "pveFights", {})
+
 
 property(User, "apnStatus", {
     onCityBeAttacked = true,
@@ -128,6 +87,7 @@ property(User, "allianceDonate", {
     gem = 1,
 })
 
+local intInit = GameDatas.PlayerInitData.intInit
 function User:ctor(p)
     User.super.ctor(self)
     self.resources = {
@@ -139,21 +99,49 @@ function User:ctor(p)
     -- 每日任务
     self.dailyQuests = {}
     self.dailyQuestEvents = {}
-    -- 交易管理器
-    self.trade_manager = TradeManager.new()
     if type(p) == "table" then
         self:SetId(p._id)
         self:OnBasicInfoChanged(p)
     else
         self:SetId(p)
     end
-    -- vip event
-    local vip_event = VipEvent.new()
-    vip_event:AddObserver(self)
-    self.vip_event = vip_event
     self.dailyTasks = {}
-    self.growUpTaskManger = GrowUpTaskManager.new()
-    self.iapGifts = {}
+end
+
+--[[multiobserver override]]
+function User:AddListenOnType(listener, listenerType)
+    if type(listenerType) == "string" then
+        listenerType = User.LISTEN_TYPE[listenerType]
+    end
+    User.super.AddListenOnType(self, listener, listenerType)
+end
+function User:RemoveListenerOnType(listener, listenerType)
+    if type(listenerType) == "string" then
+        listenerType = User.LISTEN_TYPE[listenerType]
+    end
+    User.super.RemoveListenerOnType(self, listener, listenerType)
+end
+--[[end]]
+
+--[[pve相关方法 begin]]
+local TOTAL_STAGES = 0
+local tt = 0
+local stages = GameDatas.PvE.stages
+for k,v in pairs(stages) do
+    tt = tt + 1
+end
+for i = 1, tt do
+    if stages[string.format("%d_1", i)] then
+        TOTAL_STAGES = TOTAL_STAGES + 1
+    end
+end
+
+local sections = GameDatas.PvE.sections
+local PVE_LENGTH = 0
+local index = 1
+while sections[string.format("1_%d", index)] do
+    PVE_LENGTH = PVE_LENGTH + 1
+    index = index + 1
 end
 function User:GetPveLeftCountByName(pve_name)
     return sections[pve_name].maxFightCount - self:GetFightCountByName(pve_name)
@@ -171,7 +159,7 @@ function User:IsPveBossPassed(pve_name)
 end
 function User:IsPveBoss(pve_name)
     local index, s_index = unpack(string.split(pve_name, "_"))
-    return tonumber(s_index) == pve_length
+    return tonumber(s_index) == PVE_LENGTH
 end
 function User:IsPveNameEnable(pve_name)
     local index, s_index = unpack(string.split(pve_name, "_"))
@@ -213,7 +201,7 @@ function User:GetStageStarByIndex(index)
     for i,v in ipairs(self:GetStageByIndex(index).sections or {}) do
         total_stars = total_stars + v
     end
-    return total_stars - ((self:GetStageByIndex(index).sections or {})[pve_length] or 0)
+    return total_stars - ((self:GetStageByIndex(index).sections or {})[PVE_LENGTH] or 0)
 end
 function User:IsStageRewardedByName(stage_name)
     local stage_index,index = unpack(string.split(stage_name, "_"))
@@ -231,10 +219,10 @@ function User:IsStageEnabled(index)
     return self:IsStagePassed(index - 1)
 end
 function User:IsStagePassed(index)
-    return #(self:GetStageByIndex(index).sections or {}) == pve_length
+    return #(self:GetStageByIndex(index).sections or {}) == PVE_LENGTH
 end
 function User:IsAllPassed()
-    return self:IsStagePassed(total_stages)
+    return self:IsStagePassed(TOTAL_STAGES)
 end
 function User:GetNextStageByPveName(pve_name)
     local stage_index,pve_index = unpack(string.split(pve_name, "_"))
@@ -242,13 +230,13 @@ function User:GetNextStageByPveName(pve_name)
 end
 function User:HasNextStageByPveName(pve_name)
     local stage_index,pve_index = unpack(string.split(pve_name, "_"))
-    return tonumber(stage_index) < total_stages
+    return tonumber(stage_index) < TOTAL_STAGES
 end
 function User:HasNextStageByIndex(index)
-    return index < total_stages
+    return index < TOTAL_STAGES
 end
 function User:GetStageTotalStars()
-    return (pve_length-1) * 3
+    return (PVE_LENGTH-1) * 3
 end
 function User:GetStageByIndex(index)
     return self.pve[index] or {}
@@ -258,8 +246,8 @@ function User:GetLatestPveIndex()
     if #self.pve == 0 then
         index = 1
     else
-        if #self.pve == total_stages then
-            index = total_stages
+        if #self.pve == TOTAL_STAGES then
+            index = TOTAL_STAGES
         else
             if self:IsStagePassed(#self.pve) then
                 index = #self.pve + 1
@@ -270,18 +258,102 @@ function User:GetLatestPveIndex()
     end
     return index
 end
-function User:IsBindGameCenter()
-    return self:GcId() ~= "" and self:GcId() ~= json.null
+--[[end]]
+
+--[[交易相关方法]]
+function User:GetMyDeals()
+    return self.deals
 end
-function User:GetCollectLevelByType(collectType)
-    local exp = self.allianceInfo[collect_type[collectType]]
-    local config = GameDatas.PlayerVillageExp[collect_exp_config[collectType]]
-    for i = #config,1,-1 do
-        if exp>=config[i].expFrom then
-            return i
+function User:GetSoldDealsCount()
+    local count = 0
+    for k,v in pairs(self.deals) do
+        if v.isSold then
+            count = count + 1
+        end
+    end
+    return count
+end
+function User:IsSoldOut()
+    return self:GetSoldDealsCount() > 0
+end
+--[end]
+
+
+--[[countinfo begin]]
+-- 每日登陆奖励是否领取
+function User:HaveEveryDayLoginReward()
+    local countInfo = self.countInfo
+    local flag = countInfo.day60 % 30 == 0 and 30 or countInfo.day60 % 30
+    local geted = countInfo.day60RewardsCount % 30 == 0 and 30 or countInfo.day60RewardsCount % 30 -- <= geted
+    return flag > geted or (geted == 30 and flag == 1)
+end
+-- 连续登陆奖励是否领取
+local config_day14 = GameDatas.Activities.day14
+function User:HaveContinutyReward()
+    local countInfo = self.countInfo
+    for i,v in ipairs(config_day14) do
+        local config_rewards = string.split(v.rewards,",")
+        if #config_rewards == 1 then
+            local reward_type,item_key,count = unpack(string.split(v.rewards,":"))
+            if v.day == countInfo.day14 and countInfo.day14 > countInfo.day14RewardsCount then
+                return true
+            end
+        else
+            for __,one_reward in ipairs(config_rewards) do
+                local reward_type,item_key,count = unpack(string.split(one_reward,":"))
+                if reward_type == 'soldiers' then
+                    if v.day == countInfo.day14 and countInfo.day14 > countInfo.day14RewardsCount then
+                        return true
+                    end
+                end
+            end
         end
     end
 end
+-- 城堡冲级奖励是否领取
+local config_levelup = GameDatas.Activities.levelup
+local config_intInit = GameDatas.PlayerInitData.intInit
+function User:HavePlayerLevelUpReward()
+    local countInfo = self.countInfo
+    local current_level = self.buildings.location_1.level
+    for __,v in ipairs(config_levelup) do
+        if not (app.timer:GetServerTime() > countInfo.registerTime/1000 + config_intInit.playerLevelupRewardsHours.value * 60 * 60) then
+            if  v.level <= current_level then
+                local max_level = 0
+                local l_flag = true
+                for __,l in ipairs(countInfo.levelupRewards) do
+                    if l == v.index then
+                        l_flag = false
+                    end
+                end
+                if l_flag then
+                    return true
+                end
+            end
+        end
+    end
+end
+--[[end]]
+
+--[[iap 相关方法]]
+local giftExpireHours_value = GameDatas.PlayerInitData.intInit.giftExpireHours.value
+function User:GetIapGiftTime(iapGift)
+    return iapGift.time / 1000 + giftExpireHours_value * 60 * 60
+end
+
+--[[end]]
+
+--[[gcId]]
+function User:IsBindGameCenter()
+    return self.gcId ~= "" and self.gcId ~= json.null
+end
+--[[end]]
+
+local COLLECT_TYPE = Enum("WOOD",
+    "STONE",
+    "IRON",
+    "FOOD",
+    "COIN")
 function User:GetWoodCollectLevel()
     return self:GetCollectLevelByType(COLLECT_TYPE.WOOD)
 end
@@ -297,6 +369,31 @@ end
 function User:GetCoinCollectLevel()
     return self:GetCollectLevelByType(COLLECT_TYPE.COIN)
 end
+local collect_type = {
+    "woodExp",
+    "stoneExp",
+    "ironExp",
+    "foodExp",
+    "coinExp",
+}
+local collect_exp_config = {
+    "wood",
+    "stone",
+    "iron",
+    "food",
+    "coin",
+}
+function User:GetCollectLevelByType(collectType)
+    local exp = self.allianceInfo[collect_type[collectType]]
+    local config = GameDatas.PlayerVillageExp[collect_exp_config[collectType]]
+    for i = #config,1,-1 do
+        if exp>=config[i].expFrom then
+            return i
+        end
+    end
+end
+
+
 function User:Loyalty()
     return self.allianceInfo.loyalty
 end
@@ -312,23 +409,8 @@ end
 function User:GetStrengthResource()
     return self.resources[STRENGTH]
 end
-function User:GetTradeManager()
-    return self.trade_manager
-end
-function User:GetTaskManager()
-    return self.growUpTaskManger
-end
-function User:OnTaskChanged()
-    self:NotifyListeneOnType(TASK, function(listener)
-        listener:OnTaskChanged(self)
-    end)
-end
 function User:OnTimer(current_time)
     self:OnResourceChanged()
-    self.vip_event:OnTimer(current_time)
-    for __,v in pairs(self:GetIapGifts()) do
-        v:OnTimer(current_time)
-    end
 end
 function User:OnResourceChanged()
     self:NotifyListeneOnType(RESOURCE, function(listener)
@@ -382,109 +464,74 @@ function User:OnPropertyChange(property_name, old_value, new_value)
         and Alliance_Manager:GetMyAlliance():GetMemeberById(self:Id())
     then
         Alliance_Manager:GetMyAlliance():GetMemeberById(self:Id()).name = new_value
-
     end
 end
+
+local before_map = {
+    deals = function()end,
+    countInfo = function()end,
+    iapGifts = function()end,
+    growUpTasks = function()end,
+    vipEvents = function()
+        City:GetResourceManager():UpdateByCity(City, app.timer:GetServerTime())
+    end,
+}
+local after_map = {
+    growUpTasks = function(user)
+        if user.reward_callback and TaskUtils:IsGetAnyCityBuildRewards(user.growUpTasks) then
+            user.reward_callback()
+            user.reward_callback = nil
+        end
+    end,
+}
 function User:OnUserDataChanged(userData, current_time, deltaData)
-    self.pve = userData.pve
-    self.pveFights = userData.pveFights
-    self:SetServerId(userData.serverId)
-    self:SetServerLevel(userData.serverLevel)
-    self:SetGcId(userData.gcId)
-    self:SetServerName(userData.logicServerId)
-    self:SetApnId(userData.apnId)
+    self.gcId                   = userData.gcId
+    self.serverId               = userData.serverId
+    self.logicServerId          = userData.logicServerId
+    self.serverLevel            = userData.serverLevel
+    self.basicInfo              = userData.basicInfo
+    self.countInfo              = userData.countInfo
+    self.iapGifts               = userData.iapGifts
+    self.deals                  = userData.deals
+    self.pve                    = userData.pve
+    self.pveFights              = userData.pveFights
+    self.vipEvents              = userData.vipEvents
+    self.buildings              = userData.buildings
+    self.growUpTasks            = userData.growUpTasks
+    self.requestToAllianceEvents= userData.requestToAllianceEvents
+    self.inviteToAllianceEvents = userData.inviteToAllianceEvents
+
     self:OnResourcesChangedByTime(userData, current_time, deltaData)
     self:OnBasicInfoChanged(userData, deltaData)
-    self:OnCountInfoChanged(userData, deltaData)
-    self:OnIapGiftsChanged(userData, deltaData)
     self:OnAllianceDonateChanged(userData, deltaData)
     self:OnAllianceInfoChanged(userData, deltaData)
     self:OnApnStatusChanged(userData, deltaData)
-    if self.growUpTaskManger:OnUserDataChanged(userData, deltaData) then
-        self:OnTaskChanged()
-    end
-    self.requestToAllianceEvents = userData.requestToAllianceEvents
-    self.inviteToAllianceEvents = userData.inviteToAllianceEvents
     -- 每日任务
     self:OnDailyQuestsChanged(userData,deltaData)
     self:OnDailyQuestsEventsChanged(userData,deltaData)
-    -- 交易
-    self.trade_manager:OnUserDataChanged(userData,deltaData)
-
-    -- vip event
-    self:OnVipEventDataChange(userData, deltaData)
     -- 日常任务
     self:OnDailyTasksChanged(userData.dailyTasks)
 
+    if deltaData then
+        for k,v in pairs(User.LISTEN_TYPE) do
+            local before_func = before_map[k]
+            if type(k) == "string" and before_func then
+                if deltaData(k) then
+                    before_func()
+                    local notify_func = string.format("OnUserDataChanged_%s", k)
+                    self:NotifyListeneOnType(User.LISTEN_TYPE[k], function(listener)
+                        listener[notify_func](listener, self, deltaData)
+                    end)
+                    local after_func = after_map[k]
+                    if after_func then
+                        after_func(self)
+                    end
+                end
+            end
+        end
+    end
+
     return self
-end
-
-function User:OnIapGiftTimer(iapGift)
-    self:NotifyListeneOnType(self.LISTEN_TYPE.IAP_GIFTS_TIMER, function(listener)
-        listener:OnIapGiftTimer(iapGift)
-    end)
-end
-
-function User:OnIapGiftsChanged(userData,deltaData)
-    if not userData.iapGifts then return end
-    local is_fully_update = deltaData == nil
-    local is_delta_update = not is_fully_update and deltaData.iapGifts
-    if is_fully_update then
-        for __,v in pairs(self.iapGifts) do
-            v:Reset()
-        end
-        self.iapGifts = {}
-        for __,v in ipairs(userData.iapGifts) do
-            if not self.iapGifts[v.id] then
-                local iapGift = IapGift.new()
-                iapGift:Update(v)
-                self.iapGifts[v.id] = iapGift
-                iapGift:AddObserver(self)
-            end
-        end
-        self:NotifyListeneOnType(self.LISTEN_TYPE.IAP_GIFTS_REFRESH, function(listener)
-            listener:OnIapGiftsRefresh(self)
-        end)
-    end
-
-    if is_delta_update then
-        local changed_map = GameUtils:Handler_DeltaData_Func(
-            deltaData.iapGifts
-            ,function(event_data)
-                if not self.iapGifts[event_data.id] then
-                    local iapGift = IapGift.new()
-                    iapGift:Update(event_data)
-                    self.iapGifts[event_data.id] = iapGift
-                    iapGift:AddObserver(self)
-                    return iapGift
-                end
-            end
-            ,function(event_data)
-                if self.iapGifts[event_data.id] then
-                    local iapGift = self.iapGifts[event_data.id]
-                    iapGift:Update(event_data)
-                    return iapGift
-                end
-            end
-            ,function(event_data)
-                if self.iapGifts[event_data.id] then
-                    local iapGift = self.iapGifts[event_data.id]
-                    iapGift:Reset()
-                    self.iapGifts[event_data.id] = nil
-                    iapGift = IapGift.new()
-                    iapGift:Update(event_data)
-                    return iapGift
-                end
-            end
-        )
-        self:NotifyListeneOnType(self.LISTEN_TYPE.IAP_GIFTS_CHANGE, function(listener)
-            listener:OnIapGiftsChanged(changed_map)
-        end)
-    end
-end
-
-function User:GetIapGifts()
-    return self.iapGifts
 end
 
 function User:OnDailyTasksChanged(dailyTasks)
@@ -513,93 +560,13 @@ end
 function User:GetAllDailyTasks()
     return self.dailyTasks or {}
 end
-
-
-
-function User:OnCountInfoChanged(userData, deltaData)
-    local is_fully_update = deltaData == nil
-    local is_delta_update = not is_fully_update and deltaData.countInfo
-    if is_fully_update or is_delta_update then
-        self.countInfo = userData.countInfo
-        self:NotifyListeneOnType(COUNT_INFO, function(listener)
-            listener:OnCountInfoChanged(self)
-        end)
-    end
-end
-
-
-function User:GetCountInfo()
-    return self.countInfo
-end
--- 每日登陆奖励是否领取
-function User:HaveEveryDayLoginReward()
-    local countInfo = self:GetCountInfo()
-    local flag = countInfo.day60 % 30 == 0 and 30 or countInfo.day60 % 30
-    local geted = countInfo.day60RewardsCount % 30 == 0 and 30 or countInfo.day60RewardsCount % 30 -- <= geted
-    return flag > geted or (geted == 30 and flag == 1)
-end
--- 连续登陆奖励是否领取
-function User:HaveContinutyReward()
-    local countInfo = self:GetCountInfo()
-    local config_day14 = GameDatas.Activities.day14
-    for i,v in ipairs(config_day14) do
-        local config_rewards = string.split(v.rewards,",")
-        if #config_rewards == 1 then
-            local reward_type,item_key,count = unpack(string.split(v.rewards,":"))
-            if v.day == countInfo.day14 and countInfo.day14 > countInfo.day14RewardsCount then
-                return true
-            end
-        else
-
-            for __,one_reward in ipairs(config_rewards) do
-                local reward_type,item_key,count = unpack(string.split(one_reward,":"))
-                if reward_type == 'soldiers' then
-                    if v.day == countInfo.day14 and countInfo.day14 > countInfo.day14RewardsCount then
-                        return true
-                    end
-                end
-            end
-        end
-    end
-end
--- 城堡冲级奖励是否领取
-function User:HavePlayerLevelUpReward()
-    local countInfo = self:GetCountInfo()
-    local current_level = City:GetFirstBuildingByType('keep'):GetLevel()
-    local config_levelup = GameDatas.Activities.levelup
-    local config_intInit = GameDatas.PlayerInitData.intInit
-    for __,v in ipairs(config_levelup) do
-        if not (app.timer:GetServerTime() > countInfo.registerTime/1000 + config_intInit.playerLevelupRewardsHours.value * 60 * 60) then
-            if  v.level <= current_level then
-                local max_level = 0
-                local l_flag = true
-                for __,l in ipairs(countInfo.levelupRewards) do
-                    if l == v.index then
-                        l_flag = false
-                    end
-                end
-                if l_flag then
-                    return true
-                end
-            end
-        end
-    end
-end
+--[[vip function begin]]
 -- 获取当天剩余普通免费gacha次数
 function User:GetOddFreeNormalGachaCount()
-    local vip_add = self:GetVipEvent():IsActived() and self:GetVIPNormalGachaAdd() or 0
-    return intInit.freeNormalGachaCountPerDay.value + vip_add - self:GetCountInfo().todayFreeNormalGachaCount
+    local vip_add = self:IsVIPActived() and self:GetVIPNormalGachaAdd() or 0
+    return intInit.freeNormalGachaCountPerDay.value + vip_add - self.countInfo.todayFreeNormalGachaCount
 end
-function User:GetVipEvent()
-    return self.vip_event
-end
-function User:GetVipLevel()
-    local exp = self.vipExp
-    return DataUtils:getPlayerVIPLevel(exp)
-end
-function User:IsVIPActived()
-    return self.vip_event:IsActived()
-end
+local vip_level = GameDatas.Vip.level
 function User:GetVIPFreeSpeedUpTime()
     return self:IsVIPActived() and vip_level[self:GetVipLevel()].freeSpeedup or 5
 end
@@ -649,7 +616,6 @@ end
 function User:GetVIPSoldierConsumeSub()
     return self:IsVIPActived() and vip_level[self:GetVipLevel()].soldierConsumeSub or 0
 end
-
 function User:GetSpecialVipLevelExp(level)
     local level = #vip_level >= level and level or #vip_level
     return vip_level[level].expFrom
@@ -658,78 +624,20 @@ function User:GetSpecialVipLevelExpTo(level)
     local level = #vip_level >= level and level or #vip_level
     return vip_level[level].expTo
 end
-function User:OnVipEventDataChange(userData, deltaData)
-    local is_fully_update = deltaData == nil
-
-    local is_delta_update = not is_fully_update and deltaData.vipEvents ~= nil
-    if is_fully_update then
-        if userData.vipEvents then
-            if not LuaUtils:table_empty(userData.vipEvents) then
-                self.vip_event:UpdateData(userData.vipEvents[1])
-            else
-                self.vip_event:Reset()
-                self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT_OVER, function(listener)
-                    listener:OnVipEventOver(self.vip_event)
-                end)
-            end
-        else
-            self.vip_event:Reset()
-            self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT_OVER, function(listener)
-                listener:OnVipEventOver(self.vip_event)
-            end)
-        end
-        self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT, function(listener)
-            listener:OnVipEventTimer(self.vip_event)
-        end)
+function User:IsVIPActived()
+    local vipEvent = self.vipEvents[1]
+    if vipEvent then
+        local left = vipEvent.finishTime / 1000 - app.timer:GetServerTime()
+        local isactive = left > 0
+        return isactive, isactive and left or 0
     end
-    if is_delta_update then
-        local add = deltaData.vipEvents.add
-        local remove = deltaData.vipEvents.remove
-
-        if LuaUtils:table_empty(deltaData.vipEvents) then
-            self.vip_event:UpdateData({finishTime = 0})
-            City:GetResourceManager():UpdateByCity(City, app.timer:GetServerTime())
-            self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT_OVER, function(listener)
-                listener:OnVipEventOver(self.vip_event)
-            end)
-        end
-        if remove and #remove >0 then
-            -- vip 激活结束，刷新资源
-            -- 通知出去
-            self.vip_event:Reset()
-            City:GetResourceManager():UpdateByCity(City, app.timer:GetServerTime())
-            self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT_OVER, function(listener)
-                listener:OnVipEventOver(self.vip_event)
-            end)
-        end
-        if add and #add >0 then
-            -- vip 激活，刷新资源
-            -- 通知出去
-            self.vip_event:UpdateData(add[1])
-            City:GetResourceManager():UpdateByCity(City, app.timer:GetServerTime())
-            self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT_ACTIVE, function(listener)
-                listener:OnVipEventActive(self.vip_event)
-            end)
-        end
-        for k,v in pairs(deltaData.vipEvents) do
-            if tolua.type(k) == "number" then
-                self.vip_event:UpdateData(v)
-                self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT_ACTIVE, function(listener)
-                    listener:OnVipEventActive(self.vip_event)
-                end)
-            end
-        end
-        self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT, function(listener)
-            listener:OnVipEventTimer(self.vip_event)
-        end)
-    end
-    return self
+    return false, 0
 end
-function User:OnVipEventTimer( vip_event )
-    self:NotifyListeneOnType(User.LISTEN_TYPE.VIP_EVENT, function(listener)
-        listener:OnVipEventTimer(vip_event)
-    end)
+function User:GetVipLevel()
+    local exp = self.basicInfo.vipExp
+    return DataUtils:getPlayerVIPLevel(exp)
 end
+--[[end]]
 function User:OnResourcesChangedByTime(userData, current_time, deltaData)
     local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.resources and deltaData.resources.stamina
@@ -1006,7 +914,21 @@ function User:GetBestDragon()
     return bestDragonForTerrain[self:Terrain()]
 end
 
+--
+local promise = import("..utils.promise")
+function User:PromiseOfGetCityBuildRewards()
+    local p = promise.new()
+    self.reward_callback = function()
+        p:resolve()
+    end
+    return p
+end
+
 return User
+
+
+
+
 
 
 

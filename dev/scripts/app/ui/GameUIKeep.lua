@@ -12,7 +12,7 @@ local GameUIKeep = UIKit:createUIClass('GameUIKeep',"GameUIUpgradeBuilding")
 local sharedSpriteFrameCache = cc.SpriteFrameCache:getInstance()
 local building_config_map = {
     ["keep"] = {scale = 0.25, offset = {x = 75, y = 74}},
-    ["watchTower"] = {scale = 0.4, offset = {x = 80, y = 70}},
+    -- ["watchTower"] = {scale = 0.4, offset = {x = 80, y = 70}},
     ["warehouse"] = {scale = 0.5, offset = {x = 65, y = 70}},
     ["dragonEyrie"] = {scale = 0.35, offset = {x = 65, y = 70}},
     ["toolShop"] = {scale = 0.5, offset = {x = 75, y = 70}},
@@ -85,8 +85,7 @@ function GameUIKeep:CreateCityBasicInfo()
     if not Alliance_Manager:GetMyAlliance():IsDefault() then
         local alliance = Alliance_Manager:GetMyAlliance()
         local mapObject = alliance:FindMapObjectById(alliance:GetSelf():MapId())
-        local x, y = mapObject:GetLogicPosition()
-        city_postion = x..","..y
+        city_postion = mapObject.location.x..","..mapObject.location.y
     end
     self:CreateLineItem({
         title_1 =  _("城市坐标"),
@@ -187,7 +186,7 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
     local buildings = GameDatas.Buildings.buildings
     local unlock_index = 1
     for i,v in ipairs(buildings) do
-        if v.location<21 then
+        if v.location<21 and v.location ~= 2 then
             local unlock_building = City:GetBuildingByLocationId(v.location)
             local tile = City:GetTileByLocationId(v.location)
 

@@ -449,7 +449,7 @@ function DataUtils:GetPlayerNextOnlineTimePoint()
 end
 
 function DataUtils:getPlayerOnlineTimeSecondes()
-    local countInfo = User:GetCountInfo()
+    local countInfo = User.countInfo
     local onlineTime = countInfo.todayOnLineTime + (NetManager:getServerTime() - countInfo.lastLoginTime)
     return math.floor(onlineTime / 1000)
 end
@@ -507,7 +507,6 @@ end
 --联盟名称随机
 local config_clientinitgame = GameDatas.ClientInitGame
 function DataUtils:__getRandomAllianceNameAndTag()
-    -- math.randomseed(User:GetCountInfo().registerTime or os.time())
     local __categore = math.random(1,5)
     local name = ""
     local tag = ""

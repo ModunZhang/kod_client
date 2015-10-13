@@ -1,11 +1,9 @@
-local GrowUpTasks = GameDatas.GrowUpTasks
-local Enum = import("..utils.Enum")
-local Localize = import("..utils.Localize")
+TaskUtils = {}
+local Enum = import(".Enum")
+local Localize = import(".Localize")
 local NotifyItem = import(".NotifyItem")
-local GrowUpTaskManager = class("GrowUpTaskManager")
 local CATEGORY = Enum("BUILD", "DRAGON", "TECHNOLOGY", "SOLDIER", "EXPLORE")
-GrowUpTaskManager.TASK_CATEGORY = CATEGORY
-local ipairs = ipairs
+TaskUtils.TASK_CATEGORY = CATEGORY
 local category_map = {
     [CATEGORY.BUILD] = {
         "cityBuild"
@@ -74,7 +72,7 @@ function resource_meta:Icon()
 end
 -------
 
-
+local GrowUpTasks = GameDatas.GrowUpTasks
 local function get_rewards(config)
     local rewards = {}
     for _,v in ipairs(resource_map) do
@@ -419,21 +417,13 @@ function category_meta:Desc()
 end
 ---------
 
-
-
-function GrowUpTaskManager:ctor()
-    self.growUpTasks = {}
-    for k,v in pairs(GameDatas.GrowUpTasks) do
-        self.growUpTasks[k] = {}
-    end
+function TaskUtils:CompleteTasksByType(growUpTasks, type_)
+    return growUpTasks[type_]
 end
-function GrowUpTaskManager:CompleteTasksByType(type_)
-    return self.growUpTasks[type_]
-end
-function GrowUpTaskManager:GetFirstCompleteTasks()
+function TaskUtils:GetFirstCompleteTasks(growUpTasks)
     local r = {}
     for category,v in ipairs(CATEGORY) do
-        for _,v in ipairs(self:GetFirstCompleteTasksByCategory(category)) do
+        for _,v in ipairs(self:GetFirstCompleteTasksByCategory(growUpTasks, category)) do
             table.insert(r, v)
         end
     end
@@ -450,12 +440,12 @@ local index_map = {
     playerPower = true,
     playerKill = true,
 }
-function GrowUpTaskManager:GetFirstCompleteTasksByCategory(category)
+function TaskUtils:GetFirstCompleteTasksByCategory(growUpTasks, category)
     local r = {}
     for _,tag in ipairs(category_map[category]) do
         local mark_map = {}
         local tasks = {}
-        for i,v in ipairs(self.growUpTasks[tag]) do tasks[i] = v end
+        for i,v in ipairs(growUpTasks[tag]) do tasks[i] = v end
         table.sort(tasks, function(a, b) return a.id < b.id end)
         for _,v in ipairs(tasks) do
             local category_name = v.name
@@ -475,18 +465,18 @@ function GrowUpTaskManager:GetFirstCompleteTasksByCategory(category)
     end
     return r
 end
-function GrowUpTaskManager:GetAvailableTasksGroup()
+function TaskUtils:GetAvailableTasksGroup(growUpTasks)
     local r = {}
     for category,v in ipairs(CATEGORY) do
-        table.insert(r, self:GetAvailableTasksByCategory(category))
+        table.insert(r, self:GetAvailableTasksByCategory(growUpTasks, category))
     end
     return r
 end
-function GrowUpTaskManager:GetAvailableTasksByCategory(category)
+function TaskUtils:GetAvailableTasksByCategory(growUpTasks, category)
     local r = {}
     local p = 0
     if category == CATEGORY.BUILD then
-        local r1,count1,total1 = self:GetAvailableTaskByTag("cityBuild", function(available, is_init, cur, next_task)
+        local r1,count1,total1 = self:GetAvailableTaskByTag(growUpTasks, "cityBuild", function(available, is_init, cur, next_task)
             local name = cur.name
             if is_init then
                 available[name] = cur.id
@@ -504,7 +494,7 @@ function GrowUpTaskManager:GetAvailableTasksByCategory(category)
         r = r1
         p = count1 / total1
     elseif category == CATEGORY.DRAGON then
-        local r1,count1,total1 = self:GetAvailableTaskByTag("dragonLevel", function(available, is_init, cur, next_task)
+        local r1,count1,total1 = self:GetAvailableTaskByTag(growUpTasks, "dragonLevel", function(available, is_init, cur, next_task)
             local type = cur.type
             if is_init then
                 available[type] = cur.id
@@ -516,7 +506,7 @@ function GrowUpTaskManager:GetAvailableTasksByCategory(category)
                 end
             end
         end)
-        local r2,count2,total2 = self:GetAvailableTaskByTag("dragonStar", function(available, is_init, cur, next_task)
+        local r2,count2,total2 = self:GetAvailableTaskByTag(growUpTasks, "dragonStar", function(available, is_init, cur, next_task)
             local type = cur.type
             if is_init then
                 available[type] = cur.id
@@ -528,7 +518,7 @@ function GrowUpTaskManager:GetAvailableTasksByCategory(category)
                 end
             end
         end)
-        local r3,count3,total3 = self:GetAvailableTaskByTag("dragonSkill", function(available, is_init, cur, next_task)
+        local r3,count3,total3 = self:GetAvailableTaskByTag(growUpTasks, "dragonSkill", function(available, is_init, cur, next_task)
             local name = cur.type.."_"..cur.name
             if is_init then
                 available[name] = cur.id
@@ -581,7 +571,7 @@ function GrowUpTaskManager:GetAvailableTasksByCategory(category)
     elseif category == CATEGORY.TECHNOLOGY then
         local count, total = 0, 0
         for i,tag in ipairs(category_map[category]) do
-            local r1,count1,total1 = self:GetAvailableTaskByTag(tag, function(available, is_init, cur, next_task)
+            local r1,count1,total1 = self:GetAvailableTaskByTag(growUpTasks, tag, function(available, is_init, cur, next_task)
                 if is_init then
                     available[cur.name] = cur.id
                 else
@@ -603,7 +593,7 @@ function GrowUpTaskManager:GetAvailableTasksByCategory(category)
         end
         p = count / total
     elseif category == CATEGORY.SOLDIER then
-        local r1,count1,total1 = self:GetAvailableTaskByTag("soldierCount", function(available, is_init, cur, next_task)
+        local r1,count1,total1 = self:GetAvailableTaskByTag(growUpTasks, "soldierCount", function(available, is_init, cur, next_task)
             if is_init then
                 available[cur.name] = cur.id
             else
@@ -622,7 +612,7 @@ function GrowUpTaskManager:GetAvailableTasksByCategory(category)
     elseif category == CATEGORY.EXPLORE then
         local count, total = 0, 0
         for i,tag in ipairs(category_map[category]) do
-            local r1,count1,total1 = self:GetAvailableTaskByTag(tag, function(available, is_init, cur, next_task)
+            local r1,count1,total1 = self:GetAvailableTaskByTag(growUpTasks, tag, function(available, is_init, cur, next_task)
                 if is_init then
                     if cur.id == 0 then
                         available[1] = cur.id
@@ -646,7 +636,7 @@ function GrowUpTaskManager:GetAvailableTasksByCategory(category)
     end
     return setmetatable({tasks = r, available = p, category = category}, category_meta)
 end
-function GrowUpTaskManager:GetAvailableTaskByTag(tag, func)
+function TaskUtils:GetAvailableTaskByTag(growUpTasks, tag, func)
     func = func or function()end
     local r = {}
     local available_map = {}
@@ -658,7 +648,7 @@ function GrowUpTaskManager:GetAvailableTaskByTag(tag, func)
     end
 
     -- 找到未完成的任务id
-    for i,v in ipairs(self.growUpTasks[tag]) do
+    for i,v in ipairs(growUpTasks[tag]) do
         func(available_map, false, v, config[v.id + 1])
     end
 
@@ -671,9 +661,9 @@ function GrowUpTaskManager:GetAvailableTaskByTag(tag, func)
     end
     return r, #config + 1 - count, #config + 1
 end
-function GrowUpTaskManager:GetCompleteTaskCount()
+function TaskUtils:GetCompleteTaskCount(growUpTasks)
     local count = 0
-    for _,category in pairs(self.growUpTasks) do
+    for _,category in pairs(growUpTasks) do
         for _,task in ipairs(category) do
             if not task.rewarded then
                 count = count + 1
@@ -682,37 +672,17 @@ function GrowUpTaskManager:GetCompleteTaskCount()
     end
     return count
 end
-function GrowUpTaskManager:OnUserDataChanged(userData, deltaData)
-    local is_fully_update = deltaData == nil
-    local is_delta_update = not is_fully_update and deltaData.growUpTasks
-    if is_fully_update or is_delta_update then
-        self.growUpTasks = userData.growUpTasks
-        if GrowUpTaskManager.reward_callback and self:IsGetAnyCityBuildRewards() then
-            GrowUpTaskManager.reward_callback()
-            GrowUpTaskManager.reward_callback = nil
-        end
-        return true
-    end
-end
-function GrowUpTaskManager:IsGetAnyCityBuildRewards()
-    for i,v in ipairs(self:CompleteTasksByType("cityBuild")) do
+function TaskUtils:IsGetAnyCityBuildRewards(growUpTasks)
+    for i,v in ipairs(self:CompleteTasksByType(growUpTasks, "cityBuild")) do
         if v.id >= 0 and v.rewarded then
             return true
         end
     end
 end
-local promise = import("..utils.promise")
-function GrowUpTaskManager:PromiseOfGetCityBuildRewards()
-    local p = promise.new()
-    GrowUpTaskManager.reward_callback = function()
-        p:resolve()
-    end
-    return p
-end
 
 
 
-return GrowUpTaskManager
+return TaskUtils
 
 
 

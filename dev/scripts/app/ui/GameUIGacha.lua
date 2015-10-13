@@ -58,7 +58,7 @@ function GameUIGacha:OnMoveInStage()
         end
     end):pos(window.cx, window.bottom + 34)
 
-    User:AddListenOnType(self,User.LISTEN_TYPE.COUNT_INFO)
+    User:AddListenOnType(self, "countInfo")
 end
 function GameUIGacha:onExit()
     if self.OrdinaryGachaPool then
@@ -67,7 +67,7 @@ function GameUIGacha:onExit()
     if self.DeluxeGachaPool then
         self.DeluxeGachaPool:Destory()
     end
-    User:RemoveListenerOnType(self,User.LISTEN_TYPE.COUNT_INFO)
+    User:RemoveListenerOnType(self, "countInfo")
     GameUIGacha.super.onExit(self)
 end
 
@@ -582,7 +582,7 @@ function GameUIGacha:OnResourceChanged(resource_manager)
     end
 end
 
-function GameUIGacha:OnCountInfoChanged()
+function GameUIGacha:OnUserDataChanged_countInfo()
     if User:GetOddFreeNormalGachaCount()>0 then
         local button = self.normal_gacha_button
         button:setButtonLabel(UIKit:commonButtonLable({

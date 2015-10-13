@@ -181,7 +181,9 @@ function GameUIVipNew:OnMoveInStage()
             if not self.vip_layer then
                 self.vip_layer = display.newLayer():addTo(self:GetView())
                 self:InitVip()
-                User:AddListenOnType(self, User.LISTEN_TYPE.VIP_EVENT)
+                self.vip_layer:scheduleAt(function()
+                    self:OnVipEventTimer()
+                end, 1)
             end
             self.vip_layer:setVisible(true)
         else
@@ -195,7 +197,6 @@ function GameUIVipNew:OnMoveInStage()
 end
 function GameUIVipNew:onExit()
     User:RemoveListenerOnType(self, User.LISTEN_TYPE.BASIC)
-    User:RemoveListenerOnType(self, User.LISTEN_TYPE.VIP_EVENT)
     GameUIVipNew.super.onExit(self)
 end
 function GameUIVipNew:InitVip()
@@ -231,7 +232,8 @@ function GameUIVipNew:InitVipTop()
                 WidgetUseItems.new():Create({item_type = WidgetUseItems.USE_TYPE.VIP_ACTIVE}):AddToCurrentScene()
             end
         end)
-    local status_text = User:IsVIPActived() and _("已激活").." "..GameUtils:formatTimeStyle1(User:GetVipEvent():GetTime()) or _("未激活VIP")
+    local isactive, leftTime = User:IsVIPActived()
+    local status_text = isactive and _("已激活").." "..GameUtils:formatTimeStyle1(leftTime) or _("未激活VIP")
     self.vip_status_label = UIKit:ttfLabel({
         text = status_text,
         size = 20,
@@ -276,7 +278,7 @@ function GameUIVipNew:InitVipTop()
     self.vip_level_bg = current_level
 
     -- 连续登陆，明日登陆
-    local vipLoginDaysCount = User:GetCountInfo().vipLoginDaysCount
+    local vipLoginDaysCount = User.countInfo.vipLoginDaysCount
     local tomorrow_add = UIKit:ttfLabel({
         text = _("+ "..loginDays[ (vipLoginDaysCount + 1 ) > #loginDays and #loginDays or (vipLoginDaysCount + 1 )].expAdd),
         size = 22,
@@ -641,9 +643,9 @@ function GameUIVipNew:OnUserBasicChanged(from,changed_map)
         self:InitVip()
     end
 end
-function GameUIVipNew:OnVipEventTimer( vip_event_new )
-    local time = vip_event_new:GetTime()
-    if time >0 then
+function GameUIVipNew:OnVipEventTimer()
+    local isactive, time = User:IsVIPActived()
+    if time > 0 then
         self.vip_status_label:setString(_("已激活").." "..GameUtils:formatTimeStyle1(time))
         self.vip_level_bg:setTexture("vip_unlock_normal.png")
     else

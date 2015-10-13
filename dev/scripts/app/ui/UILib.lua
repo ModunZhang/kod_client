@@ -739,10 +739,10 @@ local DRAGON_ANIMATIONS = getAniNameFromAnimationFiles(DRAGON_ANIMATIONS_FILES)
 
 local ALLIANCE_BUILDING = {
     palace = "alliance_palace.png",
-    shrine = "alliance_shrine.png",
+    shrine = "alliance_moonGate.png",
     shop = "alliance_shop.png",
     orderHall = "alliance_orderHall.png",
-    moonGate = "alliance_moonGate.png",
+    watchTower = "alliance_shrine.png",
 }
 local OTHER_ALLIANCE_BUILDING = setmetatable({
     palace = "other_palace.png",

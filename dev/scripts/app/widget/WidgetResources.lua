@@ -26,8 +26,7 @@ function WidgetResources:onEnter()
     self.city:GetResourceManager():AddObserver(self)
     self.city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
     local user = self.city:GetUser()
-    user:AddListenOnType(self, user.LISTEN_TYPE.VIP_EVENT_ACTIVE)
-    user:AddListenOnType(self, user.LISTEN_TYPE.VIP_EVENT_OVER)
+    user:AddListenOnType(self, "vipEvents")
     ItemManager:AddListenOnType(self,ItemManager.LISTEN_TYPE.ITEM_EVENT_CHANGED)
     local resourceBuildingMap = {
         wood = "lumbermill",
@@ -43,8 +42,7 @@ function WidgetResources:onExit()
     self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
     self.city:GetResourceManager():RemoveObserver(self)
     local user = self.city:GetUser()
-    user:RemoveListenerOnType(self, user.LISTEN_TYPE.VIP_EVENT_ACTIVE)
-    user:RemoveListenerOnType(self, user.LISTEN_TYPE.VIP_EVENT_OVER)
+    user:RemoveListenerOnType(self, "vipEvents")
     ItemManager:RemoveListenerOnType(self,ItemManager.LISTEN_TYPE.ITEM_EVENT_CHANGED)
     local resourceBuildingMap = {
         wood = "lumbermill",
@@ -66,10 +64,7 @@ end
 function WidgetResources:OnBuildingUpgradeFinished( bulding )
     self:RefreshProtectPercent()
 end
-function WidgetResources:OnVipEventActive( vip_event )
-    self:RefreshProtectPercent()
-end
-function WidgetResources:OnVipEventOver( vip_event )
+function WidgetResources:OnUserDataChanged_vipEvents()
     self:RefreshProtectPercent()
 end
 function WidgetResources:OnSoliderCountChanged(...)

@@ -413,9 +413,7 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 140, window.top - 1000)
         :onButtonClicked(function(event)
-            cocos_promise.promiseWithCatchError(NetManager:getAgreeJoinAllianceInvitePromise(User:InviteToAllianceEvents()[1].id):next(function(ee)
-                dump(ee)
-            end))
+            
         end)
 
 
@@ -431,11 +429,7 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 320, window.top - 1000)
         :onButtonClicked(function(event)
-            cocos_promise.promiseWithCatchError(NetManager:getCancelJoinAlliancePromise(
-                User:RequestToAllianceEvents()[1].id
-            ):next(function(ee)
-                dump(ee)
-            end))
+            
         end)
 
     WidgetPushButton.new(
@@ -450,9 +444,7 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 500, window.top - 1000)
         :onButtonClicked(function(event)
-            cocos_promise.promiseWithCatchError(NetManager:getDisagreeJoinAllianceInvitePromise(
-                User:InviteToAllianceEvents()[1].id
-            ))
+            
         end)
 
     WidgetPushButton.new(

@@ -1,21 +1,172 @@
-local GameUIAllianceHomeNew = import("..ui.GameUIAllianceHomeNew")
+local Alliance = import("..entity.Alliance")
 local AllianceLayer = import("..layers.AllianceLayer")
+local GameUIAllianceHomeNew = import("..ui.GameUIAllianceHomeNew")
 local MapScene = import(".MapScene")
 local AllianceDetailScene = class("AllianceDetailScene", MapScene)
+
+
+function AllianceDetailScene:OnAllianceDataChanged_mapObjects(allianceData, deltaData)
+    local ok,value = deltaData("mapObjects.edit")
+    if ok then
+        for _,mapObj in pairs(value) do
+            self:GetSceneLayer():RefreshMapObjectByIndex(allianceData.mapIndex, mapObj)
+        end
+    end
+    local ok,value = deltaData("mapObjects.add")
+    if ok then
+        for _,mapObj in pairs(value) do
+            self:GetSceneLayer():AddMapObjectByIndex(allianceData.mapIndex, mapObj)
+        end
+    end
+    local ok,value = deltaData("mapObjects.remove")
+    if ok then
+        for _,mapObj in pairs(value) do
+            self:GetSceneLayer():RemoveMapObjectByIndex(allianceData.mapIndex, mapObj)
+        end
+    end
+end
+local function getAllyFromEvent(event, is_back)
+    local MINE,FRIEND,ENEMY = 1,2,3
+    if event.attackPlayerData.id == User:Id() then
+        return MINE
+    end
+    local alliance_id = is_back and v.toAlliance.id or v.fromAlliance.id
+    if alliance_id == Alliance_Manager:GetMyAlliance()._id then
+        return FRIEND
+    end
+    return ENEMY
+end
+function AllianceDetailScene:OnAllianceDataChanged_marchEvents(allianceData, deltaData)
+    -- 进攻
+    local ok, value = deltaData("marchEvents.attackMarchEvents.add")
+    if ok then
+        for _,event in pairs(value) do
+            self:CreateOrUpdateOrDeleteCorpsByEvent(event.id, event)
+        end
+    end
+    local ok, value = deltaData("marchEvents.attackMarchEvents.edit")
+    if ok then
+        for _,event in pairs(value) do
+            self:CreateOrUpdateOrDeleteCorpsByEvent(event.id, event)
+        end
+    end
+    local ok, value = deltaData("marchEvents.attackMarchEvents.remove")
+    if ok then
+        for _,event in pairs(value) do
+            self:GetSceneLayer():DeleteCorpsById(event.id)
+        end
+    end
+
+    -- 返回
+    local ok, value = deltaData("marchEvents.attackMarchReturnEvents.add")
+    if ok then
+        for _,event in pairs(value) do
+            self:CreateOrUpdateOrDeleteCorpsByReturnEvent(event.id, event)
+        end
+    end
+    local ok, value = deltaData("marchEvents.attackMarchReturnEvents.edit")
+    if ok then
+        for _,event in pairs(value) do
+            self:CreateOrUpdateOrDeleteCorpsByReturnEvent(event.id, event)
+        end
+    end
+    local ok, value = deltaData("marchEvents.attackMarchReturnEvents.remove")
+    if ok then
+        for _,event in pairs(value) do
+            self:GetSceneLayer():DeleteCorpsById(event.id)
+        end
+    end
+end
+function AllianceDetailScene:OnEnterMapIndex(mapData)
+    for id,event in pairs(mapData.marchEvents.attackMarchEvents) do
+        self:CreateOrUpdateOrDeleteCorpsByEvent(id, event)
+    end
+    for id,event in pairs(mapData.marchEvents.attackMarchReturnEvents) do
+        self:CreateOrUpdateOrDeleteCorpsByReturnEvent(id,event)
+    end
+end
+function AllianceDetailScene:OnMapDataChanged(mapData, deltaData)
+    local ok, value = deltaData("marchEvents.attackMarchEvents")
+    if ok then
+        for id,event in pairs(value) do
+            self:CreateOrUpdateOrDeleteCorpsByEvent(id, event)
+        end
+    end
+
+    local ok, value = deltaData("marchEvents.attackMarchReturnEvents")
+    if ok then
+        for id,event in pairs(value) do
+            self:CreateOrUpdateOrDeleteCorpsByReturnEvent(event)
+        end
+    end
+end
+function AllianceDetailScene:OnAllianceMapChanged(allianceData, deltaData)
+    if deltaData("mapObjects") then
+        self:OnAllianceDataChanged_mapObjects(allianceData, deltaData)
+    end
+end
+function AllianceDetailScene:CreateOrUpdateOrDeleteCorpsByEvent(id, event)
+    if event == json.null then
+        self:GetSceneLayer():DeleteCorpsById(id)
+    else
+        self:GetSceneLayer():CreateOrUpdateCorps(
+            event.id,
+            {x = event.fromAlliance.location.x, y = event.fromAlliance.location.y, index = event.fromAlliance.mapIndex},
+            {x = event.toAlliance.location.x, y = event.toAlliance.location.y, index = event.toAlliance.mapIndex},
+            event.startTime / 1000,
+            event.arriveTime / 1000,
+            event.attackPlayerData.dragon.type,
+            event.attackPlayerData.soldiers,
+            getAllyFromEvent(event),
+            string.format("[%s]%s", event.fromAlliance.tag, event.attackPlayerData.name)
+        )
+    end
+end
+function AllianceDetailScene:CreateOrUpdateOrDeleteCorpsByReturnEvent(id, event)
+    if event == json.null then
+        self:GetSceneLayer():DeleteCorpsById(id)
+    else
+        self:GetSceneLayer():CreateOrUpdateCorps(
+            event.id,
+            {x = event.toAlliance.location.x, y = event.toAlliance.location.y, index = event.toAlliance.mapIndex},
+            {x = event.fromAlliance.location.x, y = event.fromAlliance.location.y, index = event.fromAlliance.mapIndex},
+            event.startTime / 1000,
+            event.arriveTime / 1000,
+            event.attackPlayerData.dragon.type,
+            event.attackPlayerData.soldiers,
+            getAllyFromEvent(event),
+            string.format("[%s]%s", event.fromAlliance.tag, event.attackPlayerData.name)
+        )
+    end
+end
+
 
 function AllianceDetailScene:ctor()
     AllianceDetailScene.super.ctor(self)
     self.fetchtimer = display.newNode():addTo(self)
     self.amintimer = display.newNode():addTo(self)
     self.visible_alliances = {}
-    self.alliance_caches = {}
-    self:UpdateAllianceBy(Alliance_Manager:GetMyAlliance().mapIndex, Alliance_Manager:GetMyAlliance())
+    Alliance_Manager:ClearCache()
+    Alliance_Manager:UpdateAllianceBy(Alliance_Manager:GetMyAlliance().mapIndex, Alliance_Manager:GetMyAlliance())
 end
 function AllianceDetailScene:onEnter()
     AllianceDetailScene.super.onEnter(self)
     self.home_page = self:CreateHomePage()
     self:GotoAllianceByIndex(Alliance_Manager:GetMyAlliance().mapIndex)
     self:GetSceneLayer():ZoomTo(0.82)
+    Alliance_Manager:GetMyAlliance():AddListenOnType(self, "mapObjects")
+    Alliance_Manager:GetMyAlliance():AddListenOnType(self, "marchEvents")
+    Alliance_Manager:SetAllianceHandle(self)
+end
+function AllianceDetailScene:onExit()
+    if self.current_allinace_index then
+        NetManager:getLeaveMapIndexPromise(self.current_allinace_index)
+    end
+    Alliance_Manager:SetAllianceHandle(nil)
+    Alliance_Manager:ClearCache()
+    Alliance_Manager:ResetMapData()
+    Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, "mapObjects")
+    Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, "marchEvents")
 end
 function AllianceDetailScene:FetchAllianceDatasByIndex(index, func)
     if self.current_allinace_index and self.current_allinace_index ~= index then
@@ -33,7 +184,8 @@ function AllianceDetailScene:FetchAllianceDatasByIndex(index, func)
             NetManager:getEnterMapIndexPromise(index)
                 :done(function(response)
                     self.current_allinace_index = index
-                    self:UpdateAllianceBy(index, response.msg.allianceData)
+                    Alliance_Manager:UpdateAllianceBy(index, response.msg.allianceData)
+                    Alliance_Manager:OnEnterMapIndex(response.msg.mapData)
                     if type(func) == "function" then
                         func(response.msg)
                     end
@@ -92,8 +244,11 @@ function AllianceDetailScene:OnTouchClicked(pre_x, pre_y, x, y)
     end
     local mapObj = self:GetSceneLayer():GetClickedObject(x, y)
     if mapObj then
-        print(mapObj.id, mapObj.name, mapObj.mapIndex, mapObj.alliance_id)
-        UIKit:newGameUI("GameUIAllianceBase",self:GetAllianceByCache(mapObj.alliance_id), mapObj.id):AddToCurrentScene(true)
+        local alliance = Alliance_Manager:GetAllianceByCache(mapObj.index)
+        if alliance then
+            print(mapObj.index, mapObj.x, mapObj.y, mapObj.name)
+            UIKit:newGameUI("GameUIAllianceBase", alliance, mapObj.x, mapObj.y, mapObj.name):AddToCurrentScene(true)
+        end
     end
 end
 function AllianceDetailScene:OnSceneMove()
@@ -106,7 +261,7 @@ function AllianceDetailScene:UpdateVisibleAllianceBg()
     local new_visibles = {}
     for _,k in pairs(self:GetSceneLayer():GetVisibleAllianceIndexs()) do
         if not old_visibles[k] then
-            self:GetSceneLayer():LoadAllianceByIndex(k, self:GetAllianceByCache(k))
+            self:GetSceneLayer():LoadAllianceByIndex(k, Alliance_Manager:GetAllianceByCache(k))
             new_visibles[k] = true
         end
         new_visibles[k] = true
@@ -119,24 +274,16 @@ function AllianceDetailScene:UpdateCurrrentAlliance()
         self:GetSceneLayer():LoadAllianceByIndex(index, data.allianceData)
     end)
 end
-function AllianceDetailScene:GetAllianceByCache(key)
-    return self.alliance_caches[key]
-end
-function AllianceDetailScene:RemoveAllianceCache(key)
-    self.alliance_caches[key] = nil
-end
-function AllianceDetailScene:UpdateAllianceBy(key, alliance)
-    if alliance == json.null then
-        self.alliance_caches[key] = nil
-    else
-        self.alliance_caches[key] = alliance
-        self.alliance_caches[alliance._id] = alliance
-    end
-end
 
 
 
 return AllianceDetailScene
+
+
+
+
+
+
 
 
 

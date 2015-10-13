@@ -16,13 +16,15 @@ local buildingName = GameDatas.AllianceInitData.buildingName
 local pushManager_ = app:GetPushManager()
 local audioManager_ = app:GetAudioManager()
 Alliance.LISTEN_TYPE = Enum(
-    "OPERATION",
-    "BASIC",
-    "MEMBER",
-    "EVENTS",
-    "MAP_OBJECTS",
-    "JOIN_EVENTS",
-    "HELP_EVENTS")
+    "operation",
+    "basicInfo",
+    "members",
+    "villageLevels",
+    "events",
+    "joinRequestEvents",
+    "helpEvents",
+    "mapObjects",
+    "marchEvents")
     -- "OnAttackMarchEventDataChanged",
     -- "OnAttackMarchEventTimerChanged",
     -- "OnAttackMarchReturnEventDataChanged",
@@ -59,6 +61,18 @@ function Alliance:ctor()
     -- self.alliance_belvedere = AllianceBelvedere.new(self) -- 村落采集
     -- -- 联盟道具管理
     -- self.items_manager = AllianceItemsManager.new()
+end
+function Alliance:AddListenOnType(listener, listenerType)
+    if type(listenerType) == "string" then
+        listenerType = Alliance.LISTEN_TYPE[listenerType]
+    end
+    Alliance.super.AddListenOnType(self, listener, listenerType)
+end
+function Alliance:RemoveListenerOnType(listener, listenerType)
+    if type(listenerType) == "string" then
+        listenerType = Alliance.LISTEN_TYPE[listenerType]
+    end
+    Alliance.super.RemoveListenerOnType(self, listener, listenerType)
 end
 -- function Alliance:GetAllianceBelvedere()
 --     return self.alliance_belvedere
@@ -457,67 +471,31 @@ function Alliance:OnAllianceDataChanged(alliance_data,refresh_time,deltaData)
             is_quit = true
         end
     end
-    self._id = alliance_data._id
-    self.notice = alliance_data.notice
-    self.desc = alliance_data.desc
-    self.mapIndex = alliance_data.mapIndex
-    self.titles = alliance_data.titles
-    self.basicInfo = alliance_data.basicInfo
-    self.countInfo = alliance_data.countInfo
-    self.events = alliance_data.events
-    self.helpEvents = alliance_data.helpEvents
-    self.joinRequestEvents = alliance_data.joinRequestEvents
-    self.allianceFightReports = alliance_data.allianceFightReports
-    self.villageLevels = alliance_data.villageLevels
-    self.villages = alliance_data.villages
-    self.monsters = alliance_data.monsters
-    self.members = alliance_data.members
-    self.buildings = alliance_data.buildings
-    self.mapObjects = alliance_data.mapObjects
+    for k,v in pairs(alliance_data) do
+        self[k] = v
+    end
     for _,v in ipairs(self.members) do
         setmetatable(v, memberMeta)
     end
     if is_join then
         self:OnOperation("join")
     end
+
     if deltaData then
-        if deltaData.basicInfo then
-            self:NotifyListeneOnType(Alliance.LISTEN_TYPE.BASIC, function(listener)
-                listener:OnAllianceBasicChanged(self, deltaData)
-            end)
-        end
-        if deltaData.members then
-            self:NotifyListeneOnType(Alliance.LISTEN_TYPE.MEMBER, function(listener)
-                listener:OnMemberChanged(self, deltaData)
-            end)
-        end
-        if deltaData.events then
-            self:NotifyListeneOnType(Alliance.LISTEN_TYPE.EVENTS, function(listener)
-                listener:OnEventsChanged(self, deltaData)
-            end)
-        end
-        if deltaData.joinRequestEvents then
-            self:NotifyListeneOnType(Alliance.LISTEN_TYPE.JOIN_EVENTS, function(listener)
-                listener:OnJoinEventsChanged(self, deltaData)
-            end)
-        end
         if deltaData.helpEvents then
             if self:IsMyAlliance() then
                 self:NotifyHelpEvents(deltaData)
             end
-            self:NotifyListeneOnType(Alliance.LISTEN_TYPE.HELP_EVENTS, function(listener)
-                listener:OnHelpEventChanged(self, deltaData)
-            end)
         end
-        if deltaData.villageLevels then
-            self:NotifyListeneOnType(Alliance.LISTEN_TYPE.VILLAGE_LEVELS_CHANGED, function(listener)
-                listener:OnVillageLevelsChanged(self, deltaData)
-            end)
-        end
-        if deltaData.mapObjects then
-            self:NotifyListeneOnType(Alliance.LISTEN_TYPE.MAP_OBJECTS, function(listener)
-                listener:OnMapObjectsChanged(self, deltaData)
-            end)
+        for k,v in pairs(Alliance.LISTEN_TYPE) do
+            if k ~= "operation" and type(k) == "string" then
+                if deltaData(k) then
+                    local notify_func = string.format("OnAllianceDataChanged_%s", k)
+                    self:NotifyListeneOnType(Alliance.LISTEN_TYPE[k], function(listener)
+                        listener[notify_func](listener, self, deltaData)
+                    end)
+                end
+            end
         end
     end
     -- self.alliance_shrine:OnAllianceDataChanged(alliance_data,deltaData,refresh_time)
@@ -574,14 +552,10 @@ function Alliance:GetAllianceArchonMember()
     end
 end
 function Alliance:OnOperation(operation_type)
-    self:NotifyListeneOnType(Alliance.LISTEN_TYPE.OPERATION, function(listener)
-        listener:OnOperation(self, operation_type)
+    self:NotifyListeneOnType(Alliance.LISTEN_TYPE.operation, function(listener)
+        listener["OnAllianceDataChanged_operation"](listener, self, operation_type)
     end)
 end
-function Alliance:OnAllianceFightReportsChanged(alliance_data)
-    self.allianceFightReports = alliance_data.allianceFightReports
-end
-
 function Alliance:OnTimer(current_time)
     -- self:GetAllianceShrine():OnTimer(current_time)
     -- self:IteratorAttackMarchEvents(function(attackMarchEvent)
@@ -1092,7 +1066,13 @@ function Alliance:GetAllianceMonsterInfosById(id)
         end
     end
 end
-
+function Alliance:GetAllianceBuildingInfoByName(name)
+    for i,v in pairs(self.buildings) do
+        if v.name == name then
+            return v
+        end
+    end
+end
 function Alliance:SetIsMyAlliance(isMyAlliance)
     self.isMyAlliance = isMyAlliance
 end

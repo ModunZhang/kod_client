@@ -1,13 +1,16 @@
 local Alliance = import("..entity.Alliance")
+local WidgetUseItems = import("..widget.WidgetUseItems")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local GameUIAllianceBase = class("GameUIAllianceBase",WidgetPopDialog)
 local buildingName = GameDatas.AllianceMap.buildingName
-function GameUIAllianceBase:ctor(alliance, mapId)
+function GameUIAllianceBase:ctor(alliance, x, y, name)
     GameUIAllianceBase.super.ctor(self,self:GetUIHeight(),"",display.top-200)
     self.alliance = alliance
-    self.mapId = mapId
+    self.x = x
+    self.y = y
+    self.name = name
     setmetatable(self.alliance, Alliance)
 end
 function GameUIAllianceBase:onEnter()
@@ -77,7 +80,7 @@ function GameUIAllianceBase:InitBuildingImage()
         :scale(42/128)
     local honour_label= UIKit:ttfLabel({
         -- text = self:GetHonourLabelText(),
-
+        text = "",
         size = 20,
         color = 0x514d3e,
     }):align(display.CENTER, level_bg:getContentSize().width/2 , level_bg:getContentSize().height/2)
@@ -147,11 +150,62 @@ function GameUIAllianceBase:InitEnterButton()
     end
 end
 function GameUIAllianceBase:GetEnterButtons()
-	local mid = self:GetMemberId()
-	local aid = self.alliance._id
-    local attack_button = self:BuildOneButton("icon_move_player_city.png",_("迁移城市")):onButtonClicked(function()
+    if self:IsEmpty() then
+        local move_city_button = self:BuildOneButton("icon_move_player_city.png",_("迁移城市")):onButtonClicked(function()
+            WidgetUseItems.new():Create({
+                item_type = WidgetUseItems.USE_TYPE.MOVE_THE_CITY,
+                locationX = self.x,
+                locationY = self.y
+            }):AddToCurrentScene()
+            self:LeftButtonClicked()
+        end)
+        return {move_city_button}
+    end
+    if self:IsMonster() then
+        local mid = self:GetMapObjectInfo().id
+        local aid = self.alliance._id
+        local attack_button = self:BuildOneButton("icon_move_player_city.png",_("进攻")):onButtonClicked(function()
+            UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers,total_march_time,gameuialliancesendtroops)
+                NetManager:getAttackMonsterPromise(dragonType,soldiers, aid, mid):done(function()
+                    app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_SENDOUT")
+                    gameuialliancesendtroops:LeftButtonClicked()
+                end)
+            end,{targetIsMyAlliance = isMyAlliance,toLocation = toLocation,returnCloseAction = true}):AddToCurrentScene(true)
+            self:LeftButtonClicked()
+        end)
+        return {attack_button}
+    end
+
+    if self:IsVillage() then
+        local bottons = {}
+        local mid = self:GetMapObjectInfo().id
+        local aid = self.alliance._id
+        if Alliance_Manager:GetVillageEventsByMapId(self.alliance, mid) then
+            local che_button = self:BuildOneButton("capture_38x56.png",_("撤军")):onButtonClicked(function()
+                NetManager:getRetreatFromVillagePromise(self.alliance:GetAllianceVillageInfosById(mid).villageEvent.eventId)
+                self:LeftButtonClicked()
+            end)
+            table.insert(bottons, che_button)
+        end
+
+        local attack_button = self:BuildOneButton("capture_38x56.png",_("占领")):onButtonClicked(function()
+            UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers,total_march_time,gameuialliancesendtroops)
+                NetManager:getAttackVillagePromise(dragonType,soldiers,aid,mid):done(function()
+                    app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_SENDOUT")
+                    gameuialliancesendtroops:LeftButtonClicked()
+                end)
+            end,{targetIsMyAlliance = isMyAlliance,toLocation = toLocation,returnCloseAction = true}):AddToCurrentScene(true)
+            self:LeftButtonClicked()
+        end)
+        table.insert(bottons, attack_button)
+        return bottons
+    end
+
+    local mid = self:GetMemberId()
+    local aid = self.alliance._id
+    local attack_button = self:BuildOneButton("icon_move_player_city.png",_("攻打")):onButtonClicked(function()
         UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers,total_march_time,gameuialliancesendtroops)
-            NetManager:getAttackPlayerCityPromise(dragonType, soldiers, mid, aid):done(function()
+            NetManager:getAttackPlayerCityPromise(dragonType, soldiers, aid, mid):done(function()
                 app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_SENDOUT")
                 gameuialliancesendtroops:LeftButtonClicked()
             end)
@@ -183,22 +237,52 @@ function GameUIAllianceBase:GetUIHeight()
     return 242
 end
 function GameUIAllianceBase:GetObjectLevel()
-    local mapObject = self:GetMapObjectInfo()
-    local type_ = buildingName[mapObject.name]
+    if not buildingName[self.name] then
+        return 0
+    end
+    local mapInfo = self:GetMapObjectInfo()
+    local type_ = buildingName[self.name].type
     if type_ == "member" then
-        return self.alliance:GetMemberByMapObjectsId(self.mapId).level
+        return self.alliance:GetMemberByMapObjectsId(mapInfo.id).level
     elseif type_ == "village" then
-        return self.alliance:GetAllianceVillageInfosById(self.mapId).level
+        return self.alliance:GetAllianceVillageInfosById(mapInfo.id).level
     elseif type_ == "monster" then
-        return self.alliance:GetAllianceMonsterInfosById(self.mapId).level
+        return self.alliance:GetAllianceMonsterInfosById(mapInfo.id).level
+    elseif type_ == "building" then
+        return self.alliance:GetAllianceBuildingInfoByName(self.name).level
+    else
+        return 0
     end
 end
+function GameUIAllianceBase:IsVillage()
+    if buildingName[self.name] then
+        return buildingName[self.name].type == "village"
+    end
+end
+function GameUIAllianceBase:IsMonster()
+    return self.name == "monster"
+end
+function GameUIAllianceBase:IsAllianceBuilding()
+    if buildingName[self.name] then
+        return buildingName[self.name].type == "building"
+    end
+end
+function GameUIAllianceBase:IsEmpty()
+    return self.name == "empty"
+end
 function GameUIAllianceBase:GetMemberId()
-	return self.alliance:GetMemberByMapObjectsId(self.mapId).id
+    local mapInfo = self:GetMapObjectInfo()
+    if mapInfo then
+        local member = self.alliance:GetMemberByMapObjectsId(mapInfo.id)
+        if member then
+            return member.id
+        end
+    end
 end
 function GameUIAllianceBase:GetMapObjectInfo()
     for k,v in pairs(self.alliance.mapObjects) do
-        if v.id == self.mapId then
+        local location = v.location
+        if location.x == self.x and location.y == self.y then
             return v
         end
     end
@@ -209,6 +293,10 @@ end
 
 
 return GameUIAllianceBase
+
+
+
+
 
 
 

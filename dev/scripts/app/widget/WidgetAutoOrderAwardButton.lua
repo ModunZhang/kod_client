@@ -42,7 +42,7 @@ function WidgetAutoOrderAwardButton:SetTimeInfo(time)
 end
 
 function WidgetAutoOrderAwardButton:onEnter()
-	local countInfo = User:GetCountInfo()
+	local countInfo = User.countInfo
     local onlineTime = (countInfo.todayOnLineTime - countInfo.lastLoginTime)/1000
 	self.online_time = onlineTime
 	self.can_receive_num = WidgetNumberTips.new():addTo(self):pos(24,-24):hide()
@@ -82,7 +82,7 @@ function WidgetAutoOrderAwardButton:GetCanReceiveOnLineNum()
     return count
 end
 function WidgetAutoOrderAwardButton:IsTimePointRewarded(timepoint)
-    local countInfo = User:GetCountInfo()
+    local countInfo = User.countInfo
     for __,v in ipairs(countInfo.todayOnLineTimeRewards) do
         if v == timepoint then
             return true
@@ -124,7 +124,7 @@ end
 
 -- For WidgetAutoOrder
 function WidgetAutoOrderAwardButton:CheckVisible()
-	local countInfo = User:GetCountInfo()
+	local countInfo = User.countInfo
     local onlineTime = (countInfo.todayOnLineTime - countInfo.lastLoginTime)/1000
     print("CheckVisible------>",onlineTime)
 	self.online_time = onlineTime
@@ -169,7 +169,7 @@ function WidgetAutoOrderAwardButton:CheckState()
 end
 
 function WidgetAutoOrderAwardButton:IsTimePointRewarded(timepoint)
-	local countInfo = User:GetCountInfo()
+	local countInfo = User.countInfo
 	for __,v in ipairs(countInfo.todayOnLineTimeRewards) do
 		if v == timepoint then
 			return true

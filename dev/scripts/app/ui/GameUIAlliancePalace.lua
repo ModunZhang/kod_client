@@ -490,7 +490,7 @@ function GameUIAlliancePalace:OnAllianceBasicChanged(alliance,deltaData)
         end
     end
 end
-function GameUIAlliancePalace:OnMemberChanged(alliance,changed_map)
+function GameUIAlliancePalace:OnAllianceDataChanged_members(alliance,changed_map)
     self.sort_member = self:GetSortMembers()
     if not changed_map then return end
     if #changed_map[1]>0 then

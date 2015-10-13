@@ -14,7 +14,6 @@ local WidgetChangeMap = import("..widget.WidgetChangeMap")
 local GameUIHelp = import(".GameUIHelp")
 local Alliance = import("..entity.Alliance")
 local ResourceManager = import("..entity.ResourceManager")
-local GrowUpTaskManager = import("..entity.GrowUpTaskManager")
 local GameUIActivityRewardNew = import(".GameUIActivityRewardNew")
 local GameUIHome = UIKit:createUIClass('GameUIHome')
 local WidgetAutoOrderAwardButton = import("..widget.WidgetAutoOrderAwardButton")
@@ -66,23 +65,13 @@ function GameUIHome:OnResourceChanged(resource_manager)
     self.stone_label:setColor(stone_resource:IsOverLimit() and red_color or normal_color)
 end
 function GameUIHome:OnUpgradingBegin()
-    self:OnTaskChanged()
+    self:OnUserDataChanged_growUpTasks()
 end
 function GameUIHome:OnUpgrading()
 end
 function GameUIHome:OnUpgradingFinished()
-    self:OnTaskChanged()
+    self:OnUserDataChanged_growUpTasks()
     self:RefreshHelpButtonVisible()
-end
-function GameUIHome:OnTaskChanged()
-    self.task = self.city:GetRecommendTask()
-    if self.task then
-        self.quest_bar_bg:show()
-        self.quest_label:setString(self.task:Title())
-    else
-        self.quest_bar_bg:hide()
-        self.quest_label:setString(_("当前没有推荐任务!"))
-    end
 end
 function GameUIHome:OnMilitaryTechEventsChanged()
     self:RefreshHelpButtonVisible()
@@ -92,12 +81,26 @@ function GameUIHome:OnSoldierStarEventsChanged()
 end
 function GameUIHome:OnProductionTechnologyEventDataChanged()
     self:RefreshHelpButtonVisible()
-    self:OnTaskChanged()
+    self:OnUserDataChanged_growUpTasks()
 end
-function GameUIHome:OnCountInfoChanged()
-    self.join_alliance_tips_button:setVisible(not User:GetCountInfo().firstJoinAllianceRewardGeted)
+function GameUIHome:OnUserDataChanged_growUpTasks()
+    self.task = self.city:GetRecommendTask()
+    if self.task then
+        self.quest_bar_bg:show()
+        self.quest_label:setString(self.task:Title())
+    else
+        self.quest_bar_bg:hide()
+        self.quest_label:setString(_("当前没有推荐任务!"))
+    end
+end
+function GameUIHome:OnUserDataChanged_vipEvents()
+    self.top_order_group:RefreshOrder()
+    self:RefreshVIP()
+end
+function GameUIHome:OnUserDataChanged_countInfo()
+    self.join_alliance_tips_button:setVisible(not User.countInfo.firstJoinAllianceRewardGeted)
     if self.join_alliance_tips_button:getChildByTag(321) and
-        User:GetCountInfo().firstJoinAllianceRewardGeted then
+        User.countInfo.firstJoinAllianceRewardGeted then
         self.join_alliance_tips_button:removeChildByTag(321)
     end
     self.left_order_group:RefreshOrder()
@@ -155,7 +158,7 @@ function GameUIHome:onEnter()
     self:AddOrRemoveListener(true)
     self:OnResourceChanged(city:GetResourceManager())
     self:RefreshData()
-    self:OnTaskChanged()
+    self:OnUserDataChanged_growUpTasks()
     self:RefreshHelpButtonVisible()
 end
 function GameUIHome:onExit()
@@ -172,16 +175,14 @@ function GameUIHome:AddOrRemoveListener(isAdd)
         city:GetResourceManager():AddObserver(self)
         city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
         city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
-        my_allaince:AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
-        my_allaince:AddListenOnType(self, Alliance.LISTEN_TYPE.HELP_EVENTS)
-        my_allaince:AddListenOnType(self, Alliance.LISTEN_TYPE.OPERATION)
+        my_allaince:AddListenOnType(self, "basicInfo")
+        my_allaince:AddListenOnType(self, "helpEvents")
+        my_allaince:AddListenOnType(self, "operation")
         user:AddListenOnType(self, user.LISTEN_TYPE.BASIC)
-        user:AddListenOnType(self, user.LISTEN_TYPE.TASK)
-        user:AddListenOnType(self, user.LISTEN_TYPE.VIP_EVENT_ACTIVE)
-        user:AddListenOnType(self, user.LISTEN_TYPE.VIP_EVENT_OVER)
-        user:AddListenOnType(self, user.LISTEN_TYPE.COUNT_INFO)
-        user:AddListenOnType(self, user.LISTEN_TYPE.IAP_GIFTS_REFRESH)
-        user:AddListenOnType(self, user.LISTEN_TYPE.IAP_GIFTS_CHANGE)
+        user:AddListenOnType(self, "growUpTasks")
+        user:AddListenOnType(self, "vipEvents")
+        user:AddListenOnType(self, "countInfo")
+        user:AddListenOnType(self, "iapGifts")
         -- alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
         -- alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
         -- my_allaince:GetAllianceShrine():AddListenOnType(self,my_allaince:GetAllianceShrine().LISTEN_TYPE.OnShrineEventsChanged)
@@ -191,16 +192,14 @@ function GameUIHome:AddOrRemoveListener(isAdd)
         city:GetResourceManager():RemoveObserver(self)
         city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
         city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
-        my_allaince:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
-        my_allaince:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.HELP_EVENTS)
-        my_allaince:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.OPERATION)
+        my_allaince:RemoveListenerOnType(self, "basicInfo")
+        my_allaince:RemoveListenerOnType(self, "helpEvents")
+        my_allaince:RemoveListenerOnType(self, "operation")
         user:RemoveListenerOnType(self, user.LISTEN_TYPE.BASIC)
-        user:RemoveListenerOnType(self, user.LISTEN_TYPE.TASK)
-        user:RemoveListenerOnType(self, user.LISTEN_TYPE.VIP_EVENT_ACTIVE)
-        user:RemoveListenerOnType(self, user.LISTEN_TYPE.VIP_EVENT_OVER)
-        user:RemoveListenerOnType(self, user.LISTEN_TYPE.COUNT_INFO)
-        user:RemoveListenerOnType(self, user.LISTEN_TYPE.IAP_GIFTS_REFRESH)
-        user:RemoveListenerOnType(self, user.LISTEN_TYPE.IAP_GIFTS_CHANGE)
+        user:RemoveListenerOnType(self, "growUpTasks")
+        user:RemoveListenerOnType(self, "vipEvents")
+        user:RemoveListenerOnType(self, "countInfo")
+        user:RemoveListenerOnType(self, "iapGifts")
         -- alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
         -- alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
         -- my_allaince:GetAllianceShrine():RemoveListenerOnType(self,my_allaince:GetAllianceShrine().LISTEN_TYPE.OnShrineEventsChanged)
@@ -209,7 +208,7 @@ end
 function GameUIHome:OnShrineEventsChanged(changed_map)
     self.right_bottom_order:RefreshOrder()
 end
-function GameUIHome:OnAllianceBasicChanged(alliance, deltaData)
+function GameUIHome:OnAllianceDataChanged_basicInfo(alliance, deltaData)
     self:RefreshHelpButtonVisible()
     self:RefreshData()
 end
@@ -228,7 +227,7 @@ function GameUIHome:OnUserBasicChanged(fromEntity,changed_map)
     end
     self:RefreshData()
 end
-function GameUIHome:OnHelpEventChanged()
+function GameUIHome:OnAllianceDataChanged_helpEvents()
     self:RefreshHelpButtonVisible()
     self.request_count:SetNumber(Alliance_Manager:GetMyAlliance():GetOtherRequestEventsNum())
 end
@@ -449,7 +448,7 @@ function GameUIHome:CreateTop()
     if User:HavePlayerLevelUpReward() then
         award_num = award_num + 1
     end
-    button.tips_button_count:SetNumber(LuaUtils:table_size(User:GetIapGifts()) + award_num)
+    button.tips_button_count:SetNumber(#User.iapGifts + award_num)
     self.tips_button = button
     --在线活动
     local activity_button = WidgetAutoOrderAwardButton.new(self)
@@ -538,7 +537,7 @@ function GameUIHome:CreateTop()
         :onButtonClicked(function()
             UIKit:newGameUI("GameUIAllianceJoinTips"):AddToCurrentScene(true)
         end)
-    self.join_alliance_tips_button:setVisible(not User:GetCountInfo().firstJoinAllianceRewardGeted)
+    self.join_alliance_tips_button:setVisible(not User.countInfo.firstJoinAllianceRewardGeted)
     if self.join_alliance_tips_button:isVisible() then
         fire_var():addTo(self.join_alliance_tips_button, -1000, 321)
     end
@@ -638,7 +637,7 @@ end
 
 function GameUIHome:CheckAllianceRewardCount()
     if not self.tips_button then return end
-    local count = LuaUtils:table_size(User:GetIapGifts())
+    local count = #User.iapGifts
     local award_num = 0
 
     if User:HaveEveryDayLoginReward() then
@@ -651,15 +650,11 @@ function GameUIHome:CheckAllianceRewardCount()
         award_num = award_num + 1
     end
     self.tips_button.tips_button_count:SetNumber(count + award_num)
-    self:OnTaskChanged()
+    self:OnUserDataChanged_growUpTasks()
 end
 
 
-function GameUIHome:OnIapGiftsRefresh()
-    self:CheckAllianceRewardCount()
-end
-
-function GameUIHome:OnIapGiftsChanged(changed_map)
+function GameUIHome:OnUserDataChanged_iapGifts()
     self:CheckAllianceRewardCount()
 end
 
@@ -688,15 +683,8 @@ end
 function GameUIHome:ChangeChatChannel(channel_index)
     self.chat:ChangeChannel(channel_index)
 end
-function GameUIHome:OnVipEventActive( vip_event )
-    self.top_order_group:RefreshOrder()
-    self:RefreshVIP()
-end
-function GameUIHome:OnVipEventOver( vip_event )
-    self.top_order_group:RefreshOrder()
-    self:RefreshVIP()
-end
-function GameUIHome:OnOperation(alliance,operation_type)
+
+function GameUIHome:OnAllianceDataChanged_operation(alliance,operation_type)
     if operation_type == "quit" then
         self.top_order_group:RefreshOrder()
         self.right_bottom_order:RefreshOrder()

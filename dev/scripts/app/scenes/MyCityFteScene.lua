@@ -10,7 +10,7 @@ local WidgetFteMark = import("..widget.WidgetFteMark")
 local Sprite = import("..sprites.Sprite")
 local SoldierManager = import("..entity.SoldierManager")
 local User = import("..entity.User")
-local NotifyItem = import("..entity.NotifyItem")
+local NotifyItem = import("..utils.NotifyItem")
 local MyCityScene = import(".MyCityScene")
 local MyCityFteScene = class("MyCityFteScene", MyCityScene)
 

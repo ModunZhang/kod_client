@@ -1,5 +1,5 @@
-local Localize_item = import("..utils.Localize_item")
-local Localize = import("..utils.Localize")
+local Localize_item = import(".Localize_item")
+local Localize = import(".Localize")
 local function unique_key(item)
     return string.format("%s_%s", item.type, item.name)
 end

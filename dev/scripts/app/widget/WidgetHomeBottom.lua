@@ -17,8 +17,8 @@ local ALLIANCE_TAG = 222
 function WidgetHomeBottom:MailUnreadChanged(...)
     self.mail_count:SetNumber(MailManager:GetUnReadMailsNum()+MailManager:GetUnReadReportsNum())
 end
-function WidgetHomeBottom:OnTaskChanged()
-    self.task_count:SetNumber(self.city:GetUser():GetTaskManager():GetCompleteTaskCount())
+function WidgetHomeBottom:OnUserDataChanged_growUpTasks()
+    self.task_count:SetNumber(TaskUtils:GetCompleteTaskCount(self.city:GetUser().growUpTasks))
 end
 function WidgetHomeBottom:ctor(city)
     self.city = city
@@ -69,15 +69,15 @@ end
 function WidgetHomeBottom:onEnter()
     local user = self.city:GetUser()
     MailManager:AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
-    user:AddListenOnType(self, user.LISTEN_TYPE.TASK)
+    user:AddListenOnType(self, "growUpTasks")
 
-    self:OnTaskChanged()
+    self:OnUserDataChanged_growUpTasks()
     self:MailUnreadChanged()
 end
 function WidgetHomeBottom:onExit()
     local user = self.city:GetUser()
     MailManager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
-    user:RemoveListenerOnType(self, user.LISTEN_TYPE.TASK)
+    user:RemoveListenerOnType(self, "growUpTasks")
 end
 function WidgetHomeBottom:OnBottomButtonClicked(event)
     local tag = event.target:getTag()

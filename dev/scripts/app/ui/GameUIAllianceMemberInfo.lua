@@ -19,7 +19,7 @@ function GameUIAllianceMemberInfo:ctor(isMyAlliance,memberId,func_call,serverId)
     GameUIAllianceMemberInfo.super.ctor(self)
     self.isMyAlliance = isMyAlliance or false
     self.memberId_ = memberId
-    self.serverId_ = serverId or User:ServerId()
+    self.serverId_ = serverId or User.serverId
     self.func_call = func_call
 end
 
@@ -215,8 +215,8 @@ function GameUIAllianceMemberInfo:AdapterPlayerList()
     else
         table.insert(r,{_("最后登陆"),NetService:formatTimeAsTimeAgoStyleByServerTime(player.lastLogoutTime)})
     end
-    local __,__,indexName = string.find(User:ServerId() or "","-(%d+)")
-    table.insert(r,{_("服务器"),string.format("%s %d",Localize.server_name[User:ServerLevel()],indexName)})
+    local __,__,indexName = string.find(User.serverId or "","-(%d+)")
+    table.insert(r,{_("服务器"),string.format("%s %d",Localize.server_name[User.serverLevel],indexName)})
     table.insert(r,{_("战斗力"),string.formatnumberthousands(player.power)})
     table.insert(r,{_("击杀"),string.formatnumberthousands(player.kill)})
 

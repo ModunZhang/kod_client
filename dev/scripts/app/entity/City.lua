@@ -2,7 +2,6 @@ local intInit = GameDatas.PlayerInitData.intInit
 local config_productionTechs = GameDatas.ProductionTechs.productionTechs
 local Localize = import("..utils.Localize")
 local RecommendedMission = import(".RecommendedMission")
-local GrowUpTaskManager = import(".GrowUpTaskManager")
 local BuildingRegister = import(".BuildingRegister")
 local promise = import("..utils.promise")
 local Enum = import("..utils.Enum")
@@ -28,13 +27,6 @@ local ipairs = ipairs
 local pairs = pairs
 local insert = table.insert
 local format = string.format
--- 枚举定义
-City.RETURN_CODE = Enum(
-    "INNER_ROUND_NOT_UNLOCKED",
-    "EDGE_BESIDE_NOT_UNLOCKED",
-    "HAS_NO_UNLOCK_POINT",
-    "HAS_UNLOCKED",
-    "OUT_OF_BOUND")
 City.LISTEN_TYPE = Enum(
     "LOCK_TILE",
     "UNLOCK_TILE",
@@ -113,14 +105,16 @@ end
 --------------------
 function City:GetRecommendTask()
     -- 2015-8-13之后进入游戏的才有新推荐任务
-    if self:GetUser():GetCountInfo().registerTime > 1439476527805 then
+    if self:GetUser().countInfo.registerTime > 1439476527805 then
         local task = self:GetBeginnersTask()
         if task then
             return task
         end
     end
     local building_map = self:GetHighestCanUpgradeBuildingMap()
-    local tasks = self:GetUser():GetTaskManager():GetAvailableTasksByCategory(GrowUpTaskManager.TASK_CATEGORY.BUILD)
+    local tasks = TaskUtils:GetAvailableTasksByCategory(
+        self:GetUser().growUpTasks, TaskUtils.TASK_CATEGORY.BUILD
+    )
     local re_task
     for i,v in pairs(tasks.tasks) do
         if building_map[v:BuildingType()] then
@@ -249,7 +243,7 @@ for i,v in ipairs(RecommendedMission) do
     default[i] = false
 end
 function City:GetBeginnersTask()
-    local count = self:GetUser():GetTaskManager():GetCompleteTaskCount()
+    local count = TaskUtils:GetCompleteTaskCount(self:GetUser().growUpTasks)
     local key = string.format("recommend_tasks_%s", self:GetUser():Id())
     local flag = app:GetGameDefautlt():getTableForKey(key, default)
     for i,v in ipairs(RecommendedMission) do
@@ -295,8 +289,8 @@ function City:GetBeginnersTask()
                     return setmetatable({ name = v.name, level = level + 1 }, tech_meta)
                 end
             end
-        elseif v.type == "recruit" and 
-            not flag[i] and 
+        elseif v.type == "recruit" and
+            not flag[i] and
             self:GetSoldierManager():GetTreatCountBySoldierType(v.name) == 0 then
             return setmetatable({ name = v.name, index = i }, recruit_meta)
         elseif v.type == "explore" and not flag[i] then
@@ -338,7 +332,7 @@ local function get_house_event_by_location(building_location, sub_id, hosue_even
 end
 function City:InitWithJsonData(userData)
     local init_buildings = {}
-    local init_unlock_tiles = {}
+    local init_unlock_tiles = {{x = 1, y = 2}}
 
     local building_events = userData.buildingEvents
     table.foreach(userData.buildings, function(key, location)
@@ -840,15 +834,15 @@ function City:IsTileCanbeUnlockAt(x, y)
     end
     -- 是否解锁
     if not self:GetTileByIndex(x, y) then
-        return false , self.RETURN_CODE.OUT_OF_BOUND
+        return false
     end
     if not self:GetTileByIndex(x, y).locked then
-        return false, self.RETURN_CODE.HAS_UNLOCKED
+        return false
     end
     -- 检查内圈
     local inner_round_number = self:GetAroundByPosition(x, y) - 1
     if not self:IsUnlockedInAroundNumber(inner_round_number) then
-        return false, self.RETURN_CODE.INNER_ROUND_NOT_UNLOCKED
+        return false
     end
     -- 检查临边
     for iy, row in ipairs(self.tiles) do
@@ -859,7 +853,7 @@ function City:IsTileCanbeUnlockAt(x, y)
         end
     end
     -- 临边未解锁
-    return false, self.RETURN_CODE.EDGE_BESIDE_NOT_UNLOCKED
+    return false
 end
 -- local t = {
 --     [1] = 3,
@@ -1901,6 +1895,7 @@ function City:FindProductionTechEventById(_id)
 end
 
 return City
+
 
 
 

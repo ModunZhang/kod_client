@@ -812,11 +812,11 @@ function WidgetUseItems:OpenMoveTheCityDialog( item ,params)
             return true
         end,
         function ()
-            if Alliance_Manager:GetMyAlliance():GetAllianceBelvedere():HasEvents() then
-                UIKit:showMessageDialog(_("提示"),_("部队在外时不能移城"))
-            elseif Alliance_Manager:GetMyAlliance().basicInfo.status == "fight" then
-                UIKit:showMessageDialog(_("提示"),_("战争期不能移城"))
-            else
+            -- if Alliance_Manager:GetMyAlliance():GetAllianceBelvedere():HasEvents() then
+            --     UIKit:showMessageDialog(_("提示"),_("部队在外时不能移城"))
+            -- elseif Alliance_Manager:GetMyAlliance().basicInfo.status == "fight" then
+            --     UIKit:showMessageDialog(_("提示"),_("战争期不能移城"))
+            -- else
                 local item_name = item:Name()
                 NetManager:getUseItemPromise(item_name,{
                     [item_name]={
@@ -827,14 +827,14 @@ function WidgetUseItems:OpenMoveTheCityDialog( item ,params)
                 }):done(function ()
                     dialog:LeftButtonClicked()
                 end)
-            end
+            -- end
         end,
         function ()
-            if Alliance_Manager:GetMyAlliance():GetAllianceBelvedere():HasEvents() then
-                UIKit:showMessageDialog(_("提示"),_("部队在外时不能移城"))
-            elseif Alliance_Manager:GetMyAlliance().basicInfo.status == "fight" then
-                UIKit:showMessageDialog(_("提示"),_("战争期不能移城"))
-            else
+            -- if Alliance_Manager:GetMyAlliance():GetAllianceBelvedere():HasEvents() then
+            --     UIKit:showMessageDialog(_("提示"),_("部队在外时不能移城"))
+            -- elseif Alliance_Manager:GetMyAlliance().basicInfo.status == "fight" then
+            --     UIKit:showMessageDialog(_("提示"),_("战争期不能移城"))
+            -- else
                 local item_name = item:Name()
                 NetManager:getBuyAndUseItemPromise(item_name,{
                     [item_name]={
@@ -844,7 +844,7 @@ function WidgetUseItems:OpenMoveTheCityDialog( item ,params)
                 }):done(function ()
                     dialog:LeftButtonClicked()
                 end)
-            end
+            -- end
         end
     ):addTo(item_box_bg):align(display.CENTER,item_box_bg:getContentSize().width/2,item_box_bg:getContentSize().height/2)
     return dialog
@@ -911,13 +911,13 @@ function WidgetUseItems:OpenVipActive( item )
     local body = dialog:GetBody()
     local size = body:getContentSize()
     -- 是否激活 vip
-    local vip_event = User:GetVipEvent()
     local vip_status_label = UIKit:ttfLabel({
         size = 22,
-        color = vip_event:IsActived() and 0x007c23 or 0x403c2f,
+        color = User:IsVIPActived() and 0x007c23 or 0x403c2f,
     }):addTo(body):align(display.CENTER,size.width/2, size.height-35)
-    if vip_event:IsActived() then
-        local left_time_str = GameUtils:formatTimeStyle1(vip_event:GetTime())
+    local isactive,leftTime = User:IsVIPActived()
+    if isactive then
+        local left_time_str = GameUtils:formatTimeStyle1(leftTime)
         vip_status_label:setString( string.format( _("已激活,剩余时间:%s"), left_time_str ) )
     else
         vip_status_label:setString(_("未激活"))
@@ -926,9 +926,9 @@ function WidgetUseItems:OpenVipActive( item )
 
 
 
-    function dialog:OnVipEventTimer( vip_event_new )
-        local time = vip_event_new:GetTime()
-        if time >0 then
+    function dialog:OnVipEventTimer()
+        local isactive, time = User:IsVIPActived()
+        if time > 0 then
             local left_time_str = GameUtils:formatTimeStyle1(time)
             vip_status_label:setString( string.format( _("已激活,剩余时间:%s"), left_time_str ) )
             vip_status_label:setColor(UIKit:hex2c4b(0x007c23))
@@ -937,11 +937,9 @@ function WidgetUseItems:OpenVipActive( item )
             vip_status_label:setColor(UIKit:hex2c4b(0x403c2f))
         end
     end
-    dialog:addCloseCleanFunc(function ()
-        User:RemoveListenerOnType(dialog, User.LISTEN_TYPE.VIP_EVENT)
-    end)
-
-    User:AddListenOnType(dialog, User.LISTEN_TYPE.VIP_EVENT)
+    dialog:scheduleAt(function()
+        dialog:OnVipEventTimer()
+    end, 1)
 
     local list,list_node = UIKit:commonListView_1({
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,

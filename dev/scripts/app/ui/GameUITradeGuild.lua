@@ -7,7 +7,6 @@ local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local WidgetInfo = import("..widget.WidgetInfo")
 local WidgetSliderWithInput = import("..widget.WidgetSliderWithInput")
 local MaterialManager = import("..entity.MaterialManager")
-local TradeManager = import("..entity.TradeManager")
 local UILib = import(".UILib")
 
 
@@ -46,7 +45,7 @@ end
 function GameUITradeGuild:ctor(city,building, default_tab)
     local bn = Localize.building_name
     GameUITradeGuild.super.ctor(self,city,bn[building:GetType()],building,default_tab)
-    self.trade_manager = User:GetTradeManager()
+    self.user = city:GetUser()
     self.max_sell_queue = self.building:GetMaxSellQueue()
 end
 
@@ -80,16 +79,14 @@ function GameUITradeGuild:OnMoveInStage()
             self:LoadMyGoodsPage()
         end
     end):pos(window.cx, window.bottom + 34)
-    self.tab_buttons:SetButtonTipNumber("myGoods",self.trade_manager:GetSoldDealsCount())
+    self.tab_buttons:SetButtonTipNumber("myGoods",self.user:GetSoldDealsCount())
     self.building:AddUpgradeListener(self)
-    self.trade_manager:AddListenOnType(self, TradeManager.LISTEN_TYPE.DEAL_CHANGED)
-    self.trade_manager:AddListenOnType(self, TradeManager.LISTEN_TYPE.MY_DEAL_REFRESH)
+    self.user:AddListenOnType(self, "deals")
     self.city:GetMaterialManager():AddObserver(self)
 end
 
 function GameUITradeGuild:onExit()
-    self.trade_manager:RemoveListenerOnType(self, TradeManager.LISTEN_TYPE.DEAL_CHANGED)
-    self.trade_manager:RemoveListenerOnType(self, TradeManager.LISTEN_TYPE.MY_DEAL_REFRESH)
+    self.user:RemoveListenerOnType(self, "deals")
     self.building:RemoveUpgradeListener(self)
     self.city:GetMaterialManager():RemoveObserver(self)
     GameUITradeGuild.super.onExit(self)
@@ -632,7 +629,7 @@ function GameUITradeGuild:GetUnlockedSellListNum()
     return self.building:GetMaxSellQueue()
 end
 function GameUITradeGuild:GetOnSellGoods()
-    local my_deals = self.trade_manager:GetMyDeals()
+    local my_deals = self.user:GetMyDeals()
     local sell_goods = {}
     for k,v in pairs(my_deals) do
         table.insert(sell_goods,
@@ -1060,12 +1057,12 @@ function GameUITradeGuild:OnBuildingUpgradeFinished()
 end
 function GameUITradeGuild:OnBuildingUpgrading()
 end
-function GameUITradeGuild:OnDealChanged(changed_map)
-    self.tab_buttons:SetButtonTipNumber("myGoods",self.trade_manager:GetSoldDealsCount())
-    self:LoadMyGoodsList()
-end
-function GameUITradeGuild:OnMyDealsRefresh(changed_map)
-    self.tab_buttons:SetButtonTipNumber("myGoods",self.trade_manager:GetSoldDealsCount())
+function GameUITradeGuild:OnUserDataChanged_deals(userData, deltaData)
+    local ok, value = deltaData("deals")
+    if ok then
+        self.tab_buttons:SetButtonTipNumber("myGoods",self.user:GetSoldDealsCount())
+        self:LoadMyGoodsList()
+    end
 end
 function GameUITradeGuild:OnResourceChanged(resource_manager)
     GameUITradeGuild.super.OnResourceChanged(self,resource_manager)
