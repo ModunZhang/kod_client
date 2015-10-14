@@ -291,7 +291,7 @@ function GameUIPveAttack:RefreshUI()
         self.sweep_all.label:setString(string.format("-%d", self.user:GetPveLeftCountByName(self.pve_name)))
         self.sweep_once.label:setColor(UIKit:hex2c4b(ItemManager:GetItemByName("sweepScroll"):Count() >= 1 and 0xffedae or 0x7e00000))
         self.sweep_once:setButtonEnabled(star >= 3)
-        local strength = self.user:GetStaminaValue()
+        local strength = self.user:GetResValueByType("stamina")
         self.attack.label:setColor(UIKit:hex2c4b(strength >= sections[self.pve_name].staminaUsed and 0xffedae or 0x7e00000))
     end
 end

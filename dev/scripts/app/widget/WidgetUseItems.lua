@@ -509,10 +509,10 @@ function WidgetUseItems:OpenStrengthDialog( item )
     }):align(display.LEFT_CENTER,80,blood_bg:getContentSize().height/2)
         :addTo(blood_bg)
 
-    local value = User:GetStaminaValue()
-    local prodperhour = User:GetStaminaOutput()
+    local value = User:GetResValueByType("stamina")
+    local res = User:GetResProduction("stamina")
     local strength_label = UIKit:ttfLabel({
-        text = string.format(_("%s(+%d/每小时)"), string.formatnumberthousands(value), prodperhour),
+        text = string.format(_("%s(+%d/每小时)"), string.formatnumberthousands(value), res.output),
         size = 22,
         color = 0x28251d,
     }):align(display.RIGHT_CENTER,blood_bg:getContentSize().width-40,blood_bg:getContentSize().height/2)
@@ -536,9 +536,9 @@ function WidgetUseItems:OpenStrengthDialog( item )
         end
     end
     dialog:scheduleAt(function()
-        local value = User:GetStaminaValue()
-        local prodperhour = User:GetStaminaOutput()
-        strength_label:setString(string.format(_("%s(+%d/每小时)"), string.formatnumberthousands(value), prodperhour))
+        local value = User:GetResValueByType("stamina")
+        local res = User:GetResProduction("stamina")
+        strength_label:setString(string.format(_("%s(+%d/每小时)"), string.formatnumberthousands(value), res.output))
     end)
     return dialog
 end

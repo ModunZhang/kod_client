@@ -18,12 +18,20 @@ function CityScene:onEnter()
     self:PlayBackgroundMusic()
     self:GotoLogicPointInstant(5, 4)
     self:GetSceneLayer():ZoomTo(0.8)
+    self:RefreshStrenth()
 
     --  cc.ui.UIPushButton.new({normal = "lock_btn.png",pressed = "lock_btn.png"})
     -- :addTo(self, 1000000):pos(display.cx, display.cy + 300)
     -- :onButtonClicked(function()
     --     app:ReloadGame()
     -- end)
+end
+function CityScene:RefreshStrenth()
+    local limit = self.city:GetUser():GetResProduction("stamina").limit
+    local value = self.city:GetUser():GetResValueByType("stamina")
+    local ratio = value / limit
+    ratio = ratio > 1 and 1 or ratio
+    self:GetSceneLayer():GetAirship():SetBattery(ratio)
 end
 function CityScene:onExit()
     self:stopAllActions()

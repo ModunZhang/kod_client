@@ -343,8 +343,8 @@ end
 function PVELayerNew:RefreshBattery()
     if self.airship then
         local battery = self.airship.battery
-        local limit = self.user:GetStaminaLimit()
-        local value = self.user:GetStaminaValue()
+        local limit = self.user:GetResProduction("stamina").limit
+        local value = self.user:GetResValueByType("stamina")
         local ratio = value / limit
         ratio = ratio > 1 and 1 or ratio
         if ratio >= 1.0 then

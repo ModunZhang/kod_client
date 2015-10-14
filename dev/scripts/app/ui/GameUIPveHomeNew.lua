@@ -47,7 +47,7 @@ function GameUIPveHomeNew:onEnter()
     display.newNode():addTo(self):schedule(function()
         local star = User:GetStageStarByIndex(self.level)
         self.stars:setString(string.format("%d/%d", star, User:GetStageTotalStars()))
-        self.strenth_current:setString(User:GetStaminaValue())
+        self.strenth_current:setString(User:GetResValueByType("stamina"))
         self.gem_label:setString(string.formatnumberthousands(User:GetGemValue()))
 
         local index = 1
@@ -140,14 +140,15 @@ function GameUIPveHomeNew:CreateTop()
     display.newSprite("+.png"):addTo(add_btn)
 
     self.strenth_current = UIKit:ttfLabel({
-        text = User:GetStaminaValue(),
+        text = User:GetResValueByType("stamina"),
         size = 20,
         color = 0xffedae,
         shadow = true,
     }):addTo(pve_back):align(display.RIGHT_CENTER, size.width / 2, 25)
 
+    
     UIKit:ttfLabel({
-        text = string.format("/%d", User:GetStaminaLimit()),
+        text = string.format("/%d", User:GetResProduction("stamina").limit),
         size = 20,
         color = 0xffedae,
         shadow = true,

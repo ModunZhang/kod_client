@@ -10,12 +10,6 @@ end
 function OtherCityScene:onEnter()
     OtherCityScene.super.onEnter(self)
     self.home = UIKit:newGameUI('GameUICityInfo', self.user, self.location):AddToScene(self):setTouchSwallowEnabled(false)
-
-    local limit = self.city:GetUser():GetStaminaLimit()
-    local value = self.city:GetUser():GetStaminaValue()
-    local ratio = value / limit
-    ratio = ratio > 1 and 1 or ratio
-    self:GetSceneLayer():GetAirship():SetBattery(ratio)
 end
 function OtherCityScene:GetHomePage()
     return self.home

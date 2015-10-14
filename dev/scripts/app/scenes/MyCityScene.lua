@@ -34,7 +34,6 @@ function MyCityScene:onEnter()
     if not UIKit:GetUIInstance('GameUIWarSummary') and alliance:LastAllianceFightReport() then
         UIKit:newGameUI("GameUIWarSummary"):AddToCurrentScene(true)
     end
-    self:RefreshStrenth()
     -- cc.ui.UIPushButton.new({normal = "lock_btn.png",pressed = "lock_btn.png"})
     -- :addTo(self, 1000000):align(display.RIGHT_TOP, display.width, display.height)
     -- :onButtonClicked(function(event)
@@ -194,13 +193,6 @@ function MyCityScene:RefreshLockBtnStatus()
         btn:setButtonImage(cc.ui.UIPushButton.NORMAL, btn_png, true)
         btn:setButtonImage(cc.ui.UIPushButton.PRESSED, btn_png, true)
     end)
-end
-function MyCityScene:RefreshStrenth()
-    local limit = self.city:GetUser():GetStaminaLimit()
-    local value = self.city:GetUser():GetStaminaValue()
-    local ratio = value / limit
-    ratio = ratio > 1 and 1 or ratio
-    self:GetSceneLayer():GetAirship():SetBattery(ratio)
 end
 function MyCityScene:IteratorLockButtons(func)
     for i,v in ipairs(self:GetTopLayer():getChildren()) do

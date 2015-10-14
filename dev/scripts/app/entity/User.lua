@@ -41,7 +41,9 @@ local intInit = GameDatas.PlayerInitData.intInit
 function User:ctor(p)
     User.super.ctor(self)
     self.resources_cache = {
-        stamina = {value = 0, limit = intInit.staminaMax.value, output = intInit.staminaRecoverPerHour.value}
+        gem     = {limit = math.huge,output= 0,},
+        stamina = {limit = intInit.staminaMax.value, output= intInit.staminaRecoverPerHour.value,},
+        blood   = {limit = math.huge, output= 0,},
     }
     if type(p) == "table" then
         self:SetId(p._id)
@@ -343,36 +345,24 @@ end
 
 --[[resources begin]]
 function User:GetGemValue()
-    return self.resources.gem
+    return self:GetResValueByType("gem")
 end
 function User:HasAnyStamina(num)
     local res = self.resources_cache.stamina
-    return self:GetStaminaValue() >= (num or 1)
-end
-function User:GetStaminaValue()
-    return self:GetResValueByType("stamina")
-end
-function User:GetStaminaLimit()
-    return self:GetResLimitByType("stamina")
-end
-function User:GetStaminaOutput()
-    return self:GetResOutputByType("stamina")
+    return self:GetResValueByType("stamina") >= (num or 1)
 end
 function User:GetResValueByType(type_)
     local res = self.resources_cache[type_]
     return GameUtils:GetCurrentProduction(
-        res.value,
+        self.resources[type_],
         res.limit,
         res.output,
         self.resources.refreshTime / 1000,
         app.timer:GetServerTime()
     )
 end
-function User:GetResLimitByType(type_)
-    return self.resources_cache[type_].limit
-end
-function User:GetResOutputByType(type_)
-    return self.resources_cache[type_].output
+function User:GetResProduction(type_)
+    return self.resources_cache[type_]
 end
 --[[end]]
 
@@ -463,12 +453,7 @@ local before_map = {
             end
         end
     end,
-    resources = function(userData, deltaData)
-        if deltaData("resources.stamina") then
-            local stamina = userData.resources_cache.stamina
-            stamina.value = userData.resources.stamina
-        end
-    end,
+    resources = function()end,
     countInfo = function()end,
     deals = function()end,
     iapGifts = function()end,
@@ -544,9 +529,6 @@ function User:OnUserDataChanged(userData, current_time, deltaData)
                 end
             end
         end
-    else
-        local stamina = self.resources_cache.stamina
-        stamina.value = self.resources.stamina
     end
 
     return self
