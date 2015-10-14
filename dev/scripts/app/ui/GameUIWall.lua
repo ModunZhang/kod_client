@@ -34,6 +34,17 @@ function GameUIWall:OnMoveInStage()
             self.military_node:hide()
         end
     end):pos(window.cx, window.bottom + 34)
+    scheduleAt(self, function()
+        --更新城墙hp
+        if self.military_node:isVisible() then
+            local value = self.city:GetUser():GetResValueByType("wallHp")
+            local res = self.city:GetUser():GetResProduction("wallHp")
+            local string = string.format("%d/%d", value, res.limit)
+            self.wall_hp_process_label:setString(string)
+            self.wall_hp_recovery_label:setString("+" .. res.output .. "/H")
+            self.progressTimer_wall:setPercentage(value/res.limit*100)
+        end
+    end)
 end
 
 function GameUIWall:OnMoveOutStage()
@@ -178,14 +189,15 @@ function GameUIWall:CreateMilitaryUIIf()
         size = 24,
         color= 0x403c2f
     }):align(display.CENTER_TOP,military_node:getContentSize().width/2,top_bg:getPositionY()-10):addTo(military_node)
-    local wallHpResource = self.city:GetResourceManager():GetWallHpResource()
-    local string = string.format("%d/%d",wallHpResource:GetResourceValueByCurrentTime(timer:GetServerTime()),wallHpResource:GetValueLimit())
 
+    local value = self.city:GetUser():GetResValueByType("wallHp")
+    local res = self.city:GetUser():GetResProduction("wallHp")
+    local string = string.format("%d/%d", value, res.limit)
     local process_wall_bg = display.newSprite("process_bar_540x40.png")
         :align(display.CENTER_TOP,military_node:getContentSize().width/2, wall_label:getPositionY() - wall_label:getContentSize().height - 10)
         :addTo(military_node)
     local progressTimer_wall = UIKit:commonProgressTimer("bar_color_540x40.png"):addTo(process_wall_bg):align(display.LEFT_BOTTOM,0,0)
-    progressTimer_wall:setPercentage(wallHpResource:GetResourceValueByCurrentTime(timer:GetServerTime())/wallHpResource:GetValueLimit()*100)
+    progressTimer_wall:setPercentage(value/res.limit*100)
     self.progressTimer_wall = progressTimer_wall
     self.wall_hp_process_label = UIKit:ttfLabel({
         text = string,
@@ -193,9 +205,8 @@ function GameUIWall:CreateMilitaryUIIf()
         color= 0xfff3c7,
         shadow= true
     }):align(display.LEFT_CENTER,50,20):addTo(process_wall_bg)
-
     self.wall_hp_recovery_label = UIKit:ttfLabel({
-        text = "+" .. wallHpResource:GetProductionPerHour() .. "/h",
+        text = "+" .. res.output .. "/h",
         size = 22,
         color= 0xfff3c7
     }):align(display.RIGHT_CENTER, 480, 20):addTo(process_wall_bg)
@@ -302,18 +313,6 @@ end
 
 function GameUIWall:GetDragon()
     return self.dragon_manager:GetDefenceDragon()
-end
-
-function GameUIWall:OnResourceChanged(resource_manager)
-    GameUIWall.super.OnResourceChanged(self,resource_manager)
-    local wallHpResource = resource_manager:GetWallHpResource()
-    --更新城墙hp
-    if self.military_node:isVisible() then
-        local string = string.format("%d/%d",wallHpResource:GetResourceValueByCurrentTime(timer:GetServerTime()),wallHpResource:GetValueLimit())
-        self.wall_hp_process_label:setString(string)
-        self.wall_hp_recovery_label:setString("+" .. wallHpResource:GetProductionPerHour() .. "/H")
-        self.progressTimer_wall:setPercentage(wallHpResource:GetResourceValueByCurrentTime(timer:GetServerTime())/wallHpResource:GetValueLimit()*100)
-    end
 end
 
 function GameUIWall:OnSelectDragonButtonClicked()

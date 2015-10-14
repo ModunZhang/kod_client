@@ -117,6 +117,14 @@ function GameUIDragonEyrieDetail:OnMoveInStage()
     self:BuildUI()
     self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
     City:GetMaterialManager():AddObserver(self)
+
+    scheduleAt(self, function()
+        if not self:GetDragon():Ishated() then return end
+        if self.skill_ui and self.skill_ui.blood_label then
+            self.skill_ui.blood_label:setString(string.formatnumberthousands(User:GetResValueByType("blood")))
+        end
+    end)
+    
 end
 
 function GameUIDragonEyrieDetail:OnMoveOutStage()
@@ -157,14 +165,6 @@ function GameUIDragonEyrieDetail:BuildDragonContent()
     end
 end
 
-function GameUIDragonEyrieDetail:OnResourceChanged(resource_manager)
-    GameUIDragonEyrieDetail.super.OnResourceChanged(self,resource_manager)
-    if not self:GetDragon():Ishated() then return end
-    if self.skill_ui and self.skill_ui.blood_label then
-        self.skill_ui.blood_label:setString(string.formatnumberthousands(resource_manager:GetBloodResource():GetValue()))
-    end
-end
-
 function GameUIDragonEyrieDetail:GetDragon()
     return self.dragon
 end
@@ -200,7 +200,7 @@ function GameUIDragonEyrieDetail:RefreshUI()
     elseif button_tag == 'skill' then
         self.hp_process_bg:hide()
         self:RefreshSkillList()
-        self.skill_ui.blood_label:setString(string.formatnumberthousands(City:GetResourceManager():GetBloodResource():GetValue()))
+        self.skill_ui.blood_label:setString(string.formatnumberthousands(User:GetResValueByType("blood")))
         self.lv_label:hide()
     else
         self.lv_label:show()

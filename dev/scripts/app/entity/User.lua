@@ -37,13 +37,16 @@ property(User, "requestToAllianceEvents", {})
 property(User, "inviteToAllianceEvents", {})
 
 
-local intInit = GameDatas.PlayerInitData.intInit
+local staminaMax_value = GameDatas.PlayerInitData.intInit.staminaMax.value
+local staminaRecoverPerHour_value = GameDatas.PlayerInitData.intInit.staminaRecoverPerHour.value
 function User:ctor(p)
     User.super.ctor(self)
     self.resources_cache = {
-        gem     = {limit = math.huge,output= 0,},
-        stamina = {limit = intInit.staminaMax.value, output= intInit.staminaRecoverPerHour.value,},
-        blood   = {limit = math.huge, output= 0,},
+        gem         = {limit =          math.huge, output = 0},
+        blood       = {limit =          math.huge, output = 0},
+        casinoToken = {limit =          math.huge, output = 0},
+        stamina     = {limit =   staminaMax_value, output = staminaRecoverPerHour_value},
+        wallHp      = {limit =                  0, output = 0},
     }
     if type(p) == "table" then
         self:SetId(p._id)
@@ -259,12 +262,12 @@ function User:HaveContinutyReward()
 end
 -- 城堡冲级奖励是否领取
 local config_levelup = GameDatas.Activities.levelup
-local config_intInit = GameDatas.PlayerInitData.intInit
+local playerLevelupRewardsHours_value = GameDatas.PlayerInitData.intInit.playerLevelupRewardsHours.value
 function User:HavePlayerLevelUpReward()
     local countInfo = self.countInfo
     local current_level = self.buildings.location_1.level
     for __,v in ipairs(config_levelup) do
-        if not (app.timer:GetServerTime() > countInfo.registerTime/1000 + config_intInit.playerLevelupRewardsHours.value * 60 * 60) then
+        if not (app.timer:GetServerTime() > countInfo.registerTime/1000 + playerLevelupRewardsHours_value * 60 * 60) then
             if  v.level <= current_level then
                 local max_level = 0
                 local l_flag = true
@@ -552,60 +555,78 @@ end
 
 --[[vip function begin]]
 -- 获取当天剩余普通免费gacha次数
+local freeNormalGachaCountPerDay_value = GameDatas.PlayerInitData.intInit.freeNormalGachaCountPerDay.value
 function User:GetOddFreeNormalGachaCount()
-    local vip_add = self:IsVIPActived() and self:GetVIPNormalGachaAdd() or 0
-    return intInit.freeNormalGachaCountPerDay.value + vip_add - self.countInfo.todayFreeNormalGachaCount
+    return freeNormalGachaCountPerDay_value + self:GetVIPNormalGachaAdd() - self.countInfo.todayFreeNormalGachaCount
 end
-local vip_level = GameDatas.Vip.level
 function User:GetVIPFreeSpeedUpTime()
-    return self:IsVIPActived() and vip_level[self:GetVipLevel()].freeSpeedup or 5
+    return self:GetCurrentVipConfig().freeSpeedup
 end
 function User:GetVIPWoodProductionAdd()
-    return self:IsVIPActived() and vip_level[self:GetVipLevel()].woodProductionAdd or 0
+    return self:GetCurrentVipConfig().woodProductionAdd
+end
+local resource_buff = {
+    wallHp  = "RecoveryAdd",
+    food    = "ProductionAdd",
+    wood    = "ProductionAdd",
+    stone   = "ProductionAdd",
+    coin    = "ProductionAdd",
+    iron    = "ProductionAdd",
+    citizen = "ProductionAdd",
+}
+function User:GetResourceBuff()
+    local buff = {}
+    local config = self:GetCurrentVipConfig()
+    for res_type,suffix in pairs(resource_buff) do
+        local value = config[string.format("%s%s", res_type, suffix)]
+        buff[res_type] = value or 0
+    end
+    return buff
 end
 function User:GetVIPStoneProductionAdd()
-    return self:IsVIPActived() and vip_level[self:GetVipLevel()].stoneProductionAdd or 0
+    return self:GetCurrentVipConfig().stoneProductionAdd
 end
 function User:GetVIPIronProductionAdd()
-    return self:IsVIPActived() and vip_level[self:GetVipLevel()].ironProductionAdd or 0
+    return self:GetCurrentVipConfig().ironProductionAdd
 end
 function User:GetVIPFoodProductionAdd()
-    return self:IsVIPActived() and vip_level[self:GetVipLevel()].foodProductionAdd or 0
+    return self:GetCurrentVipConfig().foodProductionAdd
 end
 function User:GetVIPCitizenRecoveryAdd()
-    return self:IsVIPActived() and vip_level[self:GetVipLevel()].citizenRecoveryAdd or 0
+    return self:GetCurrentVipConfig().citizenRecoveryAdd
 end
 function User:GetVIPMarchSpeedAdd()
-    return self:IsVIPActived() and vip_level[self:GetVipLevel()].marchSpeedAdd or 0
+    return self:GetCurrentVipConfig().marchSpeedAdd
 end
 function User:GetVIPNormalGachaAdd()
-    return self:IsVIPActived() and vip_level[self:GetVipLevel()].normalGachaAdd or 0
+    return self:GetCurrentVipConfig().normalGachaAdd
 end
 --暗仓保护上限提升
 function User:GetVIPStorageProtectAdd()
-    return self:IsVIPActived() and vip_level[self:GetVipLevel()].storageProtectAdd or 0
+    return self:GetCurrentVipConfig().storageProtectAdd
 end
 function User:GetVIPWallHpRecoveryAdd()
-    return self:IsVIPActived() and vip_level[self:GetVipLevel()].wallHpRecoveryAdd or 0
+    return self:GetCurrentVipConfig().wallHpRecoveryAdd
 end
 function User:GetVIPDragonExpAdd()
-    return self:IsVIPActived() and vip_level[self:GetVipLevel()].dragonExpAdd or 0
+    return self:GetCurrentVipConfig().dragonExpAdd
 end
 function User:GetVIPDragonHpRecoveryAdd()
-    return self:IsVIPActived() and vip_level[self:GetVipLevel()].dragonHpRecoveryAdd or 0
+    return self:GetCurrentVipConfig().dragonHpRecoveryAdd
 end
 function User:GetVIPSoldierAttackPowerAdd()
-    return self:IsVIPActived() and vip_level[self:GetVipLevel()].soldierAttackPowerAdd or 0
+    return self:GetCurrentVipConfig().soldierAttackPowerAdd
 end
 function User:GetVIPSoldierHpAdd()
-    return self:IsVIPActived() and vip_level[self:GetVipLevel()].soldierHpAdd or 0
+    return self:GetCurrentVipConfig().soldierHpAdd
 end
 function User:GetVIPDragonLeaderShipAdd()
-    return self:IsVIPActived() and vip_level[self:GetVipLevel()].dragonLeaderShipAdd or 0
+    return self:GetCurrentVipConfig().dragonLeaderShipAdd
 end
 function User:GetVIPSoldierConsumeSub()
-    return self:IsVIPActived() and vip_level[self:GetVipLevel()].soldierConsumeSub or 0
+    return self:GetCurrentVipConfig().soldierConsumeSub
 end
+local vip_level = GameDatas.Vip.level
 function User:GetSpecialVipLevelExp(level)
     local level = #vip_level >= level and level or #vip_level
     return vip_level[level].expFrom
@@ -613,6 +634,9 @@ end
 function User:GetSpecialVipLevelExpTo(level)
     local level = #vip_level >= level and level or #vip_level
     return vip_level[level].expTo
+end
+function User:GetCurrentVipConfig(level)
+    return self:IsVIPActived() and vip_level[self:GetVipLevel()] or vip_level[0]
 end
 function User:IsVIPActived()
     local vipEvent = self.vipEvents[1]
@@ -624,8 +648,7 @@ function User:IsVIPActived()
     return false, 0
 end
 function User:GetVipLevel()
-    local exp = self.basicInfo.vipExp
-    return DataUtils:getPlayerVIPLevel(exp)
+    return DataUtils:getPlayerVIPLevel(self.basicInfo.vipExp)
 end
 --[[end]]
 

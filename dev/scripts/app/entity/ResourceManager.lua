@@ -10,7 +10,6 @@ local intInit = GameDatas.PlayerInitData.intInit
 ResourceManager.RESOURCE_BUFF_TYPE = Enum("PRODUCT","LIMIT")
 
 ResourceManager.RESOURCE_TYPE = Enum(
-    "BLOOD",
     "WOOD",
     "FOOD",
     "IRON",
@@ -18,14 +17,8 @@ ResourceManager.RESOURCE_TYPE = Enum(
     "CART",
     "CITIZEN",
     "COIN",
-    "RUBY",             -- 红宝石
-    "BERYL",            -- 绿宝石
-    "SAPPHIRE",         -- 蓝宝石
-    "TOPAZ",            -- 黄宝石
-    "WALLHP",
-    "CASINOTOKEN")              -- 玩家宝石
+    "WALLHP")
 
-local ENERGY        = ResourceManager.RESOURCE_TYPE.ENERGY
 local WOOD          = ResourceManager.RESOURCE_TYPE.WOOD
 local FOOD          = ResourceManager.RESOURCE_TYPE.FOOD
 local IRON          = ResourceManager.RESOURCE_TYPE.IRON
@@ -33,8 +26,6 @@ local COIN          = ResourceManager.RESOURCE_TYPE.COIN
 local STONE         = ResourceManager.RESOURCE_TYPE.STONE
 local CITIZEN       = ResourceManager.RESOURCE_TYPE.CITIZEN
 local CART          = ResourceManager.RESOURCE_TYPE.CART
-local BLOOD         = ResourceManager.RESOURCE_TYPE.BLOOD
-local CASINOTOKEN   = ResourceManager.RESOURCE_TYPE.CASINOTOKEN
 local WALLHP        = ResourceManager.RESOURCE_TYPE.WALLHP
 
 local RESOURCE_TYPE = ResourceManager.RESOURCE_TYPE
@@ -60,9 +51,7 @@ function ResourceManager:ctor(city)
         [CART] = AutomaticUpdateResource.new(),
         [CITIZEN] = CitizenAutomaticUpdateResource.new(),
         [COIN] = AutomaticUpdateResource.new(),
-        [BLOOD] = Resource.new(),
         [WALLHP] = AutomaticUpdateResource.new(),
-        [CASINOTOKEN] = Resource.new(),
     }
     self:GetCoinResource():SetValueLimit(math.huge)
 
@@ -72,18 +61,14 @@ function ResourceManager:ctor(city)
         [IRON] = 0,
         [STONE] = 0,
         [CITIZEN] = 0,
-        [WALLHP] = 0,
     }
-end
-function ResourceManager:OnTimer(current_time)
-    self:OnResourceChanged()
 end
 function ResourceManager:GetAllResources()
     return self.resources
 end
-function ResourceManager:GetWallHpResource()
-    return self.resources[WALLHP]
-end
+-- function ResourceManager:GetWallHpResource()
+--     return self.resources[WALLHP]
+-- end
 function ResourceManager:GetWoodResource()
     return self.resources[WOOD]
 end
@@ -105,20 +90,14 @@ end
 function ResourceManager:GetCoinResource()
     return self.resources[COIN]
 end
-function ResourceManager:GetBloodResource()
-    return self.resources[BLOOD]
-end
-function ResourceManager:GetCasinoTokenResource()
-    return self.resources[CASINOTOKEN]
-end
 function ResourceManager:GetResourceByType(RESOURCE_TYPE)
     return self.resources[RESOURCE_TYPE]
 end
-function ResourceManager:OnResourceChanged()
-    self:NotifyObservers(function(listener)
-        listener:OnResourceChanged(self)
-    end)
-end
+-- function ResourceManager:OnResourceChanged()
+--     self:NotifyObservers(function(listener)
+--         listener:OnResourceChanged(self)
+--     end)
+-- end
 --获取食物的生产量
 function ResourceManager:GetFoodProductionPerHour()
     return self.city:GetSoldierManager():GetTotalUpkeep() + self:GetFoodResource():GetProductionPerHour()
@@ -165,7 +144,6 @@ function ResourceManager:UpdateByCity(city, current_time)
         [IRON] = 0,
         [STONE] = 0,
         [CITIZEN] = 0,
-        [WALLHP] = 0,
         [CART] = 0,
     }
     local total_citizen = 0
@@ -190,8 +168,9 @@ function ResourceManager:UpdateByCity(city, current_time)
     dump_resources(total_production_map, "小屋对资源的影响--->")
     -- buff对资源的影响
     -- 城民的计算是写死的，没有按照通用的规则
-    local buff_production_map,buff_limt_map
-    buff_production_map,buff_limt_map = self:GetTotalBuffData(city)
+    local LIMIT_MAP = {}
+    local PRODUCTION_MAP = {}
+    local buff_production_map,buff_limt_map = self:GetTotalBuffData(city)
     self.resource_citizen = citizen_map
     self:GetCitizenResource():SetLowLimitResource(total_citizen)
     for resource_type, production in pairs(total_production_map) do
@@ -199,20 +178,28 @@ function ResourceManager:UpdateByCity(city, current_time)
         local resource_limit = math.floor(total_limit_map[resource_type] * buff_limit)
         local resource = self.resources[resource_type]
         resource:SetValueLimit(resource_limit)
+        LIMIT_MAP[resource_type] = resource_limit
 
         local buff_production = 1 + buff_production_map[resource_type]
         if resource_type == CITIZEN then
             local production = (resource_limit - resource:GetLowLimitResource()) / intInit.playerCitizenRecoverFullNeedHours.value
             resource:SetProductionPerHour(current_time, production * buff_production)
+            PRODUCTION_MAP[resource_type] = production * buff_production
         else
             local resource_production = math.floor(production * buff_production)
             if resource_type == FOOD then
                 resource_production = resource_production - city:GetSoldierManager():GetTotalUpkeep()
             end
             resource:SetProductionPerHour(current_time, resource_production)
+            PRODUCTION_MAP[resource_type] = resource_production
         end
     end
-    dump_resources(total_production_map, "total_production_map--->")
+    local wallHp = self.user:GetResProduction("wallHp")
+    wallHp.limit = LIMIT_MAP[WALLHP]
+    wallHp.output = PRODUCTION_MAP[WALLHP]
+    dump_resources(LIMIT_MAP, "LIMIT_MAP--->")
+    dump_resources(PRODUCTION_MAP, "PRODUCTION_MAP--->")
+    dump(self.user.resources_cache, "self.user.resources_cache")
 end
 function ResourceManager:GetCitizenAllocInfo()
     return self.resource_citizen
@@ -226,8 +213,6 @@ function ResourceManager:GetCitizenAllocated()
 end
 function ResourceManager:UpdateFromUserDataByTime(resources, current_time)
     local my_resources = self.resources
-    my_resources[BLOOD]:SetValue(resources.blood)
-    my_resources[CASINOTOKEN]:SetValue(resources.casinoToken)
     my_resources[COIN]:UpdateResource(current_time, resources.coin)
     my_resources[WOOD]:UpdateResource(current_time, resources.wood)
     my_resources[FOOD]:UpdateResource(current_time, resources.food)
@@ -235,7 +220,6 @@ function ResourceManager:UpdateFromUserDataByTime(resources, current_time)
     my_resources[STONE]:UpdateResource(current_time, resources.stone)
     my_resources[CART]:UpdateResource(current_time, resources.cart)
     my_resources[CITIZEN]:UpdateResource(current_time, resources.citizen)
-    my_resources[WALLHP]:UpdateResource(current_time, resources.wallHp)
 end
 local resource_building_map = {
     mill = FOOD,

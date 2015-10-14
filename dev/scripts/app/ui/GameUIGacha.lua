@@ -21,10 +21,16 @@ end
 
 function GameUIGacha:CreateBetweenBgAndTitle()
     GameUIGacha.super.CreateBetweenBgAndTitle(self)
-
     self.ordinary_layer = display.newLayer():addTo(self:GetView())
-
     self.deluxe_layer = display.newLayer():addTo(self:GetView())
+    scheduleAt(self, function()
+        if self.ordinary_layer.current_casinoToken_label then
+            self.ordinary_layer.current_casinoToken_label:setString(string.formatnumberthousands(User:GetResValueByType("casinoToken")))
+        end
+        if self.deluxe_layer.current_casinoToken_label then
+            self.deluxe_layer.current_casinoToken_label:setString(string.formatnumberthousands(User:GetResValueByType("casinoToken")))
+        end
+    end)
 end
 
 function GameUIGacha:OnMoveInStage()
@@ -111,7 +117,7 @@ function GameUIGacha:CreateGachaPool(layer)
         :align(display.CENTER, 120,122):scale(0.3)
     local city = self.city
     layer.current_casinoToken_label = UIKit:ttfLabel({
-        text = string.formatnumberthousands(city:GetResourceManager():GetCasinoTokenResource():GetValue()),
+        text = string.formatnumberthousands(User:GetResValueByType("casinoToken")),
         size = 18,
         color = 0xffd200,
     }):addTo(draw_thing_bg):align(display.LEFT_CENTER,140,118)
@@ -427,7 +433,7 @@ function GameUIGacha:InitOrdinary()
         :setButtonLabelOffset(0,20)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                if User:GetOddFreeNormalGachaCount()<1 and self.city:GetResourceManager():GetCasinoTokenResource():GetValue()<intInit.casinoTokenNeededPerNormalGacha.value then
+                if User:GetOddFreeNormalGachaCount()<1 and User:GetResValueByType("casinoToken")<intInit.casinoTokenNeededPerNormalGacha.value then
                     WidgetUseItems.new():Create({
                         item_type = WidgetUseItems.USE_TYPE.RESOURCE,
                         item_name = "casinoTokenClass_1"
@@ -525,7 +531,7 @@ function GameUIGacha:InitDeluxe()
         :setButtonLabelOffset(0,20)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                if self.city:GetResourceManager():GetCasinoTokenResource():GetValue()<intInit.casinoTokenNeededPerAdvancedGacha.value then
+                if User:GetResValueByType("casinoToken")<intInit.casinoTokenNeededPerAdvancedGacha.value then
                     WidgetUseItems.new():Create({
                         item_type = WidgetUseItems.USE_TYPE.RESOURCE,
                         item_name = "casinoTokenClass_1"
@@ -570,15 +576,6 @@ function GameUIGacha:InitDeluxe()
     self.DeluxeGachaPool = DeluxeGachaPool
     function layer:EnAbleButton(enabled)
         button:setButtonEnabled(enabled)
-    end
-end
-function GameUIGacha:OnResourceChanged(resource_manager)
-    GameUIGacha.super.OnResourceChanged(self,resource_manager)
-    if self.ordinary_layer.current_casinoToken_label then
-        self.ordinary_layer.current_casinoToken_label:setString(string.formatnumberthousands(resource_manager:GetCasinoTokenResource():GetValue()))
-    end
-    if self.deluxe_layer.current_casinoToken_label then
-        self.deluxe_layer.current_casinoToken_label:setString(string.formatnumberthousands(resource_manager:GetCasinoTokenResource():GetValue()))
     end
 end
 

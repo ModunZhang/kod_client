@@ -310,7 +310,7 @@ function WidgetUseItems:OpenHeroBloodDialog( item )
     }):align(display.LEFT_CENTER,40,blood_bg:getContentSize().height/2)
         :addTo(blood_bg)
     local blood_value = UIKit:ttfLabel({
-        text = City:GetResourceManager():GetBloodResource():GetValue(),
+        text = User:GetResValueByType("blood"),
         size = 22,
         color = 0x28251d,
     }):align(display.RIGHT_CENTER,blood_bg:getContentSize().width-40,blood_bg:getContentSize().height/2)
@@ -340,7 +340,7 @@ function WidgetUseItems:OpenHeroBloodDialog( item )
         end
     end
     dialog:scheduleAt(function()
-        blood_value:setString(City:GetResourceManager():GetBloodResource():GetValue())
+        blood_value:setString(User:GetResValueByType("blood"))
     end)
     return dialog
 end

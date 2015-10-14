@@ -1033,7 +1033,6 @@ function City:IteratorAllNeedTimerEntity(current_time)
     for _,v in ipairs(self.need_update_buildings) do
         v:OnTimer(current_time)
     end
-    self.resource_manager:OnTimer(current_time)
 end
 -- 遍历顺序影响城墙的生成
 function City:IteratorTilesByFunc(func)
