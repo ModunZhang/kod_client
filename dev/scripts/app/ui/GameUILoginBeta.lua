@@ -284,24 +284,7 @@ end
 function GameUILoginBeta:OnMoveInStage()
     self:showVersion()
     self:GetServerInfo(function()
-        if CONFIG_IS_NOT_UPDATE or device.platform == 'mac' then
-            if not app.client_tag then
-                NetManager:getUpdateFileList(function(success, msg)
-                    if not success then
-                        device.showAlert(_("错误"), _("检查游戏更新失败!"), { _("确定") },function(event)
-                            app:restart(false)
-                        end)
-                        return
-                    end
-                    local serverFileList = json.decode(msg)
-                    app.client_tag = serverFileList.tag
-                end)
-            end
-            self:loadLocalResources()
-        else
-            self:loadLocalJson()
-            self:loadServerJson()
-        end
+        self:LoadServerInfo()
     end)
 end
 function GameUILoginBeta:GetServerInfo(callback)
@@ -321,11 +304,33 @@ function GameUILoginBeta:GetServerInfo(callback)
         else
             self:performWithDelay(function()
                 self:showError(_("获取服务器信息失败!"),function()
-                    self:GetServerInfo()
+                    self:GetServerInfo(function()
+                        self:LoadServerInfo()
+                    end)
                 end)
             end, 3)
         end
     end)
+end
+function GameUILoginBeta:LoadServerInfo()
+    if CONFIG_IS_NOT_UPDATE or device.platform == 'mac' then
+        if not app.client_tag then
+            NetManager:getUpdateFileList(function(success, msg)
+                if not success then
+                    device.showAlert(_("错误"), _("检查游戏更新失败!"), { _("确定") },function(event)
+                        app:restart(false)
+                    end)
+                    return
+                end
+                local serverFileList = json.decode(msg)
+                app.client_tag = serverFileList.tag
+            end)
+        end
+        self:loadLocalResources()
+    else
+        self:loadLocalJson()
+        self:loadServerJson()
+    end
 end
 
 function GameUILoginBeta:onCleanup()
@@ -749,6 +754,7 @@ end
 
 
 return GameUILoginBeta
+
 
 
 
