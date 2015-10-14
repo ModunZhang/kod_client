@@ -269,7 +269,7 @@ end
 function GameUIUnlockBuilding:PopNotSatisfyDialog(listener,can_not_update_type)
     local dialog = UIKit:showMessageDialog()
     local required_gems =self.building:getUpgradeRequiredGems()
-    local owen_gem = City:GetUser():GetGemResource():GetValue()
+    local owen_gem = City:GetUser():GetGemValue()
     if can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.RESOURCE_NOT_ENOUGH then
         dialog:CreateOKButtonWithPrice(
             {

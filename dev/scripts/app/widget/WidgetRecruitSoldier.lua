@@ -279,7 +279,7 @@ function WidgetRecruitSoldier:AddButtons()
             shadow = true
         }))
         :onButtonClicked(function(event)
-            if City:GetUser():GetGemResource():GetValue() < self:GetNeedGemWithInstantRecruit(self.count) then
+            if City:GetUser():GetGemValue() < self:GetNeedGemWithInstantRecruit(self.count) then
                 UIKit:showMessageDialog(_("主人"),_("您当前没有足够金龙币")):CreateOKButton(
                     {
                         listener = function ()
@@ -392,7 +392,7 @@ function WidgetRecruitSoldier:AddButtons()
                     UIKit:showMessageDialog(title, content,function()
                         end):CreateOKButtonWithPrice({
                         listener = function ()
-                            if User:GetGemResource():GetValue() < (queue_need_gem + required_gems) then
+                            if User:GetGemValue() < (queue_need_gem + required_gems) then
                                 UIKit:showMessageDialog(_("提示"),_("金龙币不足"))
                                     :CreateOKButton(
                                         {
@@ -426,7 +426,7 @@ function WidgetRecruitSoldier:AddButtons()
                     UIKit:showMessageDialog(title, content,function()
                         end):CreateOKButtonWithPrice({
                         listener = function ()
-                            if User:GetGemResource():GetValue() < (queue_need_gem + required_gems) then
+                            if User:GetGemValue() < (queue_need_gem + required_gems) then
                                 UIKit:showMessageDialog(_("提示"),_("金龙币不足"))
                                     :CreateOKButton(
                                         {

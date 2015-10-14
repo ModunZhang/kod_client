@@ -47,8 +47,8 @@ function GameUIPveHomeNew:onEnter()
     display.newNode():addTo(self):schedule(function()
         local star = User:GetStageStarByIndex(self.level)
         self.stars:setString(string.format("%d/%d", star, User:GetStageTotalStars()))
-        self.strenth_current:setString(User:GetStrengthResource():GetResourceValueByCurrentTime(timer:GetServerTime()))
-        self.gem_label:setString(string.formatnumberthousands(User:GetGemResource():GetValue()))
+        self.strenth_current:setString(User:GetStaminaValue())
+        self.gem_label:setString(string.formatnumberthousands(User:GetGemValue()))
 
         local index = 1
         local stage_name = self.level.."_"..index
@@ -117,7 +117,7 @@ function GameUIPveHomeNew:CreateTop()
     light_gem():addTo(gem_icon, 1022):pos(62/2, 61/2)
 
     self.gem_label = UIKit:ttfLabel({
-        text = string.formatnumberthousands(City:GetUser():GetGemResource():GetValue()),
+        text = string.formatnumberthousands(City:GetUser():GetGemValue()),
         size = 20,
         color = 0xffd200,
     }):addTo(button):align(display.CENTER, -30, 8)
@@ -140,14 +140,14 @@ function GameUIPveHomeNew:CreateTop()
     display.newSprite("+.png"):addTo(add_btn)
 
     self.strenth_current = UIKit:ttfLabel({
-        text = User:GetStrengthResource():GetResourceValueByCurrentTime(timer:GetServerTime()),
+        text = User:GetStaminaValue(),
         size = 20,
         color = 0xffedae,
         shadow = true,
     }):addTo(pve_back):align(display.RIGHT_CENTER, size.width / 2, 25)
 
     UIKit:ttfLabel({
-        text = string.format("/%d", User:GetStrengthResource():GetValueLimit()),
+        text = string.format("/%d", User:GetStaminaLimit()),
         size = 20,
         color = 0xffedae,
         shadow = true,

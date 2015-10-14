@@ -223,7 +223,7 @@ function GameUIItems:CreateShopContentByIndex( idx )
             :setButtonLabelOffset(0, 16)
             :onButtonClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
-                    if items:Price() > User:GetGemResource():GetValue() then
+                    if items:Price() > User:GetGemValue() then
                         UIKit:showMessageDialog(_("提示"),_("金龙币不足"))
                             :CreateOKButton(
                                 {

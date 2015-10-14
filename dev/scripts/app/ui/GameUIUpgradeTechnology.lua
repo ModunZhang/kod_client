@@ -460,7 +460,7 @@ function GameUIUpgradeTechnology:OnUpgradButtonClicked()
 end
 
 function GameUIUpgradeTechnology:ForceUpgrade(gem_cost)
-    if  User:GetGemResource():GetValue() < gem_cost then
+    if  User:GetGemValue() < gem_cost then
         UIKit:showMessageDialog(_("提示"),_("金龙币不足"), function()
             UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
             self:LeftButtonClicked()
@@ -507,7 +507,7 @@ function GameUIUpgradeTechnology:CheckCanUpgradeNow()
     if not self:CheckUpgradeNowButtonState() then
         return false
     end
-    return User:GetGemResource():GetValue() >= self:GetUpgradeNowGems(),_("金龙币不足")
+    return User:GetGemValue() >= self:GetUpgradeNowGems(),_("金龙币不足")
 end
 
 function GameUIUpgradeTechnology:GetUpgradeGemsIfResourceNotEnough()

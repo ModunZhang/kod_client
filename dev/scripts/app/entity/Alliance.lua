@@ -487,7 +487,7 @@ function Alliance:OnAllianceDataChanged(alliance_data,refresh_time,deltaData)
                 self:NotifyHelpEvents(deltaData)
             end
         end
-        for k,v in pairs(Alliance.LISTEN_TYPE) do
+        for i,k in ipairs(Alliance.LISTEN_TYPE) do
             if k ~= "operation" and type(k) == "string" then
                 if deltaData(k) then
                     local notify_func = string.format("OnAllianceDataChanged_%s", k)

@@ -515,8 +515,8 @@ function WidgetUseItems:OpenStrengthDialog( item )
     }):align(display.LEFT_CENTER,80,blood_bg:getContentSize().height/2)
         :addTo(blood_bg)
 
-    local value = User:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    local prodperhour = User:GetStrengthResource():GetProductionPerHour()
+    local value = User:GetStaminaValue()
+    local prodperhour = User:GetStaminaOutput()
     local strength_label = UIKit:ttfLabel({
         text = string.format(_("%s(+%d/每小时)"), string.formatnumberthousands(value), prodperhour),
         size = 22,
@@ -547,8 +547,8 @@ function WidgetUseItems:OpenStrengthDialog( item )
         resource_manager:RemoveObserver(dialog)
     end)
     function dialog:OnResourceChanged()
-        local value = User:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-        local prodperhour = User:GetStrengthResource():GetProductionPerHour()
+        local value = User:GetStaminaValue()
+        local prodperhour = User:GetStaminaOutput()
         strength_label:setString(string.format(_("%s(+%d/每小时)"), string.formatnumberthousands(value), prodperhour))
     end
     return dialog
@@ -854,17 +854,17 @@ function WidgetUseItems:OpenVipPointDialog(item)
     local exp_bar = UIKit:CreateVipExpBar():addTo(dialog,1,999):pos(dialog:getContentSize().width/2-287, dialog:getContentSize().height-230)
     local vip_level,percent,exp = User:GetVipLevel()
     exp_bar:LightLevelBar(vip_level,percent,exp, true)
-    User:AddListenOnType(dialog, User.LISTEN_TYPE.BASIC)
-    function dialog:OnUserBasicChanged(from,changed_map)
-        if changed_map.vipExp then
-            local vip_level,percent,exp = User:GetVipLevel()
+    User:AddListenOnType(dialog, "basicInfo")
+    function dialog:OnUserDataChanged_basicInfo(userData, deltaData)
+        if deltaData("basicInfo.vipExp") then
+            local vip_level,percent,exp = userData:GetVipLevel()
             self:removeChildByTag(999, true)
             local exp_bar = UIKit:CreateVipExpBar():addTo(self,1,999):pos(self:getContentSize().width/2-287, self:getContentSize().height-230)
             exp_bar:LightLevelBar(vip_level,percent,exp, true)
         end
     end
     dialog:addCloseCleanFunc(function ()
-        User:RemoveListenerOnType(dialog, User.LISTEN_TYPE.BASIC)
+        User:RemoveListenerOnType(dialog, "basicInfo")
     end)
     return dialog
 end
@@ -984,7 +984,7 @@ function WidgetUseItems:OpenWarSpeedupDialog( item ,march_event)
 
     -- 金龙币数量
     local gem_label = UIKit:ttfLabel({
-        text = string.formatnumberthousands(User:GetGemResource():GetValue()),
+        text = string.formatnumberthousands(User:GetGemValue()),
         size = 20,
         color = 0x403c2f,
     }):addTo(body):align(display.RIGHT_CENTER,size.width - 30 ,size.height-50)
@@ -1086,7 +1086,7 @@ function WidgetUseItems:OpenWarSpeedupDialog( item ,march_event)
     end
 
     function dialog:OnResourceChanged(resource_manager)
-        gem_label:setString(string.formatnumberthousands(User:GetGemResource():GetValue()))
+        gem_label:setString(string.formatnumberthousands(User:GetGemValue()))
     end
 
     local alliance = Alliance_Manager:GetMyAlliance()
@@ -1117,7 +1117,7 @@ function WidgetUseItems:OpenRetreatTroopDialog( item,event )
     local size = body:getContentSize()
     -- 金龙币数量
     local gem_label = UIKit:ttfLabel({
-        text = string.formatnumberthousands(User:GetGemResource():GetValue()),
+        text = string.formatnumberthousands(User:GetGemValue()),
         size = 20,
         color = 0x403c2f,
     }):addTo(body):align(display.RIGHT_CENTER,size.width - 30 ,size.height-45)
@@ -1173,7 +1173,7 @@ function WidgetUseItems:OpenRetreatTroopDialog( item,event )
         end
     end
     function dialog:OnResourceChanged(resource_manager)
-        gem_label:setString(string.formatnumberthousands(User:GetGemResource():GetValue()))
+        gem_label:setString(string.formatnumberthousands(User:GetGemValue()))
     end
 
     local alliance = Alliance_Manager:GetMyAlliance()
@@ -1225,7 +1225,7 @@ function WidgetUseItems:CreateItemBox(item,checkUseFunc,useItemFunc,buyAndUseFun
             btn_label = _("购买&使用")
             local item_name = item:Name()
             btn_call_back = function ()
-                if item:Price() > User:GetGemResource():GetValue() then
+                if item:Price() > User:GetGemValue() then
                     UIKit:showMessageDialog(_("主人"),_("金龙币不足"))
                         :CreateOKButton(
                             {

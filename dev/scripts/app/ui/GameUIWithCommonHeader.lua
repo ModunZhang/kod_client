@@ -200,7 +200,7 @@ function GameUIWithCommonHeader:CreateShopButton(on_clicked)
     light_gem():addTo(gem_icon, 1022):pos(62/2, 61/2)
 
     local gem_label = UIKit:ttfLabel({
-        text = ""..string.formatnumberthousands(City:GetUser():GetGemResource():GetValue()),
+        text = ""..string.formatnumberthousands(City:GetUser():GetGemValue()),
         size = 20,
         color = 0xffd200,
         shadow = true
@@ -214,7 +214,7 @@ function GameUIWithCommonHeader:CreateBetweenBgAndTitle()
 end
 
 function GameUIWithCommonHeader:OnResourceChanged(resource_manager)
-    self:GetGemLabel():setString(string.formatnumberthousands(self.city:GetUser():GetGemResource():GetValue()))
+    self:GetGemLabel():setString(string.formatnumberthousands(self.city:GetUser():GetGemValue()))
 end
 
 function GameUIWithCommonHeader:CreateTabButtons(param, func)

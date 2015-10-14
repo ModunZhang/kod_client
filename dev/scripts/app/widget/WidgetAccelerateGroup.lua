@@ -107,7 +107,7 @@ function WidgetAccelerateGroup:ctor(eventType,eventId)
                         eventId = eventId
                     }})
                 else
-                    if speedUp_item:Price() > User:GetGemResource():GetValue() then
+                    if speedUp_item:Price() > User:GetGemValue() then
                         UIKit:showMessageDialog(_("主人"),_("金龙币不足"))
                             :CreateOKButton(
                                 {

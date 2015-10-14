@@ -237,7 +237,7 @@ function CityLayer:ConvertLogicPositionToMapPosition(lx, ly)
     return self:convertToNodeSpace(self:GetCityNode():convertToWorldSpace(map_pos))
 end
 function CityLayer:Terrain()
-    return self.scene:GetCity():GetUser():Terrain()
+    return self.scene:GetCity():GetUser().basicInfo.terrain
 end
 --
 function CityLayer:InitBackground()

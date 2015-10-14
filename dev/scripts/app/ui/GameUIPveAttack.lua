@@ -283,7 +283,6 @@ function GameUIPveAttack:RefreshUI()
         for i,v in ipairs(self.items) do
             v:setVisible(i <= star)
         end
-        -- self.str_label:setString(string.format(_("体力 : %d/%d"), self.user:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()), self.user:GetStrengthResource():GetValueLimit()))
         self.sweep_label:setColor(UIKit:hex2c4b(ItemManager:GetItemByName("sweepScroll"):Count() > 0 and 0x615b44 or 0x7e00000))
         self.sweep_label:setString(ItemManager:GetItemByName("sweepScroll"):Count())
         self.label:setString(string.format(_("今日可挑战次数: %d/%d"), self.user:GetFightCountByName(self.pve_name), sections[self.pve_name].maxFightCount))
@@ -292,7 +291,7 @@ function GameUIPveAttack:RefreshUI()
         self.sweep_all.label:setString(string.format("-%d", self.user:GetPveLeftCountByName(self.pve_name)))
         self.sweep_once.label:setColor(UIKit:hex2c4b(ItemManager:GetItemByName("sweepScroll"):Count() >= 1 and 0xffedae or 0x7e00000))
         self.sweep_once:setButtonEnabled(star >= 3)
-        local strength = self.user:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+        local strength = self.user:GetStaminaValue()
         self.attack.label:setColor(UIKit:hex2c4b(strength >= sections[self.pve_name].staminaUsed and 0xffedae or 0x7e00000))
     end
 end
@@ -338,7 +337,7 @@ function GameUIPveAttack:CreateAttackButton()
                 UIKit:showMessageDialog(_("提示"),_("已达今日最大挑战次数!"))
                 return
             end
-            if not self.user:HasAnyStength(sections[self.pve_name].staminaUsed) then
+            if not self.user:HasAnyStamina(sections[self.pve_name].staminaUsed) then
                 WidgetUseItems.new():Create({
                     item_type = WidgetUseItems.USE_TYPE.STAMINA
                 }):AddToCurrentScene()
@@ -356,7 +355,7 @@ function GameUIPveAttack:CreateAttackButton()
     button.label = UIKit:ttfLabel({
         text = "-"..sections[self.pve_name].staminaUsed,
         size = 20,
-        color = self.user:HasAnyStength(sections[self.pve_name].staminaUsed) and 0xffedae or 0xff0000,
+        color = self.user:HasAnyStamina(sections[self.pve_name].staminaUsed) and 0xffedae or 0xff0000,
     }):align(display.CENTER, size.width/2, size.height/2):addTo(num_bg)
     return button
 end
@@ -476,7 +475,7 @@ function GameUIPveAttack:BuyAndUseSweepScroll(count)
     dialog:CreateOKButtonWithPrice(
         {
             listener = function()
-                if self.user:GetGemResource():GetValue() < required_gems then
+                if self.user:GetGemValue() < required_gems then
                     UIKit:showMessageDialog(_("提示"),_("金龙币不足")):CreateOKButton(
                         {
                             listener = function ()
@@ -526,7 +525,7 @@ function GameUIPveAttack:Sweep(count)
         UIKit:showMessageDialog(_("提示"),_("已达今日最大挑战次数!"))
         return
     end
-    if not self.user:HasAnyStength(sections[self.pve_name].staminaUsed * count) then
+    if not self.user:HasAnyStamina(sections[self.pve_name].staminaUsed * count) then
         WidgetUseItems.new():Create({
             item_type = WidgetUseItems.USE_TYPE.STAMINA
         }):AddToCurrentScene()
@@ -589,7 +588,7 @@ function GameUIPveAttack:DecodeReport(report, dragon, attack_soldiers)
         return k, {name = name, star = tonumber(star), count = count}
     end)
     function report:GetFightAttackName()
-        return user:Name()
+        return user.basicInfo.name
     end
     function report:GetFightDefenceName()
         return titlename

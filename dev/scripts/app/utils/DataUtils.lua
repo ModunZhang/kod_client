@@ -1065,7 +1065,7 @@ function DataUtils:DoBattle(attacker, defencer, terrain, enemy_name)
     function report:IsPveBattle()
     end
     function report:GetFightAttackName()
-        return User:Name()
+        return User.basicInfo.name
     end
     function report:GetFightDefenceName()
         return enemy_name

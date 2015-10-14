@@ -13,6 +13,17 @@ local tonumber = tonumber
 local round = function(v)
     return floor(v + 0.5)
 end
+local function clamp(a,b,x)
+    return x < a and a or (x > b and b or x)
+end
+function GameUtils:GetCurrentProduction(value,limit,output,refreshTime,currentTime)
+    local trv = value + (currentTime - refreshTime) * output * 0.00027777777777778 --[[ 1 / 3600 = 0.00027777777777778]]
+    return floor(clamp(
+        0, 
+        output >= 0 and ((value >= limit and trv >= limit) and value or limit) or math.huge, 
+        trv
+        ))
+end
 function GameUtils:formatTimeStyle1(time)
     local seconds = floor(time) % 60
     time = time / 60

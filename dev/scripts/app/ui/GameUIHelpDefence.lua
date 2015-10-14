@@ -98,7 +98,7 @@ function GameUIHelpDefence:CreateSoldierNode()
         iceField = "battle_bg_iceField_611x275.png",
         grassLand = "battle_bg_grass_611x275.png"
     }
-    local land_bg = land_image[User:Terrain()]
+    local land_bg = land_image[User.basicInfo.terrain]
     display.newSprite(land_bg)
         :align(display.LEFT_BOTTOM,window.cx-304, window.top_bottom-250):addTo(view)
     TroopShow.offset_x = 0

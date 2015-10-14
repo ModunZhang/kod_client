@@ -395,7 +395,7 @@ function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
         return pre_limit, true
     end
 
-    local gem = city:GetUser():GetGemResource():GetValue()
+    local gem = city:GetUser():GetGemValue()
     if isUpgradeNow then
         if gem<self:getUpgradeNowNeedGems() then
             return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.GEM_NOT_ENOUGH

@@ -170,7 +170,7 @@ function GameUIShareReport:onEnter()
     elseif report:Type() == "attackMonster" then
         local monster_data = report:GetEnemyPlayerData().soldiers[1]
         local monster_type = monster_data.name
-        reportName = User:Name().." VS "..Localize.soldier_name[monster_type]
+        reportName = User.basicInfo.name.." VS "..Localize.soldier_name[monster_type]
     elseif report:Type() == "attackShrine" then
         reportName = _("圣地战报")
     end

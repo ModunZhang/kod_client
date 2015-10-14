@@ -13,7 +13,7 @@ local elastic = 200
 function MapScene:ctor()
     if User then
         User:ResetAllListeners()
-        User:AddListenOnType(self, User.LISTEN_TYPE.BASIC)
+        User:AddListenOnType(self, "basicInfo")
     end
     if City then
         City:ResetAllListeners()
@@ -26,14 +26,14 @@ function MapScene:ctor()
     self.event_manager = EventManager.new(self)
     self.touch_judgment = TouchJudgment.new(self)
 end
-function MapScene:OnUserBasicChanged(user, changed)
-    if changed.level then
-        assert(type(changed.level.old) == "number")
-        assert(type(changed.level.new) == "number")
-        if changed.level.new > 1 then
-            UIKit:newGameUI('GameUILevelUp', changed.level.old, changed.level.new):AddToScene(self)
-        end
-    end
+function MapScene:OnUserDataChanged_basicInfo(userData, deltaData)
+    -- if changed.level then
+    --     assert(type(changed.level.old) == "number")
+    --     assert(type(changed.level.new) == "number")
+    --     if changed.level.new > 1 then
+    --         UIKit:newGameUI('GameUILevelUp', changed.level.old, changed.level.new):AddToScene(self)
+    --     end
+    -- end
 end
 function MapScene:onEnter()
     if self.PreLoadImages then

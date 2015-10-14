@@ -439,7 +439,7 @@ function WidgetMakeEquip:IsAbleToMakeEqui(isFinishNow)
     local equip_config = self.equip_config
     if isFinishNow then
         local gem =  DataUtils:buyResource({coin = equip_config.coin}, {}) + DataUtils:getGemByTimeInterval(equip_config.makeTime)
-        if gem > User:GetGemResource():GetValue() then
+        if gem > User:GetGemValue() then
             UIKit:showMessageDialog(_("提示"),_("金龙币不足"),function()  UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)  end)
             return false
         end
@@ -492,7 +492,7 @@ function WidgetMakeEquip:IsAbleToMakeEqui(isFinishNow)
                 :CreateOKButtonWithPrice(
                     {
                         listener = function()
-                            if need_gems > User:GetGemResource():GetValue() then
+                            if need_gems > User:GetGemValue() then
                                 UIKit:showMessageDialog(_("提示"),_("金龙币不足"),function()  UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)  end)
                                 return false
                             end

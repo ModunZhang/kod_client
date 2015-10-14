@@ -138,7 +138,7 @@ function GameUIAllianceTitle:CheckArchonLastLoginTimeGraterThen7Days()
 end
 
 function GameUIAllianceTitle:OnBuyAllianceArchonButtonClicked()
-    if config_intInit.buyArchonGem.value > User:GetGemResource():GetValue() then
+    if config_intInit.buyArchonGem.value > User:GetGemValue() then
         UIKit:showMessageDialog(nil, _("金龙币不足"), function()
         end)
     elseif Alliance_Manager:GetMyAlliance():GetSelf():IsArchon() then

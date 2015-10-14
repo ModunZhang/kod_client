@@ -151,7 +151,7 @@ function WidgetPromoteSoldier:UpgradeButtons()
                 else
                     local dialog =  self:PopNotSatisfyDialog(upgrade_listener,results)
                     local need_gem = self:GetUpgradeGems()
-                    if need_gem > User:GetGemResource():GetValue() then
+                    if need_gem > User:GetGemValue() then
                         dialog:CreateOKButton({
                             listener =  function ()
                                 UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
@@ -297,7 +297,7 @@ function WidgetPromoteSoldier:IsAbleToUpgradeNow()
     if tech_points<level_up_config.upgradeTechPointNeed then
         table.insert(results, _("科技点未达到要求"))
     end
-    if self:GetInstantUpgradeGems() > User:GetGemResource():GetValue() then
+    if self:GetInstantUpgradeGems() > User:GetGemValue() then
         table.insert(results, _("金龙币不足"))
     end
     return results

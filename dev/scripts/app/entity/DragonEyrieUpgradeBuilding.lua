@@ -82,7 +82,7 @@ function DragonEyrieUpgradeBuilding:GetTotalHPRecoveryPerHourInfo()
     }
 
     for dragon_type,terrain in pairs(terrains_info) do
-        if terrain == User:Terrain() then
+        if terrain == User.basicInfo.terrain then
             hprecoveryperhour_info[dragon_type] =  math.floor(hprecoveryperhour * (1 + common_buff + terrain_buff))
         else
             hprecoveryperhour_info[dragon_type] =  math.floor(hprecoveryperhour * (1 + common_buff ))

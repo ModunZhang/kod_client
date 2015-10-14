@@ -912,7 +912,7 @@ end
 function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
     local dialog = UIKit:showMessageDialog()
     local required_gems =self.building:getUpgradeRequiredGems()
-    local owen_gem = City:GetUser():GetGemResource():GetValue()
+    local owen_gem = City:GetUser():GetGemValue()
     if can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.RESOURCE_NOT_ENOUGH then
         dialog:SetTitle(_("补充资源"))
         dialog:SetPopMessage(_("您当前没有足够的资源,是否花费魔法石立即补充"))

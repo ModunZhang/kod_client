@@ -260,7 +260,7 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
             end
             if self.count<1 then
                 UIKit:showMessageDialog(_("主人"),_("请设置要治愈的伤兵数"))
-            elseif self.treat_now_gems > City:GetUser():GetGemResource():GetValue() then
+            elseif self.treat_now_gems > City:GetUser():GetGemValue() then
                 UIKit:showMessageDialog(_("主人"),_("金龙币不足"))
                     :CreateOKButton(
                         {
@@ -328,7 +328,7 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
             local isAbleToTreat =hospital:IsAbleToTreat(soldiers)
             if self.count<1 then
                 UIKit:showMessageDialog(_("主人"),_("请设置要治愈的伤兵数"))
-            elseif City:GetUser():GetGemResource():GetValue()< hospital:GetTreatGems(soldiers) then
+            elseif City:GetUser():GetGemValue()< hospital:GetTreatGems(soldiers) then
                 UIKit:showMessageDialog(_("主人"),_("没有足够的金龙币补充资源"))
                     :CreateOKButton(
                         {

@@ -265,7 +265,7 @@ function WidgetUpgradeMilitaryTech:PopNotSatisfyDialog(upgrade_listener,results)
         message = message .. v.."\n"
     end
     local need_gems = self.tech:GetUpgradeGems()
-    local current_gem = User:GetGemResource():GetValue()
+    local current_gem = User:GetGemValue()
     UIKit:showMessageDialog(_("主人"),message)
         :CreateOKButtonWithPrice({
             listener =  current_gem < need_gems and function ()

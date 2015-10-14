@@ -88,10 +88,14 @@ function GameUIVipNew:AdapterPlayerList()
     table.insert(infos,{_("采集铁矿熟练度"),User:GetIronCollectLevel()})
     table.insert(infos,{_("采集石料熟练度"),User:GetStoneCollectLevel()})
     table.insert(infos,{_("采集木材熟练度"),User:GetWoodCollectLevel()})
-    table.insert(infos,{_("防御胜利"),User:DefenceWin()})
-    table.insert(infos,{_("进攻胜利"),User:AttackWin()})
-    table.insert(infos,{_("胜率"),User:AttackTotal() ~= 0 and string.format("%.2f%%",(User:AttackWin()/User:AttackTotal())*100) or 0})
-    table.insert(infos,{_("击杀"),string.formatnumberthousands(User:Kill())})
+    table.insert(infos,{_("防御胜利"),User.basicInfo.defenceWin})
+    table.insert(infos,{_("进攻胜利"),User.basicInfo.attackWin})
+    table.insert(infos,{_("胜率"), User.basicInfo.attackTotal ~= 0 and
+        string.format("%.2f%%",(
+            User.basicInfo.attackWin/User.basicInfo.attackTotal)*100
+        ) or 0
+    })
+    table.insert(infos,{_("击杀"),string.formatnumberthousands(User.basicInfo.kill)})
     table.insert(infos,{_("忠诚值"),GameUtils:formatNumber(User:Loyalty())})
     table.insert(infos,{_("联盟"),alliance and alliance.basicInfo.name or ""})
     table.insert(infos,{_("职位"),member and Localize.alliance_title[member:Title()] or ""})
@@ -133,15 +137,15 @@ end
 --数据回调
 function GameUIVipNew:WidgetPlayerNode_DataSource(name)
     if name == 'BasicInfoData' then
-        local exp_config = GameDatas.PlayerInitData.playerLevel[User:Level()]
+        local exp_config = GameDatas.PlayerInitData.playerLevel[User:GetLevel()]
         return {
-            name = User:Name(),
-            lv = User:Level(),
-            currentExp = User:LevelExp() - exp_config.expFrom,
+            name = User.basicInfo.name,
+            lv = User:GetLevel(),
+            currentExp = User.basicInfo.levelExp - exp_config.expFrom,
             maxExp = exp_config.expTo - exp_config.expFrom,
-            power = User:Power(),
-            playerId = User:Id(),
-            playerIcon = User:Icon(),
+            power = User.basicInfo.power,
+            playerId = User._id,
+            playerIcon = User.basicInfo.icon,
             vip = User:GetVipLevel()
         }
     elseif name == "MedalData"  then
@@ -192,11 +196,11 @@ function GameUIVipNew:OnMoveInStage()
             end
         end
     end):pos(window.cx, window.bottom + 34)
-    User:AddListenOnType(self, User.LISTEN_TYPE.BASIC)
+    User:AddListenOnType(self, "basicInfo")
     GameUIVipNew.super.OnMoveInStage(self)
 end
 function GameUIVipNew:onExit()
-    User:RemoveListenerOnType(self, User.LISTEN_TYPE.BASIC)
+    User:RemoveListenerOnType(self, "basicInfo")
     GameUIVipNew.super.onExit(self)
 end
 function GameUIVipNew:InitVip()
@@ -357,12 +361,12 @@ function GameUIVipNew:CreateVipEff()
 
     local clipeNode = display.newClippingRegionNode(cc.rect(window.left + 60 + 520 - bg_width + 20 - 12, window.top - 310  , bg_width - 20 - 12, 70)):addTo(vip_layer)
     local pv_right_level = UIPageView.new {
-            viewRect = cc.rect(window.left + 60 + 520 - bg_width + 20, window.bottom_top + 44  , bg_width - 20, bg_height + 56),
-            row = 1,
-            padding = {left = 0, right = 0, top = 10, bottom = 0},
-            nBounce = true,
-            continuous_touch = true
-        }:addTo(clipeNode,2)
+        viewRect = cc.rect(window.left + 60 + 520 - bg_width + 20, window.bottom_top + 44  , bg_width - 20, bg_height + 56),
+        row = 1,
+        padding = {left = 0, right = 0, top = 10, bottom = 0},
+        nBounce = true,
+        continuous_touch = true
+    }:addTo(clipeNode,2)
     pv_right_level:setTouchSwallowEnabled(false)
     local cover_layer = display.newLayer():addTo(vip_layer,3):pos(window.left + 60 + 520 - bg_width + 20 , window.top - 310)
     cover_layer:setContentSize(cc.size(bg_width - 20, 70))
@@ -482,7 +486,7 @@ function GameUIVipNew:CreateVipEff()
         end
         self.available_count = available_count
 
-        
+
         local page_index_2 = 0,right_index_2
         for i= begin_index,end_index do
             if i ~= self.current_vip_level then
@@ -627,18 +631,13 @@ function GameUIVipNew:CreateVipEffListByLevel(level)
     listview:reload()
     return listview
 end
-function GameUIVipNew:OnUserBasicChanged(from,changed_map)
-    if self.player_node then
-        if changed_map.name or changed_map.icon then
-            self.player_node:RefreshUI()
-        end
-
+function GameUIVipNew:OnUserDataChanged_basicInfo(userData, deltaData)
+    if self.player_node and
+        (deltaData("basicInfo.name") or deltaData("basicInfo.icon")) then
+        self.player_node:RefreshUI()
     end
-    if changed_map.vipExp and self.vip_layer then
-        -- local vip_level,percent,exp = User:GetVipLevel()
-        -- self.progressTimer_vip_exp:setPercentage(percent)
-        -- self.vip_exp_label:setString(string.formatnumberthousands(exp - User:GetSpecialVipLevelExp(vip_level)).."/"..string.formatnumberthousands(User:GetSpecialVipLevelExpTo(vip_level)))
-        -- self.vip_level_pic:setTexture("VIP_"..vip_level.."_46x32.png")
+
+    if self.vip_layer and deltaData("basicInfo.vipExp") then
         self.vip_layer:removeAllChildren()
         self:InitVip()
     end
@@ -654,6 +653,8 @@ function GameUIVipNew:OnVipEventTimer()
     end
 end
 return GameUIVipNew
+
+
 
 
 

@@ -1,6 +1,4 @@
-local Resource = import(".Resource")
 local Localize = import("..utils.Localize")
-local AutomaticUpdateResource = import(".AutomaticUpdateResource")
 local property = import("..utils.property")
 local Enum = import("..utils.Enum")
 local MultiObserver = import(".MultiObserver")
@@ -8,25 +6,19 @@ local User = class("User", MultiObserver)
 
 
 User.LISTEN_TYPE = Enum(
-    "deals",
+    "basicInfo",
     "countInfo",
+    "resources",
+    "deals",
     "vipEvents",
     "iapGifts",
     "growUpTasks",
     "allianceDonate",
-    "BASIC",
-    "RESOURCE",
-    "DALIY_QUEST_REFRESH",
-    "NEW_DALIY_QUEST",
-    "NEW_DALIY_QUEST_EVENT",
-    "DAILY_TASKS")
+    "dailyTasks",
+    "dailyQuests",
+    "dailyQuestEvents")
 
-local BASIC = User.LISTEN_TYPE.BASIC
-local RESOURCE = User.LISTEN_TYPE.RESOURCE
-local config_playerLevel = GameDatas.PlayerInitData.playerLevel
-User.RESOURCE_TYPE = Enum("BLOOD", "COIN", "STRENGTH", "GEM", "RUBY", "BERYL", "SAPPHIRE", "TOPAZ")
-local GEM = User.RESOURCE_TYPE.GEM
-local STRENGTH = User.RESOURCE_TYPE.STRENGTH
+property(User, "id", 0)
 property(User, "basicInfo", {})
 property(User, "countInfo", {})
 property(User, "iapGifts", {})
@@ -37,67 +29,28 @@ property(User, "vipEvents", {})
 property(User, "buildings", {})
 property(User, "growUpTasks", {})
 property(User, "allianceDonate", {})
+property(User, "apnStatus", {})
+property(User, "allianceInfo", {})
+property(User, "dailyQuests", {})
+property(User, "dailyQuestEvents", {})
 property(User, "requestToAllianceEvents", {})
 property(User, "inviteToAllianceEvents", {})
 
-property(User, "level", 1)
-property(User, "levelExp", 0)
-property(User, "power", 0)
-property(User, "name", "")
-property(User, "vipExp", 0)
-property(User, "icon", "")
-property(User, "dailyQuestsRefreshTime", 0)
-property(User, "terrain", "grassLand")
-property(User, "id", 0)
-property(User, "attackWin", 0)
-property(User, "strikeWin", 0)
-property(User, "defenceWin", 0)
-property(User, "attackTotal", 0)
-property(User, "kill", 0)
-property(User, "language", "cn")
-property(User, "recruitQueue", 1)
-property(User, "marchQueue", 1)
-property(User, "serverName", "")
-property(User, "apnId", "")
-property(User, "gcId", "")
-property(User, "serverId", "")
-property(User, "serverLevel", "")
-
-
-property(User, "apnStatus", {
-    onCityBeAttacked = true,
-    onAllianceFightStart = true,
-    onAllianceShrineEventStart = true,
-    onAllianceFightPrepare = true
-})
-property(User, "allianceInfo", {
-    loyalty = 0,
-    woodExp = 0,
-    stoneExp = 0,
-    ironExp = 0,
-    foodExp = 0,
-    coinExp = 0,
-})
 
 local intInit = GameDatas.PlayerInitData.intInit
 function User:ctor(p)
     User.super.ctor(self)
-    self.resources = {
-        [GEM] = Resource.new(),
-        [STRENGTH] = AutomaticUpdateResource.new(),
+    self.resources_cache = {
+        stamina = {value = 0, limit = intInit.staminaMax.value, output = intInit.staminaRecoverPerHour.value}
     }
-    self:GetGemResource():SetValueLimit(math.huge) -- 会有人充值这么多的金龙币吗？
-    self:GetStrengthResource():SetValueLimit(intInit.staminaMax.value)
-    -- 每日任务
-    self.dailyQuests = {}
-    self.dailyQuestEvents = {}
     if type(p) == "table" then
         self:SetId(p._id)
-        self:OnBasicInfoChanged(p)
     else
         self:SetId(p)
     end
-    self.dailyTasks = {}
+end
+function User:ResetAllListeners()
+    self:ClearAllListener()
 end
 
 --[[multiobserver override]]
@@ -388,18 +341,38 @@ function User:Loyalty()
     return self.allianceInfo.loyalty
 end
 
-
-function User:HasAnyStength(num)
-    return self:GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()) >= (num or 1)
+--[[resources begin]]
+function User:GetGemValue()
+    return self.resources.gem
 end
-function User:ResetAllListeners()
-    self:ClearAllListener()
+function User:HasAnyStamina(num)
+    local res = self.resources_cache.stamina
+    return self:GetStaminaValue() >= (num or 1)
 end
-function User:GetGemResource()
-    return self.resources[GEM]
+function User:GetStaminaValue()
+    return self:GetResValueByType("stamina")
 end
-function User:GetStrengthResource()
-    return self.resources[STRENGTH]
+function User:GetStaminaLimit()
+    return self:GetResLimitByType("stamina")
+end
+function User:GetStaminaOutput()
+    return self:GetResOutputByType("stamina")
+end
+function User:GetResValueByType(type_)
+    local res = self.resources_cache[type_]
+    return GameUtils:GetCurrentProduction(
+        res.value,
+        res.limit,
+        res.output,
+        self.resources.refreshTime / 1000,
+        app.timer:GetServerTime()
+    )
+end
+function User:GetResLimitByType(type_)
+    return self.resources_cache[type_].limit
+end
+function User:GetResOutputByType(type_)
+    return self.resources_cache[type_].output
 end
 function User:OnTimer(current_time)
     self:OnResourceChanged()
@@ -409,6 +382,7 @@ function User:OnResourceChanged()
         listener:OnResourceChanged(self)
     end)
 end
+-- [[ dailyQuests begin]]
 function User:GetDailyQuests()
     if self:GetNextDailyQuestsRefreshTime() <= app.timer:GetServerTime() then
         -- 达成刷新每日任务条件
@@ -421,22 +395,26 @@ function User:GetDailyQuests()
         table.sort( quests, function( a,b )
             return a.finishTime < b.finishTime
         end )
-        for k,v in pairs(self.dailyQuests) do
+        for k,v in pairs(self.dailyQuests.quests) do
             table.insert(quests, v)
         end
         return quests
     end
 end
+-- 判定是否完成所有任务
+function User:IsFinishedAllDailyQuests()
+    if self:GetNextDailyQuestsRefreshTime() <= app.timer:GetServerTime() then
+        return false
+    end
+    return LuaUtils:table_empty(self.dailyQuests.quests)
+end
 -- 下次刷新任务时间
+local dailyQuestsRefreshMinites_value = GameDatas.PlayerInitData.intInit.dailyQuestsRefreshMinites.value
 function User:GetNextDailyQuestsRefreshTime()
-    return GameDatas.PlayerInitData.intInit.dailyQuestsRefreshMinites.value * 60 + self.dailyQuestsRefreshTime/1000
+    return dailyQuestsRefreshMinites_value * 60 + self:GetDailyQuestsRefreshTime()
 end
-function User:SetDailyQuestsRefreshTime(dailyQuestsRefreshTime)
-    self.dailyQuestsRefreshTime = dailyQuestsRefreshTime
-end
-
-function User:GetDailyQuestEvents()
-    return self.dailyQuestEvents
+function User:GetDailyQuestsRefreshTime()
+    return self.dailyQuests.refreshTime / 1000 or 0
 end
 function User:IsQuestStarted(quest)
     return tolua.type(quest.finishTime) ~= "nil"
@@ -444,46 +422,97 @@ end
 function User:IsQuestFinished(quest)
     return quest.finishTime == 0
 end
-function User:OnPropertyChange(property_name, old_value, new_value)
-    self:NotifyListeneOnType(BASIC, function(listener)
-        listener:OnUserBasicChanged(self, {
-            [property_name] = {old = old_value, new = new_value}
-        })
-    end)
-    -- 如果是名字改变，更新联盟中信息
-    if property_name == "name" and Alliance_Manager
-        and not Alliance_Manager:GetMyAlliance():IsDefault()
-        and Alliance_Manager:GetMyAlliance():GetMemeberById(self:Id())
-    then
-        Alliance_Manager:GetMyAlliance():GetMemeberById(self:Id()).name = new_value
+-- 判定是否正在进行每日任务
+function User:IsOnDailyQuestEvents()
+    local t = self.dailyQuestEvents
+    if LuaUtils:table_empty(t) then
+        return false
+    else
+        for k,v in pairs(t) do
+            if v.finishTime == 0 then
+                return false
+            end
+        end
+        return true
     end
+end
+-- 判定是否能领取每日任务奖励
+function User:CouldGotDailyQuestReward()
+    local t = self.dailyQuestEvents
+    if LuaUtils:table_empty(t) then
+        return false
+    else
+        for k,v in pairs(t) do
+            if v.finishTime == 0 then
+                return true
+            end
+        end
+        return false
+    end
+end
+--[[end]]
+
+
+function User:OnPropertyChange(property_name, old_value, new_value)
 end
 
 local before_map = {
-    deals = function()end,
+    basicInfo = function(userData, deltaData)
+        local ok, value = deltaData("basicInfo.name")
+        if ok then
+            if Alliance_Manager and
+                not Alliance_Manager:GetMyAlliance():IsDefault()
+                and Alliance_Manager:GetMyAlliance():GetMemeberById(self._id)
+            then
+                Alliance_Manager:GetMyAlliance():GetMemeberById(self._id).name = value
+            end
+        end
+    end,
+    resources = function(userData, deltaData)
+        if deltaData("resources.stamina") then
+            local stamina = userData.resources_cache.stamina
+            stamina.value = userData.resources.stamina
+        end
+    end,
     countInfo = function()end,
+    deals = function()end,
     iapGifts = function()end,
     growUpTasks = function()end,
     allianceDonate = function()end,
+    dailyTasks = function()end,
+    dailyQuests = function()end,
+    dailyQuestEvents = function(userData, deltaData)
+        local ok, value = deltaData("dailyQuestEvents.edit")
+        if ok then
+            for k,v in pairs(value) do
+                if v.finishTime == 0 then
+                    GameGlobalUI:showTips(_("提示"),string.format(_("每日任务%s完成"),Localize.daily_quests_name[v.index]))
+                end
+            end
+        end
+    end,
     vipEvents = function()
         City:GetResourceManager():UpdateByCity(City, app.timer:GetServerTime())
     end,
 }
 local after_map = {
-    growUpTasks = function(user)
-        if user.reward_callback and TaskUtils:IsGetAnyCityBuildRewards(user.growUpTasks) then
-            user.reward_callback()
-            user.reward_callback = nil
+    growUpTasks = function(userData)
+        if userData.reward_callback and
+            TaskUtils:IsGetAnyCityBuildRewards(userData.growUpTasks) then
+            userData.reward_callback()
+            userData.reward_callback = nil
         end
     end,
 }
 function User:OnUserDataChanged(userData, current_time, deltaData)
+    self._id                    = userData._id
     self.gcId                   = userData.gcId
     self.serverId               = userData.serverId
     self.logicServerId          = userData.logicServerId
     self.serverLevel            = userData.serverLevel
     self.basicInfo              = userData.basicInfo
     self.countInfo              = userData.countInfo
+    self.resources              = userData.resources
     self.iapGifts               = userData.iapGifts
     self.deals                  = userData.deals
     self.pve                    = userData.pve
@@ -493,66 +522,57 @@ function User:OnUserDataChanged(userData, current_time, deltaData)
     self.growUpTasks            = userData.growUpTasks
     self.allianceInfo           = userData.allianceInfo
     self.allianceDonate         = userData.allianceDonate
+    self.dailyTasks             = userData.dailyTasks
+    self.apnStatus              = userData.apnStatus
+    self.dailyQuests            = userData.dailyQuests
+    self.dailyQuestEvents       = userData.dailyQuestEvents
     self.requestToAllianceEvents= userData.requestToAllianceEvents
     self.inviteToAllianceEvents = userData.inviteToAllianceEvents
 
-    self:OnResourcesChangedByTime(userData, current_time, deltaData)
-    self:OnBasicInfoChanged(userData, deltaData)
-    self:OnApnStatusChanged(userData, deltaData)
-    -- 每日任务
-    self:OnDailyQuestsChanged(userData,deltaData)
-    self:OnDailyQuestsEventsChanged(userData,deltaData)
-    -- 日常任务
-    self:OnDailyTasksChanged(userData.dailyTasks)
-
     if deltaData then
-        for k,v in pairs(User.LISTEN_TYPE) do
+        for i,k in ipairs(User.LISTEN_TYPE) do
             local before_func = before_map[k]
             if type(k) == "string" and before_func then
                 if deltaData(k) then
-                    before_func()
-                    local notify_func = string.format("OnUserDataChanged_%s", k)
+                    before_func(self, deltaData)
+                    local notify_function_name = string.format("OnUserDataChanged_%s", k)
                     self:NotifyListeneOnType(User.LISTEN_TYPE[k], function(listener)
-                        listener[notify_func](listener, self, deltaData)
+                        local func = listener[notify_function_name]
+                        if func then
+                            func(listener, self, deltaData)
+                        end
                     end)
                     local after_func = after_map[k]
                     if after_func then
-                        after_func(self)
+                        after_func(self, deltaData)
                     end
                 end
             end
         end
+    else
+        local stamina = self.resources_cache.stamina
+        stamina.value = self.resources.stamina
     end
 
     return self
 end
 
-function User:OnDailyTasksChanged(dailyTasks)
-    if not dailyTasks then return end
-    local changed_task_types = {}
-    for k,v in pairs(dailyTasks) do
-        table.insert(changed_task_types,k)
-        self.dailyTasks[k] = v
-    end
-    self:NotifyListeneOnType(self.LISTEN_TYPE.DAILY_TASKS, function(listener)
-        listener:OnDailyTasksChanged(self, changed_task_types)
-    end)
-end
-
+--[[dailyTasks begin]]
 function User:GetDailyTasksInfo(task_type)
     return self.dailyTasks[task_type] or {}
 end
-
 function User:CheckDailyTasksWasRewarded(task_type)
     for __,v in ipairs(self:GetAllDailyTasks().rewarded) do
         if v == task_type then return true end
     end
     return false
 end
-
 function User:GetAllDailyTasks()
     return self.dailyTasks or {}
 end
+--[[end]]
+
+
 --[[vip function begin]]
 -- 获取当天剩余普通免费gacha次数
 function User:GetOddFreeNormalGachaCount()
@@ -631,223 +651,16 @@ function User:GetVipLevel()
     return DataUtils:getPlayerVIPLevel(exp)
 end
 --[[end]]
-function User:OnResourcesChangedByTime(userData, current_time, deltaData)
-    local is_fully_update = deltaData == nil
-    local is_delta_update = not is_fully_update and deltaData.resources and deltaData.resources.stamina
-    local resources = userData.resources
-    if is_fully_update or is_delta_update then
-        local refreshTime = userData.resources.refreshTime / 1000
-        local strength = self:GetStrengthResource()
-        strength:UpdateResource(refreshTime, resources.stamina)
-        strength:SetProductionPerHour(refreshTime, intInit.staminaRecoverPerHour.value)
-    end
-    self:GetGemResource():SetValue(resources.gem)
-    return self
-end
-function User:OnBasicInfoChanged(userData, deltaData)
-    local is_fully_update = deltaData == nil
-    local is_delta_update = not is_fully_update and deltaData.basicInfo
-    if is_fully_update or is_delta_update then
-        local basicInfo = userData.basicInfo
-        self:SetTerrain(basicInfo.terrain)
-        self:SetLevelExp(basicInfo.levelExp)
-        self:SetLevel(self:GetPlayerLevelByExp(self:LevelExp()))
-        self:SetPower(basicInfo.power)
-        self:SetName(basicInfo.name)
-        self:SetVipExp(basicInfo.vipExp)
-        self:SetIcon(basicInfo.icon)
-        self:SetMarchQueue(basicInfo.marchQueue)
-        self:SetAttackWin(basicInfo.attackWin)
-        self:SetStrikeWin(basicInfo.strikeWin)
-        self:SetDefenceWin(basicInfo.defenceWin)
-        self:SetAttackTotal(basicInfo.attackTotal)
-        self:SetKill(basicInfo.kill)
-        self:SetLanguage(basicInfo.language)
-        self:SetRecruitQueue(basicInfo.recruitQueue)
-    end
-    return self
-end
-function User:OnApnStatusChanged( userData, deltaData )
-    local is_fully_update = deltaData == nil
-    local is_delta_update = not is_fully_update and deltaData.apnStatus
-    if is_fully_update then
-        dump(userData.apnStatus,"userData.apnStatus")
-        self.apnStatus = clone(userData.apnStatus)
-    end
-    if is_delta_update then
-        dump(deltaData.apnStatus,"deltaData.apnStatus")
-        for i,v in pairs(deltaData.apnStatus) do
-            self.apnStatus[i] = v
-        end
-    end
-end
-function User:OnDailyQuestsChanged(userData, deltaData)
-    local is_fully_update = deltaData == nil
-    if is_fully_update then
-        if userData.dailyQuests.refreshTime then
-            self:SetDailyQuestsRefreshTime(userData.dailyQuests.refreshTime)
-        end
-        self.dailyQuests= {}
-        if userData.dailyQuests.quests then
-            for k,v in pairs(userData.dailyQuests.quests) do
-                self.dailyQuests[v.id] = v
-            end
-        end
-        self:OnDailyQuestsRefresh()
-    end
-    local is_delta_update = not is_fully_update and deltaData.dailyQuests ~= nil
-
-    if is_delta_update then
-        if deltaData.dailyQuests.refreshTime then
-            self:SetDailyQuestsRefreshTime(deltaData.dailyQuests.refreshTime)
-            if deltaData.dailyQuests.quests then
-                self.dailyQuests = {}
-                for k,v in pairs(deltaData.dailyQuests.quests) do
-                    self.dailyQuests[v.id] = v
-                end
-                self:OnDailyQuestsRefresh()
-                return
-            end
-        end
-
-        local add = {}
-        local edit = {}
-        local remove = {}
-        for k,v in pairs(deltaData.dailyQuests.quests) do
-            if k == "add" then
-                for _,data in ipairs(v) do
-                    self.dailyQuests[data.id] = data
-                    table.insert(add,data)
-                end
-            end
-            if k == "edit" then
-                for _,data in ipairs(v) do
-                    if self.dailyQuests[data.id] then
-                        self.dailyQuests[data.id] = data
-                        table.insert(edit,data)
-                    end
-                end
-            end
-            if k == "remove" then
-                for _,data in ipairs(v) do
-                    if self.dailyQuests[data.id] then
-                        self.dailyQuests[data.id] = nil
-                        table.insert(remove,data)
-                    end
-                end
-            end
 
 
-        end
-        self:OnNewDailyQuests(
-            {
-                add= add,
-                edit= edit,
-                remove= remove,
-            }
-        )
-    end
-end
-function User:OnDailyQuestsEventsChanged(userData,deltaData)
-    local is_fully_update = deltaData == nil
-    if is_fully_update then
-        for k,v in pairs(userData.dailyQuestEvents) do
-            self.dailyQuestEvents[v.id] = v
-        end
-    end
-    local is_delta_update = not is_fully_update and deltaData.dailyQuestEvents ~= nil
-    if is_delta_update then
-        local add = {}
-        local edit = {}
-        local remove = {}
-        for k,v in pairs(deltaData.dailyQuestEvents) do
-            if k == "add" then
-                for _,data in ipairs(v) do
-                    self.dailyQuestEvents[data.id] = data
-                    table.insert(add,data)
-                end
-            end
-            if k == "edit" then
-                for i,data in ipairs(v) do
-                    if self.dailyQuestEvents[data.id] then
-                        self.dailyQuestEvents[data.id] = data
-                        table.insert(edit,data)
 
-                        if data.finishTime == 0 then
-                            GameGlobalUI:showTips(_("提示"),string.format(_("每日任务%s完成"),Localize.daily_quests_name[data.index]))
-                        end
-                    end
-                end
-            end
-            if k == "remove" then
-                for _,data in ipairs(v) do
-                    if self.dailyQuestEvents[data.id] then
-                        self.dailyQuestEvents[data.id] = nil
-                        table.insert(remove,data)
-                    end
-                end
-            end
-        end
-        self:OnNewDailyQuestsEvent(
-            {
-                add= add,
-                edit= edit,
-                remove= remove,
-            }
-        )
-    end
-end
--- 判定是否正在进行每日任务
-function User:IsOnDailyQuestEvents()
-    local dailyQuestEvents = self.dailyQuestEvents
-    if LuaUtils:table_empty(dailyQuestEvents) then
-        return false
-    else
-        for k,v in pairs(dailyQuestEvents) do
-            if v.finishTime == 0 then
-                return false
-            end
-        end
-        return true
-    end
-end
--- 判定是否完成所有任务
-function User:IsFinishedAllDailyQuests()
-    if self:GetNextDailyQuestsRefreshTime() <= app.timer:GetServerTime() then
-        return false
-    end
-    return LuaUtils:table_empty(self.dailyQuests)
-end
--- 判定是否能领取每日任务奖励
-function User:CouldGotDailyQuestReward()
-    local dailyQuestEvents = self.dailyQuestEvents
-    if LuaUtils:table_empty(dailyQuestEvents) then
-        return false
-    else
-        for k,v in pairs(dailyQuestEvents) do
-            if v.finishTime == 0 then
-                return true
-            end
-        end
-        return false
-    end
-end
-function User:OnDailyQuestsRefresh()
-    self:NotifyListeneOnType(User.LISTEN_TYPE.DALIY_QUEST_REFRESH, function(listener)
-        listener:OnDailyQuestsRefresh()
-    end)
-end
-function User:OnNewDailyQuests(changed_map)
-    self:NotifyListeneOnType(User.LISTEN_TYPE.NEW_DALIY_QUEST, function(listener)
-        listener:OnNewDailyQuests(changed_map)
-    end)
-end
-function User:OnNewDailyQuestsEvent(changed_map)
-    self:NotifyListeneOnType(User.LISTEN_TYPE.NEW_DALIY_QUEST_EVENT, function(listener)
-        listener:OnNewDailyQuestsEvent(changed_map)
-    end)
+--[[basicinfo begin]]
+function User:GetLevel()
+    return self:GetPlayerLevelByExp(self.basicInfo.levelExp)
 end
 
+
+local config_playerLevel = GameDatas.PlayerInitData.playerLevel
 function User:GetPlayerLevelByExp(exp)
     exp = checkint(exp)
     for i=#config_playerLevel,1,-1 do
@@ -874,9 +687,9 @@ function User:GetBestDragon()
         desert= "redDragon",
         iceField = "blueDragon",
     }
-    return bestDragonForTerrain[self:Terrain()]
+    return bestDragonForTerrain[self.basicInfo.terrain]
 end
-
+--[[end]]
 --
 local promise = import("..utils.promise")
 function User:PromiseOfGetCityBuildRewards()
@@ -888,6 +701,12 @@ function User:PromiseOfGetCityBuildRewards()
 end
 
 return User
+
+
+
+
+
+
 
 
 

@@ -123,7 +123,7 @@ function Item:ctor(parent_ui)
                 end
             elseif self.status == "instant" then
                 local city = building:BelongCity()
-                if building:getUpgradeNowNeedGems() > city:GetUser():GetGemResource():GetValue() then
+                if building:getUpgradeNowNeedGems() > city:GetUser():GetGemValue() then
                     local dialog = UIKit:showMessageDialog()
                     dialog:SetTitle(_("提示"))
                     dialog:SetPopMessage(UpgradeBuilding.NOT_ABLE_TO_UPGRADE.GEM_NOT_ENOUGH)

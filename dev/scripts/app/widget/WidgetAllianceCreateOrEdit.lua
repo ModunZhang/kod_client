@@ -86,12 +86,12 @@ function WidgetAllianceCreateOrEdit:CreateAllianceButtonClicked()
 	end
 	local goStore = false
 	if self:IsCreate() then
-		if config_intInit.createAllianceGem.value > User:GetGemResource():GetValue() then
+		if config_intInit.createAllianceGem.value > User:GetGemValue() then
 			errMsg = _("金龙币不足")
 			goStore = true
 		end
 	else
-		if config_intInit.editAllianceBasicInfoGem.value > User:GetGemResource():GetValue() then
+		if config_intInit.editAllianceBasicInfoGem.value > User:GetGemValue() then
 			errMsg = _("金龙币不足")
 			goStore = true
 		end

@@ -14,6 +14,13 @@ local WidgetPushTransparentButton = import("..widget.WidgetPushTransparentButton
 local config_stringInit = GameDatas.PlayerInitData.stringInit
 local Localize_item = import("..utils.Localize_item")
 
+
+
+function GameUIDailyMissionInfo:OnUserDataChanged_dailyTasks()
+    self:RefreshListUI()
+end
+
+
 function GameUIDailyMissionInfo:ctor(key_of_daily)
     GameUIDailyMissionInfo.super.ctor(self)
     self.key_of_daily = key_of_daily
@@ -40,7 +47,7 @@ end
 
 function GameUIDailyMissionInfo:onEnter()
     GameUIDailyMissionInfo.super.onEnter(self)
-    User:AddListenOnType(self,User.LISTEN_TYPE.DAILY_TASKS)
+    User:AddListenOnType(self, "dailyTasks")
     self:BuildUI()
 end
 
@@ -393,14 +400,8 @@ function GameUIDailyMissionInfo:GetMissionConfig()
     }
     return config
 end
-
-
-function GameUIDailyMissionInfo:OnDailyTasksChanged()
-    self:RefreshListUI()
-end
-
 function GameUIDailyMissionInfo:onExit()
-    User:RemoveListenerOnType(self,User.LISTEN_TYPE.DAILY_TASKS)
+    User:RemoveListenerOnType(self, "dailyTasks")
     GameUIDailyMissionInfo.super.onExit(self)
 end
 

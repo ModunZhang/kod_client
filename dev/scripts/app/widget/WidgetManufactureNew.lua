@@ -194,7 +194,7 @@ function WidgetManufactureNew:ReloadMaterials(materials, materials_map)
                         :CreateOKButtonWithPrice(
                             {
                                 listener = function()
-                                    if need_gems > user:GetGemResource():GetValue() then
+                                    if need_gems > user:GetGemValue() then
                                         UIKit:showMessageDialog(_("主人"),_("金龙币不足"))
                                             :CreateOKButton(
                                                 {

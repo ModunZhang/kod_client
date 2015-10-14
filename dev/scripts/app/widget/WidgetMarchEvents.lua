@@ -450,7 +450,7 @@ function WidgetMarchEvents:CreateDefenceItem(entity)
         display_text = node.prefix
         time_str = ""
         for i,v in ipairs(event:PlayerTroops()) do
-            if v.name == User:Name() then
+            if v.name == User.basicInfo.name then
                 dragonType = v.dragon.type
             end
         end

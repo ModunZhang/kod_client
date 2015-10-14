@@ -36,7 +36,7 @@ local CITIZEN       = ResourceManager.RESOURCE_TYPE.CITIZEN
 local red_color = UIKit:hex2c4b(0xff3c00)
 local normal_color = UIKit:hex2c4b(0xf3f0b6)
 
-function GameUIHome:OnResourceChanged(resource_manager)
+function GameUIHome:RefreshResources(resource_manager)
     local server_time = timer:GetServerTime()
     local allresources = resource_manager:GetAllResources()
     local wood_resource = allresources[WOOD]
@@ -51,7 +51,7 @@ function GameUIHome:OnResourceChanged(resource_manager)
     local stone_number = stone_resource:GetResourceValueByCurrentTime(server_time)
     local citizen_number = citizen_resource:GetNoneAllocatedByTime(server_time)
     local coin_number = coin_resource:GetResourceValueByCurrentTime(server_time)
-    local gem_number = self.city:GetUser():GetGemResource():GetValue()
+    local gem_number = self.city:GetUser():GetGemValue()
     self.wood_label:setString(GameUtils:formatNumber(wood_number))
     self.food_label:setString(GameUtils:formatNumber(food_number))
     self.iron_label:setString(GameUtils:formatNumber(iron_number))
@@ -156,10 +156,14 @@ function GameUIHome:onEnter()
     self.event_tab:addTo(self,0):pos(x, y)
 
     self:AddOrRemoveListener(true)
-    self:OnResourceChanged(city:GetResourceManager())
     self:RefreshData()
+    self:RefreshVIP()
     self:OnUserDataChanged_growUpTasks()
     self:RefreshHelpButtonVisible()
+
+    display.newNode():addTo(self):scheduleAt(function()
+        self:RefreshResources(city:GetResourceManager())    
+    end, 1)
 end
 function GameUIHome:onExit()
     self:AddOrRemoveListener(false)
@@ -172,13 +176,12 @@ function GameUIHome:AddOrRemoveListener(isAdd)
     if isAdd then
         city:AddListenOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
         city:AddListenOnType(self, city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
-        city:GetResourceManager():AddObserver(self)
         city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
         city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
         my_allaince:AddListenOnType(self, "basicInfo")
         my_allaince:AddListenOnType(self, "helpEvents")
         my_allaince:AddListenOnType(self, "operation")
-        user:AddListenOnType(self, user.LISTEN_TYPE.BASIC)
+        user:AddListenOnType(self, "basicInfo")
         user:AddListenOnType(self, "growUpTasks")
         user:AddListenOnType(self, "vipEvents")
         user:AddListenOnType(self, "countInfo")
@@ -189,13 +192,12 @@ function GameUIHome:AddOrRemoveListener(isAdd)
     else
         city:RemoveListenerOnType(self,city.LISTEN_TYPE.UPGRADE_BUILDING)
         city:RemoveListenerOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
-        city:GetResourceManager():RemoveObserver(self)
         city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
         city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
         my_allaince:RemoveListenerOnType(self, "basicInfo")
         my_allaince:RemoveListenerOnType(self, "helpEvents")
         my_allaince:RemoveListenerOnType(self, "operation")
-        user:RemoveListenerOnType(self, user.LISTEN_TYPE.BASIC)
+        user:RemoveListenerOnType(self, "basicInfo")
         user:RemoveListenerOnType(self, "growUpTasks")
         user:RemoveListenerOnType(self, "vipEvents")
         user:RemoveListenerOnType(self, "countInfo")
@@ -212,32 +214,27 @@ function GameUIHome:OnAllianceDataChanged_basicInfo(alliance, deltaData)
     self:RefreshHelpButtonVisible()
     self:RefreshData()
 end
-function GameUIHome:OnUserBasicChanged(fromEntity,changed_map)
-    if changed_map.name then
-        self.name_label:setString(changed_map.name.new)
-    end
-    if changed_map.vipExp then
-        self:RefreshVIP()
-    end
-    if changed_map.icon then
-        self.player_icon:setTexture(UILib.player_icon[changed_map.icon.new])
-    end
-    if changed_map.levelExp then
-        self:RefreshExp()
-    end
-    self:RefreshData()
-end
 function GameUIHome:OnAllianceDataChanged_helpEvents()
     self:RefreshHelpButtonVisible()
     self.request_count:SetNumber(Alliance_Manager:GetMyAlliance():GetOtherRequestEventsNum())
 end
+function GameUIHome:OnUserDataChanged_basicInfo(userData, deltaData)
+    self:RefreshData()
+    if deltaData("basicInfo.vipExp") then
+        self:RefreshVIP()
+    end
+    if deltaData("basicInfo.icon") then
+        self.player_icon:setTexture(UILib.player_icon[userData.basicInfo.icon])
+    end
+    if deltaData("basicInfo.levelExp") then
+        self:RefreshExp()
+    end
+end
 function GameUIHome:RefreshData()
-    -- 更新数值
     local user = self.city:GetUser()
-    self.name_label:setString(user:Name())
-    self.power_label:setString(string.formatnumberthousands(user:Power()))
-    self.level_label:setString(user:Level())
-    self:RefreshVIP()
+    self.name_label:setString(user.basicInfo.name)
+    self.power_label:setString(string.formatnumberthousands(user.basicInfo.power))
+    self.level_label:setString(user:GetLevel())
 end
 
 
@@ -336,7 +333,7 @@ function GameUIHome:CreateTop()
     local player_bg = display.newSprite("player_info_bg_120x120.png")
         :align(display.LEFT_BOTTOM, display.width>640 and 58 or 60, 10)
         :addTo(top_bg, 2):scale(106/120):setCascadeOpacityEnabled(true)
-    self.player_icon = UIKit:GetPlayerIconOnly(User:Icon())
+    self.player_icon = UIKit:GetPlayerIconOnly(User.basicInfo.icon)
         :addTo(player_bg):pos(60, 68):scale(0.78)
     self.exp = display.newProgressTimer("player_exp_bar_110x106.png",
         display.PROGRESS_TIMER_RADIAL):addTo(player_bg):pos(60, 58):scale(1.15)
@@ -691,8 +688,8 @@ function GameUIHome:OnAllianceDataChanged_operation(alliance,operation_type)
     end
 end
 function GameUIHome:RefreshExp()
-    local current_level = User:GetPlayerLevelByExp(User:LevelExp())
-    self.exp:setPercentage( (User:LevelExp() - User:GetCurrentLevelExp(current_level))/(User:GetCurrentLevelMaxExp(current_level) - User:GetCurrentLevelExp(current_level)) * 100)
+    local current_level = User:GetPlayerLevelByExp(User.basicInfo.levelExp)
+    self.exp:setPercentage( (User.basicInfo.levelExp - User:GetCurrentLevelExp(current_level))/(User:GetCurrentLevelMaxExp(current_level) - User:GetCurrentLevelExp(current_level)) * 100)
 end
 function GameUIHome:RefreshVIP()
     local vip_btn = self.vip_btn

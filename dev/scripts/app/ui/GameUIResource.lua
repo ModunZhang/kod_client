@@ -390,7 +390,7 @@ function GameUIResource:MoveButtonAction( event )
     if torch_count<1 then
         if app:GetGameDefautlt():IsOpenGemRemind() then
             UIKit:showConfirmUseGemMessageDialog(_("提示"),string.format(_("是否消费%s金龙币"),string.formatnumberthousands(movingConstruction:Price())), function()
-                if movingConstruction:Price() > User:GetGemResource():GetValue() then
+                if movingConstruction:Price() > User:GetGemValue() then
                     UIKit:showMessageDialog(_("提示"),_("金龙币不足")):CreateOKButton(
                         {
                             listener = function ()
@@ -404,7 +404,7 @@ function GameUIResource:MoveButtonAction( event )
                 WidgetMoveHouse.new(building)
             end,true,true)
         else
-            if movingConstruction:Price() > User:GetGemResource():GetValue() then
+            if movingConstruction:Price() > User:GetGemValue() then
                 UIKit:showMessageDialog(_("提示"),_("金龙币不足")):CreateOKButton(
                     {
                         listener = function ()

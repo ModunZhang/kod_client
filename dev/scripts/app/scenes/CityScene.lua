@@ -162,7 +162,7 @@ local EFFECT_TAG = 12321
 function CityScene:PlayEffectIf()
     if math.floor(app.timer:GetServerTime()) % 2 == 1 then return end
     self:GetScreenLayer():removeAllChildren()
-    local terrain = self:GetCity():GetUser():Terrain()
+    local terrain = self:GetCity():GetUser().basicInfo.terrain
     if terrain == "iceField" then
         local emitter = UIKit:CreateSnow():addTo(self:GetScreenLayer(), 1, EFFECT_TAG)
             :pos(display.cx-80, display.height)

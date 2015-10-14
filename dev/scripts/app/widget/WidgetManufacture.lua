@@ -127,7 +127,7 @@ function WidgetManufacture:Manufacture()
                 :CreateOKButtonWithPrice(
                     {
                         listener = function()
-                            if need_gems > User:GetGemResource():GetValue() then
+                            if need_gems > User:GetGemValue() then
                                 UIKit:showMessageDialog(_("主人"),_("金龙币不足"))
                                     :CreateOKButton(
                                         {
@@ -196,7 +196,7 @@ function WidgetManufacture:Manufacture()
                 :CreateOKButtonWithPrice(
                     {
                         listener = function()
-                            if need_gems > User:GetGemResource():GetValue() then
+                            if need_gems > User:GetGemValue() then
                                 UIKit:showMessageDialog(_("主人"),_("金龙币不足"))
                                     :CreateOKButton(
                                         {

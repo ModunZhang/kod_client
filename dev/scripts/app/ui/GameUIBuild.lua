@@ -195,7 +195,7 @@ function GameUIBuild:OnBuildOnItem(item)
         dialog:SetPopMessage(message):CreateOKButtonWithPrice(
             {
                 listener =  function()
-                    if need_gem > User:GetGemResource():GetValue() then
+                    if need_gem > User:GetGemValue() then
                         dialog:CreateOKButton(
                             {
                                 llistener =  function ()

@@ -190,7 +190,7 @@ function GameUIWathTowerRegion:GetMyEventItemWithIndex(index,isOpen,entity)
             :setButtonLabelOffset(0, 16)
             :align(display.RIGHT_BOTTOM,310,18)
             :onButtonClicked(function(event)
-                if unlockPlayerSecondMarchQueue_price > User:GetGemResource():GetValue() then
+                if unlockPlayerSecondMarchQueue_price > User:GetGemValue() then
                     UIKit:showMessageDialog(_("提示"),_("金龙币不足"))
                         :CreateOKButton(
                             {

@@ -137,7 +137,7 @@ function GameUIAllianceContribute:CreateContributeGroup()
     local food = City.resource_manager:GetFoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     local iron = City.resource_manager:GetIronResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     local coin = City.resource_manager:GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    local gem = City:GetUser():GetGemResource():GetValue()
+    local gem = City:GetUser():GetGemValue()
     local group_table = {
         {
             icon="res_wood_82x73.png",
@@ -326,7 +326,7 @@ function GameUIAllianceContribute:IsAbleToContribute()
     local count  = self:GetDonateValueByType(r_type).count
     local r_count
     if r_type == "gem" then
-        r_count = User:GetGemResource():GetValue()
+        r_count = User:GetGemValue()
     else
         r_count = City.resource_manager:GetResourceByType(CON_TYPE[r_type]):GetResourceValueByCurrentTime(app.timer:GetServerTime())
     end
@@ -343,7 +343,7 @@ function GameUIAllianceContribute:OnResourceChanged(resource_manager)
     local food = resource_manager:GetFoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     local iron = resource_manager:GetIronResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
     local coin = resource_manager:GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    local gem = City:GetUser():GetGemResource():GetValue()
+    local gem = City:GetUser():GetGemValue()
     local owns = {
         wood,
         stone,

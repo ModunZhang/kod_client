@@ -36,7 +36,7 @@ function GameUIShop:onEnter()
         :addTo(content)
         :align(display.CENTER, window.left + 320, window.top - 500)
         :onButtonClicked(function()
-            local current = self.shop_city:GetUser():GetGemResource():GetValue() + add_gem
+            local current = self.shop_city:GetUser():GetGemValue() + add_gem
             -- NetManager:sendMsg("gem "..current, NOT_HANDLE)
             cocos_promise.promiseWithCatchError(NetManager:getSendGlobalMsgPromise("resources gem "..current))
         end)

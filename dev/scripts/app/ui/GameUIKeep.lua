@@ -95,7 +95,7 @@ function GameUIKeep:CreateCityBasicInfo()
     -- 修改地形
     self:CreateLineItem({
         title_1 =  _("城市地形"),
-        title_2 =  Localize.terrain[User:Terrain()],
+        title_2 =  Localize.terrain[User.basicInfo.terrain],
         button_label =  _("修改"),
         listener =  function ()
             self:CreateChangeTerrainWindow()
@@ -354,7 +354,7 @@ function GameUIKeep:CreateChangeTerrainWindow()
         :align(display.CENTER, 80 , 50)
         :addTo(bg1)
 
-    local terrain = User:Terrain()
+    local terrain = User.basicInfo.terrain
     local default_index = 0
     if terrain == "grassLand" then
         default_index = 1
@@ -421,7 +421,7 @@ function GameUIKeep:CreateChangeTerrainWindow()
         :addTo(bg2):align(display.CENTER, 480, 45)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                if User:GetGemResource():GetValue()<intInit.changeTerrainNeedGemCount.value then
+                if User:GetGemValue()<intInit.changeTerrainNeedGemCount.value then
                     UIKit:showMessageDialog(_("提示"),_("金龙币不足"))
                         :CreateOKButton(
                             {

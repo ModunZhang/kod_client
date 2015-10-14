@@ -140,7 +140,7 @@ function MilitaryTechnology:GetUpgradeGems()
     return DataUtils:buyResource(required.resources, has.resources) + DataUtils:buyMaterial(required.materials, has.materials) + DataUtils:getGemByTimeInterval(left_time)
 end
 function MilitaryTechnology:IsAbleToUpgradeNow()
-    local current_gem = User:GetGemResource():GetValue()
+    local current_gem = User:GetGemValue()
     return self:GetInstantUpgradeGems() >= current_gem
 end
 function MilitaryTechnology:IsAbleToUpgrade()

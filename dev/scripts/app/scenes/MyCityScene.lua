@@ -50,7 +50,6 @@ function MyCityScene:onEnter()
     -- :align(display.RIGHT_TOP, display.width, display.height)
 
     self:GetCity():AddListenOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
-    self:GetCity():GetUser():AddListenOnType(self, User.LISTEN_TYPE.BASIC)
     self:GetCity():GetSoldierManager():AddListenOnType(self, SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
     self:GetCity():GetFirstBuildingByType("barracks"):AddBarracksListener(self)
     alliance:AddListenOnType(self, "operation")
@@ -197,8 +196,8 @@ function MyCityScene:RefreshLockBtnStatus()
     end)
 end
 function MyCityScene:RefreshStrenth()
-    local limit = self.city:GetUser():GetStrengthResource():GetValueLimit()
-    local value = self.city:GetUser():GetStrengthResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+    local limit = self.city:GetUser():GetStaminaLimit()
+    local value = self.city:GetUser():GetStaminaValue()
     local ratio = value / limit
     ratio = ratio > 1 and 1 or ratio
     self:GetSceneLayer():GetAirship():SetBattery(ratio)
@@ -318,13 +317,13 @@ end
 function MyCityScene:OnSoliderStarCountChanged(soldier_manager, soldier_star_changed)
     self:GetSceneLayer():OnSoliderStarCountChanged(soldier_manager, soldier_star_changed)
 end
-function MyCityScene:OnUserBasicChanged(user, changed)
-    MyCityScene.super.OnUserBasicChanged(self, user, changed)
-    if changed.terrain then
-        self:ChangeTerrain(changed.terrain.new)
+function MyCityScene:OnUserDataChanged_basicInfo(userData, deltaData)
+    MyCityScene.super.OnUserDataChanged_basicInfo(self, userData, deltaData)
+    if deltaData("basicInfo.terrain") then
+        self:ChangeTerrain(userData.basicInfo.terrain)
     end
-    if changed.power then
-        self:GetHomePage():ShowPowerAni(cc.p(display.cx, display.cy), changed.power.old)
+    if deltaData("basicInfo.power") then
+        self:GetHomePage():ShowPowerAni(cc.p(display.cx, display.cy), userData.basicInfo.power)
     end
 end
 function MyCityScene:OnUpgradingBegin()

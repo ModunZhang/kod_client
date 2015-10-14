@@ -134,9 +134,9 @@ function ChatManager:GetGameDefault()
 end
 
 function ChatManager:__checkIsBlocked(msg)
-    if msg.id == User:Id() then
-        msg.name = User:Name()
-        msg.icon = User:Icon()
+    if msg.id == User._id then
+        msg.name = User.basicInfo.name
+        msg.icon = User.basicInfo.icon
         local alliacne = Alliance_Manager:GetMyAlliance()
         if not alliacne:IsDefault() then
             msg.allianceTag = alliacne.basicInfo.tag
@@ -285,8 +285,8 @@ end
 
 function ChatManager:__formatLastMessage(chat)
     if not chat then return ""  end
-    if chat.id == User:Id() then
-        chat.name = User:Name()
+    if chat.id == User._id then
+        chat.name = User.basicInfo.name
     end
     if string.lower(chat.id) == 'system' then
         return self:GetEmojiUtil():FormatSystemChat(string.format("%s : %s",chat.name,chat.text),true)
