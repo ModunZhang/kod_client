@@ -23,7 +23,6 @@ end
 function WidgetResources:onEnter()
     self:CreateResourceListView()
     self:InitAllResources()
-    self.city:GetResourceManager():AddObserver(self)
     self.city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
     local user = self.city:GetUser()
     user:AddListenOnType(self, "vipEvents")
@@ -37,10 +36,25 @@ function WidgetResources:onEnter()
     for k,v in pairs(resourceBuildingMap) do
         self.city:GetFirstBuildingByType(v):AddUpgradeListener(self)
     end
+    scheduleAt(self, function()
+        local res_man = self.city:GetResourceManager()
+        local maxwood, maxfood, maxiron, maxstone = self.building:GetResourceValueLimit()
+        local resource_max = {
+            [ResourceManager.RESOURCE_TYPE.WOOD] = maxwood,
+            [ResourceManager.RESOURCE_TYPE.FOOD] = maxfood,
+            [ResourceManager.RESOURCE_TYPE.IRON] = maxiron,
+            [ResourceManager.RESOURCE_TYPE.STONE] = maxstone,
+        }
+        if self.resource_items then
+            for k,v in pairs(self.resource_items) do
+                self:RefreshSpecifyResource(res_man:GetResourceByType(k),v,resource_max[k],City:GetCitizenByType(City.RESOURCE_TYPE_TO_BUILDING_TYPE[k]), k)
+            end
+        end
+        self:RefreshProtectPercent()
+    end)
 end
 function WidgetResources:onExit()
     self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
-    self.city:GetResourceManager():RemoveObserver(self)
     local user = self.city:GetUser()
     user:RemoveListenerOnType(self, "vipEvents")
     ItemManager:RemoveListenerOnType(self,ItemManager.LISTEN_TYPE.ITEM_EVENT_CHANGED)
@@ -80,22 +94,6 @@ function WidgetResources:RefreshProtectPercent()
             end
         end
     end
-end
--- 资源刷新
-function WidgetResources:OnResourceChanged(resource_manager)
-    local maxwood, maxfood, maxiron, maxstone = self.building:GetResourceValueLimit()
-    local resource_max = {
-        [ResourceManager.RESOURCE_TYPE.WOOD] = maxwood,
-        [ResourceManager.RESOURCE_TYPE.FOOD] = maxfood,
-        [ResourceManager.RESOURCE_TYPE.IRON] = maxiron,
-        [ResourceManager.RESOURCE_TYPE.STONE] = maxstone,
-    }
-    if self.resource_items then
-        for k,v in pairs(self.resource_items) do
-            self:RefreshSpecifyResource(resource_manager:GetResourceByType(k),v,resource_max[k],City:GetCitizenByType(City.RESOURCE_TYPE_TO_BUILDING_TYPE[k]), k)
-        end
-    end
-    self:RefreshProtectPercent()
 end
 
 local FOOD = ResourceManager.RESOURCE_TYPE.FOOD

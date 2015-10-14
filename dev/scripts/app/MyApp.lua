@@ -194,7 +194,7 @@ function MyApp:GetGameLanguage()
 end
 
 function MyApp:sendPlayerLanguageCodeIf()
-    if self:GetGameLanguage() ~= User:Language() then
+    if self:GetGameLanguage() ~= User.basicInfo.language then
         NetManager:getSetPlayerLanguagePromise(self:GetGameLanguage())
     end
 end

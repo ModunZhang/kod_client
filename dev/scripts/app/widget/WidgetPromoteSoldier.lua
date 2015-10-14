@@ -25,14 +25,13 @@ function WidgetPromoteSoldier:onEnter()
     WidgetPromoteSoldier.super.onEnter(self)
     self:SoldierImage()
     self:UpgradeButtons()
-    self:UpgradeRequirement()
-
     City:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
     City:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_DATA_CHANGED)
-    City:GetResourceManager():AddObserver(self)
+    scheduleAt(self, function()
+        self:UpgradeRequirement()
+    end)
 end
 function WidgetPromoteSoldier:onExit()
-    City:GetResourceManager():RemoveObserver(self)
     City:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
     City:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_DATA_CHANGED)
     WidgetPromoteSoldier.super.onExit(self)
@@ -251,9 +250,6 @@ function WidgetPromoteSoldier:UpgradeFinishRefresh()
     self.upgrade_now_need_gems_label:setString(self:GetInstantUpgradeGems())
     self.current_soldier:SetSoldierIcon(false)
     self.next_soldier:SetSoldierIcon(true)
-end
-function WidgetPromoteSoldier:OnResourceChanged()
-    self:UpgradeRequirement()
 end
 function WidgetPromoteSoldier:OnSoliderStarCountChanged(soldier_manager,changed_map)
     for i,v in ipairs(changed_map) do

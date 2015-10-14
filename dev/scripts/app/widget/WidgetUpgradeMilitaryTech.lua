@@ -63,15 +63,12 @@ function WidgetUpgradeMilitaryTech:onEnter()
     WidgetUpgradeMilitaryTech.super.onEnter(self)
     self:CurrentInfo()
     self:UpgradeButtons()
-    self:UpgradeRequirement()
-
     City:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_DATA_CHANGED)
-    City:GetMaterialManager():AddObserver(self)
-    City:GetResourceManager():AddObserver(self)
+    display.newNode():addTo(self):scheduleAt(function()
+        self:UpgradeRequirement()
+    end, 1)
 end
 function WidgetUpgradeMilitaryTech:onExit()
-    City:GetMaterialManager():RemoveObserver(self)
-    City:GetResourceManager():RemoveObserver(self)
     City:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_DATA_CHANGED)
     WidgetUpgradeMilitaryTech.super.onExit(self)
 end
@@ -253,11 +250,6 @@ function WidgetUpgradeMilitaryTech:UpgradeRequirement()
 end
 function WidgetUpgradeMilitaryTech:OnResourceChanged()
     self:UpgradeRequirement()
-end
-function WidgetUpgradeMilitaryTech:OnMaterialsChanged(material_manager, material_type, changed)
-    if material_type == MaterialManager.MATERIAL_TYPE.TECHNOLOGY then
-        self:UpgradeRequirement()
-    end
 end
 function WidgetUpgradeMilitaryTech:PopNotSatisfyDialog(upgrade_listener,results)
     local message = ""

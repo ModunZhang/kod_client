@@ -28,28 +28,22 @@ function CommonUpgradeUI:onEnter()
     self:InitCommonPart()
     self:InitUpgradePart()
     self:InitAccelerationPart()
-    self.city:GetResourceManager():AddObserver(self)
-
     self:AddUpgradeListener()
+    scheduleAt(self, function()
+        if self.building:GetNextLevel() == self.building:GetLevel() then
+            return
+        end
+        self.upgrade_layer:isVisible()
+        if self.upgrade_layer:isVisible() then
+            self:SetUpgradeRequirementListview()
+        end
+    end)
 end
 
 function CommonUpgradeUI:onExit()
-    self.city:GetResourceManager():RemoveObserver(self)
     self:RemoveUpgradeListener()
 end
-
-function CommonUpgradeUI:OnResourceChanged(resource_manager)
-    if self.building:GetNextLevel() == self.building:GetLevel() then
-        return
-    end
-    self.upgrade_layer:isVisible()
-    if self.upgrade_layer:isVisible() then
-        self:SetUpgradeRequirementListview()
-    end
-end
-
 function CommonUpgradeUI:AddUpgradeListener()
-
     self.building:AddUpgradeListener(self)
 end
 

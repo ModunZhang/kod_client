@@ -374,14 +374,9 @@ end
 function User:GetResOutputByType(type_)
     return self.resources_cache[type_].output
 end
-function User:OnTimer(current_time)
-    self:OnResourceChanged()
-end
-function User:OnResourceChanged()
-    self:NotifyListeneOnType(RESOURCE, function(listener)
-        listener:OnResourceChanged(self)
-    end)
-end
+--[[end]]
+
+
 -- [[ dailyQuests begin]]
 function User:GetDailyQuests()
     if self:GetNextDailyQuestsRefreshTime() <= app.timer:GetServerTime() then

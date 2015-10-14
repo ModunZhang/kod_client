@@ -342,12 +342,12 @@ function MyCityScene:OnUpgradingFinished(building)
 end
 
 function MyCityScene:OnBeginRecruit()
-    self:GetHomePage():OnTaskChanged()
+    self:GetHomePage():OnUserDataChanged_growUpTasks()
 end
 function MyCityScene:OnRecruiting()
 end
 function MyCityScene:OnEndRecruit(barracks, event, soldier_type)
-    self:GetHomePage():OnTaskChanged()
+    self:GetHomePage():OnUserDataChanged_growUpTasks()
     local star = self:GetCity():GetSoldierManager():GetStarBySoldierType(soldier_type)
     self:GetSceneLayer():MoveBarracksSoldiers(soldier_type)
 end

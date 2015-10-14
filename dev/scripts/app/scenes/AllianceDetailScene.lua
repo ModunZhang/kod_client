@@ -108,7 +108,7 @@ end
 function AllianceDetailScene:CreateOrUpdateOrDeleteCorpsByEvent(id, event)
     if event == json.null then
         self:GetSceneLayer():DeleteCorpsById(id)
-    else
+    elseif event then
         self:GetSceneLayer():CreateOrUpdateCorps(
             event.id,
             {x = event.fromAlliance.location.x, y = event.fromAlliance.location.y, index = event.fromAlliance.mapIndex},
@@ -125,7 +125,7 @@ end
 function AllianceDetailScene:CreateOrUpdateOrDeleteCorpsByReturnEvent(id, event)
     if event == json.null then
         self:GetSceneLayer():DeleteCorpsById(id)
-    else
+    elseif event then
         self:GetSceneLayer():CreateOrUpdateCorps(
             event.id,
             {x = event.toAlliance.location.x, y = event.toAlliance.location.y, index = event.toAlliance.mapIndex},

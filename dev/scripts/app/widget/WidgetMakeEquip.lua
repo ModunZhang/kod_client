@@ -320,13 +320,14 @@ end
 function WidgetMakeEquip:onEnter()
     self.black_smith:AddBlackSmithListener(self)
     self.city:GetMaterialManager():AddObserver(self)
-    self.city:GetResourceManager():AddObserver(self)
     self:RefreshUI()
+    scheduleAt(self, function()
+        self:UpdateCoin(self.city:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()))
+    end)
 end
 function WidgetMakeEquip:onExit()
     self.black_smith:RemoveBlackSmithListener(self)
     self.city:GetMaterialManager():RemoveObserver(self)
-    self.city:GetResourceManager():RemoveObserver(self)
 end
 function WidgetMakeEquip:RefreshUI()
     self:UpdateEquipCounts()
@@ -344,10 +345,6 @@ function WidgetMakeEquip:OnMaterialsChanged(material_manager, material_type, cha
             self.number:setString(current.new)
         end
     end
-end
--- 资源数量监听
-function WidgetMakeEquip:OnResourceChanged(resource_manager)
-    self:UpdateCoin(resource_manager:GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()))
 end
 -- 建造队列监听
 function WidgetMakeEquip:OnBeginMakeEquipmentWithEvent(black_smith, event)

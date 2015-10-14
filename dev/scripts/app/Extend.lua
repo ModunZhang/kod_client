@@ -345,7 +345,10 @@ end
 local Node = cc.Node
 function Node:scheduleAt(callback, interval)
     callback()
-    return self:schedule(callback, interval)
+    return self:schedule(callback, interval or 1)
+end
+function scheduleAt(node, func)
+    return display.newNode():addTo(node):scheduleAt(func)
 end
 
 display.__newLayer = display.newLayer

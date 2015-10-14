@@ -281,21 +281,15 @@ function WidgetCitizen:OnUpgradingFinished(building)
         self:UpdateData()
     end
 end
-function WidgetCitizen:OnResourceChanged(resource_manager)
-    if self:isVisible() then
-        self:UpdateData()
-    end
-end
-
 function WidgetCitizen:onEnter()
     self.city:AddListenOnType(self, self.city.LISTEN_TYPE.UPGRADE_BUILDING)
-
-    self.city:GetResourceManager():AddObserver(self)
-    self:OnResourceChanged(self.city:GetResourceManager())
+    scheduleAt(self, function()
+        if self:isVisible() then
+            self:UpdateData()
+        end
+    end)
 end
-
 function WidgetCitizen:onExit()
-    self.city:GetResourceManager():RemoveObserver(self)
     self.city:RemoveListenerOnType(self, self.city.LISTEN_TYPE.UPGRADE_BUILDING)
 end
 return WidgetCitizen

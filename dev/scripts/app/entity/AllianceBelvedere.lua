@@ -18,7 +18,7 @@ function AllianceBelvedere:ctor(alliance)
 end
 
 function AllianceBelvedere:GetMarchLimit()
-	return User:MarchQueue()
+	return User.basicInfo.marchQueue
 end
 
 function AllianceBelvedere:IsReachEventLimit()

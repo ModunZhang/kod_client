@@ -89,8 +89,24 @@ function GameUIAllianceContribute:RemoveIsOpenObserver( listener )
     self.observer:RemoveObserver(listener)
 end
 function GameUIAllianceContribute:onEnter()
-    City:GetResourceManager():AddObserver(self)
     User:AddListenOnType(self, "allianceDonate")
+    scheduleAt(self, function()
+        local wood = res_man:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+        local stone = res_man:GetStoneResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+        local food = res_man:GetFoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+        local iron = res_man:GetIronResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+        local coin = res_man:GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+        local gem = City:GetUser():GetGemValue()
+        local owns = {
+            wood,
+            stone,
+            food,
+            iron,
+            coin,
+            gem,
+        }
+        self.group:RefreashAllOwn(owns)
+    end)
 end
 
 function GameUIAllianceContribute:onExit()
@@ -98,7 +114,6 @@ function GameUIAllianceContribute:onExit()
     self.observer:NotifyObservers(function ( listener )
         listener:UIAllianceContributeClose()
     end)
-    City:GetResourceManager():RemoveObserver(self)
     User:RemoveListenerOnType(self, "allianceDonate")
 end
 function GameUIAllianceContribute:GetDonateValueByType(donate_type)
@@ -335,24 +350,6 @@ function GameUIAllianceContribute:IsAbleToContribute()
         return false
     end
     return true
-end
-
-function GameUIAllianceContribute:OnResourceChanged(resource_manager)
-    local wood = resource_manager:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    local stone = resource_manager:GetStoneResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    local food = resource_manager:GetFoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    local iron = resource_manager:GetIronResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    local coin = resource_manager:GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    local gem = City:GetUser():GetGemValue()
-    local owns = {
-        wood,
-        stone,
-        food,
-        iron,
-        coin,
-        gem,
-    }
-    self.group:RefreashAllOwn(owns)
 end
 function GameUIAllianceContribute:OnUserDataChanged_allianceDonate()
     local donate = {

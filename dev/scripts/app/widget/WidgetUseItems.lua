@@ -303,7 +303,6 @@ function WidgetUseItems:OpenHeroBloodDialog( item )
     local size = body:getContentSize()
     local blood_bg = display.newScale9Sprite("back_ground_398x97.png",size.width/2,size.height-50,cc.size(556,58),cc.rect(10,10,378,77))
         :addTo(body)
-    local resource_manager = City:GetResourceManager()
     UIKit:ttfLabel({
         text = _("英雄之血"),
         size = 22,
@@ -311,7 +310,7 @@ function WidgetUseItems:OpenHeroBloodDialog( item )
     }):align(display.LEFT_CENTER,40,blood_bg:getContentSize().height/2)
         :addTo(blood_bg)
     local blood_value = UIKit:ttfLabel({
-        text = resource_manager:GetBloodResource():GetValue(),
+        text = City:GetResourceManager():GetBloodResource():GetValue(),
         size = 22,
         color = 0x28251d,
     }):align(display.RIGHT_CENTER,blood_bg:getContentSize().width-40,blood_bg:getContentSize().height/2)
@@ -340,14 +339,9 @@ function WidgetUseItems:OpenHeroBloodDialog( item )
             which_bg = not which_bg
         end
     end
-    -- 添加龙的信息监听
-    resource_manager:AddObserver(dialog)
-    dialog:addCloseCleanFunc(function ()
-        resource_manager:RemoveObserver(dialog)
+    dialog:scheduleAt(function()
+        blood_value:setString(City:GetResourceManager():GetBloodResource():GetValue())
     end)
-    function dialog:OnResourceChanged(resource_manager)
-        blood_value:setString(resource_manager:GetBloodResource():GetValue())
-    end
     return dialog
 end
 
@@ -541,16 +535,11 @@ function WidgetUseItems:OpenStrengthDialog( item )
             ):addTo(body):align(display.CENTER,size.width/2,size.height - 160 - (i-1)*138)
         end
     end
-    local resource_manager = City:GetResourceManager()
-    resource_manager:AddObserver(dialog)
-    dialog:addCloseCleanFunc(function ()
-        resource_manager:RemoveObserver(dialog)
-    end)
-    function dialog:OnResourceChanged()
+    dialog:scheduleAt(function()
         local value = User:GetStaminaValue()
         local prodperhour = User:GetStaminaOutput()
         strength_label:setString(string.format(_("%s(+%d/每小时)"), string.formatnumberthousands(value), prodperhour))
-    end
+    end)
     return dialog
 end
 function WidgetUseItems:OpenIncreaseDragonExpOrHp( item )
@@ -939,7 +928,7 @@ function WidgetUseItems:OpenVipActive( item )
     end
     dialog:scheduleAt(function()
         dialog:OnVipEventTimer()
-    end, 1)
+    end)
 
     local list,list_node = UIKit:commonListView_1({
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
@@ -1084,30 +1073,24 @@ function WidgetUseItems:OpenWarSpeedupDialog( item ,march_event)
             end
         end
     end
+    -- local alliance = Alliance_Manager:GetMyAlliance()
 
-    function dialog:OnResourceChanged(resource_manager)
+    -- alliance:AddListenOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
+    -- alliance:AddListenOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
+    -- alliance:AddListenOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
+    -- alliance:AddListenOnType(dialog,Alliance.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
+    -- alliance:AddListenOnType(dialog,Alliance.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)
+
+
+    -- dialog:addCloseCleanFunc(function ()
+    --     alliance:RemoveListenerOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
+    --     alliance:RemoveListenerOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
+    --     alliance:RemoveListenerOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
+    --     alliance:RemoveListenerOnType(dialog,Alliance.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
+    --     alliance:RemoveListenerOnType(dialog,Alliance.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)
+    -- end)
+    dialog:scheduleAt(function()
         gem_label:setString(string.formatnumberthousands(User:GetGemValue()))
-    end
-
-    local alliance = Alliance_Manager:GetMyAlliance()
-
-    alliance:AddListenOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
-    alliance:AddListenOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
-    alliance:AddListenOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
-    alliance:AddListenOnType(dialog,Alliance.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
-    alliance:AddListenOnType(dialog,Alliance.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)
-
-
-
-    City:GetResourceManager():AddObserver(dialog)
-
-    dialog:addCloseCleanFunc(function ()
-        alliance:RemoveListenerOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
-        alliance:RemoveListenerOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
-        alliance:RemoveListenerOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
-        alliance:RemoveListenerOnType(dialog,Alliance.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
-        alliance:RemoveListenerOnType(dialog,Alliance.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)
-        City:GetResourceManager():RemoveObserver(dialog)
     end)
     return dialog
 end
@@ -1172,17 +1155,14 @@ function WidgetUseItems:OpenRetreatTroopDialog( item,event )
             end
         end
     end
-    function dialog:OnResourceChanged(resource_manager)
+    -- local alliance = Alliance_Manager:GetMyAlliance()
+    -- alliance:AddListenOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
+
+    -- dialog:addCloseCleanFunc(function ()
+    --     alliance:RemoveListenerOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
+    -- end)
+    dialog:scheduleAt(function()
         gem_label:setString(string.formatnumberthousands(User:GetGemValue()))
-    end
-
-    local alliance = Alliance_Manager:GetMyAlliance()
-    City:GetResourceManager():AddObserver(dialog)
-    alliance:AddListenOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
-
-    dialog:addCloseCleanFunc(function ()
-        alliance:RemoveListenerOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
-        City:GetResourceManager():RemoveObserver(dialog)
     end)
     return dialog
 end

@@ -20,17 +20,10 @@ function GameUIUnlockBuilding:ctor( city, tile )
     self.building = city:GetBuildingByLocationId(tile.location_id)
     self:setNodeEventEnabled(true)
     self:Init()
-    self.city:GetResourceManager():AddObserver(self)
-
     self.__type  = UIKit.UITYPE.BACKGROUND
-end
-function GameUIUnlockBuilding:OnResourceChanged(resource_manager)
-    self:SetUpgradeRequirementListview()
-end
-function GameUIUnlockBuilding:onEnter()
-end
-function GameUIUnlockBuilding:onExit()
-    self.city:GetResourceManager():RemoveObserver(self)
+    scheduleAt(self, function()
+        self:SetUpgradeRequirementListview()
+    end)
 end
 function GameUIUnlockBuilding:Init()
     -- bg

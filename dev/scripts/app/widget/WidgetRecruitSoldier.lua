@@ -26,6 +26,8 @@ end)
 local NORMAL = GameDatas.Soldiers.normal
 local SPECIAL = GameDatas.Soldiers.special
 local soldier_vs = GameDatas.ClientInitGame.soldier_vs
+local app = app
+local timer = app.timer
 local function return_vs_soldiers_map(soldier_name)
     local strong_vs = {}
     local weak_vs = {}
@@ -303,7 +305,7 @@ function WidgetRecruitSoldier:AddButtons()
             else
                 NetManager:getInstantRecruitNormalSoldierPromise(self.soldier_name, self.count):always(function()
                     if iskindof(display.getRunningScene(), "MyCityScene") then
-                        display.getRunningScene():GetHomePage():OnTaskChanged()
+                        display.getRunningScene():GetHomePage():OnUserDataChanged_growUpTasks()
                     end
                 end)
             end
@@ -476,16 +478,40 @@ end
 function WidgetRecruitSoldier:onEnter()
     self:SetSoldier(self.soldier_name, self.star)
     self.count = 1
-
-    app.timer:AddListener(self)
     self.barracks:AddBarracksListener(self)
-    self.city:GetResourceManager():AddObserver(self)
     self.city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
 
-    self:OnResourceChanged(self.city:GetResourceManager())
+
+
+    scheduleAt(self, function()
+        local res_man = self.city:GetResourceManager()
+        local server_time = timer:GetServerTime()
+        local res_map = {}
+        if not self.soldier_config.specialMaterials then
+            res_map.wood = res_man:GetWoodResource():GetResourceValueByCurrentTime(server_time)
+            res_map.food = res_man:GetFoodResource():GetResourceValueByCurrentTime(server_time)
+            res_map.iron = res_man:GetIronResource():GetResourceValueByCurrentTime(server_time)
+            res_map.stone = res_man:GetStoneResource():GetResourceValueByCurrentTime(server_time)
+            res_map.citizen = res_man:GetCitizenResource():GetNoneAllocatedByTime(server_time)
+        else
+            res_map.citizen = res_man:GetCitizenResource():GetNoneAllocatedByTime(server_time)
+        end
+        self.res_total_map = res_map
+        self:CheckNeedResource(res_map, self.count)
+
+        if self.re_status then
+            local ok,time = self:GetRecruitSpecialTime()
+            if ok then
+                self.re_status:setString(_("招募开启中"))
+            else
+                self.re_status:setString(_("下一次开启招募:")..GameUtils:formatTimeStyle1(time))
+            end
+        end
+    end)
+
+
     self.slider_input:SetValue(self:GetCurrentMaxRecruitNum(self.res_total_map))
     self:OnCountChanged(self.slider_input:GetValue())
-
     if #WidgetRecruitSoldier.open_callbacks > 0 then
         table.remove(WidgetRecruitSoldier.open_callbacks, 1)(self)
     end
@@ -493,19 +519,8 @@ end
 function WidgetRecruitSoldier:onExit()
     app.timer:RemoveListener(self)
     self.barracks:RemoveBarracksListener(self)
-    self.city:GetResourceManager():RemoveObserver(self)
     self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
     UIKit:getRegistry().removeObject(self.__cname)
-end
-function WidgetRecruitSoldier:OnTimer(current_time)
-    if self.re_status then
-        local ok,time = self:GetRecruitSpecialTime()
-        if ok then
-            self.re_status:setString(_("招募开启中"))
-        else
-            self.re_status:setString(_("下一次开启招募:")..GameUtils:formatTimeStyle1(time))
-        end
-    end
 end
 function WidgetRecruitSoldier:SetSoldier(soldier_name, star)
     local soldier_config, soldier_ui_config = self:GetConfigBySoldierTypeAndStar(soldier_name, star)
@@ -551,23 +566,6 @@ end
 function WidgetRecruitSoldier:align(anchorPoint, x, y)
     self.back_ground:align(anchorPoint, x, y)
     return self
-end
-local app = app
-local timer = app.timer
-function WidgetRecruitSoldier:OnResourceChanged(resource_manager)
-    local server_time = timer:GetServerTime()
-    local res_map = {}
-    if not self.soldier_config.specialMaterials then
-        res_map.wood = resource_manager:GetWoodResource():GetResourceValueByCurrentTime(server_time)
-        res_map.food = resource_manager:GetFoodResource():GetResourceValueByCurrentTime(server_time)
-        res_map.iron = resource_manager:GetIronResource():GetResourceValueByCurrentTime(server_time)
-        res_map.stone = resource_manager:GetStoneResource():GetResourceValueByCurrentTime(server_time)
-        res_map.citizen = resource_manager:GetCitizenResource():GetNoneAllocatedByTime(server_time)
-    else
-        res_map.citizen = resource_manager:GetCitizenResource():GetNoneAllocatedByTime(server_time)
-    end
-    self.res_total_map = res_map
-    self:CheckNeedResource(res_map, self.count)
 end
 function WidgetRecruitSoldier:OnBeginRecruit()
 

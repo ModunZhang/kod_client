@@ -406,12 +406,13 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
     self:OnCountChanged(self:GetMaxTreatNum())
 end
 function WidgetTreatSoldier:onEnter()
-    City:GetResourceManager():AddObserver(self)
     City:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
+    display.newNode():addTo(self):scheduleAt(function()
+        self:RefreshResources(City:GetResourceManager())
+    end)
 end
 function WidgetTreatSoldier:onExit()
     City:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
-    City:GetResourceManager():RemoveObserver(self)
 end
 function WidgetTreatSoldier:SetSoldier(soldier_type, star)
     local soldier_config, soldier_ui_config = self:GetConfigBySoldierTypeAndStar(soldier_type, star)
@@ -477,10 +478,10 @@ function WidgetTreatSoldier:align(anchorPoint, x, y)
 end
 local app = app
 local timer = app.timer
-function WidgetTreatSoldier:OnResourceChanged(resource_manager)
+function WidgetTreatSoldier:RefreshResources(res_man)
     local server_time = timer:GetServerTime()
     local res_map = {}
-    res_map.treatCoin = resource_manager:GetCoinResource():GetResourceValueByCurrentTime(server_time)
+    res_map.treatCoin = res_man:GetCoinResource():GetResourceValueByCurrentTime(server_time)
     for k, v in pairs(self.res_map) do
         local total = res_map[k]
         v.total:setString(GameUtils:formatNumber(total))
