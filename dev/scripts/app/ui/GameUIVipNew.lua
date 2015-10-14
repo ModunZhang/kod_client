@@ -187,7 +187,7 @@ function GameUIVipNew:OnMoveInStage()
                 self:InitVip()
                 self.vip_layer:scheduleAt(function()
                     self:OnVipEventTimer()
-                end, 1)
+                end)
             end
             self.vip_layer:setVisible(true)
         else

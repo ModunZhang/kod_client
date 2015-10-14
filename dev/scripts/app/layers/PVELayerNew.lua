@@ -254,9 +254,9 @@ function PVELayerNew:GotoPve()
 
     self:RefreshPve()
     self:MoveAirship()
-    display.newNode():addTo(self):scheduleAt(function()
+    scheduleAt(self, function()
         self:RefreshBattery()
-    end, 1)
+    end)
 end
 function PVELayerNew:RegisterNpc(obj,X,Y)
     local w,h = self.normal_map:GetSize()

@@ -407,7 +407,7 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
 end
 function WidgetTreatSoldier:onEnter()
     City:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
-    display.newNode():addTo(self):scheduleAt(function()
+    scheduleAt(self, function()
         self:RefreshResources(City:GetResourceManager())
     end)
 end

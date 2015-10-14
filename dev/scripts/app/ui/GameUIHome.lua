@@ -161,9 +161,9 @@ function GameUIHome:onEnter()
     self:OnUserDataChanged_growUpTasks()
     self:RefreshHelpButtonVisible()
 
-    display.newNode():addTo(self):scheduleAt(function()
+    scheduleAt(self, function()
         self:RefreshResources(city:GetResourceManager())    
-    end, 1)
+    end)
 end
 function GameUIHome:onExit()
     self:AddOrRemoveListener(false)

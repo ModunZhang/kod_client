@@ -335,7 +335,7 @@ function GameUIActivityNew:RefreshAwardList()
 		for k,v in pairs(User.iapGifts) do
 			self:OnIapGiftTimer(v)
 		end
-	end, 1)
+	end)
 end
 
 function GameUIActivityNew:RefreshAwardListDataSource()

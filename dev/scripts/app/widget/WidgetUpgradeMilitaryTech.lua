@@ -64,9 +64,9 @@ function WidgetUpgradeMilitaryTech:onEnter()
     self:CurrentInfo()
     self:UpgradeButtons()
     City:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_DATA_CHANGED)
-    display.newNode():addTo(self):scheduleAt(function()
+    scheduleAt(self, function()
         self:UpgradeRequirement()
-    end, 1)
+    end)
 end
 function WidgetUpgradeMilitaryTech:onExit()
     City:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_DATA_CHANGED)
@@ -247,9 +247,6 @@ function WidgetUpgradeMilitaryTech:UpgradeRequirement()
         }):addTo(body):pos(32,size.height-650)
     end
     self.requirement_listview:RefreshListView(requirements)
-end
-function WidgetUpgradeMilitaryTech:OnResourceChanged()
-    self:UpgradeRequirement()
 end
 function WidgetUpgradeMilitaryTech:PopNotSatisfyDialog(upgrade_listener,results)
     local message = ""

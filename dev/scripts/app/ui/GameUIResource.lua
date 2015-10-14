@@ -430,12 +430,6 @@ function GameUIResource:OnMoveOutStage()
     GameUIResource.super.OnMoveOutStage(self)
 end
 
-function GameUIResource:OnResourceChanged(resource_manager)
-    GameUIResource.super.OnResourceChanged(self,resource_manager)
-    -- if self.listView:getItems():count() < 2 then return end
-    local number = self.city.resource_manager:GetResourceByType(self.building:GetUpdateResourceType()):GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    -- print("update cout:",number)
-end
 
 return GameUIResource
 
