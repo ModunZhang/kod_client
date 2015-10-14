@@ -46,6 +46,7 @@ function User:ctor(p)
         blood       = {limit =          math.huge, output = 0},
         casinoToken = {limit =          math.huge, output = 0},
         stamina     = {limit =   staminaMax_value, output = staminaRecoverPerHour_value},
+        cart        = {limit =                  0, output = 0},
         wallHp      = {limit =                  0, output = 0},
     }
     if type(p) == "table" then

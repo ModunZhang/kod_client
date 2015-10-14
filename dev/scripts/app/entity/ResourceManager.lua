@@ -66,9 +66,6 @@ end
 function ResourceManager:GetAllResources()
     return self.resources
 end
--- function ResourceManager:GetWallHpResource()
---     return self.resources[WALLHP]
--- end
 function ResourceManager:GetWoodResource()
     return self.resources[WOOD]
 end
@@ -93,11 +90,6 @@ end
 function ResourceManager:GetResourceByType(RESOURCE_TYPE)
     return self.resources[RESOURCE_TYPE]
 end
--- function ResourceManager:OnResourceChanged()
---     self:NotifyObservers(function(listener)
---         listener:OnResourceChanged(self)
---     end)
--- end
 --获取食物的生产量
 function ResourceManager:GetFoodProductionPerHour()
     return self.city:GetSoldierManager():GetTotalUpkeep() + self:GetFoodResource():GetProductionPerHour()
@@ -106,10 +98,10 @@ function ResourceManager:UpdateByCity(city, current_time)
     -- 产量
     -- 资源小车
     local tradeGuild = city:GetFirstBuildingByType("tradeGuild")
-    local cart_recovery, max_cart = 0, 0
+    local cart_recovery, cart_max = 0, 0
     if tradeGuild:GetLevel() > 0 then
         cart_recovery = tradeGuild:GetCartRecovery()
-        max_cart = tradeGuild:GetMaxCart()
+        cart_max = tradeGuild:GetMaxCart()
     end
 
     -- 城墙
@@ -134,7 +126,7 @@ function ResourceManager:UpdateByCity(city, current_time)
         [STONE] = max_stone,
         [COIN] = math.huge,
         [CITIZEN] = intInit.initCitizen.value,
-        [CART] = max_cart,
+        [CART] = cart_max,
         [WALLHP] = wall_config.wallHp or 0,
     }
 
@@ -144,7 +136,6 @@ function ResourceManager:UpdateByCity(city, current_time)
         [IRON] = 0,
         [STONE] = 0,
         [CITIZEN] = 0,
-        [CART] = 0,
     }
     local total_citizen = 0
     --小屋对资源的影响
@@ -180,7 +171,7 @@ function ResourceManager:UpdateByCity(city, current_time)
         resource:SetValueLimit(resource_limit)
         LIMIT_MAP[resource_type] = resource_limit
 
-        local buff_production = 1 + buff_production_map[resource_type]
+        local buff_production = 1 + (buff_production_map[resource_type] or 0)
         if resource_type == CITIZEN then
             local production = (resource_limit - resource:GetLowLimitResource()) / intInit.playerCitizenRecoverFullNeedHours.value
             resource:SetProductionPerHour(current_time, production * buff_production)
@@ -197,6 +188,10 @@ function ResourceManager:UpdateByCity(city, current_time)
     local wallHp = self.user:GetResProduction("wallHp")
     wallHp.limit = LIMIT_MAP[WALLHP]
     wallHp.output = PRODUCTION_MAP[WALLHP]
+    local cart = self.user:GetResProduction("cart")
+    cart.limit = LIMIT_MAP[CART]
+    cart.output = PRODUCTION_MAP[CART]
+
     dump_resources(LIMIT_MAP, "LIMIT_MAP--->")
     dump_resources(PRODUCTION_MAP, "PRODUCTION_MAP--->")
     dump(self.user.resources_cache, "self.user.resources_cache")
@@ -218,7 +213,6 @@ function ResourceManager:UpdateFromUserDataByTime(resources, current_time)
     my_resources[FOOD]:UpdateResource(current_time, resources.food)
     my_resources[IRON]:UpdateResource(current_time, resources.iron)
     my_resources[STONE]:UpdateResource(current_time, resources.stone)
-    my_resources[CART]:UpdateResource(current_time, resources.cart)
     my_resources[CITIZEN]:UpdateResource(current_time, resources.citizen)
 end
 local resource_building_map = {
@@ -238,7 +232,6 @@ function ResourceManager:GetTotalBuffData(city)
             [COIN] = 0,
             [CITIZEN] = 0,
             [WALLHP] = 0,
-            [CART] = 0,
         }
     local buff_limt_map =
         {
@@ -297,13 +290,13 @@ function ResourceManager:GetTotalBuffData(city)
         [COIN] = 0,
         [CITIZEN] = 0,
         [WALLHP] = 0,
-        [CART] = 0,
     }
     local item_buff = ItemManager:GetAllResourceBuffData()
     for _,v in ipairs(item_buff) do
         local resource_type,buff_type,buff_value = unpack(v)
         if resource_type  then
-            local target_map = buff_type == self.RESOURCE_BUFF_TYPE.PRODUCT and buff_production_map or buff_limt_map
+            local target_map = buff_type == self.RESOURCE_BUFF_TYPE.PRODUCT 
+                                and buff_production_map or buff_limt_map
             if type(resource_type) == 'number' then
                 target_map[resource_type] = target_map[resource_type] + buff_value
                 item_buff_map[resource_type] = item_buff_map[resource_type] + buff_value
@@ -326,7 +319,6 @@ function ResourceManager:GetTotalBuffData(city)
         [CITIZEN] = user:GetVIPCitizenRecoveryAdd(),
         [WALLHP] = user:GetVIPWallHpRecoveryAdd(),
         [COIN] = 0,
-        [CART] = 0,
     }
     dump_resources(vip_buff_map, "VIP对资源的影响--->")
     for resource_type,v in pairs(buff_production_map) do
