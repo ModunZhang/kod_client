@@ -252,23 +252,10 @@ function ItemManager:GetAllWarBuffTypes()
 end
 -- 按照道具类型添加到对应table,并加入总表
 function ItemManager:InsertItem(item)
-    self:GetCategoryItems(item)[item:Name()] = item
     self.items[item:Name()] = item
 end
 function ItemManager:RemoveItem(item)
-    self:GetCategoryItems(item)[item:Name()]:SetCount(0)
     self.items[item:Name()]:SetCount(0)
-end
-function ItemManager:GetCategoryItems(item)
-    if item:Category() == Item.CATEGORY.BUFF then
-        return self.items_buff
-    elseif item:Category() == Item.CATEGORY.RESOURCE then
-        return self.items_resource
-    elseif item:Category() == Item.CATEGORY.SPECIAL then
-        return self.items_special
-    elseif item:Category() == Item.CATEGORY.SPEEDUP then
-        return self.items_speedUp
-    end
 end
 function ItemManager:GetItems()
     return self.items
@@ -303,7 +290,7 @@ end
 
 function ItemManager:GetSameTypeItems(item)
     local same_items = {}
-    local find_area = self:GetCategoryItems(item)
+    local find_area = self.items
     local area_type = string.split(item:Name(),"_")
     if #area_type == 2 then
         for i=1,math.huge do
