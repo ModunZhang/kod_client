@@ -1,4 +1,3 @@
-local ResourceManager = import("..entity.ResourceManager")
 local SpriteConfig = import(".SpriteConfig")
 local UILib = import("..ui.UILib")
 local Sprite = import(".Sprite")
@@ -26,14 +25,6 @@ function UpgradingSprite:OnBuildingUpgradingBegin(building, time)
     self:StartBuildingAnimation()
 end
 
-local res_map = {
-    [ResourceManager.RESOURCE_TYPE.WOOD] = "wood",
-    [ResourceManager.RESOURCE_TYPE.FOOD] = "food",
-    [ResourceManager.RESOURCE_TYPE.IRON] = "iron",
-    [ResourceManager.RESOURCE_TYPE.COIN] = "coin",
-    [ResourceManager.RESOURCE_TYPE.STONE] = "stone",
-    [ResourceManager.RESOURCE_TYPE.CITIZEN] = "citizen",
-}
 function UpgradingSprite:OnBuildingUpgradeFinished(building, is_upgrading)
     if self.label then
         self.label:setString(building:GetType().." "..building:GetLevel())
@@ -51,7 +42,7 @@ function UpgradingSprite:OnBuildingUpgradeFinished(building, is_upgrading)
     local running_scene = display.getRunningScene()
     if iskindof(running_scene, "MyCityScene") and building:IsHouse() then
         local _,tp = self:GetWorldPosition()
-        running_scene:GetHomePage():ShowResourceAni(res_map[building:GetUpdateResourceType()], tp)
+        running_scene:GetHomePage():ShowResourceAni(building:GetResType(), tp)
         if building:GetType() == "dwelling" then
             running_scene:GetHomePage():ShowResourceAni("coin", tp)
         end

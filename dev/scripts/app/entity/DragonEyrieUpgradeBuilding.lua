@@ -5,7 +5,6 @@
 local config_function            = GameDatas.BuildingFunction.dragonEyrie
 local config_levelup             = GameDatas.BuildingLevelUp.dragonEyrie
 local config_intInit             = GameDatas.PlayerInitData.intInit
-local ResourceManager            = import(".ResourceManager")
 local UpgradeBuilding            = import(".UpgradeBuilding")
 local DragonEyrieUpgradeBuilding = class("DragonEyrieUpgradeBuilding", UpgradeBuilding)
 local DragonManager              = import(".DragonManager")

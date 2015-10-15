@@ -4,7 +4,6 @@ end)
 
 local window = import("..utils.window")
 local WidgetUseItems = import(".WidgetUseItems")
-local ResourceManager = import("..entity.ResourceManager")
 WidgetCitizen.CITIZEN_TYPE = {
     CITIZEN = 5,
     FOOD = 4,

@@ -17,11 +17,16 @@ local buildings_map = {
 	"decorate_tree_2",
 	"decorate_tree_3",
 	"decorate_tree_4",
+    "decorate_1",
+    "decorate_2",
+    "decorate_3",
+    "decorate_4",
+    "decorate_6",
 }
 
 
 for i,layer in ipairs(map.layers) do
-    if layer.name == "buildings" then
+    -- if layer.name == "buildings" then
         local min = 999
         for i,v in ipairs(layer.data) do
             if v ~= 0 and v < min then
@@ -37,5 +42,6 @@ for i,layer in ipairs(map.layers) do
         		print(buildings_map[v], index % layer.width, math.floor(index / layer.width))
         	end
         end
-    end
+    -- end
+    break
 end

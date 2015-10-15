@@ -28,6 +28,14 @@ local CITIZEN       = ResourceManager.RESOURCE_TYPE.CITIZEN
 local CART          = ResourceManager.RESOURCE_TYPE.CART
 local WALLHP        = ResourceManager.RESOURCE_TYPE.WALLHP
 
+local str2enum = {
+    wood = WOOD,
+    food = FOOD,
+    iron = IRON,
+    stone = STONE,
+    citizen = CITIZEN,
+}
+
 local RESOURCE_TYPE = ResourceManager.RESOURCE_TYPE
 local dump_resources = function(...)
     local t, name = ...
@@ -83,7 +91,7 @@ function ResourceManager:UpdateByCity(city, current_time)
     --小屋对资源的影响
     city:IteratorDecoratorBuildingsByFunc(function(_, decorator)
         if iskindof(decorator, 'ResourceUpgradeBuilding') then
-            local resource_type = decorator:GetUpdateResourceType()
+            local resource_type = str2enum[decorator:GetResType()]
             if resource_type then
                 total_production_map[resource_type] = total_production_map[resource_type] + decorator:GetProductionPerHour()
                 if CITIZEN == resource_type then
@@ -142,7 +150,7 @@ function ResourceManager:UpdateByCity(city, current_time)
 
     dump_resources(LIMIT_MAP, "LIMIT_MAP--->")
     dump_resources(PRODUCTION_MAP, "PRODUCTION_MAP--->")
-    -- dump(self.user.resources, "self.user.resources_cache")
+    dump(self.user.resources, "self.user.resources_cache")
     dump(self.user.resources_cache, "self.user.resources_cache")
 end
 local resource_building_map = {
@@ -255,8 +263,26 @@ function ResourceManager:GetTotalBuffData(city)
         buff_production_map[resource_type] = v + vip_buff_map[resource_type]
     end
     --end
-    dump_resources(buff_production_map,"buff_production_map--->")
-    dump_resources(buff_limt_map,"buff_limt_map--->")
+    buff_production_map.wood    = buff_production_map[WOOD]
+    buff_production_map.food    = buff_production_map[FOOD]
+    buff_production_map.iron    = buff_production_map[IRON]
+    buff_production_map.stone   = buff_production_map[STONE]
+    buff_production_map.coin    = buff_production_map[COIN]
+    buff_production_map.citizen = buff_production_map[CITIZEN]
+    buff_production_map.wallHp  = buff_production_map[WALLHP]
+
+
+    buff_limt_map.wood    = buff_limt_map[WOOD]
+    buff_limt_map.food    = buff_limt_map[FOOD]
+    buff_limt_map.iron    = buff_limt_map[IRON]
+    buff_limt_map.stone   = buff_limt_map[STONE]
+    buff_limt_map.coin    = buff_limt_map[COIN]
+    buff_limt_map.citizen = buff_limt_map[CITIZEN]
+    buff_limt_map.wallHp  = buff_limt_map[WALLHP]
+    buff_limt_map.cart    = buff_limt_map[CART]
+
+    dump(buff_production_map,"buff_production_map--->")
+    dump(buff_limt_map,"buff_limt_map--->")
     return buff_production_map,buff_limt_map
 end
 

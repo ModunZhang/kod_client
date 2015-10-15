@@ -13,7 +13,6 @@ local UILib = import(".UILib")
 local WidgetChangeMap = import("..widget.WidgetChangeMap")
 local GameUIHelp = import(".GameUIHelp")
 local Alliance = import("..entity.Alliance")
-local ResourceManager = import("..entity.ResourceManager")
 local GameUIActivityRewardNew = import(".GameUIActivityRewardNew")
 local GameUIHome = UIKit:createUIClass('GameUIHome')
 local WidgetAutoOrderAwardButton = import("..widget.WidgetAutoOrderAwardButton")
@@ -26,13 +25,6 @@ local fire_var = import("app.particles.fire_var")
 
 local app = app
 local timer = app.timer
-local WOOD          = ResourceManager.RESOURCE_TYPE.WOOD
-local FOOD          = ResourceManager.RESOURCE_TYPE.FOOD
-local IRON          = ResourceManager.RESOURCE_TYPE.IRON
-local COIN          = ResourceManager.RESOURCE_TYPE.COIN
-local STONE         = ResourceManager.RESOURCE_TYPE.STONE
-local CITIZEN       = ResourceManager.RESOURCE_TYPE.CITIZEN
-
 function GameUIHome:OnUpgradingBegin()
     self:OnUserDataChanged_growUpTasks()
 end

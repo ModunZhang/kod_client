@@ -3,7 +3,6 @@
 -- Date: 2014-09-13 10:30:04
 --
 local GameUIResource = UIKit:createUIClass("GameUIResource","GameUIUpgradeBuilding")
-local ResourceManager = import("..entity.ResourceManager")
 local WidgetInfoWithTitle = import("..widget.WidgetInfoWithTitle")
 local WidgetMoveHouse = import("..widget.WidgetMoveHouse")
 local UILib = import(".UILib")
@@ -231,14 +230,14 @@ function GameUIResource:CreateInfomation()
     local __,resource_title = self:GetTitleByType(self.building)
     self.secondLabel:setString(resource_title)
 
-    if ResourceManager.RESOURCE_TYPE.CITIZEN ==  self.building:GetUpdateResourceType() then
+    if "citizen" ==  self.building:GetResType() then
         self.secondValueLabel:setString(string.format("-%d",self.building:GetProductionLimit()))
         self.firstLable:setString(_("银币产量"))
         self.firstValueLabel:setString(string.format("-%d/h",self.building:GetProductionPerHour()))
     else
         local reduce = self.building:GetProductionPerHour()
         local buffMap,__ = self.city.resource_manager:GetTotalBuffData(self.city)
-        local key = ResourceManager.RESOURCE_TYPE[self.building:GetUpdateResourceType()]
+        local key = self.building:GetResType()
         if buffMap[key] then
             reduce = reduce * (1 + buffMap[key])
         end
@@ -288,7 +287,7 @@ function GameUIResource:GetDataSource()
     local __,__,title = self:GetTitleByType(self.building)
     table.insert(dataSource,{title,string.format("%d/h", self.city:GetUser():GetResProduction(self.building:GetResType()).output)})
 
-    if self.building:GetUpdateResourceType() == ResourceManager.RESOURCE_TYPE.CITIZEN then
+    if self.building:GetResType() == "citizen" then
         local desc = string.format("%d/h", self.city:GetUser():GetResProduction("coin").output)
         table.insert(dataSource,{_("当前产出银币"),desc})
     end
@@ -316,16 +315,16 @@ end
 
 
 function GameUIResource:GetTitleByType(building)
-    local type = building:GetUpdateResourceType()
-    if type == ResourceManager.RESOURCE_TYPE.WOOD then
+    local type_ = building:GetResType()
+    if type_ == "wood" then
         return _("木工小屋"),_("木材产量"),_("当前产出木材")
-    elseif type == ResourceManager.RESOURCE_TYPE.IRON then
+    elseif type_ == "iron" then
         return _("矿工小屋"),_("铁矿产量"),_("当前产出铁矿")
-    elseif type == ResourceManager.RESOURCE_TYPE.STONE then
+    elseif type_ == "stone" then
         return _("石匠小屋"),_("石料产量"),_("当前产出石料")
-    elseif type == ResourceManager.RESOURCE_TYPE.FOOD then
+    elseif type_ == "food" then
         return _("农夫小屋"),_("粮食产量"),_("当前产出粮食")
-    elseif type == ResourceManager.RESOURCE_TYPE.CITIZEN then
+    elseif type_ == "citizen" then
         return _("住宅"),_("城民上限"),_("当前城民增长")
     else
         assert(false)

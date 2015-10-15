@@ -45,9 +45,6 @@ function ResourceUpgradeBuilding:GetNextLevelProductionPerHour()
     local current_config = config[self:GetNextLevel()]
     return current_config.production
 end
-function ResourceUpgradeBuilding:GetUpdateResourceType()
-    return nil
-end
 function ResourceUpgradeBuilding:GetResType()
     return ""
 end

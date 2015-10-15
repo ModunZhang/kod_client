@@ -1,5 +1,4 @@
 local config_dwelling = GameDatas.HouseFunction.dwelling
-local ResourceManager = import(".ResourceManager")
 local ResourceUpgradeBuilding = import(".ResourceUpgradeBuilding")
 local CitizenResourceUpgradeBuilding = class("CitizenResourceUpgradeBuilding", ResourceUpgradeBuilding)
 
@@ -11,9 +10,6 @@ function CitizenResourceUpgradeBuilding:GetProductionLimit()
     	return config_dwelling[self:GetEfficiencyLevel()].citizen
     end
     return 0
-end
-function CitizenResourceUpgradeBuilding:GetUpdateResourceType()
-    return ResourceManager.RESOURCE_TYPE.CITIZEN
 end
 function CitizenResourceUpgradeBuilding:GetNextLevelCitizen()
     return config_dwelling[self:GetNextLevel()].citizen

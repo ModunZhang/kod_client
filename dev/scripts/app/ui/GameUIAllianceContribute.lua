@@ -5,19 +5,9 @@ local Alliance = import("..entity.Alliance")
 local Observer = import("..entity.Observer")
 local window = import("..utils.window")
 
-local ResourceManager = import("..entity.ResourceManager")
 
 
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
-
-local CON_TYPE = {
-    wood = ResourceManager.RESOURCE_TYPE.WOOD,
-    food = ResourceManager.RESOURCE_TYPE.FOOD,
-    iron = ResourceManager.RESOURCE_TYPE.IRON,
-    stone = ResourceManager.RESOURCE_TYPE.STONE,
-    coin = ResourceManager.RESOURCE_TYPE.COIN,
-    gem = ResourceManager.RESOURCE_TYPE.GEM,
-}
 local GameUIAllianceContribute = class("GameUIAllianceContribute", WidgetPopDialog)
 
 function GameUIAllianceContribute:ctor()
