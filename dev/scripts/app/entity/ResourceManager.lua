@@ -6,9 +6,6 @@ local Observer = import(".Observer")
 local ResourceManager = class("ResourceManager", Observer)
 
 local intInit = GameDatas.PlayerInitData.intInit
-
-ResourceManager.RESOURCE_BUFF_TYPE = Enum("PRODUCT","LIMIT")
-
 ResourceManager.RESOURCE_TYPE = Enum(
     "WOOD",
     "FOOD",
@@ -29,10 +26,13 @@ local CART          = ResourceManager.RESOURCE_TYPE.CART
 local WALLHP        = ResourceManager.RESOURCE_TYPE.WALLHP
 
 local str2enum = {
+    cart = CART,
+    coin = COIN,
     wood = WOOD,
     food = FOOD,
     iron = IRON,
-    stone = STONE,
+    stone= STONE,
+    wallHp = WALLHP,
     citizen = CITIZEN,
 }
 
@@ -211,9 +211,10 @@ function ResourceManager:GetTotalBuffData(city)
 
     --学院科技
     city:IteratorTechs(function(__,tech)
-        local resource_type,buff_type,buff_value = tech:GetResourceBuffData()
-        if resource_type then
-            local target_map = buff_type == self.RESOURCE_BUFF_TYPE.PRODUCT and buff_production_map or buff_limt_map
+        local res_type,buff_type,buff_value = tech:GetResourceBuffData()
+        local resource_type = str2enum[res_type]
+        if res_type then
+            local target_map = buff_type == "product" and buff_production_map or buff_limt_map
             target_map[resource_type] = target_map[resource_type] + buff_value
         end
     end)
@@ -231,15 +232,15 @@ function ResourceManager:GetTotalBuffData(city)
     }
     local item_buff = ItemManager:GetAllResourceBuffData()
     for _,v in ipairs(item_buff) do
-        local resource_type,buff_type,buff_value = unpack(v)
-        if resource_type  then
-            local target_map = buff_type == self.RESOURCE_BUFF_TYPE.PRODUCT 
-                                and buff_production_map or buff_limt_map
-            if type(resource_type) == 'number' then
+        local res_type,buff_type,buff_value = unpack(v)
+        if res_type  then
+            local target_map = buff_type == "product" and buff_production_map or buff_limt_map
+            if type(res_type) == 'string' then
+                local resource_type = str2enum[res_type]
                 target_map[resource_type] = target_map[resource_type] + buff_value
                 item_buff_map[resource_type] = item_buff_map[resource_type] + buff_value
-            elseif type(resource_type) == 'table' then
-                for _,one_resource_type in ipairs(resource_type) do
+            elseif type(res_type) == 'table' then
+                for _,one_resource_type in ipairs(res_type) do
                     target_map[one_resource_type] = target_map[one_resource_type] + buff_value
                     item_buff_map[one_resource_type] = item_buff_map[one_resource_type] + buff_value
                 end

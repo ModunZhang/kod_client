@@ -6,9 +6,8 @@ local Enum = import("..utils.Enum")
 local MultiObserver = import(".MultiObserver")
 local Item = import(".Item")
 local ItemEvent = import(".ItemEvent")
-local ItemManager = class("ItemManager", MultiObserver)
+local ItemManager = class("ItemMItemsanager", MultiObserver)
 local buffTypes = GameDatas.Items.buffTypes
-local ResourceManager = import(".ResourceManager")
 ItemManager.LISTEN_TYPE = Enum("ITEM_CHANGED","OnItemEventTimer","ITEM_EVENT_CHANGED")
 
 function ItemManager:ctor()
@@ -167,7 +166,7 @@ function ItemManager:OnItemEventTimer(itemEvent)
     end)
 end
 function ItemManager:IsAnyItmeEventActive()
-   return LuaUtils:table_size(self.itemEvents) > 0
+    return LuaUtils:table_size(self.itemEvents) > 0
 end
 function ItemManager:GetItemEventByType( type )
     return self.itemEvents[type]
@@ -178,28 +177,21 @@ end
 function ItemManager:GetBuffEffect( type )
     return buffTypes[type].effect1 , buffTypes[type].effect2
 end
-function ItemManager:GetAllResourceTypes()
-    local RESOURCE_TYPE = ResourceManager.RESOURCE_TYPE
-    local RESOURCE_BUFF_TYPE = ResourceManager.RESOURCE_BUFF_TYPE
-
-    local buff_map =  {
-        woodBonus = {RESOURCE_TYPE.WOOD,RESOURCE_BUFF_TYPE.PRODUCT},
-        stoneBonus = {RESOURCE_TYPE.STONE,RESOURCE_BUFF_TYPE.PRODUCT},
-        ironBonus = {RESOURCE_TYPE.IRON,RESOURCE_BUFF_TYPE.PRODUCT},
-        foodBonus = {RESOURCE_TYPE.FOOD,RESOURCE_BUFF_TYPE.PRODUCT},
-        coinBonus = {RESOURCE_TYPE.COIN,RESOURCE_BUFF_TYPE.PRODUCT},
-        citizenBonus = {RESOURCE_TYPE.CITIZEN,RESOURCE_BUFF_TYPE.PRODUCT},
-    }
-    return buff_map
-end
 function ItemManager:GetAllResourceBuffData()
+    local resource_buff_key = {
+        woodBonus   = {"wood"   ,"product"},
+        stoneBonus  = {"stone"  ,"product"},
+        ironBonus   = {"iron"   ,"product"},
+        foodBonus   = {"food"   ,"product"},
+        coinBonus   = {"coin"   ,"product"},
+        citizenBonus= {"citizen","product"},
+    }
     local all_resource_buff = {}
-    local resource_buff_key = self:GetAllResourceTypes()
     self:IteratorItmeEvents(function(event)
         if resource_buff_key[event:Type()] then
-            local resource_type,buff_type = unpack(resource_buff_key[event:Type()])
+            local res_type,buff_type = unpack(resource_buff_key[event:Type()])
             local buff_value = self:GetBuffEffect(event:Type())
-            table.insert(all_resource_buff,{resource_type,buff_type,buff_value})
+            table.insert(all_resource_buff,{res_type,buff_type,buff_value})
         end
     end)
     return all_resource_buff
@@ -348,6 +340,7 @@ function ItemManager:CanOpenChest( item )
     return  not key_item or key_item:Count()>0
 end
 return ItemManager
+
 
 
 

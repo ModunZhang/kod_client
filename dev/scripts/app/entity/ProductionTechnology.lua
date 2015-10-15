@@ -7,7 +7,6 @@ local ProductionTechnology = class("ProductionTechnology")
 local property = import("..utils.property")
 local productionTechs = GameDatas.ProductionTechs.productionTechs
 local Localize = import("..utils.Localize")
-local ResourceManager = import(".ResourceManager")
 local UILib = import("..ui.UILib")
 
 local unpack = unpack
@@ -110,16 +109,14 @@ function ProductionTechnology:IsOpen()
     return self:Index() < 19
 end
 --如果是资源相关科技返回资源的类型 否则返回nil
-local RESOURCE_TYPE = ResourceManager.RESOURCE_TYPE
-local RESOURCE_BUFF_TYPE = ResourceManager.RESOURCE_BUFF_TYPE
 local map_resource = {
-    stoneCarving = {RESOURCE_TYPE.STONE,RESOURCE_BUFF_TYPE.PRODUCT},
-    forestation = {RESOURCE_TYPE.WOOD,RESOURCE_BUFF_TYPE.PRODUCT},
-    ironSmelting = {RESOURCE_TYPE.IRON,RESOURCE_BUFF_TYPE.PRODUCT},
-    cropResearch = {RESOURCE_TYPE.FOOD,RESOURCE_BUFF_TYPE.PRODUCT},
-    fastFix = {RESOURCE_TYPE.WALLHP,RESOURCE_BUFF_TYPE.PRODUCT},
-    beerSupply = {RESOURCE_TYPE.CITIZEN,RESOURCE_BUFF_TYPE.LIMIT},
-    mintedCoin = {RESOURCE_TYPE.COIN,RESOURCE_BUFF_TYPE.PRODUCT},
+    stoneCarving= {"stone"  ,"product"},
+    forestation = {"wood"   ,"product"},
+    ironSmelting= {"iron"   ,"product"},
+    cropResearch= {"food"   ,"product"},
+    fastFix     = {"wallHp" ,"product"},
+    beerSupply  = {"citizen",  "limit"},
+    mintedCoin  = {"coin"   ,"product"},
 }
 function ProductionTechnology:GetResourceBuffData()
     if map_resource[self:Name()] then

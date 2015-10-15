@@ -487,9 +487,7 @@ local before_map = {
             end
         end
     end,
-    vipEvents = function()
-        City.resource_manager:UpdateByCity(City, app.timer:GetServerTime())
-    end,
+    vipEvents = function()end,
 }
 local after_map = {
     growUpTasks = function(userData)
