@@ -168,12 +168,10 @@ function WidgetManufactureNew:ReloadMaterials(materials, materials_map)
             style = UIKit.BTN_COLOR.YELLOW,
             labelParams={text = _("生产")},
             listener = function ()
-                local user = self.toolShop:BelongCity():GetUser()
-                local resource_manager = self.toolShop:BelongCity():GetResourceManager()
-                local server_time = timer:GetServerTime()
-                local wood_cur = resource_manager:GetWoodResource():GetResourceValueByCurrentTime(server_time)
-                local stone_cur = resource_manager:GetStoneResource():GetResourceValueByCurrentTime(server_time)
-                local iron_cur = resource_manager:GetIronResource():GetResourceValueByCurrentTime(server_time)
+                local User = self.toolShop:BelongCity():GetUser()
+                local wood_cur = User:GetResValueByType("wood")
+                local stone_cur = User:GetResValueByType("stone")
+                local iron_cur = User:GetResValueByType("iron")
                 local count, wood, stone, iron, time
                 if self.material_tab:GetSelectedButtonTag() == "building" then
                     count, wood, stone, iron, time = self.toolShop:GetNeedByCategory("building")
@@ -343,11 +341,10 @@ function WidgetManufactureNew:RefreshRequirements(category)
     self:RefreshRequirementList(wood, stone, iron, time)
 end
 function WidgetManufactureNew:RefreshRequirementList(wood, stone, iron, time)
-    local server_time = timer:GetServerTime()
-    local resource_manager = self.toolShop:BelongCity():GetResourceManager()
-    local wood_cur = resource_manager:GetWoodResource():GetResourceValueByCurrentTime(server_time)
-    local stone_cur = resource_manager:GetStoneResource():GetResourceValueByCurrentTime(server_time)
-    local iron_cur = resource_manager:GetIronResource():GetResourceValueByCurrentTime(server_time)
+    local User = self.toolShop:BelongCity()
+    local wood_cur = User:GetResValueByType("wood")
+    local stone_cur = User:GetResValueByType("stone")
+    local iron_cur = User:GetResValueByType("iron")
     self.require_list:RefreshListView({
         {
             resource_type = _("木材"),

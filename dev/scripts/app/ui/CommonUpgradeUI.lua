@@ -677,10 +677,11 @@ function CommonUpgradeUI:GotoPreconditionBuilding()
 end
 function CommonUpgradeUI:SetUpgradeRequirementListview()
     local city = City
-    local wood = city.resource_manager:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    local iron = city.resource_manager:GetIronResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    local stone = city.resource_manager:GetStoneResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    local population = city.resource_manager:GetCitizenResource():GetNoneAllocatedByTime(app.timer:GetServerTime())
+    local User = User
+    local wood = User:GetResValueByType("wood")
+    local iron = User:GetResValueByType("iron")
+    local stone = User:GetResValueByType("stone")
+    local citizen = User:GetResValueByType("citizen")
 
     local materials = city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
     local building = self.building
@@ -726,9 +727,9 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
         {
             resource_type = _("空闲城民"),
             isVisible = building:GetLevelUpCitizen()>0,
-            isSatisfy = population>=building:GetLevelUpCitizen() ,
+            isSatisfy = citizen>=building:GetLevelUpCitizen() ,
             icon="res_citizen_88x82.png",
-            description=population.."/"..building:GetLevelUpCitizen()
+            description=citizen.."/"..building:GetLevelUpCitizen()
         },
 
         {

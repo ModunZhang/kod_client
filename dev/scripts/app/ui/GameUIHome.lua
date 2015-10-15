@@ -33,37 +33,6 @@ local COIN          = ResourceManager.RESOURCE_TYPE.COIN
 local STONE         = ResourceManager.RESOURCE_TYPE.STONE
 local CITIZEN       = ResourceManager.RESOURCE_TYPE.CITIZEN
 
-local red_color = UIKit:hex2c4b(0xff3c00)
-local normal_color = UIKit:hex2c4b(0xf3f0b6)
-
-function GameUIHome:RefreshResources(resource_manager)
-    local server_time = timer:GetServerTime()
-    local allresources = resource_manager:GetAllResources()
-    local wood_resource = allresources[WOOD]
-    local food_resource = allresources[FOOD]
-    local iron_resource = allresources[IRON]
-    local stone_resource = allresources[STONE]
-    local citizen_resource = allresources[CITIZEN]
-    local coin_resource = allresources[COIN]
-    local wood_number = wood_resource:GetResourceValueByCurrentTime(server_time)
-    local food_number = food_resource:GetResourceValueByCurrentTime(server_time)
-    local iron_number = iron_resource:GetResourceValueByCurrentTime(server_time)
-    local stone_number = stone_resource:GetResourceValueByCurrentTime(server_time)
-    local citizen_number = citizen_resource:GetNoneAllocatedByTime(server_time)
-    local coin_number = coin_resource:GetResourceValueByCurrentTime(server_time)
-    local gem_number = self.city:GetUser():GetGemValue()
-    self.wood_label:setString(GameUtils:formatNumber(wood_number))
-    self.food_label:setString(GameUtils:formatNumber(food_number))
-    self.iron_label:setString(GameUtils:formatNumber(iron_number))
-    self.stone_label:setString(GameUtils:formatNumber(stone_number))
-    self.citizen_label:setString(GameUtils:formatNumber(citizen_number))
-    self.coin_label:setString(GameUtils:formatNumber(coin_number))
-    self.gem_label:setString(string.formatnumberthousands(gem_number))
-    self.wood_label:setColor(wood_resource:IsOverLimit() and red_color or normal_color)
-    self.food_label:setColor(food_resource:IsOverLimit() and red_color or normal_color)
-    self.iron_label:setColor(iron_resource:IsOverLimit() and red_color or normal_color)
-    self.stone_label:setColor(stone_resource:IsOverLimit() and red_color or normal_color)
-end
 function GameUIHome:OnUpgradingBegin()
     self:OnUserDataChanged_growUpTasks()
 end
@@ -137,7 +106,8 @@ function GameUIHome:FadeToSelf(isFullDisplay)
         })
     end
 end
-
+local red_color = UIKit:hex2c4b(0xff3c00)
+local normal_color = UIKit:hex2c4b(0xf3f0b6)
 function GameUIHome:ctor(city)
     GameUIHome.super.ctor(self,{type = UIKit.UITYPE.BACKGROUND})
     self.city = city
@@ -162,7 +132,18 @@ function GameUIHome:onEnter()
     self:RefreshHelpButtonVisible()
 
     scheduleAt(self, function()
-        self:RefreshResources(city:GetResourceManager())    
+        local User = self.city:GetUser()
+        self.wood_label:setString(GameUtils:formatNumber(User:GetResValueByType("wood")))
+        self.food_label:setString(GameUtils:formatNumber(User:GetResValueByType("food")))
+        self.iron_label:setString(GameUtils:formatNumber(User:GetResValueByType("iron")))
+        self.stone_label:setString(GameUtils:formatNumber(User:GetResValueByType("stone")))
+        self.citizen_label:setString(GameUtils:formatNumber(User:GetResValueByType("citizen")))
+        self.coin_label:setString(GameUtils:formatNumber(User:GetResValueByType("coin")))
+        self.gem_label:setString(string.formatnumberthousands(User:GetResValueByType("gem")))
+        self.wood_label:setColor(User:IsResOverLimit("wood") and red_color or normal_color)
+        self.food_label:setColor(User:IsResOverLimit("food") and red_color or normal_color)
+        self.iron_label:setColor(User:IsResOverLimit("iron") and red_color or normal_color)
+        self.stone_label:setColor(User:IsResOverLimit("stone") and red_color or normal_color)
     end)
 end
 function GameUIHome:onExit()

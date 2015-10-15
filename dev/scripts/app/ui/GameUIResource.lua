@@ -226,8 +226,6 @@ function GameUIResource:CreateInfomation()
 
 
     self.listView = self.info:GetListView()
-
-    local resource = self.city.resource_manager:GetResourceByType(self.building:GetUpdateResourceType())
     local citizen = self.building:GetCitizen()
     self.firstValueLabel:setString(string.format('%d',citizen))
     local __,resource_title = self:GetTitleByType(self.building)
@@ -287,13 +285,11 @@ function GameUIResource:GetDataSource()
     local dataSource = {{_("待建地基"),'x' .. #self.city:GetRuinsNotBeenOccupied()}}
     local decorators = self.city:GetDecoratorsByType(self.building:GetType())
     table.insert(dataSource,{_("可建造数量"),#decorators .. '/' .. self.city:GetMaxHouseCanBeBuilt(self.building:GetType())})
-    local resource = self.city.resource_manager:GetResourceByType(self.building:GetUpdateResourceType())
     local __,__,title = self:GetTitleByType(self.building)
-    table.insert(dataSource,{title,string.format("%d/h",resource:GetProductionPerHour())})
+    table.insert(dataSource,{title,string.format("%d/h", self.city:GetUser():GetResProduction(self.building:GetResType()).output)})
 
     if self.building:GetUpdateResourceType() == ResourceManager.RESOURCE_TYPE.CITIZEN then
-        local coin_resource = self.city.resource_manager:GetCoinResource()
-        local desc = string.format("%d/h",coin_resource:GetProductionPerHour())
+        local desc = string.format("%d/h", self.city:GetUser():GetResProduction("coin").output)
         table.insert(dataSource,{_("当前产出银币"),desc})
     end
     local levelTable = {}

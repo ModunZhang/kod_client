@@ -13,6 +13,9 @@ end
 function FoodResourceUpgradeBuilding:GetUpdateResourceType()
 	return ResourceManager.RESOURCE_TYPE.FOOD
 end
+function FoodResourceUpgradeBuilding:GetResType()
+    return "food"
+end
 --
 
 return FoodResourceUpgradeBuilding

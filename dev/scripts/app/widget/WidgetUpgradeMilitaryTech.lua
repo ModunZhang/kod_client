@@ -192,7 +192,7 @@ function WidgetUpgradeMilitaryTech:UpgradeRequirement()
     local size = body:getContentSize()
     local level_up_config = tech:GetLevelUpConfig()
     local has_materials = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.TECHNOLOGY)
-    local current_coin = City:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+    local current_coin = User:GetResValueByType("coin")
 
     local requirements = {
         {

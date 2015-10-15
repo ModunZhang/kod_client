@@ -133,7 +133,7 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
             added = added + 1
         end
     end
-   
+
     -- 立即建造
     local size = back_ground:getContentSize()
     local instant_button = cc.ui.UIPushButton.new({normal = "green_btn_up_250x66.png",
@@ -322,7 +322,14 @@ function WidgetMakeEquip:onEnter()
     self.city:GetMaterialManager():AddObserver(self)
     self:RefreshUI()
     scheduleAt(self, function()
-        self:UpdateCoin(self.city:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()))
+        local coin = self.city:GetUser():GetResValueByType("coin")
+        local equip_config = self.equip_config
+        local need_coin = equip_config.coin
+        local label = string.format( _("需要银币 %s/%s"),  GameUtils:formatNumber(coin),GameUtils:formatNumber(need_coin))
+        self.coin_label:setString(label)
+        local is_enough = coin >= need_coin
+        self.coin_label:setColor(is_enough and UIKit:hex2c3b(0x403c2f) or display.COLOR_RED)
+        self.coin_check_box:setButtonSelected(is_enough)
     end)
 end
 function WidgetMakeEquip:onExit()
@@ -333,7 +340,6 @@ function WidgetMakeEquip:RefreshUI()
     self:UpdateEquipCounts()
     self:UpdateMaterials()
     self:UpdateBuildLabel(self.black_smith:IsEquipmentEventEmpty() and 0 or 1)
-    self:UpdateCoin(self.city:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()))
     self:UpdateGemLabel()
     self:UpdateBuffTime()
 end
@@ -388,16 +394,6 @@ function WidgetMakeEquip:UpdateBuildLabel(queue)
     self.build_label:setString(label)
     self.build_label:setColor(is_enough and UIKit:hex2c3b(0x403c2f) or display.COLOR_RED)
     self.build_check_box:setButtonSelected(is_enough)
-end
--- 更新银币数量
-function WidgetMakeEquip:UpdateCoin(coin)
-    local equip_config = self.equip_config
-    local need_coin = equip_config.coin
-    local label = string.format( _("需要银币 %s/%s"),  GameUtils:formatNumber(coin),GameUtils:formatNumber(need_coin))
-    self.coin_label:setString(label)
-    local is_enough = coin >= need_coin
-    self.coin_label:setColor(is_enough and UIKit:hex2c3b(0x403c2f) or display.COLOR_RED)
-    self.coin_check_box:setButtonSelected(is_enough)
 end
 -- 更新金龙币数量
 function WidgetMakeEquip:UpdateGemLabel()
@@ -472,7 +468,7 @@ function WidgetMakeEquip:IsAbleToMakeEqui(isFinishNow)
             table.insert(not_suitble, string.format( _("完成当前制造队列,需要%d"), time_gem ) )
         end
         -- 检查银币
-        local current_coin = city:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+        local current_coin = User:GetResValueByType("coin")
         if equip_config.coin>current_coin then
             local coin_gem = DataUtils:buyResource({coin = equip_config.coin}, {coin =current_coin })
 
@@ -507,6 +503,7 @@ function WidgetMakeEquip:IsAbleToMakeEqui(isFinishNow)
 end
 
 return WidgetMakeEquip
+
 
 
 

@@ -144,7 +144,7 @@ function GameUIDragonEquipmentMake:GetMakeRequirement()
         description= desc
     })
     local need_coin = equip_config.coin
-    local coin = City.resource_manager:GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+    local coin = User:GetResValueByType("coin")
     table.insert(requirements,
     {
         resource_type = "coin",

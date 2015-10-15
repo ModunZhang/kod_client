@@ -389,6 +389,7 @@ function UpgradeBuilding:GetPreConditionBuilding()
 end
 function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
     local city = self:BelongCity()
+    local User = city:GetUser()
 
     local pre_limit = self:IsBuildingUpgradeLegal()
     if pre_limit then
@@ -406,10 +407,10 @@ function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
     local config = self.config_building_levelup[self:GetType()]
 
     -- 升级所需资源不足
-    local wood = city.resource_manager:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    local iron = city.resource_manager:GetIronResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    local stone = city.resource_manager:GetStoneResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    local citizen = city.resource_manager:GetCitizenResource():GetNoneAllocatedByTime(app.timer:GetServerTime())
+    local wood = User:GetResValueByType("wood")
+    local iron = User:GetResValueByType("iron")
+    local stone = User:GetResValueByType("stone")
+    local citizen = User:GetResValueByType("citizen")
     local is_resource_enough = wood<config[self:GetNextLevel()].wood
         or stone<config[self:GetNextLevel()].stone
         or iron<config[self:GetNextLevel()].iron
@@ -433,24 +434,23 @@ function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
 end
 
 function UpgradeBuilding:getUpgradeNowNeedGems()
-
     local resource_config = DataUtils:getBuildingUpgradeRequired(self.building_type, self:GetNextLevel())
     local required_gems = 0
     required_gems = required_gems + DataUtils:buyResource(resource_config.resources, {})
     required_gems = required_gems + DataUtils:buyMaterial(resource_config.materials, {})
     required_gems = required_gems + DataUtils:getGemByTimeInterval(resource_config.buildTime)
-
     return required_gems
 end
 
 function UpgradeBuilding:getUpgradeRequiredGems()
     local city = self:BelongCity()
+    local User = city:GetUser()
     local required_gems = 0
     local has_resourcce = {
-        wood = city.resource_manager:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()),
-        iron = city.resource_manager:GetIronResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()),
-        stone = city.resource_manager:GetStoneResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()),
-        citizen = city.resource_manager:GetCitizenResource():GetNoneAllocatedByTime(app.timer:GetServerTime()),
+        wood = User:GetResValueByType("wood"),
+        iron = User:GetResValueByType("iron"),
+        stone = User:GetResValueByType("stone"),
+        citizen = User:GetResValueByType("citizen"),
     }
 
     local has_materials =city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)

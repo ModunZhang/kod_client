@@ -43,56 +43,6 @@ function ResourceManager:ctor(city)
     self.city = city
     self.user = self.city:GetUser()
     ResourceManager.super.ctor(self)
-    self.resources = {
-        [WOOD] = AutomaticUpdateResource.new(),
-        [FOOD] = AutomaticUpdateResource.new(),
-        [IRON] = AutomaticUpdateResource.new(),
-        [STONE] = AutomaticUpdateResource.new(),
-        [CART] = AutomaticUpdateResource.new(),
-        [CITIZEN] = CitizenAutomaticUpdateResource.new(),
-        [COIN] = AutomaticUpdateResource.new(),
-        [WALLHP] = AutomaticUpdateResource.new(),
-    }
-    self:GetCoinResource():SetValueLimit(math.huge)
-
-    self.resource_citizen = {
-        [WOOD] = 0,
-        [FOOD] = 0,
-        [IRON] = 0,
-        [STONE] = 0,
-        [CITIZEN] = 0,
-    }
-end
-function ResourceManager:GetAllResources()
-    return self.resources
-end
-function ResourceManager:GetWoodResource()
-    return self.resources[WOOD]
-end
-function ResourceManager:GetFoodResource()
-    return self.resources[FOOD]
-end
-function ResourceManager:GetIronResource()
-    return self.resources[IRON]
-end
-function ResourceManager:GetStoneResource()
-    return self.resources[STONE]
-end
-function ResourceManager:GetCartResource()
-    return self.resources[CART]
-end
-function ResourceManager:GetCitizenResource()
-    return self.resources[CITIZEN]
-end
-function ResourceManager:GetCoinResource()
-    return self.resources[COIN]
-end
-function ResourceManager:GetResourceByType(RESOURCE_TYPE)
-    return self.resources[RESOURCE_TYPE]
-end
---获取食物的生产量
-function ResourceManager:GetFoodProductionPerHour()
-    return self.city:GetSoldierManager():GetTotalUpkeep() + self:GetFoodResource():GetProductionPerHour()
 end
 function ResourceManager:UpdateByCity(city, current_time)
     -- 产量
@@ -118,37 +68,24 @@ function ResourceManager:UpdateByCity(city, current_time)
     }
 
     -- 上限
-    local max_wood, max_food, max_iron, max_stone = city:GetFirstBuildingByType("warehouse"):GetResourceValueLimit()
+    local limits = BuildingUtils:GetWarehouseLimit(city:GetUser())
     local total_limit_map = {
-        [WOOD] = max_wood,
-        [FOOD] = max_food,
-        [IRON] = max_iron,
-        [STONE] = max_stone,
+        [WOOD] = limits.wood,
+        [FOOD] = limits.food,
+        [IRON] = limits.iron,
+        [STONE]= limits.stone,
         [COIN] = math.huge,
         [CITIZEN] = intInit.initCitizen.value,
         [CART] = cart_max,
         [WALLHP] = wall_config.wallHp or 0,
     }
 
-    local citizen_map = {
-        [WOOD] = 0,
-        [FOOD] = 0,
-        [IRON] = 0,
-        [STONE] = 0,
-        [CITIZEN] = 0,
-    }
-    local total_citizen = 0
     --小屋对资源的影响
     city:IteratorDecoratorBuildingsByFunc(function(_, decorator)
         if iskindof(decorator, 'ResourceUpgradeBuilding') then
             local resource_type = decorator:GetUpdateResourceType()
             if resource_type then
-                local citizen = decorator:GetCitizen()
-                total_citizen = total_citizen + citizen
                 total_production_map[resource_type] = total_production_map[resource_type] + decorator:GetProductionPerHour()
-                if citizen_map[resource_type] then
-                    citizen_map[resource_type] = citizen_map[resource_type] + citizen
-                end
                 if CITIZEN == resource_type then
                     total_production_map[COIN] = total_production_map[COIN] + decorator:GetProductionPerHour()
                     total_limit_map[CITIZEN] = total_limit_map[CITIZEN] + decorator:GetProductionLimit()
@@ -162,58 +99,51 @@ function ResourceManager:UpdateByCity(city, current_time)
     local LIMIT_MAP = {}
     local PRODUCTION_MAP = {}
     local buff_production_map,buff_limt_map = self:GetTotalBuffData(city)
-    self.resource_citizen = citizen_map
-    self:GetCitizenResource():SetLowLimitResource(total_citizen)
     for resource_type, production in pairs(total_production_map) do
         local buff_limit = 1 + buff_limt_map[resource_type]
         local resource_limit = math.floor(total_limit_map[resource_type] * buff_limit)
-        local resource = self.resources[resource_type]
-        resource:SetValueLimit(resource_limit)
         LIMIT_MAP[resource_type] = resource_limit
 
         local buff_production = 1 + (buff_production_map[resource_type] or 0)
         if resource_type == CITIZEN then
-            local production = (resource_limit - resource:GetLowLimitResource()) / intInit.playerCitizenRecoverFullNeedHours.value
-            resource:SetProductionPerHour(current_time, production * buff_production)
             PRODUCTION_MAP[resource_type] = production * buff_production
         else
             local resource_production = math.floor(production * buff_production)
             if resource_type == FOOD then
                 resource_production = resource_production - city:GetSoldierManager():GetTotalUpkeep()
             end
-            resource:SetProductionPerHour(current_time, resource_production)
             PRODUCTION_MAP[resource_type] = resource_production
         end
     end
-    local wallHp = self.user:GetResProduction("wallHp")
+    local User = self.user
+    local wallHp = User:GetResProduction("wallHp")
     wallHp.limit = LIMIT_MAP[WALLHP]
     wallHp.output = PRODUCTION_MAP[WALLHP]
-    local cart = self.user:GetResProduction("cart")
+    local cart = User:GetResProduction("cart")
     cart.limit = LIMIT_MAP[CART]
     cart.output = PRODUCTION_MAP[CART]
+    local wood = User:GetResProduction("wood")
+    wood.limit = LIMIT_MAP[WOOD]
+    wood.output = PRODUCTION_MAP[WOOD]
+    local food = User:GetResProduction("food")
+    food.limit = LIMIT_MAP[FOOD]
+    food.output = PRODUCTION_MAP[FOOD]
+    local iron = User:GetResProduction("iron")
+    iron.limit = LIMIT_MAP[IRON]
+    iron.output = PRODUCTION_MAP[IRON]
+    local stone = User:GetResProduction("stone")
+    stone.limit = LIMIT_MAP[STONE]
+    stone.output = PRODUCTION_MAP[STONE]
+    local citizen = User:GetResProduction("citizen")
+    citizen.limit = LIMIT_MAP[CITIZEN] - BuildingUtils:GetCitizenMap(city:GetUser()).total
+    citizen.output = PRODUCTION_MAP[CITIZEN]
+    local coin = User:GetResProduction("coin")
+    coin.output = PRODUCTION_MAP[COIN]
 
     dump_resources(LIMIT_MAP, "LIMIT_MAP--->")
     dump_resources(PRODUCTION_MAP, "PRODUCTION_MAP--->")
+    -- dump(self.user.resources, "self.user.resources_cache")
     dump(self.user.resources_cache, "self.user.resources_cache")
-end
-function ResourceManager:GetCitizenAllocInfo()
-    return self.resource_citizen
-end
-function ResourceManager:GetCitizenAllocated()
-    local total_citizen = 0
-    for k, v in pairs(self.resource_citizen) do
-        total_citizen = total_citizen + v
-    end
-    return total_citizen
-end
-function ResourceManager:UpdateFromUserDataByTime(resources, current_time)
-    local my_resources = self.resources
-    my_resources[COIN]:UpdateResource(current_time, resources.coin)
-    my_resources[WOOD]:UpdateResource(current_time, resources.wood)
-    my_resources[FOOD]:UpdateResource(current_time, resources.food)
-    my_resources[IRON]:UpdateResource(current_time, resources.iron)
-    my_resources[STONE]:UpdateResource(current_time, resources.stone)
-    my_resources[CITIZEN]:UpdateResource(current_time, resources.citizen)
 end
 local resource_building_map = {
     mill = FOOD,

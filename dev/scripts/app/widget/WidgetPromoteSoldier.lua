@@ -195,7 +195,7 @@ function WidgetPromoteSoldier:UpgradeRequirement()
     if not level_up_config then
         return
     end
-    local current_coin = City:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+    local current_coin = User:GetResValueByType("coin")
 
     local tech_points = City:GetSoldierManager():GetTechPointsByType(self:GetSoldierMapToBuilding())
     local requirements = {
@@ -279,7 +279,7 @@ function WidgetPromoteSoldier:GetInstantUpgradeGems()
 end
 function WidgetPromoteSoldier:GetUpgradeGems()
     local config = self:GetNextLevelConfig()
-    local current_coin = City:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+    local current_coin = User:GetResValueByType("coin")
     -- 正在升级的军事科技剩余升级时间
     local left_time = City:GetSoldierManager():GetUpgradingMitiTaryTechLeftTimeByCurrentTime(self.building_type)
     return DataUtils:buyResource({coin = config.upgradeCoinNeed}, {coin=current_coin}) + DataUtils:getGemByTimeInterval(left_time)
@@ -309,7 +309,7 @@ function WidgetPromoteSoldier:IsAbleToUpgradeFirst()
 end
 function WidgetPromoteSoldier:IsAbleToUpgradeSecond()
     local level_up_config = self:GetNextLevelConfig()
-    local current_coin = City:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+    local current_coin = User:GetResValueByType("coin")
     local results = {}
     if City:GetSoldierManager():IsUpgradingMilitaryTech(self.building_type) then
         table.insert(results, _("升级军事科技队列被占用"))

@@ -1,16 +1,8 @@
-local ResourceManager = import('..entity.ResourceManager')
 local SoldierManager = import('..entity.SoldierManager')
 local WidgetUseItems= import(".WidgetUseItems")
 local WidgetUIBackGround= import(".WidgetUIBackGround")
 local WidgetPushButton = import('.WidgetPushButton')
 local UIListView = import("..ui.UIListView")
-local resource_type = {
-    WOOD = ResourceManager.RESOURCE_TYPE.WOOD,
-    FOOD = ResourceManager.RESOURCE_TYPE.FOOD,
-    IRON = ResourceManager.RESOURCE_TYPE.IRON,
-    STONE = ResourceManager.RESOURCE_TYPE.STONE,
-    COIN = ResourceManager.RESOURCE_TYPE.COIN
-}
 local WidgetResources = class("WidgetResources", function ()
     return display.newLayer()
 end)
@@ -40,14 +32,15 @@ function WidgetResources:onEnter()
         local res_man = self.city:GetResourceManager()
         local maxwood, maxfood, maxiron, maxstone = self.building:GetResourceValueLimit()
         local resource_max = {
-            [ResourceManager.RESOURCE_TYPE.WOOD] = maxwood,
-            [ResourceManager.RESOURCE_TYPE.FOOD] = maxfood,
-            [ResourceManager.RESOURCE_TYPE.IRON] = maxiron,
-            [ResourceManager.RESOURCE_TYPE.STONE] = maxstone,
+            wood = maxwood,
+            food = maxfood,
+            iron = maxiron,
+            stone = maxstone,
         }
+        local citizen_map = BuildingUtils:GetCitizenMap(self.city:GetUser())
         if self.resource_items then
             for k,v in pairs(self.resource_items) do
-                self:RefreshSpecifyResource(res_man:GetResourceByType(k),v,resource_max[k],City:GetCitizenByType(City.RESOURCE_TYPE_TO_BUILDING_TYPE[k]), k)
+                self:RefreshSpecifyResource(k,v,resource_max[k],citizen_map[k])
             end
         end
         self:RefreshProtectPercent()
@@ -95,21 +88,21 @@ function WidgetResources:RefreshProtectPercent()
         end
     end
 end
-
-local FOOD = ResourceManager.RESOURCE_TYPE.FOOD
-function WidgetResources:RefreshSpecifyResource(resource,item,maxvalue,occupy_citizen, type_)
+function WidgetResources:RefreshSpecifyResource(res_type,item,maxvalue,occupy_citizen)
+    local User = User
+    local value = User:GetResValueByType(res_type)
     if maxvalue then
-        item.r_percent = math.floor(resource:GetResourceValueByCurrentTime(app.timer:GetServerTime())/maxvalue*100)
+        item.r_percent = math.floor(value/maxvalue*100)
         item.ProgressTimer:setPercentage(item.r_percent)
-        item.resource_label:setString(GameUtils:formatNumber(resource:GetResourceValueByCurrentTime(app.timer:GetServerTime())).."/"..GameUtils:formatNumber(maxvalue))
-        if type_ == FOOD then
-            item.produce_capacity.value:setString(GameUtils:formatNumber(self.city:GetResourceManager():GetFoodProductionPerHour()) .."/h")
+        item.resource_label:setString(GameUtils:formatNumber(value).."/"..GameUtils:formatNumber(maxvalue))
+        if res_type == "food" then
+            item.produce_capacity.value:setString(GameUtils:formatNumber(User:GetFoodRealOutput()) .."/h")
         else
-            item.produce_capacity.value:setString(GameUtils:formatNumber(resource:GetProductionPerHour()).."/h")
+            item.produce_capacity.value:setString(GameUtils:formatNumber(User:GetResProduction(res_type).output).."/h")
         end
-        item.occupy_citizen.value:setString(GameUtils:formatNumber(occupy_citizen).."")
+        item.occupy_citizen.value:setString(GameUtils:formatNumber(occupy_citizen))
     else
-        item.resource_label.value:setString(GameUtils:formatNumber(resource:GetResourceValueByCurrentTime(app.timer:GetServerTime())))
+        item.resource_label.value:setString(GameUtils:formatNumber(value))
     end
 end
 function WidgetResources:CreateResourceListView()
@@ -128,8 +121,8 @@ function WidgetResources:InitAllResources()
         food = {
             resource_icon="res_food_91x74.png",
             resource_limit_value = maxfood,
-            resource_current_value=crm:GetFoodResource():GetResourceValueByCurrentTime(current_time),
-            total_income=GameUtils:formatNumber(crm:GetFoodProductionPerHour()).."/h",
+            resource_current_value=User:GetResValueByType("food"),
+            total_income=GameUtils:formatNumber(User:GetFoodRealOutput()).."/h",
             occupy_citizen=GameUtils:formatNumber(City:GetCitizenByType("farmer")),
             maintenance_cost="-"..GameUtils:formatNumber(self.city:GetSoldierManager():GetTotalUpkeep()).."/h",
             type = "food"
@@ -137,41 +130,42 @@ function WidgetResources:InitAllResources()
         wood = {
             resource_icon="res_wood_82x73.png",
             resource_limit_value= maxwood,
-            resource_current_value=crm:GetWoodResource():GetResourceValueByCurrentTime(current_time),
-            total_income=GameUtils:formatNumber(crm:GetWoodResource():GetProductionPerHour()).."/h",
+            resource_current_value=User:GetResValueByType("wood"),
+            total_income=GameUtils:formatNumber(User:GetResProduction("wood").output).."/h",
             occupy_citizen=GameUtils:formatNumber(City:GetCitizenByType("woodcutter")),
             type = "wood"
         },
         stone = {
             resource_icon="res_stone_88x82.png",
             resource_limit_value= maxstone,
-            resource_current_value=crm:GetStoneResource():GetResourceValueByCurrentTime(current_time),
-            total_income=GameUtils:formatNumber(crm:GetStoneResource():GetProductionPerHour()).."/h",
+            resource_current_value=User:GetResValueByType("stone"),
+            total_income=GameUtils:formatNumber(User:GetResProduction("stone").output).."/h",
             occupy_citizen=GameUtils:formatNumber(City:GetCitizenByType("quarrier")),
             type = "stone"
         },
         iron = {
             resource_icon="res_iron_91x63.png",
             resource_limit_value=maxiron,
-            resource_current_value=crm:GetIronResource():GetResourceValueByCurrentTime(current_time),
-            total_income=GameUtils:formatNumber(crm:GetIronResource():GetProductionPerHour()).."/h",
+            resource_current_value=User:GetResValueByType("iron"),
+            total_income=GameUtils:formatNumber(User:GetResProduction("iron").output).."/h",
             occupy_citizen=GameUtils:formatNumber(City:GetCitizenByType("miner")),
             type = "iron"
         },
         coin = {
             resource_icon="res_coin_81x68.png",
-            resource_current_value=GameUtils:formatNumber(crm:GetCoinResource():GetResourceValueByCurrentTime(current_time)),
-            total_income=GameUtils:formatNumber(crm:GetCoinResource():GetProductionPerHour()).."/h",
-            occupy_citizen=GameUtils:formatNumber(self.city:GetResourceManager():GetCitizenResource():GetNoneAllocatedByTime(current_time)),
+            resource_current_value=GameUtils:formatNumber(User:GetResValueByType("coin")),
+            total_income=GameUtils:formatNumber(User:GetResProduction("coin").output).."/h",
+            occupy_citizen=GameUtils:formatNumber(User:GetResValueByType("citizen")),
             type = "coin"
         },
     }
+
     self.resource_items = {}
-    self.resource_items[resource_type.FOOD] = self:AddResourceItem(all_resources.food)
-    self.resource_items[resource_type.WOOD] = self:AddResourceItem(all_resources.wood)
-    self.resource_items[resource_type.STONE] = self:AddResourceItem(all_resources.stone)
-    self.resource_items[resource_type.IRON] = self:AddResourceItem(all_resources.iron)
-    self.resource_items[resource_type.COIN] = self:AddResourceItem(all_resources.coin)
+    self.resource_items.food = self:AddResourceItem(all_resources.food)
+    self.resource_items.wood = self:AddResourceItem(all_resources.wood)
+    self.resource_items.stone = self:AddResourceItem(all_resources.stone)
+    self.resource_items.iron = self:AddResourceItem(all_resources.iron)
+    self.resource_items.coin = self:AddResourceItem(all_resources.coin)
 end
 
 function WidgetResources:AddResourceItem(parms)

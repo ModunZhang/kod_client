@@ -1241,7 +1241,6 @@ function City:OnUserDataChanged(userData, current_time, deltaData)
     local resource_refresh_time = current_time
     if userData.resources then
         resource_refresh_time = userData.resources.refreshTime / 1000
-        self.resource_manager:UpdateFromUserDataByTime(userData.resources, resource_refresh_time)
     end
 
     if need_update_resouce_buildings then

@@ -149,7 +149,7 @@ function GameUIHospital:CreateHealAllSoldierItem()
         table.insert(soldiers,{name=k,count=v})
     end
     local treat_coin = self.city:GetSoldierManager():GetTreatResource(soldiers)
-    local total_coin = self.city:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+    local total_coin = self.city:GetUser():GetResValueByType("coin")
     local resource_icons = {
         [COIN]  = {total_coin,treat_coin,"res_coin_81x68.png"},
     }
@@ -508,7 +508,7 @@ function GameUIHospital:OnTreatSoliderCountChanged(soldier_manager, treat_soldie
         table.insert(soldiers,{name=k,count=v})
     end
     local treat_coin = soldier_manager:GetTreatResource(soldiers)
-    local total_coin = self.city:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+    local total_coin = self.city:GetUser():GetResValueByType("coin")
     self:SetTreatAllSoldiersNeedResources({
         [COIN] = {treat_coin,total_coin}
     })
@@ -547,7 +547,7 @@ function GameUIHospital:RefreshResources()
         table.insert(soldiers,{name=k,count=v})
     end
     local treat_coin = self.city:GetSoldierManager():GetTreatResource(soldiers)
-    local total_coin = self.city:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+    local total_coin = self.city:GetUser():GetResValueByType("coin")
     self:SetTreatAllSoldiersNeedResources({
         [COIN] = {treat_coin,total_coin}
     })

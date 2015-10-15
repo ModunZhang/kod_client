@@ -275,13 +275,13 @@ function GameUITradeGuild:CreateSellItemForListView(listView,goods)
                             listView:removeItem(item)
                         end)
                     end
-                    if City:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())<goods.itemData.price*goods.itemData.count then
+                    if User:GetResValueByType("coin")<goods.itemData.price*goods.itemData.count then
                         UIKit:showMessageDialog(_("主人"),_("银币不足,是否使用金龙币补充"))
                             :CreateOKButtonWithPrice({
                                 listener = function ()
                                     buy_func()
                                 end,
-                                price = DataUtils:buyResource({coin = goods.itemData.price*goods.itemData.count}, {coin=City:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())})
+                                price = DataUtils:buyResource({coin = goods.itemData.price*goods.itemData.count}, {coin=User:GetResValueByType("coin")})
                             })
                             :CreateCancelButton()
                         return
@@ -302,22 +302,23 @@ end
 function GameUITradeGuild:GetGoodsDetailsByType(goods_type)
     if goods_type==RESOURCE_TYPE then
         local manager = City:GetResourceManager()
+        local User = User
         return {
             {
                 UILib.resource.wood,
-                manager:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+                User:GetResValueByType("wood")
             },
             {
                 UILib.resource.stone,
-                manager:GetStoneResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+                User:GetResValueByType("stone")
             },
             {
                 UILib.resource.iron,
-                manager:GetIronResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+                User:GetResValueByType("iron")
             },
             {
                 UILib.resource.food,
-                manager:GetFoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+                User:GetResValueByType("food")
             },
         }
     elseif goods_type==BUILD_MATERIAL_TYPE then

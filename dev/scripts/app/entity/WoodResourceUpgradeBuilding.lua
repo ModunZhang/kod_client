@@ -8,6 +8,9 @@ end
 function WoodResourceUpgradeBuilding:GetUpdateResourceType()
 	return ResourceManager.RESOURCE_TYPE.WOOD
 end
+function WoodResourceUpgradeBuilding:GetResType()
+    return "wood"
+end
 
 --
 

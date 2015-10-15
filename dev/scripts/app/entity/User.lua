@@ -42,12 +42,18 @@ local staminaRecoverPerHour_value = GameDatas.PlayerInitData.intInit.staminaReco
 function User:ctor(p)
     User.super.ctor(self)
     self.resources_cache = {
-        gem         = {limit =          math.huge, output = 0},
-        blood       = {limit =          math.huge, output = 0},
-        casinoToken = {limit =          math.huge, output = 0},
-        stamina     = {limit =   staminaMax_value, output = staminaRecoverPerHour_value},
-        cart        = {limit =                  0, output = 0},
-        wallHp      = {limit =                  0, output = 0},
+        gem         = {limit =        math.huge, output = 0},
+        blood       = {limit =        math.huge, output = 0},
+        casinoToken = {limit =        math.huge, output = 0},
+        stamina     = {limit = staminaMax_value, output = staminaRecoverPerHour_value},
+        cart        = {limit =        math.huge, output = 0},
+        wallHp      = {limit =        math.huge, output = 0},
+        coin        = {limit =        math.huge, output = 0},
+        wood        = {limit =        math.huge, output = 0},
+        food        = {limit =        math.huge, output = 0},
+        iron        = {limit =        math.huge, output = 0},
+        stone       = {limit =        math.huge, output = 0},
+        citizen     = {limit =        math.huge, output = 0},
     }
     if type(p) == "table" then
         self:SetId(p._id)
@@ -365,8 +371,14 @@ function User:GetResValueByType(type_)
         app.timer:GetServerTime()
     )
 end
+function User:IsResOverLimit(type_)
+    return self.resources[type_] > self.resources_cache[type_].limit
+end
 function User:GetResProduction(type_)
     return self.resources_cache[type_]
+end
+function User:GetFoodRealOutput()
+    return City:GetSoldierManager():GetTotalUpkeep() + self.resources_cache.food.output
 end
 --[[end]]
 
@@ -489,30 +501,9 @@ local after_map = {
     end,
 }
 function User:OnUserDataChanged(userData, current_time, deltaData)
-    self._id                    = userData._id
-    self.gcId                   = userData.gcId
-    self.serverId               = userData.serverId
-    self.logicServerId          = userData.logicServerId
-    self.serverLevel            = userData.serverLevel
-    self.basicInfo              = userData.basicInfo
-    self.countInfo              = userData.countInfo
-    self.resources              = userData.resources
-    self.iapGifts               = userData.iapGifts
-    self.deals                  = userData.deals
-    self.pve                    = userData.pve
-    self.pveFights              = userData.pveFights
-    self.vipEvents              = userData.vipEvents
-    self.buildings              = userData.buildings
-    self.growUpTasks            = userData.growUpTasks
-    self.allianceInfo           = userData.allianceInfo
-    self.allianceDonate         = userData.allianceDonate
-    self.dailyTasks             = userData.dailyTasks
-    self.apnStatus              = userData.apnStatus
-    self.dailyQuests            = userData.dailyQuests
-    self.dailyQuestEvents       = userData.dailyQuestEvents
-    self.requestToAllianceEvents= userData.requestToAllianceEvents
-    self.inviteToAllianceEvents = userData.inviteToAllianceEvents
-
+    for k,v in pairs(userData) do
+        self[k] = v
+    end
     if deltaData then
         for i,k in ipairs(User.LISTEN_TYPE) do
             local before_func = before_map[k]

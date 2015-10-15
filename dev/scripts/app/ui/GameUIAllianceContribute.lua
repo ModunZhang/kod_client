@@ -91,21 +91,15 @@ end
 function GameUIAllianceContribute:onEnter()
     User:AddListenOnType(self, "allianceDonate")
     scheduleAt(self, function()
-        local wood = res_man:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-        local stone = res_man:GetStoneResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-        local food = res_man:GetFoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-        local iron = res_man:GetIronResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-        local coin = res_man:GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-        local gem = City:GetUser():GetGemValue()
-        local owns = {
-            wood,
-            stone,
-            food,
-            iron,
-            coin,
-            gem,
-        }
-        self.group:RefreashAllOwn(owns)
+        local User = User
+        self.group:RefreashAllOwn({
+            User:GetResValueByType("wood"),
+            User:GetResValueByType("stone"),
+            User:GetResValueByType("food"),
+            User:GetResValueByType("iron"),
+            User:GetResValueByType("coin"),
+            User:GetResValueByType("gem"),
+        })
     end)
 end
 
@@ -142,46 +136,40 @@ function GameUIAllianceContribute:RefreashEff()
 end
 
 function GameUIAllianceContribute:CreateContributeGroup()
+    local User = User
     local ui_self = self
-
     -- 透明背景框
     local group = WidgetUIBackGround.new({width = 568,height=490},WidgetUIBackGround.STYLE_TYPE.STYLE_6)
         :align(display.CENTER,304, 355):addTo(self.body)
-    local wood = City.resource_manager:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    local stone = City.resource_manager:GetStoneResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    local food = City.resource_manager:GetFoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    local iron = City.resource_manager:GetIronResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    local coin = City.resource_manager:GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    local gem = City:GetUser():GetGemValue()
     local group_table = {
         {
             icon="res_wood_82x73.png",
-            own=wood,
+            own=User:GetResValueByType("wood"),
             donate=self:GetDonateValueByType("wood").count
         },
         {
             icon="res_stone_88x82.png",
-            own=stone,
+            own=User:GetResValueByType("stone"),
             donate=self:GetDonateValueByType("stone").count
         },
         {
             icon="res_food_91x74.png",
-            own=food,
+            own=User:GetResValueByType("food"),
             donate=self:GetDonateValueByType("food").count
         },
         {
             icon="res_iron_91x63.png",
-            own=iron,
+            own=User:GetResValueByType("iron"),
             donate=self:GetDonateValueByType("iron").count
         },
         {
             icon="res_coin_81x68.png",
-            own=coin,
+            own=User:GetResValueByType("coin"),
             donate=self:GetDonateValueByType("coin").count
         },
         {
             icon="gem_icon_62x61.png",
-            own=gem,
+            own=User:GetResValueByType("gem"),
             donate=self:GetDonateValueByType("gem").count
         },
     }
@@ -343,7 +331,8 @@ function GameUIAllianceContribute:IsAbleToContribute()
     if r_type == "gem" then
         r_count = User:GetGemValue()
     else
-        r_count = City.resource_manager:GetResourceByType(CON_TYPE[r_type]):GetResourceValueByCurrentTime(app.timer:GetServerTime())
+        assert(false)
+        -- r_count = City.resource_manager:GetResourceByType(CON_TYPE[r_type]):GetResourceValueByCurrentTime(app.timer:GetServerTime())
     end
     if r_count<count then
         UIKit:showMessageDialog(_("提示"),_("选择捐赠的物资不足"))

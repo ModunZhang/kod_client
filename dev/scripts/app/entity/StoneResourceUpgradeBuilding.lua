@@ -12,6 +12,9 @@ end
 function StoneResourceUpgradeBuilding:GetUpdateResourceType()
 	return ResourceManager.RESOURCE_TYPE.STONE
 end
+function StoneResourceUpgradeBuilding:GetResType()
+    return "stone"
+end
 --
 
 return StoneResourceUpgradeBuilding

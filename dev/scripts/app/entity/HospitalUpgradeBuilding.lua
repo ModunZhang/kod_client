@@ -158,7 +158,7 @@ function HospitalUpgradeBuilding:GetTreatingTimeByTypeWithCount(soldiers)
     return treat_time
 end
 function HospitalUpgradeBuilding:GetSoldierConfigByType(soldier_type)
-     local star = City:GetSoldierManager():GetStarBySoldierType(soldier_type)
+     local star = self:BelongCity():GetSoldierManager():GetStarBySoldierType(soldier_type)
     local config_name = soldier_type.."_"..star
     local config = NORMAL[config_name] or SPECIAL[soldier_type]
     return config
@@ -203,9 +203,8 @@ function HospitalUpgradeBuilding:OnUserDataChanged(...)
 end
 
 function HospitalUpgradeBuilding:IsAbleToTreat(soldiers)
-    local total_coin = City:GetSoldierManager():GetTreatResource(soldiers)
-    local resource_state =  City:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())<total_coin
-
+    local total_coin = self:BelongCity():GetSoldierManager():GetTreatResource(soldiers)
+    local resource_state = self:BelongCity():GetUser():GetResValueByType("coin")<total_coin
     if self:IsTreating() and resource_state then
         return HospitalUpgradeBuilding.CAN_NOT_TREAT.TREATING_AND_LACK_RESOURCE
     elseif self:IsTreating() then
@@ -216,12 +215,12 @@ function HospitalUpgradeBuilding:IsAbleToTreat(soldiers)
 end
 -- 普通治疗需要的金龙币
 function HospitalUpgradeBuilding:GetTreatGems(soldiers)
-    local total_coin = City:GetSoldierManager():GetTreatResource(soldiers)
-    local resource_state =  City:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime()) < total_coin
-
+    local total_coin = self:BelongCity():GetSoldierManager():GetTreatResource(soldiers)
+    local value = self:BelongCity():GetUser():GetResValueByType("coin")
+    local resource_state = value < total_coin
     local need_gems = 0
     if resource_state then
-        need_gems = DataUtils:buyResource({coin=total_coin},{coin = City:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())})
+        need_gems = DataUtils:buyResource({coin=total_coin},{coin = value})
     end
     if self:IsTreating() then
         need_gems = need_gems + DataUtils:getGemByTimeInterval(self:GetTreatEvent():LeftTime(app.timer:GetServerTime()))
@@ -230,16 +229,16 @@ function HospitalUpgradeBuilding:GetTreatGems(soldiers)
 end
 --  立即治疗需要金龙币
 function HospitalUpgradeBuilding:GetTreatNowGems(soldiers)
-    local total_time = City:GetSoldierManager():GetTreatTime(soldiers)
+    local total_time = self:BelongCity():GetSoldierManager():GetTreatTime(soldiers)
     need_gems = DataUtils:getGemByTimeInterval(total_time)
-    local total_coin = City:GetSoldierManager():GetTreatResource(soldiers)
+    local total_coin = self:BelongCity():GetSoldierManager():GetTreatResource(soldiers)
     need_gems = need_gems + DataUtils:buyResource({coin=total_coin},{})
     return need_gems
 end
 -- 医院伤兵是否超过上限
 function HospitalUpgradeBuilding:IsWoundedSoldierOverhead()
     local max = self:GetMaxCasualty()
-    local current = City:GetSoldierManager():GetTotalTreatSoldierCitizen()
+    local current = self:BelongCity():GetSoldierManager():GetTotalTreatSoldierCitizen()
     return current > max
 end
 --获取下一级伤病最大上限

@@ -18,6 +18,9 @@ end
 function CitizenResourceUpgradeBuilding:GetNextLevelCitizen()
     return config_dwelling[self:GetNextLevel()].citizen
 end
+function CitizenResourceUpgradeBuilding:GetResType()
+    return "citizen"
+end
 
 return CitizenResourceUpgradeBuilding
 

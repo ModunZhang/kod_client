@@ -198,13 +198,13 @@ end
 function WidgetCitizen:UpdateData()
     local city = self.city
     citizen_array = {}
-    local resource_manager = city:GetResourceManager()
-    citizen_array[CITIZEN] = resource_manager:GetCitizenResource():GetNoneAllocatedByTime(app.timer:GetServerTime())
+    citizen_array[CITIZEN] = city:GetUser():GetResValueByType("citizen")
     citizen_array[FOOD] = city:GetCitizenByType("farmer")
     citizen_array[WOOD] = city:GetCitizenByType("woodcutter")
     citizen_array[IRON] = city:GetCitizenByType("miner")
     citizen_array[STONE] = city:GetCitizenByType("quarrier")
-    self:SetMaxCitizen(resource_manager:GetCitizenResource():GetTotalLimit())
+    local total_limit = city:GetUser():GetResProduction("citizen").limit + BuildingUtils:GetCitizenMap(city:GetUser()).total
+    self:SetMaxCitizen(total_limit)
     self:OnCitizenChanged(citizen_array)
 end
 function WidgetCitizen:OnCitizenChanged(citizen_array)
@@ -229,17 +229,16 @@ function WidgetCitizen:OnCitizenChanged(citizen_array)
         local production = string.format("%d", citizen_array[k])
         local productionPerHour
         if k == CITIZEN then
-            local population = resource_manager:GetCitizenResource()
-            productionPerHour = population:GetProductionPerHour()
-            production = string.format("%d/%d", production, population:GetValueLimit())
+            productionPerHour = User:GetResProduction("citizen").output
+            production = string.format("%d/%d", production, User:GetResProduction("citizen").limit)
         elseif k == FOOD then
-            productionPerHour = resource_manager:GetFoodProductionPerHour()
+            productionPerHour = User:GetFoodRealOutput()
         elseif k == WOOD then
-            productionPerHour = resource_manager:GetWoodResource():GetProductionPerHour()
+            productionPerHour = User:GetResProduction("wood").output
         elseif k == IRON then
-            productionPerHour = resource_manager:GetIronResource():GetProductionPerHour()
+            productionPerHour = User:GetResProduction("iron").output
         elseif k == STONE then
-            productionPerHour = resource_manager:GetStoneResource():GetProductionPerHour()
+            productionPerHour = User:GetResProduction("stone").output
         end
         v[1]:setString(production)
         v[2]:setString(string.format("%d/h",productionPerHour))

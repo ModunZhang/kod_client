@@ -12,6 +12,9 @@ end
 function IronResourceUpgradeBuilding:GetUpdateResourceType()
 	return ResourceManager.RESOURCE_TYPE.IRON
 end
+function IronResourceUpgradeBuilding:GetResType()
+    return "iron"
+end
 --
 
 return IronResourceUpgradeBuilding

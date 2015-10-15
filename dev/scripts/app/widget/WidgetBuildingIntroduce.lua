@@ -63,10 +63,11 @@ end
 
 function WidgetBuildingIntroduce:SetUpgradeRequirementListview()
     local city = self.city
-    local wood = city.resource_manager:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    local iron = city.resource_manager:GetIronResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    local stone = city.resource_manager:GetStoneResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    local population = city.resource_manager:GetCitizenResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+    local User = city:GetUser()
+    local wood = User:GetResValueByType("wood")
+    local iron = User:GetResValueByType("iron")
+    local stone = User:GetResValueByType("stone")
+    local citizen = User:GetResValueByType("citizen")
 
     local materials = city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
 
@@ -91,9 +92,9 @@ function WidgetBuildingIntroduce:SetUpgradeRequirementListview()
         {
             resource_type = _("空闲城民"),
             isVisible = self.building:GetLevelUpCitizen()>0,
-            isSatisfy = population >= self.building:GetLevelUpCitizen() ,
+            isSatisfy = citizen >= self.building:GetLevelUpCitizen() ,
             icon="res_citizen_88x82.png",
-            description=self.building:GetLevelUpCitizen().."/"..population
+            description=self.building:GetLevelUpCitizen().."/"..citizen
         },
         {
             resource_type = _("工程图纸"),

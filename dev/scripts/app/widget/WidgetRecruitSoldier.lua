@@ -485,16 +485,17 @@ function WidgetRecruitSoldier:onEnter()
 
     scheduleAt(self, function()
         local res_man = self.city:GetResourceManager()
+        local User = self.city:GetUser()
         local server_time = timer:GetServerTime()
         local res_map = {}
         if not self.soldier_config.specialMaterials then
-            res_map.wood = res_man:GetWoodResource():GetResourceValueByCurrentTime(server_time)
-            res_map.food = res_man:GetFoodResource():GetResourceValueByCurrentTime(server_time)
-            res_map.iron = res_man:GetIronResource():GetResourceValueByCurrentTime(server_time)
-            res_map.stone = res_man:GetStoneResource():GetResourceValueByCurrentTime(server_time)
-            res_map.citizen = res_man:GetCitizenResource():GetNoneAllocatedByTime(server_time)
+            res_map.wood = User:GetResValueByType("wood")
+            res_map.food = User:GetResValueByType("food")
+            res_map.iron = User:GetResValueByType("iron")
+            res_map.stone = User:GetResValueByType("stone")
+            res_map.citizen = User:GetResValueByType("citizen")
         else
-            res_map.citizen = res_man:GetCitizenResource():GetNoneAllocatedByTime(server_time)
+            res_map.citizen = User:GetResValueByType("citizen")
         end
         self.res_total_map = res_map
         self:CheckNeedResource(res_map, self.count)

@@ -22,7 +22,8 @@ local WidgetTreatSoldier = class("WidgetTreatSoldier", function(...)
 end)
 local NORMAL = GameDatas.Soldiers.normal
 local SPECIAL = GameDatas.Soldiers.special
-
+local app = app
+local timer = app.timer
 local SOLDIER_CATEGORY_MAP = {
     ["swordsman"] = "infantry",
     ["sentinel"] = "infantry",
@@ -396,7 +397,7 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
 
     self.back_ground = back_ground
     local res_map = {}
-    res_map.treatCoin = City:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+    res_map.treatCoin = User:GetResValueByType("coin")
     for k, v in pairs(self.res_map) do
         local total = res_map[k]
         v.total:setString(GameUtils:formatNumber(total))
@@ -408,7 +409,18 @@ end
 function WidgetTreatSoldier:onEnter()
     City:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
     scheduleAt(self, function()
-        self:RefreshResources(City:GetResourceManager())
+        local server_time = timer:GetServerTime()
+        local res_map = {}
+        res_map.treatCoin = User:GetResValueByType("coin")
+        for k, v in pairs(self.res_map) do
+            local total = res_map[k]
+            v.total:setString(GameUtils:formatNumber(total))
+        end
+        self.res_total_map = res_map
+        if not self.isSet then
+            self.slider_input:SetValue(self:GetMaxTreatNum())
+            self.isSet = true
+        end
     end)
 end
 function WidgetTreatSoldier:onExit()
@@ -448,7 +460,7 @@ function WidgetTreatSoldier:SetSoldier(soldier_type, star)
 end
 function WidgetTreatSoldier:GetMaxTreatNum()
     local soldier_config = self.soldier_config
-    local total = City:GetResourceManager():GetCoinResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
+    local total = User:GetResValueByType("coin")
     local temp_max = math.floor(total / soldier_config.treatCoin)
     local max_count = math.min(self.treat_max,temp_max)
     return max_count
@@ -475,22 +487,6 @@ end
 function WidgetTreatSoldier:align(anchorPoint, x, y)
     self.back_ground:align(anchorPoint, x, y)
     return self
-end
-local app = app
-local timer = app.timer
-function WidgetTreatSoldier:RefreshResources(res_man)
-    local server_time = timer:GetServerTime()
-    local res_map = {}
-    res_map.treatCoin = res_man:GetCoinResource():GetResourceValueByCurrentTime(server_time)
-    for k, v in pairs(self.res_map) do
-        local total = res_map[k]
-        v.total:setString(GameUtils:formatNumber(total))
-    end
-    self.res_total_map = res_map
-    if not self.isSet then
-        self.slider_input:SetValue(self:GetMaxTreatNum())
-        self.isSet = true
-    end
 end
 function WidgetTreatSoldier:OnInstantButtonClicked(func)
     self.instant_button_clicked = func

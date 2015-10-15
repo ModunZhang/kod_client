@@ -115,7 +115,6 @@ function GameUIBuild:OnUpgradingFinished(building)
     self:OnCityChanged()
 end
 function GameUIBuild:OnCityChanged()
-    local citizen = self.build_city:GetResourceManager():GetCitizenResource():GetValueLimit()
     table.foreachi(self.base_resource_building_items or {}, function(i, v)
         local building_type = base_items[i].building_type
         local number = #self.build_city:GetDecoratorsByType(building_type)
@@ -125,7 +124,7 @@ function GameUIBuild:OnCityChanged()
         if building then
             if self.build_city:GetAvailableBuildQueueCounts() <= 0 then
                 v:SetCondition(_("建造队列不足"), display.COLOR_RED)
-            elseif building:GetCitizen() > citizen then
+            elseif building:GetCitizen() > self.build_city:GetUser():GetResProduction("citizen").limit then
                 v:SetBuildEnable(false)
                 v:SetCondition(_("城民上限不足,请首先升级或建造小屋"), display.COLOR_RED)
             elseif number >= max_number then
@@ -149,10 +148,11 @@ function GameUIBuild:OnBuildOnItem(item)
     local config = house_levelup_config[item.building.building_type]
 
     -- 升级所需资源不足
-    local wood = city.resource_manager:GetWoodResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    local iron = city.resource_manager:GetIronResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    local stone = city.resource_manager:GetStoneResource():GetResourceValueByCurrentTime(app.timer:GetServerTime())
-    local citizen = city.resource_manager:GetCitizenResource():GetNoneAllocatedByTime(app.timer:GetServerTime())
+    local User = city:GetUser()
+    local wood = User:GetResValueByType("wood")
+    local iron = User:GetResValueByType("iron")
+    local stone = User:GetResValueByType("stone")
+    local citizen = User:GetResValueByType("citizen")
     local is_resource_enough = wood<config[1].wood
         or stone<config[1].stone
         or iron<config[1].iron
