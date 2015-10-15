@@ -301,7 +301,6 @@ function GameUITradeGuild:GetGoodsIcon(listView,icon)
 end
 function GameUITradeGuild:GetGoodsDetailsByType(goods_type)
     if goods_type==RESOURCE_TYPE then
-        local manager = City:GetResourceManager()
         local User = User
         return {
             {

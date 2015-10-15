@@ -42,13 +42,6 @@ City.LISTEN_TYPE = Enum(
     "PRODUCTION_EVENT_CHANGED",
     "PRODUCTION_EVENT_TIMER",
     "PRODUCTION_EVENT_REFRESH")
-City.RESOURCE_TYPE_TO_BUILDING_TYPE = {
-    [ResourceManager.RESOURCE_TYPE.WOOD] = "woodcutter",
-    [ResourceManager.RESOURCE_TYPE.FOOD] = "farmer",
-    [ResourceManager.RESOURCE_TYPE.IRON] = "miner",
-    [ResourceManager.RESOURCE_TYPE.STONE] = "quarrier",
-    [ResourceManager.RESOURCE_TYPE.CITIZEN] = "dwelling",
-}
 local only_one_buildings_map = {
     keep            = true,
     watchTower      = true,
@@ -418,7 +411,6 @@ function City:ResetAllListeners()
     self.upgrading_building_callbacks = {}
     self.finish_upgrading_callbacks = {}
 
-    self.resource_manager:RemoveAllObserver()
     self.soldier_manager:ClearAllListener()
     self.material_manager:RemoveAllObserver()
     self:ClearAllListener()
@@ -551,9 +543,6 @@ function City:GetSoldierManager()
 end
 function City:GetMaterialManager()
     return self.material_manager
-end
-function City:GetResourceManager()
-    return self.resource_manager
 end
 function City:GetAvailableBuildQueueCounts()
     return self:BuildQueueCounts() - #self:GetUpgradingBuildings()

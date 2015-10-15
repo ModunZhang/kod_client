@@ -267,7 +267,6 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
                         {
                             listener = function ()
                                 UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
-                                City:GetResourceManager():RemoveObserver(self)
                                 self:getParent():LeftButtonClicked()
                             end,
                             btn_name= _("前往商店")
@@ -335,7 +334,6 @@ function WidgetTreatSoldier:ctor(soldier_type, star, treat_max)
                         {
                             listener = function ()
                                 UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
-                                City:GetResourceManager():RemoveObserver(self)
                                 self:getParent():LeftButtonClicked()
                             end,
                             btn_name= _("前往商店")

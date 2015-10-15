@@ -488,7 +488,7 @@ local before_map = {
         end
     end,
     vipEvents = function()
-        City:GetResourceManager():UpdateByCity(City, app.timer:GetServerTime())
+        City.resource_manager:UpdateByCity(City, app.timer:GetServerTime())
     end,
 }
 local after_map = {

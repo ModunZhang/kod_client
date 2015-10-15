@@ -29,7 +29,6 @@ function WidgetResources:onEnter()
         self.city:GetFirstBuildingByType(v):AddUpgradeListener(self)
     end
     scheduleAt(self, function()
-        local res_man = self.city:GetResourceManager()
         local maxwood, maxfood, maxiron, maxstone = self.building:GetResourceValueLimit()
         local resource_max = {
             wood = maxwood,
@@ -116,7 +115,6 @@ end
 function WidgetResources:InitAllResources()
     local current_time = app.timer:GetServerTime()
     local maxwood, maxfood, maxiron, maxstone = self.building:GetResourceValueLimit()
-    local crm = City:GetResourceManager()
     local all_resources = {
         food = {
             resource_icon="res_food_91x74.png",

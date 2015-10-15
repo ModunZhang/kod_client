@@ -481,10 +481,7 @@ function WidgetRecruitSoldier:onEnter()
     self.barracks:AddBarracksListener(self)
     self.city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
 
-
-
     scheduleAt(self, function()
-        local res_man = self.city:GetResourceManager()
         local User = self.city:GetUser()
         local server_time = timer:GetServerTime()
         local res_map = {}

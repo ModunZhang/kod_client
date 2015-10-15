@@ -61,7 +61,6 @@ function WidgetAllianceTop:onEnter()
     end)
 end
 function WidgetAllianceTop:onExit()
-    -- City:GetResourceManager():RemoveObserver(self)
     if self.auto_change_page then
         scheduler.unscheduleGlobal(self.auto_change_page)
     end

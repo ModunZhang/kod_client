@@ -222,8 +222,6 @@ function WidgetCitizen:OnCitizenChanged(citizen_array)
             bar_ui:setVisible(false)
         end
     end
-
-    local resource_manager = self.city:GetResourceManager()
     for k, v in pairs(self.citizen_number) do
         local production = string.format("%d", citizen_array[k])
         local productionPerHour
