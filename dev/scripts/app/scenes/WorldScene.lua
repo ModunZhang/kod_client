@@ -10,9 +10,9 @@ end
 function WorldScene:onEnter()
     WorldScene.super.onEnter(self)
     self:GotoPosition(0,0)
-    -- self:ScheduleLoadMap()
+    self:ScheduleLoadMap()
 
-    NetManager:getEnterMapIndexPromise(0)
+    -- NetManager:getEnterMapIndexPromise(0)
 end
 function WorldScene:GetHomePage()
 

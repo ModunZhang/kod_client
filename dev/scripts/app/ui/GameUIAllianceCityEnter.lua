@@ -174,7 +174,7 @@ function GameUIAllianceCityEnter:GetEnterButtons()
                                         end)
                                     end,{targetIsMyAlliance = isMyAlliance,toLocation = toLocation}):AddToCurrentScene(true)
                                 end
-                                UIKit:showSendTroopMessageDialog(attack_func,City:GetMaterialManager().MATERIAL_TYPE.DRAGON,_("龙"))
+                                UIKit:showSendTroopMessageDialog(attack_func, "dragonMaterials",_("龙"))
                             end)
                         else
                             local attack_func = function ()
@@ -184,7 +184,7 @@ function GameUIAllianceCityEnter:GetEnterButtons()
                                     end)
                                 end,{targetIsMyAlliance = isMyAlliance,toLocation = toLocation}):AddToCurrentScene(true)
                             end
-                            UIKit:showSendTroopMessageDialog(attack_func,City:GetMaterialManager().MATERIAL_TYPE.DRAGON,_("龙"))
+                            UIKit:showSendTroopMessageDialog(attack_func, "dragonMaterials",_("龙"))
                         end
                     else
                         UIKit:showMessageDialog(_("错误"), _("已有协防部队正在行军"), function()end)
@@ -240,7 +240,7 @@ function GameUIAllianceCityEnter:GetEnterButtons()
                         end
                     end,{targetIsMyAlliance = isMyAlliance,toLocation = toLocation,returnCloseAction = true}):AddToCurrentScene(true)
                 end
-                UIKit:showSendTroopMessageDialog(attack_func,City:GetMaterialManager().MATERIAL_TYPE.DRAGON,_("龙"))
+                UIKit:showSendTroopMessageDialog(attack_func, "dragonMaterials",_("龙"))
             end
 
             if isProtected then
@@ -275,7 +275,7 @@ function GameUIAllianceCityEnter:GetEnterButtons()
             --         end
             --     end,{targetIsMyAlliance = isMyAlliance,toLocation = toLocation,returnCloseAction = true}):AddToCurrentScene(true)
             -- end
-            -- UIKit:showSendTroopMessageDialog(attack_func,City:GetMaterialManager().MATERIAL_TYPE.DRAGON,_("龙"))
+            -- UIKit:showSendTroopMessageDialog(attack_func,"dragonMaterials",_("龙"))
         end)
         local my_allaince = Alliance_Manager:GetMyAlliance()
         attack_button:setButtonEnabled(my_allaince.basicInfo.status == "fight")

@@ -159,7 +159,7 @@ function GameUIAllianceMosterEnter:onEnter()
                         end)
                     end,{targetIsMyAlliance = isMyAlliance,toLocation = entity.location,returnCloseAction = false}):AddToCurrentScene(true)
                 end
-                UIKit:showSendTroopMessageDialog(attack_monster_func,City:GetMaterialManager().MATERIAL_TYPE.BUILD,_("建筑"))
+                UIKit:showSendTroopMessageDialog(attack_monster_func,"buildingMaterials",_("建筑"))
             end
 
             if my_alliance:GetSelf():IsProtected() then
@@ -194,7 +194,7 @@ function GameUIAllianceMosterEnter:onEnter()
             --         end,{targetIsMyAlliance = isMyAlliance,toLocation = entity.location,returnCloseAction = false}):AddToCurrentScene(true)
             --     end
             -- end
-            -- UIKit:showSendTroopMessageDialog(attack_monster_func,City:GetMaterialManager().MATERIAL_TYPE.BUILD,_("建筑"))
+            -- UIKit:showSendTroopMessageDialog(attack_monster_func,"buildingMaterials",_("建筑"))
         end):addTo(body):align(display.RIGHT_TOP, b_width, 10)
     local s = btn:getCascadeBoundingBox().size
     display.newSprite("attack_58x56.png"):align(display.CENTER, -s.width/2, -s.height/2+12):addTo(btn)

@@ -14,7 +14,6 @@ local Localize = import("..utils.Localize")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local DragonManager = import("..entity.DragonManager")
 local GameUIDragonEyrieDetail = import(".GameUIDragonEyrieDetail")
-local MaterialManager = import("..entity.MaterialManager")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetMakeEquip = import("..widget.WidgetMakeEquip")
 local WidgetRequirementListview = import("..widget.WidgetRequirementListview")
@@ -122,8 +121,7 @@ function GameUIDragonEquipmentMake:BuildUI()
 end
 
 function GameUIDragonEquipmentMake:GetMakeRequirement()
-	local material_manager = City:GetMaterialManager()
-	local materials = material_manager:GetMaterialsByType(MaterialManager.MATERIAL_TYPE.DRAGON)
+	local materials = User.dragonMaterials
 	local requirements = {}
 	local equip_config = EQUIPMENTS[self:GetEquipment():GetCanLoadConfig().name]
 	local matrials = LuaUtils:table_map(string.split(equip_config.materials, ","), function(k, v)
@@ -179,7 +177,7 @@ function GameUIDragonEquipmentMake:GetEquipment()
 end
 
 function GameUIDragonEquipmentMake:GetCurrentEquipmentCount()
-    local player_equipments = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.EQUIPMENT)
+    local player_equipments = User.dragonEquipments
     local equipment = self:GetEquipment()
     local eq_name = equipment:IsLoaded() and equipment:Name() or equipment:GetCanLoadConfig().name
     return player_equipments[eq_name] or 0

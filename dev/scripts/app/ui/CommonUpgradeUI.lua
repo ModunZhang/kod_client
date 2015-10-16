@@ -3,7 +3,6 @@ local UIListView = import(".UIListView")
 local Localize = import("..utils.Localize")
 local window = import("..utils.window")
 local UpgradeBuilding = import("..entity.UpgradeBuilding")
-local MaterialManager = import("..entity.MaterialManager")
 local WidgetRequirementListview = import("..widget.WidgetRequirementListview")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
@@ -682,8 +681,7 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
     local iron = User:GetResValueByType("iron")
     local stone = User:GetResValueByType("stone")
     local citizen = User:GetResValueByType("citizen")
-
-    local materials = city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
+    local materials = User.buildingMaterials
     local building = self.building
     local pre_condition = building:IsBuildingUpgradeLegal()
     local requirements = {

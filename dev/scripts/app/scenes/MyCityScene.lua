@@ -252,7 +252,7 @@ function MyCityScene:FteEditName(func)
             func()
         end
     else
-        if ItemManager:GetItemByName("changePlayerName"):Count() == 0 then
+        if User:GetItemCount("changePlayerName") == 0 then
             NetManager:getFinishFTE()
             if type(func) == "function" then
                 func()

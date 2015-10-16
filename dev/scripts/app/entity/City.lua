@@ -8,7 +8,6 @@ local Enum = import("..utils.Enum")
 local Orient = import(".Orient")
 local Tile = import(".Tile")
 local SoldierManager = import(".SoldierManager")
-local MaterialManager = import(".MaterialManager")
 local ResourceManager = import(".ResourceManager")
 local Building = import(".Building")
 local GateEntity = import(".GateEntity")
@@ -42,13 +41,6 @@ City.LISTEN_TYPE = Enum(
     "PRODUCTION_EVENT_CHANGED",
     "PRODUCTION_EVENT_TIMER",
     "PRODUCTION_EVENT_REFRESH")
-City.RESOURCE_TYPE_TO_BUILDING_TYPE = {
-    [ResourceManager.RESOURCE_TYPE.WOOD] = "woodcutter",
-    [ResourceManager.RESOURCE_TYPE.FOOD] = "farmer",
-    [ResourceManager.RESOURCE_TYPE.IRON] = "miner",
-    [ResourceManager.RESOURCE_TYPE.STONE] = "quarrier",
-    [ResourceManager.RESOURCE_TYPE.CITIZEN] = "dwelling",
-}
 local only_one_buildings_map = {
     keep            = true,
     watchTower      = true,
@@ -81,7 +73,6 @@ function City:ctor(user)
     self.belong_user = user
     self.resource_manager = ResourceManager.new(self)
     self.soldier_manager = SoldierManager.new(self)
-    self.material_manager = MaterialManager.new(self)
     self.buildings = {}
     self.walls = {}
     self.gate = GateEntity.new({building_type = "wall", city = self}):AddUpgradeListener(self)
@@ -112,8 +103,8 @@ function City:GetRecommendTask()
         end
     end
     local building_map = self:GetHighestCanUpgradeBuildingMap()
-    local tasks = TaskUtils:GetAvailableTasksByCategory(
-        self:GetUser().growUpTasks, TaskUtils.TASK_CATEGORY.BUILD
+    local tasks = UtilsForTask:GetAvailableTasksByCategory(
+        self:GetUser().growUpTasks, UtilsForTask.TASK_CATEGORY.BUILD
     )
     local re_task
     for i,v in pairs(tasks.tasks) do
@@ -243,7 +234,7 @@ for i,v in ipairs(RecommendedMission) do
     default[i] = false
 end
 function City:GetBeginnersTask()
-    local count = TaskUtils:GetCompleteTaskCount(self:GetUser().growUpTasks)
+    local count = UtilsForTask:GetCompleteTaskCount(self:GetUser().growUpTasks)
     local key = string.format("recommend_tasks_%s", self:GetUser():Id())
     local flag = app:GetGameDefautlt():getTableForKey(key, default)
     for i,v in ipairs(RecommendedMission) do
@@ -418,9 +409,7 @@ function City:ResetAllListeners()
     self.upgrading_building_callbacks = {}
     self.finish_upgrading_callbacks = {}
 
-    self.resource_manager:RemoveAllObserver()
     self.soldier_manager:ClearAllListener()
-    self.material_manager:RemoveAllObserver()
     self:ClearAllListener()
     self:IteratorCanUpgradeBuildings(function(building)
         building:ResetAllListeners()
@@ -548,12 +537,6 @@ function City:IsGate(building)
 end
 function City:GetSoldierManager()
     return self.soldier_manager
-end
-function City:GetMaterialManager()
-    return self.material_manager
-end
-function City:GetResourceManager()
-    return self.resource_manager
 end
 function City:GetAvailableBuildQueueCounts()
     return self:BuildQueueCounts() - #self:GetUpgradingBuildings()
@@ -1224,8 +1207,6 @@ function City:OnUserDataChanged(userData, current_time, deltaData)
 
     -- 更新兵种
     self.soldier_manager:OnUserDataChanged(userData, current_time, deltaData)
-    -- 更新材料，这里是广义的材料，包括龙的装备
-    self.material_manager:OnUserDataChanged(userData, deltaData)
     -- 更新基本信息
     local basicInfo = userData.basicInfo
     self.build_queue = basicInfo.buildQueue

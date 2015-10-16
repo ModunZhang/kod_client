@@ -125,8 +125,8 @@ function SoldierManager:GetTotalUpkeep()
         local config = self:GetSoldierConfig(k)
         total = total + config.consumeFoodPerHour * v
     end
-    if ItemManager:IsBuffActived("quarterMaster") then
-        total = math.ceil(total * (1 - ItemManager:GetBuffEffect("quarterMaster")))
+    if self.user:IsItemEventActive("quarterMaster") then
+        total = math.ceil(total * (1 - UtilsForItem:GetItemBuff("quarterMaster")))
     end
     -- vip效果
     if self.user:IsVIPActived() then

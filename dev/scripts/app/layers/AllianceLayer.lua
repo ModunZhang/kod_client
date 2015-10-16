@@ -59,6 +59,13 @@ function AllianceLayer:onEnter()
     -- end
 end
 function AllianceLayer:InitAllianceMap()
+    self.alliance_nomanland = {
+        {},
+        {},
+        {},
+        {},
+    }
+
     self.alliance_objects = {}
     self.alliance_objects_free = {
         {},
@@ -343,13 +350,13 @@ function AllianceLayer:AddMapObjectByIndex(index, mapObject)
     end
 end
 function AllianceLayer:RemoveMapObjectByIndex(index, mapObject)
-   local alliance_object = self.alliance_objects[index]
+    local alliance_object = self.alliance_objects[index]
     if alliance_object then
         if alliance_object.mapObjects[mapObject.id] then
             alliance_object.mapObjects[mapObject.id]:removeFromParent()
             alliance_object.mapObjects[mapObject.id] = nil
         end
-    end 
+    end
 end
 function AllianceLayer:RefreshMapObjectByIndex(index, mapObject)
     local alliance_object = self.alliance_objects[index]
@@ -366,15 +373,16 @@ local maps = {
     "tmxmaps/alliance_iceField1.tmx",
 }
 function AllianceLayer:LoadAllianceByIndex(index, alliance)
+    local allianceData = (alliance ~= nil and alliance ~= json.null) and alliance or nil
     self:FreeInvisible()
-    self:LoadBackground(index, alliance)
-    self:LoadObjects(index, alliance, function(objects_node)
-        if alliance and alliance ~= json.null then
+    self:LoadBackground(index, allianceData)
+    self:LoadObjects(index, allianceData, function(objects_node)
+        if allianceData then
             local map_obj_id = {}
-            for k,v in pairs(alliance.mapObjects) do
+            for k,v in pairs(allianceData.mapObjects) do
                 map_obj_id[v.id] = true
             end
-            for _,mapObj in pairs(alliance.mapObjects) do
+            for _,mapObj in pairs(allianceData.mapObjects) do
                 local x,y = mapObj.location.x, mapObj.location.y
                 local mapObject = objects_node.mapObjects[mapObj.id]
                 if not mapObject then
@@ -464,11 +472,12 @@ function AllianceLayer:LoadObjects(index, alliance, func)
             func(new_obj)
         end
     else
-        if alliance_obj.style ~= style then
+        if alliance and (alliance_obj.nomanland or alliance_obj.style ~= style) then
             self:FreeObjects(alliance_obj)
             self.alliance_objects[index] = nil
-            self:LoadObjects(index, alliance)
-        elseif alliance_obj.terrain ~= terrain then
+            return self:LoadObjects(index, alliance)
+        end
+        if alliance_obj.terrain ~= terrain then
             self:ReloadObjectsByTerrain(alliance_obj, terrain)
         end
         if type(func) == "function" then
@@ -478,23 +487,50 @@ function AllianceLayer:LoadObjects(index, alliance, func)
 end
 function AllianceLayer:FreeObjects(obj)
     if not obj then return end
+
+    if obj.nomanland then
+        if obj:getParent() then
+            obj:retain()
+            obj:getParent():removeChild(obj, false)
+        end
+        table.insert(self.alliance_nomanland[obj.nomanland_style], obj)
+        return
+    end
+
     for k,v in pairs(obj.mapObjects) do
         v:removeFromParent()
     end
     obj.mapObjects = {}
     if obj:getParent() then
         obj:retain()
-        table.insert(self.alliance_objects_free[obj.style], obj)
         obj:getParent():removeChild(obj, false)
-    else
-        table.insert(self.alliance_objects_free[obj.style], obj)
     end
+    table.insert(self.alliance_objects_free[obj.style], obj)
 end
 function AllianceLayer:GetFreeObjects(terrain, style, index, alliance)
+    if not alliance then
+        local nomanland_style = (index % 1 + 1)
+        local obj = table.remove(self.alliance_nomanland[nomanland_style], 1)
+        if obj then
+            if obj.terrain ~= terrain then
+                self:ReloadObjectsByTerrain(obj, terrain)
+            end
+            return obj
+        else
+            local obj = display.newNode()
+            self:CreateNoManLand(obj, terrain, index)
+            obj.terrain = terrain
+            obj.nomanland = true
+            obj.nomanland_style = nomanland_style
+            obj:retain()
+            return obj
+        end
+    end
+
     local obj = table.remove(self.alliance_objects_free[style], 1)
     if obj then
         if obj.terrain ~= terrain then
-            self:ReloadObjectsByTerrain(obj, terrain, index, alliance)
+            self:ReloadObjectsByTerrain(obj, terrain)
         end
         return obj
     else
@@ -507,7 +543,7 @@ function AllianceLayer:GetFreeObjects(terrain, style, index, alliance)
         return obj
     end
 end
-function AllianceLayer:ReloadObjectsByTerrain(obj_node, terrain, index, alliance)
+function AllianceLayer:ReloadObjectsByTerrain(obj_node, terrain)
     obj_node.terrain = terrain
     for k,v in pairs(obj_node.decorators) do
         v:setTexture(decorator_image[terrain][v.name])
@@ -543,6 +579,30 @@ function AllianceLayer:CreateAllianceObjects(obj_node, terrain, style, index, al
     obj_node.decorators = decorators
     obj_node.buildings = buildings
 end
+local NoManMap = GameDatas.NoManMap
+function AllianceLayer:CreateNoManLand(obj_node, terrain, index)
+    local decorators = {}
+    local style = 1
+    for _,v in ipairs(NoManMap[string.format("noManMap_%d", style)]) do
+        local name = v.name
+        local size = buildingName[name]
+        if size then
+            local x,y = (2 * v.x - size.width + 1) / 2, (2 * v.y - size.height + 1) / 2
+            local deco_png = decorator_image[terrain][name]
+            local building_png = alliance_building[name]
+            if deco_png then
+                local decorator = display.newSprite(deco_png)
+                    :addTo(obj_node, getZorderByXY(x, y))
+                    :pos(self:GetInnerMapPosition(x,y))
+                decorator.x = x
+                decorator.y = y
+                decorator.name = name
+                table.insert(decorators, decorator)
+            end
+        end
+    end
+    obj_node.decorators = decorators
+end
 function AllianceLayer:GetInnerMapPosition(xOrPosition, y)
     if type(xOrPosition) == "table" then
         return self:GetInnerAllianceLogicMap():ConvertToMapPosition(xOrPosition.x, xOrPosition.y)
@@ -554,7 +614,7 @@ function AllianceLayer:LoadBackground(index, alliance)
     if not self.alliance_bg[index] then
         local new_bg = self:GetFreeBackground(terrain)
         self:FreeBackground(self.alliance_bg[index])
-        self.alliance_bg[index] = new_bg:addTo(self.background_node, index)
+        self.alliance_bg[index] = new_bg:addTo(self.background_node, -index)
             :pos(
                 self:GetAllianceLogicMap()
                     :ConvertToLeftBottomMapPosition(self:IndexToLogic(index))
@@ -584,6 +644,22 @@ function AllianceLayer:GetFreeBackground(terrain)
         local map = cc.TMXTiledMap:create(string.format("tmxmaps/alliance_%s1.tmx", terrain))
         map:retain()
         map.terrain = terrain
+        local LEN = 115
+        display.newSprite(string.format("%s_plus_right.png", terrain))
+            :addTo(map):align(display.LEFT_BOTTOM, map:getContentSize().width - LEN, 0)
+        for i = 0, 9 do
+            display.newSprite(string.format("%s_plus_right.png", terrain))
+                :addTo(map):align(display.LEFT_BOTTOM, map:getContentSize().width - LEN, i * 480 + 160)
+        end
+        for i = 0, 9 do
+            display.newSprite(string.format("%s_plus_down.png", terrain))
+                :addTo(map):align(display.LEFT_TOP, i * 480, LEN)
+        end
+        display.newSprite(string.format("%s_plus_down.png", terrain))
+            :addTo(map):align(display.LEFT_TOP, 10 * 480 - 320, LEN)
+
+        display.newSprite(string.format("%s_plus.png", terrain))
+            :addTo(map):align(display.LEFT_TOP, map:getContentSize().width, 0)
         return map
     end
 end
@@ -605,6 +681,7 @@ end
 
 
 return AllianceLayer
+
 
 
 

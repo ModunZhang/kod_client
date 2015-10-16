@@ -177,15 +177,17 @@ function WidgetCitizen:ctor(city)
             cc.ui.UIPushButton.new()
                 :addTo(res_info_bg):align(display.CENTER, res_info_bg:getContentSize().width/2, res_info_bg:getContentSize().height/2)
                 :onButtonClicked(function(event)
-                    WidgetUseItems.new():Create({item_type = WidgetUseItems.USE_TYPE.RESOURCE,item_name="citizenClass_1"})
-                        :AddToCurrentScene()
+                    WidgetUseItems.new():Create({
+                        item_name="citizenClass_1"
+                    }):AddToCurrentScene()
                 end):setContentSize(res_info_bg:getContentSize())
             local add_btn = cc.ui.UIPushButton.new(
                 {normal = "button_wareHouseUI_normal.png",pressed = "button_wareHouseUI_pressed.png"})
                 :addTo(res_info_bg):pos(373, 53)
                 :onButtonClicked(function(event)
-                    WidgetUseItems.new():Create({item_type = WidgetUseItems.USE_TYPE.RESOURCE,item_name="citizenClass_1"})
-                        :AddToCurrentScene()
+                    WidgetUseItems.new():Create({
+                        item_name="citizenClass_1"
+                    }):AddToCurrentScene()
                 end):scale(30/49)
             cc.ui.UIImage.new("+.png"):addTo(add_btn):align(display.CENTER, 0, 0)
         end
@@ -202,7 +204,7 @@ function WidgetCitizen:UpdateData()
     citizen_array[WOOD] = city:GetCitizenByType("woodcutter")
     citizen_array[IRON] = city:GetCitizenByType("miner")
     citizen_array[STONE] = city:GetCitizenByType("quarrier")
-    local total_limit = city:GetUser():GetResProduction("citizen").limit + BuildingUtils:GetCitizenMap(city:GetUser()).total
+    local total_limit = city:GetUser():GetResProduction("citizen").limit + UtilsForBuilding:GetCitizenMap(city:GetUser()).total
     self:SetMaxCitizen(total_limit)
     self:OnCitizenChanged(citizen_array)
 end
@@ -222,8 +224,6 @@ function WidgetCitizen:OnCitizenChanged(citizen_array)
             bar_ui:setVisible(false)
         end
     end
-
-    local resource_manager = self.city:GetResourceManager()
     for k, v in pairs(self.citizen_number) do
         local production = string.format("%d", citizen_array[k])
         local productionPerHour

@@ -435,11 +435,10 @@ function GameUIGacha:InitOrdinary()
             if event.name == "CLICKED_EVENT" then
                 if User:GetOddFreeNormalGachaCount()<1 and User:GetResValueByType("casinoToken")<intInit.casinoTokenNeededPerNormalGacha.value then
                     WidgetUseItems.new():Create({
-                        item_type = WidgetUseItems.USE_TYPE.RESOURCE,
                         item_name = "casinoTokenClass_1"
                     }):AddToCurrentScene()
                 else
-                    local clone_items = clone(ItemManager:GetItems())
+                    local items = clone(User.items)
                     NetManager:getNormalGachaPromise():done(function(response)
                         if response.msg.playerData then
                             local data = response.msg.playerData
@@ -448,7 +447,7 @@ function GameUIGacha:InitOrdinary()
                                 local key = string.split(v[1], ".")[1]
                                 if key == "items" then
                                     items[1] = v[2].name
-                                    local count = clone_items[v[2].name]:Count() > 0 and v[2].count - clone_items[v[2].name]:Count() or v[2].count
+                                    local count = UtilsForItem:GetItemCount(items, v[2].name) > 0 and v[2].count - UtilsForItem:GetItemCount(items, v[2].name) or v[2].count
                                     items[2] = count
                                 end
                             end
@@ -533,7 +532,6 @@ function GameUIGacha:InitDeluxe()
             if event.name == "CLICKED_EVENT" then
                 if User:GetResValueByType("casinoToken")<intInit.casinoTokenNeededPerAdvancedGacha.value then
                     WidgetUseItems.new():Create({
-                        item_type = WidgetUseItems.USE_TYPE.RESOURCE,
                         item_name = "casinoTokenClass_1"
                     }):AddToCurrentScene()
                 else

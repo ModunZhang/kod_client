@@ -6,7 +6,6 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local WidgetInfo = import("..widget.WidgetInfo")
 local WidgetSliderWithInput = import("..widget.WidgetSliderWithInput")
-local MaterialManager = import("..entity.MaterialManager")
 local UILib = import(".UILib")
 
 
@@ -79,16 +78,20 @@ function GameUITradeGuild:OnMoveInStage()
             self:LoadMyGoodsPage()
         end
     end):pos(window.cx, window.bottom + 34)
+    local User = self.user
     self.tab_buttons:SetButtonTipNumber("myGoods",User:GetSoldDealsCount())
     self.building:AddUpgradeListener(self)
     User:AddListenOnType(self, "deals")
-    self.city:GetMaterialManager():AddObserver(self)
+    User:AddListenOnType(self, "buildingMaterials")
+    User:AddListenOnType(self, "technologyMaterials")
 end
 
 function GameUITradeGuild:onExit()
+    local User = self.user
     User:RemoveListenerOnType(self, "deals")
+    User:RemoveListenerOnType(self, "buildingMaterials")
+    User:RemoveListenerOnType(self, "technologyMaterials")
     self.building:RemoveUpgradeListener(self)
-    self.city:GetMaterialManager():RemoveObserver(self)
     GameUITradeGuild.super.onExit(self)
 end
 
@@ -301,7 +304,6 @@ function GameUITradeGuild:GetGoodsIcon(listView,icon)
 end
 function GameUITradeGuild:GetGoodsDetailsByType(goods_type)
     if goods_type==RESOURCE_TYPE then
-        local manager = City:GetResourceManager()
         local User = User
         return {
             {
@@ -322,7 +324,7 @@ function GameUITradeGuild:GetGoodsDetailsByType(goods_type)
             },
         }
     elseif goods_type==BUILD_MATERIAL_TYPE then
-        local build_materials = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
+        local build_materials = User.buildingMaterials
         return {
             {
                 UILib.materials.blueprints,
@@ -342,7 +344,7 @@ function GameUITradeGuild:GetGoodsDetailsByType(goods_type)
             },
         }
     elseif goods_type==MARTIAL_MATERIAL_TYPE then
-        local technology_materials = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.TECHNOLOGY)
+        local technology_materials = User.technologyMaterials
         return {
             {
                 UILib.materials.trainingFigure,
@@ -1079,21 +1081,24 @@ function GameUITradeGuild:OnUserDataChanged_deals(userData, deltaData)
         self:LoadMyGoodsList()
     end
 end
-function GameUITradeGuild:OnMaterialsChanged(material_manager, material_type, changed)
-    if material_type == MaterialManager.MATERIAL_TYPE.BUILD then
+function GameUITradeGuild:OnUserDataChanged_buildingMaterials(userData, deltaData)
+    local ok, value = deltaData("buildingMaterials")
+    if ok then
         if self.build_material_options then
             local options =  self.build_material_options
-            for k,v in pairs(changed) do
-                local index = self:GetMaterialIndexByName(k)
-                options:getButtonAtIndex(index):SetValue(v.new)
+            for k,v in pairs(value) do
+                options:getButtonAtIndex(self:GetMaterialIndexByName(k)):SetValue(v)
             end
         end
-    elseif material_type == MaterialManager.MATERIAL_TYPE.TECHNOLOGY then
-        if self.martial_material_options then
+    end
+end
+function GameUITradeGuild:OnUserDataChanged_technologyMaterials(material_manager, material_type, changed)
+    local ok, value = deltaData("technologyMaterials")
+    if ok then
+         if self.martial_material_options then
             local options =  self.martial_material_options
-            for k,v in pairs(changed) do
-                local index = self:GetMaterialIndexByName(k)
-                options:getButtonAtIndex(index):SetValue(v.new)
+            for k,v in pairs(value) do
+                options:getButtonAtIndex(self:GetMaterialIndexByName(k)):SetValue(v)
             end
         end
     end

@@ -1,6 +1,5 @@
 local config_house_function = GameDatas.HouseFunction
 local config_house_levelup = GameDatas.HouseLevelUp
-local MaterialManager = import("..entity.MaterialManager")
 local UpgradeBuilding = import(".UpgradeBuilding")
 local ResourceUpgradeBuilding = class("ResourceUpgradeBuilding", UpgradeBuilding)
 

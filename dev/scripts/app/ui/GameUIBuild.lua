@@ -2,7 +2,6 @@ local cocos_promise = import("..utils.cocos_promise")
 local promise = import("..utils.promise")
 local window = import("..utils.window")
 local BuildingRegister = import("..entity.BuildingRegister")
-local MaterialManager = import("..entity.MaterialManager")
 local WidgetFteArrow = import("..widget.WidgetFteArrow")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushButton = import("..widget.WidgetPushButton")
@@ -139,16 +138,16 @@ function GameUIBuild:OnCityChanged()
 end
 function GameUIBuild:OnBuildOnItem(item)
     local city = self.build_city
+    local User = city:GetUser()
     local max = city.build_queue
     local current_time = app.timer:GetServerTime()
     local upgrading_buildings = city:GetUpgradingBuildingsWithOrder(current_time)
     local current = max - #upgrading_buildings
 
-    local m =city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
+    local m = User.buildingMaterials
     local config = house_levelup_config[item.building.building_type]
 
     -- 升级所需资源不足
-    local User = city:GetUser()
     local wood = User:GetResValueByType("wood")
     local iron = User:GetResValueByType("iron")
     local stone = User:GetResValueByType("stone")

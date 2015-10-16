@@ -1,6 +1,5 @@
 local WidgetPopDialog = import(".WidgetPopDialog")
 local WidgetRequirementListview = import(".WidgetRequirementListview")
-local MaterialManager = import("..entity.MaterialManager")
 local Localize = import("..utils.Localize")
 local SpriteConfig = import("..sprites.SpriteConfig")
 
@@ -69,7 +68,7 @@ function WidgetBuildingIntroduce:SetUpgradeRequirementListview()
     local stone = User:GetResValueByType("stone")
     local citizen = User:GetResValueByType("citizen")
 
-    local materials = city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
+    local materials = User.buildingMaterials
 
     local requirements = {
         {

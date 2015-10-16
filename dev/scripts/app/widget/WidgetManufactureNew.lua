@@ -7,7 +7,6 @@ local WidgetTimerProgress = import("..widget.WidgetTimerProgress")
 local WidgetRoundTabButtons = import("..widget.WidgetRoundTabButtons")
 local WidgetRequirementListview = import("..widget.WidgetRequirementListview")
 local WidgetTimerProgressStyleThree = import("..widget.WidgetTimerProgressStyleThree")
-local MaterialManager = import("..entity.MaterialManager")
 local WidgetManufactureNew = class("WidgetManufactureNew", function()
     local node = display.newNode()
     node:setNodeEventEnabled(true)
@@ -71,12 +70,16 @@ function WidgetManufactureNew:onEnter()
     end
 
     --
+    local User = self.toolShop:BelongCity():GetUser()
+    User:AddListenOnType(self, "buildingMaterials")
+    User:AddListenOnType(self, "technologyMaterials")
     self.toolShop:AddToolShopListener(self)
-    self.toolShop:BelongCity():GetMaterialManager():AddObserver(self)
 end
 function WidgetManufactureNew:onExit()
+    local User = self.toolShop:BelongCity():GetUser()
+    User:RemoveListenerOnType(self, "buildingMaterials")
+    User:RemoveListenerOnType(self, "technologyMaterials")
     self.toolShop:RemoveToolShopListener(self)
-    self.toolShop:BelongCity():GetMaterialManager():RemoveObserver(self)
 end
 --
 function WidgetManufactureNew:OnBeginMakeMaterialsWithEvent(tool_shop, event)
@@ -95,10 +98,23 @@ function WidgetManufactureNew:OnGetMaterialsWithEvent(tool_shop, event)
     self:RefreshRequirements(event:Category())
     self:UpdateCurrentEvent()
 end
-function WidgetManufactureNew:OnMaterialsChanged(material_manager, material_type, changed)
-    for k,v in pairs(changed) do
-        if self.material_map[k] then
-            self.material_map[k]:SetNumber(v.new)
+function WidgetManufactureNew:OnUserDataChanged_buildingMaterials(userData, deltaData)
+    local ok, value = deltaData("buildingMaterials")
+    if ok then
+        for k,v in pairs(value) do
+            if self.material_map[k] then
+                self.material_map[k]:SetNumber(v)
+            end
+        end
+    end
+end
+function WidgetManufactureNew:OnUserDataChanged_technologyMaterials(userData, deltaData)
+    local ok, value = deltaData("technologyMaterials")
+    if ok then
+        for k,v in pairs(value) do
+            if self.material_map[k] then
+                self.material_map[k]:SetNumber(v)
+            end
         end
     end
 end
@@ -110,14 +126,14 @@ function WidgetManufactureNew:Reload(tag)
             "tools",
             "tiles" ,
             "pulley" ,
-        }, self.toolShop:BelongCity():GetMaterialManager():GetBuildMaterias())
+        }, self.toolShop:BelongCity():GetUser().buildingMaterials)
     elseif tag == "technology" then
         self:ReloadMaterials({
             "trainingFigure",
             "bowTarget",
             "saddle",
             "ironPart",
-        }, self.toolShop:BelongCity():GetMaterialManager():GetTechnologyMaterias())
+        }, self.toolShop:BelongCity():GetUser().technologyMaterials)
     else
         assert(false)
     end
@@ -137,7 +153,7 @@ function WidgetManufactureNew:ReloadMaterials(materials, materials_map)
             color = 0xffedae
         }):addTo(title, 10):align(display.CENTER, point.x, point.y)
 
-        self.material_map[v] = WidgetMaterialBox.new(MaterialManager.MATERIAL_TYPE.BUILD, v)
+        self.material_map[v] = WidgetMaterialBox.new("buildingMaterials", v)
             :addTo(self.view):pos(x, y):SetNumber(materials_map[v])
         self.material_map[v]:GetButton():removeEventListenersByEvent("PRESSED_EVENT")
         self.material_map[v]:GetButton():removeEventListenersByEvent("RELEASE_EVENT")
@@ -341,7 +357,7 @@ function WidgetManufactureNew:RefreshRequirements(category)
     self:RefreshRequirementList(wood, stone, iron, time)
 end
 function WidgetManufactureNew:RefreshRequirementList(wood, stone, iron, time)
-    local User = self.toolShop:BelongCity()
+    local User = self.toolShop:BelongCity():GetUser()
     local wood_cur = User:GetResValueByType("wood")
     local stone_cur = User:GetResValueByType("stone")
     local iron_cur = User:GetResValueByType("iron")
@@ -382,10 +398,10 @@ function WidgetManufactureNew:CreateFetchDialog(func,text)
 end
 function WidgetManufactureNew:CheckOverFlow(content)
     local city = self.toolShop:BelongCity()
-    local material_man = city:GetMaterialManager()
+    local User = city:GetUser()
     local limit = city:GetFirstBuildingByType("materialDepot"):GetMaxMaterial()
-    local mm = material_man:GetMaterialsByType(material_man.MATERIAL_TYPE.TECHNOLOGY)
-    for k,v in pairs(material_man:GetMaterialsByType(material_man.MATERIAL_TYPE.BUILD)) do
+    local mm = User.technologyMaterials
+    for k,v in pairs(User.buildingMaterials) do
         mm[k] = v
     end
     local overflows = {}

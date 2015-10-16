@@ -299,7 +299,7 @@ function GameUIAllianceEnterBase:GetEnterButtons()
             end
             local location = self:GetLogicPosition()
             WidgetUseItems.new():Create({
-                item_type = WidgetUseItems.USE_TYPE.MOVE_THE_CITY,
+                item_name = "moveTheCity",
                 locationX=location.x,
                 locationY=location.y
             }):AddToCurrentScene()

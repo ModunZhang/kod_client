@@ -1,9 +1,9 @@
-TaskUtils = {}
+UtilsForTask = {}
 local Enum = import(".Enum")
 local Localize = import(".Localize")
 local NotifyItem = import(".NotifyItem")
 local CATEGORY = Enum("BUILD", "DRAGON", "TECHNOLOGY", "SOLDIER", "EXPLORE")
-TaskUtils.TASK_CATEGORY = CATEGORY
+UtilsForTask.TASK_CATEGORY = CATEGORY
 local category_map = {
     [CATEGORY.BUILD] = {
         "cityBuild"
@@ -417,10 +417,10 @@ function category_meta:Desc()
 end
 ---------
 
-function TaskUtils:CompleteTasksByType(growUpTasks, type_)
+function UtilsForTask:CompleteTasksByType(growUpTasks, type_)
     return growUpTasks[type_]
 end
-function TaskUtils:GetFirstCompleteTasks(growUpTasks)
+function UtilsForTask:GetFirstCompleteTasks(growUpTasks)
     local r = {}
     for category,v in ipairs(CATEGORY) do
         for _,v in ipairs(self:GetFirstCompleteTasksByCategory(growUpTasks, category)) do
@@ -440,7 +440,7 @@ local index_map = {
     playerPower = true,
     playerKill = true,
 }
-function TaskUtils:GetFirstCompleteTasksByCategory(growUpTasks, category)
+function UtilsForTask:GetFirstCompleteTasksByCategory(growUpTasks, category)
     local r = {}
     for _,tag in ipairs(category_map[category]) do
         local mark_map = {}
@@ -465,14 +465,14 @@ function TaskUtils:GetFirstCompleteTasksByCategory(growUpTasks, category)
     end
     return r
 end
-function TaskUtils:GetAvailableTasksGroup(growUpTasks)
+function UtilsForTask:GetAvailableTasksGroup(growUpTasks)
     local r = {}
     for category,v in ipairs(CATEGORY) do
         table.insert(r, self:GetAvailableTasksByCategory(growUpTasks, category))
     end
     return r
 end
-function TaskUtils:GetAvailableTasksByCategory(growUpTasks, category)
+function UtilsForTask:GetAvailableTasksByCategory(growUpTasks, category)
     local r = {}
     local p = 0
     if category == CATEGORY.BUILD then
@@ -636,7 +636,7 @@ function TaskUtils:GetAvailableTasksByCategory(growUpTasks, category)
     end
     return setmetatable({tasks = r, available = p, category = category}, category_meta)
 end
-function TaskUtils:GetAvailableTaskByTag(growUpTasks, tag, func)
+function UtilsForTask:GetAvailableTaskByTag(growUpTasks, tag, func)
     func = func or function()end
     local r = {}
     local available_map = {}
@@ -661,7 +661,7 @@ function TaskUtils:GetAvailableTaskByTag(growUpTasks, tag, func)
     end
     return r, #config + 1 - count, #config + 1
 end
-function TaskUtils:GetCompleteTaskCount(growUpTasks)
+function UtilsForTask:GetCompleteTaskCount(growUpTasks)
     local count = 0
     for _,category in pairs(growUpTasks) do
         for _,task in ipairs(category) do
@@ -672,7 +672,7 @@ function TaskUtils:GetCompleteTaskCount(growUpTasks)
     end
     return count
 end
-function TaskUtils:IsGetAnyCityBuildRewards(growUpTasks)
+function UtilsForTask:IsGetAnyCityBuildRewards(growUpTasks)
     for i,v in ipairs(self:CompleteTasksByType(growUpTasks, "cityBuild")) do
         if v.id >= 0 and v.rewarded then
             return true
@@ -682,7 +682,7 @@ end
 
 
 
-return TaskUtils
+return UtilsForTask
 
 
 

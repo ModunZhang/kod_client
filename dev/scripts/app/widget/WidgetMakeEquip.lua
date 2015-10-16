@@ -1,7 +1,6 @@
 local DragonEquipments = GameDatas.DragonEquipments
 local EQUIPMENTS = DragonEquipments.equipments
 local Localize = import("..utils.Localize")
-local MaterialManager = import("..entity.MaterialManager")
 local WidgetPushButton = import(".WidgetPushButton")
 local WidgetUIBackGround = import(".WidgetUIBackGround")
 local WidgetPopDialog = import(".WidgetPopDialog")
@@ -239,7 +238,7 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
         -- 材料背景根据龙的颜色来
         local material = WidgetPushButton.new({normal = DRAGON_BG[equip_config.usedFor]})
             :onButtonClicked(function(event)
-                UIKit:newWidgetUI("WidgetMaterialDetails",MaterialManager.MATERIAL_TYPE.DRAGON,material_type):AddToCurrentScene()
+                UIKit:newWidgetUI("WidgetMaterialDetails", "dragonMaterials",material_type):AddToCurrentScene()
             end):addTo(back_ground, 2)
             :align(display.CENTER, origin_x + (unit_len + gap_x) * (i - 1), origin_y)
 
@@ -318,8 +317,9 @@ function WidgetMakeEquip:ctor(equip_type, black_smith, city)
     self.back_ground = back_ground
 end
 function WidgetMakeEquip:onEnter()
+    local User = self.city:GetUser()
+    User:AddListenOnType(self, "dragonMaterials")
     self.black_smith:AddBlackSmithListener(self)
-    self.city:GetMaterialManager():AddObserver(self)
     self:RefreshUI()
     scheduleAt(self, function()
         local coin = self.city:GetUser():GetResValueByType("coin")
@@ -333,8 +333,9 @@ function WidgetMakeEquip:onEnter()
     end)
 end
 function WidgetMakeEquip:onExit()
+    local User = self.city:GetUser()
+    User:RemoveListenerOnType(self, "dragonMaterials")
     self.black_smith:RemoveBlackSmithListener(self)
-    self.city:GetMaterialManager():RemoveObserver(self)
 end
 function WidgetMakeEquip:RefreshUI()
     self:UpdateEquipCounts()
@@ -344,11 +345,12 @@ function WidgetMakeEquip:RefreshUI()
     self:UpdateBuffTime()
 end
 -- 装备数量监听
-function WidgetMakeEquip:OnMaterialsChanged(material_manager, material_type, changed)
-    if material_type == MaterialManager.MATERIAL_TYPE.EQUIPMENT then
-        local current = changed[self.equip_type]
+function WidgetMakeEquip:OnUserDataChanged_dragonMaterials(userData, deltaData)
+    local ok, value = deltaData("dragonEquipments")
+    if ok then
+        local current = value[self.equip_type]
         if current then
-            self.number:setString(current.new)
+            self.number:setString(current)
         end
     end
 end
@@ -364,16 +366,14 @@ function WidgetMakeEquip:OnEndMakeEquipmentWithEvent(black_smith, event, equipme
 end
 -- 更新装备数量
 function WidgetMakeEquip:UpdateEquipCounts()
-    local material_manager = self.city:GetMaterialManager()
-    local cur = material_manager:GetMaterialsByType(MaterialManager.MATERIAL_TYPE.EQUIPMENT)[self.equip_type]
+    local cur = self.city:GetUser().dragonEquipments[self.equip_type]
     -- local max = self.city:GetFirstBuildingByType("materialDepot"):GetMaxDragonEquipment()
     local label = string.format("%d", cur, max)
     self.number:setString(label)
 end
 -- 更新材料数量
 function WidgetMakeEquip:UpdateMaterials()
-    local material_manager = self.city:GetMaterialManager()
-    local materials = material_manager:GetMaterialsByType(MaterialManager.MATERIAL_TYPE.DRAGON)
+    local materials = self.city:GetUser().dragonMaterials
     local matrials_map = self.materials_map
     for i, v in ipairs(self.matrials) do
         local material_type = v[1]
@@ -429,6 +429,7 @@ end
 
 function WidgetMakeEquip:IsAbleToMakeEqui(isFinishNow)
     local city = self.city
+    local User = self.city:GetUser()
     local equip_config = self.equip_config
     if isFinishNow then
         local gem =  DataUtils:buyResource({coin = equip_config.coin}, {}) + DataUtils:getGemByTimeInterval(equip_config.makeTime)
@@ -437,20 +438,19 @@ function WidgetMakeEquip:IsAbleToMakeEqui(isFinishNow)
             return false
         end
     end
-    local material_manager = city:GetMaterialManager()
     local is_material_enough = true
     for k,v in pairs(self.matrials) do
         if not is_material_enough then
             break
         end
-        material_manager:IteratorDragonMaterials(function (m_name,m_count)
+        for m_name,m_count in pairs(User.dragonMaterials) do
             if m_name == v[1] then
                 if tonumber(v[2]) > m_count then
                     UIKit:showMessageDialog(_("提示"),_("材料不足"),function()end)
                     is_material_enough = false
                 end
             end
-        end)
+        end
     end
     if not is_material_enough  then
         return is_material_enough

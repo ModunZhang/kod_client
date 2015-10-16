@@ -16,9 +16,9 @@ function WidgetResources:onEnter()
     self:CreateResourceListView()
     self:InitAllResources()
     self.city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
-    local user = self.city:GetUser()
-    user:AddListenOnType(self, "vipEvents")
-    ItemManager:AddListenOnType(self,ItemManager.LISTEN_TYPE.ITEM_EVENT_CHANGED)
+    local User = self.city:GetUser()
+    User:AddListenOnType(self, "vipEvents")
+    User:AddListenOnType(self, "itemEvents")
     local resourceBuildingMap = {
         wood = "lumbermill",
         stone = "stoneMason",
@@ -29,7 +29,6 @@ function WidgetResources:onEnter()
         self.city:GetFirstBuildingByType(v):AddUpgradeListener(self)
     end
     scheduleAt(self, function()
-        local res_man = self.city:GetResourceManager()
         local maxwood, maxfood, maxiron, maxstone = self.building:GetResourceValueLimit()
         local resource_max = {
             wood = maxwood,
@@ -37,7 +36,7 @@ function WidgetResources:onEnter()
             iron = maxiron,
             stone = maxstone,
         }
-        local citizen_map = BuildingUtils:GetCitizenMap(self.city:GetUser())
+        local citizen_map = UtilsForBuilding:GetCitizenMap(self.city:GetUser())
         if self.resource_items then
             for k,v in pairs(self.resource_items) do
                 self:RefreshSpecifyResource(k,v,resource_max[k],citizen_map[k])
@@ -48,9 +47,9 @@ function WidgetResources:onEnter()
 end
 function WidgetResources:onExit()
     self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
-    local user = self.city:GetUser()
-    user:RemoveListenerOnType(self, "vipEvents")
-    ItemManager:RemoveListenerOnType(self,ItemManager.LISTEN_TYPE.ITEM_EVENT_CHANGED)
+    local User = self.city:GetUser()
+    User:RemoveListenerOnType(self, "vipEvents")
+    User:RemoveListenerOnType(self, "itemEvents")
     local resourceBuildingMap = {
         wood = "lumbermill",
         stone = "stoneMason",
@@ -61,9 +60,6 @@ function WidgetResources:onExit()
         self.city:GetFirstBuildingByType(v):RemoveUpgradeListener(self)
     end
 end
-function WidgetResources:OnItemEventChanged()
-    self:RefreshProtectPercent()
-end
 function WidgetResources:OnBuildingUpgradingBegin( bulding )
 end
 function WidgetResources:OnBuildingUpgrading( bulding )
@@ -72,6 +68,9 @@ function WidgetResources:OnBuildingUpgradeFinished( bulding )
     self:RefreshProtectPercent()
 end
 function WidgetResources:OnUserDataChanged_vipEvents()
+    self:RefreshProtectPercent()
+end
+function WidgetResources:OnUserDataChanged_itemEvents()
     self:RefreshProtectPercent()
 end
 function WidgetResources:OnSoliderCountChanged(...)
@@ -116,7 +115,6 @@ end
 function WidgetResources:InitAllResources()
     local current_time = app.timer:GetServerTime()
     local maxwood, maxfood, maxiron, maxstone = self.building:GetResourceValueLimit()
-    local crm = City:GetResourceManager()
     local all_resources = {
         food = {
             resource_icon="res_food_91x74.png",
@@ -309,8 +307,9 @@ function WidgetResources:AddResourceItem(parms)
     cc.ui.UIPushButton.new()
         :addTo(content):align(display.CENTER, c_size.width/2, c_size.height/2)
         :onButtonClicked(function(event)
-            local items = ItemManager:GetItemByName(parms.type.."Class_1")
-            WidgetUseItems.new():Create({item = items}):AddToCurrentScene()
+            WidgetUseItems.new():Create({
+                item_name = parms.type.."Class_1"
+            }):AddToCurrentScene()
         end):setContentSize(c_size)
 
     WidgetPushButton.new({normal = "button_wareHouseUI_normal.png",pressed = "button_wareHouseUI_pressed.png"})

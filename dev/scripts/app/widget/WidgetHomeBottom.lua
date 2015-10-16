@@ -18,7 +18,7 @@ function WidgetHomeBottom:MailUnreadChanged(...)
     self.mail_count:SetNumber(MailManager:GetUnReadMailsNum()+MailManager:GetUnReadReportsNum())
 end
 function WidgetHomeBottom:OnUserDataChanged_growUpTasks()
-    self.task_count:SetNumber(TaskUtils:GetCompleteTaskCount(self.city:GetUser().growUpTasks))
+    self.task_count:SetNumber(UtilsForTask:GetCompleteTaskCount(self.city:GetUser().growUpTasks))
 end
 function WidgetHomeBottom:ctor(city)
     self.city = city

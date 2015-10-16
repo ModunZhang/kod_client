@@ -45,6 +45,11 @@ require("app.datas.ClientInitGame_alliance_name_fixed")
 require("app.datas.ClientInitGame_pve_level")
 require("app.datas.ClientInitGame_pve_wanted")
 
+GameDatas.NoManMap = {
+	["noManMap_1"] = {},
+}
+require("app.datas.NoManMap_noManMap_1")
+
 GameDatas.Activities = {
 	["day60"] = {},
 	["online"] = {},

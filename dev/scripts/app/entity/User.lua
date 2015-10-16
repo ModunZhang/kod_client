@@ -9,34 +9,28 @@ User.LISTEN_TYPE = Enum(
     "basicInfo",
     "countInfo",
     "resources",
-    "deals",
-    "vipEvents",
-    "iapGifts",
     "growUpTasks",
+    "items",
+    "deals",
+
+    "iapGifts",
     "allianceDonate",
+
+    "dragonEquipments",
+    "dragonMaterials",
+    "soldierMaterials",
+    "buildingMaterials",
+    "technologyMaterials",
+
     "dailyTasks",
     "dailyQuests",
-    "dailyQuestEvents")
+
+    "vipEvents",
+    "itemEvents",
+    "dailyQuestEvents",
+    "dragonEquipmentEvents")
 
 property(User, "id", 0)
-property(User, "basicInfo", {})
-property(User, "countInfo", {})
-property(User, "iapGifts", {})
-property(User, "deals", {})
-property(User, "pve", {})
-property(User, "pveFights", {})
-property(User, "vipEvents", {})
-property(User, "buildings", {})
-property(User, "growUpTasks", {})
-property(User, "allianceDonate", {})
-property(User, "apnStatus", {})
-property(User, "allianceInfo", {})
-property(User, "dailyQuests", {})
-property(User, "dailyQuestEvents", {})
-property(User, "requestToAllianceEvents", {})
-property(User, "inviteToAllianceEvents", {})
-
-
 local staminaMax_value = GameDatas.PlayerInitData.intInit.staminaMax.value
 local staminaRecoverPerHour_value = GameDatas.PlayerInitData.intInit.staminaRecoverPerHour.value
 function User:ctor(p)
@@ -300,6 +294,67 @@ end
 
 --[[end]]
 
+
+--[[items begin]]
+function User:IsItemEventActive(type_)
+    for k,v in pairs(self.itemEvents) do
+        if v.type == type_ then
+            local time = UtilsForItem:GetItemEventTime(v)
+            return time > 0, time
+        end
+    end
+    return false, 0
+end
+function User:IsAnyItmeEventActive()
+    return next(self.itemEvents)
+end
+function User:IsItemVisible(item_name)
+    return self:GetItemCount(item_name) >= 1 or 
+    UtilsForItem:GetItemInfoByName(item_name).isSell
+end
+local config_items_buff     = GameDatas.Items.buff
+local config_items_resource = GameDatas.Items.resource
+local config_items_speedup  = GameDatas.Items.speedup
+local config_items_special  = GameDatas.Items.special
+function User:GetRelationItemInfos(item_name)
+    local configs
+    if config_items_buff[item_name] then
+        configs = config_items_buff
+    elseif config_items_resource[item_name] then
+        configs = config_items_resource
+    elseif config_items_speedup[item_name] then
+        configs = config_items_speedup
+    elseif config_items_special[item_name] then
+        configs = config_items_special
+    end
+    assert(configs)
+    local same_items_info = {}
+    local item_type, item_index = unpack(string.split(item_name, "_"))
+    if item_index then
+        for i = 1, math.huge do
+            local same_item_info = configs[item_type.."_"..i]
+            if same_item_info then
+                if same_item_info.isSell or 
+                    self:GetItemCount(same_item_info.name) > 0 then
+                    table.insert(same_items_info, same_item_info)
+                end
+            else
+                break
+            end
+        end
+    end
+    return same_items_info
+end
+function User:CanOpenChest(item_name)
+    local area_type = string.split(item_name, "_")
+    if area_type[2] == 1 then return true end
+    return User:GetItemCount("chestKey_"..area_type[2]) > 0
+end
+function User:GetItemCount(item_name)
+    return UtilsForItem:GetItemCount(self.items, item_name)
+end
+--[[end]]
+
 --[[gcId]]
 function User:IsBindGameCenter()
     return self.gcId ~= "" and self.gcId ~= json.null
@@ -452,82 +507,6 @@ function User:CouldGotDailyQuestReward()
     end
 end
 --[[end]]
-
-
-function User:OnPropertyChange(property_name, old_value, new_value)
-end
-
-local before_map = {
-    basicInfo = function(userData, deltaData)
-        local ok, value = deltaData("basicInfo.name")
-        if ok then
-            if Alliance_Manager and
-                not Alliance_Manager:GetMyAlliance():IsDefault()
-                and Alliance_Manager:GetMyAlliance():GetMemeberById(self._id)
-            then
-                Alliance_Manager:GetMyAlliance():GetMemeberById(self._id).name = value
-            end
-        end
-    end,
-    resources = function()end,
-    countInfo = function()end,
-    deals = function()end,
-    iapGifts = function()end,
-    growUpTasks = function()end,
-    allianceDonate = function()end,
-    dailyTasks = function()end,
-    dailyQuests = function()end,
-    dailyQuestEvents = function(userData, deltaData)
-        local ok, value = deltaData("dailyQuestEvents.edit")
-        if ok then
-            for k,v in pairs(value) do
-                if v.finishTime == 0 then
-                    GameGlobalUI:showTips(_("提示"),string.format(_("每日任务%s完成"),Localize.daily_quests_name[v.index]))
-                end
-            end
-        end
-    end,
-    vipEvents = function()
-        City:GetResourceManager():UpdateByCity(City, app.timer:GetServerTime())
-    end,
-}
-local after_map = {
-    growUpTasks = function(userData)
-        if userData.reward_callback and
-            TaskUtils:IsGetAnyCityBuildRewards(userData.growUpTasks) then
-            userData.reward_callback()
-            userData.reward_callback = nil
-        end
-    end,
-}
-function User:OnUserDataChanged(userData, current_time, deltaData)
-    for k,v in pairs(userData) do
-        self[k] = v
-    end
-    if deltaData then
-        for i,k in ipairs(User.LISTEN_TYPE) do
-            local before_func = before_map[k]
-            if type(k) == "string" and before_func then
-                if deltaData(k) then
-                    before_func(self, deltaData)
-                    local notify_function_name = string.format("OnUserDataChanged_%s", k)
-                    self:NotifyListeneOnType(User.LISTEN_TYPE[k], function(listener)
-                        local func = listener[notify_function_name]
-                        if func then
-                            func(listener, self, deltaData)
-                        end
-                    end)
-                    local after_func = after_map[k]
-                    if after_func then
-                        after_func(self, deltaData)
-                    end
-                end
-            end
-        end
-    end
-
-    return self
-end
 
 --[[dailyTasks begin]]
 function User:GetDailyTasksInfo(task_type)
@@ -682,6 +661,134 @@ function User:GetBestDragon()
     return bestDragonForTerrain[self.basicInfo.terrain]
 end
 --[[end]]
+
+
+-- [[material begin]]
+-- 检查对应类型的材料是否有超过材料仓库上限
+function User:IsMaterialOutOfRange(materials_name, materials_add_map)
+    local limit = UtilsForBuilding:GetMaterialDepotLimit(self)[materials_name]
+    for k,v in pairs(self[materials_name]) do
+        if v >= limit then
+            if not materials_add_map or materials_add_map[k] then
+                return true
+            end
+        end
+    end
+end
+local DragonEquipments_equipments = GameDatas.DragonEquipments.equipments
+function User:IsAbleToMakeEquipment(equip_name)
+    local equip_config = DragonEquipments_equipments[equip_name]
+    local matrials = LuaUtils:table_map(string.split(equip_config.materials, ","), function(k, v)
+        return k, string.split(v, ":")
+    end)
+    local dm = self.dragonMaterials
+    for k,v in pairs(matrials) do
+        local mk,mn = unpack(v)
+        if dm[mk] < tonumber(mn) then
+            return false
+        end
+    end
+    return true
+end
+--[[end]]
+
+
+
+
+local before_map = {
+    basicInfo = function(userData, deltaData)
+        local ok, value = deltaData("basicInfo.name")
+        if ok then
+            if Alliance_Manager and
+                not Alliance_Manager:GetMyAlliance():IsDefault()
+                and Alliance_Manager:GetMyAlliance():GetMemeberById(userData._id)
+            then
+                Alliance_Manager:GetMyAlliance():GetMemeberById(userData._id).name = value
+            end
+        end
+    end,
+    items = function()end,
+    resources = function()end,
+    countInfo = function()end,
+    deals = function()end,
+    iapGifts = function()end,
+    growUpTasks = function()end,
+    allianceDonate = function()end,
+    dailyTasks = function()end,
+    dailyQuests = function()end,
+    itemEvents = function()end,
+
+    dragonEquipments = function()end,
+    dragonMaterials = function()end,
+    soldierMaterials = function()end,
+    buildingMaterials = function()end,
+    technologyMaterials = function()end,
+    dragonEquipmentEvents = function(userData, deltaData)
+        LuaUtils:outputTable(deltaData)
+        local ok, value = deltaData("dragonEquipmentEvents.remove")
+        if ok then
+            for k,v in ipairs(value) do
+                GameGlobalUI:showTips(_("制造装备完成"), Localize.equip[v.name].."X1")
+            end
+        end
+    end,
+
+    dailyQuestEvents = function(userData, deltaData)
+        local ok, value = deltaData("dailyQuestEvents.edit")
+        if ok then
+            for k,v in pairs(value) do
+                if v.finishTime == 0 then
+                    GameGlobalUI:showTips(_("提示"),string.format(_("每日任务%s完成"),Localize.daily_quests_name[v.index]))
+                end
+            end
+        end
+    end,
+    vipEvents = function()end,
+}
+local after_map = {
+    growUpTasks = function(userData)
+        if userData.reward_callback and
+            UtilsForTask:IsGetAnyCityBuildRewards(userData.growUpTasks) then
+            userData.reward_callback()
+            userData.reward_callback = nil
+        end
+    end,
+}
+function User:OnUserDataChanged(userData, current_time, deltaData)
+    for k,v in pairs(userData) do
+        self[k] = v
+    end
+    if deltaData then
+        for i,k in ipairs(User.LISTEN_TYPE) do
+            local before_func = before_map[k]
+            if type(k) == "string" and before_func then
+                if deltaData(k) then
+                    before_func(self, deltaData)
+                    local notify_function_name = string.format("OnUserDataChanged_%s", k)
+                    self:NotifyListeneOnType(User.LISTEN_TYPE[k], function(listener)
+                        local func = listener[notify_function_name]
+                        if func then
+                            func(listener, self, deltaData)
+                        end
+                    end)
+                    local after_func = after_map[k]
+                    if after_func then
+                        after_func(self, deltaData)
+                    end
+                end
+            end
+        end
+    end
+
+    return self
+end
+
+
+function User:OnPropertyChange(property_name, old_value, new_value)
+end
+
+
+
 --
 local promise = import("..utils.promise")
 function User:PromiseOfGetCityBuildRewards()

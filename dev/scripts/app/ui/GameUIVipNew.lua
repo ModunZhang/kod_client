@@ -118,7 +118,9 @@ function GameUIVipNew:WidgetPlayerNode_OnPlayerIconCliked()
 end
 --修改玩家名
 function GameUIVipNew:WidgetPlayerNode_OnPlayerNameCliked()
-    WidgetUseItems.new():Create({item_type = WidgetUseItems.USE_TYPE.CHANGE_PLAYER_NAME}):AddToCurrentScene()
+    WidgetUseItems.new():Create({
+        item_name = "changePlayerName"
+    }):AddToCurrentScene()
 end
 --决定按钮是否可以点击
 function GameUIVipNew:WidgetPlayerNode_PlayerCanClickedButton(name,args)
@@ -233,7 +235,9 @@ function GameUIVipNew:InitVipTop()
         :addTo(top_bg):align(display.CENTER, 90, bg_size.height-56)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                WidgetUseItems.new():Create({item_type = WidgetUseItems.USE_TYPE.VIP_ACTIVE}):AddToCurrentScene()
+                WidgetUseItems.new():Create({
+                    item_name = "vipActive_1"
+                }):AddToCurrentScene()
             end
         end)
     local isactive, leftTime = User:IsVIPActived()
@@ -264,7 +268,9 @@ function GameUIVipNew:InitVipTop()
         :addTo(process_bg)
         :align(display.CENTER_RIGHT,580,20)
         :onButtonClicked(function()
-            WidgetUseItems.new():Create({item_type = WidgetUseItems.USE_TYPE.VIP_POINT}):AddToCurrentScene()
+            WidgetUseItems.new():Create({
+                item_name = "vipPoint_1"
+            }):AddToCurrentScene()
         end)
 
     -- 当前vip等级

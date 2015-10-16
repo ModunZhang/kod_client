@@ -3,7 +3,6 @@ local cocos_promise = import("..utils.cocos_promise")
 local UILib = import("..ui.UILib")
 local StarBar = import("..ui.StarBar")
 local Localize = import("..utils.Localize")
-local MaterialManager = import("..entity.MaterialManager")
 local SoldierManager = import("..entity.SoldierManager")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
@@ -481,10 +480,7 @@ function WidgetRecruitSoldier:onEnter()
     self.barracks:AddBarracksListener(self)
     self.city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
 
-
-
     scheduleAt(self, function()
-        local res_man = self.city:GetResourceManager()
         local User = self.city:GetUser()
         local server_time = timer:GetServerTime()
         local res_map = {}
@@ -621,6 +617,7 @@ function WidgetRecruitSoldier:GetNeedGemWithInstantRecruit(count)
     return 0
 end
 function WidgetRecruitSoldier:CheckNeedResource(total_resouce, count)
+    local User = self.city:GetUser()
     local soldier_config = self.soldier_config
     local current_res_map = {}
     local total_map = total_resouce
@@ -633,7 +630,7 @@ function WidgetRecruitSoldier:CheckNeedResource(total_resouce, count)
                 current_res_map[k] = current
             else
                 local temp = string.split(k, "_")
-                total = self.city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.SOLDIER)[temp[1]]
+                total = User.soldierMaterials[temp[1]]
                 current = count * tonumber(temp[2])
             end
         else
@@ -653,6 +650,7 @@ function WidgetRecruitSoldier:CheckNeedResource(total_resouce, count)
     return current_res_map
 end
 function WidgetRecruitSoldier:GetCurrentMaxRecruitNum(total_resouce)
+    local User = self.city:GetUser()
     local soldier_config = self.soldier_config
     local total_map = total_resouce
     local max_count = math.huge
@@ -664,7 +662,7 @@ function WidgetRecruitSoldier:GetCurrentMaxRecruitNum(total_resouce)
                 temp_max = math.floor(total / soldier_config[k])
             else
                 local temp = string.split(k, "_")
-                total = self.city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.SOLDIER)[temp[1]]
+                total = User.soldierMaterials[temp[1]]
                 temp_max = math.floor(total/tonumber(temp[2]))
             end
         else
@@ -692,12 +690,13 @@ function WidgetRecruitSoldier:GetNeedResouce(count)
     return need_res_map
 end
 function WidgetRecruitSoldier:CheckMaterials(count)
+    local User = self.city:GetUser()
     local soldier_config = self.soldier_config
     if soldier_config.specialMaterials then
         local specialMaterials = string.split(soldier_config.specialMaterials,",")
         for k,v in pairs(specialMaterials) do
             local temp = string.split(v, "_")
-            local total = self.city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.SOLDIER)[temp[1]]
+            local total = User.soldierMaterials[temp[1]]
             if total < (count * tonumber(temp[2])) then
                 return v
             end

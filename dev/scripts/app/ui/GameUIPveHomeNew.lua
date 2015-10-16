@@ -134,7 +134,7 @@ function GameUIPveHomeNew:CreateTop()
         :addTo(pve_back):align(display.CENTER, 25, 25)
         :onButtonClicked(function ( event )
             WidgetUseItems.new():Create({
-                item_type = WidgetUseItems.USE_TYPE.STAMINA
+                item_name = "stamina_1"
             }):AddToCurrentScene()
         end)
     display.newSprite("+.png"):addTo(add_btn)
