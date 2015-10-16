@@ -331,7 +331,7 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
                     end)
                 end, function ()
                 end
-                UIKit:showSendTroopMessageDialog(attack_func,City:GetMaterialManager().MATERIAL_TYPE.DRAGON,_("龙"))
+                UIKit:showSendTroopMessageDialog(attack_func,"dragonMaterials",_("龙"))
             end
             if checkMeIsProtectedWarinng then
                 UIKit:showMessageDialog(_("提示"),_("进攻村落将失去保护状态，确定继续派兵?"),final_func)
@@ -359,7 +359,7 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
             --     end)
             -- end, function ()
             -- end
-            -- UIKit:showSendTroopMessageDialog(attack_func,City:GetMaterialManager().MATERIAL_TYPE.DRAGON,_("龙"))
+            -- UIKit:showSendTroopMessageDialog(attack_func, "dragonMaterials",_("龙"))
         end)
         buttons = {attack_button}
     end
@@ -380,7 +380,7 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
                                 end)
                             end,{targetIsMyAlliance = isMyAlliance,toLocation = toLocation,returnCloseAction = true}):AddToCurrentScene(true)
                         end
-                        UIKit:showSendTroopMessageDialog(attack_func,City:GetMaterialManager().MATERIAL_TYPE.DRAGON,_("龙"))
+                        UIKit:showSendTroopMessageDialog(attack_func,"dragonMaterials",_("龙"))
                     end
 
                     if checkMeIsProtectedWarinng then
@@ -406,7 +406,7 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
                     --         end
                     --     end,{targetIsMyAlliance = isMyAlliance,toLocation = toLocation,returnCloseAction = true}):AddToCurrentScene(true)
                     -- end
-                    -- UIKit:showSendTroopMessageDialog(attack_func,City:GetMaterialManager().MATERIAL_TYPE.DRAGON,_("龙"))
+                    -- UIKit:showSendTroopMessageDialog(attack_func,"dragonMaterials",_("龙"))
                 end)
             local strike_button = self:BuildOneButton("strike_66x62.png",_("突袭")):onButtonClicked(function()
                 local toLocation = self:GetLogicPosition()
@@ -444,7 +444,7 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
                                 end)
                             end,{targetIsMyAlliance = isMyAlliance,toLocation = toLocation,returnCloseAction = true}):AddToCurrentScene(true)
                         end
-                        UIKit:showSendTroopMessageDialog(attack_func,City:GetMaterialManager().MATERIAL_TYPE.DRAGON,_("龙"))
+                        UIKit:showSendTroopMessageDialog(attack_func, "dragonMaterials",_("龙"))
                     end
 
 
@@ -471,7 +471,7 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
                     --         end
                     --     end,{targetIsMyAlliance = isMyAlliance,toLocation = toLocation,returnCloseAction = true}):AddToCurrentScene(true)
                     -- end
-                    -- UIKit:showSendTroopMessageDialog(attack_func,City:GetMaterialManager().MATERIAL_TYPE.DRAGON,_("龙"))
+                    -- UIKit:showSendTroopMessageDialog(attack_func,"dragonMaterials",_("龙"))
                 end)
             if not self:IsMyAlliance() and self:GetMyAlliance().basicInfo.status == "prepare" then
                 local progress_1 = WidgetAllianceEnterButtonProgress.new()
@@ -496,7 +496,7 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
                         end)
                     end,{targetIsMyAlliance = isMyAlliance,toLocation = toLocation,returnCloseAction = true}):AddToCurrentScene(true)
                 end
-                UIKit:showSendTroopMessageDialog(attack_func,City:GetMaterialManager().MATERIAL_TYPE.DRAGON,_("龙"))
+                UIKit:showSendTroopMessageDialog(attack_func, "dragonMaterials", _("龙"))
             end
 
 
@@ -523,7 +523,7 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
             --         end
             --     end,{targetIsMyAlliance = isMyAlliance,toLocation = toLocation,returnCloseAction = true}):AddToCurrentScene(true)
             -- end
-            -- UIKit:showSendTroopMessageDialog(attack_func,City:GetMaterialManager().MATERIAL_TYPE.DRAGON,_("龙"))
+            -- UIKit:showSendTroopMessageDialog(attack_func,"dragonMaterials",_("龙"))
         end)
     if not self:IsMyAlliance() and self:GetMyAlliance().basicInfo.status == "prepare" then
         local progress_1 = WidgetAllianceEnterButtonProgress.new()

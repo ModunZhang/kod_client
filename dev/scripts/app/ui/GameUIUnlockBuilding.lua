@@ -7,7 +7,6 @@ local Localize = import("..utils.Localize")
 local window = import("..utils.window")
 local cocos_promise = import("..utils.cocos_promise")
 local promise = import("..utils.promise")
-local MaterialManager = import("..entity.MaterialManager")
 local SpriteConfig = import("..sprites.SpriteConfig")
 
 
@@ -177,7 +176,7 @@ function GameUIUnlockBuilding:SetUpgradeRequirementListview()
     local stone = User:GetResValueByType("stone")
     local building = self.building
 
-    local has_materials =City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
+    local has_materials = User.buildingMaterials
     local pre_condition = building:IsBuildingUpgradeLegal()
     local requirements = {
         {

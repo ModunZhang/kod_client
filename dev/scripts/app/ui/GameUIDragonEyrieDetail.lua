@@ -17,7 +17,6 @@ local Localize = import("..utils.Localize")
 local config_intInit = GameDatas.PlayerInitData.intInit
 local WidgetUseItems = import("..widget.WidgetUseItems")
 local UILib = import(".UILib")
-local MaterialManager = import("..entity.MaterialManager")
 local WidgetPushTransparentButton = import("..widget.WidgetPushTransparentButton")
 local GameUIShowDragonUpStarAnimation = import(".GameUIShowDragonUpStarAnimation")
 -- building = DragonEyrie
@@ -114,9 +113,10 @@ end
 
 function GameUIDragonEyrieDetail:OnMoveInStage()
     GameUIDragonEyrieDetail.super.OnMoveInStage(self)
+    local User = User
     self:BuildUI()
+    User:AddListenOnType(self, "dragonEquipments")
     self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
-    City:GetMaterialManager():AddObserver(self)
 
     scheduleAt(self, function()
         if not self:GetDragon():Ishated() then return end
@@ -128,8 +128,9 @@ function GameUIDragonEyrieDetail:OnMoveInStage()
 end
 
 function GameUIDragonEyrieDetail:OnMoveOutStage()
+    local User = User
+    User:RemoveListenerOnType(self, "dragonEquipments")
     self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
-    City:GetMaterialManager():RemoveObserver(self)
     GameUIDragonEyrieDetail.super.OnMoveOutStage(self)
 end
 
@@ -315,7 +316,7 @@ function GameUIDragonEyrieDetail:PlaceEquipmentBoxIntoEqNode()
 end
 
 
-function GameUIDragonEyrieDetail:OnMaterialsChanged()
+function GameUIDragonEyrieDetail:OnUserDataChanged_dragonEquipments(userData, deltaData)
     if self.tab_buttons:GetCurrentTag() == 'equipment' then
         local canloadAnyEq = self:FillEquipemtBox()
         self.equipment_ui.upgrade_star_btn:setVisible(not canloadAnyEq)
@@ -378,7 +379,7 @@ end
 
 function GameUIDragonEyrieDetail:CheckCanLoadEquipment(equipment)
     if equipment:IsLocked() or equipment:IsLoaded() then return false end
-    local player_equipments = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.EQUIPMENT)
+    local player_equipments = User.dragonEquipments
     local eq_name = equipment:IsLoaded() and equipment:Name() or equipment:GetCanLoadConfig().name
     return (player_equipments[eq_name] or 0) > 0 
 end

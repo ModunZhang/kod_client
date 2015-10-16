@@ -8,7 +8,6 @@ local window = import("..utils.window")
 local Localize = import("..utils.Localize")
 local UILib = import("..ui.UILib")
 local WidgetRequirementListview = import(".WidgetRequirementListview")
-local MaterialManager = import("..entity.MaterialManager")
 local SoldierManager = import("..entity.SoldierManager")
 local NORMAL = GameDatas.Soldiers.normal
 

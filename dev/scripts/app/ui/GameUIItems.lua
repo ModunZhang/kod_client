@@ -12,7 +12,6 @@ local UIListView = import(".UIListView")
 local Localize_item = import("..utils.Localize_item")
 local UILib = import("..ui.UILib")
 local Item = import("..entity.Item")
-local MaterialManager = import("..entity.MaterialManager")
 local WidgetUseItems = import("..widget.WidgetUseItems")
 
 local GameUIItems = UIKit:createUIClass("GameUIItems","GameUIWithCommonHeader")
@@ -480,7 +479,7 @@ function GameUIItems:UseItemFunc( item_name )
         -- 使用巨龙宝箱会获得龙装备材料，需要提示
         local clone_dragon_materials
         if string.find(item_name,"dragonChest") then
-            clone_dragon_materials = clone(self.city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.DRAGON))
+            clone_dragon_materials = clone(User.dragonMaterials)
         end
         -- 木,铜,银,金宝箱
         if string.find(item_name,"chest") then

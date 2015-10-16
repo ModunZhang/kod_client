@@ -8,7 +8,6 @@ local Localize = import("..utils.Localize")
 local UILib = import("..ui.UILib")
 local MilitaryTechnology = import("..entity.MilitaryTechnology")
 local WidgetRequirementListview = import(".WidgetRequirementListview")
-local MaterialManager = import("..entity.MaterialManager")
 local SoldierManager = import("..entity.SoldierManager")
 
 
@@ -187,11 +186,12 @@ function WidgetUpgradeMilitaryTech:UpgradeButtons()
     }):align(display.LEFT_CENTER,size.width/2+120,size.height-300):addTo(body)
 end
 function WidgetUpgradeMilitaryTech:UpgradeRequirement()
+    local User = User
     local tech = self.tech
     local body = self.body
     local size = body:getContentSize()
     local level_up_config = tech:GetLevelUpConfig()
-    local has_materials = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.TECHNOLOGY)
+    local has_materials = User.technologyMaterials
     local current_coin = User:GetResValueByType("coin")
 
     local requirements = {

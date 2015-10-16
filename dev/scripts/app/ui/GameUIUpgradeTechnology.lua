@@ -7,7 +7,6 @@ local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetRequirementListview = import("..widget.WidgetRequirementListview")
 local HEIGHT = 760
 local window = import("..utils.window")
-local MaterialManager = import("..entity.MaterialManager")
 
 function GameUIUpgradeTechnology:ctor(productionTechnology)
     self.productionTechnology = productionTechnology
@@ -333,6 +332,7 @@ function GameUIUpgradeTechnology:RefreshRequirementList()
 end
 
 function GameUIUpgradeTechnology:GetUpgradeRequirements()
+    local User = User
     local requirements = {}
     local current_tech = self:GetProductionTechnology()
     local unLockByTech = City:FindTechByIndex(current_tech:UnlockBy())
@@ -378,33 +378,33 @@ function GameUIUpgradeTechnology:GetUpgradeRequirements()
         {
             resource_type = _("工程图纸"),
             isVisible = cost.blueprints>0,
-            isSatisfy = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["blueprints"]>=cost.blueprints,
+            isSatisfy = User.buildingMaterials["blueprints"]>=cost.blueprints,
             icon="blueprints_128x128.png",
-            description= City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["blueprints"] .."/"..  cost.blueprints
+            description= User.buildingMaterials["blueprints"] .."/"..  cost.blueprints
         })
     table.insert(requirements,
         {
             resource_type = _("建造工具"),
             isVisible = cost.tools>0,
-            isSatisfy = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tools"]>=cost.tools,
+            isSatisfy = User.buildingMaterials["tools"]>=cost.tools,
             icon="tools_128x128.png",
-            description= City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tools"] .."/".. cost.tools
+            description= User.buildingMaterials["tools"] .."/".. cost.tools
         })
     table.insert(requirements,
         {
             resource_type = _("砖石瓦片"),
             isVisible = cost.tiles>0,
-            isSatisfy = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tiles"]>=cost.tiles,
+            isSatisfy = User.buildingMaterials["tiles"]>=cost.tiles,
             icon="tiles_128x128.png",
-            description= City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tiles"] .. "/" .. cost.tiles
+            description= User.buildingMaterials["tiles"] .. "/" .. cost.tiles
         })
     table.insert(requirements,
         {
             resource_type = _("滑轮组"),
             isVisible = cost.pulley>0,
-            isSatisfy = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["pulley"]>=cost.pulley,
+            isSatisfy = User.buildingMaterials["pulley"]>=cost.pulley,
             icon="pulley_128x128.png",
-            description = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["pulley"] .. "/" .. cost.pulley
+            description = User.buildingMaterials["pulley"] .. "/" .. cost.pulley
         })
 
     -- table.sort( requirements, function(a,b)
@@ -511,14 +511,14 @@ function GameUIUpgradeTechnology:CheckCanUpgradeNow()
 end
 
 function GameUIUpgradeTechnology:GetUpgradeGemsIfResourceNotEnough()
+    local User = User
     local coin = User:GetResValueByType("coin")
-    local materialManager = City:GetMaterialManager()
     local resource,material,__ = self:GetNeedResourceAndMaterialsAndTime()
     local resource_gems = DataUtils:buyResource(resource,{coin = coin})
-    local blueprints = materialManager:GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["blueprints"]
-    local tools = materialManager:GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tools"]
-    local pulley = materialManager:GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["pulley"]
-    local tiles = materialManager:GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)["tiles"]
+    local blueprints = User.buildingMaterials["blueprints"]
+    local tools = User.buildingMaterials["tools"]
+    local pulley = User.buildingMaterials["pulley"]
+    local tiles = User.buildingMaterials["tiles"]
     local material_gems = DataUtils:buyMaterial(material,{blueprints = blueprints,tools = tools,pulley = pulley,tiles = tiles})
     return resource_gems + material_gems
 end

@@ -905,6 +905,9 @@ local function get_makeDragonEquipment_promise(equipment_name, finish_now)
         equipmentName = equipment_name,
         finishNow = finish_now or false
     }, "打造装备失败!"):done(get_player_response_msg):done(function()
+        if finish_now then
+            GameGlobalUI:showTips(_("制造装备完成"), Localize.equip[equipment_name].."X1")
+        end
         app:GetAudioManager():PlayeEffectSoundWithKey("UI_BLACKSMITH_FORGE")
     end)
 end
@@ -1946,7 +1949,8 @@ function NetManager:getAttackPveSectionPromise(sectionName, dragonType, soldiers
                 if v.type == "items" then
                     pre_tab[v.type][v.name] = User:GetItemCount(v.name)
                 elseif v.type == "soldierMaterials" then
-                    pre_tab[v.type][v.name] = City:GetMaterialManager():GetSoldierMaterias()[v.name]
+                    
+                    pre_tab[v.type][v.name] = User.soldierMaterials[v.name]
                 end
             end
         end)
@@ -1957,7 +1961,7 @@ function NetManager:getAttackPveSectionPromise(sectionName, dragonType, soldiers
                 if v.type == "items" then
                     cur_tab[v.type][v.name] = User:GetItemCount(v.name)
                 elseif v.type == "soldierMaterials" then
-                    cur_tab[v.type][v.name] = City:GetMaterialManager():GetSoldierMaterias()[v.name]
+                    cur_tab[v.type][v.name] = User.soldierMaterials[v.name]
                 end
             end
             local adds = {items = {}, soldierMaterials = {}}

@@ -550,8 +550,7 @@ function GameUIPveAttack:CheckMaterials(func)
             break
         end
     end
-    local material_man = City:GetMaterialManager()
-    if is_special and material_man:CheckOutOfRangeByType(material_man.MATERIAL_TYPE.SOLDIER) then
+    if is_special and User:IsMaterialOutOfRange("soldierMaterials") then
         local dialog = UIKit:showMessageDialogWithParams({
             title = _("提示"),
             content = string.format(_("当前材料库房中的%s材料已满，你可能无法获得此次扫荡所得的材料奖励。是否仍要扫荡？"), _("士兵")),

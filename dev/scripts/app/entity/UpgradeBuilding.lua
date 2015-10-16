@@ -1,7 +1,6 @@
 
 local Observer = import(".Observer")
 local DataUtils = import("..utils.DataUtils")
-local MaterialManager = import("..entity.MaterialManager")
 local Building = import(".Building")
 local UpgradeBuilding = class("UpgradeBuilding", Building)
 local Localize = import("..utils.Localize")
@@ -403,7 +402,7 @@ function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
         end
         return
     end
-    local m =city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
+    local m = city:GetUser().buildingMaterials
     local config = self.config_building_levelup[self:GetType()]
 
     -- 升级所需资源不足
@@ -452,9 +451,7 @@ function UpgradeBuilding:getUpgradeRequiredGems()
         stone = User:GetResValueByType("stone"),
         citizen = User:GetResValueByType("citizen"),
     }
-
-    local has_materials =city:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.BUILD)
-
+    local has_materials = User.buildingMaterials
     local resource_config = DataUtils:getBuildingUpgradeRequired(self.building_type, self:GetNextLevel())
     required_gems = required_gems + DataUtils:buyResource(resource_config.resources, has_resourcce)
     required_gems = required_gems + DataUtils:buyMaterial(resource_config.materials, has_materials)

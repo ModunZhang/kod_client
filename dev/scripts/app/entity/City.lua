@@ -8,7 +8,6 @@ local Enum = import("..utils.Enum")
 local Orient = import(".Orient")
 local Tile = import(".Tile")
 local SoldierManager = import(".SoldierManager")
-local MaterialManager = import(".MaterialManager")
 local ResourceManager = import(".ResourceManager")
 local Building = import(".Building")
 local GateEntity = import(".GateEntity")
@@ -74,7 +73,6 @@ function City:ctor(user)
     self.belong_user = user
     self.resource_manager = ResourceManager.new(self)
     self.soldier_manager = SoldierManager.new(self)
-    self.material_manager = MaterialManager.new(self)
     self.buildings = {}
     self.walls = {}
     self.gate = GateEntity.new({building_type = "wall", city = self}):AddUpgradeListener(self)
@@ -412,7 +410,6 @@ function City:ResetAllListeners()
     self.finish_upgrading_callbacks = {}
 
     self.soldier_manager:ClearAllListener()
-    self.material_manager:RemoveAllObserver()
     self:ClearAllListener()
     self:IteratorCanUpgradeBuildings(function(building)
         building:ResetAllListeners()
@@ -540,9 +537,6 @@ function City:IsGate(building)
 end
 function City:GetSoldierManager()
     return self.soldier_manager
-end
-function City:GetMaterialManager()
-    return self.material_manager
 end
 function City:GetAvailableBuildQueueCounts()
     return self:BuildQueueCounts() - #self:GetUpgradingBuildings()
@@ -1213,8 +1207,6 @@ function City:OnUserDataChanged(userData, current_time, deltaData)
 
     -- 更新兵种
     self.soldier_manager:OnUserDataChanged(userData, current_time, deltaData)
-    -- 更新材料，这里是广义的材料，包括龙的装备
-    self.material_manager:OnUserDataChanged(userData, deltaData)
     -- 更新基本信息
     local basicInfo = userData.basicInfo
     self.build_queue = basicInfo.buildQueue

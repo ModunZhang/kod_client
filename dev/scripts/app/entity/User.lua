@@ -9,16 +9,26 @@ User.LISTEN_TYPE = Enum(
     "basicInfo",
     "countInfo",
     "resources",
+    "growUpTasks",
     "items",
     "deals",
+
     "iapGifts",
-    "growUpTasks",
     "allianceDonate",
+
+    "dragonEquipments",
+    "dragonMaterials",
+    "soldierMaterials",
+    "buildingMaterials",
+    "technologyMaterials",
+
     "dailyTasks",
     "dailyQuests",
+
     "vipEvents",
     "itemEvents",
-    "dailyQuestEvents")
+    "dailyQuestEvents",
+    "dragonEquipmentEvents")
 
 property(User, "id", 0)
 local staminaMax_value = GameDatas.PlayerInitData.intInit.staminaMax.value
@@ -498,82 +508,6 @@ function User:CouldGotDailyQuestReward()
 end
 --[[end]]
 
-
-function User:OnPropertyChange(property_name, old_value, new_value)
-end
-
-local before_map = {
-    basicInfo = function(userData, deltaData)
-        local ok, value = deltaData("basicInfo.name")
-        if ok then
-            if Alliance_Manager and
-                not Alliance_Manager:GetMyAlliance():IsDefault()
-                and Alliance_Manager:GetMyAlliance():GetMemeberById(userData._id)
-            then
-                Alliance_Manager:GetMyAlliance():GetMemeberById(userData._id).name = value
-            end
-        end
-    end,
-    items = function()end,
-    resources = function()end,
-    countInfo = function()end,
-    deals = function()end,
-    iapGifts = function()end,
-    growUpTasks = function()end,
-    allianceDonate = function()end,
-    dailyTasks = function()end,
-    dailyQuests = function()end,
-    itemEvents = function()end,
-    dailyQuestEvents = function(userData, deltaData)
-        local ok, value = deltaData("dailyQuestEvents.edit")
-        if ok then
-            for k,v in pairs(value) do
-                if v.finishTime == 0 then
-                    GameGlobalUI:showTips(_("提示"),string.format(_("每日任务%s完成"),Localize.daily_quests_name[v.index]))
-                end
-            end
-        end
-    end,
-    vipEvents = function()end,
-}
-local after_map = {
-    growUpTasks = function(userData)
-        if userData.reward_callback and
-            UtilsForTask:IsGetAnyCityBuildRewards(userData.growUpTasks) then
-            userData.reward_callback()
-            userData.reward_callback = nil
-        end
-    end,
-}
-function User:OnUserDataChanged(userData, current_time, deltaData)
-    for k,v in pairs(userData) do
-        self[k] = v
-    end
-    if deltaData then
-        for i,k in ipairs(User.LISTEN_TYPE) do
-            local before_func = before_map[k]
-            if type(k) == "string" and before_func then
-                if deltaData(k) then
-                    before_func(self, deltaData)
-                    local notify_function_name = string.format("OnUserDataChanged_%s", k)
-                    self:NotifyListeneOnType(User.LISTEN_TYPE[k], function(listener)
-                        local func = listener[notify_function_name]
-                        if func then
-                            func(listener, self, deltaData)
-                        end
-                    end)
-                    local after_func = after_map[k]
-                    if after_func then
-                        after_func(self, deltaData)
-                    end
-                end
-            end
-        end
-    end
-
-    return self
-end
-
 --[[dailyTasks begin]]
 function User:GetDailyTasksInfo(task_type)
     return self.dailyTasks[task_type] or {}
@@ -727,6 +661,134 @@ function User:GetBestDragon()
     return bestDragonForTerrain[self.basicInfo.terrain]
 end
 --[[end]]
+
+
+-- [[material begin]]
+-- 检查对应类型的材料是否有超过材料仓库上限
+function User:IsMaterialOutOfRange(materials_name, materials_add_map)
+    local limit = UtilsForBuilding:GetMaterialDepotLimit(self)[materials_name]
+    for k,v in pairs(self[materials_name]) do
+        if v >= limit then
+            if not materials_add_map or materials_add_map[k] then
+                return true
+            end
+        end
+    end
+end
+local DragonEquipments_equipments = GameDatas.DragonEquipments.equipments
+function User:IsAbleToMakeEquipment(equip_name)
+    local equip_config = DragonEquipments_equipments[equip_name]
+    local matrials = LuaUtils:table_map(string.split(equip_config.materials, ","), function(k, v)
+        return k, string.split(v, ":")
+    end)
+    local dm = self.dragonMaterials
+    for k,v in pairs(matrials) do
+        local mk,mn = unpack(v)
+        if dm[mk] < tonumber(mn) then
+            return false
+        end
+    end
+    return true
+end
+--[[end]]
+
+
+
+
+local before_map = {
+    basicInfo = function(userData, deltaData)
+        local ok, value = deltaData("basicInfo.name")
+        if ok then
+            if Alliance_Manager and
+                not Alliance_Manager:GetMyAlliance():IsDefault()
+                and Alliance_Manager:GetMyAlliance():GetMemeberById(userData._id)
+            then
+                Alliance_Manager:GetMyAlliance():GetMemeberById(userData._id).name = value
+            end
+        end
+    end,
+    items = function()end,
+    resources = function()end,
+    countInfo = function()end,
+    deals = function()end,
+    iapGifts = function()end,
+    growUpTasks = function()end,
+    allianceDonate = function()end,
+    dailyTasks = function()end,
+    dailyQuests = function()end,
+    itemEvents = function()end,
+
+    dragonEquipments = function()end,
+    dragonMaterials = function()end,
+    soldierMaterials = function()end,
+    buildingMaterials = function()end,
+    technologyMaterials = function()end,
+    dragonEquipmentEvents = function(userData, deltaData)
+        LuaUtils:outputTable(deltaData)
+        local ok, value = deltaData("dragonEquipmentEvents.remove")
+        if ok then
+            for k,v in ipairs(value) do
+                GameGlobalUI:showTips(_("制造装备完成"), Localize.equip[v.name].."X1")
+            end
+        end
+    end,
+
+    dailyQuestEvents = function(userData, deltaData)
+        local ok, value = deltaData("dailyQuestEvents.edit")
+        if ok then
+            for k,v in pairs(value) do
+                if v.finishTime == 0 then
+                    GameGlobalUI:showTips(_("提示"),string.format(_("每日任务%s完成"),Localize.daily_quests_name[v.index]))
+                end
+            end
+        end
+    end,
+    vipEvents = function()end,
+}
+local after_map = {
+    growUpTasks = function(userData)
+        if userData.reward_callback and
+            UtilsForTask:IsGetAnyCityBuildRewards(userData.growUpTasks) then
+            userData.reward_callback()
+            userData.reward_callback = nil
+        end
+    end,
+}
+function User:OnUserDataChanged(userData, current_time, deltaData)
+    for k,v in pairs(userData) do
+        self[k] = v
+    end
+    if deltaData then
+        for i,k in ipairs(User.LISTEN_TYPE) do
+            local before_func = before_map[k]
+            if type(k) == "string" and before_func then
+                if deltaData(k) then
+                    before_func(self, deltaData)
+                    local notify_function_name = string.format("OnUserDataChanged_%s", k)
+                    self:NotifyListeneOnType(User.LISTEN_TYPE[k], function(listener)
+                        local func = listener[notify_function_name]
+                        if func then
+                            func(listener, self, deltaData)
+                        end
+                    end)
+                    local after_func = after_map[k]
+                    if after_func then
+                        after_func(self, deltaData)
+                    end
+                end
+            end
+        end
+    end
+
+    return self
+end
+
+
+function User:OnPropertyChange(property_name, old_value, new_value)
+end
+
+
+
 --
 local promise = import("..utils.promise")
 function User:PromiseOfGetCityBuildRewards()

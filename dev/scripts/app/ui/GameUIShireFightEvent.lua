@@ -289,7 +289,7 @@ function GameUIShireFightEvent:DispathSoliderButtonClicked()
                 end
             end,{toLocation = self:GetAllianceShrineLocation(),targetIsMyAlliance = true,returnCloseAction = true}):AddToCurrentScene(true)
         end
-        UIKit:showSendTroopMessageDialog(attack_func,City:GetMaterialManager().MATERIAL_TYPE.DRAGON,_("龙"))
+        UIKit:showSendTroopMessageDialog(attack_func, "dragonMaterials", _("龙"))
     end
     if self:GetAllianceShrine():GetAlliance():GetSelf():IsProtected() then
         UIKit:showMessageDialog(_("提示"),_("进攻该目标将失去保护状态，确定继续派兵?"),final_func)

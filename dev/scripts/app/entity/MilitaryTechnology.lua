@@ -5,7 +5,6 @@
 
 local property = import("..utils.property")
 local Localize = import("..utils.Localize")
-local MaterialManager = import("..entity.MaterialManager")
 local MilitaryTechnology = class("MilitaryTechnology")
 
 local military_config = GameDatas.MilitaryTechs.militaryTechs
@@ -122,9 +121,7 @@ function MilitaryTechnology:GetUpgradeGems()
         },
     }
 
-    local has_materials = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.TECHNOLOGY)
-
-    
+    local has_materials = User.technologyMaterials    
     local has = {
         resources={
             coin=User:GetResValueByType("coin"),
@@ -146,7 +143,7 @@ function MilitaryTechnology:IsAbleToUpgradeNow()
 end
 function MilitaryTechnology:IsAbleToUpgrade()
     local level_up_config = self:GetLevelUpConfig()
-    local has_materials = City:GetMaterialManager():GetMaterialsByType(MaterialManager.MATERIAL_TYPE.TECHNOLOGY)
+    local has_materials = User.technologyMaterials    
     local current_coin = User:GetResValueByType("coin")
 
     local results = {}

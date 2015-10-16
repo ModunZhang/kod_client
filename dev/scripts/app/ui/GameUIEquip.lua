@@ -4,7 +4,6 @@
 --
 local EQUIPMENTS = GameDatas.DragonEquipments.equipments
 local Localize = import("..utils.Localize")
-local MaterialManager = import("..entity.MaterialManager")
 local window = import("..utils.window")
 local UILib = import(".UILib")
 local WidgetTips = import("..widget.WidgetTips")
@@ -38,17 +37,19 @@ function GameUIEquip:OnEndMakeEquipmentWithEvent(black_smith, event, equipment)
     self.tips:setVisible(true)
     self.timer:setVisible(false)
 end
-function GameUIEquip:OnMaterialsChanged(material_manager, material_type, changed)
-    if MaterialManager.MATERIAL_TYPE.EQUIPMENT == material_type then
+function GameUIEquip:OnUserDataChanged_dragonEquipments(userData, deltaData)
+    local ok, value = deltaData("dragonEquipments")
+    if ok then
         if self.list_node:isVisible() then
-            for k, v in pairs(changed) do
+            for k,v in pairs(value) do
                 if self.equip_map[k] then
-                    self.equip_map[k]:SetNumber(v.new)
+                    self.equip_map[k]:SetNumber(v)
                 end
             end
         end
-    elseif MaterialManager.MATERIAL_TYPE.DRAGON == material_type then
-        for k, v in pairs(self.equip_map) do
+    end
+    if deltaData("dragonMaterials") then
+        for _,v in pairs(self.equip_map) do
             v:CheckMaterials()
         end
     end
@@ -80,11 +81,11 @@ function GameUIEquip:Init()
     self.list_node:addTo(self.gameui:GetView())
         :align(display.BOTTOM_CENTER, window.cx, window.bottom_top + 20)
 
-    self.black_smith_city:GetMaterialManager():AddObserver(self)
     self.black_smith:AddBlackSmithListener(self)
+    self.black_smith:BelongCity():GetUser():AddListenOnType(self, "dragonEquipments")
 end
 function GameUIEquip:UnInit()
-    self.black_smith_city:GetMaterialManager():RemoveObserver(self)
+    self.black_smith:BelongCity():GetUser():RemoveListenerOnType(self, "dragonEquipments")
     self.black_smith:RemoveBlackSmithListener(self)
 end
 function GameUIEquip:InitEquipmentTitle()
@@ -117,9 +118,10 @@ function GameUIEquip:SwitchToDragon(dragon_type)
         local item = self:CreateItemWithListViewByEquipments(self.list_view, v.equipments, v.title, equip_map, i)
         self.list_view:addItem(item)
     end
-    local materials_manager = self.black_smith_city:GetMaterialManager()
+    local User = self.black_smith_city:GetUser()
+    local dragonEquipments = User.dragonEquipments
     for k,v in pairs(equip_map) do
-        v:SetNumber(materials_manager:GetEquipmentMaterias()[k])
+        v:SetNumber(dragonEquipments[k])
     end
     self.equip_map = equip_map
 
@@ -286,13 +288,13 @@ function GameUIEquip:CreateEquipmentByType(equip_type)
         :addTo(equipment_btn):align(display.RIGHT_TOP, 104/2, 132/2)
 
 
-    local materials_manager = self.black_smith_city:GetMaterialManager()
+    local User = self.black_smith_city:GetUser()
     function equipment_btn:SetNumber(number)
         number_label:setString(number)
         return self
     end
     function equipment_btn:CheckMaterials()
-        self.tips_green:setVisible(materials_manager:IsAbleToMakeEquipmentByType(equip_type))
+        self.tips_green:setVisible(User:IsAbleToMakeEquipment(equip_type))
         return self
     end
 
