@@ -153,7 +153,7 @@ function GameUIAllianceBase:GetEnterButtons()
     if self:IsEmpty() then
         local move_city_button = self:BuildOneButton("icon_move_player_city.png",_("迁移城市")):onButtonClicked(function()
             WidgetUseItems.new():Create({
-                item_type = WidgetUseItems.USE_TYPE.MOVE_THE_CITY,
+                item_name = "moveTheCity",
                 locationX = self.x,
                 locationY = self.y
             }):AddToCurrentScene()

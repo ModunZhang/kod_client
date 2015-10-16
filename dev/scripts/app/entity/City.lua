@@ -105,8 +105,8 @@ function City:GetRecommendTask()
         end
     end
     local building_map = self:GetHighestCanUpgradeBuildingMap()
-    local tasks = TaskUtils:GetAvailableTasksByCategory(
-        self:GetUser().growUpTasks, TaskUtils.TASK_CATEGORY.BUILD
+    local tasks = UtilsForTask:GetAvailableTasksByCategory(
+        self:GetUser().growUpTasks, UtilsForTask.TASK_CATEGORY.BUILD
     )
     local re_task
     for i,v in pairs(tasks.tasks) do
@@ -236,7 +236,7 @@ for i,v in ipairs(RecommendedMission) do
     default[i] = false
 end
 function City:GetBeginnersTask()
-    local count = TaskUtils:GetCompleteTaskCount(self:GetUser().growUpTasks)
+    local count = UtilsForTask:GetCompleteTaskCount(self:GetUser().growUpTasks)
     local key = string.format("recommend_tasks_%s", self:GetUser():Id())
     local flag = app:GetGameDefautlt():getTableForKey(key, default)
     for i,v in ipairs(RecommendedMission) do

@@ -663,7 +663,7 @@ function GameUIDragonEyrieMain:ChangeDragon(direction)
 end
 function GameUIDragonEyrieMain:OnDragonHpItemUseButtonClicked()
     local widgetUseItems = WidgetUseItems.new():Create({
-        item_type = WidgetUseItems.USE_TYPE.DRAGON_HP,
+        item_name = "dragonHp_1",
         dragon = self:GetCurrentDragon()
     })
     widgetUseItems:AddToCurrentScene()
@@ -671,7 +671,7 @@ end
 
 function GameUIDragonEyrieMain:OnDragonExpItemUseButtonClicked()
     local widgetUseItems = WidgetUseItems.new():Create({
-        item_type = WidgetUseItems.USE_TYPE.DRAGON_EXP,
+        item_name = "dragonExp_1",
         dragon = self:GetCurrentDragon()
     })
     widgetUseItems:AddToCurrentScene()

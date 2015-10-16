@@ -350,7 +350,7 @@ end
 
 function GameUIDragonEyrieDetail:OnDragonExpItemUseButtonClicked()
     local widgetUseItems = WidgetUseItems.new():Create({
-        item_type = WidgetUseItems.USE_TYPE.DRAGON_EXP,
+        item_name = "dragonExp_1",
         dragon = self:GetDragon()
     })
     widgetUseItems:AddToCurrentScene()
@@ -732,8 +732,7 @@ end
 
 function GameUIDragonEyrieDetail:OnHeroBloodUseItemClicked()
     local widgetUseItems = WidgetUseItems.new():Create({
-        item_type = WidgetUseItems.USE_TYPE.HERO_BLOOD,
-        dragon = self:GetDragon()
+        item_name = "heroBlood_1",
     })
     widgetUseItems:AddToCurrentScene()
 end

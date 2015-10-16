@@ -9,34 +9,18 @@ User.LISTEN_TYPE = Enum(
     "basicInfo",
     "countInfo",
     "resources",
+    "items",
     "deals",
-    "vipEvents",
     "iapGifts",
     "growUpTasks",
     "allianceDonate",
     "dailyTasks",
     "dailyQuests",
+    "vipEvents",
+    "itemEvents",
     "dailyQuestEvents")
 
 property(User, "id", 0)
-property(User, "basicInfo", {})
-property(User, "countInfo", {})
-property(User, "iapGifts", {})
-property(User, "deals", {})
-property(User, "pve", {})
-property(User, "pveFights", {})
-property(User, "vipEvents", {})
-property(User, "buildings", {})
-property(User, "growUpTasks", {})
-property(User, "allianceDonate", {})
-property(User, "apnStatus", {})
-property(User, "allianceInfo", {})
-property(User, "dailyQuests", {})
-property(User, "dailyQuestEvents", {})
-property(User, "requestToAllianceEvents", {})
-property(User, "inviteToAllianceEvents", {})
-
-
 local staminaMax_value = GameDatas.PlayerInitData.intInit.staminaMax.value
 local staminaRecoverPerHour_value = GameDatas.PlayerInitData.intInit.staminaRecoverPerHour.value
 function User:ctor(p)
@@ -300,6 +284,67 @@ end
 
 --[[end]]
 
+
+--[[items begin]]
+function User:IsItemEventActive(type_)
+    for k,v in pairs(self.itemEvents) do
+        if v.type == type_ then
+            local time = UtilsForItem:GetItemEventTime(v)
+            return time > 0, time
+        end
+    end
+    return false, 0
+end
+function User:IsAnyItmeEventActive()
+    return next(self.itemEvents)
+end
+function User:IsItemVisible(item_name)
+    return self:GetItemCount(item_name) >= 1 or 
+    UtilsForItem:GetItemInfoByName(item_name).isSell
+end
+local config_items_buff     = GameDatas.Items.buff
+local config_items_resource = GameDatas.Items.resource
+local config_items_speedup  = GameDatas.Items.speedup
+local config_items_special  = GameDatas.Items.special
+function User:GetRelationItemInfos(item_name)
+    local configs
+    if config_items_buff[item_name] then
+        configs = config_items_buff
+    elseif config_items_resource[item_name] then
+        configs = config_items_resource
+    elseif config_items_speedup[item_name] then
+        configs = config_items_speedup
+    elseif config_items_special[item_name] then
+        configs = config_items_special
+    end
+    assert(configs)
+    local same_items_info = {}
+    local item_type, item_index = unpack(string.split(item_name, "_"))
+    if item_index then
+        for i = 1, math.huge do
+            local same_item_info = configs[item_type.."_"..i]
+            if same_item_info then
+                if same_item_info.isSell or 
+                    self:GetItemCount(same_item_info.name) > 0 then
+                    table.insert(same_items_info, same_item_info)
+                end
+            else
+                break
+            end
+        end
+    end
+    return same_items_info
+end
+function User:CanOpenChest(item_name)
+    local area_type = string.split(item_name, "_")
+    if area_type[2] == 1 then return true end
+    return User:GetItemCount("chestKey_"..area_type[2]) > 0
+end
+function User:GetItemCount(item_name)
+    return UtilsForItem:GetItemCount(self.items, item_name)
+end
+--[[end]]
+
 --[[gcId]]
 function User:IsBindGameCenter()
     return self.gcId ~= "" and self.gcId ~= json.null
@@ -463,12 +508,13 @@ local before_map = {
         if ok then
             if Alliance_Manager and
                 not Alliance_Manager:GetMyAlliance():IsDefault()
-                and Alliance_Manager:GetMyAlliance():GetMemeberById(self._id)
+                and Alliance_Manager:GetMyAlliance():GetMemeberById(userData._id)
             then
-                Alliance_Manager:GetMyAlliance():GetMemeberById(self._id).name = value
+                Alliance_Manager:GetMyAlliance():GetMemeberById(userData._id).name = value
             end
         end
     end,
+    items = function()end,
     resources = function()end,
     countInfo = function()end,
     deals = function()end,
@@ -477,6 +523,7 @@ local before_map = {
     allianceDonate = function()end,
     dailyTasks = function()end,
     dailyQuests = function()end,
+    itemEvents = function()end,
     dailyQuestEvents = function(userData, deltaData)
         local ok, value = deltaData("dailyQuestEvents.edit")
         if ok then
@@ -492,7 +539,7 @@ local before_map = {
 local after_map = {
     growUpTasks = function(userData)
         if userData.reward_callback and
-            TaskUtils:IsGetAnyCityBuildRewards(userData.growUpTasks) then
+            UtilsForTask:IsGetAnyCityBuildRewards(userData.growUpTasks) then
             userData.reward_callback()
             userData.reward_callback = nil
         end

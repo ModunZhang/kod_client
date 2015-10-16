@@ -1,7 +1,7 @@
-BuildingUtils = {}
+UtilsForBuilding = {}
 local config_house_function = GameDatas.HouseFunction
 local config_house_levelup = GameDatas.HouseLevelUp
-function BuildingUtils:GetCitizenMap(userData)
+function UtilsForBuilding:GetCitizenMap(userData)
 	local house_citizen = {
 		miner = 0,
 		farmer = 0,
@@ -45,7 +45,7 @@ end
 local warehouse_function = GameDatas.BuildingFunction.warehouse
 local buildings_location = GameDatas.Buildings.buildings
 local initCitizen_value = GameDatas.PlayerInitData.intInit.initCitizen.value
-function BuildingUtils:GetWarehouseLimit(userData)
+function UtilsForBuilding:GetWarehouseLimit(userData)
 	local limit = {
 		wood = 0,
 		food = 0,

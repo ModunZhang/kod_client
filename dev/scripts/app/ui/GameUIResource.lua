@@ -58,9 +58,10 @@ function GameUIResource:CreateInfomation()
         :align(display.LEFT_TOP, window.left+48, iconBg:getPositionY()-iconBg:getContentSize().height+36)
         :addTo(infomationLayer)
     local lvLabel = UIKit:ttfLabel({
-        text = _("拥有").." "..ItemManager:GetItemByName("torch"):Count(),
-        size = 18,
-        color = 0xffedae,
+
+            text = _("拥有").." "..User:GetItemCount("torch"),
+            size = 18,
+            color = 0xffedae,
     }):addTo(lvBg):align(display.CENTER,lvBg:getContentSize().width/2,lvBg:getContentSize().height/2)
 
     local title_bg = display.newSprite("title_blue_430x30.png"):addTo(infomationLayer)
@@ -117,7 +118,7 @@ function GameUIResource:CreateInfomation()
         :onButtonClicked(function(event)
             self:ChaiButtonAction(event)
         end)
-    if ItemManager:GetItemByName("torch"):Count()>0 then
+    if User:GetItemCount("torch") > 0 then
         chaiButton:setButtonImage(cc.ui.UIPushButton.NORMAL, "red_btn_up_148x58.png", true)
         chaiButton:setButtonImage(cc.ui.UIPushButton.PRESSED, "red_btn_down_148x58.png", true)
         chaiButton:setButtonLabel("normal", UIKit:ttfLabel({
@@ -140,7 +141,7 @@ function GameUIResource:CreateInfomation()
         -- gem icon
         local gem_icon = display.newSprite("gem_icon_62x61.png"):addTo(num_bg):align(display.CENTER, 20, num_bg:getContentSize().height/2):scale(0.5)
         local price = UIKit:ttfLabel({
-            text = string.formatnumberthousands(ItemManager:GetItemByName("torch"):Price()),
+            text = string.formatnumberthousands(UtilsForItem:GetItemInfoByName("torch").price),
             size = 18,
             color = 0xffd200,
         }):align(display.LEFT_CENTER, 50 , num_bg:getContentSize().height/2)
@@ -149,7 +150,6 @@ function GameUIResource:CreateInfomation()
 
 
     -- 移动小屋
-    local movingConstruction_item = ItemManager:GetItemByName("movingConstruction")
     local iconBg = display.newSprite("box_118x118.png")
         :align(display.LEFT_TOP, window.left+40, window.top - 260)
         :addTo(infomationLayer)
@@ -160,7 +160,7 @@ function GameUIResource:CreateInfomation()
         :align(display.LEFT_TOP, window.left+48, iconBg:getPositionY()-iconBg:getContentSize().height+36)
         :addTo(infomationLayer)
     local lvLabel = UIKit:ttfLabel({
-        text = _("拥有").." "..movingConstruction_item:Count(),
+        text = _("拥有").." "..User:GetItemCount("movingConstruction"),
         size = 18,
         color = 0xffedae,
     }):addTo(lvBg):align(display.CENTER,lvBg:getContentSize().width/2,lvBg:getContentSize().height/2)
@@ -189,7 +189,7 @@ function GameUIResource:CreateInfomation()
         :onButtonClicked(function(event)
             self:MoveButtonAction(event)
         end)
-    if movingConstruction_item:Count()>0 then
+    if User:GetItemCount("movingConstruction") > 0 then
         moveButton:setButtonLabel("normal", UIKit:ttfLabel({
             text = _("移动"),
             size = 22,
@@ -208,7 +208,7 @@ function GameUIResource:CreateInfomation()
         -- gem icon
         local gem_icon = display.newSprite("gem_icon_62x61.png"):addTo(num_bg):align(display.CENTER, 20, num_bg:getContentSize().height/2):scale(0.5)
         local price = UIKit:ttfLabel({
-            text = string.formatnumberthousands(movingConstruction_item:Price()),
+            text = string.formatnumberthousands(UtilsForItem:GetItemInfoByName("movingConstruction").price),
             size = 18,
             color = 0xffd200,
         }):align(display.LEFT_CENTER, 50 , num_bg:getContentSize().height/2)
@@ -343,7 +343,7 @@ function GameUIResource:ChaiButtonAction( event )
     end
     local tile = self.city:GetTileWhichBuildingBelongs(self.building)
     local house_location = tile:GetBuildingLocation(self.building)
-    local torch_count = ItemManager:GetItemByName("torch"):Count()
+    local torch_count = User:GetItemCount("torch")
     if torch_count<1 then
         UIKit:showMessageDialog(_("提示"),_("是否确认拆除?"),function ()
             NetManager:getBuyAndUseItemPromise("torch",{
@@ -378,28 +378,32 @@ function GameUIResource:MoveButtonAction( event )
     end
     local tile = self.city:GetTileWhichBuildingBelongs(self.building)
     local house_location = tile:GetBuildingLocation(self.building)
-    local movingConstruction = ItemManager:GetItemByName("movingConstruction")
-    local torch_count = movingConstruction:Count()
+    local item_info = UtilsForItem:GetItemInfoByName("movingConstruction")
+    local torch_count = User:GetItemCount("movingConstruction")
     local building = self.building
 
     if torch_count<1 then
         if app:GetGameDefautlt():IsOpenGemRemind() then
-            UIKit:showConfirmUseGemMessageDialog(_("提示"),string.format(_("是否消费%s金龙币"),string.formatnumberthousands(movingConstruction:Price())), function()
-                if movingConstruction:Price() > User:GetGemValue() then
-                    UIKit:showMessageDialog(_("提示"),_("金龙币不足")):CreateOKButton(
-                        {
-                            listener = function ()
-                                UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
-                            end,
-                            btn_name= _("前往商店")
-                        })
-                    return
-                end
-                NetManager:getBuyItemPromise("movingConstruction",1)
-                WidgetMoveHouse.new(building)
-            end,true,true)
+            UIKit:showConfirmUseGemMessageDialog(_("提示"),
+                string.format(
+                    _("是否消费%s金龙币"),string.formatnumberthousands(item_info.price)
+                ),
+                function()
+                    if item_info.price > User:GetGemValue() then
+                        UIKit:showMessageDialog(_("提示"),_("金龙币不足")):CreateOKButton(
+                            {
+                                listener = function ()
+                                    UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)
+                                end,
+                                btn_name= _("前往商店")
+                            })
+                        return
+                    end
+                    NetManager:getBuyItemPromise("movingConstruction",1)
+                    WidgetMoveHouse.new(building)
+                end,true,true)
         else
-            if movingConstruction:Price() > User:GetGemValue() then
+            if item_info.price > User:GetGemValue() then
                 UIKit:showMessageDialog(_("提示"),_("金龙币不足")):CreateOKButton(
                     {
                         listener = function ()
@@ -427,6 +431,7 @@ end
 
 
 return GameUIResource
+
 
 
 

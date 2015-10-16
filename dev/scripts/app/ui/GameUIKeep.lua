@@ -3,7 +3,6 @@ local promise = import('..utils.promise')
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPopDialog= import("..widget.WidgetPopDialog")
-local WidgetUseItems= import("..widget.WidgetUseItems")
 local Localize = import("..utils.Localize")
 local SpriteConfig = import("..sprites.SpriteConfig")
 local window = import('..utils.window')
@@ -278,10 +277,6 @@ function GameUIKeep:CreateCanBeUnlockedBuildingListView()
         end
     end
     self.building_listview:reload()
-end
-
-function GameUIKeep:CreateModifyCityNameWindow()
-    WidgetUseItems.new():Create({item_type = WidgetUseItems.USE_TYPE.CHANGE_CITY_NAME}):AddToCurrentScene()
 end
 
 function GameUIKeep:CreateChangeTerrainWindow()

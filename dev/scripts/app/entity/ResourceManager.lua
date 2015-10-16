@@ -76,7 +76,7 @@ function ResourceManager:UpdateByCity(city, current_time)
     }
 
     -- 上限
-    local limits = BuildingUtils:GetWarehouseLimit(city:GetUser())
+    local limits = UtilsForBuilding:GetWarehouseLimit(city:GetUser())
     local total_limit_map = {
         [WOOD] = limits.wood,
         [FOOD] = limits.food,
@@ -143,7 +143,7 @@ function ResourceManager:UpdateByCity(city, current_time)
     stone.limit = LIMIT_MAP[STONE]
     stone.output = PRODUCTION_MAP[STONE]
     local citizen = User:GetResProduction("citizen")
-    citizen.limit = LIMIT_MAP[CITIZEN] - BuildingUtils:GetCitizenMap(city:GetUser()).total
+    citizen.limit = LIMIT_MAP[CITIZEN] - UtilsForBuilding:GetCitizenMap(city:GetUser()).total
     citizen.output = PRODUCTION_MAP[CITIZEN]
     local coin = User:GetResProduction("coin")
     coin.output = PRODUCTION_MAP[COIN]
@@ -230,7 +230,7 @@ function ResourceManager:GetTotalBuffData(city)
         [CITIZEN] = 0,
         [WALLHP] = 0,
     }
-    local item_buff = ItemManager:GetAllResourceBuffData()
+    local item_buff = UtilsForItem:GetAllResourceBuffData(city:GetUser())
     for _,v in ipairs(item_buff) do
         local res_type,buff_type,buff_value = unpack(v)
         if res_type  then

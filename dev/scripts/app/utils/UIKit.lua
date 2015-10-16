@@ -895,10 +895,10 @@ function UIKit:GotoPreconditionBuilding(jump_building)
     end)
 end
 -- 暂时只有宝箱
-function UIKit:PlayUseItemAni(items,awards,message)
-    if string.find(items:Name(),"dragonChest") or string.find(items:Name(),"chest") then
+function UIKit:PlayUseItemAni(item_name,awards,message)
+    if string.find(item_name,"dragonChest") 
+        or string.find(item_name,"chest") then
         local ani = ""
-        local item_name = items:Name()
         if item_name == "dragonChest_1" then
             ani = "lanse"
         elseif item_name == "dragonChest_2" then
@@ -915,7 +915,7 @@ function UIKit:PlayUseItemAni(items,awards,message)
             ani = "jin_box"
         end
         if ani then
-            self:newGameUI("GameUIChest", items,awards,message,ani):AddToCurrentScene():setLocalZOrder(10000)
+            self:newGameUI("GameUIChest",awards,message,ani):AddToCurrentScene():setLocalZOrder(10000)
         end
     end
 end

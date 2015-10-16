@@ -1944,7 +1944,7 @@ function NetManager:getAttackPveSectionPromise(sectionName, dragonType, soldiers
         :done(function(response)
             for i,v in ipairs(rewards) do
                 if v.type == "items" then
-                    pre_tab[v.type][v.name] = ItemManager:GetItemByName(v.name):Count()
+                    pre_tab[v.type][v.name] = User:GetItemCount(v.name)
                 elseif v.type == "soldierMaterials" then
                     pre_tab[v.type][v.name] = City:GetMaterialManager():GetSoldierMaterias()[v.name]
                 end
@@ -1955,7 +1955,7 @@ function NetManager:getAttackPveSectionPromise(sectionName, dragonType, soldiers
             local cur_tab = {items = {}, soldierMaterials = {}}
             for i,v in ipairs(rewards) do
                 if v.type == "items" then
-                    cur_tab[v.type][v.name] = ItemManager:GetItemByName(v.name):Count()
+                    cur_tab[v.type][v.name] = User:GetItemCount(v.name)
                 elseif v.type == "soldierMaterials" then
                     cur_tab[v.type][v.name] = City:GetMaterialManager():GetSoldierMaterias()[v.name]
                 end

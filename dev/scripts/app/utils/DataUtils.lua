@@ -231,7 +231,7 @@ end
 function DataUtils:getAllSoldierBuffValue(solider_config)
     local result = {}
     local soldier_type = solider_config.type
-    local item_buff = ItemManager:GetAllSoldierBuffData()
+    local item_buff = UtilsForItem:GetAllSoldierBuffData(User)
     local military_technology_buff = City:GetSoldierManager():GetAllMilitaryBuffData()
     table.insertto(item_buff,military_technology_buff)
     local vip_buff = self:getAllSoldierVipBuffValue()
@@ -374,8 +374,8 @@ end
 
 function DataUtils:getPlayerMarchTimeBuffEffectValue()
     local effect = 0
-    if ItemManager:IsBuffActived("marchSpeedBonus") then
-        effect = effect + ItemManager:GetBuffEffect("marchSpeedBonus")
+    if User:IsItemEventActive("marchSpeedBonus") then
+        effect = effect + UtilsForItem:GetItemBuff("marchSpeedBonus")
     end
     --vip buffer
     effect = effect + User:GetVIPMarchSpeedAdd()
@@ -471,8 +471,8 @@ end
 --龙的生命值恢复buff
 function DataUtils:GetDragonHpBuffTotal()
     local effect = 0
-    if ItemManager:IsBuffActived("dragonHpBonus") then
-        effect = effect + ItemManager:GetBuffEffect("dragonHpBonus")
+    if User:IsItemEventActive("dragonHpBonus") then
+        effect = effect + UtilsForItem:GetItemBuff("dragonHpBonus")
     end
     effect = effect + User:GetVIPDragonHpRecoveryAdd()
     return effect
@@ -652,8 +652,8 @@ local function getPlayerSoldierAtkBuff(soldierName, soldierStar, dragon, terrain
     local soldierType = getSoldiersConfig(soldierName, soldierStar).type
 
     local eventType = soldierType.."AtkBonus"
-    if ItemManager:IsBuffActived(eventType) then
-        local effect1 = ItemManager:GetBuffEffect(eventType)
+    if User:IsItemEventActive(eventType) then
+        local effect1 = UtilsForItem:GetItemBuff(eventType)
         itemBuff = effect1
     end
 
@@ -684,8 +684,8 @@ local function getPlayerSoldierHpBuff(soldierName, soldierStar, dragon, terrain,
     local skillBuff = 0
     local equipmentBuff = 0
 
-    if ItemManager:IsBuffActived("unitHpBonus") then
-        local effect1 = ItemManager:GetBuffEffect("unitHpBonus")
+    if User:IsItemEventActive("unitHpBonus") then
+        local effect1 = UtilsForItem:GetItemBuff("unitHpBonus")
         itemBuff = effect1
     end
 
@@ -754,8 +754,8 @@ end
 local function getPlayerDragonExpAdd(dragon)
     local itemBuff = 0
     local vipBuff = User:GetVIPDragonExpAdd()
-    if ItemManager:IsBuffActived("dragonExpBonus") then
-        local effect1 = ItemManager:GetBuffEffect("dragonExpBonus")
+    if User:IsItemEventActive("dragonExpBonus") then
+        local effect1 = UtilsForItem:GetItemBuff("dragonExpBonus")
         itemBuff = effect1
     end
     return itemBuff + vipBuff
@@ -1133,8 +1133,7 @@ local function getBuildingBuffForResourceProtectPercent(resourceName)
 end
 local function getPlayerItemBuffForResourceLootPercentSubtract()
     local itemBuff = 0
-    local eventType = "masterOfDefender"
-    if ItemManager:IsBuffActived( eventType ) then
+    if User:IsItemEventActive("masterOfDefender") then
         itemBuff = items.buffTypes.masterOfDefender.effect2
     end
     return itemBuff

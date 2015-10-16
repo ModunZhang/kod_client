@@ -215,7 +215,9 @@ function GameUIWall:CreateMilitaryUIIf()
         :addTo(process_wall_bg)
         :align(display.CENTER_RIGHT,546,20)
         :onButtonClicked(function()
-            WidgetUseItems.new():Create({item = ItemManager:GetItemByName("restoreWall_1")}):AddToCurrentScene(true)
+            WidgetUseItems.new():Create({
+                item_name = "restoreWall_1"
+            }):AddToCurrentScene(true)
         end)
 
     local iconbg = display.newSprite("drgon_process_icon_bg.png")
@@ -246,7 +248,7 @@ end
 
 function GameUIWall:OnDragonHpItemUseButtonClicked()
     local widgetUseItems = WidgetUseItems.new():Create({
-        item_type = WidgetUseItems.USE_TYPE.DRAGON_HP,
+        item_name = "dragonHp_1",
         dragon = self:GetDragon()
     })
     widgetUseItems:AddToCurrentScene()

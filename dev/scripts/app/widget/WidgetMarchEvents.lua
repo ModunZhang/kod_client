@@ -519,7 +519,7 @@ end
 
 function WidgetMarchEvents:OnSpeedUpButtonClicked(entity)
     local widgetUseItems = WidgetUseItems.new():Create({
-        item_type = WidgetUseItems.USE_TYPE.WAR_SPEEDUP_CLASS,
+        item_name = "warSpeedupClass_1",
         event = entity
     })
     widgetUseItems:AddToCurrentScene()
@@ -548,7 +548,7 @@ function WidgetMarchEvents:OnRetreatButtonClicked(entity,cb)
         end)
     elseif entity:GetType() == entity.ENTITY_TYPE.MARCH_OUT  or entity:GetType() == entity.ENTITY_TYPE.STRIKE_OUT then
         local widgetUseItems = WidgetUseItems.new():Create({
-            item_type = WidgetUseItems.USE_TYPE.RETREAT_TROOP,
+            item_name = "retreatTroop",
             event = entity
         })
         widgetUseItems:AddToCurrentScene()

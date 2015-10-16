@@ -79,7 +79,7 @@ function DataManager:setMapDataByIndex(index, data)
 end
 
 function DataManager:OnUserDataChanged(userData,timer, deltaData)
-    if not User or not ItemManager or not City or not Alliance_Manager or not MailManager then
+    if not User or not City or not Alliance_Manager or not MailManager then
         print(debug.traceback("", 2))
         assert(false)
     end
@@ -90,9 +90,6 @@ function DataManager:OnUserDataChanged(userData,timer, deltaData)
     LuaUtils:TimeCollect(function()
         User:OnUserDataChanged(userData, timer, deltaData)
     end, "User:OnUserDataChanged")
-    LuaUtils:TimeCollect(function()
-        ItemManager:OnUserDataChanged(userData, timer, deltaData)
-    end, "ItemManager:OnUserDataChanged")
     LuaUtils:TimeCollect(function()
         City:OnUserDataChanged(userData, timer, deltaData)
     end, "City:OnUserDataChanged")
