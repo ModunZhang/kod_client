@@ -55,7 +55,7 @@ function GameUIOrderHall:OnMoveInStage()
     end):pos(window.cx, window.bottom + 34)
 
 
-    self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.VILLAGE_LEVELS_CHANGED)
+    self.alliance:AddListenOnType(self, "villageLevels")
 end
 function GameUIOrderHall:CreateBetweenBgAndTitle()
     GameUIOrderHall.super.CreateBetweenBgAndTitle(self)
@@ -379,7 +379,7 @@ function GameUIOrderHall:CreateProficiencyContent()
     return content
 end
 
-function GameUIOrderHall:OnVillageLevelsChanged(alliance)
+function GameUIOrderHall:OnAllianceDataChanged_villageLevels(allianceData, deltaData)
     dump(alliance:GetVillageLevels())
     for k,v in pairs(alliance:GetVillageLevels()) do
         if self.village_items[k] then
@@ -389,7 +389,7 @@ function GameUIOrderHall:OnVillageLevelsChanged(alliance)
 end
 
 function GameUIOrderHall:onExit()
-    self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.VILLAGE_LEVELS_CHANGED)
+    self.alliance:RemoveListenerOnType(self, "villageLevels")
     GameUIOrderHall.super.onExit(self)
 end
 

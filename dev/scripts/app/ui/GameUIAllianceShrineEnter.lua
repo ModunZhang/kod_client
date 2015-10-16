@@ -9,22 +9,22 @@ local Localize = import("..utils.Localize")
 
 function GameUIAllianceShrineEnter:ctor(building,isMyAlliance,alliance,enemy_alliance)
 	GameUIAllianceShrineEnter.super.ctor(self,building,isMyAlliance,alliance,enemy_alliance)
-	if isMyAlliance then
-		self.building = alliance:FindAllianceBuildingInfoByObjects(building)
-	else
-		self.building = enemy_alliance:FindAllianceBuildingInfoByObjects(building)
-	end
+	-- if isMyAlliance then
+	-- 	self.building = alliance:FindAllianceBuildingInfoByObjects(building)
+	-- else
+	-- 	self.building = enemy_alliance:FindAllianceBuildingInfoByObjects(building)
+	-- end
 end
 
-function GameUIAllianceShrineEnter:GetLocation()
-	local mapObject
-	if self:IsMyAlliance() then
-		mapObject = self:GetMyAlliance():FindMapObjectById(self:GetBuilding().id)
-	else
-		mapObject = self:GetEnemyAlliance():FindMapObjectById(self:GetBuilding().id)
-	end
-	return mapObject.location.x .. "," .. mapObject.location.y
-end
+-- function GameUIAllianceShrineEnter:GetLocation()
+-- 	local mapObject
+-- 	if self:IsMyAlliance() then
+-- 		mapObject = self:GetMyAlliance():FindMapObjectById(self:GetBuilding().id)
+-- 	else
+-- 		mapObject = self:GetEnemyAlliance():FindMapObjectById(self:GetBuilding().id)
+-- 	end
+-- 	return mapObject.location.x .. "," .. mapObject.location.y
+-- end
 
 function GameUIAllianceShrineEnter:GetLogicPosition()
 	local mapObject

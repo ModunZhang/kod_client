@@ -12,12 +12,14 @@ local Localize = import("..utils.Localize")
 local WidgetUseItems = import("..widget.WidgetUseItems")
 
 -- building is allianceobject
-function GameUIAllianceEnterBase:ctor(building,isMyAlliance,my_alliance,enemy_alliance)
+function GameUIAllianceEnterBase:ctor(mapObj,alliance)
     GameUIAllianceEnterBase.super.ctor(self,self:GetUIHeight(),"",display.top-200)
-    self.building = building
-    self.my_alliance = my_alliance
-    self.isMyAlliance = isMyAlliance
-    self.enemy_alliance = enemy_alliance
+
+    self.building = alliance:GetAllianceBuildingInfoByName(mapObj.name)
+    self.my_alliance = Alliance_Manager:GetMyAlliance()
+    self.focus_alliance = alliance
+    self.mapObj = mapObj
+    self.isMyAlliance = mapObj.index == self.my_alliance:MapIndex()
 end
 
 function GameUIAllianceEnterBase:IsMyAlliance()
@@ -79,8 +81,7 @@ function GameUIAllianceEnterBase:GetLogicPosition()
 end
 
 function GameUIAllianceEnterBase:GetLocation()
-    local location = self:GetBuilding().location
-    return location.x .. "," .. location.y
+    return self.mapObj.x .. "," .. self.mapObj.y
 end
 
 function GameUIAllianceEnterBase:GetTerrain()

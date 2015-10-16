@@ -51,8 +51,8 @@ function GameUIAlliancePalace:OnMoveInStage()
     end):pos(window.cx, window.bottom + 34)
 
     local alliance = self.alliance
-    alliance:AddListenOnType(self,Alliance.LISTEN_TYPE.BASIC)
-    alliance:AddListenOnType(self,Alliance.LISTEN_TYPE.MEMBER)
+    alliance:AddListenOnType(self,"basicInfo")
+    alliance:AddListenOnType(self,"members")
 end
 function GameUIAlliancePalace:CreateBetweenBgAndTitle()
     GameUIAlliancePalace.super.CreateBetweenBgAndTitle(self)
@@ -74,8 +74,8 @@ function GameUIAlliancePalace:CreateBetweenBgAndTitle()
 end
 function GameUIAlliancePalace:onExit()
     local alliance = self.alliance
-    alliance:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.BASIC)
-    alliance:RemoveListenerOnType(self,Alliance.LISTEN_TYPE.MEMBER)
+    alliance:RemoveListenerOnType(self,"basicInfo")
+    alliance:RemoveListenerOnType(self,"members")
     GameUIAlliancePalace.super.onExit(self)
 end
 
@@ -482,7 +482,7 @@ function GameUIAlliancePalace:InitInfoPart()
     }):addTo(layer)
         :align(display.BOTTOM_CENTER, window.cx, window.bottom_top+50)
 end
-function GameUIAlliancePalace:OnAllianceBasicChanged(alliance,deltaData)
+function GameUIAlliancePalace:OnAllianceDataChanged_basicInfo(alliance,deltaData)
     local ok, value = deltaData("basicInfo.honour")
     if ok then
         if self.current_honour then
@@ -490,21 +490,21 @@ function GameUIAlliancePalace:OnAllianceBasicChanged(alliance,deltaData)
         end
     end
 end
-function GameUIAlliancePalace:OnAllianceDataChanged_members(alliance,changed_map)
+function GameUIAlliancePalace:OnAllianceDataChanged_members(alliance,deltaData)
     self.sort_member = self:GetSortMembers()
-    if not changed_map then return end
-    if #changed_map[1]>0 then
+    if deltaData("members.add") then
         if self.award_menmber_listview then
             self.award_menmber_listview:asyncLoadWithCurrentPosition_()
         end
     end
-    if #changed_map[3]>0 then
+    if deltaData("members.remove") then
         if self.award_menmber_listview then
             self.award_menmber_listview:asyncLoadWithCurrentPosition_()
         end
     end
-    if changed_map[2] then
-        for k,v in pairs(changed_map[2]) do
+    if deltaData("members.edit") then
+    local ok, value = deltaData("members.edit")
+        for k,v in pairs(value) do
             if self.award_menmber_listview then
                 for i,listitem in ipairs(self.award_menmber_listview:getItems()) do
                     local content = listitem:getContent()

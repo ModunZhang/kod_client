@@ -1221,6 +1221,13 @@ local SERVER_NAME = {
     master = _("大师级"),
 }
 
+local PERIOD_TYPE = {
+    peace = _("和平期"),
+    prepare = _("准备期"),
+    fight = _("战争期"),
+    protect = _("保护期"),
+}
+
 local TERRAIN_FUNCTION = {
     grassLand = _("草地产出绿龙材料，更容易培养绿龙"),
     desert= _("沙漠产出红龙材料,更容易培养红龙"),
@@ -1297,6 +1304,7 @@ return {
     server_errors = SERVER_ERRORS,
     terrain_function = TERRAIN_FUNCTION,
     user_agreement = USER_AGREEMENT,
+    period_type = PERIOD_TYPE,
 }
 
 

@@ -1,6 +1,6 @@
 local Alliance = import("..entity.Alliance")
 local AllianceLayer = import("..layers.AllianceLayer")
-local GameUIAllianceHomeNew = import("..ui.GameUIAllianceHomeNew")
+local GameUIAllianceHome = import("..ui.GameUIAllianceHome")
 local MapScene = import(".MapScene")
 local AllianceDetailScene = class("AllianceDetailScene", MapScene)
 
@@ -151,8 +151,8 @@ function AllianceDetailScene:ctor()
 end
 function AllianceDetailScene:onEnter()
     AllianceDetailScene.super.onEnter(self)
-    self.home_page = self:CreateHomePage()
     self:GotoAllianceByIndex(Alliance_Manager:GetMyAlliance().mapIndex)
+    self.home_page = self:CreateHomePage()
     self:GetSceneLayer():ZoomTo(0.82)
     Alliance_Manager:GetMyAlliance():AddListenOnType(self, "mapObjects")
     Alliance_Manager:GetMyAlliance():AddListenOnType(self, "marchEvents")
@@ -193,12 +193,13 @@ function AllianceDetailScene:FetchAllianceDatasByIndex(index, func)
                     self.amintimer:schedule(function()
                         NetManager:getAmInMapIndexPromise(self.current_allinace_index)
                     end, 10)
+                    self.home_page:RefreshTop(true)
                 end)
         end, 0.5)
     end
 end
 function AllianceDetailScene:CreateHomePage()
-    local home_page = GameUIAllianceHomeNew.new(City):addTo(self)
+    local home_page = GameUIAllianceHome.new(Alliance_Manager:GetMyAlliance()):addTo(self)
     home_page:setTouchSwallowEnabled(false)
     return home_page
 end
@@ -247,7 +248,8 @@ function AllianceDetailScene:OnTouchClicked(pre_x, pre_y, x, y)
         local alliance = Alliance_Manager:GetAllianceByCache(mapObj.index)
         if alliance then
             print(mapObj.index, mapObj.x, mapObj.y, mapObj.name)
-            UIKit:newGameUI("GameUIAllianceBase", alliance, mapObj.x, mapObj.y, mapObj.name):AddToCurrentScene(true)
+            -- UIKit:newGameUI("GameUIAllianceBase", alliance, mapObj.x, mapObj.y, mapObj.name):AddToCurrentScene(true)
+            self:EnterAllianceBuilding(alliance,mapObj)
         end
     end
 end
@@ -269,13 +271,33 @@ function AllianceDetailScene:UpdateVisibleAllianceBg()
     self.visible_alliances = new_visibles
 end
 function AllianceDetailScene:UpdateCurrrentAlliance()
-    local index = self:GetSceneLayer():GetMiddleAllianceIndex()
+local index = self:GetSceneLayer():GetMiddleAllianceIndex()
     self:FetchAllianceDatasByIndex(index, function(data)
         self:GetSceneLayer():LoadAllianceByIndex(index, data.allianceData)
     end)
 end
 
-
+function AllianceDetailScene:EnterAllianceBuilding(alliance,mapObj)
+    if mapObj.name then
+        local building_name = mapObj.name
+        local class_name = ""
+        if building_name == 'shrine' then
+            class_name = "GameUIAllianceShrineEnter"
+        elseif building_name == 'palace' then
+            class_name = "GameUIAlliancePalaceEnter"
+        elseif building_name == 'shop' then
+            class_name = "GameUIAllianceShopEnter"
+        elseif building_name == 'orderHall' then
+            class_name = "GameUIAllianceOrderHallEnter"
+        elseif building_name == 'moonGate' then
+            class_name = "GameUIAllianceMoonGateEnter"
+        else
+            print("没有此建筑--->",building_name)
+            return
+        end
+        UIKit:newGameUI(class_name,mapObj,alliance):AddToCurrentScene(true)
+    end
+end
 
 return AllianceDetailScene
 

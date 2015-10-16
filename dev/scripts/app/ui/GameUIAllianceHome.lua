@@ -63,29 +63,21 @@ function GameUIAllianceHome:onEnter()
     -- 获取历史记录
     self.city = City
     self.visible_count = 1
-    self.top = self:CreateTop()
     self.bottom = self:CreateBottom()
-
 
     local ratio = self.bottom:getScale()
     local rect1 = self.chat:getCascadeBoundingBox()
     local x, y = rect1.x, rect1.y + rect1.height - 2
     local march = WidgetMarchEvents.new(self.alliance, ratio):addTo(self):pos(x, y)
     self:AddMapChangeButton()
+    scheduleAt(self, function()
+        self:RefreshTop()
+    end)
     self:InitArrow()
-    if self.top then
-        if not self.alliance.allianceFightReports and self.alliance.basicInfo.status == "protect" then
-            NetManager:getAllianceFightReportsPromise(self.alliance.id):done(function ()
-                self.top:Refresh()
-            end)
-        else
-            self.top:Refresh()
-        end
-    end
     -- 中间按钮
     self:CreateOperationButton()
     self:AddOrRemoveListener(true)
-    self:Schedule()
+    -- self:Schedule()
 end
 function GameUIAllianceHome:onExit()
     self:AddOrRemoveListener(false)
@@ -94,8 +86,8 @@ end
 function GameUIAllianceHome:AddOrRemoveListener(isAdd)
     local city = self.city
     if isAdd then
-        self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
-        self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.MEMBER)
+        self.alliance:AddListenOnType(self, "basicInfo")
+        self.alliance:AddListenOnType(self, "members")
         city:AddListenOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
         city:AddListenOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
         city:AddListenOnType(self,city.LISTEN_TYPE.HELPED_TO_TROOPS)
@@ -108,11 +100,11 @@ function GameUIAllianceHome:AddOrRemoveListener(isAdd)
         city:GetDragonEyrie():GetDragonManager():AddListenOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
 
         -- 添加到全局计时器中，以便显示各个阶段的时间
-        app.timer:AddListener(self)
+        -- app.timer:AddListener(self)
     else
-        app.timer:RemoveListener(self)
-        self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
-        self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.MEMBER)
+        -- app.timer:RemoveListener(self)
+        self.alliance:RemoveListenerOnType(self, "basicInfo")
+        self.alliance:RemoveListenerOnType(self, "members")
         city:RemoveListenerOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
         city:RemoveListenerOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
         city:RemoveListenerOnType(self,city.LISTEN_TYPE.HELPED_TO_TROOPS)
@@ -203,10 +195,10 @@ function GameUIAllianceHome:InitArrow()
                 coinVillage = 0,
             }
             self.alliance:IteratorAllObjects(function(_, entity)
-                
-                if Alliance:GetMapObjectType(entity) == "village" then
-                    map[entity.name] = map[entity.name] + 1
-                end
+
+                    if Alliance:GetMapObjectType(entity) == "village" then
+                        map[entity.name] = map[entity.name] + 1
+                    end
             end)
             for k,v in pairs(map) do
                 print(Localize.village_name[k], v)
@@ -253,16 +245,16 @@ function GameUIAllianceHome:CreateOperationButton()
             -- button.alliance_belvedere_events_count:SetNumber(count)
 
             function button:CheckVisible()
-                -- local hasEvent,count = alliance_belvedere:HasEvents()
-                -- if self.alliance_belvedere_events_count then
-                --     self.alliance_belvedere_events_count:SetNumber(count)
-                -- end
-                -- return hasEvent
+            -- local hasEvent,count = alliance_belvedere:HasEvents()
+            -- if self.alliance_belvedere_events_count then
+            --     self.alliance_belvedere_events_count:SetNumber(count)
+            -- end
+            -- return hasEvent
             end
         elseif i == 3 then
             local alliance = self.alliance
             function button:CheckVisible()
-                -- return alliance:GetAllianceShrine():HaveEvent()
+            -- return alliance:GetAllianceShrine():HaveEvent()
             end
         elseif i == 1 then
             local dragon_img = display.newSprite(UILib.dragon_head.blueDragon)
@@ -340,16 +332,16 @@ function GameUIAllianceHome:TopBg()
     -- 顶部背景,为按钮
     local top_self_bg = WidgetPushButton.new({normal = "button_blue_normal_314X88.png",
         pressed = "button_blue_pressed_314X88.png"})
-        :onButtonClicked(handler(self, self.OnTopButtonClicked))
+        :onButtonClicked(handler(self, self.OnTopLeftButtonClicked))
         :align(display.TOP_CENTER, t_size.width/2-160, t_size.height-4)
         :addTo(top_bg)
     local top_enemy_bg = WidgetPushButton.new({normal = "button_red_normal_314X88.png",
         pressed = "button_red_pressed_314X88.png"})
-        :onButtonClicked(handler(self, self.OnTopButtonClicked))
+        :onButtonClicked(handler(self, self.OnTopRightButtonClicked))
         :align(display.TOP_CENTER, t_size.width/2+160, t_size.height-4)
         :addTo(top_bg)
 
-    return top_self_bg,top_enemy_bg
+    return top_self_bg,top_enemy_bg,top_bg
 end
 
 function GameUIAllianceHome:TopTabButtons()
@@ -357,10 +349,23 @@ function GameUIAllianceHome:TopTabButtons()
         :addTo(self.top_bg)
 end
 
-function GameUIAllianceHome:CreateTop()
+function GameUIAllianceHome:RefreshTop(force_refresh)
     local alliance = self.alliance
+    -- 获取当前所在联盟
+    local current_allinace_index = self.current_allinace_index
+    local pre_status = self.pre_status
+    local need_refresh = false
+    local current_map_index = display.getRunningScene():GetSceneLayer():GetMiddleAllianceIndex()
+    local need_refresh = current_allinace_index ~= current_map_index or pre_status ~= alliance.basicInfo.status
+    if not need_refresh and not force_refresh then
+        return
+    end
+    local top_bg = self.top_bg
+    if top_bg then
+        top_bg:removeFromParent()
+    end
     local Top = {}
-    local top_self_bg,top_enemy_bg = self:TopBg()
+    local top_self_bg,top_enemy_bg,top_bg = self:TopBg()
     -- 己方联盟名字
     local self_name_bg = display.newSprite("title_green_292X32.png")
         :align(display.LEFT_CENTER, -147,-26)
@@ -380,7 +385,45 @@ function GameUIAllianceHome:CreateTop()
     local self_flag = ui_helper:CreateFlagContentSprite(alliance.basicInfo.flag):scale(0.5)
     self_flag:align(display.CENTER, self_name_bg:getContentSize().width-100, -30):addTo(self_name_bg)
     self.self_flag = self_flag
-    -- 敌方联盟名字
+
+    -- 和平期,战争期,准备期背景
+    local period_bg = display.newSprite("box_104x104.png")
+        :align(display.TOP_CENTER, top_bg:getContentSize().width/2,top_bg:getContentSize().height)
+        :addTo(top_bg)
+
+    local period_text = self:GetAlliancePeriod()
+    local period_label = UIKit:ttfLabel(
+        {
+            text = period_text,
+            size = 16,
+            color = 0xbdb582
+        }):align(display.TOP_CENTER, period_bg:getContentSize().width/2, period_bg:getContentSize().height-14)
+        :addTo(period_bg)
+    local time_label = UIKit:ttfLabel(
+        {
+            text = "",
+            size = 18,
+            color = 0xffedae
+        }):align(display.BOTTOM_CENTER, period_bg:getContentSize().width/2, period_bg:getContentSize().height/2-10)
+        :addTo(period_bg)
+    scheduleAt(period_bg, function()
+        local basicInfo = alliance.basicInfo
+        if basicInfo.status then
+            if basicInfo.status ~= "peace" then
+                local statusFinishTime = basicInfo.statusFinishTime
+                if math.floor(statusFinishTime/1000)>app.timer:GetServerTime() then
+                    time_label:setString(GameUtils:formatTimeStyle1(math.floor(statusFinishTime/1000)-app.timer:GetServerTime()))
+                end
+            else
+                local statusStartTime = basicInfo.statusStartTime
+                if app.timer:GetServerTime()>= math.floor(statusStartTime/1000) then
+                    time_label:setString(GameUtils:formatTimeStyle1(app.timer:GetServerTime()-math.floor(statusStartTime/1000)))
+                end
+            end
+        end
+    end)
+
+    -- 敌方联盟名字 或者 占领联盟背景条
     local enemy_name_bg =  display.newSprite("title_red_292X32.png")
         :align(display.RIGHT_CENTER, 147,-26)
         :addTo(top_enemy_bg)
@@ -393,59 +436,89 @@ function GameUIAllianceHome:CreateTop()
             ellipsis = true
         }):align(display.LEFT_CENTER, 100, 20)
         :addTo(enemy_name_bg)
-    local enemy_peace_label = UIKit:ttfLabel(
-        {
-            text = alliance:GetMemeberById(User:Id()):IsTitleEqualOrGreaterThan("general") and _("开始战斗") or _("请求开战"),
-            size = 20,
-            color = 0xffedae
-        }):align(display.LEFT_CENTER, -20,-24)
-        :addTo(top_enemy_bg)
-    local fight_icon_66x66 = display.newSprite("fight_icon_66x66.png"):addTo(top_enemy_bg):align(display.LEFT_CENTER, -108,-37)
 
-    -- 和平期,战争期,准备期背景
-    local period_bg = display.newSprite("box_104x104.png")
-        :align(display.TOP_CENTER, self.top_bg:getContentSize().width/2,self.top_bg:getContentSize().height)
-        :addTo(self.top_bg)
+    -- local status = alliance.basicInfo.status
+    local status = "peace"
+    if status == "peace" or status == "prepare" then
+        -- 己方战力
+        local self_power_bg = display.newSprite("power_background_146x26.png")
+            :align(display.LEFT_CENTER, -107, -65):addTo(top_self_bg)
+        local our_num_icon = cc.ui.UIImage.new("dragon_strength_27x31.png"):align(display.CENTER, -107, -65):addTo(top_self_bg)
+        local self_power_label = UIKit:ttfLabel(
+            {
+                text = string.formatnumberthousands(alliance.basicInfo.power),
+                size = 20,
+                color = 0xbdb582
+            }):align(display.LEFT_CENTER, 20, self_power_bg:getContentSize().height/2)
+            :addTo(self_power_bg)
+        local other_alliance = Alliance_Manager:GetAllianceByCache(current_map_index)
+        if current_map_index ~= alliance:MapIndex() and other_alliance then
+            local enemy_flag = ui_helper:CreateFlagContentSprite(other_alliance.basicInfo.flag):scale(0.5)
+            enemy_flag:align(display.CENTER,100-enemy_flag:getCascadeBoundingBox().size.width, -30)
+                :addTo(enemy_name_bg)
+            enemy_name_label:setString("["..other_alliance.basicInfo.tag.."] "..other_alliance.basicInfo.name)
 
-    local period_text = self:GetAlliancePeriod()
-    local period_label = UIKit:ttfLabel(
-        {
-            text = period_text,
-            size = 16,
-            color = 0xbdb582
-        }):align(display.TOP_CENTER, period_bg:getContentSize().width/2, period_bg:getContentSize().height-14)
-        :addTo(period_bg)
-    self.time_label = UIKit:ttfLabel(
-        {
-            text = "",
-            size = 18,
-            color = 0xffedae
-        }):align(display.BOTTOM_CENTER, period_bg:getContentSize().width/2, period_bg:getContentSize().height/2-10)
-        :addTo(period_bg)
-    -- 己方战力
-    local self_power_bg = display.newSprite("power_background_146x26.png")
-        :align(display.LEFT_CENTER, -107, -65):addTo(top_self_bg)
-    local our_num_icon = cc.ui.UIImage.new("dragon_strength_27x31.png"):align(display.CENTER, -107, -65):addTo(top_self_bg)
-    local self_power_label = UIKit:ttfLabel(
-        {
-            text = string.formatnumberthousands(alliance.basicInfo.power),
-            size = 20,
-            color = 0xbdb582
-        }):align(display.LEFT_CENTER, 20, self_power_bg:getContentSize().height/2)
-        :addTo(self_power_bg)
+            -- 敌方战力
+            local enemy_power_bg = display.newSprite("power_background_146x26.png")
+                :align(display.LEFT_CENTER, -20, -65):addTo(top_enemy_bg)
+            local enemy_num_icon = cc.ui.UIImage.new("dragon_strength_27x31.png")
+                :align(display.CENTER, 0, enemy_power_bg:getContentSize().height/2)
+                :addTo(enemy_power_bg)
+            local enemy_power_label = UIKit:ttfLabel(
+                {
+                    text = string.formatnumberthousands(other_alliance.basicInfo.power),
+                    size = 20,
+                    color = 0xbdb582
+                }):align(display.LEFT_CENTER, 20, enemy_power_bg:getContentSize().height/2)
+                :addTo(enemy_power_bg)
+        else
+            local fight_icon_66x66 = display.newSprite("icon_capture_80x72.png"):addTo(top_enemy_bg):align(display.LEFT_CENTER, -108,-37)
+            enemy_name_label:align(display.CENTER, 220, 20)
+            enemy_name_label:setString(_("占领联盟"))
+            local capture_bg = display.newSprite("power_background_146x26_2.png")
+                :align(display.LEFT_CENTER, -20, -65):addTo(top_enemy_bg)
+            local capture_label = UIKit:ttfLabel(
+                {
+                    text = "0",
+                    size = 20,
+                    color = 0xbdb582
+                }):align(display.CENTER, capture_bg:getContentSize().width/2, capture_bg:getContentSize().height/2)
+                :addTo(capture_bg)
+        end
+    else
+        enemy_name_label:setString(_("敌方联盟名字"))
+        local enemy_flag = ui_helper:CreateFlagContentSprite(alliance.basicInfo.flag):scale(0.5)
+        enemy_flag:align(display.CENTER,100-enemy_flag:getCascadeBoundingBox().size.width, -30)
+            :addTo(enemy_name_bg)
+    end
+
+    self.current_allinace_index = current_map_index
+    self.pre_status = alliance.basicInfo.status
+
+
+    -- local enemy_peace_label = UIKit:ttfLabel(
+    --     {
+    --         text = alliance:GetMemeberById(User:Id()):IsTitleEqualOrGreaterThan("general") and _("开始战斗") or _("请求开战"),
+    --         size = 20,
+    --         color = 0xffedae
+    --     }):align(display.LEFT_CENTER, -20,-24)
+    --     :addTo(top_enemy_bg)
+
+
+
     -- 敌方战力
-    local enemy_power_bg = display.newSprite("power_background_146x26.png")
-        :align(display.LEFT_CENTER, -20, -65):addTo(top_enemy_bg)
-    local enemy_num_icon = cc.ui.UIImage.new("dragon_strength_27x31.png")
-        :align(display.CENTER, 0, enemy_power_bg:getContentSize().height/2)
-        :addTo(enemy_power_bg)
-    local enemy_power_label = UIKit:ttfLabel(
-        {
-            text = "",
-            size = 20,
-            color = 0xbdb582
-        }):align(display.LEFT_CENTER, 20, enemy_power_bg:getContentSize().height/2)
-        :addTo(enemy_power_bg)
+    -- local enemy_power_bg = display.newSprite("power_background_146x26.png")
+    --     :align(display.LEFT_CENTER, -20, -65):addTo(top_enemy_bg)
+    -- local enemy_num_icon = cc.ui.UIImage.new("dragon_strength_27x31.png")
+    --     :align(display.CENTER, 0, enemy_power_bg:getContentSize().height/2)
+    --     :addTo(enemy_power_bg)
+    -- local enemy_power_label = UIKit:ttfLabel(
+    --     {
+    --         text = "",
+    --         size = 20,
+    --         color = 0xbdb582
+    --     }):align(display.LEFT_CENTER, 20, enemy_power_bg:getContentSize().height/2)
+    --     :addTo(enemy_power_bg)
 
     self:TopTabButtons()
 
@@ -453,7 +526,7 @@ function GameUIAllianceHome:CreateTop()
     function Top:Refresh()
         local alliance = home.alliance
         local status = alliance.basicInfo.status
-        local enemyAlliance = Alliance_Manager:GetEnemyAlliance()
+        -- local enemyAlliance = Alliance_Manager:GetEnemyAlliance()
         period_label:setString(home:GetAlliancePeriod())
         enemy_name_label:setVisible(status~="peace")
         -- 和平期
@@ -521,11 +594,11 @@ function GameUIAllianceHome:CreateTop()
     function Top:SetEnemyPowerOrKill(num)
         enemy_power_label:setString(string.formatnumberthousands(num))
     end
-    top_enemy_bg:schedule(function()
-        if self.alliance.basicInfo.status == "peace" then
-            self.top:SetEnemyPowerOrKill(0)
-        end
-    end, 1)
+    -- top_enemy_bg:schedule(function()
+    --     if self.alliance.basicInfo.status == "peace" then
+    --         self.top:SetEnemyPowerOrKill(0)
+    --     end
+    -- end, 1)
     return Top
 end
 function GameUIAllianceHome:CreateBottom()
@@ -538,9 +611,21 @@ end
 function GameUIAllianceHome:ChangeChatChannel(channel_index)
     self.chat:ChangeChannel(channel_index)
 end
-function GameUIAllianceHome:OnTopButtonClicked(event)
+function GameUIAllianceHome:OnTopLeftButtonClicked(event)
     if event.name == "CLICKED_EVENT" then
-        UIKit:newGameUI("GameUIAllianceBattle", self.city):AddToCurrentScene(true)
+        UIKit:newGameUI("GameUIAllianceBattle", self.city , "history"):AddToCurrentScene(true)
+    end
+end
+function GameUIAllianceHome:OnTopRightButtonClicked(event)
+    if event.name == "CLICKED_EVENT" then
+        local other_alliance = Alliance_Manager:GetAllianceByCache(self.current_allinace_index)
+        local tag
+        if other_alliance and self.current_allinace_index ~= self.alliance:MapIndex() then
+            tag = "fight"
+        else
+            tag = "capture"
+        end
+        UIKit:newGameUI("GameUIAllianceBattle", self.city , tag ,other_alliance):AddToCurrentScene(true)
     end
 end
 function GameUIAllianceHome:OnMidButtonClicked(event)
@@ -566,7 +651,7 @@ function GameUIAllianceHome:OnMidButtonClicked(event)
                 shrine_info = v
             end
         end
-        
+
         UIKit:newGameUI("GameUIAllianceShrine",self.city,"fight_event",self.alliance:FindAllianceBuildingInfoByObjects(shrine_info)):AddToCurrentScene(true)
     elseif tag == 1 then
         UIKit:newGameUI("GameUIDragonEyrieMain", self.city, self.city:GetFirstBuildingByType("dragonEyrie"), "dragon"):AddToCurrentScene(true)
@@ -587,11 +672,13 @@ function GameUIAllianceHome:OnAllianceDataChanged_basicInfo(alliance,deltaData)
         if alliance.allianceFightReports then
             NetManager:getAllianceFightReportsPromise(self.alliance.id):done(function ( ... )
                 if self.top then
-                    self.top:Refresh()
+                    -- self.top:Refresh()
+                    self:RefreshTop()
                 end
             end)
         else
-            self.top:Refresh()
+            -- self.top:Refresh()
+            self:RefreshTop()
         end
         self.operation_button_order:RefreshOrder()
     elseif ok_name or ok_tag then
@@ -779,27 +866,27 @@ end
 function GameUIAllianceHome:OnAllianceFightChanged(alliance, deltaData)
     if deltaData("basicInfo.status", "fight") then
         -- if our and enemy then
-            self.top:SetOurPowerOrKill(0)
-            self.top:SetEnemyPowerOrKill(0)
+        self.top:SetOurPowerOrKill(0)
+        self.top:SetEnemyPowerOrKill(0)
         -- end
     end
 end
-function GameUIAllianceHome:OnTimer(current_time)
-    local basicInfo = self.alliance.basicInfo
-    if basicInfo.status then
-        if basicInfo.status ~= "peace" then
-            local statusFinishTime = basicInfo.statusFinishTime
-            if math.floor(statusFinishTime/1000)>current_time then
-                self.time_label:setString(GameUtils:formatTimeStyle1(math.floor(statusFinishTime/1000)-current_time))
-            end
-        else
-            local statusStartTime = basicInfo.statusStartTime
-            if current_time>= math.floor(statusStartTime/1000) then
-                self.time_label:setString(GameUtils:formatTimeStyle1(current_time-math.floor(statusStartTime/1000)))
-            end
-        end
-    end
-end
+-- function GameUIAllianceHome:OnTimer(current_time)
+--     local basicInfo = self.alliance.basicInfo
+--     if basicInfo.status then
+--         if basicInfo.status ~= "peace" then
+--             local statusFinishTime = basicInfo.statusFinishTime
+--             if math.floor(statusFinishTime/1000)>current_time then
+--                 self.time_label:setString(GameUtils:formatTimeStyle1(math.floor(statusFinishTime/1000)-current_time))
+--             end
+--         else
+--             local statusStartTime = basicInfo.statusStartTime
+--             if current_time>= math.floor(statusStartTime/1000) then
+--                 self.time_label:setString(GameUtils:formatTimeStyle1(current_time-math.floor(statusStartTime/1000)))
+--             end
+--         end
+--     end
+-- end
 
 function GameUIAllianceHome:GetAlliancePeriod()
     local period = ""
@@ -817,6 +904,14 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
+
+
+
+
+
+
+
+
 
 
 

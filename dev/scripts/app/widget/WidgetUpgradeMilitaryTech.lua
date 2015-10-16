@@ -25,7 +25,7 @@ local function create_line_item(icon,text_1,text_2,text_3)
     }):align(display.LEFT_BOTTOM, 40 , 2)
         :addTo(line)
 
-    local green_icon = display.newSprite("teach_upgrade_icon_15x17.png"):align(display.BOTTOM_CENTER, 358 , 6):addTo(line)
+    local green_icon = display.newSprite("teach_upgrade_icon_15x17.png"):align(display.BOTTOM_CENTER, 340 , 6):addTo(line)
     if text_2 == "" then
         green_icon:hide()
     end

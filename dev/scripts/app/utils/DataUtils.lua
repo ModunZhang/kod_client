@@ -64,7 +64,7 @@ function DataUtils:buyResource(need, has)
             if key == "citizen" then
                 local freeCitizenLimit = User:GetResProduction("citizen").limit
                 assert(freeCitizenLimit ~= 0)
-                while required > 0 do
+                while required > 0 and freeCitizenLimit ~= 0 do
                     local requiredPercent = required / freeCitizenLimit
                     for i=#config,1,-1 do
                         item = config[i]

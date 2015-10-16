@@ -1358,7 +1358,7 @@ end
 function NetManager:getAllianceFightReportsPromise(allianceId)
     return get_blocking_request_promise("logic.allianceHandler.getAllianceFightReports", {
         allianceId = allianceId
-    }, "获取联盟战历史记录失败!"):done(get_alliance_alliancefightreports_response_msg)
+    }, "获取联盟战历史记录失败!"):done(get_alliance_response_msg)
 end
 --获取联盟圣地战历史记录
 function NetManager:getShrineReportsPromise()
@@ -1449,9 +1449,11 @@ function NetManager:getMarchToShrinePromose(shrineEventId,dragonType,soldiers)
     }, "圣地派兵失败!"):done(get_player_response_msg)
 end
 --查找合适的联盟进行战斗
-function NetManager:getFindAllianceToFightPromose()
-    return get_blocking_request_promise("logic.allianceHandler.findAllianceToFight",
-        {}, "查找合适的联盟进行战斗失败!"):done(get_player_response_msg):done(get_alliance_response_msg)
+function NetManager:getAttackAlliancePromose(targetAllianceId)
+    return get_blocking_request_promise("logic.allianceHandler.attackAlliance",
+        {
+            targetAllianceId = targetAllianceId
+        }, "查找合适的联盟进行战斗失败!"):done(get_player_response_msg):done(get_alliance_response_msg)
 end
 --获取对手联盟数据
 function NetManager:getFtechAllianceViewDataPromose(targetAllianceId)

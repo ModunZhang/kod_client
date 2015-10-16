@@ -12,7 +12,7 @@ local function create_line_item(icon,text_1,text_2)
     local line = display.newScale9Sprite("dividing_line.png",0,0,cc.size(258,2),cc.rect(10,2,382,2))
     local icon = display.newSprite(icon):addTo(line,2):align(display.LEFT_BOTTOM, 0, 2)
     icon:scale(32/math.max(icon:getContentSize().width,icon:getContentSize().height))
-    local green_icon = display.newSprite("teach_upgrade_icon_15x17.png"):align(display.BOTTOM_CENTER, 194 , 6):addTo(line)
+    local green_icon = display.newSprite("teach_upgrade_icon_15x17.png"):align(display.BOTTOM_CENTER, 182 , 6):addTo(line)
     if text_1 == "" then
         green_icon:hide()
     end
