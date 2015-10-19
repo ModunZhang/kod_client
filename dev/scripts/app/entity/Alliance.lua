@@ -1012,7 +1012,13 @@ function Alliance:OnVillageEventsDataChanged(alliance_data,deltaData,refresh_tim
         self:CallEventsChangedListeners(Alliance.LISTEN_TYPE.OnVillageEventsDataChanged,GameUtils:pack_event_table(changed_map))
     end
 end
-
+function Alliance:OnAllianceFightReportsChanged(alliance_data, deltaData)
+    local is_fully_update = deltaData == nil
+    local is_delta_update = not is_fully_update and deltaData.allianceFightReports ~= nil
+    if is_fully_update or is_delta_update then
+        self.allianceFightReports = alliance_data.allianceFightReports
+    end
+end
 function Alliance:IteratorVillageEvents(func)
     -- for _,v in pairs(self.villageEvents) do
     --     func(v)

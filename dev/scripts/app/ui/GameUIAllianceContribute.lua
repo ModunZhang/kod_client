@@ -1,6 +1,5 @@
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetPopDialog = import("..widget.WidgetPopDialog")
-local UIListView = import(".UIListView")
 local Alliance = import("..entity.Alliance")
 local Observer = import("..entity.Observer")
 local window = import("..utils.window")
@@ -11,7 +10,7 @@ local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local GameUIAllianceContribute = class("GameUIAllianceContribute", WidgetPopDialog)
 
 function GameUIAllianceContribute:ctor()
-    GameUIAllianceContribute.super.ctor(self,626,_("联盟捐献"),window.top-200)
+    GameUIAllianceContribute.super.ctor(self,788,_("联盟捐献"),window.top-120)
     self:setNodeEventEnabled(true)
     -- 联盟主页滑动框需要监听捐赠ui是否开启来决定是否自动滚动
     self.observer = Observer.new()
@@ -21,8 +20,8 @@ function GameUIAllianceContribute:ctor()
 
     -- 捐赠能获得荣耀点
     local honour_bg = display.newScale9Sprite("back_ground_166x84.png",0 , 0,cc.size(138,34),cc.rect(15,10,136,64))
-        :align(display.LEFT_CENTER, 30, 75):addTo(self.body)
-    display.newSprite("honour_128x128.png"):align(display.CENTER, 30, 75):addTo(self.body):scale(42/128)
+        :align(display.LEFT_CENTER, 30, 235):addTo(self.body)
+    display.newSprite("honour_128x128.png"):align(display.CENTER, 30, 235):addTo(self.body):scale(42/128)
     self.donate_honour = UIKit:ttfLabel({
         text = "+0",
         size = 22,
@@ -31,8 +30,8 @@ function GameUIAllianceContribute:ctor()
         :addTo(honour_bg)
     -- 捐赠能获得忠诚
     local loyalty_bg = display.newScale9Sprite("back_ground_166x84.png",0 , 0,cc.size(138,34),cc.rect(15,10,136,64))
-        :align(display.LEFT_CENTER, 200, 75):addTo(self.body)
-    display.newSprite("loyalty_128x128.png"):align(display.CENTER, 205, 75):addTo(self.body):scale(46/128)
+        :align(display.LEFT_CENTER, 200, 235):addTo(self.body)
+    display.newSprite("loyalty_128x128.png"):align(display.CENTER, 205, 235):addTo(self.body):scale(46/128)
     self.donate_loyalty = UIKit:ttfLabel({
         text = "+0",
         size = 22,
@@ -44,11 +43,11 @@ function GameUIAllianceContribute:ctor()
         text = "",
         size = 20,
         color = 0x615b44,
-    }):align(display.LEFT_CENTER, 20,40)
+    }):align(display.LEFT_CENTER, 20,200)
         :addTo(self.body)
 
     local contribute_btn = WidgetPushButton.new({normal = "yellow_btn_up_186x66.png",pressed = "yellow_btn_down_186x66.png"})
-        :align(display.CENTER,500,60)
+        :align(display.CENTER,500,220)
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 if self:IsAbleToContribute() then
@@ -70,6 +69,23 @@ function GameUIAllianceContribute:ctor()
             shadow = true
         }))
         :addTo(self.body)
+    local info = {
+        _("忠诚值是玩家自己的属性，退出联盟后依然保留"),
+        _("忠诚值可以在联盟商店中购买道具"),
+        _("向联盟捐赠资源可以增加忠诚值"),
+        _("帮助盟友加速科技研发和建筑升级可以增加忠诚值"),
+    }
+    local origin_y, gap_y = 160, 40
+    for i,v in ipairs(info) do
+        display.newSprite("icon_star_22x20.png"):align(display.CENTER, 40, origin_y - (i -1) * gap_y)
+            :addTo(self.body)
+        UIKit:ttfLabel({
+            text = v,
+            size = 18,
+            color = 0x615b44,
+        }):align(display.LEFT_CENTER, 60,origin_y - (i -1) * gap_y)
+            :addTo(self.body)
+    end
 
 end
 function GameUIAllianceContribute:AddIsOpenObserver( listener )
@@ -102,7 +118,7 @@ function GameUIAllianceContribute:onExit()
 end
 function GameUIAllianceContribute:GetDonateValueByType(donate_type)
     if not donate_type then return end
-    local donate_status = User:AllianceDonate()
+    local donate_status = User.allianceDonate
     local donate_level = donate_status[donate_type]
     for _,donate in pairs(GameDatas.AllianceInitData.donate) do
         if donate.level==donate_level and donate_type == donate.type then
@@ -130,7 +146,7 @@ function GameUIAllianceContribute:CreateContributeGroup()
     local ui_self = self
     -- 透明背景框
     local group = WidgetUIBackGround.new({width = 568,height=490},WidgetUIBackGround.STYLE_TYPE.STYLE_6)
-        :align(display.CENTER,304, 355):addTo(self.body)
+        :align(display.CENTER,304, 515):addTo(self.body)
     local group_table = {
         {
             icon="res_wood_82x73.png",
@@ -321,8 +337,7 @@ function GameUIAllianceContribute:IsAbleToContribute()
     if r_type == "gem" then
         r_count = User:GetGemValue()
     else
-        assert(false)
-        -- r_count = City.resource_manager:GetResourceByType(CON_TYPE[r_type]):GetResourceValueByCurrentTime(app.timer:GetServerTime())
+        r_count = User:GetResValueByType(r_type)
     end
     if r_count<count then
         UIKit:showMessageDialog(_("提示"),_("选择捐赠的物资不足"))
@@ -343,6 +358,7 @@ function GameUIAllianceContribute:OnUserDataChanged_allianceDonate()
     self:RefreashEff()
 end
 return GameUIAllianceContribute
+
 
 
 
