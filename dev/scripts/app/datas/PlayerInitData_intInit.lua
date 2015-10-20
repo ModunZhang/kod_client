@@ -155,3 +155,43 @@ intInit["eachHouseInitCount"] = {
 	["value"] = 3,
 	["desc"] = "玩家初始小屋数量"
 }
+intInit["resourceCollectPerSecond"] = {
+	["type"] = "resourceCollectPerSecond",
+	["value"] = 100,
+	["desc"] = "普通资源每秒采集量"
+}
+intInit["coinCollectPerSecond"] = {
+	["type"] = "coinCollectPerSecond",
+	["value"] = 50,
+	["desc"] = "银币每秒采集量"
+}
+intInit["grassLandWoodAddPercent"] = {
+	["type"] = "grassLandWoodAddPercent",
+	["value"] = 10,
+	["desc"] = "草地木材加成百分比"
+}
+intInit["grassLandStoneAddPercent"] = {
+	["type"] = "grassLandStoneAddPercent",
+	["value"] = 10,
+	["desc"] = "草地石材加成百分比"
+}
+intInit["grassLandIronAddPercent"] = {
+	["type"] = "grassLandIronAddPercent",
+	["value"] = 10,
+	["desc"] = "草地铁矿加成百分比"
+}
+intInit["grassLandFoodAddPercent"] = {
+	["type"] = "grassLandFoodAddPercent",
+	["value"] = 20,
+	["desc"] = "草地粮食加成百分比"
+}
+intInit["desertAttackAddPercent"] = {
+	["type"] = "desertAttackAddPercent",
+	["value"] = 5,
+	["desc"] = "沙漠攻击力加成百分比"
+}
+intInit["iceFieldDefenceAddPercent"] = {
+	["type"] = "iceFieldDefenceAddPercent",
+	["value"] = 5,
+	["desc"] = "雪地防御力加成百分比"
+}
