@@ -1437,6 +1437,7 @@ end
 
 
 
+
 local before_map = {
     basicInfo = function(userData, deltaData)
         local ok, value = deltaData("basicInfo.name")
@@ -1466,10 +1467,18 @@ local before_map = {
         local ok, value = deltaData("houseEvents.remove")
         if ok then
             for i,v in ipairs(value) do
+                app:GetPushManager():CancelBuildPush(v.id)
                 local house = userData:GetHouseByLocation(v.buildingLocation, v.houseLocation)
                 GameGlobalUI:showTips(_("提示"),
                     string.format(_("建造%s至%d级完成"),
                     Localize.building_name[house.type], house.level))
+            end
+        end
+        
+        local ok, value = deltaData("houseEvents.edit")
+        if ok then
+            for i,v in ipairs(value) do
+                userData:HouseLocalPush(v)
             end
         end
     end,
@@ -1477,10 +1486,18 @@ local before_map = {
         local ok, value = deltaData("buildingEvents.remove")
         if ok then
             for i,v in ipairs(value) do
+                app:GetPushManager():CancelBuildPush(v.id)
                 local building = userData:GetBuilingByLocation(v.location)
                 GameGlobalUI:showTips(_("提示"),
                     string.format(_("建造%s至%d级完成"),
                     Localize.building_name[building.type], building.level))
+            end
+        end
+
+        local ok, value = deltaData("buildingEvents.edit")
+        if ok then
+            for i,v in ipairs(value) do
+                userData:BuildingLocalPush(v)
             end
         end
     end,
@@ -1490,10 +1507,18 @@ local before_map = {
         local ok, value = deltaData("productionTechEvents.remove")
         if ok then
             for i,v in ipairs(value) do
+                app:GetPushManager():CancelTechnologyPush(v.id)
                 GameGlobalUI:showTips(
                     _("生产科技升级完成"), 
                     Localize.productiontechnology_name[v.name]
                     .."Lv"..userData.productionTechs[v.name].level)        
+            end
+        end
+
+        local ok, value = deltaData("productionTechEvents.edit")
+        if ok then
+            for i,v in ipairs(value) do
+                userData:ProductTechLocalPush(v)
             end
         end
         
@@ -1505,9 +1530,17 @@ local before_map = {
         local ok, value = deltaData("militaryTechEvents.remove")
         if ok then
             for i,v in ipairs(value) do
+                app:GetPushManager():CancelTechnologyPush(v.id)
                 GameGlobalUI:showTips(_("军事科技升级完成"),
                     UtilsForTech:GetTechLocalize(v.name)
                     .."Lv"..militaryTechs[v.name].level)
+            end
+        end
+
+        local ok, value = deltaData("militaryTechEvents.edit")
+        if ok then
+            for i,v in ipairs(value) do
+                userData:MilitaryLocalPush(v)
             end
         end
     end,
@@ -1517,8 +1550,16 @@ local before_map = {
         local ok, value = deltaData("soldierEvents.remove")
         if ok then
             for i,v in ipairs(value) do
+                app:GetPushManager():CancelSoldierPush(v.id)
                 GameGlobalUI:showTips(_("招募士兵完成"), 
                 Localize.soldier_name[v.name].."X"..v.count)
+            end
+        end
+
+        local ok, value = deltaData("soldierEvents.edit")
+        if ok then
+            for i,v in ipairs(value) do
+                userData:RecruitLocalPush(v)
             end
         end
     end, 
@@ -1528,6 +1569,7 @@ local before_map = {
         local ok, value = deltaData("treatSoldierEvents.remove")
         if ok then
             for i,v in ipairs(value) do
+                app:GetPushManager():CancelSoldierPush(v.id)
                 local soldiers_info = {}
                 for i,soldier in ipairs(v.soldiers) do
                     table.insert(soldiers_info, 
@@ -1538,6 +1580,13 @@ local before_map = {
                     table.concat(soldiers_info, ","))
             end
         end
+
+        local ok, value = deltaData("treatSoldierEvents.edit")
+        if ok then
+            for i,v in ipairs(value) do
+                userData:TreatLocalPush(v)
+            end
+        end
     end,
 
     soldierStars = function()end,
@@ -1545,6 +1594,7 @@ local before_map = {
         local ok, value = deltaData("soldierStarEvents.remove")
         if ok then
             for i,v in ipairs(value) do
+                app:GetPushManager():CancelSoldierPush(v.id)
                 GameGlobalUI:showTips(
                     _("士兵晋级完成"),
                     string.format(
@@ -1555,6 +1605,13 @@ local before_map = {
                 )
             end
         end
+
+        local ok, value = deltaData("soldierStarEvents.edit")
+        if ok then
+            for i,v in ipairs(value) do
+                userData:StarLocalPush(v)
+            end
+        end
     end,
     
     dragonEquipments = function()end,
@@ -1562,8 +1619,15 @@ local before_map = {
         local ok, value = deltaData("dragonEquipmentEvents.remove")
         if ok then
             for k,v in ipairs(value) do
+                app:GetPushManager():CancelToolEquipmentPush(v.id)
                 GameGlobalUI:showTips(_("制造装备完成"), 
                     Localize.equip[v.name].."X1")
+            end
+        end
+        local ok, value = deltaData("dragonEquipmentEvents.edit")
+        if ok then
+            for i,v in ipairs(value) do
+                userData:EquipLocalPush(v)
             end
         end
     end,
@@ -1577,6 +1641,7 @@ local before_map = {
         if ok then
             for k,v in ipairs(value) do
                 if v.finishTime == 0 then
+                    app:GetPushManager():CancelToolEquipmentPush(v.id)
                     local material_info = {}
                     for i,m in ipairs(v.materials) do
                         table.insert(material_info, 
@@ -1584,6 +1649,8 @@ local before_map = {
                     end
                     GameGlobalUI:showTips(_("制造材料完成"), 
                         table.concat(material_info, ","))
+                else
+                    userData:MaterialLocalPush(v)
                 end
             end
         end
@@ -1613,10 +1680,135 @@ local after_map = {
     end,
 }
 function User:OnUserDataChanged(userData, deltaData)
+    local push_man = app:GetPushManager()
     for k,v in pairs(userData) do
         self[k] = v
     end
+    if not deltaData then
+        for id,func in pairs(self.local_push_map or {}) do
+            func(push_man, id)
+        end
+        self.local_push_map = {}
+
+        -- jianzhu
+        for i,v in ipairs(self.houseEvents) do
+            self:HouseLocalPush(v)
+        end
+        for i,v in ipairs(self.buildingEvents) do
+            self:BuildingLocalPush(v)
+        end
+
+        -- shibing
+        for i,v in ipairs(self.soldierEvents) do
+            self:RecruitLocalPush(v)
+        end
+        for i,v in ipairs(self.soldierStarEvents) do
+            self:StarLocalPush(v)
+        end
+        for i,v in ipairs(self.treatSoldierEvents) do
+            self:TreatLocalPush(v)
+        end
+
+        -- keji
+        for i,v in ipairs(self.militaryTechEvents) do
+            self:MilitaryLocalPush(v)
+        end
+        for i,v in ipairs(self.productionTechs) do
+            self:ProductTechLocalPush(v)
+        end
+
+        -- cailiao
+        for i,v in ipairs(self.materialEvents) do
+            self:MaterialLocalPush(v)
+        end
+        for i,v in ipairs(self.dragonEquipmentEvents) do
+            self:EquipLocalPush(v)
+        end
+    end
     return self
+end
+function User:HouseLocalPush(event)
+    local push_man = app:GetPushManager()
+    self.local_push_map = self.local_push_map or {}
+    local building = self:GetBuildingByEvent(event)
+    local title = string.format(_("修建%s到LV%d完成"), 
+        Localize.getLocaliedKeyByType(building.type), 
+        (building.level + 1))
+    push_man:UpdateBuildPush(event.finishTime/1000, title, event.id)
+    self.local_push_map[event.id] = push_man.CancelBuildPush
+end
+function User:BuildingLocalPush(event)
+    local push_man = app:GetPushManager()
+    self.local_push_map = self.local_push_map or {}
+    local building = self:GetBuildingByEvent(event)
+    local title = string.format(_("修建%s到LV%d完成"), 
+        Localize.getLocaliedKeyByType(building.type), 
+        (building.level + 1))
+    push_man:UpdateBuildPush(event.finishTime/1000, title, event.id)
+    self.local_push_map[event.id] = push_man.CancelBuildPush
+end
+function User:RecruitLocalPush(event)
+    local push_man = app:GetPushManager()
+    self.local_push_map = self.local_push_map or {}
+    local title = string.format(_("招募%s X%d完成"),
+        Localize.soldier_name[event.name],event.count)
+    push_man:UpdateSoldierPush(event.finishTime/1000, title, event.id)
+    self.local_push_map[event.id] = push_man.CancelSoldierPush
+end
+function User:StarLocalPush(event)
+    local push_man = app:GetPushManager()
+    self.local_push_map = self.local_push_map or {}
+    local title = string.format(_("晋升%s的星级 star %d%s完成"), 
+        Localize.soldier_name[event.name],
+        self.soldierStars[event.name].level)
+    push_man:UpdateSoldierPush(event.finishTime/1000, title, event.id)
+    self.local_push_map[event.id] = push_man.CancelSoldierPush
+end
+function User:TreatLocalPush(event)
+    local push_man = app:GetPushManager()
+    self.local_push_map = self.local_push_map or {}
+    local soldiers_info = {}
+    for i,v in ipairs(event.soldiers) do
+        table.insert(soldiers_info, 
+            string.format(_("%s X %d "), 
+                Localize.soldier_name[v.name], v.count))
+    end
+    local title = string.format(_("治愈%s完成"), table.concat(soldiers_info, ","))
+    push_man:UpdateSoldierPush(event.finishTime/1000, title, event.id)
+    self.local_push_map[event.id] = push_man.CancelSoldierPush
+end
+function User:MilitaryLocalPush(event)
+    local push_man = app:GetPushManager()
+    self.local_push_map = self.local_push_map or {}
+    local title = UtilsForEvent:GetMilitaryTechEventLocalize(event.name, 
+                self.militaryTechs[event.name].level)
+    push_man:UpdateTechnologyPush(event.finishTime/1000, title, event.id)
+    self.local_push_map[event.id] = push_man.CancelTechnologyPush
+end
+function User:ProductTechLocalPush(event)
+    local push_man = app:GetPushManager()
+    self.local_push_map = self.local_push_map or {}
+    local title = Localize.productiontechnology_buffer_complete[event.name]
+    push_man:UpdateTechnologyPush(event.finishTime/1000, title, event.id)
+    self.local_push_map[event.id] = push_man.CancelTechnologyPush
+end
+function User:MaterialLocalPush(event)
+    local push_man = app:GetPushManager()
+    self.local_push_map = self.local_push_map or {}
+    local count = 0
+    for k,v in ipairs(event.materials) do
+        count = count + v.count
+    end
+    local title = string.format(_("制造%d个材料完成"), count)
+    push_man:UpdateToolEquipmentPush(event.finishTime/1000, title, event.id)
+    self.local_push_map[event.id] = push_man.CancelToolEquipmentPush
+end
+function User:EquipLocalPush(event)
+    local push_man = app:GetPushManager()
+    self.local_push_map = self.local_push_map or {}
+    local title = string.format(_("制造%s装备完成"), Localize.equip[event.name])
+    push_man:UpdateToolEquipmentPush(event.finishTime/1000, title, event.id)
+    self.local_push_map[event.id] = push_man.CancelToolEquipmentPush 
 end
 function User:OnDeltaDataChanged(deltaData)
     if deltaData then
