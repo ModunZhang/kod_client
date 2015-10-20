@@ -110,53 +110,6 @@ function GameUIHelp:InsertItemToList(help_event)
         self.help_listview:addItem(item)
     end
 end
--- function GameUIHelp:CheckEventFinished(help_event)
---     local city = City
---     local eventData = help_event:GetEventData()
---     local type = eventData:Type()
---     local event_id = eventData:Id()
---     local isFinished = true
---     if type == "buildingEvents" then
---         city:IteratorFunctionBuildingsByFunc(function(key, building)
---             if building:UniqueUpgradingKey() == event_id then
---                 isFinished = false
---             end
---         end)
---         -- 城墙，箭塔
---         if city:GetGate():UniqueUpgradingKey() == event_id then
---             isFinished = false
---         end
---         if city:GetTower():UniqueUpgradingKey() == event_id then
---             isFinished = false
---         end
---     elseif type == "houseEvents" then
---         city:IteratorDecoratorBuildingsByFunc(function(key, building)
---             if building:UniqueUpgradingKey() == event_id then
---                 isFinished = false
---             end
---         end)
---     elseif type == "productionTechEvents" then
---         city:IteratorProductionTechEvents(function(productionTechnologyEvent)
---             if productionTechnologyEvent:Id() == event_id then
---                 isFinished = false
---             end
---         end)
---     elseif type == "militaryTechEvents" then
---         city:GetSoldierManager():IteratorMilitaryTechEvents(function(militaryTechEvent)
---             if militaryTechEvent:Id() == event_id then
---                 isFinished = false
---             end
---         end)
---     elseif type == "soldierStarEvents" then
---         city:GetSoldierManager():IteratorSoldierStarEvents(function(soldierStarEvent)
---             if soldierStarEvent:Id() == event_id then
---                 isFinished = false
---             end
---         end)
---     end
-
---     return isFinished
--- end
 function GameUIHelp:IsHelpedByMe(helpedMembers)
     local _id = User:Id()
     for k,id in pairs(helpedMembers) do

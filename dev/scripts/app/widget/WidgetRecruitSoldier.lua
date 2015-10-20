@@ -3,7 +3,6 @@ local cocos_promise = import("..utils.cocos_promise")
 local UILib = import("..ui.UILib")
 local StarBar = import("..ui.StarBar")
 local Localize = import("..utils.Localize")
-local SoldierManager = import("..entity.SoldierManager")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetSliderWithInput = import("..widget.WidgetSliderWithInput")
@@ -25,8 +24,6 @@ end)
 local NORMAL = GameDatas.Soldiers.normal
 local SPECIAL = GameDatas.Soldiers.special
 local soldier_vs = GameDatas.ClientInitGame.soldier_vs
-local app = app
-local timer = app.timer
 local function return_vs_soldiers_map(soldier_name)
     local strong_vs = {}
     local weak_vs = {}
@@ -43,7 +40,9 @@ function WidgetRecruitSoldier:ctor(barracks, city, soldier_name, soldier_star)
     UIKit:RegistUI(self)
     self.barracks = barracks
     self.soldier_name = soldier_name
-    self.star = soldier_star or city:GetSoldierManager():GetStarBySoldierType(soldier_name)
+    
+    
+    self.star = soldier_star or city:GetUser():SoldierStarByName(soldier_name)
     local soldier_config, aaa = self:GetConfigBySoldierTypeAndStar(soldier_name, self.star)
     self.recruit_max = barracks:GetMaxRecruitSoldierCount()
     if soldier_config.citizen ~= 0 then
@@ -368,19 +367,12 @@ function WidgetRecruitSoldier:AddButtons()
         }))
         :onButtonClicked(function(event)
             local current_time = app.timer:GetServerTime()
-            -- local min_left_time = math.huge
-            -- for i,v in ipairs(self.barracks:GetSoldierEvents()) do
-            --     if min_left_time > v:LeftTime(current_time) then
-            --         min_left_time = v:LeftTime(current_time)
-            --     end
-            -- end
-            -- if self.barracks:IsFullRecruting() then
-                
-            -- end
-            local left_time = self.barracks:GetRecruitEvent():LeftTime(current_time)
-            local queue_need_gem = self.barracks:IsRecruting()
-                and DataUtils:getGemByTimeInterval(left_time) or 0
-
+            local left_time
+            local event = User:GetSoldierEventsBySeq()[1]
+            if event then
+                left_time = UtilsForEvent:GetEventInfo(event)
+            end
+            local queue_need_gem = event and DataUtils:getGemByTimeInterval(left_time) or 0
             if SPECIAL[self.soldier_name] then
                 local not_enough_material = self:CheckMaterials(self.count)
                 local required_gems = DataUtils:buyResource(self:GetNeedResouce(self.count), {})
@@ -476,13 +468,11 @@ function WidgetRecruitSoldier:AddButtons()
 end
 function WidgetRecruitSoldier:onEnter()
     self:SetSoldier(self.soldier_name, self.star)
+    local User = self.city:GetUser()
     self.count = 1
-    self.barracks:AddBarracksListener(self)
-    self.city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
-
+    User:AddListenOnType(self, "soldierStars")
     scheduleAt(self, function()
-        local User = self.city:GetUser()
-        local server_time = timer:GetServerTime()
+        local server_time = app.timer:GetServerTime()
         local res_map = {}
         if not self.soldier_config.specialMaterials then
             res_map.wood = User:GetResValueByType("wood")
@@ -514,9 +504,7 @@ function WidgetRecruitSoldier:onEnter()
     end
 end
 function WidgetRecruitSoldier:onExit()
-    app.timer:RemoveListener(self)
-    self.barracks:RemoveBarracksListener(self)
-    self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
+    User:RemoveListenerOnType(self, "soldierStars")
     UIKit:getRegistry().removeObject(self.__cname)
 end
 function WidgetRecruitSoldier:SetSoldier(soldier_name, star)
@@ -563,15 +551,6 @@ end
 function WidgetRecruitSoldier:align(anchorPoint, x, y)
     self.back_ground:align(anchorPoint, x, y)
     return self
-end
-function WidgetRecruitSoldier:OnBeginRecruit()
-
-end
-function WidgetRecruitSoldier:OnRecruiting()
-
-end
-function WidgetRecruitSoldier:OnEndRecruit()
-    local enable = self.count > 0
 end
 function WidgetRecruitSoldier:OnInstantButtonClicked(func)
     self.instant_button_clicked = func
@@ -635,7 +614,8 @@ function WidgetRecruitSoldier:CheckNeedResource(total_resouce, count)
             end
         else
             total = total_map[k] == nil and 0 or total_map[k]
-            current = soldier_config[k] * count * (k == "citizen" and 1 or (1 - self.city:FindTechByName("recruitment"):GetBuffEffectVal()))
+            local effect = UtilsForTech:GetEffect("recruitment", User.productionTechs["recruitment"])
+            current = soldier_config[k] * count * (k == "citizen" and 1 or (1 - effect))
             current_res_map[k] = current
         end
         local color = total >= current
@@ -703,10 +683,11 @@ function WidgetRecruitSoldier:CheckMaterials(count)
         end
     end
 end
-function WidgetRecruitSoldier:OnSoliderStarCountChanged(soldier_manager,star_changed_map)
-    for i,v in pairs(star_changed_map) do
-        if v == self.soldier_name then
-            self.star =  soldier_manager:GetStarBySoldierType(v)
+function WidgetRecruitSoldier:OnUserDataChanged_soldierStars(userData, deltaData)
+    local ok, value = deltaData("soldierStars")
+    for soldier_name,star in pairs(value) do
+        if soldier_name == self.soldier_name then
+            self.star = star
             local soldier_config, soldier_ui_config = self:GetConfigBySoldierTypeAndStar(soldier_name, self.star)
             self.soldier:setButtonImage(cc.ui.UIPushButton.NORMAL, soldier_ui_config, true)
             self.soldier:setButtonImage(cc.ui.UIPushButton.PRESSED, soldier_ui_config, true)

@@ -1,4 +1,4 @@
--- local VillageEvent = import(".VillageEvent")
+ -- local VillageEvent = import(".VillageEvent")
 -- local AllianceShrine = import(".AllianceShrine")
 -- local AllianceMoonGate = import(".AllianceMoonGate")
 -- local MarchAttackEvent = import(".MarchAttackEvent")
@@ -215,6 +215,7 @@ function Alliance:GetEnemyLastAllianceFightReportsData()
     end
 end
 function Alliance:GetCouldShowHelpEvents()
+    local User = User
     local could_show = {}
     for k,event in pairs(self.helpEvents) do
         -- 去掉被自己帮助过的
@@ -228,7 +229,6 @@ function Alliance:GetCouldShowHelpEvents()
         if not isHelped then
             -- 已经帮助到最大次数的去掉
             if #event.eventData.helpedMembers < event.eventData.maxHelpCount then
-
                 -- 属于自己的求助事件，已经结束的
                 local isFinished = false
                 if User:Id() == event.playerData.id then
@@ -236,43 +236,10 @@ function Alliance:GetCouldShowHelpEvents()
                     local eventData = event.eventData
                     local type = eventData.type
                     local event_id = eventData.id
-                    if type == "buildingEvents" then
-                        city:IteratorFunctionBuildingsByFunc(function(key, building)
-                            if building:UniqueUpgradingKey() == event_id then
-                                isFinished = true
-                            end
-                        end)
-                        -- 城墙，箭塔
-                        if city:GetGate():UniqueUpgradingKey() == event_id then
+                    for _,event in ipairs(User[type] or {}) do
+                        if event.id == event_id then
                             isFinished = true
                         end
-                        if city:GetTower():UniqueUpgradingKey() == event_id then
-                            isFinished = true
-                        end
-                    elseif type == "houseEvents" then
-                        city:IteratorDecoratorBuildingsByFunc(function(key, building)
-                            if building:UniqueUpgradingKey() == event_id then
-                                isFinished = true
-                            end
-                        end)
-                    elseif type == "productionTechEvents" then
-                        city:IteratorProductionTechEvents(function(productionTechnologyEvent)
-                            if productionTechnologyEvent:Id() == event_id then
-                                isFinished = true
-                            end
-                        end)
-                    elseif type == "militaryTechEvents" then
-                        city:GetSoldierManager():IteratorMilitaryTechEvents(function(militaryTechEvent)
-                            if militaryTechEvent:Id() == event_id then
-                                isFinished = true
-                            end
-                        end)
-                    elseif type == "soldierStarEvents" then
-                        city:GetSoldierManager():IteratorSoldierStarEvents(function(soldierStarEvent)
-                            if soldierStarEvent:Id() == event_id then
-                                isFinished = true
-                            end
-                        end)
                     end
                 else
                     isFinished = true

@@ -268,27 +268,12 @@ end
 function WidgetCitizen:GetCitizenUIEnd()
     return 688
 end
-function WidgetCitizen:OnUpgradingBegin(building)
-    self:OnUpgradingFinished(building)
-end
-function WidgetCitizen:OnUpgrading(building)
-
-end
-function WidgetCitizen:OnUpgradingFinished(building)
-    if self:isVisible() then
-        self:UpdateData()
-    end
-end
 function WidgetCitizen:onEnter()
-    self.city:AddListenOnType(self, self.city.LISTEN_TYPE.UPGRADE_BUILDING)
     scheduleAt(self, function()
         if self:isVisible() then
             self:UpdateData()
         end
     end)
-end
-function WidgetCitizen:onExit()
-    self.city:RemoveListenerOnType(self, self.city.LISTEN_TYPE.UPGRADE_BUILDING)
 end
 return WidgetCitizen
 

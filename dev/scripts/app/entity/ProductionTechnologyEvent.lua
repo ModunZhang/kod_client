@@ -19,15 +19,6 @@ function ProductionTechnologyEvent:ctor()
 	property(self,"entity","")
 end
 
-function ProductionTechnologyEvent:OnTimer(current_time)
-	self.times_ = math.ceil(self:FinishTime() - current_time)
-	if self.times_ >= 0 then
-		self:NotifyObservers(function(listener)
-			listener:OnProductionTechnologyEventTimer(self)
-		end)
-	end
-end
-
 function ProductionTechnologyEvent:UpdateData(json_data)
 	self:SetId(json_data.id or "")
 	self:SetStartTime(json_data.startTime and json_data.startTime/1000.0 or 0)

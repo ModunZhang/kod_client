@@ -11,7 +11,6 @@ local Localize = import("..utils.Localize")
 local UIListView = import(".UIListView")
 local Localize_item = import("..utils.Localize_item")
 local UILib = import("..ui.UILib")
-local Item = import("..entity.Item")
 local WidgetUseItems = import("..widget.WidgetUseItems")
 
 local GameUIItems = UIKit:createUIClass("GameUIItems","GameUIWithCommonHeader")

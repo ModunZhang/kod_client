@@ -15,27 +15,15 @@ local GameUIEquip = class("GameUIEquip")
 
 
 
-function GameUIEquip:OnBeginMakeEquipmentWithEvent(black_smith, event)
-    self.tips:setVisible(false)
-    self.timer:setVisible(true)
-    self:OnMakingEquipmentWithEvent(black_smith, event, app.timer:GetServerTime())
-    self.gameui:LeftButtonClicked()
-end
-function GameUIEquip:OnMakingEquipmentWithEvent(black_smith, event, current_time)
-    if self.title:isVisible() then
-        if self.tips:isVisible() then
-            self.tips:setVisible(false)
-        end
-        if not self.timer:isVisible() then
-            self.timer:setVisible(true)
-        end
-        self.timer:SetDescribe(string.format(_("正在制作装备 %s"), Localize.equip[event:Content()]))
-        self.timer:SetProgressInfo(GameUtils:formatTimeStyle1(event:LeftTime(current_time)), event:Percent(current_time))
+function GameUIEquip:OnUserDataChanged_dragonEquipmentEvents(userData, deltaData)
+    if deltaData("dragonEquipmentEvents.add") then
+        self.tips:setVisible(false)
+        self.timer:setVisible(true)
+        self.gameui:LeftButtonClicked()
+    elseif deltaData("dragonEquipmentEvents.remove") then
+        self.tips:setVisible(true)
+        self.timer:setVisible(false)
     end
-end
-function GameUIEquip:OnEndMakeEquipmentWithEvent(black_smith, event, equipment)
-    self.tips:setVisible(true)
-    self.timer:setVisible(false)
 end
 function GameUIEquip:OnUserDataChanged_dragonEquipments(userData, deltaData)
     local ok, value = deltaData("dragonEquipments")
@@ -80,13 +68,32 @@ function GameUIEquip:Init()
     })
     self.list_node:addTo(self.gameui:GetView())
         :align(display.BOTTOM_CENTER, window.cx, window.bottom_top + 20)
+    local User = self.black_smith:BelongCity():GetUser()
+    User:AddListenOnType(self, "dragonEquipments")
+    User:AddListenOnType(self, "dragonEquipmentEvents")
 
-    self.black_smith:AddBlackSmithListener(self)
-    self.black_smith:BelongCity():GetUser():AddListenOnType(self, "dragonEquipments")
+
+    self.gameui:scheduleAt(function()
+        if self.title:isVisible() then
+            local event = User.dragonEquipmentEvents[1]
+            if event then
+                if self.tips:isVisible() then
+                    self.tips:setVisible(false)
+                end
+                if not self.timer:isVisible() then
+                    self.timer:setVisible(true)
+                end
+                local time, percent = UtilsForEvent:GetEventInfo(event)
+                self.timer:SetDescribe(string.format(_("正在制作装备 %s"), Localize.equip[event.name]))
+                self.timer:SetProgressInfo(GameUtils:formatTimeStyle1(time), percent)
+            end
+        end
+    end)
 end
 function GameUIEquip:UnInit()
-    self.black_smith:BelongCity():GetUser():RemoveListenerOnType(self, "dragonEquipments")
-    self.black_smith:RemoveBlackSmithListener(self)
+    local User = self.black_smith:BelongCity():GetUser()
+    User:RemoveListenerOnType(self, "dragonEquipments")
+    User:RemoveListenerOnType(self, "dragonEquipmentEvents")
 end
 function GameUIEquip:InitEquipmentTitle()
     local node = display.newNode():addTo(self.gameui:GetView())
@@ -146,13 +153,14 @@ function GameUIEquip:SwitchToDragon(dragon_type)
     end
     self.list_view:reload()
 
-    local event = self.black_smith:GetMakeEquipmentEvent()
-    self.tips:setVisible(event:IsEmpty())
-    self.timer:setVisible(event:IsMaking())
-    if event:IsMaking() then
+    local event = User.dragonEquipmentEvents[1]
+    self.tips:setVisible(event == nil)
+    self.timer:setVisible(event ~= nil)
+    if event then
         local current_time = app.timer:GetServerTime()
-        self.timer:SetDescribe(string.format(_("正在制作装备 %s"), Localize.equip[event:Content()]))
-        self.timer:SetProgressInfo(GameUtils:formatTimeStyle1(event:LeftTime(current_time)), event:Percent(current_time))
+        local time, percent = UtilsForEvent:GetEventInfo(event)
+        self.timer:SetDescribe(string.format(_("正在制作装备 %s"), Localize.equip[event.name]))
+        self.timer:SetProgressInfo(GameUtils:formatTimeStyle1(time), percent)
     end
 end
 function GameUIEquip:CreateDragonEquipmentsByType(dragon_type)

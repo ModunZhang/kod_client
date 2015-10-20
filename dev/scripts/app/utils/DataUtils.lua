@@ -23,6 +23,7 @@ local round = function(v)
     return floor(v + 0.5)
 end
 
+
 --[[
   获取建筑升级时,需要的资源和道具
 ]]
@@ -232,7 +233,7 @@ function DataUtils:getAllSoldierBuffValue(solider_config)
     local result = {}
     local soldier_type = solider_config.type
     local item_buff = UtilsForItem:GetAllSoldierBuffData(User)
-    local military_technology_buff = City:GetSoldierManager():GetAllMilitaryBuffData()
+    local military_technology_buff = User():GetMilitaryBuff()
     table.insertto(item_buff,military_technology_buff)
     local vip_buff = self:getAllSoldierVipBuffValue()
     table.insertto(item_buff,vip_buff)
@@ -287,12 +288,8 @@ end
 --获取建筑时间的buff
 --buildingTime:升级或建造原来的时间
 function DataUtils:getBuildingBuff(buildingTime)
-    local tech = City:FindTechByName('crane')
-    if tech and tech:Level() > 0 then
-        return DataUtils:getBuffEfffectTime(buildingTime, tech:GetBuffEffectVal())
-    else
-        return 0
-    end
+    local tech_effect = UtilsForTech:GetEffect("crane", User.productionTechs["crane"])
+    return DataUtils:getBuffEfffectTime(buildingTime, tech_effect)
 end
 
 local AllianceInitData = GameDatas.AllianceInitData
@@ -710,19 +707,18 @@ local function getPlayerSoldierHpBuff(soldierName, soldierStar, dragon, terrain,
 end
 local function createPlayerSoldiersForFight(soldiers, dragon, terrain, is_dragon_win)
     return LuaUtils:table_map(soldiers, function(k, soldier)
-        local soldier_man = City:GetSoldierManager()
-        -----
-        local config = getSoldiersConfig(soldier.name, soldier.star)
-        local atkBuff = getPlayerSoldierAtkBuff(soldier.name, soldier.star, dragon, terrain, is_dragon_win)
+        -- local soldier_man = City:GetSoldierManager()
+        -- local config = getSoldiersConfig(soldier.name, soldier.star)
+        -- local atkBuff = getPlayerSoldierAtkBuff(soldier.name, soldier.star, dragon, terrain, is_dragon_win)
         -- var atkWallBuff = self.getDragonAtkWallBuff(dragon)
-        local hpBuff = getPlayerSoldierHpBuff(soldier.name, soldier.star, dragon, terrain, is_dragon_win)
-        local techBuffToInfantry = soldier_man:GetMilitaryTechsByName(config.type.."_".."infantry"):GetAtkEff()
-        local techBuffToArcher = soldier_man:GetMilitaryTechsByName(config.type.."_".."archer"):GetAtkEff()
-        local techBuffToCavalry = soldier_man:GetMilitaryTechsByName(config.type.."_".."cavalry"):GetAtkEff()
-        local techBuffToSiege = soldier_man:GetMilitaryTechsByName(config.type.."_".."siege"):GetAtkEff()
-        local techBuffHpAdd = soldier_man:GetMilitaryTechsByName(config.type.."_".."hpAdd"):GetAtkEff()
-        local vipAttackBuff = User:GetVIPSoldierAttackPowerAdd()
-        local vipHpBuff = User:GetVIPSoldierHpAdd()
+        -- local hpBuff = getPlayerSoldierHpBuff(soldier.name, soldier.star, dragon, terrain, is_dragon_win)
+        -- local techBuffToInfantry = soldier_man:GetMilitaryTechsByName(config.type.."_".."infantry"):GetAtkEff()
+        -- local techBuffToArcher = soldier_man:GetMilitaryTechsByName(config.type.."_".."archer"):GetAtkEff()
+        -- local techBuffToCavalry = soldier_man:GetMilitaryTechsByName(config.type.."_".."cavalry"):GetAtkEff()
+        -- local techBuffToSiege = soldier_man:GetMilitaryTechsByName(config.type.."_".."siege"):GetAtkEff()
+        -- local techBuffHpAdd = soldier_man:GetMilitaryTechsByName(config.type.."_".."hpAdd"):GetAtkEff()
+        -- local vipAttackBuff = User:GetVIPSoldierAttackPowerAdd()
+        -- local vipHpBuff = User:GetVIPSoldierHpAdd()
         -- dump(hpBuff, "hpBuff")
         -- dump(vipHpBuff, "vipHpBuff")
         -- dump(atkBuff, "atkBuff")
@@ -1150,29 +1146,10 @@ function DataUtils:GetResourceProtectPercent( resource_name )
     local buildingBuffAddPercent = getBuildingBuffForResourceProtectPercent(resource_name)
     local itemBuffAddPercent = getPlayerItemBuffForResourceLootPercentSubtract(defencePlayerDoc)
     local vipBuffAddPercent = getPlayerVipForResourceLootPercentSubtract()
-    local finalPercent = basePercent + buildingBuffAddPercent + itemBuffAddPercent + vipBuffAddPercent + City:FindTechByName("hideout"):GetBuffEffectVal()
+    local tech_effect = UtilsForTech:GetEffect("hideout", User.productionTechs["hideout"])
+    local finalPercent = basePercent + buildingBuffAddPercent + itemBuffAddPercent + vipBuffAddPercent + tech_effect
     finalPercent = finalPercent > 0.9 and 0.9 or finalPercent < 0.1 and 0.1 or finalPercent
     return finalPercent
-end
-
--- 事件是否已经申请过协助加速
-function DataUtils:HasBeenRequestedToHelpSpeedup( eventId )
-    local user_data = DataManager:getUserData()
-    local can_helped_events = {
-        user_data.buildingEvents,
-        user_data.houseEvents,
-        user_data.productionTechEvents,
-        user_data.militaryTechEvents,
-        user_data.soldierStarEvents,
-    }
-    for i,events in ipairs(can_helped_events) do
-        for i,event in ipairs(events) do
-            if event.id == eventId and event.helped then
-                return true
-            end
-        end
-    end
-    return false
 end
 return DataUtils
 

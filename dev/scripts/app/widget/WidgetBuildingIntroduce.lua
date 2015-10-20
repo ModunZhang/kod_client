@@ -73,10 +73,10 @@ function WidgetBuildingIntroduce:SetUpgradeRequirementListview()
     local requirements = {
         {
             resource_type = "building_queue",
-            isVisible = #city:GetUpgradingBuildings()>=city:BuildQueueCounts(),
-            isSatisfy = #city:GetUpgradingBuildings()<city:BuildQueueCounts(),
+            isVisible = #city:GetUpgradingBuildings() >= User.basicInfo.buildQueue,
+            isSatisfy = #city:GetUpgradingBuildings()  < User.basicInfo.buildQueue,
             icon="hammer_33x40.png",
-            description=_("建造队列已满")..(city:BuildQueueCounts()-#city:GetUpgradingBuildings()).."/"..1
+            description=_("建造队列已满")..(User.basicInfo.buildQueue-#city:GetUpgradingBuildings()).."/"..1
         },
         
         {resource_type = _("木材"),isVisible = self.building:GetLevelUpWood()>0,      isSatisfy = wood >= self.building:GetLevelUpWood(),

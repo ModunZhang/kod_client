@@ -10,25 +10,49 @@ User.LISTEN_TYPE = Enum(
     "countInfo",
     "resources",
     "growUpTasks",
-    "items",
     "deals",
+
+    "helpedByTroops",
+    "helpToTroops",
+
+    "houseEvents",
+    "buildingEvents",
+
+    "productionTechs",
+    "productionTechEvents",
+
+    "militaryTechs",
+    "militaryTechEvents",
+
+    "soldiers",
+    "soldierEvents",
+
+    "woundedSoldiers",
+    "treatSoldierEvents",
+
+    "soldierStars",
+    "soldierStarEvents",
 
     "iapGifts",
     "allianceDonate",
 
     "dragonEquipments",
+    "dragonEquipmentEvents",
+
     "dragonMaterials",
     "soldierMaterials",
     "buildingMaterials",
     "technologyMaterials",
+    "materialEvents",
+
+    "vipEvents",
+
+    "items",
+    "itemEvents",
 
     "dailyTasks",
     "dailyQuests",
-
-    "vipEvents",
-    "itemEvents",
-    "dailyQuestEvents",
-    "dragonEquipmentEvents")
+    "dailyQuestEvents")
 
 property(User, "id", 0)
 local staminaMax_value = GameDatas.PlayerInitData.intInit.staminaMax.value
@@ -309,8 +333,8 @@ function User:IsAnyItmeEventActive()
     return next(self.itemEvents)
 end
 function User:IsItemVisible(item_name)
-    return self:GetItemCount(item_name) >= 1 or 
-    UtilsForItem:GetItemInfoByName(item_name).isSell
+    return self:GetItemCount(item_name) >= 1 or
+        UtilsForItem:GetItemInfoByName(item_name).isSell
 end
 local config_items_buff     = GameDatas.Items.buff
 local config_items_resource = GameDatas.Items.resource
@@ -334,7 +358,7 @@ function User:GetRelationItemInfos(item_name)
         for i = 1, math.huge do
             local same_item_info = configs[item_type.."_"..i]
             if same_item_info then
-                if same_item_info.isSell or 
+                if same_item_info.isSell or
                     self:GetItemCount(same_item_info.name) > 0 then
                     table.insert(same_items_info, same_item_info)
                 end
@@ -433,7 +457,7 @@ function User:GetResProduction(type_)
     return self.resources_cache[type_]
 end
 function User:GetFoodRealOutput()
-    return City:GetSoldierManager():GetTotalUpkeep() + self.resources_cache.food.output
+    return self:GetSoldierUpkeep() + self.resources_cache.food.output
 end
 --[[end]]
 
@@ -618,9 +642,6 @@ function User:IsVIPActived()
     end
     return false, 0
 end
-function User:GetVipLevel()
-    return DataUtils:getPlayerVIPLevel(self.basicInfo.vipExp)
-end
 --[[end]]
 
 
@@ -629,6 +650,19 @@ end
 function User:GetLevel()
     return self:GetPlayerLevelByExp(self.basicInfo.levelExp)
 end
+function User:GetVipLevel()
+    return DataUtils:getPlayerVIPLevel(self.basicInfo.vipExp)
+end
+--获得有加成的龙类型
+function User:GetBestDragon()
+    local bestDragonForTerrain = {
+        grassLand = "greenDragon",
+        desert= "redDragon",
+        iceField = "blueDragon",
+    }
+    return bestDragonForTerrain[self.basicInfo.terrain]
+end
+--[[end]]
 
 
 local config_playerLevel = GameDatas.PlayerInitData.playerLevel
@@ -651,17 +685,6 @@ function User:GetCurrentLevelMaxExp(level)
         return config.expFrom
     end
 end
---获得有加成的龙类型
-function User:GetBestDragon()
-    local bestDragonForTerrain = {
-        grassLand = "greenDragon",
-        desert= "redDragon",
-        iceField = "blueDragon",
-    }
-    return bestDragonForTerrain[self.basicInfo.terrain]
-end
---[[end]]
-
 
 -- [[material begin]]
 -- 检查对应类型的材料是否有超过材料仓库上限
@@ -694,6 +717,725 @@ end
 
 
 
+--[[treat begin]]
+function User:GetTreatTime(soldiers)
+    local treat_time = 0
+    for _,v in pairs(soldiers) do
+        local config = self:GetSoldierConfig(v.name)
+        total_iron = total_iron + config.treatTime * v.count
+    end
+    return treat_time
+end
+function User:GetTreatCoin(soldiers)
+    local treatCoin = 0
+    for _,v in pairs(soldiers) do
+        local config = self:GetSoldierConfig(v.name)
+        treatCoin = treatCoin + config.treatCoin * v.count
+    end
+    return treatCoin
+end
+function User:GetTreatAllTime()
+    local total_time = 0
+    for soldier_name,count in pairs(self.woundedSoldiers) do
+        local config = self:GetSoldierConfig(soldier_name)
+        total_time = total_time + config.treatTime * count
+    end
+    return total_time
+end
+function User:GetTreatCitizen()
+    local total_citizen = 0
+    for soldier_name,count in pairs(self.woundedSoldiers) do
+        local config = self:GetSoldierConfig(soldier_name)
+        total_citizen = total_citizen + config.citizen * count
+    end
+    return total_citizen
+end
+function User:CanTreat(soldiers)
+    local resource_state = self:GetResValueByType("coin") < self:GetTreatCoin(soldiers)
+    if #self.treatSoldierEvents > 0 and resource_state then
+        return false, "treating_and_lack_resource"
+    elseif #self.treatSoldierEvents > 0 then
+        return false, "treating"
+    elseif resource_state then
+        return false, "lack_resource"
+    end
+    return true
+end
+function User:GetNormalTreatGems(soldiers)
+    local total_coin = self:GetTreatCoin(soldiers)
+    local value = self:GetResValueByType("coin")
+    local resource_state = value < total_coin
+    local need_gems = 0
+    if resource_state then
+        need_gems = DataUtils:buyResource({coin=total_coin},{coin = value})
+    end
+    if #self.treatSoldierEvents > 0 then
+        local time = UtilsForEvent:GetEventInfo(self.treatSoldierEvents[1])
+        need_gems = need_gems + DataUtils:getGemByTimeInterval(time)
+    end
+    return need_gems
+end
+--[[end]]
+
+
+--[[soldier begin]]
+function User:GetSoldierEventsBySeq()
+    local events = {}
+    for _,v in ipairs(self.soldierEvents) do
+        table.insert(events, v)
+    end
+    table.sort(events, function(a, b)
+        return (a.finishTime - a.startTime) < (b.finishTime - b.startTime)
+    end)
+    return events
+end
+function User:GetBuildingSoldiersInfo(building)
+    if building == "trainingGround" then
+        return {
+            { "swordsman", self:SoldierStarByName("swordsman") },
+            {  "sentinel",  self:SoldierStarByName("sentinel") }
+        }
+    elseif building == "stable" then
+        return {
+            {      "lancer",      self:SoldierStarByName("lancer") },
+            { "horseArcher", self:SoldierStarByName("horseArcher") }
+        }
+    elseif building == "hunterHall" then
+        return {
+            {      "ranger",      self:SoldierStarByName("ranger") },
+            { "crossbowman", self:SoldierStarByName("crossbowman") }
+        }
+    elseif building == "workshop" then
+        return {
+            { "catapult", self:SoldierStarByName("catapult") },
+            { "ballista", self:SoldierStarByName("ballista") }
+        }
+    end
+    assert(false)
+end
+function User:GetSoldierUpkeep()
+    local total = 0
+    for soldier_name,count in pairs(self.soldiers) do
+        total = total + self:GetSoldierConfig(soldier_name).consumeFoodPerHour * count
+    end
+    -- item效果
+    if self:IsItemEventActive("quarterMaster") then
+        total = math.ceil(total * (1 - UtilsForItem:GetItemBuff("quarterMaster")))
+    end
+    -- vip效果
+    if self:IsVIPActived() then
+        total = total * (1-self:GetVIPSoldierConsumeSub())
+    end
+    return total
+end
+local soldiers_normal = GameDatas.Soldiers.normal
+local soldiers_special = GameDatas.Soldiers.special
+function User:GetSoldierConfig(soldier_name)
+    return  UtilsForSoldier:IsSpecial(soldier_name)
+        and soldiers_special[soldier_name]
+        or soldiers_normal[soldier_name.."_"..self.soldierStars[soldier_name]]
+end
+function User:SoldierStarByName(soldier_name)
+    return  UtilsForSoldier:IsSpecial(soldier_name)
+        and soldiers_special[soldier_name].star
+        or self.soldierStars[soldier_name]
+end
+function User:HasAnyWoundedSoldiers()
+    for _,count in pairs(self.woundedSoldiers) do
+        if count > 0 then
+            return true
+        end
+    end
+end
+function User:GetStarEventBy(building)
+    for _,event in ipairs(self.soldierStarEvents) do
+        if UtilsForSoldier:SoldierBelongBuilding(event.name) == building then
+            return event
+        end
+    end
+end
+local seq_map = Enum("infantry", "archer", "cavalry", "siege", "hpAdd")
+function User:GetMilitaryTechsByBuilding(building)
+    local techs = {}
+    for name, tech in pairs(self.militaryTechs) do
+        if building == tech.building then
+            local _,focus_field = unpack(string.split(name,"_"))
+            local seq_index = seq_map[focus_field]
+            assert(seq_index)
+            techs[seq_index] = {name, tech}
+        end
+    end
+    return techs
+end
+function User:HasAnyMilitaryTechEvent()
+    return LuaUtils:table_size(self.militaryTechEvents) > 0
+        or LuaUtils:table_size(self.soldierStarEvents) > 0
+end
+function User:GetTotalMilitaryTechEventsNumber()
+    local count = LuaUtils:table_size(self.militaryTechEvents) + LuaUtils:table_size(self.soldierStarEvents)
+    return count > 4 and 4 or count
+end
+function User:GetMilitaryTechEventsNumber(building)
+    local count = 0
+    for _,event in pairs(self.militaryTechEvents) do
+        if self.militaryTechs[event.name].building == building then
+            count = count + 1
+        end
+    end
+    for _,event in pairs(self.soldierStarEvents) do
+        if UtilsForSoldier:SoldierBelongBuilding(event.name) == building then
+            count = count + 1
+        end
+    end
+    return count
+end
+function User:GetMilitaryTechEventBy(building)
+    for _,event in pairs(self.militaryTechEvents) do
+        if self.militaryTechs[event.name].building == building then
+            return event
+        end
+    end
+end
+function User:GetMilitaryTechLevel(tech_name)
+    return self.militaryTechs[tech_name].level
+end
+function User:GetShortestTechEvent()
+    local shortest_event
+    local time = math.huge
+    for _,event in ipairs(self.soldierStarEvents) do
+        local l = event.finishTime - event.startTime
+        if l < time then
+            shortest_event = event
+            time = l
+        end
+    end
+    for _,event in ipairs(self.militaryTechEvents) do
+        local l = event.finishTime - event.startTime
+        if l < time then
+            shortest_event = event
+            time = l
+        end
+    end
+    for _,event in ipairs(self.productionTechEvents) do
+        local l = event.finishTime - event.startTime
+        if l < time then
+            shortest_event = event
+            time = l
+        end
+    end
+    return shortest_event 
+end
+function User:GetShortestMilitaryTechEvent()
+    local shortest_event
+    local time = math.huge
+    for _,event in ipairs(self.militaryTechEvents) do
+        local l = event.finishTime - event.startTime
+        if l < time then
+            shortest_event = event
+            time = l
+        end
+    end
+    for _,event in ipairs(self.soldierStarEvents) do
+        local l = event.finishTime - event.startTime
+        if l < time then
+            shortest_event = event
+            time = l
+        end
+    end
+    return shortest_event 
+end
+function User:GetShortMilitaryTechEventBy(building)
+    local event1 = self:GetMilitaryTechEventBy(building)
+    local event2 = self:GetStarEventBy(building)
+    return (event1 and event1.startTime or 0) 
+         > (event2 and event2.startTime or 0) 
+       and event1 or event2
+end
+function User:GetShortMilitaryTechEventTime(building)
+    local event = self:GetShortMilitaryTechEventBy(building)
+    if event then
+        return event.finishTime/1000 - app.timer:GetServerTime()
+    end
+    return 0
+end
+function User:GetMilitaryBuff()
+    local all_military_buff = {}
+    for name,tech in pairs(self.militaryTechs) do
+        if tech.level > 0 then
+            local effect_soldier,buff_field = unpack(string.split(name,"_"))
+            table.insert(all_military_buff,{
+                effect_soldier,
+                buff_field,
+                UtilsForTech:GetEffect(name, tech)
+            })
+        end
+    end
+    return all_military_buff
+end
+local militaryTechs = GameDatas.MilitaryTechs.militaryTechs
+function User:GetTechPoints(building)
+    local tech_points = 0
+    for k,v in pairs(self:GetMilitaryTechsByBuilding(building)) do
+        local name, tech = unpack(v)
+        tech_points = tech_points + militaryTechs[name].techPointPerLevel * tech.level
+    end
+    return tech_points
+end
+function User:HasMilitaryTechEventBy(building)
+    for _,event in pairs(self.militaryTechEvents) do
+        if militaryTechs[event.name].building == building then
+            return true
+        end
+    end
+    for _,event in pairs(self.soldierStarEvents) do
+        if UtilsForSoldier:SoldierBelongBuilding(event.name) == building then
+            return true
+        end
+    end
+end
+function User:GetPromotionName(building)
+    local event = self:GetStarEventBy(building)
+    if event then
+        return event.name
+    end
+end
+local MilitaryTechLevelUp = GameDatas.MilitaryTechLevelUp
+function User:GetMilitaryTechUpgradeTime(tech_name, level)
+    return MilitaryTechLevelUp[tech_name][level + 1].buildTime
+end
+function User:CanUpgradeNow(tech_name, tech)
+    return self:GetInstantUpgradeMilitaryTechGems(tech_name, tech) >= self:GetGemValue()
+end
+function User:GetNormalUpgradeMilitaryTechGems(tech_name, tech)
+    local config = MilitaryTechLevelUp[tech_name][tech.level+1]
+    local required = {
+        resources = {
+            coin = config.coin,
+        },
+        materials = {
+            trainingFigure = config.trainingFigure,
+            bowTarget      = config.bowTarget,
+            saddle         = config.saddle,
+            ironPart       = config.ironPart
+        },
+    }
+    local has_materials = self.technologyMaterials
+    local has = {
+        resources = {
+            coin = self:GetResValueByType("coin"),
+        },
+        materials={
+            trainingFigure = has_materials.trainingFigure,
+            bowTarget      = has_materials.bowTarget,
+            saddle         = has_materials.saddle,
+            ironPart       = has_materials.ironPart
+        },
+    }
+    -- 正在升级的军事科技剩余升级时间
+    local left_time = self:GetShortMilitaryTechEventTime(tech.building)
+    return DataUtils:buyResource(required.resources, has.resources) + DataUtils:buyMaterial(required.materials, has.materials) + DataUtils:getGemByTimeInterval(left_time)
+end
+function User:GetInstantUpgradeMilitaryTechGems(tech_name, tech)
+    local config = MilitaryTechLevelUp[tech_name][tech.level+1]
+    local required = {
+        resources = {
+            coin = config.coin,
+        },
+        materials = {
+            trainingFigure = config.trainingFigure,
+            bowTarget      = config.bowTarget,
+            saddle         = config.saddle,
+            ironPart       = config.ironPart
+        },
+        buildTime = config.buildTime
+    }
+    return DataUtils:buyResource(required.resources, {}) + DataUtils:buyMaterial(required.materials, {}) + DataUtils:getGemByTimeInterval(required.buildTime)
+end
+function User:CanUpgrade(tech_name, tech)
+    local level_up_config = MilitaryTechLevelUp[tech_name][tech.level + 1]
+    local has_materials = self.technologyMaterials
+    local current_coin = self:GetResValueByType("coin")
+
+    local results = {}
+    if self:HasMilitaryTechEventBy(tech.building) then
+        table.insert(results, _("升级军事科技队列被占用"))
+    end
+    if current_coin < level_up_config.coin then
+        table.insert(results, string.format( _("银币不足 需要补充 %d"), level_up_config.coin - current_coin ) )
+    end
+    if has_materials.trainingFigure < level_up_config.trainingFigure then
+        table.insert(results, string.format( _("木人桩 需要补充 %d"), level_up_config.trainingFigure - has_materials.trainingFigure ) )
+    end
+    if has_materials.bowTarget < level_up_config.bowTarget then
+        table.insert(results, string.format( _("箭靶 需要补充 %d"), level_up_config.bowTarget - has_materials.bowTarget ) )
+    end
+    if has_materials.saddle < level_up_config.saddle then
+        table.insert(results, string.format( _("马鞍 需要补充 %d"), level_up_config.saddle - has_materials.saddle ) )
+    end
+    if has_materials.ironPart < level_up_config.ironPart then
+        table.insert(results, string.format( _("精铁零件 需要补充 %d"), level_up_config.ironPart - has_materials.ironPart ) )
+    end
+
+    return results
+end
+--[[end]]
+
+
+--[[begin productionTechs]]
+local productionTechs = GameDatas.ProductionTechs.productionTechs
+function User:GetTechReduceTreatTime(time)
+    return math.ceil(self.productionTechs["healingAgent"].level * productionTechs["healingAgent"].effectPerLevel * time)
+end
+function User:IsTechEnable(tech_name, tech)
+    local config = UtilsForTech:GetProductionTechConfig(tech_name)
+    local depend_tech_name, depend_tech = self:GetProductionTech(config.unlockBy)
+    local config_depend = UtilsForTech:GetProductionTechConfig(depend_tech_name)
+    return self:GetAcademyLevel() >= config.academyLevel
+       and depend_tech.level >= config_depend.unlockLevel 
+end
+function User:GetProductionTech(index)
+    for tech_name,v in pairs(self.productionTechs) do
+        if v.index == index then
+            return tech_name, v
+        end
+    end
+end
+function User:HasProductionTechEvent()
+    return next(self.productionTechEvents)
+end
+--[[end]]
+
+
+--[[buildings begin]]
+local buildings_location = GameDatas.Buildings.buildings
+local function getLocationsByName(name)
+    local locations = {}
+    for _,building in ipairs(buildings_location) do
+        if building.name == name then
+            table.insert(locations, building.location)
+        end
+    end
+    return locations
+end
+function User:GetAcademyLevel()
+    for k,v in pairs(self.buildings) do
+        if v.type == "academy" then
+            return v.level
+        end
+    end
+end
+function User:IsBuildingUnlockedBy(name)
+    for _,location in ipairs(getLocationsByName(name)) do
+        local key = string.format("location_%d", location)
+        local building = self.buildings[key]
+        if building.level > 0 then
+            return true
+        end
+    end
+    return false
+end
+function User:GetUnlockBuildingsBy(name)
+    local buildings = {}
+    for _,location in ipairs(getLocationsByName(name)) do
+        local key = string.format("location_%d", location)
+        local building = self.buildings[key]
+        if building.level > 0 then
+            table.insert(buildings, building)
+        end
+    end
+    return buildings
+end
+function User:GetBuildingByEvent(event)
+    if event.location then
+        return self:GetBuilingByLocation(event.location)
+    end
+    return self:GetHouseByLocation(event.buildingLocation, event.houseLocation)
+end
+function User:GetHouseByLocation(buildingLocation, houseLocation)
+    local building = self:GetBuilingByLocation(buildingLocation)
+    assert(building)
+    for i,v in ipairs(building.houses) do
+        if v.location == houseLocation then
+            return v
+        end
+    end
+end
+function User:GetBuilingByLocation(location)
+    return self.buildings[string.format("location_%d", location)]
+end
+function User:GetBuildingEventByLocation(buildingLocation, houseLocation)
+    if houseLocation then
+        for i,v in ipairs(self.houseEvents) do
+            if v.buildingLocation == buildingLocation 
+           and v.houseLocation == houseLocation then
+                return v
+            end
+        end
+    else
+        for i,v in ipairs(self.buildingEvents) do
+            if v.location == buildingLocation then
+                return v
+            end
+        end
+    end
+end
+function User:GetBuildingEventsBySeq()
+    local events = {}
+    for i,v in ipairs(self.houseEvents) do
+        table.insert(events, v)
+    end
+    for i,v in ipairs(self.buildingEvents) do
+        table.insert(events, v)
+    end
+    table.sort(events, function(a, b)
+        return (a.finishTime - a.startTime) < (b.finishTime - b.startTime)
+    end)
+    return events
+end
+-- local BuildingLevelUp = GameDatas.BuildingLevelUp
+-- local HouseLevelUp = GameDatas.HouseLevelUp
+-- function User:CanUpgrade(buildingLocation, houseLocation)
+--     local building = self:GetHouseByLocation(buildingLocation)
+--     if houseLocation then
+--         building = self:GetBuilingByLocation(buildingLocation, houseLocation)
+--     else
+--         building = self:GetHouseByLocation(buildingLocation)
+--     end
+--     local level = building.level
+
+--     --等级小于0级
+--     if level < 0 then
+--         return false
+--     end
+--     local event = self:GetBuildingEventByLocation(buildingLocation, houseLocation)
+--     --建筑正在升级
+--     if event then
+--         return false
+--     end
+--     local level_up_config = BuildingLevelUp[building.type] or HouseLevelUp[building.type]
+--     -- 满级
+--     if #level_up_config == level then
+--         return false
+--     end
+--     -- 是否已经解锁内圈
+--     local tile = city:GetTileWhichBuildingBelongs(self)
+--     if not city:IsUnlockedInAroundNumber(math.max(tile.x,tile.y) - 1) then
+--         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.TILE_NOT_UNLOCKED
+--     end
+--     -- 是否达到建造上限
+--     if city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint() < 1 and self.level==0 then
+--         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.IS_MAX_UNLOCK
+--     end
+--     local config
+--     if self:IsHouse() then
+--         config = GameDatas.Houses.houses[self:GetType()]
+--     else
+--         local location_id = city:GetLocationIdByBuildingType(self:GetType())
+--         config = GameDatas.Buildings.buildings[location_id]
+--     end
+--     -- 等级大于5级时有升级前置条件
+--     if self:GetLevel()>5 then
+--         local configParams = string.split(config.preCondition,"_")
+--         local preType = configParams[1]
+--         local preName = configParams[2]
+--         local preLevel = tonumber(configParams[3])
+--         local limit
+--         if preType == "building" then
+--             local find_buildings = city:GetBuildingByType(preName)
+--             for i,v in ipairs(find_buildings) do
+--                 if v:GetLevel()>=self:GetLevel()+preLevel then
+--                     limit = true
+--                 end
+--             end
+--         else
+--             city:IteratorDecoratorBuildingsByFunc(function (index,house)
+--                 if house:GetType() == preName and house:GetLevel()>=self:GetLevel()+preLevel then
+--                     limit = true
+--                 end
+--             end)
+--         end
+--         if not limit then
+--             return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.PRE_CONDITION
+--         end
+--     end
+-- end
+--[[end]]
+
+
+--[[materialEvents begin]]
+function User:GetMakingMaterialsEventsBySeq()
+    local events = {}
+    for i,v in ipairs(self.materialEvents) do
+        if v.finishTime ~= 0 then
+            table.insert(events, v)
+        end
+    end
+    for i,v in ipairs(self.dragonEquipmentEvents) do
+        table.insert(events, v)
+    end
+    table.sort(events, function(a, b)
+        return (a.finishTime - a.startTime) < (b.finishTime - b.startTime)
+    end)
+    return events
+end
+function User:GetMakingMaterialsEventCount()
+    local count = 0
+    for i,v in ipairs(self.materialEvents) do
+        if v.finishTime ~= 0 then
+            count = count + 1
+        end
+    end
+    return count
+end
+function User:GetMakingMaterialsEvent(type_)
+    for i,v in ipairs(self.materialEvents) do
+        if v.finishTime ~= 0 and 
+            (not type_ or v.type == type_) then
+            return v
+        end
+    end
+end
+function User:GetStoreMaterialsEvent(type_)
+    for i,v in ipairs(self.materialEvents) do
+        if v.finishTime == 0 and 
+            (not type_ or v.type == type_) then
+            return v
+        end
+    end
+end
+function User:IsStoreMaterials(type_)
+    for i,v in ipairs(self.materialEvents) do
+        if v.finishTime == 0 and 
+            (not type_ or v.type == type_) then
+            return true
+        end
+    end
+    return false
+end
+function User:CanMakeMaterials()
+    if #self.materialEvents == 0 then
+        return true
+    end
+    if #self.materialEvents == 2 then
+        return false
+    end
+    if self.materialEvents[1].finishTime ~= 0 then
+        return false
+    end
+    return true
+end
+function User:IsMakingMaterials(type_)
+    for i,v in ipairs(self.materialEvents) do
+        if v.finishTime ~= 0 and 
+            (not type_ or v.type == type_) then
+            return true
+        end
+    end
+    return false
+end
+--[[end]]
+
+
+
+--[[event begin]]
+function User:IsProductionTechEvent(event)
+    for i,v in ipairs(self.productionTechEvents) do
+        if v.id == event.id then
+            return true
+        end
+    end
+end
+function User:IsSoldierStarEvent(event)
+    for i,v in ipairs(self.soldierStarEvents) do
+        if v.id == event.id then
+            return true
+        end
+    end
+end
+function User:IsMilitaryTechEvent(event)
+    for i,v in ipairs(self.militaryTechEvents) do
+        if v.id == event.id then
+            return true
+        end
+    end
+end
+local can_helped_event_key = {
+    "buildingEvents",
+    "houseEvents",
+    "productionTechEvents",
+    "militaryTechEvents",
+    "soldierStarEvents",
+}
+function User:IsRequestHelped(id)
+    local user_data = DataManager:getUserData()
+    for _,event_key in ipairs(can_helped_event_key) do
+        for _,event in ipairs(self[event_key]) do
+            if event.id == id and event.helped then
+                return true
+            end
+        end
+    end
+    return false
+end
+function User:GetEventById(id)
+    for i,v in ipairs(self.militaryTechEvents) do
+        if v.id == id then
+            return v
+        end
+    end
+    for i,v in ipairs(self.soldierEvents) do
+        if v.id == id then
+            return v
+        end
+    end
+    for i,v in ipairs(self.soldierStarEvents) do
+        if v.id == id then
+            return v
+        end
+    end
+    for i,v in ipairs(self.treatSoldierEvents) do
+        if v.id == id then
+            return v
+        end
+    end
+    assert(false)
+end
+function User:EventType(event)
+    for i,v in ipairs(self.militaryTechEvents) do
+        if v.id == event.id then
+            return "militaryTechEvents"
+        end
+    end
+    for i,v in ipairs(self.soldierEvents) do
+        if v.id == event.id then
+            return "soldierEvents"
+        end
+    end
+    for i,v in ipairs(self.soldierStarEvents) do
+        if v.id == event.id then
+            return "soldierStarEvents"
+        end
+    end
+    for i,v in ipairs(self.treatSoldierEvents) do
+        if v.id == event.id then
+            return "treatSoldierEvents"
+        end
+    end
+    assert(false)
+end
+--[[end]]
+
+--[[helpToTroops begin]]
+function User:IsHelpedToPlayer(id)
+    for _,v in ipairs(self.helpToTroops) do
+        if v.beHelpedPlayerData.id == id then
+            return true
+        end
+    end
+end
+--[[end]]
+
+
 
 local before_map = {
     basicInfo = function(userData, deltaData)
@@ -717,18 +1459,132 @@ local before_map = {
     dailyTasks = function()end,
     dailyQuests = function()end,
     itemEvents = function()end,
+    helpedByTroops = function()end,
+    helpToTroops = function()end,
 
+    houseEvents = function(userData, deltaData)
+        local ok, value = deltaData("houseEvents.remove")
+        if ok then
+            for i,v in ipairs(value) do
+                local house = userData:GetHouseByLocation(v.buildingLocation, v.houseLocation)
+                GameGlobalUI:showTips(_("提示"),
+                    string.format(_("建造%s至%d级完成"),
+                    Localize.building_name[house.type], house.level))
+            end
+        end
+    end,
+    buildingEvents = function(userData, deltaData)
+        local ok, value = deltaData("buildingEvents.remove")
+        if ok then
+            for i,v in ipairs(value) do
+                local building = userData:GetBuilingByLocation(v.location)
+                GameGlobalUI:showTips(_("提示"),
+                    string.format(_("建造%s至%d级完成"),
+                    Localize.building_name[building.type], building.level))
+            end
+        end
+    end,
+
+    productionTechs = function()end,
+    productionTechEvents = function(userData, deltaData)
+        local ok, value = deltaData("productionTechEvents.remove")
+        if ok then
+            for i,v in ipairs(value) do
+                GameGlobalUI:showTips(
+                    _("生产科技升级完成"), 
+                    Localize.productiontechnology_name[v.name]
+                    .."Lv"..userData.productionTechs[v.name].level)        
+            end
+        end
+        
+    end,
+
+    militaryTechs = function()end,
+    militaryTechEvents = function(userData, deltaData)
+        local militaryTechs = userData.militaryTechs
+        local ok, value = deltaData("militaryTechEvents.remove")
+        if ok then
+            for i,v in ipairs(value) do
+                GameGlobalUI:showTips(_("军事科技升级完成"),
+                    UtilsForTech:GetTechLocalize(v.name)
+                    .."Lv"..militaryTechs[v.name].level)
+            end
+        end
+    end,
+
+    soldiers = function()end,
+    soldierEvents = function(userData, deltaData)
+        local ok, value = deltaData("soldierEvents.remove")
+        if ok then
+            for i,v in ipairs(value) do
+                GameGlobalUI:showTips(_("招募士兵完成"), 
+                Localize.soldier_name[v.name].."X"..v.count)
+            end
+        end
+    end, 
+
+    woundedSoldiers = function()end,
+    treatSoldierEvents = function(userData, deltaData)
+        local ok, value = deltaData("treatSoldierEvents.remove")
+        if ok then
+            for i,v in ipairs(value) do
+                local soldiers_info = {}
+                for i,soldier in ipairs(v.soldiers) do
+                    table.insert(soldiers_info, 
+                        Localize.soldier_name[soldier.name]
+                        .."X"..soldier.count)
+                end
+                GameGlobalUI:showTips(_("治愈士兵完成"), 
+                    table.concat(soldiers_info, ","))
+            end
+        end
+    end,
+
+    soldierStars = function()end,
+    soldierStarEvents = function(userData, deltaData)
+        local ok, value = deltaData("soldierStarEvents.remove")
+        if ok then
+            for i,v in ipairs(value) do
+                GameGlobalUI:showTips(
+                    _("士兵晋级完成"),
+                    string.format(
+                        _("晋级%s至%d星完成"),
+                        Localize.soldier_name[v.name],
+                        userData.soldierStars[v.name]
+                    )
+                )
+            end
+        end
+    end,
+    
     dragonEquipments = function()end,
+    dragonEquipmentEvents = function(userData, deltaData)
+        local ok, value = deltaData("dragonEquipmentEvents.remove")
+        if ok then
+            for k,v in ipairs(value) do
+                GameGlobalUI:showTips(_("制造装备完成"), 
+                    Localize.equip[v.name].."X1")
+            end
+        end
+    end,
+
     dragonMaterials = function()end,
     soldierMaterials = function()end,
     buildingMaterials = function()end,
     technologyMaterials = function()end,
-    dragonEquipmentEvents = function(userData, deltaData)
-        LuaUtils:outputTable(deltaData)
-        local ok, value = deltaData("dragonEquipmentEvents.remove")
+    materialEvents = function(userData, deltaData)
+        local ok, value = deltaData("materialEvents.edit")
         if ok then
             for k,v in ipairs(value) do
-                GameGlobalUI:showTips(_("制造装备完成"), Localize.equip[v.name].."X1")
+                if v.finishTime == 0 then
+                    local material_info = {}
+                    for i,m in ipairs(v.materials) do
+                        table.insert(material_info, 
+                            Localize.materials[m.name].."X"..m.count)
+                    end
+                    GameGlobalUI:showTips(_("制造材料完成"), 
+                        table.concat(material_info, ","))
+                end
             end
         end
     end,
@@ -738,7 +1594,9 @@ local before_map = {
         if ok then
             for k,v in pairs(value) do
                 if v.finishTime == 0 then
-                    GameGlobalUI:showTips(_("提示"),string.format(_("每日任务%s完成"),Localize.daily_quests_name[v.index]))
+                    GameGlobalUI:showTips(_("提示"),
+                        string.format(_("每日任务%s完成"),
+                        Localize.daily_quests_name[v.index]))
                 end
             end
         end
@@ -754,10 +1612,13 @@ local after_map = {
         end
     end,
 }
-function User:OnUserDataChanged(userData, current_time, deltaData)
+function User:OnUserDataChanged(userData, deltaData)
     for k,v in pairs(userData) do
         self[k] = v
     end
+    return self
+end
+function User:OnDeltaDataChanged(deltaData)
     if deltaData then
         for i,k in ipairs(User.LISTEN_TYPE) do
             local before_func = before_map[k]
@@ -779,8 +1640,6 @@ function User:OnUserDataChanged(userData, current_time, deltaData)
             end
         end
     end
-
-    return self
 end
 
 
@@ -800,19 +1659,6 @@ function User:PromiseOfGetCityBuildRewards()
 end
 
 return User
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

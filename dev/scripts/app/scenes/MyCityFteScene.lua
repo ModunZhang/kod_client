@@ -8,7 +8,6 @@ local GameUINpc = import("..ui.GameUINpc")
 local WidgetFteArrow = import("..widget.WidgetFteArrow")
 local WidgetFteMark = import("..widget.WidgetFteMark")
 local Sprite = import("..sprites.Sprite")
-local SoldierManager = import("..entity.SoldierManager")
 local User = import("..entity.User")
 local NotifyItem = import("..utils.NotifyItem")
 local MyCityScene = import(".MyCityScene")
@@ -185,8 +184,9 @@ local ui_map = setmetatable({
 }, {__index = function() assert(false) end})
 function MyCityFteScene:OpenUI(building, default_tab)
     local city = self:GetCity()
+    local User = city:GetUser()
     if iskindof(building, "HelpedTroopsSprite") then
-        local helped = city:GetHelpedByTroops()[building:GetIndex()]
+        local helped = User.helpedByTroops[building:GetIndex()]
         local user = self.city:GetUser()
         NetManager:getHelpDefenceTroopDetailPromise(user:Id(),helped.id):done(function(response)
             LuaUtils:outputTable("response", response)

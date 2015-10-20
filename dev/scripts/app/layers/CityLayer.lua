@@ -15,7 +15,6 @@ local CitizenSprite = import("..sprites.CitizenSprite")
 local SoldierSprite = import("..sprites.SoldierSprite")
 local BarracksSoldierSprite = import("..sprites.BarracksSoldierSprite")
 local HelpedTroopsSprite = import("..sprites.HelpedTroopsSprite")
-local SoldierManager = import("..entity.SoldierManager")
 local cocos_promise = import("..utils.cocos_promise")
 local Enum = import("..utils.Enum")
 local promise = import("..utils.promise")
@@ -192,18 +191,15 @@ function CityLayer:OnDestoryDecorator(destory_decorator, release_ruins)
         end
     end
 end
-function CityLayer:OnSoliderStarCountChanged(soldier_manager, soldier_star_changed)
-    self:UpdateSoldiersStar(soldier_manager, soldier_star_changed)
-end
-function CityLayer:OnSoliderCountChanged(soldier_manager, changed)
+function CityLayer:OnUserDataChanged_soldiers(userData, deltaData)
     if self:IsBarracksMoving() then return end
-    self:UpdateSoldiersVisibleWithSoldierManager(soldier_manager)
+    self:UpdateSoldiersVisible()
+end
+function CityLayer:OnUserDataChanged_helpedByTroops(userData, deltaData)
+    self:UpdateHelpedByTroopsVisible(userData.helpedByTroops)
 end
 function CityLayer:IsBarracksMoving()
     return self:GetCityNode():getChildByTag(BARRACKS_SOLDIER_TAG)
-end
-function CityLayer:OnHelpedTroopsChanged(city)
-    self:UpdateHelpedByTroopsVisible(city:GetHelpedByTroops())
 end
 -----
 local SCENE_ZORDER = Enum("SCENE_BACKGROUND", "CITY_LAYER", "SKY_LAYER", "INFO_LAYER")
@@ -374,8 +370,9 @@ function CityLayer:InitWithCity(city)
     city:AddListenOnType(self, city.LISTEN_TYPE.OCCUPY_RUINS)
     city:AddListenOnType(self, city.LISTEN_TYPE.CREATE_DECORATOR)
     city:AddListenOnType(self, city.LISTEN_TYPE.DESTROY_DECORATOR)
-    city:AddListenOnType(self, city.LISTEN_TYPE.HELPED_BY_TROOPS)
-    city:GetSoldierManager():AddListenOnType(self, SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
+    local User = self.scene:GetCity():GetUser()
+    User:AddListenOnType(self, "soldiers")
+    User:AddListenOnType(self, "helpedByTroops")
 
     local city_node = self:GetCityNode()
     -- 加废墟
@@ -396,7 +393,6 @@ function CityLayer:InitWithCity(city)
         local building_sprite = self:CreateBuilding(building, city):addTo(city_node)
         city:AddListenOnType(building_sprite, city.LISTEN_TYPE.LOCK_TILE)
         city:AddListenOnType(building_sprite, city.LISTEN_TYPE.UNLOCK_TILE)
-        city:AddListenOnType(building_sprite, city.LISTEN_TYPE.UPGRADE_BUILDING)
         table.insert(self.buildings, building_sprite)
     end
 
@@ -426,7 +422,7 @@ function CityLayer:InitWithCity(city)
     self.single_tree = single_tree
 
     -- 兵种
-    self:RefreshSoldiers(city:GetSoldierManager())
+    self:RefreshSoldiers()
 
 
     -- 协防的部队
@@ -459,10 +455,10 @@ function CityLayer:InitWithCity(city)
         self:CreateBird(0, 0):scale(0.8):addTo(self.sky_layer)
     end
 end
-function CityLayer:MoveBarracksSoldiers(soldier, is_mark)
-    if soldier then
-        local star = City:GetSoldierManager():GetStarBySoldierType(soldier)
-        local soldier = self:CreateBarracksSoldier(soldier, star)
+function CityLayer:MoveBarracksSoldiers(soldier_name, is_mark)
+    if soldier_name then
+        local star = User:SoldierStarByName(soldier_name)
+        local soldier = self:CreateBarracksSoldier(soldier_name, star)
             :addTo(self:GetCityNode(), 0, BARRACKS_SOLDIER_TAG)
         if is_mark then
             display.newSprite("fte_icon_arrow.png"):addTo(soldier)
@@ -492,12 +488,13 @@ function CityLayer:IsEditMode()
     return is_edit_mode
 end
 function CityLayer:UpdateAllDynamicWithCity(city)
+    local User = self.scene:GetCity():GetUser()
     -- self:UpdateLockedTilesWithCity(city)
     self:UpdateTilesWithCity(city)
     self:UpdateTreesWithCity(city)
     self:UpdateWallsWithCity(city)
-    self:UpdateSoldiersVisibleWithSoldierManager(city:GetSoldierManager())
-    self:UpdateHelpedByTroopsVisible(city:GetHelpedByTroops())
+    self:UpdateSoldiersVisible()
+    self:UpdateHelpedByTroopsVisible(User.helpedByTroops)
     self:UpdateCitizen(city)
 end
 function CityLayer:UpdateRuinsVisibleWithCity(city)
@@ -596,30 +593,32 @@ function CityLayer:UpdateTowersWithCity(city)
     end
 end
 function CityLayer:RefreshMyCitySoldierCount()
-    self:UpdateSoldiersVisibleWithSoldierManager(City:GetSoldierManager())
+    self:UpdateSoldiersVisible()
 end
-function CityLayer:UpdateSoldiersVisibleWithSoldierManager(soldier_manager)
-    local map = soldier_manager:GetSoldierMap()
+function CityLayer:UpdateSoldiersVisible()
+    local map = self.scene:GetCity():GetUser().soldiers
     self:IteratorSoldiers(function(_, v)
         local type_, star = v:GetSoldierTypeAndStar()
         local is_visible = map[type_] > 0
         v:setVisible(is_visible)
     end)
 end
-function CityLayer:UpdateSoldiersStar(soldier_manager)
+function CityLayer:UpdateSoldiersStar()
+    local User = self.scene:GetCity():GetUser()
     local need_refresh = false
     self:IteratorSoldiers(function(_, v)
         local type_, star_old = v:GetSoldierTypeAndStar()
-        local star_now = soldier_manager:GetStarBySoldierType(type_)
+        local star_now = User:SoldierStarByName(type_)
         if star_now ~= star_old then
             need_refresh = true
         end
     end)
     if need_refresh then
-        self:RefreshSoldiers(soldier_manager)
+        self:RefreshSoldiers()
     end
 end
-function CityLayer:RefreshSoldiers(soldier_manager)
+function CityLayer:RefreshSoldiers()
+    local User = self.scene:GetCity():GetUser()
     for _,v in pairs(self.soldiers or {}) do
         v:removeFromParent()
     end
@@ -640,7 +639,7 @@ function CityLayer:RefreshSoldiers(soldier_manager)
         {x = 4, y = 13, soldier_type = "crossbowman", scale = 1},
         {x = 2, y = 13, soldier_type = "ballista", scale = 0.8},
     }) do
-        local star = soldier_manager:GetStarBySoldierType(v.soldier_type)
+        local star = User:SoldierStarByName(v.soldier_type)
         assert(star < 4)
         local soldier = self:CreateSoldier(v.soldier_type, star, v.x, v.y):addTo(self:GetCityNode())
         local x, y = soldier:getPosition()
@@ -649,7 +648,7 @@ function CityLayer:RefreshSoldiers(soldier_manager)
     end
     self.soldiers = soldiers
 
-    self:UpdateSoldiersVisibleWithSoldierManager(soldier_manager)
+    self:UpdateSoldiersVisible()
 end
 function CityLayer:UpdateHelpedByTroopsVisible(helped_by_troops)
     self:IteratorHelpedTroops(function(i, v)

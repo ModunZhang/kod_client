@@ -210,8 +210,9 @@ end
 local function get_daily_quests_response_msg(response)
     LuaUtils:outputTable("response", response)
     if response.msg.playerData then
-        DataManager:getUserData().dailyQuests = response.msg.playerData[1][2]
-        User:OnDailyQuestsChanged(DataManager:getUserData())
+        local userData = DataManager:getUserData()
+        local deltaData = decodeInUserDataFromDeltaData(userData, response.msg.playerData)
+        DataManager:setUserData(userData, deltaData)
     end
     return response
 end
@@ -1631,6 +1632,12 @@ function NetManager:getUpgradeProductionTechPromise(techName,finishNow)
         techName = techName,
         finishNow = finishNow,
     }, "升级生产科技失败!"):done(get_player_response_msg):done(function()
+        if finishNow then
+            GameGlobalUI:showTips(
+                    _("生产科技升级完成"), 
+                    Localize.productiontechnology_name[techName]
+                    .."Lv"..User.productionTechs[techName].level)  
+        end
         app:GetAudioManager():PlayeEffectSoundWithKey("TECHNOLOGY")
     end)
 end
@@ -1641,6 +1648,10 @@ local function upgrade_military_tech_promise(techName,finishNow)
         finishNow = finishNow,
     }, "升级军事科技失败!"):done(get_player_response_msg):done(function()
         if finishNow then
+            GameGlobalUI:showTips(_("军事科技升级完成"),
+                    UtilsForTech:GetTechLocalize(techName)
+                    .."Lv"..
+                    User.militaryTechs[techName].level)
             app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
         end
     end)
@@ -1658,7 +1669,18 @@ local function upgrade_soldier_star_promise(soldierName,finishNow)
     return get_blocking_request_promise("logic.playerHandler.upgradeSoldierStar", {
         soldierName = soldierName,
         finishNow = finishNow,
-    }, "士兵晋级失败!"):done(get_player_response_msg)
+    }, "士兵晋级失败!"):done(get_player_response_msg):done(function()
+        if finishNow then
+            GameGlobalUI:showTips(
+                _("士兵晋级完成"),
+                string.format(
+                    _("晋级%s至%d星完成"),
+                    Localize.soldier_name[soldierName],
+                    User.soldierStars[soldierName]
+                )
+            )
+        end
+    end)
 end
 function NetManager:getInstantUpgradeSoldierStarPromise(soldierName)
     return upgrade_soldier_star_promise(soldierName,true)
@@ -1951,7 +1973,7 @@ function NetManager:getAttackPveSectionPromise(sectionName, dragonType, soldiers
                 if v.type == "items" then
                     pre_tab[v.type][v.name] = User:GetItemCount(v.name)
                 elseif v.type == "soldierMaterials" then
-                    
+
                     pre_tab[v.type][v.name] = User.soldierMaterials[v.name]
                 end
             end
@@ -2083,6 +2105,7 @@ function NetManager:downloadFile(fileInfo, cb, progressCb)
         progressCb(totalSize, currentSize)
     end)
 end
+
 
 
 

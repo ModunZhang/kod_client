@@ -50,7 +50,6 @@ function GameUIKeep:OnMoveInStage()
                 self:CreateCanBeUnlockedBuildingBG()
                 self:CreateCanBeUnlockedBuildingListView()
                 self:CreateCityBasicInfo()
-                self.city:AddListenOnType(self, City.LISTEN_TYPE.CITY_NAME)
             end
             self.info_layer:setVisible(true)
         else
@@ -63,7 +62,6 @@ function GameUIKeep:OnMoveInStage()
 end
 
 function GameUIKeep:onExit()
-    self.city:RemoveListenerOnType(self, City.LISTEN_TYPE.CITY_NAME)
     GameUIKeep.super.onExit(self)
 end
 

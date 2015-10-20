@@ -1,9 +1,5 @@
 local Enum = import("..utils.Enum")
-local Resource = import(".Resource")
-local AutomaticUpdateResource = import(".AutomaticUpdateResource")
-local CitizenAutomaticUpdateResource = import(".CitizenAutomaticUpdateResource")
-local Observer = import(".Observer")
-local ResourceManager = class("ResourceManager", Observer)
+local ResourceManager = class("ResourceManager")
 
 local intInit = GameDatas.PlayerInitData.intInit
 ResourceManager.RESOURCE_TYPE = Enum(
@@ -50,7 +46,6 @@ local ipairs = ipairs
 function ResourceManager:ctor(city)
     self.city = city
     self.user = self.city:GetUser()
-    ResourceManager.super.ctor(self)
 end
 function ResourceManager:UpdateByCity(city, current_time)
     -- 产量
@@ -106,6 +101,7 @@ function ResourceManager:UpdateByCity(city, current_time)
     -- 城民的计算是写死的，没有按照通用的规则
     local LIMIT_MAP = {}
     local PRODUCTION_MAP = {}
+    local User = self.user
     local buff_production_map,buff_limt_map = self:GetTotalBuffData(city)
     for resource_type, production in pairs(total_production_map) do
         local buff_limit = 1 + buff_limt_map[resource_type]
@@ -118,12 +114,11 @@ function ResourceManager:UpdateByCity(city, current_time)
         else
             local resource_production = math.floor(production * buff_production)
             if resource_type == FOOD then
-                resource_production = resource_production - city:GetSoldierManager():GetTotalUpkeep()
+                resource_production = resource_production - User:GetSoldierUpkeep()
             end
             PRODUCTION_MAP[resource_type] = resource_production
         end
     end
-    local User = self.user
     local wallHp = User:GetResProduction("wallHp")
     wallHp.limit = LIMIT_MAP[WALLHP]
     wallHp.output = PRODUCTION_MAP[WALLHP]
@@ -210,14 +205,14 @@ function ResourceManager:GetTotalBuffData(city)
     dump_resources(buff_production_map, "建筑对资源的影响--->")
 
     --学院科技
-    city:IteratorTechs(function(__,tech)
-        local res_type,buff_type,buff_value = tech:GetResourceBuffData()
+    for tech_name,tech in pairs(city:GetUser().productionTechs) do
+        local res_type,buff_type,buff_value = UtilsForTech:GetResourceBuff(tech_name, tech)
         local resource_type = str2enum[res_type]
         if res_type then
             local target_map = buff_type == "product" and buff_production_map or buff_limt_map
             target_map[resource_type] = target_map[resource_type] + buff_value
         end
-    end)
+    end
     dump_resources(buff_production_map, "学院科技对资源的影响--->")
 
     --道具buuff

@@ -1,5 +1,4 @@
 local intInit = GameDatas.PlayerInitData.intInit
-local config_productionTechs = GameDatas.ProductionTechs.productionTechs
 local Localize = import("..utils.Localize")
 local RecommendedMission = import(".RecommendedMission")
 local BuildingRegister = import(".BuildingRegister")
@@ -7,7 +6,6 @@ local promise = import("..utils.promise")
 local Enum = import("..utils.Enum")
 local Orient = import(".Orient")
 local Tile = import(".Tile")
-local SoldierManager = import(".SoldierManager")
 local ResourceManager = import(".ResourceManager")
 local Building = import(".Building")
 local GateEntity = import(".GateEntity")
@@ -33,14 +31,7 @@ City.LISTEN_TYPE = Enum(
     "CREATE_DECORATOR",
     "OCCUPY_RUINS",
     "DESTROY_DECORATOR",
-    "UPGRADE_BUILDING",
-    "CITY_NAME",
-    "HELPED_BY_TROOPS",
-    "HELPED_TO_TROOPS",
-    "PRODUCTION_DATA_CHANGED",
-    "PRODUCTION_EVENT_CHANGED",
-    "PRODUCTION_EVENT_TIMER",
-    "PRODUCTION_EVENT_REFRESH")
+    "UPGRADE_BUILDING")
 local only_one_buildings_map = {
     keep            = true,
     watchTower      = true,
@@ -72,18 +63,12 @@ function City:ctor(user)
     City.super.ctor(self)
     self.belong_user = user
     self.resource_manager = ResourceManager.new(self)
-    self.soldier_manager = SoldierManager.new(self)
     self.buildings = {}
     self.walls = {}
     self.gate = GateEntity.new({building_type = "wall", city = self}):AddUpgradeListener(self)
     self.tower = TowerEntity.new({building_type = "tower", city = self}):AddUpgradeListener(self)
     self.visible_towers = {}
     self.decorators = {}
-    self.helpedByTroops = {}
-    self.helpToTroops = {}
-    self.productionTechs = {}
-    self.productionTechEvents = {}
-    self.build_queue = 0
     self.need_update_buildings = {}
     self.building_location_map = {}
     self:InitLocations()
@@ -265,12 +250,12 @@ function City:GetBeginnersTask()
             end
         elseif v.type == "technology" then
             local event
-            self:IteratorProductionTechEvents(function(t)
-                if v.name == t:Name() then
+            for i,t in ipairs(self:GetUser().productionTechEvents) do
+                if v.name == t.name then
                     event = t
                 end
-            end)
-            local level = self:FindTechByName(v.name):Level()
+            end
+            local level = self:GetUser().productionTechs[v.name].level
             if level < v.min then
                 if event then
                     if level + 1 < v.min then
@@ -282,7 +267,7 @@ function City:GetBeginnersTask()
             end
         elseif v.type == "recruit" and
             not flag[i] and
-            self:GetSoldierManager():GetTreatCountBySoldierType(v.name) == 0 then
+            self:GetUser().woundedSoldiers[v.name] == 0 then
             return setmetatable({ name = v.name, index = i }, recruit_meta)
         elseif v.type == "explore" and not flag[i] then
             return setmetatable({ index = i }, explore_meta)
@@ -409,7 +394,6 @@ function City:ResetAllListeners()
     self.upgrading_building_callbacks = {}
     self.finish_upgrading_callbacks = {}
 
-    self.soldier_manager:ClearAllListener()
     self:ClearAllListener()
     self:IteratorCanUpgradeBuildings(function(building)
         building:ResetAllListeners()
@@ -521,6 +505,11 @@ function City:GetHousesAroundFunctionBuildingWithFilter(building, len, filter)
     return r
 end
 function City:IsFunctionBuilding(building)
+    if building:GetType() == "tower" then
+        return true
+    elseif building:GetType() == "wall" then
+        return true
+    end
     local location_id = self:GetLocationIdByBuilding(building)
     if location_id then
         return self:GetBuildingByLocationId(location_id):IsSamePositionWith(building)
@@ -535,17 +524,8 @@ end
 function City:IsGate(building)
     return iskindof(building, "GateEntity")
 end
-function City:GetSoldierManager()
-    return self.soldier_manager
-end
 function City:GetAvailableBuildQueueCounts()
-    return self:BuildQueueCounts() - #self:GetUpgradingBuildings()
-end
-function City:BuildQueueCounts()
-    return self.build_queue
-end
-function City:GetHelpedByTroops()
-    return self.helpedByTroops
+    return self:GetUser().basicInfo.buildQueue - #self:GetUpgradingBuildings()
 end
 function City:GetUpgradingBuildings(need_sort)
     local builds = {}
@@ -1087,9 +1067,6 @@ end
 -- 功能函数
 function City:OnTimer(time)
     self:IteratorAllNeedTimerEntity(time)
-    self:IteratorProductionTechEvents(function(v)
-        v:OnTimer(time)
-    end)
 end
 function City:CreateDecorator(current_time, decorator_building)
     insert(self.decorators, decorator_building)
@@ -1196,23 +1173,6 @@ function City:OnUserDataChanged(userData, current_time, deltaData)
         LuaUtils:outputTable("unlock_table", unlock_table)
         self:UnlockTilesByIndexArray(unlock_table)
     end
-
-    -- 更新协防信息
-    self:OnHelpedByTroopsDataChange(userData, deltaData)
-    --更新派出的协防信息
-    self:OnHelpToTroopsDataChange(userData, deltaData)
-    --科技
-    self:OnProductionTechsDataChanged(userData.productionTechs)
-    self:OnProductionTechEventsDataChaned(userData,deltaData)
-
-    -- 更新兵种
-    self.soldier_manager:OnUserDataChanged(userData, current_time, deltaData)
-    -- 更新基本信息
-    local basicInfo = userData.basicInfo
-    self.build_queue = basicInfo.buildQueue
-    self:SetCityName(basicInfo.name)
-    -- 最后才更新资源
-
     local is_fully_update = deltaData == nil
     local is_delta_update = not is_fully_update and deltaData.resources and deltaData.resources.refreshTime
     is_delta_update = is_delta_update or (deltaData and deltaData.soldiers)
@@ -1317,17 +1277,6 @@ function City:OnHouseChanged(userData, current_time, deltaData)
     end)
     return true, is_unlock_any_tiles, unlock_table
 end
-function City:GetCityName()
-    return self.cityName
-end
-function City:SetCityName(cityName)
-    if self.cityName~= cityName then
-        self.cityName = cityName
-        self:NotifyListeneOnType(City.LISTEN_TYPE.CITY_NAME, function(listener)
-            listener:OnCityNameChanged(cityName)
-        end)
-    end
-end
 function City:OnCreateDecorator(current_time, building)
     building:AddUpgradeListener(self)
 end
@@ -1335,29 +1284,11 @@ function City:OnDestoryDecorator(current_time, building)
     building:RemoveUpgradeListener(self)
 end
 function City:OnBuildingUpgradingBegin(building, current_time)
-    self:NotifyListeneOnType(City.LISTEN_TYPE.UPGRADE_BUILDING, function(listener)
-        listener:OnUpgradingBegin(building, current_time, self)
-    end)
-
     self:CheckUpgradingBuildingPormise(building)
 end
 function City:OnBuildingUpgrading(building, current_time)
-    self:NotifyListeneOnType(City.LISTEN_TYPE.UPGRADE_BUILDING, function(listener)
-        listener:OnUpgrading(building, current_time, self)
-    end)
-end
-function City:OnSpeedUpBuilding()
-    self:NotifyListeneOnType(City.LISTEN_TYPE.UPGRADE_BUILDING, function(listener)
-        if listener.OnSpeedUpBuilding then
-            listener:OnSpeedUpBuilding()
-        end
-    end)
 end
 function City:OnBuildingUpgradeFinished(building)
-    self:NotifyListeneOnType(City.LISTEN_TYPE.UPGRADE_BUILDING, function(listener)
-        listener:OnUpgradingFinished(building, self)
-    end)
-
     self:CheckFinishUpgradingBuildingPormise(building)
 end
 function City:LockTilesByIndexArray(index_array)
@@ -1566,57 +1497,6 @@ end
 --     end
 --     return visible_towers
 -- end
-function City:OnHelpedByTroopsDataChange(userData, deltaData)
-    local is_fully_update = deltaData == nil
-    local is_delta_update = not is_fully_update and deltaData.helpedByTroops
-    if is_fully_update or is_delta_update then
-        self.helpedByTroops = userData.helpedByTroops or {}
-        self:NotifyListeneOnType(City.LISTEN_TYPE.HELPED_BY_TROOPS, function(listener)
-            listener:OnHelpedTroopsChanged(self)
-        end)
-    end
-end
---helpToTroops
-function City:OnHelpToTroopsDataChange(userData, deltaData)
-    local is_fully_update = deltaData == nil
-    local is_delta_update = not is_fully_update and deltaData.helpToTroops
-    if is_fully_update or is_delta_update then
-        self.helpToTroops = {}
-        for _,v in ipairs(userData.helpToTroops or {}) do
-            self.helpToTroops[v.beHelpedPlayerData.id] = v
-        end
-        self:NotifyListeneOnType(City.LISTEN_TYPE.HELPED_TO_TROOPS, function(listener)
-            listener:OnHelpToTroopsChanged(self)
-        end)
-    end
-end
-
-function City:IteratorHelpToTroops(func)
-    for _,v in pairs(self.helpToTroops) do
-        func(v)
-    end
-end
-
-function City:GetHelpToTroops(playerId)
-    if playerId then
-        return self.helpToTroops[playerId]
-    else
-        local r = {}
-        self:IteratorHelpToTroops(function(v)
-            insert(r, v)
-        end)
-        return r
-    end
-end
-
-function City:HasHelpToTroops()
-    return not LuaUtils:table_empty(self.helpToTroops)
-end
-
-function City:IsHelpedToTroopsWithPlayerId(id)
-    return self:GetHelpToTroops(id) ~= nil
-end
-
 -- promise
 local function promiseOfBuilding(callbacks, building_type, level)
     assert(#callbacks == 0)
@@ -1669,101 +1549,6 @@ function City:GetWatchTowerLevel()
     return watch_tower and watch_tower:GetLevel() or 0
 end
 
-function City:OnProductionTechsDataChanged(productionTechs)
-    if not productionTechs then return end
-    local need_fast_update_all_techs = false
-    local edited = {}
-    for name,v in pairs(productionTechs) do
-        local productionTechnology = self:FindTechByIndex(v.index)
-        if not productionTechnology then
-            local productionTechnology = ProductionTechnology.new()
-            productionTechnology:UpdateData(name,v)
-            self.productionTechs[productionTechnology:Index()] = productionTechnology
-            need_fast_update_all_techs = true
-        else
-            need_fast_update_all_techs = false
-            if productionTechnology and productionTechnology:Level() ~= v.level then
-                productionTechnology:SetLevel(v.level)
-                GameGlobalUI:showTips(_("生产科技升级完成"),productionTechnology:GetLocalizedName().."Lv"..productionTechnology:Level())
-                local changed = self:CheckDependTechsLockState(productionTechnology)
-                insert(edited, productionTechnology)
-                table.insertto(edited,changed)
-            end
-        end
-    end
-    if need_fast_update_all_techs then
-        self:FastUpdateAllTechsLockState()
-    end
-    if #edited > 0 then
-        self:NotifyListeneOnType(City.LISTEN_TYPE.PRODUCTION_DATA_CHANGED, function(listener)
-            listener:OnProductionTechsDataChanged({edited = edited})
-        end)
-    end
-end
-
-function City:IteratorTechs(func)
-    for index,v in pairs(self.productionTechs) do
-        if func(index,v) then
-            return
-        end
-    end
-end
-
-function City:FindTechByName(name)
-    local index = config_productionTechs[name].index
-    if index then
-        return self:FindTechByIndex(index)
-    end
-end
-
-function City:FindTechByIndex(index)
-    index = checkint(index)
-    return self.productionTechs[index]
-end
-
---查找依赖于此科技的所有科技
-function City:FindDependOnTheTechs(tech)
-    local r = {}
-    self:IteratorTechs(function(_,tech_)
-        if tech_:UnlockBy() == tech:Index() then
-            insert(r, tech_)
-        end
-    end)
-    return r
-end
---更新依赖于此科技的科技的解锁状态
-function City:CheckDependTechsLockState(tech)
-    local changed = {}
-    local targetTechs = self:FindDependOnTheTechs(tech)
-    for _,tech_ in ipairs(targetTechs) do
-        tech_:SetEnable(tech:Level() >= tech_:UnlockLevel() and tech_:IsOpen() and tech_:AcademyLevel() <= self:GetAcademyBuildingLevel())
-        insert(changed,tech_)
-    end
-    return changed
-end
-
-function City:FastUpdateAllTechsLockState()
-    self:IteratorTechs(function(index,tech)
-        local unLockByTech = self:FindTechByIndex(tech:UnlockBy())
-        if unLockByTech then
-            if unLockByTech:Index() == tech:Index() then
-                tech:SetEnable(true)
-            else
-                tech:SetEnable(tech:UnlockLevel() <= unLockByTech:Level() and tech:IsOpen() and tech:AcademyLevel() <= self:GetAcademyBuildingLevel())
-            end
-        end
-    end)
-end
-
-function City:GetAcademyBuildingLevel()
-    local building = self:GetFirstBuildingByType('academy')
-    if building then
-        return building:GetLevel()
-    else
-        return 0
-    end
-end
-
 function City:GeneralProductionLocalPush(productionTechnologyEvent)
     if ext and ext.localpush then
         local title = productionTechnologyEvent:GetBuffLocalizedDescComplete()
@@ -1777,127 +1562,10 @@ function City:CancelProductionLocalPush(Id)
 end
 
 
-function City:OnProductionTechEventsDataChaned(userData,deltaData)
-    if not userData.productionTechEvents then return end
-    local is_fully_update = deltaData == nil
-    local is_delta_update = not is_fully_update and deltaData.productionTechEvents ~= nil
-    if is_fully_update then
-        --清空之前的数据
-        self:IteratorProductionTechEvents(function(productionTechnologyEvent)
-            productionTechnologyEvent:Reset()
-        end)
-        self.productionTechEvents = {}
-        for _,v in ipairs(userData.productionTechEvents) do
-            if not self:FindProductionTechEventById(v.id) then
-                local productionTechnologyEvent = ProductionTechnologyEvent.new()
-                productionTechnologyEvent:UpdateData(v)
-                productionTechnologyEvent:SetEntity(self:FindTechByName(productionTechnologyEvent:Name()))
-                self.productionTechEvents[productionTechnologyEvent:Id()] = productionTechnologyEvent
-                productionTechnologyEvent:AddObserver(self)
-                self:GeneralProductionLocalPush(productionTechnologyEvent)
-            end
-        end
-        self:NotifyListeneOnType(City.LISTEN_TYPE.PRODUCTION_EVENT_REFRESH, function(listener)
-            listener:OnProductionTechnologyEventDataRefresh()
-        end)
-    end
-    if is_delta_update then
-        local changed_map = GameUtils:Handler_DeltaData_Func(
-            deltaData.productionTechEvents
-            ,function(v)
-                if not self:FindProductionTechEventById(v.id) then
-                    local productionTechnologyEvent = ProductionTechnologyEvent.new()
-                    productionTechnologyEvent:UpdateData(v)
-                    productionTechnologyEvent:SetEntity(self:FindTechByName(productionTechnologyEvent:Name()))
-                    self.productionTechEvents[productionTechnologyEvent:Id()] = productionTechnologyEvent
-                    productionTechnologyEvent:AddObserver(self)
-                    self:GeneralProductionLocalPush(productionTechnologyEvent)
-                    return productionTechnologyEvent
-                end
-            end
-            ,function(v)
-                if self:FindProductionTechEventById(v.id) then
-                    local productionTechnologyEvent = self:FindProductionTechEventById(v.id)
-                    productionTechnologyEvent:UpdateData(v)
-                    self:GeneralProductionLocalPush(productionTechnologyEvent)
-                    return productionTechnologyEvent
-                end
-            end
-            ,function(v)
-                if self:FindProductionTechEventById(v.id) then
-                    local productionTechnologyEvent = self:FindProductionTechEventById(v.id)
-                    productionTechnologyEvent:Reset()
-                    self.productionTechEvents[productionTechnologyEvent:Id()] = nil
-                    productionTechnologyEvent = ProductionTechnologyEvent.new()
-                    productionTechnologyEvent:UpdateData(v)
-                    productionTechnologyEvent:SetEntity(self:FindTechByName(productionTechnologyEvent:Name()))
-                    self:CancelProductionLocalPush(productionTechnologyEvent:Id())
-                    return productionTechnologyEvent
-                end
-            end
-        )
-        self:NotifyListeneOnType(City.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED, function(listener)
-            listener:OnProductionTechnologyEventDataChanged(GameUtils:pack_event_table(changed_map))
-        end)
-    end
-end
 
-function City:IteratorProductionTechEvents(func)
-    for _,v in pairs(self.productionTechEvents) do
-        func(v)
-    end
-end
 
-function City:OnProductionTechnologyEventTimer(productionTechnologyEvent)
-    self:NotifyListeneOnType(City.LISTEN_TYPE.PRODUCTION_EVENT_TIMER, function(listener)
-        listener:OnProductionTechnologyEventTimer(productionTechnologyEvent)
-    end)
-end
-
-function City:HaveProductionTechEvent()
-    return not LuaUtils:table_empty(self.productionTechEvents)
-end
-function City:GetProductionTechEventCount()
-    return table.nums(self.productionTechEvents)
-end
-
-function City:GetProductionTechEventsArray()
-    local r = {}
-    self:IteratorProductionTechEvents(function(event)
-        insert(r, event)
-    end)
-    return r
-end
-
-function City:FindProductionTechEventById(_id)
-    return self.productionTechEvents[_id]
-end
 
 return City
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

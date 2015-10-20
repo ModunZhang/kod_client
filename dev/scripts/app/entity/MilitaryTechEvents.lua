@@ -53,7 +53,7 @@ function MilitaryTechEvents:GetTime()
 end
 function MilitaryTechEvents:GetLocalizeDesc()
     local name = self.name
-    local level = City:GetSoldierManager():GetMilitaryTechsLevelByName(name)
+    local level = User:GetMilitaryTechLevel(name)
     local sp_name = string.split(name, "_")
     if sp_name[2] == "hpAdd" then
         return string.format(_("研发科技-%s血量增加到 Lv %d"),Localize.soldier_category[string.split(name, "_")[1]],level+1)

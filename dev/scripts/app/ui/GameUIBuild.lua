@@ -25,7 +25,6 @@ function GameUIBuild:ctor(city, building, p1, p2, need_tips, build_name)
     self.build_name = build_name
     print(self.need_tips, self.build_name)
     self.select_ruins_list = city:GetNeighbourRuinWithSpecificRuin(building)
-    self.build_city:AddListenOnType(self, self.build_city.LISTEN_TYPE.UPGRADE_BUILDING)
     app:GetAudioManager():PlayBuildingEffectByType("woodcutter")
 end
 function GameUIBuild:OnMoveInStage()
@@ -55,10 +54,6 @@ function GameUIBuild:OnMoveInStage()
 
     GameUIBuild.super.OnMoveInStage(self)
 end
-function GameUIBuild:onExit()
-    self.build_city:RemoveListenerOnType(self, self.build_city.LISTEN_TYPE.UPGRADE_BUILDING)
-    GameUIBuild.super.onExit(self)
-end
 function GameUIBuild:LoadBuildingQueue()
     local back_ground = display.newScale9Sprite("back_ground_166x84.png", 0,0,cc.size(534,46),cc.rect(15,10,136,64))
         :align(display.CENTER, window.cx, window.top - 120)
@@ -76,7 +71,7 @@ function GameUIBuild:LoadBuildingQueue()
         :align(display.LEFT_CENTER, 60, back_ground:getContentSize().height/2)
 
 
-    if self.build_city:BuildQueueCounts() < 2 then
+    if User.basicInfo.buildQueue < 2 then
         WidgetPushButton.new(
             {normal = "add_btn_up_50x50.png",pressed = "add_btn_down_50x50.png"}
             ,{}
@@ -102,16 +97,7 @@ function GameUIBuild:LoadBuildingQueue()
     return back_ground
 end
 function GameUIBuild:UpdateBuildingQueue(city)
-    self.queue:SetBuildingQueue(city:GetAvailableBuildQueueCounts(), city:BuildQueueCounts())
-end
-function GameUIBuild:OnUpgradingBegin(building)
-    self:OnCityChanged()
-end
-function GameUIBuild:OnUpgrading()
-
-end
-function GameUIBuild:OnUpgradingFinished(building)
-    self:OnCityChanged()
+    self.queue:SetBuildingQueue(city:GetAvailableBuildQueueCounts(), city:GetUser().basicInfo.buildQueue)
 end
 function GameUIBuild:OnCityChanged()
     table.foreachi(self.base_resource_building_items or {}, function(i, v)
@@ -139,7 +125,7 @@ end
 function GameUIBuild:OnBuildOnItem(item)
     local city = self.build_city
     local User = city:GetUser()
-    local max = city.build_queue
+    local max = User.basicInfo.buildQueue
     local current_time = app.timer:GetServerTime()
     local upgrading_buildings = city:GetUpgradingBuildingsWithOrder(current_time)
     local current = max - #upgrading_buildings
@@ -180,7 +166,11 @@ function GameUIBuild:OnBuildOnItem(item)
         local dialog =  UIKit:showMessageDialog()
         local required_gems = 0
         if current <= 0 then
-            required_gems = DataUtils:getGemByTimeInterval(upgrading_buildings[1]:GetUpgradingLeftTimeByCurrentTime(current_time))
+            local event = User:GetBuildingEventByLocation(self:GetCurrentLocation(upgrading_buildings[1]))
+            if event then
+                local time = UtilsForEvent:GetEventInfo(event)
+                required_gems = DataUtils:getGemByTimeInterval(time)
+            end
         end
         dialog:SetTitle(_("提示"))
         local message  = ""
@@ -212,6 +202,21 @@ function GameUIBuild:OnBuildOnItem(item)
                 price = need_gem
             }
         )
+    end
+end
+function GameUIBuild:GetCurrentLocation(building)
+    if building:GetType() == "wall" then
+        return 21
+    elseif building:GetType() == "tower" then
+        return 22
+    end
+    local City = building:BelongCity()
+    local tile = City:GetTileWhichBuildingBelongs(building)
+    if City:IsFunctionBuilding(building) then
+        return tile.location_id
+    else
+        local houseLocation = tile:GetBuildingLocation(building)
+        return tile.location_id, houseLocation
     end
 end
 function GameUIBuild:BuildWithRuins(select_ruins, building_type)

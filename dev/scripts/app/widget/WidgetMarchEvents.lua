@@ -42,7 +42,7 @@ end
 
 ---------------------------
 --Observer Methods
-function WidgetMarchEvents:OnHelpToTroopsChanged(changed_map)
+function WidgetMarchEvents:OnUserDataChanged_helpToTroops(userData, deltaData)
     self:PromiseOfSwitch()
 end
 
@@ -80,15 +80,16 @@ function WidgetMarchEvents:OnVillageEventTimer(villageEvent)
 end
 
 function WidgetMarchEvents:AddOrRemoveAllianceEvent(isAdd)
+    local User = User
     -- local alliance_belvedere = self:GetAllianceBelvedere()
     if isAdd then
-        City:AddListenOnType(self,City.LISTEN_TYPE.HELPED_TO_TROOPS)
+        User:AddListenOnType(self, "helpToTroops")
         -- alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
         -- alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
         -- alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnVillageEventTimer)
         -- alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnFightEventTimerChanged)
     else
-        City:RemoveListenerOnType(self,City.LISTEN_TYPE.HELPED_TO_TROOPS)
+        User:RemoveListenerOnType(self, "helpToTroops")
         -- alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
         -- alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
         -- alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnVillageEventTimer)

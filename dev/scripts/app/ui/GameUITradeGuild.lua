@@ -80,10 +80,10 @@ function GameUITradeGuild:OnMoveInStage()
     end):pos(window.cx, window.bottom + 34)
     local User = self.user
     self.tab_buttons:SetButtonTipNumber("myGoods",User:GetSoldDealsCount())
-    self.building:AddUpgradeListener(self)
     User:AddListenOnType(self, "deals")
     User:AddListenOnType(self, "buildingMaterials")
     User:AddListenOnType(self, "technologyMaterials")
+    User:AddListenOnType(self, "buildingEvents")
 end
 
 function GameUITradeGuild:onExit()
@@ -91,7 +91,7 @@ function GameUITradeGuild:onExit()
     User:RemoveListenerOnType(self, "deals")
     User:RemoveListenerOnType(self, "buildingMaterials")
     User:RemoveListenerOnType(self, "technologyMaterials")
-    self.building:RemoveUpgradeListener(self)
+    User:RemoveListenerOnType(self, "buildingEvents")
     GameUITradeGuild.super.onExit(self)
 end
 
@@ -1058,10 +1058,7 @@ function GameUITradeGuild:OpenSellDialog()
     )
     body.drop_list:align(display.TOP_CENTER,window.cx,window.top-170):addTo(root)
 end
-
-function GameUITradeGuild:OnBuildingUpgradingBegin()
-end
-function GameUITradeGuild:OnBuildingUpgradeFinished()
+function GameUITradeGuild:OnUserDataChanged_buildingEvents(userData, deltaData)
     if self.cart_num and self.cart_recovery then
         local tradeGuild = City:GetFirstBuildingByType("tradeGuild")
         self.cart_num:SetValue(User:GetResValueByType("cart").. "/"..User:GetResProduction("cart").limit)
@@ -1071,8 +1068,6 @@ function GameUITradeGuild:OnBuildingUpgradeFinished()
     if queue_num>self.max_sell_queue then
         self:LoadMyGoodsList()
     end
-end
-function GameUITradeGuild:OnBuildingUpgrading()
 end
 function GameUITradeGuild:OnUserDataChanged_deals(userData, deltaData)
     local ok, value = deltaData("deals")
