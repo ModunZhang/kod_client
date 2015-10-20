@@ -8,8 +8,6 @@ local GameUINpc = import("..ui.GameUINpc")
 local WidgetFteArrow = import("..widget.WidgetFteArrow")
 local WidgetFteMark = import("..widget.WidgetFteMark")
 local Sprite = import("..sprites.Sprite")
-local SoldierManager = import("..entity.SoldierManager")
-local User = import("..entity.User")
 local NotifyItem = import("..utils.NotifyItem")
 local CityScene = import(".CityScene")
 local MyCityScene = class("MyCityScene", CityScene)
@@ -49,9 +47,9 @@ function MyCityScene:onEnter()
     -- :align(display.RIGHT_TOP, display.width, display.height)
 
     self:GetCity():AddListenOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
-    self:GetCity():GetSoldierManager():AddListenOnType(self, SoldierManager.LISTEN_TYPE.SOLDIER_STAR_CHANGED)
-    self:GetCity():GetFirstBuildingByType("barracks"):AddBarracksListener(self)
     alliance:AddListenOnType(self, "operation")
+    self:GetCity():GetUser():AddListenOnType(self, "soldierStars")
+    self:GetCity():GetUser():AddListenOnType(self, "soldierEvents")
 end
 function MyCityScene:onExit()
     self.home_page = nil
@@ -306,8 +304,19 @@ function MyCityScene:GetLockButtonsByBuildingType(building_type)
     assert(lock_button, building_type)
     return lock_button
 end
-function MyCityScene:OnSoliderStarCountChanged(soldier_manager, soldier_star_changed)
-    self:GetSceneLayer():OnSoliderStarCountChanged(soldier_manager, soldier_star_changed)
+function MyCityScene:OnUserDataChanged_soldierEvents(userData, deltaData)
+    if deltaData("soldierEvents.add") then
+        self:GetHomePage():OnUserDataChanged_growUpTasks()
+    end
+    local ok, value = deltaData("soldierEvents.remove")
+    if ok then
+        local event = value[1]
+        self:GetHomePage():OnUserDataChanged_growUpTasks()
+        self:GetSceneLayer():MoveBarracksSoldiers(event.name)
+    end
+end
+function MyCityScene:OnUserDataChanged_soldierStars(userData, deltaData)
+    self:GetSceneLayer():UpdateSoldiersStar()
 end
 function MyCityScene:OnUserDataChanged_basicInfo(userData, deltaData)
     MyCityScene.super.OnUserDataChanged_basicInfo(self, userData, deltaData)
@@ -331,17 +340,6 @@ function MyCityScene:OnUpgradingFinished(building)
     end
     self:GetSceneLayer():CheckCanUpgrade()
     app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
-end
-
-function MyCityScene:OnBeginRecruit()
-    self:GetHomePage():OnUserDataChanged_growUpTasks()
-end
-function MyCityScene:OnRecruiting()
-end
-function MyCityScene:OnEndRecruit(barracks, event, soldier_type)
-    self:GetHomePage():OnUserDataChanged_growUpTasks()
-    local star = self:GetCity():GetSoldierManager():GetStarBySoldierType(soldier_type)
-    self:GetSceneLayer():MoveBarracksSoldiers(soldier_type)
 end
 function MyCityScene:OnTilesChanged(tiles)
     self:GetTopLayer():removeAllChildren()
@@ -409,8 +407,9 @@ local ui_map = setmetatable({
 }, {__index = function() assert(false) end})
 function MyCityScene:OpenUI(building, default_tab, need_tips, build_name)
     local city = self:GetCity()
+    local User = city:GetUser()
     if iskindof(building, "HelpedTroopsSprite") then
-        local helped = city:GetHelpedByTroops()[building:GetIndex()]
+        local helped = User.helpedByTroops[building:GetIndex()]
         local user = self.city:GetUser()
         NetManager:getHelpDefenceTroopDetailPromise(user:Id(),helped.id):done(function(response)
             LuaUtils:outputTable("response", response)

@@ -150,7 +150,7 @@ function GameUIAllianceCityEnter:GetEnterButtons()
         buttons = {enter_button}
         else --盟友
             local help_button
-            local can_not_help_in_city = City:IsHelpedToTroopsWithPlayerId(member:Id())
+            local can_not_help_in_city = User:IsHelpedToPlayer(member:Id())
             if can_not_help_in_city then
                 help_button = self:BuildOneButton("tmp_retreat_defense_48x58.png",_("撤防")):onButtonClicked(function()
                     UIKit:showMessageDialog(_("提示"),_("是否确认撤防"),function()

@@ -7,7 +7,6 @@ local UIListView = import(".UIListView")
 local WidgetSlider = import("..widget.WidgetSlider")
 local WidgetSelectDragon = import("..widget.WidgetSelectDragon")
 local WidgetInput = import("..widget.WidgetInput")
-local SoldierManager = import("..entity.SoldierManager")
 
 local Corps = import(".Corps")
 local UILib = import(".UILib")
@@ -95,7 +94,6 @@ function GameUIAllianceSendTroops:ctor(march_callback,params)
         end
     end
     self.alliance = Alliance_Manager:GetMyAlliance()
-    self.soldier_manager = City:GetSoldierManager()
     self.dragon_manager = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager()
     self.soldiers_table = {}
     self.march_callback = march_callback
@@ -254,7 +252,7 @@ function GameUIAllianceSendTroops:OnMoveInStage()
             color = 0x068329
         }):align(display.LEFT_CENTER,window.cx+20,window.top-920):addTo(self:GetView())
     end
-    City:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
+    User:AddListenOnType(self, "soldiers")
 end
 
 function GameUIAllianceSendTroops:CallFuncMarch_Callback(dragonType,soldiers)
@@ -497,7 +495,7 @@ function GameUIAllianceSendTroops:SelectSoldiers()
         end
         return item
     end
-    local sm = self.soldier_manager
+    local User = User
     local soldiers = {}
     local soldier_map = {
         "swordsman",
@@ -517,11 +515,11 @@ function GameUIAllianceSendTroops:SelectSoldiers()
     -- "paladin",
     -- "steamTank",
     }
-    local map_s = sm:GetSoldierMap()
+    local map_s = User.soldiers
     for _,name in pairs(soldier_map) do
         local soldier_num = map_s[name]
         if soldier_num>0 then
-            table.insert(soldiers, {name = name,level = sm:GetStarBySoldierType(name), max_num = soldier_num})
+            table.insert(soldiers, {name = name,level = User:SoldierStarByName(name), max_num = soldier_num})
         end
     end
     for k,v in pairs(soldiers) do
@@ -772,19 +770,21 @@ function GameUIAllianceSendTroops:CreateTroopsShow()
 
     return TroopShow
 end
-function GameUIAllianceSendTroops:OnSoliderCountChanged( soldier_manager,changed_map )
-    for i,soldier_type in ipairs(changed_map) do
-        for _,item in pairs(self.soldiers_table) do
-            local item_type = item:GetSoldierInfo()
-            if soldier_type == item_type then
-                item:SetMaxSoldier(City:GetSoldierManager():GetCountBySoldierType(item_type))
+function GameUIAllianceSendTroops:OnUserDataChanged_soldiers(userData, deltaData)
+    local ok, value = deltaData("soldiers")
+    if ok then
+        for i,soldier_type in ipairs(value) do
+            for _,item in pairs(self.soldiers_table) do
+                local item_type = item:GetSoldierInfo()
+                if soldier_type == item_type then
+                    item:SetMaxSoldier(User.soldiers[item_type])
+                end
             end
         end
     end
 end
 function GameUIAllianceSendTroops:onExit()
-    City:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
-
+    User:RemoveListenerOnType(self, "soldiers")
     GameUIAllianceSendTroops.super.onExit(self)
 end
 

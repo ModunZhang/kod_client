@@ -190,9 +190,9 @@ function GameUIUnlockBuilding:SetUpgradeRequirementListview()
         {
             resource_type = _("建造队列"),
             isVisible = true,
-            isSatisfy = #City:GetUpgradingBuildings()<City:BuildQueueCounts(),
+            isSatisfy = #City:GetUpgradingBuildings() < User.basicInfo.buildQueue,
             icon="hammer_33x40.png",
-            description=_("建造队列")..(City:BuildQueueCounts()-#City:GetUpgradingBuildings()).."/"..1
+            description=_("建造队列")..(User.basicInfo.buildQueue-#City:GetUpgradingBuildings()).."/"..1
         },
         {
             resource_type = _("木材"),

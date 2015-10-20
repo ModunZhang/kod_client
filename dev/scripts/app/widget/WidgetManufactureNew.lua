@@ -46,56 +46,41 @@ end
 function WidgetManufactureNew:onEnter()
     self.view = display.newNode():addTo(self)
     self.material_tab = WidgetRoundTabButtons.new({
-        {tag = "building",label = _("建筑材料")},
-        {tag = "technology",label = _("军事材料")},
+        {tag = "buildingMaterials",label = _("建筑材料")},
+        {tag = "technologyMaterials",label = _("军事材料")},
     }, function(tag)
         self:Reload(tag)
     end):align(display.TOP_CENTER,window.cx,window.top-84):addTo(self)
 
-    local server_time = timer:GetServerTime()
-    local making, stored
-    for i,v in ipairs({self.toolShop:GetTechnologyEvent(), self.toolShop:GetBuildingEvent()}) do
-        if v:IsMaking(server_time) then
-            making = v
-        elseif v:IsStored(server_time) then
-            stored = v
-        end
-    end
-    if making then
-        self.material_tab:SelectTab(making:Category())
-    elseif stored then
-        self.material_tab:SelectTab(stored:Category())
-    else
-        self.material_tab:SelectTab("building")
-    end
-
-    --
     local User = self.toolShop:BelongCity():GetUser()
+    local making_event = User:GetMakingMaterialsEvent()
+    local store_event = User:GetStoreMaterialsEvent()
+    if making_event then
+        self.material_tab:SelectTab(making_event.type)
+    elseif store_event then
+        self.material_tab:SelectTab(store_event.type)
+    else
+        self.material_tab:SelectTab("buildingMaterials")
+    end
     User:AddListenOnType(self, "buildingMaterials")
     User:AddListenOnType(self, "technologyMaterials")
-    self.toolShop:AddToolShopListener(self)
+    User:AddListenOnType(self, "materialEvents")
+    scheduleAt(self, function()
+        self:UpdateCurrentEvent()
+    end)
 end
 function WidgetManufactureNew:onExit()
     local User = self.toolShop:BelongCity():GetUser()
     User:RemoveListenerOnType(self, "buildingMaterials")
     User:RemoveListenerOnType(self, "technologyMaterials")
-    self.toolShop:RemoveToolShopListener(self)
+    User:RemoveListenerOnType(self, "materialEvents")
 end
---
-function WidgetManufactureNew:OnBeginMakeMaterialsWithEvent(tool_shop, event)
-    app:GetAudioManager():PlayeEffectSoundWithKey("UI_TOOLSHOP_CRAFT_START")
-    self:RefreshRequirements(event:Category())
-    self:UpdateCurrentEvent()
-end
-function WidgetManufactureNew:OnMakingMaterialsWithEvent(tool_shop, event, current_time)
-    self:UpdateCurrentEvent()
-end
-function WidgetManufactureNew:OnEndMakeMaterialsWithEvent(tool_shop, event, current_time)
-    self:RefreshRequirements(event:Category())
-    self:UpdateCurrentEvent()
-end
-function WidgetManufactureNew:OnGetMaterialsWithEvent(tool_shop, event)
-    self:RefreshRequirements(event:Category())
+function WidgetManufactureNew:OnUserDataChanged_materialEvents(userData, deltaData)
+    local ok, value = deltaData("materialEvents.add")
+    if ok then
+        app:GetAudioManager():PlayeEffectSoundWithKey("UI_TOOLSHOP_CRAFT_START")
+    end
+    self:RefreshRequirements(self.material_tab:GetSelectedButtonTag())
     self:UpdateCurrentEvent()
 end
 function WidgetManufactureNew:OnUserDataChanged_buildingMaterials(userData, deltaData)
@@ -120,14 +105,14 @@ function WidgetManufactureNew:OnUserDataChanged_technologyMaterials(userData, de
 end
 --
 function WidgetManufactureNew:Reload(tag)
-    if tag == "building" then
+    if tag == "buildingMaterials" then
         self:ReloadMaterials({
             "blueprints",
             "tools",
             "tiles" ,
             "pulley" ,
         }, self.toolShop:BelongCity():GetUser().buildingMaterials)
-    elseif tag == "technology" then
+    elseif tag == "technologyMaterials" then
         self:ReloadMaterials({
             "trainingFigure",
             "bowTarget",
@@ -189,7 +174,7 @@ function WidgetManufactureNew:ReloadMaterials(materials, materials_map)
                 local stone_cur = User:GetResValueByType("stone")
                 local iron_cur = User:GetResValueByType("iron")
                 local count, wood, stone, iron, time
-                if self.material_tab:GetSelectedButtonTag() == "building" then
+                if self.material_tab:GetSelectedButtonTag() == "buildingMaterials" then
                     count, wood, stone, iron, time = self.toolShop:GetNeedByCategory("building")
                 else
                     count, wood, stone, iron, time = self.toolShop:GetNeedByCategory("technology")
@@ -208,7 +193,7 @@ function WidgetManufactureNew:ReloadMaterials(materials, materials_map)
                         :CreateOKButtonWithPrice(
                             {
                                 listener = function()
-                                    if need_gems > user:GetGemValue() then
+                                    if need_gems > User:GetGemValue() then
                                         UIKit:showMessageDialog(_("主人"),_("金龙币不足"))
                                             :CreateOKButton(
                                                 {
@@ -256,18 +241,16 @@ function WidgetManufactureNew:ReloadMaterials(materials, materials_map)
             style = UIKit.BTN_COLOR.YELLOW,
             labelParams={text = _("获得")},
             listener = function ()
-                local event
-                if self.material_tab:GetSelectedButtonTag() == "building" then
-                    event = self.toolShop:GetBuildingEvent()
-                else
-                    event = self.toolShop:GetTechnologyEvent()
-                end
-                if self:CheckOverFlow(event:Content()) then
-                    self:CreateFetchDialog(function()
+                local event_name = self.material_tab:GetSelectedButtonTag()
+                local event = User:GetStoreMaterialsEvent(event_name)
+                if event then
+                    if self:CheckOverFlow(event.materials) then
+                        self:CreateFetchDialog(function()
+                            self:FetchMaterials(event)
+                        end, _("当前材料库房中的材料已满，你可能无法获得这些材料。是否仍要获取？"))
+                    else
                         self:FetchMaterials(event)
-                    end, _("当前材料库房中的材料已满，你可能无法获得这些材料。是否仍要获取？"))
-                else
-                    self:FetchMaterials(event)
+                    end
                 end
             end,
         }
@@ -305,46 +288,45 @@ function WidgetManufactureNew:ReloadMaterials(materials, materials_map)
     self:UpdateCurrentEvent()
 end
 function WidgetManufactureNew:UpdateCurrentEvent()
-    if self.material_tab:GetSelectedButtonTag() == "building" then
-        self:UpdateByEvent(self.toolShop:GetBuildingEvent())
-    else
-        self:UpdateByEvent(self.toolShop:GetTechnologyEvent())
-    end
+    local event_name = self.material_tab:GetSelectedButtonTag()
+    self:UpdateByEvent(User:GetMakingMaterialsEvent(event_name) 
+        or User:GetStoreMaterialsEvent(event_name))
 end
 function WidgetManufactureNew:UpdateByEvent(event)
     local server_time = timer:GetServerTime()
-    if event:IsEmpty() then
+    if not event then
+        local User = self.toolShop:BelongCity():GetUser()
         self.build_node:show()
-        self.build_node.build_btn:setButtonEnabled(self.toolShop:CanMakeMaterial(server_time))
+        self.build_node.build_btn:setButtonEnabled(User:CanMakeMaterials())
         self.progress_node:hide()
         self.get_node:hide()
         self:CleanStoreNumbers()
-        local number, wood, stone, iron, time = self.toolShop:GetNeedByCategory(event:Category())
+        local number, wood, stone, iron, time = self.toolShop:GetNeedByCategory(self.material_tab:GetSelectedButtonTag())
         self.build_node.build_label:setString(string.format(_("随机制造%d个材料"), number))
         self.build_node.build_time:setString(GameUtils:formatTimeStyle1(time))
         local size = self.build_node.build_time:getContentSize()
-        self.build_node.buff_time:setString(string.format("(-%s)", GameUtils:formatTimeStyle1(math.ceil(time *  self.toolShop:BelongCity():FindTechByName("sketching"):GetBuffEffectVal()))))
+        local tech = User.productionTechs["sketching"]
+        local tech_effect = UtilsForTech:GetEffect("sketching", tech)
+        self.build_node.buff_time:setString(string.format("(-%s)", GameUtils:formatTimeStyle1(math.ceil(time * tech_effect))))
         self.build_node.buff_time:setPositionX(self.build_node.build_time:getPositionX() + 90)
-    elseif event:IsStored(server_time) then
+    elseif event.finishTime == 0 then
         self.build_node:hide()
         self.progress_node:hide()
         self.get_node:show()
-        for i,v in ipairs(event:Content()) do
+        for i,v in ipairs(event.materials) do
             if self.material_map[v.name] then
                 self.material_map[v.name]:SetSecondNumber(string.format("+%d", v.count))
             end
         end
-    elseif event:IsMaking(server_time) then
+    elseif event.finishTime ~= 0 then
         self.build_node:hide()
         self.progress_node:show()
         self.get_node:hide()
-        local number = self.toolShop:GetNeedByCategory(event:Category())
-        local elapse_time = event:ElapseTime(server_time)
-        local total_time = event:FinishTime() - event:StartTime()
-        local percent = elapse_time * 100.0 / total_time
+        local number = self.toolShop:GetNeedByCategory(event.type)
+        local time, percent = UtilsForEvent:GetEventInfo(event)
         local prog = self.progress_node.progress
         prog.describe:setString(string.format(_("制造材料 x%d"), number))
-        prog.progress:SetProgressInfo(GameUtils:formatTimeStyle1(event:LeftTime(server_time)), percent)
+        prog.progress:SetProgressInfo(GameUtils:formatTimeStyle1(time), percent)
     end
 end
 function WidgetManufactureNew:CleanStoreNumbers()
@@ -413,13 +395,12 @@ function WidgetManufactureNew:CheckOverFlow(content)
     return next(overflows)
 end
 function WidgetManufactureNew:FetchMaterials(event)
-    local content = event:Content()
-    NetManager:getFetchMaterialsPromise(event:Id()):done(function()
+    NetManager:getFetchMaterialsPromise(event.id):done(function()
         local desc_t = {}
-        for i,v in ipairs(content) do
+        for i,v in ipairs(event.materials) do
             table.insert(desc_t, string.format("%sx%d", Localize.materials[v.name], v.count))
         end
-        if event:Category() == "building" then
+        if event.type == "buildingMaterials" then
             GameGlobalUI:showTips(_("获取建筑材料"), table.concat(desc_t, ", "))
         else
             GameGlobalUI:showTips(_("获取科技材料"), table.concat(desc_t, ", "))
@@ -427,7 +408,7 @@ function WidgetManufactureNew:FetchMaterials(event)
     end)
 end
 function WidgetManufactureNew:BuildMaterial()
-    if self.material_tab:GetSelectedButtonTag() == "building" then
+    if self.material_tab:GetSelectedButtonTag() == "buildingMaterials" then
         NetManager:getMakeBuildingMaterialPromise():done(function()
             self:RefreshRequirements("building")
         end)

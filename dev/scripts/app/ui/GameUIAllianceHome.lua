@@ -4,7 +4,6 @@ local WidgetEventTabButtons = import("..widget.WidgetEventTabButtons")
 local UIPageView = import("..ui.UIPageView")
 local UILib = import("..ui.UILib")
 local Alliance = import("..entity.Alliance")
-local SoldierManager = import("..entity.SoldierManager")
 local DragonManager = import("..entity.DragonManager")
 local WidgetAllianceHelper = import("..widget.WidgetAllianceHelper")
 local WidgetAllianceTop = import("..widget.WidgetAllianceTop")
@@ -85,31 +84,28 @@ function GameUIAllianceHome:onExit()
 end
 function GameUIAllianceHome:AddOrRemoveListener(isAdd)
     local city = self.city
+    local User = self.city:GetUser()
     if isAdd then
         self.alliance:AddListenOnType(self, "basicInfo")
         self.alliance:AddListenOnType(self, "members")
+        User:AddListenOnType(self, "soldierStarEvents")
+        User:AddListenOnType(self, "militaryTechEvents")
+        User:AddListenOnType(self, "productionTechEvents")
+        User:AddListenOnType(self, "helpToTroops")
         city:AddListenOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
-        city:AddListenOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
-        city:AddListenOnType(self,city.LISTEN_TYPE.HELPED_TO_TROOPS)
-        city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
-        city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
         -- local alliance_belvedere = self.alliance:GetAllianceBelvedere()
         -- alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
         -- alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
         -- self.alliance:GetAllianceShrine():AddListenOnType(self,self.alliance:GetAllianceShrine().LISTEN_TYPE.OnShrineEventsChanged)
         city:GetDragonEyrie():GetDragonManager():AddListenOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
-
-        -- 添加到全局计时器中，以便显示各个阶段的时间
-        -- app.timer:AddListener(self)
     else
-        -- app.timer:RemoveListener(self)
         self.alliance:RemoveListenerOnType(self, "basicInfo")
         self.alliance:RemoveListenerOnType(self, "members")
+        User:RemoveListenerOnType(self, "soldierStarEvents")
+        User:RemoveListenerOnType(self, "militaryTechEvents")
+        User:RemoveListenerOnType(self, "productionTechEvents")
+        User:RemoveListenerOnType(self, "helpToTroops")
         city:RemoveListenerOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
-        city:RemoveListenerOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
-        city:RemoveListenerOnType(self,city.LISTEN_TYPE.HELPED_TO_TROOPS)
-        city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
-        city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
         -- local alliance_belvedere = self.alliance:GetAllianceBelvedere()
         -- alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
         -- alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
@@ -122,13 +118,13 @@ function GameUIAllianceHome:AddMapChangeButton()
     WidgetChangeMap.new(WidgetChangeMap.MAP_TYPE.OUR_ALLIANCE):addTo(self)
 end
 function GameUIAllianceHome:OnMarchDataChanged()
-    self:OnHelpToTroopsChanged()
+    self:OnUserDataChanged_helpToTroops()
 end
 function GameUIAllianceHome:OnCommingDataChanged()
-    self:OnHelpToTroopsChanged()
+    self:OnUserDataChanged_helpToTroops()
 end
 
-function GameUIAllianceHome:OnHelpToTroopsChanged()
+function GameUIAllianceHome:OnUserDataChanged_helpToTroops()
     self.operation_button_order:RefreshOrder()
 end
 function GameUIAllianceHome:Schedule()
@@ -304,13 +300,13 @@ end
 function GameUIAllianceHome:OnUpgradingFinished()
     self.operation_button_order:RefreshOrder()
 end
-function GameUIAllianceHome:OnMilitaryTechEventsChanged()
+function GameUIAllianceHome:OnUserDataChanged_soldierStarEvents()
     self.operation_button_order:RefreshOrder()
 end
-function GameUIAllianceHome:OnSoldierStarEventsChanged()
+function GameUIAllianceHome:OnUserDataChanged_militaryTechEvents()
     self.operation_button_order:RefreshOrder()
 end
-function GameUIAllianceHome:OnProductionTechnologyEventDataChanged()
+function GameUIAllianceHome:OnUserDataChanged_productionTechEvents()
     self.operation_button_order:RefreshOrder()
 end
 function GameUIAllianceHome:OnShrineEventsChanged(changed_map)

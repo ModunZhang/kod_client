@@ -405,7 +405,7 @@ function GameUIHasBeenBuild:LoadBuildingQueue()
         color = 0x615b44,
     }):addTo(back_ground, 2):align(display.LEFT_CENTER, 60, back_ground:getContentSize().height/2)
 
-    if City:BuildQueueCounts() < 2 then
+    if User.basicInfo.buildQueue < 2 then
         WidgetPushButton.new({normal = "add_btn_up_50x50.png",pressed = "add_btn_down_50x50.png"})
             :addTo(back_ground)
             :align(display.CENTER, back_ground:getContentSize().width - 25, back_ground:getContentSize().height/2)
@@ -425,7 +425,7 @@ function GameUIHasBeenBuild:LoadBuildingQueue()
     return back_ground
 end
 function GameUIHasBeenBuild:UpdateBuildingQueue(city)
-    self.queue:SetBuildingQueue(city:GetAvailableBuildQueueCounts(), city:BuildQueueCounts())
+    self.queue:SetBuildingQueue(city:GetAvailableBuildQueueCounts(), city:GetUser().basicInfo.buildQueue)
 end
 function GameUIHasBeenBuild:TabButtons()
     self.tabs = self:CreateTabButtons({

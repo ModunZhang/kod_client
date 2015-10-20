@@ -694,10 +694,10 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
         },
         {
             resource_type = "building_queue",
-            isVisible = #city:GetUpgradingBuildings()>=city:BuildQueueCounts(),
-            isSatisfy = #city:GetUpgradingBuildings()<city:BuildQueueCounts(),
+            isVisible = #city:GetUpgradingBuildings() >= User.basicInfo.buildQueue,
+            isSatisfy = #city:GetUpgradingBuildings()  < User.basicInfo.buildQueue,
             icon="hammer_33x40.png",
-            description=_("建造队列已满")..(city:BuildQueueCounts()-#city:GetUpgradingBuildings()).."/"..City:BuildQueueCounts()
+            description=_("建造队列已满")..(User.basicInfo.buildQueue-#city:GetUpgradingBuildings()).."/"..User.basicInfo.buildQueue
         },
         {
             resource_type = _("木材"),
@@ -929,7 +929,7 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
             }
         ):CreateCancelButton()
     elseif can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_NOT_ENOUGH then
-        if City:BuildQueueCounts() == 2 then
+        if User.basicInfo.buildQueue == 2 then
             dialog:CreateOKButtonWithPrice(
                 {
                     listener = function()
@@ -980,7 +980,7 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
         dialog:SetTitle(_("立即开始"))
         dialog:SetPopMessage(_("您当前没有空闲的建筑,是否花费魔法石立即完成上一个队列"))
     elseif can_not_update_type==UpgradeBuilding.NOT_ABLE_TO_UPGRADE.BUILDINGLIST_AND_RESOURCE_NOT_ENOUGH then
-        if City:BuildQueueCounts() == 2 then
+        if User.basicInfo.buildQueue == 2 then
             dialog:CreateOKButtonWithPrice(
                 {
                     listener = function()

@@ -1,4 +1,3 @@
-local SoldierManager = import('..entity.SoldierManager')
 local WidgetUseItems= import(".WidgetUseItems")
 local WidgetUIBackGround= import(".WidgetUIBackGround")
 local WidgetPushButton = import('.WidgetPushButton')
@@ -15,10 +14,6 @@ end
 function WidgetResources:onEnter()
     self:CreateResourceListView()
     self:InitAllResources()
-    self.city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
-    local User = self.city:GetUser()
-    User:AddListenOnType(self, "vipEvents")
-    User:AddListenOnType(self, "itemEvents")
     local resourceBuildingMap = {
         wood = "lumbermill",
         stone = "stoneMason",
@@ -44,10 +39,15 @@ function WidgetResources:onEnter()
         end
         self:RefreshProtectPercent()
     end)
+
+    local User = self.city:GetUser()
+    User:AddListenOnType(self, "soldiers")
+    User:AddListenOnType(self, "vipEvents")
+    User:AddListenOnType(self, "itemEvents")
 end
 function WidgetResources:onExit()
-    self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_CHANGED)
     local User = self.city:GetUser()
+    User:RemoveListenerOnType(self, "soldiers")
     User:RemoveListenerOnType(self, "vipEvents")
     User:RemoveListenerOnType(self, "itemEvents")
     local resourceBuildingMap = {
@@ -67,14 +67,14 @@ end
 function WidgetResources:OnBuildingUpgradeFinished( bulding )
     self:RefreshProtectPercent()
 end
+function WidgetResources:OnUserDataChanged_soldiers()
+    self.maintenance_cost.value:setString("-"..GameUtils:formatNumber(User:GetSoldierUpkeep()).."/h")
+end
 function WidgetResources:OnUserDataChanged_vipEvents()
     self:RefreshProtectPercent()
 end
 function WidgetResources:OnUserDataChanged_itemEvents()
     self:RefreshProtectPercent()
-end
-function WidgetResources:OnSoliderCountChanged(...)
-    self.maintenance_cost.value:setString("-"..GameUtils:formatNumber(self.city:GetSoldierManager():GetTotalUpkeep()).."/h")
 end
 function WidgetResources:RefreshProtectPercent()
     if self.resource_items then
@@ -122,7 +122,7 @@ function WidgetResources:InitAllResources()
             resource_current_value=User:GetResValueByType("food"),
             total_income=GameUtils:formatNumber(User:GetFoodRealOutput()).."/h",
             occupy_citizen=GameUtils:formatNumber(City:GetCitizenByType("farmer")),
-            maintenance_cost="-"..GameUtils:formatNumber(self.city:GetSoldierManager():GetTotalUpkeep()).."/h",
+            maintenance_cost="-"..GameUtils:formatNumber(User:GetSoldierUpkeep()).."/h",
             type = "food"
         },
         wood = {

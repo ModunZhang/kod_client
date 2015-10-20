@@ -129,7 +129,7 @@ function GameUIDragonEquipmentMake:GetMakeRequirement()
     end)
 	local desc = ""
 	if self.blackSmith:IsUnlocked() then
-		desc = self.blackSmith:IsEquipmentEventEmpty() and "1/1" or "0/1"
+		desc = #User.dragonEquipmentEvents == 0 and "1/1" or "0/1"
 	else
 		desc = _("铁匠铺还未解锁")
 	end
@@ -137,7 +137,7 @@ function GameUIDragonEquipmentMake:GetMakeRequirement()
     {
         resource_type = "queue",
         isVisible = true,
-        isSatisfy = self.blackSmith:IsUnlocked() and self.blackSmith:IsEquipmentEventEmpty(),
+        isSatisfy = self.blackSmith:IsUnlocked() and #User.dragonEquipmentEvents == 0,
         icon="hammer_33x40.png",
         description= desc
     })

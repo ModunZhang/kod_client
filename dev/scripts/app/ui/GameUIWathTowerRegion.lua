@@ -78,7 +78,6 @@ end
 
 function GameUIWathTowerRegion:AddOrRemoveListener(isAdd)
     if isAdd then
-        City:AddListenOnType(self,City.LISTEN_TYPE.HELPED_TO_TROOPS)
         -- self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.CheckNotHaveTheEventIf)
         -- self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.OnCommingDataChanged)
         -- self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.OnMarchDataChanged)
@@ -86,7 +85,6 @@ function GameUIWathTowerRegion:AddOrRemoveListener(isAdd)
         -- self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.OnVillageEventTimer)
         -- self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.OnFightEventTimerChanged)
     else
-        City:RemoveListenerOnType(self,City.LISTEN_TYPE.HELPED_TO_TROOPS)
         -- self:GetAllianceBelvedere():RemoveListenerOnType(self, AllianceBelvedere.LISTEN_TYPE.CheckNotHaveTheEventIf)
         -- self:GetAllianceBelvedere():RemoveListenerOnType(self, AllianceBelvedere.LISTEN_TYPE.OnCommingDataChanged)
         -- self:GetAllianceBelvedere():RemoveListenerOnType(self, AllianceBelvedere.LISTEN_TYPE.OnMarchDataChanged)
@@ -513,9 +511,9 @@ function GameUIWathTowerRegion:CheckNotHaveTheEventIf(event)
     return self.march_timer_label[event:Id()] == nil
 end
 
-function GameUIWathTowerRegion:OnHelpToTroopsChanged(changed_map)
-    self:RefreshCurrentList()
-end
+-- function GameUIWathTowerRegion:OnHelpToTroopsChanged(changed_map)
+--     self:RefreshCurrentList()
+-- end
 
 function GameUIWathTowerRegion:OnCommingDataChanged()
     self:RefreshCurrentList()

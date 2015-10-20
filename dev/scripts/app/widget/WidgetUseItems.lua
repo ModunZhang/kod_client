@@ -8,7 +8,6 @@ local Enum = import("..utils.Enum")
 local window = import("..utils.window")
 local Localize = import("..utils.Localize")
 local UILib = import("..ui.UILib")
-local Item = import("..entity.Item")
 local Alliance = import("..entity.Alliance")
 local WidgetUseItems = class("WidgetUseItems")
 

@@ -2,9 +2,8 @@
 -- Author: Kenny Dai
 -- Date: 2015-02-11 11:13:18
 --
-local WidgetSpeedUp = import("..widget.WidgetSpeedUp")
-local SoldierManager = import("..entity.SoldierManager")
 local Localize = import("..utils.Localize")
+local WidgetSpeedUp = import("..widget.WidgetSpeedUp")
 local GameUIBuildingSpeedUp = class("GameUIBuildingSpeedUp",WidgetSpeedUp)
 local GameUtils = GameUtils
 local DataUtils = DataUtils

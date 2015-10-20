@@ -1,7 +1,6 @@
 local promise = import("..utils.promise")
 local cocos_promise = import("..utils.cocos_promise")
 local Localize = import("..utils.Localize")
-local SoldierManager = import("..entity.SoldierManager")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetTab = import(".WidgetTab")
 local timer = app.timer
@@ -61,113 +60,66 @@ function WidgetEventTabButtons:OnUpgradingFinished(building, city)
     self:EventChangeOn("build")
     self:RefreshBuildQueueByType("build", "soldier", "material", "technology")
 end
--- 兵营事件
-function WidgetEventTabButtons:OnBeginRecruit(barracks, event)
-    self:GetTabByKey("soldier"):SetOrResetProgress(self:EventPercent(event))
-    self:EventChangeOn("soldier", true)
-end
-function WidgetEventTabButtons:OnRecruiting(barracks, event, current_time)
-    self:GetTabByKey("soldier"):SetOrResetProgress(self:EventPercent(event))
-    if self:IsShow() and self:GetCurrentTab() == "soldier" then
-        self:IteratorAllItem(function(i, v)
-            if i ~= 1 and v and v.SetProgressInfo then
-                v:SetProgressInfo(self:SoldierDescribe(event))
-            end
-        end)
-    end
-end
-function WidgetEventTabButtons:OnEndRecruit(barracks)
-    self:EventChangeOn("soldier")
-end
--- 装备事件
-function WidgetEventTabButtons:OnSpeedUpMakingEquipment()
-    self:EventChangeOn("material")
-end
-function WidgetEventTabButtons:OnBeginMakeEquipmentWithEvent(black_smith, event)
-    self:GetTabByKey("material"):SetOrResetProgress(self:EventPercent(event))
-    self:EventChangeOn("material", true)
-end
-function WidgetEventTabButtons:OnMakingEquipmentWithEvent(black_smith, event, current_time)
-    self:GetTabByKey("material"):SetOrResetProgress(self:EventPercent(event))
-    if self:IsShow() and self:GetCurrentTab() == "material" then
-        self:IteratorAllItem(function(i, v)
-            if i ~= 1 and v.GetEventKey and v:GetEventKey() == event:UniqueKey() then
-                v:SetProgressInfo(self:EquipmentDescribe(event))
-            end
-        end)
-    end
-end
-function WidgetEventTabButtons:OnEndMakeEquipmentWithEvent(black_smith, event, equipment)
-    self:EventChangeOn("material")
-end
--- 材料事件
-function WidgetEventTabButtons:OnSpeedUpMakingMaterial()
-    self:EventChangeOn("material")
-end
-function WidgetEventTabButtons:OnBeginMakeMaterialsWithEvent(tool_shop, event)
-    self:GetTabByKey("material"):SetOrResetProgress(self:EventPercent(event))
-    self:EventChangeOn("material", true)
-end
-function WidgetEventTabButtons:OnMakingMaterialsWithEvent(tool_shop, event, current_time)
-    self:GetTabByKey("material"):SetOrResetProgress(self:EventPercent(event))
-    if self:IsShow() and self:GetCurrentTab() == "material" then
-        self:IteratorAllItem(function(i, v)
-            if i ~= 1 and v.GetEventKey and v:GetEventKey() == event:UniqueKey() then
-                v:SetProgressInfo(self:MaterialDescribe(event))
-            end
-        end)
-    end
-end
-function WidgetEventTabButtons:OnEndMakeMaterialsWithEvent(tool_shop, event, current_time)
-    self:EventChangeOn("material")
-end
-function WidgetEventTabButtons:OnGetMaterialsWithEvent(tool_shop, event)
-    self:EventChangeOn("material")
-end
-
--- 军事科技
-function WidgetEventTabButtons:OnSoldierStarEventsTimer(star_event)
-    self:GetTabByKey("technology"):SetOrResetProgress(self:EventPercent(star_event))
-    if self:IsShow() and self:GetCurrentTab() == "technology" then
-        self:IteratorAllItem(function(i, v)
-            if v.GetEventKey and v:GetEventKey() == star_event:Id() then
-                v:SetProgressInfo(self:MilitaryTechDescribe(star_event))
-                self:SetProgressItemBtnLabel(DataUtils:getFreeSpeedUpLimitTime()>star_event:GetTime(),star_event:Id(),v)
-            end
-        end)
-    end
-end
-function WidgetEventTabButtons:OnMilitaryTechEventsTimer(tech_event)
-    self:GetTabByKey("technology"):SetOrResetProgress(self:EventPercent(tech_event))
-    if self:IsShow() and self:GetCurrentTab() == "technology" then
-        self:IteratorAllItem(function(i, v)
-            if v.GetEventKey and v:GetEventKey() == tech_event:Id() then
-                v:SetProgressInfo(self:MilitaryTechDescribe(tech_event))
-                self:SetProgressItemBtnLabel(DataUtils:getFreeSpeedUpLimitTime()>tech_event:GetTime(),tech_event:Id(),v)
-            end
-        end)
-    end
-end
-function WidgetEventTabButtons:OnMilitaryTechEventsChanged(soldier_manager,changed_map)
-    if #changed_map[1]~=0 then
-        self:EventChangeOn("technology", #changed_map[1]>0)
-    end
-    if #changed_map[3]>0 then
+function WidgetEventTabButtons:OnUserDataChanged_dragonEquipmentEvents(userData, deltaData)
+    if deltaData("dragonEquipmentEvents.add") 
+    or deltaData("dragonEquipmentEvents.edit") then
+        self:EventChangeOn("material", true)
+    elseif deltaData("dragonEquipmentEvents.remove") then
+        self:EventChangeOn("material")
         app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
+    end
+    self:RefreshBuildQueueByType("material")
+end
+function WidgetEventTabButtons:OnUserDataChanged_materialEvents(userData, deltaData)
+    local ok, value = deltaData("materialEvents.edit")
+    if ok then
+        if value[1].finishTime == 0 then
+            self:EventChangeOn("material")
+            app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
+        end
+        self:EventChangeOn("material", true)
+    elseif deltaData("materialEvents.add") then
+        self:EventChangeOn("material", true)
+    end
+    self:RefreshBuildQueueByType("material")
+end
+function WidgetEventTabButtons:OnUserDataChanged_soldierEvents(userData, deltaData)
+    if deltaData("soldierEvents.add")
+    or deltaData("soldierEvents.edit") then
+        self:EventChangeOn("soldier", true)
+    elseif deltaData("soldierEvents.remove") then
+        self:EventChangeOn("soldier")
+        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
+    end
+    self:RefreshBuildQueueByType("soldier")
+end
+function WidgetEventTabButtons:OnUserDataChanged_militaryTechEvents(userData, deltaData)
+    if deltaData("militaryTechEvents.add") 
+    or deltaData("militaryTechEvents.edit") then
+        self:EventChangeOn("technology", true)
+    elseif deltaData("militaryTechEvents.remove") then
         self:EventChangeOn("technology")
+        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
     end
     self:RefreshBuildQueueByType("technology")
 end
-function WidgetEventTabButtons:OnMilitaryTechEventsAllChanged()
+function WidgetEventTabButtons:OnUserDataChanged_soldierStarEvents(userData, deltaData)
+    if deltaData("soldierStarEvents.add")
+    or deltaData("soldierStarEvents.edit") then
+        self:EventChangeOn("technology", true)
+    elseif deltaData("soldierStarEvents.remove") then
+        self:EventChangeOn("technology")
+        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
+    end
     self:RefreshBuildQueueByType("technology")
 end
-function WidgetEventTabButtons:OnSoldierStarEventsChanged(soldier_manager, changed)
-    if #changed[1]~=0 then
-        self:EventChangeOn("technology", #changed[1]>0)
-    end
-    if #changed[3]>0 then
-        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
+function WidgetEventTabButtons:OnUserDataChanged_productionTechEvents(userData, deltaData)
+    if deltaData("productionTechEvents.add") 
+    or deltaData("productionTechEvents.edit") then
+        self:EventChangeOn("technology", true)
+    elseif deltaData("productionTechEvents.remove") then
         self:EventChangeOn("technology")
+        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
     end
     self:RefreshBuildQueueByType("technology")
 end
@@ -199,66 +151,115 @@ function WidgetEventTabButtons:ctor(city, ratio)
     self.back_ground = self:CreateBackGround():addTo(node)
 
     self.city = city
-    self.barracks = city:GetFirstBuildingByType("barracks")
-    self.toolShop = city:GetFirstBuildingByType("toolShop")
-    self.blackSmith = city:GetFirstBuildingByType("blackSmith")
-
-    self.toolShop:AddToolShopListener(self)
-    self.barracks:AddBarracksListener(self)
-    self.blackSmith:AddBlackSmithListener(self)
-    city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.OnSoldierStarEventsTimer)
-    city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.OnMilitaryTechEventsTimer)
-    city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
-    city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_ALL_CHANGED)
-    city:GetSoldierManager():AddListenOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
+    local User = city:GetUser()
     city:AddListenOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
     city:AddListenOnType(self, City.LISTEN_TYPE.DESTROY_DECORATOR)
-    city:AddListenOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_TIMER)
-    city:AddListenOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
-    city:AddListenOnType(self,city.LISTEN_TYPE.PRODUCTION_EVENT_REFRESH)
 
     self:Reset()
     self:ShowStartEvent()
     self:RefreshBuildQueueByType("build", "soldier", "material", "technology")
+
+    scheduleAt(self, function()
+        local event = User:GetShortestTechEvent()
+        if event then
+            local time, percent = UtilsForEvent:GetEventInfo(event)
+            self:GetTabByKey("technology"):SetOrResetProgress(time, percent)
+        else
+            self:GetTabByKey("technology"):SetOrResetProgress(nil)
+        end
+
+        local event = User:GetSoldierEventsBySeq()[1]
+        if event then
+            local time, percent = UtilsForEvent:GetEventInfo(event)
+            self:GetTabByKey("soldier"):SetOrResetProgress(time, percent)
+        else
+            self:GetTabByKey("soldier"):SetOrResetProgress(nil)
+        end
+
+        local event = User:GetMakingMaterialsEventsBySeq()[1]
+        if event then
+            local time, percent = UtilsForEvent:GetEventInfo(event)
+            self:GetTabByKey("material"):SetOrResetProgress(time, percent)
+        else
+            self:GetTabByKey("material"):SetOrResetProgress(nil)
+        end
+
+        if self:IsShow() then
+            if self:GetCurrentTab() == "technology" then
+                self:IteratorAllItem(function(_, v)
+                    if v.event then
+                        v:SetProgressInfo(self:TechDescribe(v.event))
+                        self:SetProgressItemBtnLabel(
+                            DataUtils:getFreeSpeedUpLimitTime()
+                            >UtilsForEvent:GetEventInfo(v.event),
+                            v.event.id,
+                            v
+                        )
+                    end
+                end)
+            elseif self:GetCurrentTab() == "soldier" then
+                self:IteratorAllItem(function(i, v)
+                    if i ~= 1 and v.event then
+                        v:SetProgressInfo(self:SoldierDescribe(v.event))
+                    end
+                end)
+            elseif self:GetCurrentTab() == "material" then
+                self:IteratorAllItem(function(i, v)
+                    if i ~= 1 and v.event then
+                        if v.event.type then
+                            v:SetProgressInfo(self:MaterialDescribe(v.event))
+                        else
+                            v:SetProgressInfo(self:EquipmentDescribe(v.event))
+                        end
+                    end
+                end)
+            elseif self:GetCurrentTab() == "build" then
+            end
+        end
+    end)
+
+    User:AddListenOnType(self, "soldierEvents")
+    User:AddListenOnType(self, "soldierStarEvents")
+    User:AddListenOnType(self, "militaryTechEvents")
+    User:AddListenOnType(self, "productionTechEvents")
+    User:AddListenOnType(self, "materialEvents")
+    User:AddListenOnType(self, "dragonEquipmentEvents")
 end
 function WidgetEventTabButtons:onExit()
-    self.toolShop:RemoveToolShopListener(self)
-    self.barracks:RemoveBarracksListener(self)
-    self.blackSmith:RemoveBlackSmithListener(self)
+    local User = city:GetUser()
     self.city:RemoveListenerOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
     self.city:RemoveListenerOnType(self, City.LISTEN_TYPE.DESTROY_DECORATOR)
-    self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.OnSoldierStarEventsTimer)
-    self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.OnMilitaryTechEventsTimer)
-    self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_CHANGED)
-    self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.MILITARY_TECHS_EVENTS_ALL_CHANGED)
-    self.city:GetSoldierManager():RemoveListenerOnType(self,SoldierManager.LISTEN_TYPE.SOLDIER_STAR_EVENTS_CHANGED)
-    self.city:RemoveListenerOnType(self,self.city.LISTEN_TYPE.PRODUCTION_EVENT_REFRESH)
-    self.city:RemoveListenerOnType(self,self.city.LISTEN_TYPE.PRODUCTION_EVENT_CHANGED)
-    self.city:RemoveListenerOnType(self,self.city.LISTEN_TYPE.PRODUCTION_EVENT_REFRESH)
+    User:RemoveListenerOnType(self, "soldierEvents")
+    User:RemoveListenerOnType(self, "soldierStarEvents")
+    User:RemoveListenerOnType(self, "militaryTechEvents")
+    User:RemoveListenerOnType(self, "productionTechEvents")
+    User:RemoveListenerOnType(self, "materialEvents")
+    User:RemoveListenerOnType(self, "dragonEquipmentEvents")
 end
 function WidgetEventTabButtons:RefreshBuildQueueByType(...)
-    local cur_tab = self:GetCurrentTab()
     local city = self.city
+    local User = self.city:GetUser()
+    local cur_tab = self:GetCurrentTab()
     for _,key in ipairs{...} do
         local item = self.tab_map[key]
         local able = self:IsTabEnable(key)
         if key == "build" then
             local count = #city:GetUpgradingBuildings()
-            local total = city:BuildQueueCounts()
+            local total = User.basicInfo.buildQueue
             if item:IsChanged(count, total) then item:SetOrResetProgress() end
             item:SetActiveNumber(count, total):Enable(able):SetOrResetProgress()
         elseif key == "soldier" then
-            local count = self.barracks:IsRecruting() and 1 or 0
-            local total = self.barracks:IsUnlocked() and 1 or 0
+            local count = #User.soldierEvents
+            local total = #User:GetUnlockBuildingsBy("barracks")
             if item:IsChanged(count, total) then item:SetOrResetProgress() end
             item:SetActiveNumber(count, total):Enable(able)
         elseif key == "material" then
             local count = 0
-            count = count + (self.blackSmith:IsMakingEquipment() and 1 or 0)
-            count = count + (self.toolShop:IsMakingAny(timer:GetServerTime()) and 1 or 0)
+            count = count + #User.dragonEquipmentEvents
+            count = count + User:GetMakingMaterialsEventCount()
             local total = 0
-            total = total + (self.toolShop:IsUnlocked() and 1 or 0)
-            total = total + (self.blackSmith:IsUnlocked() and 1 or 0)
+            total = total + #User:GetUnlockBuildingsBy("barracks")
+            total = total + #User:GetUnlockBuildingsBy("blackSmith")
             if item:IsChanged(count, total) then item:SetOrResetProgress() end
             item:SetActiveNumber(count, total):Enable(able)
         elseif key == "technology" then
@@ -275,7 +276,7 @@ function WidgetEventTabButtons:RefreshBuildQueueByType(...)
                     total = total + 1
                 end
             end
-            local count = city:GetSoldierManager():GetTotalUpgradingMilitaryTechNum() + city:GetProductionTechEventCount()
+            local count = User:GetTotalMilitaryTechEventsNumber() + #User.productionTechEvents
             if item:IsChanged(count, total) then item:SetOrResetProgress() end
             item:SetActiveNumber(count, total):Enable(able)
         end
@@ -296,13 +297,14 @@ function WidgetEventTabButtons:HasAnyBuildingEvent()
     return #self.city:GetUpgradingBuildings() > 0
 end
 function WidgetEventTabButtons:HasAnySoldierEvent()
-    return self.barracks:IsRecruting()
+    return #self.city:GetUser().soldierEvents > 0
 end
 function WidgetEventTabButtons:HasAnyMaterialEvent()
-    return self.blackSmith:IsMakingEquipment() or self.toolShop:IsMakingAny(timer:GetServerTime())
+    local User = self.city:GetUser()
+    return #User.dragonEquipmentEvents > 0 or User:IsMakingMaterials()
 end
 function WidgetEventTabButtons:HasAnyTechnologyEvent()
-    return self.city:GetSoldierManager():IsUpgradingAnyMilitaryTech() or self.city:HaveProductionTechEvent()
+    return self.city:GetUser():HasAnyMilitaryTechEvent()
 end
 -- 构造ui
 function WidgetEventTabButtons:CreateTabButtons()
@@ -412,6 +414,10 @@ function WidgetEventTabButtons:CreateProgressItem()
         self.key = key
         return self
     end
+    function node:SetEvent(event)
+        self.event = event
+        return self
+    end
     function node:SetButtonImages(images)
         self.speed_btn:setButtonImage(cc.ui.UIPushButton.NORMAL, images["normal"], true)
         self.speed_btn:setButtonImage(cc.ui.UIPushButton.PRESSED, images["pressed"], true)
@@ -473,11 +479,14 @@ function WidgetEventTabButtons:CreateOpenMilitaryTechItem(building)
     end)
 end
 function WidgetEventTabButtons:IsTabEnable(tab)
+    local User = self.city:GetUser()
     if tab == "build" or tab == nil then
         return true
-    elseif tab == "soldier" and self.barracks:IsUnlocked() then
+    elseif tab == "soldier" and User:IsBuildingUnlockedBy("barracks") then
         return true
-    elseif tab == "material" and (self.toolShop:IsUnlocked() or self.blackSmith:IsUnlocked()) then
+    elseif tab == "material" 
+        and (User:IsBuildingUnlockedBy("toolShop") 
+        or User:IsBuildingUnlockedBy("blackSmith")) then
         return true
     elseif tab == "technology" then
         local city = self.city
@@ -667,6 +676,7 @@ function WidgetEventTabButtons:IsAbleToFreeSpeedup(building)
     return building:IsAbleToFreeSpeedUpByTime(app.timer:GetServerTime())
 end
 function WidgetEventTabButtons:UpgradeBuildingHelpOrSpeedup(building)
+    local User = self.city:GetUser()
     local eventType = building:EventType()
     if self:IsAbleToFreeSpeedup(building) then
         if building:GetUpgradingLeftTimeByCurrentTime(app.timer:GetServerTime()) > 2 then
@@ -675,8 +685,7 @@ function WidgetEventTabButtons:UpgradeBuildingHelpOrSpeedup(building)
     else
         if not Alliance_Manager:GetMyAlliance():IsDefault() then
             -- 是否已经申请过联盟加速
-            local isRequested = DataUtils:HasBeenRequestedToHelpSpeedup(building:UniqueUpgradingKey())
-            if not isRequested then
+            if not User:IsRequestHelped(building:UniqueUpgradingKey()) then
                 NetManager:getRequestAllianceToSpeedUpPromise(eventType,building:UniqueUpgradingKey())
                 return
             end
@@ -686,14 +695,15 @@ function WidgetEventTabButtons:UpgradeBuildingHelpOrSpeedup(building)
     end
 end
 function WidgetEventTabButtons:MiliTaryTechUpgradeOrSpeedup(event)
-    if DataUtils:getFreeSpeedUpLimitTime() > event:GetTime() and event:GetTime() > 2 then
-        NetManager:getFreeSpeedUpPromise(event:GetEventType(),event:Id())
+    local User = self.city:GetUser()
+    local time, percent = UtilsForEvent:GetEventInfo(event)
+
+    if DataUtils:getFreeSpeedUpLimitTime() > time and time > 2 then
+        NetManager:getFreeSpeedUpPromise(User:EventType(event), event.id)
     else
         if not Alliance_Manager:GetMyAlliance():IsDefault() then
-            -- 是否已经申请过联盟加速
-            local isRequested = DataUtils:HasBeenRequestedToHelpSpeedup(event:Id())
-            if not isRequested then
-                NetManager:getRequestAllianceToSpeedUpPromise(event:GetEventType(),event:Id())
+            if not User:IsRequestHelped(event.id) then
+                NetManager:getRequestAllianceToSpeedUpPromise(User:EventType(event),event.id)
                 return
             end
         end
@@ -702,7 +712,7 @@ function WidgetEventTabButtons:MiliTaryTechUpgradeOrSpeedup(event)
     end
 end
 function WidgetEventTabButtons:SoldierRecruitUpgradeOrSpeedup()
-    UIKit:newGameUI("GameUIBarracksSpeedUp", self.city:GetFirstBuildingByType("barracks")):AddToCurrentScene(true)
+    UIKit:newGameUI("GameUIBarracksSpeedUp"):AddToCurrentScene(true)
 end
 function WidgetEventTabButtons:MaterialEventUpgradeOrSpeedup()
     UIKit:newGameUI("GameUIToolShopSpeedUp", self.city:GetFirstBuildingByType("toolShop")):AddToCurrentScene(true)
@@ -711,6 +721,7 @@ function WidgetEventTabButtons:DragonEquipmentEventsUpgradeOrSpeedup()
     UIKit:newGameUI("GameUIBlackSmithSpeedUp", self.city:GetFirstBuildingByType("blackSmith")):AddToCurrentScene(true)
 end
 function WidgetEventTabButtons:SetProgressItemBtnLabel(canFreeSpeedUp,event_key,event_item)
+    local User = self.city:GetUser()
     local old_status = event_item.status
     local btn_label
     local btn_images
@@ -722,8 +733,8 @@ function WidgetEventTabButtons:SetProgressItemBtnLabel(canFreeSpeedUp,event_key,
         event_item.status = "freeSpeedup"
     else
         -- 未加入联盟或者已经申请过联盟加速
-        if Alliance_Manager:GetMyAlliance():IsDefault() or
-            DataUtils:HasBeenRequestedToHelpSpeedup(event_key) then
+        if Alliance_Manager:GetMyAlliance():IsDefault()
+            or User:IsRequestHelped(event_key) then
             btn_label = _("加速")
             btn_images = {normal = "green_btn_up_154x39.png",
                 pressed = "green_btn_down_154x39.png",
@@ -765,13 +776,14 @@ function WidgetEventTabButtons:LoadBuildingEvents()
 end
 function WidgetEventTabButtons:LoadSoldierEvents()
     self:InsertItem(self:CreateBottom():OnOpenClicked(function(event)
-        UIKit:newGameUI('GameUIBarracks', self.city, self.barracks, "recruit"):AddToCurrentScene(true)
+        UIKit:newGameUI('GameUIBarracks', self.city, self.city:GetFirstBuildingByType("barracks"), "recruit"):AddToCurrentScene(true)
     end):SetLabel(_("查看现有的士兵")))
-    local event = self.barracks:GetRecruitEvent()
-    if event:IsRecruting() then
+    local User = self.city:GetUser()
+    for i,event in ipairs(User:GetSoldierEventsBySeq()) do
         local item = self:CreateItem()
             :SetProgressInfo(self:SoldierDescribe(event))
-            :SetEventKey(event:Id())
+            :SetEventKey(event.id)
+            :SetEvent(event)
             :OnClicked(
                 function(e)
                     if e.name == "CLICKED_EVENT" then
@@ -787,25 +799,29 @@ local material_buildings = {
     "blackSmith",
 }
 function WidgetEventTabButtons:LoadMaterialEvents()
+    local User = self.city:GetUser()
     self:InsertItem(self:CreateBottom():OnOpenClicked(function(event)
-        UIKit:newGameUI('GameUIMaterials', self.toolShop, self.blackSmith):AddToCurrentScene(true)
+        UIKit:newGameUI('GameUIMaterials', 
+            self.city:GetFirstBuildingByType("toolShop"), 
+            self.city:GetFirstBuildingByType("blackSmith")
+        ):AddToCurrentScene(true)
     end):SetLabel(_("查看材料")))
 
     local material_events = {}
 
-    local event = self.blackSmith:GetMakeEquipmentEvent()
-    if event:IsMaking() then
+    local event = User.dragonEquipmentEvents[1]
+    if event then
         table.insert(material_events, {"blackSmith", event})
     end
 
-    for _,event in pairs(self.toolShop:GetMakeMaterialsEvents()) do
-        if event:IsMaking(timer:GetServerTime()) then
+    for _,event in ipairs(User.materialEvents) do
+        if event.finishTime ~= 0 then
             table.insert(material_events, {"toolShop", event})
         end
     end
 
     table.sort(material_events, function(a, b)
-        return a[2]:FinishTime() > b[2]:FinishTime()
+        return a[2].finishTime > b[2].finishTime
     end)
 
     for _,v in ipairs(material_events) do
@@ -813,13 +829,15 @@ function WidgetEventTabButtons:LoadMaterialEvents()
         if building_type == "blackSmith" then
             local item = self:CreateItem()
                 :SetProgressInfo(self:EquipmentDescribe(event))
-                :SetEventKey(event:Id())
+                :SetEventKey(event.id)
+                :SetEvent(event)
                 :OnClicked(function(e) self:DragonEquipmentEventsUpgradeOrSpeedup() end)
             self:InsertItem(item)
         elseif building_type == "toolShop" then
             local item = self:CreateItem()
                 :SetProgressInfo(self:MaterialDescribe(event))
-                :SetEventKey(event:Id())
+                :SetEventKey(event.id)
+                :SetEvent(event)
                 :OnClicked(function(e) self:MaterialEventUpgradeOrSpeedup() end)
             self:InsertItem(item)
         end
@@ -840,28 +858,29 @@ local military_techs_desc = {
     academy = _("查看学院科技"),
 }
 function WidgetEventTabButtons:LoadTechnologyEvents()
+    local city = self.city
+    local User = self.city:GetUser()
     local technology_buildings = {}
     local technology_events = {}
-    local city = self.city
-    local soldier_manager = city:GetSoldierManager()
     for _,building_type in ipairs({"trainingGround",
         "hunterHall",
         "stable",
         "workshop",
         "academy"}) do
         if building_type == "academy" then
-            if city:HaveProductionTechEvent() then
-                city:IteratorProductionTechEvents(function(event)
+            if User:HasProductionTechEvent() then
+                for _,event in ipairs(User.productionTechEvents) do
                     table.insert(technology_events, {building_type, event})
-                end)
+                end
             else
                 table.insert(technology_events, {building_type})
             end
         else
+            local User = city:GetUser()
             technology_buildings[building_type] = city:GetFirstBuildingByType(building_type)
             if technology_buildings[building_type]:IsUnlocked() then
-                if soldier_manager:IsUpgradingMilitaryTech(building_type) then
-                    local event = soldier_manager:GetUpgradingMilitaryTech(building_type)
+                if User:HasMilitaryTechEventBy(building_type) then
+                    local event = User:GetShortMilitaryTechEventBy(building_type)
                     table.insert(technology_events, {building_type, event})
                 else
                     table.insert(technology_events, {building_type})
@@ -874,7 +893,7 @@ function WidgetEventTabButtons:LoadTechnologyEvents()
         local type1, event1 = unpack(a)
         local type2, event2 = unpack(b)
         if event1 and event2 then
-            return event1:FinishTime() > event2:FinishTime()
+            return event1.finishTime > event2.finishTime
         elseif event1 and not event2 then
             return false
         elseif not event1 and event2 then
@@ -893,12 +912,13 @@ function WidgetEventTabButtons:LoadTechnologyEvents()
         if building_type == "academy" then
             if event then
                 local item = self:CreateItem()
-                    :SetProgressInfo(self:GetProductionTechnologyEventProgressInfo(event))
-                    :SetEventKey(event:Id())
+                    :SetProgressInfo(self:TechDescribe(event))
+                    :SetEventKey(event.id)
+                    :SetEvent(event)
                     :OnClicked(function(e)
                         self:ProductionTechnologyEventUpgradeOrSpeedup(event)
                     end)
-                self:SetProgressItemBtnLabel(DataUtils:getFreeSpeedUpLimitTime() > event:GetTime(),event:Id(),item)
+                self:SetProgressItemBtnLabel(DataUtils:getFreeSpeedUpLimitTime() > UtilsForEvent:GetEventInfo(event),event.id,item)
                 self:InsertItem(item)
             else
                 self:InsertItem(self:CreateBottom():OnOpenClicked(function(event)
@@ -908,12 +928,13 @@ function WidgetEventTabButtons:LoadTechnologyEvents()
         else
             if event then
                 local item = self:CreateItem()
-                    :SetProgressInfo(self:MilitaryTechDescribe(event))
-                    :SetEventKey(event:Id())
+                    :SetProgressInfo(self:TechDescribe(event))
+                    :SetEventKey(event.id)
+                    :SetEvent(event)
                     :OnClicked(function(e)
                         self:MiliTaryTechUpgradeOrSpeedup(event)
                     end)
-                self:SetProgressItemBtnLabel(DataUtils:getFreeSpeedUpLimitTime() > event:GetTime(), event:Id(),item)
+                self:SetProgressItemBtnLabel(DataUtils:getFreeSpeedUpLimitTime() > UtilsForEvent:GetEventInfo(event), event.id,item)
                 self:InsertItem(item)
             else
                 self:InsertItem(self:CreateMilitaryItem(building):SetLabel(desc))
@@ -941,64 +962,52 @@ function WidgetEventTabButtons:BuildingPercent(building)
     return building:GetUpgradingLeftTimeByCurrentTime(time), building:GetUpgradingPercentByCurrentTime(time)
 end
 function WidgetEventTabButtons:SoldierDescribe(event)
-    local soldier_type, count = event:GetRecruitInfo()
-    local soldier_name = Localize.soldier_name[soldier_type]
-    local time, percent = self:EventPercent(event)
-    return string.format( _("招募%s x%d"), soldier_name, count), percent,GameUtils:formatTimeStyle1(time)
+    local time, percent = UtilsForEvent:GetEventInfo(event)
+    return string.format( _("招募%s x%d"), 
+        Localize.soldier_name[event.name], event.count), 
+        percent, 
+        GameUtils:formatTimeStyle1(time)
 end
 function WidgetEventTabButtons:EquipmentDescribe(event)
-    local time, percent = self:EventPercent(event)
-    return string.format( _("正在制作 %s"), Localize.equip[event:Content()]), percent , GameUtils:formatTimeStyle1(time)
+    local time, percent = UtilsForEvent:GetEventInfo(event)
+    return string.format( _("正在制作 %s"), Localize.equip[event.name]), percent , GameUtils:formatTimeStyle1(time)
 end
 function WidgetEventTabButtons:MaterialDescribe(event)
-    local time, percent = self:EventPercent(event)
-    return string.format( _("制造材料 x%d"), event:TotalCount()), percent , GameUtils:formatTimeStyle1(time)
+    local time, percent = UtilsForEvent:GetEventInfo(event)
+    local count = 0
+    for _,v in pairs(event.materials) do
+        count = count + v.count
+    end
+    return string.format( _("制造材料 x%d"), count), percent , GameUtils:formatTimeStyle1(time)
 end
-function WidgetEventTabButtons:MilitaryTechDescribe(event)
-    local time, percent = self:EventPercent(event)
-    return string.format("%s", event:GetLocalizeDesc()), percent , GameUtils:formatTimeStyle1(time)
+function WidgetEventTabButtons:TechDescribe(event)
+    local User = self.city:GetUser()
+    local str
+    if User:IsProductionTechEvent(event) then
+        str = _("研发")..Localize.productiontechnology_name[event.name]
+    elseif User:IsSoldierStarEvent(event) then
+        str = UtilsForEvent:GetMilitaryTechEventLocalize(event.name, User:SoldierStarByName(event.name))
+    elseif User:IsMilitaryTechEvent(event) then
+        str = UtilsForEvent:GetMilitaryTechEventLocalize(event.name, User:GetMilitaryTechLevel(event.name))
+    else
+        return "", 0, "00:00:00"
+    end
+    local time, percent = UtilsForEvent:GetEventInfo(event)
+    return str, percent , GameUtils:formatTimeStyle1(time)
 end
 function WidgetEventTabButtons:EventPercent(event)
     local time = timer:GetServerTime()
     return event:LeftTime(time), event:Percent(time)
 end
---学院科技
-function WidgetEventTabButtons:OnProductionTechnologyEventTimer(event)
-    self:GetTabByKey("technology"):SetOrResetProgress(self:EventPercent(event))
-    if self:IsShow() and self:GetCurrentTab() == "technology" then
-        self:IteratorAllItem(function(i, v)
-            if v.GetEventKey and v:GetEventKey() == event:Id() then
-                v:SetProgressInfo(self:GetProductionTechnologyEventProgressInfo(event))
-                self:SetProgressItemBtnLabel(DataUtils:getFreeSpeedUpLimitTime()>event:GetTime(),event:Id(),v)
-            end
-        end)
-    end
-end
-function WidgetEventTabButtons:OnProductionTechnologyEventDataChanged(changed_map)
-    changed_map = changed_map or {}
-    if changed_map.added and #changed_map.added > 0 then
-        self:EventChangeOn("technology", true)
-    end
-    if changed_map.removed and #changed_map.removed > 0 then
-        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
-        self:EventChangeOn("technology")
-    end
-end
-function WidgetEventTabButtons:OnProductionTechnologyEventDataRefresh()
-    self:EventChangeOn("technology")
-end
-
 function WidgetEventTabButtons:ProductionTechnologyEventUpgradeOrSpeedup(event)
-    if DataUtils:getFreeSpeedUpLimitTime() > event:GetTime() and event:GetTime() > 2 then
-        NetManager:getFreeSpeedUpPromise("productionTechEvents",event:Id())
+    local time = UtilsForEvent:GetEventInfo(event)
+    local User = self.city:GetUser()
+    if DataUtils:getFreeSpeedUpLimitTime() > time and time > 2 then
+        NetManager:getFreeSpeedUpPromise("productionTechEvents", event.id)
     else
         if not Alliance_Manager:GetMyAlliance():IsDefault() then
-            -- 是否已经申请过联盟加速
-            local isRequested = DataUtils:HasBeenRequestedToHelpSpeedup(event:Id())
-            if not isRequested then
-                NetManager:getRequestAllianceToSpeedUpPromise("productionTechEvents",event:Id()):done(function()
-                    self:OnProductionTechnologyEventDataRefresh()
-                end)
+            if not User:IsRequestHelped(event.id) then
+                NetManager:getRequestAllianceToSpeedUpPromise("productionTechEvents",event.id)
                 return
             end
         end
@@ -1006,11 +1015,6 @@ function WidgetEventTabButtons:ProductionTechnologyEventUpgradeOrSpeedup(event)
         UIKit:newGameUI("GameUITechnologySpeedUp"):AddToCurrentScene(true)
     end
 end
-
-function WidgetEventTabButtons:GetProductionTechnologyEventProgressInfo(event)
-    return _("研发") .. event:Entity():GetLocalizedName() ,event:GetPercent(),GameUtils:formatTimeStyle1(event:GetTime())
-end
-
 function WidgetEventTabButtons:PromiseOfPopUp()
     local p = promise.new()
     self.pop_callbacks = {}
@@ -1027,6 +1031,8 @@ end
 
 
 return WidgetEventTabButtons
+
+
 
 
 

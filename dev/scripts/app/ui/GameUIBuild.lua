@@ -76,7 +76,7 @@ function GameUIBuild:LoadBuildingQueue()
         :align(display.LEFT_CENTER, 60, back_ground:getContentSize().height/2)
 
 
-    if self.build_city:BuildQueueCounts() < 2 then
+    if User.basicInfo.buildQueue < 2 then
         WidgetPushButton.new(
             {normal = "add_btn_up_50x50.png",pressed = "add_btn_down_50x50.png"}
             ,{}
@@ -102,7 +102,7 @@ function GameUIBuild:LoadBuildingQueue()
     return back_ground
 end
 function GameUIBuild:UpdateBuildingQueue(city)
-    self.queue:SetBuildingQueue(city:GetAvailableBuildQueueCounts(), city:BuildQueueCounts())
+    self.queue:SetBuildingQueue(city:GetAvailableBuildQueueCounts(), city:GetUser().basicInfo.buildQueue)
 end
 function GameUIBuild:OnUpgradingBegin(building)
     self:OnCityChanged()

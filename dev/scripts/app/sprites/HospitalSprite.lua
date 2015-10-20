@@ -2,23 +2,15 @@ local heal = import("..particles.heal")
 local FunctionUpgradingSprite = import(".FunctionUpgradingSprite")
 local HospitalSprite = class("HospitalSprite", FunctionUpgradingSprite)
 
-function HospitalSprite:OnBeginTreat()
-    self:DoAni()
-end
-function HospitalSprite:OnTreating()
-end
-function HospitalSprite:OnEndTreat()
+
+function HospitalSprite:OnUserDataChanged_treatSoldierEvents()
     self:DoAni()
 end
 
 local WOUNDED_TAG = 114
 function HospitalSprite:ctor(city_layer, entity, city)
     HospitalSprite.super.ctor(self, city_layer, entity, city)
-    entity:AddHospitalListener(self)
-    display.newNode():addTo(self):schedule(function()
-        self:CheckEvent()
-    end, 1)
-    self:CheckEvent()
+    scheduleAt(self, function() self:CheckEvent() end)
 end
 function HospitalSprite:RefreshSprite()
     HospitalSprite.super.RefreshSprite(self)
@@ -26,7 +18,7 @@ function HospitalSprite:RefreshSprite()
 end
 function HospitalSprite:CheckEvent()
     if self:GetEntity():IsUnlocked() then
-        if self:GetEntity():BelongCity():GetSoldierManager():HasAnyWoundedSoldiers() then
+        if self:GetEntity():BelongCity():GetUser():HasAnyWoundedSoldiers() then
             self:PlayWoundedSoldiersAni()
         elseif self:getChildByTag(WOUNDED_TAG) then
             self:removeChildByTag(WOUNDED_TAG)
@@ -35,7 +27,7 @@ function HospitalSprite:CheckEvent()
 end
 function HospitalSprite:DoAni()
     if self:GetEntity():IsUnlocked() then
-        if self:GetEntity():IsTreating() then
+        if #self:GetEntity():BelongCity():GetUser().treatSoldierEvents > 0 then
             self:PlayAni()
         else
             self:StopAni()

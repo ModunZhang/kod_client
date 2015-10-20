@@ -319,7 +319,7 @@ end
 function WidgetMakeEquip:onEnter()
     local User = self.city:GetUser()
     User:AddListenOnType(self, "dragonMaterials")
-    self.black_smith:AddBlackSmithListener(self)
+    User:AddListenOnType(self, "dragonEquipmentEvents")
     self:RefreshUI()
     scheduleAt(self, function()
         local coin = self.city:GetUser():GetResValueByType("coin")
@@ -335,12 +335,13 @@ end
 function WidgetMakeEquip:onExit()
     local User = self.city:GetUser()
     User:RemoveListenerOnType(self, "dragonMaterials")
-    self.black_smith:RemoveBlackSmithListener(self)
+    User:RemoveListenerOnType(self, "dragonEquipmentEvents")
 end
 function WidgetMakeEquip:RefreshUI()
+    local User = self.city:GetUser()
     self:UpdateEquipCounts()
     self:UpdateMaterials()
-    self:UpdateBuildLabel(self.black_smith:IsEquipmentEventEmpty() and 0 or 1)
+    self:UpdateBuildLabel(#User.dragonEquipmentEvents)
     self:UpdateGemLabel()
     self:UpdateBuffTime()
 end
@@ -355,14 +356,12 @@ function WidgetMakeEquip:OnUserDataChanged_dragonMaterials(userData, deltaData)
     end
 end
 -- 建造队列监听
-function WidgetMakeEquip:OnBeginMakeEquipmentWithEvent(black_smith, event)
-    self:UpdateBuildLabel(1)
-end
-function WidgetMakeEquip:OnMakingEquipmentWithEvent(black_smith, event, current_time)
-    self:UpdateBuildLabel(1)
-end
-function WidgetMakeEquip:OnEndMakeEquipmentWithEvent(black_smith, event, equipment)
-    self:UpdateBuildLabel(0)
+function WidgetMakeEquip:OnUserDataChanged_dragonEquipmentEvents(userData, deltaData)
+    if deltaData("dragonEquipmentEvents.add") then
+        self:UpdateBuildLabel(1)
+    elseif deltaData("dragonEquipmentEvents.remove") then
+        self:UpdateBuildLabel(0)
+    end
 end
 -- 更新装备数量
 function WidgetMakeEquip:UpdateEquipCounts()
@@ -461,9 +460,10 @@ function WidgetMakeEquip:IsAbleToMakeEqui(isFinishNow)
         local not_suitble = {}
         local need_gems = 0
         -- 制造队列
-        if self.black_smith:IsMakingEquipment() then
-            local making_event = self.black_smith:GetMakeEquipmentEvent()
-            local time_gem = DataUtils:getGemByTimeInterval(making_event:LeftTime(app.timer:GetServerTime()))
+        if #User.dragonEquipmentEvents > 0 then
+            local event = User.dragonEquipmentEvents[1]
+            local time, percent = UtilsForEvent:GetEventInfo(event)
+            local time_gem = DataUtils:getGemByTimeInterval(time)
             need_gems = need_gems + time_gem
             table.insert(not_suitble, string.format( _("完成当前制造队列,需要%d"), time_gem ) )
         end
