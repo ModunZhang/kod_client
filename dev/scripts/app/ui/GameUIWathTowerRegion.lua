@@ -445,7 +445,7 @@ function GameUIWathTowerRegion:OnEventDetailButtonClicked(entity)
     local strEntityType = entity:GetType()
     if strEntityType == entity.ENTITY_TYPE.MARCH_OUT then
         if entity:WithObject():MarchType() == "helpDefence" then
-            NetManager:getHelpDefenceMarchEventDetailPromise(entity:WithObject():Id(),Alliance_Manager:GetMyAlliance():Id()):done(function(response)
+            NetManager:getHelpDefenceMarchEventDetailPromise(entity:WithObject():Id()):done(function(response)
                 UIKit:newGameUI("GameUIWatchTowerTroopDetail",GameUIWatchTowerTroopDetail.DATA_TYPE.MARCH,response.msg.eventDetail,User:Id())
                     :AddToCurrentScene(true)
             end)

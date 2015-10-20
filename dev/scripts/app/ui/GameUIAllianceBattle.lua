@@ -36,6 +36,14 @@ function GameUIAllianceBattle:OnMoveInStage()
         end
     elseif tag == "fight" then
         self:InitBattleStatistics()
+    elseif tag == "capture" then
+        UIKit:ttfLabel(
+            {
+                text = _("即将开放"),
+                size = 24,
+                color = 0x403c2f,
+            }):align(display.CENTER, window.cx, window.cy)
+            :addTo(self)
     end
     -- self:CreateTabButtons({
     --     {
