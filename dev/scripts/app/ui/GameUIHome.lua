@@ -805,9 +805,9 @@ function GameUIHome:PromiseOfFteWaitFinish()
 end
 function GameUIHome:PromiseOfFteFreeSpeedUp()
     if #self.city:GetUpgradingBuildings() > 0 then
-        if not self.event_tab:IsShow() then
-            self.event_tab:EventChangeOn("build", true)
-        end
+        -- if not self.event_tab:IsShow() then
+        --     self.event_tab:EventChangeOn("build", true)
+        -- end
         self:GetFteLayer()
         self.event_tab:PromiseOfPopUp():next(function()
             self:GetFteLayer():SetTouchObject(self:Find())
@@ -842,13 +842,12 @@ function GameUIHome:PromiseOfFteFreeSpeedUp()
 end
 function GameUIHome:PromiseOfFteInstantSpeedUp()
     if #self.city:GetUpgradingBuildings() > 0 then
-        if not self.event_tab:IsShow() then
-            self.event_tab:EventChangeOn("build", true)
-        end
+        -- if not self.event_tab:IsShow() then
+        --     self.event_tab:EventChangeOn("build", true)
+        -- end
         self:GetFteLayer()
         self.event_tab:PromiseOfPopUp():next(function()
             self:GetFteLayer():SetTouchObject(self:Find())
-
             self:Find():removeEventListenersByEvent("CLICKED_EVENT")
             self:Find():onButtonClicked(function()
                 self:Find():setButtonEnabled(false)

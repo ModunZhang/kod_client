@@ -398,16 +398,16 @@ function GameUIPVESendTroop:SelectSoldiers()
         "skeletonArcher",
         "deathKnight",
         "meatWagon",
-        "priest",
-        "demonHunter",
-        "paladin",
-        "steamTank",
+        -- "priest",
+        -- "demonHunter",
+        -- "paladin",
+        -- "steamTank",
     }
     local User = User
     local map_s = User.soldiers
     for _,name in pairs(soldier_map) do
         local soldier_num = map_s[name]
-        if soldier_num>0 then
+        if soldier_num > 0 then
             table.insert(soldiers, {name = name,level = User:SoldierStarByName(name), max_num = soldier_num})
         end
     end

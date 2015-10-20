@@ -622,6 +622,7 @@ function WidgetEventTabButtons:PromiseOfShow()
             self.arrow:flipY(false)
             if self.pop_callbacks and #self.pop_callbacks > 0 then
                 table.remove(self.pop_callbacks, 1)()
+                self.pop_callbacks = {}
             end
         end)
     end
@@ -914,10 +915,6 @@ function WidgetEventTabButtons:LoadTechnologyEvents()
         end
         return military_techs[type1] < military_techs[type2]
     end)
-
-    for i = #technology_events, 1, -1 do
-        print(i, technology_events[i][1])
-    end
     for i,v in ipairs(technology_events) do
         local building_type, event = unpack(v)
         local desc = military_techs_desc[building_type]
@@ -1031,7 +1028,7 @@ end
 function WidgetEventTabButtons:PromiseOfPopUp()
     local p = promise.new()
     self.pop_callbacks = {}
-    if not self:IsShow() or self:IsShowing() then
+    if not self:IsShow() or self:IsShowing() or #self.item_array == 1 then
         table.insert(self.pop_callbacks, function()
             p:resolve()
         end)
@@ -1044,25 +1041,4 @@ end
 
 
 return WidgetEventTabButtons
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

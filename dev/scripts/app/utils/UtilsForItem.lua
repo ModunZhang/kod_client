@@ -74,7 +74,7 @@ function UtilsForItem:__order(items_info)
     return order_items_info
 end
 function UtilsForItem:GetItemCount(items, name)
-    for k,v in pairs(items) do
+    for i,v in ipairs(items) do
         if v.name == name then
             return v.count
         end
