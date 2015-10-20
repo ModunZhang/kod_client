@@ -1362,7 +1362,7 @@ end
 function NetManager:getAllianceFightReportsPromise(allianceId)
     return get_blocking_request_promise("logic.allianceHandler.getAllianceFightReports", {
         allianceId = allianceId
-    }, "获取联盟战历史记录失败!"):done(get_alliance_response_msg)
+    }, "获取联盟战历史记录失败!"):done(get_alliance_alliancefightreports_response_msg)
 end
 --获取联盟圣地战历史记录
 function NetManager:getShrineReportsPromise()

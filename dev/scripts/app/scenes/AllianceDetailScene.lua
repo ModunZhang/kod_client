@@ -249,7 +249,11 @@ function AllianceDetailScene:OnTouchClicked(pre_x, pre_y, x, y)
         if alliance then
             print(mapObj.index, mapObj.x, mapObj.y, mapObj.name)
             -- UIKit:newGameUI("GameUIAllianceBase", alliance, mapObj.x, mapObj.y, mapObj.name):AddToCurrentScene(true)
-            self:EnterAllianceBuilding(alliance,mapObj)
+            if Alliance:GetMapObjectType(mapObj) ~= "building" then
+                self:EnterNotAllianceBuilding(alliance,mapObj)
+            else
+                self:EnterAllianceBuilding(alliance,mapObj)
+            end
         end
     end
 end
@@ -271,7 +275,7 @@ function AllianceDetailScene:UpdateVisibleAllianceBg()
     self.visible_alliances = new_visibles
 end
 function AllianceDetailScene:UpdateCurrrentAlliance()
-local index = self:GetSceneLayer():GetMiddleAllianceIndex()
+    local index = self:GetSceneLayer():GetMiddleAllianceIndex()
     self:FetchAllianceDatasByIndex(index, function(data)
         self:GetSceneLayer():LoadAllianceByIndex(index, data.allianceData)
     end)
@@ -289,8 +293,8 @@ function AllianceDetailScene:EnterAllianceBuilding(alliance,mapObj)
             class_name = "GameUIAllianceShopEnter"
         elseif building_name == 'orderHall' then
             class_name = "GameUIAllianceOrderHallEnter"
-        elseif building_name == 'moonGate' then
-            class_name = "GameUIAllianceMoonGateEnter"
+        elseif building_name == 'watchTower' then
+            class_name = "GameUIAllianceWatchTowerEnter"
         else
             print("没有此建筑--->",building_name)
             return
@@ -299,7 +303,36 @@ function AllianceDetailScene:EnterAllianceBuilding(alliance,mapObj)
     end
 end
 
+function AllianceDetailScene:EnterNotAllianceBuilding(alliance,mapObj)
+    local isMyAlliance = true
+    local type_ = Alliance:GetMapObjectType(mapObj)
+    print("type_=====",type_)
+    local class_name = ""
+    if type_ == 'none' then
+        class_name = "GameUIAllianceEnterBase"
+    elseif type_ == 'member' then
+        app:GetAudioManager():PlayBuildingEffectByType("keep")
+        class_name = "GameUIAllianceCityEnter"
+    elseif type_ == 'decorate' then
+        class_name = "GameUIAllianceDecorateEnter"
+    elseif type_ == 'village' then
+        app:GetAudioManager():PlayBuildingEffectByType("warehouse")
+        class_name = "GameUIAllianceVillageEnter"
+        -- if not alliance:FindAllianceVillagesInfoByObject(mapObj) then -- 废墟
+        --     class_name = "GameUIAllianceRuinsEnter"
+        -- end
+    elseif type_ == 'monster' then
+        if not alliance:FindAllianceMonsterInfoByObject(mapObj) then
+            return
+        end
+        class_name = "GameUIAllianceMosterEnter"
+    end
+    UIKit:newGameUI(class_name,mapObj,alliance):AddToCurrentScene(true)
+
+end
 return AllianceDetailScene
+
+
 
 
 

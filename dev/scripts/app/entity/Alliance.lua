@@ -12,7 +12,7 @@ local property = import("..utils.property")
 local MultiObserver = import(".MultiObserver")
 local Alliance = class("Alliance", MultiObserver)
 local config_palace = GameDatas.AllianceBuilding.palace
-local buildingName = GameDatas.AllianceInitData.buildingName
+local buildingName = GameDatas.AllianceMap.buildingName
 local pushManager_ = app:GetPushManager()
 local audioManager_ = app:GetAudioManager()
 Alliance.LISTEN_TYPE = Enum(
@@ -48,6 +48,7 @@ property(Alliance, "helpEvents", {})
 property(Alliance, "villages", {})
 property(Alliance, "monsters", {})
 property(Alliance, "villageLevels", {})
+property(Alliance, "allianceFight", nil)
 property(Alliance, "allianceFightReports", nil)
 property(Alliance, "lastAllianceFightReport", nil)
 -- property(Alliance, "attackMarchEvents", {})
@@ -180,6 +181,13 @@ function Alliance:GetMembersCountInfo()
         end
     end
     return count,online,maxmembers
+end
+-- 获取战争期敌对联盟信息
+function Alliance:GetEnemyAlliance()
+   local allianceFight = self:AllianceFight()
+   if allianceFight then
+       return self._id == allianceFight.attacker.alliance.id and allianceFight.defencer or allianceFight.attacker
+   end
 end
 function Alliance:GetLastAllianceFightReports()
     local last_report
@@ -406,9 +414,13 @@ function Alliance:FindAllianceVillagesInfoByObject(object)
 end
 function Alliance:FindAllianceMonsterInfoByObject(object)
     if buildingName[object.name].type == "monster" then
-        local monster_info = self:GetAllianceMonsterInfosById(object.id)
+        local monster_info = self:GetMapObjectInfoByObject(object)
         if monster_info then
-            return monster_info
+            for i,v in ipairs(self.monsters) do
+                if v.id == monster_info.id then
+                    return v
+                end
+            end
         end
     end
 end
@@ -418,6 +430,15 @@ function Alliance:FindAllianceBuildingInfoByName(name)
             return v
         end
     end
+end
+function Alliance:GetMapObjectInfoByObject(mapObj)
+    for k,v in pairs(self.mapObjects) do
+        local location = v.location
+        if location.x == mapObj.x and location.y == mapObj.y then
+            return v
+        end
+    end
+    return self:GetAllianceBuildingInfoByName(mapObj.name)
 end
 function Alliance:Reset()
     print("===================>Reset")
@@ -979,7 +1000,13 @@ function Alliance:OnVillageEventsDataChanged(alliance_data,deltaData,refresh_tim
         self:CallEventsChangedListeners(Alliance.LISTEN_TYPE.OnVillageEventsDataChanged,GameUtils:pack_event_table(changed_map))
     end
 end
-
+function Alliance:OnAllianceFightReportsChanged(alliance_data, deltaData)
+    local is_fully_update = deltaData == nil
+    local is_delta_update = not is_fully_update and deltaData.allianceFightReports ~= nil
+    if is_fully_update or is_delta_update then
+        self.allianceFightReports = alliance_data.allianceFightReports
+    end
+end
 function Alliance:IteratorVillageEvents(func)
     -- for _,v in pairs(self.villageEvents) do
     --     func(v)
@@ -1005,12 +1032,13 @@ function Alliance:GetVillageEvent(id)
     end
 end
 function Alliance:FindVillageEventByVillageId(village_id)
-    -- for _,v in pairs(self.villageEvents) do
-    --     if v:VillageData().id == village_id then
-    --         return v
-    --     end
-    -- end
-    return nil
+    dump(self.villageEvents,"self.villageEvents")
+    for _,v in pairs(self.villageEvents) do
+        if v.villageData.id == village_id then
+            return v
+        end
+    end
+    -- return nil
 end
 --TODO:检测村落重新刷新ui更新是否有bug
 function Alliance:IteratorAllianceVillageInfo(func)

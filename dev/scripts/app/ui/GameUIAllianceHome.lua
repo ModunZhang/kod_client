@@ -383,9 +383,18 @@ function GameUIAllianceHome:RefreshTop(force_refresh)
     self.self_flag = self_flag
 
     -- 和平期,战争期,准备期背景
-    local period_bg = display.newSprite("box_104x104.png")
+    local period_bg = WidgetPushButton.new({normal = "box_104x104.png"})
+        :onButtonClicked(function (event)
+            if event.name == "CLICKED_EVENT" then
+                UIKit:newWidgetUI("WidgetWarIntroduce"):AddToCurrentScene(true)
+            end
+        end)
         :align(display.TOP_CENTER, top_bg:getContentSize().width/2,top_bg:getContentSize().height)
         :addTo(top_bg)
+    period_bg:setTouchSwallowEnabled(true)
+    -- local period_bg = display.newSprite("box_104x104.png")
+    --     :align(display.TOP_CENTER, top_bg:getContentSize().width/2,top_bg:getContentSize().height)
+    --     :addTo(top_bg)
 
     local period_text = self:GetAlliancePeriod()
     local period_label = UIKit:ttfLabel(
@@ -400,7 +409,7 @@ function GameUIAllianceHome:RefreshTop(force_refresh)
             text = "",
             size = 18,
             color = 0xffedae
-        }):align(display.BOTTOM_CENTER, period_bg:getContentSize().width/2, period_bg:getContentSize().height/2-10)
+        }):align(display.BOTTOM_CENTER, period_bg:getContentSize().width/2, period_bg:getContentSize().height/2-62)
         :addTo(period_bg)
     scheduleAt(period_bg, function()
         local basicInfo = alliance.basicInfo
@@ -433,9 +442,9 @@ function GameUIAllianceHome:RefreshTop(force_refresh)
         }):align(display.LEFT_CENTER, 100, 20)
         :addTo(enemy_name_bg)
 
-    -- local status = alliance.basicInfo.status
-    local status = "peace"
-    if status == "peace" or status == "prepare" then
+    local status = alliance.basicInfo.status
+    -- local status = "peace"
+    if status == "peace" or status == "protect" then
         -- 己方战力
         local self_power_bg = display.newSprite("power_background_146x26.png")
             :align(display.LEFT_CENTER, -107, -65):addTo(top_self_bg)
@@ -482,10 +491,40 @@ function GameUIAllianceHome:RefreshTop(force_refresh)
                 :addTo(capture_bg)
         end
     else
-        enemy_name_label:setString(_("敌方联盟名字"))
-        local enemy_flag = ui_helper:CreateFlagContentSprite(alliance.basicInfo.flag):scale(0.5)
+        local our_kill = alliance.allianceFight.attacker.alliance.id == alliance._id and alliance.allianceFight.attacker.allianceCountData.kill or alliance.allianceFight.defencer.alliance
+        local enemy_kill = alliance.allianceFight.attacker.alliance.id == alliance._id and alliance.allianceFight.defencer.allianceCountData.kill or alliance.allianceFight.attacker.alliance
+
+        -- 己方击杀
+        local self_power_bg = display.newSprite("power_background_146x26.png")
+            :align(display.LEFT_CENTER, -107, -65):addTo(top_self_bg)
+        local our_num_icon = cc.ui.UIImage.new("battle_33x33.png"):align(display.CENTER, -107, -65):addTo(top_self_bg)
+        local self_power_label = UIKit:ttfLabel(
+            {
+                text = string.formatnumberthousands(our_kill),
+                size = 20,
+                color = 0xbdb582
+            }):align(display.LEFT_CENTER, 20, self_power_bg:getContentSize().height/2)
+            :addTo(self_power_bg)
+
+        local enemy_alliance = alliance._id == alliance.allianceFight.attacker.alliance.id and alliance.allianceFight.defencer or alliance.allianceFight.attacker
+        enemy_name_label:setString("["..enemy_alliance.alliance.tag.."] "..enemy_alliance.alliance.name)
+        local enemy_flag = ui_helper:CreateFlagContentSprite(enemy_alliance.alliance.flag):scale(0.5)
         enemy_flag:align(display.CENTER,100-enemy_flag:getCascadeBoundingBox().size.width, -30)
             :addTo(enemy_name_bg)
+
+        -- 敌方击杀
+        local enemy_power_bg = display.newSprite("power_background_146x26.png")
+            :align(display.LEFT_CENTER, -20, -65):addTo(top_enemy_bg)
+        local enemy_num_icon = cc.ui.UIImage.new("battle_33x33.png")
+            :align(display.CENTER, 0, enemy_power_bg:getContentSize().height/2)
+            :addTo(enemy_power_bg)
+        local enemy_power_label = UIKit:ttfLabel(
+            {
+                text = string.formatnumberthousands(enemy_kill),
+                size = 20,
+                color = 0xbdb582
+            }):align(display.LEFT_CENTER, 20, enemy_power_bg:getContentSize().height/2)
+            :addTo(enemy_power_bg)
     end
 
     self.current_allinace_index = current_map_index
@@ -614,9 +653,10 @@ function GameUIAllianceHome:OnTopLeftButtonClicked(event)
 end
 function GameUIAllianceHome:OnTopRightButtonClicked(event)
     if event.name == "CLICKED_EVENT" then
+        local status = self.alliance.basicInfo.status
         local other_alliance = Alliance_Manager:GetAllianceByCache(self.current_allinace_index)
         local tag
-        if other_alliance and self.current_allinace_index ~= self.alliance:MapIndex() then
+        if other_alliance and self.current_allinace_index ~= self.alliance:MapIndex() or status == "prepare" or status == "fight" then
             tag = "fight"
         else
             tag = "capture"
@@ -900,6 +940,8 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
+
+
 
 
 

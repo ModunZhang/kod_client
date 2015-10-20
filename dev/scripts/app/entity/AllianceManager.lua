@@ -31,7 +31,11 @@ function AllianceManager:ResetMapData()
     }
 end
 function AllianceManager:GetAllianceByCache(key)
-    return self.alliance_caches[key]
+    local cache_alliance = self.alliance_caches[key]
+    if cache_alliance and self:GetMyAlliance()._id ~= cache_alliance._id then
+        setmetatable(cache_alliance, Alliance)
+    end
+    return cache_alliance
 end
 function AllianceManager:RemoveAllianceCache(key)
     self.alliance_caches[key] = nil

@@ -253,8 +253,6 @@ function UIKit:getImageByBuildingType( building_type ,level)
         return "keep_1.png"
     elseif building_type=="dragonEyrie" then
         return "dragonEyrie.png"
-    elseif building_type=="watchTower" then
-        return "watchTower_445x638.png"
     elseif building_type=="warehouse" then
         return "warehouse_498x468.png"
     elseif building_type=="toolShop" then
