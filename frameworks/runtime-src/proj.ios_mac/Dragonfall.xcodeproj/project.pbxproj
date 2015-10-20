@@ -1843,6 +1843,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: Alan Cooper (37X43D5H4Z)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Alan Cooper (37X43D5H4Z)";
 				COMPRESS_PNG_FILES = NO;
+				ENABLE_BITCODE = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ios/Prefix.pch;
@@ -1874,7 +1875,7 @@
 					"$(PROJECT_SDK_ROOT)/TalkingData/libTalkingDataGA_iphonesimulator_x86.a",
 				);
 				PROJECT_SDK_ROOT = "$(SRCROOT)/../../sdk";
-				PROVISIONING_PROFILE = "670a6042-784c-47a0-8ceb-a3268949549a";
+				PROVISIONING_PROFILE = "362823ae-f14e-4755-8113-7f5b275d87cf";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "$(inherited) $(SRCROOT)/../../cocos2d-x/cocos/platform/ios $(SRCROOT)/../../cocos2d-x/external/curl/include/ios";
@@ -1891,6 +1892,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Alan Cooper (B484Q6X8P4)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Alan Cooper (B484Q6X8P4)";
 				COMPRESS_PNG_FILES = NO;
+				ENABLE_BITCODE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ios/Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (

@@ -79,9 +79,11 @@ function TouchJudgment:OnTouchMove(pre_x, pre_y, x, y)
         end
     end
     if not find then
-        table.insert(self.one_touch_array, {x = x, y = y, time = self.time})
-        if #self.one_touch_array > 3 then
-            table.remove(self.one_touch_array, 1)
+        if pre_x ~= x and pre_y ~= y then -- fix difference move event
+            table.insert(self.one_touch_array, {x = x, y = y, time = self.time})
+            if #self.one_touch_array > 3 then
+                table.remove(self.one_touch_array, 1)
+            end
         end
     end
     self.touch_handle:OnTouchMove(pre_x, pre_y, x, y)
