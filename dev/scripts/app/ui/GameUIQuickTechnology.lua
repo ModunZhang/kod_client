@@ -76,9 +76,9 @@ end
 
 function GameUIQuickTechnology:onEnter()
     GameUIQuickTechnology.super.onEnter(self)
-    City:AddListenOnType(self,City.LISTEN_TYPE.UPGRADE_BUILDING)
     User:AddListenOnType(self, "productionTechs")
     User:AddListenOnType(self, "productionTechEvents")
+    User:AddListenOnType(self, "buildingEvents")
     scheduleAt(self, function()
         if self.time_label and self.time_label:isVisible() 
             and User:HasProductionTechEvent() then
@@ -97,6 +97,9 @@ function GameUIQuickTechnology:onEnter()
     end)
 end
 
+function GameUIQuickTechnology:OnUserDataChanged_buildingEvents(userData, deltaData)
+    self:CheckUIChanged()
+end
 function GameUIQuickTechnology:OnUserDataChanged_productionTechEvents(userData, deltaData)
     self:CheckUIChanged()
 end
@@ -116,34 +119,16 @@ function GameUIQuickTechnology:OnUserDataChanged_productionTechs(userData, delta
     end
 end
 
-function GameUIQuickTechnology:OnUpgradingBegin()
-end
-
-function GameUIQuickTechnology:OnUpgradingFinished(building)
-    if building:GetType() == self:GetBuilding():GetType() and self.technology_node then
-        for tech_name,tech in pairs(User.productionTechs) do
-            local item = self:GetItemByTag(tech.index)
-            if item and item.changeState then
-                item.changeState(User:IsTechEnable(tech_name, tech))
-            end
-        end
-    end
-end
-
-function GameUIQuickTechnology:OnUpgrading()
-end
 function GameUIQuickTechnology:OnMoveOutStage()
     GameUIQuickTechnology.super.OnMoveOutStage(self)
-    City:RemoveListenerOnType(self,City.LISTEN_TYPE.UPGRADE_BUILDING)
-
     User:RemoveListenerOnType(self, "productionTechs")
     User:RemoveListenerOnType(self, "productionTechEvents")
+    User:RemoveListenerOnType(self, "buildingEvents")
 end
 
 function GameUIQuickTechnology:CreateBetweenBgAndTitle()
     GameUIQuickTechnology.super.CreateBetweenBgAndTitle(self)
     self.technology_node = self:BuildTechnologyUI(window.height - 100):addTo(self:GetView()):pos(window.left,window.bottom+15)
-
 end
 
 function GameUIQuickTechnology:BuildTipsUI(technology_node,y)

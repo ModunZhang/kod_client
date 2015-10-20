@@ -505,6 +505,11 @@ function City:GetHousesAroundFunctionBuildingWithFilter(building, len, filter)
     return r
 end
 function City:IsFunctionBuilding(building)
+    if building:GetType() == "tower" then
+        return true
+    elseif building:GetType() == "wall" then
+        return true
+    end
     local location_id = self:GetLocationIdByBuilding(building)
     if location_id then
         return self:GetBuildingByLocationId(location_id):IsSamePositionWith(building)
@@ -1279,29 +1284,11 @@ function City:OnDestoryDecorator(current_time, building)
     building:RemoveUpgradeListener(self)
 end
 function City:OnBuildingUpgradingBegin(building, current_time)
-    self:NotifyListeneOnType(City.LISTEN_TYPE.UPGRADE_BUILDING, function(listener)
-        listener:OnUpgradingBegin(building, current_time, self)
-    end)
-
     self:CheckUpgradingBuildingPormise(building)
 end
 function City:OnBuildingUpgrading(building, current_time)
-    self:NotifyListeneOnType(City.LISTEN_TYPE.UPGRADE_BUILDING, function(listener)
-        listener:OnUpgrading(building, current_time, self)
-    end)
-end
-function City:OnSpeedUpBuilding()
-    self:NotifyListeneOnType(City.LISTEN_TYPE.UPGRADE_BUILDING, function(listener)
-        if listener.OnSpeedUpBuilding then
-            listener:OnSpeedUpBuilding()
-        end
-    end)
 end
 function City:OnBuildingUpgradeFinished(building)
-    self:NotifyListeneOnType(City.LISTEN_TYPE.UPGRADE_BUILDING, function(listener)
-        listener:OnUpgradingFinished(building, self)
-    end)
-
     self:CheckFinishUpgradingBuildingPormise(building)
 end
 function City:LockTilesByIndexArray(index_array)

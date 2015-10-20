@@ -24,18 +24,17 @@ local fire_var = import("app.particles.fire_var")
 
 local app = app
 local timer = app.timer
-function GameUIHome:OnUpgradingBegin()
+function GameUIHome:OnUserDataChanged_houseEvents()
     self:OnUserDataChanged_growUpTasks()
+    self:RefreshHelpButtonVisible()
 end
-function GameUIHome:OnUpgrading()
-end
-function GameUIHome:OnUpgradingFinished()
+function GameUIHome:OnUserDataChanged_buildingEvents()
     self:OnUserDataChanged_growUpTasks()
     self:RefreshHelpButtonVisible()
 end
 function GameUIHome:OnUserDataChanged_productionTechEvents()
-    self:RefreshHelpButtonVisible()
     self:OnUserDataChanged_growUpTasks()
+    self:RefreshHelpButtonVisible()
 end
 function GameUIHome:OnUserDataChanged_militaryTechEvents()
     self:RefreshHelpButtonVisible()
@@ -146,7 +145,6 @@ function GameUIHome:AddOrRemoveListener(isAdd)
     local my_allaince = Alliance_Manager:GetMyAlliance()
     -- local alliance_belvedere = my_allaince:GetAllianceBelvedere()
     if isAdd then
-        city:AddListenOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
         my_allaince:AddListenOnType(self, "basicInfo")
         my_allaince:AddListenOnType(self, "helpEvents")
         my_allaince:AddListenOnType(self, "operation")
@@ -162,7 +160,6 @@ function GameUIHome:AddOrRemoveListener(isAdd)
         -- alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
         -- my_allaince:GetAllianceShrine():AddListenOnType(self,my_allaince:GetAllianceShrine().LISTEN_TYPE.OnShrineEventsChanged)
     else
-        city:RemoveListenerOnType(self,city.LISTEN_TYPE.UPGRADE_BUILDING)
         my_allaince:RemoveListenerOnType(self, "basicInfo")
         my_allaince:RemoveListenerOnType(self, "helpEvents")
         my_allaince:RemoveListenerOnType(self, "operation")

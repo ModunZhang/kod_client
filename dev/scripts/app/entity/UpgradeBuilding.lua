@@ -37,9 +37,6 @@ end
 function UpgradeBuilding:GetRealEntity()
     return self
 end
-function UpgradeBuilding:IsAbleToFreeSpeedUpByTime(time)
-    return self:GetFreeSpeedupTime() >= self:GetUpgradingLeftTimeByCurrentTime(time)
-end
 function UpgradeBuilding:GetFreeSpeedupTime()
     return DataUtils:getFreeSpeedUpLimitTime()
 end
@@ -73,13 +70,6 @@ end
 function UpgradeBuilding:GetUpgradingLeftTimeByCurrentTime(current_time)
     local left_time = self.upgrade_to_next_level_time - current_time
     return left_time > 0 and left_time or 0
-end
-function UpgradeBuilding:GetUpgradingPercentByCurrentTime(current_time)
-    if self:IsUpgrading() then
-        local total = self:GetUpgradeTimeToNextLevel()
-        return (1 - self:GetUpgradingLeftTimeByCurrentTime(current_time) / (total - DataUtils:getBuildingBuff(total))) * 100
-    end
-    return 0
 end
 function UpgradeBuilding:CanUpgrade()
     local legal = self:IsBuildingUpgradeLegal()
@@ -167,15 +157,6 @@ function UpgradeBuilding:OnTimer(current_time)
         end)
     end
 end
-function UpgradeBuilding:SpeedUpBuilding()
-    if self:IsUpgrading() then
-        self.upgrade_building_observer:NotifyObservers(function(listener)
-            if listener.OnSpeedUpBuilding then
-                listener:OnSpeedUpBuilding()
-            end
-        end)
-    end
-end
 function UpgradeBuilding:OnUserDataChanged(userData, current_time, location_info, house_location_info, deltaData, event)
     local level, finished_time, type_
     if self:IsHouse() then
@@ -191,9 +172,9 @@ function UpgradeBuilding:OnUserDataChanged(userData, current_time, location_info
     end
     self:OnEvent(event)
     if level and finished_time then
-        if display.getRunningScene().__cname ~= "MainScene" and level ~= self.level then
-            GameGlobalUI:showTips(_("提示"),format(_("建造%s至%d级完成"),Localize.building_name[self:GetType()],level))
-        end
+        -- if display.getRunningScene().__cname ~= "MainScene" and level ~= self.level then
+        --     GameGlobalUI:showTips(_("提示"),format(_("建造%s至%d级完成"),Localize.building_name[self:GetType()],level))
+        -- end
         self:OnHandle(level, finished_time)
     end
 end
@@ -221,9 +202,6 @@ function UpgradeBuilding:OnHandle(level, finish_time)
             local total = self:GetUpgradeTimeToNextLevel()
             self:UpgradeByCurrentTime(finish_time - total - DataUtils:getBuildingBuff(total))
         elseif self.upgrade_to_next_level_time ~= 0 and finish_time ~= 0 then
-            if self.upgrade_to_next_level_time ~= finish_time then
-                self:SpeedUpBuilding()
-            end
             self.upgrade_to_next_level_time = finish_time
             self:GeneralLocalPush()
         elseif self.upgrade_to_next_level_time ~= 0 and finish_time == 0 then
@@ -418,7 +396,7 @@ function UpgradeBuilding:IsAbleToUpgrade(isUpgradeNow)
         or m.tools<config[self:GetNextLevel()].tools
         or m.blueprints<config[self:GetNextLevel()].blueprints
         or m.pulley<config[self:GetNextLevel()].pulley
-    local max = city.build_queue
+    local max = User.basicInfo.buildQueue
     local current = max - #city:GetUpgradingBuildings()
 
     if is_resource_enough and current <= 0 then

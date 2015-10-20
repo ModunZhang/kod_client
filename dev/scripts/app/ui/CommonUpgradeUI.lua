@@ -27,39 +27,84 @@ function CommonUpgradeUI:onEnter()
     self:InitCommonPart()
     self:InitUpgradePart()
     self:InitAccelerationPart()
-    self:AddUpgradeListener()
+    local User = self.city:GetUser()
+    User:AddListenOnType(self, "houseEvents")
+    User:AddListenOnType(self, "buildingEvents")
     scheduleAt(self, function()
         if self.building:GetNextLevel() == self.building:GetLevel() then
             return
         end
-        self.upgrade_layer:isVisible()
         if self.upgrade_layer:isVisible() then
             self:SetUpgradeRequirementListview()
+        end
+        if self:GetCurrentEvent() then
+            self:Upgrading()
         end
     end)
 end
 
 function CommonUpgradeUI:onExit()
-    self:RemoveUpgradeListener()
+    local User = self.city:GetUser()
+    User:RemoveListenerOnType(self, "houseEvents")
+    User:RemoveListenerOnType(self, "buildingEvents")
 end
-function CommonUpgradeUI:AddUpgradeListener()
-    self.building:AddUpgradeListener(self)
+function CommonUpgradeUI:OnUserDataChanged_houseEvents(userData, deltaData)
+    if City:IsFunctionBuilding(self.building) then
+        return
+    end
+    local buildingLocation, houseLocation = self:GetCurrentLocation()
+    local ok, value = deltaData("houseEvents.remove")
+    if ok then
+        for i,v in ipairs(value) do
+            if v.buildingLocation == buildingLocation
+                and v.houseLocation == houseLocation then
+                self:UpgradeFinished()
+            end
+        end
+    end
+    local ok, value = deltaData("houseEvents.add")
+    if ok then
+        for i,v in ipairs(value) do
+            if v.buildingLocation == buildingLocation
+                and v.houseLocation == houseLocation then
+                self:UpgradeBegin(v)
+            end
+        end
+    end
 end
-
-function CommonUpgradeUI:RemoveUpgradeListener()
-    self.building:RemoveUpgradeListener(self)
+function CommonUpgradeUI:OnUserDataChanged_buildingEvents(userData, deltaData)
+    if not City:IsFunctionBuilding(self.building) then
+        return
+    end
+    local buildingLocation = self:GetCurrentLocation()
+    local ok, value = deltaData("buildingEvents.remove")
+    if ok then
+        for i,v in ipairs(value) do
+            if v.location == buildingLocation then
+                self:UpgradeFinished()
+            end
+        end
+    end
+    local ok, value = deltaData("buildingEvents.add")
+    if ok then
+        for i,v in ipairs(value) do
+            if v.location == buildingLocation then
+                self:UpgradeBegin(v)
+            end
+        end
+    end
 end
-function CommonUpgradeUI:OnBuildingUpgradingBegin( buidling, current_time )
+function CommonUpgradeUI:UpgradeBegin(event)
     local pro = self.acc_layer.ProgressTimer
-    pro:setPercentage(self.building:GetUpgradingPercentByCurrentTime(current_time))
-    self.acc_layer.upgrade_time_label:setString(GameUtils:formatTimeStyle1(self.building:GetUpgradingLeftTimeByCurrentTime(current_time)))
+    local time, percent = UtilsForEvent:GetEventInfo(event)
+    self.acc_layer.upgrade_time_label:setString(GameUtils:formatTimeStyle1(time))
+    pro:setPercentage(percent)
     self:visibleChildLayers()
 end
-function CommonUpgradeUI:OnBuildingUpgradeFinished( buidling )
+function CommonUpgradeUI:UpgradeFinished()
     self:visibleChildLayers()
     self:SetBuildingLevel()
     self:SetUpgradeNowNeedGems()
-    -- self:SetBuildingIntroduces()
     self:SetUpgradeTime()
     self:SetUpgradeEfficiency()
     self:ReloadBuildingImage()
@@ -67,17 +112,50 @@ function CommonUpgradeUI:OnBuildingUpgradeFinished( buidling )
         self.upgrade_layer:setVisible(false)
     end
 end
-
-function CommonUpgradeUI:OnBuildingUpgrading( buidling, current_time )
-    local pro = self.acc_layer.ProgressTimer
-    pro:setPercentage(self.building:GetUpgradingPercentByCurrentTime(current_time))
-    self.acc_layer.upgrade_time_label:setString(GameUtils:formatTimeStyle1(self.building:GetUpgradingLeftTimeByCurrentTime(current_time)))
-    if not self.acc_layer.acc_button:isButtonEnabled() and
-        self.building:IsAbleToFreeSpeedUpByTime(current_time) then
-        self.acc_layer.acc_button:setButtonEnabled(true)
+function CommonUpgradeUI:Upgrading()
+    if City:IsFunctionBuilding(self.building) then
+        local buildingLocation = self:GetCurrentLocation()
+        local event = User:GetBuildingEventByLocation(buildingLocation)
+        if event then
+            local pro = self.acc_layer.ProgressTimer
+            local time, percent = UtilsForEvent:GetEventInfo(event)
+            self.acc_layer.upgrade_time_label:setString(GameUtils:formatTimeStyle1(time))
+            pro:setPercentage(percent)
+            self.acc_layer.acc_button:setButtonEnabled(
+                DataUtils:getFreeSpeedUpLimitTime() >= time
+            )
+        end
+    else
+        local buildingLocation, houseLocation = self:GetCurrentLocation()
+        local event = User:GetBuildingEventByLocation(buildingLocation, houseLocation)
+        if event then
+            local pro = self.acc_layer.ProgressTimer
+            local time, percent = UtilsForEvent:GetEventInfo(event)
+            self.acc_layer.upgrade_time_label:setString(GameUtils:formatTimeStyle1(time))
+            pro:setPercentage(percent)
+            self.acc_layer.acc_button:setButtonEnabled(
+                DataUtils:getFreeSpeedUpLimitTime() >= time
+            )
+        end
     end
 end
-
+function CommonUpgradeUI:GetCurrentEvent()
+    return User:GetBuildingEventByLocation(self:GetCurrentLocation())
+end
+function CommonUpgradeUI:GetCurrentLocation()
+    if self.building:GetType() == "wall" then
+        return 21
+    elseif self.building:GetType() == "tower" then
+        return 22
+    end
+    local tile = City:GetTileWhichBuildingBelongs(self.building)
+    if City:IsFunctionBuilding(self.building) then
+        return tile.location_id
+    else
+        local houseLocation = tile:GetBuildingLocation(self.building)
+        return tile.location_id, houseLocation
+    end
+end
 function CommonUpgradeUI:InitCommonPart()
     -- building level
     local level_bg = display.newScale9Sprite("title_blue_430x30.png",display.cx+80, display.top-125, cc.size(390,30), cc.rect(10,10,410,10)):addTo(self)
@@ -544,18 +622,23 @@ function CommonUpgradeUI:InitUpgradePart()
                 local commend = function ()
                     local upgrade_listener = function()
                         if self.building:GetType()=="tower" then
-                            NetManager:getInstantUpgradeTowerPromise()
+                            NetManager:getInstantUpgradeTowerPromise():done(function()
+                                self:UpgradeFinished()
+                            end)
                         elseif self.building:GetType()=="wall" then
-                            NetManager:getInstantUpgradeWallByLocationPromise()
+                            NetManager:getInstantUpgradeWallByLocationPromise():done(function()
+                                self:UpgradeFinished()
+                            end)
                         else
                             if City:IsFunctionBuilding(self.building) then
-
-                                local location_id = City:GetLocationIdByBuilding(self.building)
-                                NetManager:getInstantUpgradeBuildingByLocationPromise(location_id)
+                                NetManager:getInstantUpgradeBuildingByLocationPromise(self:GetCurrentLocation()):done(function()
+                                    self:UpgradeFinished()
+                                end)
                             else
-                                local tile = City:GetTileWhichBuildingBelongs(self.building)
-                                local house_location = tile:GetBuildingLocation(self.building)
-                                NetManager:getInstantUpgradeHouseByLocationPromise(tile.location_id, house_location)
+                                local l1, l2 = self:GetCurrentLocation()
+                                NetManager:getInstantUpgradeHouseByLocationPromise(l1, l2):done(function()
+                                    self:UpgradeFinished()
+                                end)
                             end
                         end
                     end
@@ -597,12 +680,9 @@ function CommonUpgradeUI:InitUpgradePart()
                         NetManager:getUpgradeWallByLocationPromise()
                     else
                         if City:IsFunctionBuilding(self.building) then
-                            local location_id = City:GetLocationIdByBuilding(self.building)
-                            NetManager:getUpgradeBuildingByLocationPromise(location_id)
+                            NetManager:getUpgradeBuildingByLocationPromise(self:GetCurrentLocation())
                         else
-                            local tile = City:GetTileWhichBuildingBelongs(self.building)
-                            local house_location = tile:GetBuildingLocation(self.building)
-                            NetManager:getUpgradeHouseByLocationPromise(tile.location_id, house_location)
+                            NetManager:getUpgradeHouseByLocationPromise(self:GetCurrentLocation())
                         end
                     end
                     self:getParent():getParent():LeftButtonClicked()
@@ -808,9 +888,12 @@ function CommonUpgradeUI:InitAccelerationPart()
     }):addTo(bar)
     self.acc_layer.upgrade_time_label:setAnchorPoint(cc.p(0,0.5))
     self.acc_layer.upgrade_time_label:pos(self.acc_layer.upgrade_time_label:getContentSize().width/2+40, bar:getContentSize().height/2)
-    if self.building:IsUpgrading() then
-        pro:setPercentage(self.building:GetUpgradingPercentByCurrentTime(app.timer:GetServerTime()))
-        self.acc_layer.upgrade_time_label:setString(GameUtils:formatTimeStyle1(self.building:GetUpgradingLeftTimeByCurrentTime(app.timer:GetServerTime())))
+    local event = self:GetCurrentEvent()
+    if event then
+        local time, percent = UtilsForEvent:GetEventInfo(event)
+        self.acc_layer.upgrade_time_label
+            :setString(GameUtils:formatTimeStyle1(time))
+        pro:setPercentage(percent)
     end
 
     -- 进度条头图标
@@ -852,15 +935,22 @@ function CommonUpgradeUI:CreateFreeSpeedUpBuildingUpgradeButton()
         }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                if self.building:GetUpgradingLeftTimeByCurrentTime(app.timer:GetServerTime()) > 2 then
-                    local eventType = self.building:EventType()
-                    NetManager:getFreeSpeedUpPromise(eventType,self.building:UniqueUpgradingKey())
+                local event = self:GetCurrentEvent()
+                if event then
+                    local time = UtilsForEvent:GetEventInfo(event)
+                    if time > 2 then
+                        NetManager:getFreeSpeedUpPromise(self:GetEventTypeByBuilding(), event.id)
+                    end
                 end
             end
         end):align(display.CENTER, display.cx+194, display.top - 335):addTo(self.acc_layer)
     local building = self.building
-    if building:IsUpgrading() and building:IsAbleToFreeSpeedUpByTime(app.timer:GetServerTime()) then
-        self.acc_layer.acc_button:setButtonEnabled(true)
+    local event = User:GetBuildingEventByLocation(self:GetCurrentLocation())
+    if event then
+        local time = UtilsForEvent:GetEventInfo(event)
+        if DataUtils:getFreeSpeedUpLimitTime() >= time then
+            self.acc_layer.acc_button:setButtonEnabled(true)
+        end
     else
         self.acc_layer.acc_button:setButtonEnabled(false)
     end
@@ -872,7 +962,7 @@ function CommonUpgradeUI:SetAccTipLabel()
     self.acc_tip_label:setString(_("小于5分钟时，可使用免费加速.激活VIP X后，小于5分钟时可使用免费加速"))
 end
 function CommonUpgradeUI:GetEventTypeByBuilding()
-    return self.building:EventType()
+    return City:IsFunctionBuilding(self.building) and "buildingEvents" or "houseEvents"
 end
 function CommonUpgradeUI:CreateAccButtons()
     -- 8个加速按钮单独放置在一个layer上方便处理事件
@@ -882,16 +972,18 @@ end
 
 -- 设置各个layers显示状态
 function CommonUpgradeUI:visibleChildLayers()
+    local isupgrading = self:GetCurrentEvent() ~= nil
     if self.acc_button_layer then
-        self.acc_button_layer:setVisible(self.building:IsUpgrading())
+        self.acc_button_layer:setVisible(isupgrading)
     end
     if self.upgrade_layer then
-        self.upgrade_layer:setVisible(not self.building:IsUpgrading())
+        self.upgrade_layer:setVisible(not isupgrading)
     end
     if self.acc_layer then
-        self.acc_layer:setVisible(self.building:IsUpgrading())
+        self.acc_layer:setVisible(isupgrading)
     end
 end
+
 
 function CommonUpgradeUI:ResetAccButtons()
     for k,v in pairs(self.time_button_tbale) do
@@ -1092,6 +1184,8 @@ function CommonUpgradeUI:PopNotSatisfyDialog(listener,can_not_update_type)
 end
 
 return CommonUpgradeUI
+
+
 
 
 

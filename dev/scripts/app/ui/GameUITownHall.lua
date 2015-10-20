@@ -30,7 +30,7 @@ function GameUITownHall:onExit()
     app.timer:RemoveListener(self)
     User:RemoveListenerOnType(self, "dailyQuests")
     User:RemoveListenerOnType(self, "dailyQuestEvents")
-    self.town_hall:RemoveUpgradeListener(self)
+    User:RemoveListenerOnType(self, "buildingEvents")
     GameUITownHall.super.onExit(self)
 end
 
@@ -108,7 +108,7 @@ function GameUITownHall:CreateAdministration()
     app.timer:AddListener(self)
     User:AddListenOnType(self, "dailyQuests")
     User:AddListenOnType(self, "dailyQuestEvents")
-    self.town_hall:AddUpgradeListener(self)
+    User:AddListenOnType(self, "buildingEvents")
 end
 
 function GameUITownHall:CreateAllQuests(daily_quests)
@@ -497,15 +497,10 @@ function GameUITownHall:OnUserDataChanged_dailyQuestEvents(userData, deltaData)
         end
     end
 end
-
-function GameUITownHall:OnBuildingUpgradingBegin()
-end
-function GameUITownHall:OnBuildingUpgradeFinished()
+function GameUITownHall:OnUserDataChanged_buildingEvents(userData, deltaData)
     for k,v in pairs(self.quest_items) do
         v:SetReward()
     end
-end
-function GameUITownHall:OnBuildingUpgrading()
 end
 
 return GameUITownHall

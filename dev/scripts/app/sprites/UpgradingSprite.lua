@@ -13,51 +13,85 @@ function UpgradingSprite:OnLogicPositionChanged(x, y)
 end
 function UpgradingSprite:OnTransformed()
 end
-function UpgradingSprite:OnBuildingUpgradingBegin(building, time)
-    if self.label then
-        self.label:setString(building:GetType().." "..building:GetLevel())
+function UpgradingSprite:OnUserDataChanged_houseEvents(userData, deltaData)
+    if City:IsFunctionBuilding(self:GetEntity()) then
+        return
     end
-    -- self:NotifyObservers(function(listener)
-    --     listener:OnBuildingUpgradingBegin(building, time)
-    -- end)
-
-    -- animation
-    self:StartBuildingAnimation()
-end
-
-function UpgradingSprite:OnBuildingUpgradeFinished(building, is_upgrading)
-    if self.label then
-        self.label:setString(building:GetType().." "..building:GetLevel())
+    local buildingLocation, houseLocation = self:GetCurrentLocation()
+    local ok, value = deltaData("houseEvents.remove")
+    if ok then
+        for i,v in ipairs(value) do
+            if v.buildingLocation == buildingLocation
+                and v.houseLocation == houseLocation then
+                self:UpgradeFinished()
+            end
+        end
     end
-    -- self:NotifyObservers(function(listener)
-    --     listener:OnBuildingUpgradeFinished(building)
-    -- end)
-    self:RefreshSprite()
-    -- self:RefreshShadow()
-
-    -- animation
-    self:StopBuildingAnimation()
-
-    if not is_upgrading then return end
-    local running_scene = display.getRunningScene()
-    if iskindof(running_scene, "MyCityScene") and building:IsHouse() then
-        local _,tp = self:GetWorldPosition()
-        running_scene:GetHomePage():ShowResourceAni(building:GetResType(), tp)
-        if building:GetType() == "dwelling" then
-            running_scene:GetHomePage():ShowResourceAni("coin", tp)
+    local ok, value = deltaData("houseEvents.add")
+    if ok then
+        for i,v in ipairs(value) do
+            if v.buildingLocation == buildingLocation
+                and v.houseLocation == houseLocation then
+                self:UpgradeBegin()
+            end
         end
     end
 end
-function UpgradingSprite:OnBuildingUpgrading(building, time)
-    if self.label then
-        self.label:setString("upgrading "..building:GetLevel().."\n"..math.round(building:GetUpgradingLeftTimeByCurrentTime(time)))
+function UpgradingSprite:OnUserDataChanged_buildingEvents(userData, deltaData)
+    local City = self:GetEntity():BelongCity()
+    if not City:IsFunctionBuilding(self:GetEntity()) then
+        return
     end
-    -- self:NotifyObservers(function(listener)
-    --     listener:OnBuildingUpgrading(building, time)
-    -- end)
-
-    -- animation
+    local buildingLocation = self:GetCurrentLocation()
+    local ok, value = deltaData("buildingEvents.remove")
+    if ok then
+        for i,v in ipairs(value) do
+            if v.location == buildingLocation then
+                self:UpgradeFinished()
+            end
+        end
+    end
+    local ok, value = deltaData("buildingEvents.add")
+    if ok then
+        for i,v in ipairs(value) do
+            if v.location == buildingLocation then
+                self:UpgradeBegin()
+            end
+        end
+    end
+end
+function UpgradingSprite:GetCurrentLocation()
+    if self:GetEntity():GetType() == "wall" then
+        return 21
+    elseif self:GetEntity():GetType() == "tower" then
+        return 22
+    end
+    local City = self:GetEntity():BelongCity()
+    local tile = City:GetTileWhichBuildingBelongs(self:GetEntity())
+    if City:IsFunctionBuilding(self:GetEntity()) then
+        return tile.location_id
+    else
+        local houseLocation = tile:GetBuildingLocation(self:GetEntity())
+        return tile.location_id, houseLocation
+    end
+end
+function UpgradingSprite:UpgradeBegin()
     self:StartBuildingAnimation()
+    self:CheckCondition()
+end
+
+function UpgradingSprite:UpgradeFinished()
+    self:RefreshSprite()
+    self:StopBuildingAnimation()
+    local running_scene = display.getRunningScene()
+    if iskindof(running_scene, "MyCityScene") and self:GetEntity():IsHouse() then
+        local _,tp = self:GetWorldPosition()
+        running_scene:GetHomePage():ShowResourceAni(self:GetEntity():GetResType(), tp)
+        if self:GetEntity():GetType() == "dwelling" then
+            running_scene:GetHomePage():ShowResourceAni("coin", tp)
+        end
+    end
+    self:CheckCondition()
 end
 function UpgradingSprite:StartBuildingAnimation()
     if self.building_animation then return end
@@ -84,9 +118,6 @@ function UpgradingSprite:StopBuildingAnimation()
     self.level_bg:pos(self:GetSpriteTopPosition())
 end
 function UpgradingSprite:CheckCondition()
-    -- self:NotifyObservers(function(listener)
-    --     listener:OnCheckUpgradingCondition(self)
-    -- end)
     if not self.level_bg then return end
     local building = self:GetEntity():GetRealEntity()
     local level = building:GetLevel()
@@ -101,7 +132,9 @@ function UpgradingSprite:ctor(city_layer, entity)
     local x, y = city_layer:GetLogicMap():ConvertToMapPosition(entity:GetLogicPosition())
     UpgradingSprite.super.ctor(self, city_layer, entity, x, y)
     entity:AddBaseListener(self)
-    entity:AddUpgradeListener(self)
+    local User = entity:BelongCity():GetUser()
+    User:AddListenOnType(self, "houseEvents")
+    User:AddListenOnType(self, "buildingEvents")
 
     if entity:GetType() == "wall" then
         if entity:IsGate() then
@@ -110,19 +143,19 @@ function UpgradingSprite:ctor(city_layer, entity)
     else
         self:CreateLevelNode()
     end
-    self:CheckCondition()
-
-    -- if entity:IsUnlocked() and self:GetShadowConfig() then
-    --     self:CreateShadow(self:GetShadowConfig())
-    -- end
-
-    -- self.handle = self:schedule(function() self:CheckCondition() end, 1)
-    -- self:InitLabel(entity)
+    if User:GetBuildingEventByLocation(self:GetCurrentLocation()) then
+        self:UpgradeBegin()
+    end
+    scheduleAt(self, function()
+        self:CheckCondition()
+    end)
     -- self:CreateBase()
 end
 function UpgradingSprite:DestorySelf()
+    local User = self:GetEntity():BelongCity():GetUser()
     self:GetEntity():RemoveBaseListener(self)
-    self:GetEntity():RemoveUpgradeListener(self)
+    User:AddListenOnType(self, "houseEvents")
+    User:AddListenOnType(self, "buildingEvents")
     self:removeFromParent()
 end
 function UpgradingSprite:InitLabel(entity)

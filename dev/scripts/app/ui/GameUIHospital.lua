@@ -73,7 +73,7 @@ function GameUIHospital:OnMoveInStage()
     User:AddListenOnType(self, "soldierStars")
     User:AddListenOnType(self, "woundedSoldiers")
     User:AddListenOnType(self, "treatSoldierEvents")
-    self.building:AddUpgradeListener(self)
+    User:AddListenOnType(self, "buildingEvents")
     GameUIHospital.super.OnMoveInStage(self)
 
     scheduleAt(self, function()
@@ -97,15 +97,11 @@ function GameUIHospital:onExit()
     User:RemoveListenerOnType(self, "soldierStars")
     User:RemoveListenerOnType(self, "woundedSoldiers")
     User:RemoveListenerOnType(self, "treatSoldierEvents")
-    self.building:RemoveUpgradeListener(self)
+    User:RemoveListenerOnType(self, "buildingEvents")
     GameUIHospital.super.onExit(self)
 end
-function GameUIHospital:OnBuildingUpgradingBegin( ... )
-end
-function GameUIHospital:OnBuildingUpgradeFinished( ... )
+function GameUIHospital:OnUserDataChanged_buildingEvents()
     self:SetProgressCasualtyRateLabel()
-end
-function GameUIHospital:OnBuildingUpgrading( ... )
 end
 function GameUIHospital:CreateHealAllSoldierItem()
     self.treate_all_soldiers_item = WidgetWithBlueTitle.new(250, _("治愈所有伤兵")):addTo(self.heal_layer)

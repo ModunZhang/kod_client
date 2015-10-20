@@ -15,6 +15,9 @@ User.LISTEN_TYPE = Enum(
     "helpedByTroops",
     "helpToTroops",
 
+    "houseEvents",
+    "buildingEvents",
+
     "productionTechs",
     "productionTechEvents",
 
@@ -1142,6 +1145,120 @@ function User:GetUnlockBuildingsBy(name)
     end
     return buildings
 end
+function User:GetBuildingByEvent(event)
+    if event.location then
+        return self:GetBuilingByLocation(event.location)
+    end
+    return self:GetHouseByLocation(event.buildingLocation, event.houseLocation)
+end
+function User:GetHouseByLocation(buildingLocation, houseLocation)
+    local building = self:GetBuilingByLocation(buildingLocation)
+    assert(building)
+    for i,v in ipairs(building.houses) do
+        if v.location == houseLocation then
+            return v
+        end
+    end
+end
+function User:GetBuilingByLocation(location)
+    return self.buildings[string.format("location_%d", location)]
+end
+function User:GetBuildingEventByLocation(buildingLocation, houseLocation)
+    if houseLocation then
+        for i,v in ipairs(self.houseEvents) do
+            if v.buildingLocation == buildingLocation 
+           and v.houseLocation == houseLocation then
+                return v
+            end
+        end
+    else
+        for i,v in ipairs(self.buildingEvents) do
+            if v.location == buildingLocation then
+                return v
+            end
+        end
+    end
+end
+function User:GetBuildingEventsBySeq()
+    local events = {}
+    for i,v in ipairs(self.houseEvents) do
+        table.insert(events, v)
+    end
+    for i,v in ipairs(self.buildingEvents) do
+        table.insert(events, v)
+    end
+    table.sort(events, function(a, b)
+        return (a.finishTime - a.startTime) < (b.finishTime - b.startTime)
+    end)
+    return events
+end
+-- local BuildingLevelUp = GameDatas.BuildingLevelUp
+-- local HouseLevelUp = GameDatas.HouseLevelUp
+-- function User:CanUpgrade(buildingLocation, houseLocation)
+--     local building = self:GetHouseByLocation(buildingLocation)
+--     if houseLocation then
+--         building = self:GetBuilingByLocation(buildingLocation, houseLocation)
+--     else
+--         building = self:GetHouseByLocation(buildingLocation)
+--     end
+--     local level = building.level
+
+--     --等级小于0级
+--     if level < 0 then
+--         return false
+--     end
+--     local event = self:GetBuildingEventByLocation(buildingLocation, houseLocation)
+--     --建筑正在升级
+--     if event then
+--         return false
+--     end
+--     local level_up_config = BuildingLevelUp[building.type] or HouseLevelUp[building.type]
+--     -- 满级
+--     if #level_up_config == level then
+--         return false
+--     end
+--     -- 是否已经解锁内圈
+--     local tile = city:GetTileWhichBuildingBelongs(self)
+--     if not city:IsUnlockedInAroundNumber(math.max(tile.x,tile.y) - 1) then
+--         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.TILE_NOT_UNLOCKED
+--     end
+--     -- 是否达到建造上限
+--     if city:GetFirstBuildingByType("keep"):GetFreeUnlockPoint() < 1 and self.level==0 then
+--         return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.IS_MAX_UNLOCK
+--     end
+--     local config
+--     if self:IsHouse() then
+--         config = GameDatas.Houses.houses[self:GetType()]
+--     else
+--         local location_id = city:GetLocationIdByBuildingType(self:GetType())
+--         config = GameDatas.Buildings.buildings[location_id]
+--     end
+--     -- 等级大于5级时有升级前置条件
+--     if self:GetLevel()>5 then
+--         local configParams = string.split(config.preCondition,"_")
+--         local preType = configParams[1]
+--         local preName = configParams[2]
+--         local preLevel = tonumber(configParams[3])
+--         local limit
+--         if preType == "building" then
+--             local find_buildings = city:GetBuildingByType(preName)
+--             for i,v in ipairs(find_buildings) do
+--                 if v:GetLevel()>=self:GetLevel()+preLevel then
+--                     limit = true
+--                 end
+--             end
+--         else
+--             city:IteratorDecoratorBuildingsByFunc(function (index,house)
+--                 if house:GetType() == preName and house:GetLevel()>=self:GetLevel()+preLevel then
+--                     limit = true
+--                 end
+--             end)
+--         end
+--         if not limit then
+--             return UpgradeBuilding.NOT_ABLE_TO_UPGRADE.PRE_CONDITION
+--         end
+--     end
+-- end
 --[[end]]
 
 
@@ -1345,6 +1462,29 @@ local before_map = {
     helpedByTroops = function()end,
     helpToTroops = function()end,
 
+    houseEvents = function(userData, deltaData)
+        local ok, value = deltaData("houseEvents.remove")
+        if ok then
+            for i,v in ipairs(value) do
+                local house = userData:GetHouseByLocation(v.buildingLocation, v.houseLocation)
+                GameGlobalUI:showTips(_("提示"),
+                    string.format(_("建造%s至%d级完成"),
+                    Localize.building_name[house.type], house.level))
+            end
+        end
+    end,
+    buildingEvents = function(userData, deltaData)
+        local ok, value = deltaData("buildingEvents.remove")
+        if ok then
+            for i,v in ipairs(value) do
+                local building = userData:GetBuilingByLocation(v.location)
+                GameGlobalUI:showTips(_("提示"),
+                    string.format(_("建造%s至%d级完成"),
+                    Localize.building_name[building.type], building.level))
+            end
+        end
+    end,
+
     productionTechs = function()end,
     productionTechEvents = function(userData, deltaData)
         local ok, value = deltaData("productionTechEvents.remove")
@@ -1472,10 +1612,13 @@ local after_map = {
         end
     end,
 }
-function User:OnUserDataChanged(userData, current_time, deltaData)
+function User:OnUserDataChanged(userData, deltaData)
     for k,v in pairs(userData) do
         self[k] = v
     end
+    return self
+end
+function User:OnDeltaDataChanged(deltaData)
     if deltaData then
         for i,k in ipairs(User.LISTEN_TYPE) do
             local before_func = before_map[k]
@@ -1497,7 +1640,6 @@ function User:OnUserDataChanged(userData, current_time, deltaData)
             end
         end
     end
-    return self
 end
 
 

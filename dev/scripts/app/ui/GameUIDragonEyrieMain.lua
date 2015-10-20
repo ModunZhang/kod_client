@@ -113,25 +113,17 @@ function GameUIDragonEyrieMain:OnMoveInStage()
     self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventChanged)
     self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventRefresh)
     self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventTimer)
-    City:AddListenOnType(self,City.LISTEN_TYPE.UPGRADE_BUILDING)
     GameUIDragonEyrieMain.super.OnMoveInStage(self)
 end
 
-function GameUIDragonEyrieMain:OnUpgradingBegin()
-end
+-- if building:GetType() == self:GetBuilding():GetType() then
+--     if self.dragon_hp_recovery_count_label then
+--         local dragon_hp_recovery = self:GetBuilding():GetTotalHPRecoveryPerHour(self:GetCurrentDragon():Type())
+--         self.dragon_hp_recovery_count_label:setString(string.format("+%s/h",string.formatnumberthousands(dragon_hp_recovery)))
+--     end
+--     self.hate_button:setButtonEnabled(self.building:CheckIfHateDragon())
+-- end
 
-function GameUIDragonEyrieMain:OnUpgradingFinished(building)
-    if building:GetType() == self:GetBuilding():GetType() then
-        if self.dragon_hp_recovery_count_label then
-            local dragon_hp_recovery = self:GetBuilding():GetTotalHPRecoveryPerHour(self:GetCurrentDragon():Type())
-            self.dragon_hp_recovery_count_label:setString(string.format("+%s/h",string.formatnumberthousands(dragon_hp_recovery)))
-        end
-        self.hate_button:setButtonEnabled(self.building:CheckIfHateDragon())
-    end
-end
-
-function GameUIDragonEyrieMain:OnUpgrading()
-end
 
 function GameUIDragonEyrieMain:OnMoveOutStage()
     self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnHPChanged)
@@ -142,7 +134,6 @@ function GameUIDragonEyrieMain:OnMoveOutStage()
     self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventChanged)
     self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventRefresh)
     self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventTimer)
-    City:RemoveListenerOnType(self,City.LISTEN_TYPE.UPGRADE_BUILDING)
     GameUIDragonEyrieMain.super.OnMoveOutStage(self)
 end
 

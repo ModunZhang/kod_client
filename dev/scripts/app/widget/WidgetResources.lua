@@ -14,15 +14,6 @@ end
 function WidgetResources:onEnter()
     self:CreateResourceListView()
     self:InitAllResources()
-    local resourceBuildingMap = {
-        wood = "lumbermill",
-        stone = "stoneMason",
-        iron = "foundry",
-        food = "mill"
-    }
-    for k,v in pairs(resourceBuildingMap) do
-        self.city:GetFirstBuildingByType(v):AddUpgradeListener(self)
-    end
     scheduleAt(self, function()
         local maxwood, maxfood, maxiron, maxstone = self.building:GetResourceValueLimit()
         local resource_max = {
@@ -39,32 +30,20 @@ function WidgetResources:onEnter()
         end
         self:RefreshProtectPercent()
     end)
-
     local User = self.city:GetUser()
     User:AddListenOnType(self, "soldiers")
     User:AddListenOnType(self, "vipEvents")
     User:AddListenOnType(self, "itemEvents")
+    User:AddListenOnType(self, "buildingEvents")
 end
 function WidgetResources:onExit()
     local User = self.city:GetUser()
     User:RemoveListenerOnType(self, "soldiers")
     User:RemoveListenerOnType(self, "vipEvents")
     User:RemoveListenerOnType(self, "itemEvents")
-    local resourceBuildingMap = {
-        wood = "lumbermill",
-        stone = "stoneMason",
-        iron = "foundry",
-        food = "mill"
-    }
-    for k,v in pairs(resourceBuildingMap) do
-        self.city:GetFirstBuildingByType(v):RemoveUpgradeListener(self)
-    end
+    User:RemoveListenerOnType(self, "buildingEvents")
 end
-function WidgetResources:OnBuildingUpgradingBegin( bulding )
-end
-function WidgetResources:OnBuildingUpgrading( bulding )
-end
-function WidgetResources:OnBuildingUpgradeFinished( bulding )
+function WidgetResources:OnUserDataChanged_buildingEvents()
     self:RefreshProtectPercent()
 end
 function WidgetResources:OnUserDataChanged_soldiers()

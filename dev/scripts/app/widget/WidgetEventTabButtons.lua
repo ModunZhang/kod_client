@@ -33,32 +33,27 @@ function WidgetEventTabButtons:isTouchInViewRect(event)
     viewRect.height = self.view_rect.height
     return cc.rectContainsPoint(viewRect, cc.p(event.x, event.y))
 end
--- 建筑事件
-function WidgetEventTabButtons:OnSpeedUpBuilding()
-    self:EventChangeOn("build")
-end
-function WidgetEventTabButtons:OnDestoryDecorator()
-    self:EventChangeOn("build")
-end
-function WidgetEventTabButtons:OnUpgradingBegin(building, current_time, city)
-    self:GetTabByKey("build"):SetOrResetProgress(self:BuildingPercent(building))
-    self:EventChangeOn("build", true)
-    self:RefreshBuildQueueByType("build")
-end
-function WidgetEventTabButtons:OnUpgrading(building, current_time, city)
-    self:GetTabByKey("build"):SetOrResetProgress(self:BuildingPercent(building))
-    if self:IsShow() and self:GetCurrentTab() == "build" then
-        self:IteratorAllItem(function(i, v)
-            if i ~= 1 and v.GetEventKey and v:GetEventKey() == building:UniqueKey() then
-                v:SetProgressInfo(self:BuildingDescribe(building))
-                self:SetProgressItemBtnLabel(self:IsAbleToFreeSpeedup(building),building:UniqueUpgradingKey(),v)
-            end
-        end)
+function WidgetEventTabButtons:OnUserDataChanged_houseEvents(userData, deltaData)
+    if deltaData("houseEvents.add") 
+    or deltaData("houseEvents.edit") then
+        self:EventChangeOn("build", true)
+        self:RefreshBuildQueueByType("build")
+    elseif deltaData("houseEvents.remove") then
+        self:EventChangeOn("build")
+        self:RefreshBuildQueueByType("build", "soldier", "material", "technology")
+        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
     end
 end
-function WidgetEventTabButtons:OnUpgradingFinished(building, city)
-    self:EventChangeOn("build")
-    self:RefreshBuildQueueByType("build", "soldier", "material", "technology")
+function WidgetEventTabButtons:OnUserDataChanged_buildingEvents(userData, deltaData)
+    if deltaData("buildingEvents.add") 
+    or deltaData("buildingEvents.edit") then
+        self:EventChangeOn("build", true)
+        self:RefreshBuildQueueByType("build")
+    elseif deltaData("buildingEvents.remove") then
+        self:EventChangeOn("build")
+        self:RefreshBuildQueueByType("build", "soldier", "material", "technology")
+        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
+    end
 end
 function WidgetEventTabButtons:OnUserDataChanged_dragonEquipmentEvents(userData, deltaData)
     if deltaData("dragonEquipmentEvents.add") 
@@ -152,8 +147,6 @@ function WidgetEventTabButtons:ctor(city, ratio)
 
     self.city = city
     local User = city:GetUser()
-    city:AddListenOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
-    city:AddListenOnType(self, City.LISTEN_TYPE.DESTROY_DECORATOR)
 
     self:Reset()
     self:ShowStartEvent()
@@ -184,6 +177,14 @@ function WidgetEventTabButtons:ctor(city, ratio)
             self:GetTabByKey("material"):SetOrResetProgress(nil)
         end
 
+        local event = User:GetBuildingEventsBySeq()[1]
+        if event then
+            local time, percent = UtilsForEvent:GetEventInfo(event)
+            self:GetTabByKey("build"):SetOrResetProgress(time, percent)
+        else
+            self:GetTabByKey("build"):SetOrResetProgress(nil)
+        end
+
         if self:IsShow() then
             if self:GetCurrentTab() == "technology" then
                 self:IteratorAllItem(function(_, v)
@@ -192,7 +193,6 @@ function WidgetEventTabButtons:ctor(city, ratio)
                         self:SetProgressItemBtnLabel(
                             DataUtils:getFreeSpeedUpLimitTime()
                             >UtilsForEvent:GetEventInfo(v.event),
-                            v.event.id,
                             v
                         )
                     end
@@ -214,6 +214,15 @@ function WidgetEventTabButtons:ctor(city, ratio)
                     end
                 end)
             elseif self:GetCurrentTab() == "build" then
+                self:IteratorAllItem(function(i, v)
+                    if i ~= 1 and v.event then
+                        v:SetProgressInfo(self:BuildingDescribe(v.event))
+                        self:SetProgressItemBtnLabel(
+                            DataUtils:getFreeSpeedUpLimitTime()
+                            >UtilsForEvent:GetEventInfo(v.event),
+                            v)
+                    end
+                end)
             end
         end
     end)
@@ -224,17 +233,19 @@ function WidgetEventTabButtons:ctor(city, ratio)
     User:AddListenOnType(self, "productionTechEvents")
     User:AddListenOnType(self, "materialEvents")
     User:AddListenOnType(self, "dragonEquipmentEvents")
+    User:AddListenOnType(self, "houseEvents")
+    User:AddListenOnType(self, "buildingEvents")
 end
 function WidgetEventTabButtons:onExit()
     local User = city:GetUser()
-    self.city:RemoveListenerOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
-    self.city:RemoveListenerOnType(self, City.LISTEN_TYPE.DESTROY_DECORATOR)
     User:RemoveListenerOnType(self, "soldierEvents")
     User:RemoveListenerOnType(self, "soldierStarEvents")
     User:RemoveListenerOnType(self, "militaryTechEvents")
     User:RemoveListenerOnType(self, "productionTechEvents")
     User:RemoveListenerOnType(self, "materialEvents")
     User:RemoveListenerOnType(self, "dragonEquipmentEvents")
+    User:RemoveListenerOnType(self, "houseEvents")
+    User:RemoveListenerOnType(self, "buildingEvents")
 end
 function WidgetEventTabButtons:RefreshBuildQueueByType(...)
     local city = self.city
@@ -405,13 +416,6 @@ function WidgetEventTabButtons:CreateProgressItem()
     end
     function node:OnClicked(func)
         self.speed_btn:onButtonClicked(func)
-        return self
-    end
-    function node:GetEventKey()
-        return self.key
-    end
-    function node:SetEventKey(key)
-        self.key = key
         return self
     end
     function node:SetEvent(event)
@@ -672,26 +676,28 @@ end
 
 
 --------------
-function WidgetEventTabButtons:IsAbleToFreeSpeedup(building)
-    return building:IsAbleToFreeSpeedUpByTime(app.timer:GetServerTime())
+function WidgetEventTabButtons:IsAbleToFreeSpeedup(event)
+    local time = UtilsForEvent:GetEventInfo(event)
+    return DataUtils:getFreeSpeedUpLimitTime() > time
 end
-function WidgetEventTabButtons:UpgradeBuildingHelpOrSpeedup(building)
+function WidgetEventTabButtons:UpgradeBuildingHelpOrSpeedup(event)
     local User = self.city:GetUser()
-    local eventType = building:EventType()
-    if self:IsAbleToFreeSpeedup(building) then
-        if building:GetUpgradingLeftTimeByCurrentTime(app.timer:GetServerTime()) > 2 then
-            NetManager:getFreeSpeedUpPromise(eventType,building:UniqueUpgradingKey())
+    local eventType = event.location and "buildingEvents" or "houseEvents"
+    if self:IsAbleToFreeSpeedup(event) then
+        local time = UtilsForEvent:GetEventInfo(event)
+        if time > 2 then
+            NetManager:getFreeSpeedUpPromise(eventType, event.id)
         end
     else
         if not Alliance_Manager:GetMyAlliance():IsDefault() then
             -- 是否已经申请过联盟加速
-            if not User:IsRequestHelped(building:UniqueUpgradingKey()) then
-                NetManager:getRequestAllianceToSpeedUpPromise(eventType,building:UniqueUpgradingKey())
+            if not User:IsRequestHelped(event.id) then
+                NetManager:getRequestAllianceToSpeedUpPromise(eventType, event.id)
                 return
             end
         end
         -- 没加入联盟或者已加入联盟并且申请过帮助时执行使用道具加速
-        UIKit:newGameUI("GameUIBuildingSpeedUp", building):AddToCurrentScene(true)
+        UIKit:newGameUI("GameUIBuildingSpeedUp", event):AddToCurrentScene(true)
     end
 end
 function WidgetEventTabButtons:MiliTaryTechUpgradeOrSpeedup(event)
@@ -720,7 +726,7 @@ end
 function WidgetEventTabButtons:DragonEquipmentEventsUpgradeOrSpeedup()
     UIKit:newGameUI("GameUIBlackSmithSpeedUp", self.city:GetFirstBuildingByType("blackSmith")):AddToCurrentScene(true)
 end
-function WidgetEventTabButtons:SetProgressItemBtnLabel(canFreeSpeedUp,event_key,event_item)
+function WidgetEventTabButtons:SetProgressItemBtnLabel(canFreeSpeedUp, event_item)
     local User = self.city:GetUser()
     local old_status = event_item.status
     local btn_label
@@ -734,7 +740,7 @@ function WidgetEventTabButtons:SetProgressItemBtnLabel(canFreeSpeedUp,event_key,
     else
         -- 未加入联盟或者已经申请过联盟加速
         if Alliance_Manager:GetMyAlliance():IsDefault()
-            or User:IsRequestHelped(event_key) then
+            or User:IsRequestHelped(event_item.event.id) then
             btn_label = _("加速")
             btn_images = {normal = "green_btn_up_154x39.png",
                 pressed = "green_btn_down_154x39.png",
@@ -757,19 +763,29 @@ function WidgetEventTabButtons:LoadBuildingEvents()
     self:InsertItem(self:CreateBottom():OnOpenClicked(function(event)
         UIKit:newGameUI('GameUIHasBeenBuild', self.city):AddToCurrentScene(true)
     end):SetLabel(_("查看已拥有的建筑")))
+    local User = self.city:GetUser()
+    local events = {}
+    for _,v in ipairs(User.houseEvents) do
+        table.insert(events, v)
+    end
+    for _,v in ipairs(User.buildingEvents) do
+        table.insert(events, v)
+    end
+    table.sort(events, function(a, b)
+        return a.finishTime > b.finishTime
+    end)
 
-    local buildings = self.city:GetUpgradingBuildings(true)
     local items = {}
-    for i, v in ipairs(buildings) do
+    for _,v in ipairs(events) do
         local event_item = self:CreateItem()
             :SetProgressInfo(self:BuildingDescribe(v))
-            :SetEventKey(v:UniqueKey()):OnClicked(
-            function(event)
+            :SetEvent(v)
+            :OnClicked(function(event)
                 if event.name == "CLICKED_EVENT" then
                     self:UpgradeBuildingHelpOrSpeedup(v)
                 end
             end)
-        self:SetProgressItemBtnLabel(self:IsAbleToFreeSpeedup(v),v:UniqueUpgradingKey(),event_item)
+        self:SetProgressItemBtnLabel(self:IsAbleToFreeSpeedup(v), event_item)
         table.insert(items, event_item)
     end
     self:InsertItem(items)
@@ -782,7 +798,6 @@ function WidgetEventTabButtons:LoadSoldierEvents()
     for i,event in ipairs(User:GetSoldierEventsBySeq()) do
         local item = self:CreateItem()
             :SetProgressInfo(self:SoldierDescribe(event))
-            :SetEventKey(event.id)
             :SetEvent(event)
             :OnClicked(
                 function(e)
@@ -829,14 +844,12 @@ function WidgetEventTabButtons:LoadMaterialEvents()
         if building_type == "blackSmith" then
             local item = self:CreateItem()
                 :SetProgressInfo(self:EquipmentDescribe(event))
-                :SetEventKey(event.id)
                 :SetEvent(event)
                 :OnClicked(function(e) self:DragonEquipmentEventsUpgradeOrSpeedup() end)
             self:InsertItem(item)
         elseif building_type == "toolShop" then
             local item = self:CreateItem()
                 :SetProgressInfo(self:MaterialDescribe(event))
-                :SetEventKey(event.id)
                 :SetEvent(event)
                 :OnClicked(function(e) self:MaterialEventUpgradeOrSpeedup() end)
             self:InsertItem(item)
@@ -913,12 +926,11 @@ function WidgetEventTabButtons:LoadTechnologyEvents()
             if event then
                 local item = self:CreateItem()
                     :SetProgressInfo(self:TechDescribe(event))
-                    :SetEventKey(event.id)
                     :SetEvent(event)
                     :OnClicked(function(e)
                         self:ProductionTechnologyEventUpgradeOrSpeedup(event)
                     end)
-                self:SetProgressItemBtnLabel(DataUtils:getFreeSpeedUpLimitTime() > UtilsForEvent:GetEventInfo(event),event.id,item)
+                self:SetProgressItemBtnLabel(DataUtils:getFreeSpeedUpLimitTime() > UtilsForEvent:GetEventInfo(event), item)
                 self:InsertItem(item)
             else
                 self:InsertItem(self:CreateBottom():OnOpenClicked(function(event)
@@ -929,12 +941,11 @@ function WidgetEventTabButtons:LoadTechnologyEvents()
             if event then
                 local item = self:CreateItem()
                     :SetProgressInfo(self:TechDescribe(event))
-                    :SetEventKey(event.id)
                     :SetEvent(event)
                     :OnClicked(function(e)
                         self:MiliTaryTechUpgradeOrSpeedup(event)
                     end)
-                self:SetProgressItemBtnLabel(DataUtils:getFreeSpeedUpLimitTime() > UtilsForEvent:GetEventInfo(event), event.id,item)
+                self:SetProgressItemBtnLabel(DataUtils:getFreeSpeedUpLimitTime() > UtilsForEvent:GetEventInfo(event), item)
                 self:InsertItem(item)
             else
                 self:InsertItem(self:CreateMilitaryItem(building):SetLabel(desc))
@@ -942,24 +953,26 @@ function WidgetEventTabButtons:LoadTechnologyEvents()
         end
     end
 end
-function WidgetEventTabButtons:BuildingDescribe(building)
-    local upgrade_info
-    if iskindof(building, "ResourceUpgradeBuilding") and building:IsBuilding() then
-        upgrade_info = _("建造")
-    elseif building:IsUnlocking() then
-        upgrade_info = _("解锁")
+function WidgetEventTabButtons:BuildingDescribe(event)
+    local User = self.city:GetUser()
+    local str
+    if event.location then
+        local building = User:GetBuildingByEvent(event)
+        if building.level == 0 then
+            str = string.format(_("%s (解锁)"), Localize.building_name[building.type])
+        else
+            str = string.format(_("%s (升级到 等级%d)"), Localize.building_name[building.type], building.level + 1)
+        end
     else
-        upgrade_info = string.format( _("升级到 等级%d"), building:GetNextLevel())
+        local house = User:GetBuildingByEvent(event)
+        if house.level == 0 then
+            str = string.format(_("%s (建造)"), Localize.building_name[house.type])
+        else
+            str = string.format(_("%s (升级到 等级%d)"), Localize.building_name[house.type], house.level + 1)
+        end
     end
-    local time, percent = self:BuildingPercent(building)
-    local str = string.format("%s (%s)",
-        Localize.building_name[building:GetType()],
-        upgrade_info)
+    local time, percent = UtilsForEvent:GetEventInfo(event)
     return str, percent , GameUtils:formatTimeStyle1(time)
-end
-function WidgetEventTabButtons:BuildingPercent(building)
-    local time = timer:GetServerTime()
-    return building:GetUpgradingLeftTimeByCurrentTime(time), building:GetUpgradingPercentByCurrentTime(time)
 end
 function WidgetEventTabButtons:SoldierDescribe(event)
     local time, percent = UtilsForEvent:GetEventInfo(event)

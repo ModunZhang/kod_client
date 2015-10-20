@@ -90,7 +90,6 @@ function GameUIAcademy:OnMoveInStage()
         end
     end):pos(window.cx, window.bottom + 34)
     GameUIAcademy.super.OnMoveInStage(self)
-    City:AddListenOnType(self,City.LISTEN_TYPE.UPGRADE_BUILDING)
     User:AddListenOnType(self, "productionTechs")
     User:AddListenOnType(self, "productionTechEvents")
 
@@ -114,23 +113,6 @@ function GameUIAcademy:OnMoveInStage()
 end
 
 
-function GameUIAcademy:OnUpgradingBegin()
-end
-
-function GameUIAcademy:OnUpgradingFinished(building)
-    if building:GetType() == self:GetBuilding():GetType() and self.technology_node then
-        for tech_name,tech in pairs(User.productionTechs) do
-            local item = self:GetItemByTag(tech.index)
-            if item and item.changeState then
-                item.changeState(User:IsTechEnable(tech_name, tech))
-            end
-        end
-    end
-end
-
-function GameUIAcademy:OnUpgrading()
-end
-
 function GameUIAcademy:OnUserDataChanged_productionTechs(userData, deltaData)
     local ok, value = deltaData("productionTechs")
     if ok then
@@ -151,7 +133,6 @@ function GameUIAcademy:OnUserDataChanged_productionTechEvents()
 end
 function GameUIAcademy:OnMoveOutStage()
     GameUIAcademy.super.OnMoveOutStage(self)
-    City:RemoveListenerOnType(self,City.LISTEN_TYPE.UPGRADE_BUILDING)
     User:RemoveListenerOnType(self, "productionTechs")
     User:RemoveListenerOnType(self, "productionTechEvents")
 end

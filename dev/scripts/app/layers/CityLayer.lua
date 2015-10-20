@@ -393,7 +393,6 @@ function CityLayer:InitWithCity(city)
         local building_sprite = self:CreateBuilding(building, city):addTo(city_node)
         city:AddListenOnType(building_sprite, city.LISTEN_TYPE.LOCK_TILE)
         city:AddListenOnType(building_sprite, city.LISTEN_TYPE.UNLOCK_TILE)
-        city:AddListenOnType(building_sprite, city.LISTEN_TYPE.UPGRADE_BUILDING)
         table.insert(self.buildings, building_sprite)
     end
 

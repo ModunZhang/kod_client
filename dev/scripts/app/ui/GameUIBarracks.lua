@@ -25,12 +25,12 @@ function GameUIBarracks:OnMoveInStage()
     self.recruit = self:CreateSoldierUI()
     self.specialRecruit = self:CreateSpecialSoldierUI()
     self:TabButtons()
-    self.barracks:AddUpgradeListener(self)
     GameUIBarracks.super.OnMoveInStage(self)
     local User = self.barracks_city:GetUser()
     User:AddListenOnType(self, "soldiers")
     User:AddListenOnType(self, "soldierStars")
     User:AddListenOnType(self, "soldierEvents")
+    User:AddListenOnType(self, "buildingEvents")
     scheduleAt(self, function()
         if self.timerAndTips:isVisible() then
             local event = User:GetSoldierEventsBySeq()[1]
@@ -50,7 +50,7 @@ function GameUIBarracks:onExit()
     User:RemoveListenerOnType(self, "soldiers")
     User:RemoveListenerOnType(self, "soldierStars")
     User:RemoveListenerOnType(self, "soldierEvents")
-    self.barracks:RemoveUpgradeListener(self)
+    User:RemoveListenerOnType(self, "buildingEvents")
     GameUIBarracks.super.onExit(self)
 end
 function GameUIBarracks:RightButtonClicked()
@@ -59,12 +59,8 @@ function GameUIBarracks:RightButtonClicked()
     end
     GameUIBarracks.super.RightButtonClicked(self)
 end
-function GameUIBarracks:OnBuildingUpgradingBegin()
-end
-function GameUIBarracks:OnBuildingUpgradeFinished()
+function GameUIBarracks:OnUserDataChanged_buildingEvents()
     self:RefershUnlockInfo()
-end
-function GameUIBarracks:OnBuildingUpgrading()
 end
 function GameUIBarracks:CreateTimerAndTips()
     local timerAndTips = display.newNode():addTo(self:GetView())

@@ -92,7 +92,6 @@ function GameUIAllianceHome:AddOrRemoveListener(isAdd)
         User:AddListenOnType(self, "militaryTechEvents")
         User:AddListenOnType(self, "productionTechEvents")
         User:AddListenOnType(self, "helpToTroops")
-        city:AddListenOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
         -- local alliance_belvedere = self.alliance:GetAllianceBelvedere()
         -- alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
         -- alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
@@ -105,7 +104,6 @@ function GameUIAllianceHome:AddOrRemoveListener(isAdd)
         User:RemoveListenerOnType(self, "militaryTechEvents")
         User:RemoveListenerOnType(self, "productionTechEvents")
         User:RemoveListenerOnType(self, "helpToTroops")
-        city:RemoveListenerOnType(self, city.LISTEN_TYPE.UPGRADE_BUILDING)
         -- local alliance_belvedere = self.alliance:GetAllianceBelvedere()
         -- alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
         -- alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
@@ -292,13 +290,6 @@ function GameUIAllianceHome:CreateOperationButton()
     end
     order:RefreshOrder()
     self.operation_button_order = order
-end
-function GameUIAllianceHome:OnUpgradingBegin()
-end
-function GameUIAllianceHome:OnUpgrading()
-end
-function GameUIAllianceHome:OnUpgradingFinished()
-    self.operation_button_order:RefreshOrder()
 end
 function GameUIAllianceHome:OnUserDataChanged_soldierStarEvents()
     self.operation_button_order:RefreshOrder()

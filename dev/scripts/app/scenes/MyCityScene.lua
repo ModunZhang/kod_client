@@ -46,10 +46,11 @@ function MyCityScene:onEnter()
     -- }):addTo(self, 1000000)
     -- :align(display.RIGHT_TOP, display.width, display.height)
 
-    self:GetCity():AddListenOnType(self, City.LISTEN_TYPE.UPGRADE_BUILDING)
     alliance:AddListenOnType(self, "operation")
     self:GetCity():GetUser():AddListenOnType(self, "soldierStars")
     self:GetCity():GetUser():AddListenOnType(self, "soldierEvents")
+    self:GetCity():GetUser():AddListenOnType(self, "houseEvents")
+    self:GetCity():GetUser():AddListenOnType(self, "buildingEvents")
 end
 function MyCityScene:onExit()
     self.home_page = nil
@@ -304,6 +305,32 @@ function MyCityScene:GetLockButtonsByBuildingType(building_type)
     assert(lock_button, building_type)
     return lock_button
 end
+function MyCityScene:OnUserDataChanged_houseEvents(userData, deltaData)
+    if deltaData("buildingEvents.add") then
+        self:GetSceneLayer():CheckCanUpgrade()
+        app:GetAudioManager():PlayeEffectSoundWithKey("UI_BUILDING_UPGRADE_START")
+    end
+    if deltaData("buildingEvents.remove") then
+        self:GetSceneLayer():CheckCanUpgrade()
+        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
+    end
+end
+function MyCityScene:OnUserDataChanged_buildingEvents(userData, deltaData)
+    if deltaData("buildingEvents.add") then
+        self:GetSceneLayer():CheckCanUpgrade()
+        app:GetAudioManager():PlayeEffectSoundWithKey("UI_BUILDING_UPGRADE_START")
+    end
+    local ok, value = deltaData("buildingEvents.remove")
+    if ok then
+        for i,v in ipairs(value) do
+            if v.location == 21 then
+                self:GetSceneLayer():UpdateWallsWithCity(self:GetCity())    
+            end
+        end
+        self:GetSceneLayer():CheckCanUpgrade()
+        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
+    end
+end
 function MyCityScene:OnUserDataChanged_soldierEvents(userData, deltaData)
     if deltaData("soldierEvents.add") then
         self:GetHomePage():OnUserDataChanged_growUpTasks()
@@ -326,20 +353,6 @@ function MyCityScene:OnUserDataChanged_basicInfo(userData, deltaData)
     if deltaData("basicInfo.power") then
         self:GetHomePage():ShowPowerAni(cc.p(display.cx, display.cy), userData.basicInfo.power)
     end
-end
-function MyCityScene:OnUpgradingBegin()
-    app:GetAudioManager():PlayeEffectSoundWithKey("UI_BUILDING_UPGRADE_START")
-    self:GetSceneLayer():CheckCanUpgrade()
-end
-function MyCityScene:OnUpgrading()
-
-end
-function MyCityScene:OnUpgradingFinished(building)
-    if building:GetType() == "wall" then
-        self:GetSceneLayer():UpdateWallsWithCity(self:GetCity())
-    end
-    self:GetSceneLayer():CheckCanUpgrade()
-    app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
 end
 function MyCityScene:OnTilesChanged(tiles)
     self:GetTopLayer():removeAllChildren()
