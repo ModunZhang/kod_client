@@ -315,8 +315,6 @@ function GameUIAllianceBattle:InitBattleStatistics()
         display.newColorLayer(UIKit:hex2c4b(0xcc1a1e26)):addTo(layer):align(display.CENTER,window.left + 14,window.bottom):setContentSize(cc.size(612,886))
         -- time bg
         local time_bg = display.newSprite("tmp_background_624x62.png"):addTo(layer):align(display.TOP_CENTER,window.cx,window.top_bottom+18)
-        -- display.newSprite("tmp_battle_btn_up_296x40.png"):align(display.CENTER,time_bg:getContentSize().width/2, time_bg:getContentSize().height/2)
-        --     :addTo(time_bg)
         WidgetPushButton.new({normal = "tmp_battle_btn_up_296x40.png",
             pressed = "tmp_battle_btn_down_296x40.png"})
             :onButtonClicked(function()

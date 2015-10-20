@@ -15,11 +15,11 @@ local monsterConfig = GameDatas.AllianceInitData.monsters
 
 local GameUIAllianceMosterEnter = class("GameUIAllianceMosterEnter", WidgetPopDialog)
 
-function GameUIAllianceMosterEnter:ctor(entity,isMyAlliance,alliance,enemyAlliance)
-    self.entity = entity
-    self.isMyAlliance = isMyAlliance
+function GameUIAllianceMosterEnter:ctor(mapObj,alliance)
+    self.mapObj = mapObj
+    self.entity = alliance:GetMapObjectInfoByObject(mapObj)
+    self.isMyAlliance = mapObj.index == Alliance_Manager:GetMyAlliance():MapIndex()
     self.alliance = alliance
-    self.enemyAlliance = enemyAlliance
     local moster = self:GetBuildingInfo()
     self.moster_config = monsterConfig[moster.level]
     self.moster = moster
@@ -51,7 +51,6 @@ end
 function GameUIAllianceMosterEnter:onEnter()
     GameUIAllianceMosterEnter.super.onEnter(self)
     local alliance = self.alliance
-    local enemyAlliance = self.enemyAlliance
     local isMyAlliance = self.isMyAlliance
     local entity = self.entity
     local moster = self.moster
@@ -139,22 +138,22 @@ function GameUIAllianceMosterEnter:onEnter()
 
     -- 进攻按钮
     local entity = self.entity
-    local my_alliance = self.alliance
+    local mapObj = self.mapObj
+    local my_alliance = Alliance_Manager:GetMyAlliance()
     local alliance = self:GetBelongAlliance()
     local btn = WidgetPushButton.new({normal = "btn_138x110.png",pressed = "btn_pressed_138x110.png"},{}
         ,{
             disabled = { name = "GRAY", params = {0.2, 0.3, 0.5, 0.1} }
         }):onButtonClicked(function()
-
             local final_func = function ()
                 local attack_monster_func = function ()
                     UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers,total_march_time,gameuialliancesendtroops)
                         local scene_name = display.getRunningScene().__cname
-                        if not alliance:FindAllianceMonsterInfoByObject(entity) then
+                        if not alliance:FindAllianceMonsterInfoByObject(mapObj) then
                             UIKit:showMessageDialog(_("提示"),_("敌人已经消失了"))
                             return
                         end
-                        NetManager:getAttackMonsterPromise(dragonType,soldiers,isMyAlliance and alliance.id or enemyAlliance.id,entity.id):done(function()
+                        NetManager:getAttackMonsterPromise(dragonType,soldiers,alliance._id,entity.id):done(function()
                             app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_SENDOUT")
                         end)
                     end,{targetIsMyAlliance = isMyAlliance,toLocation = entity.location,returnCloseAction = false}):AddToCurrentScene(true)
@@ -167,34 +166,6 @@ function GameUIAllianceMosterEnter:onEnter()
             else
                 final_func()
             end
-            -- local attack_monster_func = function ()
-            --     if alliance:GetSelf():IsProtected() then
-            --         UIKit:showMessageDialog(_("提示"),_("进攻该目标将失去保护状态，确定继续派兵?"),function()
-            --             UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers,total_march_time,gameuialliancesendtroops)
-            --                 local scene_name = display.getRunningScene().__cname
-            --                 if not self:GetBuildingInfo() then
-            --                     UIKit:showMessageDialog(_("提示"),_("敌人已经消失了"))
-            --                     return
-            --                 end
-            --                 NetManager:getAttackMonsterPromise(dragonType,soldiers,isMyAlliance and alliance:Id() or enemyAlliance:Id(),entity.id):done(function()
-            --                     app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_SENDOUT")
-            --                 end)
-            --             end,{targetIsMyAlliance = isMyAlliance,toLocation = entity.location,returnCloseAction = false}):AddToCurrentScene(true)
-            --         end)
-            --     else
-            --         UIKit:newGameUI('GameUIAllianceSendTroops',function(dragonType,soldiers,total_march_time,gameuialliancesendtroops)
-            --             local scene_name = display.getRunningScene().__cname
-            --             if not self:GetBuildingInfo() then
-            --                 UIKit:showMessageDialog(_("提示"),_("敌人已经消失了"))
-            --                 return
-            --             end
-            --             NetManager:getAttackMonsterPromise(dragonType,soldiers,isMyAlliance and alliance:Id() or enemyAlliance:Id(),entity.id):done(function()
-            --                 app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_SENDOUT")
-            --             end)
-            --         end,{targetIsMyAlliance = isMyAlliance,toLocation = entity.location,returnCloseAction = false}):AddToCurrentScene(true)
-            --     end
-            -- end
-            -- UIKit:showSendTroopMessageDialog(attack_monster_func,"buildingMaterials",_("建筑"))
         end):addTo(body):align(display.RIGHT_TOP, b_width, 10)
     local s = btn:getCascadeBoundingBox().size
     display.newSprite("attack_58x56.png"):align(display.CENTER, -s.width/2, -s.height/2+12):addTo(btn)
@@ -222,10 +193,10 @@ function GameUIAllianceMosterEnter:ShowReward()
 end
 
 function GameUIAllianceMosterEnter:GetBuildingInfo()
-    return self:GetBelongAlliance():FindAllianceMonsterInfoByObject(self.entity)
+    return self.alliance:FindAllianceMonsterInfoByObject(self.mapObj)
 end
 function GameUIAllianceMosterEnter:GetBelongAlliance()
-    return self.isMyAlliance and self.alliance or self.enemyAlliance
+    return self.alliance
 end
 
 return GameUIAllianceMosterEnter

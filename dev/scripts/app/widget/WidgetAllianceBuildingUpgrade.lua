@@ -142,7 +142,7 @@ function WidgetAllianceBuildingUpgrade:SetUpgradeEfficiency()
     local now_c = self.building_config[building.level]
     local next_c = self:getNextLevelConfig__()
     local efficiency
-    if #self.building_config == self.building.level then
+    if #self.building_config == building.level then
         efficiency = _("已达到最大等级")
     else
         if building.name == "palace" then
@@ -153,6 +153,8 @@ function WidgetAllianceBuildingUpgrade:SetUpgradeEfficiency()
             efficiency = string.format(_("道具个数+%d"),#string.split(next_c.itemsUnlock,",") - #string.split(now_c.itemsUnlock,","))
         elseif building.name == "orderHall" then
             efficiency = string.format(_("各类型的村落个数+%d"),next_c.villageCount - now_c.villageCount)
+        elseif building.name == "watchTower" then
+            efficiency = Localize.building_description["watchTower_".. (building.level + 1)]
         else
             efficiency = string.format( "本地化缺失%s", building.name )
         end

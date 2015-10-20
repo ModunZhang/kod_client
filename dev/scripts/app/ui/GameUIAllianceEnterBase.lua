@@ -15,21 +15,31 @@ local WidgetUseItems = import("..widget.WidgetUseItems")
 function GameUIAllianceEnterBase:ctor(mapObj,alliance)
     GameUIAllianceEnterBase.super.ctor(self,self:GetUIHeight(),"",display.top-200)
 
-    self.building = alliance:GetAllianceBuildingInfoByName(mapObj.name)
     self.my_alliance = Alliance_Manager:GetMyAlliance()
-    self.focus_alliance = alliance
+    self.focus_alliance = alliance or self.my_alliance
     self.mapObj = mapObj
     self.isMyAlliance = mapObj.index == self.my_alliance:MapIndex()
+    self.building = self:GetMapObjectInfo()
 end
 
 function GameUIAllianceEnterBase:IsMyAlliance()
     return self.isMyAlliance
 end
-
+function GameUIAllianceEnterBase:GetFocusAlliance()
+    return self.focus_alliance
+end
 function GameUIAllianceEnterBase:GetBuilding()
     return self.building
 end
-
+function GameUIAllianceEnterBase:GetMapObjectInfo()
+    for k,v in pairs(self.focus_alliance.mapObjects) do
+        local location = v.location
+        if location.x == self.mapObj.x and location.y == self.mapObj.y then
+            return v
+        end
+    end
+    return self.focus_alliance:GetAllianceBuildingInfoByName(self.mapObj.name)
+end
 function GameUIAllianceEnterBase:GetMyAlliance()
     return self.my_alliance
 end
@@ -112,7 +122,10 @@ end
 function GameUIAllianceEnterBase:IsShowBuildingBox()
     return true
 end
-
+-- 是否在对战的敌对联盟地图中
+function GameUIAllianceEnterBase:IsInFightAllianceMap()
+    return self:GetMyAlliance():GetEnemyAlliance() and self:GetMyAlliance():GetEnemyAlliance().alliance.id == self:GetFocusAlliance().id
+end
 function GameUIAllianceEnterBase:InitBuildingImage()
     local body = self:GetBody()
     if self:IsShowBuildingBox() then
