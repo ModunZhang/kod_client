@@ -32,11 +32,11 @@ function GameUIOrderHall:OnMoveInStage()
             tag = "village",
             default = "village" == self.default_tab,
         },
-        {
-            label = _("熟练度"),
-            tag = "proficiency",
-            default = "proficiency" == self.default_tab,
-        },
+        -- {
+        --     label = _("熟练度"),
+        --     tag = "proficiency",
+        --     default = "proficiency" == self.default_tab,
+        -- },
     }, function(tag)
         if tag == 'village' then
             self.village_layer:setVisible(true)
@@ -45,13 +45,13 @@ function GameUIOrderHall:OnMoveInStage()
             self.village_layer:Reset()
             self.village_layer:setVisible(false)
         end
-        if tag == 'proficiency' then
-            self.proficiency_layer:setVisible(true)
-            self:InitProficiencyPart()
-        else
-            self.proficiency_layer:Reset()
-            self.proficiency_layer:setVisible(false)
-        end
+        -- if tag == 'proficiency' then
+        --     self.proficiency_layer:setVisible(true)
+        --     self:InitProficiencyPart()
+        -- else
+        --     self.proficiency_layer:Reset()
+        --     self.proficiency_layer:setVisible(false)
+        -- end
     end):pos(window.cx, window.bottom + 34)
 
 
