@@ -1226,7 +1226,15 @@ local PERIOD_TYPE = {
     fight = _("战争期"),
     protect = _("保护期"),
 }
-
+local ALLIANCE_BUFF = {
+    ["villageAddPercent"] = _("村落采集速度"),
+    ["loyaltyAddPercent"] = _("全体成员每日获得忠诚值"),
+    ["honourAddPercent"] = _("联盟每日获得荣耀值"),
+    ["dragonExpAddPercent"] = _("巨龙经验值"),
+    ["bloodAddPercent"] = _("英雄之血"),
+    ["marchSpeedAddPercent"] = _("行军速度"),
+    ["dragonStrengthAddPercent"] = _("巨龙力量"),
+}
 local TERRAIN_FUNCTION = {
     grassLand = _("草地产出绿龙材料，更容易培养绿龙"),
     desert= _("沙漠产出红龙材料,更容易培养红龙"),
@@ -1304,6 +1312,7 @@ return {
     terrain_function = TERRAIN_FUNCTION,
     user_agreement = USER_AGREEMENT,
     period_type = PERIOD_TYPE,
+    alliance_buff = ALLIANCE_BUFF,
 }
 
 

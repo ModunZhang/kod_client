@@ -61,11 +61,20 @@ function WidgetInfo:CreateInfoItem(info_message)
             color = 0x615b44,
         }):align(display.LEFT_CENTER, 10, item_height/2):addTo(content)
         if v[2] then
-            local text_2 = UIKit:ttfLabel({
-                text = v[2],
-                size = 20,
-                color = 0x403c2f,
-            }):align(display.RIGHT_CENTER, item_width-10, item_height/2):addTo(content)
+            local text_2
+            if tolua.type(v[2]) == "table" then
+                text_2 = UIKit:ttfLabel({
+                    text = v[2][1],
+                    size = 20,
+                    color = v[2][2],
+                }):align(display.RIGHT_CENTER, item_width-20, item_height/2):addTo(content)
+            else
+                text_2 = UIKit:ttfLabel({
+                    text = v[2],
+                    size = 20,
+                    color = 0x403c2f,
+                }):align(display.RIGHT_CENTER, item_width-10, item_height/2):addTo(content)
+            end
             -- icon
             if v[3] then
                 local icon = display.newSprite(v[3]):align(display.RIGHT_CENTER, item_width-15, item_height/2):addTo(content)
@@ -86,6 +95,7 @@ function WidgetInfo:CreateInfoItem(info_message)
     self.info_listview:reload()
 end
 return WidgetInfo
+
 
 
 
