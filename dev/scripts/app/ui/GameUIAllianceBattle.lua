@@ -542,45 +542,45 @@ function GameUIAllianceBattle:InitBattleStatistics()
             :addTo(period_bg)
 
         -- 双方击杀排行
-        local self_kill = WidgetPushButton.new({normal = "background_blue_256x40.png"})
+        local self_kill = WidgetPushButton.new({normal = "blue_btn_up_256x40.png",pressed = "blue_btn_down_256x40.png"})
             :onButtonClicked(function()
                 self:OpenAllianceDetails(true)
             end)
             :setButtonLabel(UIKit:ttfLabel({
                 text = _("击杀排行"),
-                size = 22,
+                size = 18,
                 color = 0xffedae,
             }))
-            :setButtonLabelOffset(20,0)
             :align(display.TOP_LEFT, window.left + 20, window.top-260)
             :addTo(layer)
-        local head_bg = display.newSprite("btn_kill_54x56.png")
-            :align(display.CENTER, 25,-20)
-            :addTo(self_kill)
         display.newSprite("setting_rank_a_75x66.png")
-            :align(display.CENTER, 27,28)
-            :addTo(head_bg)
+            :align(display.CENTER, 27,-20)
+            :addTo(self_kill)
+            :scale(0.5)
+        display.newSprite("setting_rank_a_75x66.png")
+            :align(display.CENTER, 256 - 27,-20)
+            :addTo(self_kill)
             :scale(0.5)
 
 
-        local enemy_kill = WidgetPushButton.new({normal = "background_red_256x40.png"})
+        local enemy_kill = WidgetPushButton.new({normal = "red_btn_up_256x40.png",pressed = "red_btn_down_256x40.png"})
             :onButtonClicked(function()
                 self:OpenAllianceDetails(false)
             end)
             :setButtonLabel(UIKit:ttfLabel({
                 text = _("击杀排行"),
-                size = 22,
+                size = 18,
                 color = 0xffedae,
             }))
-            :setButtonLabelOffset(-10,0)
             :align(display.TOP_RIGHT, window.right - 20, window.top-260)
             :addTo(layer)
-        local head_bg = display.newSprite("btn_kill_54x56.png")
-            :align(display.CENTER, -25,-20)
-            :addTo(enemy_kill)
         display.newSprite("setting_rank_a_75x66.png")
-            :align(display.CENTER, 27,28)
-            :addTo(head_bg)
+            :align(display.CENTER, -256 + 27,-20)
+            :addTo(enemy_kill)
+            :scale(0.5)
+        display.newSprite("setting_rank_a_75x66.png")
+            :align(display.CENTER, - 27,-20)
+            :addTo(enemy_kill)
             :scale(0.5)
         UIKit:ttfLabel({
             text = _("本次联盟会战结束后奖励,总击杀越高奖励越高.获胜方获得70%的总奖励,失败方获得剩下的,获胜联盟击杀第1名的玩家还将获得金龙币奖励"),
