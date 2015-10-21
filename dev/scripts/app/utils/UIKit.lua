@@ -393,6 +393,17 @@ function UIKit:GetPlayerIconOnly(key,isOnline)
     end
     return isOnline and display.newSprite(self:GetPlayerIconImage(key)) or self:getDiscolorrationSprite(self:GetPlayerIconImage(key))
 end
+-- 带背景框的龙头像
+function UIKit:GetDragonHeadWithFrame(dragonType)
+    local dragon_bg = display.newSprite("dragon_bg_114x114.png")
+    local dragon_img = display.newSprite(UILib.dragon_head[dragonType])
+        :align(display.CENTER, dragon_bg:getContentSize().width/2, dragon_bg:getContentSize().height/2+5)
+        :addTo(dragon_bg)
+    function dragon_bg:setDragonImg(dragonType)
+        dragon_img:setTexture(UILib.dragon_head[dragonType])
+    end
+    return dragon_bg
+end
 --TODO:将这个函数替换成CreateBoxPanel9来实现
 function UIKit:CreateBoxPanel(height)
     local node = self:CreateBoxPanel9({height = height})
@@ -507,7 +518,7 @@ function UIKit:createLineItem(params)
     -- 分割线
     local line = display.newScale9Sprite("dividing_line.png",0,0,cc.size(params.width,2),cc.rect(10,2,382,2))
     local line_size = line:getContentSize()
-    self:ttfLabel(
+    local title_lable = self:ttfLabel(
         {
             text = params.text_1,
             size = 20,
@@ -522,8 +533,11 @@ function UIKit:createLineItem(params)
         }):align(display.RIGHT_BOTTOM, line_size.width, 4)
         :addTo(line)
 
-    function line:SetValue(value)
+    function line:SetValue(value,title)
         value_label:setString(value)
+        if title then
+            title_lable:setString(title)
+        end
     end
     return line
 end

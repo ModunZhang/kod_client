@@ -750,7 +750,7 @@ function NetManager:getLoginPromise(deviceId)
             app:GetPushManager():CancelAll() -- 登录成功便清空本地通知
             local playerData = response.msg.playerData
             local user_alliance_data = response.msg.allianceData
-            local mapData = response.msg.mapData
+            local mapData = response.msg.mapIndexData
             if IS_HARD_LOGIN and mapData then
                 DataManager:setMapData(mapData)
                 IS_HARD_LOGIN = false
@@ -1565,19 +1565,19 @@ function NetManager:getStrikeVillagePromise(dragonType,defenceAllianceId,defence
         {dragonType = dragonType,defenceAllianceId = defenceAllianceId,defenceVillageId=defenceVillageId},"突袭村落失败!"):done(get_player_response_msg)
 end
 --查看敌方进攻行军事件详细信息
-function NetManager:getAttackMarchEventDetailPromise(eventId,enemyAllianceId)
+function NetManager:getAttackMarchEventDetailPromise(eventId,targetAllianceId)
     return get_blocking_request_promise("logic.allianceHandler.getAttackMarchEventDetail",
-        {eventId = eventId,enemyAllianceId = enemyAllianceId},"获取行军事件数据失败!"):done(get_player_response_msg)
+        {eventId = eventId,targetAllianceId = targetAllianceId},"获取行军事件数据失败!"):done(get_player_response_msg)
 end
 --查看敌方突袭行军事件详细信息
-function NetManager:getStrikeMarchEventDetailPromise(eventId,enemyAllianceId)
+function NetManager:getStrikeMarchEventDetailPromise(eventId,targetAllianceId)
     return get_blocking_request_promise("logic.allianceHandler.getStrikeMarchEventDetail",
-        {eventId = eventId,enemyAllianceId = enemyAllianceId},"获取突袭事件数据失败!"):done(get_player_response_msg)
+        {eventId = eventId,targetAllianceId = targetAllianceId},"获取突袭事件数据失败!"):done(get_player_response_msg)
 end
 --查看协助部队行军事件详细信息
-function NetManager:getHelpDefenceMarchEventDetailPromise(eventId,allianceId)
+function NetManager:getHelpDefenceMarchEventDetailPromise(eventId)
     return get_blocking_request_promise("logic.allianceHandler.getHelpDefenceMarchEventDetail",
-        {eventId = eventId,allianceId = allianceId},"获取协防事件数据失败!"):done(get_player_response_msg)
+        {eventId = eventId},"获取协防事件数据失败!"):done(get_player_response_msg)
 end
 --查看协防部队详细信息
 function NetManager:getHelpDefenceTroopDetailPromise(playerId,helpedByPlayerId)

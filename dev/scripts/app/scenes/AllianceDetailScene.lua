@@ -30,7 +30,7 @@ local function getAllyFromEvent(event, is_back)
     if event.attackPlayerData.id == User:Id() then
         return MINE
     end
-    local alliance_id = is_back and v.toAlliance.id or v.fromAlliance.id
+    local alliance_id = is_back and event.toAlliance.id or event.fromAlliance.id
     if alliance_id == Alliance_Manager:GetMyAlliance()._id then
         return FRIEND
     end

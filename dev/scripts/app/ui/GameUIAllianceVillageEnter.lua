@@ -111,7 +111,6 @@ function GameUIAllianceVillageEnter:GetBuildingInfo()
     }
     local labels = {}
     local village_id = self:GetVillageInfo().id
-    print("village_id==",village_id)
     local villageEvent = self:GetFocusAlliance():FindVillageEventByVillageId(village_id)
     dump(villageEvent,"villageEvent")
     if villageEvent then --我方未占领
@@ -286,7 +285,7 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
     else --我方未占领
         villageEvent = self:GetFocusAlliance():FindVillageEventByVillageId(village_id)
         if villageEvent then -- 敌方占领
-            local attack_button = self:BuildOneButton(self:IsMyAlliance() and "capture_38x56.png" or "destory_48x60.png",self:IsMyAlliance() and _("占领") or _("摧毁")):onButtonClicked(function()
+            local attack_button = self:BuildOneButton("capture_38x56.png", _("占领")):onButtonClicked(function()
                 local isMyAlliance = self:IsMyAlliance()
                 local toLocation = self:GetLogicPosition()
 
@@ -320,7 +319,7 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
         end)
         buttons = {attack_button,strike_button}
         else -- 无人占领
-            local attack_button = self:BuildOneButton(self:IsMyAlliance() and "capture_38x56.png" or "destory_48x60.png",self:IsMyAlliance() and _("占领") or _("摧毁")):onButtonClicked(function()
+            local attack_button = self:BuildOneButton("capture_38x56.png",_("占领")):onButtonClicked(function()
                 local isMyAlliance = self:IsMyAlliance()
                 local toLocation = self:GetLogicPosition()
 

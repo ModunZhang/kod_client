@@ -647,6 +647,8 @@ function Report:GetReportResult()
                 end
             end
             return my_round[#my_round].isWin
+        else
+            return true
         end
     elseif data.defencePlayerData and data.defencePlayerData.id == self.player_id then
         -- 完全没有战斗数据,表示防守玩家城墙血量为零，且没有驻防

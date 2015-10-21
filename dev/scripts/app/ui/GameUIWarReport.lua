@@ -223,15 +223,42 @@ function GameUIWarReport:CreateBootyPart()
             added_booty_item_count = added_booty_item_count + 1
             booty_item_bg_color_flag = not booty_item_bg_color_flag
         end
+    else
+        booty_list_bg = WidgetUIBackGround.new({width = item_width,height = 100},WidgetUIBackGround.STYLE_TYPE.STYLE_6)
+            :align(display.CENTER,0,-25)
+        local booty_list_bg_size = booty_list_bg:getContentSize()
+        booty_group:addChild(booty_list_bg)
+        local booty_item_bg = display.newScale9Sprite("back_ground_548x40_1.png"):size(520,86)
+            :align(display.CENTER, booty_list_bg_size.width/2, booty_list_bg_size.height/2)
+            :addTo(booty_list_bg)
+
+        local reward_text = ""
+        local report_data = self.report:GetData()
+        if report_data.defencePlayerData.masterOfDefender then
+            if report_data.defencePlayerData.id == User:Id() then
+                reward_text = _("由于使用了城防大师，敌方无法掠夺资源")
+            else
+                reward_text = _("由于敌方使用了城防大师，无法掠夺资源")
+            end
+        else
+            reward_text = _("未获得战利品")
+        end
+        UIKit:ttfLabel({
+            text = reward_text ,
+            size = 20,
+            color = 0x615b44,
+            valign = cc.ui.TEXT_VALIGN_CENTER,
+            align = cc.ui.TEXT_ALIGN_CENTER,
+            dimensions = cc.size(480,0)
+        }):align(display.CENTER,booty_list_bg_size.width/2, booty_list_bg_size.height/2):addTo(booty_list_bg)
     end
     local booty_title_bg = display.newSprite("alliance_evnets_title_548x50.png")
         :align(display.CENTER_BOTTOM, 0,booty_list_bg and booty_list_bg:getContentSize().height/2-25 or -25)
 
     booty_group:addChild(booty_title_bg)
 
-
     UIKit:ttfLabel({
-        text = booty_count > 0 and _("战利品") or _("无战利品") ,
+        text = _("战利品") ,
         size = 24,
         color = 0xffedae
     }):align(display.CENTER,booty_title_bg:getContentSize().width/2, 25):addTo(booty_title_bg)
@@ -713,6 +740,10 @@ function GameUIWarReport:GetRewards()
     return  self.report:GetMyRewards()
 end
 return GameUIWarReport
+
+
+
+
 
 
 

@@ -429,7 +429,7 @@ function User:GetCollectLevelByType(collectType)
     end
 end
 function User:Loyalty()
-    return self.allianceInfo.loyalty
+    return self.allianceData.loyalty
 end
 
 --[[resources begin]]
