@@ -406,6 +406,8 @@ function GameUIAllianceWatchTower:CreateAttackContent()
             if event.name == "CLICKED_EVENT" then
                 -- TODO
                 print("补充定位功能")
+                display.getRunningScene():GotoAllianceByIndex(att_event.toAlliance.mapIndex)
+                parent:LeftButtonClicked()
             end
         end)
         dragon_head:setDragonImg(att_event.attackPlayerData.dragon.type)

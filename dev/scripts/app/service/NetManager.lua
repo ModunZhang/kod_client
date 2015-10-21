@@ -750,7 +750,7 @@ function NetManager:getLoginPromise(deviceId)
             app:GetPushManager():CancelAll() -- 登录成功便清空本地通知
             local playerData = response.msg.playerData
             local user_alliance_data = response.msg.allianceData
-            local mapData = response.msg.mapData
+            local mapData = response.msg.mapIndexData
             if IS_HARD_LOGIN and mapData then
                 DataManager:setMapData(mapData)
                 IS_HARD_LOGIN = false

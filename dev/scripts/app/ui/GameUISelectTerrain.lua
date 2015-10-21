@@ -171,7 +171,7 @@ function GameUISelectTerrain:BuildUI()
         size = 24,
         color = 0xffedae,
         shadow= true
-    })):addTo(self:GetBody()):pos(s.width/2, 60)
+    })):addTo(self:GetBody()):pos(s.width/2, 50)
     return ui_map
 end
 

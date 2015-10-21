@@ -158,10 +158,13 @@ end
 function GameUIAllianceBattle:CreateBetweenBgAndTitle()
     GameUIAllianceBattle.super.CreateBetweenBgAndTitle(self)
 
-    -- statistics_layer
-    self.statistics_layer = display.newLayer():addTo(self:GetView())
-    -- info_layer
-    self.info_layer = display.newLayer():addTo(self:GetView())
+    if self.tag == "history" then
+        -- info_layer
+        self.info_layer = display.newLayer():addTo(self:GetView())
+    elseif self.tag == "fight" then
+        -- statistics_layer
+        self.statistics_layer = display.newLayer():addTo(self:GetView())
+    end
     -- other_alliance_layer
     -- self.other_alliance_layer = display.newLayer():addTo(self:GetView())
 
