@@ -164,7 +164,7 @@ function AllianceDetailScene:onExit()
     end
     Alliance_Manager:SetAllianceHandle(nil)
     Alliance_Manager:ClearCache()
-    Alliance_Manager:ResetMapData()
+    Alliance_Manager:ResetCurrentMapData()
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, "mapObjects")
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, "marchEvents")
 end

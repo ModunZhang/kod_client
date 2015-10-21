@@ -9,12 +9,12 @@ local ZORDER = Enum("BACKGROUND", "OBJECT", "LINE")
 local AllianceMap = GameDatas.AllianceMap
 local buildingName = AllianceMap.buildingName
 local ui_helper = WidgetAllianceHelper.new()
-local intInit = GameDatas.AllianceInitData.intInit
 local decorator_image = UILib.decorator_image
 local alliance_building = UILib.alliance_building
 local MAP_LEGNTH_WIDTH = 41
 local MAP_LEGNTH_HEIGHT = 41
 local TILE_WIDTH = 160
+local intInit = GameDatas.AllianceInitData.intInit
 local ALLIANCE_WIDTH, ALLIANCE_HEIGHT = intInit.allianceRegionMapWidth.value, intInit.allianceRegionMapHeight.value
 local worldsize = {width = ALLIANCE_WIDTH * 160 * MAP_LEGNTH_WIDTH, height = ALLIANCE_HEIGHT * 160 * MAP_LEGNTH_HEIGHT}
 local timer = app.timer
@@ -666,7 +666,7 @@ end
 function AllianceLayer:GetMapInfoByIndex(index, alliance)
     local terrain, style
     if (alliance == nil or alliance == json.null) then
-        terrain, style = DataManager:getMapDataByIndex(index)
+        terrain, style = Alliance_Manager:getMapDataByIndex(index)
     else
         terrain, style = alliance.basicInfo.terrain, alliance.basicInfo.terrainStyle
     end

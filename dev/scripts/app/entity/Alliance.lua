@@ -13,8 +13,6 @@ local MultiObserver = import(".MultiObserver")
 local Alliance = class("Alliance", MultiObserver)
 local config_palace = GameDatas.AllianceBuilding.palace
 local buildingName = GameDatas.AllianceMap.buildingName
-local pushManager_ = app:GetPushManager()
-local audioManager_ = app:GetAudioManager()
 Alliance.LISTEN_TYPE = Enum(
     "operation",
     "basicInfo",
@@ -1083,7 +1081,7 @@ function Alliance:updateWatchTowerLocalPushIf(marchEvent)
     --         local msg = marchEvent:IsStrikeEvent() and _("你的城市正被敌军突袭") or _("你的城市正被敌军攻击")
     --         local warningTime = self:GetAllianceBelvedere():GetWarningTime()
     --         if marchType == 'city' then
-    --             pushManager_:UpdateWatchTowerPush(marchEvent:ArriveTime() - warningTime,msg,marchEvent:Id())
+    --             app:GetPushManager():UpdateWatchTowerPush(marchEvent:ArriveTime() - warningTime,msg,marchEvent:Id())
     --         end
     --     end
     -- end
@@ -1093,10 +1091,10 @@ function Alliance:cancelLocalMarchEventPushIf(marchEvent)
     if marchEvent:GetPlayerRole() == marchEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER then
         if marchEvent:IsReturnEvent() then
             if not marchEvent:IsStrikeEvent() then --我的一般进攻部队返回城市
-                audioManager_:PlayeEffectSoundWithKey("TROOP_BACK")
+                app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_BACK")
             end
         else
-            pushManager_:CancelWatchTowerPush(marchEvent:Id())
+            app:GetPushManager():CancelWatchTowerPush(marchEvent:Id())
         end
     end
 end

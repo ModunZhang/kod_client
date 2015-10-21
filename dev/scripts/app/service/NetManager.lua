@@ -8,8 +8,6 @@ local cocos_promise = import("..utils.cocos_promise")
 local SUCCESS_CODE = 200
 local FAILED_CODE = 500
 local TIME_OUT = 15
-
-
 NetManager = {}
 -- 过滤器
 local function get_player_response_msg(response)
@@ -217,6 +215,9 @@ local function get_daily_quests_response_msg(response)
     return response
 end
 local function get_alliance_response_msg(response)
+    if response.msg.mapIndexData then
+        Alliance_Manager:setMapIndexData(response.msg.mapIndexData)
+    end
     if response.msg.allianceData then
         local user_alliance_data = DataManager:getUserAllianceData()
         if user_alliance_data == json.null then
@@ -575,45 +576,31 @@ local logic_event_map = {
         end
     end,
     onMapDataChanged = function(success, response)
-        local edit = decodeInUserDataFromDeltaData(Alliance_Manager:GetMapData(), response)
-        Alliance_Manager:OnMapDataChanged(edit)
-        LuaUtils:outputTable("onMapDataChanged", edit)
+        local mapData
+        local myAllianceData = DataManager:getUserAllianceData()
+        if myAllianceData and
+            myAllianceData.mapIndex == response.targetMapIndex then
+            mapData = Alliance_Manager.my_alliance_mapData
+        else
+            mapData = Alliance_Manager:GetCurrentMapData()
+        end
+        if mapData then
+            local edit = decodeInUserDataFromDeltaData(mapData, response.data)
+            Alliance_Manager:OnMapDataChanged(mapData, edit)
+            LuaUtils:outputTable("onMapDataChanged", edit)
+        end
     end,
     onJoinAllianceSuccess = function(success, response)
         if not NetManager.m_was_inited_game then return end
         if success and DataManager:hasUserData() then
-            -- DataManager:setEnemyAllianceData(response.enemyAllianceData)
+            Alliance_Manager:setMapIndexData(response.mapIndexData)
             DataManager:setUserAllianceData(response.allianceData)
+
             local user_data = DataManager:getUserData()
             local edit = decodeInUserDataFromDeltaData(user_data, response.playerData)
             DataManager:setUserData(user_data, edit)
         end
     end,
-    -- onEnemyAllianceDataChanged = function(success, response)
-    --     if not NetManager.m_was_inited_game then return end
-    --     if success and DataManager:hasUserData() then
-    --         LuaUtils:outputTable("onEnemyAllianceDataChanged", response)
-    --         -- local user_enemy_alliance_data = DataManager:getEnemyAllianceData()
-    --         -- local edit = decodeInUserDataFromDeltaData(user_enemy_alliance_data,response)
-    --         -- DataManager:setEnemyAllianceData(user_enemy_alliance_data,edit)
-    --     end
-    -- end,
-    -- onAllianceFight = function(success, response)
-    --     if not NetManager.m_was_inited_game then return end
-    --     if success and DataManager:hasUserData() then
-    --         LuaUtils:outputTable("onAllianceFight", response)
-    --         for i,data in ipairs(response.allianceData) do
-    --             if string.find(data[1],"allianceFightReports") then
-    --                 Alliance_Manager:GetMyAlliance():SetLastAllianceFightReport(data[2])
-    --             end
-    --         end
-    --         local user_enemy_alliance_data = response.enemyAllianceData
-    --         -- DataManager:setEnemyAllianceData(user_enemy_alliance_data)
-    --         local user_alliance_data = DataManager:getUserAllianceData()
-    --         local edit = decodeInUserDataFromDeltaData(user_alliance_data, response.allianceData)
-    --         DataManager:setUserAllianceData(user_alliance_data, edit)
-    --     end
-    -- end,
     onNotice = function(success, response)
         if success then
             local running_scene = display.getRunningScene().__cname
@@ -750,9 +737,9 @@ function NetManager:getLoginPromise(deviceId)
             app:GetPushManager():CancelAll() -- 登录成功便清空本地通知
             local playerData = response.msg.playerData
             local user_alliance_data = response.msg.allianceData
-            local mapData = response.msg.mapIndexData
-            if IS_HARD_LOGIN and mapData then
-                DataManager:setMapData(mapData)
+            local mapIndexData = response.msg.mapIndexData
+            if IS_HARD_LOGIN and mapIndexData then
+                Alliance_Manager:setMapIndexData(mapIndexData)
                 IS_HARD_LOGIN = false
             end
             -- LuaUtils:outputTable(mapData)

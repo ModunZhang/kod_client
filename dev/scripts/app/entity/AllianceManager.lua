@@ -5,7 +5,16 @@ function AllianceManager:ctor()
     self.my_alliance = Alliance.new()
     self.my_alliance:SetIsMyAlliance(true)
     self.alliance_caches = {}
-    self:ResetMapData()
+    self.my_alliance_mapData = {
+        marchEvents = {
+            strikeMarchEvents = {} ,
+            strikeMarchReturnEvents = {} ,
+            attackMarchEvents = {},
+            attackMarchReturnEvents = {} ,
+        },
+        villageEvents = {}
+    }
+    self:ResetCurrentMapData()
 end
 function AllianceManager:GetVillageEventsByMapId(alliance, mapId)
     for k,v in pairs(alliance.villageEvents) do
@@ -13,22 +22,11 @@ function AllianceManager:GetVillageEventsByMapId(alliance, mapId)
             return v
         end
     end
-    for k,v in pairs(self.mapData.villageEvents) do
+    for k,v in pairs(self:GetCurrentMapData().villageEvents) do
         if v ~= json.null and v.villageData.id == mapId then
             return v
         end
     end
-end
-function AllianceManager:ResetMapData()
-    self.mapData = {
-        ["marchEvents"] = {
-            ["strikeMarchEvents"] = {} ,
-            ["strikeMarchReturnEvents"] = {} ,
-            ["attackMarchEvents"] = {},
-            ["attackMarchReturnEvents"] = {} ,
-        },
-        ["villageEvents"] = {}
-    }
 end
 function AllianceManager:GetAllianceByCache(key)
     local cache_alliance = self.alliance_caches[key]
@@ -51,8 +49,24 @@ end
 function AllianceManager:ClearCache()
     self.alliance_caches = {}
 end
-function AllianceManager:GetMapData()
-    return self.mapData
+function AllianceManager:GetCurrentMapData()
+    return self.currentMapData
+end
+function AllianceManager:ResetCurrentMapData()
+    self.currentMapData = {
+        marchEvents = {
+            strikeMarchEvents = {} ,
+            strikeMarchReturnEvents = {} ,
+            attackMarchEvents = {},
+            attackMarchReturnEvents = {} ,
+        },
+        villageEvents = {}
+    }
+end
+function AllianceManager:OnEnterMapIndex(currentMapData)
+    self.currentMapData = currentMapData
+    if not self.handle then return end
+    self.handle.OnEnterMapIndex(self.handle, self.currentMapData)
 end
 local function removeJsonNull(t)
     for k,v in pairs(t) do
@@ -61,16 +75,11 @@ local function removeJsonNull(t)
         end
     end 
 end
-function AllianceManager:OnEnterMapIndex(mapData)
-    self.mapData = mapData
+function AllianceManager:OnMapDataChanged(currentMapData, deltaData)
     if not self.handle then return end
-    self.handle.OnEnterMapIndex(self.handle, self.mapData)
-end
-function AllianceManager:OnMapDataChanged(deltaData)
-    if not self.handle then return end
-    self.handle.OnMapDataChanged(self.handle, self.mapData, deltaData)
-    removeJsonNull(self.mapData.villageEvents)
-    for _,t in pairs(self.mapData.marchEvents) do
+    self.handle.OnMapDataChanged(self.handle, currentMapData, deltaData)
+    removeJsonNull(currentMapData.villageEvents)
+    for _,t in pairs(currentMapData.marchEvents) do
         removeJsonNull(t)
     end
 end
@@ -96,6 +105,15 @@ function AllianceManager:OnUserDataChanged(user_data,time,deltaData)
     local allianceId = user_data.allianceId
     local my_alliance = self:GetMyAlliance()
     if (allianceId == json.null or not allianceId) and not my_alliance:IsDefault() then
+        self.my_alliance_mapData = {
+            marchEvents = {
+                strikeMarchEvents = {} ,
+                strikeMarchReturnEvents = {} ,
+                attackMarchEvents = {},
+                attackMarchReturnEvents = {} ,
+            },
+            villageEvents = {}
+        }
         my_alliance:Reset()
         app:GetChatManager():emptyAllianceChannel()
         DataManager:setUserAllianceData(json.null)
@@ -116,11 +134,22 @@ function AllianceManager:OnAllianceDataChanged(alliance_data,refresh_time,deltaD
     -- end
 end
 
-function AllianceManager:OnTimer(current_time)
--- self:GetMyAlliance():OnTimer(current_time)
--- if self:HaveEnemyAlliance() then
---     self:GetEnemyAlliance():OnTimer(current_time)
--- end
+
+function AllianceManager:setMapIndexData(mapIndexData)
+    self.mapIndexData = mapIndexData
+end
+local terrainStyle = GameDatas.AllianceMap.terrainStyle
+function AllianceManager:getMapDataByIndex(index)
+    local key = self.mapIndexData[tostring(index)]
+    for _,v in pairs(terrainStyle) do
+        if v.index == key then
+            local terrain, style = unpack(string.split(v.style, "_"))
+            return terrain, tonumber(style)
+        end
+    end
+end
+function AllianceManager:setMapDataByIndex(index, data)
+    self.mapIndexData[tostring(index)] = data
 end
 -- json decode to a alliance
 function AllianceManager:DecodeAllianceFromJson( json_data )
