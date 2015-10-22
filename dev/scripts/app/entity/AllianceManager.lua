@@ -22,6 +22,11 @@ function AllianceManager:GetVillageEventsByMapId(alliance, mapId)
             return v
         end
     end
+    for k,v in pairs(self.my_alliance_mapData) do
+        if v ~= json.null and v.villageData.id == mapId then
+            return v
+        end
+    end
     for k,v in pairs(self:GetCurrentMapData().villageEvents) do
         if v ~= json.null and v.villageData.id == mapId then
             return v

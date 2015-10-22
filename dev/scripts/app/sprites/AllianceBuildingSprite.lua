@@ -23,23 +23,7 @@ function AllianceBuildingSprite:ctor(...)
 end
 function AllianceBuildingSprite:CheckEventIf(yesOrno)
     if not self.alliance:IsDefault() and self:GetBuildingInfo().name == "shrine" then
-        -- local alliance_shirine = self.alliance:GetAllianceShrine()
-        -- if not alliance_shirine then return end
-        -- if yesOrno then
-        --     self:CheckEvent()
-        --     alliance_shirine:AddListenOnType(self,alliance_shirine.LISTEN_TYPE.OnShrineEventsChanged)
-        --     alliance_shirine:AddListenOnType(self,alliance_shirine.LISTEN_TYPE.OnShrineEventsRefresh)
-        -- else
-        --     alliance_shirine:RemoveListenerOnType(self,alliance_shirine.LISTEN_TYPE.OnShrineEventsChanged)
-        --     alliance_shirine:RemoveListenerOnType(self,alliance_shirine.LISTEN_TYPE.OnShrineEventsRefresh) 
-        -- end
     end
-end
-function AllianceBuildingSprite:OnShrineEventsChanged()
-    -- self:CheckEvent()
-end
-function AllianceBuildingSprite:OnShrineEventsRefresh()
-    -- self:CheckEvent()
 end
 function AllianceBuildingSprite:onExit()
     -- self:CheckEventIf(false)

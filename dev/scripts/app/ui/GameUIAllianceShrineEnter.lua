@@ -90,7 +90,7 @@ function GameUIAllianceShrineEnter:FixedUI()
 end
 
 function GameUIAllianceShrineEnter:GetTroopsInfo()
-	local events = self:GetMyAlliance():GetAllianceShrine():GetShrineEvents()
+	local events = self:GetMyAlliance():GetShrineEventsBySeq()
 	local event_count = 0
 	local total_count = 0
 	local running_event_names = {}

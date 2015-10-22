@@ -17,24 +17,30 @@ function GameUIShireFightEvent:ctor(fight_event,allianceShrine)
     GameUIShireFightEvent.super.ctor(self,790,_("事件详情"),window.top - 50)
     self.fight_event = fight_event
     self.allianceShrine_ = allianceShrine
-    self:GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnFightEventTimerChanged)
+    -- self:GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnFightEventTimerChanged)
     self:GetAllianceShrine():GetAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
     self:GetAllianceShrine():GetAlliance():AddListenOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
-    self:GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsChanged)
-    self:GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsRefresh)
+    local alliance = Alliance_Manager:GetMyAlliance()
+    alliance:AddListenOnType(self, "shrineEvents")
+
     self.event_bind_to_label = {}
 end
 
 function GameUIShireFightEvent:onEnter()
     GameUIShireFightEvent.super.onEnter(self)
     self:BuildUI()
+    scheduleAt(self, function()
+        -- if event:Id() == self:GetFightEvent():Id() then
+        --     self.time_label:setString(string.format(_("派兵时间 %s"),GameUtils:formatTimeStyle1(event:GetTime())))
+        -- end
+        end)
 end
 
-function GameUIShireFightEvent:OnFightEventTimerChanged(event)
-    if event:Id() == self:GetFightEvent():Id() then
-        self.time_label:setString(string.format(_("派兵时间 %s"),GameUtils:formatTimeStyle1(event:GetTime())))
-    end
-end
+-- function GameUIShireFightEvent:OnFightEventTimerChanged(event)
+--     if event:Id() == self:GetFightEvent():Id() then
+--         self.time_label:setString(string.format(_("派兵时间 %s"),GameUtils:formatTimeStyle1(event:GetTime())))
+--     end
+-- end
 
 function GameUIShireFightEvent:OnAttackMarchEventDataChanged(change_map)
     if change_map.added or change_map.removed then
@@ -43,23 +49,16 @@ function GameUIShireFightEvent:OnAttackMarchEventDataChanged(change_map)
     end
 end
 
-function GameUIShireFightEvent:OnShrineEventsChanged(change_map)
-    if change_map.removed then
+function GameUIShireFightEvent:OnAllianceDataChanged_shrineEvents(alliance, deltaData)
+    local ok, value = deltaData("shrineEvents.remove")
+    if ok then
         local id_ = self:GetFightEvent():Id()
-        for _,v in ipairs(change_map.removed) do
-            if id_ == v:Id() then
+        for _,v in ipairs(value) do
+            if id_ == v.id then
                 self:LeftButtonClicked()
                 break
             end
         end
-    end
-end
-
-function GameUIShireFightEvent:OnShrineEventsRefresh()
-    local id_ = self:GetFightEvent():Id()
-    local event = self:GetAllianceShrine():GetShrineEventById(id_)
-    if not event then
-        self:LeftButtonClicked()
     end
 end
 
@@ -70,11 +69,11 @@ function GameUIShireFightEvent:OnAttackMarchEventTimerChanged(event)
 end
 
 function GameUIShireFightEvent:onCleanup()
-    self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnFightEventTimerChanged)
-    self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsChanged)
-    self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsRefresh)
+    -- self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnFightEventTimerChanged)
     self:GetAllianceShrine():GetAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
     self:GetAllianceShrine():GetAlliance():RemoveListenerOnType(self,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
+    local alliance = Alliance_Manager:GetMyAlliance()
+    alliance:RemoveListenerOnType(self, "shrineEvents")
     self.event_bind_to_label = nil
     GameUIShireFightEvent.super.onCleanup(self)
 end
@@ -256,13 +255,19 @@ function GameUIShireFightEvent:GetFightEvent()
 end
 
 function GameUIShireFightEvent:GetAllianceShrineLocation()
-    local alliance_obj = self:GetAllianceShrine():GetShireObjectFromMap()
-    local location = alliance_obj.location
+    local object
+    Alliance_Manager:GetMyAlliance():IteratorAllianceBuildings(function(_,obj)
+        if obj.name == 'shrine' then
+            object = obj
+            return true
+        end
+    end)
+    local location = object.location
     return location
 end
 
 function GameUIShireFightEvent:DispathSoliderButtonClicked()
-    if not self:GetAllianceShrine():CheckSelfCanDispathSoldiers() then
+    if not Alliance_Manager:GetMyAlliance():CanSendTroopToShrine(User._id) then
         UIKit:showMessageDialog(nil,_("你已经向圣地派遣了部队"))
         return
     end
@@ -303,6 +308,7 @@ function GameUIShireFightEvent:InfomationButtonClicked()
 end
 
 return GameUIShireFightEvent
+
 
 
 
