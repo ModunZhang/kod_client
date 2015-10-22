@@ -95,6 +95,9 @@ end
 function GameUIAlliance:OnMoveInStage()
     GameUIAlliance.super.OnMoveInStage(self)
     self:RefreshMainUI()
+    if not User.countInfo.firstJoinAllianceRewardGeted and not Alliance_Manager:GetMyAlliance():IsDefault() then
+        UIKit:newGameUI("GameUIAllianceJoinTips"):AddToCurrentScene(true)
+    end
     self:AddListenerOfMyAlliance()
 end
 
