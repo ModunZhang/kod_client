@@ -23,7 +23,8 @@ Alliance.LISTEN_TYPE = Enum(
     "events",
     "joinRequestEvents",
     "helpEvents",
-    "marchEvents")
+    "marchEvents",
+    "buildings")
 property(Alliance, "_id", nil)
 property(Alliance, "mapIndex", nil)
 property(Alliance, "desc", "")
@@ -567,6 +568,7 @@ local before_map = {
     shrineEvents = function()end,
 
     events = function()end,
+    buildings = function()end,
     joinRequestEvents = function()end,
     helpEvents = function(allianceData, deltaData)
         if allianceData:IsMyAlliance() then

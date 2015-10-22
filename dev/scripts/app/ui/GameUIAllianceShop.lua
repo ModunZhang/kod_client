@@ -3,7 +3,6 @@ local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetBuyGoods = import("..widget.WidgetBuyGoods")
 local WidgetStockGoods = import("..widget.WidgetStockGoods")
 local WidgetPushButton = import("..widget.WidgetPushButton")
-local AllianceItemsManager = import("..entity.AllianceItemsManager")
 local GameUIAllianceShop = UIKit:createUIClass('GameUIAllianceShop', "GameUIAllianceBuilding")
 local UIListView = import(".UIListView")
 local UILib = import(".UILib")
@@ -91,6 +90,7 @@ function GameUIAllianceShop:OnMoveInStage()
         end
     end):pos(window.cx, window.bottom + 34)
     self.alliance:AddListenOnType(self, "basicInfo")
+    self.alliance:AddListenOnType(self, "buildings")
     self.alliance:AddListenOnType(self, "itemLogs")
     self.alliance:AddListenOnType(self, "items")
 end
@@ -107,6 +107,7 @@ end
 function GameUIAllianceShop:onExit()
     self.alliance:RemoveListenerOnType(self, "basicInfo")
     self.alliance:RemoveListenerOnType(self, "itemLogs")
+    self.alliance:RemoveListenerOnType(self, "buildings")
     self.alliance:RemoveListenerOnType(self, "items")
     GameUIAllianceShop.super.onExit(self)
 end
@@ -402,9 +403,10 @@ function GameUIAllianceShop:InitRecordPart()
     self.record_list = list
 
     local item_logs = self.alliance.itemLogs
-    if not item_logs then
+    if LuaUtils:table_size(item_logs) == 0 then
         NetManager:getItemLogsPromise(self.alliance.id):done(function ( response )
-            local item_logs = self.alliance.itemLogs
+            local item_logs = response.msg.itemLogs
+            dump(item_logs,"getItemLogsPromise done")
             if item_logs then
                 self.record_logs_items = {}
                 for i,v in ipairs(item_logs) do
@@ -485,9 +487,26 @@ function GameUIAllianceShop:OnAllianceDataChanged_basicInfo(alliance, deltaData)
         self.honourAndLoyalty:SetHonour(value)
     end
 end
+function GameUIAllianceShop:OnAllianceDataChanged_buildings(alliance, deltaData)
+    local ok, value = deltaData("buildings")
+    if ok then
+        self:InitUnLockItems()
+        if self.goods_listview then
+            self.goods_listview:removeAllItems()
+            self:InitGoodsPart()
+        end
+        if  self.stock_listview then
+            self.stock_listview:removeAllItems()
+            self:InitStockPart()
+        end
+    end
+end
 function GameUIAllianceShop:OnAllianceDataChanged_itemLogs(alliance, deltaData)
     if self.record_list then
         local ok, value = deltaData("itemLogs.add")
+        if LuaUtils:table_size(alliance.itemLogs) == 1 then
+            self.record_list:removeAllItems()
+        end
         if ok then
             for i,v in ipairs(value) do
                 self:CreateRecordItem(v,1)
