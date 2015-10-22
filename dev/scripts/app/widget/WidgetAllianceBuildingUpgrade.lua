@@ -18,6 +18,7 @@ local ERR_MESSAGE = {
 function WidgetAllianceBuildingUpgrade:ctor(building)
     self:setNodeEventEnabled(true)
     self.building = building
+    dump(building,"building")
     self.building_config = GameDatas.AllianceBuilding[building.name]
     self.alliance = Alliance_Manager:GetMyAlliance()
 end
@@ -82,8 +83,7 @@ function WidgetAllianceBuildingUpgrade:onEnter()
     self:VisibleUpgradeButton()
 
     self:InitRequirement()
-
-
+    self.alliance:AddListenOnType(self, "buildings")
 end
 
 function WidgetAllianceBuildingUpgrade:InitBuildingIntroduces()
@@ -196,6 +196,7 @@ function WidgetAllianceBuildingUpgrade:InitRequirement()
 end
 
 function WidgetAllianceBuildingUpgrade:onExit()
+    self.alliance:RemoveListenerOnType(self, "buildings")
 end
 
 function WidgetAllianceBuildingUpgrade:IsAbleToUpgrade()
@@ -208,14 +209,18 @@ function WidgetAllianceBuildingUpgrade:IsAbleToUpgrade()
     end
 end
 
-function WidgetAllianceBuildingUpgrade:OnBuildingInfoChange(building)
-    self:RefreahBuilding(building)
+function WidgetAllianceBuildingUpgrade:OnAllianceDataChanged_buildings(alliance, deltaData)
+    for k,v in pairs(alliance.buildings) do
+        if v.id == self.building.id then
+            self.building = v
+        end
+    end
+    self:RefreahBuilding(self.building)
     self:InitRequirement()
     self:SetBuildingLevel()
     self:SetUpgradeEfficiency()
     self:VisibleUpgradeButton()
 end
-
 function WidgetAllianceBuildingUpgrade:VisibleUpgradeButton()
     if #self.building_config == self.building.level then
         self.upgrade_button:hide()

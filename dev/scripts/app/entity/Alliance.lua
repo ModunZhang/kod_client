@@ -25,7 +25,8 @@ Alliance.LISTEN_TYPE = Enum(
     "events",
     "joinRequestEvents",
     "helpEvents",
-    "marchEvents")
+    "marchEvents",
+    "buildings")
     -- "OnAttackMarchEventDataChanged",
     -- "OnAttackMarchEventTimerChanged",
     -- "OnAttackMarchReturnEventDataChanged",
@@ -482,6 +483,7 @@ local before_map = {
     mapObjects = function()end,
     villageLevels = function()end,
     events = function()end,
+    buildings = function()end,
     joinRequestEvents = function()end,
     helpEvents = function(allianceData, deltaData)
         if allianceData:IsMyAlliance() then
