@@ -47,13 +47,8 @@ function UpgradeBuilding:UniqueUpgradingKey()
     return self.unique_upgrading_key
 end
 function UpgradeBuilding:ResetAllListeners()
-    UpgradeBuilding.super.ResetAllListeners(self)
     self:GetUpgradeObserver():RemoveAllObserver()
 end
--- function UpgradeBuilding:CopyListenerFrom(building)
---     UpgradeBuilding.super.CopyListenerFrom(self, building)
---     self.upgrade_building_observer:CopyListenerFrom(building:GetUpgradeObserver())
--- end
 function UpgradeBuilding:AddUpgradeListener(listener)
     assert(listener.OnBuildingUpgradingBegin)
     assert(listener.OnBuildingUpgradeFinished)
@@ -165,16 +160,10 @@ function UpgradeBuilding:OnUserDataChanged(userData, current_time, location_info
         level, type_, finished_time = location_info.level, location_info.type, (event == nil and 0 or event.finishTime / 1000)
         if type_ ~= self.building_type then
             self.building_type = type_
-            self.base_building_observer:NotifyObservers(function(listener)
-                listener:OnTransformed(self)
-            end)
         end
     end
     self:OnEvent(event)
     if level and finished_time then
-        -- if display.getRunningScene().__cname ~= "MainScene" and level ~= self.level then
-        --     GameGlobalUI:showTips(_("提示"),format(_("建造%s至%d级完成"),Localize.building_name[self:GetType()],level))
-        -- end
         self:OnHandle(level, finished_time)
     end
 end

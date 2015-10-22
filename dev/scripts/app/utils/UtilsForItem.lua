@@ -155,7 +155,24 @@ function UtilsForItem:GetAllWarBuffTypes()
         "siegeAtkBonus",
     }
 end
-
+function UtilsForItem:GetBuff(userData)
+    local buff = {
+        coin = 0,
+        wood = 0,
+        iron = 0,
+        food = 0,
+        stone= 0,
+        wallHp = 0,
+        citizen= 0,
+    }
+    for _,v in ipairs(self:GetAllResourceBuffData(userData)) do
+        local res_type,buff_type,buff_value = unpack(v)
+        if res_type then
+            buff[res_type] = buff[res_type] + buff_value
+        end
+    end
+    return setmetatable(buff, BUFF_META)
+end
 
 
 

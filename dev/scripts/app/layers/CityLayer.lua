@@ -191,6 +191,73 @@ function CityLayer:OnDestoryDecorator(destory_decorator, release_ruins)
         end
     end
 end
+function CityLayer:OnUserDataChanged_buildings(userData, deltaData)
+    for k,v in pairs(self.buildings) do
+        v:RefreshSprite()
+        v:CheckCondition()
+    end
+    for k,v in pairs(self.houses) do
+        v:RefreshSprite()
+        v:CheckCondition()
+    end
+end
+function CityLayer:OnUserDataChanged_houseEvents(userData, deltaData)
+    local buildingLocation, houseLocation = self:GetCurrentLocation()
+    local ok, value = deltaData("houseEvents.remove")
+    if ok then
+        for i,v in ipairs(value) do
+            local house = self:GetHouse(v.buildingLocation, v.houseLocation)
+            if house then
+                house:UpgradeFinished()
+            end
+        end
+    end
+    local ok, value = deltaData("houseEvents.add")
+    if ok then
+        for i,v in ipairs(value) do
+            local house = self:GetHouse(v.buildingLocation, v.houseLocation)
+            if house then
+                house:UpgradeBegin()
+            end
+        end
+    end
+end
+function CityLayer:GetHouse(buildingLocation, houseLocation)
+    for k,v in pairs(self.houses) do
+        local l1, l2 = v:GetCurrentLocation()
+        if l1 == buildingLocation and l2 == houseLocation then
+            return v
+        end
+    end
+end
+function CityLayer:OnUserDataChanged_buildingEvents(userData, deltaData)
+    local ok, value = deltaData("buildingEvents.remove")
+    if ok then
+        for i,v in ipairs(value) do
+            local building = self:GetBuilding(v.location)
+            if building then
+                building:UpgradeFinished()
+            end
+        end
+    end
+    local ok, value = deltaData("buildingEvents.add")
+    if ok then
+        for i,v in ipairs(value) do
+            local building = self:GetBuilding(v.location)
+            if building then
+                building:UpgradeBegin()
+            end
+        end
+    end
+end
+function CityLayer:GetBuilding(buildingLocation)
+    for k,v in pairs(self.buildings) do
+        local l1 = v:GetCurrentLocation()
+        if l1 == buildingLocation then
+            return v
+        end
+    end
+end
 function CityLayer:OnUserDataChanged_soldiers(userData, deltaData)
     if self:IsBarracksMoving() then return end
     self:UpdateSoldiersVisible()
@@ -373,6 +440,9 @@ function CityLayer:InitWithCity(city)
     local User = self.scene:GetCity():GetUser()
     User:AddListenOnType(self, "soldiers")
     User:AddListenOnType(self, "helpedByTroops")
+    User:AddListenOnType(self, "buildings")
+    User:AddListenOnType(self, "houseEvents")
+    User:AddListenOnType(self, "buildingEvents")
 
     local city_node = self:GetCityNode()
     -- 加废墟

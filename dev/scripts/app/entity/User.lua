@@ -15,6 +15,7 @@ User.LISTEN_TYPE = Enum(
     "helpedByTroops",
     "helpToTroops",
 
+    "buildings",
     "houseEvents",
     "buildingEvents",
 
@@ -642,6 +643,17 @@ function User:IsVIPActived()
     end
     return false, 0
 end
+function User:GetVipBuff()
+    return setmetatable({
+        coin = 0,
+        wood = self:GetVIPWoodProductionAdd(),
+        food = self:GetVIPFoodProductionAdd(),
+        iron = self:GetVIPIronProductionAdd(),
+        stone= self:GetVIPStoneProductionAdd(),
+        wallHp = self:GetVIPWallHpRecoveryAdd(),
+        citizen= self:GetVIPCitizenRecoveryAdd(),
+    }, BUFF_META)
+end
 --[[end]]
 
 
@@ -923,7 +935,7 @@ function User:GetShortestTechEvent()
             time = l
         end
     end
-    return shortest_event 
+    return shortest_event
 end
 function User:GetShortestMilitaryTechEvent()
     local shortest_event
@@ -942,14 +954,14 @@ function User:GetShortestMilitaryTechEvent()
             time = l
         end
     end
-    return shortest_event 
+    return shortest_event
 end
 function User:GetShortMilitaryTechEventBy(building)
     local event1 = self:GetMilitaryTechEventBy(building)
     local event2 = self:GetStarEventBy(building)
-    return (event1 and event1.startTime or 0) 
-         > (event2 and event2.startTime or 0) 
-       and event1 or event2
+    return (event1 and event1.startTime or 0)
+        > (event2 and event2.startTime or 0)
+        and event1 or event2
 end
 function User:GetShortMilitaryTechEventTime(building)
     local event = self:GetShortMilitaryTechEventBy(building)
@@ -1091,7 +1103,7 @@ function User:IsTechEnable(tech_name, tech)
     local depend_tech_name, depend_tech = self:GetProductionTech(config.unlockBy)
     local config_depend = UtilsForTech:GetProductionTechConfig(depend_tech_name)
     return self:GetAcademyLevel() >= config.academyLevel
-       and depend_tech.level >= config_depend.unlockLevel 
+        and depend_tech.level >= config_depend.unlockLevel
 end
 function User:GetProductionTech(index)
     for tech_name,v in pairs(self.productionTechs) do
@@ -1107,16 +1119,6 @@ end
 
 
 --[[buildings begin]]
-local buildings_location = GameDatas.Buildings.buildings
-local function getLocationsByName(name)
-    local locations = {}
-    for _,building in ipairs(buildings_location) do
-        if building.name == name then
-            table.insert(locations, building.location)
-        end
-    end
-    return locations
-end
 function User:GetAcademyLevel()
     for k,v in pairs(self.buildings) do
         if v.type == "academy" then
@@ -1125,25 +1127,10 @@ function User:GetAcademyLevel()
     end
 end
 function User:IsBuildingUnlockedBy(name)
-    for _,location in ipairs(getLocationsByName(name)) do
-        local key = string.format("location_%d", location)
-        local building = self.buildings[key]
-        if building.level > 0 then
-            return true
-        end
-    end
-    return false
+    return next(UtilsForBuilding:GetBuildingsBy(self, name, 1))
 end
 function User:GetUnlockBuildingsBy(name)
-    local buildings = {}
-    for _,location in ipairs(getLocationsByName(name)) do
-        local key = string.format("location_%d", location)
-        local building = self.buildings[key]
-        if building.level > 0 then
-            table.insert(buildings, building)
-        end
-    end
-    return buildings
+    return UtilsForBuilding:GetBuildingsBy(self, name, 1)
 end
 function User:GetBuildingByEvent(event)
     if event.location then
@@ -1166,8 +1153,8 @@ end
 function User:GetBuildingEventByLocation(buildingLocation, houseLocation)
     if houseLocation then
         for i,v in ipairs(self.houseEvents) do
-            if v.buildingLocation == buildingLocation 
-           and v.houseLocation == houseLocation then
+            if v.buildingLocation == buildingLocation
+                and v.houseLocation == houseLocation then
                 return v
             end
         end
@@ -1289,7 +1276,7 @@ function User:GetMakingMaterialsEventCount()
 end
 function User:GetMakingMaterialsEvent(type_)
     for i,v in ipairs(self.materialEvents) do
-        if v.finishTime ~= 0 and 
+        if v.finishTime ~= 0 and
             (not type_ or v.type == type_) then
             return v
         end
@@ -1297,7 +1284,7 @@ function User:GetMakingMaterialsEvent(type_)
 end
 function User:GetStoreMaterialsEvent(type_)
     for i,v in ipairs(self.materialEvents) do
-        if v.finishTime == 0 and 
+        if v.finishTime == 0 and
             (not type_ or v.type == type_) then
             return v
         end
@@ -1305,7 +1292,7 @@ function User:GetStoreMaterialsEvent(type_)
 end
 function User:IsStoreMaterials(type_)
     for i,v in ipairs(self.materialEvents) do
-        if v.finishTime == 0 and 
+        if v.finishTime == 0 and
             (not type_ or v.type == type_) then
             return true
         end
@@ -1326,7 +1313,7 @@ function User:CanMakeMaterials()
 end
 function User:IsMakingMaterials(type_)
     for i,v in ipairs(self.materialEvents) do
-        if v.finishTime ~= 0 and 
+        if v.finishTime ~= 0 and
             (not type_ or v.type == type_) then
             return true
         end
@@ -1436,6 +1423,65 @@ end
 --[[end]]
 
 
+--[[production begin]]
+local playerCitizenRecoverFullNeedHours_value = GameDatas.
+    PlayerInitData.
+    intInit.
+    playerCitizenRecoverFullNeedHours.value
+function User:RefreshOutput()
+    local wall_info = UtilsForBuilding:GetWallInfo(self)
+
+    local production = UtilsForBuilding:GetHouseProductions(self)
+    production.wallHp = wall_info.wallRecovery
+    local buff_building = UtilsForBuilding:GetBuildingsBuff(self)
+    local buff_tech     = UtilsForTech:GetBuff(self)
+    local buff_item     = UtilsForItem:GetBuff(self)
+    local buff_vip      = self:GetVipBuff()
+    production = production * (1 + buff_building + buff_item + buff_tech + buff_vip)
+
+    local limits = UtilsForBuilding:GetWarehouseLimit(self)
+    local limits_map = setmetatable({
+        coin = math.huge,
+        wood = limits.maxWood,
+        food = limits.maxFood,
+        iron = limits.maxIron,
+        stone= limits.maxStone,
+        wallHp = wall_info.wallHp,
+        citizen= UtilsForBuilding:GetCitizenLimit(self),
+    }, BUFF_META)
+    local buff_limit = UtilsForTech:GetLimitBuff(self)
+    limits_map = limits_map * (1 + buff_limit)
+
+    for k,v in pairs(limits_map) do
+        local res = self.resources_cache[k]
+        if k == "citizen" then
+            res.limit = v - UtilsForBuilding:GetCitizenMap(self).total
+        else
+            res.limit = v
+        end
+    end
+
+    for k,v in pairs(production) do
+        local res = self.resources_cache[k]
+        if k == "food" then
+            res.output = math.floor(v - self:GetSoldierUpkeep())
+        else
+            res.output = math.floor(v)
+        end
+    end
+    local citizen = self:GetResProduction("citizen")
+    citizen.output = math.floor(citizen.limit / playerCitizenRecoverFullNeedHours_value)
+    local cart = self:GetResProduction("cart")
+    local tradeGuild_info = UtilsForBuilding:GetTradeGuildInfo(self)
+    cart.limit = tradeGuild_info.maxCart
+    cart.output = tradeGuild_info.cartRecovery
+
+    dump(self.resources, "self.user.resources_cache")
+    dump(self.resources_cache, "self.user.resources_cache")
+end
+--[[end]]
+
+
 
 
 local before_map = {
@@ -1451,7 +1497,9 @@ local before_map = {
         end
     end,
     items = function()end,
-    resources = function()end,
+    resources = function(userData, deltaData)
+        userData:RefreshOutput()
+    end,
     countInfo = function()end,
     deals = function()end,
     iapGifts = function()end,
@@ -1459,11 +1507,19 @@ local before_map = {
     allianceDonate = function()end,
     dailyTasks = function()end,
     dailyQuests = function()end,
-    itemEvents = function()end,
+    itemEvents = function(userData, deltaData)
+        userData:RefreshOutput()
+    end,
     helpedByTroops = function()end,
     helpToTroops = function()end,
 
+
+    buildings = function(userData, deltaData)
+        userData:RefreshOutput()
+    end,
     houseEvents = function(userData, deltaData)
+        userData:RefreshOutput()
+
         local ok, value = deltaData("houseEvents.remove")
         if ok then
             for i,v in ipairs(value) do
@@ -1471,10 +1527,10 @@ local before_map = {
                 local house = userData:GetHouseByLocation(v.buildingLocation, v.houseLocation)
                 GameGlobalUI:showTips(_("提示"),
                     string.format(_("建造%s至%d级完成"),
-                    Localize.building_name[house.type], house.level))
+                        Localize.building_name[house.type], house.level))
             end
         end
-        
+
         local ok, value = deltaData("houseEvents.edit")
         if ok then
             for i,v in ipairs(value) do
@@ -1483,6 +1539,8 @@ local before_map = {
         end
     end,
     buildingEvents = function(userData, deltaData)
+        userData:RefreshOutput()
+
         local ok, value = deltaData("buildingEvents.remove")
         if ok then
             for i,v in ipairs(value) do
@@ -1490,7 +1548,7 @@ local before_map = {
                 local building = userData:GetBuilingByLocation(v.location)
                 GameGlobalUI:showTips(_("提示"),
                     string.format(_("建造%s至%d级完成"),
-                    Localize.building_name[building.type], building.level))
+                        Localize.building_name[building.type], building.level))
             end
         end
 
@@ -1502,16 +1560,19 @@ local before_map = {
         end
     end,
 
-    productionTechs = function()end,
+    productionTechs = function(userData, deltaData)
+        userData:RefreshOutput()
+    end,
     productionTechEvents = function(userData, deltaData)
+        userData:RefreshOutput()
         local ok, value = deltaData("productionTechEvents.remove")
         if ok then
             for i,v in ipairs(value) do
                 app:GetPushManager():CancelTechnologyPush(v.id)
                 GameGlobalUI:showTips(
-                    _("生产科技升级完成"), 
+                    _("生产科技升级完成"),
                     Localize.productiontechnology_name[v.name]
-                    .."Lv"..userData.productionTechs[v.name].level)        
+                    .."Lv"..userData.productionTechs[v.name].level)
             end
         end
 
@@ -1521,11 +1582,15 @@ local before_map = {
                 userData:ProductTechLocalPush(v)
             end
         end
-        
+
     end,
 
-    militaryTechs = function()end,
+    militaryTechs = function(userData, deltaData)
+        userData:RefreshOutput()
+    end,
     militaryTechEvents = function(userData, deltaData)
+        userData:RefreshOutput()
+
         local militaryTechs = userData.militaryTechs
         local ok, value = deltaData("militaryTechEvents.remove")
         if ok then
@@ -1545,14 +1610,16 @@ local before_map = {
         end
     end,
 
-    soldiers = function()end,
+    soldiers = function(userData, deltaData)
+        userData:RefreshOutput()
+    end,
     soldierEvents = function(userData, deltaData)
         local ok, value = deltaData("soldierEvents.remove")
         if ok then
             for i,v in ipairs(value) do
                 app:GetPushManager():CancelSoldierPush(v.id)
-                GameGlobalUI:showTips(_("招募士兵完成"), 
-                Localize.soldier_name[v.name].."X"..v.count)
+                GameGlobalUI:showTips(_("招募士兵完成"),
+                    Localize.soldier_name[v.name].."X"..v.count)
             end
         end
 
@@ -1562,9 +1629,11 @@ local before_map = {
                 userData:RecruitLocalPush(v)
             end
         end
-    end, 
+    end,
 
-    woundedSoldiers = function()end,
+    woundedSoldiers = function(userData, deltaData)
+        userData:RefreshOutput()
+    end,
     treatSoldierEvents = function(userData, deltaData)
         local ok, value = deltaData("treatSoldierEvents.remove")
         if ok then
@@ -1572,11 +1641,11 @@ local before_map = {
                 app:GetPushManager():CancelSoldierPush(v.id)
                 local soldiers_info = {}
                 for i,soldier in ipairs(v.soldiers) do
-                    table.insert(soldiers_info, 
+                    table.insert(soldiers_info,
                         Localize.soldier_name[soldier.name]
                         .."X"..soldier.count)
                 end
-                GameGlobalUI:showTips(_("治愈士兵完成"), 
+                GameGlobalUI:showTips(_("治愈士兵完成"),
                     table.concat(soldiers_info, ","))
             end
         end
@@ -1589,7 +1658,9 @@ local before_map = {
         end
     end,
 
-    soldierStars = function()end,
+    soldierStars = function(userData, deltaData)
+        userData:RefreshOutput()
+    end,
     soldierStarEvents = function(userData, deltaData)
         local ok, value = deltaData("soldierStarEvents.remove")
         if ok then
@@ -1613,14 +1684,14 @@ local before_map = {
             end
         end
     end,
-    
+
     dragonEquipments = function()end,
     dragonEquipmentEvents = function(userData, deltaData)
         local ok, value = deltaData("dragonEquipmentEvents.remove")
         if ok then
             for k,v in ipairs(value) do
                 app:GetPushManager():CancelToolEquipmentPush(v.id)
-                GameGlobalUI:showTips(_("制造装备完成"), 
+                GameGlobalUI:showTips(_("制造装备完成"),
                     Localize.equip[v.name].."X1")
             end
         end
@@ -1644,10 +1715,10 @@ local before_map = {
                     app:GetPushManager():CancelToolEquipmentPush(v.id)
                     local material_info = {}
                     for i,m in ipairs(v.materials) do
-                        table.insert(material_info, 
+                        table.insert(material_info,
                             Localize.materials[m.name].."X"..m.count)
                     end
-                    GameGlobalUI:showTips(_("制造材料完成"), 
+                    GameGlobalUI:showTips(_("制造材料完成"),
                         table.concat(material_info, ","))
                 else
                     userData:MaterialLocalPush(v)
@@ -1663,12 +1734,14 @@ local before_map = {
                 if v.finishTime == 0 then
                     GameGlobalUI:showTips(_("提示"),
                         string.format(_("每日任务%s完成"),
-                        Localize.daily_quests_name[v.index]))
+                            Localize.daily_quests_name[v.index]))
                 end
             end
         end
     end,
-    vipEvents = function()end,
+    vipEvents = function(userData, deltaData)
+        userData:RefreshOutput()
+    end,
 }
 local after_map = {
     growUpTasks = function(userData)
@@ -1680,59 +1753,82 @@ local after_map = {
     end,
 }
 function User:OnUserDataChanged(userData, deltaData)
-    local push_man = app:GetPushManager()
     for k,v in pairs(userData) do
         self[k] = v
     end
-    if not deltaData then
-        for id,func in pairs(self.local_push_map or {}) do
-            func(push_man, id)
-        end
-        self.local_push_map = {}
-
-        -- jianzhu
-        for i,v in ipairs(self.houseEvents) do
-            self:HouseLocalPush(v)
-        end
-        for i,v in ipairs(self.buildingEvents) do
-            self:BuildingLocalPush(v)
-        end
-
-        -- shibing
-        for i,v in ipairs(self.soldierEvents) do
-            self:RecruitLocalPush(v)
-        end
-        for i,v in ipairs(self.soldierStarEvents) do
-            self:StarLocalPush(v)
-        end
-        for i,v in ipairs(self.treatSoldierEvents) do
-            self:TreatLocalPush(v)
-        end
-
-        -- keji
-        for i,v in ipairs(self.militaryTechEvents) do
-            self:MilitaryLocalPush(v)
-        end
-        for i,v in ipairs(self.productionTechs) do
-            self:ProductTechLocalPush(v)
-        end
-
-        -- cailiao
-        for i,v in ipairs(self.materialEvents) do
-            self:MaterialLocalPush(v)
-        end
-        for i,v in ipairs(self.dragonEquipmentEvents) do
-            self:EquipLocalPush(v)
+    return self
+end
+function User:OnDeltaDataChanged(deltaData)
+    if deltaData then
+        for i,k in ipairs(User.LISTEN_TYPE) do
+            local before_func = before_map[k]
+            if type(k) == "string" and before_func then
+                if deltaData(k) then
+                    before_func(self, deltaData)
+                    local notify_function_name = string.format("OnUserDataChanged_%s", k)
+                    self:NotifyListeneOnType(User.LISTEN_TYPE[k], function(listener)
+                        local func = listener[notify_function_name]
+                        if func then
+                            func(listener, self, deltaData)
+                        end
+                    end)
+                    local after_func = after_map[k]
+                    if after_func then
+                        after_func(self, deltaData)
+                    end
+                end
+            end
         end
     end
-    return self
+end
+function User:GeneralLocalPush()
+    local push_man = app:GetPushManager()
+    for id,func in pairs(self.local_push_map or {}) do
+        func(push_man, id)
+    end
+    self.local_push_map = {}
+
+    -- jianzhu
+    for i,v in ipairs(self.houseEvents) do
+        self:HouseLocalPush(v)
+    end
+    for i,v in ipairs(self.buildingEvents) do
+        self:BuildingLocalPush(v)
+    end
+
+    -- shibing
+    for i,v in ipairs(self.soldierEvents) do
+        self:RecruitLocalPush(v)
+    end
+    for i,v in ipairs(self.soldierStarEvents) do
+        self:StarLocalPush(v)
+    end
+    for i,v in ipairs(self.treatSoldierEvents) do
+        self:TreatLocalPush(v)
+    end
+
+    -- keji
+    for i,v in ipairs(self.militaryTechEvents) do
+        self:MilitaryLocalPush(v)
+    end
+    for i,v in ipairs(self.productionTechs) do
+        self:ProductTechLocalPush(v)
+    end
+
+    -- cailiao
+    for i,v in ipairs(self.materialEvents) do
+        self:MaterialLocalPush(v)
+    end
+    for i,v in ipairs(self.dragonEquipmentEvents) do
+        self:EquipLocalPush(v)
+    end
 end
 function User:HouseLocalPush(event)
     local push_man = app:GetPushManager()
     self.local_push_map = self.local_push_map or {}
     local building = self:GetBuildingByEvent(event)
-    local title = string.format(_("修建%s到LV%d完成"), 
-        Localize.getLocaliedKeyByType(building.type), 
+    local title = string.format(_("修建%s到LV%d完成"),
+        Localize.getLocaliedKeyByType(building.type),
         (building.level + 1))
     push_man:UpdateBuildPush(event.finishTime/1000, title, event.id)
     self.local_push_map[event.id] = push_man.CancelBuildPush
@@ -1741,8 +1837,8 @@ function User:BuildingLocalPush(event)
     local push_man = app:GetPushManager()
     self.local_push_map = self.local_push_map or {}
     local building = self:GetBuildingByEvent(event)
-    local title = string.format(_("修建%s到LV%d完成"), 
-        Localize.getLocaliedKeyByType(building.type), 
+    local title = string.format(_("修建%s到LV%d完成"),
+        Localize.getLocaliedKeyByType(building.type),
         (building.level + 1))
     push_man:UpdateBuildPush(event.finishTime/1000, title, event.id)
     self.local_push_map[event.id] = push_man.CancelBuildPush
@@ -1758,7 +1854,7 @@ end
 function User:StarLocalPush(event)
     local push_man = app:GetPushManager()
     self.local_push_map = self.local_push_map or {}
-    local title = string.format(_("晋升%s的星级 star %d%s完成"), 
+    local title = string.format(_("晋升%s的星级 star %d%s完成"),
         Localize.soldier_name[event.name],
         self.soldierStars[event.name].level)
     push_man:UpdateSoldierPush(event.finishTime/1000, title, event.id)
@@ -1769,8 +1865,8 @@ function User:TreatLocalPush(event)
     self.local_push_map = self.local_push_map or {}
     local soldiers_info = {}
     for i,v in ipairs(event.soldiers) do
-        table.insert(soldiers_info, 
-            string.format(_("%s X %d "), 
+        table.insert(soldiers_info,
+            string.format(_("%s X %d "),
                 Localize.soldier_name[v.name], v.count))
     end
     local title = string.format(_("治愈%s完成"), table.concat(soldiers_info, ","))
@@ -1780,8 +1876,8 @@ end
 function User:MilitaryLocalPush(event)
     local push_man = app:GetPushManager()
     self.local_push_map = self.local_push_map or {}
-    local title = UtilsForEvent:GetMilitaryTechEventLocalize(event.name, 
-                self.militaryTechs[event.name].level)
+    local title = UtilsForEvent:GetMilitaryTechEventLocalize(event.name,
+        self.militaryTechs[event.name].level)
     push_man:UpdateTechnologyPush(event.finishTime/1000, title, event.id)
     self.local_push_map[event.id] = push_man.CancelTechnologyPush
 end
@@ -1808,31 +1904,9 @@ function User:EquipLocalPush(event)
     self.local_push_map = self.local_push_map or {}
     local title = string.format(_("制造%s装备完成"), Localize.equip[event.name])
     push_man:UpdateToolEquipmentPush(event.finishTime/1000, title, event.id)
-    self.local_push_map[event.id] = push_man.CancelToolEquipmentPush 
+    self.local_push_map[event.id] = push_man.CancelToolEquipmentPush
 end
-function User:OnDeltaDataChanged(deltaData)
-    if deltaData then
-        for i,k in ipairs(User.LISTEN_TYPE) do
-            local before_func = before_map[k]
-            if type(k) == "string" and before_func then
-                if deltaData(k) then
-                    before_func(self, deltaData)
-                    local notify_function_name = string.format("OnUserDataChanged_%s", k)
-                    self:NotifyListeneOnType(User.LISTEN_TYPE[k], function(listener)
-                        local func = listener[notify_function_name]
-                        if func then
-                            func(listener, self, deltaData)
-                        end
-                    end)
-                    local after_func = after_map[k]
-                    if after_func then
-                        after_func(self, deltaData)
-                    end
-                end
-            end
-        end
-    end
-end
+
 
 
 function User:OnPropertyChange(property_name, old_value, new_value)
@@ -1851,6 +1925,7 @@ function User:PromiseOfGetCityBuildRewards()
 end
 
 return User
+
 
 
 

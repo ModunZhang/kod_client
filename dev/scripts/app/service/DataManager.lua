@@ -53,14 +53,22 @@ function DataManager:OnUserDataChanged(userData,timer, deltaData)
     end
     LuaUtils:TimeCollect(function()
         User:OnUserDataChanged(userData, deltaData)
+        if not deltaData then
+            User:RefreshOutput()
+            User:GeneralLocalPush()
+        end
     end, "User:OnUserDataChanged")
+
     LuaUtils:TimeCollect(function()
         City:OnUserDataChanged(userData, timer, deltaData)
     end, "City:OnUserDataChanged")
+    
     User:OnDeltaDataChanged(deltaData)
+
     LuaUtils:TimeCollect(function()
         Alliance_Manager:OnUserDataChanged(userData, timer, deltaData)
     end, "Alliance_Manager:OnUserDataChanged")
+    
     LuaUtils:TimeCollect(function()
         MailManager:OnUserDataChanged(userData, timer, deltaData)
     end, "MailManager:OnUserDataChanged")

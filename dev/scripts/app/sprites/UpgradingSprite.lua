@@ -8,58 +8,6 @@ function UpgradingSprite:GetWorldPosition()
     return self:convertToWorldSpace(cc.p(self:GetSpriteOffset())),
         self:convertToWorldSpace(cc.p(self:GetSpriteTopPosition()))
 end
-function UpgradingSprite:OnLogicPositionChanged(x, y)
-    self:SetPositionWithZOrder(self:GetLogicMap():ConvertToMapPosition(x, y))
-end
-function UpgradingSprite:OnTransformed()
-end
-function UpgradingSprite:OnUserDataChanged_houseEvents(userData, deltaData)
-    if City:IsFunctionBuilding(self:GetEntity()) then
-        return
-    end
-    local buildingLocation, houseLocation = self:GetCurrentLocation()
-    local ok, value = deltaData("houseEvents.remove")
-    if ok then
-        for i,v in ipairs(value) do
-            if v.buildingLocation == buildingLocation
-                and v.houseLocation == houseLocation then
-                self:UpgradeFinished()
-            end
-        end
-    end
-    local ok, value = deltaData("houseEvents.add")
-    if ok then
-        for i,v in ipairs(value) do
-            if v.buildingLocation == buildingLocation
-                and v.houseLocation == houseLocation then
-                self:UpgradeBegin()
-            end
-        end
-    end
-end
-function UpgradingSprite:OnUserDataChanged_buildingEvents(userData, deltaData)
-    local City = self:GetEntity():BelongCity()
-    if not City:IsFunctionBuilding(self:GetEntity()) then
-        return
-    end
-    local buildingLocation = self:GetCurrentLocation()
-    local ok, value = deltaData("buildingEvents.remove")
-    if ok then
-        for i,v in ipairs(value) do
-            if v.location == buildingLocation then
-                self:UpgradeFinished()
-            end
-        end
-    end
-    local ok, value = deltaData("buildingEvents.add")
-    if ok then
-        for i,v in ipairs(value) do
-            if v.location == buildingLocation then
-                self:UpgradeBegin()
-            end
-        end
-    end
-end
 function UpgradingSprite:GetCurrentLocation()
     if self:GetEntity():GetType() == "wall" then
         return 21
@@ -102,7 +50,7 @@ function UpgradingSprite:StartBuildingAnimation()
     self:stopAllActions()
     self.building_animation = self:runAction(cc.RepeatForever:create(sequence))
 
-    self.hammer_animation = ccs.Armature:create("chuizi"):addTo(self):scale(0.6):align(display.CENTER):pos(self:GetSpriteOffset())
+    self.hammer_animation = ccs.Armature:create("chuizi"):addTo(self, 1):scale(0.6):align(display.CENTER):pos(self:GetSpriteOffset())
     self.hammer_animation:getAnimation():playWithIndex(0)
 end
 function UpgradingSprite:StopBuildingAnimation()
@@ -131,10 +79,7 @@ function UpgradingSprite:ctor(city_layer, entity)
     self.config = SpriteConfig[entity:GetType()]
     local x, y = city_layer:GetLogicMap():ConvertToMapPosition(entity:GetLogicPosition())
     UpgradingSprite.super.ctor(self, city_layer, entity, x, y)
-    entity:AddBaseListener(self)
     local User = entity:BelongCity():GetUser()
-    User:AddListenOnType(self, "houseEvents")
-    User:AddListenOnType(self, "buildingEvents")
 
     if entity:GetType() == "wall" then
         if entity:IsGate() then
@@ -152,10 +97,6 @@ function UpgradingSprite:ctor(city_layer, entity)
     -- self:CreateBase()
 end
 function UpgradingSprite:DestorySelf()
-    local User = self:GetEntity():BelongCity():GetUser()
-    self:GetEntity():RemoveBaseListener(self)
-    User:AddListenOnType(self, "houseEvents")
-    User:AddListenOnType(self, "buildingEvents")
     self:removeFromParent()
 end
 function UpgradingSprite:InitLabel(entity)
@@ -209,13 +150,6 @@ function UpgradingSprite:GetCurrentConfig()
         return nil
     end
 end
--- function UpgradingSprite:GetBeforeConfig()
---     if self.config then
---         return self.config:GetConfigByLevel(self:GetEntity():GetRealEntity():GetBeforeLevel())
---     else
---         return nil
---     end
--- end
 function UpgradingSprite:GetLogicZorder()
     if self:GetEntity():GetType() == "keep" then
         return 1

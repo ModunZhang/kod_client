@@ -69,6 +69,60 @@ function Sprite:setTexture(arg)
     end
 end
 
+BUFF_META = {}
+function BUFF_META.__add(a, b)
+    local t1, t2
+    if getmetatable(a) == BUFF_META then
+        t1, t2 = a, b
+    elseif getmetatable(b) == BUFF_META then
+        t1, t2 = b, a
+    else
+        assert(false)
+    end
+    local t = {}
+    if type(t2) == "table" then
+        for k,v in pairs(t1) do
+            t[k] = v
+        end
+        for k,v in pairs(t2) do
+            t[k] = v + (t[k] or 0)
+        end
+    elseif type(t2) == "number" then
+        for k,v in pairs(t1) do
+            t[k] = v + t2
+        end
+    end
+    return setmetatable(t, BUFF_META)
+end
+function BUFF_META.__sub(a, b)
+    local t = {}
+    for k,v in pairs(a) do
+        t[k] = v - (b[k] or 0)
+    end
+    return setmetatable(t, BUFF_META)
+end
+function BUFF_META.__mul(a, b)
+    local t1, t2
+    if getmetatable(a) == BUFF_META then
+        t1, t2 = a, b
+    elseif getmetatable(b) == BUFF_META then
+        t1, t2 = b, a
+    else
+        assert(false)
+    end
+    local t = {}
+    if type(t2) == "table" then
+        for k,v in pairs(t1) do
+            t[k] = v * (t2[k] or 1)
+        end
+    elseif type(t2) == "number" then
+        for k,v in pairs(t1) do
+            t[k] = v * t2
+        end
+    end
+    return setmetatable(t, BUFF_META)
+end
+
 local c3b_m_ = {
     __add = function(a,b)
         return {

@@ -236,10 +236,14 @@ function GameUIResource:CreateInfomation()
         self.firstValueLabel:setString(string.format("-%d/h",self.building:GetProductionPerHour()))
     else
         local reduce = self.building:GetProductionPerHour()
-        local buffMap,__ = self.city.resource_manager:GetTotalBuffData(self.city)
+        local buff_building = UtilsForBuilding:GetBuildingsBuff(User)
+        local buff_tech     = UtilsForTech:GetBuff(User)
+        local buff_item     = UtilsForItem:GetBuff(User)
+        local buff_vip      = User:GetVipBuff()
+        local buff_total    = buff_building + buff_tech + buff_item + buff_vip
         local key = self.building:GetResType()
-        if buffMap[key] then
-            reduce = reduce * (1 + buffMap[key])
+        if buff_total[key] then
+            reduce = reduce * (1 + buff_total[key])
         end
         self.secondValueLabel:setString(string.format("-%d/h",reduce))
     end
