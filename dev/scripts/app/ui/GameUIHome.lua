@@ -148,6 +148,7 @@ function GameUIHome:AddOrRemoveListener(isAdd)
         my_allaince:AddListenOnType(self, "basicInfo")
         my_allaince:AddListenOnType(self, "helpEvents")
         my_allaince:AddListenOnType(self, "operation")
+        my_allaince:AddListenOnType(self, "marchEvents")
         user:AddListenOnType(self, "basicInfo")
         user:AddListenOnType(self, "growUpTasks")
         user:AddListenOnType(self, "vipEvents")
@@ -163,6 +164,7 @@ function GameUIHome:AddOrRemoveListener(isAdd)
         my_allaince:RemoveListenerOnType(self, "basicInfo")
         my_allaince:RemoveListenerOnType(self, "helpEvents")
         my_allaince:RemoveListenerOnType(self, "operation")
+        my_allaince:RemoveListenerOnType(self, "marchEvents")
         user:RemoveListenerOnType(self, "basicInfo")
         user:RemoveListenerOnType(self, "growUpTasks")
         user:RemoveListenerOnType(self, "vipEvents")
@@ -186,6 +188,9 @@ end
 function GameUIHome:OnAllianceDataChanged_helpEvents()
     self:RefreshHelpButtonVisible()
     self.request_count:SetNumber(Alliance_Manager:GetMyAlliance():GetOtherRequestEventsNum())
+end
+function GameUIHome:OnAllianceDataChanged_marchEvents(alliance, deltaData)
+    self.right_bottom_order:RefreshOrder()
 end
 function GameUIHome:OnUserDataChanged_basicInfo(userData, deltaData)
     self:RefreshData()
@@ -497,17 +502,48 @@ function GameUIHome:CreateTop()
     self.left_order_group = left_order
 
 
+    local left_bottom_order = WidgetAutoOrder.new(WidgetAutoOrder.ORIENTATION.BOTTOM_TO_TOP,50):addTo(self):pos(display.left+50, display.top-600)
 
     --联盟提示按钮
-    self.join_alliance_tips_button = cc.ui.UIPushButton.new({normal = 'alliance_join_tips_79x83.png'}):pos(display.left+40, display.top-600):addTo(self)
+    local join_alliance_tips_button = cc.ui.UIPushButton.new({normal = 'alliance_join_tips_79x83.png'})
         :onButtonClicked(function()
             UIKit:newGameUI("GameUIAllianceJoinTips"):AddToCurrentScene(true)
         end)
-    self.join_alliance_tips_button:setVisible(not User.countInfo.firstJoinAllianceRewardGeted)
-    if self.join_alliance_tips_button:isVisible() then
-        fire_var():addTo(self.join_alliance_tips_button, -1000, 321)
-    end
 
+    function join_alliance_tips_button:CheckVisible()
+        local show = not User.countInfo.firstJoinAllianceRewardGeted
+        if show then
+            fire_var():addTo(join_alliance_tips_button, -1000, 321)
+        end
+        return show
+    end
+    function join_alliance_tips_button:GetElementSize()
+        return join_alliance_tips_button:getCascadeBoundingBox().size
+    end
+    self.join_alliance_tips_button = join_alliance_tips_button
+    left_bottom_order:AddElement(join_alliance_tips_button)
+
+    --进入三级地图按钮
+    local world_map_btn_bg = display.newSprite("background_86x86.png")
+    local world_map_btn = cc.ui.UIPushButton.new({normal = 'icon_world_88x88.png'})
+        :onButtonPressed(function(event)
+            event.target:runAction(cc.ScaleTo:create(0.1, 1.2))
+        end)
+        :onButtonClicked(function()
+            app:EnterWorldScene()
+            end)
+        :align(display.CENTER,world_map_btn_bg:getContentSize().width/2 , world_map_btn_bg:getContentSize().height/2)
+        :addTo(world_map_btn_bg)
+
+    function world_map_btn_bg:CheckVisible()
+        return not Alliance_Manager:GetMyAlliance():IsDefault()
+    end
+    function world_map_btn_bg:GetElementSize()
+        return world_map_btn_bg:getContentSize()
+    end
+    left_bottom_order:AddElement(world_map_btn_bg)
+
+    left_bottom_order:RefreshOrder()
     local right_bottom_order = WidgetAutoOrder.new(WidgetAutoOrder.ORIENTATION.BOTTOM_TO_TOP,50):addTo(self):pos(display.right-50, display.top-600)
     --瞭望塔事件按钮
     local alliance_belvedere_button = cc.ui.UIPushButton.new({normal = 'fight_62x70.png'})
@@ -523,14 +559,15 @@ function GameUIHome:CreateTop()
         --         default_tab = 'comming'
         --     end
         -- end
-        UIKit:newGameUI('GameUIWathTowerRegion',self.city,default_tab):AddToCurrentScene(true)
+        UIKit:newGameUI('GameUIAllianceWatchTowerOnlyMarchEvents',self.city):AddToCurrentScene(true)
     end)
     function alliance_belvedere_button:CheckVisible()
         local alliance = Alliance_Manager:GetMyAlliance()
+        local marchEvents = alliance.marchEvents
         -- local alliance_belvedere = alliance:GetAllianceBelvedere()
         -- local hasEvent,count = alliance_belvedere:HasEvents()
-        -- alliance_belvedere_button.alliance_belvedere_events_count:SetNumber(count)
-        return hasEvent
+        alliance_belvedere_button.alliance_belvedere_events_count:SetNumber(LuaUtils:table_size(marchEvents.strikeMarchEvents) + LuaUtils:table_size(marchEvents.attackMarchEvents))
+        return not (LuaUtils:table_empty(marchEvents.strikeMarchEvents) and LuaUtils:table_empty(marchEvents.attackMarchEvents))
     end
     function alliance_belvedere_button:GetElementSize()
         return alliance_belvedere_button:getCascadeBoundingBox().size
@@ -921,6 +958,8 @@ end
 
 
 return GameUIHome
+
+
 
 
 

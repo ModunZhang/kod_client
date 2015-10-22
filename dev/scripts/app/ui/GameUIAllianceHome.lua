@@ -88,6 +88,7 @@ function GameUIAllianceHome:AddOrRemoveListener(isAdd)
     if isAdd then
         self.alliance:AddListenOnType(self, "basicInfo")
         self.alliance:AddListenOnType(self, "members")
+        self.alliance:AddListenOnType(self, "marchEvents")
         User:AddListenOnType(self, "soldierStarEvents")
         User:AddListenOnType(self, "militaryTechEvents")
         User:AddListenOnType(self, "productionTechEvents")
@@ -100,6 +101,7 @@ function GameUIAllianceHome:AddOrRemoveListener(isAdd)
     else
         self.alliance:RemoveListenerOnType(self, "basicInfo")
         self.alliance:RemoveListenerOnType(self, "members")
+        self.alliance:RemoveListenerOnType(self, "marchEvents")
         User:RemoveListenerOnType(self, "soldierStarEvents")
         User:RemoveListenerOnType(self, "militaryTechEvents")
         User:RemoveListenerOnType(self, "productionTechEvents")
@@ -123,6 +125,9 @@ function GameUIAllianceHome:OnCommingDataChanged()
 end
 
 function GameUIAllianceHome:OnUserDataChanged_helpToTroops()
+    self.operation_button_order:RefreshOrder()
+end
+function GameUIAllianceHome:OnAllianceDataChanged_marchEvents(alliance, deltaData)
     self.operation_button_order:RefreshOrder()
 end
 function GameUIAllianceHome:Schedule()
@@ -233,17 +238,14 @@ function GameUIAllianceHome:CreateOperationButton()
 
         if i == 2 then
             local alliance = self.alliance
-            -- local alliance_belvedere = alliance:GetAllianceBelvedere()
-            -- local __,count = alliance_belvedere:HasEvents()
-            -- button.alliance_belvedere_events_count = WidgetNumberTips.new():addTo(button):pos(20,-20)
-            -- button.alliance_belvedere_events_count:SetNumber(count)
+            local marchEvents = alliance.marchEvents
+            button.alliance_belvedere_events_count = WidgetNumberTips.new():addTo(button):pos(20,-20)
+            button.alliance_belvedere_events_count:SetNumber(LuaUtils:table_size(marchEvents.strikeMarchEvents) + LuaUtils:table_size(marchEvents.attackMarchEvents))
 
             function button:CheckVisible()
-            -- local hasEvent,count = alliance_belvedere:HasEvents()
-            -- if self.alliance_belvedere_events_count then
-            --     self.alliance_belvedere_events_count:SetNumber(count)
-            -- end
-            -- return hasEvent
+                local marchEvents = alliance.marchEvents
+                button.alliance_belvedere_events_count:SetNumber(LuaUtils:table_size(marchEvents.strikeMarchEvents) + LuaUtils:table_size(marchEvents.attackMarchEvents))
+                return not (LuaUtils:table_empty(marchEvents.strikeMarchEvents) and LuaUtils:table_empty(marchEvents.attackMarchEvents))
             end
         elseif i == 3 then
             local alliance = self.alliance
@@ -669,7 +671,8 @@ function GameUIAllianceHome:OnMidButtonClicked(event)
         --         default_tab = 'comming'
         --     end
         -- end
-        UIKit:newGameUI('GameUIWathTowerRegion',self.city,default_tab):AddToCurrentScene(true)
+        UIKit:newGameUI('GameUIAllianceWatchTowerOnlyMarchEvents',self.city):AddToCurrentScene(true)
+        -- UIKit:newGameUI('GameUIWathTowerRegion',self.city,default_tab):AddToCurrentScene(true)
     elseif tag == 3 then
         local buildings = self.alliance:GetMapObjectsByType("building")
         local shrine_info
