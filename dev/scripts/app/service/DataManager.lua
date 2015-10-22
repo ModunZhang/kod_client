@@ -1,6 +1,5 @@
 DataManager = {}
 local initData = import("..fte.initData")
-local terrainStyle = GameDatas.AllianceMap.terrainStyle
 function DataManager:setUserData( userData, deltaData )
     self.user = userData
     if not GLOBAL_FTE then
@@ -41,41 +40,6 @@ function DataManager:setFteUserDeltaData(deltaData)
 end
 function DataManager:getFteData()
     return initData
-end
-
--- function DataManager:setEnemyAllianceData(enemyAllianceData,deltaData)
---     self.enemyAllianceData = enemyAllianceData
---     if GLOBAL_FTE then return end
---     if not Alliance_Manager then
---         print(debug.traceback("", 2))
---         assert(false)
---     end
---     LuaUtils:TimeCollect(function()
---         Alliance_Manager:OnEnemyAllianceDataChanged(enemyAllianceData,app.timer:GetServerTime(),deltaData)
---     end, "DataManager:setEnemyAllianceData")
--- end
-
--- function DataManager:getEnemyAllianceData()
---     return self.enemyAllianceData
--- end
-
-function DataManager:setMapData(mapData, deltaData)
-    self.mapData = mapData
-end
-function DataManager:getMapData()
-    return self.mapData
-end
-function DataManager:getMapDataByIndex(index)
-    local key = self.mapData[tostring(index)]
-    for _,v in pairs(terrainStyle) do
-        if v.index == key then
-            local terrain, style = unpack(string.split(v.style, "_"))
-            return terrain, tonumber(style)
-        end
-    end
-end
-function DataManager:setMapDataByIndex(index, data)
-    self.mapData[tostring(index)] = data
 end
 
 function DataManager:OnUserDataChanged(userData,timer, deltaData)

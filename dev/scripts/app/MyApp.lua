@@ -46,6 +46,8 @@ local Timer = import('.utils.Timer')
 local User_ = import('.entity.User')
 local MyApp = class("MyApp", cc.mvc.AppBase)
 local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
+local AllianceManager_ = import(".entity.AllianceManager")
+Alliance_Manager = AllianceManager_.new()
 CLOUD_TAG = 1987
 local speed = 2
 -- local function transition_(scene, status)
