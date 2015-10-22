@@ -6,7 +6,6 @@ local WidgetPopDialog = import(".WidgetPopDialog")
 local window = import("..utils.window")
 local Localize = import("..utils.Localize")
 local UILib = import("..ui.UILib")
-local MilitaryTechnology = import("..entity.MilitaryTechnology")
 local WidgetRequirementListview = import(".WidgetRequirementListview")
 
 
