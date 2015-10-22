@@ -11,57 +11,105 @@ end
 function UtilsForItem:GetItemDesc(item_name)
     return Localize_item.item_desc[item_name]
 end
-local config_items_buff     = GameDatas.Items.buff
-local config_items_resource = GameDatas.Items.resource
-local config_items_speedup  = GameDatas.Items.speedup
-local config_items_special  = GameDatas.Items.special
+local buff     = GameDatas.Items.buff
+local resource = GameDatas.Items.resource
+local speedup  = GameDatas.Items.speedup
+local special  = GameDatas.Items.special
 function UtilsForItem:GetItemInfoByName(item_name)
-    local config = config_items_buff[item_name] 
-                or config_items_resource[item_name] 
-                or config_items_speedup[item_name] 
-                or config_items_special[item_name]
+    local config = buff[item_name] 
+                or resource[item_name] 
+                or speedup[item_name] 
+                or special[item_name]
     assert(config)
     return config
 end
 function UtilsForItem:IsBuffItem(item_name)
-    return config_items_buff[item_name] 
+    return buff[item_name] 
 end
 function UtilsForItem:IsResourceItem(item_name)
-    return config_items_resource[item_name] 
+    return resource[item_name] 
 end
 function UtilsForItem:IsSpeedUpItem(item_name)
-    return config_items_speedup[item_name] 
+    return speedup[item_name] 
 end
 function UtilsForItem:IsSpecialItem(item_name)
-    return config_items_special[item_name]
+    return special[item_name]
 end
 function UtilsForItem:GetBuffItemsInfo()
     local t = {}
-    for _,v in pairs(config_items_buff) do
+    for _,v in pairs(buff) do
         table.insert(t, v)
     end
     return self:__order(t)
 end
 function UtilsForItem:GetResourcetItemsInfo()
     local t = {}
-    for _,v in pairs(config_items_resource) do
+    for _,v in pairs(resource) do
         table.insert(t, v)
     end
     return self:__order(t)
 end
 function UtilsForItem:GetSpeedUpItemsInfo()
     local t = {}
-    for _,v in pairs(config_items_speedup) do
+    for _,v in pairs(speedup) do
         table.insert(t, v)
     end
     return self:__order(t)
 end
 function UtilsForItem:GetSpecialItemsInfo()
     local t = {}
-    for _,v in pairs(config_items_special) do
+    for _,v in pairs(special) do
         table.insert(t, v)
     end
     return self:__order(t)
+end
+function UtilsForItem:GetNormalItemsInfo()
+    local items = {}
+    for i,v in ipairs(self:GetSpecialItemsInfo()) do
+        if not v.isAdvancedItem then
+            table.insert(items, v)
+        end
+    end
+    for i,v in ipairs(self:GetBuffItemsInfo()) do
+        if not v.isAdvancedItem then
+            table.insert(items, v)
+        end
+    end
+    for i,v in ipairs(self:GetResourcetItemsInfo()) do
+        if not v.isAdvancedItem then
+            table.insert(items, v)
+        end
+    end
+    for i,v in ipairs(self:GetSpeedUpItemsInfo()) do
+        if not v.isAdvancedItem then
+            table.insert(items, v)
+        end
+    end
+    return items
+end
+function UtilsForItem:GetAdvanceItems()
+    local item = {}
+    for i,v in ipairs(self:GetSpecialItemsInfo()) do
+        if v.isAdvancedItem then
+            table.insert(item, v)
+        end
+    end
+    for i,v in ipairs(self:GetBuffItemsInfo()) do
+        if v.isAdvancedItem then
+            table.insert(item, v)
+        end
+    end
+    for i,v in ipairs(self:GetResourcetItemsInfo()) do
+        if v.isAdvancedItem then
+            table.insert(item, v)
+        end
+    end
+    for i,v in ipairs(self:GetSpeedUpItemsInfo()) do
+        if v.isAdvancedItem then
+            table.insert(item, v)
+        end
+    end
+    return item
 end
 function UtilsForItem:__order(items_info)
     local order_items_info = {}

@@ -3,7 +3,6 @@
 -- local AllianceMoonGate = import(".AllianceMoonGate")
 -- local MarchAttackEvent = import(".MarchAttackEvent")
 -- local AllianceBelvedere = import(".AllianceBelvedere")
--- local AllianceItemsManager = import(".AllianceItemsManager")
 -- local MarchAttackReturnEvent = import(".MarchAttackReturnEvent")
 local Enum = import("..utils.Enum")
 local memberMeta = import(".memberMeta")
@@ -11,17 +10,21 @@ local Localize = import("..utils.Localize")
 local property = import("..utils.property")
 local MultiObserver = import(".MultiObserver")
 local Alliance = class("Alliance", MultiObserver)
-local config_palace = GameDatas.AllianceBuilding.palace
 local buildingName = GameDatas.AllianceMap.buildingName
 Alliance.LISTEN_TYPE = Enum(
-    "operation",
+    "operation", -- 自己加的
+
     "basicInfo",
     "members",
+
+    "items",
+    "itemLogs",
+
+    "mapObjects",
     "villageLevels",
     "events",
     "joinRequestEvents",
     "helpEvents",
-    "mapObjects",
     "marchEvents")
     -- "OnAttackMarchEventDataChanged",
     -- "OnAttackMarchEventTimerChanged",
@@ -37,15 +40,23 @@ property(Alliance, "_id", nil)
 property(Alliance, "mapIndex", nil)
 property(Alliance, "desc", "")
 property(Alliance, "titles", {})
+
 property(Alliance, "members", {})
+
+property(Alliance, "items", {})
+property(Alliance, "itemLogs", {})
+
 property(Alliance, "basicInfo", {})
 property(Alliance, "countInfo", {})
+
 property(Alliance, "events", {})
 property(Alliance, "joinRequestEvents", {})
 property(Alliance, "helpEvents", {})
+
 property(Alliance, "villages", {})
 property(Alliance, "monsters", {})
 property(Alliance, "villageLevels", {})
+
 property(Alliance, "allianceFight", nil)
 property(Alliance, "allianceFightReports", nil)
 property(Alliance, "lastAllianceFightReport", nil)
@@ -59,7 +70,6 @@ function Alliance:ctor()
     -- self.alliance_shrine = AllianceShrine.new(self)
     -- self.alliance_belvedere = AllianceBelvedere.new(self) -- 村落采集
     -- -- 联盟道具管理
-    -- self.items_manager = AllianceItemsManager.new()
 end
 function Alliance:AddListenOnType(listener, listenerType)
     if type(listenerType) == "string" then
@@ -82,9 +92,6 @@ end
 function Alliance:GetVillageLevels()
     return self.villageLevels
 end
--- function Alliance:GetItemsManager()
---     return self.items_manager
--- end
 function Alliance:ResetAllListeners()
     self:ClearAllListener()
 end
@@ -163,6 +170,7 @@ function Alliance:GetMembersCount()
     return count
 end
 -- return 当前人数,在线人数,最大成员数
+local palace = GameDatas.AllianceBuilding.palace
 function Alliance:GetMembersCountInfo()
     local count,online,maxCount = 0,0,0
     for __,v in pairs(self:GetAllMembers()) do
@@ -171,10 +179,10 @@ function Alliance:GetMembersCountInfo()
             online = online + 1
         end
     end
-    local maxmembers = config_palace[1].memberCount
+    local maxmembers = palace[1].memberCount
     for _,v in ipairs(self.buildings) do
         if v.name == 'palace' then
-            maxmembers = config_palace[v.level].memberCount
+            maxmembers = palace[v.level].memberCount
             break
         end
     end
@@ -448,16 +456,50 @@ function Alliance:Reset()
     -- self:ResetVillageEvents()
     self:OnOperation("quit")
 end
-function Alliance:OnAllianceDataChanged(alliance_data,refresh_time,deltaData)
+
+--[[itemLogs begin]]
+function Alliance:SetNewGoodsCome(b)
+    self.isNewGoodsCome = b
+end
+function Alliance:GetItemCount(item_name)
+    return UtilsForItem:GetItemCount(self.items, item_name)
+end
+--[[end]]
+
+
+local before_map = {
+    items = function(allianceData, deltaData)
+        
+    end,
+    basicInfo = function()end,
+    members = function()end,
+    items = function()end,
+    itemLogs = function(allianceData, deltaData)
+        if deltaData("itemLogs.add") then
+            allianceData:SetNewGoodsCome(true)
+        end
+    end,
+    mapObjects = function()end,
+    villageLevels = function()end,
+    events = function()end,
+    joinRequestEvents = function()end,
+    helpEvents = function(allianceData, deltaData)
+        if allianceData:IsMyAlliance() then
+            allianceData:NotifyHelpEvents(deltaData)
+        end
+    end,
+    marchEvents = function()end,
+}
+function Alliance:OnAllianceDataChanged(allianceData,refresh_time,deltaData)
     local is_join, is_quit
-    if self._id ~= alliance_data._id then
-        if (self._id == nil or self._id == json.null) and alliance_data._id ~= nil and alliance_data._id ~= json.null then
+    if self._id ~= allianceData._id then
+        if (self._id == nil or self._id == json.null) and allianceData._id ~= nil and allianceData._id ~= json.null then
             is_join = true
-        elseif self._id ~= nil and self._id ~= json.null and (alliance_data._id == nil or alliance_data._id == json.null) then
+        elseif self._id ~= nil and self._id ~= json.null and (allianceData._id == nil or allianceData._id == json.null) then
             is_quit = true
         end
     end
-    for k,v in pairs(alliance_data) do
+    for k,v in pairs(allianceData) do
         self[k] = v
     end
     for _,v in ipairs(self.members) do
@@ -466,33 +508,31 @@ function Alliance:OnAllianceDataChanged(alliance_data,refresh_time,deltaData)
     if is_join then
         self:OnOperation("join")
     end
+    dump(allianceData.items)
 
     if deltaData then
-        if deltaData.helpEvents then
-            if self:IsMyAlliance() then
-                self:NotifyHelpEvents(deltaData)
-            end
-        end
         for i,k in ipairs(Alliance.LISTEN_TYPE) do
-            if k ~= "operation" and type(k) == "string" then
+            local before_func = before_map[k]
+            if type(k) == "string" and before_func then
                 if deltaData(k) then
-                    local notify_func = string.format("OnAllianceDataChanged_%s", k)
+                    before_func(self, deltaData)
+                    local notify_function_name = string.format("OnAllianceDataChanged_%s", k)
                     self:NotifyListeneOnType(Alliance.LISTEN_TYPE[k], function(listener)
-                        listener[notify_func](listener, self, deltaData)
+                        local func = listener[notify_function_name]
+                        if func then
+                            func(listener, self, deltaData)
+                        end
                     end)
                 end
             end
         end
     end
-    -- self.alliance_shrine:OnAllianceDataChanged(alliance_data,deltaData,refresh_time)
-    -- self:OnAttackMarchEventsDataChanged(alliance_data,deltaData,refresh_time)
-    -- self:OnAttackMarchReturnEventsDataChanged(alliance_data,deltaData,refresh_time)
-    -- self:OnStrikeMarchEventsDataChanged(alliance_data,deltaData,refresh_time)
-    -- self:OnStrikeMarchReturnEventsDataChanged(alliance_data,deltaData,refresh_time)
-    -- self:OnVillageEventsDataChanged(alliance_data,deltaData,refresh_time)
-    -- 联盟道具管理
-    -- self.items_manager:OnItemsChanged(alliance_data,deltaData)
-    -- self.items_manager:OnItemLogsChanged(alliance_data,deltaData)
+    -- self.alliance_shrine:OnAllianceDataChanged(allianceData,deltaData,refresh_time)
+    -- self:OnAttackMarchEventsDataChanged(allianceData,deltaData,refresh_time)
+    -- self:OnAttackMarchReturnEventsDataChanged(allianceData,deltaData,refresh_time)
+    -- self:OnStrikeMarchEventsDataChanged(allianceData,deltaData,refresh_time)
+    -- self:OnStrikeMarchReturnEventsDataChanged(allianceData,deltaData,refresh_time)
+    -- self:OnVillageEventsDataChanged(allianceData,deltaData,refresh_time)
 end
 function Alliance:NotifyHelpEvents(deltaData)
     local ok, value = deltaData("helpEvents")

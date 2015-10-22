@@ -269,7 +269,6 @@ end
 local function get_alliance_itemlogs_response_msg(response)
     if response.msg.itemLogs then
         DataManager:getUserAllianceData().itemLogs = response.msg.itemLogs
-        Alliance_Manager:GetMyAlliance():GetItemsManager():OnItemLogsChanged(DataManager:getUserAllianceData())
     end
     return response
 end

@@ -17,7 +17,6 @@ function GameUIAllianceShop:ctor(city,default_tab,building)
     self.default_tab = default_tab
     self.building = building
     self.alliance = Alliance_Manager:GetMyAlliance()
-    self.items_manager = self.alliance:GetItemsManager()
     self:InitUnLockItems()
 end
 function GameUIAllianceShop:InitUnLockItems()
@@ -54,8 +53,8 @@ function GameUIAllianceShop:OnMoveInStage()
         if tag == 'goods' then
             self.goods_layer:setVisible(true)
             -- 打开商店,更新查看新货物状态
-            if self.alliance:GetItemsManager():IsNewGoodsCome() then
-                self.alliance:GetItemsManager():HasCheckNewGoods()
+            if self.alliance.isNewGoodsCome then
+                self.alliance:SetNewGoodsCome(false)
             end
         else
             self.goods_layer:setVisible(false)
@@ -91,9 +90,9 @@ function GameUIAllianceShop:OnMoveInStage()
             end
         end
     end):pos(window.cx, window.bottom + 34)
-    self.alliance:GetItemsManager():AddListenOnType(self,AllianceItemsManager.LISTEN_TYPE.ITEM_CHANGED)
-    self.alliance:GetItemsManager():AddListenOnType(self,AllianceItemsManager.LISTEN_TYPE.ITEM_LOGS_CHANGED)
     self.alliance:AddListenOnType(self, "basicInfo")
+    self.alliance:AddListenOnType(self, "itemLogs")
+    self.alliance:AddListenOnType(self, "items")
 end
 function GameUIAllianceShop:CreateBetweenBgAndTitle()
     GameUIAllianceShop.super.CreateBetweenBgAndTitle(self)
@@ -107,8 +106,8 @@ function GameUIAllianceShop:CreateBetweenBgAndTitle()
 end
 function GameUIAllianceShop:onExit()
     self.alliance:RemoveListenerOnType(self, "basicInfo")
-    self.alliance:GetItemsManager():RemoveListenerOnType(self,AllianceItemsManager.LISTEN_TYPE.ITEM_CHANGED)
-    self.alliance:GetItemsManager():RemoveListenerOnType(self,AllianceItemsManager.LISTEN_TYPE.ITEM_LOGS_CHANGED)
+    self.alliance:RemoveListenerOnType(self, "itemLogs")
+    self.alliance:RemoveListenerOnType(self, "items")
     GameUIAllianceShop.super.onExit(self)
 end
 -- 荣耀值和忠诚值
@@ -189,12 +188,11 @@ function GameUIAllianceShop:InitGoodsPart()
     local origin_x = box_width/2
     local row_count = 4
     local gap_x = 10
-
-    local normal_items = self.items_manager:GetAllNormalItems()
+    local normal_items = UtilsForItem:GetNormalItemsInfo()
     local row_items = {}
     for i=1,#normal_items do
         local noraml_item = normal_items[i]
-        if self:CheckSell(noraml_item:Name()) then
+        if self:CheckSell(noraml_item.name) then
             table.insert(row_items,noraml_item)
         end
         if LuaUtils:table_size(row_items) == 4 or (i == #normal_items and LuaUtils:table_size(row_items)>0) then
@@ -224,10 +222,10 @@ function GameUIAllianceShop:InitGoodsPart()
 
     -- 道具部分
     local row_items = {}
-    local super_items = self.items_manager:GetAllSuperItems()
+    local super_items = UtilsForItem:GetAdvanceItems()
     for i=1,#super_items do
         local super_item = super_items[i]
-        if self:CheckSell(super_item:Name()) then
+        if self:CheckSell(super_item.name) then
             table.insert(row_items,super_item)
         end
         if LuaUtils:table_size(row_items) == 4 or (i == #super_items and LuaUtils:table_size(row_items) > 0 ) then
@@ -236,8 +234,8 @@ function GameUIAllianceShop:InitGoodsPart()
             node:setContentSize(cc.size(list_width,goods_item_height))
             for i,v in ipairs(row_items) do
                 local goods_box = self:CreateGoodsBox(v):addTo(node):pos(origin_x+(i-1)*(gap_x+box_width), goods_item_height/2)
-                if v:IsAdvancedItem() then
-                    self.super_goods_boxes[v:Name()] = goods_box
+                if v.isAdvancedItem then
+                    self.super_goods_boxes[v.name] = goods_box
                 end
             end
             goods_item:addContent(node)
@@ -259,19 +257,19 @@ function GameUIAllianceShop:CreateGoodsBox(goods)
 
     local item_bg = display.newSprite("box_118x118.png"):addTo(box_button):align(display.CENTER, 0, 18)
     -- tool image
-    local goods_icon = display.newSprite(UILib.item[goods:Name()]):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
+    local goods_icon = display.newSprite(UILib.item[goods.name]):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
         :addTo(item_bg)
     goods_icon:scale(100/goods_icon:getContentSize().width)
 
     local i_icon = display.newSprite("goods_26x26.png"):addTo(item_bg):align(display.CENTER, 15, 15)
 
     -- 高级道具显示数量
-    if goods:IsAdvancedItem() then
+    if goods.isAdvancedItem then
         -- 拥有数量
         local own_bg = display.newSprite("back_ground_42x48.png"):align(display.TOP_CENTER, 28, item_bg:getContentSize().height+4):addTo(item_bg)
 
         local own_label = UIKit:ttfLabel({
-            text = goods:Count(),
+            text = self.alliance:GetItemCount(goods.name),
             size = 18,
             color = 0xfff3ca,
             shadow = true
@@ -286,7 +284,7 @@ function GameUIAllianceShop:CreateGoodsBox(goods)
         :addTo(box_button)
     display.newSprite("loyalty_128x128.png"):align(display.CENTER, 24, num_bg:getContentSize().height/2-2):addTo(num_bg):scale(34/128)
     UIKit:ttfLabel({
-        text = GameUtils:formatNumber(goods:SellPriceInAlliance()),
+        text = GameUtils:formatNumber(goods.sellPriceInAlliance),
         size = 22,
         color = 0x423f32,
     }):align(display.LEFT_CENTER, num_bg:getContentSize().width/2-18, num_bg:getContentSize().height/2-2):addTo(num_bg)
@@ -303,7 +301,7 @@ function GameUIAllianceShop:CreateStockGoodsBox(goods)
 
     local item_bg = display.newSprite("box_118x118.png"):addTo(box_button):align(display.CENTER, 0, 18)
     -- tool image
-    local goods_icon = display.newSprite(UILib.item[goods:Name()]):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
+    local goods_icon = display.newSprite(UILib.item[goods.name]):align(display.CENTER, item_bg:getContentSize().width/2, item_bg:getContentSize().height/2)
         :addTo(item_bg)
     goods_icon:scale(100/goods_icon:getContentSize().width)
 
@@ -312,7 +310,7 @@ function GameUIAllianceShop:CreateStockGoodsBox(goods)
     local own_bg = display.newSprite("back_ground_42x48.png"):align(display.TOP_CENTER, 28, item_bg:getContentSize().height+4):addTo(item_bg)
 
     local own_label = UIKit:ttfLabel({
-        text = goods:Count(),
+        text = self.alliance:GetItemCount(goods.name),
         size = 18,
         color = 0xfff3ca,
         shadow = true
@@ -322,7 +320,7 @@ function GameUIAllianceShop:CreateStockGoodsBox(goods)
         :addTo(box_button)
     display.newSprite("honour_128x128.png"):align(display.CENTER, 24, num_bg:getContentSize().height/2-2):addTo(num_bg):scale(34/128)
     UIKit:ttfLabel({
-        text = GameUtils:formatNumber(goods:BuyPriceInAlliance()),
+        text = GameUtils:formatNumber(goods.buyPriceInAlliance),
         size = 22,
         color = 0x423f32,
     }):align(display.LEFT_CENTER, num_bg:getContentSize().width/2-18, num_bg:getContentSize().height/2-2):addTo(num_bg)
@@ -373,10 +371,10 @@ function GameUIAllianceShop:InitStockPart()
 
     -- 道具部分
     local row_items = {}
-    local super_items = self.items_manager:GetAllSuperItems()
+    local super_items = UtilsForItem:GetAdvanceItems()
     for i=1,#super_items do
         local super_item = super_items[i]
-        if self:CheckSell(super_item:Name()) then
+        if self:CheckSell(super_item.name) then
             table.insert(row_items,super_item)
         end
         if LuaUtils:table_size(row_items) == 4 or (i == #super_items and LuaUtils:table_size(row_items)>0)then
@@ -384,7 +382,7 @@ function GameUIAllianceShop:InitStockPart()
             local node = display.newNode()
             node:setContentSize(cc.size(list_width,goods_item_height))
             for i,v in ipairs(row_items) do
-                self.stock_boxes[v:Name()] = self:CreateStockGoodsBox(v):addTo(node):pos(origin_x+(i-1)*(gap_x+box_width), goods_item_height/2)
+                self.stock_boxes[v.name] = self:CreateStockGoodsBox(v):addTo(node):pos(origin_x+(i-1)*(gap_x+box_width), goods_item_height/2)
             end
             goods_item:addContent(node)
             row_items = {}
@@ -403,10 +401,10 @@ function GameUIAllianceShop:InitRecordPart()
     list_node:addTo(layer):align(display.BOTTOM_CENTER, window.cx,window.bottom_top+20)
     self.record_list = list
 
-    local item_logs = self.alliance:GetItemsManager():GetItemLogs()
+    local item_logs = self.alliance.itemLogs
     if not item_logs then
         NetManager:getItemLogsPromise(self.alliance.id):done(function ( response )
-            local item_logs = self.alliance:GetItemsManager():GetItemLogs()
+            local item_logs = self.alliance.itemLogs
             if item_logs then
                 self.record_logs_items = {}
                 for i,v in ipairs(item_logs) do
@@ -468,49 +466,6 @@ function GameUIAllianceShop:CreateRecordItem(item_log,index)
 
     self.record_logs_items[item_log.time..item_log.playerName] = item
 end
-
-function GameUIAllianceShop:OnItemsChanged(changed_map)
-    for i,v in ipairs(changed_map[1]) do
-        if self.stock_boxes and self.stock_boxes[v:Name()] then
-            self.stock_boxes[v:Name()]:SetOwnCount(v:Count())
-        end
-        if self.super_goods_boxes and self.super_goods_boxes[v:Name()] then
-            self.super_goods_boxes[v:Name()]:SetOwnCount(v:Count())
-        end
-    end
-    for i,v in ipairs(changed_map[2]) do
-        if self.stock_boxes and self.stock_boxes[v:Name()] then
-            self.stock_boxes[v:Name()]:SetOwnCount(v:Count())
-        end
-        if self.super_goods_boxes and self.super_goods_boxes[v:Name()] then
-            self.super_goods_boxes[v:Name()]:SetOwnCount(v:Count())
-        end
-    end
-    for i,v in ipairs(changed_map[3]) do
-        if self.stock_boxes and self.stock_boxes[v:Name()] then
-            self.stock_boxes[v:Name()]:SetOwnCount(v:Count())
-        end
-        if self.super_goods_boxes and self.super_goods_boxes[v:Name()] then
-            self.super_goods_boxes[v:Name()]:SetOwnCount(v:Count())
-        end
-    end
-end
-
-function GameUIAllianceShop:OnItemLogsChanged( changed_map )
-    if self.record_list then
-        for i,v in ipairs(changed_map[1]) do
-            self:CreateRecordItem(v,1)
-            self.record_list:reload()
-        end
-
-        for i,v in ipairs(changed_map[3]) do
-            local record_item = self.record_logs_items[v.time..v.playerName]
-            if record_item then
-                self.record_list:removeItem(record_item)
-            end
-        end
-    end
-end
 function GameUIAllianceShop:OnBuildingInfoChange(building)
     if building.name == 'shop' then
         self:InitUnLockItems()
@@ -524,10 +479,66 @@ function GameUIAllianceShop:OnBuildingInfoChange(building)
         end
     end
 end
-function GameUIAllianceShop:OnAllianceDataChanged_basicInfo(alliance,deltaData)
+function GameUIAllianceShop:OnAllianceDataChanged_basicInfo(alliance, deltaData)
     local ok, value = deltaData("basicInfo.honour")
     if ok and self.honourAndLoyalty then
         self.honourAndLoyalty:SetHonour(value)
+    end
+end
+function GameUIAllianceShop:OnAllianceDataChanged_itemLogs(alliance, deltaData)
+    if self.record_list then
+        local ok, value = deltaData("itemLogs.add")
+        if ok then
+            for i,v in ipairs(value) do
+                self:CreateRecordItem(v,1)
+                self.record_list:reload()
+            end
+        end
+        local ok, value = deltaData("itemLogs.remove")
+        if ok then
+            for i,v in ipairs(value) do
+                local record_item = self.record_logs_items[v.time..v.playerName]
+                if record_item then
+                    self.record_list:removeItem(record_item)
+                end
+            end
+        end
+    end
+end
+function GameUIAllianceShop:OnAllianceDataChanged_items(alliance, deltaData)
+    local aln = self.alliance
+    local ok, value = deltaData("items.add")
+    if ok then
+        for i,v in ipairs(value) do
+            if self.stock_boxes and self.stock_boxes[v.name] then
+                self.stock_boxes[v.name]:SetOwnCount(aln:GetItemCount(v.name))
+            end
+            if self.super_goods_boxes and self.super_goods_boxes[v.name] then
+                self.super_goods_boxes[v.name]:SetOwnCount(aln:GetItemCount(v.name))
+            end
+        end
+    end
+    local ok, value = deltaData("items.edit")
+    if ok then
+        for i,v in ipairs(value) do
+            if self.stock_boxes and self.stock_boxes[v.name] then
+                self.stock_boxes[v.name]:SetOwnCount(aln:GetItemCount(v.name))
+            end
+            if self.super_goods_boxes and self.super_goods_boxes[v.name] then
+                self.super_goods_boxes[v.name]:SetOwnCount(aln:GetItemCount(v.name))
+            end
+        end
+    end
+    local ok, value = deltaData("items.remove")
+    if ok then
+        for i,v in ipairs(value) do
+            if self.stock_boxes and self.stock_boxes[v.name] then
+                self.stock_boxes[v.name]:SetOwnCount(aln:GetItemCount(v.name))
+            end
+            if self.super_goods_boxes and self.super_goods_boxes[v.name] then
+                self.super_goods_boxes[v.name]:SetOwnCount(aln:GetItemCount(v.name))
+            end
+        end
     end
 end
 return GameUIAllianceShop
