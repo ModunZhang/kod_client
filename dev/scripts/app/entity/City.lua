@@ -6,7 +6,6 @@ local promise = import("..utils.promise")
 local Enum = import("..utils.Enum")
 local Orient = import(".Orient")
 local Tile = import(".Tile")
-local ResourceManager = import(".ResourceManager")
 local Building = import(".Building")
 local GateEntity = import(".GateEntity")
 local TowerEntity = import(".TowerEntity")
@@ -62,7 +61,6 @@ end
 function City:ctor(user)
     City.super.ctor(self)
     self.belong_user = user
-    self.resource_manager = ResourceManager.new(self)
     self.buildings = {}
     self.walls = {}
     self.gate = GateEntity.new({building_type = "wall", city = self}):AddUpgradeListener(self)
@@ -1165,29 +1163,12 @@ function City:DestoryDecoratorByPosition(current_time, x, y)
 end
 ----------- 功能扩展点
 function City:OnUserDataChanged(userData, current_time, deltaData)
-    local need_update_resouce_buildings, is_unlock_any_tiles, unlock_table = self:OnHouseChanged(userData, current_time, deltaData)
-    -- 更新建筑信息
+    local _,is_unlock_any_tiles,unlock_table = self:OnHouseChanged(userData, current_time, deltaData)
     self:IteratorCanUpgradeBuildingsByUserData(userData, current_time, deltaData)
-    -- 更新地块信息
     if is_unlock_any_tiles then
         LuaUtils:outputTable("unlock_table", unlock_table)
         self:UnlockTilesByIndexArray(unlock_table)
     end
-    local is_fully_update = deltaData == nil
-    local is_delta_update = not is_fully_update and deltaData.resources and deltaData.resources.refreshTime
-    is_delta_update = is_delta_update or (deltaData and deltaData.soldiers)
-    if is_delta_update then
-        need_update_resouce_buildings = true
-    end
-    local resource_refresh_time = current_time
-    if userData.resources then
-        resource_refresh_time = userData.resources.refreshTime / 1000
-    end
-
-    if need_update_resouce_buildings then
-        self.resource_manager:UpdateByCity(self, resource_refresh_time)
-    end
-
     local need_update_buildings = {}
     self:IteratorCanUpgradeBuildings(function(building)
         if building:IsNeedToUpdate() then
@@ -1454,49 +1435,9 @@ function City:GenerateTowers(walls)
         end
     end
 
-    -- local efficiency_tower = {}
-    -- for i = 1, #visible_tower do
-    --     if visible_tower[i]:IsEfficiency() then
-    --         efficiency_tower[#efficiency_tower + 1] = i
-    --     end
-    -- end
-
-    -- local tower_limit = self:GetUnlockTowerLimit()
-    -- local indexes = {}
-    -- while #indexes < tower_limit do
-    --     local i = ceil(#efficiency_tower * 0.5)
-    --     local index = table.remove(efficiency_tower, i)
-    --     table.insert(indexes, index)
-    -- end
-
-    -- for tower_id, tower_index in ipairs(indexes) do
-    --     visible_tower[tower_index]:SetTowerId(tower_id)
-    -- end
-    -- self.visible_towers = self:ReloadTowers(visible_tower)
     self.visible_towers = visible_tower
 end
--- function City:ReloadTowers(visible_towers)
---     local old_tower_map = {}
---     for k, v in pairs(self.visible_towers) do
---         if v:IsUnlocked() then
---             old_tower_map[v:TowerId()] = v
---         end
---     end
---     for i, v in ipairs(visible_towers) do
---         if v:IsUnlocked() then
---             local old_tower = old_tower_map[v:TowerId()]
---             -- 已经解锁的
---             if old_tower then
---                 visible_towers[i] = old_tower
---                 old_tower:CopyValueFrom(v)
---             else
---                 -- 如果是新解锁的
---                 self:OnInitBuilding(v)
---             end
---         end
---     end
---     return visible_towers
--- end
+
 -- promise
 local function promiseOfBuilding(callbacks, building_type, level)
     assert(#callbacks == 0)

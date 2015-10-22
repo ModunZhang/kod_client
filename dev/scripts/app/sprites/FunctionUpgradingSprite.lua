@@ -27,11 +27,6 @@ function FunctionUpgradingSprite:OnTileChanged(city)
     end
     return self:hide()
 end
---
-function FunctionUpgradingSprite:OnTransformed(entity)
-    self.config = SpriteConfig[entity:GetType()]
-    self:RefreshSprite()
-end
 function FunctionUpgradingSprite:ctor(city_layer, entity, city)
     FunctionUpgradingSprite.super.ctor(self, city_layer, entity)
     self:OnTileChanged(city)

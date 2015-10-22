@@ -91,6 +91,42 @@ function UtilsForTech:GetResourceBuff(tech_name, tech)
     end
     return nil,nil,nil
 end
+function UtilsForTech:GetBuff(userData)
+    local buff = {
+        coin = 0,
+        wood = 0,
+        iron = 0,
+        food = 0,
+        stone= 0,
+        wallHp = 0,
+        citizen= 0,
+    }
+    for tech_name,tech in pairs(userData.productionTechs) do
+        local res_type,buff_type,buff_value = self:GetResourceBuff(tech_name, tech)
+        if buff_type == "product" then
+            buff[res_type] = buff[res_type] + buff_value
+        end
+    end
+    return setmetatable(buff, BUFF_META)
+end
+function UtilsForTech:GetLimitBuff(userData)
+    local buff = {
+        coin = 0,
+        wood = 0,
+        iron = 0,
+        food = 0,
+        stone= 0,
+        wallHp = 0,
+        citizen= 0,
+    }
+    for tech_name,tech in pairs(userData.productionTechs) do
+        local res_type,buff_type,buff_value = self:GetResourceBuff(tech_name, tech)
+        if buff_type == "limit" then
+            buff[res_type] = buff[res_type] + buff_value
+        end
+    end
+    return setmetatable(buff, BUFF_META)
+end
 
 
 
