@@ -1,5 +1,6 @@
 local WidgetNumberTips = import(".WidgetNumberTips")
 local WidgetChangeMap = import(".WidgetChangeMap")
+local fire_var = import("app.particles.fire_var")
 local WidgetHomeBottom = class("WidgetHomeBottom", function()
     local bottom_bg = display.newSprite("bottom_bg_768x136.png")
     if display.width >640 then
@@ -60,6 +61,9 @@ function WidgetHomeBottom:ctor(city)
         elseif i == 4 then
             self.alliance_btn = button
             self.alliance_btn:setLocalZOrder(9)
+            if not User.countInfo.firstJoinAllianceRewardGeted then
+                fire_var():addTo(self.alliance_btn, -1000, 321)
+            end
         end
     end
     display.newNode():addTo(self):schedule(function()
@@ -70,6 +74,7 @@ function WidgetHomeBottom:onEnter()
     local user = self.city:GetUser()
     MailManager:AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
     user:AddListenOnType(self, "growUpTasks")
+    user:AddListenOnType(self, "countInfo")
 
     self:OnUserDataChanged_growUpTasks()
     self:MailUnreadChanged()
@@ -78,12 +83,18 @@ function WidgetHomeBottom:onExit()
     local user = self.city:GetUser()
     MailManager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
     user:RemoveListenerOnType(self, "growUpTasks")
+    user:RemoveListenerOnType(self, "countInfo")
 end
 function WidgetHomeBottom:OnBottomButtonClicked(event)
     local tag = event.target:getTag()
     if not tag then return end
     if tag == 4 then -- tag 4 = alliance button
-        UIKit:newGameUI('GameUIAlliance'):AddToCurrentScene(true)
+        local alliance = Alliance_Manager:GetMyAlliance()
+        if alliance:IsDefault() then
+            UIKit:newGameUI("GameUIAllianceJoinTips"):AddToCurrentScene(true)
+        else
+            UIKit:newGameUI('GameUIAlliance'):AddToCurrentScene(true)
+        end
         self.alliance_btn:removeChildByTag(ALLIANCE_TAG)
     elseif tag == 3 then
         UIKit:newGameUI('GameUIMail',self.city):AddToCurrentScene(true)
@@ -96,13 +107,17 @@ function WidgetHomeBottom:OnBottomButtonClicked(event)
     end
 end
 function WidgetHomeBottom:TipsOnTaskCount()
-    if self.task_count:getNumberOfRunningActions() > 0 or 
+    if self.task_count:getNumberOfRunningActions() > 0 or
         not self.task_count:isVisible() then
         return
     end
     self.task_count:runAction(cc.JumpBy:create(1, cc.p(0,0), 30, 3))
 end
-
+function WidgetHomeBottom:OnUserDataChanged_countInfo(userData, deltaData)
+    if User.countInfo.firstJoinAllianceRewardGeted then
+        self.alliance_btn:removeChildByTag(321, cleanup)
+    end
+end
 
 -- fte
 local WidgetFteArrow = import(".WidgetFteArrow")
@@ -123,6 +138,8 @@ end
 
 
 return WidgetHomeBottom
+
+
 
 
 

@@ -11,11 +11,21 @@ function WorldScene:onEnter()
     WorldScene.super.onEnter(self)
     self:GotoPosition(0,0)
     self:ScheduleLoadMap()
+    self.home_page = self:CreateHomePage()
 
     -- NetManager:getEnterMapIndexPromise(0)
 end
 function WorldScene:GetHomePage()
-
+	return  self.home_page
+end
+function WorldScene:CreateHomePage()
+    if UIKit:GetUIInstance("GameUIWorldHome") then
+        UIKit:GetUIInstance("GameUIWorldHome"):removeFromParent()
+    end
+    local home = UIKit:newGameUI('GameUIWorldHome', City):AddToScene(self)
+    home:setLocalZOrder(10)
+    home:setTouchSwallowEnabled(false)
+    return home
 end
 function WorldScene:CreateSceneLayer()
     return WorldLayer.new(self)

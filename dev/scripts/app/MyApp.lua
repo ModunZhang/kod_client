@@ -463,6 +463,9 @@ end
 function MyApp:EnterPVEFteScene(level)
     enter_next_scene("PVESceneNewFte", User, level)
 end
+function MyApp:EnterWorldScene()
+    enter_next_scene("WorldScene")
+end
 
 function MyApp:pushScene(sceneName, args, transitionType, time, more)
     local scenePackageName = "app.scenes." .. sceneName

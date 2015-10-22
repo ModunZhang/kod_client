@@ -1,46 +1,23 @@
 local cocos_promise = import("..utils.cocos_promise")
 local promise = import("..utils.promise")
 local window = import("..utils.window")
-local WidgetLight = import("..widget.WidgetLight")
 local WidgetChat = import("..widget.WidgetChat")
-local WidgetNumberTips = import("..widget.WidgetNumberTips")
 local WidgetHomeBottom = import("..widget.WidgetHomeBottom")
-local WidgetPushButton = import("..widget.WidgetPushButton")
 local WidgetEventTabButtons = import("..widget.WidgetEventTabButtons")
-local WidgetAutoOrder = import("..widget.WidgetAutoOrder")
 local UILib = import(".UILib")
 local WidgetChangeMap = import("..widget.WidgetChangeMap")
-local GameUIHelp = import(".GameUIHelp")
-local Alliance = import("..entity.Alliance")
 local GameUIActivityRewardNew = import(".GameUIActivityRewardNew")
 local GameUIHome = UIKit:createUIClass('GameUIHome')
-local WidgetAutoOrderAwardButton = import("..widget.WidgetAutoOrderAwardButton")
-local WidgetAutoOrderGachaButton = import("..widget.WidgetAutoOrderGachaButton")
-local WidgetAutoOrderBuffButton = import("..widget.WidgetAutoOrderBuffButton")
 local light_gem = import("..particles.light_gem")
-local fire_var = import("app.particles.fire_var")
 
-
-
-local app = app
-local timer = app.timer
 function GameUIHome:OnUserDataChanged_houseEvents()
     self:OnUserDataChanged_growUpTasks()
-    self:RefreshHelpButtonVisible()
 end
 function GameUIHome:OnUserDataChanged_buildingEvents()
     self:OnUserDataChanged_growUpTasks()
-    self:RefreshHelpButtonVisible()
 end
 function GameUIHome:OnUserDataChanged_productionTechEvents()
     self:OnUserDataChanged_growUpTasks()
-    self:RefreshHelpButtonVisible()
-end
-function GameUIHome:OnUserDataChanged_militaryTechEvents()
-    self:RefreshHelpButtonVisible()
-end
-function GameUIHome:OnUserDataChanged_soldierStarEvents()
-    self:RefreshHelpButtonVisible()
 end
 function GameUIHome:OnUserDataChanged_growUpTasks()
     self.task = self.city:GetRecommendTask()
@@ -53,23 +30,7 @@ function GameUIHome:OnUserDataChanged_growUpTasks()
     end
 end
 function GameUIHome:OnUserDataChanged_vipEvents()
-    self.top_order_group:RefreshOrder()
     self:RefreshVIP()
-end
-function GameUIHome:OnUserDataChanged_countInfo()
-    self.join_alliance_tips_button:setVisible(not User.countInfo.firstJoinAllianceRewardGeted)
-    if self.join_alliance_tips_button:getChildByTag(321) and
-        User.countInfo.firstJoinAllianceRewardGeted then
-        self.join_alliance_tips_button:removeChildByTag(321)
-    end
-    self.left_order_group:RefreshOrder()
-    self.top_order_group:RefreshOrder()
-    self:CheckAllianceRewardCount()
-end
-function GameUIHome:RefreshHelpButtonVisible()
-    if self.help_button then
-        self.top_order_group:RefreshOrder()
-    end
 end
 
 function GameUIHome:DisplayOn()
@@ -105,6 +66,9 @@ end
 function GameUIHome:onEnter()
     self.visible_count = 1
     local city = self.city
+
+    UIKit:newWidgetUI("WidgetShortcutButtons",city):addTo(self)
+
     -- 上背景
     self.top = self:CreateTop()
     self.bottom = self:CreateBottom()
@@ -119,7 +83,6 @@ function GameUIHome:onEnter()
     self:RefreshData()
     self:RefreshVIP()
     self:OnUserDataChanged_growUpTasks()
-    self:RefreshHelpButtonVisible()
 
     scheduleAt(self, function()
         local User = self.city:GetUser()
@@ -142,50 +105,15 @@ end
 function GameUIHome:AddOrRemoveListener(isAdd)
     local city = self.city
     local user = self.city:GetUser()
-    local my_allaince = Alliance_Manager:GetMyAlliance()
-    -- local alliance_belvedere = my_allaince:GetAllianceBelvedere()
     if isAdd then
-        my_allaince:AddListenOnType(self, "basicInfo")
-        my_allaince:AddListenOnType(self, "helpEvents")
-        my_allaince:AddListenOnType(self, "operation")
         user:AddListenOnType(self, "basicInfo")
         user:AddListenOnType(self, "growUpTasks")
         user:AddListenOnType(self, "vipEvents")
-        user:AddListenOnType(self, "countInfo")
-        user:AddListenOnType(self, "iapGifts")
-        User:AddListenOnType(self, "soldierStarEvents")
-        User:AddListenOnType(self, "militaryTechEvents")
-        User:AddListenOnType(self, "productionTechEvents")
-        -- alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
-        -- alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
-        -- my_allaince:GetAllianceShrine():AddListenOnType(self,my_allaince:GetAllianceShrine().LISTEN_TYPE.OnShrineEventsChanged)
     else
-        my_allaince:RemoveListenerOnType(self, "basicInfo")
-        my_allaince:RemoveListenerOnType(self, "helpEvents")
-        my_allaince:RemoveListenerOnType(self, "operation")
         user:RemoveListenerOnType(self, "basicInfo")
         user:RemoveListenerOnType(self, "growUpTasks")
         user:RemoveListenerOnType(self, "vipEvents")
-        user:RemoveListenerOnType(self, "countInfo")
-        user:RemoveListenerOnType(self, "iapGifts")
-        User:RemoveListenerOnType(self, "soldierStarEvents")
-        User:RemoveListenerOnType(self, "militaryTechEvents")
-        User:RemoveListenerOnType(self, "productionTechEvents")
-        -- alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
-        -- alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
-        -- my_allaince:GetAllianceShrine():RemoveListenerOnType(self,my_allaince:GetAllianceShrine().LISTEN_TYPE.OnShrineEventsChanged)
     end
-end
-function GameUIHome:OnShrineEventsChanged(changed_map)
-    self.right_bottom_order:RefreshOrder()
-end
-function GameUIHome:OnAllianceDataChanged_basicInfo(alliance, deltaData)
-    self:RefreshHelpButtonVisible()
-    self:RefreshData()
-end
-function GameUIHome:OnAllianceDataChanged_helpEvents()
-    self:RefreshHelpButtonVisible()
-    self.request_count:SetNumber(Alliance_Manager:GetMyAlliance():GetOtherRequestEventsNum())
 end
 function GameUIHome:OnUserDataChanged_basicInfo(userData, deltaData)
     self:RefreshData()
@@ -199,6 +127,7 @@ function GameUIHome:OnUserDataChanged_basicInfo(userData, deltaData)
         self:RefreshExp()
     end
 end
+
 function GameUIHome:RefreshData()
     local user = self.city:GetUser()
     self.name_label:setString(user.basicInfo.name)
@@ -333,10 +262,7 @@ function GameUIHome:CreateTop()
     self.vip_level = display.newNode():addTo(vip_btn):pos(-3, 0):scale(0.8)
     self.vip_btn = vip_btn
 
-
-
     -- 金龙币按钮
-
     local button = cc.ui.UIPushButton.new(
         {normal = "gem_btn_up_196x68.png", pressed = "gem_btn_down_196x68.png"},
         {scale9 = false}
@@ -383,185 +309,6 @@ function GameUIHome:CreateTop()
         color = 0xfffeb3,
     }):addTo(quest_bar_bg):align(display.LEFT_CENTER, -130, 0)
 
-    local left_order =  WidgetAutoOrder.new(WidgetAutoOrder.ORIENTATION.TOP_TO_BOTTOM,50):addTo(self):pos(display.left+40, display.top-200)
-    -- 活动按钮
-    local button = cc.ui.UIPushButton.new(
-        {normal = "tips_66x64.png", pressed = "tips_66x64.png"},
-        {scale9 = false}
-    )
-    WidgetLight.new():addTo(button, -1001):scale(0.6)
-    button:onButtonClicked(function(event)
-        if event.name == "CLICKED_EVENT" then
-            UIKit:newGameUI("GameUIActivityNew",self.city):AddToCurrentScene(true)
-        end
-    end)
-    function button:CheckVisible()
-        return true
-    end
-    function button:GetElementSize()
-        return {width = 66,height = 64}
-    end
-    left_order:AddElement(button)
-    button.tips_button_count = WidgetNumberTips.new():addTo(button):pos(20,-20)
-    local award_num = 0
-
-    if User:HaveEveryDayLoginReward() then
-        award_num = award_num + 1
-    end
-    if User:HaveContinutyReward() then
-        award_num = award_num + 1
-    end
-    if User:HavePlayerLevelUpReward() then
-        award_num = award_num + 1
-    end
-    button.tips_button_count:SetNumber(#User.iapGifts + award_num)
-    self.tips_button = button
-    --在线活动
-    local activity_button = WidgetAutoOrderAwardButton.new(self)
-    left_order:AddElement(activity_button)
-
-
-
-    if not self.city:GetDragonEyrie():GetDragonManager():IsAllHated() then
-        local this = self
-        local dragon_egg_btn = UIKit:ButtonAddScaleAction(cc.ui.UIPushButton.new(
-            {normal = "dragon_eggs_68x80.png", pressed = "dragon_eggs_68x80.png"}
-        ):onButtonClicked(function(event)
-            if not event.target:CheckVisible() then
-                event.target:hide()
-            else
-                local dragon = this.city:GetDragonEyrie():GetDragonManager():GetEnableHatedDragon()
-                if dragon then
-                    UIKit:newGameUI("GameUIDragonEyrieMain", self.city, self.city:GetFirstBuildingByType("dragonEyrie"), "dragon", false, dragon:Type()):AddToCurrentScene(true)
-                end
-            end
-        end))
-        function dragon_egg_btn:CheckVisible()
-            return this.city:GetDragonEyrie():GetDragonManager():IsHateEnable()
-        end
-        function dragon_egg_btn:GetElementSize()
-            return {width = 68,height = 80}
-        end
-        dragon_egg_btn:schedule(function()
-            local old_visible = dragon_egg_btn:isVisible()
-            local cur_visible = dragon_egg_btn:CheckVisible()
-            if old_visible ~= cur_visible then
-                dragon_egg_btn:setVisible(cur_visible)
-                left_order:RefreshOrder()
-            end
-        end, 1)
-        self.dragon_egg_btn = dragon_egg_btn
-        left_order:AddElement(dragon_egg_btn)
-    end
-    left_order:RefreshOrder()
-
-
-    local order = WidgetAutoOrder.new(WidgetAutoOrder.ORIENTATION.TOP_TO_BOTTOM,50):addTo(self):pos(display.right-50, display.top-200)
-    -- BUFF按钮
-    local buff_button = WidgetAutoOrderBuffButton.new(self)
-    order:AddElement(buff_button)
-
-
-    -- 协助加速按钮
-    self.help_button = cc.ui.UIPushButton.new(
-        {normal = "help_64x72.png", pressed = "help_64x72.png"},
-        {scale9 = false}
-    ):onButtonClicked(function(event)
-        if event.name == "CLICKED_EVENT" then
-            if not Alliance_Manager:GetMyAlliance():IsDefault() then
-                UIKit:newGameUI("GameUIHelp"):AddToCurrentScene(true)
-            else
-                UIKit:showMessageDialog(_("提示"),_("加入联盟才能激活帮助功能"))
-            end
-        end
-    end)
-
-    self.request_count = WidgetNumberTips.new():addTo(self.help_button):pos(20,-20)
-    self.request_count:SetNumber(Alliance_Manager:GetMyAlliance():GetOtherRequestEventsNum())
-    local help_button = self.help_button
-    function help_button:CheckVisible()
-        local alliance = Alliance_Manager:GetMyAlliance()
-        return not alliance:IsDefault() and #alliance:GetCouldShowHelpEvents()>0
-    end
-    function help_button:GetElementSize()
-        return help_button:getCascadeBoundingBox().size
-    end
-    order:AddElement(help_button)
-
-    -- gacha button
-    local gacha_button = WidgetAutoOrderGachaButton.new(self)
-    order:AddElement(gacha_button)
-
-    order:RefreshOrder()
-    self.top_order_group = order
-    self.left_order_group = left_order
-
-
-
-    --联盟提示按钮
-    self.join_alliance_tips_button = cc.ui.UIPushButton.new({normal = 'alliance_join_tips_79x83.png'}):pos(display.left+40, display.top-600):addTo(self)
-        :onButtonClicked(function()
-            UIKit:newGameUI("GameUIAllianceJoinTips"):AddToCurrentScene(true)
-        end)
-    self.join_alliance_tips_button:setVisible(not User.countInfo.firstJoinAllianceRewardGeted)
-    if self.join_alliance_tips_button:isVisible() then
-        fire_var():addTo(self.join_alliance_tips_button, -1000, 321)
-    end
-
-    local right_bottom_order = WidgetAutoOrder.new(WidgetAutoOrder.ORIENTATION.BOTTOM_TO_TOP,50):addTo(self):pos(display.right-50, display.top-600)
-    --瞭望塔事件按钮
-    local alliance_belvedere_button = cc.ui.UIPushButton.new({normal = 'fight_62x70.png'})
-    alliance_belvedere_button.alliance_belvedere_events_count = WidgetNumberTips.new():addTo(alliance_belvedere_button):pos(20,-20)
-    alliance_belvedere_button:onButtonClicked(function()
-        local default_tab = 'march'
-        local alliance = Alliance_Manager:GetMyAlliance()
-        -- local alliance_belvedere = alliance:GetAllianceBelvedere()
-        -- local hasMarch,__ = alliance_belvedere:HasMyEvents()
-        -- if not hasMarch then
-        --     local hasComming,__ = alliance_belvedere:HasOtherEvents()
-        --     if hasComming then
-        --         default_tab = 'comming'
-        --     end
-        -- end
-        UIKit:newGameUI('GameUIWathTowerRegion',self.city,default_tab):AddToCurrentScene(true)
-    end)
-    function alliance_belvedere_button:CheckVisible()
-        local alliance = Alliance_Manager:GetMyAlliance()
-        -- local alliance_belvedere = alliance:GetAllianceBelvedere()
-        -- local hasEvent,count = alliance_belvedere:HasEvents()
-        -- alliance_belvedere_button.alliance_belvedere_events_count:SetNumber(count)
-        return hasEvent
-    end
-    function alliance_belvedere_button:GetElementSize()
-        return alliance_belvedere_button:getCascadeBoundingBox().size
-    end
-    right_bottom_order:AddElement(alliance_belvedere_button)
-
-    -- 圣地时间按钮
-    local shrine_event_button = cc.ui.UIPushButton.new({normal = 'tmp_btn_shrine_72x72.png'})
-    shrine_event_button:onButtonClicked(function()
-        local buildings = Alliance_Manager:GetMyAlliance():GetMapObjectsByType("building")
-        local shrine_info
-        for k,v in pairs(buildings) do
-            if v.name == "shrine" then
-                shrine_info = v
-            end
-        end
-        UIKit:newGameUI("GameUIAllianceShrine",self.city,"fight_event",Alliance_Manager:GetMyAlliance():FindAllianceBuildingInfoByObjects(shrine_info)):AddToCurrentScene(true)
-    end)
-    function shrine_event_button:CheckVisible()
-        -- local alliance = Alliance_Manager:GetMyAlliance()
-        -- return alliance:GetAllianceShrine():HaveEvent()
-        return false
-    end
-    function shrine_event_button:GetElementSize()
-        return shrine_event_button:getCascadeBoundingBox().size
-    end
-    right_bottom_order:AddElement(shrine_event_button)
-
-
-    right_bottom_order:RefreshOrder()
-    self.right_bottom_order = right_bottom_order
     return top_bg
 end
 function GameUIHome:GotoUnlockBuilding(location_id)
@@ -601,40 +348,6 @@ function GameUIHome:CheckFinishAllActivity()
 
 end
 
-function GameUIHome:CheckAllianceRewardCount()
-    if not self.tips_button then return end
-    local count = #User.iapGifts
-    local award_num = 0
-
-    if User:HaveEveryDayLoginReward() then
-        award_num = award_num + 1
-    end
-    if User:HaveContinutyReward() then
-        award_num = award_num + 1
-    end
-    if User:HavePlayerLevelUpReward() then
-        award_num = award_num + 1
-    end
-    self.tips_button.tips_button_count:SetNumber(count + award_num)
-    self:OnUserDataChanged_growUpTasks()
-end
-
-
-function GameUIHome:OnUserDataChanged_iapGifts()
-    self:CheckAllianceRewardCount()
-end
-
-function GameUIHome:OnMarchDataChanged()
-    self:RefreshAllianceBelvedereButton()
-end
-function GameUIHome:OnCommingDataChanged()
-    self:RefreshAllianceBelvedereButton()
-end
-
-function GameUIHome:RefreshAllianceBelvedereButton()
-    self.right_bottom_order:RefreshOrder()
-end
-
 function GameUIHome:CreateBottom()
     local bottom_bg = WidgetHomeBottom.new(self.city):addTo(self, 1)
         :align(display.BOTTOM_CENTER, display.cx, display.bottom)
@@ -650,12 +363,6 @@ function GameUIHome:ChangeChatChannel(channel_index)
     self.chat:ChangeChannel(channel_index)
 end
 
-function GameUIHome:OnAllianceDataChanged_operation(alliance,operation_type)
-    if operation_type == "quit" then
-        self.top_order_group:RefreshOrder()
-        self.right_bottom_order:RefreshOrder()
-    end
-end
 function GameUIHome:RefreshExp()
     local current_level = User:GetPlayerLevelByExp(User.basicInfo.levelExp)
     self.exp:setPercentage( (User.basicInfo.levelExp - User:GetCurrentLevelExp(current_level))/(User:GetCurrentLevelMaxExp(current_level) - User:GetCurrentLevelExp(current_level)) * 100)
@@ -920,6 +627,8 @@ end
 
 
 return GameUIHome
+
+
 
 
 
