@@ -19,7 +19,7 @@ function GameUIAllianceEnterBase:ctor(mapObj,alliance)
     self.focus_alliance = alliance or self.my_alliance
     self.mapObj = mapObj
     self.isMyAlliance = mapObj.index == self.my_alliance:MapIndex()
-    self.building = self:GetMapObjectInfo()
+    self.building = self:GetMapObjectInfo() or mapObj
 end
 
 function GameUIAllianceEnterBase:IsMyAlliance()
@@ -87,7 +87,7 @@ function GameUIAllianceEnterBase:GetBuildingInfo()
 end
 
 function GameUIAllianceEnterBase:GetLogicPosition()
-    return self:GetBuilding().location
+    return self:GetBuilding().location or {x = self:GetBuilding().x , y = self:GetBuilding().y}
 end
 
 function GameUIAllianceEnterBase:GetLocation()
@@ -171,6 +171,7 @@ function GameUIAllianceEnterBase:GetLevelBg()
 end
 
 function GameUIAllianceEnterBase:GetLevelLabelText()
+    dump()
     return self:GetBuilding().level and _("等级") .. self:GetBuilding().level or ""
 end
 

@@ -164,7 +164,6 @@ function AllianceDetailScene:ctor(targetAllianceMapIndex,x,y)
     self.targetAllianceMapIndex = targetAllianceMapIndex
     self.goto_x = x
     self.goto_y = y
-    print("targetAllianceMapIndex,x,y=",targetAllianceMapIndex,x,y)
     self.visible_alliances = {}
     Alliance_Manager:ClearCache()
     Alliance_Manager:UpdateAllianceBy(Alliance_Manager:GetMyAlliance().mapIndex, Alliance_Manager:GetMyAlliance())
@@ -343,9 +342,15 @@ function AllianceDetailScene:EnterNotAllianceBuilding(alliance,mapObj)
     local isMyAlliance = true
     local type_ = Alliance:GetMapObjectType(mapObj)
     print("type_=====",type_)
+    dump(type_)
     local class_name = ""
-    if type_ == 'none' then
-        class_name = "GameUIAllianceEnterBase"
+
+    if tolua.type(type_) == 'table' then
+        if alliance.mapIndex == Alliance_Manager:GetMyAlliance().mapIndex then
+            class_name = "GameUIAllianceEnterBase"
+        else
+            return
+        end
     elseif type_ == 'member' then
         app:GetAudioManager():PlayBuildingEffectByType("keep")
         class_name = "GameUIAllianceCityEnter"
@@ -364,10 +369,11 @@ function AllianceDetailScene:EnterNotAllianceBuilding(alliance,mapObj)
         end
         class_name = "GameUIAllianceMosterEnter"
     end
-    UIKit:newGameUI(class_name,mapObj,alliance):AddToCurrentScene(true)
+    UIKit:newGameUI(class_name,mapObj or type_,alliance):AddToCurrentScene(true)
 
 end
 return AllianceDetailScene
+
 
 
 
