@@ -244,7 +244,7 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
     local villageEvent = self:GetMyAlliance():FindVillageEventByVillageId(village_id)
     local alliance_id = self:GetFocusAlliance()._id
     local checkMeIsProtectedWarinng = self:CheckMeIsProtectedWarinng()
-
+    local focus_alliance = self:GetFocusAlliance()
     if villageEvent then --我方占领
         if villageEvent.playerData.id == User:Id() then --自己占领
             local che_button = self:BuildOneButton("capture_38x56.png",_("撤军")):onButtonClicked(function()
@@ -257,7 +257,6 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
             end)
             buttons =  {che_button,info_button}
         else --盟友占领
-            local isMyAlliance = self:IsMyAlliance()
             local position = self:GetLogicPosition()
             local attack_button = self:BuildOneButton("capture_38x56.png",_("占领")):onButtonClicked(function()
                 local final_func = function ()
@@ -268,7 +267,7 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
                                     app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_SENDOUT")
                                     gameuialliancesendtroops:LeftButtonClicked()
                                 end)
-                            end,{targetIsMyAlliance = isMyAlliance,toLocation = position,returnCloseAction = true}):AddToCurrentScene(true)
+                            end,{targetAlliance = focus_alliance,toLocation = position,returnCloseAction = true}):AddToCurrentScene(true)
                         end)
                     end, function ()
                     end
@@ -286,7 +285,6 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
         villageEvent = self:GetFocusAlliance():FindVillageEventByVillageId(village_id)
         if villageEvent then -- 敌方占领
             local attack_button = self:BuildOneButton("capture_38x56.png", _("占领")):onButtonClicked(function()
-                local isMyAlliance = self:IsMyAlliance()
                 local toLocation = self:GetLogicPosition()
 
                 local final_func = function ()
@@ -296,7 +294,7 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
                                 app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_SENDOUT")
                                 gameuialliancesendtroops:LeftButtonClicked()
                             end)
-                        end,{targetIsMyAlliance = isMyAlliance,toLocation = toLocation,returnCloseAction = true}):AddToCurrentScene(true)
+                        end,{targetAlliance = focus_alliance,toLocation = toLocation,returnCloseAction = true}):AddToCurrentScene(true)
                     end
                     UIKit:showSendTroopMessageDialog(attack_func,"dragonMaterials",_("龙"))
                 end
@@ -320,7 +318,6 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
         buttons = {attack_button,strike_button}
         else -- 无人占领
             local attack_button = self:BuildOneButton("capture_38x56.png",_("占领")):onButtonClicked(function()
-                local isMyAlliance = self:IsMyAlliance()
                 local toLocation = self:GetLogicPosition()
 
                 local final_func = function ()
@@ -330,7 +327,7 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
                                 app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_SENDOUT")
                                 gameuialliancesendtroops:LeftButtonClicked()
                             end)
-                        end,{targetIsMyAlliance = isMyAlliance,toLocation = toLocation,returnCloseAction = true}):AddToCurrentScene(true)
+                        end,{targetAlliance = focus_alliance,toLocation = toLocation,returnCloseAction = true}):AddToCurrentScene(true)
                     end
                     UIKit:showSendTroopMessageDialog(attack_func, "dragonMaterials",_("龙"))
                 end

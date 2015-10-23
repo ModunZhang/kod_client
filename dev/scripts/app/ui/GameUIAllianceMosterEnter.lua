@@ -156,7 +156,7 @@ function GameUIAllianceMosterEnter:onEnter()
                         NetManager:getAttackMonsterPromise(dragonType,soldiers,alliance._id,entity.id):done(function()
                             app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_SENDOUT")
                         end)
-                    end,{targetIsMyAlliance = isMyAlliance,toLocation = entity.location,returnCloseAction = false}):AddToCurrentScene(true)
+                    end,{targetAlliance = alliance,toLocation = entity.location,returnCloseAction = false}):AddToCurrentScene(true)
                 end
                 UIKit:showSendTroopMessageDialog(attack_monster_func,"buildingMaterials",_("建筑"))
             end

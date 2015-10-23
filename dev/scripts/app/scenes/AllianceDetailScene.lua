@@ -261,6 +261,7 @@ function AllianceDetailScene:OnSceneMove()
     AllianceDetailScene.super.OnSceneMove(self)
     self:UpdateVisibleAllianceBg()
     self:UpdateCurrrentAlliance()
+    self:UpdateHomePage()
 end
 function AllianceDetailScene:UpdateVisibleAllianceBg()
     local old_visibles = self.visible_alliances
@@ -280,7 +281,11 @@ function AllianceDetailScene:UpdateCurrrentAlliance()
         self:GetSceneLayer():LoadAllianceByIndex(index, data.allianceData)
     end)
 end
-
+function AllianceDetailScene:UpdateHomePage()
+    if self:GetHomePage() then
+        self:GetHomePage():UpdateCoordinate(self:GetSceneLayer():GetMiddlePosition())
+    end
+end
 function AllianceDetailScene:EnterAllianceBuilding(alliance,mapObj)
     if mapObj.name then
         local building_name = mapObj.name

@@ -65,8 +65,8 @@ function GameUIStrikePlayer:GetMarchTime()
     local fromLocation = mapObject.location
 	
 	local toLocation = self.params.toLocation or cc.p(0,0)
-	-- local time = DataUtils:getPlayerDragonMarchTime(from_alliance,fromLocation,self.params.alliance,toLocation)
-	return GameUtils:formatTimeStyle1(0)
+	local time = DataUtils:getPlayerDragonMarchTime(from_alliance,fromLocation,self.params.alliance,toLocation)
+	return GameUtils:formatTimeStyle1(time)
 end
 
 function GameUIStrikePlayer:BuildUI()

@@ -292,7 +292,7 @@ function GameUIShireFightEvent:DispathSoliderButtonClicked()
                     end)
                     gameuialliancesendtroops:LeftButtonClicked()
                 end
-            end,{toLocation = self:GetAllianceShrineLocation(),targetIsMyAlliance = true,returnCloseAction = true}):AddToCurrentScene(true)
+            end,{toLocation = self:GetAllianceShrineLocation(),targetAlliance = Alliance_Manager:GetMyAlliance(),returnCloseAction = true}):AddToCurrentScene(true)
         end
         UIKit:showSendTroopMessageDialog(attack_func, "dragonMaterials", _("龙"))
     end

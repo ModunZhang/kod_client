@@ -63,13 +63,13 @@ end
 -- end
 
 function GameUIAllianceSendTroops:GetMarchTime(soldier_show_table)
-    -- local mapObject = self:GetMyAlliance():FindMapObjectById(self:GetMyAlliance():GetSelf():MapId())
-    -- local fromLocation = mapObject.location
-    -- local target_alliance = self.targetIsMyAlliance and self:GetMyAlliance() or self:GetEnemyAlliance()
-    -- local time = DataUtils:getPlayerSoldiersMarchTime(soldier_show_table,self:GetMyAlliance(),fromLocation,target_alliance,self.toLocation)
-    -- local buffTime = DataUtils:getPlayerMarchTimeBuffTime(time)
-    -- return time,buffTime
-    return 0,0
+    local mapObject = self:GetMyAlliance():FindMapObjectById(self:GetMyAlliance():GetSelf():MapId())
+    local fromLocation = mapObject.location
+    local target_alliance = self.targetAlliance
+    local time = DataUtils:getPlayerSoldiersMarchTime(soldier_show_table,self:GetMyAlliance(),fromLocation,target_alliance,self.toLocation)
+    local buffTime = DataUtils:getPlayerMarchTimeBuffTime(time)
+    return time,buffTime
+    -- return 0,0
 end
 
 function GameUIAllianceSendTroops:RefreshMarchTimeAndBuff(soldier_show_table)
@@ -84,7 +84,7 @@ function GameUIAllianceSendTroops:ctor(march_callback,params)
     self.isPVE = type(params.isPVE) == 'boolean' and params.isPVE or false
     self.returnCloseAction = type(params.returnCloseAction) == 'boolean' and params.returnCloseAction or false
     self.toLocation = params.toLocation or cc.p(0,0)
-    self.targetIsMyAlliance = params.targetIsMyAlliance
+    self.targetAlliance = params.targetAlliance
     self.terrain = User.basicInfo.terrain
     GameUIAllianceSendTroops.super.ctor(self,City,_("准备进攻"))
     local manager = ccs.ArmatureDataManager:getInstance()

@@ -143,7 +143,6 @@ function GameUIAllianceCityEnter:GetEnterButtons()
                 help_button = self:BuildOneButton("help_defense_44x56.png",_("协防")):onButtonClicked(function()
                     local playerId = member.id
                     if not alliance:CheckHelpDefenceMarchEventsHaveTarget(playerId) then
-                        local isMyAlliance = self:IsMyAlliance()
                         local toLocation = self:GetLogicPosition()
                         if alliance:GetSelf():IsProtected() then
                             UIKit:showMessageDialog(_("提示"),_("协防盟友将失去保护状态，确定继续派兵?"),function()
@@ -152,7 +151,7 @@ function GameUIAllianceCityEnter:GetEnterButtons()
                                         NetManager:getHelpAllianceMemberDefencePromise(dragonType, soldiers, playerId):done(function()
                                             app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_SENDOUT")
                                         end)
-                                    end,{targetIsMyAlliance = isMyAlliance,toLocation = toLocation}):AddToCurrentScene(true)
+                                    end,{targetAlliance = alliance,toLocation = toLocation}):AddToCurrentScene(true)
                                 end
                                 UIKit:showSendTroopMessageDialog(attack_func, "dragonMaterials",_("龙"))
                             end)
@@ -162,7 +161,7 @@ function GameUIAllianceCityEnter:GetEnterButtons()
                                     NetManager:getHelpAllianceMemberDefencePromise(dragonType, soldiers, playerId):done(function()
                                         app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_SENDOUT")
                                     end)
-                                end,{targetIsMyAlliance = isMyAlliance,toLocation = toLocation}):AddToCurrentScene(true)
+                                end,{targetAlliance = alliance,toLocation = toLocation}):AddToCurrentScene(true)
                             end
                             UIKit:showSendTroopMessageDialog(attack_func, "dragonMaterials",_("龙"))
                         end
@@ -199,7 +198,6 @@ function GameUIAllianceCityEnter:GetEnterButtons()
         end
     else -- 敌方玩家
         local isProtected = self:CheckMeIsProtectedWarinng()
-        local isMyAlliance = self:IsMyAlliance()
         local toLocation = self:GetLogicPosition()
         local alliance = self.focus_alliance
         local attack_button = self:BuildOneButton("attack_58x56.png",_("进攻")):onButtonClicked(function()
@@ -219,7 +217,7 @@ function GameUIAllianceCityEnter:GetEnterButtons()
                                 gameuialliancesendtroops:LeftButtonClicked()
                             end)
                         end
-                    end,{targetIsMyAlliance = isMyAlliance,toLocation = toLocation,returnCloseAction = true}):AddToCurrentScene(true)
+                    end,{targetAlliance = alliance,toLocation = toLocation,returnCloseAction = true}):AddToCurrentScene(true)
                 end
                 UIKit:showSendTroopMessageDialog(attack_func, "dragonMaterials",_("龙"))
             end
