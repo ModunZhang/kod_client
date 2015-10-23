@@ -77,6 +77,8 @@ function AllianceDetailScene:OnAllianceDataChanged_marchEvents(allianceData, del
         end
     end
 end
+
+-- other
 function AllianceDetailScene:OnEnterMapIndex(mapData)
     for id,event in pairs(mapData.marchEvents.attackMarchEvents) do
         self:CreateOrUpdateOrDeleteCorpsByEvent(id, event)
@@ -88,15 +90,17 @@ end
 function AllianceDetailScene:OnMapDataChanged(mapData, deltaData)
     local ok, value = deltaData("marchEvents.attackMarchEvents")
     if ok then
-        for id,event in pairs(value) do
+        for id,_ in pairs(value) do
+            local event = mapData.marchEvents.attackMarchEvents[id]
             self:CreateOrUpdateOrDeleteCorpsByEvent(id, event)
         end
     end
 
     local ok, value = deltaData("marchEvents.attackMarchReturnEvents")
     if ok then
-        for id,event in pairs(value) do
-            self:CreateOrUpdateOrDeleteCorpsByReturnEvent(event)
+        for id,_ in pairs(value) do
+            local event = mapData.marchEvents.attackMarchReturnEvents[id]
+            self:CreateOrUpdateOrDeleteCorpsByReturnEvent(id, event)
         end
     end
 end
@@ -109,6 +113,7 @@ function AllianceDetailScene:CreateOrUpdateOrDeleteCorpsByEvent(id, event)
     if event == json.null then
         self:GetSceneLayer():DeleteCorpsById(id)
     elseif event then
+        dump(event)
         self:GetSceneLayer():CreateOrUpdateCorps(
             event.id,
             {x = event.fromAlliance.location.x, y = event.fromAlliance.location.y, index = event.fromAlliance.mapIndex},
@@ -151,12 +156,20 @@ function AllianceDetailScene:ctor()
 end
 function AllianceDetailScene:onEnter()
     AllianceDetailScene.super.onEnter(self)
-    self:GotoAllianceByIndex(Alliance_Manager:GetMyAlliance().mapIndex)
+    local alliance = Alliance_Manager:GetMyAlliance()
+    self:GotoAllianceByIndex(alliance.mapIndex)
     self.home_page = self:CreateHomePage()
     self:GetSceneLayer():ZoomTo(0.82)
-    Alliance_Manager:GetMyAlliance():AddListenOnType(self, "mapObjects")
-    Alliance_Manager:GetMyAlliance():AddListenOnType(self, "marchEvents")
+    alliance:AddListenOnType(self, "mapObjects")
+    alliance:AddListenOnType(self, "marchEvents")
     Alliance_Manager:SetAllianceHandle(self)
+
+
+    for _,events in pairs(alliance.marchEvents) do
+        for _,v in ipairs(events) do
+            self:CreateOrUpdateOrDeleteCorpsByEvent(v.id, v)
+        end
+    end
 end
 function AllianceDetailScene:onExit()
     if self.current_allinace_index then

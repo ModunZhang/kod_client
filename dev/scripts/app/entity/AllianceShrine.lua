@@ -53,31 +53,6 @@ end
 --ÁªÃËÎ£»ú
 
 
-function AllianceShrine:GetStageByIndex(index)
-    for _,v in pairs(self:Stages()) do
-        if v:Index() == index then
-            return v
-        end
-    end
-    return nil
-end
-
-function AllianceShrine:GetStatgeByName(state_name)
-    return self:Stages()[state_name]
-end
-
-
-function AllianceShrine:GetStarInfoByMainStage(statge_index)
-    local current_star,total_star = 0,0
-    for key,stage in pairs(self:Stages()) do
-        if tonumber(string.sub(key,1,1)) == statge_index then
-            current_star = current_star + stage:Star()
-            total_star = total_star + stage:MaxStar()
-        end
-    end
-    return current_star,total_star
-end
-
 -- state is number 1~6
 function AllianceShrine:GetSubStagesByMainStage(statge_index)
     local tempStages = {}
@@ -90,9 +65,6 @@ function AllianceShrine:GetSubStagesByMainStage(statge_index)
     return tempStages
 end
 
-function AllianceShrine:GetMainStageDescName(statge_index)
-    return Localize.shrine_desc[string.format("main_stage_%s",statge_index)]
-end
 
 
 return AllianceShrine

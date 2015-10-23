@@ -116,12 +116,10 @@ function GameUIAllianceBattle:OnMoveInStage()
     -- self:InitBattleStatistics()
 
 
-    -- app.timer:AddListener(self)
     -- self.alliance:AddListenOnType(self, Alliance.LISTEN_TYPE.BASIC)
 end
 
 function GameUIAllianceBattle:onExit()
-    -- app.timer:RemoveListener(self)
     -- self.alliance:RemoveListenerOnType(self, Alliance.LISTEN_TYPE.BASIC)
     GameUIAllianceBattle.super.onExit(self)
 end

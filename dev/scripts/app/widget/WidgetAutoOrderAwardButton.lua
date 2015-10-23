@@ -46,28 +46,24 @@ function WidgetAutoOrderAwardButton:onEnter()
     local onlineTime = (countInfo.todayOnLineTime - countInfo.lastLoginTime)/1000
 	self.online_time = onlineTime
 	self.can_receive_num = WidgetNumberTips.new():addTo(self):pos(24,-24):hide()
-	app.timer:AddListener(self)
-end
 
-function WidgetAutoOrderAwardButton:onCleanup()
-	app.timer:RemoveListener(self)
-end
-
-function WidgetAutoOrderAwardButton:OnTimer(dt)
-	if not self.can_get and self.timePoint then
-		local time = self.online_time + dt
-		local diff_time = config_online[self.timePoint].onLineMinutes * 60 - time
-		if  math.floor(diff_time) > 0 then
-			self:SetTimeInfo(diff_time)
+	scheduleAt(self, function()
+		local dt = app.timer:GetServerTime()
+		if not self.can_get and self.timePoint then
+			local time = self.online_time + dt
+			local diff_time = config_online[self.timePoint].onLineMinutes * 60 - time
+			if  math.floor(diff_time) > 0 then
+				self:SetTimeInfo(diff_time)
+			else
+				self:CheckState()
+				self:SetTimeInfo(diff_time)
+			end
+			self.can_receive_num:hide()
 		else
-			self:CheckState()
-			self:SetTimeInfo(diff_time)
+			self.can_receive_num:show()
+			self.can_receive_num:SetNumber(self:GetCanReceiveOnLineNum())
 		end
-		self.can_receive_num:hide()
-	else
-		self.can_receive_num:show()
-		self.can_receive_num:SetNumber(self:GetCanReceiveOnLineNum())
-	end
+	end)
 end
 function WidgetAutoOrderAwardButton:GetCanReceiveOnLineNum()
     local on_line_time = DataUtils:getPlayerOnlineTimeMinutes()

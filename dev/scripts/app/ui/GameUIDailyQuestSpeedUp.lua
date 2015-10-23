@@ -14,11 +14,19 @@ function GameUIDailyQuestSpeedUp:ctor(quest)
     self:SetAccBtnsGroup(self:GetEventType(),quest.id)
     self:SetAccTips(_("每日任务不能免费加速"))
     self:SetUpgradeTip(string.format(_("正在%s"),Localize.daily_quests_name[quest.index]))
-    local current_time = app.timer:GetServerTime()
-    local show_time = quest.finishTime/1000-current_time <0 and 0 or quest.finishTime/1000-current_time
-    self:SetProgressInfo(GameUtils:formatTimeStyle1(show_time), 100-(quest.finishTime-current_time*1000)/(quest.finishTime-quest.startTime)*100 )
-    app.timer:AddListener(self)
+
     User:AddListenOnType(self, "dailyQuestEvents")
+
+    scheduleAt(self, function()
+        local current_time = app.timer:GetServerTime()
+        local quest = self.quest
+        local show_time = quest.finishTime/1000-current_time <0 and 0 or quest.finishTime/1000-current_time
+        if show_time == 0 then
+            self:LeftButtonClicked()
+            return
+        end
+        self:SetProgressInfo(GameUtils:formatTimeStyle1(show_time), 100-(quest.finishTime-current_time*1000)/(quest.finishTime-quest.startTime)*100 )
+    end)
 end
 
 function GameUIDailyQuestSpeedUp:GetEventType()
@@ -28,7 +36,6 @@ function GameUIDailyQuestSpeedUp:onCleanup()
     GameUIDailyQuestSpeedUp.super.onCleanup(self)
 end
 function GameUIDailyQuestSpeedUp:onExit()
-    app.timer:RemoveListener(self)
     User:RemoveListenerOnType(self, "dailyQuestEvents")
     GameUIDailyQuestSpeedUp.super.onExit(self)
 end

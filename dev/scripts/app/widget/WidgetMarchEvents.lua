@@ -45,61 +45,62 @@ end
 function WidgetMarchEvents:OnUserDataChanged_helpToTroops(userData, deltaData)
     self:PromiseOfSwitch()
 end
-
-function WidgetMarchEvents:OnMarchDataChanged()
-    self:PromiseOfSwitch()
+function WidgetMarchEvents:OnAllianceDataChanged_marchEvents(userData, deltaData)
+    if deltaData("marchEvents.attackMarchEvents.add") 
+    or deltaData("marchEvents.attackMarchEvents.edit") 
+    or deltaData("marchEvents.attackMarchEvents.remove") 
+    or deltaData("marchEvents.attackMarchReturnEvents.add")
+    or deltaData("marchEvents.attackMarchReturnEvents.edit")
+    or deltaData("marchEvents.attackMarchReturnEvents.remove")
+    then
+        self:PromiseOfSwitch()
+    end
+end
+function WidgetMarchEvents:OnAllianceDataChanged_shrineEvents(userData, deltaData)
+end
+function WidgetMarchEvents:OnAllianceDataChanged_villageEvents(userData, deltaData)
 end
 
--- function WidgetMarchEvents:OnFightEventTimerChanged(fightEvent)
---     local item = self.items_map[fightEvent:Id()]
+
+-- function WidgetMarchEvents:OnAttackMarchEventTimerChanged(attackMarchEvent)
+--     local item = self.items_map[attackMarchEvent:Id()]
 --     if item then
---         -- local desc =  string.format(" %s %s", item.prefix,GameUtils:formatTimeStyle1(fightEvent:GetTime()))
+--         -- local desc =  string.format(" %s %s", item.prefix,GameUtils:formatTimeStyle1(attackMarchEvent:GetTime()))
 --         -- item.desc:setString(desc)
---         item.time:setString(GameUtils:formatTimeStyle1(fightEvent:GetTime()))
+--         item.time:setString(GameUtils:formatTimeStyle1(attackMarchEvent:GetTime()))
+--         item.progress:setPercentage(attackMarchEvent:GetPercent())
 --     end
 -- end
 
-function WidgetMarchEvents:OnAttackMarchEventTimerChanged(attackMarchEvent)
-    local item = self.items_map[attackMarchEvent:Id()]
-    if item then
-        -- local desc =  string.format(" %s %s", item.prefix,GameUtils:formatTimeStyle1(attackMarchEvent:GetTime()))
-        -- item.desc:setString(desc)
-        item.time:setString(GameUtils:formatTimeStyle1(attackMarchEvent:GetTime()))
-        item.progress:setPercentage(attackMarchEvent:GetPercent())
-    end
-end
-
-function WidgetMarchEvents:OnVillageEventTimer(villageEvent)
-    local item = self.items_map[villageEvent:Id()]
-    if item then
-        local desc =  string.format("%s %d%%", item.prefix,villageEvent:CollectPercent())
-        item.desc:setString(desc)
-        item.time:setString(GameUtils:formatTimeStyle1(villageEvent:GetTime()))
-        item.progress:setPercentage(villageEvent:CollectPercent())
-    end
-end
+-- function WidgetMarchEvents:OnVillageEventTimer(villageEvent)
+--     local item = self.items_map[villageEvent:Id()]
+--     if item then
+--         local desc =  string.format("%s %d%%", item.prefix,villageEvent:CollectPercent())
+--         item.desc:setString(desc)
+--         item.time:setString(GameUtils:formatTimeStyle1(villageEvent:GetTime()))
+--         item.progress:setPercentage(villageEvent:CollectPercent())
+--     end
+-- end
 
 function WidgetMarchEvents:AddOrRemoveAllianceEvent(isAdd)
     local User = User
-    -- local alliance_belvedere = self:GetAllianceBelvedere()
+    local alliance = Alliance_Manager:GetMyAlliance()
     if isAdd then
         User:AddListenOnType(self, "helpToTroops")
-        -- alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
-        -- alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
-        -- alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnVillageEventTimer)
+        alliance:AddListenOnType(self, "marchEvents")
+        alliance:AddListenOnType(self, "shrineEvents")
+        alliance:AddListenOnType(self, "villageEvents")
     else
         User:RemoveListenerOnType(self, "helpToTroops")
-        -- alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
-        -- alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
-        -- alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnVillageEventTimer)
+        alliance:RemoveListenerOnType(self, "marchEvents")
+        alliance:RemoveListenerOnType(self, "shrineEvents")
+        alliance:RemoveListenerOnType(self, "villageEvents")
     end
 end
 
 ---------------------------
-function WidgetMarchEvents:ctor(alliance, ratio)
+function WidgetMarchEvents:ctor(ratio)
     self:setNodeEventEnabled(true)
-    self.alliance = alliance
-    -- self.alliance_belvedere = alliance:GetAllianceBelvedere() -- 获取瞭望塔对象
     self.view_rect = cc.rect(0, 0, WIDGET_WIDTH * ratio, (WIDGET_HEIGHT) * ratio)
     self:setClippingRegion(self.view_rect)
 
@@ -110,17 +111,30 @@ function WidgetMarchEvents:ctor(alliance, ratio)
     self.back_ground = self:CreateBackGround():addTo(self.node)
     self:Reset()
 end
-
--- function WidgetMarchEvents:GetAllianceBelvedere()
---     assert(self.alliance_belvedere)
---     return self.alliance_belvedere
--- end
-
 function WidgetMarchEvents:onEnter()
     self:AddOrRemoveAllianceEvent(true)
     if self:HasAnyMarchEvent() then
         self:PromiseOfSwitch()
     end
+    scheduleAt(self, function()
+        self:IteratorItems(function(v)
+            if v.eventType == "attackMarchEvents" then
+                local time, percent = UtilsForEvent:GetEventInfo(v.event)
+                v.time:setString(GameUtils:formatTimeStyle1(time))
+                v.progress:setPercentage(percent)
+            elseif v.eventType == "attackMarchReturnEvents" then
+                local time, percent = UtilsForEvent:GetEventInfo(v.event)
+                v.time:setString(GameUtils:formatTimeStyle1(time))
+                v.progress:setPercentage(percent)
+            elseif v.eventType == "villageEvents" then
+                local time, percent = UtilsForEvent:GetEventInfo(v.event)
+                local collectCount, collectPercent = UtilsForEvent:GetCollectPercent(v.event)
+                v.desc:setString(string.format("%s %d%%", v.prefix, collectPercent))
+                v.time:setString(GameUtils:formatTimeStyle1(time))
+                v.progress:setPercentage(collectPercent)
+            end
+        end)
+    end)
 end
 
 function WidgetMarchEvents:onExit()
@@ -224,45 +238,65 @@ function WidgetMarchEvents:Reload()
 end
 
 function WidgetMarchEvents:Reset()
-    self.items_map = {}
     self.back_ground:removeAllChildren()
     self.item_array = {}
     self:ResizeBelowHorizon(0)
     self.node:stopAllActions()
     self.arrow:flipY(true)
     self:Lock(false)
-    -- local has_events = self:GetAllianceBelvedere():HasMyEvents()
-    self:setVisible(has_events)
+    self:setVisible(self:HasAnyMarchEvent())
 end
 
 function WidgetMarchEvents:Load()
-    -- local my_events = self:GetAllianceBelvedere():GetMyEvents()
+    -- for __,entity in ipairs({}) do
+    --     local type_str = entity:GetTypeStr()
+    --     local event = entity:WithObject()
+    --     if  type_str == 'MARCH_OUT'  or type_str == 'STRIKE_OUT' then
+    --         local item = self:CreateAttackItem(entity)
+    --         self.items_map[event:Id()] = item
+    --         table.insert(items,item)
+    --     elseif type_str == 'MARCH_RETURN' or type_str == 'STRIKE_RETURN' then
+    --         local item = self:CreateReturnItem(entity)
+    --         self.items_map[event:Id()] = item
+    --         table.insert(items,item )
+    --     elseif type_str == 'COLLECT' then
+    --         local item = self:CreateDefenceItem(entity)
+    --         self.items_map[event:Id()] = item
+    --         table.insert(items, item)
+    --     elseif type_str == 'SHIRNE' then
+    --         local item = self:CreateDefenceItem(entity)
+    --         item.speed_btn:setButtonEnabled(false) -- 圣地事件没有撤军功能
+    --         self.items_map[event:Id()] = item
+    --         table.insert(items, item)
+    --     elseif type_str == 'HELPTO' then
+    --         local item = self:CreateDefenceItem(entity)
+    --         -- self.items_map[event:Id()] = item
+    --         table.insert(items, item)
+    --     end
+    -- end
     local items = {}
-    for __,entity in ipairs({}) do
-        local type_str = entity:GetTypeStr()
-        local event = entity:WithObject()
-        if  type_str == 'MARCH_OUT'  or type_str == 'STRIKE_OUT' then
-            local item = self:CreateAttackItem(entity)
-            self.items_map[event:Id()] = item
-            table.insert(items,item)
-        elseif type_str == 'MARCH_RETURN' or type_str == 'STRIKE_RETURN' then
-            local item = self:CreateReturnItem(entity)
-            self.items_map[event:Id()] = item
-            table.insert(items,item )
-        elseif type_str == 'COLLECT' then
-            local item = self:CreateDefenceItem(entity)
-            self.items_map[event:Id()] = item
-            table.insert(items, item)
-        elseif type_str == 'SHIRNE' then
-            local item = self:CreateDefenceItem(entity)
-            item.speed_btn:setButtonEnabled(false) -- 圣地事件没有撤军功能
-            self.items_map[event:Id()] = item
-            table.insert(items, item)
-        elseif type_str == 'HELPTO' then
-            local item = self:CreateDefenceItem(entity)
-            -- self.items_map[event:Id()] = item
+    local alliance = Alliance_Manager:GetMyAlliance()
+    for i,v in ipairs(alliance.marchEvents.attackMarchEvents) do
+        if UtilsForEvent:IsMyMarchEvent(v) then
+            local item = self:CreateAttackItem(v)
             table.insert(items, item)
         end
+    end
+    for i,v in ipairs(alliance.marchEvents.attackMarchReturnEvents) do
+        if UtilsForEvent:IsMyMarchEvent(v) then
+            local item = self:CreateReturnItem(v, "attackMarchReturnEvents")
+            table.insert(items, item)
+        end
+    end
+    for i,v in ipairs(alliance.villageEvents) do
+        if UtilsForEvent:IsMyVillageEvent(v) then
+            local item = self:CreateDefenceItem(v, "villageEvents")
+            table.insert(items, item)
+        end
+    end
+    for i,v in ipairs(User.helpToTroops) do
+        local item = self:CreateDefenceItem(v, "helpToTroops")
+        table.insert(items, item)
     end
     self:InsertItem(items)
     self:ResizeBelowHorizon(self:Length(#self.item_array))
@@ -291,8 +325,7 @@ function WidgetMarchEvents:GetDragonHead(dragon_type)
     return dragon_bg_1
 end
 -- 只有加速按钮和部队
-function WidgetMarchEvents:CreateReturnItem(entity)
-    local event = entity:WithObject()
+function WidgetMarchEvents:CreateReturnItem(event, eventType)
     local node = display.newSprite("tab_event_bar.png"):align(display.LEFT_CENTER)
     local half_height = node:getContentSize().height / 2
     node.progress = display.newProgressTimer("tab_progress_bar.png",
@@ -300,15 +333,16 @@ function WidgetMarchEvents:CreateReturnItem(entity)
         :align(display.LEFT_CENTER, 4, half_height)
     node.progress:setBarChangeRate(cc.p(1,0))
     node.progress:setMidpoint(cc.p(0,0))
-    node.progress:setPercentage(event:GetPercent())
+    local time, percent = UtilsForEvent:GetEventInfo(event)
+    node.progress:setPercentage(percent)
     WidgetPushTransparentButton.new(cc.rect(0,0,469,41)):onButtonClicked(function()
-        display.getRunningScene():GetSceneLayer():TrackCorpsById(event:Id())
+        display.getRunningScene():GetSceneLayer():TrackCorpsById(event.id)
     end):addTo(node):align(display.LEFT_CENTER, 4, half_height)
 
-    self:GetDragonHead(event:AttackPlayerData().dragon.type):align(display.LEFT_CENTER, 2, half_height)
+    self:GetDragonHead(event.attackPlayerData.dragon.type):align(display.LEFT_CENTER, 2, half_height)
         :addTo(node)
 
-    node.prefix = entity:GetEventPrefix()
+    node.prefix = UtilsForEvent:GetMarchReturnEventPrefix(event)
     node.desc = UIKit:ttfLabel({
         text = node.prefix,
         size = 18,
@@ -317,7 +351,7 @@ function WidgetMarchEvents:CreateReturnItem(entity)
     }):addTo(node):align(display.LEFT_CENTER, 55, half_height)
 
     node.time = UIKit:ttfLabel({
-        text = GameUtils:formatTimeStyle1(event:GetTime()),
+        text = GameUtils:formatTimeStyle1(time),
         size = 18,
         color = 0xd1ca95,
         align = cc.TEXT_ALIGNMENT_RIGHT,
@@ -335,7 +369,7 @@ function WidgetMarchEvents:CreateReturnItem(entity)
             shadow = true,
         }))
         :onButtonClicked(function()
-            self:OnSpeedUpButtonClicked(entity)
+            self:OnSpeedUpButtonClicked(event, "attackMarchReturnEvents")
         end)
 
 
@@ -351,13 +385,14 @@ function WidgetMarchEvents:CreateReturnItem(entity)
             shadow = true,
         }))
         :onButtonClicked(function()
-            self:OnInfoButtonClicked(entity)
+            self:OnInfoButtonClicked(event, eventType)
         end)
+    node.eventType = "attackMarchReturnEvents"
+    node.event = event
     return node
 end
 --加速和撤退
-function WidgetMarchEvents:CreateAttackItem(entity)
-    local event = entity:WithObject()
+function WidgetMarchEvents:CreateAttackItem(event)
     local node = display.newSprite("tab_event_bar.png"):align(display.LEFT_CENTER)
     local half_height = node:getContentSize().height / 2
     node.progress = display.newProgressTimer("tab_progress_bar.png",
@@ -365,15 +400,16 @@ function WidgetMarchEvents:CreateAttackItem(entity)
         :align(display.LEFT_CENTER, 4, half_height)
     node.progress:setBarChangeRate(cc.p(1,0))
     node.progress:setMidpoint(cc.p(0,0))
-    node.progress:setPercentage(event:GetPercent())
+    local time, percent = UtilsForEvent:GetEventInfo(event)
+    node.progress:setPercentage(percent)
     WidgetPushTransparentButton.new(cc.rect(0,0,469,41)):onButtonClicked(function()
-        display.getRunningScene():GetSceneLayer():TrackCorpsById(event:Id())
+        display.getRunningScene():GetSceneLayer():TrackCorpsById(event.id)
     end):addTo(node):align(display.LEFT_CENTER, 4, half_height)
 
-    self:GetDragonHead(event:AttackPlayerData().dragon.type):align(display.LEFT_CENTER, 2, half_height)
+    self:GetDragonHead(event.attackPlayerData.dragon.type):align(display.LEFT_CENTER, 2, half_height)
         :addTo(node)
 
-    node.prefix = entity:GetEventPrefix()
+    node.prefix = UtilsForEvent:GetMarchEventPrefix(event)
     node.desc = UIKit:ttfLabel({
         text = node.prefix,
         size = 18,
@@ -382,7 +418,7 @@ function WidgetMarchEvents:CreateAttackItem(entity)
     }):addTo(node):align(display.LEFT_CENTER, 55, half_height)
 
     node.time = UIKit:ttfLabel({
-        text = GameUtils:formatTimeStyle1(event:GetTime()),
+        text = GameUtils:formatTimeStyle1(time),
         size = 18,
         color = 0xd1ca95,
         align = cc.TEXT_ALIGNMENT_RIGHT,
@@ -401,7 +437,7 @@ function WidgetMarchEvents:CreateAttackItem(entity)
             shadow = true,
         }))
         :onButtonClicked(function()
-            self:OnSpeedUpButtonClicked(entity)
+            self:OnSpeedUpButtonClicked(event, "attackMarchEvents")
         end)
 
 
@@ -417,14 +453,14 @@ function WidgetMarchEvents:CreateAttackItem(entity)
             shadow = true,
         }))
         :onButtonClicked(function()
-            self:OnRetreatButtonClicked(entity)
+            self:OnRetreatButtonClicked(event, "attackMarchEvents")
         end)
+    node.eventType = "attackMarchEvents"
+    node.event = event
     return node
 end
 --只有撤退和部队
-function WidgetMarchEvents:CreateDefenceItem(entity)
-    local event = entity:WithObject()
-    local type_str = entity:GetTypeStr()
+function WidgetMarchEvents:CreateDefenceItem(event, eventType)
     local node = display.newSprite("tab_event_bar.png"):align(display.LEFT_CENTER)
     local half_height = node:getContentSize().height / 2
     node.progress = display.newProgressTimer("tab_progress_bar.png",
@@ -433,32 +469,38 @@ function WidgetMarchEvents:CreateDefenceItem(entity)
     node.progress:setBarChangeRate(cc.p(1,0))
     node.progress:setMidpoint(cc.p(0,0))
     WidgetPushTransparentButton.new(cc.rect(0,0,469,41)):onButtonClicked(function()
-        self:MoveToTargetAction(entity)
+        self:MoveToTargetAction(event)
     end):addTo(node):align(display.LEFT_CENTER, 4, half_height)
-    local display_text = ""
-    node.prefix = entity:GetEventPrefix()
     local time_str = ""
+    local display_text = ""
     local dragonType = ""
-    if type_str == 'COLLECT' then
-        node.progress:setPercentage(event:CollectPercent())
-        display_text = string.format("%s %d%%", node.prefix,event:CollectPercent())
-        time_str = GameUtils:formatTimeStyle1(event:GetTime())
-        dragonType = event:PlayerData().dragon.type
-    elseif type_str == 'SHIRNE' then
-        node.progress:setPercentage(100)
-        display_text = node.prefix
-        time_str = ""
-        for i,v in ipairs(event:PlayerTroops()) do
-            if v.name == User.basicInfo.name then
-                dragonType = v.dragon.type
-            end
-        end
-    elseif type_str == 'HELPTO' then
+    if eventType == "villageEvents" then
+        node.prefix = UtilsForEvent:GetVillageEventPrefix(event)
+        local time, percent = UtilsForEvent:GetEventInfo(event)
+        time_str = GameUtils:formatTimeStyle1(time)
+        local collectCount, collectPercent = UtilsForEvent:GetCollectPercent(event)
+        display_text = string.format("%s %d%%", node.prefix, collectPercent)
+        node.progress:setPercentage(collectPercent)
+        dragonType = event.playerData.dragon.type
+    elseif eventType == "helpToTroops" then
+        local target_pos = event.beHelpedPlayerData.location.x .. "," .. event.beHelpedPlayerData.location.y
+        node.prefix = string.format(_("正在协防 %s (%s)"), 
+                event.beHelpedPlayerData.name, target_pos)
         node.progress:setPercentage(100)
         display_text = node.prefix
         time_str = ""
         dragonType = event.playerDragon
     end
+    -- if type_str == 'SHIRNE' then
+    --     node.progress:setPercentage(100)
+    --     display_text = node.prefix
+    --     time_str = ""
+    --     for i,v in ipairs(event:PlayerTroops()) do
+    --         if v.name == User.basicInfo.name then
+    --             dragonType = v.dragon.type
+    --         end
+    --     end
+    -- end
     self:GetDragonHead(dragonType):align(display.LEFT_CENTER, 2, half_height)
             :addTo(node)
     node.desc = UIKit:ttfLabel({
@@ -488,7 +530,7 @@ function WidgetMarchEvents:CreateDefenceItem(entity)
             shadow = true,
         }))
         :onButtonClicked(function()
-            self:OnRetreatButtonClicked(entity)
+            self:OnRetreatButtonClicked(event, eventType)
         end)
 
 
@@ -504,53 +546,63 @@ function WidgetMarchEvents:CreateDefenceItem(entity)
             shadow = true,
         }))
         :onButtonClicked(function()
-            self:OnInfoButtonClicked(entity)
+            self:OnInfoButtonClicked(event, eventType)
         end)
+    node.eventType = eventType
+    node.event = event
     return node
 end
 
 function WidgetMarchEvents:HasAnyMarchEvent()
+    local alliance = Alliance_Manager:GetMyAlliance()
+    for i,v in ipairs(alliance.marchEvents.attackMarchEvents) do
+        if UtilsForEvent:IsMyMarchEvent(v) then
+            return true
+        end
+    end
+    for i,v in ipairs(alliance.marchEvents.attackMarchReturnEvents) do
+        if UtilsForEvent:IsMyMarchEvent(v) then
+            return true
+        end
+    end
+    for i,v in ipairs(alliance.villageEvents) do
+        if UtilsForEvent:IsMyVillageEvent(v) then
+            return true
+        end
+    end
+    if #User.helpToTroops > 0 then
+        return true
+    end
     return false
-    -- local alliance_belvedere = self:GetAllianceBelvedere()
-    -- local hasEvent,__ = alliance_belvedere:HasMyEvents()
-    -- return hasEvent
 end
 
-function WidgetMarchEvents:OnSpeedUpButtonClicked(entity)
+function WidgetMarchEvents:OnSpeedUpButtonClicked(event, eventType)
     local widgetUseItems = WidgetUseItems.new():Create({
         item_name = "warSpeedupClass_1",
-        event = entity
+        event = event,
+        eventType = eventType,
     })
     widgetUseItems:AddToCurrentScene()
 end
 
-function WidgetMarchEvents:OnRetreatButtonClicked(entity,cb)
-    cb = cb or function(...)end
-    if entity:GetType() == entity.ENTITY_TYPE.HELPTO then
-        UIKit:showMessageDialog(_("提示"),_("确定撤军?"),function()
-            NetManager:getRetreatFromHelpedAllianceMemberPromise(entity:WithObject().beHelpedPlayerData.id)
-                :done(function()
-                    cb(true)
-                end)
-                :fail(function()
-                    cb(false)
-                end)
-        end)
-    elseif entity:GetType() == entity.ENTITY_TYPE.COLLECT then
-        UIKit:showMessageDialog(_("提示"),_("确定撤军?"),function()
-            NetManager:getRetreatFromVillagePromise(entity:WithObject():VillageData().alliance.id,entity:WithObject():Id())
-                :done(function()
-                    cb(true)
-                end):fail(function()
-                cb(false)
-                end)
-        end)
-    elseif entity:GetType() == entity.ENTITY_TYPE.MARCH_OUT  or entity:GetType() == entity.ENTITY_TYPE.STRIKE_OUT then
+function WidgetMarchEvents:OnRetreatButtonClicked(event, eventType)
+    if event.marchType == "village"
+    or event.marchType == "helpDefence"
+    or event.marchType == "city" then
         local widgetUseItems = WidgetUseItems.new():Create({
             item_name = "retreatTroop",
-            event = entity
+            event = event,
+            eventType = eventType,
         })
         widgetUseItems:AddToCurrentScene()
+    elseif eventType == "villageEvents" then
+        UIKit:showMessageDialog(_("提示"),_("确定撤军?"),function()
+            NetManager:getRetreatFromVillagePromise(event.id)
+        end)
+    elseif eventType == "helpToTroops" then
+        UIKit:showMessageDialog(_("提示"),_("确定撤军?"),function()
+            NetManager:getRetreatFromHelpedAllianceMemberPromise(event.beHelpedPlayerData.id)
+        end)
     end
 end
 
@@ -569,8 +621,8 @@ function WidgetMarchEvents:MoveToTargetAction(entity)
     map_layer:GotoMapPositionInMiddle(point.x,point.y)
 end
 
-function WidgetMarchEvents:OnInfoButtonClicked(entity)
-    UIKit:newGameUI("GameUIWatchTowerMyTroopsDetail",entity):AddToCurrentScene(true)
+function WidgetMarchEvents:OnInfoButtonClicked(event, eventType)
+    UIKit:newGameUI("GameUIWatchTowerMyTroopsDetail", event, eventType):AddToCurrentScene(true)
 end
 return WidgetMarchEvents
 

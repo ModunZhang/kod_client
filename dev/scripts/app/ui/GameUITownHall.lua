@@ -27,7 +27,6 @@ function GameUITownHall:OnMoveInStage()
     self:UpdateDwellingCondition()
 end
 function GameUITownHall:onExit()
-    app.timer:RemoveListener(self)
     User:RemoveListenerOnType(self, "dailyQuests")
     User:RemoveListenerOnType(self, "dailyQuestEvents")
     User:RemoveListenerOnType(self, "buildingEvents")
@@ -102,13 +101,29 @@ function GameUITownHall:CreateAdministration()
     listnode:align(display.BOTTOM_CENTER, layer_width/2, 20):addTo(admin_layer)
     self.quest_list_view = list_view
     -- 获取任务
-    local daily_quests = User:GetDailyQuests()
-    self:CreateAllQuests(daily_quests)
-    -- 添加到全局计时器中
-    app.timer:AddListener(self)
+    self:CreateAllQuests(User:GetDailyQuests())
     User:AddListenOnType(self, "dailyQuests")
     User:AddListenOnType(self, "dailyQuestEvents")
     User:AddListenOnType(self, "buildingEvents")
+
+    scheduleAt(self, function()
+        local current_time = app.timer:GetServerTime()
+        if self.refresh_time then
+            if (User:GetNextDailyQuestsRefreshTime()-current_time) <= 0 then
+                self:ResetQuest()
+            else
+                self.refresh_time:setString(GameUtils:formatTimeStyle1(User:GetNextDailyQuestsRefreshTime()-current_time))
+            end
+        end
+
+        for __,item in pairs(self.quest_items) do
+            local quest = item:GetQuest()
+            if quest and User:IsQuestStarted(quest) and not User:IsQuestFinished(quest) then
+                local show_time = quest.finishTime/1000-current_time <0 and 0 or quest.finishTime/1000-current_time
+                item:SetProgress(GameUtils:formatTimeStyle1(show_time), 100-(quest.finishTime-current_time*1000)/(quest.finishTime-quest.startTime)*100 )
+            end
+        end
+    end)
 end
 
 function GameUITownHall:CreateAllQuests(daily_quests)
@@ -404,24 +419,6 @@ function GameUITownHall:CreateDwellingLineItem(width,flag)
     end
     return node
 end
-
-function GameUITownHall:OnTimer(current_time)
-    if self.refresh_time then
-        if (User:GetNextDailyQuestsRefreshTime()-current_time) <= 0 then
-            self:ResetQuest()
-        else
-            self.refresh_time:setString(GameUtils:formatTimeStyle1(User:GetNextDailyQuestsRefreshTime()-current_time))
-        end
-    end
-
-    for __,item in pairs(self.quest_items) do
-        local quest = item:GetQuest()
-        if quest and User:IsQuestStarted(quest) and not User:IsQuestFinished(quest) then
-            local show_time = quest.finishTime/1000-current_time <0 and 0 or quest.finishTime/1000-current_time
-            item:SetProgress(GameUtils:formatTimeStyle1(show_time), 100-(quest.finishTime-current_time*1000)/(quest.finishTime-quest.startTime)*100 )
-        end
-    end
-end
 function GameUITownHall:GetQuestItemById(questId)
     return self.quest_items[questId]
 end
@@ -433,8 +430,7 @@ end
 function GameUITownHall:ResetQuest()
     self.quest_items = {}
     self.quest_list_view:removeAllItems()
-    local daily_quests = User:GetDailyQuests()
-    self:CreateAllQuests(daily_quests)
+    self:CreateAllQuests(User:GetDailyQuests())
 end
 function GameUITownHall:OnUserDataChanged_dailyQuests(userData, deltaData)
     if deltaData("dailyQuests.refreshTime") 
