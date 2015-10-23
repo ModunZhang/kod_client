@@ -1463,6 +1463,12 @@ function NetManager:getAllianceInfoPromise(allianceId,serverId)
     return get_blocking_request_promise("logic.allianceHandler.getAllianceInfo",{allianceId = allianceId , serverId = serverId},
         "请求联盟数据失败!",false,0)
 end
+--请求联盟基本数据
+function NetManager:getAllianceBasicInfoPromise(allianceId,serverId)
+    return get_blocking_request_promise("logic.allianceHandler.getAllianceBasicInfo",{allianceId = allianceId , serverId = serverId},
+        "请求联盟基本数据失败!",false,0)
+end
+
 --协防
 function NetManager:getHelpAllianceMemberDefencePromise(dragonType, soldiers, targetPlayerId)
     return get_blocking_request_promise("logic.allianceHandler.helpAllianceMemberDefence",

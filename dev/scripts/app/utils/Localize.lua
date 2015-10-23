@@ -780,6 +780,7 @@ local ALLIANCE_EVENTS = {
     fight = _("开启了联盟战"),
     buildingUpgrade = _("升级了%s"),
     villageUpgrade = _("升级了%s"),
+    moveAlliance = _("迁移了联盟"),
 }
 local ALLIANCE_NOTICE = {
     attackVillage = {_("%s正在前往采集Lv%d %s"),_("%s正在前往摧毁Lv%d %s")},

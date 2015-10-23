@@ -314,7 +314,8 @@ function AllianceDetailScene:EnterNotAllianceBuilding(alliance,mapObj)
         app:GetAudioManager():PlayBuildingEffectByType("keep")
         class_name = "GameUIAllianceCityEnter"
     elseif type_ == 'decorate' then
-        class_name = "GameUIAllianceDecorateEnter"
+        -- class_name = "GameUIAllianceDecorateEnter"
+        return
     elseif type_ == 'village' then
         app:GetAudioManager():PlayBuildingEffectByType("warehouse")
         class_name = "GameUIAllianceVillageEnter"
