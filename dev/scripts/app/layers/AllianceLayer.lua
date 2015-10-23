@@ -5,7 +5,7 @@ local WidgetAllianceHelper = import("..widget.WidgetAllianceHelper")
 local NormalMapAnchorBottomLeftReverseY = import("..map.NormalMapAnchorBottomLeftReverseY")
 local MapLayer = import(".MapLayer")
 local AllianceLayer = class("AllianceLayer", MapLayer)
-local ZORDER = Enum("BACKGROUND", "OBJECT", "LINE")
+local ZORDER = Enum("BACKGROUND", "OBJECT", "INFO", "LINE", "CORPS")
 local AllianceMap = GameDatas.AllianceMap
 local buildingName = AllianceMap.buildingName
 local ui_helper = WidgetAllianceHelper.new()
@@ -31,8 +31,9 @@ function AllianceLayer:onEnter()
     self.background_node = display.newNode():addTo(self.map, ZORDER.BACKGROUND)
     self.objects_node = display.newNode():addTo(self.map, ZORDER.OBJECT)
     self.lines_node = display.newNode():addTo(self.map, ZORDER.LINE)
-    self.map_lines = {}
     self.corps_node = display.newNode():addTo(self, ZORDER.CORPS)
+    self.info_node = display.newNode():addTo(self, ZORDER.INFO)
+    self.map_lines = {}
     self.map_corps = {}
 
     self:StartCorpsTimer()
@@ -346,11 +347,12 @@ function AllianceLayer:FindMapObject(index, x, y)
     end
     return {index = index, x = x, y = y, name = "empty"}
 end
-function AllianceLayer:AddMapObjectByIndex(index, mapObject)
+function AllianceLayer:AddMapObjectByIndex(index, mapObject, alliance)
     local alliance_object = self.alliance_objects[index]
     if alliance_object then
         if not alliance_object.mapObjects[mapObject.id] then
-            self:AddMapObject(alliance_object, mapObject)
+            local sprite = self:AddMapObject(alliance_object, mapObject, index)
+            self:RefreshSpriteInfo(sprite, mapObj, alliance)
         end
     end
 end
@@ -358,17 +360,18 @@ function AllianceLayer:RemoveMapObjectByIndex(index, mapObject)
     local alliance_object = self.alliance_objects[index]
     if alliance_object then
         if alliance_object.mapObjects[mapObject.id] then
-            alliance_object.mapObjects[mapObject.id]:removeFromParent()
+            self:RemoveMapObject(alliance_object.mapObjects[mapObject.id])
             alliance_object.mapObjects[mapObject.id] = nil
         end
     end
 end
-function AllianceLayer:RefreshMapObjectByIndex(index, mapObject)
+function AllianceLayer:RefreshMapObjectByIndex(index, mapObject, alliance)
     local alliance_object = self.alliance_objects[index]
     if alliance_object then
         local sprite = alliance_object.mapObjects[mapObject.id]
         if sprite then
             self:RefreshMapObjectPosition(sprite, mapObject)
+            self:RefreshSpriteInfo(sprite, mapObject, alliance)
         end
     end
 end
@@ -391,21 +394,27 @@ function AllianceLayer:LoadAllianceByIndex(index, alliance)
                 local x,y = mapObj.location.x, mapObj.location.y
                 local mapObject = objects_node.mapObjects[mapObj.id]
                 if not mapObject then
-                    mapObject = self:AddMapObject(objects_node, mapObj)
+                    mapObject = self:AddMapObject(objects_node, mapObj, index)
+                    self:RefreshSpriteInfo(mapObject, mapObj, allianceData)
                 end
-                self:RefreshMapObjectPosition(mapObject, mapObj)
             end
             local mapObjects = objects_node.mapObjects
             for id,v in pairs(mapObjects) do
                 if not map_obj_id[id] then
-                    v:removeFromParent()
+                    self:RemoveMapObject(v)
                     mapObjects[id] = nil
                 end
             end
         end
     end)
 end
-function AllianceLayer:AddMapObject(objects_node, mapObj)
+function AllianceLayer:RemoveMapObject(mapObj)
+    if mapObj.info then
+        mapObj.info:removeFromParent()
+    end
+    mapObj:removeFromParent()
+end
+function AllianceLayer:AddMapObject(objects_node, mapObj, index)
     local x,y = mapObj.location.x, mapObj.location.y
     local mapObject = objects_node.mapObjects[mapObj.id]
     local sprite
@@ -427,9 +436,47 @@ function AllianceLayer:AddMapObject(objects_node, mapObj)
         --todo
         assert(false)
     end
+
+
+    local lx,ly = self:IndexToLogic(index)
+    local x,y = self:GetLogicMap():ConvertToMapPosition(
+        lx * ALLIANCE_WIDTH + mapObj.location.x,
+        ly * ALLIANCE_HEIGHT + mapObj.location.y
+    )
+    local info = display.newNode():addTo(self.info_node)
+        :pos(x, y - 50):scale(0.8):zorder(x * y)
+    local banners = UILib.my_city_banner
+    info.banner = display.newSprite(banners[0])
+        :addTo(info):align(display.CENTER_TOP)
+    info.level = UIKit:ttfLabel({
+        size = 22,
+        color = 0xffedae,
+    }):addTo(info.banner):align(display.CENTER, 30, 30)
+    info.name = UIKit:ttfLabel({
+        size = 20,
+        color = 0xffedae,
+    }):addTo(info.banner):align(display.LEFT_CENTER, 60, 32)
+
+    
+    sprite.info = info
     sprite.name = mapObj.name
     objects_node.mapObjects[mapObj.id] = sprite:addTo(objects_node)
+    self:RefreshMapObjectPosition(sprite, mapObj)
     return sprite
+end
+function AllianceLayer:RefreshSpriteInfo(sprite, mapObj, alliance)
+    local banners = UILib.my_city_banner
+    if mapObj.name == "member" then
+        for _,v in ipairs(alliance.members) do
+            if mapObj.id == v.mapId then
+                local info = sprite.info
+                info.banner:setTexture(banners[v.helpedByTroopsCount])
+                info.level:setString(v.keepLevel)
+                info.name:setString(string.format("[%s]%s", alliance.basicInfo.tag, v.name))
+                break
+            end
+        end
+    end
 end
 function AllianceLayer:RefreshMapObjectPosition(sprite, mapObject)
     local x,y = mapObject.location.x, mapObject.location.y
@@ -686,6 +733,7 @@ end
 
 
 return AllianceLayer
+
 
 
 

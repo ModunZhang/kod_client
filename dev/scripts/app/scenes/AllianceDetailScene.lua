@@ -11,14 +11,15 @@ function AllianceDetailScene:OnAllianceDataChanged_mapObjects(allianceData, delt
     self:HandleMapObjects(allianceData.mapIndex, "add", deltaData("mapObjects.edit"))
 end
 function AllianceDetailScene:HandleMapObjects(mapIndex, op, ok, value)
+    local alliance = Alliance_Manager:GetAllianceByCache(mapIndex)
     if not ok then return end
     if op == "edit" then
         for _,mapObj in pairs(value) do
-            self:GetSceneLayer():RemoveMapObjectByIndex(mapIndex, mapObj)
+            self:GetSceneLayer():RemoveMapObjectByIndex(mapIndex, mapObj, alliance)
         end
     elseif op == "add" then
         for _,mapObj in pairs(value) do
-            self:GetSceneLayer():AddMapObjectByIndex(mapIndex, mapObj)
+            self:GetSceneLayer():AddMapObjectByIndex(mapIndex, mapObj, alliance)
         end
     elseif op == "remove" then
         for _,mapObj in pairs(value) do
