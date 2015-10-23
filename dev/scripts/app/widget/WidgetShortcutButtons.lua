@@ -125,14 +125,13 @@ function WidgetShortcutButtons:ctor(city)
         return world_map_btn_bg:getContentSize()
     end
     function world_map_btn_bg:GetXY()
-        return {x = 0 ,y = -520}
+        return {x = 0 ,y =  440 - display.top }
     end
     order:AddElement(world_map_btn_bg)
 
     order:RefreshOrder()
 
     self.left_order_group = order
-
 
     local right_top_order = WidgetAutoOrder.new(WidgetAutoOrder.ORIENTATION.TOP_TO_BOTTOM,50,true):addTo(self):pos(display.right - 50, display.top-200)
 
