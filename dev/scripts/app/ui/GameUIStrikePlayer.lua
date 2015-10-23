@@ -63,15 +63,10 @@ function GameUIStrikePlayer:GetMarchTime()
 	local from_alliance = Alliance_Manager:GetMyAlliance()
 	local mapObject = from_alliance:FindMapObjectById(from_alliance:GetSelf():MapId())
     local fromLocation = mapObject.location
-	local target_alliance
-	if self.params.targetIsMyAlliance then
-		target_alliance = from_alliance
-	else
-		target_alliance = Alliance_Manager:GetEnemyAlliance()
-	end
+	
 	local toLocation = self.params.toLocation or cc.p(0,0)
-	local time = DataUtils:getPlayerDragonMarchTime(from_alliance,fromLocation,target_alliance,toLocation)
-	return GameUtils:formatTimeStyle1(time)
+	-- local time = DataUtils:getPlayerDragonMarchTime(from_alliance,fromLocation,self.params.alliance,toLocation)
+	return GameUtils:formatTimeStyle1(0)
 end
 
 function GameUIStrikePlayer:BuildUI()
@@ -113,7 +108,7 @@ function GameUIStrikePlayer:BuildUI()
 			local dragon = self:GetDragonManager():GetDragon(select_DragonType)
 
 			local alliance = Alliance_Manager:GetMyAlliance()
-			if alliance:GetAllianceBelvedere():IsReachEventLimit() then
+			if alliance:IsReachEventLimit() then
 				UIKit:showMessageDialogWithParams({
         			content = _("没有空闲的行军队列"),
         			ok_callback = function()
@@ -239,13 +234,14 @@ function GameUIStrikePlayer:SendDataToServerRealy()
 	if self.strike_type == self.STRIKE_TYPE.CITY then
 		if self.params.targetIsProtected then
 			UIKit:showMessageDialog(_("提示"),_("目标城市已被击溃并进入保护期，可能无法发生战斗，你是否继续突袭?"), function()
-                NetManager:getStrikePlayerCityPromise(self:GetSelectDragonType(),self.params.memberId):done(function()
+                NetManager:getStrikePlayerCityPromise(self:GetSelectDragonType(),self.params.memberId,self.params.alliance._id):done(function()
 					app:GetAudioManager():PlayeEffectSoundWithKey("DRAGON_STRIKE")
 					self:LeftButtonClicked()
 				end)
             end,function()end)
         else
-        	NetManager:getStrikePlayerCityPromise(self:GetSelectDragonType(),self.params.memberId):done(function()
+        	print("self.params.alliance._id=",self.params.alliance._id,self.params.alliance.id)
+        	NetManager:getStrikePlayerCityPromise(self:GetSelectDragonType(),self.params.memberId,self.params.alliance._id):done(function()
 				app:GetAudioManager():PlayeEffectSoundWithKey("DRAGON_STRIKE")
 				self:LeftButtonClicked()
 			end)

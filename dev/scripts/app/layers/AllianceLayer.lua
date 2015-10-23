@@ -294,6 +294,10 @@ function AllianceLayer:RealPosition(index, lx, ly)
     local x,y = self:IndexToLogic(index)
     return self:ConvertLogicPositionToMapPosition(ALLIANCE_WIDTH * x + lx, ALLIANCE_HEIGHT * y + ly)
 end
+function AllianceLayer:GetLogicPosition(index, lx, ly)
+    local x,y = self:IndexToLogic(index)
+    return ALLIANCE_WIDTH * x + lx, ALLIANCE_HEIGHT * y + ly
+end
 function AllianceLayer:IndexToLogic(index)
     return index % MAP_LEGNTH_WIDTH, math.floor(index / MAP_LEGNTH_WIDTH)
 end

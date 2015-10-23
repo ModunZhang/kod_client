@@ -236,10 +236,10 @@ function GameUIAllianceCityEnter:GetEnterButtons()
             local toLocation = self:GetLogicPosition()
               if isProtected then
                 UIKit:showMessageDialog(_("提示"),_("突袭玩家城市将失去保护状态，确定继续派兵?"),function ()
-                     UIKit:newGameUI("GameUIStrikePlayer",1,{memberId = member.id,targetIsMyAlliance = false,toLocation = toLocation,targetIsProtected = member.isProtected}):AddToCurrentScene(true)
+                     UIKit:newGameUI("GameUIStrikePlayer",1,{memberId = member.id,alliance = alliance, toLocation = toLocation,targetIsProtected = member.isProtected}):AddToCurrentScene(true)
                 end)
             else
-                UIKit:newGameUI("GameUIStrikePlayer",1,{memberId = member.id,targetIsMyAlliance = false,toLocation = toLocation,targetIsProtected = member.isProtected}):AddToCurrentScene(true)
+                UIKit:newGameUI("GameUIStrikePlayer",1,{memberId = member.id,alliance = alliance,toLocation = toLocation,targetIsProtected = member.isProtected}):AddToCurrentScene(true)
             end
         end)
         -- strike_button:setButtonEnabled(my_allaince.basicInfo.status == "fight")

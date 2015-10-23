@@ -95,7 +95,7 @@ function GameUIAllianceHome:AddOrRemoveListener(isAdd)
         -- local alliance_belvedere = alliance:GetAllianceBelvedere()
         -- alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
         -- alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
-        city:GetDragonEyrie():GetDragonManager():AddListenOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
+        -- city:GetDragonEyrie():GetDragonManager():AddListenOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
     else
         alliance:RemoveListenerOnType(self, "basicInfo")
         alliance:RemoveListenerOnType(self, "members")
@@ -104,7 +104,7 @@ function GameUIAllianceHome:AddOrRemoveListener(isAdd)
         -- local alliance_belvedere = alliance:GetAllianceBelvedere()
         -- alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
         -- alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
-        city:GetDragonEyrie():GetDragonManager():RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
+        -- city:GetDragonEyrie():GetDragonManager():RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
     end
 end
 
@@ -118,12 +118,12 @@ function GameUIAllianceHome:OnCommingDataChanged()
     self:OnUserDataChanged_helpToTroops()
 end
 
-function GameUIAllianceHome:OnUserDataChanged_helpToTroops()
-    self.operation_button_order:RefreshOrder()
-end
-function GameUIAllianceHome:OnAllianceDataChanged_marchEvents(alliance, deltaData)
-    self.operation_button_order:RefreshOrder()
-end
+-- function GameUIAllianceHome:OnUserDataChanged_helpToTroops()
+--     self.operation_button_order:RefreshOrder()
+-- end
+-- function GameUIAllianceHome:OnAllianceDataChanged_marchEvents(alliance, deltaData)
+--     self.operation_button_order:RefreshOrder()
+-- end
 function GameUIAllianceHome:OnAllianceDataChanged_basicInfo(alliance,deltaData)
     local ok_honour, new_honour = deltaData("basicInfo.honour")
     local ok_status, new_status = deltaData("basicInfo.status")
@@ -142,7 +142,7 @@ function GameUIAllianceHome:OnAllianceDataChanged_basicInfo(alliance,deltaData)
         else
             self:RefreshTop()
         end
-        self.operation_button_order:RefreshOrder()
+        -- self.operation_button_order:RefreshOrder()
     elseif ok_name or ok_tag then
         self.self_name_label:setString("["..alliance.basicInfo.tag.."] ".. alliance.basicInfo.name)
     elseif ok_flag then

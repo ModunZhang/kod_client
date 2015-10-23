@@ -1507,9 +1507,9 @@ function NetManager:getSearchAllianceInfoByTagPromise(tag)
         "根据Tag搜索联盟战斗数据失败!")
 end
 --突袭玩家城市
-function NetManager:getStrikePlayerCityPromise(dragonType,defencePlayerId)
+function NetManager:getStrikePlayerCityPromise(dragonType,defencePlayerId,defenceAllianceId)
     return get_blocking_request_promise("logic.allianceHandler.strikePlayerCity",
-        {dragonType=dragonType,defencePlayerId=defencePlayerId},
+        {dragonType=dragonType,defencePlayerId=defencePlayerId,defenceAllianceId = defenceAllianceId},
         "突袭玩家城市失败!"):done(get_player_response_msg)
 end
 --攻打玩家城市
