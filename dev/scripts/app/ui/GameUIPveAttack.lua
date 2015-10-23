@@ -94,13 +94,14 @@ function GameUIPveAttack:BuildNormalUI()
         local type,name = unpack(string.split(v, ":"))
         return k, {type = type, name = name}
     end)
+    dump(rewards,"rewards")
     local skipw = 1.5
     local count = 10
     local w = (count - skipw * 2) / (#rewards - 1)
     for i,v in ipairs(rewards) do
         local png
-        if v.type == "items" then
-            png = UILib.item[v.name]
+        if v.type == "resources" then
+            png = UILib.resource[v.name]
         elseif v.type == "soldierMaterials" then
             png = UILib.soldier_metarial[v.name]
         end
