@@ -157,11 +157,11 @@ function AllianceDetailScene:CreateOrUpdateOrDeleteCorpsByReturnEvent(id, event)
 end
 
 
-function AllianceDetailScene:ctor(targetAllianceMapIndex,x,y)
+function AllianceDetailScene:ctor(location)
     AllianceDetailScene.super.ctor(self)
     self.fetchtimer = display.newNode():addTo(self)
     self.amintimer = display.newNode():addTo(self)
-    self.targetAllianceMapIndex = targetAllianceMapIndex
+    self.location = location
     self.goto_x = x
     self.goto_y = y
     self.visible_alliances = {}
@@ -171,9 +171,13 @@ end
 function AllianceDetailScene:onEnter()
     AllianceDetailScene.super.onEnter(self)
     local alliance = Alliance_Manager:GetMyAlliance()
-    self:GotoAllianceByIndex(self.targetAllianceMapIndex or alliance.mapIndex)
-    if self.goto_x and self.goto_y then
-        self:GotoPosition(self.goto_x,self.goto_y)
+    if self.location then
+        self:GotoAllianceByIndex(self.location.mapIndex)
+        if self.location.x and self.location.y then
+            self:GotoPosition(self.location.x,self.location.y)
+        end
+    else
+        self:GotoAllianceByIndex(alliance.mapIndex)
     end
     self.home_page = self:CreateHomePage()
     self:GetSceneLayer():ZoomTo(0.82)
@@ -240,6 +244,7 @@ function AllianceDetailScene:CreateSceneLayer()
     return AllianceLayer.new(self)
 end
 function AllianceDetailScene:GotoAllianceByIndex(index)
+    print("GotoAllianceByIndex(index)=",index)
     self:GotoAllianceByXY(self:GetSceneLayer():IndexToLogic(index))
     self:FetchAllianceDatasByIndex(index, function(data)
         self:GetSceneLayer():LoadAllianceByIndex(index, data.allianceData)
@@ -342,10 +347,9 @@ function AllianceDetailScene:EnterNotAllianceBuilding(alliance,mapObj)
     local isMyAlliance = true
     local type_ = Alliance:GetMapObjectType(mapObj)
     print("type_=====",type_)
-    dump(type_)
     local class_name = ""
 
-    if tolua.type(type_) == 'table' then
+    if type_ == "empty" then
         if alliance.mapIndex == Alliance_Manager:GetMyAlliance().mapIndex then
             class_name = "GameUIAllianceEnterBase"
         else

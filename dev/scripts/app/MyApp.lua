@@ -426,7 +426,7 @@ function MyApp:EnterFteScene()
     -- app:enterScene("FteScene", nil, "custom", -1, transition_)
     enter_next_scene("FteScene")
 end
-function MyApp:EnterMyAllianceScene(mapIndex,x,y)
+function MyApp:EnterMyAllianceScene(location)
     if Alliance_Manager:GetMyAlliance():IsDefault() then
         UIKit:showMessageDialog(_("提示"),_("加入联盟后开放此功能!"),function()end)
         return
@@ -438,7 +438,7 @@ function MyApp:EnterMyAllianceScene(mapIndex,x,y)
         alliance_name = "AllianceDetailScene"
     end
     -- app:enterScene(alliance_name, {location}, "custom", -1, transition_)
-    enter_next_scene(alliance_name, mapIndex,x,y)
+    enter_next_scene(alliance_name, location)
 end
 function MyApp:EnterMyAllianceSceneOrMyCityScene(location)
     if not Alliance_Manager:GetMyAlliance():IsDefault() then

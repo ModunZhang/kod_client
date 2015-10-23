@@ -273,7 +273,7 @@ function Alliance:GetOtherRequestEventsNum()
     return request_num
 end
 function Alliance:GetMapObjectType(mapobj)
-    return mapobj or buildingName[mapobj.name].type
+    return buildingName[mapobj.name] and buildingName[mapobj.name].type or mapobj.name 
 end
 function Alliance:GetSizeWithMapObj(mapobj)
     local size = buildingName[mapobj.name]
