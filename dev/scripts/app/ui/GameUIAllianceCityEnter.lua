@@ -247,6 +247,7 @@ function GameUIAllianceCityEnter:GetEnterButtons()
             local enter_button = self:BuildOneButton("alliance_enter_city_56x68.png",_("进入")):onButtonClicked(function()
                 local location = self:GetLogicPosition()
                 location.id = self:GetCurrentAlliance().id
+                location.mapIndex = self:GetCurrentAlliance().mapIndex
                 app:EnterPlayerCityScene(member.id, location)
                 self:LeftButtonClicked()
             end)

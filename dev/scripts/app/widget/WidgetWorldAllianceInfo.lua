@@ -141,7 +141,7 @@ function WidgetWorldAllianceInfo:LoadInfo(alliance_data)
         :align(display.RIGHT_TOP,titleBg:getPositionX(),titleBg:getPositionY() - titleBg:getContentSize().height -10)
         :addTo(layer)
     button:onButtonClicked(function(event)
-    		app:EnterMyAllianceScene(self.mapIndex)
+    		app:EnterMyAllianceScene({mapIndex = self.mapIndex})
         end)
 
     local desc_bg = WidgetUIBackGround.new({height=158,width=550},WidgetUIBackGround.STYLE_TYPE.STYLE_5)
@@ -161,8 +161,11 @@ function WidgetWorldAllianceInfo:LoadInfo(alliance_data)
     }):addTo(desc_bg):align(display.CENTER, desc_bg:getContentSize().width/2,desc_bg:getContentSize().height/2)
 
     self:BuildOneButton("icon_goto_38x56.png",_("定位")):onButtonClicked(function()
-    	dump(self:GetAllianceData().archon,"self:GetAllianceData().archon")
-    	app:EnterMyAllianceScene(self.mapIndex,self:GetAllianceData().archon.location.x,self:GetAllianceData().archon.location.y)
+    	app:EnterMyAllianceScene({
+    		mapIndex = self.mapIndex,
+    		x = self:GetAllianceData().archon.location.x,
+    		y = self:GetAllianceData().archon.location.y,
+    		})
         self:LeftButtonClicked()
     end):addTo(layer):align(display.RIGHT_TOP, l_size.width,10)
     return layer
