@@ -33,7 +33,7 @@ function WidgetChangeMap:ctor(map_type, location)
                 end
                 app:EnterMyAllianceScene(location)
             elseif map_type == WidgetChangeMap.MAP_TYPE.OTHER_CITY then
-                app:EnterMyAllianceSceneOrMyCityScene(location)
+                app:EnterMyAllianceScene(location)
             elseif map_type == WidgetChangeMap.MAP_TYPE.OUR_ALLIANCE then
                 app:EnterMyCityScene()
             elseif map_type == WidgetChangeMap.MAP_TYPE.OTHER_ALLIANCE then

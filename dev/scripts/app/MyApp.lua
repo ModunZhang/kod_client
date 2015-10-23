@@ -404,17 +404,12 @@ end
 function MyApp:EnterCitySceneByPlayerAndAlliance(id, is_my_alliance, location)
     NetManager:getPlayerCityInfoPromise(id):done(function(response)
         local user_data = response.msg.playerViewData
-        local user = User_.new(user_data):OnBasicInfoChanged(user_data)
-                                         :OnResourcesChangedByTime(user_data)
-                                         :OnVipEventDataChange(user_data)
-        local city = City.new(user)
-            :InitWithJsonData(user_data)
+        local user = User_.new(user_data):OnUserDataChanged(user_data)
+        local city = City.new(user):InitWithJsonData(user_data)
             :OnUserDataChanged(user_data, app.timer:GetServerTime())
         if is_my_alliance then
-            -- app:enterScene("FriendCityScene", {user, city, location}, "custom", -1, transition_)
             enter_next_scene("FriendCityScene", user, city, location)
         else
-            -- app:enterScene("OtherCityScene", {user, city, location}, "custom", -1, transition_)
             enter_next_scene("OtherCityScene", user, city, location)
         end
     end)

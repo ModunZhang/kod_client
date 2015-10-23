@@ -41,6 +41,9 @@ function UtilsForEvent:GetMarchEventPrefix(event, eventType)
         local target_str = string.format("%sLv%s", 
             Localize.village_name[event.defenceVillageData.name], 
             event.defenceVillageData.level)
+        if eventType == "strikeMarchEvents" then
+            return string.format(_("正在突袭 %s(%s)"), target_str, target_pos)
+        end
         return string.format(_("正在进攻 %s(%s)"), target_str, target_pos)
     elseif event.marchType == "monster" then
         local soldier_name = unpack(string.split(event.defenceMonsterData.name, "_"))
@@ -53,35 +56,13 @@ function UtilsForEvent:GetMarchEventPrefix(event, eventType)
                 event.defencePlayerData.name, target_pos)
     elseif event.marchType == "city" then
         local target_str = event.defencePlayerData.name
+        if eventType == "strikeMarchEvents" then
+            return string.format(_("正在突袭 %s(%s)"), target_str, target_pos)
+        end
         return string.format(_("正在进攻 %s(%s)"), target_str, target_pos)
     elseif event.marchType == "shrine" then
         return string.format(_("进军圣地 (%s)"), target_pos)
     end
-    -- if self:GetType() == self.ENTITY_TYPE.HELPTO then
-    --     return  string.format(_("正在协防 %s (%s)"),self:WithObject().beHelpedPlayerData.name,self:GetDestinationLocation())
-    -- elseif self:GetType() == self.ENTITY_TYPE.COLLECT then
-    --     return string.format(_("正在采集%sLv%s (%s)"), 
-    --         Localize.village_name[self:WithObject():VillageData().name],
-    --         self:WithObject():VillageData().level,
-    --         self:GetDestinationLocation())
-    -- elseif self:GetType() == self.ENTITY_TYPE.MARCH_OUT then
-    --     local march_type = self:WithObject():MarchType()
-    --     if march_type == 'shrine' then 
-    --         return string.format(_("进军圣地 (%s)"),self:GetDestinationLocation())
-    --     elseif  march_type == 'helpDefence' then
-    --         return string.format(_("前往协防 %s(%s)"),self:GetDestination(),self:GetDestinationLocation())
-    --     else
-    --         return string.format(_("正在进攻 %s(%s)"),self:GetDestination(),self:GetDestinationLocation())
-    --     end
-    -- elseif self:GetType() == self.ENTITY_TYPE.MARCH_RETURN then
-    --     return string.format(_("返回中 (%s)"),self:GetDestinationLocation())
-    -- elseif self:GetType() == self.ENTITY_TYPE.STRIKE_OUT then
-    --     return string.format(_("正在突袭 %s(%s)"),self:GetDestination(),self:GetDestinationLocation())
-    -- elseif self:GetType() == self.ENTITY_TYPE.STRIKE_RETURN then
-    --     return string.format(_("返回中 (%s)"),self:GetDestinationLocation())
-    -- elseif self:GetType() == self.ENTITY_TYPE.SHIRNE then
-    --     return string.format(_("正在参加圣地战 %s(%s)"),self:WithObject():Stage():GetDescStageName(),self:GetDestinationLocation())
-    -- end
 end
 function UtilsForEvent:GetMarchReturnEventPrefix(event)
     local target_pos = string.format("%s,%s", 

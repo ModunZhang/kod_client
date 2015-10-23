@@ -1,5 +1,4 @@
 local promise = import("..utils.promise")
-local MarchAttackEvent = import("..entity.MarchAttackEvent")
 local Alliance = import("..entity.Alliance")
 local cocos_promise = import("..utils.cocos_promise")
 local WidgetPushButton = import("..widget.WidgetPushButton")
@@ -58,9 +57,18 @@ function WidgetMarchEvents:OnAllianceDataChanged_marchEvents(userData, deltaData
     if HasMyEvent(deltaData("marchEvents.attackMarchEvents.add"))
     or HasMyEvent(deltaData("marchEvents.attackMarchEvents.edit"))
     or HasMyEvent(deltaData("marchEvents.attackMarchEvents.remove"))
+    --
     or HasMyEvent(deltaData("marchEvents.attackMarchReturnEvents.add"))
     or HasMyEvent(deltaData("marchEvents.attackMarchReturnEvents.edit"))
     or HasMyEvent(deltaData("marchEvents.attackMarchReturnEvents.remove"))
+    --
+    or HasMyEvent(deltaData("marchEvents.strikeMarchEvents.add"))
+    or HasMyEvent(deltaData("marchEvents.strikeMarchEvents.edit"))
+    or HasMyEvent(deltaData("marchEvents.strikeMarchEvents.remove"))
+    --
+    or HasMyEvent(deltaData("marchEvents.strikeMarchReturnEvents.add"))
+    or HasMyEvent(deltaData("marchEvents.strikeMarchReturnEvents.edit"))
+    or HasMyEvent(deltaData("marchEvents.strikeMarchReturnEvents.remove"))
     then
         self:PromiseOfSwitch()
     end
@@ -98,11 +106,11 @@ function WidgetMarchEvents:onEnter()
     end
     scheduleAt(self, function()
         self:IteratorItems(function(v)
-            if v.eventType == "attackMarchEvents" then
-                local time, percent = UtilsForEvent:GetEventInfo(v.event)
-                v.time:setString(GameUtils:formatTimeStyle1(time))
-                v.progress:setPercentage(percent)
-            elseif v.eventType == "attackMarchReturnEvents" then
+            if v.eventType == "attackMarchEvents" 
+            or v.eventType == "attackMarchReturnEvents"
+            or v.eventType == "strikeMarchEvents"
+            or v.eventType == "strikeMarchReturnEvents"
+                then
                 local time, percent = UtilsForEvent:GetEventInfo(v.event)
                 v.time:setString(GameUtils:formatTimeStyle1(time))
                 v.progress:setPercentage(percent)
@@ -228,37 +236,23 @@ function WidgetMarchEvents:Reset()
 end
 
 function WidgetMarchEvents:Load()
-    -- for __,entity in ipairs({}) do
-    --     local type_str = entity:GetTypeStr()
-    --     local event = entity:WithObject()
-    --     if  type_str == 'MARCH_OUT'  or type_str == 'STRIKE_OUT' then
-    --         local item = self:CreateAttackItem(entity)
-    --         self.items_map[event:Id()] = item
-    --         table.insert(items,item)
-    --     elseif type_str == 'MARCH_RETURN' or type_str == 'STRIKE_RETURN' then
-    --         local item = self:CreateReturnItem(entity)
-    --         self.items_map[event:Id()] = item
-    --         table.insert(items,item )
-    --     elseif type_str == 'COLLECT' then
-    --         local item = self:CreateDefenceItem(entity)
-    --         self.items_map[event:Id()] = item
-    --         table.insert(items, item)
-    --     elseif type_str == 'SHIRNE' then
-    --         local item = self:CreateDefenceItem(entity)
-    --         item.speed_btn:setButtonEnabled(false) -- 圣地事件没有撤军功能
-    --         self.items_map[event:Id()] = item
-    --         table.insert(items, item)
-    --     elseif type_str == 'HELPTO' then
-    --         local item = self:CreateDefenceItem(entity)
-    --         -- self.items_map[event:Id()] = item
-    --         table.insert(items, item)
-    --     end
-    -- end
     local items = {}
     local alliance = Alliance_Manager:GetMyAlliance()
+    for i,v in ipairs(alliance.marchEvents.strikeMarchEvents) do
+        if UtilsForEvent:IsMyMarchEvent(v) then
+            local item = self:CreateAttackItem(v, "strikeMarchEvents")
+            table.insert(items, item)
+        end
+    end
+    for i,v in ipairs(alliance.marchEvents.strikeMarchReturnEvents) do
+        if UtilsForEvent:IsMyMarchEvent(v) then
+            local item = self:CreateReturnItem(v, "strikeMarchReturnEvents")
+            table.insert(items, item)
+        end
+    end
     for i,v in ipairs(alliance.marchEvents.attackMarchEvents) do
         if UtilsForEvent:IsMyMarchEvent(v) then
-            local item = self:CreateAttackItem(v)
+            local item = self:CreateAttackItem(v, "attackMarchEvents")
             table.insert(items, item)
         end
     end
@@ -358,7 +352,7 @@ function WidgetMarchEvents:CreateReturnItem(event, eventType)
             shadow = true,
         }))
         :onButtonClicked(function()
-            self:OnSpeedUpButtonClicked(event, "attackMarchReturnEvents")
+            self:OnSpeedUpButtonClicked(event, eventType)
         end)
 
 
@@ -376,12 +370,12 @@ function WidgetMarchEvents:CreateReturnItem(event, eventType)
         :onButtonClicked(function()
             self:OnInfoButtonClicked(event, eventType)
         end)
-    node.eventType = "attackMarchReturnEvents"
+    node.eventType = eventType
     node.event = event
     return node
 end
 --加速和撤退
-function WidgetMarchEvents:CreateAttackItem(event)
+function WidgetMarchEvents:CreateAttackItem(event, eventType)
     local node = display.newSprite("tab_event_bar.png"):align(display.LEFT_CENTER)
     local half_height = node:getContentSize().height / 2
     node.progress = display.newProgressTimer("tab_progress_bar.png",
@@ -398,7 +392,7 @@ function WidgetMarchEvents:CreateAttackItem(event)
     self:GetDragonHead(event.attackPlayerData.dragon.type):align(display.LEFT_CENTER, 2, half_height)
         :addTo(node)
 
-    node.prefix = UtilsForEvent:GetMarchEventPrefix(event)
+    node.prefix = UtilsForEvent:GetMarchEventPrefix(event, eventType)
     node.desc = UIKit:ttfLabel({
         text = node.prefix,
         size = 18,
@@ -426,7 +420,7 @@ function WidgetMarchEvents:CreateAttackItem(event)
             shadow = true,
         }))
         :onButtonClicked(function()
-            self:OnSpeedUpButtonClicked(event, "attackMarchEvents")
+            self:OnSpeedUpButtonClicked(event, eventType)
         end)
 
 
@@ -442,9 +436,9 @@ function WidgetMarchEvents:CreateAttackItem(event)
             shadow = true,
         }))
         :onButtonClicked(function()
-            self:OnRetreatButtonClicked(event, "attackMarchEvents")
+            self:OnRetreatButtonClicked(event, eventType)
         end)
-    node.eventType = "attackMarchEvents"
+    node.eventType = eventType
     node.event = event
     return node
 end
@@ -546,8 +540,17 @@ function WidgetMarchEvents:HasAnyMarchEvent()
     if #User.helpToTroops > 0 then
         return true
     end
-
     local alliance = Alliance_Manager:GetMyAlliance()
+    for i,v in ipairs(alliance.marchEvents.strikeMarchEvents) do
+        if UtilsForEvent:IsMyMarchEvent(v) then
+            return true
+        end
+    end
+    for i,v in ipairs(alliance.marchEvents.strikeMarchReturnEvents) do
+        if UtilsForEvent:IsMyMarchEvent(v) then
+            return true
+        end
+    end
     for i,v in ipairs(alliance.marchEvents.attackMarchEvents) do
         if UtilsForEvent:IsMyMarchEvent(v) then
             return true

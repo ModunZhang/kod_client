@@ -6,80 +6,65 @@ local AllianceDetailScene = class("AllianceDetailScene", MapScene)
 
 
 function AllianceDetailScene:OnAllianceDataChanged_mapObjects(allianceData, deltaData)
-    local ok,value = deltaData("mapObjects.edit")
-    if ok then
+    self:HandleMapObjects(allianceData.mapIndex, "remove", deltaData("mapObjects.edit"))
+    self:HandleMapObjects(allianceData.mapIndex, "edit", deltaData("mapObjects.edit"))
+    self:HandleMapObjects(allianceData.mapIndex, "add", deltaData("mapObjects.edit"))
+end
+function AllianceDetailScene:HandleMapObjects(mapIndex, op, ok, value)
+    if not ok then return end
+    if op == "edit" then
         for _,mapObj in pairs(value) do
-            self:GetSceneLayer():RefreshMapObjectByIndex(allianceData.mapIndex, mapObj)
+            self:GetSceneLayer():RemoveMapObjectByIndex(mapIndex, mapObj)
         end
-    end
-    local ok,value = deltaData("mapObjects.add")
-    if ok then
+    elseif op == "add" then
         for _,mapObj in pairs(value) do
-            self:GetSceneLayer():AddMapObjectByIndex(allianceData.mapIndex, mapObj)
+            self:GetSceneLayer():AddMapObjectByIndex(mapIndex, mapObj)
         end
-    end
-    local ok,value = deltaData("mapObjects.remove")
-    if ok then
+    elseif op == "remove" then
         for _,mapObj in pairs(value) do
-            self:GetSceneLayer():RemoveMapObjectByIndex(allianceData.mapIndex, mapObj)
+            self:GetSceneLayer():RemoveMapObjectByIndex(mapIndex, mapObj)
         end
     end
 end
-local function getAllyFromEvent(event, is_back)
-    local MINE,FRIEND,ENEMY = 1,2,3
-    if event.attackPlayerData.id == User:Id() then
-        return MINE
-    end
-    local alliance_id = is_back and event.toAlliance.id or event.fromAlliance.id
-    if alliance_id == Alliance_Manager:GetMyAlliance()._id then
-        return FRIEND
-    end
-    return ENEMY
-end
+
+-- 
 function AllianceDetailScene:OnAllianceDataChanged_marchEvents(allianceData, deltaData)
     -- 进攻
-    local ok, value = deltaData("marchEvents.attackMarchEvents.add")
-    if ok then
-        for _,event in pairs(value) do
-            self:CreateOrUpdateOrDeleteCorpsByEvent(event.id, event)
-        end
-    end
-    local ok, value = deltaData("marchEvents.attackMarchEvents.edit")
-    if ok then
-        for _,event in pairs(value) do
-            self:CreateOrUpdateOrDeleteCorpsByEvent(event.id, event)
-        end
-    end
-    local ok, value = deltaData("marchEvents.attackMarchEvents.remove")
-    if ok then
-        for _,event in pairs(value) do
-            self:GetSceneLayer():DeleteCorpsById(event.id)
-        end
-    end
-
+    self:HandleEvents("remove", false, deltaData("marchEvents.attackMarchEvents.remove"))
+    self:HandleEvents("add", false, deltaData("marchEvents.attackMarchEvents.add"))
+    self:HandleEvents("edit", false, deltaData("marchEvents.attackMarchEvents.edit"))
     -- 返回
-    local ok, value = deltaData("marchEvents.attackMarchReturnEvents.add")
-    if ok then
-        for _,event in pairs(value) do
-            self:CreateOrUpdateOrDeleteCorpsByReturnEvent(event.id, event)
+    self:HandleEvents("remove", false, deltaData("marchEvents.attackMarchReturnEvents.remove"))
+    self:HandleEvents("add", false, deltaData("marchEvents.attackMarchReturnEvents.add"))
+    self:HandleEvents("edit", false, deltaData("marchEvents.attackMarchReturnEvents.edit"))
+end
+function AllianceDetailScene:HandleEvents(op, isReturn, ok, value)
+    if not ok then return end
+    if op == "add" 
+    or op == "edit" then
+        if isReturn then
+            for _,event in pairs(value) do
+                self:CreateOrUpdateOrDeleteCorpsByReturnEvent(event.id, event)
+            end
+        else
+            for _,event in pairs(value) do
+                self:CreateOrUpdateOrDeleteCorpsByEvent(event.id, event)
+            end
         end
-    end
-    local ok, value = deltaData("marchEvents.attackMarchReturnEvents.edit")
-    if ok then
-        for _,event in pairs(value) do
-            self:CreateOrUpdateOrDeleteCorpsByReturnEvent(event.id, event)
-        end
-    end
-    local ok, value = deltaData("marchEvents.attackMarchReturnEvents.remove")
-    if ok then
+    elseif op == "remove" then
         for _,event in pairs(value) do
             self:GetSceneLayer():DeleteCorpsById(event.id)
         end
     end
 end
-
 -- other
 function AllianceDetailScene:OnEnterMapIndex(mapData)
+    for id,event in pairs(mapData.marchEvents.strikeMarchEvents) do
+        self:CreateOrUpdateOrDeleteCorpsByEvent(id, event)
+    end
+    for id,event in pairs(mapData.marchEvents.strikeMarchReturnEvents) do
+        self:CreateOrUpdateOrDeleteCorpsByReturnEvent(id,event)
+    end
     for id,event in pairs(mapData.marchEvents.attackMarchEvents) do
         self:CreateOrUpdateOrDeleteCorpsByEvent(id, event)
     end
@@ -88,6 +73,22 @@ function AllianceDetailScene:OnEnterMapIndex(mapData)
     end
 end
 function AllianceDetailScene:OnMapDataChanged(mapData, deltaData)
+    local ok, value = deltaData("marchEvents.strikeMarchEvents")
+    if ok then
+        for id,_ in pairs(value) do
+            local event = mapData.marchEvents.strikeMarchEvents[id]
+            self:CreateOrUpdateOrDeleteCorpsByEvent(id, event)
+        end
+    end
+
+    local ok, value = deltaData("marchEvents.strikeMarchReturnEvents")
+    if ok then
+        for id,_ in pairs(value) do
+            local event = mapData.marchEvents.strikeMarchReturnEvents[id]
+            self:CreateOrUpdateOrDeleteCorpsByReturnEvent(id, event)
+        end
+    end
+
     local ok, value = deltaData("marchEvents.attackMarchEvents")
     if ok then
         for id,_ in pairs(value) do
@@ -109,11 +110,21 @@ function AllianceDetailScene:OnAllianceMapChanged(allianceData, deltaData)
         self:OnAllianceDataChanged_mapObjects(allianceData, deltaData)
     end
 end
+local function getAllyFromEvent(event, is_back)
+    local MINE,FRIEND,ENEMY = 1,2,3
+    if event.attackPlayerData.id == User:Id() then
+        return MINE
+    end
+    local alliance_id = is_back and event.toAlliance.id or event.fromAlliance.id
+    if alliance_id == Alliance_Manager:GetMyAlliance()._id then
+        return FRIEND
+    end
+    return ENEMY
+end
 function AllianceDetailScene:CreateOrUpdateOrDeleteCorpsByEvent(id, event)
     if event == json.null then
         self:GetSceneLayer():DeleteCorpsById(id)
     elseif event then
-        dump(event)
         self:GetSceneLayer():CreateOrUpdateCorps(
             event.id,
             {x = event.fromAlliance.location.x, y = event.fromAlliance.location.y, index = event.fromAlliance.mapIndex},

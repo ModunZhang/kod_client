@@ -932,52 +932,38 @@ function WidgetUseItems:OpenWarSpeedupDialog( item_name ,march_event, eventType)
         end
     end
     function dialog:OnAllianceDataChanged_marchEvents(alliance, deltaData)
-        local ok, value = deltaData("marchEvents.attackMarchEvents.remove")
-        if ok then
-            if self:HandleRemove(value) then return end
-        end
-        local ok, value = deltaData("marchEvents.attackMarchEvents.edit")
-        if ok then
-            if self:HandleEdit(value) then return end
-        end
-
-        local ok, value = deltaData("marchEvents.attackMarchReturnEvents.remove")
-        if ok then
-            if self:HandleRemove(value) then return end
-        end
-        local ok, value = deltaData("marchEvents.attackMarchReturnEvents.edit")
-        if ok then
-            if self:HandleEdit(value) then return end
-        end
+        return self:HandleEvents("remove", deltaData("marchEvents.attackMarchEvents.remove"))
+            or self:HandleEvents("edit", deltaData("marchEvents.attackMarchEvents.edit"))
+            or self:HandleEvents("remove", deltaData("marchEvents.attackMarchReturnEvents.remove"))
+            or self:HandleEvents("edit", deltaData("marchEvents.attackMarchReturnEvents.edit"))
+            or self:HandleEvents("remove", deltaData("marchEvents.strikeMarchEvents.remove"))
+            or self:HandleEvents("edit", deltaData("marchEvents.strikeMarchEvents.edit"))
+            or self:HandleEvents("remove", deltaData("marchEvents.strikeMarchReturnEvents.remove"))
+            or self:HandleEvents("edit", deltaData("marchEvents.strikeMarchReturnEvents.edit"))
     end
-    function dialog:OnAllianceDataChanged_shrineEvents(alliance, deltaData)
-    end
-    function dialog:OnAllianceDataChanged_villageEvents(alliance, deltaData)
-    end
-    function dialog:HandleRemove(value)
-        for i,v in ipairs(value) do
-            if v.id == march_event.id then
-                self:LeftButtonClicked()
-                return true
+    function dialog:HandleEvents(op, ok, value)
+        if not ok then return end
+        if op == "remove" then
+            for i,v in ipairs(value) do
+                if v.id == march_event.id then
+                    self:LeftButtonClicked()
+                    return true
+                end
+            end
+        elseif op == "edit" then
+            for i,v in ipairs(value) do
+                if v.id == march_event.id then
+                    march_event.arriveTime = v.arriveTime
+                    return true
+                end
             end
         end
-    end
-    function dialog:HandleEdit(value)
-        for i,v in ipairs(value) do
-            if v.id == march_event.id then
-                march_event.arriveTime = v.arriveTime
-                return true
-            end
-        end
+        
     end
     local alliance = Alliance_Manager:GetMyAlliance()
     alliance:AddListenOnType(dialog, "marchEvents")
-    -- alliance:AddListenOnType(dialog, "shrineEvents")
-    -- alliance:AddListenOnType(dialog, "villageEvents")
     dialog:addCloseCleanFunc(function()
         alliance:RemoveListenerOnType(dialog, "marchEvents")
-        -- alliance:RemoveListenerOnType(dialog, "shrineEvents")
-        -- alliance:RemoveListenerOnType(dialog, "villageEvents")
     end)
     dialog:scheduleAt(function()
         gem_label:setString(string.formatnumberthousands(User:GetGemValue()))

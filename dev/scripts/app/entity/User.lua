@@ -56,6 +56,7 @@ User.LISTEN_TYPE = Enum(
     "dailyQuestEvents")
 
 property(User, "id", 0)
+property(User, "soldierStars", {})
 local staminaMax_value = GameDatas.PlayerInitData.intInit.staminaMax.value
 local staminaRecoverPerHour_value = GameDatas.PlayerInitData.intInit.staminaRecoverPerHour.value
 function User:ctor(p)
@@ -850,7 +851,7 @@ end
 function User:SoldierStarByName(soldier_name)
     return  UtilsForSoldier:IsSpecial(soldier_name)
         and soldiers_special[soldier_name].star
-        or self.soldierStars[soldier_name]
+        or self.soldierStars[soldier_name] or 1
 end
 function User:HasAnyWoundedSoldiers()
     for _,count in pairs(self.woundedSoldiers) do
