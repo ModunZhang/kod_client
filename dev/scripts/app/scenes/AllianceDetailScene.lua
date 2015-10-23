@@ -141,17 +141,24 @@ function AllianceDetailScene:CreateOrUpdateOrDeleteCorpsByReturnEvent(id, event)
 end
 
 
-function AllianceDetailScene:ctor()
+function AllianceDetailScene:ctor(targetAllianceMapIndex,x,y)
     AllianceDetailScene.super.ctor(self)
     self.fetchtimer = display.newNode():addTo(self)
     self.amintimer = display.newNode():addTo(self)
+    self.targetAllianceMapIndex = targetAllianceMapIndex
+    self.goto_x = x
+    self.goto_y = y
+    print("targetAllianceMapIndex,x,y=",targetAllianceMapIndex,x,y)
     self.visible_alliances = {}
     Alliance_Manager:ClearCache()
     Alliance_Manager:UpdateAllianceBy(Alliance_Manager:GetMyAlliance().mapIndex, Alliance_Manager:GetMyAlliance())
 end
 function AllianceDetailScene:onEnter()
     AllianceDetailScene.super.onEnter(self)
-    self:GotoAllianceByIndex(Alliance_Manager:GetMyAlliance().mapIndex)
+    self:GotoAllianceByIndex(self.targetAllianceMapIndex or Alliance_Manager:GetMyAlliance().mapIndex)
+    if self.goto_x and self.goto_y then
+        self:GotoPosition(self.goto_x,self.goto_y)
+    end
     self.home_page = self:CreateHomePage()
     self:GetSceneLayer():ZoomTo(0.82)
     Alliance_Manager:GetMyAlliance():AddListenOnType(self, "mapObjects")

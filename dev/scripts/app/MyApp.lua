@@ -140,6 +140,7 @@ end
 local is_debug_cloud = true
 
 local enter_next_scene = function(new_scene_name, ...)
+    print("enter_next_scene=",new_scene_name,...)
     if is_debug_cloud then
         enter_scene_transition(new_scene_name, ...)
     else
@@ -429,7 +430,7 @@ function MyApp:EnterFteScene()
     -- app:enterScene("FteScene", nil, "custom", -1, transition_)
     enter_next_scene("FteScene")
 end
-function MyApp:EnterMyAllianceScene(location)
+function MyApp:EnterMyAllianceScene(mapIndex,x,y)
     if Alliance_Manager:GetMyAlliance():IsDefault() then
         UIKit:showMessageDialog(_("提示"),_("加入联盟后开放此功能!"),function()end)
         return
@@ -441,7 +442,7 @@ function MyApp:EnterMyAllianceScene(location)
         alliance_name = "AllianceDetailScene"
     end
     -- app:enterScene(alliance_name, {location}, "custom", -1, transition_)
-    enter_next_scene(alliance_name, location)
+    enter_next_scene(alliance_name, mapIndex,x,y)
 end
 function MyApp:EnterMyAllianceSceneOrMyCityScene(location)
     if not Alliance_Manager:GetMyAlliance():IsDefault() then

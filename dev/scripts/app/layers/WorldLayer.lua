@@ -177,7 +177,7 @@ function WorldLayer:GetClickedObject(world_x, world_y)
     local point = self.map:convertToNodeSpace(cc.p(world_x, world_y))
     local logic_x, logic_y = self:GetLogicMap():ConvertToLogicPosition(point.x, point.y)
     local index = self:LogicToIndex(logic_x, logic_y)
-    return self.allainceSprites[tostring(index)] or index
+    return self.allainceSprites[tostring(index)] , index
 end
 function WorldLayer:getContentSize()
     return worldsize
