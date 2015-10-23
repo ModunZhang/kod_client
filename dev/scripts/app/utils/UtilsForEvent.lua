@@ -27,7 +27,13 @@ function UtilsForEvent:GetMilitaryTechEventLocalize(tech_name, level)
 end
 
 
-function UtilsForEvent:GetMarchEventPrefix(event)
+function UtilsForEvent:GetMarchEventPrefix(event, eventType)
+    if eventType == "shrineEvents" then
+        local target_str = Localize.shrine_desc[event.stageName][1]
+        local location = event.playerTroops[1].location
+        local target_pos = string.format("%s,%s", location.x, location.y)
+        return string.format(_("正在参加圣地战 %s(%s)"), target_str, target_pos)
+    end
     local target_pos = string.format("%s,%s", 
             event.toAlliance.location.x, 
             event.toAlliance.location.y)

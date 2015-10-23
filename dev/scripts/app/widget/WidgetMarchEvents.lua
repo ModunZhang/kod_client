@@ -45,42 +45,26 @@ end
 function WidgetMarchEvents:OnUserDataChanged_helpToTroops(userData, deltaData)
     self:PromiseOfSwitch()
 end
-function WidgetMarchEvents:OnAllianceDataChanged_marchEvents(userData, deltaData)
-    if deltaData("marchEvents.attackMarchEvents.add") 
-    or deltaData("marchEvents.attackMarchEvents.edit") 
-    or deltaData("marchEvents.attackMarchEvents.remove") 
-    or deltaData("marchEvents.attackMarchReturnEvents.add")
-    or deltaData("marchEvents.attackMarchReturnEvents.edit")
-    or deltaData("marchEvents.attackMarchReturnEvents.remove")
+local function HasMyEvent(ok, events)
+    if ok then
+        for i,v in ipairs(events) do
+            if v.attackPlayerData.id == User._id then
+                return true
+            end
+        end
+    end
+end
+function WidgetMarchEvents:OnAllianceDataChanged_marchEvents(userData, deltaData) 
+    if HasMyEvent(deltaData("marchEvents.attackMarchEvents.add"))
+    or HasMyEvent(deltaData("marchEvents.attackMarchEvents.edit"))
+    or HasMyEvent(deltaData("marchEvents.attackMarchEvents.remove"))
+    or HasMyEvent(deltaData("marchEvents.attackMarchReturnEvents.add"))
+    or HasMyEvent(deltaData("marchEvents.attackMarchReturnEvents.edit"))
+    or HasMyEvent(deltaData("marchEvents.attackMarchReturnEvents.remove"))
     then
         self:PromiseOfSwitch()
     end
 end
-function WidgetMarchEvents:OnAllianceDataChanged_shrineEvents(userData, deltaData)
-end
-function WidgetMarchEvents:OnAllianceDataChanged_villageEvents(userData, deltaData)
-end
-
-
--- function WidgetMarchEvents:OnAttackMarchEventTimerChanged(attackMarchEvent)
---     local item = self.items_map[attackMarchEvent:Id()]
---     if item then
---         -- local desc =  string.format(" %s %s", item.prefix,GameUtils:formatTimeStyle1(attackMarchEvent:GetTime()))
---         -- item.desc:setString(desc)
---         item.time:setString(GameUtils:formatTimeStyle1(attackMarchEvent:GetTime()))
---         item.progress:setPercentage(attackMarchEvent:GetPercent())
---     end
--- end
-
--- function WidgetMarchEvents:OnVillageEventTimer(villageEvent)
---     local item = self.items_map[villageEvent:Id()]
---     if item then
---         local desc =  string.format("%s %d%%", item.prefix,villageEvent:CollectPercent())
---         item.desc:setString(desc)
---         item.time:setString(GameUtils:formatTimeStyle1(villageEvent:GetTime()))
---         item.progress:setPercentage(villageEvent:CollectPercent())
---     end
--- end
 
 function WidgetMarchEvents:AddOrRemoveAllianceEvent(isAdd)
     local User = User
@@ -88,13 +72,9 @@ function WidgetMarchEvents:AddOrRemoveAllianceEvent(isAdd)
     if isAdd then
         User:AddListenOnType(self, "helpToTroops")
         alliance:AddListenOnType(self, "marchEvents")
-        alliance:AddListenOnType(self, "shrineEvents")
-        alliance:AddListenOnType(self, "villageEvents")
     else
         User:RemoveListenerOnType(self, "helpToTroops")
         alliance:RemoveListenerOnType(self, "marchEvents")
-        alliance:RemoveListenerOnType(self, "shrineEvents")
-        alliance:RemoveListenerOnType(self, "villageEvents")
     end
 end
 
@@ -298,6 +278,15 @@ function WidgetMarchEvents:Load()
         local item = self:CreateDefenceItem(v, "helpToTroops")
         table.insert(items, item)
     end
+    for _,event in ipairs(alliance.shrineEvents) do
+        for _,v in ipairs(event.playerTroops) do
+            if v.id == User._id then
+                local item = self:CreateDefenceItem(event, "shrineEvents")
+                table.insert(items, item)
+                break
+            end
+        end
+    end
     self:InsertItem(items)
     self:ResizeBelowHorizon(self:Length(#self.item_array))
 end
@@ -490,17 +479,17 @@ function WidgetMarchEvents:CreateDefenceItem(event, eventType)
         display_text = node.prefix
         time_str = ""
         dragonType = event.playerDragon
+    elseif eventType == "shrineEvents" then
+        node.prefix = UtilsForEvent:GetMarchEventPrefix(event, eventType)
+        display_text = node.prefix
+        node.progress:setPercentage(100)
+        time_str = ""
+        for i,v in ipairs(event.playerTroops) do
+            if v.id == User._id then
+                dragonType = v.dragon.type
+            end
+        end
     end
-    -- if type_str == 'SHIRNE' then
-    --     node.progress:setPercentage(100)
-    --     display_text = node.prefix
-    --     time_str = ""
-    --     for i,v in ipairs(event:PlayerTroops()) do
-    --         if v.name == User.basicInfo.name then
-    --             dragonType = v.dragon.type
-    --         end
-    --     end
-    -- end
     self:GetDragonHead(dragonType):align(display.LEFT_CENTER, 2, half_height)
             :addTo(node)
     node.desc = UIKit:ttfLabel({
@@ -554,6 +543,10 @@ function WidgetMarchEvents:CreateDefenceItem(event, eventType)
 end
 
 function WidgetMarchEvents:HasAnyMarchEvent()
+    if #User.helpToTroops > 0 then
+        return true
+    end
+
     local alliance = Alliance_Manager:GetMyAlliance()
     for i,v in ipairs(alliance.marchEvents.attackMarchEvents) do
         if UtilsForEvent:IsMyMarchEvent(v) then
@@ -570,8 +563,12 @@ function WidgetMarchEvents:HasAnyMarchEvent()
             return true
         end
     end
-    if #User.helpToTroops > 0 then
-        return true
+    for _,v in ipairs(alliance.shrineEvents) do
+        for _,v in ipairs(v.playerTroops) do
+            if v.id == User._id then
+                return true
+            end
+        end
     end
     return false
 end
@@ -588,7 +585,8 @@ end
 function WidgetMarchEvents:OnRetreatButtonClicked(event, eventType)
     if event.marchType == "village"
     or event.marchType == "helpDefence"
-    or event.marchType == "city" then
+    or event.marchType == "city"
+    then
         local widgetUseItems = WidgetUseItems.new():Create({
             item_name = "retreatTroop",
             event = event,

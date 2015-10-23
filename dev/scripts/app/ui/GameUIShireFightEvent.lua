@@ -15,13 +15,14 @@ local GameUtils = GameUtils
 function GameUIShireFightEvent:ctor(fight_event)
     GameUIShireFightEvent.super.ctor(self,790,_("事件详情"),window.top - 50)
     self.fight_event = fight_event
-    local alliance = Alliance_Manager:GetMyAlliance()
-    alliance:AddListenOnType(self, "shrineEvents")
 end
 
 function GameUIShireFightEvent:onEnter()
     GameUIShireFightEvent.super.onEnter(self)
     self:BuildUI()
+    local alliance = Alliance_Manager:GetMyAlliance()
+    alliance:AddListenOnType(self, "shrineEvents")
+    alliance:AddListenOnType(self, "marchEvents")
     scheduleAt(self, function()
         local time = UtilsForShrine:GetEventTime(self:GetFightEvent())
             self.time_label:setString(string.format(_("派兵时间 %s"),GameUtils:formatTimeStyle1(time)))
@@ -33,6 +34,17 @@ function GameUIShireFightEvent:onEnter()
             end
         end
     end)
+end
+function GameUIShireFightEvent:onCleanup()
+    local alliance = Alliance_Manager:GetMyAlliance()
+    alliance:RemoveListenerOnType(self, "shrineEvents")
+    alliance:RemoveListenerOnType(self, "marchEvents")
+    GameUIShireFightEvent.super.onCleanup(self)
+end
+
+
+function GameUIShireFightEvent:OnAllianceDataChanged_marchEvents(alliance, deltaData)
+    self:RefreshListView()
 end
 function GameUIShireFightEvent:OnAllianceDataChanged_shrineEvents(alliance, deltaData)
     local ok, value = deltaData("shrineEvents.remove")
@@ -49,12 +61,6 @@ function GameUIShireFightEvent:OnAllianceDataChanged_shrineEvents(alliance, delt
         self.popultaion_label:setString(#self:GetFightEvent().playerTroops)
         self:RefreshListView()
     end
-end
-
-function GameUIShireFightEvent:onCleanup()
-    local alliance = Alliance_Manager:GetMyAlliance()
-    alliance:RemoveListenerOnType(self, "shrineEvents")
-    GameUIShireFightEvent.super.onCleanup(self)
 end
 
 function GameUIShireFightEvent:GetAllianceShrine()
@@ -261,7 +267,7 @@ function GameUIShireFightEvent:DispathSoliderButtonClicked()
                     end)
                     gameuialliancesendtroops:LeftButtonClicked()
                 end
-            end,{targetIsMyAlliance = true,returnCloseAction = true}):AddToCurrentScene(true)
+            end,{toLocation = Alliance_Manager:GetMyAlliance():GetShrinePosition(), targetIsMyAlliance = true,returnCloseAction = true, targetAlliance = Alliance_Manager:GetMyAlliance()}):AddToCurrentScene(true)
         end
         UIKit:showSendTroopMessageDialog(attack_func, "dragonMaterials", _("龙"))
     end
