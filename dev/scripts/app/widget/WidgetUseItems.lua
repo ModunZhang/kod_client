@@ -43,9 +43,9 @@ function WidgetUseItems:Create(params)
     elseif UtilsForItem:IsResourceItem(item_name) then
         dialog = self:OpenResourceDialog(item_name)
     elseif item_name == "retreatTroop" then
-        dialog = self:OpenRetreatTroopDialog(item, params.event)
+        dialog = self:OpenRetreatTroopDialog(item_name, params.event, params.eventType)
     elseif item_name == "warSpeedupClass_1" then
-        dialog = self:OpenWarSpeedupDialog(item_name, params.event)
+        dialog = self:OpenWarSpeedupDialog(item_name, params.event, params.eventType)
     elseif item_name == "moveTheCity" then
         dialog = self:OpenMoveTheCityDialog(item_name,params)
     else
@@ -867,7 +867,7 @@ function WidgetUseItems:OpenVipActive( item_name )
     dialog.list = list
     return dialog
 end
-function WidgetUseItems:OpenWarSpeedupDialog( item_name ,march_event)
+function WidgetUseItems:OpenWarSpeedupDialog( item_name ,march_event, eventType)
     local same_items_info = User:GetRelationItemInfos(item_name)
     local dialog = UIKit:newWidgetUI("WidgetPopDialog",#same_items_info * 130 + 140,_("战争沙漏"),window.top-230)
     local body = dialog:GetBody()
@@ -890,8 +890,9 @@ function WidgetUseItems:OpenWarSpeedupDialog( item_name ,march_event)
         color = 0x403c2f,
     }):addTo(body):align(display.RIGHT_CENTER,gem_icon:getPositionX() - gem_icon:getContentSize().width * 0.6 - 10,size.height-50)
 
+    local time, percent = UtilsForEvent:GetEventInfo(march_event)
     local buff_status_label = UIKit:ttfLabel({
-        text = string.format( _("剩余时间: %s"), GameUtils:formatTimeStyle1(march_event:WithObject():GetTime()) ),
+        text = string.format( _("剩余时间: %s"), GameUtils:formatTimeStyle1(time) ),
         size = 22,
         color = 0x007c23,
     }):addTo(body):align(display.LEFT_CENTER,30, size.height-50)
@@ -911,8 +912,8 @@ function WidgetUseItems:OpenWarSpeedupDialog( item_name ,march_event)
                 function ()
                     NetManager:getUseItemPromise(item_name,{
                         [item_name]={
-                            eventType = march_event:GetEventServerType(),
-                            eventId=march_event:WithObject():Id()
+                            eventType = eventType,
+                            eventId = march_event.id
                         }
 
                     })
@@ -920,8 +921,8 @@ function WidgetUseItems:OpenWarSpeedupDialog( item_name ,march_event)
                 function ()
                     NetManager:getBuyAndUseItemPromise(item_name,{
                         [item_name]={
-                            eventType = march_event:GetEventServerType(),
-                            eventId=march_event:WithObject():Id()
+                            eventType = eventType,
+                            eventId= march_event.id
                         }
                     })
                 end,
@@ -930,72 +931,62 @@ function WidgetUseItems:OpenWarSpeedupDialog( item_name ,march_event)
             which_bg = not which_bg
         end
     end
-    function dialog:OnAttackMarchEventTimerChanged( attackMarchEvent )
-        if march_event:WithObject():Id() == attackMarchEvent:Id() and (attackMarchEvent:GetPlayerRole() == attackMarchEvent.MARCH_EVENT_PLAYER_ROLE.SENDER
-            or attackMarchEvent:GetPlayerRole() == attackMarchEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER) then
-            local left_time_str = GameUtils:formatTimeStyle1(attackMarchEvent:GetTime())
-            buff_status_label:setString(string.format(_("剩余时间:%s"), left_time_str))
+    function dialog:OnAllianceDataChanged_marchEvents(alliance, deltaData)
+        local ok, value = deltaData("marchEvents.attackMarchEvents.remove")
+        if ok then
+            if self:HandleRemove(value) then return end
+        end
+        local ok, value = deltaData("marchEvents.attackMarchEvents.edit")
+        if ok then
+            if self:HandleEdit(value) then return end
+        end
+
+        local ok, value = deltaData("marchEvents.attackMarchReturnEvents.remove")
+        if ok then
+            if self:HandleRemove(value) then return end
+        end
+        local ok, value = deltaData("marchEvents.attackMarchReturnEvents.edit")
+        if ok then
+            if self:HandleEdit(value) then return end
         end
     end
-
-    function dialog:OnAttackMarchEventDataChanged(changed_map,alliance)
-        if changed_map.removed then
-            for i,v in ipairs(changed_map.removed) do
-                if v:Id() == march_event:WithObject():Id() then
-                    self:LeftButtonClicked()
-                end
+    function dialog:OnAllianceDataChanged_shrineEvents(alliance, deltaData)
+    end
+    function dialog:OnAllianceDataChanged_villageEvents(alliance, deltaData)
+    end
+    function dialog:HandleRemove(value)
+        for i,v in ipairs(value) do
+            if v.id == march_event.id then
+                self:LeftButtonClicked()
+                return true
             end
         end
     end
-    function dialog:OnAttackMarchReturnEventDataChanged(changed_map)
-        if changed_map.removed then
-            for i,v in ipairs(changed_map.removed) do
-                if v:Id() == march_event:WithObject():Id() then
-                    self:LeftButtonClicked()
-                end
+    function dialog:HandleEdit(value)
+        for i,v in ipairs(value) do
+            if v.id == march_event.id then
+                march_event.arriveTime = v.arriveTime
+                return true
             end
         end
     end
-    function dialog:OnStrikeMarchEventDataChanged(changed_map)
-        if changed_map.removed then
-            for i,v in ipairs(changed_map.removed) do
-                if v:Id() == march_event:WithObject():Id() then
-                    self:LeftButtonClicked()
-                end
-            end
-        end
-    end
-    function dialog:OnStrikeMarchReturnEventDataChanged(changed_map)
-        if changed_map.removed then
-            for i,v in ipairs(changed_map.removed) do
-                if v:Id() == march_event:WithObject():Id() then
-                    self:LeftButtonClicked()
-                end
-            end
-        end
-    end
-    -- local alliance = Alliance_Manager:GetMyAlliance()
-
-    -- alliance:AddListenOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
-    -- alliance:AddListenOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
-    -- alliance:AddListenOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
-    -- alliance:AddListenOnType(dialog,Alliance.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
-    -- alliance:AddListenOnType(dialog,Alliance.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)
-
-
-    -- dialog:addCloseCleanFunc(function ()
-    --     alliance:RemoveListenerOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
-    --     alliance:RemoveListenerOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
-    --     alliance:RemoveListenerOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchReturnEventDataChanged)
-    --     alliance:RemoveListenerOnType(dialog,Alliance.LISTEN_TYPE.OnStrikeMarchEventDataChanged)
-    --     alliance:RemoveListenerOnType(dialog,Alliance.LISTEN_TYPE.OnStrikeMarchReturnEventDataChanged)
-    -- end)
+    local alliance = Alliance_Manager:GetMyAlliance()
+    alliance:AddListenOnType(dialog, "marchEvents")
+    -- alliance:AddListenOnType(dialog, "shrineEvents")
+    -- alliance:AddListenOnType(dialog, "villageEvents")
+    dialog:addCloseCleanFunc(function()
+        alliance:RemoveListenerOnType(dialog, "marchEvents")
+        -- alliance:RemoveListenerOnType(dialog, "shrineEvents")
+        -- alliance:RemoveListenerOnType(dialog, "villageEvents")
+    end)
     dialog:scheduleAt(function()
         gem_label:setString(string.formatnumberthousands(User:GetGemValue()))
+        local time, percent = UtilsForEvent:GetEventInfo(march_event)
+        buff_status_label:setString(string.format(_("剩余时间:%s"), GameUtils:formatTimeStyle1(time)))
     end)
     return dialog
 end
-function WidgetUseItems:OpenRetreatTroopDialog( item_name,event )
+function WidgetUseItems:OpenRetreatTroopDialog( item_name,event,eventType )
     local dialog = UIKit:newWidgetUI("WidgetPopDialog", 130 + 80 + 40, UtilsForItem:GetItemLocalize(item_name), window.top-230)
     local body = dialog:GetBody()
     local size = body:getContentSize()
@@ -1027,8 +1018,8 @@ function WidgetUseItems:OpenRetreatTroopDialog( item_name,event )
         function ()
             NetManager:getUseItemPromise(item_name,{
                 [item_name]={
-                    eventType = event:GetEventServerType(),
-                    eventId=event:WithObject():Id()
+                    eventType = eventType,
+                    eventId = event.id
                 }
             }):done(function ()
                 dialog:LeftButtonClicked()
@@ -1037,30 +1028,19 @@ function WidgetUseItems:OpenRetreatTroopDialog( item_name,event )
         function ()
             NetManager:getBuyAndUseItemPromise(item_name,{
                 [item_name]={
-                    eventType = event:GetEventServerType(),
-                    eventId=event:WithObject():Id()
+                    eventType = eventType,
+                    eventId = event.id
                 }
             }):done(function ()
                 dialog:LeftButtonClicked()
             end)
         end
     ):addTo(item_box_bg):align(display.CENTER,item_box_bg:getContentSize().width/2,item_box_bg:getContentSize().height/2)
-
-    function dialog:OnAttackMarchEventTimerChanged( attackMarchEvent )
-        if event:WithObject():Id() == attackMarchEvent:Id() and (attackMarchEvent:GetPlayerRole() == attackMarchEvent.MARCH_EVENT_PLAYER_ROLE.SENDER
-            or attackMarchEvent:GetPlayerRole() == attackMarchEvent.MARCH_EVENT_PLAYER_ROLE.RECEIVER) then
-            if attackMarchEvent:GetTime()<=5 then
-                dialog:LeftButtonClicked()
-            end
-        end
-    end
-    -- local alliance = Alliance_Manager:GetMyAlliance()
-    -- alliance:AddListenOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
-
-    -- dialog:addCloseCleanFunc(function ()
-    --     alliance:RemoveListenerOnType(dialog,Alliance.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
-    -- end)
     dialog:scheduleAt(function()
+        if UtilsForEvent:GetEventInfo(event) <= 0 then
+            dialog:LeftButtonClicked()
+            return 
+        end
         gem_label:setString(string.formatnumberthousands(User:GetGemValue()))
     end)
     return dialog

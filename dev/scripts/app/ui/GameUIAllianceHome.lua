@@ -67,7 +67,7 @@ function GameUIAllianceHome:onEnter()
     local ratio = self.bottom:getScale()
     local rect1 = self.chat:getCascadeBoundingBox()
     local x, y = rect1.x, rect1.y + rect1.height - 2
-    local march = WidgetMarchEvents.new(self.alliance, ratio):addTo(self):pos(x, y)
+    local march = WidgetMarchEvents.new(ratio):addTo(self):pos(x, y)
     self:AddMapChangeButton()
     scheduleAt(self, function()
         self:RefreshTop()
@@ -89,41 +89,14 @@ function GameUIAllianceHome:AddOrRemoveListener(isAdd)
     local alliance = self.alliance
     if isAdd then
         alliance:AddListenOnType(self, "basicInfo")
-        alliance:AddListenOnType(self, "members")
-        alliance:AddListenOnType(self, "marchEvents")
-        User:AddListenOnType(self, "helpToTroops")
-        -- local alliance_belvedere = alliance:GetAllianceBelvedere()
-        -- alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
-        -- alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
-        -- city:GetDragonEyrie():GetDragonManager():AddListenOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
     else
         alliance:RemoveListenerOnType(self, "basicInfo")
-        alliance:RemoveListenerOnType(self, "members")
-        alliance:RemoveListenerOnType(self, "marchEvents")
-        User:RemoveListenerOnType(self, "helpToTroops")
-        -- local alliance_belvedere = alliance:GetAllianceBelvedere()
-        -- alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
-        -- alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
-        -- city:GetDragonEyrie():GetDragonManager():RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
     end
 end
 
 function GameUIAllianceHome:AddMapChangeButton()
     WidgetChangeMap.new(WidgetChangeMap.MAP_TYPE.OUR_ALLIANCE):addTo(self)
 end
-function GameUIAllianceHome:OnMarchDataChanged()
-    self:OnUserDataChanged_helpToTroops()
-end
-function GameUIAllianceHome:OnCommingDataChanged()
-    self:OnUserDataChanged_helpToTroops()
-end
-
--- function GameUIAllianceHome:OnUserDataChanged_helpToTroops()
---     self.operation_button_order:RefreshOrder()
--- end
--- function GameUIAllianceHome:OnAllianceDataChanged_marchEvents(alliance, deltaData)
---     self.operation_button_order:RefreshOrder()
--- end
 function GameUIAllianceHome:OnAllianceDataChanged_basicInfo(alliance,deltaData)
     local ok_honour, new_honour = deltaData("basicInfo.honour")
     local ok_status, new_status = deltaData("basicInfo.status")
@@ -153,10 +126,6 @@ function GameUIAllianceHome:OnAllianceDataChanged_basicInfo(alliance,deltaData)
         self_flag:align(display.CENTER, self.self_name_bg:getContentSize().width-100, -30):addTo(self.self_name_bg)
         self.self_flag = self_flag
     end
-end
-function GameUIAllianceHome:OnAllianceDataChanged_members(alliance)
--- local self_member = alliance:GetMemeberById(DataManager:getUserData()._id)
--- self.page_top:SetLoyalty(GameUtils:formatNumber(self_member.loyalty))
 end
 function GameUIAllianceHome:Schedule()
     local alliance = self.alliance

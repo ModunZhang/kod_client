@@ -243,7 +243,7 @@ end
 local function get_alliance_joinrequestevents_response_msg(response)
     if response.msg.joinRequestEvents then
         DataManager:getUserAllianceData().joinRequestEvents = response.msg.joinRequestEvents
-        Alliance_Manager:GetMyAlliance():OnJoinRequestEventsChanged(DataManager:getUserAllianceData())
+        Alliance_Manager:GetMyAlliance().joinRequestEvents = response.msg.joinRequestEvents
     end
     return response
 end
@@ -252,7 +252,7 @@ end
 local function get_alliance_alliancefightreports_response_msg(response)
     if response.msg.allianceFightReports then
         DataManager:getUserAllianceData().allianceFightReports = response.msg.allianceFightReports
-        Alliance_Manager:GetMyAlliance():OnAllianceFightReportsChanged(DataManager:getUserAllianceData())
+        Alliance_Manager:GetMyAlliance().allianceFightReports = response.msg.allianceFightReports
     end
     return response
 end
@@ -260,6 +260,7 @@ end
 local function get_alliance_allianceshrinereports_response_msg(response)
     if response.msg.shrineReports then
         DataManager:getUserAllianceData().shrineReports = response.msg.shrineReports
+        Alliance_Manager:GetMyAlliance().shrineReports = response.msg.shrineReports
     end
     return response
 end

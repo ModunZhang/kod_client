@@ -96,7 +96,7 @@ function GameUIAllianceShrineEnter:GetTroopsInfo()
 	local running_event_names = {}
 	for __,event in ipairs(events) do
 		event_count = event_count + 1
-		total_count = total_count + #event:PlayerTroops()
+		total_count = total_count + #event.playerTroops
 	end
 	if event_count > 0 then
 		return event_count,total_count

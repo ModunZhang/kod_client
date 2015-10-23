@@ -45,7 +45,34 @@ function GameUIActivityRewardNew:ctor(reward_type)
         local countInfo = User.countInfo
         self.player_level_up_time = countInfo.registerTime/1000 + config_intInit.playerLevelupRewardsHours.value * 60 * 60 -- 单位秒
         self.player_level_up_time_residue = self.player_level_up_time - app.timer:GetServerTime()
-        app.timer:AddListener(self)
+        scheduleAt(self, function()
+            local current_time = app.timer:GetServerTime()
+            if self.online_time_label and self.online_time then
+                local time = self.online_time + current_time
+                self.online_time_label:setString(GameUtils:formatTimeStyle1(time))
+                --item update
+                for k,v in pairs(self.need_update_online_item) do
+                    local diff_time = config_online[k].onLineMinutes * 60 - time
+                    if diff_time > 0 then
+                        v.time_label:setString(GameUtils:formatTimeStyle1(diff_time))
+                        print("GameUtils:formatTimeStyle1(time)---->",GameUtils:formatTimeStyle1(time),GameUtils:formatTimeStyle1(diff_time))
+                    else
+                        self:RefreshOnLineList(false)
+                        break
+                    end
+                end
+            end
+            if self.level_up_time_label then
+                self.player_level_up_time_residue = self.player_level_up_time - current_time
+                if self.player_level_up_time_residue > 0 then
+                    self.level_up_time_label:setString(GameUtils:formatTimeStyle1(self.player_level_up_time_residue))
+                else
+                    self.level_up_time_label:hide()
+                    self.level_up_time_desc_label:hide()
+                    self.level_up_state_label:show()
+                end
+            end
+        end)
     end
 end
 
@@ -60,9 +87,6 @@ function GameUIActivityRewardNew:onEnter()
 end
 
 function GameUIActivityRewardNew:onExit()
-    if self:GetRewardType() == self.REWARD_TYPE.PLAYER_LEVEL_UP or self:GetRewardType() == self.REWARD_TYPE.ONLINE then
-        app.timer:RemoveListener(self)
-    end
     User:RemoveListenerOnType(self, "countInfo")
     GameUIActivityRewardNew.super.onExit(self)
 end
@@ -1034,6 +1058,8 @@ function GameUIActivityRewardNew:GetNextOnlineTimePoint()
 end
 
 return GameUIActivityRewardNew
+
+
 
 
 

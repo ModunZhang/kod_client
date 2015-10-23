@@ -27,15 +27,15 @@ local buildings_map = {
 
 for i,layer in ipairs(map.layers) do
     -- if layer.name == "buildings" then
-        local min = 999
-        for i,v in ipairs(layer.data) do
-            if v ~= 0 and v < min then
-            	min = v
-            end
-        end
-        for i = 1, #layer.data do
-        	layer.data[i] = layer.data[i] - min + 1
-        end
+        -- local min = 999
+        -- for i,v in ipairs(layer.data) do
+        --     if v ~= 0 and v < min then
+        --     	min = v
+        --     end
+        -- end
+        -- for i = 1, #layer.data do
+        -- 	layer.data[i] = layer.data[i] - min + 1
+        -- end
         for i,v in ipairs(layer.data) do
         	if v > 0 and #buildings_map >= v then
         		local index = (i-1)

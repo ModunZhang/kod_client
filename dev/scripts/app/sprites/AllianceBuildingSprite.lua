@@ -53,14 +53,10 @@ end
 local ANI_TAG = 110
 function AllianceBuildingSprite:CheckEvent()
     if self:GetBuildingInfo().name == "shrine" then
-        -- if self.alliance:GetAllianceShrine():HaveEvent() then
         --     local armature = self:getChildByTag(ANI_TAG)
         --     if not armature then
         --         self:PlayAni()
         --     end
-        -- else
-        --     self:StopAni()
-        -- end
     end
 end
 function AllianceBuildingSprite:PlayAni()

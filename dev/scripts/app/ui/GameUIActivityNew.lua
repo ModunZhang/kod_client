@@ -31,12 +31,28 @@ function GameUIActivityNew:ctor(city)
 	GameUIActivityNew.super.ctor(self,city, _("活动"))
 	local countInfo = User.countInfo
 	self.player_level_up_time = countInfo.registerTime/1000 + config_intInit.playerLevelupRewardsHours.value * 60 * 60 -- 单位秒
-	app.timer:AddListener(self)
+
+	scheduleAt(self, function()
+		local current_time = app.timer:GetServerTime()
+		if self.activity_list_view and self.tab_buttons:GetSelectedButtonTag() == 'activity' then
+			local count = #self.activity_list_view:getItems()
+			local item = self.activity_list_view:getItems()[count]
+			if item.item_type ~= self.ITEMS_TYPE.PLAYER_LEVEL_UP then return end
+			if current_time <= self.player_level_up_time and item then
+				if not item.time_label then return end
+				self.player_level_up_time_residue = self.player_level_up_time - current_time
+				if self.player_level_up_time_residue > 0 then
+					item.time_label:setString(GameUtils:formatTimeStyle1(self.player_level_up_time_residue))
+				else
+					self.activity_list_view:removeItem(item)
+				end
+			end
+		end
+	end)
 end
 
 
 function GameUIActivityNew:onCleanup()
-	app.timer:RemoveListener(self)
 	User:RemoveListenerOnType(self, "countInfo")
 	User:RemoveListenerOnType(self, "iapGifts")
 	GameUIActivityNew.super.onCleanup(self)
@@ -136,23 +152,6 @@ function GameUIActivityNew:OnUserDataChanged_iapGifts(changed_map)
 end
 function GameUIActivityNew:OnUserDataChanged_countInfo()
 	self:RefreshActivityListView()
-end
-
-function GameUIActivityNew:OnTimer(current_time)
-	if self.activity_list_view and self.tab_buttons:GetSelectedButtonTag() == 'activity' then
-		local count = #self.activity_list_view:getItems()
-		local item = self.activity_list_view:getItems()[count]
-		if item.item_type ~= self.ITEMS_TYPE.PLAYER_LEVEL_UP then return end
-		if current_time <= self.player_level_up_time and item then
-			if not item.time_label then return end
-			self.player_level_up_time_residue = self.player_level_up_time - current_time
-			if self.player_level_up_time_residue > 0 then
-				item.time_label:setString(GameUtils:formatTimeStyle1(self.player_level_up_time_residue))
-			else
-				self.activity_list_view:removeItem(item)
-			end
-		end
-	end
 end
 
 function GameUIActivityNew:OnActivityListViewTouch(event)
