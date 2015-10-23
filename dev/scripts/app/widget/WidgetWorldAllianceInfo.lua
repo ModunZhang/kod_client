@@ -12,21 +12,21 @@ local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local intInit = GameDatas.AllianceInitData.intInit
 local WidgetWorldAllianceInfo = class("WidgetWorldAllianceInfo", WidgetPopDialog)
 
-function WidgetWorldAllianceInfo:ctor(object)
+function WidgetWorldAllianceInfo:ctor(object,mapIndex)
 	self.object = object
-	local isNumber = tolua.type(object) == "number"
-    WidgetWorldAllianceInfo.super.ctor(self,isNumber and 328 or 430,isNumber and _("无主领土") or object.alliance.name,window.top-120)
+	self.mapIndex = mapIndex
+    WidgetWorldAllianceInfo.super.ctor(self,object and 430 or 328,object and  object.alliance.name or _("无主领土"),window.top-120)
     self:setNodeEventEnabled(true)
 
-    if isNumber then
-    	self:LoadMoveAlliance()
-    else
+    if object then
 	    NetManager:getAllianceBasicInfoPromise(object.alliance.id,User.serverId):done(function(response)
 	        if response.success and response.msg.allianceData then
 	            self:SetAllianceData(response.msg.allianceData)
 	            self:LoadInfo(response.msg.allianceData)
 	        end
 	    end)
+    else
+    	self:LoadMoveAlliance()
     end
 end
 function WidgetWorldAllianceInfo:SetAllianceData(allianceData)
@@ -141,6 +141,7 @@ function WidgetWorldAllianceInfo:LoadInfo(alliance_data)
         :align(display.RIGHT_TOP,titleBg:getPositionX(),titleBg:getPositionY() - titleBg:getContentSize().height -10)
         :addTo(layer)
     button:onButtonClicked(function(event)
+    		app:EnterMyAllianceScene(self.mapIndex)
         end)
 
     local desc_bg = WidgetUIBackGround.new({height=158,width=550},WidgetUIBackGround.STYLE_TYPE.STYLE_5)
@@ -160,6 +161,8 @@ function WidgetWorldAllianceInfo:LoadInfo(alliance_data)
     }):addTo(desc_bg):align(display.CENTER, desc_bg:getContentSize().width/2,desc_bg:getContentSize().height/2)
 
     self:BuildOneButton("icon_goto_38x56.png",_("定位")):onButtonClicked(function()
+    	dump(self:GetAllianceData().archon,"self:GetAllianceData().archon")
+    	app:EnterMyAllianceScene(self.mapIndex,self:GetAllianceData().archon.location.x,self:GetAllianceData().archon.location.y)
         self:LeftButtonClicked()
     end):addTo(layer):align(display.RIGHT_TOP, l_size.width,10)
     return layer
@@ -202,7 +205,7 @@ function WidgetWorldAllianceInfo:LoadMoveAlliance()
     scheduleAt(self,function ()
     	local time = intInit.allianceMoveColdMinutes.value * 60 + Alliance_Manager:GetMyAlliance().basicInfo.allianceMoveTime/1000.0 - app.timer:GetServerTime()
     	local canMove = Alliance_Manager:GetMyAlliance().basicInfo.allianceMoveTime == 0 or time <= 0
-    	move_time:setString(GameUtils:formatTimeStyle1(canMove and 0 or time))
+    	move_time:setString(canMove and _("准备就绪") or GameUtils:formatTimeStyle1(time))
     end)
 
 	local desc_bg = WidgetUIBackGround.new({height=186,width=556},WidgetUIBackGround.STYLE_TYPE.STYLE_5)

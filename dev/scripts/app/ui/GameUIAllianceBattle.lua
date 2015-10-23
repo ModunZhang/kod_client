@@ -1326,11 +1326,7 @@ function GameUIAllianceBattle:CreateHistoryContent()
             size = 24,
             color = 0xffedae,
             shadow= true
-        })):onButtonClicked(function(event)
-        if event.name == "CLICKED_EVENT" then
-
-        end
-        end)
+        }))
 
     local parent = self
     function content:SetData( idx )
@@ -1400,7 +1396,13 @@ function GameUIAllianceBattle:CreateHistoryContent()
             createItem(v,b_flag):align(display.CENTER, 270, origin_y - (i-1)*gap_y):addTo(info_bg)
             b_flag = not b_flag
         end
-
+        goto_button:removeEventListenersByEvent("CLICKED_EVENT")
+        goto_button:onButtonClicked(function(event)
+            if event.name == "CLICKED_EVENT" then
+                display.getRunningScene():GotoAllianceByIndex(enemyAlliance.mapIndex)
+                parent:LeftButtonClicked()
+            end
+        end)
     end
 
     return content
@@ -1670,6 +1672,7 @@ end
 
 
 return GameUIAllianceBattle
+
 
 
 
