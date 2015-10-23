@@ -44,6 +44,9 @@ function WidgetAutoOrder:RefreshOrder()
                 v:setPositionX(gap)
                 gap = gap - v:GetElementSize().width/2 - self.default_gap
             end
+            if v.GetXY then
+                v:setPosition(v.GetXY().x, v.GetXY().y)
+            end
             if v.refrshCallback then
                 v:refrshCallback()
             end
@@ -61,6 +64,9 @@ function WidgetAutoOrder:RefreshOrder()
                 elseif self.order_type == WidgetAutoOrder.ORIENTATION.RIGHT_TO_LEFT then
                     v:setPositionX(gap)
                     gap = gap - v:GetElementSize().width/2 - self.default_gap
+                end
+                if v.GetXY then
+                    v:setPosition(v.GetXY().x, v.GetXY().y)
                 end
                 v:show()
                 if v.refrshCallback then

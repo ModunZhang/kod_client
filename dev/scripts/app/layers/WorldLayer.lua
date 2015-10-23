@@ -100,7 +100,7 @@ function WorldLayer:CreateAllianceLayer()
     self.allianceLyaer = display.newNode():addTo(self.map)
 end
 function WorldLayer:LoadAlliance()
-    dump(self:GetAvailableIndex())
+    dump(self:GetAvailableIndex(),"GetAvailableIndex")
     NetManager:getMapAllianceDatasPromise(self:GetAvailableIndex()):done(function(response)
         dump(response.msg.datas)
         for k,v in pairs(response.msg.datas) do
@@ -131,6 +131,7 @@ function WorldLayer:CreateAllianceSprite(index, alliance)
         ellipsis = true,
         dimensions = cc.size(100,15),
     }):addTo(sprite):align(display.CENTER, size.width/2, 0)
+    sprite.alliance = alliance
     sprite.flagstr = alliance.flag
 	sprite.flag = ui_helper:CreateFlagContentSprite(alliance.flag)
 				:addTo(sprite):align(display.CENTER, 80, 60):scale(0.3)
@@ -175,7 +176,8 @@ end
 function WorldLayer:GetClickedObject(world_x, world_y)
     local point = self.map:convertToNodeSpace(cc.p(world_x, world_y))
     local logic_x, logic_y = self:GetLogicMap():ConvertToLogicPosition(point.x, point.y)
-    print(point.x, point.y, logic_x, logic_y)
+    local index = self:LogicToIndex(logic_x, logic_y)
+    return self.allainceSprites[tostring(index)] or index
 end
 function WorldLayer:getContentSize()
     return worldsize

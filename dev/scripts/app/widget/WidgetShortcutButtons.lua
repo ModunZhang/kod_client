@@ -105,7 +105,7 @@ function WidgetShortcutButtons:ctor(city)
 
 
     --进入三级地图按钮
-    local world_map_btn_bg = display.newSprite("background_86x86.png")
+    local world_map_btn_bg = display.newSprite("background_86x86.png"):scale(0.85)
     local inWorldScene = display.getRunningScene().__cname == "WorldScene"
     local world_map_btn = UIKit:ButtonAddScaleAction(cc.ui.UIPushButton.new({normal = inWorldScene and 'icon_world_retiurn_88x88.png' or 'icon_world_88x88.png'})
         :onButtonClicked(function()
@@ -124,12 +124,14 @@ function WidgetShortcutButtons:ctor(city)
     function world_map_btn_bg:GetElementSize()
         return world_map_btn_bg:getContentSize()
     end
+    function world_map_btn_bg:GetXY()
+        return {x = 0 ,y =  440 - display.top }
+    end
     order:AddElement(world_map_btn_bg)
 
     order:RefreshOrder()
 
     self.left_order_group = order
-
 
     local right_top_order = WidgetAutoOrder.new(WidgetAutoOrder.ORIENTATION.TOP_TO_BOTTOM,50,true):addTo(self):pos(display.right - 50, display.top-200)
 

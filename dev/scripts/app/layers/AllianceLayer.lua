@@ -272,6 +272,11 @@ function AllianceLayer:GetMiddleAllianceIndex()
     local point = self.map:convertToNodeSpace(cc.p(display.cx, display.cy))
     return self:LogicToIndex(self:GetAllianceLogicMap():ConvertToLogicPosition(point.x, point.y))
 end
+function AllianceLayer:GetMiddlePosition()
+    local point = self.map:convertToNodeSpace(cc.p(display.cx, display.cy))
+    local logic_x, logic_y = self:GetLogicMap():ConvertToLogicPosition(point.x, point.y)
+    return logic_x, logic_y
+end
 function AllianceLayer:GetVisibleAllianceIndexs()
     local t = {}
     local point = self.map:convertToNodeSpace(cc.p(0, display.height))

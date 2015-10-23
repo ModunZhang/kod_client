@@ -442,6 +442,20 @@ function Alliance:GetMapObjectInfoByObject(mapObj)
     end
     return self:GetAllianceBuildingInfoByName(mapObj.name)
 end
+function Alliance:IsReachEventLimit()
+    return User.basicInfo.marchQueue <= #self:GetMyMarchEvents()
+end
+function Alliance:GetMyMarchEvents()
+    local my_events = {}
+    for k,kindsOfEvents in pairs(self.marchEvents) do
+        for i,event in ipairs(kindsOfEvents) do
+            if event.attackPlayerData.id == User:Id() then
+                table.insert(my_events, event)
+            end
+        end
+    end
+    return my_events
+end
 function Alliance:Reset()
     print("===================>Reset")
     print(debug.traceback("", 2))

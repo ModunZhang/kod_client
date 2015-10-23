@@ -67,7 +67,8 @@ function WorldScene:OnTouchClicked(pre_x, pre_y, x, y)
     if self:IsFingerOn() then
         return
     end
-    self:GetSceneLayer():GetClickedObject(x, y)
+    local click_object = self:GetSceneLayer():GetClickedObject(x, y)
+    UIKit:newWidgetUI("WidgetWorldAllianceInfo",click_object):AddToCurrentScene()
 end
 
 return WorldScene

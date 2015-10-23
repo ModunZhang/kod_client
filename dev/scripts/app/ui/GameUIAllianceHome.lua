@@ -88,37 +88,14 @@ function GameUIAllianceHome:AddOrRemoveListener(isAdd)
     local User = self.city:GetUser()
     local alliance = self.alliance
     if isAdd then
-        User:AddListenOnType(self, "helpToTroops")
         alliance:AddListenOnType(self, "basicInfo")
-        alliance:AddListenOnType(self, "members")
-        alliance:AddListenOnType(self, "marchEvents")
-        city:GetDragonEyrie():GetDragonManager():AddListenOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
     else
-        User:RemoveListenerOnType(self, "helpToTroops")
         alliance:RemoveListenerOnType(self, "basicInfo")
-        alliance:RemoveListenerOnType(self, "members")
-        alliance:RemoveListenerOnType(self, "marchEvents")
-        city:GetDragonEyrie():GetDragonManager():RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
     end
 end
 
 function GameUIAllianceHome:AddMapChangeButton()
     WidgetChangeMap.new(WidgetChangeMap.MAP_TYPE.OUR_ALLIANCE):addTo(self)
-end
-function GameUIAllianceHome:OnMarchDataChanged()
-    self:OnUserDataChanged_helpToTroops()
-end
-function GameUIAllianceHome:OnBasicChanged()
-end
-function GameUIAllianceHome:OnCommingDataChanged()
-    self:OnUserDataChanged_helpToTroops()
-end
-
-function GameUIAllianceHome:OnUserDataChanged_helpToTroops()
-    -- self.operation_button_order:RefreshOrder()
-end
-function GameUIAllianceHome:OnAllianceDataChanged_marchEvents(alliance, deltaData)
-    -- self.operation_button_order:RefreshOrder()
 end
 function GameUIAllianceHome:OnAllianceDataChanged_basicInfo(alliance,deltaData)
     local ok_honour, new_honour = deltaData("basicInfo.honour")
@@ -149,10 +126,6 @@ function GameUIAllianceHome:OnAllianceDataChanged_basicInfo(alliance,deltaData)
         self_flag:align(display.CENTER, self.self_name_bg:getContentSize().width-100, -30):addTo(self.self_name_bg)
         self.self_flag = self_flag
     end
-end
-function GameUIAllianceHome:OnAllianceDataChanged_members(alliance)
--- local self_member = alliance:GetMemeberById(DataManager:getUserData()._id)
--- self.page_top:SetLoyalty(GameUtils:formatNumber(self_member.loyalty))
 end
 function GameUIAllianceHome:Schedule()
     local alliance = self.alliance

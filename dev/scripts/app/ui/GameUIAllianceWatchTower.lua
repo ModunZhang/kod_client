@@ -251,7 +251,7 @@ function GameUIAllianceWatchTower:CreateBeStrikedContent()
             title_label:setString(title)
         end
         local fromAlliance = beStriked_event.fromAlliance
-        local location = display.getRunningScene():GetSceneLayer():RealPosition(fromAlliance.mapIndex, fromAlliance.location.x, fromAlliance.location.y)
+        local location = display.getRunningScene():GetSceneLayer():GetLogicPosition(fromAlliance.mapIndex, fromAlliance.location.x, fromAlliance.location.y)
         line_1:SetValue(beStriked_event.attackPlayerData.name)
         line_2:SetValue(location.x..","..location.y)
         scheduleAt(self,function ()
