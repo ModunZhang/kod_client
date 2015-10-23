@@ -28,12 +28,12 @@ end
 
 
 function ShrineFightEvent:OnTimer(current_time)
-	self.times = math.ceil(self:StartTime() - current_time)
-	if self.times >= 0 then
-		self:NotifyObservers(function(listener)
-			listener:OnFightEventTimer(self)
-		end)
-	end
+	-- self.times = math.ceil(self:StartTime() - current_time)
+	-- if self.times >= 0 then
+	-- 	self:NotifyObservers(function(listener)
+	-- 		listener:OnFightEventTimer(self)
+	-- 	end)
+	-- end
 end
 
 function ShrineFightEvent:GetTime()

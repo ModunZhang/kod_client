@@ -50,14 +50,14 @@ function WidgetMarchEvents:OnMarchDataChanged()
     self:PromiseOfSwitch()
 end
 
-function WidgetMarchEvents:OnFightEventTimerChanged(fightEvent)
-    local item = self.items_map[fightEvent:Id()]
-    if item then
-        -- local desc =  string.format(" %s %s", item.prefix,GameUtils:formatTimeStyle1(fightEvent:GetTime()))
-        -- item.desc:setString(desc)
-        item.time:setString(GameUtils:formatTimeStyle1(fightEvent:GetTime()))
-    end
-end
+-- function WidgetMarchEvents:OnFightEventTimerChanged(fightEvent)
+--     local item = self.items_map[fightEvent:Id()]
+--     if item then
+--         -- local desc =  string.format(" %s %s", item.prefix,GameUtils:formatTimeStyle1(fightEvent:GetTime()))
+--         -- item.desc:setString(desc)
+--         item.time:setString(GameUtils:formatTimeStyle1(fightEvent:GetTime()))
+--     end
+-- end
 
 function WidgetMarchEvents:OnAttackMarchEventTimerChanged(attackMarchEvent)
     local item = self.items_map[attackMarchEvent:Id()]
@@ -87,13 +87,11 @@ function WidgetMarchEvents:AddOrRemoveAllianceEvent(isAdd)
         -- alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
         -- alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
         -- alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnVillageEventTimer)
-        -- alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnFightEventTimerChanged)
     else
         User:RemoveListenerOnType(self, "helpToTroops")
         -- alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
         -- alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
         -- alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnVillageEventTimer)
-        -- alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnFightEventTimerChanged)
     end
 end
 

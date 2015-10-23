@@ -1,9 +1,3 @@
- -- local VillageEvent = import(".VillageEvent")
--- local AllianceShrine = import(".AllianceShrine")
--- local AllianceMoonGate = import(".AllianceMoonGate")
--- local MarchAttackEvent = import(".MarchAttackEvent")
--- local AllianceBelvedere = import(".AllianceBelvedere")
--- local MarchAttackReturnEvent = import(".MarchAttackReturnEvent")
 local Enum = import("..utils.Enum")
 local memberMeta = import(".memberMeta")
 local Localize = import("..utils.Localize")
@@ -17,6 +11,10 @@ Alliance.LISTEN_TYPE = Enum(
     "basicInfo",
     "members",
 
+    "shrineDatas",
+    "shrineReports",
+    "shrineEvents",
+
     "items",
     "itemLogs",
 
@@ -27,16 +25,6 @@ Alliance.LISTEN_TYPE = Enum(
     "helpEvents",
     "marchEvents",
     "buildings")
-    -- "OnAttackMarchEventDataChanged",
-    -- "OnAttackMarchEventTimerChanged",
-    -- "OnAttackMarchReturnEventDataChanged",
-    -- "OnStrikeMarchEventDataChanged",
-    -- "OnStrikeMarchReturnEventDataChanged",
-    -- "OnVillageEventsDataChanged",
-    -- "OnVillageEventTimer",
-    -- "VILLAGE_LEVELS_CHANGED",
-    -- "OnMarchEventRefreshed")
-local unpack = unpack
 property(Alliance, "_id", nil)
 property(Alliance, "mapIndex", nil)
 property(Alliance, "desc", "")
@@ -61,17 +49,29 @@ property(Alliance, "villageLevels", {})
 property(Alliance, "allianceFight", nil)
 property(Alliance, "allianceFightReports", nil)
 property(Alliance, "lastAllianceFightReport", nil)
--- property(Alliance, "attackMarchEvents", {})
--- property(Alliance, "attackMarchReturnEvents", {})
--- property(Alliance, "strikeMarchEvents", {})
--- property(Alliance, "strikeMarchReturnEvents", {})
--- property(Alliance, "villageEvents", {})
 function Alliance:ctor()
     Alliance.super.ctor(self)
-    -- self.alliance_shrine = AllianceShrine.new(self)
-    -- self.alliance_belvedere = AllianceBelvedere.new(self) -- 村落采集
-    -- -- 联盟道具管理
+    self.resources_cache = {
+        perception  = {limit = math.huge, output = 0},
+    }
 end
+
+--[[resourse begin]]
+function Alliance:GetPerceptionRes()
+    return self.resources_cache.perception
+end
+function Alliance:GetPerception()
+    local res = self.resources_cache.perception
+    return GameUtils:GetCurrentProduction(
+        self.basicInfo.perception,
+        self.basicInfo.perceptionRefreshTime / 1000,
+        res.limit,
+        res.output,
+        app.timer:GetServerTime()
+    )
+end
+--[[end]]
+
 function Alliance:AddListenOnType(listener, listenerType)
     if type(listenerType) == "string" then
         listenerType = Alliance.LISTEN_TYPE[listenerType]
@@ -451,10 +451,6 @@ function Alliance:Reset()
     print("===================>Reset")
     print(debug.traceback("", 2))
     property(self, "RESET")
-    -- self.alliance_shrine:Reset()
-    -- self:GetAllianceBelvedere():Reset()
-    -- self:ResetMarchEvent()
-    -- self:ResetVillageEvents()
     self:OnOperation("quit")
 end
 
@@ -468,20 +464,109 @@ end
 --[[end]]
 
 
+--[[shrine begin]]
+local shrineStage = GameDatas.AllianceInitData.shrineStage
+function Alliance:GetMaxStage()
+    local maxStages = 0
+    table.foreach(shrineStage,function(key, config)
+        if config.stage > maxStages then
+            maxStages = config.stage
+        end
+    end)
+    return maxStages
+end
+function Alliance:GetSubStagesByMainStage()
+
+end
+function Alliance:GetStageInfoBy(key)
+    if type(key) == "string" then
+        return shrineStage[key]
+    elseif type(key) == "number" then
+        for _,v in pairs(shrineStage) do
+            if v.index == index then
+                return v
+            end
+        end
+    end
+end
+function Alliance:CanSendTroopToShrine(member_id)
+    if self:GetShrineEventByPlayerId(member_id) then
+        printInfo("%s","已经驻防的部队检查到玩家信息")
+        return false
+    end
+    --check 正在行军的部队
+    for i,v in ipairs(self.marchEvents.attackMarchEvents) do
+        if v.marchType == "shrine" then
+            if member_id == self.attackPlayerData.id then
+                printInfo("%s","正在行军的部队检查到玩家信息")
+                return false
+            end
+        end
+    end
+    return true
+end
+function Alliance:GetShrineEventByPlayerId(id)
+    for _,event in ipairs(self.shrineEvents) do
+        for _,player in ipairs(event.playerTroops) do
+            if player.id == id then
+                return event
+            end
+        end
+    end
+end
+function Alliance:GetShrineEventsBySeq()
+    local r = {}
+    for _,v in pairs(self.shrineEvents) do
+        table.insert(r,v)
+    end
+    table.sort(r, function(a,b)
+        return a.startTime > b.startTime
+    end)
+    return r
+end
+function Alliance:GetShrineEventByStageName(stageName)
+    for _,event in pairs(self.shrineEvents) do
+        if event.stageName == stageName then
+            return event
+        end
+    end
+end
+function Alliance:GetShrineEventByid(id)
+    for _,v in ipairs(self.shrineEvents) do
+        if v.id == id then
+            return v
+        end
+    end
+end
+--[[end]]
+
+local shrine = GameDatas.AllianceBuilding.shrine
 local before_map = {
     items = function(allianceData, deltaData)
         
     end,
-    basicInfo = function()end,
+    basicInfo = function(allianceData, deltaData)
+        local building = allianceData:FindAllianceBuildingInfoByName("shrine")
+        local config = shrine[building.level]
+        self.resources_cache.perception.limit = config.perception
+        self.resources_cache.perception.output= config.pRecoveryPerHour
+    end,
     members = function()end,
+
     items = function()end,
     itemLogs = function(allianceData, deltaData)
         if deltaData("itemLogs.add") then
             allianceData:SetNewGoodsCome(true)
         end
     end,
+
     mapObjects = function()end,
     villageLevels = function()end,
+
+    shrineDatas = function()end,
+    shrineReports = function()end,
+    shrineEvents = function()end,
+
     events = function()end,
     buildings = function()end,
     joinRequestEvents = function()end,
@@ -510,7 +595,7 @@ function Alliance:OnAllianceDataChanged(allianceData,refresh_time,deltaData)
     if is_join then
         self:OnOperation("join")
     end
-    dump(allianceData.items)
+    dump(allianceData.shrineDatas)
 
     if deltaData then
         for i,k in ipairs(Alliance.LISTEN_TYPE) do
@@ -529,12 +614,6 @@ function Alliance:OnAllianceDataChanged(allianceData,refresh_time,deltaData)
             end
         end
     end
-    -- self.alliance_shrine:OnAllianceDataChanged(allianceData,deltaData,refresh_time)
-    -- self:OnAttackMarchEventsDataChanged(allianceData,deltaData,refresh_time)
-    -- self:OnAttackMarchReturnEventsDataChanged(allianceData,deltaData,refresh_time)
-    -- self:OnStrikeMarchEventsDataChanged(allianceData,deltaData,refresh_time)
-    -- self:OnStrikeMarchReturnEventsDataChanged(allianceData,deltaData,refresh_time)
-    -- self:OnVillageEventsDataChanged(allianceData,deltaData,refresh_time)
 end
 function Alliance:NotifyHelpEvents(deltaData)
     local ok, value = deltaData("helpEvents")
@@ -1051,12 +1130,6 @@ function Alliance:IteratorVillageEvents(func)
     -- for _,v in pairs(self.villageEvents) do
     --     func(v)
     -- end
-end
-function Alliance:ResetVillageEvents()
-    self:IteratorVillageEvents(function(villageEvent)
-        villageEvent:Reset()
-    end)
-    self.villageEvents = {}
 end
 
 --有id为指定事件 没有id时获取所有采集事件

@@ -16,7 +16,7 @@ end
 local function clamp(a,b,x)
     return x < a and a or (x > b and b or x)
 end
-function GameUtils:GetCurrentProduction(value,limit,output,refreshTime,currentTime)
+function GameUtils:GetCurrentProduction(value,refreshTime,limit,output,currentTime)
     local trv = value + (currentTime - refreshTime) * output * 0.00027777777777778 --[[ 1 / 3600 = 0.00027777777777778]]
     return floor(clamp(
         0, 

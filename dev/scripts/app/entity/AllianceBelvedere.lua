@@ -262,16 +262,6 @@ function AllianceBelvedere:OnVillageEventTimer(villageEvent,left_resource)
 	self:CallEventsChangedListeners(AllianceBelvedere.LISTEN_TYPE.OnVillageEventTimer,{villageEvent,left_resource})
 end
 
-function AllianceBelvedere:OnShrineEventsChanged(changed_map)
-	if self:GetAlliance():IsMyAlliance() then
-		self:NotifyMarchDataChanged()
-	end
-end
-
-function AllianceBelvedere:OnShrineEventsRefresh()
-	self:OnShrineEventsChanged()
-end
-
 function AllianceBelvedere:OnFightEventTimerChanged(fightEvent)
 	if self:GetAlliance():IsMyAlliance() then
 		self:CallEventsChangedListeners(AllianceBelvedere.LISTEN_TYPE.OnFightEventTimerChanged,{fightEvent}) 

@@ -445,9 +445,9 @@ function User:GetResValueByType(type_)
     local res = self.resources_cache[type_]
     return GameUtils:GetCurrentProduction(
         self.resources[type_],
+        self.resources.refreshTime / 1000,
         res.limit,
         res.output,
-        self.resources.refreshTime / 1000,
         app.timer:GetServerTime()
     )
 end

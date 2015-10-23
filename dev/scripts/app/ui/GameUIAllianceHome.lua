@@ -86,31 +86,24 @@ end
 function GameUIAllianceHome:AddOrRemoveListener(isAdd)
     local city = self.city
     local User = self.city:GetUser()
+    local alliance = self.alliance
     if isAdd then
-        self.alliance:AddListenOnType(self, "basicInfo")
-        self.alliance:AddListenOnType(self, "members")
-        self.alliance:AddListenOnType(self, "marchEvents")
-        User:AddListenOnType(self, "soldierStarEvents")
-        User:AddListenOnType(self, "militaryTechEvents")
-        User:AddListenOnType(self, "productionTechEvents")
+        alliance:AddListenOnType(self, "basicInfo")
+        alliance:AddListenOnType(self, "members")
+        alliance:AddListenOnType(self, "marchEvents")
         User:AddListenOnType(self, "helpToTroops")
-        -- local alliance_belvedere = self.alliance:GetAllianceBelvedere()
+        -- local alliance_belvedere = alliance:GetAllianceBelvedere()
         -- alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
         -- alliance_belvedere:AddListenOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
-        -- self.alliance:GetAllianceShrine():AddListenOnType(self,self.alliance:GetAllianceShrine().LISTEN_TYPE.OnShrineEventsChanged)
         city:GetDragonEyrie():GetDragonManager():AddListenOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
     else
-        self.alliance:RemoveListenerOnType(self, "basicInfo")
-        self.alliance:RemoveListenerOnType(self, "members")
-        self.alliance:RemoveListenerOnType(self, "marchEvents")
-        User:RemoveListenerOnType(self, "soldierStarEvents")
-        User:RemoveListenerOnType(self, "militaryTechEvents")
-        User:RemoveListenerOnType(self, "productionTechEvents")
+        alliance:RemoveListenerOnType(self, "basicInfo")
+        alliance:RemoveListenerOnType(self, "members")
+        alliance:RemoveListenerOnType(self, "marchEvents")
         User:RemoveListenerOnType(self, "helpToTroops")
-        -- local alliance_belvedere = self.alliance:GetAllianceBelvedere()
+        -- local alliance_belvedere = alliance:GetAllianceBelvedere()
         -- alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnMarchDataChanged)
         -- alliance_belvedere:RemoveListenerOnType(self, alliance_belvedere.LISTEN_TYPE.OnCommingDataChanged)
-        -- self.alliance:GetAllianceShrine():RemoveListenerOnType(self,self.alliance:GetAllianceShrine().LISTEN_TYPE.OnShrineEventsChanged)
         city:GetDragonEyrie():GetDragonManager():RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnBasicChanged)
     end
 end
@@ -130,6 +123,40 @@ function GameUIAllianceHome:OnUserDataChanged_helpToTroops()
 end
 function GameUIAllianceHome:OnAllianceDataChanged_marchEvents(alliance, deltaData)
     self.operation_button_order:RefreshOrder()
+end
+function GameUIAllianceHome:OnAllianceDataChanged_basicInfo(alliance,deltaData)
+    local ok_honour, new_honour = deltaData("basicInfo.honour")
+    local ok_status, new_status = deltaData("basicInfo.status")
+    local ok_name, new_name = deltaData("basicInfo.name")
+    local ok_tag, new_tag = deltaData("basicInfo.tag")
+    local ok_flag, new_flag = deltaData("basicInfo.flag")
+    if ok_honour then
+        self.page_top:SetHonour(GameUtils:formatNumber(new_honour))
+    elseif ok_status then
+        if alliance.allianceFightReports then
+            NetManager:getAllianceFightReportsPromise(self.alliance.id):done(function ( ... )
+                if self.top then
+                    self:RefreshTop()
+                end
+            end)
+        else
+            self:RefreshTop()
+        end
+        self.operation_button_order:RefreshOrder()
+    elseif ok_name or ok_tag then
+        self.self_name_label:setString("["..alliance.basicInfo.tag.."] ".. alliance.basicInfo.name)
+    elseif ok_flag then
+        self.self_flag:removeFromParent(true)
+        -- 己方联盟旗帜
+        local ui_helper = WidgetAllianceHelper.new()
+        local self_flag = ui_helper:CreateFlagContentSprite(alliance.basicInfo.flag):scale(0.5)
+        self_flag:align(display.CENTER, self.self_name_bg:getContentSize().width-100, -30):addTo(self.self_name_bg)
+        self.self_flag = self_flag
+    end
+end
+function GameUIAllianceHome:OnAllianceDataChanged_members(alliance)
+-- local self_member = alliance:GetMemeberById(DataManager:getUserData()._id)
+-- self.page_top:SetLoyalty(GameUtils:formatNumber(self_member.loyalty))
 end
 function GameUIAllianceHome:Schedule()
     local alliance = self.alliance
@@ -537,41 +564,6 @@ function GameUIAllianceHome:OnTopRightButtonClicked(event)
         end
         UIKit:newGameUI("GameUIAllianceBattle", self.city , tag ,other_alliance):AddToCurrentScene(true)
     end
-end
-
-function GameUIAllianceHome:OnAllianceDataChanged_basicInfo(alliance,deltaData)
-    local ok_honour, new_honour = deltaData("basicInfo.honour")
-    local ok_status, new_status = deltaData("basicInfo.status")
-    local ok_name, new_name = deltaData("basicInfo.name")
-    local ok_tag, new_tag = deltaData("basicInfo.tag")
-    local ok_flag, new_flag = deltaData("basicInfo.flag")
-    if ok_honour then
-        self.page_top:SetHonour(GameUtils:formatNumber(new_honour))
-    elseif ok_status then
-        if alliance.allianceFightReports then
-            NetManager:getAllianceFightReportsPromise(self.alliance.id):done(function ( ... )
-                if self.top then
-                    self:RefreshTop()
-                end
-            end)
-        else
-            self:RefreshTop()
-        end
-        self.operation_button_order:RefreshOrder()
-    elseif ok_name or ok_tag then
-        self.self_name_label:setString("["..alliance.basicInfo.tag.."] ".. alliance.basicInfo.name)
-    elseif ok_flag then
-        self.self_flag:removeFromParent(true)
-        -- 己方联盟旗帜
-        local ui_helper = WidgetAllianceHelper.new()
-        local self_flag = ui_helper:CreateFlagContentSprite(alliance.basicInfo.flag):scale(0.5)
-        self_flag:align(display.CENTER, self.self_name_bg:getContentSize().width-100, -30):addTo(self.self_name_bg)
-        self.self_flag = self_flag
-    end
-end
-function GameUIAllianceHome:OnAllianceDataChanged_members(alliance)
--- local self_member = alliance:GetMemeberById(DataManager:getUserData()._id)
--- self.page_top:SetLoyalty(GameUtils:formatNumber(self_member.loyalty))
 end
 local deg = math.deg
 local ceil = math.ceil

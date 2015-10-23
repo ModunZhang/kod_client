@@ -20,53 +20,30 @@ function GameUIAllianceShrine:ctor(city,default_tab,building)
     self.event_bind_to_label = {}
 end
 
-function GameUIAllianceShrine:OnPerceotionChanged()
-    if self:GetSelectedButtonTag() ~= "stage" then return end
-    local resource = self:GetAllianceShrine():GetPerceptionResource()
-    local display_str = string.format(_("感知力:%s"),resource:GetResourceValueByCurrentTime(app.timer:GetServerTime()) .. "/" .. resource:GetValueLimit())
-    if self.stage_ui and self.stage_ui.insight_label:getString() ~= display_str then
-        self.stage_ui.insight_label:setString(display_str)
-        self.stage_ui.progressBar:setPercentage(resource:GetResourceValueByCurrentTime(app.timer:GetServerTime())/resource:GetValueLimit()*100)
-    end
-    if self.stage_ui and self.stage_ui.perHour_label then
-        self.stage_ui.perHour_label:setString(string.format("+%s/h",resource:GetProductionPerHour()))
-    end
-end
-
-function GameUIAllianceShrine:OnShrineReportsChanged(change_map)
-    self:RefreshUI()
-end
-
 function GameUIAllianceShrine:OnFightEventTimerChanged(event)
     if self:GetSelectedButtonTag() == "fight_event" and self.event_bind_to_label[event:Id()] then
         self.event_bind_to_label[event:Id()]:setString(GameUtils:formatTimeStyle1(event:GetTime()))
     end
 end
-function GameUIAllianceShrine:OnShrineEventsChanged(change_map)
-    if self:GetSelectedButtonTag() == "fight_event" and (change_map.removed or change_map.added) then
+function GameUIAllianceShrine:OnAllianceDataChanged_shrineReports()
+    self:RefreshUI()
+end
+function GameUIAllianceShrine:OnAllianceDataChanged_shrineDatas()
+    if self:GetSelectedButtonTag() == "stage" then
+        self:RefreshStageListView()
+    end
+end
+function GameUIAllianceShrine:OnAllianceDataChanged_shrineEvents(alliance, deltaData)
+    if self:GetSelectedButtonTag() == "fight_event" and
+    (deltaData("shrineEvents.add") or
+    deltaData("shrineEvents.remove")) then
         self:RefreshFightListView()
     end
     if self:GetSelectedButtonTag() == "stage" then
         self:RefreshStageListView()
     end
-    self.tab_buttons:SetButtonTipNumber("fight_event",#self:GetAllianceShrine():GetShrineEvents())
+    self.tab_buttons:SetButtonTipNumber("fight_event", #Alliance_Manager:GetMyAlliance().shrineEvents)
 end
-
-function GameUIAllianceShrine:OnShrineEventsRefresh()
-    if self:GetSelectedButtonTag() == "fight_event" then
-        self:RefreshFightListView()
-    end
-    if self:GetSelectedButtonTag() == "stage" then
-        self:RefreshStageListView()
-    end
-end
-
-function  GameUIAllianceShrine:OnNewStageOpened( change_map )
-    if self:GetSelectedButtonTag() == "stage" then
-        self:RefreshStageListView()
-    end
-end
-
 function GameUIAllianceShrine:OnMoveOutStage()
     GameUIAllianceShrine.super.OnMoveOutStage(self)
 end
@@ -86,13 +63,12 @@ end
 
 function GameUIAllianceShrine:onCleanup()
     self.event_bind_to_label = nil
-    self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnPerceotionChanged)
     self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnFightEventTimerChanged)
-    self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsChanged)
-    self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnNewStageOpened)
-    self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsRefresh)
-    self:GetAllianceShrine():RemoveListenerOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineReportsChanged)
-    self.my_alliance:RemoveListenerOnType(self, self.my_alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
+    -- self.my_alliance:RemoveListenerOnType(self, self.my_alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
+    self.my_alliance:RemoveListenerOnType(self, "shrineDatas")
+    self.my_alliance:RemoveListenerOnType(self, "shrineReports")
+    self.my_alliance:RemoveListenerOnType(self, "shrineEvents")
+
     GameUIAllianceShrine.super.onCleanup(self)
 end
 
@@ -134,14 +110,28 @@ function GameUIAllianceShrine:OnMoveInStage()
             end
         end
     ):pos(window.cx, window.bottom + 34)
-    self.tab_buttons:SetButtonTipNumber("fight_event",#self:GetAllianceShrine():GetShrineEvents())
-    self:GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnPerceotionChanged)
+    self.tab_buttons:SetButtonTipNumber("fight_event", #Alliance_Manager:GetMyAlliance().shrineEvents)
     self:GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnFightEventTimerChanged)
-    self:GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsChanged)
-    self:GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnNewStageOpened)
-    self:GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineEventsRefresh)
-    self:GetAllianceShrine():AddListenOnType(self,AllianceShrine.LISTEN_TYPE.OnShrineReportsChanged)
-    self.my_alliance:AddListenOnType(self, self.my_alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
+    -- self.my_alliance:AddListenOnType(self, self.my_alliance.LISTEN_TYPE.OnAttackMarchEventDataChanged)
+    self.my_alliance:AddListenOnType(self, "shrineDatas")
+    self.my_alliance:AddListenOnType(self, "shrineReports")
+    self.my_alliance:AddListenOnType(self, "shrineEvents")
+
+    scheduleAt(self, function()
+        local aln = Alliance_Manager:GetMyAlliance()
+        if self:GetSelectedButtonTag() == "stage" then 
+            local res = aln:GetPerceptionRes()
+            local value = aln:GetPerception()
+            local display_str = string.format(_("感知力:%s"),value .. "/" .. res.limit)
+            if self.stage_ui and self.stage_ui.insight_label:getString() ~= display_str then
+                self.stage_ui.insight_label:setString(display_str)
+                self.stage_ui.progressBar:setPercentage(value/res.limit*100)
+            end
+            if self.stage_ui and self.stage_ui.perHour_label then
+                self.stage_ui.perHour_label:setString(string.format("+%s/h", res.output))
+            end
+        end
+    end)
 end
 
 function GameUIAllianceShrine:CreateBetweenBgAndTitle()
@@ -168,7 +158,7 @@ function GameUIAllianceShrine:RefreshUI()
     elseif tag == 'fight_event' then
         self:RefreshFightListView()
     elseif tag == 'events_history' then
-        if self:GetAllianceShrine():IsNeedRequestReportFromServer() then
+        if not DataManager:getUserAllianceData().shrineReports then
             NetManager:getShrineReportsPromise():done(function()
                 self:RefreshEventsListView()
             end)
@@ -192,7 +182,7 @@ end
 
 function GameUIAllianceShrine:ChangeStagePage(offset)
     local targetPage = self:GetStagePage() + offset
-    if targetPage  > self:GetAllianceShrine():MaxCountOfStage() then
+    if targetPage  > self.my_alliance:GetMaxStage() then
         return
     elseif  targetPage < 1 then
         return
@@ -217,16 +207,18 @@ function GameUIAllianceShrine:TabEvent_stage()
     display.newScale9Sprite("insight_icon_40x44.png")
         :addTo(insight_bg)
         :align(display.CENTER,24,18)
-    local resource = self:GetAllianceShrine():GetPerceptionResource()
-    local display_str = string.format(_("感知力:%s"),resource:GetResourceValueByCurrentTime(app.timer:GetServerTime()) .. "/" .. resource:GetValueLimit())
+    local aln = Alliance_Manager:GetMyAlliance()
+    local res = aln:GetPerceptionRes()
+    local value = aln:GetPerception()
+    local display_str = string.format(_("感知力:%s"), value .. "/" .. res.limit)
     local insight_label = UIKit:ttfLabel({
         text = display_str,
         size = 20,
         color = 0xfff3c7
     }):align(display.LEFT_CENTER,40,20):addTo(bar_bg)
-    progressBar:setPercentage(resource:GetResourceValueByCurrentTime(app.timer:GetServerTime())/resource:GetValueLimit()*100)
+    progressBar:setPercentage(value/res.limit*100)
     local perHour_label = UIKit:ttfLabel({
-        text = string.format("+%s/h",resource:GetProductionPerHour()),
+        text = string.format("+%s/h", res.output),
         size = 20,
         color= 0xfff3c7,
         align = cc.TEXT_ALIGNMENT_RIGHT
@@ -358,7 +350,7 @@ function GameUIAllianceShrine:GetStageListItem(index,stage_obj)
             size = 20,
             color = 0xfff3c7
         }):align(display.LEFT_CENTER,20,13):addTo(power_bg)
-        local event = self:GetAllianceShrine():GetShrineEventByStageName(stage_obj:StageName())
+        local event = Alliance_Manager:GetMyAlliance():GetShrineEventByStageName(stage_obj:StageName())
         if event then
             UIKit:ttfLabel({
                 text = _("已激活"),
@@ -497,16 +489,14 @@ function GameUIAllianceShrine:GetFight_List_Item(event)
 end
 
 function GameUIAllianceShrine:RefreshFightListView()
-
     self.fight_list:removeAllItems()
-    for i,event in ipairs(self:GetAllianceShrine():GetShrineEvents()) do
+    for i,event in ipairs(self.my_alliance:GetShrineEventsBySeq()) do
         local item = self.fight_list:newItem()
         local content = self:GetFight_List_Item(event)
         item:addContent(content)
         item:setItemSize(568,178)
         self.fight_list:addItem(item)
     end
-
     self.fight_list:reload()
 end
 
@@ -553,9 +543,9 @@ function GameUIAllianceShrine:reportsSouceDelegate(listView, tag, idx)
 end
 function GameUIAllianceShrine:RefreshEventsListView()
     -- self.events_list:removeAllItems()
-    local data = clone(self:GetAllianceShrine():GetShrineReports())
+    local data = clone(Alliance_Manager:GetMyAlliance().shrineReports)
     table.sort( data,function(a,b)
-        return a:Time() > b:Time()
+        return a.time > b.time
     end)
     self.report_datas = data
     self.events_list:reload()

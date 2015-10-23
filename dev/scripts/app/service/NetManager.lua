@@ -260,7 +260,6 @@ end
 local function get_alliance_allianceshrinereports_response_msg(response)
     if response.msg.shrineReports then
         DataManager:getUserAllianceData().shrineReports = response.msg.shrineReports
-        Alliance_Manager:GetMyAlliance():GetAllianceShrine():OnShrineReportsDataChanged(DataManager:getUserAllianceData())
     end
     return response
 end
