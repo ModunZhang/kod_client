@@ -43,6 +43,10 @@ function AllianceManager:GetAllianceByCache(key)
     end
     return cache_alliance
 end
+function AllianceManager:RemoveAlliance(alliance)
+    self:RemoveAllianceCache(alliance.mapIndex)
+    self:RemoveAllianceCache(alliance._id)
+end
 function AllianceManager:RemoveAllianceCache(key)
     self.alliance_caches[key] = nil
 end
@@ -150,6 +154,7 @@ end
 local terrainStyle = GameDatas.AllianceMap.terrainStyle
 function AllianceManager:getMapDataByIndex(index)
     local key = self.mapIndexData[tostring(index)]
+    if not key then return end
     for _,v in pairs(terrainStyle) do
         if v.index == key then
             local terrain, style = unpack(string.split(v.style, "_"))

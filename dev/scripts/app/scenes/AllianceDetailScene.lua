@@ -17,6 +17,15 @@ function AllianceDetailScene:OnAllianceDataChanged_members(allianceData, deltaDa
         end
     end
 end
+function AllianceDetailScene:OnAllianceDataChanged_buildings(allianceData, deltaData)
+    local ok, value = deltaData("buildings.edit")
+    if ok then
+        for i,v in ipairs(value) do
+            self:GetSceneLayer()
+            :RefreshBuildingByIndex(allianceData.mapIndex, v, allianceData)
+        end
+    end
+end
 function AllianceDetailScene:OnAllianceDataChanged_mapObjects(allianceData, deltaData)
     self:HandleMapObjects(allianceData, "remove", deltaData("mapObjects.remove"))
     self:HandleMapObjects(allianceData, "add", deltaData("mapObjects.add"))
@@ -153,11 +162,18 @@ function AllianceDetailScene:OnMapDataChanged(allianceData, mapData, deltaData)
     end
 end
 function AllianceDetailScene:OnMapAllianceChanged(allianceData, deltaData)
-    if deltaData("mapObjects") then
-        self:OnAllianceDataChanged_mapObjects(allianceData, deltaData)
+    if deltaData == json.null then
+        self:GetSceneLayer():LoadAllianceByIndex(allianceData.mapIndex, nil)
+        return 
     end
     if deltaData("members") then
        self:OnAllianceDataChanged_members(allianceData, deltaData) 
+    end
+    if deltaData("buildings") then
+       self:OnAllianceDataChanged_buildings(allianceData, deltaData) 
+    end
+    if deltaData("mapObjects") then
+        self:OnAllianceDataChanged_mapObjects(allianceData, deltaData)
     end
     if deltaData("marchEvents") then
        self:OnAllianceDataChanged_marchEvents(allianceData, deltaData) 
@@ -249,6 +265,24 @@ function AllianceDetailScene:CreateOrUpdateOrDeleteCorpsByReturnEvent(id, event)
 end
 
 
+
+
+
+
+
+
+
+
+
+-----------
+
+
+
+
+
+
+
+
 local intInit = GameDatas.AllianceInitData.intInit
 local ALLIANCE_WIDTH, ALLIANCE_HEIGHT = intInit.allianceRegionMapWidth.value, intInit.allianceRegionMapHeight.value
 function AllianceDetailScene:ctor(location)
@@ -282,6 +316,7 @@ function AllianceDetailScene:onEnter()
     self.home_page = self:CreateHomePage()
     self:GetSceneLayer():ZoomTo(0.82)
     alliance:AddListenOnType(self, "members")
+    alliance:AddListenOnType(self, "buildings")
     alliance:AddListenOnType(self, "mapObjects")
     alliance:AddListenOnType(self, "marchEvents")
     alliance:AddListenOnType(self, "villageEvents")
@@ -300,6 +335,7 @@ function AllianceDetailScene:onExit()
     Alliance_Manager:ClearCache()
     Alliance_Manager:ResetCurrentMapData()
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, "members")
+    Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, "buildings")
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, "mapObjects")
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, "marchEvents")
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, "villageEvents")

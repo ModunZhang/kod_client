@@ -569,9 +569,17 @@ local logic_event_map = {
 
         local allianceData = Alliance_Manager:GetAllianceByCache(response.targetAllianceId)
         if allianceData then
-            local edit = decodeInUserDataFromDeltaData(allianceData, response.data)
-            Alliance_Manager:OnMapAllianceChanged(allianceData, edit)
-            LuaUtils:outputTable("OnMapAllianceChanged", edit)
+            local key, value = unpack(response.data[1])
+            if #key == 0 and value == json.null then
+                Alliance_Manager:setMapDataByIndex(allianceData.mapIndex, nil)
+                Alliance_Manager:RemoveAlliance(allianceData)
+                Alliance_Manager:OnMapAllianceChanged(allianceData, json.null)
+            else
+                Alliance_Manager:setMapDataByIndex(allianceData.mapIndex, allianceData.basicInfo.terrainStyle)
+                local edit = decodeInUserDataFromDeltaData(allianceData, response.data)
+                Alliance_Manager:OnMapAllianceChanged(allianceData, edit)
+                LuaUtils:outputTable("OnMapAllianceChanged", edit)
+            end
         end
     end,
     onMapDataChanged = function(success, response)
