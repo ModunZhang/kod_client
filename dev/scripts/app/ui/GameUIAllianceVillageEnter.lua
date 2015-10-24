@@ -111,7 +111,7 @@ function GameUIAllianceVillageEnter:GetBuildingInfo()
     }
     local labels = {}
     local village_id = self:GetVillageInfo().id
-    local villageEvent = self:GetMyAlliance():FindVillageEventByVillageId(village_id)
+    local villageEvent = Alliance_Manager:GetVillageEventsByMapId(self:GetMyAlliance(), village_id)
     dump(villageEvent,"villageEvent")
     if villageEvent then --我方占领
         local startTime = villageEvent.startTime/1000.0
@@ -141,6 +141,11 @@ function GameUIAllianceVillageEnter:GetBuildingInfo()
         self:GetProgressTimer():setPercentage(percent*100)
         self:GetProcessLabel():setString(str)
         scheduleAt(self, function()
+            local villageEvent = Alliance_Manager:GetVillageEventsByMapId(self:GetMyAlliance(), village_id)
+            if not villageEvent then
+                self:LeftButtonClicked()
+                return
+            end
             local collectTime = app.timer:GetServerTime() - startTime
             local collectCount = math.floor(collectSpeed * collectTime)
 
