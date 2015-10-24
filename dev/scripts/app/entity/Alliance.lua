@@ -747,7 +747,7 @@ function Alliance:CheckHelpDefenceMarchEventsHaveTarget(memeberId)
 end
 
 function Alliance:GetSelf()
-    return self:GetMemeberById(User:Id())
+    return self:GetMemeberById(User._id)
 end
 
 function Alliance:FindVillageEventByVillageId(village_id)
