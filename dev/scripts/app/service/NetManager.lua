@@ -579,7 +579,7 @@ local logic_event_map = {
         local myAllianceData = DataManager:getUserAllianceData()
         if myAllianceData and
             myAllianceData.mapIndex == response.targetMapIndex then
-            mapData = Alliance_Manager.my_alliance_mapData
+            mapData = Alliance_Manager:GetMyAllianceMapData()
         else
             mapData = Alliance_Manager:GetCurrentMapData()
         end
