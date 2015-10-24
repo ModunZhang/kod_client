@@ -1130,7 +1130,7 @@ local SELENAQUESTION_TIPS = {
 
 local ALLIANCE_BUILDINGS = {
     shop = _("联盟商店"),
-    moonGate = _("月门"),
+    watchTower = _("巨石阵"),
     shrine = _("圣地"),
     orderHall = _("秩序大厅"),
     palace = _("联盟宫殿")
