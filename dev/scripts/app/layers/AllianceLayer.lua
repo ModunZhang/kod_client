@@ -354,7 +354,7 @@ function AllianceLayer:AddMapObjectByIndex(index, mapObject, alliance)
     if alliance_object then
         if not alliance_object.mapObjects[mapObject.id] then
             local sprite = self:AddMapObject(alliance_object, mapObject, alliance)
-            self:RefreshSpriteInfo(sprite, mapObj, alliance)
+            self:RefreshSpriteInfo(sprite, mapObject, alliance)
         end
     end
 end

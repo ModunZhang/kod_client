@@ -5,6 +5,18 @@ local MapScene = import(".MapScene")
 local AllianceDetailScene = class("AllianceDetailScene", MapScene)
 
 
+function AllianceDetailScene:OnAllianceDataChanged_members(allianceData, deltaData)
+    local ok, value = deltaData("members.edit")
+    if ok then
+        for i,v in ipairs(value) do
+            local mapObj = Alliance.FindMapObjectById(allianceData, v.mapId)
+            if mapObj then
+                self:GetSceneLayer()
+                :RefreshMapObjectByIndex(allianceData.mapIndex, mapObj, allianceData)
+            end
+        end
+    end
+end
 function AllianceDetailScene:OnAllianceDataChanged_mapObjects(allianceData, deltaData)
     self:HandleMapObjects(allianceData, "remove", deltaData("mapObjects.remove"))
     self:HandleMapObjects(allianceData, "add", deltaData("mapObjects.add"))
@@ -144,6 +156,9 @@ function AllianceDetailScene:OnMapAllianceChanged(allianceData, deltaData)
     if deltaData("mapObjects") then
         self:OnAllianceDataChanged_mapObjects(allianceData, deltaData)
     end
+    if deltaData("members") then
+       self:OnAllianceDataChanged_members(allianceData, deltaData) 
+    end
 end
 
 
@@ -260,6 +275,7 @@ function AllianceDetailScene:onEnter()
 
     self.home_page = self:CreateHomePage()
     self:GetSceneLayer():ZoomTo(0.82)
+    alliance:AddListenOnType(self, "members")
     alliance:AddListenOnType(self, "mapObjects")
     alliance:AddListenOnType(self, "marchEvents")
     alliance:AddListenOnType(self, "villageEvents")
@@ -277,6 +293,7 @@ function AllianceDetailScene:onExit()
     Alliance_Manager:SetAllianceHandle(nil)
     Alliance_Manager:ClearCache()
     Alliance_Manager:ResetCurrentMapData()
+    Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, "members")
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, "mapObjects")
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, "marchEvents")
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, "villageEvents")
