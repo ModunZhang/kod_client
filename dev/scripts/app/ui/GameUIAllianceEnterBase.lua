@@ -91,7 +91,8 @@ function GameUIAllianceEnterBase:GetLogicPosition()
 end
 
 function GameUIAllianceEnterBase:GetLocation()
-    return self.mapObj.x .. "," .. self.mapObj.y
+    local x,y = DataUtils:GetAbsolutePosition(self.focus_alliance.mapIndex, self.mapObj.x, self.mapObj.y)
+    return x .. "," .. y
 end
 
 function GameUIAllianceEnterBase:GetTerrain()
