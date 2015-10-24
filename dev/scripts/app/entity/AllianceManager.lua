@@ -80,9 +80,9 @@ local function removeJsonNull(t)
         end
     end 
 end
-function AllianceManager:OnMapDataChanged(currentMapData, deltaData)
+function AllianceManager:OnMapDataChanged(mapIndex, currentMapData, deltaData)
     if not self.handle then return end
-    self.handle.OnMapDataChanged(self.handle, currentMapData, deltaData)
+    self.handle.OnMapDataChanged(self.handle, self:GetAllianceByCache(mapIndex), currentMapData, deltaData)
     removeJsonNull(currentMapData.villageEvents)
     for _,t in pairs(currentMapData.marchEvents) do
         removeJsonNull(t)

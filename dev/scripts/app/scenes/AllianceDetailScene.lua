@@ -95,7 +95,7 @@ function AllianceDetailScene:OnEnterMapIndex(mapData)
         self:CreateOrUpdateOrDeleteCorpsByReturnEvent(id,event)
     end
 end
-function AllianceDetailScene:OnMapDataChanged(mapData, deltaData)
+function AllianceDetailScene:OnMapDataChanged(allianceData, mapData, deltaData)
     local ok, value = deltaData("marchEvents.strikeMarchEvents")
     if ok then
         for id,_ in pairs(value) do
@@ -127,12 +127,26 @@ function AllianceDetailScene:OnMapDataChanged(mapData, deltaData)
             self:CreateOrUpdateOrDeleteCorpsByReturnEvent(id, event)
         end
     end
-
-    local ok, value = deltaData("marchEvents.villageEvents")
-    if ok then
-        for id,_ in pairs(value) do
-            local event = mapData.marchEvents.villageEvents[id]
-            self:CreateOrUpdateOrDeleteCorpsByReturnEvent(id, event)
+    if allianceData then
+        for i,v in ipairs(getmetatable(deltaData).remove or {}) do
+            local mapObj = Alliance.FindMapObjectById(allianceData, v.villageData.id)
+            if mapObj then
+                self:GetSceneLayer()
+                :RefreshMapObjectByIndex(allianceData.mapIndex, mapObj, allianceData)
+            end
+        end
+        local ok, value = deltaData("villageEvents")
+        if ok then
+            for id,_ in pairs(value) do
+                local event = mapData.villageEvents[id]
+                if event ~= json.null then
+                    local mapObj = Alliance.FindMapObjectById(allianceData, event.villageData.id)
+                    if mapObj then
+                        self:GetSceneLayer()
+                        :RefreshMapObjectByIndex(allianceData.mapIndex, mapObj, allianceData)
+                    end
+                end
+            end
         end
     end
 end
