@@ -69,13 +69,13 @@ function GameUIOrderHall:CreateBetweenBgAndTitle()
         self:removeAllChildren()
     end
     -- proficiency_layer
-    local proficiency_layer = display.newLayer():addTo(self:GetView())
-    self.proficiency_layer = proficiency_layer
-    function proficiency_layer:Reset()
-        self.proficiency_listview = nil
-        self.proficiency_drop_list = nil
-        self:removeAllChildren()
-    end
+    -- local proficiency_layer = display.newLayer():addTo(self:GetView())
+    -- self.proficiency_layer = proficiency_layer
+    -- function proficiency_layer:Reset()
+    --     self.proficiency_listview = nil
+    --     self.proficiency_drop_list = nil
+    --     self:removeAllChildren()
+    -- end
 end
 
 function GameUIOrderHall:InitVillagePart()

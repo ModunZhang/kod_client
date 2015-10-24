@@ -736,10 +736,10 @@ end
 
 
 function Alliance:CheckHelpDefenceMarchEventsHaveTarget(memeberId)
-    local marchEvents = self:GetAttackMarchEvents("helpDefence")
+    local marchEvents = self.marchEvents.attackMarchEvents
     for _,attackEvent in ipairs(marchEvents) do
-        if attackEvent:GetPlayerRole() == attackEvent.MARCH_EVENT_PLAYER_ROLE.SENDER
-            and attackEvent:GetDefenceData().id == memeberId then
+        if attackEvent.marchType == "helpDefence" and attackEvent.attackPlayerData.id == User:Id()
+            and attackEvent.defencePlayerData.id == memeberId then
             return true
         end
     end

@@ -452,7 +452,7 @@ function WidgetMarchEvents:CreateDefenceItem(event, eventType)
     node.progress:setBarChangeRate(cc.p(1,0))
     node.progress:setMidpoint(cc.p(0,0))
     WidgetPushTransparentButton.new(cc.rect(0,0,469,41)):onButtonClicked(function()
-        self:MoveToTargetAction(event)
+        self:MoveToTargetAction(event,eventType)
     end):addTo(node):align(display.LEFT_CENTER, 4, half_height)
     local time_str = ""
     local display_text = ""
@@ -607,18 +607,21 @@ function WidgetMarchEvents:OnRetreatButtonClicked(event, eventType)
     end
 end
 
-function WidgetMarchEvents:MoveToTargetAction(entity)
-    local type_str = entity:GetTypeStr()
-    local location,alliance_id
-    if type_str == 'SHIRNE' or type_str == 'HELPTO' then
-        location = entity:GetDestinationLocationNotString()
-        alliance_id = Alliance_Manager:GetMyAlliance().id
+function WidgetMarchEvents:MoveToTargetAction(event,eventType)
+    dump(event,"event")
+    local location,mapIndex
+    if eventType == 'helpToTroops' then
+        location = event.beHelpedPlayerData.location
+        mapIndex = Alliance_Manager:GetMyAlliance().mapIndex
+    elseif eventType == 'shrineEvents' then
+        location = Alliance_Manager:GetMyAlliance():GetShrinePosition()
+        mapIndex = Alliance_Manager:GetMyAlliance().mapIndex
     else
-        location,alliance_id = entity:GetDestinationLocationNotString()
+        location,mapIndex = event.toAlliance.location, event.toAlliance.mapIndex
     end
     local map_layer = display.getRunningScene():GetSceneLayer()
-    map_layer:TrackCorpsById(nil)
-    local point = map_layer:ConvertLogicPositionToMapPosition(location.x,location.y,alliance_id)
+    -- map_layer:TrackCorpsById(nil)
+    local point = map_layer:RealPosition(mapIndex,location.x,location.y)
     map_layer:GotoMapPositionInMiddle(point.x,point.y)
 end
 
