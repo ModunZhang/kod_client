@@ -846,7 +846,7 @@ local soldiers_special = GameDatas.Soldiers.special
 function User:GetSoldierConfig(soldier_name)
     return  UtilsForSoldier:IsSpecial(soldier_name)
         and soldiers_special[soldier_name]
-        or soldiers_normal[soldier_name.."_"..self.soldierStars[soldier_name]]
+        or soldiers_normal[soldier_name.."_"..self:SoldierStarByName(soldier_name)]
 end
 function User:SoldierStarByName(soldier_name)
     return  UtilsForSoldier:IsSpecial(soldier_name)
