@@ -6,23 +6,23 @@ local AllianceDetailScene = class("AllianceDetailScene", MapScene)
 
 
 function AllianceDetailScene:OnAllianceDataChanged_mapObjects(allianceData, deltaData)
-    self:HandleMapObjects(allianceData, "remove", deltaData("mapObjects.edit"))
+    self:HandleMapObjects(allianceData, "remove", deltaData("mapObjects.remove"))
+    self:HandleMapObjects(allianceData, "add", deltaData("mapObjects.add"))
     self:HandleMapObjects(allianceData, "edit", deltaData("mapObjects.edit"))
-    self:HandleMapObjects(allianceData, "add", deltaData("mapObjects.edit"))
 end
 function AllianceDetailScene:HandleMapObjects(allianceData, op, ok, value)
     if not ok then return end
     if op == "edit" then
         for _,mapObj in pairs(value) do
-            self:GetSceneLayer():RemoveMapObjectByIndex(mapIndex, mapObj, allianceData)
+            self:GetSceneLayer():RefreshMapObjectByIndex(allianceData.mapIndex, mapObj, allianceData)
         end
     elseif op == "add" then
         for _,mapObj in pairs(value) do
-            self:GetSceneLayer():AddMapObjectByIndex(mapIndex, mapObj, allianceData)
+            self:GetSceneLayer():AddMapObjectByIndex(allianceData.mapIndex, mapObj, allianceData)
         end
     elseif op == "remove" then
         for _,mapObj in pairs(value) do
-            self:GetSceneLayer():RemoveMapObjectByIndex(mapIndex, mapObj)
+            self:GetSceneLayer():RemoveMapObjectByIndex(allianceData.mapIndex, mapObj)
         end
     end
 end
@@ -81,8 +81,9 @@ function AllianceDetailScene:HandleVillage(allianceData, ok, value)
     end
 end
 -- other
-function AllianceDetailScene:OnEnterMapIndex(mapData)
+function AllianceDetailScene:OnEnterMapIndex(allianceData, mapData)
     self:CreateMarchEvents(mapData.marchEvents)
+    self:GetSceneLayer():LoadAllianceByIndex(allianceData.mapIndex, allianceData)
 end
 function AllianceDetailScene:OnMapDataChanged(allianceData, mapData, deltaData)
     local ok, value = deltaData("marchEvents.strikeMarchEvents")
@@ -139,7 +140,7 @@ function AllianceDetailScene:OnMapDataChanged(allianceData, mapData, deltaData)
         end
     end
 end
-function AllianceDetailScene:OnAllianceMapChanged(allianceData, deltaData)
+function AllianceDetailScene:OnMapAllianceChanged(allianceData, deltaData)
     if deltaData("mapObjects") then
         self:OnAllianceDataChanged_mapObjects(allianceData, deltaData)
     end
@@ -280,7 +281,7 @@ function AllianceDetailScene:onExit()
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, "marchEvents")
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, "villageEvents")
 end
-function AllianceDetailScene:FetchAllianceDatasByIndex(index, func)
+function AllianceDetailScene:FetchAllianceDatasByIndex(index)
     if self.current_allinace_index and self.current_allinace_index ~= index then
         NetManager:getLeaveMapIndexPromise(self.current_allinace_index)
         self.current_allinace_index = nil
@@ -296,11 +297,7 @@ function AllianceDetailScene:FetchAllianceDatasByIndex(index, func)
             NetManager:getEnterMapIndexPromise(index)
                 :done(function(response)
                     self.current_allinace_index = index
-                    Alliance_Manager:UpdateAllianceBy(index, response.msg.allianceData)
-                    Alliance_Manager:OnEnterMapIndex(response.msg.mapData)
-                    if type(func) == "function" then
-                        func(response.msg)
-                    end
+                    Alliance_Manager:OnEnterMapIndex(index, response.msg)
                     self.amintimer:stopAllActions()
                     self.amintimer:schedule(function()
                         NetManager:getAmInMapIndexPromise(self.current_allinace_index)
@@ -324,9 +321,7 @@ end
 function AllianceDetailScene:GotoAllianceByIndex(index)
     print("GotoAllianceByIndex(index)=",index)
     self:GotoAllianceByXY(self:GetSceneLayer():IndexToLogic(index))
-    self:FetchAllianceDatasByIndex(index, function(data)
-        self:GetSceneLayer():LoadAllianceByIndex(index, data.allianceData)
-    end)
+    self:FetchAllianceDatasByIndex(index)
 end
 function AllianceDetailScene:GotoAllianceByXY(x, y)
     local point = self:GetSceneLayer():ConvertLogicPositionToAlliancePosition(x,y)
@@ -389,9 +384,7 @@ function AllianceDetailScene:UpdateVisibleAllianceBg()
 end
 function AllianceDetailScene:UpdateCurrrentAlliance()
     local index = self:GetSceneLayer():GetMiddleAllianceIndex()
-    self:FetchAllianceDatasByIndex(index, function(data)
-        self:GetSceneLayer():LoadAllianceByIndex(index, data.allianceData)
-    end)
+    self:FetchAllianceDatasByIndex(index)
 end
 function AllianceDetailScene:EnterAllianceBuilding(alliance,mapObj)
     if mapObj.name then

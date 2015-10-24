@@ -442,14 +442,7 @@ function AllianceLayer:AddMapObject(objects_node, mapObj, alliance)
     end
     sprite:addTo(node)
 
-
-    local lx,ly = self:IndexToLogic(alliance.mapIndex)
-    local x,y = self:GetLogicMap():ConvertToMapPosition(
-        lx * ALLIANCE_WIDTH + mapObj.location.x,
-        ly * ALLIANCE_HEIGHT + mapObj.location.y
-    )
-    local info = display.newNode():addTo(self.info_node)
-        :pos(x, y - 50):scale(0.8):zorder(x * y)
+    local info = display.newNode():addTo(self.info_node):scale(0.8)
     local banners = UILib.my_city_banner
     info.banner = display.newSprite(banners[0])
         :addTo(info):align(display.CENTER_TOP)
@@ -482,6 +475,10 @@ function AllianceLayer:RefreshSpriteInfo(sprite, mapObj, alliance)
         info.banner:setTexture(banners[member.helpedByTroopsCount])
         info.level:setString(member.keepLevel)
         info.name:setString(string.format("[%s]%s", alliance.basicInfo.tag, member.name))
+
+        local ax,ay = DataUtils:GetAbsolutePosition(alliance.mapIndex, mapObj.location.x, mapObj.location.y)
+        local x,y = self:GetLogicMap():ConvertToMapPosition(ax, ay)
+        info:pos(x, y - 50):zorder(x * y)
     elseif mapObj.name == "monster" then
         local banners = UILib.enemy_city_banner
         local monster = Alliance.GetAllianceMonsterInfosById(alliance, mapObj.id)
@@ -604,8 +601,9 @@ function AllianceLayer:FreeObjects(obj)
     end
 
     for k,v in pairs(obj.mapObjects) do
-        v:removeFromParent()
+        self:RemoveMapObject(v)
     end
+
     obj.mapObjects = {}
     if obj:getParent() then
         obj:retain()

@@ -68,13 +68,14 @@ function AllianceManager:ResetCurrentMapData()
             attackMarchEvents = {},
             attackMarchReturnEvents = {} ,
         },
-        villageEvents = {}
+        villageEvents = {},
     }
 end
-function AllianceManager:OnEnterMapIndex(currentMapData)
-    self.currentMapData = currentMapData
+function AllianceManager:OnEnterMapIndex(mapIndex, data)
+    self:UpdateAllianceBy(mapIndex, data.allianceData)
+    self.currentMapData = data.mapData
     if not self.handle then return end
-    self.handle.OnEnterMapIndex(self.handle, self.currentMapData)
+    self.handle.OnEnterMapIndex(self.handle, data.allianceData, data.mapData)
 end
 local function removeJsonNull(t)
     for k,v in pairs(t) do
@@ -91,9 +92,9 @@ function AllianceManager:OnMapDataChanged(mapIndex, currentMapData, deltaData)
         removeJsonNull(t)
     end
 end
-function AllianceManager:OnAllianceMapChanged(allianceData, deltaData)
+function AllianceManager:OnMapAllianceChanged(allianceData, deltaData)
     if not self.handle then return end
-    self.handle.OnAllianceMapChanged(self.handle, allianceData, deltaData)
+    self.handle.OnMapAllianceChanged(self.handle, allianceData, deltaData)
 end
 function AllianceManager:SetAllianceHandle(handle)
     self.handle = handle

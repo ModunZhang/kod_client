@@ -570,8 +570,8 @@ local logic_event_map = {
         local allianceData = Alliance_Manager:GetAllianceByCache(response.targetAllianceId)
         if allianceData then
             local edit = decodeInUserDataFromDeltaData(allianceData, response.data)
-            Alliance_Manager:OnAllianceMapChanged(allianceData, edit)
-            LuaUtils:outputTable("OnAllianceMapChanged", edit)
+            Alliance_Manager:OnMapAllianceChanged(allianceData, edit)
+            LuaUtils:outputTable("OnMapAllianceChanged", edit)
         end
     end,
     onMapDataChanged = function(success, response)
