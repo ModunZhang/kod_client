@@ -16,6 +16,9 @@ function AllianceManager:ctor()
     }
     self:ResetCurrentMapData()
 end
+function AllianceManager:GetMyAllianceMapData()
+    return self.my_alliance_mapData
+end
 function AllianceManager:GetVillageEventsByMapId(alliance, mapId)
     for k,v in pairs(alliance.villageEvents) do
         if v.villageData.id == mapId then

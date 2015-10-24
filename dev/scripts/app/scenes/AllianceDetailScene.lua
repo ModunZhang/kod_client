@@ -82,18 +82,7 @@ function AllianceDetailScene:HandleVillage(allianceData, ok, value)
 end
 -- other
 function AllianceDetailScene:OnEnterMapIndex(mapData)
-    for id,event in pairs(mapData.marchEvents.strikeMarchEvents) do
-        self:CreateOrUpdateOrDeleteCorpsByEvent(id, event)
-    end
-    for id,event in pairs(mapData.marchEvents.strikeMarchReturnEvents) do
-        self:CreateOrUpdateOrDeleteCorpsByReturnEvent(id,event)
-    end
-    for id,event in pairs(mapData.marchEvents.attackMarchEvents) do
-        self:CreateOrUpdateOrDeleteCorpsByEvent(id, event)
-    end
-    for id,event in pairs(mapData.marchEvents.attackMarchReturnEvents) do
-        self:CreateOrUpdateOrDeleteCorpsByReturnEvent(id,event)
-    end
+    self:CreateMarchEvents(mapData.marchEvents)
 end
 function AllianceDetailScene:OnMapDataChanged(allianceData, mapData, deltaData)
     local ok, value = deltaData("marchEvents.strikeMarchEvents")
@@ -155,6 +144,42 @@ function AllianceDetailScene:OnAllianceMapChanged(allianceData, deltaData)
         self:OnAllianceDataChanged_mapObjects(allianceData, deltaData)
     end
 end
+
+
+function AllianceDetailScene:CreateMarchEvents(marchEvents)
+    for _,event in pairs(marchEvents.strikeMarchEvents) do
+        if event ~= json.null then
+            self:CreateOrUpdateOrDeleteCorpsByEvent(event.id, event)
+        end
+    end
+    for _,event in pairs(marchEvents.strikeMarchReturnEvents) do
+        if event ~= json.null then
+            self:CreateOrUpdateOrDeleteCorpsByReturnEvent(event.id,event)
+        end
+    end
+    for _,event in pairs(marchEvents.attackMarchEvents) do
+        if event ~= json.null then
+            self:CreateOrUpdateOrDeleteCorpsByEvent(event.id, event)
+        end
+    end
+    for _,event in pairs(marchEvents.attackMarchReturnEvents) do
+        if event ~= json.null then
+            self:CreateOrUpdateOrDeleteCorpsByReturnEvent(event.id,event)
+        end
+    end
+end
+function AllianceDetailScene:RefreshVillageEvents(alliance, villageEvents)
+    for _,event in pairs(villageEvents) do
+        if event ~= json.null then
+            local mapObj = Alliance.FindMapObjectById(alliance, event.villageData.id)
+            if mapObj then
+                self:GetSceneLayer()
+                :RefreshMapObjectByIndex(alliance.mapIndex, mapObj, alliance)
+            end
+        end
+    end
+end
+
 local function getAllyFromEvent(event, is_back)
     local MINE,FRIEND,ENEMY = 1,2,3
     if event.attackPlayerData.id == User:Id() then
@@ -201,6 +226,7 @@ function AllianceDetailScene:CreateOrUpdateOrDeleteCorpsByReturnEvent(id, event)
     end
 end
 
+
 local intInit = GameDatas.AllianceInitData.intInit
 local ALLIANCE_WIDTH, ALLIANCE_HEIGHT = intInit.allianceRegionMapWidth.value, intInit.allianceRegionMapHeight.value
 function AllianceDetailScene:ctor(location)
@@ -238,12 +264,10 @@ function AllianceDetailScene:onEnter()
     alliance:AddListenOnType(self, "villageEvents")
     Alliance_Manager:SetAllianceHandle(self)
 
-
-    for _,events in pairs(alliance.marchEvents) do
-        for _,v in ipairs(events) do
-            self:CreateOrUpdateOrDeleteCorpsByEvent(v.id, v)
-        end
-    end
+    self:CreateMarchEvents(alliance.marchEvents)
+    -- self:RefreshVillageEvents(alliance.villageEvents)
+    self:CreateMarchEvents(Alliance_Manager:GetMyAllianceMapData().marchEvents)
+    self:RefreshVillageEvents(Alliance_Manager:GetMyAllianceMapData().villageEvents)
 end
 function AllianceDetailScene:onExit()
     if self.current_allinace_index then
