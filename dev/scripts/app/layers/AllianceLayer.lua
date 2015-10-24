@@ -384,6 +384,8 @@ function AllianceLayer:RefreshBuildingByIndex(index, building, alliance)
         local sprite = alliance_object.buildings[building.name]
         if sprite then
             sprite.info.level:setString(building.level)
+            local x,y = self:GetBannerPos(index, sprite.x, sprite.y)
+            sprite.info:pos(x, y):zorder(x * y)
         end
     end
 end
@@ -427,6 +429,9 @@ function AllianceLayer:LoadAllianceByIndex(index, alliance)
                 v.info.level:setString(b.level)
                 v.info.name:setString(Localize.alliance_buildings[name])
                 v:setTexture(building_png[name])
+
+                local x,y = self:GetBannerPos(index, v.x, v.y)
+                v.info:show():pos(x, y):zorder(x * y)
             end
         end
     end)
@@ -606,8 +611,11 @@ function AllianceLayer:LoadObjects(index, alliance, func)
             self:FreeObjects(alliance_obj)
             self.alliance_objects[index] = nil
             return self:LoadObjects(index, alliance, func)
-        end
-        if alliance_obj.terrain ~= terrain then
+        elseif not alliance and not alliance_obj.nomanland then
+            self:FreeObjects(alliance_obj)
+            self.alliance_objects[index] = nil
+            return self:LoadObjects(index, alliance, func)
+        elseif alliance_obj.terrain ~= terrain then
             self:ReloadObjectsByTerrain(alliance_obj, terrain)
         end
         if type(func) == "function" then
@@ -629,6 +637,10 @@ function AllianceLayer:FreeObjects(obj)
 
     for k,v in pairs(obj.mapObjects) do
         self:RemoveMapObject(v)
+    end
+
+    for k,v in pairs(obj.buildings) do
+        v.info:hide()
     end
 
     obj.mapObjects = {}

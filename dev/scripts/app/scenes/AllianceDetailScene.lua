@@ -162,6 +162,10 @@ function AllianceDetailScene:OnMapDataChanged(allianceData, mapData, deltaData)
     end
 end
 function AllianceDetailScene:OnMapAllianceChanged(allianceData, deltaData)
+    if deltaData == json.null then
+        self:GetSceneLayer():LoadAllianceByIndex(allianceData.mapIndex, nil)
+        return 
+    end
     if deltaData("members") then
        self:OnAllianceDataChanged_members(allianceData, deltaData) 
     end
