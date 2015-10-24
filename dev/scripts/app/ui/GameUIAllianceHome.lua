@@ -71,11 +71,11 @@ function GameUIAllianceHome:onEnter()
     self:AddMapChangeButton()
     scheduleAt(self, function()
         self:RefreshTop()
+        self:UpdateCoordinate(display.getRunningScene():GetSceneLayer():GetMiddlePosition())
     end)
     self:InitArrow()
     -- 中间按钮
     UIKit:newWidgetUI("WidgetShortcutButtons",self.city):addTo(self)
-    -- self:CreateOperationButton()
     self:AddOrRemoveListener(true)
     -- self:Schedule()
 end
