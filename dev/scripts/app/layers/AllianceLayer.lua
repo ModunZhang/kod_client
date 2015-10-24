@@ -1,6 +1,8 @@
 local Enum = import("..utils.Enum")
+local Localize = import("..utils.Localize")
 local UILib = import("..ui.UILib")
 local Alliance = import("..entity.Alliance")
+local SpriteConfig = import("..sprites.SpriteConfig")
 local WidgetAllianceHelper = import("..widget.WidgetAllianceHelper")
 local NormalMapAnchorBottomLeftReverseY = import("..map.NormalMapAnchorBottomLeftReverseY")
 local MapLayer = import(".MapLayer")
@@ -351,7 +353,7 @@ function AllianceLayer:AddMapObjectByIndex(index, mapObject, alliance)
     local alliance_object = self.alliance_objects[index]
     if alliance_object then
         if not alliance_object.mapObjects[mapObject.id] then
-            local sprite = self:AddMapObject(alliance_object, mapObject, index)
+            local sprite = self:AddMapObject(alliance_object, mapObject, alliance)
             self:RefreshSpriteInfo(sprite, mapObj, alliance)
         end
     end
@@ -394,7 +396,7 @@ function AllianceLayer:LoadAllianceByIndex(index, alliance)
                 local x,y = mapObj.location.x, mapObj.location.y
                 local mapObject = objects_node.mapObjects[mapObj.id]
                 if not mapObject then
-                    mapObject = self:AddMapObject(objects_node, mapObj, index)
+                    mapObject = self:AddMapObject(objects_node, mapObj, allianceData)
                     self:RefreshSpriteInfo(mapObject, mapObj, allianceData)
                 end
             end
@@ -414,31 +416,33 @@ function AllianceLayer:RemoveMapObject(mapObj)
     end
     mapObj:removeFromParent()
 end
-function AllianceLayer:AddMapObject(objects_node, mapObj, index)
+function AllianceLayer:AddMapObject(objects_node, mapObj, alliance)
     local x,y = mapObj.location.x, mapObj.location.y
     local mapObject = objects_node.mapObjects[mapObj.id]
+    local node = display.newNode()
     local sprite
     if mapObj.name == "member" then
         sprite = display.newSprite("my_keep_1.png")
-    elseif mapObj.name == "woodVillage" then
-        sprite = display.newSprite("woodcutter_1.png")
-    elseif mapObj.name == "stoneVillage" then
-        sprite = display.newSprite("quarrier_1.png")
-    elseif mapObj.name == "ironVillage" then
-        sprite = display.newSprite("miner_1.png")
-    elseif mapObj.name == "foodVillage" then
-        sprite = display.newSprite("farmer_1.png")
-    elseif mapObj.name == "coinVillage" then
-        sprite = display.newSprite("dwelling_1.png")
+    elseif mapObj.name == "woodVillage"
+        or mapObj.name == "stoneVillage"
+        or mapObj.name == "ironVillage"
+        or mapObj.name == "foodVillage"
+        or mapObj.name == "coinVillage"
+     then
+        local info = Alliance.GetAllianceVillageInfosById(alliance, mapObj.id)
+        local config = SpriteConfig[mapObj.name]:GetConfigByLevel(info.level)
+        sprite = display.newSprite(config.png):scale(config.scale)
     elseif mapObj.name == "monster" then
-        sprite = UIKit:CreateIdle45Ani("heihua_bubing_2")
+        local info = Alliance.GetAllianceMonsterInfosById(alliance, mapObj.id)
+        sprite = UIKit:CreateMonster(info.name)
     else
         --todo
         assert(false)
     end
+    sprite:addTo(node)
 
 
-    local lx,ly = self:IndexToLogic(index)
+    local lx,ly = self:IndexToLogic(alliance.mapIndex)
     local x,y = self:GetLogicMap():ConvertToMapPosition(
         lx * ALLIANCE_WIDTH + mapObj.location.x,
         ly * ALLIANCE_HEIGHT + mapObj.location.y
@@ -456,27 +460,76 @@ function AllianceLayer:AddMapObject(objects_node, mapObj, index)
         size = 20,
         color = 0xffedae,
     }):addTo(info.banner):align(display.LEFT_CENTER, 60, 32)
-
     
-    sprite.info = info
-    sprite.name = mapObj.name
-    objects_node.mapObjects[mapObj.id] = sprite:addTo(objects_node)
-    self:RefreshMapObjectPosition(sprite, mapObj)
-    return sprite
+
+    node.info = info
+    node.name = mapObj.name
+    objects_node.mapObjects[mapObj.id] = node:addTo(objects_node)
+    self:RefreshMapObjectPosition(node, mapObj)
+    return node
 end
+local flag_map = {
+    [MINE] = {"village_flag_mine.png", "village_icon_mine.png"},
+    [FRIEND] = {"village_flag_friend.png", "village_icon_friend.png"},
+    [ENEMY] = {"village_flag_enemy.png", "village_icon_enemy.png"},
+}
 function AllianceLayer:RefreshSpriteInfo(sprite, mapObj, alliance)
-    local banners = UILib.my_city_banner
+    local info = sprite.info
     if mapObj.name == "member" then
-        for _,v in ipairs(alliance.members) do
-            if mapObj.id == v.mapId then
-                local info = sprite.info
-                info.banner:setTexture(banners[v.helpedByTroopsCount])
-                info.level:setString(v.keepLevel)
-                info.name:setString(string.format("[%s]%s", alliance.basicInfo.tag, v.name))
-                break
+        local banners = UILib.my_city_banner
+        local member = Alliance.GetMemberByMapObjectsId(alliance, mapObj.id)
+        info.banner:setTexture(banners[member.helpedByTroopsCount])
+        info.level:setString(member.keepLevel)
+        info.name:setString(string.format("[%s]%s", alliance.basicInfo.tag, member.name))
+    elseif mapObj.name == "monster" then
+        local banners = UILib.enemy_city_banner
+        local monster = Alliance.GetAllianceMonsterInfosById(alliance, mapObj.id)
+        info.banner:setTexture(banners[0])
+        info.level:setString(monster.level)
+        info.name:setString(Localize.soldier_name[string.split(monster.name, '_')[1]])
+    elseif mapObj.name == "woodVillage"
+        or mapObj.name == "stoneVillage"
+        or mapObj.name == "ironVillage"
+        or mapObj.name == "foodVillage"
+        or mapObj.name == "coinVillage" then
+        local banners = UILib.my_city_banner
+        local village = Alliance.GetAllianceVillageInfosById(alliance, mapObj.id)
+        local event = Alliance_Manager:GetVillageEventsByMapId(alliance, mapObj.id)
+        if event then
+            local ally = ENEMY
+            if UtilsForEvent:IsMyVillageEvent(event) then
+                ally = MINE
+            elseif UtilsForEvent:IsFriendEvent(event) then
+                ally = FRIEND
             end
+            local flag = sprite:getChildByTag(1)
+            if sprite:getChildByTag(1) then
+                local head,circle = unpack(flag_map[ally])
+                flag:setTexture(head)
+                flag:getChildByTag(1):setTexture(circle)
+            else
+                self:CreateVillageFlag(ally)
+                :addTo(sprite,2,1):pos(0, 150):scale(1.5)
+            end
+        elseif not event and sprite:getChildByTag(1) then
+            sprite:getChildByTag(1):removeFromParent()
         end
+        info.banner:setTexture(banners[0])
+        info.level:setString(village.level)
+        info.name:setString(Localize.village_name[mapObj.name])
     end
+end
+function AllianceLayer:CreateVillageFlag(e)
+    local head,circle = unpack(flag_map[e])
+    local flag = display.newSprite(head)
+    flag:setAnchorPoint(cc.p(0.5, 0.62))
+    local p = flag:getAnchorPointInPoints()
+    display.newSprite(circle)
+        :addTo(flag,0,1):pos(p.x, p.y)
+        :runAction(
+            cc.RepeatForever:create(transition.sequence{cc.RotateBy:create(2, -360)})
+        )
+    return flag
 end
 function AllianceLayer:RefreshMapObjectPosition(sprite, mapObject)
     local x,y = mapObject.location.x, mapObject.location.y

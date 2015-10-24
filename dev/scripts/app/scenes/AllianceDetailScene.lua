@@ -6,20 +6,19 @@ local AllianceDetailScene = class("AllianceDetailScene", MapScene)
 
 
 function AllianceDetailScene:OnAllianceDataChanged_mapObjects(allianceData, deltaData)
-    self:HandleMapObjects(allianceData.mapIndex, "remove", deltaData("mapObjects.edit"))
-    self:HandleMapObjects(allianceData.mapIndex, "edit", deltaData("mapObjects.edit"))
-    self:HandleMapObjects(allianceData.mapIndex, "add", deltaData("mapObjects.edit"))
+    self:HandleMapObjects(allianceData, "remove", deltaData("mapObjects.edit"))
+    self:HandleMapObjects(allianceData, "edit", deltaData("mapObjects.edit"))
+    self:HandleMapObjects(allianceData, "add", deltaData("mapObjects.edit"))
 end
-function AllianceDetailScene:HandleMapObjects(mapIndex, op, ok, value)
-    local alliance = Alliance_Manager:GetAllianceByCache(mapIndex)
+function AllianceDetailScene:HandleMapObjects(allianceData, op, ok, value)
     if not ok then return end
     if op == "edit" then
         for _,mapObj in pairs(value) do
-            self:GetSceneLayer():RemoveMapObjectByIndex(mapIndex, mapObj, alliance)
+            self:GetSceneLayer():RemoveMapObjectByIndex(mapIndex, mapObj, allianceData)
         end
     elseif op == "add" then
         for _,mapObj in pairs(value) do
-            self:GetSceneLayer():AddMapObjectByIndex(mapIndex, mapObj, alliance)
+            self:GetSceneLayer():AddMapObjectByIndex(mapIndex, mapObj, allianceData)
         end
     elseif op == "remove" then
         for _,mapObj in pairs(value) do
@@ -35,9 +34,17 @@ function AllianceDetailScene:OnAllianceDataChanged_marchEvents(allianceData, del
     self:HandleEvents("add", false, deltaData("marchEvents.attackMarchEvents.add"))
     self:HandleEvents("edit", false, deltaData("marchEvents.attackMarchEvents.edit"))
     -- 返回
-    self:HandleEvents("remove", false, deltaData("marchEvents.attackMarchReturnEvents.remove"))
-    self:HandleEvents("add", false, deltaData("marchEvents.attackMarchReturnEvents.add"))
-    self:HandleEvents("edit", false, deltaData("marchEvents.attackMarchReturnEvents.edit"))
+    self:HandleEvents("remove", true, deltaData("marchEvents.attackMarchReturnEvents.remove"))
+    self:HandleEvents("add", true, deltaData("marchEvents.attackMarchReturnEvents.add"))
+    self:HandleEvents("edit", true, deltaData("marchEvents.attackMarchReturnEvents.edit"))
+
+    self:HandleEvents("remove", false, deltaData("marchEvents.strikeMarchEvents.remove"))
+    self:HandleEvents("add", false, deltaData("marchEvents.strikeMarchEvents.add"))
+    self:HandleEvents("edit", false, deltaData("marchEvents.strikeMarchEvents.edit"))
+
+    self:HandleEvents("remove", true, deltaData("marchEvents.strikeMarchReturnEvents.remove"))
+    self:HandleEvents("add", true, deltaData("marchEvents.strikeMarchReturnEvents.add"))
+    self:HandleEvents("edit", true, deltaData("marchEvents.strikeMarchReturnEvents.edit"))
 end
 function AllianceDetailScene:HandleEvents(op, isReturn, ok, value)
     if not ok then return end
@@ -55,6 +62,21 @@ function AllianceDetailScene:HandleEvents(op, isReturn, ok, value)
     elseif op == "remove" then
         for _,event in pairs(value) do
             self:GetSceneLayer():DeleteCorpsById(event.id)
+        end
+    end
+end
+
+function AllianceDetailScene:OnAllianceDataChanged_villageEvents(allianceData, deltaData)
+    self:HandleVillage(allianceData, deltaData("villageEvents.add"))
+    self:HandleVillage(allianceData, deltaData("villageEvents.remove"))
+end
+function AllianceDetailScene:HandleVillage(allianceData, ok, value)
+    if not ok then return end
+    for i,v in ipairs(value) do
+        local mapObj = Alliance.FindMapObjectById(allianceData, v.villageData.id)
+        if mapObj then
+            self:GetSceneLayer()
+            :RefreshMapObjectByIndex(allianceData.mapIndex, mapObj, allianceData)
         end
     end
 end
@@ -102,6 +124,14 @@ function AllianceDetailScene:OnMapDataChanged(mapData, deltaData)
     if ok then
         for id,_ in pairs(value) do
             local event = mapData.marchEvents.attackMarchReturnEvents[id]
+            self:CreateOrUpdateOrDeleteCorpsByReturnEvent(id, event)
+        end
+    end
+
+    local ok, value = deltaData("marchEvents.villageEvents")
+    if ok then
+        for id,_ in pairs(value) do
+            local event = mapData.marchEvents.villageEvents[id]
             self:CreateOrUpdateOrDeleteCorpsByReturnEvent(id, event)
         end
     end
@@ -157,7 +187,8 @@ function AllianceDetailScene:CreateOrUpdateOrDeleteCorpsByReturnEvent(id, event)
     end
 end
 
-
+local intInit = GameDatas.AllianceInitData.intInit
+local ALLIANCE_WIDTH, ALLIANCE_HEIGHT = intInit.allianceRegionMapWidth.value, intInit.allianceRegionMapHeight.value
 function AllianceDetailScene:ctor(location)
     AllianceDetailScene.super.ctor(self)
     self.fetchtimer = display.newNode():addTo(self)
@@ -171,6 +202,8 @@ function AllianceDetailScene:ctor(location)
 end
 function AllianceDetailScene:onEnter()
     AllianceDetailScene.super.onEnter(self)
+
+
     local alliance = Alliance_Manager:GetMyAlliance()
     if self.location then
         self:GotoAllianceByIndex(self.location.mapIndex)
@@ -178,12 +211,17 @@ function AllianceDetailScene:onEnter()
             self:GotoPosition(self.location.x,self.location.y)
         end
     else
-        self:GotoAllianceByIndex(alliance.mapIndex)
+        local lx, ly = self:GetSceneLayer():IndexToLogic(alliance.mapIndex)
+        local mapObj = alliance:FindMapObjectById(alliance:GetSelf().mapId)
+        self:GotoPosition(lx * ALLIANCE_WIDTH + mapObj.location.x,
+            ly * ALLIANCE_HEIGHT + mapObj.location.y)
     end
+
     self.home_page = self:CreateHomePage()
     self:GetSceneLayer():ZoomTo(0.82)
     alliance:AddListenOnType(self, "mapObjects")
     alliance:AddListenOnType(self, "marchEvents")
+    alliance:AddListenOnType(self, "villageEvents")
     Alliance_Manager:SetAllianceHandle(self)
 
 
@@ -202,6 +240,7 @@ function AllianceDetailScene:onExit()
     Alliance_Manager:ResetCurrentMapData()
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, "mapObjects")
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, "marchEvents")
+    Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, "villageEvents")
 end
 function AllianceDetailScene:FetchAllianceDatasByIndex(index, func)
     if self.current_allinace_index and self.current_allinace_index ~= index then

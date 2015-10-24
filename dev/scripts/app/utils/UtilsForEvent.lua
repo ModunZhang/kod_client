@@ -88,6 +88,9 @@ function UtilsForEvent:GetVillageEventPrefix(event)
             Localize.village_name[event.villageData.name],
             event.villageData.level,target_pos)
 end
+function UtilsForEvent:IsFriendEvent(event)
+    return event.fromAlliance.id == Alliance_Manager:GetMyAlliance()._id
+end
 function UtilsForEvent:IsMyVillageEvent(event)
     return event.playerData.id == User._id
 end

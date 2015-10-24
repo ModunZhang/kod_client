@@ -1061,6 +1061,97 @@ function UIKit:ButtonAddScaleAction(button)
     return button
 end
 
+
+local soldier_config = {
+    ["swordsman"] = {
+        {"heihua_bubing_2", 4},
+        {"heihua_bubing_2", 4},
+        {"heihua_bubing_3", 4},
+    },
+    ["ranger"] = {
+        {"heihua_gongjianshou_2", 4},
+        {"heihua_gongjianshou_2", 4},
+        {"heihua_gongjianshou_3", 4},
+    },
+    ["lancer"] = {
+        {"heihua_qibing_2", 2},
+        {"heihua_qibing_2", 2},
+        {"heihua_qibing_3", 2},
+    },
+    ["catapult"] = {
+        {"heihua_toushiche_2", 1},
+        {"heihua_toushiche_2", 1},
+        {"heihua_toushiche_3", 1},
+    },
+
+    -----
+    ["sentinel"] = {
+        {"heihua_shaobing_2", 4},
+        {"heihua_shaobing_2", 4},
+        {"heihua_shaobing_3", 4},
+    },
+    ["crossbowman"] = {
+        {"heihua_nugongshou_2", 4},
+        {"heihua_nugongshou_2", 4},
+        {"heihua_nugongshou_3", 4},
+    },
+    ["horseArcher"] = {
+        {"heihua_youqibing_2", 2},
+        {"heihua_youqibing_2", 2},
+        {"heihua_youqibing_3", 2},
+    },
+    ["ballista"] = {
+        {"heihua_nuche_2", 1},
+        {"heihua_nuche_2", 1},
+        {"heihua_nuche_3", 1},
+    },
+
+
+    ["skeletonWarrior"] = {
+        {"kulouyongshi", 4},
+        {"kulouyongshi", 4},
+        {"kulouyongshi", 4},
+    },
+    ["skeletonArcher"] = {
+        {"kulousheshou", 4},
+        {"kulousheshou", 4},
+        {"kulousheshou", 4},
+    },
+    ["deathKnight"] = {
+        {"siwangqishi", 2},
+        {"siwangqishi", 2},
+        {"siwangqishi", 2},
+    },
+    ["meatWagon"] = {
+        {"jiaorouche", 1},
+        {"jiaorouche", 1},
+        {"jiaorouche", 1},
+    },
+}
+local position_map = {
+    [1] = {
+        {x = 0, y = -10}
+    },
+    [2] = {
+        {x = -10, y = -10},
+        {x = 10, y = -30},
+    },
+    [4] = {
+        {x = 0, y = 0},
+        {x = -25, y = -15},
+        {x = 25, y = -15},
+        {x = 0, y = -30},
+    }
+}
+function UIKit:CreateMonster(name)
+    local soldier_name, star = unpack(string.split(name, '_'))
+    local ani,count = unpack(soldier_config[soldier_name][tonumber(star)])
+    local node = display.newNode()
+    for _,v in ipairs(position_map[count]) do
+        UIKit:CreateIdle45Ani(ani):pos(v.x, v.y):addTo(node)
+    end
+    return node
+end
 ---
 local soldier_animap = {
     -- 普通兵种
