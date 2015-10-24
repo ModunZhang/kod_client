@@ -1,21 +1,12 @@
-local Localize = import("..utils.Localize")
 local window = import("..utils.window")
-local WidgetEventTabButtons = import("..widget.WidgetEventTabButtons")
-local UIPageView = import("..ui.UIPageView")
-local UILib = import("..ui.UILib")
 local Alliance = import("..entity.Alliance")
-local DragonManager = import("..entity.DragonManager")
-local WidgetAllianceHelper = import("..widget.WidgetAllianceHelper")
-local WidgetAllianceTop = import("..widget.WidgetAllianceTop")
-local GameUIAllianceContribute = import(".GameUIAllianceContribute")
-local GameUIHelp = import(".GameUIHelp")
-local WidgetChangeMap = import("..widget.WidgetChangeMap")
 local WidgetChat = import("..widget.WidgetChat")
-local WidgetNumberTips = import("..widget.WidgetNumberTips")
+local WidgetChangeMap = import("..widget.WidgetChangeMap")
 local WidgetHomeBottom = import("..widget.WidgetHomeBottom")
 local WidgetPushButton = import("..widget.WidgetPushButton")
-local WidgetAutoOrder = import("..widget.WidgetAutoOrder")
+local WidgetAllianceTop = import("..widget.WidgetAllianceTop")
 local WidgetMarchEvents = import("app.widget.WidgetMarchEvents")
+local WidgetAllianceHelper = import("..widget.WidgetAllianceHelper")
 local GameUIAllianceHome = UIKit:createUIClass('GameUIAllianceHome')
 local buildingName = GameDatas.AllianceInitData.buildingName
 local Alliance_Manager = Alliance_Manager
@@ -75,17 +66,14 @@ function GameUIAllianceHome:onEnter()
     self:InitArrow()
     -- 中间按钮
     UIKit:newWidgetUI("WidgetShortcutButtons",self.city):addTo(self)
-    -- self:CreateOperationButton()
     self:AddOrRemoveListener(true)
-    -- self:Schedule()
+    self:Schedule()
 end
 function GameUIAllianceHome:onExit()
     self:AddOrRemoveListener(false)
     GameUIAllianceHome.super.onExit(self)
 end
 function GameUIAllianceHome:AddOrRemoveListener(isAdd)
-    local city = self.city
-    local User = self.city:GetUser()
     local alliance = self.alliance
     if isAdd then
         alliance:AddListenOnType(self, "basicInfo")
@@ -129,33 +117,28 @@ function GameUIAllianceHome:OnAllianceDataChanged_basicInfo(alliance,deltaData)
 end
 function GameUIAllianceHome:Schedule()
     local alliance = self.alliance
-    local myself = alliance:GetSelf()
-    local screen_rect = self.screen_rect
-    display.newNode():addTo(self):schedule(function()
+    -- display.newNode():addTo(self):schedule(function()
+    --     if alliance:IsDefault() then return end
+    --     local lx,ly,view = self.multialliancelayer:GetAllianceCoordWithPoint(display.cx, display.cy)
+    --     self:UpdateCoordinate(lx, ly, view)
+    -- end, 0.5)
+    self:scheduleAt(function()
         if alliance:IsDefault() then return end
-        local lx,ly,view = self.multialliancelayer:GetAllianceCoordWithPoint(display.cx, display.cy)
-        self:UpdateCoordinate(lx, ly, view)
-    end, 0.5)
-    display.newNode():addTo(self):schedule(function()
-        if alliance:IsDefault() then return end
-        local lx,ly,view = self.multialliancelayer:GetAllianceCoordWithPoint(display.cx, display.cy)
-        local layer = view:GetLayer()
-        local x,y = Alliance:GetMidLogicPositionWithMapObj(alliance:FindMapObjectById(myself:MapId()))
-        self:UpdateMyCityArrows(screen_rect, alliance, layer, x,y)
-    end, 0)
-    display.newNode():addTo(self):schedule(function()
-        if alliance:IsDefault() then return end
-        local lx,ly,view = self.multialliancelayer:GetAllianceCoordWithPoint(display.cx, display.cy)
-        local layer = view:GetLayer()
-        -- local x,y = alliance:FindMapObjectById(myself:MapId()):GetMidLogicPosition()
-        -- self:UpdateMyAllianceBuildingArrows(screen_rect, alliance, layer)
-        if not Alliance_Manager:GetMyAlliance():IsDefault() then
-            self:UpdateFriendArrows(screen_rect, Alliance_Manager:GetMyAlliance(), layer, lx, ly, myself)
-        end
-        if Alliance_Manager:HaveEnemyAlliance() then
-            self:UpdateEnemyArrows(screen_rect, Alliance_Manager:GetEnemyAlliance(), layer, lx, ly)
-        end
-    end, 0.05)
+        self:UpdateMyCityArrows(alliance)
+    end, 0.01)
+    -- display.newNode():addTo(self):schedule(function()
+    --     if alliance:IsDefault() then return end
+    --     local lx,ly,view = self.multialliancelayer:GetAllianceCoordWithPoint(display.cx, display.cy)
+    --     local layer = view:GetLayer()
+    --     -- local x,y = alliance:FindMapObjectById(myself:MapId()):GetMidLogicPosition()
+    --     -- self:UpdateMyAllianceBuildingArrows(screen_rect, alliance, layer)
+    --     if not Alliance_Manager:GetMyAlliance():IsDefault() then
+    --         self:UpdateFriendArrows(screen_rect, Alliance_Manager:GetMyAlliance(), layer, lx, ly, myself)
+    --     end
+    --     if Alliance_Manager:HaveEnemyAlliance() then
+    --         self:UpdateEnemyArrows(screen_rect, Alliance_Manager:GetEnemyAlliance(), layer, lx, ly)
+    --     end
+    -- end, 0.05)
 end
 
 function GameUIAllianceHome:InitArrow()
@@ -170,12 +153,12 @@ function GameUIAllianceHome:InitArrow()
     --         :addTo(self, -2):align(display.TOP_CENTER):hide()
     -- end
     -- self.allince_arrow_index = 1
-    -- friends
-    self.friends_arrows = {}
-    self.friends_arrow_index = 1
-    -- enemys
-    self.enemy_arrows = {}
-    self.enemy_arrow_index = 1
+    -- -- friends
+    -- self.friends_arrows = {}
+    -- self.friends_arrow_index = 1
+    -- -- enemys
+    -- self.enemy_arrows = {}
+    -- self.enemy_arrow_index = 1
 
     -- my city
     self.arrow = cc.ui.UIPushButton.new({normal = "location_arrow_up.png",
@@ -183,22 +166,6 @@ function GameUIAllianceHome:InitArrow()
         :addTo(self, -1):align(display.TOP_CENTER):hide()
         :onButtonClicked(function()
             self:ReturnMyCity()
-            local map = {
-                woodVillage = 0,
-                stoneVillage= 0,
-                ironVillage = 0,
-                foodVillage = 0,
-                coinVillage = 0,
-            }
-            self.alliance:IteratorAllObjects(function(_, entity)
-
-                    if Alliance:GetMapObjectType(entity) == "village" then
-                        map[entity.name] = map[entity.name] + 1
-                    end
-            end)
-            for k,v in pairs(map) do
-                print(Localize.village_name[k], v)
-            end
         end)
     self.arrow_label = cc.ui.UILabel.new({
         size = 20,
@@ -207,11 +174,11 @@ function GameUIAllianceHome:InitArrow()
     }):addTo(self.arrow):rotation(90):align(display.LEFT_CENTER, 0, -40)
 end
 function GameUIAllianceHome:ReturnMyCity()
-    local scene = display.getRunningScene()
-    local alliance = scene:GetAlliance()
-    local mapObject = alliance:FindMapObjectById(alliance:GetSelf():MapId())
+    local alliance = self.alliance
+    local mapObject = alliance:FindMapObjectById(alliance:GetSelf().mapId)
     local location = mapObject.location
-    scene:GotoLogicPosition(location.x, location.y, alliance.id)
+    local x,y = DataUtils:GetAbsolutePosition(alliance.mapIndex, location.x, location.y)
+    display.getRunningScene():GotoPosition(x,y)
 end
 
 function GameUIAllianceHome:TopBg()
@@ -564,9 +531,14 @@ function GameUIAllianceHome:UpdateCoordinate(logic_x, logic_y, alliance_view)
     self.page_top:SetCoordinateTitle(is_mine)
     self.page_top:SetCoordinate(coordinate_str)
 end
-function GameUIAllianceHome:UpdateMyCityArrows(screen_rect, alliance, layer, x, y)
-    local map_point = layer:ConvertLogicPositionToMapPosition(x, y, alliance.id)
-    local world_point = layer:convertToWorldSpace(map_point)
+function GameUIAllianceHome:UpdateMyCityArrows(alliance)
+    local screen_rect = self.screen_rect
+    local member = alliance:GetSelf()
+    local mapObj = alliance:FindMapObjectById(member.mapId)
+    local x,y = DataUtils:GetAbsolutePosition(alliance.mapIndex, mapObj.location.x, mapObj.location.y)
+    local sceneLayer = display.getRunningScene():GetSceneLayer()
+    local map_point = sceneLayer:ConvertLogicPositionToMapPosition(x,y)
+    local world_point = sceneLayer:convertToWorldSpace(map_point)
     if not rectContainsPoint(screen_rect, world_point) then
         local p,degree = self:GetIntersectPoint(screen_rect, MID_POINT, world_point)
         if p and degree then

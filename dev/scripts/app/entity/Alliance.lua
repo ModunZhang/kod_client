@@ -751,7 +751,6 @@ function Alliance:GetSelf()
 end
 
 function Alliance:FindVillageEventByVillageId(village_id)
-    dump(self.villageEvents,"self.villageEvents")
     for _,v in pairs(self.villageEvents) do
         if v.villageData.id == village_id then
             return v

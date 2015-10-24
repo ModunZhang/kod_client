@@ -23,6 +23,25 @@ local round = function(v)
     return floor(v + 0.5)
 end
 
+--[[
+坐标换算
+]]
+local MAP_LEGNTH_WIDTH = 41
+local MAP_LEGNTH_HEIGHT = 41
+local intInit = GameDatas.AllianceInitData.intInit
+local ALLIANCE_WIDTH, ALLIANCE_HEIGHT = intInit.allianceRegionMapWidth.value, intInit.allianceRegionMapHeight.value
+function DataUtils:GetAbsolutePosition(mapIndex, x, y)
+    local lx, ly = mapIndex % MAP_LEGNTH_WIDTH, math.floor(mapIndex / MAP_LEGNTH_WIDTH)
+    return lx * ALLIANCE_WIDTH + x, ly * ALLIANCE_HEIGHT + y
+end
+function DataUtils:GetAlliancePosition(x, y)
+    local mapIndex = math.floor(x / ALLIANCE_WIDTH) + math.floor(y / ALLIANCE_HEIGHT) * MAP_LEGNTH_WIDTH
+    return mapIndex, x % ALLIANCE_WIDTH, y % ALLIANCE_HEIGHT
+end
+--[[
+end
+]]
+
 
 --[[
   获取建筑升级时,需要的资源和道具
