@@ -442,6 +442,7 @@ function AllianceLayer:RemoveMapObject(mapObj)
     end
     mapObj:removeFromParent()
 end
+local SPRITE_TAG = 112
 function AllianceLayer:AddMapObject(objects_node, mapObj, alliance)
     local x,y = mapObj.location.x, mapObj.location.y
     local mapObject = objects_node.mapObjects[mapObj.id]
@@ -465,7 +466,7 @@ function AllianceLayer:AddMapObject(objects_node, mapObj, alliance)
         --todo
         assert(false)
     end
-    sprite:addTo(node)
+    sprite:addTo(node, 0, SPRITE_TAG)
     node.info = self:CreateInfoBanner()
     node.name = mapObj.name
     objects_node.mapObjects[mapObj.id] = node:addTo(objects_node)
@@ -479,9 +480,14 @@ local flag_map = {
 }
 function AllianceLayer:RefreshSpriteInfo(sprite, mapObj, alliance)
     local info = sprite.info
-    local banners = User.allianceId == alliance._id and UILib.my_city_banner or UILib.enemy_city_banner
+    local isenemy = User.allianceId ~= alliance._id
+    local banners = isenemy and UILib.enemy_city_banner or UILib.my_city_banner
     if mapObj.name == "member" then
         local member = Alliance.GetMemberByMapObjectsId(alliance, mapObj.id)
+        local config = SpriteConfig[isenemy and "other_keep" or "my_keep"]
+                        :GetConfigByLevel(member.keepLevel)
+        sprite:getChildByTag(SPRITE_TAG):setTexture(config.png)
+
         info.banner:setTexture(banners[member.helpedByTroopsCount])
         info.level:setString(member.keepLevel)
         info.name:setString(string.format("[%s]%s", alliance.basicInfo.tag, member.name))
