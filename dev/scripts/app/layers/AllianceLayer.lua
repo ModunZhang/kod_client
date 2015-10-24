@@ -393,6 +393,7 @@ function AllianceLayer:LoadAllianceByIndex(index, alliance)
                 map_obj_id[v.id] = true
             end
             for _,mapObj in pairs(allianceData.mapObjects) do
+                print(mapObj.name)
                 local x,y = mapObj.location.x, mapObj.location.y
                 local mapObject = objects_node.mapObjects[mapObj.id]
                 if not mapObject then
@@ -580,7 +581,7 @@ function AllianceLayer:LoadObjects(index, alliance, func)
         if alliance and (alliance_obj.nomanland or alliance_obj.style ~= style) then
             self:FreeObjects(alliance_obj)
             self.alliance_objects[index] = nil
-            return self:LoadObjects(index, alliance)
+            return self:LoadObjects(index, alliance, func)
         end
         if alliance_obj.terrain ~= terrain then
             self:ReloadObjectsByTerrain(alliance_obj, terrain)

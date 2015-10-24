@@ -267,7 +267,7 @@ function AllianceDetailScene:onEnter()
     self:CreateMarchEvents(alliance.marchEvents)
     -- self:RefreshVillageEvents(alliance.villageEvents)
     self:CreateMarchEvents(Alliance_Manager:GetMyAllianceMapData().marchEvents)
-    self:RefreshVillageEvents(Alliance_Manager:GetMyAllianceMapData().villageEvents)
+    self:RefreshVillageEvents(alliance, Alliance_Manager:GetMyAllianceMapData().villageEvents)
 end
 function AllianceDetailScene:onExit()
     if self.current_allinace_index then
