@@ -29,14 +29,20 @@ end
 
 function UtilsForEvent:GetMarchEventPrefix(event, eventType)
     if eventType == "shrineEvents" then
-        local target_str = Localize.shrine_desc[event.stageName][1]
         local location = event.playerTroops[1].location
-        local target_pos = string.format("%s,%s", location.x, location.y)
+        local x,y = DataUtils:GetAbsolutePosition(
+                Alliance_Manager:GetMyAlliance().mapIndex, 
+                location.x, 
+                location.y
+            )
+        local target_pos = string.format("%s,%s", x,y)
+        local target_str = Localize.shrine_desc[event.stageName][1]
         return string.format(_("正在参加圣地战 %s(%s)"), target_str, target_pos)
     end
-    local target_pos = string.format("%s,%s", 
-            event.toAlliance.location.x, 
-            event.toAlliance.location.y)
+    local x,y = DataUtils:GetAbsolutePosition(event.toAlliance.mapIndex, 
+                event.toAlliance.location.x, 
+                event.toAlliance.location.y)
+    local target_pos = string.format("%s,%s", x, y)
     if event.marchType == "village" then
         local target_str = string.format("%sLv%s", 
             Localize.village_name[event.defenceVillageData.name], 
@@ -65,9 +71,10 @@ function UtilsForEvent:GetMarchEventPrefix(event, eventType)
     end
 end
 function UtilsForEvent:GetMarchReturnEventPrefix(event)
-    local target_pos = string.format("%s,%s", 
-        event.toAlliance.location.x, 
-        event.toAlliance.location.y)
+    local x,y = DataUtils:GetAbsolutePosition(event.toAlliance.mapIndex, 
+                event.toAlliance.location.x, 
+                event.toAlliance.location.y)
+    local target_pos = string.format("%s,%s", x, y)
     return string.format(_("返回中 (%s)"), target_pos)
 end
 
@@ -81,9 +88,10 @@ function UtilsForEvent:GetCollectPercent(event)
 end
 
 function UtilsForEvent:GetVillageEventPrefix(event)
-    local target_pos = string.format("%s,%s", 
-            event.toAlliance.location.x, 
-            event.toAlliance.location.y)
+    local x,y = DataUtils:GetAbsolutePosition(event.toAlliance.mapIndex, 
+                event.toAlliance.location.x, 
+                event.toAlliance.location.y)
+    local target_pos = string.format("%s,%s", x, y)
     return string.format(_("正在采集%sLv%s (%s)"), 
             Localize.village_name[event.villageData.name],
             event.villageData.level,target_pos)
