@@ -75,7 +75,7 @@ function AllianceManager:OnEnterMapIndex(mapIndex, data)
     self:UpdateAllianceBy(mapIndex, data.allianceData)
     self.currentMapData = data.mapData
     if not self.handle then return end
-    self.handle.OnEnterMapIndex(self.handle, data.allianceData, data.mapData)
+    self.handle.OnEnterMapIndex(self.handle, mapIndex, data)
 end
 local function removeJsonNull(t)
     for k,v in pairs(t) do

@@ -93,9 +93,9 @@ function AllianceDetailScene:HandleVillage(allianceData, ok, value)
     end
 end
 -- other
-function AllianceDetailScene:OnEnterMapIndex(allianceData, mapData)
-    self:CreateMarchEvents(mapData.marchEvents)
-    self:GetSceneLayer():LoadAllianceByIndex(allianceData.mapIndex, allianceData)
+function AllianceDetailScene:OnEnterMapIndex(mapIndex, data)
+    self:CreateMarchEvents(data.mapData.marchEvents)
+    self:GetSceneLayer():LoadAllianceByIndex(mapIndex, data.allianceData)
 end
 function AllianceDetailScene:OnMapDataChanged(allianceData, mapData, deltaData)
     local ok, value = deltaData("marchEvents.strikeMarchEvents")
@@ -158,6 +158,12 @@ function AllianceDetailScene:OnMapAllianceChanged(allianceData, deltaData)
     end
     if deltaData("members") then
        self:OnAllianceDataChanged_members(allianceData, deltaData) 
+    end
+    if deltaData("marchEvents") then
+       self:OnAllianceDataChanged_marchEvents(allianceData, deltaData) 
+    end
+    if deltaData("villageEvents") then
+       self:OnAllianceDataChanged_villageEvents(allianceData, deltaData) 
     end
 end
 
