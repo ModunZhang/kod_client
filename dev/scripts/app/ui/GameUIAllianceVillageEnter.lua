@@ -111,9 +111,9 @@ function GameUIAllianceVillageEnter:GetBuildingInfo()
     }
     local labels = {}
     local village_id = self:GetVillageInfo().id
-    local villageEvent = self:GetFocusAlliance():FindVillageEventByVillageId(village_id)
+    local villageEvent = self:GetMyAlliance():FindVillageEventByVillageId(village_id)
     dump(villageEvent,"villageEvent")
-    if villageEvent then --我方未占领
+    if villageEvent then --我方占领
         local startTime = villageEvent.startTime/1000.0
         local finishTime = villageEvent.finishTime/1000.0
         local collectTime = app.timer:GetServerTime() - startTime
