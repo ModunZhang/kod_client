@@ -90,7 +90,7 @@ function WidgetHomeBottom:OnBottomButtonClicked(event)
     if not tag then return end
     if tag == 4 then -- tag 4 = alliance button
         local alliance = Alliance_Manager:GetMyAlliance()
-        if alliance:IsDefault() then
+        if alliance:IsDefault() and not User.countInfo.firstJoinAllianceRewardGeted then
             UIKit:newGameUI("GameUIAllianceJoinTips"):AddToCurrentScene(true)
         else
             UIKit:newGameUI('GameUIAlliance'):AddToCurrentScene(true)
