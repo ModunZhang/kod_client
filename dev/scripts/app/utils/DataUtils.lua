@@ -1237,16 +1237,11 @@ function DataUtils:getMapRoundByMapIndex( mapIndex )
         end
         table.insert(locations, location)
     end
-
     local theRound = nil
     for round,location in ipairs(locations) do
-        if theRound then
-            break
-        end
         for i,v in ipairs(location) do
             if v.from.x <= locationX and v.from.y <= locationY and v.to.x >= locationX and v.to.y >= locationY then
-                theRound = round
-                break
+                theRound = round - 1 
             end
         end
     end
