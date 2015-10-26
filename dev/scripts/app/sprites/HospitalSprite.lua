@@ -10,6 +10,7 @@ end
 local WOUNDED_TAG = 114
 function HospitalSprite:ctor(city_layer, entity, city)
     HospitalSprite.super.ctor(self, city_layer, entity, city)
+    entity:BelongCity():GetUser():AddListenOnType(self, "treatSoldierEvents")
     scheduleAt(self, function() self:CheckEvent() end)
 end
 function HospitalSprite:RefreshSprite()

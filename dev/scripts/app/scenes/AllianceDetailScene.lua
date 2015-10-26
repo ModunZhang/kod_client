@@ -418,18 +418,19 @@ function AllianceDetailScene:OnTouchClicked(pre_x, pre_y, x, y)
         local alliance = Alliance_Manager:GetAllianceByCache(mapObj.index)
         if alliance then
             print(mapObj.index, mapObj.x, mapObj.y, mapObj.name)
-            app:lockInput(true)
-            self.util_node:performWithDelay(function()app:lockInput(false)end,0.5)
             app:GetAudioManager():PlayeEffectSoundWithKey("HOME_PAGE")
-
             local type_ = Alliance:GetMapObjectType(mapObj)
             if type_ == "member"
             or type_ == "village"
             or type_ == "building" then
+                app:lockInput(true)
+                self.util_node:performWithDelay(function()app:lockInput(false)end,0.5)
                 Sprite:PromiseOfFlash(mapObj.obj):next(function()
                     self:OpenUI(alliance, mapObj)
                 end)
             elseif type_ == "empty" then
+                app:lockInput(true)
+                self.util_node:performWithDelay(function()app:lockInput(false)end,0.5)
                 self:GetSceneLayer()
                 :PromiseOfFlashEmptyGround(mapObj.index, mapObj.x, mapObj.y)
                 :next(function()

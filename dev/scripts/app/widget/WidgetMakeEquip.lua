@@ -489,7 +489,10 @@ function WidgetMakeEquip:IsAbleToMakeEqui(isFinishNow)
                                 UIKit:showMessageDialog(_("提示"),_("金龙币不足"),function()  UIKit:newGameUI("GameUIStore"):AddToCurrentScene(true)  end)
                                 return false
                             end
-                            NetManager:getMakeDragonEquipmentPromise(self.equip_type)
+                            local equip_type = self.equip_type
+                            NetManager:getMakeDragonEquipmentPromise(self.equip_type):done(function()
+                                GameGlobalUI:showTips(_("提示"), EQUIP_MAKE[equip_type])
+                            end)
                             self:Close()
                         end,
                         btn_images = {normal = "green_btn_up_148x58.png",pressed = "green_btn_down_148x58.png"},

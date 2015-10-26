@@ -843,7 +843,13 @@ function NetManager:getUpgradeHouseByLocationPromise(location, sub_location)
     return get_upgradeHouse_promise(location, sub_location, false)
 end
 function NetManager:getInstantUpgradeHouseByLocationPromise(location, sub_location)
-    return get_upgradeHouse_promise(location, sub_location, true)
+    return get_upgradeHouse_promise(location, sub_location, true):done(function()
+        local house = User:GetHouseByLocation(location, sub_location)
+        GameGlobalUI:showTips(_("提示"),
+            string.format(_("建造%s至%d级完成"),
+                Localize.building_name[house.type], house.level))
+        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
+    end)
 end
 -- 升级功能建筑
 local function get_upgradeBuilding_promise(location, finish_now)
@@ -856,21 +862,39 @@ function NetManager:getUpgradeBuildingByLocationPromise(location)
     return get_upgradeBuilding_promise(location, false)
 end
 function NetManager:getInstantUpgradeBuildingByLocationPromise(location)
-    return get_upgradeBuilding_promise(location, true)
+    return get_upgradeBuilding_promise(location, true):done(function()
+        local building = User:GetBuilingByLocation(location)
+        GameGlobalUI:showTips(_("提示"),
+            string.format(_("建造%s至%d级完成"),
+                Localize.building_name[building.type], building.level))
+        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
+    end)
 end
 -- 升级防御塔
 function NetManager:getUpgradeTowerPromise()
     return NetManager:getUpgradeBuildingByLocationPromise(22)
 end
 function NetManager:getInstantUpgradeTowerPromise()
-    return NetManager:getInstantUpgradeBuildingByLocationPromise(22)
+    return NetManager:getInstantUpgradeBuildingByLocationPromise(22):done(function()
+        local building = User:GetBuilingByLocation(22)
+        GameGlobalUI:showTips(_("提示"),
+            string.format(_("建造%s至%d级完成"),
+                Localize.building_name[building.type], building.level))
+        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
+    end)
 end
 -- 升级城门
 function NetManager:getUpgradeWallByLocationPromise()
     return NetManager:getUpgradeBuildingByLocationPromise(21)
 end
 function NetManager:getInstantUpgradeWallByLocationPromise()
-    return NetManager:getInstantUpgradeBuildingByLocationPromise(21)
+    return NetManager:getInstantUpgradeBuildingByLocationPromise(21):done(function()
+        local building = User:GetBuilingByLocation(21)
+        GameGlobalUI:showTips(_("提示"),
+            string.format(_("建造%s至%d级完成"),
+                Localize.building_name[building.type], building.level))
+        app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
+    end)
 end
 --转换生产建筑类型
 function NetManager:getSwitchBuildingPromise(buildingLocation,newBuildingName)

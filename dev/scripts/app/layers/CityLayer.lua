@@ -233,29 +233,40 @@ function CityLayer:OnUserDataChanged_buildingEvents(userData, deltaData)
     local ok, value = deltaData("buildingEvents.remove")
     if ok then
         for i,v in ipairs(value) do
-            local building = self:GetBuilding(v.location)
-            if building then
-                building:UpgradeFinished()
+            for i,v in ipairs(self:GetBuildings(v.location)) do
+                v:UpgradeFinished()
             end
         end
     end
     local ok, value = deltaData("buildingEvents.add")
     if ok then
         for i,v in ipairs(value) do
-            local building = self:GetBuilding(v.location)
-            if building then
-                building:UpgradeBegin()
+            for i,v in ipairs(self:GetBuildings(v.location)) do
+                v:UpgradeBegin()
             end
         end
     end
 end
-function CityLayer:GetBuilding(buildingLocation)
+function CityLayer:GetBuildings(buildingLocation)
+    local t = {}
     for k,v in pairs(self.buildings) do
-        local l1 = v:GetCurrentLocation()
-        if l1 == buildingLocation then
-            return v
+        if v:GetCurrentLocation() == buildingLocation then
+            table.insert(t, v)
         end
     end
+    for k,v in pairs(self.towers) do
+        if v:GetCurrentLocation() == buildingLocation then
+            table.insert(t, v)
+        end
+    end
+    for k,v in pairs(self.walls) do
+        print(v:GetEntity():IsGate())
+        if v:GetEntity():IsGate() and 
+            v:GetCurrentLocation() == buildingLocation then
+            table.insert(t, v)
+        end
+    end
+    return t
 end
 function CityLayer:OnUserDataChanged_soldiers(userData, deltaData)
     if self:IsBarracksMoving() then return end

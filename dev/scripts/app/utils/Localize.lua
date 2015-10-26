@@ -1133,7 +1133,8 @@ local ALLIANCE_BUILDINGS = {
     watchTower = _("巨石阵"),
     shrine = _("圣地"),
     orderHall = _("秩序大厅"),
-    palace = _("联盟宫殿")
+    palace = _("联盟宫殿"),
+    bloodSpring = _("血泉"),
 }
 
 local IAP_PACKAGE_NAME = {}

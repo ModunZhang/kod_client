@@ -513,6 +513,11 @@ local DECORATOR_IMAGE = {
         decorate_tree_2 =  "tree_2_grassLand.png",
         decorate_tree_3 =  "tree_3_grassLand.png",
         decorate_tree_4 =  "tree_4_grassLand.png",
+        decorate_tree_5 =  "tree_4_grassLand.png",
+        decorate_tree_6 =  "tree_4_grassLand.png",
+        decorate_tree_7 =  "tree_4_grassLand.png",
+        decorate_tree_8 =  "tree_4_grassLand.png",
+        decorate_tree_9 =  "tree_4_grassLand.png",
     },
     iceField = {
         decorate_lake_1 = "lake_1_iceField_new.png",
@@ -523,6 +528,11 @@ local DECORATOR_IMAGE = {
         decorate_tree_2 =  "tree_2_iceField.png",
         decorate_tree_3 =  "tree_3_iceField.png",
         decorate_tree_4 =  "tree_4_iceField.png",
+        decorate_tree_5 =  "tree_4_iceField.png",
+        decorate_tree_6 =  "tree_4_iceField.png",
+        decorate_tree_7 =  "tree_4_iceField.png",
+        decorate_tree_8 =  "tree_4_iceField.png",
+        decorate_tree_9 =  "tree_4_iceField.png",
     },
     desert = {
         decorate_lake_1 = "lake_1_desert_new.png",
@@ -533,6 +543,11 @@ local DECORATOR_IMAGE = {
         decorate_tree_2 =  "tree_2_desert.png",
         decorate_tree_3 =  "tree_3_desert.png",
         decorate_tree_4 =  "tree_4_desert.png",
+        decorate_tree_5 =  "tree_4_desert.png",
+        decorate_tree_6 =  "tree_4_desert.png",
+        decorate_tree_7 =  "tree_4_desert.png",
+        decorate_tree_8 =  "tree_4_desert.png",
+        decorate_tree_9 =  "tree_4_desert.png",
     },
 }
 local DRAGON_HEAD = {
@@ -743,11 +758,13 @@ local ALLIANCE_BUILDING = {
     shop = "alliance_shop.png",
     orderHall = "alliance_orderHall.png",
     watchTower = "alliance_shrine.png",
+    bloodSpring = "alliance_bloodSpring.png",
 }
 local OTHER_ALLIANCE_BUILDING = setmetatable({
     palace = "other_palace.png",
     shop = "other_shop.png",
     orderHall = "other_orderHall.png",
+    bloodSpring = "alliance_bloodSpring.png",
 }, {__index = ALLIANCE_BUILDING})
 
 local DAILY_TASK_ICON = {

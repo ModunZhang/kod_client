@@ -434,12 +434,14 @@ function AllianceLayer:LoadAllianceByIndex(index, alliance)
                                 or UILib.enemy_city_banner[0]
             for name,v in pairs(objects_node.buildings) do
                 local x,y = self:GetBannerPos(index, v.x, v.y)
-                local b = Alliance.FindAllianceBuildingInfoByName(allianceData, name)
-                v.info.banner:setTexture(banner)
-                v.info.level:setString(b.level)
-                v.info.name:setString(Localize.alliance_buildings[name])
                 v.info:show():pos(x, y):zorder(x * y)
+                v.info.banner:setTexture(banner)
+                v.info.name:setString(Localize.alliance_buildings[name])
                 v:getChildByTag(SPRITE_TAG):setTexture(building_png[name])
+                if name ~= "bloodSpring" then
+                    local b = Alliance.FindAllianceBuildingInfoByName(allianceData, name)
+                    v.info.level:setString(b.level)
+                end
             end
         end
     end)
@@ -585,6 +587,7 @@ function AllianceLayer:CreateInfoBanner(banners)
     info.banner = display.newSprite(banners[0])
         :addTo(info):align(display.CENTER_TOP)
     info.level = UIKit:ttfLabel({
+        text = "1",
         size = 22,
         color = 0xffedae,
     }):addTo(info.banner):align(display.CENTER, 30, 30)
@@ -758,7 +761,11 @@ function AllianceLayer:CreateAllianceObjects(obj_node, terrain, style, index, al
             local node = display.newNode()
                 :addTo(obj_node, getZorderByXY(x, y))
                 :pos(self:GetInnerMapPosition(x,y))
-            createBuildingSprite(building_png):addTo(node, 0, SPRITE_TAG)
+            local sprite = createBuildingSprite(building_png)
+            :addTo(node, 0, SPRITE_TAG)
+            if name == "bloodSpring" then
+                sprite:scale(0.7)
+            end
             node.x = v.x
             node.y = v.y
             node.name = name
@@ -766,6 +773,8 @@ function AllianceLayer:CreateAllianceObjects(obj_node, terrain, style, index, al
             node.info = self:CreateInfoBanner():pos(x, y):zorder(x * y)
             buildings[name] = node
             self:AddFuncToBuilding(node)
+        else
+            assert(false, name)
         end
     end
     obj_node.decorators = decorators

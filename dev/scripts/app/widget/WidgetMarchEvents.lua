@@ -589,6 +589,7 @@ function WidgetMarchEvents:OnRetreatButtonClicked(event, eventType)
     if event.marchType == "village"
     or event.marchType == "helpDefence"
     or event.marchType == "city"
+    or event.marchType == "monster"
     then
         local widgetUseItems = WidgetUseItems.new():Create({
             item_name = "retreatTroop",
