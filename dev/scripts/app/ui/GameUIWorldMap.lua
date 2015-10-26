@@ -72,7 +72,7 @@ function GameUIWorldMap:OneTouch(pre_x, pre_y, x, y, touch_type)
         self.touch_judgment:OnTouchCancelled(pre_x, pre_y, x, y)
     end
 end
-function MapScene:OnTouchCancelled(pre_x, pre_y, x, y)
+function GameUIWorldMap:OnTouchCancelled(pre_x, pre_y, x, y)
     print("OnTouchCancelled")
 end
 function GameUIWorldMap:OnTwoTouch(x1, y1, x2, y2, event_type)
