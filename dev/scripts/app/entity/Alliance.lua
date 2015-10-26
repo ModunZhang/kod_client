@@ -633,6 +633,14 @@ local before_map = {
         end
     end,
     marchEvents = function(allianceData, deltaData)
+        local ok, value = deltaData("marchEvents.attackMarchEvents.remove")
+        if ok then
+            for i,v in ipairs(value) do
+                if v.attackPlayerData.id == User._id then
+                    app:GetAudioManager():PlayeEffectSoundWithKey("SPLASH_BUTTON_START")
+                end
+            end
+        end
         local ok, value = deltaData("marchEvents.attackMarchReturnEvents.remove")
         if ok then
             for i,v in ipairs(value) do
