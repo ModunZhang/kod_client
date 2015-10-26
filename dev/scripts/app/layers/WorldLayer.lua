@@ -32,7 +32,7 @@ function WorldLayer:onEnter()
     self.allainceSprites = {}
 end
 function WorldLayer:CreateBg()
-    local offsetY = -280
+    local offsetY = - 280
     local sprite = display.newFilteredSprite("world_bg.jpg", "CUSTOM", json.encode({
         frag = "shaders/plane.fs",
         shaderName = "plane1",
