@@ -392,6 +392,10 @@ function AllianceDetailScene:GotoPosition(x,y)
     local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(x,y)
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
 end
+function AllianceDetailScene:OnTouchBegan(...)
+    AllianceDetailScene.super.OnTouchBegan(self, ...)
+    self:GetSceneLayer():TrackCorpsById(nil)
+end
 function AllianceDetailScene:OnTouchEnd(pre_x, pre_y, x, y, ismove)
     if not ismove then
         if self.current_allinace_index ~= self:GetSceneLayer():GetMiddleAllianceIndex() then
