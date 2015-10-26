@@ -252,7 +252,7 @@ function DataUtils:getAllSoldierBuffValue(solider_config)
     local result = {}
     local soldier_type = solider_config.type
     local item_buff = UtilsForItem:GetAllSoldierBuffData(User)
-    local military_technology_buff = User():GetMilitaryBuff()
+    local military_technology_buff = User:GetMilitaryBuff()
     table.insertto(item_buff,military_technology_buff)
     local vip_buff = self:getAllSoldierVipBuffValue()
     table.insertto(item_buff,vip_buff)

@@ -129,7 +129,7 @@ function WidgetAutoOrderAwardButton:CheckVisible()
 end
 
 function WidgetAutoOrderAwardButton:GetElementSize()
-	return {width = 68, height = 100}
+	return {width = 68, height = 120}
 end
 -- For Data
 function WidgetAutoOrderAwardButton:GetNextTimePoint()

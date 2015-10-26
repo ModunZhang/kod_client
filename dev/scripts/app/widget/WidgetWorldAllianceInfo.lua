@@ -133,7 +133,7 @@ function WidgetWorldAllianceInfo:LoadInfo(alliance_data)
     local button = WidgetPushButton.new({normal = "yellow_btn_up_148x58.png",pressed = "yellow_btn_down_148x58.png"})
         :setButtonLabel(
             UIKit:ttfLabel({
-                text = _("定位"),
+                text = _("定位盟主"),
                 size = 20,
                 shadow = true,
                 color = 0xfff3c7
