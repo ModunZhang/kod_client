@@ -14,6 +14,16 @@ end
 function GameUIWorldMap:onEnter()
 	self:GotoPosition(0,0)
 	self:ScheduleLoadMap()
+
+    -- 返回按钮
+    local world_map_btn_bg = display.newSprite("background_86x86.png"):addTo(self):align(display.LEFT_BOTTOM,display.left + 10,display.bottom + 25):scale(0.85)
+    -- local inWorldScene = display.getRunningScene().__cname == "WorldScene"
+    local world_map_btn = UIKit:ButtonAddScaleAction(cc.ui.UIPushButton.new({normal ='icon_world_retiurn_88x88.png'})
+        :onButtonClicked(function()
+           self:LeftButtonClicked()
+        end)
+    ):align(display.CENTER,world_map_btn_bg:getContentSize().width/2 , world_map_btn_bg:getContentSize().height/2)
+        :addTo(world_map_btn_bg)
 end
 function GameUIWorldMap:GotoPosition(x,y)
     local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(x,y)

@@ -103,17 +103,11 @@ function WidgetShortcutButtons:ctor(city)
 
     order:AddElement(dragon_defence_btn)
 
-
     --进入三级地图按钮
     local world_map_btn_bg = display.newSprite("background_86x86.png"):scale(0.85)
-    local inWorldScene = display.getRunningScene().__cname == "WorldScene"
-    local world_map_btn = UIKit:ButtonAddScaleAction(cc.ui.UIPushButton.new({normal = inWorldScene and 'icon_world_retiurn_88x88.png' or 'icon_world_88x88.png'})
+    local world_map_btn = UIKit:ButtonAddScaleAction(cc.ui.UIPushButton.new({normal = 'icon_world_88x88.png'})
         :onButtonClicked(function()
-        	if inWorldScene then
-        		app:EnterMyAllianceScene()
-        	else
-            	app:EnterWorldScene()
-        	end
+            UIKit:newGameUI("GameUIWorldMap"):AddToCurrentScene()
         end)
     ):align(display.CENTER,world_map_btn_bg:getContentSize().width/2 , world_map_btn_bg:getContentSize().height/2)
         :addTo(world_map_btn_bg)
