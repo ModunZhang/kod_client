@@ -1,5 +1,7 @@
 local Enum = import("..utils.Enum")
+local promise = import("..utils.promise")
 local Localize = import("..utils.Localize")
+local cocos_promise = import("..utils.cocos_promise")
 local UILib = import("..ui.UILib")
 local Alliance = import("..entity.Alliance")
 local SpriteConfig = import("..sprites.SpriteConfig")
@@ -7,7 +9,7 @@ local WidgetAllianceHelper = import("..widget.WidgetAllianceHelper")
 local NormalMapAnchorBottomLeftReverseY = import("..map.NormalMapAnchorBottomLeftReverseY")
 local MapLayer = import(".MapLayer")
 local AllianceLayer = class("AllianceLayer", MapLayer)
-local ZORDER = Enum("BACKGROUND", "OBJECT", "INFO", "LINE", "CORPS")
+local ZORDER = Enum("BACKGROUND", "OBJECT", "EMPTY", "INFO", "LINE", "CORPS")
 local AllianceMap = GameDatas.AllianceMap
 local buildingName = AllianceMap.buildingName
 local ui_helper = WidgetAllianceHelper.new()
@@ -21,6 +23,10 @@ local ALLIANCE_WIDTH, ALLIANCE_HEIGHT = intInit.allianceRegionMapWidth.value, in
 local worldsize = {width = ALLIANCE_WIDTH * 160 * MAP_LEGNTH_WIDTH, height = ALLIANCE_HEIGHT * 160 * MAP_LEGNTH_HEIGHT}
 local timer = app.timer
 local MINE,FRIEND,ENEMY = 1,2,3
+local SPRITE_TAG = 112
+local function createBuildingSprite(png)
+    return display.newSprite(png, nil, nil, {class=cc.FilteredSpriteWithOne})
+end
 local function getZorderByXY(x, y)
     return x + ALLIANCE_WIDTH * y
 end
@@ -35,6 +41,7 @@ function AllianceLayer:onEnter()
     self.lines_node = display.newNode():addTo(self.map, ZORDER.LINE)
     self.corps_node = display.newNode():addTo(self, ZORDER.CORPS)
     self.info_node = display.newNode():addTo(self, ZORDER.INFO)
+    self.empty_node = display.newNode():addTo(self, ZORDER.EMPTY)
     self.map_lines = {}
     self.map_corps = {}
 
@@ -251,8 +258,7 @@ function AllianceLayer:CreateLine(id, march_info, ally)
     local middle = cc.pMidpoint(march_info.start_info.real, march_info.end_info.real)
     local scale = march_info.length / 32
     local unit_count = math.floor(scale)
-    local sprite = display.newSprite(line_ally_map[ally]
-        , nil, nil, {class=cc.FilteredSpriteWithOne})
+    local sprite = createBuildingSprite(line_ally_map[ally])
         :addTo(self.lines_node)
         :pos(middle.x, middle.y)
         :rotation(march_info.degree)
@@ -328,23 +334,26 @@ function AllianceLayer:GetClickedObject(world_x, world_y)
     local x,y = logic_x % ALLIANCE_WIDTH, logic_y % ALLIANCE_HEIGHT
     return self:FindMapObject(index, x, y)
 end
+local buildingName = GameDatas.AllianceMap.buildingName
 function AllianceLayer:FindMapObject(index, x, y)
     local alliance_object = self.alliance_objects[index]
     if alliance_object.nomanland then return end
     if alliance_object then
         for k,v in pairs(alliance_object.mapObjects) do
             if v.x == x and v.y == y then
-                return {index = index, x = v.x, y = v.y, name = v.name}
+                return {index = index, x = v.x, y = v.y, name = v.name, obj = v}
             end
         end
         for k,v in pairs(alliance_object.buildings) do
             if v.x == x and v.y == y then
-                return {index = index, x = v.x, y = v.y, name = v.name}
+                return {index = index, x = v.x, y = v.y, name = v.name, obj = v}
             end
         end
         for k,v in pairs(alliance_object.decorators) do
-            if v.x == x and v.y == y then
-                return {index = index, x = v.x, y = v.y, name = v.name}
+            v.location = {x = v.x, y = v.y}
+            if Alliance:IsContainPointWithMapObj(v, x, y) then
+                local x,y = Alliance:GetMidLogicPositionWithMapObj(v)
+                return {index = index, x = x, y = y, name = v.name, obj = v}
             end
         end
     end
@@ -383,8 +392,8 @@ function AllianceLayer:RefreshBuildingByIndex(index, building, alliance)
     if alliance_object then
         local sprite = alliance_object.buildings[building.name]
         if sprite then
-            sprite.info.level:setString(building.level)
             local x,y = self:GetBannerPos(index, sprite.x, sprite.y)
+            sprite.info.level:setString(building.level)
             sprite.info:pos(x, y):zorder(x * y)
         end
     end
@@ -424,14 +433,13 @@ function AllianceLayer:LoadAllianceByIndex(index, alliance)
             local banner = ismyaln and UILib.my_city_banner[0] 
                                 or UILib.enemy_city_banner[0]
             for name,v in pairs(objects_node.buildings) do
+                local x,y = self:GetBannerPos(index, v.x, v.y)
                 local b = Alliance.FindAllianceBuildingInfoByName(allianceData, name)
                 v.info.banner:setTexture(banner)
                 v.info.level:setString(b.level)
                 v.info.name:setString(Localize.alliance_buildings[name])
-                v:setTexture(building_png[name])
-
-                local x,y = self:GetBannerPos(index, v.x, v.y)
                 v.info:show():pos(x, y):zorder(x * y)
+                v:getChildByTag(SPRITE_TAG):setTexture(building_png[name])
             end
         end
     end)
@@ -442,14 +450,13 @@ function AllianceLayer:RemoveMapObject(mapObj)
     end
     mapObj:removeFromParent()
 end
-local SPRITE_TAG = 112
 function AllianceLayer:AddMapObject(objects_node, mapObj, alliance)
     local x,y = mapObj.location.x, mapObj.location.y
     local mapObject = objects_node.mapObjects[mapObj.id]
     local node = display.newNode()
     local sprite
     if mapObj.name == "member" then
-        sprite = display.newSprite("my_keep_1.png")
+        sprite = createBuildingSprite("my_keep_1.png")
     elseif mapObj.name == "woodVillage"
         or mapObj.name == "stoneVillage"
         or mapObj.name == "ironVillage"
@@ -458,7 +465,7 @@ function AllianceLayer:AddMapObject(objects_node, mapObj, alliance)
      then
         local info = Alliance.GetAllianceVillageInfosById(alliance, mapObj.id)
         local config = SpriteConfig[mapObj.name]:GetConfigByLevel(info.level)
-        sprite = display.newSprite(config.png):scale(config.scale)
+        sprite = createBuildingSprite(config.png):scale(config.scale)
     elseif mapObj.name == "monster" then
         local info = Alliance.GetAllianceMonsterInfosById(alliance, mapObj.id)
         sprite = UIKit:CreateMonster(info.name)
@@ -471,7 +478,39 @@ function AllianceLayer:AddMapObject(objects_node, mapObj, alliance)
     node.name = mapObj.name
     objects_node.mapObjects[mapObj.id] = node:addTo(objects_node)
     self:RefreshMapObjectPosition(node, mapObj)
+    self:AddFuncToBuilding(node)
     return node
+end
+function AllianceLayer:AddFuncToBuilding(building)
+    function building:Flash(time)
+        self:ResetFlashStatus()
+        self:BeginFlash(time)
+    end
+    function building:ResetFlashStatus()
+        local sprite = self:getChildByTag(SPRITE_TAG)
+        sprite:removeNodeEventListenersByEvent(cc.NODE_ENTER_FRAME_EVENT)
+        sprite:unscheduleUpdate()
+        sprite:clearFilter()
+    end
+    function building:BeginFlash(lastTime)
+        self.time = 0
+        local sprite = self:getChildByTag(SPRITE_TAG)
+        sprite:setFilter(filter.newFilter("CUSTOM", json.encode({
+            frag = "shaders/flash.fs",
+            shaderName = "flash",
+            ratio = math.fmod(self.time, lastTime) / lastTime,
+        })))
+        sprite:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt)
+            self.time = self.time + dt
+            if self.time > lastTime then
+                self:ResetFlashStatus()
+            else
+                sprite:getFilter():getGLProgramState():setUniformFloat("ratio", math.fmod(self.time, lastTime) / lastTime)
+            end
+        end)
+        sprite:scheduleUpdate()
+    end
+    return building
 end
 local flag_map = {
     [MINE] = {"village_flag_mine.png", "village_icon_mine.png"},
@@ -711,20 +750,22 @@ function AllianceLayer:CreateAllianceObjects(obj_node, terrain, style, index, al
             local decorator = display.newSprite(deco_png)
                 :addTo(obj_node, getZorderByXY(x, y))
                 :pos(self:GetInnerMapPosition(x,y))
-            decorator.x = x
-            decorator.y = y
+            decorator.x = v.x
+            decorator.y = v.y
             decorator.name = name
             table.insert(decorators, decorator)
         elseif building_png then
-            local building = display.newSprite(building_png)
+            local node = display.newNode()
                 :addTo(obj_node, getZorderByXY(x, y))
                 :pos(self:GetInnerMapPosition(x,y))
-            building.x = x
-            building.y = y
-            building.name = name
-            buildings[name] = building
+            createBuildingSprite(building_png):addTo(node, 0, SPRITE_TAG)
+            node.x = v.x
+            node.y = v.y
+            node.name = name
             local x,y = self:GetBannerPos(index, x, y)
-            building.info = self:CreateInfoBanner():pos(x, y):zorder(x * y)
+            node.info = self:CreateInfoBanner():pos(x, y):zorder(x * y)
+            buildings[name] = node
+            self:AddFuncToBuilding(node)
         end
     end
     obj_node.decorators = decorators
@@ -825,6 +866,30 @@ function AllianceLayer:GetMapInfoByIndex(index, alliance)
     style = style == nil and math.random(6) or style
     return terrain, style
 end
+
+local CLICK_EMPTY_TAG = 911
+function AllianceLayer:PromiseOfFlashEmptyGround(mapIndex, x, y)
+    self:RemoveClickNode()
+    local point = self:RealPosition(mapIndex, x, y)
+    local p = promise.new()
+    display.newSprite("click_empty.png")
+    :addTo(self.empty_node, 10000, CLICK_EMPTY_TAG)
+    :pos(point.x, point.y):opacity(0)
+        :runAction(
+            transition.sequence{
+                cc.FadeTo:create(0.15, 255),
+                cc.FadeTo:create(0.15, 0),
+                cc.CallFunc:create(function()
+                    p:resolve()
+                    self:RemoveClickNode()
+                end)
+            }
+        )
+    return p
+end
+function AllianceLayer:RemoveClickNode()
+    self.empty_node:removeChildByTag(CLICK_EMPTY_TAG)
+end
 --
 function AllianceLayer:getContentSize()
     return worldsize
@@ -832,33 +897,3 @@ end
 
 
 return AllianceLayer
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -306,11 +306,11 @@ function MyCityScene:GetLockButtonsByBuildingType(building_type)
     return lock_button
 end
 function MyCityScene:OnUserDataChanged_houseEvents(userData, deltaData)
-    if deltaData("buildingEvents.add") then
+    if deltaData("houseEvents.add") then
         self:GetSceneLayer():CheckCanUpgrade()
         app:GetAudioManager():PlayeEffectSoundWithKey("UI_BUILDING_UPGRADE_START")
     end
-    if deltaData("buildingEvents.remove") then
+    if deltaData("houseEvents.remove") then
         self:GetSceneLayer():CheckCanUpgrade()
         app:GetAudioManager():PlayeEffectSoundWithKey("COMPLETE")
     end

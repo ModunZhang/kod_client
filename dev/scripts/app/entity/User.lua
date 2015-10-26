@@ -387,49 +387,6 @@ function User:IsBindGameCenter()
 end
 --[[end]]
 
-local COLLECT_TYPE = Enum("WOOD",
-    "STONE",
-    "IRON",
-    "FOOD",
-    "COIN")
-function User:GetWoodCollectLevel()
-    return self:GetCollectLevelByType(COLLECT_TYPE.WOOD)
-end
-function User:GetStoneCollectLevel()
-    return self:GetCollectLevelByType(COLLECT_TYPE.STONE)
-end
-function User:GetIronCollectLevel()
-    return self:GetCollectLevelByType(COLLECT_TYPE.IRON)
-end
-function User:GetFoodCollectLevel()
-    return self:GetCollectLevelByType(COLLECT_TYPE.FOOD)
-end
-function User:GetCoinCollectLevel()
-    return self:GetCollectLevelByType(COLLECT_TYPE.COIN)
-end
-local collect_type = {
-    "woodExp",
-    "stoneExp",
-    "ironExp",
-    "foodExp",
-    "coinExp",
-}
-local collect_exp_config = {
-    "wood",
-    "stone",
-    "iron",
-    "food",
-    "coin",
-}
-function User:GetCollectLevelByType(collectType)
-    local exp = self.allianceInfo[collect_type[collectType]]
-    local config = GameDatas.PlayerVillageExp[collect_exp_config[collectType]]
-    for i = #config,1,-1 do
-        if exp>=config[i].expFrom then
-            return i
-        end
-    end
-end
 function User:Loyalty()
     return self.allianceData.loyalty
 end

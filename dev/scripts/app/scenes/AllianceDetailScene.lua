@@ -1,4 +1,5 @@
 local Alliance = import("..entity.Alliance")
+local Sprite = import("..sprites.Sprite")
 local AllianceLayer = import("..layers.AllianceLayer")
 local GameUIAllianceHome = import("..ui.GameUIAllianceHome")
 local MapScene = import(".MapScene")
@@ -287,6 +288,7 @@ local intInit = GameDatas.AllianceInitData.intInit
 local ALLIANCE_WIDTH, ALLIANCE_HEIGHT = intInit.allianceRegionMapWidth.value, intInit.allianceRegionMapHeight.value
 function AllianceDetailScene:ctor(location)
     AllianceDetailScene.super.ctor(self)
+    self.util_node = display.newNode():addTo(self)
     self.fetchtimer = display.newNode():addTo(self)
     self.amintimer = display.newNode():addTo(self)
     self.location = location
@@ -407,21 +409,43 @@ function AllianceDetailScene:OnTouchExtend(old_speed_x, old_speed_y, new_speed_x
     end
 end
 function AllianceDetailScene:OnTouchClicked(pre_x, pre_y, x, y)
-    if self:IsFingerOn() then
+    if self:IsFingerOn() or self.util_node:getNumberOfRunningActions() > 0 then
         return
     end
+
     local mapObj = self:GetSceneLayer():GetClickedObject(x, y)
     if mapObj then
         local alliance = Alliance_Manager:GetAllianceByCache(mapObj.index)
         if alliance then
             print(mapObj.index, mapObj.x, mapObj.y, mapObj.name)
-            -- UIKit:newGameUI("GameUIAllianceBase", alliance, mapObj.x, mapObj.y, mapObj.name):AddToCurrentScene(true)
-            if Alliance:GetMapObjectType(mapObj) ~= "building" then
-                self:EnterNotAllianceBuilding(alliance,mapObj)
+            app:lockInput(true)
+            self.util_node:performWithDelay(function()app:lockInput(false)end,0.5)
+            app:GetAudioManager():PlayeEffectSoundWithKey("HOME_PAGE")
+
+            local type_ = Alliance:GetMapObjectType(mapObj)
+            if type_ == "member"
+            or type_ == "village"
+            or type_ == "building" then
+                Sprite:PromiseOfFlash(mapObj.obj):next(function()
+                    self:OpenUI(alliance, mapObj)
+                end)
+            elseif type_ == "empty" then
+                self:GetSceneLayer()
+                :PromiseOfFlashEmptyGround(mapObj.index, mapObj.x, mapObj.y)
+                :next(function()
+                    self:OpenUI(alliance, mapObj)
+                end)
             else
-                self:EnterAllianceBuilding(alliance,mapObj)
+                self:OpenUI(alliance, mapObj)
             end
         end
+    end
+end
+function AllianceDetailScene:OpenUI(alliance,mapObj)
+    if Alliance:GetMapObjectType(mapObj) ~= "building" then
+        self:EnterNotAllianceBuilding(alliance,mapObj)
+    else
+        self:EnterAllianceBuilding(alliance,mapObj)
     end
 end
 function AllianceDetailScene:OnSceneMove()

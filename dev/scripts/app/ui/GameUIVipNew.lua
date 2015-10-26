@@ -84,10 +84,6 @@ function GameUIVipNew:AdapterPlayerList()
     if not alliance:IsDefault() then
         member = alliance:GetMemeberById(User:Id())
     end
-    table.insert(infos,{_("采集粮食熟练度"),User:GetFoodCollectLevel()})
-    table.insert(infos,{_("采集铁矿熟练度"),User:GetIronCollectLevel()})
-    table.insert(infos,{_("采集石料熟练度"),User:GetStoneCollectLevel()})
-    table.insert(infos,{_("采集木材熟练度"),User:GetWoodCollectLevel()})
     table.insert(infos,{_("防御胜利"),User.basicInfo.defenceWin})
     table.insert(infos,{_("进攻胜利"),User.basicInfo.attackWin})
     table.insert(infos,{_("胜率"), User.basicInfo.attackTotal ~= 0 and

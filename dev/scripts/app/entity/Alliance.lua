@@ -632,7 +632,16 @@ local before_map = {
             allianceData:NotifyHelpEvents(deltaData)
         end
     end,
-    marchEvents = function()end,
+    marchEvents = function(allianceData, deltaData)
+        local ok, value = deltaData("marchEvents.attackMarchReturnEvents.remove")
+        if ok then
+            for i,v in ipairs(value) do
+                if v.attackPlayerData.id == User._id then
+                    app:GetAudioManager():PlayeEffectSoundWithKey("TROOP_BACK")
+                end
+            end
+        end
+    end,
     shrineEvents = function()end,
     villageEvents = function()end,
 }
