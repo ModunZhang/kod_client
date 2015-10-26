@@ -135,9 +135,14 @@ end
 
 function AllianceManager:OnAllianceDataChanged(alliance_data,refresh_time,deltaData)
     self:GetMyAlliance():OnAllianceDataChanged(alliance_data,refresh_time,deltaData)
+    if alliance_data and not deltaData then
+        local scene_name = display.getRunningScene().__cname
+        if scene_name == "AllianceDetailScene" then
+            app:EnterMyAllianceScene()
+        end
+    end
     -- local my_alliance_status = self:GetMyAlliance().basicInfo.status
     -- local isRelogin_action = deltaData == nil and alliance_data
-    -- local scene_name = display.getRunningScene().__cname
     -- if (scene_name == 'AllianceBattleScene' or scene_name == 'AllianceScene') and isRelogin_action  then
     --     if not UIKit:GetUIInstance('GameUIWarSummary') then
     --         app:EnterMyAllianceScene()

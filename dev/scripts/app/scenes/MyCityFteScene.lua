@@ -21,7 +21,7 @@ end
 function MyCityFteScene:onEnter()
     MyCityFteScene.super.onEnter(self)
     self:GetSceneLayer():ZoomTo(1)
-    self.home_page.order_shortcut:hide()
+    -- self.home_page.order_shortcut:hide()
 end
 function MyCityFteScene:onEnterTransitionFinish()
     self:RunFte()
