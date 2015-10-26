@@ -314,10 +314,10 @@ function GameUIAllianceVillageEnter:GetEnterButtons()
             local toLocation = self:GetLogicPosition()
             if checkMeIsProtectedWarinng then
                 UIKit:showMessageDialog(_("提示"),_("突袭村落将失去保护状态，确定继续派兵?"),function ()
-                    UIKit:newGameUI("GameUIStrikePlayer",GameUIStrikePlayer.STRIKE_TYPE.VILLAGE,{targetIsMyAlliance = false,toLocation = toLocation,defenceAllianceId = alliance_id,defenceVillageId = village_id}):AddToCurrentScene(true)
+                    UIKit:newGameUI("GameUIStrikePlayer",GameUIStrikePlayer.STRIKE_TYPE.VILLAGE,{alliance = focus_alliance,toLocation = toLocation,defenceAllianceId = alliance_id,defenceVillageId = village_id}):AddToCurrentScene(true)
                 end)
             else
-                UIKit:newGameUI("GameUIStrikePlayer",GameUIStrikePlayer.STRIKE_TYPE.VILLAGE,{targetIsMyAlliance = false,toLocation = toLocation,defenceAllianceId = alliance_id,defenceVillageId = village_id}):AddToCurrentScene(true)
+                UIKit:newGameUI("GameUIStrikePlayer",GameUIStrikePlayer.STRIKE_TYPE.VILLAGE,{alliance = focus_alliance,toLocation = toLocation,defenceAllianceId = alliance_id,defenceVillageId = village_id}):AddToCurrentScene(true)
             end
         end)
         buttons = {attack_button,strike_button}

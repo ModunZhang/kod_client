@@ -55,7 +55,6 @@ end
 
 function GameUIAlliance:OnAllianceDataChanged_events(alliance)
     if self.tab_buttons:GetSelectedButtonTag() == 'overview' then
-        print("OnEventsChanged======", "alliance")
         self:RefreshEventListView()
     end
 end
@@ -104,8 +103,6 @@ end
 function GameUIAlliance:RefreshMainUI()
     self:Reset()
     self.main_content:removeAllChildren()
-    print("========>", Alliance_Manager:GetMyAlliance()._id)
-    print("Alliance_Manager:GetMyAlliance()._id", Alliance_Manager:GetMyAlliance()._id)
     if Alliance_Manager:GetMyAlliance():IsDefault() then
         self:CreateNoAllianceUI()
     else
@@ -1660,7 +1657,11 @@ function GameUIAlliance:OnInfoButtonClicked(tag)
         UIKit:showMessageDialog(_("退出联盟"),
             _("您必须在没有部队在外行军的情况下，才可以退出联盟。退出联盟会损失当前未打开的联盟礼物。"),
             function()
-                NetManager:getQuitAlliancePromise():done()
+                NetManager:getQuitAlliancePromise():done(function ()
+                    if display.getRunningScene().__cname ~= "MyCityScene" then
+                        app:EnterMyCityScene()
+                    end
+                end)
             end)
     elseif tag == 2 then
         self:CreateInvateUI()

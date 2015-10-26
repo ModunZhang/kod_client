@@ -25,11 +25,12 @@ local titles = {
     BUFF_EFFECT = _("战争增益"),
 }
 
-function GameUIAllianceWatchTowerTroopDetail:ctor(event_data,watchTowerLevel,isFromEnemy,data_type)
+function GameUIAllianceWatchTowerTroopDetail:ctor(event_data,watchTowerLevel,isFromEnemy,data_type,isCheckOtherHelpTroop)
     GameUIAllianceWatchTowerTroopDetail.super.ctor(self)
     self.event_data = event_data
     self.watchTowerLevel = watchTowerLevel
     self.isFromEnemy = isFromEnemy
+    self.isCheckOtherHelpTroop = isCheckOtherHelpTroop
     self.data_type = data_type
 end
 
@@ -44,6 +45,10 @@ end
 
 function GameUIAllianceWatchTowerTroopDetail:IsFromEnemy()
     return self.isFromEnemy
+end
+
+function GameUIAllianceWatchTowerTroopDetail:IsCheckOtherHelpTroop()
+    return self.isCheckOtherHelpTroop
 end
 
 function GameUIAllianceWatchTowerTroopDetail:GetEventData()
@@ -316,7 +321,9 @@ end
 
 --数据过滤
 function GameUIAllianceWatchTowerTroopDetail:CanShowDragonType()
-    if self:IsFromEnemy() then
+    if self:IsCheckOtherHelpTroop() then
+        return self:GetWatchTowerLevel() >= 13
+    elseif self:IsFromEnemy() then
         return self:GetWatchTowerLevel() >=2
     else
         return true
@@ -324,7 +331,9 @@ function GameUIAllianceWatchTowerTroopDetail:CanShowDragonType()
 end
 
 function GameUIAllianceWatchTowerTroopDetail:CanShowDragonLevelAndStar()
-    if self:IsFromEnemy() then
+    if self:IsCheckOtherHelpTroop() then
+        return self:GetWatchTowerLevel() >= 13
+    elseif self:IsFromEnemy() then
         return self:GetWatchTowerLevel() >= 4
     else
         return true
@@ -333,7 +342,9 @@ end
 
 
 function GameUIAllianceWatchTowerTroopDetail:CanShowDragonHP()
-    if self:IsFromEnemy() then
+    if self:IsCheckOtherHelpTroop() then
+        return self:GetWatchTowerLevel() >= 14
+    elseif self:IsFromEnemy() then
         return self:GetWatchTowerLevel() >= 5
     else
         return true
@@ -341,7 +352,9 @@ function GameUIAllianceWatchTowerTroopDetail:CanShowDragonHP()
 end
 
 function GameUIAllianceWatchTowerTroopDetail:CanShowDragonStrength()
-    if self:IsFromEnemy() then
+    if self:IsCheckOtherHelpTroop() then
+        return self:GetWatchTowerLevel() >= 14
+    elseif self:IsFromEnemy() then
         return self:GetWatchTowerLevel() >= 5
     else
         return true
@@ -349,7 +362,9 @@ function GameUIAllianceWatchTowerTroopDetail:CanShowDragonStrength()
 end
 
 function GameUIAllianceWatchTowerTroopDetail:CanShowDragonSkill()
-    if self:IsFromEnemy() then
+    if self:IsCheckOtherHelpTroop() then
+        return self:GetWatchTowerLevel() >= 19
+    elseif self:IsFromEnemy() then
         return self:GetWatchTowerLevel() >= 10
     else
         return true
@@ -358,7 +373,9 @@ function GameUIAllianceWatchTowerTroopDetail:CanShowDragonSkill()
 end
 
 function GameUIAllianceWatchTowerTroopDetail:CanShowSoliderName()
-    if self:IsFromEnemy() then
+    if self:IsCheckOtherHelpTroop() then
+        return self:GetWatchTowerLevel() >= 15
+    elseif self:IsFromEnemy() then
         return self:GetWatchTowerLevel() >= 6
     else
         return true
@@ -367,7 +384,9 @@ function GameUIAllianceWatchTowerTroopDetail:CanShowSoliderName()
 end
 
 function GameUIAllianceWatchTowerTroopDetail:CanShowSoliderStar()
-    if self:IsFromEnemy() then
+    if self:IsCheckOtherHelpTroop() then
+        return self:GetWatchTowerLevel() >= 16
+    elseif self:IsFromEnemy() then
         return self:GetWatchTowerLevel() >= 7
     else
         return true
@@ -377,7 +396,9 @@ end
 
 
 function GameUIAllianceWatchTowerTroopDetail:CanShowDragonEquipment()
-    if self:IsFromEnemy() then
+    if self:IsCheckOtherHelpTroop() then
+        return self:GetWatchTowerLevel() >= 18
+    elseif self:IsFromEnemy() then
         return self:GetWatchTowerLevel() >= 9
     else
         return true
@@ -385,15 +406,25 @@ function GameUIAllianceWatchTowerTroopDetail:CanShowDragonEquipment()
 end
 
 function GameUIAllianceWatchTowerTroopDetail:CanShowTechnologyAndBuffEffect()
-    return true
+    return false
 end
 
 function GameUIAllianceWatchTowerTroopDetail:FileterSoliderCount(count)
-    if self:IsFromEnemy() then
+    if self:IsCheckOtherHelpTroop() then
+        if  self:GetWatchTowerLevel() >= 20 then
+            return GameUtils:formatNumber(count)
+        elseif self:GetWatchTowerLevel() >= 17 then
+            return self:FuzzyCount(count)
+        else
+            return "?"
+        end
+    elseif self:IsFromEnemy() then
         if  self:GetWatchTowerLevel() >= 11 then
             return GameUtils:formatNumber(count)
         elseif self:GetWatchTowerLevel() >= 8 then
             return self:FuzzyCount(count)
+        else
+            return "?"
         end
     else
         return GameUtils:formatNumber(count)
@@ -434,6 +465,8 @@ function GameUIAllianceWatchTowerTroopDetail:FuzzyCount(count)
 end
 
 return GameUIAllianceWatchTowerTroopDetail
+
+
 
 
 

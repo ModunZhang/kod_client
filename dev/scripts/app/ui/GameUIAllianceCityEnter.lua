@@ -175,6 +175,9 @@ function GameUIAllianceCityEnter:GetEnterButtons()
             local enter_button = self:BuildOneButton("alliance_enter_city_56x68.png",_("进入")):onButtonClicked(function()
                 local location = self:GetLogicPosition()
                 location.id = self:GetCurrentAlliance().id
+                location.mapIndex = self:GetCurrentAlliance().mapIndex
+                dump(self:GetCurrentAlliance(),"location")
+                dump(location,"location")
                 app:EnterFriendCityScene(member.id, location)
                 self:LeftButtonClicked()
             end)
@@ -232,9 +235,9 @@ function GameUIAllianceCityEnter:GetEnterButtons()
         -- attack_button:setButtonEnabled(my_allaince.basicInfo.status == "fight")
         local strike_button = self:BuildOneButton("strike_66x62.png",_("突袭")):onButtonClicked(function()
             local toLocation = self:GetLogicPosition()
-              if isProtected then
+            if isProtected then
                 UIKit:showMessageDialog(_("提示"),_("突袭玩家城市将失去保护状态，确定继续派兵?"),function ()
-                     UIKit:newGameUI("GameUIStrikePlayer",1,{memberId = member.id,alliance = alliance, toLocation = toLocation,targetIsProtected = member.isProtected}):AddToCurrentScene(true)
+                    UIKit:newGameUI("GameUIStrikePlayer",1,{memberId = member.id,alliance = alliance, toLocation = toLocation,targetIsProtected = member.isProtected}):AddToCurrentScene(true)
                 end)
             else
                 UIKit:newGameUI("GameUIStrikePlayer",1,{memberId = member.id,alliance = alliance,toLocation = toLocation,targetIsProtected = member.isProtected}):AddToCurrentScene(true)
@@ -244,14 +247,18 @@ function GameUIAllianceCityEnter:GetEnterButtons()
 
         buttons = {attack_button,strike_button}
         -- if self:GetMyAlliance():GetAllianceBelvedere():CanEnterEnemyCity() then
-            local enter_button = self:BuildOneButton("alliance_enter_city_56x68.png",_("进入")):onButtonClicked(function()
-                local location = self:GetLogicPosition()
-                location.id = self:GetCurrentAlliance().id
-                location.mapIndex = self:GetCurrentAlliance().mapIndex
-                app:EnterPlayerCityScene(member.id, location)
+        local enter_button = self:BuildOneButton("alliance_enter_city_56x68.png",_("进入")):onButtonClicked(function()
+                if self:GetMyAlliance():CanCheckOtherAllianceCity() then
+                    local location = self:GetLogicPosition()
+                    location.id = self:GetCurrentAlliance().id
+                    location.mapIndex = self:GetCurrentAlliance().mapIndex
+                    app:EnterPlayerCityScene(member.id, location)
+                else
+                    UIKit:showMessageDialog(_("提示"),_("巨石阵等级不足，不能进入其他联盟玩家城市"))
+                end
                 self:LeftButtonClicked()
-            end)
-            table.insert(buttons, enter_button)
+        end)
+        table.insert(buttons, enter_button)
         -- end
         local info_button = self:BuildOneButton("icon_info_56x56.png",_("信息")):onButtonClicked(function()
             UIKit:newGameUI("GameUIAllianceMemberInfo",false,member.id):AddToCurrentScene(true)
@@ -263,6 +270,7 @@ function GameUIAllianceCityEnter:GetEnterButtons()
 end
 
 return GameUIAllianceCityEnter
+
 
 
 

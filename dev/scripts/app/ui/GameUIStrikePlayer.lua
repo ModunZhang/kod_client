@@ -240,7 +240,6 @@ function GameUIStrikePlayer:SendDataToServerRealy()
 				end)
             end,function()end)
         else
-        	print("self.params.alliance._id=",self.params.alliance._id,self.params.alliance.id)
         	NetManager:getStrikePlayerCityPromise(self:GetSelectDragonType(),self.params.memberId,self.params.alliance._id):done(function()
 				app:GetAudioManager():PlayeEffectSoundWithKey("DRAGON_STRIKE")
 				self:LeftButtonClicked()
