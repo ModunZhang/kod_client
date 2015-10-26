@@ -202,7 +202,6 @@ function CityLayer:OnUserDataChanged_buildings(userData, deltaData)
     end
 end
 function CityLayer:OnUserDataChanged_houseEvents(userData, deltaData)
-    local buildingLocation, houseLocation = self:GetCurrentLocation()
     local ok, value = deltaData("houseEvents.remove")
     if ok then
         for i,v in ipairs(value) do
