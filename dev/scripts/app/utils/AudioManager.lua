@@ -8,8 +8,8 @@ local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
 local scene_enter_music_map = {
 	MainScene     = "music_begin.mp3",
 	MyCityScene   = "bgm_peace.mp3",
-	AllianceScene = "bgm_peace.mp3",
-	AllianceBattleScene = "bgm_battle.mp3",
+	AllianceDetailScene = "bgm_peace.mp3",
+	-- AllianceDetailScene = "bgm_battle.mp3",
 	PVEScene      = "bgm_battle.mp3"
 }
 
@@ -310,7 +310,7 @@ function AudioManager:PlayGameMusicAutoCheckScene()
 					else
 						self:PlayBgMusicWithFileKey('bgm_peace',false)
 					end
-				elseif real_scene_name == 'AllianceScene' then
+				elseif real_scene_name == 'AllianceDetailScene' then
 					if lastFileKey == 'bgm_peace' then
 						self:PlayeBgMusic(terrain_music_map[terrain], false)
 					else
@@ -325,7 +325,7 @@ function AudioManager:PlayGameMusicAutoCheckScene()
 						else
 							self:PlayBgMusicWithFileKey('sfx_city',false)
 						end
-					elseif real_scene_name == 'AllianceScene' or real_scene_name == 'AllianceBattleScene' then
+					elseif real_scene_name == 'AllianceDetailScene' or real_scene_name == 'AllianceDetailScene' then
 						if lastFileKey == 'sfx_battle' then
 							self:PlayBgMusicWithFileKey('bgm_battle',false)
 						else
@@ -341,7 +341,7 @@ function AudioManager:PlayGameMusicAutoCheckScene()
 						else
 							self:PlayBgMusicWithFileKey('bgm_peace',false)
 						end
-					elseif real_scene_name == 'AllianceScene' or real_scene_name == 'AllianceBattleScene' then
+					elseif real_scene_name == 'AllianceDetailScene' or real_scene_name == 'AllianceDetailScene' then
 						if lastFileKey == 'bgm_peace' then
 							self:PlayeBgMusic(terrain_music_map[terrain], false)
 						else
@@ -361,7 +361,7 @@ function AudioManager:PlayGameMusicOnSceneEnter(scene_name,loop)
 			if Alliance_Manager then
 				local status = Alliance_Manager:GetMyAlliance().basicInfo.status
 				if status == 'prepare' or status == 'fight' then
-					scene_name = 'AllianceBattleScene' --battle
+					scene_name = 'AllianceDetailScene' --battle
 				end
 				self:PlayeBgMusic(scene_enter_music_map[scene_name],loop)
 			else

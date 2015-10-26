@@ -125,7 +125,9 @@ function GameUIWorldMap:OnTouchClicked(pre_x, pre_y, x, y)
         return
     end
     local click_object,index = self:GetSceneLayer():GetClickedObject(x, y)
-    UIKit:newWidgetUI("WidgetWorldAllianceInfo",click_object,index):AddToCurrentScene()
+    if click_object or index then
+        UIKit:newWidgetUI("WidgetWorldAllianceInfo",click_object,index):AddToCurrentScene()
+    end
 end
 function GameUIWorldMap:IsFingerOn()
     return self.event_manager:TouchCounts() ~= 0
