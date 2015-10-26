@@ -9,10 +9,11 @@ local TILE_LENGTH = 207
 local CORNER_LENGTH = 47
 local WIDTH, HEIGHT = 41, 41
 local MAX_INDEX = WIDTH * HEIGHT - 1
-local SHADER_WIDTH = 42
+local SHADER_WIDTH, SHADER_HEIGHT = 42, 42
 local width, height = WIDTH * TILE_LENGTH, HEIGHT * TILE_LENGTH
 local worldsize = {width = width + 2 * CORNER_LENGTH, height = height + 2 * CORNER_LENGTH}
 assert(SHADER_WIDTH % 2 == 0)
+assert(SHADER_HEIGHT % 2 == 0)
 
 
 function WorldLayer:ctor(scene)
@@ -69,22 +70,24 @@ function WorldLayer:CreateEdge()
         :addTo(self):setScaleY(WIDTH):rotation(-90)
 end
 function WorldLayer:CreateMap()
-    local clip = display.newClippingRegionNode(cc.rect(0,0, TILE_LENGTH * 41, TILE_LENGTH * 41))
+    local clip = display.newClippingRegionNode(cc.rect(0,0, TILE_LENGTH * WIDTH, TILE_LENGTH * HEIGHT))
         :addTo(self):align(display.LEFT_BOTTOM,CORNER_LENGTH,CORNER_LENGTH)
 
-    local map = display.newFilteredSprite("world_terrain1.jpg", "CUSTOM", json.encode({
+    local map = display.newFilteredSprite("world_terrain.jpg", "CUSTOM", json.encode({
         frag = "shaders/maptex.fs",
         shaderName = "maptex",
-        size = {SHADER_WIDTH/2, HEIGHT, 1/(SHADER_WIDTH/2), 1/HEIGHT}
-    })):pos(SHADER_WIDTH * TILE_LENGTH * 0.5, HEIGHT * TILE_LENGTH * 0.5):addTo(clip)
+        size = {
+            SHADER_WIDTH/2, -- 
+            SHADER_HEIGHT,
+            0.5/(SHADER_WIDTH/4),
+            1/SHADER_HEIGHT,
+        }
+    })):align(display.LEFT_BOTTOM, 0, 0):addTo(clip)
     local cache = cc.Director:getInstance():getTextureCache()
-    cache:addImage("world_terrain2.jpg")
-    cache:addImage("world_terrain3.jpg")
-    cache:addImage("world_terrain4.jpg")
     cache:addImage("world_map.png"):setAliasTexParameters()
-    map:getGLProgramState():setUniformTexture("textures5", cache:getTextureForKey("world_map.png"):getName())
-    map:setScaleX(SHADER_WIDTH/2)
-    map:setScaleY(HEIGHT)
+    map:getGLProgramState():setUniformTexture("terrain", cache:getTextureForKey("world_map.png"):getName())
+    map:setScaleX(SHADER_WIDTH/4)
+    map:setScaleY(SHADER_HEIGHT/2)
 
     self.normal_map = NormalMapAnchorBottomLeftReverseY.new{
         tile_w = TILE_LENGTH,
@@ -92,7 +95,7 @@ function WorldLayer:CreateMap()
         map_width = WIDTH,
         map_height = HEIGHT,
         base_x = 0,
-        base_y = 41 * TILE_LENGTH,
+        base_y = HEIGHT * TILE_LENGTH,
     }
     return clip
 end
@@ -100,7 +103,6 @@ function WorldLayer:CreateAllianceLayer()
     self.allianceLyaer = display.newNode():addTo(self.map)
 end
 function WorldLayer:LoadAlliance()
-    dump(self:GetAvailableIndex(),"GetAvailableIndex")
     NetManager:getMapAllianceDatasPromise(self:GetAvailableIndex()):done(function(response)
         dump(response.msg.datas)
         for k,v in pairs(response.msg.datas) do
@@ -133,8 +135,8 @@ function WorldLayer:CreateAllianceSprite(index, alliance)
     }):addTo(sprite):align(display.CENTER, size.width/2, 0)
     sprite.alliance = alliance
     sprite.flagstr = alliance.flag
-	sprite.flag = ui_helper:CreateFlagContentSprite(alliance.flag)
-				:addTo(sprite):align(display.CENTER, 80, 60):scale(0.3)
+    sprite.flag = ui_helper:CreateFlagContentSprite(alliance.flag)
+        :addTo(sprite):align(display.CENTER, 80, 60):scale(0.3)
     self.allainceSprites[index] = sprite
 end
 function WorldLayer:UpdateAllianceSprite(index, alliance)
@@ -142,8 +144,8 @@ function WorldLayer:UpdateAllianceSprite(index, alliance)
     sprite:setTexture(string.format("world_alliance_%s.png", alliance.terrain))
     sprite.name:setString(string.format("[%s]%s", alliance.tag, alliance.name))
     if sprite.flagstr ~= alliance.flag then
-    	sprite.flag:SetFlag(alliance.flag)
-	end
+        sprite.flag:SetFlag(alliance.flag)
+    end
 end
 function WorldLayer:IndexToLogic(index)
     return index % WIDTH, math.floor(index / WIDTH)
@@ -185,6 +187,7 @@ end
 
 
 return WorldLayer
+
 
 
 

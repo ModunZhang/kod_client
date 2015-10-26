@@ -12,8 +12,6 @@ function WorldScene:onEnter()
     self:GotoPosition(0,0)
     self:ScheduleLoadMap()
     self.home_page = self:CreateHomePage()
-
-    -- NetManager:getEnterMapIndexPromise(0)
 end
 function WorldScene:GetHomePage()
 	return  self.home_page
@@ -32,11 +30,10 @@ function WorldScene:CreateSceneLayer()
 end
 function WorldScene:ScheduleLoadMap()
 	self:GetSceneLayer():LoadAlliance()
-	local schedule_node = display.newNode():addTo(self)
 	self.load_map_node = display.newNode():addTo(self)
 end
 function WorldScene:LoadMap()
-	if self:IsFingerOn() or true then
+	if self:IsFingerOn() then
 		return
 	end
 	self.load_map_node:stopAllActions()
@@ -55,7 +52,7 @@ function WorldScene:OnTouchEnd(pre_x, pre_y, x, y, ismove)
 end
 function WorldScene:OnTouchMove(...)
 	WorldScene.super.OnTouchMove(self, ...)
-	-- self.load_map_node:stopAllActions()
+	self.load_map_node:stopAllActions()
 end
 function WorldScene:OnTouchExtend(old_speed_x, old_speed_y, new_speed_x, new_speed_y, millisecond, is_end)
 	WorldScene.super.OnTouchExtend(self, old_speed_x, old_speed_y, new_speed_x, new_speed_y, millisecond, is_end)
