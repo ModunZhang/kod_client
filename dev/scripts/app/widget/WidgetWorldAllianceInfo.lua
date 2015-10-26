@@ -10,23 +10,24 @@ local window = import("..utils.window")
 local Localize = import("..utils.Localize")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local intInit = GameDatas.AllianceInitData.intInit
+local moveLimit = GameDatas.AllianceMap.moveLimit
 local WidgetWorldAllianceInfo = class("WidgetWorldAllianceInfo", WidgetPopDialog)
 
 function WidgetWorldAllianceInfo:ctor(object,mapIndex)
-	self.object = object
-	self.mapIndex = mapIndex
+    self.object = object
+    self.mapIndex = mapIndex
     WidgetWorldAllianceInfo.super.ctor(self,object and 430 or 328,object and  object.alliance.name or _("无主领土"),window.top-120)
     self:setNodeEventEnabled(true)
 
     if object then
-	    NetManager:getAllianceBasicInfoPromise(object.alliance.id,User.serverId):done(function(response)
-	        if response.success and response.msg.allianceData then
-	            self:SetAllianceData(response.msg.allianceData)
-	            self:LoadInfo(response.msg.allianceData)
-	        end
-	    end)
+        NetManager:getAllianceBasicInfoPromise(object.alliance.id,User.serverId):done(function(response)
+            if response.success and response.msg.allianceData then
+                self:SetAllianceData(response.msg.allianceData)
+                self:LoadInfo(response.msg.allianceData)
+            end
+        end)
     else
-    	self:LoadMoveAlliance()
+        self:LoadMoveAlliance()
     end
 end
 function WidgetWorldAllianceInfo:SetAllianceData(allianceData)
@@ -141,8 +142,12 @@ function WidgetWorldAllianceInfo:LoadInfo(alliance_data)
         :align(display.RIGHT_TOP,titleBg:getPositionX(),titleBg:getPositionY() - titleBg:getContentSize().height -10)
         :addTo(layer)
     button:onButtonClicked(function(event)
-    		app:EnterMyAllianceScene({mapIndex = self.mapIndex})
-        end)
+        app:EnterMyAllianceScene({
+            mapIndex = self.mapIndex,
+            x = self:GetAllianceData().archon.location.x,
+            y = self:GetAllianceData().archon.location.y,
+        })
+    end)
 
     local desc_bg = WidgetUIBackGround.new({height=158,width=550},WidgetUIBackGround.STYLE_TYPE.STYLE_5)
         :align(display.CENTER_TOP, l_size.width/2,l_size.height - 240)
@@ -161,11 +166,7 @@ function WidgetWorldAllianceInfo:LoadInfo(alliance_data)
     }):addTo(desc_bg):align(display.CENTER, desc_bg:getContentSize().width/2,desc_bg:getContentSize().height/2)
 
     self:BuildOneButton("icon_goto_38x56.png",_("定位")):onButtonClicked(function()
-    	app:EnterMyAllianceScene({
-    		mapIndex = self.mapIndex,
-    		x = self:GetAllianceData().archon.location.x,
-    		y = self:GetAllianceData().archon.location.y,
-    		})
+        app:EnterMyAllianceScene({mapIndex = self.mapIndex})
         self:LeftButtonClicked()
     end):addTo(layer):align(display.RIGHT_TOP, l_size.width,10)
     return layer
@@ -192,9 +193,9 @@ end
 
 
 function WidgetWorldAllianceInfo:LoadMoveAlliance()
-	local body = self.body
-	local b_size = body:getContentSize()
-	UIKit:ttfLabel({
+    local body = self.body
+    local b_size = body:getContentSize()
+    UIKit:ttfLabel({
         text =  _("迁移冷却时间"),
         size = 22,
         color = 0x403c2f,
@@ -206,33 +207,44 @@ function WidgetWorldAllianceInfo:LoadMoveAlliance()
     }):align(display.CENTER, b_size.width/2 , b_size.height - 70):addTo(body)
 
     scheduleAt(self,function ()
-    	local time = intInit.allianceMoveColdMinutes.value * 60 + Alliance_Manager:GetMyAlliance().basicInfo.allianceMoveTime/1000.0 - app.timer:GetServerTime()
-    	local canMove = Alliance_Manager:GetMyAlliance().basicInfo.allianceMoveTime == 0 or time <= 0
-    	move_time:setString(canMove and _("准备就绪") or GameUtils:formatTimeStyle1(time))
+        local time = intInit.allianceMoveColdMinutes.value * 60 + Alliance_Manager:GetMyAlliance().basicInfo.allianceMoveTime/1000.0 - app.timer:GetServerTime()
+        local canMove = Alliance_Manager:GetMyAlliance().basicInfo.allianceMoveTime == 0 or time <= 0
+        move_time:setString(canMove and _("准备就绪") or GameUtils:formatTimeStyle1(time))
     end)
 
-	local desc_bg = WidgetUIBackGround.new({height=186,width=556},WidgetUIBackGround.STYLE_TYPE.STYLE_5)
+    local desc_bg = WidgetUIBackGround.new({height=186,width=556},WidgetUIBackGround.STYLE_TYPE.STYLE_5)
         :align(display.CENTER_TOP, b_size.width/2,b_size.height - 100)
         :addTo(body)
-     UIKit:ttfLabel({
+    UIKit:ttfLabel({
         text =  _("当迁移时间就绪时，联盟可进行一次免费的迁移。迁移联盟时，针对联盟外目标的行军事件会被强制召回。迁移联盟需要将军以上的权限的玩家操作。"),
         size = 20,
         color = 0x403c2f,
         dimensions = cc.size(520,0),
     }):align(display.CENTER, desc_bg:getContentSize().width/2 , desc_bg:getContentSize().height/2):addTo(desc_bg)
 
-     self:BuildOneButton("icon_move_alliance_building.png",_("迁移")):onButtonClicked(function()
-		local time = intInit.allianceMoveColdMinutes.value * 60 + Alliance_Manager:GetMyAlliance().basicInfo.allianceMoveTime/1000.0 - app.timer:GetServerTime()
-    	local canMove = Alliance_Manager:GetMyAlliance().basicInfo.allianceMoveTime == 0 or time <= 0
-    	if canMove then
-	     	NetManager:getMoveAlliancePromise(self.object)
-	    else
-	    	UIKit:showMessageDialog(_("提示"), _("当前还不能移动联盟"))
-    	end
+    self:BuildOneButton("icon_move_alliance_building.png",_("迁移")):onButtonClicked(function()
+        local time = intInit.allianceMoveColdMinutes.value * 60 + Alliance_Manager:GetMyAlliance().basicInfo.allianceMoveTime/1000.0 - app.timer:GetServerTime()
+        local canMove = Alliance_Manager:GetMyAlliance().basicInfo.allianceMoveTime == 0 or time <= 0
+        if not canMove then
+            UIKit:showMessageDialog(_("提示"), _("当前还不能移动联盟"))
+            self:LeftButtonClicked()
+            return
+        end
+        local mapIndex = self.mapIndex
+        local palaceLevel = Alliance_Manager:GetMyAlliance():GetAllianceBuildingInfoByName("palace").level
+        local  canMove1 = palaceLevel >= moveLimit[DataUtils:getMapRoundByMapIndex(mapIndex)].needPalaceLevel
+        if not canMove1 then
+            UIKit:showMessageDialog(_("提示"), _("联盟宫殿等级不足,不能移动到目标地块"))
+            self:LeftButtonClicked()
+            return
+        end
+        NetManager:getMoveAlliancePromise(self.object)
         self:LeftButtonClicked()
     end):addTo(body):align(display.RIGHT_TOP, b_size.width,10)
 end
 return WidgetWorldAllianceInfo
+
+
 
 
 

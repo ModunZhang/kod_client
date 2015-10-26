@@ -343,58 +343,58 @@ function DataUtils:getAllianceLocationDistance(fromAllianceDoc, fromLocation, to
 
     local width = math.abs(fromLocation_change.x - toLocation_change.x)
     local height = math.abs(fromLocation_change.y - toLocation_change.y)
-    
+
     return DataUtils:getDistance(width,height)
 
-    -- local width,height = 0,0
-    -- if fromAllianceDoc == toAllianceDoc then
-    --     width = math.abs(fromLocation.x - toLocation.x)
-    --     height =  math.abs(fromLocation.y - toLocation.y)
-    --     return DataUtils:getDistance(width,height)
-    -- end
-    -- if fromAllianceDoc:GetAllianceFight()['attackAllianceId'] == fromAllianceDoc._id then
-    --     local allianceMergeStyle = fromAllianceDoc:GetAllianceFight()['mergeStyle']
-    --     if allianceMergeStyle == 'left' then
-    --         width = AllianceMapSize.width - fromLocation.x + toLocation.x
-    --         height= math.abs(fromLocation.y - toLocation.y)
-    --         return DataUtils:getDistance(width,height)
-    --     elseif allianceMergeStyle == 'right' then
-    --         width = AllianceMapSize.width - toLocation.x + fromLocation.x
-    --         height= math.abs(fromLocation.y - toLocation.y)
-    --         return DataUtils:getDistance(width,height)
-    --     elseif allianceMergeStyle == 'top' then
-    --         width = math.abs(fromLocation.x - toLocation.x)
-    --         height= AllianceMapSize.height - fromLocation.y + toLocation.y
-    --         return DataUtils:getDistance(width,height)
-    --     elseif allianceMergeStyle == 'bottom' then
-    --         width = math.abs(fromLocation.x - toLocation.x)
-    --         height= AllianceMapSize.height - toLocation.y + fromLocation.y
-    --         return DataUtils:getDistance(width,height)
-    --     else
-    --         return 0
-    --     end
-    -- else
-    --     local allianceMergeStyle = fromAllianceDoc:GetAllianceFight()['mergeStyle']
-    --     if allianceMergeStyle == 'left' then
-    --         width = AllianceMapSize.width - toLocation.x + fromLocation.x
-    --         height = math.abs(fromLocation.y - toLocation.y)
-    --         return DataUtils:getDistance(width,height)
-    --     elseif allianceMergeStyle == 'right' then
-    --         width = AllianceMapSize.width - fromLocation.x + toLocation.x
-    --         height = math.abs(fromLocation.y - toLocation.y)
-    --         return DataUtils:getDistance(width,height)
-    --     elseif allianceMergeStyle == 'top' then
-    --         width = math.abs(fromLocation.x - toLocation.x)
-    --         height = AllianceMapSize.height - toLocation.y + fromLocation.y
-    --         return DataUtils:getDistance(width,height)
-    --     elseif allianceMergeStyle == 'bottom' then
-    --         width = math.abs(fromLocation.x - toLocation.x)
-    --         height = AllianceMapSize.height - fromLocation.y + toLocation.y
-    --         return DataUtils:getDistance(width,height)
-    --     else
-    --         return 0
-    --     end
-    -- end
+        -- local width,height = 0,0
+        -- if fromAllianceDoc == toAllianceDoc then
+        --     width = math.abs(fromLocation.x - toLocation.x)
+        --     height =  math.abs(fromLocation.y - toLocation.y)
+        --     return DataUtils:getDistance(width,height)
+        -- end
+        -- if fromAllianceDoc:GetAllianceFight()['attackAllianceId'] == fromAllianceDoc._id then
+        --     local allianceMergeStyle = fromAllianceDoc:GetAllianceFight()['mergeStyle']
+        --     if allianceMergeStyle == 'left' then
+        --         width = AllianceMapSize.width - fromLocation.x + toLocation.x
+        --         height= math.abs(fromLocation.y - toLocation.y)
+        --         return DataUtils:getDistance(width,height)
+        --     elseif allianceMergeStyle == 'right' then
+        --         width = AllianceMapSize.width - toLocation.x + fromLocation.x
+        --         height= math.abs(fromLocation.y - toLocation.y)
+        --         return DataUtils:getDistance(width,height)
+        --     elseif allianceMergeStyle == 'top' then
+        --         width = math.abs(fromLocation.x - toLocation.x)
+        --         height= AllianceMapSize.height - fromLocation.y + toLocation.y
+        --         return DataUtils:getDistance(width,height)
+        --     elseif allianceMergeStyle == 'bottom' then
+        --         width = math.abs(fromLocation.x - toLocation.x)
+        --         height= AllianceMapSize.height - toLocation.y + fromLocation.y
+        --         return DataUtils:getDistance(width,height)
+        --     else
+        --         return 0
+        --     end
+        -- else
+        --     local allianceMergeStyle = fromAllianceDoc:GetAllianceFight()['mergeStyle']
+        --     if allianceMergeStyle == 'left' then
+        --         width = AllianceMapSize.width - toLocation.x + fromLocation.x
+        --         height = math.abs(fromLocation.y - toLocation.y)
+        --         return DataUtils:getDistance(width,height)
+        --     elseif allianceMergeStyle == 'right' then
+        --         width = AllianceMapSize.width - fromLocation.x + toLocation.x
+        --         height = math.abs(fromLocation.y - toLocation.y)
+        --         return DataUtils:getDistance(width,height)
+        --     elseif allianceMergeStyle == 'top' then
+        --         width = math.abs(fromLocation.x - toLocation.x)
+        --         height = AllianceMapSize.height - toLocation.y + fromLocation.y
+        --         return DataUtils:getDistance(width,height)
+        --     elseif allianceMergeStyle == 'bottom' then
+        --         width = math.abs(fromLocation.x - toLocation.x)
+        --         height = AllianceMapSize.height - fromLocation.y + toLocation.y
+        --         return DataUtils:getDistance(width,height)
+        --     else
+        --         return 0
+        --     end
+        -- end
 end
 --[[
     -->
@@ -1194,7 +1194,61 @@ function DataUtils:GetResourceProtectPercent( resource_name )
     finalPercent = finalPercent > 0.9 and 0.9 or finalPercent < 0.1 and 0.1 or finalPercent
     return finalPercent
 end
+--根据MapIndex获取MapRound
+function DataUtils:getMapRoundByMapIndex( mapIndex )
+    local bigMapLength = 41
+    local roundMax = math.floor(bigMapLength / 2)
+    local locationX = mapIndex % bigMapLength
+    local locationY = math.floor(mapIndex / bigMapLength)
+    local locations = {}
+    for i=0,roundMax do
+        local location = {}
+        local width = bigMapLength - (i * 2);
+        local height = bigMapLength - (i * 2);
+
+        local x = i
+        local y = i
+        local from = {x = x, y =y}
+        local to = {x = x + width - 1, y = y}
+        table.insert(location, {from = from, to = to})
+
+        x = i
+        y = height - 1 + i
+        if x ~= y then
+            from = {x = x, y = y}
+            to = {x = x + width - 1, y = y}
+            table.insert(location, {from = from, to = to})
+        end
+
+        if i ~= roundMax then
+            x = i
+            y = i + 1
+            from = {x = x, y = y}
+            to = {x = x, y = y + height - 2 - 1}
+            table.insert(location, {from = from, to = to})
+
+            x = width - 1 + i
+            y = i + 1
+            if x ~= y then
+                from = {x = x, y = y}
+                to = {x = x, y = y + height - 2 - 1}
+                table.insert(location, {from = from, to = to})
+            end
+        end
+        table.insert(locations, location)
+    end
+    local theRound = nil
+    for round,location in ipairs(locations) do
+        for i,v in ipairs(location) do
+            if v.from.x <= locationX and v.from.y <= locationY and v.to.x >= locationX and v.to.y >= locationY then
+                theRound = round - 1 
+            end
+        end
+    end
+    return theRound and (roundMax - theRound)
+end
 return DataUtils
+
 
 
 
