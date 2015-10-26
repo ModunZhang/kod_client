@@ -448,21 +448,6 @@ require("app.datas.PlayerInitData_stringInit")
 require("app.datas.PlayerInitData_resources")
 require("app.datas.PlayerInitData_playerLevel")
 
-GameDatas.PlayerVillageExp = {
-	["exp"] = {},
-	["wood"] = {},
-	["stone"] = {},
-	["iron"] = {},
-	["food"] = {},
-	["coin"] = {},
-}
-require("app.datas.PlayerVillageExp_exp")
-require("app.datas.PlayerVillageExp_wood")
-require("app.datas.PlayerVillageExp_stone")
-require("app.datas.PlayerVillageExp_iron")
-require("app.datas.PlayerVillageExp_food")
-require("app.datas.PlayerVillageExp_coin")
-
 GameDatas.ProductionTechLevelUp = {
 	["crane"] = {},
 	["fastFix"] = {},
