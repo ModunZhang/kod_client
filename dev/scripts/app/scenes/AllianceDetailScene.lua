@@ -295,12 +295,11 @@ function AllianceDetailScene:ctor(location)
     self.goto_x = x
     self.goto_y = y
     self.visible_alliances = {}
-    Alliance_Manager:ClearCache()
-    Alliance_Manager:UpdateAllianceBy(Alliance_Manager:GetMyAlliance().mapIndex, Alliance_Manager:GetMyAlliance())
 end
 function AllianceDetailScene:onEnter()
     AllianceDetailScene.super.onEnter(self)
-
+    Alliance_Manager:ClearCache()
+    Alliance_Manager:UpdateAllianceBy(Alliance_Manager:GetMyAlliance().mapIndex, Alliance_Manager:GetMyAlliance())
 
     local alliance = Alliance_Manager:GetMyAlliance()
     if self.location then
@@ -328,6 +327,19 @@ function AllianceDetailScene:onEnter()
     -- self:RefreshVillageEvents(alliance.villageEvents)
     self:CreateMarchEvents(Alliance_Manager:GetMyAllianceMapData().marchEvents)
     self:RefreshVillageEvents(alliance, Alliance_Manager:GetMyAllianceMapData().villageEvents)
+
+
+    -- cc.ui.UIPushButton.new({normal = "lock_btn.png",pressed = "lock_btn.png"})
+    -- :addTo(self, 1000000):align(display.RIGHT_TOP, display.width, display.height)
+    -- :onButtonClicked(function(event)
+    --     app:onEnterBackground()
+    -- end)
+
+    -- cc.ui.UIPushButton.new({normal = "lock_btn.png",pressed = "lock_btn.png"})
+    -- :addTo(self, 1000000):align(display.RIGHT_TOP, display.width, display.height - 100)
+    -- :onButtonClicked(function(event)
+    --     app:onEnterForeground()
+    -- end)
 end
 function AllianceDetailScene:onExit()
     if self.current_allinace_index then

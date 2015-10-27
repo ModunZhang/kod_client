@@ -24,6 +24,7 @@ local worldsize = {width = ALLIANCE_WIDTH * 160 * MAP_LEGNTH_WIDTH, height = ALL
 local timer = app.timer
 local MINE,FRIEND,ENEMY = 1,2,3
 local SPRITE_TAG = 112
+local CLOUD_TAG = 120
 local function createBuildingSprite(png)
     return display.newSprite(png, nil, nil, {class=cc.FilteredSpriteWithOne})
 end
@@ -438,6 +439,8 @@ function AllianceLayer:LoadAllianceByIndex(index, alliance)
                     v.info.level:setString(b.level)
                 end
             end
+        else
+            self:CreateClouds():addTo(objects_node, 999999, CLOUD_TAG)
         end
     end)
 end
@@ -669,6 +672,8 @@ end
 function AllianceLayer:FreeObjects(obj)
     if not obj then return end
 
+    obj:removeChildByTag(CLOUD_TAG)
+
     if obj.nomanland then
         if obj:getParent() then
             obj:retain()
@@ -705,8 +710,6 @@ function AllianceLayer:GetFreeObjects(terrain, style, index, alliance)
         else
             local obj = display.newNode()
             self:CreateNoManLand(obj, terrain, index)
-            self:CreateClouds():addTo(obj, 999999)
-            :pos(ALLIANCE_WIDTH * 160/2, ALLIANCE_HEIGHT * 160/2)
             obj.terrain = terrain
             obj.nomanland = true
             obj.nomanland_style = nomanland_style
@@ -724,8 +727,6 @@ function AllianceLayer:GetFreeObjects(terrain, style, index, alliance)
     else
         local obj = display.newNode()
         self:CreateAllianceObjects(obj, terrain, style, index, alliance)
-        self:CreateClouds():addTo(obj, 999999)
-        :pos(ALLIANCE_WIDTH * 160/2, ALLIANCE_HEIGHT * 160/2)
         obj.mapObjects = {}
         obj.terrain = terrain
         obj.style = style
@@ -741,19 +742,33 @@ function AllianceLayer:ReloadObjectsByTerrain(obj_node, terrain)
 end
 function AllianceLayer:CreateClouds()
     local node = display.newNode()
-    local width = (ALLIANCE_WIDTH-2) * 160
-    local height = (ALLIANCE_HEIGHT-2) * 160
-    for i = 1, 100 do
-        local x,y = math.random(width), math.random(height)
-        display.newSprite(string.format("cloud_%d.png", math.random(4)))
-            :addTo(node):pos(x - width/2, y - height/2):runAction(
-            cc.RepeatForever:create(transition.sequence{
-                cc.MoveBy:create(math.random(3) + 2, cc.p(10, 0)),
-                cc.MoveBy:create(math.random(3) + 2, cc.p(-20, 0)),
-            }
-        ))
+    for i = 1, 130 do
+        self:CreateCloud():addTo(node):Run()
     end
     return node
+end
+function AllianceLayer:CreateCloud()
+    local sprite = display.newSprite(string.format("cloud_%d.png", math.random(4)))
+    function sprite:Run()
+        local x = math.random(25 * TILE_WIDTH)
+        local y = math.random(1 + (ALLIANCE_HEIGHT - 2) * TILE_WIDTH)
+        local dis = ALLIANCE_WIDTH * TILE_WIDTH - x - TILE_WIDTH
+        time = dis / (math.random(20) + 10)
+        self:opacity(128):pos(x,y)
+        self:runAction(cc.Spawn:create({
+            transition.sequence{
+                cc.MoveBy:create(time, cc.p(dis, 0)),
+                cc.CallFunc:create(function()
+                    self:Run()
+                end)
+            },
+            transition.sequence{
+                cc.FadeIn:create(time/4),
+                cc.DelayTime:create(time * 2/4),
+                cc.FadeTo:create(time/4,0)
+            }}))
+    end
+    return sprite
 end
 function AllianceLayer:CreateAllianceObjects(obj_node, terrain, style, index, alliance)
     local decorators = {}
@@ -951,4 +966,5 @@ end
 
 
 return AllianceLayer
+
 
