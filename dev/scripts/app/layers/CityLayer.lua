@@ -260,7 +260,6 @@ function CityLayer:GetBuildings(buildingLocation)
         end
     end
     for k,v in pairs(self.walls) do
-        print(v:GetEntity():IsGate())
         if v:GetEntity():IsGate() and 
             v:GetCurrentLocation() == buildingLocation then
             table.insert(t, v)
