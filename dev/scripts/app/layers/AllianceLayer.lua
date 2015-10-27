@@ -795,6 +795,9 @@ function AllianceLayer:CreateAllianceObjects(obj_node, terrain, style, index, al
                 :addTo(node, 0, SPRITE_TAG)
             if name == "bloodSpring" then
                 sprite:scale(0.7)
+                local size = sprite:getContentSize()
+                ccs.Armature:create("longpengquan"):addTo(sprite)
+                :pos(size.width/2, size.height/2):getAnimation():playWithIndex(0)
             end
             node.x = v.x
             node.y = v.y
