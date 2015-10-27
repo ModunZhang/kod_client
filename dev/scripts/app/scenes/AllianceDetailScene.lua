@@ -391,7 +391,7 @@ function AllianceDetailScene:StartTimer(index)
             end):fail(function()
                 self:StartTimer(index)
             end)
-    end, 0.5)
+    end, 0.2)
 end
 function AllianceDetailScene:CreateHomePage()
     local home_page = GameUIAllianceHome.new(Alliance_Manager:GetMyAlliance()):addTo(self)
