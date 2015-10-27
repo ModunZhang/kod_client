@@ -451,10 +451,12 @@ function GameUIAlliancePalace:InitInfoPart()
         }))
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                if need_honour>self.alliance.basicInfo.honour then
+                if need_honour > self.alliance.basicInfo.honour then
                     UIKit:showMessageDialog(_("提示"),_("联盟荣耀值不足"))
                 elseif self.alliance.basicInfo.status == "fight" then
                     UIKit:showMessageDialog(_("提示"),_("战争期不能修改联盟地形"))
+                elseif self:MapIndexToTerrian(self.select_terrian_index) == self.alliance.basicInfo.terrain then
+                    UIKit:showMessageDialog(_("提示"),_("选择的新地形与当前地形相同"))
                 else
                     if self.alliance:GetSelf():CanEditAlliance() then
                         NetManager:getEditAllianceTerrianPromise(self:MapIndexToTerrian(self.select_terrian_index))
