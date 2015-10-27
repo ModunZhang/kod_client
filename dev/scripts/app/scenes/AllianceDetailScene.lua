@@ -5,7 +5,11 @@ local GameUIAllianceHome = import("..ui.GameUIAllianceHome")
 local MapScene = import(".MapScene")
 local AllianceDetailScene = class("AllianceDetailScene", MapScene)
 
-
+function AllianceDetailScene:OnAllianceDataChanged_basicInfo(allianceData, deltaData)
+    if deltaData("basicInfo.terrain") then
+        self:GetSceneLayer():LoadAllianceByIndex(allianceData.mapIndex, allianceData)
+    end
+end
 function AllianceDetailScene:OnAllianceDataChanged_members(allianceData, deltaData)
     local ok, value = deltaData("members.edit")
     if ok then
@@ -167,6 +171,9 @@ function AllianceDetailScene:OnMapAllianceChanged(allianceData, deltaData)
         self:GetSceneLayer():LoadAllianceByIndex(allianceData.mapIndex, nil)
         return 
     end
+    if deltaData("basicInfo") then
+       self:OnAllianceDataChanged_basicInfo(allianceData, deltaData) 
+    end
     if deltaData("members") then
        self:OnAllianceDataChanged_members(allianceData, deltaData) 
     end
@@ -316,6 +323,7 @@ function AllianceDetailScene:onEnter()
 
     self.home_page = self:CreateHomePage()
     self:GetSceneLayer():ZoomTo(0.82)
+    alliance:AddListenOnType(self, "basicInfo")
     alliance:AddListenOnType(self, "members")
     alliance:AddListenOnType(self, "buildings")
     alliance:AddListenOnType(self, "mapObjects")
@@ -364,21 +372,26 @@ function AllianceDetailScene:FetchAllianceDatasByIndex(index)
         self.amintimer:stopAllActions()
         self.current_allinace_index = nil
     elseif self.current_allinace_index ~= index then
-        self.fetchtimer:stopAllActions()
-        self.amintimer:stopAllActions()
-        self.fetchtimer:performWithDelay(function()
-            NetManager:getEnterMapIndexPromise(index)
-                :done(function(response)
-                    self.current_allinace_index = index
-                    Alliance_Manager:OnEnterMapIndex(index, response.msg)
-                    self.amintimer:stopAllActions()
-                    self.amintimer:schedule(function()
-                        NetManager:getAmInMapIndexPromise(self.current_allinace_index)
-                    end, 10)
-                    self.home_page:RefreshTop(true)
-                end)
-        end, 0.5)
+        self:StartTimer(index)
     end
+end
+function AllianceDetailScene:StartTimer(index)
+    self.fetchtimer:stopAllActions()
+    self.amintimer:stopAllActions()
+    self.fetchtimer:performWithDelay(function()
+        NetManager:getEnterMapIndexPromise(index)
+            :done(function(response)
+                self.current_allinace_index = index
+                Alliance_Manager:OnEnterMapIndex(index, response.msg)
+                self.amintimer:stopAllActions()
+                self.amintimer:schedule(function()
+                    NetManager:getAmInMapIndexPromise(self.current_allinace_index)
+                end, 10)
+                self.home_page:RefreshTop(true)
+            end):fail(function()
+                self:StartTimer(index)
+            end)
+    end, 0.5)
 end
 function AllianceDetailScene:CreateHomePage()
     local home_page = GameUIAllianceHome.new(Alliance_Manager:GetMyAlliance()):addTo(self)

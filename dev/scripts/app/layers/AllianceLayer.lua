@@ -813,7 +813,7 @@ end
 local NoManMap = GameDatas.NoManMap
 function AllianceLayer:CreateNoManLand(obj_node, terrain, index)
     local decorators = {}
-    local style = 1
+    local style = math.random(4)
     for _,v in ipairs(NoManMap[string.format("noManMap_%d", style)]) do
         local name = v.name
         local size = buildingName[name]

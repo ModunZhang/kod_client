@@ -69,7 +69,7 @@ function WorldLayer:CreateEdge()
         shaderName = "nolimittex1",
         unit_count = HEIGHT,
         unit_len = 1 / HEIGHT,
-    })):pos(CORNER_LENGTH/2, CORNER_LENGTH + HEIGHT * TILE_LENGTH * 0.5)
+    })):pos(CORNER_LENGTH/2+1, CORNER_LENGTH + HEIGHT * TILE_LENGTH * 0.5)
         :addTo(self.scene_node):setScaleY(HEIGHT)
 
     display.newFilteredSprite("world_edge.png", "CUSTOM", json.encode({
@@ -77,7 +77,7 @@ function WorldLayer:CreateEdge()
         shaderName = "nolimittex2",
         unit_count = HEIGHT,
         unit_len = 1 / HEIGHT,
-    })):pos(CORNER_LENGTH*3/2 + TILE_LENGTH * WIDTH, CORNER_LENGTH + HEIGHT * TILE_LENGTH * 0.5)
+    })):pos(CORNER_LENGTH*3/2 + TILE_LENGTH * WIDTH - 1, CORNER_LENGTH + HEIGHT * TILE_LENGTH * 0.5)
         :addTo(self.scene_node):setScaleY(HEIGHT):flipX(true)
 
     display.newFilteredSprite("world_edge.png", "CUSTOM", json.encode({
@@ -85,7 +85,7 @@ function WorldLayer:CreateEdge()
         shaderName = "nolimittex3",
         unit_count = WIDTH,
         unit_len = 1 / WIDTH,
-    })):pos(CORNER_LENGTH + WIDTH * TILE_LENGTH * 0.5, CORNER_LENGTH*3/2 + TILE_LENGTH * HEIGHT)
+    })):pos(CORNER_LENGTH + WIDTH * TILE_LENGTH * 0.5, CORNER_LENGTH*3/2 + TILE_LENGTH * HEIGHT - 1)
         :addTo(self.scene_node):setScaleY(WIDTH):rotation(90)
 
     display.newFilteredSprite("world_edge.png", "CUSTOM", json.encode({
@@ -93,7 +93,7 @@ function WorldLayer:CreateEdge()
         shaderName = "nolimittex4",
         unit_count = WIDTH,
         unit_len = 1 / WIDTH,
-    })):pos(CORNER_LENGTH + WIDTH * TILE_LENGTH * 0.5, CORNER_LENGTH/2)
+    })):pos(CORNER_LENGTH + WIDTH * TILE_LENGTH * 0.5, CORNER_LENGTH/2 + 1)
         :addTo(self.scene_node):setScaleY(WIDTH):rotation(-90)
 end
 function WorldLayer:CreateMap()
