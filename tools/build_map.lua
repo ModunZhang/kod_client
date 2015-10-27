@@ -17,11 +17,11 @@ local buildings_map = {
 	"decorate_tree_2",
 	"decorate_tree_3",
 	"decorate_tree_4",
-    "decorate_1",
-    "decorate_2",
-    "decorate_3",
-    "decorate_4",
-    "decorate_6",
+    "decorate_tree_5",
+    "decorate_tree_6",
+    "decorate_tree_7",
+    "decorate_tree_8",
+    "decorate_tree_9",
 }
 
 

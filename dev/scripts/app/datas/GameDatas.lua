@@ -47,8 +47,14 @@ require("app.datas.ClientInitGame_pve_wanted")
 
 GameDatas.NoManMap = {
 	["noManMap_1"] = {},
+	["noManMap_2"] = {},
+	["noManMap_3"] = {},
+	["noManMap_4"] = {},
 }
 require("app.datas.NoManMap_noManMap_1")
+require("app.datas.NoManMap_noManMap_2")
+require("app.datas.NoManMap_noManMap_3")
+require("app.datas.NoManMap_noManMap_4")
 
 GameDatas.Activities = {
 	["day60"] = {},
