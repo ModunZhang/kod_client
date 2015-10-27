@@ -398,11 +398,6 @@ function AllianceLayer:RefreshBuildingByIndex(index, building, alliance)
         end
     end
 end
-local maps = {
-    "tmxmaps/alliance_desert1.tmx",
-    "tmxmaps/alliance_grassLand1.tmx",
-    "tmxmaps/alliance_iceField1.tmx",
-}
 function AllianceLayer:LoadAllianceByIndex(index, alliance)
     local allianceData = (alliance ~= nil and alliance ~= json.null) and alliance or nil
     self:FreeInvisible()
