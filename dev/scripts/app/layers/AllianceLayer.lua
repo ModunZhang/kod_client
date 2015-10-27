@@ -422,11 +422,11 @@ function AllianceLayer:LoadAllianceByIndex(index, alliance)
                     mapObjects[id] = nil
                 end
             end
-            local ismyaln = allianceData._id == User.allianceId 
-            local building_png = ismyaln and UILib.alliance_building 
-                                or UILib.other_alliance_building
-            local banner = ismyaln and UILib.my_city_banner[0] 
-                                or UILib.enemy_city_banner[0]
+            local ismyaln = allianceData._id == User.allianceId
+            local building_png = ismyaln and UILib.alliance_building
+                or UILib.other_alliance_building
+            local banner = ismyaln and UILib.my_city_banner[0]
+                or UILib.enemy_city_banner[0]
             for name,v in pairs(objects_node.buildings) do
                 local x,y = self:GetBannerPos(index, v.x, v.y)
                 v.info:show():pos(x, y):zorder(x * y)
@@ -459,7 +459,7 @@ function AllianceLayer:AddMapObject(objects_node, mapObj, alliance)
         or mapObj.name == "ironVillage"
         or mapObj.name == "foodVillage"
         or mapObj.name == "coinVillage"
-     then
+    then
         local info = Alliance.GetAllianceVillageInfosById(alliance, mapObj.id)
         local config = SpriteConfig[mapObj.name]:GetConfigByLevel(info.level)
         sprite = createBuildingSprite(config.png):scale(config.scale)
@@ -521,7 +521,7 @@ function AllianceLayer:RefreshSpriteInfo(sprite, mapObj, alliance)
     if mapObj.name == "member" then
         local member = Alliance.GetMemberByMapObjectsId(alliance, mapObj.id)
         local config = SpriteConfig[isenemy and "other_keep" or "my_keep"]
-                        :GetConfigByLevel(member.keepLevel)
+            :GetConfigByLevel(member.keepLevel)
         sprite:getChildByTag(SPRITE_TAG):setTexture(config.png)
 
         info.banner:setTexture(banners[member.helpedByTroopsCount])
@@ -559,7 +559,7 @@ function AllianceLayer:RefreshSpriteInfo(sprite, mapObj, alliance)
                 flag:getChildByTag(1):setTexture(circle)
             else
                 self:CreateVillageFlag(ally)
-                :addTo(sprite,2,1):pos(0, 150):scale(1.5)
+                    :addTo(sprite,2,1):pos(0, 150):scale(1.5)
             end
         elseif not event and sprite:getChildByTag(1) then
             sprite:getChildByTag(1):removeFromParent()
@@ -705,6 +705,8 @@ function AllianceLayer:GetFreeObjects(terrain, style, index, alliance)
         else
             local obj = display.newNode()
             self:CreateNoManLand(obj, terrain, index)
+            self:CreateClouds():addTo(obj, 999999)
+            :pos(ALLIANCE_WIDTH * 160/2, ALLIANCE_HEIGHT * 160/2)
             obj.terrain = terrain
             obj.nomanland = true
             obj.nomanland_style = nomanland_style
@@ -722,6 +724,8 @@ function AllianceLayer:GetFreeObjects(terrain, style, index, alliance)
     else
         local obj = display.newNode()
         self:CreateAllianceObjects(obj, terrain, style, index, alliance)
+        self:CreateClouds():addTo(obj, 999999)
+        :pos(ALLIANCE_WIDTH * 160/2, ALLIANCE_HEIGHT * 160/2)
         obj.mapObjects = {}
         obj.terrain = terrain
         obj.style = style
@@ -734,6 +738,22 @@ function AllianceLayer:ReloadObjectsByTerrain(obj_node, terrain)
     for k,v in pairs(obj_node.decorators) do
         v:setTexture(decorator_image[terrain][v.name])
     end
+end
+function AllianceLayer:CreateClouds()
+    local node = display.newNode()
+    local width = (ALLIANCE_WIDTH-2) * 160
+    local height = (ALLIANCE_HEIGHT-2) * 160
+    for i = 1, 100 do
+        local x,y = math.random(width), math.random(height)
+        display.newSprite(string.format("cloud_%d.png", math.random(4)))
+            :addTo(node):pos(x - width/2, y - height/2):runAction(
+            cc.RepeatForever:create(transition.sequence{
+                cc.MoveBy:create(math.random(3) + 2, cc.p(10, 0)),
+                cc.MoveBy:create(math.random(3) + 2, cc.p(-20, 0)),
+            }
+        ))
+    end
+    return node
 end
 function AllianceLayer:CreateAllianceObjects(obj_node, terrain, style, index, alliance)
     local decorators = {}
@@ -757,7 +777,7 @@ function AllianceLayer:CreateAllianceObjects(obj_node, terrain, style, index, al
                 :addTo(obj_node, getZorderByXY(x, y))
                 :pos(self:GetInnerMapPosition(x,y))
             local sprite = createBuildingSprite(building_png)
-            :addTo(node, 0, SPRITE_TAG)
+                :addTo(node, 0, SPRITE_TAG)
             if name == "bloodSpring" then
                 sprite:scale(0.7)
             end
@@ -877,8 +897,8 @@ function AllianceLayer:PromiseOfFlashEmptyGround(mapIndex, x, y)
     local point = self:RealPosition(mapIndex, x, y)
     local p = promise.new()
     display.newSprite("click_empty.png")
-    :addTo(self.empty_node, 10000, CLICK_EMPTY_TAG)
-    :pos(point.x, point.y):opacity(0)
+        :addTo(self.empty_node, 10000, CLICK_EMPTY_TAG)
+        :pos(point.x, point.y):opacity(0)
         :runAction(
             transition.sequence{
                 cc.FadeTo:create(0.15, 255),
@@ -931,3 +951,4 @@ end
 
 
 return AllianceLayer
+
