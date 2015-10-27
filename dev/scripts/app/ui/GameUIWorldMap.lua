@@ -14,7 +14,14 @@ end
 function GameUIWorldMap:onEnter()
 	self:GotoPosition(0,0)
 	self:ScheduleLoadMap()
-
+    -- top
+    local top_bg = display.newSprite("background_500x84.png"):align(display.TOP_CENTER, display.cx, display.top-20):addTo(self)
+    UIKit:ttfLabel({
+        text = _("世界地图"),
+        size = 32,
+        color = 0xffedae,
+    }):align(display.CENTER, top_bg:getContentSize().width/2, top_bg:getContentSize().height/2)
+        :addTo(top_bg)
     -- 返回按钮
     local world_map_btn_bg = display.newSprite("background_86x86.png"):addTo(self):align(display.LEFT_BOTTOM,display.left + 10,display.bottom + 25):scale(0.85)
     -- local inWorldScene = display.getRunningScene().__cname == "WorldScene"
@@ -128,9 +135,10 @@ function GameUIWorldMap:OnTouchClicked(pre_x, pre_y, x, y)
         return
     end
     local click_object,index = self:GetSceneLayer():GetClickedObject(x, y)
-    if click_object or index then
-        UIKit:newWidgetUI("WidgetWorldAllianceInfo",click_object,index):AddToCurrentScene()
+    if not index then
+        return
     end
+    UIKit:newWidgetUI("WidgetWorldAllianceInfo",click_object,index):AddToCurrentScene()
 end
 function GameUIWorldMap:IsFingerOn()
     return self.event_manager:TouchCounts() ~= 0

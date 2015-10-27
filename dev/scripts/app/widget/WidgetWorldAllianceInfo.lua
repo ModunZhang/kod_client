@@ -238,7 +238,7 @@ function WidgetWorldAllianceInfo:LoadMoveAlliance()
             self:LeftButtonClicked()
             return
         end
-        NetManager:getMoveAlliancePromise(self.object)
+        NetManager:getMoveAlliancePromise(mapIndex)
         self:LeftButtonClicked()
     end):addTo(body):align(display.RIGHT_TOP, b_size.width,10)
 end
