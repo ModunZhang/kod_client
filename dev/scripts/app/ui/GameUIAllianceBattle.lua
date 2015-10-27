@@ -208,7 +208,7 @@ function GameUIAllianceBattle:InitAllianceInfo()
         :addTo(current_position)
     UIKit:ttfLabel(
         {
-            text = _("第五圈"),
+            text = string.format(_("第%d圈"),DataUtils:getMapRoundByMapIndex(alliance.mapIndex) + 1) ,
             size = 22,
             color = 0x403c2f,
         }):align(display.RIGHT_CENTER, 548 - 16, 25)
@@ -217,7 +217,7 @@ function GameUIAllianceBattle:InitAllianceInfo()
     local bg = WidgetInfoWithTitle.new({
         title = _("联盟地图BUFF"),
         h = 348,
-        info = self:GetAllianceMapBuffByIndex(1)
+        info = self:GetAllianceMapBuffByIndex(DataUtils:getMapRoundByMapIndex(alliance.mapIndex) + 1)
     }):align(display.TOP_CENTER, window.cx, current_position:getPositionY() - 120):addTo(layer)
 
 end
