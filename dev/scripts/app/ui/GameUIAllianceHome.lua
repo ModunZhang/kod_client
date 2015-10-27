@@ -47,6 +47,16 @@ function GameUIAllianceHome:ctor(alliance, multialliancelayer)
     GameUIAllianceHome.super.ctor(self)
     self.alliance = alliance
     self.multialliancelayer = multialliancelayer
+
+
+    local sprite = display.newFilteredSprite("click_empty.png", "CUSTOM", json.encode({
+        frag = "shaders/blue_light.fs",
+        shaderName = "blue_light",
+    }))
+    :addTo(self):align(display.BOTTOM_CENTER, display.cx, display.cy)
+    local size = sprite:getContentSize()
+    sprite:setScaleX(display.width / size.width)
+    sprite:setScaleY(display.height / size.height * 0.5)
 end
 function GameUIAllianceHome:onEnter()
     GameUIAllianceHome.super.onEnter(self)
