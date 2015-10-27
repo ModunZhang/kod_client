@@ -11,7 +11,10 @@ local WIDTH, HEIGHT = 41, 41
 local MAX_INDEX = WIDTH * HEIGHT - 1
 local SHADER_WIDTH, SHADER_HEIGHT = 42, 42
 local width, height = WIDTH * TILE_LENGTH, HEIGHT * TILE_LENGTH
-local worldsize = {width = width + 2 * CORNER_LENGTH, height = height + 2 * CORNER_LENGTH}
+local worldsize = {
+width = width + 2 * CORNER_LENGTH + 200, 
+height = height + 2 * CORNER_LENGTH + 500,
+}
 assert(SHADER_WIDTH % 2 == 0)
 assert(SHADER_HEIGHT % 2 == 0)
 
@@ -20,21 +23,45 @@ function WorldLayer:ctor(scene)
     WorldLayer.super.ctor(self, scene, 0.4, 1.2)
 end
 function WorldLayer:onEnter()
+    self:CreateBg()
+    self.scene_node = display.newNode():addTo(self):pos(15,15)
     self:CreateCorner()
     self:CreateEdge()
     self.map = self:CreateMap()
     self:CreateAllianceLayer()
     self.allainceSprites = {}
 end
+function WorldLayer:CreateBg()
+    local offsetY = - 280
+    local sprite = display.newFilteredSprite("world_bg.jpg", "CUSTOM", json.encode({
+        frag = "shaders/plane.fs",
+        shaderName = "plane1",
+        param = {1/14, 1/8, 14, 8}
+    })):addTo(self):align(display.LEFT_BOTTOM, 0, offsetY)
+    local size = sprite:getContentSize()
+    sprite:setScaleX(14)
+    sprite:setScaleY(8)
+    worldsize.width = size.width * 14 - 265
+    worldsize.height = size.height * 8 + offsetY
+
+    display.newFilteredSprite("world_title2.jpg", "CUSTOM", json.encode({
+        frag = "shaders/plane.fs",
+        shaderName = "plane2",
+        param = {1/14, 1, 14, 1}
+    })):addTo(self):align(display.LEFT_TOP,0,size.height * 8 + offsetY):setScaleX(14)
+
+    display.newSprite("world_title1.jpg")
+    :addTo(self):align(display.LEFT_TOP,0,size.height * 8 + offsetY)
+end
 function WorldLayer:CreateCorner()
     display.newSprite("world_tile.png"):pos(CORNER_LENGTH/2, CORNER_LENGTH/2)
-        :addTo(self):scale(1):rotation(-90)
+        :addTo(self.scene_node):scale(1):rotation(-90)
     display.newSprite("world_tile.png"):pos(CORNER_LENGTH/2, CORNER_LENGTH*3/2 + TILE_LENGTH * HEIGHT)
-        :addTo(self):scale(1):rotation(0)
+        :addTo(self.scene_node):scale(1):rotation(0)
     display.newSprite("world_tile.png"):pos(CORNER_LENGTH*3/2 + TILE_LENGTH * WIDTH, CORNER_LENGTH/2)
-        :addTo(self):scale(1):rotation(180)
+        :addTo(self.scene_node):scale(1):rotation(180)
     display.newSprite("world_tile.png"):pos(CORNER_LENGTH*3/2 + TILE_LENGTH * WIDTH, CORNER_LENGTH*3/2 + TILE_LENGTH * HEIGHT)
-        :addTo(self):scale(1):rotation(90)
+        :addTo(self.scene_node):scale(1):rotation(90)
 end
 function WorldLayer:CreateEdge()
     display.newFilteredSprite("world_edge.png", "CUSTOM", json.encode({
@@ -43,7 +70,7 @@ function WorldLayer:CreateEdge()
         unit_count = HEIGHT,
         unit_len = 1 / HEIGHT,
     })):pos(CORNER_LENGTH/2, CORNER_LENGTH + HEIGHT * TILE_LENGTH * 0.5)
-        :addTo(self):setScaleY(HEIGHT)
+        :addTo(self.scene_node):setScaleY(HEIGHT)
 
     display.newFilteredSprite("world_edge.png", "CUSTOM", json.encode({
         frag = "shaders/nolimittex.fs",
@@ -51,7 +78,7 @@ function WorldLayer:CreateEdge()
         unit_count = HEIGHT,
         unit_len = 1 / HEIGHT,
     })):pos(CORNER_LENGTH*3/2 + TILE_LENGTH * WIDTH, CORNER_LENGTH + HEIGHT * TILE_LENGTH * 0.5)
-        :addTo(self):setScaleY(HEIGHT):flipX(true)
+        :addTo(self.scene_node):setScaleY(HEIGHT):flipX(true)
 
     display.newFilteredSprite("world_edge.png", "CUSTOM", json.encode({
         frag = "shaders/nolimittex.fs",
@@ -59,7 +86,7 @@ function WorldLayer:CreateEdge()
         unit_count = WIDTH,
         unit_len = 1 / WIDTH,
     })):pos(CORNER_LENGTH + WIDTH * TILE_LENGTH * 0.5, CORNER_LENGTH*3/2 + TILE_LENGTH * HEIGHT)
-        :addTo(self):setScaleY(WIDTH):rotation(90)
+        :addTo(self.scene_node):setScaleY(WIDTH):rotation(90)
 
     display.newFilteredSprite("world_edge.png", "CUSTOM", json.encode({
         frag = "shaders/nolimittex.fs",
@@ -67,11 +94,11 @@ function WorldLayer:CreateEdge()
         unit_count = WIDTH,
         unit_len = 1 / WIDTH,
     })):pos(CORNER_LENGTH + WIDTH * TILE_LENGTH * 0.5, CORNER_LENGTH/2)
-        :addTo(self):setScaleY(WIDTH):rotation(-90)
+        :addTo(self.scene_node):setScaleY(WIDTH):rotation(-90)
 end
 function WorldLayer:CreateMap()
     local clip = display.newClippingRegionNode(cc.rect(0,0, TILE_LENGTH * WIDTH, TILE_LENGTH * HEIGHT))
-        :addTo(self):align(display.LEFT_BOTTOM,CORNER_LENGTH,CORNER_LENGTH)
+        :addTo(self.scene_node):align(display.LEFT_BOTTOM,CORNER_LENGTH,CORNER_LENGTH)
 
     local map = display.newFilteredSprite("world_terrain.jpg", "CUSTOM", json.encode({
         frag = "shaders/maptex.fs",
@@ -157,7 +184,7 @@ function WorldLayer:GetLogicMap()
     return self.normal_map
 end
 function WorldLayer:ConvertLogicPositionToMapPosition(lx, ly)
-    return self:convertToNodeSpace(self.map:convertToWorldSpace(cc.p(self.normal_map:ConvertToMapPosition(lx, ly))))
+    return self.map:getParent():convertToNodeSpace(self.map:convertToWorldSpace(cc.p(self.normal_map:ConvertToMapPosition(lx, ly))))
 end
 function WorldLayer:GetAvailableIndex()
     local t = {}
@@ -178,6 +205,9 @@ end
 function WorldLayer:GetClickedObject(world_x, world_y)
     local point = self.map:convertToNodeSpace(cc.p(world_x, world_y))
     local logic_x, logic_y = self:GetLogicMap():ConvertToLogicPosition(point.x, point.y)
+    if logic_x < 0 or logic_x >= WIDTH or logic_y < 0 or logic_y >= HEIGHT then
+        return nil, false
+    end
     local index = self:LogicToIndex(logic_x, logic_y)
     return self.allainceSprites[tostring(index)] , index
 end

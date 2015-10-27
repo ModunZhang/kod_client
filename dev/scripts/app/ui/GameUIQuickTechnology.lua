@@ -73,9 +73,9 @@ end
 function GameUIQuickTechnology:GetNodeForKey(key)
     return self.techNodes[key]
 end
-
-function GameUIQuickTechnology:onEnter()
-    GameUIQuickTechnology.super.onEnter(self)
+function GameUIQuickTechnology:OnMoveInStage()
+    GameUIQuickTechnology.super.OnMoveInStage(self)
+    self.technology_node = self:BuildTechnologyUI(window.height - 100):addTo(self:GetView()):pos(window.left,window.bottom+15)
     User:AddListenOnType(self, "productionTechs")
     User:AddListenOnType(self, "productionTechEvents")
     User:AddListenOnType(self, "buildingEvents")
@@ -96,7 +96,6 @@ function GameUIQuickTechnology:onEnter()
         end
     end)
 end
-
 function GameUIQuickTechnology:OnUserDataChanged_buildingEvents(userData, deltaData)
     self:CheckUIChanged()
 end
@@ -128,7 +127,6 @@ end
 
 function GameUIQuickTechnology:CreateBetweenBgAndTitle()
     GameUIQuickTechnology.super.CreateBetweenBgAndTitle(self)
-    self.technology_node = self:BuildTechnologyUI(window.height - 100):addTo(self:GetView()):pos(window.left,window.bottom+15)
 end
 
 function GameUIQuickTechnology:BuildTipsUI(technology_node,y)

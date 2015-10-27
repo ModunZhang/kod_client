@@ -42,7 +42,7 @@ function DataManager:getFteData()
     return initData
 end
 
-function DataManager:OnUserDataChanged(userData,timer, deltaData)
+function DataManager:OnUserDataChanged(userData, timer, deltaData)
     if not User or not City or not Alliance_Manager or not MailManager then
         print(debug.traceback("", 2))
         assert(false)
@@ -72,6 +72,13 @@ function DataManager:OnUserDataChanged(userData,timer, deltaData)
     LuaUtils:TimeCollect(function()
         MailManager:OnUserDataChanged(userData, timer, deltaData)
     end, "MailManager:OnUserDataChanged")
+
+    if userData and not deltaData then
+        local scene_name = display.getRunningScene().__cname
+        if scene_name == "MyCityScene" then
+            app:EnterMyCityScene()
+        end
+    end
 end
 
 

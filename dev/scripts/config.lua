@@ -45,15 +45,15 @@ CONFIG_APP_URL = {
 }
 CONFIG_IS_LOCAL = false
 -- 是否是测试版本 后面会删除这个变量 从plist/meta-data里面获取值，CONFIG_IS_DEBUG为true时三方sdk不会记录购买和事件信息，传到网关获取服务器信息
-CONFIG_IS_DEBUG = false 
+CONFIG_IS_DEBUG = true 
 -- 是否记录日志文件 如果关闭lua错误将被发送到三方sdk
-CONFIG_LOG_DEBUG_FILE = false 
+CONFIG_LOG_DEBUG_FILE = true 
 
 GLOBAL_FTE = true
 GLOBAL_FTE_DEBUG = false
 
 -- 是否关闭自动更新,不设置表示打开自动更新
--- CONFIG_IS_NOT_UPDATE = true
+CONFIG_IS_NOT_UPDATE = true
 
 CONFIG_SCREEN_AUTOSCALE_CALLBACK = function(w, h, deviceModel)
     if w/h > 640/960 then

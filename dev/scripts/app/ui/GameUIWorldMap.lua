@@ -72,14 +72,17 @@ function GameUIWorldMap:OneTouch(pre_x, pre_y, x, y, touch_type)
         self.touch_judgment:OnTouchCancelled(pre_x, pre_y, x, y)
     end
 end
+function GameUIWorldMap:OnTouchCancelled(pre_x, pre_y, x, y)
+    print("OnTouchCancelled")
+end
 function GameUIWorldMap:OnTwoTouch(x1, y1, x2, y2, event_type)
 	local scene = self.scene_layer
     if event_type == "began" then
         scene:StopScaleAnimation()
-        self.distance = sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
+        self.distance = math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
         scene:ZoomBegin(x1, y1, x2, y2)
     elseif event_type == "moved" then
-        local new_distance = sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
+        local new_distance = math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
         scene:ZoomBy(new_distance / self.distance, (x1 + x2) * 0.5, (y1 + y2) * 0.5)
     elseif event_type == "ended" then
         scene:ZoomEnd()
@@ -125,7 +128,9 @@ function GameUIWorldMap:OnTouchClicked(pre_x, pre_y, x, y)
         return
     end
     local click_object,index = self:GetSceneLayer():GetClickedObject(x, y)
-    UIKit:newWidgetUI("WidgetWorldAllianceInfo",click_object,index):AddToCurrentScene()
+    if click_object or index then
+        UIKit:newWidgetUI("WidgetWorldAllianceInfo",click_object,index):AddToCurrentScene()
+    end
 end
 function GameUIWorldMap:IsFingerOn()
     return self.event_manager:TouchCounts() ~= 0

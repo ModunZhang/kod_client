@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>AppHoc</key>
-	<false/>
+	<true/>
 	<key>AppMinVersion</key>
 	<string>1.0</string>
 	<key>CFBundleDevelopmentRegion</key>

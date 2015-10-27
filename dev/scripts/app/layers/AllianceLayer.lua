@@ -163,9 +163,9 @@ function AllianceLayer:StartCorpsTimer()
                     program:setUniformFloat("percent", math.fmod(time - math.floor(time), 1.0))
                     program:setUniformFloat("elapse", line.is_enemy and (cc.pGetLength(cc.pSub(cur_vec, march_info.origin_start)) / march_info.origin_length) or 0)
 
-                    -- if self.track_id == id then
-                    --     self:GotoMapPositionInMiddle(cur_vec.x, cur_vec.y)
-                    -- end
+                    if self.track_id == id then
+                        self:GotoMapPositionInMiddle(cur_vec.x, cur_vec.y)
+                    end
                 else
                     self:DeleteCorpsById(id)
                 end
@@ -398,11 +398,6 @@ function AllianceLayer:RefreshBuildingByIndex(index, building, alliance)
         end
     end
 end
-local maps = {
-    "tmxmaps/alliance_desert1.tmx",
-    "tmxmaps/alliance_grassLand1.tmx",
-    "tmxmaps/alliance_iceField1.tmx",
-}
 function AllianceLayer:LoadAllianceByIndex(index, alliance)
     local allianceData = (alliance ~= nil and alliance ~= json.null) and alliance or nil
     self:FreeInvisible()
@@ -898,6 +893,36 @@ function AllianceLayer:PromiseOfFlashEmptyGround(mapIndex, x, y)
 end
 function AllianceLayer:RemoveClickNode()
     self.empty_node:removeChildByTag(CLICK_EMPTY_TAG)
+end
+function AllianceLayer:TrackCorpsById(id)
+    if self.track_id then
+        self:RemoveCorpsCircle(self.map_corps[self.track_id])
+    end
+    self.track_id = id
+    if self.track_id then
+        self:AddToCorpsCircle(self.map_corps[self.track_id])
+    end
+end
+local CIRCLE_TAG = 4356
+function AllianceLayer:AddToCorpsCircle(corps)
+    if not corps then return end
+    if corps:getChildByTag(CIRCLE_TAG) then return end
+    local sprite = display.newSprite("tmp_monster_circle.png")
+        :addTo(corps, -1, CIRCLE_TAG)
+    sprite:runAction(
+        cc.RepeatForever:create(
+            transition.sequence{
+                cc.ScaleTo:create(0.5/2, 1.2),
+                cc.ScaleTo:create(0.5/2, 1.1),
+            }
+        )
+    )
+    sprite:setColor(cc.c3b(96,255,0))
+end
+function AllianceLayer:RemoveCorpsCircle(corps)
+    if corps and corps:getChildByTag(CIRCLE_TAG) then
+        corps:removeChildByTag(CIRCLE_TAG)
+    end
 end
 --
 function AllianceLayer:getContentSize()

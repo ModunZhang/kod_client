@@ -637,7 +637,15 @@ local before_map = {
         if ok then
             for i,v in ipairs(value) do
                 if v.attackPlayerData.id == User._id then
-                    app:GetAudioManager():PlayeEffectSoundWithKey("SPLASH_BUTTON_START")
+                    app:GetAudioManager():PlayeEffectSoundWithKey("ATTACK_PLAYER_ARRIVE")
+                end
+            end
+        end
+        local ok, value = deltaData("marchEvents.strikeMarchEvents.remove")
+        if ok then
+            for i,v in ipairs(value) do
+                if v.attackPlayerData.id == User._id then
+                    app:GetAudioManager():PlayeEffectSoundWithKey("STRIKE_PLAYER_ARRIVE")
                 end
             end
         end

@@ -136,7 +136,11 @@ exportRes()
 		fileExt=${file##*.}
 		if test -f "$file" && test $fileExt != "po" && test $fileExt != "ttf";then
 			finalDir=${outfile%/*}
+			oldlen=$(ls -al "$file" | awk '{print $5}')
+			newlen=$(ls -al "$outfile" | awk '{print $5}')
 			if test "$file" -nt "$outfile";then
+		    	test -d "$finalDir" || mkdir -p "$finalDir" && cp "$file" "$finalDir"
+		    elif [ $oldlen -ne $newlen ]; then
 		    	test -d "$finalDir" || mkdir -p "$finalDir" && cp "$file" "$finalDir"
 		    fi
 		elif test -d "$file";then
