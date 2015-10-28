@@ -30,6 +30,7 @@ function WorldLayer:onEnter()
     self.map = self:CreateMap()
     self:CreateAllianceLayer()
     self.allainceSprites = {}
+    self.flagSprites = {}
 end
 function WorldLayer:CreateBg()
     local offsetY = - 280
@@ -127,16 +128,20 @@ function WorldLayer:CreateMap()
     return clip
 end
 function WorldLayer:CreateAllianceLayer()
-    self.allianceLyaer = display.newNode():addTo(self.map)
+    self.allianceLayer = display.newNode():addTo(self.map)
 end
 function WorldLayer:LoadAlliance()
     NetManager:getMapAllianceDatasPromise(self:GetAvailableIndex()):done(function(response)
         dump(response.msg.datas)
         for k,v in pairs(response.msg.datas) do
             if v == json.null then
-                if self.allainceSprites[index] then
-                    self.allainceSprites[index]:removeFromParent()
-                    self.allainceSprites[index] = nil
+                if self.allainceSprites[k] then
+                    self.allainceSprites[k]:removeFromParent()
+                    self.allainceSprites[k] = nil
+                end
+                
+                if not self.flagSprites[k] then
+                    self:CreateFlag(k)
                 end
             else
                 if not self.allainceSprites[k] then
@@ -144,13 +149,21 @@ function WorldLayer:LoadAlliance()
                 else
                     self:UpdateAllianceSprite(k, v)
                 end
+
+                if self.flagSprites[k] then
+                    self.flagSprites[k]:removeFromParent()
+                    self.flagSprites[k] = nil
+                end
             end
         end
     end)
 end
 function WorldLayer:CreateAllianceSprite(index, alliance)
-    local sprite = display.newSprite(string.format("world_alliance_%s.png", alliance.terrain)):addTo(self.allianceLyaer)
-        :pos(self:GetLogicMap():ConvertToMapPosition(self:IndexToLogic(index)))
+    local node = display.newNode()
+    :addTo(self.allianceLayer)
+    :pos(self:GetLogicMap():ConvertToMapPosition(self:IndexToLogic(index)))
+    local sprite = display.newSprite(string.format("world_alliance_%s.png", alliance.terrain))
+    :addTo(node, 0, 1):pos(50 - math.random(50), 50 - math.random(50))
     local size = sprite:getContentSize()
     local banner = display.newSprite("alliance_banner.png"):addTo(sprite):pos(size.width/2, 0)
     sprite.name = UIKit:ttfLabel({
@@ -164,15 +177,26 @@ function WorldLayer:CreateAllianceSprite(index, alliance)
     sprite.flagstr = alliance.flag
     sprite.flag = ui_helper:CreateFlagContentSprite(alliance.flag)
         :addTo(sprite):align(display.CENTER, 80, 60):scale(0.3)
-    self.allainceSprites[index] = sprite
+
+    self.allainceSprites[index] = node
 end
 function WorldLayer:UpdateAllianceSprite(index, alliance)
-    local sprite = self.allainceSprites[index]
+    local sprite = self.allainceSprites[index]:getChildByTag(1)
     sprite:setTexture(string.format("world_alliance_%s.png", alliance.terrain))
     sprite.name:setString(string.format("[%s]%s", alliance.tag, alliance.name))
     if sprite.flagstr ~= alliance.flag then
         sprite.flag:SetFlag(alliance.flag)
     end
+end
+function WorldLayer:CreateFlag(index)
+    local node = display.newNode():addTo(self.allianceLayer)
+    :pos(self:GetLogicMap():ConvertToMapPosition(self:IndexToLogic(index)))
+    local sprite = ccs.Armature:create("daqizi"):addTo(node)
+    :scale(0.4):pos(100 - math.random(100), 100 - math.random(100))
+    local ani = sprite:getAnimation()
+    ani:playWithIndex(0)
+    ani:gotoAndPlay(math.random(71) - 1)
+    self.flagSprites[index] = node
 end
 function WorldLayer:IndexToLogic(index)
     return index % WIDTH, math.floor(index / WIDTH)

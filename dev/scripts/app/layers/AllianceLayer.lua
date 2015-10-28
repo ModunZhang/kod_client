@@ -189,7 +189,7 @@ function AllianceLayer:CreateOrUpdateCorps(id, start_pos, end_pos, start_time, f
         local corps = display.newNode():addTo(self.corps_node)
         local is_strike = not soldiers or #soldiers == 0
         if is_strike then
-            UIKit:CreateDragonByDegree(march_info.degree, 1.2):addTo(corps)
+            UIKit:CreateDragonByDegree(march_info.degree, 1.2, dragonType):addTo(corps)
         else
             UIKit:CreateMoveSoldiers(march_info.degree, soldiers[1]):addTo(corps)
         end
@@ -742,7 +742,7 @@ function AllianceLayer:ReloadObjectsByTerrain(obj_node, terrain)
 end
 function AllianceLayer:CreateClouds()
     local node = display.newNode()
-    for i = 1, 130 do
+    for i = 1, 80 do
         self:CreateCloud():addTo(node):Run()
     end
     return node
@@ -750,7 +750,7 @@ end
 function AllianceLayer:CreateCloud()
     local sprite = display.newSprite(string.format("cloud_%d.png", math.random(4)))
     function sprite:Run()
-        local x = math.random(25 * TILE_WIDTH)
+        local x = math.random(25 * TILE_WIDTH) + TILE_WIDTH
         local y = math.random(1 + (ALLIANCE_HEIGHT - 2) * TILE_WIDTH)
         local dis = ALLIANCE_WIDTH * TILE_WIDTH - x - TILE_WIDTH
         time = dis / (math.random(20) + 10)

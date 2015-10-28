@@ -1368,7 +1368,7 @@ local dragon_dir_map = {
     {"flying_45", 1}, -- x+,y-
     {"flying_45", 1}, -- y-
 }
-function UIKit:CreateDragonByDegree(degree, s)
+function UIKit:CreateDragonByDegree(degree, s, dragonType)
     local node = display.newNode():scale(s or 1)
     local ani_name, scalex = unpack(dragon_dir_map[GetDirIndexByDegree(degree)])
     local dragon_ani = UILib.dragon_animations[dragonType or "redDragon"][1]
