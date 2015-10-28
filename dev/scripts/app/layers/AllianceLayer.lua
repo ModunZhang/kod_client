@@ -737,7 +737,9 @@ end
 function AllianceLayer:ReloadObjectsByTerrain(obj_node, terrain)
     obj_node.terrain = terrain
     for k,v in pairs(obj_node.decorators) do
-        v:setTexture(decorator_image[terrain][v.name])
+        if not v.is_ani then
+            v:setTexture(decorator_image[terrain][v.name])
+        end
     end
 end
 function AllianceLayer:CreateClouds()
@@ -770,6 +772,11 @@ function AllianceLayer:CreateCloud()
     end
     return sprite
 end
+local animap = {
+    decorate_tree_7 = "lupai",
+    decorate_tree_8 = "yewaiyindi",
+    decorate_tree_9 = "zhihuishi",
+}
 function AllianceLayer:CreateAllianceObjects(obj_node, terrain, style, index, alliance)
     local decorators = {}
     local buildings = {}
@@ -779,7 +786,17 @@ function AllianceLayer:CreateAllianceObjects(obj_node, terrain, style, index, al
         local x,y = (2 * v.x - size.width + 1) / 2, (2 * v.y - size.height + 1) / 2
         local deco_png = decorator_image[terrain][name]
         local building_png = alliance_building[name]
-        if deco_png then
+        if animap[name] then
+            local decorator = ccs.Armature:create(animap[name])
+                                :addTo(obj_node, getZorderByXY(x, y))
+                                :pos(self:GetInnerMapPosition(x,y))
+            decorator:getAnimation():playWithIndex(0)
+            decorator.x = v.x
+            decorator.y = v.y
+            decorator.name = name
+            decorator.is_ani = true
+            table.insert(decorators, decorator)
+        elseif deco_png then
             local decorator = display.newSprite(deco_png)
                 :addTo(obj_node, getZorderByXY(x, y))
                 :pos(self:GetInnerMapPosition(x,y))
@@ -824,7 +841,17 @@ function AllianceLayer:CreateNoManLand(obj_node, terrain, index)
             local x,y = (2 * v.x - size.width + 1) / 2, (2 * v.y - size.height + 1) / 2
             local deco_png = decorator_image[terrain][name]
             local building_png = alliance_building[name]
-            if deco_png then
+            if animap[name] then
+                local decorator = ccs.Armature:create(animap[name])
+                                    :addTo(obj_node, getZorderByXY(x, y))
+                                    :pos(self:GetInnerMapPosition(x,y))
+                decorator:getAnimation():playWithIndex(0)
+                decorator.x = v.x
+                decorator.y = v.y
+                decorator.name = name
+                decorator.is_ani = true
+                table.insert(decorators, decorator)
+            elseif deco_png then
                 local decorator = display.newSprite(deco_png)
                     :addTo(obj_node, getZorderByXY(x, y))
                     :pos(self:GetInnerMapPosition(x,y))
@@ -835,6 +862,11 @@ function AllianceLayer:CreateNoManLand(obj_node, terrain, index)
             end
         end
     end
+    ccs.Armature:create("daqizi")
+    :addTo(obj_node, getZorderByXY(15,15))
+    :pos(self:GetInnerMapPosition(15,15))
+    :getAnimation():playWithIndex(0)
+    
     obj_node.decorators = decorators
 end
 function AllianceLayer:GetInnerMapPosition(xOrPosition, y)
