@@ -866,7 +866,7 @@ function AllianceLayer:CreateNoManLand(obj_node, terrain, index)
     :addTo(obj_node, getZorderByXY(15,15))
     :pos(self:GetInnerMapPosition(15,15))
     :getAnimation():playWithIndex(0)
-    
+
     obj_node.decorators = decorators
 end
 function AllianceLayer:GetInnerMapPosition(xOrPosition, y)
@@ -902,6 +902,26 @@ function AllianceLayer:FreeBackground(bg)
         table.insert(self.alliance_bg_free[bg.terrain], bg)
     end
 end
+local terrain_map = {
+    grassLand = {
+        "unlock_tile_surface_3_grassLand.png",
+        "unlock_tile_surface_4_grassLand.png",
+        "unlock_tile_surface_5_grassLand.png",
+        "unlock_tile_surface_6_grassLand.png",
+    },
+    desert = {
+        "005.png",
+        "006.png",
+        "007.png",
+        "008.png",
+    },
+    iceField = {
+        "unlock_tile_surface_4_iceField.png",
+        "unlock_tile_surface_5_iceField.png",
+        "unlock_tile_surface_6_iceField.png",
+        "unlock_tile_surface_7_iceField.png",
+    }
+}
 function AllianceLayer:GetFreeBackground(terrain)
     local bg = table.remove(self.alliance_bg_free[terrain], 1)
     if bg then
@@ -926,6 +946,21 @@ function AllianceLayer:GetFreeBackground(terrain)
 
         display.newSprite(string.format("%s_plus.png", terrain))
             :addTo(map):align(display.LEFT_TOP, map:getContentSize().width, 0)
+
+
+        math.randomseed(12345)
+        local random = math.random
+        local array = terrain_map[terrain]
+        if #array > 0 then
+            local sx,sy,ex,ey = self.inner_alliance_logic_map:GetRegion()
+            local span = 0
+            for i = 1, 100 do
+                local x = random(sx + span, ex - span)
+                local y = random(sy + span, ey - span)
+                display.newSprite(array[random(#array)]):addTo(map, 1000):pos(x, y)
+            end
+        end
+
         return map
     end
 end
