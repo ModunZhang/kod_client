@@ -135,29 +135,33 @@ function WorldLayer:LoadAlliance()
     NetManager:getMapAllianceDatasPromise(self:GetAvailableIndex()):done(function(response)
         dump(response.msg.datas)
         for k,v in pairs(response.msg.datas) do
-            if v == json.null then
-                if self.allainceSprites[k] then
-                    self.allainceSprites[k]:removeFromParent()
-                    self.allainceSprites[k] = nil
-                end
-                
-                if not self.flagSprites[k] then
-                    self:CreateFlag(k)
-                end
-            else
-                if not self.allainceSprites[k] then
-                    self:CreateAllianceSprite(k, v)
-                else
-                    self:UpdateAllianceSprite(k, v)
-                end
-
-                if self.flagSprites[k] then
-                    self.flagSprites[k]:removeFromParent()
-                    self.flagSprites[k] = nil
-                end
-            end
+            self:LoadAllianceBy(k,v)
         end
     end)
+end
+function WorldLayer:LoadAllianceBy(mapIndex, alliance)
+    local mapIndex = tostring(mapIndex)
+    if alliance == json.null then
+        if self.allainceSprites[mapIndex] then
+            self.allainceSprites[mapIndex]:removeFromParent()
+            self.allainceSprites[mapIndex] = nil
+        end
+        
+        if not self.flagSprites[mapIndex] then
+            self:CreateFlag(mapIndex)
+        end
+    else
+        if not self.allainceSprites[mapIndex] then
+            self:CreateAllianceSprite(mapIndex, alliance)
+        else
+            self:UpdateAllianceSprite(mapIndex, alliance)
+        end
+
+        if self.flagSprites[mapIndex] then
+            self.flagSprites[mapIndex]:removeFromParent()
+            self.flagSprites[mapIndex] = nil
+        end
+    end
 end
 function WorldLayer:CreateAllianceSprite(index, alliance)
     local node = display.newNode()

@@ -71,6 +71,8 @@ function GameUIAllianceHome:onEnter()
     self:InitArrow()
     -- 中间按钮
     UIKit:newWidgetUI("WidgetShortcutButtons",self.city):addTo(self)
+    self.loading = display.newSprite("loading.png"):addTo(self):pos(rect1.x + 50, rect1.y + 80)
+    self:HideLoading()
     self:AddOrRemoveListener(true)
     self:Schedule()
 end
@@ -86,7 +88,17 @@ function GameUIAllianceHome:AddOrRemoveListener(isAdd)
         alliance:RemoveListenerOnType(self, "basicInfo")
     end
 end
-
+function GameUIAllianceHome:ShowLoading()
+    if self.loading:isVisible() and 
+        self.loading:getNumberOfRunningActions() > 0 then 
+        return 
+    end
+    self.loading:show():rotation(math.random(360)):stopAllActions()
+    self.loading:runAction(cc.RepeatForever:create(cc.RotateBy:create(4, 360)))
+end
+function GameUIAllianceHome:HideLoading()
+    self.loading:hide():stopAllActions()
+end
 function GameUIAllianceHome:AddMapChangeButton()
     WidgetChangeMap.new(WidgetChangeMap.MAP_TYPE.OUR_ALLIANCE):addTo(self)
 end
@@ -220,6 +232,7 @@ function GameUIAllianceHome:TopTabButtons()
 end
 
 function GameUIAllianceHome:RefreshTop(force_refresh)
+    if self.alliance:IsDefault() then return end 
     local alliance = self.alliance
     -- 获取当前所在联盟
     local current_allinace_index = self.current_allinace_index

@@ -7,6 +7,7 @@ local Alliance = class("Alliance", MultiObserver)
 local buildingName = GameDatas.AllianceMap.buildingName
 Alliance.LISTEN_TYPE = Enum(
     "operation", -- 自己加的
+    "mapIndex",
 
     "basicInfo",
     "members",

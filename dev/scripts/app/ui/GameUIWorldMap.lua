@@ -12,7 +12,8 @@ function GameUIWorldMap:ctor()
     self.touch_judgment = TouchJudgment.new(self)
 end
 function GameUIWorldMap:onEnter()
-	self:GotoPosition(0,0)
+    local x,y = self:GetSceneLayer():IndexToLogic(Alliance_Manager:GetMyAlliance().mapIndex)
+	self:GotoPosition(x,y)
 	self:ScheduleLoadMap()
     -- top
     local top_bg = display.newSprite("background_500x84.png"):align(display.TOP_CENTER, display.cx, display.top-20):addTo(self)
@@ -138,7 +139,13 @@ function GameUIWorldMap:OnTouchClicked(pre_x, pre_y, x, y)
     if not index then
         return
     end
-    UIKit:newWidgetUI("WidgetWorldAllianceInfo",click_object,index):AddToCurrentScene()
+    -- display.captureScreen(function(bsuc, file)
+    --     if bsuc then
+    --         local sprite = display.newSprite(file):addTo(self):hide()
+    --         sprite:setNodeEventEnabled(true)
+    --     end
+    -- end, "screen.png")
+            UIKit:newWidgetUI("WidgetWorldAllianceInfo",click_object,index,sprite):AddToCurrentScene()
 end
 function GameUIWorldMap:IsFingerOn()
     return self.event_manager:TouchCounts() ~= 0

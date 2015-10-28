@@ -13,7 +13,8 @@ local intInit = GameDatas.AllianceInitData.intInit
 local moveLimit = GameDatas.AllianceMap.moveLimit
 local WidgetWorldAllianceInfo = class("WidgetWorldAllianceInfo", WidgetPopDialog)
 
-function WidgetWorldAllianceInfo:ctor(object,mapIndex)
+function WidgetWorldAllianceInfo:ctor(object,mapIndex,capture)
+    self.capture = capture
     self.object = object
     self.mapIndex = mapIndex
     WidgetWorldAllianceInfo.super.ctor(self,object and 430 or 328,object and  object.alliance.name or _("无主领土"),window.top-120)
@@ -42,6 +43,10 @@ end
 
 function WidgetWorldAllianceInfo:onExit()
 
+end
+function WidgetWorldAllianceInfo:LeftButtonClicked()
+    -- self.capture:scaleTo(0.5, 2)
+    WidgetWorldAllianceInfo.super.LeftButtonClicked(self)
 end
 function WidgetWorldAllianceInfo:LoadInfo(alliance_data)
     local layer = self.body
@@ -142,11 +147,28 @@ function WidgetWorldAllianceInfo:LoadInfo(alliance_data)
         :align(display.RIGHT_TOP,titleBg:getPositionX(),titleBg:getPositionY() - titleBg:getContentSize().height -10)
         :addTo(layer)
     button:onButtonClicked(function(event)
+        local wp = self.object:getParent()
+                    :convertToWorldSpace(cc.p(self.object:getPosition()))
+        if wp.x < 0 then
+            wp.x = 0
+        elseif wp.x > display.width then
+            wp.x = display.width
+        end
+        if wp.y < 0 then
+            wp.y = 0
+        elseif wp.y > display.height then
+            wp.y = display.height
+        end
+        local xp, yp = wp.x / display.width, wp.y / display.height
+        -- self.capture:pos(wp.x, wp.y)
+        -- self.capture:setAnchorPoint(cc.p(xp, yp))
+        -- self.capture:show()
         app:EnterMyAllianceScene({
             mapIndex = self.mapIndex,
             x = self:GetAllianceData().archon.location.x,
             y = self:GetAllianceData().archon.location.y,
         })
+        self:LeftButtonClicked()
     end)
 
     local desc_bg = WidgetUIBackGround.new({height=158,width=550},WidgetUIBackGround.STYLE_TYPE.STYLE_5)
@@ -166,6 +188,7 @@ function WidgetWorldAllianceInfo:LoadInfo(alliance_data)
     }):addTo(desc_bg):align(display.CENTER, desc_bg:getContentSize().width/2,desc_bg:getContentSize().height/2)
 
     self:BuildOneButton("icon_goto_38x56.png",_("定位")):onButtonClicked(function()
+        -- self.capture:show()
         app:EnterMyAllianceScene({mapIndex = self.mapIndex})
         self:LeftButtonClicked()
     end):addTo(layer):align(display.RIGHT_TOP, l_size.width,10)
@@ -223,13 +246,13 @@ function WidgetWorldAllianceInfo:LoadMoveAlliance()
     }):align(display.CENTER, desc_bg:getContentSize().width/2 , desc_bg:getContentSize().height/2):addTo(desc_bg)
 
     self:BuildOneButton("icon_move_alliance_building.png",_("迁移")):onButtonClicked(function()
-        local time = intInit.allianceMoveColdMinutes.value * 60 + Alliance_Manager:GetMyAlliance().basicInfo.allianceMoveTime/1000.0 - app.timer:GetServerTime()
-        local canMove = Alliance_Manager:GetMyAlliance().basicInfo.allianceMoveTime == 0 or time <= 0
-        if not canMove then
-            UIKit:showMessageDialog(_("提示"), _("当前还不能移动联盟"))
-            self:LeftButtonClicked()
-            return
-        end
+        -- local time = intInit.allianceMoveColdMinutes.value * 60 + Alliance_Manager:GetMyAlliance().basicInfo.allianceMoveTime/1000.0 - app.timer:GetServerTime()
+        -- local canMove = Alliance_Manager:GetMyAlliance().basicInfo.allianceMoveTime == 0 or time <= 0
+        -- if not canMove then
+        --     UIKit:showMessageDialog(_("提示"), _("当前还不能移动联盟"))
+        --     self:LeftButtonClicked()
+        --     return
+        -- end
         local mapIndex = self.mapIndex
         local palaceLevel = Alliance_Manager:GetMyAlliance():GetAllianceBuildingInfoByName("palace").level
         local  canMove1 = palaceLevel >= moveLimit[DataUtils:getMapRoundByMapIndex(mapIndex)].needPalaceLevel
@@ -238,7 +261,9 @@ function WidgetWorldAllianceInfo:LoadMoveAlliance()
             self:LeftButtonClicked()
             return
         end
-        NetManager:getMoveAlliancePromise(mapIndex)
+        NetManager:getMoveAlliancePromise(mapIndex):done(function()
+            
+        end)
         self:LeftButtonClicked()
     end):addTo(body):align(display.RIGHT_TOP, b_size.width,10)
 end
