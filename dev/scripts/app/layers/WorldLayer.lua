@@ -31,6 +31,7 @@ function WorldLayer:onEnter()
     self:CreateAllianceLayer()
     self.allainceSprites = {}
     self.flagSprites = {}
+    math.randomseed(1)
 end
 function WorldLayer:CreateBg()
     local offsetY = - 280
@@ -162,6 +163,8 @@ function WorldLayer:CreateAllianceSprite(index, alliance)
     local node = display.newNode()
     :addTo(self.allianceLayer)
     :pos(self:GetLogicMap():ConvertToMapPosition(self:IndexToLogic(index)))
+    node.alliance = alliance
+    
     local sprite = display.newSprite(string.format("world_alliance_%s.png", alliance.terrain))
     :addTo(node, 0, 1):pos(50 - math.random(50), 50 - math.random(50))
     local size = sprite:getContentSize()
@@ -173,7 +176,6 @@ function WorldLayer:CreateAllianceSprite(index, alliance)
         ellipsis = true,
         dimensions = cc.size(100,15),
     }):addTo(sprite):align(display.CENTER, size.width/2, 0)
-    sprite.alliance = alliance
     sprite.flagstr = alliance.flag
     sprite.flag = ui_helper:CreateFlagContentSprite(alliance.flag)
         :addTo(sprite):align(display.CENTER, 80, 60):scale(0.3)
@@ -213,8 +215,8 @@ end
 function WorldLayer:GetAvailableIndex()
     local t = {}
     local x,y = self:GetLeftTopLogicPosition()
-    for i = x, x + 4 do
-        for j = y, y + 4 do
+    for i = x, x + 5 do
+        for j = y, y + 5 do
             if i >= 0 and i < WIDTH and j >= 0 and j < HEIGHT then
                 table.insert(t, self:LogicToIndex(i,j))
             end
