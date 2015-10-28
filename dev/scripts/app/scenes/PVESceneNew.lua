@@ -5,7 +5,7 @@ local MapScene = import(".MapScene")
 local PVESceneNew = class("PVESceneNew", MapScene)
 function PVESceneNew:ctor(user, level)
     self.user = user
-    self.level = level
+    self.lv = level
     PVESceneNew.super.ctor(self)
     self.util_node = display.newNode():addTo(self)
 end
@@ -25,10 +25,10 @@ function PVESceneNew:GetHomePage()
     return self.home_page
 end
 function PVESceneNew:CreateSceneLayer()
-    return PVELayerNew.new(self, self.user, self.level)
+    return PVELayerNew.new(self, self.user, self.lv)
 end
 function PVESceneNew:CreateHomePage()
-    local home_page = GameUIPveHomeNew.new(self.level):AddToScene(self, true)
+    local home_page = GameUIPveHomeNew.new(self.lv):AddToScene(self, true)
     home_page:setLocalZOrder(10)
     home_page:setTouchSwallowEnabled(false)
     return home_page

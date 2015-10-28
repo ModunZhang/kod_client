@@ -45,6 +45,7 @@ function AllianceLayer:onEnter()
     self.empty_node = display.newNode():addTo(self, ZORDER.EMPTY)
     self.map_lines = {}
     self.map_corps = {}
+    self.map_dead = {}
 
     self:StartCorpsTimer()
 
@@ -175,6 +176,51 @@ function AllianceLayer:StartCorpsTimer()
     end)
     self:scheduleUpdate()
 end
+local function getAllyFromEvent(event)
+    if event.attackPlayerData.id == User._id then
+        return MINE
+    end
+    local alliance_id = event.fromAlliance.id
+    if alliance_id == Alliance_Manager:GetMyAlliance()._id then
+        return FRIEND
+    end
+    return ENEMY
+end
+function AllianceLayer:CreateOrUpdateCorpsBy(event, isreturn)
+    if isreturn then
+        self:CreateOrUpdateCorps(
+            event.id,
+            {x = event.toAlliance.location.x, y = event.toAlliance.location.y, index = event.toAlliance.mapIndex},
+            {x = event.fromAlliance.location.x, y = event.fromAlliance.location.y, index = event.fromAlliance.mapIndex},
+            event.startTime / 1000,
+            event.arriveTime / 1000,
+            event.attackPlayerData.dragon.type,
+            event.attackPlayerData.soldiers,
+            getAllyFromEvent(event),
+            string.format("[%s]%s", event.fromAlliance.tag, event.attackPlayerData.name)
+        )
+
+        -- local myid = Alliance_Manager:GetMyAlliance()_id
+        
+
+        if event.marchType == "monster"
+        or event.marchType == "village" then
+            self:CreateDeadEvent(event)
+        end
+    else
+        self:CreateOrUpdateCorps(
+            event.id,
+            {x = event.fromAlliance.location.x, y = event.fromAlliance.location.y, index = event.fromAlliance.mapIndex},
+            {x = event.toAlliance.location.x, y = event.toAlliance.location.y, index = event.toAlliance.mapIndex},
+            event.startTime / 1000,
+            event.arriveTime / 1000,
+            event.attackPlayerData.dragon.type,
+            event.attackPlayerData.soldiers,
+            getAllyFromEvent(event),
+            string.format("[%s]%s", event.fromAlliance.tag, event.attackPlayerData.name)
+        )
+    end
+end
 function AllianceLayer:CreateOrUpdateCorps(id, start_pos, end_pos, start_time, finish_time, dragonType, soldiers, ally, banner_name)
     if finish_time <= timer:GetServerTime() then return end
     local march_info = self:GetMarchInfoWith(id, start_pos, end_pos)
@@ -205,6 +251,48 @@ function AllianceLayer:CreateOrUpdateCorps(id, start_pos, end_pos, start_time, f
     end
     return corps
 end
+local resource_map = {
+    food = true,
+    wood = true,
+    iron = true,
+    coin = true,
+    stone = true,
+}
+function AllianceLayer:CreateDeadEvent(event)
+    local id_corps = event.id
+    if not self:IsExistCorps(id_corps) or self.map_dead[id_corps] then return end
+    local is_dead = false
+    if event.marchType == "monster" then
+        is_dead = not not next(event.attackPlayerData.rewards)
+    elseif event.marchType == "village" then
+        local alliance = Alliance_Manager:GetAllianceByCache(event.toAlliance.id)
+        if alliance and event.toAlliance.id ~= Alliance_Manager:GetMyAlliance()._id then
+            if not Alliance.GetAllianceVillageInfosById(alliance, event.defenceVillageData.id) then
+                is_dead = true
+            end
+        end
+    end
+    if is_dead then
+        local point = self:RealPosition(event.toAlliance.mapIndex, 
+                                      event.toAlliance.location.x, 
+                                      event.toAlliance.location.y)
+        self.map_dead[id_corps] = self:CreateDeadSpriteByEvent(event)
+                                    :addTo(self.objects_node, point.x*point.y):pos(point.x,point.y)
+    end
+end
+function AllianceLayer:CreateDeadSpriteByEvent(event)
+    local sprite
+    if event.marchType == "village" then
+        local config = SpriteConfig[event.defenceVillageData.name]
+        :GetConfigByLevel(tonumber(event.defenceVillageData.level))
+        sprite = display.newSprite(config.png):scale(config.scale)
+        local size = sprite:getContentSize()
+        fire():addTo(sprite):pos(size.width/2, 30)
+    else
+        sprite = display.newSprite("warriors_tomb_80x72.png")
+    end
+    return sprite
+end
 function AllianceLayer:UpdateCorpsBy(corps, march_info)
     local x,y = corps:getPosition()
     local cur_pos = {x = x, y = y}
@@ -231,10 +319,10 @@ function AllianceLayer:GetMarchInfoWith(id, logic_start_point, logic_end_point)
     }
 end
 function AllianceLayer:DeleteCorpsById(id)
-    -- if self.map_dead[id] then
-    --     self.map_dead[id]:removeFromParent()
-    --     self.map_dead[id] = nil
-    -- end
+    if self.map_dead[id] then
+        self.map_dead[id]:removeFromParent()
+        self.map_dead[id] = nil
+    end
     if self.map_corps[id] then
         self.map_corps[id]:removeFromParent()
         self.map_corps[id] = nil
@@ -439,7 +527,7 @@ function AllianceLayer:LoadAllianceByIndex(index, alliance)
                     v.info.level:setString(b.level)
                 end
             end
-        else
+        elseif not objects_node:getChildByTag(CLOUD_TAG) then
             self:CreateClouds():addTo(objects_node, 999999, CLOUD_TAG)
         end
     end)
@@ -744,7 +832,7 @@ function AllianceLayer:ReloadObjectsByTerrain(obj_node, terrain)
 end
 function AllianceLayer:CreateClouds()
     local node = display.newNode()
-    for i = 1, 80 do
+    for i = 1, 50 do
         self:CreateCloud():addTo(node):Run()
     end
     return node
@@ -755,7 +843,7 @@ function AllianceLayer:CreateCloud()
         local x = math.random(25 * TILE_WIDTH) + TILE_WIDTH
         local y = math.random(1 + (ALLIANCE_HEIGHT - 2) * TILE_WIDTH)
         local dis = ALLIANCE_WIDTH * TILE_WIDTH - x - TILE_WIDTH
-        time = dis / (math.random(20) + 10)
+        time = dis / (math.random(10) + 20)
         self:opacity(128):pos(x,y)
         self:runAction(cc.Spawn:create({
             transition.sequence{
@@ -954,7 +1042,7 @@ function AllianceLayer:GetFreeBackground(terrain)
         if #array > 0 then
             local sx,sy,ex,ey = self.inner_alliance_logic_map:GetRegion()
             local span = 0
-            for i = 1, 100 do
+            for i = 1, 60 do
                 local x = random(sx + span, ex - span)
                 local y = random(sy + span, ey - span)
                 display.newSprite(array[random(#array)]):addTo(map, 1000):pos(x, y)

@@ -43,10 +43,9 @@ function GameUIAllianceHome:IsDisplayOn()
 end
 
 
-function GameUIAllianceHome:ctor(alliance, multialliancelayer)
+function GameUIAllianceHome:ctor(alliance)
     GameUIAllianceHome.super.ctor(self)
     self.alliance = alliance
-    self.multialliancelayer = multialliancelayer
 
     local sprite = display.newSprite("blue_tex.png"):addTo(self)
     :align(display.TOP_CENTER, display.cx, display.height)

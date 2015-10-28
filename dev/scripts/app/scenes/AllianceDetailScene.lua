@@ -225,50 +225,18 @@ function AllianceDetailScene:RefreshVillageEvents(alliance, villageEvents)
         end
     end
 end
-
-local function getAllyFromEvent(event, is_back)
-    local MINE,FRIEND,ENEMY = 1,2,3
-    if event.attackPlayerData.id == User:Id() then
-        return MINE
-    end
-    local alliance_id = is_back and event.toAlliance.id or event.fromAlliance.id
-    if alliance_id == Alliance_Manager:GetMyAlliance()._id then
-        return FRIEND
-    end
-    return ENEMY
-end
 function AllianceDetailScene:CreateOrUpdateOrDeleteCorpsByEvent(id, event)
     if event == json.null then
         self:GetSceneLayer():DeleteCorpsById(id)
     elseif event then
-        self:GetSceneLayer():CreateOrUpdateCorps(
-            event.id,
-            {x = event.fromAlliance.location.x, y = event.fromAlliance.location.y, index = event.fromAlliance.mapIndex},
-            {x = event.toAlliance.location.x, y = event.toAlliance.location.y, index = event.toAlliance.mapIndex},
-            event.startTime / 1000,
-            event.arriveTime / 1000,
-            event.attackPlayerData.dragon.type,
-            event.attackPlayerData.soldiers,
-            getAllyFromEvent(event),
-            string.format("[%s]%s", event.fromAlliance.tag, event.attackPlayerData.name)
-        )
+        self:GetSceneLayer():CreateOrUpdateCorpsBy(event, false)
     end
 end
 function AllianceDetailScene:CreateOrUpdateOrDeleteCorpsByReturnEvent(id, event)
     if event == json.null then
         self:GetSceneLayer():DeleteCorpsById(id)
     elseif event then
-        self:GetSceneLayer():CreateOrUpdateCorps(
-            event.id,
-            {x = event.toAlliance.location.x, y = event.toAlliance.location.y, index = event.toAlliance.mapIndex},
-            {x = event.fromAlliance.location.x, y = event.fromAlliance.location.y, index = event.fromAlliance.mapIndex},
-            event.startTime / 1000,
-            event.arriveTime / 1000,
-            event.attackPlayerData.dragon.type,
-            event.attackPlayerData.soldiers,
-            getAllyFromEvent(event),
-            string.format("[%s]%s", event.fromAlliance.tag, event.attackPlayerData.name)
-        )
+        self:GetSceneLayer():CreateOrUpdateCorpsBy(event, true)
     end
 end
 
