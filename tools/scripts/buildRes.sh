@@ -19,6 +19,9 @@ exportImagesRes()
 	do
 		outfile=$outdir/${file##*/res/}
 		finalDir=${outfile%/*}
+
+		
+
 		if test "$file" -nt "$outfile";then
 			echo "---- ${file##*/res/}"
 			if $NEED_ENCRYPT_RES; then
@@ -27,6 +30,16 @@ exportImagesRes()
 				test -d $finalDir || mkdir -p $finalDir && cp  "$file" $finalDir
 			fi
 		fi
+		# oldlen=$(ls -al "$file" | awk '{print $5}')
+		# newlen=$(ls -al "$outfile" | awk '{print $5}')
+		# if [ $oldlen -ne $newlen ]; then
+		# 	echo "---- ${file##*/res/}"
+		# 	if $NEED_ENCRYPT_RES; then
+		# 		test -d $finalDir || mkdir -p $finalDir && $RES_COMPILE_TOOL -i "$file" -o $finalDir -ek $XXTEAKey -es $XXTEASign -q
+		# 	else
+		# 		test -d $finalDir || mkdir -p $finalDir && cp  "$file" $finalDir
+		# 	fi
+		# fi
 	done
 	echo -- 处理_Compressed文件夹
 	for file in $images_dir/_Compressed/*
@@ -35,6 +48,7 @@ exportImagesRes()
 			finalDir=$outdir/${images_dir##*/res/}
 			outfile=$finalDir/${file##*/}
 			fileExt=${file##*.}
+
 			if test "$file" -nt "$outfile"; then
 				echo "---- ${file##*/}"
 				if test $fileExt == "plist" || test $fileExt == "ExportJson";then
@@ -47,6 +61,20 @@ exportImagesRes()
 					fi
 				fi
 			fi
+			# oldlen=$(ls -al "$file" | awk '{print $5}')
+			# newlen=$(ls -al "$outfile" | awk '{print $5}')
+			# if [ $oldlen -ne $newlen ]; then
+			# 	echo "---- ${file##*/}"
+			# 	if test $fileExt == "plist" || test $fileExt == "ExportJson";then
+			# 		test -d $finalDir || mkdir -p $finalDir && cp "$file" $finalDir
+			# 	else
+			# 		if $NEED_ENCRYPT_RES;then
+			# 			test -d $finalDir || mkdir -p $finalDir && $RES_COMPILE_TOOL -i "$file" -o $finalDir -ek $XXTEAKey -es $XXTEASign -q
+			# 		else
+			# 			test -d $finalDir || mkdir -p $finalDir && cp "$file" $finalDir
+			# 		fi
+			# 	fi
+			# fi
 		fi
 	done
 	echo -- 处理rgba444_single文件夹
@@ -57,6 +85,7 @@ exportImagesRes()
 			outfile=$finalDir/${file##*/}
 			tempfile="$TEMP_RES_DIR/${file##*/}"
 			fileExt=${file##*.}
+
 			if test "$file" -nt "$outfile"; then
 				echo "---- ${file##*/}"
 				if test $fileExt == "plist" || test $fileExt == "ExportJson";then
@@ -71,6 +100,22 @@ exportImagesRes()
 					fi
 				fi
 			fi
+			# oldlen=$(ls -al "$file" | awk '{print $5}')
+			# newlen=$(ls -al "$outfile" | awk '{print $5}')
+			# if [ $oldlen -ne $newlen ]; then
+			# 	echo "---- ${file##*/}"
+			# 	if test $fileExt == "plist" || test $fileExt == "ExportJson";then
+			# 		test -d $finalDir || mkdir -p $finalDir && cp "$file" $finalDir
+			# 	else
+			# 		#是否考虑 pvr ccz + premultiply-alpha?
+			# 		TexturePacker --format cocos2d --no-trim --disable-rotation --texture-format png --opt RGBA4444 --png-opt-level 7  --allow-free-size --padding 0 "$file" --sheet "$tempfile" --data "$TEMP_RES_DIR/tmp.plist"
+			# 		if $NEED_ENCRYPT_RES;then
+			# 			test -d $finalDir || mkdir -p $finalDir && $RES_COMPILE_TOOL -i "$tempfile" -o $finalDir -ek $XXTEAKey -es $XXTEASign -q
+			# 		else
+			# 			test -d $finalDir || mkdir -p $finalDir && cp "$tempfile" $finalDir
+			# 		fi
+			# 	fi
+			# fi
 		fi
 	done
 	echo -- 处理_CanCompress文件夹
@@ -82,6 +127,7 @@ exportImagesRes()
 			tempfileName="${file%.*}"
 			tempfileName="${tempfileName##*/}"
 			tempfile="${TEMP_RES_DIR}/${tempfileName}.pvr"
+
 			if test "$file" -nt "$outfile"; then
 				echo "---- ${file##*/}"
 				#$PVRTOOL -p -f $IMAGEFORMAT -i $file -o ${file%.*}.pvr
@@ -95,6 +141,22 @@ exportImagesRes()
 					mv -f "${TEMP_RES_DIR}/${tempfileName}_PVR_PNG.png" $outfile
 				fi
 			fi
+			# oldlen=$(ls -al "$file" | awk '{print $5}')
+			# newlen=$(ls -al "$outfile" | awk '{print $5}')
+			# if [ $oldlen -ne $newlen ]; then
+			# 	echo "---- ${file##*/}"
+			# 	if test $fileExt == "plist" || test $fileExt == "ExportJson";then
+			# 		test -d $finalDir || mkdir -p $finalDir && cp "$file" $finalDir
+			# 	else
+			# 		#是否考虑 pvr ccz + premultiply-alpha?
+			# 		TexturePacker --format cocos2d --no-trim --disable-rotation --texture-format png --opt RGBA4444 --png-opt-level 7  --allow-free-size --padding 0 "$file" --sheet "$tempfile" --data "$TEMP_RES_DIR/tmp.plist"
+			# 		if $NEED_ENCRYPT_RES;then
+			# 			test -d $finalDir || mkdir -p $finalDir && $RES_COMPILE_TOOL -i "$tempfile" -o $finalDir -ek $XXTEAKey -es $XXTEASign -q
+			# 		else
+			# 			test -d $finalDir || mkdir -p $finalDir && cp "$tempfile" $finalDir
+			# 		fi
+			# 	fi
+			# fi
 		fi
 	done
 }
@@ -110,6 +172,7 @@ exportAnimationsRes()
 			outfile=$outdir/${file##*/res/}
 			finalDir=${outfile%/*}
 			fileExt=${file##*.}
+
 			if test "$file" -nt "$outfile";then
 				echo "---- ${file##*/res/}"
 				if test $fileExt == "plist" || test $fileExt == "ExportJson";then
@@ -122,6 +185,20 @@ exportAnimationsRes()
 					fi
 				fi
 			fi
+			# oldlen=$(ls -al "$file" | awk '{print $5}')
+			# newlen=$(ls -al "$outfile" | awk '{print $5}')
+			# if [ $oldlen -ne $newlen ]; then
+			# 	echo "---- ${file##*/res/}"
+			# 	if test $fileExt == "plist" || test $fileExt == "ExportJson";then
+			# 		test -d $finalDir || mkdir -p $finalDir && cp "$file" $finalDir
+			# 	else
+			# 		if $NEED_ENCRYPT_RES; then
+			# 			test -d $finalDir || mkdir -p $finalDir && $RES_COMPILE_TOOL -i "$file" -o $finalDir -ek $XXTEAKey -es $XXTEASign -q
+			# 		else
+			# 			test -d $finalDir || mkdir -p $finalDir && cp  "$file" $finalDir
+			# 		fi
+			# 	fi
+			# fi
 		fi
 	done
 }
@@ -136,11 +213,7 @@ exportRes()
 		fileExt=${file##*.}
 		if test -f "$file" && test $fileExt != "po" && test $fileExt != "ttf";then
 			finalDir=${outfile%/*}
-			oldlen=$(ls -al "$file" | awk '{print $5}')
-			newlen=$(ls -al "$outfile" | awk '{print $5}')
 			if test "$file" -nt "$outfile";then
-		    	test -d "$finalDir" || mkdir -p "$finalDir" && cp "$file" "$finalDir"
-		    elif [ $oldlen -ne $newlen ]; then
 		    	test -d "$finalDir" || mkdir -p "$finalDir" && cp "$file" "$finalDir"
 		    fi
 		elif test -d "$file";then
