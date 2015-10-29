@@ -35,6 +35,13 @@ function WorldLayer:onEnter()
     self.flagSprites = {}
     math.randomseed(1)
 end
+function WorldLayer:onExit()
+    local cache = cc.Director:getInstance():getTextureCache()
+    cache:removeTextureForKey("world_bg.jpg")
+    cache:removeTextureForKey("world_title2.jpg")
+    cache:removeTextureForKey("world_title1.jpg")
+    cache:removeTextureForKey("world_terrain.jpg")
+end
 function WorldLayer:CreateBg()
     local offsetY = - 280
     local sprite = display.newFilteredSprite("world_bg.jpg", "CUSTOM", json.encode({
@@ -136,6 +143,7 @@ function WorldLayer:MoveAllianceFromTo(fromIndex, toIndex)
     self:RemoveAllianceBy(toIndex)
     local sour = self:ConvertLogicPositionToMapPosition(self:IndexToLogic(fromIndex))
     local dest = self:ConvertLogicPositionToMapPosition(self:IndexToLogic(toIndex))
+
     local degree = math.deg(cc.pGetAngle(cc.pSub(dest, sour), cc.p(0, 1)))
     local normal = cc.pNormalize(cc.pSub(dest, sour))
     local distance = cc.pGetLength(cc.pSub(dest, sour))
@@ -156,20 +164,20 @@ function WorldLayer:MoveAllianceFromTo(fromIndex, toIndex)
     end
 
     local actions = {}
-    local step_time = 0.5
+    local step_time = 1.0
     for i,v in ipairs(roads) do
         table.insert(actions, cc.CallFunc:create(function()
             v:show()
         end))
         table.insert(actions, cc.DelayTime:create(step_time))
     end
-    local gap, scal, ft = 65, 0.8, 0.5
+    local gap, scal, ft, offset = -65, 0.8, 0.5, -40
     UIKit:CreateMoveSoldiers(degree, {name = "ranger", star = 3}, scal)
     :addTo(self.moveLayer)
-    :pos(sour.x + normal.x * -gap, sour.y + normal.y * -gap)
+    :pos(sour.x + normal.x * (2 * gap + offset), sour.y + normal.y * (2 * gap + offset))
     :runAction(transition.sequence{
         cc.MoveTo:create(#roads * step_time, {
-            x = dest.x + normal.x * -gap, y = dest.y + normal.y * -gap
+            x = dest.x + normal.x * (2 * gap + offset), y = dest.y + normal.y * (2 * gap + offset)
         }),
         cc.FadeOut:create(ft),
         cc.RemoveSelf:create(),
@@ -177,10 +185,10 @@ function WorldLayer:MoveAllianceFromTo(fromIndex, toIndex)
 
     UIKit:CreateMoveSoldiers(degree, {name = "swordsman", star = 3}, scal)
     :addTo(self.moveLayer)
-    :pos(sour.x, sour.y + normal.y)
+    :pos(sour.x + normal.x * (gap + offset), sour.y + normal.y * (gap + offset))
     :runAction(transition.sequence{
         cc.MoveTo:create(#roads * step_time, {
-            x = dest.x, y = dest.y
+            x = dest.x + normal.x * (gap + offset), y = dest.y + normal.y * (gap + offset)
         }),
         cc.FadeOut:create(ft),
         cc.RemoveSelf:create(),
@@ -188,10 +196,10 @@ function WorldLayer:MoveAllianceFromTo(fromIndex, toIndex)
 
     UIKit:CreateMoveSoldiers(degree, {name = "lancer", star = 3}, scal)
     :addTo(self.moveLayer)
-    :pos(sour.x + normal.x * gap, sour.y + normal.y * gap)
+    :pos(sour.x + normal.x * (offset + 10), sour.y + normal.y * (offset + 10))
     :runAction(transition.sequence{
         cc.MoveTo:create(#roads * step_time, {
-            x = dest.x + normal.x * gap, y = dest.y + normal.y * gap
+            x = dest.x + normal.x * (offset + 10), y = dest.y + normal.y * (offset + 10)
         }),
         cc.FadeOut:create(ft),
         cc.RemoveSelf:create(),

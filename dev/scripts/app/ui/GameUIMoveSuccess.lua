@@ -7,7 +7,20 @@ function GameUIMoveSuccess:ctor(fromIndex, toIndex)
             self:LeftButtonClicked()
         end)
     self:addTouchAbleChild(self.bg)
+
+    local size = self.bg:getCascadeBoundingBox()
+    UIKit:ttfLabel({
+        text = _("恭喜迁移联盟成功"),
+        size = 18,
+        color = 0x00fff5
+    }):addTo(self.bg):align(display.CENTER, 0, size.height/2 - 55)
+
     self:Play()
+end
+function GameUIMoveSuccess:onExit()
+    if display.getRunningScene().__cname == 'AllianceDetailScene' then
+        app:EnterMyAllianceScene()
+    end
 end
 function GameUIMoveSuccess:Play()
     app:GetAudioManager():PlayeEffectSoundWithKey("HOORAY")

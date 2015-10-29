@@ -48,9 +48,69 @@ end
 function WidgetWorldAllianceInfo:onExit()
 
 end
-function WidgetWorldAllianceInfo:LeftButtonClicked()
-    -- self.capture:scaleTo(0.5, 2)
-    WidgetWorldAllianceInfo.super.LeftButtonClicked(self)
+function WidgetWorldAllianceInfo:Located(mapIndex, x, y)
+    local scene = display.getRunningScene()
+    if mapIndex and x and y then
+        if scene.__cname ~= 'AllianceDetailScene' then
+            app:EnterMyAllianceScene({
+                mapIndex = mapIndex,
+                x = x,
+                y = y,
+            })
+        else
+            local x,y = DataUtils:GetAbsolutePosition(mapIndex, x, y)
+            if Alliance_Manager:GetAllianceByCache(mapIndex) then
+                scene:GotoPosition(x,y)
+                self:EnterIn()
+            else
+                scene:FetchAllianceDatasByIndex(mapIndex, function()
+                    scene:GotoPosition(x,y)
+                    self:EnterIn()
+                end)
+            end
+        end
+    else
+        if scene.__cname ~= 'AllianceDetailScene' then
+            app:EnterMyAllianceScene({mapIndex = mapIndex})
+        else
+            if Alliance_Manager:GetAllianceByCache(mapIndex) then
+                scene:GotoAllianceByXY(scene:GetSceneLayer():IndexToLogic(mapIndex))
+                self:EnterIn()
+            else
+                scene:FetchAllianceDatasByIndex(mapIndex, function()
+                    scene:GotoAllianceByXY(scene:GetSceneLayer():IndexToLogic(mapIndex))
+                    self:EnterIn()
+                end)
+            end
+        end
+    end
+end
+function WidgetWorldAllianceInfo:EnterIn(mapIndex, x, y)
+    local capture = self.capture
+    local wp = self.object:getParent():convertToWorldSpace(cc.p(self.object:getPosition()))
+    if wp.x < 0 then
+        wp.x = 0
+    elseif wp.x > display.width then
+        wp.x = display.width
+    end
+    if wp.y < 0 then
+        wp.y = 0
+    elseif wp.y > display.height then
+        wp.y = display.height
+    end
+    local xp, yp = wp.x / display.width, wp.y / display.height
+    capture:show():pos(wp.x, wp.y):setAnchorPoint(cc.p(xp, yp))
+    local tex = capture:getTexture()
+    self:LeftButtonClicked()
+    capture:runAction(transition.sequence{
+        cc.ScaleTo:create(0.5, 2),
+        cc.CallFunc:create(function()
+            cc.Director:getInstance():getTextureCache():removeTexture(tex)
+            if UIKit:GetUIInstance("GameUIWorldMap") then
+                UIKit:GetUIInstance("GameUIWorldMap"):LeftButtonClicked()
+            end
+        end)
+    })
 end
 function WidgetWorldAllianceInfo:LoadInfo(alliance_data)
     local layer = self.body
@@ -151,28 +211,8 @@ function WidgetWorldAllianceInfo:LoadInfo(alliance_data)
         :align(display.RIGHT_TOP,titleBg:getPositionX(),titleBg:getPositionY() - titleBg:getContentSize().height -10)
         :addTo(layer)
     button:onButtonClicked(function(event)
-        local wp = self.object:getParent()
-                    :convertToWorldSpace(cc.p(self.object:getPosition()))
-        if wp.x < 0 then
-            wp.x = 0
-        elseif wp.x > display.width then
-            wp.x = display.width
-        end
-        if wp.y < 0 then
-            wp.y = 0
-        elseif wp.y > display.height then
-            wp.y = display.height
-        end
-        local xp, yp = wp.x / display.width, wp.y / display.height
-        -- self.capture:pos(wp.x, wp.y)
-        -- self.capture:setAnchorPoint(cc.p(xp, yp))
-        -- self.capture:show()
-        app:EnterMyAllianceScene({
-            mapIndex = self.mapIndex,
-            x = self:GetAllianceData().archon.location.x,
-            y = self:GetAllianceData().archon.location.y,
-        })
-        self:LeftButtonClicked()
+        local location = self:GetAllianceData().archon.location
+        self:Located(self.mapIndex, location.x, location.y)
     end)
 
     local desc_bg = WidgetUIBackGround.new({height=158,width=550},WidgetUIBackGround.STYLE_TYPE.STYLE_5)
@@ -192,9 +232,7 @@ function WidgetWorldAllianceInfo:LoadInfo(alliance_data)
     }):addTo(desc_bg):align(display.CENTER, desc_bg:getContentSize().width/2,desc_bg:getContentSize().height/2)
 
     self:BuildOneButton("icon_goto_38x56.png",_("定位")):onButtonClicked(function()
-        -- self.capture:show()
-        app:EnterMyAllianceScene({mapIndex = self.mapIndex})
-        self:LeftButtonClicked()
+        self:Located(self.mapIndex)
     end):addTo(layer):align(display.RIGHT_TOP, l_size.width,10)
     return layer
 end
@@ -215,6 +253,7 @@ function WidgetWorldAllianceInfo:BuildOneButton(image,title,music_info)
         size = 18,
         color = 0xffedae,
     }):align(display.CENTER, -s.width/2 , -s.height+25):addTo(btn)
+    btn:setTouchSwallowEnabled(true)
     return btn
 end
 
@@ -267,6 +306,8 @@ function WidgetWorldAllianceInfo:LoadMoveAlliance()
         end
         local oldIndex = Alliance_Manager:GetMyAlliance().mapIndex
         NetManager:getMoveAlliancePromise(mapIndex):done(function()
+            Alliance_Manager:RemoveAllianceCache(oldIndex)
+            Alliance_Manager:UpdateAllianceBy(mapIndex, Alliance_Manager:GetMyAlliance())
             if UIKit:GetUIInstance("GameUIWorldMap") then
                 UIKit:GetUIInstance("GameUIWorldMap"):GetSceneLayer()
                 :MoveAllianceFromTo(oldIndex, mapIndex)

@@ -140,13 +140,13 @@ function GameUIWorldMap:OnTouchClicked(pre_x, pre_y, x, y)
     if not index then
         return
     end
-    -- display.captureScreen(function(bsuc, file)
-    --     if bsuc then
-    --         local sprite = display.newSprite(file):addTo(self):hide()
-    --         sprite:setNodeEventEnabled(true)
-    --     end
-    -- end, "screen.png")
+    display.captureScreen(function(bsuc, file)
+        if bsuc then
+            local sprite = display.newSprite(file):addTo(self):hide()
+            sprite:setNodeEventEnabled(true)
             UIKit:newWidgetUI("WidgetWorldAllianceInfo",click_object,index,sprite):AddToCurrentScene()
+        end
+    end, "screen.png")
 end
 function GameUIWorldMap:IsFingerOn()
     return self.event_manager:TouchCounts() ~= 0
