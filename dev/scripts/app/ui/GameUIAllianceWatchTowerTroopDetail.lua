@@ -4,7 +4,8 @@
 --
 
 --查看来袭的部队信息和驻防到对方城市的部队信息
-local GameUIAllianceWatchTowerTroopDetail = UIKit:createUIClass("GameUIAllianceWatchTowerTroopDetail")
+local WidgetPopDialog = import("..widget.WidgetPopDialog")
+local GameUIAllianceWatchTowerTroopDetail = class("GameUIAllianceWatchTowerTroopDetail", WidgetPopDialog)
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local window = import("..utils.window")
 local UIListView = import(".UIListView")
@@ -26,7 +27,7 @@ local titles = {
 }
 
 function GameUIAllianceWatchTowerTroopDetail:ctor(event_data,watchTowerLevel,isFromEnemy,data_type,isCheckOtherHelpTroop)
-    GameUIAllianceWatchTowerTroopDetail.super.ctor(self)
+    GameUIAllianceWatchTowerTroopDetail.super.ctor(self,824,_("部队详情"))
     self.event_data = event_data
     self.watchTowerLevel = watchTowerLevel
     self.isFromEnemy = isFromEnemy
@@ -58,27 +59,9 @@ end
 
 function GameUIAllianceWatchTowerTroopDetail:onEnter()
     GameUIAllianceWatchTowerTroopDetail.super.onEnter(self)
-    UIKit:shadowLayer():addTo(self)
-    self.backgroundImage = WidgetUIBackGround.new({height=824}):addTo(self)
-    self.backgroundImage:pos((display.width - self.backgroundImage:getContentSize().width)/2,window.bottom_top)
-    local title_bar = display.newSprite("title_blue_600x56.png")
-        :addTo(self.backgroundImage)
-        :align(display.CENTER_BOTTOM, 304, 810)
-    UIKit:closeButton():addTo(title_bar)
-        :align(display.BOTTOM_RIGHT,title_bar:getContentSize().width, 0)
-        :onButtonClicked(function ()
-            self:LeftButtonClicked()
-        end)
-    self.title_label = UIKit:ttfLabel({
-        text = _("部队详情"),
-        size = 24,
-        color = 0xffedae,
-    }):align(display.CENTER,title_bar:getContentSize().width/2, title_bar:getContentSize().height/2)
-        :addTo(title_bar)
-
     local listBg = display.newScale9Sprite("background_568x120.png", 0,0,cc.size(568,754),cc.rect(15,10,538,100))
-        :align(display.CENTER_BOTTOM, self.backgroundImage:getContentSize().width/2, 30)
-        :addTo(self.backgroundImage)
+        :align(display.CENTER_BOTTOM, self.body:getContentSize().width/2, 30)
+        :addTo(self.body)
 
     self.listView = UIListView.new {
         viewRect = cc.rect(10, 12, 548,730),

@@ -59,6 +59,7 @@ function DragonManager:IsHateEnable()
             return true
         end
     end
+    return false
 end
 function DragonManager:GetHatedCount()
     local count = 0

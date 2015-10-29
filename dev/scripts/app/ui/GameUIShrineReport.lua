@@ -451,6 +451,7 @@ function GameUIShrineReport:fillPlayerDataItemContent(content,list_data,item,idx
         local node = content[string.format("reward_bg%d",i)]
         if node and node.icon then
             if reward then
+                print("UIKit:GetItemImage(reward.type,reward.name)=",UIKit:GetItemImage(reward.type,reward.name),reward.type,reward.name)
                 node.icon:setTexture(UIKit:GetItemImage(reward.type,reward.name))
                 node.label:setString(string.format("x%d",reward.count))
                 node:show()

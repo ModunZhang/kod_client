@@ -500,7 +500,7 @@ function AllianceDetailScene:EnterAllianceBuilding(alliance,mapObj)
             class_name = "GameUIAllianceOrderHallEnter"
         elseif building_name == 'watchTower' then
             class_name = "GameUIAllianceWatchTowerEnter"
-        elseif building_name == 'bloodSpring' then
+        elseif building_name == 'bloodSpring' and alliance._id == Alliance_Manager:GetMyAlliance()._id then
             UIKit:showMessageDialog(_("提示"), _("此建筑即将开放"))
             return
         else

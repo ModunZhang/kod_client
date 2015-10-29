@@ -380,8 +380,7 @@ function GameUIOrderHall:CreateProficiencyContent()
 end
 
 function GameUIOrderHall:OnAllianceDataChanged_villageLevels(allianceData, deltaData)
-    dump(alliance:GetVillageLevels())
-    for k,v in pairs(alliance:GetVillageLevels()) do
+    for k,v in pairs(allianceData.villageLevels) do
         if self.village_items[k] then
             self.village_items[k]:LevelUpRefresh(k,v)
         end

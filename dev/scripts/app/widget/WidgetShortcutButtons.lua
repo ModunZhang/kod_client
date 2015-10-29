@@ -49,15 +49,6 @@ function WidgetShortcutButtons:ctor(city)
         function dragon_egg_btn:GetElementSize()
             return {width = 68,height = 80}
         end
-        dragon_egg_btn:schedule(function()
-            local old_visible = dragon_egg_btn:isVisible()
-            local cur_visible = dragon_egg_btn:CheckVisible()
-            if old_visible ~= cur_visible then
-                dragon_egg_btn:setVisible(cur_visible)
-                order:RefreshOrder()
-            end
-        end, 1)
-        self.dragon_egg_btn = dragon_egg_btn
         order:AddElement(dragon_egg_btn)
     end
     local gacha_button = WidgetAutoOrderGachaButton.new()

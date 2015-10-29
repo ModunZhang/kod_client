@@ -322,9 +322,17 @@ function GameUIWarReport:FightWithDefencePlayerReports()
     local report = self.report
     local war_s_label_item = self.details_view:newItem()
     war_s_label_item:setItemSize(540,40)
+    -- 部队信息
+    local left_player_troop = report:GetMyDefenceFightTroop()
+
+    local right_player_troop = report:GetEnemyDefenceFightTroop()
+    -- 龙信息
+    local left_player_dragon = report:GetMyDefenceFightDragon()
+
+    local right_player_dragon = report:GetEnemyDefenceFightDragon()
     local g = cc.ui.UIGroup.new()
     g:addWidget(UIKit:ttfLabel({
-        text = _("战斗统计") ,
+        text = left_player_troop and _("战斗统计") or _("由于敌方未驻防，战斗未发生"),
         size = 22,
         color = 0x403c2f
     }):align(display.CENTER, 0, 0))
@@ -334,14 +342,6 @@ function GameUIWarReport:FightWithDefencePlayerReports()
     local left_player = report:GetMyPlayerData()
     local right_player = report:GetEnemyPlayerData()
     self:CreateBelligerents(left_player,right_player)
-    -- 部队信息
-    local left_player_troop = report:GetMyDefenceFightTroop()
-
-    local right_player_troop = report:GetEnemyDefenceFightTroop()
-    -- 龙信息
-    local left_player_dragon = report:GetMyDefenceFightDragon()
-
-    local right_player_dragon = report:GetEnemyDefenceFightDragon()
     -- RoundDatas
     local left_round = report:GetMyRoundDatas()
 
