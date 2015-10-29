@@ -1,6 +1,5 @@
 local Localize = import("..utils.Localize")
-local GameUIWatchTower = UIKit:createUIClass('GameUIWatchTower',"GameUIUpgradeBuilding")
-local AllianceBelvedere = import("..entity.AllianceBelvedere")
+local GameUIWatchTower = UIKit:createUIClass('GameUIWatchTower',"GameUIWithCommonHeader")
 local window = import("..utils.window")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local WidgetPushButton = import("..widget.WidgetPushButton")
@@ -14,11 +13,9 @@ local GameUIActivityRewardNew = import(".GameUIActivityRewardNew")
 local WidgetPushTransparentButton = import("..widget.WidgetPushTransparentButton")
 
 
-function GameUIWatchTower:ctor(city,building,default_tab)
-    default_tab = default_tab or "upgrade"
+function GameUIWatchTower:ctor(city,default_tab)
     local bn = Localize.building_name
-    GameUIWatchTower.super.ctor(self,city,bn[building:GetType()],building,default_tab)
-    self.belvedere = Alliance_Manager:GetMyAlliance():GetAllianceBelvedere()
+    GameUIWatchTower.super.ctor(self,city,_("瞭望塔"))
     self.default_tab = default_tab
 end
 
@@ -70,20 +67,11 @@ function GameUIWatchTower:TabButtonsAction(tag)
 end
 
 function GameUIWatchTower:AddOrRemoveListener(isAdd)
+    local my_allaince = Alliance_Manager:GetMyAlliance()
     if isAdd then
-        self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.CheckNotHaveTheEventIf)
-        self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.OnCommingDataChanged)
-        self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.OnMarchDataChanged)
-        self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
-        self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.OnVillageEventTimer)
-        self:GetAllianceBelvedere():AddListenOnType(self, AllianceBelvedere.LISTEN_TYPE.OnFightEventTimerChanged)
+        my_allaince:AddListenOnType(self, "marchEvents")
     else
-        self:GetAllianceBelvedere():RemoveListenerOnType(self, AllianceBelvedere.LISTEN_TYPE.CheckNotHaveTheEventIf)
-        self:GetAllianceBelvedere():RemoveListenerOnType(self, AllianceBelvedere.LISTEN_TYPE.OnCommingDataChanged)
-        self:GetAllianceBelvedere():RemoveListenerOnType(self, AllianceBelvedere.LISTEN_TYPE.OnMarchDataChanged)
-        self:GetAllianceBelvedere():RemoveListenerOnType(self, AllianceBelvedere.LISTEN_TYPE.OnAttackMarchEventTimerChanged)
-        self:GetAllianceBelvedere():RemoveListenerOnType(self, AllianceBelvedere.LISTEN_TYPE.OnVillageEventTimer)
-        self:GetAllianceBelvedere():RemoveListenerOnType(self, AllianceBelvedere.LISTEN_TYPE.OnFightEventTimerChanged)
+        my_allaince:RemoveListenerOnType(self, "marchEvents")
     end
 end
 
@@ -109,7 +97,7 @@ end
 
 
 function GameUIWatchTower:RefreshMyEvents()
-    local my_events = self:GetAllianceBelvedere():GetMyEvents()
+    local my_events = Alliance_Manager:GetMyAlliance():GetMyMarchEvents()
     for index = 1,2 do
         local item
         if index == 1 then
@@ -119,7 +107,7 @@ function GameUIWatchTower:RefreshMyEvents()
                 item = self:GetMyEventItemWithIndex(1,true)
             end
         else
-            if self:GetAllianceBelvedere():GetMarchLimit() == 1 then -- 只有一条队列
+            if User.basicInfo.marchQueue == 1 then -- 只有一条队列
                 item = self:GetMyEventItemWithIndex(2,false)
             else
                 if my_events[2] then
@@ -479,7 +467,7 @@ function GameUIWatchTower:GetRedRetreatButton()
 end
 
 function GameUIWatchTower:RefreshOtherEvents()
-    local other_events = self:GetAllianceBelvedere():GetOtherEvents()
+    local other_events = Alliance_Manager:GetMyAlliance():GetOtherToMineMarchEvents()
     for _,entity in ipairs(other_events) do
         local item = self:GetOtherEventItem(entity)
         self.listView:addItem(item)
@@ -509,7 +497,9 @@ end
 function GameUIWatchTower:OnMarchDataChanged()
     self:RefreshCurrentList()
 end
-
+function GameUIWatchTower:OnAllianceDataChanged_marchEvents(alliance, deltaData)
+    self:RefreshCurrentList()
+end
 function GameUIWatchTower:OnFightEventTimerChanged(fightEvent)
     if self.shrine_timer_label[fightEvent:Id()] then
         self.shrine_timer_label[fightEvent:Id()]:setString(GameUtils:formatTimeStyle1(fightEvent:GetTime()))

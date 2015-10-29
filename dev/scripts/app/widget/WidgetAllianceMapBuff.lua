@@ -28,7 +28,7 @@ function WidgetAllianceMapBuff:ctor(mapIndex)
     end
     WidgetPages.new({
         page = 21, -- 页数
-        current_page = DataUtils:getMapRoundByMapIndex(mapIndex) or 1,
+        current_page = (DataUtils:getMapRoundByMapIndex(mapIndex) + 1) or 1,
         titles =  titles, -- 标题 type -> table
         cb = function (page)
             info_buff:SetInfo(
