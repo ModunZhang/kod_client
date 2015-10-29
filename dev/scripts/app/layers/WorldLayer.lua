@@ -21,13 +21,15 @@ function WorldLayer:ctor(scene)
 end
 function WorldLayer:onEnter()
     self:CreateBg()
-    self.scene_node = display.newNode():addTo(self):pos(15,15)
+    self.scene_node = display.newNode():addTo(self)
+                      :align(display.LEFT_BOTTOM, 15,15)
     self:CreateCorner()
     self:CreateEdge()
     self.map = self:CreateMap()
     self.allianceLayer = display.newNode():addTo(self.map,0)
     self.moveLayer = display.newNode():addTo(self.map,1)
-
+    local size = self.scene_node:getCascadeBoundingBox()
+    self.scene_node:setContentSize(cc.size(size.width, size.height))
     self.allainceSprites = {}
     self.flagSprites = {}
     math.randomseed(1)
