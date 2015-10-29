@@ -388,7 +388,6 @@ end
 local ui_map = setmetatable({
     ruins          = {"GameUIBuild"               ,                           },
     keep           = {"GameUIKeep"                ,        "upgrade",         },
-    watchTower     = {"GameUIWatchTower"          ,                           },
     warehouse      = {"GameUIWarehouse"           ,        "upgrade",         },
     dragonEyrie    = {"GameUIDragonEyrieMain"     ,         "dragon",         },
     barracks       = {"GameUIBarracks"            ,        "recruit",         },
@@ -416,6 +415,7 @@ local ui_map = setmetatable({
     tower          = {"GameUITower"               ,},
     airship        = {},
     FairGround     = {},
+    watchTower     = {},
     square         = {},
 }, {__index = function() assert(false) end})
 function MyCityScene:OpenUI(building, default_tab, need_tips, build_name)
@@ -453,6 +453,8 @@ function MyCityScene:OpenUI(building, default_tab, need_tips, build_name)
         UIKit:newGameUI("GameUIGacha", self.city):AddToScene(self, true)
     elseif type_ == "square" then
         UIKit:newGameUI("GameUISquare", self.city):AddToScene(self, true)
+    elseif type_ == "watchTower" then
+
     else
         if entity:IsUnlocked() then
             UIKit:newGameUI(uiarrays[1], city, entity, default_tab or uiarrays[2], uiarrays[3]):AddToScene(self, true)

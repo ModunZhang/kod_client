@@ -8,6 +8,7 @@ local RoadSprite = import("..sprites.RoadSprite")
 local TileSprite = import("..sprites.TileSprite")
 local TreeSprite = import("..sprites.TreeSprite")
 local AirshipSprite = import("..sprites.AirshipSprite")
+local WatchTowerSprite = import("..sprites.WatchTowerSprite")
 local FairGroundSprite = import("..sprites.FairGroundSprite")
 local SingleTreeSprite = import("..sprites.SingleTreeSprite")
 local BirdSprite = import("..sprites.BirdSprite")
@@ -515,8 +516,9 @@ function CityLayer:InitWithCity(city)
     self.helpedByTroops = helpedByTroops
 
     -- pve 入口
-    self.pve_airship = self:CreateAirship(-9, 4):addTo(city_node)
-    self.fair_ground = self:CreateFairGround(60, 25):addTo(city_node)
+    self.watchTower = WatchTowerSprite.new(self, -7, 15):addTo(city_node)
+    self.pve_airship = AirshipSprite.new(self, -9, 4):addTo(city_node)
+    self.fair_ground = FairGroundSprite.new(self, 60, 25):addTo(city_node)
 
 
     -- 更新其他需要动态生成的建筑
@@ -877,6 +879,9 @@ function CityLayer:IteratorClickAble(func)
         if self.fair_ground then
             handle_func(nil, self.fair_ground)
         end
+        if self.watchTower then
+            handle_func(nil, self.watchTower)
+        end
     until true
 end
 function CityLayer:IteratorRuins(func)
@@ -942,12 +947,6 @@ function CityLayer:CreateBarracksSoldier(soldier_type, star)
 end
 function CityLayer:CreateSoldier(soldier_type, star, logic_x, logic_y)
     return SoldierSprite.new(self, soldier_type, star, logic_x, logic_y)
-end
-function CityLayer:CreateAirship(logic_x, logic_y)
-    return AirshipSprite.new(self, logic_x, logic_y)
-end
-function CityLayer:CreateFairGround(logic_x, logic_y)
-    return FairGroundSprite.new(self, logic_x, logic_y)
 end
 
 ----- override
