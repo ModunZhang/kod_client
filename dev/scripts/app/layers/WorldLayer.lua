@@ -28,7 +28,9 @@ function WorldLayer:onEnter()
     self:CreateCorner()
     self:CreateEdge()
     self.map = self:CreateMap()
-    self:CreateAllianceLayer()
+    self.allianceLayer = display.newNode():addTo(self.map,0)
+    self.moveLayer = display.newNode():addTo(self.map,1)
+
     self.allainceSprites = {}
     self.flagSprites = {}
     math.randomseed(1)
@@ -128,11 +130,117 @@ function WorldLayer:CreateMap()
     }
     return clip
 end
-function WorldLayer:CreateAllianceLayer()
-    self.allianceLayer = display.newNode():addTo(self.map)
+local screen_rect = cc.rect(0, 0, display.width, display.height)
+function WorldLayer:MoveAllianceFromTo(fromIndex, toIndex)
+    self:RemoveAllianceBy(fromIndex)
+    self:RemoveAllianceBy(toIndex)
+    local sour = self:ConvertLogicPositionToMapPosition(self:IndexToLogic(fromIndex))
+    local dest = self:ConvertLogicPositionToMapPosition(self:IndexToLogic(toIndex))
+    local degree = math.deg(cc.pGetAngle(cc.pSub(dest, sour), cc.p(0, 1)))
+    local normal = cc.pNormalize(cc.pSub(dest, sour))
+    local distance = cc.pGetLength(cc.pSub(dest, sour))
+    local roads = {}
+    for i = 0, math.huge do
+        local length = 50 * i
+        local x = dest.x - normal.x * length
+        local y = dest.y - normal.y * length
+        if length >= distance or
+            not cc.rectContainsPoint(screen_rect, self.map:convertToWorldSpace(cc.p(x, y))) 
+        then
+            break
+        end
+        sour.x, sour.y = x, y
+        local sprite = display.newSprite("pve_road_point.png")
+        :addTo(self.moveLayer):pos(x, y):rotation(degree):hide()
+        table.insert(roads, 1, sprite)
+    end
+
+    local actions = {}
+    local step_time = 0.5
+    for i,v in ipairs(roads) do
+        table.insert(actions, cc.CallFunc:create(function()
+            v:show()
+        end))
+        table.insert(actions, cc.DelayTime:create(step_time))
+    end
+    local gap, scal, ft = 65, 0.8, 0.5
+    UIKit:CreateMoveSoldiers(degree, {name = "ranger", star = 3}, scal)
+    :addTo(self.moveLayer)
+    :pos(sour.x + normal.x * -gap, sour.y + normal.y * -gap)
+    :runAction(transition.sequence{
+        cc.MoveTo:create(#roads * step_time, {
+            x = dest.x + normal.x * -gap, y = dest.y + normal.y * -gap
+        }),
+        cc.FadeOut:create(ft),
+        cc.RemoveSelf:create(),
+    })
+
+    UIKit:CreateMoveSoldiers(degree, {name = "swordsman", star = 3}, scal)
+    :addTo(self.moveLayer)
+    :pos(sour.x, sour.y + normal.y)
+    :runAction(transition.sequence{
+        cc.MoveTo:create(#roads * step_time, {
+            x = dest.x, y = dest.y
+        }),
+        cc.FadeOut:create(ft),
+        cc.RemoveSelf:create(),
+    })
+
+    UIKit:CreateMoveSoldiers(degree, {name = "lancer", star = 3}, scal)
+    :addTo(self.moveLayer)
+    :pos(sour.x + normal.x * gap, sour.y + normal.y * gap)
+    :runAction(transition.sequence{
+        cc.MoveTo:create(#roads * step_time, {
+            x = dest.x + normal.x * gap, y = dest.y + normal.y * gap
+        }),
+        cc.FadeOut:create(ft),
+        cc.RemoveSelf:create(),
+    })
+
+    table.insert(actions, cc.CallFunc:create(function()
+        for i,v in ipairs(roads) do
+            v:runAction(transition.sequence{
+                cc.FadeOut:create(ft),
+                cc.RemoveSelf:create(),
+            })
+        end
+        self:LoadAllianceBy(toIndex, Alliance_Manager:GetMyAlliance().basicInfo)
+    end))
+    table.insert(actions, cc.DelayTime:create(0.5))
+    table.insert(actions, cc.CallFunc:create(function()
+        UIKit:newGameUI("GameUIMoveSuccess",0,0):AddToCurrentScene(true)
+        app:lockInput(false)
+    end))
+    table.insert(actions, cc.RemoveSelf:create())
+    app:lockInput(true)
+    display.newNode():addTo(self):runAction(transition.sequence(actions))
 end
+
 function WorldLayer:LoadAlliance()
-    NetManager:getMapAllianceDatasPromise(self:GetAvailableIndex()):done(function(response)
+    local flagSprites = {}
+    local allainceSprites = {}
+    for k,v in pairs(self.currentIndexs or {}) do
+        flagSprites[k] = self.flagSprites[k]
+        self.flagSprites[k] = nil
+        allainceSprites[k] = self.allainceSprites[k]
+        self.allainceSprites[k] = nil
+    end
+    for k,v in pairs(self.flagSprites) do
+        v:removeFromParent()
+    end
+    for k,v in pairs(self.allainceSprites) do
+        v:removeFromParent()
+    end
+    self.flagSprites = flagSprites
+    self.allainceSprites = allainceSprites
+
+
+    self.currentIndexs = self:GetAvailableIndex()
+    local request_body = {}
+    for k,v in pairs(self.currentIndexs) do
+        table.insert(request_body, tonumber(k))
+    end
+    NetManager:getMapAllianceDatasPromise(request_body):done(function(response)
         dump(response.msg.datas)
         for k,v in pairs(response.msg.datas) do
             self:LoadAllianceBy(k,v)
@@ -140,39 +248,50 @@ function WorldLayer:LoadAlliance()
     end)
 end
 function WorldLayer:LoadAllianceBy(mapIndex, alliance)
-    local mapIndex = tostring(mapIndex)
     if alliance == json.null then
-        if self.allainceSprites[mapIndex] then
-            self.allainceSprites[mapIndex]:removeFromParent()
-            self.allainceSprites[mapIndex] = nil
-        end
-        
-        if not self.flagSprites[mapIndex] then
-            self:CreateFlag(mapIndex)
-        end
+        self:RemoveAllianceBy(mapIndex)
     else
-        if not self.allainceSprites[mapIndex] then
-            self:CreateAllianceSprite(mapIndex, alliance)
-        else
-            self:UpdateAllianceSprite(mapIndex, alliance)
-        end
-
-        if self.flagSprites[mapIndex] then
-            self.flagSprites[mapIndex]:removeFromParent()
-            self.flagSprites[mapIndex] = nil
-        end
+        self:CreateOrUpdateAllianceBy(mapIndex, alliance)
     end
 end
+function WorldLayer:RemoveAllianceBy(mapIndex)
+    local mapIndex = tostring(mapIndex)
+    if self.allainceSprites[mapIndex] then
+        self.allainceSprites[mapIndex]:removeFromParent()
+        self.allainceSprites[mapIndex] = nil
+    end
+    if not self.flagSprites[mapIndex] then
+        self:CreateFlag(mapIndex)
+    end
+end
+function WorldLayer:CreateOrUpdateAllianceBy(mapIndex, alliance)
+    local mapIndex = tostring(mapIndex)
+    if not self.allainceSprites[mapIndex] then
+        self:CreateAllianceSprite(mapIndex, alliance)
+    else
+        self:UpdateAllianceSprite(mapIndex, alliance)
+    end
+
+    if self.flagSprites[mapIndex] then
+        self.flagSprites[mapIndex]:removeFromParent()
+        self.flagSprites[mapIndex] = nil
+    end
+    return self.allainceSprites[mapIndex]
+end
 function WorldLayer:CreateAllianceSprite(index, alliance)
-    local node = display.newNode()
-    :addTo(self.allianceLayer)
-    :pos(self:GetLogicMap():ConvertToMapPosition(self:IndexToLogic(index)))
+    local index = tostring(index)
+    local p = self:ConvertLogicPositionToMapPosition(self:IndexToLogic(index))
+    local node = display.newNode():addTo(self.allianceLayer):pos(p.x, p.y)
     node.alliance = alliance
     
     local sprite = display.newSprite(string.format("world_alliance_%s.png", alliance.terrain))
-    :addTo(node, 0, 1):pos(50 - math.random(50), 50 - math.random(50))
+    :addTo(node, 0, 1)
+    if index ~= Alliance_Manager:GetMyAlliance().mapIndex then
+        sprite:pos(30 - math.random(30), 30 - math.random(30))
+    end
     local size = sprite:getContentSize()
-    local banner = display.newSprite("alliance_banner.png"):addTo(sprite):pos(size.width/2, 0)
+    local banner = display.newSprite("alliance_banner.png")
+                   :addTo(sprite):pos(size.width/2, 0)
     sprite.name = UIKit:ttfLabel({
         size = 12,
         color = 0xffedae,
@@ -187,6 +306,7 @@ function WorldLayer:CreateAllianceSprite(index, alliance)
     self.allainceSprites[index] = node
 end
 function WorldLayer:UpdateAllianceSprite(index, alliance)
+    local index = tostring(index)
     local sprite = self.allainceSprites[index]:getChildByTag(1)
     sprite:setTexture(string.format("world_alliance_%s.png", alliance.terrain))
     sprite.name:setString(string.format("[%s]%s", alliance.tag, alliance.name))
@@ -195,10 +315,11 @@ function WorldLayer:UpdateAllianceSprite(index, alliance)
     end
 end
 function WorldLayer:CreateFlag(index)
-    local node = display.newNode():addTo(self.allianceLayer)
-    :pos(self:GetLogicMap():ConvertToMapPosition(self:IndexToLogic(index)))
+    local index = tostring(index)
+    local p = self:ConvertLogicPositionToMapPosition(self:IndexToLogic(index))
+    local node = display.newNode():addTo(self.allianceLayer):pos(p.x, p.y)
     local sprite = ccs.Armature:create("daqizi"):addTo(node)
-    :scale(0.4):pos(100 - math.random(100), 60 - math.random(60))
+    :scale(0.4):pos(60 - math.random(60), 30 - math.random(30))
     local ani = sprite:getAnimation()
     ani:playWithIndex(0)
     ani:gotoAndPlay(math.random(71) - 1)
@@ -213,8 +334,14 @@ end
 function WorldLayer:GetLogicMap()
     return self.normal_map
 end
-function WorldLayer:ConvertLogicPositionToMapPosition(lx, ly)
+function WorldLayer:ConverToScenePosition(lx, ly)
     return self.map:getParent():convertToNodeSpace(self.map:convertToWorldSpace(cc.p(self.normal_map:ConvertToMapPosition(lx, ly))))
+end
+function WorldLayer:ConverToWorldSpace(lx, ly)
+    return self.map:convertToWorldSpace(cc.p(self.normal_map:ConvertToMapPosition(lx, ly)))
+end
+function WorldLayer:ConvertLogicPositionToMapPosition(lx, ly)
+    return self.map:convertToNodeSpace(self.map:convertToWorldSpace(cc.p(self.normal_map:ConvertToMapPosition(lx, ly))))
 end
 function WorldLayer:GetAvailableIndex()
     local t = {}
@@ -222,7 +349,7 @@ function WorldLayer:GetAvailableIndex()
     for i = x, x + 5 do
         for j = y, y + 5 do
             if i >= 0 and i < WIDTH and j >= 0 and j < HEIGHT then
-                table.insert(t, self:LogicToIndex(i,j))
+                t[tostring(self:LogicToIndex(i,j))] = true
             end
         end
     end

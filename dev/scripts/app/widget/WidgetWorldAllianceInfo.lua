@@ -21,7 +21,11 @@ function WidgetWorldAllianceInfo:ctor(object,mapIndex,capture)
     self:setNodeEventEnabled(true)
 
     if object then
-        NetManager:getAllianceBasicInfoPromise(object.alliance.id,User.serverId):done(function(response)
+        local id = object.alliance.id
+        if mapIndex == Alliance_Manager:GetMyAlliance().mapIndex then
+            id = Alliance_Manager:GetMyAlliance()._id
+        end
+        NetManager:getAllianceBasicInfoPromise(id, User.serverId):done(function(response)
             if response.success and response.msg.allianceData then
                 self:SetAllianceData(response.msg.allianceData)
                 self:LoadInfo(response.msg.allianceData)
@@ -261,8 +265,12 @@ function WidgetWorldAllianceInfo:LoadMoveAlliance()
             self:LeftButtonClicked()
             return
         end
+        local oldIndex = Alliance_Manager:GetMyAlliance().mapIndex
         NetManager:getMoveAlliancePromise(mapIndex):done(function()
-            
+            if UIKit:GetUIInstance("GameUIWorldMap") then
+                UIKit:GetUIInstance("GameUIWorldMap"):GetSceneLayer()
+                :MoveAllianceFromTo(oldIndex, mapIndex)
+            end
         end)
         self:LeftButtonClicked()
     end):addTo(body):align(display.RIGHT_TOP, b_size.width,10)

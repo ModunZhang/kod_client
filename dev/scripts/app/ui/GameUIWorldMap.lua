@@ -5,6 +5,7 @@ local GameUIWorldMap = UIKit:createUIClass('GameUIWorldMap')
 
 function GameUIWorldMap:ctor()
 	GameUIWorldMap.super.ctor(self)
+    self.__type  = UIKit.UITYPE.BACKGROUND
     self.scene_node = display.newNode():addTo(self)
     self.scene_layer = WorldLayer.new(self):addTo(self.scene_node, 0)
     self.touch_layer = self:CreateMultiTouchLayer():addTo(self.scene_node, 1)
@@ -34,7 +35,7 @@ function GameUIWorldMap:onEnter()
         :addTo(world_map_btn_bg)
 end
 function GameUIWorldMap:GotoPosition(x,y)
-    local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(x,y)
+    local point = self:GetSceneLayer():ConverToScenePosition(x,y)
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
 end
 function GameUIWorldMap:ScheduleLoadMap()
@@ -101,8 +102,8 @@ end
 function GameUIWorldMap:OnTouchBegan(pre_x, pre_y, x, y)
 
 end
-function GameUIWorldMap:OnTouchEnd(pre_x, pre_y, x, y, ismove)
-	if not ismove then
+function GameUIWorldMap:OnTouchEnd(pre_x, pre_y, x, y, ismove, isclick)
+	if not ismove and not isclick then
 		self:LoadMap()
 	end
 end
