@@ -305,6 +305,7 @@ function GameUIGacha:CreateGachaPool(layer)
         end
         layer:EnAbleButton(false)
         local terminal_point
+        print("item_name=",item_name,"count=",item[2])
         for i,item in ipairs(items) do
             if item:GetGachaItemName() == item_name and item:GetGachaItemCount()== self.current_gacha_item_count then
                 terminal_point = i
@@ -438,7 +439,7 @@ function GameUIGacha:InitOrdinary()
                         item_name = "casinoTokenClass_1"
                     }):AddToCurrentScene()
                 else
-                    local items = clone(User.items)
+                    local clone_items = clone(User.items)
                     NetManager:getNormalGachaPromise():done(function(response)
                         if response.msg.playerData then
                             local data = response.msg.playerData
@@ -447,7 +448,7 @@ function GameUIGacha:InitOrdinary()
                                 local key = string.split(v[1], ".")[1]
                                 if key == "items" then
                                     items[1] = v[2].name
-                                    local count = UtilsForItem:GetItemCount(items, v[2].name) > 0 and v[2].count - UtilsForItem:GetItemCount(items, v[2].name) or v[2].count
+                                    local count = UtilsForItem:GetItemCount(clone_items, v[2].name) > 0 and v[2].count - UtilsForItem:GetItemCount(clone_items, v[2].name) or v[2].count
                                     items[2] = count
                                 end
                             end

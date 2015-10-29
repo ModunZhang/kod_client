@@ -67,8 +67,7 @@ function GameUIHome:onEnter()
     self.visible_count = 1
     local city = self.city
 
-    UIKit:newWidgetUI("WidgetShortcutButtons",city):addTo(self)
-
+    self.order_shortcut = UIKit:newWidgetUI("WidgetShortcutButtons",city):addTo(self)
     -- 上背景
     self.top = self:CreateTop()
     self.bottom = self:CreateBottom()

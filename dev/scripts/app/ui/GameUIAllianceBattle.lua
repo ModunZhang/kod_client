@@ -216,7 +216,7 @@ function GameUIAllianceBattle:InitAllianceInfo()
 
     local bg = WidgetInfoWithTitle.new({
         title = _("联盟地图BUFF"),
-        h = 346,
+        h = 386,
         info = self:GetAllianceMapBuffByIndex(DataUtils:getMapRoundByMapIndex(alliance.mapIndex) + 1)
     }):align(display.TOP_CENTER, window.cx, current_position:getPositionY() - 120):addTo(layer)
 
@@ -224,42 +224,25 @@ end
 function GameUIAllianceBattle:GetAllianceMapBuffByIndex(index)
     local buff = aliance_buff[index-1]
     local buff_info = {}
-    for i,v in pairs(buff) do
-        if i ~="round" and i ~="monsterLevel" then
+
+    for i,v in ipairs({"monsterLevel","villageAddPercent","dragonExpAddPercent","bloodAddPercent","marchSpeedAddPercent","dragonStrengthAddPercent","loyaltyAddPercent","honourAddPercent"}) do
+        if v =="monsterLevel" then
+            local levels = string.split(buff[v],"_")
             table.insert(buff_info, {
-                Localize.alliance_buff[i],
-                {"+"..v.."%",0x288400}
+                Localize.alliance_buff[v],
+                {string.format("Lv%s~Lv%s",levels[1],levels[2]),0x288400}
+            })
+        else
+            table.insert(buff_info, {
+                Localize.alliance_buff[v],
+                {"+"..buff[v].."%",0x288400}
             })
         end
     end
     return buff_info
 end
 function GameUIAllianceBattle:OpenAllianceBuffDetails()
-    local layer = UIKit:newWidgetUI("WidgetPopDialog",424,_("联盟地图BUFF")):AddToCurrentScene()
-    local body = layer:GetBody()
-    local rb_size = body:getContentSize()
-
-    local info_buff = WidgetInfo.new({
-        h = 300
-    }):align(display.BOTTOM_CENTER, rb_size.width/2 , 30)
-        :addTo(body)
-
-    local titles = {}
-    for i=1,21 do
-        table.insert(titles, string.format(_("第%d圈"),i))
-    end
-
-    WidgetPages.new({
-        page = 21, -- 页数
-        titles =  titles, -- 标题 type -> table
-        cb = function (page)
-            info_buff:SetInfo(
-                self:GetAllianceMapBuffByIndex(page)
-            )
-        end -- 回调
-    }):align(display.CENTER, rb_size.width/2,rb_size.height-50)
-        :addTo(body)
-
+    UIKit:newWidgetUI("WidgetAllianceMapBuff",self.alliance.mapIndex):AddToCurrentScene()
 end
 function GameUIAllianceBattle:InitBattleStatistics()
     local layer = self.statistics_layer
@@ -1671,6 +1654,8 @@ end
 
 
 return GameUIAllianceBattle
+
+
 
 
 

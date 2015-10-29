@@ -183,7 +183,10 @@ function WorldLayer:CreateAllianceSprite(index, alliance)
     sprite.flagstr = alliance.flag
     sprite.flag = ui_helper:CreateFlagContentSprite(alliance.flag)
         :addTo(sprite):align(display.CENTER, 80, 60):scale(0.3)
-
+    if Alliance_Manager:GetMyAlliance().mapIndex == tonumber(index) then
+        display.newSprite("icon_current_position_46x68.png")
+            :addTo(node, 0, 2):pos(sprite:getPositionX(), sprite:getPositionY() + sprite:getContentSize().height / 2 + 15)
+    end
     self.allainceSprites[index] = node
 end
 function WorldLayer:UpdateAllianceSprite(index, alliance)
@@ -215,6 +218,10 @@ function WorldLayer:GetLogicMap()
 end
 function WorldLayer:ConvertLogicPositionToMapPosition(lx, ly)
     return self.map:getParent():convertToNodeSpace(self.map:convertToWorldSpace(cc.p(self.normal_map:ConvertToMapPosition(lx, ly))))
+end
+function WorldLayer:ConvertScreenPositionToLogicPosition(sx, sy)
+    local p = self.map:convertToNodeSpace(cc.p(sx, sy))
+    return self.normal_map:ConvertToLogicPosition(p.x, p.y)
 end
 function WorldLayer:GetAvailableIndex()
     local t = {}

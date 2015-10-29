@@ -216,19 +216,12 @@ function WidgetShortcutButtons:ctor(city)
     right_top_order:AddElement(alliance_belvedere_button)
 
     -- 圣地时间按钮
-    local shrine_event_button = cc.ui.UIPushButton.new({normal = 'tmp_btn_shrine_72x72.png'})
+    local shrine_event_button = cc.ui.UIPushButton.new({normal = 'tmp_btn_shrine_74x90.png'})
     shrine_event_button:onButtonClicked(function()
-        local buildings = Alliance_Manager:GetMyAlliance():GetMapObjectsByType("building")
-        local shrine_info
-        for k,v in pairs(buildings) do
-            if v.name == "shrine" then
-                shrine_info = v
-            end
-        end
-        UIKit:newGameUI("GameUIAllianceShrine",self.city,"fight_event",Alliance_Manager:GetMyAlliance():FindAllianceBuildingInfoByObjects(shrine_info)):AddToCurrentScene(true)
+        UIKit:newGameUI("GameUIAllianceShrine",self.city,"fight_event",Alliance_Manager:GetMyAlliance():GetAllianceBuildingInfoByName("shrine")):AddToCurrentScene(true)
     end)
     function shrine_event_button:CheckVisible()
-        return false
+        return Alliance_Manager:GetMyAlliance().shrineEvents and #Alliance_Manager:GetMyAlliance().shrineEvents > 0
     end
     function shrine_event_button:GetElementSize()
         return shrine_event_button:getCascadeBoundingBox().size
@@ -255,6 +248,7 @@ function WidgetShortcutButtons:onEnter()
     my_allaince:AddListenOnType(self, "basicInfo")
     my_allaince:AddListenOnType(self, "helpEvents")
     my_allaince:AddListenOnType(self, "marchEvents")
+    my_allaince:AddListenOnType(self, "shrineEvents")
 end
 function WidgetShortcutButtons:onExit()
     User:RemoveListenerOnType(self, "countInfo")
@@ -272,6 +266,7 @@ function WidgetShortcutButtons:onExit()
     my_allaince:RemoveListenerOnType(self, "basicInfo")
     my_allaince:RemoveListenerOnType(self, "helpEvents")
     my_allaince:RemoveListenerOnType(self, "marchEvents")
+    my_allaince:RemoveListenerOnType(self, "shrineEvents")
 end
 function WidgetShortcutButtons:onCleanup()
     GameGlobalUI:clearMessageQueue()
@@ -322,6 +317,9 @@ function WidgetShortcutButtons:OnAllianceDataChanged_helpEvents()
     self.request_count:SetNumber(Alliance_Manager:GetMyAlliance():GetOtherRequestEventsNum())
 end
 function WidgetShortcutButtons:OnAllianceDataChanged_marchEvents(alliance, deltaData)
+    self.right_top_order:RefreshOrder()
+end
+function WidgetShortcutButtons:OnAllianceDataChanged_shrineEvents(alliance, deltaData)
     self.right_top_order:RefreshOrder()
 end
 function WidgetShortcutButtons:OnUserDataChanged_vipEvents()

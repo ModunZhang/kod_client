@@ -1239,12 +1239,13 @@ local PERIOD_TYPE = {
 }
 local ALLIANCE_BUFF = {
     ["villageAddPercent"] = _("村落采集速度"),
-    ["loyaltyAddPercent"] = _("全体成员每日获得忠诚值"),
-    ["honourAddPercent"] = _("联盟每日获得荣耀值"),
+    ["loyaltyAddPercent"] = _("圣地战玩家获得忠诚值"),
+    ["honourAddPercent"] = _("圣地战联盟获得荣耀值"),
     ["dragonExpAddPercent"] = _("巨龙经验值"),
     ["bloodAddPercent"] = _("英雄之血"),
     ["marchSpeedAddPercent"] = _("行军速度"),
     ["dragonStrengthAddPercent"] = _("巨龙力量"),
+    ["monsterLevel"] = _("野怪等级"),
 }
 local TERRAIN_FUNCTION = {
     grassLand = _("草地产出绿龙材料，更容易培养绿龙"),
