@@ -457,6 +457,17 @@ function Alliance:GetMyMarchEvents()
     end
     return my_events
 end
+function Alliance:GetOtherToMineMarchEvents()
+    local to_my_events = {}
+    for k,kindsOfEvents in pairs(self.marchEvents) do
+        for i,event in ipairs(kindsOfEvents) do
+            if event.defencePlayerData.id == User:Id() then
+                table.insert(to_my_events, event)
+            end
+        end
+    end
+    return to_my_events
+end
 function Alliance:Reset()
     print("===================>Reset")
     print(debug.traceback("", 2))

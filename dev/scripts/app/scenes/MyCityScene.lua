@@ -411,11 +411,11 @@ local ui_map = setmetatable({
     woodcutter     = {"GameUIResource"            ,},
     quarrier       = {"GameUIResource"            ,},
     miner          = {"GameUIResource"            ,},
-    wall           = {"GameUIWall"                ,       "upgrade",         },
+    wall           = {"GameUIWall"                ,       "upgrade",          },
     tower          = {"GameUITower"               ,},
+    watchTower     = {"GameUIWatchTower"               ,  "march"             },
     airship        = {},
     FairGround     = {},
-    watchTower     = {},
     square         = {},
 }, {__index = function() assert(false) end})
 function MyCityScene:OpenUI(building, default_tab, need_tips, build_name)
@@ -454,7 +454,7 @@ function MyCityScene:OpenUI(building, default_tab, need_tips, build_name)
     elseif type_ == "square" then
         UIKit:newGameUI("GameUISquare", self.city):AddToScene(self, true)
     elseif type_ == "watchTower" then
-
+        UIKit:newGameUI(uiarrays[1], city, uiarrays[2]):AddToScene(self, true)
     else
         if entity:IsUnlocked() then
             UIKit:newGameUI(uiarrays[1], city, entity, default_tab or uiarrays[2], uiarrays[3]):AddToScene(self, true)
