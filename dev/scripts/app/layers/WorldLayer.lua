@@ -225,13 +225,16 @@ function WorldLayer:MoveAllianceFromTo(fromIndex, toIndex)
 end
 
 function WorldLayer:LoadAlliance()
+    local indexes = self:GetAvailableIndex()
     local flagSprites = {}
     local allainceSprites = {}
     for k,v in pairs(self.currentIndexs or {}) do
-        flagSprites[k] = self.flagSprites[k]
-        self.flagSprites[k] = nil
-        allainceSprites[k] = self.allainceSprites[k]
-        self.allainceSprites[k] = nil
+        if indexes[k] then
+            flagSprites[k] = self.flagSprites[k]
+            self.flagSprites[k] = nil
+            allainceSprites[k] = self.allainceSprites[k]
+            self.allainceSprites[k] = nil
+        end
     end
     for k,v in pairs(self.flagSprites) do
         v:removeFromParent()
@@ -243,9 +246,9 @@ function WorldLayer:LoadAlliance()
     self.allainceSprites = allainceSprites
 
 
-    self.currentIndexs = self:GetAvailableIndex()
+    self.currentIndexs = indexes
     local request_body = {}
-    for k,v in pairs(self.currentIndexs) do
+    for k,v in pairs(indexes) do
         table.insert(request_body, tonumber(k))
     end
     NetManager:getMapAllianceDatasPromise(request_body):done(function(response)

@@ -605,6 +605,10 @@ local flag_map = {
     [FRIEND] = {"village_flag_friend.png", "village_icon_friend.png"},
     [ENEMY] = {"village_flag_enemy.png", "village_icon_enemy.png"},
 }
+local FIRE_TAG = 11900
+local SMOKE_TAG = 12000
+local fire = import("..particles.fire")
+local smoke_city = import("..particles.smoke_city")
 function AllianceLayer:RefreshSpriteInfo(sprite, mapObj, alliance)
     local info = sprite.info
     local isenemy = User.allianceId ~= alliance._id
@@ -618,6 +622,30 @@ function AllianceLayer:RefreshSpriteInfo(sprite, mapObj, alliance)
         info.banner:setTexture(banners[member.helpedByTroopsCount])
         info.level:setString(member.keepLevel)
         info.name:setString(string.format("[%s]%s", alliance.basicInfo.tag, member.name))
+
+        if member.isProtected then
+            if sprite:getChildByTag(SMOKE_TAG) then
+                sprite:removeChildByTag(SMOKE_TAG)
+            end
+            if not sprite:getChildByTag(FIRE_TAG) then
+                fire():addTo(sprite, 2, FIRE_TAG):pos(0,-50)
+            end
+        else
+            if sprite:getChildByTag(FIRE_TAG) then
+                sprite:removeChildByTag(FIRE_TAG)
+            end
+            local attackTime = (timer:GetServerTime() - member.lastBeAttackedTime / 1000)
+            local is_smoke = attackTime < 10 * 60
+            if is_smoke then
+                if not sprite:getChildByTag(SMOKE_TAG) then
+                    smoke_city():addTo(sprite, 2, SMOKE_TAG):pos(-20,-20)
+                end
+            else
+                if sprite:getChildByTag(SMOKE_TAG) then
+                    sprite:removeChildByTag(SMOKE_TAG)
+                end
+            end
+        end
     elseif mapObj.name == "monster" then
         local banners = UILib.enemy_city_banner
         local monster = Alliance.GetAllianceMonsterInfosById(alliance, mapObj.id)
