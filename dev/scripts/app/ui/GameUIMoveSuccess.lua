@@ -20,6 +20,11 @@ end
 function GameUIMoveSuccess:onExit()
     if display.getRunningScene().__cname == 'AllianceDetailScene' then
         app:EnterMyAllianceScene()
+    else
+        self:LeftButtonClicked()
+        if UIKit:GetUIInstance("GameUIWorldMap") then
+            UIKit:GetUIInstance("GameUIWorldMap"):LeftButtonClicked()
+        end
     end
 end
 function GameUIMoveSuccess:Play()

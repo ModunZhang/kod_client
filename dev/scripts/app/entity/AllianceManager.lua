@@ -133,23 +133,32 @@ function AllianceManager:OnUserDataChanged(user_data,time,deltaData)
     end
 end
 
-function AllianceManager:OnAllianceDataChanged(alliance_data,refresh_time,deltaData)
-    self:GetMyAlliance():OnAllianceDataChanged(alliance_data,refresh_time,deltaData)
-    if alliance_data and not deltaData then
-        local scene_name = display.getRunningScene().__cname
+function AllianceManager:OnAllianceDataChanged(allianceData,refresh_time,deltaData)
+    self:GetMyAlliance():OnAllianceDataChanged(allianceData,refresh_time,deltaData)
+    local scene_name = display.getRunningScene().__cname
+    if allianceData and not deltaData then
         if scene_name == "AllianceDetailScene" then
             app:EnterMyAllianceScene()
         end
     end
-    -- local my_alliance_status = self:GetMyAlliance().basicInfo.status
-    -- local isRelogin_action = deltaData == nil and alliance_data
-    -- if (scene_name == 'AllianceBattleScene' or scene_name == 'AllianceScene') and isRelogin_action  then
-    --     if not UIKit:GetUIInstance('GameUIWarSummary') then
-    --         app:EnterMyAllianceScene()
-    --     end
-    -- else
-    --     -- self:RefreshAllianceSceneIf(my_alliance_status)
-    -- end
+    if deltaData then        
+        if self.my_mapIndex and 
+            self.my_mapIndex ~= allianceData.mapIndex then
+            local mapIndex = self.my_mapIndex
+            UIKit:showMessageDialogWithParams({
+                content = _("联盟已经迁移"),
+                ok_callback = function()
+                    if UIKit:GetUIInstance("GameUIWorldMap") then
+                        UIKit:GetUIInstance("GameUIWorldMap"):LeftButtonClicked()
+                    end
+                    UIKit:newGameUI("GameUIWorldMap", mapIndex, allianceData.mapIndex):AddToCurrentScene()
+                end,
+                auto_close = false,
+                user_data = '__alliance_move_tips__'
+            })
+        end
+    end
+    self.my_mapIndex = allianceData.mapIndex
 end
 
 
