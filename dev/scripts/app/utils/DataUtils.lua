@@ -6,6 +6,7 @@ local items = GameDatas.Items
 local normal_soldier = GameDatas.Soldiers.normal
 local special_soldier = GameDatas.Soldiers.special
 local soldier_vs = GameDatas.ClientInitGame.soldier_vs
+local buff = GameDatas.AllianceMap.buff
 local Localize = import("..utils.Localize")
 
 DataUtils = {}
@@ -417,8 +418,10 @@ function DataUtils:getPlayerMarchTimeBuffEffectValue()
     if User:IsItemEventActive("marchSpeedBonus") then
         effect = effect + UtilsForItem:GetItemBuff("marchSpeedBonus")
     end
-    --vip buffer
+    -- vip buffer
     effect = effect + User:GetVIPMarchSpeedAdd()
+    -- 联盟行军buff
+    effect = effect + buff[self:getMapRoundByMapIndex(Alliance_Manager:GetMyAlliance().mapIndex)].marchSpeedAddPercent / 100
     return effect
 end
 --获取攻击行军的buff时间
