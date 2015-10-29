@@ -5,7 +5,7 @@ local WidgetPushButton = import("..widget.WidgetPushButton")
 local GameUIWorldMap = UIKit:createUIClass('GameUIWorldMap')
 local aliance_buff = GameDatas.AllianceMap.buff
 
-function GameUIWorldMap:ctor()
+function GameUIWorldMap:ctor(fromIndex, toIndex)
 	GameUIWorldMap.super.ctor(self)
     self.__type  = UIKit.UITYPE.BACKGROUND
     self.scene_node = display.newNode():addTo(self)
@@ -13,11 +13,12 @@ function GameUIWorldMap:ctor()
     self.touch_layer = self:CreateMultiTouchLayer():addTo(self.scene_node, 1)
     self.event_manager = EventManager.new(self)
     self.touch_judgment = TouchJudgment.new(self)
+    self.fromIndex = fromIndex
+    self.toIndex = toIndex
 end
 function GameUIWorldMap:onEnter()
     local x,y = self:GetSceneLayer():IndexToLogic(Alliance_Manager:GetMyAlliance().mapIndex)
-    self:GotoPosition(x,y)
-    self:ScheduleLoadMap()
+	self:GotoPosition(x,y)
     -- top
     local top_bg = display.newSprite("background_500x84.png"):align(display.TOP_CENTER, display.cx, display.top-20):addTo(self)
     UIKit:ttfLabel({
@@ -38,6 +39,12 @@ function GameUIWorldMap:onEnter()
         end)
     ):align(display.CENTER,world_map_btn_bg:getContentSize().width/2 , world_map_btn_bg:getContentSize().height/2)
         :addTo(world_map_btn_bg)
+
+    if self.fromIndex and self.toIndex then
+        self:GetSceneLayer():MoveAllianceFromTo(self.fromIndex, self.toIndex)
+    else
+        self:ScheduleLoadMap()
+    end
 end
 function GameUIWorldMap:GotoPosition(x,y)
     local point = self:GetSceneLayer():ConverToScenePosition(x,y)

@@ -350,6 +350,7 @@ function AllianceDetailScene:FetchAllianceDatasByIndex(index, func)
         if type(func) == "function" then
             func()
         end
+        self:GetHomePage():HideLoading()
     elseif self.current_allinace_index ~= index then
         self:StartTimer(index, func)
     end
