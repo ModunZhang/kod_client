@@ -40,19 +40,16 @@ function GameUIWorldMap:onEnter()
     ):align(display.CENTER,world_map_btn_bg:getContentSize().width/2 , world_map_btn_bg:getContentSize().height/2)
         :addTo(world_map_btn_bg)
 
+    self.load_map_node = display.newNode():addTo(self)
     if self.fromIndex and self.toIndex then
         self:GetSceneLayer():MoveAllianceFromTo(self.fromIndex, self.toIndex)
     else
-        self:ScheduleLoadMap()
+        self:GetSceneLayer():LoadAlliance()
     end
 end
 function GameUIWorldMap:GotoPosition(x,y)
     local point = self:GetSceneLayer():ConverToScenePosition(x,y)
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
-end
-function GameUIWorldMap:ScheduleLoadMap()
-    self:GetSceneLayer():LoadAlliance()
-    self.load_map_node = display.newNode():addTo(self)
 end
 function GameUIWorldMap:LoadMap()
     if self:IsFingerOn() then
