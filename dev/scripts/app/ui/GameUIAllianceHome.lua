@@ -131,6 +131,11 @@ function GameUIAllianceHome:OnAllianceDataChanged_basicInfo(alliance,deltaData)
         self_flag:align(display.CENTER, self.self_name_bg:getContentSize().width-100, -30):addTo(self.self_name_bg)
         self.self_flag = self_flag
     end
+
+    if deltaData("basicInfo.status", "fight") then
+        self.top:SetOurPowerOrKill(0)
+        self.top:SetEnemyPowerOrKill(0)
+    end
 end
 function GameUIAllianceHome:Schedule()
     local alliance = self.alliance
@@ -690,14 +695,6 @@ function GameUIAllianceHome:GetPointsWithScreenRect(screen_rect)
         point(x, y + h),
         point(x, y),
     }
-end
-function GameUIAllianceHome:OnAllianceFightChanged(alliance, deltaData)
-    if deltaData("basicInfo.status", "fight") then
-        -- if our and enemy then
-        self.top:SetOurPowerOrKill(0)
-        self.top:SetEnemyPowerOrKill(0)
-        -- end
-    end
 end
 
 function GameUIAllianceHome:GetAlliancePeriod()

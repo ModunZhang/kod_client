@@ -6,7 +6,8 @@ local GameUIWorldMap = UIKit:createUIClass('GameUIWorldMap')
 local aliance_buff = GameDatas.AllianceMap.buff
 
 function GameUIWorldMap:ctor()
-    GameUIWorldMap.super.ctor(self)
+	GameUIWorldMap.super.ctor(self)
+    self.__type  = UIKit.UITYPE.BACKGROUND
     self.scene_node = display.newNode():addTo(self)
     self.scene_layer = WorldLayer.new(self):addTo(self.scene_node, 0)
     self.touch_layer = self:CreateMultiTouchLayer():addTo(self.scene_node, 1)
@@ -39,7 +40,7 @@ function GameUIWorldMap:onEnter()
         :addTo(world_map_btn_bg)
 end
 function GameUIWorldMap:GotoPosition(x,y)
-    local point = self:GetSceneLayer():ConvertLogicPositionToMapPosition(x,y)
+    local point = self:GetSceneLayer():ConverToScenePosition(x,y)
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
 end
 function GameUIWorldMap:ScheduleLoadMap()
@@ -198,10 +199,10 @@ end
 function GameUIWorldMap:OnTouchBegan(pre_x, pre_y, x, y)
 
 end
-function GameUIWorldMap:OnTouchEnd(pre_x, pre_y, x, y, ismove)
-    if not ismove then
-        self:LoadMap()
-    end
+function GameUIWorldMap:OnTouchEnd(pre_x, pre_y, x, y, ismove, isclick)
+	if not ismove and not isclick then
+		self:LoadMap()
+	end
 end
 function GameUIWorldMap:OnTouchMove(pre_x, pre_y, x, y)
     self.load_map_node:stopAllActions()
@@ -236,13 +237,13 @@ function GameUIWorldMap:OnTouchClicked(pre_x, pre_y, x, y)
     if not index then
         return
     end
-    -- display.captureScreen(function(bsuc, file)
-    --     if bsuc then
-    --         local sprite = display.newSprite(file):addTo(self):hide()
-    --         sprite:setNodeEventEnabled(true)
-    --     end
-    -- end, "screen.png")
-    UIKit:newWidgetUI("WidgetWorldAllianceInfo",click_object,index,sprite):AddToCurrentScene()
+    display.captureScreen(function(bsuc, file)
+        if bsuc then
+            local sprite = display.newSprite(file):addTo(self):hide()
+            sprite:setNodeEventEnabled(true)
+            UIKit:newWidgetUI("WidgetWorldAllianceInfo",click_object,index,sprite):AddToCurrentScene()
+        end
+    end, "screen.png")
 end
 function GameUIWorldMap:IsFingerOn()
     return self.event_manager:TouchCounts() ~= 0

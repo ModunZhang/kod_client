@@ -288,10 +288,9 @@ function AllianceDetailScene:onEnter()
             self:GotoPosition(self.location.x,self.location.y)
         end
     else
-        local lx, ly = self:GetSceneLayer():IndexToLogic(alliance.mapIndex)
         local mapObj = alliance:FindMapObjectById(alliance:GetSelf().mapId)
-        self:GotoPosition(lx * ALLIANCE_WIDTH + mapObj.location.x,
-            ly * ALLIANCE_HEIGHT + mapObj.location.y)
+        local x,y = DataUtils:GetAbsolutePosition(alliance.mapIndex, mapObj.location.x, mapObj.location.y)
+        self:GotoPosition(x,y)
     end
     self:GetSceneLayer():ZoomTo(0.82)
     alliance:AddListenOnType(self, "mapIndex")
@@ -336,20 +335,26 @@ function AllianceDetailScene:onExit()
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, "marchEvents")
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, "villageEvents")
 end
-function AllianceDetailScene:FetchAllianceDatasByIndex(index)
+function AllianceDetailScene:FetchAllianceDatasByIndex(index, func)
     if self.current_allinace_index and self.current_allinace_index ~= index then
-        NetManager:getLeaveMapIndexPromise(self.current_allinace_index)
+        NetManager:getLeaveMapIndexPromise(self.current_allinace_index):done(function()
+            self:FetchAllianceDatasByIndex(index, func)
+        end)
         self.current_allinace_index = nil
+        return 
     end
     if Alliance_Manager:GetMyAlliance().mapIndex == index then
         self.fetchtimer:stopAllActions()
         self.amintimer:stopAllActions()
         self.current_allinace_index = nil
+        if type(func) == "function" then
+            func()
+        end
     elseif self.current_allinace_index ~= index then
-        self:StartTimer(index)
+        self:StartTimer(index, func)
     end
 end
-function AllianceDetailScene:StartTimer(index)
+function AllianceDetailScene:StartTimer(index, func)
     self.fetchtimer:stopAllActions()
     self.amintimer:stopAllActions()
     self:GetHomePage():ShowLoading()
@@ -360,12 +365,18 @@ function AllianceDetailScene:StartTimer(index)
                 Alliance_Manager:OnEnterMapIndex(index, response.msg)
                 self.amintimer:stopAllActions()
                 self.amintimer:schedule(function()
-                    NetManager:getAmInMapIndexPromise(self.current_allinace_index)
+                    if self.current_allinace_index and 
+                    self.current_allinace_index ~= Alliance_Manager:GetMyAlliance().mapIndex then
+                        NetManager:getAmInMapIndexPromise(self.current_allinace_index)
+                    end
                 end, 10)
                 self.home_page:RefreshTop(true)
                 self:GetHomePage():HideLoading()
+                if type(func) == "function" then
+                    func()
+                end
             end):fail(function()
-                self:StartTimer(index)
+                self:StartTimer(index, func)
             end)
     end, 0.2)
 end
