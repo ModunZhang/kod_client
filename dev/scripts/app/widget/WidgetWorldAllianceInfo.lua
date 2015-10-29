@@ -17,7 +17,7 @@ function WidgetWorldAllianceInfo:ctor(object,mapIndex,capture)
     self.capture = capture
     self.object = object
     self.mapIndex = mapIndex
-    WidgetWorldAllianceInfo.super.ctor(self,object and 430 or 328,object and  object.alliance.name or _("无主领土"),window.top-120)
+    WidgetWorldAllianceInfo.super.ctor(self,object and 454 or 328,object and  object.alliance.name or _("无主领土"),window.top-120)
     self:setNodeEventEnabled(true)
 
     if object then
@@ -116,27 +116,34 @@ function WidgetWorldAllianceInfo:LoadInfo(alliance_data)
     local layer = self.body
     local l_size = layer:getContentSize()
     local flag_box = display.newScale9Sprite("alliance_item_flag_box_126X126.png")
-        :size(100,100)
+        :size(134,134)
         :addTo(layer)
         :align(display.LEFT_TOP, 30, l_size.height - 30)
     local flag_sprite = WidgetAllianceHelper.new():CreateFlagWithRhombusTerrain(alliance_data.terrain,alliance_data.flag)
     flag_sprite:addTo(flag_box)
-    flag_sprite:pos(50,40)
+    flag_sprite:pos(67,46):scale(1.4)
+     local position_node = UIKit:createLineItem(
+        {
+            width = 388,
+            text_1 = _("位置"),
+            text_2 = string.format(_("第%d圈"),DataUtils:getMapRoundByMapIndex(alliance_data.mapIndex) + 1),
+        }
+    ):align(display.RIGHT_TOP,l_size.width-30, l_size.height - 56):addTo(layer)
 
     local titleBg = UIKit:createLineItem(
         {
-            width = 418,
+            width = 388,
             text_1 = _("和平期"),
             text_2 = "00:11:11",
         }
-    ):align(display.RIGHT_TOP,l_size.width-30, l_size.height - 56):addTo(layer)
+    ):align(display.RIGHT_TOP,l_size.width-30, l_size.height - 96):addTo(layer)
 
     scheduleAt(self, function()
         titleBg:SetValue(GameUtils:formatTimeStyle1(app.timer:GetServerTime() - alliance_data.statusStartTime/1000.0),Localize.period_type[alliance_data.status])
     end)
 
     local info_bg = WidgetUIBackGround.new({height=82,width=556},WidgetUIBackGround.STYLE_TYPE.STYLE_5)
-        :align(display.LEFT_TOP, flag_box:getPositionX(),l_size.height - 146)
+        :align(display.LEFT_TOP, flag_box:getPositionX(),l_size.height - 174)
         :addTo(layer)
     local memberTitleLabel = UIKit:ttfLabel({
         text = _("成员"),
@@ -216,7 +223,7 @@ function WidgetWorldAllianceInfo:LoadInfo(alliance_data)
     end)
 
     local desc_bg = WidgetUIBackGround.new({height=158,width=550},WidgetUIBackGround.STYLE_TYPE.STYLE_5)
-        :align(display.CENTER_TOP, l_size.width/2,l_size.height - 240)
+        :align(display.CENTER_TOP, l_size.width/2,info_bg:getPositionY() - 92)
         :addTo(layer)
 
     local desc = alliance_data.desc
@@ -261,21 +268,27 @@ end
 function WidgetWorldAllianceInfo:LoadMoveAlliance()
     local body = self.body
     local b_size = body:getContentSize()
-    UIKit:ttfLabel({
-        text =  _("迁移冷却时间"),
-        size = 22,
-        color = 0x403c2f,
-    }):align(display.CENTER, b_size.width/2 , b_size.height - 40):addTo(body)
+    local mapIndex = self.mapIndex
+    UIKit:createLineItem(
+        {
+            width = 548,
+            text_1 = string.format(_("第%d圈"),DataUtils:getMapRoundByMapIndex(mapIndex) + 1),
+            text_2 = {string.format(_("需要联盟宫殿 Lv%s"),moveLimit[DataUtils:getMapRoundByMapIndex(mapIndex)].needPalaceLevel),0x7e0000},
+        }
+    ):align(display.CENTER_TOP, b_size.width/2 , b_size.height - 50):addTo(body)
 
-    local move_time = UIKit:ttfLabel({
-        size = 22,
-        color = 0x007c23,
-    }):align(display.CENTER, b_size.width/2 , b_size.height - 70):addTo(body)
+    local move_time = UIKit:createLineItem(
+        {
+            width = 548,
+            text_1 = _("迁移冷却时间"),
+            text_2 = {"",0x007c23},
+        }
+    ):align(display.CENTER_TOP, b_size.width/2 , b_size.height - 90):addTo(body)
 
     scheduleAt(self,function ()
         local time = intInit.allianceMoveColdMinutes.value * 60 + Alliance_Manager:GetMyAlliance().basicInfo.allianceMoveTime/1000.0 - app.timer:GetServerTime()
         local canMove = Alliance_Manager:GetMyAlliance().basicInfo.allianceMoveTime == 0 or time <= 0
-        move_time:setString(canMove and _("准备就绪") or GameUtils:formatTimeStyle1(time))
+        move_time:SetValue(canMove and _("准备就绪") or GameUtils:formatTimeStyle1(time))
     end)
 
     local desc_bg = WidgetUIBackGround.new({height=186,width=556},WidgetUIBackGround.STYLE_TYPE.STYLE_5)

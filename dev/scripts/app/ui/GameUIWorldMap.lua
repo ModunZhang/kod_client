@@ -1,7 +1,9 @@
 local EventManager = import("..layers.EventManager")
 local TouchJudgment = import("..layers.TouchJudgment")
 local WorldLayer = import("..layers.WorldLayer")
+local WidgetPushButton = import("..widget.WidgetPushButton")
 local GameUIWorldMap = UIKit:createUIClass('GameUIWorldMap')
+local aliance_buff = GameDatas.AllianceMap.buff
 
 function GameUIWorldMap:ctor(fromIndex, toIndex)
 	GameUIWorldMap.super.ctor(self)
@@ -9,7 +11,7 @@ function GameUIWorldMap:ctor(fromIndex, toIndex)
     self.scene_node = display.newNode():addTo(self)
     self.scene_layer = WorldLayer.new(self):addTo(self.scene_node, 0)
     self.touch_layer = self:CreateMultiTouchLayer():addTo(self.scene_node, 1)
-	self.event_manager = EventManager.new(self)
+    self.event_manager = EventManager.new(self)
     self.touch_judgment = TouchJudgment.new(self)
     self.fromIndex = fromIndex
     self.toIndex = toIndex
@@ -25,12 +27,15 @@ function GameUIWorldMap:onEnter()
         color = 0xffedae,
     }):align(display.CENTER, top_bg:getContentSize().width/2, top_bg:getContentSize().height/2)
         :addTo(top_bg)
+
+    -- bottom 所在位置信息
+    self.round_info = self:LoadRoundInfo(Alliance_Manager:GetMyAlliance().mapIndex)
     -- 返回按钮
-    local world_map_btn_bg = display.newSprite("background_86x86.png"):addTo(self):align(display.LEFT_BOTTOM,display.left + 10,display.bottom + 25):scale(0.85)
+    local world_map_btn_bg = display.newSprite("background_86x86.png"):addTo(self):align(display.LEFT_BOTTOM,display.left + 10,display.bottom + 135):scale(0.85)
     -- local inWorldScene = display.getRunningScene().__cname == "WorldScene"
     local world_map_btn = UIKit:ButtonAddScaleAction(cc.ui.UIPushButton.new({normal ='icon_world_retiurn_88x88.png'})
         :onButtonClicked(function()
-           self:LeftButtonClicked()
+            self:LeftButtonClicked()
         end)
     ):align(display.CENTER,world_map_btn_bg:getContentSize().width/2 , world_map_btn_bg:getContentSize().height/2)
         :addTo(world_map_btn_bg)
@@ -46,20 +51,112 @@ function GameUIWorldMap:GotoPosition(x,y)
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
 end
 function GameUIWorldMap:ScheduleLoadMap()
-	self:GetSceneLayer():LoadAlliance()
-	self.load_map_node = display.newNode():addTo(self)
+    self:GetSceneLayer():LoadAlliance()
+    self.load_map_node = display.newNode():addTo(self)
 end
 function GameUIWorldMap:LoadMap()
-	if self:IsFingerOn() then
-		return
-	end
-	self.load_map_node:stopAllActions()
-	self.load_map_node:performWithDelay(function()
-		self:GetSceneLayer():LoadAlliance()
-	end, 0.5)
+    if self:IsFingerOn() then
+        return
+    end
+    self.load_map_node:stopAllActions()
+    self.load_map_node:performWithDelay(function()
+        self:GetSceneLayer():LoadAlliance()
+    end, 0.5)
+end
+function GameUIWorldMap:LoadRoundInfo(mapIndex)
+    local node = display.newSprite("background_768x292.png"):align(display.BOTTOM_CENTER, display.cx, display.bottom):addTo(self)
+    node.mapIndex = mapIndex
+    local mini_map_button = WidgetPushButton.new({normal = "mini_map_146x124.png"})
+        :onButtonClicked(function(event)
+            if event.name == "CLICKED_EVENT" then
+                UIKit:newWidgetUI("WidgetAllianceMapBuff",node.mapIndex):AddToCurrentScene()
+            end
+        end):align(display.LEFT_BOTTOM, 84 , 10)
+        :addTo(node)
+    mini_map_button:setTouchSwallowEnabled(true)
+
+    local current_round_bg = display.newSprite("background_red_558x42.png"):align(display.LEFT_TOP, mini_map_button:getPositionX() + 30 , mini_map_button:getPositionY() + mini_map_button:getCascadeBoundingBox().size.height + 5)
+        :addTo(node)
+    local current_round_label = UIKit:ttfLabel({
+        text = DataUtils:getMapRoundByMapIndex(mapIndex),
+        size = 22,
+        color = 0xfed36c,
+    }):align(display.CENTER, current_round_bg:getContentSize().width/2, current_round_bg:getContentSize().height/2)
+        :addTo(current_round_bg)
+
+    -- 野怪等级
+    local monster_bg = display.newSprite("background_464x38.png"):align(display.LEFT_TOP, mini_map_button:getPositionX() + 70 , mini_map_button:getPositionY() + mini_map_button:getCascadeBoundingBox().size.height/2 + 18)
+        :addTo(node)
+    UIKit:ttfLabel({
+        text = _("野怪等级"),
+        size = 18,
+        color = 0xffedae,
+    }):align(display.LEFT_CENTER, 60, monster_bg:getContentSize().height/2)
+        :addTo(monster_bg)
+    local monster_levels = UIKit:ttfLabel({
+        text = " 10 - 14",
+        size = 20,
+        color = 0xa1dd00,
+    }):align(display.RIGHT_CENTER, monster_bg:getContentSize().width - 55, monster_bg:getContentSize().height/2)
+        :addTo(monster_bg)
+    -- BUFF数量
+    local buff_bg = display.newSprite("background_464x38.png"):align(display.LEFT_TOP, monster_bg:getPositionX() , monster_bg:getPositionY() - 39)
+        :addTo(node)
+    UIKit:ttfLabel({
+        text = _("增益效果数量"),
+        size = 18,
+        color = 0xffedae,
+    }):align(display.LEFT_CENTER, 60, buff_bg:getContentSize().height/2 )
+        :addTo(buff_bg)
+    local buff_num_label = UIKit:ttfLabel({
+        text = "0",
+        size = 20,
+        color = 0xa1dd00,
+    }):align(display.RIGHT_CENTER, buff_bg:getContentSize().width - 55, buff_bg:getContentSize().height/2)
+        :addTo(buff_bg)
+
+    -- 屏幕中心点在小地图的位置
+    local current_position_sprite = display.newSprite("icon_current_position_8x10.png"):addTo(mini_map_button)
+        -- :align(display.RIGHT_CENTER)
+    current_position_sprite:runAction(
+        cc.RepeatForever:create(
+            transition.sequence{
+                cc.ScaleTo:create(0.5/2, 1.2),
+                cc.ScaleTo:create(0.5/2, 1.1),
+            }
+        )
+    )
+
+    function node:RefreshRoundInfo(mapIndex,x, y)
+        self.mapIndex = mapIndex
+        local map_round = DataUtils:getMapRoundByMapIndex(mapIndex)
+        local buff = aliance_buff[map_round]
+        local buff_num = 0
+        for i,v in pairs(buff) do
+            if i ~="monsterLevel" and i ~= "round" and v > 0 then
+                buff_num = buff_num + 1
+            end
+        end
+        buff_num_label:setString(buff_num)
+        current_round_label:setString(string.format(_("%d 圈"),map_round + 1))
+        local levels = string.split(buff["monsterLevel"],"_")
+        monster_levels:setString(string.format("Lv%s~Lv%s",levels[1],levels[2]))
+
+        local offset_x,offset_y = x / 41, 1 - y / 41
+        local mini_map_size = mini_map_button:getCascadeBoundingBox().size
+        current_position_sprite:setPosition(124 * offset_x, 124 * offset_y)
+    end
+
+    scheduleAt(self,function ()
+        local x,y = self.scene_layer:ConvertScreenPositionToLogicPosition(display.cx,display.cy)
+        local mapIndex = self.scene_layer:LogicToIndex(x, y) 
+        node:RefreshRoundInfo(mapIndex,x, y)
+    end,0.5)
+
+    return node
 end
 function GameUIWorldMap:GetSceneLayer()
-	return self.scene_layer
+    return self.scene_layer
 end
 function GameUIWorldMap:CreateMultiTouchLayer()
     local touch_layer = display.newLayer()
@@ -92,7 +189,7 @@ function GameUIWorldMap:OnTouchCancelled(pre_x, pre_y, x, y)
     print("OnTouchCancelled")
 end
 function GameUIWorldMap:OnTwoTouch(x1, y1, x2, y2, event_type)
-	local scene = self.scene_layer
+    local scene = self.scene_layer
     if event_type == "began" then
         scene:StopScaleAnimation()
         self.distance = math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
@@ -115,8 +212,8 @@ function GameUIWorldMap:OnTouchEnd(pre_x, pre_y, x, y, ismove, isclick)
 	end
 end
 function GameUIWorldMap:OnTouchMove(pre_x, pre_y, x, y)
-	self.load_map_node:stopAllActions()
-	if self.distance then return end
+    self.load_map_node:stopAllActions()
+    if self.distance then return end
     local parent = self.scene_layer:getParent()
     local old_point = parent:convertToNodeSpace(cc.p(pre_x, pre_y))
     local new_point = parent:convertToNodeSpace(cc.p(x, y))
@@ -126,7 +223,7 @@ function GameUIWorldMap:OnTouchMove(pre_x, pre_y, x, y)
     self.scene_layer:setPosition(cc.p(old_x + diffX, old_y + diffY))
 end
 function GameUIWorldMap:OnTouchExtend(old_speed_x, old_speed_y, new_speed_x, new_speed_y, millisecond, is_end)
-	local parent = self.scene_layer:getParent()
+    local parent = self.scene_layer:getParent()
     local speed = parent:convertToNodeSpace(cc.p(new_speed_x, new_speed_y))
     local x, y = self.scene_layer:getPosition()
     local max_speed = 5
@@ -136,8 +233,8 @@ function GameUIWorldMap:OnTouchExtend(old_speed_x, old_speed_y, new_speed_x, new
     self.scene_layer:setPosition(cc.p(x + sp.x, y + sp.y))
 
     if is_end then
-		self:LoadMap()
-	end
+        self:LoadMap()
+    end
 end
 function GameUIWorldMap:OnTouchClicked(pre_x, pre_y, x, y)
     if self:IsFingerOn() then
@@ -164,3 +261,4 @@ function GameUIWorldMap:OnSceneMove()
 end
 
 return GameUIWorldMap
+

@@ -518,18 +518,22 @@ function UIKit:createLineItem(params)
     -- 分割线
     local line = display.newScale9Sprite("dividing_line.png",0,0,cc.size(params.width,2),cc.rect(10,2,382,2))
     local line_size = line:getContentSize()
+    local text_1 = params.text_1
+    local text_2 = params.text_2
+    local is_one_table = tolua.type(text_1)
+    local is_two_table = tolua.type(text_2)
     local title_lable = self:ttfLabel(
         {
-            text = params.text_1,
+            text = is_one_table and text_1[1] or text_1,
             size = 20,
-            color = 0x615b44
+            color = is_one_table and text_1[2] or 0x615b44
         }):align(display.LEFT_BOTTOM, 0, 4)
         :addTo(line)
     local value_label = self:ttfLabel(
         {
-            text = params.text_2,
+            text = is_two_table and text_2[1] or text_2,
             size = 22,
-            color = 0x403c2f
+            color = is_two_table and text_2[2] or 0x403c2f
         }):align(display.RIGHT_BOTTOM, line_size.width, 4)
         :addTo(line)
 
