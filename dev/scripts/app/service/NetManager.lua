@@ -218,6 +218,9 @@ local function get_alliance_response_msg(response)
     if response.msg.mapIndexData then
         Alliance_Manager:setMapIndexData(response.msg.mapIndexData)
     end
+    if response.msg.mapData then
+        Alliance_Manager.my_alliance_mapData = response.msg.mapData
+    end
     if response.msg.allianceData then
         local user_alliance_data = DataManager:getUserAllianceData()
         if user_alliance_data == json.null then
@@ -612,6 +615,7 @@ local logic_event_map = {
         if not NetManager.m_was_inited_game then return end
         if success and DataManager:hasUserData() then
             Alliance_Manager:setMapIndexData(response.mapIndexData)
+            Alliance_Manager.my_alliance_mapData = response.msg.mapData
             DataManager:setUserAllianceData(response.allianceData)
 
             local user_data = DataManager:getUserData()
@@ -759,6 +763,9 @@ function NetManager:getLoginPromise(deviceId)
             if IS_HARD_LOGIN and mapIndexData then
                 Alliance_Manager:setMapIndexData(mapIndexData)
                 IS_HARD_LOGIN = false
+            end
+            if response.msg.mapData then
+                Alliance_Manager.my_alliance_mapData = response.msg.mapData
             end
             -- LuaUtils:outputTable(mapData)
             -- local user_enemy_alliance_data = response.msg.enemyAllianceData
