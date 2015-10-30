@@ -70,9 +70,17 @@ function GameUIWatchTower:AddOrRemoveListener(isAdd)
     local my_allaince = Alliance_Manager:GetMyAlliance()
     if isAdd then
         my_allaince:AddListenOnType(self, "marchEvents")
+        Alliance_Manager:SetAllianceHandle(self)
     else
         my_allaince:RemoveListenerOnType(self, "marchEvents")
+        Alliance_Manager:SetAllianceHandle(nil)
     end
+end
+
+function GameUIWatchTower:OnEnterMapIndex()
+end
+function GameUIWatchTower:OnMapDataChanged()
+    self:RefreshCurrentList()
 end
 
 
@@ -414,7 +422,7 @@ function GameUIWatchTower:GetOtherEventItem(entity)
         size = 22,
         color= 0x403c2f
     }):addTo(bg):align(display.LEFT_BOTTOM,164+ icon_bg:getCascadeBoundingBox().width+8, 20)
-    scheduleAt(self,function ()
+    scheduleAt(item,function ()
         timer_label:setString(UtilsForEvent:GetEventTime(entity))
     end)
     -- self.march_timer_label[entity:WithObject():Id()] = timer_label
@@ -493,7 +501,7 @@ function GameUIWatchTower:GetRedRetreatButton()
 end
 
 function GameUIWatchTower:RefreshOtherEvents()
-    local other_events = Alliance_Manager:GetMyAlliance():GetOtherToMineMarchEvents()
+    local other_events = Alliance_Manager:GetToMineMarchEvents()
     for _,entity in ipairs(other_events) do
         local item = self:GetOtherEventItem(entity)
         self.listView:addItem(item)
