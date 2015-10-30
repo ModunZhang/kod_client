@@ -141,7 +141,7 @@ function AllianceManager:OnAllianceDataChanged(allianceData,refresh_time,deltaDa
             app:EnterMyAllianceScene()
         end
     end
-    if deltaData and not self:GetMyAlliance():GetSelf():IsArchon() then        
+    if deltaData then        
         if self.my_mapIndex and 
             self.my_mapIndex ~= allianceData.mapIndex then
             local mapIndex = self.my_mapIndex

@@ -321,6 +321,7 @@ function WidgetWorldAllianceInfo:LoadMoveAlliance()
             return
         end
         local oldIndex = Alliance_Manager:GetMyAlliance().mapIndex
+        Alliance_Manager.my_mapIndex = nil
         NetManager:getMoveAlliancePromise(mapIndex):done(function()
             Alliance_Manager:RemoveAllianceCache(oldIndex)
             Alliance_Manager:UpdateAllianceBy(mapIndex, Alliance_Manager:GetMyAlliance())
