@@ -12,6 +12,9 @@ function AllianceDetailScene:OnAllianceDataChanged_basicInfo(allianceData, delta
     if deltaData("basicInfo.terrain") then
         self:GetSceneLayer():LoadAllianceByIndex(allianceData.mapIndex, allianceData)
     end
+    if deltaData("basicInfo.status") then
+        app:GetAudioManager():PlayGameMusicOnSceneEnter("AllianceDetailScene",false)
+    end
 end
 function AllianceDetailScene:OnAllianceDataChanged_members(allianceData, deltaData)
     local ok, value = deltaData("members.edit")
@@ -275,6 +278,7 @@ function AllianceDetailScene:ctor(location)
 end
 function AllianceDetailScene:onEnter()
     AllianceDetailScene.super.onEnter(self)
+    app:GetAudioManager():PlayGameMusicOnSceneEnter("AllianceDetailScene",false)
     self.home_page = self:CreateHomePage()
     
     Alliance_Manager:ClearCache()
