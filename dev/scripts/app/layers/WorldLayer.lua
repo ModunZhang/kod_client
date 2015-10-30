@@ -3,11 +3,11 @@ local NormalMapAnchorBottomLeftReverseY = import("..map.NormalMapAnchorBottomLef
 local MapLayer = import(".MapLayer")
 local WorldLayer = class("WorldLayer", MapLayer)
 
-
+local bigMapLength_value = GameDatas.AllianceInitData.intInit.bigMapLength.value
 local ui_helper = WidgetAllianceHelper.new()
 local TILE_LENGTH = 207
 local CORNER_LENGTH = 47
-local WIDTH, HEIGHT = 41, 41
+local WIDTH, HEIGHT = bigMapLength_value, bigMapLength_value
 local MAX_INDEX = WIDTH * HEIGHT - 1
 local width, height = WIDTH * TILE_LENGTH, HEIGHT * TILE_LENGTH
 local worldsize = {
@@ -42,26 +42,27 @@ function WorldLayer:onExit()
     cache:removeTextureForKey("world_terrain.jpg")
 end
 function WorldLayer:CreateBg()
-    local offsetY = - 280
+    local sx, sy = 12, 7
+    local offsetY = - 350
     local sprite = display.newFilteredSprite("world_bg.jpg", "CUSTOM", json.encode({
         frag = "shaders/plane.fs",
         shaderName = "plane1",
-        param = {1/14, 1/8, 14, 8}
+        param = {1/sx, 1/sy, sx, sy}
     })):addTo(self):align(display.LEFT_BOTTOM, 0, offsetY)
     local size = sprite:getContentSize()
-    sprite:setScaleX(14)
-    sprite:setScaleY(8)
-    worldsize.width = size.width * 14 - 265
-    worldsize.height = size.height * 8 + offsetY
+    sprite:setScaleX(sx)
+    sprite:setScaleY(sy)
+    worldsize.width = size.width * sx - 235
+    worldsize.height = size.height * sy + offsetY
 
     display.newFilteredSprite("world_title2.jpg", "CUSTOM", json.encode({
         frag = "shaders/plane.fs",
         shaderName = "plane2",
-        param = {1/14, 1, 14, 1}
-    })):addTo(self):align(display.LEFT_TOP,0,size.height * 8 + offsetY):setScaleX(14)
+        param = {1/sx, 1, sx, 1}
+    })):addTo(self):align(display.LEFT_TOP,0,size.height * sy + offsetY):setScaleX(sx)
 
     display.newSprite("world_title1.jpg")
-    :addTo(self):align(display.LEFT_TOP,0,size.height * 8 + offsetY)
+    :addTo(self):align(display.LEFT_TOP,0,size.height * sy + offsetY)
 end
 function WorldLayer:CreateCorner()
     display.newSprite("world_tile.png"):pos(CORNER_LENGTH/2, CORNER_LENGTH/2)

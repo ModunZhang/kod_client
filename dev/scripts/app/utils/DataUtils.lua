@@ -27,9 +27,10 @@ end
 --[[
 坐标换算
 ]]
-local MAP_LEGNTH_WIDTH = 41
-local MAP_LEGNTH_HEIGHT = 41
 local intInit = GameDatas.AllianceInitData.intInit
+local bigMapLength_value = intInit.bigMapLength.value
+local MAP_LEGNTH_WIDTH = bigMapLength_value
+local MAP_LEGNTH_HEIGHT = bigMapLength_value
 local ALLIANCE_WIDTH, ALLIANCE_HEIGHT = intInit.allianceRegionMapWidth.value, intInit.allianceRegionMapHeight.value
 function DataUtils:GetAbsolutePosition(mapIndex, x, y)
     local lx, ly = mapIndex % MAP_LEGNTH_WIDTH, math.floor(mapIndex / MAP_LEGNTH_WIDTH)
@@ -325,8 +326,8 @@ end
 function DataUtils:getAllianceLocationDistance(fromAllianceDoc, fromLocation, toAllianceDoc, toLocation)
     local getMapIndexLocation = function(mapIndex)
         return {
-            x = mapIndex % 41,
-            y = math.floor(mapIndex / 41)
+            x = mapIndex % bigMapLength_value,
+            y = math.floor(mapIndex / bigMapLength_value)
         }
     end
 
@@ -1199,7 +1200,7 @@ function DataUtils:GetResourceProtectPercent( resource_name )
 end
 --根据MapIndex获取MapRound
 function DataUtils:getMapRoundByMapIndex( mapIndex )
-    local bigMapLength = 41
+    local bigMapLength = bigMapLength_value
     local roundMax = math.floor(bigMapLength / 2)
     local locationX = mapIndex % bigMapLength
     local locationY = math.floor(mapIndex / bigMapLength)

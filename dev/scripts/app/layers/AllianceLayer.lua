@@ -15,10 +15,10 @@ local buildingName = AllianceMap.buildingName
 local ui_helper = WidgetAllianceHelper.new()
 local decorator_image = UILib.decorator_image
 local alliance_building = UILib.alliance_building
-local MAP_LEGNTH_WIDTH = 41
-local MAP_LEGNTH_HEIGHT = 41
-local TILE_WIDTH = 160
 local intInit = GameDatas.AllianceInitData.intInit
+local MAP_LEGNTH_WIDTH = intInit.bigMapLength.value
+local MAP_LEGNTH_HEIGHT = intInit.bigMapLength.value
+local TILE_WIDTH = 160
 local ALLIANCE_WIDTH, ALLIANCE_HEIGHT = intInit.allianceRegionMapWidth.value, intInit.allianceRegionMapHeight.value
 local worldsize = {width = ALLIANCE_WIDTH * 160 * MAP_LEGNTH_WIDTH, height = ALLIANCE_HEIGHT * 160 * MAP_LEGNTH_HEIGHT}
 local timer = app.timer
