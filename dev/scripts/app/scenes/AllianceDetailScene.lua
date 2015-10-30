@@ -12,6 +12,9 @@ function AllianceDetailScene:OnAllianceDataChanged_basicInfo(allianceData, delta
     if deltaData("basicInfo.terrain") then
         self:GetSceneLayer():LoadAllianceByIndex(allianceData.mapIndex, allianceData)
     end
+    if deltaData("basicInfo.status") then
+        app:GetAudioManager():PlayGameMusicOnSceneEnter("AllianceDetailScene",false)
+    end
 end
 function AllianceDetailScene:OnAllianceDataChanged_members(allianceData, deltaData)
     local ok, value = deltaData("members.edit")
@@ -272,10 +275,10 @@ function AllianceDetailScene:ctor(location)
     self.location = location
     self.goto_x = x
     self.goto_y = y
-    self.visible_alliances = {}
 end
 function AllianceDetailScene:onEnter()
     AllianceDetailScene.super.onEnter(self)
+    app:GetAudioManager():PlayGameMusicOnSceneEnter("AllianceDetailScene",false)
     self.home_page = self:CreateHomePage()
     
     Alliance_Manager:ClearCache()
@@ -469,10 +472,10 @@ end
 function AllianceDetailScene:OnSceneMove()
     AllianceDetailScene.super.OnSceneMove(self)
     self:UpdateVisibleAllianceBg()
-    self:UpdateCurrrentAlliance()
+    self:FetchAllianceDatasByIndex(self:GetSceneLayer():GetMiddleAllianceIndex())
 end
 function AllianceDetailScene:UpdateVisibleAllianceBg()
-    local old_visibles = self.visible_alliances
+    local old_visibles = self.visible_alliances or {}
     local new_visibles = {}
     for _,k in pairs(self:GetSceneLayer():GetVisibleAllianceIndexs()) do
         if not old_visibles[k] then
@@ -482,10 +485,6 @@ function AllianceDetailScene:UpdateVisibleAllianceBg()
         new_visibles[k] = true
     end
     self.visible_alliances = new_visibles
-end
-function AllianceDetailScene:UpdateCurrrentAlliance()
-    local index = self:GetSceneLayer():GetMiddleAllianceIndex()
-    self:FetchAllianceDatasByIndex(index)
 end
 function AllianceDetailScene:EnterAllianceBuilding(alliance,mapObj)
     if mapObj.name then

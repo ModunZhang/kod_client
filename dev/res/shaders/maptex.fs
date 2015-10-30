@@ -19,8 +19,8 @@ vec2 getpos( vec4 range, float x, float y ) {
 void main(void) {
 	float x = mod( v_texCoord.x, size.z ) * size.x;
 	float y = mod( v_texCoord.y, size.w ) * size.y;
-	float X = floor(v_texCoord.x / size.z) / 42.0;
-	float Y = floor(v_texCoord.y / size.w) / 42.0;
+	float X = floor(v_texCoord.x / size.z) / 41.0;
+	float Y = floor(v_texCoord.y / size.w) / 41.0;
 	vec4 range = ranges[int(floor(texture2D(terrain, vec2(X, Y)).r / 0.24))];
 	gl_FragColor = texture2D(CC_Texture0, getpos(range, x, y));
 }

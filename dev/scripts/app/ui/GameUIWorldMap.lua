@@ -31,7 +31,13 @@ function GameUIWorldMap:onEnter()
     -- bottom 所在位置信息
     self.round_info = self:LoadRoundInfo(Alliance_Manager:GetMyAlliance().mapIndex)
     -- 返回按钮
-    local world_map_btn_bg = display.newSprite("background_86x86.png"):addTo(self):align(display.LEFT_BOTTOM,display.left + 10,display.bottom + 135):scale(0.85)
+    local world_map_btn_bg = display.newSprite("background_86x86.png")
+    :addTo(self):align(display.LEFT_BOTTOM,display.left + 10,display.bottom + 135):scale(0.85)
+    local size = world_map_btn_bg:getContentSize()
+    self.loading = display.newSprite("loading.png"):addTo(self)
+                    :pos(display.left + 10 + size.width/2 * 0.85, display.bottom + 150)
+    self:HideLoading()
+    
     -- local inWorldScene = display.getRunningScene().__cname == "WorldScene"
     local world_map_btn = UIKit:ButtonAddScaleAction(cc.ui.UIPushButton.new({normal ='icon_world_retiurn_88x88.png'})
         :onButtonClicked(function()
@@ -47,6 +53,17 @@ function GameUIWorldMap:onEnter()
         self:GetSceneLayer():LoadAlliance()
     end
 end
+function GameUIWorldMap:ShowLoading()
+    if self.loading:isVisible() and 
+        self.loading:getNumberOfRunningActions() > 0 then 
+        return 
+    end
+    self.loading:show():rotation(math.random(360)):stopAllActions()
+    self.loading:runAction(cc.RepeatForever:create(cc.RotateBy:create(4, 360)))
+end
+function GameUIWorldMap:HideLoading()
+    self.loading:hide():stopAllActions()
+end
 function GameUIWorldMap:GotoPosition(x,y)
     local point = self:GetSceneLayer():ConverToScenePosition(x,y)
     self:GetSceneLayer():GotoMapPositionInMiddle(point.x, point.y)
@@ -55,6 +72,7 @@ function GameUIWorldMap:LoadMap()
     if self:IsFingerOn() then
         return
     end
+    self:ShowLoading()
     self.load_map_node:stopAllActions()
     self.load_map_node:performWithDelay(function()
         self:GetSceneLayer():LoadAlliance()
@@ -241,13 +259,7 @@ function GameUIWorldMap:OnTouchClicked(pre_x, pre_y, x, y)
     if not index then
         return
     end
-    display.captureScreen(function(bsuc, file)
-        if bsuc then
-            local sprite = display.newSprite(file):addTo(self):hide()
-            sprite:setNodeEventEnabled(true)
-            UIKit:newWidgetUI("WidgetWorldAllianceInfo",click_object,index,sprite):AddToCurrentScene()
-        end
-    end, "screen.png")
+    UIKit:newWidgetUI("WidgetWorldAllianceInfo",click_object,index):AddToCurrentScene()
 end
 function GameUIWorldMap:IsFingerOn()
     return self.event_manager:TouchCounts() ~= 0

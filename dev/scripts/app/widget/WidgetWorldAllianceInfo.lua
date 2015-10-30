@@ -13,8 +13,7 @@ local intInit = GameDatas.AllianceInitData.intInit
 local moveLimit = GameDatas.AllianceMap.moveLimit
 local WidgetWorldAllianceInfo = class("WidgetWorldAllianceInfo", WidgetPopDialog)
 
-function WidgetWorldAllianceInfo:ctor(object,mapIndex,capture)
-    self.capture = capture
+function WidgetWorldAllianceInfo:ctor(object,mapIndex)
     self.object = object
     self.mapIndex = mapIndex
     WidgetWorldAllianceInfo.super.ctor(self,object and 454 or 328,object and  object.alliance.name or _("无主领土"),window.top-120)
@@ -86,7 +85,6 @@ function WidgetWorldAllianceInfo:Located(mapIndex, x, y)
     end
 end
 function WidgetWorldAllianceInfo:EnterIn(mapIndex, x, y)
-    local capture = self.capture
     local wp = self.object:getParent():convertToWorldSpace(cc.p(self.object:getPosition()))
     if wp.x < 0 then
         wp.x = 0
@@ -98,19 +96,24 @@ function WidgetWorldAllianceInfo:EnterIn(mapIndex, x, y)
     elseif wp.y > display.height then
         wp.y = display.height
     end
-    local xp, yp = wp.x / display.width, wp.y / display.height
-    capture:show():pos(wp.x, wp.y):setAnchorPoint(cc.p(xp, yp))
-    local tex = capture:getTexture()
+
+
+    if UIKit:GetUIInstance("GameUIWorldMap") then
+        local scene_node = UIKit:GetUIInstance("GameUIWorldMap"):GetSceneLayer().scene_node
+        local lp = scene_node:getParent():convertToNodeSpace(wp)
+        local size = scene_node:getCascadeBoundingBox()
+        local xp, yp = lp.x / size.width, lp.y / size.height
+        scene_node:pos(lp.x, lp.y):setAnchorPoint(cc.p(xp, yp))
+        scene_node:runAction(transition.sequence{
+            cc.ScaleTo:create(0.5, 2),
+            cc.CallFunc:create(function()
+                if UIKit:GetUIInstance("GameUIWorldMap") then
+                    UIKit:GetUIInstance("GameUIWorldMap"):LeftButtonClicked()
+                end
+            end)
+        })
+    end
     self:LeftButtonClicked()
-    capture:runAction(transition.sequence{
-        cc.ScaleTo:create(0.5, 2),
-        cc.CallFunc:create(function()
-            cc.Director:getInstance():getTextureCache():removeTexture(tex)
-            if UIKit:GetUIInstance("GameUIWorldMap") then
-                UIKit:GetUIInstance("GameUIWorldMap"):LeftButtonClicked()
-            end
-        end)
-    })
 end
 function WidgetWorldAllianceInfo:LoadInfo(alliance_data)
     local layer = self.body
@@ -122,7 +125,7 @@ function WidgetWorldAllianceInfo:LoadInfo(alliance_data)
     local flag_sprite = WidgetAllianceHelper.new():CreateFlagWithRhombusTerrain(alliance_data.terrain,alliance_data.flag)
     flag_sprite:addTo(flag_box)
     flag_sprite:pos(67,46):scale(1.4)
-     local position_node = UIKit:createLineItem(
+    local position_node = UIKit:createLineItem(
         {
             width = 388,
             text_1 = _("位置"),
@@ -318,18 +321,20 @@ function WidgetWorldAllianceInfo:LoadMoveAlliance()
             return
         end
         local oldIndex = Alliance_Manager:GetMyAlliance().mapIndex
+        Alliance_Manager.my_mapIndex = nil
         NetManager:getMoveAlliancePromise(mapIndex):done(function()
             Alliance_Manager:RemoveAllianceCache(oldIndex)
             Alliance_Manager:UpdateAllianceBy(mapIndex, Alliance_Manager:GetMyAlliance())
             if UIKit:GetUIInstance("GameUIWorldMap") then
                 UIKit:GetUIInstance("GameUIWorldMap"):GetSceneLayer()
-                :MoveAllianceFromTo(oldIndex, mapIndex)
+                    :MoveAllianceFromTo(oldIndex, mapIndex)
             end
         end)
         self:LeftButtonClicked()
     end):addTo(body):align(display.RIGHT_TOP, b_size.width,10)
 end
 return WidgetWorldAllianceInfo
+
 
 
 

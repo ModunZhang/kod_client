@@ -9,14 +9,11 @@ local TILE_LENGTH = 207
 local CORNER_LENGTH = 47
 local WIDTH, HEIGHT = 41, 41
 local MAX_INDEX = WIDTH * HEIGHT - 1
-local SHADER_WIDTH, SHADER_HEIGHT = 42, 42
 local width, height = WIDTH * TILE_LENGTH, HEIGHT * TILE_LENGTH
 local worldsize = {
-width = width + 2 * CORNER_LENGTH + 200, 
-height = height + 2 * CORNER_LENGTH + 500,
+    width = width + 2 * CORNER_LENGTH + 200, 
+    height = height + 2 * CORNER_LENGTH + 500,
 }
-assert(SHADER_WIDTH % 2 == 0)
-assert(SHADER_HEIGHT % 2 == 0)
 
 
 function WorldLayer:ctor(scene)
@@ -24,13 +21,15 @@ function WorldLayer:ctor(scene)
 end
 function WorldLayer:onEnter()
     self:CreateBg()
-    self.scene_node = display.newNode():addTo(self):pos(15,15)
+    self.scene_node = display.newNode():addTo(self)
+                      :align(display.LEFT_BOTTOM, 15,15)
     self:CreateCorner()
     self:CreateEdge()
     self.map = self:CreateMap()
     self.allianceLayer = display.newNode():addTo(self.map,0)
     self.moveLayer = display.newNode():addTo(self.map,1)
-
+    local size = self.scene_node:getCascadeBoundingBox()
+    self.scene_node:setContentSize(cc.size(size.width, size.height))
     self.allainceSprites = {}
     self.flagSprites = {}
     math.randomseed(1)
@@ -108,24 +107,24 @@ function WorldLayer:CreateEdge()
         :addTo(self.scene_node):setScaleY(WIDTH):rotation(-90)
 end
 function WorldLayer:CreateMap()
-    local clip = display.newClippingRegionNode(cc.rect(0,0, TILE_LENGTH * WIDTH, TILE_LENGTH * HEIGHT))
-        :addTo(self.scene_node):align(display.LEFT_BOTTOM,CORNER_LENGTH,CORNER_LENGTH)
+    local clip = display.newNode():addTo(self.scene_node)
+                 :align(display.LEFT_BOTTOM,CORNER_LENGTH,CORNER_LENGTH)
 
     local map = display.newFilteredSprite("world_terrain.jpg", "CUSTOM", json.encode({
         frag = "shaders/maptex.fs",
         shaderName = "maptex",
         size = {
-            SHADER_WIDTH/2, -- 
-            SHADER_HEIGHT,
-            0.5/(SHADER_WIDTH/4),
-            1/SHADER_HEIGHT,
+            WIDTH/2, -- 
+            HEIGHT,
+            0.5/(WIDTH/4),
+            1/HEIGHT,
         }
     })):align(display.LEFT_BOTTOM, 0, 0):addTo(clip)
     local cache = cc.Director:getInstance():getTextureCache()
     cache:addImage("world_map.png"):setAliasTexParameters()
     map:getGLProgramState():setUniformTexture("terrain", cache:getTextureForKey("world_map.png"):getName())
-    map:setScaleX(SHADER_WIDTH/4)
-    map:setScaleY(SHADER_HEIGHT/2)
+    map:setScaleX(WIDTH/4)
+    map:setScaleY(HEIGHT/2)
 
     self.normal_map = NormalMapAnchorBottomLeftReverseY.new{
         tile_w = TILE_LENGTH,
@@ -255,6 +254,9 @@ function WorldLayer:LoadAlliance()
         dump(response.msg.datas)
         for k,v in pairs(response.msg.datas) do
             self:LoadAllianceBy(k,v)
+        end
+        if UIKit:GetUIInstance("GameUIWorldMap") then
+            UIKit:GetUIInstance("GameUIWorldMap"):HideLoading()
         end
     end)
 end
