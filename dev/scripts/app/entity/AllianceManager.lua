@@ -19,6 +19,19 @@ end
 function AllianceManager:GetMyAllianceMapData()
     return self.my_alliance_mapData
 end
+function AllianceManager:GetToMineMarchEvents()
+    local to_my_events = {}
+    local marchEvents = self.my_alliance_mapData.marchEvents
+    for k,kindsOfEvents in pairs(marchEvents) do
+        for id,event in pairs(kindsOfEvents) do
+            if event ~= json.null and event.defencePlayerData.id == User:Id() then
+                event.eventType = k
+                table.insert(to_my_events, event)
+            end
+        end
+    end
+    return to_my_events
+end
 function AllianceManager:GetVillageEventsByMapId(alliance, mapId)
     for k,v in pairs(alliance.villageEvents) do
         if v.villageData.id == mapId then

@@ -45,7 +45,7 @@ function UtilsForEvent:GetMarchEventPrefix(event, eventType)
     if eventType == "helpToTroops" then
         return  string.format(_("正在协防玩家%s"),event.beHelpedPlayerData.name)
     end
-    if eventType == "strikeMarchReturnEvents" or "attackMarchReturnEvents" then
+    if eventType == "strikeMarchReturnEvents" or eventType == "attackMarchReturnEvents" then
         local march_type = event.marchType
         if march_type == 'city' then
             return _("进攻玩家城市(返回中)")
@@ -154,7 +154,7 @@ function UtilsForEvent:GetDestination(event)
         end
     elseif eventType == "strikeMarchReturnEvents" or eventType == "attackMarchReturnEvents" then
         return event.attackPlayerData.name
-    elseif self:GetType() == "shrineEvents" then
+    elseif eventType == "shrineEvents" then
         return _("圣地")
     end
 end
