@@ -225,14 +225,24 @@ function WorldLayer:MoveAllianceFromTo(fromIndex, toIndex)
 end
 
 function WorldLayer:LoadAlliance()
-    local indexes = self:GetAvailableIndex()
     local flagSprites = {}
-    local allainceSprites = {}
+    local mapIndexStr = tostring(Alliance_Manager:GetMyAlliance().mapIndex)
+    local allainceSprites = {
+        [mapIndexStr] = self.allainceSprites[mapIndexStr]
+    }
+    LuaUtils:outputTable(allainceSprites)
+    self.allainceSprites[mapIndexStr] = nil
+    
+    local indexes = self:GetAvailableIndex()
     for k,v in pairs(self.currentIndexs or {}) do
         if indexes[k] then
-            flagSprites[k] = self.flagSprites[k]
+            if self.flagSprites[k] then
+                flagSprites[k] = self.flagSprites[k]
+            end
             self.flagSprites[k] = nil
-            allainceSprites[k] = self.allainceSprites[k]
+            if self.allainceSprites[k] then
+                allainceSprites[k] = self.allainceSprites[k]
+            end
             self.allainceSprites[k] = nil
         end
     end
