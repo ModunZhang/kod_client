@@ -54,7 +54,7 @@ normal["swordsman_2"] = {
 	["treatCoin"] = 60,
 	["treatTime"] = 2,
 	["upgradeCoinNeed"] = 500000,
-	["upgradeTechPointNeed"] = 10000,
+	["upgradeTechPointNeed"] = 7500,
 	["upgradeTimeSecondsNeed"] = 43200,
 	["techBuildingName"] = "trainingGround"
 }
@@ -83,7 +83,7 @@ normal["swordsman_3"] = {
 	["treatCoin"] = 120,
 	["treatTime"] = 2,
 	["upgradeCoinNeed"] = 1000000,
-	["upgradeTechPointNeed"] = 20000,
+	["upgradeTechPointNeed"] = 17500,
 	["upgradeTimeSecondsNeed"] = 86400,
 	["techBuildingName"] = "trainingGround"
 }
@@ -228,7 +228,7 @@ normal["ranger_2"] = {
 	["treatCoin"] = 60,
 	["treatTime"] = 2,
 	["upgradeCoinNeed"] = 500000,
-	["upgradeTechPointNeed"] = 10000,
+	["upgradeTechPointNeed"] = 7500,
 	["upgradeTimeSecondsNeed"] = 43200,
 	["techBuildingName"] = "hunterHall"
 }
@@ -257,7 +257,7 @@ normal["ranger_3"] = {
 	["treatCoin"] = 120,
 	["treatTime"] = 2,
 	["upgradeCoinNeed"] = 1000000,
-	["upgradeTechPointNeed"] = 20000,
+	["upgradeTechPointNeed"] = 17500,
 	["upgradeTimeSecondsNeed"] = 86400,
 	["techBuildingName"] = "hunterHall"
 }
@@ -402,7 +402,7 @@ normal["lancer_2"] = {
 	["treatCoin"] = 120,
 	["treatTime"] = 4,
 	["upgradeCoinNeed"] = 500000,
-	["upgradeTechPointNeed"] = 10000,
+	["upgradeTechPointNeed"] = 7500,
 	["upgradeTimeSecondsNeed"] = 43200,
 	["techBuildingName"] = "stable"
 }
@@ -431,7 +431,7 @@ normal["lancer_3"] = {
 	["treatCoin"] = 240,
 	["treatTime"] = 4,
 	["upgradeCoinNeed"] = 1000000,
-	["upgradeTechPointNeed"] = 20000,
+	["upgradeTechPointNeed"] = 17500,
 	["upgradeTimeSecondsNeed"] = 86400,
 	["techBuildingName"] = "stable"
 }
@@ -576,7 +576,7 @@ normal["catapult_2"] = {
 	["treatCoin"] = 240,
 	["treatTime"] = 8,
 	["upgradeCoinNeed"] = 500000,
-	["upgradeTechPointNeed"] = 10000,
+	["upgradeTechPointNeed"] = 7500,
 	["upgradeTimeSecondsNeed"] = 43200,
 	["techBuildingName"] = "workshop"
 }
@@ -605,7 +605,7 @@ normal["catapult_3"] = {
 	["treatCoin"] = 480,
 	["treatTime"] = 8,
 	["upgradeCoinNeed"] = 1000000,
-	["upgradeTechPointNeed"] = 20000,
+	["upgradeTechPointNeed"] = 17500,
 	["upgradeTimeSecondsNeed"] = 86400,
 	["techBuildingName"] = "workshop"
 }

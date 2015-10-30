@@ -461,7 +461,8 @@ function Alliance:GetOtherToMineMarchEvents()
     local to_my_events = {}
     for k,kindsOfEvents in pairs(self.marchEvents) do
         for i,event in ipairs(kindsOfEvents) do
-            if event.defencePlayerData.id == User:Id() then
+            if event.defencePlayerData and event.defencePlayerData.id == User:Id() then
+                event.eventType = k
                 table.insert(to_my_events, event)
             end
         end

@@ -217,7 +217,7 @@ function GameUIAllianceBattle:InitAllianceInfo()
     local bg = WidgetInfoWithTitle.new({
         title = _("联盟地图BUFF"),
         h = 386,
-        info = self:GetAllianceMapBuffByIndex(DataUtils:getMapRoundByMapIndex(alliance.mapIndex) + 1)
+        info = self:GetAllianceMapBuffByIndex(DataUtils:getMapRoundByMapIndex(alliance.mapIndex))
     }):align(display.TOP_CENTER, window.cx, current_position:getPositionY() - 120):addTo(layer)
 
 end

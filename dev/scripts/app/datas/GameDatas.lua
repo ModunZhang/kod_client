@@ -102,6 +102,7 @@ GameDatas.AllianceMap = {
 	["terrainStyle"] = {},
 	["buff"] = {},
 	["moveLimit"] = {},
+	["bigRound"] = {},
 	["allianceMap_1"] = {},
 	["allianceMap_2"] = {},
 	["allianceMap_3"] = {},
@@ -113,6 +114,7 @@ require("app.datas.AllianceMap_buildingName")
 require("app.datas.AllianceMap_terrainStyle")
 require("app.datas.AllianceMap_buff")
 require("app.datas.AllianceMap_moveLimit")
+require("app.datas.AllianceMap_bigRound")
 require("app.datas.AllianceMap_allianceMap_1")
 require("app.datas.AllianceMap_allianceMap_2")
 require("app.datas.AllianceMap_allianceMap_3")
