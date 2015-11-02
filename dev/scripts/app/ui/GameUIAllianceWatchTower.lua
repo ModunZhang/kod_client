@@ -68,9 +68,23 @@ function GameUIAllianceWatchTower:GetAllOrderedMarchEvents()
                 -- 目的地是我方联盟，并且出发地不是我方联盟，或者是协防事件:来袭事件
                 if marchEvent.toAlliance.id == alliance._id and marchEvent.fromAlliance.id ~= alliance._id or marchEvent.marchType == "helpDefence" then
                     table.insert(beStrikedEvents, marchEvent)
-            else
-                table.insert(attackEvents, marchEvent)
+                else
+                    table.insert(attackEvents, marchEvent)
+                end
             end
+        end
+    end
+    local other_marchEvents = Alliance_Manager:GetMyAllianceMarchEvents()
+    for eventType,marchEventRoot in pairs(other_marchEvents) do
+        for _,marchEvent in pairs(marchEventRoot) do
+            marchEvent.eventType = eventType -- 添加一个事件类型，突袭，进攻
+            if marchEvent.marchType ~= "shrine" and not string.find(eventType,"Return") then -- 过滤掉圣地事件和返回事件
+                -- 目的地是我方联盟，并且出发地不是我方联盟，或者是协防事件:来袭事件
+                if marchEvent.toAlliance.id == alliance._id and marchEvent.fromAlliance.id ~= alliance._id or marchEvent.marchType == "helpDefence" then
+                    table.insert(beStrikedEvents, marchEvent)
+                else
+                    table.insert(attackEvents, marchEvent)
+                end
             end
         end
     end
@@ -235,8 +249,10 @@ function GameUIAllianceWatchTower:CreateBeStrikedContent()
         goto_button:removeEventListenersByEvent("CLICKED_EVENT")
         goto_button:onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                -- TODO
-                print("补充定位功能")
+                local fromAlliance = beStriked_event.fromAlliance
+                local x,y = DataUtils:GetAbsolutePosition(fromAlliance.mapIndex, fromAlliance.location.x, fromAlliance.location.y)
+                display.getRunningScene():GotoPosition(x,y)
+                parent:LeftButtonClicked()
             end
         end)
         dragon_head:setDragonImg(beStriked_event.attackPlayerData.dragon.type)
@@ -251,9 +267,9 @@ function GameUIAllianceWatchTower:CreateBeStrikedContent()
             title_label:setString(title)
         end
         local fromAlliance = beStriked_event.fromAlliance
-        local location = display.getRunningScene():GetSceneLayer():GetLogicPosition(fromAlliance.mapIndex, fromAlliance.location.x, fromAlliance.location.y)
+        local x,y = DataUtils:GetAbsolutePosition(fromAlliance.mapIndex, fromAlliance.location.x, fromAlliance.location.y)
         line_1:SetValue(beStriked_event.attackPlayerData.name)
-        line_2:SetValue(location.x..","..location.y)
+        line_2:SetValue(x..","..y)
         scheduleAt(self,function ()
             local time = beStriked_event.arriveTime/1000.0 - app.timer:GetServerTime()
             event_time_label:setString(string.format(_("%s后到达"),GameUtils:formatTimeStyle1(time >=0 and time or 0)))
@@ -404,16 +420,24 @@ function GameUIAllianceWatchTower:CreateAttackContent()
         goto_button:removeEventListenersByEvent("CLICKED_EVENT")
         goto_button:onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                -- TODO
-                print("补充定位功能")
-                display.getRunningScene():GotoAllianceByIndex(att_event.toAlliance.mapIndex)
+                local toAlliance = att_event.toAlliance
+                local x,y = DataUtils:GetAbsolutePosition(toAlliance.mapIndex, toAlliance.location.x, toAlliance.location.y)
+                display.getRunningScene():GotoPosition(x,y)
                 parent:LeftButtonClicked()
             end
         end)
         dragon_head:setDragonImg(att_event.attackPlayerData.dragon.type)
         local defencer = att_event.defencePlayerData or att_event.defenceVillageData or att_event.defenceMonsterData
+        if att_event.defencePlayerData then
+            defencer = att_event.defencePlayerData.name
+        elseif att_event.defenceVillageData then
+            defencer = Localize.village_name[att_event.defenceVillageData.name]
+        elseif att_event.defenceMonsterData then
+            local soldier_type = string.split(att_event.defenceMonsterData.name,"_")[1]
+            defencer = Localize.soldier_name[soldier_type]
+        end
         local fromAlliance = att_event.fromAlliance
-        local title = string.format(string.find(att_event.eventType,"strike") and _("突袭%s") or _("进攻%s"),defencer.name)
+        local title = string.format(string.find(att_event.eventType,"strike") and _("突袭%s") or _("进攻%s"),defencer)
         title_label:setString(title)
         local x,y = DataUtils:GetAbsolutePosition(fromAlliance.mapIndex, fromAlliance.location.x, fromAlliance.location.y)
         line_1:SetValue(att_event.attackPlayerData.name)
@@ -436,6 +460,7 @@ function GameUIAllianceWatchTower:OnAllianceDataChanged_marchEvents(alliance, de
     end
 end
 return GameUIAllianceWatchTower
+
 
 
 
