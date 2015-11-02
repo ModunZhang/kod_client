@@ -19,6 +19,9 @@ end
 function AllianceManager:GetMyAllianceMapData()
     return self.my_alliance_mapData
 end
+function AllianceManager:GetMyAllianceMarchEvents()
+    return self.my_alliance_mapData.marchEvents
+end
 function AllianceManager:GetToMineMarchEvents()
     local to_my_events = {}
     local marchEvents = self.my_alliance_mapData.marchEvents

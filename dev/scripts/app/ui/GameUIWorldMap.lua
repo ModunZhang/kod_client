@@ -33,7 +33,7 @@ function GameUIWorldMap:onEnter()
     self.round_info = self:LoadRoundInfo(Alliance_Manager:GetMyAlliance().mapIndex)
     -- 返回按钮
     local world_map_btn_bg = display.newSprite("background_86x86.png")
-    :addTo(self):align(display.LEFT_BOTTOM,display.left + 10,display.bottom + 135):scale(0.85)
+    :addTo(self):align(display.LEFT_BOTTOM,display.left + 10,display.bottom + 197):scale(0.85)
     local size = world_map_btn_bg:getContentSize()
     self.loading = display.newSprite("loading.png"):addTo(self)
                     :pos(display.left + 10 + size.width/2 * 0.85, display.bottom + 150)

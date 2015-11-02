@@ -396,7 +396,6 @@ function AllianceDetailScene:CreateSceneLayer()
     return AllianceLayer.new(self)
 end
 function AllianceDetailScene:GotoAllianceByIndex(index)
-    print("GotoAllianceByIndex(index)=",index)
     self:GotoAllianceByXY(self:GetSceneLayer():IndexToLogic(index))
     self:FetchAllianceDatasByIndex(index)
 end

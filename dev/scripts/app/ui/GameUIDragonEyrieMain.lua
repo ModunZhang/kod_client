@@ -60,7 +60,12 @@ end
 function GameUIDragonEyrieMain:OnBasicChanged(dragon)
     self:RefreshUI()
 end
-
+function GameUIDragonEyrieMain:OnUserDataChanged_buildings(userData, deltaData)
+    local ok,value = deltaData("buildings.location_4")
+    if ok then
+        self.hate_button:setButtonEnabled(self.building:CheckIfHateDragon())
+    end
+end
 -- function GameUIDragonEyrieMain:OnDragonEventChanged()
 --     local dragonEvent = self.dragon_manager:GetDragonEventByDragonType(self:GetCurrentDragon():Type())
 --     if dragonEvent then
@@ -113,6 +118,7 @@ function GameUIDragonEyrieMain:OnMoveInStage()
     self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventChanged)
     self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventRefresh)
     self.dragon_manager:AddListenOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventTimer)
+    User:AddListenOnType(self, "buildings")
     GameUIDragonEyrieMain.super.OnMoveInStage(self)
 end
 
@@ -134,6 +140,7 @@ function GameUIDragonEyrieMain:OnMoveOutStage()
     self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventChanged)
     self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventRefresh)
     self.dragon_manager:RemoveListenerOnType(self,DragonManager.LISTEN_TYPE.OnDragonDeathEventTimer)
+    User:RemoveListenerOnType(self, "buildings")
     GameUIDragonEyrieMain.super.OnMoveOutStage(self)
 end
 
