@@ -220,7 +220,7 @@ end
 function WidgetPromoteSoliderList:OnUserDataChanged_soldierStars(userData, deltaData)
     local ok, value = deltaData("soldierStars")
     if ok then
-        for soldier_name,star in ipairs(value) do
+        for soldier_name,star in pairs(value) do
             for _,box in ipairs(self.boxes) do
                 if soldier_name == box:GetSoldierType() then
                     box:Refresh(star)

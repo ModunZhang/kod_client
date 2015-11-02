@@ -520,8 +520,8 @@ function UIKit:createLineItem(params)
     local line_size = line:getContentSize()
     local text_1 = params.text_1
     local text_2 = params.text_2
-    local is_one_table = tolua.type(text_1)
-    local is_two_table = tolua.type(text_2)
+    local is_one_table = tolua.type(text_1) == "table"
+    local is_two_table = tolua.type(text_2) == "table"
     local title_lable = self:ttfLabel(
         {
             text = is_one_table and text_1[1] or text_1,
