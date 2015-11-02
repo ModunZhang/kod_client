@@ -23,11 +23,11 @@ function WidgetAllianceMapBuff:ctor(mapIndex)
         :addTo(body)
 
     local titles = {}
-    for i=1,21 do
+    for i=1,18 do
         table.insert(titles, string.format(_("第%d圈"),i))
     end
     WidgetPages.new({
-        page = 21, -- 页数
+        page = 18, -- 页数
         current_page = (DataUtils:getMapRoundByMapIndex(mapIndex) + 1) or 1,
         titles =  titles, -- 标题 type -> table
         cb = function (page)

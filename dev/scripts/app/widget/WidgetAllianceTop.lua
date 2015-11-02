@@ -194,7 +194,7 @@ function WidgetAllianceTop:CreateBtnsPageItem()
         :addTo(coordinate_btn)
     self.coordinate_label = UIKit:ttfLabel(
         {
-            text = "23,21",
+            text = "",
             size = 18,
             color = 0xf5e8c4
         }):align(display.LEFT_CENTER, -15, coordinate_btn:getContentSize().height/2-10)
