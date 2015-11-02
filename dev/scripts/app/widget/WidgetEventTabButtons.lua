@@ -33,6 +33,9 @@ function WidgetEventTabButtons:isTouchInViewRect(event)
     viewRect.height = self.view_rect.height
     return cc.rectContainsPoint(viewRect, cc.p(event.x, event.y))
 end
+function WidgetEventTabButtons:OnUserDataChanged_buildings(userData, deltaData)
+    self:RefreshBuildQueueByType("build", "soldier", "material", "technology")
+end
 function WidgetEventTabButtons:OnUserDataChanged_houseEvents(userData, deltaData)
     if deltaData("houseEvents.add") 
     or deltaData("houseEvents.edit") then
@@ -235,6 +238,7 @@ function WidgetEventTabButtons:ctor(city, ratio)
     User:AddListenOnType(self, "dragonEquipmentEvents")
     User:AddListenOnType(self, "houseEvents")
     User:AddListenOnType(self, "buildingEvents")
+    User:AddListenOnType(self, "buildings")
 end
 function WidgetEventTabButtons:onExit()
     local User = city:GetUser()
@@ -246,6 +250,7 @@ function WidgetEventTabButtons:onExit()
     User:RemoveListenerOnType(self, "dragonEquipmentEvents")
     User:RemoveListenerOnType(self, "houseEvents")
     User:RemoveListenerOnType(self, "buildingEvents")
+    User:RemoveListenerOnType(self, "buildings")
 end
 function WidgetEventTabButtons:RefreshBuildQueueByType(...)
     local city = self.city
@@ -269,7 +274,7 @@ function WidgetEventTabButtons:RefreshBuildQueueByType(...)
             count = count + #User.dragonEquipmentEvents
             count = count + User:GetMakingMaterialsEventCount()
             local total = 0
-            total = total + #User:GetUnlockBuildingsBy("barracks")
+            total = total + #User:GetUnlockBuildingsBy("toolShop")
             total = total + #User:GetUnlockBuildingsBy("blackSmith")
             if item:IsChanged(count, total) then item:SetOrResetProgress() end
             item:SetActiveNumber(count, total):Enable(able)
