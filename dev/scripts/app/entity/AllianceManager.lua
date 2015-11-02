@@ -93,6 +93,13 @@ function AllianceManager:ResetCurrentMapData()
 end
 function AllianceManager:OnEnterMapIndex(mapIndex, data)
     self:UpdateAllianceBy(mapIndex, data.allianceData)
+    for k,v in pairs(self.alliance_caches) do
+        if type(k) == "number" then
+            if self.alliance_caches[v._id].mapIndex ~= k then
+                self.alliance_caches[k] = nil
+            end
+        end
+    end
     self.currentMapData = data.mapData
     if not self.handle then return end
     self.handle.OnEnterMapIndex(self.handle, mapIndex, data)
