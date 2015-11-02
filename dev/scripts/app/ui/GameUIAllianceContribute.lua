@@ -54,7 +54,7 @@ function GameUIAllianceContribute:ctor()
                     local current_loyalty = User:Loyalty()
                     NetManager:getDonateToAlliancePromise(self.group:GetSelectedType()):done(function ( response )
                         for i,v in ipairs(response.msg.playerData) do
-                            if v[1] == "allianceInfo.loyalty" then
+                            if v[1] == "allianceData.loyalty" then
                                 GameGlobalUI:showTips(_("捐赠成功"),string.format(_("获得%s点忠诚值"),string.formatnumberthousands(v[2]-current_loyalty)))
                             end
                         end
