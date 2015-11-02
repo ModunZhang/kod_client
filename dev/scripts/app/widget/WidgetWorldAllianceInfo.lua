@@ -272,11 +272,13 @@ function WidgetWorldAllianceInfo:LoadMoveAlliance()
     local body = self.body
     local b_size = body:getContentSize()
     local mapIndex = self.mapIndex
+    local needPalaceLevel = moveLimit[DataUtils:getMapRoundByMapIndex(mapIndex)].needPalaceLevel
+    local palaceLevel = Alliance_Manager:GetMyAlliance():GetAllianceBuildingInfoByName("palace").level
     UIKit:createLineItem(
         {
             width = 548,
             text_1 = string.format(_("第%d圈"),DataUtils:getMapRoundByMapIndex(mapIndex) + 1),
-            text_2 = {string.format(_("需要联盟宫殿 Lv%s"),moveLimit[DataUtils:getMapRoundByMapIndex(mapIndex)].needPalaceLevel),0x7e0000},
+            text_2 = {string.format(_("需要联盟宫殿 Lv%s"),needPalaceLevel),palaceLevel >= needPalaceLevel and 0x007c23 or 0x7e0000},
         }
     ):align(display.CENTER_TOP, b_size.width/2 , b_size.height - 50):addTo(body)
 
@@ -313,8 +315,7 @@ function WidgetWorldAllianceInfo:LoadMoveAlliance()
         --     return
         -- end
         local mapIndex = self.mapIndex
-        local palaceLevel = Alliance_Manager:GetMyAlliance():GetAllianceBuildingInfoByName("palace").level
-        local  canMove1 = palaceLevel >= moveLimit[DataUtils:getMapRoundByMapIndex(mapIndex)].needPalaceLevel
+        local canMove1 = palaceLevel >= needPalaceLevel
         if not canMove1 then
             UIKit:showMessageDialog(_("提示"), _("联盟宫殿等级不足,不能移动到目标地块"))
             self:LeftButtonClicked()
