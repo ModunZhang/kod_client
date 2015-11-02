@@ -151,6 +151,10 @@ function AllianceManager:OnAllianceDataChanged(allianceData,refresh_time,deltaDa
     local scene_name = display.getRunningScene().__cname
     if allianceData and not deltaData then
         if scene_name == "AllianceDetailScene" then
+            local scene = display.getRunningScene()
+            scene.current_allinace_index = nil
+            scene.fetchtimer:stopAllActions()
+            scene.amintimer:stopAllActions()
             app:EnterMyAllianceScene()
         end
     end

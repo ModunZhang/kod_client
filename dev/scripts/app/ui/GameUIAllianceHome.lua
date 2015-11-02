@@ -138,15 +138,15 @@ function GameUIAllianceHome:OnAllianceDataChanged_basicInfo(alliance,deltaData)
     end
 end
 function GameUIAllianceHome:Schedule()
-    local alliance = self.alliance
+    -- local alliance = self.alliance
     -- display.newNode():addTo(self):schedule(function()
     --     if alliance:IsDefault() then return end
     --     local lx,ly,view = self.multialliancelayer:GetAllianceCoordWithPoint(display.cx, display.cy)
     --     self:UpdateCoordinate(lx, ly, view)
     -- end, 0.5)
     self:scheduleAt(function()
-        if alliance:IsDefault() then return end
-        self:UpdateMyCityArrows(alliance)
+        if self.alliance:IsDefault() then return end
+        self:UpdateMyCityArrows(self.alliance)
     end, 0.01)
     -- display.newNode():addTo(self):schedule(function()
     --     if alliance:IsDefault() then return end
