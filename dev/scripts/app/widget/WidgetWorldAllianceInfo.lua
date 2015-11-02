@@ -98,7 +98,7 @@ function WidgetWorldAllianceInfo:EnterIn(mapIndex, x, y)
     end
 
     if UIKit:GetUIInstance("GameUIWorldMap") then
-        local s = UIKit:GetUIInstance("GameUIWorldMap"):getScale()
+        local s = UIKit:GetUIInstance("GameUIWorldMap"):GetSceneLayer():getScale()
         local scene_node = UIKit:GetUIInstance("GameUIWorldMap"):GetSceneLayer().scene_node
         local lp = scene_node:getParent():convertToNodeSpace(wp)
         local size = scene_node:getCascadeBoundingBox()
