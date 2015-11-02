@@ -767,7 +767,7 @@ function CommonUpgradeUI:SetUpgradeRequirementListview()
     local requirements = {
         {
             resource_type = _("前置条件"),
-            isVisible = building:GetLevel()>5,
+            isVisible = building:GetLevel()>5 and building:GetType() ~= "dragonEyrie",
             isSatisfy = not pre_condition,canNotBuy=true,
             icon="hammer_33x40.png",
             description = building:GetPreConditionDesc(),jump_call = handler(self,self.GotoPreconditionBuilding)
