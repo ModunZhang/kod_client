@@ -1814,7 +1814,7 @@ function User:StarLocalPush(event)
     self.local_push_map = self.local_push_map or {}
     local title = string.format(_("晋升%s的星级 star %d%s完成"),
         Localize.soldier_name[event.name],
-        self.soldierStars[event.name].level)
+        self.soldierStars[event.name])
     push_man:UpdateSoldierPush(event.finishTime/1000, title, event.id)
     self.local_push_map[event.id] = push_man.CancelSoldierPush
 end
