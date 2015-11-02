@@ -97,12 +97,14 @@ function WidgetWorldAllianceInfo:EnterIn(mapIndex, x, y)
         wp.y = display.height
     end
 
-
     if UIKit:GetUIInstance("GameUIWorldMap") then
+        local s = UIKit:GetUIInstance("GameUIWorldMap"):GetSceneLayer():getScale()
         local scene_node = UIKit:GetUIInstance("GameUIWorldMap"):GetSceneLayer().scene_node
         local lp = scene_node:getParent():convertToNodeSpace(wp)
         local size = scene_node:getCascadeBoundingBox()
-        local xp, yp = lp.x / size.width, lp.y / size.height
+
+        local xp = lp.x * s / size.width
+        local yp = lp.y * s / size.height
         scene_node:pos(lp.x, lp.y):setAnchorPoint(cc.p(xp, yp))
         scene_node:runAction(transition.sequence{
             cc.ScaleTo:create(0.5, 2),

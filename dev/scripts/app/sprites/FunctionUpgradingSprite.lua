@@ -2,13 +2,13 @@ local SpriteConfig = import(".SpriteConfig")
 local UpgradingSprite = import(".UpgradingSprite")
 local FunctionUpgradingSprite = class("FunctionUpgradingSprite", UpgradingSprite)
 
-function FunctionUpgradingSprite:OnUserDataChanged_buildingEvents(userData, deltaData)
-    FunctionUpgradingSprite.super.OnUserDataChanged_buildingEvents(self, userData, deltaData)
-    if deltaData("buildingEvents.add") 
-    or deltaData("buildingEvents.remove") then
-        self:OnTileChanged(self:GetEntity():BelongCity())
-    end
-end
+-- function FunctionUpgradingSprite:OnUserDataChanged_buildingEvents(userData, deltaData)
+--     FunctionUpgradingSprite.super.OnUserDataChanged_buildingEvents(self, userData, deltaData)
+--     if deltaData("buildingEvents.add") 
+--     or deltaData("buildingEvents.remove") then
+--         self:OnTileChanged(self:GetEntity():BelongCity())
+--     end
+-- end
 function FunctionUpgradingSprite:OnTileLocked(city)
     self:OnTileChanged(city)
 end

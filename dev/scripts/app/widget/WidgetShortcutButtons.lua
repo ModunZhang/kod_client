@@ -95,7 +95,7 @@ function WidgetShortcutButtons:ctor(city)
     order:AddElement(dragon_defence_btn)
 
     --进入三级地图按钮
-    local world_map_btn_bg = display.newSprite("background_86x86.png"):scale(0.85)
+    local world_map_btn_bg = display.newSprite("background_86x86.png"):scale(1.0)
     local world_map_btn = UIKit:ButtonAddScaleAction(cc.ui.UIPushButton.new({normal = 'icon_world_88x88.png'})
         :onButtonClicked(function()
             UIKit:newGameUI("GameUIWorldMap"):AddToCurrentScene()
@@ -110,8 +110,9 @@ function WidgetShortcutButtons:ctor(city)
         return world_map_btn_bg:getContentSize()
     end
     function world_map_btn_bg:GetXY()
-        return {x = 0 ,y =  440 - display.top }
+        return {x = 0 ,y =  485 - display.top }
     end
+    self.world_map_btn_bg = world_map_btn_bg
     order:AddElement(world_map_btn_bg)
 
     order:RefreshOrder()

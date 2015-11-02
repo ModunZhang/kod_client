@@ -212,7 +212,7 @@ local function UpgradeBuildingTo(type, level)
             {
                 id = 1,
                 startTime = start_time,
-                finishTime = start_time + buildTime * 1000,
+                finishTime = start_time + (buildTime-5) * 1000,
                 location = location_id,
             }
         }
