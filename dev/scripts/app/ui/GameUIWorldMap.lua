@@ -142,7 +142,16 @@ function GameUIWorldMap:LoadRoundInfo(mapIndex)
             }
         )
     )
-
+    -- 自己所在联盟位置
+    local self_position_sprite = display.newSprite("icon_my_alliance_position_4x4.png"):addTo(mini_map_button)
+    self_position_sprite:runAction(
+        cc.RepeatForever:create(
+            transition.sequence{
+                cc.ScaleTo:create(0.5/2, 1.2),
+                cc.ScaleTo:create(0.5/2, 1.1),
+            }
+        )
+    )
     function node:RefreshRoundInfo(mapIndex,x, y)
         self.mapIndex = mapIndex
         local map_round = DataUtils:getMapRoundByMapIndex(mapIndex)
@@ -159,7 +168,6 @@ function GameUIWorldMap:LoadRoundInfo(mapIndex)
         monster_levels:setString(string.format("Lv%s~Lv%s",levels[1],levels[2]))
         local bigMapLength = intInit.bigMapLength.value
         local offset_x,offset_y = x / bigMapLength, 1 - y / bigMapLength
-        local mini_map_size = mini_map_button:getCascadeBoundingBox().size
         current_position_sprite:setPosition(124 * offset_x, 124 * offset_y)
     end
 
@@ -167,6 +175,11 @@ function GameUIWorldMap:LoadRoundInfo(mapIndex)
         local x,y = self.scene_layer:ConvertScreenPositionToLogicPosition(display.cx,display.cy)
         local mapIndex = self.scene_layer:LogicToIndex(x, y) 
         node:RefreshRoundInfo(mapIndex,x, y)
+        local my_mapIndex = Alliance_Manager:GetMyAlliance().mapIndex
+        local bigMapLength = intInit.bigMapLength.value
+        local x,y = self.scene_layer:IndexToLogic(my_mapIndex) 
+        local offset_x,offset_y = x / bigMapLength, 1 - y / bigMapLength
+        self_position_sprite:setPosition(124 * offset_x, 124 * offset_y)
     end,0.5)
 
     return node
