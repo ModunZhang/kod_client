@@ -17,7 +17,7 @@ local worldsize = {
 
 
 function WorldLayer:ctor(scene)
-    WorldLayer.super.ctor(self, scene, 0.4, 1.2)
+    WorldLayer.super.ctor(self, scene, 1.0, 3.0)
 end
 function WorldLayer:onEnter()
     self:CreateBg()
@@ -28,10 +28,11 @@ function WorldLayer:onEnter()
     self.map = self:CreateMap()
     self.allianceLayer = display.newNode():addTo(self.map,0)
     self.moveLayer = display.newNode():addTo(self.map,1)
-    local size = self.scene_node:getCascadeBoundingBox()
-    self.scene_node:setContentSize(cc.size(size.width, size.height))
     self.allainceSprites = {}
     self.flagSprites = {}
+    self:ZoomTo(1.3)
+    local size = self.scene_node:getCascadeBoundingBox()
+    self.scene_node:setContentSize(cc.size(size.width, size.height))
     math.randomseed(1)
 end
 function WorldLayer:onExit()
@@ -377,8 +378,8 @@ end
 function WorldLayer:GetAvailableIndex()
     local t = {}
     local x,y = self:GetLeftTopLogicPosition()
-    for i = x, x + 5 do
-        for j = y, y + 5 do
+    for i = x, x + 3 do
+        for j = y, y + 4 do
             if i >= 0 and i < WIDTH and j >= 0 and j < HEIGHT then
                 t[tostring(self:LogicToIndex(i,j))] = true
             end

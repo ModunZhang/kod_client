@@ -120,6 +120,10 @@ function UpgradingSprite:GetSpriteOffset()
     local offset = self:GetCurrentConfig().offset
     return offset.x, offset.y
 end
+function UpgradingSprite:RefreshSprite()
+    self.config = SpriteConfig[self.entity:GetType()]
+    UpgradingSprite.super.RefreshSprite(self)
+end
 function UpgradingSprite:CreateSprite()
     local config = self:GetCurrentConfig()
     local sprite_file, scale = self:GetSpriteFile()
