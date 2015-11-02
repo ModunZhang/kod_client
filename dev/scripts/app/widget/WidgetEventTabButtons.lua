@@ -269,7 +269,7 @@ function WidgetEventTabButtons:RefreshBuildQueueByType(...)
             count = count + #User.dragonEquipmentEvents
             count = count + User:GetMakingMaterialsEventCount()
             local total = 0
-            total = total + #User:GetUnlockBuildingsBy("barracks")
+            total = total + #User:GetUnlockBuildingsBy("toolShop")
             total = total + #User:GetUnlockBuildingsBy("blackSmith")
             if item:IsChanged(count, total) then item:SetOrResetProgress() end
             item:SetActiveNumber(count, total):Enable(able)
