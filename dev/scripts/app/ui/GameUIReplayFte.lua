@@ -25,7 +25,7 @@ function GameUIReplayFte:OnHandle(state)
         elseif self.count == 1 then
             rect.x, rect.y, rect.width, rect.height = rect.x + 75, rect.y, rect.width - 150, rect.height - 320
             self.count = 2
-            return UIKit:newGameUI("GameUIBattleFte", rect, _("士气受损"), _("当兵中受到攻击时,会根据损失的单位数量降低士气,当士气低于%20时,无论该兵种胜负都会下场")):AddToCurrentScene(true):PromiseOfFte()
+            return UIKit:newGameUI("GameUIBattleFte", rect, _("士气受损"), _("当兵中受到攻击时,会根据损失的单位数量降低士气,当士气降至0时,无论该兵种胜负都会下场")):AddToCurrentScene(true):PromiseOfFte()
         end
     end
 end

@@ -3,6 +3,7 @@ local TouchJudgment = import("..layers.TouchJudgment")
 local WorldLayer = import("..layers.WorldLayer")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local GameUIWorldMap = UIKit:createUIClass('GameUIWorldMap')
+local intInit = GameDatas.AllianceInitData.intInit
 local aliance_buff = GameDatas.AllianceMap.buff
 
 function GameUIWorldMap:ctor(fromIndex, toIndex)
@@ -156,8 +157,8 @@ function GameUIWorldMap:LoadRoundInfo(mapIndex)
         current_round_label:setString(string.format(_("%d 圈"),map_round + 1))
         local levels = string.split(buff["monsterLevel"],"_")
         monster_levels:setString(string.format("Lv%s~Lv%s",levels[1],levels[2]))
-
-        local offset_x,offset_y = x / 41, 1 - y / 41
+        local bigMapLength = intInit.bigMapLength.value
+        local offset_x,offset_y = x / bigMapLength, 1 - y / bigMapLength
         local mini_map_size = mini_map_button:getCascadeBoundingBox().size
         current_position_sprite:setPosition(124 * offset_x, 124 * offset_y)
     end
