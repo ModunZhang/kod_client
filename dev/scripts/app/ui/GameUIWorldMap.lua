@@ -14,7 +14,7 @@ function GameUIWorldMap:ctor(fromIndex, toIndex, mapIndex)
     self.scene_node = display.newNode():addTo(self)
     self.scene_layer = WorldLayer.new(self):addTo(self.scene_node, 0)
     self.touch_layer = self:CreateMultiTouchLayer():addTo(self.scene_node, 1)
-    self.mask_layer = display.newLayer():addTo(self.scene_node, 2):hide()
+    self.mask_layer = display.newLayer():addTo(self, 2):hide()
     self.event_manager = EventManager.new(self)
     self.touch_judgment = TouchJudgment.new(self)
     self.fromIndex = fromIndex

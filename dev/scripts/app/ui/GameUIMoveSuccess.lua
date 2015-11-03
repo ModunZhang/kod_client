@@ -18,9 +18,7 @@ function GameUIMoveSuccess:ctor(fromIndex, toIndex)
     self:Play()
 end
 function GameUIMoveSuccess:onExit()
-    if display.getRunningScene().__cname == 'AllianceDetailScene' then
-        app:EnterMyAllianceScene()
-    end
+    app:EnterMyAllianceScene()
 end
 function GameUIMoveSuccess:Play()
     app:GetAudioManager():PlayeEffectSoundWithKey("HOORAY")
