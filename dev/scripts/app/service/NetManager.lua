@@ -206,7 +206,7 @@ local function get_response_delete_report_msg(response)
 end
 -- 只更新市政厅每日任务
 local function get_daily_quests_response_msg(response)
-    LuaUtils:outputTable("response", response)
+    -- LuaUtils:outputTable("response", response)
     if response.msg.playerData then
         local userData = DataManager:getUserData()
         local deltaData = decodeInUserDataFromDeltaData(userData, response.msg.playerData)
@@ -565,7 +565,7 @@ local logic_event_map = {
             if response.targetAllianceId == user_alliance_data._id then
                 local edit = decodeInUserDataFromDeltaData(user_alliance_data, response.data)
                 DataManager:setUserAllianceData(user_alliance_data, edit)
-                LuaUtils:outputTable("onAllianceDataChanged", edit)
+                -- LuaUtils:outputTable("onAllianceDataChanged", edit)
                 return
             end
         end
@@ -581,7 +581,7 @@ local logic_event_map = {
                 Alliance_Manager:setMapDataByIndex(allianceData.mapIndex, allianceData.basicInfo.terrainStyle)
                 local edit = decodeInUserDataFromDeltaData(allianceData, response.data)
                 Alliance_Manager:OnMapAllianceChanged(allianceData, edit)
-                LuaUtils:outputTable("OnMapAllianceChanged", edit)
+                -- LuaUtils:outputTable("OnMapAllianceChanged", edit)
             end
         end
     end,
@@ -608,7 +608,7 @@ local logic_event_map = {
             local edit = decodeInUserDataFromDeltaData(mapData, response.data)
             getmetatable(edit).remove = remove
             Alliance_Manager:OnMapDataChanged(response.targetMapIndex, mapData, edit)
-            LuaUtils:outputTable("onMapDataChanged", edit)
+            -- LuaUtils:outputTable("onMapDataChanged", edit)
         end
     end,
     onJoinAllianceSuccess = function(success, response)
@@ -2031,29 +2031,23 @@ function NetManager:getMoveAlliancePromise(targetMapIndex)
     return get_blocking_request_promise("logic.allianceHandler.moveAlliance",{
         targetMapIndex = targetMapIndex,
     },"移联盟失败!"):done(function(response)
-        LuaUtils:outputTable(response)
+        -- LuaUtils:outputTable(response)
     end)
 end
 function NetManager:getEnterMapIndexPromise(mapIndex)
-    return get_blocking_request_promise("logic.allianceHandler.enterMapIndex",{
+    return get_none_blocking_request_promise("logic.allianceHandler.enterMapIndex",{
         mapIndex = mapIndex,
-    },"进入联盟失败!"):done(function(response)
-        LuaUtils:outputTable(response)
-    end)
+    },"进入联盟失败!")
 end
 function NetManager:getAmInMapIndexPromise(mapIndex)
-    return get_blocking_request_promise("logic.allianceHandler.amInMapIndex",{
+    return get_none_blocking_request_promise("logic.allianceHandler.amInMapIndex",{
         mapIndex = mapIndex,
-    },"确认在联盟中!"):done(function(response)
-        LuaUtils:outputTable(response)
-    end)
+    },"确认在联盟中!")
 end
 function NetManager:getLeaveMapIndexPromise(mapIndex)
-    return get_blocking_request_promise("logic.allianceHandler.leaveMapIndex",{
+    return get_none_blocking_request_promise("logic.allianceHandler.leaveMapIndex",{
         mapIndex = mapIndex,
-    },"离开联盟!"):done(function(response)
-        LuaUtils:outputTable(response)
-    end)
+    },"离开联盟!")
 end
 
 

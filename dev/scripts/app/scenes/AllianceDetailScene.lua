@@ -278,6 +278,7 @@ function AllianceDetailScene:ctor(location)
 end
 function AllianceDetailScene:onEnter()
     AllianceDetailScene.super.onEnter(self)
+    self.home_page = self:CreateHomePage()
     app:GetAudioManager():PlayGameMusicOnSceneEnter("AllianceDetailScene",false)
     
     Alliance_Manager:ClearCache()
@@ -321,6 +322,7 @@ function AllianceDetailScene:onEnter()
     -- :onButtonClicked(function(event)
     --     app:onEnterForeground()
     -- end)
+    self:FetchAllianceDatasByIndex(self:GetSceneLayer():GetMiddleAllianceIndex())
 end
 function AllianceDetailScene:onExit()
     if self.current_allinace_index then
@@ -338,29 +340,24 @@ function AllianceDetailScene:onExit()
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, "villageEvents")
 end
 function AllianceDetailScene:FetchAllianceDatasByIndex(index, func)
-    if self.current_allinace_index and self.current_allinace_index ~= index then
-        NetManager:getLeaveMapIndexPromise(self.current_allinace_index):done(function()
-            self:FetchAllianceDatasByIndex(index, func)
-        end)
-        self.current_allinace_index = nil
-        return 
-    end
     if Alliance_Manager:GetMyAlliance().mapIndex == index then
+        if self:GetHomePage() then
+            self:GetHomePage():HideLoading()
+        end
         self.fetchtimer:stopAllActions()
         self.amintimer:stopAllActions()
         self.current_allinace_index = nil
         if type(func) == "function" then
             func()
         end
-        -- self:GetHomePage():HideLoading()
     elseif self.current_allinace_index ~= index then
         self:StartTimer(index, func)
     end
 end
 function AllianceDetailScene:StartTimer(index, func)
+    self:GetHomePage():ShowLoading()
     self.fetchtimer:stopAllActions()
     self.amintimer:stopAllActions()
-    self:GetHomePage():ShowLoading()
     self.fetchtimer:performWithDelay(function()
         NetManager:getEnterMapIndexPromise(index)
             :done(function(response)
@@ -376,13 +373,13 @@ function AllianceDetailScene:StartTimer(index, func)
                         end)
                     end
                 end, 10)
-                self.home_page:RefreshTop(true)
-                self:GetHomePage():HideLoading()
+                if self:GetHomePage() then
+                    self:GetHomePage():RefreshTop(true)
+                    self:GetHomePage():HideLoading()
+                end
                 if type(func) == "function" then
                     func()
                 end
-            end):fail(function()
-                self:StartTimer(index, func)
             end)
     end, 0.2)
 end
@@ -413,32 +410,14 @@ function AllianceDetailScene:OnTouchBegan(...)
     AllianceDetailScene.super.OnTouchBegan(self, ...)
     self:GetSceneLayer():TrackCorpsById(nil)
 end
-function AllianceDetailScene:OnTouchEnd(pre_x, pre_y, x, y, ismove)
-    if not ismove then
-        if self.current_allinace_index ~= self:GetSceneLayer():GetMiddleAllianceIndex() then
-
-        end
-    end
-end
-function AllianceDetailScene:OnTouchMove(...)
-    AllianceDetailScene.super.OnTouchMove(self, ...)
-end
-function AllianceDetailScene:OnTouchExtend(old_speed_x, old_speed_y, new_speed_x, new_speed_y, millisecond, is_end)
-    AllianceDetailScene.super.OnTouchExtend(self, old_speed_x, old_speed_y, new_speed_x, new_speed_y, millisecond, is_end)
-    if is_end then
-        local index = self:GetSceneLayer():GetMiddleAllianceIndex()
-    end
-end
 function AllianceDetailScene:OnTouchClicked(pre_x, pre_y, x, y)
     if self:IsFingerOn() or self.util_node:getNumberOfRunningActions() > 0 then
         return
     end
-
     local mapObj = self:GetSceneLayer():GetClickedObject(x, y)
     if mapObj then
         local alliance = Alliance_Manager:GetAllianceByCache(mapObj.index)
         if alliance then
-            print(mapObj.index, mapObj.x, mapObj.y, mapObj.name)
             app:GetAudioManager():PlayeEffectSoundWithKey("HOME_PAGE")
             local type_ = Alliance:GetMapObjectType(mapObj)
             if type_ == "member"
@@ -473,10 +452,6 @@ end
 function AllianceDetailScene:OnSceneMove()
     AllianceDetailScene.super.OnSceneMove(self)
     self:UpdateVisibleAllianceBg()
-    self:FetchAllianceDatasByIndex(self:GetSceneLayer():GetMiddleAllianceIndex())
-    if not self.home_page then
-        self.home_page = self:CreateHomePage()
-    end
 end
 function AllianceDetailScene:UpdateVisibleAllianceBg()
     local old_visibles = self.visible_alliances or {}

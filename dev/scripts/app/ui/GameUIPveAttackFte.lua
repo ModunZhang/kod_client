@@ -62,40 +62,40 @@ local fightReport1 = {
     }},
     sectionSoldierRoundDatas = {{
         soldierName = "lancer",
-        morale = 100,
+        morale = 8,
         soldierCount = 8,
         soldierWoundedCount = 0,
         soldierStar = 1,
         isWin = false,
         soldierDamagedCount = 3,
-        moraleDecreased = 19
+        moraleDecreased = 8
     }, {
         soldierName = "ranger",
-        morale = 100,
+        morale = 12,
         soldierCount = 12,
         soldierWoundedCount = 0,
         soldierStar = 1,
         isWin = false,
         soldierDamagedCount = 3,
-        moraleDecreased = 13
+        moraleDecreased = 12
     }, {
         soldierName = "catapult",
-        morale = 100,
+        morale = 2,
         soldierCount = 2,
         soldierWoundedCount = 0,
         soldierStar = 1,
         isWin = false,
         soldierDamagedCount = 1,
-        moraleDecreased = 25
+        moraleDecreased = 2
     }, {
         soldierName = "swordsman",
-        morale = 100,
+        morale = 4,
         soldierCount = 4,
         soldierWoundedCount = 0,
         soldierStar = 1,
         isWin = false,
         soldierDamagedCount = 3,
-        moraleDecreased = 38
+        moraleDecreased = 4
     }}
 }
 
@@ -154,40 +154,40 @@ local fightReport2 = {
     }},
     sectionSoldierRoundDatas = {{
         soldierName = "catapult",
-        morale = 100,
+        morale = 6,
         soldierCount = 6,
         soldierWoundedCount = 0,
         soldierStar = 1,
         isWin = false,
         soldierDamagedCount = 2,
-        moraleDecreased = 17
+        moraleDecreased = 6
     }, {
         soldierName = "swordsman",
-        morale = 100,
+        morale = 18,
         soldierCount = 18,
         soldierWoundedCount = 0,
         soldierStar = 1,
         isWin = false,
         soldierDamagedCount = 5,
-        moraleDecreased = 14
+        moraleDecreased = 18
     }, {
         soldierName = "lancer",
-        morale = 100,
+        morale = 6,
         soldierCount = 6,
         soldierWoundedCount = 0,
         soldierStar = 1,
         isWin = false,
         soldierDamagedCount = 2,
-        moraleDecreased = 17
+        moraleDecreased = 6
     }, {
         soldierName = "ranger",
-        morale = 100,
+        morale = 6,
         soldierCount = 6,
         soldierWoundedCount = 0,
         soldierStar = 1,
         isWin = false,
         soldierDamagedCount = 3,
-        moraleDecreased = 25
+        moraleDecreased = 6
     }}
 }
 
@@ -255,49 +255,49 @@ local fightReport3 = {
     }},
     sectionSoldierRoundDatas = {{
         soldierName = "skeletonArcher",
-        morale = 100,
+        morale = 16,
         soldierCount = 16,
         soldierWoundedCount = 0,
         soldierStar = 2,
         isWin = true,
         soldierDamagedCount = 3,
-        moraleDecreased = 10
+        moraleDecreased = 6
     }, {
         soldierName = "skeletonArcher",
-        morale = 90,
+        morale = 10,
         soldierCount = 13,
         soldierWoundedCount = 0,
         soldierStar = 2,
         isWin = false,
         soldierDamagedCount = 4,
-        moraleDecreased = 25
+        moraleDecreased = 10
     }, {
         soldierName = "meatWagon",
-        morale = 100,
+        morale = 3,
         soldierCount = 3,
         soldierWoundedCount = 0,
         soldierStar = 2,
         isWin = false,
         soldierDamagedCount = 1,
-        moraleDecreased = 17
+        moraleDecreased = 3
     }, {
         soldierName = "skeletonWarrior",
-        morale = 100,
+        morale = 8,
         soldierCount = 8,
         soldierWoundedCount = 0,
         soldierStar = 2,
         isWin = false,
         soldierDamagedCount = 2,
-        moraleDecreased = 13
+        moraleDecreased = 8
     }, {
         soldierName = "deathKnight",
-        morale = 100,
+        morale = 2,
         soldierCount = 2,
         soldierWoundedCount = 0,
         soldierStar = 2,
         isWin = false,
         soldierDamagedCount = 1,
-        moraleDecreased = 25
+        moraleDecreased = 2
     }}
 }
 
@@ -336,10 +336,10 @@ function GameUIPveAttackFte:PormiseOfFte()
                 local report
                 if self.pve_name == "1_1" then
                     report = fightReport1
-                    param.reward = {{type = "items", name = "foodClass_2", count = 1}}
+                    param.reward = {{type = "resources", name = "food", count = 1}}
                 elseif self.pve_name == "1_2" then
                     report = fightReport2
-                    param.reward = {{type = "items", name = "woodClass_2", count = 1}}
+                    param.reward = {{type = "resources", name = "wood", count = 1}}
                 elseif self.pve_name == "1_3" then
                     report = fightReport3
                     param.reward = {{type = "soldierMaterials", name = "deathHand", count = 2}}
