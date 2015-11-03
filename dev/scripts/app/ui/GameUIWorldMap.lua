@@ -33,7 +33,7 @@ function GameUIWorldMap:onEnter()
     self.round_info = self:LoadRoundInfo(Alliance_Manager:GetMyAlliance().mapIndex)
     -- 返回按钮
     local world_map_btn_bg = display.newSprite("background_86x86.png")
-    :addTo(self):align(display.LEFT_BOTTOM,display.left + 10,display.bottom + 197):scale(0.85)
+    :addTo(self):align(display.LEFT_BOTTOM,display.left + 10,display.bottom + 246)
     local size = world_map_btn_bg:getContentSize()
     self.loading = display.newSprite("loading.png"):addTo(self)
                     :pos(display.left + 10 + size.width/2 * 0.85, display.bottom + 150)
@@ -80,18 +80,23 @@ function GameUIWorldMap:LoadMap()
     end, 0.5)
 end
 function GameUIWorldMap:LoadRoundInfo(mapIndex)
-    local node = display.newSprite("background_768x292.png"):align(display.BOTTOM_CENTER, display.cx, display.bottom):addTo(self)
+    local node = display.newSprite("background_768x152.png"):align(display.BOTTOM_CENTER, display.cx, display.bottom):addTo(self)
+    if display.width > 640 then
+        node:scale(display.width/node:getContentSize().width)
+    end
+    node:setTouchEnabled(true)
+    node:setTouchSwallowEnabled(true)
     node.mapIndex = mapIndex
     local mini_map_button = WidgetPushButton.new({normal = "mini_map_146x124.png"})
         :onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
                 UIKit:newWidgetUI("WidgetAllianceMapBuff",node.mapIndex):AddToCurrentScene()
             end
-        end):align(display.LEFT_BOTTOM, 84 , 10)
+        end):align(display.LEFT_BOTTOM, 80 , 8)
         :addTo(node)
     mini_map_button:setTouchSwallowEnabled(true)
 
-    local current_round_bg = display.newSprite("background_red_558x42.png"):align(display.LEFT_TOP, mini_map_button:getPositionX() + 30 , mini_map_button:getPositionY() + mini_map_button:getCascadeBoundingBox().size.height + 5)
+    local current_round_bg = display.newSprite("background_red_558x42.png"):align(display.LEFT_TOP, mini_map_button:getPositionX() + 36 , mini_map_button:getPositionY() + mini_map_button:getCascadeBoundingBox().size.height + 5)
         :addTo(node)
     local current_round_label = UIKit:ttfLabel({
         text = DataUtils:getMapRoundByMapIndex(mapIndex),
@@ -100,37 +105,50 @@ function GameUIWorldMap:LoadRoundInfo(mapIndex)
     }):align(display.CENTER, current_round_bg:getContentSize().width/2, current_round_bg:getContentSize().height/2)
         :addTo(current_round_bg)
 
-    -- 野怪等级
-    local monster_bg = display.newSprite("background_464x38.png"):align(display.LEFT_TOP, mini_map_button:getPositionX() + 70 , mini_map_button:getPositionY() + mini_map_button:getCascadeBoundingBox().size.height/2 + 18)
+
+    local info_bg = display.newSprite("background_330x78.png"):align(display.LEFT_TOP, mini_map_button:getPositionX() + mini_map_button:getCascadeBoundingBox().size.width  , mini_map_button:getPositionY() + mini_map_button:getCascadeBoundingBox().size.height/2 + 20)
         :addTo(node)
+    -- 野怪等级
+    local monster_bg = display.newSprite("background_318x38.png"):align(display.LEFT_TOP, 0 ,info_bg:getContentSize().height)
+        :addTo(info_bg)
     UIKit:ttfLabel({
         text = _("野怪等级"),
         size = 18,
         color = 0xffedae,
-    }):align(display.LEFT_CENTER, 60, monster_bg:getContentSize().height/2)
+    }):align(display.LEFT_CENTER, 8, monster_bg:getContentSize().height/2)
         :addTo(monster_bg)
     local monster_levels = UIKit:ttfLabel({
         text = " 10 - 14",
         size = 20,
         color = 0xa1dd00,
-    }):align(display.RIGHT_CENTER, monster_bg:getContentSize().width - 55, monster_bg:getContentSize().height/2)
+    }):align(display.RIGHT_CENTER, monster_bg:getContentSize().width , monster_bg:getContentSize().height/2)
         :addTo(monster_bg)
     -- BUFF数量
-    local buff_bg = display.newSprite("background_464x38.png"):align(display.LEFT_TOP, monster_bg:getPositionX() , monster_bg:getPositionY() - 39)
-        :addTo(node)
+    local buff_bg = display.newSprite("background_318x38.png"):align(display.LEFT_BOTTOM, 0,0)
+        :addTo(info_bg)
     UIKit:ttfLabel({
         text = _("增益效果数量"),
         size = 18,
         color = 0xffedae,
-    }):align(display.LEFT_CENTER, 60, buff_bg:getContentSize().height/2 )
+    }):align(display.LEFT_CENTER, 8, buff_bg:getContentSize().height/2 )
         :addTo(buff_bg)
     local buff_num_label = UIKit:ttfLabel({
         text = "0",
         size = 20,
         color = 0xa1dd00,
-    }):align(display.RIGHT_CENTER, buff_bg:getContentSize().width - 55, buff_bg:getContentSize().height/2)
+    }):align(display.RIGHT_CENTER, buff_bg:getContentSize().width , buff_bg:getContentSize().height/2)
         :addTo(buff_bg)
-
+    -- 详情按钮
+    local details_button = WidgetPushButton.new({normal = "yellow_btn_up_134x56.png",pressed = "yellow_btn_down_134x56.png"})
+        :setButtonLabel(
+            UIKit:commonButtonLable({
+                text = _("详情")
+            })
+        ):onButtonClicked(function()
+            UIKit:newWidgetUI("WidgetAllianceMapBuff",node.mapIndex):AddToCurrentScene()
+        end)
+        :align(display.CENTER,630,46)
+        :addTo(node)
     -- 屏幕中心点在小地图的位置
     local current_position_sprite = display.newSprite("icon_current_position_8x10.png"):addTo(mini_map_button)
         -- :align(display.RIGHT_CENTER)
