@@ -279,7 +279,6 @@ end
 function AllianceDetailScene:onEnter()
     AllianceDetailScene.super.onEnter(self)
     app:GetAudioManager():PlayGameMusicOnSceneEnter("AllianceDetailScene",false)
-    self.home_page = self:CreateHomePage()
     
     Alliance_Manager:ClearCache()
     Alliance_Manager:UpdateAllianceBy(Alliance_Manager:GetMyAlliance().mapIndex, Alliance_Manager:GetMyAlliance())
@@ -353,7 +352,7 @@ function AllianceDetailScene:FetchAllianceDatasByIndex(index, func)
         if type(func) == "function" then
             func()
         end
-        self:GetHomePage():HideLoading()
+        -- self:GetHomePage():HideLoading()
     elseif self.current_allinace_index ~= index then
         self:StartTimer(index, func)
     end
@@ -472,6 +471,9 @@ function AllianceDetailScene:OnSceneMove()
     AllianceDetailScene.super.OnSceneMove(self)
     self:UpdateVisibleAllianceBg()
     self:FetchAllianceDatasByIndex(self:GetSceneLayer():GetMiddleAllianceIndex())
+    if not self.home_page then
+        self.home_page = self:CreateHomePage()
+    end
 end
 function AllianceDetailScene:UpdateVisibleAllianceBg()
     local old_visibles = self.visible_alliances or {}

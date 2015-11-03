@@ -21,43 +21,54 @@ function GameUIAllianceBattle:ctor(city,tag,other_alliance)
     self.alliance = Alliance_Manager:GetMyAlliance()
     self.other_alliance = other_alliance
     self.tag = tag
+    self.a_helper = WidgetAllianceHelper.new()
 end
 
 function GameUIAllianceBattle:OnMoveInStage()
     GameUIAllianceBattle.super.OnMoveInStage(self)
     local tag = self.tag
     if tag == "history" then
-        self:InitAllianceInfo()
-        self:CreateTabButtons({
-            {
-                label = _("信息"),
-                tag = "info",
-                default = true
-            },
-            {
-                label = _("联盟战历史"),
-                tag = "history",
-            },
-        }, function(tag_1)
-            if tag_1 == "info" then
-                if self.history_listview then
-                    self.history_listview:hide()
-                end
-                self.info_layer:show()
-            else
-                -- 获取历史记录
-                if self.alliance.allianceFightReports == nil then
-                    NetManager:getAllianceFightReportsPromise(self.alliance.id):done(function ()
-                        self:InitHistoryRecord()
-                        self.history_listview:show()
-                    end)
-                else
-                    self:InitHistoryRecord()
-                    self.history_listview:show()
-                end
-                self.info_layer:hide()
-            end
-        end):pos(window.cx, window.bottom + 34)
+        -- self:InitAllianceInfo()
+        -- self:CreateTabButtons({
+        --     {
+        --         label = _("信息"),
+        --         tag = "info",
+        --         default = true
+        --     },
+        --     {
+        --         label = _("联盟战历史"),
+        --         tag = "history",
+        --     },
+        -- }, function(tag_1)
+        --     if tag_1 == "info" then
+        --         if self.history_listview then
+        --             self.history_listview:hide()
+        --         end
+        --         self.info_layer:show()
+        --     else
+        --         -- 获取历史记录
+        --         if self.alliance.allianceFightReports == nil then
+        --             NetManager:getAllianceFightReportsPromise(self.alliance.id):done(function ()
+        --                 self:InitHistoryRecord()
+        --                 self.history_listview:show()
+        --             end)
+        --         else
+        --             self:InitHistoryRecord()
+        --             self.history_listview:show()
+        --         end
+        --         self.info_layer:hide()
+        --     end
+        -- end):pos(window.cx, window.bottom + 34)
+        -- 获取历史记录
+        if self.alliance.allianceFightReports == nil then
+            NetManager:getAllianceFightReportsPromise(self.alliance.id):done(function ()
+                self:InitHistoryRecord()
+                -- self.history_listview:show()
+            end)
+        else
+            self:InitHistoryRecord()
+            -- self.history_listview:show()
+        end
     elseif tag == "fight" then
         self:InitBattleStatistics()
     elseif tag == "capture" then
@@ -180,7 +191,7 @@ function GameUIAllianceBattle:InitAllianceInfo()
         end)
         :align(display.LEFT_BOTTOM, 0,0)
         :addTo(shadow_layer):setContentSize(cc.size(548,44))
-    local a_helper = WidgetAllianceHelper.new()
+    local a_helper = self.a_helper
     local flag_sprite = a_helper:CreateFlagContentSprite(alliance.basicInfo.flag)
     flag_sprite:align(display.LEFT_CENTER, 30, -10)
         :addTo(shadow_layer)
@@ -217,29 +228,9 @@ function GameUIAllianceBattle:InitAllianceInfo()
     local bg = WidgetInfoWithTitle.new({
         title = _("联盟地图BUFF"),
         h = 386,
-        info = self:GetAllianceMapBuffByIndex(DataUtils:getMapRoundByMapIndex(alliance.mapIndex))
+        info = DataUtils:GetAllianceMapBuffByRound(DataUtils:getMapRoundByMapIndex(alliance.mapIndex))
     }):align(display.TOP_CENTER, window.cx, current_position:getPositionY() - 120):addTo(layer)
 
-end
-function GameUIAllianceBattle:GetAllianceMapBuffByIndex(index)
-    local buff = aliance_buff[index-1]
-    local buff_info = {}
-
-    for i,v in ipairs({"monsterLevel","villageAddPercent","dragonExpAddPercent","bloodAddPercent","marchSpeedAddPercent","dragonStrengthAddPercent","loyaltyAddPercent","honourAddPercent"}) do
-        if v =="monsterLevel" then
-            local levels = string.split(buff[v],"_")
-            table.insert(buff_info, {
-                Localize.alliance_buff[v],
-                {string.format("Lv%s~Lv%s",levels[1],levels[2]),0x288400}
-            })
-        else
-            table.insert(buff_info, {
-                Localize.alliance_buff[v],
-                {"+"..buff[v].."%",0x288400}
-            })
-        end
-    end
-    return buff_info
 end
 function GameUIAllianceBattle:OpenAllianceBuffDetails()
     UIKit:newWidgetUI("WidgetAllianceMapBuff",self.alliance.mapIndex):AddToCurrentScene()
@@ -267,7 +258,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
             :addTo(vs_bg)
 
         -- 己方联盟旗帜
-        local a_helper = WidgetAllianceHelper.new()
+        local a_helper = self.a_helper
         local flag_sprite = a_helper:CreateFlagContentSprite(alliance.basicInfo.flag)
         flag_sprite:align(display.RIGHT_CENTER, blue_bg:getContentSize().width - 120, 0)
             :addTo(blue_bg)
@@ -295,7 +286,6 @@ function GameUIAllianceBattle:InitBattleStatistics()
             }):align(display.LEFT_CENTER, self_period_label:getPositionX() + self_period_label:getContentSize().width + 10, 24)
             :addTo(blue_bg)
         -- 敌方联盟旗帜
-        local a_helper = WidgetAllianceHelper.new()
         local flag_sprite1 = a_helper:CreateFlagContentSprite(other_alliance.basicInfo.flag)
         flag_sprite1:align(display.LEFT_CENTER, 50, 0)
             :addTo(red_bg)
@@ -1046,19 +1036,7 @@ function GameUIAllianceBattle:OpenAllianceDetails(isOur)
     local body = UIKit:newWidgetUI("WidgetPopDialog",630,_("击杀排行")):AddToCurrentScene():GetBody()
     local rb_size = body:getContentSize()
 
-
-    -- 联盟旗帜
-    -- local flag_bg = display.newSprite("alliance_item_flag_box_126X126.png")
-    --     :align(display.CENTER,90,rb_size.height-90)
-    --     :addTo(body)
-    -- local a_helper = WidgetAllianceHelper.new()
-    -- local flag_sprite = a_helper:CreateFlagWithRhombusTerrain(alliance_terrain,alliance_flag)
-    -- flag_sprite:align(display.CENTER, flag_bg:getContentSize().width/2, flag_bg:getContentSize().height/2-20)
-    --     :addTo(flag_bg)
-    -- 联盟名称
-    -- local title_bg = display.newSprite("title_blue_430x30.png")
-    --     :align(display.CENTER,rb_size.width/2+80,rb_size.height-40)
-    --     :addTo(body)
+ 
     UIKit:ttfLabel({
         text = "["..alliance_tag.."]  "..alliance_name,
         size = 30,
@@ -1176,13 +1154,13 @@ end
 function GameUIAllianceBattle:InitHistoryRecord()
     local list = UIListView.new({
         async = true, --异步加载
-        viewRect = cc.rect(0, 0,568, 800),
+        viewRect = cc.rect(0, 0,568, 860),
         direction = cc.ui.UIScrollView.DIRECTION_VERTICAL,
     })
     list:setRedundancyViewVal(294)
     list:setDelegate(handler(self, self.HistoryDelegate))
     list:reload()
-    list:addTo(self:GetView()):align(display.BOTTOM_CENTER, window.cx - 568/2, window.bottom_top)
+    list:addTo(self:GetView()):align(display.BOTTOM_CENTER, window.cx - 568/2, window.bottom + 20)
     self.history_listview = list
 end
 function GameUIAllianceBattle:HistoryDelegate(listView, tag, idx)
@@ -1311,6 +1289,7 @@ function GameUIAllianceBattle:CreateHistoryContent()
         }))
 
     local parent = self
+    local ui_helper = self.a_helper
     function content:SetData( idx )
         local alliance = parent.alliance
         local cloneReports = clone(alliance.allianceFightReports)
@@ -1346,7 +1325,6 @@ function GameUIAllianceBattle:CreateHistoryContent()
         enemy_alliance_name:setString(enemyAlliance.name)
         enemy_alliance_tag:setString("["..enemyAlliance.tag.."]")
 
-        local ui_helper = WidgetAllianceHelper.new()
         if self.self_flag then
             self.self_flag:SetFlag(ourAlliance.flag)
         else
@@ -1446,7 +1424,7 @@ function GameUIAllianceBattle:CreateAllianceItem(alliance,index)
         end)
         :align(display.CENTER,80,h/2)
         :addTo(content)
-    local a_helper = WidgetAllianceHelper.new()
+    local a_helper = self.a_helper
     local flag_sprite = a_helper:CreateFlagWithRhombusTerrain(basic.terrain,basic.flag)
     flag_sprite:scale(1.2)
     flag_sprite:align(display.CENTER,0,-20)
@@ -1547,7 +1525,7 @@ function GameUIAllianceBattle:OpenOtherAllianceDetails(alliance)
         :align(display.CENTER,78,h-78)
         :addTo(body)
         :scale(0.8)
-    local a_helper = WidgetAllianceHelper.new()
+    local a_helper = self.a_helper
     local flag_sprite = a_helper:CreateFlagWithRhombusTerrain(basic.terrain,basic.flag)
     flag_sprite:align(display.CENTER, flag_bg:getContentSize().width/2, flag_bg:getContentSize().height/2-20)
         :addTo(flag_bg)
@@ -1654,6 +1632,7 @@ end
 
 
 return GameUIAllianceBattle
+
 
 
 

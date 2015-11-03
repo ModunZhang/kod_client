@@ -33,10 +33,10 @@ function GameUIWorldMap:onEnter()
     self.round_info = self:LoadRoundInfo(Alliance_Manager:GetMyAlliance().mapIndex)
     -- 返回按钮
     local world_map_btn_bg = display.newSprite("background_86x86.png")
-    :addTo(self):align(display.LEFT_BOTTOM,display.left + 10,display.bottom + 246)
+    :addTo(self):align(display.LEFT_BOTTOM,display.left + 8,display.bottom + 246)
     local size = world_map_btn_bg:getContentSize()
     self.loading = display.newSprite("loading.png"):addTo(self)
-                    :pos(display.left + 10 + size.width/2 * 0.85, display.bottom + 150)
+                    :pos(display.left + 30 + size.width/2 * 0.85, display.bottom + 246)
     self:HideLoading()
     
     -- local inWorldScene = display.getRunningScene().__cname == "WorldScene"
@@ -174,13 +174,7 @@ function GameUIWorldMap:LoadRoundInfo(mapIndex)
         self.mapIndex = mapIndex
         local map_round = DataUtils:getMapRoundByMapIndex(mapIndex)
         local buff = aliance_buff[map_round]
-        local buff_num = 0
-        for i,v in pairs(buff) do
-            if i ~="monsterLevel" and i ~= "round" and v > 0 then
-                buff_num = buff_num + 1
-            end
-        end
-        buff_num_label:setString(buff_num)
+        buff_num_label:setString(DataUtils:getMapBuffNumByMapIndex(mapIndex))
         current_round_label:setString(string.format(_("%d 圈"),map_round + 1))
         local levels = string.split(buff["monsterLevel"],"_")
         monster_levels:setString(string.format("Lv%s~Lv%s",levels[1],levels[2]))
@@ -291,7 +285,7 @@ function GameUIWorldMap:OnTouchClicked(pre_x, pre_y, x, y)
     if not index then
         return
     end
-    UIKit:newWidgetUI("WidgetWorldAllianceInfo",click_object,index):AddToCurrentScene()
+    UIKit:newWidgetUI("WidgetWorldAllianceInfo",click_object,index,true):AddToCurrentScene()
 end
 function GameUIWorldMap:IsFingerOn()
     return self.event_manager:TouchCounts() ~= 0

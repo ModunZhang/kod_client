@@ -8,15 +8,17 @@ local WidgetPopDialog = import("..widget.WidgetPopDialog")
 local WidgetAllianceHelper = import("..widget.WidgetAllianceHelper")
 local window = import("..utils.window")
 local Localize = import("..utils.Localize")
+local WidgetInfo = import(".WidgetInfo")
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local intInit = GameDatas.AllianceInitData.intInit
 local moveLimit = GameDatas.AllianceMap.moveLimit
 local WidgetWorldAllianceInfo = class("WidgetWorldAllianceInfo", WidgetPopDialog)
 
-function WidgetWorldAllianceInfo:ctor(object,mapIndex)
+function WidgetWorldAllianceInfo:ctor(object,mapIndex,need_goto_btn)
     self.object = object
     self.mapIndex = mapIndex
-    WidgetWorldAllianceInfo.super.ctor(self,object and 454 or 328,object and  object.alliance.name or _("无主领土"),window.top-120)
+    self.need_goto_btn = need_goto_btn
+    WidgetWorldAllianceInfo.super.ctor(self,object and 454 or 612,object and  object.alliance.name or _("无主领土"),window.top-120)
     self:setNodeEventEnabled(true)
 
     if object then
@@ -84,7 +86,7 @@ function WidgetWorldAllianceInfo:Located(mapIndex, x, y)
         end
     end
 end
-function WidgetWorldAllianceInfo:EnterIn(mapIndex, x, y)
+function WidgetWorldAllianceInfo:EnterIn()
     local wp = self.object:getParent():convertToWorldSpace(cc.p(self.object:getPosition()))
     if wp.x < 0 then
         wp.x = 0
@@ -274,7 +276,8 @@ function WidgetWorldAllianceInfo:LoadMoveAlliance()
     local body = self.body
     local b_size = body:getContentSize()
     local mapIndex = self.mapIndex
-    local needPalaceLevel = moveLimit[DataUtils:getMapRoundByMapIndex(mapIndex)].needPalaceLevel
+    local round = DataUtils:getMapRoundByMapIndex(mapIndex)
+    local needPalaceLevel = moveLimit[round].needPalaceLevel
     local palaceLevel = Alliance_Manager:GetMyAlliance():GetAllianceBuildingInfoByName("palace").level
     UIKit:createLineItem(
         {
@@ -298,24 +301,33 @@ function WidgetWorldAllianceInfo:LoadMoveAlliance()
         move_time:SetValue(canMove and _("准备就绪") or GameUtils:formatTimeStyle1(time))
     end)
 
-    local desc_bg = WidgetUIBackGround.new({height=186,width=556},WidgetUIBackGround.STYLE_TYPE.STYLE_5)
-        :align(display.CENTER_TOP, b_size.width/2,b_size.height - 100)
+    local info_buff = WidgetInfo.new({
+        info = DataUtils:GetAllianceMapBuffByRound(round),
+        h = 340
+    }):align(display.BOTTOM_CENTER, b_size.width/2 , 160)
         :addTo(body)
-    UIKit:ttfLabel({
-        text =  _("当迁移时间就绪时，联盟可进行一次免费的迁移。迁移联盟时，针对联盟外目标的行军事件会被强制召回。迁移联盟需要将军以上的权限的玩家操作。"),
-        size = 20,
-        color = 0x403c2f,
-        dimensions = cc.size(520,0),
-    }):align(display.CENTER, desc_bg:getContentSize().width/2 , desc_bg:getContentSize().height/2):addTo(desc_bg)
+
+    local info = {
+        _("当迁移时间就绪时，联盟可进行一次免费的迁移。迁移联盟时，针对联盟外目标的行军事件会被强制召回。"),
+        _("迁移联盟需要将军以上的权限的玩家操作。"),
+    }
+    local origin_y, gap_y = 140, 40
+    local pre_label
+    for i,v in ipairs(info) do
+        local y =  origin_y - (pre_label and (pre_label:getContentSize().height + 10) or 0)
+        display.newSprite("icon_star_22x20.png"):align(display.LEFT_TOP, 40,y)
+            :addTo(body)
+        pre_label = UIKit:ttfLabel({
+            text = v,
+            size = 18,
+            color = 0x403C2F,
+            dimensions = cc.size(500,0)
+        }):align(display.LEFT_TOP, 60,y)
+            :addTo(body)
+        origin_y = y
+    end
 
     self:BuildOneButton("icon_move_alliance_building.png",_("迁移")):onButtonClicked(function()
-        -- local time = intInit.allianceMoveColdMinutes.value * 60 + Alliance_Manager:GetMyAlliance().basicInfo.allianceMoveTime/1000.0 - app.timer:GetServerTime()
-        -- local canMove = Alliance_Manager:GetMyAlliance().basicInfo.allianceMoveTime == 0 or time <= 0
-        -- if not canMove then
-        --     UIKit:showMessageDialog(_("提示"), _("当前还不能移动联盟"))
-        --     self:LeftButtonClicked()
-        --     return
-        -- end
         local mapIndex = self.mapIndex
         local canMove1 = palaceLevel >= needPalaceLevel
         if not canMove1 then
@@ -335,8 +347,14 @@ function WidgetWorldAllianceInfo:LoadMoveAlliance()
         end)
         self:LeftButtonClicked()
     end):addTo(body):align(display.RIGHT_TOP, b_size.width,10)
+    if self.need_goto_btn then
+        self:BuildOneButton("icon_goto_38x56.png",_("定位")):onButtonClicked(function()
+            self:Located(self.mapIndex)
+        end):addTo(body):align(display.RIGHT_TOP, b_size.width - 130,10)
+    end
 end
 return WidgetWorldAllianceInfo
+
 
 
 

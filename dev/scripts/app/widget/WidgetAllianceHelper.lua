@@ -219,7 +219,7 @@ function WidgetAllianceHelper:CreateFlagContentSprite(flagstr)
 
    	local this = self
    	function box:SetFlag(flagstr)
-   		local form, color1, color2, graphic, graphic_color = self:GetFlagArray(flagstr)
+   		local form, color1, color2, graphic, graphic_color = this:GetFlagArray(flagstr)
    		body_node:getChildByTag(1):setFilter(filter.newFilter("CUSTOM", this:GetColorFilter(color1)))
    		local is_visible = form > 1
    		local color2_sprite = body_node:getChildByTag(2)
