@@ -88,13 +88,24 @@ function GameUIWorldMap:LoadRoundInfo(mapIndex)
     node:setTouchEnabled(true)
     node:setTouchSwallowEnabled(true)
     node.mapIndex = mapIndex
-    local mini_map_button = WidgetPushButton.new({normal = "mini_map_146x124.png"})
-        :onButtonClicked(function(event)
-            if event.name == "CLICKED_EVENT" then
-                UIKit:newWidgetUI("WidgetAllianceMapBuff",node.mapIndex):AddToCurrentScene()
-            end
-        end):align(display.LEFT_BOTTOM, 80 , 8)
+    local mini_map_button = display.newSprite("mini_map_124x124.png")
+        :align(display.LEFT_BOTTOM, 80 , 8)
         :addTo(node)
+    mini_map_button:setTouchEnabled(true)
+    mini_map_button:setNodeEventEnabled(true)
+    local bigMapLength = intInit.bigMapLength.value
+    local ALLIANCE_WIDTH, ALLIANCE_HEIGHT = intInit.allianceRegionMapWidth.value, intInit.allianceRegionMapHeight.value
+    mini_map_button:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+        local map_position = mini_map_button:convertToNodeSpace(cc.p(event.x,event.y))
+        local x,y = math.floor(map_position.x/124 * bigMapLength * ALLIANCE_WIDTH) , math.floor((1 - map_position.y/124) * bigMapLength * ALLIANCE_HEIGHT)
+        local mapIndex = DataUtils:GetAlliancePosition(x, y)
+        local x,y = self:GetSceneLayer():IndexToLogic(mapIndex)
+        self:GotoPosition(x,y)
+        if event.name == "ended" then
+            self:LoadMap()
+        end
+        return true
+    end)
     mini_map_button:setTouchSwallowEnabled(true)
 
     local current_round_bg = display.newSprite("background_red_558x42.png"):align(display.LEFT_TOP, mini_map_button:getPositionX() + 36 , mini_map_button:getPositionY() + mini_map_button:getCascadeBoundingBox().size.height + 5)
@@ -107,7 +118,7 @@ function GameUIWorldMap:LoadRoundInfo(mapIndex)
         :addTo(current_round_bg)
 
 
-    local info_bg = display.newSprite("background_330x78.png"):align(display.LEFT_TOP, mini_map_button:getPositionX() + mini_map_button:getCascadeBoundingBox().size.width  , mini_map_button:getPositionY() + mini_map_button:getCascadeBoundingBox().size.height/2 + 20)
+    local info_bg = display.newSprite("background_330x78.png"):align(display.LEFT_TOP, mini_map_button:getPositionX() + mini_map_button:getCascadeBoundingBox().size.width + 20 , mini_map_button:getPositionY() + mini_map_button:getCascadeBoundingBox().size.height/2 + 20)
         :addTo(node)
     -- 野怪等级
     local monster_bg = display.newSprite("background_318x38.png"):align(display.LEFT_TOP, 0 ,info_bg:getContentSize().height)
@@ -179,7 +190,6 @@ function GameUIWorldMap:LoadRoundInfo(mapIndex)
         current_round_label:setString(string.format(_("%d 圈"),map_round + 1))
         local levels = string.split(buff["monsterLevel"],"_")
         monster_levels:setString(string.format("Lv%s~Lv%s",levels[1],levels[2]))
-        local bigMapLength = intInit.bigMapLength.value
         local offset_x,offset_y = x / bigMapLength, 1 - y / bigMapLength
         current_position_sprite:setPosition(124 * offset_x, 124 * offset_y)
     end
