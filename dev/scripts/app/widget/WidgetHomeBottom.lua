@@ -61,6 +61,11 @@ function WidgetHomeBottom:ctor(city)
         elseif i == 4 then
             self.alliance_btn = button
             self.alliance_btn:setLocalZOrder(9)
+            if Alliance_Manager:GetMyAlliance():GetSelf():IsTitleEqualOrGreaterThan("quartermaster") then
+                self.join_request_count = WidgetNumberTips.new():addTo(self):pos(x+20, first_row+20)
+                self.join_request_count:setLocalZOrder(11)
+                self.join_request_count:SetNumber(#Alliance_Manager:GetMyAlliance().joinRequestEvents or 0)
+            end
             if not User.countInfo.firstJoinAllianceRewardGeted then
                 fire_var():addTo(self.alliance_btn, -1000, 321)
             end
@@ -75,6 +80,7 @@ function WidgetHomeBottom:onEnter()
     MailManager:AddListenOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
     user:AddListenOnType(self, "growUpTasks")
     user:AddListenOnType(self, "countInfo")
+    Alliance_Manager:GetMyAlliance():AddListenOnType(self, "joinRequestEvents")
 
     self:OnUserDataChanged_growUpTasks()
     self:MailUnreadChanged()
@@ -84,6 +90,7 @@ function WidgetHomeBottom:onExit()
     MailManager:RemoveListenerOnType(self,MailManager.LISTEN_TYPE.UNREAD_MAILS_CHANGED)
     user:RemoveListenerOnType(self, "growUpTasks")
     user:RemoveListenerOnType(self, "countInfo")
+    Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, "joinRequestEvents")
 end
 function WidgetHomeBottom:OnBottomButtonClicked(event)
     local tag = event.target:getTag()
@@ -118,7 +125,11 @@ function WidgetHomeBottom:OnUserDataChanged_countInfo(userData, deltaData)
         self.alliance_btn:removeChildByTag(321, cleanup)
     end
 end
-
+function WidgetHomeBottom:OnAllianceDataChanged_joinRequestEvents(alliance,deltaData)
+    if self.join_request_count then
+        self.join_request_count:SetNumber(#alliance.joinRequestEvents or 0)
+    end
+end
 -- fte
 local WidgetFteArrow = import(".WidgetFteArrow")
 local WidgetFteMark = import(".WidgetFteMark")

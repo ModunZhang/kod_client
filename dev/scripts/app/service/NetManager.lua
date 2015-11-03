@@ -615,7 +615,7 @@ local logic_event_map = {
         if not NetManager.m_was_inited_game then return end
         if success and DataManager:hasUserData() then
             Alliance_Manager:setMapIndexData(response.mapIndexData)
-            Alliance_Manager.my_alliance_mapData = response.msg.mapData
+            Alliance_Manager.my_alliance_mapData = response.mapData
             DataManager:setUserAllianceData(response.allianceData)
 
             local user_data = DataManager:getUserData()
@@ -1388,11 +1388,11 @@ function NetManager:getFetchChatPromise(channel)
     return get_none_blocking_request_promise("chat.chatHandler.getAll",{channel = channel}, "获取聊天信息失败!")
 end
 -- 获取所有请求加入联盟的申请
-function NetManager:getJoinRequestEventsPromise(allianceId)
-    return get_blocking_request_promise("logic.allianceHandler.getJoinRequestEvents", {
-        allianceId = allianceId
-    }, "获取所有请求加入联盟的申请失败!"):done(get_alliance_joinrequestevents_response_msg)
-end
+-- function NetManager:getJoinRequestEventsPromise(allianceId)
+--     return get_blocking_request_promise("logic.allianceHandler.getJoinRequestEvents", {
+--         allianceId = allianceId
+--     }, "获取所有请求加入联盟的申请失败!"):done(get_alliance_joinrequestevents_response_msg)
+-- end
 -- 获取联盟战历史记录
 function NetManager:getAllianceFightReportsPromise(allianceId)
     return get_blocking_request_promise("logic.allianceHandler.getAllianceFightReports", {

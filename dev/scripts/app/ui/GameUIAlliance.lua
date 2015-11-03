@@ -9,6 +9,7 @@ local UIListView = import(".UIListView")
 local WidgetBackGroundTabButtons = import("..widget.WidgetBackGroundTabButtons")
 local GameUIAlliance = UIKit:createUIClass("GameUIAlliance","GameUIWithCommonHeader")
 local WidgetPushButton = import("..widget.WidgetPushButton")
+local WidgetNumberTips = import("..widget.WidgetNumberTips")
 local WidgetPushTransparentButton = import("..widget.WidgetPushTransparentButton")
 local contentWidth = window.width - 80
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
@@ -50,7 +51,13 @@ function GameUIAlliance:OnAllianceDataChanged_basicInfo(alliance, deltaData)
 end
 
 function GameUIAlliance:OnAllianceDataChanged_joinRequestEvents(alliance)
-
+    if Alliance_Manager:GetMyAlliance():GetSelf():IsTitleEqualOrGreaterThan("quartermaster") then
+        local num = #alliance.joinRequestEvents or 0
+        self.tab_buttons:SetButtonTipNumber("infomation",num)
+        if self.join_request_count then
+            self.join_request_count:SetNumber(num)
+        end
+    end
 end
 
 function GameUIAlliance:OnAllianceDataChanged_events(alliance)
@@ -770,6 +777,9 @@ function GameUIAlliance:CreateHaveAlliaceUI()
             end
         end
     ):pos(window.cx, window.bottom + 34)
+    if Alliance_Manager:GetMyAlliance():GetSelf():IsTitleEqualOrGreaterThan("quartermaster") then
+        self.tab_buttons:SetButtonTipNumber("infomation",#Alliance_Manager:GetMyAlliance().joinRequestEvents or 0)
+    end
 end
 
 --总览
@@ -1577,6 +1587,10 @@ function GameUIAlliance:HaveAlliaceUI_infomationIf()
             :setButtonLabel("normal",UIKit:ttfLabel({text = button_texts[i],size = 18,color = 0xffedae}))
             :setButtonLabelOffset(0, -30)
         display.newSprite(button_imags[i]):addTo(button):pos(66,59)
+        if i == 3 and Alliance_Manager:GetMyAlliance():GetSelf():IsTitleEqualOrGreaterThan("quartermaster") then
+            self.join_request_count = WidgetNumberTips.new():addTo(button):pos(118,88)
+            self.join_request_count:SetNumber(#Alliance_Manager:GetMyAlliance().joinRequestEvents or 0)
+        end
     end
     self:RefreshDescView()
     return self.informationNode
@@ -1736,6 +1750,7 @@ end
 
 
 return GameUIAlliance
+
 
 
 

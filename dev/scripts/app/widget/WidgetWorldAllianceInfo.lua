@@ -350,6 +350,9 @@ function WidgetWorldAllianceInfo:LoadMoveAlliance()
                 UIKit:GetUIInstance("GameUIWorldMap"):GetSceneLayer()
                     :MoveAllianceFromTo(oldIndex, mapIndex)
             end
+            if not self.need_goto_btn then
+                app:EnterMyAllianceScene()
+            end
         end)
         self:LeftButtonClicked()
     end):addTo(body):align(display.RIGHT_TOP, b_size.width,10)
