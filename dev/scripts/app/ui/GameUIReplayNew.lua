@@ -57,9 +57,9 @@ local function decode_battle_from_report(report)
         defender.soldierName = defender.soldierName or "wall"
         local defeatAll
         if attacker.soldierName ~= "wall" and defender.soldierName ~= "wall" --[[and #attacks ~= i]] then
-            defeatAll = (((attacker.morale - attacker.moraleDecreased) <= 20
+            defeatAll = (((attacker.morale - attacker.moraleDecreased) <= 0
                 or (attacker.soldierCount - attacker.soldierDamagedCount) <= 0) or not attacker.isWin)
-                and (((defender.morale - defender.moraleDecreased) <= 20
+                and (((defender.morale - defender.moraleDecreased) <= 0
                 or (defender.soldierCount - defender.soldierDamagedCount) <= 0) or not defender.isWin)
         end
         local left
@@ -796,14 +796,13 @@ local report_ = {
 --     createTime = "1431351323688"
 -- }
 
--- -------------------
+-- -- -------------------
 -- local Report = import("..entity.Report")
 -- User = {
 --     Id = function() return 1 end
 -- }
 function GameUIReplayNew:ctor(report, callback, skipcallback)
     -- report = Report:DecodeFromJsonData(report1)
-    -- report = report_
     assert(report.GetFightAttackName)
     assert(report.GetFightDefenceName)
     assert(report.IsDragonFight)
@@ -1154,8 +1153,9 @@ function GameUIReplayNew:HurtSoldierLeft(corps)
     local soldier = self:TopSoldierLeft()
     local soldierCount = round.soldierCount or round.wallHp
     local soldierDamagedCount = round.soldierDamagedCount or round.wallDamagedHp
-    local morale = round.morale or self.ui_map.soldier_morale_attack:GetPercent()
-    local moraleDecreased = round.moraleDecreased or 0
+    local morale = self.ui_map.soldier_morale_attack:GetPercent()
+    local moraleDecreased = (round.moraleDecreased or 0) / self.ui_map.soldier_count_attack.count * 100
+    print(morale, moraleDecreased)
     local x,y = corps:getPosition()
     return promise.all(
         self:PromiseOfPlayDamage(soldierDamagedCount, x, y),
@@ -1180,8 +1180,8 @@ function GameUIReplayNew:HurtSoldierRight(corps)
     local soldier = self:TopSoldierRight()
     local soldierCount = round.soldierCount or round.wallHp
     local soldierDamagedCount = round.soldierDamagedCount or round.wallDamagedHp
-    local morale = round.morale or 100
-    local moraleDecreased = round.moraleDecreased or 0
+    local morale = self.ui_map.soldier_morale_defence:GetPercent()
+    local moraleDecreased = (round.moraleDecreased or 0) / self.ui_map.soldier_count_defence.count * 100
     local x,y = corps:getPosition()
     return promise.all(
         self:PromiseOfPlayDamage(soldierDamagedCount, x, y),
@@ -1209,7 +1209,7 @@ function GameUIReplayNew:EnterSoldiersLeft()
         :show():SetEnable(true)
     self.ui_map.soldier_count_attack
         :SetText(top_soldier.count.."/"..top_soldier.count)
-        :SetProgress(100):show()
+        :SetProgress(100):show().count = top_soldier.count
     self.ui_map.soldier_morale_attack
         :SetText("100/100")
         :SetProgress(100):show()
@@ -1227,7 +1227,7 @@ function GameUIReplayNew:EnterSoldiersRight()
 
     self.ui_map.soldier_count_defence
         :SetText(top_soldier.count.."/"..top_soldier.count)
-        :SetProgress(100):show()
+        :SetProgress(100):show().count = top_soldier.count
     self.ui_map.soldier_morale_defence
         :SetText("100/100")
         :SetProgress(100):show()

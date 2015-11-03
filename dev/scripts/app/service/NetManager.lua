@@ -775,7 +775,6 @@ function NetManager:getLoginPromise(deviceId)
             local real_server_time = diff_time / 2 + request_server_time
             local delta_time = real_server_time - ext.now()
 
-            -- print_(requestTime, diff_time, playerData.deltaTime, delta_time, request_server_time, real_server_time)
             if self.m_was_inited_game then
                 self.m_netService:setDeltatime(delta_time)
                 DataManager:setUserData(playerData)
@@ -2000,10 +1999,6 @@ function NetManager:getSetApnStatusPromise(type,status)
 end
 
 function NetManager:getAttackPveSectionPromise(sectionName, dragonType, soldiers)
-    local rewards = LuaUtils:table_map(string.split(GameDatas.PvE.sections[sectionName].rewards, ","), function(k,v)
-        local type,name = unpack(string.split(v, ":"))
-        return k, {type = type, name = name}
-    end)
     local pre_tab = {items = {}, soldierMaterials = {}}
     return get_blocking_request_promise("logic.playerHandler.attackPveSection",{
         sectionName = sectionName,
@@ -2011,47 +2006,16 @@ function NetManager:getAttackPveSectionPromise(sectionName, dragonType, soldiers
         soldiers = soldiers,
     },"攻打npc失败!")
         :done(function(response)
-            for i,v in ipairs(rewards) do
-                if v.type == "items" then
-                    pre_tab[v.type][v.name] = User:GetItemCount(v.name)
-                elseif v.type == "soldierMaterials" then
-
-                    pre_tab[v.type][v.name] = User.soldierMaterials[v.name]
+            response.get_func = function() return {} end
+            for i,v in ipairs(response.msg.playerData) do
+                local key, value = unpack(v)
+                if key == "__rewards" and value ~= json.null then
+                    response.get_func = function() return value end
+                    break
                 end
             end
         end)
         :done(get_player_response_msg)
-        :done(function(response)
-            local cur_tab = {items = {}, soldierMaterials = {}}
-            for i,v in ipairs(rewards) do
-                if v.type == "items" then
-                    cur_tab[v.type][v.name] = User:GetItemCount(v.name)
-                elseif v.type == "soldierMaterials" then
-                    cur_tab[v.type][v.name] = User.soldierMaterials[v.name]
-                end
-            end
-            local adds = {items = {}, soldierMaterials = {}}
-            for type,category in pairs(cur_tab) do
-                for key,count in pairs(category) do
-                    local add = count - (pre_tab[type][key] or 0)
-                    if add > 0 then
-                        adds[type][key] = add
-                    end
-                end
-            end
-            local reward_items = {}
-            if next(adds.items) then
-                for itemName,count in pairs(adds.items) do
-                    table.insert(reward_items, {type = "items", name = itemName, count = count})
-                end
-            end
-            if next(adds.soldierMaterials) then
-                for key,count in pairs(adds.soldierMaterials) do
-                    table.insert(reward_items, {type = "soldierMaterials", name = key, count = count})
-                end
-            end
-            response.get_func = function() return reward_items end
-        end)
 end
 function NetManager:getPveStageRewardPromise(stageName)
     return get_blocking_request_promise("logic.playerHandler.getPveStageReward",{
