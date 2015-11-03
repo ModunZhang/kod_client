@@ -61,7 +61,7 @@ function WidgetHomeBottom:ctor(city)
         elseif i == 4 then
             self.alliance_btn = button
             self.alliance_btn:setLocalZOrder(9)
-            if Alliance_Manager:GetMyAlliance():GetSelf():IsTitleEqualOrGreaterThan("quartermaster") then
+            if not Alliance_Manager:GetMyAlliance():IsDefault() and Alliance_Manager:GetMyAlliance():GetSelf():IsTitleEqualOrGreaterThan("quartermaster") then
                 self.join_request_count = WidgetNumberTips.new():addTo(self):pos(x+20, first_row+20)
                 self.join_request_count:setLocalZOrder(11)
                 self.join_request_count:SetNumber(#Alliance_Manager:GetMyAlliance().joinRequestEvents or 0)
