@@ -73,7 +73,7 @@ function GameUIStrikeReport:onEnter()
     cc.ui.UIPushButton.new({normal = "X_1.png",pressed = "X_2.png"})
         :onButtonClicked(function(event)
             self:removeFromParent()
-        end):align(display.CENTER, title:getContentSize().width-20, title:getContentSize().height-20)
+        end):align(display.CENTER, title:getContentSize().width-26, title:getContentSize().height-26)
         :addTo(title)
     -- 突袭结果图片
     local report_result_img
