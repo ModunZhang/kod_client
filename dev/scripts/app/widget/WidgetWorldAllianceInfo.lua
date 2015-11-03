@@ -340,6 +340,12 @@ function WidgetWorldAllianceInfo:LoadMoveAlliance()
             self:LeftButtonClicked()
             return
         end
+        local canMove1 = Alliance_Manager:GetMyAlliance():GetSelf():CanMoveAlliance()
+        if not canMove1 then
+            UIKit:showMessageDialog(_("提示"), _("权限不足，不能迁移联盟"))
+            self:LeftButtonClicked()
+            return
+        end
         local oldIndex = Alliance_Manager:GetMyAlliance().mapIndex
         Alliance_Manager.my_mapIndex = nil
         NetManager:getMoveAlliancePromise(mapIndex):done(function()
@@ -348,9 +354,8 @@ function WidgetWorldAllianceInfo:LoadMoveAlliance()
             if UIKit:GetUIInstance("GameUIWorldMap") then
                 UIKit:GetUIInstance("GameUIWorldMap"):GetSceneLayer()
                     :MoveAllianceFromTo(oldIndex, mapIndex)
-            end
-            if not self.need_goto_btn then
-                app:EnterMyAllianceScene()
+            else
+                UIKit:newGameUI("GameUIWorldMap", oldIndex, mapIndex):AddToCurrentScene()
             end
         end)
         self:LeftButtonClicked()
@@ -362,6 +367,7 @@ function WidgetWorldAllianceInfo:LoadMoveAlliance()
     end
 end
 return WidgetWorldAllianceInfo
+
 
 
 
