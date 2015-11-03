@@ -22,12 +22,14 @@ end
 function WorldLayer:onEnter()
     self:CreateBg()
     self.scene_node = display.newNode():addTo(self)
-                      :align(display.LEFT_BOTTOM, 15,15)
+                      :align(display.LEFT_BOTTOM, 15,70)
     self:CreateCorner()
     self:CreateEdge()
     self.map = self:CreateMap()
     self.allianceLayer = display.newNode():addTo(self.map,0)
     self.moveLayer = display.newNode():addTo(self.map,1)
+    self.leveLayer = display.newNode():addTo(self.map,2)
+    self.levelSprites = {}
     self.allainceSprites = {}
     self.flagSprites = {}
     self:ZoomTo(1.3)
@@ -44,7 +46,7 @@ function WorldLayer:onExit()
 end
 function WorldLayer:CreateBg()
     local sx, sy = 12, 7
-    local offsetY = - 350
+    local offsetY = - 400
     local sprite = display.newFilteredSprite("world_bg.jpg", "CUSTOM", json.encode({
         frag = "shaders/plane.fs",
         shaderName = "plane1",
@@ -63,7 +65,7 @@ function WorldLayer:CreateBg()
     })):addTo(self):align(display.LEFT_TOP,0,size.height * sy + offsetY):setScaleX(sx)
 
     display.newSprite("world_title1.jpg")
-    :addTo(self):align(display.LEFT_TOP,0,size.height * sy + offsetY)
+    :addTo(self):align(display.LEFT_TOP,0,size.height * sy + offsetY):scale(0.7)
 end
 function WorldLayer:CreateCorner()
     display.newSprite("world_tile.png"):pos(CORNER_LENGTH/2, CORNER_LENGTH/2)
@@ -137,6 +139,28 @@ function WorldLayer:CreateMap()
         base_y = HEIGHT * TILE_LENGTH,
     }
     return clip
+end
+function WorldLayer:LoadLevelBg(index)
+    local x,y = self:IndexToLogic(index)
+    local mx, my = 17, 17
+    if x >= 0
+    and x < bigMapLength_value
+    and y >= 0
+    and y < bigMapLength_value
+    and not self.levelSprites[index]
+    and (math.abs(x - mx) + math.abs(y - my)) % 2 == 0
+    then
+        local p = self:ConvertLogicPositionToMapPosition(x,y)
+        local sp= display.newSprite("world_level_bg.png")
+                   :addTo(self.leveLayer):pos(p.x + 20, p.y - 50)
+        local size = sp:getContentSize()
+        UIKit:ttfLabel({
+            text = math.abs(x - mx) + 1,
+            size = 18,
+            color = 0xd1cead,
+        }):addTo(sp):align(display.CENTER, size.width/2, size.height/2)
+        self.levelSprites[index] = sp
+    end
 end
 local screen_rect = cc.rect(0, 0, display.width, display.height)
 function WorldLayer:MoveAllianceFromTo(fromIndex, toIndex)
@@ -228,46 +252,49 @@ function WorldLayer:MoveAllianceFromTo(fromIndex, toIndex)
 end
 
 function WorldLayer:LoadAlliance()
-    local flagSprites = {}
-    local mapIndexStr = tostring(Alliance_Manager:GetMyAlliance().mapIndex)
-    local allainceSprites = {
-        [mapIndexStr] = self.allainceSprites[mapIndexStr]
-    }
-    LuaUtils:outputTable(allainceSprites)
-    self.allainceSprites[mapIndexStr] = nil
-    
-    local indexes = self:GetAvailableIndex()
-    for k,v in pairs(self.currentIndexs or {}) do
-        if indexes[k] then
-            if self.flagSprites[k] then
-                flagSprites[k] = self.flagSprites[k]
-            end
-            self.flagSprites[k] = nil
-            if self.allainceSprites[k] then
-                allainceSprites[k] = self.allainceSprites[k]
-            end
-            self.allainceSprites[k] = nil
-        end
-    end
-    for k,v in pairs(self.flagSprites) do
-        v:removeFromParent()
-    end
-    for k,v in pairs(self.allainceSprites) do
-        v:removeFromParent()
-    end
-    self.flagSprites = flagSprites
-    self.allainceSprites = allainceSprites
+    -- local flagSprites = {}
+    -- local mapIndexStr = tostring(Alliance_Manager:GetMyAlliance().mapIndex)
+    -- local allainceSprites = {
+    --     [mapIndexStr] = self.allainceSprites[mapIndexStr]
+    -- }
+    -- LuaUtils:outputTable(allainceSprites)
+    -- self.allainceSprites[mapIndexStr] = nil
+    -- local indexes = self:GetAvailableIndex()
+    -- for k,v in pairs(self.currentIndexs or {}) do
+    --     if indexes[k] then
+    --         if self.flagSprites[k] then
+    --             flagSprites[k] = self.flagSprites[k]
+    --         end
+    --         self.flagSprites[k] = nil
+    --         if self.allainceSprites[k] then
+    --             allainceSprites[k] = self.allainceSprites[k]
+    --         end
+    --         self.allainceSprites[k] = nil
+    --     end
+    -- end
+    -- for k,v in pairs(self.flagSprites) do
+    --     v:removeFromParent()
+    -- end
+    -- for k,v in pairs(self.allainceSprites) do
+    --     v:removeFromParent()
+    -- end
+    -- self.flagSprites = flagSprites
+    -- self.allainceSprites = allainceSprites
 
-
-    self.currentIndexs = indexes
-    local request_body = {}
-    for k,v in pairs(indexes) do
-        table.insert(request_body, tonumber(k))
-    end
-    NetManager:getMapAllianceDatasPromise(request_body):done(function(response)
+    -- local indexes = self:GetAvailableIndex()
+    -- self.currentIndexs = indexes
+    -- local request_body = self:GetAvailableIndex()
+    -- local request_body = {}
+    -- for k,v in pairs(self:GetAvailableIndex()) do
+    --     table.insert(request_body, tonumber(k))
+    -- end
+    NetManager:getMapAllianceDatasPromise(self:GetAvailableIndex())
+    :done(function(response)
         dump(response.msg.datas)
         for k,v in pairs(response.msg.datas) do
-            self:LoadAllianceBy(k,v)
+            if self.LoadAllianceBy then
+                self:LoadAllianceBy(k,v)
+            end
         end
         if UIKit:GetUIInstance("GameUIWorldMap") then
             UIKit:GetUIInstance("GameUIWorldMap"):HideLoading()
@@ -383,7 +410,7 @@ function WorldLayer:GetAvailableIndex()
     for i = x, x + 3 do
         for j = y, y + 4 do
             if i >= 0 and i < WIDTH and j >= 0 and j < HEIGHT then
-                t[tostring(self:LogicToIndex(i,j))] = true
+                table.insert(t, self:LogicToIndex(i,j))
             end
         end
     end

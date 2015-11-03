@@ -401,8 +401,8 @@ function Node:scheduleAt(callback, interval)
     callback()
     return self:schedule(callback, interval or 1)
 end
-function scheduleAt(self, func)
-    return display.newNode():addTo(self):scheduleAt(func)
+function scheduleAt(self, func, interval)
+    return display.newNode():addTo(self):scheduleAt(func, interval)
 end
 
 display.__newLayer = display.newLayer

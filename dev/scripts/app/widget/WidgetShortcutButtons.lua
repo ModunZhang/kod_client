@@ -98,7 +98,11 @@ function WidgetShortcutButtons:ctor(city)
     local world_map_btn_bg = display.newSprite("background_86x86.png"):scale(1.0)
     local world_map_btn = UIKit:ButtonAddScaleAction(cc.ui.UIPushButton.new({normal = 'icon_world_88x88.png'})
         :onButtonClicked(function()
-            UIKit:newGameUI("GameUIWorldMap"):AddToCurrentScene()
+            if display.getRunningScene().__cname == "AllianceDetailScene" then
+                local x,y = display.getRunningScene():GetSceneLayer():GetMiddlePosition()
+                local mapIndex = DataUtils:GetAlliancePosition(x, y)
+                UIKit:newGameUI("GameUIWorldMap", nil, nil, mapIndex):AddToCurrentScene()
+            end
         end)
     ):align(display.CENTER,world_map_btn_bg:getContentSize().width/2 , world_map_btn_bg:getContentSize().height/2)
         :addTo(world_map_btn_bg)

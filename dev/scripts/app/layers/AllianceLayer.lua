@@ -15,6 +15,7 @@ local buildingName = AllianceMap.buildingName
 local ui_helper = WidgetAllianceHelper.new()
 local decorator_image = UILib.decorator_image
 local alliance_building = UILib.alliance_building
+local other_alliance_building = UILib.other_alliance_building
 local intInit = GameDatas.AllianceInitData.intInit
 local MAP_LEGNTH_WIDTH = intInit.bigMapLength.value
 local MAP_LEGNTH_HEIGHT = intInit.bigMapLength.value
@@ -511,24 +512,18 @@ function AllianceLayer:LoadAllianceByIndex(index, alliance)
                     mapObjects[id] = nil
                 end
             end
-            local ismyaln = allianceData._id == User.allianceId
-            local building_png = ismyaln and UILib.alliance_building
-                or UILib.other_alliance_building
-            local banner = ismyaln and UILib.my_city_banner[0]
-                or UILib.enemy_city_banner[0]
             for name,v in pairs(objects_node.buildings) do
-                local x,y = self:GetBannerPos(index, v.x, v.y)
-                v.info:show():pos(x, y):zorder(x * y)
-                v.info.banner:setTexture(banner)
-                v.info.name:setString(Localize.alliance_buildings[name])
-                v:getChildByTag(SPRITE_TAG):setTexture(building_png[name])
                 if name ~= "bloodSpring" then
                     local b = Alliance.FindAllianceBuildingInfoByName(allianceData, name)
                     v.info.level:setString(b.level)
                 end
             end
-        elseif not objects_node:getChildByTag(CLOUD_TAG) then
-            self:CreateClouds():addTo(objects_node, 999999, CLOUD_TAG)
+        else
+            if Alliance_Manager:getMapDataByIndex(index) then
+
+            elseif not objects_node:getChildByTag(CLOUD_TAG) then
+                self:CreateClouds():addTo(objects_node, 999999, CLOUD_TAG)
+            end
         end
     end)
 end
@@ -758,7 +753,8 @@ function AllianceLayer:LoadObjects(index, alliance, func)
     local terrain, style = self:GetMapInfoByIndex(index, alliance)
     local alliance_obj = self.alliance_objects[index]
     if not alliance_obj then
-        local new_obj = self:GetFreeObjects(terrain, style, index, alliance)
+        local isnomanland = not (Alliance_Manager:getMapDataByIndex(index))
+        local new_obj = self:GetFreeObjects(terrain, style, index, alliance, isnomanland)
         self.alliance_objects[index] = new_obj:addTo(self.objects_node, index)
             :pos(
                 self:GetAllianceLogicMap()
@@ -814,8 +810,8 @@ function AllianceLayer:FreeObjects(obj)
     end
     table.insert(self.alliance_objects_free[obj.style], obj)
 end
-function AllianceLayer:GetFreeObjects(terrain, style, index, alliance)
-    if not alliance then
+function AllianceLayer:GetFreeObjects(terrain, style, index, alliance, isnomanland)
+    if not alliance and isnomanland then
         local nomanland_style = (index % 1 + 1)
         local obj = table.remove(self.alliance_nomanland[nomanland_style], 1)
         if obj then
@@ -836,6 +832,18 @@ function AllianceLayer:GetFreeObjects(terrain, style, index, alliance)
 
     local obj = table.remove(self.alliance_objects_free[style], 1)
     if obj then
+        local ismyaln = Alliance_Manager:GetMyAlliance().mapIndex == index
+        local building_png = ismyaln and UILib.alliance_building
+                          or UILib.other_alliance_building
+        local banner = ismyaln and UILib.my_city_banner[0]
+                    or UILib.enemy_city_banner[0]
+        for name,v in pairs(obj.buildings) do
+            local x,y = self:GetBannerPos(index, v.x, v.y)
+            v.info:show():pos(x, y):zorder(x * y)
+            v.info.banner:setTexture(banner)
+            v.info.name:setString(Localize.alliance_buildings[name])
+            v:getChildByTag(SPRITE_TAG):setTexture(building_png[name])
+        end
         if obj.terrain ~= terrain then
             self:ReloadObjectsByTerrain(obj, terrain)
         end
@@ -901,7 +909,8 @@ function AllianceLayer:CreateAllianceObjects(obj_node, terrain, style, index, al
         local size = buildingName[name]
         local x,y = (2 * v.x - size.width + 1) / 2, (2 * v.y - size.height + 1) / 2
         local deco_png = decorator_image[terrain][name]
-        local building_png = alliance_building[name]
+        local config_png = (index == Alliance_Manager:GetMyAlliance().mapIndex) and alliance_building or other_alliance_building
+        local building_png = config_png[name]
         if animap[name] then
             local decorator = ccs.Armature:create(animap[name])
                                 :addTo(obj_node, getZorderByXY(x, y))
@@ -935,7 +944,7 @@ function AllianceLayer:CreateAllianceObjects(obj_node, terrain, style, index, al
             node.x = v.x
             node.y = v.y
             node.name = name
-            local x,y = self:GetBannerPos(index, x, y)
+            local x,y = self:GetBannerPos(index, v.x, v.y)
             node.info = self:CreateInfoBanner():pos(x, y):zorder(x * y)
             buildings[name] = node
             self:AddFuncToBuilding(node)
