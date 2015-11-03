@@ -155,7 +155,7 @@ function WorldLayer:LoadLevelBg(index)
                    :addTo(self.leveLayer):pos(p.x + 20, p.y - 50)
         local size = sp:getContentSize()
         UIKit:ttfLabel({
-            text = math.abs(x - mx) + 1,
+            text = math.max(math.abs(x - mx), math.abs(y - my)) + 1,
             size = 18,
             color = 0xd1cead,
         }):addTo(sp):align(display.CENTER, size.width/2, size.height/2)
