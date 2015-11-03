@@ -1265,7 +1265,7 @@ function DataUtils:getMapBuffNumByMapIndex( mapIndex )
 end
 
 function DataUtils:GetAllianceMapBuffByRound(round)
-    local aliance_buff = buff[round-1]
+    local aliance_buff = buff[round]
     local buff_info = {}
 
     for i,v in ipairs({"monsterLevel","villageAddPercent","dragonExpAddPercent","bloodAddPercent","marchSpeedAddPercent","dragonStrengthAddPercent","loyaltyAddPercent","honourAddPercent"}) do
