@@ -363,10 +363,10 @@ function GameUIPveAttack:CreateAttackButton()
     return button
 end
 function GameUIPveAttack:Attack()
-    local soldiers = string.split(sections[self.pve_name].troops, ",")
-    table.remove(soldiers, 1)
+    local enemies = string.split(sections[self.pve_name].troops, ",")
+    table.remove(enemies, 1)
     UIKit:newGameUI('GameUIPVESendTroop',
-        LuaUtils:table_map(soldiers, function(k,v)
+        LuaUtils:table_map(enemies, function(k,v)
             local name,star = unpack(string.split(v, "_"))
             return k, {name = name, star = tonumber(star)}
         end),
@@ -390,23 +390,28 @@ function GameUIPveAttack:Attack()
                 display.getRunningScene():GetSceneLayer():RefreshPve()
             end):done(function(response)
                 response.msg.fightReport.playerDragonFightData.hpDecreased = 0
+                local enemy_enter = {}
+                for i,v in ipairs(response.msg.fightReport.sectionSoldierRoundDatas) do
+                    enemy_enter[v.soldierName] = true
+                end
+                
                 local star = 0
-                if response.msg.fightReport.playerSoldierRoundDatas[#response.msg.fightReport.playerSoldierRoundDatas].isWin then
+                if response.msg.fightReport.playerSoldierRoundDatas[#response.msg.fightReport.playerSoldierRoundDatas].isWin 
+                and table.nums(enemy_enter) == #enemies 
+                then
                     star = 2
                     if response.msg.fightReport.playerDragonFightData.isWin then
                         star = star + 1
                     end
+                    local soldierName = {}
                     local soldiername
                     for i,v in ipairs(response.msg.fightReport.playerSoldierRoundDatas) do
-                        if not soldiername then
-                            soldiername = v.soldierName
-                        elseif soldiername ~= v.soldierName then
-                            star = star - 1
-                            break
-                        end
+                        soldierName[v.soldierName] = true
+                    end
+                    if table.nums(soldierName) > 2 then
+                        star = star - 1
                     end
                 end
-
 
                 local dragon = City:GetFirstBuildingByType("dragonEyrie"):GetDragonManager():GetDragon(dragonType)
                 param.new_exp = dragon:Exp()

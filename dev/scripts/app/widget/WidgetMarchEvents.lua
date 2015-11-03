@@ -120,6 +120,9 @@ function WidgetMarchEvents:onEnter()
                 v.desc:setString(string.format("%s %d%%", v.prefix, collectPercent))
                 v.time:setString(GameUtils:formatTimeStyle1(time))
                 v.progress:setPercentage(collectPercent)
+            elseif v.eventType == "shrineEvents" then
+                local time = UtilsForShrine:GetEventTime(v.event)
+                v.time:setString(GameUtils:formatTimeStyle1(time))
             end
         end)
     end)
@@ -477,7 +480,8 @@ function WidgetMarchEvents:CreateDefenceItem(event, eventType)
         node.prefix = UtilsForEvent:GetMarchEventPrefix(event, eventType)
         display_text = node.prefix
         node.progress:setPercentage(100)
-        time_str = ""
+        local time = UtilsForShrine:GetEventTime(event)
+        time_str = GameUtils:formatTimeStyle1(time)
         for i,v in ipairs(event.playerTroops) do
             if v.id == User._id then
                 dragonType = v.dragon.type

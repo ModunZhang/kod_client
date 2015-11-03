@@ -371,7 +371,10 @@ function AllianceDetailScene:StartTimer(index, func)
                 self.amintimer:schedule(function()
                     if self.current_allinace_index and 
                     self.current_allinace_index ~= Alliance_Manager:GetMyAlliance().mapIndex then
-                        NetManager:getAmInMapIndexPromise(self.current_allinace_index)
+                        NetManager:getAmInMapIndexPromise(self.current_allinace_index):fail(function()
+                            self.current_allinace_index = nil
+                            self:FetchAllianceDatasByIndex(index, func)
+                        end)
                     end
                 end, 10)
                 self.home_page:RefreshTop(true)
