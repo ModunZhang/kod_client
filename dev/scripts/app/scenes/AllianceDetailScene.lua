@@ -438,7 +438,7 @@ function AllianceDetailScene:OnTouchClicked(pre_x, pre_y, x, y)
     if mapObj then
         local alliance = Alliance_Manager:GetAllianceByCache(mapObj.index)
         if alliance then
-            print(mapObj.index, mapObj.x, mapObj.y, mapObj.name)
+            print("AllianceDetailScene:OnTouchClicked",mapObj.index, mapObj.x, mapObj.y, mapObj.name)
             app:GetAudioManager():PlayeEffectSoundWithKey("HOME_PAGE")
             local type_ = Alliance:GetMapObjectType(mapObj)
             if type_ == "member"
@@ -461,6 +461,8 @@ function AllianceDetailScene:OnTouchClicked(pre_x, pre_y, x, y)
                 self:OpenUI(alliance, mapObj)
             end
         end
+    else
+        UIKit:newWidgetUI("WidgetWorldAllianceInfo",nil,self:GetSceneLayer():GetMapIndexByWorldPosition(x, y)):AddToCurrentScene()
     end
 end
 function AllianceDetailScene:OpenUI(alliance,mapObj)
