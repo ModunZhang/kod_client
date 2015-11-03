@@ -18,7 +18,7 @@ function WidgetWorldAllianceInfo:ctor(object,mapIndex,need_goto_btn)
     self.object = object
     self.mapIndex = mapIndex
     self.need_goto_btn = need_goto_btn
-    WidgetWorldAllianceInfo.super.ctor(self,object and 454 or 612,object and  object.alliance.name or _("无主领土"),window.top-120)
+    WidgetWorldAllianceInfo.super.ctor(self,object and 454 or 580,object and  object.alliance.name or _("无主领土"),window.top-120)
     self:setNodeEventEnabled(true)
 
     self.mask_layer = display.newLayer():addTo(self, 2):hide()
@@ -310,14 +310,14 @@ function WidgetWorldAllianceInfo:LoadMoveAlliance()
     local info_buff = WidgetInfo.new({
         info = DataUtils:GetAllianceMapBuffByRound(round),
         h = 340
-    }):align(display.BOTTOM_CENTER, b_size.width/2 , 160)
+    }):align(display.BOTTOM_CENTER, b_size.width/2 , 140)
         :addTo(body)
 
     local info = {
         _("当迁移时间就绪时，联盟可进行一次免费的迁移。迁移联盟时，针对联盟外目标的行军事件会被强制召回。"),
         _("迁移联盟需要将军以上的权限的玩家操作。"),
     }
-    local origin_y, gap_y = 140, 40
+    local origin_y, gap_y = 120, 40
     local pre_label
     for i,v in ipairs(info) do
         local y =  origin_y - (pre_label and (pre_label:getContentSize().height + 10) or 0)

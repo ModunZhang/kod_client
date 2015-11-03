@@ -556,7 +556,7 @@ function GameUIAllianceHome:RefreshTop(force_refresh)
             size = 20,
             color = 0xa1dd00
         }):align(display.RIGHT_CENTER, 180, 14):addTo(buff_bg)
-        display.newSprite("icon_buff_28x28.png"):align(display.LEFT_CENTER, -5,14):addTo(buff_bg)
+        display.newSprite("buff_68x68.png"):align(display.LEFT_CENTER, -5,14):addTo(buff_bg):scale(0.4)
     end
     self:TopTabButtons()
 
