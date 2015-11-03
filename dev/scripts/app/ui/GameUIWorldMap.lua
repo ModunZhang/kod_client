@@ -34,6 +34,7 @@ function GameUIWorldMap:onEnter()
     }):align(display.CENTER, top_bg:getContentSize().width/2, top_bg:getContentSize().height/2)
         :addTo(top_bg)
 
+
     -- bottom 所在位置信息
     self.round_info = self:LoadRoundInfo(mapIndex)
     -- 返回按钮
@@ -59,6 +60,90 @@ function GameUIWorldMap:onEnter()
     else
         self:GetSceneLayer():LoadAlliance()
     end
+
+    self:InitArrow()
+    scheduleAt(self, function()
+        self:UpdateArrow()
+    end, 0.01)
+end
+local deg = math.deg
+local ceil = math.ceil
+local point = cc.p
+local pSub = cc.pSub
+local pGetAngle = cc.pGetAngle
+local pGetLength = cc.pGetLength
+local rectContainsPoint = cc.rectContainsPoint
+local RIGHT_CENTER = display.RIGHT_CENTER
+local LEFT_CENTER = display.LEFT_CENTER
+local MID_POINT = point(display.cx, display.cy)
+local function pGetIntersectPoint(pt1,pt2,pt3,pt4)
+    local s,t, ret = 0,0,false
+    ret,s,t = cc.pIsLineIntersect(pt1,pt2,pt3,pt4,s,t)
+    if ret then
+        return point(pt1.x + s * (pt2.x - pt1.x), pt1.y + s * (pt2.y - pt1.y)), s
+    else
+        return point(0,0), s
+    end
+end
+function GameUIWorldMap:InitArrow()
+    self.arrow = cc.ui.UIPushButton.new({normal = "location_arrow_up.png",
+        pressed = "location_arrow_down.png"})
+        :addTo(self,2):align(display.TOP_CENTER):hide()
+        :onButtonClicked(function()
+            local mapIndex = Alliance_Manager:GetMyAlliance().mapIndex
+            local x,y = self:GetSceneLayer():IndexToLogic(mapIndex)
+            self:GotoPosition(x,y)
+            self:LoadMap()
+        end)
+    self.arrow_label = UIKit:ttfLabel({
+        size = 20,
+        color = 0xf5e8c4
+    }):addTo(self.arrow):rotation(90):align(display.LEFT_CENTER, 0, -50)
+end
+local screen_rect = cc.rect(0, 200, display.width, display.height - 200)
+function GameUIWorldMap:UpdateArrow()
+    local mapIndex = Alliance_Manager:GetMyAlliance().mapIndex
+    local x,y = self:GetSceneLayer():IndexToLogic(mapIndex)
+    local world_point = self:GetSceneLayer():ConverToWorldSpace(x,y)
+    if not rectContainsPoint(screen_rect, world_point) then
+        local p,degree = self:GetIntersectPoint(screen_rect, MID_POINT, world_point)
+        if p and degree then
+            degree = degree + 180
+            self.arrow:show():pos(p.x, p.y):rotation(degree)
+            local isflip = (degree > 0 and degree < 180)
+            local distance = ceil(pGetLength(pSub(world_point, p)) / 80)
+            self.arrow_label:align(isflip and RIGHT_CENTER or LEFT_CENTER)
+                :scale(isflip and -1 or 1):setString(string.format("%d", distance))
+        end
+    else
+        self.arrow:hide()
+    end
+end
+function GameUIWorldMap:GetIntersectPoint(screen_rect, point1, point2, normal)
+    local points = self:GetPointsWithScreenRect(screen_rect)
+    for i = 1, #points do
+        local p1, p2
+        if i ~= #points then
+            p1 = points[i]
+            p2 = points[i + 1]
+        else
+            p1 = points[i]
+            p2 = points[1]
+        end
+        local p,s = pGetIntersectPoint(point1, point2, p1, p2)
+        if s > 0 and rectContainsPoint(screen_rect, p) then
+            return p, deg(pGetAngle(pSub(point1, point2), normal or point(0, 1)))
+        end
+    end
+end
+function GameUIWorldMap:GetPointsWithScreenRect(screen_rect)
+    local x,y,w,h = screen_rect.x, screen_rect.y, screen_rect.width, screen_rect.height
+    return {
+        point(x + w, y),
+        point(x + w, y + h),
+        point(x, y + h),
+        point(x, y),
+    }
 end
 function GameUIWorldMap:ShowLoading()
     if self.loading:isVisible() and 
