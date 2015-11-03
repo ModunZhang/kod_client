@@ -32,34 +32,13 @@ function WidgetAllianceMapBuff:ctor(mapIndex)
         titles =  titles, -- 标题 type -> table
         cb = function (page)
             info_buff:SetInfo(
-                self:GetAllianceMapBuffByRound(page)
+                DataUtils:GetAllianceMapBuffByRound(page)
             )
         end -- 回调
     }):align(display.CENTER, rb_size.width/2,rb_size.height-50)
         :addTo(body)
 
 
-end
-
-function WidgetAllianceMapBuff:GetAllianceMapBuffByRound( round )
-    local buff = aliance_buff[round-1]
-    local buff_info = {}
-
-    for i,v in ipairs({"monsterLevel","villageAddPercent","dragonExpAddPercent","bloodAddPercent","marchSpeedAddPercent","dragonStrengthAddPercent","loyaltyAddPercent","honourAddPercent"}) do
-        if v =="monsterLevel" then
-            local levels = string.split(buff[v],"_")
-            table.insert(buff_info, {
-                Localize.alliance_buff[v],
-                {string.format("Lv%s~Lv%s",levels[1],levels[2]),0x288400}
-            })
-        else
-            table.insert(buff_info, {
-                Localize.alliance_buff[v],
-                {"+"..buff[v].."%",0x288400}
-            })
-        end
-    end
-    return buff_info
 end
 
 return WidgetAllianceMapBuff

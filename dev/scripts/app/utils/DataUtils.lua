@@ -1251,6 +1251,40 @@ function DataUtils:getMapRoundByMapIndex( mapIndex )
     end
     return theRound and (roundMax - theRound)
 end
+--根据MapIndex获取对应buff增益数量
+function DataUtils:getMapBuffNumByMapIndex( mapIndex )
+        local map_round = self:getMapRoundByMapIndex(mapIndex)
+        local buff_1 = buff[map_round]
+        local buff_num = 0
+        for i,v in pairs(buff_1) do
+            if i ~="monsterLevel" and i ~= "round" and v > 0 then
+                buff_num = buff_num + 1
+            end
+        end
+        return buff_num
+end
+
+function DataUtils:GetAllianceMapBuffByRound(round)
+    local aliance_buff = buff[round-1]
+    local buff_info = {}
+
+    for i,v in ipairs({"monsterLevel","villageAddPercent","dragonExpAddPercent","bloodAddPercent","marchSpeedAddPercent","dragonStrengthAddPercent","loyaltyAddPercent","honourAddPercent"}) do
+        if v =="monsterLevel" then
+            local levels = string.split(aliance_buff[v],"_")
+            table.insert(buff_info, {
+                Localize.alliance_buff[v],
+                {string.format("Lv%s~Lv%s",levels[1],levels[2]),0x288400}
+            })
+        else
+            table.insert(buff_info, {
+                Localize.alliance_buff[v],
+                {(aliance_buff[v] > 0 and "+" or "")..aliance_buff[v].."%",aliance_buff[v] > 0 and 0x288400 or 0xe34724}
+            })
+        end
+    end
+    return buff_info
+end
+
 return DataUtils
 
 
