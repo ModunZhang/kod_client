@@ -13,7 +13,7 @@ local NOT_ABLE_TO_UPGRADE = UpgradeBuilding.NOT_ABLE_TO_UPGRADE
 local UIKit = UIKit
 local building_config_map = {
     ["keep"] = {scale = 0.3, offset = {x = 80, y = 74}},
-    ["watchTower"] = {scale = 0.35, offset = {x = 90, y = 70}},
+    -- ["watchTower"] = {scale = 0.35, offset = {x = 90, y = 70}},
     ["warehouse"] = {scale = 0.5, offset = {x = 84, y = 70}},
     ["dragonEyrie"] = {scale = 0.35, offset = {x = 74, y = 70}},
     ["toolShop"] = {scale = 0.5, offset = {x = 80, y = 70}},
@@ -143,7 +143,17 @@ function Item:ctor(parent_ui)
                     return
                 end
                 local instant_build = function ()
-                    if city:IsFunctionBuilding(building) then
+                    if city:IsGate(building) then
+                        NetManager:getInstantUpgradeWallByLocationPromise():done(function()
+                            local ui = self.parent_ui
+                            ui:RefreshCurrentList(ui.tabs:GetSelectedButtonTag())
+                        end)
+                    elseif city:IsTower(building) then
+                        NetManager:getInstantUpgradeTowerPromise():done(function()
+                            local ui = self.parent_ui
+                            ui:RefreshCurrentList(ui.tabs:GetSelectedButtonTag())
+                        end)
+                    elseif city:IsFunctionBuilding(building) then
                         local location_id = city:GetLocationIdByBuilding(building)
                         NetManager:getInstantUpgradeBuildingByLocationPromise(location_id):done(function()
                             local ui = self.parent_ui
@@ -153,16 +163,6 @@ function Item:ctor(parent_ui)
                         local tile = city:GetTileWhichBuildingBelongs(building)
                         local house_location = tile:GetBuildingLocation(building)
                         NetManager:getInstantUpgradeHouseByLocationPromise(tile.location_id, house_location):done(function()
-                            local ui = self.parent_ui
-                            ui:RefreshCurrentList(ui.tabs:GetSelectedButtonTag())
-                        end)
-                    elseif city:IsGate(building) then
-                        NetManager:getInstantUpgradeWallByLocationPromise():done(function()
-                            local ui = self.parent_ui
-                            ui:RefreshCurrentList(ui.tabs:GetSelectedButtonTag())
-                        end)
-                    elseif city:IsTower(building) then
-                        NetManager:getInstantUpgradeTowerPromise():done(function()
                             local ui = self.parent_ui
                             ui:RefreshCurrentList(ui.tabs:GetSelectedButtonTag())
                         end)
@@ -193,7 +193,16 @@ function Item:ctor(parent_ui)
                     return
                 end
                 local city = building:BelongCity()
-                if city:IsFunctionBuilding(building) then
+                
+                if city:IsGate(building) then
+                    NetManager:getUpgradeWallByLocationPromise():done(function()
+                        self.parent_ui:RefreshAllItems()
+                    end)
+                elseif city:IsTower(building) then
+                    NetManager:getUpgradeTowerPromise():done(function()
+                        self.parent_ui:RefreshAllItems()
+                    end)
+                elseif city:IsFunctionBuilding(building) then
                     local location_id = city:GetLocationIdByBuilding(building)
                     NetManager:getUpgradeBuildingByLocationPromise(location_id):done(function()
                         self.parent_ui:RefreshAllItems()
@@ -203,14 +212,6 @@ function Item:ctor(parent_ui)
                     local house_location = tile:GetBuildingLocation(building)
 
                     NetManager:getUpgradeHouseByLocationPromise(tile.location_id, house_location):done(function()
-                        self.parent_ui:RefreshAllItems()
-                    end)
-                elseif city:IsGate(building) then
-                    NetManager:getUpgradeWallByLocationPromise():done(function()
-                        self.parent_ui:RefreshAllItems()
-                    end)
-                elseif city:IsTower(building) then
-                    NetManager:getUpgradeTowerPromise():done(function()
                         self.parent_ui:RefreshAllItems()
                     end)
                 end
@@ -405,8 +406,8 @@ function GameUIHasBeenBuild:OnMoveInStage()
     self.build_city:GetUser():AddListenOnType(self, "buildingEvents")
     scheduleAt(self, function()
         local City = self.build_city
-        self.queue:SetBuildingQueue(City:GetAvailableBuildQueueCounts(), 
-                City:GetUser().basicInfo.buildQueue)
+        self.queue:SetBuildingQueue(City:GetAvailableBuildQueueCounts(),
+            City:GetUser().basicInfo.buildQueue)
         self:RefreshAllItems()
     end)
 end
@@ -517,6 +518,7 @@ end
 
 
 return GameUIHasBeenBuild
+
 
 
 

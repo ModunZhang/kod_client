@@ -775,7 +775,6 @@ function NetManager:getLoginPromise(deviceId)
             local real_server_time = diff_time / 2 + request_server_time
             local delta_time = real_server_time - ext.now()
 
-            -- print_(requestTime, diff_time, playerData.deltaTime, delta_time, request_server_time, real_server_time)
             if self.m_was_inited_game then
                 self.m_netService:setDeltatime(delta_time)
                 DataManager:setUserData(playerData)
