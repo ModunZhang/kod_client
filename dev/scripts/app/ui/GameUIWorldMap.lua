@@ -3,23 +3,27 @@ local TouchJudgment = import("..layers.TouchJudgment")
 local WorldLayer = import("..layers.WorldLayer")
 local WidgetPushButton = import("..widget.WidgetPushButton")
 local GameUIWorldMap = UIKit:createUIClass('GameUIWorldMap')
+local alliancemap_buff = GameDatas.AllianceMap.buff
 local intInit = GameDatas.AllianceInitData.intInit
-local aliance_buff = GameDatas.AllianceMap.buff
-
-function GameUIWorldMap:ctor(fromIndex, toIndex)
+local bigMapLength_value = intInit.bigMapLength.value
+local ALLIANCE_WIDTH = intInit.allianceRegionMapWidth.value
+local ALLIANCE_HEIGHT= intInit.allianceRegionMapHeight.value
+function GameUIWorldMap:ctor(fromIndex, toIndex, mapIndex)
 	GameUIWorldMap.super.ctor(self)
     self.__type  = UIKit.UITYPE.BACKGROUND
     self.scene_node = display.newNode():addTo(self)
     self.scene_layer = WorldLayer.new(self):addTo(self.scene_node, 0)
     self.touch_layer = self:CreateMultiTouchLayer():addTo(self.scene_node, 1)
-    self.mask_layer = display.newLayer():addTo(self.scene_node, 2):hide()
+    self.mask_layer = display.newLayer():addTo(self, 2):hide()
     self.event_manager = EventManager.new(self)
     self.touch_judgment = TouchJudgment.new(self)
     self.fromIndex = fromIndex
     self.toIndex = toIndex
+    self.mapIndex = mapIndex
 end
 function GameUIWorldMap:onEnter()
-    local x,y = self:GetSceneLayer():IndexToLogic(Alliance_Manager:GetMyAlliance().mapIndex)
+    local mapIndex = self.mapIndex or Alliance_Manager:GetMyAlliance().mapIndex
+    local x,y = self:GetSceneLayer():IndexToLogic(mapIndex)
     self:GotoPosition(x,y)
     -- top
     local top_bg = display.newSprite("background_500x84.png"):align(display.TOP_CENTER, display.cx, display.top-20):addTo(self)
@@ -31,13 +35,14 @@ function GameUIWorldMap:onEnter()
         :addTo(top_bg)
 
     -- bottom 所在位置信息
-    self.round_info = self:LoadRoundInfo(Alliance_Manager:GetMyAlliance().mapIndex)
+    self.round_info = self:LoadRoundInfo(mapIndex)
     -- 返回按钮
     local world_map_btn_bg = display.newSprite("background_86x86.png")
     :addTo(self):align(display.LEFT_BOTTOM,display.left + 8,display.bottom + 246)
     local size = world_map_btn_bg:getContentSize()
-    self.loading = display.newSprite("loading.png"):addTo(self)
-                    :pos(display.left + 30 + size.width/2 * 0.85, display.bottom + 246)
+    self.loading = display.newSprite("loading.png")
+                   :addTo(world_map_btn_bg,1)
+                   :pos(size.width-20,10)
     self:HideLoading()
     
     -- local inWorldScene = display.getRunningScene().__cname == "WorldScene"
@@ -78,7 +83,7 @@ function GameUIWorldMap:LoadMap()
     self.load_map_node:stopAllActions()
     self.load_map_node:performWithDelay(function()
         self:GetSceneLayer():LoadAlliance()
-    end, 0.5)
+    end, 0.2)
 end
 function GameUIWorldMap:LoadRoundInfo(mapIndex)
     local node = display.newSprite("background_768x152.png"):align(display.BOTTOM_CENTER, display.cx, display.bottom):addTo(self)
@@ -185,11 +190,15 @@ function GameUIWorldMap:LoadRoundInfo(mapIndex)
     function node:RefreshRoundInfo(mapIndex,x, y)
         self.mapIndex = mapIndex
         local map_round = DataUtils:getMapRoundByMapIndex(mapIndex)
-        local buff = aliance_buff[map_round]
+        local buff = alliancemap_buff[map_round]
         buff_num_label:setString(DataUtils:getMapBuffNumByMapIndex(mapIndex))
         current_round_label:setString(string.format(_("%d 圈"),map_round + 1))
         local levels = string.split(buff["monsterLevel"],"_")
         monster_levels:setString(string.format("Lv%s~Lv%s",levels[1],levels[2]))
+<<<<<<< HEAD
+=======
+        local bigMapLength = bigMapLength_value
+>>>>>>> 77ae6c4f5a4766cfb1368f703cf0883db31cc5cc
         local offset_x,offset_y = x / bigMapLength, 1 - y / bigMapLength
         current_position_sprite:setPosition(124 * offset_x, 124 * offset_y)
     end
@@ -199,7 +208,7 @@ function GameUIWorldMap:LoadRoundInfo(mapIndex)
         local mapIndex = self.scene_layer:LogicToIndex(x, y) 
         node:RefreshRoundInfo(mapIndex,x, y)
         local my_mapIndex = Alliance_Manager:GetMyAlliance().mapIndex
-        local bigMapLength = intInit.bigMapLength.value
+        local bigMapLength = bigMapLength_value
         local x,y = self.scene_layer:IndexToLogic(my_mapIndex) 
         local offset_x,offset_y = x / bigMapLength, 1 - y / bigMapLength
         self_position_sprite:setPosition(124 * offset_x, 124 * offset_y)
@@ -304,6 +313,10 @@ end
 function GameUIWorldMap:OnSceneScale()
 end
 function GameUIWorldMap:OnSceneMove()
+    local indexes = self:GetSceneLayer():GetAvailableIndex()
+    for i,v in ipairs(indexes) do
+        self:GetSceneLayer():LoadLevelBg(v)
+    end
 end
 
 return GameUIWorldMap

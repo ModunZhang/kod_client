@@ -11,6 +11,9 @@ function NormalMapAnchorBottomLeftReverseY:ctor(map_info)
     self.base_x = map_info.base_x
     self.base_y = map_info.base_y
 end
+function NormalMapAnchorBottomLeftReverseY:GetMapSize()
+    return self.tile_w * self.map_width, self.tile_h * self.map_height
+end
 function NormalMapAnchorBottomLeftReverseY:GetSize()
     return self.map_width, self.map_height
 end

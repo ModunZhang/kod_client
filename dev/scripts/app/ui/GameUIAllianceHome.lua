@@ -99,6 +99,13 @@ function GameUIAllianceHome:ShowLoading()
     end
     self.loading:show():rotation(math.random(360)):stopAllActions()
     self.loading:runAction(cc.RepeatForever:create(cc.RotateBy:create(4, 360)))
+    display.newNode():addTo(self):runAction(transition.sequence{
+        cc.DelayTime:create(10),
+        cc.CallFunc:create(function()
+            self:HideLoading()
+        end),
+        cc.RemoveSelf:create(),
+    })
 end
 function GameUIAllianceHome:HideLoading()
     self.loading:hide():stopAllActions()
@@ -149,7 +156,7 @@ function GameUIAllianceHome:Schedule()
     --     local lx,ly,view = self.multialliancelayer:GetAllianceCoordWithPoint(display.cx, display.cy)
     --     self:UpdateCoordinate(lx, ly, view)
     -- end, 0.5)
-    self:scheduleAt(function()
+    scheduleAt(self, function()
         if self.alliance:IsDefault() then return end
         self:UpdateMyCityArrows(self.alliance)
     end, 0.01)

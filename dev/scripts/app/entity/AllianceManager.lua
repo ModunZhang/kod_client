@@ -92,7 +92,13 @@ function AllianceManager:ResetCurrentMapData()
     }
 end
 function AllianceManager:OnEnterMapIndex(mapIndex, data)
-    self:UpdateAllianceBy(mapIndex, data.allianceData)
+    local allianceData = data.allianceData
+    self:UpdateAllianceBy(mapIndex, allianceData)
+    if allianceData == json.null then
+        self:setMapDataByIndex(mapIndex, nil)
+    else
+        self:setMapDataByIndex(allianceData.mapIndex, allianceData.basicInfo.terrainStyle)
+    end
     for k,v in pairs(self.alliance_caches) do
         if type(k) == "number" then
             if self.alliance_caches[v._id].mapIndex ~= k then

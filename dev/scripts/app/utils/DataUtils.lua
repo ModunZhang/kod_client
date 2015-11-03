@@ -537,7 +537,7 @@ function DataUtils:getItemsPrice( items )
     local total_price = 0
     for k,v in pairs(items) do
         local tag_item = Items.buff[k] or Items.resource[k] or Items.special[k] or Items.speedup[k]
-        total_price = total_price + tag_item.price
+        total_price = total_price + tag_item.price * v
     end
     return total_price
 end

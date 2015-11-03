@@ -21,6 +21,8 @@ function WidgetWorldAllianceInfo:ctor(object,mapIndex,need_goto_btn)
     WidgetWorldAllianceInfo.super.ctor(self,object and 454 or 612,object and  object.alliance.name or _("无主领土"),window.top-120)
     self:setNodeEventEnabled(true)
 
+    self.mask_layer = display.newLayer():addTo(self, 2):hide()
+
     if object then
         local id = object.alliance.id
         if mapIndex == Alliance_Manager:GetMyAlliance().mapIndex then
@@ -50,6 +52,7 @@ function WidgetWorldAllianceInfo:onExit()
 
 end
 function WidgetWorldAllianceInfo:Located(mapIndex, x, y)
+    self.mask_layer:show()
     local scene = display.getRunningScene()
     if mapIndex and x and y then
         if scene.__cname ~= 'AllianceDetailScene' then
@@ -62,11 +65,11 @@ function WidgetWorldAllianceInfo:Located(mapIndex, x, y)
             local x,y = DataUtils:GetAbsolutePosition(mapIndex, x, y)
             if Alliance_Manager:GetAllianceByCache(mapIndex) then
                 scene:GotoPosition(x,y)
-                self:EnterIn()
+                self:EnterIn(mapIndex)
             else
                 scene:FetchAllianceDatasByIndex(mapIndex, function()
                     scene:GotoPosition(x,y)
-                    self:EnterIn()
+                    self:EnterIn(mapIndex)
                 end)
             end
         end
@@ -76,18 +79,20 @@ function WidgetWorldAllianceInfo:Located(mapIndex, x, y)
         else
             if Alliance_Manager:GetAllianceByCache(mapIndex) then
                 scene:GotoAllianceByXY(scene:GetSceneLayer():IndexToLogic(mapIndex))
-                self:EnterIn()
+                self:EnterIn(mapIndex)
             else
                 scene:FetchAllianceDatasByIndex(mapIndex, function()
                     scene:GotoAllianceByXY(scene:GetSceneLayer():IndexToLogic(mapIndex))
-                    self:EnterIn()
+                    self:EnterIn(mapIndex)
                 end)
             end
         end
     end
 end
-function WidgetWorldAllianceInfo:EnterIn()
-    local wp = self.object:getParent():convertToWorldSpace(cc.p(self.object:getPosition()))
+function WidgetWorldAllianceInfo:EnterIn(mapIndex)
+    local worldmap = UIKit:GetUIInstance("GameUIWorldMap")
+    local scenelayer = worldmap:GetSceneLayer()
+    local wp = scenelayer:ConverToWorldSpace(scenelayer:IndexToLogic(mapIndex))
     if wp.x < 0 then
         wp.x = 0
     elseif wp.x > display.width then

@@ -209,34 +209,44 @@ function UtilsForEvent:GetAllMyMarchEvents()
     local villageEvents = Alliance_Manager:GetMyAlliance().villageEvents
     local helpToTroops = User.helpToTroops
     local events = {}
-    for eventType,bigTypeEvent in pairs(marchEvents) do
-        for i,event in ipairs(bigTypeEvent) do
-            if self:IsMyMarchEvent(event) then
-                event.eventType = eventType
+    if marchEvents then
+        for eventType,bigTypeEvent in pairs(marchEvents) do
+            for i,event in ipairs(bigTypeEvent) do
+                if self:IsMyMarchEvent(event) then
+                    event.eventType = eventType
+                    table.insert(events, event)
+                end
+            end
+        end
+    end
+    if shrineEvents then
+        for __,event in pairs(shrineEvents) do
+            for i,troop in ipairs(event.playerTroops) do
+                if troop.id == User:Id() then
+                    event.eventType = "shrineEvents"
+                    table.insert(events, event)
+                end
+            end
+        end
+    end
+    if villageEvents then
+        for __,event in pairs(villageEvents) do
+            if self:IsMyVillageEvent(event) then
+                event.eventType = "villageEvents"
                 table.insert(events, event)
             end
         end
     end
-    for __,event in pairs(shrineEvents) do
-        for i,troop in ipairs(event.playerTroops) do
-            if troop.id == User:Id() then
-                event.eventType = "shrineEvents"
-                table.insert(events, event)
-            end
-        end
-    end
-    for __,event in pairs(villageEvents) do
-        if self:IsMyVillageEvent(event) then
-            event.eventType = "villageEvents"
+    if helpToTroops then
+        for __,event in pairs(helpToTroops) do
+            event.eventType = "helpToTroops"
             table.insert(events, event)
         end
     end
-    for __,event in pairs(helpToTroops) do
-        event.eventType = "helpToTroops"
-        table.insert(events, event)
-    end
     return events
 end
+
+
 
 
 
