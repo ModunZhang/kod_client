@@ -453,10 +453,13 @@ function GameUIAllianceBattle:InitBattleStatistics()
             :scale(1.1)
         local t_size = top_bg:getContentSize()
 
+        local enemy_alliance = alliance.allianceFight.attacker.alliance.id == alliance._id and alliance.allianceFight.defencer.alliance or alliance.allianceFight.attacker.alliance
+
         local self_alliance_bg = WidgetPushButton.new({normal = "button_blue_normal_232x64.png",
             pressed = "button_blue_pressed_232x64.png"})
             :onButtonClicked(function()
                 -- self:OpenAllianceDetails(true)
+                    app:EnterMyAllianceScene({mapIndex = alliance.mapIndex})
                 end)
             :align(display.RIGHT_CENTER,t_size.width/2-35, t_size.height/2)
             :addTo(top_bg)
@@ -464,6 +467,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
             pressed = "button_red_pressed_232x64.png"})
             :onButtonClicked(function()
                 -- self:OpenAllianceDetails(false)
+                    app:EnterMyAllianceScene({mapIndex = enemy_alliance.mapIndex})
                 end)
             :align(display.LEFT_CENTER,t_size.width/2+35, t_size.height/2)
             :addTo(top_bg)
@@ -488,7 +492,6 @@ function GameUIAllianceBattle:InitBattleStatistics()
         }):addTo(self_alliance_bg)
             :align(display.CENTER,-120,-14)
         -- 敌方联盟名字
-        local enemy_alliance = alliance.allianceFight.attacker.alliance.id == alliance._id and alliance.allianceFight.defencer.alliance or alliance.allianceFight.attacker.alliance
         local a_tag = enemy_alliance.tag
         local a_name = enemy_alliance.name
         local enemy_alliance_tag = UIKit:ttfLabel({
@@ -1300,13 +1303,13 @@ function GameUIAllianceBattle:CreateHistoryContent()
         self.report = report
         -- 各项数据
         local win
-        if report.attackAllianceId == alliance.id then
+        if report.attackAllianceId == alliance._id then
             win = report.fightResult == "attackWin"
-        elseif report.defenceAllianceId == alliance.id then
+        elseif report.defenceAllianceId == alliance._id then
             win = report.fightResult == "defenceWin"
         end
-        local ourAlliance = report.attackAllianceId == alliance.id and report.attackAlliance or report.defenceAlliance
-        local enemyAlliance = report.attackAllianceId == alliance.id and report.defenceAlliance or report.attackAlliance
+        local ourAlliance = report.attackAllianceId == alliance._id and report.attackAlliance or report.defenceAlliance
+        local enemyAlliance = report.attackAllianceId == alliance._id and report.defenceAlliance or report.attackAlliance
         local killMax = report.killMax
 
         local win_text = win and _("胜利") or _("失败")
@@ -1359,8 +1362,9 @@ function GameUIAllianceBattle:CreateHistoryContent()
         goto_button:removeEventListenersByEvent("CLICKED_EVENT")
         goto_button:onButtonClicked(function(event)
             if event.name == "CLICKED_EVENT" then
-                display.getRunningScene():GotoAllianceByIndex(enemyAlliance.mapIndex)
-                parent:LeftButtonClicked()
+                -- display.getRunningScene():GotoAllianceByIndex(enemyAlliance.mapIndex)
+                app:EnterMyAllianceScene({mapIndex = enemyAlliance.mapIndex})
+                -- parent:LeftButtonClicked()
             end
         end)
     end

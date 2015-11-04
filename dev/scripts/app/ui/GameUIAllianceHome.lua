@@ -66,6 +66,12 @@ function GameUIAllianceHome:onEnter()
     local x, y = rect1.x, rect1.y + rect1.height - 2
     local march = WidgetMarchEvents.new(ratio):addTo(self):pos(x, y)
     self:AddMapChangeButton()
+end
+function GameUIAllianceHome:onExit()
+    self:AddOrRemoveListener(false)
+    GameUIAllianceHome.super.onExit(self)
+end
+function GameUIAllianceHome:ScheduleAtRefreshTop()
     scheduleAt(self, function()
         self:RefreshTop()
         self:UpdateCoordinate(display.getRunningScene():GetSceneLayer():GetMiddlePosition())
@@ -79,10 +85,6 @@ function GameUIAllianceHome:onEnter()
     self:HideLoading()
     self:AddOrRemoveListener(true)
     self:Schedule()
-end
-function GameUIAllianceHome:onExit()
-    self:AddOrRemoveListener(false)
-    GameUIAllianceHome.super.onExit(self)
 end
 function GameUIAllianceHome:AddOrRemoveListener(isAdd)
     local alliance = self.alliance
@@ -108,7 +110,9 @@ function GameUIAllianceHome:ShowLoading()
     })
 end
 function GameUIAllianceHome:HideLoading()
-    self.loading:hide():stopAllActions()
+    if self.loading then
+        self.loading:hide():stopAllActions()
+    end
 end
 function GameUIAllianceHome:AddMapChangeButton()
     WidgetChangeMap.new(WidgetChangeMap.MAP_TYPE.OUR_ALLIANCE):addTo(self)

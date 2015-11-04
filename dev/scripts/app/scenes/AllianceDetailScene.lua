@@ -310,7 +310,7 @@ function AllianceDetailScene:onEnter()
     self:CreateMarchEvents(Alliance_Manager:GetMyAllianceMapData().marchEvents)
     self:RefreshVillageEvents(alliance, Alliance_Manager:GetMyAllianceMapData().villageEvents)
 
-
+    self.home_page:ScheduleAtRefreshTop()
     -- cc.ui.UIPushButton.new({normal = "lock_btn.png",pressed = "lock_btn.png"})
     -- :addTo(self, 1000000):align(display.RIGHT_TOP, display.width, display.height)
     -- :onButtonClicked(function(event)
