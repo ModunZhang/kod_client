@@ -1092,12 +1092,12 @@ function User:GetUnlockBuildingsBy(name)
 end
 function User:GetBuildingByEvent(event)
     if event.location then
-        return self:GetBuilingByLocation(event.location)
+        return self:GetBuildingByLocation(event.location)
     end
     return self:GetHouseByLocation(event.buildingLocation, event.houseLocation)
 end
 function User:GetHouseByLocation(buildingLocation, houseLocation)
-    local building = self:GetBuilingByLocation(buildingLocation)
+    local building = self:GetBuildingByLocation(buildingLocation)
     assert(building)
     for i,v in ipairs(building.houses) do
         if v.location == houseLocation then
@@ -1105,7 +1105,7 @@ function User:GetHouseByLocation(buildingLocation, houseLocation)
         end
     end
 end
-function User:GetBuilingByLocation(location)
+function User:GetBuildingByLocation(location)
     return self.buildings[string.format("location_%d", location)]
 end
 function User:GetBuildingEventByLocation(buildingLocation, houseLocation)
@@ -1142,7 +1142,7 @@ end
 -- function User:CanUpgrade(buildingLocation, houseLocation)
 --     local building = self:GetHouseByLocation(buildingLocation)
 --     if houseLocation then
---         building = self:GetBuilingByLocation(buildingLocation, houseLocation)
+--         building = self:GetBuildingByLocation(buildingLocation, houseLocation)
 --     else
 --         building = self:GetHouseByLocation(buildingLocation)
 --     end
@@ -1503,7 +1503,7 @@ local before_map = {
         if ok then
             for i,v in ipairs(value) do
                 app:GetPushManager():CancelBuildPush(v.id)
-                local building = userData:GetBuilingByLocation(v.location)
+                local building = userData:GetBuildingByLocation(v.location)
                 GameGlobalUI:showTips(_("提示"),
                     string.format(_("建造%s至%d级完成"),
                         Localize.building_name[building.type], building.level))

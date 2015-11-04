@@ -58,6 +58,15 @@ function AllianceDetailScene:HandleMapObjects(allianceData, op, ok, value)
         end
     end
 end
+function AllianceDetailScene:OnAllianceDataChanged_shrineEvents(allianceData, deltaData)
+    for _,v in ipairs(allianceData.buildings) do
+        if v.name == "shrine" then
+            self:GetSceneLayer()
+            :RefreshBuildingByIndex(allianceData.mapIndex, v, allianceData)
+            return
+        end
+    end
+end
 
 -- 
 function AllianceDetailScene:OnAllianceDataChanged_marchEvents(allianceData, deltaData)
@@ -302,6 +311,7 @@ function AllianceDetailScene:onEnter()
     alliance:AddListenOnType(self, "mapObjects")
     alliance:AddListenOnType(self, "marchEvents")
     alliance:AddListenOnType(self, "villageEvents")
+    alliance:AddListenOnType(self, "shrineEvents")
     Alliance_Manager:SetAllianceHandle(self)
 
     self:CreateMarchEvents(alliance.marchEvents)
@@ -336,6 +346,7 @@ function AllianceDetailScene:onExit()
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, "mapObjects")
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, "marchEvents")
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, "villageEvents")
+    Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, "shrineEvents")
 end
 function AllianceDetailScene:FetchAllianceDatasByIndex(index, func)
     if Alliance_Manager:GetMyAlliance().mapIndex == index then

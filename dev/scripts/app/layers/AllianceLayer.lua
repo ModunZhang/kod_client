@@ -492,11 +492,20 @@ function AllianceLayer:RefreshBuildingByIndex(index, building, alliance)
             local x,y = self:GetBannerPos(index, sprite.x, sprite.y)
             sprite.info.level:setString(building.level)
             sprite.info:pos(x, y):zorder(x * y)
+            local door = sprite:getChildByTag(SPRITE_TAG).door
+            if building.name == "shrine" and alliance and door then
+                if #alliance.shrineEvents > 0 then
+                    door:show()
+                else
+                    door:hide()
+                end
+            end
         end
     end
 end
 function AllianceLayer:LoadAllianceByIndex(index, alliance)
     local allianceData = (alliance ~= nil and alliance ~= json.null) and alliance or nil
+    local isMyAlliance = index == Alliance_Manager:GetMyAlliance().mapIndex
     self:FreeInvisible()
     self:LoadBackground(index, allianceData)
     self:LoadObjects(index, allianceData, function(objects_node)
@@ -523,6 +532,20 @@ function AllianceLayer:LoadAllianceByIndex(index, alliance)
                 if name ~= "bloodSpring" then
                     local b = Alliance.FindAllianceBuildingInfoByName(allianceData, name)
                     v.info.level:setString(b.level)
+                    if name == "shrine" then
+                        local sprite = v:getChildByTag(SPRITE_TAG)
+                        if not sprite.door then
+                            if isMyAlliance then
+                                local size = sprite:getContentSize()
+                                sprite.door = ccs.Armature:create("chuansongmen"):hide()
+                                              :addTo(sprite,0):pos(size.width/2, size.height/2)
+                                sprite.door:getAnimation():playWithIndex(0)
+                                if #allianceData.shrineEvents > 0 then
+                                    sprite.door:show()
+                                end
+                            end
+                        end
+                    end
                 end
             end
         else
@@ -818,8 +841,15 @@ function AllianceLayer:FreeObjects(obj)
         self:RemoveMapObject(v)
     end
 
-    for k,v in pairs(obj.buildings) do
+    for name,v in pairs(obj.buildings) do
         v.info:hide()
+        if name == "shrine" then
+            local sprite = v:getChildByTag(SPRITE_TAG)
+            if v.door then
+                v.door:removeFromParent()
+                v.door = nil
+            end
+        end
     end
 
     obj.mapObjects = {}

@@ -869,7 +869,7 @@ function NetManager:getUpgradeBuildingByLocationPromise(location)
 end
 function NetManager:getInstantUpgradeBuildingByLocationPromise(location)
     return get_upgradeBuilding_promise(location, true):done(function()
-        local building = User:GetBuilingByLocation(location)
+        local building = User:GetBuildingByLocation(location)
         GameGlobalUI:showTips(_("提示"),
             string.format(_("建造%s至%d级完成"),
                 Localize.building_name[building.type], building.level))
@@ -882,7 +882,7 @@ function NetManager:getUpgradeTowerPromise()
 end
 function NetManager:getInstantUpgradeTowerPromise()
     return NetManager:getInstantUpgradeBuildingByLocationPromise(22):done(function()
-        local building = User:GetBuilingByLocation(22)
+        local building = User:GetBuildingByLocation(22)
         GameGlobalUI:showTips(_("提示"),
             string.format(_("建造%s至%d级完成"),
                 Localize.building_name[building.type], building.level))
@@ -895,7 +895,7 @@ function NetManager:getUpgradeWallByLocationPromise()
 end
 function NetManager:getInstantUpgradeWallByLocationPromise()
     return NetManager:getInstantUpgradeBuildingByLocationPromise(21):done(function()
-        local building = User:GetBuilingByLocation(21)
+        local building = User:GetBuildingByLocation(21)
         GameGlobalUI:showTips(_("提示"),
             string.format(_("建造%s至%d级完成"),
                 Localize.building_name[building.type], building.level))
