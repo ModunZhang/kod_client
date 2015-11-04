@@ -278,7 +278,6 @@ function AllianceDetailScene:ctor(location)
 end
 function AllianceDetailScene:onEnter()
     AllianceDetailScene.super.onEnter(self)
-    self.home_page = self:CreateHomePage()
     app:GetAudioManager():PlayGameMusicOnSceneEnter("AllianceDetailScene",false)
     
     Alliance_Manager:ClearCache()
@@ -310,7 +309,6 @@ function AllianceDetailScene:onEnter()
     self:CreateMarchEvents(Alliance_Manager:GetMyAllianceMapData().marchEvents)
     self:RefreshVillageEvents(alliance, Alliance_Manager:GetMyAllianceMapData().villageEvents)
 
-    self.home_page:ScheduleAtRefreshTop()
     -- cc.ui.UIPushButton.new({normal = "lock_btn.png",pressed = "lock_btn.png"})
     -- :addTo(self, 1000000):align(display.RIGHT_TOP, display.width, display.height)
     -- :onButtonClicked(function(event)
@@ -457,6 +455,9 @@ function AllianceDetailScene:OnSceneMove()
     AllianceDetailScene.super.OnSceneMove(self)
     self:UpdateVisibleAllianceBg()
     self:FetchAllianceDatasByIndex(self:GetSceneLayer():GetMiddleAllianceIndex())
+    if not self.home_page then
+        self.home_page = self:CreateHomePage()
+    end
 end
 function AllianceDetailScene:UpdateVisibleAllianceBg()
     local old_visibles = self.visible_alliances or {}
