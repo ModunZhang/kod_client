@@ -444,7 +444,7 @@ function Alliance:GetMapObjectInfoByObject(mapObj)
     return self:GetAllianceBuildingInfoByName(mapObj.name)
 end
 function Alliance:IsReachEventLimit()
-    return User.basicInfo.marchQueue <= #self:GetMyMarchEvents()
+    return User.basicInfo.marchQueue <= #UtilsForEvent:GetAllMyMarchEvents()
 end
 function Alliance:GetMyMarchEvents()
     local my_events = {}
