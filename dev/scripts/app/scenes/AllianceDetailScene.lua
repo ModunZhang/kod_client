@@ -322,10 +322,10 @@ function AllianceDetailScene:onEnter()
     -- :onButtonClicked(function(event)
     --     app:onEnterForeground()
     -- end)
-    self:FetchAllianceDatasByIndex(self:GetSceneLayer():GetMiddleAllianceIndex())
 end
 function AllianceDetailScene:onExit()
-    if self.current_allinace_index then
+    if self.current_allinace_index 
+   and not Alliance_Manager:GetMyAlliance():IsDefault() then
         NetManager:getLeaveMapIndexPromise(self.current_allinace_index)
     end
     Alliance_Manager:SetAllianceHandle(nil)
@@ -355,7 +355,9 @@ function AllianceDetailScene:FetchAllianceDatasByIndex(index, func)
     end
 end
 function AllianceDetailScene:StartTimer(index, func)
-    self:GetHomePage():ShowLoading()
+    if self:GetHomePage() then
+        self:GetHomePage():ShowLoading()
+    end
     self.fetchtimer:stopAllActions()
     self.amintimer:stopAllActions()
     self.fetchtimer:performWithDelay(function()
@@ -440,6 +442,8 @@ function AllianceDetailScene:OnTouchClicked(pre_x, pre_y, x, y)
                 self:OpenUI(alliance, mapObj)
             end
         end
+    else
+        UIKit:newWidgetUI("WidgetWorldAllianceInfo",nil,self:GetSceneLayer():GetMapIndexByWorldPosition(x, y)):AddToCurrentScene()
     end
 end
 function AllianceDetailScene:OpenUI(alliance,mapObj)
@@ -452,6 +456,7 @@ end
 function AllianceDetailScene:OnSceneMove()
     AllianceDetailScene.super.OnSceneMove(self)
     self:UpdateVisibleAllianceBg()
+    self:FetchAllianceDatasByIndex(self:GetSceneLayer():GetMiddleAllianceIndex())
 end
 function AllianceDetailScene:UpdateVisibleAllianceBg()
     local old_visibles = self.visible_alliances or {}

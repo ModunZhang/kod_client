@@ -288,7 +288,7 @@ function WidgetWorldAllianceInfo:LoadMoveAlliance()
     UIKit:createLineItem(
         {
             width = 548,
-            text_1 = string.format(_("第%d圈"),DataUtils:getMapRoundByMapIndex(mapIndex) + 1),
+            text_1 = string.format(_("第%d圈"),round + 1),
             text_2 = {string.format(_("需要联盟宫殿 Lv%s"),needPalaceLevel),palaceLevel >= needPalaceLevel and 0x007c23 or 0x7e0000},
         }
     ):align(display.CENTER_TOP, b_size.width/2 , b_size.height - 50):addTo(body)
@@ -306,7 +306,6 @@ function WidgetWorldAllianceInfo:LoadMoveAlliance()
         local canMove = Alliance_Manager:GetMyAlliance().basicInfo.allianceMoveTime == 0 or time <= 0
         move_time:SetValue(canMove and _("准备就绪") or GameUtils:formatTimeStyle1(time))
     end)
-
     local info_buff = WidgetInfo.new({
         info = DataUtils:GetAllianceMapBuffByRound(round),
         h = 340

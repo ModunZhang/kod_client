@@ -39,7 +39,7 @@ function GameUIWorldMap:onEnter()
     self.round_info = self:LoadRoundInfo(mapIndex)
     -- 返回按钮
     local world_map_btn_bg = display.newSprite("background_86x86.png")
-    :addTo(self):align(display.LEFT_BOTTOM,display.left + 8,display.bottom + 246)
+    :addTo(self):align(display.LEFT_BOTTOM,display.left + 7,display.bottom + 243)
     local size = world_map_btn_bg:getContentSize()
     self.loading = display.newSprite("loading.png")
                    :addTo(world_map_btn_bg,1)
@@ -183,19 +183,6 @@ function GameUIWorldMap:LoadRoundInfo(mapIndex)
         :addTo(node)
     mini_map_button:setTouchEnabled(true)
     mini_map_button:setNodeEventEnabled(true)
-    local bigMapLength = intInit.bigMapLength.value
-    local ALLIANCE_WIDTH, ALLIANCE_HEIGHT = intInit.allianceRegionMapWidth.value, intInit.allianceRegionMapHeight.value
-    mini_map_button:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
-        local map_position = mini_map_button:convertToNodeSpace(cc.p(event.x,event.y))
-        local x,y = math.floor(map_position.x/124 * bigMapLength * ALLIANCE_WIDTH) , math.floor((1 - map_position.y/124) * bigMapLength * ALLIANCE_HEIGHT)
-        local mapIndex = DataUtils:GetAlliancePosition(x, y)
-        local x,y = self:GetSceneLayer():IndexToLogic(mapIndex)
-        self:GotoPosition(x,y)
-        if event.name == "ended" then
-            self:LoadMap()
-        end
-        return true
-    end)
     mini_map_button:setTouchSwallowEnabled(true)
 
     local current_round_bg = display.newSprite("background_red_558x42.png"):align(display.LEFT_TOP, mini_map_button:getPositionX() + 36 , mini_map_button:getPositionY() + mini_map_button:getCascadeBoundingBox().size.height + 5)
@@ -272,6 +259,21 @@ function GameUIWorldMap:LoadRoundInfo(mapIndex)
             }
         )
     )
+    local bigMapLength = intInit.bigMapLength.value
+    local ALLIANCE_WIDTH, ALLIANCE_HEIGHT = intInit.allianceRegionMapWidth.value, intInit.allianceRegionMapHeight.value
+    mini_map_button:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+        local map_position = mini_map_button:convertToNodeSpace(cc.p(event.x,event.y))
+        local x,y = math.floor(map_position.x/124 * bigMapLength * ALLIANCE_WIDTH) , math.floor((1 - map_position.y/124) * bigMapLength * ALLIANCE_HEIGHT)
+        local mapIndex = DataUtils:GetAlliancePosition(x, y)
+        local x,y = self:GetSceneLayer():IndexToLogic(mapIndex)
+        self:GotoPosition(x,y)
+        if event.name == "ended" then
+            self:LoadMap()
+        elseif event.name == "moved" then
+            current_position_sprite:setPosition(map_position.x, map_position.y)
+        end
+        return true
+    end)
     function node:RefreshRoundInfo(mapIndex,x, y)
         self.mapIndex = mapIndex
         local map_round = DataUtils:getMapRoundByMapIndex(mapIndex)

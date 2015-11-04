@@ -424,6 +424,12 @@ function AllianceLayer:GetClickedObject(world_x, world_y)
     local x,y = logic_x % ALLIANCE_WIDTH, logic_y % ALLIANCE_HEIGHT
     return self:FindMapObject(index, x, y)
 end
+function AllianceLayer:GetMapIndexByWorldPosition(world_x, world_y)
+    local point = self.map:convertToNodeSpace(cc.p(world_x, world_y))
+    local logic_x, logic_y = self:GetLogicMap():ConvertToLogicPosition(point.x, point.y)
+    local index = self:LogicToIndex(self:GetAllianceLogicMap():ConvertToLogicPosition(point.x, point.y))
+    return index
+end
 local buildingName = GameDatas.AllianceMap.buildingName
 function AllianceLayer:FindMapObject(index, x, y)
     local alliance_object = self.alliance_objects[index]

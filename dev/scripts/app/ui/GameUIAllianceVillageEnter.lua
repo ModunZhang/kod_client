@@ -98,11 +98,11 @@ end
 function GameUIAllianceVillageEnter:InitBuildingInfo()
     GameUIAllianceVillageEnter.super.InitBuildingInfo(self)
     UIKit:ttfLabel({
-        text = _("当处于战争期间，掠夺将会摧毁该村落，并直接获得其总容量20%的资源"),
+        text = _("当处于战争期间，占领将会摧毁该村落，并直接获得其总容量20%的资源"),
         size = 20,
         color = 0x7e0000,
         dimensions = cc.size(500,0)
-    }):align(display.BOTTOM_CENTER, self.body:getContentSize().width/2, 30):addTo(self.body)
+    }):align(display.BOTTOM_CENTER, self.body:getContentSize().width/2, 20):addTo(self.body)
         :setVisible(not self:IsMyAlliance())
 end
 function GameUIAllianceVillageEnter:GetBuildingInfo()

@@ -24,9 +24,8 @@ function GameUIAlliancePosition:ctor()
         :align(display.CENTER,304, 140):addTo(body)
 
     -- 最大坐标
-    local max = 41 * GameDatas.AllianceInitData.intInit.allianceRegionMapWidth.value
+    local max = GameDatas.AllianceInitData.intInit.bigMapLength.value * GameDatas.AllianceInitData.intInit.allianceRegionMapWidth.value
               
-    print("max ====",max)
     local min = 1
     local function edit(event, editbox)
         local text = tonumber(editbox:getText()) or min
