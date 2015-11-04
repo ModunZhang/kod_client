@@ -26,9 +26,9 @@ function WorldLayer:onEnter()
     self:CreateCorner()
     self:CreateEdge()
     self.map = self:CreateMap()
-    self.allianceLayer = display.newNode():addTo(self.map,0)
-    self.moveLayer = display.newNode():addTo(self.map,1)
-    self.leveLayer = display.newNode():addTo(self.map,2)
+    self.leveLayer = display.newNode():addTo(self.map,1)
+    self.allianceLayer = display.newNode():addTo(self.map,2)
+    self.moveLayer = display.newNode():addTo(self.map,3)
     self.levelSprites = {}
     self.allainceSprites = {}
     self.flagSprites = {}
@@ -243,7 +243,7 @@ function WorldLayer:MoveAllianceFromTo(fromIndex, toIndex)
     end))
     table.insert(actions, cc.DelayTime:create(0.5))
     table.insert(actions, cc.CallFunc:create(function()
-        UIKit:newGameUI("GameUIMoveSuccess",0,0):AddToCurrentScene(true)
+        UIKit:newGameUI("GameUIMoveSuccess", fromIndex, toIndex):AddToCurrentScene(true)
         app:lockInput(false)
     end))
     table.insert(actions, cc.RemoveSelf:create())
@@ -359,7 +359,7 @@ function WorldLayer:CreateAllianceSprite(index, alliance)
     if Alliance_Manager:GetMyAlliance().mapIndex == tonumber(index) then
         display.newSprite("icon_current_position.png")
         :addTo(node, 0, 2):scale(0.8)
-        :pos(sprite:getPositionX(), sprite:getPositionY() + sprite:getContentSize().height / 2 + 15)
+        :pos(sprite:getPositionX(), sprite:getPositionY() + sprite:getContentSize().height / 2)
     end
     self.allainceSprites[index] = node
 end

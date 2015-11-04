@@ -173,7 +173,6 @@ function AllianceManager:OnAllianceDataChanged(allianceData,refresh_time,deltaDa
             local scene = display.getRunningScene()
             scene.current_allinace_index = nil
             scene.fetchtimer:stopAllActions()
-            scene.amintimer:stopAllActions()
             app:EnterMyAllianceScene()
         end
         if allianceData.basicInfo.status == 'prepare' or allianceData.basicInfo.status == 'fight'then
