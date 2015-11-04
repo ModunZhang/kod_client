@@ -246,21 +246,21 @@ function GameUIAllianceBattle:InitBattleStatistics()
     local status = alliance.basicInfo.status
     -- local status = ""
     if status == "peace" or status == "protect" then
-        local blue_bg = display.newSprite("back_ground_blue_308x78.png"):addTo(layer):align(display.RIGHT_CENTER,window.cx,window.top_bottom - 20)
-        local red_bg = display.newSprite("back_ground_red_308x78.png"):addTo(layer):align(display.LEFT_CENTER,window.cx,window.top_bottom - 20)
+        local blue_bg = display.newSprite("back_ground_blue_308x96.png"):addTo(layer):align(display.RIGHT_CENTER,window.cx,window.top_bottom - 40)
+        local red_bg = display.newSprite("back_ground_red_308x96.png"):addTo(layer):align(display.LEFT_CENTER,window.cx,window.top_bottom - 40)
 
         local vs_bg = display.newSprite("box_104x104.png")
-            :align(display.CENTER, window.cx,window.top_bottom - 22)
+            :align(display.CENTER, window.cx,window.top_bottom - 42)
             :addTo(layer)
-            :scale(0.85)
-        display.newSprite("VS_73x44.png")
+            :scale(0.7)
+        display.newSprite("VS_78x50.png")
             :align(display.CENTER, vs_bg:getContentSize().width/2, vs_bg:getContentSize().height/2)
             :addTo(vs_bg)
 
         -- 己方联盟旗帜
         local a_helper = self.a_helper
         local flag_sprite = a_helper:CreateFlagContentSprite(alliance.basicInfo.flag)
-        flag_sprite:align(display.RIGHT_CENTER, blue_bg:getContentSize().width - 120, 0)
+        flag_sprite:align(display.RIGHT_CENTER, blue_bg:getContentSize().width - 110, 10)
             :addTo(blue_bg)
             :scale(0.56)
         local self_name_label = UIKit:ttfLabel(
@@ -270,24 +270,36 @@ function GameUIAllianceBattle:InitBattleStatistics()
                 color = 0xffedae,
                 dimensions = cc.size(160,18),
                 ellipsis = true
-            }):align(display.LEFT_CENTER, 30, 64)
+            }):align(display.LEFT_CENTER, 30, 84)
             :addTo(blue_bg)
         local self_period_label = UIKit:ttfLabel(
             {
                 text = Localize.period_type[alliance.basicInfo.status],
                 size = 18,
                 color = 0xbdb582,
-            }):align(display.LEFT_CENTER, 30, 24)
+            }):align(display.LEFT_CENTER, 30, 48)
             :addTo(blue_bg)
         local self_period_time_label = UIKit:ttfLabel(
             {
                 size = 18,
                 color = 0xffedae,
-            }):align(display.LEFT_CENTER, self_period_label:getPositionX() + self_period_label:getContentSize().width + 10, 24)
+            }):align(display.LEFT_CENTER, self_period_label:getPositionX() + self_period_label:getContentSize().width + 10, 48)
             :addTo(blue_bg)
+        local self_power_bg = display.newSprite("power_background_146x26.png")
+            :align(display.LEFT_CENTER, self_period_label:getPositionX() + 10, 18):addTo(blue_bg)
+        display.newSprite("dragon_strength_27x31.png")
+            :align(display.CENTER, 0,13)
+            :addTo(self_power_bg)
+        UIKit:ttfLabel(
+            {
+                text = string.formatnumberthousands(alliance.basicInfo.power),
+                size = 18,
+                color = 0xbdb582,
+            }):align(display.LEFT_CENTER, 20, 13)
+            :addTo(self_power_bg)
         -- 敌方联盟旗帜
         local flag_sprite1 = a_helper:CreateFlagContentSprite(other_alliance.basicInfo.flag)
-        flag_sprite1:align(display.LEFT_CENTER, 50, 0)
+        flag_sprite1:align(display.LEFT_CENTER, 40, 10)
             :addTo(red_bg)
             :scale(0.56)
         local other_name_label = UIKit:ttfLabel(
@@ -297,21 +309,43 @@ function GameUIAllianceBattle:InitBattleStatistics()
                 color = 0xffedae,
                 dimensions = cc.size(160,18),
                 ellipsis = true
-            }):align(display.LEFT_CENTER, 125, 64)
+            }):align(display.LEFT_CENTER, 125, 84)
             :addTo(red_bg)
         local other_period_label = UIKit:ttfLabel(
             {
                 text = Localize.period_type[other_alliance.basicInfo.status],
                 size = 18,
                 color = 0xbdb582,
-            }):align(display.LEFT_CENTER, 125, 24)
+            }):align(display.LEFT_CENTER, 125, 48)
             :addTo(red_bg)
         local other_period_time_label = UIKit:ttfLabel(
             {
                 size = 18,
                 color = 0xffedae,
-            }):align(display.LEFT_CENTER, other_period_label:getPositionX() + other_period_label:getContentSize().width + 10, 24)
+            }):align(display.LEFT_CENTER, other_period_label:getPositionX() + other_period_label:getContentSize().width + 10, 48)
             :addTo(red_bg)
+        local other_power_bg = display.newSprite("power_background_red_146x26.png")
+            :align(display.LEFT_CENTER, other_period_label:getPositionX() + 10, 18):addTo(red_bg)
+        display.newSprite("dragon_strength_27x31.png")
+            :align(display.CENTER, 0,13)
+            :addTo(other_power_bg)
+        UIKit:ttfLabel(
+            {
+                text = string.formatnumberthousands(other_alliance.basicInfo.power),
+                size = 18,
+                color = 0xbdb582,
+            }):align(display.LEFT_CENTER, 20, 13)
+            :addTo(other_power_bg)
+        display.newSprite("i_icon_20x20.png"):addTo(other_power_bg):align(display.RIGHT_CENTER,148, 14)
+        WidgetPushButton.new()
+            :onButtonClicked(function(event)
+                if event.name == "CLICKED_EVENT" then
+                    UIKit:newGameUI("GameUIAllianceInfo",other_alliance._id,nil,other_alliance.serverId):AddToCurrentScene(true)
+                end
+            end)
+            :align(display.LEFT_BOTTOM, 0,0)
+            :addTo(red_bg):setContentSize(cc.size(308,96))
+
         scheduleAt(layer, function()
             local basicInfo = alliance.basicInfo
             if basicInfo.status ~= "peace" then
@@ -347,7 +381,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
             {_("将敌方盟主城墙摧毁可殖民")},
             {_("将敌方所有玩家城墙摧毁可强制敌方联盟搬迁")},
         }
-        local origin_y, gap_y = window.top - 520, -60
+        local origin_y, gap_y = window.top - 550, -60
         for i,v in ipairs(war_award_info) do
             local award_bg = display.newSprite("tmp_background_red_612x58.png"):addTo(layer)
                 :align(display.CENTER,window.cx, origin_y + (i - 1) * gap_y)
@@ -356,7 +390,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
 
             local info_label = UIKit:ttfLabel({
                 text = v[1],
-                size = 22,
+                size = 20,
                 color = 0xffedae,
             }):addTo(award_bg)
                 :align(display.LEFT_CENTER,50,29)
@@ -400,7 +434,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
                             }
                         )
                     end
-                end):align(display.CENTER_BOTTOM, window.cx, window.bottom_top - 20)
+                end):align(display.CENTER_BOTTOM, window.cx, window.bottom_top - 40)
                 :addTo(layer)
         else
             UIKit:ttfLabel({
@@ -459,16 +493,16 @@ function GameUIAllianceBattle:InitBattleStatistics()
             pressed = "button_blue_pressed_232x64.png"})
             :onButtonClicked(function()
                 -- self:OpenAllianceDetails(true)
-                    app:EnterMyAllianceScene({mapIndex = alliance.mapIndex})
-                end)
+                app:EnterMyAllianceScene({mapIndex = alliance.mapIndex})
+            end)
             :align(display.RIGHT_CENTER,t_size.width/2-35, t_size.height/2)
             :addTo(top_bg)
         local enemy_alliance_bg = WidgetPushButton.new({normal = "button_red_normal_232x64.png",
             pressed = "button_red_pressed_232x64.png"})
             :onButtonClicked(function()
                 -- self:OpenAllianceDetails(false)
-                    app:EnterMyAllianceScene({mapIndex = enemy_alliance.mapIndex})
-                end)
+                app:EnterMyAllianceScene({mapIndex = enemy_alliance.mapIndex})
+            end)
             :align(display.LEFT_CENTER,t_size.width/2+35, t_size.height/2)
             :addTo(top_bg)
 
@@ -510,7 +544,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
             :align(display.CENTER, t_size.width/2, t_size.height/2-4)
             :addTo(top_bg)
             :scale(0.75)
-        display.newSprite("VS_73x44.png")
+        display.newSprite("VS_78x50.png")
             :align(display.CENTER, period_bg:getContentSize().width/2, period_bg:getContentSize().height/2)
             :addTo(period_bg)
 
@@ -822,7 +856,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
     --     :align(display.CENTER, t_size.width/2, t_size.height/2-4)
     --     :addTo(top_bg)
     --     :scale(0.75)
-    -- display.newSprite("VS_73x44.png")
+    -- display.newSprite("VS_78x50.png")
     --     :align(display.CENTER, period_bg:getContentSize().width/2, period_bg:getContentSize().height/2)
     --     :addTo(period_bg)
 
@@ -1039,7 +1073,7 @@ function GameUIAllianceBattle:OpenAllianceDetails(isOur)
     local body = UIKit:newWidgetUI("WidgetPopDialog",630,_("击杀排行")):AddToCurrentScene():GetBody()
     local rb_size = body:getContentSize()
 
- 
+
     UIKit:ttfLabel({
         text = "["..alliance_tag.."]  "..alliance_name,
         size = 30,
@@ -1636,6 +1670,7 @@ end
 
 
 return GameUIAllianceBattle
+
 
 
 

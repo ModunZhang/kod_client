@@ -443,7 +443,7 @@ function GameUIAllianceHome:RefreshTop(force_refresh)
             :addTo(enemy_name_bg)
 
         -- 敌方击杀
-        local enemy_power_bg = display.newSprite("power_background_146x26.png")
+        local enemy_power_bg = display.newSprite("power_background_red_146x26.png")
             :align(display.RIGHT_CENTER, -20, -65):addTo(top_enemy_bg)
         local enemy_num_icon = cc.ui.UIImage.new("battle_33x33.png")
             :align(display.CENTER, 0, enemy_power_bg:getContentSize().height/2)
