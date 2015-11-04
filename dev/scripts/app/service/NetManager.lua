@@ -397,7 +397,7 @@ local base_event_map = {
     end,
 }
 
-
+local terrainStyle = GameDatas.AllianceMap.terrainStyle
 local logic_event_map = {
     -- player
     onPlayerDataChanged = function(success, response)
@@ -578,7 +578,9 @@ local logic_event_map = {
                 Alliance_Manager:RemoveAlliance(allianceData)
                 Alliance_Manager:OnMapAllianceChanged(allianceData, json.null)
             else
-                Alliance_Manager:setMapDataByIndex(allianceData.mapIndex, allianceData.basicInfo.terrainStyle)
+                local basicInfo = allianceData.basicInfo
+                local key = string.format("%s_%d", basicInfo.terrain, basicInfo.terrainStyle)
+                Alliance_Manager:setMapDataByIndex(allianceData.mapIndex, terrainStyle[key].index)
                 local edit = decodeInUserDataFromDeltaData(allianceData, response.data)
                 Alliance_Manager:OnMapAllianceChanged(allianceData, edit)
                 -- LuaUtils:outputTable("OnMapAllianceChanged", edit)
@@ -2038,11 +2040,6 @@ function NetManager:getEnterMapIndexPromise(mapIndex)
     return get_none_blocking_request_promise("logic.allianceHandler.enterMapIndex",{
         mapIndex = mapIndex,
     },"进入联盟失败!")
-end
-function NetManager:getAmInMapIndexPromise(mapIndex)
-    return get_none_blocking_request_promise("logic.allianceHandler.amInMapIndex",{
-        mapIndex = mapIndex,
-    },"确认在联盟中!")
 end
 function NetManager:getLeaveMapIndexPromise(mapIndex)
     return get_none_blocking_request_promise("logic.allianceHandler.leaveMapIndex",{

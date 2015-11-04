@@ -280,7 +280,6 @@ function AllianceDetailScene:ctor(location)
     AllianceDetailScene.super.ctor(self)
     self.util_node = display.newNode():addTo(self)
     self.fetchtimer = display.newNode():addTo(self)
-    self.amintimer = display.newNode():addTo(self)
     self.location = location
     self.goto_x = x
     self.goto_y = y
@@ -354,7 +353,6 @@ function AllianceDetailScene:FetchAllianceDatasByIndex(index, func)
             self:GetHomePage():HideLoading()
         end
         self.fetchtimer:stopAllActions()
-        self.amintimer:stopAllActions()
         self.current_allinace_index = nil
         if type(func) == "function" then
             func()
@@ -368,22 +366,11 @@ function AllianceDetailScene:StartTimer(index, func)
         self:GetHomePage():ShowLoading()
     end
     self.fetchtimer:stopAllActions()
-    self.amintimer:stopAllActions()
     self.fetchtimer:performWithDelay(function()
         NetManager:getEnterMapIndexPromise(index)
             :done(function(response)
                 self.current_allinace_index = index
                 Alliance_Manager:OnEnterMapIndex(index, response.msg)
-                self.amintimer:stopAllActions()
-                self.amintimer:schedule(function()
-                    if self.current_allinace_index and 
-                    self.current_allinace_index ~= Alliance_Manager:GetMyAlliance().mapIndex then
-                        NetManager:getAmInMapIndexPromise(self.current_allinace_index):fail(function()
-                            self.current_allinace_index = nil
-                            self:FetchAllianceDatasByIndex(index, func)
-                        end)
-                    end
-                end, 10)
                 if self:GetHomePage() then
                     self:GetHomePage():RefreshTop(true)
                     self:GetHomePage():HideLoading()
