@@ -436,6 +436,7 @@ function AllianceDetailScene:OnTouchClicked(pre_x, pre_y, x, y)
             end
         end
     else
+        app:GetAudioManager():PlayeEffectSoundWithKey("NORMAL_DOWN")
         UIKit:newWidgetUI("WidgetWorldAllianceInfo",nil,self:GetSceneLayer():GetMapIndexByWorldPosition(x, y)):AddToCurrentScene()
     end
 end
