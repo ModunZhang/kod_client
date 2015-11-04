@@ -339,6 +339,13 @@ function WidgetWorldAllianceInfo:LoadMoveAlliance()
     end
 
     self:BuildOneButton("icon_move_alliance_building.png",_("迁移")):onButtonClicked(function()
+        local time = intInit.allianceMoveColdMinutes.value * 60 + Alliance_Manager:GetMyAlliance().basicInfo.allianceMoveTime/1000.0 - app.timer:GetServerTime()
+        local canMove = Alliance_Manager:GetMyAlliance().basicInfo.allianceMoveTime == 0 or time <= 0
+        if not canMove then
+            UIKit:showMessageDialog(_("提示"), _("迁移联盟冷却中"))
+            self:LeftButtonClicked()
+            return
+        end
         local mapIndex = self.mapIndex
         local canMove1 = palaceLevel >= needPalaceLevel
         if not canMove1 then
@@ -352,19 +359,21 @@ function WidgetWorldAllianceInfo:LoadMoveAlliance()
             self:LeftButtonClicked()
             return
         end
-        local oldIndex = Alliance_Manager:GetMyAlliance().mapIndex
-        Alliance_Manager.my_mapIndex = nil
-        NetManager:getMoveAlliancePromise(mapIndex):done(function()
-            Alliance_Manager:RemoveAllianceCache(oldIndex)
-            Alliance_Manager:UpdateAllianceBy(mapIndex, Alliance_Manager:GetMyAlliance())
-            if UIKit:GetUIInstance("GameUIWorldMap") then
-                UIKit:GetUIInstance("GameUIWorldMap"):GetSceneLayer()
-                    :MoveAllianceFromTo(oldIndex, mapIndex)
-            else
-                UIKit:newGameUI("GameUIWorldMap", oldIndex, mapIndex):AddToCurrentScene()
-            end
+        UIKit:showMessageDialog(_("提示"),_("是否确认迁移联盟至该领土？"),function()
+            local oldIndex = Alliance_Manager:GetMyAlliance().mapIndex
+            Alliance_Manager.my_mapIndex = nil
+            NetManager:getMoveAlliancePromise(mapIndex):done(function()
+                Alliance_Manager:RemoveAllianceCache(oldIndex)
+                Alliance_Manager:UpdateAllianceBy(mapIndex, Alliance_Manager:GetMyAlliance())
+                if UIKit:GetUIInstance("GameUIWorldMap") then
+                    UIKit:GetUIInstance("GameUIWorldMap"):GetSceneLayer()
+                        :MoveAllianceFromTo(oldIndex, mapIndex)
+                else
+                    UIKit:newGameUI("GameUIWorldMap", oldIndex, mapIndex):AddToCurrentScene()
+                end
+            end)
+            self:LeftButtonClicked()
         end)
-        self:LeftButtonClicked()
     end):addTo(body):align(display.RIGHT_TOP, b_size.width,10)
     if self.need_goto_btn then
         self:BuildOneButton("icon_goto_38x56.png",_("定位")):onButtonClicked(function()
@@ -373,6 +382,7 @@ function WidgetWorldAllianceInfo:LoadMoveAlliance()
     end
 end
 return WidgetWorldAllianceInfo
+
 
 
 
