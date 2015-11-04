@@ -92,7 +92,13 @@ end
 function WidgetWorldAllianceInfo:EnterIn(mapIndex)
     local worldmap = UIKit:GetUIInstance("GameUIWorldMap")
     local scenelayer = worldmap:GetSceneLayer()
-    local wp = scenelayer:ConverToWorldSpace(scenelayer:IndexToLogic(mapIndex))
+    local sprite = scenelayer.allainceSprites[tostring(mapIndex)]
+    local wp
+    if sprite then
+        wp = sprite:getParent():convertToWorldSpace(cc.p(sprite:getPosition()))
+    else
+        wp = scenelayer:ConverToWorldSpace(scenelayer:IndexToLogic(mapIndex))
+    end
     if wp.x < 0 then
         wp.x = 0
     elseif wp.x > display.width then
@@ -115,7 +121,7 @@ function WidgetWorldAllianceInfo:EnterIn(mapIndex)
         local yp = lp.y * s / size.height
         scene_node:pos(lp.x, lp.y):setAnchorPoint(cc.p(xp, yp))
         scene_node:runAction(transition.sequence{
-            cc.ScaleTo:create(0.5, 2),
+            cc.ScaleTo:create(0.3, 2),
             cc.CallFunc:create(function()
                 if UIKit:GetUIInstance("GameUIWorldMap") then
                     UIKit:GetUIInstance("GameUIWorldMap"):LeftButtonClicked()

@@ -422,7 +422,8 @@ function AllianceDetailScene:OnTouchClicked(pre_x, pre_y, x, y)
                 Sprite:PromiseOfFlash(mapObj.obj):next(function()
                     self:OpenUI(alliance, mapObj)
                 end)
-            elseif type_ == "empty" then
+            elseif type_ == "empty" 
+               and mapObj.index == Alliance_Manager:GetMyAlliance().mapIndex then
                 app:lockInput(true)
                 self.util_node:performWithDelay(function()app:lockInput(false)end,0.5)
                 self:GetSceneLayer()
