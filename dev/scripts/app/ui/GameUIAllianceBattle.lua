@@ -61,7 +61,7 @@ function GameUIAllianceBattle:OnMoveInStage()
         -- end):pos(window.cx, window.bottom + 34)
         -- 获取历史记录
         if self.alliance.allianceFightReports == nil then
-            NetManager:getAllianceFightReportsPromise(self.alliance.id):done(function ()
+            NetManager:getAllianceFightReportsPromise(self.alliance._id):done(function ()
                 self:InitHistoryRecord()
                 -- self.history_listview:show()
             end)

@@ -173,6 +173,9 @@ function AllianceManager:OnAllianceDataChanged(allianceData,refresh_time,deltaDa
             scene.amintimer:stopAllActions()
             app:EnterMyAllianceScene()
         end
+        if allianceData.basicInfo.status == 'prepare' or allianceData.basicInfo.status == 'fight'then
+            self:RefreshAllianceSceneIf()
+        end
     end
     if deltaData then        
         if self.my_mapIndex and 
@@ -190,8 +193,12 @@ function AllianceManager:OnAllianceDataChanged(allianceData,refresh_time,deltaDa
                 user_data = '__alliance_move_tips__'
             })
         end
+        if self.status and self.status ~= allianceData.basicInfo.status then
+            self:RefreshAllianceSceneIf(self.status)
+        end
     end
     self.my_mapIndex = allianceData.mapIndex
+    self.status = allianceData.basicInfo.status
 end
 
 
@@ -222,30 +229,29 @@ end
 function AllianceManager:RefreshAllianceSceneIf(old_alliance_status)
     local my_alliance = self:GetMyAlliance()
     local my_alliance_status = my_alliance.basicInfo.status
-    if old_alliance_status == my_alliance_status then return end
     local scene_name = display.getRunningScene().__cname
     if (my_alliance_status == 'protect') then
         self.tipUserWar = false
-        -- if self:HaveEnemyAlliance() then
-        --     self:GetEnemyAlliance():Reset()
-        -- end
         if old_alliance_status == "" then return end
-        print("==========>RefreshAllianceSceneIf", old_alliance_status, my_alliance_status, my_alliance:LastAllianceFightReport())
-        if scene_name == 'AllianceBattleScene' or scene_name == 'AllianceScene' or scene_name == 'MyCityScene' then
-            if not UIKit:GetUIInstance('GameUIWarSummary') and my_alliance:LastAllianceFightReport() then
+        print("==========>RefreshAllianceSceneIf", old_alliance_status, my_alliance_status)
+        if scene_name == 'AllianceDetailScene' or scene_name == 'MyCityScene' then
+            if not UIKit:GetUIInstance('GameUIWarSummary') then
                 UIKit:newGameUI("GameUIWarSummary"):AddToCurrentScene(true)
             end
         end
     end
     if (my_alliance_status == 'prepare' or my_alliance_status == 'fight') then
-        if scene_name == 'AllianceScene' then
+        if scene_name == 'AllianceDetailScene' then
             if not self.tipUserWar then
                 self.tipUserWar = true
-                if not UIKit:isMessageDialogShowWithUserData("__alliance_war_tips__") then
-                    UIKit:showMessageDialog(nil,_("联盟对战已开始，您将进入自己联盟对战地图。"),function()
-                        app:EnterMyAllianceScene()
-                    end,nil,false,nil,"__alliance_war_tips__")
-                end
+                 GameGlobalUI:showTips(
+                    _("提示"), 
+                   _("联盟对战已开始"))  
+                -- if not UIKit:isMessageDialogShowWithUserData("__alliance_war_tips__") then
+                --     UIKit:showMessageDialog(nil,_("联盟对战已开始，您将进入自己联盟对战地图。"),function()
+                --         app:EnterMyAllianceScene()
+                --     end,nil,false,nil,"__alliance_war_tips__")
+                -- end
             end
         elseif scene_name == 'MyCityScene' then
             if not self.tipUserWar then
