@@ -571,7 +571,7 @@ local logic_event_map = {
         end
 
         local allianceData = Alliance_Manager:GetAllianceByCache(response.targetAllianceId)
-        if allianceData then
+        if allianceData and next(response.data) then
             local key, value = unpack(response.data[1])
             if #key == 0 and value == json.null then
                 Alliance_Manager:setMapDataByIndex(allianceData.mapIndex, nil)
