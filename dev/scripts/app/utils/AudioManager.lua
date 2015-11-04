@@ -309,27 +309,24 @@ function AudioManager:PlayGameMusicAutoCheckScene()
 					else
 						self:PlayBgMusicWithFileKey('bgm_peace',false)
 					end
-				elseif real_scene_name == 'AllianceDetailScene' then
-					if lastFileKey == 'bgm_peace' then
-
-						self:PlayeBgMusic(terrain_music_map[math.random(3)], false)
-					else
-						self:PlayBgMusicWithFileKey('bgm_peace',false)
-					end
 				end
 			else --有联盟
 				if status == 'prepare' or status == 'fight' then
 					if real_scene_name == 'MyCityScene' then
-						if lastFileKey == 'sfx_city' then
-							self:PlayBgMusicWithFileKey('bgm_battle',false)
-						else
+						if lastFileKey == 'bgm_battle' then
 							self:PlayBgMusicWithFileKey('sfx_city',false)
-						end
-					elseif real_scene_name == 'AllianceDetailScene' or real_scene_name == 'AllianceDetailScene' then
-						if lastFileKey == 'sfx_battle' then
+						elseif lastFileKey == "sfx_city" then
 							self:PlayBgMusicWithFileKey('bgm_battle',false)
 						else
+							self:PlayBgMusicWithFileKey('bgm_battle',false)
+						end
+					elseif real_scene_name == 'AllianceDetailScene' then
+						if lastFileKey == 'bgm_battle' then
 							self:PlayBgMusicWithFileKey('sfx_battle',false)
+						elseif lastFileKey == "sfx_battle" then
+							self:PlayBgMusicWithFileKey('bgm_battle',false)
+						else
+							self:PlayBgMusicWithFileKey('bgm_battle',false)
 						end
 					end
 				else
@@ -341,7 +338,7 @@ function AudioManager:PlayGameMusicAutoCheckScene()
 						else
 							self:PlayBgMusicWithFileKey('bgm_peace',false)
 						end
-					elseif real_scene_name == 'AllianceDetailScene' or real_scene_name == 'AllianceDetailScene' then
+					elseif real_scene_name == 'AllianceDetailScene' then
 						if lastFileKey == 'bgm_peace' then
 							self:PlayeBgMusic(terrain_music_map[math.random(3)], false)
 						else

@@ -91,13 +91,16 @@ function AllianceManager:ResetCurrentMapData()
         villageEvents = {},
     }
 end
+local terrainStyle = GameDatas.AllianceMap.terrainStyle
 function AllianceManager:OnEnterMapIndex(mapIndex, data)
     local allianceData = data.allianceData
     self:UpdateAllianceBy(mapIndex, allianceData)
     if allianceData == json.null then
         self:setMapDataByIndex(mapIndex, nil)
     else
-        self:setMapDataByIndex(allianceData.mapIndex, allianceData.basicInfo.terrainStyle)
+        local basicInfo = allianceData.basicInfo
+        local key = string.format("%s_%d", basicInfo.terrain, basicInfo.terrainStyle)
+        self:setMapDataByIndex(allianceData.mapIndex, terrainStyle[key].index)
     end
     for k,v in pairs(self.alliance_caches) do
         if type(k) == "number" then
@@ -195,6 +198,13 @@ function AllianceManager:OnAllianceDataChanged(allianceData,refresh_time,deltaDa
         end
         if self.status and self.status ~= allianceData.basicInfo.status then
             self:RefreshAllianceSceneIf(self.status)
+            if self.status == "prepare" 
+           and allianceData.basicInfo.status == "fight" then
+                app:GetAudioManager():PlayeEffectSoundWithKey("BATTLE_START")
+            end
+            if audio.isMusicPlaying() then
+                app:GetAudioManager():StopMusic()
+            end
         end
     end
     self.my_mapIndex = allianceData.mapIndex
