@@ -229,7 +229,7 @@ function GameUIAllianceHome:TopBg()
     local t_size = top_bg:getContentSize()
     local alliance = self.alliance
     local status = alliance.basicInfo.status
-    local left_img,right_img
+    local left_img,right_img,mid_img
     if status == "fight" or status == "prepare" then
         left_img = {normal = "button_blue_normal_314X88.png",
             pressed = "button_blue_pressed_314X88.png"}
@@ -245,6 +245,7 @@ function GameUIAllianceHome:TopBg()
         end
         right_img = {normal = "button_blue_normal_240X86.png",
             pressed = "button_blue_pressed_240X86.png"}
+        mid_img = "background_52x112.png"
     end
 
 
@@ -257,6 +258,9 @@ function GameUIAllianceHome:TopBg()
         :onButtonClicked(handler(self, self.OnTopRightButtonClicked))
         :align(display.TOP_RIGHT, t_size.width - 69, t_size.height-4)
         :addTo(top_bg)
+    if mid_img then
+        display.newSprite(mid_img):align(display.TOP_CENTER,69 + top_self_bg:getCascadeBoundingBox().size.width + 26,t_size.height):addTo(top_bg)
+    end
 
     return top_self_bg,top_enemy_bg,top_bg
 end
@@ -472,22 +476,34 @@ function GameUIAllianceHome:RefreshTop(force_refresh)
                 ellipsis = true
             }):align(display.LEFT_CENTER, 80, 20)
             :addTo(name_bg)
-        local text_1
+        local text_1,isAddAction
         if current_alliance then
             if current_alliance.mapIndex == self.alliance.mapIndex then
                 text_1 = _("战争历史")
             else
                 text_1 = _("宣战")
+                isAddAction = true
             end
         else
             text_1 = _("迁移联盟")
+            isAddAction = true
         end
-        UIKit:ttfLabel(
+        local action_label = UIKit:ttfLabel(
             {
                 text = text_1,
                 size = 20,
                 color = 0xbdb582,
             }):align(display.LEFT_CENTER, flag_bg:getPositionX() + flag_bg:getContentSize().width,flag_bg:getPositionY() - 20):addTo(top_self_bg)
+        if isAddAction then
+            action_label:runAction(
+                cc.RepeatForever:create(
+                    transition.sequence{
+                        cc.ScaleTo:create(0.5, 1.1),
+                        cc.ScaleTo:create(0.5, 1.0),
+                    }
+                )
+            )
+        end
 
         local period_bg = display.newSprite("background_98x70.png"):align(display.LEFT_CENTER, name_bg:getPositionX() + name_bg:getContentSize().width + 10,-top_self_size.height/2 - 4):addTo(top_self_bg)
         UIKit:ttfLabel({
@@ -869,6 +885,7 @@ function GameUIAllianceHome:GetAlliancePeriod()
 end
 
 return GameUIAllianceHome
+
 
 
 
