@@ -108,10 +108,16 @@ function GameUIHome:AddOrRemoveListener(isAdd)
         user:AddListenOnType(self, "basicInfo")
         user:AddListenOnType(self, "growUpTasks")
         user:AddListenOnType(self, "vipEvents")
+        user:AddListenOnType(self, "houseEvents")
+        user:AddListenOnType(self, "buildingEvents")
+        user:AddListenOnType(self, "productionTechEvents")
     else
         user:RemoveListenerOnType(self, "basicInfo")
         user:RemoveListenerOnType(self, "growUpTasks")
         user:RemoveListenerOnType(self, "vipEvents")
+        user:RemoveListenerOnType(self, "houseEvents")
+        user:RemoveListenerOnType(self, "buildingEvents")
+        user:RemoveListenerOnType(self, "productionTechEvents")
     end
 end
 function GameUIHome:OnUserDataChanged_basicInfo(userData, deltaData)

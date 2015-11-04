@@ -17,8 +17,9 @@ local decorator_image = UILib.decorator_image
 local alliance_building = UILib.alliance_building
 local other_alliance_building = UILib.other_alliance_building
 local intInit = GameDatas.AllianceInitData.intInit
-local MAP_LEGNTH_WIDTH = intInit.bigMapLength.value
-local MAP_LEGNTH_HEIGHT = intInit.bigMapLength.value
+local bigMapLength_value = intInit.bigMapLength.value
+local MAP_LEGNTH_WIDTH = bigMapLength_value
+local MAP_LEGNTH_HEIGHT = bigMapLength_value
 local TILE_WIDTH = 160
 local ALLIANCE_WIDTH, ALLIANCE_HEIGHT = intInit.allianceRegionMapWidth.value, intInit.allianceRegionMapHeight.value
 local worldsize = {width = ALLIANCE_WIDTH * 160 * MAP_LEGNTH_WIDTH, height = ALLIANCE_HEIGHT * 160 * MAP_LEGNTH_HEIGHT}
@@ -570,34 +571,46 @@ function AllianceLayer:AddMapObject(objects_node, mapObj, alliance)
     self:AddFuncToBuilding(node)
     return node
 end
+local function resetStatus(sprite)
+    sprite:removeNodeEventListenersByEvent(cc.NODE_ENTER_FRAME_EVENT)
+    sprite:unscheduleUpdate()
+    sprite:clearFilter()
+end
+local function beginFlash(sprite, lastTime)
+    sprite.time = 0
+    sprite:setFilter(filter.newFilter("CUSTOM", json.encode({
+        frag = "shaders/flash.fs",
+        shaderName = "flash",
+        ratio = math.fmod(sprite.time, lastTime) / lastTime,
+    })))
+    sprite:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt)
+        sprite.time = sprite.time + dt
+        if sprite.time > lastTime then
+            resetStatus(sprite)
+        else
+            sprite:getFilter()
+            :getGLProgramState()
+            :setUniformFloat("ratio", math.fmod(sprite.time, lastTime) / lastTime)
+        end
+    end)
+    sprite:scheduleUpdate()
+end
 function AllianceLayer:AddFuncToBuilding(building)
     function building:Flash(time)
         self:ResetFlashStatus()
         self:BeginFlash(time)
     end
     function building:ResetFlashStatus()
-        local sprite = self:getChildByTag(SPRITE_TAG)
-        sprite:removeNodeEventListenersByEvent(cc.NODE_ENTER_FRAME_EVENT)
-        sprite:unscheduleUpdate()
-        sprite:clearFilter()
+        resetStatus(self:getChildByTag(SPRITE_TAG))
+        if self.part then
+            resetStatus(self.part)
+        end
     end
     function building:BeginFlash(lastTime)
-        self.time = 0
-        local sprite = self:getChildByTag(SPRITE_TAG)
-        sprite:setFilter(filter.newFilter("CUSTOM", json.encode({
-            frag = "shaders/flash.fs",
-            shaderName = "flash",
-            ratio = math.fmod(self.time, lastTime) / lastTime,
-        })))
-        sprite:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt)
-            self.time = self.time + dt
-            if self.time > lastTime then
-                self:ResetFlashStatus()
-            else
-                sprite:getFilter():getGLProgramState():setUniformFloat("ratio", math.fmod(self.time, lastTime) / lastTime)
-            end
-        end)
-        sprite:scheduleUpdate()
+        beginFlash(self:getChildByTag(SPRITE_TAG), lastTime)
+        if self.part then
+            beginFlash(self.part, lastTime)
+        end
     end
     return building
 end
@@ -954,6 +967,10 @@ function AllianceLayer:CreateAllianceObjects(obj_node, terrain, style, index, al
                 local size = sprite:getContentSize()
                 ccs.Armature:create("longpengquan"):addTo(sprite)
                 :pos(size.width/2, size.height/2):getAnimation():playWithIndex(0)
+            elseif name == "shrine" then
+                local size = sprite:getContentSize()
+                node.part = createBuildingSprite("alliance_shrine_2.png")
+                            :addTo(sprite, 1):pos(size.width/2, size.height/2)
             end
             node.x = v.x
             node.y = v.y
@@ -1018,18 +1035,56 @@ function AllianceLayer:LoadBackground(index, alliance)
     local terrain = self:GetMapInfoByIndex(index, alliance)
     if not self.alliance_bg[index] then
         local new_bg = self:GetFreeBackground(terrain)
+        if terrain == "desert" then
+            local right, down = self:GetRightDownTerrain(index)
+            if right then
+                if new_bg.right[right] then
+                    new_bg.right[right]:show()
+                end
+            end
+            if down then
+                if new_bg.down[down] then
+                    new_bg.down[down]:show()
+                end
+            end
+        end
         self:FreeBackground(self.alliance_bg[index])
-        self.alliance_bg[index] = new_bg:addTo(self.background_node, -index)
-            :pos(
-                self:GetAllianceLogicMap()
+        local x,y = self:GetAllianceLogicMap()
                     :ConvertToLeftBottomMapPosition(self:IndexToLogic(index))
-            )
+        self.alliance_bg[index] = new_bg:addTo(self.background_node, -index):pos(x,y)
         new_bg:release()
     elseif self.alliance_bg[index].terrain ~= terrain then
         self:FreeBackground(self.alliance_bg[index])
         self.alliance_bg[index] = nil
         self:LoadBackground(index, alliance)
     end
+end
+function AllianceLayer:GetRightDownTerrain(index)
+    local right_terrain
+    local down_terrain
+    
+    local x,y = self:IndexToLogic(index)
+    if x + 1 >= 0 
+   and x + 1 < bigMapLength_value 
+   and y >= 0
+   and y < bigMapLength_value
+   then
+        local mapIndex = self:LogicToIndex(x + 1, y)
+        local aln = Alliance_Manager:GetAllianceByCache(mapIndex)
+        right_terrain = self:GetMapInfoByIndex(mapIndex, aln)
+    end
+
+    if x >= 0 
+   and x < bigMapLength_value 
+   and y + 1 >= 0
+   and y + 1 < bigMapLength_value
+   then
+        local mapIndex = self:LogicToIndex(x, y + 1)
+        local aln = Alliance_Manager:GetAllianceByCache(mapIndex)
+        down_terrain = self:GetMapInfoByIndex(mapIndex, aln)
+    end
+
+    return right_terrain, down_terrain
 end
 function AllianceLayer:FreeBackground(bg)
     if not bg then return end
@@ -1064,48 +1119,154 @@ local terrain_map = {
 function AllianceLayer:GetFreeBackground(terrain)
     local bg = table.remove(self.alliance_bg_free[terrain], 1)
     if bg then
+        if terrain == "desert" then
+            self:HideDesertEdge(bg)
+        end
         return bg
     else
         local map
-        -- if terrain == "grassLand" then
-        --     map = self:CreateGrassLandBg()
-        -- else
-            map = cc.TMXTiledMap:create(string.format("tmxmaps/alliance_%s1.tmx", terrain))
-            local LEN = 115
-            display.newSprite(string.format("%s_plus_right.png", terrain))
-                :addTo(map):align(display.LEFT_BOTTOM, map:getContentSize().width - LEN, 0)
-            for i = 0, 9 do
-                display.newSprite(string.format("%s_plus_right.png", terrain))
-                    :addTo(map):align(display.LEFT_BOTTOM, map:getContentSize().width - LEN, i * 480 + 160)
-            end
-            for i = 0, 9 do
-                display.newSprite(string.format("%s_plus_down.png", terrain))
-                    :addTo(map):align(display.LEFT_TOP, i * 480, LEN)
-            end
-            display.newSprite(string.format("%s_plus_down.png", terrain))
-                :addTo(map):align(display.LEFT_TOP, 10 * 480 - 320, LEN)
+        if terrain == "grassLand" then
+            map = self:CreateGrassLandBg()
+        elseif terrain == "iceField" then
+            map = self:CreateIceFieldBg()
+        elseif terrain == "desert" then
+            map = self:CreateDesertBg()
+        else
+            -- map = cc.TMXTiledMap:create(string.format("tmxmaps/alliance_%s1.tmx", terrain))
+            -- local LEN = 115
+            -- display.newSprite(string.format("%s_plus_right.png", terrain))
+            --     :addTo(map):align(display.LEFT_BOTTOM, map:getContentSize().width - LEN, 0)
+            -- for i = 0, 9 do
+            --     display.newSprite(string.format("%s_plus_right.png", terrain))
+            --         :addTo(map):align(display.LEFT_BOTTOM, map:getContentSize().width - LEN, i * 480 + 160)
+            -- end
+            -- for i = 0, 9 do
+            --     display.newSprite(string.format("%s_plus_down.png", terrain))
+            --         :addTo(map):align(display.LEFT_TOP, i * 480, LEN)
+            -- end
+            -- display.newSprite(string.format("%s_plus_down.png", terrain))
+            --     :addTo(map):align(display.LEFT_TOP, 10 * 480 - 320, LEN)
 
-            display.newSprite(string.format("%s_plus.png", terrain))
-                :addTo(map):align(display.LEFT_TOP, map:getContentSize().width, 0)
+            -- display.newSprite(string.format("%s_plus.png", terrain))
+            --     :addTo(map):align(display.LEFT_TOP, map:getContentSize().width, 0)
 
 
-            math.randomseed(12345)
-            local random = math.random
-            local array = terrain_map[terrain]
-            if #array > 0 then
-                local sx,sy,ex,ey = self.inner_alliance_logic_map:GetRegion()
-                local span = 0
-                for i = 1, 60 do
-                    local x = random(sx + span, ex - span)
-                    local y = random(sy + span, ey - span)
-                    display.newSprite(array[random(#array)]):addTo(map, 1000):pos(x, y)
-                end
-            end
-        -- end
+            -- math.randomseed(12345)
+            -- local random = math.random
+            -- local array = terrain_map[terrain]
+            -- if #array > 0 then
+            --     local sx,sy,ex,ey = self.inner_alliance_logic_map:GetRegion()
+            --     local span = 0
+            --     for i = 1, 60 do
+            --         local x = random(sx + span, ex - span)
+            --         local y = random(sy + span, ey - span)
+            --         display.newSprite(array[random(#array)]):addTo(map, 1000):pos(x, y)
+            --     end
+            -- end
+        end
+        self:LoadMiddleTerrain(map, terrain)
         map:retain()
         map.terrain = terrain
         return map
     end
+end
+function AllianceLayer:HideDesertEdge(map)
+    for k,v in pairs(map.right) do
+        v:hide()
+    end
+    for k,v in pairs(map.down) do
+        v:hide()
+    end
+    return map
+end
+local random = math.random
+function AllianceLayer:LoadMiddleTerrain(map, terrain)
+    math.randomseed(12345)
+    local array = terrain_map[terrain]
+    if #array > 0 then
+        local sx,sy,ex,ey = self.inner_alliance_logic_map:GetRegion()
+        local span = 0
+        for i = 1, 60 do
+            local x = random(sx + span, ex - span)
+            local y = random(sy + span, ey - span)
+            display.newSprite(array[random(#array)])
+            :addTo(map, 1000):pos(x, y)
+        end
+    end
+end
+function AllianceLayer:CreateDesertBg()
+    local terrain = "desert"
+    local map = cc.TMXTiledMap:create(string.format("tmxmaps/alliance_%s1.tmx", terrain))
+    local width = map:getContentSize().width
+    
+    map.right = {}
+    map.down = {}
+
+    map.right.grassLand = display.newNode():addTo(map)
+    local terrain = "grassLand"
+    display.newSprite(string.format("plus_right_%s.png", terrain))
+        :align(display.RIGHT_BOTTOM, map:getContentSize().width, 0)
+        :addTo(map.right.grassLand):flipX(true)
+
+    for i = 0, 9 do
+        display.newSprite(string.format("plus_right_%s.png", terrain))
+        :addTo(map.right.grassLand):flipX(true)
+        :align(display.RIGHT_BOTTOM, map:getContentSize().width, i * 480 + 160)
+    end
+
+    map.down.grassLand = display.newNode():addTo(map)
+    local w = -100
+    math.randomseed(737)
+    while true do
+        local index = math.random(2)
+        local png = string.format("plus_down%d_%s.png", index, terrain)
+        local sprite = display.newSprite(png)
+                       :addTo(map.down.grassLand):flipY(true)
+        local size = sprite:getContentSize()
+        local offset = (index == 1 and -100 or -120)
+        local x = (index == 1 and -20 or -30)
+        local y = (index == 1 and 100 or 100 - 20)
+        sprite:align(display.LEFT_TOP, w + x, y)
+        w = size.width + w + offset
+        if w > width then
+            break
+        end
+    end
+
+
+
+    map.right.iceField = display.newNode():addTo(map)
+    local terrain = "iceField"
+    display.newSprite(string.format("plus_right_%s.png", terrain))
+        :align(display.RIGHT_BOTTOM, map:getContentSize().width, 0)
+        :addTo(map.right.iceField):flipX(true)
+
+    for i = 0, 9 do
+        display.newSprite(string.format("plus_right_%s.png", terrain))
+        :addTo(map.right.iceField):flipX(true)
+        :align(display.RIGHT_BOTTOM, map:getContentSize().width, i * 480 + 160)
+    end
+
+    map.down.iceField = display.newNode():addTo(map)
+    local w = -100
+    math.randomseed(117)
+    while true do
+        local index = math.random(2)
+        local png = string.format("plus_down%d_%s.png", index, terrain)
+        local sprite = display.newSprite(png)
+                       :addTo(map.down.iceField):flipY(true)
+        local size = sprite:getContentSize()
+        local offset = (index == 1 and -25 or -100)
+        local x = (index == 1 and -5 or -5)
+        local y = (index == 1 and 100 or 155)
+        sprite:align(display.LEFT_TOP, w + x, y)
+        w = size.width + w + offset
+        if w > width then
+            break
+        end
+    end
+    self:HideDesertEdge(map)
+    return map
 end
 function AllianceLayer:CreateIceFieldBg()
     local terrain = "iceField"
@@ -1162,7 +1323,7 @@ function AllianceLayer:CreateGrassLandBg()
         local x = (index == 1 and -20 or -30)
         local y = (index == 1 and 30 or 38)
         sprite:align(display.LEFT_TOP, w + x, y)
-        w = size.width + w + offset - 50
+        w = size.width + w + offset
         if w > width then
             break
         end

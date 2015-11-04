@@ -754,7 +754,7 @@ local DRAGON_ANIMATIONS = getAniNameFromAnimationFiles(DRAGON_ANIMATIONS_FILES)
 
 local ALLIANCE_BUILDING = {
     palace = "alliance_palace.png",
-    shrine = "alliance_moonGate.png",
+    shrine = "alliance_shrine_1.png",
     shop = "alliance_shop.png",
     orderHall = "alliance_orderHall.png",
     watchTower = "alliance_shrine.png",
