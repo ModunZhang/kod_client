@@ -259,7 +259,7 @@ function GameUIAllianceHome:TopBg()
         :align(display.TOP_RIGHT, t_size.width - 69, t_size.height-4)
         :addTo(top_bg)
     if mid_img then
-        display.newSprite(mid_img):align(display.TOP_CENTER,69 + top_self_bg:getCascadeBoundingBox().size.width + 26,t_size.height):addTo(top_bg)
+        display.newSprite(mid_img):align(display.TOP_CENTER,t_size.width-240-26 - 44,t_size.height):addTo(top_bg)
     end
 
     return top_self_bg,top_enemy_bg,top_bg
