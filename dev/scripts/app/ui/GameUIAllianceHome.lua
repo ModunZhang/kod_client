@@ -197,7 +197,7 @@ function GameUIAllianceHome:InitArrow()
     -- my city
     self.arrow = cc.ui.UIPushButton.new({normal = "location_arrow_up.png",
         pressed = "location_arrow_down.png"})
-        :addTo(self, -1):align(display.TOP_CENTER):hide()
+        :addTo(self, 10):align(display.TOP_CENTER):hide()
         :onButtonClicked(function()
             self:ReturnMyCity()
         end)
