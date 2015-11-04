@@ -408,8 +408,8 @@ end
 function WorldLayer:GetAvailableIndex()
     local t = {}
     local x,y = self:GetLeftTopLogicPosition()
-    for i = x, x + 3 do
-        for j = y, y + 4 do
+    for i = x - 3, x + 3 do
+        for j = y - 2, y + 4 do
             if i >= 0 and i < WIDTH and j >= 0 and j < HEIGHT then
                 table.insert(t, self:LogicToIndex(i,j))
             end
