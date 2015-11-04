@@ -152,7 +152,7 @@ function WorldLayer:LoadLevelBg(index)
     then
         local p = self:ConvertLogicPositionToMapPosition(x,y)
         local sp= display.newSprite("world_level_bg.png")
-                   :addTo(self.leveLayer):pos(p.x + 20, p.y - 50)
+                   :addTo(self.leveLayer):pos(p.x + 20, p.y - 70)
         local size = sp:getContentSize()
         UIKit:ttfLabel({
             text = math.max(math.abs(x - mx), math.abs(y - my)) + 1,
@@ -339,7 +339,7 @@ function WorldLayer:CreateAllianceSprite(index, alliance)
     node.alliance = alliance
     
     local sprite = display.newSprite(string.format("world_alliance_%s.png", alliance.terrain))
-    :addTo(node, 0, 1)
+    :addTo(node, 0, 1):scale(0.8)
     if index ~= Alliance_Manager:GetMyAlliance().mapIndex then
         sprite:pos(30 - math.random(30), 30 - math.random(30))
     end
@@ -347,18 +347,19 @@ function WorldLayer:CreateAllianceSprite(index, alliance)
     local banner = display.newSprite("alliance_banner.png")
                    :addTo(sprite):pos(size.width/2, 0)
     sprite.name = UIKit:ttfLabel({
-        size = 12,
+        size = 24,
         color = 0xffedae,
         text = string.format("[%s]%s", alliance.tag, alliance.name),
         ellipsis = true,
         dimensions = cc.size(100,15),
-    }):addTo(sprite):align(display.CENTER, size.width/2, 0)
+    }):addTo(sprite):align(display.CENTER, size.width/2, 5):scale(0.5)
     sprite.flagstr = alliance.flag
     sprite.flag = ui_helper:CreateFlagContentSprite(alliance.flag)
-        :addTo(sprite):align(display.CENTER, 80, 60):scale(0.3)
+        :addTo(sprite):align(display.CENTER, 90, 60):scale(0.3)
     if Alliance_Manager:GetMyAlliance().mapIndex == tonumber(index) then
-        display.newSprite("icon_current_position_46x68.png")
-            :addTo(node, 0, 2):pos(sprite:getPositionX(), sprite:getPositionY() + sprite:getContentSize().height / 2 + 15)
+        display.newSprite("icon_current_position.png")
+        :addTo(node, 0, 2):scale(0.8)
+        :pos(sprite:getPositionX(), sprite:getPositionY() + sprite:getContentSize().height / 2 + 15)
     end
     self.allainceSprites[index] = node
 end

@@ -945,8 +945,12 @@ function AllianceLayer:CreateAllianceObjects(obj_node, terrain, style, index, al
                 :pos(self:GetInnerMapPosition(x,y))
             local sprite = createBuildingSprite(building_png)
                 :addTo(node, 0, SPRITE_TAG)
-            if name == "bloodSpring" then
-                sprite:scale(0.7)
+            if name == "palace" then
+                sprite:setAnchorPoint(cc.p(0.5, 0.4))
+            elseif name == "orderHall" then
+                sprite:setAnchorPoint(cc.p(0.5, 0.35))
+            elseif name == "bloodSpring" then
+                sprite:scale(0.7):setAnchorPoint(cc.p(0.5, 0.4))
                 local size = sprite:getContentSize()
                 ccs.Armature:create("longpengquan"):addTo(sprite)
                 :pos(size.width/2, size.height/2):getAnimation():playWithIndex(0)
