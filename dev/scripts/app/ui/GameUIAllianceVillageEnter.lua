@@ -365,10 +365,8 @@ function GameUIAllianceVillageEnter:FindTroopShowInfoFromAllianceBelvedere()
     local village_id = self:GetVillageInfo().id
     local villageEvent = self:GetMyAlliance():FindVillageEventByVillageId(village_id)
     if villageEvent then
-        if villageEvent:GetPlayerRole() == villageEvent.EVENT_PLAYER_ROLE.Me then
-            local belvedereEntity = BelvedereEntity.new(villageEvent)
-            belvedereEntity:SetType(BelvedereEntity.ENTITY_TYPE.COLLECT)
-            UIKit:newGameUI("GameUIWatchTowerMyTroopsDetail",belvedereEntity):AddToCurrentScene(true)
+        if villageEvent.playerData.id == User:Id() then
+            UIKit:newGameUI("GameUIWatchTowerMyTroopsDetail", villageEvent, "villageEvents"):AddToCurrentScene(true)
         end
     end
 end

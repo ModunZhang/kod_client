@@ -38,14 +38,14 @@ function AllianceManager:GetToMineMarchEvents()
 end
 function AllianceManager:HasToMyAllianceEvents()
     local marchEvents = self:GetMyAllianceMarchEvents()
-    for k,v in pairs(marchEvents.attackMarchEvents) do
+    for k,event in pairs(marchEvents.attackMarchEvents) do
         if event ~= json.null
             and event.toAlliance.id == self.my_alliance._id
             and event.fromAlliance.id ~= self.my_alliance._id then
             return true
         end
     end
-    for k,v in pairs(marchEvents.strikeMarchEvents) do
+    for k,event in pairs(marchEvents.strikeMarchEvents) do
         if event ~= json.null
             and event.toAlliance.id == self.my_alliance._id
             and event.fromAlliance.id ~= self.my_alliance._id then
@@ -307,14 +307,11 @@ function AllianceManager:RefreshAllianceSceneIf(old_alliance_status)
         if scene_name == 'AllianceDetailScene' then
             if not self.tipUserWar then
                 self.tipUserWar = true
-                GameGlobalUI:showTips(
-                    _("提示"),
-                    _("联盟对战已开始"))
-                -- if not UIKit:isMessageDialogShowWithUserData("__alliance_war_tips__") then
-                --     UIKit:showMessageDialog(nil,_("联盟对战已开始，您将进入自己联盟对战地图。"),function()
-                --         app:EnterMyAllianceScene()
-                --     end,nil,false,nil,"__alliance_war_tips__")
-                -- end
+                if not UIKit:isMessageDialogShowWithUserData("__alliance_war_tips__") then
+                    UIKit:showMessageDialog(nil,_("联盟对战已开始，您将进入自己联盟对战地图。"),function()
+                        app:EnterMyAllianceScene()
+                    end,nil,false,nil,"__alliance_war_tips__")
+                end
             end
         elseif scene_name == 'MyCityScene' then
             if not self.tipUserWar then
