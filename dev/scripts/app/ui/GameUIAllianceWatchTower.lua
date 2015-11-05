@@ -40,6 +40,7 @@ function GameUIAllianceWatchTower:OnMoveInStage()
         self.atack_list_node:setVisible(tag == "march")
     end):pos(window.cx, window.bottom + 34)
     self.alliance:AddListenOnType(self, "marchEvents")
+    Alliance_Manager:AddHandle(self)
 end
 function GameUIAllianceWatchTower:CreateBetweenBgAndTitle()
     GameUIAllianceWatchTower.super.CreateBetweenBgAndTitle(self)
@@ -48,6 +49,7 @@ end
 
 function GameUIAllianceWatchTower:onExit()
     self.alliance:RemoveListenerOnType(self, "marchEvents")
+    Alliance_Manager:RemoveHandle(self)
     GameUIAllianceWatchTower.super.onExit(self)
 end
 -- 获取所有可显示事件数据 timer
@@ -77,13 +79,15 @@ function GameUIAllianceWatchTower:GetAllOrderedMarchEvents()
     local other_marchEvents = Alliance_Manager:GetMyAllianceMarchEvents()
     for eventType,marchEventRoot in pairs(other_marchEvents) do
         for _,marchEvent in pairs(marchEventRoot) do
-            marchEvent.eventType = eventType -- 添加一个事件类型，突袭，进攻
-            if marchEvent.marchType ~= "shrine" and not string.find(eventType,"Return") then -- 过滤掉圣地事件和返回事件
-                -- 目的地是我方联盟，并且出发地不是我方联盟，或者是协防事件:来袭事件
-                if marchEvent.toAlliance.id == alliance._id and marchEvent.fromAlliance.id ~= alliance._id or marchEvent.marchType == "helpDefence" then
-                    table.insert(beStrikedEvents, marchEvent)
-                else
-                    table.insert(attackEvents, marchEvent)
+            if marchEvent ~= json.null then
+                marchEvent.eventType = eventType -- 添加一个事件类型，突袭，进攻
+                if marchEvent.marchType ~= "shrine" and not string.find(eventType,"Return") then -- 过滤掉圣地事件和返回事件
+                    -- 目的地是我方联盟，并且出发地不是我方联盟，或者是协防事件:来袭事件
+                    if marchEvent.toAlliance.id == alliance._id and marchEvent.fromAlliance.id ~= alliance._id or marchEvent.marchType == "helpDefence" then
+                        table.insert(beStrikedEvents, marchEvent)
+                    else
+                        table.insert(attackEvents, marchEvent)
+                    end
                 end
             end
         end
@@ -456,6 +460,19 @@ function GameUIAllianceWatchTower:OnAllianceDataChanged_marchEvents(alliance, de
         self.atack_listview:asyncLoadWithCurrentPosition_()
     end
 end
+function GameUIAllianceWatchTower:OnMapDataChanged(allianceData, deltaData)
+    if self.beStriked_list_node:isVisible() then
+        self.beStriked_listview:asyncLoadWithCurrentPosition_()
+    end
+    if self.atack_list_node:isVisible() then
+        self.atack_listview:asyncLoadWithCurrentPosition_()
+    end
+end
+function GameUIAllianceWatchTower:OnMapAllianceChanged(allianceData, deltaData)
+    
+end
+
+
 return GameUIAllianceWatchTower
 
 

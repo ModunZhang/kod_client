@@ -39,20 +39,33 @@ end
 function AllianceManager:HasToMyAllianceEvents()
     local marchEvents = self:GetMyAllianceMarchEvents()
     for k,v in pairs(marchEvents.attackMarchEvents) do
-        if event ~= json.null 
-       and event.toAlliance.id == self.my_alliance._id 
-       and event.fromAlliance.id ~= self.my_alliance._id then
+        if event ~= json.null
+            and event.toAlliance.id == self.my_alliance._id
+            and event.fromAlliance.id ~= self.my_alliance._id then
             return true
         end
     end
     for k,v in pairs(marchEvents.strikeMarchEvents) do
-        if event ~= json.null 
-       and event.toAlliance.id == self.my_alliance._id 
-       and event.fromAlliance.id ~= self.my_alliance._id then
+        if event ~= json.null
+            and event.toAlliance.id == self.my_alliance._id
+            and event.fromAlliance.id ~= self.my_alliance._id then
             return true
         end
     end
     return false
+end
+function AllianceManager:GetMyBeAttackingEvent()
+    local to_my_events = {}
+    local marchEvents = self:GetMyAllianceMarchEvents()
+    for k,kindsOfEvents in pairs(marchEvents) do
+        for id,event in pairs(kindsOfEvents) do
+            if event ~= json.null and event.defencePlayerData.id == User:Id() and event.fromAlliance.id ~= self:GetMyAlliance()._id then
+                event.eventType = k
+                table.insert(to_my_events, event)
+            end
+        end
+    end
+    return to_my_events
 end
 function AllianceManager:GetToMyAllianceMarchEvents()
     local to_my_events = {}
@@ -151,7 +164,7 @@ local function removeJsonNull(t)
         if v == json.null then
             t[k] = nil
         end
-    end 
+    end
 end
 function AllianceManager:OnMapDataChanged(mapIndex, currentMapData, deltaData)
     for _,v in pairs(self.handles) do
@@ -220,8 +233,8 @@ function AllianceManager:OnAllianceDataChanged(allianceData,refresh_time,deltaDa
             self:RefreshAllianceSceneIf()
         end
     end
-    if deltaData then        
-        if self.my_mapIndex and 
+    if deltaData then
+        if self.my_mapIndex and
             self.my_mapIndex ~= allianceData.mapIndex then
             local mapIndex = self.my_mapIndex
             UIKit:showMessageDialogWithParams({
@@ -238,8 +251,8 @@ function AllianceManager:OnAllianceDataChanged(allianceData,refresh_time,deltaDa
         end
         if self.status and self.status ~= allianceData.basicInfo.status then
             self:RefreshAllianceSceneIf(self.status)
-            if self.status == "prepare" 
-           and allianceData.basicInfo.status == "fight" then
+            if self.status == "prepare"
+                and allianceData.basicInfo.status == "fight" then
                 app:GetAudioManager():PlayeEffectSoundWithKey("BATTLE_START")
             end
             if audio.isMusicPlaying() then
@@ -294,9 +307,9 @@ function AllianceManager:RefreshAllianceSceneIf(old_alliance_status)
         if scene_name == 'AllianceDetailScene' then
             if not self.tipUserWar then
                 self.tipUserWar = true
-                 GameGlobalUI:showTips(
-                    _("提示"), 
-                   _("联盟对战已开始"))  
+                GameGlobalUI:showTips(
+                    _("提示"),
+                    _("联盟对战已开始"))
                 -- if not UIKit:isMessageDialogShowWithUserData("__alliance_war_tips__") then
                 --     UIKit:showMessageDialog(nil,_("联盟对战已开始，您将进入自己联盟对战地图。"),function()
                 --         app:EnterMyAllianceScene()
@@ -338,5 +351,6 @@ function AllianceManager:RefreshAllianceSceneIf(old_alliance_status)
 end
 
 return AllianceManager
+
 
 
