@@ -7,11 +7,11 @@
             <key>VIP_10_46x32.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{58,847},{46,32}}</string>
+                <string>{{547,530},{46,32}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{46,32}}</string>
                 <key>sourceSize</key>
@@ -20,7 +20,7 @@
             <key>VIP_1_46x32.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{575,118},{20,32}}</string>
+                <string>{{547,608},{20,32}}</string>
                 <key>offset</key>
                 <string>{-1,0}</string>
                 <key>rotated</key>
@@ -33,7 +33,7 @@
             <key>VIP_2_46x32.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{592,630},{26,32}}</string>
+                <string>{{171,600},{26,32}}</string>
                 <key>offset</key>
                 <string>{-1,0}</string>
                 <key>rotated</key>
@@ -46,7 +46,7 @@
             <key>VIP_3_46x32.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{592,596},{26,32}}</string>
+                <string>{{171,566},{26,32}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -59,11 +59,11 @@
             <key>VIP_4_46x32.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{504,269},{28,32}}</string>
+                <string>{{547,578},{28,32}}</string>
                 <key>offset</key>
                 <string>{-1,0}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{8,0},{28,32}}</string>
                 <key>sourceSize</key>
@@ -72,7 +72,7 @@
             <key>VIP_5_46x32.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{595,562},{26,32}}</string>
+                <string>{{143,602},{26,32}}</string>
                 <key>offset</key>
                 <string>{-1,0}</string>
                 <key>rotated</key>
@@ -85,11 +85,11 @@
             <key>VIP_6_46x32.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{190,985},{26,32}}</string>
+                <string>{{143,568},{26,32}}</string>
                 <key>offset</key>
                 <string>{-1,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{9,0},{26,32}}</string>
                 <key>sourceSize</key>
@@ -98,7 +98,7 @@
             <key>VIP_7_46x32.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{595,528},{26,32}}</string>
+                <string>{{532,211},{26,32}}</string>
                 <key>offset</key>
                 <string>{-1,0}</string>
                 <key>rotated</key>
@@ -111,7 +111,7 @@
             <key>VIP_8_46x32.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{342,802},{26,32}}</string>
+                <string>{{532,177},{26,32}}</string>
                 <key>offset</key>
                 <string>{-1,0}</string>
                 <key>rotated</key>
@@ -124,11 +124,11 @@
             <key>VIP_9_46x32.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{314,802},{26,32}}</string>
+                <string>{{543,109},{26,32}}</string>
                 <key>offset</key>
                 <string>{-1,0}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{9,0},{26,32}}</string>
                 <key>sourceSize</key>
@@ -137,11 +137,11 @@
             <key>alliance_join_tips_title_571x66.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,73},{571,66}}</string>
+                <string>{{73,2},{571,66}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{571,66}}</string>
                 <key>sourceSize</key>
@@ -150,11 +150,11 @@
             <key>back_ground_box.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{374,919},{96,95}}</string>
+                <string>{{484,432},{96,95}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{96,95}}</string>
                 <key>sourceSize</key>
@@ -163,11 +163,11 @@
             <key>back_ground_pve.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{82,269},{246,51}}</string>
+                <string>{{2,643},{246,51}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{246,51}}</string>
                 <key>sourceSize</key>
@@ -176,7 +176,7 @@
             <key>box_gacha_112x112_1.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{426,695},{110,112}}</string>
+                <string>{{116,891},{110,112}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -189,11 +189,11 @@
             <key>box_gacha_112x112_2.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{314,688},{110,112}}</string>
+                <string>{{2,891},{110,112}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{1,0},{110,112}}</string>
                 <key>sourceSize</key>
@@ -202,7 +202,7 @@
             <key>box_gacha_senior_136x136_1.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{116,847},{134,136}}</string>
+                <string>{{221,396},{134,136}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -215,7 +215,7 @@
             <key>box_gacha_senior_136x136_2.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{58,709},{134,136}}</string>
+                <string>{{221,258},{134,136}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -228,7 +228,7 @@
             <key>buff_active_123x125.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{391,325},{123,123}}</string>
+                <string>{{365,133},{123,123}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -241,7 +241,7 @@
             <key>can_level_up.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{608,865},{22,42}}</string>
+                <string>{{548,917},{22,42}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -254,11 +254,11 @@
             <key>can_not_level_up.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{620,73},{22,42}}</string>
+                <string>{{55,862},{22,42}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{22,42}}</string>
                 <key>sourceSize</key>
@@ -267,7 +267,7 @@
             <key>dragon_load_eq_37x38.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{595,450},{37,38}}</string>
+                <string>{{532,137},{37,38}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -280,7 +280,7 @@
             <key>dragon_skill_bg_110x110.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{374,807},{110,110}}</string>
+                <string>{{352,873},{110,110}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -293,7 +293,7 @@
             <key>dragon_skill_item_180x110.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{82,322},{180,110}}</string>
+                <string>{{221,2},{180,110}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -306,7 +306,7 @@
             <key>dragon_skill_lock_34x46.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{608,817},{34,46}}</string>
+                <string>{{543,40},{34,46}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -319,7 +319,7 @@
             <key>dragon_star_40x40.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{595,490},{36,36}}</string>
+                <string>{{543,2},{36,36}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -332,11 +332,11 @@
             <key>dragon_strength_27x31.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{472,989},{25,29}}</string>
+                <string>{{548,961},{25,29}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{1,1},{25,29}}</string>
                 <key>sourceSize</key>
@@ -345,7 +345,7 @@
             <key>dragon_tab_buttons_light_172x54.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,707},{172,54}}</string>
+                <string>{{479,258},{172,54}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -358,11 +358,11 @@
             <key>dragon_tab_buttons_normal_172x54.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{330,269},{172,54}}</string>
+                <string>{{55,643},{172,54}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{172,54}}</string>
                 <key>sourceSize</key>
@@ -371,7 +371,7 @@
             <key>drgon_process_icon_bg.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{575,73},{43,43}}</string>
+                <string>{{55,817},{43,43}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -384,7 +384,7 @@
             <key>gacha_line_16x564_1.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{46,141},{16,562}}</string>
+                <string>{{185,2},{16,562}}</string>
                 <key>offset</key>
                 <string>{0,1}</string>
                 <key>rotated</key>
@@ -397,7 +397,7 @@
             <key>gacha_line_16x564_2.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{64,141},{16,560}}</string>
+                <string>{{203,2},{16,560}}</string>
                 <key>offset</key>
                 <string>{0,-2}</string>
                 <key>rotated</key>
@@ -410,7 +410,7 @@
             <key>gacha_line_20x568_1.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,141},{20,564}}</string>
+                <string>{{141,2},{20,564}}</string>
                 <key>offset</key>
                 <string>{0,2}</string>
                 <key>rotated</key>
@@ -423,7 +423,7 @@
             <key>gacha_line_20x568_2.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{24,141},{20,562}}</string>
+                <string>{{163,2},{20,562}}</string>
                 <key>offset</key>
                 <string>{0,-3}</string>
                 <key>rotated</key>
@@ -436,11 +436,11 @@
             <key>gacha_num_bg.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{623,528},{36,19}}</string>
+                <string>{{543,88},{36,19}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{36,19}}</string>
                 <key>sourceSize</key>
@@ -453,7 +453,7 @@
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{639,69}}</string>
                 <key>sourceSize</key>
@@ -462,7 +462,7 @@
             <key>technology_bg_116x116.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{474,577},{116,116}}</string>
+                <string>{{234,775},{116,116}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -475,7 +475,7 @@
             <key>technology_bg_normal_142x142.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{82,434},{142,142}}</string>
+                <string>{{221,114},{142,142}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -488,11 +488,11 @@
             <key>technology_line_normal_72x12.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{116,985},{72,12}}</string>
+                <string>{{464,873},{72,12}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{72,12}}</string>
                 <key>sourceSize</key>
@@ -501,11 +501,11 @@
             <key>technology_lv_bg_117x40.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{252,963},{117,40}}</string>
+                <string>{{490,133},{117,40}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{117,40}}</string>
                 <key>sourceSize</key>
@@ -514,11 +514,11 @@
             <key>vip_1.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,881},{112,125}}</string>
+                <string>{{221,534},{112,125}}</string>
                 <key>offset</key>
                 <string>{-2,0}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{11,2},{112,125}}</string>
                 <key>sourceSize</key>
@@ -527,7 +527,7 @@
             <key>vip_10.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{82,578},{138,129}}</string>
+                <string>{{403,2},{138,129}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -540,7 +540,7 @@
             <key>vip_2.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{194,709},{118,125}}</string>
+                <string>{{353,632},{118,125}}</string>
                 <key>offset</key>
                 <string>{-2,0}</string>
                 <key>rotated</key>
@@ -553,7 +553,7 @@
             <key>vip_3.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{475,450},{118,125}}</string>
+                <string>{{233,648},{118,125}}</string>
                 <key>offset</key>
                 <string>{-2,1}</string>
                 <key>rotated</key>
@@ -566,7 +566,7 @@
             <key>vip_4.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{351,572},{114,121}}</string>
+                <string>{{111,775},{114,121}}</string>
                 <key>offset</key>
                 <string>{-1,-1}</string>
                 <key>rotated</key>
@@ -579,7 +579,7 @@
             <key>vip_5.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{264,325},{118,125}}</string>
+                <string>{{357,512},{118,125}}</string>
                 <key>offset</key>
                 <string>{-2,0}</string>
                 <key>rotated</key>
@@ -592,7 +592,7 @@
             <key>vip_6.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{252,836},{120,125}}</string>
+                <string>{{111,648},{120,125}}</string>
                 <key>offset</key>
                 <string>{-2,1}</string>
                 <key>rotated</key>
@@ -605,7 +605,7 @@
             <key>vip_7.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{226,572},{112,123}}</string>
+                <string>{{353,759},{112,123}}</string>
                 <key>offset</key>
                 <string>{-1,2}</string>
                 <key>rotated</key>
@@ -618,11 +618,11 @@
             <key>vip_8.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{348,450},{120,125}}</string>
+                <string>{{357,385},{120,125}}</string>
                 <key>offset</key>
                 <string>{-2,1}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{7,1},{120,125}}</string>
                 <key>sourceSize</key>
@@ -631,7 +631,7 @@
             <key>vip_9.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{226,445},{120,125}}</string>
+                <string>{{357,258},{120,125}}</string>
                 <key>offset</key>
                 <string>{-1,1}</string>
                 <key>rotated</key>
@@ -644,33 +644,20 @@
             <key>vip_bg_110x124.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{579,363},{61,85}}</string>
+                <string>{{478,854},{61,85}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{61,85}}</string>
                 <key>sourceSize</key>
                 <string>{61,85}</string>
             </dict>
-            <key>vip_bg_3.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{82,141},{450,126}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{450,126}}</string>
-                <key>sourceSize</key>
-                <string>{450,126}</string>
-            </dict>
             <key>vip_bg_disable_110x124.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{516,363},{61,85}}</string>
+                <string>{{484,530},{61,85}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -683,7 +670,7 @@
             <key>vip_btn_back_ground_96x120.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{534,263},{96,98}}</string>
+                <string>{{478,754},{96,98}}</string>
                 <key>offset</key>
                 <string>{0,-7}</string>
                 <key>rotated</key>
@@ -693,27 +680,14 @@
                 <key>sourceSize</key>
                 <string>{96,120}</string>
             </dict>
-            <key>vip_king_icon.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{224,985},{26,26}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{26,26}}</string>
-                <key>sourceSize</key>
-                <string>{26,26}</string>
-            </dict>
             <key>vip_level_tip_bg_1.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{536,915},{62,68}}</string>
+                <string>{{478,917},{62,68}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{62,68}}</string>
                 <key>sourceSize</key>
@@ -722,11 +696,11 @@
             <key>vip_level_tip_bg_2.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{472,919},{62,68}}</string>
+                <string>{{73,575},{62,68}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{62,68}}</string>
                 <key>sourceSize</key>
@@ -735,11 +709,11 @@
             <key>vip_lock.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{486,817},{96,120}}</string>
+                <string>{{473,632},{96,120}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{96,120}}</string>
                 <key>sourceSize</key>
@@ -748,7 +722,7 @@
             <key>vip_point.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{504,303},{14,18}}</string>
+                <string>{{565,854},{14,18}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -761,24 +735,11 @@
             <key>vip_unlock_normal.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{540,695},{96,120}}</string>
+                <string>{{230,893},{96,120}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{96,120}}</string>
-                <key>sourceSize</key>
-                <string>{96,120}</string>
-            </dict>
-            <key>vip_unlock_pressed.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{534,141},{96,120}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{96,120}}</string>
                 <key>sourceSize</key>
@@ -792,9 +753,9 @@
             <key>realTextureFileName</key>
             <string>city_png.png</string>
             <key>size</key>
-            <string>{644,1016}</string>
+            <string>{581,1004}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:3c93e11da6038dff0b89fede6e4dc6c8:1/1$</string>
+            <string>$TexturePacker:SmartUpdate:93601d84b93f131709c4c593109d0522:1/1$</string>
             <key>textureFileName</key>
             <string>city_png.png</string>
         </dict>
