@@ -339,13 +339,14 @@ function WidgetWorldAllianceInfo:LoadMoveAlliance()
     end
 
     self:BuildOneButton("icon_move_alliance_building.png",_("迁移")):onButtonClicked(function()
-        local time = intInit.allianceMoveColdMinutes.value * 60 + Alliance_Manager:GetMyAlliance().basicInfo.allianceMoveTime/1000.0 - app.timer:GetServerTime()
-        local canMove = Alliance_Manager:GetMyAlliance().basicInfo.allianceMoveTime == 0 or time <= 0
+        local alliance = Alliance_Manager:GetMyAlliance()
+        local time = intInit.allianceMoveColdMinutes.value * 60 + alliance.basicInfo.allianceMoveTime/1000.0 - app.timer:GetServerTime()
+        local canMove = alliance.basicInfo.allianceMoveTime == 0 or time <= 0
         -- if not canMove then
         --     UIKit:showMessageDialog(_("提示"), _("迁移联盟冷却中"))
         --     self:LeftButtonClicked()
         --     return
-        -- end
+        -- endove
         local mapIndex = self.mapIndex
         local canMove1 = palaceLevel >= needPalaceLevel
         if not canMove1 then
@@ -353,14 +354,14 @@ function WidgetWorldAllianceInfo:LoadMoveAlliance()
             self:LeftButtonClicked()
             return
         end
-        local canMove1 = Alliance_Manager:GetMyAlliance():GetSelf():CanMoveAlliance()
+        local canMove1 = alliance:GetSelf():CanMoveAlliance()
         if not canMove1 then
             UIKit:showMessageDialog(_("提示"), _("权限不足，不能迁移联盟"))
             self:LeftButtonClicked()
             return
         end
         UIKit:showMessageDialog(_("提示"),_("是否确认迁移联盟至该领土？"),function()
-            local oldIndex = Alliance_Manager:GetMyAlliance().mapIndex
+            local oldIndex = alliance.mapIndex
             Alliance_Manager.my_mapIndex = nil
             NetManager:getMoveAlliancePromise(mapIndex):done(function()
                 Alliance_Manager:RemoveAllianceCache(oldIndex)
