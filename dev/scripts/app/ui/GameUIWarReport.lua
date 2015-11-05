@@ -235,7 +235,7 @@ function GameUIWarReport:CreateBootyPart()
 
         local reward_text = ""
         local report_data = self.report:GetData()
-        if report_data.defencePlayerData.masterOfDefender then
+        if report_data.defencePlayerData and report_data.defencePlayerData.masterOfDefender then
             if report_data.defencePlayerData.id == User:Id() then
                 reward_text = _("由于使用了城防大师，敌方无法掠夺资源")
             else
@@ -333,7 +333,7 @@ function GameUIWarReport:FightWithDefencePlayerReports()
     local right_player_dragon = report:GetEnemyDefenceFightDragon()
     local g = cc.ui.UIGroup.new()
     g:addWidget(UIKit:ttfLabel({
-        text = left_player_troop and _("战斗统计") or _("由于敌方未驻防，战斗未发生"),
+        text = left_player_troop and _("战斗统计") or (report:IsAttackCamp() and _("由于敌方未驻防，战斗未发生") or _("由于我方未驻防，战斗未发生")),
         size = 22,
         color = 0x403c2f
     }):align(display.CENTER, 0, 0))

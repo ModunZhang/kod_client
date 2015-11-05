@@ -30,7 +30,6 @@ Alliance.LISTEN_TYPE = Enum(
 property(Alliance, "_id", nil)
 property(Alliance, "mapIndex", nil)
 property(Alliance, "desc", "")
-property(Alliance, "titles", {})
 
 property(Alliance, "members", {})
 
@@ -111,12 +110,14 @@ function Alliance:GetEliteTitle()
     return self:GetTitles()["elite"]
 end
 function Alliance:GetTitles()
-    return LuaUtils:table_map(self.titles, function(k, v)
-        if string.sub(v, 1, 2) == "__" then
-            return k, Localize.alliance_title[k]
-        end
-        return k,v
-    end)
+    return {
+        archon = Localize.alliance_title["archon"],
+        general = Localize.alliance_title["general"],
+        quartermaster = Localize.alliance_title["quartermaster"],
+        supervisor = Localize.alliance_title["supervisor"],
+        elite = Localize.alliance_title["elite"],
+        member = Localize.alliance_title["member"],
+    }
 end
 function Alliance:IsDefault()
     return self._id == nil or self._id == json.null
@@ -274,7 +275,7 @@ function Alliance:GetOtherRequestEventsNum()
     return request_num
 end
 function Alliance:GetMapObjectType(mapobj)
-    return buildingName[mapobj.name] and buildingName[mapobj.name].type or mapobj.name 
+    return buildingName[mapobj.name] and buildingName[mapobj.name].type or mapobj.name
 end
 function Alliance:GetSizeWithMapObj(mapobj)
     local size = buildingName[mapobj.name]
@@ -605,8 +606,8 @@ function Alliance:GetSubStageStar(stageName)
 end
 --[[end]]
 function Alliance:GetEnemyAllianceMapIndex()
-     if self.allianceFight ~= nil 
-    and self.allianceFight ~= json.null then
+    if self.allianceFight ~= nil
+        and self.allianceFight ~= json.null then
         for k,v in pairs(self.allianceFight) do
             if v.alliance.id ~= self._id then
                 return v.alliance.mapIndex
@@ -874,6 +875,7 @@ function Alliance:cancelLocalMarchEventPushIf(marchEvent)
     end
 end
 return Alliance
+
 
 
 
