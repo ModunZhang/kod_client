@@ -36,6 +36,19 @@ function AllianceManager:GetToMineMarchEvents()
     end
     return to_my_events
 end
+function AllianceManager:GetMyBeAttackingEvent()
+    local to_my_events = {}
+    local marchEvents = self:GetMyAllianceMarchEvents()
+    for k,kindsOfEvents in pairs(marchEvents) do
+        for id,event in pairs(kindsOfEvents) do
+            if event ~= json.null and event.defencePlayerData.id == User:Id() and event.fromAlliance.id ~= self:GetMyAlliance()._id then
+                event.eventType = k
+                table.insert(to_my_events, event)
+            end
+        end
+    end
+    return to_my_events
+end
 function AllianceManager:GetToMyAllianceMarchEvents()
     local to_my_events = {}
     local marchEvents = self:GetMyAllianceMarchEvents()
