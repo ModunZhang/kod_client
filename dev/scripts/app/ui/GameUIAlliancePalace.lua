@@ -459,9 +459,7 @@ function GameUIAlliancePalace:InitInfoPart()
                     UIKit:showMessageDialog(_("提示"),_("选择的新地形与当前地形相同"))
                 else
                     if self.alliance:GetSelf():CanEditAlliance() then
-                        NetManager:getEditAllianceTerrianPromise(self:MapIndexToTerrian(self.select_terrian_index)):done(function ()
-                            app:EnterMyAllianceScene()
-                        end)
+                        NetManager:getEditAllianceTerrianPromise(self:MapIndexToTerrian(self.select_terrian_index))
                     else
                         UIKit:showMessageDialog(_("提示"),_("权限不足"))
                     end

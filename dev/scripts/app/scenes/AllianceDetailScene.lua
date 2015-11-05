@@ -10,7 +10,13 @@ function AllianceDetailScene:OnAllianceDataChanged_mapIndex(allianceData, deltaD
 end
 function AllianceDetailScene:OnAllianceDataChanged_basicInfo(allianceData, deltaData)
     if deltaData("basicInfo.terrain") then
-        self:GetSceneLayer():LoadAllianceByIndex(allianceData.mapIndex, allianceData)
+        if allianceData._id == Alliance_Manager:GetMyAlliance()._id then
+            UIKit:showMessageDialog(nil,_("联盟地形已经改变"),function()
+                app:EnterMyAllianceScene()
+            end,nil,false,nil)
+        else
+            self:GetSceneLayer():LoadAllianceByIndex(allianceData.mapIndex, allianceData)
+        end
     end
 end
 function AllianceDetailScene:OnAllianceDataChanged_members(allianceData, deltaData)
