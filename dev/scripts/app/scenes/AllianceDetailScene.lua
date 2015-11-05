@@ -314,7 +314,7 @@ function AllianceDetailScene:onEnter()
         local x,y = DataUtils:GetAbsolutePosition(alliance.mapIndex, mapObj.location.x, mapObj.location.y)
         self:GotoPosition(x,y)
     end
-    self:GetSceneLayer():ZoomTo(0.82)
+    self:GetSceneLayer():ZoomTo(0.65)
     alliance:AddListenOnType(self, "mapIndex")
     alliance:AddListenOnType(self, "basicInfo")
     alliance:AddListenOnType(self, "members")
