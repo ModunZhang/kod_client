@@ -10,10 +10,11 @@ function AllianceDetailScene:OnAllianceDataChanged_mapIndex(allianceData, deltaD
 end
 function AllianceDetailScene:OnAllianceDataChanged_basicInfo(allianceData, deltaData)
     if deltaData("basicInfo.terrain") then
-        if allianceData._id == Alliance_Manager:GetMyAlliance()._id then
+        if allianceData._id == Alliance_Manager:GetMyAlliance()._id and self.my_terrain ~= allianceData.basicInfo.terrain then
             UIKit:showMessageDialog(nil,_("联盟地形已经改变"),function()
                 app:EnterMyAllianceScene()
             end,nil,false,nil)
+            self.my_terrain = allianceData.basicInfo.terrain
         else
             self:GetSceneLayer():LoadAllianceByIndex(allianceData.mapIndex, allianceData)
         end
@@ -319,7 +320,7 @@ function AllianceDetailScene:onEnter()
     -- self:RefreshVillageEvents(alliance.villageEvents)
     self:CreateMarchEvents(Alliance_Manager:GetMyAllianceMapData().marchEvents)
     self:RefreshVillageEvents(alliance, Alliance_Manager:GetMyAllianceMapData().villageEvents)
-
+    self.my_terrain = alliance.basicInfo.terrain
     -- cc.ui.UIPushButton.new({normal = "lock_btn.png",pressed = "lock_btn.png"})
     -- :addTo(self, 1000000):align(display.RIGHT_TOP, display.width, display.height)
     -- :onButtonClicked(function(event)
