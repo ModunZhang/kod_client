@@ -63,7 +63,7 @@ function GameUIAllianceShrineEnter:GetUITitle()
 end
 
 function GameUIAllianceShrineEnter:GetBuildingImage()
-	return self.isMyAlliance and UILib.alliance_building.shrine or UILib.other_alliance_building.shrine
+	return {UILib.alliance_building.shrine,"alliance_shrine_2.png"}
 end
 
 function GameUIAllianceShrineEnter:GetBuildImageSprite()

@@ -636,8 +636,9 @@ local before_map = {
 
     items = function()end,
     itemLogs = function(allianceData, deltaData)
-        if deltaData("itemLogs.add") then
-            allianceData:SetNewGoodsCome(true)
+        local ok,value = deltaData("itemLogs.add")
+        if ok then
+            allianceData:SetNewGoodsCome(value[1].type == "addItem")
         end
     end,
 
