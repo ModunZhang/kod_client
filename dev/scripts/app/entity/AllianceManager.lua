@@ -4,6 +4,7 @@ local AllianceManager = class("AllianceManager")
 function AllianceManager:ctor()
     self.my_alliance = Alliance.new()
     self.my_alliance:SetIsMyAlliance(true)
+    self.handles = {}
     self.alliance_caches = {}
     self.my_alliance_mapData = {
         marchEvents = {
@@ -110,8 +111,9 @@ function AllianceManager:OnEnterMapIndex(mapIndex, data)
         end
     end
     self.currentMapData = data.mapData
-    if not self.handle then return end
-    self.handle.OnEnterMapIndex(self.handle, mapIndex, data)
+    for k,v in pairs(self.handles) do
+        v.OnEnterMapIndex(v, mapIndex, data)
+    end
 end
 local function removeJsonNull(t)
     for k,v in pairs(t) do
@@ -121,19 +123,27 @@ local function removeJsonNull(t)
     end 
 end
 function AllianceManager:OnMapDataChanged(mapIndex, currentMapData, deltaData)
-    if not self.handle then return end
-    self.handle.OnMapDataChanged(self.handle, self:GetAllianceByCache(mapIndex), currentMapData, deltaData)
+    for _,v in pairs(self.handles) do
+        v.OnMapDataChanged(v, self:GetAllianceByCache(mapIndex), currentMapData, deltaData)
+    end
     removeJsonNull(currentMapData.villageEvents)
     for _,t in pairs(currentMapData.marchEvents) do
         removeJsonNull(t)
     end
 end
 function AllianceManager:OnMapAllianceChanged(allianceData, deltaData)
-    if not self.handle then return end
-    self.handle.OnMapAllianceChanged(self.handle, allianceData, deltaData)
+    for _,v in pairs(self.handles) do
+        v.OnMapAllianceChanged(v, allianceData, deltaData)
+    end
 end
-function AllianceManager:SetAllianceHandle(handle)
-    self.handle = handle
+function AllianceManager:AddHandle(handle)
+    self.handles[handle] = handle
+end
+function AllianceManager:RemoveHandle(handle)
+    self.handles[handle] = nil
+end
+function AllianceManager:ClearAllHandles()
+    self.handles = {}
 end
 
 

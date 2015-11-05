@@ -492,12 +492,17 @@ function AllianceLayer:RefreshBuildingByIndex(index, building, alliance)
             local x,y = self:GetBannerPos(index, sprite.x, sprite.y)
             sprite.info.level:setString(building.level)
             sprite.info:pos(x, y):zorder(x * y)
-            local door = sprite:getChildByTag(SPRITE_TAG).door
-            if building.name == "shrine" and alliance and door then
-                if #alliance.shrineEvents > 0 then
-                    door:show()
-                else
-                    door:hide()
+            if alliance then
+                local door = sprite:getChildByTag(SPRITE_TAG).door
+                local light = sprite:getChildByTag(SPRITE_TAG).light
+                if building.name == "shrine" and door then
+                    if #alliance.shrineEvents > 0 then
+                        door:show()
+                    else
+                        door:hide()
+                    end
+                elseif building.name == "watchTower" and light then
+                    light:show()
                 end
             end
         end
@@ -532,18 +537,26 @@ function AllianceLayer:LoadAllianceByIndex(index, alliance)
                 if name ~= "bloodSpring" then
                     local b = Alliance.FindAllianceBuildingInfoByName(allianceData, name)
                     v.info.level:setString(b.level)
+                    local sprite = v:getChildByTag(SPRITE_TAG)
+                    local size = sprite:getContentSize()
                     if name == "shrine" then
-                        local sprite = v:getChildByTag(SPRITE_TAG)
-                        if not sprite.door then
-                            if isMyAlliance then
-                                local size = sprite:getContentSize()
-                                sprite.door = ccs.Armature:create("chuansongmen"):hide()
-                                              :addTo(sprite,0):pos(size.width/2, size.height/2)
-                                sprite.door:getAnimation():playWithIndex(0)
-                                if #allianceData.shrineEvents > 0 then
-                                    sprite.door:show()
-                                end
+                        if not sprite.door and isMyAlliance then
+                            sprite.door = ccs.Armature:create("chuansongmen"):hide()
+                                          :addTo(sprite,0):pos(size.width/2, size.height/2)
+                            sprite.door:getAnimation():playWithIndex(0)
+                            if #allianceData.shrineEvents > 0 then
+                                sprite.door:show()
                             end
+                        end
+                    elseif name == "watchTower" then
+                        if not sprite.light and isMyAlliance then
+                            sprite.light = ccs.Armature:create("shengdi"):show()
+                                           :addTo(sprite):pos(size.width/2, size.height/2)
+                            local bone = sprite.light:getBone("Layer1")
+                            bone:addDisplay(display.newNode(), 0)
+                            bone:changeDisplayWithIndex(0, true)
+                            sprite.light:setAnchorPoint(cc.p(0.5, 0.34))
+                            sprite.light:getAnimation():playWithIndex(0)
                         end
                     end
                 end
@@ -843,11 +856,16 @@ function AllianceLayer:FreeObjects(obj)
 
     for name,v in pairs(obj.buildings) do
         v.info:hide()
+        local sprite = v:getChildByTag(SPRITE_TAG)
         if name == "shrine" then
-            local sprite = v:getChildByTag(SPRITE_TAG)
             if v.door then
                 v.door:removeFromParent()
                 v.door = nil
+            end
+        elseif name == "watchTower" then
+            if v.light then
+                v.light:removeFromParent()
+                v.light = nil
             end
         end
     end

@@ -313,7 +313,7 @@ function AllianceDetailScene:onEnter()
     alliance:AddListenOnType(self, "marchEvents")
     alliance:AddListenOnType(self, "villageEvents")
     alliance:AddListenOnType(self, "shrineEvents")
-    Alliance_Manager:SetAllianceHandle(self)
+    Alliance_Manager:AddHandle(self)
 
     self:CreateMarchEvents(alliance.marchEvents)
     -- self:RefreshVillageEvents(alliance.villageEvents)
@@ -337,7 +337,7 @@ function AllianceDetailScene:onExit()
    and not Alliance_Manager:GetMyAlliance():IsDefault() then
         NetManager:getLeaveMapIndexPromise(self.current_allinace_index)
     end
-    Alliance_Manager:SetAllianceHandle(nil)
+    Alliance_Manager:ClearAllHandles()
     Alliance_Manager:ClearCache()
     Alliance_Manager:ResetCurrentMapData()
     Alliance_Manager:GetMyAlliance():RemoveListenerOnType(self, "mapIndex")

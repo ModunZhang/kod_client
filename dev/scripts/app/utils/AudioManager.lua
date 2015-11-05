@@ -359,7 +359,7 @@ function AudioManager:PlayGameMusicOnSceneEnter(scene_name,loop)
 				local status = Alliance_Manager:GetMyAlliance().basicInfo.status
 				if status == 'prepare' or status == 'fight' then
 					scene_name = 'AllianceDetailScene' --battle
-					self:PlayBgMusicWithFileKey('sfx_battle',false)
+					self:PlayBgMusicWithFileKey('bgm_battle',false)
 				else
 					self:PlayeBgMusic(scene_enter_music_map[scene_name],loop)
 				end

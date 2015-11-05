@@ -70,10 +70,10 @@ function GameUIWatchTower:AddOrRemoveListener(isAdd)
     local my_allaince = Alliance_Manager:GetMyAlliance()
     if isAdd then
         my_allaince:AddListenOnType(self, "marchEvents")
-        Alliance_Manager:SetAllianceHandle(self)
+        Alliance_Manager:AddHandle(self)
     else
         my_allaince:RemoveListenerOnType(self, "marchEvents")
-        Alliance_Manager:SetAllianceHandle(nil)
+        Alliance_Manager:RemoveHandle(self)
     end
 end
 
