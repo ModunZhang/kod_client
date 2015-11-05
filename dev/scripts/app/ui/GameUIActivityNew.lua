@@ -337,7 +337,6 @@ function GameUIActivityNew:GetActivityItem(item_type)
     return item
 end
 function GameUIActivityNew:CheckCanGetLevelUpReward(level)
-    local max_level = 0
     local countInfo = User.countInfo
     for __,v in ipairs(countInfo.levelupRewards) do
         if v == level then

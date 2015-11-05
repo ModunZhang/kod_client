@@ -296,7 +296,6 @@ function User:HavePlayerLevelUpReward()
     for __,v in ipairs(config_levelup) do
         if not (app.timer:GetServerTime() > countInfo.registerTime/1000 + playerLevelupRewardsHours_value * 60 * 60) then
             if  v.level <= current_level then
-                local max_level = 0
                 local l_flag = true
                 for __,l in ipairs(countInfo.levelupRewards) do
                     if l == v.index then
