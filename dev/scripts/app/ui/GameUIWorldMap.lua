@@ -91,7 +91,7 @@ function GameUIWorldMap:InitArrow()
     self.arrow_enemy = cc.ui.UIPushButton.new({
         normal = "arrow_up_enemy.png",
         pressed = "arrow_down_enemy.png"
-    }):addTo(self, 10):align(display.TOP_CENTER):hide()
+    }):addTo(self, 10):align(display.TOP_CENTER):hide():scale(0.8)
     :onButtonClicked(function()
         local mapIndex = Alliance_Manager:GetMyAlliance():GetEnemyAllianceMapIndex()
         if mapIndex then
@@ -102,21 +102,21 @@ function GameUIWorldMap:InitArrow()
             self.arrow_enemy:hide()
         end
     end)
-    display.newSprite("attack_58x56.png")
+    self.arrow_enemy.icon = display.newSprite("attack_58x56.png")
     :addTo(self.arrow_enemy):pos(0, - 53):scale(0.68)
 
 
     self.arrow = cc.ui.UIPushButton.new({
-        normal = "location_arrow_up.png",
-        pressed = "location_arrow_down.png"
-    }):addTo(self,2):align(display.TOP_CENTER):hide()
+        normal = "arrow_up_mine.png",
+        pressed = "arrow_down_mine.png"
+    }):addTo(self,2):align(display.TOP_CENTER):hide():scale(0.8)
     :onButtonClicked(function()
             local mapIndex = Alliance_Manager:GetMyAlliance().mapIndex
             local x,y = self:GetSceneLayer():IndexToLogic(mapIndex)
             self:GotoPosition(x,y)
             self:LoadMap()
         end)
-    display.newSprite("arrow_icon_mine.png")
+    self.arrow.icon = display.newSprite("arrow_icon_mine.png")
     :addTo(self.arrow):pos(0, - 53)
     -- self.arrow_label = UIKit:ttfLabel({
     --     size = 20,
@@ -133,6 +133,7 @@ function GameUIWorldMap:UpdateArrow()
         if p and degree then
             degree = degree + 180
             self.arrow:show():pos(p.x, p.y):rotation(degree)
+            self.arrow.icon:rotation(-degree)
             -- local isflip = (degree > 0 and degree < 180)
             -- local distance = ceil(pGetLength(pSub(world_point, p)) / 80)
             -- self.arrow_label:align(isflip and RIGHT_CENTER or LEFT_CENTER)
@@ -152,6 +153,7 @@ function GameUIWorldMap:UpdateEnemyArrow()
         if p and degree then
             degree = degree + 180
             self.arrow_enemy:show():pos(p.x, p.y):rotation(degree)
+            self.arrow_enemy.icon:rotation(-degree)
         end
     else
         self.arrow_enemy:hide()
