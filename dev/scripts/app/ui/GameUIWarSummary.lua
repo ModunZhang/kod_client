@@ -146,7 +146,7 @@ function GameUIWarSummary:InitWarSummary(report)
         {string.formatnumberthousands(ourAlliance.strikeSuccessCount),_("突袭成功"),string.formatnumberthousands(enemyAlliance.strikeSuccessCount)},
         {string.formatnumberthousands(ourAlliance.attackCount),_("进攻次数"),string.formatnumberthousands(enemyAlliance.attackCount)},
         {string.formatnumberthousands(ourAlliance.attackSuccessCount),_("进攻成功"),string.formatnumberthousands(enemyAlliance.attackSuccessCount)},
-        {killMax.allianceId == alliance._id and killMax.playerName ~= json.null and killMax.playerName or _("无"),_("头号杀手"),killMax.allianceId ~= alliance.id and killMax.playerName  ~= json.null and killMax.playerName or _("无")},
+        {killMax.allianceId == alliance._id and killMax.playerName ~= json.null and killMax.playerName or _("无"),_("头号杀手"),killMax.allianceId ~= alliance._id and killMax.playerName  ~= json.null and killMax.playerName or _("无")},
         {string.formatnumberthousands(ourAlliance.honour),_("荣耀值奖励"),string.formatnumberthousands(enemyAlliance.honour)},
     }
     local b_flag = true
