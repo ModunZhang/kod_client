@@ -386,7 +386,8 @@ function WorldLayer:UpdateAllianceSprite(index, alliance)
     if sprite.flagstr ~= alliance.flag then
         sprite.flag:SetFlag(alliance.flag)
     end
-    if self:GetAllianceStatus(alliance) ~= "fight" then
+    if self:GetAllianceStatus(alliance) ~= "fight"
+    and sprite:getChildByTag(ANI_TAG) then
         sprite:removeChildByTag(ANI_TAG)
     elseif not sprite:getChildByTag(ANI_TAG) then
         local size = sprite:getContentSize()

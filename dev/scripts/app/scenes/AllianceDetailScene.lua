@@ -365,6 +365,7 @@ function AllianceDetailScene:FetchAllianceDatasByIndex(index, func)
             self:GetHomePage():HideLoading()
         end
         self.fetchtimer:stopAllActions()
+        self.fetch_index = nil
         self.current_allinace_index = nil
         if type(func) == "function" then
             func()
