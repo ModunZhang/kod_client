@@ -757,7 +757,7 @@ local ALLIANCE_BUILDING = {
     shrine = "alliance_shrine_1.png",
     shop = "alliance_shop.png",
     orderHall = "alliance_orderHall.png",
-    watchTower = "alliance_shrine.png",
+    watchTower = "alliance_watchTower.png",
     bloodSpring = "alliance_bloodSpring.png",
 }
 local OTHER_ALLIANCE_BUILDING = setmetatable({
