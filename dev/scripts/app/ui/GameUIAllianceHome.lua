@@ -195,17 +195,21 @@ function GameUIAllianceHome:InitArrow()
     -- self.enemy_arrow_index = 1
 
     -- my city
-    self.arrow = cc.ui.UIPushButton.new({normal = "location_arrow_up.png",
-        pressed = "location_arrow_down.png"})
-        :addTo(self, 10):align(display.TOP_CENTER):hide()
-        :onButtonClicked(function()
-            self:ReturnMyCity()
-        end)
-    self.arrow_label = cc.ui.UILabel.new({
-        size = 20,
-        font = UIKit:getFontFilePath(),
-        color = UIKit:hex2c3b(0xf5e8c4)
-    }):addTo(self.arrow):rotation(90):align(display.LEFT_CENTER, 0, -40)
+    self.arrow = cc.ui.UIPushButton.new({
+        normal = "arrow_up_mine.png",
+        pressed = "arrow_down_mine.png"
+    }):addTo(self, 10):align(display.TOP_CENTER):hide()
+    :onButtonClicked(function()
+        self:ReturnMyCity()
+    end)
+
+    display.newSprite("arrow_icon_mine.png")
+    :addTo(self.arrow):pos(0, - 53)
+    -- self.arrow_label = cc.ui.UILabel.new({
+    --     size = 20,
+    --     font = UIKit:getFontFilePath(),
+    --     color = UIKit:hex2c3b(0xf5e8c4)
+    -- }):addTo(self.arrow):rotation(90):align(display.LEFT_CENTER, 0, -40)
 end
 function GameUIAllianceHome:ReturnMyCity()
     local alliance = self.alliance
@@ -739,11 +743,10 @@ function GameUIAllianceHome:UpdateMyCityArrows(alliance)
         if p and degree then
             degree = degree + 180
             self.arrow:show():pos(p.x, p.y):rotation(degree)
-
-            local isflip = (degree > 0 and degree < 180)
-            local distance = ceil(pGetLength(pSub(world_point, p)) / 80)
-            self.arrow_label:align(isflip and RIGHT_CENTER or LEFT_CENTER)
-                :scale(isflip and -1 or 1):setString(string.format("%dM", distance))
+            -- local isflip = (degree > 0 and degree < 180)
+            -- local distance = ceil(pGetLength(pSub(world_point, p)) / 80)
+            -- self.arrow_label:align(isflip and RIGHT_CENTER or LEFT_CENTER)
+            --     :scale(isflip and -1 or 1):setString(string.format("%dM", distance))
         end
     else
         self.arrow:hide()

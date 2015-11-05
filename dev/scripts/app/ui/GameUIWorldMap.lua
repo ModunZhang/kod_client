@@ -95,10 +95,12 @@ function GameUIWorldMap:InitArrow()
             self:GotoPosition(x,y)
             self:LoadMap()
         end)
-    self.arrow_label = UIKit:ttfLabel({
-        size = 20,
-        color = 0xf5e8c4
-    }):addTo(self.arrow):rotation(90):align(display.LEFT_CENTER, 0, -50)
+    display.newSprite("arrow_icon_mine.png")
+    :addTo(self.arrow):pos(0, - 53)
+    -- self.arrow_label = UIKit:ttfLabel({
+    --     size = 20,
+    --     color = 0xf5e8c4
+    -- }):addTo(self.arrow):rotation(90):align(display.LEFT_CENTER, 0, -50)
 end
 local screen_rect = cc.rect(0, 200, display.width, display.height - 200)
 function GameUIWorldMap:UpdateArrow()
@@ -110,10 +112,10 @@ function GameUIWorldMap:UpdateArrow()
         if p and degree then
             degree = degree + 180
             self.arrow:show():pos(p.x, p.y):rotation(degree)
-            local isflip = (degree > 0 and degree < 180)
-            local distance = ceil(pGetLength(pSub(world_point, p)) / 80)
-            self.arrow_label:align(isflip and RIGHT_CENTER or LEFT_CENTER)
-                :scale(isflip and -1 or 1):setString(string.format("%d", distance))
+            -- local isflip = (degree > 0 and degree < 180)
+            -- local distance = ceil(pGetLength(pSub(world_point, p)) / 80)
+            -- self.arrow_label:align(isflip and RIGHT_CENTER or LEFT_CENTER)
+            --     :scale(isflip and -1 or 1):setString(string.format("%d", distance))
         end
     else
         self.arrow:hide()
