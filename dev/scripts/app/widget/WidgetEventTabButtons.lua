@@ -156,6 +156,7 @@ function WidgetEventTabButtons:ctor(city, ratio)
     self:RefreshBuildQueueByType("build", "soldier", "material", "technology")
 
     scheduleAt(self, function()
+        if self:IsShowing() then return end
         local event = User:GetShortestTechEvent()
         if event then
             local time, percent = UtilsForEvent:GetEventInfo(event)
