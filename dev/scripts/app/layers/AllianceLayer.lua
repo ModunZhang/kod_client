@@ -1065,19 +1065,6 @@ function AllianceLayer:LoadBackground(index, alliance)
     local terrain = self:GetMapInfoByIndex(index, alliance)
     if not self.alliance_bg[index] then
         local new_bg = self:GetFreeBackground(terrain)
-        if terrain == "desert" then
-            local right, down = self:GetRightDownTerrain(index)
-            if right then
-                if new_bg.right[right] then
-                    new_bg.right[right]:show()
-                end
-            end
-            if down then
-                if new_bg.down[down] then
-                    new_bg.down[down]:show()
-                end
-            end
-        end
         self:FreeBackground(self.alliance_bg[index])
         local x,y = self:GetAllianceLogicMap()
                     :ConvertToLeftBottomMapPosition(self:IndexToLogic(index))
@@ -1149,9 +1136,6 @@ local terrain_map = {
 function AllianceLayer:GetFreeBackground(terrain)
     local bg = table.remove(self.alliance_bg_free[terrain], 1)
     if bg then
-        if terrain == "desert" then
-            self:HideDesertEdge(bg)
-        end
         return bg
     else
         local map
@@ -1200,15 +1184,6 @@ function AllianceLayer:GetFreeBackground(terrain)
         return map
     end
 end
-function AllianceLayer:HideDesertEdge(map)
-    for k,v in pairs(map.right) do
-        v:hide()
-    end
-    for k,v in pairs(map.down) do
-        v:hide()
-    end
-    return map
-end
 local random = math.random
 function AllianceLayer:LoadMiddleTerrain(map, terrain)
     math.randomseed(12345)
@@ -1228,74 +1203,31 @@ function AllianceLayer:CreateDesertBg()
     local terrain = "desert"
     local map = cc.TMXTiledMap:create(string.format("tmxmaps/alliance_%s1.tmx", terrain))
     local width = map:getContentSize().width
-    
-    map.right = {}
-    map.down = {}
 
-    map.right.grassLand = display.newNode():addTo(map)
-    local terrain = "grassLand"
     display.newSprite(string.format("plus_right_%s.png", terrain))
-        :align(display.RIGHT_BOTTOM, map:getContentSize().width, 0)
-        :addTo(map.right.grassLand):flipX(true)
-
+        :addTo(map):align(display.LEFT_BOTTOM, map:getContentSize().width, 0)
     for i = 0, 9 do
         display.newSprite(string.format("plus_right_%s.png", terrain))
-        :addTo(map.right.grassLand):flipX(true)
-        :align(display.RIGHT_BOTTOM, map:getContentSize().width, i * 480 + 160)
+            :addTo(map):align(display.LEFT_BOTTOM, map:getContentSize().width, i * 480 + 160)
     end
-
-    map.down.grassLand = display.newNode():addTo(map)
-    local w = -100
+    local w = 0
     math.randomseed(737)
     while true do
         local index = math.random(2)
         local png = string.format("plus_down%d_%s.png", index, terrain)
-        local sprite = display.newSprite(png)
-                       :addTo(map.down.grassLand):flipY(true)
+        local sprite = display.newSprite(png):addTo(map)
         local size = sprite:getContentSize()
-        local offset = (index == 1 and -100 or -120)
-        local x = (index == 1 and -20 or -30)
-        local y = (index == 1 and 100 or 100 - 20)
+        local offset = (index == 1 and -10 or -10)
+        local x = (index == 1 and 0 or 0)
+        local y = (index == 1 and 5 or 10)
         sprite:align(display.LEFT_TOP, w + x, y)
         w = size.width + w + offset
         if w > width then
             break
         end
     end
-
-
-
-    map.right.iceField = display.newNode():addTo(map)
-    local terrain = "iceField"
-    display.newSprite(string.format("plus_right_%s.png", terrain))
-        :align(display.RIGHT_BOTTOM, map:getContentSize().width, 0)
-        :addTo(map.right.iceField):flipX(true)
-
-    for i = 0, 9 do
-        display.newSprite(string.format("plus_right_%s.png", terrain))
-        :addTo(map.right.iceField):flipX(true)
-        :align(display.RIGHT_BOTTOM, map:getContentSize().width, i * 480 + 160)
-    end
-
-    map.down.iceField = display.newNode():addTo(map)
-    local w = -100
-    math.randomseed(117)
-    while true do
-        local index = math.random(2)
-        local png = string.format("plus_down%d_%s.png", index, terrain)
-        local sprite = display.newSprite(png)
-                       :addTo(map.down.iceField):flipY(true)
-        local size = sprite:getContentSize()
-        local offset = (index == 1 and -25 or -100)
-        local x = (index == 1 and -5 or -5)
-        local y = (index == 1 and 100 or 155)
-        sprite:align(display.LEFT_TOP, w + x, y)
-        w = size.width + w + offset
-        if w > width then
-            break
-        end
-    end
-    self:HideDesertEdge(map)
+    display.newSprite("plus_down1_desert.png"):addTo(map)
+    :align(display.RIGHT_TOP, width, 20)
     return map
 end
 function AllianceLayer:CreateIceFieldBg()
