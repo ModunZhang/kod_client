@@ -68,24 +68,27 @@ function WorldLayer:CreateBg()
     :addTo(self):align(display.LEFT_TOP,0,size.height * sy + offsetY):scale(0.7)
 end
 function WorldLayer:CreateCorner()
-    display.newSprite("world_tile.png"):pos(CORNER_LENGTH/2, CORNER_LENGTH/2)
+    display.newSprite("world_tile.png"):pos(CORNER_LENGTH/2 + 2, CORNER_LENGTH/2 + 2)
         :addTo(self.scene_node):scale(1):rotation(-90)
-    display.newSprite("world_tile.png"):pos(CORNER_LENGTH/2, CORNER_LENGTH*3/2 + TILE_LENGTH * HEIGHT)
+    display.newSprite("world_tile.png"):pos(CORNER_LENGTH/2 + 2, CORNER_LENGTH*3/2 + TILE_LENGTH * HEIGHT - 2)
         :addTo(self.scene_node):scale(1):rotation(0)
-    display.newSprite("world_tile.png"):pos(CORNER_LENGTH*3/2 + TILE_LENGTH * WIDTH, CORNER_LENGTH/2)
+    display.newSprite("world_tile.png"):pos(CORNER_LENGTH*3/2 + TILE_LENGTH * WIDTH - 2, CORNER_LENGTH/2 + 2)
         :addTo(self.scene_node):scale(1):rotation(180)
-    display.newSprite("world_tile.png"):pos(CORNER_LENGTH*3/2 + TILE_LENGTH * WIDTH, CORNER_LENGTH*3/2 + TILE_LENGTH * HEIGHT)
+    display.newSprite("world_tile.png"):pos(CORNER_LENGTH*3/2 + TILE_LENGTH * WIDTH - 2, CORNER_LENGTH*3/2 + TILE_LENGTH * HEIGHT - 2)
         :addTo(self.scene_node):scale(1):rotation(90)
 end
 function WorldLayer:CreateEdge()
+    -- left
     display.newFilteredSprite("world_edge.png", "CUSTOM", json.encode({
         frag = "shaders/nolimittex.fs",
         shaderName = "nolimittex1",
         unit_count = HEIGHT,
         unit_len = 1 / HEIGHT,
-    })):pos(CORNER_LENGTH/2+1, CORNER_LENGTH + HEIGHT * TILE_LENGTH * 0.5)
+    })):pos(CORNER_LENGTH/2 + 1, CORNER_LENGTH + HEIGHT * TILE_LENGTH * 0.5)
         :addTo(self.scene_node):setScaleY(HEIGHT)
 
+
+    -- right
     display.newFilteredSprite("world_edge.png", "CUSTOM", json.encode({
         frag = "shaders/nolimittex.fs",
         shaderName = "nolimittex2",
@@ -94,6 +97,8 @@ function WorldLayer:CreateEdge()
     })):pos(CORNER_LENGTH*3/2 + TILE_LENGTH * WIDTH - 1, CORNER_LENGTH + HEIGHT * TILE_LENGTH * 0.5)
         :addTo(self.scene_node):setScaleY(HEIGHT):flipX(true)
 
+
+    -- up
     display.newFilteredSprite("world_edge.png", "CUSTOM", json.encode({
         frag = "shaders/nolimittex.fs",
         shaderName = "nolimittex3",
@@ -102,6 +107,7 @@ function WorldLayer:CreateEdge()
     })):pos(CORNER_LENGTH + WIDTH * TILE_LENGTH * 0.5, CORNER_LENGTH*3/2 + TILE_LENGTH * HEIGHT - 1)
         :addTo(self.scene_node):setScaleY(WIDTH):rotation(90)
 
+    -- down
     display.newFilteredSprite("world_edge.png", "CUSTOM", json.encode({
         frag = "shaders/nolimittex.fs",
         shaderName = "nolimittex4",

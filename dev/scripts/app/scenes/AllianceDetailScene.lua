@@ -364,11 +364,13 @@ function AllianceDetailScene:FetchAllianceDatasByIndex(index, func)
     end
 end
 function AllianceDetailScene:StartTimer(index, func)
+    if self.fetch_index == index then return end
     if self:GetHomePage() then
         self:GetHomePage():ShowLoading()
     end
     self.fetchtimer:stopAllActions()
     self.fetchtimer:performWithDelay(function()
+        self.fetch_index = index
         NetManager:getEnterMapIndexPromise(index)
             :done(function(response)
                 self.current_allinace_index = index
