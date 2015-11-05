@@ -604,6 +604,16 @@ function Alliance:GetSubStageStar(stageName)
     return 0
 end
 --[[end]]
+function Alliance:GetEnemyAllianceMapIndex()
+     if self.allianceFight ~= nil 
+    and self.allianceFight ~= json.null then
+        for k,v in pairs(self.allianceFight) do
+            if v.alliance.id ~= self._id then
+                return v.alliance.mapIndex
+            end
+        end
+    end
+end
 
 
 --[[resouese begin]]

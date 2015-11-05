@@ -64,6 +64,7 @@ function GameUIWorldMap:onEnter()
     self:InitArrow()
     scheduleAt(self, function()
         self:UpdateArrow()
+        self:UpdateEnemyArrow()
     end, 0.01)
 end
 local deg = math.deg
@@ -86,10 +87,30 @@ local function pGetIntersectPoint(pt1,pt2,pt3,pt4)
     end
 end
 function GameUIWorldMap:InitArrow()
-    self.arrow = cc.ui.UIPushButton.new({normal = "location_arrow_up.png",
-        pressed = "location_arrow_down.png"})
-        :addTo(self,2):align(display.TOP_CENTER):hide()
-        :onButtonClicked(function()
+
+    self.arrow_enemy = cc.ui.UIPushButton.new({
+        normal = "arrow_up_enemy.png",
+        pressed = "arrow_down_enemy.png"
+    }):addTo(self, 10):align(display.TOP_CENTER):hide()
+    :onButtonClicked(function()
+        local mapIndex = Alliance_Manager:GetMyAlliance():GetEnemyAllianceMapIndex()
+        if mapIndex then
+            local x,y = self:GetSceneLayer():IndexToLogic(mapIndex)
+            self:GotoPosition(x,y)
+            self:LoadMap()
+        else
+            self.arrow_enemy:hide()
+        end
+    end)
+    display.newSprite("attack_58x56.png")
+    :addTo(self.arrow_enemy):pos(0, - 53):scale(0.68)
+
+
+    self.arrow = cc.ui.UIPushButton.new({
+        normal = "location_arrow_up.png",
+        pressed = "location_arrow_down.png"
+    }):addTo(self,2):align(display.TOP_CENTER):hide()
+    :onButtonClicked(function()
             local mapIndex = Alliance_Manager:GetMyAlliance().mapIndex
             local x,y = self:GetSceneLayer():IndexToLogic(mapIndex)
             self:GotoPosition(x,y)
@@ -119,6 +140,21 @@ function GameUIWorldMap:UpdateArrow()
         end
     else
         self.arrow:hide()
+    end
+end
+function GameUIWorldMap:UpdateEnemyArrow()
+    local mapIndex = Alliance_Manager:GetMyAlliance():GetEnemyAllianceMapIndex()
+    if not mapIndex then return self.arrow_enemy:hide() end
+    local x,y = self:GetSceneLayer():IndexToLogic(mapIndex)
+    local world_point = self:GetSceneLayer():ConverToWorldSpace(x,y)
+    if not rectContainsPoint(screen_rect, world_point) then
+        local p,degree = self:GetIntersectPoint(screen_rect, MID_POINT, world_point)
+        if p and degree then
+            degree = degree + 180
+            self.arrow_enemy:show():pos(p.x, p.y):rotation(degree)
+        end
+    else
+        self.arrow_enemy:hide()
     end
 end
 function GameUIWorldMap:GetIntersectPoint(screen_rect, point1, point2, normal)

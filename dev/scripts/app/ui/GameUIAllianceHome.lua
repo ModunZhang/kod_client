@@ -159,6 +159,7 @@ function GameUIAllianceHome:Schedule()
     scheduleAt(self, function()
         if self.alliance:IsDefault() then return end
         self:UpdateMyCityArrows(self.alliance)
+        self:UpdateEnemyArrow()
     end, 0.01)
     -- display.newNode():addTo(self):schedule(function()
     --     if alliance:IsDefault() then return end
@@ -193,6 +194,26 @@ function GameUIAllianceHome:InitArrow()
     -- -- enemys
     -- self.enemy_arrows = {}
     -- self.enemy_arrow_index = 1
+
+
+    self.arrow_enemy = cc.ui.UIPushButton.new({
+        normal = "arrow_up_enemy.png",
+        pressed = "arrow_down_enemy.png"
+    }):addTo(self, 10):align(display.TOP_CENTER):hide()
+    :onButtonClicked(function()
+        local mapIndex = Alliance_Manager:GetMyAlliance():GetEnemyAllianceMapIndex()
+        if not mapIndex then return self.arrow_enemy:hide() end
+        local scene = display.getRunningScene()
+        if Alliance_Manager:GetAllianceByCache(mapIndex) then
+            scene:GotoAllianceByXY(scene:GetSceneLayer():IndexToLogic(mapIndex))
+        else
+            scene:FetchAllianceDatasByIndex(mapIndex, function()
+                scene:GotoAllianceByXY(scene:GetSceneLayer():IndexToLogic(mapIndex))
+            end)
+        end
+    end)
+    display.newSprite("attack_58x56.png")
+    :addTo(self.arrow_enemy):pos(0, - 53):scale(0.68)
 
     -- my city
     self.arrow = cc.ui.UIPushButton.new({
@@ -750,6 +771,27 @@ function GameUIAllianceHome:UpdateMyCityArrows(alliance)
         end
     else
         self.arrow:hide()
+    end
+end
+function GameUIAllianceHome:UpdateEnemyArrow()
+    local mapIndex = self.alliance:GetEnemyAllianceMapIndex()
+    if not mapIndex then return self.arrow_enemy:hide() end
+    local screen_rect = self.screen_rect
+    local x,y = DataUtils:GetAbsolutePosition(mapIndex, 16, 16)
+    local sceneLayer = display.getRunningScene():GetSceneLayer()
+    local map_point = sceneLayer:ConvertLogicPositionToMapPosition(x,y)
+    local world_point = sceneLayer:convertToWorldSpace(map_point)
+    if not rectContainsPoint(screen_rect, world_point) then
+        local p,degree = self:GetIntersectPoint(screen_rect, MID_POINT, world_point)
+        if p and degree then
+            degree = degree + 180
+            self.arrow_enemy:show():pos(p.x, p.y):rotation(degree)
+            if pGetLength(pSub(world_point, p)) < 2000 then
+                self.arrow_enemy:hide()
+            end
+        end
+    else
+        self.arrow_enemy:hide()
     end
 end
 -- function GameUIAllianceHome:UpdateMyAllianceBuildingArrows(screen_rect, alliance, layer)
