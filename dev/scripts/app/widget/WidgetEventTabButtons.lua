@@ -733,6 +733,7 @@ function WidgetEventTabButtons:DragonEquipmentEventsUpgradeOrSpeedup()
     UIKit:newGameUI("GameUIBlackSmithSpeedUp", self.city:GetFirstBuildingByType("blackSmith")):AddToCurrentScene(true)
 end
 function WidgetEventTabButtons:SetProgressItemBtnLabel(canFreeSpeedUp, event_item)
+    if event_item.event.finishTime/1000 < timer:GetServerTime() then return end
     local User = self.city:GetUser()
     local old_status = event_item.status
     local btn_label
