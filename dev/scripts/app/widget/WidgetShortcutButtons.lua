@@ -231,6 +231,7 @@ end
 function WidgetShortcutButtons:onEnter()
     User:AddListenOnType(self, "countInfo")
     User:AddListenOnType(self, "houseEvents")
+    User:AddListenOnType(self, "buildings")
     User:AddListenOnType(self, "buildingEvents")
     User:AddListenOnType(self, "soldierStarEvents")
     User:AddListenOnType(self, "militaryTechEvents")
@@ -249,6 +250,7 @@ end
 function WidgetShortcutButtons:onExit()
     User:RemoveListenerOnType(self, "countInfo")
     User:RemoveListenerOnType(self, "houseEvents")
+    User:RemoveListenerOnType(self, "buildings")
     User:RemoveListenerOnType(self, "buildingEvents")
     User:RemoveListenerOnType(self, "soldierStarEvents")
     User:RemoveListenerOnType(self, "militaryTechEvents")
@@ -285,6 +287,12 @@ end
 function WidgetShortcutButtons:RefreshHelpButtonVisible()
     if self.help_button then
         self.right_top_order:RefreshOrder()
+    end
+end
+
+function WidgetShortcutButtons:OnUserDataChanged_buildings(userData, deltaData)
+    if deltaData("buildings.location_1") then
+        self:CheckAllianceRewardCount()
     end
 end
 function WidgetShortcutButtons:OnUserDataChanged_houseEvents()

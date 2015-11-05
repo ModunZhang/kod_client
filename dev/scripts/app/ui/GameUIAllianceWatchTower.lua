@@ -102,9 +102,6 @@ function GameUIAllianceWatchTower:GetAllOrderedMarchEvents()
     -- end
     return beStrikedEvents , attackEvents
 end
-function GameUIAllianceWatchTower:FliterEvents(watchTowerLevel)
-
-end
 -- 创建来袭事件列表页
 function GameUIAllianceWatchTower:CreateBeStrikedList()
     local beStriked_listview ,list_node = UIKit:commonListView({
