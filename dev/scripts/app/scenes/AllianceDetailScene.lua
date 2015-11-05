@@ -162,7 +162,7 @@ function AllianceDetailScene:OnMapDataChanged(allianceData, mapData, deltaData)
         end
     end
     if allianceData then
-        for i,v in ipairs(getmetatable(deltaData).remove or {}) do
+        for i,v in ipairs(getmetatable(deltaData).villageEvents_remove or {}) do
             local mapObj = Alliance.FindMapObjectById(allianceData, v.villageData.id)
             if mapObj then
                 self:GetSceneLayer()
@@ -179,6 +179,15 @@ function AllianceDetailScene:OnMapDataChanged(allianceData, mapData, deltaData)
                         self:GetSceneLayer()
                         :RefreshMapObjectByIndex(allianceData.mapIndex, mapObj, allianceData)
                     end
+                end
+            end
+        end
+        if deltaData("marchEvents") then
+            for _,v in ipairs(allianceData.buildings) do
+                if v.name == "watchTower" then
+                    self:GetSceneLayer()
+                    :RefreshBuildingByIndex(allianceData.mapIndex, v, allianceData)
+                    break
                 end
             end
         end

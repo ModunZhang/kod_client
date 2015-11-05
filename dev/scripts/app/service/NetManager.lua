@@ -597,18 +597,18 @@ local logic_event_map = {
             mapData = Alliance_Manager:GetCurrentMapData()
         end
         if mapData then
-            local remove = {}
+            local villageEvents_remove = {}
             for i,v in ipairs(response.data) do
                 local keys, value = unpack(v)
                 if value == json.null then
                     local villageevents, id = unpack(string.split(keys, "."))
                     if villageevents == "villageEvents" then
-                        table.insert(remove, mapData.villageEvents[id])
+                        table.insert(villageEvents_remove, mapData.villageEvents[id])
                     end
                 end
             end
             local edit = decodeInUserDataFromDeltaData(mapData, response.data)
-            getmetatable(edit).remove = remove
+            getmetatable(edit).villageEvents_remove = villageEvents_remove
             Alliance_Manager:OnMapDataChanged(response.targetMapIndex, mapData, edit)
             -- LuaUtils:outputTable("onMapDataChanged", edit)
         end

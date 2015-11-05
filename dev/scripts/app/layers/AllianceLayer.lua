@@ -492,17 +492,14 @@ function AllianceLayer:RefreshBuildingByIndex(index, building, alliance)
             local x,y = self:GetBannerPos(index, sprite.x, sprite.y)
             sprite.info.level:setString(building.level)
             sprite.info:pos(x, y):zorder(x * y)
-            if alliance then
+            if alliance and 
+                alliance._id == Alliance_Manager:GetMyAlliance()._id then
                 local door = sprite:getChildByTag(SPRITE_TAG).door
                 local light = sprite:getChildByTag(SPRITE_TAG).light
                 if building.name == "shrine" and door then
-                    if #alliance.shrineEvents > 0 then
-                        door:show()
-                    else
-                        door:hide()
-                    end
+                    door:setVisible(#alliance.shrineEvents > 0)
                 elseif building.name == "watchTower" and light then
-                    light:show()
+                    light:setVisible(Alliance_Manager:HasToMyAllianceEvents())
                 end
             end
         end
@@ -541,22 +538,21 @@ function AllianceLayer:LoadAllianceByIndex(index, alliance)
                     local size = sprite:getContentSize()
                     if name == "shrine" then
                         if not sprite.door and isMyAlliance then
-                            sprite.door = ccs.Armature:create("chuansongmen"):hide()
+                            sprite.door = ccs.Armature:create("chuansongmen")
                                           :addTo(sprite,0):pos(size.width/2, size.height/2)
                             sprite.door:getAnimation():playWithIndex(0)
-                            if #allianceData.shrineEvents > 0 then
-                                sprite.door:show()
-                            end
+                            sprite.door:setVisible(#allianceData.shrineEvents > 0)
                         end
                     elseif name == "watchTower" then
                         if not sprite.light and isMyAlliance then
-                            sprite.light = ccs.Armature:create("shengdi"):show()
+                            sprite.light = ccs.Armature:create("shengdi")
                                            :addTo(sprite):pos(size.width/2, size.height/2)
                             local bone = sprite.light:getBone("Layer1")
                             bone:addDisplay(display.newNode(), 0)
                             bone:changeDisplayWithIndex(0, true)
                             sprite.light:setAnchorPoint(cc.p(0.5, 0.34))
                             sprite.light:getAnimation():playWithIndex(0)
+                            sprite.light:setVisible(Alliance_Manager:HasToMyAllianceEvents())
                         end
                     end
                 end

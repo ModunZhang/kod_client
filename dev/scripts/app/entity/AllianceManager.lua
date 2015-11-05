@@ -36,6 +36,24 @@ function AllianceManager:GetToMineMarchEvents()
     end
     return to_my_events
 end
+function AllianceManager:HasToMyAllianceEvents()
+    local marchEvents = self:GetMyAllianceMarchEvents()
+    for k,v in pairs(marchEvents.attackMarchEvents) do
+        if event ~= json.null 
+       and event.toAlliance.id == self.my_alliance._id 
+       and event.fromAlliance.id ~= self.my_alliance._id then
+            return true
+        end
+    end
+    for k,v in pairs(marchEvents.strikeMarchEvents) do
+        if event ~= json.null 
+       and event.toAlliance.id == self.my_alliance._id 
+       and event.fromAlliance.id ~= self.my_alliance._id then
+            return true
+        end
+    end
+    return false
+end
 function AllianceManager:GetToMyAllianceMarchEvents()
     local to_my_events = {}
     local marchEvents = self:GetMyAllianceMarchEvents()
