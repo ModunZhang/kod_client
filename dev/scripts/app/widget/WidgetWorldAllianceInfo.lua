@@ -141,11 +141,12 @@ function WidgetWorldAllianceInfo:LoadInfo(alliance_data)
     local flag_sprite = WidgetAllianceHelper.new():CreateFlagWithRhombusTerrain(alliance_data.terrain,alliance_data.flag)
     flag_sprite:addTo(flag_box)
     flag_sprite:pos(67,46):scale(1.4)
+    local mid_position_x,mid_position_y = DataUtils:GetAbsolutePosition(alliance_data.mapIndex, 16, 16)
     local position_node = UIKit:createLineItem(
         {
             width = 388,
             text_1 = _("位置"),
-            text_2 = string.format(_("第%d圈"),DataUtils:getMapRoundByMapIndex(alliance_data.mapIndex) + 1),
+            text_2 = string.format(_("第%d圈(%d,%d)"),DataUtils:getMapRoundByMapIndex(alliance_data.mapIndex) + 1,mid_position_x,mid_position_y),
         }
     ):align(display.RIGHT_TOP,l_size.width-30, l_size.height - 56):addTo(layer)
 
@@ -356,7 +357,7 @@ function WidgetWorldAllianceInfo:LoadMoveAlliance()
         end
         local canMove1 = alliance:GetSelf():CanMoveAlliance()
         if not canMove1 then
-            UIKit:showMessageDialog(_("提示"), _("权限不足，不能迁移联盟"))
+            UIKit:showMessageDialog(_("提示"), _("需盟主或将军权限才能迁移！"))
             self:LeftButtonClicked()
             return
         end
