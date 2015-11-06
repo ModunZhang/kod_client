@@ -143,7 +143,7 @@ function GameUIWatchTower:GetMyEventItemWithIndex(index,isOpen,entity)
         WidgetPushTransparentButton.new(cc.rect(0,0,558,34))
             :addTo(title_bg):align(display.LEFT_BOTTOM, 0, 0)
             :onButtonClicked(function()
-                UIKit:newGameUI("GameUIWatchTowerMyTroopsDetail",entity):AddToCurrentScene(true)
+                UIKit:newGameUI("GameUIWatchTowerMyTroopsDetail",entity,entity.eventType):AddToCurrentScene(true)
             end)
     end
     local tile_label = UIKit:ttfLabel({

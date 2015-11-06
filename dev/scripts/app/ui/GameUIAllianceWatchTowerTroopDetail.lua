@@ -90,10 +90,14 @@ function GameUIAllianceWatchTowerTroopDetail:RefreshListView()
     end
     item = self:GetItem(self.ITEM_TYPE.DRAGON_SKILL,self:GetEventData())
     self.listView:addItem(item)
-    item = self:GetItem(self.ITEM_TYPE.TECHNOLOGY,self:GetEventData())
-    self.listView:addItem(item)
-    item = self:GetItem(self.ITEM_TYPE.BUFF_EFFECT,self:GetEventData())
-    self.listView:addItem(item)
+    if self:GetEventData().militaryTechs then
+        item = self:GetItem(self.ITEM_TYPE.TECHNOLOGY,self:GetEventData())
+        self.listView:addItem(item)
+    end
+    if self:GetEventData().militaryBuffs then
+        item = self:GetItem(self.ITEM_TYPE.BUFF_EFFECT,self:GetEventData())
+        self.listView:addItem(item)
+    end
     self.listView:reload()
 end
 
@@ -459,6 +463,8 @@ function GameUIAllianceWatchTowerTroopDetail:FuzzyCount(count)
 end
 
 return GameUIAllianceWatchTowerTroopDetail
+
+
 
 
 
