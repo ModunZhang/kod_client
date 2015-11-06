@@ -150,7 +150,7 @@ function GameUIAllianceWatchTowerTroopDetail:GetItem(ITEM_TYPE,item_data)
             size = 20,
             color= 0xffedae
         }):align(display.LEFT_CENTER, 20, 19):addTo(title_bar)
-        if self:CanShowSoliderStar() then
+        if self:CanShowDragonLevelAndStar() then
             local star_bar = StarBar.new({
                 max = 4,
                 bg = "Stars_bar_bg.png",
