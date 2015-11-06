@@ -71,10 +71,10 @@ local desc_map = {
     },
     iceField = {
         title = _("雪地"),
-        desc1 =  _("步兵防御").. "+"..intInit.iceFieldDefenceAddPercent.value.."%",
-        desc2 = _("弓手防御").. "+"..intInit.iceFieldDefenceAddPercent.value.."%",
-        desc3 = _("骑兵防御").. "+"..intInit.iceFieldDefenceAddPercent.value.."%",
-        desc4 = _("攻城器械防御").. "+"..intInit.iceFieldDefenceAddPercent.value.."%",
+        desc1 =  _("步兵生命值").. "+"..intInit.iceFieldDefenceAddPercent.value.."%",
+        desc2 = _("弓手生命值").. "+"..intInit.iceFieldDefenceAddPercent.value.."%",
+        desc3 = _("骑兵生命值").. "+"..intInit.iceFieldDefenceAddPercent.value.."%",
+        desc4 = _("攻城器械生命值").. "+"..intInit.iceFieldDefenceAddPercent.value.."%",
     },
 }
 function GameUISelectTerrain:RefreshDragon(terrainType)

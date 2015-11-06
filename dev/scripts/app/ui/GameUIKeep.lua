@@ -64,16 +64,16 @@ local buff_info = {
     },
     {
         {
-            _("步兵防御"), "+"..intInit.iceFieldDefenceAddPercent.value.."%"
+            _("步兵生命值"), "+"..intInit.iceFieldDefenceAddPercent.value.."%"
         },
         {
-            _("弓手防御"), "+"..intInit.iceFieldDefenceAddPercent.value.."%"
+            _("弓手生命值"), "+"..intInit.iceFieldDefenceAddPercent.value.."%"
         },
         {
-            _("骑兵防御"), "+"..intInit.iceFieldDefenceAddPercent.value.."%"
+            _("骑兵生命值"), "+"..intInit.iceFieldDefenceAddPercent.value.."%"
         },
         {
-            _("攻城器械防御"), "+"..intInit.iceFieldDefenceAddPercent.value.."%"
+            _("攻城器械生命值"), "+"..intInit.iceFieldDefenceAddPercent.value.."%"
         },
     },
 }
