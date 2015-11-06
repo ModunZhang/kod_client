@@ -40,6 +40,8 @@ function GameUILoginBeta:ctor()
         {image = "ui_png.pvr.ccz",list = "ui_png.plist"},
         {image = "ui_pvr_0.pvr.ccz",list = "ui_pvr_0.plist"},
         {image = "ui_pvr_1.pvr.ccz",list = "ui_pvr_1.plist"},
+
+
     -- {image = "emoji.png",list = "emoji.plist"},
 
 
@@ -174,8 +176,16 @@ function GameUILoginBeta:startGame()
     display.getRunningScene().startGame = true
     local sp = cc.Spawn:create(cc.ScaleTo:create(1,1.5),cc.FadeOut:create(1))
     local seq = transition.sequence({sp,cc.CallFunc:create(function()
-        -- self:connectLogicServer()
-        self:loginAction()
+        if app:GetGameDefautlt():getStringForKey("PASS_SPLASH") == "yes" then
+            self:loginAction()
+        else
+            self.verLabel:fadeOut(0.5)
+            self.user_agreement_label:fadeOut(0.5)
+            self.user_agreement_button:hide()
+            self:RunFte(function()
+                self:loginAction()
+            end)
+        end
     end)})
     self.star_game_sprite:runAction(seq)
 end
@@ -189,6 +199,7 @@ function GameUILoginBeta:createUserAgreement()
         color = UIKit:hex2c3b(0x2a575d),
     }):addTo(self.ui_layer,2)
         :align(display.LEFT_BOTTOM,display.left+2,display.bottom)
+    self.user_agreement_label = user_agreement_label
     local button = WidgetPushButton.new()
         :addTo(self.ui_layer,2):align(display.LEFT_BOTTOM, display.left+2,display.bottom)
         :onButtonClicked(function(event)
@@ -201,6 +212,7 @@ function GameUILoginBeta:createUserAgreement()
         end)
     button:setContentSize(user_agreement_label:getContentSize())
     button:setTouchSwallowEnabled(true)
+    self.user_agreement_button = button
 end
 function GameUILoginBeta:OpenUserAgreement()
     local dialog = UIKit:newWidgetUI("WidgetPopDialog",770,_("用户协议"),display.top-130):addTo(self.ui_layer,2)

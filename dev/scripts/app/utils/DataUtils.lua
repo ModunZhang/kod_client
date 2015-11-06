@@ -1179,13 +1179,13 @@ local function getBuildingBuffForResourceProtectPercent(resourceName)
     end
     return protectPercent
 end
-local function getPlayerItemBuffForResourceLootPercentSubtract()
-    local itemBuff = 0
-    if User:IsItemEventActive("masterOfDefender") then
-        itemBuff = items.buffTypes.masterOfDefender.effect2
-    end
-    return itemBuff
-end
+-- local function getPlayerItemBuffForResourceLootPercentSubtract()
+--     local itemBuff = 0
+--     if User:IsItemEventActive("masterOfDefender") then
+--         itemBuff = items.buffTypes.masterOfDefender.effect2
+--     end
+--     return itemBuff
+-- end
 local function getPlayerVipForResourceLootPercentSubtract()
     local vipBuffAddPercent = 0
     if User:IsVIPActived() then
@@ -1196,10 +1196,10 @@ end
 function DataUtils:GetResourceProtectPercent( resource_name )
     local basePercent = PlayerInitData.intInit.playerResourceProtectPercent.value / 100
     local buildingBuffAddPercent = getBuildingBuffForResourceProtectPercent(resource_name)
-    local itemBuffAddPercent = getPlayerItemBuffForResourceLootPercentSubtract(defencePlayerDoc)
+    -- local itemBuffAddPercent = getPlayerItemBuffForResourceLootPercentSubtract(defencePlayerDoc)
     local vipBuffAddPercent = getPlayerVipForResourceLootPercentSubtract()
     local tech_effect = UtilsForTech:GetEffect("hideout", User.productionTechs["hideout"])
-    local finalPercent = basePercent + buildingBuffAddPercent + itemBuffAddPercent + vipBuffAddPercent + tech_effect
+    local finalPercent = basePercent + buildingBuffAddPercent + vipBuffAddPercent + tech_effect
     finalPercent = finalPercent > 0.9 and 0.9 or finalPercent < 0.1 and 0.1 or finalPercent
     return finalPercent
 end
