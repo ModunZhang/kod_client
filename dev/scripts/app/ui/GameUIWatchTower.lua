@@ -83,7 +83,8 @@ end
 function GameUIWatchTower:OnMapDataChanged()
     self:RefreshCurrentList()
 end
-
+function GameUIWatchTower:OnMapAllianceChanged()
+end
 
 --ui
 function GameUIWatchTower:RefreshListView(tag)
@@ -429,7 +430,7 @@ function GameUIWatchTower:GetOtherEventItem(entity)
     -- self.march_timer_label[entity:WithObject():Id()] = timer_label
     --如果瞭望塔达到等级或者是盟友对我的协助
     local watchTowerLevel = Alliance_Manager:GetMyAlliance():GetAllianceBuildingInfoByName("watchTower").level
-    if watchTowerLevel >= 3 or (entity.eventType == "attackMarchEvents" and entity.marchType == 'helpDefence') then
+    if watchTowerLevel >= 3 and (entity.eventType == "attackMarchEvents" or entity.marchType == 'helpDefence' or entity.eventType ==  "strikeMarchEvents") then
         WidgetPushButton.new({normal = "blue_btn_up_148x58.png",pressed = "blue_btn_down_148x58.png"})
             :setButtonLabel(UIKit:commonButtonLable({text = _("详情")}))
             :align(display.RIGHT_BOTTOM,555,10):addTo(bg)
@@ -535,11 +536,7 @@ end
 function GameUIWatchTower:OnAllianceDataChanged_marchEvents(alliance, deltaData)
     self:RefreshCurrentList()
 end
-function GameUIWatchTower:OnMapDataChanged()
-    self:RefreshCurrentList()
-end
-function GameUIWatchTower:OnMapAllianceChanged()
-end
+
 function GameUIWatchTower:OnFightEventTimerChanged(fightEvent)
 -- if self.shrine_timer_label[fightEvent:Id()] then
 --     self.shrine_timer_label[fightEvent:Id()]:setString(GameUtils:formatTimeStyle1(fightEvent:GetTime()))
