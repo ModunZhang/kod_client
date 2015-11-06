@@ -283,7 +283,11 @@ function AllianceManager:OnAllianceDataChanged(allianceData,refresh_time,deltaDa
                 app:GetAudioManager():PlayeEffectSoundWithKey("BATTLE_START")
             end
             if audio.isMusicPlaying() then
+                local last_music_loop = app:GetAudioManager().last_music_loop
+                app:GetAudioManager().last_music_loop = true
                 app:GetAudioManager():StopMusic()
+                app:GetAudioManager().last_music_loop = last_music_loop
+                app:GetAudioManager():PlayGameMusicAutoCheckScene()
             end
         end
     end
