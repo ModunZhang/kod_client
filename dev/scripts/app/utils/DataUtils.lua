@@ -259,6 +259,10 @@ function DataUtils:getAllSoldierBuffValue(solider_config)
     table.insertto(item_buff,military_technology_buff)
     local vip_buff = self:getAllSoldierVipBuffValue()
     table.insertto(item_buff,vip_buff)
+    local terrain_attack_buff = User:GetTerrainAttackBuff()
+    table.insertto(item_buff,terrain_attack_buff)
+    local terrain_defence_buff = User:GetTerrainDefenceBuff()
+    table.insertto(item_buff,terrain_defence_buff)
     for __,v in ipairs(item_buff) do
         local effect_soldier,buff_field,buff_value = unpack(v)
         if effect_soldier == soldier_type or effect_soldier == '*' then

@@ -625,6 +625,53 @@ end
 function User:GetVipLevel()
     return DataUtils:getPlayerVIPLevel(self.basicInfo.vipExp)
 end
+local intInit = GameDatas.PlayerInitData.intInit
+local desertAttackAddPercent_value = intInit.desertAttackAddPercent.value/100
+function User:GetTerrainAttackBuff(soldierName)
+    if self.basicInfo.terrain == "desert" then
+        return {
+            {"*", "infantry", desertAttackAddPercent_value},
+            {"*",   "archer", desertAttackAddPercent_value},
+            {"*",  "cavalry", desertAttackAddPercent_value},
+            {"*",    "siege", desertAttackAddPercent_value},
+            {"*",     "wall", desertAttackAddPercent_value},
+        }
+    end
+    return {}
+end
+local intInit = GameDatas.PlayerInitData.intInit
+local iceFieldDefenceAddPercent_value = intInit.iceFieldDefenceAddPercent.value/100
+function User:GetTerrainDefenceBuff()
+    if self.basicInfo.terrain == "iceField" then
+        return {
+            {"*", "hp", iceFieldDefenceAddPercent_value},
+        }
+    end
+    return {}
+end
+local intInit = GameDatas.PlayerInitData.intInit
+local grassLandFoodAddPercent_value = intInit.grassLandFoodAddPercent.value/100
+local grassLandWoodAddPercent_value = intInit.grassLandWoodAddPercent.value/100
+local grassLandIronAddPercent_value = intInit.grassLandIronAddPercent.value/100
+local grassLandStoneAddPercent_value = intInit.grassLandStoneAddPercent.value/100
+function User:GetTerrainResourceBuff()
+    local buff = {
+        food = 0,
+        wood = 0,
+        iron = 0,
+        stone= 0,
+        coin = 0,
+        wallHp = 0,
+        citizen= 0,
+    }
+    if self.basicInfo.terrain == "grassLand" then
+        buff.food = grassLandFoodAddPercent_value
+        buff.wood = grassLandWoodAddPercent_value
+        buff.iron = grassLandIronAddPercent_value
+        buff.stone= grassLandStoneAddPercent_value
+    end
+    return setmetatable(buff, BUFF_META)
+end
 --获得有加成的龙类型
 function User:GetBestDragon()
     local bestDragonForTerrain = {
@@ -1397,7 +1444,8 @@ function User:RefreshOutput()
     local buff_tech     = UtilsForTech:GetBuff(self)
     local buff_item     = UtilsForItem:GetBuff(self)
     local buff_vip      = self:GetVipBuff()
-    production = production * (1 + buff_building + buff_item + buff_tech + buff_vip)
+    local buff_terrain  = self:GetTerrainResourceBuff()
+    production = production * (1 + buff_building + buff_item + buff_tech + buff_vip + buff_terrain)
 
     local limits = UtilsForBuilding:GetWarehouseLimit(self)
     local limits_map = setmetatable({
@@ -1885,6 +1933,7 @@ function User:PromiseOfGetCityBuildRewards()
 end
 
 return User
+
 
 
 

@@ -240,7 +240,8 @@ function GameUIResource:CreateInfomation()
         local buff_tech     = UtilsForTech:GetBuff(User)
         local buff_item     = UtilsForItem:GetBuff(User)
         local buff_vip      = User:GetVipBuff()
-        local buff_total    = buff_building + buff_tech + buff_item + buff_vip
+        local buff_terrain  = User:GetTerrainResourceBuff()
+        local buff_total    = buff_building + buff_tech + buff_item + buff_vip + buff_terrain
         local key = self.building:GetResType()
         if buff_total[key] then
             reduce = reduce * (1 + buff_total[key])

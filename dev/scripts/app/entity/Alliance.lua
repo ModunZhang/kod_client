@@ -449,10 +449,12 @@ function Alliance:IsReachEventLimit()
 end
 function Alliance:GetMyMarchEvents()
     local my_events = {}
-    for k,kindsOfEvents in pairs(self.marchEvents) do
-        for i,event in ipairs(kindsOfEvents) do
-            if event.attackPlayerData.id == User:Id() then
-                table.insert(my_events, event)
+    if self.marchEvents then
+        for k,kindsOfEvents in pairs(self.marchEvents) do
+            for i,event in ipairs(kindsOfEvents) do
+                if event.attackPlayerData.id == User:Id() then
+                    table.insert(my_events, event)
+                end
             end
         end
     end
