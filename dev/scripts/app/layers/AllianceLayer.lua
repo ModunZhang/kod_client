@@ -1222,12 +1222,12 @@ function AllianceLayer:CreateDesertBg()
     local terrain = "desert"
     local map = cc.TMXTiledMap:create(string.format("tmxmaps/alliance_%s1.tmx", terrain))
     local width = map:getContentSize().width
-
+    local LEN = 160
     display.newSprite(string.format("plus_right_%s.png", terrain))
-        :addTo(map):align(display.LEFT_BOTTOM, map:getContentSize().width, 0)
+        :addTo(map):align(display.LEFT_BOTTOM, map:getContentSize().width - LEN, 0)
     for i = 0, 9 do
         display.newSprite(string.format("plus_right_%s.png", terrain))
-            :addTo(map):align(display.LEFT_BOTTOM, map:getContentSize().width, i * 480 + 160)
+            :addTo(map):align(display.LEFT_BOTTOM, map:getContentSize().width - LEN, i * 480 + 160)
     end
     local w = 0
     math.randomseed(737)
@@ -1254,7 +1254,7 @@ function AllianceLayer:CreateIceFieldBg()
     local map = cc.TMXTiledMap:create(string.format("tmxmaps/alliance_%s1.tmx", terrain))
     local width = map:getContentSize().width
 
-    local LEN = 115
+    local LEN = 160
     display.newSprite(string.format("plus_right_%s.png", terrain))
         :addTo(map):align(display.LEFT_BOTTOM, map:getContentSize().width - LEN, 0)
     for i = 0, 9 do
@@ -1286,7 +1286,7 @@ function AllianceLayer:CreateGrassLandBg()
     local map = cc.TMXTiledMap:create(string.format("tmxmaps/alliance_%s1.tmx", terrain))
     local width = map:getContentSize().width
 
-    local LEN = 115
+    local LEN = 160
     display.newSprite(string.format("plus_right_%s.png", terrain))
         :addTo(map):align(display.LEFT_BOTTOM, map:getContentSize().width - LEN, 0)
     for i = 0, 9 do
