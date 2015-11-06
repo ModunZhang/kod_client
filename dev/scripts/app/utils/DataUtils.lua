@@ -194,10 +194,10 @@ function DataUtils:getTotalVitalityFromJson(star,level,skills,equipments)
     return vitality
 end
 
-function DataUtils:getDragonSkillEffect(skillName,level)
+function DataUtils:getDragonSkillEffect(level)
     level = checkint(level)
-    if config_dragonSkill[skillName] then
-        return level * config_dragonSkill[skillName].effectPerLevel
+    if config_dragonSkill[level] then
+        return config_dragonSkill[level].effect
     end
     return 0
 end
@@ -210,7 +210,6 @@ function DataUtils:getDragonBaseStrengthAndVitality(star,level)
 end
 
 function DataUtils:getDragonEquipmentAttribute(body,max_star,star)
-    print("body,max_star,star",body,max_star,star)
     return config_dragoneyrie[body][max_star .. "_" .. star]
 end
 
@@ -221,7 +220,7 @@ end
 function DataUtils:__getDragonStrengthBuff(skills)
     for __,v in pairs(skills) do
         if v.name == 'dragonBreath' then
-            return self:getDragonSkillEffect(v.name,v.level)
+            return self:getDragonSkillEffect(v.level)
         end
     end
     return 0
@@ -230,7 +229,7 @@ end
 function DataUtils:__getDragonVitalityBuff(skills)
     for __,v in pairs(skills) do
         if v.name == 'dragonBlood' then
-            return self:getDragonSkillEffect(v.name,v.level)
+            return self:getDragonSkillEffect(v.level)
         end
     end
     return 0
@@ -238,7 +237,7 @@ end
 --如果有道具加龙属性 这里就还未完成
 function DataUtils:getDragonMaxHp(star,level,skills,equipments)
     local vitality = self:getTotalVitalityFromJson(star,level,skills,equipments)
-    return vitality * 2
+    return vitality * 4
 end
 -- 通过buff名获得士兵属性字段
 function DataUtils:getSoldierBuffFieldFromKey(key)
