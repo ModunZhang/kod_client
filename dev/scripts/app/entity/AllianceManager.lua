@@ -26,7 +26,7 @@ end
 function AllianceManager:HasToMyCityEvents()
     local marchEvents = self:GetMyAllianceMarchEvents()
     for k,event in pairs(marchEvents.attackMarchEvents) do
-        if event ~= json.null
+        if event ~= json.null and event.defencePlayerData
             and event.defencePlayerData.id == User._id
             and event.fromAlliance.id ~= self.my_alliance._id then
             return true

@@ -26,6 +26,9 @@ function MapScene:ctor()
     self.blur_count = 1
     self.event_manager = EventManager.new(self)
     self.touch_judgment = TouchJudgment.new(self)
+
+    app:GetGameDefautlt():setStringForKey("PASS_SPLASH", "yes")
+    app:GetGameDefautlt():flush()
 end
 function MapScene:OnUserDataChanged_basicInfo(userData, deltaData)
     local ok, value = deltaData("basicInfo.levelExp")
