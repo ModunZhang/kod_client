@@ -23,6 +23,24 @@ end
 function AllianceManager:GetMyAllianceMarchEvents()
     return self.my_alliance_mapData.marchEvents
 end
+function AllianceManager:HasToMyCityEvents()
+    local marchEvents = self:GetMyAllianceMarchEvents()
+    for k,event in pairs(marchEvents.attackMarchEvents) do
+        if event ~= json.null
+            and event.defencePlayerData.id == User._id
+            and event.fromAlliance.id ~= self.my_alliance._id then
+            return true
+        end
+    end
+    for k,event in pairs(marchEvents.strikeMarchEvents) do
+        if event ~= json.null
+            and event.defencePlayerData.id == User._id
+            and event.fromAlliance.id ~= self.my_alliance._id then
+            return true
+        end
+    end
+    return false
+end
 function AllianceManager:GetToMineMarchEvents()
     local to_my_events = {}
     local marchEvents = self:GetMyAllianceMarchEvents()
@@ -265,7 +283,11 @@ function AllianceManager:OnAllianceDataChanged(allianceData,refresh_time,deltaDa
                 app:GetAudioManager():PlayeEffectSoundWithKey("BATTLE_START")
             end
             if audio.isMusicPlaying() then
+                local last_music_loop = app:GetAudioManager().last_music_loop
+                app:GetAudioManager().last_music_loop = true
                 app:GetAudioManager():StopMusic()
+                app:GetAudioManager().last_music_loop = last_music_loop
+                app:GetAudioManager():PlayGameMusicAutoCheckScene()
             end
         end
     end

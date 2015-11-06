@@ -73,7 +73,7 @@ function DragonEyrieUpgradeBuilding:GetTotalHPRecoveryPerHourInfo()
     }
     local hprecoveryperhour = self:GetHPRecoveryPerHourWithoutBuff()
     local common_buff = DataUtils:GetDragonHpBuffTotal()
-    local terrain_buff = config_intInit['dragonHpRecoverTerrainAddPercent'].value / 100
+    -- local terrain_buff = config_intInit['dragonHpRecoverTerrainAddPercent'].value / 100
     local hprecoveryperhour_info = {
         redDragon = 0,
         greenDragon = 0,
@@ -81,11 +81,11 @@ function DragonEyrieUpgradeBuilding:GetTotalHPRecoveryPerHourInfo()
     }
 
     for dragon_type,terrain in pairs(terrains_info) do
-        if terrain == User.basicInfo.terrain then
-            hprecoveryperhour_info[dragon_type] =  math.floor(hprecoveryperhour * (1 + common_buff + terrain_buff))
-        else
-            hprecoveryperhour_info[dragon_type] =  math.floor(hprecoveryperhour * (1 + common_buff ))
-        end
+        hprecoveryperhour_info[dragon_type] =  math.floor(hprecoveryperhour * (1 + common_buff ))
+        -- if terrain == User.basicInfo.terrain then
+        -- else
+        --     hprecoveryperhour_info[dragon_type] =  math.floor(hprecoveryperhour * (1 + common_buff ))
+        -- end
     end
     return hprecoveryperhour_info
 end

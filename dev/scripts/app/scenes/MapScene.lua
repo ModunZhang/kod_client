@@ -52,17 +52,17 @@ function MapScene:onEnter()
     self.top_layer = display.newNode():addTo(self, 3)
     self.screen_layer = display.newNode():addTo(self:GetSceneNode(), 4)
     display.newNode():addTo(self):schedule(function()
-        -- local flag = false
-        -- if self.my_alliance and self.my_alliance:IsDefault() then
-        --     flag = false 
-        -- else
-        --     -- flag = self.my_alliance:GetAllianceBelvedere():IsMeBeAttacked() 
-        -- end
-        -- if flag then
-        --     self:Warning()
-        -- else
-        --     self:DisableWaring()
-        -- end
+        local flag = false
+        if self.my_alliance and self.my_alliance:IsDefault() then
+            flag = false 
+        else
+            flag = Alliance_Manager:HasToMyCityEvents()
+        end
+        if flag then
+            self:Warning()
+        else
+            self:DisableWaring()
+        end
     end, 1)
 end
 function MapScene:onExit()
