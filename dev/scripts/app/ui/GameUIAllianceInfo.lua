@@ -486,7 +486,7 @@ function GameUIAllianceInfo:LoadMembers()
 end
 
 function GameUIAllianceInfo:GetAllianceTitleAndLevelPng(title)
-    local titles = self:GetAllianceData().titles
+    local titles = Localize.alliance_title
     local final_title = titles[title]
     if string.sub(final_title, 1, 2) == "__" then
         final_title = Localize.alliance_title[title]

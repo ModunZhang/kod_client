@@ -23,6 +23,7 @@ function GameUIWatchTower:OnMoveInStage()
     self:ResetTimerNodeTable()
     GameUIWatchTower.super.OnMoveInStage(self)
     self:AddOrRemoveListener(true)
+    Alliance_Manager:AddHandle(self)
     self:CreateUI()
 end
 
@@ -533,6 +534,11 @@ end
 -- end
 function GameUIWatchTower:OnAllianceDataChanged_marchEvents(alliance, deltaData)
     self:RefreshCurrentList()
+end
+function GameUIWatchTower:OnMapDataChanged()
+    self:RefreshCurrentList()
+end
+function GameUIWatchTower:OnMapAllianceChanged()
 end
 function GameUIWatchTower:OnFightEventTimerChanged(fightEvent)
 -- if self.shrine_timer_label[fightEvent:Id()] then
