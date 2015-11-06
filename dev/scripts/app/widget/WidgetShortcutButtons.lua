@@ -193,18 +193,16 @@ function WidgetShortcutButtons:ctor(city)
     local alliance_belvedere_button = cc.ui.UIPushButton.new({normal = 'fight_62x70.png'})
     alliance_belvedere_button.alliance_belvedere_events_count = WidgetNumberTips.new():addTo(alliance_belvedere_button):pos(20,-20)
     alliance_belvedere_button:onButtonClicked(function()
-        local default_tab = 'march'
-        local alliance = Alliance_Manager:GetMyAlliance()
-        UIKit:newGameUI('GameUIAllianceWatchTowerOnlyMarchEvents',self.city):AddToCurrentScene(true)
+        UIKit:newGameUI("GameUIWatchTower", City, "march"):AddToCurrentScene(true)
     end)
     function alliance_belvedere_button:CheckVisible()
-        local alliance = Alliance_Manager:GetMyAlliance()
-        local marchEvents = alliance.marchEvents
-        if not marchEvents then
+        local to_my_events,out_march_events = Alliance_Manager:GetAboutMyMarchEvents()
+        local count = #to_my_events + #out_march_events
+        if count == 0 then
             return false
         end
-        alliance_belvedere_button.alliance_belvedere_events_count:SetNumber(LuaUtils:table_size(marchEvents.strikeMarchEvents) + LuaUtils:table_size(marchEvents.attackMarchEvents))
-        return not (LuaUtils:table_empty(marchEvents.strikeMarchEvents) and LuaUtils:table_empty(marchEvents.attackMarchEvents))
+        alliance_belvedere_button.alliance_belvedere_events_count:SetNumber(count)
+        return true
     end
     function alliance_belvedere_button:GetElementSize()
         return alliance_belvedere_button:getCascadeBoundingBox().size
@@ -246,6 +244,7 @@ function WidgetShortcutButtons:onEnter()
     my_allaince:AddListenOnType(self, "helpEvents")
     my_allaince:AddListenOnType(self, "marchEvents")
     my_allaince:AddListenOnType(self, "shrineEvents")
+    Alliance_Manager:AddHandle(self)
 end
 function WidgetShortcutButtons:onExit()
     User:RemoveListenerOnType(self, "countInfo")
@@ -265,6 +264,7 @@ function WidgetShortcutButtons:onExit()
     my_allaince:RemoveListenerOnType(self, "helpEvents")
     my_allaince:RemoveListenerOnType(self, "marchEvents")
     my_allaince:RemoveListenerOnType(self, "shrineEvents")
+    Alliance_Manager:RemoveHandle(self)
 end
 function WidgetShortcutButtons:onCleanup()
     GameGlobalUI:clearMessageQueue()
@@ -331,6 +331,13 @@ function WidgetShortcutButtons:OnUserDataChanged_vipEvents()
 end
 function WidgetShortcutButtons:OnBasicChanged()
     self.left_order_group:RefreshOrder()
+end
+function WidgetShortcutButtons:OnMapDataChanged()
+    self.right_top_order:RefreshOrder()
+end
+function WidgetShortcutButtons:OnEnterMapIndex()
+end
+function WidgetShortcutButtons:OnMapAllianceChanged()
 end
 function WidgetShortcutButtons:CheckAllianceRewardCount()
     if not self.tips_button then return end

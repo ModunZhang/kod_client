@@ -36,6 +36,12 @@ function AllianceManager:GetToMineMarchEvents()
     end
     return to_my_events
 end
+-- 获取和自己有关的行军事件
+function AllianceManager:GetAboutMyMarchEvents()
+   local to_my_events = self:GetToMineMarchEvents()
+   local out_march_events = self:GetMyAlliance():GetMyMarchEvents()
+   return to_my_events,out_march_events
+end
 function AllianceManager:HasToMyAllianceEvents()
     local marchEvents = self:GetMyAllianceMarchEvents()
     for k,event in pairs(marchEvents.attackMarchEvents) do
