@@ -76,7 +76,7 @@ function GameUIMoveSuccess:onExit()
     app:EnterMyAllianceScene()
 end
 function GameUIMoveSuccess:Play()
-    -- app:GetAudioManager():PlayeEffectSoundWithKey("HOORAY")
+    app:GetAudioManager():PlayeEffectSoundWithKey("USE_ITEM")
     self.bg:scale(0.3):show():stopAllActions()
     transition.scaleTo(self.bg, {
         scale = 1,
