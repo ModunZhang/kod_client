@@ -10,6 +10,9 @@ local GameUIActivityRewardNew = import(".GameUIActivityRewardNew")
 local GameUIHome = UIKit:createUIClass('GameUIHome')
 local light_gem = import("..particles.light_gem")
 
+function GameUIHome:OnUserDataChanged_buildings()
+    self:OnUserDataChanged_growUpTasks()
+end
 function GameUIHome:OnUserDataChanged_houseEvents()
     self:OnUserDataChanged_growUpTasks()
 end
@@ -106,6 +109,7 @@ function GameUIHome:AddOrRemoveListener(isAdd)
     local user = self.city:GetUser()
     if isAdd then
         user:AddListenOnType(self, "basicInfo")
+        user:AddListenOnType(self, "buildings")
         user:AddListenOnType(self, "growUpTasks")
         user:AddListenOnType(self, "vipEvents")
         user:AddListenOnType(self, "houseEvents")
@@ -113,6 +117,7 @@ function GameUIHome:AddOrRemoveListener(isAdd)
         user:AddListenOnType(self, "productionTechEvents")
     else
         user:RemoveListenerOnType(self, "basicInfo")
+        user:RemoveListenerOnType(self, "buildings")
         user:RemoveListenerOnType(self, "growUpTasks")
         user:RemoveListenerOnType(self, "vipEvents")
         user:RemoveListenerOnType(self, "houseEvents")
