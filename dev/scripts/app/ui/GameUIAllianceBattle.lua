@@ -515,31 +515,31 @@ function GameUIAllianceBattle:InitBattleStatistics()
         -- 己方联盟名字
         local our_alliance_tag = UIKit:ttfLabel({
             text = "["..alliance.basicInfo.tag.."]",
-            size = 22,
+            size = 20,
             color = 0xffedae,
         }):addTo(self_alliance_bg)
-            :align(display.CENTER,-120,14)
+            :align(display.CENTER,-110,14)
         local our_alliance_name = UIKit:ttfLabel({
             text = alliance.basicInfo.name,
-            size = 22,
+            size = 20,
             color = 0xffedae,
         }):addTo(self_alliance_bg)
-            :align(display.CENTER,-120,-14)
+            :align(display.CENTER,-110,-14)
         -- 敌方联盟名字
         local a_tag = enemy_alliance.tag
         local a_name = enemy_alliance.name
         local enemy_alliance_tag = UIKit:ttfLabel({
             text ="["..a_tag.."]",
-            size = 22,
+            size = 20,
             color = 0xffedae,
         }):addTo(enemy_alliance_bg)
-            :align(display.CENTER,120,14)
+            :align(display.CENTER,110,14)
         local enemy_alliance_name = UIKit:ttfLabel({
             text =a_name,
-            size = 22,
+            size = 20,
             color = 0xffedae,
         }):addTo(enemy_alliance_bg)
-            :align(display.CENTER,120,-14)
+            :align(display.CENTER,110,-14)
         local period_bg = display.newSprite("box_104x104.png")
             :align(display.CENTER, t_size.width/2, t_size.height/2-4)
             :addTo(top_bg)
@@ -1012,21 +1012,37 @@ function GameUIAllianceBattle:RefreshFightInfoList(info_bg_y)
             {our_count_data.strikeSuccessCount,_("突袭成功"),enemy_count_data.strikeSuccessCount},
             {ourKillMaxName,_("头号杀手"),enemyKillMaxName},
         }
+
         local origin_y = fight_list_node:getContentSize().height
         for i,v in ipairs(info_message) do
-            self:CreateInfoItem(v):addTo(fight_list_node):align(display.TOP_CENTER, fight_list_node:getContentSize().width/2, origin_y - (i-1) * 60)
+            local item = self:CreateInfoItem(v,i):addTo(fight_list_node):align(display.TOP_CENTER, fight_list_node:getContentSize().width/2, origin_y - (i-1) * 60)
+            -- 击杀积分和击溃城市有点击效果，弹出提示
+            if i == 2 then
+                local layer = display.newColorLayer(UIKit:hex2c4b(0x19ffffff)):align(display.CENTER, 0, origin_y - (i-1) * 60 - 58)
+                    :addTo(fight_list_node):size(612,58):hide()
+               local button = WidgetPushButton.new()
+                    :onButtonPressed(function(event)
+                        layer:show()
+                    end):onButtonRelease(function(event)
+                        layer:hide()
+                    end)
+                    :align(display.CENTER, fight_list_node:getContentSize().width/2, origin_y - (i-1) * 60 - 29)
+                    :addTo(fight_list_node):setContentSize(cc.size(612,58))
+                UIKit:addTipsToNode(button,_("当击的敌方溃城市数量大于对方联盟战争期开始时刻的联盟玩家数量，且最后联盟战胜利，敌方联盟会被强制迁移"),
+                    self,cc.size(300,0))
+            end
         end
     end
 end
 
-function GameUIAllianceBattle:CreateInfoItem(info_message)
+function GameUIAllianceBattle:CreateInfoItem(info_message,index)
     local content =display.newScale9Sprite("tmp_background_red_612x58.png")
     UIKit:ttfLabel({
         text = info_message[1],
         size = 22,
         color = 0xffefba,
     }):align(display.LEFT_CENTER, 20, 29):addTo(content)
-    UIKit:ttfLabel({
+    local text_2 = UIKit:ttfLabel({
         text = info_message[2],
         size = 22,
         color = 0xff6023,
@@ -1036,6 +1052,9 @@ function GameUIAllianceBattle:CreateInfoItem(info_message)
         size = 22,
         color = 0xffefba,
     }):align(display.RIGHT_CENTER, 592, 29):addTo(content)
+    if index == 2 then
+        display.newSprite("info_16x33.png"):addTo(content):align(display.CENTER, text_2:getPositionX() + text_2:getContentSize().width/2 + 15, 29):scale(0.5)
+    end
     return content
 end
 
@@ -1076,7 +1095,7 @@ function GameUIAllianceBattle:OpenAllianceDetails(isOur)
 
     UIKit:ttfLabel({
         text = "["..alliance_tag.."]  "..alliance_name,
-        size = 30,
+        size = 24,
         color = 0x403c2f,
     }):align(display.CENTER, rb_size.width/2,rb_size.height-60)
         :addTo(body)
@@ -1670,6 +1689,9 @@ end
 
 
 return GameUIAllianceBattle
+
+
+
 
 
 

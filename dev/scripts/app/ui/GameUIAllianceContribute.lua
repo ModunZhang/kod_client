@@ -4,8 +4,6 @@ local Alliance = import("..entity.Alliance")
 local Observer = import("..entity.Observer")
 local window = import("..utils.window")
 
-
-
 local WidgetUIBackGround = import("..widget.WidgetUIBackGround")
 local GameUIAllianceContribute = class("GameUIAllianceContribute", WidgetPopDialog)
 
@@ -56,6 +54,7 @@ function GameUIAllianceContribute:ctor()
                         for i,v in ipairs(response.msg.playerData) do
                             if v[1] == "allianceData.loyalty" then
                                 GameGlobalUI:showTips(_("捐赠成功"),string.format(_("获得%s点忠诚值"),string.formatnumberthousands(v[2]-current_loyalty)))
+                                app:GetAudioManager():PlayeEffectSoundWithKey("USE_ITEM")
                             end
                         end
                     end)

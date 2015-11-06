@@ -197,14 +197,14 @@ function GameUIActivityNew:GetActivityItem(item_type)
             color= 0xffedae,
             align = cc.TEXT_ALIGNMENT_LEFT,
             shadow= true
-        }):align(display.LEFT_BOTTOM,298,92):addTo(bg)
+        }):align(display.LEFT_BOTTOM,278,92):addTo(bg)
         local sign_str,sign_color = _("已签到"),0xa2ff00
         if countInfo.day60 > countInfo.day60RewardsCount then
             sign_str = _("未签到")
             sign_color = 0xff4e00
         end
         local sign_bg = display.newSprite("activity_day_bg_104x34.png")
-            :align(display.LEFT_BOTTOM,451,50)
+            :align(display.LEFT_BOTTOM,431,50)
             :addTo(bg)
         local today_label = UIKit:ttfLabel({
             text = _("今日"),
@@ -225,7 +225,7 @@ function GameUIActivityNew:GetActivityItem(item_type)
             color= 0xffedae,
             align = cc.TEXT_ALIGNMENT_LEFT,
             shadow= true
-        }):align(display.LEFT_BOTTOM,298,90):addTo(bg)
+        }):align(display.LEFT_BOTTOM,278,90):addTo(bg)
 
         local day_label = UIKit:ttfLabel({
             text = string.format("%d/%d",countInfo.day14,#config_day14),
@@ -233,7 +233,7 @@ function GameUIActivityNew:GetActivityItem(item_type)
             color= 0xa2ff00,
             shadow= true,
             align = cc.TEXT_ALIGNMENT_LEFT,
-        }):addTo(bg):align(display.LEFT_BOTTOM, 298, 46)
+        }):addTo(bg):align(display.LEFT_BOTTOM, 278, 46)
         local day_label2 = UIKit:ttfLabel({
             text = _("天"),
             size = 20,
@@ -249,7 +249,7 @@ function GameUIActivityNew:GetActivityItem(item_type)
             shadow= true
         }):align(display.LEFT_BOTTOM,day_label2:getPositionX()+day_label2:getContentSize().width + 15,46):addTo(bg)
         local got_bg = display.newSprite("activity_day_bg_104x34.png")
-            :align(display.LEFT_BOTTOM,451,42)
+            :align(display.LEFT_BOTTOM,431,42)
             :addTo(bg)
         local str,color = _("已领取"),0xa2ff00
         if countInfo.day14 > countInfo.day14RewardsCount then
@@ -266,7 +266,7 @@ function GameUIActivityNew:GetActivityItem(item_type)
     elseif item_type == self.ITEMS_TYPE.FIRST_IN_PURGURE then
         local title_label = RichText.new({width = 400,size = 20,color = 0xffedae,shadow = true})
         local str = self:GetFirstPurgureTips()
-        title_label:Text(str):align(display.LEFT_BOTTOM,298,82):addTo(bg)
+        title_label:Text(str):align(display.LEFT_BOTTOM,278,82):addTo(bg)
         --
         local content_label = UIKit:ttfLabel({
             text = _("永久获得第二条建筑队列"),
@@ -274,7 +274,7 @@ function GameUIActivityNew:GetActivityItem(item_type)
             color= 0xffedae,
             align = cc.TEXT_ALIGNMENT_LEFT,
             shadow= true
-        }):align(display.LEFT_CENTER,298,62):addTo(bg)
+        }):align(display.LEFT_CENTER,278,62):addTo(bg)
     elseif item_type == self.ITEMS_TYPE.PLAYER_LEVEL_UP then
         local title_label = UIKit:ttfLabel({
             text = _("活动时间类，升级智慧中心，获得丰厚奖励"),
@@ -283,7 +283,7 @@ function GameUIActivityNew:GetActivityItem(item_type)
             align = cc.TEXT_ALIGNMENT_LEFT,
             shadow= true,
             dimensions = cc.size(272, 0)
-        }):align(display.LEFT_TOP,298,126):addTo(bg)
+        }):align(display.LEFT_TOP,278,126):addTo(bg)
 
         local time_desc_label = UIKit:ttfLabel({
             text = _("倒计时:"),
@@ -291,14 +291,14 @@ function GameUIActivityNew:GetActivityItem(item_type)
             color= 0xffedae,
             align = cc.TEXT_ALIGNMENT_LEFT,
             shadow= true
-        }):align(display.LEFT_BOTTOM,298,40):addTo(bg)
+        }):align(display.LEFT_BOTTOM,278,40):addTo(bg)
         local time_label = UIKit:ttfLabel({
             text = GameUtils:formatTimeStyle1(self.player_level_up_time_residue),
             size = 20,
             color= 0xa2ff00,
             align = cc.TEXT_ALIGNMENT_LEFT,
             shadow= true
-        }):align(display.LEFT_BOTTOM,298 + time_desc_label:getContentSize().width + 10,40):addTo(bg)
+        }):align(display.LEFT_BOTTOM,278 + time_desc_label:getContentSize().width + 10,40):addTo(bg)
 
         local countInfo = User.countInfo
         local current_level = City:GetFirstBuildingByType('keep'):GetLevel()

@@ -38,6 +38,9 @@ function AllianceManager:GetToMineMarchEvents()
 end
 -- 获取和自己有关的行军事件
 function AllianceManager:GetAboutMyMarchEvents()
+    if self:GetMyAlliance():IsDefault() then
+        return {},{}
+    end
    local to_my_events = self:GetToMineMarchEvents()
    local out_march_events = self:GetMyAlliance():GetMyMarchEvents()
    return to_my_events,out_march_events

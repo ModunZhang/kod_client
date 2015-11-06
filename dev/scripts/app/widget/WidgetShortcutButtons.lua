@@ -215,7 +215,7 @@ function WidgetShortcutButtons:ctor(city)
         UIKit:newGameUI("GameUIAllianceShrine",self.city,"fight_event",Alliance_Manager:GetMyAlliance():GetAllianceBuildingInfoByName("shrine")):AddToCurrentScene(true)
     end)
     function shrine_event_button:CheckVisible()
-        return Alliance_Manager:GetMyAlliance().shrineEvents and #Alliance_Manager:GetMyAlliance().shrineEvents > 0
+        return not Alliance_Manager:GetMyAlliance():IsDefault() and Alliance_Manager:GetMyAlliance().shrineEvents and #Alliance_Manager:GetMyAlliance().shrineEvents > 0
     end
     function shrine_event_button:GetElementSize()
         return shrine_event_button:getCascadeBoundingBox().size

@@ -173,7 +173,7 @@ function DataUtils:getDragonTotalStrengthFromJson(star,level,skills,equipments)
     for body,equipemt in pairs(equipments) do
         if equipemt.name ~= "" then
             local config = self:getDragonEquipmentConfig(equipemt.name)
-            local attribute = self:getDragonEquipmentAttribute(body,config.maxStar,equipemt.star)
+            local attribute = self:getDragonEquipmentAttribute(equipemt.type,config.maxStar,equipemt.star)
             strength = attribute and (strength + attribute.strength) or strength
         end
     end
@@ -187,7 +187,7 @@ function DataUtils:getTotalVitalityFromJson(star,level,skills,equipments)
     for body,equipemt in pairs(equipments) do
         if equipemt.name ~= "" then
             local config = self:getDragonEquipmentConfig(equipemt.name)
-            local attribute = self:getDragonEquipmentAttribute(body,config.maxStar,equipemt.star)
+            local attribute = self:getDragonEquipmentAttribute(equipemt.type,config.maxStar,equipemt.star)
             vitality = attribute and (vitality + attribute.vitality) or vitality
         end
     end
@@ -210,6 +210,7 @@ function DataUtils:getDragonBaseStrengthAndVitality(star,level)
 end
 
 function DataUtils:getDragonEquipmentAttribute(body,max_star,star)
+    print("body,max_star,star",body,max_star,star)
     return config_dragoneyrie[body][max_star .. "_" .. star]
 end
 

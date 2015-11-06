@@ -968,15 +968,16 @@ function UIKit:getIapPackageName(productId)
     return Localize.iap_package_name[productId]
 end
 
-function UIKit:addTipsToNode( node,tips , include_node)
+function UIKit:addTipsToNode( node,tips , include_node ,tip_dimensions)
     node:setTouchEnabled(true)
     node:setTouchSwallowEnabled(false)
     local tips_bg
     if not include_node:getChildByTag(9090) then
-        tips_bg = display.newScale9Sprite("back_ground_240x73.png",0,0,cc.size(240,73),cc.rect(10,10,220,53))
+        tips_bg = display.newScale9Sprite("back_ground_240x73.png",0,0,cc.size(240,73),cc.rect(20,20,200,33))
             :addTo(include_node):align(display.BOTTOM_CENTER)
         tips_bg:setTag(9090)
-        local text_1 = UIKit:ttfLabel({text = tips,size = 20 ,color = 0xfff2b3})
+        dump(tip_dimensions,"tip_dimensions")
+        local text_1 = UIKit:ttfLabel({text = tips,size = 20 ,color = 0xfff2b3,dimensions = tip_dimensions})
             :addTo(tips_bg)
         tips_bg:size(text_1:getContentSize().width+20,text_1:getContentSize().height+40)
         local t_size = tips_bg:getContentSize()

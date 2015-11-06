@@ -106,7 +106,8 @@ function GameUIAllianceWatchTowerTroopDetail:GetItem(ITEM_TYPE,item_data)
     elseif ITEM_TYPE == self.ITEM_TYPE.DRAGON_EQUIPMENT then
         if self:CanShowDragonEquipment() then
             sub_line = #item_data.dragon.equipments
-            height   = sub_line * 36
+            height = sub_line * 36
+            height = height == 0 and 36 or height
         else
             height = 36
         end
@@ -133,7 +134,8 @@ function GameUIAllianceWatchTowerTroopDetail:GetItem(ITEM_TYPE,item_data)
         end
     elseif ITEM_TYPE == self.ITEM_TYPE.DRAGON_SKILL then
         sub_line = #item_data.dragon.skills
-        height   = sub_line * 36
+        height = sub_line * 36
+        height = height == 0 and 36 or height
     end
     local bg = display.newScale9Sprite("transparent_1x1.png"):size(548,height + 38)
     local title_bar = display.newSprite("alliance_member_title_548x38.png"):addTo(bg):align(display.LEFT_TOP, 0, height + 38)
@@ -176,10 +178,14 @@ function GameUIAllianceWatchTowerTroopDetail:GetItem(ITEM_TYPE,item_data)
         }):addTo(title_bar):align(display.CENTER, 274, 19)
         if ITEM_TYPE == self.ITEM_TYPE.DRAGON_EQUIPMENT then
             if self:CanShowDragonEquipment() then
-                local y = 0
-                for i,v in ipairs(item_data.dragon.equipments) do
-                    self:GetSubItem(ITEM_TYPE,i,{Localize.equip[v.name],v.star}):addTo(bg):align(display.LEFT_BOTTOM,0, y)
-                    y = y + 36
+                if #item_data.dragon.equipments > 0 then
+                    local y = 0
+                    for i,v in ipairs(item_data.dragon.equipments) do
+                        self:GetSubItem(ITEM_TYPE,i,{Localize.equip[v.name],v.star}):addTo(bg):align(display.LEFT_BOTTOM,0, y)
+                        y = y + 36
+                    end
+                else
+                    self:GetTipsItem(_("无")):addTo(bg):align(display.LEFT_BOTTOM, 0, 0)
                 end
             else
                 self:GetTipsItem():addTo(bg):align(display.LEFT_BOTTOM, 0, 0)
@@ -214,22 +220,25 @@ function GameUIAllianceWatchTowerTroopDetail:GetItem(ITEM_TYPE,item_data)
                 local y = 0
                 for i,v in ipairs(item_data.militaryTechs) do
                     local name = Localize.getMilitaryTechnologyName(v.name)
-                    local buff = DataUtils:getMilitaryTechEff(v.name,v.level)
-                    self:GetSubItem(ITEM_TYPE,i,{name,buff}):addTo(bg):align(display.LEFT_BOTTOM,0, y)
+                    self:GetSubItem(ITEM_TYPE,i,{name,"Lv"..v.level}):addTo(bg):align(display.LEFT_BOTTOM,0, y)
                     y = y + 36
                 end
             else
                 self:GetTipsItem():addTo(bg):align(display.LEFT_BOTTOM, 0, 0)
             end
         elseif ITEM_TYPE == self.ITEM_TYPE.DRAGON_SKILL then
-            local y = 0
-            for i,v in ipairs(item_data.dragon.skills) do
-                local val_str = '?'
-                if self:CanShowDragonSkill() then
-                    val_str = _("等级") .. ":" .. v.level
+            if #item_data.dragon.skills >0 then
+                local y = 0
+                for i,v in ipairs(item_data.dragon.skills) do
+                    local val_str = '?'
+                    if self:CanShowDragonSkill() then
+                        val_str = _("等级") .. ":" .. v.level
+                    end
+                    self:GetSubItem(ITEM_TYPE,i,{Localize.dragon_skill[v.name],val_str}):addTo(bg):align(display.LEFT_BOTTOM,0, y)
+                    y = y + 36
                 end
-                self:GetSubItem(ITEM_TYPE,i,{Localize.dragon_skill[v.name],val_str}):addTo(bg):align(display.LEFT_BOTTOM,0, y)
-                y = y + 36
+            else
+                self:GetTipsItem(_("无")):addTo(bg):align(display.LEFT_BOTTOM, 0, 0)
             end
         end
     end
@@ -237,10 +246,10 @@ function GameUIAllianceWatchTowerTroopDetail:GetItem(ITEM_TYPE,item_data)
     item:setItemSize(548,height + 38)
     return item
 end
-function GameUIAllianceWatchTowerTroopDetail:GetTipsItem()
+function GameUIAllianceWatchTowerTroopDetail:GetTipsItem(tips)
     local item = display.newScale9Sprite(string.format("back_ground_548x40_%d.png",1)):size(547,36)
     UIKit:ttfLabel({
-        text = _("巨石阵等级不足,暂时不能查看"),
+        text = tips or _("巨石阵等级不足,暂时不能查看"),
         size = 20,
         color= 0x615b44
     }):align(display.CENTER, 273, 19):addTo(item)
@@ -317,7 +326,7 @@ function GameUIAllianceWatchTowerTroopDetail:CanShowDragonLevelAndStar()
     if self:IsCheckOtherHelpTroop() then
         return self:GetWatchTowerLevel() >= 13
     elseif self:IsFromEnemy() then
-        return self:GetWatchTowerLevel() >= 4
+        return self:GetWatchTowerLevel() >= 2
     else
         return true
     end
@@ -328,7 +337,7 @@ function GameUIAllianceWatchTowerTroopDetail:CanShowDragonHP()
     if self:IsCheckOtherHelpTroop() then
         return self:GetWatchTowerLevel() >= 14
     elseif self:IsFromEnemy() then
-        return self:GetWatchTowerLevel() >= 5
+        return self:GetWatchTowerLevel() >= 4
     else
         return true
     end
@@ -338,7 +347,7 @@ function GameUIAllianceWatchTowerTroopDetail:CanShowDragonStrength()
     if self:IsCheckOtherHelpTroop() then
         return self:GetWatchTowerLevel() >= 14
     elseif self:IsFromEnemy() then
-        return self:GetWatchTowerLevel() >= 5
+        return self:GetWatchTowerLevel() >= 4
     else
         return true
     end
@@ -348,7 +357,7 @@ function GameUIAllianceWatchTowerTroopDetail:CanShowDragonSkill()
     if self:IsCheckOtherHelpTroop() then
         return self:GetWatchTowerLevel() >= 19
     elseif self:IsFromEnemy() then
-        return self:GetWatchTowerLevel() >= 10
+        return self:GetWatchTowerLevel() >= 9
     else
         return true
     end
@@ -359,7 +368,7 @@ function GameUIAllianceWatchTowerTroopDetail:CanShowSoliderName()
     if self:IsCheckOtherHelpTroop() then
         return self:GetWatchTowerLevel() >= 15
     elseif self:IsFromEnemy() then
-        return self:GetWatchTowerLevel() >= 6
+        return self:GetWatchTowerLevel() >= 5
     else
         return true
     end
@@ -370,7 +379,7 @@ function GameUIAllianceWatchTowerTroopDetail:CanShowSoliderStar()
     if self:IsCheckOtherHelpTroop() then
         return self:GetWatchTowerLevel() >= 16
     elseif self:IsFromEnemy() then
-        return self:GetWatchTowerLevel() >= 7
+        return self:GetWatchTowerLevel() >= 6
     else
         return true
     end
@@ -389,7 +398,9 @@ function GameUIAllianceWatchTowerTroopDetail:CanShowDragonEquipment()
 end
 
 function GameUIAllianceWatchTowerTroopDetail:CanShowTechnologyAndBuffEffect()
-    return false
+    if self:IsFromEnemy() then
+        return self:GetWatchTowerLevel() >= 10
+    end
 end
 
 function GameUIAllianceWatchTowerTroopDetail:FileterSoliderCount(count)
