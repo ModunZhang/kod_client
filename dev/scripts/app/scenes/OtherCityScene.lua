@@ -11,6 +11,10 @@ end
 function OtherCityScene:onEnter()
     OtherCityScene.super.onEnter(self)
     self.home = UIKit:newGameUI('GameUICityInfo', self.user, self.location):AddToScene(self):setTouchSwallowEnabled(false)
+
+    if not self.location.canShowBuildingLevel then
+        self:GetSceneLayer():HideLevelUpNode()
+    end
 end
 function OtherCityScene:GetHomePage()
     return self.home

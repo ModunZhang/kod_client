@@ -421,8 +421,13 @@ function AllianceLayer:GetClickedObject(world_x, world_y)
     local point = self.map:convertToNodeSpace(cc.p(world_x, world_y))
     local logic_x, logic_y = self:GetLogicMap():ConvertToLogicPosition(point.x, point.y)
     local index = self:LogicToIndex(self:GetAllianceLogicMap():ConvertToLogicPosition(point.x, point.y))
-    print(index, logic_x % ALLIANCE_WIDTH, logic_y % ALLIANCE_HEIGHT)
     local x,y = logic_x % ALLIANCE_WIDTH, logic_y % ALLIANCE_HEIGHT
+    if x == 0
+    or x == ALLIANCE_WIDTH - 1
+    or y == 0
+    or y == ALLIANCE_HEIGHT - 1 then
+        return {index = index, x = x, y = y, name = "nouse"}
+    end
     return self:FindMapObject(index, x, y)
 end
 function AllianceLayer:GetMapIndexByWorldPosition(world_x, world_y)
