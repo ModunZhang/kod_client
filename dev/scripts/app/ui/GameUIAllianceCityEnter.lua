@@ -186,8 +186,7 @@ function GameUIAllianceCityEnter:GetEnterButtons()
                 local location = self:GetLogicPosition()
                 location.id = self:GetCurrentAlliance().id
                 location.mapIndex = self:GetCurrentAlliance().mapIndex
-                dump(self:GetCurrentAlliance(),"location")
-                dump(location,"location")
+                location.canShowBuildingLevel = self:GetMyAlliance():CanCheckOtherAllianceCityBuildingLevel()
                 app:EnterFriendCityScene(member.id, location)
                 self:LeftButtonClicked()
             end)
@@ -262,6 +261,7 @@ function GameUIAllianceCityEnter:GetEnterButtons()
                 local location = self:GetLogicPosition()
                 location.id = self:GetCurrentAlliance().id
                 location.mapIndex = self:GetCurrentAlliance().mapIndex
+                location.canShowBuildingLevel = self:GetMyAlliance():CanCheckOtherAllianceCityBuildingLevel()
                 app:EnterPlayerCityScene(member.id, location)
             else
                 UIKit:showMessageDialog(_("提示"),_("巨石阵等级不足，不能进入其他联盟玩家城市"))
