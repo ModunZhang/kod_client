@@ -242,6 +242,9 @@ function User:GetMyDeals()
     return self.deals
 end
 function User:GetSoldDealsCount()
+    if not self.deals then
+        return 0
+    end
     local count = 0
     for k,v in pairs(self.deals) do
         if v.isSold then
