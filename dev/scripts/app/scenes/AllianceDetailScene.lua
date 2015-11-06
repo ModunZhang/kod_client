@@ -452,6 +452,8 @@ function AllianceDetailScene:OnTouchClicked(pre_x, pre_y, x, y)
                 :next(function()
                     self:OpenUI(alliance, mapObj)
                 end)
+            elseif type_ == "nouse" then
+                return
             else
                 self:OpenUI(alliance, mapObj)
             end

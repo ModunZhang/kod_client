@@ -22,7 +22,7 @@
         <key>dataFormat</key>
         <string>cocos2d</string>
         <key>textureFileName</key>
-        <filename>../../../dev/res/images/_Compressed/ui_png_bg.pvr.ccz</filename>
+        <filename>../../../dev/res/images/_Compressed/ui_png_bg{n}.pvr.ccz</filename>
         <key>flipPVR</key>
         <false/>
         <key>ditherType</key>
@@ -111,9 +111,9 @@
             <enum type="AndEngine::MagFilter">MagLinear</enum>
         </struct>
         <key>dataFileName</key>
-        <filename>../../../dev/res/images/_Compressed/ui_png_bg.plist</filename>
+        <filename>../../../dev/res/images/_Compressed/ui_png_bg{n}.plist</filename>
         <key>multiPack</key>
-        <false/>
+        <true/>
         <key>mainExtension</key>
         <string></string>
         <key>forceIdenticalLayout</key>
