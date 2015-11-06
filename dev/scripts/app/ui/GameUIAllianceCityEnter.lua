@@ -184,8 +184,10 @@ function GameUIAllianceCityEnter:GetEnterButtons()
             end
             local enter_button = self:BuildOneButton("alliance_enter_city_56x68.png",_("进入")):onButtonClicked(function()
                 local location = self:GetLogicPosition()
-                location.id = self:GetCurrentAlliance().id
+                location.id = self:GetCurrentAlliance()._id
                 location.mapIndex = self:GetCurrentAlliance().mapIndex
+                location.x = self:GetLogicPosition().x
+                location.y = self:GetLogicPosition().y
                 location.canShowBuildingLevel = self:GetMyAlliance():CanCheckOtherAllianceCityBuildingLevel()
                 app:EnterFriendCityScene(member.id, location)
                 self:LeftButtonClicked()
@@ -259,8 +261,10 @@ function GameUIAllianceCityEnter:GetEnterButtons()
         local enter_button = self:BuildOneButton("alliance_enter_city_56x68.png",_("进入")):onButtonClicked(function()
             if self:GetMyAlliance():CanCheckOtherAllianceCity() then
                 local location = self:GetLogicPosition()
-                location.id = self:GetCurrentAlliance().id
+                location.id = self:GetCurrentAlliance()._id
                 location.mapIndex = self:GetCurrentAlliance().mapIndex
+                location.x = self:GetLogicPosition().x
+                location.y = self:GetLogicPosition().y
                 location.canShowBuildingLevel = self:GetMyAlliance():CanCheckOtherAllianceCityBuildingLevel()
                 app:EnterPlayerCityScene(member.id, location)
             else
