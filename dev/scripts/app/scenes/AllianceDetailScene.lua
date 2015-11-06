@@ -314,7 +314,7 @@ function AllianceDetailScene:onEnter()
         local x,y = DataUtils:GetAbsolutePosition(alliance.mapIndex, mapObj.location.x, mapObj.location.y)
         self:GotoPosition(x,y)
     end
-    self:GetSceneLayer():ZoomTo(0.82)
+    self:GetSceneLayer():ZoomTo(0.65)
     alliance:AddListenOnType(self, "mapIndex")
     alliance:AddListenOnType(self, "basicInfo")
     alliance:AddListenOnType(self, "members")
@@ -365,6 +365,7 @@ function AllianceDetailScene:FetchAllianceDatasByIndex(index, func)
             self:GetHomePage():HideLoading()
         end
         self.fetchtimer:stopAllActions()
+        self.fetch_index = nil
         self.current_allinace_index = nil
         if type(func) == "function" then
             func()

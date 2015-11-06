@@ -32,7 +32,7 @@ function WorldLayer:onEnter()
     self.levelSprites = {}
     self.allainceSprites = {}
     self.flagSprites = {}
-    self:ZoomTo(1.3)
+    self:ZoomTo(1.2)
     local size = self.scene_node:getCascadeBoundingBox()
     self.scene_node:setContentSize(cc.size(size.width, size.height))
     math.randomseed(1)
@@ -338,6 +338,7 @@ function WorldLayer:CreateOrUpdateAllianceBy(mapIndex, alliance)
     end
     return self.allainceSprites[mapIndex]
 end
+local ANI_TAG = 123
 function WorldLayer:CreateAllianceSprite(index, alliance)
     local index = tostring(index)
     local p = self:ConvertLogicPositionToMapPosition(self:IndexToLogic(index))
@@ -361,12 +362,20 @@ function WorldLayer:CreateAllianceSprite(index, alliance)
     }):addTo(sprite):align(display.CENTER, size.width/2, 5):scale(0.5)
     sprite.flagstr = alliance.flag
     sprite.flag = ui_helper:CreateFlagContentSprite(alliance.flag)
-        :addTo(sprite):align(display.CENTER, 90, 60):scale(0.3)
+        :addTo(sprite):align(display.CENTER, 100, 90):scale(0.4)
     if Alliance_Manager:GetMyAlliance().mapIndex == tonumber(index) then
         display.newSprite("icon_current_position.png")
         :addTo(node, 0, 2):scale(0.8)
         :pos(sprite:getPositionX(), sprite:getPositionY() + sprite:getContentSize().height / 2)
     end
+
+    if self:GetAllianceStatus(alliance) == "fight" then
+        ccs.Armature:create("duizhan")
+        :addTo(sprite, 1, ANI_TAG)
+        :pos(size.width/2, size.height/2 + 80)
+        :getAnimation():playWithIndex(0)
+    end
+
     self.allainceSprites[index] = node
 end
 function WorldLayer:UpdateAllianceSprite(index, alliance)
@@ -376,6 +385,24 @@ function WorldLayer:UpdateAllianceSprite(index, alliance)
     sprite.name:setString(string.format("[%s]%s", alliance.tag, alliance.name))
     if sprite.flagstr ~= alliance.flag then
         sprite.flag:SetFlag(alliance.flag)
+    end
+    if self:GetAllianceStatus(alliance) ~= "fight" then
+        if sprite:getChildByTag(ANI_TAG) then
+            sprite:removeChildByTag(ANI_TAG)
+        end
+    elseif not sprite:getChildByTag(ANI_TAG) then
+        local size = sprite:getContentSize()
+        ccs.Armature:create("duizhan")
+        :addTo(sprite, 1, ANI_TAG)
+        :pos(size.width/2, size.height/2 + 80)
+        :getAnimation():playWithIndex(0)
+    end
+end
+function WorldLayer:GetAllianceStatus(aln)
+    local my_aln = Alliance_Manager:GetMyAlliance()
+    if aln.id == my_aln._id
+    or aln.id == my_aln:GetEnemyAllianceId() then
+        return my_aln.basicInfo.status
     end
 end
 function WorldLayer:CreateFlag(index)
