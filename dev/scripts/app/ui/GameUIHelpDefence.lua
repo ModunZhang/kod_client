@@ -313,10 +313,6 @@ function GameUIHelpDefence:DragonPart()
     }):align(display.RIGHT_CENTER,416,60)
         :addTo(box_bg)
 
-    local equi = {}
-    for k,v in pairs(dragon.equipments) do
-        equi[v.type] = {name = v.name,star = v.star}
-    end
     -- 龙力量
     UIKit:ttfLabel({
         text = _("力量"),
@@ -325,7 +321,7 @@ function GameUIHelpDefence:DragonPart()
     }):align(display.LEFT_CENTER,10,30)
         :addTo(box_bg)
     local dragon_power = UIKit:ttfLabel({
-        text = string.formatnumberthousands(DataUtils:getDragonTotalStrengthFromJson(dragon.star,dragon.level,dragon.skills,equi)),
+        text = string.formatnumberthousands(DataUtils:getDragonTotalStrengthFromJson(dragon.star,dragon.level,dragon.skills,dragon.equipments)),
         size = 20,
         color = 0x514d3e,
     }):align(display.RIGHT_CENTER,416,30)
