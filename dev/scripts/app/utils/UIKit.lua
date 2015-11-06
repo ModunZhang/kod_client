@@ -400,7 +400,13 @@ function UIKit:GetDragonHeadWithFrame(dragonType)
         :align(display.CENTER, dragon_bg:getContentSize().width/2, dragon_bg:getContentSize().height/2+5)
         :addTo(dragon_bg)
     function dragon_bg:setDragonImg(dragonType)
-        dragon_img:setTexture(UILib.dragon_head[dragonType])
+        if UILib.dragon_head[dragonType] then
+            dragon_img:setTexture(UILib.dragon_head[dragonType])
+            dragon_img:show()
+        else
+            dragon_bg:setTexture(dragonType)
+            dragon_img:hide()
+        end
     end
     return dragon_bg
 end

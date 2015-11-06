@@ -70,9 +70,9 @@ function GameUIAllianceWatchTower:GetAllOrderedMarchEvents()
                 -- 目的地是我方联盟，并且出发地不是我方联盟，或者是协防事件:来袭事件
                 if marchEvent.toAlliance.id == alliance._id and marchEvent.fromAlliance.id ~= alliance._id or marchEvent.marchType == "helpDefence" then
                     table.insert(beStrikedEvents, marchEvent)
-                else
-                    table.insert(attackEvents, marchEvent)
-                end
+            else
+                table.insert(attackEvents, marchEvent)
+            end
             end
         end
     end
@@ -85,9 +85,9 @@ function GameUIAllianceWatchTower:GetAllOrderedMarchEvents()
                     -- 目的地是我方联盟，并且出发地不是我方联盟，或者是协防事件:来袭事件
                     if marchEvent.toAlliance.id == alliance._id and marchEvent.fromAlliance.id ~= alliance._id or marchEvent.marchType == "helpDefence" then
                         table.insert(beStrikedEvents, marchEvent)
-                    else
-                        table.insert(attackEvents, marchEvent)
-                    end
+                else
+                    table.insert(attackEvents, marchEvent)
+                end
                 end
             end
         end
@@ -218,12 +218,7 @@ function GameUIAllianceWatchTower:CreateBeStrikedContent()
         details_button:removeEventListenersByEvent("CLICKED_EVENT")
         details_button:onButtonClicked(function(event)
             local alliance = parent.alliance
-            local watchTowerLevel = 1
-            for k,v in pairs(alliance.buildings) do
-                if v.name == "watchTower" then
-                    watchTowerLevel = v.level
-                end
-            end
+            local watchTowerLevel = parent:GetWatchTowerLevel()
             if watchTowerLevel > 3 then
                 if beStriked_event.marchType == "helpDefence" then
                     NetManager:getHelpDefenceMarchEventDetailPromise(beStriked_event.id):done(function(response)
@@ -256,7 +251,12 @@ function GameUIAllianceWatchTower:CreateBeStrikedContent()
                 parent:LeftButtonClicked()
             end
         end)
-        dragon_head:setDragonImg(beStriked_event.attackPlayerData.dragon.type)
+        if parent:GetWatchTowerLevel() > 1 then
+            dragon_head:setDragonImg(beStriked_event.attackPlayerData.dragon.type)
+        else
+            dragon_head:setDragonImg("unknown_dragon_icon_112x112.png")
+        end
+
         local defencer = beStriked_event.defencePlayerData or beStriked_event.defenceVillageData or beStriked_event.defenceMonsterData
         if beStriked_event.marchType == "helpDefence" then
             title_bg:setTexture("title_green_558x34.png")
@@ -278,6 +278,16 @@ function GameUIAllianceWatchTower:CreateBeStrikedContent()
     end
 
     return content
+end
+function GameUIAllianceWatchTower:GetWatchTowerLevel()
+    local alliance = self.alliance
+    local watchTowerLevel = 1
+    for k,v in pairs(alliance.buildings) do
+        if v.name == "watchTower" then
+            watchTowerLevel = v.level
+        end
+    end
+    return watchTowerLevel
 end
 -- 创建行军事件列表页
 function GameUIAllianceWatchTower:CreateMarchList()
@@ -428,6 +438,7 @@ function GameUIAllianceWatchTower:CreateAttackContent()
             end
         end)
         dragon_head:setDragonImg(att_event.attackPlayerData.dragon.type)
+
         local defencer = att_event.defencePlayerData or att_event.defenceVillageData or att_event.defenceMonsterData
         if att_event.defencePlayerData then
             defencer = att_event.defencePlayerData.name
@@ -469,11 +480,14 @@ function GameUIAllianceWatchTower:OnMapDataChanged(allianceData, deltaData)
     end
 end
 function GameUIAllianceWatchTower:OnMapAllianceChanged(allianceData, deltaData)
-    
+
 end
 
 
 return GameUIAllianceWatchTower
+
+
+
 
 
 
