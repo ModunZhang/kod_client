@@ -46,7 +46,7 @@ function AllianceManager:GetToMineMarchEvents()
     local marchEvents = self:GetMyAllianceMarchEvents()
     for k,kindsOfEvents in pairs(marchEvents) do
         for id,event in pairs(kindsOfEvents) do
-            if event ~= json.null and event.defencePlayerData.id == User:Id() then
+            if event ~= json.null and event.defencePlayerData and event.defencePlayerData.id == User:Id() then
                 event.eventType = k
                 table.insert(to_my_events, event)
             end

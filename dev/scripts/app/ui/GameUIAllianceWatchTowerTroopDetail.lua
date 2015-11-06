@@ -90,10 +90,14 @@ function GameUIAllianceWatchTowerTroopDetail:RefreshListView()
     end
     item = self:GetItem(self.ITEM_TYPE.DRAGON_SKILL,self:GetEventData())
     self.listView:addItem(item)
-    item = self:GetItem(self.ITEM_TYPE.TECHNOLOGY,self:GetEventData())
-    self.listView:addItem(item)
-    item = self:GetItem(self.ITEM_TYPE.BUFF_EFFECT,self:GetEventData())
-    self.listView:addItem(item)
+    if self:GetEventData().militaryTechs then
+        item = self:GetItem(self.ITEM_TYPE.TECHNOLOGY,self:GetEventData())
+        self.listView:addItem(item)
+    end
+    if self:GetEventData().militaryBuffs then
+        item = self:GetItem(self.ITEM_TYPE.BUFF_EFFECT,self:GetEventData())
+        self.listView:addItem(item)
+    end
     self.listView:reload()
 end
 
@@ -146,7 +150,7 @@ function GameUIAllianceWatchTowerTroopDetail:GetItem(ITEM_TYPE,item_data)
             size = 20,
             color= 0xffedae
         }):align(display.LEFT_CENTER, 20, 19):addTo(title_bar)
-        if self:CanShowSoliderStar() then
+        if self:CanShowDragonLevelAndStar() then
             local star_bar = StarBar.new({
                 max = 4,
                 bg = "Stars_bar_bg.png",
@@ -459,6 +463,8 @@ function GameUIAllianceWatchTowerTroopDetail:FuzzyCount(count)
 end
 
 return GameUIAllianceWatchTowerTroopDetail
+
+
 
 
 
