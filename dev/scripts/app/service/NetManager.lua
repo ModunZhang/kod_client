@@ -218,7 +218,7 @@ local function get_alliance_response_msg(response)
     if response.msg.mapIndexData then
         Alliance_Manager:setMapIndexData(response.msg.mapIndexData)
     end
-    if response.msg.mapData then
+    if response.msg.mapData and response.msg.mapData ~= json.null then
         Alliance_Manager.my_alliance_mapData = response.msg.mapData
     end
     if response.msg.allianceData then
@@ -766,7 +766,7 @@ function NetManager:getLoginPromise(deviceId)
                 Alliance_Manager:setMapIndexData(mapIndexData)
                 IS_HARD_LOGIN = false
             end
-            if response.msg.mapData then
+            if response.msg.mapData and response.msg.mapData ~= json.null then
                 Alliance_Manager.my_alliance_mapData = response.msg.mapData
             end
             -- LuaUtils:outputTable(mapData)
