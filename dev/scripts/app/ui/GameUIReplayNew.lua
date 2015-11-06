@@ -1154,7 +1154,12 @@ function GameUIReplayNew:HurtSoldierLeft(corps)
     local soldierCount = round.soldierCount or round.wallHp
     local soldierDamagedCount = round.soldierDamagedCount or round.wallDamagedHp
     local morale = self.ui_map.soldier_morale_attack:GetPercent()
-    local moraleDecreased = (round.moraleDecreased or 0) / self.ui_map.soldier_count_attack.count * 100
+    local moraleDecreased
+    if round.moraleDecreased then
+        moraleDecreased = round.moraleDecreased / self.ui_map.soldier_count_attack.count * 100
+    else
+        moraleDecreased = morale
+    end
     local x,y = corps:getPosition()
     return promise.all(
         self:PromiseOfPlayDamage(soldierDamagedCount, x, y),
@@ -1182,6 +1187,11 @@ function GameUIReplayNew:HurtSoldierRight(corps)
     local soldierDamagedCount = round.soldierDamagedCount or round.wallDamagedHp
     local morale = self.ui_map.soldier_morale_defence:GetPercent()
     local moraleDecreased = (round.moraleDecreased or 0) / self.ui_map.soldier_count_defence.count * 100
+    if round.wallHp then
+        if round.wallDamagedHp == round.wallHp then
+            moraleDecreased = morale
+        end
+    end
     local x,y = corps:getPosition()
     return promise.all(
         self:PromiseOfPlayDamage(soldierDamagedCount, x, y),
