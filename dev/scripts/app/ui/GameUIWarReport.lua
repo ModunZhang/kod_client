@@ -122,7 +122,7 @@ function GameUIWarReport:onEnter()
         local share_button = WidgetPushButton.new(
             {normal = "tmp_blue_btn_up_64x56.png", pressed = "tmp_blue_btn_down_64x56.png"},
             {scale9 = false}
-        ):addTo(report_body):align(display.CENTER,  report_body:getContentSize().width- (can_replay and 210 or 100),rb_size.height-186)
+        ):addTo(report_body):align(display.CENTER,  report_body:getContentSize().width- (can_replay and 210 or 70),rb_size.height-186)
             :onButtonClicked(function(event)
                 UIKit:newGameUI("GameUIShareReport", report):AddToCurrentScene()
             end)
