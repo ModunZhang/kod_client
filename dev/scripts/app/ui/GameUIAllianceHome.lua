@@ -89,9 +89,11 @@ function GameUIAllianceHome:AddOrRemoveListener(isAdd)
     if isAdd then
         alliance:AddListenOnType(self, "basicInfo")
         alliance:AddListenOnType(self, "allianceFight")
+        Alliance_Manager:AddHandle(self)
     else
         alliance:RemoveListenerOnType(self, "basicInfo")
         alliance:RemoveListenerOnType(self, "allianceFight")
+        Alliance_Manager:RemoveHandle(self)
     end
 end
 function GameUIAllianceHome:ShowLoading()
@@ -115,6 +117,12 @@ end
 function GameUIAllianceHome:AddMapChangeButton()
     WidgetChangeMap.new(WidgetChangeMap.MAP_TYPE.OUR_ALLIANCE):addTo(self)
 end
+function GameUIAllianceHome:OnMapDataChanged()
+end
+function GameUIAllianceHome:OnMapAllianceChanged()
+    self:RefreshTop(true)
+end
+
 function GameUIAllianceHome:OnAllianceDataChanged_basicInfo(alliance,deltaData)
     local ok_honour, new_honour = deltaData("basicInfo.honour")
     local ok_status, new_status = deltaData("basicInfo.status")

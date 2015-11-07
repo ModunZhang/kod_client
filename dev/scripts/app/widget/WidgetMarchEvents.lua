@@ -528,7 +528,7 @@ function WidgetMarchEvents:CreateDefenceItem(event, eventType)
         }))
         :onButtonClicked(function()
             self:OnRetreatButtonClicked(event, eventType)
-        end)
+        end):setButtonEnabled(eventType ~= "shrineEvents")
 
 
     node.return_btn = WidgetPushButton.new({
@@ -632,7 +632,12 @@ function WidgetMarchEvents:MoveToTargetAction(event,eventType)
         location = Alliance_Manager:GetMyAlliance():GetShrinePosition()
         mapIndex = Alliance_Manager:GetMyAlliance().mapIndex
     else
-        location,mapIndex = event.toAlliance.location, event.toAlliance.mapIndex
+        location = event.toAlliance.location
+        if event.toAlliance.id == Alliance_Manager:GetMyAlliance()._id then
+            mapIndex = Alliance_Manager:GetMyAlliance().mapIndex
+        else
+            mapIndex = event.toAlliance.mapIndex
+        end
     end
     local map_layer = display.getRunningScene():GetSceneLayer()
     -- map_layer:TrackCorpsById(nil)

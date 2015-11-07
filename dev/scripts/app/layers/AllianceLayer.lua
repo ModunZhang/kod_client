@@ -231,31 +231,55 @@ local function getAllyFromEvent(event)
     return ENEMY
 end
 function AllianceLayer:CreateOrUpdateCorpsBy(event, isreturn)
+    local myid = Alliance_Manager:GetMyAlliance()._id
     if isreturn then
+        local sour_index
+        if myid == event.toAlliance.id then
+            dest_index = Alliance_Manager:GetMyAlliance().mapIndex
+        else
+            dest_index = event.toAlliance.mapIndex
+        end
+
+        local dest_index
+        if myid == event.fromAlliance.id then
+            dest_index = Alliance_Manager:GetMyAlliance().mapIndex
+        else
+            dest_index = event.fromAlliance.mapIndex
+        end
         self:CreateOrUpdateCorps(
             event.id,
-            {x = event.toAlliance.location.x, y = event.toAlliance.location.y, index = event.toAlliance.mapIndex},
-            {x = event.fromAlliance.location.x, y = event.fromAlliance.location.y, index = event.fromAlliance.mapIndex},
+            {x = event.toAlliance.location.x, y = event.toAlliance.location.y, index = sour_index},
+            {x = event.fromAlliance.location.x, y = event.fromAlliance.location.y, index = dest_index},
             event.startTime / 1000,
             event.arriveTime / 1000,
             event.attackPlayerData.dragon.type,
             event.attackPlayerData.soldiers,
             getAllyFromEvent(event),
             string.format("[%s]%s", event.fromAlliance.tag, event.attackPlayerData.name)
-        )
-
-        -- local myid = Alliance_Manager:GetMyAlliance()_id
-        
+        )        
 
         if event.marchType == "monster"
         or event.marchType == "village" then
             self:CreateDeadEvent(event)
         end
     else
+        local sour_index
+        if myid == event.fromAlliance.id then
+            dest_index = Alliance_Manager:GetMyAlliance().mapIndex
+        else
+            dest_index = event.fromAlliance.mapIndex
+        end
+        
+        local dest_index
+        if myid == event.toAlliance.id then
+            dest_index = Alliance_Manager:GetMyAlliance().mapIndex
+        else
+            dest_index = event.toAlliance.mapIndex
+        end
         self:CreateOrUpdateCorps(
             event.id,
-            {x = event.fromAlliance.location.x, y = event.fromAlliance.location.y, index = event.fromAlliance.mapIndex},
-            {x = event.toAlliance.location.x, y = event.toAlliance.location.y, index = event.toAlliance.mapIndex},
+            {x = event.fromAlliance.location.x, y = event.fromAlliance.location.y, index = sour_index},
+            {x = event.toAlliance.location.x, y = event.toAlliance.location.y, index = dest_index},
             event.startTime / 1000,
             event.arriveTime / 1000,
             event.attackPlayerData.dragon.type,
@@ -308,13 +332,13 @@ function AllianceLayer:CreateDeadEvent(event)
     local is_dead = false
     if event.marchType == "monster" then
         is_dead = not not next(event.attackPlayerData.rewards)
-    elseif event.marchType == "village" then
-        local alliance = Alliance_Manager:GetAllianceByCache(event.toAlliance.id)
-        if alliance and event.toAlliance.id ~= Alliance_Manager:GetMyAlliance()._id then
-            if not Alliance.GetAllianceVillageInfosById(alliance, event.defenceVillageData.id) then
-                is_dead = true
-            end
-        end
+    -- elseif event.marchType == "village" then
+    --     local alliance = Alliance_Manager:GetAllianceByCache(event.toAlliance.id)
+    --     if alliance and event.toAlliance.id ~= Alliance_Manager:GetMyAlliance()._id then
+    --         if not Alliance.GetAllianceVillageInfosById(alliance, event.defenceVillageData.id) then
+    --             is_dead = true
+    --         end
+    --     end
     end
     if is_dead then
         local point = self:RealPosition(event.toAlliance.mapIndex, 

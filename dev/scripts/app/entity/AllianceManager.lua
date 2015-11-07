@@ -192,7 +192,9 @@ function AllianceManager:OnEnterMapIndex(mapIndex, data)
     end
     self.currentMapData = data.mapData
     for k,v in pairs(self.handles) do
-        v.OnEnterMapIndex(v, mapIndex, data)
+        if v.OnEnterMapIndex then
+            v.OnEnterMapIndex(v, mapIndex, data)
+        end
     end
 end
 local function removeJsonNull(t)
@@ -204,7 +206,9 @@ local function removeJsonNull(t)
 end
 function AllianceManager:OnMapDataChanged(mapIndex, currentMapData, deltaData)
     for _,v in pairs(self.handles) do
-        v.OnMapDataChanged(v, self:GetAllianceByCache(mapIndex), currentMapData, deltaData)
+        if v.OnMapDataChanged then
+            v.OnMapDataChanged(v, self:GetAllianceByCache(mapIndex), currentMapData, deltaData)
+        end
     end
     removeJsonNull(currentMapData.villageEvents)
     for _,t in pairs(currentMapData.marchEvents) do
@@ -213,7 +217,9 @@ function AllianceManager:OnMapDataChanged(mapIndex, currentMapData, deltaData)
 end
 function AllianceManager:OnMapAllianceChanged(allianceData, deltaData)
     for _,v in pairs(self.handles) do
-        v.OnMapAllianceChanged(v, allianceData, deltaData)
+        if v.OnMapAllianceChanged then
+            v.OnMapAllianceChanged(v, allianceData, deltaData)
+        end
     end
 end
 function AllianceManager:AddHandle(handle)
