@@ -92,6 +92,7 @@ function GameUIAcademy:OnMoveInStage()
     GameUIAcademy.super.OnMoveInStage(self)
     User:AddListenOnType(self, "productionTechs")
     User:AddListenOnType(self, "productionTechEvents")
+    User:AddListenOnType(self, "buildings")
 
     scheduleAt(self, function()
         if not User:HasProductionTechEvent() then return end
@@ -116,8 +117,21 @@ end
 function GameUIAcademy:OnUserDataChanged_productionTechs(userData, deltaData)
     local ok, value = deltaData("productionTechs")
     if ok then
-        for tech_name,v in pairs(value) do
-            local tech = userData.productionTechs[tech_name]
+        for tech_name,tech in pairs(userData.productionTechs) do
+            local item = self:GetItemByTag(tech.index)
+            if item and item.levelLabel then
+                item.levelLabel:setString("Lv " .. tech.level)
+            end
+            if item and item.changeState then
+                item.changeState(User:IsTechEnable(tech_name, tech))
+            end
+        end
+    end
+end
+function GameUIAcademy:OnUserDataChanged_buildings(userData, deltaData)
+    local ok, value = deltaData("buildings.location_7")
+    if ok then
+        for tech_name,tech in pairs(userData.productionTechs) do
             local item = self:GetItemByTag(tech.index)
             if item and item.levelLabel then
                 item.levelLabel:setString("Lv " .. tech.level)
@@ -135,6 +149,7 @@ function GameUIAcademy:OnMoveOutStage()
     GameUIAcademy.super.OnMoveOutStage(self)
     User:RemoveListenerOnType(self, "productionTechs")
     User:RemoveListenerOnType(self, "productionTechEvents")
+    User:RemoveListenerOnType(self, "buildings")
 end
 
 function GameUIAcademy:CreateBetweenBgAndTitle()
