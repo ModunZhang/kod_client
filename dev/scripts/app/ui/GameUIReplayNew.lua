@@ -95,6 +95,11 @@ local function decode_battle_from_report(report)
             }
         end
         defeat = attacker.isWin and "right" or "left"
+        if attacker.isWin then
+            right.decrease = defender.morale
+        else
+            left.decrease = attacker.morale
+        end
         table.insert(battle, {left = left, right = right, defeat = defeat, defeatAll = defeatAll})
         if defeatAll then
             defeat = nil
@@ -1099,10 +1104,10 @@ function GameUIReplayNew:DecodeStateBySide(side, is_left)
     elseif state == "hurt" then
         action = BattleObject:Do():next(function(corps)
             if is_left then
-                return promise.any(corps:hit(), self:HurtSoldierLeft(corps))
+                return promise.any(corps:hit(), self:HurtSoldierLeft(corps, side.decrease))
                     :next(function() return corps end)
             else
-                return promise.any(corps:hit(), self:HurtSoldierRight(corps))
+                return promise.any(corps:hit(), self:HurtSoldierRight(corps, side.decrease))
                     :next(function() return corps end)
             end
         end):next(function(corps)
@@ -1148,7 +1153,7 @@ function GameUIReplayNew:PromiseOfPlayDamage(count, x, y)
         :align(display.CENTER, x, y):runAction(speed)
     return p
 end
-function GameUIReplayNew:HurtSoldierLeft(corps)
+function GameUIReplayNew:HurtSoldierLeft(corps, decrease)
     local round = self:GetFightAttackSoldierByRound(self.round)
     local soldier = self:TopSoldierLeft()
     local soldierCount = round.soldierCount or round.wallHp
@@ -1156,7 +1161,7 @@ function GameUIReplayNew:HurtSoldierLeft(corps)
     local morale = self.ui_map.soldier_morale_attack:GetPercent()
     local moraleDecreased
     if round.moraleDecreased then
-        moraleDecreased = round.moraleDecreased / self.ui_map.soldier_count_attack.count * 100
+        moraleDecreased = decrease / self.ui_map.soldier_count_attack.count * 100
     else
         moraleDecreased = morale
     end
@@ -1180,13 +1185,13 @@ function GameUIReplayNew:HurtSoldierLeft(corps)
         end)
     )
 end
-function GameUIReplayNew:HurtSoldierRight(corps)
+function GameUIReplayNew:HurtSoldierRight(corps, decrease)
     local round = self:GetFightDefenceSoldierByRound(self.round)
     local soldier = self:TopSoldierRight()
     local soldierCount = round.soldierCount or round.wallHp
     local soldierDamagedCount = round.soldierDamagedCount or round.wallDamagedHp
     local morale = self.ui_map.soldier_morale_defence:GetPercent()
-    local moraleDecreased = (round.moraleDecreased or 0) / self.ui_map.soldier_count_defence.count * 100
+    local moraleDecreased = (decrease or 0) / self.ui_map.soldier_count_defence.count * 100
     if round.wallHp then
         if round.wallDamagedHp == round.wallHp then
             moraleDecreased = morale
