@@ -381,12 +381,11 @@ function GameUIAllianceBattle:InitBattleStatistics()
         end)
         local war_award_info = {
             {_("联盟战荣耀值基础奖励"),"honour_128x128.png",GameDatas.AllianceInitData.fightRewards[User.serverLevel].honour},
-            {_("联盟战期间最高击杀"),"gem_icon_62x61.png",GameDatas.AllianceInitData.fightRewards[User.serverLevel].gem},
-            {_("将敌方村落直接摧毁，立刻获得一定比例的资源")},
-            {_("将敌方盟主城墙摧毁可殖民")},
+            {_("联盟战期间最高击杀者"),"gem_icon_62x61.png",GameDatas.AllianceInitData.fightRewards[User.serverLevel].gem},
+            {_("可召集其他联盟前来助阵")},
             {_("将敌方所有玩家城墙摧毁可强制敌方联盟搬迁")},
         }
-        local origin_y, gap_y = window.top - 550, -60
+        local origin_y, gap_y = window.top - 550 - 58/2, -60
         for i,v in ipairs(war_award_info) do
             local award_bg = display.newSprite("tmp_background_red_612x58.png"):addTo(layer)
                 :align(display.CENTER,window.cx, origin_y + (i - 1) * gap_y)
@@ -600,10 +599,10 @@ function GameUIAllianceBattle:InitBattleStatistics()
             color = 0xff6023,
             dimensions = cc.size(580,0),
         }):addTo(layer)
-            :align(display.TOP_CENTER,window.cx,window.top-320)
+            :align(display.TOP_CENTER,window.cx,window.top-320-30)
 
         -- 荣耀值奖励
-        local honour_bg = display.newScale9Sprite("tmp_background_red_130x30.png",window.right-200,window.top-440,cc.size(166,32),cc.rect(15,10,100,10))
+        local honour_bg = display.newScale9Sprite("tmp_background_red_130x30.png",window.right-200,window.top-440-50,cc.size(166,32),cc.rect(15,10,100,10))
             :align(display.LEFT_CENTER)
             :addTo(layer)
         display.newSprite("honour_128x128.png"):align(display.CENTER,0,honour_bg:getContentSize().height/2)
@@ -616,7 +615,7 @@ function GameUIAllianceBattle:InitBattleStatistics()
         }):addTo(honour_bg,2)
             :align(display.CENTER,honour_bg:getContentSize().width/2,honour_bg:getContentSize().height/2)
         -- 金龙币奖励
-        local gem_bg = display.newScale9Sprite("tmp_background_red_130x30.png",window.left+210,window.top-440,cc.size(166,32),cc.rect(15,10,100,10))
+        local gem_bg = display.newScale9Sprite("tmp_background_red_130x30.png",window.left+210,window.top-440-50,cc.size(166,32),cc.rect(15,10,100,10))
             :align(display.RIGHT_CENTER)
             :addTo(layer)
         display.newSprite("gem_icon_62x61.png"):align(display.CENTER,0,gem_bg:getContentSize().height/2)
@@ -1010,7 +1009,6 @@ function GameUIAllianceBattle:RefreshFightInfoList(info_bg_y)
         local info_message = {
             {string.formatnumberthousands(our_count_data.kill),_("击杀积分"),string.formatnumberthousands(enemy_count_data.kill)},
             {our_count_data.routCount.."/"..enemy.alliance.memberCount,_("击溃城市"),enemy_count_data.routCount.."/"..our.alliance.memberCount},
-            {our_count_data.distroyVillageCount,_("摧毁村落"),enemy_count_data.distroyVillageCount},
             {our_count_data.attackCount,_("进攻次数"),enemy_count_data.attackCount},
             {our_count_data.attackSuccessCount,_("进攻获胜"),enemy_count_data.attackSuccessCount},
             {our_count_data.strikeCount,_("突袭次数"),enemy_count_data.strikeCount},
@@ -1018,7 +1016,7 @@ function GameUIAllianceBattle:RefreshFightInfoList(info_bg_y)
             {ourKillMaxName,_("头号杀手"),enemyKillMaxName},
         }
 
-        local origin_y = fight_list_node:getContentSize().height
+        local origin_y = fight_list_node:getContentSize().height - 58
         for i,v in ipairs(info_message) do
             local item = self:CreateInfoItem(v,i):addTo(fight_list_node):align(display.TOP_CENTER, fight_list_node:getContentSize().width/2, origin_y - (i-1) * 60)
             -- 击杀积分和击溃城市有点击效果，弹出提示
@@ -1408,7 +1406,7 @@ function GameUIAllianceBattle:CreateHistoryContent()
         local info_message = {
             {string.formatnumberthousands(ourAlliance.kill),_("击杀积分"),string.formatnumberthousands(enemyAlliance.kill)},
             {string.formatnumberthousands(ourAlliance.routCount),_("击溃城市"),string.formatnumberthousands(enemyAlliance.routCount)},
-            {string.formatnumberthousands(ourAlliance.distroyVillageCount),_("摧毁村落"),string.formatnumberthousands(enemyAlliance.distroyVillageCount)},
+            {string.formatnumberthousands(ourAlliance.attackCount),_("进攻次数"),string.formatnumberthousands(enemyAlliance.attackCount)},
         }
         local b_flag = true
         local origin_y = 160 - 33

@@ -235,9 +235,9 @@ function AllianceLayer:CreateOrUpdateCorpsBy(event, isreturn)
     if isreturn then
         local sour_index
         if myid == event.toAlliance.id then
-            dest_index = Alliance_Manager:GetMyAlliance().mapIndex
+            sour_index = Alliance_Manager:GetMyAlliance().mapIndex
         else
-            dest_index = event.toAlliance.mapIndex
+            sour_index = event.toAlliance.mapIndex
         end
 
         local dest_index
@@ -265,9 +265,9 @@ function AllianceLayer:CreateOrUpdateCorpsBy(event, isreturn)
     else
         local sour_index
         if myid == event.fromAlliance.id then
-            dest_index = Alliance_Manager:GetMyAlliance().mapIndex
+            sour_index = Alliance_Manager:GetMyAlliance().mapIndex
         else
-            dest_index = event.fromAlliance.mapIndex
+            sour_index = event.fromAlliance.mapIndex
         end
         
         local dest_index
@@ -327,6 +327,7 @@ local resource_map = {
     stone = true,
 }
 function AllianceLayer:CreateDeadEvent(event)
+    local myid = Alliance_Manager:GetMyAlliance()._id
     local id_corps = event.id
     if not self:IsExistCorps(id_corps) or self.map_dead[id_corps] then return end
     local is_dead = false
@@ -341,7 +342,13 @@ function AllianceLayer:CreateDeadEvent(event)
     --     end
     end
     if is_dead then
-        local point = self:RealPosition(event.toAlliance.mapIndex, 
+        local mapIndex
+        if myid == event.toAlliance.id then
+            mapIndex = Alliance_Manager:GetMyAlliance().mapIndex
+        else
+            mapIndex = event.toAlliance.mapIndex
+        end
+        local point = self:RealPosition(mapIndex, 
                                       event.toAlliance.location.x, 
                                       event.toAlliance.location.y)
         self.map_dead[id_corps] = self:CreateDeadSpriteByEvent(event)
