@@ -1009,7 +1009,7 @@ function GameUIAllianceBattle:RefreshFightInfoList(info_bg_y)
         local enemy_count_data = enemy.allianceCountData
         local info_message = {
             {string.formatnumberthousands(our_count_data.kill),_("击杀积分"),string.formatnumberthousands(enemy_count_data.kill)},
-            {our_count_data.routCount.."/"..our.alliance.memberCount,_("击溃城市"),enemy_count_data.routCount.."/"..enemy.alliance.memberCount},
+            {our_count_data.routCount.."/"..enemy.alliance.memberCount,_("击溃城市"),enemy_count_data.routCount.."/"..our.alliance.memberCount},
             {our_count_data.distroyVillageCount,_("摧毁村落"),enemy_count_data.distroyVillageCount},
             {our_count_data.attackCount,_("进攻次数"),enemy_count_data.attackCount},
             {our_count_data.attackSuccessCount,_("进攻获胜"),enemy_count_data.attackSuccessCount},
