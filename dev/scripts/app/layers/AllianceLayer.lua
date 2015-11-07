@@ -6,6 +6,8 @@ local UILib = import("..ui.UILib")
 local Alliance = import("..entity.Alliance")
 local SpriteConfig = import("..sprites.SpriteConfig")
 local WidgetAllianceHelper = import("..widget.WidgetAllianceHelper")
+local fire = import("..particles.fire")
+local smoke_city = import("..particles.smoke_city")
 local NormalMapAnchorBottomLeftReverseY = import("..map.NormalMapAnchorBottomLeftReverseY")
 local MapLayer = import(".MapLayer")
 local AllianceLayer = class("AllianceLayer", MapLayer)
@@ -658,8 +660,6 @@ local flag_map = {
 }
 local FIRE_TAG = 11900
 local SMOKE_TAG = 12000
-local fire = import("..particles.fire")
-local smoke_city = import("..particles.smoke_city")
 function AllianceLayer:RefreshSpriteInfo(sprite, mapObj, alliance)
     local info = sprite.info
     local isenemy = User.allianceId ~= alliance._id
