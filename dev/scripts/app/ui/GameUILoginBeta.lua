@@ -176,7 +176,7 @@ function GameUILoginBeta:startGame()
     display.getRunningScene().startGame = true
     local sp = cc.Spawn:create(cc.ScaleTo:create(1,1.5),cc.FadeOut:create(1))
     local seq = transition.sequence({sp,cc.CallFunc:create(function()
-        if app:GetGameDefautlt():getStringForKey("PASS_SPLASH") == "yes" then
+        if app:GetGameDefautlt():IsPassedSplash() then
             self:loginAction()
         else
             self.verLabel:fadeOut(0.5)

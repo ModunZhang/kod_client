@@ -31,7 +31,7 @@ end
 
 function GameUISplashBeta:CreateBottomAnimate()
     self.sprite = self:CreateBgSprite():align(display.LEFT_BOTTOM, 0, 0):addTo(self.bottom_layer)
-    if app:GetGameDefautlt():getStringForKey("PASS_SPLASH") == "yes" then
+    if app:GetGameDefautlt():IsPassedSplash() then
     	self:RunNormal()
     end
 end
@@ -56,7 +56,7 @@ function GameUISplashBeta:RunFte(func)
         align = cc.ui.TEXT_ALIGN_CENTER,
         dimensions = cc.size(display.width, 0),
     }):addTo(self.bottom_layer,1):opacity(0)
-        :align(display.CENTER, display.cx, display.height - 103)
+        :align(display.CENTER, display.cx, display.height - 120)
 
 	local is_skip = false
  --    local skip = cc.ui.UIPushButton.new({normal = "skip.png",pressed = "skip.png"})
